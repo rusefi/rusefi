@@ -425,8 +425,13 @@ void TunerStudio::handleCrc32Check(TsChannelBase *tsChannel, uint32_t page, uint
 
 	uint32_t crc = SWAP_UINT32(crc32(start, count));
 	tsChannel->sendResponse(TS_CRC, (const uint8_t *) &crc, 4);
-	// todo: rename to onConfigCrc?
-	ConfigurationWizard::onConfigOnStartUpOrBurn(false);
+	if (page == TS_PAGE_SETTINGS && offset == 0 && count == sizeof(persistent_config_s)) {
+		finishPendingBurn(tsChannel);
+	}
+	if (!tsChannel->settingsBurnPending) {
+		// todo: rename to onConfigCrc?
+		ConfigurationWizard::onConfigOnStartUpOrBurn(false);
+	}
 }
 
 #if EFI_TS_SCATTER
@@ -524,44 +529,76 @@ void requestBurn() {
 }
 
 #if EFI_TUNER_STUDIO
-#if EFI_PROD_CODE || EFI_SIMULATOR
-/**
- * 'Burn' command is a command to commit the changes
- */
-static void handleBurnCommand(TsChannelBase* tsChannel, uint16_t page) {
-	if (page == TS_PAGE_SETTINGS) {
-		Timer t;
-		t.reset();
+// TS normally waits 500ms; 2s keeps clients without a CRC check from blocking forever the write.
+static constexpr float SETTINGS_BURN_TIMEOUT_MS = 2000;
 
-		tsState.burnCommandCounter++;
+void TunerStudio::finishPendingBurn(TsChannelBase* tsChannel) {
+	if (!tsChannel->settingsBurnPending) {
+		return;
+	}
 
-		efiPrintf("TS -> Burn");
-		validateConfigOnStartUpOrBurn(true);
+	tsChannel->settingsBurnPending = false;
+	const uint32_t crcBefore = crc32(engineConfiguration, sizeof(persistent_config_s));
+	Timer t;
+	t.reset();
+
+	efiPrintf("Finishing pending TS burn");
+	validateConfigOnStartUpOrBurn(true);
 
 		// problem: 'popular vehicles' dialog has 'Burn' which is very NOT helpful on that dialog
 		// since users often click both buttons producing a conflict between ECU desire to change settings
 		// and TS desire to send TS calibration snapshot into ECU
 		// Skip the burn if a preset was just loaded - we don't want to overwrite it
 		// [tag:popular_vehicle]
-		if (!needToTriggerTsRefresh()) {
-			efiPrintf("TS -> Burn, we are allowed to burn");
-			requestBurn();
-		}
-		efiPrintf("Burned in %.1fms", t.getElapsedSeconds() * 1e3);
+  if (!needToTriggerTsRefresh()) {
+    efiPrintf("TS -> Burn, we are allowed to burn");
+		requestBurn();
+	}
+
+	if (crcBefore != crc32(engineConfiguration, sizeof(persistent_config_s))) {
+		onApplyPreset();
+	}
+
+	efiPrintf("Burned in %.1fms", t.getElapsedSeconds() * 1e3);
+}
+
+void TunerStudio::handlePendingBurnTimeout(TsChannelBase* tsChannel) {
+	if (tsChannel->settingsBurnPending && tsChannel->settingsBurnTimer.hasElapsedMs(SETTINGS_BURN_TIMEOUT_MS)) {
+		efiPrintf("TS burn CRC timeout");
+		finishPendingBurn(tsChannel);
+	}
+}
+
+/**
+ * 'Burn' command is a command to commit the changes
+ */
+void TunerStudio::handleBurnCommand(TsChannelBase* tsChannel, uint16_t page) {
+	if (page == TS_PAGE_SETTINGS) {
+		tsState.burnCommandCounter++;
+		// Only page 0 needs deferral (see #9938)
+		// Extra-page and lua are wrote normally
+		efiPrintf("TS -> Burn, waiting for CRC");
+		tsChannel->settingsBurnPending = true;
 	} else if (page == TS_PAGE_SCATTER_OFFSETS) {
 		/* do nothing */
 	} else if (page == TS_PAGE_SECOND_TABLES) {
+#if !EFI_UNIT_TEST
 		burnExtraFlashPage(EFI_SECOND_TABLES_RECORD_ID);
+#endif
 	} else if (page == TS_PAGE_LUA) {
+#if !EFI_UNIT_TEST
 		burnExtraFlashPage(EFI_LUA_PAGE_RECORD_ID);
+#endif
 	} else {
 		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, "ERROR: Burn invalid page");
 		return;
 	}
 
 	tsChannel->writeCrcResponse(TS_RESPONSE_BURN_OK);
+	if (page == TS_PAGE_SETTINGS) {
+		tsChannel->settingsBurnTimer.reset();
+	}
 }
-#endif // EFI_PROD_CODE || EFI_SIMULATOR
 
 #if (EFI_PROD_CODE || EFI_SIMULATOR)
 
@@ -681,6 +718,7 @@ TunerStudio tsInstance;
 
 static int tsProcessOne(TsChannelBase* tsChannel) {
 	assertStack("communication", ObdCode::STACK_USAGE_COMMUNICATION, EXPECTED_REMAINING_STACK, -1);
+	tsInstance.handlePendingBurnTimeout(tsChannel);
 
 	if (!tsChannel->isReady()) {
 		chThdSleepMilliseconds(10);

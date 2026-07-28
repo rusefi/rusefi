@@ -34,9 +34,12 @@ public:
 	void handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t page, uint16_t offset, uint16_t count,
 			void *content);
 	void handleCrc32Check(TsChannelBase *tsChannel,  uint32_t page, uint32_t offset, uint32_t count);
+	void handleBurnCommand(TsChannelBase* tsChannel, uint16_t page);
+	void handlePendingBurnTimeout(TsChannelBase* tsChannel);
 	void handlePageReadCommand(TsChannelBase* tsChannel, uint32_t page, uint32_t offset, uint32_t count);
 	void handleScatteredReadCommand(TsChannelBase* tsChannel);
 
 private:
+	void finishPendingBurn(TsChannelBase* tsChannel);
 	void sendErrorCode(TsChannelBase* tsChannel, uint8_t code, /*empty line by default, use nullptr not to log*/const char *msg="");
 };
