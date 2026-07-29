@@ -67,9 +67,10 @@ bool writeToFlashNowImpl() {
 
 	// Do actual write
 	auto result1 = storageWrite(EFI_SETTINGS_RECORD_ID, (uint8_t *)&persistentState, sizeof(persistentState));
-#if (EFI_STORAGE_INT_FLASH == TRUE) && (EFI_STORAGE_MFS != TRUE)
+#if EFI_STORAGE_INT_FLASH == TRUE
 	// The sector was just erased above — write all extra pages into the
-	// now-blank shared region.  Add new pages in extra_flash_pages.cpp.
+	// now-blank shared region. This also applies to hybrid INT_FLASH+MFS
+	// builds: the external backend may not be available at runtime.
 	if (result1 == StorageStatus::Ok) {
 		burnExtraFlashPages();
 	}
