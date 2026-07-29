@@ -10,9 +10,11 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class SingleAsyncJobExecutor implements com.rusefi.DeviceSessionManager.JobExecutor {
     private final Function<AsyncJob, UpdateOperationCallbacks> callbacksProvider;
+    private final Predicate<AsyncJob> recordResult;
 
     private final java.util.List<Runnable> onJobInProgressFinished = new ArrayList<>();
     private final java.util.List<Runnable> onJobAboutToStart = new ArrayList<>();
@@ -30,11 +32,17 @@ public class SingleAsyncJobExecutor implements com.rusefi.DeviceSessionManager.J
     public SingleAsyncJobExecutor(
         final UpdateOperationCallbacks updateOperationCallbacks
     ) {
-        this(job -> updateOperationCallbacks);
+        this(job -> updateOperationCallbacks, job -> true);
     }
 
     public SingleAsyncJobExecutor(Function<AsyncJob, UpdateOperationCallbacks> callbacksProvider) {
+        this(callbacksProvider, job -> true);
+    }
+
+    public SingleAsyncJobExecutor(Function<AsyncJob, UpdateOperationCallbacks> callbacksProvider,
+                                  Predicate<AsyncJob> recordResult) {
         this.callbacksProvider = callbacksProvider;
+        this.recordResult = recordResult;
     }
 
     /** Delegating callbacks that record the terminal outcome before forwarding to the selected UI. */
@@ -139,8 +147,9 @@ public class SingleAsyncJobExecutor implements com.rusefi.DeviceSessionManager.J
             for (Runnable listener : onJobAboutToStart) {
                 listener.run();
             }
-            UpdateOperationCallbacks callbacks = recordingCallbacks(callbacksProvider.apply(job));
-            callbacks.clear(); // resets lastResult to NONE and clears the selected status panel
+            UpdateOperationCallbacks delegate = callbacksProvider.apply(job);
+            UpdateOperationCallbacks callbacks = recordResult.test(job) ? recordingCallbacks(delegate) : delegate;
+            callbacks.clear(); // clears the selected status panel; recorded jobs also reset lastResult
             AsyncJobExecutor.INSTANCE.executeJob(job, callbacks, () -> {
                 for (Runnable listener : onJobWorkerAboutToStart) {
                     listener.run();

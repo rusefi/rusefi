@@ -72,7 +72,14 @@ abstract class AbstractAutoFlashJob extends AsyncJobWithContext<SerialPortWithPa
             connectivityContext.getPortScanner().resume();
             final String detectedPort = awaitEcuPort(TimeUnit.SECONDS.toMillis(60), SYSTEM_CLOCK);
             if (detectedPort != null) {
-                connectivityContext.getPortScanner().cachePort(new PortResult(detectedPort, context.getPort().type));
+                PortResult portToCache = new PortResult(detectedPort, context.getPort().type);
+                for (PortResult candidate : connectivityContext.getCurrentHardware().getKnownPorts()) {
+                    if (detectedPort.equals(candidate.port)) {
+                        portToCache = candidate;
+                        break;
+                    }
+                }
+                connectivityContext.getPortScanner().cachePort(portToCache);
                 lm.reconnect(detectedPort);
             } else {
                 callbacks.logLine("ECU did not re-appear after flashing — reconnect manually once it enumerates.");

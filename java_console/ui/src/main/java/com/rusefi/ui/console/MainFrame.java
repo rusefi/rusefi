@@ -159,8 +159,8 @@ public class MainFrame {
         if (firmwareUpdateInProgress) {
             int choice = JOptionPane.showConfirmDialog(
                 frame.getFrame(),
-                "A firmware update is still in progress. Exiting now may leave the ECU unfinished. Exit anyway?",
-                "Firmware Update In Progress",
+                "An ECU update operation is still in progress. Exiting now may leave the ECU unfinished. Exit anyway?",
+                "ECU Update In Progress",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.WARNING_MESSAGE
             );

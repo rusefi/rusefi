@@ -12,6 +12,39 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SingleAsyncJobExecutorTest {
     @Test
+    void unrecordedJobDoesNotOverwriteRecordedResult() throws Exception {
+        final SingleAsyncJobExecutor executor = new SingleAsyncJobExecutor(
+            job -> UpdateOperationCallbacks.DUMMY,
+            job -> "firmware".equals(job.getName()));
+
+        CountDownLatch firmwareFinished = new CountDownLatch(1);
+        executor.addOnJobInProgressFinishedListener(firmwareFinished::countDown);
+        assertTrue(executor.startJob(completedJob("firmware", true), null));
+        assertTrue(firmwareFinished.await(5, TimeUnit.SECONDS));
+        assertEquals(UpdateFirmwareResult.SUCCESS, executor.getLastResult());
+
+        CountDownLatch tuneFinished = new CountDownLatch(1);
+        executor.addOnJobInProgressFinishedListener(tuneFinished::countDown);
+        assertTrue(executor.startJob(completedJob("tune", false), null));
+        assertTrue(tuneFinished.await(5, TimeUnit.SECONDS));
+        assertEquals(UpdateFirmwareResult.SUCCESS, executor.getLastResult());
+    }
+
+    private static AsyncJob completedJob(String name, boolean success) {
+        return new AsyncJob(name) {
+            @Override
+            public void doJob(UpdateOperationCallbacks callbacks, Runnable onJobFinished) {
+                if (success) {
+                    callbacks.done();
+                } else {
+                    callbacks.error();
+                }
+                onJobFinished.run();
+            }
+        };
+    }
+
+    @Test
     void blockingPreparationDoesNotBlockCallerAndFinishesBeforeJobStarts() throws Exception {
         final SingleAsyncJobExecutor executor = new SingleAsyncJobExecutor(UpdateOperationCallbacks.DUMMY);
         final CountDownLatch preparationStarted = new CountDownLatch(1);
