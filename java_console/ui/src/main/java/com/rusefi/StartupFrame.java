@@ -771,7 +771,7 @@ public class StartupFrame {
         if (offlineConsoleOpen) {
             // [tag:offline_tune] Pre-cache the target so the scanner skips re-inspecting it during the
             // connect read window — otherwise a scan tick could reopen the port mid-read and hang in LOADING.
-            connectivityContext.getPortScanner().cachePort(new PortResult(target.port, target.type));
+            connectivityContext.getPortScanner().cachePort(target);
         }
         connectButton.setEnabled(false);
         connectButton.setText("Connecting...");
@@ -904,7 +904,7 @@ public class StartupFrame {
             // under a different port name — auto-reconnects (handled via onSplashDisconnected re-arming).
             // Do NOT open a second console.
             log.info("onSplashConnected: offline console online on " + target.port + " — caching port, scanner kept alive");
-            connectivityContext.getPortScanner().cachePort(new PortResult(target.port, target.type));
+            connectivityContext.getPortScanner().cachePort(target);
             return;
         }
         connectButton.setText("Connect");

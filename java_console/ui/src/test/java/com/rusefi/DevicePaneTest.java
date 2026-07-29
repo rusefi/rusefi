@@ -48,6 +48,7 @@ public class DevicePaneTest {
         assertTrue(DevicePane.isOfflineCapableTab("Device"));
         assertTrue(DevicePane.isOfflineCapableTab("Tuning"));
         assertTrue(DevicePane.isOfflineCapableTab("Pinout"));
+        assertTrue(DevicePane.isOfflineCapableTab("Manage Tunes"));
 
         assertFalse(DevicePane.isOfflineCapableTab("Gauges"));
         assertFalse(DevicePane.isOfflineCapableTab("Messages"));
@@ -55,7 +56,9 @@ public class DevicePaneTest {
 
         assertTrue(DevicePane.isTabEnabled("Tuning", SessionState.DEVICE_IN_BLT));
         assertTrue(DevicePane.isTabEnabled("Tuning", SessionState.DEVICE_IN_DFU));
+        assertTrue(DevicePane.isTabEnabled("Manage Tunes", SessionState.DEVICE_IN_BLT));
         assertFalse(DevicePane.isTabEnabled("Tuning", SessionState.FLASHING));
+        assertFalse(DevicePane.isTabEnabled("Manage Tunes", SessionState.FLASHING));
         assertTrue(DevicePane.isTabEnabled("Device", SessionState.FLASHING));
         assertTrue(DevicePane.isTabEnabled("Pinout", SessionState.FLASHING));
         assertFalse(DevicePane.isTabEnabled("Messages", SessionState.FLASHING));

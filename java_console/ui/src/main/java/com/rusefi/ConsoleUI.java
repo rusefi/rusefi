@@ -14,7 +14,11 @@ import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.maintenance.StLinkFlasher;
+import com.rusefi.maintenance.jobs.ImportTuneJob;
 import com.rusefi.ui.*;
+import com.rusefi.ui.basic.SingleAsyncJobExecutor;
+import com.rusefi.ui.basic.StatusPanelWithProgressBar;
+import com.rusefi.ui.basic.TuneManagementTab;
 import com.rusefi.ui.console.MainFrame;
 import com.rusefi.ui.console.TabbedPanel;
 import com.rusefi.ui.engine.EngineSnifferPanel;
@@ -22,6 +26,7 @@ import com.rusefi.ui.lua.LuaScriptPanel;
 import com.rusefi.ui.plugins.ConsoleTabProvider;
 import com.rusefi.ui.util.JustOneInstance;
 import com.rusefi.ui.widgets.ConnectionStatusIcon;
+import com.rusefi.ui.widgets.StatusPanel;
 import com.rusefi.ui.wizard.WizardCatalog;
 import com.rusefi.ui.wizard.WizardContainer;
 import com.rusefi.ui.wizard.WizardStep;
@@ -338,8 +343,24 @@ console live data tab is broken #8402
             tabbedPane.addTab("Live Data", LiveDataPane.createLazy(uiContext).getContent());
  */
             PinoutPane pinoutPane = new PinoutPane(uiContext);
-            PortResult initialPort = (port != null) ? new PortResult(port, serialPortType) : null;
+            PortResult initialPort = null;
+            if (port != null) {
+                for (PortResult candidate : connectivityContext.getCurrentHardware().getKnownPorts()) {
+                    if (port.equals(candidate.port)) {
+                        initialPort = candidate;
+                        break;
+                    }
+                }
+                if (initialPort == null) {
+                    initialPort = new PortResult(port, serialPortType);
+                }
+            }
             DeviceSessionManager deviceSessionManager = new DeviceSessionManager(connectivityContext, initialPort);
+            StatusPanelWithProgressBar deviceStatusPanel = new StatusPanelWithProgressBar();
+            StatusPanel tuneStatusPanel = new StatusPanel(250);
+            SingleAsyncJobExecutor consoleJobExecutor = new SingleAsyncJobExecutor(job ->
+                job instanceof ImportTuneJob ? tuneStatusPanel : deviceStatusPanel,
+                job -> !(job instanceof ImportTuneJob));
 
             // [tag:offline_tune] Seed the loaded tune image so config-image-driven panes (e.g. PinoutPane's
             // "Tune use" column) have data with no live ECU — the online path gets this from BinaryProtocol.
@@ -397,10 +418,26 @@ console live data tab is broken #8402
             if (UiProperties.isPinoutEnabled()) {
                 tabbedPane.addTab("Pinout", pinoutPane.getContent());
             }
+
+            final TuneManagementTab tuneManagementTab;
+            if (TuneManagementTab.getTunesManifestUrl() != null) {
+                tuneManagementTab = new TuneManagementTab(
+                    connectivityContext,
+                    uiContext,
+                    consoleJobExecutor,
+                    tuneStatusPanel,
+                    () -> tabbedPane.selectTab("Manage Tunes")
+                );
+                tabbedPane.addTab("Manage Tunes", tuneManagementTab.getContent());
+            } else {
+                tuneManagementTab = null;
+            }
+
             // Single-session device manager [tag:better_ux_for_flashing]: the scanner is kept alive for the whole console
             // lifetime so this one instance can hook / remove / re-connect / DFU / OpenBLT the board.
             DevicePane devicePane = new DevicePane(
                 uiContext, connectivityContext, deviceSessionManager, tabbedPane.tabbedPane,
+                consoleJobExecutor, deviceStatusPanel,
                 picker -> {
                     rollbackPicker.removeAll();
                     rollbackPicker.add(picker, BorderLayout.CENTER);
@@ -415,12 +452,19 @@ console live data tab is broken #8402
 
             addCustomTabs();
 
+            AtomicReference<AvailableHardware> tuneHardware = new AtomicReference<>();
             deviceSessionManager.addListener((state, hardware) -> SwingUtilities.invokeLater(() -> {
                 boolean flashing = state == SessionState.FLASHING;
                 mainFrame.setFirmwareUpdateInProgress(flashing);
                 launchWizardButton.setEnabled(!flashing);
                 if (tuningHolder[0] != null) {
                     tuningHolder[0].setFirmwareUpdateInProgress(flashing);
+                }
+                if (tuneManagementTab != null) {
+                    AvailableHardware effectiveHardware = connectivityContext.getCurrentHardware();
+                    if (tuneHardware.getAndSet(effectiveHardware) != effectiveHardware) {
+                        tuneManagementTab.onHardwareUpdated(effectiveHardware);
+                    }
                 }
             }));
 

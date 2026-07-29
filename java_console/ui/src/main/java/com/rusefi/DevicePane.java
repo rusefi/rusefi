@@ -36,7 +36,7 @@ public class DevicePane {
     private final ProgramSelector selector;
     private final SingleAsyncJobExecutor jobExecutor;
     private final FirmwareRollbackController rollbackController;
-    private final StatusPanelWithProgressBar statusPanel = new StatusPanelWithProgressBar();
+    private final StatusPanelWithProgressBar statusPanel;
     private final JCheckBox autoUpdateBundle = new JCheckBox("Auto-update Software", AutoupdateProperty.get());
     private final JCheckBox migrateSettings = new JCheckBox("Migrate Settings", true);
     // Previous state rendered on the EDT — used to detect the *transition* into a bootloader state so we
@@ -45,15 +45,17 @@ public class DevicePane {
 
     public DevicePane(final UIContext uiContext, final ConnectivityContext connectivityContext,
                       final DeviceSessionManager sessionManager, final JTabbedPane tabbedPane,
+                      final SingleAsyncJobExecutor jobExecutor, final StatusPanelWithProgressBar statusPanel,
                       final Consumer<JComponent> showRollbackPicker, final Runnable closeRollbackPicker) {
         this.connectivityContext = connectivityContext;
         this.sessionManager = sessionManager;
         this.tabbedPane = tabbedPane;
+        this.jobExecutor = jobExecutor;
+        this.statusPanel = statusPanel;
 
-        // Firmware jobs run on a per-tab single executor whose output is the status/progress panel.
+        // Firmware and tune-import jobs share one executor, with output routed to their own status panels.
         // Tab-locking is driven by render() off the session state (which already includes FLASHING as
         // well as the DFU/OpenBLT bootloader states), so no separate job-executor listeners are needed.
-        this.jobExecutor = new SingleAsyncJobExecutor(statusPanel);
         sessionManager.setJobExecutor(jobExecutor);
 
         this.selector = new ProgramSelector(connectivityContext, comboPorts);
@@ -239,7 +241,8 @@ public class DevicePane {
     // ("Tuning") and the pinout reference. Active flashing is stricter: Tuning can write if the old
     // BinaryProtocol is still reachable, so only Device progress and Pinout remain available.
     static boolean isOfflineCapableTab(final String title) {
-        return "Device".equals(title) || "Tuning".equals(title) || "Pinout".equals(title);
+        return "Device".equals(title) || "Tuning".equals(title) || "Pinout".equals(title)
+            || "Manage Tunes".equals(title);
     }
 
     static boolean isTabEnabled(final String title, final SessionState state) {

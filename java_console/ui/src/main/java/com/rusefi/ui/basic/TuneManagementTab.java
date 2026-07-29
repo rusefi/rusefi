@@ -20,6 +20,7 @@ import com.rusefi.tune_manifest.TuneModel;
 import com.rusefi.ui.table.ButtonEditor;
 import com.rusefi.ui.table.ButtonRenderer;
 import com.rusefi.ui.widgets.StatusPanel;
+import org.jetbrains.annotations.Nullable;
 import org.json.simple.parser.ParseException;
 
 import javax.swing.*;
@@ -73,6 +74,27 @@ public class TuneManagementTab {
                              StatusPanel statusPanelTuneTab,
                              Runnable showTuneTab,
                              java.util.function.BiConsumer<IniFileModel, ConfigurationImage> offlineConsoleLauncher) {
+        this(connectivityContext, uiContext, importTuneControl, singleAsyncJobExecutor, statusPanelTuneTab,
+            showTuneTab, offlineConsoleLauncher, true);
+    }
+
+    public TuneManagementTab(ConnectivityContext connectivityContext,
+                             UIContext uiContext,
+                             SingleAsyncJobExecutor singleAsyncJobExecutor,
+                             StatusPanel statusPanelTuneTab,
+                             Runnable showTuneTab) {
+        this(connectivityContext, uiContext, null, singleAsyncJobExecutor, statusPanelTuneTab,
+            showTuneTab, null, false);
+    }
+
+    private TuneManagementTab(ConnectivityContext connectivityContext,
+                              UIContext uiContext,
+                              @Nullable ImportTuneControl importTuneControl,
+                              SingleAsyncJobExecutor singleAsyncJobExecutor,
+                              StatusPanel statusPanelTuneTab,
+                              Runnable showTuneTab,
+                              @Nullable java.util.function.BiConsumer<IniFileModel, ConfigurationImage> offlineConsoleLauncher,
+                              boolean showSplashControls) {
         this.offlineConsoleLauncher = offlineConsoleLauncher;
         Optional<TuneManifestExtension> loadedExtension;
         RuntimeException extensionLoadError;
@@ -86,10 +108,12 @@ public class TuneManagementTab {
         manifestExtension = loadedExtension;
         final RuntimeException finalExtensionLoadError = extensionLoadError;
 
-        Component importTuneButton = importTuneControl.getContent();
+        Component importTuneButton = showSplashControls ? importTuneControl.getContent() : null;
         importStatusPanel = new TuneOperationStatusPanel(statusPanelTuneTab, this::showMainContent);
 
-        importTuneControl.setImportErrorHandler(message -> showImportError(message, statusPanelTuneTab, showTuneTab));
+        if (importTuneControl != null) {
+            importTuneControl.setImportErrorHandler(message -> showImportError(message, statusPanelTuneTab, showTuneTab));
+        }
 
         singleAsyncJobExecutor.addOnJobAboutToStartListener(() -> {
             if (singleAsyncJobExecutor.getJobInProgress().filter(ImportTuneJob.class::isInstance).isPresent()) {
@@ -161,7 +185,7 @@ public class TuneManagementTab {
                         ImportTuneJob.importTuneIntoDeviceViaLiveConnection(
                             liveBp, lm, status, connectivityContext, tuneFileName, singleAsyncJobExecutor,
                             message -> showImportError(message, statusPanelTuneTab, showTuneTab));
-                    } else if (lm != null) {
+                    } else if (lm.isActive()) {
                         log.info("Let's load " + tuneFileName + " via LM");
                         ImportTuneJob.importTuneIntoDeviceViaLiveConnection(
                             lm, status, connectivityContext, tuneFileName, singleAsyncJobExecutor,
@@ -173,58 +197,62 @@ public class TuneManagementTab {
             }
         }));
 
-        JButton loadTuneFileButton = new JButton("Load Tune File");
-        loadTuneFileButton.addActionListener(e -> loadTuneFileOffline());
-        // A bit bigger so it reads as the primary offline action (#9715).
-        loadTuneFileButton.setFont(loadTuneFileButton.getFont().deriveFont(Font.BOLD, 16f));
-        loadTuneFileButton.setMargin(new Insets(12, 28, 12, 28));
+        if (showSplashControls) {
+            JButton loadTuneFileButton = new JButton("Load Tune File");
+            loadTuneFileButton.addActionListener(e -> loadTuneFileOffline());
+            // A bit bigger so it reads as the primary offline action (#9715).
+            loadTuneFileButton.setFont(loadTuneFileButton.getFont().deriveFont(Font.BOLD, 16f));
+            loadTuneFileButton.setMargin(new Insets(12, 28, 12, 28));
 
-        // [tag:offline_tune] Explain what this screen does — without it the splash is three silent
-        // buttons and no hint that a tune can be edited with no ECU attached (#9730).
-        JLabel offlineHint = new JLabel("<html><div style='text-align:center;'>"
-                + "No ECU connected. Load a tune file to view and edit it offline,<br>"
-                + "then connect an ECU to burn your changes.</div></html>");
-        offlineHint.setForeground(Color.DARK_GRAY);
+            // [tag:offline_tune] Explain what this screen does — without it the splash is three silent
+            // buttons and no hint that a tune can be edited with no ECU attached (#9730).
+            JLabel offlineHint = new JLabel("<html><div style='text-align:center;'>"
+                    + "No ECU connected. Load a tune file to view and edit it offline,<br>"
+                    + "then connect an ECU to burn your changes.</div></html>");
+            offlineHint.setForeground(Color.DARK_GRAY);
 
-        // [tag:offline_tune] The import pair pushes a tune to a *connected* ECU; on this pre-connection
-        // splash it has nothing to talk to (clicking just prints "Not connected?"), so only show it
-        // once an ECU is actually connected.
-        Runnable updateImportVisibility = () ->
-                importTuneButton.setVisible(com.rusefi.io.ConnectionStatusLogic.INSTANCE.isConnected());
-        updateImportVisibility.run();
-        com.rusefi.io.ConnectionStatusLogic.INSTANCE.addListener(
-                c -> SwingUtilities.invokeLater(updateImportVisibility));
+            // [tag:offline_tune] The import pair pushes a tune to a *connected* ECU; on this pre-connection
+            // splash it has nothing to talk to (clicking just prints "Not connected?"), so only show it
+            // once an ECU is actually connected.
+            Runnable updateImportVisibility = () ->
+                    importTuneButton.setVisible(com.rusefi.io.ConnectionStatusLogic.INSTANCE.isConnected());
+            updateImportVisibility.run();
+            com.rusefi.io.ConnectionStatusLogic.INSTANCE.addListener(
+                    c -> SwingUtilities.invokeLater(updateImportVisibility));
 
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
-        buttonPanel.add(centerHorizontally(offlineHint));
-        buttonPanel.add(Box.createVerticalStrut(20));
-        buttonPanel.add(centerHorizontally(importTuneButton));
-        buttonPanel.add(Box.createVerticalStrut(28));
-        buttonPanel.add(centerHorizontally(loadTuneFileButton));
+            JPanel buttonPanel = new JPanel();
+            buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+            buttonPanel.add(centerHorizontally(offlineHint));
+            buttonPanel.add(Box.createVerticalStrut(20));
+            buttonPanel.add(centerHorizontally(importTuneButton));
+            buttonPanel.add(Box.createVerticalStrut(28));
+            buttonPanel.add(centerHorizontally(loadTuneFileButton));
 
-        if (tunesManifestUrl != null) {
-            // Keep the tune list but cap it at ~80% of the height, with the buttons in the lower 20%,
-            // so they aren't pinned to the very bottom edge of the now-maximized splash (#9715).
-            JPanel body = new JPanel(new GridBagLayout());
-            GridBagConstraints c = new GridBagConstraints();
-            c.gridx = 0;
-            c.gridy = 0;
-            c.weightx = 1;
-            c.weighty = 0.8;
-            c.fill = GridBagConstraints.BOTH;
-            body.add(centerPanel, c);
-            c.gridy = 1;
-            c.weighty = 0.2;
-            c.fill = GridBagConstraints.NONE;
-            c.anchor = GridBagConstraints.CENTER;
-            body.add(buttonPanel, c);
-            mainContent.add(body, BorderLayout.CENTER);
-        } else {
-            // No tune list available — just center the buttons in the tab (#9715).
-            JPanel centered = new JPanel(new GridBagLayout());
-            centered.add(buttonPanel, new GridBagConstraints());
-            mainContent.add(centered, BorderLayout.CENTER);
+            if (tunesManifestUrl != null) {
+                // Keep the tune list but cap it at ~80% of the height, with the buttons in the lower 20%,
+                // so they aren't pinned to the very bottom edge of the now-maximized splash (#9715).
+                JPanel body = new JPanel(new GridBagLayout());
+                GridBagConstraints c = new GridBagConstraints();
+                c.gridx = 0;
+                c.gridy = 0;
+                c.weightx = 1;
+                c.weighty = 0.8;
+                c.fill = GridBagConstraints.BOTH;
+                body.add(centerPanel, c);
+                c.gridy = 1;
+                c.weighty = 0.2;
+                c.fill = GridBagConstraints.NONE;
+                c.anchor = GridBagConstraints.CENTER;
+                body.add(buttonPanel, c);
+                mainContent.add(body, BorderLayout.CENTER);
+            } else {
+                // No tune list available — just center the buttons in the tab (#9715).
+                JPanel centered = new JPanel(new GridBagLayout());
+                centered.add(buttonPanel, new GridBagConstraints());
+                mainContent.add(centered, BorderLayout.CENTER);
+            }
+        } else if (tunesManifestUrl != null) {
+            mainContent.add(centerPanel, BorderLayout.CENTER);
         }
 
         totalContent.add(mainContent, MAIN_CARD);
@@ -380,6 +408,9 @@ public class TuneManagementTab {
 
     /** [tag:offline_tune] Lets the user pick an .msq and open the console offline (no ECU connection). */
     private void loadTuneFileOffline() {
+        if (offlineConsoleLauncher == null) {
+            return;
+        }
         JFileChooser chooser = new JFileChooser();
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         chooser.setFileFilter(new FileNameExtensionFilter("Tune files (.msq)", "msq"));
