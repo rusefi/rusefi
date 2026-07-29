@@ -476,7 +476,11 @@ public class StartupFrame {
                 return;
             }
             startupUpdateActions.onHardwareUpdated();
+            if (!offlineConsoleOpen) {
+                tuneManagementTab.onHardwareUpdated(currentHardware);
+            }
         }));
+        tuneManagementTab.onHardwareUpdated(connectivityContext.getCurrentHardware());
 
         wizardContainer = new WizardContainer(uiContext, /*compact=*/true);
         wizardContainer.setOnWizardExit(() -> {
