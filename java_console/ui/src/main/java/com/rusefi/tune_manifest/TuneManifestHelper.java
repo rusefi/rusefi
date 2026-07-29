@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
+import java.util.function.BooleanSupplier;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -134,13 +135,25 @@ public class TuneManifestHelper {
 
     public static void downloadAllTunes(String baseUrl, TuneManifestExtension extension, AvailableHardware hardware,
                                         Callback callback) throws IOException, ParseException {
+        downloadAllTunes(baseUrl, extension, hardware, () -> true, callback);
+    }
+
+    public static void downloadAllTunes(String baseUrl, TuneManifestExtension extension, AvailableHardware hardware,
+                                        BooleanSupplier shouldContinue, Callback callback) throws IOException, ParseException {
         Objects.requireNonNull(extension, "extension");
         Objects.requireNonNull(hardware, "hardware");
-        downloadAllTunesInternal(baseUrl, extension, hardware, callback);
+        Objects.requireNonNull(shouldContinue, "shouldContinue");
+        downloadAllTunesInternal(baseUrl, extension, hardware, shouldContinue, callback);
     }
 
     private static void downloadAllTunesInternal(String baseUrl, @Nullable TuneManifestExtension extension,
                                                  @Nullable AvailableHardware hardware, Callback callback) throws IOException, ParseException {
+        downloadAllTunesInternal(baseUrl, extension, hardware, () -> true, callback);
+    }
+
+    private static void downloadAllTunesInternal(String baseUrl, @Nullable TuneManifestExtension extension,
+                                                 @Nullable AvailableHardware hardware, BooleanSupplier shouldContinue,
+                                                 Callback callback) throws IOException, ParseException {
         String localManifest = downloadFile(baseUrl, baseUrl + MANIFEST_FILE_NAME, MANIFEST_FILE_NAME, "application/json");
         if (localManifest == null) {
             throw new IOException("Manifest not found at " + baseUrl + MANIFEST_FILE_NAME);
@@ -148,6 +161,9 @@ public class TuneManifestHelper {
         List<TuneModel> tunes = parseManifest(localManifest, extension, hardware);
 
         for (TuneModel t : tunes) {
+            if (!shouldContinue.getAsBoolean()) {
+                return;
+            }
             String localTuneName = t.getSaferLocalFileName();
             // at the moment we always download latest version of all tunes
             String localFile = downloadFile(baseUrl, t.getUrl(), localTuneName);

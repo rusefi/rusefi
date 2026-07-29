@@ -18,6 +18,10 @@ public interface TuneManifestExtension {
         return true;
     }
 
+    default String getSelectionWarning(AvailableHardware hardware) {
+        return null;
+    }
+
     static Optional<TuneManifestExtension> load() {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         if (classLoader == null) {

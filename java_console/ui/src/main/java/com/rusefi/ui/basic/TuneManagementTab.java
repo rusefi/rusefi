@@ -279,17 +279,28 @@ public class TuneManagementTab {
                     return;
                 }
                 try {
+                    String warning = manifestExtension.isPresent()
+                        ? manifestExtension.get().getSelectionWarning(hardware)
+                        : null;
+                    if (warning != null) {
+                        SwingUtilities.invokeLater(() -> {
+                            if (loadSequence == tuneLoadSequence.get()) {
+                                status.setText(warning);
+                            }
+                        });
+                    }
                     TuneManifestHelper.Callback callback = downloadedTunes -> SwingUtilities.invokeLater(() -> {
                         if (loadSequence == tuneLoadSequence.get()) {
-                            displayTunes(downloadedTunes);
+                            displayTunes(downloadedTunes, warning);
                         }
                     });
                     if (manifestExtension.isPresent()) {
-                        TuneManifestHelper.downloadAllTunes(tunesManifestUrl, manifestExtension.get(), hardware, callback);
+                        TuneManifestHelper.downloadAllTunes(tunesManifestUrl, manifestExtension.get(), hardware,
+                            () -> loadSequence == tuneLoadSequence.get(), callback);
                     } else {
                         TuneManifestHelper.downloadAllTunes(tunesManifestUrl, callback);
                     }
-                } catch (IOException | ParseException e) {
+                } catch (IOException | ParseException | RuntimeException e) {
                     if (loadSequence != tuneLoadSequence.get()) {
                         return;
                     }
@@ -321,9 +332,9 @@ public class TuneManagementTab {
         AutoupdateUtil.trueLayoutAndRepaint(centerPanel);
     }
 
-    private void displayTunes(List<TuneModel> tunes) {
+    private void displayTunes(List<TuneModel> tunes, String warning) {
         this.tunes = tunes;
-        status.setText(tunes.size() + " tunes downloaded!");
+        status.setText(warning == null ? tunes.size() + " tunes downloaded!" : warning);
         showTuneTable();
         tableModel.fireTableDataChanged();
     }
