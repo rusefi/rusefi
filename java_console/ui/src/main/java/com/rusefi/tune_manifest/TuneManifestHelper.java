@@ -1,6 +1,7 @@
 package com.rusefi.tune_manifest;
 
 import com.devexperts.logging.Logging;
+import com.rusefi.AvailableHardware;
 import com.rusefi.core.FileUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,6 +18,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -90,6 +92,11 @@ public class TuneManifestHelper {
     }
 
     static List<TuneModel> parseManifest(String localManifest) throws IOException, ParseException {
+        return parseManifest(localManifest, null, null);
+    }
+
+    static List<TuneModel> parseManifest(String localManifest, @Nullable TuneManifestExtension extension,
+                                         @Nullable AvailableHardware hardware) throws IOException, ParseException {
         try {
             List<TuneModel> tunes = new ArrayList<>();
             JSONParser parser = new JSONParser();
@@ -98,11 +105,17 @@ public class TuneManifestHelper {
                 JSONArray topLevelArray = (JSONArray) obj;
                 for (int i = 0; i < topLevelArray.size(); i++) {
                     JSONObject object = (JSONObject) topLevelArray.get(i);
-                    tunes.add(TuneModel.parse(object));
+                    TuneModel tune = TuneModel.parse(object);
+                    if (extension != null) {
+                        tune = Objects.requireNonNull(extension.parse(object, tune), "TuneManifestExtension.parse returned null");
+                    }
+                    if (extension == null || extension.includeTune(tune, hardware)) {
+                        tunes.add(tune);
+                    }
                 }
             }
             return tunes;
-        } catch (ClassCastException | ParseException e) {
+        } catch (RuntimeException | ParseException e) {
             throw new ManifestParseException(readFileBodySafely(localManifest), e);
         }
     }
@@ -116,11 +129,23 @@ public class TuneManifestHelper {
     }
 
     public static void downloadAllTunes(String baseUrl, Callback callback) throws IOException, ParseException {
+        downloadAllTunesInternal(baseUrl, null, null, callback);
+    }
+
+    public static void downloadAllTunes(String baseUrl, TuneManifestExtension extension, AvailableHardware hardware,
+                                        Callback callback) throws IOException, ParseException {
+        Objects.requireNonNull(extension, "extension");
+        Objects.requireNonNull(hardware, "hardware");
+        downloadAllTunesInternal(baseUrl, extension, hardware, callback);
+    }
+
+    private static void downloadAllTunesInternal(String baseUrl, @Nullable TuneManifestExtension extension,
+                                                 @Nullable AvailableHardware hardware, Callback callback) throws IOException, ParseException {
         String localManifest = downloadFile(baseUrl, baseUrl + MANIFEST_FILE_NAME, MANIFEST_FILE_NAME, "application/json");
         if (localManifest == null) {
             throw new IOException("Manifest not found at " + baseUrl + MANIFEST_FILE_NAME);
         }
-        List<TuneModel> tunes = parseManifest(localManifest);
+        List<TuneModel> tunes = parseManifest(localManifest, extension, hardware);
 
         for (TuneModel t : tunes) {
             String localTuneName = t.getSaferLocalFileName();
