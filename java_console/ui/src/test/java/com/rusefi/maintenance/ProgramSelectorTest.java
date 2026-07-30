@@ -11,6 +11,7 @@ import static com.rusefi.maintenance.ProgramSelector.mainButtonModeFor;
 import static com.rusefi.maintenance.ProgramSelector.resolveFlashPort;
 import static com.rusefi.maintenance.UpdateMode.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -144,5 +145,19 @@ public class ProgramSelectorTest {
     public void firmwareControlsStayVisibleWhileJobRunsWithoutDetectedHardware() {
         assertTrue(ProgramSelector.shouldShowFirmwareControls(true, true, false));
         assertTrue(ProgramSelector.shouldShowFirmwareControls(true, false, true));
+    }
+
+    @Test
+    public void syntheticDfuTargetIsNotTreatedAsSerialPort() {
+        assertFalse(ProgramSelector.hasRealSerialPort(Collections.singletonList(port(SerialPortType.Dfu))));
+        assertTrue(ProgramSelector.hasRealSerialPort(Collections.singletonList(port(SerialPortType.Ecu))));
+    }
+
+    @Test
+    public void mainDfuActionRequiresPlatformSupportButOpenBltDoesNot() {
+        assertTrue(ProgramSelector.shouldEnableMainButton(false, true, false, DFU_MANUAL, true));
+        assertFalse(ProgramSelector.shouldEnableMainButton(false, true, false, DFU_MANUAL, false));
+        assertTrue(ProgramSelector.shouldEnableMainButton(true, false, false, OPENBLT_MANUAL, false));
+        assertFalse(ProgramSelector.shouldEnableMainButton(true, false, true, OPENBLT_MANUAL, true));
     }
 }
