@@ -58,11 +58,6 @@ public class ConnectionAndMeta {
         return signatureWhiteLabel;
     }
 
-    /*
-        public static boolean showUpdateCalibrations() {
-            return getBoolean("show_update_calibrations");
-        }
-    */
     public static boolean getBoolean(String propertyName) {
         return getBoolean(propertyName, getProperties());
     }
