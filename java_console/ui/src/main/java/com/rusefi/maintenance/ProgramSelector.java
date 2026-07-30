@@ -73,12 +73,13 @@ public class ProgramSelector {
             executeJob(splitButton, mainButtonModeFor(targetPort), targetPort);
         });
 
-        // Keep the main button label in sync with whatever port is currently selected. The combo is
+        // Keep the main button label and enabled state in sync with whatever port is currently selected. The combo is
         // shared with the Connect tab and is repopulated/re-selected after apply() runs, so drive the
-        // text off selection changes (same source the action reads) rather than off apply()'s snapshot.
+        // control off selection changes (same source the action reads) rather than off apply()'s snapshot.
         comboPorts.addItemListener(e -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
                 refreshMainButtonText();
+                apply(connectivityContext.getCurrentHardware());
             }
         });
         refreshMainButtonText();
@@ -560,30 +561,34 @@ public class ProgramSelector {
         updateModeAndButton.setVisible(shouldShowFirmwareControls(
             currentHardware.isEmpty(), isJobRunning, additionalControlVisible));
 
-        boolean hasSerialPorts = !currentHardware.getKnownPorts().isEmpty();
+        final List<PortResult> knownPorts = currentHardware.getKnownPorts();
+        boolean hasSerialPorts = hasRealSerialPort(knownPorts);
         boolean hasDfuDevice = currentHardware.isDfuFound();
+        boolean supportsDfu = DfuFlasher.isDfuProgrammingSupported();
 
         JPopupMenu popupMenu = new JPopupMenu();
 
-        if (FileLog.isWindows()) {
-            boolean requireBlt = FindFileHelper.isObfuscated()
-                || isForeignBoardOnUniversalBundle(connectivityContext.getConnectedEcuTarget());
+        boolean requireBlt = FindFileHelper.isObfuscated()
+            || isForeignBoardOnUniversalBundle(connectivityContext.getConnectedEcuTarget());
+        boolean canUseDfu = supportsDfu && !requireBlt;
 
-            if (!requireBlt) {
-                if (hasSerialPorts) {
-                    addMenuItem(popupMenu, DFU_AUTO);
-                }
-                if (hasDfuDevice) {
-                    addMenuItem(popupMenu, DFU_MANUAL);
-                    addMenuItem(popupMenu, DFU_ERASE);
-                    if (DfuFlasher.haveBootloaderBinFile()) {
-                        addMenuItem(popupMenu, INSTALL_OPENBLT);
-                    }
-                }
+        if (canUseDfu) {
+            if (hasSerialPorts) {
+                addMenuItem(popupMenu, DFU_AUTO);
                 addMenuItem(popupMenu, DFU_SWITCH);
-                if (currentHardware.isStLinkConnected()) {
-                    addMenuItem(popupMenu, ST_LINK);
+            }
+            if (hasDfuDevice) {
+                addMenuItem(popupMenu, DFU_MANUAL);
+                addMenuItem(popupMenu, DFU_ERASE);
+                if (DfuFlasher.haveBootloaderBinFile()) {
+                    addMenuItem(popupMenu, INSTALL_OPENBLT);
                 }
+            }
+        }
+
+        if (FileLog.isWindows()) {
+            if (!requireBlt && currentHardware.isStLinkConnected()) {
+                addMenuItem(popupMenu, ST_LINK);
             }
             if (currentHardware.isPCANConnected()) {
                 addMenuItem(popupMenu, OPENBLT_CAN);
@@ -598,7 +603,8 @@ public class ProgramSelector {
         int menuItemCount = popupMenu.getComponentCount();
 
         splitButton.setPopupMenu(menuItemCount > 0 ? popupMenu : null);
-        splitButton.setMainButtonEnabled(hasSerialPorts && !isJobRunning);
+        splitButton.setMainButtonEnabled(shouldEnableMainButton(
+            hasSerialPorts, hasDfuDevice, isJobRunning, mainButtonModeFor(resolveFlashPort()), canUseDfu));
         splitButton.setArrowButtonEnabled(menuItemCount > 0 && !isJobRunning);
 
         // Keep the main-button mode/label in sync with the connection state too (not just combo changes):
@@ -607,6 +613,22 @@ public class ProgramSelector {
 
         AutoupdateUtil.trueLayoutAndRepaint(splitButton);
         AutoupdateUtil.trueLayoutAndRepaint(content);
+    }
+
+    static boolean hasRealSerialPort(List<PortResult> ports) {
+        return ports.stream().anyMatch(port -> port.type != SerialPortType.Dfu);
+    }
+
+    static boolean shouldEnableMainButton(
+        boolean hasSerialPorts,
+        boolean hasDfuDevice,
+        boolean jobRunning,
+        UpdateMode mode,
+        boolean supportsDfu
+    ) {
+        boolean targetAvailable = mode == DFU_MANUAL ? hasDfuDevice : hasSerialPorts;
+        boolean modeSupported = mode != DFU_MANUAL || supportsDfu;
+        return targetAvailable && modeSupported && !jobRunning;
     }
 
     static boolean shouldShowFirmwareControls(

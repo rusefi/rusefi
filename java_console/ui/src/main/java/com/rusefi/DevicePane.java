@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
+import com.rusefi.maintenance.DfuFlasher;
 import com.rusefi.maintenance.ProgramSelector;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.basic.FirmwareRollbackController;
@@ -181,10 +182,12 @@ public class DevicePane {
 
     static String bootloaderGuidance(final SessionState state) {
         if (state == SessionState.DEVICE_IN_DFU) {
-            // DFU flashing is Windows-only in rusEFI (STM32_Programmer_CLI.exe); elsewhere it's a dead end.
-            return FileLog.isWindows()
-                ? "Board is in the DFU bootloader — click Update Firmware to flash."
-                : "Board is in the DFU bootloader. DFU flashing requires Windows — power-cycle to exit, or use OpenBLT.";
+            if (FileLog.isLinux()) {
+                return "Board is in the DFU bootloader - click Update Firmware to flash with dfu-util.";
+            }
+            return DfuFlasher.isDfuProgrammingSupported()
+                ? "Board is in the DFU bootloader - click Update Firmware to flash."
+                : "Board is in the DFU bootloader. DFU flashing is not supported on this platform.";
         }
         return "Board is in the OpenBLT bootloader — click Update Firmware to flash.";
     }

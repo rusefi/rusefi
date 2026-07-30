@@ -27,12 +27,13 @@ public class DevicePaneTest {
     public void dfuGuidanceMentionsDfuAndReflectsPlatformSupport() {
         String guidance = DevicePane.bootloaderGuidance(SessionState.DEVICE_IN_DFU);
         assertTrue(guidance.contains("DFU"), guidance);
-        if (FileLog.isWindows()) {
-            // DFU flashing works here — send the user to the update button
+        if (FileLog.isLinux()) {
+            assertTrue(guidance.contains("dfu-util"), guidance);
+            assertTrue(guidance.contains("Update Firmware"), guidance);
+        } else if (FileLog.isWindows()) {
             assertTrue(guidance.contains("Update Firmware"), guidance);
         } else {
-            // DFU flashing is Windows-only (STM32_Programmer_CLI.exe) — say so instead of a dead end
-            assertTrue(guidance.contains("Windows"), guidance);
+            assertTrue(guidance.contains("not supported"), guidance);
         }
     }
 
