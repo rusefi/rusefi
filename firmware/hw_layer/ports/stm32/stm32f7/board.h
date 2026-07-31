@@ -51,9 +51,12 @@
 #define DEFAULT_GPIO_SPEED PIN_OSPEED_HIGH
 
 /*
- * Ethernet PHY type.
+ * Ethernet PHY type. Default matches Nucleo-F767 (LAN8742A); boards with a
+ * different PHY override via DDEFS, e.g. -DBOARD_PHY_ID=MII_LAN8720_ID
  */
+#ifndef BOARD_PHY_ID
 #define BOARD_PHY_ID                MII_LAN8742A_ID
+#endif
 #define BOARD_PHY_RMII
 
 /*

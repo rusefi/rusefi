@@ -58,7 +58,31 @@ static void premiumQuickTestInitHardware() {
 	canStb.setValue(0);
 }
 
+// On-module LAN8720A RMII PHY, same MCU pins as Nucleo-F767:
+// REF_CLK=PA1 MDIO=PA2 CRS_DV=PA7 MDC=PC1 RXD0=PC4 RXD1=PC5
+// TX_EN=PG11 TXD0=PG13 TXD1=PG14, PHY nRST=PE11.
+// AF must be set before the MAC driver probes the PHY, hence preHalInit
+// (see nucleo_h743 for the same pattern).
+static void premiumQuickTestPreHalInit() {
+	efiSetPadMode("Ethernet",  Gpio::A1, PAL_MODE_ALTERNATE(0xb));
+	efiSetPadMode("Ethernet",  Gpio::A2, PAL_MODE_ALTERNATE(0xb));
+	efiSetPadMode("Ethernet",  Gpio::A7, PAL_MODE_ALTERNATE(0xb));
+
+	efiSetPadMode("Ethernet",  Gpio::C1, PAL_MODE_ALTERNATE(0xb));
+	efiSetPadMode("Ethernet",  Gpio::C4, PAL_MODE_ALTERNATE(0xb));
+	efiSetPadMode("Ethernet",  Gpio::C5, PAL_MODE_ALTERNATE(0xb));
+
+	efiSetPadMode("Ethernet", Gpio::G11, PAL_MODE_ALTERNATE(0xb));
+	efiSetPadMode("Ethernet", Gpio::G13, PAL_MODE_ALTERNATE(0xb));
+	efiSetPadMode("Ethernet", Gpio::G14, PAL_MODE_ALTERNATE(0xb));
+
+	// release PHY reset (no pull resistor on the net - must be driven)
+	efiSetPadMode("Ethernet PHY nRST", Gpio::E11, PAL_MODE_OUTPUT_PUSHPULL);
+	palSetPad(GPIOE, 11);
+}
+
 void setup_custom_board_overrides() {
+	custom_board_preHalInit = premiumQuickTestPreHalInit;
 	custom_board_InitHardware = premiumQuickTestInitHardware;
 	custom_board_DefaultConfiguration = premiumQuickTestDefaultConfiguration;
 }

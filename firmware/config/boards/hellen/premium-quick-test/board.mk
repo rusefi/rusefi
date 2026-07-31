@@ -18,6 +18,11 @@ DDEFS += -DSTM32_CAN_USE_CAN3=TRUE
 # (AIN2/AIN3/AIN5), see stm32_adc_v2.cpp
 DDEFS += -DADC_MUX_PIN=Gpio::H15
 
+# on-module LAN8720A RMII PHY: TunerStudio over TCP (ethernet_console + lwIP).
+# RMII pin AF and PHY nRST release happen in board preHalInit
+EFI_ETHERNET = yes
+DDEFS += -DBOARD_PHY_ID=MII_LAN8720_ID
+
 # USB FS device on module pads USBM/USBP (PA11/PA12, AF10) - same as the
 # STM32F7 port defaults, stated explicitly; module has no USB ID pad, and
 # VBUS sensing is ignored (BOARD_OTG_NOVBUSSENS in the port board.h)

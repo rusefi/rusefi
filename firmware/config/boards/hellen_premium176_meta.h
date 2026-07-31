@@ -169,9 +169,12 @@
 //   NCS=PB10 CLK=PB2 IO0=PC9 IO1=PD12 IO2=PE2 IO3=PD13
 // LIS2DH12 accelerometer on SPI4: CS=PE4 SCK=PE12 MISO=PE5 MOSI=PE6
 // LPS22HB barometer on I2C2 (PH4/PH5, shared with SCL/SDA pads)
-// LAN8720A RMII Ethernet PHY: MDC=PC1 MDIO=PA2 nRST=PE11;
-//   frame-side pads are only the magnetics pairs (ETH_TXP/N, ETH_RXP/N) + LED
-// KLMAG1JETD 16GB eMMC footprint is present but its SDMMC bus is NOT routed
-//   in module revision jlc-0.1 (PC6/PC7 are unconnected)
+// LAN8720A RMII Ethernet PHY, fully routed (same MCU pins as Nucleo-F767):
+//   REF_CLK=PA1 MDIO=PA2 CRS_DV=PA7 MDC=PC1 RXD0=PC4 RXD1=PC5
+//   TX_EN=PG11 TXD0=PG13 TXD1=PG14 nRST=PE11 (no pull - drive high);
+//   frame-side pads are the magnetics pairs (ETH_TXP/N, ETH_RXP/N) + LED
+// KLMAG1JETD 16GB eMMC, fully routed as 8-bit SDMMC2 (via series Rs):
+//   CK=PD6 CMD=PD7 D0=PG9 D1=PG10 D2=PB3 D3=PG12 D4=PB8 D5=PB9
+//   D6=PC6 D7=PC7 RST_n=PI3
 // USB FS device on PA11/PA12, VBUS sensing on PA9 (OTG_FS_VBUS via divider)
 // SWD on PA13/PA14; 8MHz crystal on PH0/PH1; wakeup input on PI8

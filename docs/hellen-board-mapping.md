@@ -318,6 +318,16 @@ report matches / mismatches / one-sided entries.
 - If `pdftotext` returns nothing, the PDF is image-only and needs rendering
   (`pdftoppm`) plus manual reading or OCR - not currently the case for any
   hellen-one module PDF.
+- When parsing a P-CAD ASCII netlist (`*-pcad.PCB`) as the ground truth,
+  extract `(net ...)` blocks with *brace matching*, never with a regex that
+  assumes consecutive `(node ...)` entries - a net block containing any
+  other sub-element silently truncates, and the dropped nets read as
+  "unrouted". A real audit of mega-mcu-premium lost 27 of 312 nets this way
+  (exactly the Ethernet RMII + eMMC buses) and produced a false
+  "not routed" conclusion. Sanity-check by counting `(net ` occurrences vs
+  parsed nets, and corroborate suspicious absences against copper: count
+  `netNameRef "<net>"` occurrences (tracks/vias) and compare with a
+  known-routed net's count.
 
 ## Worked example: uaefi injector 1
 
