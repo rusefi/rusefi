@@ -80,6 +80,7 @@ The mapping "signal name -> STM32 pin" lives in meta headers in
 | `hellen_mm64_meta.h` | `MM64_*` defines for the 64-pin megamodule |
 | `hellen_mm100_meta.h` | `MM100_*` defines for the 100-pin megamodule |
 | `hellen_mm176_meta.h` | `MM176_*` defines for the 176-pin megamodule |
+| `hellen_premium176_meta.h` | `MMP176_*` defines for the 176-pin STM32F767 "mega-mcu-premium" megamodule |
 | `hellen_meta.h` | includes all three MM headers, plus `H144_*`/`H176_*` names and shared SPI/CAN/UART pins |
 | `hellen_original_mcu_meta.h` | `H176_*` names specific to the original (non-mega) MCU placement |
 | `hellen_all_meta.h` | includes everything |

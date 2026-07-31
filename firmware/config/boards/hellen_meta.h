@@ -9,6 +9,7 @@
 #include "hellen_mm64_meta.h"
 #include "hellen_mm100_meta.h"
 #include "hellen_mm176_meta.h"
+#include "hellen_premium176_meta.h"
 
 // stm32 UART8
 #define H144_UART8_RX E0
