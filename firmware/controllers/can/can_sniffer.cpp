@@ -90,8 +90,9 @@ void CanSniffer::handle_can_message(const size_t busIndex, const CANRxFrame &cms
 	if (!m_started)
 		return;
 	*/
-	if (!terminal_open)
+	if (!terminal_open) {
 		return;
+	}
 	// TODO: check busIndex?
 
 
@@ -256,6 +257,7 @@ void CanSniffer::executeCommand() {
 		case 't': // transmit standard ID messages
 		case 'r':
 			if (transmit_enabled && send_can_message_from_string(str)) {
+				// Ack instantly
 				putstr("z\r");
 				//putstr(loopback, str);
 			}
@@ -267,6 +269,7 @@ void CanSniffer::executeCommand() {
 		case 'T': // transmit extended ID messages
 		case 'R':
 			if (transmit_enabled && send_can_message_from_string(str)) {
+				// Ack instantly
 				putstr("Z\r");
 			}
 			else {
