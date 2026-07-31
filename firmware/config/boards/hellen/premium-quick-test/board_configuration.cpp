@@ -6,6 +6,7 @@
  */
 
 #include "pch.h"
+#include "defaults.h"
 #include "hellen_meta.h"
 #include "board_overrides.h"
 
@@ -27,6 +28,14 @@ static void premiumQuickTestDefaultConfiguration() {
 	// on-module LPS22HB barometer, bit-banged I2C on the module SCL/SDA pads
 	engineConfiguration->lps25BaroSensorScl = Gpio::MMP176_I2C_SCL;
 	engineConfiguration->lps25BaroSensorSda = Gpio::MMP176_I2C_SDA;
+
+	// Redundant TPS and pedal on the muxed analog inputs (ADC_MUX_PIN=PH15
+	// in board.mk). Each mux pair shares one MCU ADC pin, so primary and
+	// secondary tracks stay on the same physical channel:
+	//   TPS1 track 1 -> pad AIN1, track 2 -> pad AIN2 (both PB1)
+	setTPS1Inputs(MMP176_AIN1_ANALOG, MMP176_AIN2_ANALOG);
+	//   pedal track 1 -> pad AIN4, track 2 -> pad AIN3 (both PB0)
+	setPPSInputs(MMP176_AIN4_ANALOG, MMP176_AIN3_ANALOG);
 
 	// three on-module TJA1042T/3 transceivers
 	engineConfiguration->canRxPin = Gpio::MMP176_CAN1_RX;
