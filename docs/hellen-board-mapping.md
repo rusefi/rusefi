@@ -128,6 +128,12 @@ the rusefi repo. Shared makefiles wire in the platform:
   board-ID pins (`HELLEN_BOARD_ID_PIN_1/2`), and per-size extras (ADC mux
   pin, software knock, onboard accelerometer).
 
+Gotcha: core files resolve meta names only when `HW_HELLEN` is set -
+`efi_gpio.cpp` includes `hellen_all_meta.h` under `#if HW_HELLEN`, so a
+board that passes `-DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::MM100_LED1_RED`
+without including `hellen-common.mk` (which defines `HW_HELLEN=1`) fails
+with "'MM100_LED1_RED' is not a member of 'Gpio'".
+
 `board_configuration.cpp` then assigns defaults using only meta names, e.g.
 from the uaefi board:
 
