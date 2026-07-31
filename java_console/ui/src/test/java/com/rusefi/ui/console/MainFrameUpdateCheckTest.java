@@ -3,7 +3,11 @@ package com.rusefi.ui.console;
 import com.rusefi.core.RusEfiSignature;
 import org.junit.jupiter.api.Test;
 
+import javax.swing.Icon;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MainFrameUpdateCheckTest {
@@ -83,5 +87,16 @@ public class MainFrameUpdateCheckTest {
         // SREC name without _update suffix should still parse correctly
         String srec = "rusefi_development_2026-05-09_uaefi_pro_4226383888_8849742d4267db6407b1400ae917a1ed39795d32.srec";
         assertFalse(MainFrame.needsFirmwareUpdate(ECU_SIG, srec));
+    }
+
+    @Test
+    public void menuIconsLoadAtExpectedSize() {
+        String[] icons = {"folder-open", "floppy", "logout", "refresh", "controller"};
+        for (String name : icons) {
+            Icon icon = MainFrame.loadMenuIcon(name);
+            assertNotNull(icon, name + " should load");
+            assertEquals(18, icon.getIconWidth(), name + " icon width");
+            assertEquals(18, icon.getIconHeight(), name + " icon height");
+        }
     }
 }
