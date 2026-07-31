@@ -592,6 +592,13 @@ typedef enum __attribute__ ((__packed__)) {
 } can_broadcast_channel_e;
 
 typedef enum __attribute__ ((__packed__)) {
+	CAN_BUS_NONE = 0,
+	CAN_BUS_CAN1 = 1,
+	CAN_BUS_CAN2 = 2,
+	CAN_BUS_CAN3 = 3,
+} can_bus_channel_e;
+
+typedef enum __attribute__ ((__packed__)) {
 	TCHARGE_MODE_RPM_TPS = 0,
 	TCHARGE_MODE_AIR_INTERP = 1,
 	TCHARGE_MODE_AIR_INTERP_TABLE = 2,

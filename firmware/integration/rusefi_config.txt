@@ -341,6 +341,7 @@ struct_no_prefix engine_configuration_s
 
 #define PRIMARY_CAN_NAME "Primary CAN"
 #define SECONDARY_CAN_NAME "Secondary CAN"
+#define TERTIARY_CAN_NAME "Third CAN"
 
 #define I2C_BUS_TOTAL_COUNT 4
 
@@ -391,6 +392,9 @@ custom SentEtbType 1 bits, S08, @OFFSET@, [0:1], @@SentEtbType_enum@@
 
 #define SentFuelHighPressureType_enum "None", "GM type", "Custom"
 custom SentFuelHighPressureType 1 bits, U08, @OFFSET@, [0:1], @@SentFuelHighPressureType_enum@@
+
+#define can_bus_channel_e_enum "None", "CAN1", "CAN2", "CAN3"
+custom can_bus_channel_e 1 bits, U08, @OFFSET@, [0:1], @@can_bus_channel_e_enum@@
 
 #define SentInput_enum "None", "SENT input 1",  "SENT input 2",  "SENT input 3",  "SENT input 4",  "SENT input 5",  "SENT input 6",  "SENT input 7"
 custom SentInput 1 bits, U08, @OFFSET@, [0:2], @@SentInput_enum@@
@@ -2019,6 +2023,8 @@ end_struct
 	end_struct
 
 	i2c_config_s[I2C_BUS_TOTAL_COUNT iterate] i2c;
+
+	include_file controllers/can/can_sniffer.txt
 ! end of engine_configuration_s
 end_struct
 
