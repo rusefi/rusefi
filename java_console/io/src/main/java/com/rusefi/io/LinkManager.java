@@ -246,6 +246,12 @@ public class LinkManager implements Closeable {
         close();
     }
 
+    /** Re-enable automatic reconnect without immediately opening a port. */
+    public void allowAutomaticReconnect() {
+        log.info("allowAutomaticReconnect");
+        isDisconnectedByUser = false;
+    }
+
     public void reconnect() {
         log.info("reconnect");
         isDisconnectedByUser = false;
