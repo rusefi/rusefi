@@ -85,16 +85,16 @@ static void premiumQuickTestPreHalInit() {
 
 	// On-module eMMC on 8-bit SDMMC2, AF11 for CK/CMD/D0/D1/D3 and AF10
 	// for the PB/PC data lines (see hellen_premium176_meta.h for the map)
-	efiSetPadMode("eMMC",  Gpio::D6, PAL_MODE_ALTERNATE(11)); // CK
-	efiSetPadMode("eMMC",  Gpio::D7, PAL_MODE_ALTERNATE(11)); // CMD
-	efiSetPadMode("eMMC",  Gpio::G9, PAL_MODE_ALTERNATE(11)); // D0
-	efiSetPadMode("eMMC", Gpio::G10, PAL_MODE_ALTERNATE(11)); // D1
-	efiSetPadMode("eMMC",  Gpio::B3, PAL_MODE_ALTERNATE(10)); // D2
-	efiSetPadMode("eMMC", Gpio::G12, PAL_MODE_ALTERNATE(11)); // D3
-	efiSetPadMode("eMMC",  Gpio::B8, PAL_MODE_ALTERNATE(10)); // D4
-	efiSetPadMode("eMMC",  Gpio::B9, PAL_MODE_ALTERNATE(10)); // D5
-	efiSetPadMode("eMMC",  Gpio::C6, PAL_MODE_ALTERNATE(10)); // D6
-	efiSetPadMode("eMMC",  Gpio::C7, PAL_MODE_ALTERNATE(10)); // D7
+	efiSetPadMode("eMMC",  Gpio::D6, PAL_MODE_ALTERNATE(11) | PAL_STM32_OSPEED_HIGHEST); // CK
+	efiSetPadMode("eMMC",  Gpio::D7, PAL_MODE_ALTERNATE(11) | PAL_STM32_OSPEED_HIGHEST); // CMD
+	efiSetPadMode("eMMC",  Gpio::G9, PAL_MODE_ALTERNATE(11) | PAL_STM32_OSPEED_HIGHEST); // D0
+	efiSetPadMode("eMMC", Gpio::G10, PAL_MODE_ALTERNATE(11) | PAL_STM32_OSPEED_HIGHEST); // D1
+	efiSetPadMode("eMMC",  Gpio::B3, PAL_MODE_ALTERNATE(10) | PAL_STM32_OSPEED_HIGHEST); // D2
+	efiSetPadMode("eMMC", Gpio::G12, PAL_MODE_ALTERNATE(11) | PAL_STM32_OSPEED_HIGHEST); // D3
+	efiSetPadMode("eMMC",  Gpio::B8, PAL_MODE_ALTERNATE(10) | PAL_STM32_OSPEED_HIGHEST); // D4
+	efiSetPadMode("eMMC",  Gpio::B9, PAL_MODE_ALTERNATE(10) | PAL_STM32_OSPEED_HIGHEST); // D5
+	efiSetPadMode("eMMC",  Gpio::C6, PAL_MODE_ALTERNATE(10) | PAL_STM32_OSPEED_HIGHEST); // D6
+	efiSetPadMode("eMMC",  Gpio::C7, PAL_MODE_ALTERNATE(10) | PAL_STM32_OSPEED_HIGHEST); // D7
 
 	// hold eMMC RST_n high (JEDEC default has the reset function disabled,
 	// high is the safe do-nothing level either way)
