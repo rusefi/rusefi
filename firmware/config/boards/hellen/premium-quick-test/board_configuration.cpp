@@ -27,8 +27,29 @@ static void premiumQuickTestDefaultConfiguration() {
 	// on-module LPS22HB barometer, bit-banged I2C on the module SCL/SDA pads
 	engineConfiguration->lps25BaroSensorScl = Gpio::MMP176_I2C_SCL;
 	engineConfiguration->lps25BaroSensorSda = Gpio::MMP176_I2C_SDA;
+
+	// three on-module TJA1042T/3 transceivers
+	engineConfiguration->canRxPin = Gpio::MMP176_CAN1_RX;
+	engineConfiguration->canTxPin = Gpio::MMP176_CAN1_TX;
+	engineConfiguration->can2RxPin = Gpio::MMP176_CAN2_RX;
+	engineConfiguration->can2TxPin = Gpio::MMP176_CAN2_TX;
+#if (EFI_CAN_BUS_COUNT >= 3)
+	engineConfiguration->can3RxPin = Gpio::MMP176_CAN3_RX;
+	engineConfiguration->can3TxPin = Gpio::MMP176_CAN3_TX;
+#endif
+}
+
+// All three TJA1042 S pins share MMP176_CAN_STB with no pull resistor:
+// firmware must actively drive it low or the transceivers stay in silent
+// (listen-only) mode and never transmit
+static OutputPin canStb;
+
+static void premiumQuickTestInitHardware() {
+	canStb.initPin("CAN_STB", Gpio::MMP176_CAN_STB);
+	canStb.setValue(0);
 }
 
 void setup_custom_board_overrides() {
+	custom_board_InitHardware = premiumQuickTestInitHardware;
 	custom_board_DefaultConfiguration = premiumQuickTestDefaultConfiguration;
 }

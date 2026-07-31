@@ -8,6 +8,10 @@ include $(BOARDS_DIR)/hellen/hellen-common.mk
 
 DDEFS += -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::MMP176_LED1_RED
 
+# third bxCAN peripheral for the third on-module transceiver
+# (EFI_CAN_BUS_COUNT=3 comes from prepend.txt via the generated config)
+DDEFS += -DSTM32_CAN_USE_CAN3=TRUE
+
 # USB FS device on module pads USBM/USBP (PA11/PA12, AF10) - same as the
 # STM32F7 port defaults, stated explicitly; module has no USB ID pad, and
 # VBUS sensing is ignored (BOARD_OTG_NOVBUSSENS in the port board.h)
