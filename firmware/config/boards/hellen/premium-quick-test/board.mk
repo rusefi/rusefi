@@ -23,6 +23,17 @@ DDEFS += -DADC_MUX_PIN=Gpio::H15
 EFI_ETHERNET = yes
 DDEFS += -DBOARD_PHY_ID=MII_LAN8720_ID
 
+# on-module KLMAG1JETD 16GB eMMC on 8-bit SDMMC2 (pin map in
+# hellen_premium176_meta.h). It rides the standard SD-card stack:
+# EFI_SDC_DEVICE flips HAL_USE_SDC on in rusefi_halconf.h, and the shared
+# F7 mcuconf already enables SDMMC2. The mounted block device is exposed
+# over USB MSD by the regular SD/MSD machinery.
+DDEFS += -DEFI_SDC_DEVICE=SDCD2
+# ChibiOS MMC/eMMC init path (CMD1 + CMD6 SWITCH), off by default
+DDEFS += -DSDC_MMC_SUPPORT=TRUE
+# all eight data lines are wired
+DDEFS += -DRE_SDC_MODE=SDC_MODE_8BIT
+
 # USB FS device on module pads USBM/USBP (PA11/PA12, AF10) - same as the
 # STM32F7 port defaults, stated explicitly; module has no USB ID pad, and
 # VBUS sensing is ignored (BOARD_OTG_NOVBUSSENS in the port board.h)
