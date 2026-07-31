@@ -101,7 +101,7 @@ void CanSniffer::handle_can_message(const size_t busIndex, const CANRxFrame &cms
 
 	uint32_t id = CAN_ID(cmsg);
 
-	if (CAN_ISX(cmsg)) { // standard identifier
+	if (!CAN_ISX(cmsg)) { // standard identifier
 		*str++ = CAN_ISRTR(cmsg) ? 'r':'t';
 		str = put_hex_digit(str, id >> 8);
 		str = put_hex_byte(str, id & 0xff);
