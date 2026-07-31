@@ -214,29 +214,23 @@ public class BinaryProtocol {
         // Check for bundle/ECU mismatch before attempting to read configuration
         // Skip check if bundle target is unknown (e.g., simulator, local development)
         RusEfiSignature ecuSignature = SignatureHelper.parse(signature);
-        if (ecuSignature != null) {
-            // remember the connected board so universal bundles can pick the right firmware / hardware kind
-            linkManager.getConnectedEcuTarget().set(ecuSignature.getBundleTarget());
-        }
         String bundleTarget = BundleUtil.getBundleTarget();
         if (ecuSignature != null && bundleTarget != null && !"unknown".equalsIgnoreCase(bundleTarget)) {
             // exact target, _QC_ hack and board_compatibility (* / allowlist) all handled here [tag:QC_firmware]
             if (!com.rusefi.core.io.BoardCompatibility.isEcuCompatible(bundleTarget, ecuSignature.getBundleTarget())) {
-                linkManager.reportUnsupportedEcu(new UnsupportedEcuInfo(
-                    ecuSignature.getBundleTarget(), bundleTarget));
-                String errorMsg = String.format(
-                    "Bundle/ECU mismatch detected!\n\n" +
-                    "Connected ECU: %s\n" +
-                    "Bundle target: %s\n\n" +
-                    "Please download the correct bundle for your ECU from:\n" +
-                    RUSEFI_WIKI_DOWNLOAD_PAGE + "\n\n" +
-                    "The .ini file in this bundle is not compatible with your ECU's memory layout.",
-                    ecuSignature.getBundleTarget(), bundleTarget
-                );
+                UnsupportedEcuInfo unsupported = new UnsupportedEcuInfo(
+                    ecuSignature.getBundleTarget(), bundleTarget);
+                linkManager.reportUnsupportedEcu(unsupported);
+                String errorMsg = unsupported.getMessage();
                 log.info(errorMsg);
                 close();
                 return errorMsg;
             }
+        }
+        if (ecuSignature != null) {
+            linkManager.reportCompatibleEcu(ecuSignature);
+            // Remember only a target this bundle is allowed to serve.
+            linkManager.getConnectedEcuTarget().set(ecuSignature.getBundleTarget());
         }
 
         try {

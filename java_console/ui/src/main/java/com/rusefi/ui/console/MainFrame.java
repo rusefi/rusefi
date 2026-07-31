@@ -64,9 +64,11 @@ public class MainFrame {
     private boolean firmwareUpdateInProgress;
     private boolean updateSoftwareAvailable;
     private boolean updateEcuAvailable;
+    private boolean unsupportedEcuBlocking;
+    private final UnsupportedEcuCardHost unsupportedEcuHost;
 
     public MainFrame(ConsoleUI consoleUI, TabbedPanel tabbedPane) {
-        this(consoleUI, tabbedPane, null);
+        this(consoleUI, tabbedPane, null, null);
     }
 
     /**
@@ -74,8 +76,14 @@ public class MainFrame {
      *                   (handed off from {@link StartupFrame}) instead of creating a new window (#9715).
      */
     public MainFrame(ConsoleUI consoleUI, TabbedPanel tabbedPane, JFrame reuseFrame) {
+        this(consoleUI, tabbedPane, reuseFrame, null);
+    }
+
+    public MainFrame(ConsoleUI consoleUI, TabbedPanel tabbedPane, JFrame reuseFrame,
+                     UnsupportedEcuCardHost unsupportedEcuHost) {
         this.consoleUI = Objects.requireNonNull(consoleUI);
         this.tabbedPane = tabbedPane;
+        this.unsupportedEcuHost = unsupportedEcuHost;
         listener = ConnectionStatusLogic.Listener.VOID;
         // reuseFrame == null creates a new window; non-null reuses the splash frame in place (#9715).
         this.frame = new FrameHelper(reuseFrame, JFrame.DO_NOTHING_ON_CLOSE) {
@@ -99,6 +107,12 @@ public class MainFrame {
         };
 
         createMenuBar();
+        if (unsupportedEcuHost != null) {
+            unsupportedEcuHost.addBlockingListener(blocking -> {
+                unsupportedEcuBlocking = blocking;
+                refreshFirmwareUpdateExclusion();
+            });
+        }
     }
 
     private void createMenuBar() {
@@ -299,7 +313,11 @@ public class MainFrame {
                 @Override
                 public void onConnectionFailed(String errorMessage) {
                     log.error("onConnectionFailed " + errorMessage);
-                    SwingUtilities.invokeLater(() -> showConnectionFailedDialog(errorMessage));
+                    consoleUI.invalidatePort(linkManager.getLastTriedPort());
+                    if (unsupportedEcuHost == null
+                        || !unsupportedEcuHost.isBlocked(linkManager.getLastTriedPort())) {
+                        SwingUtilities.invokeLater(() -> showConnectionFailedDialog(errorMessage));
+                    }
                 }
 
                 @Override
@@ -337,7 +355,19 @@ public class MainFrame {
         saveTuneItem.setAction(saveAction);
         saveTuneItem.setText(LoadTuneHelper.SAVE_TUNE_TEXT);
         saveTuneItem.setMnemonic(KeyEvent.VK_S);
+        loadAction.addPropertyChangeListener(e -> refreshActionsAfterActionStateChange(e.getPropertyName()));
+        saveAction.addPropertyChangeListener(e -> refreshActionsAfterActionStateChange(e.getPropertyName()));
         refreshFirmwareUpdateExclusion();
+    }
+
+    private void refreshActionsAfterActionStateChange(String propertyName) {
+        if ("enabled".equals(propertyName)) {
+            if (SwingUtilities.isEventDispatchThread()) {
+                refreshFirmwareUpdateExclusion();
+            } else {
+                SwingUtilities.invokeLater(this::refreshFirmwareUpdateExclusion);
+            }
+        }
     }
 
     public void setFirmwareUpdateInProgress(boolean firmwareUpdateInProgress) {
@@ -357,9 +387,12 @@ public class MainFrame {
 
     private void refreshFirmwareUpdateExclusion() {
         Action loadAction = loadTuneItem.getAction();
-        loadTuneItem.setEnabled(!firmwareUpdateInProgress && loadAction != null && loadAction.isEnabled());
-        updateSoftwareItem.setEnabled(!firmwareUpdateInProgress && updateSoftwareAvailable);
-        updateEcuItem.setEnabled(!firmwareUpdateInProgress && updateEcuAvailable);
+        Action saveAction = saveTuneItem.getAction();
+        boolean applicationActionsAllowed = !firmwareUpdateInProgress && !unsupportedEcuBlocking;
+        loadTuneItem.setEnabled(applicationActionsAllowed && loadAction != null && loadAction.isEnabled());
+        saveTuneItem.setEnabled(applicationActionsAllowed && saveAction != null && saveAction.isEnabled());
+        updateSoftwareItem.setEnabled(applicationActionsAllowed && updateSoftwareAvailable);
+        updateEcuItem.setEnabled(applicationActionsAllowed && updateEcuAvailable);
     }
 
     public FrameHelper getFrame() {

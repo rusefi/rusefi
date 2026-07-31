@@ -134,6 +134,7 @@ public class StartupFrame {
     private final UIContext uiContext;
     private final CompletableFuture<Autoupdate.UpdateOutcome> softwareUpdateOutcome;
     private final JPanel rootContent = new JPanel(new CardLayout());
+    private UnsupportedEcuCardHost unsupportedEcuHost;
     private final JPanel rollbackPicker = new JPanel(new BorderLayout());
     // The large "scanning" card shown first (#9715); its status line is updated to "Connecting to X…"
     // if a single-ECU auto-connect fires before the controls are revealed.
@@ -221,6 +222,14 @@ public class StartupFrame {
     }
 
     public void showUi() {
+        unsupportedEcuHost = new UnsupportedEcuCardHost(connectivityContext, uiContext.getLinkManager());
+        unsupportedEcuHost.addBlockingListener(blocking -> {
+            if (blocking && autoConnectedPort != null) {
+                firstTimeAutoConnect = true;
+                onSplashDisconnected();
+            }
+            updateConnectButtonState();
+        });
         miscPanel.setBorder(new TitledBorder(BorderFactory.createLineBorder(Color.darkGray), "Miscellaneous"));
 
         connectPanel.add(portsComboBox.getComboPorts());
@@ -492,9 +501,11 @@ public class StartupFrame {
         rootContent.add(createScanningPanel(), CARD_SCANNING);
         ((CardLayout) rootContent.getLayout()).show(rootContent, CARD_SCANNING);
 
-        TunerStudioHelper.checkTunerStudio(frame.getContentPane(), () -> restoreContent(rootContent));
+        unsupportedEcuHost.setNormalContent(rootContent);
+        TunerStudioHelper.checkTunerStudio(
+            unsupportedEcuHost.getNormalContent(), () -> restoreContent(rootContent));
 
-        frame.add(rootContent);
+        frame.add(unsupportedEcuHost.getContent());
         // Maximize for the whole splash lifecycle so it doesn't jump to center then get replaced by
         // a second maximized console window (#9715). Mirrors FrameHelper.initFrame.
         frame.setSize(GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().getSize());
@@ -584,8 +595,7 @@ public class StartupFrame {
     }
 
     private void restoreContent(JComponent root) {
-        frame.getContentPane().removeAll();
-        frame.add(root);
+        unsupportedEcuHost.setNormalContent(root);
         // Frame stays fixed-maximized (#9715) — relayout in place instead of pack()/resize.
         AutoupdateUtil.trueLayoutAndRepaint(frame);
     }
@@ -595,7 +605,10 @@ public class StartupFrame {
         // OpenBLT bootloader and DFU are not connectable — they are firmware-update targets [tag:better_ux_for_flashing].
         connectButton.setEnabled(selectedItem != null
             && selectedItem.type != OpenBlt
-            && selectedItem.type != SerialPortType.Dfu);
+            && selectedItem.type != SerialPortType.Dfu
+            && selectedItem.type != SerialPortType.EcuUnknown
+            && selectedItem.type != SerialPortType.UnsupportedEcu
+            && !unsupportedEcuHost.isBlocking());
     }
 
     private void applyKnownPorts(AvailableHardware currentHardware) {
@@ -670,8 +683,11 @@ public class StartupFrame {
     }
 
     private void connect(PortResult selectedPort) {
-        if (!asyncJobExecutor.isNotInProgress()) {
+        if (!asyncJobExecutor.isNotInProgress() || unsupportedEcuHost.isBlocking()) {
             return;
+        }
+        if (selectedPort.isEcu()) {
+            connectivityContext.getPortScanner().cachePort(selectedPort);
         }
         log.info("connect: port=" + selectedPort.port);
         boolean alreadyConnected = isAutoConnected(selectedPort);
@@ -688,7 +704,8 @@ public class StartupFrame {
         prepareForHandoff();
         LoadingOverlay.show(frame, "Loading console…", LogoHelper.createLogoLabel());
         SwingUtilities.invokeLater(() ->
-            new ConsoleUI(uiContext, selectedPort.port, selectedPort.type, alreadyConnected, frame, connectivityContext));
+            new ConsoleUI(uiContext, selectedPort.port, selectedPort.type, alreadyConnected,
+                frame, unsupportedEcuHost, connectivityContext));
     }
 
     /**
@@ -709,7 +726,7 @@ public class StartupFrame {
         prepareForHandoff();
         LoadingOverlay.show(frame, "Loading console…", LogoHelper.createLogoLabel());
         SwingUtilities.invokeLater(() ->
-            new ConsoleUI(uiContext, ini, image, frame, connectivityContext));
+            new ConsoleUI(uiContext, ini, image, frame, unsupportedEcuHost, connectivityContext));
     }
 
     /**
@@ -730,7 +747,7 @@ public class StartupFrame {
      * different startup tab last session.
      */
     private boolean shouldAutoConnect() {
-        return asyncJobExecutor.isNotInProgress();
+        return asyncJobExecutor.isNotInProgress() && !unsupportedEcuHost.isBlocking();
     }
 
     private boolean isFirmwareOperationInProgress() {
@@ -768,11 +785,9 @@ public class StartupFrame {
         if (scanningStatusLabel != null) {
             scanningStatusLabel.setText("Connecting to " + target.port + "…");
         }
-        if (offlineConsoleOpen) {
-            // [tag:offline_tune] Pre-cache the target so the scanner skips re-inspecting it during the
-            // connect read window — otherwise a scan tick could reopen the port mid-read and hang in LOADING.
-            connectivityContext.getPortScanner().cachePort(target);
-        }
+        // Pin the target while connecting so the scanner never reopens the same stream when its
+        // normal identity-cache TTL expires. DeviceSessionManager keeps it pinned after handoff.
+        connectivityContext.getPortScanner().cachePort(target);
         connectButton.setEnabled(false);
         connectButton.setText("Connecting...");
         portsComboBox.getComboPorts().setEnabled(false);
@@ -895,6 +910,11 @@ public class StartupFrame {
             // User cancelled or moved on — ignore the late event.
             return;
         }
+        if (unsupportedEcuHost.isBlocking()) {
+            firstTimeAutoConnect = true;
+            onSplashDisconnected();
+            return;
+        }
         if (offlineConsoleOpen) {
             // [tag:offline_tune] The offline console (already open on the shared uiContext) is now connected
             // via autoConnect.
@@ -908,7 +928,7 @@ public class StartupFrame {
             return;
         }
         connectButton.setText("Connect");
-        connectButton.setEnabled(true);
+        updateConnectButtonState();
         portsComboBox.getComboPorts().setEnabled(true);
         String launchingMsg = "Connected to " + target.port + " — launching console…";
         noPortsMessage.setForeground(Color.darkGray);
@@ -1088,17 +1108,19 @@ public class StartupFrame {
         startupUpdateActions.setSplashLinkManager(null);
         // Sets isStarted=false so the next connect() can create a new LinkManager connector.
         uiContext.getLinkManager().close();
+        if (autoConnectedPort != null) {
+            connectivityContext.getPortScanner().invalidatePort(autoConnectedPort.port);
+        }
         if (offlineConsoleOpen && autoConnectedPort != null) {
             // [tag:offline_tune] The offline console is still up. Re-arm scanner-driven auto-connect and
             // let the scanner re-inspect the (now stale) port so the console reconnects when the board
             // comes back — possibly under a different port name (USB re-enumeration).
-            connectivityContext.getPortScanner().invalidatePort(autoConnectedPort.port);
             firstTimeAutoConnect = true;
         }
         autoConnectedPort = null;
         autoConnectThread = null;
         connectButton.setText("Connect");
-        connectButton.setEnabled(true);
+        updateConnectButtonState();
         portsComboBox.getComboPorts().setEnabled(true);
         // Auto-connect dropped — make sure the user isn't stranded on the scanning animation (#9715).
         revealControls();
@@ -1114,10 +1136,13 @@ public class StartupFrame {
         }
         // Per design: keep auto-connect gate closed for the rest of the session.
         uiContext.getLinkManager().close();
+        if (autoConnectedPort != null) {
+            connectivityContext.getPortScanner().invalidatePort(autoConnectedPort.port);
+        }
         autoConnectedPort = null;
         autoConnectThread = null;
-        connectButton.setEnabled(true);
         connectButton.setText("Connect");
+        updateConnectButtonState();
         portsComboBox.getComboPorts().setEnabled(true);
         noPortsMessage.setForeground(Color.red);
         noPortsMessage.setText("Auto-connect failed: " + msg);

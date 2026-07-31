@@ -19,7 +19,7 @@ public class UiProperties {
     }
 
     public static String getUpdateHelpUrl() {
-        return PropertiesHolder.getProperty("UPDATE_FW_HELP_URL", "https://wiki.rusefi.com/HOWTO-Update-Firmware");
+        return PropertiesHolder.getUpdateHelpUrl("https://wiki.rusefi.com/HOWTO-Update-Firmware");
     }
 
     public static boolean skipEcuTypeDetection() {

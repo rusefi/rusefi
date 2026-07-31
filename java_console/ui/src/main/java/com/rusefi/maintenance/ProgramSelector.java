@@ -70,6 +70,9 @@ public class ProgramSelector {
                 return;
             }
             final PortResult targetPort = resolveFlashPort();
+            if (targetPort == null) {
+                return;
+            }
             executeJob(splitButton, mainButtonModeFor(targetPort), targetPort);
         });
 
@@ -176,7 +179,7 @@ public class ProgramSelector {
                 return bltPorts.get(0);
             }
         }
-        return selected;
+        return isUnflashableEcu(selected) ? null : selected;
     }
 
     private void executeJob(JComponent parent, UpdateMode selectedMode, PortResult selectedPort) {
@@ -616,7 +619,7 @@ public class ProgramSelector {
     }
 
     static boolean hasRealSerialPort(List<PortResult> ports) {
-        return ports.stream().anyMatch(port -> port.type != SerialPortType.Dfu);
+        return ports.stream().anyMatch(port -> port.type != SerialPortType.Dfu && !isUnflashableEcu(port));
     }
 
     static boolean shouldEnableMainButton(
@@ -655,8 +658,18 @@ public class ProgramSelector {
 
     private void addMenuItem(JPopupMenu menu, UpdateMode mode) {
         JMenuItem item = new JMenuItem(mode.displayText);
-        item.addActionListener(e -> executeJob(splitButton, mode, (PortResult) comboPorts.getSelectedItem()));
+        item.addActionListener(e -> {
+            PortResult selected = (PortResult) comboPorts.getSelectedItem();
+            if (isUnflashableEcu(selected)) {
+                return;
+            }
+            executeJob(splitButton, mode, selected);
+        });
         menu.add(item);
+    }
+
+    private static boolean isUnflashableEcu(@Nullable PortResult port) {
+        return port != null && (port.isUnsupportedEcu() || port.type == SerialPortType.EcuUnknown);
     }
 
     @NotNull

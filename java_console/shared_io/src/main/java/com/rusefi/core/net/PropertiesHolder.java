@@ -58,6 +58,14 @@ public enum PropertiesHolder {
         return result;
     }
 
+    public static String getUpdateHelpUrl(String defaultUrl) {
+        return getUpdateHelpUrl(INSTANCE.getProperties(), defaultUrl);
+    }
+
+    static String getUpdateHelpUrl(Properties properties, String defaultUrl) {
+        return properties.getProperty("UPDATE_FW_HELP_URL", defaultUrl);
+    }
+
     public static String getFirmwareRollbackRootUrl() {
         return getFirmwareRollbackRootUrl(INSTANCE.getProperties());
     }

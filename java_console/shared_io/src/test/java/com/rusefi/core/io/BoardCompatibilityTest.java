@@ -45,4 +45,14 @@ public class BoardCompatibilityTest {
     public void nullEcuTargetIsTolerant() {
         assertTrue(BoardCompatibility.isEcuCompatible("uaefi", null, null));
     }
+
+    @Test
+    public void unsupportedMessageNamesBothTargetsAndDoesNotBlameBundledIni() {
+        String message = new UnsupportedEcuInfo("hellen121nissan", "universal").getMessage();
+
+        assertTrue(message.contains("hellen121nissan"));
+        assertTrue(message.contains("universal"));
+        assertTrue(message.contains("https://"));
+        assertFalse(message.contains(".ini"));
+    }
 }
