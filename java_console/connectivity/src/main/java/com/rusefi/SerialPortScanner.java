@@ -2,7 +2,6 @@ package com.rusefi;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.io.LinkManager;
-import com.rusefi.maintenance.CalibrationsInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,7 +45,7 @@ public class SerialPortScanner implements PortScanner {
 
         Collection<String> listTcpPorts();
 
-        Optional<CalibrationsInfo> getEcuCalibrations(String tcpPort);
+        PortResult inspectTcpPort(String tcpPort);
 
         boolean isLiveEcuConnected();
 
@@ -264,14 +263,11 @@ public class SerialPortScanner implements PortScanner {
                 if (cachedPort.isPresent()) {
                     ports.add(cachedPort.get());
                 } else {
-                    final Optional<CalibrationsInfo> tcpCalibrations = probes.getEcuCalibrations(tcpPort);
-                    final PortResult tcpResult = tcpCalibrations
-                        .map(c -> new PortResult(tcpPort, SerialPortType.Ecu, c))
-                        .orElseGet(() -> new PortResult(tcpPort, SerialPortType.Unknown));
+                    final PortResult tcpResult = probes.inspectTcpPort(tcpPort);
                     ports.add(tcpResult);
 
-                    // cache port + calibrations
-                    if (tcpCalibrations.isPresent()) {
+                    // Preserve the previous policy: cache only a positively identified usable ECU.
+                    if (tcpResult.isEcu()) {
                         portCache.put(tcpResult);
                     }
                 }

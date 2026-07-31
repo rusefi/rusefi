@@ -14,11 +14,13 @@ import com.rusefi.maintenance.MaintenanceUtil;
 import com.rusefi.maintenance.StLinkFlasher;
 import com.rusefi.updater.OpenbltDetectorStrategy;
 import com.rusefi.updater.OpenbltDetectorStrategy.OpenbltInfo;
+import com.rusefi.core.io.UnsupportedEcuInfo;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Production {@link SerialPortScanner.HardwareProbes}: real OS/hardware detection behind the
@@ -56,8 +58,9 @@ public class EcuHardwareProbes implements SerialPortScanner.HardwareProbes {
     }
 
     @Override
-    public Optional<CalibrationsInfo> getEcuCalibrations(String tcpPort) {
-        return EcuHardwareProbes.readEcuCalibrations(tcpPort);
+    public PortResult inspectTcpPort(String tcpPort) {
+        PortResult result = EcuHardwareProbes.inspectRunningEcu(tcpPort);
+        return result != null ? result : new PortResult(tcpPort, SerialPortType.Unknown);
     }
 
     @Override
@@ -96,7 +99,7 @@ public class EcuHardwareProbes implements SerialPortScanner.HardwareProbes {
         OpenbltInfo getOpenbltInfo(String port);
 
         /** @throws com.fazecast.jSerialComm.SerialPortInvalidPortException when the port vanishes mid-probe */
-        Optional<CalibrationsInfo> readEcuCalibrations(String port);
+        PortResult inspectRunningEcu(String port);
 
         boolean ecuHasOpenblt(String port);
 
@@ -111,8 +114,8 @@ public class EcuHardwareProbes implements SerialPortScanner.HardwareProbes {
         }
 
         @Override
-        public Optional<CalibrationsInfo> readEcuCalibrations(String port) {
-            return EcuHardwareProbes.readEcuCalibrations(port);
+        public PortResult inspectRunningEcu(String port) {
+            return EcuHardwareProbes.inspectRunningEcu(port);
         }
 
         @Override
@@ -152,23 +155,26 @@ public class EcuHardwareProbes implements SerialPortScanner.HardwareProbes {
         }
 
         for (int attempt = 1; attempt <= DETECT_MAX_ATTEMPTS; attempt++) {
-            final Optional<CalibrationsInfo> ecuCalibrations;
+            final PortResult ecuResult;
             try {
-                ecuCalibrations = probe.readEcuCalibrations(serialPort);
+                ecuResult = probe.inspectRunningEcu(serialPort);
             } catch (com.fazecast.jSerialComm.SerialPortInvalidPortException e) {
                 log.info("Port " + serialPort + " vanished during ECU detection: " + e.getMessage());
                 return null;
             }
-            final boolean isEcu = ecuCalibrations.isPresent();
+            final boolean isEcu = ecuResult != null;
             log.info("Port " + serialPort + " ECU detection attempt " + attempt + "/" + DETECT_MAX_ATTEMPTS
                 + ": " + (isEcu ? "found" : "not found"));
             if (isEcu) {
+                if (ecuResult.isUnsupportedEcu()) {
+                    return ecuResult;
+                }
                 final boolean hasOpenblt = probe.ecuHasOpenblt(serialPort);
                 log.info("ECU at " + serialPort + (hasOpenblt ? " has" : " does not have") + " an OpenBLT bootloader");
                 return new PortResult(
                     serialPort,
                     hasOpenblt ? SerialPortType.EcuWithOpenblt : SerialPortType.Ecu,
-                    ecuCalibrations.get()
+                    ecuResult.getCalibrations()
                 );
             }
             if (attempt < DETECT_MAX_ATTEMPTS) {
@@ -190,12 +196,20 @@ public class EcuHardwareProbes implements SerialPortScanner.HardwareProbes {
         return SerialPortScanner.inspectPorts(ports, null, EcuHardwareProbes::inspect);
     }
 
-    private static Optional<CalibrationsInfo> readEcuCalibrations(final String port) {
+    private static PortResult inspectRunningEcu(final String port) {
         log.info("getEcuCalibrations " + port);
-        return CalibrationsHelper.readCurrentCalibrationsWithoutSuspendingPortScanner(
+        AtomicReference<UnsupportedEcuInfo> unsupported = new AtomicReference<>();
+        Optional<CalibrationsInfo> calibrations =
+            CalibrationsHelper.readCurrentCalibrationsWithoutSuspendingPortScanner(
             port,
-            UpdateOperationCallbacks.LOGGER
+            UpdateOperationCallbacks.LOGGER,
+            (ignoredPort, info) -> unsupported.set(info)
         );
+        if (calibrations.isPresent()) {
+            return new PortResult(port, SerialPortType.Ecu, calibrations.get());
+        }
+        UnsupportedEcuInfo info = unsupported.get();
+        return info == null ? null : PortResult.unsupportedEcu(port, info);
     }
 
     private static boolean ecuHasOpenblt(String port) {
