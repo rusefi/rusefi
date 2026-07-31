@@ -227,4 +227,30 @@ public class AbstractAutoFlashJobAwaitEcuPortTest {
         verify(completion).run();
         verify(linkManager, never()).reconnect(anyString());
     }
+
+    @Test
+    public void failedRecoveryCurrentlyLeavesAutomaticReconnectDisabled() {
+        LinkManager linkManager = new LinkManager().setNotifyGlobalStatusOnClose(false);
+        linkManager.setBinaryProtocolForTests(mock(BinaryProtocol.class));
+
+        AbstractAutoFlashJob failingJob = new AbstractAutoFlashJob(
+            "test", new PortResult("COM_OLD", SerialPortType.Ecu), null,
+            new ConnectivityContext(scanner), linkManager) {
+            @Override
+            protected boolean flash(LinkManager lm, BinaryProtocol bp, UpdateOperationCallbacks cb) {
+                lm.disconnect();
+                return false;
+            }
+
+            @Override
+            String awaitEcuPort(long timeoutMs, Clock clock) {
+                return null;
+            }
+        };
+
+        failingJob.doJob(mock(UpdateOperationCallbacks.class), () -> {});
+
+        assertTrue(linkManager.isDisconnectedByUser(),
+            "#9952: failed recovery leaves automatic reconnect disabled");
+    }
 }
