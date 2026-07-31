@@ -122,14 +122,11 @@ void CanSniffer::handle_can_message(const size_t busIndex, const CANRxFrame &cms
 		}
 	}
 
-	// TODO:
-/*
 	if (ts) {
-		uint16_t ts = tick.msec;
-		str = put_hex_byte(str, (ts >> 8) & 0xff);
-		str = put_hex_byte(str, (ts >> 0) & 0xff);
+		uint16_t nowUs = NT2US(nowNt);
+		str = put_hex_byte(str, (nowUs >> 8) & 0xff);
+		str = put_hex_byte(str, (nowUs >> 0) & 0xff);
 	}
-*/
 
 	*str++ = '\r';
 	*str++ = 0;
