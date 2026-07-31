@@ -218,12 +218,22 @@ size_t CanSniffer::readLine() {
 	size_t offset = 0;
 
 	do {
-		size_t transferred = chnReadTimeout(m_channel, (uint8_t *)&line[offset], 1, TIME_MS2I(100));
-		// timeout?
-		if (transferred == 0) {
+		msg_t ret = chnGetTimeout(m_channel, TIME_MS2I(100));
+		if (ret == MSG_TIMEOUT) {
+			return 0;
+		}
+		if (ret == MSG_RESET) {
+			// channel not ready...
+			// do not waste cpu time
+			chThdSleepMilliseconds(10);
+			return 0;
+		}
+		if (ret < 0) {
+			// add delay?
 			return 0;
 		}
 
+		line[offset] = ret;
 		if (line[offset] == '\r') {
 			line[offset + 1] = '\0';
 			return offset;
