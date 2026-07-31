@@ -28,7 +28,8 @@ public:
 
 	void ThreadTask() override;
 
-	void handle_can_message(const size_t busIndex, const CANRxFrame &cmsg, efitick_t nowNt);
+	template<typename T>
+	void handle_can_message(const size_t busIndex, const T &cmsg, efitick_t nowNt);
 
 private:
 	typedef enum
