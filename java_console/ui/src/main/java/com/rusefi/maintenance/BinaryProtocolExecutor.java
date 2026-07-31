@@ -34,8 +34,21 @@ public class BinaryProtocolExecutor {
         final BinaryProtocolAction<T> bpAction,
         final T failureResult,
         boolean isScanningForEcu, String msg) {
+        return execute(port, callbacks, bpAction, failureResult, isScanningForEcu, msg,
+            LinkManager.EcuCompatibilityListener.VOID);
+    }
+
+    public static <T> T execute(
+        final String port,
+        final UpdateOperationCallbacks callbacks,
+        final BinaryProtocolAction<T> bpAction,
+        final T failureResult,
+        boolean isScanningForEcu,
+        String msg,
+        LinkManager.EcuCompatibilityListener compatibilityListener) {
         final AtomicReference<T> executionResult = new AtomicReference<>(failureResult);
         try (LinkManager linkManager = new LinkManager()
+            .setEcuCompatibilityListener(compatibilityListener)
             .setNeedPullText(false)
             .setNeedPullLiveData(true)
             .setNotifyGlobalStatusOnClose(false)

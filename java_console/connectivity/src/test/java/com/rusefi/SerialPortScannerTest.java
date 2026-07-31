@@ -1,7 +1,6 @@
 package com.rusefi;
 
 import com.rusefi.io.LinkManager;
-import com.rusefi.maintenance.CalibrationsInfo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,7 +9,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -32,7 +30,8 @@ public class SerialPortScannerTest {
         final Map<String, PortResult> inspectResults = new HashMap<>();
         final Map<String, Integer> inspectCalls = new HashMap<>();
         Collection<String> tcpPorts = new ArrayList<>();
-        int tcpCalibrationsCalls;
+        int tcpInspectionCalls;
+        PortResult tcpResult;
         boolean liveEcuConnected;
         boolean dfuConnected;
         int deviceProbeCalls;
@@ -55,9 +54,9 @@ public class SerialPortScannerTest {
         }
 
         @Override
-        public Optional<CalibrationsInfo> getEcuCalibrations(String tcpPort) {
-            tcpCalibrationsCalls++;
-            return Optional.empty();
+        public PortResult inspectTcpPort(String tcpPort) {
+            tcpInspectionCalls++;
+            return tcpResult != null ? tcpResult : new PortResult(tcpPort, SerialPortType.Unknown);
         }
 
         @Override
@@ -248,10 +247,21 @@ public class SerialPortScannerTest {
         scan(true);
         scan(true);
 
-        assertEquals(2, probes.tcpCalibrationsCalls, "a non-ECU TCP port must be re-checked, not cached");
+        assertEquals(2, probes.tcpInspectionCalls, "a non-ECU TCP port must be re-checked, not cached");
         List<PortResult> ports = knownPorts();
         assertEquals(1, ports.size());
         assertEquals(SerialPortType.Unknown, ports.get(0).type);
+    }
+
+    @Test
+    public void unsupportedTcpEcuKeepsItsClassification() {
+        probes.tcpPorts.add("29001");
+        probes.tcpResult = new PortResult("29001", SerialPortType.UnsupportedEcu);
+
+        scan(true);
+
+        assertEquals(1, probes.tcpInspectionCalls);
+        assertEquals(SerialPortType.UnsupportedEcu, knownPorts().get(0).type);
     }
 
     @Test

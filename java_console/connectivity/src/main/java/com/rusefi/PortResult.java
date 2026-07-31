@@ -5,6 +5,7 @@ import com.opensr5.ConfigurationImageMeta;
 import com.opensr5.ini.field.IniField;
 import com.rusefi.core.RusEfiSignature;
 import com.rusefi.core.SignatureHelper;
+import com.rusefi.core.io.UnsupportedEcuInfo;
 import com.rusefi.maintenance.CalibrationsInfo;
 import com.rusefi.updater.OpenbltDetectorStrategy.OpenbltInfo;
 
@@ -18,6 +19,7 @@ public class PortResult {
     private final CalibrationsInfo calibrations;
     private final RusEfiSignature signature;
     public final OpenbltInfo bootloaderInfo;
+    private final UnsupportedEcuInfo unsupportedEcuInfo;
 
     public PortResult(final String port, final SerialPortType type, final CalibrationsInfo calibrations) {
         this(port, type, calibrations, null);
@@ -25,10 +27,16 @@ public class PortResult {
 
     public PortResult(final String port, final SerialPortType type, final CalibrationsInfo calibrations,
                       final OpenbltInfo bootloaderInfo) {
+        this(port, type, calibrations, bootloaderInfo, null);
+    }
+
+    private PortResult(final String port, final SerialPortType type, final CalibrationsInfo calibrations,
+                       final OpenbltInfo bootloaderInfo, final UnsupportedEcuInfo unsupportedEcuInfo) {
         this.port = port;
         this.type = type;
         this.calibrations = calibrations;
         this.bootloaderInfo = bootloaderInfo;
+        this.unsupportedEcuInfo = unsupportedEcuInfo;
         if (calibrations == null) {
             signature = null;
         } else {
@@ -44,12 +52,17 @@ public class PortResult {
         this(port, type, null);
     }
 
+    public static PortResult unsupportedEcu(String port, UnsupportedEcuInfo info) {
+        return new PortResult(port, SerialPortType.UnsupportedEcu, null, null, info);
+    }
+
     protected PortResult(final PortResult origin) {
         this.port = origin.port;
         this.type = origin.type;
         this.calibrations = origin.calibrations;
         this.signature = origin.signature;
         this.bootloaderInfo = origin.bootloaderInfo;
+        this.unsupportedEcuInfo = origin.unsupportedEcuInfo;
     }
 
     @Override
@@ -91,6 +104,14 @@ public class PortResult {
 
     public boolean isEcu() {
         return type == SerialPortType.Ecu || type == SerialPortType.EcuWithOpenblt;
+    }
+
+    public boolean isUnsupportedEcu() {
+        return type == SerialPortType.UnsupportedEcu;
+    }
+
+    public UnsupportedEcuInfo getUnsupportedEcuInfo() {
+        return unsupportedEcuInfo;
     }
 
     public Optional<String> getFirmwareHash() {

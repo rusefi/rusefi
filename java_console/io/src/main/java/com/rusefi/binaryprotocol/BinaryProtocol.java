@@ -20,6 +20,7 @@ import com.rusefi.core.SignatureHelper;
 import com.rusefi.core.io.BoardCompatibility;
 import com.rusefi.core.io.BundleInfo;
 import com.rusefi.core.io.BundleUtil;
+import com.rusefi.core.io.UnsupportedEcuInfo;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.io.*;
 import com.rusefi.io.commands.*;
@@ -221,6 +222,8 @@ public class BinaryProtocol {
         if (ecuSignature != null && bundleTarget != null && !"unknown".equalsIgnoreCase(bundleTarget)) {
             // exact target, _QC_ hack and board_compatibility (* / allowlist) all handled here [tag:QC_firmware]
             if (!com.rusefi.core.io.BoardCompatibility.isEcuCompatible(bundleTarget, ecuSignature.getBundleTarget())) {
+                linkManager.reportUnsupportedEcu(new UnsupportedEcuInfo(
+                    ecuSignature.getBundleTarget(), bundleTarget));
                 String errorMsg = String.format(
                     "Bundle/ECU mismatch detected!\n\n" +
                     "Connected ECU: %s\n" +
