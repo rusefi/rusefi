@@ -84,17 +84,16 @@ uint32_t CanSniffer::read_hex_number(const char * str, uint8_t len)
 	return d;
 }
 
-void CanSniffer::handle_can_message(const size_t busIndex, const CANRxFrame &cmsg, efitick_t nowNt)
+template<typename T>
+void CanSniffer::handle_can_message(const size_t busIndex, const T &cmsg, efitick_t nowNt)
 {
-	/*
-	if (!m_started)
-		return;
-	*/
+	// handled at caller level
+	// current implementation have one sniffer CAN channel
+	(void)busIndex;
+
 	if (!terminal_open) {
 		return;
 	}
-	// TODO: check busIndex?
-
 
 	//       cmd  id  dlc data   \r  0
 	char buf[ 1  + 8 + 1 + 8*2 + 2*2 + 1 + 1];
@@ -389,6 +388,10 @@ void CanSniffer::putstr(const char * s)
 
 	chnWriteTimeout(m_channel, (uint8_t *)s, l, TIME_MS2I(100));
 }
+
+// Explicitly instantiate the template for the required frame types
+template void CanSniffer::handle_can_message<CANTxFrame>(unsigned int, const CANTxFrame&, long long);
+template void CanSniffer::handle_can_message<CANRxFrame>(unsigned int, const CANRxFrame&, long long);
 
 #endif // CAN_SNIFFER
 #endif // EFI_PROD_CODE && EFI_CAN_SUPPORT
