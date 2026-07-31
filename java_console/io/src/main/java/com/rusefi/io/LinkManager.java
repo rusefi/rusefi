@@ -6,6 +6,7 @@ import com.rusefi.Callable;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.core.EngineState;
+import com.rusefi.core.RusEfiSignature;
 import com.rusefi.core.io.UnsupportedEcuInfo;
 import com.rusefi.io.serial.BufferedSerialIoStream;
 import com.rusefi.io.serial.StreamConnector;
@@ -45,6 +46,9 @@ public class LinkManager implements Closeable {
         EcuCompatibilityListener VOID = (port, info) -> { };
 
         void onUnsupportedEcu(String port, UnsupportedEcuInfo info);
+
+        default void onCompatibleEcu(String port, RusEfiSignature signature) {
+        }
     }
 
     @NotNull
@@ -106,6 +110,10 @@ public class LinkManager implements Closeable {
 
     public void reportUnsupportedEcu(UnsupportedEcuInfo info) {
         ecuCompatibilityListener.onUnsupportedEcu(lastTriedPort, info);
+    }
+
+    public void reportCompatibleEcu(RusEfiSignature signature) {
+        ecuCompatibilityListener.onCompatibleEcu(lastTriedPort, signature);
     }
 
     @NotNull

@@ -16,6 +16,7 @@ public class SerialPortTypeTest {
     public void bootloadersSortFirstAndUnknownSortsLast() {
         assertTrue(SerialPortType.OpenBlt.sortOrder < SerialPortType.Dfu.sortOrder);
         assertTrue(SerialPortType.Dfu.sortOrder < SerialPortType.Ecu.sortOrder);
+        assertEquals(SerialPortType.Ecu.sortOrder, SerialPortType.EcuUnknown.sortOrder);
         assertTrue(SerialPortType.Ecu.sortOrder < SerialPortType.UnsupportedEcu.sortOrder);
         assertTrue(SerialPortType.UnsupportedEcu.sortOrder < SerialPortType.CAN.sortOrder);
         assertTrue(SerialPortType.CAN.sortOrder < SerialPortType.Unknown.sortOrder);

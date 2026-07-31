@@ -83,6 +83,7 @@ public class ConsoleUI {
     private final String port;
 
     public final UIContext uiContext;
+    private final ConnectivityContext connectivityContext;
 
     /**
      * We can listen to tab activation event if we so desire
@@ -90,11 +91,12 @@ public class ConsoleUI {
     private final Map<Component, ActionListener> tabSelectedListeners = new HashMap<>();
 
     public ConsoleUI(String port, SerialPortType serialPortType, ConnectivityContext connectivityContext) {
-        this(new UIContext(connectivityContext.getConnectedEcuTarget()), port, serialPortType, false, null, null, null, connectivityContext);
+        this(new UIContext(connectivityContext.getConnectedEcuTarget()), port, serialPortType, false,
+            null, null, null, null, connectivityContext);
     }
 
     public ConsoleUI(UIContext uiContext, String port, SerialPortType serialPortType, boolean alreadyConnected, ConnectivityContext connectivityContext) {
-        this(uiContext, port, serialPortType, alreadyConnected, null, null, null, connectivityContext);
+        this(uiContext, port, serialPortType, alreadyConnected, null, null, null, null, connectivityContext);
     }
 
     /**
@@ -102,7 +104,14 @@ public class ConsoleUI {
      * instead of opening a second window (#9715).
      */
     public ConsoleUI(UIContext uiContext, String port, SerialPortType serialPortType, boolean alreadyConnected, JFrame reuseFrame, ConnectivityContext connectivityContext) {
-        this(uiContext, port, serialPortType, alreadyConnected, null, null, reuseFrame, connectivityContext);
+        this(uiContext, port, serialPortType, alreadyConnected, null, null, reuseFrame, null, connectivityContext);
+    }
+
+    public ConsoleUI(UIContext uiContext, String port, SerialPortType serialPortType, boolean alreadyConnected,
+                     JFrame reuseFrame, UnsupportedEcuCardHost unsupportedEcuHost,
+                     ConnectivityContext connectivityContext) {
+        this(uiContext, port, serialPortType, alreadyConnected, null, null, reuseFrame,
+            unsupportedEcuHost, connectivityContext);
     }
 
     /**
@@ -120,7 +129,13 @@ public class ConsoleUI {
      * {@code reuseFrame} instead of opening a second window — same handoff the online path uses (#9715).
      */
     public ConsoleUI(UIContext uiContext, IniFileModel ini, ConfigurationImage initialImage, JFrame reuseFrame, ConnectivityContext connectivityContext) {
-        this(uiContext, null, SerialPortType.Unknown, false, ini, initialImage, reuseFrame, connectivityContext);
+        this(uiContext, null, SerialPortType.Unknown, false, ini, initialImage, reuseFrame, null, connectivityContext);
+    }
+
+    public ConsoleUI(UIContext uiContext, IniFileModel ini, ConfigurationImage initialImage, JFrame reuseFrame,
+                     UnsupportedEcuCardHost unsupportedEcuHost, ConnectivityContext connectivityContext) {
+        this(uiContext, null, SerialPortType.Unknown, false, ini, initialImage, reuseFrame,
+            unsupportedEcuHost, connectivityContext);
     }
 
     /**
@@ -173,9 +188,14 @@ public class ConsoleUI {
 
     private ConsoleUI(UIContext uiContext, String port, SerialPortType serialPortType,
                       boolean alreadyConnected, IniFileModel offlineIni, ConfigurationImage offlineImage,
-                      JFrame reuseFrame, ConnectivityContext connectivityContext) {
+                      JFrame reuseFrame, UnsupportedEcuCardHost existingUnsupportedEcuHost,
+                      ConnectivityContext connectivityContext) {
         this.uiContext = uiContext;
+        this.connectivityContext = connectivityContext;
         LinkManager linkManager = uiContext.getLinkManager();
+        UnsupportedEcuCardHost unsupportedEcuHost = existingUnsupportedEcuHost != null
+            ? existingUnsupportedEcuHost
+            : new UnsupportedEcuCardHost(connectivityContext, linkManager);
 
         boolean isOffline = (offlineIni != null && offlineImage != null);
         if (isOffline) {
@@ -200,6 +220,11 @@ public class ConsoleUI {
         uiContext.addOfflineModeListener(offline -> SwingUtilities.invokeLater(() ->
                 tabbedPane.tabbedPane.putClientProperty("offlineMode", offline ? Boolean.TRUE : null)));
         this.port = port;
+        ConnectionStatusLogic.INSTANCE.addListener(isConnected -> {
+            if (!isConnected && linkManager.isDisconnectedByUser()) {
+                invalidatePort(linkManager.getLastTriedPort());
+            }
+        });
 
         // Follow a renumbered ECU across a bootloader round-trip. After a reboot to DFU/OpenBLT *without*
         // flashing, the board can re-enumerate onto a different ttyACMx. ConnectionWatchdog.restart() only
@@ -268,7 +293,7 @@ public class ConsoleUI {
 
         // ---------------
 
-        MainFrame mainFrame = new MainFrame(this, tabbedPane, reuseFrame);
+        MainFrame mainFrame = new MainFrame(this, tabbedPane, reuseFrame, unsupportedEcuHost);
         JFrame frame = mainFrame.getFrame().getFrame();
         setFrameIcon(frame);
         log.info("Console " + UiVersion.CONSOLE_VERSION);
@@ -356,6 +381,7 @@ console live data tab is broken #8402
                 }
             }
             DeviceSessionManager deviceSessionManager = new DeviceSessionManager(connectivityContext, initialPort);
+            unsupportedEcuHost.addCompatiblePortListener(deviceSessionManager::setSessionPort);
             StatusPanelWithProgressBar deviceStatusPanel = new StatusPanelWithProgressBar();
             StatusPanel tuneStatusPanel = new StatusPanel(250);
             SingleAsyncJobExecutor consoleJobExecutor = new SingleAsyncJobExecutor(job ->
@@ -523,10 +549,12 @@ console live data tab is broken #8402
         });
 
         ShortcutsHelper.installConnectAndDisconnect(uiContext, tabbedPane.tabbedPane,
-            () -> !Boolean.TRUE.equals(tabbedPane.tabbedPane.getClientProperty("isUpdating")));
+            () -> !Boolean.TRUE.equals(tabbedPane.tabbedPane.getClientProperty("isUpdating"))
+                && !unsupportedEcuHost.isBlocking());
         AutoupdateUtil.setAppIcon(mainFrame.getFrame().getFrame());
 
-        mainFrame.getFrame().showFrame(rootPanel);
+        unsupportedEcuHost.setNormalContent(rootPanel);
+        mainFrame.getFrame().showFrame(unsupportedEcuHost.getContent());
     }
 
     private @NotNull JButton getLaunchWizardButton(JPanel rootPanel, WizardContainer wizardContainer, CardLayout rootCardLayout) {
@@ -546,6 +574,12 @@ console live data tab is broken #8402
 
     public String getPort() {
         return port;
+    }
+
+    public void invalidatePort(String portToInvalidate) {
+        if (portToInvalidate != null) {
+            connectivityContext.getPortScanner().invalidatePort(portToInvalidate);
+        }
     }
 
     private void addCustomTabs() {

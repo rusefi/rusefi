@@ -179,4 +179,12 @@ public class DeviceSessionManager {
         return state;
     }
 
+    /** Replace stale identity/calibration data after a different ECU is verified on the session port. */
+    public void setSessionPort(PortResult port) {
+        sessionPort = port;
+        if (state == SessionState.CONNECTED && port != null && !LinkManager.isSpecialNotSerial(port.port)) {
+            connectivityContext.getPortScanner().cachePort(port);
+        }
+    }
+
 }

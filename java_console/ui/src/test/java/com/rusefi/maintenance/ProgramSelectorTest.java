@@ -97,6 +97,14 @@ public class ProgramSelectorTest {
         assertNull(resolveFlashPort(null, false, NO_PORTS, NO_PORTS));
     }
 
+    @Test
+    public void unsupportedEcuCannotBeSelectedForFlashing() {
+        PortResult unsupported = port(SerialPortType.UnsupportedEcu);
+        assertNull(resolveFlashPort(unsupported, false, NO_PORTS, NO_PORTS));
+        assertNull(resolveFlashPort(unsupported, true, NO_PORTS, NO_PORTS));
+        assertNull(resolveFlashPort(port(SerialPortType.EcuUnknown), true, NO_PORTS, NO_PORTS));
+    }
+
     // ---- combined: resolved port feeds the button mode ----
 
     @Test
@@ -150,6 +158,8 @@ public class ProgramSelectorTest {
     @Test
     public void syntheticDfuTargetIsNotTreatedAsSerialPort() {
         assertFalse(ProgramSelector.hasRealSerialPort(Collections.singletonList(port(SerialPortType.Dfu))));
+        assertFalse(ProgramSelector.hasRealSerialPort(Collections.singletonList(port(SerialPortType.UnsupportedEcu))));
+        assertFalse(ProgramSelector.hasRealSerialPort(Collections.singletonList(port(SerialPortType.EcuUnknown))));
         assertTrue(ProgramSelector.hasRealSerialPort(Collections.singletonList(port(SerialPortType.Ecu))));
     }
 

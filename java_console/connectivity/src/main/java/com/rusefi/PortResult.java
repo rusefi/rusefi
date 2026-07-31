@@ -70,9 +70,12 @@ public class PortResult {
         if (type.friendlyString == null) {
             return this.port;
         } else {
-            String identity = type == SerialPortType.OpenBlt && bootloaderInfo != null && bootloaderInfo.raw != null
-                ? ": " + bootloaderInfo.raw
-                : "";
+            String identity = "";
+            if (type == SerialPortType.OpenBlt && bootloaderInfo != null && bootloaderInfo.raw != null) {
+                identity = ": " + bootloaderInfo.raw;
+            } else if (type == SerialPortType.UnsupportedEcu && unsupportedEcuInfo != null) {
+                identity = ": " + unsupportedEcuInfo.getEcuTarget();
+            }
             return this.port + " (" + type.friendlyString + identity + ")";
         }
     }
@@ -112,6 +115,10 @@ public class PortResult {
 
     public UnsupportedEcuInfo getUnsupportedEcuInfo() {
         return unsupportedEcuInfo;
+    }
+
+    public RusEfiSignature getSignature() {
+        return signature;
     }
 
     public Optional<String> getFirmwareHash() {
