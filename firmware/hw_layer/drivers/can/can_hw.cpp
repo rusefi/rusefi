@@ -84,7 +84,9 @@ public:
 			processCanRxMessage(m_index, m_buffer, nowNt);
 
 #if EFI_PROD_CODE && HAL_USE_USB_CDC_2
-			canSniffer.handle_can_message(m_index, m_buffer, nowNt);
+			if (engineConfiguration->canSniffer[m_index].read) {
+				canSniffer.handle_can_message(m_index, m_buffer, nowNt);
+			}
 #endif
 		}
 

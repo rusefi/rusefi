@@ -176,6 +176,10 @@ void CanSniffer::execute_status_command() {
 }
 
 bool CanSniffer::send_can_message_from_string(const char *str) {
+	if (engineConfiguration->canSnifferTxBus == CAN_BUS_NONE) {
+		return false;
+	}
+
 	char cmd = *str++; // command char
 	bool IDE = cmd == 'T' || cmd == 'R'; // upercase means EID
 	bool RTR = cmd == 'r' || cmd == 'R'; // the upper or lowercase r means RTR
@@ -202,7 +206,7 @@ bool CanSniffer::send_can_message_from_string(const char *str) {
 	if(dlc > 8)
 		return false;
 
-	CanTxMessage cmsg(CanCategory::SNIFFER, id, dlc, /*bus*/0, /*isExtended*/IDE);
+	CanTxMessage cmsg(CanCategory::SNIFFER, id, dlc, engineConfiguration->canSnifferTxBus - CAN_BUS_CAN1, /*isExtended*/IDE);
 
 	if (!RTR) {
 		for (uint8_t i = 0; i < dlc; i++) {
