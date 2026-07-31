@@ -121,11 +121,13 @@ public class MainFrame {
         fileMenu.setMnemonic(KeyEvent.VK_F);
 
         loadTuneItem = new JMenuItem(LoadTuneHelper.LOAD_TUNE_TEXT);
+        loadTuneItem.setIcon(loadMenuIcon("folder-open"));
         loadTuneItem.setMnemonic(KeyEvent.VK_L);
         loadTuneItem.setEnabled(false);
         fileMenu.add(loadTuneItem);
 
         saveTuneItem = new JMenuItem(LoadTuneHelper.SAVE_TUNE_TEXT);
+        saveTuneItem.setIcon(loadMenuIcon("floppy"));
         saveTuneItem.setMnemonic(KeyEvent.VK_S);
         saveTuneItem.setEnabled(false);
         fileMenu.add(saveTuneItem);
@@ -133,6 +135,7 @@ public class MainFrame {
         fileMenu.addSeparator();
 
         JMenuItem exitItem = new JMenuItem("Exit");
+        exitItem.setIcon(loadMenuIcon("logout"));
         exitItem.setMnemonic(KeyEvent.VK_X);
         exitItem.addActionListener(e -> requestExit());
         fileMenu.add(exitItem);
@@ -143,11 +146,13 @@ public class MainFrame {
         actionsMenu.setMnemonic(KeyEvent.VK_A);
 
         updateSoftwareItem = new JMenuItem("Update Software");
+        updateSoftwareItem.setIcon(loadMenuIcon("refresh"));
         updateSoftwareItem.setEnabled(false);
         updateSoftwareItem.addActionListener(e -> onUpdateSoftwareClicked());
         actionsMenu.add(updateSoftwareItem);
 
         updateEcuItem = new JMenuItem("No updates available");
+        updateEcuItem.setIcon(loadMenuIcon("controller"));
         updateEcuItem.setEnabled(false);
         updateEcuItem.addActionListener(e -> {
             if (updateEcuAction != null) {
@@ -350,14 +355,24 @@ public class MainFrame {
 
     public void setTuneActions(Action loadAction, Action saveAction) {
         loadTuneItem.setAction(loadAction);
+        loadTuneItem.setIcon(loadMenuIcon("folder-open"));
         loadTuneItem.setText(LoadTuneHelper.LOAD_TUNE_TEXT);
         loadTuneItem.setMnemonic(KeyEvent.VK_L);
         saveTuneItem.setAction(saveAction);
+        saveTuneItem.setIcon(loadMenuIcon("floppy"));
         saveTuneItem.setText(LoadTuneHelper.SAVE_TUNE_TEXT);
         saveTuneItem.setMnemonic(KeyEvent.VK_S);
         loadAction.addPropertyChangeListener(e -> refreshActionsAfterActionStateChange(e.getPropertyName()));
         saveAction.addPropertyChangeListener(e -> refreshActionsAfterActionStateChange(e.getPropertyName()));
         refreshFirmwareUpdateExclusion();
+    }
+
+    static Icon loadMenuIcon(String name) {
+        ImageIcon icon = AutoupdateUtil.loadIcon("icons/tuning/" + name + "48.png");
+        if (icon == null) {
+            return null;
+        }
+        return new ImageIcon(icon.getImage().getScaledInstance(18, 18, Image.SCALE_SMOOTH));
     }
 
     private void refreshActionsAfterActionStateChange(String propertyName) {
