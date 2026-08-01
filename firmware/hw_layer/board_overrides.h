@@ -29,6 +29,7 @@
 
 // function with no parameters and returning void
 using setup_custom_board_overrides_type = void (*)();
+using setup_custom_bool_type = bool (*)();
 using setup_custom_board_config_type = void (*)(engine_configuration_s * /*previousConfiguration*/);
 using setup_custom_board_output_type = int (*)();
 using setup_custom_board_engine_type_type = void (*)(engine_type_e);
@@ -85,6 +86,15 @@ extern std::optional<setup_custom_board_overrides_type> custom_board_LtftTrimToV
 // specific firmware builds are meant for specific hardware. In order to provide best user experience on well-known boards sometimes we reduce user flexibility.
 extern std::optional<setup_custom_board_overrides_type> custom_board_DefaultConfiguration;
 extern std::optional<setup_custom_board_overrides_type> custom_board_ConfigOverrides;
+
+extern std::optional<setup_custom_bool_type> custom_board_getAcrState;
+// Additive ACR hold: when set and returning true, the Harley ACR valve is kept
+// energized regardless of the acrRevolutions countdown (the engineMovedRecently
+// power-save guard still wins). Unlike custom_board_getAcrState this does NOT
+// replace the default strategy - it only extends the open window, e.g. while a
+// board-side cranking-phase detector is holding fuel/spark off and needs the
+// compression signature to stay stationary. Defined in harley_acr.cpp.
+extern std::optional<setup_custom_bool_type> custom_board_holdAcr;
 
 /**
  * This function checks if an override is present and calls it if available.
