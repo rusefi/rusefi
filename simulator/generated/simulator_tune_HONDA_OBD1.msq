@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="15784">
+    <page number="0" size="15796">
         <constant name="accelEnrichmentMode">"MS Adder"</constant>
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
@@ -561,7 +561,7 @@
         <constant name="brakePedalPin">"NONE"</constant>
         <constant name="brakePedalPinMode">"PULLUP"</constant>
         <constant digits="0" name="byFirmwareVersion" units="index">0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">20260731</constant>
+        <constant digits="0" name="calibrationBirthday" units="">20260801</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="angle">95</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -586,6 +586,13 @@
         <constant name="canReadEnabled">"enable"</constant>
         <constant name="canRxPin">"NONE"</constant>
         <constant digits="2" name="canSleepPeriodMs" units="ms">50.0</constant>
+        <constant name="canSniffer1_handleInjected">"No"</constant>
+        <constant name="canSniffer1_listenOurs">"No"</constant>
+        <constant name="canSniffer1_read">"No"</constant>
+        <constant name="canSniffer2_handleInjected">"No"</constant>
+        <constant name="canSniffer2_listenOurs">"No"</constant>
+        <constant name="canSniffer2_read">"No"</constant>
+        <constant name="canSnifferTxBus">"None"</constant>
         <constant name="canTxPin">"NONE"</constant>
         <constant name="canVssNbcType">"BMW_e46"</constant>
         <constant digits="4" name="canVssScaling" units="ratio">1.0</constant>
@@ -5167,8 +5174,8 @@
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260730" nPages="1" signature="rusEFI master.2026.07.31.f407-discovery.3442241841" version="5.0"/>
-    <bibliography author="rusEFI 20260730" writeDate="date"/>
+    <versionInfo firmwareInfo="20260731" nPages="1" signature="rusEFI master.2026.08.01.f407-discovery.3328623680" version="5.0"/>
+    <bibliography author="rusEFI 20260731" writeDate="date"/>
     <settings/>
     <userComments/>
 </msq>
