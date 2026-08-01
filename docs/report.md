@@ -390,3 +390,48 @@ Open follow-ups:
   wedge never reaches the new recovery path (lib_scsi is in ChibiOS-Contrib).
 - The loss-of-cdc.pcapng pre-capture wedge could not be attributed (stale
   firmware vs blkRead wedge); confirm the flashed build via sdinfo counters.
+
+## 2026-08-01 - Decouple VE Analyze from the STFT display scale
+
+What: Restored zero-based STFT presentation without changing the 100-based
+correction contract required by TunerStudio VE Analyze. PR #9657 changed the
+STFT translation from -1.0 to -100; under TunerStudio's `(raw + translate) *
+scale` conversion, a neutral raw multiplier of 1.0 became -9900 percent. The
+derived `100 + stftCorrection1` channel then supplied -9800 instead of 100 to
+VE Analyze, causing it to remove fuel.
+
+| File | Change |
+|----------------------------------------------------|----------------------------------------|
+| firmware/controllers/algo/engine_state.txt | Restore STFT display metadata to scale 100, translation -1.0, so raw 0.9/1.0/1.1 displays as -10/0/+10 percent |
+| firmware/tunerstudio/tunerstudio.template.ini | Feed `egoCorrectionForVeAnalyze` directly from `Gego`, the existing 100-neutral STFT output channel |
+| java_tools/configuration_definition/src/test/java/com/rusefi/test/VeAnalyzeCorrectionTest.java | Regression coverage for zero-neutral display and independence of the VE Analyze channel |
+| java_tools/version/src/main/java/com/rusefi/UiVersion.java | Bump console version to 20260801 as required for Java changes |
+
+Key decisions and why:
+- Reused `Gego` instead of adding another live-data field. `status_loop.cpp`
+  already publishes it as `100 * stftCorrection[0]`, so this avoids output
+  layout churn and keeps the machine-facing 100-neutral contract explicit.
+- Kept the user-facing `stftCorrection` channels zero-neutral and independent
+  from AutoTune. Gauge scale or translation changes can no longer alter the
+  correction consumed by VE Analyze.
+- No persistent calibration field or generated file is part of the change, so
+  existing tunes require no migration.
+- LTFT behavior is intentionally unchanged in this unit of work. Stored LTFT
+  correction still affects delivered fuel without being represented in the VE
+  Analyze correction channel; that requires a separate policy change and test.
+
+Validation:
+- Regression test first failed on the old code: raw 0.9 displayed as -9910
+  instead of -10, and VE Analyze still referenced the visual STFT channel.
+- The same test passes after the fix.
+- `gradlew.bat :config_definition:test` passes.
+- Clean uaefi `make -B -j12 ini` generation passes. The generated INI contains
+  `stftCorrection1/2` with `100.0, -1.0`, keeps `Gego` at scale 0.01, and emits
+  `egoCorrectionForVeAnalyze = { Gego }`; both VE Analyze and WUE Analyze use
+  that alias.
+
+Open follow-ups:
+- Define and test the LTFT policy during AutoTune (disable application, require
+  applying/resetting learned trims, or introduce an explicit tuning session).
+- Decide how a future bank-2-aware VE Analyze correction should select/combine
+  STFT banks; this change preserves the existing bank-1 behavior.
