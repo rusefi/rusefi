@@ -41,6 +41,11 @@ std::optional<setup_custom_bool_type> custom_board_holdAcr;
 static bool getAcrState() {
     bool engineMovedRecently = getTriggerCentral()->engineMovedRecently();
     engine->engineState.acrEngineMovedRecently = engineMovedRecently;
+
+	if (custom_board_holdAcr.has_value() && custom_board_holdAcr.value()()) {
+		return true;
+	}
+
 	auto currentPhase = getTriggerCentral()->getCurrentEnginePhase(getTimeNowNt());
 	if (!currentPhase) {
 		return engineMovedRecently;
@@ -49,13 +54,6 @@ static bool getAcrState() {
 	// Turn off the valve if the engine isn't moving - no sense wasting power on a stopped engine
 	if (!engineMovedRecently) {
 		return false;
-	}
-
-	// Additive board-side hold (see board_overrides.h): keep the valve open past
-	// the acrRevolutions countdown, e.g. while a cranking-phase detector needs
-	// the compression signature to stay stationary between compared revolutions.
-	if (custom_board_holdAcr.has_value() && custom_board_holdAcr.value()()) {
-		return true;
 	}
 
     if (custom_board_getAcrState.has_value()) {
