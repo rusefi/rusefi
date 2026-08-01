@@ -2939,7 +2939,7 @@ struct engine_configuration_s {
 	offset 848 bit 13 */
 	bool stepperForceParkingEveryRestart : 1 {};
 	/**
-	 * If enabled, try to fire the engine before a full engine cycle has been completed using RPM estimated from the last 90 degrees of engine rotation. As soon as the trigger syncs plus 90 degrees rotation, fuel and ignition events will occur. If disabled, worst case may require up to 4 full crank rotations before any events are scheduled.
+	 * If enabled, RPM is estimated from ~90 degrees of rotation using tooth timestamps collected even before trigger sync, and fuel/ignition scheduling starts as soon as the trigger syncs (sequential ignition temporarily runs as wasted spark until full phase sync). As soon as the trigger syncs plus 90 degrees rotation, fuel and ignition events will occur. If disabled, worst case may require up to 4 full crank rotations before any events are scheduled.
 	offset 848 bit 14 */
 	bool isFasterEngineSpinUpEnabled : 1 {};
 	/**
