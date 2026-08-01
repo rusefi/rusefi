@@ -72,6 +72,7 @@ public class ConsoleUI {
     private static final Logging log = getLogging(ConsoleUI.class);
     private static final int DEFAULT_TAB_INDEX = 0;
     private static final String WIKI_URL = "https://wiki.rusefi.com/rusEFI-logs-folder";
+    private static final String AUTO_LAUNCH_WIZARD = "auto_launch_wizard";
 
     public static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
@@ -259,11 +260,14 @@ public class ConsoleUI {
         JButton launchWizardButton = getLaunchWizardButton(rootPanel, wizardContainer, rootCardLayout);
 
         wizardContainer.setOnWizardExit(() -> rootCardLayout.show(rootPanel, "console"));
+        wizardContainer.setOnDontShowAgain(() -> {
+            getConfig().getRoot().setBoolProperty(AUTO_LAUNCH_WIZARD, false);
+            getConfig().save();
+        });
 
-        // On ECU connect, scan the wizard catalog for applicable standalone steps that need attention
-        // (e.g. empty VIN) and auto-launch the first one. Fires on every reconnect; once the user
-        // saves the value, subsequent connects skip this because needsAttention returns false.
-        ConnectionStatusLogic.INSTANCE.addListener(isConnected -> {
+        // On ECU connect, preserve standalone prompt priority (e.g. empty VIN), then offer the full
+        // wizard when one of its ECU-backed progress flags is incomplete.
+        ConnectionStatusLogic.INSTANCE.addAndFireListener(isConnected -> {
             if (!isConnected) return;
             SwingUtilities.invokeLater(() -> {
                 if (!ConnectionStatusLogic.INSTANCE.isConnected()) return;
@@ -279,6 +283,13 @@ public class ConsoleUI {
                     wizardContainer.startSingleStep(step);
                     rootCardLayout.show(rootPanel, "wizard");
                     return;
+                }
+
+                if (UiProperties.isWizardAutoLaunchEnabled()
+                    && getConfig().getRoot().getBoolProperty(AUTO_LAUNCH_WIZARD, true)
+                    && wizardContainer.hasIncompleteSteps()) {
+                    wizardContainer.startWizard(true);
+                    rootCardLayout.show(rootPanel, "wizard");
                 }
             });
         });
