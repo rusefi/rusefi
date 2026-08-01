@@ -5,6 +5,7 @@ import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.EnumIniField.EnumKeyValueMap;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.FieldType;
 import com.rusefi.ui.UIContext;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -153,6 +155,62 @@ public class WizardContainerTest {
                 container.startSingleStep(new StubStep());
                 assertFalse(container.isProgressVisibleForTests());
             }
+        });
+    }
+
+    @Test
+    public void incompleteFlagsControlAutoLaunchEligibility() {
+        Map<Integer, String> flagValues = new TreeMap<>();
+        flagValues.put(0, "no");
+        flagValues.put(1, "yes");
+        EnumIniField flag = new EnumIniField(
+            "wizardNumberOfCylinders", 0, FieldType.INT, new EnumKeyValueMap(flagValues), 0, 0);
+
+        IniFileModel ini = mock(IniFileModel.class);
+        when(ini.findIniField(anyString())).thenReturn(Optional.empty());
+        when(ini.findIniField("wizardNumberOfCylinders")).thenReturn(Optional.of(flag));
+
+        ConfigurationImage image = new ConfigurationImage(new byte[4]);
+        BinaryProtocol binaryProtocol = mock(BinaryProtocol.class);
+        when(binaryProtocol.getControllerConfiguration()).thenReturn(image);
+
+        UIContext context = new UIContext();
+        context.iniFileState.setIniFileModelForTest(ini);
+        context.getLinkManager().setBinaryProtocolForTests(binaryProtocol);
+        WizardContainer container = new WizardContainer(context);
+        assertTrue(container.hasIncompleteSteps());
+
+        image.setBitValue(flag, 1);
+
+        assertFalse(container.hasIncompleteSteps());
+    }
+
+    @Test
+    public void autoLaunchOffersCancelAndPersistentDismissal() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            WizardContainer container = new WizardContainer(new UIContext());
+            AtomicBoolean dontShowAgain = new AtomicBoolean();
+            AtomicBoolean exited = new AtomicBoolean();
+            container.setOnDontShowAgain(() -> dontShowAgain.set(true));
+            container.setOnWizardExit(() -> exited.set(true));
+
+            container.startWizard(true);
+            assertEquals("Cancel", container.getCancelButtonTextForTests());
+            assertTrue(container.isDontShowAgainVisibleForTests());
+
+            container.clickCancelForTests();
+            assertFalse(dontShowAgain.get());
+            assertTrue(exited.get());
+
+            exited.set(false);
+            container.startWizard(true);
+            container.clickDontShowAgainForTests();
+            assertTrue(dontShowAgain.get());
+            assertTrue(exited.get());
+
+            container.startSingleStep(new StubStep());
+            assertEquals("Exit Wizard", container.getCancelButtonTextForTests());
+            assertFalse(container.isDontShowAgainVisibleForTests());
         });
     }
 
