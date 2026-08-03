@@ -9,9 +9,7 @@ import com.rusefi.ini.reader.IniFileReaderUtil;
 import com.rusefi.ini.reader.IniParsingException;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -26,7 +24,7 @@ public class RealIniFileProvider implements IniFileProvider {
      * stays Swing-free. See {@link com.rusefi.core.SignatureHelper#importIntoCache}.
      */
     public interface ManualIniPicker {
-        File pick(String signature);
+        void pick(String signature);
     }
 
     public static ManualIniPicker manualPicker = null;
@@ -40,9 +38,15 @@ public class RealIniFileProvider implements IniFileProvider {
      * can clear it later if anyone asks.
      */
     private static final Set<String> promptedSignatures = ConcurrentHashMap.newKeySet();
+    private static final Set<String> reportedMissingSignatures = ConcurrentHashMap.newKeySet();
 
-    public static void clearPromptedSignaturesForTests() {
+    public static void clearMissingIniStateForTests() {
         promptedSignatures.clear();
+        reportedMissingSignatures.clear();
+    }
+
+    public static void allowManualPrompt(String signature) {
+        promptedSignatures.remove(signature);
     }
 
     private StatusConsumer statusConsumer = StatusConsumer.ANONYMOUS;
@@ -61,9 +65,6 @@ public class RealIniFileProvider implements IniFileProvider {
          */
         String localIniFile = SignatureHelper.downloadIfNotAvailable(SignatureHelper.getUrl(signature));
         if (localIniFile == null) {
-            String message = "Failed to download " + signature + " maybe custom board?";
-            log.info(message);
-            statusConsumer.logLine(message);
             // 4th option: current folder
             localIniFile = IniLocator.findIniFile(".", signature);
         }
@@ -72,23 +73,20 @@ public class RealIniFileProvider implements IniFileProvider {
             localIniFile = IniLocator.findIniFile(IniFileReader.INI_FILE_PATH, signature);
         }
         ManualIniPicker picker = manualPicker;
-        if (localIniFile == null && picker != null && promptedSignatures.add(signature)) {
-            // 6th option: ask the user to point at a local .ini and cache it for next time.
-            // Atomic add prevents concurrent port-scanner probes from opening duplicate pickers.
-            File picked = picker.pick(signature);
-            if (picked != null) {
-                try {
-                    localIniFile = SignatureHelper.importIntoCache(signature, picked);
-                    if (localIniFile == null)
-                        localIniFile = picked.getAbsolutePath();
-                } catch (IOException e) {
-                    log.info("Failed to import picked .ini into cache: " + e);
-                    localIniFile = picked.getAbsolutePath();
-                }
+        if (localIniFile == null) {
+            if (reportedMissingSignatures.add(signature)) {
+                String message = "Failed to download " + signature + " maybe custom board?";
+                log.info(message);
+                statusConsumer.logLine(message);
+            }
+            if (picker != null && promptedSignatures.add(signature)) {
+                // The UI caches the eventual selection asynchronously; a later probe will find it.
+                picker.pick(signature);
             }
         }
-        if (localIniFile == null)
-            throw new IniNotFoundException("Failed to locate .ini file in five different places!");
+        if (localIniFile == null) {
+            throw new IniNotFoundException("Failed to locate matching .ini file");
+        }
         IniFileModel iniFileModel;
         try {
                 iniFileModel = IniFileReaderUtil.readIniFileChecked(localIniFile);
