@@ -2274,7 +2274,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.08.01.hellen154hyundai_f7.1630648356"
+#define TS_SIGNATURE "rusEFI master.2026.08.03.hellen154hyundai_f7.1630648356"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
