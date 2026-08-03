@@ -328,7 +328,7 @@ public class TuningToolbarWidget {
                                         : currentImage.clone();
                                     ConfigurationImage newImage = bp == null
                                         ? result.image
-                                        : result.msq.applyOnto(base, targetIni);
+                                        : applyLoadedTune(result.msq, result.ini, base, targetIni, cb);
 
                                     if (bp != null) {
                                         cb.logLine("Uploading and burning to ECU...");
@@ -374,6 +374,12 @@ public class TuningToolbarWidget {
                 );
             }
         };
+    }
+
+    static ConfigurationImage applyLoadedTune(Msq tune, IniFileModel sourceIni,
+                                               ConfigurationImage base, IniFileModel targetIni,
+                                               UpdateOperationCallbacks callbacks) {
+        return tune.applyOnto(base, targetIni);
     }
 
     public void setFirmwareUpdateInProgress(boolean inProgress) {
