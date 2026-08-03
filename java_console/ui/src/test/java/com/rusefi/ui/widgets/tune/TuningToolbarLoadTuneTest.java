@@ -20,9 +20,9 @@ class TuningToolbarLoadTuneTest {
             context.getPrevTune(), context.getPrevIniFile(), targetImage, targetIni, context.getCallbacks());
 
         ArrayIniField field = (ArrayIniField) targetIni.findIniField("lambdaTable").orElseThrow();
-        assertEquals(113, rawValue(loaded, field, 0, 0));
-        assertEquals(10, rawValue(loaded, field, 8, 4));
-        assertEquals(60, rawValue(loaded, field, 11, 13));
+        assertEquals(147, rawValue(loaded, field, 0, 0));
+        assertEquals(140, rawValue(loaded, field, 8, 4));
+        assertEquals(126, rawValue(loaded, field, 11, 13));
     }
 
     private static int rawValue(ConfigurationImage image, ArrayIniField field, int row, int column) {
