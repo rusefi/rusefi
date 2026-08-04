@@ -49,6 +49,8 @@ static const CANConfig * findCanConfig(can_baudrate_e /*rate*/)
 
 class CanRead final : protected ThreadController<UTILITY_THREAD_STACK_SIZE> {
 public:
+	using ThreadController::stackSize;
+
 	CanRead(size_t index)
 		: ThreadController("CAN RX", PRIO_CAN_RX)
 		, m_index(index)
@@ -98,6 +100,8 @@ private:
 	CANRxFrame m_buffer;
 	CANDriver* m_device;
 };
+
+RUSEFI_STACK_ROOT(CanRead, ThreadTask);
 
 CCM_OPTIONAL static CanRead canRead[EFI_CAN_BUS_COUNT] = { CanRead(0), CanRead(1)
 #if (EFI_CAN_BUS_COUNT >= 3)

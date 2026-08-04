@@ -1169,7 +1169,8 @@ PUBLIC_API_WEAK bool boardSdCardDisable() {
 	return true;
 }
 
-static THD_WORKING_AREA(mmcThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);		// MMC monitor thread
+static constexpr int mmcThreadStackSize = 3 * UTILITY_THREAD_STACK_SIZE;
+static THD_WORKING_AREA(mmcThreadStack, mmcThreadStackSize);		// MMC monitor thread
 
 /**
  * The SD card thread: owns the card and the 'resources' union for its whole lifetime.
@@ -1255,6 +1256,8 @@ die:
 		chThdSleepMilliseconds(100);
 	}
 }
+
+RUSEFI_STACK_ROOT_EXPLICIT(MMCmonThread, mmcThreadStackSize);
 
 /**
  * Write one MLG log line and pace the logger: sleeps so that lines are written at

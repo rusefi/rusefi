@@ -742,6 +742,8 @@ struct DcThread final : public PeriodicController<DC_THREAD_STACK_SIZE> {
 	}
 };
 
+RUSEFI_STACK_ROOT(DcThread, PeriodicTask);
+
 static DcThread dcThread CCM_OPTIONAL;
 
 #endif // !EFI_UNIT_TEST

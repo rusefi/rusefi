@@ -9,6 +9,9 @@
 #include "thread_controller.h"
 #include "tunerstudio.h"
 
+RUSEFI_STACK_FOREIGN_ROOT(lwIP_driver, "lwip_thread", LWIP_THREAD_STACK_SIZE);
+RUSEFI_STACK_FOREIGN_ROOT(lwIP_TCP__IP, "tcpip_thread", TCPIP_THREAD_STACKSIZE);
+
 static int listenerSocket = -1;
 static int connectionSocket = -1;
 

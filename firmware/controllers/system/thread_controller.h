@@ -36,6 +36,8 @@ protected:
 	const char* const m_name;
 
 public:
+	static constexpr int stackSize = TStackSize;
+
 	ThreadController(const char* name, tprio_t priority)
 		: m_prio(priority)
 		, m_name(name)
