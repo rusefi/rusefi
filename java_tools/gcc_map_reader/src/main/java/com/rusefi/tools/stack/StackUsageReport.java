@@ -43,12 +43,13 @@ public class StackUsageReport {
     private static final Pattern CLONE_RE = Pattern.compile("(?: \\[clone [^]]+]|\\.(?:lto_priv|isra|constprop|part)\\.\\d+|\\.cold)+$");
     private static final Pattern MAP_STACK_RE = Pattern.compile(
         "^\\s+0x([0-9a-fA-F]+)\\s+__(process|main)_stack_size__\\s*=", Pattern.MULTILINE);
-    private static final Pattern STACK_ROOT_RE = Pattern.compile(
-        "^\\s*(\\.rusefi_stack_root\\.([A-Za-z0-9_]+)\\.(\\S+))\\s*$", Pattern.MULTILINE);
-    private static final Pattern STACK_REVIEWED_ROOTS_RE = Pattern.compile(
-        "^\\s*\\.rusefi_stack_reviewed_roots\\.([A-Za-z0-9_.]+)\\s*$", Pattern.MULTILINE);
+    private static final Pattern FOREIGN_STACK_ROOT_RE = Pattern.compile(
+        "^\\s*(\\.rusefi_stack_foreign_root\\.([A-Za-z0-9_]+)\\.(\\S+))\\s*$", Pattern.MULTILINE);
     private static final Pattern STRING_DUMP_HEADER_RE = Pattern.compile("^String dump of section '([^']+)':$");
     private static final Pattern STRING_DUMP_VALUE_RE = Pattern.compile("^\\s*\\[\\s*[0-9a-fA-F]+]\\s+(.*)$");
+    private static final String STACK_SYMBOL_PREFIX = "_ZN11stack_usage";
+    private static final String PROFILE_HEADER = "| Image | Entry | Name | Retained | Proxy | Scenario |";
+    private static final String PROFILE_SEPARATOR = "|---|---|---|---:|---:|---|";
 
     public static void main(String[] args) throws Exception {
         Options options = Options.parse(args);
@@ -73,17 +74,18 @@ public class StackUsageReport {
         graphs.add(new Graph(
             "firmware",
             parseCallgraphs(find(options.firmwareDir, "*.ci")),
-            parseMapRoots(firmwareMap, firmwareElf, "firmware", options.readelf),
+            parseElfRoots(firmwareMap, firmwareElf, "firmware", options.readelf, options.cxxfilt),
             parseMapStackSizes(firmwareMap)));
         graphs.add(new Graph(
             "bootloader",
             parseCallgraphs(find(options.bootloaderDir, "*" + options.profile + "*.ci")),
-            parseMapRoots(bootloaderMap, bootloaderElf, "bootloader", options.readelf),
+            parseElfRoots(bootloaderMap, bootloaderElf, "bootloader", options.readelf, options.cxxfilt),
             parseMapStackSizes(bootloaderMap)));
 
         for (Graph graph : graphs) {
             demangleSymbols(graph.nodes, options.cxxfilt);
         }
+        applyProfile(graphs, loadProfile(options.profile));
         return render(options.profile, graphs);
     }
 
@@ -176,24 +178,31 @@ public class StackUsageReport {
         return values;
     }
 
-    static List<Root> parseMapRoots(Path path, String image, String readelfOutput) throws IOException {
-        return parseMapRoots(path, image, parseRootSections(path), readelfOutput);
+    static List<Root> parseElfRoots(
+        Path path, String image, String readelfOutput, String demangledSymbols) throws IOException {
+        return parseElfRoots(path, image, parseForeignRootSections(path), readelfOutput, demangledSymbols);
     }
 
-    private static List<Root> parseMapRoots(Path path, Path elf, String image, String readelf)
+    private static List<Root> parseElfRoots(
+        Path path, Path elf, String image, String readelf, String cxxfilt)
         throws IOException, InterruptedException {
-        Map<String, SectionRoot> sections = parseRootSections(path);
+        Map<String, SectionRoot> sections = parseForeignRootSections(path);
         List<String> command = new ArrayList<>();
         command.add(readelf);
+        command.add("--wide");
+        command.add("--symbols");
         for (String section : sections.keySet()) {
             command.add("-p");
             command.add(section);
         }
         command.add(elf.toString());
-        return parseMapRoots(path, image, sections, run(command, null));
+        String readelfOutput = run(command, null);
+        List<String> symbols = parseStackRootSymbols(readelfOutput);
+        return parseElfRoots(path, image, sections, readelfOutput,
+            run(Collections.singletonList(cxxfilt), String.join("\n", symbols) + "\n"));
     }
 
-    private static Map<String, SectionRoot> parseRootSections(Path path) throws IOException {
+    private static Map<String, SectionRoot> parseForeignRootSections(Path path) throws IOException {
         String text = read(path);
         int marker = text.indexOf(MAP_MARKER);
         if (marker < 0) {
@@ -201,18 +210,20 @@ public class StackUsageReport {
         }
 
         Map<String, SectionRoot> sections = new TreeMap<>();
-        Matcher matcher = STACK_ROOT_RE.matcher(text.substring(marker + MAP_MARKER.length()));
+        Matcher matcher = FOREIGN_STACK_ROOT_RE.matcher(text.substring(marker + MAP_MARKER.length()));
         while (matcher.find()) {
             sections.put(matcher.group(1), new SectionRoot(matcher.group(2), matcher.group(3)));
-        }
-        if (sections.isEmpty()) {
-            throw new IllegalArgumentException("no linked stack root metadata in " + path);
         }
         return sections;
     }
 
-    private static List<Root> parseMapRoots(
-        Path path, String image, Map<String, SectionRoot> sections, String readelfOutput) {
+    private static List<Root> parseElfRoots(Path path, String image, Map<String, SectionRoot> sections,
+        String readelfOutput, String demangledSymbols) {
+        Map<String, Root> roots = new HashMap<>();
+        for (Root root : parseTypedRoots(image, readelfOutput, demangledSymbols)) {
+            putRoot(path, roots, root);
+        }
+
         Map<String, List<String>> metadata = parseRootStringDump(readelfOutput);
         if (!metadata.keySet().equals(sections.keySet())) {
             Set<String> missing = new TreeSet<>(sections.keySet());
@@ -223,80 +234,214 @@ public class StackUsageReport {
                 "stack root ELF/map mismatch: missing=" + missing + ", extra=" + extra);
         }
 
-        Map<String, Root> roots = new HashMap<>();
         for (Map.Entry<String, SectionRoot> entry : sections.entrySet()) {
             SectionRoot section = entry.getValue();
             List<String> values = metadata.get(entry.getKey());
-            if (values.isEmpty() || values.size() > 2 || values.get(0).isEmpty()) {
+            if (values.size() != 1 || values.get(0).isEmpty()) {
                 throw new IllegalArgumentException(
                     "stack root section '" + entry.getKey() + "' has invalid metadata " + values);
             }
             String name = rootName(section.identifier);
-            ReviewedBaseline reviewed = values.size() == 2 ? parseReviewedBaseline(values.get(1)) : null;
             Root root = new Root(image, name, canonicalizeFunction(values.get(0)),
-                parseBudget(section.budget), reviewed);
-            Root previous = roots.put(name, root);
-            if (previous != null && !previous.equals(root)) {
-                throw new IllegalArgumentException("conflicting stack root '" + name + "' in " + path);
-            }
+                parseBudget(section.budget), null);
+            putRoot(path, roots, root);
         }
-        Set<String> expectedReviewed = parseExpectedReviewedRoots(path);
-        if (expectedReviewed == null && "firmware".equals(image)) {
-            throw new IllegalArgumentException("missing reviewed stack root manifest in " + path);
-        }
-        if (expectedReviewed != null) {
-            Set<String> actualReviewed = new TreeSet<>();
-            for (Root root : roots.values()) {
-                if (root.reviewed != null) {
-                    actualReviewed.add(root.name);
-                }
-            }
-            if (!actualReviewed.equals(expectedReviewed)) {
-                Set<String> missing = new TreeSet<>(expectedReviewed);
-                missing.removeAll(actualReviewed);
-                Set<String> extra = new TreeSet<>(actualReviewed);
-                extra.removeAll(expectedReviewed);
-                throw new IllegalArgumentException(
-                    "reviewed stack root mismatch in " + path + ": missing=" + missing + ", extra=" + extra);
-            }
-        }
-        roots.put("exception/ISR", new Root(image, "exception/ISR", null, "exception", null));
+        putRoot(path, roots, new Root(image, "exception/ISR", null, "exception", null));
 
         List<Root> result = new ArrayList<>(roots.values());
         result.sort(Comparator.comparing(root -> root.name, String.CASE_INSENSITIVE_ORDER));
         return result;
     }
 
-    private static Set<String> parseExpectedReviewedRoots(Path path) {
-        try {
-            String text = read(path);
-            int marker = text.indexOf(MAP_MARKER);
-            Set<String> manifests = new TreeSet<>();
-            Matcher matcher = STACK_REVIEWED_ROOTS_RE.matcher(text.substring(marker + MAP_MARKER.length()));
-            while (matcher.find()) {
-                manifests.add(matcher.group(1));
-            }
-            if (manifests.size() > 1) {
-                throw new IllegalArgumentException(
-                    "conflicting reviewed stack root manifests in " + path + ": " + manifests);
-            }
-            if (manifests.isEmpty()) {
-                return null;
-            }
+    private static void putRoot(Path path, Map<String, Root> roots, Root root) {
+        Root previous = roots.put(root.entry(), root);
+        if (previous != null && !previous.equals(root)) {
+            throw new IllegalArgumentException("conflicting stack root '" + root.entry() + "' in " + path);
+        }
+    }
 
-            Set<String> roots = new TreeSet<>();
-            String manifest = manifests.iterator().next();
-            if (!"none".equals(manifest)) {
-                for (String identifier : manifest.split("\\.")) {
-                    String name = rootName(identifier);
-                    if (!roots.add(name)) {
-                        throw new IllegalArgumentException("duplicate reviewed stack root '" + name + "' in " + path);
-                    }
+    static List<String> parseStackRootSymbols(String readelfOutput) {
+        Set<String> symbols = new TreeSet<>();
+        for (String line : splitLines(readelfOutput)) {
+            String trimmed = line.trim();
+            int separator = trimmed.lastIndexOf(' ');
+            String symbol = separator < 0 ? trimmed : trimmed.substring(separator + 1);
+            if (symbol.startsWith(STACK_SYMBOL_PREFIX)) {
+                symbols.add(symbol);
+            }
+        }
+        if (symbols.isEmpty()) {
+            throw new IllegalArgumentException("no typed stack root symbols in ELF symbol table");
+        }
+        return new ArrayList<>(symbols);
+    }
+
+    static List<Root> parseTypedRoots(String image, String readelfOutput, String demangledOutput) {
+        List<String> symbols = parseStackRootSymbols(readelfOutput);
+        List<String> demangled = splitLines(demangledOutput);
+        if (symbols.size() != demangled.size()) {
+            throw new IllegalArgumentException(
+                "c++filt returned " + demangled.size() + " stack roots for " + symbols.size() + " symbols");
+        }
+
+        List<Root> roots = new ArrayList<>();
+        for (String symbol : demangled) {
+            roots.add(parseTypedRoot(image, symbol));
+        }
+        return roots;
+    }
+
+    private static Root parseTypedRoot(String image, String symbol) {
+        List<String> arguments = templateArguments(symbol, "stack_usage::controllerRoot<");
+        if (arguments != null) {
+            if (arguments.size() != 3) {
+                throw new IllegalArgumentException("invalid controller stack root symbol '" + symbol + "'");
+            }
+            String function = addressTarget(arguments.get(1));
+            return new Root(image, function, function, parseBudget(arguments.get(2)), null);
+        }
+
+        arguments = templateArguments(symbol, "stack_usage::explicitRoot<");
+        if (arguments != null) {
+            if (arguments.size() != 2) {
+                throw new IllegalArgumentException("invalid explicit stack root symbol '" + symbol + "'");
+            }
+            String function = addressTarget(arguments.get(0));
+            return new Root(image, function, function, parseBudget(arguments.get(1)), null);
+        }
+
+        arguments = templateArguments(symbol, "stack_usage::processRoot<");
+        if (arguments != null && arguments.size() == 1 && "0".equals(arguments.get(0))) {
+            return new Root(image, "main/process", "main", "process", null);
+        }
+        throw new IllegalArgumentException("unknown typed stack root symbol '" + symbol + "'");
+    }
+
+    private static List<String> templateArguments(String symbol, String prefix) {
+        if (!symbol.startsWith(prefix) || !symbol.endsWith(">")) {
+            return null;
+        }
+        String value = symbol.substring(prefix.length(), symbol.length() - 1);
+        List<String> result = new ArrayList<>();
+        int start = 0;
+        int angle = 0;
+        int parenthesis = 0;
+        int square = 0;
+        for (int i = 0; i < value.length(); i++) {
+            char character = value.charAt(i);
+            if (character == '<') {
+                angle++;
+            } else if (character == '>') {
+                angle--;
+            } else if (character == '(') {
+                parenthesis++;
+            } else if (character == ')') {
+                parenthesis--;
+            } else if (character == '[') {
+                square++;
+            } else if (character == ']') {
+                square--;
+            } else if (character == ',' && angle == 0 && parenthesis == 0 && square == 0) {
+                result.add(value.substring(start, i).trim());
+                start = i + 1;
+            }
+        }
+        result.add(value.substring(start).trim());
+        return result;
+    }
+
+    private static String addressTarget(String value) {
+        if (value.startsWith("&(") && value.endsWith(")")) {
+            return canonicalizeFunction(value.substring(2, value.length() - 1));
+        }
+        if (value.startsWith("&")) {
+            return canonicalizeFunction(value.substring(1));
+        }
+        throw new IllegalArgumentException("stack root entry is not an address: '" + value + "'");
+    }
+
+    private static List<ProfileRoot> loadProfile(String profile) throws IOException {
+        String resource = "/stack_usage/" + profile + ".md";
+        InputStream stream = StackUsageReport.class.getResourceAsStream(resource);
+        if (stream == null) {
+            throw new IllegalArgumentException("missing stack usage profile " + resource);
+        }
+        return parseProfile(readStream(stream));
+    }
+
+    static List<ProfileRoot> parseProfile(String text) {
+        List<String> lines = splitLines(text);
+        if (lines.size() < 2 || !PROFILE_HEADER.equals(lines.get(0))
+            || !PROFILE_SEPARATOR.equals(lines.get(1))) {
+            throw new IllegalArgumentException("invalid stack usage profile header");
+        }
+
+        List<ProfileRoot> result = new ArrayList<>();
+        Set<String> keys = new HashSet<>();
+        for (int i = 2; i < lines.size(); i++) {
+            String line = lines.get(i).trim();
+            if (line.isEmpty() || line.startsWith("#")) {
+                continue;
+            }
+            if (!line.startsWith("|") || !line.endsWith("|")) {
+                throw new IllegalArgumentException("invalid stack usage profile line " + (i + 1));
+            }
+            String[] fields = line.substring(1, line.length() - 1).split("\\|", -1);
+            for (int field = 0; field < fields.length; field++) {
+                fields[field] = fields[field].trim();
+            }
+            if (fields.length != 6 || fields[0].isEmpty() || fields[1].isEmpty() || fields[2].isEmpty()) {
+                throw new IllegalArgumentException("invalid stack usage profile line " + (i + 1));
+            }
+            boolean noReview = "-".equals(fields[3]) && "-".equals(fields[4]) && "-".equals(fields[5]);
+            if (!noReview && (fields[3].isEmpty() || fields[4].isEmpty() || fields[5].isEmpty()
+                || "-".equals(fields[3]) || "-".equals(fields[4]) || "-".equals(fields[5]))) {
+                throw new IllegalArgumentException("incomplete review on stack usage profile line " + (i + 1));
+            }
+            ReviewedBaseline reviewed = noReview ? null
+                : parseReviewedBaseline(fields[3] + "|" + fields[4] + "|" + fields[5]);
+            ProfileRoot root = new ProfileRoot(fields[0], fields[1], fields[2], reviewed);
+            if (!keys.add(root.key())) {
+                throw new IllegalArgumentException("duplicate stack usage profile entry '" + root.key() + "'");
+            }
+            result.add(root);
+        }
+        return result;
+    }
+
+    static void applyProfile(List<Graph> graphs, List<ProfileRoot> profile) {
+        Map<String, ProfileRoot> expected = new HashMap<>();
+        for (ProfileRoot root : profile) {
+            expected.put(root.key(), root);
+        }
+
+        Map<String, Root> actual = new HashMap<>();
+        for (Graph graph : graphs) {
+            for (Root root : graph.roots) {
+                Root previous = actual.put(root.key(), root);
+                if (previous != null) {
+                    throw new IllegalArgumentException("duplicate linked stack root '" + root.key() + "'");
                 }
             }
-            return roots;
-        } catch (IOException e) {
-            throw new IllegalArgumentException("failed to read " + path, e);
+        }
+        if (!actual.keySet().equals(expected.keySet())) {
+            Set<String> missing = new TreeSet<>(actual.keySet());
+            missing.removeAll(expected.keySet());
+            Set<String> extra = new TreeSet<>(expected.keySet());
+            extra.removeAll(actual.keySet());
+            throw new IllegalArgumentException(
+                "stack usage profile mismatch: missing=" + missing + ", extra=" + extra);
+        }
+
+        for (Graph graph : graphs) {
+            List<Root> roots = new ArrayList<>();
+            for (Root root : graph.roots) {
+                ProfileRoot configured = expected.get(root.key());
+                roots.add(new Root(root.image, configured.name, root.function, root.budget, configured.reviewed));
+            }
+            roots.sort(Comparator.comparing(root -> root.name, String.CASE_INSENSITIVE_ORDER));
+            graph.roots.clear();
+            graph.roots.addAll(roots);
         }
     }
 
@@ -354,7 +499,8 @@ public class StackUsageReport {
     static String findSymbol(Map<String, Node> nodes, String function) {
         List<String> matches = new ArrayList<>();
         for (Node node : nodes.values()) {
-            if (function.equals(node.function)) {
+            if (function.equals(node.function)
+                || (!function.contains("(") && node.function.startsWith(function + "("))) {
                 matches.add(node.symbol);
             }
         }
@@ -617,6 +763,14 @@ public class StackUsageReport {
             this.reviewed = reviewed;
         }
 
+        String entry() {
+            return function == null ? name : function;
+        }
+
+        String key() {
+            return image + ":" + entry();
+        }
+
         @Override
         public boolean equals(Object object) {
             if (!(object instanceof Root)) {
@@ -692,8 +846,26 @@ public class StackUsageReport {
         Graph(String image, Map<String, Node> nodes, List<Root> roots, Map<String, Integer> stackSizes) {
             this.image = image;
             this.nodes = nodes;
-            this.roots = roots;
+            this.roots = new ArrayList<>(roots);
             this.stackSizes = stackSizes;
+        }
+    }
+
+    static class ProfileRoot {
+        final String image;
+        final String entry;
+        final String name;
+        final ReviewedBaseline reviewed;
+
+        ProfileRoot(String image, String entry, String name, ReviewedBaseline reviewed) {
+            this.image = image;
+            this.entry = entry;
+            this.name = name;
+            this.reviewed = reviewed;
+        }
+
+        String key() {
+            return image + ":" + entry;
         }
     }
 
