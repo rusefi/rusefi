@@ -59,6 +59,14 @@ void chDbgAssert(int c, char *msg, void *arg);
 
 #define CCM_OPTIONAL
 
+#ifndef LUA_THREAD_STACK_SIZE
+#define LUA_THREAD_STACK_SIZE 4096
+#endif /* LUA_THREAD_STACK_SIZE */
+
+#ifndef STORAGE_MANAGER_THREAD_STACK_SIZE
+#define STORAGE_MANAGER_THREAD_STACK_SIZE UTILITY_THREAD_STACK_SIZE
+#endif /* STORAGE_MANAGER_THREAD_STACK_SIZE */
+
 #define chSysLock() {}
 #define chSysUnlock() {}
 #define osalThreadDequeueNextI(x, y) {}

@@ -56,7 +56,7 @@ void efiSetLed(ioportid_t port, int pin, bool state) {
 #endif
 }
 
-class BlinkyThread : public chibios_rt::BaseStaticThread<256> {
+class BlinkyThread : public chibios_rt::BaseStaticThread<BLINKY_THREAD_STACK_SIZE> {
 protected:
 	void main(void) override {
 		Gpio yellow = getWarningLedPin();
