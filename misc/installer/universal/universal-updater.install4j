@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="11.0.5" transformSequenceNumber="11">
   <directoryPresets config="../../../../../bundles/rusefi_bundle_universal/rusefi.snapshot.universal" />
-  <application name="rusEFI Universal Updater" applicationId="5936-1408-7724-2651" mediaDir="." shortName="rusEFI Universal Updater" version="1.0.0.0" allPathsRelative="true" macVolumeId="9af7b89f15108498">
+  <application name="rusEFI Universal Updater" applicationId="5936-1408-7724-2651" mediaDir="." shortName="rusEFI Universal Updater" version="1.0.0.1" allPathsRelative="true" macVolumeId="9af7b89f15108498">
     <jreBundles jdkProviderId="Zulu" release="17/17.0.14" />
   </application>
   <files>
@@ -17,7 +17,7 @@
   <launchers>
     <launcher name="rusEFI-Grab-Fresh-And-Update-ECU" id="3">
       <executable name="rusEFI-Grab-Fresh-And-Update-ECU" iconSet="true" executableMode="gui" workingDirectory="console" executionLevel="requireAdministrator" />
-      <java mainClass="com.rusefi.autoupdate.Autoupdate" arguments="basic-ui">
+      <java mainClass="com.rusefi.Launcher" arguments="basic-ui">
         <classPath>
           <archive location="console/rusefi_console.jar" failOnError="false" />
         </classPath>
