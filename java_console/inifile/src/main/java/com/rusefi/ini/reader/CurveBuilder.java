@@ -6,6 +6,9 @@ import com.opensr5.ini.CurveModel;
 import java.util.LinkedList;
 
 public class CurveBuilder {
+    // TunerStudio treats the axis step (grid divisions) as optional, e.g. "yAxis = -5, 5,"
+    private static final int DEFAULT_AXIS_STEP = 10;
+
     private String curveId;
     private String title;
     private AxisModel xAxis;
@@ -78,14 +81,14 @@ public class CurveBuilder {
             list.removeFirst();
             double min = com.opensr5.ini.field.IniField.parseDouble(list.removeFirst());
             double max = com.opensr5.ini.field.IniField.parseDouble(list.removeFirst());
-            int step = (int) com.opensr5.ini.field.IniField.parseDouble(list.removeFirst());
+            int step = list.isEmpty() ? DEFAULT_AXIS_STEP : (int) com.opensr5.ini.field.IniField.parseDouble(list.removeFirst());
             setXAxis(min, max, step);
             return true;
         } else if (first.equalsIgnoreCase("yAxis")) {
             list.removeFirst();
             double min = com.opensr5.ini.field.IniField.parseDouble(list.removeFirst());
             double max = com.opensr5.ini.field.IniField.parseDouble(list.removeFirst());
-            int step = (int) com.opensr5.ini.field.IniField.parseDouble(list.removeFirst());
+            int step = list.isEmpty() ? DEFAULT_AXIS_STEP : (int) com.opensr5.ini.field.IniField.parseDouble(list.removeFirst());
             setYAxis(min, max, step);
             return true;
         } else if (first.equalsIgnoreCase("xBins")) {
