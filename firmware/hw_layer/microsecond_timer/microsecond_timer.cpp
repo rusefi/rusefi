@@ -121,6 +121,8 @@ struct MicrosecondTimerWatchdogController : public PeriodicController<TIMER_WATC
 	}
 };
 
+RUSEFI_STACK_ROOT(MicrosecondTimerWatchdogController, PeriodicTask);
+
 static MicrosecondTimerWatchdogController watchdogControllerInstance;
 
 static scheduling_s watchDogBuddy;

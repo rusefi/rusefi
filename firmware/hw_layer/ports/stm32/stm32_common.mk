@@ -26,6 +26,7 @@ HW_INC += \
 	$(HW_STM32_PORT_DIR)/cfg \
 	$(HW_STM32_PORT_DIR)/serial_over_usb
 
+DDEFS += -DRUSEFI_STACK_USAGE
 USE_OPT += -Wl,-T,$(HW_STM32_PORT_DIR)/rusefi_metadata.ld
 LDSCRIPT_DEPS += $(HW_STM32_PORT_DIR)/rusefi_metadata.ld
 

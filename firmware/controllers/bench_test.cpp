@@ -353,6 +353,8 @@ private:
 	}
 };
 
+RUSEFI_STACK_ROOT(BenchController, ThreadTask);
+
 static BenchController instance;
 
 static void auxOutBench(int index) {

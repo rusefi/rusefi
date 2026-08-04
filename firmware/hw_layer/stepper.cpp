@@ -11,6 +11,10 @@
 
 #include "stepper.h"
 
+#if !EFI_UNIT_TEST
+RUSEFI_STACK_ROOT(StepperMotor, ThreadTask);
+#endif
+
 float StepperMotorBase::getTargetPosition() const {
 	return m_targetPosition;
 }

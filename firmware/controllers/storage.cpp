@@ -284,7 +284,8 @@ static uint32_t pendingWrites = 0;
 static uint32_t pendingReads = 0;
 
 /* in case of MFS or SD card we need more stack */
-static THD_WORKING_AREA(storageManagerThreadStack, STORAGE_MANAGER_THREAD_STACK_SIZE);
+static constexpr int storageManagerThreadStackSize = STORAGE_MANAGER_THREAD_STACK_SIZE;
+static THD_WORKING_AREA(storageManagerThreadStack, storageManagerThreadStackSize);
 
 static void storageManagerThread(void*) {
 	chRegSetThreadName("storage manger");
@@ -380,6 +381,8 @@ static void storageManagerThread(void*) {
 		}
 	}
 }
+
+RUSEFI_STACK_ROOT_EXPLICIT(storageManagerThread, storageManagerThreadStackSize);
 
 /* misc helpers */
 bool getNeedToWriteConfiguration() {

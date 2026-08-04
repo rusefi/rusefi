@@ -259,6 +259,7 @@ static bool runOneLua(lua_Alloc alloc, const char* script) {
 	return true;
 }
 
+RUSEFI_STACK_ROOT(LuaThread, ThreadTask);
 void LuaThread::ThreadTask() {
 	while (!chThdShouldTerminateX()) {
 		bool wasOk = runOneLua(luaHeapAlloc, luaConfigPageGetState()->luaScript);

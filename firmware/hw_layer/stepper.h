@@ -96,6 +96,8 @@ protected:
 
 class StepperMotor final : public StepperMotorBase, private ThreadController<UTILITY_THREAD_STACK_SIZE> {
 public:
+	using ThreadController::stackSize;
+
 	StepperMotor() : ThreadController("stepper", PRIO_STEPPER) {}
 
 	void initialize(StepperHw* hardware, int totalSteps);
