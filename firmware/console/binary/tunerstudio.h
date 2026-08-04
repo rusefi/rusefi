@@ -86,7 +86,7 @@ struct TunerStudioPageRWChunkRequest {
 static_assert(sizeof(TunerStudioPageRWChunkRequest) == 6);
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
-#define CONNECTIVITY_THREAD_STACK (3 * UTILITY_THREAD_STACK_SIZE)
+#define CONNECTIVITY_THREAD_STACK (3*UTILITY_THREAD_STACK_SIZE)
 
 class TunerstudioThread : public ThreadController<CONNECTIVITY_THREAD_STACK> {
 public:

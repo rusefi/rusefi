@@ -64,7 +64,9 @@ void unregisterCanListener(CanListener& listener);
 void registerCanSensor(CanSensorBase& sensor);
 // TODO: unregisterCanSensor()?
 
-class CanWrite final : public PeriodicController</*TStackSize*/512> {
+#define CAN_WRITE_THREAD_STACK_SIZE 512
+
+class CanWrite final : public PeriodicController<CAN_WRITE_THREAD_STACK_SIZE> {
 public:
 	CanWrite();
 	void PeriodicTask(efitick_t nowNt) override;

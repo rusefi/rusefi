@@ -18,7 +18,9 @@ static constexpr int loopCounts() {
     return MAIN_LOOP_RATE / hz;
 }
 
-class MainLoop : public PeriodicController<1024> {
+#define MAIN_LOOP_THREAD_STACK_SIZE 1024
+
+class MainLoop : public PeriodicController<MAIN_LOOP_THREAD_STACK_SIZE> {
 public:
     MainLoop();
     void PeriodicTask(efitick_t nowNt) override;

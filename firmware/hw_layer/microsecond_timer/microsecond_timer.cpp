@@ -107,7 +107,7 @@ void portMicrosecondTimerCallback() {
 	}
 }
 
-struct MicrosecondTimerWatchdogController : public PeriodicController<256> {
+struct MicrosecondTimerWatchdogController : public PeriodicController<TIMER_WATCHDOG_THREAD_STACK_SIZE> {
 	MicrosecondTimerWatchdogController()
 		: PeriodicController("MstWatchdog", NORMALPRIO, 2)
 	{

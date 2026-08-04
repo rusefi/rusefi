@@ -283,12 +283,8 @@ bool storagRequestUnregisterStorage(StorageType id)
 static uint32_t pendingWrites = 0;
 static uint32_t pendingReads = 0;
 
-#if (EFI_STORAGE_MFS == TRUE) || (EFI_STORAGE_SD == TRUE)
 /* in case of MFS or SD card we need more stack */
-static THD_WORKING_AREA(storageManagerThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);
-#else
-static THD_WORKING_AREA(storageManagerThreadStack, UTILITY_THREAD_STACK_SIZE);
-#endif
+static THD_WORKING_AREA(storageManagerThreadStack, STORAGE_MANAGER_THREAD_STACK_SIZE);
 
 static void storageManagerThread(void*) {
 	chRegSetThreadName("storage manger");

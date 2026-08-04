@@ -187,7 +187,7 @@ static void invokeTick(LuaHandle& ls) {
 	lua_settop(ls, 0);
 }
 
-struct LuaThread : ThreadController<4096> {
+struct LuaThread : ThreadController<LUA_THREAD_STACK_SIZE> {
 	LuaThread() : ThreadController("lua", PRIO_LUA) { }
 
 	void ThreadTask() override;
