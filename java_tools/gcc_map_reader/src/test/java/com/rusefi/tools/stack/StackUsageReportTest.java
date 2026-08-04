@@ -101,30 +101,49 @@ public class StackUsageReportTest {
     }
 
     @Test
-    void linkedStackRootMetadata() throws Exception {
+    void linkedStackRootMetadataAndExternalProfile() throws Exception {
         Path map = write("roots.map",
             "Discarded input sections\n"
-                + " .rusefi_stack_root.dead.100\n"
+                + " .rusefi_stack_foreign_root.dead.100\n"
                 + "Linker script and memory map\n"
-                + ".rusefi_stack_root.CAN_RX.3*400\n"
-                + " .rusefi_stack_root.CAN_RX.3*400\n"
-                + ".rusefi_stack_root.idle.32\n"
-                + "                0x00000000 0x1 test.o\n"
-                + ".rusefi_stack_reviewed_roots.CAN_RX\n"
+                + ".rusefi_stack_foreign_root.idle.32\n"
                 + "                0x00000000 0x1 test.o\n");
         String readelf =
-            "String dump of section '.rusefi_stack_root.CAN_RX.3*400':\n"
-                + "  [     0]  CanRead::ThreadTask()\n"
-                + "  [    16]  440|1244|CAN serial receive\n"
-                + "String dump of section '.rusefi_stack_root.idle.32':\n"
+            "   11: 00000002     1 OBJECT  GLOBAL DEFAULT   11 "
+                + "_ZN11stack_usage14controllerRootI7CanReadXadL_ZNS1_10ThreadTaskEvEELi1200EEE\n"
+                + "   12: 00000001     1 OBJECT  LOCAL  DEFAULT   11 "
+                + "_ZN11stack_usage12explicitRootIXadL_ZL12MMCmonThreadPvEELi1200EEE\n"
+                + "   13: 00000000     1 OBJECT  GLOBAL DEFAULT   11 "
+                + "_ZN11stack_usage11processRootILi0EEE\n"
+                + "String dump of section '.rusefi_stack_foreign_root.idle.32':\n"
                 + "  [     0]  __idle_thread\n";
+        String demangled =
+            "stack_usage::processRoot<0>\n"
+                + "stack_usage::explicitRoot<&(MMCmonThread(void*)), 1200>\n"
+                + "stack_usage::controllerRoot<CanRead, &CanRead::ThreadTask, 1200>\n";
 
-        List<StackUsageReport.Root> roots = StackUsageReport.parseMapRoots(map, "firmware", readelf);
-        assertEquals(3, roots.size());
-        assertEquals(new StackUsageReport.Root("firmware", "CAN RX", "CanRead::ThreadTask()", 1200,
+        List<StackUsageReport.Root> roots = StackUsageReport.parseElfRoots(map, "firmware", readelf, demangled);
+        assertEquals(5, roots.size());
+        List<StackUsageReport.ProfileRoot> profile = StackUsageReport.parseProfile(
+            "| Image | Entry | Name | Retained | Proxy | Scenario |\n"
+                + "|---|---|---|---:|---:|---|\n"
+                + "| firmware | CanRead::ThreadTask | CAN RX | 440 | 1244 | CAN serial receive |\n"
+                + "| firmware | exception/ISR | exception/ISR | - | - | - |\n"
+                + "| firmware | __idle_thread | idle | - | - | - |\n"
+                + "| firmware | main | main/process | - | - | - |\n"
+                + "| firmware | MMCmonThread(void*) | SD/MMC | - | - | - |\n");
+        StackUsageReport.Graph graph = new StackUsageReport.Graph(
+            "firmware", Collections.<String, StackUsageReport.Node>emptyMap(), roots,
+            Collections.<String, Integer>emptyMap());
+        StackUsageReport.applyProfile(Collections.singletonList(graph), profile);
+        roots = graph.roots;
+
+        assertEquals(new StackUsageReport.Root("firmware", "CAN RX", "CanRead::ThreadTask", 1200,
             new StackUsageReport.ReviewedBaseline(440, 1244, "CAN serial receive")), roots.get(0));
         assertEquals(new StackUsageReport.Root("firmware", "exception/ISR", null, "exception", null), roots.get(1));
         assertEquals(new StackUsageReport.Root("firmware", "idle", "__idle_thread", 32, null), roots.get(2));
+        assertEquals(new StackUsageReport.Root("firmware", "main/process", "main", "process", null), roots.get(3));
+        assertEquals(new StackUsageReport.Root("firmware", "SD/MMC", "MMCmonThread(void*)", 1200, null), roots.get(4));
         assertEquals("SD/MMC", StackUsageReport.rootName("SD__MMC"));
         assertEquals(BigInteger.valueOf(448), StackUsageReport.parseBudget("(3*128)+64"));
         assertEquals(BigInteger.valueOf(256), StackUsageReport.parseBudget("0x100"));
@@ -140,20 +159,10 @@ public class StackUsageReportTest {
         }
         assertThrows(IllegalArgumentException.class,
             () -> StackUsageReport.parseReviewedBaseline("440|missing scenario"));
-
-        Path wrongManifest = write("wrong_manifest.map",
-            new String(Files.readAllBytes(map), StandardCharsets.UTF_8)
-                .replace(".rusefi_stack_reviewed_roots.CAN_RX", ".rusefi_stack_reviewed_roots.idle"));
-        IllegalArgumentException manifestError = assertThrows(IllegalArgumentException.class,
-            () -> StackUsageReport.parseMapRoots(wrongManifest, "firmware", readelf));
-        assertTrue(manifestError.getMessage().contains("missing=[idle], extra=[CAN RX]"));
-
-        Path missingManifest = write("missing_manifest.map",
-            new String(Files.readAllBytes(map), StandardCharsets.UTF_8)
-                .replace(".rusefi_stack_reviewed_roots.CAN_RX", ".ignored"));
-        IllegalArgumentException missingManifestError = assertThrows(IllegalArgumentException.class,
-            () -> StackUsageReport.parseMapRoots(missingManifest, "firmware", readelf));
-        assertTrue(missingManifestError.getMessage().contains("missing reviewed stack root manifest"));
+        IllegalArgumentException profileError = assertThrows(IllegalArgumentException.class,
+            () -> StackUsageReport.applyProfile(Collections.singletonList(graph),
+                profile.subList(0, profile.size() - 1)));
+        assertTrue(profileError.getMessage().contains("missing=[firmware:MMCmonThread(void*)]"));
     }
 
     @Test
@@ -166,6 +175,13 @@ public class StackUsageReportTest {
 
         assertEquals("CanWrite::PeriodicTask(long long)", nodes.get(symbol).function);
         assertEquals("lwip_thread", StackUsageReport.canonicalizeFunction("lwip_thread.lto_priv.0"));
+        assertEquals(symbol, StackUsageReport.findSymbol(nodes, "CanWrite::PeriodicTask(long long)"));
+        assertEquals(symbol, StackUsageReport.findSymbol(nodes, "CanWrite::PeriodicTask"));
+        StackUsageReport.Node overload = new StackUsageReport.Node("overload");
+        overload.function = "CanWrite::PeriodicTask(int)";
+        nodes.put(overload.symbol, overload);
+        assertThrows(IllegalArgumentException.class,
+            () -> StackUsageReport.findSymbol(nodes, "CanWrite::PeriodicTask"));
         assertEquals(symbol, StackUsageReport.findSymbol(nodes, "CanWrite::PeriodicTask(long long)"));
         assertThrows(IllegalArgumentException.class,
             () -> StackUsageReport.parseCallgraphs(Collections.<Path>emptyList()));
