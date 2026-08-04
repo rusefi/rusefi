@@ -110,6 +110,8 @@ TEST(ToothLoggerBuffer, StaleBufferFlushedAfter5Seconds) {
 	pool.appendI(state, getTimeNowNt());
 	EXPECT_FALSE(s_toothReady);
 
+	eth.moveTimeForwardSec(1);
+	pool.appendI(state, getTimeNowNt());
 	// A partially-filled buffer goes stale after 5 seconds and is posted on
 	// the next append even though it is nowhere near full
 	eth.moveTimeForwardSec(6);
@@ -118,8 +120,21 @@ TEST(ToothLoggerBuffer, StaleBufferFlushedAfter5Seconds) {
 
 	CompositeBuffer* buf = pool.getFilled(TIME_IMMEDIATE);
 	ASSERT_NE(buf, nullptr);
+	// Only one old event in first buffer, second one is still pending
 	EXPECT_EQ(buf->nextIdx, 2u);
-	EXPECT_EQ(unswap(buf->buffer[1]).timestamp, 6'000'000u);
+	EXPECT_EQ(unswap(buf->buffer[1]).timestamp, 1'000'000u);
+
+	pool.returnBufferI(buf);
+
+	// Wait another timeout
+	eth.moveTimeForwardSec(6);
+	pool.appendI(state, getTimeNowNt());
+	EXPECT_TRUE(s_toothReady);
+
+	// Expecting second event in this buffer
+	buf = pool.getFilled(TIME_IMMEDIATE);
+	ASSERT_NE(buf, nullptr);
+	EXPECT_EQ(buf->nextIdx, 1u);
 
 	pool.returnBufferI(buf);
 	pool.stopI();
