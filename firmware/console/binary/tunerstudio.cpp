@@ -861,6 +861,7 @@ void TunerstudioThread::onDataArrived(int instance, bool valid) {
 	}
 }
 
+RUSEFI_STACK_ROOT(TunerstudioThread, ThreadTask);
 void TunerstudioThread::ThreadTask() {
 	auto channel = setupChannel();
 
