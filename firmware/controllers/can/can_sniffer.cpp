@@ -135,6 +135,9 @@ void CanSniffer::handle_can_message(const size_t busIndex, const T &cmsg, efitic
 }
 
 bool CanSniffer::can_init(slcan_can_mode_e mode) {
+	// Hardware initialization is controlled by the ECU, so this is mostly a dummy
+	// or for informational prints. Bit rate change and interface restart are not supported
+	// here.
 	switch (mode) {
 	case can_mode_close:
 		efiPrintf("sniffer wants to close CAN");
@@ -281,6 +284,8 @@ void CanSniffer::executeCommand() {
 			break;
 
 		case 'O': //open terminal
+			// Bit rate and interface state are controlled by the ECU.
+			// The sniffer just opens its logical terminal.
 			if (baudrate_configured && !terminal_open && can_init(can_mode_normal)) {
 				terminal_open = 1;
 				transmit_enabled = 1;
@@ -314,6 +319,7 @@ void CanSniffer::executeCommand() {
 			break;
 
 		case 'C': //close terminal
+			// Hardware is controlled by the ECU, we only close the logical terminal.
 			if (terminal_open) {
 				terminal_open = 0;
 				transmit_enabled = 0;
@@ -333,6 +339,7 @@ void CanSniffer::executeCommand() {
 			break;
 
 		case 'S': //select bitrate e.g. "S4" for 125kbit
+			// Bit rate change is not supported, it is controlled by the ECU.
 			if (terminal_open || str[1] < '0' || str[1] > '8') {
 				// any other character is also error
 				// or terminal is open, we cannot set a baud rate
