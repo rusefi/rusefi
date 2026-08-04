@@ -452,6 +452,16 @@ console live data tab is broken #8402
             if (UiProperties.isKnockAnalyzerEnabled()) {
                 tabbedPane.addTab("Knock Analyzer", new KnockPane(uiContext).getContent());
             }
+            if (UiProperties.isSlcanSnifferEnabled()) {
+                // Lazy: SlcanTab starts a serial-port-scanning reader thread on construction,
+                // only do that once the user actually opens the tab.
+                tabbedPane.addTab("SLCAN Sniffer", new InitOnFirstPaintPanel() {
+                    @Override
+                    protected JPanel createContent() {
+                        return new SlcanTab().getContent();
+                    }
+                }.getContent());
+            }
             if (UiProperties.isPinoutEnabled()) {
                 tabbedPane.addTab("Pinout", pinoutPane.getContent());
             }
