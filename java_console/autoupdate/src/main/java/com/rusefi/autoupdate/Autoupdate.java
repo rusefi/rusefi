@@ -25,7 +25,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -74,7 +77,12 @@ import static com.rusefi.core.FindFileHelper.findFirmwareFile;
  *   <li>If auto-update is enabled, {@link #downloadFreshZipFile} downloads the latest
  *       bundle zip (only when server timestamp/size indicate it's newer than the local
  *       copy — see {@link #isNewerAvailable}); otherwise nothing is downloaded.</li>
- *   <li>{@link #unzipAutoUpdate} extracts the bundle over the installation.</li>
+ *   <li>{@link #unzipAutoUpdate} extracts the bundle over the installation. Exception: when
+ *       the updater itself was launched from {@code rusefi_console.jar} (some white-label exe
+ *       launchers are configured that way, #10000) the flow instead reuses the staged
+ *       pending-JAR path of the in-console update ({@link #applyUpdate} +
+ *       {@link #relaunchConsole(String[])}), because extracting over the installation would
+ *       overwrite the JAR this JVM is running from and break lazy class loading.</li>
  *   <li>{@link #prefetchLastConnectedBoardFirmware} (issue #9714) refreshes firmware for
  *       the board the user last connected to, so a later in-console "Update ECU" is
  *       instant.</li>
@@ -261,6 +269,23 @@ public class Autoupdate {
         // Let's try to get console .exe-file name before we rewrite autoupdate .jar file:
         final String consoleExeFileName = new ConsoleExeFileLocator().getConsoleExeFileName();
 
+        if (downloadedAutoupdateFile.isPresent() && isRunningFromConsoleJar()) {
+            // #10000: this launcher runs Autoupdate straight from rusefi_console.jar, so the legacy
+            // unzipAutoUpdate path would overwrite the running JAR on disk and break lazy class
+            // loading (NoClassDefFoundError on any class not loaded yet). Reuse the staged
+            // pending-JAR path of the in-console update instead: the running JAR is never touched,
+            // relaunchConsole() starts the new code from the pending JAR and finalizePendingUpdate()
+            // promotes it to the real name during that startup.
+            UpdateOutcome outcome = applyDownloadedUpdate(downloadedAutoupdateFile.get(), Autoupdate::applyUpdate);
+            prefetchLastConnectedBoardFirmware();
+            if (outcome == UpdateOutcome.UPDATED) {
+                relaunchConsole(args); // does not return - exits this JVM after spawning the console
+            }
+            log.error("Staged update failed, launching existing console");
+            startConsoleAsANewProcess(consoleExeFileName, args);
+            return;
+        }
+
         // java lazy class-loader would get broken if we replace rusefi_autoupdate.jar file
         // ATTENTION! To avoid `ClassNotFoundException` we need to load all necessary classes before unzipping
         // autoupdate archive
@@ -306,6 +331,14 @@ public class Autoupdate {
      * current JAR path cannot be resolved (e.g. running from an IDE class directory).
      */
     public static void relaunchConsole() {
+        relaunchConsole(new String[0]);
+    }
+
+    /**
+     * Same as {@link #relaunchConsole()} but forwards program arguments to the new console
+     * process - used by the launch-time staged-update path, which must pass its own args through.
+     */
+    public static void relaunchConsole(String[] args) {
         String jarPath = getCurrentJarPath();
         if (jarPath != null) {
             // If a staged update exists, launch from it so the new code is picked up immediately.
@@ -314,14 +347,16 @@ public class Autoupdate {
             String javaExe = Paths.get(System.getProperty("java.home"), "bin", "java").toString();
             log.info("relaunchConsole: launching " + launchJar);
             try {
-                new ProcessBuilder(javaExe, "-DSKIP_ONE_INSTANCE_CHECK=true", "-jar", launchJar).start();
+                List<String> command = new ArrayList<>(Arrays.asList(javaExe, "-DSKIP_ONE_INSTANCE_CHECK=true", "-jar", launchJar));
+                command.addAll(Arrays.asList(args));
+                new ProcessBuilder(command).start();
                 System.exit(0);
             } catch (IOException e) {
                 log.error("Direct relaunch failed, falling back to exe launcher: " + e);
             }
         }
         String consoleExeFileName = new ConsoleExeFileLocator().getConsoleExeFileName();
-        startConsoleAsANewProcess(consoleExeFileName, new String[0]);
+        startConsoleAsANewProcess(consoleExeFileName, args);
         System.exit(0);
     }
 
@@ -374,28 +409,35 @@ public class Autoupdate {
      * Extracts the console JAR entry from the bundle ZIP to {@value PENDING_CONSOLE_JAR} in the
      * same {@code ../console/} directory, so the running JAR is not touched.
      */
-    private static void extractConsoleJarAsPending(String zipFileName) {
+    private static void extractConsoleJarAsPending(String zipFileName) throws IOException {
         // ../console/ relative to working dir (console/) is the console directory itself
-        File pendingJar = new File(new File(".."), "console" + File.separator + PENDING_CONSOLE_JAR);
+        Path pendingJar = Paths.get("..", "console", PENDING_CONSOLE_JAR);
         log.info("extractConsoleJarAsPending: " + pendingJar);
-        try (ZipInputStream zis = new ZipInputStream(Files.newInputStream(Paths.get(zipFileName)))) {
+        stageConsoleJar(Paths.get(zipFileName), pendingJar, consoleJarZipEntry);
+        log.info("extractConsoleJarAsPending: done (" + Files.size(pendingJar) + " bytes)");
+    }
+
+    static void stageConsoleJar(Path zipFile, Path pendingJar, String consoleJarEntry) throws IOException {
+        Path temporaryJar = pendingJar.resolveSibling(pendingJar.getFileName() + ".tmp");
+        Files.createDirectories(pendingJar.getParent());
+        Files.deleteIfExists(temporaryJar);
+        try (ZipInputStream zis = new ZipInputStream(Files.newInputStream(zipFile))) {
             ZipEntry entry;
             while ((entry = zis.getNextEntry()) != null) {
-                if (isConsoleJar.test(entry)) {
-                    pendingJar.getParentFile().mkdirs();
-                    try (FileOutputStream fos = new FileOutputStream(pendingJar)) {
-                        byte[] buffer = new byte[4096];
-                        int len;
-                        while ((len = zis.read(buffer)) > 0)
-                            fos.write(buffer, 0, len);
-                    }
-                    log.info("extractConsoleJarAsPending: done (" + pendingJar.length() + " bytes)");
+                if (consoleJarEntry.equals(entry.getName())) {
+                    Files.copy(zis, temporaryJar, StandardCopyOption.REPLACE_EXISTING);
+                    Files.move(temporaryJar, pendingJar,
+                        StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
                     return;
                 }
             }
-            log.info("extractConsoleJarAsPending: entry " + consoleJarZipEntry + " not found in bundle");
-        } catch (IOException e) {
-            log.error("extractConsoleJarAsPending: " + e);
+            throw new IOException("Console JAR entry " + consoleJarEntry + " not found in bundle");
+        } finally {
+            try {
+                Files.deleteIfExists(temporaryJar);
+            } catch (IOException e) {
+                log.warn("Unable to remove temporary console JAR " + temporaryJar + ": " + e);
+            }
         }
     }
 
@@ -523,10 +565,19 @@ public class Autoupdate {
                 return UpdateOutcome.FAILED;
             }
             log.info("performUpdate: update downloaded, applying...");
-            applier.apply(downloaded.file.get());
-            return UpdateOutcome.UPDATED;
+            return applyDownloadedUpdate(downloaded.file.get(), applier);
         } catch (Throwable e) {
             log.error("performUpdate failed", e);
+            return UpdateOutcome.FAILED;
+        }
+    }
+
+    static UpdateOutcome applyDownloadedUpdate(DownloadedAutoupdateFileInfo file, UpdateApplier applier) {
+        try {
+            applier.apply(file);
+            return UpdateOutcome.UPDATED;
+        } catch (Throwable e) {
+            log.error("applyDownloadedUpdate failed", e);
             return UpdateOutcome.FAILED;
         }
     }
@@ -595,6 +646,12 @@ public class Autoupdate {
     }
 
     private static void unzipFreshConsole(DownloadedAutoupdateFileInfo autoupdateFile) {
+        if (isRunningFromConsoleJar()) {
+            // should be unreachable: autoupdate() routes console-jar-hosted updaters to the staged
+            // pending-JAR path. Never overwrite the JAR this JVM is running from (#10000).
+            log.error("unzipFreshConsole: running from the console JAR, refusing to overwrite it");
+            return;
+        }
         try {
             log.info("unzipFreshConsole " + autoupdateFile.zipFileName + " only " + consoleJarZipEntry);
             // We cannot unzip rusefi_autoupdate.jar file because we need the old one to prepare class loader below
@@ -623,6 +680,30 @@ public class Autoupdate {
     }
 
     private static final Predicate<ZipEntry> isConsoleJar = zipEntry -> consoleJarZipEntry.equals(zipEntry.getName());
+
+    /**
+     * True when this updater's own code was loaded from the console JAR (or its staged pending
+     * copy) - some white-label exe launchers are configured that way (#10000). Overwriting that
+     * file in place would break the running JVM's lazy class loading, so such installations must
+     * take the staged pending-JAR update path.
+     */
+    private static boolean isRunningFromConsoleJar() {
+        return isConsoleJarFileName(getCurrentJarPath());
+    }
+
+    /** Bare console JAR file name, white-label aware (e.g. {@code rusefi_console.jar}). Package-private for unit tests. */
+    static String consoleJarFileName() {
+        return new File(consoleJarZipEntry).getName();
+    }
+
+    // package-private for unit tests
+    static boolean isConsoleJarFileName(String jarPath) {
+        if (jarPath == null) {
+            return false;
+        }
+        String name = new File(jarPath).getName();
+        return name.equals(consoleJarFileName()) || name.equals(PENDING_CONSOLE_JAR);
+    }
 
     private static Optional<DownloadedAutoupdateFileInfo> doDownload(final BundleInfo bundleInfo) {
         return doDownloadDetailed(bundleInfo).file;
