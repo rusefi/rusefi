@@ -98,10 +98,16 @@ static LuaHandle setupLuaState(lua_Alloc alloc) {
 	return ls;
 }
 
+// this function is needed for a correct graph on the stackUsageReport
+static int doString(lua_State* ls, const char* script) {
+	return luaL_loadbufferx(ls, script, std::strlen(script), script, "t")
+		|| lua_pcall(ls, 0, LUA_MULTRET, 0);
+}
+
 static bool loadScript(LuaHandle& ls, const char* scriptStr) {
 	efiPrintf(TAG "loading script length: %u...", std::strlen(scriptStr));
 
-	if (0 != luaL_dostring(ls, scriptStr)) {
+	if (0 != doString(ls, scriptStr)) {
 	  withErrorLoading = true;
 		efiPrintf(TAG "ERROR loading script: %s", lua_tostring(ls, -1));
 		lua_pop(ls, 1);
@@ -127,7 +133,7 @@ static void doInteractive(LuaHandle& ls) {
 		return;
 	}
 
-	auto status = luaL_dostring(ls, interactiveCmd);
+	auto status = doString(ls, interactiveCmd);
 
 	if (0 == status) {
 		// Function call was OK, resolve return value and print it
