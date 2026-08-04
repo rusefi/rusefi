@@ -98,6 +98,81 @@ TEST(ToothLoggerBuffer, FillPostsBufferWithRelativeTimestamps) {
 	pool.stopI();
 }
 
+TEST(ToothLoggerBuffer, CircularModeReusesBuffers) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	s_toothReady = false;
+	ToothLoggerBufferPool pool{readyCallback};
+	ASSERT_TRUE(pool.startI());
+	pool.setCircularModeI(true);
+
+	composite_logger_s state{};
+	efitick_t now = getTimeNowNt();
+
+	// 1. Fill all buffers exactly.
+	// Each loop fills one buffer and posts it to filledBuffers.
+	for (size_t b = 0; b < ToothLoggerBufferPool::bufferCount; b++) {
+		for (size_t i = 0; i < toothLoggerEntriesPerBuffer; i++) {
+			pool.appendI(state, now + US2NT(b * 10000 + i));
+		}
+	}
+
+	// Now freeBuffers is empty, and filledBuffers has all bufferCount buffers.
+	// m_currentBuffer is nullptr because the last appendI posted it.
+
+	// 2. Append one more entry.
+	// findBufferI will see m_currentBuffer == nullptr, freeBuffers empty,
+	// and since m_circularMode is true, it will fetch from filledBuffers.
+	pool.appendI(state, now + US2NT(1000000));
+
+	// m_currentBuffer should now be non-null.
+	CompositeBuffer* current = pool.getCurrent();
+	ASSERT_NE(current, nullptr);
+	EXPECT_EQ(current->nextIdx, 1u);
+
+	// The filled queue should now have (bufferCount - 1) buffers.
+	// We can't directly check the count, but we can try to drain it.
+	for (size_t i = 0; i < ToothLoggerBufferPool::bufferCount - 1; i++) {
+		CompositeBuffer* b = pool.getFilled(TIME_IMMEDIATE);
+		EXPECT_NE(b, nullptr);
+		// None of these should be the one we are currently filling
+		EXPECT_NE(b, current);
+	}
+	// The queue should be empty now
+	EXPECT_EQ(pool.getFilled(TIME_IMMEDIATE), nullptr);
+
+	pool.stopI();
+}
+
+TEST(ToothLoggerBuffer, NormalModeDoesNotReuseBuffers) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	s_toothReady = false;
+	ToothLoggerBufferPool pool{readyCallback};
+	ASSERT_TRUE(pool.startI());
+	pool.setCircularModeI(false); // Normal mode
+
+	composite_logger_s state{};
+	efitick_t now = getTimeNowNt();
+
+	// Fill all buffers
+	for (size_t b = 0; b < ToothLoggerBufferPool::bufferCount; b++) {
+		for (size_t i = 0; i < toothLoggerEntriesPerBuffer; i++) {
+			pool.appendI(state, now + US2NT(b * 10000 + i));
+		}
+	}
+
+	// Now pool is full.
+	// Try to append one more entry.
+	pool.appendI(state, now + US2NT(1000000));
+
+	// In normal mode, findBufferI returns nullptr if all buffers are full.
+	// appendI does nothing if findBufferI returns nullptr.
+	EXPECT_EQ(pool.getCurrent(), nullptr);
+
+	pool.stopI();
+}
+
 TEST(ToothLoggerBuffer, StaleBufferFlushedAfter5Seconds) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
