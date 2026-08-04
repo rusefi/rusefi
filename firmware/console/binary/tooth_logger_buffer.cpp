@@ -18,12 +18,17 @@
 std::optional<board_tooth_log_sample_type> custom_board_toothLogSample;
 
 bool ToothLoggerBufferPool::startI() {
+#if (BACKGROUND_TOOTH_LOGGER_SIZE > 0)
+	// we already have static buffers
+	CompositeBuffer* buffers = m_buffers;
+#else
 	m_bufferHandle = getBigBuffer(BigBufferUser::ToothLogger);
 	if (!m_bufferHandle) {
 		return false;
 	}
 
 	CompositeBuffer* buffers = m_bufferHandle.get<CompositeBuffer>();
+#endif
 
 	// Reset all buffers
 	for (size_t i = 0; i < bufferCount; i++) {
@@ -52,9 +57,13 @@ void ToothLoggerBufferPool::stopI() {
 	// Drop the partial buffer - it lives in memory we are about to hand back
 	m_currentBuffer = nullptr;
 
+#if (BACKGROUND_TOOTH_LOGGER_SIZE > 0)
+	// static buffers, nothing to release
+#else
 	// Release the big buffer for another user
 	// C++ magic: here we are calling BigBufferHandle::operator=() with empty instance
 	m_bufferHandle = {};
+#endif
 }
 
 CompositeBuffer* ToothLoggerBufferPool::findBufferI(efitick_t timestamp) {
@@ -63,13 +72,20 @@ CompositeBuffer* ToothLoggerBufferPool::findBufferI(efitick_t timestamp) {
 	if (!m_currentBuffer) {
 		// try and find a buffer, if none available, we can't log
 		if (MSG_OK != m_freeBuffers.fetchI(&buffer)) {
-			return nullptr;
+			if (!m_circularMode) {
+				return nullptr;
+			}
+
+			// in circular mode get oldest one and reuse
+			if (MSG_OK != m_filledBuffers.fetchI(&buffer)) {
+				return nullptr;
+			}
 		}
 
 		// Record the time of the last buffer swap so we can force a swap after a minimum period of time
 		// This ensures the user sees *something* even if they don't have enough trigger events
 		// to fill the buffer.
-		buffer->startTime.reset(timestamp);
+		m_currentBufferStartTime.reset(timestamp);
 		buffer->nextIdx = 0;
 
 		m_currentBuffer = buffer;
@@ -79,23 +95,37 @@ CompositeBuffer* ToothLoggerBufferPool::findBufferI(efitick_t timestamp) {
 }
 
 void ToothLoggerBufferPool::appendI(const composite_logger_s& state, efitick_t timestamp) {
-	CompositeBuffer* buffer = findBufferI(timestamp);
+	if (!m_circularMode) {
+		// check for timeout only in normal mode
+		if ((m_currentBuffer) && (m_currentBuffer->nextIdx > 0) &&
+			(m_currentBufferStartTime.hasElapsedSec(5))) {
+			// more than 5 seconds gap in events - start new buffer
 
+			postCurrentI();
+
+			// Flag that we are ready
+			setReady(true);
+		}
+	}
+
+	CompositeBuffer* buffer = findBufferI(timestamp);
 	if (!buffer) {
 		// All buffers are full, nothing to do here.
 		return;
 	}
 
+	// TODO: why so complicated?
 	size_t idx = buffer->nextIdx;
 	auto nextIdx = idx + 1;
 	buffer->nextIdx = nextIdx;
 
+	// TODO: is this a useless check?
 	if (idx < efi::size(buffer->buffer)) {
 		composite_logger_s* entry = &buffer->buffer[idx];
 
 		entry->x = state.x;
 		// timestamp is offset to buffer begin
-		entry->timestamp = NT2US(timestamp - buffer->startTime.get());
+		entry->timestamp = NT2US(timestamp - m_currentBufferStartTime.get());
 
 		// TS uses big endian, grumble
 		// the whole order of all packet bytes is reversed, not just the 'endian-swap' integers
@@ -124,22 +154,33 @@ void ToothLoggerBufferPool::appendI(const composite_logger_s& state, efitick_t t
 #endif
 	}
 
-	// if the buffer is full...
-	bool bufferFull = nextIdx >= efi::size(buffer->buffer);
-	// ... or it's been too long since the last flush
-	bool bufferTimedOut = buffer->startTime.hasElapsedSec(5);
-
 	// Then cycle buffers and set the ready flag.
-	if (bufferFull || bufferTimedOut) {
+	if (nextIdx >= efi::size(buffer->buffer)) {
 		// Post to the output queue
-		m_filledBuffers.postI(buffer);
+		postCurrentI();
 
-		// Null the current buffer so we get a new one next time
-		m_currentBuffer = nullptr;
-
-		// Flag that we are ready
-		setReady(true);
+		if (!m_circularMode) {
+			// Flag that we are ready
+			setReady(true);
+		}
 	}
+}
+
+bool ToothLoggerBufferPool::postCurrentI() {
+	if (!m_currentBuffer) {
+		return false;
+	}
+
+	// startTime is deferred until the buffer is posted - see m_currentBufferStartTime
+	m_currentBuffer->startTime = m_currentBufferStartTime;
+
+	// Post to the output queue
+	m_filledBuffers.postI(m_currentBuffer);
+
+	// Null the current buffer so we get a new one next time
+	m_currentBuffer = nullptr;
+
+	return true;
 }
 
 void ToothLoggerBufferPool::returnBufferI(CompositeBuffer* buffer) {
@@ -149,7 +190,9 @@ void ToothLoggerBufferPool::returnBufferI(CompositeBuffer* buffer) {
 
 	// If the used list is empty, clear the ready flag
 	if (m_filledBuffers.getUsedCountI() == 0) {
-		setReady(false);
+		if (!m_circularMode) {
+			setReady(false);
+		}
 	}
 }
 
@@ -177,8 +220,27 @@ msg_t ToothLoggerBufferPool::fetchFilled(CompositeBuffer** buffer, sysinterval_t
 
 CompositeBuffer* ToothLoggerBufferPool::flushCurrentI() {
 	CompositeBuffer* buffer = m_currentBuffer;
+	if (buffer) {
+		// startTime is deferred until the buffer leaves the pool
+		buffer->startTime = m_currentBufferStartTime;
+	}
 	m_currentBuffer = nullptr;
 	return buffer;
+}
+
+bool ToothLoggerBufferPool::setCircularModeI(bool circular) {
+	if (m_circularMode != circular) {
+		m_circularMode = circular;
+		if (m_circularMode) {
+			// 50% trigger position, so event is in the middle of log
+			toothLoggerEntriesToCapture = toothLoggerEntriesTotal / 2;
+		}
+
+		// mode has changed
+		return true;
+	}
+
+	return false;
 }
 
 bool ToothLoggerBufferPool::hasDataI() {
