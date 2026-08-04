@@ -770,6 +770,7 @@ static bool sdLoggerFailed = false;
 static bool sdLoggedSuppressed = false;
 
 #if EFI_TOOTH_LOGGER
+static bool toothLoggerEnabled = false;
 /**
  * One iteration of trigger tooth logging: lazily creates a .teeth file once tooth
  * data shows up, appends whatever the tooth logger has buffered, and closes the file
@@ -779,6 +780,12 @@ static bool sdLoggedSuppressed = false;
  */
 static int sdLoggerTooth(FIL *fd) {
 	int ret = 0;
+
+	if (!toothLoggerEnabled) {
+		// Tooth logger selected in setting but was not started (used by DTC manager?)
+		// Return 0 and sleep in MMCmonThread
+		return 0;
+	}
 
 	// file is not created yet?
 	if (!sdLoggerInitDone) {
@@ -894,9 +901,8 @@ static void sdLoggerStart()
 	sdLoggerFailed = false;
 
 #if EFI_TOOTH_LOGGER
-	// TODO: cache this config option until sdLoggerStop()
 	if (engineConfiguration->sdTriggerLog) {
-		EnableToothLogger();
+		toothLoggerEnabled = EnableToothLogger();
 	}
 #endif
 }
@@ -906,9 +912,9 @@ static void sdLoggerStop()
 	logBuffer.stop();
 	sdLoggerCloseFile(&resources.fd);
 #if EFI_TOOTH_LOGGER
-	// TODO: pick this config option from cached
-	if (engineConfiguration->sdTriggerLog) {
+	if (toothLoggerEnabled) {
 		DisableToothLogger();
+		toothLoggerEnabled = false;
 	}
 #endif
 }
