@@ -127,6 +127,10 @@ static ToothLoggerBufferPool toothBuffers{setToothLogReady};
 bool EnableToothLogger(TLmode mode) {
 	chibios_rt::CriticalSectionLocker csl;
 
+	if (ToothLoggerEnabled) {
+		return false;
+	}
+
 	if (!toothBuffers.startI()) {
 		return false;
 	}
@@ -142,6 +146,10 @@ bool EnableToothLogger(TLmode mode) {
 
 void DisableToothLogger() {
 	chibios_rt::CriticalSectionLocker csl;
+
+	if (!ToothLoggerEnabled) {
+		return;
+	}
 
 	toothBuffers.stopI();
 
@@ -311,9 +319,14 @@ void LogTriggerAcrState(efitick_t timestamp, bool state) {
 }
 
 bool EnableToothLoggerIfNotEnabled(TLmode mode) {
-	if (!ToothLoggerEnabled) {
-		ToothLoggerEnabled = EnableToothLogger(mode);
+	if (ToothLoggerEnabled) {
+		if (mode == ToothLoggerMode) {
+			return true;
+		}
+		return false;
 	}
+
+	ToothLoggerEnabled = EnableToothLogger(mode);
 
 	return ToothLoggerEnabled;
 }
