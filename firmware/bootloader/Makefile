@@ -398,6 +398,8 @@ ULIBS = -lm --specs=nano.specs
 
 include $(RULESFILE)
 
+$(BUILDDIR)/$(PROJECT).elf: $(LDSCRIPT_DEPS)
+
 include $(PROJECT_DIR)/target_sentinel.mk
 
 ifneq (yes,$(SUBMAKE))
