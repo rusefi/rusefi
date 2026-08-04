@@ -144,6 +144,6 @@ int ToothLoggerWriter(FileBufferedWriter &writer);
 #include "writer.h"
 
 int ToothLoggerWriteCsvHeader(Writer &writer);
-int ToothLoggerWriteCsv(Writer &writer, CompositeBuffer* buffer);
+int ToothLoggerWriteBufferCsv(Writer &writer, CompositeBuffer* buffer, bool tail = false);
 
 #endif

@@ -338,7 +338,7 @@ bool IsToothLoggerEnabled() {
 #if EFI_FILE_LOGGING
 
 
-static int ToothLoggerWriteBin(Writer &writer, CompositeBuffer* buffer) {
+static int ToothLoggerWriteBufferBin(Writer &writer, CompositeBuffer* buffer) {
 	int size = buffer->nextIdx * sizeof(composite_logger_s);
 
 	writer.write(reinterpret_cast<const char*>(buffer->buffer), size);
@@ -355,6 +355,24 @@ bool ToothLoggerHasData() {
 // binary vs CSV output format, latched at file creation - see ToothLoggerWriter()
 static bool sdTriggerLogCsv = 0;
 
+// Return true if queue if empty
+static bool ToothLoggerFetchOrGetCurrent(CompositeBuffer** buffer) {
+	// manualy pick buffer, do not use getFilled() as it changes TS buffer ready flag
+	msg_t msg = toothBuffers.fetchFilled(buffer, TIME_MS2I(3000));
+	// small chanse of race condition here
+	if (msg == MSG_TIMEOUT) {
+		chibios_rt::CriticalSectionLocker csl;
+
+		// flush data from currently writing buffer!
+		*buffer = toothBuffers.flushCurrentI();
+
+		// if we did not get any event within 3 seconds - finish current file and wait for new event.
+		return true;
+	}
+
+	return false;
+}
+
 /**
  * One iteration of SD card .teeth file writing, called from the SD thread
  * (sdLoggerTooth() in mmc_card.cpp): waits up to 3 seconds for a filled buffer
@@ -368,22 +386,8 @@ static bool sdTriggerLogCsv = 0;
 int ToothLoggerWriter(FileBufferedWriter &writer) {
 	int ret = 0;
 	CompositeBuffer* buffer = nullptr;
-	bool startNewFile = false;
 
-	// manualy pick buffer, do not use getFilled() as it changes TS buffer ready flag
-	msg_t msg = toothBuffers.fetchFilled(&buffer, TIME_MS2I(3000));
-	if ((msg != MSG_OK) && (msg != MSG_TIMEOUT)) {
-		// error?
-		return -1;
-	}
-	if (msg == MSG_TIMEOUT) {
-		chibios_rt::CriticalSectionLocker csl;
-		// if we did not get any event within 3 seconds - finish current file and wait for new event.
-		startNewFile = true;
-
-		// flush data from currently writing buffer!
-		buffer = toothBuffers.flushCurrentI();
-	}
+	bool startNewFile = ToothLoggerFetchOrGetCurrent(&buffer);
 
 	// can return nullptr
 	if (buffer) {
@@ -395,9 +399,9 @@ int ToothLoggerWriter(FileBufferedWriter &writer) {
 			if (writer.size() == 0) {
 				ToothLoggerWriteCsvHeader(writer);
 			}
-			ret = ToothLoggerWriteCsv(writer, buffer);
+			ret = ToothLoggerWriteBufferCsv(writer, buffer);
 		} else {
-			ret = ToothLoggerWriteBin(writer, buffer);
+			ret = ToothLoggerWriteBufferBin(writer, buffer);
 		}
 
 		ReturnToothLoggerBuffer(buffer);
@@ -416,12 +420,14 @@ std::optional<board_tooth_log_csv_header_type> custom_board_toothLogCsvHeader;
 std::optional<board_tooth_log_csv_line_type> custom_board_toothLogCsvLine;
 
 int ToothLoggerWriteCsvHeader(Writer &writer) {
+	size_t total = 0;
 	// keep in sync with composite_logger_s
 	// drop trigger - purpose not clear
 	const char header[] = "Time[s], Primary, Cam 1, Cam 2, Cam 3, Cam 4, Sync, TDC, Coils, Injectors, ACR, VBatt, ET, InstantMAP, TPS";
 
 	// no tailing '\0'
 	writer.write(header, sizeof(header) - 1);
+	total += sizeof(header) - 1;
 
 	if (custom_board_toothLogCsvHeader.has_value()) {
 		char extra[256];
@@ -430,71 +436,94 @@ int ToothLoggerWriteCsvHeader(Writer &writer) {
 			return -1;
 		}
 		writer.write(extra, len);
+		total += len;
 	}
 
 	writer.write("\r\n", 2);
+	total += 2;
 
-	return 0;
+	return total;
 }
 
-int ToothLoggerWriteCsv(Writer &writer, CompositeBuffer* buffer) {
-	size_t total = 0;
-	// base columns plus optional custom_board_toothLogCsvLine fragment plus CRLF
+static int ToothLoggerWriteCsvLine(Writer &writer, efitick_t timestamp, composite_logger_s c, const composite_sensor_snapshot_s &snapshot, const void *boardPayload) {
 	char tmp[256];
+	efitick_t time_us = NT2US(timestamp);
+	uint32_t sec = time_us / 1000000;
+	uint32_t usec = time_us % 1000000;
 
-	for (size_t i = 0; i < buffer->nextIdx; i++) {
+	// per-event values sampled at append time - see sensorSnapshot in CompositeBuffer
+	float vbatt = snapshot.vbatt;
+	float et = snapshot.et;
+	float instantMap = snapshot.instantMap;
+	float tps = snapshot.tps;
+
+	// it is cheaper to write all data, even we have 1 cylinder engine with single crank sensor
+	int ret = chsnprintf(tmp, sizeof(tmp), "%d.%06d, "
+				"%d, %d, %d, %d, %d, "
+				"%d, %d, "
+				"%d, %d, %d, "	// TODO: convert to bitwise?
+				"%.2f, %.2f, %.2f, %.2f",
+			sec, usec,
+			c.priLevel, c.cam1, c.cam2, c.cam3, c.cam4,
+			c.sync, c.tdc,
+			c.coil, c.injector, c.acr,
+			vbatt, et, instantMap, tps);
+
+	if ((ret < 0) || (ret >= (int)sizeof(tmp))) {
+		return -1;
+	}
+
+	size_t len = ret;
+
+	if (custom_board_toothLogCsvLine.has_value()) {
+		size_t room = sizeof(tmp) - 2 - len;
+		int extra = (*custom_board_toothLogCsvLine)(tmp + len, room, boardPayload);
+		if ((extra < 0) || (extra >= (int)room)) {
+			return -1;
+		}
+		len += extra;
+	}
+
+	tmp[len++] = '\r';
+	tmp[len++] = '\n';
+
+	writer.write(tmp, len);
+
+	return len;
+}
+
+int ToothLoggerWriteBufferCsv(Writer &writer, CompositeBuffer* buffer, bool tail) {
+	size_t total = 0;
+	size_t start = 0;
+	size_t end = buffer->nextIdx;
+
+	if (tail) {
+		start = buffer->nextIdx;
+		end = toothLoggerEntriesPerBuffer;
+	}
+
+	efiPrintf("writing composite buffer to CSV from %d to %d", start, end);
+
+	for (size_t i = start; i < end; i++) {
 		// Swap back
 		composite_logger_s c;
 		c.x = SWAP_UINT64(buffer->buffer[i].x);
+#if TOOTH_LOG_BOARD_PAYLOAD_SIZE > 0
+		const void* boardPayload = buffer->boardPayload[i];
+#else
+		const void* boardPayload = nullptr;
+#endif
+		const composite_sensor_snapshot_s& snapshot = buffer->sensorSnapshot[i];
 
 		// recover timestamp
-		efitick_t raw_time = buffer->startTime.get() + USF2NT(c.timestamp);
-		efitick_t time_us = NT2US(raw_time);
-		uint32_t sec = time_us / 1000000;
-		uint32_t usec = time_us % 1000000;
+		efitick_t timestamp = buffer->startTime.get() + USF2NT(c.timestamp);
 
-		// per-event values sampled at append time - see sensorSnapshot in CompositeBuffer
-		const composite_sensor_snapshot_s& snapshot = buffer->sensorSnapshot[i];
-		float vbatt = snapshot.vbatt;
-		float et = snapshot.et;
-		float instantMap = snapshot.instantMap;
-		float tps = snapshot.tps;
-
-		// it is cheaper to write all data, even we have 1 cylinder engine with single crank sensor
-		// last two bytes are reserved for the CRLF terminator appended below
-		int ret = chsnprintf(tmp, sizeof(tmp) - 2, "%d.%06d, "
-					"%d, %d, %d, %d, %d, "
-					"%d, %d, "
-					"%d, %d, %d, %.2f, %.2f, %.2f, %.2f",	// TODO: convert to bitwise?
-				sec, usec,
-				c.priLevel, c.cam1, c.cam2, c.cam3, c.cam4,
-				c.sync, c.tdc,
-				c.coil, c.injector, c.acr, vbatt, et, instantMap, tps);
-
-		if ((ret < 0) || (ret >= (int)sizeof(tmp) - 2)) {
-			return -1;
+		int ret = ToothLoggerWriteCsvLine(writer, timestamp, c, snapshot, boardPayload);
+		if (ret < 0) {
+			return ret;
 		}
 
-		size_t len = ret;
-
-		if (custom_board_toothLogCsvLine.has_value()) {
-#if TOOTH_LOG_BOARD_PAYLOAD_SIZE > 0
-			const void* payload = buffer->boardPayload[i];
-#else
-			const void* payload = nullptr;
-#endif
-			size_t room = sizeof(tmp) - 2 - len;
-			int extra = (*custom_board_toothLogCsvLine)(tmp + len, room, payload);
-			if ((extra < 0) || (extra >= (int)room)) {
-				return -1;
-			}
-			len += extra;
-		}
-
-		tmp[len++] = '\r';
-		tmp[len++] = '\n';
-
-		total += writer.write(tmp, len);
+		total += ret;
 	}
 
 	return total;
