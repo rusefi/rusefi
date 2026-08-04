@@ -942,6 +942,14 @@ typedef enum __attribute__((__packed__)) {
 	ftRegionCruise = 3,
 } ft_region_e;
 
+enum class SDLoggerMode : uint8_t {
+	None = 0,
+	Mlg = 1,
+	ToothBin = 2,
+	ToothCsv = 3,
+	Dtc = 4,
+};
+
 #endif // __cplusplus
 
 #include "generated/enums/rusefi_config_generated_enums.h"

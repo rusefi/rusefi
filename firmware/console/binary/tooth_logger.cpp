@@ -393,7 +393,7 @@ int ToothLoggerWriter(FileBufferedWriter &writer) {
 	if (buffer) {
 		// on-fly format change is not supported
 		if (writer.size() == 0) {
-			sdTriggerLogCsv = engineConfiguration->sdTriggerLogCsv;
+			sdTriggerLogCsv = engineConfiguration->sdLoggerMode == SDLoggerMode::ToothCsv;
 		}
 		if (sdTriggerLogCsv) {
 			if (writer.size() == 0) {

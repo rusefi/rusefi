@@ -135,6 +135,15 @@ static const char *sdModeName(SD_MODE mode) {
 	return "INVALID";
 }
 
+// Log 'regular' ECU log to MLG file
+static int mlgLogger();
+
+static bool sdLoggerInitDone = false;
+static bool sdLoggerFailed = false;
+static SDLoggerMode sdLoggerMode = SDLoggerMode::None;
+
+static bool sdLoggedSuppressed = false;
+
 static bool sdLoggerReady = false;
 static SD_STATUS sdStatus = SD_STATUS_INIT;
 
@@ -414,7 +423,8 @@ static void prepareLogFileName() {
 		ptr = itoa10(&logName[PREFIX_LEN], logFileIndex);
 	}
 
-	if (engineConfiguration->sdTriggerLog) {
+	if ((sdLoggerMode == SDLoggerMode::ToothBin) ||
+		(sdLoggerMode == SDLoggerMode::ToothCsv)) {
 		strcat(ptr, ".teeth");
 	} else {
 		strcat(ptr, DOT_MLG);
@@ -761,16 +771,8 @@ bool mountMmc() {
 
 #if EFI_PROD_CODE
 
-// Log 'regular' ECU log to MLG file
-static int mlgLogger();
-
-static bool sdLoggerInitDone = false;
-static bool sdLoggerFailed = false;
-
-static bool sdLoggedSuppressed = false;
-
 #if EFI_TOOTH_LOGGER
-static bool toothLoggerEnabled = false;
+static bool toothLoggerStarted = false;
 /**
  * One iteration of trigger tooth logging: lazily creates a .teeth file once tooth
  * data shows up, appends whatever the tooth logger has buffered, and closes the file
@@ -781,7 +783,7 @@ static bool toothLoggerEnabled = false;
 static int sdLoggerTooth(FIL *fd) {
 	int ret = 0;
 
-	if (!toothLoggerEnabled) {
+	if (!toothLoggerStarted) {
 		// Tooth logger selected in setting but was not started (used by DTC manager?)
 		// Return 0 and sleep in MMCmonThread
 		return 0;
@@ -793,7 +795,6 @@ static int sdLoggerTooth(FIL *fd) {
 		if (!ToothLoggerHasData()) {
 			// nothing to log
 			// wait another 100mS for tooth data
-			chThdSleepMilliseconds(100);
 			return 0;
 		}
 
@@ -895,28 +896,39 @@ static int sdLoggerMlg(FIL *fd) {
 	return ret;
 }
 
-static void sdLoggerStart()
-{
-	sdLoggerInitDone = false;
-	sdLoggerFailed = false;
-
-#if EFI_TOOTH_LOGGER
-	if (engineConfiguration->sdTriggerLog) {
-		toothLoggerEnabled = EnableToothLogger();
-	}
-#endif
-}
-
 static void sdLoggerStop()
 {
 	logBuffer.stop();
 	sdLoggerCloseFile(&resources.fd);
 #if EFI_TOOTH_LOGGER
-	if (toothLoggerEnabled) {
+	if (toothLoggerStarted) {
 		DisableToothLogger();
-		toothLoggerEnabled = false;
+		toothLoggerStarted = false;
 	}
 #endif
+	sdLoggerMode = SDLoggerMode::None;
+}
+
+static void sdLoggerStart()
+{
+	// mode has changed?
+	if (sdLoggerMode != engineConfiguration->sdLoggerMode) {
+		if (sdLoggerMode != SDLoggerMode::None) {
+			sdLoggerStop();
+		}
+
+		sdLoggerInitDone = false;
+		sdLoggerFailed = false;
+
+		// cache
+		sdLoggerMode = engineConfiguration->sdLoggerMode;
+	#if EFI_TOOTH_LOGGER
+		if ((sdLoggerMode == SDLoggerMode::ToothBin) ||
+			(sdLoggerMode == SDLoggerMode::ToothCsv)) {
+			toothLoggerStarted = EnableToothLogger();
+		}
+	#endif
+	}
 }
 
 static bool sdFormat()
@@ -1065,7 +1077,6 @@ static SD_MODE sdModeSwitcher(SD_MODE mode, SD_MODE target) {
 	case SD_MODE_ECU:
 		if (mountMmc()) {
 			sdSetCurrentStatus(SD_STATUS_MOUNTED);
-			sdLoggerStart();
 			return SD_MODE_ECU;
 		} else {
 			sdSetCurrentStatus(SD_STATUS_MOUNT_FAILED);
@@ -1102,7 +1113,6 @@ static int sdModeExecuter(SD_MODE mode)
 	case SD_MODE_UNMOUNT:
 	case SD_MODE_FORMAT:
 		// nothing to do in these state, just sleep
-		chThdSleepMilliseconds(100);
 		return 0;
 	case SD_MODE_ECU:
 		if (sdNeedRemoveReports) {
@@ -1110,11 +1120,12 @@ static int sdModeExecuter(SD_MODE mode)
 			sdNeedRemoveReports = false;
 		}
 
+		sdLoggerStart();
 		if ((sdLoggedSuppressed) || (sdLoggerFailed)) {
 			// logger is dead or paused, do not waste CPU
 			engine->outputChannels.sdLoggingState = (uint8_t)(sdLoggerFailed ? SD_LOG_FAILED : SD_LOG_SUPPRESSED);
 			engine->outputChannels.sd_logging_internal = false;
-			chThdSleepMilliseconds(100);
+			// Do nothing, sleep
 			return 0;
 		}
 
@@ -1129,20 +1140,25 @@ static int sdModeExecuter(SD_MODE mode)
 					sdLoggerStop();
 					sdLoggerInitDone = false;
 				}
-				chThdSleepMilliseconds(100);
+				// Do nothing, sleep
 				return 0;
 			}
 			engine->outputChannels.sd_logging_internal = true;
 		}
 
 		// execute one of logger
-#if EFI_TOOTH_LOGGER
-		if (engineConfiguration->sdTriggerLog) {
-			return sdLoggerTooth(&resources.fd);
-		} else
-#endif
-		{
+		switch (sdLoggerMode) {
+		case SDLoggerMode::Mlg:
 			return sdLoggerMlg(&resources.fd);
+		case SDLoggerMode::ToothBin:
+		case SDLoggerMode::ToothCsv:
+#if EFI_TOOTH_LOGGER
+			return sdLoggerTooth(&resources.fd);
+#endif
+		case SDLoggerMode::None:
+		default:
+			// Do nothing, sleep
+			return 0;
 		}
 	}
 

@@ -408,6 +408,9 @@ custom MsIoBoxId 1 bits, U08, @OFFSET@, [0:1], @@MsIoBoxId_enum@@
 #define MsIoBoxVss_enum "Off", "VR speed in (1, 2)", "Hall speed in (3, 4)", "All (1, 2, 3, 4)"
 custom MsIoBoxVss 1 bits, U08, @OFFSET@, [0:1], @@MsIoBoxVss_enum@@
 
+#define SDLoggerMode_enum "Off", "Full MLG", "Trigger bin", "Trigger CSV", "DTC Freeze Frame"
+custom SDLoggerMode 1 bits, U08, @OFFSET@, [0:2], @@SDLoggerMode_enum@@
+
 struct MsIoBox_config_s
 	MsIoBoxId id
 	MsIoBoxVss vss
@@ -1244,10 +1247,8 @@ bit invertVvtControlIntake,"retard","advance";If increased VVT duty cycle increa
 bit invertVvtControlExhaust,"retard","advance";If increased VVT duty cycle increases the indicated VVT angle, set this to 'advance'. If it decreases, set this to 'retard'. Most intake cams use 'advance', and most exhaust cams use 'retard'.
 
 bit useBiQuadOnAuxSpeedSensors,"yes","no"
-bit sdTriggerLog,"Trigger","Full MLG";'Trigger' mode will write a high speed log of trigger events (warning: uses lots of space!). 'Full MLG' mode will write a standard MLG of sensors, engine function, etc. similar to the one captured in TunerStudio.
 bit stepper_dc_use_two_wires,"yes","no"
 bit watchOutForLinearTime,"yes","no"
-bit sdTriggerLogCsv,"CSV","Binary"
 bit sdCardConditionalLogging,"enabled","disabled";Only write the SD log while trigger conditions are met (start/stop). Off = always log, the current behavior.
 bit useCompensatedMap,"enabled","disabled";Compensated MAP: in Speed Density mode, normalize MAP by barometric pressure before it is used as a table load axis.\nMAP_ref = MAP / (baro / 101.325 kPa) feeds the VE lookup and the fuel/spark load axes, so the same table cells are hit regardless of altitude (WOT reads ~100 kPa at any elevation).\nThe physical air mass calculation still uses actual MAP. Requires a barometric pressure sensor; without a valid baro reading no compensation is applied.\nWorks together with the Barometric pressure correction table, which serves a different goal: this setting keeps table lookups stable across altitude, while the baro table multiplies fueling for exhaust-side scavenging effects. Either or both can be used.
 uint16_t sdLogStartRpm;Start logging at/above this RPM;"rpm", 1, 0, 0, 30000, 0
@@ -2025,6 +2026,8 @@ end_struct
 	i2c_config_s[I2C_BUS_TOTAL_COUNT iterate] i2c;
 
 	include_file controllers/can/can_sniffer.txt
+
+	SDLoggerMode sdLoggerMode;'Trigger' mode will write a high speed log of trigger events (warning: uses lots of space!). 'Full MLG' mode will write a standard MLG of sensors, engine function, etc. similar to the one captured in TunerStudio. 'DTC Freeze Frame' will write one frame MLG log and short CSV trigger log on every DTC
 ! end of engine_configuration_s
 end_struct
 
