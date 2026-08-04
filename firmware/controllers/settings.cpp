@@ -655,7 +655,7 @@ void initSettings() {
 	addConsoleActionF("set_whole_timing_map", setWholeTimingMapCmd);
 #endif // EFI_ENGINE_CONTROL
 
-	addConsoleAction("stopengine", (Void) scheduleStopEngine);
+	addConsoleAction("stopengine", scheduleStopEngine);
 
 	// todo: refactor this - looks like all boolean flags should be controlled with less code duplication
 	addConsoleActionI("enable_spi", enableSpi);
@@ -681,7 +681,7 @@ void initSettings() {
 	addConsoleActionS("bench_setpin", benchSetPin);
 	addConsoleActionS("readpin", readPin);
 	addConsoleAction("hw_qc_mode", [](){
-  	setHwQcMode();
+	setHwQcMode();
   });
 	addConsoleActionS("bench_set_output_mode", [](const char *pinName){
 	  brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
@@ -733,7 +733,7 @@ void setDateTime(const char * const isoDateTime) {
 	}
 	efiPrintf("date_set Date parameter %s is wrong", isoDateTime);
 #else // EFI_RTC
-  UNUSED(isoDateTime);
+	UNUSED(isoDateTime);
 	efiPrintf("Cannot set time: RTC not supported");
 #endif // EFI_RTC
 }

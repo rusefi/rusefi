@@ -156,7 +156,7 @@ void PwmConfig::handleCycleStart() {
 
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6580, periodNt != 0, "period not initialized");
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6580, iterationLimit > 0, "iterationLimit invalid");
-	if (forceCycleStart || safe.periodNt != periodNt || safe.iteration == iterationLimit) {
+	if (forceCycleStart || safe.periodNt != periodNt || (uint32_t)safe.iteration == iterationLimit) {
 		/**
 		 * period length has changed - we need to reset internal state
 		 */
