@@ -43,6 +43,7 @@ typedef enum __attribute__ ((__packed__)) {
 	FO_1_6_3_2_5_4 = 13, // Subaru EG33
 	FO_1_4_3_6_2_5 = 27, // VAG v6 different from VAG VR6
 	FO_1_6_2_4_3_5 = 29, // Some 911
+	FO_1_6_2_5_3_4 = 36, // Maserati V6 and Porsche Boxster Flat-6
 
 
 	// todo: one day we shall support 7 cylinder radial, probably not before one actually approaches us
@@ -81,7 +82,7 @@ typedef enum __attribute__ ((__packed__)) {
 	// unfortunately not supported by default firmware because MAX_CYLINDER_COUNT=12 by default
 	FO_1_14_9_4_7_12_15_6_13_8_3_16_11_2_5_10 = 22, // WR16
 
-	// next value to use: 36
+	// next value to use: 37
 
 } firing_order_e;
 

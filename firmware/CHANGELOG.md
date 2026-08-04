@@ -35,6 +35,7 @@ Release template (copy/paste this for new release):
  - Per cylinder knock control individual gain control #9404
  - 6G75 Cam trigger support #9533
  - minimal launchTpsThreshold is required to reduce confusion
+ - New firing order 1-6-2-5-3-4 (Maserati V6 and Porsche Boxster Flat-6)
 
 ### Breaking Changes
  - Dodge Neon 2003 crank actually uses crank decoder #8977
