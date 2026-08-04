@@ -24,12 +24,17 @@
 
 /* How many CompositeBuffer will be STATICALY allocated for circle logging
  * non zero value also enables circular buffer mode */
-#ifndef BACKGROUND_TOOTH_LOGGER_SIZE
-#define BACKGROUND_TOOTH_LOGGER_SIZE 0
+#ifndef EFI_TOOTH_LOGGER_STATICBUFFER_COUNT
+#if EFI_UNIT_TEST
+// host unit tests exercise the BigBuffer-backed, non-circular path
+#define EFI_TOOTH_LOGGER_STATICBUFFER_COUNT 0
+#else
+#define EFI_TOOTH_LOGGER_STATICBUFFER_COUNT 4
+#endif
 #endif
 
-#if (BACKGROUND_TOOTH_LOGGER_SIZE == 1)
-	#error "BACKGROUND_TOOTH_LOGGER_SIZE should be at least 2"
+#if (EFI_TOOTH_LOGGER_STATICBUFFER_COUNT == 1)
+	#error "EFI_TOOTH_LOGGER_STATICBUFFER_COUNT should be at least 2"
 #endif
 
 class ToothLoggerBufferPool {
@@ -99,8 +104,8 @@ public:
 	// buffer waiting for a consumer. Caller must hold the critical section.
 	bool hasDataI();
 
-#if (BACKGROUND_TOOTH_LOGGER_SIZE > 0)
-	static constexpr size_t bufferCount = BACKGROUND_TOOTH_LOGGER_SIZE;
+#if (EFI_TOOTH_LOGGER_STATICBUFFER_COUNT > 0)
+	static constexpr size_t bufferCount = EFI_TOOTH_LOGGER_STATICBUFFER_COUNT;
 #else
 	static constexpr size_t bufferCount = BIG_BUFFER_SIZE / sizeof(CompositeBuffer);
 #endif
@@ -123,8 +128,8 @@ private:
 	// circular mode a reused buffer still contains old entries
 	Timer m_currentBufferStartTime = {};
 
-#if (BACKGROUND_TOOTH_LOGGER_SIZE > 0)
-	CompositeBuffer m_buffers[BACKGROUND_TOOTH_LOGGER_SIZE];
+#if (EFI_TOOTH_LOGGER_STATICBUFFER_COUNT > 0)
+	CompositeBuffer m_buffers[EFI_TOOTH_LOGGER_STATICBUFFER_COUNT];
 #else
 	BigBufferHandle m_bufferHandle;
 #endif
