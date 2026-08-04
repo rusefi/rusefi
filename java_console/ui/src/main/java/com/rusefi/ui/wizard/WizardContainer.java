@@ -67,9 +67,9 @@ public class WizardContainer extends JPanel {
             WizardStyle.LARGE_GAP));
         headerPanel.add(progressPanel, BorderLayout.CENTER);
 
-        AbstractWizardStep.styleButton(cancelButton);
+        AbstractWizardStep.stylePrimaryAction(cancelButton);
         cancelButton.addActionListener(e -> exitWizard());
-        AbstractWizardStep.styleButton(dontShowAgainButton);
+        AbstractWizardStep.stylePrimaryAction(dontShowAgainButton);
         dontShowAgainButton.setVisible(false);
         dontShowAgainButton.addActionListener(e -> {
             if (onDontShowAgain != null) {
@@ -78,9 +78,10 @@ public class WizardContainer extends JPanel {
             exitWizard();
         });
         JPanel exitPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, WizardStyle.GAP, 0));
+        exitPanel.setBorder(BorderFactory.createEmptyBorder(
+            WizardStyle.GAP, WizardStyle.LARGE_GAP, WizardStyle.LARGE_GAP, WizardStyle.LARGE_GAP));
         exitPanel.add(cancelButton);
         exitPanel.add(dontShowAgainButton);
-        headerPanel.add(exitPanel, BorderLayout.EAST);
         progressPanel.setOnCompletedSelected(this::showStep);
 
         add(headerPanel, BorderLayout.NORTH);
@@ -91,7 +92,10 @@ public class WizardContainer extends JPanel {
         // Debug panel at the bottom showing wizard flag states
         buildDebugPanel();
         debugPanel.setVisible(false);
-        add(debugPanel, BorderLayout.SOUTH);
+        JPanel footerPanel = new JPanel(new BorderLayout());
+        footerPanel.add(debugPanel, BorderLayout.CENTER);
+        footerPanel.add(exitPanel, BorderLayout.EAST);
+        add(footerPanel, BorderLayout.SOUTH);
     }
 
     private void buildDebugPanel() {
