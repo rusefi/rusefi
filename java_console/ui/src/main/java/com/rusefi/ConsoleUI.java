@@ -544,12 +544,6 @@ console live data tab is broken #8402
         tabbedPane.addTab("rusEFI Online", new OnlineTab(uiContext).getContent());
 */
 
-        if (false) {
-            // this feature is not totally happy safer to disable to reduce user confusion
-            // https://github.com/rusefi/rusefi/issues/5292
-            uiContext.sensorLogger.init();
-        }
-
         if (isOffline || !LinkManager.isLogViewerMode(port)) {
             if (savedTabIndex < tabbedPane.tabbedPane.getTabCount())
                 tabbedPane.tabbedPane.setSelectedIndex(savedTabIndex);
