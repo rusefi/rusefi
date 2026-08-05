@@ -2104,6 +2104,12 @@ Misfire Detection: wobble EMA alpha when spread is decreasing.
 ### misfireSettleCycles
 Misfire Detection: firings to wait after entering idle before flagging starts. 0 = immediate.
 
+### dwellDutyModeEnabled
+Dwell Duty Mode: when enabled, ignores the RPM/voltage dwell tables and computes dwell as a fixed percentage of the time between consecutive ignition pulses. Required for Ford TFI modules that expect a 50% duty cycle square wave.
+
+### dwellDutyPercent
+Dwell Duty Mode: percentage of the inter-spark interval used as coil dwell time. 50 = half the interval between pulses (standard TFI target).
+
 ### tcu_shiftTime
 
 

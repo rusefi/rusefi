@@ -2110,6 +2110,12 @@ float getConfigValueByHash(const int hash) {
 // misfireSettleCycles
 		case -631434424:
 			return engineConfiguration->misfireSettleCycles;
+// dwellDutyModeEnabled
+		case 1075058835:
+			return engineConfiguration->dwellDutyModeEnabled;
+// dwellDutyPercent
+		case -238882060:
+			return engineConfiguration->dwellDutyPercent;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -5730,6 +5736,16 @@ bool setConfigValueByName(const char *name, float value) {
 		case -631434424:
 	{
 		engineConfiguration->misfireSettleCycles = (int)value;
+		return 1;
+	}
+		case 1075058835:
+	{
+		engineConfiguration->dwellDutyModeEnabled = (int)value;
+		return 1;
+	}
+		case -238882060:
+	{
+		engineConfiguration->dwellDutyPercent = (int)value;
 		return 1;
 	}
 		case -1658957891:
