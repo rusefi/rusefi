@@ -170,6 +170,9 @@ jobs:
       run: echo "BUNDLE_DATE=$(date +'%Y-%m-%d')">> $GITHUB_ENV
 
     - name: Set run condition variables 2
+      env:
+        # ref names may contain shell metacharacters - never interpolate them into scripts with ${{ }}
+        GH_REF: ${{ github.ref }}
       run: |
         if [ "${{github.event_name}}" = "schedule" ] && [ "${{github.repository}}" = "rusefi/rusefi" ]; then
           echo "Creating nightly build"
@@ -177,7 +180,7 @@ jobs:
           echo "upload=release" >> $GITHUB_ENV
           echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
         elif [ "${{github.event_name}}" = "push" ]\
-        && [ "${{github.ref}}" = "refs/heads/master" ]\
+        && [ "$GH_REF" = "refs/heads/master" ]\
         || [ "${{toJSON(inputs.lts)}}" = "true" ]; then
           echo "Server upload mode"
           echo "full=true" >> $GITHUB_ENV
@@ -201,10 +204,14 @@ jobs:
         sudo bash misc/actions/ubuntu-install-tools.sh
 
     - name: Set Build Env Variables
+      env:
+        # ref names may contain shell metacharacters - never interpolate them into scripts with ${{ }}
+        REF_NAME: ${{ github.ref_name }}
+        META_INFO: ${{ matrix.meta-info }}
       run: |
         echo AUTOMATION_LTS=${{toJSON(inputs.lts)}} >> $GITHUB_ENV
-        echo AUTOMATION_REF=${{github.ref_name}} >> $GITHUB_ENV
-        echo BOARD_META_PATH=${{matrix.meta-info}} >> $GITHUB_ENV
+        echo "AUTOMATION_REF=$REF_NAME" >> $GITHUB_ENV
+        echo "BOARD_META_PATH=$META_INFO" >> $GITHUB_ENV
         echo "WHITE_LABEL=rusefi" >> $GITHUB_ENV
 
     - name: Git Status
