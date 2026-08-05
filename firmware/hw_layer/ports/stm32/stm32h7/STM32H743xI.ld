@@ -22,7 +22,8 @@ flash_size = DEFINED(IS_BOOTLOADER) ? bootloader_size : 1M;
 image_size = DEFINED(HAS_BOOTLOADER) ? (flash_size - bootloader_size) : flash_size;
 
 /* OpenBLT <-> main FW shared area */
-_OpenBLT_Shared_Params_Size = DEFINED(HAS_BOOTLOADER) || DEFINED(IS_BOOTLOADER) ? 16 : 0;
+/* 32 bytes so that the stacks that follow stay aligned to the 32-byte MPU guard page granularity */
+_OpenBLT_Shared_Params_Size = DEFINED(HAS_BOOTLOADER) || DEFINED(IS_BOOTLOADER) ? 32 : 0;
 
 /*
  * STM32H743xI generic setup.

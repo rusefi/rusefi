@@ -182,6 +182,7 @@ Any code reachable from a unit-test build (`unit_tests/` itself, plus firmware s
 
 ## Source Control Hygiene
 
+- **Never push — only a human pushes.** Claude may commit locally, but `git push` (to any remote, any branch) is reserved for the human. Leave commits on the local branch and say they are ready to push.
 - **Stage new files immediately**: When you create a new source file (C/C++ headers/sources, Java/Kotlin sources, unit tests, scripts, build files, resources, docs, etc.), run `git add <path>` as part of the same change so it shows up in `git status` / `git diff` and is not lost on the next clean or branch switch.
 - Do not stage build artifacts or generated files (see "Do not attempt to commit any generated files" above), IDE-local files, or user-specific configs.
 
@@ -226,6 +227,17 @@ The USB serial console (CDC) and the SD-card USB mass storage are **interfaces o
 Consequence (observed, `SdEcuPcCycleSandbox`): switching **PC/MSD → ECU** yanks the mounted mass-storage medium out from under the host. Windows' usbstor stack recovers by resetting/re-enumerating the whole composite device; the firmware then takes `USB_EVENT_RESET`/`SUSPEND`, whose handler calls `sduSuspendHookI(&SDU1)` (`usbcfg.cpp`), tearing down the CDC channel. The console link drops host-side (`write failed: wrote 0 but expected 11`, port closes) even though the SD switch itself succeeded firmware-side. So a console-driven SD-mode soak cannot span multiple cycles over one connection — either address it firmware-side (return SCSI "medium not present"/unit-attention for an orderly host eject instead of swapping to a dead LUN) or reconnect the host link after each switch.
 
 **MSD thread wedge → periodic CDC disconnects (confirmed on hardware + USBPcap, 2026-07)**: if the host abandons a mass-storage command mid-data-phase (cancels its IN URB without sending a Bulk-Only Mass Storage Reset — Windows usbstor does exactly this), the MSD thread blocks forever: `lib_scsi` `data_read10` → `scsi_transport_transmit(_wait)` → `usbTransmit`/`usbTransmitWait`, which is `osalThreadSuspendS` with **no timeout** (`firmware/ChibiOS/os/hal/src/hal_usb.c`). The existing `m_botResetPending`/`transportAbandoned()` escape hatch only fires on the class-specific BOT reset request, which Windows does not send in this scenario. A wedged MSD thread never re-arms the bulk-OUT endpoint, so every subsequent CBW NAKs forever; usbstor then resets the whole composite device on a ~20 s timeout cycle, cancelling the CDC IRPs each time — the user-visible symptom is *recurring CDC console/TS disconnects*, with MSD as the hidden culprit. Diagnose with console `sdinfo`: `MSD: executing opcode 0x28 for <huge> ms` = wedged (diagnostics from `MassStorageController::printDiagnostics`). Wire-level signature (USBPcap): all-endpoint `USBD_STATUS_CANCELED` storms, a CBW submit whose IRP survives ~20 s then cancels, no CSW/STALL ever returned.
+
+## MPU Guard Pages (ChibiOS PORT_ENABLE_GUARD_PAGES on F7)
+
+Enabling guard pages is NOT just the two `chconf.h` defines — four coupled constraints, all learned the hard way (FOME hit every one; see docs/report.md 2026-08-05):
+
+- **32-byte alignment of `__main_thread_stack_base__` is load-bearing.** ChibiOS `mpuSetRegionAddress`/`mpuConfigureRegion` write the address raw into MPU RBAR, whose bits [4:0] are the VALID/REGION selector fields — a misaligned base silently programs a *different region number*, so the guard lands nowhere useful and stale mappings persist. The ChibiOS `rules_stacks.ld` only `ALIGN(8)`s `.mstack`/`.pstack`, so alignment is inherited from the RAM region origin: this is why `_OpenBLT_Shared_Params_Size` in the F7/H7 linker scripts must be 32 (not 16) — bootloader builds offset `ram0` by that amount. `THD_WORKING_AREA` threads are safe (`PORT_WORKING_AREA_ALIGN` becomes 32 automatically).
+- **The bootloader must clear the MPU before jumping to the app** (`__cpu_deinit` in `openblt_chibios.cpp`): it builds with the same `chconf.h`, so it enables guard pages too, and the app would fault before its own `port_init` runs.
+- **`MemManage_Handler_C` must `mpuDisable()` first**, else saving fault state double-faults into a silent lockup — masking the two failures above as a mystery hang.
+- **Nothing may read a thread's `wabase` directly** — the first `PORT_GUARD_PAGE_SIZE` (32) bytes are no-access even to privileged code (`AP_NA_NA`); see `CountFreeStackSpace` in `eficonsole.cpp` (simulator port has no `PORT_GUARD_PAGE_SIZE`, hence the 0 fallback there).
+
+Region assignment on F7: nocache = `MPU_REGION_6` (`mcuconf.h`), guard = `MPU_REGION_7` (`chconf.h`) — keep them distinct; the guard region is reprogrammed on every context switch (`__port_set_region`), so any other user of that region number is clobbered continuously.
 
 ## OpenBLT Bootloader Version Marker ("BLxx")
 
