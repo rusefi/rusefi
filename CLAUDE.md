@@ -70,6 +70,13 @@ To inspect what a test actually scheduled/executed (events, timings, sniffer/log
 
 See also unit_tests/test_results/readme.md for unit tests output.
 
+#### EventQueue scheduling pool + EngineTestHelper gotchas
+
+- Only injection open/close events and knock windows allocate from the EventQueue 64-slot `m_pool` (`schedule(..., nullptr, ...)`); spark/dwell/trigger-angle events use `scheduling_s` members embedded in their owner objects. Host-side measurements (`unit_tests/tests/test_scheduling_pool.cpp`) show legitimate load peaks at ~2 slots — a "No slots in scheduling pool" criticalError on hardware means events are stuck/parked (see the queue size/headInUs/tailInUs figures it prints), not that the pool is too small.
+- Several trigger tests (`trigger.noiselessDecoder`, `trigger.testNoStartUpWarnings`, `misc.testRpmCalculator`) advance time with `moveTimeForwardUs` and never execute queued events, so the pool legitimately empties (`POOL_EXHAUSTED:` printfs in test output) and further injections are *silently dropped* — a latent source of waveform-assertion flakiness in those tests, not a firmware bug.
+- `EngineTestHelper::spin60_2UntilDeg` tooth timing assumes a cam-mounted 60-2 wheel (TEST_ENGINE style); with a crank-mounted wheel (e.g. MINIMAL_PINS defaults) it spins the engine at HALF the requested rpm — pass 2x the target. Also `setTriggerType` asserts `isTriggerConfigChanged`, so calling it with the already-configured type fails the test.
+- Forcing extreme injection pulses in a test (e.g. `injector.flow = 1`) does not create long pulses: injector duty-cycle protection cuts injection entirely. With all sensors dead (no mocks), failed MAP produces zero fuel mass — also no injection.
+
 **Cross-platform requirement**: Unit test code MUST build and run on all supported host platforms — Linux (GCC/Clang), macOS (Clang), and Windows (MSVC and MinGW). Avoid POSIX-only APIs (e.g. `realpath`, `PATH_MAX`, `dirent.h` without guards) unless wrapped in `#ifdef` guards or replaced by portable C++ equivalents. Prefer `std::filesystem` over POSIX path APIs.
 
 ### Code Generation

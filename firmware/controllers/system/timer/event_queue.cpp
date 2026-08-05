@@ -106,12 +106,18 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitick_t timeNt, action_s
 			// and legitimate load stays tiny (see test_scheduling_pool.cpp), so an empty pool
 			// means events are stuck in the queue (drain stall or far-future timestamps).
 #if EFI_PROD_CODE
-			// queue size plus how far the next event is from now tell stuck-vs-leak apart:
-			// large negative headInUs = queue not draining, large positive = far-future timestamps,
-			// small queue size = slots leaked outside the queue
-			scheduling_s* head = m_head;
-			criticalError("No slots in scheduling pool, queue size %d, headInUs %d",
-					size(), head ? (int)NT2US(head->getMomentNt() - getTimeNowNt()) : 0);
+			// queue size plus how far the first/last events are from now tell the failure modes
+			// apart: strongly negative headInUs = queue not draining; strongly positive tailInUs
+			// = events scheduled far in the future (eg angle scheduling with a bogus-low rpm after
+			// a trigger disturbance); small queue size = slots leaked outside the queue
+			scheduling_s* tail = m_head;
+			while (tail && tail->next) {
+				tail = tail->next;
+			}
+			efitick_t nowNt = getTimeNowNt();
+			criticalError("No slots in scheduling pool, queue size %d, headInUs %d, tailInUs %d",
+					size(), m_head ? (int)NT2US(m_head->getMomentNt() - nowNt) : 0,
+					tail ? (int)NT2US(tail->getMomentNt() - nowNt) : 0);
 #endif
 			return false;
 		}
