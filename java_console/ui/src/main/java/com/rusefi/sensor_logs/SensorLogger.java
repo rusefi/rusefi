@@ -15,6 +15,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import static com.rusefi.config.generated.VariableRegistryValues.GAUGE_NAME_MAP;
+import static com.rusefi.core.SensorNames.MAPGauge;
+
 /**
  * Andrey Belomutskiy, (c) 2013-2020
  * 4/15/2016.
@@ -38,6 +41,9 @@ public class SensorLogger {
                     && ((ScalarIniField) field).getType() != FieldType.BIT
                     && ((ScalarIniField) field).getType() != FieldType.STRING)) {
                 outputChannels.add(new CustomBinaryLogEntry(entry.getKey(), field));
+                if (MAPGauge.equals(entry.getKey())) {
+                    outputChannels.add(new CustomBinaryLogEntry(GAUGE_NAME_MAP, field));
+                }
             }
         }
         return outputChannels;

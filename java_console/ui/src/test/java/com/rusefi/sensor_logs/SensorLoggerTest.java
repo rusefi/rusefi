@@ -13,6 +13,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
@@ -38,10 +39,12 @@ class SensorLoggerTest {
         ScalarIniField notGauge = new ScalarIniField("notGauge", 2, "V", FieldType.UINT8, 0.1, "1", 0);
         EnumIniField flag = new EnumIniField("flag", 3, FieldType.UINT8,
                 new EnumIniField.EnumKeyValueMap(Collections.emptyMap()), 1, 0);
+        ScalarIniField map = new ScalarIniField("MAPValue", 4, "kPa", FieldType.UINT16, 0.1, "1", 0);
         Map<String, IniField> outputChannels = new LinkedHashMap<>();
         outputChannels.put("rpm", rpm);
         outputChannels.put("notGauge", notGauge);
         outputChannels.put("flag", flag);
+        outputChannels.put("MAPValue", map);
 
         when(context.getBinaryProtocol()).thenReturn(protocol);
         when(protocol.getIniFileNullable()).thenReturn(ini);
@@ -50,6 +53,7 @@ class SensorLoggerTest {
         when(ini.getOutputChannel("rpm")).thenReturn(rpm);
         when(ini.getOutputChannel("notGauge")).thenReturn(notGauge);
         when(ini.getOutputChannel("flag")).thenReturn(flag);
+        when(ini.getOutputChannel("MAPValue")).thenReturn(map);
 
         SensorLogger logger = new SensorLogger(context);
         Path file = tempDir.resolve("selected.mlg");
@@ -58,7 +62,7 @@ class SensorLoggerTest {
             assertTrue(logger.start(file.toFile()));
             assertTrue(logger.isLogging());
             assertTrue(logger.start(file.toFile()));
-            SensorCentral.getInstance().grabSensorValues(new byte[]{0, 42, 0, 7, 2}, ini, null);
+            SensorCentral.getInstance().grabSensorValues(new byte[]{0, 42, 0, 7, 2, -46, 4}, ini, null);
         } finally {
             logger.stop();
         }
@@ -66,10 +70,20 @@ class SensorLoggerTest {
         assertTrue(Files.exists(file));
 
         ByteBuffer data = ByteBuffer.wrap(Files.readAllBytes(file)).order(ByteOrder.BIG_ENDIAN);
-        assertEquals(3, data.getShort(22));
+        assertEquals(5, data.getShort(22));
+        assertEquals("MAP", readFieldName(data, 4));
         data.position(data.getInt(16) + 4);
         assertEquals(42, data.getShort());
         assertEquals(7, data.get());
         assertEquals(1, data.get());
+        assertEquals(1234, data.getShort());
+        assertEquals(1234, data.getShort());
+    }
+
+    private static String readFieldName(ByteBuffer data, int index) {
+        byte[] name = new byte[34];
+        data.position(24 + index * 89 + 1);
+        data.get(name);
+        return new String(name, StandardCharsets.US_ASCII).trim();
     }
 }
