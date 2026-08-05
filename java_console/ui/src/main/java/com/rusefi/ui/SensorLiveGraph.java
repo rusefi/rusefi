@@ -109,8 +109,8 @@ public class SensorLiveGraph extends JPanel {
                         channelName = gaugeModel.getChannel();
                         IniField field = iniFile.getOutputChannel(channelName);
                         if (field instanceof ScalarIniField) {
-                            CustomBinaryLogEntry entry = new CustomBinaryLogEntry(gaugeModel, (ScalarIniField) field);
-                            value = entry.getValue(response);
+                            CustomBinaryLogEntry entry = new CustomBinaryLogEntry(channelName, field);
+                            value = entry.getValue(response) * entry.getScale();
                         }
                     }
                 } catch (Exception e) {

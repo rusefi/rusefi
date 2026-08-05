@@ -1,71 +1,89 @@
 package com.rusefi.sensor_logs;
 
-import com.opensr5.ini.GaugeModel;
 import com.opensr5.ini.IniFileModel;
-import com.opensr5.ini.IniMemberNotFound;
+import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
 import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.core.Sensor;
+import com.rusefi.config.FieldType;
 import com.rusefi.core.SensorCentral;
-import com.rusefi.core.WellKnownGauges;
-import com.rusefi.io.ConnectionStatusLogic;
-import com.rusefi.io.ConnectionStatusValue;
 import com.rusefi.ui.UIContext;
 
+import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Andrey Belomutskiy, (c) 2013-2020
  * 4/15/2016.
  */
 public class SensorLogger {
-    public static List<BinaryLogEntry> getSensors(UIContext uiContext) {
+    private static List<CustomBinaryLogEntry> getOutputChannels(UIContext uiContext) {
         BinaryProtocol bp = uiContext.getBinaryProtocol();
-        if (bp == null)
+        if (bp == null) {
             return Collections.emptyList();
-        return getIniFileModel(bp.getIniFileNullable());
+        }
+        IniFileModel iniFileModel = bp.getIniFileNullable();
+        return iniFileModel == null ? Collections.emptyList() : getOutputChannels(iniFileModel);
     }
 
-    private static List<BinaryLogEntry> getIniFileModel(IniFileModel iniFileModel) {
-        List<BinaryLogEntry> sensors = new ArrayList<>();
-        for (GaugeModel gaugeModel : iniFileModel.getGauges().values()) {
-            IniField field = null;
-            try {
-                field = iniFileModel.getOutputChannel(gaugeModel.getChannel());
-            } catch (IniMemberNotFound e) {
-                throw new RuntimeException(e);
-            }
-            if (field instanceof ScalarIniField) {
-                sensors.add(new CustomBinaryLogEntry(gaugeModel, (ScalarIniField) field));
+    private static List<CustomBinaryLogEntry> getOutputChannels(IniFileModel iniFileModel) {
+        List<CustomBinaryLogEntry> outputChannels = new ArrayList<>();
+        for (Map.Entry<String, IniField> entry : iniFileModel.getAllOutputChannels().entrySet()) {
+            IniField field = entry.getValue();
+            if (field instanceof EnumIniField
+                    || (field instanceof ScalarIniField
+                    && ((ScalarIniField) field).getType() != FieldType.BIT
+                    && ((ScalarIniField) field).getType() != FieldType.STRING)) {
+                outputChannels.add(new CustomBinaryLogEntry(entry.getKey(), field));
             }
         }
-        return sensors;
+        return outputChannels;
     }
 
-    private final List<SensorLog> sensorLogs;
-
-    private boolean isInitialized;
+    private final UIContext uiContext;
+    private final SensorCentral.ResponseListener responseListener = this::writeSensorLogLine;
+    private BinarySensorLog<CustomBinaryLogEntry> sensorLog;
 
     public SensorLogger(UIContext uiContext) {
-        sensorLogs = Arrays.asList(new PlainTextSensorLog(uiContext), new BinarySensorLogRestarter(uiContext));
+        this.uiContext = uiContext;
     }
 
-    public synchronized void init() {
-        if (isInitialized) {
-            return;
+    public synchronized boolean start(File file) {
+        if (sensorLog != null) {
+            return true;
         }
-        isInitialized = true;
-        SensorCentral.getInstance().addListener(WellKnownGauges.SECONDS.getOutputChannelName(),
-            value -> {
-                if (ConnectionStatusLogic.INSTANCE.getValue() != ConnectionStatusValue.CONNECTED)
-                    return;
-                for (SensorLog sensorLog : sensorLogs)
-                    sensorLog.writeSensorLogLine();
-            });
+
+        List<CustomBinaryLogEntry> outputChannels = getOutputChannels(uiContext);
+        if (outputChannels.isEmpty()) {
+            return false;
+        }
+
+        sensorLog = new BinarySensorLog<>(sensor -> {
+            byte[] response = SensorCentral.getInstance().getResponse();
+            return response == null ? 0.0 : sensor.getValue(response);
+        }, outputChannels, System::currentTimeMillis, file.getAbsolutePath());
+        SensorCentral.getInstance().addListener(responseListener);
+        return true;
     }
 
+    private synchronized void writeSensorLogLine() {
+        if (sensorLog != null) {
+            sensorLog.writeSensorLogLine();
+        }
+    }
+
+    public synchronized void stop() {
+        SensorCentral.getInstance().removeListener(responseListener);
+        if (sensorLog != null) {
+            sensorLog.close();
+            sensorLog = null;
+        }
+    }
+
+    public synchronized boolean isLogging() {
+        return sensorLog != null;
+    }
 }
