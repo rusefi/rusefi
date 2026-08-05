@@ -1594,6 +1594,13 @@
 #define sd_log_state_e_SD_LOG_UNCONDITIONAL 3
 #define sd_log_state_e_SD_LOG_WAIT_COND 7
 #define sd_log_state_e_SD_LOG_WAIT_RPM 6
+#define SDLoggerMode_auto_enum 0="None",4="Dtc",1="Mlg",2="ToothBin",3="ToothCsv"
+#define SDLoggerMode_Dtc 4
+#define SDLoggerMode_enum "Off", "Full MLG", "Trigger bin", "Trigger CSV", "DTC Freeze Frame"
+#define SDLoggerMode_Mlg 1
+#define SDLoggerMode_None 0
+#define SDLoggerMode_ToothBin 2
+#define SDLoggerMode_ToothCsv 3
 #define SECOND_IGNITION_TABLE "Second Ignition Table"
 #define SECOND_VE_TABLE "Second VE Table"
 #define SECONDARY_CAN_NAME "Secondary CAN"
@@ -1634,7 +1641,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 3067112201
+#define SIGNATURE_HASH 107246700
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2274,7 +2281,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.08.05.alphax-silver-a.3067112201"
+#define TS_SIGNATURE "rusEFI master.2026.08.05.alphax-silver-a.107246700"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'

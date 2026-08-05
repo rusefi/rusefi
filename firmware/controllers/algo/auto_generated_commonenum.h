@@ -1,4 +1,4 @@
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sat Aug 01 00:32:51 UTC 2026
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Wed Aug 05 11:27:05 UTC 2026
 // see also gen_config_and_enums.bat
 
 
@@ -23,6 +23,9 @@ const char *getMsIoBoxVss(MsIoBoxVss value);
 #endif //__cplusplus
 #if __cplusplus
 const char *getRotationalCutMode(RotationalCutMode value);
+#endif //__cplusplus
+#if __cplusplus
+const char *getSDLoggerMode(SDLoggerMode value);
 #endif //__cplusplus
 #if __cplusplus
 const char *getSelectedGear(SelectedGear value);

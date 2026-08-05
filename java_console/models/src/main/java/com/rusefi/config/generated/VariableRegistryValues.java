@@ -1485,6 +1485,11 @@ public class VariableRegistryValues {
 	public static final int sd_log_state_e_SD_LOG_UNCONDITIONAL = 3;
 	public static final int sd_log_state_e_SD_LOG_WAIT_COND = 7;
 	public static final int sd_log_state_e_SD_LOG_WAIT_RPM = 6;
+	public static final int SDLoggerMode_Dtc = 4;
+	public static final int SDLoggerMode_Mlg = 1;
+	public static final int SDLoggerMode_None = 0;
+	public static final int SDLoggerMode_ToothBin = 2;
+	public static final int SDLoggerMode_ToothCsv = 3;
 	public static final String SECOND_IGNITION_TABLE = "Second Ignition Table";
 	public static final String SECOND_VE_TABLE = "Second VE Table";
 	public static final String SECONDARY_CAN_NAME = "Secondary CAN";
@@ -1516,6 +1521,7 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
+	public static final int SIGNATURE_HASH = 584690972;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1841,7 +1847,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2026.08.05.stm32f767_nucleo.2456662649";
+	public static final String TS_SIGNATURE = "rusEFI master.2026.08.05.stm32f767_nucleo.584690972";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2196;

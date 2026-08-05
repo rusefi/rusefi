@@ -3915,29 +3915,28 @@ struct engine_configuration_s {
 	offset 1440 bit 25 */
 	bool useBiQuadOnAuxSpeedSensors : 1 {};
 	/**
-	 * 'Trigger' mode will write a high speed log of trigger events (warning: uses lots of space!). 'Full MLG' mode will write a standard MLG of sensors, engine function, etc. similar to the one captured in TunerStudio.
 	offset 1440 bit 26 */
-	bool sdTriggerLog : 1 {};
-	/**
-	offset 1440 bit 27 */
 	bool stepper_dc_use_two_wires : 1 {};
 	/**
-	offset 1440 bit 28 */
+	offset 1440 bit 27 */
 	bool watchOutForLinearTime : 1 {};
 	/**
-	offset 1440 bit 29 */
-	bool sdTriggerLogCsv : 1 {};
-	/**
 	 * Only write the SD log while trigger conditions are met (start/stop). Off = always log, the current behavior.
-	offset 1440 bit 30 */
+	offset 1440 bit 28 */
 	bool sdCardConditionalLogging : 1 {};
 	/**
 	 * Compensated MAP: in Speed Density mode, normalize MAP by barometric pressure before it is used as a table load axis.
 	 * MAP_ref = MAP / (baro / 101.325 kPa) feeds the VE lookup and the fuel/spark load axes, so the same table cells are hit regardless of altitude (WOT reads ~100 kPa at any elevation).
 	 * The physical air mass calculation still uses actual MAP. Requires a barometric pressure sensor; without a valid baro reading no compensation is applied.
 	 * Works together with the Barometric pressure correction table, which serves a different goal: this setting keeps table lookups stable across altitude, while the baro table multiplies fueling for exhaust-side scavenging effects. Either or both can be used.
-	offset 1440 bit 31 */
+	offset 1440 bit 29 */
 	bool useCompensatedMap : 1 {};
+	/**
+	offset 1440 bit 30 */
+	bool unusedBit_548_30 : 1 {};
+	/**
+	offset 1440 bit 31 */
+	bool unusedBit_548_31 : 1 {};
 	/**
 	 * Start logging at/above this RPM
 	 * units: rpm
@@ -6625,11 +6624,16 @@ struct engine_configuration_s {
 	 */
 	can_bus_channel_e canSnifferTxBus;
 	/**
-	 * need 4 byte alignment
-	 * units: units
+	 * 'Trigger' mode will write a high speed log of trigger events (warning: uses lots of space!). 'Full MLG' mode will write a standard MLG of sensors, engine function, etc. similar to the one captured in TunerStudio. 'DTC Freeze Frame' will write one frame MLG log and short CSV trigger log on every DTC
 	 * offset 4257
 	 */
-	uint8_t alignmentFill_at_4257[3] = {};
+	SDLoggerMode sdLoggerMode;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 4258
+	 */
+	uint8_t alignmentFill_at_4258[2] = {};
 };
 static_assert(sizeof(engine_configuration_s) == 4260);
 

@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sat Aug 01 00:32:51 UTC 2026
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Wed Aug 05 11:27:05 UTC 2026
 // see also gen_config_and_enums.bat
 
 
@@ -85,6 +85,21 @@ const char *getRotationalCutMode(RotationalCutMode value) {
 			return "Fuel";
 		case RotationalCutMode::Spark:
 			return "Spark";
+	}
+	return NULL;
+}
+const char *getSDLoggerMode(SDLoggerMode value) {
+	switch (value) {
+		case SDLoggerMode::Dtc:
+			return "Dtc";
+		case SDLoggerMode::Mlg:
+			return "Mlg";
+		case SDLoggerMode::None:
+			return "None";
+		case SDLoggerMode::ToothBin:
+			return "ToothBin";
+		case SDLoggerMode::ToothCsv:
+			return "ToothCsv";
 	}
 	return NULL;
 }
