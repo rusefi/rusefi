@@ -11,6 +11,10 @@ ifeq ($(PROJECT_CPU),ARCH_STM32F7)
 	DDEFS += -DEFI_EMBED_INI_MSD=TRUE
 endif
 
+#we are low on flash
+DDEFS += -DEFI_LOGIC_ANALYZER=FALSE
+DDEFS += -DEFI_HPFP=FALSE
+
 #no mux on mm100
 
 # Add them all together
