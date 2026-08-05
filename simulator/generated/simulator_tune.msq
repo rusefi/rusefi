@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="15796">
+    <page number="0" size="15804">
         <constant name="accelEnrichmentMode">"MS Adder"</constant>
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
@@ -962,6 +962,8 @@
         <constant name="drv8860_csPinMode">"default"</constant>
         <constant name="drv8860_miso">"NONE"</constant>
         <constant name="drv8860spiDevice">"Off"</constant>
+        <constant name="dwellDutyModeEnabled">"disabled"</constant>
+        <constant digits="0" name="dwellDutyPercent" units="%">50</constant>
         <constant cols="1" digits="2" name="dwellVoltageCorrValues" rows="8" units="multiplier">
          1.0
          1.0
@@ -5172,7 +5174,7 @@
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260804" nPages="1" signature="rusEFI master.2026.08.05.f407-discovery.3282417185" version="5.0"/>
+    <versionInfo firmwareInfo="20260804" nPages="1" signature="rusEFI master.2026.08.05.f407-discovery.3945730013" version="5.0"/>
     <bibliography author="rusEFI 20260804" writeDate="date"/>
     <settings/>
     <userComments/>
