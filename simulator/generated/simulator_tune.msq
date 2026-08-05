@@ -560,7 +560,7 @@
         <constant digits="0" name="brakeMeanEffectivePressureDifferential" units="">0</constant>
         <constant name="brakePedalPin">"NONE"</constant>
         <constant name="brakePedalPinMode">"PULLUP"</constant>
-        <constant digits="0" name="byFirmwareVersion" units="index">20260804</constant>
+        <constant digits="0" name="byFirmwareVersion" units="index">20260805</constant>
         <constant digits="0" name="calibrationBirthday" units="">20260805</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="angle">95</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40</constant>
@@ -3605,6 +3605,7 @@
         <constant name="sdCardCsPinMode">"default"</constant>
         <constant digits="0" name="sdCardLogFrequency" units="hz">50</constant>
         <constant name="sdCardSpiDevice">"Off"</constant>
+        <constant name="sdLoggerMode">"Off"</constant>
         <constant digits="0" name="sdLogMinMap" units="kPa">0</constant>
         <constant digits="0" name="sdLogMinTps" units="%">0</constant>
         <constant digits="0" name="sdLogMinVss" units="kph">0</constant>
@@ -3613,8 +3614,6 @@
         <constant digits="0" name="sdLogStopRpm" units="rpm">700</constant>
         <constant name="sdLogTriggerPin">"NONE"</constant>
         <constant name="sdLogTriggerPinMode">"DEFAULT"</constant>
-        <constant name="sdTriggerLog">"Full MLG"</constant>
-        <constant name="sdTriggerLogCsv">"Binary"</constant>
         <constant name="secondaryInjectorCompensationMode">"None"</constant>
         <constant digits="0" name="secondaryInjectorFuelReferencePressure" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">0</constant>
         <constant name="secondSolenoidPin">"NONE"</constant>
@@ -5173,7 +5172,7 @@
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260804" nPages="1" signature="rusEFI master.2026.08.05.f407-discovery.1930537284" version="5.0"/>
+    <versionInfo firmwareInfo="20260804" nPages="1" signature="rusEFI master.2026.08.05.f407-discovery.3282417185" version="5.0"/>
     <bibliography author="rusEFI 20260804" writeDate="date"/>
     <settings/>
     <userComments/>
