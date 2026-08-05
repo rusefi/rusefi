@@ -10,6 +10,7 @@
 #include "pch.h"
 
 #include "board_overrides.h"
+#include "flash_main.h"
 
 namespace {
 
@@ -117,4 +118,52 @@ TEST_F(ConfigErrorRefresh, invokedFromPeriodicSlowCallback) {
 	firstActive = false;
 	engine->periodicSlowCallback();
 	EXPECT_FALSE(hasConfigError());
+}
+
+// core producer: settings writes failing continuously (see flash_main.cpp)
+
+TEST_F(ConfigErrorRefresh, settingsWriteFailureRaisesAfterThresholdAndSelfClears) {
+	// first failed attempt starts the clock - not reported yet
+	trackSettingsWriteResult(false);
+	refreshConfigErrorState();
+	EXPECT_FALSE(hasConfigError());
+
+	// still failing past the threshold - reported
+	advanceTimeUs(MS2US(11'000));
+	trackSettingsWriteResult(false);
+	refreshConfigErrorState();
+	ASSERT_TRUE(hasConfigError());
+	EXPECT_STREQ("Settings write keeps failing - your changes are NOT saved to flash", getConfigErrorMessage());
+
+	// a later retry succeeds - condition goes away, message clears without any producer calling clear
+	trackSettingsWriteResult(true);
+	refreshConfigErrorState();
+	EXPECT_FALSE(hasConfigError());
+}
+
+TEST_F(ConfigErrorRefresh, settingsWriteTransientFailureStaysQuiet) {
+	trackSettingsWriteResult(false);
+	advanceTimeUs(MS2US(5'000));
+	// recovered below the threshold - never reported
+	trackSettingsWriteResult(true);
+	advanceTimeUs(MS2US(20'000));
+	refreshConfigErrorState();
+	EXPECT_FALSE(hasConfigError());
+}
+
+TEST_F(ConfigErrorRefresh, settingsWriteFailureOutranksBoardHook) {
+	secondActive = true;
+	trackSettingsWriteResult(false);
+	advanceTimeUs(MS2US(11'000));
+	refreshConfigErrorState();
+
+	// core producer wins over the board hook
+	ASSERT_TRUE(hasConfigError());
+	EXPECT_STREQ("Settings write keeps failing - your changes are NOT saved to flash", getConfigErrorMessage());
+
+	// once settings writes recover, the board condition surfaces
+	trackSettingsWriteResult(true);
+	refreshConfigErrorState();
+	ASSERT_TRUE(hasConfigError());
+	EXPECT_STREQ("second problem", getConfigErrorMessage());
 }

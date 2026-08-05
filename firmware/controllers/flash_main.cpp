@@ -9,8 +9,41 @@
 
 #include "pch.h"
 
+#include "flash_main.h"
+
 #if EFI_CONFIGURATION_STORAGE || defined(EFI_UNIT_TEST)
 #include "storage.h"
+
+// A failed settings write stays pending and is retried by the storage manager thread;
+// once it has been failing this long, checkSettingsWriteFailure() escalates to
+// configError so the TS user learns their changes are not persisted
+static constexpr float SETTINGS_WRITE_FAIL_ALERT_SEC = 10.0f;
+
+static Timer settingsWriteFailTimer;
+static bool settingsWriteFailing = false;
+
+void trackSettingsWriteResult(bool success) {
+	if (success) {
+		settingsWriteFailing = false;
+	} else if (!settingsWriteFailing) {
+		settingsWriteFailing = true;
+		settingsWriteFailTimer.reset();
+	}
+}
+
+// level-triggered producer evaluated from refreshConfigErrorState(); the auto-clear
+// once the condition goes away (e.g. a later retry succeeded) happens there
+bool checkSettingsWriteFailure() {
+	if (settingsWriteFailing && settingsWriteFailTimer.hasElapsedSec(SETTINGS_WRITE_FAIL_ALERT_SEC)) {
+		configError("Settings write keeps failing - your changes are NOT saved to flash");
+		return true;
+	}
+	return false;
+}
+#else
+bool checkSettingsWriteFailure() {
+	return false;
+}
 #endif
 
 /* If any setting storage is exist */
@@ -80,8 +113,12 @@ bool writeToFlashNowImpl() {
 	resetMaxValues();
 
 	// Some MCU have no enough flash to store two copies. First one is mandatory.
-	return ((result1 == StorageStatus::Ok) &&
+	bool success = ((result1 == StorageStatus::Ok) &&
 			((result2 == StorageStatus::Ok) || (result2 == StorageStatus::NotSupported)));
+
+	trackSettingsWriteResult(success);
+
+	return success;
 }
 
 static StorageStatus validatePersistentState() {

@@ -14,6 +14,7 @@
 #include "rusefi/critical_error.h"
 #include "rusefi/efistring.h"
 #include "board_overrides.h"
+#include "flash_main.h"
 
 #if EFI_USE_OPENBLT
 /* communication with OpenBLT that is plain C, not to modify external file */
@@ -638,8 +639,12 @@ static uint32_t refreshRaisedSeq = 0;
 
 void refreshConfigErrorState() {
 	// core producers go here, worst first, before the board hook
-	if (get_board_override_result(custom_board_updateConfigError, false)) {
-		// the hook has just called configError() with its message
+	bool active = checkSettingsWriteFailure();
+	if (!active) {
+		active = get_board_override_result(custom_board_updateConfigError, false);
+	}
+	if (active) {
+		// the producer has just called configError() with its message
 		refreshRaisedConfigError = true;
 		refreshRaisedSeq = configErrorSeq;
 		return;
@@ -659,6 +664,7 @@ void resetConfigErrorStateForUnitTest() {
 	refreshRaisedConfigError = false;
 	refreshRaisedSeq = 0;
 	configErrorSeq = 0;
+	trackSettingsWriteResult(true);
 	clearConfigErrorMessage();
 }
 #endif

@@ -25,3 +25,10 @@ void suspendLinearTimeWatcher();
 bool settingsLtftRequestWriteToFlash();
 
 bool flashAllowWriteID(uint32_t id);
+
+// Level state consumed by checkSettingsWriteFailure(): writeToFlashNowImpl() reports
+// every settings-write attempt outcome here; a success clears the failing state.
+void trackSettingsWriteResult(bool success);
+// Core config-error producer (see refreshConfigErrorState()): reports when settings
+// write attempts have been failing continuously for longer than the alert threshold.
+bool checkSettingsWriteFailure();
