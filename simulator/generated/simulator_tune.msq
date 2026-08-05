@@ -587,10 +587,10 @@
         <constant name="canRxPin">"NONE"</constant>
         <constant digits="2" name="canSleepPeriodMs" units="ms">50.0</constant>
         <constant name="canSniffer1_handleInjected">"No"</constant>
-        <constant name="canSniffer1_listenOurs">"No"</constant>
+        <constant name="canSniffer1_listenOurs">"Yes"</constant>
         <constant name="canSniffer1_read">"No"</constant>
         <constant name="canSniffer2_handleInjected">"No"</constant>
-        <constant name="canSniffer2_listenOurs">"No"</constant>
+        <constant name="canSniffer2_listenOurs">"Yes"</constant>
         <constant name="canSniffer2_read">"No"</constant>
         <constant name="canSnifferTxBus">"None"</constant>
         <constant name="canTxPin">"NONE"</constant>
@@ -5173,7 +5173,7 @@
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260804" nPages="1" signature="rusEFI master.2026.08.05.f407-discovery.1777691761" version="5.0"/>
+    <versionInfo firmwareInfo="20260804" nPages="1" signature="rusEFI master.2026.08.05.f407-discovery.1930537284" version="5.0"/>
     <bibliography author="rusEFI 20260804" writeDate="date"/>
     <settings/>
     <userComments/>
