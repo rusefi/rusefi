@@ -123,28 +123,20 @@ TEST(Multispark, IntegratedCoilRestrikes) {
 
 	uint32_t outOfOrderBefore = engine->engineState.sparkOutOfOrderCounter;
 
-	// Desired behavior: each restrike re-charges the coil multisparkSparkDuration (0.5ms) after the
-	// previous firing, then fires again after multisparkDwell (1ms) of charging.
-	//
-	// BUG (asserted below as current behavior, to be fixed): restrike dwell never starts.
-	// fireSparkBySettingPinLow() records output->signalFallSparkId = event->sparkCounter, and
-	// event->sparkCounter only advances once per cylinder event, so on every restrike
-	// startDwellByTurningSparkPinHigh() trips the [tag] #6349 out-of-order guard
-	// (signalFallSparkId >= sparkCounter), bumps sparkOutOfOrderCounter and bails.
-	// The restrike "firing" events still run on schedule, setting the already-low pin low again.
+	// Each restrike: coil re-charges multisparkSparkDuration (0.5ms) after the previous firing,
+	// then fires again after multisparkDwell (1ms) of charging
 	for (int i = 0; i < 3; i++) {
 		eth.moveTimeForwardMs(0.6f);
 		eth.executeActions();
-		// should be true once fixed: restrike dwell #i in progress
-		EXPECT_EQ(enginePins.coils[0].getLogicValue(), false) << "restrike dwell #" << i;
+		EXPECT_EQ(enginePins.coils[0].getLogicValue(), true) << "restrike dwell #" << i;
 
 		eth.moveTimeForwardMs(1.0f);
 		eth.executeActions();
 		EXPECT_EQ(enginePins.coils[0].getLogicValue(), false) << "restrike fire #" << i;
 	}
 
-	// every one of the 3 restrike dwells was rejected by the out-of-order guard
-	EXPECT_EQ(outOfOrderBefore + 3, engine->engineState.sparkOutOfOrderCounter);
+	// no restrike dwell was rejected by the [tag] #6349 out-of-order guard
+	EXPECT_EQ(outOfOrderBefore, engine->engineState.sparkOutOfOrderCounter);
 
 	// all restrikes are spent: coil must stay low
 	eth.moveTimeForwardMs(5);
