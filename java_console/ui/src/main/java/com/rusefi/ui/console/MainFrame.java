@@ -1,5 +1,6 @@
 package com.rusefi.ui.console;
 
+import com.devexperts.logging.FileLogger;
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.*;
@@ -22,10 +23,12 @@ import javax.swing.Action;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.net.URI;
+import java.util.Locale;
 import java.util.Objects;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -59,6 +62,8 @@ public class MainFrame {
      */
     private JMenuItem updateSoftwareItem;
     private JMenuItem updateEcuItem;
+    private JMenuItem startBinaryLoggingItem;
+    private JMenuItem stopBinaryLoggingItem;
     private Runnable updateEcuAction;
     private Runnable exitRequestHandler;
     private boolean firmwareUpdateInProgress;
@@ -163,7 +168,69 @@ public class MainFrame {
 
         menuBar.add(actionsMenu);
 
+        JMenu binaryLoggingMenu = new JMenu("Binary Logging");
+        binaryLoggingMenu.setMnemonic(KeyEvent.VK_B);
+
+        startBinaryLoggingItem = new JMenuItem("Start");
+        startBinaryLoggingItem.setIcon(loadMenuIcon("player-play"));
+        startBinaryLoggingItem.addActionListener(e -> chooseAndStartBinaryLogging());
+        binaryLoggingMenu.add(startBinaryLoggingItem);
+
+        stopBinaryLoggingItem = new JMenuItem("Stop");
+        stopBinaryLoggingItem.setIcon(loadMenuIcon("player-stop"));
+        stopBinaryLoggingItem.addActionListener(e -> {
+            consoleUI.uiContext.sensorLogger.stop();
+            refreshBinaryLoggingActions();
+        });
+        binaryLoggingMenu.add(stopBinaryLoggingItem);
+
+        menuBar.add(binaryLoggingMenu);
+        refreshBinaryLoggingActions();
+
         frame.getFrame().setJMenuBar(menuBar);
+    }
+
+    private void refreshBinaryLoggingActions() {
+        boolean isLogging = consoleUI.uiContext.sensorLogger.isLogging();
+        boolean isConnected = ConnectionStatusLogic.INSTANCE.getValue() == ConnectionStatusValue.CONNECTED;
+        startBinaryLoggingItem.setEnabled(isConnected && !isLogging);
+        stopBinaryLoggingItem.setEnabled(isLogging);
+    }
+
+    private void chooseAndStartBinaryLogging() {
+        FileLogger.createFolderIfNeeded();
+        JFileChooser chooser = new JFileChooser(new File(FileLogger.DIR));
+        chooser.setDialogTitle("Save data Log");
+        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        chooser.setFileFilter(new FileNameExtensionFilter("Binary log files (.mlg)", "mlg"));
+        chooser.setSelectedFile(new File(FileLogger.DIR,
+                "rusEFI_outputChannels_" + FileLogger.getDate() + ".mlg").getAbsoluteFile());
+        if (chooser.showSaveDialog(frame.getFrame()) != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+
+        File file = ensureMlgExtension(chooser.getSelectedFile());
+        if (file.exists() && JOptionPane.showConfirmDialog(frame.getFrame(),
+                file.getName() + " already exists. Replace it?",
+                "Replace Binary Log",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        if (!consoleUI.uiContext.sensorLogger.start(file)) {
+            JOptionPane.showMessageDialog(frame.getFrame(),
+                    "No supported output channels are available for binary logging.",
+                    "Binary Logging",
+                    JOptionPane.WARNING_MESSAGE);
+        }
+        refreshBinaryLoggingActions();
+    }
+
+    static File ensureMlgExtension(File file) {
+        return file.getName().toLowerCase(Locale.ROOT).endsWith(".mlg")
+                ? file
+                : new File(file.getPath() + ".mlg");
     }
 
     public void setUpdateEcuAction(Runnable action) {
@@ -288,9 +355,11 @@ public class MainFrame {
                     fwCheckThread.start();
                 }
             } else {
+                consoleUI.uiContext.sensorLogger.stop();
                 updateEcuItem.setText("No updates available");
                 setUpdateEcuAvailable(false);
             }
+            refreshBinaryLoggingActions();
         }));
 
         final LinkManager linkManager = consoleUI.uiContext.getLinkManager();
@@ -351,6 +420,7 @@ public class MainFrame {
                 VersionChecker.getInstance().onFirmwareVersion(firmwareVersion);
             }
         });
+        refreshBinaryLoggingActions();
     }
 
     public void setTuneActions(Action loadAction, Action saveAction) {
@@ -482,6 +552,7 @@ public class MainFrame {
         root.setProperty(ConsoleUI.TAB_INDEX, tabbedPane.tabbedPane.getSelectedIndex());
         consoleUI.uiContext.DetachedRepositoryINSTANCE.saveConfig();
         getConfig().save();
+        consoleUI.uiContext.sensorLogger.stop();
         BinaryProtocol bp = consoleUI.uiContext.getBinaryProtocol();
         if (bp != null && !bp.isClosed())
             bp.close(); // it could be that serial driver wants to be closed explicitly
