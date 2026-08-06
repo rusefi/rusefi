@@ -78,7 +78,7 @@ public class PortResultTest {
     public void toStringShowsPortWithFriendlyType() {
         assertEquals("COM1 (ECU)", new PortResult("COM1", SerialPortType.Ecu).toString());
         assertEquals("COM2 (OpenBLT Bootloader)", new PortResult("COM2", SerialPortType.OpenBlt).toString());
-        assertEquals("COM3 (OpenBLT Bootloader)",
+        assertEquals("COM3 (OpenBLT Bootloader: rusefi.uaefi)",
             new PortResult("COM3", SerialPortType.OpenBlt, null, new OpenbltInfo(true, "rusefi.uaefi")).toString());
     }
 
@@ -94,6 +94,13 @@ public class PortResultTest {
         assertEquals("COM1 (OpenBLT Bootloader v1.16.0[encrypted,custom_led])",
             new PortResult("COM1", SerialPortType.OpenBlt, null,
                 new OpenbltInfo(true, null, "1.16.0", List.of("encrypted", "custom_led"))).toString());
+    }
+
+    @Test
+    public void toStringShowsBoardString() {
+        assertEquals("COM3 (OpenBLT Bootloader v1.16.0[custom_led]: rusefi.uaefi)",
+            new PortResult("COM3", SerialPortType.OpenBlt, null,
+                new OpenbltInfo(true, "rusefi.uaefi", "1.16.0", List.of("custom_led"))).toString());
     }
 
 }

@@ -78,6 +78,9 @@ public class PortResult {
                 if (bootloaderInfo.features != null && !bootloaderInfo.features.isEmpty()) {
                     identity += "[" + String.join(",", bootloaderInfo.features) + "]";
                 }
+                if (bootloaderInfo.raw != null) {
+                    identity += ": " + bootloaderInfo.raw;
+                }
             } else if (type == SerialPortType.UnsupportedEcu && unsupportedEcuInfo != null) {
                 identity = ": " + unsupportedEcuInfo.getEcuTarget();
             }
