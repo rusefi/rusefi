@@ -89,7 +89,31 @@ public class StackUsageReport {
             demangleSymbols(graph.nodes, options.cxxfilt);
         }
         applyProfile(graphs, loadProfile(options.profile));
+        if (options.checkReviewed) {
+            checkReviewedBudgets(graphs);
+        }
         return render(options.profile, graphs);
+    }
+
+    static void checkReviewedBudgets(List<Graph> graphs) {
+        List<String> failures = new ArrayList<>();
+        for (Graph graph : graphs) {
+            for (Root root : graph.roots) {
+                if (root.reviewed == null) {
+                    continue;
+                }
+                BigInteger budget = budgetFor(root, graph.stackSizes);
+                BigInteger retained = BigInteger.valueOf(root.reviewed.retained);
+                if (retained.compareTo(budget) > 0) {
+                    failures.add(graph.image + ":" + root.name + " uses " + retained
+                        + " bytes in '" + root.reviewed.scenario + "' but has " + budget);
+                }
+            }
+        }
+        if (!failures.isEmpty()) {
+            throw new IllegalArgumentException("reviewed stack budget exceeded:\n"
+                + String.join("\n", failures));
+        }
     }
 
     static Map<String, Node> parseCallgraphs(List<Path> paths) throws IOException {
@@ -1139,8 +1163,8 @@ public class StackUsageReport {
 
     private static class Options {
         static final String USAGE = "Usage: StackUsageReport --profile <name> "
-            + "[--firmware-dir <path>] [--bootloader-dir <path>] [--cxxfilt <command>] "
-            + "[--readelf <command>] [--output <path>]";
+            + "[--check-reviewed] [--firmware-dir <path>] [--bootloader-dir <path>] "
+            + "[--cxxfilt <command>] [--readelf <command>] [--output <path>]";
         String profile;
         Path firmwareDir = Paths.get("build");
         Path bootloaderDir = Paths.get("bootloader/blbuild");
@@ -1148,6 +1172,7 @@ public class StackUsageReport {
         String readelf = "arm-none-eabi-readelf";
         Path output;
         boolean help;
+        boolean checkReviewed;
 
         static Options parse(String[] args) {
             Options options = new Options();
@@ -1155,6 +1180,10 @@ public class StackUsageReport {
                 String option = args[i];
                 if ("--help".equals(option) || "-h".equals(option)) {
                     options.help = true;
+                    continue;
+                }
+                if ("--check-reviewed".equals(option)) {
+                    options.checkReviewed = true;
                     continue;
                 }
                 String value;

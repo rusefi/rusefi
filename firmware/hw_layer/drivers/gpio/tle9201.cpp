@@ -249,6 +249,8 @@ static bool isInitialized = false;
 	}
 }
 
+RUSEFI_STACK_ROOT_EXPLICIT(tle9201_driver_thread, 256);
+
 /*==========================================================================*/
 /* Driver interrupt handlers.												*/
 /*==========================================================================*/

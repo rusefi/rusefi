@@ -1185,7 +1185,7 @@ PUBLIC_API_WEAK bool boardSdCardDisable() {
 	return true;
 }
 
-static constexpr int mmcThreadStackSize = 3 * UTILITY_THREAD_STACK_SIZE;
+static constexpr int mmcThreadStackSize = 4 * UTILITY_THREAD_STACK_SIZE;
 static THD_WORKING_AREA(mmcThreadStack, mmcThreadStackSize);		// MMC monitor thread
 
 /**
