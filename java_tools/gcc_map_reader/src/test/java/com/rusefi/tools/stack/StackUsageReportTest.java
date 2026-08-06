@@ -103,6 +103,19 @@ public class StackUsageReportTest {
     }
 
     @Test
+    void reviewedStackBudgetIsEnforced() {
+        StackUsageReport.Root root = new StackUsageReport.Root("firmware", "test", "root", 100,
+            new StackUsageReport.ReviewedBaseline(101, 0, "test scenario"));
+        StackUsageReport.Graph graph = new StackUsageReport.Graph("firmware",
+            Collections.<String, StackUsageReport.Node>emptyMap(), Collections.singletonList(root),
+            Collections.<String, Integer>emptyMap());
+
+        IllegalArgumentException error = assertThrows(IllegalArgumentException.class,
+            () -> StackUsageReport.checkReviewedBudgets(Collections.singletonList(graph)));
+        assertTrue(error.getMessage().contains("firmware:test uses 101 bytes"));
+    }
+
+    @Test
     void linkedStackRootMetadataAndExternalProfile() throws Exception {
         Path map = write("roots.map",
             "Discarded input sections\n"

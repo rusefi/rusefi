@@ -43,7 +43,7 @@ jobs:
     - name: Build firmware and bootloader callgraphs
       working-directory: ./firmware/
       env:
-        EXTRA_3_PARAMS: -fstack-usage -fcallgraph-info=su
+        EXTRA_3_PARAMS: -fstack-usage -fcallgraph-info=su -Wstack-usage=1024
       run: bash bin/compile.sh "${{ matrix.meta-info }}" elf bootloader --output-sync=recurse
 
     - name: Test and generate stack usage report
