@@ -25,14 +25,14 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | SD/MMC | 1200 | 1432 | exFAT log creation | 2052 | 1812 | PROXY -240, SCENARIO OVER NOMINAL +232; partial proxy: 54 unknown, 15 indirect, recursion |
 | firmware | software knock | 400 | 144 | normal RMS processing | 628 | 620 | PROXY -8; partial proxy: 24 unknown, 2 indirect, recursion |
 | firmware | stepper | 400 | 280 | dual H-bridge stepping | 676 | 668 | PROXY -8; partial proxy: 25 unknown, 6 indirect, recursion |
-| firmware | storage manager | 1200 | 1032 | SD extra-page burn | 660 | 652 | PROXY -8, PROXY BELOW REVIEWED; partial proxy: 26 unknown, 5 indirect, recursion |
+| firmware | storage manager | 1200 | 1032 | SD extra-page burn | 660 | 652 | PROXY -8, PROXY BELOW REVIEWED; partial proxy: 27 unknown, 5 indirect, recursion |
 | firmware | timer watchdog | 256 | 104 | normal watchdog sleep | 552 | 544 | PROXY -8; partial proxy: 20 unknown, 2 indirect, recursion |
-| firmware | TunerStudio | 1200 | 824 | normal communication | 1324 | 1308 | PROXY -16; partial proxy: 62 unknown, 33 indirect, recursion |
+| firmware | TunerStudio | 1200 | 824 | normal communication | 1324 | 1316 | PROXY -8; partial proxy: 62 unknown, 33 indirect, recursion |
 | firmware | USB mass storage | 256 | 240 | SD block read | 756 | 748 | PROXY -8; partial proxy: 26 unknown, 5 indirect, recursion |
 | bootloader | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | bootloader | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
 | bootloader | LED | 256 | - | - | - | 80 | NOT REVIEWED: 3 unknown |
-| bootloader | main/process | 2048 | - | - | - | 456 | NOT REVIEWED: 14 unknown, 3 indirect |
+| bootloader | main/process | 2048 | - | - | - | 472 | NOT REVIEWED: 14 unknown, 3 indirect |
 
 ## Largest Post-LTO Frames
 
@@ -41,14 +41,14 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | 688 | updateWidebandFirmwareFromFile(unsigned char) | controllers/can/rusefi_wideband.cpp:336:6 |
 | firmware | 520 | f_unlink | ext/FatFS/ff.c:5087:9 |
 | firmware | 472 | f_open | ext/FatFS/ff.c:3799:9 |
-| firmware | 424 | errorHandlerDeleteTypedReport(ErrorCookie) | controllers/core/error_handling.cpp:363:13 |
-| firmware | 416 | errorHandlerIsReportExist(ErrorCookie) | controllers/core/error_handling.cpp:338:12 |
+| firmware | 424 | errorHandlerDeleteTypedReport(ErrorCookie) | controllers/core/error_handling.cpp:364:13 |
+| firmware | 416 | errorHandlerIsReportExist(ErrorCookie) | controllers/core/error_handling.cpp:339:12 |
 | firmware | 376 | ToothLoggerWriteCsvLine(Writer&, long long, composite_logger_s, composite_sensor_snapshot_s const&, void const*) | console/binary/tooth_logger.cpp:448:12 |
 | firmware | 344 | f_sync | ext/FatFS/ff.c:4218:9 |
 | firmware | 328 | canDashboardHondaK(CanCycle) | controllers/can/can_dash_honda.cpp:46:6 |
 | firmware | 272 | f_findnext | ext/FatFS/ff.c:4850:9 |
 | firmware | 256 | f_opendir | ext/FatFS/ff.c:4719:9 |
-| bootloader | 280 | XcpPacketReceived | ../ext/openblt/Target/Source/xcp.c:202:6 |
+| bootloader | 256 | XcpPacketReceivedHook | ../hw_layer/openblt/hooks.c:366:32 |
 | bootloader | 128 | HardFault_Handler_C | ../hw_layer/main_hardfault.c:37:6 |
 | bootloader | 128 | MemManage_Handler_C | ../hw_layer/main_hardfault.c:106:6 |
 | bootloader | 120 | UsageFault_Handler_C | ../hw_layer/main_hardfault.c:72:6 |
@@ -69,7 +69,7 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 
 | Image | Stack / entry | Nominal | Reviewed | Scenario | Proxy snapshot | Current proxy | Result |
 |---|---|---:|---:|---|---:|---:|---|
-| firmware | bench test | 1600 | - | - | - | 716 | NOT REVIEWED: 20 unknown, 3 indirect, recursion |
+| firmware | bench test | 1600 | - | - | - | 692 | NOT REVIEWED: 20 unknown, 3 indirect, recursion |
 | firmware | CAN RX | 400 | 296 | normal IOBox receive | 1212 | 1212 | PROXY +0; partial proxy: 46 unknown, 22 indirect, recursion |
 | firmware | CAN TX | 512 | 648 | Honda-K dashboard output | 836 | 836 | PROXY +0, SCENARIO OVER NOMINAL +136; partial proxy: 21 unknown, 7 indirect, recursion |
 | firmware | electronic throttle | 512 | 256 | normal ETB update | 8 | 8 | PROXY +0, PROXY BELOW REVIEWED; partial proxy: 1 indirect |
@@ -82,20 +82,20 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | main loop | 1024 | - | - | - | 628 | NOT REVIEWED: 14 unknown, 3 indirect, recursion |
 | firmware | main/process | 1536 | - | - | - | 1180 | NOT REVIEWED: 52 unknown, 24 indirect, recursion |
 | firmware | stepper | 400 | 220 | normal startup positioning | 652 | 652 | PROXY +0; partial proxy: 16 unknown, 6 indirect, recursion |
-| firmware | storage manager | 400 | 308 | internal-flash tune burn | 628 | 628 | PROXY +0; partial proxy: 17 unknown, 5 indirect, recursion |
+| firmware | storage manager | 400 | 308 | internal-flash tune burn | 628 | 628 | PROXY +0; partial proxy: 18 unknown, 5 indirect, recursion |
 | firmware | timer watchdog | 256 | 112 | normal watchdog sleep | 528 | 528 | PROXY +0; partial proxy: 12 unknown, 2 indirect, recursion |
-| firmware | TunerStudio | 1200 | 804 | normal tune burn | 1244 | 1260 | REVIEW PROXY +16; partial proxy: 49 unknown, 31 indirect, recursion |
+| firmware | TunerStudio | 1200 | 804 | normal tune burn | 1244 | 1244 | PROXY +0; partial proxy: 49 unknown, 31 indirect, recursion |
 | bootloader | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | bootloader | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
 | bootloader | LED | 256 | - | - | - | 80 | NOT REVIEWED: 3 unknown |
-| bootloader | main/process | 2048 | - | - | - | 520 | NOT REVIEWED: 21 unknown, 3 indirect |
+| bootloader | main/process | 2048 | - | - | - | 536 | NOT REVIEWED: 21 unknown, 3 indirect |
 
 ## Largest Post-LTO Frames
 
 | Image | Frame bytes | Function | Source |
 |---|---:|---|---|
 | firmware | 328 | canDashboardHondaK(CanCycle) | controllers/can/can_dash_honda.cpp:46:6 |
-| firmware | 256 | Engine::periodicFastCallback() | controllers/algo/engine.cpp:595:6 |
+| firmware | 256 | Engine::periodicFastCallback() | controllers/algo/engine.cpp:598:6 |
 | firmware | 248 | luaO_pushvfstring | ext/lua/lobject.c:480:13 |
 | firmware | 240 | luaO_str2num | ext/lua/lobject.c:308:8 |
 | firmware | 200 | luaD_rawrunprotected | ext/lua/ldo.c:135:5 |
@@ -104,7 +104,7 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | 184 | CanWrite::PeriodicTask(long long) | controllers/can/can_tx.cpp:55:6 |
 | firmware | 168 | handleShaftSignal(int, bool, long long) | controllers/trigger/trigger_central.cpp:513:6 |
 | firmware | 144 | TriggerDecoderBase::printGaps(char const*, TriggerConfiguration const&, TriggerWaveform const&) | controllers/trigger/trigger_decoder.cpp:441:6 |
-| bootloader | 272 | XcpPacketReceived | ../ext/openblt/Target/Source/xcp.c:202:6 |
+| bootloader | 256 | XcpPacketReceivedHook | ../hw_layer/openblt/hooks.c:366:32 |
 | bootloader | 128 | HardFault_Handler_C | ../hw_layer/main_hardfault.c:37:6 |
 | bootloader | 128 | MemManage_Handler_C | ../hw_layer/main_hardfault.c:106:6 |
 | bootloader | 120 | UsageFault_Handler_C | ../hw_layer/main_hardfault.c:72:6 |
@@ -125,7 +125,7 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 
 | Image | Stack / entry | Nominal | Reviewed | Scenario | Proxy snapshot | Current proxy | Result |
 |---|---|---:|---:|---|---:|---:|---|
-| firmware | bench test | 1600 | 204 | idle production worker | 2028 | 2028 | PROXY +0; partial proxy: 24 unknown, 6 indirect, recursion |
+| firmware | bench test | 1600 | 204 | idle production worker | 2028 | 2004 | PROXY -24; partial proxy: 24 unknown, 6 indirect, recursion |
 | firmware | CAN RX | 400 | 496 | CAN serial receive | 1340 | 1340 | PROXY +0, SCENARIO OVER NOMINAL +96; partial proxy: 48 unknown, 22 indirect, recursion |
 | firmware | CAN TX | 512 | 1136 | Honda-K saturated output | 1024 | 1024 | PROXY +0, PROXY BELOW REVIEWED, SCENARIO OVER NOMINAL +624; partial proxy: 22 unknown, 7 indirect, recursion |
 | firmware | electronic throttle | 512 | 312 | normal ETB update | 532 | 532 | PROXY +0; partial proxy: 12 unknown, 3 indirect, recursion |
@@ -141,12 +141,12 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | stepper | 400 | 280 | startup redundant pedal check | 652 | 652 | PROXY +0; partial proxy: 16 unknown, 6 indirect, recursion |
 | firmware | storage manager | 400 | 292 | internal-flash tune burn | 644 | 644 | PROXY +0; partial proxy: 17 unknown, 5 indirect, recursion |
 | firmware | timer watchdog | 256 | 112 | normal watchdog sleep | 528 | 528 | PROXY +0; partial proxy: 12 unknown, 2 indirect, recursion |
-| firmware | TunerStudio | 1200 | 744 | Ethernet TS with ARP | 1316 | 1332 | REVIEW PROXY +16; partial proxy: 52 unknown, 31 indirect, recursion |
+| firmware | TunerStudio | 1200 | 744 | Ethernet TS with ARP | 1316 | 1316 | PROXY +0; partial proxy: 52 unknown, 31 indirect, recursion |
 | firmware | USB mass storage | 2048 | 300 | SD READ/WRITE(10) | 732 | 732 | PROXY +0; partial proxy: 18 unknown, 5 indirect, recursion |
 | bootloader | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | bootloader | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
 | bootloader | LED | 256 | - | - | - | 80 | NOT REVIEWED: 3 unknown |
-| bootloader | main/process | 2048 | - | - | - | 616 | NOT REVIEWED: 23 unknown, 3 indirect |
+| bootloader | main/process | 2048 | - | - | - | 632 | NOT REVIEWED: 23 unknown, 3 indirect |
 
 ## Largest Post-LTO Frames
 
@@ -156,13 +156,13 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | 744 | updateWidebandFirmwareFromFile(unsigned char) | controllers/can/rusefi_wideband.cpp:336:6 |
 | firmware | 520 | f_unlink | ext/FatFS/ff.c:5087:9 |
 | firmware | 472 | f_open | ext/FatFS/ff.c:3799:9 |
-| firmware | 424 | errorHandlerDeleteTypedReport(ErrorCookie) | controllers/core/error_handling.cpp:363:13 |
-| firmware | 416 | errorHandlerIsReportExist(ErrorCookie) | controllers/core/error_handling.cpp:338:12 |
+| firmware | 424 | errorHandlerDeleteTypedReport(ErrorCookie) | controllers/core/error_handling.cpp:364:13 |
+| firmware | 416 | errorHandlerIsReportExist(ErrorCookie) | controllers/core/error_handling.cpp:339:12 |
 | firmware | 360 | ToothLoggerWriteCsvLine(Writer&, long long, composite_logger_s, composite_sensor_snapshot_s const&, void const*) | console/binary/tooth_logger.cpp:448:12 |
 | firmware | 344 | f_sync | ext/FatFS/ff.c:4218:9 |
 | firmware | 272 | f_findnext | ext/FatFS/ff.c:4850:9 |
 | firmware | 256 | f_opendir | ext/FatFS/ff.c:4719:9 |
-| bootloader | 272 | XcpPacketReceived | ../ext/openblt/Target/Source/xcp.c:202:6 |
+| bootloader | 256 | XcpPacketReceivedHook | ../hw_layer/openblt/hooks.c:366:32 |
 | bootloader | 128 | HardFault_Handler_C | ../hw_layer/main_hardfault.c:37:6 |
 | bootloader | 128 | MemManage_Handler_C | ../hw_layer/main_hardfault.c:106:6 |
 | bootloader | 120 | UsageFault_Handler_C | ../hw_layer/main_hardfault.c:72:6 |
