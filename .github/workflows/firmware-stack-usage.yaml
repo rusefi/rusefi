@@ -51,9 +51,10 @@ jobs:
       run: |
         ../gradlew -p .. :gcc_map_reader:test :gcc_map_reader:shadowJar
         java -cp ../java_tools/gcc_map_reader/build/libs/gcc_map_reader-all.jar \
-          com.rusefi.tools.stack.StackUsageReport \
-          --profile "${{ matrix.profile }}" \
-          --output "build/firmware_stack_usage_${{ matrix.profile }}.md"
+           com.rusefi.tools.stack.StackUsageReport \
+           --profile "${{ matrix.profile }}" \
+           --check-reviewed \
+           --output "build/firmware_stack_usage_${{ matrix.profile }}.md"
 
     - name: Publish pull request workflow summary
       if: ${{ github.event_name == 'pull_request' }}
