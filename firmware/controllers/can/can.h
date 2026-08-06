@@ -64,7 +64,7 @@ void unregisterCanListener(CanListener& listener);
 void registerCanSensor(CanSensorBase& sensor);
 // TODO: unregisterCanSensor()?
 
-#define CAN_WRITE_THREAD_STACK_SIZE 512
+#define CAN_WRITE_THREAD_STACK_SIZE 1536
 
 class CanWrite final : public PeriodicController<CAN_WRITE_THREAD_STACK_SIZE> {
 public:
@@ -122,4 +122,3 @@ private:
 #endif
 
 #define CAN_ID(f) (CAN_ISX(f) ? CAN_EID(f) : CAN_SID(f))
-

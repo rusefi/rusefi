@@ -47,7 +47,7 @@ static const CANConfig * findCanConfig(can_baudrate_e /*rate*/)
 
 #endif
 
-class CanRead final : protected ThreadController<UTILITY_THREAD_STACK_SIZE> {
+class CanRead final : protected ThreadController<768> {
 public:
 	using ThreadController::stackSize;
 
