@@ -144,6 +144,8 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	enginePins.reset();
 	enginePins.unregisterPins();
 
+	resetConfigErrorStateForUnitTest();
+
 	waveChart.init();
 
 	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -40, 1.5);

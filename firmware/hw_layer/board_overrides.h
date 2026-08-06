@@ -188,6 +188,15 @@ extern std::optional<setup_custom_hack_hellen_board_id_type> custom_board_hackHe
 extern std::optional<setup_custom_get_cylinder_ignition_trim_type> custom_board_getCylinderIgnitionTrim;
 extern std::optional<setup_custom_get_cylinder_fuel_trim_type> custom_board_getCylinderFuelTrim;
 
+// Level-triggered board config-error evaluation, invoked from refreshConfigErrorState()
+// once per Engine::periodicSlowCallback(). Evaluate current conditions worst-first: when
+// one holds, call configError(...) with its message and return true (the first condition
+// wins; the next one surfaces automatically once it clears). Return false when all
+// conditions are clear - the core then clears the message, but only if this mechanism
+// raised it, so the hook must NOT call clearConfigErrorMessage() itself.
+// See fw-iws updateConfigError() for the reference implementation of the if/else chain.
+extern std::optional<setup_custom_bool_type> custom_board_updateConfigError;
+
 extern std::optional<setup_custom_bool_type> custom_board_isBoardWithPowerManagement;
 extern std::optional<setup_custom_bool_type> custom_board_boardAllowTriggerActions;
 

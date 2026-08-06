@@ -90,12 +90,36 @@ const char* getCriticalErrorMessage();
  * Surfacing: status_loop.cpp ORs hasConfigError() into
  * tsOutputChannels->hasCriticalError, and TunerStudio reads the message
  * via getConfigErrorMessage(). The flag stays set until something calls
- * clearConfigErrorMessage() (who does that when?!).
+ * clearConfigErrorMessage().
+ *
+ * There is a single message buffer shared by all callers, so raising from
+ * scattered places loses messages and clearing from scattered places wipes
+ * other subsystems' messages. Prefer plugging into refreshConfigErrorState()
+ * below over calling configError()/clearConfigErrorMessage() directly.
  */
 void configError(const char *fmt, ...);
 void clearConfigErrorMessage();
 const char* getConfigErrorMessage();
 bool hasConfigError();
+
+/**
+ * Level-triggered config-error evaluation: the ownership mechanism for configError().
+ *
+ * Runs once per Engine::periodicSlowCallback(). Core producers are evaluated first
+ * (worst first), then the custom_board_updateConfigError hook (see board_overrides.h);
+ * whoever finds an active condition calls configError(...) with its message and the
+ * evaluation stops there, so the worst problem wins and the next one surfaces
+ * automatically when it clears. When no condition is active the message is cleared -
+ * but only if this evaluation raised it, so legacy direct configError() callers stay
+ * latched until someone clears them explicitly.
+ *
+ * Producers should keep state (flags, timers) readable from here instead of calling
+ * configError()/clearConfigErrorMessage() from scattered places.
+ */
+void refreshConfigErrorState();
+#if EFI_UNIT_TEST
+void resetConfigErrorStateForUnitTest();
+#endif
 bool hasErrorReportFile();
 
 void errorHandlerResetCounters();
