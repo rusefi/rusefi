@@ -168,7 +168,7 @@ public class SensorCentral implements ISensorCentral {
      */
     @Nullable
     public ResolvedGaugeLabels getResolvedLabels(String gaugeName) {
-        return resolvedGaugeLabels.get(gaugeName);
+        return resolvedGaugeLabels.get(gaugeName.toLowerCase(Locale.US));
     }
 
     public byte[] getResponse() {
