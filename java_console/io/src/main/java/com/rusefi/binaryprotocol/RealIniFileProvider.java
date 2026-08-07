@@ -9,6 +9,7 @@ import com.rusefi.ini.reader.IniFileReaderUtil;
 import com.rusefi.ini.reader.IniParsingException;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -91,6 +92,7 @@ public class RealIniFileProvider implements IniFileProvider {
         try {
                 iniFileModel = IniFileReaderUtil.readIniFileChecked(localIniFile);
         } catch (IniParsingException e) {
+            new File(localIniFile).delete();
             throw new IniNotFoundException("Parsing error: " + e, e);
         } catch (FileNotFoundException e) {
             throw new IniNotFoundException(e.toString());

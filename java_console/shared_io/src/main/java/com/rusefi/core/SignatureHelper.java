@@ -52,24 +52,30 @@ public class SignatureHelper {
             return EXTRA_INI_SOURCE;
         }
         log.info(".ini not found in " + LOCAL_INI_CACHE_FOLDER + "(" + localIniFile + "), trying to download " + p.first);
+
+        // atomic download via .tmp + rename — prevents corrupted partial files from becoming the cache (#10030)
+        File tempFile = new File(localIniFile + ".tmp");
         try {
             HttpURLConnection httpURLConnection = (HttpURLConnection) new URL(p.first).openConnection();
             int statusCode = httpURLConnection.getResponseCode();
             if (statusCode >= 300) {
                 log.info("Unexpected code " + statusCode);
+                tempFile.delete();
                 return null;
             }
             try (BufferedInputStream in = new BufferedInputStream(httpURLConnection.getInputStream());
-                 FileOutputStream fileOutputStream = new FileOutputStream(localIniFile)) {
+                 FileOutputStream fileOutputStream = new FileOutputStream(tempFile)) {
                 byte[] dataBuffer = new byte[32 * 1024];
                 int bytesRead;
                 while ((bytesRead = in.read(dataBuffer, 0, dataBuffer.length)) != -1) {
                     fileOutputStream.write(dataBuffer, 0, bytesRead);
                 }
-                return localIniFile;
             }
+            tempFile.renameTo(file);
+            return localIniFile;
         } catch (IOException e) {
             System.err.println(e.getMessage());
+            tempFile.delete();
             return null;
         }
     }
