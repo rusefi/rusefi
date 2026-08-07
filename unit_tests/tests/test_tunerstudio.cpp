@@ -74,7 +74,7 @@ TEST(binary, testWriteCrc) {
 	assertCrcPacket(test);
 }
 
-TEST(TunerStudioState, SmoothedAfrBank1) {
+TEST(TunerStudioState, SmoothedAfrBank1UsesConfiguredStoichRatio) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	engine->fuelComputer.stoichiometricRatio = 9.0f;
@@ -82,10 +82,10 @@ TEST(TunerStudioState, SmoothedAfrBank1) {
 
 	updateTunerStudioState();
 
-	EXPECT_FLOAT_EQ(0.8f, engine->outputChannels.SmoothedAFRValue);
+	EXPECT_FLOAT_EQ(7.2f, engine->outputChannels.SmoothedAFRValue);
 }
 
-TEST(TunerStudioState, SmoothedAfrBank2) {
+TEST(TunerStudioState, SmoothedAfrBank2UsesConfiguredStoichRatio) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	engine->fuelComputer.stoichiometricRatio = 12.0f;
@@ -93,7 +93,7 @@ TEST(TunerStudioState, SmoothedAfrBank2) {
 
 	updateTunerStudioState();
 
-	EXPECT_FLOAT_EQ(1.2f, engine->outputChannels.SmoothedAFRValue2);
+	EXPECT_FLOAT_EQ(14.4f, engine->outputChannels.SmoothedAFRValue2);
 }
 
 TEST(TunerstudioCommands, writeChunkEngineConfig) {
