@@ -47,6 +47,7 @@ public:
 	 * @return The raw input value.
 	 */
 	float getRaw() const override final;
+	bool hasRaw() const override final { return true; }
 private:
 	// Conversion function for this sensor
 	ConverterType* m_function = nullptr;

@@ -173,6 +173,10 @@ public:
 		return 0;
 	}
 
+	virtual bool hasRaw() const {
+		return false;
+	}
+
 	/*
 	 * Get whether this sensor is redundant (backed by multiple other sensors)
 	 */
