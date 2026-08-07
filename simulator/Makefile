@@ -43,6 +43,10 @@ endif
 include ../firmware/rusefi.mk
 include ../firmware/rusefi_rules.mk
 -include ${BOARD_DIR}/firmware/firmware.mk
+# TS page guard flags: extract definitions from board prepend.txt so the
+# simulator build agrees with the generated .ini on which pages are active.
+TS_PAGE_GUARD_FLAGS = EFI_LTFT_CONTROL|EFI_LUA
+TS_PAGE_GUARD_DEFS := $(shell sed -nE 's/^#define[[:space:]]+($(TS_PAGE_GUARD_FLAGS))[[:space:]]+(TRUE|FALSE)[[:space:]]*$$/-D\1=\2/p' $(BOARD_DIR)/prepend.txt $(BOARD_DIR)/prepend_$(SHORT_BOARD_NAME).txt 2>/dev/null)
 DDEFS += $(TS_PAGE_GUARD_DEFS)
 
 # Configure precompiled header
