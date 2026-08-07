@@ -160,11 +160,14 @@ Consequences of sharing the sector:
   `writeToFlashNow()`, which piggybacks all extra pages via
   `burnExtraFlashPages()`.
 - Reading a blank extra-page area returns `NotFound` -> defaults are used.
-- Exception: STM32F7 DualBank-2MB without `EFI_FLASH_USE_1500_OF_2MB` places
-  settings in a region of 16 KB sectors, where offset 72 KB would land
-  outside the erased range and inside the backup copy -
-  `getExtraPageFlashAddr()` returns 0 (unsupported) and those boards persist
-  extra pages on their SD card instead.
+- Exception: the usual STM32F7 build without `EFI_FLASH_USE_1500_OF_2MB` is a
+  dual-bank 2 MB device with settings starting in 16 KB sectors. The current
+  settings payload does not erase as far as the fixed 72/76 KB offsets, so a
+  repeated piggyback write would fail. Because bank mode and flash size are
+  detected only at runtime, the compile-time guard conservatively makes
+  internal extra pages unsupported for every unflagged F7 build. Such builds
+  need another enabled and ready backend, normally SD; without one, extra
+  pages revert to defaults after reboot.
 
 On MFS/SD boards (and the simulator), `burnExtraFlashPage(id)` writes just
 that record directly to all backends.
