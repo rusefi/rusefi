@@ -447,13 +447,6 @@
 #define EFI_ELECTRONIC_THROTTLE_BODY TRUE
 #endif
 
-/**
- * Do we need Malfunction Indicator blinking logic?
- */
-#ifndef EFI_MALFUNCTION_INDICATOR
-#define EFI_MALFUNCTION_INDICATOR FALSE
-#endif
-
 #ifndef CONSOLE_MAX_ACTIONS
 #define CONSOLE_MAX_ACTIONS 180
 #endif
