@@ -1,12 +1,15 @@
 package com.rusefi.ui.console;
 
 import com.rusefi.core.RusEfiSignature;
+import com.rusefi.io.ConnectionStatusValue;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import javax.swing.Icon;
+import javax.swing.SwingUtilities;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -39,6 +42,30 @@ public class MainFrameUpdateCheckTest {
     @Test
     public void unparseableSrecNameReturnsFalse() {
         assertFalse(MainFrame.needsFirmwareUpdate(ECU_SIG, "garbage.srec"));
+    }
+
+    @Test
+    public void checkResultDistinguishesUnavailableFromUpToDate() {
+        assertEquals(MainFrame.FirmwareUpdateCheckResult.UNABLE_TO_CHECK,
+            MainFrame.firmwareUpdateCheckResult(null, "firmware.srec"));
+        assertEquals(MainFrame.FirmwareUpdateCheckResult.UNABLE_TO_CHECK,
+            MainFrame.firmwareUpdateCheckResult(ECU_SIG, null));
+        assertEquals(MainFrame.FirmwareUpdateCheckResult.UNABLE_TO_CHECK,
+            MainFrame.firmwareUpdateCheckResult(ECU_SIG, "garbage.srec"));
+
+        String matching = "rusefi_development_2026-05-09_uaefi_pro_4226383888_8849742d4267db6407b1400ae917a1ed39795d32_update.srec";
+        String different = "rusefi_development_2026-05-09_uaefi_pro_9999999999_8849742d4267db6407b1400ae917a1ed39795d32_update.srec";
+        assertEquals(MainFrame.FirmwareUpdateCheckResult.UP_TO_DATE,
+            MainFrame.firmwareUpdateCheckResult(ECU_SIG, matching));
+        assertEquals(MainFrame.FirmwareUpdateCheckResult.AVAILABLE,
+            MainFrame.firmwareUpdateCheckResult(ECU_SIG, different));
+    }
+
+    @Test
+    public void firmwareCheckRequiresFullyConnectedState() {
+        assertFalse(MainFrame.isFirmwareUpdateConnectionReady(ConnectionStatusValue.NOT_CONNECTED));
+        assertFalse(MainFrame.isFirmwareUpdateConnectionReady(ConnectionStatusValue.LOADING));
+        assertTrue(MainFrame.isFirmwareUpdateConnectionReady(ConnectionStatusValue.CONNECTED));
     }
 
     @Test
@@ -107,5 +134,38 @@ public class MainFrameUpdateCheckTest {
             assertEquals(18, icon.getIconWidth(), name + " icon width");
             assertEquals(18, icon.getIconHeight(), name + " icon height");
         }
+    }
+
+    @Test
+    public void overlayShowsExplicitResultsAndActions() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            AtomicBoolean updateClicked = new AtomicBoolean();
+            AtomicBoolean closeClicked = new AtomicBoolean();
+            MainFrame.FirmwareUpdateCheckOverlay overlay = new MainFrame.FirmwareUpdateCheckOverlay(
+                () -> updateClicked.set(true), () -> closeClicked.set(true));
+
+            assertEquals("Checking ECU firmware...", overlay.getMessageForUnitTest());
+            assertFalse(overlay.isUpdateVisibleForUnitTest());
+            assertTrue(overlay.isCloseVisibleForUnitTest());
+
+            overlay.showResult(MainFrame.FirmwareUpdateCheckResult.AVAILABLE);
+            assertEquals("ECU firmware update available", overlay.getMessageForUnitTest());
+            assertTrue(overlay.isUpdateVisibleForUnitTest());
+            assertTrue(overlay.isCloseVisibleForUnitTest());
+            overlay.updateForUnitTest();
+            assertTrue(updateClicked.get());
+
+            overlay.showResult(MainFrame.FirmwareUpdateCheckResult.UP_TO_DATE);
+            assertEquals("ECU already matches the local firmware image", overlay.getMessageForUnitTest());
+            assertFalse(overlay.isUpdateVisibleForUnitTest());
+            assertTrue(overlay.isCloseVisibleForUnitTest());
+
+            overlay.showResult(MainFrame.FirmwareUpdateCheckResult.UNABLE_TO_CHECK);
+            assertEquals("Unable to check ECU firmware", overlay.getMessageForUnitTest());
+            assertFalse(overlay.isUpdateVisibleForUnitTest());
+            assertTrue(overlay.isCloseVisibleForUnitTest());
+            overlay.closeForUnitTest();
+            assertTrue(closeClicked.get());
+        });
     }
 }
