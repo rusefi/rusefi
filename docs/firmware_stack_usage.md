@@ -22,7 +22,7 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | main loop | 1024 | - | - | - | 644 | NOT REVIEWED: 21 unknown, 3 indirect, recursion |
 | firmware | main/process | 1536 | - | - | - | 1196 | NOT REVIEWED: 69 unknown, 24 indirect, recursion |
 | firmware | MAX3185x | 400 | 192 | normal sensor read | 756 | 748 | PROXY -8; partial proxy: 27 unknown, 2 indirect, recursion |
-| firmware | SD/MMC | 1200 | 1432 | exFAT log creation | 2052 | 1812 | PROXY -240, SCENARIO OVER NOMINAL +232; partial proxy: 54 unknown, 15 indirect, recursion |
+| firmware | SD/MMC | 1600 | 1432 | exFAT log creation | 2052 | 1812 | PROXY -240; partial proxy: 54 unknown, 15 indirect, recursion |
 | firmware | software knock | 400 | 144 | normal RMS processing | 628 | 620 | PROXY -8; partial proxy: 24 unknown, 2 indirect, recursion |
 | firmware | stepper | 400 | 280 | dual H-bridge stepping | 676 | 668 | PROXY -8; partial proxy: 25 unknown, 6 indirect, recursion |
 | firmware | storage manager | 1200 | 1032 | SD extra-page burn | 660 | 652 | PROXY -8, PROXY BELOW REVIEWED; partial proxy: 27 unknown, 5 indirect, recursion |
@@ -137,7 +137,7 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | lwIP TCP/IP | 1024 | 584 | TCP write with ARP | 660 | 660 | PROXY +0; partial proxy: 16 unknown, 5 indirect, recursion |
 | firmware | main loop | 1024 | 208 | normal ADC processing | 620 | 620 | PROXY +0; partial proxy: 15 unknown, 3 indirect, recursion |
 | firmware | main/process | 1536 | 704 | startup fast callback | 1196 | 1196 | PROXY +0; partial proxy: 61 unknown, 24 indirect, recursion |
-| firmware | SD/MMC | 1200 | 1436 | exFAT log creation | 2036 | 1804 | PROXY -232, SCENARIO OVER NOMINAL +236; partial proxy: 42 unknown, 15 indirect, recursion |
+| firmware | SD/MMC | 1600 | 1436 | exFAT log creation | 2036 | 1804 | PROXY -232; partial proxy: 42 unknown, 15 indirect, recursion |
 | firmware | stepper | 400 | 280 | startup redundant pedal check | 652 | 652 | PROXY +0; partial proxy: 16 unknown, 6 indirect, recursion |
 | firmware | storage manager | 400 | 292 | internal-flash tune burn | 644 | 644 | PROXY +0; partial proxy: 17 unknown, 5 indirect, recursion |
 | firmware | timer watchdog | 256 | 112 | normal watchdog sleep | 528 | 528 | PROXY +0; partial proxy: 12 unknown, 2 indirect, recursion |
