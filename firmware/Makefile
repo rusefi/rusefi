@@ -108,6 +108,9 @@ endif
 # Hellen is one of the boards which cares
 USE_CPPOPT += -Wno-error=tautological-compare
 
+# todo: move to rusefi_rules.mk? or address it in 'ChibiOS-Contrib/os/hal/src/hal_usb_msd.c'? #9203
+USE_COPT += -Wno-error=unterminated-string-initialization
+
 USE_CPPOPT += $(RUSEFI_CPPOPT)
 
 # Enable this if you want the linker to remove unused code and data
