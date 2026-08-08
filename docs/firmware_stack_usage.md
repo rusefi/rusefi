@@ -12,8 +12,8 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 |---|---|---:|---:|---|---:|---:|---|
 | firmware | accelerometer | 400 | 184 | normal SPI sensor read | 24 | 24 | PROXY +0, PROXY BELOW REVIEWED; partial proxy: 1 indirect |
 | firmware | bench test | 1600 | 148 | idle production worker | 1932 | 1924 | PROXY -8; partial proxy: 32 unknown, 6 indirect, recursion |
-| firmware | CAN RX | 400 | 440 | CAN serial receive | 1244 | 1236 | PROXY -8, SCENARIO OVER NOMINAL +40; partial proxy: 56 unknown, 22 indirect, recursion |
-| firmware | CAN TX | 512 | 600 | Honda-K dashboard output | 860 | 852 | PROXY -8, SCENARIO OVER NOMINAL +88; partial proxy: 31 unknown, 7 indirect, recursion |
+| firmware | CAN RX | 768 | 440 | CAN serial receive | 1244 | 1236 | PROXY -8; partial proxy: 56 unknown, 22 indirect, recursion |
+| firmware | CAN TX | 1536 | 600 | Honda-K dashboard output | 860 | 852 | PROXY -8; partial proxy: 31 unknown, 7 indirect, recursion |
 | firmware | electronic throttle | 512 | 304 | normal ETB update | 556 | 548 | PROXY -8; partial proxy: 20 unknown, 3 indirect, recursion |
 | firmware | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | firmware | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
@@ -70,8 +70,8 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | Image | Stack / entry | Nominal | Reviewed | Scenario | Proxy snapshot | Current proxy | Result |
 |---|---|---:|---:|---|---:|---:|---|
 | firmware | bench test | 1600 | - | - | - | 692 | NOT REVIEWED: 20 unknown, 3 indirect, recursion |
-| firmware | CAN RX | 400 | 296 | normal IOBox receive | 1212 | 1212 | PROXY +0; partial proxy: 46 unknown, 22 indirect, recursion |
-| firmware | CAN TX | 512 | 648 | Honda-K dashboard output | 836 | 836 | PROXY +0, SCENARIO OVER NOMINAL +136; partial proxy: 21 unknown, 7 indirect, recursion |
+| firmware | CAN RX | 768 | 296 | normal IOBox receive | 1212 | 1212 | PROXY +0; partial proxy: 46 unknown, 22 indirect, recursion |
+| firmware | CAN TX | 1536 | 648 | Honda-K dashboard output | 836 | 836 | PROXY +0; partial proxy: 21 unknown, 7 indirect, recursion |
 | firmware | electronic throttle | 512 | 256 | normal ETB update | 8 | 8 | PROXY +0, PROXY BELOW REVIEWED; partial proxy: 1 indirect |
 | firmware | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | firmware | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
@@ -80,7 +80,7 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | lwIP driver | 672 | 240 | normal Ethernet delivery | 804 | 804 | PROXY +0; partial proxy: 33 unknown, 6 indirect, recursion |
 | firmware | lwIP TCP/IP | 1024 | - | - | - | 652 | NOT REVIEWED: 16 unknown, 5 indirect, recursion |
 | firmware | main loop | 1024 | - | - | - | 628 | NOT REVIEWED: 14 unknown, 3 indirect, recursion |
-| firmware | main/process | 1536 | - | - | - | 1180 | NOT REVIEWED: 52 unknown, 24 indirect, recursion |
+| firmware | main/process | 1536 | - | - | - | 1172 | NOT REVIEWED: 52 unknown, 24 indirect, recursion |
 | firmware | stepper | 400 | 220 | normal startup positioning | 652 | 652 | PROXY +0; partial proxy: 16 unknown, 6 indirect, recursion |
 | firmware | storage manager | 400 | 308 | internal-flash tune burn | 628 | 628 | PROXY +0; partial proxy: 18 unknown, 5 indirect, recursion |
 | firmware | timer watchdog | 256 | 112 | normal watchdog sleep | 528 | 528 | PROXY +0; partial proxy: 12 unknown, 2 indirect, recursion |
@@ -126,8 +126,8 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | Image | Stack / entry | Nominal | Reviewed | Scenario | Proxy snapshot | Current proxy | Result |
 |---|---|---:|---:|---|---:|---:|---|
 | firmware | bench test | 1600 | 204 | idle production worker | 2028 | 2004 | PROXY -24; partial proxy: 24 unknown, 6 indirect, recursion |
-| firmware | CAN RX | 400 | 496 | CAN serial receive | 1340 | 1340 | PROXY +0, SCENARIO OVER NOMINAL +96; partial proxy: 48 unknown, 22 indirect, recursion |
-| firmware | CAN TX | 512 | 1136 | Honda-K saturated output | 1024 | 1024 | PROXY +0, PROXY BELOW REVIEWED, SCENARIO OVER NOMINAL +624; partial proxy: 22 unknown, 7 indirect, recursion |
+| firmware | CAN RX | 768 | 496 | CAN serial receive | 1340 | 1340 | PROXY +0; partial proxy: 48 unknown, 22 indirect, recursion |
+| firmware | CAN TX | 1536 | 1136 | Honda-K saturated output | 1024 | 1024 | PROXY +0, PROXY BELOW REVIEWED; partial proxy: 22 unknown, 7 indirect, recursion |
 | firmware | electronic throttle | 512 | 312 | normal ETB update | 532 | 532 | PROXY +0; partial proxy: 12 unknown, 3 indirect, recursion |
 | firmware | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | firmware | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
