@@ -15,6 +15,7 @@ void setDefaultCranking() {
 
 	// IAC
 	setArrayValues(config->cltCrankingCorr, 50);
+	setArrayValues(config->cltCrankingRpmAdder, 0);
 	// should be 100 once tune is better
 	setArrayValues(config->afterCrankingIACtaperDuration, 200);
 	setLinearCurve(config->afterCrankingIACtaperDurationBins, CLT_CURVE_RANGE_FROM, 100, 1);

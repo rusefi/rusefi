@@ -229,14 +229,11 @@ if (engine->antilagController.isAntilagCondition) {
  *   - running open-loop, blended from cranking via the taper fraction
  */
 percent_t IdleController::getOpenLoop(Phase phase, float rpm, float clt, SensorResult tps, float crankingTaperFraction) {
-	percent_t crankingValvePosition = getCrankingOpenLoop(clt);
-
 	isCranking = phase == Phase::Cranking;
 	isIdleCoasting = phase == Phase::Coasting || (phase == Phase::Running && engineConfiguration->modeledFlowIdle);
 
-	// if we're cranking, nothing more to do.
-	if (isCranking) {
-		return crankingValvePosition;
+	if (isCranking && engineConfiguration->crankingAirAmountEnabled) {
+		return getCrankingOpenLoop(clt);
 	}
 
 	// If coasting (and enabled), use the coasting position table instead of normal open loop
@@ -256,9 +253,14 @@ percent_t IdleController::getOpenLoop(Phase phase, float rpm, float clt, SensorR
 
 	percent_t running = getRunningOpenLoop(phase, rpm, clt, tps);
 
-	// Interpolate between cranking and running over a short time
-	// This clamps once you fall off the end, so no explicit check for >1 required
-	return interpolateClamped(0, crankingValvePosition, 1, running, crankingTaperFraction);
+	// No air amount table: taper is handled via m_lastTargetRpm driving the 3D table; just return running.
+	if (!engineConfiguration->crankingAirAmountEnabled) {
+		return running;
+	}
+
+	// Air amount table enabled: interpolate between cranking duty and running over the crank taper.
+	// This clamps once you fall off the end, so no explicit check for >1 required.
+	return interpolateClamped(0, getCrankingOpenLoop(clt), 1, running, crankingTaperFraction);
 }
 
 float IdleController::getIdleTimingAdjustment(float rpm) {
@@ -448,6 +450,24 @@ float IdleController::getIdlePosition(float rpm) {
  	  }
 
 		m_lastPhase = phase;
+
+		// RPM mode: elevate the idle RPM target by a CLT-based adder during cranking and the
+		// crank-to-idle taper, decaying to zero as crankingTaper approaches 1.
+		// m_lastTargetRpm is updated for both phases so that getRunningOpenLoop() indexes the
+		// 3D duty table at the elevated RPM even during actual cranking (starter engaged).
+		// idleTarget (displayed in TunerStudio) is only updated during CrankToIdleTaper — when
+		// the engine is running — to avoid showing a corrupted value during key-off.
+		if (engineConfiguration->crankingIdleRpmFlareEnabled &&
+		    (phase == Phase::Cranking || phase == Phase::CrankToIdleTaper)) {
+			float rpmAdder = interpolate2d(clt, config->cltCrankingCorrBins, config->cltCrankingRpmAdder);
+			float baseIdle = targetRpm.ClosedLoopTarget;
+			float crankingRpmTarget = baseIdle + rpmAdder;
+			m_lastTargetRpm = interpolateClamped(0, crankingRpmTarget, 1, baseIdle, crankingTaper);
+			targetRpm.ClosedLoopTarget = m_lastTargetRpm;
+			if (phase == Phase::CrankToIdleTaper) {
+				idleTarget = m_lastTargetRpm;
+			}
+		}
 
 		finishIdleTestIfNeeded();
 
