@@ -25,8 +25,8 @@ void bmwN52() {
     engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL_60_2;
     engineConfiguration->globalTriggerAngleOffset = 90;
 
-    engineConfiguration->vvtMode[0] = VVT_BOSCH_QUICK_START;
-    engineConfiguration->vvtMode[1] = VVT_BOSCH_QUICK_START;
+    engineConfiguration->vvtMode[0] = VVT_BMW_VANOS_RELUCTOR;
+    engineConfiguration->vvtMode[1] = VVT_BMW_VANOS_RELUCTOR;
 
 #ifdef HW_HELLEN_SUPER_UAEFI
     engineConfiguration->map.sensor.hwChannel = MM100_IN_MAP1_ANALOG;
