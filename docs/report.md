@@ -700,3 +700,40 @@ Open follow-ups:
   than quoting - the query transport is now deterministic.
 - `TunerStudioHelper` still uses Runtime.exec(String) with outer quotes; fine today,
   but converting it to the list-based ExecHelper would remove the last fragile caller.
+
+## 2026-08-09 - m74_9 watchdog round 2: CNT alive, ISR->reschedule chain dies; live register dump + pre-fault history
+
+What: Follow-up instrumentation of the m74_9 (AT32F435) `CRITICAL error: Watchdog: no
+events for 2s!` lockup at ~14-20 s after boot. Round-1's register snapshot was truncated
+by `CRITICAL_BUFFER_SIZE=120` (the message buffer), so the extended state never reached
+the console. Round-2 moves the full register picture to the 256-byte console path and
+adds a pre-fault history.
+
+| File | Change |
+|----------------------------------------------------|----------------------------------------|
+| firmware/hw_layer/microsecond_timer/microsecond_timer.cpp | Latched `firmwareError` shrunk to ~103 chars (`isr=%d setHw=%d pending=%d cnt=%u..%u dier=0x%x sr=0x%x cr1=0x%x`) so it survives the 120-byte buffer plus the ` %d@%s` suffix; live `WDT regs: ...` dump (cnt span, dier, sr, cr1, smcr, psc, arr, ccr1, ccmr1, ccer, apb1enr, tim5en) via `efiPrintf` every watchdog period while the error holds; 16-sample ring buffer (`WDT hist: ...`) recording cnt/isr/setHw/freeze/pending/sr/dier/ccr1/cr1 once per healthy 500 ms watchdog period (last ~8 s), dumped once at first latch; state kept private under `#ifdef SCHEDULER_TIMER_DEVICE` (Cypress/Kinetis have no TIM device) |
+
+Key findings from the user's round-2 log (2026-08-09 20:54):
+- `cnt=124159183..124559165(+399982)` per 100 ms at 4 MHz -> the TIM5 counter keeps
+  running, the clock is NOT gated (rules out frozen CNT and cleared APB1ENR.TIM5EN).
+- `isr=37650 setHw=37652` frozen, `pending=1`, `dier=0x2` (CC1IE armed), `sr=0x0` (no
+  CC1IF) -> the compare never fires even though the interrupt is armed; the
+  ISR -> executeAllPendingActions -> scheduleTimerCallback chain stops at "comparison
+  does not trigger".
+- Error repeats every ~180 ms while pending=1 holds; the CAN console keeps working, so
+  it is not a global freeze.
+- Timeline: first error 20:54:54.9 vs boot 20:54:40.05; ~37650 ISR hits at ~1400/s
+  matches ~14 s. Preceding events: MFS config read (ok), Lua load (ok, 5.4% heap),
+  set date over CAN (RTC 1980 -> 2026).
+
+Validation:
+- Diff reviewed for `%d/%u/%x` vs cast consistency; touches only the EFI_PROD_CODE path.
+- Cross-compile and on-hardware reproduction pending on the user's Windows machine (no
+  arm-none-eabi toolchain on the macOS host).
+
+Open follow-ups:
+- Need a full 40-60 s console log with `WDT regs:` (ccr1, ccer, apb1enr, tim5en, smcr)
+  and `WDT hist:` lines to decide between "CC1E/OC1M rewritten by a second pwmStart on
+  PWMD5" vs "CC1IF set but ISR never dispatched (NVIC/vector)".
+- If the counter proves alive but the compare is disabled, check whether any code path
+  restarts PWMD5 after boot (would reset CNT/ARR/CCER per pwm_lld_start).
