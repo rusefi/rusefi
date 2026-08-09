@@ -122,7 +122,8 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 		return trigger_type_e::TT_TOYOTA_3_TOOTH_UZ;
 	case VVT_NISSAN_MR:
 		return trigger_type_e::TT_NISSAN_MR18_CAM_VVT;
-	case VVT_BMW_N63TU:
+	case VVT_BMW_VANOS_RELUCTOR:
+		return trigger_type_e::TT_BMW_VANOS_RELUCTOR;
 	case VVT_MITSUBISHI_4G63:
 		return trigger_type_e::TT_MITSU_4G63_CAM;
 	case VVT_HR12DDR_IN:

@@ -26,6 +26,7 @@
 #include "trigger_nissan.h"
 #include "trigger_mazda.h"
 #include "trigger_misc.h"
+#include "trigger_bmw.h"
 #include "trigger_mitsubishi.h"
 #include "trigger_renault.h"
 #include "trigger_subaru.h"
@@ -854,9 +855,12 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		break;
 
 	case trigger_type_e::TT_VIPER_V10_CRANK:
-	case trigger_type_e::TT_UNUSED_98:
 	case trigger_type_e::TT_SUBARU_7_6_CRANK:
 		initializeSubaru7_6_crankOnly(this);
+		break;
+
+	case trigger_type_e::TT_BMW_VANOS_RELUCTOR:
+		initializeVvtVanosReluctor(this);
 		break;
 
 

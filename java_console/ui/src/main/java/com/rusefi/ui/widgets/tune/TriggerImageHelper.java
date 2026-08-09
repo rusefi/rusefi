@@ -188,7 +188,8 @@ public class TriggerImageHelper {
                 return VariableRegistryValues.trigger_type_e_TT_TOYOTA_3_TOOTH_UZ;
             case VariableRegistryValues.vvt_mode_e_VVT_NISSAN_MR:
                 return VariableRegistryValues.trigger_type_e_TT_NISSAN_MR18_CAM_VVT;
-            case VariableRegistryValues.vvt_mode_e_VVT_BMW_N63TU:
+            case VariableRegistryValues.vvt_mode_e_VVT_BMW_VANOS_RELUCTOR:
+                return VariableRegistryValues.trigger_type_e_TT_BMW_VANOS_RELUCTOR;
             case VariableRegistryValues.vvt_mode_e_VVT_MITSUBISHI_4G63:
                 return VariableRegistryValues.trigger_type_e_TT_MITSU_4G63_CAM;
             case VariableRegistryValues.vvt_mode_e_VVT_HR12DDR_IN:

@@ -2,4 +2,4 @@
 
 class TriggerWaveform;
 
-void initializeVvtN63TU(TriggerWaveform *s);
+void initializeVvtVanosReluctor(TriggerWaveform *s);

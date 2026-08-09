@@ -205,7 +205,7 @@ static angle_t adjustCrankPhase(int camIndex) {
 	case VVT_SINGLE_TOOTH:
 	case VVT_NISSAN_VQ:
 	case VVT_BOSCH_QUICK_START:
-	case VVT_BMW_N63TU:
+	case VVT_BMW_VANOS_RELUCTOR:
 	case VVT_MIATA_NB:
 	case VVT_TOYOTA_3TOOTH_UZ:
 	case VVT_TOYOTA_3_TOOTH:
