@@ -874,3 +874,21 @@ Open follow-ups:
   overload receives the real DLC - verify byte 0 of every 0x720 frame against a
   PCAN-View capture.
 - Consider the same FC-wait for SocketCANIoStream.
+
+## 2026-08-09 - TS-over-CAN ISO-TP fix VALIDATED on hardware (m74_9)
+
+What: The user rebuilt m74_9 on Windows with commit b75fc82311e (32-frame receive
+FIFO + host FC wait + ISO-TP desync reset) and ran the TS session over PCAN-USB:
+no more `Got only 18 bytes while expecting 50`, no `not enough bytes in stream`
+errors, the connection stays up - "кажется что работает". This confirms the
+root-cause chain: burst overflow of the 8-frame FIFO plus a permanently stuck
+ISO-TP state after a lost frame.
+
+Validation:
+- User-reported on hardware (Windows host, PCAN-USB console, 500k): continuous
+  TS session without truncation errors.
+
+Open follow-ups:
+- Long-run soak to make sure the `outofrange` counter stays flat.
+- Optional: same FC-wait treatment for SocketCANIoStream (Linux path still uses
+  the no-op default).
