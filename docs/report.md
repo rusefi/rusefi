@@ -1,5 +1,77 @@
 # Work Report
 
+## 2026-08-09 - PCAN ISO-TP decode root cause: decodePacket got the 127-byte buffer instead of the DLC
+
+What was done:
+- Fixed java_console/io/src/main/java/com/rusefi/io/can/PCanIoStream.java readOnePacket:
+  `canDecoder.decodePacket(rx.getData())` -> `decodePacket(rx.getData(), rx.getLength())`
+- Root cause of the m74_9 (AT32F435, CAN-only, no USB) "No signature returned by
+  PCanIoStream{PCAN_USBBUS1}" blocker: TPCANMsg(Byte.MAX_VALUE) allocates a 127-byte data
+  buffer (workaround for issue #4370) and the PCAN driver fills only rx.getLength() (DLC=8)
+  bytes; the deprecated decodePacket(byte[]) overload passed data.length (127) instead, so the
+  ISO-TP multi-frame state machine and the CRC check read garbage zero padding. Symptom seen in
+  the log: `CRC mismatch on recv packet for [hello]: got 309f7bb9 but expected 0` (CRC field all
+  zeros) even though the 0x720 frame itself was delivered fine (`isotp rate 1`). The size-aware
+  overload exists exactly for this - its javadoc names PCAN as the larger-data-buffer example
+- Checked the other decoders: SocketCANHelper.read allocates `new byte[rx.getDataLength()]` so
+  SocketCANIoStream.payload() is exact-length and unaffected; Elm327IoStream gets real-length
+  arrays from the ELM327 chip. Only the PCAN path was broken
+
+Validation:
+- ./gradlew :ecu_io:test BUILD SUCCESSFUL (JDK 11 toolchain via
+  -Porg.gradle.java.installations.paths=...)
+
+Follow-ups:
+- User rebuilds java_console on Windows and connects to m74_9 over PCAN-USB: expect
+  `Got [rusEFI ...] signature` / Connection established instead of the CRC-mismatch loop
+
+## 2026-08-09 - PCanIoStream log flood fix (INFO_SKIP_RATE typo)
+
+What was done:
+- Fixed INFO_SKIP_RATE typo in java_console/io/src/main/java/com/rusefi/io/can/PCanIoStream.java:
+  `3-00` evaluated to 3 (three minus zero), so the "Skipping non 720 packet" log fired every
+  3rd skipped frame - at ~3600 pps on the m74_9 test bus that is ~1200 lines/sec of noise,
+  making the PCAN debug log unreadable. Now 300 (log every 300th skipped frame)
+
+Validation:
+- ./gradlew :ecu_io:test BUILD SUCCESSFUL (JDK 11 toolchain via
+  -Porg.gradle.java.installations.paths=...)
+
+Follow-ups:
+- PCAN ISO-TP diagnosis continues: need "Skipping non 720 packet:" ID lines or PCAN-View
+  capture to tell whether the m74_9 ECU announces 0x770017 (extended) on the probed bus
+
+## 2026-08-09 - java_console PCAN detection fix + merge conflict resolution
+
+What was done:
+- Fixed java_console not detecting PCAN adapters on Windows: the PowerShell WMI query
+  (`powershell -NoProfile -Command "Get-CimInstance ... -Filter \"Caption like '%PCAN-USB%'\" ..."`)
+  was executed via Runtime.exec(String), whose tokenizer splits on whitespace and keeps quotes as
+  literal characters, so the script arrived shredded and the query silently matched nothing
+  (PCANConnected always false -> "OpenBLT CAN" menu item missing)
+- Added ExecHelper.executeCommand(List<String>, ...) overload that runs commands through
+  ProcessBuilder with an explicit argument list (platform-correct quoting, no shell tokenization)
+- Converted all PowerShell hardware probes to the list form: PCAN (MaintenanceUtil), DFU
+  (DfuFlasher, both H7 and F4 variants), ST-Link (StLinkFlasher), plus DfuFlasher.getDevicesReport
+- Added MaintenanceUtilTest.pcanQueryIsSingleIntactPowerShellScriptArgument regression test
+- Resolved the remaining merge conflicts (HEAD vs 075e600f): can_sniffer.cpp kept HEAD guard
+  structure + theirs' explicit template instantiations; VariableRegistryValues.java took HEAD values
+
+Key decisions:
+- Root-cause fix at ExecHelper instead of patching the query string: the same broken
+  Runtime.exec(String) quoting pattern was shared by PCAN/DFU/ST-Link detection
+- Used Arrays.asList (not List.of): java_console still compiles with sourceCompatibility 8
+- Generated VariableRegistryValues.java resolves to HEAD side; regenerated at next build anyway
+
+Validation:
+- Empirical check on macOS: a fake powershell argv dump showed Runtime.exec(String) splits the
+  script into 15 broken tokens, while ProcessBuilder passes it as one intact argument
+- ./gradlew :ui:test --tests MaintenanceUtilTest: BUILD SUCCESSFUL, 14 tests passed (JDK 11
+  toolchain via -Porg.gradle.java.installations.paths=/opt/homebrew/opt/openjdk@11/...)
+
+Follow-ups:
+- WMIC_* constant names now hold PowerShell arg lists; renaming to PS_* would be cosmetic
+
 ## 2026-07-29 - m74_9 (AT32F435) firmware build fixes
 
 What was done:
@@ -462,255 +534,92 @@ Open follow-ups:
 - Decide how a future bank-2-aware VE Analyze correction should select/combine
   STFT banks; this change preserves the existing bank-1 behavior.
 
-## 2026-08-13 - Console logs the real build date instead of the 1969 epoch (#6836)
+## 2026-08-09 - Restore PCAN adapter into the console ports list + surface init errors
 
-What: The console and the updater logged
-"Compiled Wed Dec 31 19:00:00 EST 1969" instead of a build timestamp.
-
-Root cause: `rusEFIVersion#classBuildTimeMillis` handled the `jar:` protocol by
-chopping the "file:" prefix off the URL path with `path.substring(5, ...)`.
-That path is percent-encoded, so any installation directory containing a space
-produced a file name with a literal `%20`, a file which does not exist, and
-therefore `lastModified() == 0`. `new Date(0)` then rendered the epoch.
-
-Reproduced exactly, with the jar URL shape of a bundle installed under
-"Program Files":
-
-    current  -> C:\Program%20Files\Purple%20Updater\console\rusefi_console.jar
-    exists   -> false, lastModified=0
-    printed  -> Wed Dec 31 17:00:00 MST 1969
-    fixed    -> C:\Program Files\Purple Updater\console\rusefi_console.jar
-
-The same encoding bug also affected the "Source ..." line logged by
-`Autoupdate#main`, which is where it first showed up in the #10000 log.
+What: PCAN-USB adapters were detected (`AvailableHardware.isPCANConnected()`)
+but never shown in the ports dropdown: the `ports.add(new PortResult(LinkManager.PCAN,
+SerialPortType.CAN))` block had been commented out in Feb 2026 (commits
+`6bc0d319e2f`/`ad9856e19a4`, messages "PCANConnected only:hiding"), so the user
+saw `Rendering available ports: []` and "No ECU ports to use found" even though
+MaintenanceUtil confirmed `Caption : PCAN-USB, ConfigManagerErrorCode : 0`. A
+second, hidden-by-design issue: when PCAN init failed, `PCanIoStream.createStream()`
+logged the real `TPCANStatus` only through the status consumer and returned null,
+so the UI showed the generic "Failed to open port" without the cause.
 
 | File | Change |
-|-------------------------------------------------------|--------------------------------------------------|
-| java_console/shared_io/.../rusEFIVersion.java | New `jarFileOf` parses the jar URL as a URI; new `classBuildTimeString` renders "unknown" rather than the epoch |
-| java_console/ui/.../Launcher.java | Use `classBuildTimeString()` |
-| java_console/autoupdate/.../Autoupdate.java | Use `classBuildTimeString(Class)`; `toURI()` for the "Source" log line; bump AUTOUPDATE_VERSION |
-| java_tools/proxy_server/.../Monitoring.java | Use `classBuildTimeString()` |
-| java_console/shared_io/src/test/.../RusEfiVersionTest.java | 7 cases: encoded path, plain path, encoded file name, missing separator, malformed URL, relative URL, no-epoch contract |
+|----------------------------------------------------|----------------------------------------|
+| java_console/connectivity/src/main/java/com/rusefi/SerialPortScanner.java | Re-enable the PCAN synthetic CAN port (SocketCAN stays hidden as before - it is Linux-only and was deliberately hidden separately) |
+| java_console/io/src/main/java/com/rusefi/io/LinkManager.java | PCAN branch now captures the status-consumer message and throws it as IllegalStateException, so PortHolder reports "Exception opening port: Error initializing PCAN: <status>" instead of the generic failure |
+| java_console/connectivity/src/test/java/com/rusefi/SerialPortScannerTest.java | FakeProbes gains a scripted `pcanConnected` flag; new tests for PCAN surfacing as a CAN port and for the no-adapter case |
 
 Key decisions and why:
-- Two separate defects, both fixed. Decoding the path makes the timestamp
-  correct for the overwhelming majority of installs; rendering "unknown"
-  covers the cases where the timestamp genuinely cannot be determined, so the
-  log never again claims a 1969 build.
-- `jarFileOf` is a package-visible pure function taking the URL path as a
-  string, so the tests cover both the encoded and the malformed cases without
-  building a jar or touching the class loader. No reflection.
-- `jarFileOf` returns null instead of throwing. `new File(URI)` rejects
-  relative and opaque URIs with `IllegalArgumentException`, and a logging
-  helper must never be the reason startup fails.
-- Removed the now-unused `java.util.Date` imports from the two call sites that
-  no longer construct a Date.
+- Restored only the PCAN block, not SocketCAN. `SHOW_SOCKETCAN` is Linux-only
+  and the existing `tcpPortWithoutEcuIsReportedUnknownAndNotCached` test asserts
+  an exact port count on Linux CI, so un-hiding SocketCAN would break it; the
+  owner hid it in a separate commit for its own reasons.
+- Kept `PCanIoStream.createStream()` contract (returns null + status consumer)
+  and wrapped it at the LinkManager call site instead: the status text flows into
+  the thrown exception, so every caller (dropdown connect, ConsoleTools,
+  PcanConnectorUI) keeps working unchanged.
+- `AtomicReference` needs `java.util.concurrent.atomic` - `import
+  java.util.concurrent.*` does not cover subpackages (compile error caught by
+  `:ecu_io:compileJava`).
 
 Validation:
-- Old and new path resolution compared side by side on the "Program Files"
-  URL shape; the old one reproduces the issue's literal 1969 string.
-- `gradlew :shared_io:test :autoupdate:test :ui:shadowJar :proxy_server:compileTestJava`
-  green, 7 new tests among them.
-- Not exercised by launching an installed bundle from a spaced path - verified
-  at the unit level and by the side-by-side reproduction only.
-
-## 2026-08-24 - Units-expression migration gap: minimal GREEN coverage
-
-What was done:
-- Added java_console/io/src/test/java/com/rusefi/maintenance/migration/
-  UnitsExpressionMigrationTest.java - 4 JUnit5 tests, all GREEN against
-  current behavior, documenting the bug that lost a Harley hd81 customer's
-  VE/ignition load axes during the Kansas -> Lima firmware update: the
-  customer's 20..180 bins were silently replaced by the new defaults
-  (10..160 / 21..120).
-- Root cause under test: IniFieldMigrationUtils.checkIfUnitsCanBeMigrated
-  compares RAW unevaluated TS units strings. Lima changed units from
-  Kansas's `{bitStringValue(fuelUnits, fuelAlgorithm) }` (veLoadBins) /
-  literal `Load` (ignitionLoadBins) / literal `kPa` (boostCutPressure) to
-  new `{bitStringValue(...)}` expressions for kPa/psi display support; the
-  strings differ textually while the physical unit (kPa) is unchanged, so
-  DefaultTuneMigrator refuses with "WARNING! Field `...` cannot be updated
-  because its units are updated" and the tuned value is dropped.
-
-Key decisions and why:
-- Tests parse the VERBATIM hd81 Kansas/Lima ini lines through the
-  production tokenizer (RawIniFile.Line -> ArrayIniField/ScalarIniField
-  .parse) rather than passing hand-written unit strings - this pins the
-  actual contract: splitTokens strips quotes (`"Load"` -> `Load`) but keeps
-  `{...}` expressions raw and whole (spaces, trailing ` }` included), which
-  is exactly what reaches the comparison in the updater flow (both tunes
-  come from CalibrationsInfo.generateMsq; TS-saved .msq files carry
-  EVALUATED units and do NOT reproduce the bug).
-- assertFalse() calls are marked as bug-documenting: flip to assertTrue()
-  when checkIfUnitsCanBeMigrated learns to evaluate or tolerate expression
-  units. A control test shows identical expressions still migrate.
-- Placed in the io module (":ecu_io" in gradle) next to the code under
-  test; the end-to-end board-level RED repro already lives in fw-iws
-  (java-tests/board-specific-tests KansasLimaMigrationTest, see that
-  repo's docs/report.md 2026-08-24 fourth entry).
-
-Validation:
-- ./gradlew :ecu_io:test --tests '*UnitsExpressionMigrationTest*' - 4/4
-  pass (JUnit XML confirms all 4 testcases executed, 0 failures).
+- `./gradlew :connectivity:test :ecu_io:test` passes (including new
+  `pcanAdapterSurfacesAsSyntheticCanPort` / `noPcanAdapterMeansNoSyntheticPcanPort`
+  and the pre-existing scan-policy suite).
+- Compile of `:ecu_io` catches the missing-import mistake; fixed with an explicit
+  `java.util.concurrent.atomic.AtomicReference` import.
 
 Open follow-ups:
-- Implement the fix in checkIfUnitsCanBeMigrated (evaluate/ignore `{...}`
-  expression units, ideally with a same-evaluated-unit check), then flip
-  the three assertFalse() to assertTrue() and un-RED the fw-iws
-  KansasLimaMigrationTest.
+- `PCanHelper.init` still hardcodes `PCAN_USBBUS1` + `PCAN_BAUD_500K`; a bus
+  number or baud mismatch (e.g. ECU at 1M) will surface now as the real
+  TPCANStatus in the UI - consider making channel/baud configurable.
+- If PCAN init succeeds but the ECU never answers, the next diagnostic step is
+  the ISO-TP IDs (`CAN_ECU_SERIAL_RX_ID`/`TX_ID`) versus firmware config.
 
-## 2026-08-24 - Fix: TS `{...}` expression units no longer block tune migration
+## 2026-08-09 - PowerShell device probes: -Command quoting broken on Windows, switched to -EncodedCommand
 
-What was done:
-- Fixed checkIfUnitsCanBeMigrated (java_console/io/.../migration/
-  IniFieldMigrationUtils.java): if either side's units string is a TS
-  `{...}` expression (trimmed string starts with `{`), the units check
-  passes. Expressions reach the migrator unevaluated, so the same
-  physical unit can be spelled as a literal in one ini and as an
-  expression in the other (or as two different expressions) - a raw
-  string mismatch involving an expression says nothing about the
-  physical unit, while refusing silently replaces the user's tuned
-  value with the new firmware default (the Kansas -> Lima load-axis
-  loss from the previous entry).
-- Updated UnitsExpressionMigrationTest to assert the FIXED behavior:
-  the three former bug-documenting assertFalse() flipped to
-  assertTrue(); added differentLiteralUnitsAreStillRefused (afr vs
-  lambda) proving the literal-vs-literal guard is untouched.
+What: After the ProcessBuilder conversion of the PowerShell device probes, the user's
+Windows console log changed from `powershell -NoProfile -Command "Get-CimInstance ...
+-Filter \"Caption like '%PCAN-USB%'\" ..." says Caption : PCAN-USB` (old build, worked)
+to `[powershell, -NoProfile, -Command, Get-CimInstance Win32_PnPEntity -Filter "Caption
+like '%PCAN-USB%'" ...] says (empty)` (new build, empty). Root cause: Windows PowerShell
+parses the `-Command` tail with its own quote handling (it strips/re-interprets quotes,
+not the standard C-runtime argv rules), and every Java argv-joining strategy feeds it a
+different escaped form - Runtime.exec(String)'s tokenizer produced literal `\"` tokens,
+ProcessBuilder's command-line quoting produces `\"` escapes - so the WQL -Filter value
+`"Caption like '%PCAN-USB%'"` got mangled and the query matched nothing. The macOS
+fake-powershell argv-dump test could not catch this: POSIX execvp passes argv verbatim,
+Windows command-line reconstruction is where quoting breaks.
 
-Key decisions and why:
-- Tolerate (skip) expression units rather than evaluate them: proper
-  evaluation of bitStringValue(...) needs the ini's string lists plus
-  the live selector field values - far beyond this comparison's reach.
-  The check keeps guarding real literal unit changes; the remaining
-  type/row/col checks in DefaultTuneMigrator and
-  DefaultIniFieldMigrationStrategy still apply to expression-unit
-  fields.
-- Both call sites (DefaultTuneMigrator, DefaultIniFieldMigrationStrategy)
-  share the helper, so scalars (boostCutPressure & friends) are covered
-  by the same one-line policy.
-
-Validation:
-- ./gradlew :ecu_io:test - all 25 suites green, including the 5-test
-  UnitsExpressionMigrationTest.
-- ./gradlew :ui:test --tests '*Migrat*' --tests '*migration*' - all
-  migration suites green, notably DefaultTuneMigratorTest (26 tests,
-  includes the afr-vs-lambda refusal) and CalibrationsHelperTest (19).
-
-Open follow-ups:
-- fw-iws's end-to-end KansasLimaMigrationTest (RED repro against the
-  submodule copy of this code) flips green once ext/fw-private/ext/rusefi
-  picks up this change.
-- Optional future hardening: same-evaluated-unit check for expressions
-  once an expression evaluator with ini context is available.
-
-## 2026-08-27 - Fix: "Grab baro value from MAP" latched 101.325 kPa (#9744)
-
-What was done:
-- Root-caused rusefi#9744: with `useFixedBaroCorrFromMap` enabled, barometric
-  pressure stayed at 101.325 kPa even though MAP reported ~95 kPa at key-on.
-- `initMapDecoder()` (controllers/sensors/impl/map.cpp) read
-  `Sensor::get(SensorType::MapSlow).value_or(STD_ATMOSPHERE)`. In
-  commonInitEngineController() `initNewSensors()` (engine_controller.cpp:440)
-  only *subscribes* slowMapSensor to the ADC; `initSensors()` ->
-  `initMapDecoder()` runs three lines later on the same thread, so no slow-ADC
-  callback has fired and MapSlow is always invalid. The `.value_or()` therefore
-  returned STD_ATMOSPHERE = 101.325, `validateBaroMap()` accepted it (plausible
-  range is 60..110 kPa), and `Sensor::setMockValue(BarometricPressure, ...)`
-  latched it permanently (`m_useMock` is sticky, sensor.cpp:19).
-- Deferred the grab to the slow callback:
-
-  | File | Change |
-  |---|---|
-  | controllers/sensors/impl/map.cpp | `initMapDecoder()` now only arms `baroFromMapPending` + resets a Timer; new `updateFixedBaroFromMap()` performs the grab |
-  | controllers/sensors/impl/map.h | declares `updateFixedBaroFromMap()` (reaches all TUs via pch -> allsensors.h) |
-  | controllers/algo/engine.cpp | calls it from `periodicSlowCallback()`, right after `updateSlowSensors()` |
-  | unit_tests/tests/sensor/test_baro_from_map.cpp | new, 5 tests |
-  | unit_tests/tests/tests.mk | registers the new test file |
+| File | Change |
+|----------------------------------------------------|----------------------------------------|
+| java_console/ui/src/main/java/com/rusefi/maintenance/MaintenanceUtil.java | New `powershellEncodedCommand(script)` helper: transports the script as Base64 UTF-16LE via `-EncodedCommand` (pure-ASCII payload, no spaces/quotes - immune to any command-line quoting); PCAN query converted; `detectDevice` log line now shows the decoded script via `describeQueryCommand` |
+| java_console/ui/src/main/java/com/rusefi/maintenance/DfuFlasher.java | STM32-bootloader and STM32-H7 DFU queries converted to `powershellEncodedCommand` |
+| java_console/ui/src/main/java/com/rusefi/maintenance/StLinkFlasher.java | ST-Link query converted; dropped now-unused `Arrays` import |
+| java_console/ui/src/test/java/com/rusefi/maintenance/MaintenanceUtilTest.java | `pcanQueryIsSingleIntactPowerShellScriptArgument` replaced by `pcanQueryIsEncodedCommandSurvivingQuoting` (base64 payload shape + decode round-trip) and `describeQueryCommandShowsDecodedScript` |
 
 Key decisions and why:
-- One shot per valid sample: as soon as MapSlow becomes valid we validate and
-  either latch or disable, and never retry. Retrying would re-run
-  `validateBaroMap()` every slow callback and spam `warning()`.
-- Engine-turning guard (`Rpm > 0` -> give up): MAP only reads atmosphere with
-  the engine stopped, so a late first sample must not be trusted.
-- 3 s timeout -> one `OBD_Barometric_Press_Circ` warning, then give up. Covers
-  MAP not configured / sensor faulted, without waiting forever.
-- On any failure path we leave BarometricPressure *unregistered* rather than
-  mocking STD_ATMOSPHERE. That matches the pre-existing "the fixed baro
-  correction will be disabled" branch: `getBaroCorrection()` returns 1 when
-  `!hasSensor(BarometricPressure)` (fuel_math.cpp:457). It also makes the up-to
-  50 ms delay before the first grab harmless - correction is neutral meanwhile.
-- Not made an EngineModule: no TS page, and a two-line hook keeps the change
-  small. The pre-existing "TODO: do literally anything other than this" on the
-  setMockValue hack is left in place - out of scope here.
+- `-EncodedCommand` (Base64 of UTF-16LE) instead of more quote-escaping: it is the
+  canonical way to pass complex scripts to Windows PowerShell and pwsh alike, and it
+  makes the transport deterministic - the script reaches PowerShell byte-exact.
+- Left `ExecHelper.executeCommand(List, ...)`/ProcessBuilder in place (correct on
+  POSIX and needed for the no-shell path); only the command content changed.
+- Left `DfuFlasher.getPnpDevices` (`Get-PnpDevice -PresentOnly`, no quotes) and
+  `TunerStudioHelper` (Runtime.exec(String), script without inner quotes) untouched -
+  neither has quoted arguments, so both are immune to this class of bug.
 
 Validation:
-- RED first (per .junie/guidelines.md "Bug Fix Process"), retrofitted: I wrote
-  fix and test together, which violates the mandated order, so I proved the
-  test's RED afterwards by temporarily restoring the pre-fix behaviour in
-  map.cpp. 4 of 5 tests failed, with the diagnostic literally reading
-  `Which is: 101.325` - the issue's symptom. Restored, all 5 pass.
-- Full suite after restore: 1198 tests / 236 suites, all pass.
-
-Environment notes (not repo changes):
-- This machine had no `make`/gcc on PATH, so `unit_tests/test.sh` fails with
-  `make: command not found`. Built with the MSYS2 UCRT64 toolchain by exporting
-  PATH=/c/msys64/ucrt64/bin:/c/msys64/usr/bin.
-- That GCC is 16.1.0 (much newer than CI) and rejects pre-existing
-  `unit_tests/mocks.cpp:38` (`MockAirmass::MockAirmass() :
-  AirmassVeModelBase(veTable)`) with `-Werror=maybe-uninitialized`. Worked
-  around on the command line only, via `make UDEFS='-Wno-error=maybe-uninitialized'`.
-  `UDEFS` is the free additive slot (rules.mk:53 `DEFS = $(DDEFS) $(UDEFS)`,
-  `UDEFS =` empty at unit_test_rules.mk:235). Do NOT use `DDEFS` for this - it
-  carries the real project `-D`s including `META_GENERATED_H_OVERRIDE`, and
-  overriding it from the command line breaks the whole build.
+- `./gradlew :ui:test :connectivity:test :ecu_io:test` passes; the new tests verify
+  the payload charset and the decode round-trip back to the intact script.
+- Cannot run PowerShell here (macOS host); the user validates on Windows: the log
+  line should show `-EncodedCommand <Get-CimInstance ...>` and "says Caption : PCAN-USB".
 
 Open follow-ups:
-- clang build of unit tests not verified: no clang in this environment (MSYS2
-  install has no clang64/ucrt64 clang). CLAUDE.md wants both compilers; left to CI.
-- `unit_tests/mocks.cpp:38` will need a real fix (or a targeted suppression)
-  whenever CI moves to GCC 16.
-- `useFixedBaroCorrFromMap` remains boot-only (unchanged by this fix):
-  `initMapDecoder()` is not re-run on Burn, so toggling it in TS still needs a
-  reboot. Not listed in the ini `requiresPowerCycle` set - candidate for
-  docs/hardware-reinit-and-power-cycle.md if it ever confuses someone.
-
-## 2026-08-27 - Review round on PR #10153 (baro from MAP)
-
-What was done:
-- Addressed both inline comments from dron0gus's CHANGES_REQUESTED review on
-  PR #10153 (the #9744 fix from the previous entry). No objection was raised to
-  the mechanism itself - deferring the grab to the slow callback, the
-  engine-turning guard and the timeout all stood.
-
-  | Comment | Change |
-  |---|---|
-  | "Making validateBaroMap() return SensorResult will simplify further code." | `validateBaroMap()` returns `SensorResult` instead of float-with-NaN-sentinel |
-  | "Print actual value instead of \"this\"?" | Confirmation message now carries the kPa value; the two prints collapsed to one per outcome |
-
-Key decisions and why:
-- Kept the parameter as `float` and changed only the return type. The caller
-  already validated the `SensorResult` from `Sensor::get(MapSlow)` before
-  calling, so taking a `SensorResult` in would just move the same check around.
-  The `std::isnan()` guard inside stays - it is now the only NaN handling left.
-- Dropped the pre-validation `"Get initial baro MAP pressure = %.2fkPa"` line.
-  With the value printed in both outcome messages (and `validateBaroMap()`
-  already warning with the value on rejection) it carried no information that
-  is not printed elsewhere, and it read as a success line even when the value
-  was about to be rejected.
-- Both findings were in code carried over unchanged from the original
-  implementation rather than written fresh for the fix - worth noting as a
-  pattern: moving code into a new function is a good moment to clean up its
-  idioms, not just relocate them.
-
-Validation:
-- Build on master base: 0 errors. Full suite 1201 tests / 237 suites, all pass,
-  BaroFromMap 5/5.
-- CI on the previous commit (4173a63ed6) was fully green: 64 checks, 0 failures,
-  including `build (macos-latest)` - which closes the "clang not verified"
-  follow-up from the previous entry - plus `build (ubuntu-latest)`,
-  `clang-format`, and `hardware-ci` on f407-discovery and nucleo_f767.
-
-Open follow-ups:
-- `unit_tests/mocks.cpp:38` still trips GCC 16's `-Wmaybe-uninitialized`; only
-  a local concern until CI moves to that compiler (see previous entry).
+- If the user's adapter still reports empty with the encoded command, the next step
+  is hardware/driver state (PCAN-View holding the channel, unplugged adapter) rather
+  than quoting - the query transport is now deterministic.
+- `TunerStudioHelper` still uses Runtime.exec(String) with outer quotes; fine today,
+  but converting it to the list-based ExecHelper would remove the last fragile caller.

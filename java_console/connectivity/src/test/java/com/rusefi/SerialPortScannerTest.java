@@ -274,6 +274,27 @@ public class SerialPortScannerTest {
     }
 
     @Test
+    public void pcanAdapterSurfacesAsSyntheticCanPort() {
+        probes.pcanConnected = true;
+
+        scan(true);
+
+        assertTrue(scanner.getCurrentHardware().isPCANConnected());
+        assertTrue(scanner.getCurrentHardware().getKnownPorts().stream()
+            .anyMatch(p -> LinkManager.PCAN.equals(p.port) && p.type == SerialPortType.CAN),
+            "a detected PCAN adapter must show up in the ports list as a CAN port");
+    }
+
+    @Test
+    public void noPcanAdapterMeansNoSyntheticPcanPort() {
+        scan(true);
+
+        assertFalse(scanner.getCurrentHardware().getKnownPorts().stream()
+            .anyMatch(p -> LinkManager.PCAN.equals(p.port)),
+            "no PCAN adapter means no PCAN entry in the ports list");
+    }
+
+    @Test
     public void fastScanCycleNeverRunsExpensiveDeviceProbes() {
         probes.dfuConnected = true;
 
