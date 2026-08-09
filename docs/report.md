@@ -1,5 +1,48 @@
 # Work Report
 
+## 2026-08-09 - m74_9 watchdog round 2: extended TIM5 snapshot with RCC gate + 100 ms delayed re-read
+
+What was done:
+- User report of the instrumented firmware: `cnt=80159147..80159147 dier=0x2 sr=0x0 cr1=0x485`
+  at 4 MHz -> freeze at ~20 s after boot. cr1=0x485 = CEN+URS+ARPE+PMEN (exactly what
+  pwm_lld_start writes on AT32), DIER bit 1 (CC1IE) armed, no pending compare, isr=28523 /
+  setHw=28525 -> the ISR->reschedule chain ran perfectly until the freeze. Conclusion: timer
+  registers are intact, TIM5 counter stops counting at runtime - classic signature of the
+  peripheral clock being gated (RCC APB1ENR.TIM5EN cleared, e.g. by stray
+  pwmStop()/gptStop()/icuStop() on PWMD5/GPTD5/ICUD5 -> rccDisableTIM5 in the TIMv1 LLD), or a
+  deeper AT32 clock issue. The two identical adjacent CNT reads are only weak proof (a few
+  cycles can elapse between reads)
+- Extended the diagnostic in microsecond_timer.cpp MicrosecondTimerWatchdogController::PeriodicTask:
+  - re-read CNT after chThdSleepMilliseconds(100) (thread context, no locks held) - prints
+    cnt2 and the delta cnt2-cnt1, so cnt2==cnt1 after 100 ms now PROVES a frozen counter
+  - added RCC APB1 clock-enable snapshot: apb1enr + tim5en bit (RCC->APB1ENR + RCC_APB1ENR_TIM5EN
+    on AT32F4XX/STM32F4XX/STM32F7XX, RCC->APB1LENR + RCC_APB1LENR_TIM5EN on STM32H7XX - the H7
+    register name differs; verified all four families' CMSIS headers). Zeroed default keeps the
+    message safe if a future family defines SCHEDULER_TIMER_DEVICE without matching the #if
+  - added SMCR/PSC/ARR/CCR1/CCMR1 so a stale compare window or slave-mode gate is visible
+  - cypress/kinetis GPT port still gets the old message via the #else branch
+- Clock-gate culprit sweep (rusEFI tree, outside ChibiOS): no pwmStop() callers at all; the
+  only stop call is icuStop() in sent_hw_icu.cpp (SENT input, but STM32_ICU_USE_TIM5=FALSE);
+  HAL_USE_ONEWIRE=FALSE on AT32 so ChibiOS-Contrib hal_onewire.c pwmStop(pwmd) is not built;
+  direct RCC-> writes in-tree touch only AHB1ENR (USB disable at boot, stm32_common.cpp),
+  APB2ENR (osc_detector.cpp, H7-only) and BDCR (F7 RTC) - none can clear TIM5EN at runtime
+
+Validation:
+- Edit is type-checked by hand (%d/%u/%x specifiers match the casted arguments, including the
+  new (unsigned)(cnt2-cnt1) and (unsigned)tim5en); no firmware build possible on the macOS
+  host (no arm-none-eabi toolchain) - user builds m74_9 on Windows
+
+Follow-ups:
+- User: rebuild m74_9 on Windows, flash, reproduce (~20 s), paste the new error text; also
+  capture the last console lines right before the error (any Storage/burn/MFS/CAN-reconnect
+  message, any `local freeze cnt=`)
+- Reading apb1enr/tim5en: bit 3 (0x8) clear -> someone gated TIM5 clock -> correlate ~20 s
+  wall-time with the log to find the culprit; bit still set but cnt2==cnt1 after 100 ms ->
+  deeper AT32 clock issue, next print RCC->CR (PLLON/PLLRDY) and RCC->CFGR (SW) and consider
+  sampling CNT every 1 s from status_loop to find the exact freeze moment
+- cnt2 != cnt1 but watchdog still latched -> the freeze was transient; re-think executor/queue
+  and the hasFirmwareError() early-return interplay
+
 ## 2026-08-09 - m74_9 watchdog critical: instrument MstWatchdog with TIM5 register snapshot
 
 What was done:

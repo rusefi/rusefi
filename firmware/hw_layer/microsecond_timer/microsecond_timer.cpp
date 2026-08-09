@@ -122,13 +122,37 @@ struct MicrosecondTimerWatchdogController : public PeriodicController<TIMER_WATC
 			// - compare interrupt dead (DIER bit 1 / CC1IE cleared, CNT still counting),
 			// - notification never re-armed after last fire (isTimerPending false).
 			uint32_t cnt1 = SCHEDULER_TIMER_DEVICE->CNT;
+
+			// two adjacent CNT reads can be identical just because a few CPU cycles
+			// elapsed between them - sleep so the counter really has time to advance:
+			// cnt2 == cnt1 after 100 ms proves the counter is frozen, not just slow
+			chThdSleepMilliseconds(100);
 			uint32_t cnt2 = SCHEDULER_TIMER_DEVICE->CNT;
+
+			// TIM5 peripheral clock gate: a cleared bit means someone called
+			// pwmStop()/gptStop()/icuStop() on the scheduler timer handle, which
+			// gates the clock via rccDisableTIM5 in the TIMv1 LLD. The RCC register
+			// name differs between families (APB1LENR on H7, APB1ENR elsewhere).
+			uint32_t apb1enr = 0;
+			uint32_t tim5en = 0;
+#if defined(AT32F4XX) || defined(STM32F4XX) || defined(STM32F7XX)
+			apb1enr = RCC->APB1ENR;
+			tim5en = apb1enr & RCC_APB1ENR_TIM5EN;
+#elif defined(STM32H7XX)
+			apb1enr = RCC->APB1LENR;
+			tim5en = apb1enr & RCC_APB1LENR_TIM5EN;
+#endif
+
 			firmwareError(ObdCode::RUNTIME_CRITICAL_TIMER_WATCHDOG,
-				"Watchdog: no events for 2s! isr=%d setHw=%d freeze=%d pending=%d cnt=%u..%u dier=0x%x sr=0x%x cr1=0x%x",
+				"Watchdog: no events for 2s! isr=%d setHw=%d freeze=%d pending=%d cnt=%u..%u(+%u) dier=0x%x sr=0x%x cr1=0x%x apb1enr=0x%x tim5en=%u smcr=0x%x psc=0x%x arr=0x%x ccr1=0x%x ccmr1=0x%x",
 				timerCallbackCounter, setHwTimerCounter, timerFreezeCounter, (int)isTimerPending,
-				(unsigned)cnt1, (unsigned)cnt2,
+				(unsigned)cnt1, (unsigned)cnt2, (unsigned)(cnt2 - cnt1),
 				(unsigned)SCHEDULER_TIMER_DEVICE->DIER, (unsigned)SCHEDULER_TIMER_DEVICE->SR,
-				(unsigned)SCHEDULER_TIMER_DEVICE->CR1);
+				(unsigned)SCHEDULER_TIMER_DEVICE->CR1,
+				(unsigned)apb1enr, (unsigned)tim5en,
+				(unsigned)SCHEDULER_TIMER_DEVICE->SMCR, (unsigned)SCHEDULER_TIMER_DEVICE->PSC,
+				(unsigned)SCHEDULER_TIMER_DEVICE->ARR, (unsigned)SCHEDULER_TIMER_DEVICE->CCR1,
+				(unsigned)SCHEDULER_TIMER_DEVICE->CCMR1);
 #else
 			firmwareError(ObdCode::RUNTIME_CRITICAL_TIMER_WATCHDOG, "Watchdog: no events for 2 seconds!");
 #endif
