@@ -807,3 +807,70 @@ Open follow-ups:
   rarer variant of the race remains; a fresh-flash boot was already covered.
 - The WDT regs/hist diagnostics (commit 1371adf526f) are harmless when quiet and
   stay in place as a first-line tool for any future timer/lockup report.
+
+## 2026-08-09 - TS-over-CAN link stability: ISO-TP flow control + desync recovery
+
+Symptom (user log): `Got only 18 bytes while expecting 50 for command 0x43` and
+`TunerStudio errors: outofrange=86/470` - multi-frame TS-over-CAN requests were
+being truncated on m74_9 (CAN-only ECU, PCAN-USB host, 500k). 50 bytes = 1 FIRST
++ 7 CONSECUTIVE = exactly 8 CAN frames; only 18 bytes (6+7+5) assembled, so
+frames were dropped and the ECU's ISO-TP state never recovered until the next
+FIRST frame.
+
+Root cause (three coupled problems):
+1. The host (IsoTpConnector.sendStrategy) bursts FIRST + all CONSECUTIVE frames
+   with no pause - `receiveData()` was an empty no-op - while the ECU's receive
+   FIFO (CanTsListener.rxFifo, `CAN_FIFO_FRAME_SIZE=8`) holds only 8 frames and
+   the TS thread may be busy sending the previous response, so a burst can
+   overflow and `decodeFrame` silently drops.
+2. A single dropped frame permanently desynchronized the ECU's ISO-TP state:
+   CanStreamerState::receiveFrame / streamReceiveTimeout / IsoTpRx::readTimeout
+   returned/aborted on index mismatch without calling reset(), so consecutive
+   frames of the next message kept failing until a new FIRST arrived.
+3. The Java decoder (IsoTpCanDecoder) treated the ECU's flow-control frame as a
+   data packet (empty chunk) - noise, not a functional break.
+
+What was done:
+| Change | File |
+| --- | --- |
+| `CAN_FIFO_FRAME_SIZE` 8 -> 32 (headroom for host bursts; ~640 B static RAM on top of 384 KB, fine) | firmware/controllers/can/isotp/isotp.h |
+| reset() on consecutive-index mismatch in receiveFrame | firmware/controllers/can/isotp/isotp.cpp |
+| reset() when streamReceiveTimeout gets numReceived < 1 (lost/ignored frame) | firmware/controllers/can/isotp/isotp.cpp |
+| reset() on desync/timeout in IsoTpRx::readTimeout (defensive; TS path uses CanStreamerState) | firmware/controllers/can/isotp/isotp.cpp |
+| reset() now also clears the byte-level rxFifoBuf (drop stale leftovers) | firmware/controllers/can/isotp/isotp.cpp |
+| PCanIoStream overrides receiveData(): wait up to 200 ms for the ECU FC frame (monitor + flag, reader thread signals on FC); FC frames are intercepted in readOnePacket and not fed to the decoder | java_console/io/src/main/java/com/rusefi/io/can/PCanIoStream.java |
+| `receiveData()` documented as the FC-wait hook between FIRST and CONSECUTIVE; default stays no-op (SocketCAN/ELM327 unchanged) | java_console/io/src/main/java/com/rusefi/io/can/isotp/IsoTpConnector.java |
+| public `ISO_TP_FRAME_FLOW_CONTROL=3` constant | java_console/io/src/main/java/com/rusefi/io/can/isotp/IsoTpConstants.java |
+| New test: receiveData() is called between FIRST and CONSECUTIVE | java_console/io/src/test/java/com/rusefi/io/can/IsoTpConnectorTest.java |
+
+Design notes:
+- The FC wait is a monitor/flag pair, not a per-send CountDownLatch, because
+  CountDownLatch cannot be reset. Writer thread waits in receiveData(); PCAN
+  reader thread sets the flag + notifyAll on a frame whose type nibble is 3.
+  Timeout falls back to the historical burst behavior (no regression if FC is
+  lost). Both threads only touch the monitor under synchronization, so there is
+  no lost-wakeup race.
+- FC timeout 200 ms was chosen because the ECU sends FC immediately on FIRST
+  (sendFlowControl, blockSize=0, stmin=0); the wait normally costs ~1 ms of
+  latency per multi-frame write and paces the burst against the 32-frame FIFO.
+- SocketCANIoStream keeps the default no-op receiveData() (Linux kernel path,
+  same historical behavior) - flagged as a possible follow-up.
+
+Validation:
+- `./gradlew :ecu_io:test` BUILD SUCCESSFUL (JDK 11 toolchain via
+  -Porg.gradle.java.installations.paths=...). New test passed; existing
+  IsoTpConnectorTest / IsoTpCanDecoderTest untouched behavior.
+- `cd unit_tests && ./test.sh testCanSerial`: 6/6 PASSED (TestCanStreamerState
+  round-trips are index-consistent, so the new reset() paths are not hit there;
+  macOS build needed a flock shim - `flock` does not ship on macOS - and the JDK
+  11 toolchain env var for the gradle codegen steps).
+
+Open follow-ups:
+- User rebuilds m74_9 on Windows (firmware/config/boards/m74_9/compile_m74_9.sh)
+  and re-runs the TS session over PCAN-USB; expect the `outofrange` counter and
+  `not enough bytes in stream` errors to drop to zero.
+- If truncation persists, the next suspect is host-side: PCanIoStream.decodePacket
+  is still fed a 127-byte buffer for its assembly math even though the size-aware
+  overload receives the real DLC - verify byte 0 of every 0x720 frame against a
+  PCAN-View capture.
+- Consider the same FC-wait for SocketCANIoStream.

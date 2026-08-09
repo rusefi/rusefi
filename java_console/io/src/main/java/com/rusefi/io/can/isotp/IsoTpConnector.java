@@ -35,7 +35,9 @@ public abstract class IsoTpConnector {
         // multiple frames
         // send the first header frame
         connector.sendCanFrame((IsoTpConstants.ISO_TP_FRAME_FIRST << 4) | ((bytes.length >> 8) & 0x0f), bytes.length & 0xff, bytes, 0, 6);
-        // get a flow control frame
+        // wait for the receiver's flow control frame before bursting the consecutive frames.
+        // default implementation is a no-op; hardware streams may override it to pace the burst
+        // (see PCanIoStream) so the receiver's FIFO does not overflow.
         connector.receiveData();
 
         // send the rest of the data
@@ -74,6 +76,11 @@ public abstract class IsoTpConnector {
 
     public abstract void sendCanData(byte[] total);
 
+    /**
+     * Called by {@link #sendStrategy} between the FIRST frame and the CONSECUTIVE burst of a
+     * multi-frame ISO-TP packet. Override to wait for the receiver's flow control (FC) frame;
+     * the default implementation does not wait (keeps the historical burst behavior).
+     */
     public void receiveData() {
     }
 }

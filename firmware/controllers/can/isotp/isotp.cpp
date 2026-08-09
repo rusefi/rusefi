@@ -128,7 +128,8 @@ int CanStreamerState::receiveFrame(const CANRxFrame &rxmsg, uint8_t *destination
 	case ISO_TP_FRAME_CONSECUTIVE:
 		frameIdx = rxmsg.data8[isoHeaderByteIndex] & 0xf;
 		if (this->waitingForNumBytes < 0 || this->waitingForFrameIndex != frameIdx) {
-			// todo: that's an abnormal situation, and we probably should react?
+			// a frame was lost (or a stale frame arrived): re-sync so the next FIRST frame starts clean
+			reset();
 			return 0;
 		}
 		numBytesAvailable = minI(this->waitingForNumBytes, 7 - isoHeaderByteIndex);
@@ -193,6 +194,7 @@ void CanStreamerState::reset() {
   waitingForNumBytes = 0;
   waitingForFrameIndex = 0;
   isComplete = false;
+  rxFifoBuf.clear();
 }
 
 int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sysinterval_t timeout) {
@@ -370,8 +372,12 @@ can_msg_t CanStreamerState::streamReceiveTimeout(size_t *np, uint8_t *rxbuf, can
 		if (rxTransport->receive(&rxmsg, timeout) == CAN_MSG_OK) {
 			int numReceived = receiveFrame(rxmsg, rxbuf + receivedSoFar, availableBufferSpace, timeout);
 
-			if (numReceived < 1)
+			if (numReceived < 1) {
+				// a frame was lost or ignored (e.g. an unexpected flow control frame):
+				// drop the partial ISO-TP state so the next FIRST frame starts clean
+				reset();
 				break;
+			}
 			availableBufferSpace -= numReceived;
 			receivedSoFar += numReceived;
 		} else {
@@ -413,6 +419,7 @@ int IsoTpRx::readTimeout(uint8_t *rxbuf, size_t *size, sysinterval_t timeout)
 
 			efiPrintf("IsoTP: rx timeout, %d left to receive", waitingForNumBytes);
 			*size = buf - rxbuf;
+			reset();
 			return -1;
 		}
 
@@ -445,6 +452,7 @@ int IsoTpRx::readTimeout(uint8_t *rxbuf, size_t *size, sysinterval_t timeout)
 			frameIdx = rxmsg.data8[isoHeaderByteIndex] & 0xf;
 			if (waitingForNumBytes < 0) {
 				// Should not happen
+				reset();
 				return -4;
 			}
 			if (waitingForFrameIndex != frameIdx) {
@@ -452,6 +460,7 @@ int IsoTpRx::readTimeout(uint8_t *rxbuf, size_t *size, sysinterval_t timeout)
 				// TODO: error codes
 				efiPrintf("received frame index %d is not what expected %d",
 					frameIdx, waitingForFrameIndex);
+				reset();
 				return -2;
 			}
 			numBytesAvailable = minI(waitingForNumBytes, 7 - isoHeaderByteIndex);

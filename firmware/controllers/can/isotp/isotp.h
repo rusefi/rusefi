@@ -134,7 +134,7 @@ class ICanTransport : public ICanTransmitter, public ICanReceiver {
 #define CAN_FIFO_BUF_SIZE 76
 #endif // CAN_FIFO_BUF_SIZE
 
-#define CAN_FIFO_FRAME_SIZE 8
+#define CAN_FIFO_FRAME_SIZE 32
 
 class CanStreamerState : public IsoTpBase {
 public:
