@@ -23,7 +23,20 @@ void portSetHardwareSchedulerTimer(efitick_t nowNt, efitick_t setTimeNt) {
 	// This implementation doesn't need the current time, only the target time
 	UNUSED(nowNt);
 
-	pwm_lld_enable_channel(&SCHEDULER_PWM_DEVICE, 0, setTimeNt);
+	// The hardware counter is free-running and monotonic: if the compare value is
+	// written in the past, the CNT == CCR1 equality has already been missed and no
+	// further interrupts fire until the 32-bit counter wraps (~18 min at 4 MHz),
+	// silently killing the whole event scheduler. The scheduler's setTimeNt can be
+	// stale by the time this write lands, so re-check against a fresh counter read
+	// and clamp the compare a small margin into the future.
+	const uint32_t compareMinDelta = static_cast<uint32_t>(US2NT(4));
+	uint32_t compare = static_cast<uint32_t>(setTimeNt);
+	const uint32_t cnt = SCHEDULER_TIMER_DEVICE->CNT;
+	if (static_cast<int32_t>(compare - cnt) < static_cast<int32_t>(compareMinDelta)) {
+		compare = cnt + compareMinDelta;
+	}
+
+	pwm_lld_enable_channel(&SCHEDULER_PWM_DEVICE, 0, compare);
 	pwmEnableChannelNotificationI(&SCHEDULER_PWM_DEVICE, 0);
 }
 
