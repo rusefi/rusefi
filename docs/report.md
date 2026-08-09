@@ -737,3 +737,52 @@ Open follow-ups:
   PWMD5" vs "CC1IF set but ISR never dispatched (NVIC/vector)".
 - If the counter proves alive but the compare is disabled, check whether any code path
   restarts PWMD5 after boot (would reset CNT/ARR/CCER per pwm_lld_start).
+
+## 2026-08-09 - m74_9 watchdog ROOT CAUSE: compare re-armed in the past, missed CNT==CCR1 equality
+
+What: The user's round-3 register dump (21:23) finally pinned the failure mode. The
+latched error repeats with isr=20128 setHw=20130 pending=1 cnt=60158992..60558987
+while the live dump shows the counter alive and growing:
+
+- `ccr1=0x30316F9` = 50,521,849 - in the PAST (cnt already 64-76M at dump time): the
+  last successful re-arm wrote a compare value that CNT had already passed.
+- `ccer=0x0` - NOT the culprit: CC1E is 0 since pwm_lld_start (channel mode
+  PWM_OUTPUT_DISABLED) and the design works without it (compare interrupts fire on
+  CC1IF + CC1IE only).
+- `ccmr1=0x10` = OC1M(1) toggle as set by portInitMicrosecondTimer; `cr1=0x485` =
+  PMEN|ARPE|URS|CEN exactly as pwm_lld_start writes (AT32 32-bit mode); both untouched.
+- `psc=0x47` (72 divider, 288MHz APB1 -> 4MHz counter), `apb1enr=0x12000018`,
+  `tim5en=8`: clock gating ruled out for good.
+- `dier=0x2` (CC1IE armed) + `sr=0x0` (CC1IF cleared): the re-arm sequence
+  pwm_lld_enable_channel (CCR1 write) -> pwm_lld_enable_channel_notification
+  (SR=~(2<<0), DIER|=CC1IE) ran, but with CCR1 already in the past the equality
+  CNT==CCR1 can never fire again until the 32-bit counter wraps (~18 min at 4MHz).
+  The ISR->reschedule chain therefore dies silently; the 2s watchdog only reports it.
+
+Root cause: setHardwareSchedulerTimer() computes its "too close to now" clamp
+(US2NT(2)) against the nowNt passed by the caller (read earlier, under lock). The
+hardware write happens later and the free-running CNT keeps advancing, so an event
+scheduled only a few microseconds ahead can land in CCR1 already in the past - a
+probabilistic race that took 12-20s to hit (isr counts differ per run: 20128, 37650).
+
+Fix (firmware/hw_layer/ports/stm32/microsecond_timer_stm32.cpp,
+portSetHardwareSchedulerTimer): re-check the compare value against a FRESH
+SCHEDULER_TIMER_DEVICE->CNT read and clamp it at least US2NT(4) = 4us (16 ticks at
+4MHz) into the future before writing CCR1. This makes the CNT==CCR1 equality
+impossible to miss regardless of how stale the scheduler's setTimeNt is. The
+int32-trick on (compare - cnt) is safe because TOO_FAR_INTO_FUTURE_NT is 10s
+= 40M ticks << 2^31.
+
+Validation:
+- Review-only on macOS (no arm-none-eabi toolchain); the user will rebuild m74_9 on
+  Windows and confirm the ECU stays up past the previous 12-20s lockup.
+- The change is EFI_PROD_CODE-path only and does not alter the normal path (compare
+  values >= 4us ahead are written verbatim).
+
+Open follow-ups:
+- If the lockup still reproduces with the clamp in place, the next suspect is an
+  event actually landing in the queue with a past time (scheduleTimerCallback's
+  efiAssertVoid "setTimer constraint" fires firmwareError but with
+  EFI_ENABLE_ASSERTS=0 the guard is a no-op) - then fix there instead.
+- WDT hist lines never reached the console in the 21:23 log (printed once at first
+  latch, log started after); they are kept for future diagnosis.
