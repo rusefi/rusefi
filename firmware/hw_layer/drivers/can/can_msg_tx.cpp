@@ -61,7 +61,7 @@ CanTxMessage::CanTxMessage(CanCategory p_category, uint32_t eid, uint8_t dlc, si
 		CAN_EID(m_frame) = eid;
 	} else {
 	    if (eid >= 0x800) {
-	        criticalError("Looks like extended CAN ID %x %s", eid, getCanCategory(category));
+	        criticalError("CAN TX error extended CAN ID 0x%x/%d %s", eid, eid, getCanCategory(category));
 	        return;
 	    }
 		CAN_SID(m_frame) = eid;
