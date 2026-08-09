@@ -143,21 +143,86 @@ struct MicrosecondTimerWatchdogController : public PeriodicController<TIMER_WATC
 			tim5en = apb1enr & RCC_APB1LENR_TIM5EN;
 #endif
 
-			firmwareError(ObdCode::RUNTIME_CRITICAL_TIMER_WATCHDOG,
-				"Watchdog: no events for 2s! isr=%d setHw=%d freeze=%d pending=%d cnt=%u..%u(+%u) dier=0x%x sr=0x%x cr1=0x%x apb1enr=0x%x tim5en=%u smcr=0x%x psc=0x%x arr=0x%x ccr1=0x%x ccmr1=0x%x",
-				timerCallbackCounter, setHwTimerCounter, timerFreezeCounter, (int)isTimerPending,
+			// Live register dump, printed every watchdog period while the error holds.
+			// The latched firmwareError below is capped at CRITICAL_BUFFER_SIZE=120
+			// bytes, so the full register picture has to go over the 256-byte console
+			// path instead. ccer bit 0 (CC1E) and ccmr1 bits 6:4 (OC1M) tell whether
+			// the compare channel itself is still enabled.
+			efiPrintf("WDT regs: cnt=%u..%u(+%u) dier=0x%x sr=0x%x cr1=0x%x smcr=0x%x psc=0x%x arr=0x%x ccr1=0x%x ccmr1=0x%x ccer=0x%x apb1enr=0x%x tim5en=%u",
 				(unsigned)cnt1, (unsigned)cnt2, (unsigned)(cnt2 - cnt1),
 				(unsigned)SCHEDULER_TIMER_DEVICE->DIER, (unsigned)SCHEDULER_TIMER_DEVICE->SR,
-				(unsigned)SCHEDULER_TIMER_DEVICE->CR1,
-				(unsigned)apb1enr, (unsigned)tim5en,
-				(unsigned)SCHEDULER_TIMER_DEVICE->SMCR, (unsigned)SCHEDULER_TIMER_DEVICE->PSC,
-				(unsigned)SCHEDULER_TIMER_DEVICE->ARR, (unsigned)SCHEDULER_TIMER_DEVICE->CCR1,
-				(unsigned)SCHEDULER_TIMER_DEVICE->CCMR1);
+				(unsigned)SCHEDULER_TIMER_DEVICE->CR1, (unsigned)SCHEDULER_TIMER_DEVICE->SMCR,
+				(unsigned)SCHEDULER_TIMER_DEVICE->PSC, (unsigned)SCHEDULER_TIMER_DEVICE->ARR,
+				(unsigned)SCHEDULER_TIMER_DEVICE->CCR1, (unsigned)SCHEDULER_TIMER_DEVICE->CCMR1,
+				(unsigned)SCHEDULER_TIMER_DEVICE->CCER, (unsigned)apb1enr, (unsigned)tim5en);
+
+			if (!m_errorReported) {
+				m_errorReported = true;
+
+				// Reconstruct the moment the ISR->reschedule chain stopped from the
+				// ring buffer kept by the healthy-path branch below
+				for (int i = 0; i < m_sampleCount; i++) {
+					int idx = (m_sampleIndex + i) % m_sampleCount;
+					if (!m_sampleValid[idx]) {
+						continue;
+					}
+					const auto& s = m_samples[idx];
+					efiPrintf("WDT hist: cnt=%u isr=%d setHw=%d freeze=%d pend=%u sr=0x%x dier=0x%x ccr1=0x%x cr1=0x%x",
+						(unsigned)s.cnt, s.isr, s.setHw, s.freeze, (unsigned)s.pending,
+						(unsigned)s.sr, (unsigned)s.dier, (unsigned)s.ccr1, (unsigned)s.cr1);
+				}
+
+				firmwareError(ObdCode::RUNTIME_CRITICAL_TIMER_WATCHDOG,
+					"Watchdog: no events for 2s! isr=%d setHw=%d pending=%d cnt=%u..%u dier=0x%x sr=0x%x cr1=0x%x",
+					timerCallbackCounter, setHwTimerCounter, (int)isTimerPending,
+					(unsigned)cnt1, (unsigned)cnt2,
+					(unsigned)SCHEDULER_TIMER_DEVICE->DIER, (unsigned)SCHEDULER_TIMER_DEVICE->SR,
+					(unsigned)SCHEDULER_TIMER_DEVICE->CR1);
+			}
 #else
 			firmwareError(ObdCode::RUNTIME_CRITICAL_TIMER_WATCHDOG, "Watchdog: no events for 2 seconds!");
 #endif
+		} else {
+#ifdef SCHEDULER_TIMER_DEVICE
+			// Healthy path - keep a short recent history so the error dump can show
+			// exactly when the ISR->reschedule chain stopped and whether the counter
+			// kept advancing afterwards
+			auto& s = m_samples[m_sampleIndex % m_sampleCount];
+			s.cnt = SCHEDULER_TIMER_DEVICE->CNT;
+			s.isr = timerCallbackCounter;
+			s.setHw = setHwTimerCounter;
+			s.freeze = timerFreezeCounter;
+			s.pending = isTimerPending ? 1 : 0;
+			s.sr = SCHEDULER_TIMER_DEVICE->SR;
+			s.dier = SCHEDULER_TIMER_DEVICE->DIER;
+			s.ccr1 = SCHEDULER_TIMER_DEVICE->CCR1;
+			s.cr1 = SCHEDULER_TIMER_DEVICE->CR1;
+			m_sampleValid[m_sampleIndex % m_sampleCount] = true;
+			m_sampleIndex++;
+#endif
 		}
 	}
+
+#ifdef SCHEDULER_TIMER_DEVICE
+private:
+	// One sample per watchdog period (500 ms) - 16 samples cover the last 8 s
+	struct Sample {
+		uint32_t cnt;
+		int isr;
+		int setHw;
+		int freeze;
+		uint32_t pending;
+		uint32_t sr;
+		uint32_t dier;
+		uint32_t ccr1;
+		uint32_t cr1;
+	};
+	static constexpr int m_sampleCount = 16;
+	Sample m_samples[m_sampleCount];
+	bool m_sampleValid[m_sampleCount];
+	int m_sampleIndex = 0;
+	bool m_errorReported = false;
+#endif
 };
 
 RUSEFI_STACK_ROOT(MicrosecondTimerWatchdogController, PeriodicTask);
