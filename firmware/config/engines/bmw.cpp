@@ -13,6 +13,21 @@ void bmwM52() {
     engineConfiguration->firingOrder = FO_1_5_3_6_2_4;
 }
 
+
+/**
+ DISA
+ 200Hz
+ Close Flap ~20% Duty Cycle Motor holds flap Closed
+ Open Flap ~80% Duty CycleMotor holds flap Open
+ Default / Idle Fault0% or 100% Duty CycleFail-safe / Inactive state
+
+ Low RPM: Both flaps closed to create long runners for optimal low-end torque.
+
+ Mid RPM: Large flap opens to transition to medium runner length.
+
+ High RPM: Both flaps open to maximize airflow through short, direct paths for top-end horsepower.
+
+ */
 void bmwN52() {
     engineConfiguration->canNbcType = CAN_BUS_BMW_E90;
 
