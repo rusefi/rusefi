@@ -95,7 +95,7 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | Image | Frame bytes | Function | Source |
 |---|---:|---|---|
 | firmware | 328 | canDashboardHondaK(CanCycle) | controllers/can/can_dash_honda.cpp:46:6 |
-| firmware | 256 | Engine::periodicFastCallback() | controllers/algo/engine.cpp:598:6 |
+| firmware | 256 | Engine::periodicFastCallback() | controllers/algo/engine.cpp:599:6 |
 | firmware | 248 | luaO_pushvfstring | ext/lua/lobject.c:480:13 |
 | firmware | 240 | luaO_str2num | ext/lua/lobject.c:308:8 |
 | firmware | 200 | luaD_rawrunprotected | ext/lua/ldo.c:135:5 |
