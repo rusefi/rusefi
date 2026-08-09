@@ -11,15 +11,44 @@ import com.rusefi.io.UpdateOperationCallbacks;
 
 import javax.swing.*;
 import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.List;
 
 import static com.devexperts.logging.Logging.getLogging;
 
 public class MaintenanceUtil {
     private static final Logging log = getLogging(MaintenanceUtil.class);
 
-    private static final String WMIC_PCAN_QUERY_COMMAND = "powershell -NoProfile -Command \"Get-CimInstance Win32_PnPEntity -Filter \\\"Caption like '%PCAN-USB%'\\\" | Select-Object Caption, ConfigManagerErrorCode | Format-List\"";
+    /**
+     * Builds a PowerShell command that executes the given inline script. The script is transported as
+     * Base64-encoded UTF-16LE via {@code -EncodedCommand} instead of {@code -Command}: Windows
+     * PowerShell's own command-line parsing of {@code -Command} mangles embedded quotes (the WQL
+     * -Filter value here), and every argv-joining strategy (Runtime.exec(String) tokenizer, Java's
+     * ProcessBuilder command-line quoting on Windows) feeds it a different escaped form. Base64 has
+     * no spaces and no quotes, so it survives any transport verbatim and PowerShell decodes the
+     * script byte-exact.
+     */
+    static List<String> powershellEncodedCommand(String script) {
+        return Arrays.asList(
+            "powershell", "-NoProfile", "-EncodedCommand",
+            Base64.getEncoder().encodeToString(script.getBytes(StandardCharsets.UTF_16LE)));
+    }
 
-    static boolean detectDevice(UpdateOperationCallbacks callbacks, String queryCommand, String pattern) throws ErrorExecutingCommand {
+    static final List<String> PCAN_QUERY_COMMAND = powershellEncodedCommand(
+        "Get-CimInstance Win32_PnPEntity -Filter \"Caption like '%PCAN-USB%'\" | Select-Object Caption, ConfigManagerErrorCode | Format-List");
+
+    /** Renders a query command for logs, decoding the -EncodedCommand payload back to the script. */
+    static String describeQueryCommand(List<String> queryCommand) {
+        if (queryCommand.size() == 4 && "-EncodedCommand".equals(queryCommand.get(2))) {
+            String script = new String(Base64.getDecoder().decode(queryCommand.get(3)), StandardCharsets.UTF_16LE);
+            return queryCommand.get(0) + " " + queryCommand.get(1) + " -EncodedCommand <" + script + ">";
+        }
+        return String.valueOf(queryCommand);
+    }
+
+    static boolean detectDevice(UpdateOperationCallbacks callbacks, List<String> queryCommand, String pattern) throws ErrorExecutingCommand {
         if (!FileLog.isWindows()) {
             return false;
         }
@@ -32,7 +61,7 @@ public class MaintenanceUtil {
         long cost = System.currentTimeMillis() - now;
         String duration = "detectDevice lookup cost " + cost + "ms; ";
         String nicerOutput = output.length() == 0 ? "(empty)" : output.toString();
-        log.info(duration + queryCommand + " says " + nicerOutput);
+        log.info(duration + describeQueryCommand(queryCommand) + " says " + nicerOutput);
         return containsPattern(output.toString(), pattern);
     }
 
@@ -48,7 +77,7 @@ public class MaintenanceUtil {
 
     public static boolean detectPcan(UpdateOperationCallbacks wnd) {
         try {
-            return detectDevice(wnd, WMIC_PCAN_QUERY_COMMAND, "PCAN");
+            return detectDevice(wnd, PCAN_QUERY_COMMAND, "PCAN");
         } catch (ErrorExecutingCommand e) {
             log.error("detectPcan error: " + e, e);
             return false;

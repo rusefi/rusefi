@@ -23,7 +23,7 @@ import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.config.generated.VariableRegistryValues.CAN_ECU_SERIAL_TX_ID;
 
 public class PCanIoStream extends AbstractIoStream {
-    private static final int INFO_SKIP_RATE = 3-00;
+    private static final int INFO_SKIP_RATE = 300;
     static Logging log = getLogging(PCanIoStream.class);
 
     private final IncomingDataBuffer dataBuffer;
@@ -119,7 +119,10 @@ public class PCanIoStream extends AbstractIoStream {
             }
             PCanHelper.debugPacket(rx);
             isoTpCounter.add();
-            byte[] decode = canDecoder.decodePacket(rx.getData());
+            // decodePacket(byte[]) passes the buffer length (127, see TPCANMsg workaround above) instead of
+            // the actual DLC, so multi-frame assembly and the CRC check read garbage zero padding. Use the
+            // size-aware overload with the real frame length.
+            byte[] decode = canDecoder.decodePacket(rx.getData(), rx.getLength());
             listener.onDataArrived(decode);
 
             //            log.info("Decoded " + IoStream.printByteArray(decode));

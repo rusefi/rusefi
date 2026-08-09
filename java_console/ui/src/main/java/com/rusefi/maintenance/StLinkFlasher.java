@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.List;
 
 import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
 
@@ -29,7 +30,10 @@ public class StLinkFlasher {
     private static final String FAILED_MESSAGE_TAG = "failed";
     public static final String TITLE = "rusEFI ST-LINK Firmware Flasher";
     public static final String DONE = "DONE!";
-    private static final String WMIC_STLINK_QUERY_COMMAND = "powershell -NoProfile -Command \"Get-CimInstance Win32_PnPEntity -Filter \\\"Caption like '%STLink%'\\\" | Select-Object Caption, ConfigManagerErrorCode | Format-List\"";
+    // Inline PowerShell script transported as -EncodedCommand (see MaintenanceUtil.powershellEncodedCommand):
+    // the WQL -Filter quotes survive verbatim, no -Command quote-mangling on Windows.
+    private static final List<String> WMIC_STLINK_QUERY_COMMAND = MaintenanceUtil.powershellEncodedCommand(
+        "Get-CimInstance Win32_PnPEntity -Filter \"Caption like '%STLink%'\" | Select-Object Caption, ConfigManagerErrorCode | Format-List");
 
     public static void doUpdateFirmware(String fileName, UpdateOperationCallbacks callbacks, final Runnable onJobFinished,
                                         final ConnectedEcuTarget connectedEcuTarget) {

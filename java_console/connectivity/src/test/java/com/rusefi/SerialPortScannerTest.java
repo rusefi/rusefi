@@ -34,6 +34,7 @@ public class SerialPortScannerTest {
         PortResult tcpResult;
         boolean liveEcuConnected;
         boolean dfuConnected;
+        boolean pcanConnected;
         int deviceProbeCalls;
         long time = 1_000_000;
 
@@ -77,7 +78,7 @@ public class SerialPortScannerTest {
 
         @Override
         public boolean isPcanConnected() {
-            return false;
+            return pcanConnected;
         }
 
         @Override
@@ -228,6 +229,27 @@ public class SerialPortScannerTest {
         List<PortResult> dfuPorts = scanner.getCurrentHardware().getKnownPorts(SerialPortType.Dfu);
         assertEquals(1, dfuPorts.size());
         assertEquals(LinkManager.DFU, dfuPorts.get(0).port);
+    }
+
+    @Test
+    public void pcanAdapterSurfacesAsSyntheticCanPort() {
+        probes.pcanConnected = true;
+
+        scan(true);
+
+        assertTrue(scanner.getCurrentHardware().isPCANConnected());
+        assertTrue(scanner.getCurrentHardware().getKnownPorts().stream()
+            .anyMatch(p -> LinkManager.PCAN.equals(p.port) && p.type == SerialPortType.CAN),
+            "a detected PCAN adapter must show up in the ports list as a CAN port");
+    }
+
+    @Test
+    public void noPcanAdapterMeansNoSyntheticPcanPort() {
+        scan(true);
+
+        assertFalse(scanner.getCurrentHardware().getKnownPorts().stream()
+            .anyMatch(p -> LinkManager.PCAN.equals(p.port)),
+            "no PCAN adapter means no PCAN entry in the ports list");
     }
 
     @Test

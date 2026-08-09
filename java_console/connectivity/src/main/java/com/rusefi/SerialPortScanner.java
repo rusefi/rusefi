@@ -292,10 +292,11 @@ public class SerialPortScanner implements PortScanner {
             stLinkConnected = false;
             PCANConnected = false;
         }
-/*
+        // Surface the PCAN adapter as a synthetic CAN port so it can be picked from the dropdown.
+        // Detection is throttled and last-known values are reused between probes, so the entry just
+        // tracks the probe's cached result.
         if (PCANConnected)
             ports.add(new PortResult(LinkManager.PCAN, SerialPortType.CAN));
- */
 /*
         if (SHOW_SOCKETCAN)
             ports.add(new PortResult(LinkManager.SOCKET_CAN, SerialPortType.CAN));

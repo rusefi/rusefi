@@ -23,6 +23,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -351,7 +352,18 @@ public class LinkManager implements Closeable {
         if (isLogViewerMode(port)) {
             setConnector(LinkConnector.VOID);
         } else if (isPcanPort(port)) {
-            Callable<IoStream> streamFactory = PCanIoStream::createStream;
+            // PCanIoStream.createStream reports init failures through the status consumer and returns
+            // null; turn that failure into an exception so PortHolder surfaces the real TPCANStatus
+            // instead of the generic "Failed to open port".
+            Callable<IoStream> streamFactory = () -> {
+                AtomicReference<String> failure = new AtomicReference<>();
+                PCanIoStream stream = PCanIoStream.createStream(failure::set);
+                if (stream == null) {
+                    String reason = failure.get() != null ? failure.get() : "Unable to initialize PCAN";
+                    throw new IllegalStateException(reason);
+                }
+                return stream;
+            };
             setConnector(new StreamConnector(this, streamFactory));
         } else if (isSocketCan(port)) {
             Callable<IoStream> streamFactory = SocketCANIoStream::createStream;

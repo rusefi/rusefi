@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -94,16 +95,7 @@ public class ExecHelper {
         callbacks.logLine("Executing command=" + command);
         try {
             Process p = Runtime.getRuntime().exec(command, null, workingDir);
-            Thread stdoutThread = startStreamThread(p, p.getInputStream(), output, callbacks);
-            Thread stderrThread = startStreamThread(p, p.getErrorStream(), error, callbacks);
-            p.waitFor(3, TimeUnit.MINUTES);
-            // Join the stream threads so that output/error buffers are fully populated before
-            // we return. Without this join, callers that inspect `output` immediately after this
-            // method returns race against the stream threads and can see an empty buffer even
-            // when the process produced output (the root cause of intermittent WMIC false-negatives,
-            // see #9157 [see the if "manual DFU" is auto-selected - it gets un-selected periodically! part])
-            stdoutThread.join(2000);
-            stderrThread.join(2000);
+            return waitForAndCollect(p, callbacks, output, error);
         } catch (IOException e) {
             log.info("executeCommand " + e);
             throw new ErrorExecutingCommand(e);
@@ -112,6 +104,48 @@ public class ExecHelper {
             callbacks.error();
         }
 
+        return "";
+    }
+
+    /**
+     * Executes a command given as an explicit argument list. Unlike the {@link String} overload, which
+     * is tokenized by {@link Runtime#exec(String)} (whitespace splits, quotes are not preserved), this
+     * passes every argument verbatim to the OS, doing platform-correct quoting only where needed. Use it
+     * for commands that contain quoted arguments, e.g. inline PowerShell scripts — the {@code String}
+     * overload shreds those into broken argv entries.
+     */
+    @NotNull
+    public static String executeCommand(List<String> command, UpdateOperationCallbacks callbacks, StringBuffer output, StringBuffer error, File workingDir) throws ErrorExecutingCommand {
+        callbacks.logLine("Executing command=" + command);
+        try {
+            ProcessBuilder pb = new ProcessBuilder(command);
+            if (workingDir != null) {
+                pb.directory(workingDir);
+            }
+            Process p = pb.start();
+            return waitForAndCollect(p, callbacks, output, error);
+        } catch (IOException e) {
+            log.info("executeCommand " + e);
+            throw new ErrorExecutingCommand(e);
+        } catch (InterruptedException e) {
+            callbacks.logLine("WaitError: " + e);
+            callbacks.error();
+        }
+
+        return "";
+    }
+
+    private static String waitForAndCollect(Process p, UpdateOperationCallbacks callbacks, StringBuffer output, StringBuffer error) throws InterruptedException {
+        Thread stdoutThread = startStreamThread(p, p.getInputStream(), output, callbacks);
+        Thread stderrThread = startStreamThread(p, p.getErrorStream(), error, callbacks);
+        p.waitFor(3, TimeUnit.MINUTES);
+        // Join the stream threads so that output/error buffers are fully populated before
+        // we return. Without this join, callers that inspect `output` immediately after this
+        // method returns race against the stream threads and can see an empty buffer even
+        // when the process produced output (the root cause of intermittent WMIC false-negatives,
+        // see #9157 [see the if "manual DFU" is auto-selected - it gets un-selected periodically! part])
+        stdoutThread.join(2000);
+        stderrThread.join(2000);
         return error.toString();
     }
 

@@ -1,5 +1,77 @@
 # Work Report
 
+## 2026-08-09 - PCAN ISO-TP decode root cause: decodePacket got the 127-byte buffer instead of the DLC
+
+What was done:
+- Fixed java_console/io/src/main/java/com/rusefi/io/can/PCanIoStream.java readOnePacket:
+  `canDecoder.decodePacket(rx.getData())` -> `decodePacket(rx.getData(), rx.getLength())`
+- Root cause of the m74_9 (AT32F435, CAN-only, no USB) "No signature returned by
+  PCanIoStream{PCAN_USBBUS1}" blocker: TPCANMsg(Byte.MAX_VALUE) allocates a 127-byte data
+  buffer (workaround for issue #4370) and the PCAN driver fills only rx.getLength() (DLC=8)
+  bytes; the deprecated decodePacket(byte[]) overload passed data.length (127) instead, so the
+  ISO-TP multi-frame state machine and the CRC check read garbage zero padding. Symptom seen in
+  the log: `CRC mismatch on recv packet for [hello]: got 309f7bb9 but expected 0` (CRC field all
+  zeros) even though the 0x720 frame itself was delivered fine (`isotp rate 1`). The size-aware
+  overload exists exactly for this - its javadoc names PCAN as the larger-data-buffer example
+- Checked the other decoders: SocketCANHelper.read allocates `new byte[rx.getDataLength()]` so
+  SocketCANIoStream.payload() is exact-length and unaffected; Elm327IoStream gets real-length
+  arrays from the ELM327 chip. Only the PCAN path was broken
+
+Validation:
+- ./gradlew :ecu_io:test BUILD SUCCESSFUL (JDK 11 toolchain via
+  -Porg.gradle.java.installations.paths=...)
+
+Follow-ups:
+- User rebuilds java_console on Windows and connects to m74_9 over PCAN-USB: expect
+  `Got [rusEFI ...] signature` / Connection established instead of the CRC-mismatch loop
+
+## 2026-08-09 - PCanIoStream log flood fix (INFO_SKIP_RATE typo)
+
+What was done:
+- Fixed INFO_SKIP_RATE typo in java_console/io/src/main/java/com/rusefi/io/can/PCanIoStream.java:
+  `3-00` evaluated to 3 (three minus zero), so the "Skipping non 720 packet" log fired every
+  3rd skipped frame - at ~3600 pps on the m74_9 test bus that is ~1200 lines/sec of noise,
+  making the PCAN debug log unreadable. Now 300 (log every 300th skipped frame)
+
+Validation:
+- ./gradlew :ecu_io:test BUILD SUCCESSFUL (JDK 11 toolchain via
+  -Porg.gradle.java.installations.paths=...)
+
+Follow-ups:
+- PCAN ISO-TP diagnosis continues: need "Skipping non 720 packet:" ID lines or PCAN-View
+  capture to tell whether the m74_9 ECU announces 0x770017 (extended) on the probed bus
+
+## 2026-08-09 - java_console PCAN detection fix + merge conflict resolution
+
+What was done:
+- Fixed java_console not detecting PCAN adapters on Windows: the PowerShell WMI query
+  (`powershell -NoProfile -Command "Get-CimInstance ... -Filter \"Caption like '%PCAN-USB%'\" ..."`)
+  was executed via Runtime.exec(String), whose tokenizer splits on whitespace and keeps quotes as
+  literal characters, so the script arrived shredded and the query silently matched nothing
+  (PCANConnected always false -> "OpenBLT CAN" menu item missing)
+- Added ExecHelper.executeCommand(List<String>, ...) overload that runs commands through
+  ProcessBuilder with an explicit argument list (platform-correct quoting, no shell tokenization)
+- Converted all PowerShell hardware probes to the list form: PCAN (MaintenanceUtil), DFU
+  (DfuFlasher, both H7 and F4 variants), ST-Link (StLinkFlasher), plus DfuFlasher.getDevicesReport
+- Added MaintenanceUtilTest.pcanQueryIsSingleIntactPowerShellScriptArgument regression test
+- Resolved the remaining merge conflicts (HEAD vs 075e600f): can_sniffer.cpp kept HEAD guard
+  structure + theirs' explicit template instantiations; VariableRegistryValues.java took HEAD values
+
+Key decisions:
+- Root-cause fix at ExecHelper instead of patching the query string: the same broken
+  Runtime.exec(String) quoting pattern was shared by PCAN/DFU/ST-Link detection
+- Used Arrays.asList (not List.of): java_console still compiles with sourceCompatibility 8
+- Generated VariableRegistryValues.java resolves to HEAD side; regenerated at next build anyway
+
+Validation:
+- Empirical check on macOS: a fake powershell argv dump showed Runtime.exec(String) splits the
+  script into 15 broken tokens, while ProcessBuilder passes it as one intact argument
+- ./gradlew :ui:test --tests MaintenanceUtilTest: BUILD SUCCESSFUL, 14 tests passed (JDK 11
+  toolchain via -Porg.gradle.java.installations.paths=/opt/homebrew/opt/openjdk@11/...)
+
+Follow-ups:
+- WMIC_* constant names now hold PowerShell arg lists; renaming to PS_* would be cosmetic
+
 ## 2026-07-29 - m74_9 (AT32F435) firmware build fixes
 
 What was done:
@@ -461,3 +533,93 @@ Open follow-ups:
   applying/resetting learned trims, or introduce an explicit tuning session).
 - Decide how a future bank-2-aware VE Analyze correction should select/combine
   STFT banks; this change preserves the existing bank-1 behavior.
+
+## 2026-08-09 - Restore PCAN adapter into the console ports list + surface init errors
+
+What: PCAN-USB adapters were detected (`AvailableHardware.isPCANConnected()`)
+but never shown in the ports dropdown: the `ports.add(new PortResult(LinkManager.PCAN,
+SerialPortType.CAN))` block had been commented out in Feb 2026 (commits
+`6bc0d319e2f`/`ad9856e19a4`, messages "PCANConnected only:hiding"), so the user
+saw `Rendering available ports: []` and "No ECU ports to use found" even though
+MaintenanceUtil confirmed `Caption : PCAN-USB, ConfigManagerErrorCode : 0`. A
+second, hidden-by-design issue: when PCAN init failed, `PCanIoStream.createStream()`
+logged the real `TPCANStatus` only through the status consumer and returned null,
+so the UI showed the generic "Failed to open port" without the cause.
+
+| File | Change |
+|----------------------------------------------------|----------------------------------------|
+| java_console/connectivity/src/main/java/com/rusefi/SerialPortScanner.java | Re-enable the PCAN synthetic CAN port (SocketCAN stays hidden as before - it is Linux-only and was deliberately hidden separately) |
+| java_console/io/src/main/java/com/rusefi/io/LinkManager.java | PCAN branch now captures the status-consumer message and throws it as IllegalStateException, so PortHolder reports "Exception opening port: Error initializing PCAN: <status>" instead of the generic failure |
+| java_console/connectivity/src/test/java/com/rusefi/SerialPortScannerTest.java | FakeProbes gains a scripted `pcanConnected` flag; new tests for PCAN surfacing as a CAN port and for the no-adapter case |
+
+Key decisions and why:
+- Restored only the PCAN block, not SocketCAN. `SHOW_SOCKETCAN` is Linux-only
+  and the existing `tcpPortWithoutEcuIsReportedUnknownAndNotCached` test asserts
+  an exact port count on Linux CI, so un-hiding SocketCAN would break it; the
+  owner hid it in a separate commit for its own reasons.
+- Kept `PCanIoStream.createStream()` contract (returns null + status consumer)
+  and wrapped it at the LinkManager call site instead: the status text flows into
+  the thrown exception, so every caller (dropdown connect, ConsoleTools,
+  PcanConnectorUI) keeps working unchanged.
+- `AtomicReference` needs `java.util.concurrent.atomic` - `import
+  java.util.concurrent.*` does not cover subpackages (compile error caught by
+  `:ecu_io:compileJava`).
+
+Validation:
+- `./gradlew :connectivity:test :ecu_io:test` passes (including new
+  `pcanAdapterSurfacesAsSyntheticCanPort` / `noPcanAdapterMeansNoSyntheticPcanPort`
+  and the pre-existing scan-policy suite).
+- Compile of `:ecu_io` catches the missing-import mistake; fixed with an explicit
+  `java.util.concurrent.atomic.AtomicReference` import.
+
+Open follow-ups:
+- `PCanHelper.init` still hardcodes `PCAN_USBBUS1` + `PCAN_BAUD_500K`; a bus
+  number or baud mismatch (e.g. ECU at 1M) will surface now as the real
+  TPCANStatus in the UI - consider making channel/baud configurable.
+- If PCAN init succeeds but the ECU never answers, the next diagnostic step is
+  the ISO-TP IDs (`CAN_ECU_SERIAL_RX_ID`/`TX_ID`) versus firmware config.
+
+## 2026-08-09 - PowerShell device probes: -Command quoting broken on Windows, switched to -EncodedCommand
+
+What: After the ProcessBuilder conversion of the PowerShell device probes, the user's
+Windows console log changed from `powershell -NoProfile -Command "Get-CimInstance ...
+-Filter \"Caption like '%PCAN-USB%'\" ..." says Caption : PCAN-USB` (old build, worked)
+to `[powershell, -NoProfile, -Command, Get-CimInstance Win32_PnPEntity -Filter "Caption
+like '%PCAN-USB%'" ...] says (empty)` (new build, empty). Root cause: Windows PowerShell
+parses the `-Command` tail with its own quote handling (it strips/re-interprets quotes,
+not the standard C-runtime argv rules), and every Java argv-joining strategy feeds it a
+different escaped form - Runtime.exec(String)'s tokenizer produced literal `\"` tokens,
+ProcessBuilder's command-line quoting produces `\"` escapes - so the WQL -Filter value
+`"Caption like '%PCAN-USB%'"` got mangled and the query matched nothing. The macOS
+fake-powershell argv-dump test could not catch this: POSIX execvp passes argv verbatim,
+Windows command-line reconstruction is where quoting breaks.
+
+| File | Change |
+|----------------------------------------------------|----------------------------------------|
+| java_console/ui/src/main/java/com/rusefi/maintenance/MaintenanceUtil.java | New `powershellEncodedCommand(script)` helper: transports the script as Base64 UTF-16LE via `-EncodedCommand` (pure-ASCII payload, no spaces/quotes - immune to any command-line quoting); PCAN query converted; `detectDevice` log line now shows the decoded script via `describeQueryCommand` |
+| java_console/ui/src/main/java/com/rusefi/maintenance/DfuFlasher.java | STM32-bootloader and STM32-H7 DFU queries converted to `powershellEncodedCommand` |
+| java_console/ui/src/main/java/com/rusefi/maintenance/StLinkFlasher.java | ST-Link query converted; dropped now-unused `Arrays` import |
+| java_console/ui/src/test/java/com/rusefi/maintenance/MaintenanceUtilTest.java | `pcanQueryIsSingleIntactPowerShellScriptArgument` replaced by `pcanQueryIsEncodedCommandSurvivingQuoting` (base64 payload shape + decode round-trip) and `describeQueryCommandShowsDecodedScript` |
+
+Key decisions and why:
+- `-EncodedCommand` (Base64 of UTF-16LE) instead of more quote-escaping: it is the
+  canonical way to pass complex scripts to Windows PowerShell and pwsh alike, and it
+  makes the transport deterministic - the script reaches PowerShell byte-exact.
+- Left `ExecHelper.executeCommand(List, ...)`/ProcessBuilder in place (correct on
+  POSIX and needed for the no-shell path); only the command content changed.
+- Left `DfuFlasher.getPnpDevices` (`Get-PnpDevice -PresentOnly`, no quotes) and
+  `TunerStudioHelper` (Runtime.exec(String), script without inner quotes) untouched -
+  neither has quoted arguments, so both are immune to this class of bug.
+
+Validation:
+- `./gradlew :ui:test :connectivity:test :ecu_io:test` passes; the new tests verify
+  the payload charset and the decode round-trip back to the intact script.
+- Cannot run PowerShell here (macOS host); the user validates on Windows: the log
+  line should show `-EncodedCommand <Get-CimInstance ...>` and "says Caption : PCAN-USB".
+
+Open follow-ups:
+- If the user's adapter still reports empty with the encoded command, the next step
+  is hardware/driver state (PCAN-View holding the channel, unplugged adapter) rather
+  than quoting - the query transport is now deterministic.
+- `TunerStudioHelper` still uses Runtime.exec(String) with outer quotes; fine today,
+  but converting it to the list-based ExecHelper would remove the last fragile caller.

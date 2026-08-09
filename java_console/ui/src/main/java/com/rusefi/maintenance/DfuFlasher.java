@@ -36,8 +36,12 @@ public class DfuFlasher {
     private static final String DFU_CMD_TOOL = "STM32_Programmer_CLI.exe";
     private static final String DFU_UTIL = "dfu-util";
     private static final String STM32_DFU_USB_ID = "0483:df11";
-    private static final String WMIC_DFU_QUERY_COMMAND = "powershell -NoProfile -Command \"Get-CimInstance Win32_PnPEntity -Filter \\\"Caption like '%STM32%' and Caption like '%Bootloader%'\\\" | Select-Object Caption, ConfigManagerErrorCode | Format-List\"";
-    private static final String WMIC_DFU_QUERY_H7_COMMAND = "powershell -NoProfile -Command \"Get-CimInstance Win32_PnPEntity -Filter \\\"Caption like '%DFU%' and Caption like '%FS Mode%'\\\" | Select-Object Caption, ConfigManagerErrorCode | Format-List\"";
+    // Inline PowerShell scripts transported as -EncodedCommand (see MaintenanceUtil.powershellEncodedCommand):
+    // the WQL -Filter quotes survive verbatim, no -Command quote-mangling on Windows.
+    private static final List<String> WMIC_DFU_QUERY_COMMAND = MaintenanceUtil.powershellEncodedCommand(
+        "Get-CimInstance Win32_PnPEntity -Filter \"Caption like '%STM32%' and Caption like '%Bootloader%'\" | Select-Object Caption, ConfigManagerErrorCode | Format-List");
+    private static final List<String> WMIC_DFU_QUERY_H7_COMMAND = MaintenanceUtil.powershellEncodedCommand(
+        "Get-CimInstance Win32_PnPEntity -Filter \"Caption like '%DFU%' and Caption like '%FS Mode%'\" | Select-Object Caption, ConfigManagerErrorCode | Format-List");
     /**
      * Set to true when the DFU device-detection command itself fails to execute (e.g. insufficient privileges).
      * Used by the UI to show a "Run as Administrator" hint after a grace period.
@@ -339,7 +343,7 @@ public class DfuFlasher {
         // ECU's target first (e.g. "uaefi_pro_h7"), falling back to the bundled is_h7 property.
         String effectiveTarget = connectedEcuTarget.effectiveTarget();
         boolean isH7 = (effectiveTarget != null && effectiveTarget.contains("h7")) || ConnectionAndMeta.getBoolean("is_h7");
-        String command = isH7 ? WMIC_DFU_QUERY_H7_COMMAND : WMIC_DFU_QUERY_COMMAND;
+        List<String> command = isH7 ? WMIC_DFU_QUERY_H7_COMMAND : WMIC_DFU_QUERY_COMMAND;
         try {
             return MaintenanceUtil.detectDevice(callbacks, command, "ConfigManagerErrorCode=0");
         } catch (ErrorExecutingCommand e) {
@@ -518,7 +522,7 @@ public class DfuFlasher {
         List<String> report = new ArrayList<>();
 
         try {
-            Process powerShellProcess = Runtime.getRuntime().exec("powershell \"Get-PnpDevice -PresentOnly\"");
+            Process powerShellProcess = new ProcessBuilder("powershell", "-NoProfile", "-Command", "Get-PnpDevice -PresentOnly").start();
             // Getting the results
             powerShellProcess.getOutputStream().close();
 
