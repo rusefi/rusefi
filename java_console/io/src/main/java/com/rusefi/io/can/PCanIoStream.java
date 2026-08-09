@@ -8,6 +8,7 @@ import com.rusefi.io.can.isotp.DefaultFlowControl;
 import com.rusefi.util.HexBinary;
 import com.rusefi.io.can.isotp.IsoTpCanDecoder;
 import com.rusefi.io.can.isotp.IsoTpConnector;
+import com.rusefi.io.can.isotp.IsoTpConstants;
 import com.rusefi.io.serial.AbstractIoStream;
 import com.rusefi.io.serial.RateCounter;
 import com.rusefi.io.tcp.BinaryProtocolServer;
@@ -24,6 +25,8 @@ import static com.rusefi.config.generated.VariableRegistryValues.CAN_ECU_SERIAL_
 
 public class PCanIoStream extends AbstractIoStream {
     private static final int INFO_SKIP_RATE = 300;
+    /** how long to wait for the ECU's ISO-TP flow control frame before sending the consecutive burst */
+    private static final int FLOW_CONTROL_TIMEOUT_MS = 200;
     static Logging log = getLogging(PCanIoStream.class);
 
     private final IncomingDataBuffer dataBuffer;
@@ -39,10 +42,33 @@ public class PCanIoStream extends AbstractIoStream {
         }
     };
 
+    // Flow control handshake state, shared between the reader thread (readOnePacket) and
+    // the writer thread (IsoTpConnector.receiveData() override below)
+    private final Object flowControlMonitor = new Object();
+    private boolean flowControlReceived;
+
     private final IsoTpConnector isoTpConnector = new IsoTpConnector(VariableRegistryValues.CAN_ECU_SERIAL_RX_ID) {
         @Override
         public void sendCanData(byte[] total) {
             sendCanPacket(total);
+        }
+
+        @Override
+        public void receiveData() {
+            // Wait for the ECU's flow control frame (sent in response to our FIRST frame) before
+            // bursting the consecutive frames. If no FC shows up within the timeout we send anyway,
+            // which is no worse than the previous burst behavior.
+            synchronized (flowControlMonitor) {
+                try {
+                    if (!flowControlReceived) {
+                        flowControlMonitor.wait(FLOW_CONTROL_TIMEOUT_MS);
+                    }
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                } finally {
+                    flowControlReceived = false;
+                }
+            }
         }
     };
     private int logSkipRate;
@@ -119,6 +145,15 @@ public class PCanIoStream extends AbstractIoStream {
             }
             PCanHelper.debugPacket(rx);
             isoTpCounter.add();
+
+            // The ECU's flow control frame (0x30 00 00...) carries no payload - it only paces our
+            // multi-frame sends. Do not feed it to the ISO-TP decoder (it would surface as an empty
+            // data chunk), just release the writer waiting in IsoTpConnector.receiveData().
+            if (isFlowControlFrame(rx)) {
+                onFlowControlReceived();
+                return;
+            }
+
             // decodePacket(byte[]) passes the buffer length (127, see TPCANMsg workaround above) instead of
             // the actual DLC, so multi-frame assembly and the CRC check read garbage zero padding. Use the
             // size-aware overload with the real frame length.
@@ -128,6 +163,17 @@ public class PCanIoStream extends AbstractIoStream {
             //            log.info("Decoded " + IoStream.printByteArray(decode));
         } else {
 //                   log.info("Receive " + status);
+        }
+    }
+
+    private static boolean isFlowControlFrame(TPCANMsg rx) {
+        return rx.getLength() >= 1 && ((rx.getData()[0] >> 4) & 0xf) == IsoTpConstants.ISO_TP_FRAME_FLOW_CONTROL;
+    }
+
+    private void onFlowControlReceived() {
+        synchronized (flowControlMonitor) {
+            flowControlReceived = true;
+            flowControlMonitor.notifyAll();
         }
     }
 
