@@ -786,3 +786,24 @@ Open follow-ups:
   EFI_ENABLE_ASSERTS=0 the guard is a no-op) - then fix there instead.
 - WDT hist lines never reached the console in the 21:23 log (printed once at first
   latch, log started after); they are kept for future diagnosis.
+
+## 2026-08-09 - m74_9 watchdog fix VALIDATED on hardware
+
+What: The user rebuilt m74_9 on Windows with commit 1236c24c150 (compare re-arm
+clamped >= 4us into the future against a fresh CNT read) and ran the ECU for
+several minutes - no more `CRITICAL error: Watchdog: no events for 2s!`. The
+previous firmware reliably latched after 12-20 s of uptime, so the race (stale
+nowNt vs advancing CNT putting CCR1 in the past, equality CNT==CCR1 missed until
+the 32-bit wrap) is confirmed fixed. No further WDT regs/hist output was produced,
+which is the expected healthy behavior - the diagnostic prints only on latch.
+
+Validation:
+- User-reported on hardware (Windows host, PCAN-USB console): continuous run for
+  several minutes, zero watchdog errors. This is the first on-target confirmation
+  of the fix; earlier rounds were review-only on macOS.
+
+Open follow-ups:
+- Long-run soak (hours) and a powered-cycle test are desirable to make sure no
+  rarer variant of the race remains; a fresh-flash boot was already covered.
+- The WDT regs/hist diagnostics (commit 1371adf526f) are harmless when quiet and
+  stay in place as a first-line tool for any future timer/lockup report.
