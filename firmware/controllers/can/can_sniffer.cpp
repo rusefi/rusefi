@@ -10,11 +10,9 @@
 
 #include "pch.h"
 
-#if EFI_PROD_CODE && EFI_CAN_SUPPORT
+#if EFI_PROD_CODE && EFI_CAN_SUPPORT && EFI_USB_SERIAL
 
 #include "can_sniffer.h"
-
-#if CAN_SNIFFER
 
 #include "can_msg_tx.h"
 
@@ -380,5 +378,4 @@ void CanSniffer::putstr(const char * s)
 	chnWriteTimeout(m_channel, (uint8_t *)s, l, TIME_MS2I(100));
 }
 
-#endif // CAN_SNIFFER
-#endif // EFI_PROD_CODE && EFI_CAN_SUPPORT
+#endif // EFI_PROD_CODE && EFI_CAN_SUPPORT && EFI_USB_SERIAL

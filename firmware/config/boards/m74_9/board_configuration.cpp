@@ -1,6 +1,7 @@
 
 #include "pch.h"
 #include "defaults.h"
+#include "board_overrides.h"
 #include "smart_gpio.h"
 #include "drivers/gpio/l9779.h"
 
@@ -110,7 +111,7 @@ static struct l9779_config l9779_cfg = {
 	.spi_bus = &SPID1,
 	.spi_config = {
 		.circular = false,
-#ifdef _CHIBIOS_RT_CONF_VER_6_1_
+#if defined(_CHIBIOS_RT_CONF_VER_6_1_) || defined(AT32F4XX)
 		.end_cb = nullptr,
 #else
 		.slave = false,

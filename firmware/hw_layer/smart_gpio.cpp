@@ -52,7 +52,7 @@ struct tle6240_config tle6240 = {
 	.spi_bus = NULL,
 	.spi_config = {
 		.circular = false,
-#ifdef _CHIBIOS_RT_CONF_VER_6_1_
+#if defined(_CHIBIOS_RT_CONF_VER_6_1_) || defined(AT32F4XX)
 	.end_cb = NULL,
 #else
         .slave = false,
@@ -86,7 +86,7 @@ struct mc33972_config mc33972 = {
 	.spi_bus = NULL,
 	.spi_config = {
 		.circular = false,
-#ifdef _CHIBIOS_RT_CONF_VER_6_1_
+#if defined(_CHIBIOS_RT_CONF_VER_6_1_) || defined(AT32F4XX)
 	.end_cb = NULL,
 #else
         .slave = false,
@@ -116,7 +116,7 @@ struct l9779_config l9779_cfg = {
 	.spi_bus = NULL,
 	.spi_config = {
 		.circular = false,
-#ifdef _CHIBIOS_RT_CONF_VER_6_1_
+#if defined(_CHIBIOS_RT_CONF_VER_6_1_) || defined(AT32F4XX)
 	.end_cb = NULL,
 #else
         .slave = false,
@@ -162,7 +162,7 @@ struct tle8888_config tle8888_cfg = {
 	.spi_bus = NULL,
 	.spi_config = {
 		.circular = false,
-#ifdef _CHIBIOS_RT_CONF_VER_6_1_
+#if defined(_CHIBIOS_RT_CONF_VER_6_1_) || defined(AT32F4XX)
 	.end_cb = NULL,
 #else
         .slave = false,
@@ -224,7 +224,7 @@ struct drv8860_config drv8860 = {
 	.spi_bus = NULL,
 	.spi_config = {
 		.circular = false,
-#ifdef _CHIBIOS_RT_CONF_VER_6_1_
+#if defined(_CHIBIOS_RT_CONF_VER_6_1_) || defined(AT32F4XX)
 	.end_cb = NULL,
 #else
         .slave = false,

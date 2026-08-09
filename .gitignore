@@ -61,3 +61,5 @@ coverage_reports/
 .ai/mcp
 
 .claude/settings.local.json
+
+.DS_Store

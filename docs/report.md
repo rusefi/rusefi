@@ -1,5 +1,31 @@
 # Work Report
 
+## 2026-07-29 - m74_9 (AT32F435) firmware build fixes
+
+What was done:
+- Fixed build of m74_9 board (previously disabled, meta-info.disabled_env -> meta-info.env)
+- Fixed gcc_version_check.c to support GCC 16 (limit 1700)
+- Created AT32 interrupt_priority.h with EFI_IRQ_* priority macros
+- Fixed SPI v1 struct field names (end_cb instead of slave/data_cb/error_cb) used by old AT32 port
+- Fixed usbcfg.h to guard USB type declarations with #if HAL_USE_USB
+- Disabled EFI_STORAGE_INT_FLASH for m74_9 (no flash storage driver for AT32)
+- Added stub implementations for assertInterruptPriority, getFlashAddr*, printWRPBits, etc. in AT32 port
+- Wrapped can_sniffer in #if EFI_USB_SERIAL
+
+Build result:
+- Output files: build/rusefi.bin (632516 bytes), build/rusefi.srec
+- text: 389516, data: 1025, rodata: 219860, bss: 135901
+- Compiler: arm-none-eabi-gcc 16.1.1
+
+Key decisions:
+- Used old AT32 port (ChibiOS/AT32F4xx) instead of ChibiOS-Contrib AT32F435_437 to minimize risk
+- Corresponds to SPIv1 driver (no slave/data_cb/error_cb fields, only end_cb)
+
+Follow-ups:
+- Should consider migrating to ChibiOS-Contrib AT32F435_437 port for proper SPIv2 support
+- AT32 flash driver not implemented (EFI_STORAGE_INT_FLASH=FALSE)
+- USB is physically absent on m74_9, confirmed via board.mk
+
 ## 2026-07-14 - Investigation: "Malformed Packet: packet length" in USB.pcapng
 
 What was done:
