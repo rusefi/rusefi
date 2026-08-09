@@ -6597,9 +6597,9 @@ shapeWithoutTdc=true
 gapFrom.0=0.400000
 gapTo.0=0.800000
 # end of meta section
-event 0 0 0 0.000000 0.600000
-event 1 0 1 190.000000 nan
-event 2 0 0 240.000000 1.333333
-event 3 0 1 370.000000 nan
-event 4 0 0 540.000000 1.250000
-event 5 0 1 600.000000 nan
+event 0 0 0 0.000000 0.580645
+event 1 0 1 181.000000 nan
+event 2 0 0 230.000000 1.277778
+event 3 0 1 361.000000 nan
+event 4 0 0 540.000000 1.347826
+event 5 0 1 581.000000 nan
