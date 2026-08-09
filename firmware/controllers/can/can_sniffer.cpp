@@ -15,8 +15,6 @@
 #include "can_sniffer.h"
 #include "slcan_frame.h"
 
-#if CAN_SNIFFER
-
 #include "can_msg_tx.h"
 
 void CanSniffer::ThreadTask() {
@@ -372,9 +370,4 @@ void CanSniffer::putstr(const char * s)
 	chnWriteTimeout(m_channel, (uint8_t *)s, l, TIME_MS2I(100));
 }
 
-// Explicitly instantiate the template for the required frame types
-template void CanSniffer::handle_can_message<CANTxFrame>(unsigned int, const CANTxFrame&, long long);
-template void CanSniffer::handle_can_message<CANRxFrame>(unsigned int, const CANRxFrame&, long long);
-
-#endif // CAN_SNIFFER
 #endif // EFI_PROD_CODE && EFI_CAN_SUPPORT && EFI_USB_SERIAL

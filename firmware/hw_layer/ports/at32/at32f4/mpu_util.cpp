@@ -30,3 +30,23 @@ void stm32_standby() {
 
     __WFI();
 }
+
+uintptr_t getFlashAddrFirstCopy() {
+	return 0;
+}
+
+uintptr_t getFlashAddrSecondCopy() {
+	return 0;
+}
+
+void assertInterruptPriority(const char* func, uint8_t expectedPrio) {
+}
+
+void printWRPBits() {
+}
+
+void printOptBytes() {
+}
+
+void removeWRP() {
+}

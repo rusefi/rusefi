@@ -67,4 +67,5 @@ private:
 	bool includeBus = false;
 	uint8_t baud;
 };
+
 #endif // EFI_USB_SERIAL

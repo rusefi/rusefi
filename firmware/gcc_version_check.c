@@ -15,7 +15,7 @@
 	#error "GCC compiler >= 11.3.1 required"
 #endif
 
-#if (GCC_VERSION > 1500)
+#if (GCC_VERSION > 1700)
 	#error "Looks like we support only 11-14?"
 #endif
 
