@@ -1,5 +1,6 @@
 package com.rusefi.ui.console;
 
+import com.devexperts.logging.FileLogger;
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.*;
@@ -22,10 +23,12 @@ import javax.swing.Action;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.net.URI;
+import java.util.Locale;
 import java.util.Objects;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -40,6 +43,113 @@ import static com.rusefi.core.net.ConnectionAndMeta.RUSEFI_WIKI_DOWNLOAD_PAGE;
  */
 public class MainFrame {
     private static final Logging log = getLogging(Launcher.class);
+
+    enum FirmwareUpdateCheckResult {
+        AVAILABLE,
+        UP_TO_DATE,
+        UNABLE_TO_CHECK
+    }
+
+    static final class FirmwareUpdateCheckOverlay extends JPanel {
+        private static final Color GREEN = new Color(0, 128, 0);
+        private final JLabel message = new JLabel("", SwingConstants.CENTER);
+        private final JButton updateButton = createButton("Update ECU Firmware");
+        private final JButton closeButton = createButton("Close");
+
+        FirmwareUpdateCheckOverlay(Runnable onUpdate, Runnable onClose) {
+            super(new GridBagLayout());
+            setFocusCycleRoot(true);
+            message.setFont(message.getFont().deriveFont(Font.BOLD, 32f));
+
+            updateButton.setMnemonic(KeyEvent.VK_U);
+            updateButton.addActionListener(e -> onUpdate.run());
+            closeButton.setMnemonic(KeyEvent.VK_C);
+            closeButton.addActionListener(e -> onClose.run());
+
+            Dimension buttonSize = new Dimension(
+                Math.max(updateButton.getPreferredSize().width, closeButton.getPreferredSize().width),
+                Math.max(updateButton.getPreferredSize().height, closeButton.getPreferredSize().height)
+            );
+            updateButton.setPreferredSize(buttonSize);
+            closeButton.setPreferredSize(buttonSize);
+
+            JPanel actions = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 8));
+            actions.add(updateButton);
+            actions.add(closeButton);
+
+            JPanel content = new JPanel(new BorderLayout(0, 24));
+            content.setBorder(BorderFactory.createEmptyBorder(32, 32, 32, 32));
+            content.add(message, BorderLayout.CENTER);
+            content.add(actions, BorderLayout.SOUTH);
+            add(content);
+
+            showChecking();
+        }
+
+        private static JButton createButton(String text) {
+            JButton button = new JButton(text);
+            button.setFont(button.getFont().deriveFont(button.getFont().getSize() * 1.5f));
+            button.setMargin(new Insets(10, 24, 10, 24));
+            return button;
+        }
+
+        void showChecking() {
+            message.setText("Checking ECU firmware...");
+            message.setForeground(Color.DARK_GRAY);
+            updateButton.setVisible(false);
+            closeButton.setVisible(true);
+            message.getAccessibleContext().setAccessibleName(message.getText());
+        }
+
+        void requestInitialFocus() {
+            closeButton.requestFocusInWindow();
+        }
+
+        void showResult(FirmwareUpdateCheckResult result) {
+            switch (result) {
+                case AVAILABLE:
+                    message.setText("ECU firmware update available");
+                    message.setForeground(GREEN);
+                    updateButton.setVisible(true);
+                    break;
+                case UP_TO_DATE:
+                    message.setText("ECU already matches the local firmware image");
+                    message.setForeground(GREEN);
+                    updateButton.setVisible(false);
+                    break;
+                default:
+                    message.setText("Unable to check ECU firmware");
+                    message.setForeground(Color.RED.darker());
+                    updateButton.setVisible(false);
+                    break;
+            }
+            closeButton.setVisible(true);
+            message.getAccessibleContext().setAccessibleName(message.getText());
+            revalidate();
+            repaint();
+            (updateButton.isVisible() ? updateButton : closeButton).requestFocusInWindow();
+        }
+
+        String getMessageForUnitTest() {
+            return message.getText();
+        }
+
+        boolean isUpdateVisibleForUnitTest() {
+            return updateButton.isVisible();
+        }
+
+        boolean isCloseVisibleForUnitTest() {
+            return closeButton.isVisible();
+        }
+
+        void updateForUnitTest() {
+            updateButton.doClick();
+        }
+
+        void closeForUnitTest() {
+            closeButton.doClick();
+        }
+    }
 
     @NotNull
     private final ConsoleUI consoleUI;
@@ -58,15 +168,26 @@ public class MainFrame {
      * user experience overview at Autoupdate.java
      */
     private JMenuItem updateSoftwareItem;
+    private JMenuItem checkEcuUpdateItem;
     private JMenuItem updateEcuItem;
+    private JMenuItem startBinaryLoggingItem;
+    private JMenuItem stopBinaryLoggingItem;
     private Runnable updateEcuAction;
     private Runnable exitRequestHandler;
     private boolean firmwareUpdateInProgress;
     private boolean updateSoftwareAvailable;
     private boolean updateEcuAvailable;
+    private boolean firmwareUpdateCheckInProgress;
+    private int firmwareUpdateCheckGeneration;
+    private boolean unsupportedEcuBlocking;
+    private final UnsupportedEcuCardHost unsupportedEcuHost;
+    private FirmwareUpdateCheckOverlay firmwareUpdateCheckOverlay;
+    private Component previousGlassPane;
+    private boolean previousGlassPaneVisible;
+    private Component previousFocusOwner;
 
     public MainFrame(ConsoleUI consoleUI, TabbedPanel tabbedPane) {
-        this(consoleUI, tabbedPane, null);
+        this(consoleUI, tabbedPane, null, null);
     }
 
     /**
@@ -74,8 +195,14 @@ public class MainFrame {
      *                   (handed off from {@link StartupFrame}) instead of creating a new window (#9715).
      */
     public MainFrame(ConsoleUI consoleUI, TabbedPanel tabbedPane, JFrame reuseFrame) {
+        this(consoleUI, tabbedPane, reuseFrame, null);
+    }
+
+    public MainFrame(ConsoleUI consoleUI, TabbedPanel tabbedPane, JFrame reuseFrame,
+                     UnsupportedEcuCardHost unsupportedEcuHost) {
         this.consoleUI = Objects.requireNonNull(consoleUI);
         this.tabbedPane = tabbedPane;
+        this.unsupportedEcuHost = unsupportedEcuHost;
         listener = ConnectionStatusLogic.Listener.VOID;
         // reuseFrame == null creates a new window; non-null reuses the splash frame in place (#9715).
         this.frame = new FrameHelper(reuseFrame, JFrame.DO_NOTHING_ON_CLOSE) {
@@ -99,6 +226,12 @@ public class MainFrame {
         };
 
         createMenuBar();
+        if (unsupportedEcuHost != null) {
+            unsupportedEcuHost.addBlockingListener(blocking -> {
+                unsupportedEcuBlocking = blocking;
+                refreshFirmwareUpdateExclusion();
+            });
+        }
     }
 
     private void createMenuBar() {
@@ -107,11 +240,13 @@ public class MainFrame {
         fileMenu.setMnemonic(KeyEvent.VK_F);
 
         loadTuneItem = new JMenuItem(LoadTuneHelper.LOAD_TUNE_TEXT);
+        loadTuneItem.setIcon(loadMenuIcon("folder-open"));
         loadTuneItem.setMnemonic(KeyEvent.VK_L);
         loadTuneItem.setEnabled(false);
         fileMenu.add(loadTuneItem);
 
         saveTuneItem = new JMenuItem(LoadTuneHelper.SAVE_TUNE_TEXT);
+        saveTuneItem.setIcon(loadMenuIcon("floppy"));
         saveTuneItem.setMnemonic(KeyEvent.VK_S);
         saveTuneItem.setEnabled(false);
         fileMenu.add(saveTuneItem);
@@ -119,6 +254,7 @@ public class MainFrame {
         fileMenu.addSeparator();
 
         JMenuItem exitItem = new JMenuItem("Exit");
+        exitItem.setIcon(loadMenuIcon("logout"));
         exitItem.setMnemonic(KeyEvent.VK_X);
         exitItem.addActionListener(e -> requestExit());
         fileMenu.add(exitItem);
@@ -129,11 +265,19 @@ public class MainFrame {
         actionsMenu.setMnemonic(KeyEvent.VK_A);
 
         updateSoftwareItem = new JMenuItem("Update Software");
+        updateSoftwareItem.setIcon(loadMenuIcon("refresh"));
         updateSoftwareItem.setEnabled(false);
         updateSoftwareItem.addActionListener(e -> onUpdateSoftwareClicked());
         actionsMenu.add(updateSoftwareItem);
 
+        checkEcuUpdateItem = new JMenuItem("Check for ECU Firmware Updates");
+        checkEcuUpdateItem.setIcon(loadMenuIcon("refresh"));
+        checkEcuUpdateItem.setEnabled(false);
+        checkEcuUpdateItem.addActionListener(e -> requestFirmwareUpdateCheck(true));
+        actionsMenu.add(checkEcuUpdateItem);
+
         updateEcuItem = new JMenuItem("No updates available");
+        updateEcuItem.setIcon(loadMenuIcon("controller"));
         updateEcuItem.setEnabled(false);
         updateEcuItem.addActionListener(e -> {
             if (updateEcuAction != null) {
@@ -144,7 +288,69 @@ public class MainFrame {
 
         menuBar.add(actionsMenu);
 
+        JMenu binaryLoggingMenu = new JMenu("Binary Logging");
+        binaryLoggingMenu.setMnemonic(KeyEvent.VK_B);
+
+        startBinaryLoggingItem = new JMenuItem("Start");
+        startBinaryLoggingItem.setIcon(loadMenuIcon("player-play"));
+        startBinaryLoggingItem.addActionListener(e -> chooseAndStartBinaryLogging());
+        binaryLoggingMenu.add(startBinaryLoggingItem);
+
+        stopBinaryLoggingItem = new JMenuItem("Stop");
+        stopBinaryLoggingItem.setIcon(loadMenuIcon("player-stop"));
+        stopBinaryLoggingItem.addActionListener(e -> {
+            consoleUI.uiContext.sensorLogger.stop();
+            refreshBinaryLoggingActions();
+        });
+        binaryLoggingMenu.add(stopBinaryLoggingItem);
+
+        menuBar.add(binaryLoggingMenu);
+        refreshBinaryLoggingActions();
+
         frame.getFrame().setJMenuBar(menuBar);
+    }
+
+    private void refreshBinaryLoggingActions() {
+        boolean isLogging = consoleUI.uiContext.sensorLogger.isLogging();
+        boolean isConnected = ConnectionStatusLogic.INSTANCE.getValue() == ConnectionStatusValue.CONNECTED;
+        startBinaryLoggingItem.setEnabled(isConnected && !isLogging);
+        stopBinaryLoggingItem.setEnabled(isLogging);
+    }
+
+    private void chooseAndStartBinaryLogging() {
+        FileLogger.createFolderIfNeeded();
+        JFileChooser chooser = new JFileChooser(new File(FileLogger.DIR));
+        chooser.setDialogTitle("Save data Log");
+        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        chooser.setFileFilter(new FileNameExtensionFilter("Binary log files (.mlg)", "mlg"));
+        chooser.setSelectedFile(new File(FileLogger.DIR,
+                "rusEFI_outputChannels_" + FileLogger.getDate() + ".mlg").getAbsoluteFile());
+        if (chooser.showSaveDialog(frame.getFrame()) != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+
+        File file = ensureMlgExtension(chooser.getSelectedFile());
+        if (file.exists() && JOptionPane.showConfirmDialog(frame.getFrame(),
+                file.getName() + " already exists. Replace it?",
+                "Replace Binary Log",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        if (!consoleUI.uiContext.sensorLogger.start(file)) {
+            JOptionPane.showMessageDialog(frame.getFrame(),
+                    "No supported output channels are available for binary logging.",
+                    "Binary Logging",
+                    JOptionPane.WARNING_MESSAGE);
+        }
+        refreshBinaryLoggingActions();
+    }
+
+    static File ensureMlgExtension(File file) {
+        return file.getName().toLowerCase(Locale.ROOT).endsWith(".mlg")
+                ? file
+                : new File(file.getPath() + ".mlg");
     }
 
     public void setUpdateEcuAction(Runnable action) {
@@ -159,8 +365,8 @@ public class MainFrame {
         if (firmwareUpdateInProgress) {
             int choice = JOptionPane.showConfirmDialog(
                 frame.getFrame(),
-                "A firmware update is still in progress. Exiting now may leave the ECU unfinished. Exit anyway?",
-                "Firmware Update In Progress",
+                "An ECU update operation is still in progress. Exiting now may leave the ECU unfinished. Exit anyway?",
+                "ECU Update In Progress",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.WARNING_MESSAGE
             );
@@ -176,47 +382,163 @@ public class MainFrame {
     }
 
 
-    static boolean needsFirmwareUpdate(RusEfiSignature ecuSig, String srecName) {
+    static FirmwareUpdateCheckResult firmwareUpdateCheckResult(RusEfiSignature ecuSig, String srecName) {
         if (ecuSig == null || srecName == null) {
-            return false;
+            return FirmwareUpdateCheckResult.UNABLE_TO_CHECK;
         }
         RusEfiSignature srecSig = SignatureHelper.parseSrec(srecName);
         if (srecSig == null) {
-            return false;
+            return FirmwareUpdateCheckResult.UNABLE_TO_CHECK;
         }
+        boolean needsUpdate;
         if (!srecSig.getIsLegacyFormat()) {
-            return !srecSig.getHash().equals(ecuSig.getHash());
+            needsUpdate = !srecSig.getHash().equals(ecuSig.getHash());
         } else {
-            return !ecuSig.getYear().equals(srecSig.getYear())
+            needsUpdate = !ecuSig.getYear().equals(srecSig.getYear())
                 || !ecuSig.getMonth().equals(srecSig.getMonth())
                 || !ecuSig.getDay().equals(srecSig.getDay());
         }
+        return needsUpdate ? FirmwareUpdateCheckResult.AVAILABLE : FirmwareUpdateCheckResult.UP_TO_DATE;
     }
 
-    private void checkFirmwareUpdate(String firmwareVersion) {
+    static boolean needsFirmwareUpdate(RusEfiSignature ecuSig, String srecName) {
+        return firmwareUpdateCheckResult(ecuSig, srecName) == FirmwareUpdateCheckResult.AVAILABLE;
+    }
+
+    static boolean isFirmwareUpdateConnectionReady(ConnectionStatusValue status) {
+        return status == ConnectionStatusValue.CONNECTED;
+    }
+
+    private FirmwareUpdateCheckResult checkFirmwareUpdate(String firmwareVersion) {
         log.info("checkFirmwareUpdate: " + firmwareVersion);
         RusEfiSignature ecuSig = SignatureHelper.parse(firmwareVersion);
         if (ecuSig == null) {
             log.info("checkFirmwareUpdate: could not parse ECU signature");
-            return;
+            return FirmwareUpdateCheckResult.UNABLE_TO_CHECK;
         }
-        String srecPath = FindFileHelper.findSrecFile();
+        String srecPath = FindFileHelper.findSrecFileForConnectedBoard(
+            consoleUI.uiContext.getLinkManager().getConnectedEcuTarget());
         if (srecPath == null) {
             log.info("checkFirmwareUpdate: no srec file found");
-            SwingUtilities.invokeLater(() -> {
-                updateEcuItem.setText("No updates available");
-                setUpdateEcuAvailable(false);
-            });
-            return;
+            return FirmwareUpdateCheckResult.UNABLE_TO_CHECK;
         }
         String srecName = new File(srecPath).getName();
         log.info("checkFirmwareUpdate: srec=" + srecName);
-        boolean needsUpdate = needsFirmwareUpdate(ecuSig, srecName);
-        log.info("checkFirmwareUpdate: needsUpdate=" + needsUpdate);
-        SwingUtilities.invokeLater(() -> {
-            updateEcuItem.setText(needsUpdate ? "Update ECU Firmware" : "No updates available");
-            setUpdateEcuAvailable(needsUpdate);
-        });
+        FirmwareUpdateCheckResult result = firmwareUpdateCheckResult(ecuSig, srecName);
+        log.info("checkFirmwareUpdate: result=" + result);
+        return result;
+    }
+
+    private void requestFirmwareUpdateCheck(boolean userInitiated) {
+        if (!SwingUtilities.isEventDispatchThread()) {
+            SwingUtilities.invokeLater(() -> requestFirmwareUpdateCheck(userInitiated));
+            return;
+        }
+        if (firmwareUpdateCheckInProgress) {
+            return;
+        }
+
+        BinaryProtocol bp = consoleUI.uiContext.getBinaryProtocol();
+        String firmwareVersion = bp == null ? null : bp.signature;
+        if (!isFirmwareUpdateConnectionReady(ConnectionStatusLogic.INSTANCE.getValue()) || firmwareVersion == null) {
+            applyFirmwareUpdateCheckResult(FirmwareUpdateCheckResult.UNABLE_TO_CHECK);
+            if (userInitiated) {
+                showFirmwareUpdateCheckOverlay();
+                firmwareUpdateCheckOverlay.showResult(FirmwareUpdateCheckResult.UNABLE_TO_CHECK);
+            }
+            return;
+        }
+
+        firmwareUpdateCheckInProgress = true;
+        int generation = ++firmwareUpdateCheckGeneration;
+        refreshFirmwareUpdateExclusion();
+        if (userInitiated) {
+            showFirmwareUpdateCheckOverlay();
+        }
+
+        Thread checkThread = new Thread(() -> {
+            FirmwareUpdateCheckResult result;
+            try {
+                result = checkFirmwareUpdate(firmwareVersion);
+            } catch (RuntimeException e) {
+                log.error("checkFirmwareUpdate failed", e);
+                result = FirmwareUpdateCheckResult.UNABLE_TO_CHECK;
+            }
+            FirmwareUpdateCheckResult completedResult = result;
+            SwingUtilities.invokeLater(() -> completeFirmwareUpdateCheck(
+                generation, firmwareVersion, completedResult, userInitiated));
+        }, "firmware-update-check");
+        checkThread.setDaemon(true);
+        checkThread.start();
+    }
+
+    private void completeFirmwareUpdateCheck(int generation, String firmwareVersion,
+                                             FirmwareUpdateCheckResult result, boolean userInitiated) {
+        if (generation != firmwareUpdateCheckGeneration) {
+            return;
+        }
+        firmwareUpdateCheckInProgress = false;
+        BinaryProtocol bp = consoleUI.uiContext.getBinaryProtocol();
+        if (!isFirmwareUpdateConnectionReady(ConnectionStatusLogic.INSTANCE.getValue())
+            || bp == null
+            || !Objects.equals(firmwareVersion, bp.signature)) {
+            closeFirmwareUpdateCheckOverlay();
+            refreshFirmwareUpdateExclusion();
+            return;
+        }
+
+        applyFirmwareUpdateCheckResult(result);
+        if (userInitiated && firmwareUpdateCheckOverlay != null) {
+            firmwareUpdateCheckOverlay.showResult(result);
+        }
+    }
+
+    private void applyFirmwareUpdateCheckResult(FirmwareUpdateCheckResult result) {
+        switch (result) {
+            case AVAILABLE:
+                updateEcuItem.setText("Update ECU Firmware");
+                break;
+            case UP_TO_DATE:
+                updateEcuItem.setText("ECU matches local firmware");
+                break;
+            default:
+                updateEcuItem.setText("Unable to check ECU firmware");
+                break;
+        }
+        setUpdateEcuAvailable(result == FirmwareUpdateCheckResult.AVAILABLE);
+    }
+
+    private void showFirmwareUpdateCheckOverlay() {
+        closeFirmwareUpdateCheckOverlay();
+        previousGlassPane = frame.getFrame().getGlassPane();
+        previousGlassPaneVisible = previousGlassPane.isVisible();
+        previousFocusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+        firmwareUpdateCheckOverlay = new FirmwareUpdateCheckOverlay(() -> {
+            closeFirmwareUpdateCheckOverlay();
+            if (updateEcuItem.isEnabled() && updateEcuAction != null) {
+                updateEcuAction.run();
+            }
+        }, this::closeFirmwareUpdateCheckOverlay);
+        frame.getFrame().setGlassPane(firmwareUpdateCheckOverlay);
+        firmwareUpdateCheckOverlay.setVisible(true);
+        firmwareUpdateCheckOverlay.requestInitialFocus();
+    }
+
+    private void closeFirmwareUpdateCheckOverlay() {
+        if (firmwareUpdateCheckOverlay == null) {
+            return;
+        }
+        if (frame.getFrame().getGlassPane() == firmwareUpdateCheckOverlay && previousGlassPane != null) {
+            frame.getFrame().setGlassPane(previousGlassPane);
+            previousGlassPane.setVisible(previousGlassPaneVisible);
+        }
+        firmwareUpdateCheckOverlay = null;
+        previousGlassPane = null;
+        previousGlassPaneVisible = false;
+        if (previousFocusOwner != null) {
+            previousFocusOwner.requestFocusInWindow();
+            previousFocusOwner = null;
+        }
     }
 
     private void onUpdateSoftwareClicked() {
@@ -251,28 +573,33 @@ public class MainFrame {
             checkThread.setDaemon(true);
             checkThread.start();
         }
-        ConnectionStatusLogic.INSTANCE.addListener(isConnected -> SwingUtilities.invokeLater(() -> {
-            setTitle();
-            // this would repaint status label
-            AutoupdateUtil.trueLayoutAndRepaint(tabbedPane.tabbedPane);
-            if (ConnectionStatusLogic.INSTANCE.getValue() == ConnectionStatusValue.CONNECTED) {
-                LocalDateTime dateTime = LocalDateTime.now(ZoneOffset.systemDefault());
-                String isoDateTime = dateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-                consoleUI.uiContext.getLinkManager().execute(() -> consoleUI.uiContext.getCommandQueue().write(IoUtil.getSetCommand(Integration.CMD_DATE) +
-                                " " + isoDateTime, CommandQueue.DEFAULT_TIMEOUT,
-                        InvocationConfirmationListener.VOID, false));
-                BinaryProtocol bp = consoleUI.uiContext.getBinaryProtocol();
-                if (bp != null && bp.signature != null) {
-                    String sig = bp.signature;
-                    Thread fwCheckThread = new Thread(() -> checkFirmwareUpdate(sig), "firmware-update-check");
-                    fwCheckThread.setDaemon(true);
-                    fwCheckThread.start();
-                }
-            } else {
+        ConnectionStatusLogic.INSTANCE.addListener(isConnected -> {
+            ConnectionStatusValue status = ConnectionStatusLogic.INSTANCE.getValue();
+            SwingUtilities.invokeLater(() -> {
+                setTitle();
+                // this would repaint status label
+                AutoupdateUtil.trueLayoutAndRepaint(tabbedPane.tabbedPane);
+                if (isFirmwareUpdateConnectionReady(status)) {
+                    LocalDateTime dateTime = LocalDateTime.now(ZoneOffset.systemDefault());
+                    String isoDateTime = dateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+                    consoleUI.uiContext.getLinkManager().execute(() -> consoleUI.uiContext.getCommandQueue().write(IoUtil.getSetCommand(Integration.CMD_DATE) +
+                                    " " + isoDateTime, CommandQueue.DEFAULT_TIMEOUT,
+                            InvocationConfirmationListener.VOID, false));
+                    BinaryProtocol bp = consoleUI.uiContext.getBinaryProtocol();
+                    if (bp != null && bp.signature != null) {
+                        requestFirmwareUpdateCheck(false);
+                    }
+                } else {
+                    firmwareUpdateCheckGeneration++;
+                    firmwareUpdateCheckInProgress = false;
+                    closeFirmwareUpdateCheckOverlay();
+                    consoleUI.uiContext.sensorLogger.stop();
                 updateEcuItem.setText("No updates available");
                 setUpdateEcuAvailable(false);
             }
-        }));
+            refreshBinaryLoggingActions();
+        });
+        });
 
         final LinkManager linkManager = consoleUI.uiContext.getLinkManager();
         BinaryProtocol existingBp = linkManager.getBinaryProtocol();
@@ -286,10 +613,7 @@ public class MainFrame {
                 new BinaryProtocolServer().start(linkManager);
             });
             if (existingBp.signature != null) {
-                String sig = existingBp.signature;
-                Thread fwCheckThread = new Thread(() -> checkFirmwareUpdate(sig), "firmware-update-check");
-                fwCheckThread.setDaemon(true);
-                fwCheckThread.start();
+                requestFirmwareUpdateCheck(false);
             }
         } else {
             linkManager.getConnector().connectAndReadConfiguration(new BinaryProtocol.Arguments(true), new ConnectionStatusLogic.Listener() {
@@ -299,7 +623,11 @@ public class MainFrame {
                 @Override
                 public void onConnectionFailed(String errorMessage) {
                     log.error("onConnectionFailed " + errorMessage);
-                    SwingUtilities.invokeLater(() -> showConnectionFailedDialog(errorMessage));
+                    consoleUI.invalidatePort(linkManager.getLastTriedPort());
+                    if (unsupportedEcuHost == null
+                        || !unsupportedEcuHost.isBlocked(linkManager.getLastTriedPort())) {
+                        SwingUtilities.invokeLater(() -> showConnectionFailedDialog(errorMessage));
+                    }
                 }
 
                 @Override
@@ -328,16 +656,39 @@ public class MainFrame {
                 VersionChecker.getInstance().onFirmwareVersion(firmwareVersion);
             }
         });
+        refreshBinaryLoggingActions();
     }
 
     public void setTuneActions(Action loadAction, Action saveAction) {
         loadTuneItem.setAction(loadAction);
+        loadTuneItem.setIcon(loadMenuIcon("folder-open"));
         loadTuneItem.setText(LoadTuneHelper.LOAD_TUNE_TEXT);
         loadTuneItem.setMnemonic(KeyEvent.VK_L);
         saveTuneItem.setAction(saveAction);
+        saveTuneItem.setIcon(loadMenuIcon("floppy"));
         saveTuneItem.setText(LoadTuneHelper.SAVE_TUNE_TEXT);
         saveTuneItem.setMnemonic(KeyEvent.VK_S);
+        loadAction.addPropertyChangeListener(e -> refreshActionsAfterActionStateChange(e.getPropertyName()));
+        saveAction.addPropertyChangeListener(e -> refreshActionsAfterActionStateChange(e.getPropertyName()));
         refreshFirmwareUpdateExclusion();
+    }
+
+    static Icon loadMenuIcon(String name) {
+        ImageIcon icon = AutoupdateUtil.loadIcon("icons/tuning/" + name + "48.png");
+        if (icon == null) {
+            return null;
+        }
+        return new ImageIcon(icon.getImage().getScaledInstance(18, 18, Image.SCALE_SMOOTH));
+    }
+
+    private void refreshActionsAfterActionStateChange(String propertyName) {
+        if ("enabled".equals(propertyName)) {
+            if (SwingUtilities.isEventDispatchThread()) {
+                refreshFirmwareUpdateExclusion();
+            } else {
+                SwingUtilities.invokeLater(this::refreshFirmwareUpdateExclusion);
+            }
+        }
     }
 
     public void setFirmwareUpdateInProgress(boolean firmwareUpdateInProgress) {
@@ -357,9 +708,22 @@ public class MainFrame {
 
     private void refreshFirmwareUpdateExclusion() {
         Action loadAction = loadTuneItem.getAction();
-        loadTuneItem.setEnabled(!firmwareUpdateInProgress && loadAction != null && loadAction.isEnabled());
-        updateSoftwareItem.setEnabled(!firmwareUpdateInProgress && updateSoftwareAvailable);
-        updateEcuItem.setEnabled(!firmwareUpdateInProgress && updateEcuAvailable);
+        Action saveAction = saveTuneItem.getAction();
+        boolean applicationActionsAllowed = !firmwareUpdateInProgress && !unsupportedEcuBlocking;
+        loadTuneItem.setEnabled(applicationActionsAllowed && loadAction != null && loadAction.isEnabled());
+        saveTuneItem.setEnabled(applicationActionsAllowed && saveAction != null && saveAction.isEnabled());
+        updateSoftwareItem.setEnabled(applicationActionsAllowed && updateSoftwareAvailable);
+        BinaryProtocol bp = consoleUI.uiContext.getBinaryProtocol();
+        boolean firmwareConnectionReady = isFirmwareUpdateConnectionReady(ConnectionStatusLogic.INSTANCE.getValue());
+        checkEcuUpdateItem.setEnabled(applicationActionsAllowed
+            && !firmwareUpdateCheckInProgress
+            && firmwareConnectionReady
+            && bp != null
+            && bp.signature != null);
+        updateEcuItem.setEnabled(applicationActionsAllowed
+            && !firmwareUpdateCheckInProgress
+            && firmwareConnectionReady
+            && updateEcuAvailable);
     }
 
     public FrameHelper getFrame() {
@@ -434,6 +798,7 @@ public class MainFrame {
         root.setProperty(ConsoleUI.TAB_INDEX, tabbedPane.tabbedPane.getSelectedIndex());
         consoleUI.uiContext.DetachedRepositoryINSTANCE.saveConfig();
         getConfig().save();
+        consoleUI.uiContext.sensorLogger.stop();
         BinaryProtocol bp = consoleUI.uiContext.getBinaryProtocol();
         if (bp != null && !bp.isClosed())
             bp.close(); // it could be that serial driver wants to be closed explicitly

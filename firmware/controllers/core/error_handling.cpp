@@ -14,6 +14,7 @@
 #include "rusefi/critical_error.h"
 #include "rusefi/efistring.h"
 #include "board_overrides.h"
+#include "flash_main.h"
 
 #if EFI_USE_OPENBLT
 /* communication with OpenBLT that is plain C, not to modify external file */
@@ -614,17 +615,59 @@ void onUnlockHook(void) {
 #include <stdexcept>
 #endif
 
+// bumped on every configError() so refreshConfigErrorState() can tell whether the
+// current message is its own or was raised by an unregistered legacy caller
+static uint32_t configErrorSeq = 0;
+
 void configError(const char *fmt, ...) {
 		va_list ap;
 		va_start(ap, fmt);
 		chvsnprintf(configErrorMessageBuffer, sizeof(configErrorMessageBuffer), fmt, ap);
 		va_end(ap);
 		hasConfigErrorFlag = true;
+		configErrorSeq++;
 }
 
 const char* getConfigErrorMessage() {
 	return configErrorMessageBuffer;
 }
+
+std::optional<setup_custom_bool_type> custom_board_updateConfigError;
+
+static bool refreshRaisedConfigError = false;
+static uint32_t refreshRaisedSeq = 0;
+
+void refreshConfigErrorState() {
+	// core producers go here, worst first, before the board hook
+	bool active = checkSettingsWriteFailure();
+	if (!active) {
+		active = get_board_override_result(custom_board_updateConfigError, false);
+	}
+	if (active) {
+		// the producer has just called configError() with its message
+		refreshRaisedConfigError = true;
+		refreshRaisedSeq = configErrorSeq;
+		return;
+	}
+	if (refreshRaisedConfigError) {
+		refreshRaisedConfigError = false;
+		// a seq mismatch means a legacy caller raised after our condition fired - leave theirs latched
+		if (refreshRaisedSeq == configErrorSeq) {
+			clearConfigErrorMessage();
+		}
+	}
+}
+
+#if EFI_UNIT_TEST
+void resetConfigErrorStateForUnitTest() {
+	custom_board_updateConfigError = {};
+	refreshRaisedConfigError = false;
+	refreshRaisedSeq = 0;
+	configErrorSeq = 0;
+	trackSettingsWriteResult(true);
+	clearConfigErrorMessage();
+}
+#endif
 
 static void firmwareErrorV(ObdCode code, const char *fmt, va_list ap) {
 #if EFI_PROD_CODE

@@ -23,6 +23,8 @@
 #include "idle_thread.h"
 #include "launch_control.h"
 #include "gppwm_channel.h"
+#include "spark_logic.h"
+#include "engine_math.h"
 
 #if EFI_ENGINE_CONTROL
 
@@ -346,6 +348,15 @@ floatms_t IgnitionState::getSparkDwell(float rpm, bool isCranking) {
 	float dwellMs;
 	if (isCranking) {
 		dwellMs = engineConfiguration->ignitionDwellForCrankingMs;
+	} else if (engineConfiguration->dwellDutyModeEnabled) {
+		efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !std::isnan(rpm), "invalid rpm", NAN);
+		// Duty mode: dwell = duty% × (engine cycle duration / sparks per cycle).
+		// Exact inverse of getCoilDutyCycle() — gives the dwell that produces the
+		// requested duty on the coil output pin (e.g. 50% for Ford TFI modules).
+		float intervalMs = getEngineCycleDuration(rpm) / getNumberOfSparks(getCurrentIgnitionMode());
+		baseDwell = engineConfiguration->dwellDutyPercent / 100.0f * intervalMs;
+		dwellVoltageCorrection = 1.0f;
+		dwellMs = baseDwell;
 	} else {
 		efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !std::isnan(rpm), "invalid rpm", NAN);
 

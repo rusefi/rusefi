@@ -38,7 +38,100 @@ TEST(Vvt, TestSetPoint) {
 	EXPECT_EQ(20, dut.getSetpoint().value_or(0));
 }
 
-TEST(Vvt, observePlant) {
+struct FakeMap : public ValueProvider3D {
+	float setpoint = 0;
+
+	float getValue(float xColumn, float yRow) const override {
+		return setpoint;
+	}
+};
+
+TEST(VVT, SetpointHysteresisAdvancingCam) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	Sensor::setMockValue(SensorType::Clt, 70); // m_isCltWarmEnough
+	// m_isRpmHighEnough
+	engine->rpmCalculator.setRpmValue(1500);
+	engineConfiguration->vvtControlMinRpm = 500;
+	// m_engineRunningLongEnough
+	advanceTimeUs(0.8e6);
+	engineConfiguration->vvtActivationDelayMs = 5;
+	engineConfiguration->invertVvtControlIntake = false;
+	engineConfiguration->invertVvtControlExhaust = false;
+
+	FakeMap targetMap;
+	MockPwm pwm;
+
+	VvtController dut(0);
+	dut.init(&targetMap, &pwm);
+
+	// update m_engineRunningLongEnough / m_isRpmHighEnough flags
+	dut.onFastCallback();
+
+	// 0 position returns unexpected
+	targetMap.setpoint = 0;
+	EXPECT_EQ(-1000, dut.getSetpoint().value_or(-1000));
+
+	// Between hysteresis still return unexpected
+	targetMap.setpoint = 2;
+	EXPECT_EQ(-1000, dut.getSetpoint().value_or(-1000));
+
+	// Above hysteresis returns real value
+	targetMap.setpoint = 5;
+	EXPECT_EQ(5, dut.getSetpoint().value_or(-1000));
+
+	// Between hysteresis still returns valid
+	targetMap.setpoint = 2;
+	EXPECT_EQ(2, dut.getSetpoint().value_or(-1000));
+
+	// Back under hysteresis retuns unexpected again
+	targetMap.setpoint = 0.5;
+	EXPECT_EQ(-1000, dut.getSetpoint().value_or(-1000));
+}
+
+TEST(VVT, SetpointHysteresisRetardingCam) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	Sensor::setMockValue(SensorType::Clt, 70); // m_isCltWarmEnough
+	// m_isRpmHighEnough
+	engine->rpmCalculator.setRpmValue(1500);
+	engineConfiguration->vvtControlMinRpm = 500;
+	// m_engineRunningLongEnough
+	advanceTimeUs(0.8e6);
+	engineConfiguration->vvtActivationDelayMs = 5;
+
+	engineConfiguration->invertVvtControlIntake = true;
+	engineConfiguration->invertVvtControlExhaust = false;
+
+	FakeMap targetMap;
+	MockPwm pwm;
+
+	VvtController dut(0);
+	dut.init(&targetMap, &pwm);
+
+	// update m_engineRunningLongEnough / m_isRpmHighEnough flags
+	dut.onFastCallback();
+
+	// 0 position returns unexpected
+	targetMap.setpoint = 0;
+	EXPECT_EQ(-1000, dut.getSetpoint().value_or(-1000));
+
+	// Between hysteresis still return unexpected
+	targetMap.setpoint = -2;
+	EXPECT_EQ(-1000, dut.getSetpoint().value_or(-1000));
+
+	// Above hysteresis returns real value
+	targetMap.setpoint = -5;
+	EXPECT_EQ(-5, dut.getSetpoint().value_or(-1000));
+
+	// Between hysteresis still returns valid
+	targetMap.setpoint = -2;
+	EXPECT_EQ(-2, dut.getSetpoint().value_or(-1000));
+
+	// Back under hysteresis retuns unexpected again
+	targetMap.setpoint = -0.5;
+	EXPECT_EQ(-1000, dut.getSetpoint().value_or(-1000));
+}
+
+TEST(VVT, ObservePlant) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	engine->triggerCentral.vvtPosition[0][0] = 23;

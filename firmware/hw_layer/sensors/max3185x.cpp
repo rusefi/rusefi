@@ -539,6 +539,8 @@ private:
 	};
 };
 
+RUSEFI_STACK_ROOT(Max3185xRead, ThreadTask);
+
 static Max3185xRead instance;
 
 static void showEgtInfo() {

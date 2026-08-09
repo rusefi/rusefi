@@ -148,6 +148,7 @@ TESTS_SRC_CPP = \
 	tests/test_pwm_generator.cpp \
 	tests/test_log_buffer.cpp \
 	tests/test_event_queue.cpp \
+	tests/test_scheduling_pool.cpp \
 	tests/test_cpp_memory_layout.cpp \
 	tests/test_pid.cpp \
 	tests/test_accel_enrichment.cpp \
@@ -157,6 +158,7 @@ TESTS_SRC_CPP = \
 	tests/test_sticky_pps.cpp \
 	tests/test_knock.cpp \
 	tests/test_misfire_detection.cpp \
+	tests/test_config_error_refresh.cpp \
 	tests/test_lambda_monitor.cpp \
 	tests/test_flex_sensor.cpp \
 	tests/sensor/basic_sensor.cpp \

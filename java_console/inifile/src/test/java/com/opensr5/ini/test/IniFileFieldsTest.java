@@ -51,6 +51,31 @@ public class IniFileFieldsTest {
     }
 
     @Test
+    public void testCurveAxisWithoutStep() {
+        // seen in a real TS project mainController.ini: "yAxis = -5,  5," - min and max only,
+        // trailing comma, no step value
+        String string =
+            "[Constants]\n" +
+                "page = 1\n" +
+                "scriptCurve1Bins = array, F32, 4828, [16], \"x\", 1, 0, -10000, 10000, 3\n" +
+                "scriptCurve1 = array, F32, 4892, [16], \"y\", 1, 0, -10000, 10000, 3\n" +
+                "[CurveEditor]\n" +
+                "\tcurve = scriptCurve1, \"Script Curve #1\"\n" +
+                "\t\txAxis\t\t=  0, 128, 10\n" +
+                "\t\tyAxis\t\t= -5,  5,\n" +
+                "\t\txBins\t\t= scriptCurve1Bins\n" +
+                "\t\tyBins\t\t= scriptCurve1\n";
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = IniFileReaderTest.readLines(lines);
+
+        CurveModel curve = model.getCurves().get("scriptCurve1");
+        assertNotNull(curve);
+        assertEquals(-5, curve.getyAxis().getMin());
+        assertEquals(5, curve.getyAxis().getMax());
+        assertEquals(10, curve.getyAxis().getStep());
+    }
+
+    @Test
     public void testEasyFields() {
         String string = "page = 1\n" +
             "[Constants]\n" +

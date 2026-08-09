@@ -277,6 +277,7 @@ static void processLastKnockEvent() {
 	engine->module<KnockController>()->onKnockSenseCompleted(currentCylinderNumber, db, lastKnockTime);
 }
 
+RUSEFI_STACK_ROOT(KnockThread, ThreadTask);
 void KnockThread::ThreadTask() {
 	while (1) {
 		knockSem.wait();

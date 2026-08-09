@@ -14,7 +14,11 @@ import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.maintenance.StLinkFlasher;
+import com.rusefi.maintenance.jobs.ImportTuneJob;
 import com.rusefi.ui.*;
+import com.rusefi.ui.basic.SingleAsyncJobExecutor;
+import com.rusefi.ui.basic.StatusPanelWithProgressBar;
+import com.rusefi.ui.basic.TuneManagementTab;
 import com.rusefi.ui.console.MainFrame;
 import com.rusefi.ui.console.TabbedPanel;
 import com.rusefi.ui.engine.EngineSnifferPanel;
@@ -22,6 +26,7 @@ import com.rusefi.ui.lua.LuaScriptPanel;
 import com.rusefi.ui.plugins.ConsoleTabProvider;
 import com.rusefi.ui.util.JustOneInstance;
 import com.rusefi.ui.widgets.ConnectionStatusIcon;
+import com.rusefi.ui.widgets.StatusPanel;
 import com.rusefi.ui.wizard.WizardCatalog;
 import com.rusefi.ui.wizard.WizardContainer;
 import com.rusefi.ui.wizard.WizardStep;
@@ -67,6 +72,7 @@ public class ConsoleUI {
     private static final Logging log = getLogging(ConsoleUI.class);
     private static final int DEFAULT_TAB_INDEX = 0;
     private static final String WIKI_URL = "https://wiki.rusefi.com/rusEFI-logs-folder";
+    private static final String AUTO_LAUNCH_WIZARD = "auto_launch_wizard";
 
     public static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
@@ -78,6 +84,7 @@ public class ConsoleUI {
     private final String port;
 
     public final UIContext uiContext;
+    private final ConnectivityContext connectivityContext;
 
     /**
      * We can listen to tab activation event if we so desire
@@ -85,11 +92,12 @@ public class ConsoleUI {
     private final Map<Component, ActionListener> tabSelectedListeners = new HashMap<>();
 
     public ConsoleUI(String port, SerialPortType serialPortType, ConnectivityContext connectivityContext) {
-        this(new UIContext(connectivityContext.getConnectedEcuTarget()), port, serialPortType, false, null, null, null, connectivityContext);
+        this(new UIContext(connectivityContext.getConnectedEcuTarget()), port, serialPortType, false,
+            null, null, null, null, connectivityContext);
     }
 
     public ConsoleUI(UIContext uiContext, String port, SerialPortType serialPortType, boolean alreadyConnected, ConnectivityContext connectivityContext) {
-        this(uiContext, port, serialPortType, alreadyConnected, null, null, null, connectivityContext);
+        this(uiContext, port, serialPortType, alreadyConnected, null, null, null, null, connectivityContext);
     }
 
     /**
@@ -97,7 +105,14 @@ public class ConsoleUI {
      * instead of opening a second window (#9715).
      */
     public ConsoleUI(UIContext uiContext, String port, SerialPortType serialPortType, boolean alreadyConnected, JFrame reuseFrame, ConnectivityContext connectivityContext) {
-        this(uiContext, port, serialPortType, alreadyConnected, null, null, reuseFrame, connectivityContext);
+        this(uiContext, port, serialPortType, alreadyConnected, null, null, reuseFrame, null, connectivityContext);
+    }
+
+    public ConsoleUI(UIContext uiContext, String port, SerialPortType serialPortType, boolean alreadyConnected,
+                     JFrame reuseFrame, UnsupportedEcuCardHost unsupportedEcuHost,
+                     ConnectivityContext connectivityContext) {
+        this(uiContext, port, serialPortType, alreadyConnected, null, null, reuseFrame,
+            unsupportedEcuHost, connectivityContext);
     }
 
     /**
@@ -115,7 +130,13 @@ public class ConsoleUI {
      * {@code reuseFrame} instead of opening a second window — same handoff the online path uses (#9715).
      */
     public ConsoleUI(UIContext uiContext, IniFileModel ini, ConfigurationImage initialImage, JFrame reuseFrame, ConnectivityContext connectivityContext) {
-        this(uiContext, null, SerialPortType.Unknown, false, ini, initialImage, reuseFrame, connectivityContext);
+        this(uiContext, null, SerialPortType.Unknown, false, ini, initialImage, reuseFrame, null, connectivityContext);
+    }
+
+    public ConsoleUI(UIContext uiContext, IniFileModel ini, ConfigurationImage initialImage, JFrame reuseFrame,
+                     UnsupportedEcuCardHost unsupportedEcuHost, ConnectivityContext connectivityContext) {
+        this(uiContext, null, SerialPortType.Unknown, false, ini, initialImage, reuseFrame,
+            unsupportedEcuHost, connectivityContext);
     }
 
     /**
@@ -168,9 +189,14 @@ public class ConsoleUI {
 
     private ConsoleUI(UIContext uiContext, String port, SerialPortType serialPortType,
                       boolean alreadyConnected, IniFileModel offlineIni, ConfigurationImage offlineImage,
-                      JFrame reuseFrame, ConnectivityContext connectivityContext) {
+                      JFrame reuseFrame, UnsupportedEcuCardHost existingUnsupportedEcuHost,
+                      ConnectivityContext connectivityContext) {
         this.uiContext = uiContext;
+        this.connectivityContext = connectivityContext;
         LinkManager linkManager = uiContext.getLinkManager();
+        UnsupportedEcuCardHost unsupportedEcuHost = existingUnsupportedEcuHost != null
+            ? existingUnsupportedEcuHost
+            : new UnsupportedEcuCardHost(connectivityContext, linkManager);
 
         boolean isOffline = (offlineIni != null && offlineImage != null);
         if (isOffline) {
@@ -195,6 +221,11 @@ public class ConsoleUI {
         uiContext.addOfflineModeListener(offline -> SwingUtilities.invokeLater(() ->
                 tabbedPane.tabbedPane.putClientProperty("offlineMode", offline ? Boolean.TRUE : null)));
         this.port = port;
+        ConnectionStatusLogic.INSTANCE.addListener(isConnected -> {
+            if (!isConnected && linkManager.isDisconnectedByUser()) {
+                invalidatePort(linkManager.getLastTriedPort());
+            }
+        });
 
         // Follow a renumbered ECU across a bootloader round-trip. After a reboot to DFU/OpenBLT *without*
         // flashing, the board can re-enumerate onto a different ttyACMx. ConnectionWatchdog.restart() only
@@ -229,11 +260,14 @@ public class ConsoleUI {
         JButton launchWizardButton = getLaunchWizardButton(rootPanel, wizardContainer, rootCardLayout);
 
         wizardContainer.setOnWizardExit(() -> rootCardLayout.show(rootPanel, "console"));
+        wizardContainer.setOnDontShowAgain(() -> {
+            getConfig().getRoot().setBoolProperty(AUTO_LAUNCH_WIZARD, false);
+            getConfig().save();
+        });
 
-        // On ECU connect, scan the wizard catalog for applicable standalone steps that need attention
-        // (e.g. empty VIN) and auto-launch the first one. Fires on every reconnect; once the user
-        // saves the value, subsequent connects skip this because needsAttention returns false.
-        ConnectionStatusLogic.INSTANCE.addListener(isConnected -> {
+        // On ECU connect, preserve standalone prompt priority (e.g. empty VIN), then offer the full
+        // wizard when one of its ECU-backed progress flags is incomplete.
+        ConnectionStatusLogic.INSTANCE.addAndFireListener(isConnected -> {
             if (!isConnected) return;
             SwingUtilities.invokeLater(() -> {
                 if (!ConnectionStatusLogic.INSTANCE.isConnected()) return;
@@ -250,6 +284,13 @@ public class ConsoleUI {
                     rootCardLayout.show(rootPanel, "wizard");
                     return;
                 }
+
+                if (UiProperties.isWizardAutoLaunchEnabled()
+                    && getConfig().getRoot().getBoolProperty(AUTO_LAUNCH_WIZARD, true)
+                    && wizardContainer.hasIncompleteSteps()) {
+                    wizardContainer.startWizard(true);
+                    rootCardLayout.show(rootPanel, "wizard");
+                }
             });
         });
 
@@ -263,7 +304,7 @@ public class ConsoleUI {
 
         // ---------------
 
-        MainFrame mainFrame = new MainFrame(this, tabbedPane, reuseFrame);
+        MainFrame mainFrame = new MainFrame(this, tabbedPane, reuseFrame, unsupportedEcuHost);
         JFrame frame = mainFrame.getFrame().getFrame();
         setFrameIcon(frame);
         log.info("Console " + UiVersion.CONSOLE_VERSION);
@@ -338,8 +379,25 @@ console live data tab is broken #8402
             tabbedPane.addTab("Live Data", LiveDataPane.createLazy(uiContext).getContent());
  */
             PinoutPane pinoutPane = new PinoutPane(uiContext);
-            PortResult initialPort = (port != null) ? new PortResult(port, serialPortType) : null;
+            PortResult initialPort = null;
+            if (port != null) {
+                for (PortResult candidate : connectivityContext.getCurrentHardware().getKnownPorts()) {
+                    if (port.equals(candidate.port)) {
+                        initialPort = candidate;
+                        break;
+                    }
+                }
+                if (initialPort == null) {
+                    initialPort = new PortResult(port, serialPortType);
+                }
+            }
             DeviceSessionManager deviceSessionManager = new DeviceSessionManager(connectivityContext, initialPort);
+            unsupportedEcuHost.addCompatiblePortListener(deviceSessionManager::setSessionPort);
+            StatusPanelWithProgressBar deviceStatusPanel = new StatusPanelWithProgressBar();
+            StatusPanel tuneStatusPanel = new StatusPanel(250);
+            SingleAsyncJobExecutor consoleJobExecutor = new SingleAsyncJobExecutor(job ->
+                job instanceof ImportTuneJob ? tuneStatusPanel : deviceStatusPanel,
+                job -> !(job instanceof ImportTuneJob));
 
             // [tag:offline_tune] Seed the loaded tune image so config-image-driven panes (e.g. PinoutPane's
             // "Tune use" column) have data with no live ECU — the online path gets this from BinaryProtocol.
@@ -394,13 +452,39 @@ console live data tab is broken #8402
             if (UiProperties.isKnockAnalyzerEnabled()) {
                 tabbedPane.addTab("Knock Analyzer", new KnockPane(uiContext).getContent());
             }
+            if (UiProperties.isSlcanSnifferEnabled()) {
+                // Lazy: SlcanTab starts a serial-port-scanning reader thread on construction,
+                // only do that once the user actually opens the tab.
+                tabbedPane.addTab("SLCAN Sniffer", new InitOnFirstPaintPanel() {
+                    @Override
+                    protected JPanel createContent() {
+                        return new SlcanTab().getContent();
+                    }
+                }.getContent());
+            }
             if (UiProperties.isPinoutEnabled()) {
                 tabbedPane.addTab("Pinout", pinoutPane.getContent());
             }
+
+            final TuneManagementTab tuneManagementTab;
+            if (TuneManagementTab.getTunesManifestUrl() != null) {
+                tuneManagementTab = new TuneManagementTab(
+                    connectivityContext,
+                    uiContext,
+                    consoleJobExecutor,
+                    tuneStatusPanel,
+                    () -> tabbedPane.selectTab("Manage Tunes")
+                );
+                tabbedPane.addTab("Manage Tunes", tuneManagementTab.getContent());
+            } else {
+                tuneManagementTab = null;
+            }
+
             // Single-session device manager [tag:better_ux_for_flashing]: the scanner is kept alive for the whole console
             // lifetime so this one instance can hook / remove / re-connect / DFU / OpenBLT the board.
             DevicePane devicePane = new DevicePane(
                 uiContext, connectivityContext, deviceSessionManager, tabbedPane.tabbedPane,
+                consoleJobExecutor, deviceStatusPanel,
                 picker -> {
                     rollbackPicker.removeAll();
                     rollbackPicker.add(picker, BorderLayout.CENTER);
@@ -415,12 +499,19 @@ console live data tab is broken #8402
 
             addCustomTabs();
 
+            AtomicReference<AvailableHardware> tuneHardware = new AtomicReference<>();
             deviceSessionManager.addListener((state, hardware) -> SwingUtilities.invokeLater(() -> {
                 boolean flashing = state == SessionState.FLASHING;
                 mainFrame.setFirmwareUpdateInProgress(flashing);
                 launchWizardButton.setEnabled(!flashing);
                 if (tuningHolder[0] != null) {
                     tuningHolder[0].setFirmwareUpdateInProgress(flashing);
+                }
+                if (tuneManagementTab != null) {
+                    AvailableHardware effectiveHardware = connectivityContext.getCurrentHardware();
+                    if (tuneHardware.getAndSet(effectiveHardware) != effectiveHardware) {
+                        tuneManagementTab.onHardwareUpdated(effectiveHardware);
+                    }
                 }
             }));
 
@@ -453,12 +544,6 @@ console live data tab is broken #8402
         tabbedPane.addTab("rusEFI Online", new OnlineTab(uiContext).getContent());
 */
 
-        if (false) {
-            // this feature is not totally happy safer to disable to reduce user confusion
-            // https://github.com/rusefi/rusefi/issues/5292
-            uiContext.sensorLogger.init();
-        }
-
         if (isOffline || !LinkManager.isLogViewerMode(port)) {
             if (savedTabIndex < tabbedPane.tabbedPane.getTabCount())
                 tabbedPane.tabbedPane.setSelectedIndex(savedTabIndex);
@@ -479,10 +564,12 @@ console live data tab is broken #8402
         });
 
         ShortcutsHelper.installConnectAndDisconnect(uiContext, tabbedPane.tabbedPane,
-            () -> !Boolean.TRUE.equals(tabbedPane.tabbedPane.getClientProperty("isUpdating")));
+            () -> !Boolean.TRUE.equals(tabbedPane.tabbedPane.getClientProperty("isUpdating"))
+                && !unsupportedEcuHost.isBlocking());
         AutoupdateUtil.setAppIcon(mainFrame.getFrame().getFrame());
 
-        mainFrame.getFrame().showFrame(rootPanel);
+        unsupportedEcuHost.setNormalContent(rootPanel);
+        mainFrame.getFrame().showFrame(unsupportedEcuHost.getContent());
     }
 
     private @NotNull JButton getLaunchWizardButton(JPanel rootPanel, WizardContainer wizardContainer, CardLayout rootCardLayout) {
@@ -502,6 +589,12 @@ console live data tab is broken #8402
 
     public String getPort() {
         return port;
+    }
+
+    public void invalidatePort(String portToInvalidate) {
+        if (portToInvalidate != null) {
+            connectivityContext.getPortScanner().invalidatePort(portToInvalidate);
+        }
     }
 
     private void addCustomTabs() {

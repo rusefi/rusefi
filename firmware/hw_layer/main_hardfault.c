@@ -104,6 +104,9 @@ void UsageFault_Handler_C(void* sp) {
 }
 
 void MemManage_Handler_C(void* sp) {
+	// Disable the MPU so we don't get smacked with a double fault while trying to save state
+	mpuDisable();
+
 	//Copy to local variables (not pointers) to allow GDB "i loc" to directly show the info
 	//Get thread context. Contains main registers including PC and LR
 	struct port_extctx ctx;

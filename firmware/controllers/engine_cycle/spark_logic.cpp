@@ -257,6 +257,11 @@ void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 	if (event->sparksRemaining > 0) {
 		event->sparksRemaining--;
 
+		// each restrike is its own spark: grab a fresh id, otherwise the out-of-order
+		// protection in startDwellByTurningSparkPinHigh bails restrike dwell since
+		// signalFallSparkId already matches this event's sparkCounter
+		event->sparkCounter = engine->engineState.globalSparkCounter++;
+
 		efitick_t nextDwellStart = nowNt + engine->engineState.multispark.delay;
 		efitick_t nextFiring = nextDwellStart + engine->engineState.multispark.dwell;
 #if SPARK_EXTREME_LOGGING

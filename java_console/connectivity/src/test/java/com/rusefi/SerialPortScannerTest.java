@@ -1,7 +1,6 @@
 package com.rusefi;
 
 import com.rusefi.io.LinkManager;
-import com.rusefi.maintenance.CalibrationsInfo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,7 +9,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -32,7 +30,8 @@ public class SerialPortScannerTest {
         final Map<String, PortResult> inspectResults = new HashMap<>();
         final Map<String, Integer> inspectCalls = new HashMap<>();
         Collection<String> tcpPorts = new ArrayList<>();
-        int tcpCalibrationsCalls;
+        int tcpInspectionCalls;
+        PortResult tcpResult;
         boolean liveEcuConnected;
         boolean dfuConnected;
         int deviceProbeCalls;
@@ -55,9 +54,9 @@ public class SerialPortScannerTest {
         }
 
         @Override
-        public Optional<CalibrationsInfo> getEcuCalibrations(String tcpPort) {
-            tcpCalibrationsCalls++;
-            return Optional.empty();
+        public PortResult inspectTcpPort(String tcpPort) {
+            tcpInspectionCalls++;
+            return tcpResult != null ? tcpResult : new PortResult(tcpPort, SerialPortType.Unknown);
         }
 
         @Override
@@ -140,6 +139,19 @@ public class SerialPortScannerTest {
     }
 
     @Test
+    public void unconnectedEcuIdentityIsRecheckedAfterCacheTtl() {
+        addPort("COM5", SerialPortType.Ecu);
+        scan(false);
+
+        probes.inspectResults.put("COM5", new PortResult("COM5", SerialPortType.UnsupportedEcu));
+        probes.time += 3001;
+        scan(false);
+
+        assertEquals(2, (int) probes.inspectCalls.get("COM5"));
+        assertEquals(SerialPortType.UnsupportedEcu, knownPorts().get(0).type);
+    }
+
+    @Test
     public void unknownPortIsNotCachedSoDetectionRetriesEveryCycle() {
         addPort("COM5", SerialPortType.Unknown);
 
@@ -148,6 +160,21 @@ public class SerialPortScannerTest {
 
         assertEquals(2, (int) probes.inspectCalls.get("COM5"),
             "Unknown must be retried without waiting for the port to disappear and reappear");
+    }
+
+    @Test
+    public void unsupportedEcuIsReinspectedForSamePortHardwareReplacement() {
+        addPort("COM5", SerialPortType.UnsupportedEcu);
+
+        scan(false);
+        scan(false);
+
+        assertEquals(2, (int) probes.inspectCalls.get("COM5"));
+        assertEquals(SerialPortType.UnsupportedEcu, knownPorts().get(0).type);
+
+        probes.inspectResults.put("COM5", new PortResult("COM5", SerialPortType.Ecu));
+        scan(false);
+        assertEquals(SerialPortType.Ecu, knownPorts().get(0).type);
     }
 
     @Test
@@ -248,10 +275,22 @@ public class SerialPortScannerTest {
         scan(true);
         scan(true);
 
-        assertEquals(2, probes.tcpCalibrationsCalls, "a non-ECU TCP port must be re-checked, not cached");
+        assertEquals(2, probes.tcpInspectionCalls, "a non-ECU TCP port must be re-checked, not cached");
         List<PortResult> ports = knownPorts();
         assertEquals(1, ports.size());
         assertEquals(SerialPortType.Unknown, ports.get(0).type);
+    }
+
+    @Test
+    public void unsupportedTcpEcuKeepsItsClassificationAndIsReinspected() {
+        probes.tcpPorts.add("29001");
+        probes.tcpResult = new PortResult("29001", SerialPortType.UnsupportedEcu);
+
+        scan(true);
+        scan(true);
+
+        assertEquals(2, probes.tcpInspectionCalls);
+        assertEquals(SerialPortType.UnsupportedEcu, knownPorts().get(0).type);
     }
 
     @Test
@@ -261,6 +300,7 @@ public class SerialPortScannerTest {
         probes.inspectResults.put("COM7", new PortResult("COM7", SerialPortType.EcuWithOpenblt));
 
         scanner.cachePort(live);
+        probes.time += 10_000;
         scan(false);
         assertFalse(probes.inspectCalls.containsKey("COM7"),
             "cachePort must prevent the scanner from opening a port a live connection is using");
@@ -281,5 +321,19 @@ public class SerialPortScannerTest {
         List<PortResult> ports = knownPorts();
         assertEquals(2, ports.size());
         assertEquals(SerialPortType.Ecu, ports.get(0).type, "your ECU belongs at the top of the list");
+    }
+
+    @Test
+    public void unsupportedEcuSortsAfterUsableEcuAndBeforeUnknown() {
+        addPort("COM1", SerialPortType.Unknown);
+        addPort("COM2", SerialPortType.UnsupportedEcu);
+        addPort("COM3", SerialPortType.Ecu);
+
+        scan(false);
+
+        List<PortResult> ports = knownPorts();
+        assertEquals(SerialPortType.Ecu, ports.get(0).type);
+        assertEquals(SerialPortType.UnsupportedEcu, ports.get(1).type);
+        assertEquals(SerialPortType.Unknown, ports.get(2).type);
     }
 }

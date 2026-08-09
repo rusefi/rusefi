@@ -35,6 +35,7 @@ Release template (copy/paste this for new release):
  - Per cylinder knock control individual gain control #9404
  - 6G75 Cam trigger support #9533
  - minimal launchTpsThreshold is required to reduce confusion
+ - New firing order 1-6-2-5-3-4 (Maserati V6 and Porsche Boxster Flat-6)
 
 ### Breaking Changes
  - Dodge Neon 2003 crank actually uses crank decoder #8977
@@ -47,6 +48,7 @@ Release template (copy/paste this for new release):
  - SD card access over USB is not reliable #9664
  - wmic.exe command-line utility is being completely eliminated. #9672
  - USB serial stability in some scenarios #9860
+ - multispark
 
 ## February 2026 "Day 1458"
 

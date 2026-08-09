@@ -181,6 +181,10 @@ public class VariableRegistryValues {
 	public static final int can_broadcast_channel_e_CAN_BUS_FIRST = 0;
 	public static final int can_broadcast_channel_e_CAN_BUS_SECOND = 1;
 	public static final int can_broadcast_channel_e_CAN_BUS_THIRD = 2;
+	public static final int can_bus_channel_e_CAN_BUS_CAN1 = 1;
+	public static final int can_bus_channel_e_CAN_BUS_CAN2 = 2;
+	public static final int can_bus_channel_e_CAN_BUS_CAN3 = 3;
+	public static final int can_bus_channel_e_CAN_BUS_NONE = 0;
 	public static final int CAN_DEFAULT_BASE = 0x200;
 	public static final int CAN_ECU_SERIAL_RX_ID = 0x710;
 	public static final int CAN_ECU_SERIAL_TX_ID = 0x720;
@@ -199,6 +203,7 @@ public class VariableRegistryValues {
 	public static final int can_nbc_e_CAN_BUS_NISSAN_VQ = 9;
 	public static final int can_nbc_e_CAN_BUS_W202_C180 = 5;
 	public static final String CAN_RX_PREFIX = "CAN_rx";
+	public static final int can_sniffer_channel_s_size = 4;
 	public static final int can_vss_nbc_e_BMW_e46 = 0;
 	public static final int can_vss_nbc_e_BMW_e90 = 2;
 	public static final int can_vss_nbc_e_HONDA_CIVIC9 = 5;
@@ -447,7 +452,7 @@ public class VariableRegistryValues {
 	public static final int ego_sensor_e_ES_PLX = 4;
 	public static final String egoSettings_NAME = "CAN O2 sensors";
 	public static final int EGT_CHANNEL_COUNT = 8;
-	public static final int engine_configuration_s_size = 4248;
+	public static final int engine_configuration_s_size = 4268;
 	public static final int engine_load_mode_e_LM_ALPHA_N = 2;
 	public static final int engine_load_mode_e_LM_LUA = 3;
 	public static final int engine_load_mode_e_LM_REAL_MAF = 1;
@@ -581,7 +586,7 @@ public class VariableRegistryValues {
 	public static final int ETB_HW_MAX_FREQUENCY = 3000;
 	public static final int ETHERNET_PORT = 29001;
 	public static final int FAN_PWM_CURVE_SIZE = 8;
-	public static final int FLASH_DATA_VERSION = 260714;
+	public static final int FLASH_DATA_VERSION = 260805;
 	public static final int FLEX_TRANSIENT_CLT_SIZE = 8;
 	public static final int FLEX_TRANSIENT_ETH_SIZE = 8;
 	public static final int FLOW_LINEARIZATION_MASS_SIZE = 2;
@@ -1413,7 +1418,7 @@ public class VariableRegistryValues {
 	public static final int PEDAL_TO_TPS_SIZE = 8;
 	public static final String pedalSensor_NAME = "Accelerator pedal";
 	public static final String pedalToTpsTbl_NAME = "ETB pedal target";
-	public static final int persistent_config_s_size = 16196;
+	public static final int persistent_config_s_size = 16216;
 	public static final int pid_s_size = 20;
 	public static final int pin_input_mode_e_PI_DEFAULT = 0;
 	public static final int pin_input_mode_e_PI_INVERTED_DEFAULT = 4;
@@ -1480,6 +1485,11 @@ public class VariableRegistryValues {
 	public static final int sd_log_state_e_SD_LOG_UNCONDITIONAL = 3;
 	public static final int sd_log_state_e_SD_LOG_WAIT_COND = 7;
 	public static final int sd_log_state_e_SD_LOG_WAIT_RPM = 6;
+	public static final int SDLoggerMode_Dtc = 4;
+	public static final int SDLoggerMode_Mlg = 1;
+	public static final int SDLoggerMode_None = 0;
+	public static final int SDLoggerMode_ToothBin = 2;
+	public static final int SDLoggerMode_ToothCsv = 3;
 	public static final String SECOND_IGNITION_TABLE = "Second Ignition Table";
 	public static final String SECOND_VE_TABLE = "Second VE Table";
 	public static final String SECONDARY_CAN_NAME = "Secondary CAN";
@@ -1511,7 +1521,7 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 224820514;
+	public static final int SIGNATURE_HASH = 1346390265;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1556,6 +1566,7 @@ public class VariableRegistryValues {
 	public static final int TCU_RANGE_COUNT = 11;
 	public static final int TCU_SOLENOID_COUNT = 6;
 	public static final int TCU_TABLE_WIDTH = 8;
+	public static final String TERTIARY_CAN_NAME = "Third CAN";
 	public static final int thermistor_conf_s_size = 28;
 	public static final int ThermistorConf_size = 32;
 	public static final int THR_EST_SIZE = 12;
@@ -1580,7 +1591,7 @@ public class VariableRegistryValues {
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_BUTTON = 0;
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH = 2;
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_UP_SWITCH = 3;
-	public static final int TOTAL_CONFIG_SIZE = 16196;
+	public static final int TOTAL_CONFIG_SIZE = 16216;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int TPS_PPS_TOO_HIGH_THRESHOLD = 110;
 	public static final int TPS_PPS_TOO_LOW_THRESHOLD = -10;
@@ -1622,6 +1633,7 @@ public class VariableRegistryValues {
 	public static final int trigger_type_e_TT_6_TOOTH_CRANK = 80;
 	public static final int trigger_type_e_TT_ARCTIC_CAT = 85;
 	public static final int trigger_type_e_TT_BENELLI_TRE = 21;
+	public static final int trigger_type_e_TT_BMW_VANOS_RELUCTOR = 98;
 	public static final int trigger_type_e_TT_CHRYSLER_NGC_36_2_2 = 30;
 	public static final int trigger_type_e_TT_CHRYSLER_PHASER = 90;
 	public static final int trigger_type_e_TT_CUSTOM_1 = 88;
@@ -1693,7 +1705,6 @@ public class VariableRegistryValues {
 	public static final int trigger_type_e_TT_TOYOTA_3_TOOTH_UZ = 91;
 	public static final int trigger_type_e_TT_TRI_TACH = 53;
 	public static final int trigger_type_e_TT_UNUSED = 99;
-	public static final int trigger_type_e_TT_UNUSED_98 = 98;
 	public static final int trigger_type_e_TT_VIPER_V10_CRANK = 96;
 	public static final int trigger_type_e_TT_VVT_BARRA_3_PLUS_1 = 56;
 	public static final int trigger_type_e_TT_VVT_BOSCH_QUICK_START = 47;
@@ -1836,7 +1847,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2026.08.07.m74_9.224820514";
+	public static final String TS_SIGNATURE = "rusEFI master.2026.08.09.m74_9.1346390265";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2196;
@@ -1900,7 +1911,7 @@ public class VariableRegistryValues {
 	public static final String VVT_25_NAME = "INVALID";
 	public static final String VVT_26_NAME = "INVALID";
 	public static final int vvt_mode_e_VVT_BARRA_3_PLUS_1 = 8;
-	public static final int vvt_mode_e_VVT_BMW_N63TU = 17;
+	public static final int vvt_mode_e_VVT_BMW_VANOS_RELUCTOR = 17;
 	public static final int vvt_mode_e_VVT_BOSCH_QUICK_START = 5;
 	public static final int vvt_mode_e_VVT_CHRYSLER_PHASER = 14;
 	public static final int vvt_mode_e_VVT_CUSTOM_1 = 29;

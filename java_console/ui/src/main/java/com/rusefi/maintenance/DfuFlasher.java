@@ -21,8 +21,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -32,6 +34,8 @@ import java.util.concurrent.atomic.AtomicReference;
 public class DfuFlasher {
     private static final String DFU_CMD_TOOL_LOCATION = Launcher.TOOLS_PATH + File.separator + "STM32_Programmer_CLI/bin";
     private static final String DFU_CMD_TOOL = "STM32_Programmer_CLI.exe";
+    private static final String DFU_UTIL = "dfu-util";
+    private static final String STM32_DFU_USB_ID = "0483:df11";
     private static final String WMIC_DFU_QUERY_COMMAND = "powershell -NoProfile -Command \"Get-CimInstance Win32_PnPEntity -Filter \\\"Caption like '%STM32%' and Caption like '%Bootloader%'\\\" | Select-Object Caption, ConfigManagerErrorCode | Format-List\"";
     private static final String WMIC_DFU_QUERY_H7_COMMAND = "powershell -NoProfile -Command \"Get-CimInstance Win32_PnPEntity -Filter \\\"Caption like '%DFU%' and Caption like '%FS Mode%'\\\" | Select-Object Caption, ConfigManagerErrorCode | Format-List\"";
     /**
@@ -42,6 +46,10 @@ public class DfuFlasher {
 
     public static boolean haveBootloaderBinFile() {
         return new File(FindFileHelper.findBootloaderFile()).exists();
+    }
+
+    public static boolean isDfuProgrammingSupported() {
+        return FileLog.isWindows() || FileLog.isLinux();
     }
 
     public static boolean doAutoDfu(
@@ -96,16 +104,20 @@ public class DfuFlasher {
             return false;
         }
 
+        if (!isDfuProgrammingSupported()) {
+            callbacks.logLine("DFU programming is not supported on " + FileLog.getOsName());
+            return false;
+        }
+
+        // Do not reboot a working ECU into DFU if the external Linux programmer is unavailable.
+        if (FileLog.isLinux() && !executeDfuUtilCommand(getDfuUtilVersionCommand(), callbacks)) {
+            return false;
+        }
+
         AtomicBoolean isSignatureValidated = rebootToDfu(parent, port, callbacks, Integration.CMD_REBOOT_DFU);
         if (isSignatureValidated == null)
             return false;
         if (isSignatureValidated.get()) {
-            if (!FileLog.isWindows()) {
-                callbacks.logLine("Switched to DFU mode!");
-                callbacks.logLine("rusEFI console can only program on Windows");
-                return false;
-            }
-
             timeForDfuSwitch(callbacks);
             final String fileName = firmwareBinFile != null
                 ? firmwareBinFile
@@ -188,6 +200,19 @@ public class DfuFlasher {
     }
 
     private static void runDfuErase(UpdateOperationCallbacks callbacks) {
+        if (FileLog.isLinux()) {
+            if (!executeDfuUtilCommand(getDfuUtilEraseCommand(), callbacks)) {
+                callbacks.error();
+            }
+            return;
+        }
+
+        if (!FileLog.isWindows()) {
+            callbacks.logLine("DFU erase is not supported on " + FileLog.getOsName());
+            callbacks.error();
+            return;
+        }
+
         try {
             ExecHelper.executeCommand(DFU_CMD_TOOL_LOCATION,
                     getDfuEraseCommand(),
@@ -241,7 +266,12 @@ public class DfuFlasher {
     }
 
     private static boolean executeDFU(UpdateOperationCallbacks callbacks, String firmwareBinFile,
-                                      ConnectedEcuTarget connectedEcuTarget) {
+                                       ConnectedEcuTarget connectedEcuTarget) {
+        if (!isDfuProgrammingSupported()) {
+            callbacks.logLine("DFU programming is not supported on " + FileLog.getOsName());
+            return false;
+        }
+
         // Refuse to silently flash firmware built for a different board (brick guard, [tag:better_ux_for_flashing]).
         if (!MaintenanceUtil.confirmFirmwareMatchesBoard(firmwareBinFile, callbacks, connectedEcuTarget)) {
             callbacks.logLine("Firmware update aborted — firmware/board mismatch.");
@@ -249,8 +279,21 @@ public class DfuFlasher {
         }
         boolean driverIsHappy = detectSTM32BootloaderDriverState(callbacks, connectedEcuTarget);
         if (!driverIsHappy) {
-            callbacks.logLine("*** DRIVER ERROR? *** Did you have a chance to try 'Install Drivers' button on top of rusEFI console start screen?");
+            if (FileLog.isLinux()) {
+                callbacks.logLine("STM32 DFU device 0483:df11 was not detected. Check the USB connection and lsusb access.");
+            } else {
+                callbacks.logLine("*** DRIVER ERROR? *** Did you have a chance to try 'Install Drivers' button on top of rusEFI console start screen?");
+            }
             return false;
+        }
+
+        if (FileLog.isLinux()) {
+            if (!executeDfuUtilCommand(getDfuUtilWriteCommand(firmwareBinFile), callbacks)) {
+                return false;
+            }
+
+            callbacks.logLine("SUCCESS!");
+            return true;
         }
 
         StringBuffer stdout = new StringBuffer();
@@ -289,7 +332,7 @@ public class DfuFlasher {
         if (!FileLog.isWindows()) {
             // The WMIC/driver check below is Windows-only. On Linux the STM32 system bootloader is
             // visible directly over USB as 0483:df11 ("STM Device in DFU Mode"), so probe lsusb so the
-            // console at least reflects the DFU state (flashing it is still Windows-only, see [tag:better_ux_for_flashing]).
+            // console reflects the DFU state before the Linux dfu-util flasher runs.
             return FileLog.isLinux() && detectStm32DfuViaLsusb(callbacks);
         }
         // #9714: a universal bundle's is_h7 property can't cover every board, so trust the connected
@@ -310,19 +353,32 @@ public class DfuFlasher {
     // via lsusb so a board reset into DFU surfaces in the console instead of leaving the watchdog spinning
     // on the vanished serial port. [tag:better_ux_for_flashing]
     private static boolean detectStm32DfuViaLsusb(UpdateOperationCallbacks callbacks) {
+        Process process = null;
         try {
-            Process process = new ProcessBuilder("lsusb").redirectErrorStream(true).start();
+            process = new ProcessBuilder("lsusb").redirectErrorStream(true).start();
+            if (!process.waitFor(3, TimeUnit.SECONDS)) {
+                process.destroyForcibly();
+                process.waitFor(2, TimeUnit.SECONDS);
+                callbacks.logLine("lsusb DFU probe timed out");
+                return false;
+            }
+
             StringBuilder output = new StringBuilder();
-            try (java.io.BufferedReader reader =
-                     new java.io.BufferedReader(new java.io.InputStreamReader(process.getInputStream()))) {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
                 String line;
                 while ((line = reader.readLine()) != null) {
                     output.append(line).append('\n');
                 }
             }
-            process.waitFor(3, java.util.concurrent.TimeUnit.SECONDS);
             return output.toString().toLowerCase().contains("0483:df11");
-        } catch (Exception e) {
+        } catch (InterruptedException e) {
+            if (process != null) {
+                process.destroyForcibly();
+            }
+            Thread.currentThread().interrupt();
+            callbacks.logLine("lsusb DFU probe interrupted");
+            return false;
+        } catch (IOException e) {
             callbacks.logLine("lsusb DFU probe failed: " + e);
             return false;
         }
@@ -366,6 +422,94 @@ public class DfuFlasher {
 
     private static String getDfuEraseCommand() {
         return DFU_CMD_TOOL_LOCATION + "/" + DFU_CMD_TOOL + " -c port=usb1 -e all";
+    }
+
+    static List<String> getDfuUtilWriteCommand(String fileName) {
+        return Arrays.asList(
+            DFU_UTIL,
+            "--device", STM32_DFU_USB_ID,
+            "--alt", "0",
+            "--dfuse-address", "0x08000000:leave",
+            "--download", new File(fileName).getAbsolutePath()
+        );
+    }
+
+    static List<String> getDfuUtilEraseCommand() {
+        return Arrays.asList(
+            DFU_UTIL,
+            "--device", STM32_DFU_USB_ID,
+            "--alt", "0",
+            "--dfuse-address", "0x08000000:mass-erase:force"
+        );
+    }
+
+    private static List<String> getDfuUtilVersionCommand() {
+        return Arrays.asList(DFU_UTIL, "--version");
+    }
+
+    private static boolean executeDfuUtilCommand(List<String> command, UpdateOperationCallbacks callbacks) {
+        callbacks.logLine("Executing command=" + String.join(" ", command));
+
+        Process process = null;
+        Thread outputThread = null;
+        StringBuffer output = new StringBuffer();
+        try {
+            process = new ProcessBuilder(command).redirectErrorStream(true).start();
+            final Process runningProcess = process;
+            outputThread = new Thread(() -> {
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(runningProcess.getInputStream()))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        callbacks.logLine(line);
+                        output.append(line).append('\n');
+                    }
+                } catch (IOException e) {
+                    callbacks.logLine("dfu-util output error: " + e);
+                }
+            }, DfuFlasher.class.getSimpleName() + " dfu-util output");
+            outputThread.setDaemon(true);
+            outputThread.start();
+
+            if (!process.waitFor(3, TimeUnit.MINUTES)) {
+                process.destroyForcibly();
+                process.waitFor(2, TimeUnit.SECONDS);
+                outputThread.join(2000);
+                callbacks.logLine("dfu-util timed out after 3 minutes");
+                return false;
+            }
+            outputThread.join(2000);
+
+            if (process.exitValue() == 0) {
+                return true;
+            }
+
+            callbacks.logLine("dfu-util exited with code " + process.exitValue());
+            String lowerOutput = output.toString().toLowerCase();
+            if (lowerOutput.contains("libusb_error_access")
+                || lowerOutput.contains("permission denied")
+                || lowerOutput.contains("cannot open dfu device")) {
+                callbacks.logLine("Grant this user USB access to 0483:df11 with an appropriate udev rule, then reconnect the ECU.");
+            }
+            return false;
+        } catch (IOException e) {
+            callbacks.logLine("Unable to run dfu-util. Install dfu-util and make sure it is available on PATH: " + e);
+            return false;
+        } catch (InterruptedException e) {
+            if (process != null) {
+                process.destroyForcibly();
+                try {
+                    process.waitFor(2, TimeUnit.SECONDS);
+                    if (outputThread != null) {
+                        outputThread.join(2000);
+                    }
+                } catch (InterruptedException ignored) {
+                    // Restore interruption below after best-effort process cleanup.
+                }
+            }
+            Thread.currentThread().interrupt();
+            callbacks.logLine("dfu-util was interrupted");
+            return false;
+        }
     }
 
     @NotNull

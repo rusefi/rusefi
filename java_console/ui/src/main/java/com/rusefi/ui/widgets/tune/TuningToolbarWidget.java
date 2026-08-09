@@ -2,9 +2,12 @@ package com.rusefi.ui.widgets.tune;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
+import com.opensr5.ConfigurationImageWithMeta;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.io.UpdateOperationCallbacks;
+import com.rusefi.maintenance.CalibrationsHelper;
+import com.rusefi.maintenance.CalibrationsInfo;
 import com.rusefi.maintenance.OfflineTuneLoader;
 import com.rusefi.maintenance.jobs.AsyncJob;
 import com.rusefi.maintenance.jobs.AsyncJobExecutor;
@@ -21,6 +24,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.ArrayDeque;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
@@ -328,7 +333,7 @@ public class TuningToolbarWidget {
                                         : currentImage.clone();
                                     ConfigurationImage newImage = bp == null
                                         ? result.image
-                                        : result.msq.applyOnto(base, targetIni);
+                                        : applyLoadedTune(result.msq, result.ini, base, targetIni, cb);
 
                                     if (bp != null) {
                                         cb.logLine("Uploading and burning to ECU...");
@@ -374,6 +379,22 @@ public class TuningToolbarWidget {
                 );
             }
         };
+    }
+
+    static ConfigurationImage applyLoadedTune(Msq tune, IniFileModel sourceIni,
+                                               ConfigurationImage base, IniFileModel targetIni,
+                                               UpdateOperationCallbacks callbacks) {
+        Set<String> secondaryFields = new HashSet<>(sourceIni.getSecondaryIniFields().keySet());
+        secondaryFields.addAll(targetIni.getSecondaryIniFields().keySet());
+
+        CalibrationsInfo target = new CalibrationsInfo(
+            targetIni, ConfigurationImageWithMeta.valueOf(targetIni, base));
+        CalibrationsHelper.MergeResult result = CalibrationsHelper.mergeCalibrationsWithPartialFailure(
+            sourceIni, tune, target, callbacks, secondaryFields);
+
+        return result.mergedCalibrations
+            .map(calibrations -> calibrations.getImage().getConfigurationImage())
+            .orElse(base);
     }
 
     public void setFirmwareUpdateInProgress(boolean inProgress) {

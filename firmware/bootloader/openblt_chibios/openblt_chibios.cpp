@@ -32,6 +32,15 @@ void __cpu_deinit(void) {
   SCB_DisableICache();
   SCB_DisableDCache();
 #endif
+
+  /* Clear all MPU settings (guard pages etc), as they may immediately cause a
+   * fault after the jump to the user program, before it configures its own MPU. */
+  mpuDisable();
+  for (int i = 0; i < 8; i++) {
+    mpuConfigureRegion(i, 0, 0);
+  }
+  __DSB();
+  __ISB();
 }
 
 /** \brief Pointer to the user program's reset vector. */

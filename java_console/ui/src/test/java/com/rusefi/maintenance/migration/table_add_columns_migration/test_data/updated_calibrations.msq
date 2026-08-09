@@ -178,5 +178,24 @@
          9100.0
          9400.0
 </constant>
+        <constant cols="5" digits="0" name="pedalToTpsTable" rows="4">
+         0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0
+</constant>
+        <constant cols="1" digits="0" name="pedalToTpsRpmBins" rows="5" units="RPM">
+         0.0
+         1000.0
+         2000.0
+         3000.0
+         4000.0
+</constant>
+        <constant cols="1" digits="0" name="pedalToTpsPedalBins" rows="4" units="%">
+         0.0
+         30.0
+         60.0
+         100.0
+</constant>
     </page>
 </msq>

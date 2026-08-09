@@ -449,6 +449,8 @@ ULIBS = -lm --specs=nano.specs -Wl,--sort-section=alignment
 
 include $(RULESFILE)
 
+$(BUILDDIR)/$(PROJECT).elf: $(LDSCRIPT_DEPS)
+
 include target_sentinel.mk
 
 # this one would include ../java_tools/java_tools.mk for gradlew for config and console and plugin jars

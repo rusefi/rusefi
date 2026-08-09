@@ -141,11 +141,31 @@ public class MainMenuTreeWidget {
         tree.setFont(new Font(font.getName(), font.getStyle(), (int)(font.getSize() * 1.2)));
         tree.setRootVisible(false);
 
-        ImageIcon setupIcon = scaleIcon(AutoupdateUtil.loadIcon("setup48.png"), 24);
-        ImageIcon fuelIcon = scaleIcon(AutoupdateUtil.loadIcon("fuel48.png"), 24);
-        ImageIcon ignitionIcon = scaleIcon(AutoupdateUtil.loadIcon("ignition48.png"), 24);
-        ImageIcon idleIcon = scaleIcon(AutoupdateUtil.loadIcon("idle48.png"), 24);
-        ImageIcon crankingIcon = scaleIcon(AutoupdateUtil.loadIcon("cranking48.png"), 24);
+        ImageIcon setupIcon = loadTuningIcon("setup", 24);
+        Map<String, ImageIcon> categoryIcons = new HashMap<>();
+        categoryIcons.put("Setup", setupIcon);
+        categoryIcons.put("Base Engine", setupIcon);
+        categoryIcons.put("Fuel", loadTuningIcon("fuel", 24));
+        categoryIcons.put("Ignition", loadTuningIcon("ignition", 24));
+        categoryIcons.put("Cranking", loadTuningIcon("cranking", 24));
+        categoryIcons.put("Idle", loadTuningIcon("idle", 24));
+        categoryIcons.put("Advanced", loadTuningIcon("advanced", 24));
+        categoryIcons.put("Sensors", loadTuningIcon("sensors", 24));
+        categoryIcons.put("CAN-bus", loadTuningIcon("can", 24));
+        categoryIcons.put("Controller", loadTuningIcon("controller", 24));
+        categoryIcons.put("Help", loadTuningIcon("help", 24));
+        categoryIcons.put("View", loadTuningIcon("view", 24));
+
+        ImageIcon groupIcon = loadTuningIcon("group", 18);
+        ImageIcon tableIcon = loadTuningIcon("table", 18);
+        ImageIcon curveIcon = loadTuningIcon("curve", 18);
+        ImageIcon dialogIcon = loadTuningIcon("dialog", 18);
+        Map<String, ImageIcon> featureIcons = new HashMap<>();
+        featureIcons.put("fanSettings", loadTuningIcon("fan", 18));
+        featureIcons.put("acSettings", loadTuningIcon("snowflake", 18));
+        featureIcons.put("energySystems", loadTuningIcon("battery", 18));
+        featureIcons.put("ignitionInputDialog", loadTuningIcon("key", 18));
+        featureIcons.put("engineChars", loadTuningIcon("file-info", 18));
 
         tree.setCellRenderer(new DefaultTreeCellRenderer() {
             private final SeparatorRenderer separatorRenderer = new SeparatorRenderer();
@@ -165,16 +185,26 @@ public class MainMenuTreeWidget {
                     }
                     setText(name);
 
-                    if ("Setup".equals(name)) {
-                        setIcon(setupIcon);
-                    } else if ("Fuel".equals(name)) {
-                        setIcon(fuelIcon);
-                    } else if ("Ignition".equals(name)) {
-                        setIcon(ignitionIcon);
-                    } else if ("Idle".equals(name)) {
-                        setIcon(idleIcon);
-                    } else if ("Cranking".equals(name)) {
-                        setIcon(crankingIcon);
+                    ImageIcon categoryIcon = categoryIcons.get(name);
+                    if (categoryIcon != null) {
+                        setIcon(categoryIcon);
+                    } else if (userObject instanceof SubMenuModel) {
+                        IniFileModel currentModel = uiContext.iniFileState.getIniFileModel();
+                        String key = ((SubMenuModel) userObject).getKey();
+                        ImageIcon featureIcon = featureIcons.get(key);
+                        if (featureIcon != null) {
+                            setIcon(featureIcon);
+                        } else if (currentModel != null) {
+                            if (currentModel.getDialogs().containsKey(key)) {
+                                setIcon(dialogIcon);
+                            } else if (currentModel.getTable(key) != null) {
+                                setIcon(tableIcon);
+                            } else if (currentModel.getCurves().containsKey(key)) {
+                                setIcon(curveIcon);
+                            }
+                        }
+                    } else if (!leaf) {
+                        setIcon(groupIcon);
                     }
 
                     if (disabledNodes.contains(node)) {
@@ -548,8 +578,14 @@ public class MainMenuTreeWidget {
     }
 
     private static ImageIcon scaleIcon(ImageIcon icon, int size) {
-        if (icon == null) return null;
+        if (icon == null) {
+            return null;
+        }
         return new ImageIcon(icon.getImage().getScaledInstance(size, size, java.awt.Image.SCALE_SMOOTH));
+    }
+
+    private static ImageIcon loadTuningIcon(String name, int size) {
+        return scaleIcon(AutoupdateUtil.loadIcon("icons/tuning/" + name + "48.png"), size);
     }
 
     public JPanel getContentPane() {

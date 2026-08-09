@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sun Jul 26 11:49:48 EDT 2026
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sun Aug 09 03:05:39 UTC 2026
 // see also gen_config_and_enums.bat
 
 
@@ -85,6 +85,21 @@ const char *getRotationalCutMode(RotationalCutMode value) {
 			return "Fuel";
 		case RotationalCutMode::Spark:
 			return "Spark";
+	}
+	return NULL;
+}
+const char *getSDLoggerMode(SDLoggerMode value) {
+	switch (value) {
+		case SDLoggerMode::Dtc:
+			return "Dtc";
+		case SDLoggerMode::Mlg:
+			return "Mlg";
+		case SDLoggerMode::None:
+			return "None";
+		case SDLoggerMode::ToothBin:
+			return "ToothBin";
+		case SDLoggerMode::ToothCsv:
+			return "ToothCsv";
 	}
 	return NULL;
 }
@@ -352,6 +367,19 @@ const char *getCan_broadcast_channel_e(can_broadcast_channel_e value) {
 			return "CAN_BUS_SECOND";
 		case CAN_BUS_THIRD:
 			return "CAN_BUS_THIRD";
+	}
+	return NULL;
+}
+const char *getCan_bus_channel_e(can_bus_channel_e value) {
+	switch (value) {
+		case CAN_BUS_CAN1:
+			return "CAN_BUS_CAN1";
+		case CAN_BUS_CAN2:
+			return "CAN_BUS_CAN2";
+		case CAN_BUS_CAN3:
+			return "CAN_BUS_CAN3";
+		case CAN_BUS_NONE:
+			return "CAN_BUS_NONE";
 	}
 	return NULL;
 }
@@ -1115,8 +1143,8 @@ const char *getVvt_mode_e(vvt_mode_e value) {
 	switch (value) {
 		case VVT_BARRA_3_PLUS_1:
 			return "VVT_BARRA_3_PLUS_1";
-		case VVT_BMW_N63TU:
-			return "VVT_BMW_N63TU";
+		case VVT_BMW_VANOS_RELUCTOR:
+			return "VVT_BMW_VANOS_RELUCTOR";
 		case VVT_BOSCH_QUICK_START:
 			return "VVT_BOSCH_QUICK_START";
 		case VVT_CHRYSLER_PHASER:

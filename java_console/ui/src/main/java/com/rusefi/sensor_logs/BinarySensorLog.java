@@ -13,10 +13,11 @@ import java.util.function.Function;
  * </p>
  * Andrey Belomutskiy, (c) 2013-2020
  */
-public class BinarySensorLog<T extends BinaryLogEntry> implements SensorLog {
+public class BinarySensorLog<T extends BinaryLogEntry> {
     private final Function<T, Double> valueProvider;
     private final Collection<T> entries;
     private final TimeProvider timeProvider;
+    private final String requestedFileName;
     private DataOutputStream stream;
 
     private String fileName;
@@ -24,29 +25,30 @@ public class BinarySensorLog<T extends BinaryLogEntry> implements SensorLog {
     private int counter;
 
     public BinarySensorLog(Function<T, Double> valueProvider, Collection<T> sensors) {
-        this(valueProvider, sensors, System::currentTimeMillis);
+        this(valueProvider, sensors, System::currentTimeMillis, null);
     }
 
     public BinarySensorLog(Function<T, Double> valueProvider, Collection<T> sensors, TimeProvider timeProvider) {
+        this(valueProvider, sensors, timeProvider, null);
+    }
+
+    BinarySensorLog(Function<T, Double> valueProvider, Collection<T> sensors, TimeProvider timeProvider, String fileName) {
         this.valueProvider = Objects.requireNonNull(valueProvider, "valueProvider");
         this.entries = Objects.requireNonNull(sensors, "entries");
         this.timeProvider = timeProvider;
+        this.requestedFileName = fileName;
     }
 
     interface TimeProvider {
         long currentTimestamp();
     }
 
-    @Override
-    public double getSecondsSinceFileStart() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public void writeSensorLogLine() {
         if (stream == null) {
             FileLogger.createFolderIfNeeded();
-            fileName = FileLogger.DIR + "rusEFI_gauges_" + FileLogger.getDate() + ".mlg";
+            fileName = requestedFileName != null
+                    ? requestedFileName
+                    : FileLogger.DIR + "rusEFI_gauges_" + FileLogger.getDate() + ".mlg";
 
             try {
                 stream = new DataOutputStream(new FileOutputStream(fileName));
@@ -102,7 +104,7 @@ public class BinarySensorLog<T extends BinaryLogEntry> implements SensorLog {
 
         int fieldsDataSize = 0;
         for (BinaryLogEntry entry : entries) {
-            fieldsDataSize += entry.getByteSize();
+            fieldsDataSize += entry.getDataSize();
         }
 
         // 0006h Format version = 02
@@ -118,7 +120,7 @@ public class BinarySensorLog<T extends BinaryLogEntry> implements SensorLog {
 
         // 0010h Data begin index - begins immediately after the header text
         int headerWithTextSize = headerSize + headerText.length();
-        stream.writeInt(headerSize);
+        stream.writeInt(headerWithTextSize);
 
         // 0014h Record length
         stream.writeShort(fieldsDataSize);
@@ -138,7 +140,7 @@ public class BinarySensorLog<T extends BinaryLogEntry> implements SensorLog {
             // 0023h
             writeLine(stream, unit, 11);
             // 002Eh scale
-            stream.writeFloat(1); // todo: multiplier?
+            stream.writeFloat(sensor.getScale());
             // 0032h zeroes
             stream.writeInt(0);
             // 0036h precision
@@ -152,7 +154,6 @@ public class BinarySensorLog<T extends BinaryLogEntry> implements SensorLog {
         writeLine(stream, headerText, headerText.length());
     }
 
-    @Override
     public void close() {
         close(stream);
         stream = null;

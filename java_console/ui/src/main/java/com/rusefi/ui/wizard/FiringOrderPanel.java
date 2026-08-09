@@ -24,6 +24,7 @@ public class FiringOrderPanel extends AbstractWizardStep {
         put("1_6_3_2_5_4", "Subaru EG33");
         put("1_4_3_6_2_5", "VAG v6 different from VAG VR6");
         put("1_6_2_4_3_5", "Some 911");
+        put("1_6_2_5_3_4", "Maserati V6 and Porsche Boxster Flat-6");
         put("1_8_4_3_6_5_7_2", "SBC, Dodge");
         put("1_8_7_2_6_5_4_3", "GM Gen. 3, 4, 5 LT1");
         put("1_5_4_2_6_3_7_8", "Ford Mustang");

@@ -217,6 +217,8 @@ private:
 	}
 };
 
+RUSEFI_STACK_ROOT(AccelController, PeriodicTask);
+
 static AccelController instance;
 
 void initAccelerometer() {

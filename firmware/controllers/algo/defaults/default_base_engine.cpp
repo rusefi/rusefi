@@ -410,6 +410,9 @@ void setDefaultBaseEngine() {
 	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
 	engineConfiguration->vvtOffsets[0] = 450;
 	engineConfiguration->vvtPins[0] = Gpio::A0; // a random unused pin needed to unblock startSimplePwmExt()
+	// non-zero target so VVT control stays enabled (targets near 0 disable control),
+	// SimulatorFunctionalTest expects the VVT valve pin to be actively PWMing
+	setTable(config->vvtTable1, 25);
 #endif // EFI_SIMULATOR
 
 #if EFI_SIMULATOR

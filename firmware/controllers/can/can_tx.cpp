@@ -51,6 +51,7 @@ static uint16_t m_cycleCount = 0;
 }
 
 // this is invoked at CAN_CYCLE_FREQ frequency
+RUSEFI_STACK_ROOT(CanWrite, PeriodicTask);
 void CanWrite::PeriodicTask(efitick_t) {
 	ScopePerf pc(PE::CanThreadTx);
 	CanCycle cycle(m_cycleCount);

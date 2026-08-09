@@ -170,8 +170,13 @@ static void sayHello() {
 }
 
 #if CH_DBG_THREADS_PROFILING && CH_DBG_FILL_THREADS
+#ifndef PORT_GUARD_PAGE_SIZE
+// only the ARMv7-M port has MPU guard pages, the simulator port has no such concept
+#define PORT_GUARD_PAGE_SIZE 0U
+#endif
 int CountFreeStackSpace(const void* wabase) {
-	const uint8_t* stackBase = reinterpret_cast<const uint8_t*>(wabase);
+	// the guard page at the working area base is no-access, skip it
+	const uint8_t* stackBase = reinterpret_cast<const uint8_t*>(wabase) + PORT_GUARD_PAGE_SIZE;
 	const uint8_t* stackUsage = stackBase;
 
 	// thread stacks are filled with CH_DBG_STACK_FILL_VALUE

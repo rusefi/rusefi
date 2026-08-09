@@ -27,12 +27,13 @@ public class DevicePaneTest {
     public void dfuGuidanceMentionsDfuAndReflectsPlatformSupport() {
         String guidance = DevicePane.bootloaderGuidance(SessionState.DEVICE_IN_DFU);
         assertTrue(guidance.contains("DFU"), guidance);
-        if (FileLog.isWindows()) {
-            // DFU flashing works here — send the user to the update button
+        if (FileLog.isLinux()) {
+            assertTrue(guidance.contains("dfu-util"), guidance);
+            assertTrue(guidance.contains("Update Firmware"), guidance);
+        } else if (FileLog.isWindows()) {
             assertTrue(guidance.contains("Update Firmware"), guidance);
         } else {
-            // DFU flashing is Windows-only (STM32_Programmer_CLI.exe) — say so instead of a dead end
-            assertTrue(guidance.contains("Windows"), guidance);
+            assertTrue(guidance.contains("not supported"), guidance);
         }
     }
 
@@ -48,6 +49,7 @@ public class DevicePaneTest {
         assertTrue(DevicePane.isOfflineCapableTab("Device"));
         assertTrue(DevicePane.isOfflineCapableTab("Tuning"));
         assertTrue(DevicePane.isOfflineCapableTab("Pinout"));
+        assertTrue(DevicePane.isOfflineCapableTab("Manage Tunes"));
 
         assertFalse(DevicePane.isOfflineCapableTab("Gauges"));
         assertFalse(DevicePane.isOfflineCapableTab("Messages"));
@@ -55,7 +57,9 @@ public class DevicePaneTest {
 
         assertTrue(DevicePane.isTabEnabled("Tuning", SessionState.DEVICE_IN_BLT));
         assertTrue(DevicePane.isTabEnabled("Tuning", SessionState.DEVICE_IN_DFU));
+        assertTrue(DevicePane.isTabEnabled("Manage Tunes", SessionState.DEVICE_IN_BLT));
         assertFalse(DevicePane.isTabEnabled("Tuning", SessionState.FLASHING));
+        assertFalse(DevicePane.isTabEnabled("Manage Tunes", SessionState.FLASHING));
         assertTrue(DevicePane.isTabEnabled("Device", SessionState.FLASHING));
         assertTrue(DevicePane.isTabEnabled("Pinout", SessionState.FLASHING));
         assertFalse(DevicePane.isTabEnabled("Messages", SessionState.FLASHING));

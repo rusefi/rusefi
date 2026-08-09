@@ -17,7 +17,15 @@ void TripOdometer::consumeFuel(float grams, efitick_t nowNt) {
 #if EFI_PROD_CODE || EFI_UNIT_TEST
 	m_consumedRemainder += grams;
 
-  // 1000grams of fuel between invocations of TripOdometer logic means something very wrong, we do not control cruise ship engines yet!
+  // Sanity guard: consumeFuel() runs once per injection event (see main_trigger_callback.cpp), so a
+  // healthy increment is milligrams-to-grams; 1000grams of fuel between invocations of TripOdometer
+  // logic means something very wrong, we do not control cruise ship engines yet!
+  // This trips only on a grossly bogus injection mass - a broken fueling calculation / corrupted
+  // config, or simulator time anomalies feeding huge masses (the "simulator busy loop drama" above).
+  // Without this check the gram-draining while loop below would spin 1000+ iterations inside the
+  // injection callback, stalling the real-time trigger path - that is the "busy loop" in the message.
+  // Severity: firmwareError() is an unrecoverable critical error - the ECU enters the fatal error
+  // state and the engine stops. Acceptable because the fueling math is already producing garbage.
   if (m_consumedRemainder > 1000) {
     firmwareError(ObdCode::OBD_PCM_Processor_Fault, "m_consumedRemainder busy loop %f %f", m_consumedRemainder, grams);
     return;

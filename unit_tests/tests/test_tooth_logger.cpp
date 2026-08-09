@@ -75,7 +75,7 @@ TEST(ToothLogger, WriteCsvRows) {
 		c.coil = 3;
 		c.injector = 5;
 		c.acr = true;
-		// On-the-wire format is byte-reversed; ToothLoggerWriteCsv swaps it back.
+		// On-the-wire format is byte-reversed; ToothLoggerWriteBufferCsv swaps it back.
 		buf.buffer[0].x = SWAP_UINT64(c.x);
 	}
 
@@ -95,7 +95,7 @@ TEST(ToothLogger, WriteCsvRows) {
 	}
 
 	StringWriter w;
-	int total = ToothLoggerWriteCsv(w, &buf);
+	int total = ToothLoggerWriteBufferCsv(w, &buf);
 
 	EXPECT_GT(total, 0);
 	EXPECT_EQ((size_t)total, w.data.size());
@@ -146,7 +146,7 @@ TEST(ToothLogger, WriteCsvRowsRecoverAbsoluteTime) {
 	}
 
 	StringWriter w;
-	int total = ToothLoggerWriteCsv(w, &buf);
+	int total = ToothLoggerWriteBufferCsv(w, &buf);
 	EXPECT_GT(total, 0);
 
 	// Split rows and check the absolute timestamp prefix of each
@@ -185,7 +185,7 @@ TEST(ToothLogger, WriteCsvFullBuffer) {
 	}
 
 	StringWriter w;
-	int total = ToothLoggerWriteCsv(w, &buf);
+	int total = ToothLoggerWriteBufferCsv(w, &buf);
 
 	EXPECT_GT(total, 0);
 	EXPECT_EQ((size_t)total, w.data.size());
@@ -220,7 +220,7 @@ TEST(ToothLogger, WriteCsvBoardOverrideColumns) {
 	};
 
 	StringWriter header;
-	EXPECT_EQ(ToothLoggerWriteCsvHeader(header), 0);
+	EXPECT_EQ(ToothLoggerWriteCsvHeader(header), 130);
 	EXPECT_EQ(header.data,
 		"Time[s], Primary, Cam 1, Cam 2, Cam 3, Cam 4, Sync, TDC, Coils, Injectors, ACR, VBatt, ET, InstantMAP, TPS"
 		", BoardColA, BoardColB\r\n");
@@ -235,7 +235,7 @@ TEST(ToothLogger, WriteCsvBoardOverrideColumns) {
 	}
 
 	StringWriter rows;
-	int total = ToothLoggerWriteCsv(rows, &buf);
+	int total = ToothLoggerWriteBufferCsv(rows, &buf);
 	EXPECT_GT(total, 0);
 	EXPECT_EQ((size_t)total, rows.data.size());
 
@@ -274,7 +274,7 @@ TEST(ToothLogger, WriteCsvBoardOverrideLineOverflow) {
 	buf.buffer[0].x = SWAP_UINT64(c.x);
 
 	StringWriter w;
-	EXPECT_EQ(ToothLoggerWriteCsv(w, &buf), -1);
+	EXPECT_EQ(ToothLoggerWriteBufferCsv(w, &buf), -1);
 	EXPECT_TRUE(w.data.empty());
 }
 
@@ -305,7 +305,7 @@ TEST(ToothLogger, WriteCsvBoardPayloadIsPerRow) {
 	}
 
 	StringWriter w;
-	int total = ToothLoggerWriteCsv(w, &buf);
+	int total = ToothLoggerWriteBufferCsv(w, &buf);
 	EXPECT_GT(total, 0);
 
 	size_t rowStart = 0;

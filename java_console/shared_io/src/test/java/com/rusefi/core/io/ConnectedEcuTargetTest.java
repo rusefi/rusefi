@@ -95,9 +95,9 @@ public class ConnectedEcuTargetTest {
 
     @Test
     void setPersistsAcrossInstances() {
-        target.set("proteus_f7");
+        target.set("proteus_h7");
         // a different instance (e.g. the autoupdate process after restart) sees the persisted value
-        assertEquals("proteus_f7", ConnectedEcuTarget.readPersisted());
+        assertEquals("proteus_h7", ConnectedEcuTarget.readPersisted());
         assertFalse(new ConnectedEcuTarget().isLiveTargetKnown());
         // effectiveTarget only trusts the persisted guess when this bundle can serve it; with the test
         // env's "unknown" bundle target and no compatibility list, it falls back to the bundle target.

@@ -40,6 +40,11 @@ public:
 
 	scheduling_s* getFreeScheduling();
 	void tryReturnScheduling(scheduling_s* sched);
+
+	// Diagnostics for the fixed scheduling pool: how many pool slots are
+	// currently handed out, and the worst case seen since construction.
+	int getUsedPoolSlots() const { return m_usedPoolSlots; }
+	int getMaxUsedPoolSlots() const { return m_maxUsedPoolSlots; }
 private:
 	void assertListIsSorted() const;
 	/**
@@ -49,6 +54,8 @@ private:
 	const efidur_t m_lateDelay;
 
 	scheduling_s* m_freelist = nullptr;
+	int m_usedPoolSlots = 0;
+	int m_maxUsedPoolSlots = 0;
 	scheduling_s m_pool[64];
 };
 

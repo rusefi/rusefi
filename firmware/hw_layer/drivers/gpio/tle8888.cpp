@@ -885,6 +885,8 @@ static THD_FUNCTION(tle8888_driver_thread, p) {
 	}
 }
 
+RUSEFI_STACK_ROOT_EXPLICIT(tle8888_driver_thread, 256);
+
 /*==========================================================================*/
 /* Driver interrupt handlers.												*/
 /*==========================================================================*/

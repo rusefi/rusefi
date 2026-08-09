@@ -74,21 +74,14 @@ public class FindFileHelper {
 
     @Nullable
     public static String findSrecFile(boolean keepOneFile) {
-        String fileAtFirstLocation = findFile(INPUT_FILES_PATH, PREFIX, SUFFIX, new AdditionalFileHandler() {
-            @Override
-            public void onAdditionalFile(String fileDirectory, String fileName) {
-                moveFile(fileDirectory, fileName);
-            }
-        }, keepOneFile);
+        // method references instead of anonymous classes: an anonymous class here is a separate
+        // FindFileHelper$N jar entry loaded lazily on first use, which crashes with
+        // NoClassDefFoundError when the updater has already replaced the running jar on disk
+        String fileAtFirstLocation = findFile(INPUT_FILES_PATH, PREFIX, SUFFIX, FindFileHelper::moveFile, keepOneFile);
         if (fileAtFirstLocation == null) {
             // todo: what is this second location about?!
             log.info("Second choice: current folder");
-            return findFile(".", PREFIX, SUFFIX, new AdditionalFileHandler() {
-                @Override
-                public void onAdditionalFile(String fileDirectory, String fileName) {
-                    moveFile(fileDirectory, fileName);
-                }
-            }, keepOneFile);
+            return findFile(".", PREFIX, SUFFIX, FindFileHelper::moveFile, keepOneFile);
         }
 
         return fileAtFirstLocation;

@@ -119,11 +119,14 @@ public class XcpSerial implements IXcpTransport {
             if (VERBOSE) {
                 log.info("actualRead " + actualRead);
             }
-            if (actualRead != 1) {
-                throw new IOException("XcpSerial: Cannot read response actual read=" + actualRead + "; request length was " + request.length + ", timeoutMs=" + timeoutMs);
-            }
             if (VERBOSE) {
                 log.info("actualRead responseLen " + HexBinary.printHexBinary(responseLen));
+            }
+            if (actualRead < 0) {
+                throw new IOException("XcpSerial: serial port read error. Device disconnected?");
+            }
+            if (actualRead != 1) {
+                throw new IOException("XcpSerial: Cannot read response actual read=" + actualRead + "; request type was 0x" +  Integer.toHexString(request[0] & 0xFF) + " with length " + request.length + ", timeoutMs=" + timeoutMs);
             }
 
             byte[] response = new byte[responseLen[0]];

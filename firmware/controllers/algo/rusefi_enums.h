@@ -109,7 +109,7 @@ typedef enum  __attribute__ ((__packed__)) {
 	 */
 	VVT_HONDA_K_EXHAUST = 16,
 
-	VVT_BMW_N63TU = 17,
+	VVT_BMW_VANOS_RELUCTOR = 17,
 
 	// also 4G92/93/94
 	VVT_MITSUBISHI_4G63 = 18,
@@ -592,6 +592,13 @@ typedef enum __attribute__ ((__packed__)) {
 } can_broadcast_channel_e;
 
 typedef enum __attribute__ ((__packed__)) {
+	CAN_BUS_NONE = 0,
+	CAN_BUS_CAN1 = 1,
+	CAN_BUS_CAN2 = 2,
+	CAN_BUS_CAN3 = 3,
+} can_bus_channel_e;
+
+typedef enum __attribute__ ((__packed__)) {
 	TCHARGE_MODE_RPM_TPS = 0,
 	TCHARGE_MODE_AIR_INTERP = 1,
 	TCHARGE_MODE_AIR_INTERP_TABLE = 2,
@@ -934,6 +941,14 @@ typedef enum __attribute__((__packed__)) {
 	ftRegionPower = 2,
 	ftRegionCruise = 3,
 } ft_region_e;
+
+enum class SDLoggerMode : uint8_t {
+	None = 0,
+	Mlg = 1,
+	ToothBin = 2,
+	ToothCsv = 3,
+	Dtc = 4,
+};
 
 #endif // __cplusplus
 

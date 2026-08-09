@@ -6,6 +6,8 @@ import com.rusefi.Callable;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.core.EngineState;
+import com.rusefi.core.RusEfiSignature;
+import com.rusefi.core.io.UnsupportedEcuInfo;
 import com.rusefi.io.serial.BufferedSerialIoStream;
 import com.rusefi.io.serial.StreamConnector;
 import com.rusefi.io.can.PCanIoStream;
@@ -39,6 +41,16 @@ public class LinkManager implements Closeable {
     // never opened as a stream; used only to surface DFU in the ports list [tag:better_ux_for_flashing].
     public static final String DFU = "DFU";
 
+    @FunctionalInterface
+    public interface EcuCompatibilityListener {
+        EcuCompatibilityListener VOID = (port, info) -> { };
+
+        void onUnsupportedEcu(String port, UnsupportedEcuInfo info);
+
+        default void onCompatibleEcu(String port, RusEfiSignature signature) {
+        }
+    }
+
     @NotNull
     public static final LogLevel LOG_LEVEL = LogLevel.INFO;
 
@@ -63,6 +75,7 @@ public class LinkManager implements Closeable {
     public final MessagesListener messageListener = (source, message) -> log.info(source + ": " + message);
     private boolean isDisconnectedByUser;
     private boolean notifyGlobalStatusOnClose = true;
+    private volatile EcuCompatibilityListener ecuCompatibilityListener = EcuCompatibilityListener.VOID;
 
     // The board identity this link records at connect time. Defaults to a private instance (probe/tool
     // LinkManagers); production consoles share ConnectivityContext's instance so flashing decisions see
@@ -88,6 +101,19 @@ public class LinkManager implements Closeable {
     @NotNull
     public com.rusefi.core.io.ConnectedEcuTarget getConnectedEcuTarget() {
         return connectedEcuTarget;
+    }
+
+    public LinkManager setEcuCompatibilityListener(EcuCompatibilityListener listener) {
+        ecuCompatibilityListener = Objects.requireNonNull(listener);
+        return this;
+    }
+
+    public void reportUnsupportedEcu(UnsupportedEcuInfo info) {
+        ecuCompatibilityListener.onUnsupportedEcu(lastTriedPort, info);
+    }
+
+    public void reportCompatibleEcu(RusEfiSignature signature) {
+        ecuCompatibilityListener.onCompatibleEcu(lastTriedPort, signature);
     }
 
     @NotNull
@@ -218,6 +244,12 @@ public class LinkManager implements Closeable {
         log.info("disconnect");
         isDisconnectedByUser = true;
         close();
+    }
+
+    /** Re-enable automatic reconnect without immediately opening a port. */
+    public void allowAutomaticReconnect() {
+        log.info("allowAutomaticReconnect");
+        isDisconnectedByUser = false;
     }
 
     public void reconnect() {

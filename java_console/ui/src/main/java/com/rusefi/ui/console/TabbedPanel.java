@@ -2,6 +2,7 @@ package com.rusefi.ui.console;
 
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.MessagesCentral;
+import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.ConnectionStatusValue;
 import com.rusefi.ui.LogDownloader;
@@ -116,7 +117,48 @@ public class TabbedPanel {
     }
 
     public void addTab(String title, Component component) {
-        tabbedPane.addTab(title, component);
+        tabbedPane.addTab(title, loadTabIcon(title), component);
+    }
+
+    static Icon loadTabIcon(String title) {
+        String iconName;
+        switch (title) {
+            case "Gauges":
+                iconName = "idle";
+                break;
+            case "Messages":
+                iconName = "message";
+                break;
+            case "Lua Scripting":
+                iconName = "braces";
+                break;
+            case "Engine Sniffer":
+                iconName = "sensors";
+                break;
+            case "Tuning":
+                iconName = "dialog";
+                break;
+            case "Knock Analyzer":
+                iconName = "curve";
+                break;
+            case "Pinout":
+                iconName = "resistor";
+                break;
+            case "Manage Tunes":
+                iconName = "group";
+                break;
+            case "Device":
+                iconName = "controller";
+                break;
+            default:
+                return null;
+        }
+
+        ImageIcon icon = AutoupdateUtil.loadIcon("icons/tuning/" + iconName + "48.png");
+        if (icon == null) {
+            return null;
+        }
+        return new ImageIcon(icon.getImage().getScaledInstance(18, 18, Image.SCALE_SMOOTH));
     }
 
     public void selectTab(String title) {

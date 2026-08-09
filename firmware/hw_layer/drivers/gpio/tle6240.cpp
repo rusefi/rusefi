@@ -361,6 +361,8 @@ static THD_FUNCTION(tle6240_driver_thread, p)
 	}
 }
 
+RUSEFI_STACK_ROOT_EXPLICIT(tle6240_driver_thread, 256);
+
 /*==========================================================================*/
 /* Driver interrupt handlers.												*/
 /*==========================================================================*/

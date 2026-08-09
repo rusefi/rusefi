@@ -704,6 +704,8 @@ static THD_FUNCTION(mc33810_driver_thread, p) {
 	}
 }
 
+RUSEFI_STACK_ROOT_EXPLICIT(mc33810_driver_thread, 256);
+
 /*==========================================================================*/
 /* Driver interrupt handlers.												*/
 /*==========================================================================*/

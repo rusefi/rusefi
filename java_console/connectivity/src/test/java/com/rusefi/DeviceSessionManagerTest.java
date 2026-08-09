@@ -66,6 +66,21 @@ public class DeviceSessionManagerTest {
     }
 
     @Test
+    public void verifiedReplacementClearsStaleSessionPortIdentity() {
+        PortResult oldPort = new PortResult("COM7", SerialPortType.EcuWithOpenblt);
+        DeviceSessionManager manager = new DeviceSessionManager(connectivityContext, oldPort);
+        scanner.cachedPorts.clear();
+        ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.CONNECTED);
+        scanner.cachedPorts.clear();
+
+        PortResult replacement = new PortResult("COM7", SerialPortType.Ecu);
+        manager.setSessionPort(replacement);
+
+        assertEquals(1, scanner.cachedPorts.size());
+        assertSame(replacement, scanner.cachedPorts.get(0));
+    }
+
+    @Test
     public void openBltPortAppearingMovesSessionToDeviceInBlt() {
         DeviceSessionManager manager = new DeviceSessionManager(connectivityContext, null);
 

@@ -56,7 +56,9 @@ void efiSetLed(ioportid_t port, int pin, bool state) {
 #endif
 }
 
-class BlinkyThread : public chibios_rt::BaseStaticThread<256> {
+static constexpr int blinkyThreadStackSize = BLINKY_THREAD_STACK_SIZE;
+
+class BlinkyThread : public chibios_rt::BaseStaticThread<blinkyThreadStackSize> {
 protected:
 	void main(void) override {
 		Gpio yellow = getWarningLedPin();
@@ -135,6 +137,8 @@ protected:
 	}
 };
 
+RUSEFI_STACK_ROOT_EXPLICIT(BlinkyThread::main, blinkyThreadStackSize);
+
 static BlinkyThread blinky;
 
 static blt_bool checkIfRebootIntoOpenBltRequested(void) {
@@ -183,6 +187,8 @@ extern void OpenBLT__early_init(void);
 }
 #endif
 
+RUSEFI_STACK_FOREIGN_ROOT(idle, "__idle_thread", PORT_IDLE_THREAD_STACK_SIZE);
+
 int main(void) {
 #if OPENBLT_BOARD_EARLY_INIT
 	// Some specific board init
@@ -230,6 +236,8 @@ int main(void) {
 		}
 	}
 }
+
+RUSEFI_STACK_PROCESS_ROOT();
 
 // very basic version, supports on chip pins only (really only used for USB)
 void efiSetPadMode(const char* msg, brain_pin_e brainPin, iomode_t mode) {

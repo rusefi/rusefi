@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.Deque;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -226,5 +227,53 @@ public class AbstractAutoFlashJobAwaitEcuPortTest {
         assertThrows(IllegalStateException.class, () -> failingJob.doJob(callbacks, completion));
         verify(completion).run();
         verify(linkManager, never()).reconnect(anyString());
+    }
+
+    @Test
+    public void failedRecoveryReenablesAutomaticReconnectBeforeCompletion() {
+        LinkManager linkManager = new LinkManager().setNotifyGlobalStatusOnClose(false);
+        linkManager.setBinaryProtocolForTests(mock(BinaryProtocol.class));
+
+        AbstractAutoFlashJob failingJob = new AbstractAutoFlashJob(
+            "test", new PortResult("COM_OLD", SerialPortType.Ecu), null,
+            new ConnectivityContext(scanner), linkManager) {
+            @Override
+            protected boolean flash(LinkManager lm, BinaryProtocol bp, UpdateOperationCallbacks cb) {
+                lm.disconnect();
+                return false;
+            }
+
+            @Override
+            String awaitEcuPort(long timeoutMs, Clock clock) {
+                return null;
+            }
+        };
+
+        failingJob.doJob(mock(UpdateOperationCallbacks.class), () ->
+            assertFalse(linkManager.isDisconnectedByUser(),
+                "automatic reconnect must be enabled before completion listeners run"));
+
+        assertFalse(linkManager.isDisconnectedByUser(),
+            "failed recovery must not leave a permanent user-disconnect marker");
+    }
+
+    @Test
+    public void rejectedBeforeFirmwareHandoffPreservesUserDisconnect() {
+        LinkManager linkManager = new LinkManager().setNotifyGlobalStatusOnClose(false);
+        linkManager.disconnect();
+
+        AbstractAutoFlashJob rejectedJob = new AbstractAutoFlashJob(
+            "test", new PortResult("COM_OLD", SerialPortType.Ecu), null,
+            new ConnectivityContext(scanner), linkManager) {
+            @Override
+            protected boolean flash(LinkManager lm, BinaryProtocol bp, UpdateOperationCallbacks cb) {
+                throw new AssertionError("firmware handoff must not start without a binary protocol");
+            }
+        };
+
+        rejectedJob.doJob(mock(UpdateOperationCallbacks.class), () -> {});
+
+        assertTrue(linkManager.isDisconnectedByUser(),
+            "a job rejected before firmware handoff must preserve explicit user intent");
     }
 }

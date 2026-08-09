@@ -19,6 +19,11 @@
 fifo_buffer<CANTxFrame, TEST_CAN_BUFFER_SIZE> txCanBuffer;
 #endif // EFI_SIMULATOR
 
+#if EFI_PROD_CODE && HAL_USE_USB_CDC_2
+#include "can_sniffer.h"
+extern CanSniffer canSniffer;
+#endif
+
 bool verboseCanTxError = false;
 
 #if EFI_CAN_SUPPORT
@@ -127,6 +132,11 @@ CanTxMessage::~CanTxMessage() {
 
 	// 100 ms timeout
 	msg_t msg = canTransmit(device, CAN_ANY_MAILBOX, &m_frame, TIME_MS2I(100));
+#if EFI_PROD_CODE && HAL_USE_USB_CDC_2
+	if ((msg == MSG_OK) && (engineConfiguration->canSniffer[busIndex].listenOurs)) {
+		canSniffer.handle_can_message(busIndex, m_frame, getTimeNowNt());
+	}
+#endif
 #if EFI_TUNER_STUDIO
 	if (msg == MSG_OK) {
 		engine->outputChannels.canWriteOk++;

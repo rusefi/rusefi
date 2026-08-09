@@ -9,6 +9,8 @@ public enum SerialPortType {
     // synthetic PortResult (LinkManager.DFU) so a running console can offer DFU flashing in-session,
     // while DFU detection also stays exposed as AvailableHardware.isDfuFound() for back-compat.
     Dfu("DFU", 15),
+    EcuUnknown("ECU (bootloader unknown)", 20),
+    UnsupportedEcu("Unsupported ECU", 25),
     CAN("CAN", 30),
     Unknown("Unknown", 100),
     ;

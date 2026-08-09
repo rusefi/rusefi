@@ -47,6 +47,7 @@ abstract class AbstractAutoFlashJob extends AsyncJobWithContext<SerialPortWithPa
     @Override
     public void doJob(final UpdateOperationCallbacks callbacks, final Runnable onJobFinished) {
         final LinkManager lm = linkManager;
+        boolean firmwareHandoffStarted = false;
         try {
             if (lm == null) {
                 callbacks.logLine("ERROR: No live LinkManager available — auto-connect to an ECU first.");
@@ -59,6 +60,7 @@ abstract class AbstractAutoFlashJob extends AsyncJobWithContext<SerialPortWithPa
                 callbacks.error();
                 return;
             }
+            firmwareHandoffStarted = true;
             if (flash(lm, bp, callbacks)) {
                 callbacks.done();
             } else {
@@ -72,12 +74,24 @@ abstract class AbstractAutoFlashJob extends AsyncJobWithContext<SerialPortWithPa
             connectivityContext.getPortScanner().resume();
             final String detectedPort = awaitEcuPort(TimeUnit.SECONDS.toMillis(60), SYSTEM_CLOCK);
             if (detectedPort != null) {
-                connectivityContext.getPortScanner().cachePort(new PortResult(detectedPort, context.getPort().type));
+                PortResult portToCache = new PortResult(detectedPort, context.getPort().type);
+                for (PortResult candidate : connectivityContext.getCurrentHardware().getKnownPorts()) {
+                    if (detectedPort.equals(candidate.port)) {
+                        portToCache = candidate;
+                        break;
+                    }
+                }
+                connectivityContext.getPortScanner().cachePort(portToCache);
                 lm.reconnect(detectedPort);
             } else {
                 callbacks.logLine("ECU did not re-appear after flashing — reconnect manually once it enumerates.");
             }
         } finally {
+            if (firmwareHandoffStarted && lm != null) {
+                // CalibrationsHelper temporarily uses disconnect() to keep reconnect attempts away from
+                // the port while flashing. Re-arm before completion listeners resume the watchdog.
+                lm.allowAutomaticReconnect();
+            }
             onJobFinished.run();
         }
     }

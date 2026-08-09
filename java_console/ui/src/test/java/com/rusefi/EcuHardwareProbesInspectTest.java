@@ -2,6 +2,7 @@ package com.rusefi;
 
 import com.fazecast.jSerialComm.SerialPortInvalidPortException;
 import com.opensr5.ConfigurationImageWithMeta;
+import com.rusefi.core.io.UnsupportedEcuInfo;
 import com.rusefi.maintenance.CalibrationsInfo;
 import com.rusefi.updater.OpenbltDetectorStrategy.OpenbltInfo;
 import org.junit.jupiter.api.AfterEach;
@@ -34,7 +35,7 @@ public class EcuHardwareProbesInspectTest {
         boolean openbltPortThrowsStaleNode;
         boolean ecuHasOpenblt;
         boolean interruptOnSleep;
-        /** one entry per readEcuCalibrations call: an Optional to return, or a RuntimeException to throw */
+        /** one entry per ECU inspection: Optional calibrations, an explicit PortResult, or an exception */
         final Deque<Object> ecuReadOutcomes = new ArrayDeque<>();
 
         int ecuReadCalls;
@@ -51,13 +52,18 @@ public class EcuHardwareProbesInspectTest {
 
         @SuppressWarnings("unchecked")
         @Override
-        public Optional<CalibrationsInfo> readEcuCalibrations(String port) {
+        public PortResult inspectRunningEcu(String port) {
             ecuReadCalls++;
             Object outcome = ecuReadOutcomes.removeFirst();
             if (outcome instanceof RuntimeException) {
                 throw (RuntimeException) outcome;
             }
-            return (Optional<CalibrationsInfo>) outcome;
+            if (outcome instanceof PortResult) {
+                return (PortResult) outcome;
+            }
+            return ((Optional<CalibrationsInfo>) outcome)
+                .map(c -> new PortResult(port, SerialPortType.Ecu, c))
+                .orElse(null);
         }
 
         @Override
@@ -155,6 +161,21 @@ public class EcuHardwareProbesInspectTest {
         assertEquals(SerialPortType.Ecu, result.type);
         assertEquals(3, probe.ecuReadCalls);
         assertEquals(2, probe.sleepCalls, "backoff runs between attempts only");
+    }
+
+    @Test
+    public void unsupportedEcuIsReturnedWithoutRetryOrBootloaderProbe() {
+        FakePortProbe probe = new FakePortProbe();
+        UnsupportedEcuInfo info = new UnsupportedEcuInfo("hellen121nissan", "universal");
+        probe.ecuReadOutcomes.add(PortResult.unsupportedEcu(PORT, info));
+
+        PortResult result = EcuHardwareProbes.inspect(PORT, probe);
+
+        assertEquals(SerialPortType.UnsupportedEcu, result.type);
+        assertSame(info, result.getUnsupportedEcuInfo());
+        assertEquals(1, probe.ecuReadCalls);
+        assertEquals(0, probe.sleepCalls);
+        assertEquals(0, probe.hasOpenbltCalls);
     }
 
     @Test

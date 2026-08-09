@@ -982,18 +982,12 @@ float getConfigValueByHash(const int hash) {
 // useBiQuadOnAuxSpeedSensors
 		case 1486014321:
 			return engineConfiguration->useBiQuadOnAuxSpeedSensors;
-// sdTriggerLog
-		case -105464622:
-			return engineConfiguration->sdTriggerLog;
 // stepper_dc_use_two_wires
 		case 2136379132:
 			return engineConfiguration->stepper_dc_use_two_wires;
 // watchOutForLinearTime
 		case -1896516795:
 			return engineConfiguration->watchOutForLinearTime;
-// sdTriggerLogCsv
-		case -1920854018:
-			return engineConfiguration->sdTriggerLogCsv;
 // sdCardConditionalLogging
 		case -1861088559:
 			return engineConfiguration->sdCardConditionalLogging;
@@ -2116,6 +2110,12 @@ float getConfigValueByHash(const int hash) {
 // misfireSettleCycles
 		case -631434424:
 			return engineConfiguration->misfireSettleCycles;
+// dwellDutyModeEnabled
+		case 1075058835:
+			return engineConfiguration->dwellDutyModeEnabled;
+// dwellDutyPercent
+		case -238882060:
+			return engineConfiguration->dwellDutyPercent;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -3858,11 +3858,6 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->useBiQuadOnAuxSpeedSensors = (int)value;
 		return 1;
 	}
-		case -105464622:
-	{
-		engineConfiguration->sdTriggerLog = (int)value;
-		return 1;
-	}
 		case 2136379132:
 	{
 		engineConfiguration->stepper_dc_use_two_wires = (int)value;
@@ -3871,11 +3866,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1896516795:
 	{
 		engineConfiguration->watchOutForLinearTime = (int)value;
-		return 1;
-	}
-		case -1920854018:
-	{
-		engineConfiguration->sdTriggerLogCsv = (int)value;
 		return 1;
 	}
 		case -1861088559:
@@ -5746,6 +5736,16 @@ bool setConfigValueByName(const char *name, float value) {
 		case -631434424:
 	{
 		engineConfiguration->misfireSettleCycles = (int)value;
+		return 1;
+	}
+		case 1075058835:
+	{
+		engineConfiguration->dwellDutyModeEnabled = (int)value;
+		return 1;
+	}
+		case -238882060:
+	{
+		engineConfiguration->dwellDutyPercent = (int)value;
 		return 1;
 	}
 		case -1658957891:

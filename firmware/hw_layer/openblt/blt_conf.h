@@ -260,7 +260,7 @@
 
 #define BOOT_XCP_UPLOAD_ENABLE          (0)
 
-/** \brief Enable the custom board-signature command. */
+/** \brief Enable custom plain-text probes ('?' version, 0xBF board signature). */
 #ifndef BOOT_XCP_PACKET_RECEIVED_HOOK
 #define BOOT_XCP_PACKET_RECEIVED_HOOK   (1)
 #endif

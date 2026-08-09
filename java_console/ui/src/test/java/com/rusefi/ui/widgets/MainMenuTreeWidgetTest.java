@@ -34,8 +34,11 @@ import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -190,37 +193,64 @@ todo: spllit into smaller tests?
         // Check if we have some top-level menus
         assertTrue(root.getChildCount() > 0, "Tree should have top-level menus");
 
-        // Find "Setup" menu
+        List<String> categories = Arrays.asList(
+            "Setup", "Fuel", "Ignition", "Cranking", "Idle", "Advanced",
+            "Sensors", "CAN-bus", "Controller", "Help", "View"
+        );
+        Set<Icon> categoryIcons = new HashSet<>();
+        for (String category : categories) {
+            DefaultMutableTreeNode node = findNode(root, category);
+            assertNotNull(node, category + " node should exist");
+            categoryIcons.add(verifyIcon(tree, node, category, 24));
+        }
+        assertEquals(categories.size(), categoryIcons.size(), "Each category should have a distinct icon");
+
         DefaultMutableTreeNode setupNode = findNode(root, "Setup");
-        assertNotNull(setupNode, "Setup node should exist");
-
-        // Verify icon for Setup
-        verifyIcon(tree, setupNode, "Setup");
-
-        // Find "Fuel" menu
-        DefaultMutableTreeNode fuelNode = findNode(root, "Fuel");
-        assertNotNull(fuelNode, "Fuel node should exist");
-        verifyIcon(tree, fuelNode, "Fuel");
-
-        // Find "Ignition" menu
-        DefaultMutableTreeNode ignitionNode = findNode(root, "Ignition");
-        assertNotNull(ignitionNode, "Ignition node should exist");
-        verifyIcon(tree, ignitionNode, "Ignition");
-
-        // Find "Idle" menu
-        DefaultMutableTreeNode idleNode = findNode(root, "Idle");
-        assertNotNull(idleNode, "Idle node should exist");
-        verifyIcon(tree, idleNode, "Idle");
-
-        // Find "Cranking" menu
-        DefaultMutableTreeNode crankingNode = findNode(root, "Cranking");
-        assertNotNull(crankingNode, "Cranking node should exist");
-        verifyIcon(tree, crankingNode, "Cranking");
-
-        // Find "Limits and protection" group in Setup
         DefaultMutableTreeNode limitsNode = findNode(setupNode, "Limits and protection");
         assertNotNull(limitsNode, "Limits and protection node should exist");
         assertTrue(limitsNode.getChildCount() > 0, "Limits group should have children");
+        Icon groupIcon = verifyIcon(tree, limitsNode, "Limits and protection", 18);
+
+        DefaultMutableTreeNode triggerNode = findNode(setupNode, "Trigger");
+        assertNotNull(triggerNode);
+        Icon dialogIcon = verifyIcon(tree, triggerNode, "Trigger", 18);
+
+        DefaultMutableTreeNode vehicleNode = findNode(setupNode, "Vehicle Information");
+        assertNotNull(vehicleNode);
+        Icon vehicleIcon = verifyIcon(tree, vehicleNode, "Vehicle Information", 18);
+
+        DefaultMutableTreeNode batteryNode = findNode(setupNode, "Battery and alternator");
+        assertNotNull(batteryNode);
+        Icon batteryIcon = verifyIcon(tree, batteryNode, "Battery and alternator", 18);
+
+        DefaultMutableTreeNode ignitionKeyNode = findNode(setupNode, "Ignition key input Settings");
+        assertNotNull(ignitionKeyNode);
+        Icon ignitionKeyIcon = verifyIcon(tree, ignitionKeyNode, "Ignition key input Settings", 18);
+
+        DefaultMutableTreeNode acNode = findNode(setupNode, "Air Conditioning");
+        assertNotNull(acNode);
+        Icon acIcon = verifyIcon(tree, acNode, "Air Conditioning", 18);
+
+        DefaultMutableTreeNode fanNode = new DefaultMutableTreeNode(
+            new SubMenuModel("fanSettings", "Cooling Fans"));
+        Icon fanIcon = verifyIcon(tree, fanNode, "Cooling Fans", 18);
+        assertEquals(6, new HashSet<>(Arrays.asList(
+            dialogIcon, vehicleIcon, batteryIcon, ignitionKeyIcon, acIcon, fanIcon)).size(),
+            "Feature icons should differ from each other and the generic dialog icon");
+
+        DefaultMutableTreeNode fuelNode = findNode(root, "Fuel");
+        DefaultMutableTreeNode fuelTrimsNode = findNode(fuelNode, "Cylinder fuel trims");
+        DefaultMutableTreeNode fuelTrimNode = findNode(fuelTrimsNode, "Fuel trim cyl 1");
+        assertNotNull(fuelTrimNode);
+        Icon tableIcon = verifyIcon(tree, fuelTrimNode, "Fuel trim cyl 1", 18);
+
+        DefaultMutableTreeNode crankingNode = findNode(root, "Cranking");
+        DefaultMutableTreeNode crankingFuelNode = findNode(crankingNode, "Cranking Fuel multiplier");
+        assertNotNull(crankingFuelNode);
+        Icon curveIcon = verifyIcon(tree, crankingFuelNode, "Cranking Fuel multiplier", 18);
+
+        assertEquals(4, new HashSet<>(Arrays.asList(groupIcon, dialogIcon, tableIcon, curveIcon)).size(),
+            "Each node type should have a distinct icon");
     }
 
     @Test
@@ -432,14 +462,16 @@ todo: spllit into smaller tests?
         return null;
     }
 
-    private void verifyIcon(JTree tree, DefaultMutableTreeNode node, String name) {
+    private Icon verifyIcon(JTree tree, DefaultMutableTreeNode node, String name, int size) {
         TreeCellRenderer renderer = tree.getCellRenderer();
-        Component rendererComponent = renderer.getTreeCellRendererComponent(tree, node, false, false, false, 0, false);
+        Component rendererComponent = renderer.getTreeCellRendererComponent(
+            tree, node, false, false, node.isLeaf(), 0, false);
         assertTrue(rendererComponent instanceof JLabel, name + " renderer should be a JLabel");
         JLabel label = (JLabel) rendererComponent;
         assertNotNull(label.getIcon(), name + " should have an icon");
-        assertEquals(24, label.getIcon().getIconWidth(), name + " icon width");
-        assertEquals(24, label.getIcon().getIconHeight(), name + " icon height");
+        assertEquals(size, label.getIcon().getIconWidth(), name + " icon width");
+        assertEquals(size, label.getIcon().getIconHeight(), name + " icon height");
+        return label.getIcon();
     }
     @Test
     public void testCurveWidgetInCalibrationWidget() {

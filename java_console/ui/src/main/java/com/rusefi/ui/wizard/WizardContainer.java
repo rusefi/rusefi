@@ -29,6 +29,8 @@ public class WizardContainer extends JPanel {
     private final UIContext uiContext;
     private final WizardProgressPanel progressPanel = new WizardProgressPanel();
     private final JPanel stepContentPanel = new JPanel(new CardLayout());
+    private final JButton cancelButton = new JButton("Exit Wizard");
+    private final JButton dontShowAgainButton = new JButton("Don't Show Again");
     private final List<WizardStep> steps = new ArrayList<>();
     private final List<Integer> visibleCatalogIndices = new ArrayList<>();
 
@@ -37,6 +39,7 @@ public class WizardContainer extends JPanel {
     private final JPanel debugPanel = new JPanel();
 
     private Runnable onWizardExit;
+    private Runnable onDontShowAgain;
     private Runnable onAllStepsComplete;
     private int currentStepIndex = 0;
     private int activeStepIndex = -1;
@@ -64,10 +67,21 @@ public class WizardContainer extends JPanel {
             WizardStyle.LARGE_GAP));
         headerPanel.add(progressPanel, BorderLayout.CENTER);
 
-        JButton cancelButton = new JButton("Exit Wizard");
-        AbstractWizardStep.styleButton(cancelButton);
+        AbstractWizardStep.stylePrimaryAction(cancelButton);
         cancelButton.addActionListener(e -> exitWizard());
-        headerPanel.add(cancelButton, BorderLayout.EAST);
+        AbstractWizardStep.stylePrimaryAction(dontShowAgainButton);
+        dontShowAgainButton.setVisible(false);
+        dontShowAgainButton.addActionListener(e -> {
+            if (onDontShowAgain != null) {
+                onDontShowAgain.run();
+            }
+            exitWizard();
+        });
+        JPanel exitPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, WizardStyle.GAP, 0));
+        exitPanel.setBorder(BorderFactory.createEmptyBorder(
+            WizardStyle.GAP, WizardStyle.LARGE_GAP, WizardStyle.LARGE_GAP, WizardStyle.LARGE_GAP));
+        exitPanel.add(cancelButton);
+        exitPanel.add(dontShowAgainButton);
         progressPanel.setOnCompletedSelected(this::showStep);
 
         add(headerPanel, BorderLayout.NORTH);
@@ -78,7 +92,10 @@ public class WizardContainer extends JPanel {
         // Debug panel at the bottom showing wizard flag states
         buildDebugPanel();
         debugPanel.setVisible(false);
-        add(debugPanel, BorderLayout.SOUTH);
+        JPanel footerPanel = new JPanel(new BorderLayout());
+        footerPanel.add(debugPanel, BorderLayout.CENTER);
+        footerPanel.add(exitPanel, BorderLayout.EAST);
+        add(footerPanel, BorderLayout.SOUTH);
     }
 
     private void buildDebugPanel() {
@@ -175,7 +192,16 @@ public class WizardContainer extends JPanel {
         this.onWizardExit = onWizardExit;
     }
 
+    public void setOnDontShowAgain(Runnable onDontShowAgain) {
+        this.onDontShowAgain = onDontShowAgain;
+    }
+
     public void startWizard() {
+        startWizard(false);
+    }
+
+    public void startWizard(boolean autoLaunch) {
+        configureExitButtons(autoLaunch);
         hideCurrentStep();
         currentStepIndex = 0;
         singleStepMode = false;
@@ -302,6 +328,7 @@ public class WizardContainer extends JPanel {
      * satisfied), the wizard auto-exits. Used for targeted prompts like an empty-VIN auto-launch.
      */
     public void startSingleStep(WizardStep step) {
+        configureExitButtons(false);
         hideCurrentStep();
         currentStepIndex = 0;
         singleStepMode = true;
@@ -352,6 +379,17 @@ public class WizardContainer extends JPanel {
             if (!satisfied.test(index)) return index;
         }
         return -1;
+    }
+
+    public boolean hasIncompleteSteps() {
+        List<Integer> visibleIndices = findVisibleCatalogIndices(
+            uiContext, uiContext.iniFileState.getIniFileModel());
+        return findFirstIncomplete(visibleIndices, this::isStepSatisfied) >= 0;
+    }
+
+    private void configureExitButtons(boolean autoLaunch) {
+        cancelButton.setText(autoLaunch ? "Cancel" : "Exit Wizard");
+        dontShowAgainButton.setVisible(autoLaunch);
     }
 
     private void rebuildVisibleCatalogIndices() {
@@ -616,5 +654,21 @@ public class WizardContainer extends JPanel {
 
     boolean isProgressVisibleForTests() {
         return progressPanel.isVisible();
+    }
+
+    String getCancelButtonTextForTests() {
+        return cancelButton.getText();
+    }
+
+    boolean isDontShowAgainVisibleForTests() {
+        return dontShowAgainButton.isVisible();
+    }
+
+    void clickDontShowAgainForTests() {
+        dontShowAgainButton.doClick();
+    }
+
+    void clickCancelForTests() {
+        cancelButton.doClick();
     }
 }

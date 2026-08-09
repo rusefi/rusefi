@@ -3,6 +3,7 @@ package com.rusefi.ui.basic;
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
+import com.rusefi.AvailableHardware;
 import com.rusefi.ConnectivityContext;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.net.PropertiesHolder;
@@ -13,11 +14,13 @@ import com.rusefi.maintenance.OfflineTuneLoader;
 import com.rusefi.maintenance.jobs.ImportTuneJob;
 import com.rusefi.ui.UIContext;
 import com.rusefi.tune_manifest.ManifestParseException;
+import com.rusefi.tune_manifest.TuneManifestExtension;
 import com.rusefi.tune_manifest.TuneManifestHelper;
 import com.rusefi.tune_manifest.TuneModel;
 import com.rusefi.ui.table.ButtonEditor;
 import com.rusefi.ui.table.ButtonRenderer;
 import com.rusefi.ui.widgets.StatusPanel;
+import org.jetbrains.annotations.Nullable;
 import org.json.simple.parser.ParseException;
 
 import javax.swing.*;
@@ -29,7 +32,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.tune_manifest.TuneManifestHelper.getLocalFolder;
@@ -47,11 +52,16 @@ public class TuneManagementTab {
     private final JPanel totalContent = new JPanel(new CardLayout());
     private final JPanel mainContent = new JPanel(new BorderLayout());
     private final JLabel status = new JLabel("Downloading tunes...");
-    private final JTable table = new JTable(new MyTableModel());
+    private final MyTableModel tableModel = new MyTableModel();
+    private final JTable table = new JTable(tableModel);
     private final JPanel centerPanel = new JPanel(new BorderLayout());
     private JScrollPane tableScroll;
     private final TuneOperationStatusPanel importStatusPanel;
     private final AtomicBoolean awaitingCompletion = new AtomicBoolean(false);
+    private final AtomicInteger tuneLoadSequence = new AtomicInteger();
+    private final Object tuneLoadLock = new Object();
+    private final Optional<TuneManifestExtension> manifestExtension;
+    private final String tunesManifestUrl = getTunesManifestUrl();
     private List<TuneModel> tunes = new ArrayList<>();
 
     /** [tag:offline_tune] Hands an offline-loaded tune back to the splash so it can open the console on the shared uiContext. */
@@ -64,11 +74,46 @@ public class TuneManagementTab {
                              StatusPanel statusPanelTuneTab,
                              Runnable showTuneTab,
                              java.util.function.BiConsumer<IniFileModel, ConfigurationImage> offlineConsoleLauncher) {
+        this(connectivityContext, uiContext, importTuneControl, singleAsyncJobExecutor, statusPanelTuneTab,
+            showTuneTab, offlineConsoleLauncher, true);
+    }
+
+    public TuneManagementTab(ConnectivityContext connectivityContext,
+                             UIContext uiContext,
+                             SingleAsyncJobExecutor singleAsyncJobExecutor,
+                             StatusPanel statusPanelTuneTab,
+                             Runnable showTuneTab) {
+        this(connectivityContext, uiContext, null, singleAsyncJobExecutor, statusPanelTuneTab,
+            showTuneTab, null, false);
+    }
+
+    private TuneManagementTab(ConnectivityContext connectivityContext,
+                              UIContext uiContext,
+                              @Nullable ImportTuneControl importTuneControl,
+                              SingleAsyncJobExecutor singleAsyncJobExecutor,
+                              StatusPanel statusPanelTuneTab,
+                              Runnable showTuneTab,
+                              @Nullable java.util.function.BiConsumer<IniFileModel, ConfigurationImage> offlineConsoleLauncher,
+                              boolean showSplashControls) {
         this.offlineConsoleLauncher = offlineConsoleLauncher;
-        Component importTuneButton = importTuneControl.getContent();
+        Optional<TuneManifestExtension> loadedExtension;
+        RuntimeException extensionLoadError;
+        try {
+            loadedExtension = TuneManifestExtension.load();
+            extensionLoadError = null;
+        } catch (RuntimeException e) {
+            loadedExtension = Optional.empty();
+            extensionLoadError = e;
+        }
+        manifestExtension = loadedExtension;
+        final RuntimeException finalExtensionLoadError = extensionLoadError;
+
+        Component importTuneButton = showSplashControls ? importTuneControl.getContent() : null;
         importStatusPanel = new TuneOperationStatusPanel(statusPanelTuneTab, this::showMainContent);
 
-        importTuneControl.setImportErrorHandler(message -> showImportError(message, statusPanelTuneTab, showTuneTab));
+        if (importTuneControl != null) {
+            importTuneControl.setImportErrorHandler(message -> showImportError(message, statusPanelTuneTab, showTuneTab));
+        }
 
         singleAsyncJobExecutor.addOnJobAboutToStartListener(() -> {
             if (singleAsyncJobExecutor.getJobInProgress().filter(ImportTuneJob.class::isInstance).isPresent()) {
@@ -90,7 +135,6 @@ public class TuneManagementTab {
             });
         });
 
-        String tunesManifestUrl = getTunesManifestUrl();
         if (tunesManifestUrl != null) {
             mainContent.add(status, BorderLayout.NORTH);
 
@@ -103,23 +147,14 @@ public class TuneManagementTab {
 
             centerPanel.add(tableScroll, BorderLayout.CENTER);
 
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        TuneManifestHelper.downloadAllTunes(tunesManifestUrl, new TuneManifestHelper.Callback() {
-                            @Override
-                            public void onDownloaded(List<TuneModel> tunes) {
-                                SwingUtilities.invokeLater(() -> displayTunes(tunes));
-                            }
-                        });
-                    } catch (IOException | ParseException e) {
-                        log.error("Failed to download tunes manifest from " + tunesManifestUrl, e);
-                        String body = (e instanceof ManifestParseException) ? ((ManifestParseException) e).getBody() : null;
-                        SwingUtilities.invokeLater(() -> showManifestError(e, body));
-                    }
+            if (finalExtensionLoadError == null) {
+                if (!manifestExtension.isPresent()) {
+                    loadTunes(tunesManifestUrl, connectivityContext.getCurrentHardware());
                 }
-            }).start();
+            } else {
+                log.error("Failed to load tune manifest extension", finalExtensionLoadError);
+                SwingUtilities.invokeLater(() -> showManifestError(finalExtensionLoadError, null));
+            }
         }
         table.getColumnModel().getColumn(MAP_ID_INDEX).setPreferredWidth(50);
         table.getColumnModel().getColumn(1).setPreferredWidth(450);
@@ -132,6 +167,9 @@ public class TuneManagementTab {
         buttonColumn.setCellEditor(new ButtonEditor(new JButton(), "Import", table, new ButtonEditor.Clicked() {
             @Override
             public void clicked(int row) {
+                if (row < 0 || row >= tunes.size()) {
+                    return;
+                }
                 TuneModel model = tunes.get(row);
                 String localFolderForSpecificUrl = getLocalFolder(tunesManifestUrl);
                 String tuneFileName = localFolderForSpecificUrl + model.getSaferLocalFileName();
@@ -147,7 +185,7 @@ public class TuneManagementTab {
                         ImportTuneJob.importTuneIntoDeviceViaLiveConnection(
                             liveBp, lm, status, connectivityContext, tuneFileName, singleAsyncJobExecutor,
                             message -> showImportError(message, statusPanelTuneTab, showTuneTab));
-                    } else if (lm != null) {
+                    } else if (lm.isActive()) {
                         log.info("Let's load " + tuneFileName + " via LM");
                         ImportTuneJob.importTuneIntoDeviceViaLiveConnection(
                             lm, status, connectivityContext, tuneFileName, singleAsyncJobExecutor,
@@ -159,58 +197,62 @@ public class TuneManagementTab {
             }
         }));
 
-        JButton loadTuneFileButton = new JButton("Load Tune File");
-        loadTuneFileButton.addActionListener(e -> loadTuneFileOffline());
-        // A bit bigger so it reads as the primary offline action (#9715).
-        loadTuneFileButton.setFont(loadTuneFileButton.getFont().deriveFont(Font.BOLD, 16f));
-        loadTuneFileButton.setMargin(new Insets(12, 28, 12, 28));
+        if (showSplashControls) {
+            JButton loadTuneFileButton = new JButton("Load Tune File");
+            loadTuneFileButton.addActionListener(e -> loadTuneFileOffline());
+            // A bit bigger so it reads as the primary offline action (#9715).
+            loadTuneFileButton.setFont(loadTuneFileButton.getFont().deriveFont(Font.BOLD, 16f));
+            loadTuneFileButton.setMargin(new Insets(12, 28, 12, 28));
 
-        // [tag:offline_tune] Explain what this screen does — without it the splash is three silent
-        // buttons and no hint that a tune can be edited with no ECU attached (#9730).
-        JLabel offlineHint = new JLabel("<html><div style='text-align:center;'>"
-                + "No ECU connected. Load a tune file to view and edit it offline,<br>"
-                + "then connect an ECU to burn your changes.</div></html>");
-        offlineHint.setForeground(Color.DARK_GRAY);
+            // [tag:offline_tune] Explain what this screen does — without it the splash is three silent
+            // buttons and no hint that a tune can be edited with no ECU attached (#9730).
+            JLabel offlineHint = new JLabel("<html><div style='text-align:center;'>"
+                    + "No ECU connected. Load a tune file to view and edit it offline,<br>"
+                    + "then connect an ECU to burn your changes.</div></html>");
+            offlineHint.setForeground(Color.DARK_GRAY);
 
-        // [tag:offline_tune] The import pair pushes a tune to a *connected* ECU; on this pre-connection
-        // splash it has nothing to talk to (clicking just prints "Not connected?"), so only show it
-        // once an ECU is actually connected.
-        Runnable updateImportVisibility = () ->
-                importTuneButton.setVisible(com.rusefi.io.ConnectionStatusLogic.INSTANCE.isConnected());
-        updateImportVisibility.run();
-        com.rusefi.io.ConnectionStatusLogic.INSTANCE.addListener(
-                c -> SwingUtilities.invokeLater(updateImportVisibility));
+            // [tag:offline_tune] The import pair pushes a tune to a *connected* ECU; on this pre-connection
+            // splash it has nothing to talk to (clicking just prints "Not connected?"), so only show it
+            // once an ECU is actually connected.
+            Runnable updateImportVisibility = () ->
+                    importTuneButton.setVisible(com.rusefi.io.ConnectionStatusLogic.INSTANCE.isConnected());
+            updateImportVisibility.run();
+            com.rusefi.io.ConnectionStatusLogic.INSTANCE.addListener(
+                    c -> SwingUtilities.invokeLater(updateImportVisibility));
 
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
-        buttonPanel.add(centerHorizontally(offlineHint));
-        buttonPanel.add(Box.createVerticalStrut(20));
-        buttonPanel.add(centerHorizontally(importTuneButton));
-        buttonPanel.add(Box.createVerticalStrut(28));
-        buttonPanel.add(centerHorizontally(loadTuneFileButton));
+            JPanel buttonPanel = new JPanel();
+            buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+            buttonPanel.add(centerHorizontally(offlineHint));
+            buttonPanel.add(Box.createVerticalStrut(20));
+            buttonPanel.add(centerHorizontally(importTuneButton));
+            buttonPanel.add(Box.createVerticalStrut(28));
+            buttonPanel.add(centerHorizontally(loadTuneFileButton));
 
-        if (tunesManifestUrl != null) {
-            // Keep the tune list but cap it at ~80% of the height, with the buttons in the lower 20%,
-            // so they aren't pinned to the very bottom edge of the now-maximized splash (#9715).
-            JPanel body = new JPanel(new GridBagLayout());
-            GridBagConstraints c = new GridBagConstraints();
-            c.gridx = 0;
-            c.gridy = 0;
-            c.weightx = 1;
-            c.weighty = 0.8;
-            c.fill = GridBagConstraints.BOTH;
-            body.add(centerPanel, c);
-            c.gridy = 1;
-            c.weighty = 0.2;
-            c.fill = GridBagConstraints.NONE;
-            c.anchor = GridBagConstraints.CENTER;
-            body.add(buttonPanel, c);
-            mainContent.add(body, BorderLayout.CENTER);
-        } else {
-            // No tune list available — just center the buttons in the tab (#9715).
-            JPanel centered = new JPanel(new GridBagLayout());
-            centered.add(buttonPanel, new GridBagConstraints());
-            mainContent.add(centered, BorderLayout.CENTER);
+            if (tunesManifestUrl != null) {
+                // Keep the tune list but cap it at ~80% of the height, with the buttons in the lower 20%,
+                // so they aren't pinned to the very bottom edge of the now-maximized splash (#9715).
+                JPanel body = new JPanel(new GridBagLayout());
+                GridBagConstraints c = new GridBagConstraints();
+                c.gridx = 0;
+                c.gridy = 0;
+                c.weightx = 1;
+                c.weighty = 0.8;
+                c.fill = GridBagConstraints.BOTH;
+                body.add(centerPanel, c);
+                c.gridy = 1;
+                c.weighty = 0.2;
+                c.fill = GridBagConstraints.NONE;
+                c.anchor = GridBagConstraints.CENTER;
+                body.add(buttonPanel, c);
+                mainContent.add(body, BorderLayout.CENTER);
+            } else {
+                // No tune list available — just center the buttons in the tab (#9715).
+                JPanel centered = new JPanel(new GridBagLayout());
+                centered.add(buttonPanel, new GridBagConstraints());
+                mainContent.add(centered, BorderLayout.CENTER);
+            }
+        } else if (tunesManifestUrl != null) {
+            mainContent.add(centerPanel, BorderLayout.CENTER);
         }
 
         totalContent.add(mainContent, MAIN_CARD);
@@ -248,10 +290,81 @@ public class TuneManagementTab {
         ((CardLayout) totalContent.getLayout()).show(totalContent, MAIN_CARD);
     }
 
-    private void displayTunes(List<TuneModel> tunes) {
+    private void loadTunes(String tunesManifestUrl, AvailableHardware hardware) {
+        int loadSequence = tuneLoadSequence.incrementAndGet();
+        runOnEdt(() -> {
+            if (loadSequence == tuneLoadSequence.get()) {
+                tunes = new ArrayList<>();
+                status.setText("Downloading tunes...");
+                showTuneTable();
+                tableModel.fireTableDataChanged();
+            }
+        });
+
+        new Thread(() -> {
+            synchronized (tuneLoadLock) {
+                if (loadSequence != tuneLoadSequence.get()) {
+                    return;
+                }
+                try {
+                    String warning = manifestExtension.isPresent()
+                        ? manifestExtension.get().getSelectionWarning(hardware)
+                        : null;
+                    if (warning != null) {
+                        SwingUtilities.invokeLater(() -> {
+                            if (loadSequence == tuneLoadSequence.get()) {
+                                status.setText(warning);
+                            }
+                        });
+                    }
+                    TuneManifestHelper.Callback callback = downloadedTunes -> SwingUtilities.invokeLater(() -> {
+                        if (loadSequence == tuneLoadSequence.get()) {
+                            displayTunes(downloadedTunes, warning);
+                        }
+                    });
+                    if (manifestExtension.isPresent()) {
+                        TuneManifestHelper.downloadAllTunes(tunesManifestUrl, manifestExtension.get(), hardware,
+                            () -> loadSequence == tuneLoadSequence.get(), callback);
+                    } else {
+                        TuneManifestHelper.downloadAllTunes(tunesManifestUrl, callback);
+                    }
+                } catch (IOException | ParseException | RuntimeException e) {
+                    if (loadSequence != tuneLoadSequence.get()) {
+                        return;
+                    }
+                    log.error("Failed to download tunes manifest from " + tunesManifestUrl, e);
+                    String body = (e instanceof ManifestParseException) ? ((ManifestParseException) e).getBody() : null;
+                    SwingUtilities.invokeLater(() -> {
+                        if (loadSequence == tuneLoadSequence.get()) {
+                            showManifestError(e, body);
+                        }
+                    });
+                }
+            }
+        }).start();
+    }
+
+    private static void runOnEdt(Runnable action) {
+        if (SwingUtilities.isEventDispatchThread()) {
+            action.run();
+        } else {
+            SwingUtilities.invokeLater(action);
+        }
+    }
+
+    private void showTuneTable() {
+        centerPanel.removeAll();
+        if (tableScroll != null) {
+            centerPanel.add(tableScroll, BorderLayout.CENTER);
+        }
+        AutoupdateUtil.trueLayoutAndRepaint(centerPanel);
+    }
+
+    private void displayTunes(List<TuneModel> tunes, String warning) {
         this.tunes = tunes;
-        status.setText(tunes.size() + " tunes downloaded!");
-        AutoupdateUtil.trueLayoutAndRepaint(table);
+        status.setText(warning == null ? tunes.size() + " tunes downloaded!" : warning);
+        showTuneTable();
+        tableModel.fireTableDataChanged();
     }
 
     private void showManifestError(Exception e, String body) {
@@ -283,12 +396,21 @@ public class TuneManagementTab {
         return totalContent;
     }
 
+    public void onHardwareUpdated(AvailableHardware hardware) {
+        if (manifestExtension.isPresent() && tunesManifestUrl != null) {
+            loadTunes(tunesManifestUrl, hardware);
+        }
+    }
+
     public static String getTunesManifestUrl() {
         return PropertiesHolder.getProperty("tunes_manifest");
     }
 
     /** [tag:offline_tune] Lets the user pick an .msq and open the console offline (no ECU connection). */
     private void loadTuneFileOffline() {
+        if (offlineConsoleLauncher == null) {
+            return;
+        }
         JFileChooser chooser = new JFileChooser();
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         chooser.setFileFilter(new FileNameExtensionFilter("Tune files (.msq)", "msq"));

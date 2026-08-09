@@ -157,6 +157,9 @@ runs:
     - name: Set Env Variables
       id: set-env-variables
       shell: bash
+      env:
+        # ref names may contain shell metacharacters - never interpolate them into scripts with ${{ }}
+        REF_NAME: ${{ github.ref_name }}
       run: |
         : Set Env Variables
         echo "WHITE_LABEL=${{steps.find-out-white-label.outputs.white_label}}" >> $GITHUB_ENV
@@ -167,7 +170,7 @@ runs:
         echo "AUTOMATION_LTS=${{toJSON(inputs.lts)}}" >> $GITHUB_ENV
         echo "BUNDLE_SIMULATOR=${{toJSON(inputs.bundle_simulator)}}" >> $GITHUB_ENV
         echo "RUN_SIMULATOR=${{toJSON(inputs.run_simulator)}}" >> $GITHUB_ENV
-        echo "AUTOMATION_REF=${{github.ref_name}}" >> $GITHUB_ENV
+        echo "AUTOMATION_REF=$REF_NAME" >> $GITHUB_ENV
         echo "${{ inputs.ADDITIONAL_ENV }}" >> $GITHUB_ENV
         shopt -s expand_aliases
         if which grealpath >/dev/null 2>&1; then alias realpath='grealpath'; fi
@@ -197,14 +200,18 @@ runs:
 
     - name: Set Build Env Variables
       shell: bash
+      env:
+        # ref names may contain shell metacharacters - never interpolate them into scripts with ${{ }}
+        REF_NAME: ${{ github.ref_name }}
+        GH_REF: ${{ github.ref }}
       run: |
         : Set Build Env Variables
-        if [[ ${{github.ref_name}} == "lts"* ]]; then
+        if [[ "$REF_NAME" == "lts"* ]]; then
           echo AUTOMATION_LTS=true >> $GITHUB_ENV
-          echo AUTOMATION_REF=${{github.ref_name}} >> $GITHUB_ENV
-          echo "On LTS branch [${{github.ref}}]"
+          echo "AUTOMATION_REF=$REF_NAME" >> $GITHUB_ENV
+          echo "On LTS branch [$GH_REF]"
         else
-          echo "Not LTS branch [${{github.ref}}]"
+          echo "Not LTS branch [$GH_REF]"
         fi
 
     - name: Install Arm GNU Toolchain (arm-none-eabi-gcc)
@@ -338,14 +345,18 @@ runs:
       if: ${{ contains(inputs.uploads, 'ftp_upload_bundles') }}
       working-directory: ${{inputs.rusefi_dir}}/artifacts
       shell: bash
+      env:
+        # ref names may contain shell metacharacters - never interpolate them into scripts with ${{ }}
+        REF_NAME: ${{ github.ref_name }}
+        GH_REF: ${{ github.ref }}
       run: |
         : Ftp Upload Both Bundles
-        if [ "${{github.ref}}" = "refs/heads/master" ] || [ "${{github.ref}}" = "refs/heads/main" ]; then
+        if [ "$GH_REF" = "refs/heads/master" ] || [ "$GH_REF" = "refs/heads/main" ]; then
           echo "On master branch"
-        elif [[ ${{github.ref_name}} == "lts"* ]]; then
-          echo "On LTS branch [${{github.ref}}]"
+        elif [[ "$REF_NAME" == "lts"* ]]; then
+          echo "On LTS branch [$GH_REF]"
         else
-          echo "Not uploading [${{github.ref}}]"
+          echo "Not uploading [$GH_REF]"
           exit 0
         fi
         bash ../firmware/bin/upload_bundle.sh "${{ env.RUSEFI_SSH_USER }}" "${{ env.RUSEFI_SSH_PASS }}" "${{ env.RUSEFI_SSH_SERVER }}" "${{ env.BUNDLE_NAME }}"

@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.EOFException;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import static com.rusefi.binaryprotocol.IoHelper.checkResponseCode;
 
@@ -32,9 +33,18 @@ public class HelloCommand implements Command {
     @Nullable
     public static String getStringResponse(String msg, IncomingDataBuffer incomingData) throws EOFException {
         byte[] response = incomingData.getPacket(msg);
-        if (!checkResponseCode(response))
+        return decodeStringResponse(response);
+    }
+
+    static String decodeStringResponse(byte[] response) {
+        if (!checkResponseCode(response)) {
             return null;
-        return new String(response, 1, response.length - 1);
+        }
+        int end = response.length;
+        while (end > 1 && response[end - 1] == 0) {
+            end--;
+        }
+        return new String(response, 1, end - 1, StandardCharsets.US_ASCII);
     }
 
     @Override

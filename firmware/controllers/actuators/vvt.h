@@ -60,6 +60,7 @@ private:
 	bool m_isCltWarmEnough = false;
 
 	const ValueProvider3D* m_targetMap = nullptr;
+	Hysteresis m_targetHysteresis;
 	IPwm* m_pwm = nullptr;
 };
 

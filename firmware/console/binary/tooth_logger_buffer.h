@@ -22,6 +22,16 @@
 
 #if EFI_TOOTH_LOGGER
 
+/* How many CompositeBuffer will be STATICALY allocated for circle logging
+ * non zero value also enables circular buffer mode */
+#ifndef BACKGROUND_TOOTH_LOGGER_SIZE
+#define BACKGROUND_TOOTH_LOGGER_SIZE 0
+#endif
+
+#if (BACKGROUND_TOOTH_LOGGER_SIZE == 1)
+	#error "BACKGROUND_TOOTH_LOGGER_SIZE should be at least 2"
+#endif
+
 class ToothLoggerBufferPool {
 public:
 	// Consumer-visible "a filled buffer is ready" indication
@@ -67,11 +77,34 @@ public:
 	// Caller must hold the critical section.
 	CompositeBuffer* flushCurrentI();
 
+	// Post the partially-filled current buffer to the filled queue.
+	// Returns true if there was a current buffer to post.
+	// Caller must hold the critical section.
+	bool postCurrentI();
+
+	// Peek at the partially-filled current buffer, may return nullptr.
+	CompositeBuffer* getCurrent() const {
+		return m_currentBuffer;
+	}
+
+	// In circular mode the oldest filled buffer is overwritten when no
+	// consumer drains the filled queue, and stale buffers are not flushed.
+	bool isCircularMode() const {
+		return m_circularMode;
+	}
+
+	bool setCircularModeI(bool circular);
+
 	// True if any entries are pending: a partial current buffer or a filled
 	// buffer waiting for a consumer. Caller must hold the critical section.
 	bool hasDataI();
 
+#if (BACKGROUND_TOOTH_LOGGER_SIZE > 0)
+	static constexpr size_t bufferCount = BACKGROUND_TOOTH_LOGGER_SIZE;
+#else
 	static constexpr size_t bufferCount = BIG_BUFFER_SIZE / sizeof(CompositeBuffer);
+#endif
+	static constexpr size_t toothLoggerEntriesTotal = toothLoggerEntriesPerBuffer * bufferCount;
 
 private:
 	CompositeBuffer* findBufferI(efitick_t timestamp);
@@ -86,8 +119,19 @@ private:
 	chibios_rt::Mailbox<CompositeBuffer*, bufferCount> m_filledBuffers;
 
 	CompositeBuffer* m_currentBuffer = nullptr;
+	// do not update currentBuffer->startTime until the buffer is posted, as in
+	// circular mode a reused buffer still contains old entries
+	Timer m_currentBufferStartTime = {};
 
+#if (BACKGROUND_TOOTH_LOGGER_SIZE > 0)
+	CompositeBuffer m_buffers[BACKGROUND_TOOTH_LOGGER_SIZE];
+#else
 	BigBufferHandle m_bufferHandle;
+#endif
+	// rewrite older events with newer if noone is reading filledBuffers queue
+	bool m_circularMode = false;
+	// how many entries to capture after switching to circular mode
+	size_t toothLoggerEntriesToCapture = 0;
 
 	ReadyCallback m_onReady = nullptr;
 };

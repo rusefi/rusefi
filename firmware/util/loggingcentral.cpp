@@ -154,6 +154,8 @@ public:
 	}
 };
 
+RUSEFI_STACK_ROOT(LoggingBufferFlusher, ThreadTask);
+
 static LoggingBufferFlusher lbf;
 
 void startLoggingProcessor() {

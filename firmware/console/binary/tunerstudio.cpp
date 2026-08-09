@@ -861,6 +861,7 @@ void TunerstudioThread::onDataArrived(int instance, bool valid) {
 	}
 }
 
+RUSEFI_STACK_ROOT(TunerstudioThread, ThreadTask);
 void TunerstudioThread::ThreadTask() {
 	auto channel = setupChannel();
 
@@ -1128,16 +1129,19 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		break;
 	case TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY:
 		{
-			EnableToothLoggerIfNotEnabled();
+			if (EnableToothLoggerIfNotEnabled()) {
+				auto toothBuffer = GetToothLoggerBufferNonblocking();
 
-			auto toothBuffer = GetToothLoggerBufferNonblocking();
+				if (toothBuffer) {
+					tsChannel->sendResponse(TS_CRC, reinterpret_cast<const uint8_t*>(toothBuffer->buffer), toothBuffer->nextIdx * sizeof(composite_logger_s), true);
 
-			if (toothBuffer) {
-				tsChannel->sendResponse(TS_CRC, reinterpret_cast<const uint8_t*>(toothBuffer->buffer), toothBuffer->nextIdx * sizeof(composite_logger_s), true);
-
-				ReturnToothLoggerBuffer(toothBuffer);
+					ReturnToothLoggerBuffer(toothBuffer);
+				} else {
+					// TS asked for a tooth logger buffer, but we don't have one to give it.
+					sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, DO_NOT_LOG);
+				}
 			} else {
-				// TS asked for a tooth logger buffer, but we don't have one to give it.
+				// TS asked for a tooth logger buffer, but tooth logger is busy
 				sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, DO_NOT_LOG);
 			}
 		}

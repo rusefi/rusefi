@@ -214,6 +214,7 @@ MassStorageController::MassStorageController(USBDriver* usb)
 	m_scsiTransport.receive  = scsi_transport_receive;
 }
 
+RUSEFI_STACK_ROOT(MassStorageController, ThreadTask);
 void MassStorageController::ThreadTask() {
 	while (!chThdShouldTerminateX()) {
 		const msg_t status = usbReceive(m_usb, USB_MSD_DATA_EP, (uint8_t*)&m_cbw, sizeof(m_cbw));

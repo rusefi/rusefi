@@ -88,10 +88,10 @@ public class MaintenanceUtilTest {
         RecordingConfirm confirm = new RecordingConfirm(false);
         assertFalse(confirmFirmwareMatchesBoard(
             "rusefi_release_2026-07-01_uaefi_pro_1234567890_deadbeef.srec",
-            UpdateOperationCallbacks.DUMMY, boardTarget("proteus_f4"), confirm));
+            UpdateOperationCallbacks.DUMMY, boardTarget("proteus_h7"), confirm));
         assertEquals(1, confirm.calls);
         assertTrue(confirm.lastMessage.contains("uaefi_pro"), confirm.lastMessage);
-        assertTrue(confirm.lastMessage.contains("proteus_f4"), confirm.lastMessage);
+        assertTrue(confirm.lastMessage.contains("proteus_h7"), confirm.lastMessage);
     }
 
     @Test
@@ -99,7 +99,7 @@ public class MaintenanceUtilTest {
         RecordingConfirm confirm = new RecordingConfirm(true);
         assertTrue(confirmFirmwareMatchesBoard(
             "rusefi_release_2026-07-01_uaefi_pro_1234567890_deadbeef.srec",
-            UpdateOperationCallbacks.DUMMY, boardTarget("proteus_f4"), confirm));
+            UpdateOperationCallbacks.DUMMY, boardTarget("proteus_h7"), confirm));
         assertEquals(1, confirm.calls);
     }
 

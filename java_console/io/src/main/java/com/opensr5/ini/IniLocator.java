@@ -16,8 +16,8 @@ import java.util.List;
  * <p>
  * A bundle dir can legitimately contain more than one {@code rusefi*.ini}, so this never throws on
  * extra matches (the old behaviour bricked the fallback and left the board classified "Unknown").
- * When the caller knows the connected board's signature, the matching .ini is preferred over an
- * arbitrary one — the .ini analogue of the firmware brick-guard in {@link com.rusefi.core.FindFileHelper}.
+ * When the caller knows the connected board's signature, only a matching .ini is returned — the
+ * .ini analogue of the firmware brick-guard in {@link com.rusefi.core.FindFileHelper}.
  */
 public class IniLocator {
     /** Signature-agnostic lookup: first {@code rusefi*.ini} in the directory, or null. */
@@ -26,23 +26,23 @@ public class IniLocator {
     }
 
     /**
-     * Find a {@code rusefi*.ini} in {@code iniFilePath}. When {@code signature} is non-null and several
-     * candidates exist, prefer the one whose embedded signature matches; otherwise return the first
-     * match. Never throws on multiple matches.
+     * Find a {@code rusefi*.ini} in {@code iniFilePath}. When {@code signature} is non-null, only a file
+     * with that embedded signature is returned. Never throws on multiple matches.
      */
     public static @Nullable String findIniFile(String iniFilePath, @Nullable String signature) {
         final List<File> matches = listIniFiles(iniFilePath);
         if (matches.isEmpty()) {
             return null;
         }
-        if (signature != null) {
-            for (File f : matches) {
-                if (signature.equals(readIniSignature(f))) {
-                    return f.getAbsolutePath();
-                }
+        if (signature == null) {
+            return matches.get(0).getAbsolutePath();
+        }
+        for (File f : matches) {
+            if (signature.equals(readIniSignature(f))) {
+                return f.getAbsolutePath();
             }
         }
-        return matches.get(0).getAbsolutePath();
+        return null;
     }
 
     private static List<File> listIniFiles(String iniFilePath) {
@@ -81,7 +81,7 @@ public class IniLocator {
                 }
             }
         } catch (IOException e) {
-            // unreadable candidate — treat as "no signature", caller falls back to first match
+            // unreadable candidate — treat as "no signature"
         }
         return null;
     }

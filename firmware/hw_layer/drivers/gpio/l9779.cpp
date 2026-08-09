@@ -551,6 +551,8 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 	}
 }
 
+RUSEFI_STACK_ROOT_EXPLICIT(l9779_driver_thread, 256);
+
 /*==========================================================================*/
 /* Driver interrupt handlers.												*/
 /*==========================================================================*/

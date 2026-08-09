@@ -524,7 +524,7 @@ Sample MAP during only one cylinder's intake per engine cycle instead of every c
 
 
 ### isFasterEngineSpinUpEnabled
-If enabled, try to fire the engine before a full engine cycle has been completed using RPM estimated from the last 90 degrees of engine rotation. As soon as the trigger syncs plus 90 degrees rotation, fuel and ignition events will occur. If disabled, worst case may require up to 4 full crank rotations before any events are scheduled.
+If enabled, RPM is estimated from ~90 degrees of rotation using tooth timestamps collected even before trigger sync, and fuel/ignition scheduling starts as soon as the trigger syncs (sequential ignition temporarily runs as wasted spark until full phase sync). As soon as the trigger syncs plus 90 degrees rotation, fuel and ignition events will occur. If disabled, worst case may require up to 4 full crank rotations before any events are scheduled.
 
 ### coastingFuelCutEnabled
 This setting disables fuel injection while the engine is in overrun, this is useful as a fuel saving measure and to prevent back firing.
@@ -976,16 +976,10 @@ If increased VVT duty cycle increases the indicated VVT angle, set this to 'adva
 ### useBiQuadOnAuxSpeedSensors
 
 
-### sdTriggerLog
-'Trigger' mode will write a high speed log of trigger events (warning: uses lots of space!). 'Full MLG' mode will write a standard MLG of sensors, engine function, etc. similar to the one captured in TunerStudio.
-
 ### stepper_dc_use_two_wires
 
 
 ### watchOutForLinearTime
-
-
-### sdTriggerLogCsv
 
 
 ### sdCardConditionalLogging
@@ -2109,6 +2103,12 @@ Misfire Detection: wobble EMA alpha when spread is decreasing.
 
 ### misfireSettleCycles
 Misfire Detection: firings to wait after entering idle before flagging starts. 0 = immediate.
+
+### dwellDutyModeEnabled
+Dwell Duty Mode: when enabled, ignores the RPM/voltage dwell tables and computes dwell as a fixed percentage of the time between consecutive ignition pulses. Required for Ford TFI modules that expect a 50% duty cycle square wave.
+
+### dwellDutyPercent
+Dwell Duty Mode: percentage of the inter-spark interval used as coil dwell time. 50 = half the interval between pulses (standard TFI target).
 
 ### tcu_shiftTime
 

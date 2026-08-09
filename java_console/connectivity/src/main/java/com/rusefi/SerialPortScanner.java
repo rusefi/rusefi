@@ -2,7 +2,6 @@ package com.rusefi;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.io.LinkManager;
-import com.rusefi.maintenance.CalibrationsInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,6 +29,7 @@ public class SerialPortScanner implements PortScanner {
     private final static Logging log = Logging.getLogging(SerialPortScanner.class);
 
     private static final boolean SHOW_SOCKETCAN = FileLog.isLinux();
+    private static final long DETECTED_ECU_CACHE_MS = 3000;
 
     /**
      * The hardware/OS probes the scan loop performs, separated from the scan *policy* (caching,
@@ -46,7 +46,7 @@ public class SerialPortScanner implements PortScanner {
 
         Collection<String> listTcpPorts();
 
-        Optional<CalibrationsInfo> getEcuCalibrations(String tcpPort);
+        PortResult inspectTcpPort(String tcpPort);
 
         boolean isLiveEcuConnected();
 
@@ -229,7 +229,7 @@ public class SerialPortScanner implements PortScanner {
 
         for (String serialPort : serialPorts) {
             // First, check the port cache
-            final Optional<PortResult> cachedPort = portCache.get(serialPort);
+            final Optional<PortResult> cachedPort = portCache.get(serialPort, probes.now());
             if (cachedPort.isPresent()) {
                 ports.add(cachedPort.get());
             } else {
@@ -242,8 +242,8 @@ public class SerialPortScanner implements PortScanner {
             ports.add(p);
             // Do not cache Unknown — keep the port uninspected so the next scan cycle retries
             // detection automatically without waiting for the port to disappear and reappear.
-            if (p.type != SerialPortType.Unknown) {
-                portCache.put(p);
+            if (p.type != SerialPortType.Unknown && p.type != SerialPortType.UnsupportedEcu) {
+                cacheDetectedPort(p);
             }
         }
 
@@ -260,19 +260,16 @@ public class SerialPortScanner implements PortScanner {
 
         if (includeSlowLookup) {
             for (String tcpPort : tcpPorts) {
-                final Optional<PortResult> cachedPort = portCache.get(tcpPort);
+                final Optional<PortResult> cachedPort = portCache.get(tcpPort, probes.now());
                 if (cachedPort.isPresent()) {
                     ports.add(cachedPort.get());
                 } else {
-                    final Optional<CalibrationsInfo> tcpCalibrations = probes.getEcuCalibrations(tcpPort);
-                    final PortResult tcpResult = tcpCalibrations
-                        .map(c -> new PortResult(tcpPort, SerialPortType.Ecu, c))
-                        .orElseGet(() -> new PortResult(tcpPort, SerialPortType.Unknown));
+                    final PortResult tcpResult = probes.inspectTcpPort(tcpPort);
                     ports.add(tcpResult);
 
-                    // cache port + calibrations
-                    if (tcpCalibrations.isPresent()) {
-                        portCache.put(tcpResult);
+                    // Preserve the previous policy: cache only a positively identified usable ECU.
+                    if (tcpResult.isEcu()) {
+                        cacheDetectedPort(tcpResult);
                     }
                 }
             }
@@ -323,6 +320,14 @@ public class SerialPortScanner implements PortScanner {
 
     private void startTimer() {
         portsScanner.start();
+    }
+
+    private void cacheDetectedPort(PortResult port) {
+        if (port.isEcu()) {
+            portCache.put(port, probes.now() + DETECTED_ECU_CACHE_MS);
+        } else {
+            portCache.put(port);
+        }
     }
 
     public void stopTimer() {

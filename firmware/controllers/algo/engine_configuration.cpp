@@ -341,6 +341,10 @@ static void setDefaultCanSettings() {
 	engineConfiguration->canWriteEnabled = true;
 	engineConfiguration->canVssScaling = 1.0f;
 
+	for (size_t i = 0; i < efi::size(engineConfiguration->canSniffer); i++) {
+		engineConfiguration->canSniffer[i].listenOurs = true;
+	}
+
 	// Don't enable, but set default address
 	engineConfiguration->verboseCanBaseAddress = CAN_DEFAULT_BASE;
 }

@@ -1,0 +1,9 @@
+struct_no_prefix can_sniffer_channel_s
+bit read,"Yes","No";Sniffer listens to this CAN channel
+bit listenOurs,"Yes","No";Sniffer also listen to what RusEFI ECU says
+bit handleInjected,"Yes","No";Messages transmitted from PC will be also handled by RusEFI ECU like it received from CAN
+end_struct
+
+can_sniffer_channel_s[EFI_CAN_BUS_COUNT iterate] canSniffer
+
+can_bus_channel_e canSnifferTxBus;Bus for Tx

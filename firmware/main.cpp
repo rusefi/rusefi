@@ -23,6 +23,8 @@ void setup_custom_board_overrides();
 
 std::optional<setup_custom_board_overrides_type> custom_board_preHalInit;
 
+RUSEFI_STACK_FOREIGN_ROOT(idle, "__idle_thread", PORT_IDLE_THREAD_STACK_SIZE);
+
 int main(void) {
 	setup_custom_fw_overrides();
 	setup_custom_board_overrides();
@@ -44,6 +46,8 @@ int main(void) {
 	runRusEfi();
 	return 0;
 }
+
+RUSEFI_STACK_PROCESS_ROOT();
 
 // Weak linked default implementation (not necessarily required for all boards)
 __attribute__((weak)) void preHalInit() { }

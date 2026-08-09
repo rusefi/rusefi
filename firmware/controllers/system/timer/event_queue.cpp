@@ -33,6 +33,10 @@ EventQueue::EventQueue(efidur_t lateDelay)
 		tryReturnScheduling(&m_pool[i]);
 	}
 
+	// the loop above walked the counter negative, reset now that the whole pool is free
+	m_usedPoolSlots = 0;
+	m_maxUsedPoolSlots = 0;
+
 #if EFI_PROD_CODE
 	getTunerStudioOutputChannels()->schedulingUsedCount = 0;
 #endif
@@ -41,9 +45,27 @@ EventQueue::EventQueue(efidur_t lateDelay)
 scheduling_s* EventQueue::getFreeScheduling() {
 	auto retVal = m_freelist;
 
+#if EFI_UNIT_TEST
+	if (!retVal) {
+		// scheduled events are silently dropped when this happens - see insertTask
+		printf("POOL_EXHAUSTED: scheduling freelist empty, queue size %d\r\n", size());
+		if (verboseMode) {
+			for (scheduling_s* cur = m_head; cur; cur = cur->next) {
+				bool fromPool = cur >= &m_pool[0] && cur <= &m_pool[efi::size(m_pool) - 1];
+				printf("  queued%s: %s at %d\r\n", fromPool ? "(pool)" : "", cur->action.getCallbackName(), (int)cur->getMomentNt());
+			}
+		}
+	}
+#endif
+
 	if (retVal) {
 		m_freelist = retVal->next;
 		retVal->next = nullptr;
+
+		m_usedPoolSlots++;
+		if (m_usedPoolSlots > m_maxUsedPoolSlots) {
+			m_maxUsedPoolSlots = m_usedPoolSlots;
+		}
 
 #if EFI_PROD_CODE
 		getTunerStudioOutputChannels()->schedulingUsedCount++;
@@ -58,6 +80,8 @@ void EventQueue::tryReturnScheduling(scheduling_s* sched) {
 	if (sched >= &m_pool[0] && sched <= &m_pool[efi::size(m_pool) - 1]) {
 		sched->next = m_freelist;
 		m_freelist = sched;
+
+		m_usedPoolSlots--;
 
 #if EFI_PROD_CODE
 		getTunerStudioOutputChannels()->schedulingUsedCount--;
@@ -76,10 +100,18 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitick_t timeNt, action_s
 
 		// If still null, the free list is empty and all schedulings in the pool have been expended.
 		if (!scheduling) {
-			// TODO: should we warn or error here?
-// todo: look into why units tests fail here
+			// Unit tests hit this by design: many trigger tests advance time without invoking
+			// the executor, so pool-backed events legitimately accumulate - see POOL_EXHAUSTED
+			// diagnostics in getFreeScheduling. On real hardware the queue drains in real time
+			// and legitimate load stays tiny (see test_scheduling_pool.cpp), so an empty pool
+			// means events are stuck in the queue (drain stall or far-future timestamps).
 #if EFI_PROD_CODE
-      criticalError("No slots in scheduling pool");
+			// queue size plus how far the next event is from now tell stuck-vs-leak apart:
+			// large negative headInUs = queue not draining, large positive = far-future timestamps,
+			// small queue size = slots leaked outside the queue
+			scheduling_s* head = m_head;
+			criticalError("No slots in scheduling pool, queue size %d, headInUs %d",
+					size(), head ? (int)NT2US(head->getMomentNt() - getTimeNowNt()) : 0);
 #endif
 			return false;
 		}

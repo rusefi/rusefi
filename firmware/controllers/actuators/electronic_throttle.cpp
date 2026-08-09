@@ -729,7 +729,7 @@ void blinkEtbErrorCodes(bool blinkPhase) {
 
 #if !EFI_UNIT_TEST
 
-struct DcThread final : public PeriodicController<512> {
+struct DcThread final : public PeriodicController<DC_THREAD_STACK_SIZE> {
 	DcThread() : PeriodicController("DC", PRIO_ETB, ETB_LOOP_FREQUENCY) {}
 
 	void PeriodicTask(efitick_t) override {
@@ -741,6 +741,8 @@ struct DcThread final : public PeriodicController<512> {
 		}
 	}
 };
+
+RUSEFI_STACK_ROOT(DcThread, PeriodicTask);
 
 static DcThread dcThread CCM_OPTIONAL;
 
@@ -1087,6 +1089,7 @@ const electronic_throttle_s* getLiveData(size_t idx) {
 
 	return etbControllers[idx];
 #else
+	UNUSED(idx);
 	return nullptr;
 #endif
 }

@@ -36,6 +36,19 @@ public class SerialPortCacheTest {
     }
 
     @Test
+    public void detectedEntryExpiresButPinnedEntryDoesNot() {
+        SerialPortCache cache = new SerialPortCache();
+        PortResult detected = new PortResult("COM1", SerialPortType.Ecu);
+        cache.put(detected, 100);
+
+        assertTrue(cache.get("COM1", 99).isPresent());
+        assertFalse(cache.get("COM1", 100).isPresent());
+
+        cache.put(detected);
+        assertTrue(cache.get("COM1", 1_000_000).isPresent());
+    }
+
+    @Test
     public void putOverwritesPreviousEntryForSamePortName() {
         SerialPortCache cache = new SerialPortCache();
         cache.put(new PortResult("COM1", SerialPortType.Unknown));

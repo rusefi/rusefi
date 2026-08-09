@@ -82,16 +82,16 @@ uint32_t CanSniffer::read_hex_number(const char * str, uint8_t len)
 	return d;
 }
 
-void CanSniffer::handle_can_message(const size_t busIndex, const CANRxFrame &cmsg, efitick_t nowNt)
+template<typename T>
+void CanSniffer::handle_can_message(const size_t busIndex, const T &cmsg, efitick_t nowNt)
 {
-	/*
-	if (!m_started)
-		return;
-	*/
-	if (!terminal_open)
-		return;
-	// TODO: check busIndex?
+	// handled at caller level
+	// current implementation have one sniffer CAN channel
+	(void)busIndex;
 
+	if (!terminal_open) {
+		return;
+	}
 
 	//       cmd  id  dlc data   \r  0
 	char buf[ 1  + 8 + 1 + 8*2 + 2*2 + 1 + 1];
@@ -99,7 +99,7 @@ void CanSniffer::handle_can_message(const size_t busIndex, const CANRxFrame &cms
 
 	uint32_t id = CAN_ID(cmsg);
 
-	if (CAN_ISX(cmsg)) { // standard identifier
+	if (!CAN_ISX(cmsg)) { // standard identifier
 		*str++ = CAN_ISRTR(cmsg) ? 'r':'t';
 		str = put_hex_digit(str, id >> 8);
 		str = put_hex_byte(str, id & 0xff);
@@ -120,14 +120,11 @@ void CanSniffer::handle_can_message(const size_t busIndex, const CANRxFrame &cms
 		}
 	}
 
-	// TODO:
-/*
 	if (ts) {
-		uint16_t ts = tick.msec;
-		str = put_hex_byte(str, (ts >> 8) & 0xff);
-		str = put_hex_byte(str, (ts >> 0) & 0xff);
+		uint16_t nowUs = NT2US(nowNt);
+		str = put_hex_byte(str, (nowUs >> 8) & 0xff);
+		str = put_hex_byte(str, (nowUs >> 0) & 0xff);
 	}
-*/
 
 	*str++ = '\r';
 	*str++ = 0;
@@ -136,6 +133,9 @@ void CanSniffer::handle_can_message(const size_t busIndex, const CANRxFrame &cms
 }
 
 bool CanSniffer::can_init(slcan_can_mode_e mode) {
+	// Hardware initialization is controlled by the ECU, so this is mostly a dummy
+	// or for informational prints. Bit rate change and interface restart are not supported
+	// here.
 	switch (mode) {
 	case can_mode_close:
 		efiPrintf("sniffer wants to close CAN");
@@ -177,6 +177,10 @@ void CanSniffer::execute_status_command() {
 }
 
 bool CanSniffer::send_can_message_from_string(const char *str) {
+	if (engineConfiguration->canSnifferTxBus == CAN_BUS_NONE) {
+		return false;
+	}
+
 	char cmd = *str++; // command char
 	bool IDE = cmd == 'T' || cmd == 'R'; // upercase means EID
 	bool RTR = cmd == 'r' || cmd == 'R'; // the upper or lowercase r means RTR
@@ -203,7 +207,7 @@ bool CanSniffer::send_can_message_from_string(const char *str) {
 	if(dlc > 8)
 		return false;
 
-	CanTxMessage cmsg(CanCategory::SNIFFER, id, dlc, /*bus*/0, /*isExtended*/IDE);
+	CanTxMessage cmsg(CanCategory::SNIFFER, id, dlc, engineConfiguration->canSnifferTxBus - CAN_BUS_CAN1, /*isExtended*/IDE);
 
 	if (!RTR) {
 		for (uint8_t i = 0; i < dlc; i++) {
@@ -219,12 +223,22 @@ size_t CanSniffer::readLine() {
 	size_t offset = 0;
 
 	do {
-		size_t transferred = chnReadTimeout(m_channel, (uint8_t *)&line[offset], 1, TIME_MS2I(100));
-		// timeout?
-		if (transferred == 0) {
+		msg_t ret = chnGetTimeout(m_channel, TIME_MS2I(100));
+		if (ret == MSG_TIMEOUT) {
+			return 0;
+		}
+		if (ret == MSG_RESET) {
+			// channel not ready...
+			// do not waste cpu time
+			chThdSleepMilliseconds(10);
+			return 0;
+		}
+		if (ret < 0) {
+			// add delay?
 			return 0;
 		}
 
+		line[offset] = ret;
 		if (line[offset] == '\r') {
 			line[offset + 1] = '\0';
 			return offset;
@@ -247,6 +261,7 @@ void CanSniffer::executeCommand() {
 		case 't': // transmit standard ID messages
 		case 'r':
 			if (transmit_enabled && send_can_message_from_string(str)) {
+				// Ack instantly
 				putstr("z\r");
 				//putstr(loopback, str);
 			}
@@ -258,6 +273,7 @@ void CanSniffer::executeCommand() {
 		case 'T': // transmit extended ID messages
 		case 'R':
 			if (transmit_enabled && send_can_message_from_string(str)) {
+				// Ack instantly
 				putstr("Z\r");
 			}
 			else {
@@ -266,6 +282,8 @@ void CanSniffer::executeCommand() {
 			break;
 
 		case 'O': //open terminal
+			// Bit rate and interface state are controlled by the ECU.
+			// The sniffer just opens its logical terminal.
 			if (baudrate_configured && !terminal_open && can_init(can_mode_normal)) {
 				terminal_open = 1;
 				transmit_enabled = 1;
@@ -299,6 +317,7 @@ void CanSniffer::executeCommand() {
 			break;
 
 		case 'C': //close terminal
+			// Hardware is controlled by the ECU, we only close the logical terminal.
 			if (terminal_open) {
 				terminal_open = 0;
 				transmit_enabled = 0;
@@ -318,6 +337,7 @@ void CanSniffer::executeCommand() {
 			break;
 
 		case 'S': //select bitrate e.g. "S4" for 125kbit
+			// Bit rate change is not supported, it is controlled by the ECU.
 			if (terminal_open || str[1] < '0' || str[1] > '8') {
 				// any other character is also error
 				// or terminal is open, we cannot set a baud rate
@@ -377,5 +397,9 @@ void CanSniffer::putstr(const char * s)
 
 	chnWriteTimeout(m_channel, (uint8_t *)s, l, TIME_MS2I(100));
 }
+
+// Explicitly instantiate the template for the required frame types
+template void CanSniffer::handle_can_message<CANTxFrame>(unsigned int, const CANTxFrame&, long long);
+template void CanSniffer::handle_can_message<CANRxFrame>(unsigned int, const CANRxFrame&, long long);
 
 #endif // EFI_PROD_CODE && EFI_CAN_SUPPORT && EFI_USB_SERIAL

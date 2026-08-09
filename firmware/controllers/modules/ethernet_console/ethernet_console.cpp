@@ -9,6 +9,9 @@
 #include "thread_controller.h"
 #include "tunerstudio.h"
 
+RUSEFI_STACK_FOREIGN_ROOT(lwIP_driver, "lwip_thread", LWIP_THREAD_STACK_SIZE);
+RUSEFI_STACK_FOREIGN_ROOT(lwIP_TCP__IP, "tcpip_thread", TCPIP_THREAD_STACKSIZE);
+
 static int listenerSocket = -1;
 static int connectionSocket = -1;
 
@@ -22,12 +25,23 @@ static void do_connection() {
 
 	sockaddr_in remote;
 	socklen_t size = sizeof(remote);
-	connectionSocket = lwip_accept(listenerSocket, (sockaddr*)&remote, &size);
-
-	if (connectionSocket != -1) {
-		int one = 1;
-		lwip_setsockopt(connectionSocket, IPPROTO_TCP, TCP_NODELAY, &one, sizeof(one));
+	while (connectionSocket == -1) {
+		connectionSocket = lwip_accept(listenerSocket, (sockaddr*)&remote, &size);
+		if (connectionSocket == -1) {
+			chThdSleepMilliseconds(100);
+		}
 	}
+
+	int one = 1;
+	lwip_setsockopt(connectionSocket, IPPROTO_TCP, TCP_NODELAY, &one, sizeof(one));
+	lwip_setsockopt(connectionSocket, SOL_SOCKET, SO_KEEPALIVE, &one, sizeof(one));
+
+	int keepIdle = 5;
+	int keepInterval = 1;
+	int keepCount = 3;
+	lwip_setsockopt(connectionSocket, IPPROTO_TCP, TCP_KEEPIDLE, &keepIdle, sizeof(keepIdle));
+	lwip_setsockopt(connectionSocket, IPPROTO_TCP, TCP_KEEPINTVL, &keepInterval, sizeof(keepInterval));
+	lwip_setsockopt(connectionSocket, IPPROTO_TCP, TCP_KEEPCNT, &keepCount, sizeof(keepCount));
 }
 
 class EthernetChannel final : public TsChannelBase {
@@ -77,14 +91,19 @@ private:
 public:
 
 	size_t readTimeout(uint8_t* buffer, size_t size, int /*timeout*/) override {
-		auto result = lwip_recv(connectionSocket, buffer, size, /*flags =*/ 0);
-
-		if (result == -1) {
-			do_connection();
-			return 0;
+		size_t received = 0;
+		while (received < size) {
+			auto result = lwip_recv(connectionSocket, buffer + received, size - received, /*flags =*/ 0);
+			if (result <= 0) {
+				in_sync = false;
+				txPos = 0;
+				do_connection();
+				return 0;
+			}
+			received += static_cast<size_t>(result);
 		}
 
-		return result;
+		return received;
 	}
 };
 

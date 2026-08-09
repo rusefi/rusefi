@@ -7,10 +7,12 @@ import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.migration.TuneMigrationContext;
 import com.rusefi.tune.xml.Constant;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Optional;
 
 /**
- * TableAddColumnsMigrator handles resizing of 2D tables (e.g., VE, Ignition) when columns or rows are added.
+ * Handles non-shrinking resize of 2D tables and their axes.
  *
  * <h3>Testing and Coverage Examples:</h3>
  * This migrator is tested in {@code TableAddColumnsMigratorTest} in the {@code java_console/ui} module.
@@ -23,19 +25,27 @@ import java.util.Optional;
 public class TableAddColumnsMigrator implements TuneMigrator {
     public static final String VE_TABLE_FIELD_NAME = "veTable";
     public static final String VE_RPM_BINS_FIELD_NAME = "veRpmBins";
+    public static final String VE_LOAD_BINS_FIELD_NAME = "veLoadBins";
     public static final String LAMBDA_TABLE_FIELD_NAME = "lambdaTable";
     public static final String LAMBDA_RPM_BINS_FIELD_NAME = "lambdaRpmBins";
+    public static final String LAMBDA_LOAD_BINS_FIELD_NAME = "lambdaLoadBins";
     public static final String IGNITION_TABLE_FIELD_NAME = "ignitionTable";
     public static final String IGNITION_RPM_BINS_FIELD_NAME = "ignitionRpmBins";
+    public static final String IGNITION_LOAD_BINS_FIELD_NAME = "ignitionLoadBins";
     public static final String INJECTION_PHASE_FIELD_NAME = "injectionPhase";
     public static final String INJECTION_PHASE_RPM_BINS_FIELD_NAME = "injPhaseRpmBins";
+    public static final String INJECTION_PHASE_LOAD_BINS_FIELD_NAME = "injPhaseLoadBins";
     public static final String MAP_SAMPLING_FIELD_NAME = "map_samplingAngle";
     public static final String MAP_SAMPLING_RPM_BINS_NAME = "map_samplingAngleBins";
+    public static final String PEDAL_TO_TPS_TABLE_FIELD_NAME = "pedalToTpsTable";
+    public static final String PEDAL_TO_TPS_RPM_BINS_FIELD_NAME = "pedalToTpsRpmBins";
+    public static final String PEDAL_TO_TPS_PEDAL_BINS_FIELD_NAME = "pedalToTpsPedalBins";
 
     public static final TableAddColumnsMigrator VE_TABLE_MIGRATOR = new TableAddColumnsMigrator(
         VE_TABLE_FIELD_NAME,
         FieldType.UINT16,
         VE_RPM_BINS_FIELD_NAME,
+        VE_LOAD_BINS_FIELD_NAME,
         RetainTableValuesConverter.INSTANCE
     );
 
@@ -43,6 +53,7 @@ public class TableAddColumnsMigrator implements TuneMigrator {
         LAMBDA_TABLE_FIELD_NAME,
         FieldType.UINT8,
         LAMBDA_RPM_BINS_FIELD_NAME,
+        LAMBDA_LOAD_BINS_FIELD_NAME,
         AfrLambdaTableValuesConverter.INSTANCE
     );
 
@@ -50,6 +61,7 @@ public class TableAddColumnsMigrator implements TuneMigrator {
         IGNITION_TABLE_FIELD_NAME,
         FieldType.INT16,
         IGNITION_RPM_BINS_FIELD_NAME,
+        IGNITION_LOAD_BINS_FIELD_NAME,
         RetainTableValuesConverter.INSTANCE
     );
 
@@ -57,19 +69,30 @@ public class TableAddColumnsMigrator implements TuneMigrator {
         INJECTION_PHASE_FIELD_NAME ,
         FieldType.INT16,
         INJECTION_PHASE_RPM_BINS_FIELD_NAME,
+        INJECTION_PHASE_LOAD_BINS_FIELD_NAME,
         RetainTableValuesConverter.INSTANCE
     );
 
     public static final TableAddColumnsMigrator MAP_SAMPLING_MIGRATOR = new TableAddColumnsMigrator(
         MAP_SAMPLING_FIELD_NAME ,
         FieldType.FLOAT,
+        null,
         MAP_SAMPLING_RPM_BINS_NAME,
         MapSamplingValuesConverter.INSTANCE
+    );
+
+    public static final TableAddColumnsMigrator PEDAL_TO_TPS_MIGRATOR = new TableAddColumnsMigrator(
+        PEDAL_TO_TPS_TABLE_FIELD_NAME,
+        FieldType.UINT8,
+        PEDAL_TO_TPS_RPM_BINS_FIELD_NAME,
+        PEDAL_TO_TPS_PEDAL_BINS_FIELD_NAME,
+        RetainTableValuesConverter.INSTANCE
     );
 
     private final String tableFieldName;
     private final FieldType tableFieldType;
     private final String columnsBinFieldName;
+    private final String rowsBinFieldName;
     private final TableValuesConverter prevTableValueConverter;
 
     private static class RetainTableValuesConverter implements TableValuesConverter {
@@ -93,9 +116,20 @@ public class TableAddColumnsMigrator implements TuneMigrator {
         final String columnsIniBinFieldName,
         final TableValuesConverter tableValuesConverter
     ) {
+        this(tableIniFieldName, tableIniFieldType, columnsIniBinFieldName, null, tableValuesConverter);
+    }
+
+    private TableAddColumnsMigrator(
+        final String tableIniFieldName,
+        final FieldType tableIniFieldType,
+        final String columnsIniBinFieldName,
+        final String rowsIniBinFieldName,
+        final TableValuesConverter tableValuesConverter
+    ) {
         tableFieldName = tableIniFieldName;
         tableFieldType = tableIniFieldType;
         columnsBinFieldName = columnsIniBinFieldName;
+        rowsBinFieldName = rowsIniBinFieldName;
         prevTableValueConverter = tableValuesConverter;
     }
 
@@ -120,8 +154,47 @@ public class TableAddColumnsMigrator implements TuneMigrator {
         if (prevArrayIniField.isPresent() && updatedArrayIniField.isPresent()) {
             final ArrayIniField prevTableField = prevArrayIniField.get();
             final int prevTableFieldCols = prevTableField.getCols();
+            final int prevTableFieldRows = prevTableField.getRows();
             final ArrayIniField updatedTableField = updatedArrayIniField.get();
             final int updatedTableFieldCols = updatedTableField.getCols();
+            final int updatedTableFieldRows = updatedTableField.getRows();
+            final boolean columnsGrow = prevTableFieldCols < updatedTableFieldCols;
+            final boolean rowsGrow = prevTableFieldRows < updatedTableFieldRows;
+            if (!columnsGrow && !rowsGrow) {
+                if (updatedTableFieldCols < prevTableFieldCols || updatedTableFieldRows < prevTableFieldRows) {
+                    context.getCallbacks().logLine(String.format(
+                        "WARNING! `%s` ini-field cannot be migrated from %dx%d to smaller %dx%d dimensions",
+                        tableFieldName,
+                        prevTableFieldCols,
+                        prevTableFieldRows,
+                        updatedTableFieldCols,
+                        updatedTableFieldRows
+                    ));
+                }
+                return;
+            }
+            if (updatedTableFieldCols < prevTableFieldCols || updatedTableFieldRows < prevTableFieldRows) {
+                context.getCallbacks().logLine(String.format(
+                    "WARNING! `%s` ini-field cannot be migrated when one dimension shrinks",
+                    tableFieldName
+                ));
+                return;
+            }
+            if (rowsGrow && rowsBinFieldName == null) {
+                context.getCallbacks().logLine(String.format(
+                    "WARNING! `%s` ini-field cannot add rows without a row-axis field",
+                    tableFieldName
+                ));
+                return;
+            }
+            if (columnsGrow && columnsBinFieldName == null) {
+                context.getCallbacks().logLine(String.format(
+                    "WARNING! `%s` ini-field cannot add columns without a column-axis field",
+                    tableFieldName
+                ));
+                return;
+            }
+
             final Constant prevValue = context.getPrevTune().getConstantsAsMap().get(tableFieldName);
             if (prevValue != null) {
                 final Optional<String[][]> convertedPrevValues = prevTableValueConverter.convertTableValues(
@@ -136,7 +209,8 @@ public class TableAddColumnsMigrator implements TuneMigrator {
                         context.getCallbacks()
                     );
                     if (migratedValues.isPresent()) {
-                        context.addMigration(
+                        final Map<String, Constant> migrations = new LinkedHashMap<>();
+                        migrations.put(
                             tableFieldName,
                             new Constant(
                                 tableFieldName,
@@ -147,57 +221,91 @@ public class TableAddColumnsMigrator implements TuneMigrator {
                                 Integer.toString(updatedTableFieldCols)
                             )
                         );
+
+                        if (columnsGrow) {
+                            final Optional<Constant> columnsMigration = migrateBins(
+                                context,
+                                columnsBinFieldName,
+                                prevTableFieldCols,
+                                updatedTableFieldCols
+                            );
+                            if (!columnsMigration.isPresent()) {
+                                return;
+                            }
+                            migrations.put(columnsBinFieldName, columnsMigration.get());
+                        }
+                        if (rowsGrow) {
+                            final Optional<Constant> rowsMigration = migrateBins(
+                                context,
+                                rowsBinFieldName,
+                                prevTableFieldRows,
+                                updatedTableFieldRows
+                            );
+                            if (!rowsMigration.isPresent()) {
+                                return;
+                            }
+                            migrations.put(rowsBinFieldName, rowsMigration.get());
+                        }
+
+                        migrations.forEach(context::addMigration);
                     }
                 }
             }
-            migrateBins(context, prevTableFieldCols, updatedTableFieldCols);
         }
     }
 
-    private void migrateBins(final TuneMigrationContext context, final int prevBinsCount, final int updatedBinsCount) {
-        final Constant prevValue = context.getPrevTune().getConstantsAsMap().get(columnsBinFieldName);
+    private Optional<Constant> migrateBins(
+        final TuneMigrationContext context,
+        final String binsFieldName,
+        final int prevBinsCount,
+        final int updatedBinsCount
+    ) {
+        final Constant prevValue = context.getPrevTune().getConstantsAsMap().get(binsFieldName);
         if (prevValue != null) {
-            final Optional<IniField> prevField = context.getPrevIniFile().findIniField(columnsBinFieldName);
+            final Optional<IniField> prevField = context.getPrevIniFile().findIniField(binsFieldName);
             if (!prevField.isPresent()) {
                 context.getCallbacks().logLine(String.format(
                     "WARNING!!! Missed `%s` ini field in previous .ini file.",
-                    columnsBinFieldName
+                    binsFieldName
                 ));
-                return;
+                return Optional.empty();
             }
-            final Optional<IniField> updatedField = context.getUpdatedIniFile().findIniField(columnsBinFieldName);
+            final Optional<IniField> updatedField = context.getUpdatedIniFile().findIniField(binsFieldName);
             if (!updatedField.isPresent()) {
                 context.getCallbacks().logLine(String.format(
                     "WARNING!!! Missed `%s` ini field in updated .ini file.",
-                    columnsBinFieldName
+                    binsFieldName
                 ));
-                return;
+                return Optional.empty();
             }
-            final ArrayIniField updatedBinsField = (ArrayIniField) updatedField.get();
             final Optional<String> migratedValue = new BinsIniFieldMigratorStrategy(
-                columnsBinFieldName,
+                binsFieldName,
                 prevBinsCount,
                 updatedBinsCount
             ).tryMigrateBins(
                 prevField.get(),
-                updatedBinsField,
+                updatedField.get(),
                 prevValue.getValue(),
                 context.getCallbacks()
             );
             if (migratedValue.isPresent()) {
-                context.addMigration(
-                    columnsBinFieldName,
-                    new Constant(
-                        columnsBinFieldName,
-                        updatedBinsField.getUnits(),
-                        migratedValue.get(),
-                        updatedBinsField.getDigits(),
-                        Integer.toString(updatedBinsField.getRows()),
-                        Integer.toString(updatedBinsField.getCols())
-                    )
-                );
+                final ArrayIniField updatedBinsField = (ArrayIniField) updatedField.get();
+                return Optional.of(new Constant(
+                    binsFieldName,
+                    updatedBinsField.getUnits(),
+                    migratedValue.get(),
+                    updatedBinsField.getDigits(),
+                    Integer.toString(updatedBinsField.getRows()),
+                    Integer.toString(updatedBinsField.getCols())
+                ));
             }
+        } else {
+            context.getCallbacks().logLine(String.format(
+                "WARNING!!! Missed `%s` value in previous tune.",
+                binsFieldName
+            ));
         }
+        return Optional.empty();
     }
 
     private Optional<String[][]> tryMigrateTable(
@@ -206,33 +314,46 @@ public class TableAddColumnsMigrator implements TuneMigrator {
         final String[][] prevValues,
         final UpdateOperationCallbacks callbacks
     ) {
-        Optional<String[][]> result = Optional.empty();
-        final int tableFieldRows = prevField.getRows();
-        if (newField.getRows() == tableFieldRows) {
-            final int prevTableFieldCols = prevField.getCols();
-            final int newTableFieldCols = newField.getCols();
-            if (prevTableFieldCols < newTableFieldCols) {
-                final String[][] newValues = new String[tableFieldRows][newTableFieldCols];
-                for (int rowIdx = 0; rowIdx < tableFieldRows; rowIdx++) {
-                    // copy prev values:
-                    for (int colIdx = 0; colIdx < prevTableFieldCols; colIdx++) {
-                        newValues[rowIdx][colIdx] = prevValues[rowIdx][colIdx];
-                    }
-                    // propagate value from a last column to new columns:
-                    for (int colIdx = prevTableFieldCols; colIdx < newTableFieldCols; colIdx++) {
-                        newValues[rowIdx][colIdx] = prevValues[rowIdx][prevTableFieldCols - 1];
-                    }
-                }
-                result = Optional.of(newValues);
-            }
-        } else {
+        final int prevRows = prevField.getRows();
+        final int prevCols = prevField.getCols();
+        if (prevValues.length != prevRows) {
             callbacks.logLine(String.format(
-                "WARNING! New `%s` ini-field is expected to contain %d rows as prev ini-field does",
+                "WARNING! Previous `%s` value has %d rows instead of %d",
                 tableFieldName,
-                tableFieldRows
+                prevValues.length,
+                prevRows
             ));
+            return Optional.empty();
         }
-        return result;
+        for (final String[] row : prevValues) {
+            if (row.length != prevCols) {
+                callbacks.logLine(String.format(
+                    "WARNING! Previous `%s` value has a row with %d columns instead of %d",
+                    tableFieldName,
+                    row.length,
+                    prevCols
+                ));
+                return Optional.empty();
+            }
+        }
+
+        final int newRows = newField.getRows();
+        final int newCols = newField.getCols();
+        if (newRows < prevRows || newCols < prevCols) {
+            return Optional.empty();
+        }
+
+        final String[][] newValues = new String[newRows][newCols];
+        for (int rowIdx = 0; rowIdx < newRows; rowIdx++) {
+            for (int colIdx = 0; colIdx < newCols; colIdx++) {
+                newValues[rowIdx][colIdx] = prevValues[
+                    Math.min(rowIdx, prevRows - 1)
+                ][
+                    Math.min(colIdx, prevCols - 1)
+                ];
+            }
+        }
+        return Optional.of(newValues);
     }
 
     private Optional<ArrayIniField> getValidatedTableArrayIniField(

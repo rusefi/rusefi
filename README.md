@@ -52,4 +52,3 @@ Important note - we now use submodules:
 See [gcc_version_check.c](https://github.com/rusefi/rusefi/blob/master/firmware/gcc_version_check.c) for recommended version of GCC.
 
 Check out https://rusefi.com/forum/viewtopic.php?f=5&t=9
-

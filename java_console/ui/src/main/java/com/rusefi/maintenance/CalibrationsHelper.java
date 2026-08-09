@@ -910,6 +910,15 @@ public class CalibrationsHelper {
         final String port,
         final UpdateOperationCallbacks callbacks
     ) {
+        return readCurrentCalibrationsWithoutSuspendingPortScanner(
+            port, callbacks, LinkManager.EcuCompatibilityListener.VOID);
+    }
+
+    public static Optional<CalibrationsInfo> readCurrentCalibrationsWithoutSuspendingPortScanner(
+        final String port,
+        final UpdateOperationCallbacks callbacks,
+        final LinkManager.EcuCompatibilityListener compatibilityListener
+    ) {
         return BinaryProtocolExecutor.execute(
             port,
             callbacks,
@@ -924,7 +933,8 @@ public class CalibrationsHelper {
             },
             Optional.empty(),
             true,
-            "readCalibrationsInfo");
+            "readCalibrationsInfo",
+            compatibilityListener);
     }
 
     public static Optional<CalibrationsInfo> readAndBackupCurrentCalibrationsWithSuspendedPortScanner(
