@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Tue Jun 16 02:40:10 UTC 2026
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Sun Aug 09 03:05:40 UTC 2026
 // see also gen_config_and_enums.bat
 
 
@@ -252,6 +252,8 @@ const char *getTrigger_type_e(trigger_type_e value) {
 			return "TT_ARCTIC_CAT";
 		case trigger_type_e::TT_BENELLI_TRE:
 			return "TT_BENELLI_TRE";
+		case trigger_type_e::TT_BMW_VANOS_RELUCTOR:
+			return "TT_BMW_VANOS_RELUCTOR";
 		case trigger_type_e::TT_CHRYSLER_NGC_36_2_2:
 			return "TT_CHRYSLER_NGC_36_2_2";
 		case trigger_type_e::TT_CHRYSLER_PHASER:
@@ -394,8 +396,6 @@ const char *getTrigger_type_e(trigger_type_e value) {
 			return "TT_TRI_TACH";
 		case trigger_type_e::TT_UNUSED:
 			return "TT_UNUSED";
-		case trigger_type_e::TT_UNUSED_98:
-			return "TT_UNUSED_98";
 		case trigger_type_e::TT_VIPER_V10_CRANK:
 			return "TT_VIPER_V10_CRANK";
 		case trigger_type_e::TT_VVT_BARRA_3_PLUS_1:
