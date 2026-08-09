@@ -1,5 +1,39 @@
 # Work Report
 
+## 2026-08-09 - m74_9 watchdog critical: instrument MstWatchdog with TIM5 register snapshot
+
+What was done:
+- m74_9 (AT32F435, CAN-only) runs ~10-20 s after boot, then latches
+  `CRITICAL error: Watchdog: no events for 2 seconds!` (firmwareError RUNTIME_CRITICAL_TIMER_WATCHDOG)
+- The MstWatchdog thread (only started under EFI_EMULATE_POSITION_SENSORS, inherited TRUE from
+  stm32f4ems/efifeatures.h) fires when setHardwareSchedulerTimer() has not updated
+  lastSetTimerTimeNt for 2 s. The watchDogBuddy 1 s self-rescheduling event keeps that chain
+  alive, so a trip means the TIM5 compare-interrupt -> executor loop died at runtime. Console
+  CAN and status_loop keep running after the error, so it is NOT a global IRQ stall - something
+  specific to the TIM5 CC1 path on the AT32 port
+- Static verification of the chain: PWM driver is the STM32 TIMv1 LLD compiled for AT32
+  (AT32 platform.mk reuses STM32/LLD/TIMv1/driver.mk), STM32_TIM5_HANDLER=Vector108 (IRQ 50,
+  vector table offset 0x108), STM32_PWM_TIM5_IRQ_PRIORITY=4 from the new at32 interrupt_priority.h,
+  AT32_TIM_CR1_PMEN 32-bit mode set in pwm_lld_start. Nothing else on this board uses PWMD5/TIM5
+  (A0-A3 -> PWMD5 mapping in stm32_pwm.cpp is unused by the m74_9 default config)
+- Added diagnostics to firmware/hw_layer/microsecond_timer/microsecond_timer.cpp
+  MicrosecondTimerWatchdogController::PeriodicTask: the error message now snapshots
+  timerCallbackCounter (ISR count), setHwTimerCounter, timerFreezeCounter, isTimerPending and
+  raw TIM5 CNT x2 / DIER / SR / CR1 at the moment of detection. Distinguishes timer clock dead
+  (CNT frozen), compare IRQ dead (CNT counting, DIER bit 1 / CC1IE cleared), notification never
+  re-armed (pending=0) vs executor/queue wedged (counters still growing). Guarded by
+  #ifdef SCHEDULER_TIMER_DEVICE so the cypress/kinetis GPT port keeps the old message
+
+Validation:
+- Edit is type-checked by hand (%d/%u/%x specifiers match the casted arguments); no firmware
+  build possible on the macOS host (no arm-none-eabi toolchain) - user builds m74_9 on Windows
+
+Follow-ups:
+- User: rebuild m74_9 on Windows, flash, reproduce (~20 s), capture the new watchdog error text
+  with isr=/setHw=/freeze=/pending=/cnt=/dier=/sr=/cr1= values
+- Reading the values: CNT frozen -> TIM5 clock stopped; DIER without CC1IE (bit 1) -> compare
+  interrupt never re-armed; counters still growing -> executor/queue issue, not the timer
+
 ## 2026-08-09 - PCAN ISO-TP decode root cause: decodePacket got the 127-byte buffer instead of the DLC
 
 What was done:
