@@ -116,7 +116,22 @@ struct MicrosecondTimerWatchdogController : public PeriodicController<TIMER_WATC
 	void PeriodicTask(efitick_t nowNt) override {
 		// 2 seconds of inactivity would not look right
 		if (nowNt > lastSetTimerTimeNt + MS2NT(2000)) {
+#ifdef SCHEDULER_TIMER_DEVICE
+			// Snapshot the hardware timer state at the moment of detection to tell apart:
+			// - timer clock dead (CNT frozen),
+			// - compare interrupt dead (DIER bit 1 / CC1IE cleared, CNT still counting),
+			// - notification never re-armed after last fire (isTimerPending false).
+			uint32_t cnt1 = SCHEDULER_TIMER_DEVICE->CNT;
+			uint32_t cnt2 = SCHEDULER_TIMER_DEVICE->CNT;
+			firmwareError(ObdCode::RUNTIME_CRITICAL_TIMER_WATCHDOG,
+				"Watchdog: no events for 2s! isr=%d setHw=%d freeze=%d pending=%d cnt=%u..%u dier=0x%x sr=0x%x cr1=0x%x",
+				timerCallbackCounter, setHwTimerCounter, timerFreezeCounter, (int)isTimerPending,
+				(unsigned)cnt1, (unsigned)cnt2,
+				(unsigned)SCHEDULER_TIMER_DEVICE->DIER, (unsigned)SCHEDULER_TIMER_DEVICE->SR,
+				(unsigned)SCHEDULER_TIMER_DEVICE->CR1);
+#else
 			firmwareError(ObdCode::RUNTIME_CRITICAL_TIMER_WATCHDOG, "Watchdog: no events for 2 seconds!");
+#endif
 		}
 	}
 };
