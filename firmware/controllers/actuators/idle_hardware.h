@@ -12,3 +12,8 @@
 void initIdleHardware();
 bool isIdleHardwareRestartNeeded();
 bool isIdleMotorBusy();
+
+#if EFI_UNIT_TEST
+float getIdleSolenoidOpenDutyForUnitTest();
+float getIdleSolenoidCloseDutyForUnitTest();
+#endif // EFI_UNIT_TEST

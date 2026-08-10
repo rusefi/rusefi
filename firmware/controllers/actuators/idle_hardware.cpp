@@ -27,6 +27,27 @@ StepperMotor iacMotor CCM_OPTIONAL;
 static SimplePwm idleSolenoidOpen("idle open");
 static SimplePwm idleSolenoidClose("idle close");
 
+#if EFI_UNIT_TEST
+static float getEffectiveDuty(const SimplePwm& pwm) {
+	// near-zero and near-full duty do not update the state sequence, they only switch the mode
+	if (pwm.mode == PM_ZERO) {
+		return 0;
+	}
+	if (pwm.mode == PM_FULL) {
+		return 1;
+	}
+	return pwm.seq.getSwitchTime(0);
+}
+
+float getIdleSolenoidOpenDutyForUnitTest() {
+	return getEffectiveDuty(idleSolenoidOpen);
+}
+
+float getIdleSolenoidCloseDutyForUnitTest() {
+	return getEffectiveDuty(idleSolenoidClose);
+}
+#endif // EFI_UNIT_TEST
+
 void applyIACposition(percent_t position) {
 	/**
 	 * currently idle level is an percent value (0-100 range), and PWM takes a float in the 0..1 range
