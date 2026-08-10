@@ -608,14 +608,14 @@
         <constant name="canWbo2_type">"RusEFI"</constant>
         <constant name="canWriteEnabled">"enable"</constant>
         <constant name="cdmInputPin">"NONE"</constant>
-        <constant digits="1" name="cel_battery_max_v" units="V">0.0</constant>
-        <constant digits="1" name="cel_battery_min_v" units="V">0.0</constant>
-        <constant digits="2" name="cel_iat_max_v" units="V">0.0</constant>
-        <constant digits="2" name="cel_iat_min_v" units="V">0.0</constant>
-        <constant digits="2" name="cel_map_max_v" units="V">0.0</constant>
-        <constant digits="2" name="cel_map_min_v" units="V">0.0</constant>
-        <constant digits="2" name="cel_tps_max_v" units="V">0.0</constant>
-        <constant digits="2" name="cel_tps_min_v" units="V">0.0</constant>
+        <constant digits="1" name="cel_battery_max_v" units="V">18.0</constant>
+        <constant digits="1" name="cel_battery_min_v" units="V">6.0</constant>
+        <constant digits="2" name="cel_iat_max_v" units="V">4.8</constant>
+        <constant digits="2" name="cel_iat_min_v" units="V">0.2</constant>
+        <constant digits="2" name="cel_map_max_v" units="V">4.8</constant>
+        <constant digits="2" name="cel_map_min_v" units="V">0.2</constant>
+        <constant digits="2" name="cel_tps_max_v" units="V">4.8</constant>
+        <constant digits="2" name="cel_tps_min_v" units="V">0.2</constant>
         <constant name="clt_adcChannel">"Disabled"</constant>
         <constant digits="1" name="clt_bias_resistor" units="Ohm">1500.0</constant>
         <constant digits="1" name="clt_resistance_1" units="Ohm">9500.0</constant>
@@ -5174,7 +5174,7 @@
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260810" nPages="1" signature="rusEFI master.2026.08.10.f407-discovery.1509844861" version="5.0"/>
+    <versionInfo firmwareInfo="20260810" nPages="1" signature="rusEFI master.2026.08.10.f407-discovery.47800182" version="5.0"/>
     <bibliography author="rusEFI 20260810" writeDate="date"/>
     <settings/>
     <userComments/>
