@@ -131,13 +131,15 @@ static struct l9779_config l9779_cfg = {
 			SPI_CR1_16BIT_MODE |
 			SPI_CR1_SSM |
 			SPI_CR1_SSI |
-			/* L9779WD-SPI is MSB-first: datasheet 6.16.2 "The DIN pin
-			 * receives serial data from the master with MSB first". With
-			 * LSB-first frames the chip rejects every frame (its SPI_ERR
-			 * lands in our bit 0) and answers 0x0001 forever - no read
-			 * reply, IDENT stays 0x00. This was the original cause of the
-			 * dead injector/coil drivers on m74_9. */
-			((3 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |	// div = 16
+			/* L9779WD-SPI: MSB-first 16-bit frames (datasheet 6.16.2), data
+			 * latched on the rising edge of SCK and shifted on the falling
+			 * edge. Mode 0 (CPOL=0, CPHA=0) and mode 1 (CPOL=0, CPHA=1) are
+			 * both rejected by the chip with SPI_ERR (DO=0x8000) on every
+			 * frame; Figure 73 shows SCK idling high, which together with the
+			 * latch-on-rising requirement gives SPI mode 3 (CPOL=1, CPHA=1).
+			 * Transfer clock stays under the 8 MHz limit (Table 53):
+			 * div 32 = 4.5 MHz @ 144 MHz APB2 (div 16 = 9 MHz exceeds it). */
+			((4 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |	// div = 32
 			SPI_CR1_MSTR |
 			SPI_CR1_CPOL |
 			SPI_CR1_CPHA |
