@@ -35,7 +35,6 @@
 #include "trigger_emulator_algo.h"
 #include "high_pressure_fuel_pump.h"
 #include "malfunction_central.h"
-#include "malfunction_indicator.h"
 #include "speed_density.h"
 #include "local_version_holder.h"
 #include "alternator_controller.h"
@@ -434,10 +433,6 @@ void commonInitEngineController() {
 #if EFI_VVT_PID
 	initVvtActuators();
 #endif /* EFI_VVT_PID */
-
-#if EFI_MALFUNCTION_INDICATOR
-	initMalfunctionIndicator();
-#endif /* EFI_MALFUNCTION_INDICATOR */
 
 #if !EFI_UNIT_TEST
 	// This is tested independently - don't configure sensors for tests.
