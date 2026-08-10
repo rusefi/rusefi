@@ -40,6 +40,68 @@ Profile membership is exact. Adding or removing a linked root without updating
 the corresponding profile table makes report generation fail with the missing
 and extra entries.
 
+## Add A Thread
+
+1. Mark the thread entry in the source that owns its working area:
+
+```cpp
+class ExampleThread final : public ThreadController<512> {
+    // ...
+};
+
+RUSEFI_STACK_ROOT(ExampleThread, ThreadTask);
+```
+
+For a `PeriodicController`, use `PeriodicTask`. For a function passed directly
+to `chThdCreateStatic`, use the working-area size explicitly:
+
+```cpp
+static THD_WORKING_AREA(exampleThreadStack, 512);
+
+static THD_FUNCTION(exampleThread, arg) {
+    // ...
+}
+
+RUSEFI_STACK_ROOT_EXPLICIT(exampleThread, 512);
+```
+
+Place the macro after the entry function is declared. Use
+`RUSEFI_STACK_FOREIGN_ROOT` only when the entry is an inaccessible static
+function in upstream code. The macros compile to no code outside production
+stack-report builds and their ELF metadata is not flashed.
+
+2. Build and run the report for every affected reference-board profile. The
+report fails and prints the exact `missing` or `extra` entry when a linked root
+is not in its profile.
+
+3. Add the exact demangled entry name to the matching
+`src/main/resources/stack_usage/<profile>.md` table. Start with `-` for
+Retained, Proxy, and Scenario if the thread has not been measured:
+
+```text
+| firmware | ExampleThread::ThreadTask | example worker | - | - | - |
+```
+
+Do not add inactive roots to a profile. The profile describes the final ELF
+for that board, not all source files.
+
+## Fix A Stack Overflow
+
+1. Reproduce the highest realistic workload on hardware and record the maximum
+stack used by the thread. `Remaining stack` console diagnostics and the stack
+guard/check are useful runtime evidence; include ChibiOS overhead in the
+working-area budget.
+
+2. Increase the owning `ThreadController<N>`, `PeriodicController<N>`, or
+`THD_WORKING_AREA` size above that measurement with a practical margin. Do not
+use the direct-call proxy as the measurement: indirect calls, unknown frames,
+recursion, interrupts, and context switches can make it too small.
+
+3. Update the profile row's Retained bytes, Proxy snapshot, and Scenario. The
+scenario must say what was exercised, for example `SD exFAT log creation`.
+The next report compares Current proxy to that snapshot and flags growth for
+review.
+
 ## Run Locally
 
 Build one profile with stack and callgraph data. For example, H743:
