@@ -913,8 +913,17 @@ static void sdLoggerStart()
 {
 	// mode has changed?
 	if (sdLoggerMode != engineConfiguration->sdLoggerMode) {
-		if (sdLoggerMode != SDLoggerMode::None) {
-			sdLoggerStop();
+		// Stop current logger
+		switch (sdLoggerMode) {
+			case SDLoggerMode::Mlg:
+		#if EFI_TOOTH_LOGGER
+			case SDLoggerMode::ToothBin:
+			case SDLoggerMode::ToothCsv:
+		#endif
+				sdLoggerStop();
+				break;
+			default:
+				break;
 		}
 
 		sdLoggerInitDone = false;
@@ -922,12 +931,21 @@ static void sdLoggerStart()
 
 		// cache
 		sdLoggerMode = engineConfiguration->sdLoggerMode;
-	#if EFI_TOOTH_LOGGER
-		if ((sdLoggerMode == SDLoggerMode::ToothBin) ||
-			(sdLoggerMode == SDLoggerMode::ToothCsv)) {
-			toothLoggerStarted = EnableToothLogger();
+
+		// start new logger
+		switch (sdLoggerMode) {
+			case SDLoggerMode::Mlg:
+				//none
+				break;
+		#if EFI_TOOTH_LOGGER
+			case SDLoggerMode::ToothBin:
+			case SDLoggerMode::ToothCsv:
+				toothLoggerStarted = EnableToothLogger();
+				break;
+		#endif
+			default:
+				break;
 		}
-	#endif
 	}
 }
 
@@ -1150,9 +1168,9 @@ static int sdModeExecuter(SD_MODE mode)
 		switch (sdLoggerMode) {
 		case SDLoggerMode::Mlg:
 			return sdLoggerMlg(&resources.fd);
+#if EFI_TOOTH_LOGGER
 		case SDLoggerMode::ToothBin:
 		case SDLoggerMode::ToothCsv:
-#if EFI_TOOTH_LOGGER
 			return sdLoggerTooth(&resources.fd);
 #endif
 		case SDLoggerMode::None:
