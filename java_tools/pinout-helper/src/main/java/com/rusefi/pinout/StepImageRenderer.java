@@ -22,11 +22,13 @@ public class StepImageRenderer {
     private static final int RADIUS = 22;
 
     /**
-     * @param highlight  pin name to wire color string, pins to wire in this step
-     * @param done       pins already wired in previous steps
+     * @param highlight   pin name to wire color string, pins to wire in this step
+     * @param done        pins already wired in previous steps
+     * @param vehicleSide vehicle-side connectors get orange circles in all four corners:
+     *                    that end of each wire gets the paint marker
      */
     public static void render(ConnectorYaml connector, Map<String, String> highlight,
-                              Collection<String> done, File outputFile) throws IOException {
+                              Collection<String> done, boolean vehicleSide, File outputFile) throws IOException {
         if (connector.imageFile == null || !connector.imageFile.isFile()) {
             throw new IOException("No image for connector " + connector.name);
         }
@@ -39,6 +41,17 @@ public class StepImageRenderer {
         g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
         g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g.drawImage(source, 0, 0, width, height, null);
+
+        if (vehicleSide) {
+            // clearly distinct from the yellow wire-color circles
+            g.setColor(new Color(255, 102, 0));
+            int inset = 2 * RADIUS;
+            for (int cx : new int[]{inset, width - inset}) {
+                for (int cy : new int[]{inset, height - inset}) {
+                    g.fillOval(cx - RADIUS, cy - RADIUS, 2 * RADIUS, 2 * RADIUS);
+                }
+            }
+        }
 
         for (String pin : done) {
             ConnectorYaml.Coord coord = connector.coords.get(pin);

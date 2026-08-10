@@ -11,6 +11,10 @@ which renders individual pinouts.
 
 for order of assembly by functional blocks use https://github.com/rusefi/rusefi_documentation/blob/master/Universal-Patchcord-Color-Scheme.md
 
+Use paint marker on VEHICLE side of the patchcord - VEHICLE side images have orangle cirles in all four cornes.
+
+Each step of the instructions should not have two wires of the same color - break into smaller steps if wires duplicate.
+
 ## Usage
 
 ```

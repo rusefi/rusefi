@@ -197,35 +197,69 @@ public class PatchCordHelper {
             md.println();
             md.println("On each image: solid circles are wires of the current step (circle color = wire color),");
             md.println("dimmed grey circles are pins already wired in previous steps.");
+            md.println();
+            md.println("Vehicle adapter side images have orange circles in all four corners: put the paint");
+            md.println("marker on that end of each wire, so the two identical plugs of the finished patchcord");
+            md.println("can be told apart.");
 
             int stepIndex = 0;
             for (Map.Entry<Phase, List<Wire>> entry : byPhase.entrySet()) {
-                List<Wire> stepWires = entry.getValue();
-                if (stepWires.isEmpty()) {
+                List<Wire> phaseWires = entry.getValue();
+                if (phaseWires.isEmpty()) {
                     continue;
                 }
-                stepIndex++;
-                stepWires.sort(Comparator
+                phaseWires.sort(Comparator
                         .comparing((Wire w) -> w.color())
                         .thenComparing(w -> w.ecu.label()));
 
-                md.println();
-                md.println("## Step " + stepIndex + ": " + entry.getKey().title);
-                md.println();
-                md.println("| Wire color | ECU pin | Adapter pin | Function |");
-                md.println("|------------|---------|-------------|----------|");
-                for (Wire wire : stepWires) {
-                    md.println("| " + wire.color() + " | " + wire.ecu.label() + " | " + wire.adapter.label()
-                            + " | " + safe(wire.ecu.pin.function) + " |");
-                }
+                List<List<Wire>> subSteps = splitByUniqueColor(phaseWires);
+                for (int subStep = 0; subStep < subSteps.size(); subStep++) {
+                    List<Wire> stepWires = subSteps.get(subStep);
+                    stepIndex++;
+                    String title = entry.getKey().title
+                            + (subSteps.size() > 1 ? " (" + (subStep + 1) + " of " + subSteps.size() + ")" : "");
 
-                writeStepImages(md, stepIndex, "ecu", ecuName, stepWires, true, done, outputDir);
-                writeStepImages(md, stepIndex, "adapter", adapterName, stepWires, false, done, outputDir);
+                    md.println();
+                    md.println("## Step " + stepIndex + ": " + title);
+                    md.println();
+                    md.println("| Wire color | ECU pin | Adapter pin | Function |");
+                    md.println("|------------|---------|-------------|----------|");
+                    for (Wire wire : stepWires) {
+                        md.println("| " + wire.color() + " | " + wire.ecu.label() + " | " + wire.adapter.label()
+                                + " | " + safe(wire.ecu.pin.function) + " |");
+                    }
+
+                    writeStepImages(md, stepIndex, "ecu", ecuName, stepWires, true, done, outputDir);
+                    writeStepImages(md, stepIndex, "adapter", adapterName, stepWires, false, done, outputDir);
+                }
             }
 
             writeUnmatched(md, "ECU (" + ecuName + ")", unmatchedEcu);
             writeUnmatched(md, "adapter (" + adapterName + ")", unmatchedAdapter);
         }
+    }
+
+    /**
+     * Within one assembly step every wire must have a distinct color, otherwise two freshly cut
+     * wires of the same color cannot be told apart; overflow goes into additional sub-steps.
+     */
+    static List<List<Wire>> splitByUniqueColor(List<Wire> wires) {
+        List<List<Wire>> subSteps = new ArrayList<>();
+        List<Set<String>> usedColors = new ArrayList<>();
+        for (Wire wire : wires) {
+            String color = wire.color().toLowerCase(Locale.ROOT);
+            int target = 0;
+            while (target < subSteps.size() && usedColors.get(target).contains(color)) {
+                target++;
+            }
+            if (target == subSteps.size()) {
+                subSteps.add(new ArrayList<>());
+                usedColors.add(new LinkedHashSet<>());
+            }
+            subSteps.get(target).add(wire);
+            usedColors.get(target).add(color);
+        }
+        return subSteps;
     }
 
     private static void writeStepImages(PrintWriter md, int stepIndex, String side, String sideName,
@@ -243,7 +277,7 @@ public class PatchCordHelper {
             Set<String> connectorDone = done.computeIfAbsent(connector, k -> new LinkedHashSet<>());
             String imageName = "step-" + stepIndex + "-" + side + "-" + fileNameSafe(connector.name) + ".png";
             if (connector.imageFile != null && connector.imageFile.isFile()) {
-                StepImageRenderer.render(connector, entry.getValue(), connectorDone, new File(outputDir, imageName));
+                StepImageRenderer.render(connector, entry.getValue(), connectorDone, !isEcuSide, new File(outputDir, imageName));
                 md.println();
                 md.println(sideName + ", connector " + connector.name + ":");
                 md.println();

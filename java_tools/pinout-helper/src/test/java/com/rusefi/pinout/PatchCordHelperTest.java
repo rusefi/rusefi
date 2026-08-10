@@ -21,6 +21,34 @@ public class PatchCordHelperTest {
     }
 
     @Test
+    public void testSplitByUniqueColor() throws IOException {
+        File dir = Files.createTempDirectory("patchcord").toFile();
+        File yaml = new File(dir, "conn.yaml");
+        Files.write(yaml.toPath(), (
+                "pins:\n" +
+                "  - pin: 1D\n" +
+                "    color: black\n" +
+                "  - pin: 2D\n" +
+                "    color: black\n" +
+                "  - pin: 3D\n" +
+                "    color: green\n").getBytes(StandardCharsets.UTF_8));
+        ConnectorYaml connector = ConnectorYaml.read(yaml);
+        assertNotNull(connector);
+        List<PatchCordHelper.Wire> wires = new java.util.ArrayList<>();
+        for (ConnectorYaml.PinEntry pin : connector.pins) {
+            PatchCordHelper.PinRef ref = new PatchCordHelper.PinRef(connector, pin);
+            wires.add(new PatchCordHelper.Wire(ref, ref));
+        }
+
+        List<List<PatchCordHelper.Wire>> subSteps = PatchCordHelper.splitByUniqueColor(wires);
+
+        assertEquals(2, subSteps.size());
+        assertEquals(2, subSteps.get(0).size());
+        assertEquals(1, subSteps.get(1).size());
+        assertEquals("black", subSteps.get(1).get(0).color());
+    }
+
+    @Test
     public void testMatchByFunction() throws IOException {
         File dir = Files.createTempDirectory("patchcord").toFile();
         File ecuYaml = new File(dir, "ecu.yaml");
