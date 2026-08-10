@@ -892,3 +892,56 @@ Open follow-ups:
 - Long-run soak to make sure the `outofrange` counter stays flat.
 - Optional: same FC-wait treatment for SocketCANIoStream (Linux path still uses
   the no-op default).
+
+## 2026-08-10 - m74_9 L9779WD-SPI: link fixed, VDA 2.0 watchdog feeding added
+
+What: On the m74_9 bench the L9779WD-SPI power driver did not drive injectors
+(OUT1..4) or coils (IGN1..4). Root cause turned out to be twofold: (a) the SPI
+chip-select pad was never configured as an output, so the chip saw CS permanently
+asserted and rejected every frame with SPI_ERR (DO = 0x8000), and (b) even with
+a valid link the chip keeps OUT1..4/IGN1..4 forced off because the VDA 2.0
+query-answer watchdog (WDA) is not fed - after any reset the error counter EC
+starts at 6 and EC > 4 sets WDA_INT and disables the LSA drivers.
+
+Working SPI configuration (proven on hardware, must not be changed): LSB-first
+16-bit frames, CPHA=1, BR = div 16, SSM|SSI, CS = PE12, chip-select pad
+configured push-pull output idle high. Everything else fails on the bench:
+MSB-first and div 64 give 100% parity errors, CPHA=0 makes the chip answer
+SPI_ERR (0x8000).
+
+What was done:
+| Change | File |
+| --- | --- |
+| SPI read pipeline: the DO reply to a read request arrives in one of the frames that follow it (datasheet 6.16.2); requests are queued (rd_pending) and matched to replies in order, rx_subaddr carries the answered sub-address | firmware/hw_layer/drivers/gpio/l9779.cpp |
+| VDA 2.0 level 3 watchdog feeding (datasheet 6.15): every ~112 ms read the question from REQULO (0x10\|0x0e) plus REQUHI (0x10\|0x0f) status flags, write the expected 32-bit answer from Table 51 via WD_ANSW (0x0e); REQUHI flags (RESP_TO_EARLY / NO_RESP) adapt the response delay in 60..150 ms | firmware/hw_layer/drivers/gpio/l9779.cpp |
+| Driver thread: only pushes CONTR_REG writes when outputs changed (o_dirty), wakes 1 ms before the watchdog response is due | firmware/hw_layer/drivers/gpio/l9779.cpp |
+| Chip-select pad configured push-pull output idle high in init() before the first frame | firmware/hw_layer/drivers/gpio/l9779.cpp |
+| tlead/tcsn timing: 2 us CS-low-to-SCK and CS-high-between-frames delays via the DWT cycle counter (datasheet requires >= 525 ns / >= 640 ns) | firmware/hw_layer/drivers/gpio/l9779.cpp |
+| Fixed output mapping: regs[2] bit 4 now mirrors OUT13 (Fuel pump, BG1) instead of OUT14 (Starter) | firmware/hw_layer/drivers/gpio/l9779.cpp |
+| Injector pins follow the physical wiring: OUT4 -> Injector 1, OUT3 -> Injector 2, OUT2 -> Injector 3, OUT1 -> Injector 4 (matches m74_9.yaml and the board OUTPUTS[] meta list) | firmware/config/boards/m74_9/board_configuration.cpp |
+
+Design notes:
+- EC starts at 6 after SW_RST, so the watchdog must be answered correctly
+  (value AND timing) at least twice before EC drops below 4 and the LSA drivers
+  turn on; after that it must keep being answered every cycle or the outputs
+  drop again.
+- The answer value comes from a hardcoded 16-entry table (Table 51) derived from
+  the RESP_SOLL7..0 formulas in 6.15.2; there is no cheap way to disable the
+  watchdog in configuration, so the driver feeds it.
+- cs: the ChibiOS SPI HAL used here (SPI_SELECT_MODE_PAD) toggles the CS pad
+  level but never sets its mode; without the explicit palSetPadMode() the pad
+  floats and the chip never frames a transfer.
+
+Validation:
+- Bench (user-reported): with the stock config restored, `pins` shows
+  parity_err=0 frame_err=0 addr_err=0, ident=0x0001 - the chip decodes the
+  frames. Watchdog feeding is new in this change and needs a bench flash.
+
+Open follow-ups:
+- User flashes, then checks `pins`: expect `WDA: req=<4-bit> ec=0 wda_int=0
+  ok=<growing> fail=0 delay=~105ms`. If `fail` grows, adjust the response
+  timing (REQUHI flags already steer wd_delay_ms).
+- Then verify outputs on the bench: injector pulse on AF4 (OUT4, Injector 1)
+  and fuel pump relay on BG1 (OUT13) when commanded from the console/TS.
+- Then on the car: coils via IGN1..3 (AL1/AM1, wasted spark), injector bank
+  sequencing per cylinder.

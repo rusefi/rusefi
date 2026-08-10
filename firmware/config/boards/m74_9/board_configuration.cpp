@@ -22,10 +22,12 @@ Gpio getRunningLedPin() {
 }
 
 static void setInjectorPins() {
-	engineConfiguration->injectionPins[0] = Gpio::L9779_OUT_1;
-	engineConfiguration->injectionPins[1] = Gpio::L9779_OUT_2;
-	engineConfiguration->injectionPins[2] = Gpio::L9779_OUT_3;
-	engineConfiguration->injectionPins[3] = Gpio::L9779_OUT_4;
+	/* physical wiring (see m74_9.yaml): OUT4 -> Injector 1, OUT3 -> Injector 2,
+	 * OUT2 -> Injector 3, OUT1 -> Injector 4 */
+	engineConfiguration->injectionPins[0] = Gpio::L9779_OUT_4;
+	engineConfiguration->injectionPins[1] = Gpio::L9779_OUT_3;
+	engineConfiguration->injectionPins[2] = Gpio::L9779_OUT_2;
+	engineConfiguration->injectionPins[3] = Gpio::L9779_OUT_1;
 
 	engineConfiguration->injectionPinMode = OM_DEFAULT;
 }
