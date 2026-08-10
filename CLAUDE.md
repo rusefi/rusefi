@@ -202,6 +202,7 @@ Any code reachable from a unit-test build (`unit_tests/` itself, plus firmware s
 - **No RTTI**: `dynamic_cast` and `typeid` are unavailable.
 - **Interrupt safety**: Be mindful of code that runs in interrupt context vs. thread context. Use appropriate synchronization primitives.
 - **Stack usage**: Keep stack allocations small. Large arrays should be static or global, not local variables.
+- **No float→int64 conversions**: CI (`firmware/check_illegal_conversion.sh`) fails any board image containing `__aeabi_f2lz`. The usual trigger is adding a float time offset to an `efitick_t` timestamp (e.g. `timestamp + MS2NT(floatMs)` — `MS2NT` promotes the int64 to float and back, losing precision). Use `sumTickAndFloat(timestamp, MSF2NT(floatMs))` (or `USF2NT` for µs) from `firmware/util/efitime.h` instead; see `spark_logic.cpp` for the idiom.
 
 ## Java Version Constants
 
