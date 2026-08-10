@@ -722,6 +722,14 @@ void configureRusefiLuaHooks(lua_State* lState) {
 
 	lua_register(lState, "readPin", lua_readpin);
 #if EFI_PROD_CODE && EFI_SHAFT_POSITION_INPUT
+	// startCrankingEngine(): engage the starter motor, same as pressing the start/stop button
+	// on a stopped engine. Immediately sets the starterControlPin output high and restarts the
+	// cranking timer; returns without waiting. The starter is released later by the 20 Hz slow
+	// callback (see disengageStarterIfNeeded in start_stop.cpp) as soon as the engine reaches
+	// running RPM, or after the startCrankingDuration timeout (seconds, default 3, tunable up
+	// to 30) if it does not start. Caveats: calling while already cranking is a no-op and does
+	// NOT extend the timeout; there is no check that the engine is stopped, so calling on a
+	// running engine engages the starter until the next slow callback releases it.
 	lua_register(lState, "startCrankingEngine", [](lua_State*) {
 		doStartCranking();
 		return 0;

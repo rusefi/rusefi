@@ -105,7 +105,7 @@ controllers (see [protection_system.md](protection_system.md)).
 | `setAcDisabled(bool)` | AcController override; `getTimeSinceAcToggleMs()` reads time since last AC state change |
 | `stopEngine()` | `doScheduleStopEngine(StopRequestedReason::Lua)` |
 | `isEngineStopRequested()` | Queries LimpManager shutdown controller |
-| `startCrankingEngine()` | Start-stop starter engagement (`doStartCranking`) |
+| `startCrankingEngine()` | Start-stop starter engagement (`doStartCranking`): sets starterControlPin high, released by slow callback on running RPM or after `startCrankingDuration` seconds (default 3) |
 | `restartEtb()` | Re-runs ETB init - workaround for LuaSensor acting as PPS (marked "todo: smarter implementation") |
 | `mcu_standby()` | STM32 standby/low-power (opt-in `LUA_STM32_STANDBY` boards; criticalError if called in the first 3s after boot) |
 
