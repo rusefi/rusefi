@@ -175,6 +175,8 @@ struct L9779 : public GpioChip {
 	int update_output();
 	int update_direct_output(size_t pin, int value);
 	int wake_driver();
+	void dbg_add_frame(uint16_t tx, uint16_t rx, uint8_t sub, int ret);
+	void dbg_print_frames();
 
 	int chip_reset();
 	int chip_init_data();
@@ -236,7 +238,18 @@ struct L9779 : public GpioChip {
 	int							spi_err;			/* rx messages with incorrect ADDR or WR fields */
 	uint16_t					recentTx;
 	uint16_t					recentRx;
-	uint32_t					recent_frame_cycles;	/* CPU cycles of the last frame exchange */
+	/* last frame exchange CPU cycles */
+	uint32_t					recent_frame_cycles;
+
+	/* SPI frame debug ring buffer: last L9779_DBG_FRAMES exchanges with the
+	 * sub-address they were matched to and the validate result */
+	enum { L9779_DBG_FRAMES = 32 };
+	uint16_t					dbg_tx[L9779_DBG_FRAMES];
+	uint16_t					dbg_rx[L9779_DBG_FRAMES];
+	uint8_t						dbg_sub[L9779_DBG_FRAMES];
+	int8_t						dbg_ret[L9779_DBG_FRAMES];
+	uint8_t						dbg_cnt;	/* frames stored, saturates at L9779_DBG_FRAMES */
+	uint8_t						dbg_next;	/* index of the next slot */
 };
 
 static L9779 chips[BOARD_L9779_COUNT];
@@ -299,6 +312,30 @@ void L9779::spi_queue_read(uint8_t subaddr)
 
 	rd_pending[(rd_pending_head + rd_pending_cnt) % efi::size(rd_pending)] = subaddr;
 	rd_pending_cnt++;
+}
+
+/* store one SPI exchange in the debug ring buffer */
+void L9779::dbg_add_frame(uint16_t tx, uint16_t rx, uint8_t sub, int ret)
+{
+	uint8_t slot = dbg_next;
+	dbg_tx[slot] = tx;
+	dbg_rx[slot] = rx;
+	dbg_sub[slot] = sub;
+	dbg_ret[slot] = (int8_t)ret;
+	dbg_next = (uint8_t)((dbg_next + 1) % L9779_DBG_FRAMES);
+	if (dbg_cnt < L9779_DBG_FRAMES)
+		dbg_cnt++;
+}
+
+/* print the stored exchanges, oldest first */
+void L9779::dbg_print_frames()
+{
+	uint8_t start = (uint8_t)((dbg_next + L9779_DBG_FRAMES - dbg_cnt) % L9779_DBG_FRAMES);
+	for (uint8_t i = 0; i < dbg_cnt; i++) {
+		uint8_t s = (uint8_t)((start + i) % L9779_DBG_FRAMES);
+		efiPrintf(DRIVER_NAME " dbg: tx=0x%04x rx=0x%04x sub=%02x ret=%d",
+			dbg_tx[s], dbg_rx[s], dbg_sub[s], (int)dbg_ret[s]);
+	}
 }
 
 int L9779::spi_validate(uint16_t rx)
@@ -390,6 +427,7 @@ int L9779::spi_rw(uint16_t tx, uint16_t *rx_ptr)
 		spi_queue_read(MSG_GET_SUBADDR(tx));
 
 	ret = spi_validate(rx);
+	dbg_add_frame(recentTx, rx, rx_subaddr, ret);
 
 	return ret;
 }
@@ -438,6 +476,7 @@ int L9779::spi_rw_array(const uint16_t *tx, uint16_t *rx, int n)
 
 		/* validate reply  */
 		ret = spi_validate(rxdata);
+		dbg_add_frame(recentTx, rxdata, rx_subaddr, ret);
 
 		if (ret < 0)
 			break;
@@ -829,6 +868,9 @@ void L9779::debug() {
 	}
 	efiPrintf(DRIVER_NAME " WDA: req=0x%x ec=%d wda_int=%d ok=%d fail=%d delay=%dms",
 		wd_last_req, wd_last_ec, wd_int ? 1 : 0, wd_ok_cnt, wd_fail_cnt, wd_delay_ms);
+
+	/* dump the last SPI exchanges - protocol debugging */
+	dbg_print_frames();
 }
 
 
