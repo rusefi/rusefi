@@ -171,6 +171,7 @@ public class CalibrationFieldFactory {
         applyBackgroundColor(comboBox, cleanValue);
         Dimension size = comboBox.getPreferredSize();
         size.width = Math.min(size.width, MAX_COMBO_WIDTH);
+        comboBox.setMinimumSize(new Dimension(0, size.height));
         comboBox.setPreferredSize(size);
         comboBox.setMaximumSize(size);
         comboBox.addActionListener(e -> {
