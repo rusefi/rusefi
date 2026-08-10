@@ -546,7 +546,7 @@ static void handleKickStart(trigger_event_e signal, efitick_t timestamp) {
 	enginePins.coils[1].setHigh();
 	// ...and fire them once the dwell period is over
 	// if the previous fire event is still pending the scheduler ignores this reschedule
-	engine->scheduler.schedule("kickstart", &kickStartScheduling, timestamp + MS2NT(dwellMs), action_s::make<kickStartFire>());
+	engine->scheduler.schedule("kickstart", &kickStartScheduling, sumTickAndFloat(timestamp, MSF2NT(dwellMs)), action_s::make<kickStartFire>());
 }
 #endif // EFI_ENGINE_CONTROL
 
