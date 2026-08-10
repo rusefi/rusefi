@@ -78,6 +78,22 @@ public:
 		}
 	}
 
+	void requestStop()
+	{
+		if (m_started) {
+			ref.requestTerminate();
+		}
+	}
+
+	void waitStop()
+	{
+		if (m_started) {
+			ref.wait();
+
+			m_started = false;
+		}
+	}
+
 	bool isStarted() const
 	{
 		return m_started;
