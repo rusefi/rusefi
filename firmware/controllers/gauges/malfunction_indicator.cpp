@@ -23,110 +23,123 @@
  *
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
+ * TODO: move it to firmware/controllers/modules
  */
 
 #include "pch.h"
 
-#if EFI_MALFUNCTION_INDICATOR
+#include "bench_test.h"
 #include "malfunction_central.h"
 #include "malfunction_indicator.h"
 
-#include "periodic_thread_controller.h"
+static constexpr float ShortPulseMs = 400;
+static constexpr float LongPulseMs = 1500;
+static constexpr float PulseGapMs = 400;
 
-#define TEST_MIL_CODE FALSE
-
-#define MFI_LONG_BLINK	1500
-#define MFI_SHORT_BLINK	400
-#define MFI_BLINK_SEPARATOR 400
-#define MFI_CHECKENGINE_LIGHT 10000
-
-static void blink_digits(int digit, int duration) {
-	for (int iter = 0; iter < digit; iter++) {
-		// todo: why we set LOW and then HIGH? not the other way around?
-		enginePins.checkEnginePin.setValue(0);
-		chThdSleepMilliseconds(duration);
-		enginePins.checkEnginePin.setValue(1);
-		chThdSleepMilliseconds(MFI_BLINK_SEPARATOR);
-	}
+void MILController::startPulse() {
+	enginePins.checkEnginePin.setValue("MIL", true);
+	m_phase = Phase::Pulse;
+	m_phaseTimer.reset();
 }
 
-// calculate how many digits our code have
-static int DigitLength(int digit) {
-	int i = 0;
-	while (digit > 0) {
-		digit = digit / 10;
-		++i;
-	}
-	return i;
+void MILController::startDigit() {
+	const int code = static_cast<int>(m_activeCode);
+	m_pulsesRemaining = (code / m_divisor) % 10 + 1;
+	startPulse();
 }
 
-// display code
-static void DisplayErrorCode(int length, int code) {
-	// todo: I suggest we use 'itoa' method to simplify this logic
-	for (int iter = length - 1; iter >= 0; iter--) {
-		int ourDigit = (int) efiPow10(iter);		// 10^0 = 1, 10^1 = 10, 10^2=100, 10^3 = 1000, ....
-		int digit = 1;						// as we remember "0" we show as one blink
-		while (code >= ourDigit) {
-			code = code - ourDigit;
-			digit++;
-		}
-		if (iter % 2 == 0)
-			blink_digits(digit, MFI_SHORT_BLINK);		// even 2,0 - long blink
-		else
-			blink_digits(digit, MFI_LONG_BLINK); 		// odd  3,1 - short blink
+void MILController::startCode(ObdCode code) {
+	m_activeCode = code;
+	m_divisor = 1;
+	m_digitPlace = 0;
+
+	for (int value = static_cast<int>(code); value >= 10; value /= 10) {
+		m_divisor *= 10;
+		m_digitPlace++;
 	}
+
+	startDigit();
 }
 
-class MILController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
-public:
-	MILController()	: PeriodicController("MFIndicator") { }
-private:
-	void PeriodicTask(efitick_t nowNt) override	{
-		UNUSED(nowNt);
+bool MILController::isActiveCodePresent() const {
+	error_codes_set_s codes;
+	getErrorCodes(&codes);
 
-		assertStackVoid("MIL", ObdCode::STACK_USAGE_MIL, EXPECTED_REMAINING_STACK);
-#if EFI_SHAFT_POSITION_INPUT
-		if (nowNt - engine->triggerCentral.triggerState.mostRecentSyncTime < MS2NT(500)) {
-			enginePins.checkEnginePin.setValue(1);
-			chThdSleepMilliseconds(500);
-			enginePins.checkEnginePin.setValue(0);
-		}
-#endif // EFI_SHAFT_POSITION_INPUT
-
-		static error_codes_set_s localErrorCopy;
-		// todo: why do I not see this on a real vehicle? is this whole blinking logic not used?
-		getErrorCodes(&localErrorCopy);
-		for (int p = 0; p < localErrorCopy.count; p++) {
-			// Calculate how many digits in this integer and display error code from start to end
-			int code = (int)localErrorCopy.error_codes[p];
-			DisplayErrorCode(DigitLength(code), code);
+	for (int i = 0; i < codes.count; i++) {
+		if (codes.error_codes[i] == m_activeCode) {
+			return true;
 		}
 	}
-};
 
-static MILController instance;
-
-#if TEST_MIL_CODE
-static void testMil() {
-	addError(ObdCode::OBD_Engine_Coolant_Temperature_Circuit_Malfunction);
-	addError(ObdCode::OBD_Intake_Air_Temperature_Circuit_Malfunction);
-}
-#endif /* TEST_MIL_CODE */
-
-bool isMilEnabled() {
-	return isBrainPinValid(engineConfiguration->malfunctionIndicatorPin);
+	return false;
 }
 
-void initMalfunctionIndicator(void) {
-	if (!isMilEnabled()) {
+void MILController::startNextCode() {
+	error_codes_set_s codes;
+	getErrorCodes(&codes);
+
+	if (codes.count == 0) {
+		m_phase = Phase::Idle;
+		m_activeCode = ObdCode::None;
 		return;
 	}
-	instance.setPeriod(10 /*ms*/);
-	instance.start();
 
-#if	TEST_MIL_CODE
-	addConsoleAction("testmil", testMil);
-#endif /* TEST_MIL_CODE */
+	int next = 0;
+	for (int i = 0; i < codes.count; i++) {
+		if (codes.error_codes[i] == m_activeCode) {
+			next = (i + 1) % codes.count;
+			break;
+		}
+	}
+
+	startCode(codes.error_codes[next]);
 }
 
-#endif /* EFI_MALFUNCTION_INDICATOR */
+void MILController::onSlowCallback() {
+	if (getOutputOnTheBenchTest() == &enginePins.checkEnginePin) {
+		m_wasBenchActive = true;
+		return;
+	}
+
+	if (m_wasBenchActive) {
+		m_wasBenchActive = false;
+		m_phase = Phase::Idle;
+		m_activeCode = ObdCode::None;
+	}
+
+	if (!hasErrorCodes()) {
+		m_phase = Phase::Idle;
+		m_activeCode = ObdCode::None;
+		enginePins.checkEnginePin.setValue("MIL", false);
+		return;
+	}
+
+	if (m_phase == Phase::Idle || !isActiveCodePresent()) {
+		startNextCode();
+		return;
+	}
+
+	if (m_phase == Phase::Pulse) {
+		const float duration = m_digitPlace % 2 == 0 ? ShortPulseMs : LongPulseMs;
+		if (m_phaseTimer.hasElapsedMs(duration)) {
+			enginePins.checkEnginePin.setValue("MIL", false);
+			m_phase = Phase::Gap;
+			m_phaseTimer.reset();
+		}
+		return;
+	}
+
+	if (!m_phaseTimer.hasElapsedMs(PulseGapMs)) {
+		return;
+	}
+
+	if (--m_pulsesRemaining > 0) {
+		startPulse();
+	} else if (m_divisor > 1) {
+		m_divisor /= 10;
+		m_digitPlace--;
+		startDigit();
+	} else {
+		startNextCode();
+	}
+}

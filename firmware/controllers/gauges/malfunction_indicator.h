@@ -10,10 +10,32 @@
 
 #pragma once
 
-#if EFI_MALFUNCTION_INDICATOR
+#include "engine_module.h"
+#include "obd_error_codes.h"
+#include "rusefi/timer.h"
 
-bool isMilEnabled();
-void initMalfunctionIndicator(void);
+class MILController : public EngineModule {
+public:
+	void onSlowCallback() override;
 
-#endif /* EFI_MALFUNCTION_INDICATOR */
+private:
+	enum class Phase : uint8_t {
+		Idle,
+		Pulse,
+		Gap,
+	};
 
+	void startCode(ObdCode code);
+	void startDigit();
+	void startPulse();
+	void startNextCode();
+	bool isActiveCodePresent() const;
+
+	Phase m_phase = Phase::Idle;
+	ObdCode m_activeCode = ObdCode::None;
+	Timer m_phaseTimer;
+	int m_divisor = 1;
+	int m_digitPlace = 0;
+	int m_pulsesRemaining = 0;
+	bool m_wasBenchActive = false;
+};
