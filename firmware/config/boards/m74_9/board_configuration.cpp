@@ -126,7 +126,12 @@ static struct l9779_config l9779_cfg = {
 			SPI_CR1_16BIT_MODE |
 			SPI_CR1_SSM |
 			SPI_CR1_SSI |
-			SPI_CR1_LSBFIRST |	//LSB first
+			/* L9779WD-SPI is MSB-first: datasheet 6.16.2 "The DIN pin
+			 * receives serial data from the master with MSB first". With
+			 * LSB-first frames the chip rejects every frame (its SPI_ERR
+			 * lands in our bit 0) and answers 0x0001 forever - no read
+			 * reply, IDENT stays 0x00. This was the original cause of the
+			 * dead injector/coil drivers on m74_9. */
 			((3 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |	// div = 16
 			SPI_CR1_MSTR |
 			SPI_CR1_CPHA |
