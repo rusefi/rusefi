@@ -106,6 +106,12 @@ void LimpManager::updateState(float rpm, efitick_t nowNt) {
 		allowFuel.clear(ClearReason::Lua);
 	}
 
+	if (engineConfiguration->kickStartCranking && rpm < KICK_START_MODE_MAX_RPM) {
+		// normal spark scheduling is suppressed: kick-start logic in handleShaftSignal()
+		// fires both coils directly off the trigger edge, see #4569
+		allowSpark.clear(ClearReason::KickStart);
+	}
+
 	updateRevLimit(rpm);
 	if (m_revLimitHysteresis.test(rpm, m_revLimit, resumeRpm)) {
 		if (engineConfiguration->cutFuelOnHardLimit) {

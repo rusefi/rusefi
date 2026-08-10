@@ -618,7 +618,7 @@ bit isDoubleSolenoidIdle,"yes","no";Subaru/BMW style where default valve positio
 bit useEeprom,"yes","no"
 bit useCicPidForIdle,"Cic","Industrial";Switch between Industrial and Cic PID implementation
 bit useTLE8888_cranking_hack,"yes","no"
-bit kickStartCranking,"yes","no"
+bit kickStartCranking,"yes","no";Kick-start cranking mode: below 800 RPM both coils are charged right at the trigger mark and fired a dwell-time later, normal spark scheduling is suppressed.
 bit useSeparateIdleTablesForCrankingTaper,"enabled","disabled";This uses separate ignition timing and VE tables not only for idle conditions, also during the postcranking-to-idle taper transition (See also afterCrankingIACtaperDuration).
 bit launchControlEnabled,"enabled","disabled"
 bit antiLagEnabled,"enabled","disabled"
