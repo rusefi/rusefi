@@ -77,4 +77,9 @@ public:
 			m_started = false;
 		}
 	}
+
+	bool isStarted() const
+	{
+		return m_started;
+	}
 };
