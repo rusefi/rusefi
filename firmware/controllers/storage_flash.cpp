@@ -25,11 +25,12 @@ static flashaddr_t getExtraPageFlashAddr(StorageItemId id) {
 	}
 
 #if defined(STM32F7XX) && !defined(EFI_FLASH_USE_1500_OF_2MB)
-	// The usual unflagged F7 layout is dual-bank 2 MB, with primary settings at
-	// sector 12. A settings burn no longer reaches the extra pages at 72+ KB, so
-	// repeated piggyback writes would fail because that region was not erased.
-	// Bank mode and flash size are runtime properties, so conservatively require
-	// another enabled backend (normally SD) for every unflagged F7 build.
+#if (EFI_STORAGE_MFS != TRUE) && (EFI_STORAGE_SD != TRUE)
+#error "STM32F7 requires the 2 MB flash layout (include 2mb_flash.mk) or MFS/SD storage for persistent extra pages"
+#endif
+
+	// The usual unflagged F7 layout cannot safely piggyback extra pages. MFS or
+	// SD stores them instead.
 	(void)offset;
 	return 0;
 #else
