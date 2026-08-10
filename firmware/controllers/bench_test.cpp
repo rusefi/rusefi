@@ -48,6 +48,12 @@ const OutputPin *getOutputOnTheBenchTest() {
     return outputOnTheBenchTest;
 }
 
+#if EFI_UNIT_TEST
+void setOutputOnTheBenchTestForUnitTest(OutputPin* output) {
+	outputOnTheBenchTest = output;
+}
+#endif
+
 #if !EFI_UNIT_TEST
 
 #include "flash_main.h"
