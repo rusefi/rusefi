@@ -131,7 +131,7 @@ Switch between Industrial and Cic PID implementation
 
 
 ### kickStartCranking
-
+Kick-start cranking mode: below 800 RPM both coils are charged right at the trigger mark and fired a dwell-time later, normal spark scheduling is suppressed.
 
 ### useSeparateIdleTablesForCrankingTaper
 This uses separate ignition timing and VE tables not only for idle conditions, also during the postcranking-to-idle taper transition (See also afterCrankingIACtaperDuration).

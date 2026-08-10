@@ -1855,6 +1855,7 @@ struct engine_configuration_s {
 	offset 196 bit 11 */
 	bool useTLE8888_cranking_hack : 1 {};
 	/**
+	 * Kick-start cranking mode: below 800 RPM both coils are charged right at the trigger mark and fired a dwell-time later, normal spark scheduling is suppressed.
 	offset 196 bit 12 */
 	bool kickStartCranking : 1 {};
 	/**
