@@ -449,13 +449,19 @@ int L9779::spi_rw_array(const uint16_t *tx, uint16_t *rx, int n)
 	spiStart(spi, &cfg->spi_config);
 
 	for (int i = 0; i < n; i++) {
+		/* set parity, same as spi_rw(): frames with an even number of set
+		 * bits are rejected by the chip (e.g. every WD_ANSW write below), so
+		 * the parity bit must be forced before transmission */
+		uint16_t txdata = tx[i];
+		txdata |= !spi_parity_odd(txdata);
+
 		/* Slave Select assertion. */
 		spiSelect(spi);
 		/* meet tlead: CS low to first SCK edge */
 		l9779_delay_us(L9779_TLEAD_DELAY_US);
 		/* data transfer */
 		uint32_t cyc0 = DWT->CYCCNT;
-		uint16_t rxdata = spiPolledExchange(spi, tx[i]);
+		uint16_t rxdata = spiPolledExchange(spi, txdata);
 		recent_frame_cycles = DWT->CYCCNT - cyc0;
 
 		if (rx)
@@ -466,13 +472,13 @@ int L9779::spi_rw_array(const uint16_t *tx, uint16_t *rx, int n)
 		l9779_delay_us(L9779_TCSN_DELAY_US);
 
 		/* statistic and debug */
-		recentTx = tx[i];
+		recentTx = txdata;
 		recentRx = rxdata;
 		this->spi_cnt++;
 
 		/* see spi_rw() for the reply/request pipelining */
-		if (MSG_GET_ADDR(tx[i]) == MSG_READ_ADDR)
-			spi_queue_read(MSG_GET_SUBADDR(tx[i]));
+		if (MSG_GET_ADDR(txdata) == MSG_READ_ADDR)
+			spi_queue_read(MSG_GET_SUBADDR(txdata));
 
 		/* validate reply  */
 		ret = spi_validate(rxdata);
