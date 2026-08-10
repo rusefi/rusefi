@@ -446,6 +446,7 @@ public class CalibrationDialogWidgetTest {
         }
         assertNotNull(combo);
         assertEquals(CalibrationFieldFactory.MAX_COMBO_WIDTH, combo.getPreferredSize().width);
+        assertEquals(0, combo.getMinimumSize().width);
         assertEquals(longOption, combo.getToolTipText());
     }
 
