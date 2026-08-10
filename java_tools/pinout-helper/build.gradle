@@ -1,0 +1,9 @@
+dependencies {
+    implementation global_libs.snakeyaml
+}
+
+shadowJar {
+  manifest {
+    attributes 'Main-Class': 'com.rusefi.pinout.PatchCordHelper'
+  }
+}

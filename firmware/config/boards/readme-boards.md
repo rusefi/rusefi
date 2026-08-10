@@ -3,6 +3,8 @@
 This is an overview of the board directories with active builds. Completely disabled boards and
 connector/.yaml-only directories are intentionally not listed here.
 
+For suggested colors see https://github.com/rusefi/rusefi_documentation/blob/master/Universal-Patchcord-Color-Scheme.md
+
 See [readme.md](readme.md) for what a board directory is and the new-board procedure.
 For Hellen-platform boards, [docs/hellen-board-mapping.md](../../../docs/hellen-board-mapping.md)
 explains how connector yaml entries map through meta headers to STM32 pins, and
