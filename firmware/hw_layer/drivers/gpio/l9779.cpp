@@ -5,7 +5,6 @@
  *
  * Andrey Gusakov, (c) 2022
  *
- *
  * Masks/inputs bits:
  * 0..3   - IGN1 .. 4 - Ignition pre-drivers
  * 						Driven by logical-AND of SPI control bit and dedicated parallel input IGNI1...IGNI4
@@ -48,26 +47,14 @@
 #define DRIVER_NAME					"l9779"
 
 #define DIAG_PERIOD_MS				(7)
-#define DIAG_REFRESH_MS			(125)
-#define DIAG_REFRESH_REGS			(3)
-#define OUT_DIS_HEAL_MS				(200)
 
-/* VDA 2.0 level 3 watchdog timing. RESPTIME=10 gives an answer window of
- * [15.8, 28.4] ms at 64 kHz and [25.9, 38.5] ms at 39 kHz. A 27 ms answer
- * period is accepted at either rate, while REQUHI timing verdicts can move it
- * within the union of both windows. */
-#define WDA_RESPTIME					(10)
-#define WDA_DELAY_INIT_MS			(27)
-#define WDA_EC_SAT_ESCAPE_CYCLES	(8)
-#define WDA_BURST_LEAD_US			(80)
-#define L9779_CONFIG6_PWR			(0x06)
-#define L9779_CONFIG6_PSOFF			(0x16)
-#define L9779_WD_RESPTIME_REG		(0x11)
-
-/* L9779WD-SPI timing requirements (datasheet table 53):
+/* L9779WD-SPI timing requirements (datasheet Table 53):
  *  - tlead >= 525 ns: CS low to first SCK edge
- *  - tcsn  >= 640 ns: CS high between frames
- * Two microseconds provides margin without materially affecting throughput. */
+ *  - tcsn  >= 640 ns: CS high between two frames
+ * With a GPIO-driven CS both gaps are only tens of nanoseconds, which the
+ * chip flags as failed receptions (SPI_ERR). The delays below give a
+ * comfortable margin; they are small enough to be negligible at the
+ * frame rates used here. */
 #define L9779_TLEAD_DELAY_US		(2)
 #define L9779_TCSN_DELAY_US			(2)
 
@@ -121,30 +108,53 @@ typedef enum {
 #define CMD_CLOCK_UNLOCK_SW_RST(d)	MSG_W(0x0c, (d))
 #define CMD_START_REACT(d)			MSG_W(0x0d, (d))
 #define CMD_CONTR_REG(n, d)			MSG_W(0x08 + (n), (d))
-#define L9779_WD_ANSW(d)			MSG_W(0x0e, (d))
 
-#define L9779_CONFIG_REG1			(0x01)
-#define L9779_CONFIG_REG5			(0x05)
-
-/* Read only registers (common address 0x10 plus a 5-bit sub-address in the
- * MOSI data field; the reply carries the sub-address in its address field). */
-#define L9779_IDENT_SUB				(0x00)
-#define L9779_DIA_REG1_SUB			(0x01)
-#define L9779_DIA_REG9_SUB			(0x09)
-#define L9779_DIA_REG10_SUB			(0x0a)
-#define L9779_WD_RESPTIME_SUB		(0x0d)
-#define L9779_WD_REQULO_SUB			(0x0e)
-#define L9779_WD_REQUHI_SUB			(0x0f)
-#define L9779_IDENT					(MSG_SET_ADDR(MSG_READ_ADDR) | MSG_SET_SUBADDR(L9779_IDENT_SUB))
+/* WDA monitoring (VDA 2.0 level 3, datasheet section 6.15) */
+#define L9779_WD_ANSW_REG			0x0e	/* write-only: one byte of the 32-bit response */
+#define L9779_WD_ANSW(d)			MSG_W(L9779_WD_ANSW_REG, (d))
+/* read-only registers use the common address 0x10 plus a 5-bit sub-address
+ * (datasheet Table 55); the reply carries the sub-address in the ADD field */
+#define L9779_WD_REQULO_SUB			0x0e	/* WDA question + error counter (DIA_REG14) */
+#define L9779_WD_REQUHI_SUB			0x0f	/* WDA response status (DIA_REG15) */
+#define L9779_IDENT_SUB				0x00	/* identifier register */
 #define L9779_WD_REQULO				(MSG_SET_ADDR(MSG_READ_ADDR) | MSG_SET_SUBADDR(L9779_WD_REQULO_SUB))
 #define L9779_WD_REQUHI				(MSG_SET_ADDR(MSG_READ_ADDR) | MSG_SET_SUBADDR(L9779_WD_REQUHI_SUB))
+#define L9779_IDENT					(MSG_SET_ADDR(MSG_READ_ADDR) | MSG_SET_SUBADDR(L9779_IDENT_SUB))
+
+/* Read only registers */
+
+/* IGN1..4 + OUT1..7 */
+#define OUT_DIRECT_DRIVE_MASK		0x7ff
 
 /*==========================================================================*/
 /* Driver exported variables.												*/
 /*==========================================================================*/
 
+/* Expected 32-bit response for every 4-bit WDA question.
+ * Layout: [question] -> { RESP_BYTE3, RESP_BYTE2, RESP_BYTE1, RESP_BYTE0 }
+ * (datasheet Table 51, values re-verified against the RESP_SOLL7..0 formulas
+ * in section 6.15.2) */
+static const uint8_t wd_resp_table[16][4] = {
+	{0xff, 0x0f, 0xf0, 0x00},	/* 0 */
+	{0xb0, 0x40, 0xbf, 0x4f},	/* 1 */
+	{0xe9, 0x19, 0xe6, 0x16},	/* 2 */
+	{0xa6, 0x56, 0xa9, 0x59},	/* 3 */
+	{0x75, 0x85, 0x7a, 0x8a},	/* 4 */
+	{0x3a, 0xca, 0x35, 0xc5},	/* 5 */
+	{0x63, 0x93, 0x6c, 0x9c},	/* 6 */
+	{0x2c, 0xdc, 0x23, 0xd3},	/* 7 */
+	{0xd2, 0x22, 0xdd, 0x2d},	/* 8 */
+	{0x9d, 0x6d, 0x92, 0x62},	/* 9 */
+	{0xc4, 0x34, 0xcb, 0x3b},	/* a */
+	{0x8b, 0x7b, 0x84, 0x74},	/* b */
+	{0x58, 0xa8, 0x57, 0xa7},	/* c */
+	{0x17, 0xe7, 0x18, 0xe8},	/* d */
+	{0x4e, 0xbe, 0x41, 0xb1},	/* e */
+	{0x01, 0xf1, 0x0e, 0xfe},	/* f */
+};
+
 /*==========================================================================*/
-/* Driver local variables and types.										*/
+/* Driver local variables and types.											*/
 /*==========================================================================*/
 
 /* Driver private data */
@@ -156,29 +166,22 @@ struct L9779 : public GpioChip {
 	int writePad(size_t pin, int value) override;
 	int readPad(size_t pin) override;
 	brain_pin_diag_e getDiag(size_t pin) override;
-	void debug() override;
 
 	bool spi_parity_odd(uint16_t x);
+	void spi_queue_read(uint8_t subaddr);
 	int spi_validate(uint16_t rx);
 	int spi_rw(uint16_t tx, uint16_t *rx_ptr);
 	int spi_rw_array(const uint16_t *tx, uint16_t *rx, int n);
-	int spi_frame_isr(uint16_t tx, uint16_t *rx_ptr);
-	int read_diag_reg(uint8_t subaddress, uint16_t *value);
-	int refresh_diag_cache(int maxRegisters);
-	void wd_feed();
-	void wd_arm(int delayMs);
 
 	int update_output();
 	int update_direct_output(size_t pin, int value);
 	int wake_driver();
-	void logSpiFrame(uint16_t tx, uint16_t rx, int result);
 
 	int chip_reset();
 	int chip_init_data();
 	int chip_init();
-	int chip_heal_out_dis(bool configurationLost);
-	int chip_power_off();
-	int vrs_configure();
+	int wd_feed();
+	void debug() override;
 
 	brain_pin_diag_e getOutputDiag(size_t pin);
 	brain_pin_diag_e getInputDiag(size_t pin);
@@ -196,35 +199,31 @@ struct L9779 : public GpioChip {
 	uint32_t					o_oe_mask;
 	/* cached output registers state - value last send to chip */
 	uint32_t					o_data_cached;
-	bool						o_dirty;
 
 	l9779_drv_state				drv_state;
 
-	/* Read replies are delayed and can arrive after intervening frames.
-	 * Match them by the sub-address returned by the chip, not by position. */
-	L9779ReadTracker				read_requests;
-	/* Sub-address answered by the most recently validated frame. */
-	uint8_t						rx_subaddress = REG_INVALID;
-	volatile bool				spi_busy;
-	bool						spi_configured;
+	/* Outstanding read requests, matched against the replies in order:
+	 * the DO reply to a request arrives in one of the frames that follow
+	 * the request (datasheet 6.16.2), so the request is remembered here
+	 * and the reply is matched when it shows up */
+	uint8_t						rd_pending[8];
+	int							rd_pending_head;	/* index of the oldest outstanding read */
+	int							rd_pending_cnt;		/* number of outstanding reads */
+	/* sub-address answered by the last received frame (REG_INVALID when
+	 * the frame was a write echo / idle pattern) */
+	uint8_t						rx_subaddr;
+	/* output registers changed since the last successful SPI update */
+	bool						o_dirty;
 
-	volatile bool				wd_running;
-	uint8_t						wd_last_req;
-	uint8_t						wd_last_ec;
-	bool						wd_int;
-	int							wd_delay_ms;
-	int							wd_ok_cnt;
-	int							wd_fail_cnt;
-	int							wd_timing_miss_cnt;
-	int							wd_wrong_cnt;
-	int							wd_cnt_bad;
-	int							wd_defer_cnt;
-	int							wd_kill_cnt;
-	int							wd_poll_timeouts;
-	int							wd_ec_sat_cycles;
-	uint8_t						wd_last_requhi;
-	bool						wd_prev_int;
-	bool						wd_prev_cycle_clean;
+	/* WDA (VDA 2.0) query-answer watchdog state */
+	uint8_t						wd_last_req;	/* last question from the chip */
+	uint8_t						wd_last_ec;		/* error counter as reported by the chip */
+	bool						wd_int;			/* WDA_INT flag (EC > 4) */
+	int							wd_delay_ms;	/* response delay, aimed at window center */
+	sysinterval_t				wd_ts;			/* when to send the next response */
+	int							wd_ok_cnt;		/* cycles answered correctly */
+	int							wd_fail_cnt;	/* cycles missed (timing or value) */
+	uint16_t					ident_reg;		/* IDENT_REG readback (0x10 | 0x00) */
 
 
 	/* statistic */
@@ -238,67 +237,10 @@ struct L9779 : public GpioChip {
 	int							spi_err;			/* rx messages with incorrect ADDR or WR fields */
 	uint16_t					recentTx;
 	uint16_t					recentRx;
-	uint32_t					recent_frame_ticks;
-	uint16_t					ident_reg;
-	uint16_t					dia_cache[8];
-	bool						dia_valid[8];
-	uint8_t						dia10_cache;
-	bool						dia10_valid;
-	volatile bool				key_on_status;
-	volatile bool				key_on_valid;
-	sysinterval_t				diag_ts;
-	int							diag_next_reg;
-	int							diag_pending;
-	bool						out_dis_latched;
-	systime_t					out_dis_heal_ts;
-	/* Written by the board callback and applied by the driver thread. Keep
-	 * the defaults on so boards without an ignition gate retain old behavior. */
-	volatile bool				power_stage_on = true;
-	bool						power_stage_applied = true;
-	L9779SpiFrameLog				frame_log;
+	uint32_t					recent_frame_cycles;	/* CPU cycles of the last frame exchange */
 };
 
 static L9779 chips[BOARD_L9779_COUNT];
-
-bool l9779_getWdaCounters(uint8_t *ec, bool *wdaInt, int *ok, int *fail,
-	int *timingMiss, uint8_t *dia10, int *delayMs, int *deferCount,
-	int *killCount, uint8_t *requhi, int *wrongCount, int *countBad)
-{
-	L9779 *chip = &chips[0];
-
-	if (chip->cfg == nullptr) {
-		return false;
-	}
-
-	if (ec != nullptr) { *ec = chip->wd_last_ec; }
-	if (wdaInt != nullptr) { *wdaInt = chip->wd_int; }
-	if (ok != nullptr) { *ok = chip->wd_ok_cnt; }
-	if (fail != nullptr) { *fail = chip->wd_fail_cnt; }
-	if (timingMiss != nullptr) { *timingMiss = chip->wd_timing_miss_cnt; }
-	if (dia10 != nullptr) { *dia10 = chip->dia10_cache; }
-	if (delayMs != nullptr) { *delayMs = chip->wd_delay_ms; }
-	if (deferCount != nullptr) { *deferCount = chip->wd_defer_cnt; }
-	if (killCount != nullptr) { *killCount = chip->wd_kill_cnt; }
-	if (requhi != nullptr) { *requhi = chip->wd_last_requhi; }
-	if (wrongCount != nullptr) { *wrongCount = chip->wd_wrong_cnt; }
-	if (countBad != nullptr) { *countBad = chip->wd_cnt_bad; }
-
-	return true;
-}
-
-void l9779_setPowerStage(bool on)
-{
-	L9779 *chip = &chips[0];
-
-	if (chip->cfg == nullptr) {
-		return;
-	}
-
-	chip->power_stage_on = on;
-	if (chip->thread != nullptr) {
-		chip->wake_driver();
-	}
-}
 
 static const char* l9779_pin_names[L9779_SIGNALS] = {
 	"L9779.IGN1",	"L9779.IGN2",	"L9779.IGN3",	"L9779.IGN4",
@@ -316,24 +258,23 @@ static const char* l9779_pin_names[L9779_SIGNALS] = {
 /* Driver local functions.													*/
 /*==========================================================================*/
 
-static void l9779DelayUs(uint32_t microseconds)
+/* Busy-wait delay using the DWT cycle counter (Cortex-M4). The core runs
+ * at SystemCoreClock; the counter is enabled on first use. */
+static void l9779_delay_us(int us)
 {
-	chSysPolledDelayX(US2RTC(SystemCoreClock, microseconds));
-}
+	static bool dwt_ready = false;
 
-static brain_pin_diag_e l9779DecodeOutputDiag(uint8_t field)
-{
-	switch (l9779DecodeDiagField(field)) {
-	case L9779DiagResult::ShortToGround:
-		return PIN_SHORT_TO_GND;
-	case L9779DiagResult::OpenLoad:
-		return PIN_OPEN;
-	case L9779DiagResult::ShortToBattery:
-		return PIN_SHORT_TO_BAT;
-	case L9779DiagResult::Ok:
-	default:
-		return PIN_OK;
+	if (!dwt_ready) {
+		CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
+		DWT->CYCCNT = 0;
+		DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
+		dwt_ready = true;
 	}
+
+	uint32_t start = DWT->CYCCNT;
+	uint32_t cycles = (uint32_t)us * (SystemCoreClock / 1000000);
+	while ((DWT->CYCCNT - start) < cycles)
+		;
 }
 
 /* true if parity of input x is odd */
@@ -342,14 +283,24 @@ bool L9779::spi_parity_odd(uint16_t x)
 	return l9779HasOddParity(x);
 }
 
-void L9779::logSpiFrame(uint16_t tx, uint16_t rx, int result)
+/* remember a read request so its reply can be matched when it arrives */
+void L9779::spi_queue_read(uint8_t subaddr)
 {
-	frame_log.record(tx, rx, rx_subaddress, result);
+	if (rd_pending_cnt >= (int)efi::size(rd_pending)) {
+		/* the reply stream would misalign - this must never happen with
+		 * the fixed access patterns used by this driver */
+		spi_err++;
+		return;
+	}
+
+	rd_pending[(rd_pending_head + rd_pending_cnt) % efi::size(rd_pending)] = subaddr;
+	rd_pending_cnt++;
 }
 
 int L9779::spi_validate(uint16_t rx)
 {
-	rx_subaddress = REG_INVALID;
+	/* by default this frame does not answer any outstanding read */
+	rx_subaddr = REG_INVALID;
 
 	if (!spi_parity_odd(rx)) {
 		spi_err_parity++;
@@ -357,24 +308,33 @@ int L9779::spi_validate(uint16_t rx)
 	}
 
 	if (MSG_GET_SPIERROR(rx)) {
-		/* not clear what does this means */
+		/* the chip flags a failed reception with bit 15 */
 		spi_err_frame++;
 		return -1;
 	}
 
-	/* A write/status frame does not answer an outstanding read. */
-	if (!MSG_GET_WR(rx)) {
+	/* Read replies have W/R (D9) set and carry the register sub-address in
+	 * the ADD field. Write echoes (write-only registers return all zeroes
+	 * in the next frame, datasheet 6.16.2) and the SW_RST/START_REACT
+	 * status frames have W/R = 0 and are not replies to a read. */
+	if (!MSG_GET_WR(rx))
+		return 0;
+
+	if (rd_pending_cnt <= 0) {
+		/* read reply with no outstanding request */
+		spi_err++;
 		return 0;
 	}
 
-	/* Read replies carry their own sub-address. Content-addressed matching
-	 * lets the stream recover after a delayed or skipped response instead of
-	 * permanently shifting every subsequent reply by one request. */
-	const uint8_t reply_subaddress = MSG_GET_ADDR(rx);
-	if (!read_requests.consume(reply_subaddress)) {
+	/* The chip answers outstanding reads in order, so the oldest pending
+	 * request is the one this reply belongs to. */
+	rx_subaddr = rd_pending[rd_pending_head];
+	rd_pending_head = (rd_pending_head + 1) % efi::size(rd_pending);
+	rd_pending_cnt--;
+
+	if (MSG_GET_ADDR(rx) != rx_subaddr) {
+		/* unexpected content, the link is alive though */
 		spi_err++;
-	} else {
-		rx_subaddress = reply_subaddress;
 	}
 
 	return 0;
@@ -391,28 +351,23 @@ int L9779::spi_rw(uint16_t tx, uint16_t *rx_ptr)
 
 	/* set parity */
 	tx = l9779PrepareSpiWord(tx);
-	spi_busy = true;
 
 	/* Acquire ownership of the bus. */
 	spiAcquireBus(spi);
-	/* The bus is dedicated to this chip. Avoid reopening the brief SPE=0
-	 * window that spiStart() creates while the watchdog ISR is active. */
-	if (!spi_configured) {
-		spiStart(spi, &cfg->spi_config);
-		spi_configured = true;
-	}
+	/* Setup transfer parameters. */
+	spiStart(spi, &cfg->spi_config);
 	/* Slave Select assertion. */
 	spiSelect(spi);
-	/* Meet tlead: CS low to first SCK edge. */
-	l9779DelayUs(L9779_TLEAD_DELAY_US);
+	/* meet tlead: CS low to first SCK edge */
+	l9779_delay_us(L9779_TLEAD_DELAY_US);
 	/* Atomic transfer operations. */
-	const rtcnt_t frame_start = chSysGetRealtimeCounterX();
+	uint32_t cyc0 = DWT->CYCCNT;
 	rx = spiPolledExchange(spi, tx);
-	recent_frame_ticks = chSysGetRealtimeCounterX() - frame_start;
+	recent_frame_cycles = DWT->CYCCNT - cyc0;
 	/* Slave Select de-assertion. */
 	spiUnselect(spi);
-	/* Meet tcsn before another frame can assert CS. */
-	l9779DelayUs(L9779_TCSN_DELAY_US);
+	/* meet tcsn: CS high between frames */
+	l9779_delay_us(L9779_TCSN_DELAY_US);
 	/* Ownership release. */
 	spiReleaseBus(spi);
 
@@ -424,16 +379,13 @@ int L9779::spi_rw(uint16_t tx, uint16_t *rx_ptr)
 	if (rx_ptr)
 		*rx_ptr = rx;
 
-	/* validate reply */
-	ret = spi_validate(rx);
+	/* the reply to THIS request arrives in one of the following frames,
+	 * remember the request; then validate the reply received in this
+	 * frame, which answers a previously issued request */
+	if (MSG_GET_ADDR(tx) == MSG_READ_ADDR)
+		spi_queue_read(MSG_GET_SUBADDR(tx));
 
-	/* This request can only be answered by a later frame, so record it after
-	 * validating the reply received in the current frame. */
-	if (MSG_GET_ADDR(tx) == MSG_READ_ADDR && !read_requests.push(MSG_GET_SUBADDR(tx))) {
-		spi_err++;
-	}
-	logSpiFrame(recentTx, rx, ret);
-	spi_busy = false;
+	ret = spi_validate(rx);
 
 	return ret;
 }
@@ -448,198 +400,114 @@ int L9779::spi_rw_array(const uint16_t *tx, uint16_t *rx, int n)
 	if (n <= 0) {
 		return -2;
 	}
-	spi_busy = true;
 
 	/* Acquire ownership of the bus. */
 	spiAcquireBus(spi);
-	if (!spi_configured) {
-		spiStart(spi, &cfg->spi_config);
-		spi_configured = true;
-	}
+	/* Setup transfer parameters. */
+	spiStart(spi, &cfg->spi_config);
 
 	for (int i = 0; i < n; i++) {
 		/* Slave Select assertion. */
 		spiSelect(spi);
-		/* Meet tlead: CS low to first SCK edge. */
-		l9779DelayUs(L9779_TLEAD_DELAY_US);
+		/* meet tlead: CS low to first SCK edge */
+		l9779_delay_us(L9779_TLEAD_DELAY_US);
 		/* data transfer */
-		uint16_t txdata = l9779PrepareSpiWord(tx[i]);
-		const rtcnt_t frame_start = chSysGetRealtimeCounterX();
-		uint16_t rxdata = spiPolledExchange(spi, txdata);
-		recent_frame_ticks = chSysGetRealtimeCounterX() - frame_start;
+		uint32_t cyc0 = DWT->CYCCNT;
+		uint16_t rxdata = spiPolledExchange(spi, tx[i]);
+		recent_frame_cycles = DWT->CYCCNT - cyc0;
 
 		if (rx)
 			rx[i] = rxdata;
 		/* Slave Select de-assertion. */
 		spiUnselect(spi);
-		/* Meet tcsn before the next frame. */
-		l9779DelayUs(L9779_TCSN_DELAY_US);
+		/* meet tcsn: CS high between frames */
+		l9779_delay_us(L9779_TCSN_DELAY_US);
 
 		/* statistic and debug */
 		recentTx = txdata;
 		recentRx = rxdata;
 		this->spi_cnt++;
 
+		/* see spi_rw() for the reply/request pipelining */
+		if (MSG_GET_ADDR(tx[i]) == MSG_READ_ADDR)
+			spi_queue_read(MSG_GET_SUBADDR(tx[i]));
+
 		/* validate reply  */
 		ret = spi_validate(rxdata);
-
-		if (MSG_GET_ADDR(txdata) == MSG_READ_ADDR && !read_requests.push(MSG_GET_SUBADDR(txdata))) {
-			spi_err++;
-		}
-		logSpiFrame(recentTx, rxdata, ret);
 
 		if (ret < 0)
 			break;
 	}
 	/* Ownership release. */
 	spiReleaseBus(spi);
-	spi_busy = false;
 
 	/* no errors for now */
 	return ret;
 }
 
-/* ISR-safe single frame. The thread-side SPI setup persists because this bus
- * is dedicated to the L9779; a bounded RXNE poll turns a disabled peripheral
- * into a visible missed feed instead of an infinite ISR lockup. */
-int L9779::spi_frame_isr(uint16_t tx, uint16_t *rx_ptr)
-{
-	SPIDriver *spi = cfg->spi_bus;
-	tx = l9779PrepareSpiWord(tx);
+/* use datasheet numbering, starting from 1, skip 4 ignition channels */
+#define OUT_ENABLED(n)			(!!(o_state & BIT((n) + L9779_OUTPUTS_IGN - 1)))
+#define SHIFT_N_OUT_TO_M(n, m)	(OUT_ENABLED(n) << (m))
 
-	spiSelectI(spi);
-	l9779DelayUs(L9779_TLEAD_DELAY_US);
-
-	const efitick_t start = getTimeNowNt();
-	spi->spi->DR = tx;
-	while ((spi->spi->SR & SPI_SR_RXNE) == 0) {
-		if (getTimeNowNt() - start > US2NT(1000)) {
-			wd_poll_timeouts++;
-			spiUnselectI(spi);
-			return -3;
-		}
-	}
-
-	const uint16_t rx = spi->spi->DR;
-	spiUnselectI(spi);
-	l9779DelayUs(L9779_TCSN_DELAY_US);
-
-	recentTx = tx;
-	recentRx = rx;
-	spi_cnt++;
-	if (rx_ptr != nullptr) {
-		*rx_ptr = rx;
-	}
-
-	const int ret = spi_validate(rx);
-	if (MSG_GET_ADDR(tx) == MSG_READ_ADDR && !read_requests.push(MSG_GET_SUBADDR(tx))) {
-		spi_err++;
-	}
-	logSpiFrame(tx, rx, ret);
-	return ret;
-}
-
-/* L9779 read replies can arrive after intervening frames. Keep issuing the
- * same request until its content-addressed reply arrives, with a hard bound
- * so a missing chip cannot stall the driver thread. */
-int L9779::read_diag_reg(uint8_t subaddress, uint16_t *value)
-{
-	for (int attempt = 0; attempt < 3; attempt++) {
-		uint16_t rx = 0;
-		const int ret = spi_rw(
-			MSG_SET_ADDR(MSG_READ_ADDR) | MSG_SET_SUBADDR(subaddress), &rx);
-		if (ret == 0 && rx_subaddress == subaddress) {
-			*value = rx;
-			return 0;
-		}
-	}
-
-	return -1;
-}
-
-/* Refresh a bounded chunk of DIA_REG1..8, KEY_ON in REG9, and DIA_REG10.
- * Diagnosis reads clear their fault bits, so only the driver thread accesses
- * the hardware; other contexts consume the cache. */
-int L9779::refresh_diag_cache(int maxRegisters)
-{
-	constexpr int RegisterCount = 10;
-	int processed = 0;
-
-	for (; processed < maxRegisters && diag_next_reg < RegisterCount;
-		 processed++, diag_next_reg++) {
-		if (diag_next_reg < 8) {
-			uint16_t value = 0;
-			if (read_diag_reg(L9779_DIA_REG1_SUB + diag_next_reg, &value) == 0) {
-				dia_cache[diag_next_reg] = value;
-				dia_valid[diag_next_reg] = true;
-			}
-			continue;
-		}
-
-		if (diag_next_reg == 8) {
-			uint16_t value = 0;
-			if (read_diag_reg(L9779_DIA_REG9_SUB, &value) == 0) {
-				key_on_status = (MSG_GET_DATA(value) & 0x80U) != 0;
-				key_on_valid = true;
-			}
-			continue;
-		}
-
-		uint16_t value = 0;
-		if (read_diag_reg(L9779_DIA_REG10_SUB, &value) != 0) {
-			continue;
-		}
-
-		const uint8_t dia10 = MSG_GET_DATA(value);
-		dia10_cache = dia10;
-		dia10_valid = true;
-		const bool outDis = l9779Dia10HasOutDis(dia10);
-
-		if (outDis && !out_dis_latched) {
-			efiPrintf(DRIVER_NAME " OUT_DIS set: DIA10=0x%02x", dia10);
-		} else if (!outDis && out_dis_latched) {
-			efiPrintf(DRIVER_NAME " OUT_DIS cleared: DIA10=0x%02x", dia10);
-		}
-
-		if (outDis && power_stage_on) {
-			const systime_t now = chVTGetSystemTimeX();
-			if (now - out_dis_heal_ts >= TIME_MS2I(OUT_DIS_HEAL_MS)) {
-				out_dis_heal_ts = now;
-				const bool configurationLost = l9779Dia10LostConfiguration(dia10);
-				if (chip_heal_out_dis(configurationLost) == 0) {
-					efiPrintf(DRIVER_NAME " OUT_DIS recovery: %s (DIA10=0x%02x)",
-						configurationLost ? "reinitialized" : "START restored", dia10);
-				}
-			}
-		} else {
-			out_dis_heal_ts = 0;
-		}
-
-		out_dis_latched = outDis;
-	}
-
-	if (diag_next_reg >= RegisterCount) {
-		diag_next_reg = 0;
-	}
-
-	return processed;
-}
+/* use datasheet numbering, starting from 1 */
+#define IGN_ENABLED(n)			(!!(o_state & BIT((n) - 1)))
+#define SHIFT_N_IGN_TO_M(n, m)	(IGN_ENABLED(n) << (m))
 
 int L9779::update_output()
 {
-	const L9779OutputRegisters packed = l9779PackOutputRegisters(o_state, o_oe_mask);
+	int ret;
+	uint8_t regs[4];
+
+	/* set value only for non-direct driven pins */
+	uint32_t o_data = o_state & ~OUT_DIRECT_DRIVE_MASK;
+	/* direct driven outputs are logicaly-AND spi bit and dedicated input
+	 * set bits to all enabled direct driven outputs */
+	o_data = o_state | (o_oe_mask & OUT_DIRECT_DRIVE_MASK);
+
+	/* nightmare... briliant mapping */
+	regs[0] =
+		SHIFT_N_OUT_TO_M( 1, 7) |	/* bit 7 - OUT1 */
+		SHIFT_N_OUT_TO_M( 2, 6) |	/* and so on, refer to datasheet */
+		SHIFT_N_OUT_TO_M( 3, 5) |
+		SHIFT_N_OUT_TO_M( 4, 4) |
+		SHIFT_N_OUT_TO_M( 5, 3) |
+		SHIFT_N_OUT_TO_M(20, 2);
+	regs[1] =
+		SHIFT_N_OUT_TO_M(15, 7) |
+		SHIFT_N_OUT_TO_M(14, 6) |
+		/* reserved + don't care */
+		SHIFT_N_IGN_TO_M( 1, 3) |
+		SHIFT_N_IGN_TO_M( 2, 2) |
+		SHIFT_N_IGN_TO_M( 3, 1) |
+		SHIFT_N_IGN_TO_M( 4, 0);
+	regs[2] =
+		SHIFT_N_OUT_TO_M(22, 7) |	/* TODO: stepper DIR */
+		SHIFT_N_OUT_TO_M(21, 6) |	/* TODO: stepper enable */
+		SHIFT_N_OUT_TO_M(16, 5) |
+		SHIFT_N_OUT_TO_M(13, 4) |
+		SHIFT_N_OUT_TO_M(17, 3) |
+		SHIFT_N_OUT_TO_M(18, 2) |
+		SHIFT_N_OUT_TO_M( 7, 1) |
+		SHIFT_N_OUT_TO_M( 6, 0);
+	regs[3] =
+		SHIFT_N_OUT_TO_M(28, 5) |
+		SHIFT_N_OUT_TO_M(27, 4) |
+		SHIFT_N_OUT_TO_M(26, 3) |
+		SHIFT_N_OUT_TO_M(25, 2) |
+		SHIFT_N_OUT_TO_M(24, 1) |
+		SHIFT_N_OUT_TO_M(23, 0);	/* TODO: stepper PWM */
 	uint16_t tx[] = {
 		/* output enables */
-		CMD_CONTR_REG(0, packed.control[0]),
-		CMD_CONTR_REG(1, packed.control[1]),
-		CMD_CONTR_REG(2, packed.control[2]),
-		CMD_CONTR_REG(3, packed.control[3])
+		CMD_CONTR_REG(0, regs[0]),
+		CMD_CONTR_REG(1, regs[1]),
+		CMD_CONTR_REG(2, regs[2]),
+		CMD_CONTR_REG(3, regs[3])
 	};
-	const int ret = spi_rw_array(tx, NULL, efi::size(tx));
+	ret = spi_rw_array(tx, NULL, efi::size(tx));
 
 	if (ret == 0) {
 		/* atomic */
-		o_data_cached = packed.enabledState;
+		o_data_cached = o_data;
 		o_dirty = false;
 	}
 
@@ -683,261 +551,14 @@ int L9779::wake_driver()
 }
 
 int L9779::chip_reset() {
-	int ret;
+	/* SW_RST = frame bit 2 = data bit 1 (datasheet Table 56). The reply
+	 * (LOCK status) arrives in the following frame; whatever the DO line
+	 * returns here is the pre-reset state and must not fail the init */
+	(void)spi_rw(CMD_CLOCK_UNLOCK_SW_RST(BIT(1)), NULL);
 
-	read_requests.clear();
-
-	ret = spi_rw(CMD_CLOCK_UNLOCK_SW_RST(BIT(1)), NULL);
-	/**
-	 * ???
-	 */
 	chThdSleepMilliseconds(3);
 
-	read_requests.clear();
-
-	return ret;
-}
-
-/* TIM7 shares the validated APB1 time domain with the firmware NT clock.
- * Measure it once against NT and program a 250 kHz (4 us) free-running tick.
- * lp=true is required on AT32 so the clock continues while the CPU sleeps. */
-#define WDA_TIMER TIM7
-#define WDA_TIMER_PSC_PROVISIONAL 143
-
-static L9779 *s_wda_chip;
-static efitick_t s_wda_last_fire_nt;
-static efitick_t s_wda_fire_period_nt;
-static efitick_t s_wda_previous_period_nt;
-static int s_wda_previous_delay_ms;
-
-static void wdaTimerInit()
-{
-	rccEnableTIM7(true);
-
-	WDA_TIMER->PSC = WDA_TIMER_PSC_PROVISIONAL;
-	WDA_TIMER->ARR = 0xffff;
-	WDA_TIMER->CR1 = 0;
-	WDA_TIMER->DIER = 0;
-	WDA_TIMER->EGR = STM32_TIM_EGR_UG;
-	WDA_TIMER->SR = 0;
-
-	WDA_TIMER->CR1 = STM32_TIM_CR1_CEN;
-	const uint32_t timerStart = WDA_TIMER->CNT;
-	const efitick_t ntStart = getTimeNowNt();
-	do {
-	} while (getTimeNowNt() - ntStart < MS2NT(10));
-	const uint32_t timerDelta = WDA_TIMER->CNT - timerStart;
-	const efitick_t ntDelta = getTimeNowNt() - ntStart;
-	WDA_TIMER->CR1 = 0;
-
-	uint32_t prescaler = static_cast<uint32_t>(
-		(static_cast<uint64_t>(timerDelta) * (WDA_TIMER_PSC_PROVISIONAL + 1) * 16) /
-		ntDelta) - 1;
-	if (prescaler > 0xffff) {
-		prescaler = 0xffff;
-	}
-
-	WDA_TIMER->PSC = prescaler;
-	WDA_TIMER->CNT = 0;
-	WDA_TIMER->EGR = STM32_TIM_EGR_UG;
-	WDA_TIMER->SR = 0;
-	nvicEnableVector(STM32_TIM7_NUMBER, EFI_IRQ_L9779_WDA_PRIORITY);
-
-	efiPrintf(DRIVER_NAME " WDA TIM7: %lu counts/%lu NT, PSC=%lu",
-		(unsigned long)timerDelta, (unsigned long)ntDelta, (unsigned long)prescaler);
-}
-
-static void wdaTimerArm(uint32_t ticks)
-{
-	if (ticks < 2) {
-		ticks = 2;
-	} else if (ticks > 65535) {
-		ticks = 65535;
-	}
-
-	const uint32_t reload = ticks - 1;
-	if ((WDA_TIMER->CR1 & STM32_TIM_CR1_CEN) != 0) {
-		if (WDA_TIMER->ARR == reload) {
-			return;
-		}
-
-		WDA_TIMER->ARR = reload;
-		WDA_TIMER->EGR = STM32_TIM_EGR_UG;
-		WDA_TIMER->SR = 0;
-		return;
-	}
-
-	WDA_TIMER->CNT = 0;
-	WDA_TIMER->ARR = reload;
-	WDA_TIMER->EGR = STM32_TIM_EGR_UG;
-	WDA_TIMER->SR = 0;
-	WDA_TIMER->DIER = STM32_TIM_DIER_UIE;
-	WDA_TIMER->CR1 = STM32_TIM_CR1_CEN;
-}
-
-static void wdaTimerStop()
-{
-	WDA_TIMER->CR1 = 0;
-	WDA_TIMER->DIER = 0;
-	WDA_TIMER->SR = 0;
-}
-
-void L9779::wd_arm(int delayMs)
-{
-	const uint32_t intervalUs = static_cast<uint32_t>(delayMs * 1000 - WDA_BURST_LEAD_US);
-	wdaTimerArm((intervalUs + 3) / 4);
-}
-
-CH_IRQ_HANDLER(STM32_TIM7_HANDLER)
-{
-	OSAL_IRQ_PROLOGUE();
-
-	if ((WDA_TIMER->SR & STM32_TIM_SR_UIF) != 0) {
-		WDA_TIMER->SR = ~STM32_TIM_SR_UIF;
-		const efitick_t now = getTimeNowNt();
-		s_wda_previous_period_nt = s_wda_fire_period_nt;
-		s_wda_previous_delay_ms = s_wda_chip != nullptr ? s_wda_chip->wd_delay_ms : 0;
-		if (s_wda_last_fire_nt != 0) {
-			s_wda_fire_period_nt = now - s_wda_last_fire_nt;
-		}
-		s_wda_last_fire_nt = now;
-
-		if (s_wda_chip != nullptr) {
-			s_wda_chip->wd_feed();
-		}
-	}
-
-	OSAL_IRQ_EPILOGUE();
-}
-
-/* One atomic VDA 2.0 level-3 feed. Four reads cover the chip's one- or
- * two-frame reply delay; all four response bytes then follow back-to-back so
- * RESP_CNT cannot remain shifted after a missed cycle. */
-void L9779::wd_feed()
-{
-	if (!wd_running) {
-		return;
-	}
-
-	if (!spi_configured || spi_busy) {
-		wd_defer_cnt++;
-		wd_prev_cycle_clean = false;
-		wd_arm(spi_configured ? 1 : 10);
-		return;
-	}
-
-	static constexpr uint16_t RequestFrames[] = {
-		L9779_WD_REQUHI,
-		L9779_WD_REQULO,
-		L9779_WD_REQUHI,
-		L9779_WD_REQUHI,
-	};
-	constexpr uint32_t BurstBasepri = 4u << (8u - __NVIC_PRIO_BITS);
-
-	if (read_requests.size() > 4) {
-		read_requests.clear();
-	}
-
-	uint8_t requhi = 0;
-	uint8_t requlo = 0;
-	bool requloReceived = false;
-	int ret = 0;
-	const uint32_t previousBasepri = __get_BASEPRI();
-	__set_BASEPRI(BurstBasepri);
-	for (size_t i = 0; i < efi::size(RequestFrames); i++) {
-		uint16_t rx = 0;
-		ret = spi_frame_isr(RequestFrames[i], &rx);
-		if (ret < 0) {
-			break;
-		}
-
-		if (rx_subaddress == L9779_WD_REQUHI_SUB) {
-			requhi = MSG_GET_DATA(rx);
-		} else if (rx_subaddress == L9779_WD_REQULO_SUB) {
-			requlo = MSG_GET_DATA(rx);
-			requloReceived = true;
-		}
-	}
-	__set_BASEPRI(previousBasepri);
-
-	if (ret < 0 || !requloReceived) {
-		wd_fail_cnt++;
-		wd_prev_cycle_clean = false;
-		wd_arm(10);
-		return;
-	}
-
-	bool previousClean = wd_prev_cycle_clean;
-	wd_prev_cycle_clean = false;
-	if (s_wda_previous_period_nt != 0 && s_wda_previous_delay_ms > 0) {
-		const uint32_t periodUs = static_cast<uint32_t>(NT2US(s_wda_previous_period_nt));
-		const uint32_t armedUs = static_cast<uint32_t>(s_wda_previous_delay_ms * 1000);
-		if (periodUs < (armedUs * 3) / 4 || periodUs > (armedUs * 5) / 4) {
-			previousClean = false;
-		}
-	}
-
-	if (previousClean) {
-		if ((requhi & 0x03U) != 0) {
-			wd_timing_miss_cnt++;
-		}
-		const int adjustedDelay = l9779AdjustWdaDelay(wd_delay_ms, requhi);
-		if (adjustedDelay != wd_delay_ms) {
-			wd_delay_ms = adjustedDelay;
-		}
-	}
-
-	const L9779WdaStatus status = l9779DecodeWdaStatus(requlo);
-	wd_last_req = status.question;
-	wd_last_ec = status.errorCount;
-	wd_int = status.interrupt;
-	wd_last_requhi = requhi;
-	if (wd_int && !wd_prev_int) {
-		wd_kill_cnt++;
-	}
-	wd_prev_int = wd_int;
-
-	if ((requhi & (0x04U | 0x10U | 0x20U)) != 0) {
-		wd_wrong_cnt++;
-		wd_delay_ms = WDA_DELAY_INIT_MS;
-	}
-
-	if (previousClean && status.errorCount >= 6 && wd_delay_ms != WDA_DELAY_INIT_MS) {
-		wd_ec_sat_cycles++;
-		if (wd_ec_sat_cycles >= WDA_EC_SAT_ESCAPE_CYCLES) {
-			wd_ec_sat_cycles = 0;
-			wd_delay_ms += wd_delay_ms > WDA_DELAY_INIT_MS ? -5 : 5;
-		}
-	} else {
-		wd_ec_sat_cycles = 0;
-	}
-
-	if (!l9779WdaResponseCounterAligned(requhi)) {
-		wd_cnt_bad++;
-		wd_delay_ms = WDA_DELAY_INIT_MS;
-		wd_arm(wd_delay_ms);
-		return;
-	}
-
-	const uint8_t *response = L9779_WDA_RESPONSES[wd_last_req];
-	const uint32_t responseBasepri = __get_BASEPRI();
-	__set_BASEPRI(BurstBasepri);
-	for (size_t i = 0; i < 4; i++) {
-		ret = spi_frame_isr(L9779_WD_ANSW(response[i]), nullptr);
-		if (ret < 0) {
-			break;
-		}
-	}
-	__set_BASEPRI(responseBasepri);
-
-	if (ret == 0) {
-		wd_ok_cnt++;
-		wd_prev_cycle_clean = true;
-	} else {
-		wd_fail_cnt++;
-	}
-
-	wd_arm(wd_delay_ms);
+	return 0;
 }
 
 /*==========================================================================*/
@@ -956,72 +577,149 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 
 		/* should we care about msg == MSG_TIMEOUT? */
 		(void)msg;
-		const systime_t now = chVTGetSystemTimeX();
+
+		systime_t now = chVTGetSystemTimeX();
 
 		/* default polling interval */
 		poll_interval = TIME_MS2I(DIAG_PERIOD_MS);
 
 		if ((chip->cfg == NULL) ||
 			(chip->drv_state == L9779_DISABLED) ||
-			(chip->drv_state == L9779_FAILED)) {
+			(chip->drv_state == L9779_FAILED))
 			continue;
+
+		if (chip->need_init) {
+			/* clear first, as flag can be raised again during init */
+			chip->need_init = false;
+			/* re-init chip! */
+			chip->chip_init();
+			/* sync pins state */
+			chip->update_output();
 		}
 
-		if (chip->power_stage_on != chip->power_stage_applied) {
-			chip->power_stage_applied = chip->power_stage_on;
-			if (chip->power_stage_on) {
-				chip->need_init = true;
-			} else {
-				chip->chip_power_off();
-			}
-		}
-
-		if (chip->power_stage_on) {
-			if (chip->need_init) {
-				/* A key-on reset clears the parked PSOFF state and watchdog EC. */
-				chip->need_init = false;
-				chip->chip_reset();
-				chip->chip_init();
-				chip->update_output();
-			}
-
-			if (!chip->wd_running) {
-				chip->wd_running = true;
-				chip->wd_arm(chip->wd_delay_ms);
-			}
-
-			/* Recover if a system reset stopped the timer while driver RAM survived. */
-			if ((WDA_TIMER->CR1 & STM32_TIM_CR1_CEN) == 0) {
-				chip->wd_arm(chip->wd_delay_ms);
-			}
-
-			if (chip->o_dirty) {
-				ret = chip->update_output();
-				if (ret != 0) {
-					/* set state to L9779_FAILED? */
-				}
+		/* send the output registers only when the pin state changed: with the
+		 * watchdog armed the thread wakes up every millisecond, re-writing
+		 * all four CONTR registers on every wakeup would saturate the SPI bus */
+		if (chip->o_dirty) {
+			ret = chip->update_output();
+			if (ret) {
+				/* o_dirty stays set - retry on the next loop */
 			}
 		}
 
-		if (chip->diag_pending == 0 && chip->diag_ts <= now) {
-			chip->diag_next_reg = 0;
-			chip->diag_pending = 10;
-			chip->diag_ts = chTimeAddX(now, TIME_MS2I(DIAG_REFRESH_MS));
+		/* Feed the VDA 2.0 watchdog: without correct answers the chip
+		 * keeps OUT1..4 and IGN1..4 disabled (EC > 4 after reset) */
+		if (chip->wd_ts <= now) {
+			chip->wd_feed();
+			now = chVTGetSystemTimeX();
 		}
 
-		if (chip->diag_pending > 0) {
-			const uint32_t timerCount = WDA_TIMER->CNT;
-			const uint32_t timerReload = WDA_TIMER->ARR;
-			const bool burstImminent = chip->wd_running && timerReload >= timerCount &&
-				(timerReload - timerCount) < 500; // 2 ms at 250 kHz.
-			if (!burstImminent) {
-				chip->diag_pending -= chip->refresh_diag_cache(DIAG_REFRESH_REGS);
-			}
+		/* wake up in time for the next watchdog response */
+		sysinterval_t wd_delay = chTimeDiffX(now, chip->wd_ts);
+		if ((int32_t)wd_delay < (int32_t)TIME_MS2I(DIAG_PERIOD_MS)) {
+			if ((int32_t)wd_delay <= 0)
+				poll_interval = TIME_MS2I(1);
+			else
+				poll_interval = wd_delay;
 		}
 	}
 }
 
 RUSEFI_STACK_ROOT_EXPLICIT(l9779_driver_thread, 256);
+
+/* Feed VDA 2.0 level 3 query-answer watchdog (datasheet 6.15).
+ *
+ * The chip generates a new 4-bit question every monitoring cycle
+ * (response time + fixed window, ~112 ms with default RESPTIME). A wrong
+ * value or a response outside the window increments the error counter EC;
+ * with EC > 4 the WDA_INT flag is set and OUT1..4 + IGN1..4 are forced
+ * off. EC starts at 6 after any reset, so the watchdog must be answered
+ * correctly (value AND timing) at least twice before the outputs get
+ * enabled, and must keep being answered afterwards.
+ *
+ * The DO reply to a request arrives in one of the frames that follow the
+ * request (datasheet 6.16.2), so the reads are pipelined: REQUHI/REQULO
+ * are requested first and their replies are collected while the four
+ * answer bytes are being sent. The filler REQUHI reads flush the pipeline
+ * without side effects and work with a one or two frame reply delay. */
+int L9779::wd_feed()
+{
+	int ret = 0;
+	uint16_t rx;
+	bool requlo_received = false;
+	uint8_t requhi = 0;
+	uint8_t requlo = 0;
+
+	static const uint16_t req_tx[] = {
+		L9779_WD_REQUHI,	/* status of the previous response */
+		L9779_WD_REQULO,	/* current question + error counter */
+		L9779_WD_REQUHI,	/* filler */
+		L9779_WD_REQUHI,	/* filler */
+	};
+
+	for (size_t i = 0; i < efi::size(req_tx); i++) {
+		ret = spi_rw(req_tx[i], &rx);
+		if (ret < 0)
+			break;
+
+		if (rx_subaddr == L9779_WD_REQUHI_SUB)
+			requhi = MSG_GET_DATA(rx);
+		else if (rx_subaddr == L9779_WD_REQULO_SUB) {
+			requlo = MSG_GET_DATA(rx);
+			requlo_received = true;
+		}
+	}
+
+	if ((ret >= 0) && !requlo_received) {
+		/* the question was not received within this cycle */
+		ret = -1;
+	}
+
+	if (ret < 0) {
+		/* keep the current response delay but retry sooner than a full cycle */
+		wd_fail_cnt++;
+		wd_ts = chTimeAddX(chVTGetSystemTimeX(), TIME_MS2I(20));
+		return -1;
+	}
+
+	/* REQUHI flags report the timing of the previous response and are used
+	 * to keep the response delay centered in the answer window */
+	if (requhi & 0x01) {
+		/* RESP_TO_EARLY: response before the window opened */
+		wd_delay_ms++;
+	} else if (requhi & 0x02) {
+		/* NO_RESP: response after the window closed */
+		wd_delay_ms--;
+	}
+	/* keep the delay in a sane range: 60..150 ms */
+	if (wd_delay_ms < 60)
+		wd_delay_ms = 60;
+	if (wd_delay_ms > 150)
+		wd_delay_ms = 150;
+
+	wd_last_req = requlo & 0x0f;
+	wd_last_ec  = (requlo >> 4) & 0x07;
+	wd_int      = !!(requlo & 0x80);
+
+	/* write the expected 32-bit response: RESP_BYTE3..0 via WD_ANSW */
+	const uint8_t *resp = wd_resp_table[wd_last_req];
+	uint16_t tx[4];
+	for (int i = 0; i < 4; i++) {
+		tx[i] = L9779_WD_ANSW(resp[i]);
+	}
+
+	ret = spi_rw_array(tx, NULL, 4);
+	if (ret == 0)
+		wd_ok_cnt++;
+	else
+		wd_fail_cnt++;
+
+	/* the monitoring cycle restarts at the end of the RESP_BYTE0 write;
+	 * aim for the middle of the response window */
+	wd_ts = chTimeAddX(chVTGetSystemTimeX(), TIME_MS2I(wd_delay_ms));
+
+	return ret;
+}
 
 /*==========================================================================*/
 /* Driver interrupt handlers.												*/
@@ -1052,13 +750,13 @@ int L9779::writePad(size_t pin, int value) {
 			o_state &= ~(1 << pin);
 		}
 
-		if ((L9779_DIRECT_DRIVE_MASK & BIT(pin)) == 0) {
-			o_dirty = true;
-		}
+		/* the SPI control register mirrors o_state (e.g. CMD_IGN1..4 in
+		 * CONTR_REG2), so every change must be pushed to the chip */
+		o_dirty = true;
 	}
 
 	/* direct driven? */
-	if (L9779_DIRECT_DRIVE_MASK & BIT(pin)) {
+	if (OUT_DIRECT_DRIVE_MASK & BIT(pin)) {
 		return update_direct_output(pin, value);
 	} else {
 		return wake_driver();
@@ -1069,21 +767,9 @@ int L9779::writePad(size_t pin, int value) {
 
 brain_pin_diag_e L9779::getOutputDiag(size_t pin)
 {
-	if (pin >= L9779_OUTPUTS) {
-		return PIN_UNKNOWN;
-	}
+	(void)pin;
 
-	const L9779DiagLocation location = l9779GetDiagLocation(pin);
-	if (!location.supported()) {
-		return PIN_UNKNOWN;
-	}
-
-	if (!dia_valid[location.registerIndex]) {
-		return PIN_UNKNOWN;
-	}
-
-	const uint8_t diagnosis = MSG_GET_DATA(dia_cache[location.registerIndex]);
-	return l9779DecodeOutputDiag((diagnosis >> location.shift) & 0x03U);
+	return PIN_OK;
 }
 
 brain_pin_diag_e L9779::getInputDiag(unsigned int pin)
@@ -1096,11 +782,6 @@ brain_pin_diag_e L9779::getInputDiag(unsigned int pin)
 int L9779::readPad(size_t pin) {
 	if (pin >= L9779_SIGNALS)
 		return -1;
-
-	/* The only L9779 input exposed as a GPIO is KEY_ON from DIA_REG9. */
-	if (pin == L9779_OUTPUTS) {
-		return key_on_valid ? (key_on_status ? 1 : 0) : -1;
-	}
 
 	/* unknown pin */
 	return -1;
@@ -1115,6 +796,35 @@ brain_pin_diag_e L9779::getDiag(size_t pin)
 		return getOutputDiag(pin);
 	else
 		return getInputDiag(pin);
+}
+
+void L9779::debug() {
+	efiPrintf(DRIVER_NAME " spi=%d parity_err=%d frame_err=%d addr_err=%d",
+		spi_cnt, spi_err_parity, spi_err_frame, spi_err);
+	efiPrintf(DRIVER_NAME " lastTx=0x%04x lastRx=0x%04x ident=0x%04x",
+		recentTx, recentRx, ident_reg);
+	efiPrintf(DRIVER_NAME " frame=%dus SPI1: CR1=0x%08x CR2=0x%08x SR=0x%08x",
+		(int)(recent_frame_cycles / (SystemCoreClock / 1000000)),
+		(unsigned)cfg->spi_bus->spi->CR1,
+		(unsigned)cfg->spi_bus->spi->CR2,
+		(unsigned)cfg->spi_bus->spi->SR);
+	efiPrintf(DRIVER_NAME " SPI1: DFF=%d BR=%d CPOL=%d CPHA=%d LSBFIRST=%d SPE=%d",
+		(cfg->spi_bus->spi->CR1 & SPI_CR1_DFF) ? 1 : 0,
+		(int)((cfg->spi_bus->spi->CR1 & SPI_CR1_BR) >> SPI_CR1_BR_Pos),
+		(cfg->spi_bus->spi->CR1 & SPI_CR1_CPOL) ? 1 : 0,
+		(cfg->spi_bus->spi->CR1 & SPI_CR1_CPHA) ? 1 : 0,
+		(cfg->spi_bus->spi->CR1 & SPI_CR1_LSBFIRST) ? 1 : 0,
+		(cfg->spi_bus->spi->CR1 & SPI_CR1_SPE) ? 1 : 0);
+	if (cfg->spi_config.ssport != NULL) {
+		/* CS pad state: moder=1 is output, odr is the driven level and idr
+		 * is what the chip actually sees (should be 1 between frames) */
+		efiPrintf(DRIVER_NAME " CS: moder=%d odr=%d idr=%d",
+			(int)((cfg->spi_config.ssport->MODER >> (cfg->spi_config.sspad * 2)) & 0x3),
+			(int)((cfg->spi_config.ssport->ODR >> cfg->spi_config.sspad) & 1),
+			(int)((cfg->spi_config.ssport->IDR >> cfg->spi_config.sspad) & 1));
+	}
+	efiPrintf(DRIVER_NAME " WDA: req=0x%x ec=%d wda_int=%d ok=%d fail=%d delay=%dms",
+		wd_last_req, wd_last_ec, wd_int ? 1 : 0, wd_ok_cnt, wd_fail_cnt, wd_delay_ms);
 }
 
 
@@ -1143,7 +853,7 @@ int L9779::chip_init_data(void)
 
 	/* enable all spi-driven ouputs
 	 * TODO: add API to enable/disable? */
-	o_oe_mask |= ~L9779_DIRECT_DRIVE_MASK;
+	o_oe_mask |= ~OUT_DIRECT_DRIVE_MASK;
 
 	return 0;
 
@@ -1158,34 +868,10 @@ err_gpios:
 	return ret;
 }
 
-/* Configure the crank VR conditioner for the L9779's fully adaptive mode
- * (datasheet section 6.14). CONFIG_REG1 enables full adaptation, while
- * CONFIG_REG5 enables both amplitude-based hysteresis and the adaptive time
- * filter (Tfilter = 1/32 of the tooth period) with a 17 uA floor. The chip
- * performs both adaptations internally, so no RPM-driven software ramp is
- * needed. These registers are write-only and reset with the chip. */
-int L9779::vrs_configure()
-{
-	constexpr L9779VrsConfiguration vrsConfig = l9779FullAdaptiveVrsConfiguration();
-
-	int ret = spi_rw(MSG_W(L9779_CONFIG_REG1, vrsConfig.config1), NULL);
-	if (ret != 0) {
-		return ret;
-	}
-
-	ret = spi_rw(MSG_W(L9779_CONFIG_REG5, vrsConfig.config5), NULL);
-	if (ret != 0) {
-		return ret;
-	}
-
-	efiPrintf(DRIVER_NAME " VRS full adaptive: REG1=0x%02x REG5=0x%02x",
-		vrsConfig.config1, vrsConfig.config5);
-	return 0;
-}
-
 int L9779::chip_init()
 {
 	int ret;
+	uint16_t rx;
 
 	/* statistic */
 	init_cnt++;
@@ -1195,91 +881,25 @@ int L9779::chip_init()
 	if (ret)
 		return ret;
 
-	/* Enable power stages */
+	/* Enable the power stages: the START command (frame bit 2 = data bit 1,
+	 * datasheet Table 57) clears OUT_DIS. With OUT_DIS = 1 all control
+	 * register writes are ignored and the power stages stay off. */
 	ret = spi_rw(CMD_START_REACT(BIT(1)), NULL);
 	if (ret)
 		return ret;
 
-	/* Pin the watchdog clock configuration before anchoring its response
-	 * window, then select the short window accepted by the 27 ms feed. */
-	ret = spi_rw(MSG_W(0x06, L9779_CONFIG6_PWR), NULL);
-	if (ret != 0) {
+	/* The OUT_DIS status is echoed in the DO data bit 0 of the frame that
+	 * follows the START command - use an IDENT_REG read to flush it out
+	 * and check that the power stages are really enabled. */
+	ret = spi_rw(L9779_IDENT, &rx);
+	if (ret)
 		return ret;
+
+	if (MSG_GET_DATA(rx) & 0x01) {
+		efiPrintf(DRIVER_NAME " OUT_DIS still set after START");
 	}
 
-	ret = spi_rw(MSG_W(L9779_WD_RESPTIME_REG, WDA_RESPTIME), NULL);
-	if (ret != 0) {
-		return ret;
-	}
-
-	uint16_t responseTime = 0;
-	if (read_diag_reg(L9779_WD_RESPTIME_SUB, &responseTime) == 0) {
-		efiPrintf(DRIVER_NAME " WDA RESPTIME=0x%02x",
-			MSG_GET_DATA(responseTime) & 0x3f);
-	}
-
-	/* A power-on or smart-reset event restores the write-only VRS registers
-	 * to their defaults. chip_init() serves both initial setup and the
-	 * configuration-lost OUT_DIS recovery path, so reapply them here. */
-	ret = vrs_configure();
-	if (ret != 0) {
-		return ret;
-	}
-
-	/* Verify the link without assuming an exact reply-frame delay. Each
-	 * attempt is bounded to one frame; stop only when IDENT's sub-address is
-	 * matched by spi_validate(). A failed probe is diagnostic, not fatal. */
-	bool ident_received = false;
-	for (int attempt = 0; attempt < 3; attempt++) {
-		uint16_t rx = 0;
-		int ident_ret = spi_rw(L9779_IDENT, &rx);
-		if (ident_ret == 0 && rx_subaddress == L9779_IDENT_SUB) {
-			ident_reg = rx;
-			ident_received = true;
-			break;
-		}
-	}
-
-	if (ident_received) {
-		efiPrintf(DRIVER_NAME " IDENT_REG = 0x%02x", MSG_GET_DATA(ident_reg));
-	} else {
-		efiPrintf(DRIVER_NAME " IDENT read failed: SPI link problem?");
-	}
-
-	return ret;
-}
-
-/* Stop watchdog traffic before parking the power stages. CONFIG_REG6 PSOFF
- * leaves chip logic, SPI, and KEY_ON monitoring alive for the wake edge. */
-int L9779::chip_power_off()
-{
-	wd_running = false;
-	wdaTimerStop();
-
-	const int ret = spi_rw(MSG_W(0x06, L9779_CONFIG6_PSOFF), NULL);
-	if (ret != 0) {
-		efiPrintf(DRIVER_NAME " PSOFF write failed (%d)", ret);
-	}
-
-	return ret;
-}
-
-int L9779::chip_heal_out_dis(bool configurationLost)
-{
-	if (configurationLost) {
-		/* Reapply all write-only configuration, including the VRS setup. */
-		const int ret = chip_init();
-		if (ret != 0) {
-			return ret;
-		}
-	} else {
-		const int ret = spi_rw(CMD_START_REACT(BIT(1)), NULL);
-		if (ret != 0) {
-			return ret;
-		}
-	}
-
-	return update_output();
+	return 0;
 }
 
 int L9779::init()
@@ -1290,49 +910,45 @@ int L9779::init()
 	if (drv_state != L9779_WAIT_INIT)
 		return -1;
 
-	ret = chip_reset();
-	if (ret)
-		return ret;
+	/* Configure the SPI chip-select as a push-pull output, idle high.
+	 * This ChibiOS SPI HAL (SPI_SELECT_MODE_PAD) only toggles the CS pad
+	 * level and never sets its pad mode; an unconfigured pad floats, the
+	 * L9779 sees CS permanently asserted, its 16-bit SCK counter never
+	 * gets a CS edge to frame the transfer and every frame is rejected
+	 * with SPI_ERR (DO = 0x8000). Must happen before the first frame. */
+	if (cfg->spi_config.ssport != NULL) {
+		gpio_pin_markUsed(cfg->spi_config.ssport, cfg->spi_config.sspad, DRIVER_NAME " CS");
+		palSetPadMode(cfg->spi_config.ssport, cfg->spi_config.sspad, PAL_MODE_OUTPUT_PUSHPULL);
+		palSetPad(cfg->spi_config.ssport, cfg->spi_config.sspad);
+	}
+
+	/* reset the chip; a bad first frame on the DO line (pre-reset idle
+	 * state) is not fatal - the link is verified below */
+	chip_reset();
 
 	ret = chip_init_data();
 	if (ret)
 		return ret;
 
-	o_dirty = true;
-	wd_running = false;
-	wd_last_req = 0;
-	wd_last_ec = 0;
-	wd_int = false;
-	wd_delay_ms = WDA_DELAY_INIT_MS;
-	wd_ok_cnt = 0;
-	wd_fail_cnt = 0;
-	wd_timing_miss_cnt = 0;
-	wd_wrong_cnt = 0;
-	wd_cnt_bad = 0;
-	wd_defer_cnt = 0;
-	wd_kill_cnt = 0;
-	wd_poll_timeouts = 0;
-	wd_ec_sat_cycles = 0;
-	wd_last_requhi = 0;
-	wd_prev_int = false;
-	wd_prev_cycle_clean = false;
-	s_wda_last_fire_nt = 0;
-	s_wda_fire_period_nt = 0;
-	s_wda_previous_period_nt = 0;
-	s_wda_previous_delay_ms = 0;
-	s_wda_chip = this;
-	wdaTimerInit();
-
-	for (size_t i = 0; i < efi::size(dia_valid); i++) {
-		dia_valid[i] = false;
+	/* Verify the SPI link by reading the identification register. The DO
+	 * reply to a read arrives in one of the frames that follow the request,
+	 * so issue the read three times and use the last reply: this captures
+	 * the IDENT_REG content with a one or two frame reply delay. */
+	uint16_t rx;
+	spi_rw(L9779_IDENT, NULL);
+	spi_rw(L9779_IDENT, NULL);
+	if (spi_rw(L9779_IDENT, &rx) == 0) {
+		ident_reg = rx;
+		efiPrintf(DRIVER_NAME " IDENT_REG = 0x%02x", MSG_GET_DATA(ident_reg));
+	} else {
+		efiPrintf(DRIVER_NAME " IDENT read failed: SPI link problem?");
 	}
-	dia10_valid = false;
-	key_on_valid = false;
-	diag_ts = 0;
-	diag_next_reg = 0;
-	diag_pending = 0;
-	out_dis_latched = false;
-	out_dis_heal_ts = 0;
+
+	/* WDA watchdog: with the default RESPTIME (0x3f) the response time is
+	 * ~99 ms and the fixed answer window is ~12.6 ms. Start feeding as
+	 * soon as the thread starts; delay will be adapted from REQUHI flags. */
+	wd_delay_ms = 105;
+	wd_ts = 0;
 
 	/* force chip init from driver thread */
 	need_init = true;
@@ -1352,60 +968,7 @@ int L9779::init()
 
 int L9779::deinit()
 {
-	wd_running = false;
-	wdaTimerStop();
 	return 0;
-}
-
-void L9779::debug()
-{
-	efiPrintf(DRIVER_NAME " spi=%d parity_err=%d frame_err=%d addr_err=%d",
-		spi_cnt, spi_err_parity, spi_err_frame, spi_err);
-	efiPrintf(DRIVER_NAME " lastTx=0x%04x lastRx=0x%04x ident=0x%04x",
-		recentTx, recentRx, ident_reg);
-	if (dia10_valid) {
-		efiPrintf(DRIVER_NAME " DIA10=0x%02x OUT_DIS=%d config_lost=%d",
-			dia10_cache,
-			l9779Dia10HasOutDis(dia10_cache),
-			l9779Dia10LostConfiguration(dia10_cache));
-	}
-	efiPrintf(DRIVER_NAME " WDA ec=%d int=%d ok=%d fail=%d miss=%d wrong=%d cntbad=%d defer=%d kill=%d pollto=%d delay=%d",
-		wd_last_ec, wd_int, wd_ok_cnt, wd_fail_cnt, wd_timing_miss_cnt,
-		wd_wrong_cnt, wd_cnt_bad, wd_defer_cnt, wd_kill_cnt,
-		wd_poll_timeouts, wd_delay_ms);
-	efiPrintf(DRIVER_NAME " WDA TIM7 CR1=0x%08lx DIER=0x%08lx PSC=%lu ARR=%lu CNT=%lu",
-		(unsigned long)WDA_TIMER->CR1, (unsigned long)WDA_TIMER->DIER,
-		(unsigned long)WDA_TIMER->PSC, (unsigned long)WDA_TIMER->ARR,
-		(unsigned long)WDA_TIMER->CNT);
-
-	const uint32_t frame_us = recent_frame_ticks == 0
-		? 0
-		: RTC2US(SystemCoreClock, recent_frame_ticks);
-	efiPrintf(DRIVER_NAME " frame=%luus SPI1: CR1=0x%08x CR2=0x%08x SR=0x%08x",
-		(unsigned long)frame_us,
-		(unsigned)cfg->spi_bus->spi->CR1,
-		(unsigned)cfg->spi_bus->spi->CR2,
-		(unsigned)cfg->spi_bus->spi->SR);
-	efiPrintf(DRIVER_NAME " SPI1: DFF=%d BR=%d CPOL=%d CPHA=%d LSBFIRST=%d SPE=%d",
-		(cfg->spi_bus->spi->CR1 & SPI_CR1_DFF) ? 1 : 0,
-		(int)((cfg->spi_bus->spi->CR1 & SPI_CR1_BR) >> SPI_CR1_BR_Pos),
-		(cfg->spi_bus->spi->CR1 & SPI_CR1_CPOL) ? 1 : 0,
-		(cfg->spi_bus->spi->CR1 & SPI_CR1_CPHA) ? 1 : 0,
-		(cfg->spi_bus->spi->CR1 & SPI_CR1_LSBFIRST) ? 1 : 0,
-		(cfg->spi_bus->spi->CR1 & SPI_CR1_SPE) ? 1 : 0);
-
-	if (cfg->spi_config.ssport != nullptr) {
-		efiPrintf(DRIVER_NAME " CS: moder=%d odr=%d idr=%d",
-			(int)((cfg->spi_config.ssport->MODER >> (cfg->spi_config.sspad * 2)) & 0x3),
-			(int)((cfg->spi_config.ssport->ODR >> cfg->spi_config.sspad) & 1),
-			(int)((cfg->spi_config.ssport->IDR >> cfg->spi_config.sspad) & 1));
-	}
-
-	for (size_t i = 0; i < frame_log.size(); i++) {
-		const L9779SpiFrame* frame = frame_log.get(i);
-		efiPrintf(DRIVER_NAME " dbg: tx=0x%04x rx=0x%04x sub=%02x ret=%d",
-			frame->tx, frame->rx, frame->subaddress, (int)frame->result);
-	}
 }
 
 /**
