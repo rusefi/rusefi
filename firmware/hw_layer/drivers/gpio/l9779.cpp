@@ -98,7 +98,9 @@ typedef enum {
 #define CMD_START_REACT(d)			MSG_W(0x0d, (d))
 #define CMD_CONTR_REG(n, d)			MSG_W(0x08 + (n), (d))
 
-/* Read only registers */
+/* Read only registers (common address 0x10 plus a 5-bit sub-address in the
+ * MOSI DI-DATA IN field; the reply carries the sub-address in the ADD field) */
+#define L9779_IDENT				(MSG_SET_ADDR(MSG_READ_ADDR) | MSG_SET_SUBADDR(0x00))
 
 /* IGN1..4 + OUT1..7 */
 #define OUT_DIRECT_DRIVE_MASK		0x7ff
@@ -120,6 +122,7 @@ struct L9779 : public GpioChip {
 	int writePad(size_t pin, int value) override;
 	int readPad(size_t pin) override;
 	brain_pin_diag_e getDiag(size_t pin) override;
+	void debug() override;
 
 	bool spi_parity_odd(uint16_t x);
 	int spi_validate(uint16_t rx);
@@ -170,6 +173,18 @@ struct L9779 : public GpioChip {
 	int							spi_err;			/* rx messages with incorrect ADDR or WR fields */
 	uint16_t					recentTx;
 	uint16_t					recentRx;
+
+	/* diagnostics */
+	uint16_t					ident_reg;			/* IDENT_REG readback (0x10 | 0x00) */
+	uint32_t					recent_frame_cycles;	/* CPU cycles of the last frame exchange */
+	/* WDA (VDA 2.0) state - the stock driver does not feed the watchdog yet,
+	 * the fields are kept for diagnostics and future feeding */
+	uint8_t					wd_last_req;
+	uint8_t					wd_last_ec;
+	bool					wd_int;
+	int						wd_ok_cnt;
+	int						wd_fail_cnt;
+	int						wd_delay_ms;
 };
 
 static L9779 chips[BOARD_L9779_COUNT];
@@ -262,7 +277,9 @@ int L9779::spi_rw(uint16_t tx, uint16_t *rx_ptr)
 	/* Slave Select assertion. */
 	spiSelect(spi);
 	/* Atomic transfer operations. */
+	uint32_t cyc0 = DWT->CYCCNT;
 	rx = spiPolledExchange(spi, tx);
+	recent_frame_cycles = DWT->CYCCNT - cyc0;
 	/* Slave Select de-assertion. */
 	spiUnselect(spi);
 	/* Ownership release. */
@@ -308,7 +325,9 @@ int L9779::spi_rw_array(const uint16_t *tx, uint16_t *rx, int n)
 		/* Slave Select assertion. */
 		spiSelect(spi);
 		/* data transfer */
+		uint32_t cyc0 = DWT->CYCCNT;
 		uint16_t rxdata = spiPolledExchange(spi, tx[i]);
+		recent_frame_cycles = DWT->CYCCNT - cyc0;
 
 		if (rx)
 			rx[i] = rxdata;
@@ -684,7 +703,19 @@ int L9779::chip_init()
 	if (ret)
 		return ret;
 
-	/* TODO: add spi communication test: read IDENT_REG */
+	/* Verify the SPI link by reading the identification register. The DO
+	 * reply to a read arrives in one of the frames that follow the request,
+	 * so issue the read three times and keep the last reply. */
+	uint16_t rx = 0;
+	spi_rw(L9779_IDENT, NULL);
+	spi_rw(L9779_IDENT, NULL);
+	int r = spi_rw(L9779_IDENT, &rx);
+	ident_reg = rx;
+	if (r == 0) {
+		efiPrintf(DRIVER_NAME " IDENT_REG = 0x%02x", MSG_GET_DATA(ident_reg));
+	} else {
+		efiPrintf(DRIVER_NAME " IDENT read failed: SPI link problem?");
+	}
 
 	return ret;
 }
@@ -696,6 +727,15 @@ int L9779::init()
 	/* check for multiple init */
 	if (drv_state != L9779_WAIT_INIT)
 		return -1;
+
+	/* enable the CPU cycle counter used for frame timing diagnostics */
+	CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
+	DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
+	DWT->CYCCNT = 0;
+
+	/* WDA diagnostics baseline: feeding is not implemented in the stock
+	 * driver, so ok/fail stay 0 and the delay stays at the default */
+	wd_delay_ms = 105;
 
 	ret = chip_reset();
 	if (ret)
@@ -724,6 +764,35 @@ int L9779::init()
 int L9779::deinit()
 {
 	return 0;
+}
+
+void L9779::debug() {
+	efiPrintf(DRIVER_NAME " spi=%d parity_err=%d frame_err=%d addr_err=%d",
+		spi_cnt, spi_err_parity, spi_err_frame, spi_err);
+	efiPrintf(DRIVER_NAME " lastTx=0x%04x lastRx=0x%04x ident=0x%04x",
+		recentTx, recentRx, ident_reg);
+	efiPrintf(DRIVER_NAME " frame=%dus SPI1: CR1=0x%08x CR2=0x%08x SR=0x%08x",
+		(int)(recent_frame_cycles / (SystemCoreClock / 1000000)),
+		(unsigned)cfg->spi_bus->spi->CR1,
+		(unsigned)cfg->spi_bus->spi->CR2,
+		(unsigned)cfg->spi_bus->spi->SR);
+	efiPrintf(DRIVER_NAME " SPI1: DFF=%d BR=%d CPOL=%d CPHA=%d LSBFIRST=%d SPE=%d",
+		(cfg->spi_bus->spi->CR1 & SPI_CR1_DFF) ? 1 : 0,
+		(int)((cfg->spi_bus->spi->CR1 & SPI_CR1_BR) >> SPI_CR1_BR_Pos),
+		(cfg->spi_bus->spi->CR1 & SPI_CR1_CPOL) ? 1 : 0,
+		(cfg->spi_bus->spi->CR1 & SPI_CR1_CPHA) ? 1 : 0,
+		(cfg->spi_bus->spi->CR1 & SPI_CR1_LSBFIRST) ? 1 : 0,
+		(cfg->spi_bus->spi->CR1 & SPI_CR1_SPE) ? 1 : 0);
+	if (cfg->spi_config.ssport != NULL) {
+		/* CS pad state: moder=1 is output, odr is the driven level and idr
+		 * is what the chip actually sees (should be 1 between frames) */
+		efiPrintf(DRIVER_NAME " CS: moder=%d odr=%d idr=%d",
+			(int)((cfg->spi_config.ssport->MODER >> (cfg->spi_config.sspad * 2)) & 0x3),
+			(int)((cfg->spi_config.ssport->ODR >> cfg->spi_config.sspad) & 1),
+			(int)((cfg->spi_config.ssport->IDR >> cfg->spi_config.sspad) & 1));
+	}
+	efiPrintf(DRIVER_NAME " WDA: req=0x%x ec=%d wda_int=%d ok=%d fail=%d delay=%dms",
+		wd_last_req, wd_last_ec, wd_int ? 1 : 0, wd_ok_cnt, wd_fail_cnt, wd_delay_ms);
 }
 
 /**
