@@ -15,6 +15,9 @@ void onConfigurationChangeBenchTest();
 
 bool isRunningBenchTest();
 const OutputPin *getOutputOnTheBenchTest();
+#if EFI_UNIT_TEST
+void setOutputOnTheBenchTestForUnitTest(OutputPin* output);
+#endif
 
 void fanBench();
 void fan2Bench();
