@@ -31,9 +31,20 @@ public:
 		return rxFifo.get(item, timeout);
 	}
 
+	// diagnostics for the console 'isotpinfo' command
+	uint32_t getRxFifoOverflow() const {
+		return rxFifoOverflow;
+	}
+
+	int getRxFifoCount() const {
+		return rxFifo.getCount();
+	}
+
 protected:
   // CanStreamerState has non-sync fifo, unify?
 	fifo_buffer_sync<CanRxMessage, CAN_FIFO_FRAME_SIZE> rxFifo;
+	// diagnostics: frames dropped because rxFifo was full
+	uint32_t rxFifoOverflow = 0;
 };
 
 #if HAL_USE_CAN

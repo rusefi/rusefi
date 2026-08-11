@@ -5,5 +5,5 @@ public interface UiVersion {
      * *** BE CAREFUL WE HAVE SEPARATE AUTOUPDATE_VERSION also managed manually ***
      * @see com.rusefi.autoupdate.Autoupdate#AUTOUPDATE_VERSION
      */
-    int CONSOLE_VERSION = 20260809;
+    int CONSOLE_VERSION = 20260811;
 }

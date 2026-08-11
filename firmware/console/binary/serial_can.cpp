@@ -42,12 +42,18 @@ static int isoTpPacketCounter = 0;
  */
 void CanTsListener::decodeFrame(const CANRxFrame& frame, efitick_t /*nowNt*/) {
 	// CAN ID filtering happens in base class, by the time we are here we know it's the CAN_ECU_SERIAL_RX_ID packet
+	// But CAN_ID() compares only the raw 11/29-bit identifier, so an extended frame whose low bits
+	// collide with our id would also reach us - reject those, they are not our ISO-TP packets.
+	if (frame.IDE) {
+		return;
+	}
 	// todo: what if the FIFO is full?
 	CanRxMessage msg(frame);
 	if (engineConfiguration->verboseIsoTp) {
 		PRINT("*** INFO: CanTsListener decodeFrame %d" PRINT_EOL, isoTpPacketCounter++);
 	}
 	if (!rxFifo.put(msg)) {
+		rxFifoOverflow++;
 		warning(ObdCode::CUSTOM_ERR_CAN_COMMUNICATION, "CAN sendDataTimeout() problems");
 	}
 }
@@ -80,6 +86,15 @@ can_msg_t CanTransport::receive(CANRxFrame *crfp, can_sysinterval_t timeout) {
 
 void tsOverCanInit() {
 	transport.init();
+
+	addConsoleAction("isotpinfo", [] {
+		efiPrintf("isotp: rxFifoOverflow=%u ignoredFrames=%u desyncResets=%u rxFifoBufOverflow=%u rxFifoCount=%d",
+			(unsigned)g_listener.getRxFifoOverflow(),
+			(unsigned)state.ignoredFrames,
+			(unsigned)state.desyncResets,
+			(unsigned)state.rxFifoBufOverflow,
+			g_listener.getRxFifoCount());
+	});
 }
 
 msg_t canStreamAddToTxTimeout(size_t *np, const uint8_t *txbuf, sysinterval_t timeout) {

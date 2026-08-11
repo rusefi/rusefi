@@ -89,10 +89,17 @@ void IsoTpBase::sendFlowControl(can_sysinterval_t timeout) {
 	sendFrame(header, nullptr, 0, timeout);
 }
 
-// returns the number of copied bytes
+// returns the number of copied bytes, 0 for an ignored foreign/FC/bad frame (state kept),
+// -1 when the ISO-TP state was reset because a frame was lost (caller should stop this session)
 int CanStreamerState::receiveFrame(const CANRxFrame &rxmsg, uint8_t *destinationBuff, int availableAtBuffer, can_sysinterval_t timeout) {
 	if (rxmsg.DLC < 1 + isoHeaderByteIndex)
 		return 0;
+	// Extended frames whose low 11 bits collide with our RX id are not ours
+	// (CanListener compares raw ids only) - reject them without touching state.
+	if (rxmsg.IDE) {
+		ignoredFrames++;
+		return 0;
+	}
 	engine->pauseCANdueToSerial = true;
 	int frameType = (rxmsg.data8[isoHeaderByteIndex] >> 4) & 0xf;
 	if (engineConfiguration->verboseIsoTp) {
@@ -129,18 +136,21 @@ int CanStreamerState::receiveFrame(const CANRxFrame &rxmsg, uint8_t *destination
 		frameIdx = rxmsg.data8[isoHeaderByteIndex] & 0xf;
 		if (this->waitingForNumBytes < 0 || this->waitingForFrameIndex != frameIdx) {
 			// a frame was lost (or a stale frame arrived): re-sync so the next FIRST frame starts clean
+			desyncResets++;
 			reset();
-			return 0;
+			return -1;
 		}
 		numBytesAvailable = minI(this->waitingForNumBytes, 7 - isoHeaderByteIndex);
 		srcBuf = rxmsg.data8 + 1 + isoHeaderByteIndex;
 		this->waitingForFrameIndex = (this->waitingForFrameIndex + 1) & 0xf;
 		break;
 	case ISO_TP_FRAME_FLOW_CONTROL:
-		// todo: currently we just ignore the FC frame
+		// flow control frames are not data - ignore without disturbing the RX state
+		ignoredFrames++;
 		return 0;
 	default:
-		// bad frame type
+		// bad frame type - garbage from another node, keep the state
+		ignoredFrames++;
 		return 0;
 	}
 
@@ -179,7 +189,9 @@ TODO: refactor into child class if we ever choose to revive this logic
 	numBytesAvailable -= numBytesToCopy;
 	// if there are some more bytes left, we save them for the next time
 	for (int i = 0; i < numBytesAvailable; i++) {
-		rxFifoBuf.put(srcBuf[i]);
+		if (!rxFifoBuf.put(srcBuf[i])) {
+			rxFifoBufOverflow++;
+		}
 	}
 
 	// according to the specs, we need to acknowledge the received multi-frame start frame
@@ -242,15 +254,11 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 				//warning(ObdCode::CUSTOM_ERR_CAN_COMMUNICATION, "CAN Flow Control frame not received");
 				return 0;
 			}
-			receiveFrame(rxmsg, nullptr, 0, timeout);
-			uint8_t frameType = (rxmsg.data8[isoHeaderByteIndex] >> 4) & 0xf;
-			uint8_t flowStatus = rxmsg.data8[isoHeaderByteIndex] & 0xf;
-			// if something is not ok
-			if ((frameType != ISO_TP_FRAME_FLOW_CONTROL) || (flowStatus != CAN_FLOW_STATUS_OK)) {
-				// if the receiver is not ready yet and asks to wait for the next FC frame (give it 3 attempts)
-				if ((frameType == ISO_TP_FRAME_FLOW_CONTROL) && (flowStatus == CAN_FLOW_STATUS_WAIT_MORE) && (numFcReceived < 3)) {
-					continue;
-				}
+			// a foreign frame arrived while we wait for FC: skip a few of them before giving up,
+			// otherwise a busy bus would abort every multi-frame TX
+			if ((frameType != ISO_TP_FRAME_FLOW_CONTROL) && (numFcReceived < 8)) {
+				continue;
+			}
 #ifdef SERIAL_CAN_DEBUG
 				efiPrintf("*** ERROR: CAN Flow Control mode not supported");
 #endif /* SERIAL_CAN_DEBUG */
@@ -372,11 +380,14 @@ can_msg_t CanStreamerState::streamReceiveTimeout(size_t *np, uint8_t *rxbuf, can
 		if (rxTransport->receive(&rxmsg, timeout) == CAN_MSG_OK) {
 			int numReceived = receiveFrame(rxmsg, rxbuf + receivedSoFar, availableBufferSpace, timeout);
 
-			if (numReceived < 1) {
-				// a frame was lost or ignored (e.g. an unexpected flow control frame):
-				// drop the partial ISO-TP state so the next FIRST frame starts clean
+			if (numReceived < 0) {
+				// a frame was lost: receiveFrame() already dropped the partial ISO-TP state
 				reset();
 				break;
+			}
+			if (numReceived == 0) {
+				// ignored frame (foreign / flow control / bad type): keep waiting for the next one
+				continue;
 			}
 			availableBufferSpace -= numReceived;
 			receivedSoFar += numReceived;

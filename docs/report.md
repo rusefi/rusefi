@@ -992,3 +992,82 @@ Open follow-ups:
   the driver thread feeds WDA; both share rd_pending/rx_subaddr. Benign in
   practice (reads retry 3x), but a mutex around spi_rw()/spi_rw_array() would
   make it deterministic.
+
+## 2026-08-11 - TS-over-CAN link stability on a busy bus (m74_9, AT32F435)
+
+Symptom (user): on the car the java_console/PCAN link works 5-10 s then dies with
+`Got only 4 bytes while expecting 9 for command 0x4F` + `TunerStudio errors:
+underrun=1 ... outofrange=54`; on the bench (no other nodes) it is stable. Root
+cause is foreign bus traffic reaching the ISO-TP receiver: `CanListener::acceptFrame`
+compares only the raw identifier (`CAN_ID()` returns EID for extended frames), so an
+extended frame whose low 11 bits equal 0x710 also lands in `CanTsListener.rxFifo`,
+and any non-ISO-TP frame arriving between FIRST and CONSECUTIVE used to abort the
+partial receive (`numReceived < 1` -> reset + break), truncating TS packets.
+
+What was done:
+| Change | File |
+| --- | --- |
+| bxCAN HW filter on CAN1 (single-CAN boards only: `STM32_CAN_USE_CAN2==FALSE`): FIFO0 accepts only standard 0x710 (mask includes the IDE bit, so extended collisions are rejected in HW), FIFO1 accepts everything else; RX thread drains FIFO0 first so TS frames are never starved by bus noise | firmware/hw_layer/drivers/can/can_hw.cpp |
+| `CanTsListener::decodeFrame` rejects extended frames (`frame.IDE`) before enqueueing | firmware/console/binary/serial_can.cpp |
+| `CanStreamerState::receiveFrame` distinguishes garbage from loss: FC/bad-type/IDE frames return 0 with ISO-TP state kept; a stale CONSECUTIVE returns -1 after `reset()` | firmware/controllers/can/isotp/isotp.cpp |
+| `streamReceiveTimeout` continues on ignored frames (0) and only breaks on real desync (-1) | firmware/controllers/can/isotp/isotp.cpp |
+| `sendDataTimeout` FC wait skips up to 8 foreign frames before giving up (was: first non-FC frame aborted every multi-frame TX on a busy bus) | firmware/controllers/can/isotp/isotp.cpp |
+| `CAN_FIFO_BUF_SIZE` 76 -> 128, `CAN_FIFO_FRAME_SIZE` 32 -> 64 (static RAM, ~1 KB more) | firmware/controllers/can/isotp/isotp.h |
+| Diagnostics: `rxFifoOverflow/ignoredFrames/desyncResets/rxFifoBufOverflow` counters + new console command `isotpinfo` | isotp.h, serial_can.h, serial_can.cpp |
+
+Design notes:
+- HW filter is applied in `initCan()` before `canStart()` (`canSTM32SetFilters` asserts
+  `CAND1.state == CAN_STOP`); `can_lld_start`/`canStop` do not touch filters, so
+  `setCanBaud`/`setCanListenMode` restarts keep it. With `STM32_CAN_USE_CAN2==TRUE`
+  the shared filter bank split is board-specific, so the filter is left at the
+  driver default there.
+- FIFO0 priority in `can_lld_receive` (`CAN_ANY_MAILBOX` drains RX0 first) is what
+  makes the TS-first split safe: foreign frames go to FIFO1 and can never push TS
+  frames out of the 3-slot HW FIFO.
+- FC frames were the most plausible truncation trigger (`receiveFrame` returned 0,
+  old `streamReceiveTimeout` turned that into reset+break, dropping the pending
+  multi-frame packet); the new 0/-1 contract fixes exactly that path.
+
+Validation:
+- Not compiled here (user builds m74_9 himself); unit-test build on this Mac fails
+  earlier in the Java toolchain (no JDK 11, `flock` missing) - unrelated to these
+  edits. Change set touches only CAN RX path + static buffers, no L9779 logic.
+
+Open follow-ups:
+- On the car run `isotpinfo` while connected: counters tell whether drops are
+  foreign frames (`ignoredFrames` growing) or FIFO overflow (`rxFifoOverflow`/`rxFifoBufOverflow`).
+- If a third-party node genuinely transmits standard 0x710, only changing the
+  console bus ID or moving TS to a dedicated CAN avoids it - HW filter cannot help.
+- Long-term: revisit `IsoTpRx::readTimeout` and the `IsoTpRxTx` path with the same
+  garbage-vs-loss contract.
+
+## 2026-08-11 - java_console ISO-TP decoder: FIRST-frame length sign-extension bug
+
+Symptom (car, PCAN): java_console dies at connect with
+`IllegalArgumentException: 2 > -126` in `IsoTpCanDecoder.decodePacket` line 93;
+PCAN reader thread exits, link is gone.
+
+Root cause: `IsoTpCanDecoder` computed the FIRST-frame total length as
+`((pci & 0xf) << 8) | data[1]` where `data[1]` is a signed Java `byte`. Any
+multi-frame response whose length low byte has bit 7 set (e.g. 0x180 = `0x11
+0x80`, or a foreign bus node transmitting `0x10 0x80` on the same ID) turned
+into a negative `waitingForNumBytes`; `Arrays.copyOfRange(data, 2, 2 + n)`
+then threw. Secondary defect: `PCanIoStream.readOnePacket` let any decode
+RuntimeException kill the reader thread instead of skipping the frame.
+
+What was done:
+| Change | File |
+| --- | --- |
+| Mask the length byte: `data[isoHeaderByteIndex + 1] & 0xff` | java_console/io/.../can/isotp/IsoTpCanDecoder.java |
+| `readOnePacket` wraps `decodePacket` in try/catch, logs the offending frame hex and continues | java_console/io/.../can/PCanIoStream.java |
+| `UiVersion.CONSOLE_VERSION` bumped to 20260811 (project rule for Java changes) | java_tools/version/.../UiVersion.java |
+
+Validation: javac-level diagnostics clean; java_console not rebuilt here (user
+builds). Fix is the Java counterpart of the firmware-side busy-bus work above:
+firmware now survives foreign frames, and the console no longer dies on them.
+
+Open follow-ups:
+- On the car, reconnect and check `isotpinfo` counters (`ignoredFrames` etc.)
+  plus console-side frame-skip messages to confirm the link holds.
+- If a third-party node genuinely owns the 0x710/0x711 IDs, consider moving TS
+  to a dedicated CAN or changing the console bus ID.

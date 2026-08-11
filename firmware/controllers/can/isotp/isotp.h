@@ -131,10 +131,10 @@ class ICanTransport : public ICanTransmitter, public ICanReceiver {
 
 // most efficient sizes are 6 + x * 7 that way whole buffer is transmitted as (x+1) full packets
 #ifndef CAN_FIFO_BUF_SIZE
-#define CAN_FIFO_BUF_SIZE 76
+#define CAN_FIFO_BUF_SIZE 128
 #endif // CAN_FIFO_BUF_SIZE
 
-#define CAN_FIFO_FRAME_SIZE 32
+#define CAN_FIFO_FRAME_SIZE 64
 
 class CanStreamerState : public IsoTpBase {
 public:
@@ -151,6 +151,13 @@ public:
 	// used for multi-frame ISO-TP packets
 	int waitingForNumBytes = 0;
 	int waitingForFrameIndex = 0;
+
+	// diagnostics: byte-level FIFO overflowed (leftover bytes dropped)
+	uint32_t rxFifoBufOverflow = 0;
+	// diagnostics: foreign/FC/bad-type frames skipped without disturbing ISO-TP state
+	uint32_t ignoredFrames = 0;
+	// diagnostics: ISO-TP state reset after a lost/out-of-order frame
+	uint32_t desyncResets = 0;
 
 	ICanReceiver *rxTransport;
 
