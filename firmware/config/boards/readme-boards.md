@@ -51,3 +51,10 @@ connector/.yaml-only directories are intentionally not listed here.
 | [hellen/hellenMiataNA96](hellen/hellenMiataNA96) | Mazda Miata NA 1996 |
 | [hellen/hellenMiataNB1](hellen/hellenMiataNB1) | Mazda Miata NB1 |
 | [hellen/hellenMiataNB2](hellen/hellenMiataNB2) | Mazda Miata NB2 |
+
+##
+
+Canonical function strings in use:
+
+- `Power/Chassis GND ground` for `type: gnd`
+- `GNDA Analog/Sensor Ground` for `type: agnd`
