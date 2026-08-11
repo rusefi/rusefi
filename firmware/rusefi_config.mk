@@ -53,6 +53,7 @@ CONFIG_FILES = \
   $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/generated/page_3_generated.h \
   $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/generated/page_4_generated.h \
   $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/lua/generated/value_lookup_generated.cpp \
+  $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/lua/generated/value_lookup_table_generated.cpp \
   $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/lua/generated/value_lookup_generated.md \
   $(PROJECT_DIR)/../java_console/models/src/main/java/com/rusefi/config/generated/VariableRegistryValues.java \
   $(FIELDS) \

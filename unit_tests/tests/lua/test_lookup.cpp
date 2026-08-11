@@ -30,4 +30,18 @@ TEST(LuaBasic, configLookup) {
 		setConfigValueByName(name, 13);
 		ASSERT_EQ(13.0, getConfigValueByName(name));
 	}
+
+	{
+		const char * bit0Name = "devBit0";
+		const char * bit1Name = "devBit1";
+		setConfigValueByName(bit0Name, 1);
+		setConfigValueByName(bit1Name, 0);
+		ASSERT_EQ(1.0, getConfigValueByName(bit0Name));
+		ASSERT_EQ(0.0, getConfigValueByName(bit1Name));
+
+		setConfigValueByName(bit0Name, 0);
+		setConfigValueByName(bit1Name, 1);
+		ASSERT_EQ(0.0, getConfigValueByName(bit0Name));
+		ASSERT_EQ(1.0, getConfigValueByName(bit1Name));
+	}
 }
