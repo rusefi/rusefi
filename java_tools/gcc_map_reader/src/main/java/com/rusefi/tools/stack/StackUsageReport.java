@@ -88,7 +88,7 @@ public class StackUsageReport {
         for (Graph graph : graphs) {
             demangleSymbols(graph.nodes, options.cxxfilt);
         }
-        applyProfile(graphs, loadProfile(options.profile));
+        applyProfile(graphs, loadProfile(options.profile, options.profileFile));
         if (options.checkReviewed) {
             checkReviewedBudgets(graphs);
         }
@@ -387,7 +387,10 @@ public class StackUsageReport {
         throw new IllegalArgumentException("stack root entry is not an address: '" + value + "'");
     }
 
-    private static List<ProfileRoot> loadProfile(String profile) throws IOException {
+    static List<ProfileRoot> loadProfile(String profile, Path profileFile) throws IOException {
+        if (profileFile != null) {
+            return parseProfile(read(profileFile));
+        }
         String resource = "/stack_usage/" + profile + ".md";
         InputStream stream = StackUsageReport.class.getResourceAsStream(resource);
         if (stream == null) {
@@ -1162,10 +1165,11 @@ public class StackUsageReport {
     }
 
     private static class Options {
-        static final String USAGE = "Usage: StackUsageReport --profile <name> "
+        static final String USAGE = "Usage: StackUsageReport --profile <name> [--profile-file <path>] "
             + "[--check-reviewed] [--firmware-dir <path>] [--bootloader-dir <path>] "
             + "[--cxxfilt <command>] [--readelf <command>] [--output <path>]";
         String profile;
+        Path profileFile;
         Path firmwareDir = Paths.get("build");
         Path bootloaderDir = Paths.get("bootloader/blbuild");
         String cxxfilt = "arm-none-eabi-c++filt";
@@ -1200,6 +1204,9 @@ public class StackUsageReport {
                 switch (option) {
                     case "--profile":
                         options.profile = value;
+                        break;
+                    case "--profile-file":
+                        options.profileFile = Paths.get(value);
                         break;
                     case "--firmware-dir":
                         options.firmwareDir = Paths.get(value);

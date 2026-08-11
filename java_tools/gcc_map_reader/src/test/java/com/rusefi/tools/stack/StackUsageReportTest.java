@@ -181,6 +181,19 @@ public class StackUsageReportTest {
     }
 
     @Test
+    void profileFileOverridesClasspathProfile() throws Exception {
+        Path profile = write("private-stack-usage.md",
+            "| Image | Entry | Name | Retained | Proxy | Scenario |\n"
+                + "|---|---|---|---:|---:|---|\n"
+                + "| firmware | main | private main | - | - | - |\n");
+
+        List<StackUsageReport.ProfileRoot> roots = StackUsageReport.loadProfile("missing", profile);
+
+        assertEquals(1, roots.size());
+        assertEquals("private main", roots.get(0).name);
+    }
+
+    @Test
     void demanglingAndMissingInputs() {
         String symbol = "/tmp/cc.o:_ZN8CanWrite12PeriodicTaskEx.lto_priv.0";
         Map<String, StackUsageReport.Node> nodes = new TreeMap<>();
