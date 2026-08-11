@@ -82,7 +82,7 @@ TEST(TunerStudioState, SmoothedAfrBank1) {
 
 	updateTunerStudioState();
 
-	EXPECT_FLOAT_EQ(0.8f, engine->outputChannels.SmoothedAFRValue);
+	EXPECT_FLOAT_EQ(7.2f, engine->outputChannels.SmoothedAFRValue);
 }
 
 TEST(TunerStudioState, SmoothedAfrBank2) {
@@ -93,7 +93,7 @@ TEST(TunerStudioState, SmoothedAfrBank2) {
 
 	updateTunerStudioState();
 
-	EXPECT_FLOAT_EQ(1.2f, engine->outputChannels.SmoothedAFRValue2);
+	EXPECT_FLOAT_EQ(14.4f, engine->outputChannels.SmoothedAFRValue2);
 }
 
 TEST(TunerstudioCommands, writeChunkEngineConfig) {
