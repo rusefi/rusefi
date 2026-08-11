@@ -50,12 +50,25 @@ static void setupEtb() {
 	// PWM - pwm control (enable high, coast low)
 	// DIS - disables motor (enable low)
 
+	// The only H-bridge on this board drives the throttle (TS field
+	// "H-Bridge #1 function" = etbFunctions1); force it here until the
+	// throttle is proven on the bench. Note this overrides the TS field on
+	// every boot while it lives in ConfigOverrides.
+	engineConfiguration->etbFunctions[0] = DC_Throttle1;
+
 	// PWM pin
 	engineConfiguration->etbIo[0].controlPin = Gpio::B14;
 	// DIR pin
 	engineConfiguration->etbIo[0].directionPin1 = Gpio::B15;
-//	// Disable pin todo clarify if we have it?
-//	engineConfiguration->etbIo[0].disablePin = Gpio::C8;
+
+	// No disablePin here: the TLE9201 DIS pin (pin 11) is enabled by the
+	// ETC_EN chain PB13 -> Q5A (NPN, inverts) -> DIS (pulled up to +5V), i.e.
+	// the MCU-side polarity is ACTIVE-HIGH (PB13 high = bridge enabled).
+	// rusEFI's disable-pin mechanism has no inversion support (fixed
+	// OM_DEFAULT: pin low = enable), so disablePin = B13 would drive DIS high
+	// (outputs tristate) whenever the firmware thinks the bridge is enabled.
+	// PB13 is driven high directly in m74_9_boardInitHardware(); the runtime
+	// disable is PWM=0, on which the TLE9201 coasts.
 
 	// we only have pwm/dir, no dira/dirb
 	engineConfiguration->etb_use_two_wires = false;
@@ -83,12 +96,6 @@ static void m74_9_boardDefaultConfiguration() {
 	engineConfiguration->spi1misoPin = Gpio::E14;
 	engineConfiguration->spi1sckPin = Gpio::E13;
 
-	/* SPI2 is used for TLE9201 ETB H-bridge diagnostics (see setupEtb) */
-	engineConfiguration->is_enabled_spi_2 = true;
-	engineConfiguration->spi2sckPin = Gpio::D1;  // PD1 AF6, ETC_SCK
-	engineConfiguration->spi2misoPin = Gpio::D3; // PD3 AF6, ETC_SO
-	engineConfiguration->spi2mosiPin = Gpio::D4; // PD4 AF6, ETC_SI
-
   engineConfiguration->triggerInputPins[0] = Gpio::F8;
   engineConfiguration->camInputs[0] = Gpio::B9;
 
@@ -110,6 +117,25 @@ static void m74_9_boardDefaultConfiguration() {
 }
 
 static void m74_9_boardConfigOverrides() {
+	/* Ignition key detection for isIgnVoltage() (the TLE9201 ETB gate):
+	 * the IGN_KEY line (connector BF2) is wired to the L9779 KEY_ON input
+	 * (pin 11), not to an MCU pin, so read it back over SPI via DIA_REG9
+	 * KEY_ON_STATUS (implemented in the l9779 driver readPad()).
+	 * This lives in ConfigOverrides (applied on every boot), not in the
+	 * DefaultConfiguration (applied only on config reset), because the
+	 * stored tune predates this pin assignment. */
+	engineConfiguration->ignitionKeyDigitalPin = Gpio::L9779_PIN_KEY;
+
+	/* SPI2 for the TLE9201 ETB H-bridge diagnostics (see setupEtb). Must live
+	 * in ConfigOverrides (applied on every boot), not in the DefaultConfiguration
+	 * (applied only on config reset), for the same reason as the ignition key
+	 * pin above: the stored tune predates SPI2, so initSpiModules() would skip
+	 * the bus and PD1/PD3/PD4 would never be configured for AF6. */
+	engineConfiguration->is_enabled_spi_2 = true;
+	engineConfiguration->spi2sckPin = Gpio::D1;  // PD1 AF6, ETC_SCK
+	engineConfiguration->spi2misoPin = Gpio::D3; // PD3 AF6, ETC_SO
+	engineConfiguration->spi2mosiPin = Gpio::D4; // PD4 AF6, ETC_SI
+
 	//CAN 1 bus overwrites
 	engineConfiguration->canRxPin = Gpio::G0;
 	engineConfiguration->canTxPin = Gpio::G1;
@@ -218,11 +244,21 @@ void boardInit() {
  * kernel exists and the board hangs at power-on. Same pattern as
  * hellen154hyundai_f7.
  */
-static void m74_9_boardInitHardware() {
+	static void m74_9_boardInitHardware() {
 	/* TLE9201 ETB H-bridge: ETC_CS on PD0 */
 	gpio_pin_markUsed(GPIOD, 0, "TLE9201 ETB CS");
 	palSetPadMode(GPIOD, 0, PAL_MODE_OUTPUT_PUSHPULL);
 	palSetPad(GPIOD, 0);
+
+	/* ETC_EN on PB13 -> Q5A (NPN, inverts) -> TLE9201 DIS (pin 11, pulled up
+	 * to +5V). PB13 high = Q5A on = DIS low = bridge enabled. Must be driven
+	 * here (not via etbIo[].disablePin: that path is fixed OM_DEFAULT, and
+	 * low=enable would leave DIS high = outputs tristate). At boot PB13 is a
+	 * weak pullup only, insufficient to turn Q5A on (internal 10k base-emitter
+	 * divider), so DIS stays pulled high -> tristate until this runs. */
+	gpio_pin_markUsed(GPIOB, 13, "ETC_EN");
+	palSetPadMode(GPIOB, 13, PAL_MODE_OUTPUT_PUSHPULL);
+	palSetPad(GPIOB, 13);
 
 	int ret = tle9201_add(0, &tle9201_cfg);
 	efiPrintf("tle9201_add()=%d", ret);

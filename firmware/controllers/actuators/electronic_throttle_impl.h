@@ -273,7 +273,13 @@ public:
 
 				// Check that the calibrate actually moved the throttle
 				if (std::abs(m_primaryMax - m_primaryMin) < 0.5f) {
-					firmwareError(ObdCode::OBD_TPS_Configuration, "Auto calibrate failed, check your wiring!\r\nClosed voltage: %.1fv Open voltage: %.1fv", m_primaryMin, m_primaryMax);
+					// Failing a bench calibration is a wiring/tune problem the user must
+					// fix, not a fatal firmware condition: warning() keeps the ECU
+					// running so calibration can be retried after fixing the wiring,
+					// while firmwareError() would latch a critical error, trip
+					// LimpManager (engine limp, needs power cycle) and previously also
+					// killed the event scheduler (see microsecond_timer.cpp).
+					warning(ObdCode::OBD_TPS_Configuration, "Auto calibrate failed, check your wiring!\r\nClosed voltage: %.1fv Open voltage: %.1fv", m_primaryMin, m_primaryMax);
 					return ACPhase::Stopped;
 				}
 

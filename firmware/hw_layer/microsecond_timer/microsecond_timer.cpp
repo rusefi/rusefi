@@ -80,10 +80,13 @@ void setHardwareSchedulerTimer(efitick_t nowNt, efitick_t setTimeNt) {
 		return;
 	}
 
-	// Skip scheduling if there's a firmware error active
-	if (hasFirmwareError()) {
-		return;
-	}
+	// Always re-arm the hardware timer, even under a firmware error. The ISR
+	// disables the channel notification (CC1IE) before invoking the callback, and
+	// portSetHardwareSchedulerTimer() below is the only code that re-enables it, so
+	// skipping the arm here would permanently kill the whole event scheduler (soft
+	// PWM, watchdog buddy, every scheduled event) until the next reboot. Engine
+	// safety after a fatal error is handled by LimpManager::fatalError() cutting
+	// ignition/injection/ETB - not by stopping the scheduler.
 
 	// Do the actual hardware-specific timer set operation
 	portSetHardwareSchedulerTimer(nowNt, setTimeNt);

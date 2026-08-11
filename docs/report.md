@@ -1,5 +1,49 @@
 # Work Report
 
+## 2026-08-12 - m74_9: ETB (TLE9201) revived - the missing piece was the ETC_EN enable chain, not SPI
+
+Throttle now moves on the bench; user confirmed. The blocker from the previous session ("throttle does not move even though TLE9201 diag is clean") traced to the hardware enable: TLE9201 DIS (pin 11) sat at +5V, holding the bridge in tristate ("Outputs disabled", diag EN bit 0x80 = 0). The enable chain on the board is PB13 (ETC_EN) -> Q5A (MUN5311DW1 NPN, inverts) -> DIS (pulled up to +5V via R23), so the MCU-side polarity is ACTIVE-HIGH: PB13 high = Q5A on = DIS low = bridge enabled. PB13 was never driven (board.h leaves it a weak-pullup input).
+
+What was done:
+| Change | File |
+| --- | --- |
+| Drive PB13 (ETC_EN) high as plain GPIO in `m74_9_boardInitHardware()` (gpio_pin_markUsed + PAL_MODE_OUTPUT_PUSHPULL + palSetPad), right before `tle9201_add()` | firmware/config/boards/m74_9/board_configuration.cpp |
+| Document in `setupEtb()` why `etbIo[].disablePin` is NOT used: the disable-pin path (DcHardware::start -> OutputPin::initPin(msg, pin)) is fixed OM_DEFAULT (pin low = enable), the inverse of what this board needs; assigning disablePin = B13 would drive DIS high (tristate) whenever the firmware thinks the bridge is enabled | firmware/config/boards/m74_9/board_configuration.cpp |
+
+Key decisions:
+- Static high on ETC_EN instead of a config field: there is no `disablePinMode` anywhere (checked `dc_io` in rusefi_config.txt), so inverting the disable pin would need a new config field plus full config regen - overkill for one board bring-up. Runtime disable is PWM=0, on which the TLE9201 coasts (real coast, not drive).
+- Boot is safe by construction: PB13 weak pullup (~40k) against Q5A's internal 10k base-emitter divider gives ~0.66V at the base - below Vbe, Q5A stays off, DIS pulled high -> tristate until firmware drives PB13. Measured DIS=0.2V (Q5A Vce(sat)) after the fix.
+- The earlier hypothesis (KiCad "DIS -> +3V3 via Q5A/R20") was wrong for the physical board: DIS is pulled to +5V (R23) and Q5A is a real NPN, not open-drain logic. Schematic netlist Y-positions were unreliable; trust datasheet pinout + user's 0-ohm measurements.
+
+Validation (user on bench): DIS = 0.2V vs GND; TLE9201 diag transition 0x5C (Outputs disabled / Open Load, power-on tristate) -> 0xDF (No failure, EN bit set); `etbautocal` passes - throttle sweeps open/close, no "Auto calibrate failed", TPS1 closed/open voltages now differ.
+
+Open follow-ups:
+- On-car: confirm direction (if inverted, `stepperDcInvertedPins=true`, issue #4579), re-check TPS divider coefficients (analogInputDividerCoefficient=2.0 read 5.4V closed / 1V open on car), TPS2 warnings (P0223 Tps1Secondary too high, P2135 inconsistent - TPS2 divider may differ from TPS1), P2137 pedal inconsistent.
+- The L9779 WDA -> Q5B -> DIS path is a redundant hardware kill (L9779 algorithmic watchdog); firmware feeds the watchdog fine (WDA ok>0 fail=0) and the path is likely depopulated ("not soldered" note near R20).
+
+## 2026-08-11 - m74_9: fix event-scheduler death on firmware error (WDT TIM5 latch during ETB autocal)
+
+User log (2026-08-11_22_47): during ETB TPS autocal the scheduler died - `WDT regs: cnt` still counting at 4 MHz, `dier 0x2 -> 0x0` (CC1IE cleared and never re-enabled), `isr`/`setHw` counters frozen, `pend=0`. Root cause found in code, not in a hardware race:
+
+- `MicrosecondTimerWatchdogController` fires when `setHardwareSchedulerTimer()` has not been called for 2 s.
+- `setHardwareSchedulerTimer()` had a `if (hasFirmwareError()) return;` gate (added 2019, #996 debugging). The STM32 ISR (`hwTimerCallback` in microsecond_timer_stm32.cpp) disables the compare notification (CC1IE) *before* invoking the callback, and `portSetHardwareSchedulerTimer()` is the *only* code that re-enables it. So any `firmwareError()` (e.g. the ETB autocal's "Auto calibrate failed" critical error) made the very next timer ISR the last one ever: the whole event scheduler died (soft PWM, watchdog buddy, all scheduled events) until power cycle. This is deterministic, not a race.
+
+What was done:
+| Change | File |
+| --- | --- |
+| Removed the `hasFirmwareError()` early-return from `setHardwareSchedulerTimer()`; documented the CC1IE invariant. Scheduler now always re-arms; engine safety after fatal error is already handled by `LimpManager::fatalError()` (cuts ignition/injection/ETB/trigger), which `firmwareErrorV()` calls - the scheduler gate was redundant for safety and only served to brick the ECU until reboot | firmware/hw_layer/microsecond_timer/microsecond_timer.cpp |
+| ETB TPS autocal failure downgraded `firmwareError()` -> `warning()`: failing a bench calibration is a wiring/tune issue the user must fix, not an unrecoverable condition; the ECU keeps running and calibration can be retried without a power cycle | firmware/controllers/actuators/electronic_throttle_impl.h |
+
+Key decisions:
+- The 2026-08-09 `compareMinDelta=4us` clamp is orthogonal - that fixes compare-written-in-the-past; this fixes the firmware-error path that never re-arms.
+- WDT diagnostic output stays useful: with the gate gone, the watchdog only fires on genuine scheduler breakage (clock gate, missed compare, stuck ISR).
+
+Validation: not compiled here (user builds m74_9 himself). Static cross-check: `firmwareErrorV()` -> `getLimpManager()->fatalError()` (error_handling.cpp:716); `EtbController::setOutput()` gates on `allowElectronicThrottle()` (electronic_throttle.cpp:552).
+
+Open follow-ups:
+- On the car, the throttle still does not move even though TLE9201 diag is clean (0x5F "No failure" with motor attached). Candidates: DIS (TLE9201 pin 11) pulled to +3V3 via Q5A/R20 per KiCad (bridge held disabled - verify R20 populated and ETC_EN wired to the MCU), and PWM/DIR pins (PB14/PB15 are not in the HW-PWM table, so ETB runs on soft PWM; KiCad rev says PC0/PC1, which collide with PPS1/PPS2).
+- Confirm `stepperDcInvertedPins` (#4579) once the motor actually turns.
+
 ## 2026-08-11 - m74_9: enable TLE9201 ETB H-bridge diagnostics on SPI2 (AT32F435)
 
 Goal (user): bring the electronic throttle alive - the TLE9201 (U3) H-bridge was not wired to any SPI and had no driver in firmware. Per KiCad dump `m749_kicad.txt` the only L9779-to-TLE9201 link is the WDA_INT watchdog line (L9779 pin 38 -> Q5B -> DIS), so diagnostics must be driven directly from the AT32 via SPI2, not through the L9779.

@@ -126,6 +126,7 @@ typedef enum {
 #define L9779_DIA_REG6_SUB			0x06	/* OUT21..24 diagnosis */
 #define L9779_DIA_REG7_SUB			0x07	/* OUT25..28 diagnosis */
 #define L9779_DIA_REG8_SUB			0x08	/* IGN1..4 diagnosis */
+#define L9779_DIA_REG9_SUB			0x09	/* KEY_ON_STATUS + VTRK1/2 diagnosis */
 #define L9779_DIA_REG10_SUB			0x0a	/* OUT_DIS + power-stage fault/reset flags */
 #define L9779_WD_REQULO				(MSG_SET_ADDR(MSG_READ_ADDR) | MSG_SET_SUBADDR(L9779_WD_REQULO_SUB))
 #define L9779_WD_REQUHI				(MSG_SET_ADDR(MSG_READ_ADDR) | MSG_SET_SUBADDR(L9779_WD_REQUHI_SUB))
@@ -272,6 +273,12 @@ struct L9779 : public GpioChip {
 	uint16_t					dia_cache[8];
 	bool						dia_valid[8];
 	sysinterval_t				diag_ts;	/* when to refresh the cache next */
+
+	/* KEY_ON input level (DIA_REG9 bit 7, datasheet 6.14), cached by the
+	 * driver thread together with the power-stage diagnosis. Unlike the
+	 * DIA_REG1..8 faults, reading it clears nothing on the chip. */
+	bool						key_on_status;
+	bool						key_on_valid;
 
 
 	/* statistic */
@@ -598,6 +605,15 @@ void L9779::refresh_diag_cache()
 			dia_cache[i] = val;
 			dia_valid[i] = true;
 		}
+	}
+
+	/* KEY_ON input level (DIA_REG9 bit 7, KEY_ON_STATUS). This is the
+	 * ignition switch line on boards that route IGN_KEY to the L9779
+	 * KEY_ON pin (e.g. m74_9); isIgnVoltage() reads it via readPad(). */
+	uint16_t key;
+	if (read_diag_reg(L9779_DIA_REG9_SUB, &key) == 0) {
+		key_on_status = !!(MSG_GET_DATA(key) & 0x80);
+		key_on_valid = true;
 	}
 }
 
@@ -958,6 +974,13 @@ int L9779::readPad(size_t pin) {
 	if (pin >= L9779_SIGNALS)
 		return -1;
 
+	/* KEY (pin 11, KEY_ON input): level read back over SPI via DIA_REG9
+	 * bit 7 (KEY_ON_STATUS), cached by the driver thread. This is how
+	 * isIgnVoltage() sees the ignition switch on boards that route IGN_KEY
+	 * to the L9779 instead of an MCU pin. */
+	if (pin == L9779_OUTPUTS)
+		return key_on_valid ? (key_on_status ? 1 : 0) : -1;
+
 	/* unknown pin */
 	return -1;
 }
@@ -1038,6 +1061,12 @@ void L9779::debug() {
 		efiPrintf(DRIVER_NAME " OUT25-28: OUT25:%s OUT26:%s OUT27:%s OUT28:%s",
 			l9779_diag_str((d >> 0) & 3), l9779_diag_str((d >> 2) & 3),
 			l9779_diag_str((d >> 4) & 3), l9779_diag_str((d >> 6) & 3));
+	}
+
+	/* Ignition key input level (KEY_ON_STATUS, DIA_REG9 bit 7) */
+	uint16_t dreg9 = 0;
+	if (read_diag_reg(L9779_DIA_REG9_SUB, &dreg9) == 0) {
+		efiPrintf(DRIVER_NAME " KEY_ON_STATUS=%d", (MSG_GET_DATA(dreg9) >> 7) & 1);
 	}
 
 	/* dump the last SPI exchanges - protocol debugging */
@@ -1173,6 +1202,7 @@ int L9779::init()
 	 * performs the first refresh (diag_ts = 0 -> immediate) */
 	for (int i = 0; i < 8; i++)
 		dia_valid[i] = false;
+	key_on_valid = false;
 	diag_ts = 0;
 
 	/* force chip init from driver thread */
