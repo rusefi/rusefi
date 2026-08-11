@@ -116,6 +116,18 @@ public class StackUsageReportTest {
     }
 
     @Test
+    void rootAbsentFromCallgraphIsReported() {
+        StackUsageReport.Root root = new StackUsageReport.Root("firmware", "inactive", "missing", 100, null);
+        StackUsageReport.Graph graph = new StackUsageReport.Graph("firmware",
+            Collections.<String, StackUsageReport.Node>emptyMap(), Collections.singletonList(root),
+            Collections.<String, Integer>emptyMap());
+
+        String report = StackUsageReport.render("test", Collections.singletonList(graph));
+
+        assertTrue(report.contains("NOT ANALYZED: entry absent from post-LTO callgraph"));
+    }
+
+    @Test
     void linkedStackRootMetadataAndExternalProfile() throws Exception {
         Path map = write("roots.map",
             "Discarded input sections\n"
