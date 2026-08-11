@@ -945,3 +945,50 @@ Open follow-ups:
   and fuel pump relay on BG1 (OUT13) when commanded from the console/TS.
 - Then on the car: coils via IGN1..3 (AL1/AM1, wasted spark), injector bank
   sequencing per cylinder.
+
+## 2026-08-11 - m74_9 L9779WD-SPI: real power-stage diagnostics + corrected SPI config
+
+What: finish the L9779 driver bring-up. The 2026-08-10 entry below claimed
+LSB-first + CPHA=1 + div 16 was the working SPI config - that was wrong: LSB-first
+is rejected by the chip (it answers 0x0001 to everything, ident stays 0x0000),
+CPHA=0 answers SPI_ERR (0x8000) on every frame, and div 16 (9 MHz) exceeds the
+8 MHz limit (Table 53). The config proven on hardware (car, engine running) is
+MSB-first, mode 3 (CPOL=1, CPHA=1), BR = div 32 (4.5 MHz), plus the parity bit
+forced on every transmitted frame in spi_rw_array() - frames with an even number
+of set bits (e.g. every WD_ANSW byte) are silently rejected by the chip.
+
+What was done:
+| Change | Commit |
+| --- | --- |
+| SPI: MSB-first, mode 3 (CPOL=1, CPHA=1), div 32; parity forced in spi_rw_array() | 735f14c9ecb, 13a8b17c014 |
+| Real power-stage diagnosis: DIA_REG1..8 cached in the driver thread every 100 ms, getOutputDiag() maps each output pin to its 2-bit field (SCG/OL/SCB/OK) and reports PIN_SHORT_TO_GND/PIN_OPEN/PIN_SHORT_TO_BAT/PIN_OK; pins without a power stage (OUT8..12, OUT19, MRD) report PIN_OK, cache returns PIN_UNKNOWN until the first refresh | 862efa4b8c3 |
+| OUT_DIS check moved to the right register: DIA_REG10 bit 1 (was looking at IDENT bit 0); START must clear it before CONTR writes are accepted | 862efa4b8c3 |
+| 'pins' now dumps DIA10 + per-channel diagnosis (OUT1-4, IGN1-4, OUT21-24, OUT25-28) and the last 32 SPI frames | 862efa4b8c3 |
+
+Design notes:
+- Reading a DIA register clears its fault bits on the chip, so the cache refresh
+  (100 ms) is slower than the ~112 ms monitoring cycle - a persistent fault is
+  re-armed by the chip between reads and always visible; a fault shorter than one
+  cycle can be missed (inherent to the chip).
+- getOutputDiag()/SensorChecker never touch SPI: they read the cache filled by
+  the driver thread (uint16_t/bool, atomic on Cortex-M).
+- The bench failure where injectors would not switch was NOT firmware: the bench
+  rig lacked power ground (BG2/BG3) - without it the low-side drivers report
+  OL and never conduct. On the car, with BG2/BG3 + BH1/BH2 + BF2 powered, the
+  power stage works and L9779 drives injectors/coils.
+
+Validation (user-reported):
+- Car, engine running: ident=0x0209, spi errors 0, WDA ok=460 fail=0 (delay
+  self-tuned to ~106 ms), OUT_DIS=0, OUT1-4:OK, IGN1-4:OK, fuelbench pulses the
+  injector, power stage controls the loads.
+- Bench lamp test across the low side never lights (low-side driver sinks to
+  ground) - measure AF4/AJ4 against +12 V instead: ~9 V with the load driven.
+
+Open follow-ups:
+- User rebuilds and checks 'pins': the `ext L9779.*: diagnostic:` lines and the
+  SensorChecker injector/coil OBD faults should now reflect the real chip state
+  (SCG/OL/SCB on the bench without loads, OK with loads connected).
+- Known race (pre-existing): 'pins' (console thread) issues SPI diag reads while
+  the driver thread feeds WDA; both share rd_pending/rx_subaddr. Benign in
+  practice (reads retry 3x), but a mutex around spi_rw()/spi_rw_array() would
+  make it deterministic.

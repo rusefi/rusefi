@@ -47,6 +47,11 @@
 
 #define DIAG_PERIOD_MS				(7)
 
+/* Refresh period for the power-stage diagnosis cache. Must be longer than
+ * one chip monitoring cycle (~112 ms): reading a DIA register clears its
+ * fault bits on the chip, so a faster poll would mask latched faults. */
+#define DIAG_REFRESH_MS				(100)
+
 /* L9779WD-SPI timing requirements (datasheet Table 53):
  *  - tlead >= 525 ns: CS low to first SCK edge
  *  - tcsn  >= 640 ns: CS high between two frames
@@ -116,6 +121,11 @@ typedef enum {
 #define L9779_WD_REQULO_SUB			0x0e	/* WDA question + error counter (DIA_REG14) */
 #define L9779_WD_REQUHI_SUB			0x0f	/* WDA response status (DIA_REG15) */
 #define L9779_IDENT_SUB				0x00	/* identifier register */
+#define L9779_DIA_REG1_SUB			0x01	/* OUT1..4 diagnosis */
+#define L9779_DIA_REG6_SUB			0x06	/* OUT21..24 diagnosis */
+#define L9779_DIA_REG7_SUB			0x07	/* OUT25..28 diagnosis */
+#define L9779_DIA_REG8_SUB			0x08	/* IGN1..4 diagnosis */
+#define L9779_DIA_REG10_SUB			0x0a	/* OUT_DIS + power-stage fault/reset flags */
 #define L9779_WD_REQULO				(MSG_SET_ADDR(MSG_READ_ADDR) | MSG_SET_SUBADDR(L9779_WD_REQULO_SUB))
 #define L9779_WD_REQUHI				(MSG_SET_ADDR(MSG_READ_ADDR) | MSG_SET_SUBADDR(L9779_WD_REQUHI_SUB))
 #define L9779_IDENT					(MSG_SET_ADDR(MSG_READ_ADDR) | MSG_SET_SUBADDR(L9779_IDENT_SUB))
@@ -152,8 +162,33 @@ static const uint8_t wd_resp_table[16][4] = {
 	{0x01, 0xf1, 0x0e, 0xfe},	/* f */
 };
 
+/* Decode the 2-bit power-stage diagnosis field (datasheet 6.14):
+ * 00 SCG (short-circuit to ground), 01 OL (open load),
+ * 10 SCB (short-circuit to battery), 11 OK */
+static const char *l9779_diag_str(uint8_t d)
+{
+	switch (d) {
+	case 0:  return "SCG";
+	case 1:  return "OL";
+	case 2:  return "SCB";
+	default: return "OK";
+	}
+}
+
+/* Map a 2-bit power-stage diagnosis field to the shared output-fault bitmask
+ * consumed by getOutputDiag()/SensorChecker: 00 SCG, 01 OL, 10 SCB, 11 OK */
+static brain_pin_diag_e l9779_diag_decode(uint8_t d)
+{
+	switch (d) {
+	case 0:  return PIN_SHORT_TO_GND;
+	case 1:  return PIN_OPEN;
+	case 2:  return PIN_SHORT_TO_BAT;
+	default: return PIN_OK;
+	}
+}
+
 /*==========================================================================*/
-/* Driver local variables and types.											*/
+/* Driver private data.														*/
 /*==========================================================================*/
 
 /* Driver private data */
@@ -171,6 +206,8 @@ struct L9779 : public GpioChip {
 	int spi_validate(uint16_t rx);
 	int spi_rw(uint16_t tx, uint16_t *rx_ptr);
 	int spi_rw_array(const uint16_t *tx, uint16_t *rx, int n);
+	int read_diag_reg(uint8_t sub, uint16_t *out);
+	void refresh_diag_cache();
 
 	int update_output();
 	int update_direct_output(size_t pin, int value);
@@ -226,6 +263,15 @@ struct L9779 : public GpioChip {
 	int							wd_fail_cnt;	/* cycles missed (timing or value) */
 	uint16_t					ident_reg;		/* IDENT_REG readback (0x10 | 0x00) */
 
+	/* Cached power-stage diagnosis, DIA_REG1..8 (datasheet 6.14). Refreshed
+	 * from the driver thread only: getOutputDiag() is called from the
+	 * SensorChecker/console context where SPI is not available. Reading a DIA
+	 * register clears its fault bits on the chip, hence the throttled refresh
+	 * (DIAG_REFRESH_MS, see refresh_diag_cache()). */
+	uint16_t					dia_cache[8];
+	bool						dia_valid[8];
+	sysinterval_t				diag_ts;	/* when to refresh the cache next */
+
 
 	/* statistic */
 	//int						por_cnt;
@@ -264,6 +310,39 @@ static const char* l9779_pin_names[L9779_SIGNALS] = {
 	"L9779.OUTA",	"L9779.OUTB",	"L9779.OUTC",	"L9779.OUTD",
 	"L9779.OUT25",	"L9779.OUT26",	"L9779.OUT27",	"L9779.OUT28",
 	"L9779.MRD",	"L9779.KEY"
+};
+
+/* Driver pin index -> power-stage diagnosis source: reg_off is the offset
+ * from L9779_DIA_REG1_SUB (0..7 = DIA_REG1..DIA_REG8), shift is the bit
+ * position of the 2-bit diagnosis field inside the register data byte
+ * (datasheet 6.14). reg_off -1 means the pin has no power-stage diagnosis:
+ * OUT8..12, OUT19 and MRD are not present on the L9779WD-SPI, KEY is an
+ * input. */
+static const int8_t l9779_pin_diag[L9779_SIGNALS][2] = {
+	/* IGN1..4 -> DIA_REG8: [1:0] [3:2] [5:4] [7:6] */
+	{7, 0}, {7, 2}, {7, 4}, {7, 6},
+	/* OUT1..4 -> DIA_REG1: [1:0] [3:2] [5:4] [7:6] */
+	{0, 0}, {0, 2}, {0, 4}, {0, 6},
+	/* OUT5..7 -> DIA_REG2: [1:0] [3:2] [5:4] */
+	{1, 0}, {1, 2}, {1, 4},
+	/* OUT8..12 - no such power stages */
+	{-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0},
+	/* OUT13..14 -> DIA_REG3: [5:4] [7:6] */
+	{2, 4}, {2, 6},
+	/* OUT15..18 -> DIA_REG4: [1:0] [3:2] [5:4] [7:6] */
+	{3, 0}, {3, 2}, {3, 4}, {3, 6},
+	/* OUT19 - no such power stage */
+	{-1, 0},
+	/* OUT20 -> DIA_REG5: [3:2] */
+	{4, 2},
+	/* OUT21..24 -> DIA_REG6: [1:0] [3:2] [5:4] [7:6] */
+	{5, 0}, {5, 2}, {5, 4}, {5, 6},
+	/* OUT25..28 -> DIA_REG7: [1:0] [3:2] [5:4] [7:6] */
+	{6, 0}, {6, 2}, {6, 4}, {6, 6},
+	/* MRD - no power-stage diagnosis */
+	{-1, 0},
+	/* KEY - input */
+	{-1, 0},
 };
 
 /*==========================================================================*/
@@ -494,6 +573,38 @@ int L9779::spi_rw_array(const uint16_t *tx, uint16_t *rx, int n)
 	return ret;
 }
 
+/* Read a read-only diagnostic register. The reply to a read request
+ * arrives one frame later (the frames are pipelined and the WDA thread
+ * interleaves its own reads), so keep issuing the request until a frame
+ * carrying the expected sub-address comes back. Returns 0 on success. */
+int L9779::read_diag_reg(uint8_t sub, uint16_t *out)
+{
+	for (int i = 0; i < 3; i++) {
+		uint16_t rx;
+		int ret = spi_rw(MSG_SET_ADDR(MSG_READ_ADDR) | MSG_SET_SUBADDR(sub), &rx);
+		if (ret == 0 && rx_subaddr == sub) {
+			*out = rx;
+			return 0;
+		}
+	}
+	return -1;
+}
+
+/* Refresh the cached power-stage diagnosis (DIA_REG1..8). Must only be
+ * called from the driver thread, which owns the SPI exchanges: the reads
+ * are pipelined through the same rd_pending/rx_subaddr state as the WDA
+ * traffic. A failed read leaves the previous cache value in place. */
+void L9779::refresh_diag_cache()
+{
+	for (int i = 0; i < 8; i++) {
+		uint16_t val;
+		if (read_diag_reg(L9779_DIA_REG1_SUB + i, &val) == 0) {
+			dia_cache[i] = val;
+			dia_valid[i] = true;
+		}
+	}
+}
+
 /* use datasheet numbering, starting from 1, skip 4 ignition channels */
 #define OUT_ENABLED(n)			(!!(o_state & BIT((n) + L9779_OUTPUTS_IGN - 1)))
 #define SHIFT_N_OUT_TO_M(n, m)	(OUT_ENABLED(n) << (m))
@@ -663,6 +774,14 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 			now = chVTGetSystemTimeX();
 		}
 
+		/* Refresh the power-stage diagnosis cache. Reading a DIA register
+		 * clears its fault bits on the chip, so this runs at a low rate;
+		 * getOutputDiag() reads the cache from other threads. */
+		if (chip->diag_ts <= now) {
+			chip->refresh_diag_cache();
+			chip->diag_ts = chTimeAddX(chVTGetSystemTimeX(), TIME_MS2I(DIAG_REFRESH_MS));
+		}
+
 		/* wake up in time for the next watchdog response */
 		sysinterval_t wd_delay = chTimeDiffX(now, chip->wd_ts);
 		if ((int32_t)wd_delay < (int32_t)TIME_MS2I(DIAG_PERIOD_MS)) {
@@ -816,9 +935,20 @@ int L9779::writePad(size_t pin, int value) {
 
 brain_pin_diag_e L9779::getOutputDiag(size_t pin)
 {
-	(void)pin;
+	if (pin >= L9779_OUTPUTS)
+		return PIN_UNKNOWN;
 
-	return PIN_OK;
+	const int8_t *src = l9779_pin_diag[pin];
+	if (src[0] < 0)
+		return PIN_OK;	/* pin has no power-stage diagnosis */
+
+	/* the cache is filled by the driver thread; until the first refresh
+	 * there is nothing to report (SensorChecker ignores PIN_UNKNOWN) */
+	if (!dia_valid[src[0]])
+		return PIN_UNKNOWN;
+
+	uint8_t d = MSG_GET_DATA(dia_cache[src[0]]);
+	return l9779_diag_decode((uint8_t)((d >> src[1]) & 0x03));
 }
 
 brain_pin_diag_e L9779::getInputDiag(unsigned int pin)
@@ -875,6 +1005,45 @@ void L9779::debug() {
 	efiPrintf(DRIVER_NAME " WDA: req=0x%x ec=%d wda_int=%d ok=%d fail=%d delay=%dms",
 		wd_last_req, wd_last_ec, wd_int ? 1 : 0, wd_ok_cnt, wd_fail_cnt, wd_delay_ms);
 
+	/* Power-stage status (DIA_REG10, datasheet section 6.14): OUT_DIS must
+	 * be 0 for OUTx/IGNx to switch at all; F1/F2 report output faults,
+	 * OV_RST says the stages were cut off due to battery overvoltage and
+	 * VDD5_OV/V3V3_UV flag regulator problems. */
+	uint16_t dia10 = 0;
+	read_diag_reg(L9779_DIA_REG10_SUB, &dia10);
+	uint8_t d10 = MSG_GET_DATA(dia10);
+	efiPrintf(DRIVER_NAME " DIA10: OUT_DIS=%d F1=%d F2=%d OV_RST=%d VDD5_OV=%d V3V3_UV=%d TNL_RST=%d CRK_RST=%d",
+		(d10 >> 1) & 1, (d10 >> 6) & 1, (d10 >> 4) & 1, d10 & 1,
+		(d10 >> 3) & 1, (d10 >> 2) & 1, (d10 >> 7) & 1, (d10 >> 5) & 1);
+
+	/* Per-channel power-stage diagnosis (datasheet 6.14): DIA_REG1 = OUT1..4
+	 * (injectors), DIA_REG6/7 = OUT21..28, DIA_REG8 = IGN1..4 (coils). */
+	uint16_t dreg = 0;
+	if (read_diag_reg(L9779_DIA_REG1_SUB, &dreg) == 0) {
+		uint8_t d = MSG_GET_DATA(dreg);
+		efiPrintf(DRIVER_NAME " OUT1-4: OUT1:%s OUT2:%s OUT3:%s OUT4:%s",
+			l9779_diag_str((d >> 0) & 3), l9779_diag_str((d >> 2) & 3),
+			l9779_diag_str((d >> 4) & 3), l9779_diag_str((d >> 6) & 3));
+	}
+	if (read_diag_reg(L9779_DIA_REG8_SUB, &dreg) == 0) {
+		uint8_t d = MSG_GET_DATA(dreg);
+		efiPrintf(DRIVER_NAME " IGN1-4: IGN1:%s IGN2:%s IGN3:%s IGN4:%s",
+			l9779_diag_str((d >> 0) & 3), l9779_diag_str((d >> 2) & 3),
+			l9779_diag_str((d >> 4) & 3), l9779_diag_str((d >> 6) & 3));
+	}
+	if (read_diag_reg(L9779_DIA_REG6_SUB, &dreg) == 0) {
+		uint8_t d = MSG_GET_DATA(dreg);
+		efiPrintf(DRIVER_NAME " OUT21-24: OUT21:%s OUT22:%s OUT23:%s OUT24:%s",
+			l9779_diag_str((d >> 0) & 3), l9779_diag_str((d >> 2) & 3),
+			l9779_diag_str((d >> 4) & 3), l9779_diag_str((d >> 6) & 3));
+	}
+	if (read_diag_reg(L9779_DIA_REG7_SUB, &dreg) == 0) {
+		uint8_t d = MSG_GET_DATA(dreg);
+		efiPrintf(DRIVER_NAME " OUT25-28: OUT25:%s OUT26:%s OUT27:%s OUT28:%s",
+			l9779_diag_str((d >> 0) & 3), l9779_diag_str((d >> 2) & 3),
+			l9779_diag_str((d >> 4) & 3), l9779_diag_str((d >> 6) & 3));
+	}
+
 	/* dump the last SPI exchanges - protocol debugging */
 	dbg_print_frames();
 }
@@ -923,7 +1092,6 @@ err_gpios:
 int L9779::chip_init()
 {
 	int ret;
-	uint16_t rx;
 
 	/* statistic */
 	init_cnt++;
@@ -940,15 +1108,18 @@ int L9779::chip_init()
 	if (ret)
 		return ret;
 
-	/* The OUT_DIS status is echoed in the DO data bit 0 of the frame that
-	 * follows the START command - use an IDENT_REG read to flush it out
-	 * and check that the power stages are really enabled. */
-	ret = spi_rw(L9779_IDENT, &rx);
-	if (ret)
-		return ret;
+	/* Verify that START really cleared OUT_DIS. OUT_DIS lives in DIA_REG10
+	 * (bit 1, datasheet section 6.14): with OUT_DIS = 1 all control
+	 * register writes are ignored and the power stages stay off. */
+	uint16_t dia10 = 0;
+	bool got10 = read_diag_reg(L9779_DIA_REG10_SUB, &dia10) == 0;
 
-	if (MSG_GET_DATA(rx) & 0x01) {
-		efiPrintf(DRIVER_NAME " OUT_DIS still set after START");
+	if (!got10) {
+		efiPrintf(DRIVER_NAME " DIA_REG10 read failed (OUT_DIS unknown)");
+	} else if (MSG_GET_DATA(dia10) & 0x02) {
+		efiPrintf(DRIVER_NAME " OUT_DIS still set after START (DIA_REG10=0x%02x)", MSG_GET_DATA(dia10));
+	} else {
+		efiPrintf(DRIVER_NAME " OUT_DIS cleared (DIA_REG10=0x%02x)", MSG_GET_DATA(dia10));
 	}
 
 	return 0;
@@ -1001,6 +1172,12 @@ int L9779::init()
 	 * soon as the thread starts; delay will be adapted from REQUHI flags. */
 	wd_delay_ms = 105;
 	wd_ts = 0;
+
+	/* power-stage diagnosis cache: nothing valid until the driver thread
+	 * performs the first refresh (diag_ts = 0 -> immediate) */
+	for (int i = 0; i < 8; i++)
+		dia_valid[i] = false;
+	diag_ts = 0;
 
 	/* force chip init from driver thread */
 	need_init = true;
