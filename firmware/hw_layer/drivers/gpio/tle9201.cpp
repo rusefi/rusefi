@@ -94,7 +94,10 @@ struct Tle9201 {
 
 	tle9201_drv_state			drv_state;
 	int idx;
-	int detectedRev = 0;
+	// Start at -1 so that a first read of rev==0 (chip not responding / not
+	// powered / MISO stuck low) is reported as "Unknown revision" instead of
+	// being silently swallowed because the initial value matches.
+	int detectedRev = -1;
 	uint8_t savedDiag = 0;
 	char name[11];
 };

@@ -241,6 +241,19 @@ Enabling guard pages is NOT just the two `chconf.h` defines — four coupled con
 
 Region assignment on F7: nocache = `MPU_REGION_6` (`mcuconf.h`), guard = `MPU_REGION_7` (`chconf.h`) — keep them distinct; the guard region is reprogrammed on every context switch (`__port_set_region`), so any other user of that region number is clobbered continuously.
 
+## Microsecond Scheduler Invariant (TIM5/other OC timers)
+
+`hwTimerCallback` in `microsecond_timer_stm32.cpp` **disables the compare notification (CC1IE) before** invoking the callback; `setHardwareSchedulerTimer()` -> `portSetHardwareSchedulerTimer()` (`pwmEnableChannelNotificationI`) is the **only** code that re-enables it. Therefore nothing in the scheduler path may early-return before the arm: a `hasFirmwareError()` gate there (removed 2026-08-11) silently killed the whole event scheduler (soft PWM, watchdog buddy, every scheduled event) on the first ISR after any `firmwareError()` - deterministic brick-until-reboot, WDT firing 2 s later. Engine safety after a fatal error is NOT supposed to come from stopping the scheduler: `firmwareErrorV()` calls `getLimpManager()->fatalError()` which cuts ignition/injection/ETB/trigger input, and `EtbController::setOutput()` gates on `allowElectronicThrottle()`. Bench-calibration failures (ETB TPS autocal) are `warning()`-level, not `firmwareError()`.
+
+## m74_9 / Itelma ETB: TLE9201 enable chain (ETC_EN) and the inverted-disable gotcha
+
+The TLE9201 H-bridge DIS pin (11) is active-low at the chip, but on m74_9 the MCU-side enable is ACTIVE-HIGH and inverted through a transistor: PB13 (ETC_EN) -> Q5A (MUN5311DW1 NPN, inverts) -> DIS pulled up to +5V (R23). PB13 high = Q5A on = DIS low = bridge enabled. Consequences:
+
+- **rusEFI's disable-pin mechanism cannot express this**: `DcHardware::start()` calls `OutputPin::initPin(msg, pin)` with hardcoded `OM_DEFAULT` (pin low = enable) and there is NO `disablePinMode` config field (checked `dc_io` in `rusefi_config.txt`). Assigning `disablePin = B13` would keep DIS high (tristate) whenever the firmware thinks the bridge is enabled. Boards with an inverted enable chain must drive the enable GPIO directly from board init (`m74_9_boardInitHardware` sets PB13 high); the runtime disable is then PWM=0, on which the TLE9201 coasts.
+- **Boot is safe by construction**: PB13's weak pullup (~40k) against Q5A's internal 10k base-emitter divider leaves ~0.66V at the base - below Vbe, Q5A stays off, DIS is pulled to +5V, outputs tristate until firmware drives PB13.
+
+The L9779 WDA output (pin 38) nets to ETC_WD -> Q5B -> DIS as a redundant hardware kill (L9779 algorithmic watchdog can cut the bridge); likely depopulated ("not soldered" near R20). The KiCad netlist disagrees with the physical board (KiCad says DIS -> +3V3, physically +5V via R23) - trust 0-ohm measurements over netlist Y-positions.
+
 ## OpenBLT Bootloader Version Marker ("BLxx")
 
 The OpenBLT bootloader binary carries no version of its own; rusEFI stamps an ASCII marker (currently `BL08`, historically `BL07`/`BL06` etc.) into the third *reserved* DWORD of the bootloader's vector table, at flash address `0x08000024`. To bump the version, use the `/bump-blt-version` skill (`.claude/skills/bump-blt-version/SKILL.md`) - it walks through both edits and the consistency check. The version is defined in **two places that MUST be bumped together** (both are tagged with the grep marker `search:openblt_version`):
