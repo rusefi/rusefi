@@ -18,6 +18,7 @@ import com.rusefi.maintenance.VersionChecker;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.ui.basic.LoadTuneHelper;
+import com.rusefi.ui.util.URLLabel;
 import com.rusefi.util.ExitUtil;
 import javax.swing.Action;
 import org.jetbrains.annotations.NotNull;
@@ -27,7 +28,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.net.URI;
 import java.util.Locale;
 import java.util.Objects;
 import java.time.LocalDateTime;
@@ -53,8 +53,8 @@ public class MainFrame {
     static final class FirmwareUpdateCheckOverlay extends JPanel {
         private static final Color GREEN = new Color(0, 128, 0);
         private final JLabel message = new JLabel("", SwingConstants.CENTER);
-        private final JButton updateButton = createButton("Update ECU Firmware");
-        private final JButton closeButton = createButton("Close");
+        private final JButton updateButton = createLargeButton("Update ECU Firmware");
+        private final JButton closeButton = createLargeButton("Close");
 
         FirmwareUpdateCheckOverlay(Runnable onUpdate, Runnable onClose) {
             super(new GridBagLayout());
@@ -84,13 +84,6 @@ public class MainFrame {
             add(content);
 
             showChecking();
-        }
-
-        private static JButton createButton(String text) {
-            JButton button = new JButton(text);
-            button.setFont(button.getFont().deriveFont(button.getFont().getSize() * 1.5f));
-            button.setMargin(new Insets(10, 24, 10, 24));
-            return button;
         }
 
         void showChecking() {
@@ -151,6 +144,71 @@ public class MainFrame {
         }
     }
 
+    static final class ConnectionFailureOverlay extends JPanel {
+        private final JTextArea message;
+        private final JButton downloadButton = createLargeButton("Open Download Page");
+        private final JButton closeButton = createLargeButton("Close");
+
+        ConnectionFailureOverlay(String errorMessage, Runnable onDownload, Runnable onClose) {
+            super(new GridBagLayout());
+            setFocusCycleRoot(true);
+
+            message = new JTextArea(errorMessage);
+            message.setEditable(false);
+            message.setOpaque(false);
+            message.setFont(message.getFont().deriveFont(Font.BOLD, 32f));
+            message.setLineWrap(true);
+            message.setWrapStyleWord(true);
+            message.setColumns(50);
+            message.getAccessibleContext().setAccessibleName(errorMessage);
+
+            downloadButton.setMnemonic(KeyEvent.VK_O);
+            downloadButton.setVisible(onDownload != null);
+            if (onDownload != null) {
+                downloadButton.addActionListener(e -> onDownload.run());
+            }
+            closeButton.setMnemonic(KeyEvent.VK_C);
+            closeButton.addActionListener(e -> onClose.run());
+
+            JPanel actions = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 8));
+            actions.add(downloadButton);
+            actions.add(closeButton);
+
+            JPanel content = new JPanel(new BorderLayout(0, 24));
+            content.setBorder(BorderFactory.createEmptyBorder(32, 32, 32, 32));
+            content.add(message, BorderLayout.CENTER);
+            content.add(actions, BorderLayout.SOUTH);
+            add(content);
+        }
+
+        void requestInitialFocus() {
+            (downloadButton.isVisible() ? downloadButton : closeButton).requestFocusInWindow();
+        }
+
+        String getMessageForUnitTest() {
+            return message.getText();
+        }
+
+        boolean isDownloadVisibleForUnitTest() {
+            return downloadButton.isVisible();
+        }
+
+        void downloadForUnitTest() {
+            downloadButton.doClick();
+        }
+
+        void closeForUnitTest() {
+            closeButton.doClick();
+        }
+    }
+
+    private static JButton createLargeButton(String text) {
+        JButton button = new JButton(text);
+        button.setFont(button.getFont().deriveFont(button.getFont().getSize() * 1.5f));
+        button.setMargin(new Insets(10, 24, 10, 24));
+        return button;
+    }
+
     @NotNull
     private final ConsoleUI consoleUI;
     private final TabbedPanel tabbedPane;
@@ -182,9 +240,13 @@ public class MainFrame {
     private boolean unsupportedEcuBlocking;
     private final UnsupportedEcuCardHost unsupportedEcuHost;
     private FirmwareUpdateCheckOverlay firmwareUpdateCheckOverlay;
+    private ConnectionFailureOverlay connectionFailureOverlay;
     private Component previousGlassPane;
     private boolean previousGlassPaneVisible;
     private Component previousFocusOwner;
+    private Component previousConnectionFailureGlassPane;
+    private boolean previousConnectionFailureGlassPaneVisible;
+    private Component previousConnectionFailureFocusOwner;
 
     public MainFrame(ConsoleUI consoleUI, TabbedPanel tabbedPane) {
         this(consoleUI, tabbedPane, null, null);
@@ -509,6 +571,7 @@ public class MainFrame {
     }
 
     private void showFirmwareUpdateCheckOverlay() {
+        closeConnectionFailureOverlay();
         closeFirmwareUpdateCheckOverlay();
         previousGlassPane = frame.getFrame().getGlassPane();
         previousGlassPaneVisible = previousGlassPane.isVisible();
@@ -538,6 +601,38 @@ public class MainFrame {
         if (previousFocusOwner != null) {
             previousFocusOwner.requestFocusInWindow();
             previousFocusOwner = null;
+        }
+    }
+
+    private void showConnectionFailureOverlay(String errorMessage) {
+        closeFirmwareUpdateCheckOverlay();
+        closeConnectionFailureOverlay();
+        previousConnectionFailureGlassPane = frame.getFrame().getGlassPane();
+        previousConnectionFailureGlassPaneVisible = previousConnectionFailureGlassPane.isVisible();
+        previousConnectionFailureFocusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+        Runnable onDownload = errorMessage.contains(RUSEFI_WIKI_DOWNLOAD_PAGE)
+            ? () -> URLLabel.open(RUSEFI_WIKI_DOWNLOAD_PAGE)
+            : null;
+        connectionFailureOverlay = new ConnectionFailureOverlay(errorMessage, onDownload, this::closeConnectionFailureOverlay);
+        frame.getFrame().setGlassPane(connectionFailureOverlay);
+        connectionFailureOverlay.setVisible(true);
+        connectionFailureOverlay.requestInitialFocus();
+    }
+
+    private void closeConnectionFailureOverlay() {
+        if (connectionFailureOverlay == null) {
+            return;
+        }
+        if (frame.getFrame().getGlassPane() == connectionFailureOverlay && previousConnectionFailureGlassPane != null) {
+            frame.getFrame().setGlassPane(previousConnectionFailureGlassPane);
+            previousConnectionFailureGlassPane.setVisible(previousConnectionFailureGlassPaneVisible);
+        }
+        connectionFailureOverlay = null;
+        previousConnectionFailureGlassPane = null;
+        previousConnectionFailureGlassPaneVisible = false;
+        if (previousConnectionFailureFocusOwner != null) {
+            previousConnectionFailureFocusOwner.requestFocusInWindow();
+            previousConnectionFailureFocusOwner = null;
         }
     }
 
@@ -755,37 +850,7 @@ public class MainFrame {
     }
 
     private void showConnectionFailedDialog(String errorMessage) {
-        JTextArea textArea = new JTextArea(errorMessage);
-        textArea.setEditable(false);
-        textArea.setOpaque(false);
-        textArea.setFont(UIManager.getFont("Label.font"));
-        textArea.setLineWrap(true);
-        textArea.setWrapStyleWord(true);
-        textArea.setColumns(50);
-
-        JPanel panel = new JPanel(new BorderLayout(0, 10));
-        panel.add(textArea, BorderLayout.CENTER);
-
-        if (errorMessage.contains(RUSEFI_WIKI_DOWNLOAD_PAGE)) {
-            JButton downloadButton = new JButton("Open Download Page");
-            downloadButton.addActionListener(e -> {
-                try {
-                    Desktop.getDesktop().browse(new URI(RUSEFI_WIKI_DOWNLOAD_PAGE));
-                } catch (Exception ex) {
-                    log.error("Failed to open download URL: " + ex);
-                }
-            });
-            JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            buttonPanel.add(downloadButton);
-            panel.add(buttonPanel, BorderLayout.SOUTH);
-        }
-
-        JOptionPane.showMessageDialog(
-            frame.getFrame(),
-            panel,
-            "Connection Failed",
-            JOptionPane.WARNING_MESSAGE
-        );
+        showConnectionFailureOverlay(errorMessage);
     }
 
     private void windowClosedHandler() {
