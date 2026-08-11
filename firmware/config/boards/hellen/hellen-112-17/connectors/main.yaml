@@ -20,16 +20,16 @@ pins:
     type: ls
 
   - pin: A03
-    function: Analog GND
+    function: GNDA Analog/Sensor Ground
     type: agnd
   - pin: A04
-    function: Analog GND
+    function: GNDA Analog/Sensor Ground
     type: agnd
   - pin: A05
-    function: Analog GND
+    function: GNDA Analog/Sensor Ground
     type: agnd
   - pin: A06
-    function: Analog GND
+    function: GNDA Analog/Sensor Ground
     type: agnd
 
   - pin: A07
@@ -231,22 +231,22 @@ pins:
     ts_name: ___ TPS Throttle Position 1
 
   - pin: B04
-    function: Analog GND
+    function: GNDA Analog/Sensor Ground
     type: agnd
 
   - pin: B05
-    function: Analog GND
+    function: GNDA Analog/Sensor Ground
     type: agnd
 
   - pin: B06
-    function: Analog GND
+    function: GNDA Analog/Sensor Ground
     type: agnd
   - pin: B07
-    function: Analog GND
+    function: GNDA Analog/Sensor Ground
     type: agnd
 # Polaris CLT GND
   - pin: B08
-    function: Analog GND
+    function: GNDA Analog/Sensor Ground
     type: agnd
 
   - pin: B10
@@ -341,7 +341,7 @@ pins:
     ts_name: ___ low side 1.5A output
     type: ls
   - pin: B47
-    function: Analog GND
+    function: GNDA Analog/Sensor Ground
     type: agnd
 
   - pin: B50

@@ -358,7 +358,7 @@ pins:
     color: green B2
 
   - pin: 4O
-    function: Sensor GND
+    function: GNDA Analog/Sensor Ground
     type: agnd
     color: black B2
 

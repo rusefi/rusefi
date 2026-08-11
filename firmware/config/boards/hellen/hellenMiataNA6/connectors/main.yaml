@@ -177,12 +177,12 @@ pins:
     color: white
 
   - pin: 3C
-    function: Sensor GND
+    function: GNDA Analog/Sensor Ground
     type: agnd
     color: white
 
   - pin: 3D
-    function: Sensor GND
+    function: GNDA Analog/Sensor Ground
     type: agnd
     color: white
 

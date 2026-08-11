@@ -41,10 +41,10 @@ pins:
     ts_name: A9 - KNOCK
     function: Knock Sensor
   - pin: A10
-    function: Analog GND
+    function: GNDA Analog/Sensor Ground
     type: agnd
   - pin: A11
-    function: Analog GND
+    function: GNDA Analog/Sensor Ground
     type: agnd
 
   - pin: A12
@@ -68,7 +68,7 @@ pins:
 
 
   - pin: A16
-    function: Analog GND
+    function: GNDA Analog/Sensor Ground
     type: agnd
     color: black
 
@@ -93,12 +93,12 @@ pins:
     color: orange
 
   - pin: A23
-    function: Analog GND
+    function: GNDA Analog/Sensor Ground
     type: agnd
     color: black
 
   - pin: A24
-    function: Analog GND
+    function: GNDA Analog/Sensor Ground
     type: agnd
     color: black
 
@@ -340,7 +340,7 @@ pins:
     color: black
 
   - pin: E4
-    function: Analog GND
+    function: GNDA Analog/Sensor Ground
     type: agnd
     color: black
 

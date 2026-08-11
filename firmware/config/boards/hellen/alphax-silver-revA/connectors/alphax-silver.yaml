@@ -101,7 +101,7 @@ pins:
     color: blue
 
   - pin: 15A
-    function: Analog Ground
+    function: GNDA Analog/Sensor Ground
     color: black
     type: agnd
 

@@ -1,34 +1,34 @@
 pins:
   - pin: 1
-    function: Sensor GND
+    function: GNDA Analog/Sensor Ground
     type: agnd
 
   - pin: 2
-    function: Sensor GND
+    function: GNDA Analog/Sensor Ground
     type: agnd
 
   - pin: 3
-    function: Sensor GND
+    function: GNDA Analog/Sensor Ground
     type: agnd
 
   - pin: 4
-    function: Sensor GND
+    function: GNDA Analog/Sensor Ground
     type: agnd
 
   - pin: 5
-    function: Sensor GND
+    function: GNDA Analog/Sensor Ground
     type: agnd
 
   - pin: 6
-    function: Sensor GND
+    function: GNDA Analog/Sensor Ground
     type: agnd
 
   - pin: 7
-    function: Sensor GND
+    function: GNDA Analog/Sensor Ground
     type: agnd
 
   - pin: 8
-    function: Sensor GND
+    function: GNDA Analog/Sensor Ground
     type: agnd
 
   - pin: 9
@@ -117,7 +117,7 @@ pins:
     type: 5v
 
   - pin: 23
-    function: Sensor GND
+    function: GNDA Analog/Sensor Ground
     type: agnd
 
   - pin: 24
@@ -157,7 +157,7 @@ pins:
     type: av
 
   - pin: 29
-    function: Sensor GND
+    function: GNDA Analog/Sensor Ground
     type: agnd
 
   - pin: 30

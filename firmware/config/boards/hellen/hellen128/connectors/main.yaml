@@ -190,7 +190,7 @@ pins:
     type: 5v
 
   - pin: C23
-    function: analog GND
+    function: GNDA Analog/Sensor Ground
     type: agnd
 
   - pin: C24
@@ -206,7 +206,7 @@ pins:
     function: PPS2 analog input
 
   - pin: C26
-    function: analog GND
+    function: GNDA Analog/Sensor Ground
     type: agnd
 
   - pin: C27
@@ -430,7 +430,7 @@ pins:
     type: av
 
   - pin: E24
-    function: analog GND
+    function: GNDA Analog/Sensor Ground
     type: agnd
 
   - pin: E25
@@ -453,7 +453,7 @@ pins:
     function: NC
 
   - pin: E28
-    function: analog GND
+    function: GNDA Analog/Sensor Ground
     type: agnd
 
   - pin: E29
@@ -474,7 +474,7 @@ pins:
     type: av
 
   - pin: E32
-    function: analog GND
+    function: GNDA Analog/Sensor Ground
     type: agnd
 
   - pin: E33
@@ -506,7 +506,7 @@ pins:
     type: vr
 
   - pin: E39
-    function: analog GND
+    function: GNDA Analog/Sensor Ground
     type: agnd
 
   - pin: E40
@@ -550,7 +550,7 @@ pins:
     type: av
 
   - pin: E48
-    function: analog GND
+    function: GNDA Analog/Sensor Ground
     type: agnd
 
   - pin: F1

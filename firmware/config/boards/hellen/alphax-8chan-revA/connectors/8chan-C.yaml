@@ -102,7 +102,7 @@ pins:
 
 
   - pin: 25C
-    function: Analog Ground
+    function: GNDA Analog/Sensor Ground
     color: black
     type: agnd
 

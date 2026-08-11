@@ -167,7 +167,7 @@ pins:
     color: black
 
   - pin: 27B
-    function: Sensor GND
+    function: GNDA Analog/Sensor Ground
     type: agnd
     color: black
 

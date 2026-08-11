@@ -61,7 +61,7 @@ pins:
     color: black
 
   - pin: 8A
-    function: Analog Ground
+    function: GNDA Analog/Sensor Ground
     type: agnd
     color: black
 
@@ -127,7 +127,7 @@ pins:
     type: 5v
 
   - pin: 17A
-    function: Analog Ground
+    function: GNDA Analog/Sensor Ground
     type: agnd
     color: black
 
@@ -185,7 +185,7 @@ pins:
     color: black
 
   - pin: 25A
-    function: Analog Ground
+    function: GNDA Analog/Sensor Ground
     type: agnd
     color: black
 
@@ -369,7 +369,7 @@ pins:
     type: 12v
 
   - pin: 20B
-    function: Analog Ground
+    function: GNDA Analog/Sensor Ground
     type: agnd
 
   - pin: 21B

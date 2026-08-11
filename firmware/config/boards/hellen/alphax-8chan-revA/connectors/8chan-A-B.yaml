@@ -49,7 +49,7 @@ pins:
     color: red
 
   - pin: 7A
-    function: Analog Ground
+    function: GNDA Analog/Sensor Ground
     color: black
     type: agnd
 
@@ -183,7 +183,7 @@ pins:
     ts_name: 23A - Hall Input 1
 
   - pin: 24A
-    function: Analog Ground
+    function: GNDA Analog/Sensor Ground
     color: black
     type: agnd
 

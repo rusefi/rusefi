@@ -34,7 +34,7 @@ pins:
     color: purple
 
   - pin: A5
-    function: Sensor Ground
+    function: GNDA Analog/Sensor Ground
     type: agnd
     color: brown
 

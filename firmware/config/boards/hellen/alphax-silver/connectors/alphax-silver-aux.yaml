@@ -29,7 +29,7 @@ pins:
     ts_name: ___ - VVT 1
 
   - pin: X5
-    function: Analog Ground
+    function: GNDA Analog/Sensor Ground
     type: agnd
     color: black
 
