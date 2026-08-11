@@ -42,10 +42,10 @@ pins:
     function: Knock Sensor
   - pin: A10
     function: Analog GND
-    type: gnda
+    type: agnd
   - pin: A11
     function: Analog GND
-    type: gnda
+    type: agnd
 
   - pin: A12
     meta: H144_LS_6
@@ -69,7 +69,7 @@ pins:
 
   - pin: A16
     function: Analog GND
-    type: gnda
+    type: agnd
     color: black
 
   - pin: A18
@@ -94,12 +94,12 @@ pins:
 
   - pin: A23
     function: Analog GND
-    type: gnda
+    type: agnd
     color: black
 
   - pin: A24
     function: Analog GND
-    type: gnda
+    type: agnd
     color: black
 
   - pin: A25
@@ -315,7 +315,7 @@ pins:
 
   - pin: C20
     function: Aux GND
-    type: gnda
+    type: agnd
     color: black
 
   - pin: C21
@@ -341,7 +341,7 @@ pins:
 
   - pin: E4
     function: Analog GND
-    type: gnda
+    type: agnd
     color: black
 
   - pin: E5
