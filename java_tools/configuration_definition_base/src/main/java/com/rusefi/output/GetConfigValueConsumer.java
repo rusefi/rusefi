@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -17,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Here we generate C++ code for https://wiki.rusefi.com/Lua-Scripting#getcalibrationname
  * @see GetOutputValueConsumer
- * @see GetConfigValueConsumerTest
+ * @see GetConfigValueConsumer
  */
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 public class GetConfigValueConsumer implements ConfigurationConsumer {
@@ -41,6 +42,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
     private static final String SET_METHOD_FOOTER = "}\n";
     private final List<VariableRecord> variables = new ArrayList<>();
     private final String outputFileName;
+    private final String tableOutputFileName;
     private final String mdOutputFileName;
     private final LazyFile.LazyFileFactory lazyFileFactory;
 
@@ -51,7 +53,12 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
     }
 
     public GetConfigValueConsumer(String outputFileName, String mdOutputFileName, LazyFile.LazyFileFactory lazyFileFactory) {
+        this(outputFileName, null, mdOutputFileName, lazyFileFactory);
+    }
+
+    public GetConfigValueConsumer(String outputFileName, String tableOutputFileName, String mdOutputFileName, LazyFile.LazyFileFactory lazyFileFactory) {
         this.outputFileName = outputFileName;
+        this.tableOutputFileName = tableOutputFileName;
         this.mdOutputFileName = mdOutputFileName;
         this.lazyFileFactory = lazyFileFactory;
     }
@@ -70,7 +77,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
             PerFieldWithStructuresIterator.Strategy strategy = new PerFieldWithStructuresIterator.Strategy() {
                 @Override
                 public String process(ReaderState state, ConfigField cf, String prefix, int currentPosition, PerFieldWithStructuresIterator perFieldWithStructuresIterator) {
-                    return processConfig(cf, prefix);
+                    return processConfig(cf, prefix, currentPosition, perFieldWithStructuresIterator);
                 }
 
                 @Override
@@ -87,10 +94,11 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
     @Override
     public void endFile() throws IOException {
         writeStringToFile(outputFileName, getContent(), lazyFileFactory);
+        writeStringToFile(tableOutputFileName, getTableContent(), lazyFileFactory);
         writeStringToFile(mdOutputFileName, getMdContent(), lazyFileFactory);
     }
 
-    private String processConfig(ConfigField cf, String prefix) {
+    private String processConfig(ConfigField cf, String prefix, int currentPosition, PerFieldWithStructuresIterator iterator) {
         if (cf.isUnusedField())
             return "";
 
@@ -108,7 +116,9 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
         if (javaName.startsWith(CONFIG_ENGINE_CONFIGURATION))
             javaName = "engineConfiguration->" + javaName.substring(CONFIG_ENGINE_CONFIGURATION.length());
 
-        variables.add(new VariableRecord(userName, javaName + cf.getName(), cf.getTypeName(), null));
+        int bitOffset = cf.isBit() ? iterator.bitState.get() : 0;
+
+        variables.add(new VariableRecord(userName, javaName + cf.getName(), cf.getTypeName(), null, currentPosition, bitOffset));
 
         mdContent.append("### " + userName + "\n");
         mdContent.append(cf.getComment() + "\n\n");
@@ -180,6 +190,38 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
         String fullSwitch = GetOutputValueConsumer.wrapSwitchStatement(switchBody);
 
         return fullSwitch + "\treturn 0;\n" + setterBody;
+    }
+
+    public String getTableContent() {
+        if (variables.isEmpty()) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append(getHeader(getClass()));
+        sb.append("\n");
+        sb.append("#include \"pch.h\"\n" +
+                "#include \"value_lookup.h\"\n\n");
+
+        List<VariableRecord> sorted = new ArrayList<>(variables);
+        sorted.sort((o1, o2) -> Integer.compareUnsigned(HashUtil.hash(o1.getUserName()), HashUtil.hash(o2.getUserName())));
+
+        sb.append("const ConfigParameter allParameters[] = {\n");
+        for (VariableRecord var : sorted) {
+            int hash = HashUtil.hash(var.getUserName());
+            int type = 0; // default float
+            if (TypesHelper.isBoolean(var.type)) type = 1;
+            else if ("int".equals(var.type) || "uint32_t".equals(var.type) || "idle_state_e".equals(var.type)) type = 2;
+            else if ("int8_t".equals(var.type)) type = 3;
+            else if ("uint8_t".equals(var.type)) type = 4;
+            else if ("int16_t".equals(var.type)) type = 5;
+            else if ("uint16_t".equals(var.type)) type = 6;
+
+            sb.append(String.format("\t{ 0x%08X, %d, %d, %d }, // %s\n", hash, var.getOffset(), type, var.getBitOffset(), var.getUserName()));
+        }
+        sb.append("};\n\n");
+        sb.append("const size_t allParametersCount = efi::size(allParameters);\n");
+
+        return sb.toString();
     }
 
     public String getContent() {

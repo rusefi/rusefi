@@ -114,8 +114,14 @@ public class ConfigDefinition {
                 case "-field_lookup_file": {
                     String cppFile = args[i + 1];
                     String mdFile = args[i + 2];
+                    String tableFile = args.length > i + 3 ? args[i + 3] : null;
+                    if (tableFile != null && tableFile.startsWith("-")) {
+                        tableFile = null;
+                    } else if (tableFile != null) {
+                        i++;
+                    }
                     i++;
-                    state.addDestination(new GetConfigValueConsumer(cppFile, mdFile, LazyFile.REAL));
+                    state.addDestination(new GetConfigValueConsumer(cppFile, tableFile, mdFile, LazyFile.REAL));
                 }
                 break;
                 case READFILE_OPTION:
