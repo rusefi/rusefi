@@ -3,15 +3,15 @@
 pins:
   - pin: A1
     function: Power Ground
-    class: gnd   
+    class: gnd
     type: gnd
     color: black
 
   - pin: A2
     function: 'Anti theft Switch'
-    class: input_ON_OFF   
+    class: input_ON_OFF
     type: [gp_low, gp_pp]
-    color: brown/red 
+    color: brown/red
 
   - pin: A3
     function: 'Power 12 Volts from injection relay'
@@ -59,7 +59,7 @@ pins:
     function: Injector 1
     class: outputs
     type: inj
-    # note color: English manual is unclear on second color! 
+    # note color: English manual is unclear on second color!
     # "VE" appears to be original italian term "verde" for english "green"
     color: gray/green
 
@@ -146,7 +146,7 @@ pins:
   - pin: C8
     function: Power Ground
     class: pgnd
-    type: pgnd
+    type: gnd
     color: black
 
   - pin: D1
@@ -192,7 +192,7 @@ pins:
   - pin: D8
     function: Power Ground
     class: pgnd
-    type: pgnd
+    type: gnd
     color: black
 
   - pin: E1
@@ -234,7 +234,7 @@ pins:
   - pin: F1
     function: Power Ground
     class: pgnd
-    type: pgnd
+    type: gnd
     color: black
 
   - pin: F2

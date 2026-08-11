@@ -67,7 +67,7 @@ pins:
 
   - pin: 11
     function: Power GND
-    type: pgnd
+    type: gnd
 
   - pin: 12
     id: MC33810_1_OUT_2
@@ -82,7 +82,7 @@ pins:
 
   - pin: 14
     function: Ground (Body)
-    type: pgnd
+    type: gnd
 
   - pin: 15
     function: Backup 12V supply (always on)
@@ -126,7 +126,7 @@ pins:
 
   - pin: 22
     function: Power GND
-    type: pgnd
+    type: gnd
 
 info:
   cid: a

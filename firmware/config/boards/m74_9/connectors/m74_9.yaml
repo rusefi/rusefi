@@ -313,7 +313,6 @@ pins:
     id: L9779_OUT_18
     class: outputs
     function: Unknown out (OUT18)
-    type: pgnd
 
   - pin: BF1
     function: Check engine / CAN H
@@ -343,11 +342,11 @@ pins:
 
   - pin: BG2
     function: Power ground
-    type: pgnd
+    type: gnd
 
   - pin: BG3
     function: Power ground
-    type: pgnd
+    type: gnd
 
   - pin: BG4
     function: Ignition ground

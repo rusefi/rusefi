@@ -168,12 +168,12 @@ pins:
 
   - pin: 3A
     function: Power GND
-    type: pgnd
+    type: gnd
     color: white
 
   - pin: 3B
     function: Power GND
-    type: pgnd
+    type: gnd
     color: white
 
   - pin: 3C

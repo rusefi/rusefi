@@ -14,7 +14,7 @@ pins:
 
   - pin: 2
     function: Power GND
-    type: pgnd
+    type: gnd
     color: white
 
   # default Idle Air Control TLE8888 high current low side: VVT2 TLE8888_OUT5
@@ -38,7 +38,7 @@ pins:
 
   - pin: 6
     function: Power GND
-    type: pgnd
+    type: gnd
     color: black
 
   # default VVT TLE8888 high current low side: VVT1 TLE8888_OUT6
