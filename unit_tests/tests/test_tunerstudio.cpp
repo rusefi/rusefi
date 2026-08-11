@@ -74,6 +74,28 @@ TEST(binary, testWriteCrc) {
 	assertCrcPacket(test);
 }
 
+TEST(TunerStudioState, SmoothedAfrBank1) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	engine->fuelComputer.stoichiometricRatio = 9.0f;
+	Sensor::setMockValue(SensorType::SmoothedLambda1, 0.8f);
+
+	updateTunerStudioState();
+
+	EXPECT_FLOAT_EQ(0.8f, engine->outputChannels.SmoothedAFRValue);
+}
+
+TEST(TunerStudioState, SmoothedAfrBank2) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	engine->fuelComputer.stoichiometricRatio = 12.0f;
+	Sensor::setMockValue(SensorType::SmoothedLambda2, 1.2f);
+
+	updateTunerStudioState();
+
+	EXPECT_FLOAT_EQ(1.2f, engine->outputChannels.SmoothedAFRValue2);
+}
+
 TEST(TunerstudioCommands, writeChunkEngineConfig) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	::testing::NiceMock<MockTsChannel> channel;
