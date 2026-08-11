@@ -15,7 +15,7 @@ pins:
 
   - pin: 3a
     function: Ignition GND
-    type: GND
+    type: gnd
 
   - pin: 4a
     id: D15

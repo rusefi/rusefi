@@ -3,7 +3,7 @@ meta: config/boards/hellen_meta.h
 pins:
   - pin: 1a
     function: GND
-    type: GND
+    type: gnd
 
   - pin: 2a
     function: LSU 4.2 Heater1
@@ -342,11 +342,11 @@ pins:
 
   - pin: 115a
     function: GND
-    type: GND
+    type: gnd
 
   - pin: 116a
     function: GND
-    type: GND
+    type: gnd
 
   - pin: 119a
     function: +12v from main relay

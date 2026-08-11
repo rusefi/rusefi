@@ -55,11 +55,11 @@ pins:
 
   - pin: 1a
     function: GND
-    type: GND
+    type: gnd
 
   - pin: 2a
     function: GND
-    type: GND
+    type: gnd
 
   - pin: 3a
     function: +12v

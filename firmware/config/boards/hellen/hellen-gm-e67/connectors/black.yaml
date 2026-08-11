@@ -186,7 +186,7 @@ pins:
 
   - pin: K73
     function: GND
-    type: GND
+    type: gnd
 
 info:
   cid: GM-E67

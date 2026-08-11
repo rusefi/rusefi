@@ -206,7 +206,7 @@ pins:
 
   - pin: 28A
     function: GND
-    type: GND
+    type: gnd
 
   - pin: 29A
     function: WBO2 Heater Negative (pin 3)

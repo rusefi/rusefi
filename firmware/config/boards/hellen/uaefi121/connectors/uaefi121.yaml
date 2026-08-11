@@ -24,7 +24,7 @@ pins:
 
   - pin: 3a
     function: GND
-    type: GND
+    type: gnd
     color: black
 
   - pin: 4a
@@ -655,17 +655,17 @@ pins:
 
   - pin: 113a
     function: GND USB
-    type: GND
+    type: gnd
     color: red
 
   - pin: 114a
     function: GND
-    type: GND
+    type: gnd
     color: red
 
   - pin: 115a
     function: GND
-    type: GND
+    type: gnd
     color: red
 
   - pin: 116a

@@ -122,13 +122,13 @@ pins:
 
   - pin: A100
     function: Power GND
-    type: GND
+    type: gnd
   - pin: A102
     function: Power GND
-    type: GND
+    type: gnd
   - pin: A103
     function: Power GND
-    type: GND
+    type: gnd
 
 info:
   title: coyote

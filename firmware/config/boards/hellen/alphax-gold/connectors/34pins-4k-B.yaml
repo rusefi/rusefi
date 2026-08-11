@@ -203,7 +203,7 @@ pins:
 
   - pin: 26B
     function: GND
-    type: GND
+    type: gnd
 
   - pin: 27B
     function: GNDA
