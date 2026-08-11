@@ -155,7 +155,6 @@ pins:
 
   - pin: AJ3
     function: Oxygen sensor 2 signal
-    type: agnd
 
   - pin: AJ4
     id: L9779_OUT_1
