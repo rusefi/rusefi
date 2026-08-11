@@ -332,7 +332,7 @@ pins:
     color: orange
 
   - pin: 51
-    function: Power Ground
+    function: Power/Chassis GND ground
     type: gnd
     color: black
 
@@ -379,7 +379,7 @@ pins:
     color: green
 
   - pin: 61
-    function: Power Ground
+    function: Power/Chassis GND ground
     type: gnd
     color: black
 
@@ -504,7 +504,7 @@ pins:
     color: white
 
   - pin: 80
-    function: Power Ground
+    function: Power/Chassis GND ground
     type: gnd
     color: black
 

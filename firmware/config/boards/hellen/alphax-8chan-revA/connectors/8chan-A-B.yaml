@@ -188,7 +188,7 @@ pins:
     type: gnd
 
   - pin: 25A
-    function: Power Ground
+    function: Power/Chassis GND ground
     color: black
     type: gnd
 
@@ -239,7 +239,7 @@ pins:
 
 
   - pin: 34A
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: 2B
@@ -346,7 +346,7 @@ pins:
 
 
   - pin: 26B
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
 
 info:

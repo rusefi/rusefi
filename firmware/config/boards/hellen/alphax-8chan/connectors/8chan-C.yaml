@@ -72,7 +72,7 @@ pins:
     color: green
 
   - pin: 12C
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
     color: yellow
 
@@ -141,7 +141,7 @@ pins:
     color: blue
 
   - pin: 22C
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
     color: orange
 

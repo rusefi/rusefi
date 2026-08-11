@@ -31,7 +31,7 @@ pins:
     color: blue
 
   - pin: 7D
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: 8D

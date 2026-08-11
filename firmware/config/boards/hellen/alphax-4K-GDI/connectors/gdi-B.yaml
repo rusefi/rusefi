@@ -162,7 +162,7 @@ pins:
 
 
   - pin: 26B
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
     color: black
 

@@ -22,10 +22,10 @@ pins:
     type: 12v
     color: red
   - pin: A4
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
   - pin: A5
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: A7
@@ -335,7 +335,7 @@ pins:
     ts_name: E1 Fuel Relay
     function: Fuel Relay
   - pin: E3
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
     color: black
 

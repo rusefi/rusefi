@@ -186,7 +186,7 @@ pins:
     function: VR max9924 Positive
 
   - pin: 26A
-    function: Power Ground
+    function: Power/Chassis GND ground
     type: gnd
     color: black
 

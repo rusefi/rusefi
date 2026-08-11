@@ -89,7 +89,7 @@ pins:
     color: white
 
   - pin: 14
-    function: Ground
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: 15
@@ -115,11 +115,11 @@ pins:
     type: 12v
 
   - pin: 19
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: 20
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: 21

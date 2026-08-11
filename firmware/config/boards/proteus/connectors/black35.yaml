@@ -117,11 +117,11 @@ pins:
     color: orange/brown
 
   - pin: 17
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: 18
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: 19
@@ -164,7 +164,7 @@ pins:
     color: yellow
 
   - pin: 24
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: 25

@@ -167,12 +167,12 @@ pins:
     function: Knock Input
 
   - pin: 3A
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
     color: white
 
   - pin: 3B
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
     color: white
 

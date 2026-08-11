@@ -66,7 +66,7 @@ pins:
     type: agnd
 
   - pin: 11
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: 12
@@ -125,7 +125,7 @@ pins:
 #    type: agnd
 
   - pin: 22
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
 
 info:

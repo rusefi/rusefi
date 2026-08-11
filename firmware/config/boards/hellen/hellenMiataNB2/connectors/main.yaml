@@ -279,7 +279,7 @@ pins:
     type: ign
 
   - pin: 4A
-    function: Ground
+    function: Power/Chassis GND ground
     type: gnd
     color: black W4
 

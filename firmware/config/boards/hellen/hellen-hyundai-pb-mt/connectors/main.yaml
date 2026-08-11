@@ -135,13 +135,13 @@ pins:
     function: VIS Control
 
   - pin: K1
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
   - pin: K2
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
   - pin: K3
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: K4

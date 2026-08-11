@@ -128,12 +128,12 @@ pins:
     color: orange
 
   - pin: 17D
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
     color: purple
 
   - pin: 18D
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
     color: purple
 

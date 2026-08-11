@@ -2,7 +2,7 @@
 
 pins:
   - pin: A1
-    function: Power Ground
+    function: Power/Chassis GND ground
     class: gnd
     type: gnd
     color: black
@@ -144,7 +144,7 @@ pins:
     function: 'Lambda sensor'
 
   - pin: C8
-    function: Power Ground
+    function: Power/Chassis GND ground
     class: pgnd
     type: gnd
     color: black
@@ -190,7 +190,7 @@ pins:
     type: gnd
 
   - pin: D8
-    function: Power Ground
+    function: Power/Chassis GND ground
     class: pgnd
     type: gnd
     color: black
@@ -232,7 +232,7 @@ pins:
     color: blue/gray
 
   - pin: F1
-    function: Power Ground
+    function: Power/Chassis GND ground
     class: pgnd
     type: gnd
     color: black

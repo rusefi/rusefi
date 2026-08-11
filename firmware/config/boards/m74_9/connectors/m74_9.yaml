@@ -341,11 +341,11 @@ pins:
     type:
 
   - pin: BG2
-    function: Power ground
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: BG3
-    function: Power ground
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: BG4

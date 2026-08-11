@@ -98,11 +98,11 @@ pins:
     type: ls
 
   - pin: A7
-    function: power GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: A8
-    function: power GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: B1
@@ -589,7 +589,7 @@ pins:
     type: ign
 
   - pin: F8
-    function: power GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: F9
@@ -629,7 +629,7 @@ pins:
     type: ign
 
   - pin: F15
-    function: power GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: F16

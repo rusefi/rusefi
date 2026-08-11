@@ -17,7 +17,7 @@ pins:
     ts_name: Aux ___
 
   - pin: K1
-    function: GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: K2
@@ -27,14 +27,14 @@ pins:
     function: V ign
 
   - pin: K3
-    function: GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: K4
     function: +12v from main relay
 
   - pin: K5
-    function: GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: K6

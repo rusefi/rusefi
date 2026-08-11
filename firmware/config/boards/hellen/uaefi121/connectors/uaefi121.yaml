@@ -23,7 +23,7 @@ pins:
     type: etb
 
   - pin: 3a
-    function: GND
+    function: Power/Chassis GND ground
     type: gnd
     color: black
 
@@ -659,12 +659,12 @@ pins:
     color: red
 
   - pin: 114a
-    function: GND
+    function: Power/Chassis GND ground
     type: gnd
     color: red
 
   - pin: 115a
-    function: GND
+    function: Power/Chassis GND ground
     type: gnd
     color: red
 

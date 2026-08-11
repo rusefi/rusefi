@@ -161,7 +161,7 @@ pins:
     color: blue
 
   - pin: 26A
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: 27A

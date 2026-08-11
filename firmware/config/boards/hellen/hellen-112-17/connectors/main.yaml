@@ -207,10 +207,10 @@ pins:
     type: ls
     ts_name: ___ relay output
   - pin: A53
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
   - pin: A54
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
   - pin: A55
     function: +12V From Main Relay
@@ -345,7 +345,7 @@ pins:
     type: gnd
 
   - pin: B50
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
   - pin: B51
     # jumper

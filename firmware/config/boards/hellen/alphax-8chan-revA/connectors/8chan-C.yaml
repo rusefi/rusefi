@@ -22,7 +22,7 @@ pins:
 
 
   - pin: 9C
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: 10C
@@ -39,7 +39,7 @@ pins:
     ts_name: 13C - 2-Step Input
 
   - pin: 14C
-    function: Power Ground
+    function: Power/Chassis GND ground
     color: black
     type: gnd
 
@@ -60,7 +60,7 @@ pins:
     color: orange
 
   - pin: 17C
-    function: Power Ground
+    function: Power/Chassis GND ground
     color: black
     type: gnd
 

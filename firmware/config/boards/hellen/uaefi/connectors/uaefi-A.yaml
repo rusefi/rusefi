@@ -20,12 +20,12 @@ pins:
     color: white
 
   - pin: A3
-    function: Power Ground
+    function: Power/Chassis GND ground
     color: black
     type: gnd
 
   - pin: A4
-    function: Power Ground
+    function: Power/Chassis GND ground
     color: black
     type: gnd
 
