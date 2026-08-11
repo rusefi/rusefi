@@ -15,14 +15,13 @@
 #include "electronic_throttle.h"
 
 #include "dc_motors.h"
-#if ! EFI_UNIT_TEST
 #include "stepper.h"
+
 /* Storing two following structs in CCM memory cause HardFault (at least on F4)
  * This need deep debuging. Until it is moved out of CMM. */
 static StepDirectionStepper iacStepperHw /*CCM_OPTIONAL*/;
 static DualHBridgeStepper iacHbridgeHw /*CCM_OPTIONAL*/;
 StepperMotor iacMotor CCM_OPTIONAL;
-#endif /* EFI_UNIT_TEST */
 
 static SimplePwm idleSolenoidOpen("idle open");
 static SimplePwm idleSolenoidClose("idle close");
@@ -59,14 +58,8 @@ void applyIACposition(percent_t position) {
 	setEtbIdlePosition(position);
 #endif // EFI_ELECTRONIC_THROTTLE_BODY
 
-#if EFI_UNIT_TEST
-	if (false) {
-#endif // EFI_UNIT_TEST
-
-#if ! EFI_UNIT_TEST
 	if (engineConfiguration->useStepperIdle) {
 		iacMotor.setTargetPosition(duty * engineConfiguration->idleStepperTotalSteps);
-#endif /* EFI_UNIT_TEST */
 	} else {
 		// if not spinning or running a bench test, turn off the idle valve(s) to be quieter and save power
 #if EFI_SHAFT_POSITION_INPUT
@@ -91,8 +84,6 @@ void applyIACposition(percent_t position) {
 		}
 	}
 }
-
-#if !EFI_UNIT_TEST
 
 bool isIdleHardwareRestartNeeded() {
 	return  isConfigurationChanged(stepperEnablePin) ||
@@ -189,6 +180,19 @@ void initIdleHardware() {
 	}
 }
 
-#endif
+#if EFI_UNIT_TEST
+#include <new>
+
+StepperMotorBase& getIacMotorForUnitTest() {
+	return iacMotor;
+}
+
+void resetIdleHardwareForUnitTest() {
+	// these objects are file-scope statics: reconstruct them so every test starts from scratch
+	new (&iacStepperHw) StepDirectionStepper();
+	new (&iacHbridgeHw) DualHBridgeStepper();
+	new (&iacMotor) StepperMotor();
+}
+#endif // EFI_UNIT_TEST
 
 #endif // EFI_IDLE_HARDWARE
