@@ -16,6 +16,8 @@
 #include "logicdata.h"
 #include "unit_test_logger.h"
 #include "hardware.h"
+#include "dc_motors.h"
+#include "idle_hardware.h"
 // https://stackoverflow.com/questions/23427804/cant-find-mkdir-function-in-dirent-h-for-windows
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -143,6 +145,11 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 
 	enginePins.reset();
 	enginePins.unregisterPins();
+
+	// DC motor / idle stepper hardware objects are file-scope statics - reset them
+	// so tests do not observe pool slots started by earlier tests
+	resetDcHardwareForUnitTest();
+	resetIdleHardwareForUnitTest();
 
 	resetConfigErrorStateForUnitTest();
 

@@ -199,6 +199,7 @@ TESTS_SRC_CPP = \
 	tests/actuators/test_aux_valves.cpp \
 	tests/actuators/test_antilag.cpp \
 	tests/actuators/test_boost.cpp \
+	tests/actuators/test_dc_hardware_pool.cpp \
 	tests/actuators/test_dc_motor.cpp \
 	tests/actuators/test_etb.cpp \
 	tests/actuators/test_etb_integrated.cpp \
