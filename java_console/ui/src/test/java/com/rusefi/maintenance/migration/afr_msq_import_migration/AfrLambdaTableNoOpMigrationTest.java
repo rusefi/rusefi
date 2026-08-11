@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import static com.rusefi.maintenance.migration.TestTuneMigrationContextFactory.createTestMigrationContext;
 import static com.rusefi.maintenance.migration.migrators.TableAddColumnsMigrator.LAMBDA_TABLE_FIELD_NAME;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class AfrLambdaTableNoOpMigrationTest {
     private static final ArrayIniField LAMBDA_TABLE_FIELD = new ArrayIniField(
@@ -35,7 +35,7 @@ class AfrLambdaTableNoOpMigrationTest {
     );
 
     @Test
-    void unchangedLambdaTableIsMigrated() {
+    void unchangedLambdaTableIsNotMigrated() {
         final TestTuneMigrationContext context = createTestMigrationContext(
             LAMBDA_TABLE_VALUE,
             LAMBDA_TABLE_FIELD,
@@ -45,6 +45,6 @@ class AfrLambdaTableNoOpMigrationTest {
 
         AfrLambdaTableMigrator.INSTANCE.migrateTune(context);
 
-        assertTrue(context.getMigratedConstants().containsKey(LAMBDA_TABLE_FIELD_NAME));
+        assertFalse(context.getMigratedConstants().containsKey(LAMBDA_TABLE_FIELD_NAME));
     }
 }
