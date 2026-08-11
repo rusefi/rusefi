@@ -337,7 +337,9 @@
  * SPI driver system settings.
  */
 #define STM32_SPI_USE_SPI1                  TRUE
+#ifndef STM32_SPI_USE_SPI2
 #define STM32_SPI_USE_SPI2                  FALSE
+#endif
 #define STM32_SPI_USE_SPI3                  FALSE
 #define STM32_SPI_USE_SPI4                  FALSE
 #define STM32_SPI_USE_SPI5                  FALSE
