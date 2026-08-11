@@ -6,8 +6,14 @@
 # destination_folder=$4
 # file_to_upload=$5
 
+SCRIPT_NAME=$(basename "$0")
+
 if [ ! "$1" ] || [ ! "$2" ] || [ ! "$3" ]; then
- echo "upload_file.sh says No Secrets, exiting"
+ MISSING=""
+ [ -z "$1" ] && MISSING="${MISSING} USER(arg1)"
+ [ -z "$2" ] && MISSING="${MISSING} PASS(arg2)"
+ [ -z "$3" ] && MISSING="${MISSING} HOST(arg3)"
+ echo "$SCRIPT_NAME: Upload not configured: missing${MISSING} - typically RUSEFI_SSH_USER/RUSEFI_SSH_PASS/RUSEFI_SSH_SERVER secrets are not available on this build"
  exit 0
 fi
 
