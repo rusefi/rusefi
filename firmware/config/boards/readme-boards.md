@@ -62,3 +62,5 @@ Canonical function strings in use:
 - 'Injector N' for type: inj
 
 alphax-4K-GDI is a single GDI board with special injector naming: 'Port Injector N' and Positive/Negative GDI injectors
+
+uaefi, uaefi121 and super-uaefi same output could be repurposed, these use just 'Ignition Coil N' for coils
