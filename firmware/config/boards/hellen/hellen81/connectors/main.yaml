@@ -40,7 +40,7 @@ pins:
     color: red
 
   - pin: 6
-    function: Injector 2 Output
+    function: Injector 2
     id: G8
     class: outputs
     ts_name: 6 - INJ_2
@@ -48,7 +48,7 @@ pins:
     color: blue
 
   - pin: 7
-    function: Injector 3 Output
+    function: Injector 3
     id: D11
     class: outputs
     ts_name: 7 - INJ_3
@@ -171,7 +171,7 @@ pins:
     color: red
 
   - pin: 25
-    function: Injector 6 Output
+    function: Injector 6
     id: F12
     class: outputs
     ts_name: 25 - INJ_6
@@ -183,7 +183,7 @@ pins:
     color: green
 
   - pin: 27
-    function: Injector 1 Output
+    function: Injector 1
     id: G7
     class: outputs
     ts_name: 27 - INJ_1
@@ -203,7 +203,7 @@ pins:
     color: green
 
   - pin: 30
-    function: Injector 5 Output
+    function: Injector 5
     id: D9
     class: outputs
     ts_name: 30 - INJ_5
@@ -300,7 +300,7 @@ pins:
     color: orange
 
   - pin: 47
-    function: Injector 4 Output
+    function: Injector 4
     id: D10
     class: outputs
     ts_name: 47 - INJ_4
@@ -446,7 +446,7 @@ pins:
     function: K-Line
 
   - pin: 72
-    function: Injector 7 Output
+    function: Injector 7
     id: F13
     class: outputs
     ts_name: 72 - INJ_7
@@ -454,7 +454,7 @@ pins:
     color: blue
 
   - pin: 73
-    function: Injector 8 Output
+    function: Injector 8
     id: F14
     class: outputs
     ts_name: 73 - INJ_8

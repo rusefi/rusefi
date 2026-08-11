@@ -2,10 +2,13 @@ pins:
 
   - pin: B1
     function: Injector 1
+    type: inj
   - pin: B2
     function: Injector 5
+    type: inj
   - pin: B3
     function: Injector 4
+    type: inj
   - pin: B4
     function: VVT12 Solenoid
   - pin: B5
@@ -31,6 +34,7 @@ pins:
     function: LinePressureControl TCU (bypass for TCU molex)
   - pin: B16
     function: Injector 8
+    type: inj
   - pin: B17
     function: Cam Sensors Power (share and pass for TCU molex)
   - pin: B18
@@ -51,6 +55,7 @@ pins:
     function: Oil Level Switch
   - pin: B31
     function: Injector 6
+    type: inj
   - pin: B34
     function: Cam Sensor Power
   - pin: B37
@@ -69,6 +74,7 @@ pins:
     function: IMRC Sensor 2
   - pin: B46
     function: Injector 3
+    type: inj
   - pin: B47
     function: Cylinder Head Temperature
   - pin: B48
@@ -94,8 +100,10 @@ pins:
     function: Intake Manifold Runner Control Solenoid
   - pin: B61
     function: Injector 7
+    type: inj
   - pin: B62
     function: Injector 2
+    type: inj
   - pin: B67
     function: Knock2 Neg
   - pin: B68

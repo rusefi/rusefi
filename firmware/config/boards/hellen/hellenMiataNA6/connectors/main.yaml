@@ -272,14 +272,14 @@ pins:
     id: G7
     class: outputs
     ts_name: 3U - Injector 1
-    function: Injector #1
+    function: Injector 1
     type: inj
 
   - pin: 3V
     id: G8
     class: outputs
     ts_name: 3V - Injector 2
-    function: Injector #2
+    function: Injector 2
     type: inj
 
   - pin: 3W
@@ -293,14 +293,14 @@ pins:
     id: D11
     class: outputs
     ts_name: 3Y - Injector 3
-    function: Injector #3
+    function: Injector 3
     type: inj
 
   - pin: 3Z
     id: D10
     class: outputs
     ts_name: 3Z - Injector 4
-    function: Injector #4
+    function: Injector 4
     type: inj
 
   - pin: int_map

@@ -9,9 +9,9 @@ pins:
 
   - pin: X2
     meta: H144_LS_5
-    function: Inj 5
+    function: Injector 5
     class: outputs
-    type: ls
+    type: inj
     ts_name: Aux2 - Inj 5
 
   - pin: X3
@@ -22,9 +22,9 @@ pins:
 
   - pin: X4
     meta: H144_LS_6
-    function: Inj 6
+    function: Injector 6
     class: outputs
-    type: ls
+    type: inj
     ts_name: Aux4 - Inj 6
 
   - pin: X5

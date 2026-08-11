@@ -58,3 +58,7 @@ Canonical function strings in use:
 
 - `Power/Chassis GND ground` for `type: gnd`
 - `GNDA Analog/Sensor Ground` for `type: agnd`
+
+- 'Injector N' for type: inj
+
+alphax-4K-GDI is a single GDI board with special injector naming: 'Port Injector N' and Positive/Negative GDI injectors

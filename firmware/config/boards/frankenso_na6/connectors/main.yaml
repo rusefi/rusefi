@@ -201,13 +201,15 @@ pins:
     id: E2
     class: outputs
     ts_name: Injector 3V
-    function: Injector #2
+    function: Injector 2
+    type: inj
 
   - pin: 61
     id: B9
     class: outputs
     ts_name: Injector 3W
-    function: Injector #1
+    function: Injector 1
+    type: inj
 
   - pin: 62
     id: D5
@@ -219,13 +221,15 @@ pins:
     id: B8
     class: outputs
     ts_name: Injector 3Y
-    function: Injector #3
+    function: Injector 3
+    type: inj
 
   - pin: 64
     id: B7
     class: outputs
     ts_name: Injector 3Z
-    function: Injector #4
+    function: Injector 4
+    type: inj
 
   - pin: onboard
     id: EFI_ADC_14

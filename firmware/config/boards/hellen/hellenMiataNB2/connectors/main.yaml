@@ -9,7 +9,7 @@ pins:
     id: G7
     class: outputs
     ts_name: 2A - INJ_1
-    function: Injector #1
+    function: Injector 1
     type: inj
     color: orange Y1
 
@@ -33,7 +33,7 @@ pins:
     id: G8
     class: outputs
     ts_name: 2D - INJ_2
-    function: Injector #2
+    function: Injector 2
     type: inj
     color: blue Y1
 
@@ -56,7 +56,7 @@ pins:
     id: D11
     class: outputs
     ts_name: 2G - INJ_3
-    function: Injector #3
+    function: Injector 3
     type: inj
     color: white Y1
 
@@ -79,7 +79,7 @@ pins:
     id: D10
     class: outputs
     ts_name: 2J - INJ_4
-    function: Injector #4
+    function: Injector 4
     type: inj
     color: green Y1
 

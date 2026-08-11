@@ -28,7 +28,7 @@ pins:
   - pin: 3A
     # H144_LS_2
     id: G8
-    function: Injector 2 Output
+    function: Injector 2
     class: outputs
     type: inj
     ts_name: 3A - Injector 2
@@ -37,7 +37,7 @@ pins:
   - pin: 4A
     # H144_LS_1
     id: G7
-    function: Injector 1 Output
+    function: Injector 1
     class: outputs
     type: inj
     ts_name: 4A - Injector 1

@@ -265,28 +265,28 @@ pins:
     id: G7
     class: outputs
     ts_name: 3W - INJ_1
-    function: Injector #1
+    function: Injector 1
     type: inj
 
   - pin: 3X
     id: G8
     class: outputs
     ts_name: 3X - INJ_2
-    function: Injector #2
+    function: Injector 2
     type: inj
 
   - pin: 3Y
     id: D11
     class: outputs
     ts_name: 3Y - INJ_3
-    function: Injector #3
+    function: Injector 3
     type: inj
 
   - pin: 3Z
     id: D10
     class: outputs
     ts_name: 3Z - INJ_4
-    function: Injector #4
+    function: Injector 4
     type: inj
 
   - pin: 4A

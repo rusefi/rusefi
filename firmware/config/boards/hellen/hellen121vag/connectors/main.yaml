@@ -98,7 +98,7 @@ pins:
     id: F13
     class: outputs
     ts_name: 19 - INJ 7
-    function: OUT_INJ7
+    function: Injector 7
     type: inj
 
   - pin: 21a
@@ -117,7 +117,7 @@ pins:
     id: F14
     class: outputs
     ts_name: 24 - INJ 8
-    function: OUT_INJ8
+    function: Injector 8
     type: inj
 
 # something weird same IAT on pin 85? figure this out one day
@@ -307,14 +307,14 @@ pins:
     id: D10
     class: outputs
     ts_name: 88 - INJ_4
-    function: Injector #4
+    function: Injector 4
     type: inj
 
   - pin: 89a
     id: G8
     class: outputs
     ts_name: 89 - INJ_2
-    function: Injector #2
+    function: Injector 2
     type: inj
 
   - pin: 90a
@@ -352,14 +352,14 @@ pins:
     id: G7
     class: outputs
     ts_name: 96 - INJ_1
-    function: Injector #1
+    function: Injector 1
     type: inj
 
   - pin: 97a
     id: D11
     class: outputs
     ts_name: 97 - INJ_3
-    function: Injector #3
+    function: Injector 3
     type: inj
 
   - pin: 98a
@@ -439,14 +439,14 @@ pins:
     id: F12
     class: outputs
     ts_name: 112 INJ 6
-    function: INJ_6
+    function: Injector 6
     type: inj
 
   - pin: 113a
     id: D9
     class: outputs
     ts_name: 113 INJ 5
-    function: INJ_5
+    function: Injector 5
     type: inj
 
   - pin: 115a

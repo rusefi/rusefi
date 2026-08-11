@@ -56,7 +56,7 @@ pins:
 
   - pin: A8
     meta: H144_LS_1
-    function: Injector 1 Output
+    function: Injector 1
     class: outputs
     type: inj
     ts_name: A8 - Injector 1
@@ -116,7 +116,7 @@ pins:
 
   - pin: B8
     meta: H144_LS_2
-    function: Injector 2 Output
+    function: Injector 2
     class: outputs
     type: inj
     ts_name: B8 - Injector 2

@@ -37,14 +37,14 @@ pins:
     function: Injector 2
     class: outputs
     ts_name: 6 - INJ_2
-    type: ls
+    type: inj
 
   - pin: 7a
     id: D10
     function: Injector 3
     class: outputs
     ts_name: 7 - INJ_3
-    type: ls
+    type: inj
 
   - pin: 8a
     id: B8
@@ -122,7 +122,7 @@ pins:
     function: Injector 1
     class: outputs
     ts_name: 27 - INJ_1
-    type: ls
+    type: inj
 
   - pin: 28a
     id: C7
@@ -213,7 +213,7 @@ pins:
     function: Injector 4
     class: outputs
     ts_name: 47 - INJ_4
-    type: ls
+    type: inj
 
   - pin: 48a
     id: E5

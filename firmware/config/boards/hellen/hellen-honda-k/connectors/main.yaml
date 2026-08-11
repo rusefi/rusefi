@@ -168,6 +168,7 @@ pins:
     class: outputs
     ts_name: B5 - Injector 1
     function: Injector 1
+    type: inj
   - pin: B6
     meta: H144_OUT_IO12
     class: outputs
