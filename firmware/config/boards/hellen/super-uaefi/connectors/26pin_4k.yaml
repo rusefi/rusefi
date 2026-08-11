@@ -12,7 +12,7 @@ pins:
     color: yellow
 
   - pin: 3D
-    function: WBO1 Heater Negative (pin 3)
+    function: WBO1 Heater Negative (pin 3) (and heater +12 could use 18C)
     color: white
     type: wbo
 

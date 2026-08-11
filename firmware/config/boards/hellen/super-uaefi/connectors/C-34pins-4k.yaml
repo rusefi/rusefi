@@ -44,7 +44,7 @@ pins:
     color: yellow
 
   - pin: 9C
-    function: WBO2 Heater Negative (pin 3)
+    function: WBO2 Heater Negative (pin 3) (and heater +12 could use 11C)
     color: white
     type: wbo
 
