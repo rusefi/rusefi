@@ -113,4 +113,7 @@ public:
 		}
 	}
 };
+#else
+// no dedicated thread in unit tests - tests pump doIteration() by hand
+using StepperMotor = StepperMotorBase;
 #endif

@@ -33,9 +33,6 @@ void StepperMotorBase::initialize(StepperHw *hardware, int totalSteps) {
 	m_hw = hardware;
 }
 
-// todo: EFI_STEPPER macro
-#if EFI_PROD_CODE || EFI_SIMULATOR
-
 void StepperMotorBase::saveStepperPos(int pos) {
 	// use backup-power RTC registers to store the data
 #if EFI_PROD_CODE && EFI_BACKUP_SRAM
@@ -93,7 +90,7 @@ void StepperMotorBase::setInitialPosition() {
 	efiPrintf("Stepper: savedStepperPos=%d forceStepperParking=%d (tps=%.2f)", m_currentPosition, (forceStepperParking ? 1 : 0), tpsPos);
 
 	if (m_currentPosition < 0 || forceStepperParking) {
-		efiPrintf("Stepper: starting parking time=%lums", getTimeNowMs());
+		efiPrintf("Stepper: starting parking time=%lums", (unsigned long)getTimeNowMs());
 		// reset saved value
 		saveStepperPos(-1);
 
@@ -118,7 +115,7 @@ void StepperMotorBase::setInitialPosition() {
 		m_currentPosition = 0;
 		saveStepperPos(m_currentPosition);
 		// todo: is this a slow operation on the start-up path?
-		efiPrintf("Stepper: parking finished time=%lums", getTimeNowMs());
+		efiPrintf("Stepper: parking finished time=%lums", (unsigned long)getTimeNowMs());
 	} else {
 		// The initial target position should correspond to the saved stepper position.
 		// Idle thread starts later and sets a new target position.
@@ -197,8 +194,13 @@ void StepperHw::sleep() {
 }
 
 void StepperHw::pause(int divisor) const {
+#if EFI_UNIT_TEST
+	// no threads to sleep in unit tests - stepping happens synchronously
+	UNUSED(divisor);
+#else
 	// currently we can't sleep less than 1ms (see #3214)
 	chThdSleepMicroseconds(maxI(MS2US(1), (int)(MS2US(m_reactionTime)) / divisor));
+#endif
 }
 
 void StepperHw::setReactionTime(float ms) {
@@ -210,11 +212,13 @@ bool StepDirectionStepper::step(bool positive) {
 	return pulse();
 }
 
+#if !EFI_UNIT_TEST
 void StepperMotor::initialize(StepperHw *hardware, int totalSteps) {
 	StepperMotorBase::initialize(hardware, totalSteps);
 
 	start();
 }
+#endif // EFI_UNIT_TEST
 
 void StepDirectionStepper::initialize(brain_pin_e p_stepPin, brain_pin_e p_directionPin, pin_output_mode_e p_directionPinMode, float reactionTime, brain_pin_e p_enablePin, pin_output_mode_e p_enablePinMode) {
 	if (!isBrainPinValid(p_stepPin) || !isBrainPinValid(p_directionPin)) {
@@ -238,9 +242,3 @@ void StepDirectionStepper::initialize(brain_pin_e p_stepPin, brain_pin_e p_direc
 	directionPin.setValue(false);
 	m_currentDirection = false;
 }
-
-#endif
-
-#if EFI_UNIT_TEST
-void StepperHw::sleep() { }
-#endif // EFI_UNIT_TEST

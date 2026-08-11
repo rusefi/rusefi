@@ -8,8 +8,6 @@
 
 #include "pch.h"
 
-#if !EFI_UNIT_TEST
-
 #include "stepper.h"
 #include "dc_motor.h"
 
@@ -113,5 +111,3 @@ void DualHBridgeStepper::sleep() {
 	update(sleepingCoef);
 	pause();
 }
-
-#endif
