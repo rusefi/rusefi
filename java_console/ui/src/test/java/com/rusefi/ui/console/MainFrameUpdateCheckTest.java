@@ -168,4 +168,25 @@ public class MainFrameUpdateCheckTest {
             assertTrue(closeClicked.get());
         });
     }
+
+    @Test
+    public void connectionFailureOverlayShowsDownloadOnlyWhenAvailable() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            AtomicBoolean downloadClicked = new AtomicBoolean();
+            AtomicBoolean closeClicked = new AtomicBoolean();
+            MainFrame.ConnectionFailureOverlay overlay = new MainFrame.ConnectionFailureOverlay(
+                "Connection failed", () -> downloadClicked.set(true), () -> closeClicked.set(true));
+
+            assertEquals("Connection failed", overlay.getMessageForUnitTest());
+            assertTrue(overlay.isDownloadVisibleForUnitTest());
+            overlay.downloadForUnitTest();
+            assertTrue(downloadClicked.get());
+            overlay.closeForUnitTest();
+            assertTrue(closeClicked.get());
+
+            MainFrame.ConnectionFailureOverlay noDownloadOverlay = new MainFrame.ConnectionFailureOverlay(
+                "Connection failed", null, () -> { });
+            assertFalse(noDownloadOverlay.isDownloadVisibleForUnitTest());
+        });
+    }
 }
