@@ -12,22 +12,22 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 |---|---|---:|---:|---|---:|---:|---|
 | firmware | accelerometer | 400 | 184 | normal SPI sensor read | 24 | 24 | PROXY +0, PROXY BELOW REVIEWED; partial proxy: 1 indirect |
 | firmware | bench test | 1600 | 148 | idle production worker | 1932 | 1924 | PROXY -8; partial proxy: 32 unknown, 6 indirect, recursion |
-| firmware | CAN RX | 768 | 440 | CAN serial receive | 1244 | 1236 | PROXY -8; partial proxy: 56 unknown, 22 indirect, recursion |
-| firmware | CAN TX | 1536 | 600 | Honda-K dashboard output | 860 | 852 | PROXY -8; partial proxy: 31 unknown, 7 indirect, recursion |
+| firmware | CAN RX | 768 | 440 | CAN serial receive | 1244 | 1236 | PROXY -8; partial proxy: 58 unknown, 22 indirect, recursion |
+| firmware | CAN TX | 1536 | 600 | Honda-K dashboard output | 860 | 852 | PROXY -8; partial proxy: 32 unknown, 7 indirect, recursion |
 | firmware | electronic throttle | 512 | 304 | normal ETB update | 556 | 548 | PROXY -8; partial proxy: 20 unknown, 3 indirect, recursion |
 | firmware | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | firmware | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
 | firmware | log flush | 400 | 124 | mailbox wait/flush | 660 | 652 | PROXY -8; partial proxy: 25 unknown, 2 indirect, recursion |
 | firmware | Lua | 4096 | - | - | - | 3212 | NOT REVIEWED: 43 unknown, 15 indirect, recursion |
 | firmware | main loop | 1024 | - | - | - | 644 | NOT REVIEWED: 21 unknown, 3 indirect, recursion |
-| firmware | main/process | 1536 | - | - | - | 1196 | NOT REVIEWED: 69 unknown, 24 indirect, recursion |
+| firmware | main/process | 1536 | - | - | - | 1196 | NOT REVIEWED: 71 unknown, 24 indirect, recursion |
 | firmware | MAX3185x | 400 | 192 | normal sensor read | 756 | 748 | PROXY -8; partial proxy: 27 unknown, 2 indirect, recursion |
 | firmware | SD/MMC | 1600 | 1432 | exFAT log creation | 2052 | 1812 | PROXY -240; partial proxy: 54 unknown, 15 indirect, recursion |
 | firmware | software knock | 400 | 144 | normal RMS processing | 628 | 620 | PROXY -8; partial proxy: 24 unknown, 2 indirect, recursion |
 | firmware | stepper | 400 | 280 | dual H-bridge stepping | 676 | 668 | PROXY -8; partial proxy: 25 unknown, 6 indirect, recursion |
 | firmware | storage manager | 1200 | 1032 | SD extra-page burn | 660 | 652 | PROXY -8, PROXY BELOW REVIEWED; partial proxy: 27 unknown, 5 indirect, recursion |
 | firmware | timer watchdog | 256 | 104 | normal watchdog sleep | 552 | 544 | PROXY -8; partial proxy: 20 unknown, 2 indirect, recursion |
-| firmware | TunerStudio | 1200 | 824 | normal communication | 1324 | 1316 | PROXY -8; partial proxy: 62 unknown, 33 indirect, recursion |
+| firmware | TunerStudio | 1200 | 824 | normal communication | 1324 | 1308 | PROXY -16; partial proxy: 64 unknown, 33 indirect, recursion |
 | firmware | USB mass storage | 256 | 240 | SD block read | 756 | 748 | PROXY -8; partial proxy: 26 unknown, 5 indirect, recursion |
 | bootloader | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | bootloader | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
@@ -70,8 +70,8 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | Image | Stack / entry | Nominal | Reviewed | Scenario | Proxy snapshot | Current proxy | Result |
 |---|---|---:|---:|---|---:|---:|---|
 | firmware | bench test | 1600 | - | - | - | 692 | NOT REVIEWED: 20 unknown, 3 indirect, recursion |
-| firmware | CAN RX | 768 | 296 | normal IOBox receive | 1212 | 1212 | PROXY +0; partial proxy: 46 unknown, 22 indirect, recursion |
-| firmware | CAN TX | 1536 | 648 | Honda-K dashboard output | 836 | 836 | PROXY +0; partial proxy: 21 unknown, 7 indirect, recursion |
+| firmware | CAN RX | 768 | 296 | normal IOBox receive | 1212 | 1212 | PROXY +0; partial proxy: 48 unknown, 22 indirect, recursion |
+| firmware | CAN TX | 1536 | 648 | Honda-K dashboard output | 836 | 836 | PROXY +0; partial proxy: 22 unknown, 7 indirect, recursion |
 | firmware | electronic throttle | 512 | 256 | normal ETB update | 8 | 8 | PROXY +0, PROXY BELOW REVIEWED; partial proxy: 1 indirect |
 | firmware | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | firmware | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
@@ -80,11 +80,11 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | lwIP driver | 672 | 240 | normal Ethernet delivery | 804 | 804 | PROXY +0; partial proxy: 33 unknown, 6 indirect, recursion |
 | firmware | lwIP TCP/IP | 1024 | - | - | - | 652 | NOT REVIEWED: 16 unknown, 5 indirect, recursion |
 | firmware | main loop | 1024 | - | - | - | 628 | NOT REVIEWED: 14 unknown, 3 indirect, recursion |
-| firmware | main/process | 1536 | - | - | - | 1172 | NOT REVIEWED: 52 unknown, 24 indirect, recursion |
+| firmware | main/process | 1536 | - | - | - | 1172 | NOT REVIEWED: 54 unknown, 24 indirect, recursion |
 | firmware | stepper | 400 | 220 | normal startup positioning | 652 | 652 | PROXY +0; partial proxy: 16 unknown, 6 indirect, recursion |
 | firmware | storage manager | 400 | 308 | internal-flash tune burn | 628 | 628 | PROXY +0; partial proxy: 18 unknown, 5 indirect, recursion |
 | firmware | timer watchdog | 256 | 112 | normal watchdog sleep | 528 | 528 | PROXY +0; partial proxy: 12 unknown, 2 indirect, recursion |
-| firmware | TunerStudio | 1200 | 804 | normal tune burn | 1244 | 1244 | PROXY +0; partial proxy: 49 unknown, 31 indirect, recursion |
+| firmware | TunerStudio | 1200 | 804 | normal tune burn | 1244 | 1260 | REVIEW PROXY +16; partial proxy: 51 unknown, 31 indirect, recursion |
 | bootloader | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | bootloader | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
 | bootloader | LED | 256 | - | - | - | 80 | NOT REVIEWED: 3 unknown |
@@ -102,7 +102,7 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | 192 | f_parser | ext/lua/ldo.c:999:13 |
 | firmware | 192 | luaH_newkey | ext/lua/ltable.c:665:13 |
 | firmware | 184 | CanWrite::PeriodicTask(long long) | controllers/can/can_tx.cpp:55:6 |
-| firmware | 168 | handleShaftSignal(int, bool, long long) | controllers/trigger/trigger_central.cpp:513:6 |
+| firmware | 168 | handleShaftSignal(int, bool, long long) | controllers/trigger/trigger_central.cpp:554:6 |
 | firmware | 144 | TriggerDecoderBase::printGaps(char const*, TriggerConfiguration const&, TriggerWaveform const&) | controllers/trigger/trigger_decoder.cpp:441:6 |
 | bootloader | 256 | XcpPacketReceivedHook | ../hw_layer/openblt/hooks.c:366:32 |
 | bootloader | 128 | HardFault_Handler_C | ../hw_layer/main_hardfault.c:37:6 |
@@ -126,8 +126,8 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | Image | Stack / entry | Nominal | Reviewed | Scenario | Proxy snapshot | Current proxy | Result |
 |---|---|---:|---:|---|---:|---:|---|
 | firmware | bench test | 1600 | 204 | idle production worker | 2028 | 2004 | PROXY -24; partial proxy: 24 unknown, 6 indirect, recursion |
-| firmware | CAN RX | 768 | 496 | CAN serial receive | 1340 | 1340 | PROXY +0; partial proxy: 48 unknown, 22 indirect, recursion |
-| firmware | CAN TX | 1536 | 1136 | Honda-K saturated output | 1024 | 1024 | PROXY +0, PROXY BELOW REVIEWED; partial proxy: 22 unknown, 7 indirect, recursion |
+| firmware | CAN RX | 768 | 496 | CAN serial receive | 1340 | 1340 | PROXY +0; partial proxy: 50 unknown, 22 indirect, recursion |
+| firmware | CAN TX | 1536 | 1136 | Honda-K saturated output | 1024 | 1024 | PROXY +0, PROXY BELOW REVIEWED; partial proxy: 23 unknown, 7 indirect, recursion |
 | firmware | electronic throttle | 512 | 312 | normal ETB update | 532 | 532 | PROXY +0; partial proxy: 12 unknown, 3 indirect, recursion |
 | firmware | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | firmware | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
@@ -136,12 +136,12 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | lwIP driver | 672 | 192 | normal Ethernet delivery | 812 | 812 | PROXY +0; partial proxy: 33 unknown, 6 indirect, recursion |
 | firmware | lwIP TCP/IP | 1024 | 584 | TCP write with ARP | 660 | 660 | PROXY +0; partial proxy: 16 unknown, 5 indirect, recursion |
 | firmware | main loop | 1024 | 208 | normal ADC processing | 620 | 620 | PROXY +0; partial proxy: 15 unknown, 3 indirect, recursion |
-| firmware | main/process | 1536 | 704 | startup fast callback | 1196 | 1196 | PROXY +0; partial proxy: 61 unknown, 24 indirect, recursion |
+| firmware | main/process | 1536 | 704 | startup fast callback | 1196 | 1196 | PROXY +0; partial proxy: 63 unknown, 24 indirect, recursion |
 | firmware | SD/MMC | 1600 | 1436 | exFAT log creation | 2036 | 1804 | PROXY -232; partial proxy: 42 unknown, 15 indirect, recursion |
 | firmware | stepper | 400 | 280 | startup redundant pedal check | 652 | 652 | PROXY +0; partial proxy: 16 unknown, 6 indirect, recursion |
 | firmware | storage manager | 400 | 292 | internal-flash tune burn | 644 | 644 | PROXY +0; partial proxy: 17 unknown, 5 indirect, recursion |
 | firmware | timer watchdog | 256 | 112 | normal watchdog sleep | 528 | 528 | PROXY +0; partial proxy: 12 unknown, 2 indirect, recursion |
-| firmware | TunerStudio | 1200 | 744 | Ethernet TS with ARP | 1316 | 1316 | PROXY +0; partial proxy: 52 unknown, 31 indirect, recursion |
+| firmware | TunerStudio | 1200 | 744 | Ethernet TS with ARP | 1316 | 1332 | REVIEW PROXY +16; partial proxy: 54 unknown, 31 indirect, recursion |
 | firmware | USB mass storage | 2048 | 300 | SD READ/WRITE(10) | 732 | 732 | PROXY +0; partial proxy: 18 unknown, 5 indirect, recursion |
 | bootloader | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | bootloader | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
