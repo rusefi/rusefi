@@ -7,7 +7,7 @@ pins:
 
   - pin: 13
     function: Sensors GND
-    type: sgnd
+    type: agnd
 
   - pin: 14
     id: TLE6240_PIN_14

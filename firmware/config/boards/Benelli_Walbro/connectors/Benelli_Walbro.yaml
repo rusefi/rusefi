@@ -66,13 +66,13 @@ pins:
   - pin: B2
     function: 'Sensors common ground (IAT, ECT, Map change Switch)'
     class: sgnd
-    type: sgnd
+    type: agnd
     color: violet/black
 
   - pin: B3
     function: 'Throttle position sensor (TPS) Sensor ground / Lambda O2 Sensor ground'
     class: sgnd
-    type: sgnd
+    type: agnd
     color: violet/black
 
   - pin: B4

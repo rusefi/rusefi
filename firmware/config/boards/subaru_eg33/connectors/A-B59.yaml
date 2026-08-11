@@ -59,11 +59,11 @@ pins:
 
   - pin: 9
     function: Cam and Crank 2 VR sensor GND
-    type: sgnd
+    type: agnd
 
   - pin: 10
     function: Cam and Crank 2 VR sensors shield
-    type: sgnd
+    type: agnd
 
   - pin: 11
     function: Power GND
@@ -97,7 +97,7 @@ pins:
 
   - pin: 17
     function: AFR sensors shield
-    type: sgnd
+    type: agnd
 
   - pin: 18
     id: EFI_ADC_11
@@ -122,7 +122,7 @@ pins:
 
 #  - pin: 21
 #    function: Sensors GND
-#    type: sgnd
+#    type: agnd
 
   - pin: 22
     function: Power GND

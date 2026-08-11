@@ -51,7 +51,7 @@ pins:
 
   - pin: AD1
     function: Oxygen sensor 2 ground
-    type: sgnd
+    type: agnd
 
   - pin: AD2
     id: E1
@@ -111,7 +111,7 @@ pins:
 
   - pin: AG1
     function: Coolant temperature sensor ground
-    type: sgnd
+    type: agnd
 
   - pin: AG2
     function: Camshaft position sensor signal
@@ -127,11 +127,11 @@ pins:
 
   - pin: AH1
     function: Discrete sensors ground
-    type: sgnd
+    type: agnd
 
   - pin: AH2
     function: Oxygen sensor 2 ground
-    type: sgnd
+    type: agnd
 
   - pin: AH3
     function: Alternator LT signal
@@ -155,7 +155,7 @@ pins:
 
   - pin: AJ3
     function: Oxygen sensor 2 signal
-    type: sgnd
+    type: agnd
 
   - pin: AJ4
     id: L9779_OUT_1
@@ -277,7 +277,7 @@ pins:
 
   - pin: BC4
     function: Pedal position sensor 1 ground
-    type: sgnd
+    type: agnd
 
   - pin: BD1
     id: L9779_OUT_16
@@ -295,7 +295,7 @@ pins:
 
   - pin: BD4
     function: Pedal position sensor 2 ground
-    type: sgnd
+    type: agnd
 
   - pin: BE1
     function: Main relay

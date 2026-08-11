@@ -117,7 +117,7 @@ pins:
 
   - pin: 17
     function: Signal GND
-    type: sgnd
+    type: agnd
     color: red right
 
   - pin: 18
@@ -146,7 +146,7 @@ pins:
 
   - pin: 21
     function: Signal GND
-    type: sgnd
+    type: agnd
     color: dark green
 
   - pin: 22
