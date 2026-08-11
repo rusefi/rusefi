@@ -541,6 +541,16 @@ public class StackUsageReport {
         return matches.get(0);
     }
 
+    private static boolean hasSymbol(Map<String, Node> nodes, String function) {
+        for (Node node : nodes.values()) {
+            if (function.equals(node.function)
+                || (!function.contains("(") && node.function.startsWith(function + "("))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     static List<Set<String>> findComponents(Map<String, Node> nodes) {
         Tarjan tarjan = new Tarjan(nodes);
         List<String> symbols = new ArrayList<>(nodes.keySet());
@@ -606,6 +616,11 @@ public class StackUsageReport {
                 BigInteger budget = budgetFor(root, graph.stackSizes);
                 if (root.function == null) {
                     rows.add("| " + graph.image + " | " + root.name + " | " + budget + " | - | - | - | - | NOT REVIEWED |");
+                    continue;
+                }
+                if (!hasSymbol(graph.nodes, root.function)) {
+                    rows.add("| " + graph.image + " | " + root.name + " | " + budget
+                        + " | - | - | - | - | NOT ANALYZED: entry absent from post-LTO callgraph |");
                     continue;
                 }
 
