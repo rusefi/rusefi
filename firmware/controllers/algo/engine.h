@@ -50,15 +50,6 @@
 #include "advance_map.h"
 #include "ignition_state.h"
 #include "sensor_checker.h"
-#if defined(MODULE_MIL) && !defined(MODULE_CHECK_ENGINE_LIGHT)
-#error "MODULE_MIL requires MODULE_CHECK_ENGINE_LIGHT"
-#endif
-#ifdef MODULE_CHECK_ENGINE_LIGHT
-#include "check_engine_light.h"
-#endif
-#ifdef MODULE_MIL
-#include "malfunction_indicator.h"
-#endif
 #include "fuel_schedule.h"
 #include "prime_injection.h"
 #include "throttle_model.h"
@@ -188,12 +179,6 @@ public:
         Mockable<WallFuelController>,
         KnockController,
         SensorChecker,
-#ifdef MODULE_CHECK_ENGINE_LIGHT
-        CheckEngineLight,
-#endif
-#ifdef MODULE_MIL
-        MILController,
-#endif
 #if EFI_ENGINE_CONTROL
         Mockable<LimpManager>,
 #endif // EFI_ENGINE_CONTROL

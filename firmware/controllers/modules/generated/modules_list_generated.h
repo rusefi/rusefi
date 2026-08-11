@@ -16,5 +16,13 @@ EthernetConsoleModule,
 VvlController,
 #endif
 
+#ifdef MODULE_CHECK_ENGINE_LIGHT
+CheckEngineLight,
+#endif
+
+#ifdef MODULE_MIL
+MILController,
+#endif
+
 // Board-specific extra module types appended to Engine::engineModules
 #include "board_modules_list.h"
