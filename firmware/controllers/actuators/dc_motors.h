@@ -18,6 +18,11 @@ DcMotor* initDcMotor(brain_pin_e coil_p, brain_pin_e coil_m, size_t index);
 void setDcMotorFrequency(size_t index, int hz);
 void setDcMotorDuty(size_t index, float duty);
 
+#if EFI_UNIT_TEST
+DcMotor* getDcMotorForUnitTest(size_t index);
+void resetDcHardwareForUnitTest();
+#endif // EFI_UNIT_TEST
+
 void showDcMotorInfo(int i);
 
 // Simple wrapper to use an OutputPin as "PWM" that can only do 0 or 1
