@@ -1,5 +1,29 @@
 # Work Report
 
+## 2026-08-11 - m74_9: enable TLE9201 ETB H-bridge diagnostics on SPI2 (AT32F435)
+
+Goal (user): bring the electronic throttle alive - the TLE9201 (U3) H-bridge was not wired to any SPI and had no driver in firmware. Per KiCad dump `m749_kicad.txt` the only L9779-to-TLE9201 link is the WDA_INT watchdog line (L9779 pin 38 -> Q5B -> DIS), so diagnostics must be driven directly from the AT32 via SPI2, not through the L9779.
+
+What was done:
+| Change | File |
+| --- | --- |
+| `DDEFS += -DBOARD_TLE9201_COUNT=1` (driver stub otherwise returns -1) and `-DSTM32_SPI_USE_SPI2=TRUE` | firmware/config/boards/m74_9/board.mk |
+| SPI2 enabled: `is_enabled_spi_2`, pins PD1/PD3/PD4 (ETC_SCK/SO/SI, AF6 per `spi2_af` in at32_spi.cpp), `tle9201_cfg` on `&SPID2` with CS PD0 (GPIO, idle high), `tle9201_add(0, ...)` + PD0 pin claim in `board_init_ext_gpios()` | firmware/config/boards/m74_9/board_configuration.cpp |
+| Wrap `STM32_SPI_USE_SPI2` in `#ifndef` in the AT32 mcuconf (was a bare `#define ... FALSE`, so the board.mk `-D` redefinition would warn -> error under `-Werror`, and worse, the mcuconf value would override the command line one, leaving `SPID2` undeclared). Same pattern as stm32h7/cfg/mcuconf.h and the existing USART1/USB guards in this very file. | firmware/hw_layer/ports/at32/at32f4/cfg/mcuconf.h |
+
+Key decisions:
+- SPI2 pin/AF mapping verified against `at32_spi.cpp` `spi2_af` table: PD1 SCK AF6, PD3 MISO AF6, PD4 MOSI AF6 - exactly what the board needs (TLE9201 SO=3/SI=8/CSN=9/SCK=10 per user's pin list).
+- CS handled the same way as the (working) L9779: GPIO push-pull output, idle high; ChibiOS `spiSelectI`/`spiUnselectI` in `SPI_SELECT_MODE_PAD` clear/set the pad (active low CSN) - no LLD work needed.
+- `TLE9201_CONFIG_CR1/CR2` macros resolve on AT32: `device_mpu_util.h` comes from `hw_layer/ports/stm32/stm32f4` (CPU_HWLAYER for ARCH_AT32F4), where 8-bit mode is `0` (SPIv1 DFF=0).
+- `etbFunctions[0] = DC_Throttle1` is already the default via `setDefaultEtbParameters()`; TPS1/PPS1 inputs and ETB PWM/DIR (PB14/PB15) were already configured, so no ETB-params change was needed.
+
+Validation: not compiled here (user builds m74_9 himself; no arm-none-eabi-gcc on this host). Static cross-check done against at32_spi.cpp, SPIv1 LLD (SPID2 declared under STM32_SPI_USE_SPI2, RCC+DMA streams in spi_lld_start), spi.cpp getSckPin/initSpiModules and tle9201.cpp thread lifecycle.
+
+Open follow-ups:
+- After flash: expect console line `tle9201 Detected! (rev=...)` and periodic `tle9201 Diag` lines; `reset_9201` console command clears diag latch. If the thread stays silent, check that the saved MFS config has `is_enabled_spi_2=yes` and the three SPI2 pins set - stale saved settings override board defaults.
+- If SPI2 still does not come up, next candidate is the DMA stream allocation: AT32 mcuconf uses `STM32_DMA_STREAM_ID_ANY` for SPI2, same as SPI1 (L9779) which works.
+- Consider exposing ETB pin options (prepend.txt) and confirming the DIS disable-pin strategy with the watchdog line before finalizing the ETB control path.
+
 ## 2026-08-09 - m74_9 watchdog round 2: extended TIM5 snapshot with RCC gate + 100 ms delayed re-read
 
 What was done:
@@ -1071,3 +1095,53 @@ Open follow-ups:
   plus console-side frame-skip messages to confirm the link holds.
 - If a third-party node genuinely owns the 0x710/0x711 IDs, consider moving TS
   to a dedicated CAN or changing the console bus ID.
+
+## 2026-08-11 - m74_9 ETB (TLE9201 via SPI2): hard-hang root cause found, init moved to custom_board_InitHardware
+
+Symptom: after adding TLE9201 ETB support (SPI2 + PD0 CS + tle9201_add) the
+board died at power-on - no response, no JTAG reaction, only flashing right
+after power-up ("poking" openocd) worked. Rolling back the change restored
+normal boot, so the change itself was the culprit.
+
+Root cause (proved by code reading): `tle9201_add()` calls `chip.init()`
+synchronously, and `Tle9201::init()` calls `chThdCreateStatic()`
+(firmware/hw_layer/drivers/gpio/tle9201.cpp). The first version added
+tle9201_add() from `board_init_ext_gpios()`, which is called by `boardInit()`.
+ChibiOS `halInit()` calls `boardInit()` at the end (os/hal/src/hal.c:149),
+and firmware main.cpp calls `halInit()` BEFORE `chSysInit()`. So
+`chThdCreateStatic` ran on a non-initialized scheduler -> guaranteed hang /
+HardFault at power-on. L9779 was never affected because `l9779_add()` only
+registers a gpiochip; its thread is created later by `gpiochips_init()` from
+`initSmartGpio()` (after the kernel is up).
+
+Fix: split init by phase, same pattern as hellen154hyundai_f7:
+- `boardInit()` keeps only `board_init_ext_gpios()` (L9779 registration,
+  safe pre-OS);
+- new `m74_9_boardInitHardware()` (PD0 CS markUsed + push-pull idle high +
+  `tle9201_add(0, &tle9201_cfg)`) registered as `custom_board_InitHardware`,
+  which `initHardware()` invokes after `chSysInit()` and before
+  `initSpiModules()` (firmware/hw_layer/hardware.cpp:381 vs 402).
+
+Change set (firmware/config/boards/m74_9/):
+| Change | File |
+| --- | --- |
+| -DBOARD_TLE9201_COUNT=1, -DSTM32_SPI_USE_SPI2=TRUE | board.mk |
+| SPI2 pins D1(SCK AF6)/D3(MISO AF6)/D4(MOSI AF6), is_enabled_spi_2, tle9201_cfg on &SPID2, CS PD0, boardInit/boardInitHardware split | board_configuration.cpp |
+| STM32_SPI_USE_SPI2 guard (#ifndef) so board.mk define wins | hw_layer/ports/at32/at32f4/cfg/mcuconf.h |
+
+Notes: TLE9201_CONFIG_CR1/CR2 reuse SPIv1 defines; AT32 reuses
+stm32f4/device_mpu_util.h (CPU_HWLAYER = ports/stm32/stm32f4 in rusefi.mk for
+ARCH_AT32F4), so SPI_CR1_8BIT_MODE=0 etc. compile as on F4. spi2_af table in
+at32_spi.cpp confirms PD1/PD3/PD4 AF6 for SCK/MISO/MOSI.
+
+Validation: not built here (user builds firmware). User to run
+`cd firmware/config/boards/m74_9 && ./compile_m74_9.sh`; expected log:
+`tle9201_add()=0`, then after ~1-2 s `tle9201 Detected!` and periodic
+`tle9201 Diag` lines; console command `reset_9201` available.
+
+Open follow-ups:
+- Confirm board boots with the fix and TLE9201 answers on SPI2.
+- Then verify throttle movement on bench (PWM=B14, DIR=B15, TPS1 PC2/PC3,
+  PPS1 PC0/PC1 already configured).
+- If hang persists: isolate stepwise - A) board.mk+mcuconf only, B)
+  +BOARD_TLE9201_COUNT=1, C) +pins.

@@ -4,6 +4,7 @@
 #include "board_overrides.h"
 #include "smart_gpio.h"
 #include "drivers/gpio/l9779.h"
+#include "drivers/gpio/tle9201.h"
 
 // PB14 is error LED, configured in board.mk
 Gpio getCommsLedPin() {
@@ -81,6 +82,12 @@ static void m74_9_boardDefaultConfiguration() {
 	engineConfiguration->spi1mosiPin = Gpio::E15;
 	engineConfiguration->spi1misoPin = Gpio::E14;
 	engineConfiguration->spi1sckPin = Gpio::E13;
+
+	/* SPI2 is used for TLE9201 ETB H-bridge diagnostics (see setupEtb) */
+	engineConfiguration->is_enabled_spi_2 = true;
+	engineConfiguration->spi2sckPin = Gpio::D1;  // PD1 AF6, ETC_SCK
+	engineConfiguration->spi2misoPin = Gpio::D3; // PD3 AF6, ETC_SO
+	engineConfiguration->spi2mosiPin = Gpio::D4; // PD4 AF6, ETC_SI
 
   engineConfiguration->triggerInputPins[0] = Gpio::F8;
   engineConfiguration->camInputs[0] = Gpio::B9;
@@ -160,10 +167,33 @@ static struct l9779_config l9779_cfg = {
 	.pwm_gpio = {.port = NULL, .pad = 0}
 };
 
+static struct tle9201_config tle9201_cfg = {
+	.spi_bus = &SPID2,
+	.spi_config = {
+		.circular = false,
+#if defined(_CHIBIOS_RT_CONF_VER_6_1_) || defined(AT32F4XX)
+		.end_cb = nullptr,
+#else
+		.slave = false,
+		.data_cb = nullptr,
+		.error_cb = nullptr,
+#endif
+		/* TLE9201 ETB H-bridge: CS on PD0, GPIO-driven (idle high) */
+		.ssport = GPIOD,
+		.sspad = 0,
+		.cr1 = TLE9201_CONFIG_CR1,
+		.cr2 = TLE9201_CONFIG_CR2
+	}
+};
+
 static void board_init_ext_gpios()
 {
 	int ret;
 
+	/* L9779 only registers a gpiochip here (safe pre-OS); its thread and SPI
+	 * start later via gpiochips_init(). TLE9201 must NOT be added here: its
+	 * init() creates a thread (chThdCreateStatic), which hangs when called
+	 * from boardInit() before chSysInit() - see m74_9_boardInitHardware. */
 	ret = l9779_add(Gpio::L9779_IGN_1, 0, &l9779_cfg);
 	if (ret < 0) {
 		/* error */
@@ -171,10 +201,31 @@ static void board_init_ext_gpios()
 }
 
 /**
- * @brief Board-specific initialization code.
+ * @brief Called from halInit() BEFORE the kernel exists (chSysInit).
+ * @details Only L9779 may be registered here: it just registers a gpiochip,
+ * its thread starts later via gpiochips_init(). TLE9201 must NOT be added
+ * here - its init() calls chThdCreateStatic() and hangs the board at power-on.
  */
 void boardInit() {
 	board_init_ext_gpios();
+}
+
+/**
+ * @brief Board-specific init after the kernel is up.
+ * @details Runs from custom_board_InitHardware (post chSysInit, before
+ * initSpiModules). TLE9201::init() calls chThdCreateStatic(), which must not
+ * run from boardInit() - boardInit() is called from halInit() before the
+ * kernel exists and the board hangs at power-on. Same pattern as
+ * hellen154hyundai_f7.
+ */
+static void m74_9_boardInitHardware() {
+	/* TLE9201 ETB H-bridge: ETC_CS on PD0 */
+	gpio_pin_markUsed(GPIOD, 0, "TLE9201 ETB CS");
+	palSetPadMode(GPIOD, 0, PAL_MODE_OUTPUT_PUSHPULL);
+	palSetPad(GPIOD, 0);
+
+	int ret = tle9201_add(0, &tle9201_cfg);
+	efiPrintf("tle9201_add()=%d", ret);
 }
 
 static Gpio OUTPUTS[] = {
@@ -202,6 +253,7 @@ int getBoardMetaDcOutputsCount() {
     return 1;
 }
 void setup_custom_board_overrides() {
+	custom_board_InitHardware = m74_9_boardInitHardware;
 	custom_board_DefaultConfiguration = m74_9_boardDefaultConfiguration;
 	custom_board_ConfigOverrides = m74_9_boardConfigOverrides;
 }
