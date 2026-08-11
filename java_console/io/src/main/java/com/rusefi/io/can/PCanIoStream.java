@@ -157,8 +157,14 @@ public class PCanIoStream extends AbstractIoStream {
             // decodePacket(byte[]) passes the buffer length (127, see TPCANMsg workaround above) instead of
             // the actual DLC, so multi-frame assembly and the CRC check read garbage zero padding. Use the
             // size-aware overload with the real frame length.
-            byte[] decode = canDecoder.decodePacket(rx.getData(), rx.getLength());
-            listener.onDataArrived(decode);
+            try {
+                byte[] decode = canDecoder.decodePacket(rx.getData(), rx.getLength());
+                listener.onDataArrived(decode);
+            } catch (RuntimeException e) {
+                // A foreign device on the bus may use the same CAN ID with non-ISO-TP content
+                // (e.g. the OEM bus on a car). One bad frame must not kill the reader thread.
+                log.info("Ignoring undecodable frame " + String.format("%X", rx.getID()) + " " + HexBinary.printHexBinary(rx.getData()) + ": " + e);
+            }
 
             //            log.info("Decoded " + IoStream.printByteArray(decode));
         } else {

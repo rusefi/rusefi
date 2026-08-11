@@ -309,6 +309,36 @@ void initCan() {
 		return;
 	}
 
+#if defined(STM32F4XX) || defined(STM32F7XX)
+	// CANv1 (bxCAN) only: route TS-over-CAN frames (std id CAN_ECU_SERIAL_RX_ID) into FIFO0 and
+	// everything else into FIFO1. The RX thread drains FIFO0 first, so foreign bus traffic cannot
+	// starve or corrupt the TS channel. The mask includes the IDE bit, so extended frames whose
+	// low 11 bits collide with our id are rejected at the hardware level.
+	// Applied only when a single CAN peripheral (CAN1) is in use: with CAN2 the shared filter bank
+	// split is board-specific and left at the driver default.
+	if (STM32_CAN_USE_CAN1 && !STM32_CAN_USE_CAN2) {
+		for (size_t index = 0; index < EFI_CAN_BUS_COUNT; index++) {
+			if (device[index] == &CAND1) {
+				CANFilter filters[2];
+				filters[0].filter = 0;
+				filters[0].mode = 0;		// mask mode
+				filters[0].scale = 1;		// 32-bit
+				filters[0].assignment = 0;	// FIFO0
+				filters[0].register1 = (CAN_ECU_SERIAL_RX_ID << 21);
+				filters[0].register2 = (0x7FF << 21) | (1 << 19);	// compare id + IDE=0 (std only)
+				filters[1].filter = 1;
+				filters[1].mode = 0;
+				filters[1].scale = 1;
+				filters[1].assignment = 1;	// FIFO1
+				filters[1].register1 = 0;	// accept all other frames
+				filters[1].register2 = 0;
+				canSTM32SetFilters(&CAND1, STM32_CAN_MAX_FILTERS / 2, 2, filters);
+				break;
+			}
+		}
+	}
+#endif
+
 	// Initialize peripherals
 	for (size_t index = 0; index < EFI_CAN_BUS_COUNT; index++) {
 		if (device[index]) {

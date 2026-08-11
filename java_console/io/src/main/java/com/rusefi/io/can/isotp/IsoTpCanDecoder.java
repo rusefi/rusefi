@@ -58,7 +58,9 @@ public abstract class IsoTpCanDecoder {
                 setComplete(true);
                 break;
             case IsoTpConstants.ISO_TP_FRAME_FIRST:
-                this.waitingForNumBytes = ((data[isoHeaderByteIndex] & 0xf) << 8) | data[isoHeaderByteIndex + 1];
+                // mask to unsigned: a length byte with bit 7 set (e.g. 0x180 = 0x11 0x80) would
+                // sign-extend and become a huge negative waitingForNumBytes, then copyOfRange() throws
+                this.waitingForNumBytes = ((data[isoHeaderByteIndex] & 0xf) << 8) | (data[isoHeaderByteIndex + 1] & 0xff);
                 if (log.debugEnabled())
                     log.debug("Total expected: " + waitingForNumBytes);
                 this.waitingForFrameIndex = 1;
