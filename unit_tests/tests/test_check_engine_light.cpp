@@ -2,6 +2,7 @@
 
 #ifdef MODULE_CHECK_ENGINE_LIGHT
 
+#include "check_engine_light.h"
 #include "functional_sensor.h"
 #include "identity_func.h"
 #include "malfunction_central.h"
