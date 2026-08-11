@@ -103,7 +103,8 @@ pins:
     type: din
 
   - pin: 2A
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 2B
     function: +5v
@@ -140,7 +141,8 @@ pins:
     function: Boost Control Solenoid
 
   - pin: 2K
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 2L
     id: F3
@@ -319,10 +321,12 @@ pins:
     function: ETB -
 
   - pin: 4E
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 4F
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 4G
     id: [A7, EFI_ADC_7]

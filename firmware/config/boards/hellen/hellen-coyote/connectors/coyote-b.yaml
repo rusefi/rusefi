@@ -74,7 +74,8 @@ pins:
   - pin: B48
     function: UNUSED Oil Pressure Switch
   - pin: B49
-    function: Analog Ground
+    function: GNDA Analog/Sensor Ground
+    type: agnd
   - pin: B52
     function: Knock1 Neg
   - pin: B53

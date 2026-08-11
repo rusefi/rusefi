@@ -507,7 +507,8 @@ pins:
  #   function: high output
 
   - pin: 5H
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 5I
     id: E12
@@ -554,10 +555,12 @@ pins:
     function: +5v
 
   - pin: 5T
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 5U
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 5V
     function: +12V
@@ -566,7 +569,8 @@ pins:
     function: +12V
 
   - pin: 5X
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 5Z
     function: WBO_Vs/Ip

@@ -159,13 +159,16 @@ pins:
     function: MAF sensor
 
   - pin: 3A
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 3B
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 3C
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 3D
     id: [C1, EFI_ADC_11]
@@ -185,7 +188,8 @@ pins:
     function: TPS sensor input
 
   - pin: 3F
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 3G
     id: C13
@@ -286,7 +290,8 @@ pins:
     type: inj
 
   - pin: 4A
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 4B
     id: E12

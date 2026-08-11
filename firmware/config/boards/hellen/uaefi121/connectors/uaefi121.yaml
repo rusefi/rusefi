@@ -400,7 +400,7 @@ pins:
     color: black
 
   - pin: 62a
-    function: Analog ground also known as GNDA
+    function: Analog GND / sensor ground
     type: agnd
     color: black
 

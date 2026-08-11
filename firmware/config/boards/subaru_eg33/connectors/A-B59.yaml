@@ -120,10 +120,6 @@ pins:
     ts_name: A20 - Torque Ctrl Din
     type: av
 
-#  - pin: 21
-#    function: Sensors GND
-#    type: agnd
-
   - pin: 22
     function: Power/Chassis GND ground
     type: gnd

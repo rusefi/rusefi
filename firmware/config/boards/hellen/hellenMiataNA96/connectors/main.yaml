@@ -64,7 +64,8 @@ pins:
     function: VSS in
 
   - pin: 1O
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 1Q
     id: [F9]
@@ -132,10 +133,12 @@ pins:
     function: IAT sensor
 
   - pin: 2O
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 3A
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 3B
     id: EFI_ADC_5
@@ -145,10 +148,12 @@ pins:
     type: 12V
 
   - pin: 3C
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 3D
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: int_map
 # H144_IN_MAP3
@@ -241,7 +246,8 @@ pins:
     type: ls
 
   - pin: 4A
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 4B
     id: E12

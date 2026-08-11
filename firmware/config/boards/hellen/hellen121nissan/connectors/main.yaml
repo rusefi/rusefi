@@ -235,7 +235,8 @@ pins:
 
 
   - pin: 78a
-    function: GNDA
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: 79a
     id: B8

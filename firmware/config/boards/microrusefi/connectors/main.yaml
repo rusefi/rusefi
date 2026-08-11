@@ -116,7 +116,7 @@ pins:
     color: yellow
 
   - pin: 17
-    function: Signal GND
+    function: Analog GND / sensor ground
     type: agnd
     color: red right
 
@@ -145,7 +145,7 @@ pins:
     type: av
 
   - pin: 21
-    function: Signal GND
+    function: Analog GND / sensor ground
     type: agnd
     color: dark green
 
