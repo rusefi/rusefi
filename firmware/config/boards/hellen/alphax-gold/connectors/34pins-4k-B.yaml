@@ -207,7 +207,7 @@ pins:
 
   - pin: 27B
     function: GNDA
-    type: gnd
+    type: agnd
     color: black
 
   - pin: 28B

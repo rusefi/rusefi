@@ -191,7 +191,7 @@ pins:
 
   - pin: C23
     function: analog GND
-    type: gnd
+    type: agnd
 
   - pin: C24
     id: [A3, EFI_ADC_3]
@@ -207,7 +207,7 @@ pins:
 
   - pin: C26
     function: analog GND
-    type: gnd
+    type: agnd
 
   - pin: C27
     function: sensor +5v feed
@@ -431,7 +431,7 @@ pins:
 
   - pin: E24
     function: analog GND
-    type: gnd
+    type: agnd
 
   - pin: E25
 # H144_LS_7
@@ -454,7 +454,7 @@ pins:
 
   - pin: E28
     function: analog GND
-    type: gnd
+    type: agnd
 
   - pin: E29
     id: [C2, EFI_ADC_12]
@@ -475,7 +475,7 @@ pins:
 
   - pin: E32
     function: analog GND
-    type: gnd
+    type: agnd
 
   - pin: E33
     function: sensor +5v feed
@@ -507,7 +507,7 @@ pins:
 
   - pin: E39
     function: analog GND
-    type: gnd
+    type: agnd
 
   - pin: E40
     id: [A6, EFI_ADC_6]
@@ -551,7 +551,7 @@ pins:
 
   - pin: E48
     function: analog GND
-    type: gnd
+    type: agnd
 
   - pin: F1
     ts_name: F1 - ETB (-)

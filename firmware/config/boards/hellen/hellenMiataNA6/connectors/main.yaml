@@ -178,12 +178,12 @@ pins:
 
   - pin: 3C
     function: Sensor GND
-    type: gnd
+    type: agnd
     color: white
 
   - pin: 3D
     function: Sensor GND
-    type: gnd
+    type: agnd
     color: white
 
   - pin: 3E

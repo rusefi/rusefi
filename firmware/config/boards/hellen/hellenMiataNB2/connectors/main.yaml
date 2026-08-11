@@ -359,7 +359,7 @@ pins:
 
   - pin: 4O
     function: Sensor GND
-    type: gnd
+    type: agnd
     color: black B2
 
   - pin: 4P

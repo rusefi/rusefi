@@ -104,7 +104,7 @@ pins:
   - pin: 25C
     function: Analog Ground
     color: black
-    type: gnd
+    type: agnd
 
   - pin: 26C
     # H144_LS_8

@@ -147,62 +147,62 @@ pins:
 
   - pin: 23A
     function: GNDA Analog/Sensor Ground
-    type: gnd
+    type: agnd
     color: black
 
   - pin: 24A
     function: GNDA Analog/Sensor Ground
-    type: gnd
+    type: agnd
     color: black
 
   - pin: 25A
     function: GNDA Analog/Sensor Ground
-    type: gnd
+    type: agnd
     color: black
 
   - pin: 26A
     function: GNDA Analog/Sensor Ground
-    type: gnd
+    type: agnd
     color: black
 
   - pin: 27A
     function: GNDA Analog/Sensor Ground
-    type: gnd
+    type: agnd
     color: black
 
   - pin: 28A
     function: GNDA Analog/Sensor Ground
-    type: gnd
+    type: agnd
     color: black
 
   - pin: 29A
     function: GNDA Analog/Sensor Ground
-    type: gnd
+    type: agnd
     color: black
 
   - pin: 30A
     function: GNDA Analog/Sensor Ground
-    type: gnd
+    type: agnd
     color: black
 
   - pin: 31A
     function: GNDA Analog/Sensor Ground
-    type: gnd
+    type: agnd
     color: black
 
   - pin: 32A
     function: GNDA Analog/Sensor Ground
-    type: gnd
+    type: agnd
     color: black
 
   - pin: 33A
     function: GNDA Analog/Sensor Ground
-    type: gnd
+    type: agnd
     color: black
 
   - pin: 34A
     function: GNDA Analog/Sensor Ground
-    type: gnd
+    type: agnd
     color: black
 
 #  - pin: 1B
@@ -370,13 +370,13 @@ pins:
   - pin: 23B
     function: GNDA Analog/Sensor Ground
 
-    type: gnd
+    type: agnd
     color: black
 
   - pin: 24B
     function: GNDA Analog/Sensor Ground
 
-    type: gnd
+    type: agnd
     color: black
 
   - pin: 25B

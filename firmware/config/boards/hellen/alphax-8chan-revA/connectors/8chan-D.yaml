@@ -127,7 +127,7 @@ pins:
   - pin: 24D
     function: Analog Ground
     color: black
-    type: gnd
+    type: agnd
 
 info:
   title: AlphaX 8chan

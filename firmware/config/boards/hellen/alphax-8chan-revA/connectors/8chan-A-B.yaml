@@ -51,7 +51,7 @@ pins:
   - pin: 7A
     function: Analog Ground
     color: black
-    type: gnd
+    type: agnd
 
   - pin: 8A
     function: Crank VR (configurable VR or HALL with pull-up)
@@ -185,7 +185,7 @@ pins:
   - pin: 24A
     function: Analog Ground
     color: black
-    type: gnd
+    type: agnd
 
   - pin: 25A
     function: Power/Chassis GND ground

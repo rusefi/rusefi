@@ -28,7 +28,7 @@ pins:
 
   - pin: A5
     function: Sensor Ground
-    type: gnd
+    type: agnd
     color: brown
 
   - pin: A6

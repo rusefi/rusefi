@@ -192,7 +192,7 @@ pins:
 
   - pin: 27A
     function: Analog Ground
-    type: gnd
+    type: agnd
     color: black
 
   - pin: 28A

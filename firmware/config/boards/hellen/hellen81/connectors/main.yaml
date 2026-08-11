@@ -120,7 +120,7 @@ pins:
 
   - pin: 17
     function: TMOT, TPS sensor analog GND
-    type: gnd
+    type: agnd
     color: black
 
   - pin: 18
@@ -235,7 +235,7 @@ pins:
   - pin: 35
     function: MAP/MAF Sensor Analog GND
     color: black
-    type: gnd
+    type: agnd
 
   - pin: 36
     function: Lambda O2-sensor Gnd

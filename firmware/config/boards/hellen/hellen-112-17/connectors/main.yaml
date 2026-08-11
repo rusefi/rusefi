@@ -21,16 +21,16 @@ pins:
 
   - pin: A03
     function: Analog GND
-    type: gnd
+    type: agnd
   - pin: A04
     function: Analog GND
-    type: gnd
+    type: agnd
   - pin: A05
     function: Analog GND
-    type: gnd
+    type: agnd
   - pin: A06
     function: Analog GND
-    type: gnd
+    type: agnd
 
   - pin: A07
     meta: MM100_IN_CAM_ANALOG
@@ -232,22 +232,22 @@ pins:
 
   - pin: B04
     function: Analog GND
-    type: gnd
+    type: agnd
 
   - pin: B05
     function: Analog GND
-    type: gnd
+    type: agnd
 
   - pin: B06
     function: Analog GND
-    type: gnd
+    type: agnd
   - pin: B07
     function: Analog GND
-    type: gnd
+    type: agnd
 # Polaris CLT GND
   - pin: B08
     function: Analog GND
-    type: gnd
+    type: agnd
 
   - pin: B10
     function: Pedal +5V Supply
@@ -313,7 +313,7 @@ pins:
   - pin: B38
     # jumper
     function: Analog GND for Knock
-    type: gnd
+    type: agnd
 
   - pin: B42
     meta: MM100_INJ2
@@ -342,7 +342,7 @@ pins:
     type: ls
   - pin: B47
     function: Analog GND
-    type: gnd
+    type: agnd
 
   - pin: B50
     function: Power/Chassis GND ground

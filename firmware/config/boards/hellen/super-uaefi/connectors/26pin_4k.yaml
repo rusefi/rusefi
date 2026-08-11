@@ -86,7 +86,7 @@ pins:
 
   - pin: 16D
     function: GNDA Analog/Sensor Ground
-    type: gnd
+    type: agnd
     color: black
 
   - pin: 17D
@@ -120,7 +120,7 @@ pins:
 
   - pin: 23D
     function: GNDA Analog/Sensor Ground
-    type: gnd
+    type: agnd
     color: black
 
   - pin: 24D
