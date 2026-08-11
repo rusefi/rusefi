@@ -105,5 +105,9 @@ SSHCMD
      echo "$SCRIPT_NAME: DONE $FULL_BUNDLE_FILE -> ${CURRENT_FOLDER}"
  done
 else
- echo "$SCRIPT_NAME: Upload not configured"
+ MISSING=""
+ [ -z "$USER" ] && MISSING="${MISSING} USER(arg1)"
+ [ -z "$PASS" ] && MISSING="${MISSING} PASS(arg2)"
+ [ -z "$HOST" ] && MISSING="${MISSING} HOST(arg3)"
+ echo "$SCRIPT_NAME: Upload not configured: missing${MISSING} - typically RUSEFI_SSH_USER/RUSEFI_SSH_PASS/RUSEFI_SSH_SERVER secrets are not available on this build"
 fi
