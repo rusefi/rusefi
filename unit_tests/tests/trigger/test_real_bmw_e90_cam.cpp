@@ -60,8 +60,6 @@ TEST(realBmwE90, realCams) {
 				positionUpdates[cam],
 				lastSeenPosition[cam]);
 
-		// VVT_BOSCH_QUICK_START never completed a single cam cycle on this capture;
-		// VVT_BMW_VANOS_RELUCTOR holds sync over consecutive cycles during the stable idle stretch
 		EXPECT_TRUE(everSynced[cam]) << "cam " << cam;
 		EXPECT_GE(maxSyncCounter[cam], 5) << "cam " << cam;
 		EXPECT_GE(positionUpdates[cam], 20) << "cam " << cam;
