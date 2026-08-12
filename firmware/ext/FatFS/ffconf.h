@@ -114,7 +114,11 @@
 
 
 #define FF_USE_LFN		2
-#define FF_MAX_LFN		32
+
+#ifndef FF_MAX_LFN
+#define FF_MAX_LFN	32
+#endif // FF_MAX_LFN
+
 /* The FF_USE_LFN switches the support for LFN (long file name).
 /
 /   0: Disable LFN. FF_MAX_LFN has no effect.
@@ -221,7 +225,7 @@
 
 
 #define FF_MIN_GPT		0x10000000
-/* Minimum number of sectors to switch GPT as partitioning format in f_mkfs() and 
+/* Minimum number of sectors to switch GPT as partitioning format in f_mkfs() and
 /  f_fdisk(). 2^32 sectors maximum. This option has no effect when FF_LBA64 == 0. */
 
 

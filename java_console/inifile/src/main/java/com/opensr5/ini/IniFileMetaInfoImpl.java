@@ -16,11 +16,15 @@ public class IniFileMetaInfoImpl implements IniFileMetaInfo {
     private final int nPages;
     private final String signature;
     private final List<String> pageReadCommands;
+    private final List<String> burnCommands = new ArrayList<>();
 /*
     private final List<String> crc32CheckCommands;
     private int totalSize;
 */
     private final List<Integer> pageSizes = new ArrayList<>();
+    // TS wire page identifiers (e.g. 0x0400 for the Lua page), positionally aligned with the
+    // page= blocks.  May be empty for older inis without a pageIdentifier line.
+    private final List<Integer> pageIdentifiers = new ArrayList<>();
     private final int ochBlockSize;
 
     /**
@@ -53,9 +57,25 @@ public class IniFileMetaInfoImpl implements IniFileMetaInfo {
             }
 
             pageReadCommands = file.getValues("pageReadCommand");
+            try {
+                burnCommands.addAll(file.getValues("burnCommand"));
+            } catch (MandatoryLineMissing ignored) {
+                for (int page = 0; page < nPages; page++) {
+                    burnCommands.add(page == 0 ? "B" : "");
+                }
+            }
 /*
             crc32CheckCommands = file.getValues("crc32CheckCommand");
  */
+            // pageIdentifier is optional: older inis (and any single-page controller .ini) may
+            // omit it.  When present it gives the real TS wire page id for each page block.
+            try {
+                for (String value : file.getValues("pageIdentifier")) {
+                    pageIdentifiers.add(parsePageIdentifier(value));
+                }
+            } catch (MandatoryLineMissing ignored) {
+                // leave pageIdentifiers empty -> getPageIdentifier() falls back to the ordinal
+            }
         } catch (MandatoryLineMissing e) {
             throw new RuntimeException("While reading " + file.msg, e);
         }
@@ -93,6 +113,11 @@ public class IniFileMetaInfoImpl implements IniFileMetaInfo {
         return pageReadCommands.get(pageIndex);
     }
 
+    @Override
+    public String getBurnCommand(int pageIndex) {
+        return burnCommands.get(pageIndex);
+    }
+
     /*
     @Override
     public String getCrc32CheckCommand(int pageIndex) {
@@ -102,5 +127,39 @@ public class IniFileMetaInfoImpl implements IniFileMetaInfo {
     @Override
     public int getPageSize(int pageIndex) {
         return pageSizes.get(pageIndex);
+    }
+
+    @Override
+    public int getPageIdentifier(int pageIndex) {
+        if (pageIndex >= 0 && pageIndex < pageIdentifiers.size()) {
+            return pageIdentifiers.get(pageIndex);
+        }
+        // Fallback for inis without a pageIdentifier line - preserves the legacy ordinal
+        // behavior, which is correct for the main page (ordinal 0 == identifier 0x0000).
+        return pageIndex;
+    }
+
+    /**
+     * Parse a single {@code pageIdentifier} token into its 16-bit wire value.  The generator
+     * emits each identifier little-endian as two {@code \xNN} byte escapes, e.g. the Lua page
+     * {@code "\x00\x04"} decodes to 0x0400.  (Quotes are already stripped by the tokenizer.)
+     */
+    public static int parsePageIdentifier(String token) {
+        String t = token.trim();
+        if (t.contains("\\x")) {
+            int value = 0;
+            int shift = 0;
+            for (String part : t.split("\\\\x")) {
+                if (part.length() < 2) {
+                    continue;
+                }
+                int b = Integer.parseInt(part.substring(0, 2), 16);
+                value |= (b & 0xff) << shift; // first byte is the low byte (little-endian)
+                shift += 8;
+            }
+            return value;
+        }
+        // Plain decimal/hex fallback in case a future .ini stops using \x escapes.
+        return Integer.decode(t);
     }
 }

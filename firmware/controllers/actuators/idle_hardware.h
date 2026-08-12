@@ -12,3 +12,12 @@
 void initIdleHardware();
 bool isIdleHardwareRestartNeeded();
 bool isIdleMotorBusy();
+
+#if EFI_UNIT_TEST
+float getIdleSolenoidOpenDutyForUnitTest();
+float getIdleSolenoidCloseDutyForUnitTest();
+
+class StepperMotorBase;
+StepperMotorBase& getIacMotorForUnitTest();
+void resetIdleHardwareForUnitTest();
+#endif // EFI_UNIT_TEST

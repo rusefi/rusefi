@@ -21,7 +21,7 @@ class EngineTestHelperBase
 public:
 	// we have the base method and base constructor in order to better control order if initialization
 	// base constructor contains things which need to be executed first
-	EngineTestHelperBase(Engine * eng, engine_configuration_s * config, persistent_config_s * pers);
+	EngineTestHelperBase(Engine * eng, persistent_config_s * pers);
 	~EngineTestHelperBase();
 };
 
@@ -68,6 +68,7 @@ public:
 	void moveTimeForwardAndInvokeEventsUs(int deltaTimeUs);
 	void setTimeNtAndInvokeCallBacks(efitick_t nt);
 	void setTimeAndInvokeEventsUs(int timeNowUs);
+	void setTimeAndInvokeEventsNt(efitick_t timeNowNt);
 	void moveTimeForwardAndInvokeEventsSec(int deltaTimeSeconds);
 	/**
 	 * both Rise and Fall
@@ -90,6 +91,15 @@ public:
 	 * a healthy test should probably use executeActions instead?
 	 */
 	void clearQueue();
+	/**
+	 * Like clearQueue()/executeAll() but preserves the simulated mock clock
+	 * across the call. Without this, the scheduler busy-wait in event_queue.cpp
+	 * advances time to each scheduled event's future moment, distorting any
+	 * subsequent inter-tooth interval or RPM computation.
+	 * See rusefi issue #6457.
+	 */
+	void clearQueuePreservingTime();
+	void executeAllPreservingTimeUs(efitimeus_t deadlineUs);
 
 	scheduling_s * assertEvent5(const char *msg, int index, action_s const& action, efitimeus_t expectedTimestamp);
 	scheduling_s * assertScheduling(const char *msg, int index, scheduling_s *expected, action_s const& action, efitimeus_t expectedTimestamp);
@@ -128,6 +138,8 @@ void setupSimpleTestEngineWithMaf(EngineTestHelper *eth, injection_mode_e inject
 void setVerboseTrigger(bool isEnabled);
 
 warningBuffer_t * getRecentWarnings();
+// true if the recent-warnings buffer contains the given code
+bool hasRecentWarningCode(ObdCode code);
 
 // used by EngineTestHelper::spin60_2UntilDeg func
 struct testSpinEngineUntilData {
@@ -135,3 +147,24 @@ struct testSpinEngineUntilData {
 	int currentTooth;
 	int toothCount;
 };
+
+void setUnitTestCreateLogs(bool enabled);
+bool getUnitTestCreateLogs();
+
+/**
+ * RAII helper: toggle unit-test log creation for the duration of a test,
+ * restoring the previous value on scope exit.
+ */
+struct ScopedUnitTestCreateLogs {
+	bool saved;
+	explicit ScopedUnitTestCreateLogs(bool enabled) : saved(getUnitTestCreateLogs()) {
+		setUnitTestCreateLogs(enabled);
+	}
+	~ScopedUnitTestCreateLogs() {
+		setUnitTestCreateLogs(saved);
+	}
+};
+
+void sayByeBye();
+// Removes all files from TEST_RESULTS_DIR except .gitignore and readme.md.
+void cleanTestResultsFolder();

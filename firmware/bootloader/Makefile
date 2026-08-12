@@ -1,9 +1,5 @@
 #
-# this Makefile is intended to be invoked from one level above - see ..\compile_bootloader.sh
-#
-
 # by default EXTRA_PARAMS is empty and we create 'debug' version of the firmware with additional assertions and statistics
-# for 'release' options see 'clean_compile_two_versions.bat' file
 
 ifeq ($(DEBUG_LEVEL_BLT_OPT),)
   # this value would be used by default. For 'debug' configuration override with '-O0 -ggdb -g' or something along these lines
@@ -14,11 +10,10 @@ endif
 # Disable ChibiOS memory core and heap
 DDEFS += -DCH_CFG_USE_MEMCORE=FALSE -DCH_CFG_USE_HEAP=FALSE
 
-DDEFS += -DENABLE_AUTO_DETECT_HSE=TRUE -DSTM32_HSECLK=25000000
-
 # disable some modules to shrink bootloader binary
 DDEFS += -DEFI_BOOTLOADER
-DDEFS += -DHAL_USE_EXT=FALSE -DHAL_USE_ICU=FALSE -DHAL_USE_PWM=FALSE -DHAL_USE_RTC=FALSE -DEF_LUA=FALSE
+DDEFS += -DHAL_USE_EXT=FALSE -DHAL_USE_ICU=FALSE -DHAL_USE_PWM=FALSE -DHAL_USE_RTC=FALSE
+DDEFS += $(TS_PAGE_GUARD_DEFS)
 #disable ChibiOS flash driver and prevent header from include
 DDEFS += -DHAL_USE_FLASH=FALSE
 
@@ -32,7 +27,6 @@ DDEFS += -DSTM32_NOCACHE_ENABLE=FALSE
 DDEFS += -DEFI_UNIT_TEST=0 -DEFI_PROD_CODE=1 -DEFI_SIMULATOR=0
 
 PROJECT_DIR = ..
-include $(PROJECT_DIR)/rusefi_rules.mk
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
@@ -76,7 +70,7 @@ endif
 
 # Linker extra options here.
 ifeq ($(USE_LDOPT),)
-  USE_LDOPT =
+  USE_LDOPT = --print-memory-usage
 endif
 
 # Enable this if you want link time optimizations (LTO)
@@ -100,6 +94,8 @@ ifeq ($(USE_SMART_BUILD),)
   USE_SMART_BUILD = no
 endif
 
+include $(PROJECT_DIR)/rusefi.mk
+
 #
 # Build global options
 ##############################################################################
@@ -111,7 +107,7 @@ endif
 # Stack size to be allocated to the Cortex-M process stack. This stack is
 # the stack used by the main() thread.
 ifeq ($(USE_PROCESS_STACKSIZE),)
-  USE_PROCESS_STACKSIZE = 0x0600
+  USE_PROCESS_STACKSIZE = 0x0800
 endif
 
 # Stack size to the allocated to the Cortex-M main/exceptions stack. This
@@ -128,6 +124,9 @@ endif
 # Project, sources and paths
 #
 
+BOARDINC = $(BOARD_DIR)
+include $(BOARD_DIR)/board.mk
+
 ifeq ($(PROJECT_BOARD),)
 ifneq ($(SHORT_BOARD_NAME),)
   PROJECT_BOARD = $(SHORT_BOARD_NAME)
@@ -135,6 +134,9 @@ else
   PROJECT_BOARD = f407-discovery
 endif
 endif
+
+# should be after 'board.mk'
+include $(PROJECT_DIR)/rusefi_rules.mk
 
 # Define project name here
 PROJECT = openblt_$(PROJECT_BOARD)
@@ -154,8 +156,6 @@ include $(PROJECT_DIR)/common_libfirmware.mk
 RULESPATH = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk
 RULESFILE = $(RULESPATH)/rules.mk
 
-include $(PROJECT_DIR)/rusefi.mk
-
 CONFIG = $(PROJECT_DIR)/config
 
 # Include various ChibiOS mk files
@@ -174,15 +174,17 @@ include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
 # EX files (optional).
 include $(CHIBIOS)/os/hal/lib/streams/streams.mk
 
-BOARDINC = $(BOARD_DIR)
-include $(BOARD_DIR)/board.mk
-
 ifeq (,$(filter clean,$(MAKECMDGOALS)))
 ifeq ($(SHORT_BOARD_NAME),)
 $(error SHORT_BOARD_NAME not set, something wrong with your meta-info.env file)
 endif
 endif
 DDEFS += -DSHORT_BOARD_NAME=$(SHORT_BOARD_NAME)
+
+ifeq (,$(WHITE_LABEL))
+WHITE_LABEL = rusefi
+endif
+DDEFS += -DXCP_STATION_ID='"$(WHITE_LABEL).$(SHORT_BOARD_NAME)"'
 
 include $(PROJECT_DIR)/init/init.mk
 include $(PROJECT_DIR)/util/util.mk
@@ -207,7 +209,8 @@ CSRC =  $(ALLCSRC) \
 	$(PROJECT_DIR)/ext/openblt/Target/Source/xcp.c \
 	$(PROJECT_DIR)/ext/openblt/Target/Source/cop.c \
 	$(PROJECT_DIR)/bootloader/openblt_chibios/nvm.c \
-	$(PROJECT_DIR)/hw_layer/openblt/hooks.c \
+	$(PROJECT_DIR)/bootloader/openblt_chibios/clock-arch.c \
+	$(PROJECT_DIR)/hw_layer/openblt/hooks.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # todo: reduce code duplication with primary Makefile!!!
@@ -294,7 +297,32 @@ INCDIR += $(ALLINC) \
 	$(PROJECT_DIR)/hw_layer/openblt \
 	$(PROJECT_DIR)/ext/openblt/Target/Source \
 	$(PROJECT_DIR)/bootloader/openblt_chibios \
+	$(UIP_DIR)/uip \
+	$(UIP_DIR)/apps/dhcpc \
 	config
+
+ifeq ($(EFI_ETHERNET),yes)
+	DDEFS += -DEFI_ETHERNET=TRUE
+
+	UIP_DIR = $(PROJECT_DIR)/ext/openblt/Target/Source/third_party/uip
+
+	# Collect network and UIP third party library files
+	UIP_CSRC = \
+		$(UIP_DIR)/uip/uip.c \
+		$(UIP_DIR)/uip/uip_arp.c \
+		$(UIP_DIR)/uip/uip_timer.c \
+		$(UIP_DIR)/uip/uiplib.c \
+		$(UIP_DIR)/apps/dhcpc/dhcpc.c \
+		$(PROJECT_DIR)/hw_layer/openblt/netdev.c
+
+	CSRC += \
+		$(PROJECT_DIR)/ext/openblt/Target/Source/net.c \
+		$(UIP_CSRC)
+
+	INCDIR += \
+		$(UIP_DIR)/uip \
+		$(UIP_DIR)/apps/dhcpc
+endif
 
 BUILDDIR=blbuild
 
@@ -369,6 +397,8 @@ ULIBS = -lm --specs=nano.specs
 ##############################################################################
 
 include $(RULESFILE)
+
+$(BUILDDIR)/$(PROJECT).elf: $(LDSCRIPT_DEPS)
 
 include $(PROJECT_DIR)/target_sentinel.mk
 

@@ -31,7 +31,7 @@ New board procedure once you have new folder in this *boards* directory
 3) add connector pinout mapping [yaml](https://en.wikipedia.org/wiki/YAML) file see examples of yaml files in 'connectors' subfolders here.
 
 
-See also https://github.com/rusefi/rusefi/wiki/Hardware
+See also https://wiki.rusefi.com/Hardware
 
 
 ## FAQ
@@ -42,11 +42,11 @@ A: Primary UART, critical error LED pin and maybe a couple more of the most fund
 
 # Q: I need more info!
 
-A: please remember about https://github.com/rusefi/rusefi/wiki/Hardware#q-this-is-all-very-cool-but-you-guys-do-not-have-a-plugplay-for-my-trabant-i-think-i-will-go-and-make-a-new-rusefi-board-just-for-my-trabant
+A: please remember about https://wiki.rusefi.com/Hardware#q-this-is-all-very-cool-but-you-guys-do-not-have-a-plugplay-for-my-trabant-i-think-i-will-go-and-make-a-new-rusefi-board-just-for-my-trabant
 
 # Q: I insist on custom
 
-A: https://github.com/rusefi/rusefi/wiki/Custom-Firmware
+A: https://wiki.rusefi.com/Custom-Firmware
 
 # Q: I want to build the firmware in debug mode
 

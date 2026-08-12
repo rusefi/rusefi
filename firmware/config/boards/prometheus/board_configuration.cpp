@@ -51,8 +51,6 @@ static void setPrometheusDefaults() {
 	engineConfiguration->useLinearCltSensor = true;
 
 	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
-	engineConfiguration->canReadEnabled = true;
-	engineConfiguration->canWriteEnabled = false;
 
 	engineConfiguration->tpsMin = convertVoltageTo10bitADC(0.250);
 	engineConfiguration->tpsMax = convertVoltageTo10bitADC(4.538);

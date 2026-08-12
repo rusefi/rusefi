@@ -7,12 +7,18 @@
  */
 
 #include "pch.h"
+#include "board_overrides.h"
+
+std::optional<setup_custom_board_adjust_voltage_type> custom_board_boardAdjustVoltage;
 
 float PUBLIC_API_WEAK getAnalogInputDividerCoefficient(adc_channel_e) {
     return engineConfiguration->analogInputDividerCoefficient;
 }
 
-float PUBLIC_API_WEAK boardAdjustVoltage(float voltage, adc_channel_e /* hwChannel */) {
+float boardAdjustVoltage(float voltage, adc_channel_e hwChannel) {
+	if (custom_board_boardAdjustVoltage.has_value()) {
+		return custom_board_boardAdjustVoltage.value()(voltage, hwChannel);
+	}
 	// a hack useful when we do not trust voltage just after board EN was turned on. is this just hiding electrical design flaws?
 	return voltage;
 }
@@ -31,6 +37,8 @@ int PUBLIC_API_WEAK boardGetAnalogInputDiagnostic(adc_channel_e channel, float) 
 	if (isAdcChannelOnChip(channel)) {
 		return (boardGetAnalogDiagnostic() == ObdCode::None) ? 0 : -1;
 	}
+#else
+  UNUSED(channel);
 #endif // EFI_PROD_CODE
 
 	/* input is outside chip/ECU */

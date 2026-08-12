@@ -22,11 +22,11 @@ CsvReader::~CsvReader() {
 	}
 }
 
-void CsvReader::open(const char *fileName, const int* triggerColumnIndeces, const int *vvtColumnIndeces) {
+void CsvReader::open(const char *fileName, const int* triggerColumns, const int *vvtColumns) {
 	printf("Reading from %s\r\n", fileName);
 	fp = fopen(fileName, "r");
-	this->triggerColumnIndeces = triggerColumnIndeces;
-	this->vvtColumnIndeces = vvtColumnIndeces;
+	this->triggerColumnIndeces = triggerColumns;
+	this->vvtColumnIndeces = vvtColumns;
 	ASSERT_TRUE(fp != nullptr);
 }
 
@@ -55,11 +55,11 @@ static const char COMMA_SEPARATOR[2] = ",";
  */
 double CsvReader::readTimestampAndValues(double *values) {
 	char *timeStampstr = readFirstTokenAndRememberInputString(buffer);
-	double timeStamp = std::stod(timeStampstr);
+	double timeStamp = std::atof(timeStampstr);
 
 	for (size_t i = 0; i < m_triggerCount; i++) {
 		char *triggerToken = readNextToken();
-		values[i] = std::stod(triggerToken);
+		values[i] = std::atof(triggerToken);
 	}
 
 	return timeStamp;
@@ -71,30 +71,72 @@ double CsvReader::readTimestampAndValues(double *values) {
 
 // todo: separate trigger handling from csv file processing, maybe reuse 'readTimestampAndValues'?
 void CsvReader::processLine(EngineTestHelper *eth) {
-	Engine *engine = &eth->engine;
-
-	const char s[2] = ",";
-	char *timeStampstr = readFirstTokenAndRememberInputString(buffer);
-
-  for (int i = 0;i<readingOffset;i++) {
-    readNextToken();
-  }
-
 	bool newTriggerState[TRIGGER_INPUT_PIN_COUNT];
 	bool newVvtState[CAM_INPUTS_COUNT];
 
-	for (size_t i = 0;i<m_triggerCount;i++) {
-		char * triggerToken = readNextToken();
-		newTriggerState[triggerColumnIndeces[i]] = triggerToken[0] == '1';
-	}
+	char *timeStampstr;
 
-	for (size_t i = 0;i<m_vvtCount;i++) {
-		char *vvtToken = readNextToken();
-		if (vvtToken == nullptr) {
-			criticalError("Null token in [%s]", buffer);
+	if (timestampColumnIndex < 0) {
+		// legacy layout: first column is the timestamp, then optional skipped
+		// columns, then the trigger and vvt channels
+		timeStampstr = readFirstTokenAndRememberInputString(buffer);
+
+		for (int i = 0; i < readingOffset; i++) {
+			readNextToken();
 		}
-		bool state = vvtToken[0] == '1';
-		newVvtState[vvtColumnIndeces[i]] = state;
+
+		for (size_t i = 0; i < m_triggerCount; i++) {
+			char *triggerToken = readNextToken();
+			newTriggerState[triggerColumnIndeces[i]] = triggerToken != nullptr && triggerToken[0] == '1';
+		}
+
+		for (size_t i = 0; i < m_vvtCount; i++) {
+			char *vvtToken = readNextToken();
+			if (vvtToken == nullptr) {
+				criticalError("Null token in [%s]", buffer);
+			}
+			newVvtState[vvtColumnIndeces[i]] = vvtToken[0] == '1';
+		}
+	} else {
+		// explicit layout: tokenize the whole line into columns, then pick the
+		// timestamp column and the trigger/vvt channels which start at
+		// 'readingOffset'
+		static const size_t MAX_COLUMNS = 32;
+		char *columns[MAX_COLUMNS] = {};
+		size_t columnCount = 0;
+
+		char *token = readFirstTokenAndRememberInputString(buffer);
+		while (token != nullptr && columnCount < MAX_COLUMNS) {
+			columns[columnCount++] = token;
+			token = readNextToken();
+		}
+
+		if ((size_t)timestampColumnIndex >= columnCount
+				|| readingOffset + m_triggerCount + m_vvtCount > columnCount) {
+			// not a data row (e.g. a "MARK ###" marker line) - skip it
+			return;
+		}
+		timeStampstr = columns[timestampColumnIndex];
+
+		// skip header/units rows where the timestamp column is not numeric
+		// (e.g. "Time" or "ms"); this recording carries several header lines
+		if (timeStampstr == nullptr
+				|| !(isdigit((unsigned char)timeStampstr[0]) || timeStampstr[0] == '-' || timeStampstr[0] == '+' || timeStampstr[0] == '.')) {
+			return;
+		}
+
+		for (size_t i = 0; i < m_triggerCount; i++) {
+			char *triggerToken = columns[readingOffset + i];
+			newTriggerState[triggerColumnIndeces[i]] = triggerToken != nullptr && triggerToken[0] == '1';
+		}
+
+		for (size_t i = 0; i < m_vvtCount; i++) {
+			char *vvtToken = columns[readingOffset + m_triggerCount + i];
+			if (vvtToken == nullptr) {
+				criticalError("Null token in [%s]", buffer);
+			}
+			newVvtState[vvtColumnIndeces[i]] = vvtToken[0] == '1';
+		}
 	}
 
 	if (timeStampstr == nullptr) {
@@ -102,8 +144,16 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 		return;
 	}
 
-	double timeStamp = std::stod(timeStampstr);
+	double timeStamp = std::atof(timeStampstr) * timestampScale;
 	history.add(timeStamp);
+
+	if (normalizeTimestamps) {
+		if (!m_haveTimestampBase) {
+			m_timestampBase = timeStamp;
+			m_haveTimestampBase = true;
+		}
+		timeStamp -= m_timestampBase;
+	}
 
 	timeStamp += m_timestampOffset;
 

@@ -1,4 +1,4 @@
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Mon Oct 27 13:11:54 UTC 2025
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Wed Aug 05 11:27:05 UTC 2026
 // see also gen_config_and_enums.bat
 
 
@@ -20,6 +20,12 @@ const char *getMsIoBoxId(MsIoBoxId value);
 #endif //__cplusplus
 #if __cplusplus
 const char *getMsIoBoxVss(MsIoBoxVss value);
+#endif //__cplusplus
+#if __cplusplus
+const char *getRotationalCutMode(RotationalCutMode value);
+#endif //__cplusplus
+#if __cplusplus
+const char *getSDLoggerMode(SDLoggerMode value);
 #endif //__cplusplus
 #if __cplusplus
 const char *getSelectedGear(SelectedGear value);
@@ -51,6 +57,8 @@ const char *getAntiLagActivationMode_e(antiLagActivationMode_e value);
 const char *getBoostType_e(boostType_e value);
 const char *getBrain_pin_diag_e(brain_pin_diag_e value);
 const char *getCan_baudrate_e(can_baudrate_e value);
+const char *getCan_broadcast_channel_e(can_broadcast_channel_e value);
+const char *getCan_bus_channel_e(can_bus_channel_e value);
 const char *getCan_nbc_e(can_nbc_e value);
 const char *getCan_vss_nbc_e(can_vss_nbc_e value);
 const char *getCan_wbo_aem_id_e(can_wbo_aem_id_e value);
@@ -68,6 +76,8 @@ const char *getGear_e(gear_e value);
 const char *getGppwm_channel_e(gppwm_channel_e value);
 const char *getGppwm_compare_mode_e(gppwm_compare_mode_e value);
 const char *getHpfp_cam_e(hpfp_cam_e value);
+const char *getI2c_bus_e(i2c_bus_e value);
+const char *getI2c_speed_e(i2c_speed_e value);
 #if __cplusplus
 const char *getIdle_mode_e(idle_mode_e value);
 #endif //__cplusplus

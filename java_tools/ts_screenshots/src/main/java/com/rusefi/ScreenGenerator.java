@@ -1,7 +1,7 @@
 package com.rusefi;
 
 import com.opensr5.ini.IniFileModel;
-import com.opensr5.ini.IniFileModelImpl;
+import com.rusefi.ini.reader.IniFileReaderUtil;
 import com.rusefi.xml.*;
 
 import javax.imageio.ImageIO;
@@ -14,6 +14,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.Base64;
+import java.nio.charset.StandardCharsets;
 
 import static com.rusefi.core.FileUtil.RUSEFI_SETTINGS_FOLDER;
 
@@ -40,7 +42,7 @@ public class ScreenGenerator {
         }
         String iniFileName = args[0];
 
-        iniFileModel = IniFileModelImpl.readIniFile(iniFileName);
+        iniFileModel = IniFileReaderUtil.readIniFile(iniFileName);
 
         for (Map.Entry<String, com.opensr5.ini.DialogModel.Field> a : iniFileModel.getFieldsInUiOrder().entrySet()) {
             String cleanUiName = cleanName(a.getValue().getUiName());
@@ -85,6 +87,7 @@ public class ScreenGenerator {
                         topLevelButtons.add(ab);
                     }
                 }
+                return true;
             });
             Thread.sleep(WAITING_FOR_FRAME_PERIOD);
         }
@@ -137,9 +140,17 @@ public class ScreenGenerator {
         }
 
         String dialogTitle = dialog.getTitle();
+        String dialogName = iniFileModel.getDialogKeyByTitle(dialogTitle);
+        com.opensr5.ini.DialogModel iniDialog = iniFileModel.getDialogs().get(dialogName);
+
+        // we need to parse this HTML to b64 to correctly store on the
+        String helpText = iniFileModel.getContextHelp().get(iniDialog.getTopicHelp()).toHtml();
+        if (helpText != null) {
+            helpText = Base64.getEncoder().encodeToString(helpText.getBytes(StandardCharsets.UTF_8));
+        }
 
         String imageName = "dialog_" + cleanName(dialogTitle) + "." + PNG;
-        DialogModel dialogModel = new DialogModel(dialogTitle, imageName);
+        DialogModel dialogModel = new DialogModel(dialogTitle, imageName, helpText);
         topLevelMenuModel.getDialogs().add(dialogModel);
 
         SwingUtilities.invokeAndWait(() -> {
@@ -169,23 +180,26 @@ public class ScreenGenerator {
         });
     }
 
-    private static void saveSlices(String dialogTitle, Map<Integer, String> yCoordinates, BufferedImage dialogScreenShot, DialogModel dialogModel) {
+    private static void saveSlices(String dialogTitle, Map<Integer, String> yCoordinates, Integer xCoordinate, Map<Integer, Integer> heights, BufferedImage dialogScreenShot, DialogModel dialogModel) {
         System.out.println("Label Y coordinates: " + yCoordinates);
         yCoordinates.put(0, "top");
+        // not sure about this
+        heights.put(0, 0);
         yCoordinates.put(dialogScreenShot.getHeight(), "bottom");
+        heights.put(dialogScreenShot.getHeight(), 0);
 
         List<Integer> sorted = new ArrayList<>(yCoordinates.keySet());
 
         for (int i = 0; i < sorted.size() - 1; i++) {
             int fromY = sorted.get(i);
-            int toY = sorted.get(i + 1);
 
             String sectionNameWithSpecialCharacters = yCoordinates.get(sorted.get(i));
-            String sectionName = cleanName(sectionNameWithSpecialCharacters);
+            String sectionName = cleanName(stripUnits(sectionNameWithSpecialCharacters));
+            int sectionHeight = heights.get(sorted.get(i));
 
             BufferedImage slice;
             try {
-                slice = dialogScreenShot.getSubimage(0, fromY, dialogScreenShot.getWidth(), toY - fromY);
+                slice = dialogScreenShot.getSubimage(0, fromY, dialogScreenShot.getWidth(), sectionHeight);
             } catch (RasterFormatException e) {
                 System.out.println("Dialog does not fit screen? " + sectionNameWithSpecialCharacters);
                 continue;
@@ -204,7 +218,8 @@ public class ScreenGenerator {
             String fieldName = f.getKey();
             String tooltip = iniFileModel.getTooltips().get(fieldName);
 
-            dialogModel.fields.add(new FieldModel(sectionNameWithSpecialCharacters, fieldName, fileName, tooltip));
+
+            dialogModel.fields.add(new FieldModel(sectionNameWithSpecialCharacters, fieldName, fileName, tooltip, xCoordinate, fromY));
 
             File output = new File(IMG_DESTINATION + fileName);
             if (output == null) {
@@ -223,52 +238,69 @@ public class ScreenGenerator {
     private static void findSlices(JDialog dialog, DialogModel dialogModel) {
         UiUtils.visitComponents(dialog, "Dynamic dialog", new Callback() {
             @Override
-            public void onComponent(Component parent, Component component) {
-                if (component instanceof JPanel) {
+            public boolean onComponent(Component parent, Component component) {
+                if (component instanceof JPanel &&
+                    ((JPanel) component).getLayout() instanceof BoxLayout &&
+                    ((BoxLayout) ((JPanel) component).getLayout()).getAxis() != BoxLayout.X_AXIS) {
                     JPanel panel = (JPanel) component;
-                    handleBox(dialog.getTitle(), panel, dialogModel);
+                    handleBox(dialog, panel, dialogModel);
+                    return false;
                 }
+                return true;
             }
         });
     }
 
-    private static void handleBox(String dialogTitle, JPanel panel, DialogModel dialogModel) {
-        if (panel.getLayout() instanceof BoxLayout) {
-            BoxLayout layout = (BoxLayout) panel.getLayout();
-            if (layout.getAxis() == BoxLayout.X_AXIS)
-                return;
+    private static void handleBox(JDialog dialog, JPanel panel, DialogModel dialogModel) {
+        String dialogTitle = dialog.getTitle();
 
-            BufferedImage panelImage = UiUtils.getScreenShot(panel);
-            if (panelImage == null) {
-                System.out.println("Skipping empty panel");
-                return;
-            }
+        BoxLayout layout = (BoxLayout) panel.getLayout();
+        if (layout.getAxis() == BoxLayout.X_AXIS)
+            return;
 
-            Map<Integer, String> yCoordinates = new TreeMap<>();
-            int relativeY = panel.getLocationOnScreen().y;
+        BufferedImage panelImage = UiUtils.getScreenShot(panel);
+        if (panelImage == null) {
+            System.out.println("Skipping empty panel");
+            return;
+        }
 
-            UiUtils.visitComponents(panel, "Looking inside the box", new Callback() {
+        Map<Integer, String> yCoordinates = new TreeMap<>();
+        Map<Integer, Integer> heights = new TreeMap<>();
+        int relativeY = panel.getLocationOnScreen().y;
+        int xCoordinate = panel.getLocationOnScreen().x - dialog.getLocationOnScreen().x;
+
+        UiUtils.visitComponents(panel, "Looking inside the box", new Callback() {
                 @Override
-                public void onComponent(Component parent, Component component) {
+                public boolean onComponent(Component parent, Component component) {
                     if (component instanceof JLabel) {
                         JLabel label = (JLabel) component;
                         if (!label.isVisible() || label.getSize().width == 0)
-                            return;
+                            return false;
                         String labelText = label.getText();
                         if (labelText.length() > 0) {
                             System.out.println("Looking at " + label);
                             try {
+                                heights.put(label.getLocationOnScreen().y - relativeY, label.getSize().height);
                                 yCoordinates.put(label.getLocationOnScreen().y - relativeY, labelText);
                             } catch (IllegalComponentStateException e) {
                                 System.out.printf("Did not go well for " + label);
                             }
                         }
                     }
+                    return true;
                 }
             });
 
-            saveSlices(dialogTitle, yCoordinates, panelImage, dialogModel);
-        }
+        saveSlices(dialogTitle, yCoordinates, xCoordinate, heights, panelImage, dialogModel);
+    }
+
+    private static String stripUnits(String title) {
+        // Units are added without a space.
+        // This removes all trailing parentheticals without a leading space.
+        // If you want a parenthetical, be sure to separate it with a space.
+        // e.g. `Cam mode (intake)`
+        String reUnit = "(?<! )\\([^()]+\\)$";
+        return title.replaceFirst(reUnit, "");
     }
 
     private static String cleanName(String title) {

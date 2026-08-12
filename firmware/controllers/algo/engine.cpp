@@ -46,7 +46,6 @@
 
 #if EFI_ENGINE_SNIFFER
 #include "engine_sniffer.h"
-extern int waveChartUsedSize;
 extern WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
@@ -73,6 +72,9 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	switch (vvtMode) {
 	case VVT_CUSTOM_1:
 	case VVT_CUSTOM_2:
+	case VVT_CUSTOM_3:
+	case VVT_CUSTOM_4:
+	case VVT_CUSTOM_5:
 	case VVT_INACTIVE:
 	  // hold on, what? 'VVT_INACTIVE' means TT_HALF_MOON?!
 		return trigger_type_e::TT_HALF_MOON;
@@ -100,6 +102,8 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	    return trigger_type_e::TT_VVT_MAZDA_SKYACTIV;
 	case VVT_MAZDA_L:
 		return trigger_type_e::TT_VVT_MAZDA_L;
+	case VVT_MITSUBISHI_6G75:
+		return trigger_type_e::TT_VVT_MITSUBISHI_6G75;
 	case VVT_NISSAN_VQ:
 		return trigger_type_e::TT_VVT_NISSAN_VQ35;
 	case VVT_TOYOTA_4_1:
@@ -118,7 +122,8 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 		return trigger_type_e::TT_TOYOTA_3_TOOTH_UZ;
 	case VVT_NISSAN_MR:
 		return trigger_type_e::TT_NISSAN_MR18_CAM_VVT;
-	case VVT_UNUSED_17:
+	case VVT_BMW_VANOS_RELUCTOR:
+		return trigger_type_e::TT_BMW_VANOS_RELUCTOR;
 	case VVT_MITSUBISHI_4G63:
 		return trigger_type_e::TT_MITSU_4G63_CAM;
 	case VVT_HR12DDR_IN:
@@ -147,14 +152,7 @@ void Engine::updateTriggerConfiguration() {
 
 std::optional<setup_custom_board_overrides_type> custom_board_periodicSlowCallback;
 std::optional<setup_custom_board_overrides_type> custom_board_periodicFastCallback;
-
-void boardPeriodicSlowCallback() {
-  // placeholder to force upgrade
-}
-
-void boardPeriodicFastCallback() {
-  // placeholder to force upgrade
-}
+std::optional<setup_custom_board_overrides_type> custom_board_onEngineStopped;
 
 void Engine::periodicSlowCallback() {
 	ScopePerf perf(PE::EnginePeriodicSlowCallback);
@@ -207,8 +205,10 @@ void Engine::periodicSlowCallback() {
 	void baroLps25Update();
 	baroLps25Update();
 #endif // EFI_PROD_CODE
-  boardPeriodicSlowCallback();
   call_board_override(custom_board_periodicSlowCallback);
+
+	// after modules and board code so checks see the freshest state
+	refreshConfigErrorState();
 }
 
 /**
@@ -291,31 +291,72 @@ extern bool kAcRequestState;
 }
 
 Engine::Engine() {
-	// Everything else has default initializers setup in generated file
-	engineState.lua.fuelMult = 1;
-	ignitionState.luaTimingMult = 1;
+	resetLua();
 }
 
 int Engine::getGlobalConfigurationVersion() const {
 	return globalConfigurationVersion;
 }
 
+#if EFI_UNIT_TEST
 void Engine::reset() {
+	efi::clear((engine_state_s&)engineState);
+	efi::clear((fuel_computer_s&)fuelComputer);
+	efi::clear((ignition_state_s&)ignitionState);
+	efi::clear(sensors);
+ 	efi::clear((output_channels_s&)outputChannels);
+ 	efi::clear(dc_motors);
+ #if EFI_SENT_SUPPORT
+ 	efi::clear(sent_state);
+ #endif
+
 	/**
 	 * it's important for wrapAngle() that engineCycle field never has zero
 	 */
 	engineState.engineCycle = getEngineCycle(FOUR_STROKE_CRANK_SENSOR);
 	resetLua();
-}
 
+	allowCanTx = true;
+	isPwmEnabled = true;
+	pauseCANdueToSerial = false;
+
+	globalConfigurationVersion = 0;
+	isRunningPwmTest = false;
+	isFunctionalTestMode = false;
+	slowCallBackWasInvoked = false;
+
+	timeToStopIdleTest = 0;
+}
+#endif
+
+/**
+ * The "resetLua track": clears every piece of engine state that a Lua script
+ * may have written, so that after a script reload (luareset / new script
+ * upload via mcp_ecu / set_lua) we start from a clean slate instead of
+ * leaving the previous script's overrides stuck in place forever.
+ *
+ * Anything a Lua script can poke (fuel/ign add+mult, idle add, boost
+ * targets, ETB disable, fuel/ign cut, decel fuel cut off, engine torque,
+ * AC disable, CAN RX hooks, aux pins) MUST be reset here / from the
+ * matching subsystem resetLua(). When you add a new Lua-writable field,
+ * extend this function (and the relevant subsystem's resetLua()).
+ *
+ * Call sites:
+ *  - LuaThread::ThreadTask() after each runOneLua() iteration (lua.cpp),
+ *    which means it fires on every `luareset` and on every new script
+ *    upload performed by mcp_ecu / SetLuaTool.
+ *  - Engine reset paths in unit tests.
+ *
+ * todo: https://github.com/rusefi/rusefi/issues/4308 Uniform reset pattern for all Lua adjustments
+ */
 void Engine::resetLua() {
-	// todo: https://github.com/rusefi/rusefi/issues/4308
 	engineState.lua = {};
 	engineState.lua.fuelAdd = 0;
 	engineState.lua.fuelMult = 1;
 	engineState.lua.luaDisableEtb = false;
 	engineState.lua.luaIgnCut = false;
 	engineState.lua.luaFuelCut = false;
+	engineState.lua.engineTorque = NAN;
 	engineState.lua.disableDecelerationFuelCutOff = false;
 #if EFI_BOOST_CONTROL
 	module<BoostController>().unmock().resetLua();
@@ -547,15 +588,6 @@ bool Engine::isInShutdownMode() const {
 	return false;
 }
 
-bool Engine::isMainRelayEnabled() const {
-#if EFI_MAIN_RELAY_CONTROL
-	return enginePins.mainRelay.getLogicValue();
-#else
-	// if no main relay control, we assume it's always turned on
-	return true;
-#endif /* EFI_MAIN_RELAY_CONTROL */
-}
-
 injection_mode_e getCurrentInjectionMode() {
 	return getEngineRotationState()->isCranking() ? engineConfiguration->crankingInjectionMode : engineConfiguration->injectionMode;
 }
@@ -567,9 +599,7 @@ injection_mode_e getCurrentInjectionMode() {
 void Engine::periodicFastCallback() {
 	ScopePerf pc(PE::EnginePeriodicFastCallback);
 
-	boardPeriodicFastCallback();
 	call_board_override(custom_board_periodicFastCallback);
-
 
 	engineState.periodicFastCallback();
 
@@ -580,6 +610,9 @@ void Engine::periodicFastCallback() {
 
 void Engine::onEngineStopped() {
 	engineModules.apply_all([](auto& m) { m.onEngineStop(); });
+
+  // todo: proper way is to use modules!
+	call_board_override(custom_board_onEngineStopped);
 }
 
 EngineRotationState * getEngineRotationState() {
@@ -590,7 +623,7 @@ EngineState * getEngineState() {
 	return &engine->engineState;
 }
 
-TunerStudioOutputChannels *getTunerStudioOutputChannels() {
+output_channels_s *getTunerStudioOutputChannels() {
 	return &engine->outputChannels;
 }
 

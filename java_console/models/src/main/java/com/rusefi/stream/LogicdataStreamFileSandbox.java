@@ -5,6 +5,9 @@ import com.rusefi.composite.CompositeEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Manual harness that generates a synthetic Saleae Logic .logicdata file.
+ */
 public class LogicdataStreamFileSandbox {
     public static void main(String[] args) {
         List<CompositeEvent> events = new ArrayList<>();

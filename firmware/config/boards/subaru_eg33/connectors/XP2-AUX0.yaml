@@ -6,8 +6,8 @@ pins:
     type: 5v
 
   - pin: 13
-    function: Sensors GND
-    type: sgnd
+    function: Analog GND / sensor ground
+    type: agnd
 
   - pin: 14
     id: TLE6240_PIN_14

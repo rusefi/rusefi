@@ -134,7 +134,7 @@ TEST(misc, testAngleResolver) {
 	TriggerFormDetails *triggerFormDetails = &engine->triggerCentral.triggerFormDetails;
 	engine->updateTriggerConfiguration();
 
-	ASSERT_NEAR(52.76, triggerFormDetails->eventAngles[3], EPS4D) << "index 2"; // this angle is relation to synch point
+	ASSERT_NEAR(232.76, triggerFormDetails->eventAngles[3], EPS4D) << "index 2"; // this angle is relation to synch point
 	ASSERT_NEAR(0.3233, ts->wave.getSwitchTime(2), EPS4D) << "time 2";
 	ASSERT_NEAR(412.76, triggerFormDetails->eventAngles[6], EPS4D) << "index 5";
 	ASSERT_NEAR(0.5733, ts->wave.getSwitchTime(5), EPS4D) << "time 5";

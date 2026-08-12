@@ -212,7 +212,7 @@ static void alphax_silver_boardInitHardware() {
 	board_init_ext_gpios();
 }
 
-static void customBoardOnConfigurationChange(engine_configuration_s * /*previousConfiguration*/) {
+static void customBoardOnConfigurationChange(const engine_configuration_s * /*previousConfiguration*/) {
 	alphaTempPullUp.setValue(engineConfiguration->boardUseTempPullUp);
 	alphaTachSelPullUp.setValue(engineConfiguration->boardSelTachPullUp);
 	alphaHall1PullUp.setValue(engineConfiguration->boardEnHall1PullUp);
@@ -255,4 +255,5 @@ void setup_custom_board_overrides() {
 	custom_board_ConfigOverrides = alphax_silver_boardConfigOverrides;
 
 	custom_board_OnConfigurationChange = customBoardOnConfigurationChange;
+	custom_board_hackHellenBoardId = hackHellenBoardId;
 }

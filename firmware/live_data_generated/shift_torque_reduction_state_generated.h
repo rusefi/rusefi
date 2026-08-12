@@ -101,8 +101,26 @@ struct shift_torque_reduction_state_s {
 	/**
 	offset 0 bit 31 */
 	bool unusedBit_7_31 : 1 {};
+	/**
+	 * offset 4
+	 */
+	int16_t trqRedCutXaxisValue = (int16_t)0;
+	/**
+	 * offset 6
+	 */
+	int16_t trqRedTimeXaxisValue = (int16_t)0;
+	/**
+	 * offset 8
+	 */
+	int16_t trqRedIgnRetXaxisValue = (int16_t)0;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 10
+	 */
+	uint8_t alignmentFill_at_10[2] = {};
 };
-static_assert(sizeof(shift_torque_reduction_state_s) == 4);
+static_assert(sizeof(shift_torque_reduction_state_s) == 12);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/shift_torque_reduction_state.txt

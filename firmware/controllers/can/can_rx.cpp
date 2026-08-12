@@ -26,7 +26,7 @@
 /**
  * this build-in CAN sniffer is very basic but that's our CAN sniffer
  */
-static void printPacket(const size_t busIndex, const CANRxFrame &rx) {
+void printCANRxFrame(const size_t busIndex, const CANRxFrame &rx) {
 	// only print info if we're in can debug mode
 
 	int id = CAN_ID(rx);
@@ -81,12 +81,36 @@ void serviceCanSubscribers(const size_t busIndex, const CANRxFrame &frame, efiti
 	}
 }
 
+// TODO: rework to use utlist.h helpers
+
 void registerCanListener(CanListener& listener) {
+	// Do this under lock?
+
 	// If the listener already has a next, it's already registered
-	if (!listener.hasNext()) {
+	if (!listener.getNext()) {
 		listener.setNext(canListeners_head);
 		canListeners_head = &listener;
 	}
+}
+
+void unregisterCanListener(CanListener& listener) {
+	// Do this under lock?
+
+	// listener is at head of list...
+	if (canListeners_head == &listener) {
+		canListeners_head = listener.getNext();
+	} else {
+		CanListener *current = canListeners_head;
+
+		while (current->getNext() && (current->getNext() != &listener)) {
+			current = current->getNext();
+		}
+		if (current->getNext()) {
+			current->setNext(listener.getNext());
+		}
+	}
+
+	listener.setNext(nullptr);
 }
 
 void registerCanSensor(CanSensorBase& sensor) {
@@ -208,7 +232,7 @@ void processCanRxMessage(const size_t busIndex, const CANRxFrame &frame, efitick
 		(engineConfiguration->verboseCan3 && busIndex == 2) ||
 #endif
 		0) {
-		printPacket(busIndex, frame);
+		printCANRxFrame(busIndex, frame);
 	}
 
 	// TODO use call_board_override
@@ -257,7 +281,8 @@ static Timer dashAliveTimer;
 #if EFI_USE_OPENBLT
 #include "openblt/efi_blt_ids.h"
 	if ((CAN_SID(frame) == BOOT_COM_CAN_RX_MSG_ID) && (frame.DLC == 2)) {
-		/* TODO: gracefull shutdown? */
+		/* TODO: graceful shutdown? */
+		// todo: kill the unused (?) openblt option #9733?
 		if (((busIndex == 0) && (engineConfiguration->canOpenBLT)) ||
 			((busIndex == 1) && (engineConfiguration->can2OpenBLT))) {
 			jump_to_openblt();

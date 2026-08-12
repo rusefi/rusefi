@@ -35,6 +35,7 @@ namespace {
 
     constexpr float TEST_LAUNCH_TIMING_RETARD = 17.0f;
 
+#if (IGN_RPM_COUNT == 16) // the following tests use hardcoded test ignition table with 16 columns
     class IgnitionAngleAdvanceTestConfig : public LaunchTestConfig {
     public:
         IgnitionAngleAdvanceTestConfig(
@@ -73,7 +74,6 @@ namespace {
         const float epsilon = EPS5D;
     };
 
-#if (IGN_RPM_COUNT == 16) // the following test uses hardcoded test ignition table with 16 columns
     class IgnitionAngleAdvanceTest : public LaunchTestBase {
     protected:
         void doTest(

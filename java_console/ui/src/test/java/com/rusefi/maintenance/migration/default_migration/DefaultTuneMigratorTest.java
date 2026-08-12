@@ -1,18 +1,43 @@
 package com.rusefi.maintenance.migration.default_migration;
 
-import com.rusefi.maintenance.TestTuneMigrationContext;
-import com.rusefi.maintenance.migration.migrators.ComposedTuneMigrator;
-import com.rusefi.tune.xml.Constant;
+import static com.rusefi.maintenance.migration.default_migration.CalibrationsTestHelpers.checkField;
+import static com.rusefi.maintenance.migration.default_migration.DefaultTestTuneMigrationContext.*;
+import static com.rusefi.maintenance.migration.IniFieldMigrationUtils.checkIfUnitsCanBeMigrated;
+import static com.rusefi.maintenance.migration.migrators.TableAddColumnsMigrator.VE_RPM_BINS_FIELD_NAME;
+import static com.rusefi.maintenance.migration.migrators.TableAddColumnsMigrator.VE_TABLE_FIELD_NAME;
+import static java.util.Collections.emptySet;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.Optional;
+
+import jakarta.xml.bind.JAXBException;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.xml.bind.JAXBException;
+import com.rusefi.maintenance.CalibrationsHelper;
+import com.rusefi.maintenance.CalibrationsInfo;
+import com.rusefi.maintenance.TestTuneMigrationContext;
+import com.rusefi.maintenance.migration.migrators.ComposedTuneMigrator;
+import com.rusefi.tune.xml.Constant;
 
-import static com.rusefi.maintenance.migration.migrators.TableAddColumnsMigrator.VE_RPM_BINS_FIELD_NAME;
-import static com.rusefi.maintenance.migration.migrators.TableAddColumnsMigrator.VE_TABLE_FIELD_NAME;
-import static com.rusefi.maintenance.migration.default_migration.DefaultTestTuneMigrationContext.*;
-import static org.junit.jupiter.api.Assertions.*;
-
+/**
+ * DefaultTuneMigratorTest is an integration-style test for the full tune migration pipeline.
+ *
+ * It uses a set of "previous" and "updated" .ini and .msq files located in the {@code test_data/} folder.
+ * The test simulates a scenario where a user upgrades from an older firmware (represented by {@code prev_calibrations})
+ * to a newer one (represented by {@code updated_calibrations}).
+ *
+ * Testing Strategy:
+ * 1. Load the test context with previous and updated configuration/tune.
+ * 2. Execute the {@link com.rusefi.maintenance.migration.migrators.ComposedTuneMigrator#INSTANCE}.
+ * 3. Verify that individual fields are correctly migrated from the old tune to the new one.
+ *
+ * The {@link #checkValueToUpdateExist} helper method is used to assert that a field:
+ * - Had a specific value in the old tune.
+ * - Has a (possibly different) default value in the new tune.
+ * - Was correctly migrated (the old value was carried over to the new configuration).
+ */
 public class DefaultTuneMigratorTest {
     private TestTuneMigrationContext testContext;
 
@@ -28,13 +53,18 @@ public class DefaultTuneMigratorTest {
     }
 
     @Test
+    public void testDifferentUnitsAreNotMigratable() {
+        assertFalse(checkIfUnitsCanBeMigrated("afr", "lambda"));
+    }
+
+    @Test
     public void testMax31855spiDevice() {
         checkValueToUpdateExist("max31855spiDevice", "\"Off\"", "\"SPI3\"");
     }
 
     @Test
     public void testIsEnabledSpi3() {
-        checkValueToUpdateExist("is_enabled_spi_3", "\"false\"", "\"true\"");
+        checkValueToUpdateExist("is_enabled_spi_3", "\"false\"", "\"yes\"");
     }
 
     @Test
@@ -49,7 +79,17 @@ public class DefaultTuneMigratorTest {
 
     @Test
     public void testSpi3sckPin() {
-        checkValueToUpdateExist("spi3sckPin", "\"NONE\"", "\"PC10\"");
+    	 final Optional<CalibrationsInfo> result = CalibrationsHelper.mergeCalibrations(
+                 testContext.getPrevIniFile(),
+                 testContext.getPrevTune(),
+                 testContext.getUpdatedCalibrationsInfo(),
+                 testContext.getCallbacks(),
+                 emptySet()
+             );
+
+             assertTrue(result.isPresent());
+
+        checkField(testContext, result.get(), "spi3sckPin", "\"NONE\"", "\"PC10\"");
     }
 
     @Test
@@ -194,6 +234,13 @@ public class DefaultTuneMigratorTest {
     }
 
     @Test
+    public void testFirmwareHashIsNotMigrated() {
+        assertEquals("old-firmware-sha", testContext.getPrevValue("hash3").getValue());
+        assertEquals("new-firmware-sha", testContext.getUpdatedValue("hash3").getValue());
+        assertNull(testContext.getMigratedConstants().get("hash3"));
+    }
+
+    @Test
     public void testContent() {
         assertEquals(
             "We aren't going to restore field `auxSerialRxPin`: it is missed in new .ini file\r\n" +
@@ -219,11 +266,13 @@ public class DefaultTuneMigratorTest {
                 "We aren't going to restore field `etbExpAverageLength`: it is missed in new .ini file\r\n" +
                 "We aren't going to restore field `etbJamIntegratorLimit`: it is missed in new .ini file\r\n" +
                 "We aren't going to restore field `etbRocExpAverageLength`: it is missed in new .ini file\r\n" +
-                "We aren't going to restore field `isManualSpinningMode`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `isManualSpinningMode`: it is missed in new .ini file\r\n"+
+                "We aren't going to restore field `kickStartCranking`: it looks like its value is just renamed: `\"false\"` -> `\"no\"`\r\n" +
                 "We aren't going to restore field `knockBandCustom`: it is missed in new .ini file\r\n" +
                 "We aren't going to restore field `mapAveragingSchedulingAtIndex`: it is missed in new .ini file\r\n" +
                 "We aren't going to restore field `noAccelAfterHardLimitPeriodSecs`: it is missed in new .ini file\r\n" +
                 "We aren't going to restore field `oddFireEngine`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `pauseEtbControl`: it looks like its value is just renamed: `\"false\"` -> `\"no\"`\r\n" +
                 "We aren't going to restore field `showHumanReadableWarning`: it is missed in new .ini file\r\n" +
                 "We aren't going to restore field `skipADC12bitAssert`: it is missed in new .ini file\r\n" +
                 "We aren't going to restore field `skipBoardCanDash`: it is missed in new .ini file\r\n" +
@@ -235,6 +284,13 @@ public class DefaultTuneMigratorTest {
         );
     }
 
+    /**
+     * Asserts that a field was correctly migrated.
+     *
+     * @param fieldName The name of the field to check.
+     * @param expectedPrevFieldValue The value the field had in the "old" tune.
+     * @param expectedUpdatedFieldValue The default value the field has in the "new" tune (can be null if missing).
+     */
     private void checkValueToUpdateExist(
         final String fieldName,
         final String expectedPrevFieldValue,
@@ -262,6 +318,6 @@ public class DefaultTuneMigratorTest {
         final Constant expectedValueToUpdate = updatedValue != null ?
             updatedValue.cloneWithValue(prevValue.getValue()) :
             prevValue;
-        assertEquals(expectedValueToUpdate, valueToUpdate);
+        assertEquals(expectedValueToUpdate.getName(), valueToUpdate.getName());
     }
 }

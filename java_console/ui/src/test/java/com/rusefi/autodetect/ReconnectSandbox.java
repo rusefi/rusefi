@@ -1,13 +1,15 @@
 package com.rusefi.autodetect;
 
 import com.rusefi.IoUtil;
-import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.ConnectionWatchdog;
 import com.rusefi.io.LinkManager;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * Manual harness that exercises ECU auto-reconnect logic against real hardware.
+ */
 public class ReconnectSandbox {
     public static void main(String[] args) throws InterruptedException {
 
@@ -39,7 +41,7 @@ public class ReconnectSandbox {
         String autoDetectedPort = detectPortUntilDetected();
         System.out.println("First time port detected: " + autoDetectedPort);
 
-        linkManager.startAndConnect(autoDetectedPort, ConnectionStateListener.VOID);
+        linkManager.startAndConnect(autoDetectedPort, ConnectionStatusLogic.Listener.VOID);
 
         ConnectionWatchdog.init(linkManager);
     }

@@ -30,7 +30,15 @@ public enum AsyncJobExecutor {
     }
 
     public void executeJob(final AsyncJob job, final UpdateOperationCallbacks callbacks, final Runnable onJobFinished) {
-        final Runnable jobWithSuspendedPortScanning = () -> job.doJob(callbacks, onJobFinished);
-        ExecHelper.submitAction(jobWithSuspendedPortScanning, "mx-" + threadNameIndex.incrementAndGet());
+        executeJob(job, callbacks, () -> {}, onJobFinished);
+    }
+
+    public void executeJob(final AsyncJob job, final UpdateOperationCallbacks callbacks,
+                           final Runnable onJobAboutToStart, final Runnable onJobFinished) {
+        final Runnable jobWithPreparation = () -> {
+            onJobAboutToStart.run();
+            job.doJob(callbacks, onJobFinished);
+        };
+        ExecHelper.submitAction(jobWithPreparation, "mx-" + threadNameIndex.incrementAndGet());
     }
 }

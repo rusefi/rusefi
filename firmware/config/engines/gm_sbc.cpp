@@ -30,11 +30,16 @@ void setStepperHw() {
 #endif // HW_HELLEN_8CHAN
 
 #ifdef HW_HELLEN_UAEFI
-void setUaefiDefaultETBPins();
-  setUaefiDefaultETBPins();
+void setUaefiBoardDefaultETBPins();
+  setUaefiBoardDefaultETBPins();
 #endif // HW_HELLEN_UAEFI
 
 #ifdef HW_PROTEUS
+//Coil 1 - Pin 15 DC2 positive Pin A 	Toyota iac pin 4
+//Coil 1 - Pin 8  DC2 negative Pin B	Toyota iac pin 6
+//Coil 2 - Pin 7  DC1 positive Pin C	Toyota iac pin 1
+//Coil 2 - Pin 6  DC1 negative Pin D	Toyota iac pin 3
+
 	// coil #1 = proteus pin 15 (DC2 positive) to BL pin "A", pin B to pin 8 (DC2 negative)
 	// PWM pin
 	engineConfiguration->stepperDcIo[0].controlPin = Gpio::D13;
@@ -83,6 +88,7 @@ void setGmSbc() {
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 	engineConfiguration->globalTriggerAngleOffset = 24;
 
+    // this is used to tell HEI that we are always in charge of timing advance
     gppwm_channel *ignOverride = &engineConfiguration->gppwm[0];
    	ignOverride->pwmFrequency = 0;
    	strcpy(engineConfiguration->gpPwmNote[0], "ign ovrrd B");
@@ -99,6 +105,11 @@ void setGmSbc() {
 	  engineConfiguration->camInputs[1] = Gpio::Unassigned;
 	  engineConfiguration->ignitionPins[1] = Gpio::Unassigned;
 #endif // HW_HELLEN_UAEFI121
+
+#ifdef HW_HELLEN_SUPER_UAEFI
+	engineConfiguration->triggerInputPins[0] = Gpio::MM100_IN_D2; // HALL2
+	engineConfiguration->camInputs[1] = Gpio::Unassigned;
+#endif // HW_HELLEN_SUPER_UAEFI
 
 #if HW_PROTEUS
     // tan wire with a black trace - "HEI B", plug pin B

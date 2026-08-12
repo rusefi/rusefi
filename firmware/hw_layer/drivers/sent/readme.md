@@ -1,6 +1,6 @@
 open source SAE J2716 stm32 implementation
 
-https://github.com/rusefi/rusefi/wiki/SENT-ETB-Electronic-Throttle-Body
+https://wiki.rusefi.com/SENT-ETB-Electronic-Throttle-Body
 
 for unit test see https://github.com/rusefi/rusefi/tree/master/unit_tests/tests/sent
 

@@ -1,0 +1,5 @@
+can_baudrate_e can3BaudRate
+Gpio can3TxPin
+Gpio can3RxPin
+bit can3ListenMode,"Listen only","Allow TX"
+bit verboseCan3,"Print all","Do not print"

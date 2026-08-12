@@ -1,3 +1,11 @@
+/**
+ * @file gear_detector.cpp
+ * @brief Current gear detection.
+ *
+ * Infers the engaged transmission gear by comparing the measured RPM-to-vehicle-speed
+ * ratio against the configured per-gear ratios, picking the closest match.
+ */
+
 #include "pch.h"
 #include "gear_detector.h"
 

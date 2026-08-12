@@ -6,6 +6,7 @@
 
 #include "pch.h"
 #include "wall_fuel.h"
+#include "flex_transient.h"
 
 void WallFuel::resetWF() {
 	wallFuel = 0;
@@ -74,59 +75,71 @@ float WallFuel::getWallFuel() const {
 }
 
 float WallFuelController::computeTau() const {
-	if (!engineConfiguration->complexWallModel) {
-		return engineConfiguration->wwaeTau;
-	}
-
 	// Default to normal operating temperature in case of
 	// CLT failure, this is not critical to get perfect
 	float clt = Sensor::get(SensorType::Clt).value_or(90);
 
-	float tau = interpolate2d(
-		clt,
-		config->wwCltBins,
-		config->wwTauCltValues
-	);
-
-	// If you have a MAP sensor, apply MAP correction
-	if (Sensor::hasSensor(SensorType::Map)) {
-		auto map = Sensor::get(SensorType::Map).value_or(60);
-
-		tau *= interpolate2d(
-			map,
-			config->wwMapBins,
-			config->wwTauMapValues
+	float tau;
+	if (!engineConfiguration->complexWallModel) {
+		tau = engineConfiguration->wwaeTau;
+	} else {
+		tau = interpolate2d(
+			clt,
+			config->wwCltBins,
+			config->wwTauCltValues
 		);
+
+		// If you have a MAP sensor, apply MAP correction
+		if (Sensor::hasSensor(SensorType::Map)) {
+			auto map = Sensor::get(SensorType::Map).value_or(60);
+
+			tau *= interpolate2d(
+				map,
+				config->wwMapBins,
+				config->wwTauMapValues
+			);
+		}
 	}
+
+	// Flex fuel transient compensation (CLT x ethanol). Neutral (1.0) without a flex sensor.
+	float flexMult = getFlexTransientMult(config->flexWwTauMult);
+	engine->outputChannels.flexWwTauMultiplier = flexMult;
+	tau *= flexMult;
 
 	return tau;
 }
 
 float WallFuelController::computeBeta() const {
-	if (!engineConfiguration->complexWallModel) {
-		return engineConfiguration->wwaeBeta;
-	}
-
 	// Default to normal operating temperature in case of
 	// CLT failure, this is not critical to get perfect
 	float clt = Sensor::get(SensorType::Clt).value_or(90);
 
-	float beta = interpolate2d(
-		clt,
-		config->wwCltBins,
-		config->wwBetaCltValues
-	);
-
-	// If you have a MAP sensor, apply MAP correction
-	if (Sensor::hasSensor(SensorType::Map)) {
-		auto map = Sensor::get(SensorType::Map).value_or(60);
-
-		beta *= interpolate2d(
-			map,
-			config->wwMapBins,
-			config->wwBetaMapValues
+	float beta;
+	if (!engineConfiguration->complexWallModel) {
+		beta = engineConfiguration->wwaeBeta;
+	} else {
+		beta = interpolate2d(
+			clt,
+			config->wwCltBins,
+			config->wwBetaCltValues
 		);
+
+		// If you have a MAP sensor, apply MAP correction
+		if (Sensor::hasSensor(SensorType::Map)) {
+			auto map = Sensor::get(SensorType::Map).value_or(60);
+
+			beta *= interpolate2d(
+				map,
+				config->wwMapBins,
+				config->wwBetaMapValues
+			);
+		}
 	}
+
+	// Flex fuel transient compensation (CLT x ethanol). Neutral (1.0) without a flex sensor.
+	float flexMult = getFlexTransientMult(config->flexWwBetaMult);
+	engine->outputChannels.flexWwBetaMultiplier = flexMult;
+	beta *= flexMult;
 
 	// Clamp to 0..1 (you can't have more than 100% of the fuel hit the wall!)
 	return clampF(0, beta, 1);

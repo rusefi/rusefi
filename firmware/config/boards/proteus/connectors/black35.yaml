@@ -15,47 +15,47 @@ pins:
 
   - pin: 3
     id: D7
-    function: "Injector #1"
+    function: Injector 1
     class: outputs
     ts_name: Lowside 1
-    type: ls
+    type: inj
     color: green
 
   - pin: 4
     id: G10
-    function: "Injector #3"
+    function: Injector 3
     class: outputs
     ts_name: Lowside 3
-    type: ls
+    type: inj
     color: blue
 
   - pin: 5
     id: G12
-    function: "Injector #5"
+    function: Injector 5
     class: outputs
     ts_name: Lowside 5
-    type: ls
+    type: inj
 
   - pin: 6
     id: G13
-    function: "Injector #6"
+    function: Injector 6
     class: outputs
     ts_name: Lowside 6
-    type: ls
+    type: inj
 
   - pin: 7
     id: G14
-    function: "Injector #7"
+    function: Injector 7
     class: outputs
     ts_name: Lowside 7
-    type: ls
+    type: inj
 
   - pin: 8
     id: B5
-    function: "Injector #9"
+    function: Injector 9
     class: outputs
     ts_name: Lowside 9
-    type: ls
+    type: inj
 
   - pin: 9
     id: B7
@@ -102,34 +102,34 @@ pins:
 
   - pin: 15
     id: G9
-    function: "Injector #2"
+    function: Injector 2
     class: outputs
     ts_name: Lowside 2
-    type: ls
+    type: inj
     color: white
 
   - pin: 16
     id: G11
-    function: "Injector #4"
+    function: Injector 4
     class: outputs
     ts_name: Lowside 4
-    type: ls
+    type: inj
     color: orange/brown
 
   - pin: 17
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: 18
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: 19
     id: B4
-    function: "Injector #8"
+    function: Injector 8
     class: outputs
     ts_name: Lowside 8
-    type: ls
+    type: inj
 
   - pin: 20
     id: B6
@@ -149,10 +149,10 @@ pins:
 
   - pin: 22
     id: C9
-    function: Ignition cylinder 3
+    function: Smart Ignition Coil 3
     class: outputs
     ts_name: Ign 3
-    type: high_logic
+    type: ign
     color: blue
 
 
@@ -164,87 +164,87 @@ pins:
     color: yellow
 
   - pin: 24
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: 25
     id: G2
-    function: Ignition cylinder 12
+    function: Smart Ignition Coil 12
     class: outputs
     ts_name: Ign 12
-    type: high_logic
+    type: ign
 
   - pin: 26
     id: G3
-    function: Ignition cylinder 11
+    function: Smart Ignition Coil 11
     class: outputs
     ts_name: Ign 11
-    type: high_logic
+    type: ign
 
   - pin: 27
     id: G4
-    function: Ignition cylinder 10
+    function: Smart Ignition Coil 10
     class: outputs
     ts_name: Ign 10
-    type: high_logic
+    type: ign
 
   - pin: 28
     id: G5
-    function: Ignition cylinder 9
+    function: Smart Ignition Coil 9
     class: outputs
     ts_name: Ign 9
-    type: high_logic
+    type: ign
 
   - pin: 29
     id: G6
-    function: Ignition cylinder 8
+    function: Smart Ignition Coil 8
     class: outputs
     ts_name: Ign 8
-    type: high_logic
+    type: ign
 
   - pin: 30
     id: G7
-    function: Ignition cylinder 7
+    function: Smart Ignition Coil 7
     class: outputs
     ts_name: Ign 7
-    type: high_logic
+    type: ign
 
   - pin: 31
     id: G8
-    function: Ignition cylinder 6
+    function: Smart Ignition Coil 6
     class: outputs
     ts_name: Ign 6
-    type: high_logic
+    type: ign
 
   - pin: 32
     id: C7
-    function: Ignition cylinder 5
+    function: Smart Ignition Coil 5
     class: outputs
     ts_name: Ign 5
-    type: high_logic
+    type: ign
 
   - pin: 33
     id: C8
-    function: Ignition cylinder 4
+    function: Smart Ignition Coil 4
     class: outputs
     ts_name: Ign 4
-    type: high_logic
+    type: ign
     color: orange/brown
 
   - pin: 34
     id: D3
-    function: Ignition cylinder 2
+    function: Smart Ignition Coil 2
     class: outputs
     ts_name: Ign 2
-    type: high_logic
+    type: ign
     color: white
 
   - pin: 35
     id: D4
-    function: Ignition cylinder 1
+    function: Smart Ignition Coil 1
     class: outputs
     ts_name: Ign 1
-    type: high_logic
+    type: ign
     color: green
 
 info:

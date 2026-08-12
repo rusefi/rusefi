@@ -41,10 +41,6 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->iat.adcChannel = H144_IN_IAT;
 }
 
-void onBoardStandBy() {
-    efiPrintf("K: onBoardStandBy");
-    hellenBoardStandBy();
-}
 
 static void hellen_honda_k_boardConfigOverrides() {
 	setHellenMegaEnPin();
@@ -95,7 +91,7 @@ static void hellen_honda_k_boardDefaultConfiguration() {
 
 	setHellenCan();
 
-    engineConfiguration->vvtPins[0] = Gpio::H144_OUT_PWM4;
+    engineConfiguration->vvtPins[0] = Gpio::H144_OUT_PWM5; // B23 VTC VVT
 
   gppwm_channel *vtsControl = &engineConfiguration->gppwm[0];
   vtsControl->pin = Gpio::H144_OUT_IO6;
@@ -117,7 +113,7 @@ static void hellen_honda_k_boardDefaultConfiguration() {
     config->hondaKcltGaugeAdder = 50;
     engineConfiguration->kLineBaudRate = 9600;
 	engineConfiguration->hondaK = true;
-	engineConfiguration->verboseKLine = true;
+	engineConfiguration->verboseKLine = false;
 
 	engineConfiguration->brakePedalPin = Gpio::H144_IN_CAM;
 	engineConfiguration->acRelayPin = Gpio::H144_LS_5;
@@ -189,4 +185,8 @@ Gpio* getBoardMetaOutputs() {
 void setup_custom_board_overrides() {
 	custom_board_DefaultConfiguration = hellen_honda_k_boardDefaultConfiguration;
 	custom_board_ConfigOverrides = hellen_honda_k_boardConfigOverrides;
+	custom_board_onBoardStandBy = []() {
+		efiPrintf("K: onBoardStandBy");
+		hellenBoardStandBy();
+	};
 }

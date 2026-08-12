@@ -8,6 +8,9 @@
 
 #include "hal.h"
 
+//#include "mpu_util.h"
+extern void rebootNow(void);
+
 #include <string.h>
 
 /**
@@ -16,7 +19,7 @@
 #define bkpt() __asm volatile("BKPT #0\n")
 
 void NMI_Handler(void) {
-	NVIC_SystemReset();
+	rebootNow();
 }
 
 //See http://infocenter.arm.com/help/topic/com.arm.doc.dui0552a/BABBGBEC.html
@@ -63,7 +66,7 @@ void HardFault_Handler_C(void* sp) {
 	{
 		bkpt();
 	}
-	NVIC_SystemReset();
+	rebootNow();
 }
 
 void UsageFault_Handler_C(void* sp) {
@@ -97,10 +100,13 @@ void UsageFault_Handler_C(void* sp) {
 	{
 		bkpt();
 	}
-	NVIC_SystemReset();
+	rebootNow();
 }
 
 void MemManage_Handler_C(void* sp) {
+	// Disable the MPU so we don't get smacked with a double fault while trying to save state
+	mpuDisable();
+
 	//Copy to local variables (not pointers) to allow GDB "i loc" to directly show the info
 	//Get thread context. Contains main registers including PC and LR
 	struct port_extctx ctx;
@@ -132,5 +138,5 @@ void MemManage_Handler_C(void* sp) {
 	{
 		bkpt();
 	}
-	NVIC_SystemReset();
+	rebootNow();
 }

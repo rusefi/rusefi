@@ -38,6 +38,7 @@ LoopPeriod MainLoop::makePeriodFlags() {
 	return lp;
 }
 
+RUSEFI_STACK_ROOT(MainLoop, PeriodicTask);
 void MainLoop::PeriodicTask(efitick_t nowNt) {
 	ScopePerf perf(PE::MainLoop);
 
@@ -47,6 +48,8 @@ void MainLoop::PeriodicTask(efitick_t nowNt) {
 	if (currentLoopPeriod & ADC_UPDATE_RATE) {
 		adcInputsUpdateSubscribers(nowNt);
 	}
+#else
+ UNUSED(nowNt);
 #endif // HAL_USE_ADC
 
 #if EFI_ELECTRONIC_THROTTLE_BODY

@@ -10,11 +10,16 @@ public enum ComposedTuneMigrator implements TuneMigrator {
     INSTANCE;
 
     private final List<TuneMigrator> tuneMigrators = Arrays.asList(
+        // first the migrators that update the table shape
         TableAddColumnsMigrator.VE_TABLE_MIGRATOR,
         TableAddColumnsMigrator.LAMBDA_TABLE_MIGRATOR,
         TableAddColumnsMigrator.IGNITION_TABLE_MIGRATOR,
         TableAddColumnsMigrator.INJECTION_PHASE_MIGRATOR,
+        TableAddColumnsMigrator.MAP_SAMPLING_MIGRATOR,
+        TableAddColumnsMigrator.PEDAL_TO_TPS_MIGRATOR,
+        // rest of migrators
         AfrLambdaTableMigrator.INSTANCE,
+        ArrayFieldScaleMigrator.INSTANCE,
         BattLagCorrExtensionMigrator.INSTANCE,
         CltIdleCorrMigrator.INSTANCE,
         DisplacementIniFieldMigrator.INSTANCE,
@@ -24,8 +29,11 @@ public enum ComposedTuneMigrator implements TuneMigrator {
         DigitsIniFieldMigrator.INSTANCE,
         STFTFieldMigrator.INSTANCE,
         IdleCurveMigrator.INSTANCE,
-        CrankingIdleMigrator.INSTANCE,
+        MultiplierToTableMigrator.INSTANCE,
+        CrankingFlexTableMigrator.INSTANCE,
         ScalarToArrayMigrator.INSTANCE,
+        MapSamplingValuesMigrator.INSTANCE,
+        ImperialUnitsMigrator.INSTANCE,
 
         // leave the default as the final migrator!
         DefaultTuneMigrator.INSTANCE

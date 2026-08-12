@@ -45,8 +45,6 @@ TEST(trigger, testQuadCamInput) {
 
 	eth.moveTimeForwardUs(MS2US(3)); // shifting VVT phase a few angles
 
-	float d = 4;
-
 	int firstCam = 0;
 	int secondCam = 1;
 

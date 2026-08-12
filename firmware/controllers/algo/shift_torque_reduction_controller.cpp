@@ -22,13 +22,14 @@ void ShiftTorqueReductionController::update() {
         updateAppConditionSatisfied();
 
         isFlatShiftConditionSatisfied = torqueReductionTriggerPinState && isTimeConditionSatisfied
-            && isRpmConditionSatisfied && isAppConditionSatisfied;
+            && isRpmConditionSatisfied && isAppConditionSatisfied && !engine->launchController.ownsSharedTrigger();
     }
 }
 
-float ShiftTorqueReductionController::getSparkSkipRatio() const {
+float ShiftTorqueReductionController::getSparkSkipRatio() {
     float result = 0.0f;
     auto torqueReductionXAxis = readGppwmChannel(config->torqueReductionCutXaxis);
+    trqRedCutXaxisValue = torqueReductionXAxis.Value;
     int8_t currentGear = Sensor::getOrZero(SensorType::DetectedGear);
 
     if (engineConfiguration->torqueReductionEnabled && isFlatShiftConditionSatisfied) {
@@ -118,11 +119,14 @@ void ShiftTorqueReductionController::updateTriggerPinState(
     if (!previousTorqueReductionTriggerPinState && torqueReductionTriggerPinState) {
     m_pinTriggeredTimer.reset();
     }
+#else
+  UNUSED(pin);UNUSED(mode);UNUSED(invertPhysicalPin);UNUSED(invalidPinState);
 #endif // !EFI_SIMULATOR
 }
 
 void ShiftTorqueReductionController::updateTimeConditionSatisfied() {
     auto torqueReductionTimeXaxis = readGppwmChannel(config->torqueReductionTimeXaxis);
+	trqRedTimeXaxisValue = torqueReductionTimeXaxis.Value;
     int8_t currentGear = Sensor::getOrZero(SensorType::DetectedGear);
 
     auto torqueReductionTime = interpolate3d(
@@ -154,8 +158,9 @@ void ShiftTorqueReductionController::updateAppConditionSatisfied() {
     }
 }
 
-float ShiftTorqueReductionController::getTorqueReductionIgnitionRetard() const {
+float ShiftTorqueReductionController::getTorqueReductionIgnitionRetard() {
     auto torqueReductionXAxis = readGppwmChannel(config->torqueReductionIgnitionRetardXaxis);
+    trqRedIgnRetXaxisValue = torqueReductionXAxis.Value;
     int8_t currentGear = Sensor::getOrZero(SensorType::DetectedGear);
 
     return interpolate3d(

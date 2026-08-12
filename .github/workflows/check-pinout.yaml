@@ -1,5 +1,5 @@
 #
-# See https://github.com/rusefi/rusefi/wiki/Connector-Mapping
+# See https://wiki.rusefi.com/Connector-Mapping
 #
 
 name: Check Interactive Pinouts
@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v7
       with:
         fetch-depth: 2
 
@@ -24,7 +24,7 @@ jobs:
         echo "DELIM" >> $GITHUB_ENV
 
     - name: Generate Pinouts
-      uses: chuckwagoncomputing/interactive-pinout@2.15
+      uses: chuckwagoncomputing/interactive-pinout@2.18
       with:
         mapping-path: ${{ env.CHANGED }}
         warnings: "notice"

@@ -6,6 +6,7 @@ dependencies {
     api project(':core_ui')
     api project(':ecu_io')
     api project(':models')
+    api project(':config_definition_base')
     api ts_plugin_libs.httpclient
     api ts_plugin_libs.httpcore
     api global_libs.json

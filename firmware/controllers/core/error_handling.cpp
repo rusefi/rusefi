@@ -13,6 +13,8 @@
 #include "log_hard_fault.h"
 #include "rusefi/critical_error.h"
 #include "rusefi/efistring.h"
+#include "board_overrides.h"
+#include "flash_main.h"
 
 #if EFI_USE_OPENBLT
 /* communication with OpenBLT that is plain C, not to modify external file */
@@ -117,7 +119,7 @@ void errorHandlerInit() {
 	}
 #endif // EFI_PROD_CODE
 
-	// see https://github.com/rusefi/rusefi/wiki/Resilience
+	// see https://wiki.rusefi.com/Resilience
 	addConsoleAction("chibi_fault", [](){ chDbgCheck(0); } );
 	addConsoleAction("soft_fault", [](){ firmwareError(ObdCode::RUNTIME_CRITICAL_TEST_ERROR, "firmwareError: %d", getRusEfiVersion()); });
 	addConsoleAction("hard_fault", [](){ causeHardFault(); } );
@@ -151,14 +153,17 @@ const char *errorCookieToName(ErrorCookie cookie)
 	PRINT("Reset Cause: %s", getMCUResetCause(getMCUResetCause()))
 
 #if EFI_USE_OPENBLT
-#define printWdResetCounter()										\
+#define printResetCounters()										\
 	do {															\
 		uint8_t wd_counter = 0;										\
+		uint8_t sw_counter = 0;										\
 		SharedParamsReadByIndex(1, &wd_counter);					\
+		SharedParamsReadByIndex(2, &sw_counter);					\
 		PRINT("WD resets: %u", (unsigned int)wd_counter);			\
+		PRINT("SW resets: %u", (unsigned int)sw_counter);			\
 	} while (0)
 #else
-#define printWdResetCounter()										\
+#define printResetCounters()										\
 	do {} while(0)
 #endif
 
@@ -234,14 +239,16 @@ void errorHandlerShowBootReasonAndErrors() {
 	#define PRINT(...) efiPrintf(__VA_ARGS__)
 
 	printResetReason();
-	printWdResetCounter();
+	printResetCounters();
 
 #if EFI_BACKUP_SRAM
 	backupErrorState *err = &lastBootError;
 	ErrorCookie cookie = err->Cookie;
 
 	printErrorState();
-	printErrorStack();
+	if (cookie != ErrorCookie::None) {
+		printErrorStack();
+	}
 #endif // EFI_BACKUP_SRAM
 	#undef PRINT
 }
@@ -251,8 +258,11 @@ void errorHandlerShowBootReasonAndErrors() {
 
 #define FAIL_REPORT_PREFIX	"fail"
 
-PUBLIC_API_WEAK void onBoardWriteErrorFile(FIL *) {
+void onBoardWriteErrorFile(FIL *) {
+  // placeholder, remove in Nov 2026
 }
+
+std::optional<setup_custom_board_write_error_file_type> custom_board_onBoardWriteErrorFile;
 
 static const char *errorHandlerGetErrorName(ErrorCookie cookie)
 {
@@ -309,14 +319,16 @@ void errorHandlerWriteReportFile(FIL *fd) {
 			//this is file print
 			#define PRINT(format, ...) f_printf(fd, format "\r\n", __VA_ARGS__)
 			printResetReason();
-			printWdResetCounter();
+			printResetCounters();
 #if EFI_BACKUP_SRAM
 			printErrorState();
-			printErrorStack();
+			if (cookie != ErrorCookie::None) {
+				printErrorStack();
+			}
 #endif // EFI_BACKUP_SRAM
-      f_printf(fd, "rusEFI v%d@%u", getRusEfiVersion(), /*do we have a working way to print 64 bit values?!*/(int)SIGNATURE_HASH);
+			f_printf(fd, "rusEFI v%d@%u", getRusEfiVersion(), /*do we have a working way to print 64 bit values?!*/(int)SIGNATURE_HASH);
 			// additional board-specific data
-			onBoardWriteErrorFile(fd);
+			call_board_override(custom_board_onBoardWriteErrorFile, fd);
 			// todo: figure out what else would be useful
 			f_close(fd);
 			enginePins.warningLedPin.setValue(1);
@@ -384,7 +396,14 @@ void errorHandlerDeleteReports() {
 	errorHandlerCheckReportFiles();
 }
 
+#endif // EFI_FILE_LOGGING
+
+void errorHandlerResetCounters() {
+#if EFI_USE_OPENBLT
+	SharedParamsWriteByIndex(1, 0);
+	SharedParamsWriteByIndex(2, 0);
 #endif
+}
 
 #if EFI_BACKUP_SRAM
 static void errorHandlerSaveStack(backupErrorState *err, uint32_t *sp)
@@ -483,12 +502,16 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 		// All hope is now lost.
 
 		// Reboot!
-		NVIC_SystemReset();
+		rebootNow();
 	}
 
 #endif // EFI_PROD_CODE
 }
 #endif /* EFI_SIMULATOR || EFI_PROD_CODE */
+
+#if EFI_UNIT_TEST
+bool silentUnitTest = true; // performance optimization since console output is pricey
+#endif // EFI_UNIT_TEST
 
 /**
  * @returns TRUE in case there were warnings recently
@@ -511,7 +534,7 @@ bool warningVA(ObdCode code, bool reportToTs, const char *fmt, va_list args) {
 
 	// print Pxxxx (for standard OBD) or Cxxxx (for custom) prefix
 	size_t size = snprintf(warningBuffer, sizeof(warningBuffer), "%s%04d: ",
-		code < ObdCode::CUSTOM_NAN_ENGINE_LOAD ? "P" : "C", (int) code);
+		ObdCodeIsCustom(code) ? "C" : "P", (int) code);
 
 	chvsnprintf(warningBuffer + size, sizeof(warningBuffer) - size, fmt, args);
 
@@ -519,7 +542,9 @@ bool warningVA(ObdCode code, bool reportToTs, const char *fmt, va_list args) {
 #if EFI_SIMULATOR || EFI_PROD_CODE
 	efiPrintf("WARNING: %s", warningBuffer);
 #else
-	printf("WARNING: %s\n", warningBuffer);
+	if (!silentUnitTest) {
+		printf("WARNING: %s\n", warningBuffer);
+	}
 #endif /* EFI_SIMULATOR || EFI_PROD_CODE */
 
 	return false;
@@ -590,17 +615,59 @@ void onUnlockHook(void) {
 #include <stdexcept>
 #endif
 
+// bumped on every configError() so refreshConfigErrorState() can tell whether the
+// current message is its own or was raised by an unregistered legacy caller
+static uint32_t configErrorSeq = 0;
+
 void configError(const char *fmt, ...) {
 		va_list ap;
 		va_start(ap, fmt);
 		chvsnprintf(configErrorMessageBuffer, sizeof(configErrorMessageBuffer), fmt, ap);
 		va_end(ap);
 		hasConfigErrorFlag = true;
+		configErrorSeq++;
 }
 
 const char* getConfigErrorMessage() {
 	return configErrorMessageBuffer;
 }
+
+std::optional<setup_custom_bool_type> custom_board_updateConfigError;
+
+static bool refreshRaisedConfigError = false;
+static uint32_t refreshRaisedSeq = 0;
+
+void refreshConfigErrorState() {
+	// core producers go here, worst first, before the board hook
+	bool active = checkSettingsWriteFailure();
+	if (!active) {
+		active = get_board_override_result(custom_board_updateConfigError, false);
+	}
+	if (active) {
+		// the producer has just called configError() with its message
+		refreshRaisedConfigError = true;
+		refreshRaisedSeq = configErrorSeq;
+		return;
+	}
+	if (refreshRaisedConfigError) {
+		refreshRaisedConfigError = false;
+		// a seq mismatch means a legacy caller raised after our condition fired - leave theirs latched
+		if (refreshRaisedSeq == configErrorSeq) {
+			clearConfigErrorMessage();
+		}
+	}
+}
+
+#if EFI_UNIT_TEST
+void resetConfigErrorStateForUnitTest() {
+	custom_board_updateConfigError = {};
+	refreshRaisedConfigError = false;
+	refreshRaisedSeq = 0;
+	configErrorSeq = 0;
+	trackSettingsWriteResult(true);
+	clearConfigErrorMessage();
+}
+#endif
 
 static void firmwareErrorV(ObdCode code, const char *fmt, va_list ap) {
 #if EFI_PROD_CODE
@@ -655,6 +722,7 @@ static void firmwareErrorV(ObdCode code, const char *fmt, va_list ap) {
 	criticalShutdown();
 	enginePins.communicationLedPin.setValue(1, /*force*/true);
 #else // EFI_PROD_CODE
+  UNUSED(code);
 
 	// large buffer on stack is risky we better use normal memory
 	static char errorBuffer[200];

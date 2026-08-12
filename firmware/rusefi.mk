@@ -1,22 +1,4 @@
 
-CHIBIOS_FILE=$(CHIBIOS)/os/readme.txt
-ifeq ("$(wildcard $(CHIBIOS_FILE))","")
-$(info $(CHIBIOS_FILE) not found. Chibios: Invoking "git submodule update --init")
-$(shell git submodule update --init)
-$(info Invoked "git submodule update --init")
-# make is not happy about newly checked out module for some reason but next invocation would work
-$(error Please run 'make' again. Please make sure you have 'git' command in PATH)
-endif
-
-CHIBIOS_CONTRIB_FILE=$(CHIBIOS_CONTRIB)/os/hal/hal.mk
-ifeq ("$(wildcard $(CHIBIOS_CONTRIB_FILE))","")
-$(info $(CHIBIOS_CONTRIB_FILE) not found. Contrib: Invoking "git submodule update --init")
-$(shell git submodule update --init)
-$(info Invoked "git submodule update --init")
-# make is not happy about newly checked out module for some reason but next invocation would work
-$(error Please run 'make' again. Please make sure you have 'git' command in PATH)
-endif
-
 ifeq ($(PROJECT_BOARD),)
 ifneq ($(SHORT_BOARD_NAME),)
   PROJECT_BOARD = $(SHORT_BOARD_NAME)
@@ -45,11 +27,9 @@ endif
 
 -include $(BOARD_DIR)/config.mk
 
-PIN_NAMES_FILE=$(BOARD_DIR)/connectors/generated_ts_name_by_pin.cpp
-
-ifneq ("$(wildcard $(PIN_NAMES_FILE))","")
-$(info found $(PIN_NAMES_FILE) )
-ALLCPPSRC += $(PIN_NAMES_FILE)
+# Build the generated pin code only if the connector directory exists
+ifneq ("$(wildcard $(BOARD_DIR)/connectors/*.yaml)","")
+  ALLCPPSRC += $(BOARD_DIR)/connectors/generated_ts_name_by_pin.cpp
 endif
 
 # CPU-dependent defs

@@ -9,6 +9,7 @@
 #include "hellen_mm64_meta.h"
 #include "hellen_mm100_meta.h"
 #include "hellen_mm176_meta.h"
+#include "hellen_premium176_meta.h"
 
 // stm32 UART8
 #define H144_UART8_RX E0
@@ -144,17 +145,22 @@
 
 #define H144_IN_AUX1_ANALOG EFI_ADC_8
 #define H144_IN_AUX1_DIGITAL B0
+
+#define H144_IN_AUX2 C4
 #define H144_IN_AUX2_ANALOG EFI_ADC_14
 // fun fact: same input goes to TWO stm32 pins so that we can use it both as analog and ICU capture
 //#define H144_IN_AUX2_DIGITAL C4
 // TIM1_CH1
 #define H144_IN_AUX2_DIGITAL E9
 
+#define H144_IN_AUX3 C5
 // AIN20 PA7
 #define H144_IN_AUX3_ANALOG EFI_ADC_7
 #define H144_IN_AUX3_DIGITAL A7
 // mega-mcu aux3/4 is flipped comparing to H144_ORIGINAL_MCU_IN_D_AUX4
+
 // AIN22 PC5
+#define H144_IN_AUX4 A7
 #define H144_IN_AUX4_ANALOG EFI_ADC_15
 #define H144_IN_AUX4_DIGITAL C5
 

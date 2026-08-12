@@ -170,8 +170,8 @@ TEST(misc, testMalfunctionCentral) {
 	getErrorCodes(&localCopy);
 	// todo:	ASSERT_EQ(2, localCopy.count);
 
-	for (int code = 0; code < 100; code++) {
-		addError((ObdCode) code);
+	for (int i = 0; i < 100; i++) {
+		addError((ObdCode) i);
 	}
 	getErrorCodes(&localCopy);
 	ASSERT_EQ(MAX_ERROR_CODES_COUNT, localCopy.count);

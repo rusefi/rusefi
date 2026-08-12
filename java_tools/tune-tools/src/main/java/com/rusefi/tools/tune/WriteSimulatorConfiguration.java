@@ -4,14 +4,15 @@ import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.*;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.binaryprotocol.MsqFactory;
+import com.rusefi.tune.xml.MsqFactory;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.config.generated.VariableRegistryValues;
 import com.rusefi.enums.engine_type_e;
+import com.rusefi.ini.reader.IniFileReaderUtil;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -22,7 +23,7 @@ import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.tools.tune.TuneCanTool.ENGINE_TUNE_OUTPUT_FOLDER;
 
 /**
- * see <a href="https://github.com/rusefi/rusefi/wiki/Canned-Tune-Process">...</a>
+ * see <a href="https://wiki.rusefi.com/Canned-Tune-Process">...</a>
  */
 public class WriteSimulatorConfiguration {
     private static final Logging log = getLogging(WriteSimulatorConfiguration.class);
@@ -33,7 +34,7 @@ public class WriteSimulatorConfiguration {
         if (args.length != 1)
             throw new IllegalArgumentException("One argument expected: .ini file name");
         String iniFileName = args[0];
-        IniFileModelImpl ini = IniFileModelImpl.readIniFile(iniFileName);
+        IniFileModel ini = IniFileReaderUtil.readIniFile(iniFileName);
         BinaryProtocol.iniFileProvider = signature -> ini;
 
         log.info("ROOT_FOLDER=" + ROOT_FOLDER);
@@ -56,7 +57,7 @@ public class WriteSimulatorConfiguration {
         }
     }
 
-    private static void writeSpecificEngineType(String iniFileName, engine_type_e engineType, IniFileModelImpl ini) {
+    private static void writeSpecificEngineType(String iniFileName, engine_type_e engineType, IniFileModel ini) {
         try {
             String in = Integration.SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX + "_" + engineType.ordinal() + Integration.SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX;
             readBinaryWriteXmlTune(iniFileName, in,
@@ -81,7 +82,7 @@ public class WriteSimulatorConfiguration {
         Msq m = MsqFactory.valueOf(configuration, ini);
         String name = "KNOCKNOISERPMBINS";
         Constant noiseRpmBins = m.page.get(1).getConstantsAsMap().get(name);
-        if (!noiseRpmBins.getValue().contains(VariableRegistryValues.DEFAULT_RPM_AXIS_HIGH_VALUE + ".0"))
+        if (!noiseRpmBins.getValue().contains(VariableRegistryValues.DEFAULT_RPM_AXIS_HIGH_VALUE + ""))
             throw new IllegalStateException(name + " canary wonders if everything is fine?");
         m.writeXmlFile(outputXmlFileName);
 
@@ -89,3 +90,4 @@ public class WriteSimulatorConfiguration {
         log.info("Looks valid " + newTuneJustToValidate);
     }
 }
+

@@ -1,25 +1,25 @@
 # see https://www.msextra.com/doc/pdf/Microsquirt-IObox-1.pdf
 
 pins:
-  - pin: 9
+  - pin: canbus-1
     id: MSIOBOX_0_OUT_1
     class: outputs
     function: low side, high current
     ts_name: MS IO-Box 0 OUT 1
 
-  - pin: 10
+  - pin: canbus-2
     id: MSIOBOX_0_OUT_2
     class: outputs
     function: low side, high current
     ts_name: MS IO-Box 0 OUT 2
 
-  - pin: 7
+  - pin: canbus-3
     id: MSIOBOX_0_OUT_3
     class: outputs
     function: low side, mid current
     ts_name: MS IO-Box 0 OUT 3
 
-  - pin: 8
+  - pin: canbus-4
     id: MSIOBOX_0_OUT_4
     class: outputs
     function: low side, mid current

@@ -1,0 +1,6 @@
+*.exe
+*.zip
+md5sums
+output.txt
+sha256sums
+updates.xml

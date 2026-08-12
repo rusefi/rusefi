@@ -28,9 +28,11 @@ public class UiUtils {
         }
 
         System.out.println(prefix + " I see " + component.getClass());
-        callback.onComponent(parent, component);
+        boolean shouldRecurse = callback.onComponent(parent, component);
         Container container = (Container) component;
 
+        if (!shouldRecurse)
+            return;
         // Go visit and add all children
         for (Component subComponent : container.getComponents()) {
             if (subComponent == null)
@@ -52,6 +54,36 @@ public class UiUtils {
         // call the Component's paint method, using
         // the Graphics object of the image.
         component.paint(image.getGraphics()); // alternately use .printAll(..)
+
+        // Remove black bars from dialogs
+        if (component instanceof JDialog) {
+            return cropDialog(component, image);
+        }
         return image;
+    }
+
+    static BufferedImage cropDialog(Component component, BufferedImage image) {
+        Insets insets = ((JDialog) component).getInsets();
+
+        int menuH = 0;
+        Container pane = ((JDialog) component).getContentPane();
+        if (pane != null) {
+            Component container = pane.getComponent(0);
+            if (container != null) {
+                Component menu = ((JPanel) container).getComponent(0);
+                // Some dialogs don't have a menu, so their first component is a JPanel
+                if (menu != null && ! (menu instanceof JPanel)) {
+                    menuH = menu.getHeight();
+                }
+            }
+        }
+
+        int x = insets.left;
+        int y = insets.top + menuH;
+        int w = image.getWidth() - insets.left - insets.right;
+        int h = image.getHeight() - insets.top - insets.bottom - menuH;
+
+        BufferedImage cropped = image.getSubimage(x, y, w, h);
+        return cropped;
     }
 }

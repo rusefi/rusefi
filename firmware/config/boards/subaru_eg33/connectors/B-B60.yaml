@@ -4,7 +4,7 @@ pins:
   - pin: 1
     color:
     function: TPS sensor GND
-    type: sgnd
+    type: agnd
 
   - pin: 2
     id: EFI_ADC_12
@@ -31,7 +31,7 @@ pins:
   - pin: 6
     color:
     function: MAF sensor GND
-    type: sgnd
+    type: agnd
 
   - pin: 7
 #   TODO: fix in next HW

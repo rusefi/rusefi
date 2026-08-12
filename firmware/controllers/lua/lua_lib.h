@@ -113,7 +113,7 @@ end \n\
 
 // Motorola big-endian
 #define GET_BIT_RANGE_MSB " \
-function getBitRangeMsb(data, bitIndex, bitWidth) \n\
+function getBitRangeMsbInternal(data, bitIndex, bitWidth) \n\
 	local byteIndex = bitIndex >> 3 \n\
 	local shift = bitIndex - byteIndex * 8 \n\
 	local value = data[1 + byteIndex] \n\

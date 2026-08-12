@@ -1,4 +1,5 @@
 TESTS_SRC_CPP = \
+	tests/test_scoped_logs.cpp \
 	tests/ltft_sandbox.cpp \
 	tests/log_replay_sandbox.cpp \
 	tests/trigger/test_all_triggers.cpp \
@@ -13,19 +14,26 @@ TESTS_SRC_CPP = \
 	tests/trigger/test_miata_na_tdc.cpp \
 	tests/trigger/test_cam_vvt_input.cpp \
 	tests/trigger/test_2jz_vvt.cpp \
+	tests/trigger/test_toyota_3_tooth_cam.cpp \
+	tests/trigger/test_trigger_skipped_wheel.cpp \
 	tests/trigger/test_real_arctic_cat.cpp \
 	tests/trigger/test_real_bosch_quick_start.cpp \
+	tests/trigger/test_real_chrysler_phaser.cpp \
 	tests/trigger/test_real_cranking_miata_NA.cpp \
 	tests/trigger/test_real_cranking_miata_na6.cpp \
 	tests/trigger/test_real_cranking_nissan_vq40.cpp \
-	tests/trigger/test_real_6g72_3000gt.cpp \
+	tests/trigger/test_real_nissan_maxima.cpp \
+	tests/trigger/test_real_bmw_e90_cam.cpp \
 	tests/trigger/test_real_cas_24_plus_1.cpp \
-	tests/trigger/test_trigger_skipped_wheel.cpp \
 	tests/trigger/test_real_4b11.cpp \
 	tests/trigger/test_real_4g93.cpp \
+	tests/trigger/test_real_6g72_3000gt.cpp \
+	tests/trigger/test_real_6g75.cpp \
 	tests/trigger/test_real_ford_coyote.cpp \
 	tests/trigger/test_real_volkswagen.cpp \
+	tests/trigger/test_real_renix_44_2_2.cpp \
 	tests/trigger/test_real_nb2_cranking.cpp \
+	tests/trigger/test_real_neon.cpp \
 	tests/trigger/test_real_gm_24x.cpp \
 	tests/trigger/test_real_nissan_hr.cpp \
 	tests/trigger/test_real_nissan_hr_vvt.cpp \
@@ -33,7 +41,6 @@ TESTS_SRC_CPP = \
 	tests/trigger/test_real_k20.cpp \
 	tests/trigger/test_real_jeep_evd.cpp \
 	tests/trigger/test_real_subaru_ej20g.cpp \
-	tests/trigger/test_toyota_3_tooth_cam.cpp \
 	tests/trigger/test_real_noisy_trigger.cpp \
 	tests/trigger/test_map_cam.cpp \
 	tests/trigger/test_rpm_multiplier.cpp \
@@ -42,11 +49,16 @@ TESTS_SRC_CPP = \
 	tests/trigger/test_nissan_vq_vvt.cpp \
 	tests/trigger/test_override_gaps.cpp \
 	tests/trigger/test_injection_scheduling.cpp \
+	tests/trigger/test_instant_rpm.cpp \
+	tests/trigger/test_teeth_to_logicdata.cpp \
+	tests/trigger/test_logicdata_to_csv.cpp \
 	tests/sent/test_sent.cpp \
 	tests/ignition_injection/injection_mode_transition.cpp \
 	tests/ignition_injection/test_startOfCrankingPrimingPulse.cpp \
 	tests/ignition_injection/test_multispark.cpp \
+	tests/ignition_injection/test_kickstart.cpp \
 	tests/ignition_injection/test_hd_cranking.cpp \
+	tests/ignition_injection/test_hd_cranking2.cpp \
 	tests/ignition_injection/test_ignition_scheduling.cpp \
 	tests/ignition_injection/test_fuelCut.cpp \
 	tests/ignition_injection/test_fuel_computer.cpp \
@@ -69,6 +81,7 @@ TESTS_SRC_CPP = \
 	tests/launch/test_retard_threshold_rpm.cpp \
 	tests/launch/test_ignition_angle_advance.cpp \
 	tests/launch/test_spark_skip_ratio.cpp \
+	tests/launch/test_launch_rpm_threshold.cpp \
 	tests/shift_torque_reduction/flat_shift_condition_test_base.cpp \
 	tests/shift_torque_reduction/shift_torque_reduction_switch_params.cpp \
 	tests/shift_torque_reduction/shift_torque_reduction_switch_test_base.cpp \
@@ -94,6 +107,7 @@ TESTS_SRC_CPP = \
 	tests/test_fft.cpp \
 	tests/lua/test_lua_basic.cpp \
 	tests/lua/test_bit_range_msb.cpp \
+	tests/lua/test_bit_range.cpp \
 	tests/lua/test_lua_dbc.cpp \
 	tests/lua/test_motorola_dbc.cpp \
 	tests/lua/test_lua_bit_range_msb.cpp \
@@ -136,13 +150,18 @@ TESTS_SRC_CPP = \
 	tests/test_pwm_generator.cpp \
 	tests/test_log_buffer.cpp \
 	tests/test_event_queue.cpp \
+	tests/test_scheduling_pool.cpp \
 	tests/test_cpp_memory_layout.cpp \
 	tests/test_pid.cpp \
 	tests/test_accel_enrichment.cpp \
+	tests/test_sd_log_trigger.cpp \
 	tests/test_gpiochip.cpp \
 	tests/test_deadband.cpp \
 	tests/test_sticky_pps.cpp \
 	tests/test_knock.cpp \
+	tests/test_misfire_detection.cpp \
+	tests/test_config_error_refresh.cpp \
+	tests/test_check_engine_light.cpp \
 	tests/test_lambda_monitor.cpp \
 	tests/test_flex_sensor.cpp \
 	tests/sensor/basic_sensor.cpp \
@@ -163,7 +182,12 @@ TESTS_SRC_CPP = \
 	tests/test_hpfp_integrated.cpp \
 	tests/test_fuel_math.cpp \
 	tests/test_binary_log.cpp \
+	tests/test_tooth_logger.cpp \
+	tests/test_tooth_logger_buffer.cpp \
+	test-framework/csv2logicdata.cpp \
+	test-framework/logicdata2csv.cpp \
 	tests/binary_log/test_bit_logger_field.cpp \
+	tests/binary_log/test_log_file_content.cpp \
 	tests/test_dynoview.cpp \
 	tests/test_gpio.cpp \
 	tests/test_limp.cpp \
@@ -175,12 +199,14 @@ TESTS_SRC_CPP = \
 	tests/actuators/test_aux_valves.cpp \
 	tests/actuators/test_antilag.cpp \
 	tests/actuators/test_boost.cpp \
+	tests/actuators/test_dc_hardware_pool.cpp \
 	tests/actuators/test_dc_motor.cpp \
 	tests/actuators/test_etb.cpp \
 	tests/actuators/test_etb_integrated.cpp \
 	tests/actuators/test_fan_control.cpp \
 	tests/actuators/test_fuel_pump.cpp \
 	tests/actuators/test_gppwm.cpp \
+	tests/actuators/test_idle_hardware.cpp \
 	tests/actuators/test_main_relay.cpp \
 	tests/actuators/test_stepper.cpp \
 	tests/actuators/test_tacho.cpp \
@@ -191,6 +217,7 @@ TESTS_SRC_CPP = \
 	tests/actuators/boost/test_open_loop_multipliers.cpp \
 	tests/actuators/boost/test_closed_loop_adders.cpp \
 	tests/controllers/can/test_can_rx.cpp \
+	tests/controllers/can/test_can_msg_tx.cpp \
 	tests/controllers/can/test_can_serial.cpp \
 	tests/controllers/can/test_can_wideband.cpp \
 	tests/controllers/can/test_obd2.cpp \
@@ -204,8 +231,13 @@ TESTS_SRC_CPP = \
 	tests/controllers/algo/test_closed_loop_idle.cpp \
 	tests/controllers/modules/test_example_module.cpp \
 	tests/controllers/test_flash.cpp \
+	tests/controllers/test_second_tables.cpp \
 	tests/controllers/modules/vvl_controller/vvl_controller_rpm_condition.cpp \
 	tests/controllers/modules/vvl_controller/vvl_controller_clt_condition.cpp \
 	tests/controllers/modules/vvl_controller/vvl_controller_tps_condition.cpp \
 	tests/controllers/modules/vvl_controller/vvl_controller_map_condition.cpp \
-	tests/controllers/modules/vvl_controller/vvl_controller_afr_condition.cpp
+	tests/controllers/modules/vvl_controller/vvl_controller_afr_condition.cpp \
+	tests/controllers/modules/test_configuration_wizard.cpp \
+	tests/controllers/can/dash/test_can_bmw_e46.cpp \
+	tests/controllers/algo/rotational_idle/test_rotational_idle.cpp \
+	tests/bean/test_bean_logic.cpp

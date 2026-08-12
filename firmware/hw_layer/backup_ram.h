@@ -26,6 +26,12 @@ enum class backup_ram_e {
 	 */
 	IgnCounter,
 
+	/**
+	 * MMC card status
+	 * 32 bits value, see mmc_card.c for details
+	 */
+	MccStatus,
+
 	/* The number of stored backup variables */
 	BACKUP_RAM_NUM,
 };

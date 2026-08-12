@@ -1,1 +1,1 @@
-https://github.com/rusefi/rusefi/wiki/Lua-Scripting
+https://wiki.rusefi.com/Lua-Scripting

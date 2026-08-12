@@ -15,13 +15,15 @@
 */
 
 /* change address & length if bootloader */
-bootloader_size = 32k;
+/* H743 has all sectors 128K size */
+bootloader_size = 128k;
 flash_start = 0x08000000 + (DEFINED(HAS_BOOTLOADER) ? bootloader_size : 0);
 flash_size = DEFINED(IS_BOOTLOADER) ? bootloader_size : 1M;
 image_size = DEFINED(HAS_BOOTLOADER) ? (flash_size - bootloader_size) : flash_size;
 
 /* OpenBLT <-> main FW shared area */
-_OpenBLT_Shared_Params_Size = DEFINED(HAS_BOOTLOADER) || DEFINED(IS_BOOTLOADER) ? 16 : 0;
+/* 32 bytes so that the stacks that follow stay aligned to the 32-byte MPU guard page granularity */
+_OpenBLT_Shared_Params_Size = DEFINED(HAS_BOOTLOADER) || DEFINED(IS_BOOTLOADER) ? 32 : 0;
 
 /*
  * STM32H743xI generic setup.
@@ -37,8 +39,8 @@ _OpenBLT_Shared_Params_Size = DEFINED(HAS_BOOTLOADER) || DEFINED(IS_BOOTLOADER) 
 MEMORY
 {
     bl          : org = 0x08000000, len = bootloader_size
-    flash0 (rx) : org = flash_start, len = flash_size    /* Flash bank1+bank2 */
-    flash1 (rx) : org = flash_start, len = flash_size    /* Flash bank 1 (code) */
+    flash0 (rx) : org = flash_start, len = image_size    /* Flash bank1+bank2 */
+    flash1 (rx) : org = flash_start, len = image_size    /* Flash bank 1 (code) */
     flash2 (rx) : org = 0x08100000, len = 1M             /* Flash bank 2 (engine config) */
     flash3 (rx) : org = 0x00000000, len = 0
     flash4 (rx) : org = 0x00000000, len = 0
@@ -147,6 +149,20 @@ SECTIONS
     {
         *(.bkup_ram_noinit)
     } > BKUP_RAM
+
+    /* shared between main FW and OpenBLT */
+    .shared (NOLOAD) :
+    {
+        . = ALIGN(4);
+        _sshared = .;
+        __shared_start__ = _sshared;
+        *(.shared)
+        *(.shared.*)
+        KEEP(*(.shared))
+        . = ALIGN(4);
+        _eshared = .;
+        __shared_end__ = _eshared;
+    } > shared
 }
 
 /* Code rules inclusion.*/

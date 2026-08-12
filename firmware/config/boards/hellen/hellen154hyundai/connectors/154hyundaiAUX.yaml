@@ -23,7 +23,7 @@ pins:
     function: wg_dis
 
   - pin: X1
-    function: GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: X2

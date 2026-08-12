@@ -26,7 +26,7 @@ static CanTsListener g_listener;
 // for RX, this one delegates to above FIFO via global field
 static CanTransport transport(&g_listener);
 
-static CanStreamerState state(&transport, /*bus*/0, CAN_ECU_SERIAL_TX_ID);
+static CanStreamerState state(&transport, &transport, /*bus*/0, CAN_ECU_SERIAL_RX_ID, CAN_ECU_SERIAL_TX_ID);
 #endif // HAL_USE_CAN
 
 #if HAL_USE_CAN || EFI_UNIT_TEST
@@ -54,9 +54,13 @@ void CanTransport::init() {
 	registerCanListener(g_listener);
 }
 
-can_msg_t CanTransport::transmit(const CanTxMessage */*ctfp*/, can_sysinterval_t /*timeout*/) {
+can_msg_t CanTransport::transmit(CanTxMessage &/*ctfp*/, can_sysinterval_t /*timeout*/) {
 	// we do nothing here - see CanTxMessage::~CanTxMessage()
 	return CAN_MSG_OK;
+}
+
+void CanTransport::onTpFirstFrame() {
+  // todo: why nothing? broken iso-tp on ECU side?
 }
 
 can_msg_t CanTransport::receive(CANRxFrame *crfp, can_sysinterval_t timeout) {

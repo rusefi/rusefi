@@ -44,18 +44,21 @@ struct Status {
 	uint16_t distanceTraveled;
 };
 
-static void populateFrame(Status& msg) {
+void populateFrame(Status& msg) {
 	msg.warningCounter = engine->engineState.warnings.warningCounter;
 	msg.lastErrorCode = static_cast<uint16_t>(engine->engineState.warnings.lastErrorCode);
 
+#if EFI_ENGINE_CONTROL
 	msg.revLimit = !engine->module<LimpManager>()->allowInjection() || !engine->module<LimpManager>()->allowIgnition();
+#endif // EFI_ENGINE_CONTROL
+
 	msg.mainRelay = enginePins.mainRelay.getLogicValue();
 	msg.fuelPump = enginePins.fuelPumpRelay.getLogicValue();
 	msg.checkEngine = enginePins.checkEnginePin.getLogicValue();
 	msg.o2Heater = enginePins.o2heater.getLogicValue();
-#if EFI_SHAFT_POSITION_INPUT
+#if EFI_SHAFT_POSITION_INPUT && EFI_ENGINE_CONTROL
 	msg.lambdaProtectActive = engine->lambdaMonitor.isCut();
-#endif // EFI_SHAFT_POSITION_INPUT
+#endif // EFI_SHAFT_POSITION_INPUT && EFI_ENGINE_CONTROL
 	msg.fan = enginePins.fanRelay.getLogicValue();
 	msg.fan2 = enginePins.fanRelay2.getLogicValue();
 
@@ -67,6 +70,14 @@ static void populateFrame(Status& msg) {
 #endif // MODULE_ODOMETER
 }
 
+struct Status11 {
+  uint8_t brakePedal : 1;
+};
+
+void populateFrame(Status11& msg) {
+  msg.brakePedal = engine->engineState.brakePedalState;
+}
+
 struct Speeds {
 	uint16_t rpm;
 	scaled_angle timing;
@@ -76,7 +87,7 @@ struct Speeds {
 	uint8_t EthanolPercent;
 };
 
-static void populateFrame(Speeds& msg) {
+void populateFrame(Speeds& msg) {
 	auto rpm = Sensor::getOrZero(SensorType::Rpm);
 	msg.rpm = rpm;
 
@@ -98,7 +109,7 @@ struct PedalAndTps {
 	scaled_percent wastegate;
 };
 
-static void populateFrame(PedalAndTps& msg)
+void populateFrame(PedalAndTps& msg)
 {
 	msg.pedal = Sensor::get(SensorType::AcceleratorPedal).value_or(-1);
 	msg.tps1 = Sensor::get(SensorType::Tps1).value_or(-1);
@@ -116,7 +127,7 @@ struct Sensors1 {
 	scaled_channel<uint8_t, 2> fuelLevel;
 };
 
-static void populateFrame(Sensors1& msg) {
+void populateFrame(Sensors1& msg) {
 	msg.map = Sensor::getOrZero(SensorType::Map);
 
 	msg.clt = Sensor::getOrZero(SensorType::Clt) + PACK_ADD_TEMPERATURE;
@@ -141,7 +152,7 @@ struct Sensors2 {
 	scaled_voltage vbatt;
 };
 
-static void populateFrame(Sensors2& msg) {
+void populateFrame(Sensors2& msg) {
 	msg.oilPressure = Sensor::get(SensorType::OilPressure).value_or(-1);
 	msg.oilTemp = Sensor::getOrZero(SensorType::OilTemperature) + PACK_ADD_TEMPERATURE;
 	msg.fuelTemp = Sensor::getOrZero(SensorType::FuelTemperature) + PACK_ADD_TEMPERATURE;
@@ -155,7 +166,7 @@ struct Fueling {
 	uint16_t knockCount;
 };
 
-static void populateFrame(Fueling& msg) {
+void populateFrame(Fueling& msg) {
 #if EFI_ENGINE_CONTROL
 	msg.cylAirmass = engine->fuelComputer.sdAirMassInOneCylinder;
 	msg.estAirflow = engine->engineState.airflowEstimate;
@@ -170,7 +181,7 @@ struct Fueling2 {
 	scaled_percent fuelTrim[2];
 };
 
-static void populateFrame(Fueling2& msg) {
+void populateFrame(Fueling2& msg) {
 #ifdef MODULE_ODOMETER
 	msg.fuelConsumedGram = engine->module<TripOdometer>()->getConsumedGrams();
 	msg.fuelFlowRate = engine->module<TripOdometer>()->getConsumptionGramPerSecond();
@@ -188,7 +199,7 @@ struct Fueling3 {
 	scaled_channel<uint16_t, 10> FuelPressureHigh;
 };
 
-static void populateFrame(Fueling3& msg) {
+void populateFrame(Fueling3& msg) {
 	msg.Lambda = Sensor::getOrZero(SensorType::Lambda1);
 	msg.Lambda2 = Sensor::getOrZero(SensorType::Lambda2);
 	msg.FuelPressureLow = Sensor::getOrZero(SensorType::FuelPressureLow);
@@ -199,8 +210,8 @@ struct PerCylinderKnock {
   int8_t knock[8];
 };
 
-static void populateFrame(PerCylinderKnock& msg) {
-  for (size_t index = 0;index<std::min(8, MAX_CYLINDER_COUNT);index++) {
+void populateFrame(PerCylinderKnock& msg) {
+  for (int index = 0; index<std::min(8, MAX_CYLINDER_COUNT); index++) {
 	  msg.knock[index] = engine->module<KnockController>()->m_knockCyl[index];
   }
 }
@@ -216,7 +227,7 @@ struct Cams {
 	int8_t Bank2ExhaustTarget;
 };
 
-static void populateFrame(Cams& msg) {
+void populateFrame(Cams& msg) {
 #if EFI_SHAFT_POSITION_INPUT
 	msg.Bank1IntakeActual  = engine->triggerCentral.getVVTPosition(0, 0);
 	msg.Bank1ExhaustActual = engine->triggerCentral.getVVTPosition(0, 1);
@@ -235,7 +246,7 @@ struct Egts {
 	uint8_t egt[8];
 };
 
-static void populateFrame(Egts& msg) {
+void populateFrame(Egts& msg) {
 	msg.egt[0] = Sensor::getOrZero(SensorType::EGT1) / 5;
 	msg.egt[1] = Sensor::getOrZero(SensorType::EGT2) / 5;
 	// DBC Defines signals Egt3 through Egt8 but we do not have the code
@@ -249,7 +260,7 @@ void sendCanVerbose() {
 #endif // HW_HELLEN
 	auto base = engineConfiguration->verboseCanBaseAddress;
 	auto isExt = engineConfiguration->rusefiVerbose29b;
-	auto canChannel = engineConfiguration->canBroadcastUseChannelTwo;
+	auto canChannel = (int)engineConfiguration->canBroadcastUseChannel;
 
 	transmitStruct<Status>		(CanCategory::VERBOSE, base + 0, isExt, canChannel);
 	transmitStruct<Speeds>		(CanCategory::VERBOSE, base + 1, isExt, canChannel);
@@ -263,6 +274,7 @@ void sendCanVerbose() {
 
 	transmitStruct<Egts>	(CanCategory::VERBOSE, base + 9, isExt, canChannel);
 	transmitStruct<PerCylinderKnock>	(CanCategory::VERBOSE, base + 10, isExt, canChannel);
+	transmitStruct<Status11>	(CanCategory::VERBOSE, base + 11, isExt, canChannel);
 }
 
 #endif // EFI_CAN_SUPPORT

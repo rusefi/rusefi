@@ -29,6 +29,7 @@ decl_frag<trigger_state_s, 4>{},	// vvt2e
 decl_frag<trigger_state_primary_s>{},
 decl_frag<wall_fuel_state_s>{},
 decl_frag<closed_loop_idle_s>{},
+decl_frag<misfire_detection_state_s>{},
 decl_frag<live_data_example_s>{},
 decl_frag<idle_state_s>{},
 decl_frag<electronic_throttle_s, 0>{},	// etb1
@@ -43,3 +44,4 @@ decl_frag<mc33810_state_s>{},
 decl_frag<long_term_fuel_trim_state_s>{},
 decl_frag<short_term_fuel_trim_state_s>{},
 decl_frag<vvl_controller_state_s>{},
+decl_frag<live_data_rotational_idle_s>{},

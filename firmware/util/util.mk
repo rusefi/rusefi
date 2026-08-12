@@ -19,6 +19,7 @@ UTILSRC_CPP = \
 	$(PROJECT_DIR)/util/efilib.cpp \
 	$(RUSEFI_LIB)/util/src/timer.cpp \
 	$(UTIL_DIR)/os_util.cpp \
+	$(UTIL_DIR)/hexdump.cpp \
 	
 	
 UTIL_INC = \

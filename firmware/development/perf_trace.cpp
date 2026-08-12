@@ -1,7 +1,7 @@
 /**
  * @file perf_trace.cpp
  *
- * https://github.com/rusefi/rusefi/wiki/Developer-Performance-Tracing
+ * https://wiki.rusefi.com/Developer-Performance-Tracing
  *
  * See JsonOutput.java in rusEfi console
  */
@@ -12,16 +12,14 @@
 #error ENABLE_PERF_TRACE must be defined!
 #endif
 
-enum class EPhase : char
-{
+enum class EPhase : char {
 	Start,
 	End,
 	InstantThread,
 	InstantGlobal,
 };
 
-struct TraceEntry
-{
+struct TraceEntry {
 	PE Event;
 	EPhase Phase;
 	uint8_t IsrId;
@@ -103,6 +101,9 @@ static void perfEventImpl(PE event, EPhase phase) {
 	}
 
 	entry.Timestamp = timestamp;
+#else
+	UNUSED(event);
+	UNUSED(phase);
 #endif // EFI_PROD_CODE
 }
 

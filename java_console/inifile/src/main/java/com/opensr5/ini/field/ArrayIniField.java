@@ -1,12 +1,8 @@
 package com.opensr5.ini.field;
 
-import com.opensr5.ConfigurationImage;
-import com.rusefi.config.Field;
 import com.rusefi.config.FieldType;
-import com.rusefi.tune.xml.Constant;
 import org.jetbrains.annotations.Nullable;
 
-import java.nio.ByteBuffer;
 import java.util.LinkedList;
 import java.util.Objects;
 
@@ -85,6 +81,11 @@ public class ArrayIniField extends IniField {
     }
 
     @Override
+    public <T> T accept(IniFieldVisitor<T> visitor) {
+        return visitor.visit(this);
+    }
+
+    @Override
     public int getSize() {
         return type.getStorageSize() * cols * rows;
     }
@@ -102,19 +103,7 @@ public class ArrayIniField extends IniField {
         return sb.toString();
     }
 
-    @Override
-    public String getValue(final ConfigurationImage image) {
-        final String[][] values = new String[rows][cols];
-        for (int rowIndex = 0; rowIndex < rows; rowIndex++) {
-            for (int colIndex = 0; colIndex < cols; colIndex++) {
-                final Field f = new Field(getName() + "_" + colIndex, getOffset(rowIndex, colIndex), getType());
-                values[rowIndex][colIndex] = f.getAnyValue(image, multiplier);
-            }
-        }
-        return formatValue(values);
-    }
-
-    private int getOffset(int rowIndex, int colIndex) {
+    public int getOffset(int rowIndex, int colIndex) {
         return getOffset() + (rowIndex * cols + colIndex) * getType().getStorageSize();
     }
 
@@ -133,25 +122,6 @@ public class ArrayIniField extends IniField {
         }
     }
 
-    @Override
-    public void setValue(ConfigurationImage image, Constant constant) {
-        Objects.requireNonNull(image, "image array setter");
-        final String[][] values = getValues(constant.getValue());
-        for (int rowIndex = 0; rowIndex < values.length; rowIndex++) {
-            final String[] row = values[rowIndex];
-            for (int colIndex = 0; colIndex < row.length; colIndex++) {
-                ByteBuffer wrapped = image.getByteBuffer(getOffset(rowIndex, colIndex), type.getStorageSize());
-                ScalarIniField.setValue(
-                    wrapped,
-                    type,
-                    values[rowIndex][colIndex],
-                    Field.NO_BIT_OFFSET,
-                    multiplier,
-                    0
-                );
-            }
-        }
-    }
 
     @Override
     public String toString() {

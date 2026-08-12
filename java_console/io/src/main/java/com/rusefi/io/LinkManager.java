@@ -6,13 +6,15 @@ import com.rusefi.Callable;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.core.EngineState;
+import com.rusefi.core.RusEfiSignature;
+import com.rusefi.core.io.UnsupportedEcuInfo;
 import com.rusefi.io.serial.BufferedSerialIoStream;
 import com.rusefi.io.serial.StreamConnector;
 import com.rusefi.io.can.PCanIoStream;
 import com.rusefi.io.can.SocketCANIoStream;
 import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.io.tcp.TcpIoStream;
-import com.rusefi.util.IoUtils;
+import com.rusefi.util.ExitUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Closeable;
@@ -35,6 +37,19 @@ public class LinkManager implements Closeable {
     private static final Logging log = getLogging(LinkManager.class);
     public static final String PCAN = "PCAN";
     public static final String SOCKET_CAN = "SocketCAN";
+    // Synthetic marker for a board in the STM32 built-in bootloader (DFU). Not a real serial port —
+    // never opened as a stream; used only to surface DFU in the ports list [tag:better_ux_for_flashing].
+    public static final String DFU = "DFU";
+
+    @FunctionalInterface
+    public interface EcuCompatibilityListener {
+        EcuCompatibilityListener VOID = (port, info) -> { };
+
+        void onUnsupportedEcu(String port, UnsupportedEcuInfo info);
+
+        default void onCompatibleEcu(String port, RusEfiSignature signature) {
+        }
+    }
 
     @NotNull
     public static final LogLevel LOG_LEVEL = LogLevel.INFO;
@@ -59,8 +74,20 @@ public class LinkManager implements Closeable {
     private boolean needPullLiveData = true;
     public final MessagesListener messageListener = (source, message) -> log.info(source + ": " + message);
     private boolean isDisconnectedByUser;
+    private boolean notifyGlobalStatusOnClose = true;
+    private volatile EcuCompatibilityListener ecuCompatibilityListener = EcuCompatibilityListener.VOID;
+
+    // The board identity this link records at connect time. Defaults to a private instance (probe/tool
+    // LinkManagers); production consoles share ConnectivityContext's instance so flashing decisions see
+    // the live-connected board. [tag:better_ux_for_flashing]
+    private final com.rusefi.core.io.ConnectedEcuTarget connectedEcuTarget;
 
     public LinkManager() {
+        this(new com.rusefi.core.io.ConnectedEcuTarget());
+    }
+
+    public LinkManager(com.rusefi.core.io.ConnectedEcuTarget connectedEcuTarget) {
+        this.connectedEcuTarget = connectedEcuTarget;
         engineState = new EngineState(new EngineState.EngineStateListenerImpl() {
             @Override
             public void beforeLine(String fullLine) {
@@ -72,14 +99,35 @@ public class LinkManager implements Closeable {
     }
 
     @NotNull
+    public com.rusefi.core.io.ConnectedEcuTarget getConnectedEcuTarget() {
+        return connectedEcuTarget;
+    }
+
+    public LinkManager setEcuCompatibilityListener(EcuCompatibilityListener listener) {
+        ecuCompatibilityListener = Objects.requireNonNull(listener);
+        return this;
+    }
+
+    public void reportUnsupportedEcu(UnsupportedEcuInfo info) {
+        ecuCompatibilityListener.onUnsupportedEcu(lastTriedPort, info);
+    }
+
+    public void reportCompatibleEcu(RusEfiSignature signature) {
+        ecuCompatibilityListener.onCompatibleEcu(lastTriedPort, signature);
+    }
+
+    @NotNull
     public CountDownLatch connect(String port, boolean isScanningForEcu) {
         final CountDownLatch connected = new CountDownLatch(1);
 
-        startAndConnect(port, new ConnectionStateListener() {
+        startAndConnect(port, new ConnectionStatusLogic.Listener() {
+            @Override
+            public void onConnectionStatus(boolean isConnected) {}
+
             @Override
             public void onConnectionFailed(String s) {
                 if (!isScanningForEcu)
-                    IoUtils.exit("TERMINATING: CONNECTION FAILED, did you specify the right port name? " + s, -1);
+                    ExitUtil.exit("TERMINATING: CONNECTION FAILED, did you specify the right port name? " + s, -1);
             }
 
             @Override
@@ -105,6 +153,24 @@ public class LinkManager implements Closeable {
         SerialPort[] findPorts();
     }
 
+    // todo: proper design? mock?
+    public void setBinaryProtocolForTests(BinaryProtocol binaryProtocol) {
+        this.connector = new LinkConnector() {
+            @Override
+            public void connectAndReadConfiguration(BinaryProtocol.Arguments arguments, ConnectionStatusLogic.Listener listener) {
+            }
+
+            @Override
+            public void send(String command, boolean fireEvent) {
+            }
+
+            @Override
+            public BinaryProtocol getBinaryProtocol() {
+                return binaryProtocol;
+            }
+        };
+    }
+
     public static Set<String> getCommPorts() {
         SerialPort[] ports = SerialPortSource.REAL.findPorts();
         // wow sometimes driver returns same port name more than once?!
@@ -112,10 +178,6 @@ public class LinkManager implements Closeable {
     }
 
     public BinaryProtocol getBinaryProtocol() {
-        return getCurrentStreamState();
-    }
-
-    public BinaryProtocol getCurrentStreamState() {
         Objects.requireNonNull(connector, "connector");
         return connector.getBinaryProtocol();
     }
@@ -164,16 +226,59 @@ public class LinkManager implements Closeable {
         return this;
     }
 
+    /**
+     * When false, {@link #close()} does not push {@link ConnectionStatusValue#NOT_CONNECTED} to the
+     * global {@link ConnectionStatusLogic#INSTANCE}.  Set this on short-lived scanner probes so they
+     * do not evict the splash-screen auto-connect or any other persistent connection.
+     */
+    public LinkManager setNotifyGlobalStatusOnClose(boolean notify) {
+        this.notifyGlobalStatusOnClose = notify;
+        return this;
+    }
+
+    public boolean getNotifyGlobalStatusOnClose() {
+        return notifyGlobalStatusOnClose;
+    }
+
     public void disconnect() {
         log.info("disconnect");
         isDisconnectedByUser = true;
         close();
     }
 
+    /** Re-enable automatic reconnect without immediately opening a port. */
+    public void allowAutomaticReconnect() {
+        log.info("allowAutomaticReconnect");
+        isDisconnectedByUser = false;
+    }
+
     public void reconnect() {
         log.info("reconnect");
         isDisconnectedByUser = false;
         restart();
+    }
+
+    /**
+     * Reconnect to a specific port, updating {@link #lastTriedPort} so the watchdog follows it too. Used
+     * after a firmware flash when the board re-enumerates onto a different port (Linux ttyACMx
+     * renumbering) than the one we were originally connected to. [tag:better_ux_for_flashing]
+     */
+    public void reconnect(String port) {
+        log.info("reconnect " + port);
+        Objects.requireNonNull(port, "port");
+        isDisconnectedByUser = false;
+        lastTriedPort = port;
+        restart();
+    }
+
+    /** Port name of the most recent connect attempt, or null before the first one. */
+    public String getLastTriedPort() {
+        return lastTriedPort;
+    }
+
+    /** True once {@link #disconnect()} was called and no reconnect has happened since. */
+    public boolean isDisconnectedByUser() {
+        return isDisconnectedByUser;
     }
 
     public enum LogLevel {
@@ -224,7 +329,7 @@ public class LinkManager implements Closeable {
 
     public void startAndConnect(
         final String port,
-        final ConnectionStateListener stateListener
+        final ConnectionStatusLogic.Listener stateListener
     ) {
         Objects.requireNonNull(port, "port");
         start(port, stateListener);
@@ -239,7 +344,7 @@ public class LinkManager implements Closeable {
         return connector;
     }
 
-    public void start(String port, ConnectionFailedListener stateListener) {
+    public void start(String port, ConnectionStatusLogic.Listener stateListener) {
         Objects.requireNonNull(port, "port");
         log.info("LinkManager: Starting " + port);
         lastTriedPort = port; // Save port before connection attempt
@@ -301,8 +406,13 @@ public class LinkManager implements Closeable {
         this.connector = connector;
     }
 
+    private static boolean isDfu(String port) {
+        return DFU.equals(port);
+    }
+
     public static boolean isSpecialNotSerial(String port) {
-        return isLogViewerMode(port) || isPcanPort(port) || isSocketCan(port) || TcpConnector.isTcpPort(port);
+        // DFU is a synthetic, non-serial marker [tag:better_ux_for_flashing] — never open it as a stream.
+        return isLogViewerMode(port) || isPcanPort(port) || isSocketCan(port) || TcpConnector.isTcpPort(port) || isDfu(port);
     }
 
     public static boolean isLogViewerMode(String port) {
@@ -310,8 +420,14 @@ public class LinkManager implements Closeable {
         return port.equals(LOG_VIEWER);
     }
 
+    @Deprecated // kill this? we do not plan a any log viewers any time soon?
     public boolean isLogViewer() {
         return connector == LinkConnector.VOID;
+    }
+
+    /** True while a connection is in progress or established (between {@code start()} and {@code close()}). */
+    public boolean isActive() {
+        return isStarted;
     }
 
     public void send(String command, boolean fireEvent) throws InterruptedException {
@@ -321,25 +437,35 @@ public class LinkManager implements Closeable {
     }
 
     public void restart() {
-        if (isDisconnectedByUser)
+        if (isDisconnectedByUser) {
+            log.info("restart: skipped, disconnected by user");
             return;
+        }
+        log.info("restart: closing current connection");
         close(); // Explicitly kill the connection (call connectors destructor??????)
 
         final Set<String> ports = getCommPorts();
         final boolean isPortAvailableAgain = ports.contains(lastTriedPort);
-        log.info("restart isPortAvailableAgain=" + isPortAvailableAgain);
+        log.info("restart isPortAvailableAgain=" + isPortAvailableAgain + " port=" + lastTriedPort);
         if (isPortAvailableAgain) {
-            connect(lastTriedPort, false);
+            // Use isScanningForEcu=true to prevent ExitUtil.exit() on failure —
+            // the watchdog will retry again on the next cycle.
+            log.info("restart: calling connect()");
+            connect(lastTriedPort, true);
+        } else {
+            log.info("restart: port not available, skipping connect");
         }
     }
 
     @Override
     public void close() {
-        ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED);
+        if (notifyGlobalStatusOnClose) {
+            ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED);
+        }
         if (connector != null) {
             connector.stop();
         }
-        isStarted = false; // Connector is dead and cant be in started state (Otherwise the Exception will raised)
+        isStarted = false;
     }
 
     public static String unpackConfirmation(String message) {

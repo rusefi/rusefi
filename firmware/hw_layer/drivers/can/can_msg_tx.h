@@ -17,8 +17,15 @@
 
 #if EFI_SIMULATOR || EFI_UNIT_TEST
 #include "fifo_buffer.h"
-extern fifo_buffer<CANTxFrame, 1024> txCanBuffer;
+extern fifo_buffer<CANTxFrame, TEST_CAN_BUFFER_SIZE> txCanBuffer;
 #endif // EFI_SIMULATOR
+
+// sometimes we want to prohibit default bus index altogether
+#ifndef CAN_TX_WITH_DEFAULT_BUS
+#define CAN_TX_WITH_DEFAULT_BUS TRUE
+#endif
+
+#define DEFAULT_BUS_INDEX 0
 
 /**
  * Represent a message to be transmitted over CAN.
@@ -34,7 +41,15 @@ public:
 	/**
 	 * Create a new CAN message, with the specified extended ID.
 	 */
-	explicit CanTxMessage(CanCategory category, uint32_t eid, uint8_t dlc = 8, size_t bus = 0, bool isExtended = false);
+	explicit CanTxMessage(CanCategory category, uint32_t eid, uint8_t dlc
+#if CAN_TX_WITH_DEFAULT_BUS
+	= 8
+#endif
+	, size_t bus
+#if CAN_TX_WITH_DEFAULT_BUS
+	 = DEFAULT_BUS_INDEX
+#endif
+	 , bool isExtended = false);
 
 	/**
 	 * Destruction of an instance of CanTxMessage will transmit the message over the wire.
@@ -48,6 +63,12 @@ public:
 	 * Configures the device for all messages to transmit from.
 	 */
 	static void setDevice(size_t idx, CANDriver* device);
+	/**
+	 * Removes device from interface list
+	 */
+	static void removeDevice(size_t idx) {
+		setDevice(idx, nullptr);
+	}
 #endif // EFI_CAN_SUPPORT
 
 	size_t busIndex = 0;
@@ -61,6 +82,11 @@ public:
 	 * @brief Write a 16-bit short value to the buffer. Note: this writes in Intel little endian byte order.
 	 */
 	void setShortValue(uint16_t value, size_t offset);
+
+	/**
+	 * @brief Write a 32-bit int value to the buffer. Note: this writes in Intel little endian byte order.
+	 */
+	void setIntValueLsb(uint32_t value, size_t offset);
 
 	/**
 	 Same as above but big endian Motorola
@@ -83,7 +109,7 @@ public:
 	}
 
     void setArray(const uint8_t *data, size_t len) {
-        for (size_t i = 0; i < std::min(len, size_t(8)); i++) {
+        for (size_t i = 0; i < std::min(len, sizeof(m_frame.data8)); i++) {
             m_frame.data8[i] = data[i];
         }
     }
@@ -117,9 +143,9 @@ class CanTxTyped final : public CanTxMessage
 #endif // EFI_CAN_SUPPORT
 
 public:
-	explicit CanTxTyped(CanCategory p_category, uint32_t p_id, bool p_isExtended, size_t canChannel) : CanTxMessage(p_category, p_id, sizeof(TData), canChannel, p_isExtended) { }
+	explicit CanTxTyped(CanCategory p_category, uint32_t p_id, bool p_isExtended, size_t p_canChannel) : CanTxMessage(p_category, p_id, sizeof(TData), p_canChannel, p_isExtended) { }
 
-#if EFI_CAN_SUPPORT
+#if HAS_CAN_FRAME
 	/**
 	 * Access members of the templated type.
 	 *
@@ -134,13 +160,13 @@ public:
 	TData& get() {
 		return *reinterpret_cast<TData*>(&m_frame.data8);
 	}
-#endif // EFI_CAN_SUPPORT
+#endif // HAS_CAN_FRAME
 };
 
 template <typename TData>
-void transmitStruct(CanCategory category, uint32_t id, bool isExtended, bool canChannel)
+void transmitStruct(CanCategory category, uint32_t id, bool isExtended, int p_canChannel)
 {
-	CanTxTyped<TData> frame(category, id, isExtended, canChannel);
+	CanTxTyped<TData> frame(category, id, isExtended, p_canChannel);
 	// Destruction of an instance of CanTxMessage will transmit the message over the wire.
 	// see CanTxMessage::~CanTxMessage()
 	populateFrame(frame.get());

@@ -3,6 +3,14 @@
 # NOTE: Can be overridden externally.
 #
 
+MAKEFLAGS += -r
+# use -j4 unless some value was specified
+NUMJOBS=${NUMJOBS:-" -j4 "}
+MAKEFLAGS += ${NUMJOBS}
+
+# less disk, more RAM
+# MAKEFLAGS += -pipe
+
 PROJECT_DIR = ../firmware
 UNIT_TESTS_DIR=$(PROJECT_DIR)/../unit_tests
 
@@ -23,8 +31,25 @@ include $(PROJECT_DIR)/common.mk
 include $(PROJECT_DIR)/controllers/modules/modules.mk
 
 ifneq ("$(wildcard $(BOARD_DIR)/board_unit_tests.mk)","")
+  $(info including $(BOARD_DIR)/board_unit_tests.mk)
   # could depend on BOARDS_DIR
   include $(BOARD_DIR)/board_unit_tests.mk
+else
+  $(info no board_unit_tests.mk found at $(BOARD_DIR)/board_unit_tests.mk)
+endif
+
+# Exercise the board tooth-log payload path (tooth_logger.h) in unit tests
+# unless the board mk above picked its own payload size
+ifeq (,$(findstring TOOTH_LOG_BOARD_PAYLOAD_SIZE,$(DDEFS)))
+  DDEFS += -DTOOTH_LOG_BOARD_PAYLOAD_SIZE=4
+endif
+
+# The test payload above plus the sensorSnapshot array push
+# sizeof(CompositeBuffer) past BIG_BUFFER_SIZE/2 at the 8192 default, which
+# would fail the ToothLoggerBufferPool::bufferCount >= 2 static_assert - give
+# host builds a roomier big buffer (it is just host RAM here)
+ifeq (,$(findstring BIG_BUFFER_SIZE,$(DDEFS)))
+  DDEFS += -DBIG_BUFFER_SIZE=16384
 endif
 
 include $(PROJECT_DIR)/common_libfirmware.mk
@@ -48,7 +73,9 @@ CPPSRC += $(ALLCPPSRC) \
 	$(PROJECT_DIR)/config/boards/hellen/hellen_board_id.cpp \
 	$(PROJECT_DIR)/hw_layer/drivers/can/can_hw.cpp \
 	$(PROJECT_DIR)/../unit_tests/logicdata.cpp \
+	$(PROJECT_DIR)/../unit_tests/logicdata_reader.cpp \
 	$(PROJECT_DIR)/../unit_tests/test-framework/unit_test_logger.cpp \
+	$(PROJECT_DIR)/../unit_tests/test-framework/msl_to_csv.cpp \
 	$(PROJECT_DIR)/../unit_tests/main.cpp \
 	$(PROJECT_DIR)/../unit_tests/global_mocks.cpp \
 	$(PROJECT_DIR)/../unit_tests/mocks.cpp \

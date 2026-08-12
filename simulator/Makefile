@@ -26,8 +26,28 @@ ifneq ($(OS),Windows_NT)
 endif
 $(info OS is [${OS}])
 
+# Cygwin reports as CYGWIN_NT-* from uname but is still Windows underneath.
+# Detect it so that Windows-specific workarounds (e.g. disabling
+# CH_DBG_SYSTEM_STATE_CHECK) apply on Cygwin builds too.
+IS_CYGWIN = $(if $(findstring CYGWIN,$(OS)),yes,no)
+
+# Windows flag: true for both native Windows_NT and Cygwin.
+ifeq ($(OS),Windows_NT)
+  IS_WIN = yes
+else ifeq ($(IS_CYGWIN),yes)
+  IS_WIN = yes
+else
+  IS_WIN = no
+endif
+
 include ../firmware/rusefi.mk
 include ../firmware/rusefi_rules.mk
+-include ${BOARD_DIR}/firmware/firmware.mk
+# TS page guard flags: extract definitions from board prepend.txt so the
+# simulator build agrees with the generated .ini on which pages are active.
+TS_PAGE_GUARD_FLAGS = EFI_LTFT_CONTROL|EFI_LUA
+TS_PAGE_GUARD_DEFS := $(shell sed -nE 's/^#define[[:space:]]+($(TS_PAGE_GUARD_FLAGS))[[:space:]]+(TRUE|FALSE)[[:space:]]*$$/-D\1=\2/p' $(BOARD_DIR)/prepend.txt $(BOARD_DIR)/prepend_$(SHORT_BOARD_NAME).txt 2>/dev/null)
+DDEFS += $(TS_PAGE_GUARD_DEFS)
 
 # Configure precompiled header
 PCH_DIR = $(PROJECT_DIR)/pch
@@ -37,10 +57,12 @@ PCHSUB = simulator
 # used by USE_SMART_BUILD
 CONFDIR = .
 
-ifneq ($(OS),Windows_NT)
-  SANITIZE = yes
-else
+# SANITIZE=yes enables AddressSanitizer (ASan) which is incompatible with Valgrind.
+# If you want to run Valgrind, you must use SANITIZE=no.
+ifeq ($(IS_WIN),yes)
   SANITIZE = no
+else
+  SANITIZE = yes
 endif
 
 ifeq ($(SIMULATOR_DEBUG_LEVEL_OPT),)
@@ -53,7 +75,7 @@ ifeq ($(USE_OPT),)
   USE_OPT = -Wall -Wno-error=implicit-fallthrough -Wno-error=write-strings -Wno-error=strict-aliasing -Werror=nonnull
   USE_OPT += -D US_TO_NT_MULTIPLIER=$(US_TO_NT_MULTIPLIER)
 
-  ifeq ($(OS),Windows_NT)
+  ifeq ($(IS_WIN),yes)
     USE_OPT += -DEFI_SIM_IS_WINDOWS=1 -DIS_WINDOWS_COMPILER=1
   else
     USE_OPT += -m32 -DEFI_SIM_IS_WINDOWS=0 -DIS_WINDOWS_COMPILER=0
@@ -135,7 +157,7 @@ endif
 #
 
 # Define project name here
-ifeq ($(OS),Windows_NT)
+ifeq ($(IS_WIN),yes)
   PROJECT = rusefi_simulator.exe
 else
   PROJECT = rusefi_simulator
@@ -160,7 +182,7 @@ include $(CHIBIOS)/os/common/ports/SIMIA32/compilers/GCC/port.mk
 include $(CHIBIOS)/os/hal/lib/streams/streams.mk
 #include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
 
-ifeq ($(OS),Windows_NT)
+ifeq ($(IS_WIN),yes)
   include ${CHIBIOS}/os/hal/ports/simulator/win32/platform.mk
 else
   include ${CHIBIOS}/os/hal/ports/simulator/posix/platform.mk
@@ -170,6 +192,8 @@ include $(PROJECT_DIR)/console/binary/tunerstudio.mk
 include $(PROJECT_DIR)/console/console.mk
 include $(PROJECT_DIR)/common.mk
 include $(PROJECT_DIR)/controllers/modules/modules.mk
+# Mass storage include provides getStorageImage()/getStorageImageSize() used by TS FS_IMAGE pages
+include $(PROJECT_DIR)/hw_layer/mass_storage/mass_storage.mk
 
 ifneq ($(BOARD_DIR),)
   # used by custom board custom live data
@@ -180,10 +204,17 @@ ifneq ($(BOARD_DIR),)
   endif
 endif
 
+# SCSI and uzlib sources required by compressed_block_device.cpp for decompressing
+# the embedded INI image (TS FS_IMAGE_DATA page support)
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CSRC =  $(ALLCSRC) \
-  $(RUSEFI_LIB_C)
+  $(RUSEFI_LIB_C) \
+  $(PROJECT_DIR)/ChibiOS-Contrib/os/various/lib_scsi.c \
+  $(PROJECT_DIR)/ext/uzlib/src/tinflate.c \
+  $(PROJECT_DIR)/ext/uzlib/src/tinfgzip.c \
+  $(PROJECT_DIR)/ext/uzlib/src/adler32.c \
+  $(PROJECT_DIR)/ext/uzlib/src/crc32.c
 
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
@@ -205,10 +236,15 @@ CPPSRC = $(ALLCPPSRC) \
   $(RUSEFI_LIB_CPP) \
   main.cpp
 
+# Remove mass_storage_device.cpp from ALLCPPSRC since it requires USB MSD HAL
+# (not available in simulator). We only need getStorageImage() for TS protocol.
+CPPSRC := $(filter-out $(PROJECT_DIR)/hw_layer/mass_storage/mass_storage_device.cpp,$(CPPSRC))
+
 
 # List ASM source files here
 ASMSRC = $(PORTASM)
 
+# mass_storage and uzlib headers needed for getStorageImage() and compressed INI decompression
 INCDIR += . \
   $(PCH_DIR) \
   $(ALLINC) \
@@ -219,6 +255,8 @@ INCDIR += . \
   $(PROJECT_DIR)/development/hw_layer \
   $(CHIBIOS)/os/hal/lib/streams \
   $(RUSEFI_LIB_INC) \
+  $(PROJECT_DIR)/hw_layer/mass_storage \
+  $(PROJECT_DIR)/ext/uzlib/src \
   simulator/system \
   simulator/can \
   simulator
@@ -235,7 +273,7 @@ ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 # Compiler settings
 #
 
-ifeq ($(OS),Windows_NT)
+ifeq ($(IS_WIN),yes)
   # ChibiOS seem to require 32 bit compiler at least on Windows
   # base 32-bit Cygwin is needed with mingw64 32-bit version
   # Cygwin64 would not debug if used with mingw64 32-bit version
@@ -246,20 +284,29 @@ else
   TRGT =
 endif
 
-CC   = $(TRGT)gcc
-CPPC = $(TRGT)g++
-# Enable loading with g++ only if you need C++ runtime support.
-# NOTE: You can use C++ even without C++ support if you are careful. C++
-#       runtime support makes code size explode.
-#LD   = $(CC)
-LD   = $(CPPC)
+# Use 'make USE_CLANG=yes' to build with clang/clang++ instead of gcc/g++.
+ifeq ($(USE_CLANG),yes)
+  CC   = clang
+  CPPC = clang++
+  LD   = clang++
+  COV  = llvm-cov gcov
+else
+  CC   = $(TRGT)gcc
+  CPPC = $(TRGT)g++
+  # Enable loading with g++ only if you need C++ runtime support.
+  # NOTE: You can use C++ even without C++ support if you are careful. C++
+  #       runtime support makes code size explode.
+  #LD   = $(CC)
+  LD   = $(CPPC)
+  COV  = gcov
+endif
+
 CP   = $(TRGT)objcopy
 AS   = $(CC) -x assembler-with-cpp
 AR   = $(TRGT)ar
 OD   = $(TRGT)objdump
 SZ   = $(TRGT)size
 BIN  = $(CP) -O binary
-COV  = gcov
 
 # Define C warning options here
 CWARN = -Wall -Wextra -Wundef -Wstrict-prototypes
@@ -278,6 +325,12 @@ CPPWARN = -Wall -Wextra -Wundef
 # List all user C define here, like -D_DEBUG=1
 UDEFS = -DSIMULATOR
 DDEFS += -DFIRMWARE_ID=\"simulator\" -DSHORT_BOARD_NAME=$(SHORT_BOARD_NAME)
+DDEFS += -DMETA_GENERATED_H_OVERRIDE=\"rusefi_generated_$(SHORT_BOARD_NAME).h\"
+DDEFS += -DMETA_ENGINE_GENERATED_H_OVERRIDE=\"engine_configuration_generated_structures_$(SHORT_BOARD_NAME).h\"
+DDEFS += -DSIGNATURE_H_OVERRIDE=\"signature_$(SHORT_BOARD_NAME).h\"
+DDEFS += -DEFI_EMBED_INI_MSD=TRUE
+DDEFS += -DHAL_USE_USB_MSD=FALSE
+DDEFS += -DEFI_USE_COMPRESSED_INI_MSD=FALSE
 
 
 # Define ASM defines here
@@ -290,7 +343,7 @@ UINCDIR =
 ULIBDIR =
 
 # List all user libraries here
-ifeq ($(OS),Windows_NT)
+ifeq ($(IS_WIN),yes)
 ULIBS = -lws2_32 -static
 else
 ULIBS =
@@ -306,11 +359,22 @@ endif
 
 include $(RULESPATH)/rules.mk
 
-ifneq (yes,$(SUBMAKE))
-ifeq ($(SHORT_BOARD_NAME),)
-  SHORT_BOARD_NAME = f407-discovery
+# Clang does not support GCC's -Wa,-alms= (assembler listing) option.
+# Re-define the flags without the -Wa, listing options when building with clang.
+ifeq ($(USE_CLANG),yes)
+  CFLAGS   = $(MCFLAGS) $(OPT) $(COPT) $(CWARN) $(DEFS)
+  CPPFLAGS = $(MCFLAGS) $(OPT) $(CPPOPT) $(CPPWARN) $(DEFS)
+  ASFLAGS  = $(MCFLAGS) $(OPT) $(ADEFS)
+  ASXFLAGS = $(MCFLAGS) $(OPT) $(ADEFS)
+  CFLAGS  += -MD -MP -MF $(DEPDIR)/$(@F).d
+  CPPFLAGS += -MD -MP -MF $(DEPDIR)/$(@F).d
+  ASFLAGS += -MD -MP -MF $(DEPDIR)/$(@F).d
+  ASXFLAGS += -MD -MP -MF $(DEPDIR)/$(@F).d
 endif
+
+ifneq (yes,$(SUBMAKE))
 include $(PROJECT_DIR)/rusefi_config.mk
+include $(PROJECT_DIR)/docs_enums.mk
 endif
 
 # Enable precompiled header

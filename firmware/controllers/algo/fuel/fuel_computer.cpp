@@ -1,3 +1,12 @@
+/**
+ * @file fuel_computer.cpp
+ * @brief Fuel computer.
+ *
+ * Converts the air mass produced by the air-mass model into a required fuel mass
+ * using the target lambda/AFR (looked up from the target tables and corrected for
+ * stoichiometric ratio of the configured fuel). The result feeds the injector model.
+ */
+
 #include "pch.h"
 
 #include "engine_configuration.h"

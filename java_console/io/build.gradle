@@ -14,15 +14,11 @@ dependencies {
 
     api global_libs.jcip
 
-    // attempt to fix xml binding drama (see #7878, #7430)
-    api global_libs.jaxb
-
     api project(':models')
+    api project(':msq-file')
     api project(':peak-can-basic')
-    api project(':core_io')
-    api project(':logging')
 
-    api group: 'com.fazecast', name: 'jSerialComm', version: '2.11.2'
+    api group: 'com.fazecast', name: 'jSerialComm', version: '2.11.4'
     implementation group: 'tel.schich', name: 'javacan-core', version: "$javaCanVersion"
     implementation group: 'tel.schich', name: 'javacan-core', version: "$javaCanVersion", classifier: 'x86_64'
     implementation global_libs.json
@@ -30,6 +26,7 @@ dependencies {
     api ts_plugin_libs.httpcore
 
     testFixturesApi global_libs.mockito
+    testFixturesApi testFixtures(project(':inifile'))
     testFixturesApi global_libs.annotations
     testFixturesApi global_libs.junit5api
 }

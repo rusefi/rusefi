@@ -76,6 +76,8 @@ void stopSwitchPins() {
 	brain_pin_markUnused(activeConfiguration.launchActivatePin);
 	brain_pin_markUnused(activeConfiguration.ALSActivatePin);
 	brain_pin_markUnused(activeConfiguration.ignitionKeyDigitalPin);
+	brain_pin_markUnused(activeConfiguration.torqueReductionTriggerPin);
+	brain_pin_markUnused(activeConfiguration.nitrousControlTriggerPin);
 }
 
 #if ! EFI_UNIT_TEST

@@ -5,9 +5,12 @@ import com.rusefi.maintenance.TestTuneMigrationContext;
 import com.rusefi.maintenance.migration.TuneMigrationContext;
 import com.rusefi.maintenance.migration.default_migration.DefaultTestTuneMigrationContext;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 import java.util.Collections;
 
+/**
+ * Manual harness that exercises TunerStudio tune migration via {@link TsProjectUpdater}.
+ */
 public class TsProjectUpdaterSandbox {
     public static void main(String[] args) throws JAXBException {
         // todo: fix me, why does test context not load?!
@@ -18,3 +21,4 @@ public class TsProjectUpdaterSandbox {
         TsProjectUpdater.INSTANCE.afterTuneMigration(context);
     }
 }
+

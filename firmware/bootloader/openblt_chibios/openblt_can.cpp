@@ -2,6 +2,7 @@
 
 #include "hal.h"
 
+#include "can.h"
 #include "can_hw.h"
 
 extern "C" {
@@ -16,21 +17,29 @@ extern "C" {
 // CAN2_RX: { PB5, PB12 }, CAN2_TX: { PB6, PB13 }
 
 #ifndef BOOT_COM_CAN_CHANNEL_INDEX
-  #error BOOT_COM_CAN_CHANNEL_INDEX is not defined.
+	#error BOOT_COM_CAN_CHANNEL_INDEX is not defined.
 #elif (BOOT_COM_CAN_CHANNEL_INDEX == 0)
-  #ifndef STM32_CAN_USE_CAN1
-  #error STM32_CAN_USE_CAN1 is not enabled for CAN index 0
-  #endif
-  #undef OPENBLT_CAND
-  #define OPENBLT_CAND CAND1
+	#if defined(STM32_CAN_USE_CAN1) || defined(STM32_CAN_USE_FDCAN1)
+		#define OPENBLT_CAND CAND1
+	#else
+		#error STM32_CAN_USE_CAN1/STM32_CAN_USE_FDCAN1 is not enabled for CAN index 0
+	#endif
 #elif (BOOT_COM_CAN_CHANNEL_INDEX == 1)
-  #ifndef STM32_CAN_USE_CAN2
-  #error STM32_CAN_USE_CAN2 is not enabled for CAN index 1
-  #endif
-  #undef OPENBLT_CAND
-  #define OPENBLT_CAND CAND2
+	#if defined(STM32_CAN_USE_CAN2) || defined(STM32_CAN_USE_FDCAN2)
+		#define OPENBLT_CAND CAND2
+	#else
+		#error STM32_CAN_USE_CAN2/STM32_CAN_USE_FDCAN2 is not enabled for CAN index 1
+	#endif
 #else
-  #error Unknown BOOT_COM_CAN_CHANNEL_INDEX.
+	#error Unknown BOOT_COM_CAN_CHANNEL_INDEX.
+#endif
+
+#ifndef CAN_IDE_STD
+#define CAN_IDE_STD 0
+#endif
+
+#ifndef CAN_IDE_EXT
+#define CAN_IDE_EXT 1
 #endif
 
 #if !defined(OPENBLT_CAN_RX_PIN) || !defined(OPENBLT_CAN_RX_PORT) || !defined(OPENBLT_CAN_TX_PIN) || !defined(OPENBLT_CAN_TX_PORT)
@@ -76,20 +85,20 @@ extern "C" void CanInit(void) {
 extern "C" void CanTransmitPacket(blt_int8u *data, blt_int8u len)
 {
 	blt_int32u txMsgId = BOOT_COM_CAN_TX_MSG_ID;
-	CANTxFrame frame;
+	CANTxFrame frame = {};
 
 	if ((txMsgId & 0x80000000) == 0)
 	{
 		/* set the 11-bit CAN identifier. */
-		frame.SID = txMsgId;
-		frame.IDE = CAN_IDE_STD;
+		CAN_SID(frame) = txMsgId;
+		CAN_ISX(frame) = CAN_IDE_STD;
 	}
 	else
 	{
 		txMsgId &= ~0x80000000;
 		/* set the 29-bit CAN identifier. */
-		frame.EID = txMsgId;
-		frame.IDE = CAN_IDE_EXT;
+		CAN_EID(frame) = txMsgId;
+		CAN_ISX(frame) = CAN_IDE_EXT;
 	}
 
 	// Copy data/DLC
@@ -123,19 +132,19 @@ extern "C" blt_bool CanReceivePacket(blt_int8u *data, blt_int8u *len)
 
 	// Check that the ID type matches this frame (std vs ext)
 	constexpr bool configuredAsExt = (rxMsgId & 0x80000000) != 0;
-	if (configuredAsExt != frame.IDE) {
+	if (configuredAsExt != CAN_ISX(frame)) {
 		// Wrong frame type
 		goto wrong;
 	}
 
 	// Check that the frame's ID matches
-	if (frame.IDE) {
-		if (frame.EID != (rxMsgId & ~0x80000000)) {
+	if (CAN_ISX(frame)) {
+		if (CAN_EID(frame) != (rxMsgId & ~0x80000000)) {
 			// Wrong ID
 			goto wrong;
 		}
 	} else {
-		if (frame.SID != rxMsgId) {
+		if (CAN_SID(frame) != rxMsgId) {
 			// Wrong ID
 			goto wrong;
 		}

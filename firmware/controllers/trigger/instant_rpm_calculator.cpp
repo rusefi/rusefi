@@ -1,6 +1,6 @@
 
 #include "pch.h"
-#include "instant_rpm_calculator.h"
+#include "arrays_util.h"
 
 /**
  * sensorChartMode
@@ -43,6 +43,22 @@ void InstantRpmCalculator::movePreSynchTimestamps() {
 	memcpy(timeOfLastEvent + firstDst, spinningEvents + firstSrc, eventsToCopy * sizeof(timeOfLastEvent[0]));
 }
 
+
+void InstantRpmCalculator::offsetIndices(int indexOffset) {
+	auto triggerSize = getTriggerCentral()->triggerShape.getSize();
+	int crankDivider = getCrankDivider(getTriggerCentral()->triggerShape.getWheelOperationMode());
+	int totalSize = triggerSize * crankDivider;
+
+	// We want to shift indices by indexOffset.
+	// If index 0 becomes index -indexOffset (mod totalSize),
+	// this is a rotation.
+	// Positive indexOffset means the data moves "forward" in the array,
+	// so the element at i moves to (i + indexOffset) % totalSize.
+
+	rotateArray(timeOfLastEvent, totalSize, indexOffset);
+	rotateArray(instantRpmValue, totalSize, indexOffset);
+}
+
 float InstantRpmCalculator::calculateInstantRpm(
 	TriggerWaveform const & triggerShape, TriggerFormDetails *triggerFormDetails,
 	uint32_t current_index, efitick_t nowNt) {
@@ -53,6 +69,10 @@ float InstantRpmCalculator::calculateInstantRpm(
 	uint32_t nowNt32 = nowNt;
 
 	assertIsInBoundsWithResult(current_index, timeOfLastEvent, "calc timeOfLastEvent", 0);
+
+	// Save previous timestamp before overwriting - needed for single-tooth triggers
+	// where prevIndex == current_index (see below)
+	uint32_t previousTimeAtIndex = timeOfLastEvent[current_index];
 
 	// Record the time of this event so we can calculate RPM from it later
 	timeOfLastEvent[current_index] = nowNt32;
@@ -69,6 +89,21 @@ float InstantRpmCalculator::calculateInstantRpm(
 	// now let's get precise angle for that event
 	angle_t prevIndexAngle = triggerFormDetails->eventAngles[prevIndex];
 	auto time90ago = timeOfLastEvent[prevIndex];
+	angle_t angleDiff = currentAngle - prevIndexAngle;
+
+	// Wrap the angle in to the correct range (ie, could be -630 when we want +90)
+	wrapAngle(angleDiff, "angleDiff", ObdCode::CUSTOM_ERR_6561);
+
+	// For single-tooth triggers, all event angles map to the same value, so
+	// findAngleIndex returns current_index. This causes two problems:
+	// 1) time90ago was just overwritten with nowNt32, yielding time=0
+	// 2) angleDiff is 0 since both angles are identical
+	// Fix: use the saved previous timestamp and the full engine cycle as angle delta,
+	// effectively measuring RPM from one revolution to the next.
+	if (prevIndex == (int)current_index) {
+		time90ago = previousTimeAtIndex;
+		angleDiff = getEngineState()->engineCycle;
+	}
 
 	// No previous timestamp, instant RPM isn't ready yet
 	if (time90ago == 0) {
@@ -76,10 +111,6 @@ float InstantRpmCalculator::calculateInstantRpm(
 	}
 
 	uint32_t time = nowNt32 - time90ago;
-	angle_t angleDiff = currentAngle - prevIndexAngle;
-
-	// Wrap the angle in to the correct range (ie, could be -630 when we want +90)
-	wrapAngle(angleDiff, "angleDiff", ObdCode::CUSTOM_ERR_6561);
 
 	// just for safety, avoid divide-by-0
 	if (time == 0) {
@@ -96,6 +127,18 @@ float InstantRpmCalculator::calculateInstantRpm(
 	}
 
 	prevInstantRpmValue = instantRpm;
+
+	// Track min/max within the engine cycle; publish the range once per cycle.
+	// An index at or below the previous one means the trigger wrapped: a new engine cycle started.
+	// '<=' also covers single-tooth triggers where every event lands on the same index.
+	if (current_index <= m_lastRangeIndex) {
+		m_rpmRangeLastCycle = m_cycleMinRpm > 0 ? m_cycleMaxRpm - m_cycleMinRpm : 0;
+		m_cycleMinRpm = m_cycleMaxRpm = instantRpm;
+	} else {
+		m_cycleMinRpm = m_cycleMinRpm == 0 ? instantRpm : std::min(m_cycleMinRpm, instantRpm);
+		m_cycleMaxRpm = std::max(m_cycleMaxRpm, instantRpm);
+	}
+	m_lastRangeIndex = current_index;
 
 	m_instantRpmRatio = instantRpm / instantRpmValue[prevIndex];
 

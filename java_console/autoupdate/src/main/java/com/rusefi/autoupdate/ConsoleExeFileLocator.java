@@ -34,7 +34,7 @@ public class ConsoleExeFileLocator {
         } else {
             log.info(String.format("It looks like `%s` file is missed", INSTALLATION_PROPERTIES_FILE_NAME));
         }
-        final String defaultConsoleExeFileName = JarFileUtil.getJarFileNamePrefix() + "_console.exe";
+        final String defaultConsoleExeFileName = JarFileUtil.getJarFileNamePrefix() + "_updater.exe";
         log.info(String.format("We are using default console exe file name: `%s`", defaultConsoleExeFileName));
         return defaultConsoleExeFileName;
     }

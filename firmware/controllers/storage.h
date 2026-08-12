@@ -16,6 +16,8 @@ enum class StorageStatus {
 	NotSupported,
 	// all is well, but we're on a fresh chip with blank memory
 	NotFound,
+	// SD card is not mounted
+	NotAvailable,
 	// Write failed
 	Failed
 };
@@ -49,6 +51,8 @@ enum StorageItemId {
 	EFI_SETTINGS_RECORD_ID = 1,
 	EFI_SETTINGS_BACKUP_RECORD_ID = 2,
 	EFI_LTFT_RECORD_ID = 3,
+	EFI_SECOND_TABLES_RECORD_ID = 4,
+	EFI_LUA_PAGE_RECORD_ID = 5,
 
 	EFI_STORAGE_TOTAL_ITEMS
 };
@@ -77,5 +81,22 @@ bool storagRequestUnregisterStorage(StorageType id);
  * @return true if an persistentState write is pending
  */
 bool getNeedToWriteConfiguration();
+
+/**
+ * @return true if any storage write is queued or currently executing
+ */
+bool storageIsBusy();
+
+/**
+ * Wait for queued and in-flight storage writes to complete, up to timeoutMs.
+ * Note that deferred writes only execute once the engine stops, so this can
+ * time out while the engine is running.
+ * @return true if storage is idle, false on timeout
+ */
+bool storageWaitIdle(unsigned int timeoutMs);
+
+// Bound for storageWaitIdle() before a reboot: covers a full double-copy
+// settings write plus MFS worst case garbage collection
+#define STORAGE_WAIT_IDLE_TIMEOUT_MS 10000
 
 void initStorage();

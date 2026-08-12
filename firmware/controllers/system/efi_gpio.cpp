@@ -554,6 +554,7 @@ void IgnitionOutputPin::setLow() {
 
 void IgnitionOutputPin::reset() {
 	signalFallSparkId = 0;
+	currentLogicValue = INITIAL_PIN_STATE;
 }
 
 bool OutputPin::isInitialized() const {
@@ -697,6 +698,7 @@ void initMiscOutputPins() {
 #if EFI_SHAFT_POSITION_INPUT
 	// todo: migrate remaining OutputPin to RegisteredOutputPin in order to get consistent dynamic pin init/deinit
 	enginePins.debugTriggerSync.initPin("debug: sync", engineConfiguration->debugTriggerSync);
+	enginePins.debugTriggerState.initPin("debug: state", engineConfiguration->debugTriggerState);
 #endif // EFI_SHAFT_POSITION_INPUT
 
 	enginePins.o2heater.initPin("O2 heater", engineConfiguration->o2heaterPin);

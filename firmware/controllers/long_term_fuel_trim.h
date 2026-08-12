@@ -1,4 +1,9 @@
 // file long_term_fuel_trim.h
+//
+// [tag:disable_engine_module] Optional engine module gated by EFI_LTFT_CONTROL; it owns
+// TS page 0x0200 (TS_PAGE_LTFT_TRIMS), so the flag is a TS-page guard flag declared in the
+// board prepend.txt only.
+// See engine_module.h for the full how-to before copying this pattern.
 
 #pragma once
 

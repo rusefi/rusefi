@@ -21,13 +21,16 @@ int djb2lowerCase(const char *str);
 
 inline uint16_t SWAP_UINT16(uint16_t x)
 {
-	return ((x << 8) | (x >> 8));
+	return __builtin_bswap16(x);
 }
 
 inline uint32_t SWAP_UINT32(uint32_t x)
 {
-	return (((x >> 24) & 0x000000ff) | ((x <<  8) & 0x00ff0000) |
-			((x >>  8) & 0x0000ff00) | ((x << 24) & 0xff000000));
+	return __builtin_bswap32(x);
+}
+
+inline uint64_t SWAP_UINT64(uint64_t x) {
+    return __builtin_bswap64(x);
 }
 
 #define BIT(n) (UINT32_C(1) << (n))
@@ -127,13 +130,33 @@ constexpr remove_reference_t<_Ty>&& move(_Ty&& _Arg) noexcept {
 }
 }
 
-int getBitRangeLsb(const uint8_t data[], int bitIndex, int bitWidth);
-/**
- for instance DBC 8|16@0
- */
-int getBitRangeMsb(const uint8_t data[], int bitIndex, int bitWidth);
-void setBitRangeMsb(uint8_t data[], int totalBitIndex, int bitWidth, int value);
+// DBC bit numbers
+// byte 0    7  6  5  4  3  2  1  0
+// byte 1   15 14 13 12 11 10  9  8
+// byte 2   23 22 21 20 19 18 17 16
+// byte 3   31 30 29 28 27 26 25 24
+// byte 4   39 38 37 36 35 34 33 32
+// byte 5   47 46 45 44 43 42 41 40
+// byte 6   55 54 53 52 51 50 49 48
+// byte 7   63 62 61 60 57 58 57 56
 
+// Intel byte order, bitIndex is the least significant bit of the value
+// DBC sample: 0|16@1+
+uint32_t getBitRangeLsb(const uint8_t data[], int bitIndex, int bitWidth);
+int32_t getBitRangeLsbSigned(const uint8_t data[], int bitIndex, int bitWidth);
+void setBitRangeLsb(uint8_t data[], int totalBitIndex, int bitWidth, uint32_t value);
+
+// Motorola byte order, bitIndex is the least significant bit of the value
+// not used in DBC - should not be used by user code!
+uint32_t getBitRangeMsbInternal(const uint8_t data[], int bitIndex, int bitWidth);
+//int32_t getBitRangeMsbSigned(const uint8_t data[], int bitIndex, int bitWidth);
+void setBitRangeMsb(uint8_t data[], int totalBitIndex, int bitWidth, uint32_t value);
+
+// Motorola byte order, bitIndex is the most significant bit of the value
+// DBC sample: 7|16@0+
+uint32_t getBitRangeMoto(const uint8_t data[], int bitIndex, int bitWidth);
+int32_t getBitRangeMotoSigned(const uint8_t data[], int bitIndex, int bitWidth);
+void setBitRangeMoto(uint8_t data[], int totalBitIndex, int bitWidth, uint32_t value);
+
+// convert bitIndex from LSB to MSB style
 int motorolaMagicFromDbc(int b, int length);
-int getBitRangeMoto(const uint8_t data[], int bitIndex, int bitWidth);
-void setBitRangeMoto(uint8_t data[], int totalBitIndex, int bitWidth, int value);

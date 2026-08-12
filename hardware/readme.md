@@ -45,7 +45,7 @@ Above mentioned modules are known to work unless stated otherwise
 
 ### More rusEFI hardware
 
-See https://github.com/rusefi/rusefi/wiki/Hardware
+See https://wiki.rusefi.com/Hardware
 
 # Frankenso
 Frankenso has moved to https://github.com/rusefi/rusefi-hardware/tree/main/classic-designs

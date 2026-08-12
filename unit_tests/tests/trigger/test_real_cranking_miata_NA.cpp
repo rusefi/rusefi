@@ -21,8 +21,6 @@ TEST(cranking, realCrankingFromFile) {
 	EngineTestHelper eth (engine_type_e::FRANKENSO_MIATA_NA6_MAP);
 	engineConfiguration->alwaysInstantRpm = true;
 
-	ssize_t read;
-
 	for (int i = 0; i < 11; i++) {
 		reader.readLine(&eth);
 	}

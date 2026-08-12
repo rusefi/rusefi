@@ -19,7 +19,7 @@ AemXSeriesWideband::AemXSeriesWideband(uint8_t sensorIndex, SensorType type)
 	)
 	, m_sensorIndex(sensorIndex)
 {
-    faultCode = m_faultCode = static_cast<uint8_t>(wbo::Fault::CanSilent);// silent, initial state is "no one has spoken to us so far"
+    stateCode = m_stateCode = static_cast<uint8_t>(wbo::Status::CanSilent);// silent, initial state is "no one has spoken to us so far"
     isValid = m_isFault = m_afrIsValid = false;
     // wait for first rusEFI WBO standard frame with protocol version field
     fwUnsupported = true;
@@ -82,28 +82,27 @@ bool AemXSeriesWideband::isHeaterAllowed() {
 void AemXSeriesWideband::refreshState() {
 	can_wbo_type_e type = sensorType();
 
+	// Report ECU to WBO allow state
+	allowed = isHeaterAllowed();
 	if (getTimeNowNt() - sensor_timeout > m_lastUpdate) {
-		faultCode = static_cast<uint8_t>(wbo::Fault::CanSilent);
+		canSilent = true;
 		isValid = false;
+		// reset all gauges and indicator not to confuse users
+		heaterDuty = 0;
+		pumpDuty = 0;
+		tempC = 0;
+		nernstVoltage = 0;
+		stateCode = static_cast<uint8_t>(wbo::Status::CanSilent);
 		return;
 	}
+	canSilent = false;
 
 	if (type == RUSEFI) {
 		// This is RE WBO
-		if (!isHeaterAllowed()) {
-			faultCode = static_cast<uint8_t>(wbo::Fault::NotAllowed);
-			isValid = false;
-			// Do not check for any errors while heater is not allowed
-			return;
-		}
-
 		isValid = m_afrIsValid;
-		if (m_faultCode != static_cast<uint8_t>(wbo::Fault::None)) {
-			// Report error code from WBO
-			faultCode = m_faultCode;
-			isValid = false;
-			return;
-		}
+		// Report state code from WBO
+		stateCode = m_stateCode;
+		return;
 	} else if (type == AEM) {
 		// This is AEM with two flags only and no debug fields
 		heaterDuty = 0;
@@ -111,12 +110,18 @@ void AemXSeriesWideband::refreshState() {
 		tempC = 0;
 		nernstVoltage = 0;
 
-		isValid = m_afrIsValid;
 		if (m_isFault) {
-			faultCode = HACK_INVALID_AEM;
+			stateCode = HACK_INVALID_AEM;
 			isValid = false;
-			return;
+		} else {
+			// TODO: better status code?
+			stateCode = m_afrIsValid ?
+				static_cast<uint8_t>(wbo::Status::RunningClosedLoop) :
+				static_cast<uint8_t>(wbo::Status::Warmup);
+			isValid = m_afrIsValid;
+			faeDetected = m_faeDetected;
 		}
+		return;
 	} else {
 		// disabled or analog
 		// clear all livedata
@@ -128,15 +133,17 @@ void AemXSeriesWideband::refreshState() {
 		return;
 	}
 
-	faultCode = static_cast<uint8_t>(wbo::Fault::None);
+	// non configured
+	stateCode = static_cast<uint8_t>(wbo::Status::CanSilent);
 }
 
 void AemXSeriesWideband::decodeFrame(const CANRxFrame& frame, efitick_t nowNt) {
 	bool accepted = false;
 	// accept frame has already guaranteed that this message belongs to us
 	// We just have to check if it's AEM or rusEFI
-	if (sensorType() == RUSEFI){
+	if (sensorType() == RUSEFI) {
 		uint32_t id = CAN_ID(frame);
+		hasSeenRx = true;
 
 		// rusEFI custom format
 		if ((id & 0x1) != 0) {
@@ -170,10 +177,16 @@ bool AemXSeriesWideband::decodeAemXSeries(const CANRxFrame& frame, efitick_t now
 	uint16_t lambdaInt = SWAP_UINT16(frame.data16[0]);
 	float lambdaFloat = 0.0001f * lambdaInt;
 
+	// Bytes 2-3 - Oxygen in 0.001% units
+
+	// Byte 4 - "System volts" in 0.1 units
+
 	// bit 6 indicates sensor fault
 	m_isFault = frame.data8[7] & 0x40;
 	// bit 7 indicates valid
 	m_afrIsValid = frame.data8[6] & 0x80;
+	// bit 1 indicate FAE sensor - this is not always true
+	m_faeDetected = frame.data8[6] & 0x02;
 
 	if ((m_isFault) || (!m_afrIsValid)) {
 		invalidate();
@@ -212,7 +225,17 @@ bool AemXSeriesWideband::decodeRusefiStandard(const CANRxFrame& frame, efitick_t
 	m_afrIsValid = data->Valid & 0x01;
 
 	if (!m_afrIsValid) {
-		invalidate();
+		if (m_stateCode == static_cast<uint8_t>(wbo::Status::RunningClosedLoop)) {
+			if (nernstVoltage < 0.45) {
+				// Too rich
+				invalidate(UnexpectedCode::High);
+			} else {
+				// Too lean
+				invalidate(UnexpectedCode::Low);
+			}
+		} else {
+			invalidate();
+		}
 	} else {
 		setValidValue(lambda, nowNt);
 		refreshSmoothedLambda(lambda);
@@ -257,15 +280,15 @@ void AemXSeriesWideband::decodeRusefiDiag(const CANRxFrame& frame) {
 
 	// This state is handle in refreshState()
     //if (!isHeaterAllowed()) {
-    //    m_faultCode = HACK_CRANKING_VALUE;
+    //    m_stateCode = HACK_CRANKING_VALUE;
     //    return;
     //}
 
-	m_faultCode = static_cast<uint8_t>(data->Status);
+	m_stateCode = static_cast<uint8_t>(data->status);
 
-	if ((data->Status != wbo::Fault::None) && isHeaterAllowed()) {
+	if ((isStatusError(static_cast<wbo::Status>(data->status))) && isHeaterAllowed()) {
 		auto code = m_sensorIndex == 0 ? ObdCode::Wideband_1_Fault : ObdCode::Wideband_2_Fault;
-		warning(code, "Wideband #%d fault: %s", (m_sensorIndex + 1), wbo::describeFault(data->Status));
+		warning(code, "Wideband #%d fault: %s", (m_sensorIndex + 1), wbo::describeStatus(data->status));
 	}
 }
 

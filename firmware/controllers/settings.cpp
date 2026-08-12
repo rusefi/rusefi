@@ -7,6 +7,7 @@
  */
 
 #include "pch.h"
+#include "lua_config_page.h"
 
 #if ! EFI_UNIT_TEST
 
@@ -37,7 +38,6 @@
 
 #if EFI_ENGINE_SNIFFER
 #include "engine_sniffer.h"
-extern int waveChartUsedSize;
 extern WaveChart waveChart;
 #endif // EFI_ENGINE_SNIFFER
 
@@ -378,6 +378,13 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->verboseCan = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "verboseCan2")) {
 		engineConfiguration->verboseCan2 = isEnabled;
+
+#if EFI_PROD_CODE
+	} else if (strEqualCaseInsensitive(param, "verboseCanTxErr")) {
+extern bool verboseCanTxError;
+		verboseCanTxError = isEnabled;
+#endif // EFI_PROD_CODE
+
 #if (EFI_CAN_BUS_COUNT >= 3)
 	} else if (strEqualCaseInsensitive(param, "verboseCan3")) {
 		engineConfiguration->verboseCan3 = isEnabled;
@@ -648,7 +655,7 @@ void initSettings() {
 	addConsoleActionF("set_whole_timing_map", setWholeTimingMapCmd);
 #endif // EFI_ENGINE_CONTROL
 
-	addConsoleAction("stopengine", (Void) scheduleStopEngine);
+	addConsoleAction("stopengine", scheduleStopEngine);
 
 	// todo: refactor this - looks like all boolean flags should be controlled with less code duplication
 	addConsoleActionI("enable_spi", enableSpi);
@@ -674,7 +681,7 @@ void initSettings() {
 	addConsoleActionS("bench_setpin", benchSetPin);
 	addConsoleActionS("readpin", readPin);
 	addConsoleAction("hw_qc_mode", [](){
-  	setHwQcMode();
+	setHwQcMode();
   });
 	addConsoleActionS("bench_set_output_mode", [](const char *pinName){
 	  brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
@@ -726,6 +733,7 @@ void setDateTime(const char * const isoDateTime) {
 	}
 	efiPrintf("date_set Date parameter %s is wrong", isoDateTime);
 #else // EFI_RTC
+	UNUSED(isoDateTime);
 	efiPrintf("Cannot set time: RTC not supported");
 #endif // EFI_RTC
 }
@@ -756,4 +764,13 @@ void setEngineType(int value, bool isWriteToFlash) {
 #if EFI_ENGINE_CONTROL && ! EFI_UNIT_TEST
 	printConfiguration();
 #endif // ! EFI_UNIT_TEST
+}
+
+void setLuaScript(const char *luaScript) {
+	// luaScript lives on its own dedicated TunerStudio page (page5_s), not in the
+	// main config — see #7911. This runs during applyEngineType(), which is invoked
+	// after resetExtraPages()/luaConfigPageSetDefaults(), so the engine-default script
+	// installed here survives the page reset.
+	auto dest = luaConfigPageGetState()->luaScript;
+	strncpy(dest, luaScript, efi::size(luaConfigPageGetState()->luaScript) - 1);
 }

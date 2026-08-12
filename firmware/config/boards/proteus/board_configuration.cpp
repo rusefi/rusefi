@@ -129,10 +129,13 @@ static void setupSdCard() {
 	engineConfiguration->spi3misoPin = Gpio::C11;
 	engineConfiguration->spi3mosiPin = Gpio::C12;
 
+// does not fit into F4 binary
+#ifndef STM32F4XX
 	engineConfiguration->is_enabled_spi_5 = true;
 	engineConfiguration->spi5sckPin = Gpio::F7;
 	engineConfiguration->spi5misoPin = Gpio::F8;
 	engineConfiguration->spi5mosiPin = Gpio::F9;
+#endif
 }
 
 static void proteus_boardConfigOverrides() {

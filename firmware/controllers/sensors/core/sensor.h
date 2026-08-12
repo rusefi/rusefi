@@ -43,6 +43,10 @@
 
 #include <cstddef>
 
+#ifndef VERBOSE_SENSOR_DEBUG
+#define VERBOSE_SENSOR_DEBUG false
+#endif
+
 using SensorResult = expected<float>;
 
 // Fwd declare - nobody outside of Sensor.cpp needs to see inside this type
@@ -82,6 +86,26 @@ public:
 	 */
 	static float getOrZero(SensorType type) {
 		return Sensor::get(type).value_or(0);
+	}
+
+	/*
+	 * Get a reading from the specified sensor, or one of limit values depending on error code.
+	 * Returned value can be outside limits if it is valid
+	 */
+	static float getOrDefault(SensorType type, float valueLow, float valueDefault, float valueHigh) {
+		SensorResult res = Sensor::get(type);
+		if (res) {
+			return res.Value;
+		} else {
+			if (res.Code == UnexpectedCode::High) {
+				return valueHigh;
+			}
+			if (res.Code == UnexpectedCode::Low) {
+				return valueLow;
+			}
+			// in all other cases - return low
+			return valueDefault;
+		}
 	}
 
 	/*
@@ -149,6 +173,10 @@ public:
 		return 0;
 	}
 
+	virtual bool hasRaw() const {
+		return false;
+	}
+
 	/*
 	 * Get whether this sensor is redundant (backed by multiple other sensors)
 	 */
@@ -157,6 +185,9 @@ public:
 		return false;
 	}
 
+	// Remove this sensor from the sensor registry.
+	// No-op if a different sensor instance of the same type currently owns the
+	// registry slot (for example a Lua-created sensor while this one never registered).
 	void unregister();
 
 	SensorType type() const {

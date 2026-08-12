@@ -1,6 +1,6 @@
 /*
  * file can_bench_test.cpp
- * see also https://github.com/rusefi/rusefi/wiki/CAN BENCH_TEST_BASE_ADDRESS 0x770000
+ * see also https://wiki.rusefi.com/CAN BENCH_TEST_BASE_ADDRESS 0x770000
  *
  * primary recipient is https://github.com/rusefi/rusefi-hardware/tree/main/digital-inputs/firmware
  *
@@ -72,6 +72,8 @@ static void directWritePad(Gpio pin, int value, const char *msg = "") {
   	gpiochips_writePad(pin, value);
 #endif
 	}
+#else
+  UNUSED(value);
 #endif // EFI_GPIO_HARDWARE && EFI_PROD_CODE
 }
 
@@ -96,8 +98,8 @@ static void qcSetEtbState(uint8_t dcIndex, uint8_t direction) {
   }
 }
 
-static void setPin(const CANRxFrame& frame, int value) {
-		size_t outputIndex = frame.data8[2];
+static void setPin(const CANRxFrame& frame, [[maybe_unused]] int value) {
+		int outputIndex = frame.data8[2];
 		if (outputIndex >= getBoardMetaOutputsCount()) {
 		  criticalError("QC pin index %d out of range", outputIndex);
 			return;
@@ -114,6 +116,8 @@ static void setPin(const CANRxFrame& frame, int value) {
         }
 
         directWritePad(pin, value);
+#else
+  UNUSED(value);
 #endif // EFI_GPIO_HARDWARE && EFI_PROD_CODE
 }
 
@@ -226,6 +230,8 @@ static void sendOutBoardMeta(size_t bus) {
 	msg[2] = getBoardMetaOutputsCount();
 	msg[3] = getBoardMetaLowSideOutputsCount();
 	msg[4] = getBoardMetaDcOutputsCount();
+#else
+  UNUSED(bus);
 #endif // EFI_PROD_CODE
 }
 
@@ -246,6 +252,8 @@ void sendQcBenchBoardStatus(size_t bus) {
 	msg[5] = engineType >> 8;
 	msg[6] = engineType;
 	sendOutBoardMeta(bus);
+#else
+  UNUSED(bus);
 #endif // EFI_PROD_CODE
 }
 

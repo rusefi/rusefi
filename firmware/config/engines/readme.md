@@ -8,7 +8,7 @@ can be manually configured.
 In TunerStudio or rusEFI console use the "Popular Vehicles" dialog to
 apply one of these presets.
 
-See https://github.com/rusefi/rusefi/wiki/Engine-Types
+See https://wiki.rusefi.com/Engine-Types
 
 This folder is also used by the continuous integration testing suite.
 

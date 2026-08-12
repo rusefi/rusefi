@@ -18,6 +18,9 @@ java -DSystemOut.name=logs/gen_java_enum -cp ${ENUM_JAR} com.rusefi.ToJavaEnum -
 java -DSystemOut.name=logs/gen_java_enum -cp ${ENUM_JAR} com.rusefi.ToJavaEnum -enumInputFile controllers/algo/engine_type_e.h   -outputPath ../java_console/models/src/main/java/com/rusefi/enums -definition integration/rusefi_config.txt
 [ $? -eq 0 ] || { echo "ERROR generating engine_type_e"; exit 1; }
 
+java -DSystemOut.name=logs/gen_java_enum -cp ${ENUM_JAR} com.rusefi.ToJavaEnum -enumInputFile hw_layer/mmc_card.h -outputPath ../java_console/models/src/main/java/com/rusefi/enums
+[ $? -eq 0 ] || { echo "ERROR generating SD_MODE"; exit 1; }
+
 java -DSystemOut.name=logs/gen_java_enum \
 	-Denum_with_values=true \
 	-cp ${ENUM_JAR} com.rusefi.ToJavaEnum \
@@ -70,13 +73,6 @@ java -DSystemOut.name=logs/gen_enum_to_string \
 
 java -DSystemOut.name=logs/gen_enum_to_string \
 	-jar ${ENUM_JAR} \
-	-outputPath controllers/algo \
-	-enumInputFile controllers/algo/rusefi_hw_enums.h \
-
-[ $? -eq 0 ] || { echo "ERROR generating hw_enums"; exit 1; }
-
-java -DSystemOut.name=logs/gen_enum_to_string \
-	-jar ${ENUM_JAR} \
 	-outputPath controllers/sensors \
 	-generatedFile sensor \
 	-enumInputFile controllers/sensors/sensor_type.h
@@ -84,10 +80,3 @@ java -DSystemOut.name=logs/gen_enum_to_string \
 [ $? -eq 0 ] || { echo "ERROR generating sensors"; exit 1; }
 
 pwd
-cd config/boards/kinetis/config
-./kinetis_gen_enum_to_string.sh
-cd ../../../..
-
-cd config/boards/cypress/config
-./hellen_cypress_gen_enum_to_string.sh
-cd ../../../..

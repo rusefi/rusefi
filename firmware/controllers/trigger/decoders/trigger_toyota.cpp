@@ -85,12 +85,8 @@ void initialize2jzGE3_34_simulation_shape(TriggerWaveform *s) {
 }
 
 void initializeUzCam(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
-	int width = 5;
-
-	s->addToothRiseFall(135, width);
-	s->addToothRiseFall(270, width);
-	s->addToothRiseFall(360, width);
+	static const angle_t angles[] = { 135, 270, 360 };
+	initializeRiseOnlyTrigger(s, 5, angles, efi::size(angles));
 
 	s->setTriggerSynchronizationGap4(/*gapIndex*/0, 1.5);
 	s->setTriggerSynchronizationGap4(/*gapIndex*/1, 0.67);

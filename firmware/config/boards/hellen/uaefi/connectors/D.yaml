@@ -14,7 +14,7 @@ pins:
     class: [analog_inputs, switch_inputs, event_inputs]
     color: yellow
     ts_name: ___ BUTTON1
-    function: Button input 1 PullDown 10K
+    function: Button input 1 PullDown 10K. 12v tolerant
 
   - pin: D3
     function: Sensor +5v Power Feed
@@ -27,8 +27,8 @@ pins:
     type: 5v
 
   - pin: D5
-    meta: MM100_IN_VSS
-    class: event_inputs
+    id: [MM100_IN_VSS, MM100_IN_VSS]
+    class: [switch_inputs, event_inputs]
     ts_name: ___ FLEX
     color: orange
     function: Flex input (10K PU)
@@ -64,7 +64,7 @@ pins:
     class: [analog_inputs, switch_inputs, event_inputs]
     color: green
     ts_name: ___ A/C Request / BUTTON2
-    function: A/C Request / Button input 2 PullDown 10K
+    function: A/C Request / Button input 2 PullDown 10K by default, see BT2 area on the board. 12v tolerant
 
   - pin: D11
     color: black
@@ -78,19 +78,19 @@ pins:
     meta: MM100_IN_TPS_ANALOG
     class: analog_inputs
     ts_name: ___ TPS1
-    function: Universal analog input. Suggested TPS input 1
+    function: Universal analog input. Suggested TPS 1 sensor input
     type: av
     color: green
 
   - pin: D14
     color: yellow
-    function: Knock Input
+    function: Knock Input (other sensor pin goes to analog ground)
 
   - pin: D15
     meta: MM100_IN_IAT_ANALOG
     class: analog_inputs
     ts_name: ___ IAT
-    function: IAT input
+    function: IAT Sensor Input
     type: at
     color: blue
 
@@ -98,15 +98,16 @@ pins:
     meta: MM100_IN_CLT_ANALOG
     class: analog_inputs
     ts_name: ___ CLT Coolant
-    function: CLT input
+    function: ECT CLT Coolant Sensor Input
     type: at
     color: grey
 
 info:
   cid: d
   title: uaefi
+  name: connector D
   directory: hellen/uaefi
-  board_url: https://github.com/rusefi/rusefi/wiki/uaefi
+  board_url: https://wiki.rusefi.com/uaefi
   image:
     file: uaefi-D.jpg
   pins:

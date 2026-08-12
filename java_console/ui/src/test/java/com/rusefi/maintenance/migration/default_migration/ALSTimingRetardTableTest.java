@@ -1,6 +1,8 @@
 package com.rusefi.maintenance.migration.default_migration;
 
 import com.opensr5.ConfigurationImage;
+import com.opensr5.ConfigurationImageGetterSetter;
+import com.rusefi.tune.ConfigurationImageGetterSetter2;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.IniField;
 import com.rusefi.maintenance.CalibrationsInfo;
@@ -9,9 +11,7 @@ import com.rusefi.tune.xml.Constant;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.xml.bind.JAXBException;
-
-import java.io.FileNotFoundException;
+import jakarta.xml.bind.JAXBException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -43,7 +43,7 @@ public class ALSTimingRetardTableTest {
         prevImage = prevCalibrations.getImage().getConfigurationImage();
         assertEquals(
             PREV_ALS_TIMING_RETARD_TABLE,
-            alsTimingRetardTableField.getValue(prevImage)
+            ConfigurationImageGetterSetter.getStringValue(alsTimingRetardTableField, prevImage)
         );
         prevValue = testContext.getPrevValue(ALS_TIMING_RETARD_TABLE_FIELD_NAME);
         assertEquals(PREV_ALS_TIMING_RETARD_TABLE,
@@ -55,9 +55,10 @@ public class ALSTimingRetardTableTest {
     void updateALSTimingRetardTable() {
         final ConfigurationImage testImage = prevImage.clone();
 
-        alsTimingRetardTableField.setValue(testImage, prevValue.cloneWithValue(TEST_ALS_TIMING_RETARD_TABLE));
+        ConfigurationImageGetterSetter2.setValue(alsTimingRetardTableField, testImage, prevValue.cloneWithValue(TEST_ALS_TIMING_RETARD_TABLE));
 
         /* We are expecting to read the value that we have just set: */
-        assertEquals(TEST_ALS_TIMING_RETARD_TABLE, alsTimingRetardTableField.getValue(testImage));
+        assertEquals(TEST_ALS_TIMING_RETARD_TABLE, ConfigurationImageGetterSetter.getStringValue(alsTimingRetardTableField, testImage));
     }
 }
+

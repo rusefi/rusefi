@@ -9,9 +9,9 @@
 #include "util/injection_crank_helper.h"
 
 TEST(cranking, testFasterEngineSpinningUp) {
+	ScopedUnitTestCreateLogs scoped(true);
+
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	extern bool unitTestBusyWaitHack;
-	unitTestBusyWaitHack = true;
 	float phase = 181;
 	setTable(config->injectionPhase, -phase);
 	engine->tdcMarkEnabled = false;
@@ -102,7 +102,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	// skip, clear & advance 1 more revolution at higher RPM
 	eth.fireFall(60);
 
-	eth.clearQueue();
+	eth.clearQueuePreservingTime();
 	eth.fireTriggerEventsWithDuration(60);
 
 	// check if the mode is now changed to 'running' at higher RPM

@@ -17,21 +17,18 @@ static void setDefaultMultisparkParameters() {
 
 static void setDefaultIatTimingCorrection() {
 	setLinearCurve(config->ignitionIatCorrLoadBins, /*from=*/ 0, /*to*/ 140, 1);
-#if IAT_IGN_CORR_COUNT == 8
-	copyArray(config->ignitionIatCorrTempBins, { -40, 0, 10, 20, 30, 40, 50, 60});
 
-	// top 5 rows are the same
-	for (size_t i = 3; i < IAT_IGN_CORR_COUNT; i++) {
-		//                                                         40  50  60 deg C
-		copyArray(config->ignitionIatCorrTable[i], {0.0, 0.0, 0.0, 0.0, 0.0, -1.0, -2.0, -3.0});
+	copyArrayInterpolated(config->ignitionIatCorrTempBins, { -40, 0, 10, 20, 30, 40, 50, 60});
+
+	// top rows are the same
+	for (size_t i = 0; i < efi::size(config->ignitionIatCorrTable) - 1; i++) {
+		//																						40  50  60 deg C
+		copyArrayInterpolated(config->ignitionIatCorrTable[i], {0.0, 0.0, 0.0, 0.0, 0.0, -1.0, -2.0, -3.0});
 	}
 
-	// 6th row tapers out
-	//                                                        40  50  60 deg C
-	copyArray(config->ignitionIatCorrTable[2], {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0, -2.0});
-#else
-  setLinearCurve(config->ignitionIatCorrTempBins, /*from=*/ -40, /*to*/ 60, 1);
-#endif
+	// last row tapers out
+	//																											40  50  60 deg C
+	copyArrayInterpolated(config->ignitionIatCorrTable[efi::size(config->ignitionIatCorrTable) - 1], {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0, -2.0});
 }
 
 static void setDefaultCltTimingCorrection() {
@@ -116,6 +113,10 @@ void setDefaultIgnition() {
 
 	setLinearCurve(config->dwellVoltageCorrVoltBins, 8, 15, 0.1);
 	setLinearCurve(config->dwellVoltageCorrValues, 1, 1, 1);
+
+	// Dwell Duty Mode - disabled by default; 50% is the standard TFI module target.
+	engineConfiguration->dwellDutyModeEnabled = false;
+	engineConfiguration->dwellDutyPercent = 50;
 
 	// Multispark
 	setDefaultMultisparkParameters();

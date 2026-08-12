@@ -322,12 +322,30 @@
 /*
  * SERIAL driver system settings.
  */
+#ifndef STM32_SERIAL_USE_USART1
 #define STM32_SERIAL_USE_USART1             TRUE
+#endif
+
+#ifndef STM32_SERIAL_USE_USART2
 #define STM32_SERIAL_USE_USART2             FALSE
+#endif
+
+#ifndef STM32_SERIAL_USE_USART3
 #define STM32_SERIAL_USE_USART3             FALSE
+#endif
+
+#ifndef STM32_SERIAL_USE_UART4
 #define STM32_SERIAL_USE_UART4              FALSE
+#endif
+
+#ifndef STM32_SERIAL_USE_UART5
 #define STM32_SERIAL_USE_UART5              FALSE
+#endif
+
+#ifndef STM32_SERIAL_USE_USART6
 #define STM32_SERIAL_USE_USART6             TRUE
+#endif
+
 #define STM32_SERIAL_USE_UART7              FALSE
 #define STM32_SERIAL_USE_UART8              FALSE
 #define STM32_SERIAL_USE_LPUART1            FALSE
@@ -454,8 +472,18 @@
 
 #define STM32_SYSCLK STM32_SYS_CK
 
-#ifndef ENABLE_AUTO_DETECT_HSE
-    #define ENABLE_AUTO_DETECT_HSE          TRUE
+/* Some boards need to know clock early on boot. */
+#ifndef STM32_HSECLK
+    // Some boards has no HSE oscillator at all and obviously disable HSE detections
+    #ifndef ENABLE_AUTO_DETECT_HSE
+        // Pretend we have a 25MHz external crystal.  This value isn't actually used since we
+        // configure the PLL to start on the HSI oscillator, then compute HSE's speed at runtime
+        // and reconfigure the PLL appropriately.
+        #define STM32_HSECLK 25000000
+
+        // After boot, we will detect the real frequency, and adjust the PLL M value to suit
+        #define ENABLE_AUTO_DETECT_HSE TRUE
+    #endif
 #endif
 
 #endif /* MCUCONF_H */

@@ -10,7 +10,7 @@ pins:
     color: orange
 
   - pin: A1
-    function: DC1-
+    function: DC1- (usually electronic throttle body)
     type: etb
     color: white
 
@@ -20,17 +20,17 @@ pins:
     color: white
 
   - pin: A3
-    function: Power Ground
+    function: Power/Chassis GND ground
     color: black
     type: gnd
 
   - pin: A4
-    function: Power Ground
+    function: Power/Chassis GND ground
     color: black
     type: gnd
 
   - pin: A5
-    function: DC1+
+    function: DC1+ (usually electronic throttle body)
     type: etb
     color: blue
 
@@ -53,8 +53,9 @@ pins:
 info:
   cid: a
   title: uaefi
+  name: connector A
   directory: hellen/uaefi
-  board_url: https://github.com/rusefi/rusefi/wiki/uaefi
+  board_url: https://wiki.rusefi.com/uaefi
   image:
     file: uaefi-A.jpg
   pins:

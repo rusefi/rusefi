@@ -5,12 +5,13 @@
 #include "defaults.h"
 #include "util/injection_crank_helper.h"
 
+using ::testing::_;
+
+#if FUEL_RPM_COUNT == 16
 	// let's pretend to have a 32 degree V odd fire engine.
 static const float cylinderOne = -19;
 static const float cylinderTwo = 13;
 static const angle_t timing = 1; // same timing cranking and running modes
-
-using ::testing::_;
 
 static void configureOddFiringEngine(EngineTestHelper &eth) {
 	engineConfiguration->cranking.rpm = 100;
@@ -21,13 +22,10 @@ static void configureOddFiringEngine(EngineTestHelper &eth) {
 	engine->tdcMarkEnabled = false; // reduce event queue noise TODO extract helper method
 }
 
-#if FUEL_RPM_COUNT == 16
 TEST(OddFireRunningMode, hd) {
   // basic engine setup
 	EngineTestHelper eth(engine_type_e::HARLEY);
 	configureOddFiringEngine(eth);
-	extern bool unitTestBusyWaitHack;
-	unitTestBusyWaitHack = true;
 	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH; // need to avoid engine phase sync requirement
 	setTestFuelCrankingTable(27);
 
@@ -72,7 +70,7 @@ TEST(OddFireRunningMode, hd) {
 
 	ASSERT_EQ(500, Sensor::getOrZero(SensorType::Rpm));
 
-	engine->scheduler.executeAll(getTimeNowUs() + MS2US(1000000));
+	eth.executeAllPreservingTimeUs(getTimeNowUs() + MS2US(1000000));
 
 	eth.fireTriggerEvents2(2 /* count */ , 60 /* ms */);
 	ASSERT_EQ(IM_SEQUENTIAL, getCurrentInjectionMode());

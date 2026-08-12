@@ -16,7 +16,7 @@ public class RXTextUtilities
      *  Attempt to center the line containing the caret at the center of the
      *  scroll pane.
      *
-     *  @param component the text component in the sroll pane
+     *  @param component the text component in the scroll pane
      */
     public static void centerLineInScrollPane(JTextComponent component)
     {

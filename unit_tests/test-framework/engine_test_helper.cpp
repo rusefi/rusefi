@@ -16,13 +16,14 @@
 #include "logicdata.h"
 #include "unit_test_logger.h"
 #include "hardware.h"
+#include "dc_motors.h"
+#include "idle_hardware.h"
 // https://stackoverflow.com/questions/23427804/cant-find-mkdir-function-in-dirent-h-for-windows
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <filesystem>
 
-bool unitTestBusyWaitHack;
-bool unitTestTaskPrecisionHack;
-bool unitTestTaskNoFastCallWhileAdvancingTimeHack;
+static bool unitTestsCreateLogs = false;
 
 #if EFI_ENGINE_SNIFFER
 #include "engine_sniffer.h"
@@ -30,33 +31,44 @@ extern WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
 #include "fw_configuration.h"
+#include "malfunction_central.h"
 
 extern engine_configuration_s & activeConfiguration;
 extern PinRepository pinRepository;
 extern bool printTriggerDebug;
 extern bool printTriggerTrace;
 extern bool printFuelDebug;
-extern int minCrankingRpm;
+extern bool hasRememberedConfiguration;
 
-EngineTestHelperBase::EngineTestHelperBase(Engine * eng, engine_configuration_s * econfig, persistent_config_s * pers) {
+void setUnitTestCreateLogs(bool enabled) {
+	unitTestsCreateLogs = enabled;
+}
+
+bool getUnitTestCreateLogs() {
+  return unitTestsCreateLogs;
+}
+
+EngineTestHelperBase::EngineTestHelperBase(Engine * eng, persistent_config_s * pers) {
 	// todo: make this not a global variable, we need currentTimeProvider interface on engine
 	setTimeNowUs(0);
-	minCrankingRpm = 0;
 	ButtonDebounce::resetForUnitTests();
-	unitTestBusyWaitHack = false;
+
+	// Reset global error code set so checkEngine bit doesn't leak between tests
+	clearWarnings();
 	EnableToothLogger();
 	if (engine || engineConfiguration || config) {
 		firmwareError(ObdCode::OBD_PCM_Processor_Fault,
 			      "Engine configuration not cleaned up by previous test");
 	}
 	engine = eng;
-	engineConfiguration = econfig;
+	engineConfiguration = &pers->engineConfiguration;
 	config = pers;
 
 	setup_custom_fw_overrides();
 }
 
 EngineTestHelperBase::~EngineTestHelperBase() {
+	DisableToothLogger();
 	engine = nullptr;
 	engineConfiguration = nullptr;
 	config = nullptr;
@@ -85,8 +97,9 @@ int EngineTestHelper::getWarningCounter() {
 FILE *jsonTrace = nullptr;
 
 EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callback_t configurationCallback, const std::unordered_map<SensorType, float>& sensorValues) :
-	EngineTestHelperBase(&engine, &persistentConfig.engineConfiguration, &persistentConfig)
+	EngineTestHelperBase(&engine, &persistentConfig)
 {
+	engine.reset();
 	persistentConfig = decltype(persistentConfig){};
 	pinRepository = decltype(pinRepository){};
 
@@ -98,7 +111,10 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 		#else
 		  mkdir(TEST_RESULTS_DIR, 0777);
 		#endif
-		createUnitTestLog();
+		if (unitTestsCreateLogs) {
+			// this logging is pretty heavy, not running unless specifically requested
+			createUnitTestLog();
+		}
 
 		std::stringstream filePath;
 		filePath << TEST_RESULTS_DIR << "/unittest_" << testInfo->test_case_name() << "_" << testInfo->name() << "_trace.json";
@@ -125,9 +141,17 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	}
 
 	activeConfiguration = engine_configuration_s{};
+	hasRememberedConfiguration = false;
 
 	enginePins.reset();
 	enginePins.unregisterPins();
+
+	// DC motor / idle stepper hardware objects are file-scope statics - reset them
+	// so tests do not observe pool slots started by earlier tests
+	resetDcHardwareForUnitTest();
+	resetIdleHardwareForUnitTest();
+
+	resetConfigErrorStateForUnitTest();
 
 	waveChart.init();
 
@@ -147,6 +171,10 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	initDataStructures();
 
 	resetConfigurationExt(configurationCallback, engineType);
+
+	// Populate second tables before validation — mirrors the prod boot order
+	// where loadExtraPages() runs before validateConfig.
+	secondTablesSetDefaults();
 
 	validateConfigOnStartUpOrBurn();
 
@@ -181,7 +209,7 @@ static void writeEventsToFile(const char *fileName,
 	size_t count = events.size();
 
 	// todo: move magic keywords to something.txt and reuse magic constants from C and java, once we have java converter
-	fprintf(ptr, "count,%d\n", count);
+	fprintf(ptr, "count,%d\n", (int)count);
 
 #define numChannels 6 // todo: clean-up
 
@@ -232,7 +260,6 @@ EngineTestHelper::~EngineTestHelper() {
 	enginePins.unregisterPins();
 	Sensor::resetRegistry();
 	memset(mockPinStates, 0, sizeof(mockPinStates));
-	unitTestTaskNoFastCallWhileAdvancingTimeHack = false;
 }
 
 void EngineTestHelper::writeEventsLogicData(const char *fileName) {
@@ -241,7 +268,7 @@ void EngineTestHelper::writeEventsLogicData(const char *fileName) {
 		printf("Not enough data for %s\n", fileName);
 		return;
 	}
-	printf("Writing %d records to %s\n", events.size(), fileName);
+	printf("Writing %d records to %s\n", (int)events.size(), fileName);
 	writeLogicDataFile(fileName, events);
 }
 
@@ -251,7 +278,7 @@ void EngineTestHelper::writeEvents2(const char *fileName) {
 		printf("Not enough data for %s\n", fileName);
 		return;
 	}
-	printf("Writing %d records to %s\n", events.size(), fileName);
+	printf("Writing %d records to %s\n", (int)events.size(), fileName);
 	writeEventsToFile(fileName, events);
 }
 
@@ -284,13 +311,13 @@ void EngineTestHelper::smartFireFall(float delayMs) {
  */
 void EngineTestHelper::firePrimaryTriggerRise() {
 	efitick_t nowNt = getTimeNowNt();
-	LogTriggerTooth(SHAFT_PRIMARY_RISING, nowNt);
+	LogPrimaryTriggerTooth(nowNt, true);
 	handleShaftSignal(0, true, nowNt);
 }
 
 void EngineTestHelper::firePrimaryTriggerFall() {
 	efitick_t nowNt = getTimeNowNt();
-	LogTriggerTooth(SHAFT_PRIMARY_FALLING, nowNt);
+	LogPrimaryTriggerTooth(nowNt, false);
 	handleShaftSignal(0, false, nowNt);
 }
 
@@ -320,6 +347,21 @@ void EngineTestHelper::smartFireTriggerEvents2(int count, float durationMs) {
 void EngineTestHelper::clearQueue() {
 	engine.scheduler.executeAll(99999999); // this is needed to clear 'isScheduled' flag
 	ASSERT_EQ( 0,  engine.scheduler.size()) << "Failed to clearQueue";
+}
+
+// See rusefi issue #6457: the scheduler busy-wait in event_queue.cpp would
+// otherwise advance the mock clock to each scheduled event's future moment,
+// distorting subsequent inter-tooth interval / RPM computation.
+void EngineTestHelper::clearQueuePreservingTime() {
+	efitick_t savedNt = getTimeNowNt();
+	clearQueue();
+	setTimeNowNt(savedNt);
+}
+
+void EngineTestHelper::executeAllPreservingTimeUs(efitimeus_t deadlineUs) {
+	efitick_t savedNt = getTimeNowNt();
+	engine.scheduler.executeAll(deadlineUs);
+	setTimeNowNt(savedNt);
 }
 
 int EngineTestHelper::executeActions() {
@@ -375,32 +417,27 @@ void EngineTestHelper::setTimeNtAndInvokeCallBacks(efitick_t nt)
 }
 
 void EngineTestHelper::setTimeAndInvokeEventsUs(int targetTimeUs) {
+	setTimeAndInvokeEventsNt(US2NT(targetTimeUs));
+}
+
+void EngineTestHelper::setTimeAndInvokeEventsNt(efitick_t targetTimeNt) {
 	int counter = 0;
 	while (true) {
-		criticalAssertVoid(counter++ < 100'000, "EngineTestHelper: failing to setTimeAndInvokeEventsUs");
+		criticalAssertVoid(counter++ < 100'000, "EngineTestHelper: failing to setTimeAndInvokeEventsNt");
 		scheduling_s* nextScheduledEvent = engine.scheduler.getHead();
 		if (nextScheduledEvent == nullptr) {
 			// nothing pending - we are done here
 			break;
 		}
 		efitick_t nextEventNt = nextScheduledEvent->getMomentNt();
-		if (nextEventNt > US2NT(targetTimeUs)) {
+		if (nextEventNt > targetTimeNt) {
 			// next event is too far in the future
 			break;
 		}
-		// see #8725 for details
-		if (unitTestTaskNoFastCallWhileAdvancingTimeHack) {
-			setTimeNowNt(nextEventNt);
-		} else {
-			setTimeNtAndInvokeCallBacks(nextEventNt);
-		}
+		setTimeNtAndInvokeCallBacks(nextEventNt);
 		engine.scheduler.executeAllNt(getTimeNowNt());
 	}
-	if (unitTestTaskNoFastCallWhileAdvancingTimeHack) {
-		setTimeNowUs(targetTimeUs);
-	} else {
-		setTimeNtAndInvokeCallBacks(US_TO_NT_MULTIPLIER * targetTimeUs);
-	}
+	setTimeNtAndInvokeCallBacks(targetTimeNt);
 }
 
 void EngineTestHelper::fireTriggerEvents(int count) {
@@ -568,4 +605,77 @@ void setVerboseTrigger(bool isEnabled) {
 
 warningBuffer_t * getRecentWarnings() {
   return &engine->engineState.warnings.recentWarnings;
+}
+
+bool hasRecentWarningCode(ObdCode code) {
+	warningBuffer_t *warnings = getRecentWarnings();
+	for (size_t i = 0; i < warnings->getCount(); i++) {
+		if (warnings->get(i).Code == code) {
+			return true;
+		}
+	}
+	return false;
+}
+
+void cleanTestResultsFolder() {
+  std::error_code ec;
+  auto absPath = std::filesystem::absolute(TEST_RESULTS_DIR, ec);
+  std::string folder = ec ? std::string(TEST_RESULTS_DIR) : absPath.string();
+
+  std::error_code itEc;
+  std::filesystem::directory_iterator it(folder, itEc);
+  if (itEc) {
+    return;
+  }
+  auto isPreserved = [](const std::string& name) {
+    std::string lower;
+    lower.reserve(name.size());
+    for (char c : name) {
+      lower.push_back(static_cast<char>(std::tolower(static_cast<unsigned char>(c))));
+    }
+    return lower == ".gitignore" || lower == "readme.md";
+  };
+  for (const auto& entry : it) {
+    std::error_code fEc;
+    if (!entry.is_regular_file(fEc) || fEc) {
+      continue;
+    }
+    const std::string name = entry.path().filename().string();
+    if (isPreserved(name)) {
+      continue;
+    }
+    std::error_code rmEc;
+    std::filesystem::remove(entry.path(), rmEc);
+  }
+}
+
+void sayByeBye() {
+  std::error_code ec;
+  auto absPath = std::filesystem::absolute(TEST_RESULTS_DIR, ec);
+  std::string folder = ec ? std::string(TEST_RESULTS_DIR) : absPath.string();
+
+  // Count non-zero-size unit test log files produced under TEST_RESULTS_DIR.
+  size_t nonEmptyCount = 0;
+  std::error_code itEc;
+  std::filesystem::directory_iterator it(folder, itEc);
+  if (!itEc) {
+    for (const auto& entry : it) {
+      std::error_code fEc;
+      if (entry.is_regular_file(fEc) && !fEc) {
+        auto sz = entry.file_size(fEc);
+        if (!fEc && sz > 0) {
+          nonEmptyCount++;
+        }
+      }
+    }
+  }
+  if (nonEmptyCount > 0) {
+    printf("test results are in %s folder\n", folder.c_str());
+    printf("unit test log files: %zu\n", nonEmptyCount);
+  }
+  size_t aborted = getAbortedLogsCount();
+  if (aborted > 0) {
+    printf("aborted unit test logs (exceeded LOG_FILE_SIZE_LIMIT): %zu, total removed bytes: %zu\n",
+      aborted, getAbortedLogsTotalBytes());
+  }
 }

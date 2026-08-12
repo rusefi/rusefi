@@ -14,10 +14,11 @@ Release template (copy/paste this for new release):
  -
 
 ### Added
- -
+ - MAP Prediction AE Improvements #9482
+ - 1-2-3-4 firing order for 982 honda sabre 750 reverse rotation V4
 
 ### Fixed
- -
+ - wasted to sequential transition when phase is detected #9613
 
 ### Removed
  -
@@ -29,7 +30,46 @@ Release template (copy/paste this for new release):
 ## Unreleased
 
 ### Added
+ - ETB bench test button: open throttle 300ms without sensors (#9171)
+ - PWM support for fan control #5407
+ - Per cylinder knock control individual gain control #9404
+ - 6G75 Cam trigger support #9533
+ - minimal launchTpsThreshold is required to reduce confusion
+ - New firing order 1-6-2-5-3-4 (Maserati V6 and Porsche Boxster Flat-6)
+
+### Breaking Changes
+ - Dodge Neon 2003 crank actually uses crank decoder #8977
+ - uaEFI PPS2 calibration #9549
+ - uaefi121, super-uaefi, huge, 121vag PPS2 calibration #9551
+
+### Fixed
+ - Idle VE table when using an electronic throttle correctly uses accel pedal to match main idle logic
+ - 6G75 crank Trigger fixes #8827
+ - SD card access over USB is not reliable #9664
+ - wmic.exe command-line utility is being completely eliminated. #9672
+ - USB serial stability in some scenarios #9860
+ - multispark
+
+## February 2026 "Day 1458"
+
+### Fixed
+ - ETB: calibration, wrong scale 3% calibration error #8863
+ - luaHeapAlloc crashed when not enough RAM #8874
+ - uaefi121: pin 43 conflict with green LED #8884
+ - super-uaefi: high side 43 conflict with green LED
+ - TS: annoying numeric values after proper named values #8898
+ - true/false? is that French? #8530
+ - STM32: option bytes corruption when power is cut during settings save to flash #8926
+
+### Added
  - FatFS update to R0.16
+ - WBO: update from sd #8870
+ - Switch to 7z for ini file compression on MSD #8895
+ - stm32: flash: abort erase/write in case of undervoltage #9137
+ - freedom units progress #9029
+
+### Breaking Changes
+ - CAN bitrare 666k #8784
 
 ## October 2025 "Day 1333"
 
@@ -65,7 +105,7 @@ Release template (copy/paste this for new release):
  - Allow fractional tachometer pulse ratio for fine tachometer calibration #7547
  - separate boost control open loop axis from closed loop axis #7580
  - verbose CAN PerCylinderKnock
- - modern Chrysler VVT cam decoder https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers#vvt
+ - modern Chrysler VVT cam decoder https://wiki.rusefi.com/All-Supported-Triggers#vvt
  - SD card formatting indicator
  - additional status on WBO dialog
  - default Lua tick rate changed from 10Hz to 200Hz
@@ -555,7 +595,7 @@ All notable user-facing or behavior-altering changes will be documented in this 
 ## October 2021 Release - "Pierogi Day"
 
 ### Added
- - Ford PIP trigger decoder https://github.com/rusefi/rusefi/wiki/Images/triggers/trigger_65.png
+ - Ford PIP trigger decoder https://wiki.rusefi.com/Images/triggers/trigger_65.png
  - Dwell battery voltage correction table
  - rusEFI firmware feature should be honest about it's Windows-only limitation
  - Bosch MM5.10 accelerometer integration
@@ -611,7 +651,7 @@ All notable user-facing or behavior-altering changes will be documented in this 
  - Electronic throttle rev limiter: close the throttle before hitting hard limit, OEM style.
  - "inhibit start until oil pressure" prevents starting the engine with no/low oil pressure #2799
  - Dual cooling fans, with new "enable fan with AC" option
- - Lua scripting: implement custom ECU behavior with a Lua script. https://github.com/rusefi/rusefi/wiki/Lua-Scripting
+ - Lua scripting: implement custom ECU behavior with a Lua script. https://wiki.rusefi.com/Lua-Scripting
 
 # 2021 May "Piercing Day"
 ### Fixed
@@ -650,9 +690,9 @@ All notable user-facing or behavior-altering changes will be documented in this 
 
 ### Added
  - USB Mass Storage: The connected SD card will be mounted over USB if rusEFI connected to a PC via USB.
- - GM 60/2/2/2 trigger https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers#gm
- - TriTach trigger https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers#tritach
- - Skoda Favorit trigger https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers#skoda-favorit
+ - GM 60/2/2/2 trigger https://wiki.rusefi.com/All-Supported-Triggers#gm
+ - TriTach trigger https://wiki.rusefi.com/All-Supported-Triggers#tritach
+ - Skoda Favorit trigger https://wiki.rusefi.com/All-Supported-Triggers#skoda-favorit
  - Add fallback logic handling failed MAP sensor.  In case of failed MAP, ses either a fixed MAP value, or a table that estimates MAP based on TPS and RPM.
  - STM32H7 is mostly working
 

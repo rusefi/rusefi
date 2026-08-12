@@ -148,6 +148,16 @@ public:
 	uint32_t totalTriggerErrorCounter;
 	uint32_t orderingErrorCounter;
 
+	/**
+	 * Resets the decoder state to its initial, unsynchronized condition.
+	 * This includes clearing synchronization status, error counters, tooth duration history,
+	 * and internal event tracking.
+	 *
+	 * Invoked:
+	 *  - During object construction.
+	 *  - When trigger synchronization is lost (e.g., engine stopped for >1 second).
+	 *  - During trigger initialization/re-initialization when searching for the sync point.
+	 */
 	virtual void resetState();
 	void setShaftSynchronized(bool value);
 	bool getShaftSynchronized() const;
@@ -174,6 +184,9 @@ protected:
 	//  - Saw a sync point but the wrong number of events in the cycle
 	virtual void onTriggerError() { }
 
+	// Called when shaft synchronization state changes.
+	virtual void onShaftSynchronized(bool /*value*/) { }
+
 	virtual void onNotEnoughTeeth(int, int) { }
 	virtual void onTooManyTeeth(int, int) { }
 
@@ -198,6 +211,14 @@ private:
 class PrimaryTriggerDecoder : public TriggerDecoderBase, public trigger_state_primary_s {
 public:
 	PrimaryTriggerDecoder(const char* name);
+	/**
+	 * Resets the primary decoder state, including its base state and phase synchronization.
+	 *
+	 * Invoked:
+	 *  - During object construction (via TriggerDecoderBase).
+	 *  - When trigger synchronization is lost (e.g., engine stopped for >1 second).
+	 *  - During trigger initialization/re-initialization when searching for the sync point.
+	 */
 	void resetState() override;
 
 	void resetHasFullSync() {
@@ -225,11 +246,29 @@ public:
 
 	void onTriggerError() override;
 
+	void onShaftSynchronized(bool value) override;
+
 	void onNotEnoughTeeth(int actual, int expected) override;
 	void onTooManyTeeth(int actual, int expected) override;
 
 private:
 
+	/**
+	 * True when the crank trigger pattern alone is ambiguous and additional information
+	 * (typically a cam/VVT signal) is required to determine the engine's true phase within
+	 * the full 720-degree four-stroke cycle.
+	 *
+	 * Many crank-only wheels (e.g. symmetric 60-2) repeat their pattern every 360 crank
+	 * degrees, so the decoder can find a sync point on the crank wheel but cannot tell
+	 * which of the two engine revolutions of the four-stroke cycle it is currently in.
+	 * In that case m_needsDisambiguation is set to true, and m_hasSynchronizedPhase will
+	 * only become true once syncEnginePhase() has been called based on a cam signal.
+	 *
+	 * When false (e.g. asymmetric crank patterns that are unique over the full engine
+	 * cycle, or when running in a half-cycle/wasted-spark mode where 360 deg of ambiguity
+	 * is acceptable), the decoder is considered fully phase-synchronized as soon as the
+	 * crank sync point is found - see resetHasFullSync().
+	 */
 	bool m_needsDisambiguation = false;
 };
 

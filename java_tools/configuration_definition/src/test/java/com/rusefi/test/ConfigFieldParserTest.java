@@ -178,79 +178,6 @@ public class ConfigFieldParserTest {
     }
 
     @Test
-    public void testCustomEnumAlignment() {
-        assertThrows(SizeMismatchException.class, new Executable() {
-            @Override
-            public void execute() throws Throwable {
-                String test = "struct pid_s\n" +
-                    "#define can_wbo_type_e_enum \"RusEFI\", \"AEM X-series\", \"Disabled/Analog\"\n" +
-                    "\tcustom can_wbo_type_e 2 bits, U08, @OFFSET@, [0:1], @@can_wbo_type_e_enum@@\n" +
-                    "\tcan_wbo_type_e wboType1;\n" +
-                    "end_struct\n";
-                ReaderStateImpl state = new ReaderStateImpl();
-
-                TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
-                state.readBufferedReader(test, tsProjectConsumer);
-            }
-        });
-    }
-
-    @Test
-    public void testCustomEnumWithTsVariable() {
-        String test = "struct pid_s\n" +
-            "#define ego_sensor_e_enum \"BPSX\", \"Innovate\", \"14Point7\"\n" +
-            "custom ego_sensor_e 1 bits, S08, @OFFSET@, [0:1], $ego_sensor_e_list\n" +
-            "ego_sensor_e afr_type1;\n" +
-            "int16_t int\n" +
-            "end_struct\n";
-        ReaderStateImpl state = new ReaderStateImpl();
-
-        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
-        state.readBufferedReader(test, tsProjectConsumer);
-        assertEquals("afr_type1 = bits, S08, 0, [0:1], $ego_sensor_e_list\n" +
-            "int = scalar, S16, 2, \"\", 1, 0, 0, 32000, 0\n" +
-            "; total TS size = 4\n", tsProjectConsumer.getContent());
-    }
-
-    @Test
-    public void testShortForm() {
-        String test = "struct pid_s\n" +
-                "#define ego_sensor_e_enum \"BPSX\"\n" +
-                "custom ego_sensor_e 1 bits, S08, @OFFSET@, [0:1], @@ego_sensor_e_enum@@\n" +
-                "ego_sensor_e afr_type1;\n" +
-                "ego_sensor_e afr_type2;\n" +
-                "int8_t int\n" +
-                "end_struct\n";
-        ReaderStateImpl state = new ReaderStateImpl();
-
-        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
-        state.readBufferedReader(test, tsProjectConsumer);
-        assertEquals("afr_type1 = bits, S08, 0, [0:1], \"BPSX\"\n" +
-                "afr_type2 = bits, S08, 1, [0:1], \"BPSX\"\n" +
-                "int = scalar, S08, 2, \"\", 1, 0, 0, 100, 0\n" +
-                "; total TS size = 4\n", tsProjectConsumer.getContent());
-    }
-
-    @Test
-    public void test2byteCustomEnum() {
-        String test = "struct pid_s\n" +
-                "#define ego_sensor_e_enum \"BPSX\", \"Innovate\", \"14Point7\"\n" +
-                "custom ego_sensor_e2 2 bits, S16, @OFFSET@, [0:1], @@ego_sensor_e_enum@@\n" +
-                "int8_t int\n" +
-                "ego_sensor_e2 afr_type1;\n" +
-                "ego_sensor_e2 afr_type2;\n" +
-                "end_struct\n";
-        ReaderStateImpl state = new ReaderStateImpl();
-
-        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
-        state.readBufferedReader(test, tsProjectConsumer);
-        assertEquals("int = scalar, S08, 0, \"\", 1, 0, 0, 100, 0\n" +
-                "afr_type1 = bits, S16, 2, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
-                "afr_type2 = bits, S16, 4, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
-                "; total TS size = 8\n", tsProjectConsumer.getContent());
-    }
-
-    @Test
     public void test4byteCustomEnum() {
         String test = "struct pid_s\n" +
                 "#define ego_sensor_e_enum \"BPSX\", \"Innovate\", \"14Point7\"\n" +
@@ -364,26 +291,6 @@ public class ConfigFieldParserTest {
                 "periodMs2 = scalar, S16, 2, \"ms\", 1, 0, 0, 3000, 0\n" +
                 "afrTable = array, U08, 4, [4x4],\"deg\", 0.1, 0, 0, 25.0, 1\n" +
                 "; total TS size = 20\n", tsProjectConsumer.getContent());
-    }
-
-    @Test
-    public void useCustomType() {
-        ReaderStateImpl state = new ReaderStateImpl();
-        String test = "struct pid_s\n" +
-                "#define ERROR_BUFFER_SIZE 120\n" +
-                "\tcustom critical_error_message_t @@ERROR_BUFFER_SIZE@@ string, ASCII, @OFFSET@, @@ERROR_BUFFER_SIZE@@\n" +
-                "\tcritical_error_message_t var;\n" +
-                "\tint16_t periodMs;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
-                "end_struct\n" +
-                "";
-
-        JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
-        state.readBufferedReader(test, javaFieldsConsumer);
-
-        assertEquals("\tpublic static final Field VAR = Field.create(\"VAR\", 0, 120, FieldType.STRING).setScale(1.0).setBaseOffset(0);\n" +
-                        "\tpublic static final Field PERIODMS = Field.create(\"PERIODMS\", 120, FieldType.INT16).setScale(1.0).setBaseOffset(0);\n" +
-                        "\tpublic static final Field ALIGNMENTFILL_AT_122 = Field.create(\"ALIGNMENTFILL_AT_122\", 122, FieldType.INT8).setScale(1.0).setBaseOffset(0);\n",
-                javaFieldsConsumer.getContent());
     }
 
     @Test
@@ -519,6 +426,48 @@ public class ConfigFieldParserTest {
                             "\tpublic static final Field ETB2_ALIGNMENTFILL_AT_6 = Field.create(\"ETB2_ALIGNMENTFILL_AT_6\", 22, FieldType.INT8).setScale(1.0).setBaseOffset(0);\n",
                     javaFieldsConsumer.getContent());
         }
+    }
+
+    @Test
+    public void testBitNameViaVariableReference() {
+        // output_channels.txt uses @#DEFINE#@ references as bit names so that .ini and java share one constant
+        String test = "#define SD_PRESENT_CHANNEL \"sd_present\"\n" +
+                "struct_no_prefix pid_s\n" +
+                "\tbit @#SD_PRESENT_CHANNEL#@;SD: Present\n" +
+                "end_struct\n";
+        ReaderStateImpl state = new ReaderStateImpl();
+        JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
+        state.readBufferedReader(test, javaFieldsConsumer);
+
+        assertEquals("\tpublic static final Field SD_PRESENT = Field.create(\"SD_PRESENT\", 0, FieldType.BIT, 0).setBaseOffset(0);\n",
+                javaFieldsConsumer.getContent());
+    }
+
+    @Test
+    public void testBitWordRollover() {
+        StringBuilder test = new StringBuilder("struct_no_prefix bits_s\n");
+        for (int i = 0; i < 40; i++) {
+            test.append("\tbit b").append(i).append("\n");
+        }
+        test.append("end_struct\n");
+
+        BaseCHeaderConsumer consumer = new BaseCHeaderConsumer();
+        ReaderStateImpl state = new ReaderStateImpl();
+        JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
+        state.readBufferedReader(test.toString(), consumer, javaFieldsConsumer);
+
+        // 33rd bit starts a new 32-bit word at offset 4; second word is padded so the struct is 8 bytes
+        String header = consumer.getContent();
+        assertTrue(header.contains("offset 0 bit 31 */\n\tbool b31 : 1 {};"));
+        assertTrue(header.contains("offset 4 bit 0 */\n\tbool b32 : 1 {};"));
+        assertTrue(header.contains("offset 4 bit 7 */\n\tbool b39 : 1 {};"));
+        assertTrue(header.contains("offset 4 bit 31 */\n\tbool unusedBit_40_31 : 1 {};"));
+        assertTrue(header.contains("static_assert(sizeof(bits_s) == 8)"));
+
+        String javaFields = javaFieldsConsumer.getContent();
+        assertTrue(javaFields.contains("Field.create(\"B31\", 0, FieldType.BIT, 31)"));
+        assertTrue(javaFields.contains("Field.create(\"B32\", 4, FieldType.BIT, 0)"));
+        assertTrue(javaFields.contains("Field.create(\"B39\", 4, FieldType.BIT, 7)"));
     }
 
     @Test
@@ -877,5 +826,120 @@ public class ConfigFieldParserTest {
 // this does not look great let's document this corner case for now
         assertEquals("x\"\n" +
                 "\"y", ConfigFieldImpl.unquote("\"x\"\n\"y\""));
+    }
+
+    @Test
+    public void testExpressionWithTernaryInMultiplier() {
+        String test = "struct pid_s\n" +
+                "\tuint8_t autoscale field;;\"units\", {useLambdaOnInterface ? 1/4 : 1/10}, 0, 0, 25, 1\n" +
+                "end_struct\n";
+
+        ReaderStateImpl state = new ReaderStateImpl();
+        TSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
+
+        state.readBufferedReader(test, tsProjectConsumer);
+
+        // When scale contains a ternary expression, it should be preserved as-is
+        // and autoscale should default to 1:1
+        assertEquals("field = scalar, U08, 0, \"units\", {useLambdaOnInterface ? 1/4 : 1/10}, 0, 0, 25, 1\n" +
+                "; total TS size = 4\n", tsProjectConsumer.getContent());
+    }
+
+    @Test
+    public void testExpressionWithTernaryInLimits() {
+        String test = "struct pid_s\n" +
+                "\tuint8_t[16 x 16] autoscale lambdaTable;;{useLambdaOnInterface ? \"lambda\" : \"afr\"}, {1/@@PACK_MULT_AFR_CFG@@}, 0, {useLambdaOnInterface ? 1.5 : 0}, {useLambdaOnInterface ? 1.5 : 25}, {useLambdaOnInterface ? 2 : 1}\n" +
+                "end_struct\n";
+
+        ReaderStateImpl state = new ReaderStateImpl();
+        state.getVariableRegistry().register("PACK_MULT_AFR_CFG", 10);
+        TSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
+
+        state.readBufferedReader(test, tsProjectConsumer);
+
+        // Expressions in units, min, max, and digits should be preserved
+        String expected = "lambdaTable = array, U08, 0, [16x16], {useLambdaOnInterface ? \"lambda\" : \"afr\"}, 0.1, 0, {useLambdaOnInterface ? 1.5 : 0}, {useLambdaOnInterface ? 1.5 : 25}, {useLambdaOnInterface ? 2 : 1}\n" +
+                "; total TS size = 256\n";
+        assertEquals(expected, tsProjectConsumer.getContent());
+    }
+
+    @Test
+    public void testStructTemplateDefinition() {
+        String test = "struct blend_table_s<TABLE_SCALE>\n" +
+                "\tint16_t[2 x 2] autoscale table;;\"\", @@TABLE_SCALE@@, 0, -100, 100, 1\n" +
+                "\tuint16_t[2] loadBins;;\"Load\", 1, 0, 0, 1000, 0\n" +
+                "end_struct\n";
+
+        ReaderStateImpl state = new ReaderStateImpl();
+        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
+        state.readBufferedReader(test, tsProjectConsumer);
+
+        ConfigStructure templateStruct = state.getStructures().get("blend_table_s");
+        assertNotNull(templateStruct);
+        assertEquals("blend_table_s", templateStruct.getName());
+        assertTrue(((ConfigStructureImpl) templateStruct).isTemplate());
+        assertEquals(1, ((ConfigStructureImpl) templateStruct).getTemplateParameters().size());
+        assertEquals("TABLE_SCALE", ((ConfigStructureImpl) templateStruct).getTemplateParameters().get(0));
+    }
+
+    @Test
+    public void testStructTemplateInstantiation() {
+        String test = "#define BLEND_COUNT 2\n" +
+                "struct blend_table_s<TABLE_SCALE>\n" +
+                "\tint16_t[2 x 2] autoscale table;;\"\", @@TABLE_SCALE@@, 0, -100, 100, 1\n" +
+                "\tuint16_t[2] loadBins;;\"Load\", 1, 0, 0, 1000, 0\n" +
+                "end_struct\n" +
+                "struct_no_prefix engine_configuration_s\n" +
+                "blend_table_s<0.1>[BLEND_COUNT iterate] ignBlends\n" +
+                "blend_table_s<0.01>[BLEND_COUNT iterate] afrBlends\n" +
+                "end_struct\n";
+
+        ReaderStateImpl state = new ReaderStateImpl();
+        BaseCHeaderConsumer cConsumer = new BaseCHeaderConsumer();
+        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
+        state.readBufferedReader(test, cConsumer, tsProjectConsumer);
+
+        String cContent = cConsumer.getContent();
+        assertTrue(cContent.contains("scaled_channel<int16_t, 10, 1>"), "Should contain 0.1 scale");
+        assertTrue(cContent.contains("scaled_channel<int16_t, 100, 1>"), "Should contain 0.01 scale");
+
+        String tsContent = tsProjectConsumer.getContent();
+        assertTrue(tsContent.contains("ignBlends1_table = array, S16,"), "Should contain ignBlends1_table");
+        assertTrue(tsContent.contains("afrBlends1_table = array, S16,"), "Should contain afrBlends1_table");
+    }
+
+    @Test
+    public void testStructTemplateWithDifferentScales() {
+        String test = "struct blend_table_s<TABLE_SCALE>\n" +
+                "\tint16_t[2 x 2] autoscale table;;\"\", @@TABLE_SCALE@@, 0, -100, 100, 1\n" +
+                "end_struct\n" +
+                "struct_no_prefix engine_configuration_s\n" +
+                "blend_table_s<0.1> ignBlends\n" +
+                "blend_table_s<0.01> afrBlends\n" +
+                "end_struct\n";
+
+        ReaderStateImpl state = new ReaderStateImpl();
+        TSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
+        state.readBufferedReader(test, tsProjectConsumer);
+
+        String content = tsProjectConsumer.getContent();
+        assertTrue(content.contains("ignBlends_table"), "Should contain ignBlends_table");
+        assertTrue(content.contains("afrBlends_table"), "Should contain afrBlends_table");
+    }
+
+    @Test
+    public void testStructTemplateWrongArgCount() {
+        String test = "struct blend_table_s<TABLE_SCALE, OTHER_SCALE>\n" +
+                "\tint16_t[2 x 2] autoscale table;;\"\", @@TABLE_SCALE@@, 0, -100, 100, 1\n" +
+                "end_struct\n" +
+                "struct_no_prefix engine_configuration_s\n" +
+                "blend_table_s<0.1> ignBlends\n" +
+                "end_struct\n";
+
+        ReaderStateImpl state = new ReaderStateImpl();
+        assertThrows(ParsingException.class, () -> {
+            TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
+            state.readBufferedReader(test, tsProjectConsumer);
+        });
     }
 }

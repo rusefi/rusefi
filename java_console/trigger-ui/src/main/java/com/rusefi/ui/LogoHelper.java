@@ -14,7 +14,7 @@ import static com.devexperts.logging.Logging.getLogging;
 
 public class LogoHelper {
     private static final Logging log = getLogging(LogoHelper.class);
-    public static final String LINK_TEXT = "rusEFI (c) 2012-2025";
+    public static final String LINK_TEXT = "rusEFI (c) 2012-2026";
     public static final String URI = "http://rusefi.com/?java_console";
 
     public static JLabel createLogoLabel() {

@@ -221,6 +221,11 @@ void canHwInfo(CANDriver* cand)
 	(void)cand;
 }
 
+void canHwRecover(const size_t, CANDriver *)
+{
+	/* TODO: */
+}
+
 #endif /* EFI_CAN_SUPPORT */
 
 bool mcuCanFlashWhileRunning() {
@@ -275,6 +280,11 @@ float getMcuTemperature() {
 float getMcuVrefVoltage() {
 	// TODO: implement me!
 	return engineConfiguration->adcVcc;
+}
+
+float getMcuVbatVoltage() {
+	// TODO: implement me!
+	return 0;
 }
 
 bool readSlowAnalogInputs(adcsample_t* convertedSamples) {

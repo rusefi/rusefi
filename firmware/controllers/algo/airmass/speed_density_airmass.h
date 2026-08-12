@@ -16,6 +16,9 @@ public:
 
 	float getMap(float rpm, bool postState);
 
+	// Baro-normalized MAP for table lookups ('Compensated MAP' feature); returns map unchanged when disabled
+	float getCompensatedMap(float map) const;
+
 private:
 	float getPredictiveMap(float rpm, bool postState, float mapSensor);
 	float logAndGetFallback(float rpm, bool postState) const;
@@ -23,7 +26,8 @@ private:
 
 	// State for predictive MAP blending
 	bool m_isMapPredictionActive = false;
+	bool m_awaitingThrottleRelease = false;
 	Timer m_predictionTimer;
 	float m_initialPredictedMap = 0;
-	float m_initialRealMap = 0;
+	float m_tpsPeak = 0;
 };

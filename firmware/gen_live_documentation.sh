@@ -16,7 +16,6 @@ java -DSystemOut.name=logs/gen_live_documentation \
   integration/rusefi_config_trigger.txt \
   ../unit_tests/test-framework/trigger_meta_generated.h \
  ../java_tools/trigger-image/src/main/java/com/rusefi/config/generated/ \
- TriggerMeta.java \
  "./${META_OUTPUT_ROOT_FOLDER}"
 [ $? -eq 0 ] || { echo "ERROR generating with LiveDataProcessor"; exit 1; }
 

@@ -56,12 +56,12 @@ pins:
     color: white
 
   - pin: 7A
-    function: Power Ground
+    function: Power/Chassis GND ground
     type: gnd
     color: black
 
   - pin: 8A
-    function: Analog Ground
+    function: GNDA Analog/Sensor Ground
     type: agnd
     color: black
 
@@ -127,13 +127,13 @@ pins:
     type: 5v
 
   - pin: 17A
-    function: Analog Ground
+    function: GNDA Analog/Sensor Ground
     type: agnd
     color: black
 
 
   - pin: 18A
-    function: Power Ground
+    function: Power/Chassis GND ground
     type: gnd
     color: black
 
@@ -185,7 +185,7 @@ pins:
     color: black
 
   - pin: 25A
-    function: Analog Ground
+    function: GNDA Analog/Sensor Ground
     type: agnd
     color: black
 
@@ -216,7 +216,7 @@ pins:
   - pin: 29A
     meta: MM176_IN_CLT_ANALOG
     class: analog_inputs
-    function: CLT Sensor Input
+    function: ECT CLT Coolant Sensor Input
     type: at
     ts_name: 29A - CLT Sensor Input
     color: purple
@@ -231,7 +231,7 @@ pins:
   - pin: 31A
     meta: MM176_IN_TPS_ANALOG
     class: analog_inputs
-    function: Universal analog input. Suggested TPS Sensor Input
+    function: Universal analog input. Suggested TPS 1 sensor input
     color: green
     type: av
     ts_name: 31A - TPS Sensor Input
@@ -239,7 +239,7 @@ pins:
   - pin: 32A
     meta: MM176_IN_PPS1_ANALOG
     class: analog_inputs
-    function: Universal analog input. Suggested PPS Sensor Input
+    function: Universal analog input. Suggested PPS input 1
     ts_name: ___ - PPS Sensor Input
     type: av
     color: orange
@@ -249,14 +249,14 @@ pins:
     class: analog_inputs
     color: blue
     type: av
-    function: Universal analog input. Suggested TPS2 Sensor Input
+    function: Universal analog input. Suggested TPS 2 sensor input
     ts_name: ___ - TPS2 Sensor Input
 
   - pin: 34A
     meta: MM176_IN_PPS2_ANALOG
     class: analog_inputs
     type: av
-    function: Universal analog input. Suggested PPS2 Sensor Input
+    function: Universal analog input. Suggested PPS input 2
     ts_name: 34A - PPS2 Sensor Input
     color: white
 
@@ -369,7 +369,7 @@ pins:
     type: 12v
 
   - pin: 20B
-    function: Analog Ground
+    function: GNDA Analog/Sensor Ground
     type: agnd
 
   - pin: 21B
@@ -400,7 +400,7 @@ pins:
     type: 12v
 
   - pin: 25B
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: 26B

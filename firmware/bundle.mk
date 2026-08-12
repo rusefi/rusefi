@@ -12,6 +12,18 @@ ifeq (,$(GITHUB_SHA))
   GITHUB_SHA = local
 endif
 
+# SIGNATURE_HASH is the same hash that ends up in the generated .ini TS_SIGNATURE
+# (see gen_signature.sh and $(META_OUTPUT_ROOT_FOLDER)controllers/generated/signature_$(SHORT_BOARD_NAME).h).
+# It uniquely identifies the calibration layout of this firmware build, while
+# GITHUB_SHA identifies the source commit. Including both in the .srec filename
+# lets the autoupdater/console pair an update artifact with the exact .ini it
+# was built against, even when GITHUB_SHA is "local" or duplicated across builds.
+SIGNATURE_HASH_FILE = $(META_OUTPUT_ROOT_FOLDER)controllers/generated/signature_$(SHORT_BOARD_NAME).h
+SIGNATURE_HASH = $(shell awk '/define[ \t]+SIGNATURE_HASH/ {print $$3}' $(SIGNATURE_HASH_FILE) 2>/dev/null)
+ifeq (,$(SIGNATURE_HASH))
+  SIGNATURE_HASH = nohash
+endif
+
 # If we're running on Windows, we need to call the .exe of hex2dfu
 ifeq ($(UNAME_S),)
 	UNAME_S = $(shell uname -s)
@@ -29,7 +41,8 @@ endif
 DFU = $(DELIVER)/$(PROJECT).dfu
 DBIN = $(DELIVER)/$(PROJECT).bin
 DBIN_CRC = $(BUILDDIR)/$(PROJECT)_crc32.bin
-FIRMWARE_BIN_OUT = $(FOLDER)/$(PROJECT).bin
+# .bin name mirroring SREC_TARGET below
+BIN_TARGET = $(FOLDER)/rusefi_$(BRANCH_REF_FOR_BUNDLE)_$(BUNDLE_DATE)_$(BUNDLE_NAME)_$(SIGNATURE_HASH)_$(GITHUB_SHA).bin
 
 ifeq (,$(WHITE_LABEL))
 	WHITE_LABEL = rusefi
@@ -65,15 +78,15 @@ WHITE_LABEL_BUNDLE_NAME = $(WHITE_LABEL)_bundle_$(BUNDLE_NAME)
 
 CONSOLE_FOLDER = $(FOLDER)/console
 DRIVERS_FOLDER = $(FOLDER)/drivers
+BIN_FOLDER = $(FOLDER)/bin
+DEVICE_BIN_FOLDER = $(FOLDER)/bin/device
 
 UPDATE_FOLDER_SOURCES = \
   $(RUSEFI_CONSOLE_SETTINGS) \
   $(INI_FILE) \
-  ../misc/console_launcher/readme.html \
-  ../misc/console_launcher/rusefi_updater.exe
+  ../misc/console_launcher/readme.html
 
-FOLDER_SOURCES = \
-  ../java_console/bin
+FOLDER_SOURCES =
 
 # Custom board builds don't include the simulator
 ifneq ($(BUNDLE_SIMULATOR),false)
@@ -83,14 +96,16 @@ endif
 UPDATE_CONSOLE_FOLDER_SOURCES = \
   $(CONSOLE_JAR) \
   $(BRANCH_REF_FILE) \
-  $(TS_PLUGIN_LAUNCHER_JAR) \
-  $(AUTOUPDATE_JAR)
+  $(TS_PLUGIN_LAUNCHER_JAR)
+
+# Launchers live at the bundle root; they delegate to console/rusefi_console.jar
+ROOT_FOLDER_SOURCES = \
+  ../misc/console_launcher/rusefi_updater.exe \
+  ../misc/console_launcher/rusefi_updater.sh
 
 # todo: remove BootCommander.exe once https://github.com/rusefi/rusefi/issues/6358 is done
 
 CONSOLE_FOLDER_SOURCES = \
-  ../misc/console_launcher/rusefi_autoupdate.exe \
-  ../misc/console_launcher/rusefi_console.exe \
   $(SIMULATOR_EXE)
 
 #  $(wildcard ../java_console/*.dll) \
@@ -120,14 +135,16 @@ BOOTLOADER_HEX = bootloader/blbuild/openblt_$(PROJECT_BOARD).hex
 # We need to put different things in the bundle depending on some meta-info flags
 ifeq ($(USE_OPENBLT),yes)
   BOOTLOADER_HEX_OUT = $(BOOTLOADER_HEX)
-  BOOTLOADER_BIN_OUT = $(FOLDER)/openblt.bin
-  SREC_TARGET = $(FOLDER)/rusefi_$(BRANCH_REF_FOR_BUNDLE)_$(BUNDLE_DATE)_$(GITHUB_SHA)_update.srec
+  BOOTLOADER_BIN_OUT = $(DEVICE_BIN_FOLDER)/openblt_$(BRANCH_REF_FOR_BUNDLE)_$(BUNDLE_DATE)_$(BUNDLE_NAME)_$(SIGNATURE_HASH)_$(GITHUB_SHA).bin
+  SREC_TARGET = $(FOLDER)/rusefi_$(BRANCH_REF_FOR_BUNDLE)_$(BUNDLE_DATE)_$(BUNDLE_NAME)_$(SIGNATURE_HASH)_$(GITHUB_SHA)_update.srec
 else
   FIRMWARE_OUTPUTS = $(FOLDER)/$(PROJECT).hex
   BINSRC = $(BUILDDIR)/$(PROJECT).bin
+endif
+
+# we need these files for crash investigations
 ifeq ($(INCLUDE_ELF),yes)
   FIRMWARE_OUTPUTS += $(FOLDER)/$(PROJECT).elf $(FOLDER)/$(PROJECT).map $(FOLDER)/$(PROJECT).list
-endif
 endif
 
 ST_DRIVERS = $(DRIVERS_FOLDER)/silent_st_drivers2.exe
@@ -145,40 +162,42 @@ MOST_COMMON_BUNDLE_FILES = \
 UPDATE_BUNDLE_FILES = \
   $(FIRMWARE_OUTPUTS) \
   $(BOOTLOADER_BIN_OUT) \
-  $(FIRMWARE_BIN_OUT) \
+  $(BIN_TARGET) \
   $(SREC_TARGET) \
   $(MOST_COMMON_BUNDLE_FILES)
 
 FOLDER_TARGETS = $(addprefix $(FOLDER)/,$(notdir $(FOLDER_SOURCES)))
+ROOT_FOLDER_TARGETS = $(addprefix $(FOLDER)/,$(notdir $(ROOT_FOLDER_SOURCES)))
 CONSOLE_FOLDER_TARGETS = $(addprefix $(CONSOLE_FOLDER)/,$(notdir $(CONSOLE_FOLDER_SOURCES)))
 
 FULL_BUNDLE_CONTENT = \
   $(ST_DRIVERS) \
-  $(FOLDER_TARGETS) \
+  $(BIN_FOLDER) \
+  $(ROOT_FOLDER_TARGETS) \
   $(CONSOLE_FOLDER_TARGETS)
 
 BUNDLE_FILES = \
   $(UPDATE_BUNDLE_FILES) \
   $(FULL_BUNDLE_CONTENT)
 
-$(SIMULATOR_EXE): $(CONFIG_FILES) .FORCE
-	$(MAKE) -C ../simulator -r OS="Windows_NT" SUBMAKE=yes
+$(SIMULATOR_EXE): $(CONFIG_FILES) $(DOCS_ENUMS) .FORCE
+	$(MAKE) -C ../simulator -r OS="Windows_NT" SUBMAKE=yes TS_PAGE_GUARD_DEFS="$(TS_PAGE_GUARD_DEFS)"
 
 # make sure not to invoke in parallel with SIMULATOR_EXE rule above
-../simulator/build/rusefi_simulator.linux: $(CONFIG_FILES) .FORCE
-	$(MAKE) -C ../simulator -r OS="Linux" SUBMAKE=yes
+../simulator/build/rusefi_simulator.linux: $(CONFIG_FILES) $(DOCS_ENUMS) .FORCE
+	$(MAKE) -C ../simulator -r OS="Linux" SUBMAKE=yes TS_PAGE_GUARD_DEFS="$(TS_PAGE_GUARD_DEFS)"
 
 # make Windows simulator a prerequisite so that we don't try compiling them concurrently
 # that also means no incremental compilation making that rule less useful. See 'rusefi_simulator.linux' above
-../simulator/build/rusefi_simulator.both: $(CONFIG_FILES) .FORCE | $(SIMULATOR_EXE)
-	$(MAKE) -C ../simulator -r OS="Linux" SUBMAKE=yes
+../simulator/build/rusefi_simulator.both: $(CONFIG_FILES) $(DOCS_ENUMS) .FORCE | $(SIMULATOR_EXE)
+	$(MAKE) -C ../simulator -r OS="Linux" SUBMAKE=yes TS_PAGE_GUARD_DEFS="$(TS_PAGE_GUARD_DEFS)"
 
 $(BOOTLOADER_HEX) $(BOOTLOADER_BIN): .bootloader-sentinel ;
 
 # We pass SUBMAKE=yes to the bootloader Make instance so it knows not to try to build configs,
 #  as that would result in two simultaneous config generations, which causes issues.
 .bootloader-sentinel: $(CONFIG_FILES) .FORCE
-	BOARD_DIR=../$(BOARD_DIR) BOARD_META_PATH=../$(BOARD_META_PATH) TGT_SENTINEL=../$(TGT_SENTINEL) $(MAKE) -C bootloader -r SUBMAKE=yes
+	BOARD_DIR=../$(BOARD_DIR) BOARD_META_PATH=../$(BOARD_META_PATH) SHORT_BOARD_NAME=$(SHORT_BOARD_NAME) TGT_SENTINEL=../$(TGT_SENTINEL) WHITE_LABEL=$(WHITE_LABEL) $(MAKE) -C bootloader -r SUBMAKE=yes TS_PAGE_GUARD_DEFS="$(TS_PAGE_GUARD_DEFS)"
 	@touch $@
 
 $(BUILDDIR)/$(PROJECT).map: $(BUILDDIR)/$(PROJECT).elf
@@ -189,26 +208,24 @@ $(SREC_TARGET): $(BUILDDIR)/rusefi.srec
 $(FIRMWARE_OUTPUTS): $(FOLDER)/%: $(BUILDDIR)/% | $(FOLDER)
 	ln -rfs $< $@
 
-$(BOOTLOADER_BIN_OUT): $(FOLDER)/openblt%: bootloader/blbuild/openblt_$(PROJECT_BOARD)% | $(FOLDER)
+$(BOOTLOADER_BIN_OUT): $(BOOTLOADER_BIN) | $(DEVICE_BIN_FOLDER)
 	ln -rfs $< $@
 
-$(FIRMWARE_BIN_OUT) $(FOLDER)/$(PROJECT).dfu: $(FOLDER)/%: $(DELIVER)/% | $(FOLDER)
+$(FOLDER)/$(PROJECT).dfu: $(FOLDER)/%: $(DELIVER)/% | $(FOLDER)
 	ln -rfs $< $@
 
-HEX_BASE_ADDRESS = "0x$(shell $(OD) -h -j .vectors $(BUILDDIR)/$(PROJECT).elf | awk '/.vectors/ {print $$5 }')"
-ifeq ($(USE_OPENBLT),yes)
-  # note how bootloader_size from .ld file is hard-coded here!
-	CHECKSUM_ADDRESS = 0x0800801C
-else
-  # by the way '1C' is the magic address of first reserved DWORD in vector table
-  # by the way hex2dfu lower-case '-c' would also write binary length in second DWORD
-	CHECKSUM_ADDRESS = 0x0800001C
-endif
+# The bundled .bin gets a unique name (BIN_TARGET) so it can't be mismatched to the
+# wrong board; it still links to the plain deliver/ .bin ($(DBIN)).
+$(BIN_TARGET): $(DBIN) | $(FOLDER)
+	ln -rfs $< $@
+
+HEX_BASE_ADDRESS = $(shell $(OD) -h -j .vectors $(BUILDDIR)/$(PROJECT).elf | awk '/.vectors/ {print $$5 }')
+CHECKSUM_ADDRESS = 0x$(shell echo "ibase=16; obase=10; ${HEX_BASE_ADDRESS} + 1C" | bc)
 
 $(BUILDDIR)/rusefi.srec: $(BUILDDIR)/$(PROJECT).hex
 	# make sure we create the srec from a binary with crc
 	$(H2D) -i $< -c $(CHECKSUM_ADDRESS) -b $(DBIN_CRC)
-	$(CP) -I binary -O srec --change-addresses=$(HEX_BASE_ADDRESS) $(DBIN_CRC) $@
+	$(CP) -I binary -O srec --change-addresses=0x$(HEX_BASE_ADDRESS) $(DBIN_CRC) $@
 
 # The DFU is currently not included in the bundle, so these prerequisites are listed as order-only to avoid building it.
 # If you want it, you can build it with `make rusefi.snapshot.$BUNDLE_NAME/rusefi.dfu`
@@ -225,7 +242,7 @@ else
 endif
 	@touch $@
 
-OBFUSCATED_SREC = $(FOLDER)/rusefi-$(BRANCH_REF_FOR_BUNDLE)_$(BUNDLE_DATE)_$(GITHUB_SHA)_obfuscated.srec
+OBFUSCATED_SREC = $(FOLDER)/rusefi-$(BRANCH_REF_FOR_BUNDLE)_$(BUNDLE_DATE)_$(BUNDLE_NAME)_$(SIGNATURE_HASH)_$(GITHUB_SHA)_obfuscated.srec
 
 OBFUSCATED_OUT = \
   $(FOLDER)/rusefi-obfuscated.bin \
@@ -240,9 +257,17 @@ $(OBFUSCATED_OUT): .obfuscated-sentinel
 	@touch $@
 
 $(ST_DRIVERS): | $(DRIVERS_FOLDER)
-	wget https://rusefi.com/build_server/st_files/silent_st_drivers2.exe -P $(dir $@)
+	cp ext/rusefi-gha/static-content/silent_st_drivers2.exe $(DRIVERS_FOLDER)
 
 $(DELIVER) $(ARTIFACTS) $(STAGING_FOLDER) $(CONSOLE_FOLDER) $(DRIVERS_FOLDER):
+	mkdir -p $@
+
+$(BIN_FOLDER): .FORCE | $(FOLDER)
+	rm -rf $@
+	mkdir -p $@
+	find ../java_console/bin -maxdepth 1 -mindepth 1 | xargs -I{} ln -rfs {} $@/
+
+$(DEVICE_BIN_FOLDER): | $(BIN_FOLDER)
 	mkdir -p $@
 
 $(BRANCH_REF_FILE):
@@ -294,7 +319,7 @@ CLEAN_BUNDLE_HOOK:
 PERCENT = %
 
 .SECONDEXPANSION:
-$(FOLDER_TARGETS) $(UPDATE_FOLDER_TARGETS): $(FOLDER)/%: $$(filter $$(PERCENT)$$*,$(FOLDER_SOURCES) $(UPDATE_FOLDER_SOURCES)) | $(FOLDER)
+$(FOLDER_TARGETS) $(UPDATE_FOLDER_TARGETS) $(ROOT_FOLDER_TARGETS): $(FOLDER)/%: $$(filter $$(PERCENT)$$*,$(FOLDER_SOURCES) $(UPDATE_FOLDER_SOURCES) $(ROOT_FOLDER_SOURCES)) | $(FOLDER)
 	ln -rfs $< $@
 
 $(CONSOLE_FOLDER_TARGETS) $(UPDATE_CONSOLE_FOLDER_TARGETS): $(CONSOLE_FOLDER)/%: $$(filter $$(PERCENT)$$*,$(CONSOLE_FOLDER_SOURCES) $(UPDATE_CONSOLE_FOLDER_SOURCES)) | $(CONSOLE_FOLDER)

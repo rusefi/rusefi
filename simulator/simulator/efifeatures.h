@@ -17,7 +17,14 @@
 
 #define EFI_ENABLE_ASSERTS TRUE
 #define EFI_LAUNCH_CONTROL TRUE
-#define EFI_LTFT_CONTROL TRUE
+/* Long Term Fuel Trims */
+/* [tag:disable_engine_module] CAVEAT: EFI_LTFT_CONTROL gates TS page TS_PAGE_LTFT_TRIMS
+ * so a board must NOT flip it here or via board.mk DDEFS - declare `#define EFI_LTFT_CONTROL FALSE` in the
+ * board's prepend.txt instead.
+ * <p>
+ * Note the simulator and unit_tests keep their own efifeatures.h copies that bypass all of this.
+*/
+#define EFI_LTFT_CONTROL LTFT_PAGE_ENABLED
 #define EFI_AUX_VALVES FALSE
 
 #define EFI_TS_TUNNEL_CAN TRUE
@@ -42,7 +49,7 @@
 #define EFI_MCP_3208 FALSE
 #define EFI_MCP_3208 FALSE
 #define EFI_CAN_SERIAL FALSE
-#define EFI_TS_SCATTER TRUE
+#define EFI_TS_SCATTER FALSE
 #define EFI_SOFTWARE_KNOCK FALSE
 #define _HAS_STATIC_RTTI FALSE
 #define __GXX_RTTI FALSE
@@ -92,6 +99,7 @@
 #define BOARD_TLE6240_COUNT         0
 #define BOARD_MC33972_COUNT			0
 #define BOARD_TLE8888_COUNT 	0
+#define BOARD_MC33810_COUNT		0
 
 #define EFI_TEXT_LOGGING TRUE
 
@@ -127,7 +135,10 @@
 #define EFI_IDLE_CONTROL TRUE
 
 #define EFI_IDLE_PID_CIC TRUE
+
+#ifndef EFI_MAIN_RELAY_CONTROL
 #define EFI_MAIN_RELAY_CONTROL FALSE
+#endif
 
 #define EFI_CAN_SUPPORT TRUE
 
@@ -162,7 +173,6 @@
 #define EFI_STORAGE_MFS FALSE
 #define EFI_STORAGE_SD FALSE
 #define EFI_RTC FALSE
-#define EFI_MALFUNCTION_INDICATOR FALSE
 #define EFI_LOGIC_ANALYZER FALSE
 #define TRIGGER_EXTREME_LOGGING FALSE
 #define SPARK_EXTREME_LOGGING FALSE
@@ -180,9 +190,15 @@
 
 #define EFI_BOARD_TEST FALSE
 
+#ifndef EFI_LUA
 #define EFI_LUA TRUE
+#endif
 #define LUA_USER_HEAP 100000
 
 #ifndef TRUE
  fail("Truth not found");
 #endif
+
+#define ROTATIONAL_IDLE_CONTROLLER TRUE
+
+#define EFI_MISFIRE_DETECTION TRUE

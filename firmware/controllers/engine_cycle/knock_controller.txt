@@ -12,4 +12,6 @@ struct_no_prefix knock_controller_s
 	uint16_t m_knockFrequencyStart;Knock: Start Freq;"Hz", 1, 0, 0, 0, 0
 	float    m_knockFrequencyStep;Knock: Step Freq;"Hz", 1, 0, 0, 0, 0
 	float  	 m_knockFuelTrimMultiplier;Knock: Fuel trim when knock;"multiplier", 1, 0, 0, 0, 0
+	bit hasKnockRecently;Knock: Detected recently
+	bit hasKnockRetardNow;Knock: Retard active
 end_struct

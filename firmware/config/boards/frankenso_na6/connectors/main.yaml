@@ -6,19 +6,22 @@ pins:
   - pin: 6
     id: C9
     class: outputs
-    function: Ignition Coil #1
+    function: Smart Ignition Coil 1
+    type: ign
     ts_name: Coil 1F
 
   - pin: 7
     id: E14
     class: outputs
-    function: Ignition Coil #3
+    function: Smart Ignition Coil 3
+    type: ign
     ts_name: Coil 1G
 
   - pin: 8
     id: C7
     class: outputs
-    function: Ignition Coil #2
+    function: Smart Ignition Coil 2
+    type: ign
     ts_name: Coil 1H
 
   - pin: 9
@@ -36,7 +39,8 @@ pins:
   - pin: 13
     id: E12
     class: outputs
-    function: Ignition Coil #4
+    function: Smart Ignition Coil 4
+    type: ign
     ts_name: Coil 1M
 
   - pin: 15
@@ -100,16 +104,20 @@ pins:
     function: Spare low #2
 
   - pin: 39
-    function: Ground
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 40
-    function: Ground
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 41
-    function: Ground
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 42
-    function: Ground
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 43
     id: EFI_ADC_15
@@ -167,13 +175,15 @@ pins:
     id: EFI_ADC_11
     class: analog_inputs
     ts_name: Analog 3P
-    function: Intake air temp Sensor
+    function: IAT Sensor Input
+    type: at
 
   - pin: 55
     id: EFI_ADC_12
     class: analog_inputs
     ts_name: Analog 3Q
-    function: Coolant Temp Sensor
+    function: ECT CLT Coolant Sensor Input
+    type: at
 
   - pin: 57
     id: E3
@@ -197,13 +207,15 @@ pins:
     id: E2
     class: outputs
     ts_name: Injector 3V
-    function: Injector #2
+    function: Injector 2
+    type: inj
 
   - pin: 61
     id: B9
     class: outputs
     ts_name: Injector 3W
-    function: Injector #1
+    function: Injector 1
+    type: inj
 
   - pin: 62
     id: D5
@@ -215,13 +227,15 @@ pins:
     id: B8
     class: outputs
     ts_name: Injector 3Y
-    function: Injector #3
+    function: Injector 3
+    type: inj
 
   - pin: 64
     id: B7
     class: outputs
     ts_name: Injector 3Z
-    function: Injector #4
+    function: Injector 4
+    type: inj
 
   - pin: onboard
     id: EFI_ADC_14

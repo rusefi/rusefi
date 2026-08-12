@@ -21,8 +21,10 @@ import java.util.List;
 /**
  * This utility produces images of trigger signals supported by rusEFI
  * <p>
+ *  rusefi_documentation\Images\triggers is the ultimate destination for these files
  * 06/23/15
  * Andrey Belomutskiy, (c) 2013-2020
+ * See TriggerWheelInfoTest for custom format
  */
 public class TriggerImage {
     private static final String OUTPUT_FOLDER = "triggers";
@@ -33,8 +35,6 @@ public class TriggerImage {
     private static final int SMALL_DIAMETER = WHEEL_DIAMETER - 80;
     private static final int _180 = 180;
     public static final int MIN_TIME = 720;
-    private static final int FRAME_WIDTH = 900;
-    private static final int FRAME_HEIGHT = 700;
     private static final int PANEL_HEIGHT = 480;
     private static final boolean DEBUG = false;
 
@@ -48,7 +48,7 @@ public class TriggerImage {
     /**
      * todo: https://github.com/rusefi/rusefi/issues/2077
      *
-     * @see TriggerWheelInfo#isCrankBased
+     * @see TriggerWheelInfo#isCrankBased()
      */
     private static String getTriggerName(TriggerWheelInfo triggerName) {
         switch (findByOrdinal(triggerName.getId())) {
@@ -70,8 +70,6 @@ public class TriggerImage {
                 return "GM 24x 5";
             case TT_DODGE_NEON_1995:
                 return "Dodge Neon 1995";
-            case TT_DODGE_NEON_1995_ONLY_CRANK:
-                return "Dodge Neon 1995 crank only";
             case TT_SKODA_FAVORIT:
                 return "Skoda Favorit";
             case TT_GM_7X:
@@ -94,8 +92,8 @@ public class TriggerImage {
                 return "36/1";
             case TT_TOOTHED_WHEEL_36_2:
                 return "36/2";
-            case TT_TRI_TACH:
-                return "TriTach";
+// too dead            case TT_TRI_TACH:
+//                return "TriTach";
             case TT_TOOTHED_WHEEL_60_2:
                 return "60/2";
             case TT_GM_60_2_2_2:
@@ -104,7 +102,10 @@ public class TriggerImage {
         return triggerName.getTriggerName();
     }
 
-    public static void main(String[] args) throws InvocationTargetException, InterruptedException {
+    public static void main(String[] args) throws Exception {
+        String workingFolder = args.length > 0 ? args[0] : TriggerWheelInfo.DEFAULT_WORK_FOLDER;
+        TriggerMarkdownGenerator.generate(workingFolder, "triggers.md");
+
         SwingUtilities2.invokeAndWait(() -> {
             try {
                 runAwt(args);
@@ -153,7 +154,6 @@ public class TriggerImage {
             f.showFrame(content);
             if (DEBUG)
                 f.getFrame().setBackground(Color.cyan);
-            f.getFrame().setSize(FRAME_WIDTH, FRAME_HEIGHT);
 
             AutoupdateUtil.trueLayoutAndRepaint(content);
         });
@@ -162,7 +162,7 @@ public class TriggerImage {
             TriggerWheelInfo.readWheels(workingFolder, wheelInfo -> onWheel(triggerPanel, topPanel, content, wheelInfo));
         });
         Thread.sleep(1000L * sleepAtEnd);
-        System.exit(-1);
+        System.exit(0);
     }
 
     private static void onWheel(TriggerPanel triggerPanel, JPanel topPanel, JPanel content, TriggerWheelInfo triggerWheelInfo) {
@@ -237,35 +237,44 @@ public class TriggerImage {
     }
 
     @NotNull
-    private static JPanel createWheelPanel(List<TriggerSignal> wheel, boolean showTdc,
+    public static JPanel createWheelPanel(List<TriggerSignal> wheel, boolean showTdc,
                                            TriggerWheelInfo shape) {
         return new JPanel() {
             @Override
             public void paint(Graphics g) {
                 super.paint(g);
 
-                int middle = WHEEL_BORDER + WHEEL_DIAMETER / 2;
+                int w = getWidth();
+                int h = getHeight();
+                int size = Math.min(w, h);
+                int wheelBorder = size / 25; // proportional border
+                int wheelDiameter = size - 2 * wheelBorder;
+                int smallDiameter = (int) (wheelDiameter * 0.84); // 420/500 ratio from original constants
+                int middleX = w / 2;
+                int middleY = h / 2;
+                int radius = wheelDiameter / 2;
+
                 if (showTdc) {
                     double tdcAngle = Math.toRadians(_180 + shape.getTdcPositionIn360());
 
-                    int smallX = (int) (WHEEL_DIAMETER / 2 * Math.sin(tdcAngle));
-                    int smallY = (int) (WHEEL_DIAMETER / 2 * Math.cos(tdcAngle));
+                    int smallX = (int) (radius * Math.sin(tdcAngle));
+                    int smallY = (int) (radius * Math.cos(tdcAngle));
 
-                    int tdcMarkRadius = 8;
+                    int tdcMarkRadius = size / 60;
                     g.setColor(UpDownImage.ENGINE_CYCLE_COLOR);
                     // draw TDC mark and text on the round wheel
-                    g.fillOval(middle + smallX - tdcMarkRadius, middle + smallY - tdcMarkRadius,
+                    g.fillOval(middleX + smallX - tdcMarkRadius, middleY + smallY - tdcMarkRadius,
                         2 * tdcMarkRadius,
                         2 * tdcMarkRadius);
 
-                    g.drawString("TDC", middle + smallX + tdcMarkRadius * 2, middle + smallY);
+                    g.drawString("TDC", middleX + smallX + tdcMarkRadius * 2, middleY + smallY);
                 }
                 g.setColor(Color.black);
 
                 for (int i = 0; i < wheel.size(); i++) {
                     TriggerSignal current = wheel.get(i);
 
-                    drawRadialLine(g, current.getAngle());
+                    drawRadialLine(g, current.getAngle(), middleX, middleY, wheelDiameter, smallDiameter);
                     /**
                      * java arc API is
                      *      * Angles are interpreted such that 0&nbsp;degrees
@@ -280,22 +289,22 @@ public class TriggerImage {
                     int arcDuration = (int) (current.getAngle() - nextAngle);
                     int arcStart = (int) arcToRusEFI(nextAngle);
                     if (current.getState() == 1) {
-                        g.drawArc(WHEEL_BORDER, WHEEL_BORDER, WHEEL_DIAMETER, WHEEL_DIAMETER, arcStart, arcDuration);
+                        g.drawArc(middleX - radius, middleY - radius, wheelDiameter, wheelDiameter, arcStart, arcDuration);
                     } else {
-                        int corner = WHEEL_BORDER + (WHEEL_DIAMETER - SMALL_DIAMETER) / 2;
-                        g.drawArc(corner, corner, SMALL_DIAMETER, SMALL_DIAMETER, arcStart, arcDuration);
+                        int smallRadius = smallDiameter / 2;
+                        g.drawArc(middleX - smallRadius, middleY - smallRadius, smallDiameter, smallDiameter, arcStart, arcDuration);
                     }
                 }
 
-                int dirArrow = 40;
-                g.drawArc(middle - dirArrow, middle - dirArrow, 2 * dirArrow, 2 * dirArrow, 0, 180);
-                g.drawLine(middle + dirArrow + 5, middle - 15, middle + dirArrow, middle);
+                int dirArrow = size / 12;
+                g.drawArc(middleX - dirArrow, middleY - dirArrow, 2 * dirArrow, 2 * dirArrow, 0, 180);
+                g.drawLine(middleX + dirArrow + 5, middleY - 15, middleX + dirArrow, middleY);
 
             }
 
             @Override
             public Dimension getPreferredSize() {
-                return new Dimension(WHEEL_DIAMETER + 2 * WHEEL_BORDER, WHEEL_DIAMETER + 2 * WHEEL_BORDER);
+                return new Dimension(200, 200);
             }
         };
     }
@@ -304,21 +313,19 @@ public class TriggerImage {
         return angle + _180 - 90;
     }
 
-    private static void drawRadialLine(Graphics g, double angle) {
-        int center = WHEEL_BORDER + WHEEL_DIAMETER / 2;
-
+    private static void drawRadialLine(Graphics g, double angle, int centerX, int centerY, int wheelDiameter, int smallDiameter) {
         double radianAngle = Math.toRadians(_180 + angle);
 
-        int smallX = (int) (SMALL_DIAMETER / 2 * Math.sin(radianAngle));
-        int smallY = (int) (SMALL_DIAMETER / 2 * Math.cos(radianAngle));
-        int largeX = (int) (WHEEL_DIAMETER / 2 * Math.sin(radianAngle));
-        int largeY = (int) (WHEEL_DIAMETER / 2 * Math.cos(radianAngle));
+        int smallX = (int) (smallDiameter / 2.0 * Math.sin(radianAngle));
+        int smallY = (int) (smallDiameter / 2.0 * Math.cos(radianAngle));
+        int largeX = (int) (wheelDiameter / 2.0 * Math.sin(radianAngle));
+        int largeY = (int) (wheelDiameter / 2.0 * Math.cos(radianAngle));
 
-        g.drawLine(center + smallX, center + smallY, center + largeX, center + largeY);
+        g.drawLine(centerX + smallX, centerY + smallY, centerX + largeX, centerY + largeY);
     }
 
     @NotNull
-    static List<WaveState> convertSignalsToWaves(List<TriggerSignal> signals) {
+    public static List<WaveState> convertSignalsToWaves(List<TriggerSignal> signals) {
         /**
          * todo: what does this code do? does this work?
          * looks to be repeating trigger share couple of times? but not visible on images somehow?
@@ -387,7 +394,7 @@ public class TriggerImage {
 
             int h = getHeight();
 
-            g.drawString(name, 50, (int) (h * 0.75));
+            g.drawString(name, 50, (int) (h - f.getSize() * 3));
             if (id != null)
                 g.drawString(id, 0, (int) (h * 0.9));
 

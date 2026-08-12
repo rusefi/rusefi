@@ -1,5 +1,6 @@
 package com.rusefi;
 
+import com.devexperts.logging.FileLogger;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.commands.PTraceHelper;
@@ -32,12 +33,12 @@ public class PerformanceTraceHelper {
             }
             MessagesCentral.getInstance().postMessage(PerformanceTraceHelper.class, "Got " + data.size() + " PTrace entries");
             int rpm = RpmModel.getInstance().getValue();
-            String fileName = FileLog.getDate() + "_rpm_" + rpm + "_rusEFI_trace" + ".json";
+            String fileName = FileLogger.getDate() + "_rpm_" + rpm + "_rusEFI_trace" + ".json";
 
             File outputFile = new File(fileName);
             JsonOutput.writeToStream(data, new FileOutputStream(outputFile));
             MessagesCentral.getInstance().postMessage(PerformanceTraceHelper.class, "Saved to " + outputFile.getAbsolutePath());
-            MessagesCentral.getInstance().postMessage(PerformanceTraceHelper.class, "See https://github.com/rusefi/rusefi/wiki/Developer-Performance-Tracing");
+            MessagesCentral.getInstance().postMessage(PerformanceTraceHelper.class, "See https://wiki.rusefi.com/Developer-Performance-Tracing");
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }

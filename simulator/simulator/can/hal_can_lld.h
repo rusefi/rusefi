@@ -114,6 +114,9 @@ struct CANDriver {
 
 	// This contains a std::queue of received frames
 	void* rx;
+
+	// RE hack
+	int                       waiting_ms;
 };
 
 typedef struct {
@@ -165,6 +168,8 @@ typedef struct {
 } CANRxFrame;
 
 extern CANDriver CAND1;
+extern CANDriver CAND2;
+extern CANDriver CAND3;
 
 #ifdef __cplusplus
 extern "C" {

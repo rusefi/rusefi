@@ -58,23 +58,8 @@ void configureGm60_2_2_2(TriggerWaveform *s) {
 }
 
 void configureGmTriggerWaveform(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
-
-	float w = 5;
-
-	s->addToothRiseFall(60, w);
-
-	s->addToothRiseFall(120, w);
-
-	s->addToothRiseFall(180, w);
-
-	s->addToothRiseFall(240, w);
-
-	s->addToothRiseFall(300, w);
-
-	s->addToothRiseFall(350, w);
-
-	s->addToothRiseFall(360, w);
+	static const angle_t angles[] = { 60, 120, 180, 240, 300, 350, 360 };
+	initializeRiseOnlyTrigger(s, 5, angles, efi::size(angles), FOUR_STROKE_CRANK_SENSOR);
 
 	s->setTriggerSynchronizationGap(6);
 }

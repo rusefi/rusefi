@@ -26,9 +26,13 @@
 #include "long_term_fuel_trim.h"
 #include "can_common.h"
 #include "can_rx.h"
+#include "torque_estimator.h"
 #include "value_lookup.h"
 #include "can_msg_tx.h"
 #include "gm_sbc.h" // setStepperHw
+#if EFI_PROD_CODE
+#include "mass_storage_init.h"
+#endif // EFI_PROD_CODE
 
 #include "fw_configuration.h"
 #include "board_overrides.h"
@@ -43,6 +47,12 @@ bool isRunningBenchTest() {
 const OutputPin *getOutputOnTheBenchTest() {
     return outputOnTheBenchTest;
 }
+
+#if EFI_UNIT_TEST
+void setOutputOnTheBenchTestForUnitTest(OutputPin* output) {
+	outputOnTheBenchTest = output;
+}
+#endif
 
 #if !EFI_UNIT_TEST
 
@@ -151,6 +161,7 @@ static void runBench(OutputPin *output, float onTimeMs, float offTimeMs, int cou
 // todo: migrate to smarter getOutputOnTheBenchTest() approach?
 static volatile bool isBenchTestPending = false;
 static bool widebandUpdatePending = false;
+static bool widebandUpdateFromFile = false;
 static uint8_t widebandUpdateHwId = 0;
 static float globalOnTimeMs;
 static float globalOffTimeMs;
@@ -206,7 +217,7 @@ static void doRunSolenoidBench(size_t humanIndex, float onTime, float offTime, i
 	pinbench(onTime, offTime, count, &enginePins.tcuSolenoids[humanIndex - 1]);
 }
 
-static void doRunBenchTestLuaOutput(size_t humanIndex, float onTimeMs, float offTimeMs, int count) {
+void doRunBenchTestLuaOutput(size_t humanIndex, float onTimeMs, float offTimeMs, int count) {
 	if (humanIndex < 1 || humanIndex > LUA_PWM_COUNT) {
 		efiPrintf("Invalid index: %d", humanIndex);
 		return;
@@ -294,24 +305,30 @@ static void hpfpValveBench() {
 		&enginePins.hpfpValve);
 }
 
+static void boostValveBench() {
+	pinbench(engineConfiguration->benchTestOnTime, engineConfiguration->benchTestOffTime, engineConfiguration->benchTestCount,
+		&enginePins.boostPin);
+}
+
 void fuelPumpBench() {
 	fuelPumpBenchExt(BENCH_FUEL_PUMP_DURATION);
 }
 
-static void vvtValveBench(int vvtIndex) {
 #if EFI_VVT_PID
+static void vvtValveBench(int vvtIndex) {
 	pinbench(BENCH_VVT_DURATION, 100.0, 1, getVvtOutputPin(vvtIndex));
-#endif // EFI_VVT_PID
 }
+#endif // EFI_VVT_PID
 
-static void requestWidebandUpdate(int hwIndex)
+static void requestWidebandUpdate(int hwIndex, bool fromFile)
 {
 	widebandUpdateHwId = hwIndex;
+	widebandUpdateFromFile = fromFile;
 	widebandUpdatePending = true;
 	benchSemaphore.signal();
 }
 
-class BenchController : public ThreadController<UTILITY_THREAD_STACK_SIZE> {
+class BenchController : public ThreadController<4 * UTILITY_THREAD_STACK_SIZE> {
 public:
 	BenchController() : ThreadController("BenchTest", PRIO_BENCH_TEST) { }
 private:
@@ -328,13 +345,21 @@ private:
 
 			if (widebandUpdatePending) {
 	#if EFI_WIDEBAND_FIRMWARE_UPDATE && EFI_CAN_SUPPORT
-				updateWidebandFirmware(widebandUpdateHwId);
+				if (widebandUpdateFromFile) {
+					#if EFI_PROD_CODE
+						updateWidebandFirmwareFromFile(widebandUpdateHwId);
+					#endif
+				} else {
+					updateWidebandFirmware(widebandUpdateHwId);
+				}
 	#endif
 				widebandUpdatePending = false;
 			}
 		}
 	}
 };
+
+RUSEFI_STACK_ROOT(BenchController, ThreadTask);
 
 static BenchController instance;
 
@@ -354,6 +379,7 @@ int luaCommandCounters[LUA_BUTTON_COUNT] = {};
 
 void handleBenchCategory(uint16_t index) {
 	switch(index) {
+#if EFI_VVT_PID
 	case BENCH_VVT0_VALVE:
 	    vvtValveBench(0);
 		return;
@@ -366,6 +392,7 @@ void handleBenchCategory(uint16_t index) {
 	case BENCH_VVT3_VALVE:
 	    vvtValveBench(3);
 		return;
+#endif // EFI_VVT_PID
 	case BENCH_AUXOUT0:
 	    auxOutBench(0);
 		return;
@@ -423,6 +450,9 @@ void handleBenchCategory(uint16_t index) {
 #endif // EFI_HD_ACR
 	case BENCH_HPFP_VALVE:
 		hpfpValveBench();
+		return;
+	case BENCH_BOOST_VALVE:
+		boostValveBench();
 		return;
 	case BENCH_FUEL_PUMP:
 		// cmd_test_fuel_pump
@@ -495,6 +525,11 @@ static void handleCommandX14(uint16_t index) {
 			tle8888_req_init();
 		#endif
 		return;
+	case TS_TCU_UPSHIFT_REQUEST:
+	case TS_TCU_DOWNSHIFT_REQUEST:
+	  // do nothing, we are catching with Lua
+	  // this is temporary uaDASH API
+		return;
 	case TS_RESET_MC33810:
 		#if EFI_PROD_CODE && (BOARD_MC33810_COUNT > 0)
 			mc33810_req_init();
@@ -547,7 +582,13 @@ static void handleCommandX14(uint16_t index) {
 			etbAutocal(DC_Throttle1, false);
 		return;
 	case TS_ETB_AUTOCAL_1_FAST:
-			etbAutocal(DC_Throttle2, false);
+		etbAutocal(DC_Throttle2, false);
+		return;
+	case TS_ETB_BENCH_TEST_0:
+		etbBenchTestStart(0);
+		return;
+	case TS_ETB_BENCH_TEST_1:
+		etbBenchTestStart(1);
 		return;
 	case TS_ETB_START_AUTOTUNE:
 			engine->etbAutoTune = true;
@@ -569,8 +610,13 @@ static void handleCommandX14(uint16_t index) {
 		return;
 #endif // EFI_ELECTRONIC_THROTTLE_BODY
 	case TS_WIDEBAND_UPDATE:
+	case TS_WIDEBAND_UPDATE_FILE:
 		// broadcast, for old WBO FWs
-		requestWidebandUpdate(0xff);
+		requestWidebandUpdate(0xff, index == TS_WIDEBAND_UPDATE_FILE);
+		return;
+	case TS_ESTIMATE_TORQUE_TABLE:
+	  estimateTorqueTable();
+	  onApplyPreset();
 		return;
 	case COMMAND_X14_UNUSED_15:
 		return;
@@ -661,6 +707,23 @@ static void processCanRequestCalibration(const CANRxFrame& frame) {
 #endif // EFI_LUA_LOOKUP
 }
 
+// totally wrong place for this code but well
+static void sendECU_IMAGE_INFO() {
+	  CanTxMessage msg(CanCategory::BENCH_TEST, (int)bench_test_packet_ids_e::ECU_IMAGE_INFO, 8, /*bus*/0, /*isExtended*/true);
+#if EFI_PROD_CODE
+   #if EFI_EMBED_INI_MSD
+    #if EFI_USE_COMPRESSED_INI_MSD
+     msg[0] = 1;
+     msg.setIntValueLsb(getStorageImageSize(), /*offset*/4);
+    #else // EFI_USE_COMPRESSED_INI_MSD
+     msg[0] = 2;
+     msg.setIntValueLsb(getStorageImageSize(), /*offset*/4);
+    #endif // EFI_USE_COMPRESSED_INI_MSD
+   #endif //EFI_EMBED_INI_MSD
+#endif// EFI_PROD_CODE
+  efiPrintf("ECU_IMAGE_INFO %d", msg[0]);
+}
+
 void processCanEcuControl(const CANRxFrame& frame) {
 	if (frame.data8[0] != (int)bench_test_magic_numbers_e::BENCH_HEADER) {
 		return;
@@ -671,6 +734,8 @@ void processCanEcuControl(const CANRxFrame& frame) {
     processCanSetCalibration(frame);
   } else if (eid == (int)bench_test_packet_ids_e::ECU_REQ_CALIBRATION) {
     processCanRequestCalibration(frame);
+  } else if (eid == (int)bench_test_packet_ids_e::DASH_ALIVE) {
+    sendECU_IMAGE_INFO();
   } else if (eid == (int)bench_test_packet_ids_e::ECU_CAN_BUS_USER_CONTROL) {
     processCanUserControl(frame);
   }
@@ -679,6 +744,7 @@ void processCanEcuControl(const CANRxFrame& frame) {
 #endif // EFI_CAN_SUPPORT
 
 std::optional<setup_custom_board_ts_command_override_type> custom_board_ts_command;
+std::optional<board_ts_binary_command_type> custom_board_ts_binary_command;
 
 void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	efiPrintf("IO test subsystem=%d index=%d", subsystem, index);
@@ -686,12 +752,9 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	bool running = !engine->rpmCalculator.isStopped();
 
 	switch (subsystem) {
+	case TS_UNUSED_0:
 	case TS_CLEAR_WARNINGS:
 		clearWarnings();
-		break;
-
-	case TS_DEBUG_MODE:
-		engineConfiguration->debugMode = (debug_mode_e)index;
 		break;
 
 	case TS_IGNITION_CATEGORY:
@@ -756,15 +819,21 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		break;
 
 	case TS_WIDEBAND_FLASH_BY_ID:
+	case TS_WIDEBAND_FLASH_BY_ID_FILE:
 		{
 			uint8_t hwIndex = index >> 8;
 
 			// Hack until we fix canReWidebandHwIndex and set "Broadcast" to 0xff
 			// TODO:
 			widebandUpdateHwId = hwIndex < 8 ? hwIndex : 0xff;
-			requestWidebandUpdate(widebandUpdateHwId);
+			requestWidebandUpdate(widebandUpdateHwId, subsystem == TS_WIDEBAND_FLASH_BY_ID_FILE);
 		}
 		break;
+
+	case TS_WIDEBAND_RESTART:
+		restartWideband();
+		break;
+
 #endif // EFI_CAN_SUPPORT
 	case TS_BENCH_CATEGORY:
 		handleBenchCategory(index);
@@ -789,7 +858,7 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		doScheduleStopEngine(StopRequestedReason::TsCommand);
 		break;
 
-	case 0xba:
+	case JUMP_DFU_COMMAND:
 #if EFI_PROD_CODE && EFI_DFU_JUMP
 		jump_to_bootloader();
 #endif /* EFI_DFU_JUMP */
@@ -802,7 +871,8 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		break;
 
 #if EFI_USE_OPENBLT
-	case 0xbc:
+	case JUMP_BLT_COMMAND:
+	  // todo: is _anyone_ using this? console seems to use CMD_REBOOT_OPENBLT text command?
 		/* Jump to OpenBLT if present */
 		jump_to_openblt();
 		break;
@@ -850,7 +920,7 @@ void initBenchTest() {
 
 #if EFI_CAN_SUPPORT
 #if EFI_WIDEBAND_FIRMWARE_UPDATE
-	addConsoleActionI("update_wideband", requestWidebandUpdate);
+	addConsoleActionI("update_wideband", [](int hwIndex) { requestWidebandUpdate(hwIndex, false); });
 #endif // EFI_WIDEBAND_FIRMWARE_UPDATE
 	addConsoleActionII("set_wideband_index", [](int hwIndex, int index) { setWidebandOffset(hwIndex, index); });
 #endif // EFI_CAN_SUPPORT
@@ -858,6 +928,7 @@ void initBenchTest() {
 	addConsoleAction(CMD_STARTER_BENCH, starterRelayBench);
 	addConsoleAction(CMD_MIL_BENCH, milBench);
 	addConsoleAction(CMD_HPFP_BENCH, hpfpValveBench);
+	addConsoleAction(CMD_BOOST_BENCH, boostValveBench);
 
 #if EFI_CAN_SUPPORT
   addConsoleActionI("ping_wideband", [](int index) {
@@ -865,17 +936,6 @@ void initBenchTest() {
   });
 #endif // EFI_CAN_SUPPORT
 
-#if EFI_LUA
-  // this commands facilitates TS Lua Button scripts development
-  addConsoleActionI("lua_button", [](int index) {
-    if (index < 0 || index > LUA_BUTTON_COUNT)
-      return;
-    luaCommandCounters[index - 1]++;
-  });
-  addConsoleActionFFFF("luabench2", [](float humanIndex, float onTime, float offTimeMs, float count) {
-	  doRunBenchTestLuaOutput((int)humanIndex, onTime, offTimeMs, (int)count);
-  });
-#endif // EFI_LUA
 	instance.start();
 	onConfigurationChangeBenchTest();
 }

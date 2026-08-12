@@ -21,6 +21,7 @@
 // CAN_BTR_TS2(n), where n = Seg 2 - 1
 
 #ifdef STM32F4XX
+// Clock 42 MHz
 #define CAN_BTR_33  (CAN_BTR_SJW(0) | CAN_BTR_BRP(139)| CAN_BTR_TS1(6)  | CAN_BTR_TS2(0)) // sampling point at 88.9%
 // These have an 85.7% sample point
 #define CAN_BTR_50  (CAN_BTR_SJW(0) | CAN_BTR_BRP(59) | CAN_BTR_TS1(10) | CAN_BTR_TS2(1))
@@ -29,22 +30,34 @@
 #define CAN_BTR_125 (CAN_BTR_SJW(0) | CAN_BTR_BRP(23) | CAN_BTR_TS1(10) | CAN_BTR_TS2(1))
 #define CAN_BTR_250 (CAN_BTR_SJW(0) | CAN_BTR_BRP(11) | CAN_BTR_TS1(10) | CAN_BTR_TS2(1))
 #define CAN_BTR_500 (CAN_BTR_SJW(0) | CAN_BTR_BRP(5)  | CAN_BTR_TS1(10) | CAN_BTR_TS2(1))
+#define CAN_BTR_666 (CAN_BTR_SJW(0) | CAN_BTR_BRP(2)  | CAN_BTR_TS1(15) | CAN_BTR_TS2(3)) // sampling point 81.0%
 #define CAN_BTR_1k0 (CAN_BTR_SJW(0) | CAN_BTR_BRP(2)  | CAN_BTR_TS1(10) | CAN_BTR_TS2(1))
+
 #elif defined(STM32F7XX)
-#define CAN_BTR_33  (CAN_BTR_SJW(0) | CAN_BTR_BRP(179)| CAN_BTR_TS1(6)  | CAN_BTR_TS2(0)) // sampling point at 88.9%
+// Clock 54 MHz
 // These have an 88.9% sample point
+#define CAN_BTR_33  (CAN_BTR_SJW(0) | CAN_BTR_BRP(179)| CAN_BTR_TS1(6)  | CAN_BTR_TS2(0))
 #define CAN_BTR_50  (CAN_BTR_SJW(0) | CAN_BTR_BRP(59) | CAN_BTR_TS1(14) | CAN_BTR_TS2(1))
 #define CAN_BTR_83  (CAN_BTR_SJW(0) | CAN_BTR_BRP(35) | CAN_BTR_TS1(14) | CAN_BTR_TS2(1))
 #define CAN_BTR_100 (CAN_BTR_SJW(0) | CAN_BTR_BRP(29) | CAN_BTR_TS1(14) | CAN_BTR_TS2(1))
 #define CAN_BTR_125 (CAN_BTR_SJW(0) | CAN_BTR_BRP(23) | CAN_BTR_TS1(14) | CAN_BTR_TS2(1))
 #define CAN_BTR_250 (CAN_BTR_SJW(0) | CAN_BTR_BRP(11) | CAN_BTR_TS1(14) | CAN_BTR_TS2(1))
 #define CAN_BTR_500 (CAN_BTR_SJW(0) | CAN_BTR_BRP(5)  | CAN_BTR_TS1(14) | CAN_BTR_TS2(1))
+#define CAN_BTR_666 (CAN_BTR_SJW(0) | CAN_BTR_BRP(8)  | CAN_BTR_TS1(6)  | CAN_BTR_TS2(0))
 #define CAN_BTR_1k0 (CAN_BTR_SJW(0) | CAN_BTR_BRP(2)  | CAN_BTR_TS1(14) | CAN_BTR_TS2(1))
+
 #elif defined(STM32H7XX)
 // FDCAN driver has different bit timing registers (yes, different format)
 // for the arbitration and data phases
 
 static_assert(STM32_FDCANCLK == 80'000'000, "CANFD baudrates calculated for 80MHz clock!");
+
+constexpr uint32_t CAN_NBTP_H7(uint32_t sjw, uint32_t prescaler, uint32_t seg1, uint32_t seg2) {
+    return ((sjw-1)<<24) | ((prescaler-1)<<16) | ((seg1-1)<<8) | (seg2-1);
+}
+constexpr uint32_t CAN_DBTP_H7(uint32_t sjw, uint32_t prescaler, uint32_t seg1, uint32_t seg2) {
+    return ((prescaler-1) << 16) | ((seg1-1) << 8) | ((seg2-1)<<4) | (sjw-1);
+}
 
 // 87.5% sample point
 #define CAN_NBTP_33 0x06950c01
@@ -70,11 +83,20 @@ static_assert(STM32_FDCANCLK == 80'000'000, "CANFD baudrates calculated for 80MH
 #define CAN_NBTP_250 0x06130C01
 #define CAN_DBTP_250 0x00130C13
 
-#define CAN_NBTP_500 0x06090C01
-#define CAN_DBTP_500 0x00090C13
+#define CAN_NBTP_500 CAN_NBTP_H7(7, 10, 13, 2)
+#define CAN_DBTP_500 CAN_DBTP_H7(4, 10, 13, 2)
+static_assert(CAN_NBTP_500 == 0x06090C01);
+static_assert(CAN_DBTP_500 == 0x00090C13);
 
-#define CAN_NBTP_1k0 0x06040C01
-#define CAN_DBTP_1k0 0x00040C13
+#define CAN_NBTP_1k0 CAN_NBTP_H7(7, 5, 13, 2)
+#define CAN_DBTP_1k0 CAN_DBTP_H7(4, 5, 13, 2)
+static_assert(CAN_NBTP_1k0 == 0x06040C01);
+static_assert(CAN_DBTP_1k0 == 0x00040C13);
+
+// 86.7% sample point
+#define CAN_NBTP_666 CAN_NBTP_H7(7, 8, 12, 2)
+#define CAN_DBTP_666 CAN_DBTP_H7(4, 8, 12, 2)
+
 #else
 #error Please define CAN BTR settings for your MCU!
 #endif
@@ -125,6 +147,11 @@ static const CANConfig canConfig250 = {
 static const CANConfig canConfig500 = {
    .mcr = STM32FxMCR,
    .btr = CAN_BTR_500
+};
+
+static const CANConfig canConfig666 = {
+   .mcr = STM32FxMCR,
+   .btr = CAN_BTR_666
 };
 
 static const CANConfig canConfig1000 = {
@@ -197,6 +224,16 @@ static const CANConfig canConfig500 = {
    .op_mode = OPMODE_CAN,
    .NBTP = CAN_NBTP_500,
    .DBTP = CAN_DBTP_500,
+   .TDCR = 0,
+   .CCCR = 0,
+   .TEST = 0,
+   .RXGFC = 0,
+};
+
+static const CANConfig canConfig666 = {
+   .op_mode = OPMODE_CAN,
+   .NBTP = CAN_NBTP_666,
+   .DBTP = CAN_DBTP_666,
    .TDCR = 0,
    .CCCR = 0,
    .TEST = 0,
@@ -303,6 +340,8 @@ const CANConfig * findCanConfig(can_baudrate_e rate) {
       return &canConfig125;
    case B250KBPS:
       return &canConfig250;
+   case B666KBPS:
+      return &canConfig666;
    case B1MBPS:
       return &canConfig1000;
    case B500KBPS:
@@ -333,6 +372,74 @@ void canHwInfo(CANDriver* cand) {
       (esr & 0x4) ? "BOFF" : "",
       (esr & 0x2) ? "EPVF" : "",
       (esr & 0x1) ? "EWGF" : "");
+#elif STM32_CAN_USE_FDCAN1 || STM32_CAN_USE_FDCAN2 || STM32_CAN_USE_FDCAN3
+	if (cand->fdcan == NULL) {
+		efiPrintf("No device assigned!");
+	}
+
+	uint32_t cccr = cand->fdcan->CCCR;
+	efiPrintf("CCCR: %s %s %s",
+		(cccr & FDCAN_CCCR_MON) ? "Bus monitoring mode" : "",
+		(cccr & FDCAN_CCCR_ASM) ? "ASM restricted operation mode" : "",
+		(cccr & FDCAN_CCCR_INIT) ? "INIT" : "");
+
+	uint32_t ecr = cand->fdcan->ECR;
+	efiPrintf("CAN error logging counter %ld",
+		(ecr & FDCAN_ECR_CEL_Msk) >> FDCAN_ECR_CEL_Pos);
+	if (ecr & FDCAN_ECR_RP) {
+		efiPrintf("Receive error passive 128+");
+	} else {
+		efiPrintf("Receive error counter %ld",
+			(ecr & FDCAN_ECR_REC_Msk) >> FDCAN_ECR_REC_Pos);
+	}
+	efiPrintf("Transmit error counter %ld",
+		(ecr & FDCAN_ECR_TEC_Msk) >> FDCAN_ECR_TEC_Pos);
+
+	uint32_t psr = cand->fdcan->PSR;
+	efiPrintf("Flags: %s %s %s %s",
+		(psr & FDCAN_PSR_PXE) ? "PXE" : "",
+		(psr & FDCAN_PSR_BO) ? "Bus_Off" : "",
+		(psr & FDCAN_PSR_EW) ? "EW" : "",
+		(psr & FDCAN_PSR_EP) ? "Error passive" : "");
+
+	static const char *lec_names[8] = {
+		"No error",
+		"Stuff error",
+		"Form error",
+		"AckError",
+		"Bit1Error",
+		"Bit0Error",
+		"CRCError",
+		"NoChange"
+	};
+
+	efiPrintf("Last error %s", lec_names[psr & 0x7]);
+#endif
+}
+
+void canHwRecover(const size_t busIndex, CANDriver *cand)
+{
+#if STM32_CAN_USE_FDCAN1 || STM32_CAN_USE_FDCAN2 || STM32_CAN_USE_FDCAN3
+	// equal to TIMEOUT_INIT_MS
+	#define TIMEOUT_RECOVER_MS	250U
+
+	// mostly copy-paste of static bool fdcan_active_mode(CANDriver *canp) from ChibiOS hal_can_lld.c
+	if (cand->fdcan->CCCR & FDCAN_CCCR_INIT) {
+		systime_t start, end;
+
+		/* Going in active mode then waiting for it to happen.*/
+		cand->fdcan->CCCR &= ~FDCAN_CCCR_INIT;
+		start = osalOsGetSystemTimeX();
+		end = osalTimeAddX(start, TIME_MS2I(TIMEOUT_RECOVER_MS));
+		while ((cand->fdcan->CCCR & FDCAN_CCCR_INIT) != 0U) {
+			if (!osalTimeIsInRangeX(osalOsGetSystemTimeX(), start, end)) {
+				return;
+			}
+			osalThreadSleep(1);
+		}
+	}
+#else
+  UNUSED(busIndex);UNUSED(cand);
 #endif
 }
 

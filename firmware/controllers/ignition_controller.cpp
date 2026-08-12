@@ -1,3 +1,12 @@
+/**
+ * @file ignition_controller.cpp
+ * @brief Ignition key (ignition switch) input handling.
+ *
+ * Determines whether the ignition key is in the "on" position, supporting either a
+ * digital ignition-key pin (which takes priority) or an analog "voltage from key"
+ * input compared against a configurable threshold.
+ */
+
 #include "pch.h"
 
 bool isIgnVoltage() {
@@ -13,7 +22,7 @@ bool isIgnVoltage() {
 		// If we have separate ignition sensing input
 		ignVoltage = Sensor::getOrZero(SensorType::IgnKeyVoltage);
 	} else {
-		// No, we assume that ignition is ON while we are powered with resonable voltage
+		// No, we assume that ignition is ON while we are powered with reasonable voltage
 		ignVoltage = Sensor::getOrZero(SensorType::BatteryVoltage);
 	}
 

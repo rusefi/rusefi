@@ -5,4 +5,4 @@
 
 
 
-See https://github.com/rusefi/rusefi/wiki/Infineon-chips-comparison
+See https://wiki.rusefi.com/Infineon-chips-comparison

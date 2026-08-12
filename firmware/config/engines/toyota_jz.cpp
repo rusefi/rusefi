@@ -68,7 +68,7 @@ void setToyota_2jz_vics() {
 	engineConfiguration->globalTriggerAngleOffset = 155; // todo
 
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK; // just for now
-	engineConfiguration->injectionMode = IM_BATCH; // just for now
+  engineConfiguration->injectionMode = IM_SEQUENTIAL;
 	engineConfiguration->twoWireBatchIgnition = true;
 
 	// todo: these magic values would be hardcoded once we find out proper magic values!

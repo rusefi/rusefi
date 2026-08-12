@@ -1,4 +1,4 @@
-	strncpy(config->luaScript, GET_BIT_RANGE_LSB TWO_BYTES_LSB PRINT_ARRAY SET_TWO_BYTES_LSB R"(
+	setLuaScript(GET_BIT_RANGE_LSB TWO_BYTES_LSB PRINT_ARRAY SET_TWO_BYTES_LSB R"(
 
 
 isUseful = Timer.new()
@@ -20,4 +20,4 @@ end
 	end
 end
 
-)", efi::size(config->luaScript));
+)");

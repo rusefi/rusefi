@@ -13,7 +13,8 @@
 
 #define DOT_MLG ".mlg"
 
-typedef enum {
+// see also SD_STATUS
+typedef enum __attribute__ ((__packed__)) {
 	SD_MODE_IDLE = 0,
 	SD_MODE_ECU,
 	SD_MODE_PC,
@@ -21,16 +22,42 @@ typedef enum {
 	SD_MODE_FORMAT,
 } SD_MODE;
 
+#if EFI_PROD_CODE
+bool getFSlock();
+void putFSunlock();
+
+class FsGuard {
+private:
+    bool locked;
+public:
+	// Constructor: Automatically locks and attempts to acquire resource
+	explicit FsGuard() {
+		locked = getFSlock();
+	}
+
+	// Destructor: Automatically unlocks when going out of scope
+	~FsGuard() {
+		if (locked) {
+			putFSunlock();
+		}
+	}
+
+	bool isLocked() {
+		return locked;
+	}
+};
+#endif
+
 void initEarlyMmcCard();
 void initMmcCard();
 
-void onUsbConnectedNotifyMmcI(void);
+void onUsbConnectedNotifyMmcI(bool connected);
 
-void updateSdCardLiveFlags(void);
+void updateSdCardLiveFlags();
 
 struct USBDriver;
 bool msd_request_hook_new(USBDriver *usbp);
 
-void sdCardRequestMode(SD_MODE mode);
-SD_MODE sdCardGetCurrentMode(void);
+int sdCardRequestMode(SD_MODE mode);
+SD_MODE sdCardGetCurrentMode();
 void sdCardRemoveReportFiles();

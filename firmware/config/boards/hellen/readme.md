@@ -1,1 +1,1 @@
-https://github.com/rusefi/rusefi/wiki/Hellen-One-Platform
+https://wiki.rusefi.com/Hellen-One-Platform

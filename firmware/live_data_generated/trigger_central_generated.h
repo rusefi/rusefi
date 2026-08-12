@@ -71,7 +71,7 @@ struct trigger_central_s {
 	 */
 	float mapVvt_CycleDelta = (float)0;
 	/**
-	 * Sync: Engine Phase
+	 * Sync: TDC Engine Phase
 	 * units: deg
 	 * offset 48
 	 */

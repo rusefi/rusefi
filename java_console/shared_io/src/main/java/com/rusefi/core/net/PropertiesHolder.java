@@ -58,8 +58,46 @@ public enum PropertiesHolder {
         return result;
     }
 
+    public static String getUpdateHelpUrl(String defaultUrl) {
+        return getUpdateHelpUrl(INSTANCE.getProperties(), defaultUrl);
+    }
+
+    static String getUpdateHelpUrl(Properties properties, String defaultUrl) {
+        return properties.getProperty("UPDATE_FW_HELP_URL", defaultUrl);
+    }
+
+    public static String getFirmwareRollbackRootUrl() {
+        return getFirmwareRollbackRootUrl(INSTANCE.getProperties());
+    }
+
+    static String getFirmwareRollbackRootUrl(Properties properties) {
+        String rollbackRoot = properties.getProperty("firmware_rollback_root_url");
+        return rollbackRoot == null || rollbackRoot.trim().isEmpty()
+            ? properties.getProperty("auto_update_root_url")
+            : rollbackRoot;
+    }
+
+    public static String getPinoutBaseUrl() {
+        String propertyFileValue = INSTANCE.getProperties().getProperty("pinout_base_url");
+        log.info("pinout_base_url=" + propertyFileValue);
+        return System.getProperty("RE_PINOUT_URL", propertyFileValue);
+    }
+
+    public static String getPinoutMetaName() {
+        String propertyFileValue = INSTANCE.getProperties().getProperty("pinout_meta_name", "boards_meta.yaml");
+        log.info("pinout_meta_name=" + propertyFileValue);
+        return System.getProperty("RE_PINOUT_META", propertyFileValue);
+    }
+
     public static boolean getBoolean(String propertyName, Properties properties) {
+        return getBoolean(propertyName, properties, false);
+    }
+
+    public static boolean getBoolean(String propertyName, Properties properties, boolean defaultValue) {
         String flag = properties.getProperty(propertyName);
+        if (flag == null) {
+            return defaultValue;
+        }
         return Boolean.TRUE.toString().equalsIgnoreCase(flag);
     }
 

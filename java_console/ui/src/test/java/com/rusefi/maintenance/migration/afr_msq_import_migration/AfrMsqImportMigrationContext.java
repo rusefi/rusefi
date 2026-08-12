@@ -2,7 +2,7 @@ package com.rusefi.maintenance.migration.afr_msq_import_migration;
 
 import com.rusefi.maintenance.TestTuneMigrationContext;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 
 
 public class AfrMsqImportMigrationContext {
@@ -26,3 +26,4 @@ public class AfrMsqImportMigrationContext {
             return result;
         }
 }
+

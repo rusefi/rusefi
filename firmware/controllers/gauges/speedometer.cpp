@@ -1,5 +1,11 @@
 #include "pch.h"
 
+/**
+ * GMT800 platform (1999–2007 classic Chevrolet Silverado/GMC Sierra, Tahoe, Yukon, etc.)
+ * 4000 pulses per mile
+ * 2485 pulses per kilometer
+ */
+
 #include "speedometer.h"
 
 static SimplePwm speedoPwm("speedo");

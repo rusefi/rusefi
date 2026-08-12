@@ -8,3 +8,4 @@ log
 triggers
 
 PCAN*.dll
+bin2header.jar

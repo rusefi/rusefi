@@ -1,5 +1,7 @@
 package com.rusefi.config;
 
+import java.nio.ByteBuffer;
+
 public enum FieldType {
     // Signed
     INT8(1),
@@ -79,6 +81,50 @@ public enum FieldType {
 
     public boolean isString() {
         return this == STRING;
+    }
+
+    /**
+     * Read a raw numeric value from a little-endian ByteBuffer according to this type.
+     * The buffer must contain at least {@link #getStorageSize()} bytes from the current position.
+     */
+    public double readRawValue(ByteBuffer bb) {
+        switch (this) {
+            case FLOAT:
+                return bb.getFloat();
+            case INT:
+                return bb.getInt();
+            case UINT16:
+                return bb.getShort() & 0xFFFF;
+            case INT16:
+                return bb.getShort();
+            case UINT8:
+                return bb.get() & 0xFF;
+            case INT8:
+                return bb.get();
+            default:
+                throw new UnsupportedOperationException("type " + this);
+        }
+    }
+
+    /**
+     * Write a raw integer value into a little-endian ByteBuffer according to this type.
+     */
+    public void writeRawValue(ByteBuffer bb, int value) {
+        switch (this) {
+            case INT:
+                bb.putInt(value);
+                break;
+            case UINT16:
+            case INT16:
+                bb.putShort((short) value);
+                break;
+            case UINT8:
+            case INT8:
+                bb.put((byte) value);
+                break;
+            default:
+                throw new UnsupportedOperationException("writeRawValue for type " + this);
+        }
     }
 
     public boolean isNumeric() {

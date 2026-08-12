@@ -52,6 +52,8 @@ bool BitbangI2c::init(brain_pin_e scl, brain_pin_e sda) {
 
 	m_sdaPort = getHwPort("i2c", sda);
 	m_sdaPin = getHwPin("i2c", sda);
+#else
+  UNUSED(scl);UNUSED(sda);
 #endif
 
 	// Both lines idle high
@@ -148,7 +150,7 @@ bool BitbangI2c::writeByte(uint8_t data) {
 
 		data = data << 1;
 	}
-	
+
 	// Force a release of the data line so the slave can ACK
 	sda_high();
 

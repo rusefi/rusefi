@@ -18,6 +18,9 @@ void pingWideband(uint8_t hwIndex);
 // Set CAN index to given wideband controller, does not wait for ack, does not block calling thread
 void setWidebandOffsetNoWait(uint8_t hwIndex, uint8_t index);
 
+// Stops sending heating enabled bit for 0.5 sec
+void restartWideband();
+
 // WARNING:
 // Two following functions can block thread execution while waiting for ACK from WBO
 // Do not call from critical tasks!
@@ -33,6 +36,12 @@ void setWidebandOffset(uint8_t hwIndex, uint8_t index);
 void setWidebandSensorType(uint8_t hwIndex, uint8_t type);
 
 #if EFI_WIDEBAND_FIRMWARE_UPDATE
-// Update the firmware on any connected wideband controller
+// Update the firmware on any (hwIndex = 0xff) or hwIndex defined connected wideband controller
+// Support of hwIndex require WBO bootloader 09.2025+
 void updateWidebandFirmware(uint8_t hwIndex);
+#if EFI_PROD_CODE
+// Same, but loads FW from file
+void updateWidebandFirmwareFromFile(uint8_t hwIndex);
+#endif
+
 #endif //EFI_WIDEBAND_FIRMWARE_UPDATE

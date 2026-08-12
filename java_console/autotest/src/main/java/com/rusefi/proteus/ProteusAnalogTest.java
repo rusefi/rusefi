@@ -4,6 +4,7 @@ import com.rusefi.RusefiTestBase;
 import com.rusefi.binaryprotocol.BinaryProtocolLogger;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.core.SensorNames;
 import com.rusefi.enums.engine_type_e;
 import org.junit.Test;
 
@@ -24,7 +25,7 @@ import static org.junit.Assert.*;
 public class ProteusAnalogTest extends RusefiTestBase {
     @Test
     public void testVbatt() {
-        double vbatt = SensorCentral.getInstance().getValue(Sensor.VBATT);
+        double vbatt = SensorCentral.getInstance().getValue(SensorNames.VBatt);
         String expectedVbattString = System.getenv("HARDWARE_CI_VBATT");
         double expectedVbatt = expectedVbattString == null ? 12 : Double.parseDouble(expectedVbattString);
 
@@ -64,7 +65,7 @@ public class ProteusAnalogTest extends RusefiTestBase {
         // wait a sec for sensors to update
         sleepSeconds(5);
 
-        double actualTps = SensorCentral.getInstance().getValue(Sensor.TPSVALUE);
+        double actualTps = SensorCentral.getInstance().getValue(SensorNames.TPSGauge);
 
         // Accept up to 2.5% error - there is an analog filter installed, it should be at least be close
         assertEquals("With idle of " + idle, expectedTps, actualTps, 2.5);
@@ -91,15 +92,15 @@ public class ProteusAnalogTest extends RusefiTestBase {
         setIdlePositionAndAssertTps(98, 0);
     }
 
-    void assertSensorValue(Sensor sensor, double expected) {
+    void assertSensorValue(String sensor, double expected) {
         double actual = SensorCentral.getInstance().getValue(sensor);
-        assertEquals(sensor.toString(), expected, actual, 0.5);
+        assertEquals(sensor, expected, actual, 0.5);
     }
 
     @Test
     public void testUnconnectedInputs() {
         // CLT/IAT inputs should float at ~5 volts
-        assertSensorValue(Sensor.rawClt, 5.0);
-        assertSensorValue(Sensor.rawIat, 5.0);
+        assertSensorValue(SensorNames.rawClt, 5.0);
+        assertSensorValue(SensorNames.rawIat, 5.0);
     }
 }

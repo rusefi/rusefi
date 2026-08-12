@@ -56,13 +56,21 @@ PCHSUB = firmware
 # Imported source files and paths
 CHIBIOS_CONTRIB = ChibiOS-Contrib
 
+SUBMODULES = $(CHIBIOS) $(CHIBIOS_CONTRIB) libfirmware
+
+ifneq ($(filter 1,$(foreach d,$(SUBMODULES),$(if $(wildcard $(d)/*),,1))),)
+$(info Submodule not found. Chibios: Invoking "git submodule update --init")
+DISCARD := $(shell git submodule update --init)
+$(info Invoked "git submodule update --init")
+endif
+
 include $(PROJECT_DIR)/common_libfirmware.mk
 
 include rusefi.mk
 
 ifeq ($(DEBUG_LEVEL_OPT),)
   # Default to a release build - but leave in debug info.  It doesn't change the hex/bin output.
-  DEBUG_LEVEL_OPT = -O2 -ggdb -g
+  DEBUG_LEVEL_OPT = -Os -ggdb -g
   # Comment the above and uncomment the line below if you want to debug the firmware (it's difficult-to-impossible
   # to debug firmware with optimization enabled).
   # DEBUG_LEVEL_OPT = -O0 -ggdb -g
@@ -109,7 +117,7 @@ endif
 
 # Linker extra options here.
 ifeq ($(USE_LDOPT),)
-  USE_LDOPT =
+  USE_LDOPT = --print-memory-usage
 endif
 
 # Enable this if you want link time optimizations (LTO)
@@ -174,11 +182,12 @@ ifeq ($(USE_EXCEPTIONS_STACKSIZE),)
   USE_EXCEPTIONS_STACKSIZE = 0x1000
 endif
 
-# and this is not working for be :( See https://github.com/rusefi/rusefi/issues/638
 # use -j4 unless some value was specified
 NUMJOBS=${NUMJOBS:-" -j4 "}
+MAKEFLAGS += ${NUMJOBS} -r
 
-MAKEFLAGS += ${NUMJOBS}
+# less disk, more RAM
+# MAKEFLAGS += -pipe
 
 #
 # Architecture or project specific options
@@ -198,6 +207,17 @@ $(error SHORT_BOARD_NAME not set, something wrong with your meta-info.env file)
 endif
 endif
 DDEFS += -DSHORT_BOARD_NAME=$(SHORT_BOARD_NAME)
+
+# TS-page guard flags (see [tag:ts_page_table]) are declared once in the board's
+# prepend.txt - the only input the .ini generator can see. Lift them into DDEFS here
+# so the firmware compiles with the same value and the .ini page table can never
+# diverge from the pages the firmware actually serves (a divergence makes the firmware
+# answer reads of a page the .ini still lists with out_of_range, and TunerStudio
+# retries that page until it drops the connection).
+# Keep the list in sync with the guardFlag column of TS_PAGES in TSProjectConsumer.java.
+TS_PAGE_GUARD_FLAGS = EFI_LTFT_CONTROL|EFI_LUA
+TS_PAGE_GUARD_DEFS := $(shell sed -nE 's/^#define[[:space:]]+($(TS_PAGE_GUARD_FLAGS))[[:space:]]+(TRUE|FALSE)[[:space:]]*$$/-D\1=\2/p' $(BOARD_DIR)/prepend.txt $(BOARD_DIR)/prepend_$(SHORT_BOARD_NAME).txt 2>/dev/null)
+DDEFS += $(TS_PAGE_GUARD_DEFS)
 
 # Include various ChibiOS mk files
 # Licensing files.
@@ -235,11 +255,6 @@ ifeq ($(EFI_ONBOARD_MEMS_LIS3DSH),yes)
 endif
 include $(CHIBIOS)/os/hal/lib/streams/streams.mk
 include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
-
-ifeq ($(LWIP),yes)
-  include $(CHIBIOS)/os/various/lwip_bindings/lwip.mk
-endif
-
 include $(CHIBIOS)/os/hal/lib/complex/mfs/hal_mfs.mk
 
 ifeq ($(USE_FATFS),yes)
@@ -254,8 +269,19 @@ ifeq ($(USE_FATFS),yes)
 endif
 
 ifeq ($(USE_WIFI),yes)
+  LWIP = yes
   include $(PROJECT_DIR)/ext/atwinc1500/atwinc1500.mk
   DDEFS += -DEFI_WIFI=1
+endif
+
+ifeq ($(EFI_ETHERNET),yes)
+  LWIP = yes
+  DDEFS += -DEFI_ETHERNET=TRUE
+  DDEFS += -DCH_CFG_USE_DYNAMIC=TRUE
+endif
+
+ifeq ($(LWIP),yes)
+  include $(CHIBIOS)/os/various/lwip_bindings/lwip.mk
 endif
 
 include $(PROJECT_DIR)/hw_layer/mass_storage/mass_storage.mk
@@ -297,7 +323,6 @@ CSRC =  gcc_version_check.c \
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CPPSRC = \
-  configuration_check.cpp \
   $(ALLCPPSRC) \
   $(BOARDCPPSRC) \
   $(DEV_SRC_CPP) \
@@ -424,6 +449,8 @@ ULIBS = -lm --specs=nano.specs -Wl,--sort-section=alignment
 
 include $(RULESFILE)
 
+$(BUILDDIR)/$(PROJECT).elf: $(LDSCRIPT_DEPS)
+
 include target_sentinel.mk
 
 # this one would include ../java_tools/java_tools.mk for gradlew for config and console and plugin jars
@@ -444,6 +471,8 @@ CLEAN_PCH_HOOK:
 
 CLEAN_BUNDLE_HOOK:
 
-POST_MAKE_ALL_RULE_HOOK: $(BUILDDIR)/$(PROJECT).elf
-	@java -jar ../java_tools/gcc_map_reader.jar $(BUILDDIR)/$(PROJECT).map | grep Total || echo Unable to run gcc_map_reader
+POST_MAKE_ALL_RULE_HOOK: $(BUILDDIR)/$(PROJECT).elf $(GCC_MAP_READER_JAR)
+	@java -jar $(GCC_MAP_READER_JAR) $(BUILDDIR)/$(PROJECT).map | grep Total
 	@$(TRGT)objdump -h $(BUILDDIR)/$(PROJECT).elf | grep -w ram4
+
+VPATH     = $(patsubst ./%,%,$(SRCPATHS))

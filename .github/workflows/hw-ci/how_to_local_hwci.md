@@ -7,7 +7,7 @@ If you are using a devcontainer, it has to be installed on the host, *not* on th
 
 ## wiring:
 
-* F4-Discovery: read HwCiF4Discovery.java or https://github.com/rusefi/rusefi/wiki/Dev-Quality-Control#stm32f407g-disc1
+* F4-Discovery: read HwCiF4Discovery.java or https://wiki.rusefi.com/Dev-Quality-Control#stm32f407g-disc1
 * F767-Nucleo: jumper between "PD2" and "PA6", it is recommended to power the board from VIN and not from the STLink USB
 
 ## compiling:

@@ -1,6 +1,29 @@
 #pragma once
 
 #include <array>
+#include <algorithm>
+
+template <typename T>
+void rotateArray(T* array, size_t size, int offset) {
+	if (size <= 1) {
+		return;
+	}
+	offset %= (int)size;
+	if (offset < 0) {
+		offset += (int)size;
+	}
+	if (offset == 0) {
+		return;
+	}
+
+	// In-place rotation using reverse algorithm
+	// 1. Reverse first part
+	// 2. Reverse second part
+	// 3. Reverse whole array
+	std::reverse(array, array + size - offset);
+	std::reverse(array + size - offset, array + size);
+	std::reverse(array, array + size);
+}
 
 template <
     typename ValueType,

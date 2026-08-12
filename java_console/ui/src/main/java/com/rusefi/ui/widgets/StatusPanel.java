@@ -2,9 +2,8 @@ package com.rusefi.ui.widgets;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.FileLog;
+import com.rusefi.UiVersion;
 import com.rusefi.core.io.BundleUtil;
-import com.rusefi.core.rusEFIVersion;
-import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.ui.StatusWindow;
 
@@ -45,17 +44,17 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
 
     @Override
     public void done() {
-        setSuccessState();
+        SwingUtilities.invokeLater(this::setSuccessState);
     }
 
     @Override
     public void error() {
-        setErrorState();
+        SwingUtilities.invokeLater(this::setErrorState);
     }
 
     @Override
     public void warning() {
-        logTextArea.setBackground(Color.YELLOW);
+        SwingUtilities.invokeLater(() -> logTextArea.setBackground(Color.YELLOW));
     }
 
     public void setSuccessState() {
@@ -82,7 +81,7 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
     public void clear() {
         logTextArea.setText("");
         logTextArea.setBackground(Color.WHITE);
-        logLine("Console version " + rusEFIVersion.CONSOLE_VERSION);
+        logLine("Console version " + UiVersion.CONSOLE_VERSION);
         log.info(FileLog.getOsName() + " " + System.getProperty("os.version"));
         logLine("Bundle " + BundleUtil.readBundleFullNameNotNull());
     }
@@ -101,11 +100,18 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
                 stringForTestArea += "\r\n";
             }
             logTextArea.append(stringForTestArea);
-            AutoupdateUtil.trueLayoutAndRepaint(logTextArea);
         });
     }
 
     public void setStatus(String status) {
         bottomStatusLabel.setText(status);
+    }
+
+    public String getLogText() {
+        return logTextArea.getText();
+    }
+
+    public boolean isInErrorState() {
+        return LIGHT_RED.equals(logTextArea.getBackground());
     }
 }

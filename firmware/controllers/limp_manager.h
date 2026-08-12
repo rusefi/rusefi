@@ -5,13 +5,17 @@
 
 #include <cstdint>
 
+// Below this RPM, kick-start cranking mode (kickStartCranking) replaces normal spark scheduling
+// with firing both coils directly off the trigger edge, see #4569
+#define KICK_START_MODE_MAX_RPM 800
+
 // Keep this list in sync with fuelIgnCutCodeList in tunerstudio.template.ini!
 enum class ClearReason : uint8_t {
 	None, // 0
 	Fatal, // 1
 	Settings, // 2
 	HardLimit, // 3
-	EtbFaultRevLimit, // 4 means 1500 RPM limit in case of ETB fault
+	EtbJammedRevLimit, // 4 means 1500 RPM limit in ETB jam was detected
 	BoostCut, // 5
 	OilPressure, // 6
 	StopRequested, // 7
@@ -114,7 +118,7 @@ public:
 	float getLimitingFuelCorrection() const;
 
 	// Other subsystems call these APIs to indicate a problem has occurred
-	void reportEtbProblem();
+	void reportEtbJammed();
 	void fatalError();
 	Timer externalGdiCanBusComms;
 

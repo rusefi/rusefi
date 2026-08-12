@@ -12,6 +12,8 @@
 #define PACK_MULT_LAMBDA 10000
 #define PACK_MULT_ANGLE 50
 #define PACK_MULT_VOLTAGE 1000
+! see TPS_TS_CONVERSION, this is related on how TS handles voltage for TPS calibration
+#define PACK_MULT_RAW_VOLTAGE 0.005
 #define PACK_MULT_MASS_FLOW 10
 #define TPS_2_BYTE_PACKING_MULT 100
 #define PACK_MULT_AFR_CFG 10
@@ -30,6 +32,19 @@
 #define VE_RPM_COUNT 16
 #define VE_LOAD_COUNT 16
 
+#define MAP_UPPER_LIMIT 650
+
+#define IGN_LOAD_COUNT 16
+#define IGN_RPM_COUNT 16
+#define BLEND_FACTOR_SIZE 8
+
+#define TORQUE_CURVE_SIZE 6
+#define TORQUE_CURVE_RPM_SIZE 6
+
+! Default Lua script buffer size; boards override this (larger) in their prepend.txt.
+! Consumed by rusefi_types.h's lua_script_t and the page5_s struct. See #7911.
+#define LUA_SCRIPT_SIZE 8000
+
 #define TCU_GEAR_COUNT 10
 #define EGT_CHANNEL_COUNT 8
 
@@ -45,7 +60,9 @@
 #define IGN_BLEND_COUNT 4
 #define VE_BLEND_COUNT 4
 #define BOOST_BLEND_COUNT 2
+#define BLEND_PRECISION 0.1
 #define TARGET_AFR_BLEND_COUNT 2
+#define TARGET_AFR_BLEND_PRECISION 0.01
 #define LUA_GAUGE_COUNT 8
 
 
@@ -87,10 +104,11 @@
 #define GAUGE_NAME_DETECTED_GEAR "Detected Gear"
 #define GAUGE_NAME_TURBO_SPEED "Turbocharger Speed"
 #define GAUGE_NAME_VBAT "VBatt"
+#define GAUGE_NAME_VIGN "VIgn"
 #define GAUGE_NAME_TIME "Time"
 #define GAUGE_NAME_RPM "RPM"
 #define GAUGE_NAME_CLT "CLT"
-#define GAUGE_NAME_IAT "IAT"
+#define GAUGE_NAME_IAT "Intake Air IAT"
 #define GAUGE_NAME_AUX_TEMP1 "Aux temp 1"
 #define GAUGE_NAME_AUX_TEMP2 "Aux temp 2"
 #define GAUGE_NAME_TPS "TPS"
@@ -148,6 +166,13 @@
 #define INDICATOR_NAME_BRAKE_DOWN "Brake switch"
 #define INDICATOR_NAME_AC_SWITCH "AC switch"
 
+! SD card status output channel names: single source of truth shared between the
+! output_channels.txt bit fields, tunerstudio.template.ini indicators and java_console
+! (generated into VariableRegistryValues.java), see for instance SdEcuPcCycleSandbox
+#define OUTPUT_CHANNEL_SD_PRESENT "sd_present"
+#define OUTPUT_CHANNEL_SD_LOGGING_INTERNAL "sd_logging_internal"
+#define OUTPUT_CHANNEL_SD_MSD "sd_msd"
+
 #define GAUGE_NAME_AIR_FLOW_MEASURED "MAF"
 #define GAUGE_NAME_AIR_FLOW_MEASURED_2 "MAF #2"
 #define GAUGE_NAME_AIR_FLOW_ESTIMATE "Air: Flow estimate"
@@ -182,8 +207,8 @@
 #define GAUGE_NAME_FUEL_STFT_2 "Short Term Fuel Trim: Bank 2"
 #define GAUGE_NAME_FUEL_STFT_INPUT_1 "STFT input lambda error: Bank 1"
 #define GAUGE_NAME_FUEL_STFT_INPUT_2 "STFT input lambda error: Bank 2"
-#define GAUGE_NAME_FUEL_LTFT_1 "Long Term Fuel Trim: Bank 1"
-#define GAUGE_NAME_FUEL_LTFT_2 "Long Term Fuel Trim: Bank 2"
+#define GAUGE_NAME_FUEL_LTFT_1 "Long Term Fuel Trim Bank 1"
+#define GAUGE_NAME_FUEL_LTFT_2 "Long Term Fuel Trim Bank 2"
 #define GAUGE_NAME_FUEL_LTFT_ACC_1 "LTFT learned accumulator: Bank 1"
 #define GAUGE_NAME_FUEL_LTFT_ACC_2 "LTFT learned accumulator: Bank 2"
 #define GAUGE_NAME_FUEL_WALL_AMOUNT "Fuel: wall amount"
@@ -218,8 +243,11 @@
 #define UNITS_KMH "kmh"
 #define UNITS_MPH "mph"
 
-#define GAUGE_PRECISION_TEMPERATURE_C 1,1
-#define GAUGE_PRECISION_TEMPERATURE_F 1,2
+#define GAUGE_PRECISION_TEMPERATURE_C 1
+#define GAUGE_PRECISION_TEMPERATURE_F 2
+
+#define UNITS_KPA_TO_PSI 0.145038
+#define UNITS_KMH_TO_MPH 0.62137119
 
 #define GAUGE_NAME_ADJUSTED_TIMING "Timing: ignition"
 #define GAUGE_NAME_TIMING_ADVANCE "Timing: base ignition"
@@ -242,3 +270,4 @@
 #define GAUGE_NAME_DEBUG_I4 "debug i4"
 #define GAUGE_NAME_DEBUG_I5 "debug i5"
 
+#define DIALOG_NAME_VEHICLE_INFORMATION "Vehicle Information"

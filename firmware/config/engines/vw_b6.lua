@@ -1,4 +1,4 @@
-	strncpy(config->luaScript, R"(
+	setLuaScript( R"(
 AIRBAG = 0x050
 TCU_1088_440 = 0x440
 TCU_1344_540 = 0x540
@@ -483,4 +483,4 @@ function onTick()
 	end
 end
 
-)", efi::size(config->luaScript));
+)");

@@ -551,6 +551,8 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 	}
 }
 
+RUSEFI_STACK_ROOT_EXPLICIT(l9779_driver_thread, 256);
+
 /*==========================================================================*/
 /* Driver interrupt handlers.												*/
 /*==========================================================================*/
@@ -567,7 +569,7 @@ int L9779::setPadMode(unsigned int pin, iomode_t mode) {
 	return 0;
 }
 
-int L9779::writePad(unsigned int pin, int value) {
+int L9779::writePad(size_t pin, int value) {
 	if (pin >= L9779_OUTPUTS)
 		return -1;
 

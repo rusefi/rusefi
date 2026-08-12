@@ -12,17 +12,8 @@ void TimerReset() { }
 
 void TimerUpdate() { }
 
-// See also STM32_NOCACHE_ENABLE option will enable MPU init
-extern "C" void __cpu_init() {
-  // *** this is about specifically stm32f7 ***
-	// This overrides the built-in __cpu_init() function
-	// We do this to avoid enabling the D/I caches, which
-	// we'll immediately have to turn back off when jumping
-	// to the main firmware (which will then enable them itself)
-}
-
 blt_int32u TimerGet() {
-	return 0;
+	return chTimeI2MS(chVTGetSystemTime());
 }
 
 void CpuMemCopy(blt_addr dest, blt_addr src, blt_int16u len)
@@ -33,6 +24,23 @@ void CpuMemCopy(blt_addr dest, blt_addr src, blt_int16u len)
 void CpuMemSet(blt_addr dest, blt_int8u value, blt_int16u len)
 {
 	memset((void*)dest, value, len);
+}
+
+/* See crt1.c for __cpu_init() */
+void __cpu_deinit(void) {
+#if CORTEX_MODEL == 7
+  SCB_DisableICache();
+  SCB_DisableDCache();
+#endif
+
+  /* Clear all MPU settings (guard pages etc), as they may immediately cause a
+   * fault after the jump to the user program, before it configures its own MPU. */
+  mpuDisable();
+  for (int i = 0; i < 8; i++) {
+    mpuConfigureRegion(i, 0, 0);
+  }
+  __DSB();
+  __ISB();
 }
 
 /** \brief Pointer to the user program's reset vector. */
@@ -78,10 +86,51 @@ void CpuStartUserProgram(void)
   /* release the communication interface */
   ComFree();
 #endif
+#if (BOOT_COM_NET_ENABLE > 0)
+#if defined(STM32F4XX) || defined(STM32F7XX)
+  /* stop the Ethernet MAC to prevent DMA from writing to bootloader memory
+   * after we jump to the firmware.
+   * Note: we do NOT put PHY in power-down mode because the firmware's MII
+   * operations will hang waiting for a non-responsive PHY.
+   * Instead, we manually stop MAC/DMA, reset the PHY, and reset the peripheral. */
+  ETH->MACCR = 0;
+  ETH->DMAOMR = 0;
+  ETH->DMAIER = 0;
+  ETH->DMASR = ETH->DMASR;
+  rccDisableETH();
+
+  /* Reset PHY via MII before jumping - ensure PHY is in clean state for firmware */
+  rccEnableETH(true);
+  /* Wait for any pending MII operation to complete (with timeout) */
+  {
+    volatile int mii_timeout = 1000000;
+    while ((ETH->MACMIIAR & ETH_MACMIIAR_MB) && mii_timeout--)
+      ;
+  }
+  /* PHY soft reset */
+  ETH->MACMIIDR = 0x8000; /* BMCR_RESET */
+  ETH->MACMIIAR = (0 << 11) | (0 << 6) | 0x0C | ETH_MACMIIAR_MW | ETH_MACMIIAR_MB;
+  {
+    volatile int mii_timeout = 1000000;
+    while ((ETH->MACMIIAR & ETH_MACMIIAR_MB) && mii_timeout--)
+      ;
+  }
+  rccDisableETH();
+
+  /* Full ETH peripheral reset to ensure clean state for firmware */
+  rccEnableETH(true);
+  rccResetETH();
+  rccDisableETH();
+#endif // STM32F4XX || STM32F7XX
+#endif //BOOT_COM_NET_ENABLE
   /* reset the HAL */
   chSysDisable();
   /* reset the timer */
   TimerReset();
+
+  /* Core deinitialization to jump into Prog in fresh state.*/
+  __cpu_deinit();
+
   /* remap user program's vector table */
   SCB->VTOR = CPU_USER_PROGRAM_VECTABLE_OFFSET & (blt_int32u)0x1FFFFF80;
   /* set the address where the bootloader needs to jump to. this is the address of

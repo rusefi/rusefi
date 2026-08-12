@@ -161,7 +161,7 @@ public class XcpLoader {
         byte[] response = mTransport.sendPacket(request, mSettings.timeoutT4, 1);
 
         if (response.length != 1 || response[0] != XCPLOADER_CMD_PID_RES) {
-            throw new IOException("programClear failed for address=" + address + " length=" + len);
+            throw new IOException("programClear failed for address=0x" + Integer.toString(address, 16) + " length=" + len);
         }
     }
 
@@ -202,6 +202,15 @@ public class XcpLoader {
 
         byte[] response = mTransport.sendPacket(request, mSettings.timeoutT5, 1);
 
+        if (response.length == 2 && response[0] == XCPLOADER_CMD_PID_ERR && response[1] == 0x33) {
+            throw new IOException("Secure: flash write error");
+        }
+
+        if (response.length == 2 && response[0] == XCPLOADER_CMD_PID_ERR && response[1] >= 0x40) {
+            int error = response[1] - 0x40;
+            throw new IOException("Secure: decode error " + error);
+        }
+
         if (response.length == 2 && response[0] == XCPLOADER_CMD_PID_ERR && response[1] == XCPLOADER_ERR_CMD_UNKNOWN) {
             throw new IOException("Non secure bootloader?!");
         }
@@ -229,6 +238,15 @@ public class XcpLoader {
                 .array();
 
         byte[] response = mTransport.sendPacket(request, mSettings.timeoutT5, 1);
+
+        if (response.length == 2 && response[0] == XCPLOADER_CMD_PID_ERR && response[1] == 0x33) {
+            throw new IOException("Secure: flash write error");
+        }
+
+        if (response.length == 2 && response[0] == XCPLOADER_CMD_PID_ERR && response[1] >= 0x40) {
+            int error = response[1] - 0x40;
+            throw new IOException("Secure: decode error " + error);
+        }
 
         if (response.length == 2 && response[0] == XCPLOADER_CMD_PID_ERR && response[1] == XCPLOADER_ERR_CMD_UNKNOWN) {
             throw new IOException("Non secure bootloader?!");

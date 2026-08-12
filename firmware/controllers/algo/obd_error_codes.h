@@ -347,7 +347,7 @@ enum class ObdCode : uint16_t {
 	//P0297 Vehicle Overspeed Condition
 	//P0298 Engine Oil Over Temperature Condition
 	//P0299 Turbocharger/Supercharger "A" Underboost Condition
-	//P0300 Random/Multiple Cylinder Misfire Detected
+	OBD_Random_Misfire = 300,       //P0300 Random/Multiple Cylinder Misfire Detected
 	//P0301 Cylinder 1 Misfire Detected
 	//P0302 Cylinder 2 Misfire Detected
 	//P0303 Cylinder 3 Misfire Detected
@@ -1713,13 +1713,14 @@ enum class ObdCode : uint16_t {
 	//P3492 Cyl12 Deactivation/Intake Valve Ctrl Circ High
 	//P3493 Cyl12 Exhaust Valve Ctrl Circ/Open
 
+	// See ObdCodeIsCustom() at the end of this file
 	CUSTOM_NAN_ENGINE_LOAD = 6000,
 	CUSTOM_WRONG_ALGORITHM = 6001,
 	CUSTOM_NAN_ENGINE_LOAD_2 = 6002,
 	CUSTOM_FLEX_LOW = 6003,
 	CUSTOM_FLEX_HIGH = 6004,
-	CUSTOM_6005 = 6005,
-	CUSTOM_6006 = 6006,
+	CUSTOM_NEED_PHASE = 6005,
+	CUSTOM_SYMMETRICAL_CRANK = 6006,
 	CUSTOM_6007 = 6007,
 	CUSTOM_6008 = 6008,
 	CUSTOM_6009 = 6009,
@@ -2193,3 +2194,7 @@ enum class ObdCode : uint16_t {
 	CUSTOM_Ignition_Coil_Overcharge_11 = 9361,
 	CUSTOM_Ignition_Coil_Overcharge_12 = 9362,
 };
+
+inline bool ObdCodeIsCustom(ObdCode code) {
+	return (code >= ObdCode::CUSTOM_NAN_ENGINE_LOAD);
+}

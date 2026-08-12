@@ -12,7 +12,7 @@
 #include "engine_configuration.h"
 
 /**
- * https://github.com/rusefi/rusefi/wiki/Mazda-Miata-2001
+ * https://wiki.rusefi.com/Mazda-Miata-2001
  * set engine_type 1
  */
 void setMiataNB2_Proteus_TCU();

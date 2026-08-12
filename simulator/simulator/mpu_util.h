@@ -1,10 +1,11 @@
 #pragma once
 
 #if HAL_USE_CAN
-CANDriver* detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx);
+CANDriver* getCanDevice(size_t index);
 inline bool isValidCanTxPin(brain_pin_e) { return true; }
 inline bool isValidCanRxPin(brain_pin_e) { return true; }
 inline void canHwInfo(CANDriver*) { return; }
+inline void canHwRecover(const size_t, CANDriver *) { return; }
 #endif // HAL_USE_CAN
 
  bool mcuCanFlashWhileRunning() ;

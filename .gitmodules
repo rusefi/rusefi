@@ -19,14 +19,14 @@
 [submodule "firmware/controllers/can/wideband_firmware"]
 	path = firmware/controllers/can/wideband_firmware
 	url = https://github.com/rusefi/wideband
-	branch = prod-2025-05
+	branch = prod-2026-01
 [submodule "firmware/ext/uzlib"]
 	path = firmware/ext/uzlib
 	url = https://github.com/pfalcon/uzlib
 [submodule "firmware/ext/lua"]
 	path = firmware/ext/lua
 	url = https://github.com/rusefi/lua
-	branch = rusefi-5.4.6
+	branch = rusefi-5.4.8
 [submodule "firmware/controllers/lua/luaaa"]
 	path = firmware/controllers/lua/luaaa
 	url = https://github.com/rusefi/luaaa
@@ -53,3 +53,9 @@
 	path = .github/workflows/hw-ci/gethla
 	url = https://github.com/rusefi/gethla/
 	branch = prod
+[submodule "firmware/ext/rusefi-gha"]
+	path = firmware/ext/rusefi-gha
+	url = https://github.com/rusefi/rusefi-gha
+[submodule "firmware/ext/magic_enum"]
+	path = firmware/ext/magic_enum
+	url = https://github.com/Neargye/magic_enum

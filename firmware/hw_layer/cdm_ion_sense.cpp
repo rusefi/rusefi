@@ -3,7 +3,7 @@
  *
  * Saab Ion Sensing Module integration
  *
- * See https://github.com/rusefi/rusefi/wiki/Saab_Trionic_8_Combustion-Detection-Module_on_Mazda_Miata_running_rusEfi
+ * See https://wiki.rusefi.com/Saab_Trionic_8_Combustion-Detection-Module_on_Mazda_Miata_running_rusEfi
  *
  *  Created on: Dec 31, 2018
  * @author Andrey Belomutskiy, (c) 2012-2020
@@ -59,7 +59,7 @@ int getCurrentCdmValue(int currentRevolution) {
 }
 
 #if EFI_TUNER_STUDIO
-void ionPostState(TunerStudioOutputChannels *tsOutputChannels) {
+void ionPostState(output_channels_s *tsOutputChannels) {
 	tsOutputChannels->debugIntField1 = instance.totalCdmEvents;
 }
 #endif /* EFI_TUNER_STUDIO */

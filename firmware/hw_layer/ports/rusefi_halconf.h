@@ -61,8 +61,8 @@
 #define HAL_USE_COMMUNITY (EFI_FILE_LOGGING && EFI_USB_SERIAL) || HAL_USE_EEPROM
 #define USB_MSD_LUN_COUNT 2
 
-// only the MSD driver requires USB_USE_WAIT
-#define USB_USE_WAIT (EFI_FILE_LOGGING && EFI_USB_SERIAL)
+// juse enable wait if USB is enabled
+#define USB_USE_WAIT HAL_USE_USB
 
 // Ethernet
 #define HAL_USE_MAC EFI_ETHERNET

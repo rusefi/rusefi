@@ -8,6 +8,10 @@
 
 #include "pch.h"
 
+#ifndef EFI_SLOW_ADC
+#define EFI_SLOW_ADC ADCD1
+#endif
+
 #if HAL_USE_ADC
 
 #include "mpu_util.h"
@@ -42,7 +46,7 @@ static constexpr int H7_ADC_SHIFT_BITS = log2_int(H7_ADC_OVERSAMPLE);
 
 void portInitAdc() {
 	// Init slow ADC
-	adcStart(&ADCD1, NULL);
+	adcStart(&EFI_SLOW_ADC, NULL);
 
 #if STM32_ADC_USE_ADC3
 	// Knock/trigger scope ADC
@@ -62,6 +66,11 @@ float getMcuTemperature() {
 float getMcuVrefVoltage() {
 	// TODO: implement me!
 	return engineConfiguration->adcVcc;
+}
+
+float getMcuVbatVoltage() {
+	// TODO: implement me!
+	return 0;
 }
 
 adcsample_t* fastSampleBuffer;
@@ -92,7 +101,9 @@ static constexpr ADCConversionGroup convGroupSlow = {
 	.num_channels		= slowChannelCount,
 	.end_cb				= adc_callback,
 	.error_cb			= nullptr,
-	.cfgr				= ADC_CFGR_EXTEN_0 | (4 << ADC_CFGR_EXTSEL_Pos),	// External trigger ch4, rising edge: TIM3 TRGO
+	// OVRMOD=1 is required by H7 errata "ADC slave data may be shifted in Dual regular simultaneous mode" -
+	// without it, a single-DMA-channel read of CDR can leave the slave's samples offset from the master's.
+	.cfgr = ADC_CFGR_EXTEN_0 | (4 << ADC_CFGR_EXTSEL_Pos) | ADC_CFGR_OVRMOD, // External trigger ch4, rising edge: TIM3 TRGO
 	.cfgr2				= 	(H7_ADC_OVERSAMPLE - 1) << ADC_CFGR2_OVSR_Pos |	// Oversample by Nx (register contains N-1)
 							H7_ADC_SHIFT_BITS << ADC_CFGR2_OVSS_Pos |		// shift the result right log2(N) bits to make a 16 bit result out of the internal oversample sum
 							ADC_CFGR2_ROVSE,			// Enable oversampling
@@ -161,7 +172,7 @@ bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 	{
 		chibios_rt::CriticalSectionLocker csl;
 		// Oversampling and right-shift happen in hardware, so we can sample directly to the output buffer
-		adcStartConversionI(&ADCD1, &convGroupSlow, convertedSamples, 1);
+		adcStartConversionI(&EFI_SLOW_ADC, &convGroupSlow, convertedSamples, 1);
 	}
 
 	constexpr uint32_t samplingRate = H7_ADC_SPEED;

@@ -12,24 +12,11 @@
 #include "hellen_leds_100.cpp"
 #include "board_overrides.h"
 #include "connectors/generated_board_pin_names.h"
+#ifndef EFI_BOOTLOADER
+#include "AemXSeriesLambda.h"
+#endif // EFI_BOOTLOADER
 
-static void setInjectorPins() {
-	engineConfiguration->injectionPins[0] = Gpio::MM100_INJ1;
-	engineConfiguration->injectionPins[1] = Gpio::MM100_INJ2;
-	engineConfiguration->injectionPins[2] = Gpio::MM100_INJ3;
-	engineConfiguration->injectionPins[3] = Gpio::MM100_INJ4;
-	engineConfiguration->injectionPins[4] = Gpio::MM100_INJ5;
-	engineConfiguration->injectionPins[5] = Gpio::MM100_INJ6;
-}
-
-static void setIgnitionPins() {
-	engineConfiguration->ignitionPins[0] = Gpio::MM100_IGN1;
-	engineConfiguration->ignitionPins[1] = Gpio::MM100_IGN2;
-	engineConfiguration->ignitionPins[2] = Gpio::MM100_IGN3;
-	engineConfiguration->ignitionPins[3] = Gpio::MM100_IGN4;
-	engineConfiguration->ignitionPins[4] = Gpio::MM100_IGN5;
-	engineConfiguration->ignitionPins[5] = Gpio::MM100_IGN6;
-}
+#include "../uaefi121/mega-uaefi.h"
 
 static void setupDefaultSensorInputs() {
 	engineConfiguration->tps1_1AdcChannel = MM100_IN_TPS_ANALOG;
@@ -53,6 +40,7 @@ static void uaefi_boardConfigOverrides() {
 	setHellenVbatt();
 
 	hellenMegaSdWithAccelerometer();
+	engineConfiguration->injectionPinMode = OM_DEFAULT;
 
   engineConfiguration->vrThreshold[0].pin = Gpio::MM100_OUT_PWM6;
 
@@ -62,20 +50,19 @@ static void uaefi_boardConfigOverrides() {
 
 }
 
-bool validateBoardConfig() {
-#ifndef HW_HELLEN_UAEFI121
-  // this same file is used for both uaefi and uaefi121
+static bool uaefi_fixConfiguration(const engine_configuration_s* /*previousConfiguration*/) {
   if (engineConfiguration->can2RxPin != Gpio::B12) {
 	  setHellenCan2();
+	  return true;
   }
-#endif
-  return true;
+  return false;
 }
 
-void setUaefiDefaultETBPins() {
-  // users would want to override those if using H-bridges for stepper idle control
-  setupTLE9201IncludingStepper(/*PWM controlPin*/Gpio::MM100_OUT_PWM3, Gpio::MM100_OUT_PWM4, Gpio::MM100_SPI2_MISO);
-  setupTLE9201IncludingStepper(/*PWM controlPin*/Gpio::MM100_OUT_PWM5, Gpio::MM100_SPI2_MOSI, Gpio::MM100_USB1ID, 1);
+/**
+ * @brief Board-specific initialization code.
+ */
+static void uaefi_boardInitHardware() {
+	setupHellenSharedInputs();
 }
 
 /**
@@ -85,11 +72,7 @@ void setUaefiDefaultETBPins() {
  *
  */
 static void uaefi_boardDefaultConfiguration() {
-	setInjectorPins();
-	setIgnitionPins();
-	setUaefiDefaultETBPins();
-
-  setHellenMMbaro();
+	setUaefiBoardDefaultConfiguration();
 
 	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
 	engineConfiguration->isSdCardEnabled = true;
@@ -98,10 +81,8 @@ static void uaefi_boardDefaultConfiguration() {
 
 	engineConfiguration->canTxPin = Gpio::MM100_CAN_TX;
 	engineConfiguration->canRxPin = Gpio::MM100_CAN_RX;
-#ifndef HW_HELLEN_UAEFI121
-  // this same file is used for both uaefi and uaefi121
+
 	setHellenCan2();
-#endif
 
 #if (EFI_CAN_BUS_COUNT >= 3)
 	engineConfiguration->can3TxPin = Gpio::MM100_CAN3_TX;
@@ -188,13 +169,28 @@ int getBoardMetaDcOutputsCount() {
     return 2;
 }
 
+static void uaefi_slowCallback() {
+#ifndef EFI_BOOTLOADER
+extern AemXSeriesWideband aem1;
+  if (aem1.hasSeenRx) {
+    Gpio green = getRunningLedPin();
+		auto greenPort = getBrainPinPort(green);
+		auto greenPin = getBrainPinIndex(green);
+    palClearPad(greenPort, greenPin); // Hellen has inverted LED control
+  }
+#endif // EFI_BOOTLOADER
+}
+
 void setup_custom_board_overrides() {
+	custom_board_InitHardware = uaefi_boardInitHardware;
 	custom_board_DefaultConfiguration = uaefi_boardDefaultConfiguration;
 	custom_board_ConfigOverrides = uaefi_boardConfigOverrides;
+	custom_board_periodicSlowCallback = uaefi_slowCallback;
+	custom_board_fix_configuration = uaefi_fixConfiguration;
 }
 
 int boardGetAnalogInputDiagnostic(adc_channel_e hwChannel, float voltage) {
-	/* we do not check voltage for valid ragne yet */
+	/* we do not check voltage for valid range yet */
 	(void)voltage;
 
 	switch (hwChannel) {

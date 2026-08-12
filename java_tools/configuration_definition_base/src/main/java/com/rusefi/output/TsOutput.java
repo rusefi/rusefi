@@ -6,6 +6,7 @@ import com.rusefi.ConfigFieldImpl;
 import com.rusefi.ReaderState;
 import com.rusefi.parse.Type;
 import com.rusefi.parse.TypesHelper;
+import com.rusefi.PinType;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,7 +28,18 @@ public class TsOutput {
     private final StringBuilder settingContextHelp = new StringBuilder();
     private final boolean isConstantsSection;
     private final StringBuilder tsHeader = new StringBuilder();
-    private final TreeSet<String> usedNames = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+    private final TreeSet<String> usedNames;
+    private boolean directiveSeen = false; // pretty lame hack but acceptable since we are moving away from directive anyway
+
+    public TsOutput(boolean longForm) {
+        this(longForm, new TreeSet<>(String.CASE_INSENSITIVE_ORDER));
+    }
+
+    public TsOutput(boolean longForm, TreeSet<String> usedNames) {
+        this.isConstantsSection = longForm;
+        this.usedNames = usedNames;
+    }
+
 //    private final String metricUnitsConditionalStart = "#if USE_METRIC_UNITS" + EOL;
 //    private final String metricUnitsConditionalElse = "#else" + EOL;
 //    private final String metricUnitsConditionalEnd = "#endif" + EOL;
@@ -46,9 +58,6 @@ public class TsOutput {
     private final Double KmhToMphScale = 0.62137119;
     private final Double KmhToMphTranslate = 0.0;
 
-    public TsOutput(boolean longForm) {
-        this.isConstantsSection = longForm;
-    }
 
     public String getContent() {
         return tsHeader.toString();
@@ -121,14 +130,18 @@ public class TsOutput {
 				String originalTsInfo = configField.getTsInfo();
                 ConfigStructure cs = configField.getStructureType();
 
-                /**
-                 * in 'Constants' section we have conditional sections and this check is not smart enough to handle those right
-                 * A simple solution would be to allow only one variable per each conditional section - would be simpler not to check against previous field
-                 */
-                if (!usedNames.add(nameWithPrefix)
-                        && !isConstantsSection
+                if (configField.isDirective()) {
+                    directiveSeen = true;
+                }
+
+                if (!configField.isDirective() && !usedNames.add(nameWithPrefix)
                         && !configField.isUnusedField()) {
-                    throw new IllegalStateException(nameWithPrefix + " already present: " + configField);
+                    if (isConstantsSection && directiveSeen) {
+                        // In Constants section, we allow re-definitions if they are in different branches of a conditional block.
+                        // For now we use a simple heuristic: if we've seen a directive, we allow a duplicate.
+                    } else {
+                        throw new DuplicateFieldNameException(nameWithPrefix + " already present: " + configField);
+                    }
                 }
 
                 // note that we need to handle account for unused bits size below!
@@ -142,14 +155,35 @@ public class TsOutput {
                     return tsPosition;
                 }
 
-                if (configField.getComment() != null && configField.getComment().trim().length() > 0 && cs == null) {
-                    String commentContent = configField.getCommentTemplated();
-                    commentContent = ConfigFieldImpl.unquote(commentContent);
-                    settingContextHelp.append(temporaryLineComment + "\t" + nameWithPrefix + " = " + quote(commentContent) + EOL);
+                if (cs == null) {
+                    String comment = "";
+
+                    if (configField.getComment() != null && configField.getComment().trim().length() > 0) {
+                        String commentContent = configField.getCommentTemplated();
+                        comment = ConfigFieldImpl.unquote(commentContent);
+                    }
+
+
+                    PinType pinType = PinType.findByOutputEnum(configField.getTypeName());
+                    if (pinType != null) {
+                        try {
+                            String url = state.getVariableRegistry().applyVariables("@@PINOUT_URL@@");
+                            if (comment != "") {
+                                comment += "\\n";
+                            }
+                            comment += ConfigFieldImpl.unquote(url) + "?highlight=class~" + pinType.name().toLowerCase();
+                        } catch (IllegalStateException ignore) {}
+                    }
+
+                    if (comment != "") {
+                        settingContextHelp.append(temporaryLineComment + "\t" + nameWithPrefix + " = " + quote(comment) + EOL);
+                    }
                 }
 
                 if (cs != null) {
-                    String extraPrefix = cs.isWithPrefix() ? configField.getName() + "_" : "";
+                    // For iterated structs, always include the field name (which carries the index) as prefix
+                    // even if the struct is struct_no_prefix, to avoid duplicate field names across iterations.
+                    String extraPrefix = (cs.isWithPrefix() || configField.isFromIterate()) ? configField.getName() + "_" : "";
                     return writeFields(cs.getTsFields(), prefix + extraPrefix, tsPosition);
                 }
 
@@ -317,14 +351,19 @@ public class TsOutput {
                  * Evaluate static math on .ini layer to simplify rusEFI java and rusEFI PHP project consumers
                  * https://github.com/rusefi/web_backend/issues/97
                  */
-                double val = IniField.parseDouble(fields[multiplierIndex]);
+                String multiplierField = fields[multiplierIndex];
+                // Skip evaluation if this is a complex expression (e.g., ternary operator)
+                // These will be evaluated at runtime by TunerStudio
+                if (!multiplierField.contains("?")) {
+                    double val = IniField.parseDouble(multiplierField);
 
-                if (val == 0) {
-                    fields[multiplierIndex] = " 0";
-                } else if (val == 1) {
-                    fields[multiplierIndex] = " 1";
-                } else {
-                    fields[multiplierIndex] = " " + val;
+                    if (val == 0) {
+                        fields[multiplierIndex] = " 0";
+                    } else if (val == 1) {
+                        fields[multiplierIndex] = " 1";
+                    } else {
+                        fields[multiplierIndex] = " " + val;
+                    }
                 }
             }
 

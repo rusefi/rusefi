@@ -102,7 +102,8 @@ pins:
     id: EFI_ADC_13
     class: analog_inputs
     ts_name: 2B - IAT
-    function: IAT sensor
+    function: IAT Sensor Input
+    type: at
 
   - pin: 2C
     id: EFI_ADC_0
@@ -121,7 +122,8 @@ pins:
     id: EFI_ADC_12
     class: analog_inputs
     ts_name: 2E - Coolant
-    function: CLT sensor
+    function: ECT CLT Coolant Sensor Input
+    type: at
 
   - pin: 2F
 #    id: F7
@@ -159,13 +161,16 @@ pins:
     function: MAF sensor
 
   - pin: 3A
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 3B
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 3C
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 3D
     id: [C1, EFI_ADC_11]
@@ -185,20 +190,21 @@ pins:
     function: TPS sensor input
 
   - pin: 3F
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 3G
     id: C13
     class: outputs
     ts_name: 3G - IGN_1 (1&4)
-    function: Coil #1
+    function: Smart Ignition Coil 1
     type: ign
 
   - pin: 3H
     id: E5
     class: outputs
     ts_name: 3H - IGN_2 (2&3)
-    function: Coil #2
+    function: Smart Ignition Coil 2
     type: ign
 
   - pin: 3I
@@ -261,32 +267,33 @@ pins:
     id: G7
     class: outputs
     ts_name: 3W - INJ_1
-    function: Injector #1
+    function: Injector 1
     type: inj
 
   - pin: 3X
     id: G8
     class: outputs
     ts_name: 3X - INJ_2
-    function: Injector #2
+    function: Injector 2
     type: inj
 
   - pin: 3Y
     id: D11
     class: outputs
     ts_name: 3Y - INJ_3
-    function: Injector #3
+    function: Injector 3
     type: inj
 
   - pin: 3Z
     id: D10
     class: outputs
     ts_name: 3Z - INJ_4
-    function: Injector #4
+    function: Injector 4
     type: inj
 
   - pin: 4A
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 4B
     id: E12

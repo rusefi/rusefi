@@ -1,0 +1,2 @@
+! mega-mcu-premium has three on-module CAN transceivers
+#define EFI_CAN_BUS_COUNT 3

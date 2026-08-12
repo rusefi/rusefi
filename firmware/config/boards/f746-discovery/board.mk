@@ -16,8 +16,8 @@ BOARDINC = $(CHIBIOS)/os/hal/boards/ST_STM32F746G_DISCOVERY/
 # Default F7 linker script is not compatible
 LDSCRIPT = $(PROJECT_DIR)/hw_layer/ports/stm32/stm32f7/STM32F746xG.ld
 
-# Save some RAM until we enable SDRAM.
-DDEFS += -DEFI_LUA=FALSE
+# Save some RAM until we enable SDRAM: EFI_LUA=FALSE is declared in
+# prepend.txt and lifted into DDEFS by the Makefile - see [tag:ts_page_table]
 
 # USB OTG FS connector:
 DDEFS += -DEFI_USB_SERIAL_DM=Gpio::A11
@@ -27,10 +27,7 @@ DDEFS += -DEFI_USB_AF=10
 DDEFS += -DEFI_DYNO_VIEW=FALSE
 
 # TODO: Enable ethernet
-#LWIP = yes
-#ALLOW_SHADOW = yes
-#DDEFS += -DCH_CFG_USE_DYNAMIC=TRUE
-#DDEFS += -DEFI_ETHERNET=TRUE
+EFI_ETHERNET = yes
 
 BUNDLE_OPENOCD = yes
 

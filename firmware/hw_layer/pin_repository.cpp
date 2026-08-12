@@ -311,20 +311,17 @@ void gpio_pin_markUnused(ioportid_t port, ioportmask_t pin) {
 }
 
 const char *getPinFunction(brain_input_pin_e brainPin) {
-	int index;
-
-	index = brainPin_to_index(brainPin);
+	int index = brainPin_to_index(brainPin);
 	if (index < 0)
 		return NULL;
 
 	return getBrainUsedPin(index);
 }
 #else
-const char *hwPhysicalPinName(Gpio brainPin) {
+const char *hwPhysicalPinName(Gpio /*brainPin*/) {
 	return "N/A";
 }
-const char *hwPortname(Gpio brainPin) {
-	(void)brainPin;
+const char *hwPortname(Gpio /*brainPin*/) {
 	return "N/A";
 }
 #endif /* EFI_PROD_CODE */

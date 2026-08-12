@@ -17,6 +17,7 @@ static void setUpTestParameters() {
 
     engineConfiguration->launchActivationMode = ALWAYS_ACTIVE_LAUNCH; // to satisfy activateSwitchCondition
     engineConfiguration->launchSpeedThreshold = 0; // to satisfy speedCondition
+    engineConfiguration->launchTpsThreshold = 0;
     Sensor::setMockValue(SensorType::DriverThrottleIntent, 1.7); // to satisfy tpsCondition
 }
 

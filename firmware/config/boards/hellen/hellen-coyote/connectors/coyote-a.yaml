@@ -33,7 +33,8 @@ pins:
   - pin: A29
     function: 5V Sensor Power
   - pin: A30
-    function: Analog Ground
+    function: GNDA Analog/Sensor Ground
+    type: agnd
   - pin: A31
     function: UNUSED Fuel Pump Monitor 2 5.2
   - pin: A32
@@ -121,14 +122,14 @@ pins:
     function: +12 from Main Relay
 
   - pin: A100
-    function: Power GND
-    type: GND
+    function: Power/Chassis GND ground
+    type: gnd
   - pin: A102
-    function: Power GND
-    type: GND
+    function: Power/Chassis GND ground
+    type: gnd
   - pin: A103
-    function: Power GND
-    type: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
 info:
   title: coyote

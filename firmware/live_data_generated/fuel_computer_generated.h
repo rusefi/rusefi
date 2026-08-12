@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Sat Feb 17 23:38:05 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -95,15 +95,17 @@ struct fuel_computer_s {
 	/**
 	 * offset 44
 	 */
-	uint8_t brokenInjector = (uint8_t)0;
-	/**
-	 * offset 45
-	 */
-	uint8_t unused88 = (uint8_t)0;
+	uint16_t idealEngineTorque = (uint16_t)0;
 	/**
 	 * offset 46
 	 */
-	uint16_t idealEngineTorque = (uint16_t)0;
+	uint8_t brokenInjector = (uint8_t)0;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 47
+	 */
+	uint8_t alignmentFill_at_47[1] = {};
 	/**
 	offset 48 bit 0 */
 	bool injectorHwIssue : 1 {};
@@ -204,4 +206,4 @@ struct fuel_computer_s {
 static_assert(sizeof(fuel_computer_s) == 52);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Sat Feb 17 23:38:05 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt

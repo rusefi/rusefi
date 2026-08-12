@@ -4,8 +4,9 @@ import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.StringIniField;
-import com.rusefi.ConnectionTab;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.binaryprotocol.ShortcutsHelper;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.LinkManager;
@@ -44,7 +45,6 @@ public class LuaScriptPanel {
     public LuaScriptPanel(UIContext context, Node config) {
         this.context = context;
         this.config = config;
-        ConnectionTab.installConnectAndDisconnect(context, mainPanel);
         command = AnyCommand.createField(context, config, true, true);
 
         // Upper panel: command entry, etc
@@ -68,7 +68,7 @@ public class LuaScriptPanel {
             LinkManager linkManager = context.getLinkManager();
 
             linkManager.submit(() -> {
-                BinaryProtocol bp = linkManager.getCurrentStreamState();
+                BinaryProtocol bp = linkManager.getBinaryProtocol();
                 bp.burn();
             });
         });
@@ -116,7 +116,7 @@ public class LuaScriptPanel {
         upperPanel.add(burnButton);
         upperPanel.add(moreButton);
         upperPanel.add(command.getContent());
-        upperPanel.add(new URLLabel("Lua Wiki", "https://github.com/rusefi/rusefi/wiki/Lua-Scripting"));
+        upperPanel.add(new URLLabel("Lua Wiki", "https://wiki.rusefi.com/Lua-Scripting"));
 
         // Center panel - script editor and log
         JPanel scriptPanel = new JPanel(new BorderLayout());
@@ -136,15 +136,18 @@ public class LuaScriptPanel {
         mp.setFont(mono, config);
         messagesPanel.add(BorderLayout.CENTER, mp.getMessagesScroll());
 
-        ConnectionStatusLogic.INSTANCE.addListener(isConnected -> {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        readFromECU();
-                    } catch (Throwable e) {
-                        System.out.println(e);
-                    }
+        // addAndFireListener (not addListener): the Lua tab is usually opened AFTER the ECU is
+        // already connected, so a plain listener would miss the connect event and never read the
+        // script, leaving the editor blank. Firing immediately reads the current script on open.
+        ConnectionStatusLogic.INSTANCE.addAndFireListener(isConnected -> {
+            // readFromECU() does live ECU I/O (the Lua script lives on its own TS page now), which
+            // must run on the communication thread — not the EDT — or executeCommand() throws
+            // "Communication on wrong thread"
+            context.getLinkManager().submit(() -> {
+                try {
+                    readFromECU();
+                } catch (Throwable e) {
+                    log.error("Unexpected" + e, e);
                 }
             });
         });
@@ -191,8 +194,13 @@ public class LuaScriptPanel {
                 }
             });
 
-            BinaryProtocol bp = context.getLinkManager().getCurrentStreamState();
+            BinaryProtocol bp = context.getBinaryProtocol();
             StringIniField luaScript = getLuaScriptField(bp);
+
+            if (luaScript == null) {
+                setText("luaScript field not found in .ini");
+                return;
+            }
 
             if (newLua.length() >= luaScript.getSize()) {
                 setText(newLua.length() + " bytes would not fit sorry current limit " + luaScript.getSize());
@@ -234,7 +242,8 @@ public class LuaScriptPanel {
     }
 
     private void setText(String luaScript) {
-        scriptText.setText(luaScript);
+        // May be called from the communication thread (readFromECU); Swing requires EDT.
+        SwingUtilities.invokeLater(() -> scriptText.setText(luaScript));
     }
 
     private String getWorkingFolder() {
@@ -253,34 +262,58 @@ public class LuaScriptPanel {
     }
 
     void readFromECU() {
-        BinaryProtocol bp = context.getLinkManager().getCurrentStreamState();
+        BinaryProtocol bp = context.getBinaryProtocol();
 
         if (bp == null) {
             setText("No ECU located");
             return;
         }
 
-        ConfigurationImage image = bp.getControllerConfiguration();
-        if (image == null) {
-            setText("No configuration image");
+        StringIniField luaScript = getLuaScriptField(bp);
+        if (luaScript == null) {
+            setText("luaScript field not found in .ini");
             return;
         }
-        StringIniField luaScript = getLuaScriptField(bp);
-        ByteBuffer luaScriptBuffer = image.getByteBuffer(luaScript.getOffset(), luaScript.getSize());
 
-        byte[] scriptArr = new byte[luaScript.getSize()];
-        luaScriptBuffer.get(scriptArr);
+        byte[] scriptArr;
+        if (luaScript.getPageIndex() == 0) {
+            // Main settings page: comes from the already-fetched controller image.
+            ConfigurationImage image = bp.getControllerConfiguration();
+            if (image == null) {
+                log.info("readFromECU: page 0 branch but no configuration image");
+                setText("No configuration image");
+                return;
+            }
+            ByteBuffer luaScriptBuffer = image.getByteBuffer(luaScript.getOffset(), luaScript.getSize());
+            scriptArr = new byte[luaScript.getSize()];
+            luaScriptBuffer.get(scriptArr);
+        } else {
+            // Secondary page (new firmware places luaScript on its own TS page).
+            // The main image only holds page 0, so fetch directly from the ECU.
+            scriptArr = bp.readFromPage(luaScript.getPageIndex(), luaScript.getOffset(), luaScript.getSize());
+            if (scriptArr == null) {
+                log.info("readFromECU: readFromPage returned null for page=" + luaScript.getDisplayPage());
+                setText("Failed to read luaScript from page " + luaScript.getDisplayPage());
+                return;
+            }
+        }
 
         int i = findNullTerminator(scriptArr);
         setText(new String(scriptArr, 0, i, StandardCharsets.US_ASCII));
     }
 
-    static StringIniField getLuaScriptField(BinaryProtocol bp) {
+    public static StringIniField getLuaScriptField(BinaryProtocol bp) {
         Objects.requireNonNull(bp, "BinaryProtocol");
         // todo: do we have "luaScript" as code-generated constant anywhere?
-        IniFileModel iniFile = bp.getIniFile();
-        Objects.requireNonNull(iniFile, "iniFile");
-        return (StringIniField) iniFile.getIniField("LUASCRIPT");
+        IniFileModel iniFile = bp.getIniFileNullable();
+        if (iniFile == null)
+            return null;
+        // findIniField searches both the main page (old firmware) and secondary
+        // pages (new firmware places luaScript on its own dedicated page).
+        return iniFile.findIniField("LUASCRIPT")
+            .filter(f -> f instanceof StringIniField)
+            .map(f -> (StringIniField) f)
+            .orElse(null);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -296,21 +329,28 @@ public class LuaScriptPanel {
         LinkManager linkManager = context.getLinkManager();
 
         linkManager.submit(() -> {
-            BinaryProtocol bp = linkManager.getCurrentStreamState();
+            BinaryProtocol bp = linkManager.getBinaryProtocol();
 
             StringIniField field = getLuaScriptField(bp);
+            if (field == null) {
+                log.error("luaScript field not found in .ini — cannot write");
+                return;
+            }
 
             byte[] paddedScript = getScriptBytes(field, script);
 
-            log.info("Sending " + field);
-            bp.writeInBlocks(paddedScript, 0, field.getOffset(), paddedScript.length);
+            log.info("Sending " + field + " page=" + field.getDisplayPage());
+            bp.writeInBlocks(paddedScript, 0, field.getOffset(), paddedScript.length, field.getPageIndex());
 
 // need a way to modify script on the fly with shorter execution gaps to keep E65 CAN network happy
 // todo: auto-burn on console close check box in case of Lua changes?
 // todo: check box for auto-burn?
 //            bp.burn();
 
-            // Burning doesn't reload lua script, so we have to do it manually
+            // writeInBlocks above already updated the ECU's RAM copy of the script (on the
+            // main page for old firmware, or the dedicated Lua page for new firmware). The
+            // running Lua VM does not reload on its own, so trigger a reset to re-run the new
+            // script. (Note: there is no automatic reload on burn — the reset is what reloads.)
             resetLua();
         });
         // resume messages on 'write new script to ECU'
@@ -330,6 +370,6 @@ public class LuaScriptPanel {
     }
 
     void resetLua() {
-        this.context.getCommandQueue().write("luareset");
+        this.context.getCommandQueue().write(Integration.CMD_LUA_RESET);
     }
 }

@@ -26,6 +26,7 @@
 #include "trigger_nissan.h"
 #include "trigger_mazda.h"
 #include "trigger_misc.h"
+#include "trigger_bmw.h"
 #include "trigger_mitsubishi.h"
 #include "trigger_renault.h"
 #include "trigger_subaru.h"
@@ -115,10 +116,13 @@ int TriggerWaveform::getTriggerWaveformSynchPointIndex() const {
 angle_t TriggerWaveform::getCycleDuration() const {
 	switch (operationMode) {
 	case FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR:
+		// Pattern repeats every 180 crank degrees. 4 times per 720 degree engine cycle.
 		return FOUR_STROKE_CYCLE_DURATION / SYMMETRICAL_CRANK_SENSOR_DIVIDER;
 	case FOUR_STROKE_THREE_TIMES_CRANK_SENSOR:
+		// Pattern repeats every 120 crank degrees. 6 times per 720 degree engine cycle.
 		return FOUR_STROKE_CYCLE_DURATION / SYMMETRICAL_THREE_TIMES_CRANK_SENSOR_DIVIDER;
-	case FOUR_STROKE_SIX_TIMES_CRANK_SENSOR:
+		case FOUR_STROKE_FIVE_TIMES_CRANK_SENSOR:
+			return FOUR_STROKE_CYCLE_DURATION / SYMMETRICAL_FIVE_TIMES_CRANK_SENSOR_DIVIDER;case FOUR_STROKE_SIX_TIMES_CRANK_SENSOR:
 		return FOUR_STROKE_CYCLE_DURATION / SYMMETRICAL_SIX_TIMES_CRANK_SENSOR_DIVIDER;
 	case FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR:
 		return FOUR_STROKE_CYCLE_DURATION / SYMMETRICAL_TWELVE_TIMES_CRANK_SENSOR_DIVIDER;
@@ -138,6 +142,7 @@ bool TriggerWaveform::needsDisambiguation() const {
 		case FOUR_STROKE_CRANK_SENSOR:
 		case FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR:
 		case FOUR_STROKE_THREE_TIMES_CRANK_SENSOR:
+		case FOUR_STROKE_FIVE_TIMES_CRANK_SENSOR:
 		case FOUR_STROKE_SIX_TIMES_CRANK_SENSOR:
 		case FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR:
 			return true;
@@ -160,6 +165,7 @@ bool TriggerWaveform::needsDisambiguation() const {
 size_t TriggerWaveform::getLength() const {
 	/**
 	 * 24 for FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR
+	 * 10 for FOUR_STROKE_FIVE_TIMES_CRANK_SENSOR
 	 * 6 for FOUR_STROKE_THREE_TIMES_CRANK_SENSOR
 	 * 4 for FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR
 	 * 2 for FOUR_STROKE_CRANK_SENSOR
@@ -276,7 +282,7 @@ void TriggerWaveform::addEvent(angle_t angle, TriggerValue const state, TriggerW
 
 #if EFI_UNIT_TEST
 	if (printTriggerDebug) {
-		printf("addEvent2 %.2f i=%d front=%d\r\n", angle, channelIndex, state);
+		printf("addEvent2 %.2f i=%d front=%d\r\n", angle, (int)channelIndex, (int)state);
 	}
 #endif
 
@@ -416,6 +422,15 @@ uint16_t TriggerWaveform::findAngleIndex(TriggerFormDetails *details, angle_t ta
 	return left;
 }
 
+TriggerWheel TriggerWaveform::getWheel(size_t index) {
+#if EFI_UNIT_TEST
+	return triggerSignalIndeces[index];
+#else
+  UNUSED(index);
+#endif
+	return TriggerWheel::T_PRIMARY;
+}
+
 void TriggerWaveform::setShapeDefinitionError(bool value) {
 	shapeDefinitionError = value;
 }
@@ -479,8 +494,15 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		initializeSuzukiG13B(this);
 		break;
 
-	case trigger_type_e::TT_FORD_TFI_PIP:
-		configureFordPip(this);
+	case trigger_type_e::TT_SUZUKI_G16B:
+		initializeSuzukiG16B(this);
+		break;
+
+	case trigger_type_e::TT_FORD_TFI_PIP_6:
+		configureFordPip6(this);
+		break;
+	case trigger_type_e::TT_FORD_TFI_PIP_8:
+		configureFordPip8(this);
 		break;
 
 	case trigger_type_e::TT_FORD_ST170:
@@ -504,7 +526,6 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		break;
 
 	case trigger_type_e::TT_DODGE_NEON_1995:
-	case trigger_type_e::TT_DODGE_NEON_1995_ONLY_CRANK:
 		configureNeon1995TriggerWaveformOnlyCrank(this);
 		break;
 
@@ -517,8 +538,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		break;
 
 	case trigger_type_e::TT_DODGE_NEON_2003_CRANK:
-		configureNeon2003TriggerWaveformCam(this);
-//		configureNeon2003TriggerWaveformCrank(triggerShape);
+		configureNeon2003TriggerWaveformCrank(this);
 		break;
 
 	case trigger_type_e::TT_FORD_ASPIRE:
@@ -719,11 +739,16 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 	case trigger_type_e::TT_VVT_MITSUBISHI_4G69:
 	    initializeMitsubishi4G69Cam(this);
 		break;
+	case trigger_type_e::TT_VVT_MITSUBISHI_6G75:
+		initializeMitsubishi6G75Cam(this);
+		break;
 	case trigger_type_e::TT_MITSU_4G63_CAM:
 	    initializeMitsubishi4g63Cam(this);
 		break;
 
-	case trigger_type_e::TT_UNUSED29:
+	case trigger_type_e::TT_NISSAN_K11:
+	  initializeNissanK11(this);
+    break;
 	case trigger_type_e::TT_HONDA_CBR_600:
 		configureHondaCbr600(this);
 		break;
@@ -798,9 +823,9 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		break;
 
 	case trigger_type_e::TT_TRI_TACH:
-		configureTriTach(this);
-		break;
-
+// too dead		configureTriTach(this);
+//		break;
+//
 	case trigger_type_e::TT_GM_24x_5:
 		initGmLS24_5deg(this);
 		break;
@@ -829,8 +854,13 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		initializeJeepRenix66_2_2(this);
 		break;
 
+	case trigger_type_e::TT_VIPER_V10_CRANK:
 	case trigger_type_e::TT_SUBARU_7_6_CRANK:
 		initializeSubaru7_6_crankOnly(this);
+		break;
+
+	case trigger_type_e::TT_BMW_VANOS_RELUCTOR:
+		initializeVvtVanosReluctor(this);
 		break;
 
 
@@ -858,5 +888,19 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 
 	if (!shapeDefinitionError) {
 		wave.checkSwitchTimes(getCycleDuration());
+	}
+}
+
+void initializeRiseOnlyTrigger(TriggerWaveform *s, float w, const angle_t angles[], size_t count, operation_mode_e mode) {
+	s->initialize(mode, SyncEdge::RiseOnly);
+	for (size_t i = 0; i < count; i++) {
+		s->addToothRiseFall(angles[i], w);
+	}
+}
+
+void initializeRiseOnlyTrigger(TriggerWaveform *s, const float w[], const angle_t angles[], size_t count, operation_mode_e mode) {
+	s->initialize(mode, SyncEdge::RiseOnly);
+	for (size_t i = 0; i < count; i++) {
+		s->addToothRiseFall(angles[i], w[i]);
 	}
 }

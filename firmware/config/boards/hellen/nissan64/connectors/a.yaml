@@ -1,6 +1,6 @@
 pins:
   - pin: A4
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
 
 info:

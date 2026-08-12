@@ -21,6 +21,7 @@ static blt_bool rebootLoop;
 static blt_bool wdReset;
 
 static const uint8_t maxWdRebootCounter = 10;
+static const uint8_t maxSwRebootCounter = 15;
 
 #if (BOOT_COP_HOOKS_ENABLE > 0)
 extern "C" {
@@ -46,7 +47,18 @@ PUBLIC_API_WEAK bool OpenBltIsBoardOk()
 	return true;
 }
 
-class BlinkyThread : public chibios_rt::BaseStaticThread<256> {
+
+void efiSetLed(ioportid_t port, int pin, bool state) {
+#if (LED_PIN_MODE == OM_INVERTED)
+	palWritePad(port, pin, state);
+#else
+	palWritePad(port, pin, !state);
+#endif
+}
+
+static constexpr int blinkyThreadStackSize = BLINKY_THREAD_STACK_SIZE;
+
+class BlinkyThread : public chibios_rt::BaseStaticThread<blinkyThreadStackSize> {
 protected:
 	void main(void) override {
 		Gpio yellow = getWarningLedPin();
@@ -91,20 +103,17 @@ protected:
 #endif // BOOTLOADER_DISABLE_GREEN_LED
 
 		if (yellowPort) {
-			palSetPad(yellowPort, yellowPin);
+			efiSetLed(yellowPort, yellowPin, 0);
 		}
 		if (bluePort) {
-			palSetPad(bluePort, bluePin);
+			efiSetLed(bluePort, bluePin, 0);
 		}
 		if (greenPort) {
-			palSetPad(greenPort, greenPin);
+			efiSetLed(greenPort, greenPin, 0);
 		}
 		if (redPort) {
-			if (wdReset) {
-				palClearPad(redPort, redPin);
-			} else {
-				palSetPad(redPort, redPin);
-			}
+			// Red is constantly on if WD
+			efiSetLed(redPort, redPin, wdReset);
 		}
 
 		while (true) {
@@ -128,6 +137,8 @@ protected:
 	}
 };
 
+RUSEFI_STACK_ROOT_EXPLICIT(BlinkyThread::main, blinkyThreadStackSize);
+
 static BlinkyThread blinky;
 
 static blt_bool checkIfRebootIntoOpenBltRequested(void) {
@@ -142,25 +153,48 @@ static blt_bool checkIfRebootIntoOpenBltRequested(void) {
 
 static blt_bool checkIfResetLoop(void) {
 	uint8_t wd_counter = 0;
+	uint8_t sw_counter = 0;
+	SharedParamsReadByIndex(1, &wd_counter);
+	SharedParamsReadByIndex(2, &sw_counter);
 	Reset_Cause_t resetCause = getMCUResetCause();
 	if ((resetCause == Reset_Cause_IWatchdog) ||
 		(resetCause == Reset_Cause_WWatchdog)) {
 		// One of watchdogs
-		SharedParamsReadByIndex(1, &wd_counter);
 		wd_counter++;
-		SharedParamsWriteByIndex(1, wd_counter);
 		wdReset = BLT_TRUE;
-	} else if ((resetCause == Reset_Cause_NRST_Pin) ||
-			   (resetCause == Reset_Cause_POR)) {
-		// power on or NRST reset
-		// cleat WD counter
-		SharedParamsWriteByIndex(1, wd_counter);
+	} else if (resetCause == Reset_Cause_Soft_Reset) {
+		sw_counter++;
+	} else {
+		// cleat counters
+		wd_counter = 0;
+		sw_counter = 0;
+		if ((resetCause == Reset_Cause_NRST_Pin) ||
+			(resetCause == Reset_Cause_POR)) {
+			// power on or NRST reset
+			// TODO: speed up first boot on POR?
+		}
 	}
+	SharedParamsWriteByIndex(1, wd_counter);
+	SharedParamsWriteByIndex(2, sw_counter);
 
-	return (wd_counter > maxWdRebootCounter);
+	return ((wd_counter > maxWdRebootCounter) ||
+			(sw_counter > maxSwRebootCounter));
 }
 
+#if OPENBLT_BOARD_EARLY_INIT
+extern "C" {
+extern void OpenBLT__early_init(void);
+}
+#endif
+
+RUSEFI_STACK_FOREIGN_ROOT(idle, "__idle_thread", PORT_IDLE_THREAD_STACK_SIZE);
+
 int main(void) {
+#if OPENBLT_BOARD_EARLY_INIT
+	// Some specific board init
+	// Like Ethernet pin/gpio init before MAC init is called from halInit();
+	OpenBLT__early_init();
+#endif
 	halInit();
 	chSysInit();
 
@@ -202,6 +236,8 @@ int main(void) {
 		}
 	}
 }
+
+RUSEFI_STACK_PROCESS_ROOT();
 
 // very basic version, supports on chip pins only (really only used for USB)
 void efiSetPadMode(const char* msg, brain_pin_e brainPin, iomode_t mode) {

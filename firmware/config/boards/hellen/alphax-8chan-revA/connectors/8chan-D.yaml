@@ -31,7 +31,7 @@ pins:
     color: blue
 
   - pin: 7D
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: 8D
@@ -125,9 +125,9 @@ pins:
     function: +5v sensors
 
   - pin: 24D
-    function: Analog Ground
+    function: GNDA Analog/Sensor Ground
     color: black
-    type: gnd
+    type: agnd
 
 info:
   title: AlphaX 8chan

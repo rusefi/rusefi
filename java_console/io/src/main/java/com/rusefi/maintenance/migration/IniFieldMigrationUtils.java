@@ -40,7 +40,7 @@ public class IniFieldMigrationUtils {
             return true;
         } else if (newUnits != null) {
             final String lcPrevUnits = prevUnits.toLowerCase();
-            final String lcNewUnits = prevUnits.toLowerCase();
+            final String lcNewUnits = newUnits.toLowerCase();
             if (lcPrevUnits.equals(lcNewUnits)) {
                 return true;
             } else {

@@ -14,6 +14,7 @@ extern "C"
 
 void usb_serial_start();
 bool is_usb_serial_ready();
+void usb_serial_flush();
 
 #ifdef __cplusplus
 }

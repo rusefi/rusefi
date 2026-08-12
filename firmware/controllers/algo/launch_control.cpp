@@ -96,17 +96,42 @@ LaunchCondition LaunchControlBase::calculateRPMLaunchCondition(const float rpm) 
 
 LaunchCondition LaunchControlBase::calculateLaunchCondition(const float rpm) {
 	const LaunchCondition currentRpmLaunchCondition = calculateRPMLaunchCondition(rpm);
-	activateSwitchCondition = isInsideSwitchCondition();
+
+	const bool rawSwitchCondition = isInsideSwitchCondition();
+	if (engineConfiguration->launchRpmThreshold > 0) {
+		if (!rawSwitchCondition) {
+			isLaunchLatched = false;
+		} else if (!activateSwitchCondition) {
+			isLaunchLatched = (rpm <= engineConfiguration->launchRpmThreshold);
+		}
+	} else {
+		isLaunchLatched = rawSwitchCondition;
+	}
+	activateSwitchCondition = rawSwitchCondition;
+
 	rpmLaunchCondition = (currentRpmLaunchCondition == LaunchCondition::Launch);
 	rpmPreLaunchCondition = (currentRpmLaunchCondition == LaunchCondition::PreLaunch);
 	speedCondition = isInsideSpeedCondition();
 	tpsCondition = isInsideTpsCondition();
 
-	if(speedCondition && activateSwitchCondition && tpsCondition) {
+	if(speedCondition && isLaunchLatched && tpsCondition) {
 		return currentRpmLaunchCondition;
 	} else {
 		return LaunchCondition::NotMet;
 	}
+}
+
+bool LaunchControlBase::ownsSharedTrigger() const {
+	// SWITCH_INPUT_LAUNCH + LAUNCH_BUTTON already has its own RPM-based guard in
+	// calculateRPMLaunchCondition() that doesn't touch the latch, so it's excluded here.
+	const bool sameTrigger =
+		engineConfiguration->launchActivationMode == CLUTCH_INPUT_LAUNCH
+		&& engineConfiguration->torqueReductionActivationMode == TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH;
+
+	return sameTrigger
+		&& engineConfiguration->launchControlEnabled
+		&& engineConfiguration->launchRpmThreshold > 0
+		&& isLaunchLatched;
 }
 
 LaunchControlBase::LaunchControlBase() {

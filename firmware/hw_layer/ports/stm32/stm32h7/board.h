@@ -35,6 +35,9 @@
 #define EFI_USB_SERIAL_DM Gpio::A11
 #define EFI_USB_SERIAL_DP Gpio::A12
 
+// Ignore USB VBUS pin (we're never a host, only a device)
+#define BOARD_OTG_NOVBUSSENS TRUE
+
 /*
  * input-floating is the default pin mode. input-output boards should provision appropriate pull-ups/pull-downs.
  */

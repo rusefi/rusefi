@@ -17,9 +17,15 @@
 #include "hal.h"
 #endif // EFI_UNIT_TEST
 
+#if EFI_SIMULATOR || EFI_UNIT_TEST
+// todo: smarter typedef declaration?
+#define TEST_CAN_BUFFER_SIZE 4096
+#endif // EFI_SIMULATOR
+
 #include "periodic_thread_controller.h"
 
-#define CAN_TIMEOUT MS2NT(100)
+// Try to recover CAN after following timeout
+#define CAN_RX_TIMEOUT	TIME_MS2I(100)
 
 //can tx periodic task cycle time in frequency, 200hz -> 5ms period
 #define CAN_CYCLE_FREQ		(200.0f)
@@ -53,9 +59,14 @@ void processCanRxMessage(const size_t busIndex, const CANRxFrame& msg, efitick_t
 #endif // EFI_CAN_SUPPORT
 
 void registerCanListener(CanListener& listener);
-void registerCanSensor(CanSensorBase& sensor);
+void unregisterCanListener(CanListener& listener);
 
-class CanWrite final : public PeriodicController</*TStackSize*/512> {
+void registerCanSensor(CanSensorBase& sensor);
+// TODO: unregisterCanSensor()?
+
+#define CAN_WRITE_THREAD_STACK_SIZE 1536
+
+class CanWrite final : public PeriodicController<CAN_WRITE_THREAD_STACK_SIZE> {
 public:
 	CanWrite();
 	void PeriodicTask(efitick_t nowNt) override;
@@ -102,11 +113,12 @@ private:
 #define CAN_SID(f) ((f).std.SID)
 #define CAN_EID(f) ((f).ext.EID)
 #define CAN_ISX(f) ((f).common.XTD)
+#define CAN_ISRTR(f) ((f).common.RTR)
 #else
 #define CAN_SID(f) ((f).SID)
 #define CAN_EID(f) ((f).EID)
 #define CAN_ISX(f) ((f).IDE)
+#define CAN_ISRTR(f) ((f).RTR)
 #endif
 
 #define CAN_ID(f) (CAN_ISX(f) ? CAN_EID(f) : CAN_SID(f))
-

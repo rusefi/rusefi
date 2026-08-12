@@ -34,8 +34,8 @@ pins:
 #    class: [switch_inputs, analog_inputs]
     id: F6
     class: switch_inputs
-    function: IAT intake sensor signal
-    type:
+    function: IAT Sensor Input
+    type: at
 
   - pin: AC3
     id: [A1, EFI_ADC_1]
@@ -51,7 +51,7 @@ pins:
 
   - pin: AD1
     function: Oxygen sensor 2 ground
-    type: sgnd
+    type: agnd
 
   - pin: AD2
     id: E1
@@ -64,8 +64,8 @@ pins:
 #    class: [switch_inputs, analog_inputs]
     id: F5
     class: switch_inputs
-    function: CLT Coolant temperature sensor signal
-    type:
+    function: ECT CLT Coolant Sensor Input
+    type: at
 
   - pin: AD4
     function: Oil pressure sensor signal
@@ -111,7 +111,7 @@ pins:
 
   - pin: AG1
     function: Coolant temperature sensor ground
-    type: sgnd
+    type: agnd
 
   - pin: AG2
     function: Camshaft position sensor signal
@@ -127,11 +127,11 @@ pins:
 
   - pin: AH1
     function: Discrete sensors ground
-    type: sgnd
+    type: agnd
 
   - pin: AH2
     function: Oxygen sensor 2 ground
-    type: sgnd
+    type: agnd
 
   - pin: AH3
     function: Alternator LT signal
@@ -155,7 +155,6 @@ pins:
 
   - pin: AJ3
     function: Oxygen sensor 2 signal
-    type: sgnd
 
   - pin: AJ4
     id: L9779_OUT_1
@@ -277,7 +276,7 @@ pins:
 
   - pin: BC4
     function: Pedal position sensor 1 ground
-    type: sgnd
+    type: agnd
 
   - pin: BD1
     id: L9779_OUT_16
@@ -295,7 +294,7 @@ pins:
 
   - pin: BD4
     function: Pedal position sensor 2 ground
-    type: sgnd
+    type: agnd
 
   - pin: BE1
     function: Main relay
@@ -313,7 +312,6 @@ pins:
     id: L9779_OUT_18
     class: outputs
     function: Unknown out (OUT18)
-    type: pgnd
 
   - pin: BF1
     function: Check engine / CAN H
@@ -342,12 +340,12 @@ pins:
     type:
 
   - pin: BG2
-    function: Power ground
-    type: pgnd
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: BG3
-    function: Power ground
-    type: pgnd
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: BG4
     function: Ignition ground

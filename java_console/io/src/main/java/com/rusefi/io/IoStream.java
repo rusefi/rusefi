@@ -73,12 +73,4 @@ public interface IoStream extends WriteStream, Closeable, StreamStatistics {
     default short readShort() throws EOFException {
         return getDataBuffer().readShort();
     }
-
-    default byte[] sendAndGetPacket(byte[] packet, String message) throws IOException {
-        // synchronization is needed for example to help SD card download to live with gauge poker
-        synchronized (this) {
-            sendPacket(packet);
-            return getDataBuffer().getPacket(message);
-        }
-    }
 }

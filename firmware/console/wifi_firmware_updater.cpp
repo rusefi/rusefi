@@ -64,7 +64,7 @@ static const int MAX_PAYLOAD_SIZE = 256;
 
 static int readch() {
 	uint8_t buf;
-	int ret = chnReadTimeout(&SDU1, &buf, 1, TIME_MS2I(1));
+	int ret = chnReadTimeout(&EFI_CONSOLE_USB_DEVICE, &buf, 1, TIME_MS2I(1));
 
 	if (ret == 0) {
 		return -1;
@@ -107,7 +107,7 @@ static UartPacket pkt;
 static uint8_t payload[MAX_PAYLOAD_SIZE];
 
 static void serialPrint(const uint8_t* data, size_t length) {
-	chnWriteTimeout(&SDU1, data, length, TIME_MS2I(100));
+	chnWriteTimeout(&EFI_CONSOLE_USB_DEVICE, data, length, TIME_MS2I(100));
 }
 
 static void serialPrintStr(const char* str) {

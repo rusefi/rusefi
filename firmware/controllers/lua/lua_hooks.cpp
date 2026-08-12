@@ -1,7 +1,17 @@
+/**
+ * @file lua_hooks.cpp
+ * @brief Lua API hooks.
+ *
+ * Registers the rusEFI functions exposed to user Lua scripts: sensor reads, output
+ * control, table/curve lookups, CAN transmit, timers and configuration access.
+ * These bindings define the scripting surface available from the Lua VM in lua.cpp.
+ */
+
 #include "pch.h"
 
 #include "rusefi_lua.h"
 #include "lua_hooks.h"
+#include "second_tables.h"
 
 #include "lua_biquad.h"
 #include "fuel_math.h"
@@ -25,6 +35,7 @@
 
 #if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 #include "can_msg_tx.h"
+#include "can_hw.h"
 #endif // EFI_CAN_SUPPORT
 #include "settings.h"
 #include <new>
@@ -243,6 +254,42 @@ static int lua_txCan(lua_State* l) {
 	// no return value
 	return 0;
 }
+
+static int lua_canSetBaud(lua_State* l) {
+	int bus = validateCanChannelAndConvertFromHumanIntoZeroIndex(l);
+	int baud = luaL_checkinteger(l, 2);
+
+#if !EFI_UNIT_TEST
+	int ret = setCanBaud(bus, baud);
+
+	if (ret < 0) {
+		luaL_error(l, "Failed to change CAN%d baudrate to %d", bus + 1, baud);
+	}
+#else
+	(void)bus;
+	(void)baud;
+#endif
+
+	return 0;
+}
+
+static int lua_canSetListenMode(lua_State* l) {
+	int bus = validateCanChannelAndConvertFromHumanIntoZeroIndex(l);
+	bool listenOnly = lua_toboolean(l, 2);
+
+#if !EFI_UNIT_TEST
+	int ret = setCanListenMode(bus, listenOnly);
+
+	if (ret < 0) {
+		luaL_error(l, "Failed to change CAN%d listen-only mode to %d", bus + 1, listenOnly);
+	}
+#else
+	(void)bus;
+	(void)listenOnly;
+#endif
+
+	return 0;
+}
 #endif // EFI_CAN_SUPPORT
 
 static LuaAirmass luaAirmass;
@@ -390,26 +437,6 @@ static int lua_getAuxDigital(lua_State* l) {
 #endif // !EFI_SIMULATOR
 
 	return 1;
-}
-
-static int lua_setDebug(lua_State* l) {
-	// wrong debug mode, ignore
-	if (engineConfiguration->debugMode != DBG_LUA) {
-		return 0;
-	}
-
-	auto idx = luaL_checkinteger(l, 1);
-	auto val = luaL_checknumber(l, 2);
-
-	// invalid index, ignore
-	if (idx < 1 || idx > 7) {
-		return 0;
-	}
-
-	auto firstDebugField = &engine->outputChannels.debugFloatField1;
-	firstDebugField[idx - 1] = val;
-
-	return 0;
 }
 
 #if EFI_ENGINE_CONTROL
@@ -695,7 +722,15 @@ void configureRusefiLuaHooks(lua_State* lState) {
 
 	lua_register(lState, "readPin", lua_readpin);
 #if EFI_PROD_CODE && EFI_SHAFT_POSITION_INPUT
-	lua_register(lState, "startCrankingEngine", [](lua_State* l) {
+	// startCrankingEngine(): engage the starter motor, same as pressing the start/stop button
+	// on a stopped engine. Immediately sets the starterControlPin output high and restarts the
+	// cranking timer; returns without waiting. The starter is released later by the 20 Hz slow
+	// callback (see disengageStarterIfNeeded in start_stop.cpp) as soon as the engine reaches
+	// running RPM, or after the startCrankingDuration timeout (seconds, default 3, tunable up
+	// to 30) if it does not start. Caveats: calling while already cranking is a no-op and does
+	// NOT extend the timeout; there is no check that the engine is stopped, so calling on a
+	// running engine engages the starter until the next slow callback releases it.
+	lua_register(lState, "startCrankingEngine", [](lua_State*) {
 		doStartCranking();
 		return 0;
 	});
@@ -882,6 +917,11 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 	  }
 		return 1;
 	});
+
+	lua_register(lState, "setEngineTorque", [](lua_State* l) {
+		engine->engineState.lua.engineTorque = luaL_checknumber(l, 1);
+		return 0;
+	});
 #endif // STM32F4
 
 #if !defined(STM32F4) || defined(WITH_LUA_GET_GPPWM_STATE)
@@ -1024,10 +1064,11 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 		auto rpm = Sensor::getOrZero(SensorType::Rpm);
 		auto tps = Sensor::getOrZero(SensorType::Tps1);
 
+ 	  // here we assume load is TPS
 		auto result = interpolate3d(
-                  		config->torqueTable,
-                  		config->torqueLoadBins, tps,
-                  		config->torqueRpmBins, rpm
+                  		secondTablesGetState()->torqueTable,
+                  		secondTablesGetState()->torqueLoadBins, tps,
+                  		secondTablesGetState()->torqueRpmBins, rpm
                   	);
 		lua_pushnumber(l, result);
 		return 1;
@@ -1128,7 +1169,6 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
                                  	});
 	lua_register(lState, "getDigital", lua_getDigital);
 	lua_register(lState, "getAuxDigital", lua_getAuxDigital);
-	lua_register(lState, "setDebug", lua_setDebug);
 #if EFI_ENGINE_CONTROL
 	lua_register(lState, "getAirmass", lua_getAirmass);
 	lua_register(lState, "setAirmass", lua_setAirmass);
@@ -1144,7 +1184,7 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 		lua_pushboolean(l, hasFirmwareError());
 		return 1;
 	});
-#if EFI_SHAFT_POSITION_INPUT
+#if EFI_SHAFT_POSITION_INPUT && EFI_ENGINE_CONTROL
 	lua_register(lState, "stopEngine", [](lua_State*) {
 		doScheduleStopEngine(StopRequestedReason::Lua);
 		return 0;
@@ -1159,7 +1199,7 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 		lua_pushinteger(l, result);
 		return 1;
 	});
-#endif // EFI_SHAFT_POSITION_INPUT
+#endif // EFI_SHAFT_POSITION_INPUT && EFI_ENGINE_CONTROL
 #endif // WITH_LUA_STOP_ENGINE
 
 #if EFI_CAN_SUPPORT
@@ -1170,6 +1210,8 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 
 #if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 	lua_register(lState, "txCan", lua_txCan);
+	lua_register(lState, "canSetBaud", lua_canSetBaud);
+	lua_register(lState, "canSetListenMode", lua_canSetListenMode);
 #endif
 
 #if EFI_PROD_CODE

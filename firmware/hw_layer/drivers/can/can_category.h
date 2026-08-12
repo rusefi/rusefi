@@ -15,4 +15,8 @@ enum class CanCategory : uint16_t {
 	BENCH_TEST = 7,
 	CAN_IOBOX = 8,
 	GDI = 9,
+	TCU = 10,
+	HONDA_NBC = 11,
+	NBC_PURPLE = 12,
+	SNIFFER = 13,
 };

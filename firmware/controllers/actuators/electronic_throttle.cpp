@@ -7,7 +7,7 @@
  * PPS=pedal position sensor=AcceleratorPedal
  * TPS=throttle position sensor, this one is inside ETB=electronic throttle body
  *
- * Limited user documentation at https://github.com/rusefi/rusefi/wiki/HOWTO_electronic_throttle_body
+ * Limited user documentation at https://wiki.rusefi.com/HOWTO_electronic_throttle_body
  *
  *
  *  ETB is controlled according to pedal position input (pedal position sensor is a potentiometer)
@@ -489,20 +489,7 @@ expected<percent_t> EtbController::getClosedLoopAutotune(percent_t target, perce
 			break;
 		}
 
-		// Also output to debug channels if configured
-		if (engineConfiguration->debugMode == DBG_ETB_AUTOTUNE) {
-			// a - amplitude of output (TPS %)
-			engine->outputChannels.debugFloatField1 = m_a;
-			// b - amplitude of input (Duty cycle %)
-			engine->outputChannels.debugFloatField2 = b;
-			// Tu - oscillation period (seconds)
-			engine->outputChannels.debugFloatField3 = m_tu;
-
-			engine->outputChannels.debugFloatField4 = ku;
-			engine->outputChannels.debugFloatField5 = kp;
-			engine->outputChannels.debugFloatField6 = ki;
-			engine->outputChannels.debugFloatField7 = kd;
-		}
+		efiPrintf("ETB autotune: a=%.3f b=%.3f Tu=%.3f Ku=%.3f Kp=%.3f Ki=%.3f Kd=%.3f", m_a, b, m_tu, ku, kp, ki, kd);
 #endif
 		// TODO: directly update PID settings in engineConfiguration
 	}
@@ -701,7 +688,7 @@ void EtbController::checkJam(percent_t setpoint, percent_t observation) {
 				efiPrintf(" ************* ETB is jammed! ***************");
 				jamDetected = true;
 
-				getLimpManager()->reportEtbProblem();
+				getLimpManager()->reportEtbJammed();
 			}
 		} else {
 			m_jamDetectTimer.reset(nowNt);
@@ -742,7 +729,7 @@ void blinkEtbErrorCodes(bool blinkPhase) {
 
 #if !EFI_UNIT_TEST
 
-struct DcThread final : public PeriodicController<512> {
+struct DcThread final : public PeriodicController<DC_THREAD_STACK_SIZE> {
 	DcThread() : PeriodicController("DC", PRIO_ETB, ETB_LOOP_FREQUENCY) {}
 
 	void PeriodicTask(efitick_t) override {
@@ -754,6 +741,8 @@ struct DcThread final : public PeriodicController<512> {
 		}
 	}
 };
+
+RUSEFI_STACK_ROOT(DcThread, PeriodicTask);
 
 static DcThread dcThread CCM_OPTIONAL;
 
@@ -783,6 +772,17 @@ void etbAutocal(dc_function_e function, bool reportToTs) {
 				// todo fix root cause! work-around: make sure not to write bad tune since that would brick requestBurn();
 			}
 		}
+	}
+}
+
+void etbBenchTestStart(size_t throttleIndex) {
+	if (throttleIndex >= ETB_COUNT) {
+		efiPrintf("ETB bench test: invalid index %d", (int)throttleIndex);
+		return;
+	}
+	if (auto controller = etbControllers[throttleIndex]) {
+		assertNotNullVoid(controller);
+		controller->startBenchTest();
 	}
 }
 
@@ -1089,6 +1089,7 @@ const electronic_throttle_s* getLiveData(size_t idx) {
 
 	return etbControllers[idx];
 #else
+	UNUSED(idx);
 	return nullptr;
 #endif
 }

@@ -1,4 +1,4 @@
-https://github.com/rusefi/rusefi/wiki/TS-Plugin
+https://wiki.rusefi.com/TS-Plugin
 
 Here we have integration layer between 'real' ts_plugin and TS:
 

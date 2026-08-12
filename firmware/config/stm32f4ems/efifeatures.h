@@ -43,6 +43,12 @@
 #endif
 
 /* Long Term Fuel Trims */
+/* [tag:disable_engine_module] CAVEAT: EFI_LTFT_CONTROL gates TS page TS_PAGE_LTFT_TRIMS
+ * so a board must NOT flip it here or via board.mk DDEFS - declare `#define EFI_LTFT_CONTROL FALSE` in the
+ * board's prepend.txt instead.
+ * <p>
+ * Note the simulator and unit_tests keep their own efifeatures.h copies that bypass all of this.
+*/
 #ifndef EFI_LTFT_CONTROL
 #define EFI_LTFT_CONTROL TRUE
 #endif
@@ -196,6 +202,10 @@
 #define SPARK_EXTREME_LOGGING FALSE
 
 #define TRIGGER_EXTREME_LOGGING FALSE
+
+#ifndef ROTATIONAL_IDLE_CONTROLLER
+#define ROTATIONAL_IDLE_CONTROLLER TRUE
+#endif
 
 /**
  * Store configuration as raw binary to internal flash (two copies if there is enough flash)
@@ -369,7 +379,7 @@
 #define EFI_USB_SERIAL TRUE
 #endif
 
-#define EFI_CONSOLE_USB_DEVICE SDU1
+#define EFI_CONSOLE_USB_DEVICE SDU[0]
 
 #if defined(EFI_HAS_EXT_SDRAM)
 	#ifndef ENABLE_PERF_TRACE
@@ -435,13 +445,6 @@
 
 #ifndef EFI_ELECTRONIC_THROTTLE_BODY
 #define EFI_ELECTRONIC_THROTTLE_BODY TRUE
-#endif
-
-/**
- * Do we need Malfunction Indicator blinking logic?
- */
-#ifndef EFI_MALFUNCTION_INDICATOR
-#define EFI_MALFUNCTION_INDICATOR FALSE
 #endif
 
 #ifndef CONSOLE_MAX_ACTIONS
@@ -549,4 +552,8 @@
 
 #ifndef EFI_SENT_SUPPORT
 #define EFI_SENT_SUPPORT        FALSE
+#endif
+
+#ifndef EFI_MISFIRE_DETECTION
+#define EFI_MISFIRE_DETECTION FALSE
 #endif

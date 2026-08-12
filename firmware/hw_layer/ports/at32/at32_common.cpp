@@ -97,9 +97,26 @@ int at32GetRamSizeKb(void)
 
 #if EFI_PROD_CODE
 
-static void reset_and_jump(void) {
-    // and now reboot
+// the bootloader does not compile storage.cpp - keep it out of this interlock
+#if EFI_CONFIGURATION_STORAGE && !defined(EFI_BOOTLOADER)
+#include "storage.h"
+#define EFI_STORAGE_REBOOT_INTERLOCK TRUE
+#endif
+
+void rebootNow() {
     NVIC_SystemReset();
+}
+
+static void reset_and_jump(void) {
+#ifdef EFI_STORAGE_REBOOT_INTERLOCK
+    // Let any queued or in-flight settings/LTFT flash write finish before we
+    // reset: a reset in the middle of a sector erase/program corrupts the
+    // sector being written and can leave the device hung until power cycle.
+    storageWaitIdle(STORAGE_WAIT_IDLE_TIMEOUT_MS);
+#endif
+
+    // and now reboot
+    rebootNow();
 }
 
 #if EFI_DFU_JUMP

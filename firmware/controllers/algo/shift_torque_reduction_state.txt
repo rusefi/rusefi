@@ -8,4 +8,8 @@ bit isAppConditionSatisfied
 bit isFlatShiftConditionSatisfied
 bit isBelowTemperatureThreshold
 
+int16_t trqRedCutXaxisValue
+int16_t trqRedTimeXaxisValue
+int16_t trqRedIgnRetXaxisValue
+
 end_struct

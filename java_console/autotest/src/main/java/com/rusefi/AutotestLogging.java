@@ -17,7 +17,7 @@ public enum AutotestLogging {
 
 
     public synchronized void logLine(String fullLine) {
-        String withDate = FileLog.getDate() + Logger.END_OF_TIMESTAND_TAG + fullLine;
+        String withDate = FileLogger.getDate() + Logger.END_OF_TIMESTAND_TAG + fullLine;
         System.out.println(withDate);
         if (suspendLogging)
             return;

@@ -1,8 +1,17 @@
+/**
+ * @file lambda_monitor.cpp
+ * @brief Lambda protection monitor.
+ *
+ * Watches measured lambda against an allowed limit while under load and, after a
+ * configurable time delay, signals a dangerously-lean condition so the limp manager
+ * can cut power to protect the engine.
+ */
+
 #include "pch.h"
 
 #include "lambda_monitor.h"
 
-#if EFI_SHAFT_POSITION_INPUT
+#if EFI_SHAFT_POSITION_INPUT && EFI_ENGINE_CONTROL
 
 float LambdaMonitor::getMaxAllowedLambda(float rpm, float load) const {
 	return
@@ -111,4 +120,4 @@ bool LambdaMonitorBase::restoreConditionsMet(float rpm, float load) const {
 
 	return true;
 }
-#endif // EFI_SHAFT_POSITION_INPUT
+#endif // #if EFI_SHAFT_POSITION_INPUT && EFI_ENGINE_CONTROL

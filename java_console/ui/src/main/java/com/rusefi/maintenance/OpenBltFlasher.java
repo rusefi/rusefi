@@ -16,6 +16,9 @@ import java.util.List;
 import static com.devexperts.logging.Logging.getLogging;
 
 public class OpenBltFlasher {
+    // 16 full PROGRAM_MAX packets with a 240-byte CTO, while still updating progress often.
+    private static final int PROGRAM_CHUNK_SIZE = 16 * 239;
+
     private static final Logging log = getLogging(OpenBltFlasher.class);
 
     private final XcpLoader mLoader;
@@ -102,7 +105,12 @@ public class OpenBltFlasher {
         mCallbacks.setPhase("Erase", true);
         final ProgressUpdater pu = new ProgressUpdater();
 
-        forEachFirmwareChunk(32768, (Chunk c) -> {
+        // Some bootloaders in the wild (F7 1MB, in particular) have a bug that they might not
+        // erase the 2nd page if an erase request is made across a page boundary. Because of
+        // that, erase very small chunks, which will result in an aligned erase request with the
+        // beginning of every page. Most of these requests will instantly return as it was already
+        // erased by a previous request erasing a full page.
+        forEachFirmwareChunk(4096, (Chunk c) -> {
             mLoader.clearMemory(c.address, c.data.length);
 
             pu.processBytes(c.data.length);
@@ -113,7 +121,7 @@ public class OpenBltFlasher {
         mCallbacks.setPhase("Program", true);
         final ProgressUpdater pu = new ProgressUpdater();
 
-        forEachFirmwareChunk(1024, (Chunk c) -> {
+        forEachFirmwareChunk(PROGRAM_CHUNK_SIZE, (Chunk c) -> {
             mLoader.writeData(c.address, c.data);
 
             pu.processBytes(c.data.length);

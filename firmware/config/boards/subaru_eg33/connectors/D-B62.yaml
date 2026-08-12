@@ -94,12 +94,12 @@ pins:
     type: inj
 
   - pin: 14
-    function: Power GND
-    type: pgnd
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 15
     function: Ignition GND
-    type: pgnd
+    type: gnd
 
   - pin: 16
     id: MC33810_1_GD_1
@@ -159,11 +159,11 @@ pins:
 
   - pin: 24
     function: Injector GND
-    type: pgnd
+    type: gnd
 
   - pin: 25
     function: Injector GND
-    type: pgnd
+    type: gnd
 
   - pin: 26
     id: MC33810_1_OUT_1

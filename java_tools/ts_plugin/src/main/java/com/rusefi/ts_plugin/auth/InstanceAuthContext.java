@@ -3,7 +3,7 @@ package com.rusefi.ts_plugin.auth;
 import com.devexperts.logging.Logging;
 import com.rusefi.server.JsonUserDetailsResolver;
 import com.rusefi.server.UserDetails;
-import com.rusefi.ui.AuthTokenPanel;
+import com.rusefi.ts_plugin.ui.AuthTokenPanel;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 

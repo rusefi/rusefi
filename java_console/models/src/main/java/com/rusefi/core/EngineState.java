@@ -136,13 +136,17 @@ public class EngineState {
                 response = handleStringActionPair(response, pair, listener);
         }
         if (originalResponse.length() == response.length()) {
-            log.info("EngineState.unknown: " + response);
             int keyEnd = response.indexOf(Integration.LOG_DELIMITER);
             if (keyEnd == -1) {
                 // discarding invalid line
                 return "";
             }
             String unknownKey = response.substring(0, keyEnd);
+            if (Integration.PROTOCOL_VERSION_TAG.equalsIgnoreCase(unknownKey) || Integration.PROTOCOL_OUTPIN.equalsIgnoreCase(unknownKey)) {
+                return "";
+            }
+
+            log.info("EngineState.unknown: " + response);
             int valueEnd = response.indexOf(Integration.LOG_DELIMITER, keyEnd + 1);
             if (valueEnd == -1) {
                 // discarding invalid line

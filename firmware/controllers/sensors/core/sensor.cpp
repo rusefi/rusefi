@@ -40,13 +40,28 @@ public:
 			firmwareError(ObdCode::CUSTOM_OBD_26, "Duplicate registration for sensor \"%s\"", sensor->getSensorName());
 			return false;
 		} else {
+
+#if VERBOSE_SENSOR_DEBUG
+  efiPrintf("Register sensor %s", sensor->getSensorName());
+#endif
+
 			// Put the sensor in the registry
 			m_sensor = sensor;
 			return true;
 		}
 	}
 
-	void unregister() {
+	void unregister(Sensor* sensor) {
+		// Only the sensor that currently owns this slot may vacate it - the slot may be
+		// occupied by somebody else, for instance a Lua-created sensor while this one
+		// never registered (see #9822)
+		if (m_sensor != sensor) {
+			return;
+		}
+
+#if VERBOSE_SENSOR_DEBUG
+		efiPrintf("Unregistering sensor %s", m_sensor->getSensorName());
+#endif
 		m_sensor = nullptr;
 	}
 
@@ -133,7 +148,7 @@ bool Sensor::Register() {
 }
 
 void Sensor::unregister() {
-	s_sensorRegistry[getIndex()].unregister();
+	s_sensorRegistry[getIndex()].unregister(this);
 }
 
 /*static*/ void Sensor::resetRegistry() {

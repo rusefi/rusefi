@@ -11,6 +11,11 @@ import java.io.IOException;
 
 import static com.devexperts.logging.Logging.getLogging;
 
+/**
+ * Manual harness that reads an ECU signature over Linux SocketCAN.
+ *
+ * @see PCanSandbox
+ */
 public class SocketCANSandbox {
     private static final Logging log = getLogging(PCanSandbox.class);
 

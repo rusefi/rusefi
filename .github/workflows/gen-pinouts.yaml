@@ -1,5 +1,5 @@
 #
-# See https://github.com/rusefi/rusefi/wiki/Connector-Mapping
+# See https://wiki.rusefi.com/Connector-Mapping
 #
 
 name: Generate Interactive Pinouts
@@ -14,15 +14,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v7
 
     - name: Generate Pinouts
-      uses: chuckwagoncomputing/interactive-pinout@2.15
+      uses: chuckwagoncomputing/interactive-pinout@2.18
       with:
         mapping-path: firmware/config/boards/*/connectors/*.yaml
         warnings: "false"
         warning-no-pins: "skip"
         warning-dupe: "error"
+        warning-parse: "error"
         columns: |
           {
           "pin":"Pin Number",
@@ -42,8 +43,8 @@ jobs:
           }
         colors: |
           {
-          "12v":"yellow";
-          "12V":"yellow";
+          "12v":"yellow",
+          "12V":"yellow",
           "5v":"red",
           "5V":"red",
           "at":"green",
@@ -62,8 +63,7 @@ jobs:
           "inj":"maroon",
           "ls":"lightgreen",
           "mr":"firebrick",
-          "pgnd":"coral",
-          "sgnd":"olive",
+          "agnd":"olive",
           "usb":"lightseagreen",
           "vr":"sienna"
           }

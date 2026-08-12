@@ -6,10 +6,10 @@
 #include "pch.h"
 
 void doScheduleStopEngine(StopRequestedReason reason) {
-#if EFI_SHAFT_POSITION_INPUT
+#if EFI_SHAFT_POSITION_INPUT && EFI_ENGINE_CONTROL
 	efiPrintf("Let's stop this engine!");
 	getLimpManager()->shutdownController.stopEngine(reason);
-#endif // EFI_SHAFT_POSITION_INPUT
+#endif // EFI_SHAFT_POSITION_INPUT && EFI_ENGINE_CONTROL
 	// todo: initiate stepper motor parking
 	// make sure we have stored all the info
 #if EFI_PROD_CODE

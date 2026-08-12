@@ -67,7 +67,7 @@ static void cannedboostRpmBins() {
 }
 
 static void cannedpedalToTpsRpmBins() {
-#if PEDAL_TO_TPS_SIZE == 8
+#if PEDAL_TO_TPS_RPM_SIZE == 8
 	static const float hardCodedpedalToTpsRpmBins[8] = {0.0, 1100.0, 2300.0, 3400.0, 4600.0, 5700.0, 6900.0, 8000.0};
 	copyArray(config->pedalToTpsRpmBins, hardCodedpedalToTpsRpmBins);
 #endif

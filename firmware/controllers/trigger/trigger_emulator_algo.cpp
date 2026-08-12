@@ -69,8 +69,6 @@ void TriggerEmulatorHelper::handleEmulatorCallback(int channel, const MultiChann
 PwmConfig triggerEmulatorSignals[NUM_EMULATOR_CHANNELS];
 TriggerWaveform *triggerEmulatorWaveforms[NUM_EMULATOR_CHANNELS];
 
-static int atTriggerVersions[NUM_EMULATOR_CHANNELS] = { 0 };
-
 /**
  * todo: why is this method NOT reciprocal to getCrankDivider?!
  * todo: oh this method has only one usage? there must me another very similar method!
@@ -79,6 +77,7 @@ static float getRpmMultiplier(operation_mode_e mode) {
   switch (mode) {
     case FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR:
   	case FOUR_STROKE_THREE_TIMES_CRANK_SENSOR:
+		case FOUR_STROKE_FIVE_TIMES_CRANK_SENSOR:
     case FOUR_STROKE_SIX_TIMES_CRANK_SENSOR:
 	  case FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR:
 	  case FOUR_STROKE_CRANK_SENSOR:
@@ -117,6 +116,17 @@ void setTriggerEmulatorRPM(int rpm) {
 	efiPrintf("Emulating position sensor(s). RPM=%d", rpm);
 }
 
+static TriggerEmulatorHelper helper;
+static bool hasStimPins = false;
+
+#if EFI_PROD_CODE
+PUBLIC_API_WEAK void onTriggerEmulatorPinState(int, int) { }
+#endif /* EFI_PROD_CODE */
+
+# if !EFI_UNIT_TEST
+
+static int atTriggerVersions[NUM_EMULATOR_CHANNELS] = { 0 };
+
 static void updateTriggerWaveformIfNeeded(PwmConfig *state) {
 	for (int channel = 0; channel < NUM_EMULATOR_CHANNELS; channel++) {
 		if (state != &triggerEmulatorSignals[channel])
@@ -133,16 +143,7 @@ static void updateTriggerWaveformIfNeeded(PwmConfig *state) {
 	}
 }
 
-static TriggerEmulatorHelper helper;
-static bool hasStimPins = false;
-
 static bool hasInitTriggerEmulator = false;
-
-#if EFI_PROD_CODE
-PUBLIC_API_WEAK void onTriggerEmulatorPinState(int, int) { }
-#endif /* EFI_PROD_CODE */
-
-# if !EFI_UNIT_TEST
 
 static void emulatorApplyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
     assertStackVoid("emulator", ObdCode::STACK_USAGE_MISC, EXPECTED_REMAINING_STACK);

@@ -9,6 +9,9 @@
 #include "thread_controller.h"
 #include "tunerstudio.h"
 
+RUSEFI_STACK_FOREIGN_ROOT(lwIP_driver, "lwip_thread", LWIP_THREAD_STACK_SIZE);
+RUSEFI_STACK_FOREIGN_ROOT(lwIP_TCP__IP, "tcpip_thread", TCPIP_THREAD_STACKSIZE);
+
 static int listenerSocket = -1;
 static int connectionSocket = -1;
 
@@ -22,7 +25,23 @@ static void do_connection() {
 
 	sockaddr_in remote;
 	socklen_t size = sizeof(remote);
-	connectionSocket = lwip_accept(listenerSocket, (sockaddr*)&remote, &size);
+	while (connectionSocket == -1) {
+		connectionSocket = lwip_accept(listenerSocket, (sockaddr*)&remote, &size);
+		if (connectionSocket == -1) {
+			chThdSleepMilliseconds(100);
+		}
+	}
+
+	int one = 1;
+	lwip_setsockopt(connectionSocket, IPPROTO_TCP, TCP_NODELAY, &one, sizeof(one));
+	lwip_setsockopt(connectionSocket, SOL_SOCKET, SO_KEEPALIVE, &one, sizeof(one));
+
+	int keepIdle = 5;
+	int keepInterval = 1;
+	int keepCount = 3;
+	lwip_setsockopt(connectionSocket, IPPROTO_TCP, TCP_KEEPIDLE, &keepIdle, sizeof(keepIdle));
+	lwip_setsockopt(connectionSocket, IPPROTO_TCP, TCP_KEEPINTVL, &keepInterval, sizeof(keepInterval));
+	lwip_setsockopt(connectionSocket, IPPROTO_TCP, TCP_KEEPCNT, &keepCount, sizeof(keepCount));
 }
 
 class EthernetChannel final : public TsChannelBase {
@@ -37,21 +56,54 @@ public:
 	}
 
 	void write(const uint8_t* buffer, size_t size, bool isEndOfPacket) override {
-		// If not the end of a packet, set the MSG_MORE flag to indicate to the transport
-		// that we have more to add to the buffer before queuing a flush.
-		auto flags = isEndOfPacket ? 0 : MSG_MORE;
-		lwip_send(connectionSocket, buffer, size, flags);
+		// lwIP's MSG_MORE only sets PSH, it does not coalesce sends.  Buffer locally so
+		// multi-part TS responses (header + body + tail) leave as a single TCP segment.
+		// Without this, small leading writes trigger delayed-ACK + Nagle on the peer
+		// pair and add ~40 ms per transaction.
+		size_t remaining = size;
+		const uint8_t* src = buffer;
+		while (remaining > 0) {
+			size_t free = sizeof(txBuffer) - txPos;
+			size_t chunk = remaining < free ? remaining : free;
+			memcpy(txBuffer + txPos, src, chunk);
+			txPos += chunk;
+			src += chunk;
+			remaining -= chunk;
+			if (txPos == sizeof(txBuffer)) {
+				flush();
+			}
+		}
+		if (isEndOfPacket) {
+			flush();
+		}
 	}
 
-	size_t readTimeout(uint8_t* buffer, size_t size, int /*timeout*/) override {
-		auto result = lwip_recv(connectionSocket, buffer, size, /*flags =*/ 0);
+	void flush() override {
+		if (txPos > 0) {
+			lwip_send(connectionSocket, txBuffer, txPos, 0);
+			txPos = 0;
+		}
+	}
 
-		if (result == -1) {
-			do_connection();
-			return 0;
+private:
+	uint8_t txBuffer[1536];
+	size_t txPos = 0;
+public:
+
+	size_t readTimeout(uint8_t* buffer, size_t size, int /*timeout*/) override {
+		size_t received = 0;
+		while (received < size) {
+			auto result = lwip_recv(connectionSocket, buffer + received, size - received, /*flags =*/ 0);
+			if (result <= 0) {
+				in_sync = false;
+				txPos = 0;
+				do_connection();
+				return 0;
+			}
+			received += static_cast<size_t>(result);
 		}
 
-		return result;
+		return received;
 	}
 };
 
@@ -65,7 +117,7 @@ struct EthernetThread : public TunerstudioThread {
 
 		sockaddr_in address;
 		address.sin_family = AF_INET;
-		address.sin_port = htons(29000);
+		address.sin_port = htons(ETHERNET_PORT);
 		address.sin_addr.s_addr = INADDR_ANY;
 
 		listenerSocket = lwip_socket(AF_INET, SOCK_STREAM, 0);

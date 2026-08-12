@@ -35,7 +35,6 @@
 #include "trigger_emulator_algo.h"
 #include "high_pressure_fuel_pump.h"
 #include "malfunction_central.h"
-#include "malfunction_indicator.h"
 #include "speed_density.h"
 #include "local_version_holder.h"
 #include "alternator_controller.h"
@@ -69,11 +68,8 @@
 #include "logic_analyzer.h"
 #endif /* EFI_LOGIC_ANALYZER */
 
-#if defined(EFI_BOOTLOADER_INCLUDE_CODE)
-#include "bootloader/bootloader.h"
-#endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-
 #include "periodic_task.h"
+#include "board_overrides.h"
 
 #ifdef MODULE_MAP_AVERAGING
 #include "map_averaging.h"
@@ -202,6 +198,14 @@ static void doPeriodicSlowCallback() {
 #endif // EFI_TCU
 
 	tryResetWatchdog();
+
+#if EFI_PROD_CODE
+	// single-shot reset all counter after 5 second of happines
+	static unsigned int slow_counter = 5 * 1000 / SLOW_CALLBACK_PERIOD_MS;
+	if ((slow_counter) && (--slow_counter == 0)) {
+		errorHandlerResetCounters();
+	}
+#endif // EFI_PROD_CODE
 }
 
 void initPeriodicEvents() {
@@ -218,6 +222,8 @@ char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *bu
 		snprintf(buffer, bufferSize, "%s%d", name ? name : "null", getAdcChannelPin(hwChannel));
 	}
 #else
+  UNUSED(msg);
+  UNUSED(hwChannel);
 	snprintf(buffer, bufferSize, "NONE");
 #endif /* HAL_USE_ADC */
 	return buffer;
@@ -428,10 +434,6 @@ void commonInitEngineController() {
 	initVvtActuators();
 #endif /* EFI_VVT_PID */
 
-#if EFI_MALFUNCTION_INDICATOR
-	initMalfunctionIndicator();
-#endif /* EFI_MALFUNCTION_INDICATOR */
-
 #if !EFI_UNIT_TEST
 	// This is tested independently - don't configure sensors for tests.
 	// This lets us selectively mock them for each test.
@@ -474,7 +476,9 @@ void commonInitEngineController() {
 	initLaunchControl();
 #endif
 
+#if EFI_ENGINE_CONTROL
   initIgnitionAdvanceControl();
+#endif // EFI_ENGINE_CONTROL
 
 #if EFI_UNIT_TEST
 	engine->rpmCalculator.Register();
@@ -490,13 +494,16 @@ void commonInitEngineController() {
 
 	initSpeedometer();
 
+#if EFI_ENGINE_CONTROL
 	initStft();
+#endif // EFI_ENGINE_CONTROL
 #if EFI_LTFT_CONTROL
 	initLtft();
 #endif
 }
 
-PUBLIC_API_WEAK bool validateBoardConfig() {
+bool validateBoardConfig() {
+  // todo: remove placeholder June 2026
   return true;
 }
 
@@ -505,19 +512,21 @@ static bool validateGdi() {
 	if (!lobes) {
 		return true;
 	}
+#if EFI_HPFP
 	int expectedLastLobeProfileAngle = 360 / lobes;
   float actualLastAngle = config->hpfpLobeProfileAngle[efi::size(config->hpfpLobeProfileAngle) - 1];
 	if (expectedLastLobeProfileAngle != actualLastAngle) {
 		criticalError("Last HPFP angle expected %d got %f", expectedLastLobeProfileAngle, actualLastAngle);
 		return false;
 	}
-
+#endif // EFI_HPFP
 	return true;
 }
 
 // Returns false if there's an obvious problem with the loaded configuration
-bool validateConfigOnStartUpOrBurn() {
-  if (!validateBoardConfig()) {
+// previousConfiguration: nullptr on start-up, the currently running configuration on burn
+static bool validateConfig(const engine_configuration_s* previousConfiguration) {
+  if (!get_board_override_result(custom_board_validateConfig, true, previousConfiguration)) {
     return false;
   }
 #if defined(HW_HELLEN_UAEFI)
@@ -527,14 +536,24 @@ bool validateConfigOnStartUpOrBurn() {
   if (!validateGdi()) {
     return false;
   }
+#if EFI_ELECTRONIC_THROTTLE_BODY
   if (engineConfiguration->etbMinimumPosition + 1 >= engineConfiguration->etbMaximumPosition) {
 		criticalError("Broken ETB min/max %d %d",
 		  engineConfiguration->etbMinimumPosition,
 		  engineConfiguration->etbMaximumPosition);
 		return false;
   }
+#endif
 
-  defaultsOrFixOnBurn();
+  if (engineConfiguration->knockFrequency != 0 && engineConfiguration->knockFrequency < 100) {
+    // todo: migrate from hard error to soft error
+		criticalError("knock frequency setting uses HZ not KHz: %f", engineConfiguration->knockFrequency);
+		return false;
+  }
+
+
+  // the only step which is allowed to modify configuration - everything else in this method is read-only validation
+  applyDefaultsOrFixAfterBurn(previousConfiguration);
 	if (engineConfiguration->cylindersCount > MAX_CYLINDER_COUNT) {
 		criticalError("Invalid cylinder count: %d", engineConfiguration->cylindersCount);
 		return false;
@@ -559,14 +578,17 @@ bool validateConfigOnStartUpOrBurn() {
 		return false;
 	}
 
+#if EFI_ENGINE_CONTROL
 	ensureArrayIsAscending("Injector deadtime vBATT", engineConfiguration->injector.battLagCorrBattBins);
 	ensureArrayIsAscending("Injector deadtime Pressure", engineConfiguration->injector.battLagCorrPressBins);
 
-#if EFI_ENGINE_CONTROL
 	// Fueling
 	{
 		ensureArrayIsAscending("VE load", config->veLoadBins);
 		ensureArrayIsAscending("VE RPM", config->veRpmBins);
+
+  		ensureArrayIsAscending("Second VE load", secondTablesGetState()->secondVeLoadBins);
+  		ensureArrayIsAscending("Second VE RPM", secondTablesGetState()->secondVeRpmBins);
 
 		ensureArrayIsAscending("Lambda/AFR load", config->lambdaLoadBins);
 		ensureArrayIsAscending("Lambda/AFR RPM", config->lambdaRpmBins);
@@ -584,6 +606,9 @@ bool validateConfigOnStartUpOrBurn() {
 
 		ensureArrayIsAscendingOrDefault("STFT Rpm", config->fuelTrimRpmBins);
 		ensureArrayIsAscendingOrDefault("STFT Load", config->fuelTrimLoadBins);
+
+		ensureArrayIsAscendingOrDefault("knock rpm", config->maxKnockRetardRpmBins);
+		ensureArrayIsAscendingOrDefault("knock tps", config->maxKnockRetardLoadBins);
 
 		ensureArrayIsAscendingOrDefault("TC slip", engineConfiguration->tractionControlSlipBins);
 		ensureArrayIsAscendingOrDefault("TC speed", engineConfiguration->tractionControlSpeedBins);
@@ -603,6 +628,9 @@ bool validateConfigOnStartUpOrBurn() {
 
 		ensureArrayIsAscending("Ignition load", config->ignitionLoadBins);
 		ensureArrayIsAscending("Ignition RPM", config->ignitionRpmBins);
+
+		ensureArrayIsAscending("Second Ignition load", secondTablesGetState()->secondIgnitionLoadBins);
+		ensureArrayIsAscending("Second Ignition RPM", secondTablesGetState()->secondIgnitionRpmBins);
 		ensureArrayIsAscendingOrDefault("Ign Trim Rpm", config->ignTrimRpmBins);
    		ensureArrayIsAscendingOrDefault("Ign Trim Load", config->ignTrimLoadBins);
 
@@ -626,6 +654,7 @@ bool validateConfigOnStartUpOrBurn() {
 
 // todo: huh? why does this not work on CI?	ensureArrayIsAscendingOrDefault("Dwell Correction Voltage", engineConfiguration->dwellVoltageCorrVoltBins);
 
+#if EFI_ENGINE_CONTROL
 	ensureArrayIsAscending("MAF transfer function", config->mafDecodingBins);
 
 	// Cranking tables
@@ -638,6 +667,7 @@ bool validateConfigOnStartUpOrBurn() {
 	ensureArrayIsAscending("Idle target RPM", config->cltIdleRpmBins);
 	ensureArrayIsAscending("Idle warmup mult CLT", config->cltIdleCorrBins);
 	ensureArrayIsAscending("Idle warmup mult RPM", config->rpmIdleCorrBins);
+#endif // EFI_ENGINE_CONTROL
 	ensureArrayIsAscendingOrDefault("Idle coasting RPM", config->iacCoastingRpmBins);
 	ensureArrayIsAscendingOrDefault("Idle VE RPM", config->idleVeRpmBins);
 	ensureArrayIsAscendingOrDefault("Idle VE Load", config->idleVeLoadBins);
@@ -702,14 +732,25 @@ bool validateConfigOnStartUpOrBurn() {
 		ensureArrayIsAscending("Oil pressure protection", config->minimumOilPressureBins);
 	}
 
+
 	return true;
+}
+
+bool validateConfigOnStartUpOrBurn() {
+	// start-up: activeConfiguration is still void-prepared, there is no meaningful previous configuration
+	return validateConfig(nullptr);
+}
+
+bool validateConfigOnStartUpOrBurn(bool isRunningOnBurn) {
+	ConfigurationWizard::onConfigOnStartUpOrBurn(isRunningOnBurn);
+	// burn: activeConfiguration still holds the configuration the ECU is currently running on
+	return validateConfig(&activeConfiguration);
 }
 
 #if !EFI_UNIT_TEST
 
 void commonEarlyInit() {
-	// Start this early - it will start LED blinking and such
-	startStatusThreads();
+	// note: LED blinking is started even earlier, see startStatusThreads() call in runRusEfi()
 
 #if EFI_SHAFT_POSITION_INPUT
 	// todo: figure out better startup logic
@@ -766,11 +807,9 @@ void initRealHardwareEngineController() {
  * See also SIGNATURE_HASH
  */
 int getRusEfiVersion() {
-#if defined(EFI_BOOTLOADER_INCLUDE_CODE)
-	// make bootloader code happy too
-	if (initBootloader() != 0)
-		return 123;
-#endif /* EFI_BOOTLOADER_INCLUDE_CODE */
 	return VCS_DATE;
 }
 #endif /* EFI_UNIT_TEST */
+
+std::optional<custom_validate_config_type> custom_board_validateConfig;
+std::optional<custom_fix_configuration_type> custom_board_fix_configuration;

@@ -13,5 +13,5 @@ if [[ "$GITHUB_ACTIONS" == "true" ]]; then
 else
   echo "This script is NOT running within a GitHub Actions workflow."
   cd ..
-  bash bin/assume_unchaged.sh
+  # bash bin/assume_unchaged.sh
 fi

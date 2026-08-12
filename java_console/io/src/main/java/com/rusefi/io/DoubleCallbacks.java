@@ -41,6 +41,12 @@ public class DoubleCallbacks implements UpdateOperationCallbacks {
     }
 
     @Override
+    public void updateProgress(int percent) {
+        one.updateProgress(percent);
+        two.updateProgress(percent);
+    }
+
+    @Override
     public String toString() {
         return "DoubleCallbacks{" +
             "one=" + one +

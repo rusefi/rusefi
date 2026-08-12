@@ -1,9 +1,9 @@
 package com.rusefi.test;
 
-import com.rusefi.BitState;
 import com.rusefi.ReaderStateImpl;
 import com.rusefi.ldmp.TestFileCaptor;
 import com.rusefi.output.DataLogConsumer;
+import com.rusefi.output.DuplicateFieldNameException;
 import com.rusefi.output.GaugeConsumer;
 import com.rusefi.output.OutputsSectionConsumer;
 import org.jetbrains.annotations.NotNull;
@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import static com.rusefi.AssertCompatibility.assertEquals;
 import static com.rusefi.AssertCompatibility.assertThrows;
+import static com.rusefi.AssertCompatibility.assertTrue;
 
 public class OutputsTest {
     @Test
@@ -37,16 +38,20 @@ public class OutputsTest {
     }
 
     @Test
-    public void tooManyBits() {
-      assertThrows(BitState.TooManyBitsInARow.class, () -> {
+    public void fortyBitsInARow() {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < 40; i++)
-          sb.append("bit b" + i + "\n");
+            sb.append("bit b" + i + "\n");
         String test = "struct total\n" +
-          sb +
-          "end_struct\n";
-        runOriginalImplementation(test);
-      });
+            sb +
+            "end_struct\n";
+
+        // bits roll over into a new 32-bit word after [31:31], the second word is padded to 32 bits
+        StringBuilder expected = new StringBuilder();
+        for (int i = 0; i < 40; i++)
+            expected.append("b" + i + " = bits, U32, " + (i / 32) * 4 + ", [" + (i % 32) + ":" + (i % 32) + "]\n");
+        expected.append("; total TS size = 8\n");
+        assertEquals(expected.toString(), runOriginalImplementation(test).getContent());
     }
 
     private static OutputsSectionConsumer runOriginalImplementation(String test) {
@@ -195,19 +200,32 @@ public class OutputsTest {
     }
 
     @Test
+    public void iteratedStructNoPrefixUniqueNames() {
+        ReaderStateImpl state = new ReaderStateImpl();
+        String test = "struct_no_prefix acc_s\n" +
+                "uint8_t acc_max;Max accumulator value;\"\", 1, 0, 0, 255, 0\n" +
+                "end_struct\n" +
+                "struct total\n" +
+                "acc_s[3 iterate] accumulators;Accumulators\n" +
+                "end_struct\n";
+        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
+        state.readBufferedReader(test, tsProjectConsumer);
+        String content = tsProjectConsumer.getContent();
+        assertTrue("Expected accumulators1_acc_max but got: " + content, content.contains("accumulators1_acc_max"));
+        assertTrue("Expected accumulators2_acc_max but got: " + content, content.contains("accumulators2_acc_max"));
+        assertTrue("Expected accumulators3_acc_max but got: " + content, content.contains("accumulators3_acc_max"));
+    }
+
+    @Test
     public void nameDuplicate() {
-      assertThrows(IllegalStateException.class, () -> {
-        System.out.println("run");
+      assertThrows(DuplicateFieldNameException.class, () -> {
         String test = "struct total\n" +
           "float afr_type;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
           "uint8_t afr_type;123;\"ms\",      1,      0,       0, 30,      0\n" +
           "end_struct\n";
 
 
-        String expectedLegacy = "afr_type = scalar, F32, 0, \"ms\", 1, 0\n" +
-          "afr_type = scalar, U08, 0, \"ms\", 1, 0\n" +
-          "; total TS size = 1\n";
-        assertEquals(expectedLegacy, runOriginalImplementation(test).getContent());
+        runOriginalImplementation(test);
       });
     }
 

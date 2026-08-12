@@ -13,7 +13,11 @@ if [ ! "$SHORT_BOARD_NAME" ]; then
 fi
 
 if [ ! "$USER" ] || [ ! "$PASS" ] || [ ! "$HOST" ]; then
- echo "upload_ini.sh says No Secrets, exiting"
+ MISSING=""
+ [ -z "$USER" ] && MISSING="${MISSING} USER(arg1)"
+ [ -z "$PASS" ] && MISSING="${MISSING} PASS(arg2)"
+ [ -z "$HOST" ] && MISSING="${MISSING} HOST(arg3)"
+ echo "$SCRIPT_NAME: Upload not configured: missing${MISSING} - typically RUSEFI_ONLINE_FTP_USER/RUSEFI_ONLINE_FTP_PASS/RUSEFI_FTP_SERVER secrets are not available on this build"
  exit 0
 fi
 
@@ -41,7 +45,8 @@ if [ ! -z "$sig" -a "$sig" != " " ]; then
     echo "* found path: $path"
     # we do not have ssh for this user
     # sftp does not support -p flag on mkdir :(
-    sshpass -p $PASS sftp -o StrictHostKeyChecking=no ${USER}@${HOST} <<SSHCMD
+
+    $(realpath $(dirname "$0"))/../bin/sshpass-retry.sh $PASS sftp -o StrictHostKeyChecking=no ${USER}@${HOST} <<SSHCMD
 mkdir ${INI_DESTINATION_FOLDER}rusefi
 cd ${INI_DESTINATION_FOLDER}rusefi
 mkdir $branch
@@ -52,8 +57,8 @@ mkdir $branch/$year/$month/$day/$board
 put $fileName $path
 SSHCMD
     retVal=$?
+
     if [ $retVal -ne 0 ]; then
-      echo "${SCRIPT_NAME} Upload failed"
       exit 1
     fi
     echo "${SCRIPT_NAME} * upload done!"

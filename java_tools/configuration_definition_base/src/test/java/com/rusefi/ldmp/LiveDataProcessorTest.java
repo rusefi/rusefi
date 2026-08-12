@@ -164,7 +164,7 @@ public class LiveDataProcessorTest {
                 "\tint hash = djb2lowerCase(name);\n" +
                 "\treturn getOutputValueByHash(hash);\n" +
                 "}\n",
-            liveDataProcessor.getOutputLookupFileName());
+            destinationFolder + LiveDataProcessor.getOutputLookupFileName());
 
         captor.assertOutput("entry = wb1tempC, \"wb1WBO: Temperature\", int,    \"%d\"\n" +
             "entry = wb1bitName1, \"wb1bitName1\", int,    \"%d\"\n" +
@@ -246,7 +246,7 @@ public class LiveDataProcessorTest {
                 "#include <wb.h>\n" +
                 "#endif\n" +
                 "static LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE MLG::Entries::Field fields[] = {\n" +
-                "\t{packedTime, GAUGE_NAME_TIME, \"sec\", 0},\n" +
+                "\t{packedTime, GAUGE_NAME_TIME, \"sec\", 3},\n" +
                 "\t{engine->outputChannels.oootempC, \"Temperature\", \"C\", 0},\n" +
                 "\t{engine->outputChannels.oooesr, \"ESR\", \"ohm\", 0},\n" +
                 "\t{engine->outputChannels.lua.fuelMult, \"Lua: Fuel mult\", \"\", 0},\n" +

@@ -1,0 +1,21 @@
+struct_no_prefix rotational_idle_accumulator_s
+uint8_t acc_adder;Accumulator adder
+uint8_t acc_max;Max value for the rotational idle accumulator to skip;"", 1, 0, 0, 255, 0
+uint8_t acc_offset;Rotational pattern shift;
+end_struct
+
+
+#define RotationalCutMode_e_enum "Spark", "Fuel", "Both"
+custom RotationalCutMode 1 bits, U08, @OFFSET@, [0:1], @@RotationalCutMode_e_enum@@
+
+
+bit enabled,"enabled","disabled";rotational idle enable feature
+RotationalCutMode cut_mode;rotational idle cut mode
+
+bit auto_engage,"enabled","disabled";Automatic engagement of rotational idle
+uint8_t max_tps;Engage rotational idle under this Driver Intent.;"%TPS", 1, 0, 0, 100, 0
+
+bit auto_engage_clt_enable,"enabled","disabled";Rotational Idle Auto engage CLT
+int8_t auto_engage_clt;Rotational Idle Auto engage CLT.;"C", 1, 0, -20, 127, 0
+
+rotational_idle_accumulator_s[3 iterate] accumulators;Rotational Idle accumulators

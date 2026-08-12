@@ -1,0 +1,8 @@
+! note: PlainConfigHandler isolates the custom types created on rusefi_config.txt so we need to duplicate it here :c
+! LUA_SCRIPT_SIZE is defined in rusefi_config.txt (and overridden per-board in prepend.txt files);
+! it propagates to every page handler via the shared variable registry.
+custom lua_script_t @@LUA_SCRIPT_SIZE@@ string, ASCII, @OFFSET@, @@LUA_SCRIPT_SIZE@@
+
+struct_no_prefix page5_s
+	lua_script_t luaScript;
+end_struct

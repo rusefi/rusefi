@@ -3,33 +3,33 @@ meta: config/boards/hellen_mm100_meta.h
 pins:
   - pin: 1A
     id: TLE9104_0_OUT_3
-    function: Injector 4 Output
+    function: Injector 4
     class: outputs
-    type: ls
+    type: inj
     ts_name: ___ - Injector 4
     color: orange
 
   - pin: 2A
     id: TLE9104_0_OUT_2
-    function: Injector 3 Output
+    function: Injector 3
     class: outputs
-    type: ls
+    type: inj
     ts_name: ___ - Injector 3
     color: blue
 
   - pin: 3A
     id: TLE9104_0_OUT_1
-    function: Injector 2 Output
+    function: Injector 2
     class: outputs
-    type: ls
+    type: inj
     ts_name: ___ - Injector 2
     color: white
 
   - pin: 4A
     id: TLE9104_0_OUT_0
-    function: Injector 1 Output
+    function: Injector 1
     class: outputs
-    type: ls
+    type: inj
     ts_name: ___ - Injector 1
     color: green
 
@@ -130,7 +130,7 @@ pins:
   - pin: 19A
     meta: MM100_IN_CLT_ANALOG
     class: analog_inputs
-    function: CLT Sensor Input
+    function: ECT CLT Coolant Sensor Input
     ts_name: ___ - CLT
     type: av
     color: grey
@@ -140,6 +140,7 @@ pins:
     meta: MM100_IN_IAT_ANALOG
     class: analog_inputs
     function: IAT Sensor Input
+    type: at
     ts_name: ___ - IAT
     color: blue
 
@@ -186,13 +187,13 @@ pins:
     function: VR max9924 Positive
 
   - pin: 26A
-    function: Power Ground
+    function: Power/Chassis GND ground
     type: gnd
     color: black
 
   - pin: 27A
-    function: Analog Ground
-    type: gnd
+    function: GNDA Analog/Sensor Ground
+    type: agnd
     color: black
 
   - pin: 28A

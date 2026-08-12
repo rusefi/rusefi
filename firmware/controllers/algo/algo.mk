@@ -1,7 +1,6 @@
 
 CONTROLLERS_ALGO_SRC_CPP = $(PROJECT_DIR)/controllers/algo/ignition/ignition_state.cpp \
 	$(PROJECT_DIR)/controllers/algo/malfunction_central.cpp \
-	$(GENERATED_ENUMS_DIR)/auto_generated_enums.cpp \
 	$(GENERATED_ENUMS_DIR)/auto_generated_commonenum.cpp \
 	$(GENERATED_ENUMS_DIR)/auto_generated_enginetypes.cpp \
 	$(GENERATED_ENUMS_DIR)/auto_generated_engine_type_e.cpp \
@@ -33,3 +32,4 @@ CONTROLLERS_ALGO_SRC_CPP = $(PROJECT_DIR)/controllers/algo/ignition/ignition_sta
 	$(PROJECT_DIR)/controllers/algo/defaults/default_fuel.cpp \
 	$(PROJECT_DIR)/controllers/algo/defaults/default_ignition.cpp \
 	$(PROJECT_DIR)/controllers/algo/engine_cylinder.cpp \
+	$(PROJECT_DIR)/controllers/algo/misfire_detection.cpp \

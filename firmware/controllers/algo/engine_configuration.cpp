@@ -64,6 +64,7 @@
 #endif
 
 #include "board_overrides.h"
+#include "extra_flash_pages.h"
 
 #define TS_DEFAULT_SPEED 38400
 
@@ -77,8 +78,9 @@ std::optional<setup_custom_board_config_type> custom_board_OnConfigurationChange
  * This is useful to compare old/current (activeConfiguration) and new/future (engineConfiguration) configurations in order to apply new settings.
  *
  * todo: place this field next to 'engineConfiguration'?
+ * todo: not great that it's a global variable which we have to clean, move to 'engine' somewhere?
  */
-static bool hasRememberedConfiguration = false;
+bool hasRememberedConfiguration = false;
 #if EFI_ACTIVE_CONFIGURATION_IN_FLASH
 #include "flash_int.h"
 engine_configuration_s & activeConfiguration = reinterpret_cast<persistent_config_container_s*>(getFlashAddrFirstCopy())->persistentConfiguration.engineConfiguration;
@@ -109,6 +111,7 @@ static void wipeStrings() {
 	fillAfterString(engineConfiguration->engineMake, sizeof(vehicle_info_t));
 	fillAfterString(engineConfiguration->engineCode, sizeof(vehicle_info_t));
 	fillAfterString(engineConfiguration->vehicleName, sizeof(vehicle_info_t));
+	fillAfterString(engineConfiguration->vinNumber, sizeof(vin_number_t));
 }
 
 void onBurnRequest() {
@@ -116,18 +119,6 @@ void onBurnRequest() {
 	wipeStrings();
 
 	incrementGlobalConfigurationVersion("burn");
-}
-
-/**
- * this hook is about https://github.com/rusefi/rusefi/wiki/Custom-Firmware and https://github.com/rusefi/rusefi/wiki/Canned-Tune-Process
- * todo: why two hooks? is one already dead?
- */
-void boardBeforeTuneDefaults() {
-  // placeholder
-}
-
-void boardOnConfigurationChange(engine_configuration_s* /*previousConfiguration*/) {
-  // placeholder
 }
 
 /**
@@ -145,7 +136,7 @@ void incrementGlobalConfigurationVersion(const char * msg) {
     }
 	engine->globalConfigurationVersion++;
 #if EFI_DETAILED_LOGGING
-	efiPrintf("set globalConfigurationVersion=%d", globalConfigurationVersion);
+	efiPrintf("set globalConfigurationVersion=%d", engine->globalConfigurationVersion);
 #endif /* EFI_DETAILED_LOGGING */
 
 	applyNewHardwareSettings();
@@ -256,6 +247,16 @@ void setDefaultBasePins() {
 // at the moment bootloader does NOT really need SD card, this is a step towards future bootloader SD card usage
 void setDefaultSdCardParameters() {
 	engineConfiguration->isSdCardEnabled = true;
+
+	// Conditional logging defaults to off -> SD logs unconditionally (current behavior).
+	// The thresholds below are only used once the user enables conditional logging.
+	engineConfiguration->sdCardConditionalLogging = false;
+	engineConfiguration->sdLogStartRpm = 800;
+	engineConfiguration->sdLogStopRpm = 700;
+	engineConfiguration->sdLogStopDelay = 30;
+	engineConfiguration->sdLogMinTps = 0;
+	engineConfiguration->sdLogMinMap = 0;
+	engineConfiguration->sdLogMinVss = 0;
 }
 
 #if EFI_ENGINE_CONTROL
@@ -283,7 +284,7 @@ static void setDefaultGppwmParameters() {
 	// Same config for all channels
 	for (size_t i = 0; i < efi::size(engineConfiguration->gppwm); i++) {
 		auto& cfg = engineConfiguration->gppwm[i];
-		chsnprintf(engineConfiguration->gpPwmNote[i], sizeof(engineConfiguration->gpPwmNote[0]), "GPPWM%d", i);
+		chsnprintf(engineConfiguration->gpPwmNote[i], sizeof(engineConfiguration->gpPwmNote[0]), "GPPWM%d", (int)i);
 
 		// Set default axes
 		cfg.loadAxis = GPPWM_Zero;
@@ -340,6 +341,10 @@ static void setDefaultCanSettings() {
 	engineConfiguration->canWriteEnabled = true;
 	engineConfiguration->canVssScaling = 1.0f;
 
+	for (size_t i = 0; i < efi::size(engineConfiguration->canSniffer); i++) {
+		engineConfiguration->canSniffer[i].listenOurs = true;
+	}
+
 	// Don't enable, but set default address
 	engineConfiguration->verboseCanBaseAddress = CAN_DEFAULT_BASE;
 }
@@ -355,6 +360,7 @@ static void setDefaultScriptParameters() {
 	setRpmTableBin(config->scriptTable4RpmBins);
 }
 
+#if EFI_ENGINE_CONTROL
 static void setDefaultIdleOpenLoopParameters() {
 	setRpmTableBin(config->rpmIdleCorrBins);
 	setLinearCurve(config->cltIdleCorrBins, CLT_CURVE_RANGE_FROM, 140, 10);
@@ -362,6 +368,7 @@ static void setDefaultIdleOpenLoopParameters() {
 		setLinearCurve(config->cltIdleCorrTable[i], 75.0, 50, 5);
 	}
 }
+#endif // EFI_ENGINE_CONTROL
 
 /**
  * @brief	Global default engine configuration
@@ -437,6 +444,7 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->vvtActivationDelayMs = 6000;
 
 	engineConfiguration->startCrankingDuration = 3;
+	engineConfiguration->mainRelayDisableTime = 1;
 
 	engineConfiguration->maxAcRpm = 5000;
 	engineConfiguration->maxAcClt = 100;
@@ -495,6 +503,9 @@ static void setDefaultEngineConfiguration() {
 	// wow unit tests have much cooler setDefaultLaunchParameters method
 	engineConfiguration->launchRpm = 3000;
 // 	engineConfiguration->launchTimingRetard = 10;
+
+  engineConfiguration->launchTpsThreshold = MIN_launchTpsThreshold;
+
 	engineConfiguration->launchRpmWindow = 500;
     engineConfiguration->launchSpeedThreshold = 30;
 
@@ -528,6 +539,7 @@ static void setDefaultEngineConfiguration() {
 	setLinearCurve(config->iacCoastingRpmBins, 0, 8000, 1);
 
 #if !EFI_UNIT_TEST
+  // todo: remove from *engine* defaults, move into boards?
 	engineConfiguration->analogInputDividerCoefficient = 2;
 #endif
 
@@ -564,6 +576,7 @@ static void setDefaultEngineConfiguration() {
 
 	setEgoSensor(ES_14Point7_Free);
 
+	// todo: remove from *engine* defaults, move into boards?
 	engineConfiguration->adcVcc = 3.0;
 
 	engineConfiguration->map.sensor.type = MT_MPX4250;
@@ -618,7 +631,9 @@ static void setDefaultEngineConfiguration() {
 
 	setLinearCurve(config->throttleEstimateEffectiveAreaBins, 0, 100);
 #endif // EFI_ENGINE_CONTROL
-    #include "default_script.lua"
+	// Allow custom default_script.lua to be provided by BOARDINC
+	// see https://gcc.gnu.org/onlinedocs/gcc-2.95.3/cpp_1.html#SEC6
+	#include <default_script.lua>
 }
 
 #if defined(STM32F7) && defined(HARDWARE_CI)
@@ -665,6 +680,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	 * Let's apply global defaults first
 	 */
 	setDefaultEngineConfiguration();
+
+	// defaults on another configuration page/s:
+	resetExtraPages();
 
 	/**
 	 * custom board engine defaults. Yes, this overlaps with (older) engine_type_e approach.
@@ -731,9 +749,23 @@ void setBoardConfigOverrides() {
   // time to force migration to custom_board_ConfigOverrides
 }
 
-PUBLIC_API_WEAK int hackHellenBoardId(int detectedId) { return detectedId; }
+#include "board_overrides.h"
 
-PUBLIC_API_WEAK void onBoardStandBy() { }
+std::optional<setup_custom_hack_hellen_board_id_type> custom_board_hackHellenBoardId;
+std::optional<setup_custom_on_board_standby_type> custom_board_onBoardStandBy;
+
+int hackHellenBoardId(int detectedId) {
+	if (custom_board_hackHellenBoardId.has_value()) {
+		return custom_board_hackHellenBoardId.value()(detectedId);
+	}
+	return detectedId;
+}
+
+void onBoardStandBy() {
+	if (custom_board_onBoardStandBy.has_value()) {
+		custom_board_onBoardStandBy.value()();
+	}
+}
 
 PUBLIC_API_WEAK_SOMETHING_WEIRD int getBoardMetaOutputsCount() { return 0; }
 // default implementation: treat all outputs as low side

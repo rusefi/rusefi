@@ -263,7 +263,7 @@ static void w25q_reset_memory(SNORDriver *devp) {
   };
 
   wspiCommand(devp, &cmd_reset_enable_4);
-  wspiCommand(devp, &cmd_reset_memory_4);
+  wspiCommand(devp, &cmd_reset_4);
 #else
   /* 2x W25Q_CMD_RESET_ENABLE command.*/
   static const wspi_command_t cmd_reset_enable_2 = {
@@ -274,9 +274,9 @@ static void w25q_reset_memory(SNORDriver *devp) {
     .dummy            = 0
   };
 
-  /* 2x W25Q_CMD_RESET_MEMORY command.*/
-  static const wspi_command_t cmd_reset_memory_2 = {
-    .cmd              = W25Q_CMD_RESET_MEMORY,
+  /* 2x W25Q_CMD_RESET command.*/
+  static const wspi_command_t cmd_reset_2 = {
+    .cmd              = W25Q_CMD_RESET,
     .cfg              = WSPI_CFG_CMD_MODE_TWO_LINES,
     .addr             = 0,
     .alt              = 0,
@@ -297,16 +297,62 @@ static void w25q_reset_memory(SNORDriver *devp) {
 static const uint8_t w25q_manufacturer_ids[] = W25Q_SUPPORTED_MANUFACTURE_IDS;
 static const uint8_t w25q_memory_type_ids[] = W25Q_SUPPORTED_MEMORY_TYPE_IDS;
 
+static bool w25q_id_valid(const uint8_t id[3]) {
+  return w25q_find_id(w25q_manufacturer_ids,
+                      sizeof(w25q_manufacturer_ids),
+                      id[0]) &&
+         w25q_find_id(w25q_memory_type_ids,
+                      sizeof(w25q_memory_type_ids),
+                      id[1]) &&
+         /* Capacity code is log2 of the size in bytes: sanity-limit it so
+            garbage never overflows the size math below. 0x11 = 1 Mbit,
+            0x1e = 2 Gbit. */
+         (id[2] >= 0x11U) && (id[2] <= 0x1eU);
+}
+
 /*===========================================================================*/
 /* Driver exported functions.                                                */
 /*===========================================================================*/
 
 void snor_device_init(SNORDriver *devp) {
-  uint8_t id[3];
+  uint8_t id[3] = {0U, 0U, 0U};
+
 #if SNOR_BUS_DRIVER == SNOR_BUS_DRIVER_SPI
-  /* Reading device ID.*/
-  bus_cmd_receive(devp, W25Q_CMD_READ_JEDEC_ID,
-                  3U, id);
+  /* An MCU reset does not reset the flash chip. If the previous session was
+     interrupted in the middle of a transaction (for example a reboot request
+     arriving during an MFS write), the chip may still be busy finishing an
+     erase/program or have its command decoder out of sync, and the first
+     JEDEC ID read returns garbage. Do not trust a single read: wait for a
+     possibly in-flight operation, software-reset the chip and retry.*/
+  for (int attempt = 0; ; attempt++) {
+    /* Reading device ID.*/
+    bus_cmd_receive(devp, W25Q_CMD_READ_JEDEC_ID,
+                    3U, id);
+    if (w25q_id_valid(id) || (attempt >= 2)) {
+      break;
+    }
+
+    /* While busy the chip ignores most commands and status reads as busy,
+       so give an interrupted erase a chance to finish. Sector erase is
+       400 ms worst case. A desynchronized or absent chip reads as 0xFF
+       (busy) and simply burns the full timeout here.*/
+    for (int waitMs = 0; waitMs < 500; waitMs++) {
+      uint8_t sts;
+      bus_cmd_receive(devp, W25Q_CMD_READ_STATUS_REGISTER, 1, &sts);
+      if ((sts & W25Q_FLAGS_BUSY) == 0U) {
+        break;
+      }
+      osalThreadSleepMilliseconds(1);
+    }
+
+    /* Software reset returns the command decoder to a known state. It also
+       aborts any leftover erase/program - that data was torn anyway.*/
+    bus_cmd(devp, W25Q_CMD_RESET_ENABLE);
+    bus_cmd(devp, W25Q_CMD_RESET);
+    /* tRST is 30 us on an idle device, allow extra margin for a reset
+       issued against an active erase.*/
+    osalThreadSleepMilliseconds(2);
+  }
 #else /* SNOR_BUS_DRIVER == SNOR_BUS_DRIVER_WSPI */
   /* Attempting a reset of the XIP mode, it could be in an unexpected state
      because a CPU reset does not reset the memory too.*/
@@ -321,15 +367,15 @@ void snor_device_init(SNORDriver *devp) {
               3U, id);
 #endif /* SNOR_BUS_DRIVER == SNOR_BUS_DRIVER_WSPI */
 
-  /* Checking if the device is white listed.*/
-  osalDbgAssert(w25q_find_id(w25q_manufacturer_ids,
-                             sizeof(w25q_manufacturer_ids),
-                             id[0]),
-                "invalid manufacturer id");
-  osalDbgAssert(w25q_find_id(w25q_memory_type_ids,
-                             sizeof(w25q_memory_type_ids),
-                             id[1]),
-                "invalid memory type id");
+  /* Checking if the device is white listed. This intentionally does not
+     assert: a missing or confused external flash chip must degrade into
+     "storage unavailable", not halt the ECU into a watchdog reboot loop.
+     A zero-sized descriptor is the failure indication for board code.*/
+  if (!w25q_id_valid(id)) {
+    snor_descriptor.sectors_count = 0U;
+    snor_descriptor.size = 0U;
+    return;
+  }
 
   /* Setting up the device size.*/
   snor_descriptor.sectors_count = (1U << (size_t)id[2]) /

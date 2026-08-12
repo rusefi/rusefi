@@ -1,5 +1,7 @@
 .dep*
 build/
+triggers/*
+test_triggers
 build_kinetis/
 pinouts
 workarea
@@ -10,6 +12,7 @@ blbuild/
 Debug_EMS/
 Release_EMS/
 Debug/
+state/
 .settings/
 *_ram_report.txt
 doxygen/
@@ -25,6 +28,8 @@ log.txt
 *.rusefi_binary
 *.kicad_prl
 .*-sentinel
+*generated.patch
+temp/
 
 .gradle
 
@@ -39,3 +44,20 @@ rusefi_simulator_log.mlg
 
 # bundle
 artifacts
+
+# clangd cache
+
+.cache/
+*.idx
+
+# unit tests
+bean_encoder_test.csv
+
+# gcov local
+venv/
+coverage_reports/
+
+# AI
+.ai/mcp
+
+.claude/settings.local.json

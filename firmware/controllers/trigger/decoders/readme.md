@@ -1,3 +1,5 @@
+https://wiki.rusefi.com/All-Supported-Triggers/
+
 # Trigger Decoders
 
 This folder is and should not be aware of engine.h or engine_configuration.h

@@ -1,0 +1,11 @@
+struct_no_prefix live_data_rotational_idle_s
+    bit rotationalIdleEngaged;
+    ! RPM
+    bit rotIdleEngineTooSlow;engine too slow
+    bit rotIdleEngineTooFast;engine too fast
+    ! CLT
+    bit rotIdleEngineTooLowClt;engine too cool
+    bit rotIdleEngineTooHot;engine too hot
+    ! TPS
+    bit rotIdleTpsTooHigh;tps too high
+end_struct

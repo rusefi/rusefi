@@ -1,4 +1,4 @@
-	strncpy(config->luaScript, GET_BIT_RANGE_LSB R"(
+	setLuaScript( GET_BIT_RANGE_LSB R"(
 
 
 function getTwoBytes(data, offset, factor)
@@ -241,4 +241,4 @@ function onTick()
  -- empty 'onTick' until we make 'onTick' method optional
 end
 
-)", efi::size(config->luaScript));
+)");

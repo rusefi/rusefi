@@ -25,14 +25,14 @@ SensorResult ThermistorFunc::convert(float ohms) const {
 
 	float celsius = convertKelvinToCelcius(kelvin);
 
-	// bounds check result - please don't try to run rusEfi when colder than -50C
+	// bounds check result - please don't try to run rusEFI when colder than -50C
 	// high end limit is required as this could be an oil temp sensor on an
 	// air cooled engine
 	if (celsius < -50) {
 		return UnexpectedCode::Low;
 	}
 
-	if (celsius > 250) {
+	if (celsius > CLT_UPPER_VALIDATION_LIMIT) {
 		return UnexpectedCode::High;
 	}
 
