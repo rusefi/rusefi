@@ -27,7 +27,7 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | stepper | 400 | 280 | dual H-bridge stepping | 676 | 668 | PROXY -8; partial proxy: 25 unknown, 6 indirect, recursion |
 | firmware | storage manager | 1200 | 1032 | SD extra-page burn | 660 | 652 | PROXY -8, PROXY BELOW REVIEWED; partial proxy: 27 unknown, 5 indirect, recursion |
 | firmware | timer watchdog | 256 | 104 | normal watchdog sleep | 552 | 544 | PROXY -8; partial proxy: 20 unknown, 2 indirect, recursion |
-| firmware | TunerStudio | 1200 | 824 | normal communication | 1324 | 1308 | PROXY -16; partial proxy: 64 unknown, 33 indirect, recursion |
+| firmware | TunerStudio | 1200 | 824 | normal communication | 1324 | 1300 | PROXY -24; partial proxy: 64 unknown, 33 indirect, recursion |
 | firmware | USB mass storage | 256 | 240 | SD block read | 756 | 748 | PROXY -8; partial proxy: 26 unknown, 5 indirect, recursion |
 | bootloader | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | bootloader | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
@@ -172,3 +172,4 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | bootloader | 48 | chSchGoSleepTimeoutS | ../ChibiOS/os/rt/src/chschd.c:359:7 |
 | bootloader | 48 | iqReadTimeout | ../ChibiOS/os/hal/src/hal_queues.c:388:8 |
 | bootloader | 48 | oqWriteTimeout | ../ChibiOS/os/hal/src/hal_queues.c:655:8 |
+
