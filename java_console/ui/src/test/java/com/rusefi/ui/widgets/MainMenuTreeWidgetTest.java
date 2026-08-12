@@ -24,6 +24,7 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
 import java.awt.image.ImageObserver;
@@ -517,6 +518,23 @@ todo: spllit into smaller tests?
         assertNotNull(table);
         assertEquals(16, table.getRowCount());
         assertEquals(2, table.getColumnCount());
+        assertTrue(table.getCellSelectionEnabled());
+
+        table.setRowSelectionInterval(0, 1);
+        table.setColumnSelectionInterval(1, 1);
+        table.setValueAt("42", 0, 1);
+        assertEquals(42, Double.parseDouble(table.getValueAt(0, 1).toString()));
+        assertEquals(42, Double.parseDouble(table.getValueAt(1, 1).toString()));
+
+        assertTrue(table.editCellAt(0, 1, new MouseEvent(table, MouseEvent.MOUSE_PRESSED,
+            System.currentTimeMillis(), 0, 0, 0, 2, false)));
+        assertEquals(42, Double.parseDouble(((JTextField) table.getEditorComponent()).getText()));
+        table.getCellEditor().cancelCellEditing();
+
+        assertTrue(table.editCellAt(0, 1, new KeyEvent(table, KeyEvent.KEY_PRESSED,
+            System.currentTimeMillis(), 0, KeyEvent.VK_5, '5')));
+        assertEquals("", ((JTextField) table.getEditorComponent()).getText());
+        table.getCellEditor().cancelCellEditing();
     }
 
     @Test
