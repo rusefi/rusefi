@@ -16,9 +16,11 @@ import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.KeyEvent;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.EventObject;
 
 /**
  * curve panel consists of two parts
@@ -53,6 +55,28 @@ public class CurveWidget {
     public CurveWidget(CurveModel curveModel, IniFileModel iniFileModel, ConfigurationImage ci) {
         table.getTableHeader().setReorderingAllowed(false);
         table.setDefaultRenderer(Object.class, new GradientRenderer());
+        table.setDefaultEditor(Object.class, new DefaultCellEditor(new JTextField()) {
+            private boolean keyboardEditing;
+
+            @Override
+            public boolean isCellEditable(EventObject event) {
+                keyboardEditing = event instanceof KeyEvent;
+                return super.isCellEditable(event);
+            }
+
+            @Override
+            public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+                JTextField editor = (JTextField) super.getTableCellEditorComponent(table, value, isSelected, row, column);
+                if (keyboardEditing) {
+                    editor.setText("");
+                }
+                return editor;
+            }
+        });
+        table.setCellSelectionEnabled(true);
+        table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        table.getSelectionModel().addListSelectionListener(e -> canvas.repaint());
+        table.getColumnModel().getSelectionModel().addListSelectionListener(e -> canvas.repaint());
         // JTable defaults to a 450x400 preferredScrollableViewportSize; left unchanged the table would
         // claim ~450px of fixed preferred width and starve the canvas (which only receives the GridBag
         // remainder) on narrow windows. Size the table to its actual content so the 0.8/0.2 weights hold.
@@ -337,6 +361,12 @@ public class CurveWidget {
                 Point p = worldToCanvas(x[i], y[i]);
                 g2.fillOval(p.x - 4, p.y - 4, 8, 8);
             }
+
+            g2.setColor(Color.MAGENTA);
+            for (int row : table.getSelectedRows()) {
+                Point p = worldToCanvas(x[row], y[row]);
+                g2.fillOval(p.x - 5, p.y - 5, 10, 10);
+            }
         }
 
         private Point worldToCanvas(double wx, double wy) {
@@ -418,19 +448,27 @@ public class CurveWidget {
         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
             try {
                 double val = Double.parseDouble(aValue.toString());
-                if (columnIndex == 0) {
-                    // Check order
-                    double min = (rowIndex == 0) ? curveModel.getxAxis().getMin() : xValues[rowIndex - 1];
-                    double max = (rowIndex == xValues.length - 1) ? curveModel.getxAxis().getMax() : xValues[rowIndex + 1];
-                    xValues[rowIndex] = Math.max(min, Math.min(max, val));
-                } else {
-                    yValues[rowIndex] = Math.max(curveModel.getyAxis().getMin(), Math.min(curveModel.getyAxis().getMax(), val));
+                for (int row : table.getSelectedRows()) {
+                    for (int column : table.getSelectedColumns()) {
+                        setValue(row, column, val);
+                    }
                 }
-                fireTableCellUpdated(rowIndex, columnIndex);
+                fireTableDataChanged();
                 canvas.repaint();
                 writeBackToImage();
                 if (onEdit != null) onEdit.run();
             } catch (NumberFormatException ignored) {}
+        }
+
+        private void setValue(int row, int column, double value) {
+            if (column == 0) {
+                // Keep adjacent X values in their required order.
+                double min = (row == 0) ? curveModel.getxAxis().getMin() : xValues[row - 1];
+                double max = (row == xValues.length - 1) ? curveModel.getxAxis().getMax() : xValues[row + 1];
+                xValues[row] = Math.max(min, Math.min(max, value));
+            } else {
+                yValues[row] = Math.max(curveModel.getyAxis().getMin(), Math.min(curveModel.getyAxis().getMax(), value));
+            }
         }
     }
 
