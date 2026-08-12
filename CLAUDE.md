@@ -91,7 +91,7 @@ firmware/gen_enum_to_string.sh
 
 ### Directory Structure
 
-- `firmware/config/boards/` - Hardware configuration and defaults for different ECU hardware
+- `firmware/config/boards/` - Hardware configuration and defaults for different ECU hardware. When adding or editing pin entries in board `connectors/*.yaml` files, follow the canonical `function:`/`type:` naming ("Pinout language conventions" - e.g. `Injector N`, `Smart Ignition Coil N`) documented in `firmware/config/boards/readme-boards.md`.
 - `firmware/config/engines/` - Hardware-agnostic configuration for engines (orthogonal to what ECU you run)
 - `firmware/controllers/` - Core control logic
   - `algo/` - Fuel, ignition, and air calculations
