@@ -109,6 +109,7 @@ pins:
     id: [H144_IN_SENS4, H144_IN_SENS4]
     class: [event_inputs, switch_inputs]
     function: Digital Input / Flex fuel sensor
+    type: din
     ts_name: ___ Flex Input 1
 
   - pin: 19A

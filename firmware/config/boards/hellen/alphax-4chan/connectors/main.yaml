@@ -314,6 +314,7 @@ pins:
     class: event_inputs
     ts_name: E7 - Flex
     function: Digital Input / Flex fuel sensor
+    type: din
     color: brown
 
   - pin: E8

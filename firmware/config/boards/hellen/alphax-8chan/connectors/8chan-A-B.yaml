@@ -157,7 +157,7 @@ pins:
     id: [MM176_IN_SENS3, MM176_IN_SENS3]
     class: [event_inputs, switch_inputs]
     function: Digital Input / Flex fuel sensor
-    type: hall
+    type: din
     ts_name: ___ - Flex
     color: blue
 

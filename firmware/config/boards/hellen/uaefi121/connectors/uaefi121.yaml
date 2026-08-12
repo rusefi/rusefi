@@ -276,6 +276,7 @@ pins:
 
   - pin: 42a
     function: Digital Input / Flex fuel sensor
+    type: din
     class: [switch_inputs, event_inputs]
     id: [MM100_IN_VSS, MM100_IN_VSS]
     ts_name: FLEX

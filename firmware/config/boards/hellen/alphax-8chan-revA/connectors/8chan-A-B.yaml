@@ -345,7 +345,7 @@ pins:
     id: [D2, D2]
     class: [event_inputs, switch_inputs]
     function: Digital Input / Flex fuel sensor (5v pull-up, with hysteresis)
-    type: hall
+    type: din
     ts_name: 17B - Digital In Flex
     color: green
 

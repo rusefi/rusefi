@@ -383,6 +383,7 @@ pins:
 
   - pin: 25B
     function: Digital Input / Flex fuel sensor
+    type: din
     class: event_inputs
     meta: MM100_IN_VSS
     ts_name: FLEX

@@ -32,6 +32,7 @@ pins:
     ts_name: ___ FLEX
     color: orange
     function: Digital Input / Flex fuel sensor (10K PU)
+    type: din
 
   - pin: D6
     meta: MM100_IN_PPS_ANALOG

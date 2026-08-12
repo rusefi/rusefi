@@ -67,7 +67,7 @@ Connector yaml pin entries use these canonical `function:` strings:
 | `at` (IAT) | `IAT Sensor Input` |
 | `at` (CLT) | `ECT CLT Coolant Sensor Input` |
 | `av` (spare) | `Auxiliary analog input N PullDown 500K` |
-| flex | `Digital Input / Flex fuel sensor` |
+| `din` (flex) | `Digital Input / Flex fuel sensor` |
 | `can` | `CAN bus High` / `CAN bus Low`; second bus `CAN2 bus High` / `CAN2 bus Low` |
 
 `Smart Ignition Coil N` means a logic-level ignition output: it drives a smart coil
