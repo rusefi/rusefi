@@ -11,12 +11,14 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -73,15 +75,19 @@ public class CalibrationFieldFactory {
         row.add(label);
         row.add(Box.createHorizontalStrut(16));
 
+        Supplier<String> value;
         if (iniField instanceof EnumIniField) {
             EnumIniField enumField = (EnumIniField) iniField;
             String currentValue = ci == null ? "" : ConfigurationImageGetterSetter.getStringValue(iniField, ci);
 
             if (isCheckboxEnum(enumField)) {
-                row.add(createCheckBox(enumField, iniField, currentValue, workingImage, onChange));
+                JCheckBox checkBox = createCheckBox(enumField, iniField, currentValue, workingImage, onChange);
+                row.add(checkBox);
+                value = () -> checkBox.isSelected() ? "enabled" : "disabled";
             } else {
                 JComboBox<String> comboBox = createComboBox(enumField, iniField, currentValue, workingImage, onChange);
                 row.add(comboBox);
+                value = () -> String.valueOf(comboBox.getSelectedItem());
                 JButton pinoutButton = createPinoutButton(comboBox, field.getKey(), onShowInPinout);
                 if (pinoutButton != null) {
                     row.add(Box.createHorizontalStrut(4));
@@ -90,8 +96,11 @@ public class CalibrationFieldFactory {
             }
         } else {
             String currentValue = ci == null ? "" : ConfigurationImageGetterSetter.getStringValue(iniField, ci);
-            row.add(createTextField(iniField, currentValue, workingImage, onChange));
+            JTextField textField = createTextField(iniField, currentValue, workingImage, onChange);
+            row.add(textField);
+            value = textField::getText;
         }
+        installCopyListener(label, labelText, value);
 
         fixRowHeight(row);
         return row;
@@ -270,6 +279,48 @@ public class CalibrationFieldFactory {
         row.setLayout(new BoxLayout(row, BoxLayout.X_AXIS));
         row.setAlignmentX(Component.LEFT_ALIGNMENT);
         return row;
+    }
+
+    static String copiedFieldText(String label, String value) {
+        return label + ": " + value;
+    }
+
+    private static void installCopyListener(JLabel label, String labelText, Supplier<String> value) {
+        if (label.getToolTipText() == null) {
+            label.setToolTipText("Double-click to copy");
+        }
+        label.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent event) {
+                if (event.getClickCount() != 2) {
+                    return;
+                }
+
+                String copied = copiedFieldText(labelText, value.get());
+                Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(copied), null);
+                showCopiedMessage(label, copied);
+            }
+        });
+    }
+
+    private static void showCopiedMessage(JLabel label, String copied) {
+        if (!label.isShowing()) {
+            return;
+        }
+
+        JLabel message = new JLabel("Copied: " + copied);
+        message.setOpaque(true);
+        message.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(Color.DARK_GRAY),
+            BorderFactory.createEmptyBorder(4, 8, 4, 8)));
+        message.setBackground(Color.DARK_GRAY);
+        message.setForeground(Color.WHITE);
+        Point location = label.getLocationOnScreen();
+        Popup popup = PopupFactory.getSharedInstance().getPopup(label, message, location.x, location.y + label.getHeight());
+        popup.show();
+        Timer timer = new Timer(1500, event -> popup.hide());
+        timer.setRepeats(false);
+        timer.start();
     }
 
     static void fixRowHeight(JPanel row) {
