@@ -208,15 +208,9 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
         sb.append("const ConfigParameter allParameters[] = {\n");
         for (VariableRecord var : sorted) {
             int hash = HashUtil.hash(var.getUserName());
-            int type = 0; // default float
-            if (TypesHelper.isBoolean(var.type)) type = 1;
-            else if ("int".equals(var.type) || "uint32_t".equals(var.type) || "idle_state_e".equals(var.type)) type = 2;
-            else if ("int8_t".equals(var.type)) type = 3;
-            else if ("uint8_t".equals(var.type)) type = 4;
-            else if ("int16_t".equals(var.type)) type = 5;
-            else if ("uint16_t".equals(var.type)) type = 6;
-
-            sb.append(String.format("\t{ 0x%08X, %d, %d, %d }, // %s\n", hash, var.getOffset(), type, var.getBitOffset(), var.getUserName()));
+            String cast = TypesHelper.isFloat(var.type) ? "" : "(int)";
+            sb.append(String.format("\t{ 0x%08X, []() -> float { return %s; }, [](float value) { %s = %svalue; } }, // %s\n",
+                    hash, var.getFullName(), var.getFullName(), cast, var.getUserName()));
         }
         sb.append("};\n\n");
         sb.append("const size_t allParametersCount = efi::size(allParameters);\n");
