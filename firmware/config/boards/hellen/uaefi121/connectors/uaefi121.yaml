@@ -265,17 +265,17 @@ pins:
     meta: MM100_IN_O2S_ANALOG
     type: av
     ts_name: AIN 1
-    function: AUX1 analog input
+    function: Auxiliary analog input 1 PullDown 500K
 
   - pin: 41a
     class: analog_inputs
     meta: MM100_IN_O2S2_ANALOG
     type: av
     ts_name: AIN 2
-    function: AUX2 analog input
+    function: Auxiliary analog input 2 PullDown 500K
 
   - pin: 42a
-    function: FLEX
+    function: Digital Input / Flex fuel sensor
     class: [switch_inputs, event_inputs]
     id: [MM100_IN_VSS, MM100_IN_VSS]
     ts_name: FLEX
@@ -495,12 +495,12 @@ pins:
     function: KNOCK sensor (other sensor pin goes to analog ground)
 
   - pin: 82a
-    function: CAN bus high
+    function: CAN bus High
     color: green
     type: can
 
   - pin: 83a
-    function: CAN bus low
+    function: CAN bus Low
     color: blue
     type: can
 

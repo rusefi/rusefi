@@ -33,7 +33,8 @@ pins:
     class: analog_inputs
     meta: MM100_IN_O2S2_ANALOG
     ts_name: ___ AIN 2
-    function: AUX2 analog input
+    function: Auxiliary analog input 2 PullDown 500K
+    type: av
 
   - pin: 7A
     class: analog_inputs
@@ -91,7 +92,8 @@ pins:
     class: analog_inputs
     meta: MM100_IN_O2S_ANALOG
     ts_name: ___ AIN 1
-    function: AUX1 analog input
+    function: Auxiliary analog input 1 PullDown 500K
+    type: av
 
   - pin: 15A
     class: analog_inputs
@@ -380,7 +382,7 @@ pins:
     color: black
 
   - pin: 25B
-    function: FLEX
+    function: Digital Input / Flex fuel sensor
     class: event_inputs
     meta: MM100_IN_VSS
     ts_name: FLEX

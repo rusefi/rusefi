@@ -95,12 +95,12 @@ pins:
 #   color: red / black
 
   - pin: 18D
-    function: CAN bus low
+    function: CAN bus Low
     color: blue
     type: can
 
   - pin: 19D
-    function: CAN bus high
+    function: CAN bus High
     color: green
     type: can
 

@@ -67,7 +67,7 @@ pins:
     id: [A0, EFI_ADC_0]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Volt 5
-    function: "Analog Voltage Input #5"
+    function: Auxiliary analog input 5
     type: av
 
   - pin: 16
@@ -90,7 +90,7 @@ pins:
     id: [A6, EFI_ADC_6]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Volt 11
-    function: "Analog Voltage Input #11"
+    function: Auxiliary analog input 11
     type: av
 
   - pin: 19
@@ -132,28 +132,28 @@ pins:
     id: [C3, EFI_ADC_13]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Volt 4
-    function: "Analog Voltage Input #4"
+    function: Auxiliary analog input 4
     type: av
 
   - pin: 26
     id: [A1, EFI_ADC_1]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Volt 6
-    function: "Analog Voltage Input #6"
+    function: Auxiliary analog input 6
     type: av
 
   - pin: 27
     id: [A3, EFI_ADC_3]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Volt 8
-    function: "Analog Voltage Input #8"
+    function: Auxiliary analog input 8
     type: av
 
   - pin: 28
     id: [A5, EFI_ADC_5]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Volt 10
-    function: "Analog Voltage Input #10"
+    function: Auxiliary analog input 10
     type: av
 
   - pin: 29
