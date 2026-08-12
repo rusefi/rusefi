@@ -24,15 +24,17 @@ GCC_MAP_READER_JAR = $(JAVA_TOOLS)/gcc_map_reader/build/libs/gcc_map_reader-all.
 $(CONFIG_DEFINITION_JAR): .docsenums-sentinel .FORCE
 	cd $(GRADLE_ROOT) && $(FLOCK) ./gradlew :config_definition:shadowJar
 
-# These three jars depend on no generated code, so they can be built before anything else.
+# These jars depend on no generated code, so they can be built before anything else.
 # Build all of them with a single gradle invocation: every separate ./gradlew call pays a
 # full gradle round-trip while holding $(FLOCK), and these calls sit on the serial critical
-# path at the head of every build (nothing compiles until config/docs codegen has its jars).
+# path at the head of every build (nothing compiles until config/docs codegen has its jars;
+# gcc_map_reader is only consumed after the elf link, but a separate invocation for it
+# still holds the lock ahead of the codegen chain when make schedules it early).
 # Same sentinel idiom as .config-sentinel (see rusefi_config.mk for why not grouped targets).
-$(CONFIG_DEFINITION_BASE_JAR) $(ENUM_TO_STRING_JAR) $(TS_PLUGIN_LAUNCHER_JAR): .tooljars-sentinel ;
+$(CONFIG_DEFINITION_BASE_JAR) $(ENUM_TO_STRING_JAR) $(TS_PLUGIN_LAUNCHER_JAR) $(GCC_MAP_READER_JAR): .tooljars-sentinel ;
 
 .tooljars-sentinel: .FORCE
-	cd $(GRADLE_ROOT) && $(FLOCK) ./gradlew :config_definition_base:shadowJar :enum_to_string:shadowJar :ts_plugin_launcher:shadowJar
+	cd $(GRADLE_ROOT) && $(FLOCK) ./gradlew :config_definition_base:shadowJar :enum_to_string:shadowJar :ts_plugin_launcher:shadowJar :gcc_map_reader:shadowJar
 	@touch $@
 
 #$(TUNE_TOOLS_JAR):
@@ -40,9 +42,6 @@ $(CONFIG_DEFINITION_BASE_JAR) $(ENUM_TO_STRING_JAR) $(TS_PLUGIN_LAUNCHER_JAR): .
 
 $(CONSOLE_JAR): .docsenums-sentinel .config-sentinel .FORCE
 	cd $(GRADLE_ROOT) && $(FLOCK) ./gradlew :ui:shadowJar
-
-$(GCC_MAP_READER_JAR): .FORCE
-	cd $(GRADLE_ROOT) && $(FLOCK) ./gradlew :gcc_map_reader:shadowJar
 
 .FORCE:
 
