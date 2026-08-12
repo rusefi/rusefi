@@ -16,6 +16,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -60,8 +61,16 @@ public class SlcanTab {
     private final JButton resetButton = new JButton("Reset");
     private final JButton recordButton = new JButton("Record");
     private final JButton stopButton = new JButton("Stop");
+    private final Consumer<String> messageHandler;
 
     public SlcanTab() {
+        this(null);
+    }
+
+    public SlcanTab(Consumer<String> messageHandler) {
+        this.messageHandler = messageHandler != null
+            ? messageHandler
+            : message -> JOptionPane.showMessageDialog(content, message, "SLCAN", JOptionPane.INFORMATION_MESSAGE);
         JPanel buttons = new JPanel(new FlowLayout(FlowLayout.LEFT));
         buttons.add(resetButton);
         buttons.add(recordButton);
@@ -209,7 +218,7 @@ public class SlcanTab {
             snapshot = new ArrayList<>(buffer);
         }
         if (snapshot.isEmpty()) {
-            JOptionPane.showMessageDialog(content, "Buffer is empty, nothing to save", "SLCAN", JOptionPane.INFORMATION_MESSAGE);
+            messageHandler.accept("Buffer is empty, nothing to save");
             return;
         }
         JFileChooser chooser = new JFileChooser();
@@ -227,11 +236,10 @@ public class SlcanTab {
                 writer.printf("%d %s %s%n", record.wallClockMs - firstMs, record.frame.raw, record.frame.decode());
             }
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(content, "Failed to save: " + e, "SLCAN", JOptionPane.ERROR_MESSAGE);
+            messageHandler.accept("Failed to save: " + e);
             return;
         }
-        JOptionPane.showMessageDialog(content, "Saved " + snapshot.size() + " frame(s) to " + file.getAbsolutePath(),
-            "SLCAN", JOptionPane.INFORMATION_MESSAGE);
+        messageHandler.accept("Saved " + snapshot.size() + " frame(s) to " + file.getAbsolutePath());
     }
 
     private static class FrameRecord {

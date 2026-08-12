@@ -342,6 +342,10 @@ public class TuningPane {
         return toolbar.getSaveTuneAction();
     }
 
+    public void setErrorHandler(Consumer<String> errorHandler) {
+        toolbar.setErrorHandler(errorHandler);
+    }
+
     enum ExitPrompt {
         NONE,
         BURN,

@@ -65,6 +65,7 @@ public class TuningToolbarWidget {
     private final Timer undoCommitTimer;
     private final Timer uploadTimer;
     private volatile boolean firmwareUpdateInProgress;
+    private Consumer<String> errorHandler = message -> JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
 
     /**
      * @param uiContext      live context (BinaryProtocol, LinkManager)
@@ -427,7 +428,7 @@ public class TuningToolbarWidget {
             baselineImage
         );
         if (ini == null || image == null) {
-            JOptionPane.showMessageDialog(null, "No configuration loaded", "Error", JOptionPane.ERROR_MESSAGE);
+            errorHandler.accept("No configuration loaded");
             return;
         }
         if (saveTuneChooser.showSaveDialog(null) != JFileChooser.APPROVE_OPTION) {
@@ -451,13 +452,13 @@ public class TuningToolbarWidget {
             baselineImage
         );
         if (ini == null || image == null || path == null) {
-            JOptionPane.showMessageDialog(null, "No configuration loaded", "Error", JOptionPane.ERROR_MESSAGE);
+            errorHandler.accept("No configuration loaded");
             return;
         }
         saveTuneToPathAndThen(ini, image, path, onSuccess);
     }
 
-    private static void saveTuneToPathAndThen(IniFileModel ini, ConfigurationImage image, String path, Runnable onSuccess) {
+    private void saveTuneToPathAndThen(IniFileModel ini, ConfigurationImage image, String path, Runnable onSuccess) {
         final String finalPath = path;
         final ConfigurationImage finalImage = image;
         new Thread(() -> {
@@ -467,8 +468,7 @@ public class TuningToolbarWidget {
                     SwingUtilities.invokeLater(onSuccess);
                 }
             } catch (Exception ex) {
-                SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(
-                        null, "Failed to save tune: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE));
+                SwingUtilities.invokeLater(() -> errorHandler.accept("Failed to save tune: " + ex.getMessage()));
             }
         }, "save-tune").start();
     }
@@ -488,6 +488,10 @@ public class TuningToolbarWidget {
 
     public AbstractAction getLoadTuneAction() {
         return loadTuneAction;
+    }
+
+    public void setErrorHandler(Consumer<String> errorHandler) {
+        this.errorHandler = errorHandler;
     }
 
     public AbstractAction getSaveTuneAction() {

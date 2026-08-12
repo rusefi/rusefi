@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
+import java.util.function.Consumer;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -45,9 +46,14 @@ public class WizardContainer extends JPanel {
     private int activeStepIndex = -1;
     private boolean singleStepMode;
     private int selectedCylinders = 4; // default, updated by step 0
+    private Consumer<String> messageHandler = message -> JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.WARNING_MESSAGE);
 
     public WizardContainer(UIContext uiContext) {
         this(uiContext, false);
+    }
+
+    public void setMessageHandler(Consumer<String> messageHandler) {
+        this.messageHandler = messageHandler;
     }
 
     /**
@@ -497,17 +503,13 @@ public class WizardContainer extends JPanel {
     private void onStepCompleted(WizardStepResult result, WizardStep step) {
         BinaryProtocol bp = uiContext.getBinaryProtocol();
         if (bp == null) {
-            JOptionPane.showMessageDialog(this,
-                "ECU is not connected. Please reconnect and try again.",
-                "Not Connected", JOptionPane.WARNING_MESSAGE);
+            messageHandler.accept("ECU is not connected. Please reconnect and try again.");
             return;
         }
         IniFileModel ini = uiContext.iniFileState.getIniFileModel();
         ConfigurationImage image = bp.getControllerConfiguration();
         if (ini == null || image == null) {
-            JOptionPane.showMessageDialog(this,
-                "Configuration not loaded. Please reconnect and try again.",
-                "Error", JOptionPane.WARNING_MESSAGE);
+            messageHandler.accept("Configuration not loaded. Please reconnect and try again.");
             return;
         }
 
