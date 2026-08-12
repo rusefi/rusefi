@@ -18,7 +18,7 @@ float GppwmChannel::setOutput(float result) {
 
 		return result;
 	} else {
-		efiAssert(ObdCode::OBD_PCM_Processor_Fault, m_output, "m_output null", 0);
+		efiAssert(ObdCode::OBD_PCM_Processor_Fault, m_output || m_pwm, "m_output null", 0);
 		if (m_config->offBelowDuty > m_config->onAboveDuty) {
 			firmwareError(ObdCode::CUSTOM_ERR_6122, "You can't have off below %d greater than on above %d",
 					m_config->offBelowDuty,
@@ -31,7 +31,12 @@ float GppwmChannel::setOutput(float result) {
 			m_state = true;
 		}
 
-		m_output->setValue(m_state);
+		if (m_output) {
+			m_output->setValue(m_state);
+		} else {
+			// on-off mode driving an H-bridge output (#9673): no plain pin, snap duty to 0/100%
+			m_pwm->setSimplePwmDutyCycle(m_state ? 1 : 0);
+		}
 
 		// Return the actual output value with hysteresis
 		return m_state ? 100 : 0;

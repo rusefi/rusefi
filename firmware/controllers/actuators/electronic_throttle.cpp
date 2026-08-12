@@ -43,6 +43,7 @@
 
 #include "dc_motor.h"
 #include "dc_motors.h"
+#include "gppwm.h"
 #include "defaults.h"
 #include "tunerstudio.h"
 #include "tunerstudio_calibration_channel.h"
@@ -905,6 +906,10 @@ void doInitElectronicThrottle(bool isStartupInit) {
 		auto func = engineConfiguration->etbFunctions[i];
 		if (func == DC_None) {
 			// do not touch HW pins if function not selected, this way Lua can use DC motor hardware pins directly
+			continue;
+		}
+		if (isDcGppwmFunction(func)) {
+			// H-bridge is claimed as a general-purpose GPPWM output; initGpPwm() owns that hardware
 			continue;
 		}
 		auto motor = initDcMotor("ETB disable",

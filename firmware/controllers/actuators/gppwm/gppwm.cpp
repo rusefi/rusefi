@@ -11,6 +11,8 @@
 #include "pch.h"
 
 #include "gppwm_channel.h"
+#include "dc_motor.h"
+#include "dc_motors.h"
 
 static GppwmChannel channels[GPPWM_CHANNELS];
 static OutputPin pins[GPPWM_CHANNELS];
@@ -37,12 +39,44 @@ static const char *channelNames[GPPWM_CHANNELS] = { "GPPWM#1",
  };
 
 
+// H-bridge as a general-purpose output, see https://github.com/rusefi/rusefi/issues/9673:
+// duty from a GPPWM channel is forwarded into a DC motor slot instead of a plain pin
+struct DcMotorPwmWrapper : public IPwm {
+	DcMotor* motor = nullptr;
+
+	void setSimplePwmDutyCycle(float dutyCycle) override {
+		if (motor) {
+			motor->set(dutyCycle);
+		}
+	}
+};
+
+static DcMotorPwmWrapper dcOutputs[GPPWM_CHANNELS];
+
+static_assert(DC_Gppwm4 - DC_Gppwm1 + 1 == GPPWM_CHANNELS);
+
+// Returns an initialized DC motor if some H-bridge is configured to act as this GPPWM channel's output
+static DcMotor* getDcMotorForGppwmChannel(size_t channelIndex) {
+	auto function = (dc_function_e)(DC_Gppwm1 + channelIndex);
+
+	for (size_t dcIndex = 0; dcIndex < ETB_COUNT; dcIndex++) {
+		if (engineConfiguration->etbFunctions[dcIndex] == function) {
+			return initDcMotor("GPPWM disable", engineConfiguration->etbIo[dcIndex], dcIndex,
+					engineConfiguration->etb_use_two_wires);
+		}
+	}
+
+	return nullptr;
+}
+
 void initGpPwm() {
 	for (size_t i = 0; i < efi::size(channels); i++) {
 		auto& cfg = engineConfiguration->gppwm[i];
 
-		// If no pin, don't enable this channel.
-		if (!isBrainPinValid(cfg.pin)) {
+		DcMotor* dcMotor = getDcMotorForGppwmChannel(i);
+
+		// If no pin and no H-bridge, don't enable this channel.
+		if (!dcMotor && !isBrainPinValid(cfg.pin)) {
 			continue;
 		}
 
@@ -50,17 +84,30 @@ void initGpPwm() {
 		float freq = cfg.pwmFrequency;
 		bool usePwm = freq > 0;
 
-		// Setup pin & pwm
-		pins[i].initPin("gp pwm", cfg.pin);
-		if (usePwm) {
-			startSimplePwm(&outputs[i], channelNames[i], &engine->scheduler, &pins[i], freq, 0);
+		IPwm* pwm = nullptr;
+		OutputPin* outputPin = nullptr;
+
+		if (dcMotor) {
+			// An H-bridge only drives while its disable pin is released
+			dcMotor->enable();
+			dcOutputs[i].motor = dcMotor;
+			// Both modes work; in PWM mode the H-bridge switches at etbFreq, not at cfg.pwmFrequency
+			pwm = &dcOutputs[i];
+		} else {
+			// Setup pin & pwm
+			pins[i].initPin("gp pwm", cfg.pin);
+			outputPin = &pins[i];
+			if (usePwm) {
+				startSimplePwm(&outputs[i], channelNames[i], &engine->scheduler, &pins[i], freq, 0);
+				pwm = &outputs[i];
+			}
 		}
 
 		// Set up this channel's lookup table
 		tables[i]->initTable(cfg.table, cfg.rpmBins, cfg.loadBins);
 
 		// Finally configure the channel
-		channels[i].init(usePwm, &outputs[i], &pins[i], tables[i], &cfg);
+		channels[i].init(usePwm, pwm, outputPin, tables[i], &cfg);
 	}
 }
 
