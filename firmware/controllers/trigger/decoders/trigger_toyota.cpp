@@ -93,5 +93,14 @@ void initializeUzCam(TriggerWaveform *s) {
 }
 
 void initialize_3GRfSE_CAM(TriggerWaveform *s);{
-  
+  // todo: most cam wheels are defined as 'SyncEdge::Rise' or 'SyncEdge::RiseOnly' shall we unify?
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Fall);
+
+	// our preference is to sync not too close to crank sync point
+	s->setTriggerSynchronizationGap(0.545);
+	s->setSecondTriggerSynchronizationGap(1.596);
+
+	s->addToothRiseFall(104, /* width*/ 70);
+	s->addToothRiseFall(194, /* width*/ 20);
+	s->addToothRiseFall(360, /* width*/ 70);
 }
