@@ -1,17 +1,29 @@
-# Add the PCH dir to source path
-SRCPATHS += $(PCH_DIR)
+# Each delivery unit (firmware, bootloader, simulator, unit_tests) compiles its PCH
+# into its own private directory under its own BUILDDIR, so concurrent builds never
+# read or write each other's PCH.
+PCH_OUT_DIR = $(BUILDDIR)/pch
+PCHOBJ = $(PCH_OUT_DIR)/pch.h.gch
 
-PCHOBJ = $(addprefix $(PCH_DIR)/, $(notdir $(PCHSRC:.h=.h.gch)))/$(PCHSUB)
+# GCC looks for pch.h.gch in each include directory just before it looks for pch.h
+# itself, so putting PCH_OUT_DIR ahead of every other include directory makes this
+# build pick up exactly its own PCH (PCH_OUT_DIR holds nothing but the .gch).
+# Prepend to IINCDIR rather than INCDIR: the ARM rules.mk computes IINCDIR with ':='
+# before this file is included, so an INCDIR change would not propagate there.
+IINCDIR := -I$(PCH_OUT_DIR) $(IINCDIR)
 
-# Compile precompiled header file(s) as a cpp file, but output to .h.gch file
-$(PCHOBJ) : $(PCH_DIR)/%.h.gch/$(PCHSUB) : %.h Makefile $(CONFIG_FILES)
-	@mkdir -p $<.gch
+# Compile the precompiled header; compiling a .h with the C++ compiler produces a PCH.
+# pch.h itself is copied next to the .gch: sources that include pch.h somewhere other
+# than as their very first include cannot legally use a PCH, and GCC then wants the
+# real header in the directory where it found the .gch.
+$(PCHOBJ) : $(PCHSRC) Makefile $(CONFIG_FILES)
+	@mkdir -p $(PCH_OUT_DIR)
+	@cp $(PCHSRC) $(PCH_OUT_DIR)/pch.h
 ifeq ($(USE_VERBOSE_COMPILE),yes)
 	@echo
-	$(CPPC) -c $(CPPFLAGS) $(AOPT) -I. $(IINCDIR) $< -o $@
+	$(CPPC) -c $(CPPFLAGS) $(AOPT) -I. $(IINCDIR) $(PCH_OUT_DIR)/pch.h -o $@
 else
 	@echo Compiling PCH $(<F)
-	@$(CPPC) -c $(CPPFLAGS) $(AOPT) -I. $(IINCDIR) $< -o $@
+	@$(CPPC) -c $(CPPFLAGS) $(AOPT) -I. $(IINCDIR) $(PCH_OUT_DIR)/pch.h -o $@
 endif
 
 # Make all cpp objects explicitly depend on the PCH
@@ -23,7 +35,9 @@ $(TCPPOBJS): $(PCHOBJ)
 $(ACPPOBJS): $(PCHOBJ)
 $(CPPOBJS): $(PCHOBJ)
 
-# Delete PCH output on clean
+# Delete PCH output on clean. Also purge the legacy shared pch.h.gch/ directory that
+# used to live next to pch.h, so a stale old-layout PCH can never be picked up.
 CLEAN_PCH_HOOK:
 	@echo Cleaning PCH
-	rm -f $(PCHOBJ)
+	rm -f $(PCHOBJ) $(PCH_OUT_DIR)/pch.h
+	rm -rf $(PCH_DIR)/pch.h.gch

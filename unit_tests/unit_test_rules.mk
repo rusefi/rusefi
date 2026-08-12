@@ -10,7 +10,6 @@ INCDIR += 	$(UNIT_TESTS_DIR)/googletest/googlemock/include \
 
 PCH_DIR = ../firmware/pch
 PCHSRC = $(PCH_DIR)/pch.h
-PCHSUB = unit_tests
 
 # Detect clang before including rusefi_rules.mk so its USE_CLANG conditionals
 # (GCC-only vs clang-only warning flags) pick the right branch.
