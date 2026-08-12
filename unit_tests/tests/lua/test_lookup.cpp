@@ -44,6 +44,22 @@ TEST(LuaBasic, configLookup) {
 		ASSERT_EQ(0.0, getConfigValueByName(bit0Name));
 		ASSERT_EQ(1.0, getConfigValueByName(bit1Name));
 	}
+
+	{
+		//scaled_channel<uint8_t, 10, 1> knockRetardAggression;
+		const char * name = "knockRetardAggression";
+		setConfigValueByName(name, 1.0);
+		ASSERT_EQ(engineConfiguration->knockRetardAggression, getConfigValueByName(name));
+		ASSERT_EQ(1.0, engineConfiguration->knockRetardAggression);
+	}
+
+	{
+		//scaled_channel<uint16_t, 1000, 1> vssGearRatio;
+		const char * name = "vssGearRatio";
+		setConfigValueByName(name, 1.999);
+		ASSERT_EQ(engineConfiguration->vssGearRatio, getConfigValueByName(name));
+		ASSERT_NEAR(1.999, engineConfiguration->vssGearRatio, EPS3D);
+	}
 }
 
 // This test PASSES on purpose: it pins down and documents a KNOWN REGRESSION, it does not bless it.
