@@ -52,15 +52,22 @@ connector/.yaml-only directories are intentionally not listed here.
 | [hellen/hellenMiataNB1](hellen/hellenMiataNB1) | Mazda Miata NB1 |
 | [hellen/hellenMiataNB2](hellen/hellenMiataNB2) | Mazda Miata NB2 |
 
-##
+## Pinout language conventions
 
-Canonical function strings in use:
+Connector yaml pin entries use these canonical `function:` strings:
 
-- `Power/Chassis GND ground` for `type: gnd`
-- `GNDA Analog/Sensor Ground` for `type: agnd`
+| `type:` | Canonical `function:` value |
+| ------- | --------------------------- |
+| `gnd` | `Power/Chassis GND ground` |
+| `agnd` | `GNDA Analog/Sensor Ground` |
+| `inj` | `Injector N` |
+| `ign` | `Ignition Coil N` (applied so far on uaefi, uaefi121, super-uaefi) |
 
-- 'Injector N' for type: inj
+Exceptions:
 
-alphax-4K-GDI is a single GDI board with special injector naming: 'Port Injector N' and Positive/Negative GDI injectors
-
-uaefi, uaefi121 and super-uaefi same output could be repurposed, these use just 'Ignition Coil N' for coils
+- alphax-4K-GDI is the single GDI board and keeps its special injector naming:
+  `Port injector N` for the port-injection channels plus `GDI Injector N Positive` /
+  `GDI Injector N Negative` pairs for the direct injectors.
+- uaefi, uaefi121 and super-uaefi outputs can be repurposed, so coil pins use just
+  `Ignition Coil N`; uaefi121 intentionally has two pins per coil (current is split
+  across both wires), both carrying the same function value.

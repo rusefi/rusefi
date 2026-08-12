@@ -55,7 +55,7 @@ pins:
     class: outputs
     meta: MM100_IGN6
     ts_name: Coil 6
-    function: Coil 6
+    function: Ignition Coil 6
     color: yellow
     type: ign
 
@@ -63,7 +63,7 @@ pins:
     class: outputs
     meta: MM100_IGN5
     ts_name: Coil 5
-    function: Coil 5
+    function: Ignition Coil 5
     color: brown
     type: ign
 
@@ -71,7 +71,7 @@ pins:
     class: outputs
     meta: MM100_IGN4
     ts_name: Coil 4
-    function: Coil 4
+    function: Ignition Coil 4
     type: ign
     color: orange
 
@@ -79,7 +79,7 @@ pins:
     class: outputs
     meta: MM100_IGN3
     ts_name: Coil 3
-    function: Coil 3
+    function: Ignition Coil 3
     type: ign
     color: blue
 
@@ -87,7 +87,7 @@ pins:
     class: outputs
     meta: MM100_IGN2
     ts_name: Coil 2
-    function: Coil 2
+    function: Ignition Coil 2
     type: ign
     color: white
 
@@ -95,7 +95,7 @@ pins:
     class: outputs
     meta: MM100_IGN1
     ts_name: Coil 1
-    function: Coil 1 (5v)
+    function: Ignition Coil 1
     type: ign
     color: green
 
@@ -176,37 +176,37 @@ pins:
   - pin: 27a
     class: outputs
     ts_name: Coil 6
-    function: Coil 6 second wire to split current per pin
+    function: Ignition Coil 6
     type: ign
 
   - pin: 28a
     class: outputs
     ts_name: Coil 5
-    function: Coil 5
+    function: Ignition Coil 5
     type: ign
 
   - pin: 29a
     class: outputs
     ts_name: Coil 4
-    function: Coil 4
+    function: Ignition Coil 4
     type: ign
 
   - pin: 30a
     class: outputs
     ts_name: Coil 3
-    function: Coil 3
+    function: Ignition Coil 3
     type: ign
 
   - pin: 31a
     class: outputs
     ts_name: Coil 2
-    function: Coil 2
+    function: Ignition Coil 2
     type: ign
 
   - pin: 32a
     class: outputs
     ts_name: Coil 1
-    function: Coil 1 second wire to split current per pin
+    function: Ignition Coil 1
     type: ign
 
   - pin: 33a

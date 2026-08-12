@@ -70,7 +70,7 @@ pins:
     type: ign
     color: grey
     ts_name: ___ Coil 6
-    function: coil 6 (5v)
+    function: Ignition Coil 6
 
   - pin: B11
     meta: MM100_IGN4
@@ -78,6 +78,7 @@ pins:
     type: ign
     color: orange/brown
     ts_name: ___ Coil 4
+    function: Ignition Coil 4
 
   - pin: B12
     meta: MM100_IGN3
@@ -85,6 +86,7 @@ pins:
     type: ign
     color: blue
     ts_name: ___ Coil 3
+    function: Ignition Coil 3
 
   - pin: B13
     meta: MM100_IGN5
@@ -92,6 +94,7 @@ pins:
     type: ign
     color: yellow
     ts_name: ___ Coil 5
+    function: Ignition Coil 5
 
   - pin: B14
     meta: MM100_IGN2
@@ -99,6 +102,7 @@ pins:
     type: ign
     color: white
     ts_name: ___ Coil 2
+    function: Ignition Coil 2
 
   - pin: B15
     meta: MM100_IGN1
@@ -106,7 +110,7 @@ pins:
     type: ign
     color: green
     ts_name: ___ Coil 1
-    function: coil 1 (5v)
+    function: Ignition Coil 1
 
   - pin: B16
     meta: MM100_OUT_PWM2
