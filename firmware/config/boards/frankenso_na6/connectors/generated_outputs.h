@@ -4,6 +4,10 @@
 #pragma once
 
 Gpio GENERATED_OUTPUTS[] = {
+	Gpio::E2, // Injector 3V
+	Gpio::B9, // Injector 3W
+	Gpio::B8, // Injector 3Y
+	Gpio::B7, // Injector 3Z
 	Gpio::C9, // Coil 1F
 	Gpio::E14, // Coil 1G
 	Gpio::C7, // Coil 1H
@@ -19,11 +23,11 @@ Gpio GENERATED_OUTPUTS[] = {
 	Gpio::E3, // Injector 3S
 	Gpio::E4, // Injector 3T
 	Gpio::D3, // Injector 3U
-	Gpio::E2, // Injector 3V
-	Gpio::B9, // Injector 3W
 	Gpio::D5, // Injector 3X
-	Gpio::B8, // Injector 3Y
-	Gpio::B7, // Injector 3Z
+// "Injector 3V",
+// "Injector 3W",
+// "Injector 3Y",
+// "Injector 3Z",
 // "Coil 1F",
 // "Coil 1G",
 // "Coil 1H",
@@ -39,9 +43,5 @@ Gpio GENERATED_OUTPUTS[] = {
 // "Injector 3S",
 // "Injector 3T",
 // "Injector 3U",
-// "Injector 3V",
-// "Injector 3W",
 // "Injector 3X",
-// "Injector 3Y",
-// "Injector 3Z",
 }

@@ -8,13 +8,13 @@
 Gpio GENERATED_OUTPUTS[] = {
 	Gpio::H144_LS_3, // Aux2 - Inj 3
 	Gpio::H144_LS_4, // Aux4 - Inj 4
-	Gpio::H144_IGN_4, // Aux6 - Ign 4
-	Gpio::H144_IGN_3, // Aux8 - Ign 3
 	Gpio::H144_OUT_PWM2, // A3 - Fuel Pump
 	Gpio::H144_LS_1, // A8 - Injector A
 	Gpio::H144_LS_2, // B8 - Injector B
 	Gpio::H144_OUT_PWM4, // C1 - Fan Relay
 	Gpio::H144_OUT_PWM1, // C8 - Idle
+	Gpio::H144_IGN_4, // Aux6 - Ign 4
+	Gpio::H144_IGN_3, // Aux8 - Ign 3
 	Gpio::H144_LS_5, // Aux9 - HS1
 	Gpio::H144_LS_6, // Aux10 - HS2
 	Gpio::MSIOBOX_0_OUT_1, // MS IO-Box 0 OUT 1
@@ -26,13 +26,13 @@ Gpio GENERATED_OUTPUTS[] = {
 	Gpio::H144_IGN_2, // A7 - Ignition B
 // "Aux2 - Inj 3",
 // "Aux4 - Inj 4",
-// "Aux6 - Ign 4",
-// "Aux8 - Ign 3",
 // "A3 - Fuel Pump",
 // "A8 - Injector A",
 // "B8 - Injector B",
 // "C1 - Fan Relay",
 // "C8 - Idle",
+// "Aux6 - Ign 4",
+// "Aux8 - Ign 3",
 // "Aux9 - HS1",
 // "Aux10 - HS2",
 // "MS IO-Box 0 OUT 1",

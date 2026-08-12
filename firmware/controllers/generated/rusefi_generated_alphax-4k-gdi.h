@@ -58,8 +58,8 @@
 #define adc_channel_e_EFI_ADC_ERROR 50
 #define adc_channel_e_EFI_ADC_NONE 0
 #define adc_channel_e_EFI_ADC_TOTAL_CHANNELS 49
-#define adc_channel_e_enum 0="NONE",4="19A PPS1",5="19B TPS1",20="20A PPS2",21="20B TPS2",15="22A Input 2",16="23A Fuel Low Pressure",3="24A Fuel High Pressure",2="28B input",6="6A Battery Sense",13="ECT CLT Coolant",14="IAT",11="MAP Signal"
-#define adc_channel_e_fullenum "NONE","INVALID","28B input","24A Fuel High Pressure","19A PPS1","19B TPS1","6A Battery Sense","INVALID","INVALID","INVALID","INVALID","MAP Signal","INVALID","ECT CLT Coolant","IAT","22A Input 2","23A Fuel Low Pressure","INVALID","INVALID","INVALID","20A PPS2","20B TPS2","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID"
+#define adc_channel_e_enum 0="NONE",4="19A PPS1",5="19B TPS1",20="20A PPS2",21="20B TPS2",15="22A Input 2",16="23A Fuel Low Pressure",3="24A Fuel High Pressure",2="28B input",6="6A Battery Sense",13="ECT CLT Coolant Sensor Input",14="IAT Sensor Input",11="MAP Signal"
+#define adc_channel_e_fullenum "NONE","INVALID","28B input","24A Fuel High Pressure","19A PPS1","19B TPS1","6A Battery Sense","INVALID","INVALID","INVALID","INVALID","MAP Signal","INVALID","ECT CLT Coolant Sensor Input","IAT Sensor Input","22A Input 2","23A Fuel Low Pressure","INVALID","INVALID","INVALID","20A PPS2","20B TPS2","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID"
 #define ADC_CHANNEL_NONE 0
 #define afr_sensor_s_size 20
 #define air_pressure_sensor_config_s_size 12
@@ -1639,7 +1639,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 4025859099
+#define SIGNATURE_HASH 3999200795
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2279,7 +2279,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.08.12.alphax-4k-gdi.4025859099"
+#define TS_SIGNATURE "rusEFI master.2026.08.12.alphax-4k-gdi.3999200795"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'

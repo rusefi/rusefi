@@ -8,6 +8,7 @@ Gpio GENERATED_OUTPUTS[] = {
 	Gpio::H144_LS_4, // B2 - Injector 4
 	Gpio::H144_LS_3, // B3 - Injector 3
 	Gpio::H144_LS_2, // B4 - Injector 2
+	Gpio::H144_LS_1, // B5 - Injector 1
 	Gpio::H144_OUT_IO12, // B6 Radiator Relay
 	Gpio::H144_LS_8, // B7 Lockout Solenoid
 	Gpio::H144_OUT_PWM6, // B21 - EVAP
@@ -25,7 +26,6 @@ Gpio GENERATED_OUTPUTS[] = {
 	Gpio::H144_IGN_3, // A28 - IGN3
 	Gpio::H144_IGN_2, // A29 - IGN2
 	Gpio::H144_IGN_1, // A30 - IGN1
-	Gpio::H144_LS_1, // B5 - Injector 1
 	Gpio::H144_OUT_IO6, // B15 VTEC/VTS Output
 	Gpio::H144_OUT_IO9, // B18 Alternator Control
 	Gpio::H144_OUT_IO10, // E26 Tachometer
@@ -34,6 +34,7 @@ Gpio GENERATED_OUTPUTS[] = {
 // "B2 - Injector 4",
 // "B3 - Injector 3",
 // "B4 - Injector 2",
+// "B5 - Injector 1",
 // "B6 Radiator Relay",
 // "B7 Lockout Solenoid",
 // "B21 - EVAP",
@@ -51,7 +52,6 @@ Gpio GENERATED_OUTPUTS[] = {
 // "A28 - IGN3",
 // "A29 - IGN2",
 // "A30 - IGN1",
-// "B5 - Injector 1",
 // "B15 VTEC/VTS Output",
 // "B18 Alternator Control",
 // "E26 Tachometer",
