@@ -451,6 +451,12 @@ public class CalibrationDialogWidgetTest {
     }
 
     @Test
+    public void testCopiedFieldTextUsesDisplayedLabelAndValue() {
+        assertEquals("SD card logging: enabled",
+            CalibrationFieldFactory.copiedFieldText("SD card logging", "enabled"));
+    }
+
+    @Test
     public void testPinoutButton() {
         EnumIniField field = createEnumField("B16 Low Side output 4", "NONE");
         ConfigurationImage image = new ConfigurationImage(new byte[1]);
