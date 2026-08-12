@@ -37,7 +37,7 @@ pins:
     type: av
     class: analog_inputs
     ts_name: C3-55 - CLT
-    function: CLT
+    function: ECT CLT Coolant Sensor Input
     color: purple
 
   - pin: G56
@@ -46,7 +46,7 @@ pins:
     type: av
     class: analog_inputs
     ts_name: C3-56 - IAT
-    function: IAT
+    function: IAT Sensor Input
     color: purple
 
   - pin: G57

@@ -18,7 +18,7 @@ pins:
   - pin: 3
     id: EFI_ADC_14
     class: analog_inputs
-    function: CLT sensor
+    function: ECT CLT Coolant Sensor Input
     ts_name: A03 - Coolant t Ain
     type: at
 

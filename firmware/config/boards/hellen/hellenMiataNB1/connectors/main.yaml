@@ -102,7 +102,8 @@ pins:
     id: EFI_ADC_13
     class: analog_inputs
     ts_name: 2B - IAT
-    function: IAT sensor
+    function: IAT Sensor Input
+    type: at
 
   - pin: 2C
     id: EFI_ADC_0
@@ -121,7 +122,8 @@ pins:
     id: EFI_ADC_12
     class: analog_inputs
     ts_name: 2E - Coolant
-    function: CLT sensor
+    function: ECT CLT Coolant Sensor Input
+    type: at
 
   - pin: 2F
 #    id: F7

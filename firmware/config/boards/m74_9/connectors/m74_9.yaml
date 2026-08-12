@@ -34,8 +34,8 @@ pins:
 #    class: [switch_inputs, analog_inputs]
     id: F6
     class: switch_inputs
-    function: IAT intake sensor signal
-    type:
+    function: IAT Sensor Input
+    type: at
 
   - pin: AC3
     id: [A1, EFI_ADC_1]
@@ -64,8 +64,8 @@ pins:
 #    class: [switch_inputs, analog_inputs]
     id: F5
     class: switch_inputs
-    function: CLT Coolant temperature sensor signal
-    type:
+    function: ECT CLT Coolant Sensor Input
+    type: at
 
   - pin: AD4
     function: Oil pressure sensor signal

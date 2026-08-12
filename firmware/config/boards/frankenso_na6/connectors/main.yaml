@@ -175,13 +175,15 @@ pins:
     id: EFI_ADC_11
     class: analog_inputs
     ts_name: Analog 3P
-    function: Intake air temp Sensor
+    function: IAT Sensor Input
+    type: at
 
   - pin: 55
     id: EFI_ADC_12
     class: analog_inputs
     ts_name: Analog 3Q
-    function: Coolant Temp Sensor
+    function: ECT CLT Coolant Sensor Input
+    type: at
 
   - pin: 57
     id: E3

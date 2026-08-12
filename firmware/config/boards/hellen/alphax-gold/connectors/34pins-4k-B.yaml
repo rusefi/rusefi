@@ -145,7 +145,7 @@ pins:
   - pin: 19B
     meta: H144_IN_CLT
     class: analog_inputs
-    function: CLT Sensor Input
+    function: ECT CLT Coolant Sensor Input
     ts_name: ___ - CLT
     type: av
     color: grey

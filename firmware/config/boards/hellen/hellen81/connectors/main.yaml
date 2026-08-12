@@ -257,14 +257,16 @@ pins:
     color: white
 
   - pin: 39
-    function: Engine Coolant Temp. (CLT) Analog Input
+    function: ECT CLT Coolant Sensor Input
+    type: at
     id: EFI_ADC_12
     class: analog_inputs
     ts_name: 39 - IN_CLT
     color: white
 
   - pin: 40
-    function: Intake Air Temperature (IAT) Analog Input
+    function: IAT Sensor Input
+    type: at
     id: EFI_ADC_13
     class: analog_inputs
     ts_name: 40 - IN_IAT

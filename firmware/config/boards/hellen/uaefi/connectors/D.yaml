@@ -90,7 +90,7 @@ pins:
     meta: MM100_IN_IAT_ANALOG
     class: analog_inputs
     ts_name: ___ IAT
-    function: IAT input
+    function: IAT Sensor Input
     type: at
     color: blue
 
@@ -98,7 +98,7 @@ pins:
     meta: MM100_IN_CLT_ANALOG
     class: analog_inputs
     ts_name: ___ CLT Coolant
-    function: CLT input
+    function: ECT CLT Coolant Sensor Input
     type: at
     color: grey
 

@@ -85,6 +85,7 @@ pins:
     meta: H144_IN_IAT
     class: analog_inputs
     function: IAT Sensor Input
+    type: at
     ts_name: B3 - IAT
     color: orange
 
@@ -111,7 +112,8 @@ pins:
   - pin: B7
     meta: H144_IN_CLT
     class: analog_inputs
-    function: CLT Sensor Input
+    function: ECT CLT Coolant Sensor Input
+    type: at
     ts_name: B7 - CLT
     color: orange
 

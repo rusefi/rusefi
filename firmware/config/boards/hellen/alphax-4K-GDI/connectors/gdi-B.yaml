@@ -129,7 +129,7 @@ pins:
 
 
   - pin: 21B
-    function: ECT CLT Coolant
+    function: ECT CLT Coolant Sensor Input
     color: grey
     type: at
     meta: H144_IN_CLT
@@ -137,7 +137,7 @@ pins:
 
 
   - pin: 22B
-    function: IAT
+    function: IAT Sensor Input
     color: blue
     type: at
     meta: H144_IN_IAT

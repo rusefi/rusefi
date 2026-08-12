@@ -104,7 +104,7 @@ pins:
     id: [B0, EFI_ADC_8]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Temp 3
-    function: "Analog Thermistor Input #3 (CLT)"
+    function: ECT CLT Coolant Sensor Input
     type: at
     color: grey
 
@@ -164,7 +164,7 @@ pins:
     id: [C5, EFI_ADC_15]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Temp 2
-    function: Intake air temperature IAT
+    function: IAT Sensor Input
     type: at
     color: blue
 

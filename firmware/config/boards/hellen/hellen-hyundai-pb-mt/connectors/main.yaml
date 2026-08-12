@@ -39,7 +39,8 @@ pins:
 
   - pin: A23
     class: analog_inputs
-    function: CLT Coolant Temperature Signal
+    function: ECT CLT Coolant Sensor Input
+    type: at
   - pin: A24
     function: CLT Coolant Ground
     type: gnd
@@ -347,7 +348,8 @@ pins:
 
   - pin: K79
     class: analog_inputs
-    function: Intake Air Signal
+    function: IAT Sensor Input
+    type: at
   - pin: K80
     class: analog_inputs
     function: Map Signal

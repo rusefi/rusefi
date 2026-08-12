@@ -153,7 +153,8 @@ pins:
     meta: H144_IN_CLT
     class: analog_inputs
     ts_name: CLT
-    function: CLT
+    function: ECT CLT Coolant Sensor Input
+    type: at
 
   - pin: K34
     function: GNDA Analog/Sensor Ground
@@ -204,7 +205,8 @@ pins:
     meta: H144_IN_IAT
     class: analog_inputs
     ts_name: IAT
-    function: 'IAT (2014: green)'
+    function: 'IAT Sensor Input (2014: green)'
+    type: at
 
   - pin: K54
     meta: H144_IN_MAP3

@@ -50,7 +50,8 @@ pins:
   - pin: B26
     function: Output Shaft Speed (VSS, digital input + pass for TCU molex)
   - pin: B27
-    function: Intake Air Temperature
+    function: IAT Sensor Input
+    type: at
   - pin: B30
     function: Oil Level Switch
   - pin: B31

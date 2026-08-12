@@ -356,7 +356,8 @@ pins:
     id: EFI_ADC_13
     class: analog_inputs
     ts_name: 4N - IAT (A14)
-    function: IAT sensor
+    function: IAT Sensor Input
+    type: at
     color: green B2
 
   - pin: 4O
@@ -368,7 +369,8 @@ pins:
     id: EFI_ADC_12
     class: analog_inputs
     ts_name: 4P - CLT (A11)
-    function: CLT sensor
+    function: ECT CLT Coolant Sensor Input
+    type: at
     color: blue B2
 
   - pin: 4Q

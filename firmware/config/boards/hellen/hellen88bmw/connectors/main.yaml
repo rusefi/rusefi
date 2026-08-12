@@ -203,13 +203,15 @@ pins:
     id: EFI_ADC_13
     class: analog_inputs
     ts_name: 77 - IAT
-    function: IAT sensor
+    function: IAT Sensor Input
+    type: at
 
   - pin: 78
     id: EFI_ADC_12
     class: analog_inputs
     ts_name: 78 - CLT
-    function: CLT sensor
+    function: ECT CLT Coolant Sensor Input
+    type: at
 
   - pin: Aux MAP
 # H144_IN_MAP2

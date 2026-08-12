@@ -460,7 +460,7 @@ pins:
     id: [C2, EFI_ADC_12]
     class: [event_inputs, analog_inputs]
     ts_name: E29 - Coolant Temp
-    function: analog input CLT
+    function: ECT CLT Coolant Sensor Input
     type: av
 
   - pin: E30
@@ -535,7 +535,7 @@ pins:
     id: [C3, EFI_ADC_13]
     class: [event_inputs, analog_inputs]
     ts_name: E45 - IAT
-    function: analog input IAT
+    function: IAT Sensor Input
     type: av
 
   - pin: E46

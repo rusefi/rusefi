@@ -261,7 +261,8 @@ pins:
     meta: MM100_IN_CLT_ANALOG
     class: analog_inputs
     ts_name: ___ CLT
-    function: CLT sensor
+    function: ECT CLT Coolant Sensor Input
+    type: at
   - pin: B19
     meta: MM100_IN_MAP1_ANALOG
     class: analog_inputs
@@ -282,7 +283,8 @@ pins:
     class: analog_inputs
     meta: MM100_IN_IAT_ANALOG
     ts_name: ___ IAT
-    function: ___ Intake Air Temperature
+    function: IAT Sensor Input
+    type: at
   - pin: B31
     meta: MM100_IN_D1
     class: event_inputs

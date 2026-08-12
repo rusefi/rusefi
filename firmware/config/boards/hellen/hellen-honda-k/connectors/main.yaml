@@ -190,7 +190,8 @@ pins:
     meta: H144_IN_CLT
     class: analog_inputs
     ts_name: B8 - CLT
-    function: CLT
+    function: ECT CLT Coolant Sensor Input
+    type: at
 
   - pin: B9
     ts_name: B9 - VTEC PRESSURE SW
@@ -214,7 +215,8 @@ pins:
     meta: H144_IN_IAT
     class: analog_inputs
     ts_name: ___ IAT
-    function: IAT
+    function: IAT Sensor Input
+    type: at
   - pin: B18
     meta: H144_OUT_IO9
     class: outputs

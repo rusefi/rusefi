@@ -64,6 +64,8 @@ Connector yaml pin entries use these canonical `function:` strings:
 | `ign` | `Smart Ignition Coil N` |
 | `av` (TPS) | `Universal analog input. Suggested TPS N sensor input` |
 | `av` (PPS) | `Universal analog input. Suggested PPS input N` |
+| `at` (IAT) | `IAT Sensor Input` |
+| `at` (CLT) | `ECT CLT Coolant Sensor Input` |
 
 `Smart Ignition Coil N` means a logic-level ignition output: it drives a smart coil
 (built-in igniter) or an external igniter module, never a dumb coil directly. Coils are
@@ -79,6 +81,13 @@ recommended assignment, and the sensor is numbered 1/2 (never `TPS2`/`PPS2`).
 Applied on all universal boards; extra information rides along where meaningful
 (e.g. proteus `TPS 2 / TPS1_2`). Board-specific channel numbers and silkscreen
 labels stay in `ts_name`.
+
+`IAT Sensor Input` / `ECT CLT Coolant Sensor Input` are applied on every board
+with a plain IAT/CLT signal pin (universal and plug-n-play alike); extra
+information rides along in the same value where meaningful (microrusefi
+` or SENT input!`, s105 pull-up specs, hellen154hyundai wire color). Some
+boards declare these pins `type: av` instead of `at` (alphax-gold/silver,
+hellen-gm-e67, hellen128) - existing explicit types were left as-is.
 
 Exceptions:
 

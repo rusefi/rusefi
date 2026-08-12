@@ -216,7 +216,7 @@ pins:
   - pin: 29A
     meta: MM176_IN_CLT_ANALOG
     class: analog_inputs
-    function: CLT Sensor Input
+    function: ECT CLT Coolant Sensor Input
     type: at
     ts_name: 29A - CLT Sensor Input
     color: purple

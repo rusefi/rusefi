@@ -244,7 +244,8 @@ pins:
     id: EFI_ADC_13
     class: analog_inputs
     ts_name: 3P - IAT
-    function: IAT sensor
+    function: IAT Sensor Input
+    type: at
 
   - pin: 3S
     id: D9
@@ -269,7 +270,8 @@ pins:
     id: EFI_ADC_12
     class: analog_inputs
     ts_name: 3Q - CLT
-    function: CLT sensor
+    function: ECT CLT Coolant Sensor Input
+    type: at
 
   - pin: 3U
     id: G7

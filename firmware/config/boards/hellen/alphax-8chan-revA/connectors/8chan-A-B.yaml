@@ -118,6 +118,7 @@ pins:
     id: EFI_ADC_13
     class: analog_inputs
     function: IAT Sensor Input
+    type: at
     ts_name: 15A - IAT
     color: orange
 
@@ -125,7 +126,8 @@ pins:
     # H144_IN_CLT AIN11 PC2
     id: EFI_ADC_12
     class: analog_inputs
-    function: CLT Sensor Input
+    function: ECT CLT Coolant Sensor Input
+    type: at
     ts_name: 16A - CLT
     color: orange
 
