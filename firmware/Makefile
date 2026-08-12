@@ -51,7 +51,6 @@ PROJECT_DIR = .
 # Configure precompiled header
 PCH_DIR = $(PROJECT_DIR)/pch
 PCHSRC = $(PCH_DIR)/pch.h
-PCHSUB = firmware
 
 # Imported source files and paths
 CHIBIOS_CONTRIB = ChibiOS-Contrib
