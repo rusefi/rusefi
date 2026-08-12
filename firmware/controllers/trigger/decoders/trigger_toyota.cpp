@@ -91,3 +91,7 @@ void initializeUzCam(TriggerWaveform *s) {
 	s->setTriggerSynchronizationGap4(/*gapIndex*/0, 1.5);
 	s->setTriggerSynchronizationGap4(/*gapIndex*/1, 0.67);
 }
+
+void initialize_3GRfSE_CAM(TriggerWaveform *s);{
+  
+}
