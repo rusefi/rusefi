@@ -248,6 +248,7 @@ public class ConsoleUI {
         // Wizard container and CardLayout for switching between console and wizard modes
         JPanel rootPanel = new JPanel(new CardLayout());
         rootPanel.add(tabbedPane.getContent(), "console");
+        MainFrame mainFrame = new MainFrame(this, tabbedPane, reuseFrame, unsupportedEcuHost);
 
         WizardContainer wizardContainer = new WizardContainer(uiContext);
         rootPanel.add(wizardContainer, "wizard");
@@ -257,9 +258,10 @@ public class ConsoleUI {
 
         CardLayout rootCardLayout = (CardLayout) rootPanel.getLayout();
 
-        JButton launchWizardButton = getLaunchWizardButton(rootPanel, wizardContainer, rootCardLayout);
+        JButton launchWizardButton = getLaunchWizardButton(mainFrame, rootPanel, wizardContainer, rootCardLayout);
 
         wizardContainer.setOnWizardExit(() -> rootCardLayout.show(rootPanel, "console"));
+        wizardContainer.setMessageHandler(mainFrame::showMessageOverlay);
         wizardContainer.setOnDontShowAgain(() -> {
             getConfig().getRoot().setBoolProperty(AUTO_LAUNCH_WIZARD, false);
             getConfig().save();
@@ -304,7 +306,6 @@ public class ConsoleUI {
 
         // ---------------
 
-        MainFrame mainFrame = new MainFrame(this, tabbedPane, reuseFrame, unsupportedEcuHost);
         JFrame frame = mainFrame.getFrame().getFrame();
         setFrameIcon(frame);
         log.info("Console " + UiVersion.CONSOLE_VERSION);
@@ -415,6 +416,7 @@ console live data tab is broken #8402
                 }
                 TuningPane tp = new TuningPane(uiContext, offlineImage, getConfig().getRoot().getChild("tuning"));
                 tuningHolder[0] = tp;
+                tp.setErrorHandler(mainFrame::showMessageOverlay);
                 tp.setFirmwareUpdateInProgress(deviceSessionManager.getState() == SessionState.FLASHING);
                 tp.setShowTuningTab(() -> tabbedPane.selectTab("Tuning"));
                 if (isOffline && offlineImage != null) {
@@ -458,7 +460,7 @@ console live data tab is broken #8402
                 tabbedPane.addTab("SLCAN Sniffer", new InitOnFirstPaintPanel() {
                     @Override
                     protected JPanel createContent() {
-                        return new SlcanTab().getContent();
+                        return new SlcanTab(mainFrame::showMessageOverlay).getContent();
                     }
                 }.getContent());
             }
@@ -572,13 +574,12 @@ console live data tab is broken #8402
         mainFrame.getFrame().showFrame(unsupportedEcuHost.getContent());
     }
 
-    private @NotNull JButton getLaunchWizardButton(JPanel rootPanel, WizardContainer wizardContainer, CardLayout rootCardLayout) {
+    private @NotNull JButton getLaunchWizardButton(MainFrame mainFrame, JPanel rootPanel,
+                                                    WizardContainer wizardContainer, CardLayout rootCardLayout) {
         JButton launchWizardButton = new JButton("Launch Wizard");
         launchWizardButton.addActionListener(e -> {
             if (ConnectionStatusLogic.INSTANCE.getValue() != ConnectionStatusValue.CONNECTED) {
-                JOptionPane.showMessageDialog(rootPanel,
-                    "Please connect to an ECU before launching the wizard.",
-                    "Not Connected", JOptionPane.WARNING_MESSAGE);
+                mainFrame.showMessageOverlay("Please connect to an ECU before launching the wizard.");
                 return;
             }
             wizardContainer.startWizard();

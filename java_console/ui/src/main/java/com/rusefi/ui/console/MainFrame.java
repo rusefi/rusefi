@@ -557,6 +557,15 @@ public class MainFrame {
         showOverlay(unsavedTuneChangesOverlay);
     }
 
+    public void showMessageOverlay(String message) {
+        closeFirmwareUpdateCheckOverlay();
+        closeConnectionFailureOverlay();
+        closeUnsavedTuneChangesOverlay();
+        FrameOverlay overlay = new FrameOverlay(message, Color.DARK_GRAY,
+            new OverlayAction("Close", KeyEvent.VK_C, () -> closeOverlay(activeOverlay)));
+        showOverlay(overlay);
+    }
+
     private void closeUnsavedTuneChangesOverlay() {
         closeOverlay(unsavedTuneChangesOverlay);
         unsavedTuneChangesOverlay = null;
