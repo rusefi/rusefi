@@ -30,6 +30,7 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.ZoneOffset;
@@ -202,6 +203,66 @@ public class MainFrame {
         }
     }
 
+    static final class UnsavedTuneChangesOverlay extends JPanel {
+        private final JTextArea message;
+        private final JButton saveButton;
+        private final JButton discardButton = createLargeButton("Exit Without Saving");
+        private final JButton cancelButton = createLargeButton("Cancel");
+
+        UnsavedTuneChangesOverlay(String text, String saveText, Runnable onSave, Runnable onDiscard, Runnable onCancel) {
+            super(new GridBagLayout());
+            setFocusCycleRoot(true);
+
+            message = new JTextArea(text);
+            message.setEditable(false);
+            message.setOpaque(false);
+            message.setFont(message.getFont().deriveFont(Font.BOLD, 32f));
+            message.setLineWrap(true);
+            message.setWrapStyleWord(true);
+            message.setColumns(50);
+            message.getAccessibleContext().setAccessibleName(text);
+
+            saveButton = createLargeButton(saveText);
+            saveButton.setMnemonic(KeyEvent.VK_S);
+            saveButton.addActionListener(e -> onSave.run());
+            discardButton.setMnemonic(KeyEvent.VK_E);
+            discardButton.addActionListener(e -> onDiscard.run());
+            cancelButton.setMnemonic(KeyEvent.VK_C);
+            cancelButton.addActionListener(e -> onCancel.run());
+
+            JPanel actions = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 8));
+            actions.add(saveButton);
+            actions.add(discardButton);
+            actions.add(cancelButton);
+
+            JPanel content = new JPanel(new BorderLayout(0, 24));
+            content.setBorder(BorderFactory.createEmptyBorder(32, 32, 32, 32));
+            content.add(message, BorderLayout.CENTER);
+            content.add(actions, BorderLayout.SOUTH);
+            add(content);
+        }
+
+        void requestInitialFocus() {
+            saveButton.requestFocusInWindow();
+        }
+
+        String getMessageForUnitTest() {
+            return message.getText();
+        }
+
+        void saveForUnitTest() {
+            saveButton.doClick();
+        }
+
+        void discardForUnitTest() {
+            discardButton.doClick();
+        }
+
+        void cancelForUnitTest() {
+            cancelButton.doClick();
+        }
+    }
+
     private static JButton createLargeButton(String text) {
         JButton button = new JButton(text);
         button.setFont(button.getFont().deriveFont(button.getFont().getSize() * 1.5f));
@@ -241,12 +302,16 @@ public class MainFrame {
     private final UnsupportedEcuCardHost unsupportedEcuHost;
     private FirmwareUpdateCheckOverlay firmwareUpdateCheckOverlay;
     private ConnectionFailureOverlay connectionFailureOverlay;
+    private UnsavedTuneChangesOverlay unsavedTuneChangesOverlay;
     private Component previousGlassPane;
     private boolean previousGlassPaneVisible;
     private Component previousFocusOwner;
     private Component previousConnectionFailureGlassPane;
     private boolean previousConnectionFailureGlassPaneVisible;
     private Component previousConnectionFailureFocusOwner;
+    private Component previousUnsavedTuneChangesGlassPane;
+    private boolean previousUnsavedTuneChangesGlassPaneVisible;
+    private Component previousUnsavedTuneChangesFocusOwner;
 
     public MainFrame(ConsoleUI consoleUI, TabbedPanel tabbedPane) {
         this(consoleUI, tabbedPane, null, null);
@@ -571,6 +636,7 @@ public class MainFrame {
     }
 
     private void showFirmwareUpdateCheckOverlay() {
+        closeUnsavedTuneChangesOverlay();
         closeConnectionFailureOverlay();
         closeFirmwareUpdateCheckOverlay();
         previousGlassPane = frame.getFrame().getGlassPane();
@@ -605,6 +671,7 @@ public class MainFrame {
     }
 
     private void showConnectionFailureOverlay(String errorMessage) {
+        closeUnsavedTuneChangesOverlay();
         closeFirmwareUpdateCheckOverlay();
         closeConnectionFailureOverlay();
         previousConnectionFailureGlassPane = frame.getFrame().getGlassPane();
@@ -633,6 +700,45 @@ public class MainFrame {
         if (previousConnectionFailureFocusOwner != null) {
             previousConnectionFailureFocusOwner.requestFocusInWindow();
             previousConnectionFailureFocusOwner = null;
+        }
+    }
+
+    public void showUnsavedTuneChangesOverlay(String message, String saveText,
+                                               Consumer<Runnable> saveAndThen, Runnable discardAndExit) {
+        closeFirmwareUpdateCheckOverlay();
+        closeConnectionFailureOverlay();
+        closeUnsavedTuneChangesOverlay();
+        previousUnsavedTuneChangesGlassPane = frame.getFrame().getGlassPane();
+        previousUnsavedTuneChangesGlassPaneVisible = previousUnsavedTuneChangesGlassPane.isVisible();
+        previousUnsavedTuneChangesFocusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+        unsavedTuneChangesOverlay = new UnsavedTuneChangesOverlay(message, saveText,
+            () -> saveAndThen.accept(() -> {
+                closeUnsavedTuneChangesOverlay();
+                discardAndExit.run();
+            }),
+            () -> {
+                closeUnsavedTuneChangesOverlay();
+                discardAndExit.run();
+            }, this::closeUnsavedTuneChangesOverlay);
+        frame.getFrame().setGlassPane(unsavedTuneChangesOverlay);
+        unsavedTuneChangesOverlay.setVisible(true);
+        unsavedTuneChangesOverlay.requestInitialFocus();
+    }
+
+    private void closeUnsavedTuneChangesOverlay() {
+        if (unsavedTuneChangesOverlay == null) {
+            return;
+        }
+        if (frame.getFrame().getGlassPane() == unsavedTuneChangesOverlay && previousUnsavedTuneChangesGlassPane != null) {
+            frame.getFrame().setGlassPane(previousUnsavedTuneChangesGlassPane);
+            previousUnsavedTuneChangesGlassPane.setVisible(previousUnsavedTuneChangesGlassPaneVisible);
+        }
+        unsavedTuneChangesOverlay = null;
+        previousUnsavedTuneChangesGlassPane = null;
+        previousUnsavedTuneChangesGlassPaneVisible = false;
+        if (previousUnsavedTuneChangesFocusOwner != null) {
+            previousUnsavedTuneChangesFocusOwner.requestFocusInWindow();
+            previousUnsavedTuneChangesFocusOwner = null;
         }
     }
 

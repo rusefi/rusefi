@@ -421,7 +421,7 @@ console live data tab is broken #8402
                     tp.seedOfflineImage(offlineImage, null);
                 }
                 mainFrame.setExitRequestHandler(() ->
-                        tp.requestExit(mainFrame.getFrame().getFrame(),
+                        tp.requestExit(mainFrame,
                             () -> mainFrame.getFrame().getFrame().dispose(),
                             deviceSessionManager.getState() == SessionState.FLASHING));
                 mainFrame.setTuneActions(tp.getLoadTuneAction(), tp.getSaveTuneAction());

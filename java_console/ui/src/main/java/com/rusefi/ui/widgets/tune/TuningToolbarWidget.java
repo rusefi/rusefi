@@ -354,6 +354,7 @@ public class TuningToolbarWidget {
                                         // [tag:offline_tune] Loading a tune with no ECU attached is an offline session.
                                         if (loadedWhileDisconnected) {
                                             uiContext.setOfflineMode(true);
+                                            uiContext.setOfflineTunePath(path);
                                         }
                                         String key = currentKey.get();
                                         if (key != null) {
@@ -437,6 +438,26 @@ public class TuningToolbarWidget {
         if (!path.toLowerCase().endsWith(".msq")) {
             path += ".msq";
         }
+        saveTuneToPathAndThen(ini, image, path, onSuccess);
+    }
+
+    public void saveTuneToPathAndThen(CalibrationDialogWidget right, String path, Runnable onSuccess) {
+        IniFileModel ini = uiContext.iniFileState.getIniFileModel();
+        BinaryProtocol bp = uiContext.getBinaryProtocol();
+        ConfigurationImage image = imageToSave(
+            right.getWorkingImage(),
+            sessionImage.get(),
+            bp == null ? null : bp.getControllerConfiguration(),
+            baselineImage
+        );
+        if (ini == null || image == null || path == null) {
+            JOptionPane.showMessageDialog(null, "No configuration loaded", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        saveTuneToPathAndThen(ini, image, path, onSuccess);
+    }
+
+    private static void saveTuneToPathAndThen(IniFileModel ini, ConfigurationImage image, String path, Runnable onSuccess) {
         final String finalPath = path;
         final ConfigurationImage finalImage = image;
         new Thread(() -> {

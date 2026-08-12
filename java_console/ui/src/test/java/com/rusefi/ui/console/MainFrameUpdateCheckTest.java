@@ -189,4 +189,24 @@ public class MainFrameUpdateCheckTest {
             assertFalse(noDownloadOverlay.isDownloadVisibleForUnitTest());
         });
     }
+
+    @Test
+    public void unsavedTuneOverlayOffersSaveDiscardAndCancel() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            AtomicBoolean saveClicked = new AtomicBoolean();
+            AtomicBoolean discardClicked = new AtomicBoolean();
+            AtomicBoolean cancelClicked = new AtomicBoolean();
+            MainFrame.UnsavedTuneChangesOverlay overlay = new MainFrame.UnsavedTuneChangesOverlay(
+                "The tune has unsaved changes.", "Save and Exit",
+                () -> saveClicked.set(true), () -> discardClicked.set(true), () -> cancelClicked.set(true));
+
+            assertEquals("The tune has unsaved changes.", overlay.getMessageForUnitTest());
+            overlay.saveForUnitTest();
+            overlay.discardForUnitTest();
+            overlay.cancelForUnitTest();
+            assertTrue(saveClicked.get());
+            assertTrue(discardClicked.get());
+            assertTrue(cancelClicked.get());
+        });
+    }
 }

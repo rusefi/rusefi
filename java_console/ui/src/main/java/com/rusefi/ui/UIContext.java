@@ -39,6 +39,7 @@ public class UIContext {
 
     /** [tag:offline_tune] True when the console was opened in offline mode (no ECU connection, tune loaded from file). */
     private boolean offlineMode;
+    private String offlineTunePath;
 
     @NotNull
     public LinkManager getLinkManager() {
@@ -63,6 +64,15 @@ public class UIContext {
     public void setOfflineMode(boolean offlineMode) {
         this.offlineMode = offlineMode;
         for (Consumer<Boolean> l : offlineModeListeners) l.accept(offlineMode);
+    }
+
+    public String getOfflineTunePath() {
+        return offlineTunePath;
+    }
+
+    /** [tag:offline_tune] Original MSQ path used for automatic offline-save on exit. */
+    public void setOfflineTunePath(String offlineTunePath) {
+        this.offlineTunePath = offlineTunePath;
     }
 
     /** [tag:offline_tune] Notified (on the calling thread) whenever offline mode is toggled. */

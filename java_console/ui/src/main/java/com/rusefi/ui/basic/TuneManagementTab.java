@@ -60,6 +60,7 @@ public class TuneManagementTab {
     private final AtomicBoolean awaitingCompletion = new AtomicBoolean(false);
     private final AtomicInteger tuneLoadSequence = new AtomicInteger();
     private final Object tuneLoadLock = new Object();
+    private final UIContext uiContext;
     private final Optional<TuneManifestExtension> manifestExtension;
     private final String tunesManifestUrl = getTunesManifestUrl();
     private List<TuneModel> tunes = new ArrayList<>();
@@ -93,8 +94,9 @@ public class TuneManagementTab {
                               SingleAsyncJobExecutor singleAsyncJobExecutor,
                               StatusPanel statusPanelTuneTab,
                               Runnable showTuneTab,
-                              @Nullable java.util.function.BiConsumer<IniFileModel, ConfigurationImage> offlineConsoleLauncher,
-                              boolean showSplashControls) {
+                               @Nullable java.util.function.BiConsumer<IniFileModel, ConfigurationImage> offlineConsoleLauncher,
+                               boolean showSplashControls) {
+        this.uiContext = uiContext;
         this.offlineConsoleLauncher = offlineConsoleLauncher;
         Optional<TuneManifestExtension> loadedExtension;
         RuntimeException extensionLoadError;
@@ -423,6 +425,7 @@ public class TuneManagementTab {
         if (result == null) {
             return;
         }
+        uiContext.setOfflineTunePath(path);
 
         // Hand off to the splash, which disposes itself and opens the console on the shared uiContext
         // (keeping the scanner alive so a later ECU connect transitions this console online — no 2nd window).
