@@ -9,6 +9,7 @@ import java.io.File;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import javax.swing.Icon;
 import javax.swing.SwingUtilities;
+import java.awt.Color;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -141,30 +142,34 @@ public class MainFrameUpdateCheckTest {
         SwingUtilities.invokeAndWait(() -> {
             AtomicBoolean updateClicked = new AtomicBoolean();
             AtomicBoolean closeClicked = new AtomicBoolean();
-            MainFrame.FirmwareUpdateCheckOverlay overlay = new MainFrame.FirmwareUpdateCheckOverlay(
-                () -> updateClicked.set(true), () -> closeClicked.set(true));
+            MainFrame.FrameOverlay overlay = new MainFrame.FrameOverlay("Checking ECU firmware...", Color.DARK_GRAY,
+                new MainFrame.OverlayAction("Update ECU Firmware", 'U', () -> updateClicked.set(true)),
+                new MainFrame.OverlayAction("Close", 'C', () -> closeClicked.set(true)));
+            overlay.setActionVisible(0, false);
 
             assertEquals("Checking ECU firmware...", overlay.getMessageForUnitTest());
-            assertFalse(overlay.isUpdateVisibleForUnitTest());
-            assertTrue(overlay.isCloseVisibleForUnitTest());
+            assertFalse(overlay.isActionVisibleForUnitTest(0));
+            assertTrue(overlay.isActionVisibleForUnitTest(1));
 
-            overlay.showResult(MainFrame.FirmwareUpdateCheckResult.AVAILABLE);
+            overlay.setMessage("ECU firmware update available", Color.GREEN);
+            overlay.setActionVisible(0, true);
             assertEquals("ECU firmware update available", overlay.getMessageForUnitTest());
-            assertTrue(overlay.isUpdateVisibleForUnitTest());
-            assertTrue(overlay.isCloseVisibleForUnitTest());
-            overlay.updateForUnitTest();
+            assertTrue(overlay.isActionVisibleForUnitTest(0));
+            assertTrue(overlay.isActionVisibleForUnitTest(1));
+            overlay.actionForUnitTest(0);
             assertTrue(updateClicked.get());
 
-            overlay.showResult(MainFrame.FirmwareUpdateCheckResult.UP_TO_DATE);
+            overlay.setMessage("ECU already matches the local firmware image", Color.GREEN);
+            overlay.setActionVisible(0, false);
             assertEquals("ECU already matches the local firmware image", overlay.getMessageForUnitTest());
-            assertFalse(overlay.isUpdateVisibleForUnitTest());
-            assertTrue(overlay.isCloseVisibleForUnitTest());
+            assertFalse(overlay.isActionVisibleForUnitTest(0));
+            assertTrue(overlay.isActionVisibleForUnitTest(1));
 
-            overlay.showResult(MainFrame.FirmwareUpdateCheckResult.UNABLE_TO_CHECK);
+            overlay.setMessage("Unable to check ECU firmware", Color.RED);
             assertEquals("Unable to check ECU firmware", overlay.getMessageForUnitTest());
-            assertFalse(overlay.isUpdateVisibleForUnitTest());
-            assertTrue(overlay.isCloseVisibleForUnitTest());
-            overlay.closeForUnitTest();
+            assertFalse(overlay.isActionVisibleForUnitTest(0));
+            assertTrue(overlay.isActionVisibleForUnitTest(1));
+            overlay.actionForUnitTest(1);
             assertTrue(closeClicked.get());
         });
     }
@@ -174,19 +179,19 @@ public class MainFrameUpdateCheckTest {
         SwingUtilities.invokeAndWait(() -> {
             AtomicBoolean downloadClicked = new AtomicBoolean();
             AtomicBoolean closeClicked = new AtomicBoolean();
-            MainFrame.ConnectionFailureOverlay overlay = new MainFrame.ConnectionFailureOverlay(
-                "Connection failed", () -> downloadClicked.set(true), () -> closeClicked.set(true));
+            MainFrame.FrameOverlay overlay = new MainFrame.FrameOverlay("Connection failed", Color.DARK_GRAY,
+                new MainFrame.OverlayAction("Open Download Page", 'O', () -> downloadClicked.set(true)),
+                new MainFrame.OverlayAction("Close", 'C', () -> closeClicked.set(true)));
 
             assertEquals("Connection failed", overlay.getMessageForUnitTest());
-            assertTrue(overlay.isDownloadVisibleForUnitTest());
-            overlay.downloadForUnitTest();
+            assertTrue(overlay.isActionVisibleForUnitTest(0));
+            overlay.actionForUnitTest(0);
             assertTrue(downloadClicked.get());
-            overlay.closeForUnitTest();
+            overlay.actionForUnitTest(1);
             assertTrue(closeClicked.get());
 
-            MainFrame.ConnectionFailureOverlay noDownloadOverlay = new MainFrame.ConnectionFailureOverlay(
-                "Connection failed", null, () -> { });
-            assertFalse(noDownloadOverlay.isDownloadVisibleForUnitTest());
+            overlay.setActionVisible(0, false);
+            assertFalse(overlay.isActionVisibleForUnitTest(0));
         });
     }
 
@@ -196,14 +201,15 @@ public class MainFrameUpdateCheckTest {
             AtomicBoolean saveClicked = new AtomicBoolean();
             AtomicBoolean discardClicked = new AtomicBoolean();
             AtomicBoolean cancelClicked = new AtomicBoolean();
-            MainFrame.UnsavedTuneChangesOverlay overlay = new MainFrame.UnsavedTuneChangesOverlay(
-                "The tune has unsaved changes.", "Save and Exit",
-                () -> saveClicked.set(true), () -> discardClicked.set(true), () -> cancelClicked.set(true));
+            MainFrame.FrameOverlay overlay = new MainFrame.FrameOverlay("The tune has unsaved changes.", Color.DARK_GRAY,
+                new MainFrame.OverlayAction("Save and Exit", 'S', () -> saveClicked.set(true)),
+                new MainFrame.OverlayAction("Exit Without Saving", 'E', () -> discardClicked.set(true)),
+                new MainFrame.OverlayAction("Cancel", 'C', () -> cancelClicked.set(true)));
 
             assertEquals("The tune has unsaved changes.", overlay.getMessageForUnitTest());
-            overlay.saveForUnitTest();
-            overlay.discardForUnitTest();
-            overlay.cancelForUnitTest();
+            overlay.actionForUnitTest(0);
+            overlay.actionForUnitTest(1);
+            overlay.actionForUnitTest(2);
             assertTrue(saveClicked.get());
             assertTrue(discardClicked.get());
             assertTrue(cancelClicked.get());

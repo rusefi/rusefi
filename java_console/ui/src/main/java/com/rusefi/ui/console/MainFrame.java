@@ -51,215 +51,83 @@ public class MainFrame {
         UNABLE_TO_CHECK
     }
 
-    static final class FirmwareUpdateCheckOverlay extends JPanel {
-        private static final Color GREEN = new Color(0, 128, 0);
-        private final JLabel message = new JLabel("", SwingConstants.CENTER);
-        private final JButton updateButton = createLargeButton("Update ECU Firmware");
-        private final JButton closeButton = createLargeButton("Close");
+    static final class OverlayAction {
+        private final String text;
+        private final int mnemonic;
+        private final Runnable action;
 
-        FirmwareUpdateCheckOverlay(Runnable onUpdate, Runnable onClose) {
+        OverlayAction(String text, int mnemonic, Runnable action) {
+            this.text = text;
+            this.mnemonic = mnemonic;
+            this.action = action;
+        }
+    }
+
+    static final class FrameOverlay extends JPanel {
+        private static final Color GREEN = new Color(0, 128, 0);
+        private final JTextArea message = new JTextArea();
+        private final JButton[] buttons;
+
+        FrameOverlay(String text, Color color, OverlayAction... actions) {
             super(new GridBagLayout());
             setFocusCycleRoot(true);
+            message.setEditable(false);
+            message.setOpaque(false);
             message.setFont(message.getFont().deriveFont(Font.BOLD, 32f));
+            message.setLineWrap(true);
+            message.setWrapStyleWord(true);
+            message.setColumns(50);
+            setMessage(text, color);
 
-            updateButton.setMnemonic(KeyEvent.VK_U);
-            updateButton.addActionListener(e -> onUpdate.run());
-            closeButton.setMnemonic(KeyEvent.VK_C);
-            closeButton.addActionListener(e -> onClose.run());
-
-            Dimension buttonSize = new Dimension(
-                Math.max(updateButton.getPreferredSize().width, closeButton.getPreferredSize().width),
-                Math.max(updateButton.getPreferredSize().height, closeButton.getPreferredSize().height)
-            );
-            updateButton.setPreferredSize(buttonSize);
-            closeButton.setPreferredSize(buttonSize);
-
-            JPanel actions = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 8));
-            actions.add(updateButton);
-            actions.add(closeButton);
+            buttons = new JButton[actions.length];
+            JPanel actionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 8));
+            for (int i = 0; i < actions.length; i++) {
+                OverlayAction action = actions[i];
+                JButton button = createLargeButton(action.text);
+                button.setMnemonic(action.mnemonic);
+                button.addActionListener(e -> action.action.run());
+                buttons[i] = button;
+                actionPanel.add(button);
+            }
 
             JPanel content = new JPanel(new BorderLayout(0, 24));
             content.setBorder(BorderFactory.createEmptyBorder(32, 32, 32, 32));
             content.add(message, BorderLayout.CENTER);
-            content.add(actions, BorderLayout.SOUTH);
+            content.add(actionPanel, BorderLayout.SOUTH);
             add(content);
-
-            showChecking();
         }
 
-        void showChecking() {
-            message.setText("Checking ECU firmware...");
-            message.setForeground(Color.DARK_GRAY);
-            updateButton.setVisible(false);
-            closeButton.setVisible(true);
-            message.getAccessibleContext().setAccessibleName(message.getText());
+        void setMessage(String text, Color color) {
+            message.setText(text);
+            message.setForeground(color);
+            message.getAccessibleContext().setAccessibleName(text);
         }
 
         void requestInitialFocus() {
-            closeButton.requestFocusInWindow();
+            for (JButton button : buttons) {
+                if (button.isVisible()) {
+                    button.requestFocusInWindow();
+                    return;
+                }
+            }
         }
 
-        void showResult(FirmwareUpdateCheckResult result) {
-            switch (result) {
-                case AVAILABLE:
-                    message.setText("ECU firmware update available");
-                    message.setForeground(GREEN);
-                    updateButton.setVisible(true);
-                    break;
-                case UP_TO_DATE:
-                    message.setText("ECU already matches the local firmware image");
-                    message.setForeground(GREEN);
-                    updateButton.setVisible(false);
-                    break;
-                default:
-                    message.setText("Unable to check ECU firmware");
-                    message.setForeground(Color.RED.darker());
-                    updateButton.setVisible(false);
-                    break;
-            }
-            closeButton.setVisible(true);
-            message.getAccessibleContext().setAccessibleName(message.getText());
+        void setActionVisible(int index, boolean visible) {
+            buttons[index].setVisible(visible);
             revalidate();
             repaint();
-            (updateButton.isVisible() ? updateButton : closeButton).requestFocusInWindow();
         }
 
         String getMessageForUnitTest() {
             return message.getText();
         }
 
-        boolean isUpdateVisibleForUnitTest() {
-            return updateButton.isVisible();
+        boolean isActionVisibleForUnitTest(int index) {
+            return buttons[index].isVisible();
         }
 
-        boolean isCloseVisibleForUnitTest() {
-            return closeButton.isVisible();
-        }
-
-        void updateForUnitTest() {
-            updateButton.doClick();
-        }
-
-        void closeForUnitTest() {
-            closeButton.doClick();
-        }
-    }
-
-    static final class ConnectionFailureOverlay extends JPanel {
-        private final JTextArea message;
-        private final JButton downloadButton = createLargeButton("Open Download Page");
-        private final JButton closeButton = createLargeButton("Close");
-
-        ConnectionFailureOverlay(String errorMessage, Runnable onDownload, Runnable onClose) {
-            super(new GridBagLayout());
-            setFocusCycleRoot(true);
-
-            message = new JTextArea(errorMessage);
-            message.setEditable(false);
-            message.setOpaque(false);
-            message.setFont(message.getFont().deriveFont(Font.BOLD, 32f));
-            message.setLineWrap(true);
-            message.setWrapStyleWord(true);
-            message.setColumns(50);
-            message.getAccessibleContext().setAccessibleName(errorMessage);
-
-            downloadButton.setMnemonic(KeyEvent.VK_O);
-            downloadButton.setVisible(onDownload != null);
-            if (onDownload != null) {
-                downloadButton.addActionListener(e -> onDownload.run());
-            }
-            closeButton.setMnemonic(KeyEvent.VK_C);
-            closeButton.addActionListener(e -> onClose.run());
-
-            JPanel actions = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 8));
-            actions.add(downloadButton);
-            actions.add(closeButton);
-
-            JPanel content = new JPanel(new BorderLayout(0, 24));
-            content.setBorder(BorderFactory.createEmptyBorder(32, 32, 32, 32));
-            content.add(message, BorderLayout.CENTER);
-            content.add(actions, BorderLayout.SOUTH);
-            add(content);
-        }
-
-        void requestInitialFocus() {
-            (downloadButton.isVisible() ? downloadButton : closeButton).requestFocusInWindow();
-        }
-
-        String getMessageForUnitTest() {
-            return message.getText();
-        }
-
-        boolean isDownloadVisibleForUnitTest() {
-            return downloadButton.isVisible();
-        }
-
-        void downloadForUnitTest() {
-            downloadButton.doClick();
-        }
-
-        void closeForUnitTest() {
-            closeButton.doClick();
-        }
-    }
-
-    static final class UnsavedTuneChangesOverlay extends JPanel {
-        private final JTextArea message;
-        private final JButton saveButton;
-        private final JButton discardButton = createLargeButton("Exit Without Saving");
-        private final JButton cancelButton = createLargeButton("Cancel");
-
-        UnsavedTuneChangesOverlay(String text, String saveText, Runnable onSave, Runnable onDiscard, Runnable onCancel) {
-            super(new GridBagLayout());
-            setFocusCycleRoot(true);
-
-            message = new JTextArea(text);
-            message.setEditable(false);
-            message.setOpaque(false);
-            message.setFont(message.getFont().deriveFont(Font.BOLD, 32f));
-            message.setLineWrap(true);
-            message.setWrapStyleWord(true);
-            message.setColumns(50);
-            message.getAccessibleContext().setAccessibleName(text);
-
-            saveButton = createLargeButton(saveText);
-            saveButton.setMnemonic(KeyEvent.VK_S);
-            saveButton.addActionListener(e -> onSave.run());
-            discardButton.setMnemonic(KeyEvent.VK_E);
-            discardButton.addActionListener(e -> onDiscard.run());
-            cancelButton.setMnemonic(KeyEvent.VK_C);
-            cancelButton.addActionListener(e -> onCancel.run());
-
-            JPanel actions = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 8));
-            actions.add(saveButton);
-            actions.add(discardButton);
-            actions.add(cancelButton);
-
-            JPanel content = new JPanel(new BorderLayout(0, 24));
-            content.setBorder(BorderFactory.createEmptyBorder(32, 32, 32, 32));
-            content.add(message, BorderLayout.CENTER);
-            content.add(actions, BorderLayout.SOUTH);
-            add(content);
-        }
-
-        void requestInitialFocus() {
-            saveButton.requestFocusInWindow();
-        }
-
-        String getMessageForUnitTest() {
-            return message.getText();
-        }
-
-        void saveForUnitTest() {
-            saveButton.doClick();
-        }
-
-        void discardForUnitTest() {
-            discardButton.doClick();
-        }
-
-        void cancelForUnitTest() {
-            cancelButton.doClick();
+        void actionForUnitTest(int index) {
+            buttons[index].doClick();
         }
     }
 
@@ -300,18 +168,13 @@ public class MainFrame {
     private int firmwareUpdateCheckGeneration;
     private boolean unsupportedEcuBlocking;
     private final UnsupportedEcuCardHost unsupportedEcuHost;
-    private FirmwareUpdateCheckOverlay firmwareUpdateCheckOverlay;
-    private ConnectionFailureOverlay connectionFailureOverlay;
-    private UnsavedTuneChangesOverlay unsavedTuneChangesOverlay;
+    private FrameOverlay firmwareUpdateCheckOverlay;
+    private FrameOverlay connectionFailureOverlay;
+    private FrameOverlay unsavedTuneChangesOverlay;
+    private FrameOverlay activeOverlay;
     private Component previousGlassPane;
     private boolean previousGlassPaneVisible;
     private Component previousFocusOwner;
-    private Component previousConnectionFailureGlassPane;
-    private boolean previousConnectionFailureGlassPaneVisible;
-    private Component previousConnectionFailureFocusOwner;
-    private Component previousUnsavedTuneChangesGlassPane;
-    private boolean previousUnsavedTuneChangesGlassPaneVisible;
-    private Component previousUnsavedTuneChangesFocusOwner;
 
     public MainFrame(ConsoleUI consoleUI, TabbedPanel tabbedPane) {
         this(consoleUI, tabbedPane, null, null);
@@ -571,7 +434,7 @@ public class MainFrame {
             applyFirmwareUpdateCheckResult(FirmwareUpdateCheckResult.UNABLE_TO_CHECK);
             if (userInitiated) {
                 showFirmwareUpdateCheckOverlay();
-                firmwareUpdateCheckOverlay.showResult(FirmwareUpdateCheckResult.UNABLE_TO_CHECK);
+                showFirmwareUpdateCheckResult(FirmwareUpdateCheckResult.UNABLE_TO_CHECK);
             }
             return;
         }
@@ -616,7 +479,7 @@ public class MainFrame {
 
         applyFirmwareUpdateCheckResult(result);
         if (userInitiated && firmwareUpdateCheckOverlay != null) {
-            firmwareUpdateCheckOverlay.showResult(result);
+            showFirmwareUpdateCheckResult(result);
         }
     }
 
@@ -639,29 +502,85 @@ public class MainFrame {
         closeUnsavedTuneChangesOverlay();
         closeConnectionFailureOverlay();
         closeFirmwareUpdateCheckOverlay();
-        previousGlassPane = frame.getFrame().getGlassPane();
-        previousGlassPaneVisible = previousGlassPane.isVisible();
-        previousFocusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-        firmwareUpdateCheckOverlay = new FirmwareUpdateCheckOverlay(() -> {
-            closeFirmwareUpdateCheckOverlay();
-            if (updateEcuItem.isEnabled() && updateEcuAction != null) {
-                updateEcuAction.run();
-            }
-        }, this::closeFirmwareUpdateCheckOverlay);
-        frame.getFrame().setGlassPane(firmwareUpdateCheckOverlay);
-        firmwareUpdateCheckOverlay.setVisible(true);
-        firmwareUpdateCheckOverlay.requestInitialFocus();
+        firmwareUpdateCheckOverlay = new FrameOverlay("Checking ECU firmware...", Color.DARK_GRAY,
+            new OverlayAction("Update ECU Firmware", KeyEvent.VK_U, () -> {
+                closeFirmwareUpdateCheckOverlay();
+                if (updateEcuItem.isEnabled() && updateEcuAction != null) {
+                    updateEcuAction.run();
+                }
+            }), new OverlayAction("Close", KeyEvent.VK_C, this::closeFirmwareUpdateCheckOverlay));
+        firmwareUpdateCheckOverlay.setActionVisible(0, false);
+        showOverlay(firmwareUpdateCheckOverlay);
     }
 
     private void closeFirmwareUpdateCheckOverlay() {
-        if (firmwareUpdateCheckOverlay == null) {
+        closeOverlay(firmwareUpdateCheckOverlay);
+        firmwareUpdateCheckOverlay = null;
+    }
+
+    private void showConnectionFailureOverlay(String errorMessage) {
+        closeUnsavedTuneChangesOverlay();
+        closeFirmwareUpdateCheckOverlay();
+        closeConnectionFailureOverlay();
+        Runnable onDownload = errorMessage.contains(RUSEFI_WIKI_DOWNLOAD_PAGE)
+            ? () -> URLLabel.open(RUSEFI_WIKI_DOWNLOAD_PAGE)
+            : null;
+        connectionFailureOverlay = new FrameOverlay(errorMessage, Color.DARK_GRAY,
+            new OverlayAction("Open Download Page", KeyEvent.VK_O, () -> {
+                if (onDownload != null) {
+                    onDownload.run();
+                }
+            }),
+            new OverlayAction("Close", KeyEvent.VK_C, this::closeConnectionFailureOverlay));
+        connectionFailureOverlay.setActionVisible(0, onDownload != null);
+        showOverlay(connectionFailureOverlay);
+    }
+
+    private void closeConnectionFailureOverlay() {
+        closeOverlay(connectionFailureOverlay);
+        connectionFailureOverlay = null;
+    }
+
+    public void showUnsavedTuneChangesOverlay(String message, String saveText,
+                                               Consumer<Runnable> saveAndThen, Runnable discardAndExit) {
+        closeFirmwareUpdateCheckOverlay();
+        closeConnectionFailureOverlay();
+        closeUnsavedTuneChangesOverlay();
+        unsavedTuneChangesOverlay = new FrameOverlay(message, Color.DARK_GRAY,
+            new OverlayAction(saveText, KeyEvent.VK_S, () -> saveAndThen.accept(() -> {
+                closeUnsavedTuneChangesOverlay();
+                discardAndExit.run();
+            })), new OverlayAction("Exit Without Saving", KeyEvent.VK_E, () -> {
+                closeUnsavedTuneChangesOverlay();
+                discardAndExit.run();
+            }), new OverlayAction("Cancel", KeyEvent.VK_C, this::closeUnsavedTuneChangesOverlay));
+        showOverlay(unsavedTuneChangesOverlay);
+    }
+
+    private void closeUnsavedTuneChangesOverlay() {
+        closeOverlay(unsavedTuneChangesOverlay);
+        unsavedTuneChangesOverlay = null;
+    }
+
+    private void showOverlay(FrameOverlay overlay) {
+        activeOverlay = overlay;
+        previousGlassPane = frame.getFrame().getGlassPane();
+        previousGlassPaneVisible = previousGlassPane.isVisible();
+        previousFocusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+        frame.getFrame().setGlassPane(overlay);
+        overlay.setVisible(true);
+        overlay.requestInitialFocus();
+    }
+
+    private void closeOverlay(FrameOverlay overlay) {
+        if (overlay == null || activeOverlay != overlay) {
             return;
         }
-        if (frame.getFrame().getGlassPane() == firmwareUpdateCheckOverlay && previousGlassPane != null) {
+        if (previousGlassPane != null) {
             frame.getFrame().setGlassPane(previousGlassPane);
             previousGlassPane.setVisible(previousGlassPaneVisible);
         }
-        firmwareUpdateCheckOverlay = null;
+        activeOverlay = null;
         previousGlassPane = null;
         previousGlassPaneVisible = false;
         if (previousFocusOwner != null) {
@@ -670,76 +589,22 @@ public class MainFrame {
         }
     }
 
-    private void showConnectionFailureOverlay(String errorMessage) {
-        closeUnsavedTuneChangesOverlay();
-        closeFirmwareUpdateCheckOverlay();
-        closeConnectionFailureOverlay();
-        previousConnectionFailureGlassPane = frame.getFrame().getGlassPane();
-        previousConnectionFailureGlassPaneVisible = previousConnectionFailureGlassPane.isVisible();
-        previousConnectionFailureFocusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-        Runnable onDownload = errorMessage.contains(RUSEFI_WIKI_DOWNLOAD_PAGE)
-            ? () -> URLLabel.open(RUSEFI_WIKI_DOWNLOAD_PAGE)
-            : null;
-        connectionFailureOverlay = new ConnectionFailureOverlay(errorMessage, onDownload, this::closeConnectionFailureOverlay);
-        frame.getFrame().setGlassPane(connectionFailureOverlay);
-        connectionFailureOverlay.setVisible(true);
-        connectionFailureOverlay.requestInitialFocus();
-    }
-
-    private void closeConnectionFailureOverlay() {
-        if (connectionFailureOverlay == null) {
-            return;
+    private void showFirmwareUpdateCheckResult(FirmwareUpdateCheckResult result) {
+        switch (result) {
+            case AVAILABLE:
+                firmwareUpdateCheckOverlay.setMessage("ECU firmware update available", FrameOverlay.GREEN);
+                firmwareUpdateCheckOverlay.setActionVisible(0, true);
+                break;
+            case UP_TO_DATE:
+                firmwareUpdateCheckOverlay.setMessage("ECU already matches the local firmware image", FrameOverlay.GREEN);
+                firmwareUpdateCheckOverlay.setActionVisible(0, false);
+                break;
+            default:
+                firmwareUpdateCheckOverlay.setMessage("Unable to check ECU firmware", Color.RED.darker());
+                firmwareUpdateCheckOverlay.setActionVisible(0, false);
+                break;
         }
-        if (frame.getFrame().getGlassPane() == connectionFailureOverlay && previousConnectionFailureGlassPane != null) {
-            frame.getFrame().setGlassPane(previousConnectionFailureGlassPane);
-            previousConnectionFailureGlassPane.setVisible(previousConnectionFailureGlassPaneVisible);
-        }
-        connectionFailureOverlay = null;
-        previousConnectionFailureGlassPane = null;
-        previousConnectionFailureGlassPaneVisible = false;
-        if (previousConnectionFailureFocusOwner != null) {
-            previousConnectionFailureFocusOwner.requestFocusInWindow();
-            previousConnectionFailureFocusOwner = null;
-        }
-    }
-
-    public void showUnsavedTuneChangesOverlay(String message, String saveText,
-                                               Consumer<Runnable> saveAndThen, Runnable discardAndExit) {
-        closeFirmwareUpdateCheckOverlay();
-        closeConnectionFailureOverlay();
-        closeUnsavedTuneChangesOverlay();
-        previousUnsavedTuneChangesGlassPane = frame.getFrame().getGlassPane();
-        previousUnsavedTuneChangesGlassPaneVisible = previousUnsavedTuneChangesGlassPane.isVisible();
-        previousUnsavedTuneChangesFocusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-        unsavedTuneChangesOverlay = new UnsavedTuneChangesOverlay(message, saveText,
-            () -> saveAndThen.accept(() -> {
-                closeUnsavedTuneChangesOverlay();
-                discardAndExit.run();
-            }),
-            () -> {
-                closeUnsavedTuneChangesOverlay();
-                discardAndExit.run();
-            }, this::closeUnsavedTuneChangesOverlay);
-        frame.getFrame().setGlassPane(unsavedTuneChangesOverlay);
-        unsavedTuneChangesOverlay.setVisible(true);
-        unsavedTuneChangesOverlay.requestInitialFocus();
-    }
-
-    private void closeUnsavedTuneChangesOverlay() {
-        if (unsavedTuneChangesOverlay == null) {
-            return;
-        }
-        if (frame.getFrame().getGlassPane() == unsavedTuneChangesOverlay && previousUnsavedTuneChangesGlassPane != null) {
-            frame.getFrame().setGlassPane(previousUnsavedTuneChangesGlassPane);
-            previousUnsavedTuneChangesGlassPane.setVisible(previousUnsavedTuneChangesGlassPaneVisible);
-        }
-        unsavedTuneChangesOverlay = null;
-        previousUnsavedTuneChangesGlassPane = null;
-        previousUnsavedTuneChangesGlassPaneVisible = false;
-        if (previousUnsavedTuneChangesFocusOwner != null) {
-            previousUnsavedTuneChangesFocusOwner.requestFocusInWindow();
-            previousUnsavedTuneChangesFocusOwner = null;
-        }
+        firmwareUpdateCheckOverlay.requestInitialFocus();
     }
 
     private void onUpdateSoftwareClicked() {
