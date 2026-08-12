@@ -13,3 +13,5 @@ class TriggerWaveform;
 void initialize2jzGE3_34_simulation_shape(TriggerWaveform *s);
 
 void initializeUzCam(TriggerWaveform *s);
+
+void initialize_3GRfSE_CAM(TriggerWaveform *s);
