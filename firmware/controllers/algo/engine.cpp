@@ -130,6 +130,8 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	    return trigger_type_e::TT_NISSAN_HR_CAM_IN;
 	case VVT_SUBARU_7TOOTH:
 			return trigger_type_e::TT_VVT_SUBARU_7_WITHOUT_6;
+  case VVT_3GR_FSE:
+		  return trigger_type_e::TT_VVT_3GR_FSE; 
 	default:
 	  return getCustomVvtTriggerType(vvtMode);
 	}
