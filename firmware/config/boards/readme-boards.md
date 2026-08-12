@@ -62,6 +62,8 @@ Connector yaml pin entries use these canonical `function:` strings:
 | `agnd` | `GNDA Analog/Sensor Ground` |
 | `inj` | `Injector N` |
 | `ign` | `Smart Ignition Coil N` |
+| `av` (TPS) | `Universal analog input. Suggested TPS N sensor input` |
+| `av` (PPS) | `Universal analog input. Suggested PPS input N` |
 
 `Smart Ignition Coil N` means a logic-level ignition output: it drives a smart coil
 (built-in igniter) or an external igniter module, never a dumb coil directly. Coils are
@@ -70,6 +72,13 @@ cylinder pairing (e.g. hellenMiataNA6 `1G - Ignition 1 & 4`). Applied so far on 
 universal boards (uaefi, uaefi121, super-uaefi, proteus, microrusefi, alphax-2chan,
 alphax-4chan, alphax-8chan, alphax-8chan-revA, alphax-4K-GDI), hellen121nissan,
 frankenso_na6 and all hellenMiata boards (NA6, NA96, NB1, NB2).
+
+The TPS/PPS strings follow the uaefi121 style: the `Universal analog input.
+Suggested ` prefix says the pin is a general-purpose analog input with a
+recommended assignment, and the sensor is numbered 1/2 (never `TPS2`/`PPS2`).
+Applied on all universal boards; extra information rides along where meaningful
+(e.g. proteus `TPS 2 / TPS1_2`). Board-specific channel numbers and silkscreen
+labels stay in `ts_name`.
 
 Exceptions:
 

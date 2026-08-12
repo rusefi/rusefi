@@ -590,10 +590,12 @@ pins:
 
   - pin: 98a
     function: GNDA PPS1 sensor
+    type: agnd
     color: black
 
   - pin: 99a
     function: GNDA PPS2 sensor
+    type: agnd
     color: black
 
   - pin: 100a

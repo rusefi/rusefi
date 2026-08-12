@@ -133,7 +133,8 @@ pins:
     # IN_PPS
     id: EFI_ADC_3
     class: analog_inputs
-    function: PPS Sensor Input
+    function: Universal analog input. Suggested PPS input 1
+    type: av
     ts_name: 17A - PPS
     color: orange
 

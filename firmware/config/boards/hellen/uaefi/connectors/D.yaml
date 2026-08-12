@@ -78,7 +78,7 @@ pins:
     meta: MM100_IN_TPS_ANALOG
     class: analog_inputs
     ts_name: ___ TPS1
-    function: Universal analog input. Suggested TPS input 1
+    function: Universal analog input. Suggested TPS 1 sensor input
     type: av
     color: green
 

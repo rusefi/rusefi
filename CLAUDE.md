@@ -187,7 +187,7 @@ Any code reachable from a unit-test build (`unit_tests/` itself, plus firmware s
 
 ## Source Control Hygiene
 
-- **Never push — only a human pushes.** Claude may commit locally, but `git push` (to any remote, any branch) is reserved for the human. Leave commits on the local branch and say they are ready to push.
+- **Never commit or push — only a human does either.** Both `git commit` and `git push` (to any remote, any branch) are reserved for the human. Leave changes uncommitted in the working tree and summarize what changed; the human commits and pushes.
 - **Stage new files immediately**: When you create a new source file (C/C++ headers/sources, Java/Kotlin sources, unit tests, scripts, build files, resources, docs, etc.), run `git add <path>` as part of the same change so it shows up in `git status` / `git diff` and is not lost on the next clean or branch switch.
 - Do not stage build artifacts or generated files (see "Do not attempt to commit any generated files" above), IDE-local files, or user-specific configs.
 

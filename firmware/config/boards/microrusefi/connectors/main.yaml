@@ -140,7 +140,7 @@ pins:
     id: [C3, EFI_ADC_13]
     class: [switch_inputs, analog_inputs]
     color: red left
-    function: Throttle position sensor (TPS)
+    function: Universal analog input. Suggested TPS 1 sensor input
     ts_name: 20 - AN volt 5
     type: av
 
@@ -183,7 +183,7 @@ pins:
     id: [A6, EFI_ADC_6]
     class: [switch_inputs, analog_inputs]
     color: light blue
-    function: TPS2
+    function: Universal analog input. Suggested TPS 2 sensor input
     ts_name: 26 - AN volt 2
     type: av
 
@@ -224,7 +224,7 @@ pins:
     id: [C5, EFI_ADC_15]
     class: [switch_inputs, analog_inputs]
     color: pink
-    function: Throttle Pedal Position Sensor 2 (PPS2)
+    function: Universal analog input. Suggested PPS input 2
     ts_name: 30 - AN volt 7
     type: av
 
@@ -232,7 +232,7 @@ pins:
     id: [A7, EFI_ADC_7]
     class: [switch_inputs, analog_inputs]
     color: pink
-    function: Throttle Pedal Position Sensor (PPS)
+    function: Universal analog input. Suggested PPS input 1
     ts_name: 31 - AN volt 3
     type: av
 

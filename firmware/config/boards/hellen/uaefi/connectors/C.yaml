@@ -80,7 +80,7 @@ pins:
     meta: MM100_IN_AUX1_ANALOG
     class: analog_inputs
     ts_name: ___ TPS2
-    function: Universal analog input. Suggested TPS input 2
+    function: Universal analog input. Suggested TPS 2 sensor input
     type: av
     color: blue
 
