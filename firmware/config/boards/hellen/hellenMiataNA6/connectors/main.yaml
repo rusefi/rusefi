@@ -34,18 +34,21 @@ pins:
     id: I8
     class: outputs
     ts_name: 1G - Ignition 1 & 4 (rev C)
+    function: Smart Ignition Coil 1
     type: ign
 
   - pin: 1G
     id: C13
     class: outputs
     ts_name: 1G - Ignition 1 & 4 (rev D)
+    function: Smart Ignition Coil 1
     type: ign
 
   - pin: 1H
     id: E5
     class: outputs
     ts_name: 1H - Ignition 2 & 3
+    function: Smart Ignition Coil 2
     type: ign
 
   - pin: 1I

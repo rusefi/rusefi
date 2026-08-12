@@ -71,7 +71,7 @@ pins:
     # H144_IGN_4
     id: E3
     class: outputs
-    function: Smart Ignition 4 Output
+    function: Smart Ignition Coil 4
     type: ign
     ts_name: 10A - Ignition 4
     color: yellow
@@ -80,7 +80,7 @@ pins:
     # H144_IGN_3
     id: E4
     class: outputs
-    function: Smart Ignition 3 Output
+    function: Smart Ignition Coil 3
     type: ign
     ts_name: 11A - Ignition 3
     color: yellow
@@ -90,7 +90,7 @@ pins:
     # H144_IGN_2
     id: E5
     class: outputs
-    function: Smart Ignition 2 Output
+    function: Smart Ignition Coil 2
     type: ign
     ts_name: 12A - Ignition 2
     color: yellow
@@ -100,7 +100,7 @@ pins:
     # H144_IGN_1
     id: C13
     class: outputs
-    function: Smart Ignition 1 Output
+    function: Smart Ignition Coil 1
     type: ign
     ts_name: 13A - Ignition 1
     color: yellow

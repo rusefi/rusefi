@@ -168,14 +168,14 @@ pins:
     id: E2
     class: outputs
     ts_name: 60 - Coil 5
-    function: Coil 5
+    function: Smart Ignition Coil 5
     type: ign
 
   - pin: 61a
     id: E4
     class: outputs
     ts_name: 61 - Coil 3
-    function: Coil 3
+    function: Smart Ignition Coil 3
     type: ign
 
   - pin: 62a
@@ -183,7 +183,7 @@ pins:
     id: C13
     class: outputs
     ts_name: 62 - Coil 1
-    function: Coil 1
+    function: Smart Ignition Coil 1
     type: ign
 
 
@@ -242,21 +242,21 @@ pins:
     id: B8
     class: outputs
     ts_name: 79 - Coil 6
-    function: Coil 6
+    function: Smart Ignition Coil 6
     type: ign
 
   - pin: 80a
     id: E3
     class: outputs
     ts_name: 80 - Coil 4
-    function: Coil 4
+    function: Smart Ignition Coil 4
     type: ign
 
   - pin: 81a
     id: E5
     class: outputs
     ts_name: 81 - Coil 2
-    function: Coil 2
+    function: Smart Ignition Coil 2
     type: ign
 
 

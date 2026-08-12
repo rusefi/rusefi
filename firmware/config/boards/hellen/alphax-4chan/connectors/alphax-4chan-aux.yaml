@@ -35,7 +35,7 @@ pins:
 
   - pin: X6
     meta: H144_IGN_5
-    function: Ignition 5
+    function: Smart Ignition Coil 5
     type: ign
     class: outputs
     ts_name: Aux6 - Ignition 5
@@ -48,7 +48,7 @@ pins:
 
   - pin: X8
     meta: H144_IGN_6
-    function: Ignition 6
+    function: Smart Ignition Coil 6
     type: ign
     class: outputs
     ts_name: Aux8 - Ignition 6

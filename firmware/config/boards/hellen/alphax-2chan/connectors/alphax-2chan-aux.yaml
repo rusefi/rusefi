@@ -29,9 +29,9 @@ pins:
 
   - pin: X6
     meta: H144_IGN_4
-    function: Ign 4
+    function: Smart Ignition Coil 4
     class: outputs
-    type: ls
+    type: ign
     ts_name: Aux6 - Ign 4
 
   - pin: X7
@@ -42,9 +42,9 @@ pins:
 
   - pin: X8
     meta: H144_IGN_3
-    function: Ign 3
+    function: Smart Ignition Coil 3
     class: outputs
-    type: ls
+    type: ign
     ts_name: Aux8 - Ign 3
 
   - pin: X9

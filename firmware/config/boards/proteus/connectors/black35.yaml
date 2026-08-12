@@ -149,7 +149,7 @@ pins:
 
   - pin: 22
     id: C9
-    function: Ignition cylinder 3
+    function: Smart Ignition Coil 3
     class: outputs
     ts_name: Ign 3
     type: ign
@@ -169,63 +169,63 @@ pins:
 
   - pin: 25
     id: G2
-    function: Ignition cylinder 12
+    function: Smart Ignition Coil 12
     class: outputs
     ts_name: Ign 12
     type: ign
 
   - pin: 26
     id: G3
-    function: Ignition cylinder 11
+    function: Smart Ignition Coil 11
     class: outputs
     ts_name: Ign 11
     type: ign
 
   - pin: 27
     id: G4
-    function: Ignition cylinder 10
+    function: Smart Ignition Coil 10
     class: outputs
     ts_name: Ign 10
     type: ign
 
   - pin: 28
     id: G5
-    function: Ignition cylinder 9
+    function: Smart Ignition Coil 9
     class: outputs
     ts_name: Ign 9
     type: ign
 
   - pin: 29
     id: G6
-    function: Ignition cylinder 8
+    function: Smart Ignition Coil 8
     class: outputs
     ts_name: Ign 8
     type: ign
 
   - pin: 30
     id: G7
-    function: Ignition cylinder 7
+    function: Smart Ignition Coil 7
     class: outputs
     ts_name: Ign 7
     type: ign
 
   - pin: 31
     id: G8
-    function: Ignition cylinder 6
+    function: Smart Ignition Coil 6
     class: outputs
     ts_name: Ign 6
     type: ign
 
   - pin: 32
     id: C7
-    function: Ignition cylinder 5
+    function: Smart Ignition Coil 5
     class: outputs
     ts_name: Ign 5
     type: ign
 
   - pin: 33
     id: C8
-    function: Ignition cylinder 4
+    function: Smart Ignition Coil 4
     class: outputs
     ts_name: Ign 4
     type: ign
@@ -233,7 +233,7 @@ pins:
 
   - pin: 34
     id: D3
-    function: Ignition cylinder 2
+    function: Smart Ignition Coil 2
     class: outputs
     ts_name: Ign 2
     type: ign
@@ -241,7 +241,7 @@ pins:
 
   - pin: 35
     id: D4
-    function: Ignition cylinder 1
+    function: Smart Ignition Coil 1
     class: outputs
     ts_name: Ign 1
     type: ign

@@ -61,7 +61,15 @@ Connector yaml pin entries use these canonical `function:` strings:
 | `gnd` | `Power/Chassis GND ground` |
 | `agnd` | `GNDA Analog/Sensor Ground` |
 | `inj` | `Injector N` |
-| `ign` | `Ignition Coil N` (applied so far on uaefi, uaefi121, super-uaefi) |
+| `ign` | `Smart Ignition Coil N` |
+
+`Smart Ignition Coil N` means a logic-level ignition output: it drives a smart coil
+(built-in igniter) or an external igniter module, never a dumb coil directly. Coils are
+numbered by coil, not by cylinder - on wasted-spark boards the ts_name carries the
+cylinder pairing (e.g. hellenMiataNA6 `1G - Ignition 1 & 4`). Applied so far on the
+universal boards (uaefi, uaefi121, super-uaefi, proteus, microrusefi, alphax-2chan,
+alphax-4chan, alphax-8chan, alphax-8chan-revA, alphax-4K-GDI), hellen121nissan,
+frankenso_na6 and all hellenMiata boards (NA6, NA96, NB1, NB2).
 
 Exceptions:
 
@@ -69,5 +77,5 @@ Exceptions:
   `Port injector N` for the port-injection channels plus `GDI Injector N Positive` /
   `GDI Injector N Negative` pairs for the direct injectors.
 - uaefi, uaefi121 and super-uaefi outputs can be repurposed, so coil pins use just
-  `Ignition Coil N`; uaefi121 intentionally has two pins per coil (current is split
-  across both wires), both carrying the same function value.
+  `Smart Ignition Coil N`; uaefi121 intentionally has two pins per coil (current is
+  split across both wires), both carrying the same function value.

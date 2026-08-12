@@ -68,7 +68,7 @@ pins:
     # H144_IGN_8
     id: E6
     class: outputs
-    function: Smart Ignition 8 Output
+    function: Smart Ignition Coil 8
     type: ign
     ts_name: 18C - Ignition 8
     color: yellow
@@ -77,7 +77,7 @@ pins:
     # H144_IGN_7
     id: B9
     class: outputs
-    function: Smart Ignition 7 Output
+    function: Smart Ignition Coil 7
     type: ign
     ts_name: 19C - Ignition 7
     color: yellow
@@ -86,7 +86,7 @@ pins:
     # H144_IGN_6
     id: B8
     class: outputs
-    function: Smart Ignition 6 Output
+    function: Smart Ignition Coil 6
     type: ign
     ts_name: 20C - Ignition 6
     color: yellow
@@ -95,7 +95,7 @@ pins:
     # H144_IGN_5
     id: E2
     class: outputs
-    function: Smart Ignition 5 Output
+    function: Smart Ignition Coil 5
     type: ign
     ts_name: 21C - Ignition 5
     color: yellow

@@ -6,21 +6,21 @@ pins:
   - pin: 6
     id: C9
     class: outputs
-    function: Ignition Coil #1
+    function: Smart Ignition Coil 1
     type: ign
     ts_name: Coil 1F
 
   - pin: 7
     id: E14
     class: outputs
-    function: Ignition Coil #3
+    function: Smart Ignition Coil 3
     type: ign
     ts_name: Coil 1G
 
   - pin: 8
     id: C7
     class: outputs
-    function: Ignition Coil #2
+    function: Smart Ignition Coil 2
     type: ign
     ts_name: Coil 1H
 
@@ -39,7 +39,7 @@ pins:
   - pin: 13
     id: E12
     class: outputs
-    function: Ignition Coil #4
+    function: Smart Ignition Coil 4
     type: ign
     ts_name: Coil 1M
 

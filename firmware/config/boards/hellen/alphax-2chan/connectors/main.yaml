@@ -37,7 +37,7 @@ pins:
   - pin: A6
     meta: H144_IGN_1
     class: outputs
-    function: Smart Ignition A Output
+    function: Smart Ignition Coil 1
     type: ign
     ts_name: A6 - Ignition A
     color: yellow
@@ -45,7 +45,7 @@ pins:
   - pin: A7
     meta: H144_IGN_2
     class: outputs
-    function: Smart Ignition B Output
+    function: Smart Ignition Coil 2
     type: ign
     ts_name: A7 - Ignition B
     color: yellow

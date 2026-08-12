@@ -187,7 +187,7 @@ pins:
     id: C13
     class: outputs
     ts_name: 3N - IGN_1 (1&4)
-    function: Coil #1
+    function: Smart Ignition Coil 1
     type: ign
 
   - pin: 3Q
@@ -201,7 +201,7 @@ pins:
     id: E5
     class: outputs
     ts_name: 3R - IGN_2 (2&3)
-    function: Coil #2
+    function: Smart Ignition Coil 2
     type: ign
 
   - pin: 3S
