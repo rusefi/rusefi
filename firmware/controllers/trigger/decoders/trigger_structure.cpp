@@ -568,7 +568,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		break;
 
     case trigger_type_e::TT_VVT_3GR_FSE:
-		
+		initialize_3GRfSE_CAM(this);
 		break;
     
 	case trigger_type_e::TT_NISSAN_QR25:
