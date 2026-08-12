@@ -122,23 +122,27 @@ pins:
     class: outputs
     ts_name: A27 - IGN4
     function: Ignition 4
+    type: ign
   - pin: A28
     meta: H144_IGN_3
     class: outputs
     ts_name: A28 - IGN3
     function: Ignition 3
+    type: ign
 
   - pin: A29
     meta: H144_IGN_2
     class: outputs
     ts_name: A29 - IGN2
     function: Ignition 2
+    type: ign
 
   - pin: A30
     meta: H144_IGN_1
     class: outputs
     ts_name: A30 - IGN1
     function: Ignition 1
+    type: ign
 
   - pin: B1
     function: VTC +12 supply

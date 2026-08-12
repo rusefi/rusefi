@@ -7,18 +7,21 @@ pins:
     id: C9
     class: outputs
     function: Ignition Coil #1
+    type: ign
     ts_name: Coil 1F
 
   - pin: 7
     id: E14
     class: outputs
     function: Ignition Coil #3
+    type: ign
     ts_name: Coil 1G
 
   - pin: 8
     id: C7
     class: outputs
     function: Ignition Coil #2
+    type: ign
     ts_name: Coil 1H
 
   - pin: 9
@@ -37,6 +40,7 @@ pins:
     id: E12
     class: outputs
     function: Ignition Coil #4
+    type: ign
     ts_name: Coil 1M
 
   - pin: 15

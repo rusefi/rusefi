@@ -64,9 +64,11 @@ pins:
   - pin: A31
     class: outputs
     function: Coil 3
+    type: ign
   - pin: A32
     class: outputs
     function: Coil 1
+    type: ign
   - pin: A33
     class: outputs
     function: Injector 1 Negative
@@ -97,9 +99,11 @@ pins:
   - pin: A46
     class: outputs
     function: Coil 4
+    type: ign
   - pin: A47
     class: outputs
     function: Coil 2
+    type: ign
   - pin: A48
     class: outputs
     function: Injector 4 Negative

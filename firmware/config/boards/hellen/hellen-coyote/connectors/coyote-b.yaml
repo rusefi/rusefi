@@ -130,22 +130,30 @@ pins:
     function: Throttle Actuator Pos
   - pin: B87
     function: Coil 7
+    type: ign
   - pin: B88
     function: Coil 6
+    type: ign
   - pin: B89
     function: Coil 5
+    type: ign
   - pin: B90
     function: Coil 8
+    type: ign
   - pin: B91
     function: TSPC TRANSAXLE SOLENOID POWER CONTROL TCU (bypass for TCU molex)
   - pin: B92
     function: Coil 4
+    type: ign
   - pin: B93
     function: Coil 1
+    type: ign
   - pin: B94
     function: Coil 3
+    type: ign
   - pin: B95
     function: Coil 2
+    type: ign
 
 info:
   title: coyote
