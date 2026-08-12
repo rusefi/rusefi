@@ -295,8 +295,8 @@ public class GetConfigValueConsumerTest {
       "#include \"value_lookup.h\"\n" +
       "\n" +
       "const ConfigParameter allParameters[] = {\n" +
-      "\t{ 0x7C949A74, 0, 1, 0 }, // bit0\n" +
-      "\t{ 0x7C949A75, 0, 1, 1 }, // bit1\n" +
+      "\t{ 0x7C949A74, []() -> float { return config->bit0; }, [](float value) { config->bit0 = (int)value; } }, // bit0\n" +
+      "\t{ 0x7C949A75, []() -> float { return config->bit1; }, [](float value) { config->bit1 = (int)value; } }, // bit1\n" +
       "};\n" +
       "\n" +
       "const size_t allParametersCount = efi::size(allParameters);\n", table);

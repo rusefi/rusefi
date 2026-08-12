@@ -31,9 +31,8 @@ struct plain_get_float_s {
 
 struct ConfigParameter {
 	uint32_t hash;
-	uint16_t offset;
-	uint8_t type;
-	uint8_t bitOffset;
+	float (*getter)();
+	void (*setter)(float);
 };
 
 extern const ConfigParameter allParameters[];
