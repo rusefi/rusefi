@@ -1158,7 +1158,7 @@ include_file controllers/algo/accel_enrichment.engineConfiguration.txt
 
 	output_pin_e[TCU_SOLENOID_COUNT iterate] tcu_solenoid;
 
-	custom dc_function_e 1 bits, U08, @OFFSET@, [0:2], "None", "Throttle 1", "Throttle 2", "Idle Valve", "Wastegate"
+	custom dc_function_e 1 bits, U08, @OFFSET@, [0:3], "None", "Throttle 1", "Throttle 2", "Idle Valve", "Wastegate", "GPPWM 1", "GPPWM 2", "GPPWM 3", "GPPWM 4"
 	dc_function_e[ETB_COUNT iterate] etbFunctions
 
 	spi_device_e drv8860spiDevice;

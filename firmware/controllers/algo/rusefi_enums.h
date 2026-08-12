@@ -808,6 +808,13 @@ typedef enum __attribute__ ((__packed__)) {
 	// NOT to be used in dual H-bridge stepper control
 	DC_IdleValve = 3,
 	DC_Wastegate = 4,
+	// H-bridge acts as a general-purpose output driven by the corresponding GPPWM channel,
+	// see https://github.com/rusefi/rusefi/issues/9673
+	// only ONE leg of the H-bridge is usable, the other leg must stay unconnected
+	DC_Gppwm1 = 5,
+	DC_Gppwm2 = 6,
+	DC_Gppwm3 = 7,
+	DC_Gppwm4 = 8,
 } dc_function_e;
 
 typedef enum __attribute__ ((__packed__)) {
