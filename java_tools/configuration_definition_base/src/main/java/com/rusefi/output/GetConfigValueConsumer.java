@@ -208,9 +208,8 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
         sb.append("const ConfigParameter allParameters[] = {\n");
         for (VariableRecord var : sorted) {
             int hash = HashUtil.hash(var.getUserName());
-            String cast = TypesHelper.isFloat(var.type) ? "" : "(int)";
-            sb.append(String.format("\t{ 0x%08X, []() -> float { return %s; }, [](float value) { %s = %svalue; } }, // %s\n",
-                    hash, var.getFullName(), var.getFullName(), cast, var.getUserName()));
+            sb.append(String.format("\t{ 0x%08X, // %s\n\t\t[]() -> float { return %s; },\n\t\t[](float value) { %s = value; } },\n",
+                    hash, var.getUserName(), var.getFullName(), var.getFullName()));
         }
         sb.append("};\n\n");
         sb.append("const size_t allParametersCount = efi::size(allParameters);\n");
