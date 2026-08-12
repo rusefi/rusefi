@@ -26,7 +26,7 @@ help:
 	@echo "#   * to execute from root dir"
 	@echo "#   * to set number of jobs via -j# or --jobs=#, this is not shown in examples below"
 	@echo ""
-	@echo "  make all                         # Calls make in firmware/unit_tests/simulator"
+	@echo "  make all                         # Calls make in firmware/unit_tests/simulator, plus firmware bootloader"
 	@echo ""
 	@echo "  make clean                       # Calls make clean in firmware/unit_tests/simulator"
 	@echo ""
@@ -92,6 +92,7 @@ clean:
 all:
 	$(info Running make with default target in all subdirs: $(SUBDIRS))
 	$(MAKE) -C firmware
+	$(MAKE) -C firmware bootloader
 	$(MAKE) -C simulator
 	$(MAKE) -C unit_tests
 
