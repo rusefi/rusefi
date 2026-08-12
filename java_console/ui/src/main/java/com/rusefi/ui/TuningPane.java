@@ -22,6 +22,7 @@ import com.rusefi.ui.widgets.tune.TuningToolbarWidget;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.ui.basic.TuneOperationStatusPanel;
+import com.rusefi.ui.console.MainFrame;
 
 import javax.swing.*;
 import javax.swing.Action;
@@ -367,7 +368,7 @@ public class TuningPane {
         }
     }
 
-    public void requestExit(Component parent, Runnable exit, boolean firmwareUpdateInProgress) {
+    public void requestExit(MainFrame mainFrame, Runnable exit, boolean firmwareUpdateInProgress) {
         ExitPrompt prompt = exitPrompt(toolbar.hasUnsavedChanges(sessionImage.get()),
                 ConnectionStatusLogic.INSTANCE.isConnected() && uiContext.getBinaryProtocol() != null,
                 firmwareUpdateInProgress);
@@ -377,16 +378,24 @@ public class TuningPane {
         }
 
         boolean burn = prompt == ExitPrompt.BURN;
-        String action = burn ? "Burn to ECU and Exit" : "Save Tune and Exit";
-        String without = burn ? "Exit Without Burning" : "Exit Without Saving";
-        int choice = JOptionPane.showOptionDialog(parent,
-                burn ? "The tune has changes that have not been burned to the ECU."
-                        : "The tune has unsaved changes.",
-                "Unsaved Tune Changes", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
-                null, new Object[]{action, without, "Cancel"}, action);
-        dispatchExitChoice(prompt, choice,
-                onSuccess -> toolbar.burnToEcuAndThen(right, onSuccess),
-                onSuccess -> toolbar.saveTuneAndThen(right, onSuccess), exit);
+        String offlineTunePath = uiContext.getOfflineTunePath();
+        boolean autoSaveOfflineTune = uiContext.isOfflineMode() && offlineTunePath != null;
+        String action = burn ? "Burn to ECU and Exit" : autoSaveOfflineTune ? "Save and Exit" : "Save Tune and Exit";
+        String message = burn
+            ? "The tune has changes that have not been burned to the ECU."
+            : autoSaveOfflineTune
+                ? "The loaded tune has unsaved changes. It will be saved to its original .msq file."
+                : "The tune has unsaved changes.";
+        mainFrame.showUnsavedTuneChangesOverlay(message, action,
+            onSuccess -> {
+                if (burn) {
+                    toolbar.burnToEcuAndThen(right, onSuccess);
+                } else if (autoSaveOfflineTune) {
+                    toolbar.saveTuneToPathAndThen(right, offlineTunePath, onSuccess);
+                } else {
+                    toolbar.saveTuneAndThen(right, onSuccess);
+                }
+            }, exit);
     }
 
     public void setFirmwareUpdateInProgress(boolean inProgress) {
