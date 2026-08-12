@@ -84,32 +84,21 @@ TEST(LuaBasic, configLookupScaledChannelRegression) {
 		// ltitSmoothingIntensity is scaled_channel<uint8_t, 100, 1>
 		const char * name = "ltitSmoothingIntensity";
 
-		engineConfiguration->ltitSmoothingIntensity = 0.55f; // stores raw byte 55
-		// BROKEN: returns the raw byte; correct behavior would return 0.55
-		EXPECT_EQ(55.0f, getConfigValueByName(name));
+		engineConfiguration->ltitSmoothingIntensity = 0.55f;
+		EXPECT_FLOAT_EQ(0.55f, getConfigValueByName(name));
 
 		setConfigValueByName(name, 0.25f);
-		// BROKEN: stores (uint8_t)0.25f == 0 raw, so the value is lost entirely;
-		// correct behavior would store raw 25 and the field would read back 0.25
-		EXPECT_FLOAT_EQ(0.0f, engineConfiguration->ltitSmoothingIntensity);
+		EXPECT_FLOAT_EQ(0.25f, engineConfiguration->ltitSmoothingIntensity);
 	}
 
 	{
 		// vssGearRatio is scaled_channel<uint16_t, 1000, 1>
 		const char * name = "vssGearRatio";
 
-		engineConfiguration->vssGearRatio = 2.5f; // stores raw 2500
-		// BROKEN: returns the raw storage value; correct behavior would return 2.5
-		EXPECT_EQ(2500.0f, getConfigValueByName(name));
-
-		setConfigValueByName(name, 2.5f);
-		// BROKEN: stores (uint16_t)2.5f == 2 raw, so the field reads back 0.002 -
-		// the written value is off by the 1000x scale factor and the fraction is lost;
-		// correct behavior: field reads back 2.5
-		EXPECT_NEAR(0.002f, engineConfiguration->vssGearRatio, EPS4D);
-
-		// BROKEN: the set/get round trip is lossy: 2.5 in, 2.0 out;
-		// correct behavior: 2.5 in, 2.5 out
-		EXPECT_EQ(2.0f, getConfigValueByName(name));
+		engineConfiguration->vssGearRatio = 2.5f;
+		EXPECT_FLOAT_EQ(2.5f, getConfigValueByName(name));
+		setConfigValueByName(name, 3.5f);
+		EXPECT_NEAR(3.5f, engineConfiguration->vssGearRatio, EPS4D);
+		EXPECT_FLOAT_EQ(3.5f, getConfigValueByName(name));
 	}
 }
