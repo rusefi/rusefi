@@ -15,7 +15,9 @@ DDEFS += -DETB_INTERMITTENT_LIMIT=60001
 # quick board start-up with less fancy bootloader
 DDEFS += -DBOOT_BACKDOOR_ENTRY_TIMEOUT_MS=0
 
+# 1mb is not enough for everything we have
 DDEFS += -DEFI_LOGIC_ANALYZER=FALSE
+DDEFS += -DEFI_HPFP=FALSE
 MODULE_MIL = no
 
 include $(BOARDS_DIR)/hellen/hellen-common-mega144.mk
