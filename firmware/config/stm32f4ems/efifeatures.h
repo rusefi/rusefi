@@ -86,8 +86,9 @@
 #define EFI_BOR_LEVEL TRUE
 #endif
 
+// 'pow' usage costs couple of K of flash
 #ifndef EFI_DYNO_VIEW
-#define EFI_DYNO_VIEW TRUE
+#define EFI_DYNO_VIEW FALSE
 #endif
 
 #ifndef EFI_CDM_INTEGRATION
