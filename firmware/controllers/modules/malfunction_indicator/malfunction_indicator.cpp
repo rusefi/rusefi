@@ -6,6 +6,8 @@
  * @date Dec 20, 2013
  * @author Konstantin Nikonenko
  * @author Andrey Belomutskiy, (c) 2012-2020
+ * first we start on OFF state, then ON when we have ignition voltage, then OFF after we have rpm,
+ * then if we have any error:
  * we show 4 digit error code - 1,5sec * (4xxx+1) digit + 0,4sec * (x3xxx+1) + ....
  * ATTENTION!!! 0 = 1 blink, 1 = 2 blinks, ...., 9 = 10 blinks
  * sequence is the constant!!!
@@ -34,6 +36,10 @@
 static constexpr float ShortPulseMs = 400;
 static constexpr float LongPulseMs = 1500;
 static constexpr float PulseGapMs = 400;
+
+void MILController::onIgnitionStateChanged(bool ignitionOn) {
+	m_ignitionOn = ignitionOn;
+}
 
 void MILController::startPulse() {
 	enginePins.checkEnginePin.setValue("MIL", true);
@@ -106,10 +112,17 @@ void MILController::onSlowCallback() {
 		m_activeCode = ObdCode::None;
 	}
 
-	if (!hasErrorCodes()) {
+	if (!m_ignitionOn) {
 		m_phase = Phase::Idle;
 		m_activeCode = ObdCode::None;
 		enginePins.checkEnginePin.setValue("MIL", false);
+		return;
+	}
+
+	if (!hasErrorCodes()) {
+		m_phase = Phase::Idle;
+		m_activeCode = ObdCode::None;
+		enginePins.checkEnginePin.setValue("MIL", engine->rpmCalculator.isStopped());
 		return;
 	}
 

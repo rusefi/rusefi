@@ -17,6 +17,7 @@
 class MILController : public EngineModule {
 public:
 	void onSlowCallback() override;
+	void onIgnitionStateChanged(bool ignitionOn) override;
 
 private:
 	enum class Phase : uint8_t {
@@ -38,4 +39,5 @@ private:
 	int m_digitPlace = 0;
 	int m_pulsesRemaining = 0;
 	bool m_wasBenchActive = false;
+	bool m_ignitionOn = false;
 };

@@ -881,7 +881,7 @@ engineSyncCam_e engineSyncCam;Select which cam is used for engine sync. Other ca
 	pin_output_mode_e fuelPumpPinMode;
 	int8_t gapVvtTrackingLengthOverride;How many consecutive VVT gap rations have to match expected ranges for sync to happen;"count", 1, 0, 1, @@VVT_TRACKING_LENGTH@@, 0
 
-	output_pin_e malfunctionIndicatorPin;Check engine light, also malfunction indicator light. Always blinks once on boot.
+	output_pin_e malfunctionIndicatorPin;Check engine light, also malfunction indicator light. Solid while ignition is on and the engine is stopped, blinks active error codes.
 	pin_output_mode_e malfunctionIndicatorPinMode;
 
 switch_input_pin_e clutchDownPin;Some cars have a switch to indicate that clutch pedal is all the way down

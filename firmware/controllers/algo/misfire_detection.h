@@ -34,6 +34,7 @@ public:
 	// Engine stopped: discard transient detection state (baselines/streaks/timers).
 	// Cumulative counters and the MIL latch persist until power cycle ("since key-on").
 	void onEngineStop() override;
+	void onSlowCallback() override;
 
 	// Upper bound on the sliding rate-test window (config field misfireWindowFirings is
 	// clamped to this). Sized for two cycles of the largest supported engine.
