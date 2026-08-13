@@ -15,7 +15,7 @@
 #ifdef MODULE_MIL
 #include "malfunction_indicator.h"
 #endif
-#ifdef MODULE_DTC_MANAGER
+#if MODULE_DTC_MANAGER
 #include "dtc_manager.h"
 #endif
 

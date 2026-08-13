@@ -18,7 +18,7 @@ class DtcManagerModule : public EngineModule {
 
 #else
 
-#if (EFI_TOOTH_LOGGER_STATICBUFFER_COUNT == 0) && defined(MODULE_DTC_MANAGER)
+#if (EFI_TOOTH_LOGGER_STATICBUFFER_COUNT == 0) && MODULE_DTC_MANAGER
 	#error "MODULE_DTC_MANAGER needs EFI_TOOTH_LOGGER_STATICBUFFER_COUNT > 0"
 #endif
 

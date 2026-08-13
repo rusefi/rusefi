@@ -31,7 +31,7 @@ bool EnableToothLogger(TLmode mode = TLmode::Full);
 // Stop logging - leave buffer intact
 bool DisableToothLogger(TLmode mode = TLmode::Full);
 
-#if defined(MODULE_DTC_MANAGER)
+#if MODULE_DTC_MANAGER
 void ToothLoggerSetLimit(size_t toothsToCapture);
 void ToothLoggerReset();
 void ToothLoggerRelease();

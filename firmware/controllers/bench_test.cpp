@@ -68,7 +68,7 @@ void setOutputOnTheBenchTestForUnitTest(OutputPin* output) {
 #include "microsecond_timer.h"
 #include "rusefi_wideband.h"
 
-#if defined(MODULE_DTC_MANAGER)
+#if MODULE_DTC_MANAGER
 #include "dtc_manager.h"
 #endif
 
@@ -642,7 +642,7 @@ static void handleCommandX14(uint16_t index) {
 		sdCardRemoveReportFiles();
 		return;
 
-#if defined(MODULE_DTC_MANAGER)
+#if MODULE_DTC_MANAGER
 	case TS_DTC_MANAGER_SHOT:
 		DtcTriggerEvent("TS");
 		return;

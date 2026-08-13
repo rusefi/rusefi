@@ -547,7 +547,7 @@ bool warningVA(ObdCode code, bool reportToTs, const char *fmt, va_list args) {
 	}
 #endif /* EFI_SIMULATOR || EFI_PROD_CODE */
 
-#if defined(MODULE_DTC_MANAGER)
+#if MODULE_DTC_MANAGER
 	// Create FreezeFrame
 	DtcTriggerEvent(warningBuffer, code);
 #endif
