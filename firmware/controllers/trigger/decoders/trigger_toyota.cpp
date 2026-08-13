@@ -97,10 +97,10 @@ void initialize_3GRfSE_CAM(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Fall);
 
 	// our preference is to sync not too close to crank sync point
-	s->setTriggerSynchronizationGap(0.545);
-	s->setSecondTriggerSynchronizationGap(1.596);
+	s->setTriggerSynchronizationGap(2.6);
+	s->setSecondTriggerSynchronizationGap(0.6);
 
-	s->addToothRiseFall(65, /* width*/ 30);
-	s->addToothRiseFall(210, /* width*/ 85);
-	s->addToothRiseFall(360, /* width*/ 60);
+	s->addToothRiseFall(120, /* width*/ 60);
+	s->addToothRiseFall(240, /* width*/ 85);
+	s->addToothRiseFall(360, /* width*/ 30);
 }
