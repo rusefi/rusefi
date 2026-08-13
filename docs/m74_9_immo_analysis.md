@@ -82,24 +82,63 @@
 
 ### Полный 16-байтный вызов → 8-байтный ответ
 
-Получены из трейсов с оригинальным ЭБУ (тригер → frame1 || frame2 → ответ):
+Из трейсов оригинального ЭБУ (trigger → Frame1 || Frame2 → response).
+Frame1 — первый 0x0714 кадр (8 байт), Frame2 — второй 0x0714 кадр (8 байт).
 
 ```
 trigger  0841994c0b81a14c
-challenge 4a4f2a204fad58fd273622b70c2b559e -> response fda32d94ae77c121
+  frame1=4a4f2a204fad58fd  frame2=273622b70c2b559e -> response fda32d94ae77c121
 
 trigger  d081cc982708d806
-challenge 66aaeef37037dee0cdeefb22bde96807 -> response efaa66f0caa6f0cd
+  frame1=66aaeef37037dee0  frame2=cdeefb22bde96807 -> response efaa66f0caa6f0cd
 
 trigger  5283dba64769c00d
-challenge 660be1e2a34b8140b45633a0499a01ec -> response 9cb7f8ca31431bb6
+  frame1=660be1e2a34b8140  frame2=b45633a0499a01ec -> response 9cb7f8ca31431bb6
 
 trigger  a5ea8a93265530dd
-challenge cfcfbbf3cdc0f75ce9efe2eb23b62a25 -> response bff99205ed4ab7a8
+  frame1=cfcfbbf3cdc0f75c  frame2=e9efe2eb23b62a25 -> response bff99205ed4ab7a8
 
 trigger  45d4a5c0f6a1ea72
-challenge cd4c9070196bbdebb425cb7c4350082c -> response 96739be6b1299f77
+  frame1=cd4c9070196bbdeb  frame2=b425cb7c4350082c -> response 96739be6b1299f77
 ```
+
+### Вызовы от BCM для rusEFI (новые данные 2026-08-13)
+
+**Критическое наблюдение**: Frame1 = `26 17 14 F0 94 E7 29 7F` одинакова
+для ВСЕХ 10 сессий rusEFI (только Frame2 случайна).
+
+Это означает: Frame1 — фиксированный идентификатор BCM (не производная от триггера),
+а Frame2 — случайный nonce.
+
+Frame1 для rusEFI всегда: `26 17 14 F0 94 E7 29 7F`
+```
+  frame2=b6e2c52595acd6f6  -> response НЕИЗВЕСТЕН
+  frame2=c0a376b3e9fdb85f  -> response НЕИЗВЕСТЕН
+  frame2=e1f1651d533d54b8  -> response НЕИЗВЕСТЕН
+  frame2=a2699d694b45d96e  -> response НЕИЗВЕСТЕН
+  frame2=976ad10d9a3de065  -> response НЕИЗВЕСТЕН
+  frame2=619adfc29b480a80  -> response НЕИЗВЕСТЕН
+  frame2=f38352b522a50ddb  -> response НЕИЗВЕСТЕН
+  frame2=8ddf022d20c69e89  -> response НЕИЗВЕСТЕН
+  frame2=59ef563691af1d46  -> response НЕИЗВЕСТЕН
+  frame2=ee8cc257e2644898  -> response НЕИЗВЕСТЕН
+```
+
+Чтобы получить ответы: поставить оригинальный ЭБУ, снять PCAN-дамп.
+BCM пошлёт те же вызовы (Frame1=2617...), оригинальный ЭБУ даст ответы.
+
+### Frame1 структурный анализ
+
+Frame1 = `26 17 14 F0 94 E7 29 7F`
+- Byte[0] = 0x26 = 38 (возможно, Service ID)
+- Byte[1] = 0x17 = 23 (возможно, Sub-function ID)
+- Byte[2] = **0x14** → n1=4, n2=1 — единственный байт с обоими nibble ≤ 4!
+- Byte[3..6] = F0 94 E7 29 → r8 = 0xF094E729 (BCM's ключевой материал)
+- Byte[7] = 0x7F → r5 = 0x7F (дополнительный параметр)
+
+Паттерн `2617` найден в flash calibration по адресам:
+- 0x0804E87A, 0x08063891, 0x08063A91
+(вероятно, ожидаемый Frame1 хранится в калибровке ECU для проверки)
 
 ### Quick 8-байтный вызов → 8-байтный ответ (периодическая проверка)
 
