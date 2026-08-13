@@ -393,7 +393,7 @@ custom SentEtbType 1 bits, S08, @OFFSET@, [0:1], @@SentEtbType_enum@@
 #define SentFuelHighPressureType_enum "None", "GM type", "Custom"
 custom SentFuelHighPressureType 1 bits, U08, @OFFSET@, [0:1], @@SentFuelHighPressureType_enum@@
 
-#define can_bus_channel_e_enum "None", "CAN1", "CAN2", "CAN3"
+#define can_bus_channel_e_enum "None", "@#PRIMARY_CAN_NAME#@", "@#SECONDARY_CAN_NAME#@", "@#TERTIARY_CAN_NAME#@"
 custom can_bus_channel_e 1 bits, U08, @OFFSET@, [0:1], @@can_bus_channel_e_enum@@
 
 #define SentInput_enum "None", "SENT input 1",  "SENT input 2",  "SENT input 3",  "SENT input 4",  "SENT input 5",  "SENT input 6",  "SENT input 7"
@@ -1100,7 +1100,7 @@ custom script_setting_t 4 scalar, F32, @OFFSET@, 		"",	   1,	   0, 0, 18000,	  2
 	custom vehicle_info_t @@VEHICLE_INFO_SIZE@@ string, ASCII, @OFFSET@, @@VEHICLE_INFO_SIZE@@
 	custom gppwm_note_t @@GPPWM_NOTE_SIZE@@ string, ASCII, @OFFSET@, @@GPPWM_NOTE_SIZE@@
 
-#define can_broadcast_channel_e_enum "first", "second", "3rd"
+#define can_broadcast_channel_e_enum "@#PRIMARY_CAN_NAME#@", "@#SECONDARY_CAN_NAME#@", "@#TERTIARY_CAN_NAME#@"
 custom can_broadcast_channel_e 1 bits, U08, @OFFSET@, [0:1], @@can_broadcast_channel_e_enum@@
 can_broadcast_channel_e canBroadcastUseChannel;
 
