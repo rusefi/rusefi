@@ -70,8 +70,10 @@ static constexpr uint8_t BCM_STARTER_ACTIVE_THRESHOLD = 0x80;
 static constexpr uint32_t IMMO_ECU_ID  = 0x0713;  // ECU sends (trigger + response)
 static constexpr uint32_t IMMO_BCM_ID  = 0x0714;  // BCM sends (challenge)
 
-// How long after 0x0350 byte4=0x44 (crank switch) before ECU sends trigger
-static constexpr uint32_t IMMO_TRIGGER_DELAY_MS = 100u;
+// How long after first 0x0350 (IGN ON, byte4=0x04) before ECU sends the first trigger.
+// Original firmware sends the trigger ~1500ms after ignition is first detected.
+// rusEFI starts CAN earlier, so 1000ms should be enough for BCM to stabilise.
+static constexpr uint32_t IMMO_TRIGGER_DELAY_MS = 1000u;
 // Window within which two consecutive 0x0714 frames are treated as one 16-byte challenge
 static constexpr uint32_t IMMO_CHALLENGE_WINDOW_MS = 5u;
 // How long after receiving a challenge before sending the response
@@ -242,11 +244,21 @@ protected:
             // byte 4: 0x04 = IGN on/no start, 0x44 = crank switch pressed,
             //         0x84 = starter relay active, 0xC4 = engine running.
             uint8_t byte4 = frame.data8[4];
-            bool crankSwitch = (byte4 == 0x44);
             m_starterActive = (byte4 >= BCM_STARTER_ACTIVE_THRESHOLD);
 
-            // When BCM sees the crank switch, arm the IMMO trigger timer.
-            if (crankSwitch && (m_immoState == ImmoState::Idle)) {
+            // Arm IMMO trigger on ignition-on (byte4 == 0x04), NOT on crank switch.
+            //
+            // BCM does NOT assert crank-switch (byte4=0x44) until the IMMO
+            // handshake is successfully completed.  Waiting for byte4=0x44
+            // creates a dead-lock: rusEFI never sends the trigger, BCM never
+            // sends the challenge, IMMO is never cleared, engine never starts.
+            //
+            // The original ECU sends the 0x0713 trigger ~1.5 s after the first
+            // 0x0350 frame is received (IGN ON, byte4=0x04).  We mirror that:
+            // arm the IMMO timer on any BCM active state so that the trigger
+            // fires well before the user presses the crank switch.
+            bool ignitionActive = (byte4 != 0x00);
+            if (ignitionActive && (m_immoState == ImmoState::Idle)) {
                 m_immoState        = ImmoState::WaitingToTrigger;
                 m_immoTimerTicks   = 0;
             }
