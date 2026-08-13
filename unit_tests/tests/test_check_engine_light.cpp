@@ -34,6 +34,9 @@ protected:
 		advanceTimeUs(6'000'000);
 		sensorChecker->onSlowCallback();
 		ASSERT_TRUE(sensorChecker->analogSensorsShouldWork());
+#ifdef MODULE_MIL
+		engine->module<MILController>()->onIgnitionStateChanged(true);
+#endif
 	}
 
 	void registerSensor(FunctionalSensor& sensor, float value) {
@@ -114,7 +117,7 @@ TEST_F(CheckEngineLightTest, configuredVoltageFaults) {
 	evaluateAfterDebounce();
 	EXPECT_FALSE(hasErrorCodes());
 #ifdef MODULE_MIL
-	EXPECT_FALSE(enginePins.checkEnginePin.getLogicValue());
+	EXPECT_TRUE(enginePins.checkEnginePin.getLogicValue());
 #endif
 
 	tps.postRawValue(0.1f, getTimeNowNt());
@@ -147,6 +150,9 @@ TEST_F(CheckEngineLightTest, disabledRangesAndIgnitionGate) {
 
 	auto& sensorChecker = engine->module<SensorChecker>();
 	sensorChecker->onIgnitionStateChanged(false);
+#ifdef MODULE_MIL
+	engine->module<MILController>()->onIgnitionStateChanged(false);
+#endif
 	sensorChecker->onSlowCallback();
 	engine->module<CheckEngineLight>()->onSlowCallback();
 #ifdef MODULE_MIL
@@ -206,8 +212,13 @@ TEST(checkEngineLight, sensorWithoutRawVoltageIsIgnored) {
 TEST(checkEngineLight, milControllerBlinksDiagnosticCode) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	auto& mil = engine->module<MILController>();
+	addError(ObdCode::OBD_Map_Low);
+	mil->onSlowCallback();
+	EXPECT_FALSE(enginePins.checkEnginePin.getLogicValue());
 
-	addError(ObdCode::OBD_Map_Low); // 107: two short pulses, one long pulse, eight short pulses
+	mil->onIgnitionStateChanged(true);
+
+	// 107: two short pulses, one long pulse, eight short pulses
 	mil->onSlowCallback();
 
 	auto expectPulse = [&](int durationMs) {
@@ -234,12 +245,21 @@ TEST(checkEngineLight, milControllerBlinksDiagnosticCode) {
 
 	clearWarnings();
 	mil->onSlowCallback();
+	EXPECT_TRUE(enginePins.checkEnginePin.getLogicValue());
+
+	engine->rpmCalculator.setRpmValue(100);
+	mil->onSlowCallback();
 	EXPECT_FALSE(enginePins.checkEnginePin.getLogicValue());
+
+	engine->rpmCalculator.setStopSpinning();
+	mil->onSlowCallback();
+	EXPECT_TRUE(enginePins.checkEnginePin.getLogicValue());
 }
 
 TEST(checkEngineLight, milRestartsAfterBenchTest) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	auto& mil = engine->module<MILController>();
+	mil->onIgnitionStateChanged(true);
 
 	addError(ObdCode::OBD_Map_Low);
 	mil->onSlowCallback();
