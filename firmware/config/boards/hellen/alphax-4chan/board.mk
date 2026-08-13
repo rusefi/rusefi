@@ -20,9 +20,6 @@ MODULE_MIL = no
 
 include $(BOARDS_DIR)/hellen/hellen-common-mega144.mk
 
-# This board has trigger scope hardware!
-DDEFS += -DTRIGGER_SCOPE
-
 ifeq ($(PROJECT_CPU),ARCH_STM32F7)
   # need boot times of under 350ms for car that expects fast CAN https://github.com/rusefi/alphax-4chan/issues/184
   DDEFS += -DHW_HELLEN_SKIP_BOARD_TYPE=TRUE
