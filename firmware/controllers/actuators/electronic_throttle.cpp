@@ -44,6 +44,9 @@
 #include "dc_motor.h"
 #include "dc_motors.h"
 #include "gppwm.h"
+#if EFI_PROD_CODE
+#include "gpio/hbridge_gpio.h"
+#endif // EFI_PROD_CODE
 #include "defaults.h"
 #include "tunerstudio.h"
 #include "tunerstudio_calibration_channel.h"
@@ -910,6 +913,17 @@ void doInitElectronicThrottle(bool isStartupInit) {
 		}
 		if (isDcGppwmFunction(func)) {
 			// H-bridge is claimed as a general-purpose GPPWM output; initGpPwm() owns that hardware
+			continue;
+		}
+		if (func == DC_Gpio) {
+			// H-bridge acts as a plain on/off output pin (#9673); writes arrive via the hbridge_gpio chip
+			auto motor = initDcMotor("DC gpio disable", engineConfiguration->etbIo[i], i,
+					engineConfiguration->etb_use_two_wires);
+			motor->enable();
+#if EFI_PROD_CODE
+			// an output function may have been assigned and written before this hardware started
+			hbridgeGpioReplayPinState(i);
+#endif // EFI_PROD_CODE
 			continue;
 		}
 		auto motor = initDcMotor("ETB disable",

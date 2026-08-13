@@ -815,6 +815,9 @@ typedef enum __attribute__ ((__packed__)) {
 	DC_Gppwm2 = 6,
 	DC_Gppwm3 = 7,
 	DC_Gppwm4 = 8,
+	// H-bridge acts as a plain on/off output pin (Gpio::HBRIDGE_x_OUT) selectable for any
+	// output function (fuel pump, main relay, fan, ...), same one-usable-leg limitation
+	DC_Gpio = 9,
 } dc_function_e;
 
 typedef enum __attribute__ ((__packed__)) {

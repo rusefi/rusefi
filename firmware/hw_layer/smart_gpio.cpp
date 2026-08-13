@@ -18,6 +18,7 @@
 #include "drivers/gpio/l9779.h"
 #include "drivers/gpio/tle9104.h"
 #include "drivers/gpio/can_gpio_msiobox.h"
+#include "drivers/gpio/hbridge_gpio.h"
 
 #if EFI_PROD_CODE
 
@@ -328,6 +329,9 @@ void initSmartGpio() {
 #if (BOARD_TLE9104_COUNT > 0)
 	// No official boards have this IC
 #endif
+
+	// H-bridge as general-purpose output pins, registers only if a DC_Gpio function is selected
+	initHbridgeGpio();
 
 #endif // EFI_PROD_CODE
 

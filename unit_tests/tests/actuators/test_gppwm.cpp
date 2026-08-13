@@ -183,6 +183,29 @@ TEST(GpPwm, DcMotorOutputPwm) {
 	EXPECT_FLOAT_EQ(0.80f, motor->get());
 }
 
+// DC_Gpio: H-bridge claimed as a plain on/off output pin (#9673); ETB init must start and
+// enable the hardware without attaching any closed-loop controller
+TEST(GpPwm, DcGpioClaimsHardware) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	engineConfiguration->etbFunctions[0] = DC_Gpio;
+	engineConfiguration->etbFunctions[1] = DC_None;
+
+	resetDcHardwareForUnitTest();
+	doInitElectronicThrottle(/*isStartupInit*/false);
+
+	DcMotor* motor = getDcMotorForUnitTest(0);
+
+	// hardware is enabled (a disabled motor carries a disable-reason message)
+	EXPECT_EQ(nullptr, motor->msg());
+
+	// duty flows through, like a gpiochip writePad would drive it
+	motor->set(1.0f);
+	EXPECT_FLOAT_EQ(1.0f, motor->get());
+	motor->set(0.0f);
+	EXPECT_FLOAT_EQ(0.0f, motor->get());
+}
+
 TEST(GpPwm, TestGetOutput) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	GppwmChannel ch;

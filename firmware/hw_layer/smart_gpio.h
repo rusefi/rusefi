@@ -32,6 +32,7 @@ BOARD_MC33810_COUNT + \
 BOARD_L9779_COUNT + \
 BOARD_CAN_GPIO_COUNT + \
 BOARD_TLE9104_COUNT + \
+1 /* hbridge_gpio, H-bridge as on/off output #9673 */ + \
 0)
 #endif
 
