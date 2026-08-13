@@ -15,6 +15,7 @@
 #include "board_overrides.h"
 
 std::optional<setup_custom_bool_type> custom_board_requirePhaseSyncForFiring;
+std::optional<setup_custom_bool_type> custom_board_isImmobilizerBlocking;
 
 #if EFI_ENGINE_CONTROL
 
@@ -104,6 +105,13 @@ void LimpManager::updateState(float rpm, efitick_t nowNt) {
 
 	if (engine->engineState.lua.luaFuelCut) {
 		allowFuel.clear(ClearReason::Lua);
+	}
+
+	// Board-specific immobilizer hook (e.g. m74_9 BCM challenge-response).
+	// When the hook is set and returns true, fuel and spark stay cut.
+	if (custom_board_isImmobilizerBlocking.has_value() && custom_board_isImmobilizerBlocking.value()()) {
+		allowFuel.clear(ClearReason::Immobilizer);
+		allowSpark.clear(ClearReason::Immobilizer);
 	}
 
 	updateRevLimit(rpm);

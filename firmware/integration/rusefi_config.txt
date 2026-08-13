@@ -2562,6 +2562,7 @@ bit wizardCltSensor,"yes","no"
 bit wizardTps,"yes","no"
 bit wizardIgnitionOutputs,"yes","no"
 bit wizardInjectorOutputs,"yes","no"
+bit m74_9ImmoEnabled,"yes","no";Enable m74_9 BCM immobilizer challenge-response (requires working computeImmoResponse).
 
 split_lines@@BOARD_CONFIG_FROM_FILE@@
 

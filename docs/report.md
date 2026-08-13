@@ -1,5 +1,70 @@
 # Work Report
 
+## 2026-08-13 - m74_9: committed immo progress to local repo
+
+Committed the current m74_9 immobilizer work as a single local commit (`04476901f44`). The commit includes the framework, the captured challenge/response test vectors, the `analyze_immo.py` helper, and the `docs/m74_9_immo_analysis.md` hand-off notes for Ghidra.
+
+What was done:
+| Change | File |
+| --- | --- |
+| Committed immobilizer framework + analysis + test vectors | `analyze_immo.py`, `docs/m74_9_immo_analysis.md`, `docs/report.md`, `firmware/config/boards/m74_9/*`, `firmware/controllers/limp_manager.*`, `firmware/hw_layer/board_overrides.h`, `firmware/integration/rusefi_config.txt`, `firmware/tunerstudio/tunerstudio.template.ini` |
+
+Key decisions:
+- No generated files or large binaries were committed. `immo_pairs.json`, `immo_code_region.bin`, and the original `.bin`/`.trc` files remain untracked.
+- The next work unit is intentionally outside the repo: decompile the immobilizer response function in Ghidra and return with the C code for `computeImmoResponse()` / `computeImmoQuickResponse()`.
+
+## 2026-08-13 - m74_9: immobilizer framework - logging, auth state and LimpManager integration
+
+Analyzed two Largus tune files (IMMOON/IMMOOFF) and a full 4 MB flash dump from an m74_9 ECU with working immobilizer. The only functional difference between the two tunes is byte `0x074BF9` (`0x01` = immo enabled, `0x00` = disabled). The dump confirms this flag is in bank-1 flash calibration area and is copied to RAM `0x2000E25C`; the original firmware gates engine outputs through a function that checks this RAM flag.
+
+Also extracted challenge/response pairs from PCAN `.trc` logs (`ignon.trc`, `ignon_and_start.trc`, `orig_1/2/3.trc`). The protocol matches the existing rusEFI state machine: ECU sends `0x0713` trigger, BCM replies with two `0x0714` challenge frames (16 bytes total), ECU answers with one `0x0713` response. Quick re-check uses a single `0x0714`/`0x0713` exchange. Simple XOR/DES/AES/MD5 models do not explain the captured responses, so the actual algorithm still has to be pulled from the original firmware (or bypassed if the BCM allows it with immo disabled).
+
+What was done:
+| Change | File |
+| --- | --- |
+| Added `isImmoAuthenticated()` to `M74_9BcmCanListener`, plus public `m74_9_immoAuthenticated()` / `m74_9_isImmobilizerBlocking()` accessors | firmware/config/boards/m74_9/m74_9_can.h, firmware/config/boards/m74_9/m74_9_can.cpp |
+| Added hex logging for `0x0714` challenge frames (single + 16-byte), `0x0713` responses, and quick re-check, plus "IMMO: authenticated" state log | firmware/config/boards/m74_9/m74_9_can.cpp |
+| Added `ClearReason::Immobilizer` and a board hook `custom_board_isImmobilizerBlocking`; when the hook returns true, `LimpManager::updateState()` cuts fuel and spark | firmware/controllers/limp_manager.h, firmware/controllers/limp_manager.cpp, firmware/hw_layer/board_overrides.h |
+| Wired the m74_9 hook to `m74_9_isImmobilizerBlocking()` in board overrides | firmware/config/boards/m74_9/board_configuration.cpp |
+| Added `m74_9ImmoEnabled` config bit to `rusefi_config.txt` and updated `fuelIgnCutCodeList` in the TS template; regenerated m74_9 config/ini | firmware/integration/rusefi_config.txt, firmware/tunerstudio/tunerstudio.template.ini, firmware/controllers/generated/* |
+
+Key decisions:
+- Default `m74_9ImmoEnabled` is `false` (bit-field default) so the ECU runs without immobilizer until the user enables it and a working `computeImmoResponse()` is in place. This avoids bricking the car while the crypto algorithm is still unknown.
+- The LimpManager cut is dynamic: it reads the immobilizer state every fast callback, so once authentication succeeds the cut is removed automatically within 5 ms.
+- The hook is generic (`custom_board_isImmobilizerBlocking`) so any other board with a similar external immobilizer can reuse it.
+
+Validation: m74_9 config regenerated successfully (`gen_config_board.sh config/boards/m74_9 m74_9`); `m74_9ImmoEnabled` appears in the generated header and TS ini. Full firmware build could not be run locally: macOS `compile_m74_9.sh` fails on `realpath --`, and unit-test build fails on missing `flock`. User will build on his Linux environment.
+
+Open follow-ups:
+- Find the actual immobilizer response function in the original firmware (trace the CAN RX `0x0714` handler in Ghidra) and implement `computeImmoResponse()` / `computeImmoQuickResponse()`.
+- Capture more challenge/response pairs and try statistical/crypto analysis if the firmware path stays hidden.
+- Test on car whether disabling `m74_9ImmoEnabled` lets the BCM close the starter relay without a valid response.
+
+## 2026-08-13 - m74_9: immobilizer analysis helper and captured test vectors
+
+Continued reverse-engineering the immobilizer challenge/response. The original firmware immo module sits in the second flash bank around 0x08203F0C - 0x08204D00 (Ghidra base 0x08000000, ARM Cortex-M LE Thumb). Key functions identified: 0x08203FFC (immo dispatcher / state machine), 0x082047D0 (frame staging helper), 0x082048E8 (0x0714 receive handler), 0x08204B00 - 0x08204C00 (key constants / registration). The actual response computation still needs to be decompiled.
+
+Added `analyze_immo.py` to parse all PCAN `.trc` files in the repo root and extract both full 16-byte challenge sessions and quick single-frame re-checks. The full sessions confirm the protocol: ECU `0x0713` trigger -> BCM two `0x0714` frames (16-byte challenge) -> ECU `0x0713` response. The quick pairs are single `0x0714` challenge -> `0x0713` response. All captured pairs are now saved to `immo_pairs.json` and embedded as test vectors in `m74_9_can.cpp`.
+
+Also verified the IMMOON/IMMOOFF Largus tune difference: the functional flag is byte `0x074BF9` (`0x01` = enabled, `0x00` = disabled). The other four differing bytes (`0x07FFFC` - `0x07FFFF`) are the calibration-area checksum, as expected when one byte changes.
+
+What was done:
+| Change | File |
+| --- | --- |
+| Added `analyze_immo.py` to parse `.trc` logs, extract full/quick challenge-response pairs, save JSON, diff IMMOON/IMMOOFF, and dump the immo code region for Ghidra | `analyze_immo.py` |
+| Updated `computeImmoResponse()` / `computeImmoQuickResponse()` stubs with captured test vectors and the correct original-firmware offsets to decompile | `firmware/config/boards/m74_9/m74_9_can.cpp` |
+
+Key decisions:
+- The response algorithm is still unknown; simple XOR/DES/AES/MD5 models do not fit the captured pairs. The next step is to decompile the relevant original-firmware functions (especially the dispatcher and any crypto helper called from it) in Ghidra.
+- A helper script is the fastest way to keep adding real test vectors as the user captures more logs; once the algorithm is known, the captured pairs become unit-test inputs.
+
+Validation: `analyze_immo.py` runs successfully and produces consistent pairs from all five `.trc` logs. No firmware build attempted locally; the changed code is comments/stubs only.
+
+Open follow-ups:
+- Decompile the immo response function in the original firmware and implement `computeImmoResponse()` / `computeImmoQuickResponse()`.
+- Capture more sessions with different keys/keys to confirm the algorithm once a candidate is found.
+- On-car test whether `m74_9ImmoEnabled = false` is enough for the BCM to allow starting without a valid response.
+
 ## 2026-08-12 - m74_9: ETB (TLE9201) revived - the missing piece was the ETC_EN enable chain, not SPI
 
 Throttle now moves on the bench; user confirmed. The blocker from the previous session ("throttle does not move even though TLE9201 diag is clean") traced to the hardware enable: TLE9201 DIS (pin 11) sat at +5V, holding the bridge in tristate ("Outputs disabled", diag EN bit 0x80 = 0). The enable chain on the board is PB13 (ETC_EN) -> Q5A (MUN5311DW1 NPN, inverts) -> DIS (pulled up to +5V via R23), so the MCU-side polarity is ACTIVE-HIGH: PB13 high = Q5A on = DIS low = bridge enabled. PB13 was never driven (board.h leaves it a weak-pullup input).
@@ -1189,3 +1254,66 @@ Open follow-ups:
   PPS1 PC0/PC1 already configured).
 - If hang persists: isolate stepwise - A) board.mk+mcuconf only, B)
   +BOARD_TLE9201_COUNT=1, C) +pins.
+
+## 2026-08-12 - m74_9: BCM CAN protocol implemented
+
+Implemented BCM (Body Control Module) CAN emulation for m74_9 based on PCAN-View dumps
+(ignoff.trc / ignon.trc / ignon_and_start.trc, 12.08.2026).
+Starter relay is 100% on BCM; rusEFI does not use starterControlPin on this vehicle.
+
+Protocol decoded from dumps:
+- 0x0350 [100ms] BCM->all: byte4 = 0x04 (ign on) / 0x44 (crank switch) / 0x84 (starter active) / 0xC4 (running)
+- 0x0303 [100ms] BCM->all: byte5 bit1 = starter relay active
+- 0x01F6 [10ms] ECU->all: byte2 = 0x02|0x40(crank)|0x80(run); RPM*16 BE in 0x0189/0x018A bytes 0-1
+- Burst group [100ms]: 11 ECU identification frames (0x05DA .. 0x041D)
+
+Change set:
+| Change | File |
+| --- | --- |
+| New header: `initM74_9Can()`, `m74_9_bcmStarterActive()` | firmware/config/boards/m74_9/m74_9_can.h |
+| `M74_9BcmCanListener`: RX 0x0350+0x0303, TX 10/20/100ms ECU frames, static instance | firmware/config/boards/m74_9/m74_9_can.cpp |
+| Added m74_9_can.cpp to BOARDCPPSRC | firmware/config/boards/m74_9/board.mk |
+| `#include "m74_9_can.h"` + `initM74_9Can()` in `setup_custom_board_overrides()` | firmware/config/boards/m74_9/board_configuration.cpp |
+
+Key decisions:
+- Single CanListener subclass: `acceptFrame()` accepts two RX IDs; `request()` (called every 5ms by
+  CanWrite) drives TX via own counter (% 2 = 10ms, % 4 = 20ms, % 20 = 100ms burst).
+- RPM encoded as RPM*16 big-endian (verified: 0x3203/16=800.2rpm from dump).
+- No heap: one static M74_9BcmCanListener at file scope.
+- All wrapped in #if EFI_CAN_SUPPORT.
+
+Validation: m74_9 build disabled (meta-info.disabled_env); compile not run.
+Code reviewed for API consistency against can_dash.cpp, can_sensor.h.
+
+Open follow-ups:
+- Validate frame timings on car with PCAN-View.
+- Hook `m74_9_bcmStarterActive()` into any board-specific crank detection if needed.
+- Unknown byte fields (0x0189 bytes 2-3, 0x01F6 byte3) may need tuning if BCM rejects them.
+
+## 2026-08-12 - m74_9: BCM starter relay fix (CF error state / GND not asserted)
+
+Car dump `rusefi_ign_and_start.trc` showed BCM physically NOT closing starter relay GND
+despite 0x0350 byte4=0x84 in CAN. Root causes found by diffing against original firmware dump:
+
+1. **0x0189/0x0186/0x018A bytes 0-1 = 0x0000** - rusEFI encoded actual RPM (0 when stopped).
+   Original ECU always broadcasts 0x3200 (800 RPM * 16) as "ECU calibration loaded" flag
+   even when engine is off. BCM checks this field; seeing 0x0000 = ECU not ready -> CF
+   error state (byte0=CF in 0x0350) -> relay GND not asserted despite CAN showing 0x84.
+   Fixed: `encodeRpmOrBaseline()` returns 0x3200 when RPM < 1.
+
+2. **0x05E2 absent** - 1 Hz keepalive (2 bytes 0x00 0x00) present in original, missing
+   from rusEFI. Added at 1000 ms period (m_counter % 200 == 0).
+
+3. **Timing**: in the rusEFI dump ECU messages appear only at t=2094ms (BCM key event
+   was at t=1856ms). Root cause: user turned key to START before ECU CAN was ready.
+   Procedure: turn to RUN, wait ~3s for ECU CAN messages to appear, then turn to START.
+
+Change set:
+| Change | File |
+| --- | --- |
+| `encodeRpm` -> `encodeRpmOrBaseline`: returns 0x3200 when RPM < 1 | m74_9_can.cpp |
+| `send0x05E2()`: 2-byte keepalive `00 00` at 1000 ms | m74_9_can.cpp |
+| ECU_KEEPALIVE_ID = 0x05E2 constant | m74_9_can.cpp |
+| m_counter % 200 == 0: call send0x05E2() | m74_9_can.cpp |
+
+Validation: compile not run (board disabled in CI). Logic verified against dump.
