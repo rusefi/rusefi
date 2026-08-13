@@ -29,6 +29,7 @@ public class WizardContainer extends JPanel {
 
     private final UIContext uiContext;
     private final WizardProgressPanel progressPanel = new WizardProgressPanel();
+    private final JLabel wizardTitle = new JLabel("rusEFI Setup Wizard");
     private final JPanel stepContentPanel = new JPanel(new CardLayout());
     private final JButton cancelButton = new JButton("Exit Wizard");
     private final JButton dontShowAgainButton = new JButton("Don't Show Again");
@@ -71,6 +72,9 @@ public class WizardContainer extends JPanel {
             WizardStyle.LARGE_GAP,
             WizardStyle.GAP,
             WizardStyle.LARGE_GAP));
+        wizardTitle.setFont(wizardTitle.getFont().deriveFont(Font.BOLD, compact ? 16f : 20f));
+        wizardTitle.setBorder(BorderFactory.createEmptyBorder(0, 0, WizardStyle.GAP / 2, 0));
+        headerPanel.add(wizardTitle, BorderLayout.NORTH);
         headerPanel.add(progressPanel, BorderLayout.CENTER);
 
         AbstractWizardStep.stylePrimaryAction(cancelButton);
@@ -656,6 +660,10 @@ public class WizardContainer extends JPanel {
 
     boolean isProgressVisibleForTests() {
         return progressPanel.isVisible();
+    }
+
+    String getWizardTitleForTests() {
+        return wizardTitle.getText();
     }
 
     String getCancelButtonTextForTests() {
