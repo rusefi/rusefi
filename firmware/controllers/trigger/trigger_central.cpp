@@ -201,6 +201,7 @@ static angle_t adjustCrankPhase(int camIndex) {
 	switch (vvtMode) {
 	case VVT_MAP_V_TWIN:
 	case VVT_MITSUBISHI_4G63:
+  case VVT_3GR_FSE:
 		return tc->syncEnginePhaseAndReport(crankDivider, 1);
 	case VVT_SINGLE_TOOTH:
 	case VVT_NISSAN_VQ:
@@ -232,10 +233,11 @@ static angle_t adjustCrankPhase(int camIndex) {
 	  return customAdjustCustom(tc, vvtMode);
 
 	case VVT_HONDA_K_INTAKE:
+     
 	    // with 4 evenly spaced tooth we cannot use this wheel for engine sync
         criticalError("Honda K Intake is not suitable for engine sync");
         [[fallthrough]];
-  case VVT_3GR_FSE:
+  
 	case VVT_CUSTOM_1:
 	case VVT_CUSTOM_2:
 	case VVT_CUSTOM_3:
