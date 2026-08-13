@@ -1,5 +1,35 @@
 # Work Report
 
+## 2026-08-13 - m74_9: immobilizer dispatcher decompiled, literal pool mapped
+
+Continued reverse-engineering the m74_9 immobilizer. The Ghidra decompilation of the dispatcher at `0x08203FFC` is now in `docs/m74_9_immo_analysis.md`. It is a two-case state machine:
+
+- `param_1 == 0` -> calls the function pointer stored at RAM `0x20001A50` (likely the full 16-byte challenge response).
+- `param_1 == 1` -> calls the function pointer stored at RAM `0x20001A54` (likely the quick 8-byte re-check response).
+
+The literal pool at `0x08204080` was read from the full flash dump and maps to RAM addresses in the `0x20001Axx` region. The key constants `0x2548A4D2`, `0x4DF9123B`, `0x43A0C212`, `0xF9C74A52` are stored in the first flash bank at `0x080BB508` - `0x080BB577` and are copied to RAM `0x20001ADC` during initialization.
+
+What was done:
+
+| Change | File |
+| --- | --- |
+| Updated analysis notes with the decompiled dispatcher, literal pool mapping, and key-constant source addresses | `docs/m74_9_immo_analysis.md` |
+| Extended `analyze_immo.py` to dump the literal pool and key-constant addresses for Ghidra orientation | `analyze_immo.py` |
+| Added this report entry | `docs/report.md` |
+
+Key decisions:
+
+- The actual response functions are still not decompiled; they are the targets of the two RAM function pointers. The next work unit is in Ghidra.
+- The second flash bank (`0x08200000`) must be mapped in Ghidra. If `0x08203FFC` is not visible, add a memory block at `0x08203F0C` or load the full 4 MB dump at `0x08000000`.
+
+Validation: `analyze_immo.py` was run; it reproduced the 10 captured sessions and printed the literal pool / key-constant addresses. No firmware build was run (the crypto algorithm is still unknown).
+
+Open follow-ups:
+
+- Find the values stored at `0x20001A50` and `0x20001A54` in Ghidra and decompile those functions.
+- Verify the decompiled algorithm against the captured challenge/response pairs.
+- Port to `firmware/config/boards/m74_9/m74_9_can.cpp` and build/test.
+
 ## 2026-08-13 - m74_9: committed immo progress to local repo
 
 Committed the current m74_9 immobilizer work as a single local commit (`04476901f44`). The commit includes the framework, the captured challenge/response test vectors, the `analyze_immo.py` helper, and the `docs/m74_9_immo_analysis.md` hand-off notes for Ghidra.
