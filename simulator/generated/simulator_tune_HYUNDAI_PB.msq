@@ -578,7 +578,7 @@
         <constant name="can2RxPin">"NONE"</constant>
         <constant name="can2TxPin">"NONE"</constant>
         <constant name="canBaudRate">"500kbps"</constant>
-        <constant name="canBroadcastUseChannel">"first"</constant>
+        <constant name="canBroadcastUseChannel">"Primary CAN"</constant>
         <constant name="canGpioType">"None"</constant>
         <constant name="canInputBCM">"disabled"</constant>
         <constant name="canNbcType">"None"</constant>
@@ -5176,8 +5176,8 @@
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260812" nPages="1" signature="rusEFI master.2026.08.13.f407-discovery.1736042103" version="5.0"/>
-    <bibliography author="rusEFI 20260812" writeDate="date"/>
+    <versionInfo firmwareInfo="20260813" nPages="1" signature="rusEFI master.2026.08.13.f407-discovery.841634017" version="5.0"/>
+    <bibliography author="rusEFI 20260813" writeDate="date"/>
     <settings/>
     <userComments/>
 </msq>
