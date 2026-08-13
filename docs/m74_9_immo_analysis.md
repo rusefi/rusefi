@@ -4,13 +4,34 @@ This document captures everything we currently know about the m74_9 / Largus
 CAN immobilizer, so the next step (Ghidra decompilation) can continue without
 re-doing the reconnaissance.
 
+## Current status
+
+The immobilizer dispatcher at `0x08203FFC` has been decompiled in Ghidra. It is
+a two-case state machine that dispatches to two different callbacks stored in
+RAM at `0x20001A50` (full 16-byte challenge) and `0x20001A54` (quick 8-byte
+re-check). The literal pool used by the dispatcher has been read from the full
+flash dump and maps to RAM addresses in the `0x20001Axx` region.
+
+The actual response-computation functions (the targets of the two callbacks)
+are still unknown and are the main thing to decompile next.
+
+Open tasks:
+
+- Determine the function address stored at `0x20001A50` and decompile it.
+- Determine the function address stored at `0x20001A54` and decompile it.
+- Verify the decompiled functions against the captured challenge/response pairs.
+- Port the C code into `computeImmoResponse()` / `computeImmoQuickResponse()` in
+  `firmware/config/boards/m74_9/m74_9_can.cpp`.
+
 ## Protocol observed on CAN
 
 IDs:
-- `0x0713` — ECU -> BCM
-- `0x0714` — BCM -> ECU
+
+- `0x0713` - ECU -> BCM
+- `0x0714` - BCM -> ECU
 
 Full authentication cycle (per ignition cycle):
+
 1. ECU sends `0x0713` trigger (8 bytes).
 2. BCM answers with two consecutive `0x0714` frames: 16-byte challenge.
 3. ECU sends one `0x0713` response (8 bytes).
@@ -56,8 +77,8 @@ bytes are a checksum that must be recalculated after flipping the flag.
 ## Original firmware location
 
 The full flash dump is `Read_FULLFLASH_I865LB52_w2404b1____(240626_103727).bin`
-(4 MB). The vector table starts at `0x08000000`, so the file maps directly to
-flash addresses.
+(4 MB, base `0x08000000`). The vector table starts at `0x08000000`, so the file
+maps directly to flash addresses.
 
 The immobilizer module lives in the second flash bank around:
 
@@ -70,17 +91,84 @@ this slice is only the immo module, not the whole flash. In Ghidra either:
 
 - Load the **full 4 MB dump** at base `0x08000000`, or
 - Load `immo_code_region.bin` as an additional memory block at base
-  `0x08203F0C` (File -> Add Memory Block, or set base address to `0x08203F0C`
-  when importing the raw binary).
+  `0x08203F0C` (File -> Import File, or Window -> Memory Map -> Add Memory
+  Block).
+
+If `0x08203FFC` is not visible in the CodeBrowser, the second flash bank is not
+mapped. Add it as a memory block at `0x08203F0C` with read/execute permissions.
+
+## Decompilation of the immo dispatcher (0x08203FFC)
+
+Ghidra decompilation for the function at `0x08203FFC` (immo dispatcher / state
+machine):
+
+```c
+void UndefinedFunction_08203ffc(int param_1, int param_2,
+                                 undefined4 param_3, undefined4 param_4)
+{
+  code *pcVar1;
+
+  if (param_1 == 0) {
+    if (param_2 == 0) {
+      *(int *)(DAT_08204080 + 0x14) = *(int *)(DAT_08204080 + 0x14) + 1;
+      *DAT_08204084 = 0;
+    }
+    else {
+      *DAT_08204094 = *DAT_08204094 | 1;
+      *DAT_08204084 = 1;
+    }
+    *DAT_08204088 = 0;
+    pcVar1 = (code *)*DAT_0820408c;
+    if (pcVar1 != (code *)0x0) {
+      (*pcVar1)(*DAT_08204090, *DAT_08204084, DAT_08204090, pcVar1, param_4);
+    }
+  }
+  else if (param_1 == 1) {
+    if (param_2 == 0) {
+      *(int *)(DAT_08204080 + 0x10) = *(int *)(DAT_08204080 + 0x10) + 1;
+      *DAT_08204084 = 0;
+    }
+    else {
+      *DAT_08204094 = *DAT_08204094 | 2;
+      *DAT_08204084 = 1;
+    }
+    *DAT_08204088 = 0;
+    if ((code *)*DAT_08204098 != (code *)0x0) {
+      (*(code *)*DAT_08204098)(*DAT_0820409c, *DAT_08204084);
+    }
+  }
+  return;
+}
+```
+
+The `DAT_082040xx` symbols are literal-pool entries in the immo code region. Each
+holds a RAM address. The values read from the full flash dump are:
+
+| Flash literal | RAM address it points to | Role in the dispatcher |
+|---|---|---|
+| `DAT_08204080` | `0x2000162C` | Counter / small structure base (offsets `+0x10` and `+0x14` used) |
+| `DAT_08204084` | `0x20001A45` | State byte written and passed to callbacks |
+| `DAT_08204088` | `0x20001A44` | State byte |
+| `DAT_0820408c` | `0x20001A50` | **Function pointer slot for `param_1 == 0` (full 16-byte challenge)** |
+| `DAT_08204090` | `0x20001A46` | Byte argument passed to callback 0 |
+| `DAT_08204094` | `0x20001A48` | Flags / counter (`|= 1` or `|= 2`) |
+| `DAT_08204098` | `0x20001A54` | **Function pointer slot for `param_1 == 1` (quick 8-byte challenge)** |
+| `DAT_0820409c` | `0x20001A4C` | Byte argument passed to callback 1 |
+
+So the two callbacks to decompile are the functions whose addresses are stored
+at runtime in `0x20001A50` and `0x20001A54`. They are not stored directly in the
+flash dump; they are set by immo initialization code (search Ghidra for writes
+to `0x20001A50` / `0x20001A54`).
 
 ## Key functions / symbols in the original firmware
 
 | Address | Role |
 |---|---|
-| `0x08203FFC` | Immobilizer dispatcher / state machine. Receives `r0=0` or `r0=1` and dispatches to a callback stored at `0x20001A50`. |
-| `0x082047D0` | 0x0713/0x0714 frame staging helper. Looks up a message in the CAN table at `0x20001644` and copies data to/from the hardware buffer. |
-| `0x082048E8` | 0x0714 receive handler. Stores the challenge into the table, may trigger response. |
-| `0x08204B00` - `0x08204C00` | Key constants and immobilizer registration code. The values `0x2548A4D2`, `0x4DF9123B`, `0x43A0C212`, `0xF9C74A52` are written to RAM during init. |
+| `0x08203FFC` | Immobilizer dispatcher / state machine. Decompiled above. |
+| `0x08204080` | Literal-pool base consumed by the dispatcher. |
+| `0x082047D0` | `0x0713` / `0x0714` frame staging helper. Looks up a message in the CAN table at `0x20001644` and copies data to/from the hardware buffer. |
+| `0x082048E8` | `0x0714` receive handler. Stores the challenge into the table, may trigger response. |
+| `0x08204B00` - `0x08204C00` | Immobilizer registration / CAN transmit code. The values `0x2548A4D2`, `0x4DF9123B`, `0x43A0C212`, `0xF9C74A52` are copied from the first flash bank to RAM during init. |
 | `0x08207754` | Generic callback registration helper. `r0=0` writes to `0x20001C14`; `r0=1` writes to `0x20001C28`. Used to register the `0x0714` handler (`0x08203FFC`). |
 | `0x082077B0` | CAN buffer registration helper. Sets up entries in the `0x20001644` table. |
 
@@ -89,15 +177,17 @@ this slice is only the immo module, not the whole flash. In Ghidra either:
 | Address | Observed use |
 |---|---|
 | `0x20001628` | Counter / flag checked by `0x082047D0` |
-| `0x2000162C` | Counter incremented by `0x08203FFC` and `0x082047D0` |
+| `0x2000162C` | Counter / small structure base used by the dispatcher (`DAT_08204080`) |
 | `0x20001644` | Base of the CAN message/buffer table |
-| `0x20001A44` | State flag |
-| `0x20001A45` | State flag |
-| `0x20001A46` | Byte argument passed by `0x08203FFC` to its callback |
-| `0x20001A48` | Byte argument passed by `0x08203FFC` to its callback |
-| `0x20001A50` | Function pointer called by `0x08203FFC`. This is the most likely place to find the actual crypto / response logic. |
+| `0x20001A44` | State flag (`DAT_08204088`) |
+| `0x20001A45` | State flag / byte argument passed to callbacks (`DAT_08204084`) |
+| `0x20001A46` | Byte argument passed to callback 0 (`DAT_08204090`) |
+| `0x20001A48` | Flags / counter (`|= 1` or `|= 2`) (`DAT_08204094`) |
+| `0x20001A4C` | Byte argument passed to callback 1 (`DAT_0820409c`) |
+| `0x20001A50` | **Function pointer called for the full 16-byte challenge response.** This is the most likely place to find the actual crypto / response logic. |
+| `0x20001A54` | **Function pointer called for the quick 8-byte re-check response.** |
 | `0x20001AD9` | Byte used by `0x08204B04` as a CAN-send argument |
-| `0x20001ADC` | RAM location where the constant `0x2548A4D2` is stored during init (likely part of the key) |
+| `0x20001ADC` | RAM location where the constants `0x2548A4D2`, `0x4DF9123B`, `0x43A0C212`, `0xF9C74A52` are stored during init (likely part of the key) |
 | `0x20001AE0` | Function pointer used by `0x08204B04` (CAN transmit callback) |
 | `0x20001C14` | Table slot where `0x08203FFC` is registered as the `0x0714` handler |
 | `0x20001C28` | Table slot where a second value (`0x4DF9123B`) is registered |
@@ -105,7 +195,7 @@ this slice is only the immo module, not the whole flash. In Ghidra either:
 ## Key constants copied from flash to RAM
 
 During immobilizer initialization the module writes these constants to RAM
-around `0x20001ADC` / `0x20001AE0`:
+around `0x20001ADC`:
 
 ```text
 0x2548A4D2
@@ -114,8 +204,20 @@ around `0x20001ADC` / `0x20001AE0`:
 0xF9C74A52
 ```
 
-These are strong candidates for the immobilizer secret key / seed values. The
-function that consumes them is the one we need to decompile.
+In the flash dump these constants are stored in the **first flash bank**, not
+in the immo module slice:
+
+| Constant | Flash address |
+|---|---|
+| `0x4DF9123B` | `0x080BB508` |
+| `0xF9C74A52` | `0x080BB50C` |
+| `0x2548A4D2` | `0x080BB570` |
+| `0x43A0C212` | `0x080BB574` |
+
+The same constants also appear as literals inside the **second-bank immo module**
+(around `0x08204B00` - `0x08204BFC`), which is where they are most likely loaded
+from during initialization. The immo module references `0x20001ADC` (e.g. at
+`0x08204BE4`) and copies the constants to RAM during initialization.
 
 ## Call graph / state-machine flow
 
@@ -124,46 +226,53 @@ CAN RX for 0x0714
   -> CAN dispatcher (0x08202F7C area) reads handler from table at 0x20001644
      -> handler = 0x08203FFC (immo dispatcher)
         -> case 0 / case 1: updates counters/flags
-           -> calls function pointer at 0x20001A50 (likely the crypto/response worker)
+           -> calls function pointer at 0x20001A50 (full challenge response)
+           -> calls function pointer at 0x20001A54 (quick re-check response)
               -> if response is ready, it fills the 0x0713 table entry
                  -> periodic immo task (0x08202198 area) calls 0x08204C14 or 0x08204C22
                     -> 0x08204B04 triggers the CAN send callback at 0x20001AE0
                        -> 0x082047D0 copies the response bytes into the hardware TX buffer
 ```
 
-The exact crypto step is inside (or below) the function at `0x20001A50`. Finding
-that function is the main Ghidra task.
+The exact crypto step is inside (or below) the function whose address is stored
+at `0x20001A50` (and the quick variant at `0x20001A54`). Finding those two
+functions is the main Ghidra task.
 
 ## Ghidra step-by-step
 
-1. Load `immo_code_region.bin` with base address `0x08203F0C` (or load the full
-   4 MB dump at `0x08000000`).
+1. Make sure the second flash bank is visible:
+   - Load the **full 4 MB dump** at base `0x08000000`, or
+   - Add `immo_code_region.bin` as a memory block at base `0x08203F0C`.
+   - If `0x08203FFC` is not in the address space, open Window -> Memory Map,
+     right-click, choose Add Memory Block, base `0x08203F0C`, size `0x00000DF4`,
+     read + execute.
 2. Set language to `ARM:LE:32:Cortex` (Thumb-2).
 3. Analyze the image, then navigate to `0x08203FFC` and decompile it.
-4. Inside the decompilation, locate the `BLX` through the pointer loaded from
-   `0x20001A50`. The target of that pointer is the function we need.
-5. Search the firmware for writes to `0x20001A50` to see how that pointer is
-   initialized (it may be set by copying from the registration table at
-   `0x20001C14` or by `0x08204BAC`).
-6. Decompile the crypto function and verify it against the captured test vectors.
+4. Verify the decompilation matches the literal pool values above
+   (`0x20001A50`, `0x20001A54`, etc.).
+5. Search for writes to `0x20001A50` and `0x20001A54` to find the two
+   response-computation functions. Likely candidates are in the immo
+   initialization / registration code around `0x08204B00` - `0x08204C00`.
+6. Decompile both functions and verify them against the captured test vectors.
 
 ## What to look for in the crypto function
 
-- Input: 16-byte challenge (probably stored at the data buffer of the `0x0714`
-  table entry, offset `0x18C` from `0x20001644`).
-- Output: 8-byte response (stored at the data buffer of the `0x0713` table
-  entry).
+- Input: 16-byte challenge for the full response, 8-byte challenge for the quick
+  response. Probably stored at the data buffer of the `0x0714` table entry
+  (offset `0x18C` from `0x20001644` for the full challenge).
+- Output: 8-byte response stored at the data buffer of the `0x0713` table
+  entry.
 - Uses the key constants listed above (`0x2548A4D2`, `0x4DF9123B`, ...).
 - May be a simple block cipher, hash, or a manufacturer-specific rolling-code
   algorithm. No known simple model (XOR/DES/AES/MD5) fits the captured pairs.
 
 ## Files in the repo
 
-- `analyze_immo.py` — parse `.trc` logs, extract pairs, diff tunes, dump code
-  region.
-- `immo_pairs.json` — generated list of pairs (not committed, run the script).
-- `immo_code_region.bin` — generated Ghidra input (not committed, run the
+- `analyze_immo.py` - parse `.trc` logs, extract pairs, diff tunes, dump code
+  region, and print Ghidra hint addresses (literal pool, key constants).
+- `immo_pairs.json` - generated list of pairs (not committed, run the script).
+- `immo_code_region.bin` - generated Ghidra input (not committed, run the
   script).
-- `firmware/config/boards/m74_9/m74_9_can.cpp` — rusEFI integration; test
+- `firmware/config/boards/m74_9/m74_9_can.cpp` - rusEFI integration; test
   vectors are already in the `computeImmoResponse()` / `computeImmoQuickResponse()`
   stubs.

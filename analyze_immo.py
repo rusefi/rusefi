@@ -106,6 +106,66 @@ def dump_region(path: Path, out: Path, start: int, end: int) -> None:
     out.write_bytes(data[start:end])
 
 
+def dump_ghidra_hints(path: Path) -> None:
+    """Print flash-dump addresses that help orient Ghidra analysis."""
+    if not path.exists():
+        return
+    data = path.read_bytes()
+
+    def addr_off(addr: int) -> int:
+        return addr - 0x08000000
+
+    # Literal pool consumed by the immo dispatcher at 0x08203FFC.
+    pool = addr_off(0x08204080)
+    print("\nLiteral pool at 0x08204080 (values are RAM addresses):")
+    labels = [
+        "counter/struct base",
+        "state byte (DAT_08204084)",
+        "state byte (DAT_08204088)",
+        "func-ptr slot 0 -> 0x20001A50",
+        "arg for callback 0",
+        "flags/counter",
+        "func-ptr slot 1 -> 0x20001A54",
+        "arg for callback 1",
+    ]
+    for i, label in zip(range(0, 32, 4), labels):
+        val = struct.unpack_from("<I", data, pool + i)[0]
+        print(f"  0x{0x08204080 + i:08x}: 0x{val:08x}  -> {label}")
+
+    # Key constants embedded in the first flash bank.
+    constants = [0x2548A4D2, 0x4DF9123B, 0x43A0C212, 0xF9C74A52]
+    print("\nKey constants in flash (source of values copied to RAM 0x20001ADC):")
+    for c in constants:
+        needle = struct.pack("<I", c)
+        idx = data.find(needle)
+        while idx >= 0:
+            print(f"  0x{c:08x} at 0x{idx + 0x08000000:08x}")
+            idx = data.find(needle, idx + 1)
+
+    # RAM references inside the immo code region.
+    ram_addrs = [
+        0x20001A50,
+        0x20001A54,
+        0x20001A44,
+        0x20001A45,
+        0x20001A46,
+        0x20001A48,
+        0x20001A4C,
+        0x2000162C,
+    ]
+    print("\nReferences to dispatcher RAM addresses inside 0x08203F0C-0x08204D00:")
+    for a in ram_addrs:
+        needle = struct.pack("<I", a)
+        idx = data.find(needle)
+        refs = []
+        while idx >= 0:
+            addr = idx + 0x08000000
+            if 0x08203F0C <= addr <= 0x08204D00:
+                refs.append(f"0x{addr:08x}")
+            idx = data.find(needle, idx + 1)
+        print(f"  0x{a:08x}: {', '.join(refs) if refs else '(none in region)'}")
+
+
 def main() -> None:
     all_sessions: List[Dict[str, Any]] = []
     for trc in sorted(ROOT.glob("*.trc")):
@@ -164,6 +224,8 @@ def main() -> None:
         print("Language: ARM Cortex-M, LE Thumb.")
         print("Key symbols to inspect: 0x08203FFC (immo dispatcher), 0x082047D0,")
         print("0x082048E8, 0x08204B00-0x08204C00 (key constants/registration).")
+
+    dump_ghidra_hints(full)
 
 
 if __name__ == "__main__":
