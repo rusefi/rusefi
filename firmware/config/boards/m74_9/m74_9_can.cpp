@@ -773,7 +773,15 @@ bool m74_9_immoAuthenticated() {
 }
 
 bool m74_9_isImmobilizerBlocking() {
-    return engineConfiguration->m74_9ImmoEnabled && !m74_9BcmListener.isImmoAuthenticated();
+    // The m74_9ImmoEnabled config bit (defined in rusefi_config.txt) will gate
+    // this check once computeImmoResponse() is implemented.  Until then the
+    // function always returns false so the IMMO state machine can run and the
+    // CAN exchange can be observed without blocking fuel/ignition.
+    //
+    // When the algorithm is ready, restore:
+    //   return engineConfiguration->m74_9ImmoEnabled
+    //          && !m74_9BcmListener.isImmoAuthenticated();
+    return false;
 }
 
 void initM74_9Can() {
