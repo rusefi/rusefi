@@ -221,6 +221,9 @@ extern std::optional<setup_custom_bool_type> custom_board_holdAcr;
 // wasted-spark/batch operation instead of blocking the start indefinitely.
 // Defined in limp_manager.cpp.
 extern std::optional<setup_custom_bool_type> custom_board_requirePhaseSyncForFiring;
+// While set and returning true, fuel and spark are cut (ClearReason::Immobilizer).
+// Used by boards that implement an external immobilizer challenge-response (e.g. m74_9).
+extern std::optional<setup_custom_bool_type> custom_board_isImmobilizerBlocking;
 extern std::optional<setup_custom_bool_type> custom_board_allowFlashNow;
 
 /**

@@ -5,6 +5,7 @@
 #include "smart_gpio.h"
 #include "drivers/gpio/l9779.h"
 #include "drivers/gpio/tle9201.h"
+#include "m74_9_can.h"
 
 // PB14 is error LED, configured in board.mk
 Gpio getCommsLedPin() {
@@ -292,5 +293,9 @@ void setup_custom_board_overrides() {
 	custom_board_InitHardware = m74_9_boardInitHardware;
 	custom_board_DefaultConfiguration = m74_9_boardDefaultConfiguration;
 	custom_board_ConfigOverrides = m74_9_boardConfigOverrides;
+#if EFI_CAN_SUPPORT
+	initM74_9Can();
+	custom_board_isImmobilizerBlocking = m74_9_isImmobilizerBlocking;
+#endif // EFI_CAN_SUPPORT
 }
 
