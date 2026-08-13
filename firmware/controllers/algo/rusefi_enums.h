@@ -146,7 +146,7 @@ typedef enum  __attribute__ ((__packed__)) {
 
   VVT_CUSTOM_5 = 34,
     
-  VVT_3GR_FSE = 35,
+  
 
 } vvt_mode_e;
 
