@@ -58,7 +58,10 @@
 
 #define FF_USE_STRFUNC	1
 #define FF_PRINT_LLI	1
-#define FF_PRINT_FLOAT	1
+/* rusEFI: float f_printf() is unused (error_handling.cpp prints only ints/strings)
+/  and its double-precision math is prohibited on our single-precision-FPU targets,
+/  see check_illegal_conversion.sh */
+#define FF_PRINT_FLOAT	0
 #define FF_STRF_ENCODE	3
 /* FF_USE_STRFUNC switches string API functions, f_gets(), f_putc(), f_puts() and
 /  f_printf().
