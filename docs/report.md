@@ -1,5 +1,82 @@
 # Work Report
 
+## 2026-08-14 - m74_9: SWD live debug session - timing/format of IMMO challenge exchange found
+
+Extended SWD/OpenOCD investigation on the original Itelma I865LB52 ECU on the bench.
+Goal: hit breakpoint at `0x082078D4` (BLX R3 in FUN_08207874, the SLib entry call)
+to capture the address of the SLib crypto function.
+
+What was done:
+
+| Change | File |
+| --- | --- |
+| New bench PCAN trace captured without BCM | `stol.trc` |
+| Auto-respond script for timed 0x0714 reply | `immo_respond.py` |
+| Updated current-status section in analysis doc | `docs/m74_9_immo_analysis.md` |
+
+Key findings:
+
+- **0x0713 trigger is random per power cycle.**  The original ECU generates a fresh
+  8-byte trigger (likely from the AT32F435 TRNG) every time it boots and sends it in
+  the 0x0713 frame.  The BCM computes Frame1+Frame2 of the 0x0714 challenge from
+  this trigger using an unknown algorithm.  rusEFI sends a fixed session-counter
+  trigger; the two are not interchangeable.
+
+- **Root cause #1 - timing.**  Analysed all 5 trigger->challenge pairs in
+  orig_1/2/3.trc and ignon*.trc.  The BCM sends 0x0714 Frame1 within
+  1.2-10.3 ms (avg 7 ms) of receiving 0x0713.  The ECU accepts the challenge
+  only within this same window.  Manual PCAN-View clicking takes >100 ms -> always
+  misses the window.  Fix: cyclic PCAN transmission (CycleTime=1/2 ms) or the
+  `immo_respond.py` python-can auto-responder (responds in < 2 ms after seeing 0x0713).
+
+- **Root cause #2 - wrong Frame1 format.**  User was sending Frame1 =
+  `26 17 14 F0 94 E7 29 7F` (byte[0] = 0x26, no 0x40 bit).  This is what the BCM
+  sends to *rusEFI*; it is a REQUEST-style frame.  The original ECU expects a
+  RESPONSE-style frame (bit 6 of byte[0] set).  In all 5 known original-ECU pairs,
+  Frame1[0] is 0x66, 0xCF, or 0x4A - all have the 0x40 bit set.  The original ECU's
+  CAN ISR discards Frame1 without this bit, so FUN_082027A4 is never called.
+  Correct data to use: Frame1=`66 0B E1 E2 A3 4B 81 40`,
+  Frame2=`B4 56 33 A0 49 9A 01 EC` (pair 1 from orig_1.trc).
+
+- **ECU does NOT validate challenge against its own trigger.**  FUN_08201E2C only
+  checks key_type==1 and session_word==0xFF00/0xFF01 (from the SRAM buffer populated
+  by the CAN ISR).  The 8-byte trigger in 0x0713 is sent outward to the BCM and is
+  not stored for backward verification.  Any correctly-formatted 0x0714 (right
+  byte[0] format) should be accepted regardless of which trigger triggered it.
+
+- **0x0713 sent autonomously.**  stol.trc (bench, no BCM) shows the ECU sends
+  0x0713 exactly once at t=9863.5 ms without needing 0x0350 from BCM.  Sending
+  0x0350 is NOT required to get 0x0713.  After no response arrives the ECU stops
+  retrying (within the trace window).
+
+- **SWD direct call attempt (summary).**  Multiple attempts to call FUN_082027A4
+  directly via OpenOCD (set PC, SP, LR, resume) failed due to: (a) being in Handler
+  mode after HardFault, (b) FUN_08202038 not yet complete (SRAM[0x200002CA]=0,
+  function pointer at SRAM[0x200010A0] not set), (c) watchdog resets during halt.
+  Mitigation: `mww 0xE0042008 0x00001800` freezes IWDG while halted on AT32F435;
+  must be written WHILE CHIP IS RUNNING (not after halt); wait >=5 s after reset
+  before halting to allow init to complete.
+
+Validation:
+- `stol.trc` parsed: exactly 1 x 0x0713, 0 x 0x0714, 0 x 0x0350 confirmed.
+- 5-pair timing distribution verified: min 1.2 ms, max 10.3 ms, avg 7.0 ms.
+- Frame1[0] bit-pattern confirmed across all 5 original-ECU pairs (0x40 bit always set).
+- No firmware build run (algorithm still unknown; stubs in place).
+
+Open follow-ups:
+- Change PCAN cyclic data to pair-1 format (`66 0B E1 E2 A3 4B 81 40` /
+  `B4 56 33 A0 49 9A 01 EC`) and confirm BP at `0x082027A4` fires.
+- If `0x082027A4` fires but `0x082078D4` does not: check SRAM[0x200002C8]
+  (0 = SLib init path, 1 = flash-attestation path via FUN_0820630C).
+- If no BP fires at all: investigate CAN ISR (set BP at `FUN_08206FB8` or
+  watch SRAM[0x20000414] for writes after sending 0x0714).
+- Cleanest option: connect BCM on bench (or test in car with JTAG) so the real
+  BCM computes the correct Frame1+Frame2 for each trigger automatically.
+- Once SLib entry address (R3 at 0x082078D4) is known, try `mdw <addr>` -
+  readable -> disassemble; not readable -> capture input/output at BLX site.
+
+---
+
 ## 2026-08-13 - m74_9: IMMO dead-lock fix + deep firmware reverse-engineering
 
 Found and fixed the root-cause dead-lock that prevented the engine from starting
