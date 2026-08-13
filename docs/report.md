@@ -1,5 +1,67 @@
 # Work Report
 
+## 2026-08-14 - m74_9: Static binary analysis - 0x0713 crypto significance + SLib call map
+
+Python static analysis of the full 4 MB flash dump (`find_trigger_gen.py`).
+
+What was done:
+
+| Change | File |
+| --- | --- |
+| New static analysis script | `find_trigger_gen.py` |
+| Updated analysis: corrected BLX 0x082078D4, new SLib call map, trigger crypto hypothesis | `docs/m74_9_immo_analysis.md` |
+
+Key findings:
+
+- **0x0713 trigger IS crypto-significant.** BCM returns Frame1[0] with bit 0x40 (RESPONSE
+  format) for ALL 6 original-ECU triggers (0x66, 0xCF, 0x4A...) but NOT for rusEFI's
+  fixed counter (`0x26`, no 0x40 bit). Probability of 6/6 coincidence ~1.5%.
+  BCM validates the trigger content before sending a proper challenge.
+
+- **CORRECTED: BLX R3 at 0x082078D4 does NOT call SLib.**
+  The LDR before it loads 0x08209A60 (a wrapper-internal function pointer table).
+  That table contains 8 wrapper addresses (0x08205F59...0x082062E9),
+  all in 0x082xxxxx (flash attestation functions). The breakpoint is useful
+  for catching flash-attestation calls but will NOT reveal a SLib crypto address.
+
+- **36 direct BL/BLX-to-SLib calls found in main firmware (0x080xxxxx).**
+  None are in the IMMO wrapper (0x082xxxxx). SLib is called via Thumb2 immediate-offset
+  BL (F000+F8xx encoding), not via SRAM function pointer tables.
+  All 36 call sites identified; 36 different SLib entry points.
+
+- **Most likely trigger generator: 0x08069028 and 0x080697D0** (both in same 4 KB page).
+  These are the only SLib calls near CAN-related code, calling SLib 0x081F102A
+  and 0x0819AFEE respectively.
+
+- **IMMO response (flash attestation) does NOT require SLib.** The whole computation
+  chain (FUN_08201E2C -> FUN_0820630C -> FUN_08206108 -> FUN_082056D4) lives in the
+  readable wrapper. If the algorithm is indeed flash-attestation, rusEFI can implement
+  it without calling SLib at all (provided SLib is preserved at 0x08100000-0x081FFFFF
+  so the CPU reads real flash content, not 0xFF).
+
+- **SLib call hotspot: 0x08089xxx-0x0808Cxxx (15 calls to 0x08109xxx-0x0810Dxxx).**
+  Likely a crypto engine (AES/HMAC) used for something other than IMMO protocol.
+
+Validation:
+- Python script confirmed: MOVW Rn, #0x713 = NOT present in flash.
+  CAN ID 0x713 is encoded in a message descriptor table or passed via HAL parameter.
+- Shifted CAN ID 0x0713 (0xE2600000) = NOT in literal pools.
+- Shifted CAN ID 0x0350 (0x6A000000) = FOUND at 3 locations in main firmware,
+  confirming that BCM-keepalive sender uses literal-pool CAN IDs while IMMO sender uses tables.
+- 0x08209A60 table decoded: 8 function pointers, all in 0x082xxxxx wrapper range.
+
+Open follow-ups:
+- Set breakpoints at 0x08069028 and 0x080697D0 on original ECU to catch
+  SLib trigger-generation calls. Read R0..R3, LR before BL; read SRAM output after return.
+- Alternatively: connect BCM on bench -> natural exchange -> catch trigger gen in
+  SLib call sites above.
+- Verify flash-attestation hypothesis: parse known challenge Frame1+Frame2 bytes to
+  extract flash_start/flash_size parameters; read those flash regions in dump;
+  check if result matches the known 8-byte response.
+- Add new script `verify_attestation.py` to test the hypothesis against all 5 pairs.
+
+---
+
 ## 2026-08-14 - m74_9: SWD live debug session - timing/format of IMMO challenge exchange found
 
 Extended SWD/OpenOCD investigation on the original Itelma I865LB52 ECU on the bench.
