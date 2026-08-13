@@ -218,13 +218,13 @@
 #define can_broadcast_channel_e_CAN_BUS_FIRST 0
 #define can_broadcast_channel_e_CAN_BUS_SECOND 1
 #define can_broadcast_channel_e_CAN_BUS_THIRD 2
-#define can_broadcast_channel_e_enum "first", "second", "3rd"
+#define can_broadcast_channel_e_enum "Primary CAN", "Secondary CAN", "Third CAN"
 #define can_bus_channel_e_auto_enum 0="CAN_BUS_NONE",1="CAN_BUS_CAN1",2="CAN_BUS_CAN2",3="CAN_BUS_CAN3"
 #define can_bus_channel_e_CAN_BUS_CAN1 1
 #define can_bus_channel_e_CAN_BUS_CAN2 2
 #define can_bus_channel_e_CAN_BUS_CAN3 3
 #define can_bus_channel_e_CAN_BUS_NONE 0
-#define can_bus_channel_e_enum "None", "CAN1", "CAN2", "CAN3"
+#define can_bus_channel_e_enum "None", "Primary CAN", "Secondary CAN", "Third CAN"
 #define CAN_DEFAULT_BASE 0x200
 #define CAN_ECU_SERIAL_RX_ID 0x710
 #define CAN_ECU_SERIAL_TX_ID 0x720
@@ -1644,7 +1644,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 3799386975
+#define SIGNATURE_HASH 161261300
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2285,7 +2285,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.08.13.hellenNA6.3799386975"
+#define TS_SIGNATURE "rusEFI master.2026.08.13.hellenNA6.161261300"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
