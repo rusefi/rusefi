@@ -1644,7 +1644,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 1380677073
+#define SIGNATURE_HASH 393691707
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1873,6 +1873,7 @@
 #define ts_14_command_COMMAND_X14_UNUSED_1 0x01
 #define ts_14_command_COMMAND_X14_UNUSED_15 0x15
 #define ts_14_command_COMMAND_X14_UNUSED_2 0x02
+#define ts_14_command_TS_DTC_MANAGER_SHOT 0x26
 #define ts_14_command_TS_ESTIMATE_TORQUE_TABLE 0x23
 #define ts_14_command_TS_ETB_AUTOCAL_0 0x0E
 #define ts_14_command_TS_ETB_AUTOCAL_0_FAST 0x1C
@@ -2284,7 +2285,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.08.13.hellen72.1380677073"
+#define TS_SIGNATURE "rusEFI master.2026.08.13.hellen72.393691707"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
