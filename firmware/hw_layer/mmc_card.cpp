@@ -40,7 +40,7 @@
 #include "binary_mlg_logging.h"
 #include "sd_log_trigger.h"
 
-#if defined(MODULE_DTC_MANAGER)
+#if MODULE_DTC_MANAGER
 #include "dtc_manager.h"
 #endif
 
@@ -918,7 +918,7 @@ static void sdLoggerStop()
 			}
 		#endif
 			break;
-	#if defined(MODULE_DTC_MANAGER)
+	#if MODULE_DTC_MANAGER
 		case SDLoggerMode::Dtc:
 			DtcManagerStop();
 			break;
@@ -954,7 +954,7 @@ static void sdLoggerStart()
 				toothLoggerStarted = EnableToothLogger();
 				break;
 		#endif
-		#if defined(MODULE_DTC_MANAGER)
+		#if MODULE_DTC_MANAGER
 			case SDLoggerMode::Dtc:
 				{
 					int ret = DtcManagerStart(&resources.fd, &logBuffer);
@@ -1397,7 +1397,7 @@ void initEarlyMmcCard() {
 	addConsoleActionS("sdmode", sdSetMode);
 	addConsoleAction("delreports", sdCardRemoveReportFiles);
 
-#if defined(MODULE_DTC_MANAGER)
+#if MODULE_DTC_MANAGER
 	addConsoleActionS("dtc_test", [](const char *tag) {
 		int ret = DtcTriggerEvent(tag);
 		if (ret < 0) {

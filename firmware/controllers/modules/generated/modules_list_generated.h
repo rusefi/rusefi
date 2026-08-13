@@ -24,7 +24,7 @@ CheckEngineLight,
 MILController,
 #endif
 
-#ifdef MODULE_DTC_MANAGER
+#if MODULE_DTC_MANAGER
 DtcManagerModule,
 #endif
 

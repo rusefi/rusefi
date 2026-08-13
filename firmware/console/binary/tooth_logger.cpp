@@ -49,7 +49,7 @@
 
 #include "tooth_logger_buffer.h"
 
-#if defined(MODULE_DTC_MANAGER)
+#if MODULE_DTC_MANAGER
 #include "dtc_manager.h"
 #endif
 
@@ -130,7 +130,7 @@ static void setToothLogReady(bool value) {
 
 ToothLoggerBufferPool toothBuffers{setToothLogReady};
 
-#if defined(MODULE_DTC_MANAGER)
+#if MODULE_DTC_MANAGER
 // buffer is ready to write to file
 static volatile bool circularBufferFilled = false;
 // how many entries to capture after trigger have fired
@@ -185,7 +185,7 @@ bool DisableToothLogger(TLmode mode) {
 	return true;
 }
 
-#if defined(MODULE_DTC_MANAGER)
+#if MODULE_DTC_MANAGER
 void ToothLoggerSetLimit(size_t toothsToCapture) {
 	toothBuffers.setCircularModeI(true);
 	toothLoggerEntriesToCapture = toothsToCapture;
@@ -203,7 +203,7 @@ void ToothLoggerRelease() {
 
 // This is use by TS only
 CompositeBuffer* GetToothLoggerBufferNonblocking() {
-#if defined(MODULE_DTC_MANAGER)
+#if MODULE_DTC_MANAGER
 	// in circular mode buffers may be reserved for the crash dump writer,
 	// do not let the TS composite reader steal them
 	if (toothBuffers.isCircularMode()) {
@@ -223,7 +223,7 @@ static void SetNextCompositeEntry(efitick_t timestamp) {
 	// This is called from multiple interrupts/threads, so we need a lock.
 	chibios_rt::CriticalSectionLocker csl;
 
-#if defined(MODULE_DTC_MANAGER)
+#if MODULE_DTC_MANAGER
 	// Circular buffer is fully filled and pending to be writen to storage
 	if (circularBufferFilled) {
 		return;
@@ -232,7 +232,7 @@ static void SetNextCompositeEntry(efitick_t timestamp) {
 
 	toothBuffers.appendI(cur, timestamp);
 
-#if defined(MODULE_DTC_MANAGER)
+#if MODULE_DTC_MANAGER
 	if (toothLoggerEntriesToCapture) {
 		toothLoggerEntriesToCapture = toothLoggerEntriesToCapture - 1;
 		if (toothLoggerEntriesToCapture == 0) {

@@ -10,7 +10,7 @@
 #include "rusefi/efistring.h"
 #include "dtc_manager.h"
 
-#if EFI_PROD_CODE && defined(MODULE_DTC_MANAGER) && EFI_FILE_LOGGING
+#if EFI_PROD_CODE && MODULE_DTC_MANAGER && EFI_FILE_LOGGING
 
 #include "ch.hpp"
 
