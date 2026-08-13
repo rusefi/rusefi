@@ -2700,7 +2700,7 @@ struct engine_configuration_s {
 	 */
 	int8_t gapVvtTrackingLengthOverride;
 	/**
-	 * Check engine light, also malfunction indicator light. Always blinks once on boot.
+	 * Check engine light, also malfunction indicator light. Solid while ignition is on and the engine is stopped, blinks active error codes.
 	 * offset 778
 	 */
 	output_pin_e malfunctionIndicatorPin;
