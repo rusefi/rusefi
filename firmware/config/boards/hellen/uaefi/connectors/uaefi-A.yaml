@@ -30,14 +30,22 @@ pins:
     type: gnd
 
   - pin: A5
+    # H-bridge 1 usable as an on/off output when "H-Bridge #x function" = GPIO, see #9673; DC1- must stay unconnected
+    id: HBRIDGE_1_OUT
+    class: outputs
     function: DC1+ (usually electronic throttle body)
     type: etb
     color: blue
+    ts_name: A5 - DC1+
 
   - pin: A6
+    # H-bridge 2 usable as an on/off output when "H-Bridge #x function" = GPIO, see #9673; DC2- must stay unconnected
+    id: HBRIDGE_2_OUT
+    class: outputs
     function: DC2+
     type: etb
     color: blue
+    ts_name: A6 - DC2+
 
   - pin: A7
     meta: MM100_IN_VBATT
