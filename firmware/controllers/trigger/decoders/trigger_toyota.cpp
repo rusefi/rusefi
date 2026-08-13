@@ -100,7 +100,7 @@ void initialize_3GRfSE_CAM(TriggerWaveform *s);{
 	s->setTriggerSynchronizationGap(0.545);
 	s->setSecondTriggerSynchronizationGap(1.596);
 
-	s->addToothRiseFall(104, /* width*/ 70);
-	s->addToothRiseFall(194, /* width*/ 20);
-	s->addToothRiseFall(360, /* width*/ 70);
+	s->addToothRiseFall(65, /* width*/ 30);
+	s->addToothRiseFall(210, /* width*/ 85);
+	s->addToothRiseFall(360, /* width*/ 60);
 }
