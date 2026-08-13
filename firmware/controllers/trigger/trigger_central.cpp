@@ -240,7 +240,7 @@ static angle_t adjustCrankPhase(int camIndex) {
   
 	case VVT_CUSTOM_1:
 	case VVT_CUSTOM_2:
-	case VVT_CUSTOM_3:
+	
 	case VVT_CUSTOM_4:
 	case VVT_CUSTOM_5:
 	case VVT_INACTIVE:
