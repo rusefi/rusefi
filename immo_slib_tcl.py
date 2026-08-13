@@ -1,23 +1,28 @@
 #!/usr/bin/env python3
 """
-immo_slib_tcl.py - OpenOCD TCL RPC client for IMMO SLib breakpoint trap
-------------------------------------------------------------------------
-OpenOCD opens two servers:
-  :4444 - telnet  (text prompts)
-  :6666 - TCL RPC (frame: cmd+0x1a -> result+0x1a)   <- this script
+immo_slib_tcl.py - OpenOCD TCL RPC - IMMO wrapper breakpoints
+--------------------------------------------------------------
+Версия 2: BP поставлены в IMMO wrapper (0x082xxxxx) - они точно
+вызываются при запуске ECU. Для запуска IMMO нужен 0x0350 от BCM.
 
-TCL RPC protocol is much cleaner: no prompt parsing, just function calls.
+ВАЖНО: запустить параллельно immo_respond.py (или PCAN) для
+симуляции BCM с кадром 0x0350 каждые 100 мс:
+  ID=0x0350 DLC=8 Data=C3 00 00 00 04 14 94 05
 
-Usage:
-  python3 immo_slib_tcl.py             # start OpenOCD automatically
-  python3 immo_slib_tcl.py --attach    # connect to already-running OpenOCD
+OpenOCD серверы:
+  :4444 - telnet (prompt-based)
+  :6666 - TCL RPC (cmd+0x1a -> result+0x1a)  <- этот скрипт
+
+Использование:
+  python3 immo_slib_tcl.py             # запустить OpenOCD + подключиться
+  python3 immo_slib_tcl.py --attach    # только подключиться
 """
 
 import subprocess, socket, time, sys, re, threading
 from pathlib import Path
 from datetime import datetime
 
-# ============================================================ Configuration ==
+# ═══ Конфигурация ════════════════════════════════════════════════════════════
 
 HOME        = str(Path.home())
 OPENOCD_BIN = f'{HOME}/openocd'
@@ -25,17 +30,35 @@ CFG_IFACE   = f'{HOME}/tool-openocd-at32/scripts/interface/stlink-dap.cfg'
 CFG_TARGET  = f'{HOME}/tool-openocd-at32/scripts/target/at32f435xM.cfg'
 LOGFILE     = f'{HOME}/immo_slib_tcl.log'
 
-TCL_PORT    = 6666   # OpenOCD TCL RPC server
+TCL_PORT    = 6666
 
-# SLib call-site breakpoints found by Python binary analysis
+# ─────────────────────────────────────────────────────────────────────────────
+# Breakpoints — IMMO wrapper (0x082xxxxx), подтверждено анализом
+#
+# Почему НЕ 0x08069028 / 0x080697D0:
+#   Они не вызываются в нормальном режиме без BCM (скорее всего OBD/диагностика).
+#   90 секунд ожидания — ни одного срабатывания (см. лог).
+#
+# Новые BP — функции которые точно вызываются:
+#   0x082027A4  FUN_082027A4  — вычислитель IMMO-ответа (главная точка)
+#   0x08201E2C  FUN_08201E2C  — IMMO crypto handler (зарегистрирован в SRAM-таблице)
+#   0x08202038  FUN_08202038  — IMMO init (выполняется при первом запуске)
+#   0x0820743A  CAN TX wrapper — функция в wrapper'е, использующая CAN1 base
+#               (вероятно посылает 0x0713 / другие IMMO-кадры)
+#
+# Порядок: сначала 0x08202038 (init), потом 0x0820743A (TX),
+#          потом 0x082027A4 (ответ на 0x0714), потом 0x08201E2C (крипто).
+# ─────────────────────────────────────────────────────────────────────────────
 BREAKPOINTS = [
-    (0x08069028, 'CALL -> SLib 0x081F102A  [trigger generator candidate 1]'),
-    (0x080697D0, 'CALL -> SLib 0x0819AFEE  [trigger generator candidate 2]'),
+    (0x08202038, 'IMMO init (FUN_08202038) — первый запуск, init SRAM-таблицы'),
+    (0x0820743A, 'CAN TX wrapper — вероятно посылает 0x0713 триггер'),
+    (0x082027A4, 'IMMO вычислитель ответа (FUN_082027A4) — при получении 0x0714'),
+    (0x08201E2C, 'IMMO crypto handler (FUN_08201E2C) — сам расчёт'),
 ]
 
 REGS = ['pc', 'r0', 'r1', 'r2', 'r3', 'r4', 'r5', 'lr']
 
-# ================================================================== Logger ==
+# ═══ Логгер ══════════════════════════════════════════════════════════════════
 
 _lf = open(LOGFILE, 'w', buffering=1)
 
@@ -50,51 +73,38 @@ def log(msg: str, c: str = '') -> None:
         print(line)
     _lf.write(line + '\n')
 
-
-# ======================================================= OpenOCD TCL RPC ==
+# ═══ OpenOCD TCL RPC ═════════════════════════════════════════════════════════
 
 class OpenOCDTCL:
     """
-    Thin wrapper over OpenOCD TCL RPC server (port 6666).
-
-    Protocol:
-        send:    bytes(command) + 0x1a
-        receive: bytes(result)  + 0x1a
-
-    No prompts, no line buffering - just clean request/response framing.
-    'wait_halt N' blocks server-side for up to N milliseconds, then returns.
+    OpenOCD TCL RPC (порт 6666).
+    Протокол: bytes(cmd) + 0x1a  →  bytes(result) + 0x1a
     """
+    TERM = b'\x1a'
 
-    TERM = b'\x1a'     # ASCII SUB  -  OpenOCD TCL RPC frame delimiter
+    def __init__(self, host='localhost', port=TCL_PORT):
+        self._addr = (host, port)
+        self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    def __init__(self, host: str = 'localhost', port: int = TCL_PORT):
-        self._addr  = (host, port)
-        self._sock  = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-    # --------------------------------------------------------- connection --
-
-    def connect(self, max_wait: float = 25.0) -> bool:
-        log(f'TCL RPC: connecting to {self._addr}...')
+    def connect(self, max_wait=25.0) -> bool:
+        log(f'TCL RPC: подключаюсь к {self._addr}...')
         deadline = time.time() + max_wait
-        attempt  = 0
+        n = 0
         while time.time() < deadline:
-            attempt += 1
+            n += 1
             try:
                 self._sock.connect(self._addr)
-                log('TCL RPC: connected!', 'g')
+                log('TCL RPC: подключено!', 'g')
                 return True
             except (ConnectionRefusedError, OSError):
-                if attempt % 6 == 0:
-                    log(f'  waiting for OpenOCD... ({int(deadline-time.time())} s left)')
+                if n % 6 == 0:
+                    log(f'  жду OpenOCD... ({int(deadline-time.time())} с)')
                 time.sleep(0.4)
-        log('TCL RPC: connection failed', 'r')
+        log('TCL RPC: не удалось подключиться', 'r')
         return False
 
-    # ---------------------------------------------------------- transport --
-
-    def run(self, cmd: str, timeout: float = 10.0) -> str:
-        """Send one TCL command, return the result string."""
-        log(f'  tcl> {cmd}')
+    def run(self, cmd: str, timeout=10.0) -> str:
+        log(f'  >> {cmd}')
         self._sock.settimeout(timeout)
         self._sock.sendall(cmd.encode() + self.TERM)
         buf = b''
@@ -111,104 +121,52 @@ class OpenOCDTCL:
                 break
         result = buf.rstrip(self.TERM).decode('utf-8', errors='replace').strip()
         if result:
-            log(f'       {result}')
+            log(f'     {result}')
         return result
 
-    # ------------------------------------------ high-level OpenOCD API  --
+    def halt(self):    return self.run('halt')
+    def resume(self):  return self.run('resume')
 
-    def halt(self) -> str:
-        return self.run('halt')
+    def reset_run(self):
+        # reset run может давать "already halted" — игнорируем
+        return self.run('reset run', timeout=5)
 
-    def resume(self) -> str:
-        return self.run('resume')
-
-    def reset_run(self) -> str:
-        return self.run('reset run')
-
-    def wait_halt(self, timeout_sec: float = 90.0) -> bool:
-        """
-        Block until target halts (breakpoint, reset, etc).
-        Uses OpenOCD built-in 'wait_halt <ms>' which is server-side blocking -
-        no polling needed on our side.
-        Returns True if target halted, False on timeout.
-        """
+    def wait_halt(self, timeout_sec=90.0) -> bool:
         ms = int(timeout_sec * 1000)
-        log(f'  Waiting for halt (up to {int(timeout_sec)} s)...', 'y')
-        # Give the socket extra time beyond the OpenOCD timeout
+        log(f'  Жду останова до {int(timeout_sec)} с...', 'y')
         result = self.run(f'wait_halt {ms}', timeout=timeout_sec + 5)
-        timed_out = 'timed out' in result.lower()
-        return not timed_out
+        return 'timed out' not in result.lower()
 
     def reg(self, name: str):
-        """Read register, return int value or None."""
         out = self.run(f'reg {name}', timeout=5)
         m = re.search(r'0x([0-9a-fA-F]+)', out)
         return int(m.group(1), 16) if m else None
 
     def mdb(self, addr: int, count: int) -> str:
-        """Memory dump: count bytes at addr."""
         return self.run(f'mdb 0x{addr:08X} {count}', timeout=10)
 
-    def mww(self, addr: int, value: int) -> str:
-        """Memory write: 32-bit word."""
-        return self.run(f'mww 0x{addr:08X} 0x{value:08X}', timeout=5)
+    def mww(self, addr: int, val: int) -> str:
+        return self.run(f'mww 0x{addr:08X} 0x{val:08X}', timeout=5)
 
-    def bp_set(self, addr: int, size: int = 2) -> str:
-        """Set hardware breakpoint."""
-        return self.run(f'bp 0x{addr:08X} {size} hw', timeout=5)
-
-    def bp_clear_all(self) -> str:
-        return self.run('rbp all', timeout=5)
+    def bp_set(self, addr: int) -> str:
+        return self.run(f'bp 0x{addr:08X} 2 hw', timeout=5)
 
     def bp_clear(self, addr: int) -> str:
         return self.run(f'rbp 0x{addr:08X}', timeout=5)
 
+    def bp_clear_all(self) -> str:
+        return self.run('rbp all', timeout=5)
+
     def pc(self) -> int:
         return self.reg('pc') or 0
 
-    def close(self) -> None:
-        try:
-            self._sock.close()
-        except Exception:
-            pass
+    def close(self):
+        try: self._sock.close()
+        except: pass
 
+# ═══ Основная логика ═════════════════════════════════════════════════════════
 
-# ========================================================== Main logic ====
-
-def start_openocd() -> subprocess.Popen:
-    log(f'Starting OpenOCD: {OPENOCD_BIN}')
-    proc = subprocess.Popen(
-        [OPENOCD_BIN, '-f', CFG_IFACE, '-f', CFG_TARGET],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        cwd=HOME,
-    )
-    # Wait for "Listening on port 6666" line
-    log('Waiting for OpenOCD ready...')
-    t0 = time.time()
-    while time.time() - t0 < 20:
-        raw = proc.stdout.readline()
-        if not raw:
-            break
-        line = raw.decode('utf-8', errors='replace').rstrip()
-        log(f'  ocd| {line}')
-        if 'Listening on port' in line and '6666' in line:
-            log('OpenOCD is ready!', 'g')
-            break
-        if proc.poll() is not None:
-            log('OpenOCD exited unexpectedly!', 'r')
-            sys.exit(1)
-
-    # Drain stdout in background so OpenOCD doesn't block
-    def _drain():
-        for raw in proc.stdout:
-            log(f'  ocd| {raw.decode("utf-8", errors="replace").rstrip()}')
-    threading.Thread(target=_drain, daemon=True).start()
-    return proc
-
-
-def read_halt_state(ocd: OpenOCDTCL) -> dict:
-    """Read all registers, return dict reg->value."""
+def read_regs(ocd: OpenOCDTCL) -> dict:
     regs = {}
     for r in REGS:
         v = ocd.reg(r)
@@ -217,151 +175,207 @@ def read_halt_state(ocd: OpenOCDTCL) -> dict:
     return regs
 
 
-def dump_sram_pointers(ocd: OpenOCDTCL, regs: dict) -> None:
-    """Dump any SRAM addresses found in R0..R4."""
-    log('\n  SRAM pointers in R0..R4:')
+def dump_sram_args(ocd: OpenOCDTCL, regs: dict) -> None:
+    """Дампит SRAM-адреса из R0..R4 (вероятные буферы аргументов)."""
     found = False
     for r in ['r0', 'r1', 'r2', 'r3', 'r4']:
         v = regs.get(r) or 0
         if 0x20000000 <= v < 0x20020000:
-            log(f'  {r.upper()} = 0x{v:08X}  -> SRAM, read 16 bytes:', 'c')
-            out = ocd.mdb(v, 16)
-            log(f'    {out}')
+            log(f'\n  {r.upper()} = 0x{v:08X} -> SRAM, читаю 16 байт:', 'c')
+            log(f'    {ocd.mdb(v, 16)}')
             found = True
     if not found:
-        log('  (no SRAM pointers found in R0..R4)')
+        log('  (R0..R4 не указывают на SRAM)')
 
 
-def on_halt(ocd: OpenOCDTCL, pc: int, hit_num: int,
-            active_ret_bps: set) -> None:
-    """Handle a halt event."""
+def dump_key_sram(ocd: OpenOCDTCL) -> None:
+    """Дамп ключевых SRAM-адресов для диагностики IMMO."""
+    pairs = [
+        (0x200002C8, 1,  'init_flag (0=первый раз, 1=инициализирован)'),
+        (0x200002CA, 1,  'init_complete (1=FUN_08202038 завершил)'),
+        (0x200003FE, 1,  'ready_flag (должен быть 1)'),
+        (0x200003FC, 1,  'table_index'),
+        (0x20000402, 2,  'session_count'),
+        (0x20000414, 8,  'challenge_buffer [key_type, session, data...]'),
+        (0x20001ADC, 4,  'SLib_key_constant (0 или 0x2548A4D2)'),
+        (0x200010A0, 4,  'fn_ptr[1]+0x34 (должен быть 0x08201E2D)'),
+    ]
+    log('\n  Ключевые SRAM-адреса:')
+    for addr, n, desc in pairs:
+        cmd = 'mdb' if n <= 4 else 'mdb'
+        out = ocd.mdb(addr, n)
+        log(f'  0x{addr:08X} ({desc}): {out}')
 
-    # Identify which breakpoint fired
-    bp_desc   = None
-    is_call   = False
-    ret_addr  = None
 
+def on_halt(ocd: OpenOCDTCL, pc: int, hit: int,
+            dynamic_ret_bps: set) -> None:
+    # Определить BP
+    bp_desc  = None
+    is_known = False
     for addr, desc in BREAKPOINTS:
         if pc == addr:
             bp_desc  = desc
-            is_call  = True
-            ret_addr = addr + 4    # Thumb2 BL is 4 bytes
+            is_known = True
             break
 
-    if pc in active_ret_bps:
-        bp_desc = f'RETURN from SLib (after call at 0x{pc-4:08X})'
-        is_call = False
-        active_ret_bps.discard(pc)
+    if pc in dynamic_ret_bps:
+        bp_desc = f'AUTO-RETURN BP (установлен после предыдущего CALL)'
+        dynamic_ret_bps.discard(pc)
         ocd.bp_clear(pc)
+        is_known = True
 
-    if bp_desc is None:
-        log(f'  Halt at 0x{pc:08X} (not our BP), resuming...', 'y')
+    if not is_known:
+        log(f'  PC=0x{pc:08X} — не наш BP (reset-halt?), продолжаю...', 'y')
         ocd.resume()
         return
 
-    log(f'\n{"="*60}', 'y')
-    log(f'  HIT #{hit_num} at 0x{pc:08X}', 'y')
+    log(f'\n{"="*64}', 'y')
+    log(f'  СТОП #{hit}  PC = 0x{pc:08X}', 'y')
     log(f'  {bp_desc}', 'y')
-    log(f'{"="*60}', 'y')
+    log(f'{"="*64}', 'y')
 
-    # Read registers
-    log('\n  Registers:')
-    regs = read_halt_state(ocd)
+    log('\n  Регистры:')
+    regs = read_regs(ocd)
 
-    # Dump SRAM pointers
-    dump_sram_pointers(ocd, regs)
+    dump_sram_args(ocd, regs)
+    dump_key_sram(ocd)
 
-    # On RETURN: wide SRAM scan to find the trigger bytes
-    if not is_call:
-        log('\n  SRAM scan 0x20000000 (256 bytes) - looking for 8-byte trigger:')
-        out = ocd.mdb(0x20000000, 256)
-        log(f'  {out}')
+    # Для ключевых точек — ставим return-BP автоматически
+    if pc in {0x082027A4, 0x08201E2C, 0x0820743A}:
+        # Узнать размер инструкции по PC и прочитать следующий адрес
+        # (выходим через LR — можно поставить BP на LR)
+        lr = regs.get('lr', 0) or 0
+        if lr and 0x08000000 <= lr < 0x08300000:
+            log(f'\n  Авто-BP на возврат по LR = 0x{lr:08X}')
+            # lr Thumb = нечётный, выравниваем
+            ret_addr = lr & ~1
+            ocd.bp_set(ret_addr)
+            dynamic_ret_bps.add(ret_addr)
 
-    # On CALL: auto-set return breakpoint
-    if is_call and ret_addr:
-        log(f'\n  Auto-setting return BP at 0x{ret_addr:08X}...')
-        ocd.bp_set(ret_addr)
-        active_ret_bps.add(ret_addr)
-
-    log('\n  Resuming...', 'g')
+    log('\n  Продолжаю...', 'g')
     ocd.resume()
 
 
-def main() -> None:
+def start_openocd() -> subprocess.Popen:
+    log(f'Запуск OpenOCD: {OPENOCD_BIN}')
+    proc = subprocess.Popen(
+        [OPENOCD_BIN, '-f', CFG_IFACE, '-f', CFG_TARGET],
+        stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+        cwd=HOME,
+    )
+    log('Жду "Listening on port 6666"...')
+    t0 = time.time()
+    while time.time() - t0 < 20:
+        raw = proc.stdout.readline()
+        if not raw:
+            break
+        line = raw.decode('utf-8', errors='replace').rstrip()
+        log(f'  ocd| {line}')
+        if 'Listening on port' in line and '6666' in line:
+            log('OpenOCD готов!', 'g')
+            break
+        if proc.poll() is not None:
+            log('OpenOCD завершился!', 'r')
+            sys.exit(1)
+
+    def _drain():
+        for raw in proc.stdout:
+            log(f'  ocd| {raw.decode("utf-8",errors="replace").rstrip()}')
+    threading.Thread(target=_drain, daemon=True).start()
+    return proc
+
+
+def main():
     attach_only = '--attach' in sys.argv
 
-    log('=' * 60)
-    log('  IMMO SLib Breakpoint Trap  (OpenOCD TCL RPC)')
-    log(f'  Log: {LOGFILE}')
-    log('=' * 60)
+    log('=' * 64)
+    log('  IMMO Wrapper Breakpoint Trap  (OpenOCD TCL RPC v2)')
+    log(f'  Лог: {LOGFILE}')
+    log('=' * 64)
 
-    # 1. Start OpenOCD (or reuse existing)
+    log("""
+ТРЕБОВАНИЯ ДЛЯ ЗАПУСКА:
+  1. ECU подключён (питание + CAN + SWD)
+  2. PCAN посылает 0x0350 каждые 100 мс:
+       ID=0x0350  DLC=8  Data: C3 00 00 00 04 14 94 05
+     Без этого кадра ECU не запустит IMMO-последовательность!
+  3. Или запустить параллельно:  python3 immo_respond.py
+""", 'y')
+
     proc = None
     if not attach_only:
         proc = start_openocd()
         time.sleep(0.3)
 
-    # 2. Connect via TCL RPC
     ocd = OpenOCDTCL()
     if not ocd.connect(max_wait=25):
-        if proc:
-            proc.terminate()
+        if proc: proc.terminate()
         sys.exit(1)
 
-    # 3. Initialize chip
-    log('\n--- Init ---', 'c')
+    # ── Инициализация ────────────────────────────────────────────────────────
+    log('\n─── Инициализация ────────────────────────────────────', 'c')
     ocd.halt()
     ocd.bp_clear_all()
+    ocd.mww(0xE0042008, 0x00001800)   # freeze AT32 watchdog
+    ocd.mww(0xE000ED94, 0x00000000)   # disable MPU (на случай проблем)
 
-    # Freeze AT32F435 watchdog during debug halt
-    ocd.mww(0xE0042008, 0x00001800)
+    # Проверяем состояние чипа
+    pc_init = ocd.pc()
+    log(f'PC после halt: 0x{pc_init:08X}')
 
-    # 4. Set breakpoints
-    log('\n--- Breakpoints ---', 'c')
+    # ── Breakpoints ──────────────────────────────────────────────────────────
+    log('\n─── Breakpoints ──────────────────────────────────────', 'c')
     for addr, desc in BREAKPOINTS:
         r = ocd.bp_set(addr)
-        log(f'  0x{addr:08X}  {desc}  [{r}]')
+        log(f'  0x{addr:08X}  {desc}')
 
-    # Verify
-    log('\n--- Active BPs ---', 'c')
+    # Верификация
+    log('\n─── Активные BP ──────────────────────────────────────', 'c')
     ocd.run('bp')
 
-    # 5. Reset and run
-    log('\n--- Reset + Run ---', 'c')
+    # ── Сброс и запуск ───────────────────────────────────────────────────────
+    log('\n─── Reset + Run ──────────────────────────────────────', 'c')
     ocd.reset_run()
-    log('ECU running. Waiting for breakpoint...', 'g')
+    time.sleep(0.1)
+    log('ECU запущен!', 'g')
+    log('Ожидаю BP... (нужен 0x0350 от BCM/PCAN для запуска IMMO)', 'y')
 
-    # 6. Main wait loop
-    hit           = 0
-    active_ret_bps = set()   # return BPs set dynamically
+    # ── Главный цикл ─────────────────────────────────────────────────────────
+    hit             = 0
+    dynamic_ret_bps = set()
 
     while True:
         halted = ocd.wait_halt(timeout_sec=90)
 
         if not halted:
-            log('\nTimeout - no halt in 90 s', 'r')
-            log('Check: is ECU powered? Is SWD connected?')
-            break
+            log('\n90 с истекло без останова.', 'r')
+            log('Проверь: ECU включён? PCAN шлёт 0x0350?')
+            log('Пробую продолжить ожидание...')
+            # Не завершаемся — продолжаем ждать
+            continue
 
         pc = ocd.pc()
         if pc == 0:
-            log('Could not read PC, resuming...', 'r')
+            log('Не удалось прочитать PC, продолжаю...', 'r')
             ocd.resume()
             continue
 
         hit += 1
-        on_halt(ocd, pc, hit, active_ret_bps)
+        on_halt(ocd, pc, hit, dynamic_ret_bps)
 
-    log(f'\nTotal halts: {hit}')
-    log(f'Log saved to: {LOGFILE}')
+        if hit >= 50:
+            log('\n50 остановов — завершаю.', 'y')
+            break
+
+    log(f'\nВсего остановов: {hit}')
+    log(f'Лог: {LOGFILE}')
     ocd.close()
-    if proc:
-        proc.terminate()
+    if proc: proc.terminate()
 
 
 if __name__ == '__main__':
     try:
         main()
     except KeyboardInterrupt:
-        log('\nInterrupted by user (Ctrl+C).')
+        log('\nПрерывание (Ctrl+C).')
         sys.exit(0)

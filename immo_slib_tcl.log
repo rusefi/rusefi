@@ -1,0 +1,86 @@
+[00:59:24.798] ============================================================
+[00:59:24.798]   IMMO SLib Breakpoint Trap  (OpenOCD TCL RPC)
+[00:59:24.798]   Log: /Users/vladimir/immo_slib_tcl.log
+[00:59:24.798] ============================================================
+[00:59:24.798] Starting OpenOCD: /Users/vladimir/openocd
+[00:59:24.799] Waiting for OpenOCD ready...
+[00:59:24.805]   ocd| Open On-Chip Debugger 0.11.0+dev-ga8daba8 (2026-07-10-11:02)
+[00:59:24.805]   ocd| Licensed under GNU GPL v2
+[00:59:24.805]   ocd| For bug reports, read
+[00:59:24.805]   ocd| 	http://openocd.org/doc/doxygen/bugs.html
+[00:59:24.805]   ocd| Info : auto-selecting first available session transport "dapdirect_swd". To override use 'transport select <transport>'.
+[00:59:24.805]   ocd| Info : flash reg address: 0x0, usd addr:  0x0
+[00:59:24.805]   ocd| Info : flash reg address: 0x0, usd addr:  0x0
+[00:59:24.805]   ocd| Info : DEPRECATED target event trace-config; use TPIU events {pre,post}-{enable,disable}
+[00:59:24.805]   ocd| Info : Listening on port 6666 for tcl connections
+[00:59:24.805] OpenOCD is ready!
+[00:59:24.805]   ocd| Info : Listening on port 4444 for telnet connections
+[00:59:24.808]   ocd| Info : STLINK V2J37S7 (API v2) VID:PID 0483:3748
+[00:59:24.808]   ocd| Info : Target voltage: 3.250268
+[00:59:25.111] TCL RPC: connecting to ('localhost', 6666)...
+[00:59:25.117] TCL RPC: connected!
+[00:59:25.117] 
+--- Init ---
+[00:59:25.117]   tcl> halt
+[00:59:25.413]   ocd| Info : clock speed 4000 kHz
+[00:59:25.532]   ocd| Info : stlink_dap_op_connect(connect)
+[00:59:25.537]   ocd| Info : SWD DPIDR 0x2ba01477
+[00:59:25.541]   ocd| Info : [at32f435xx.cpu] Cortex-M4 r0p1 processor detected
+[00:59:25.555]   ocd| Info : [at32f435xx.cpu] target has 6 breakpoints, 4 watchpoints
+[00:59:25.561]   ocd| Info : starting gdb server for at32f435xx.cpu on 3333
+[00:59:25.561]   ocd| Info : Listening on port 3333 for gdb connections
+[00:59:25.561]   ocd| Info : accepting 'tcl' connection on tcp/6666
+[00:59:25.580]   ocd| target halted due to debug-request, current mode: Thread
+[00:59:25.580]   ocd| xPSR: 0x01000000 pc: 0x08013f80 msp: 0x2001fff8
+[00:59:25.580]   tcl> rbp all
+[00:59:25.582]   tcl> mww 0xE0042008 0x00001800
+[00:59:25.583] 
+--- Breakpoints ---
+[00:59:25.583]   tcl> bp 0x08069028 2 hw
+[00:59:25.586]   ocd| breakpoint set at 0x08069028
+[00:59:25.586]   ocd| 
+[00:59:25.586]        breakpoint set at 0x08069028
+[00:59:25.586]   0x08069028  CALL -> SLib 0x081F102A  [trigger generator candidate 1]  [breakpoint set at 0x08069028]
+[00:59:25.586]   tcl> bp 0x080697D0 2 hw
+[00:59:25.588]   ocd| breakpoint set at 0x080697d0
+[00:59:25.588]   ocd| 
+[00:59:25.588]        breakpoint set at 0x080697d0
+[00:59:25.588]   0x080697D0  CALL -> SLib 0x0819AFEE  [trigger generator candidate 2]  [breakpoint set at 0x080697d0]
+[00:59:25.588] 
+--- Active BPs ---
+[00:59:25.588]   tcl> bp
+[00:59:25.589]   ocd| Breakpoint(IVA): 0x08069028, 0x2, 0
+[00:59:25.589]   ocd| Breakpoint(IVA): 0x080697d0, 0x2, 1
+[00:59:25.589]   ocd| 
+[00:59:25.589]        Breakpoint(IVA): 0x08069028, 0x2, 0
+Breakpoint(IVA): 0x080697d0, 0x2, 1
+[00:59:25.589] 
+--- Reset + Run ---
+[00:59:25.589]   tcl> reset run
+[00:59:25.661] ECU running. Waiting for breakpoint...
+[00:59:25.661]   Waiting for halt (up to 90 s)...
+[00:59:25.661]   tcl> wait_halt 90000
+[01:00:55.676]   ocd| Error: timed out while waiting for target halted
+[01:00:55.676]   tcl> reg pc
+[01:00:55.676]   ocd| 
+[01:00:55.677]   ocd| Error: Could not read register 'pc'
+[01:00:55.677]   ocd| 
+[01:00:55.677] Could not read PC, resuming...
+[01:00:55.677]   tcl> resume
+[01:00:55.678]   ocd| Warn : [at32f435xx.cpu] target not halted
+[01:00:55.678]   ocd| 
+[01:00:55.678]   Waiting for halt (up to 90 s)...
+[01:00:55.678]   tcl> wait_halt 90000
+[01:02:25.680]   ocd| Error: timed out while waiting for target halted
+[01:02:25.680]   tcl> reg pc
+[01:02:25.680]   ocd| 
+[01:02:25.681]   ocd| Error: Could not read register 'pc'
+[01:02:25.681]   ocd| 
+[01:02:25.681] Could not read PC, resuming...
+[01:02:25.681]   tcl> resume
+[01:02:25.681]   ocd| Warn : [at32f435xx.cpu] target not halted
+[01:02:25.681]   ocd| 
+[01:02:25.681]   Waiting for halt (up to 90 s)...
+[01:02:25.682]   tcl> wait_halt 90000
+[01:02:30.771] 
+Interrupted by user (Ctrl+C).
