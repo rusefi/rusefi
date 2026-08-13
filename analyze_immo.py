@@ -1,232 +1,210 @@
 #!/usr/bin/env python3
 """
-Immo analysis helper for m74_9 (Largus / Renault CAN immobilizer).
+analyze_immo.py - IMMO challenge/response analysis for m74_9 / Itelma I865LB52
 
-Parses PCAN-View .trc files to extract 0x0713 (ECU) and 0x0714 (BCM) frames,
-forms challenge/response pairs, and prints them. Also diffs the IMMOON/IMMOOFF
-tune binaries and dumps the immobilizer-related code region from the original
-firmware full flash dump for Ghidra analysis.
+Searches the firmware binary for the IMMO algorithm and tests hypotheses against
+known challenge/response pairs.
 
-Run from the repo root:
-    python3 analyze_immo.py
+Usage:
+    python3 analyze_immo.py [path_to_bin]
 """
-
-import json
-import re
-import struct
+import struct, sys, hashlib, zlib, itertools
 from pathlib import Path
-from typing import List, Tuple, Dict, Any
 
-ROOT = Path(__file__).parent
+FIRMWARE = Path("Read_FULLFLASH_I865LB52_w2404b1____(240626_103727).bin")
+if len(sys.argv) > 1:
+    FIRMWARE = Path(sys.argv[1])
 
+data = FIRMWARE.read_bytes()
+BASE = 0x08000000
+print(f"Loaded {len(data):,} bytes from {FIRMWARE.name}")
+print(f"Flash base: 0x{BASE:08X}, range 0x{BASE:08X}–0x{BASE+len(data):08X}\n")
 
-def parse_trc(path: Path) -> List[Tuple[float, str, bytes]]:
-    """Return (time_ms, id_hex, data_bytes) for 0x0713/0x0714 frames."""
-    msgs = []
-    with open(path, "r", encoding="utf-8", errors="ignore") as f:
-        for line in f:
-            line = line.strip()
-            if not line or line.startswith(";"):
-                continue
-            m = re.search(
-                r"(\d+)\)\s+([\d.]+)\s+(Rx|Tx)\s+([0-9A-F]+)\s+(\d+)\s+(.*)",
-                line,
-            )
-            if not m:
-                continue
-            _num, t, _dir, id_hex, _dlc, data = m.groups()
-            if id_hex in ("0713", "0714"):
-                try:
-                    b = bytes.fromhex(data)
-                except ValueError:
-                    continue
-                msgs.append((float(t), id_hex, b))
-    return msgs
+# ---------------------------------------------------------------------------
+# Known challenge/response pairs
+# ---------------------------------------------------------------------------
+# Full 16-byte challenge → 8-byte response
+PAIRS16 = [
+    (bytes.fromhex('660be1e2a34b8140b45633a0499a01ec'), bytes.fromhex('9cb7f8ca31431bb6')),
+    (bytes.fromhex('cfcfbbf3cdc0f75ce9efe2eb23b62a25'), bytes.fromhex('bff99205ed4ab7a8')),
+    (bytes.fromhex('cd4c9070196bbdebb425cb7c4350082c'), bytes.fromhex('96739be6b1299f77')),
+    (bytes.fromhex('4a4f2a204fad58fd273622b70c2b559e'), bytes.fromhex('fda32d94ae77c121')),
+    (bytes.fromhex('66aaeef37037dee0cdeefb22bde96807'), bytes.fromhex('efaa66f0caa6f0cd')),
+]
+# Quick 8-byte challenge → 8-byte response
+PAIRS8 = [
+    (bytes.fromhex('0eabfe9d351af837'), bytes.fromhex('b15156d14683cd15')),
+    (bytes.fromhex('4a90250e855128bf'), bytes.fromhex('14a267bec8d8c3dc')),
+    (bytes.fromhex('63b95b1a3fbf41fe'), bytes.fromhex('2fa71d4722835ea2')),
+    (bytes.fromhex('596e3885f2460f4a'), bytes.fromhex('2cdf61de56551b86')),
+    (bytes.fromhex('a00059b79f90a8ae'), bytes.fromhex('a225de4e470324b6')),
+]
 
+def check(fn, pairs, label):
+    """Test fn(challenge)->response against all pairs; return True if all match."""
+    ok = 0
+    for ch, resp in pairs:
+        try:
+            got = fn(ch)
+            if got == resp:
+                ok += 1
+        except Exception:
+            pass
+    if ok == len(pairs):
+        print(f"  *** MATCH ({label}): all {ok}/{len(pairs)} pairs correct! ***")
+        return True
+    elif ok > 0:
+        print(f"  partial ({label}): {ok}/{len(pairs)} pairs match")
+    return False
 
-def extract_sessions(msgs: List[Tuple[float, str, bytes]]) -> List[Dict[str, Any]]:
-    """Group messages into full 16-byte challenge sessions and quick checks."""
-    sessions = []
-    i = 0
-    while i < len(msgs):
-        t, idh, data = msgs[i]
-        if idh == "0713":
-            # Full session: ECU trigger, two 0x0714 challenge frames, ECU response
-            if (
-                i + 3 < len(msgs)
-                and msgs[i + 1][1] == "0714"
-                and msgs[i + 2][1] == "0714"
-                and msgs[i + 3][1] == "0713"
-            ):
-                sessions.append(
-                    {
-                        "type": "full",
-                        "trigger_time": t,
-                        "trigger": data.hex(),
-                        "challenge1": msgs[i + 1][2].hex(),
-                        "challenge2": msgs[i + 2][2].hex(),
-                        "response_time": msgs[i + 3][0],
-                        "response": msgs[i + 3][2].hex(),
-                    }
-                )
-                i += 4
-                continue
+# ---------------------------------------------------------------------------
+# Section 1 – Key constants from prior analysis
+# ---------------------------------------------------------------------------
+KEY_CONSTANTS = [0x2548A4D2, 0x4DF9123B, 0x43A0C212, 0xF9C74A52]
+print("=== Section 1: Key constant search ===")
+for kc in KEY_CONSTANTS:
+    pattern = struct.pack('<I', kc)
+    hits = [i for i in range(len(data)-3) if data[i:i+4] == pattern]
+    print(f"  0x{kc:08X}: {len(hits)} hits at file offsets "
+          f"{[hex(h) for h in hits[:6]]}")
+print()
 
-        if idh == "0714":
-            # Quick re-check: BCM sends a single 0x0714 challenge, ECU replies
-            if i + 1 < len(msgs) and msgs[i + 1][1] == "0713":
-                sessions.append(
-                    {
-                        "type": "quick",
-                        "challenge_time": t,
-                        "challenge": data.hex(),
-                        "response_time": msgs[i + 1][0],
-                        "response": msgs[i + 1][2].hex(),
-                    }
-                )
-                i += 2
-                continue
-        i += 1
-    return sessions
+# ---------------------------------------------------------------------------
+# Section 2 – Simple algorithm tests (no key)
+# ---------------------------------------------------------------------------
+print("=== Section 2: Keyless algorithm tests ===")
 
+def xor_halves(ch):
+    h = len(ch)//2
+    return bytes(a^b for a,b in zip(ch[:h], ch[h:]))
 
-def diff_binaries(path1: Path, path2: Path) -> List[Tuple[int, int, int]]:
-    """Return list of (offset, byte_a, byte_b) differences."""
-    a = path1.read_bytes()
-    b = path2.read_bytes()
-    diffs = []
-    for offset, (ba, bb) in enumerate(zip(a, b)):
-        if ba != bb:
-            diffs.append((offset, ba, bb))
-    return diffs
+def reverse(ch):        return bytes(reversed(ch))
+def not_bytes(ch):      return bytes(~b & 0xFF for b in ch)
+def xor_self_shift1(ch): return bytes(ch[i]^ch[(i+1)%len(ch)] for i in range(8))
 
+for fn, label in [
+    (lambda c: xor_halves(c),              "XOR(half1, half2)"),
+    (lambda c: bytes(reversed(xor_halves(c))), "REV(XOR halves)"),
+    (lambda c: not_bytes(c[:8]),           "NOT(first8)"),
+    (lambda c: reverse(c[:8]),             "REVERSE(first8)"),
+    (lambda c: xor_self_shift1(c[:8]),     "XOR shift-1 on first8"),
+]:
+    check(fn, PAIRS16, label + " [16→8]")
+    check(fn, PAIRS8,  label + " [8→8]")
 
-def dump_region(path: Path, out: Path, start: int, end: int) -> None:
-    data = path.read_bytes()
-    out.write_bytes(data[start:end])
+# ---------------------------------------------------------------------------
+# Section 3 – XOR with fixed 8-byte key extracted from pairs
+# ---------------------------------------------------------------------------
+print("\n=== Section 3: Fixed-key XOR derivation ===")
+# For 8-byte pairs: if R = C XOR K, then K = C XOR R
+keys8 = [bytes(a^b for a,b in zip(c,r)) for c,r in PAIRS8]
+print("  Derived keys from 8-byte pairs:")
+for i, k in enumerate(keys8):
+    print(f"    pair {i+1}: {k.hex()}")
+# Check if any key is consistent across ALL pairs
+unique_keys = set(keys8)
+if len(unique_keys) == 1:
+    k = keys8[0]
+    print(f"  CONSTANT KEY: {k.hex()}")
+    check(lambda c: bytes(a^b for a,b in zip(c, k)), PAIRS8, "XOR const key [8→8]")
+else:
+    # Try XOR of consecutive keys
+    print("  No constant key. Checking XOR of key pairs:")
+    for i in range(len(keys8)-1):
+        xk = bytes(a^b for a,b in zip(keys8[i], keys8[i+1]))
+        print(f"    key{i+1} XOR key{i+2} = {xk.hex()}")
 
+# For 16-byte pairs: try R = f(C) where f is XOR with each half
+print()
+print("  Derived keys: response XOR first-half-of-challenge:")
+for i, (c,r) in enumerate(PAIRS16):
+    k = bytes(a^b for a,b in zip(c[:8], r))
+    print(f"    pair {i+1}: {k.hex()}")
 
-def dump_ghidra_hints(path: Path) -> None:
-    """Print flash-dump addresses that help orient Ghidra analysis."""
-    if not path.exists():
-        return
-    data = path.read_bytes()
+# ---------------------------------------------------------------------------
+# Section 4 – Known crypto functions
+# ---------------------------------------------------------------------------
+print("\n=== Section 4: Known crypto functions ===")
 
-    def addr_off(addr: int) -> int:
-        return addr - 0x08000000
+for fn, label in [
+    (lambda c: hashlib.md5(c).digest()[:8],    "MD5[:8]"),
+    (lambda c: hashlib.sha1(c).digest()[:8],   "SHA1[:8]"),
+    (lambda c: hashlib.sha256(c).digest()[:8], "SHA256[:8]"),
+    (lambda c: struct.pack('<I', zlib.crc32(c) & 0xFFFFFFFF) * 2, "CRC32×2"),
+]:
+    check(fn, PAIRS16, label + " [16→8]")
+    check(fn, PAIRS8,  label + " [8→8]")
 
-    # Literal pool consumed by the immo dispatcher at 0x08203FFC.
-    pool = addr_off(0x08204080)
-    print("\nLiteral pool at 0x08204080 (values are RAM addresses):")
-    labels = [
-        "counter/struct base",
-        "state byte (DAT_08204084)",
-        "state byte (DAT_08204088)",
-        "func-ptr slot 0 -> 0x20001A50",
-        "arg for callback 0",
-        "flags/counter",
-        "func-ptr slot 1 -> 0x20001A54",
-        "arg for callback 1",
-    ]
-    for i, label in zip(range(0, 32, 4), labels):
-        val = struct.unpack_from("<I", data, pool + i)[0]
-        print(f"  0x{0x08204080 + i:08x}: 0x{val:08x}  -> {label}")
+# ---------------------------------------------------------------------------
+# Section 5 – Known key constants XOR test
+# ---------------------------------------------------------------------------
+print("\n=== Section 5: Key constant XOR tests ===")
+import itertools
 
-    # Key constants embedded in the first flash bank.
-    constants = [0x2548A4D2, 0x4DF9123B, 0x43A0C212, 0xF9C74A52]
-    print("\nKey constants in flash (source of values copied to RAM 0x20001ADC):")
-    for c in constants:
-        needle = struct.pack("<I", c)
-        idx = data.find(needle)
-        while idx >= 0:
-            print(f"  0x{c:08x} at 0x{idx + 0x08000000:08x}")
-            idx = data.find(needle, idx + 1)
+key_bytes = b''
+for kc in KEY_CONSTANTS:
+    key_bytes += struct.pack('<I', kc)   # 16 bytes total
 
-    # RAM references inside the immo code region.
-    ram_addrs = [
-        0x20001A50,
-        0x20001A54,
-        0x20001A44,
-        0x20001A45,
-        0x20001A46,
-        0x20001A48,
-        0x20001A4C,
-        0x2000162C,
-    ]
-    print("\nReferences to dispatcher RAM addresses inside 0x08203F0C-0x08204D00:")
-    for a in ram_addrs:
-        needle = struct.pack("<I", a)
-        idx = data.find(needle)
-        refs = []
-        while idx >= 0:
-            addr = idx + 0x08000000
-            if 0x08203F0C <= addr <= 0x08204D00:
-                refs.append(f"0x{addr:08x}")
-            idx = data.find(needle, idx + 1)
-        print(f"  0x{a:08x}: {', '.join(refs) if refs else '(none in region)'}")
+print(f"  Key constants bytes: {key_bytes.hex()}")
 
+# Try: response = challenge_first8 XOR key_first8
+for off in range(0, len(key_bytes)-7):
+    kslice = key_bytes[off:off+8]
+    fn = lambda c, k=kslice: bytes(a^b for a,b in zip(c[:8], k))
+    if check(fn, PAIRS8, f"XOR key_const[{off}:{off+8}]"):
+        print(f"    KEY SLICE: {kslice.hex()}")
+    if check(fn, PAIRS16, f"XOR key_const[{off}:{off+8}] [16→8]"):
+        print(f"    KEY SLICE: {kslice.hex()}")
 
-def main() -> None:
-    all_sessions: List[Dict[str, Any]] = []
-    for trc in sorted(ROOT.glob("*.trc")):
-        msgs = parse_trc(trc)
-        sessions = extract_sessions(msgs)
-        if not sessions:
-            continue
-        print(f"\n=== {trc.name} ===")
-        for s in sessions:
-            if s["type"] == "full":
-                print(
-                    f"  full: trigger {s['trigger']} -> "
-                    f"challenge {s['challenge1']}{s['challenge2']} -> "
-                    f"response {s['response']}"
-                )
-            else:
-                print(
-                    f"  quick: challenge {s['challenge']} -> "
-                    f"response {s['response']}"
-                )
-        for s in sessions:
-            s["source"] = trc.name
-        all_sessions.extend(sessions)
+# ---------------------------------------------------------------------------
+# Section 6 – Search for IMMO function by surrounding code
+# ---------------------------------------------------------------------------
+print("\n=== Section 6: Code region search ===")
 
-    out_json = ROOT / "immo_pairs.json"
-    with open(out_json, "w") as f:
-        json.dump(all_sessions, f, indent=2)
-    print(f"\nWrote {len(all_sessions)} session(s) to {out_json}")
+# The challenge reader function is at chip 0x082047D4 (file offset 0x2047D4)
+# The IMMO response function should be nearby
+CHALLENGE_READER_OFF = 0x2047D4
+print(f"  Challenge reader at file offset 0x{CHALLENGE_READER_OFF:06X}")
 
-    # Compare the two known tune binaries
-    on = ROOT / "LARGUS_TUN_V14-8_ANTIJRK_OFF_UOZNEW_OTSKOK-6_AFR09_IMMOON.bin"
-    off = ROOT / "LARGUS_TUN_V14-8_ANTIJRK_OFF_UOZNEW_OTSKOK-6_AFR09_IMMOOFF.bin"
-    if on.exists() and off.exists():
-        diffs = diff_binaries(on, off)
-        print(f"\nIMMOON vs IMMOFF differences: {len(diffs)} byte(s)")
-        # Show first 20 diffs
-        for offset, ba, bb in diffs[:20]:
-            print(f"  0x{offset:06x}: 0x{ba:02x} -> 0x{bb:02x}")
-        if len(diffs) == 1:
-            offset, ba, bb = diffs[0]
-            print(f"  Single immo enable flag at 0x{offset:06x}: 0x{ba:02x} (ON) vs 0x{bb:02x} (OFF)")
+# Dump 256 bytes before and 512 bytes after
+for start, length, label in [
+    (CHALLENGE_READER_OFF - 0x100, 0x100, "Before challenge reader"),
+    (CHALLENGE_READER_OFF,          0x80,  "Challenge reader itself"),
+    (CHALLENGE_READER_OFF + 0x80,   0x200, "After challenge reader"),
+]:
+    if start < 0 or start + length > len(data):
+        continue
+    chunk = data[start:start+length]
+    print(f"\n  {label} (file 0x{start:06X}, chip 0x{BASE+start:08X}):")
+    for i in range(0, len(chunk), 16):
+        hex_part = ' '.join(f'{b:02X}' for b in chunk[i:i+16])
+        print(f"    0x{BASE+start+i:08X}: {hex_part}")
 
-    # Dump immobilizer-related code region from the full flash dump
-    full = ROOT / "Read_FULLFLASH_I865LB52_w2404b1____(240626_103727).bin"
-    if full.exists():
-        # 0x08200000 is the second bank in the dump; absolute address 0x08203F0C
-        # maps to file offset 0x203F0C. We dump from the immo handler to the
-        # end of the immo module (~0x8204D00).
-        start = 0x203F0C
-        end = 0x204D00
-        out_bin = ROOT / "immo_code_region.bin"
-        dump_region(full, out_bin, start, end)
-        print(f"\nDumped immo code region 0x{start:08x}-0x{end:08x} to {out_bin}")
-        print("Load this into Ghidra as an additional memory block at base")
-        print("0x08203F0C (or load the full 4 MB flash dump at 0x08000000).")
-        print("Language: ARM Cortex-M, LE Thumb.")
-        print("Key symbols to inspect: 0x08203FFC (immo dispatcher), 0x082047D0,")
-        print("0x082048E8, 0x08204B00-0x08204C00 (key constants/registration).")
+# ---------------------------------------------------------------------------
+# Section 7 – Registration function neighbours
+# ---------------------------------------------------------------------------
+print("\n=== Section 7: Registration function (0x0820477E) neighbors ===")
+REG_OFF = 0x20477E
+chunk = data[REG_OFF - 0x40 : REG_OFF + 0x100]
+start = REG_OFF - 0x40
+for i in range(0, len(chunk), 16):
+    hex_part = ' '.join(f'{b:02X}' for b in chunk[i:i+16])
+    print(f"  0x{BASE+start+i:08X}: {hex_part}")
 
-    dump_ghidra_hints(full)
+# ---------------------------------------------------------------------------
+# Section 8 – Search for "write to 0x20001A50" in code
+# ---------------------------------------------------------------------------
+print("\n=== Section 8: Search for stores to 0x20001A50 ===")
+# In ARM Thumb-2, storing to a SRAM address involves LDR Rn, [PC, #literal]
+# where literal = 0x20001A50 stored in flash as 50 1A 00 20
+target_bytes = bytes([0x50, 0x1A, 0x00, 0x20])
+hits = [i for i in range(len(data)-3) if data[i:i+4] == target_bytes]
+print(f"  0x20001A50 literal (50 1A 00 20): {len(hits)} hits")
+for h in hits:
+    # Show context
+    ctx_start = max(0, h - 4)
+    ctx = data[ctx_start:h+8]
+    ctx_hex = ' '.join(f'{b:02X}' for b in ctx)
+    print(f"    file 0x{h:06X} chip 0x{BASE+h:08X}: ...{ctx_hex}...")
 
-
-if __name__ == "__main__":
-    main()
+print("\n=== Done ===")

@@ -1,5 +1,81 @@
 # Work Report
 
+## 2026-08-13 - m74_9: IMMO dead-lock fix + deep firmware reverse-engineering
+
+Found and fixed the root-cause dead-lock that prevented the engine from starting
+with rusEFI.  Also performed extensive static analysis of the original
+I865LB52 firmware to understand the crypto algorithm.
+
+What was done:
+
+| Change | File |
+| --- | --- |
+| Fixed dead-lock: IMMO trigger fires on IGN ON (byte4!=0x00) not crank-switch (byte4==0x44) | `firmware/config/boards/m74_9/m74_9_can.cpp` |
+| Increased trigger delay from 100 ms to 1000 ms (original ECU sends at ~1.5 s) | `firmware/config/boards/m74_9/m74_9_can.cpp` |
+| Removed unused `crankSwitch` variable (would cause compiler warning) | `firmware/config/boards/m74_9/m74_9_can.cpp` |
+| Rewrote "Current status" and "Next steps" in analysis doc | `docs/m74_9_immo_analysis.md` |
+| Added analysis scripts | `emulate_immo.py`, `find_crypto_fn.py`, `trace_init.py`, `crypto_decode.py`, `deep_trace.py`, `find_algo_final.py`, `trace_fn6108.py`, `find_key_algo2.py`, `find_can_handlers.py` |
+
+Key decisions and findings:
+
+- **Dead-lock confirmed**: BCM never sets byte4=0x44 (crank-switch) until IMMO
+  is cleared.  rusEFI was waiting for 0x44 to send the trigger.  BCM was waiting
+  for the trigger before sending the challenge.  Nobody moved.  The dashboard
+  shows correct lamp states because keepalive frames (0x0189 etc.) are correct,
+  but the starter relay GND never closes.
+- **Fix**: arm IMMO timer on any non-zero byte4 from BCM (= ignition on).  Trigger
+  fires after 1000 ms, before user turns key to START.
+- **Crypto algorithm**: Not cracked yet.  Proprietary, uses ADD/XOR/shift with a
+  key from calibration area.  No standard constants (AES, SHA, XTEA, CRC32)
+  found.  Async flash-attestation chain identified:
+  `FUN_08201E2C` -> `FUN_0820630C` -> `FUN_08206108` -> `FUN_08205A3C` -> flash ISR.
+- **CAN receive chain**: `CAN1_RX0_IRQ` -> `FUN_08207432` -> `FUN_08206FB8` ->
+  per-frame handler via FMI index -> SRAM buffer at 0x20000C14.
+- **Trigger format**: 8 random bytes; BCM accepts any content and responds.
+  rusEFI's rolling-counter trigger is fine.
+
+Validation performed:
+- Traced PCAN captures: `rusefi2.trc` shows NO 0x0713/0x0714 frames (confirming
+  the old code never sent the trigger).  `ignon.trc` shows trigger at ~1521 ms
+  and successful full exchange on original ECU.
+- Verified that `ignon_and_start.trc` pair 5 (challenge 66aaeef3... / resp efaa66f0...)
+  matches `PAIRS16[4]` in the analysis scripts.
+- No firmware build was run (macOS host, needs Linux ARM cross-compiler; user
+  must build with `./compile_m74_9.sh` on Linux).
+
+Open follow-ups:
+- Deploy trigger fix -> capture new PCAN trace -> verify 0x0713/0x0714 exchange.
+- Run Unicorn emulation with actual challenge from new trace to find the response.
+- OR: SWD breakpoint at 0x082027FA on original ECU to intercept the algorithm.
+- Implement `computeImmoResponse()` once algorithm is known.
+
+---
+
+## 2026-08-13 - m74_9: updated `docs/m74_9_immo_analysis.md` with implementation progress
+
+Consolidated the current state of the m74_9 immobilizer work into `docs/m74_9_immo_analysis.md`. Added a new "Implementation progress in rusEFI" section documenting the landed state machine, logging, `m74_9ImmoEnabled` config bit, and `custom_board_isImmobilizerBlocking` LimpManager hook. Also added "Next steps and blockers" so the next session can pick up from the right place.
+
+What was done:
+
+| Change | File |
+| --- | --- |
+| Documented the implemented IMMO state machine, logging helpers, public accessors, and fuel/spark cut integration | `docs/m74_9_immo_analysis.md` |
+| Documented the `m74_9ImmoEnabled` config bit and its default-off safety behavior | `docs/m74_9_immo_analysis.md` |
+| Added next-step checklist: decompile response functions, port algorithm, build/test, decide on default | `docs/m74_9_immo_analysis.md` |
+
+Key decisions:
+
+- Keep `docs/m74_9_immo_analysis.md` as the single source of truth for both the original-firmware reverse-engineering notes and the rusEFI integration status.
+- The response algorithm remains the only blocker; all infrastructure around it is in place.
+
+Validation: Reviewed the generated header and TS ini to confirm `m74_9ImmoEnabled` and `ClearReason::Immobilizer` are present. No firmware build was run (still blocked on macOS host tooling; will build on user's Linux environment).
+
+Open follow-ups:
+
+- Run `./compile_m74_9.sh` on a Linux host to verify the current changes compile.
+- In Ghidra, find the functions whose addresses are stored at `0x20001A50` and `0x20001A54` and decompile them.
+- Implement `computeImmoResponse()` / `computeImmoQuickResponse()` once the algorithm is known.
+
 ## 2026-08-13 - m74_9: immobilizer dispatcher decompiled, literal pool mapped
 
 Continued reverse-engineering the m74_9 immobilizer. The Ghidra decompilation of the dispatcher at `0x08203FFC` is now in `docs/m74_9_immo_analysis.md`. It is a two-case state machine:
