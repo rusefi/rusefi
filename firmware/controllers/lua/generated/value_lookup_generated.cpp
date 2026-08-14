@@ -2218,6 +2218,12 @@ float getConfigValueByHash(const int hash) {
 // wizardInjectorOutputs
 		case -1528635464:
 			return config->wizardInjectorOutputs;
+// m74_9ImmoEnabled
+		case 1136071762:
+			return config->m74_9ImmoEnabled;
+// m74_9ImmoOff
+		case 385921634:
+			return config->m74_9ImmoOff;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -5916,6 +5922,16 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1528635464:
 	{
 		config->wizardInjectorOutputs = (int)value;
+		return 1;
+	}
+		case 1136071762:
+	{
+		config->m74_9ImmoEnabled = (int)value;
+		return 1;
+	}
+		case 385921634:
+	{
+		config->m74_9ImmoOff = (int)value;
 		return 1;
 	}
 	}

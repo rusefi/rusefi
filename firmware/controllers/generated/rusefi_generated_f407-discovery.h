@@ -1742,7 +1742,7 @@
 #define TransmissionControllerMode_SimpleTransmissionController 1
 #define TRIGGER_COMMENT "#"
 #define trigger_config_s_size 12
-#define TRIGGER_CRANK_BASED trigger_type == 2 || trigger_type == 5 || trigger_type == 10 || trigger_type == 12 || trigger_type == 20 || trigger_type == 21 || trigger_type == 26 || trigger_type == 27 || trigger_type == 32 || trigger_type == 33 || trigger_type == 38 || trigger_type == 44 || trigger_type == 45 || trigger_type == 46 || trigger_type == 53 || trigger_type == 55 || trigger_type == 57 || trigger_type == 58 || trigger_type == 61 || trigger_type == 62 || trigger_type == 68 || trigger_type == 70 || trigger_type == 71 || trigger_type == 72 || trigger_type == 74 || trigger_type == 75 || trigger_type == 76 || trigger_type == 77 || trigger_type == 84 || trigger_type == 87 || trigger_type == 92 || trigger_type == 93 || trigger_type == 94 || trigger_type == 96 || trigger_type == 98
+#define TRIGGER_CRANK_BASED trigger_type == 2 || trigger_type == 5 || trigger_type == 10 || trigger_type == 12 || trigger_type == 20 || trigger_type == 21 || trigger_type == 26 || trigger_type == 27 || trigger_type == 32 || trigger_type == 33 || trigger_type == 38 || trigger_type == 44 || trigger_type == 45 || trigger_type == 46 || trigger_type == 53 || trigger_type == 55 || trigger_type == 57 || trigger_type == 58 || trigger_type == 61 || trigger_type == 62 || trigger_type == 68 || trigger_type == 70 || trigger_type == 71 || trigger_type == 72 || trigger_type == 74 || trigger_type == 75 || trigger_type == 76 || trigger_type == 77 || trigger_type == 84 || trigger_type == 87 || trigger_type == 92 || trigger_type == 93 || trigger_type == 94 || trigger_type == 96
 #define TRIGGER_CYCLE_DURATION "cycleDuration"
 #define TRIGGER_GAP_FROM "gapFrom"
 #define TRIGGER_GAP_TO "gapTo"
@@ -2281,7 +2281,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.08.09.f407-discovery.2416592106"
+#define TS_SIGNATURE "rusEFI master.2026.08.11.f407-discovery.2416592106"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'

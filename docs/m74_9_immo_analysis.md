@@ -18,11 +18,9 @@
 Исправление:
 - Триггер теперь запускается при `byte4 != 0x00` (первый кадр BCM после включения зажигания).
 - Задержка триггера: 100 мс → 1000 мс (оригинальный ЭБУ посылает ~1.5 с по трейсам).
-- `m74_9_isImmobilizerBlocking()` теперь всегда возвращает `false` до реализации
-  `computeImmoResponse()`, чтобы движок можно было запустить для тестирования протокола.
-- `m74_9ImmoEnabled` убран из `m74_9_isImmobilizerBlocking()` (поле есть в
-  `rusefi_config.txt`, но не было перегенерировано в хедере на хосте пользователя;
-  исправлено убрав зависимость — функция всегда возвращает `false`).
+- `m74_9_isImmobilizerBlocking()` теперь учитывает `m74_9ImmoEnabled` и `m74_9ImmoOff`:
+  возвращает `true` только если IMMO включён в конфиге, физический обход не активен
+  и аутентификация ещё не пройдена. Когда IMMO выключен — движок заводится без обмена.
 
 ### Обнаружено (SWD/JTAG сессия 2026-08-14)
 
@@ -54,6 +52,34 @@
 Breakpoint на `0x082078D4` (BLX R3 = вход в SLib) ещё не сработал:
 нужны правильные данные (Frame1[0] с битом 0x40) + автоматическая отправка < 10 мс.
 См. `immo_respond.py` и инструкцию ниже.
+
+---
+
+## Разница между IMMO ON / IMMO OFF бинарниками
+
+Файлы лежат в корне репозитория:
+- `LARGUS_TUN_V14-8_ANTIJRK_OFF_UOZNEW_OTSKOK-6_AFR09_IMMOON.bin`
+- `LARGUS_TUN_V14-8_ANTIJRK_OFF_UOZNEW_OTSKOK-6_AFR09_IMMOOFF.bin`
+
+Оба файла — полные 1 МБ образы flash (`0x08000000…0x080FFFFF`). Сравнение `cmp -l`:
+
+| Byte (1-based) | Hex offset | IMMO ON | IMMO OFF | Примечание |
+|---|---|---|---|---|
+| 478202 | `0x74BF9` | `0x01` | `0x00` | **Флаг включения иммобилайзера** |
+| 524285 | `0x7FFFC` | `0xA2` | `0xDE` | часть 4-байтовой |
+| 524286 | `0x7FFFD` | `0xB2` | `0x1D` | контрольной |
+| 524287 | `0x7FFFE` | `0x4C` | `0xBE` | суммы/подписи |
+| 524288 | `0x7FFFF` | `0xC6` | `0xF0` | (изменилась из-за байта выше) |
+
+Окружение байта-флага:
+
+```
+0x08074BF0: 80 3e 00 4b  ff ff 00 00  01 [01/00] 01 00  00 00 00 00
+```
+
+Байт `0x08074BF9` входит в калибровочную таблицу дескрипторов по адресу `0x0804A900` (таблица найдена в `Read_FULLFLASH_I865LB52_w2404b1____(240626_103727).bin`). В оригинальном полном дампе этот же байт равен `0x01` (IMMO включён). 4 байта по `0x0807FFFC` — это, вероятно, checksum/signature первого 512 КБ банка, которая пересчитывается при изменении любого байта калибровки.
+
+**Практический вывод**: для программного отключения иммобилайзера в оригинальной прошивке достаточно сбросить бит `0x08074BF9` → `0x00` и пересчитать контрольную сумму банка. В rusEFI аналогичный конфигурационный бит — `m74_9ImmoEnabled`, но он действует на уровне firmware, а не перезаписывает байт в оригинальной калибровке.
 
 ---
 
@@ -679,7 +705,7 @@ send0x05E2()
 
 ```
 Idle
-  ↓ (byte4 != 0x00 в первом 0x0350, ждём 1000 мс)
+  ↓ (byte4 != 0x00 в первом 0x0350, m74_9ImmoEnabled == true, ждём 1000 мс)
 WaitingToTrigger
   ↓ (посылаем 0x0713 trigger)
 TriggerSent
@@ -696,16 +722,22 @@ ResponseSent   ← ФИНАЛЬНОЕ СОСТОЯНИЕ (пока не дост
 
 ### C. Конфигурационный бит
 
-`bit m74_9ImmoEnabled` определён в `firmware/integration/rusefi_config.txt` (строка 2565).
-После повторной генерации (`touch firmware/integration/rusefi_config.txt`) появляется
+`bit m74_9ImmoEnabled` и `bit m74_9ImmoOff` определены в `firmware/integration/rusefi_config.txt`.
+После повторной генерации (`touch firmware/integration/rusefi_config.txt`) появляются
 в `engine_configuration_generated_structures_m74_9.h`.
 
-Пока алгоритм не реализован, `m74_9_isImmobilizerBlocking()` возвращает `false`
-(не блокирует двигатель). Восстановить полную проверку:
+- `m74_9ImmoEnabled = yes` — разрешает IMMO-автомат (требует рабочего `computeImmoResponse()`).
+- `m74_9ImmoOff = yes` — **принудительно отключает** IMMO независимо от `m74_9ImmoEnabled`.
+  Это нужно, когда в машине установлен физический обход иммобилайзера.
+
+`m74_9_isImmobilizerBlocking()` уже использует этот бит:
 ```cpp
 return engineConfiguration->m74_9ImmoEnabled
+       && !engineConfiguration->m74_9ImmoOff
        && !m74_9BcmListener.isImmoAuthenticated();
 ```
+Когда бит выключен, ЭБУ не посылает триггер `0x0713` и не отвечает на `0x0714`, что
+полностью повторяет поведение оригинальной прошивки с `0x08074BF9 = 0x00`.
 
 ### D. LimpManager (срезание топлива/зажигания)
 
@@ -782,6 +814,66 @@ void custom_board_isImmobilizerBlocking() {
 
 ---
 
+## Живая трассировка IMMO-обмена
+
+### Новое ключевое наблюдение: IMMO OFF = нет триггера
+
+Снят новый CAN-дамп с калибровкой `IMMOOFF` (байт `0x08074BF9 = 0x00`). В этом режиме ЭБУ **вообще не посылает** кадр `0x0713`. BCM также не шлёт `0x0714`, и иммобилайзер не участвует в запуске.
+
+Это подтверждает, что байт `0x08074BF9` — именно аппаратный флаг включения IMMO: когда он `0x00`, весь протокол challenge-response отключён на стороне ECU.
+
+### Все захваченные пары из `*.trc`
+
+Для разбора создан скрипт `parse_immo_traces.py`. Результат:
+
+| Трейс | Триггер | Frame1 | Frame2 | Ответ | T→F1 | F1→F2 | F2→R |
+|---|---|---|---|---|---|---|---|
+| `orig_1.trc` | `52 83 db a6 47 69 c0 0d` | `66 0b e1 e2 a3 4b 81 40` | `b4 56 33 a0 49 9a 01 ec` | `9c b7 f8 ca 31 43 1b b6` | 5.10 | 0.20 | 15.40 |
+| `orig_2.trc` | `a5 ea 8a 93 26 55 30 dd` | `cf cf bb f3 cd c0 f7 5c` | `e9 ef e2 eb 23 b6 2a 25` | `bf f9 92 05 ed 4a b7 a8` | 8.80 | 0.30 | 19.80 |
+| `orig_3.trc` | `45 d4 a5 c0 f6 a1 ea 72` | `cd 4c 90 70 19 6b bd eb` | `b4 25 cb 7c 43 50 08 2c` | `96 73 9b e6 b1 29 9f 77` | 9.50 | 0.20 | 19.80 |
+| `ignon.trc` | `08 41 99 4c 0b 81 a1 4c` | `4a 4f 2a 20 4f ad 58 fd` | `27 36 22 b7 0c 2b 55 9e` | `fd a3 2d 94 ae 77 c1 21` | 1.20 | 0.30 | 18.60 |
+| `ignon_and_start.trc` | `d0 81 cc 98 27 08 d8 06` | `66 aa ee f3 70 37 de e0` | `cd ee fb 22 bd e9 68 07` | `ef aa 66 f0 ca a6 f0 cd` | 10.30 | 0.20 | 19.60 |
+
+Quick-check пары:
+
+| challenge | response | Δt (ms) |
+|---|---|---|
+| `0e ab fe 9d 35 1a f8 37` | `b1 51 56 d1 46 83 cd 15` | 4.90 |
+| `4a 90 25 0e 85 51 28 bf` | `14 a2 67 be c8 d8 c3 dc` | 1.30 |
+| `63 b9 5b 1a 3f bf 41 fe` | `2f a7 1d 47 22 83 5e a2` | 0.90 |
+| `59 6e 38 85 f2 46 0f 4a` | `2c df 61 de 56 55 1b 86` | 10.20 |
+| `a0 00 59 b7 9f 90 a8 ae` | `a2 25 de 4e 47 03 24 b6` | 10.90 |
+
+### Контрольные суммы во FULL_FLASH
+
+Дамп `Read_FULLFLASH_I865LB52_w2404b1____(240626_103727).bin` содержит сохранённые КС:
+
+| Название | Значение | Адрес в flash | Примечание |
+|---|---|---|---|
+| КС BOOT | `94B8B6D7` | `0x08022DFFC` | bootloader region checksum |
+| КС калиб. | `DD5630D0` | `0x0807FFFC` | calibration region checksum |
+| КС прог. | `61F8857E` | `0x080FFFFC` | program region checksum |
+| КС ПЗУ | `[2816]0379` | (не найдена как 32-битное слово) | вероятно CRC16/часть другого блока |
+
+КС калибровки `DD5630D0` совпадает с 4 байтами по `0x0807FFFC`, которые меняются между `IMMOON` и `IMMOOFF` калибровками.
+
+### Проверка гипотезы «триггер из КС»
+
+Простые комбинации байт триггера с КС (XOR, конкатенация, CRC32/MPEG-2 от КС) не дают совпадения. Триггер, вероятно, собирается из флеш-данных **плюс изменяющийся счётчик сессии** (EEPROM/пробег/время), поэтому он меняется при каждом включении зажигания.
+
+### Изменения в rusEFI
+
+В `firmware/config/boards/m74_9/m74_9_can.cpp`:
+- IMMO-автомат активируется только при `engineConfiguration->m74_9ImmoEnabled == true && !engineConfiguration->m74_9ImmoOff`.
+- Кадры `0x0714` игнорируются, если IMMO выключен.
+- `m74_9_isImmobilizerBlocking()` теперь возвращает:
+  ```cpp
+  return engineConfiguration->m74_9ImmoEnabled
+         && !m74_9BcmListener.isImmoAuthenticated();
+  ```
+
+Это повторяет поведение оригинальной прошивки: при выключенном IMMO ЭБУ не инициирует обмен и BCM не требует аутентификации для запуска.
+
 ## Дальнейшие шаги
 
 ### Приоритет 1 — Собрать и проверить триггер-фикс
@@ -854,6 +946,7 @@ mu.emu_start(0x08201E2C | 1, sentinel, ...)
 | `trace_fn6108.py` | FUN_08206108, FUN_08205A3C, FUN_082056D4, FUN_08205950 |
 | `find_key_algo2.py` | TBH case 0/1, AES-поиск, XTEA, анализ зависимостей |
 | `find_can_handlers.py` | CAN ID 0x0713/0x0714 в таблицах, TBH-диспатч, вектора |
+| `parse_immo_traces.py` | Разбор PCAN-View `.trc`: извлечение всех IMMO-пар и таймингов |
 
 ---
 
@@ -932,11 +1025,882 @@ Sector 48-61: 11111111111111
 3. **Промежуточные данные** (accumulator в SRAM[0x20001B74]) - видны только
    при живой трассировке через OpenOCD.
 
-### Следующий приоритет
+## Новые находки от декомпиляции (2026-08-14)
 
-**Динамическая трассировка** через OpenOCD при реальном IMMO-обмене:
-- BP в `fn[3]` (0x0820600C) или `fn[4]` (0x08206108)
-- Читать R0 (flash_start), R1 (flash_size), SRAM[0x20001B74] (accumulator)
-- После каждого шага state machine - видеть промежуточный результат
+### Таймеровый фреймворк и `FUN_08201716`
 
-Для этого нужен BCM с кадрами из orig_*.trc (см. раздел PCAN выше).
+`FUN_08201716` — это **не** криптография, а обработчик одного из состояний IMMO-автомата:
+
+- `0x20000220` — массив из 10 программных таймеров, каждый по 12 байт.
+- `FUN_082010d4(index, timeout)` — запуск таймера (устанавливает `counter=0`, `timeout=timeout`, бит активности).
+- `FUN_08201104(index)` — сброс/остановка таймера.
+- `FUN_08201716` сбрасывает таймер `0x20000299`, запускает таймер `0x2000029A` на **1000 мс** и переводит state в `5`.
+
+### Главный IMMO state machine — `FUN_082013d0`
+
+`FUN_082013d0(param_1, param_2)` разбирает входящие 8-байтные кадры `0x0714`:
+- `param_1`: 0 или 1 (подтип/команда)
+- `param_2`: указатель на 8 байт данных
+- старший ниббл первого байта — команда, младший — длина
+
+Основные состояния:
+
+| State | Действие |
+|-------|----------|
+| 0 | Ожидание. При кадре с `param_1==1` и ст.нibble==1 выделяет буфер `0x20000414`, копирует 6 байт, сохраняет session word, отправляет `0x30 00 00 00 00 00 00 00`. |
+| 1 | Подготовлен к приёму. |
+| 2 | Пришёл второй кадр `0x0714` (ст.нibble==2). Докидывает данные в буфер `0x20000414`. По заполнению вызывает callback B (`FUN_082020f0`) с `param_1=1`, который сохраняет session word в `0x20000402` и ставит флаг `0x200003EE = 1`. |
+| 5 | Quick-check. При мл.нibble==0 сохраняет `param_2[1]` в `state[0x1c]`, переходит в state 6 и вызывает `FUN_08201260`. |
+| 6 | `FUN_08201716`: сброс/запуск 1000 мс таймера, state=5. |
+
+### Зарегистрированные коллбэки A/B/C
+
+Инициализация в `0x08203620`:
+
+```c
+bl FUN_08201350;                 // alloc timer slots
+ldr r2, =0x08202199;             // callback C
+ldr r1, =0x082020F1;             // callback B
+ldr r0, =0x082020C1;             // callback A
+bl FUN_082013B4;                 // register callbacks
+```
+
+- **Callback A** (`0x082020c0`): буфер-аллокатор — возвращает `0x200003F4` или `0x20000414`.
+- **Callback B** (`0x082020f0`): управление сессией/флагами (`0x200003ED`, `0x200003EE`, `0x20000402`).
+- **Callback C** (`0x08202198`): завершение/диспатч — проверяет флаги `0x200003EC`, `0x200003F1`, `0x200003EF` и вызывает `FUN_0820511c` / `FUN_08204c14` / `FUN_08204c22`.
+
+### Отправка 8-байтных `0x0713`
+
+- `FUN_08201208(len)` — byte0 = session_low_nibble, bytes 1..7 = данные.
+- `FUN_082012e8()` — byte0 = `(session >> 8) | 0x10`, byte1 = session, bytes 2..7 = данные.
+- `FUN_08201260(len)` — byte0 = retry_count | 0x20, bytes 1..7 = данные + 0xCC.
+- Все три вызывают `FUN_08204ab8(0, data, 8)` — общий CAN-диспетчер, который копирует данные в CAN TX mailbox.
+
+### `FUN_08202e20` — вычисление и отправка ответа
+
+```c
+void FUN_08202e20(param_1) {
+    session = *0x20000402;
+    if ((session - 1) < 7) {
+        first_byte = *0x20000414;           // первый байт challenge
+        local_12 = 0;
+        // Вызов функции из таблицы 0x20001018, слот +0x00
+        fn = *(code**)(0x20001018 + *0x200003FC * 0x54);
+        result = fn(first_byte, 0x20000415, session - 1, 0x20000C19, &local_12);
+        if (result == 0) {
+            *0x20000C18 = first_byte | 0x40;  // RESPONSE-формат
+            FUN_08201660(0x20000C18, local_12 + 1);
+        } else {
+            FUN_08202254(param_1, result);
+        }
+    }
+}
+```
+
+Это подтверждает, что bit 0x40 в первом байте ответа формируется здесь. Функция в слоте `+0x00` таблицы `0x20001018` — основной кандидат на крипто-алгоритм.
+
+### `FUN_08202cbc` — обработка первого кадра challenge
+
+- Проверяет `0x20000402 == 2`.
+- Читает `0x20000415` (второй байт challenge).
+- Допустимые типы challenge: `1, 2, 3, 0x60, 0x61, 0x62, 0x63`.
+- Вызывает CAN-функции из таблицы `0x20001018`, слот `+0x04`.
+- При `param_2 == 0` отправляет `50 bVar6 00 32 01 F4`.
+- Переключает индекс `0x200003FC` на вычисленное `iVar7`.
+- Запускает таймер `0x2000029B` на 5000 мс.
+
+### `FUN_0820511c` — сброс процессора
+
+```c
+void FUN_0820511c(void) {
+    SCB->AIRCR = 0x05FA0004;  // system reset request
+}
+```
+
+### Таблица диспатча `0x0820868C`
+
+Таблица по адресу `0x0820868C` содержит 64 указателя (256 байт). Известен только первый диапазон:
+
+| Entry | Адрес | Функция |
+|-------|-------|---------|
+| 0x00–0x09 | `0x08202E21` | `FUN_08202e20` (вычисление и отправка IMMO-ответа) |
+| 0x0A–0x3F | — | пока не разобраны |
+
+Остальные записи, судя по смещениям, передают управление в `FUN_08202cbc`, UDS/диагностику и вложенные подтаблицы.
+
+#### Рекомендуемая трассировка через OpenOCD
+
+- Breakpoint в `fn[3]` (`0x0820600C`) или `fn[4]` (`0x08206108`).
+- Читать R0 (`flash_start`), R1 (`flash_size`), SRAM[`0x20001B74`] (`accumulator`).
+- После каждого шага state machine видеть промежуточный результат.
+
+Для этого нужен BCM с кадрами из `orig_*.trc` (см. раздел PCAN выше).
+
+### Расширенные декомпиляции IMMO-функций
+
+#### `FUN_08201716` — переход в состояние 5 с таймером 1000 мс
+
+```c
+undefined4 FUN_08201716(void)
+{
+  FUN_08201104(*DAT_082017d0);          // сброс таймера 0x20000299
+  FUN_082010d4(*puRam082017d4, 1000);   // запуск таймера 0x2000029A на 1000 мс
+  *(byte *)(iRam082017c4 + 0x10) =
+      *(byte *)(iRam082017c4 + 0x10) & 0xf0 | 5;  // state = 5
+  return 0;
+}
+```
+
+Это объясняет наблюдаемую задержку ~1 с между включением зажигания и первым кадром `0x0713`: ЭБУ сначала выполняет внутреннюю обработку challenge, затем запускает 1000 мс таймер и переходит к отправке.
+
+#### `FUN_082013d0` — главный IMMO state machine (полный листинг)
+
+```c
+byte FUN_082013d0(uint param_1, byte *param_2)
+{
+  int iVar1;
+  byte bVar2;
+  uint uVar3;
+  byte bVar4;
+  ushort uVar5;
+  int iVar6;
+  undefined1 local_20;
+  undefined1 local_1f;
+  undefined1 local_1e;
+  undefined1 local_1d;
+  undefined1 local_1c;
+  undefined1 local_1b;
+  undefined1 local_1a;
+  undefined1 local_19;
+
+  bVar4 = *param_2 >> 4;
+  if (param_1 == 0) {
+    if (bVar4 != 0) {
+      return 1;
+    }
+  }
+  else {
+    if (param_1 != 1) {
+      return 1;
+    }
+    if (bVar4 < 2) {
+      *(byte *)(DAT_0820164c + 0x10) = *(byte *)(DAT_0820164c + 0x10) & 0xf0;
+    }
+    iVar6 = DAT_0820164c;
+    bVar2 = *(byte *)(DAT_0820164c + 0x10) & 0xf;
+    if (bVar2 == 2) {
+      if (bVar4 != 2) {
+        return 0;
+      }
+      bVar4 = (*(byte *)(DAT_0820164c + 0x10) >> 4) + 1;
+      FUN_082010d4(*DAT_08201654, 1000);
+      if ((*(byte *)(iVar6 + 0x10) & 0xf0) == 0xf0) {
+        bVar4 = 0;
+      }
+      if (bVar4 != (*param_2 & 0xf)) {
+        *(byte *)(DAT_0820164c + 0x10) = *(byte *)(DAT_0820164c + 0x10) & 0xf0;
+        return 0;
+      }
+      uVar3 = *(ushort *)(DAT_0820164c + 0x12) & 0xfff;
+      if (6 < uVar3) {
+        uVar3 = 7;
+      }
+      uVar3 = uVar3 & 0xff;
+      *(byte *)(DAT_0820164c + 0x10) =
+          *(byte *)(DAT_0820164c + 0x10) & 0xf | bVar4 << 4;
+      for (uVar3 = 0; iVar6 = DAT_0820164c, uVar3 < uVar3;
+           uVar3 = uVar3 + 1 & 0xff) {
+        *(byte *)(*(int *)(DAT_0820164c + 0x18) + uVar3) = param_2[uVar3 + 1];
+      }
+      *(uint *)(DAT_0820164c + 0x18) = *(int *)(DAT_0820164c + 0x18) + uVar3;
+      uVar5 = *(ushort *)(iVar6 + 0x12);
+      uVar3 = (uVar5 & 0xfff) - uVar3 & 0xfff;
+      *(ushort *)(iVar6 + 0x12) = uVar5 & 0xf000 | (ushort)uVar3;
+      if (uVar3 != 0) {
+        return 0;
+      }
+      FUN_08201104(*DAT_08201654);
+      *(byte *)(DAT_0820164c + 0x10) = *(byte *)(DAT_0820164c + 0x10) & 0xf0;
+      if ((code *)*DAT_08201658 != (code *)0x0) {
+        (*(code *)*DAT_08201658)(1, *(ushort *)(DAT_0820164c + 0x14) & 0xfff);
+        return 0;
+      }
+      return 0;
+    }
+    if (bVar2 == 5) {
+      if (bVar4 != 3) {
+        return 0;
+      }
+      bVar4 = *param_2;
+      bVar2 = bVar4 & 0xf;
+      FUN_08201104(*DAT_0820165c);
+      iVar6 = DAT_0820164c;
+      if ((bVar4 & 0xf) != 0) {
+        if (bVar2 != 1) {
+          *(byte *)(DAT_0820164c + 0x10) = *(byte *)(DAT_0820164c + 0x10) & 0xf0;
+          return 0;
+        }
+        return 0;
+      }
+      *(byte *)(DAT_0820164c + 0x1c) = param_2[1];
+      uVar5 = *(ushort *)(iVar6 + 0x12) & 0xfff;
+      if (6 < uVar5) {
+        uVar5 = 7;
+      }
+      *(byte *)(iVar6 + 0x10) = *(byte *)(iVar6 + 0x10) & 0xf0 | 6;
+      FUN_08201260(uVar5 & 0xff);
+      return bVar2;
+    }
+    if ((*(byte *)(DAT_0820164c + 0x10) & 0xf) != 0) {
+      return 1;
+    }
+    if (bVar4 != 0) {
+      if (bVar4 != 1) {
+        return 0;
+      }
+      uVar5 = (ushort)param_2[1] | (*param_2 & 0xf) << 8;
+      if (6 < uVar5) {
+        if ((code *)*DAT_08201650 == (code *)0x0) {
+          iVar1 = 0;
+        }
+        else {
+          iVar1 = (*(code *)*DAT_08201650)(1, uVar5);
+        }
+        local_1f = 0;
+        local_1e = 0;
+        local_1d = 0;
+        local_1c = 0;
+        local_1b = 0;
+        local_1a = 0;
+        local_19 = 0;
+        if (iVar1 == 0) {
+          local_20 = 0x32;
+          *(byte *)(DAT_0820164c + 0x10) = *(byte *)(DAT_0820164c + 0x10) & 0xf0;
+        }
+        else {
+          *(int *)(DAT_0820164c + 0x18) = iVar1;
+          for (uVar3 = 0; iVar6 = DAT_0820164c, uVar3 < 6;
+               uVar3 = uVar3 + 1 & 0xff) {
+            *(byte *)(*(int *)(DAT_0820164c + 0x18) + uVar3) = param_2[uVar3 + 2];
+          }
+          *(ushort *)(DAT_0820164c + 0x14) =
+              *(ushort *)(DAT_0820164c + 0x14) & 0xf000 | uVar5;
+          *(ushort *)(iVar6 + 0x12) =
+              *(ushort *)(iVar6 + 0x12) & 0xf000 | uVar5 - 6 & 0xfff;
+          *(int *)(iVar6 + 0x18) = *(int *)(iVar6 + 0x18) + 6;
+          *(byte *)(iVar6 + 0x10) = *(byte *)(iVar6 + 0x10) & 0xf;
+          local_20 = 0x30;
+          *(byte *)(iVar6 + 0x10) = *(byte *)(iVar6 + 0x10) & 0xf0 | 1;
+        }
+        FUN_08204ab8(0, &local_20, 8);
+      }
+      return 0;
+    }
+  }
+  uVar3 = *param_2 & 0xf;
+  if ((uVar3 - 1 & 0xffff) < 7) {
+    if ((code *)*DAT_08201650 == (code *)0x0) {
+      bVar4 = 1;
+    }
+    else {
+      iVar1 = (*(code *)*DAT_08201650)(param_1 & 0xff, uVar3);
+      if (iVar1 == 0) {
+        bVar4 = 1;
+      }
+      else {
+        *(int *)(DAT_0820164c + param_1 * 0x10 + 8) = iVar1;
+        for (uVar3 = 0; uVar3 < uVar3; uVar3 = uVar3 + 1 & 0xff) {
+          *(byte *)(iVar1 + uVar3) = param_2[uVar3 + 1];
+        }
+        if ((code *)*DAT_08201658 == (code *)0x0) {
+          bVar4 = 0;
+        }
+        else {
+          (*(code *)*DAT_08201658)(param_1 & 0xff, uVar3);
+          bVar4 = 0;
+        }
+      }
+    }
+  }
+  else {
+    bVar4 = 1;
+  }
+  return bVar4;
+}
+```
+
+Ключевые переходы:
+
+| State (младший ниббл `state[0x10]`) | Верхний ниббл | Действие |
+|---|---|---|
+| 0 | 0 | Ожидание; при `param_1==1` и старшем ниббле первого байта ==1 выделяется буфер, копируются 6 байт, отправляется `0x30` |
+| 1 | — | Подготовлен к приёму |
+| 2 | sequence | Приём второго кадра `0x0714`; по заполнению вызывается callback B |
+| 5 | — | Quick-check; при младшем ниббле ==0 сохраняет `param_2[1]`, переходит в state 6, вызывает `FUN_08201260` |
+| 6 | — | `FUN_08201716`: сброс/запуск 1000 мс таймера, state=5 |
+
+#### Callbacks A / B / C
+
+```c
+undefined4 FUN_082020c0(int param_1, uint param_2)
+{
+  if (param_1 == 0) {
+    if (param_2 < 9) {
+      return DAT_082020e8;
+    }
+    return 0;
+  }
+  if (param_1 != 1) {
+    return 0;
+  }
+  if (param_2 < 0x803) {
+    return DAT_082020ec;
+  }
+  return 0;
+}
+
+void FUN_082020f0(int param_1, undefined2 param_2)
+{
+  if (param_1 == 0) {
+    *DAT_0820210c = 1;
+    return;
+  }
+  if (param_1 == 1) {
+    *DAT_08202110 = param_2;
+    *DAT_08202114 = 1;
+  }
+  return;
+}
+
+void FUN_08202198(void)
+{
+  if (*DAT_082021d8 == '\x01') {
+    *DAT_082021d8 = '\0';
+    FUN_0820511c();
+  }
+  if (*DAT_082021dc == '\x01') {
+    *DAT_082021dc = '\0';
+    FUN_08204c14();
+  }
+  if (*DAT_082021e0 == '\x01') {
+    *DAT_082021e0 = '\0';
+    FUN_08204c22();
+  }
+  return;
+}
+```
+
+- **Callback A** (`0x082020c0`) — аллокатор буферов (`0x200003F4` / `0x20000414`).
+- **Callback B** (`0x082020f0`) — управляет сессией/флагами (`0x200003ED`, `0x200003EE`, `0x20000402`).
+- **Callback C** (`0x08202198`) — завершение/диспатч; при установленных флагах сбрасывает процессор или вызывает `FUN_08204c14` / `FUN_08204c22`.
+
+#### Отправщики 8-байтных кадров `0x0713`
+
+```c
+void FUN_08201260(uint param_1)
+{
+  ushort uVar1;
+  int iVar2;
+  byte bVar3;
+  uint uVar4;
+  byte local_10;
+  undefined1 auStack_f [11];
+
+  bVar3 = (*(byte *)(DAT_082012e0 + 0x10) >> 4) + 1;
+  *(byte *)(DAT_082012e0 + 0x10) =
+      *(byte *)(DAT_082012e0 + 0x10) & 0xf | bVar3 * '\x10';
+  iVar2 = DAT_082012e0;
+  local_10 = bVar3 & 0xf | 0x20;
+  for (uVar4 = 0; uVar4 < 7; uVar4 = uVar4 + 1 & 0xff) {
+    if (uVar4 < param_1) {
+      auStack_f[uVar4] =
+          *(undefined1 *)(*(int *)(DAT_082012e0 + 0x18) + uVar4);
+    }
+    else {
+      auStack_f[uVar4] = 0xcc;
+    }
+  }
+  *(uint *)(DAT_082012e0 + 0x18) = *(int *)(DAT_082012e0 + 0x18) + param_1;
+  uVar1 = *(ushort *)(iVar2 + 0x12);
+  *(ushort *)(iVar2 + 0x12) =
+      uVar1 & 0xf000 |
+      (ushort)(((uint)uVar1 << 0x14) >> 0x14) - (short)param_1 & 0xfff;
+  FUN_082010d4(*DAT_082012e4, 1000);
+  FUN_08204ab8(0, &local_10, 8);
+  return;
+}
+
+void FUN_082012e8(void)
+{
+  ushort *puVar1;
+  int iVar2;
+  uint uVar3;
+  byte local_10;
+  undefined1 local_f;
+  undefined1 auStack_e [10];
+
+  iVar2 = *(int *)(DAT_08201348 + 0x18);
+  puVar1 = (ushort *)(DAT_08201348 + 0x14);
+  *(int *)(DAT_08201348 + 0x18) = iVar2 + 6;
+  local_10 = (byte)(((uint)*puVar1 << 0x14) >> 0x1c) | 0x10;
+  local_f = (undefined1)*puVar1;
+  for (uVar3 = 0; uVar3 < 6; uVar3 = uVar3 + 1 & 0xff) {
+    auStack_e[uVar3] = *(undefined1 *)(iVar2 + uVar3);
+  }
+  *(byte *)(DAT_08201348 + 0x10) = *(byte *)(DAT_08201348 + 0x10) & 0xf0 | 4;
+  FUN_082010d4(*DAT_0820134c, 1000);
+  FUN_08204ab8(0, &local_10, 8);
+  return;
+}
+```
+
+- `FUN_08201260` — формирует кадр с retry-счётчиком (`0x20 | nibble`) и 7 байтами данных + `0xCC`.
+- `FUN_082012e8` — формирует кадр с session-словом (`0x10 | hi_nibble`) и 6 байтами payload.
+- Обе вызывают `FUN_08204ab8(0, buf, 8)` — общий CAN TX диспетчер.
+
+#### `FUN_08202e20` / `FUN_08202cbc` / `FUN_08202254` / `FUN_0820511c`
+
+```c
+void FUN_08202e20(undefined4 param_1)
+{
+  byte bVar1;
+  byte *pbVar2;
+  int iVar3;
+  short local_12;
+
+  if ((ushort)(*DAT_08202e84 - 1U) < 7) {
+    bVar1 = *DAT_08202e88;
+    local_12 = 0;
+    iVar3 = (**(code **)(DAT_08202e90 + (uint)*DAT_08202e8c * 0x54))
+              (bVar1, DAT_08202e88 + 1, *DAT_08202e84 - 1U,
+               DAT_08202e94, &local_12);
+    pbVar2 = DAT_08202e98;
+    if (iVar3 == 0) {
+      *DAT_08202e98 = bVar1 | 0x40;  // RESPONSE-формат
+      FUN_08201660(pbVar2, local_12 + 1);
+    }
+    else {
+      FUN_08202254(param_1, iVar3);
+    }
+  }
+  else {
+    FUN_08202254(param_1, 0x13);
+  }
+  return;
+}
+
+void FUN_08202cbc(undefined4 param_1, int param_2)
+{
+  byte bVar1;
+  int iVar2;
+  int iVar3;
+  int iVar4;
+  code *pcVar5;
+  byte bVar6;
+  int iVar7;
+  undefined1 local_28;
+  byte local_27;
+  undefined1 local_26;
+  undefined1 local_25;
+  undefined1 local_24;
+  undefined1 local_23;
+
+  if (*DAT_08202e00 != 2) {
+    FUN_08202254(param_1, 0x13);
+    return;
+  }
+  bVar1 = *(byte *)(DAT_08202e04 + 1);
+  bVar6 = bVar1 & 0x7f;
+  if ((((2 < (byte)(bVar6 - 1)) && (bVar6 != 0x60)) && (bVar6 != 0x61)) &&
+     ((bVar6 != 0x62 && (bVar6 != 99)))) {
+    FUN_08202254(param_1, 0x12);
+    return;
+  }
+  iVar2 = FUN_08204c30();
+  if (bVar6 < 100) {
+    if (bVar6 < 0x60) {
+      if (bVar6 == 2) {
+        iVar7 = 1;
+      }
+      else if (bVar6 == 3) {
+        iVar7 = 2;
+      }
+      else {
+        iVar7 = 0;
+      }
+    }
+    else {
+      switch(bVar6) {
+      case 0x60: iVar7 = 3; break;
+      case 0x61: iVar7 = 4; break;
+      case 0x62: iVar7 = 5; break;
+      case 99:   iVar7 = 6; break;
+      default:   iVar7 = 0;
+      }
+    }
+  }
+  else {
+    iVar7 = 0;
+  }
+  pcVar5 = *(code **)((uint)*DAT_08202e08 * 0x54 + DAT_08202e0c + 4);
+  if (pcVar5 == (code *)0x0) {
+    iVar3 = 0;
+  }
+  else {
+    iVar3 = (*pcVar5)(iVar7);
+    if (iVar3 != 0) {
+      iVar4 = 0;
+      goto LAB_08202d42;
+    }
+  }
+  pcVar5 = *(code **)(iVar7 * 0x54 + DAT_08202e0c + 4);
+  if (pcVar5 == (code *)0x0) {
+    iVar4 = 0;
+  }
+  else {
+    iVar4 = (*pcVar5)(iVar7);
+  }
+LAB_08202d42:
+  if ((iVar3 == 0) && (iVar4 == 0)) {
+    if ((bVar6 == 2) && ((iVar2 == 1 || (iVar2 == 3)))) {
+      *DAT_08202e1c = 1;
+    }
+    if (param_2 == 0) {
+      local_28 = 0x50;
+      local_26 = 0;
+      local_25 = 0x32;
+      local_24 = 1;
+      local_23 = 0xf4;
+      local_27 = bVar6;
+      FUN_08201660(&local_28, 6);
+    }
+    *DAT_08202e10 = 0;
+    *DAT_08202e08 = (byte)iVar7;
+    *DAT_08202e14 = 0;
+    if ((bVar1 & 0x7f) != 0) {
+      FUN_082010d4(*DAT_08202e18, 5000);
+    }
+  }
+  else {
+    FUN_08202254(param_1, iVar3);
+  }
+  return;
+}
+
+void FUN_08202254(int param_1, int param_2)
+{
+  undefined1 local_c;
+  undefined1 local_b;
+  undefined1 local_a;
+
+  if ((param_2 != 0xff) &&
+     ((param_1 != 0 ||
+      ((((param_2 != 0x31 && (param_2 != 0x11)) && (param_2 != 0x7f)) &&
+       ((param_2 != 0x12 && (param_2 != 0x7e)))))))) {
+    local_b = *DAT_08202294;
+    local_c = 0x7f;
+    local_a = (undefined1)param_2;
+    FUN_08201660(&local_c, 3);
+    return;
+  }
+  return;
+}
+
+void FUN_0820511c(void)
+{
+  _DAT_e000ed0c = DAT_08205128;  // SCB->AIRCR = 0x05FA0004 — system reset
+  return;
+}
+```
+
+### Поиск `07 14` в RAM/flash — результаты
+
+Поиск нашёл 13 вхождений байтов `07 14`, но это **ложные срабатывания**: в Thumb-коде последовательность `07 14` — это инструкция `ubfx r4, r4, #4, #8`, а не константа CAN ID `0x0714`.
+
+| Адрес | Функция | Инструкция |
+|---|---|---|
+| `0x0800f5e6` | `FUN_0800f5e4` | `ubfx r4, r4, #0x4, #0x8` |
+| `0x080604e7` | — | данные/неопределённо |
+| `0x08065181` | — | данные/неопределённо |
+| `0x08065709` | — | данные/неопределённо |
+| `0x08066623` | — | данные/неопределённо |
+| `0x080746f1` | — | данные/неопределённо |
+| `0x08098863` | `FUN_08098860` | `ubfx` внутри большого цикла |
+| `0x0882f7a7` | `FUN_0882f7a8` | данные (bad instruction) |
+| `0x08834441` | `FUN_08834442` | данные (bad instruction) |
+| `0x088349c9` | `FUN_088349ca` | данные (bad instruction) |
+| `0x088358e3` | `FUN_088358e4` | данные (bad instruction) |
+| `0x088439b1` | `FUN_088439b2` | данные (bad instruction) |
+| `0x08867b23` | `FUN_08867b24` | `ubfx` внутри ROM-алиаса того же цикла |
+
+#### `FUN_0800f5e4` — вспомогательный хелпер
+
+```c
+byte FUN_0800f5e4(uint param_1, int param_2, int param_3)
+{
+  int iVar1;
+  uint unaff_r4;
+  uint uVar2;
+  int iVar3;
+  uint uVar4;
+  byte bVar5;
+  byte bVar6;
+
+  uVar2 = (unaff_r4 & 0xfff) >> 4;
+  if (*DAT_0800f704 == '\x01') {
+    iVar1 = FUN_0800edc0(uVar2);
+    if (iVar1 == 1) {
+      uVar4 = param_1 +
+              (uint)((ulonglong)DAT_0800f700 * (ulonglong)param_1 >> 0x24) * -0x32 & 0xff;
+      if (param_2 == 1) {
+        bVar5 = 1;
+        if (uVar4 < *(byte *)(*(int *)(DAT_0800f708 + uVar2 * 0x24) + 0x338)) {
+          iVar1 = *(int *)(DAT_0800f708 + uVar2 * 0x24 + 4);
+          iVar3 = iVar1 + uVar4 * 8;
+          bVar6 = *(byte *)(iVar3 + 4) & 2;
+          if (((*(byte *)(iVar3 + 4) & 2) != 0) &&
+             (iVar1 = FUN_08003c74(*(undefined4 *)(iVar1 + uVar4 * 8)),
+              bVar6 = 0, iVar1 != 0)) {
+            bVar6 = bVar5;
+          }
+          *(byte *)(iVar3 + 4) = *(byte *)(iVar3 + 4) & 0xfe;
+          bVar5 = bVar6;
+        }
+        else {
+          FUN_080ba640(DAT_0800f70c, 3, uVar2, 5);
+        }
+      }
+      else {
+        bVar5 = 0;
+      }
+      bVar6 = bVar5;
+      if (param_3 == 1) {
+        bVar6 = 1;
+        if (uVar4 < *(byte *)(*(int *)(DAT_0800f708 + uVar2 * 0x24) + 0x339)) {
+          iVar1 = *(int *)(DAT_0800f708 + uVar2 * 0x24 + 8);
+          iVar3 = iVar1 + uVar4 * 8;
+          if (((*(byte *)(iVar3 + 4) & 2) != 0) &&
+             (iVar1 = FUN_08003c74(*(undefined4 *)(iVar1 + uVar4 * 8)), iVar1 != 0)) {
+            bVar5 = bVar6;
+          }
+          bVar6 = bVar5;
+          *(byte *)(iVar3 + 4) = *(byte *)(iVar3 + 4) | 1;
+        }
+        else {
+          FUN_080ba640(DAT_0800f70c, 3, uVar2, 5);
+        }
+      }
+    }
+    else {
+      FUN_080ba640(DAT_0800f70c, 3, uVar2, 5);
+      bVar6 = 1;
+    }
+  }
+  else {
+    FUN_080ba640(DAT_0800f70c, 3, uVar2, 5);
+    bVar6 = 1;
+  }
+  return bVar6;
+}
+```
+
+Функция работает с таблицей по `DAT_0800f708` и индексом `(unaff_r4 & 0xFFF) >> 4`. Скорее всего это обработка какого-то актуатора/датчика, а не IMMO-автомат.
+
+### Два больших периодических обработчика (`FUN_08098860` / `FUN_08867b24`)
+
+Два длинных декомпилированных листинга — это **один и тот же периодический обработчик**, размещённый в двух областях:
+
+- `FUN_08098860` — обычный flash (`0x080xxxxx`)
+- `FUN_08867b24` — ROM-алиас / SLib (`0x088xxxxx`)
+
+Они вызывают одни и те же функции с префиксами `0x080` и `0x088`/`func_0x087d` соответственно. Листинги состоят из множества вызовов датчиков/исполнительных механизмов (`FUN_080a4660`, `FUN_080a48b0`, `FUN_080be8e4`, `FUN_0808db60`, `FUN_080a35f4`, `FUN_0808278c`, `FUN_080a20d0`, `FUN_080a618c`, `FUN_080a62c0`, `FUN_080a3f8c`, `FUN_08093ef8`, `FUN_08089d68`, `FUN_08088cec`, `FUN_080a8154`, `FUN_080a7b3c`, `FUN_08088254`, `FUN_0808962c`, `FUN_080a26d4`, `FUN_080a8448`, `FUN_080a8670` и т.д.).
+
+**Вывод для IMMO**: эти функции не являются точкой входа протокола. Их роль — общий цикл управления двигателем. Все вхождения `07 14` внутри них — инструкции `ubfx`. Полные листинги сохранены в логе сессии.
+
+## Следующий раунд декомпиляции (2026-08-14)
+
+### 1. IMMO-флаг и type-check
+
+Функция `FUN_08204c30` возвращает «тип» прошивки, который затем влияет на `0x200003FC`:
+
+```text
+0x08204c30:
+  bl 0x08204b54      ; читает маркер 0x08200000
+  cmp r0, #1
+  beq type_1_or_2
+  bl 0x08204ad8      ; читает SRAM[0x20000000]
+  cmp r0, #1
+  beq type_3
+  r4 = 0             ; type 0
+  return
+
+type_1_or_2:
+  r4 = 1
+  bl 0x08204ad8
+  cmp r0, #0
+  bne -> return r4   ; type 1
+  r4 = 2             ; type 2
+  return
+
+type_3:
+  r4 = 3
+  return
+```
+
+- `FUN_08204b54` сравнивает слово по `0x08200000` с константами `0x2548A4D2` / `0x43A0C212`.
+- `FUN_08204ad8` сравнивает слово по `0x20000000` с `0x4DF9123B` / `0xF9C74A52`.
+
+В `FUN_082035dc` результат `FUN_08204c30` используется так:
+
+```text
+if (type == 0 || type == 2) {
+    SRAM[0x200003FC] = 0;   // index = 0
+    SRAM[0x200003FE] = 0;   // IMMO disabled
+} else {
+    SRAM[0x200003FC] = 1;   // index = 1
+}
+```
+
+Таким образом, **byte `0x08074BF9` не читается напрямую** во wrapper `0x082xxxxx` —
+решение о включении IMMO уже закодировано в RAM-флаг `0x200003FE` на этапе
+инициализации (вероятно, в shared library `0x080xxxxx` или SLib).
+
+### 2. Инициализация и timer callback
+
+`FUN_082035dc`:
+
+```text
+bl 0x08204c30
+... ; set 0x200003FC/0x200003FE
+alloc timer 0x20000410, callback = 0x082021e5, arg = 0
+alloc timer 0x20000413, callback = 0x082021e5, arg = 1
+bl 0x08201350       ; alloc generic timers
+bl 0x082013b4       ; register callbacks A/B/C
+  r0 = 0x082020c1   ; callback A (alloc)
+  r1 = 0x082020f1   ; callback B (session)
+  r2 = 0x08202199   ; callback C (dispatch)
+```
+
+`FUN_082021e5` (timer callback):
+
+```text
+if (arg == 0) {
+    idx = SRAM[0x200003FC];
+    fn = table[0x20001018 + idx*0x54 + 0x04];
+    if (fn && fn(0) == 0) {
+        type = FUN_08204c30();
+        SRAM[0x200003FE] = 0;
+        SRAM[0x200003FC] = 0;
+        stop timer 0x20000410;
+        if (type == 2) FUN_08204c22();  // reset
+    }
+} else if (arg == 1) {
+    SRAM[0x200003F2] = 0;
+    stop timer 0x20000413;
+}
+```
+
+### 3. Таблица зарегистрированных функций `0x20001018`
+
+Регистраторы находятся в блоке `0x082036c0..0x08203788`:
+
+| Адрес регистратора | Смещение в слоте | Назначение |
+|--------------------|------------------|------------|
+| `0x082036c4` | `+0x04` | общий guard/инициализация |
+| `0x082036e0` | `+0x10` | full-challenge стадия 1 |
+| `0x08203700` | `+0x14` | full-challenge стадия 2 |
+| `0x08203718` | `+0x34` | основной крипто-алгоритм (вызывается из `FUN_08202e20`) |
+| `0x08203734` | `+0x3c` | быстрый перезапуск/сброс |
+| `0x08203750` | `+0x40/+0x44` | flash-attestation параметры |
+| `0x08203770` | `+0x4c` | quick-check guard |
+
+Регистрация для `idx = 1` происходит в `FUN_08202038`:
+
+```text
+0x08202038:
+  table[1].+0x04 = 0x08202019
+  table[1].+0x34 = 0x08201e2d
+  table[1].+0x3c = 0x08201df1
+  table[1].+0x40 = 0x08201d85, table[1].+0x44 = 0
+  table[1].+0x4c = 0x082017d9
+  table[1].+0x10 = 0x08201ae1
+  table[1].+0x14 = 0x082017f9
+```
+
+`FUN_08201e2c` — основной обработчик full-вызова: проверяет
+`SRAM[0x200003FE] == 1`, парсит `session_word` (`0xFF00` / `0xFF01`),
+по пути `0xFF00` вызывает `FUN_0820630c` (flash-attestation), по пути
+`0xFF01` переходит в SLib-ветку через `FUN_08204bac`.
+
+`FUN_08201df0` сохраняет `r0/r1` в `0x200002D4/0x200002D8` и сбрасывает
+`0x200002DC`.
+
+`FUN_08201d84` запускает flash-attestation: вызывает `FUN_08206108` с
+`flash_start = SRAM[0x200002D4]`, `flash_size = SRAM[0x200002D8]`.
+
+### 4. Обработчик первого кадра challenge — `FUN_08202cbc`
+
+- Проверяет `SRAM[0x20000402] == 2` и тип второго байта challenge
+  (`1,2,3,0x60..0x63`).
+- По типу выбирает новый `idx` (`0..6`) и вызывает `table[idx].+0x04`.
+- Если guard возвращает `0`, устанавливает `SRAM[0x200003FC] = idx`,
+  `SRAM[0x200003FE] = 0` (!), запускает таймер `0x20000410` на 5000 мс.
+- Для `param_2 == 0` отправляет `50 bVar6 00 32 01 F4` через `FUN_08201660`.
+
+**Важно**: `FUN_08202cbc` **сбрасывает** `0x200003FE` в `0` после приёма
+первого challenge-кадра. Это означает, что флаг `0x200003FE` используется
+только до начала обмена; после получения challenge дальнейшая работа
+идёт по state-machine.
+
+### 5. Геттер IMMO-флага `FUN_082037d8`
+
+```text
+FUN_082037d8:
+  ldr r3, [pc, #0x200003FE]
+  ldrb r0, [r3]
+  bx lr
+```
+
+Многие IMMO-функции (`FUN_08201e2c`, `FUN_08201df0`, `FUN_08201d84`,
+`FUN_082017d8` и др.) начинаются с `bl FUN_082037d8` и возвращают
+ошибку `0x33`, если флаг не равен `1`.
+
+**Пока не найден setter**, который устанавливает `0x200003FE = 1`.
+Единственные найденные записи в `0x200003FE` — обнуление
+(`0x08202212`, `0x08202d56`). Это подтверждает гипотезу, что флаг
+выставляется на раннем этапе инициализации (shared library или SLib)
+на основе байта калибровки `0x08074BF9`.
+
+### 6. Calibration descriptor table и pointer table
+
+- Pointer table по адресу `0x0803E590` содержит 4 указателя:
+  `0x0804A900`, `0x08046D08`, `0x08049A08`, `0x080460F8`.
+- `0x0804A900` — таблица дескрипторов калибровок.
+- В таблице есть записи для `0x08074BF8` и `0x08074BF9` (item ~28/29),
+  что совпадает с единственным отличием `IMMOOFF`/`IMMOON`.
+- Прямых ссылок на `0x0804A900`, `0x0803E590` или адреса калибровки
+  из кода `0x082xxxxx` не обнаружено; доступ идёт через pointer table
+  и, вероятно, через shared library `0x080xxxxx`.
+
+### 7. Статус поиска генератора триггера `0x0713`
+
+- Триггер отправляется через `FUN_08201208` / `FUN_08201260` /
+  `FUN_082012e8` -> общий CAN-диспетчер `FUN_08204ab8`.
+- Первичный «таймер включения зажигания» — `0x20000410` с callback
+  `0x082021e5`. Его точка запуска (возможно, по событию IGN ON или
+  по истечению 1000 мс внутри `FUN_082017d8`/`FUN_082017f8`) пока
+  не зафиксирована.
+- **Генератор случайных/flash-зависимых 8 байт триггера ещё не найден**.
+  Наиболее вероятные места:
+  - SLib-вызовы `0x08069028` / `0x080697D0` (найдены ранее в
+    `find_trigger_gen.py`);
+  - функция в слоте `+0x14` (`0x082017f9`) или `+0x4c`
+    (`0x082017d9`), которые вызываются в начале full/quick-обмена.
+
+### Открытые вопросы
+
+- Какой именно байт/флаг по `0x200003FC` выбирает слот в таблице `0x20001018` для `FUN_08202e20`?
+- Что возвращает функция в слоте `+0x00` таблицы `0x20001018` (основной кандидат на крипто-алгоритм)?
+- Совпадает ли поведение `FUN_082013d0` с наблюдаемыми трейсами для full- и quick-вызовов?
+- Где находится setter `SRAM[0x200003FE] = 1` (инициализация из `0x08074BF9`)?
+- Какая функция формирует первые 8 байт `0x0713` и использует ли она flash-данные или TRNG?

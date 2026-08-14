@@ -2212,3 +2212,9 @@ Dwell Duty Mode: percentage of the inter-spark interval used as coil dwell time.
 ### wizardInjectorOutputs
 
 
+### m74_9ImmoEnabled
+Enable m74_9 BCM immobilizer challenge-response (requires working computeImmoResponse).
+
+### m74_9ImmoOff
+Force-disable m74_9 immobilizer (use when physical bypass is installed).
+
