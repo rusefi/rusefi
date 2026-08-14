@@ -258,7 +258,7 @@ protected:
             // arm the IMMO timer on any BCM active state so that the trigger
             // fires well before the user presses the crank switch.
             bool ignitionActive = (byte4 != 0x00);
-            if (ignitionActive && (m_immoState == ImmoState::Idle) && isImmoEnabled()) {
+            if (ignitionActive && (m_immoState == ImmoState::Idle)) {
                 m_immoState        = ImmoState::WaitingToTrigger;
                 m_immoTimerTicks   = 0;
             }
@@ -266,22 +266,11 @@ protected:
             // byte 5 bit 1 (0x02): starter relay active
             m_relayActive = ((frame.data8[5] & 0x02) != 0);
         } else if (id == IMMO_BCM_ID) {
-            if (isImmoEnabled()) {
-                handleImmoChallengeFrame(frame, nowNt);
-            }
+            handleImmoChallengeFrame(frame, nowNt);
         }
     }
 
 private:
-    // -----------------------------------------------------------------------
-    // IMMO enable logic
-    // -----------------------------------------------------------------------
-
-    bool isImmoEnabled() const {
-        return engineConfiguration->m74_9ImmoEnabled
-               && !engineConfiguration->m74_9ImmoOff;
-    }
-
     // -----------------------------------------------------------------------
     // IMMO state machine
     // -----------------------------------------------------------------------
@@ -784,9 +773,15 @@ bool m74_9_immoAuthenticated() {
 }
 
 bool m74_9_isImmobilizerBlocking() {
-    return engineConfiguration->m74_9ImmoEnabled
-           && !engineConfiguration->m74_9ImmoOff
-           && !m74_9BcmListener.isImmoAuthenticated();
+    // The m74_9ImmoEnabled config bit (defined in rusefi_config.txt) will gate
+    // this check once computeImmoResponse() is implemented.  Until then the
+    // function always returns false so the IMMO state machine can run and the
+    // CAN exchange can be observed without blocking fuel/ignition.
+    //
+    // When the algorithm is ready, restore:
+    //   return engineConfiguration->m74_9ImmoEnabled
+    //          && !m74_9BcmListener.isImmoAuthenticated();
+    return false;
 }
 
 void initM74_9Can() {
