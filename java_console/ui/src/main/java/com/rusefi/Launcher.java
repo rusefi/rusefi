@@ -10,7 +10,6 @@ import com.rusefi.core.preferences.storage.PersistentConfiguration;
 
 import javax.swing.*;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.concurrent.CompletableFuture;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -46,7 +45,7 @@ public class Launcher implements rusEFIVersion {
         }
         FileLogger.init();
         log.info("rusEFI UI console " + UiVersion.CONSOLE_VERSION);
-        log.info("Compiled " + new Date(rusEFIVersion.classBuildTimeMillis()));
+        log.info("Compiled " + rusEFIVersion.classBuildTimeString());
         log.info("\n\n");
         PersistentConfiguration.registerShutdownHook();
         com.rusefi.maintenance.ManualIniFilePicker.register();
