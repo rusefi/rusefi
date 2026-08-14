@@ -196,6 +196,21 @@ float EtbController::percentToDuty(float percent) const {
 	return clampF(-limit, 0.01f * percent, limit);
 }
 
+/**
+ * The bench test and the TPS autocal drive the motor directly rather than through setOutput(),
+ * so they would otherwise ignore the ceiling entirely. On the hardware which motivated #9799 that
+ * is the worst case: the fixed 50% those two command is above the limit the user lowered the
+ * ceiling to in order to stop the driver faulting.
+ *
+ * Note this can make autocal less accurate on a throttle which needs more than the configured
+ * ceiling to reach its mechanical stops - but exceeding a limit the user set for hardware
+ * protection is the worse of the two.
+ */
+float EtbController::clampToMaxDutyCycle(float duty) const {
+	float limit = getMaxDutyCycle();
+	return clampF(-limit, duty, limit);
+}
+
 PUBLIC_API_WEAK bool isBoardAllowingLackOfPps() {
   return false;
 }

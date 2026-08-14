@@ -1023,3 +1023,25 @@ TEST(etb, dutyCeilingIsMigratedForOldTunes) {
 	applyDefaultsOrFixAfterBurn(nullptr);
 	EXPECT_EQ(45, engineConfiguration->etbMaxDutyCycle[0]);
 }
+
+TEST(etb, dutyCeilingAlsoAppliesToDirectDrivePaths) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->etbFunctions[0] = DC_Throttle1;
+
+	EtbController dut;
+	dut.init(DC_Throttle1, nullptr, nullptr, nullptr);
+
+	// the bench test and the TPS autocal command a fixed 0.5 duty straight at the motor,
+	// bypassing setOutput(). With the default ceiling that is unchanged...
+	EXPECT_FLOAT_EQ(0.5f, dut.clampToMaxDutyCycle(0.5f));
+	EXPECT_FLOAT_EQ(-0.5f, dut.clampToMaxDutyCycle(-0.5f));
+
+	// ...but a user who lowered the ceiling below it did so precisely to stop the driver
+	// being pushed that hard, so those paths have to respect it too
+	engineConfiguration->etbMaxDutyCycle[0] = 45;
+	EXPECT_FLOAT_EQ(0.45f, dut.clampToMaxDutyCycle(0.5f));
+	EXPECT_FLOAT_EQ(-0.45f, dut.clampToMaxDutyCycle(-0.5f));
+
+	// a request already inside the ceiling is untouched
+	EXPECT_FLOAT_EQ(0.2f, dut.clampToMaxDutyCycle(0.2f));
+}
