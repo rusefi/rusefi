@@ -92,23 +92,22 @@ void initializeUzCam(TriggerWaveform *s) {
 	s->setTriggerSynchronizationGap4(/*gapIndex*/1, 0.67);
 }
 
-void initialize_3GRfSE_CAM(TriggerWaveform *s) {
- 
-  s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Fall);
+void initialize_3GRfSE_CAM(TriggerWaveform* s) {
+    s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Fall);
 
-  s->shapeWithoutTdc = true;
+    s->shapeWithoutTdc = true;
 
-	// SyncEdge::Fall tracks fall-to-fall durations 155/90/115, ratios 0.58/1.28/1.35:
-	// sync on the unique short-after-long 0.58 gap, the other two are too close to each other
-	s->setTriggerSynchronizationGap2(0.4, 0.7);
+    // Fall-to-fall: 145°, 65°, 150°
+    // 65 / 145 = 0.4483
+    s->setTriggerSynchronizationGap2(0.4f, 0.7f);
 
-    
-  s->addEvent360(10,  TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-  s->addEvent360(70,  TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+    // Все углы повернуты на +80°, чтобы последний FALL был ровно на 360°.
+    s->addEvent360(90,  TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+    s->addEvent360(150, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
-  s->addEvent360(130, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-  s->addEvent360(215, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+    s->addEvent360(210, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+    s->addEvent360(295, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
-  s->addEvent360(250, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-  s->addEvent360(280, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+    s->addEvent360(330, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+    s->addEvent360(360, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 }
