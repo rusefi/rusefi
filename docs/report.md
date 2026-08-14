@@ -435,3 +435,64 @@ Open follow-ups:
   applying/resetting learned trims, or introduce an explicit tuning session).
 - Decide how a future bank-2-aware VE Analyze correction should select/combine
   STFT banks; this change preserves the existing bank-1 behavior.
+
+## 2026-08-13 - TCU unit tests, and two members that were never initialized (#6380)
+
+What: `test_tcu.cpp` covered ButtonShift and the Generic gear controller only.
+Added coverage for the two pieces of TCU logic that had none - the automatic
+shift decisions in `AutomaticGearController` and the shift timing helpers on
+`TransmissionControllerBase`.
+
+Writing the tests immediately turned up two members declared without an
+initializer. Both are harmless in production only because every controller is
+a file-scope instance and therefore zero initialized; the moment one is
+constructed on the stack they are read as garbage:
+
+- `GearControllerBase::transmissionController` - `update()` NULL-checks it
+  before dereferencing, so a garbage value segfaults. Reproduced: the new test
+  passed in isolation and crashed the binary (exit 139) when run after the
+  existing tcu tests, which is the classic uninitialized-stack signature.
+- `TransmissionControllerBase::m_shiftTime` - read by `isShiftCompleted()`
+  before any `measureShiftTime()` call.
+
+| File | Change |
+|--------------------------------------------|--------------------------------------------------------|
+| firmware/controllers/tcu/gear_controller.h | Initialize `transmissionController` to nullptr |
+| firmware/controllers/tcu/tcu.h | Initialize `m_shiftTime` to false |
+| unit_tests/tests/test_tcu.cpp | 7 new tests |
+
+New coverage:
+- automatic controller leaves NEUTRAL on the first update
+- upshifts 1-2-3-4 as speed crosses each curve, and holds in top gear
+- downshifts 4-3-2-1, and holds in bottom gear
+- holds the current gear when VSS or TPS is invalid
+- shift not reported as completed before it starts
+- shift completes when DetectedGear reaches the target, and is reported once
+- shift falls back to `tcu_shiftTime` when ISS is not configured
+
+Key decisions and why:
+- Flat shift curves. `shift()` interpolates the curve against throttle, so a
+  flat curve keeps these tests about the gear state machine rather than about
+  `interpolate2d`, which has its own tests.
+- `measureShiftTime`/`isShiftCompleted` are protected, so the test declares a
+  small subclass with `using` declarations rather than making them public or
+  reaching in some other way.
+- The two initializers are in scope because the tests cannot construct these
+  classes on the stack without them - not opportunistic cleanup.
+
+Validation:
+- Full suite: 1166 tests pass, up from 1159. No regressions.
+- The segfault above is the direct before/after evidence for the
+  `transmissionController` initializer.
+- Host build only (MinGW GCC 16.1). No ARM firmware build was run locally, so
+  the board builds are covered by CI rather than by me.
+
+Open follow-ups:
+- `GearControllerMode::Automatic` is offered in the TunerStudio dropdown
+  (`gear_controller_e_enum` = "None", "Button Shift", "Automatic", "Generic")
+  but `initGearController()` handles only ButtonShift and Generic, so
+  selecting Automatic falls to `default` and leaves `engine->gearController`
+  NULL. `AutomaticGearController` is only reachable today as the base class of
+  `GenericGearController`. Either the mode should be wired up or it should be
+  removed from the dropdown - that is a maintainer call, so it is reported
+  rather than changed here.

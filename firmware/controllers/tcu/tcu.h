@@ -18,7 +18,9 @@
 class TransmissionControllerBase: public tcu_controller_s {
 private:
 	Timer m_shiftTimer;
-	bool m_shiftTime;
+	// no initializer meant the flag was only reliably false for the file-scope controller
+	// instances which get zero initialized; anything on the stack (a unit test) read garbage
+	bool m_shiftTime = false;
 	gear_e m_shiftTimeGear;
 public:
 	virtual void update(gear_e);
