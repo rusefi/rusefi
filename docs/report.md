@@ -496,3 +496,54 @@ Open follow-ups:
   `GenericGearController`. Either the mode should be wired up or it should be
   removed from the dropdown - that is a maintainer call, so it is reported
   rather than changed here.
+## 2026-08-13 - Console logs the real build date instead of the 1969 epoch (#6836)
+
+What: The console and the updater logged
+"Compiled Wed Dec 31 19:00:00 EST 1969" instead of a build timestamp.
+
+Root cause: `rusEFIVersion#classBuildTimeMillis` handled the `jar:` protocol by
+chopping the "file:" prefix off the URL path with `path.substring(5, ...)`.
+That path is percent-encoded, so any installation directory containing a space
+produced a file name with a literal `%20`, a file which does not exist, and
+therefore `lastModified() == 0`. `new Date(0)` then rendered the epoch.
+
+Reproduced exactly, with the jar URL shape of a bundle installed under
+"Program Files":
+
+    current  -> C:\Program%20Files\Purple%20Updater\console\rusefi_console.jar
+    exists   -> false, lastModified=0
+    printed  -> Wed Dec 31 17:00:00 MST 1969
+    fixed    -> C:\Program Files\Purple Updater\console\rusefi_console.jar
+
+The same encoding bug also affected the "Source ..." line logged by
+`Autoupdate#main`, which is where it first showed up in the #10000 log.
+
+| File | Change |
+|-------------------------------------------------------|--------------------------------------------------|
+| java_console/shared_io/.../rusEFIVersion.java | New `jarFileOf` parses the jar URL as a URI; new `classBuildTimeString` renders "unknown" rather than the epoch |
+| java_console/ui/.../Launcher.java | Use `classBuildTimeString()` |
+| java_console/autoupdate/.../Autoupdate.java | Use `classBuildTimeString(Class)`; `toURI()` for the "Source" log line; bump AUTOUPDATE_VERSION |
+| java_tools/proxy_server/.../Monitoring.java | Use `classBuildTimeString()` |
+| java_console/shared_io/src/test/.../RusEfiVersionTest.java | 7 cases: encoded path, plain path, encoded file name, missing separator, malformed URL, relative URL, no-epoch contract |
+
+Key decisions and why:
+- Two separate defects, both fixed. Decoding the path makes the timestamp
+  correct for the overwhelming majority of installs; rendering "unknown"
+  covers the cases where the timestamp genuinely cannot be determined, so the
+  log never again claims a 1969 build.
+- `jarFileOf` is a package-visible pure function taking the URL path as a
+  string, so the tests cover both the encoded and the malformed cases without
+  building a jar or touching the class loader. No reflection.
+- `jarFileOf` returns null instead of throwing. `new File(URI)` rejects
+  relative and opaque URIs with `IllegalArgumentException`, and a logging
+  helper must never be the reason startup fails.
+- Removed the now-unused `java.util.Date` imports from the two call sites that
+  no longer construct a Date.
+
+Validation:
+- Old and new path resolution compared side by side on the "Program Files"
+  URL shape; the old one reproduces the issue's literal 1969 string.
+- `gradlew :shared_io:test :autoupdate:test :ui:shadowJar :proxy_server:compileTestJava`
+  green, 7 new tests among them.
+- Not exercised by launching an installed bundle from a spaced path - verified
+  at the unit level and by the side-by-side reproduction only.
