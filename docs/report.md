@@ -435,3 +435,54 @@ Open follow-ups:
   applying/resetting learned trims, or introduce an explicit tuning session).
 - Decide how a future bank-2-aware VE Analyze correction should select/combine
   STFT banks; this change preserves the existing bank-1 behavior.
+
+## 2026-08-13 - Autoupdate: report a broken bundle instead of exiting silently (#6564)
+
+What: Launching the updater against a bundle it cannot identify produced no
+user-visible output at all. `Autoupdate#autoupdate` logged
+"unable to perform without bundleFullName" and called `System.exit(-1)`
+without a dialog; since the launcher is a GUI exe with no console attached,
+the user double-clicks it and simply sees nothing happen. Running the same
+code as `java -jar` showed the message on stderr, which is exactly the
+asymmetry #6564 reports.
+
+A second, related defect made the same situation worse: `BundleUtil#parse`
+did `line.split("=", 2)` and then read `pair[1]` unconditionally, so a blank,
+commented or truncated line in `release.txt` threw
+`ArrayIndexOutOfBoundsException`. That surfaced as a raw stack-trace dialog
+from the catch-all in `main` rather than as an explanation.
+
+| File | Change |
+|--------------------------------------------------------|------------------------------------------------|
+| java_console/autoupdate/.../Autoupdate.java | Show an error dialog naming release.txt and the working directory before exiting; bump AUTOUPDATE_VERSION |
+| java_console/shared_io/.../BundleUtil.java | Skip lines without '=' instead of throwing; widen BRANCH_REF_FILE to public so the message can name it |
+| java_console/shared_io/src/test/.../BundleUtilTest.java | 5 new cases: malformed lines, truncated content, missing release, empty content, nextRelease |
+
+Key decisions and why:
+- The dialog is guarded by `AutoupdateUtil.runHeadless`, matching the existing
+  pattern in `startConsoleAsANewProcess`, so CI and headless runs are unaffected.
+- `parse` skips unparseable lines rather than failing the whole file. The
+  existing "target == null || branchName == null" check already returns
+  `BundleInfo.UNKNOWN`, so a genuinely unusable file still reaches the new
+  dialog through one code path instead of two different failure modes.
+- The message names `release.txt` and prints `user.dir` because the file lives
+  in the bundle's `console` folder, which is not where users look first.
+- Note the repro in the issue has moved: bundle identity comes from
+  `console/release.txt` (see BundleUtil / BundleInfoStrategy), not from the
+  bundle's parent folder name, so renaming the parent folder no longer breaks
+  anything. The "no error message" defect the issue asks about is still real
+  and is what this change fixes.
+
+Validation:
+- New tests fail on the unfixed `BundleUtil` with
+  `ArrayIndexOutOfBoundsException` at both the malformed-line and the
+  truncated-content case, and pass after the fix.
+- `gradlew :shared_io:test :autoupdate:test :ui:shadowJar` green.
+- The dialog itself is Swing and is not unit tested; it was reviewed by
+  reading, not by running the exe.
+
+Open follow-ups:
+- `java_console/peak-can-basic` and `java_console/luaformatter` are submodules;
+  without `git submodule update --init` for both, `:ecu_io` fails on a missing
+  `peak.can.basic` package and `:ui` on a missing `neoe.formatter.lua`. Worth a
+  line in the Java build docs.

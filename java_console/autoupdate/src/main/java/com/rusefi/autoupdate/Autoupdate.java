@@ -129,7 +129,7 @@ import static com.rusefi.core.FindFileHelper.findFirmwareFile;
  */
 public class Autoupdate {
     private static final Logging log = getLogging(Autoupdate.class);
-    private static final int AUTOUPDATE_VERSION = 20260804; // separate from rusEFIVersion#CONSOLE_VERSION
+    private static final int AUTOUPDATE_VERSION = 20260813; // separate from rusEFIVersion#CONSOLE_VERSION
     private static final String userHomeSubDirectory = FileUtil.RUSEFI_SETTINGS_FOLDER + "updates" + File.separator;
 
     /**
@@ -244,6 +244,17 @@ public class Autoupdate {
         BundleInfo bundleInfo = BundleUtil.readBundleFullNameNotNull();
         if (BundleInfo.isUndefined(bundleInfo)) {
             log.error("ERROR: Autoupdate: unable to perform without bundleFullName");
+            // #6564 the launcher is a GUI exe with no console attached, so without a dialog the user
+            // double-clicks it and simply sees nothing happen
+            if (!AutoupdateUtil.runHeadless) {
+                ErrorMessageHelper.showErrorDialog(String.format(
+                    "Unable to update: `%s` is missing or does not describe this bundle.\n"
+                        + "It is expected next to rusefi_console.jar, in\n%s\n\n"
+                        + "Please re-extract the bundle without moving or renaming files inside it.",
+                    BundleUtil.BRANCH_REF_FILE,
+                    System.getProperty("user.dir")
+                ), "Autoupdate Error " + TITLE);
+            }
             System.exit(-1);
         }
 
