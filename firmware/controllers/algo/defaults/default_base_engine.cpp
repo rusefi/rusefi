@@ -145,6 +145,15 @@ bool applyDefaultsOrFixAfterBurn(const engine_configuration_s* previousConfigura
     changed = true;
   }
 
+  // #9799: tunes which predate the configurable ceiling carry 0 here, which would otherwise mean
+  // "never open the throttle". Restore the historical hard-coded limit for them.
+  for (size_t i = 0; i < efi::size(engineConfiguration->etbMaxDutyCycle); i++) {
+    if (engineConfiguration->etbMaxDutyCycle[i] == 0) {
+      engineConfiguration->etbMaxDutyCycle[i] = ETB_DEFAULT_MAX_DUTY_CYCLE;
+      changed = true;
+    }
+  }
+
   // Seed the 2D cranking flex table for tunes that predate it (all-zero ethanol axis). Mirror the existing
   // E0 coolant curve at every ethanol level so turning on flexCranking stays neutral with respect to ethanol
   // until the user calibrates it.
@@ -522,6 +531,10 @@ void setDefaultBaseEngine() {
 
 	engineConfiguration->etbMinimumPosition = 1;
 	engineConfiguration->etbMaximumPosition = 100;
+
+	for (size_t i = 0; i < efi::size(engineConfiguration->etbMaxDutyCycle); i++) {
+		engineConfiguration->etbMaxDutyCycle[i] = ETB_DEFAULT_MAX_DUTY_CYCLE;
+	}
 
 	engineConfiguration->tcuInputSpeedSensorTeeth = 1;
 	engineConfiguration->issFilterReciprocal = 2;

@@ -2038,6 +2038,13 @@ end_struct
 	bit dwellDutyModeEnabled,"enabled","disabled";Dwell Duty Mode: when enabled, ignores the RPM/voltage dwell tables and computes dwell as a fixed percentage of the time between consecutive ignition pulses. Required for Ford TFI modules that expect a 50% duty cycle square wave.
 	uint8_t dwellDutyPercent;Dwell Duty Mode: percentage of the inter-spark interval used as coil dwell time. 50 = half the interval between pulses (standard TFI target).;"%", 1, 0, 1, 90, 0
 
+	! --- Per H-bridge duty ceiling (#9799) ---
+	! Some H-bridge drivers trip their own overcurrent/thermal protection well before the
+	! historical hard-coded 90% ceiling, and a throttle which is mechanically wide open at
+	! 45% duty never needs the rest of that range anyway. 0 means "not configured" and is
+	! migrated to ETB_DEFAULT_MAX_DUTY_CYCLE by applyDefaultsOrFixAfterBurn().
+	uint8_t[ETB_COUNT iterate] etbMaxDutyCycle;Highest duty cycle this H-bridge is allowed to command, in both directions. Lower it when the driver faults before reaching the default ceiling, or when the throttle is already fully open at a lower duty.;"%", 1, 0, 10, 90, 0
+
 ! end of engine_configuration_s
 end_struct
 

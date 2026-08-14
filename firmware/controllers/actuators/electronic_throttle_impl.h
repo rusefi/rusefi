@@ -56,6 +56,11 @@ public:
 
 	dc_function_e getFunction() const { return m_function; }
 
+	// #9799 - configurable per H-bridge duty ceiling
+	size_t getHBridgeIndex() const;
+	float getMaxDutyCycle() const;
+	float percentToDuty(float percent) const;
+
 	void checkJam(percent_t setpoint, percent_t observation);
 
 	void setOutput(expected<percent_t> outputValue) override;
