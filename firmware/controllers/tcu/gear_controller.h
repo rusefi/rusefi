@@ -16,7 +16,9 @@ public:
 	virtual GearControllerMode getMode() const {
 		return GearControllerMode::ButtonShift;
 	}
-	TransmissionControllerBase *transmissionController;
+	// update() checks this against NULL before dereferencing it, which only worked because every
+	// production controller is a file-scope instance and therefore zero initialized
+	TransmissionControllerBase *transmissionController = nullptr;
 protected:
 	virtual gear_e setDesiredGear(gear_e);
 	void initTransmissionController();

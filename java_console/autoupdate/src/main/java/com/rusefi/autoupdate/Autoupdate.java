@@ -193,12 +193,14 @@ public class Autoupdate {
         try {
             FileLogger.init();
             log.info("Version " + AUTOUPDATE_VERSION);
-            log.info("Compiled " + new Date(rusEFIVersion.classBuildTimeMillis(Autoupdate.class)));
+            log.info("Compiled " + rusEFIVersion.classBuildTimeString(Autoupdate.class));
             log.info("Current folder " + new File(".").getCanonicalPath());
+            // toURI() rather than getPath(): the location is percent-encoded, so an installation
+            // under "Program Files" used to be logged as `C:\Program%20Files\...` - see #6836
             log.info("Source " + new File(Autoupdate.class.getProtectionDomain()
                 .getCodeSource()
                 .getLocation()
-                .getPath())
+                .toURI())
                 .getCanonicalPath());
             autoupdate(args);
         } catch (Throwable e) {
