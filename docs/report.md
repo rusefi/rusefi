@@ -1,5 +1,49 @@
 # Work Report
 
+## 2026-08-14 - m74_9: IMMO OFF flag landed + confirmed against original ECU
+
+Added the `m74_9ImmoOff` configuration bit and confirmed that the original ECU
+silences the IMMO CAN exchange when the immobilizer is disabled in calibration.
+
+What was done:
+
+| Change | File |
+| --- | --- |
+| Added `bit m74_9ImmoEnabled` and `bit m74_9ImmoOff` to persistent config | `firmware/integration/rusefi_config.txt` |
+| IMMO state machine uses both bits; no trigger/response when disabled | `firmware/config/boards/m74_9/m74_9_can.cpp` |
+| Updated analysis doc with IMMO OFF confirmation and build fix note | `docs/m74_9_immo_analysis.md` |
+
+Key findings:
+
+- **IMMO OFF dump proves 0x08074BF9 is the hardware enable flag.**
+  With `0x08074BF9 = 0x00` the original ECU never sends `0x0713` and ignores `0x0714`.
+  BCM starts the engine without authentication.
+
+- **rusEFI `m74_9ImmoOff` replicates this behavior.**
+  `isImmoEnabled()` returns `m74_9ImmoEnabled && !m74_9ImmoOff`.
+  When false, the state machine stays in `Idle`, does not arm the trigger timer,
+  and discards incoming `0x0714` frames. `m74_9_isImmobilizerBlocking()` is also gated
+  by the same condition, so LimpManager does not cut fuel/ignition.
+
+- **Build error "no member named m74_9ImmoEnabled" was a stale generated header.**
+  `engine_configuration_generated_structures_m74_9.h` had not been regenerated after
+  the `rusefi_config.txt` edit. `touch firmware/integration/rusefi_config.txt` followed
+  by `make clean` regenerates the header and the build passes.
+
+Validation:
+- Verified `m74_9ImmoEnabled` and `m74_9ImmoOff` appear at offset 15768 bits 11/12 in
+  `engine_configuration_generated_structures_m74_9.h`.
+- Verified `m74_9_can.cpp` references both bits in `isImmoEnabled()` and
+  `m74_9_isImmobilizerBlocking()`.
+- No firmware build run in this session (user builds with `./compile_m74_9.sh`).
+
+Open follow-ups:
+- User to build and flash; verify engine starts with `m74_9ImmoOff = yes`.
+- Continue reverse-engineering the `0x0713` trigger generator and `computeImmoResponse()`
+  algorithm for users who want to keep IMMO enabled (`m74_9ImmoEnabled = yes`).
+
+---
+
 ## 2026-08-14 - m74_9: Static binary analysis - 0x0713 crypto significance + SLib call map
 
 Python static analysis of the full 4 MB flash dump (`find_trigger_gen.py`).
