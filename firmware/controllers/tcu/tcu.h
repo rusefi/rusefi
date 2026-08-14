@@ -18,7 +18,7 @@
 class TransmissionControllerBase: public tcu_controller_s {
 private:
 	Timer m_shiftTimer;
-	bool m_shiftTime;
+	bool m_shiftTime = false;
 	gear_e m_shiftTimeGear;
 public:
 	virtual void update(gear_e);
