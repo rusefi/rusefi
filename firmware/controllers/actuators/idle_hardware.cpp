@@ -61,9 +61,11 @@ void applyIACposition(percent_t position) {
 	if (engineConfiguration->useStepperIdle) {
 		iacMotor.setTargetPosition(duty * engineConfiguration->idleStepperTotalSteps);
 	} else {
-		// if not spinning or running a bench test, turn off the idle valve(s) to be quieter and save power
+		// if not spinning or running a bench test, turn off the idle valve(s) to be quieter and save power.
+		// #9123 - unless the user needs the valve parked somewhere other than 0% while stopped
 #if EFI_SHAFT_POSITION_INPUT
-		if (!engine->triggerCentral.engineMovedRecently() && engine->timeToStopIdleTest == 0) {
+		if (!engineConfiguration->keepIdleSolenoidWhenStopped
+				&& !engine->triggerCentral.engineMovedRecently() && engine->timeToStopIdleTest == 0) {
 			idleSolenoidOpen.setSimplePwmDutyCycle(0);
 			idleSolenoidClose.setSimplePwmDutyCycle(0);
 			return;

@@ -1862,7 +1862,7 @@ uint8_t autoscale knockFuelTrim;Maximum Amount of Fuel trim when knock;"%", 1, 0
 
 	bit nitrousControlEnabled,"enabled","disabled"
 	bit vvlControlEnabled,"enabled","disabled"
-	bit unusedBit_Fancy3
+	bit keepIdleSolenoidWhenStopped,"enabled","disabled";By default the idle solenoid is switched off whenever the engine is not turning, to be quieter and save power. Enable this to keep driving it to its calculated position instead, for valves which need to be parked somewhere other than 0%.
 	bit unusedBit_Fancy4
 	bit unusedBit_Fancy5
 	bit unusedBit_Fancy6

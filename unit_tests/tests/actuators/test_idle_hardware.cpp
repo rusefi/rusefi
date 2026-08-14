@@ -206,3 +206,46 @@ TEST(Actuators, IdleSolenoidsOffWhileEngineStopped) {
 	EXPECT_EQ(0, getIdleSolenoidOpenDutyForUnitTest());
 	EXPECT_EQ(0, getIdleSolenoidCloseDutyForUnitTest());
 }
+
+/**
+ * #9123: some valves need to be parked at a specific position rather than at 0% while the
+ * engine is stopped. Off-while-stopped stays the default; this opts out of it.
+ */
+TEST(Actuators, IdleSolenoidsCanBeKeptPoweredWhileEngineStopped) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	engineConfiguration->isDoubleSolenoidIdle = true;
+	engine->timeToStopIdleTest = 0;
+
+	// default: engine stopped means both solenoids off, unchanged from before
+	engineConfiguration->keepIdleSolenoidWhenStopped = false;
+	applyIACposition(50);
+	EXPECT_EQ(0, getIdleSolenoidOpenDutyForUnitTest());
+	EXPECT_EQ(0, getIdleSolenoidCloseDutyForUnitTest());
+
+	// opted in: the valve is driven to its calculated position even while stopped
+	engineConfiguration->keepIdleSolenoidWhenStopped = true;
+	applyIACposition(50);
+	EXPECT_NEAR(0.50f, getIdleSolenoidOpenDutyForUnitTest(), EPS4D);
+	EXPECT_NEAR(0.50f, getIdleSolenoidCloseDutyForUnitTest(), EPS4D);
+
+	// and it tracks the requested position rather than being pinned anywhere
+	applyIACposition(20);
+	EXPECT_NEAR(0.206f, getIdleSolenoidOpenDutyForUnitTest(), EPS4D);
+	EXPECT_NEAR(0.794f, getIdleSolenoidCloseDutyForUnitTest(), EPS4D);
+}
+
+TEST(Actuators, IdleSingleSolenoidCanBeKeptPoweredWhileEngineStopped) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	engineConfiguration->isDoubleSolenoidIdle = false;
+	engine->timeToStopIdleTest = 0;
+
+	engineConfiguration->keepIdleSolenoidWhenStopped = false;
+	applyIACposition(40);
+	EXPECT_EQ(0, getIdleSolenoidOpenDutyForUnitTest());
+
+	engineConfiguration->keepIdleSolenoidWhenStopped = true;
+	applyIACposition(40);
+	EXPECT_NEAR(0.40f, getIdleSolenoidOpenDutyForUnitTest(), EPS4D);
+}
