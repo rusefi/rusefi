@@ -2,15 +2,6 @@ package com.rusefi.core.ui;
 
 import org.junit.jupiter.api.Test;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.jar.JarEntry;
-import java.util.jar.JarOutputStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -45,35 +36,21 @@ class AutoupdateUtilTest {
     }
 
     /**
-     * The regression itself: loading from a jar, which is what the shipped console does. A class
-     * directory tolerates the doubled slash, which is why this only ever reproduced outside the IDE.
+     * The regression itself, against the real packaged resource rather than a jar built by the
+     * test. appicon.png used to sit in java_console/shared_ui/resources, which is not a Gradle
+     * source set - :shared_ui:processResources reported NO-SOURCE and the icon was never packaged
+     * at all, so fixing the doubled slash alone would still have found nothing.
      */
     @Test
-    void iconIsFoundInsideAJar() throws Exception {
-        final Path jar = createJarContainingAppIcon();
+    void appIconIsOnTheClasspathAndReachableByItsBareName() {
+        assertNotNull(
+            AutoupdateUtilTest.class.getResource("/com/rusefi/appicon.png"),
+            "appicon.png must be packaged from a real src/main/resources source set"
+        );
 
-        AutoupdateUtil.getClassLoaderByJar(jar.toString());
-
-        final ImageIcon icon = AutoupdateUtil.loadIcon("/appicon.png");
-        assertNotNull(icon, "appicon.png should be found under the /com/rusefi/ resource package");
-    }
-
-    /**
-     * Deliberately not a {@code @TempDir} file: the jar is added to a long lived static class
-     * loader, which keeps a handle on it, and Windows refuses to delete an open file - JUnit would
-     * then fail the test during temp directory cleanup even though the assertion passed.
-     */
-    private Path createJarContainingAppIcon() throws Exception {
-        final File jarFile = File.createTempFile("rusefi-icons-", ".jar");
-        jarFile.deleteOnExit();
-        final Path jar = jarFile.toPath();
-        try (final OutputStream fileStream = Files.newOutputStream(jar);
-             final JarOutputStream jarStream = new JarOutputStream(fileStream)
-        ) {
-            jarStream.putNextEntry(new JarEntry("com/rusefi/appicon.png"));
-            ImageIO.write(new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB), "png", jarStream);
-            jarStream.closeEntry();
-        }
-        return jar;
+        assertNotNull(
+            AutoupdateUtil.loadIcon("/appicon.png"),
+            "setAppIcon() looks the icon up by its bare name, via the secondary resource path"
+        );
     }
 }
