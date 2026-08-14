@@ -93,14 +93,24 @@ void initializeUzCam(TriggerWaveform *s) {
 }
 
 void initialize_3GRfSE_CAM(TriggerWaveform *s) {
-  // todo: most cam wheels are defined as 'SyncEdge::Rise' or 'SyncEdge::RiseOnly' shall we unify?
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Fall);
+ void initializeVvtVanosReluctor(TriggerWaveform *s) {
+    s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Fall);
 
-	// our preference is to sync not too close to crank sync point
-	s->setTriggerSynchronizationGap(2.6);
-	s->setSecondTriggerSynchronizationGap(0.6);
+    s->shapeWithoutTdc = true;
 
-	s->addToothRiseFall(120, /* width*/ 60);
-	s->addToothRiseFall(240, /* width*/ 85);
-	s->addToothRiseFall(360, /* width*/ 30);
+	// SyncEdge::Fall tracks fall-to-fall durations 155/90/115, ratios 0.58/1.28/1.35:
+	// sync on the unique short-after-long 0.58 gap, the other two are too close to each other
+	s->setTriggerSynchronizationGap2(0.4, 0.8);
+
+    
+    s->addEvent360(10,  TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+    s->addEvent360(70,  TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+
+    s->addEvent360(130, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+    s->addEvent360(215, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+
+    s->addEvent360(250, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+    s->addEvent360(280, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+
+
 }
