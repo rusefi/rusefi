@@ -1562,3 +1562,156 @@ Change set:
 | m_counter % 200 == 0: call send0x05E2() | m74_9_can.cpp |
 
 Validation: compile not run (board disabled in CI). Logic verified against dump.
+
+## 2026-08-14 - m74_9: IMMO ON/OFF binary diff + decompilation progress
+
+- Compared `LARGUS_TUN_V14-8_ANTIJRK_OFF_UOZNEW_OTSKOK-6_AFR09_IMMOON.bin` and
+  `LARGUS_TUN_V14-8_ANTIJRK_OFF_UOZNEW_OTSKOK-6_AFR09_IMMOOFF.bin`.
+  Only meaningful difference is byte at flash offset `0x08074BF9` (`0x01` = IMMO ON,
+  `0x00` = OFF). The 4-byte block at `0x0807FFFC..0x0807FFFF` changes as a consequence
+  (likely bank checksum/signature). The same `0x08074BF9` byte is `0x01` in the original
+  fullflash dump.
+- Updated `docs/m74_9_immo_analysis.md` with:
+  - binary diff section,
+  - full decompilation of `FUN_082013d0` (IMMO state machine),
+  - `FUN_08201716` 1000 ms timer -> state 5,
+  - callbacks A/B/C and `0x0713` transmit helpers,
+  - `FUN_08202e20` / `FUN_08202cbc` / `FUN_08202254` / `FUN_0820511c`,
+  - `07 14` search results (false positives: `ubfx` instructions),
+  - `FUN_0800f5e4` helper and note on `FUN_08098860` / `FUN_08867b24` being identical
+    main-loop copies.
+
+Validation: binary diff verified with `cmp -l`; fullflash cross-check with Python.
+No firmware build run (m74_9 disabled in CI).
+
+Open follow-ups:
+- Determine exact checksum algorithm for `0x0807FFFC..0x0807FFFF`.
+- Trace `0x200003FC` to identify which slot of `0x20001018` handles IMMO response.
+- Capture live IMMO exchange with corrected trigger timing.
+
+## 2026-08-14 - m74_9: IMMO OFF dump confirms trigger gating + live trace analysis
+
+- New CAN dump with `IMMOOFF` calibration shows the original ECU **does not send**
+  any `0x0713` frame when the immobilizer is disabled. This confirms the
+  `0x08074BF9` calibration byte is the hardware enable flag.
+- Added `parse_immo_traces.py` to extract all IMMO exchanges from PCAN-View `.trc`
+  files with timings.
+- Located stored checksums in `Read_FULLFLASH_…bin`:
+  - Boot KS `94B8B6D7` at `0x08022DFFC`
+  - Calibration KS `DD5630D0` at `0x0807FFFC`
+  - Program KS `61F8857E` at `0x080FFFFC`
+- Verified that simple combinations of these checksums do not reproduce the
+  observed `0x0713` trigger bytes; the trigger likely includes a session counter
+  in addition to flash-derived data.
+- Updated `firmware/config/boards/m74_9/m74_9_can.cpp`:
+  - IMMO state machine arms only when `engineConfiguration->m74_9ImmoEnabled` is true.
+  - `0x0714` challenge frames are ignored when IMMO is disabled.
+  - `m74_9_isImmobilizerBlocking()` now uses the config bit and auth state.
+- Updated `docs/m74_9_immo_analysis.md` with the live-trace section and captured
+  tables; added `parse_immo_traces.py` helper.
+
+Validation:
+- Trace parsing verified against 5 original-ECU captures.
+- Code compiles not run (m74_9 disabled in CI; no local Linux build environment).
+
+Open follow-ups:
+- Identify the exact flash-derived data + counter used to build the `0x0713` trigger.
+- Reconstruct the full `0x20001018` function table to find the response-computation
+  function (slots 0/2-6 are not registered in the scanned code region).
+- Test `m74_9ImmoEnabled = false` on the car to confirm BCM allows start without
+  IMMO exchange.
+
+## 2026-08-14 - m74_9: IMMO type-check, function table, and calibration-flag access decoded
+
+Capstone disassembly of the IMMO wrapper (`0x08200000..0x08240000`) plus the
+pointer/descriptor tables in the first flash bank.
+
+What was done:
+
+| Change | File |
+| --- | --- |
+| Disassembled `FUN_08204ad8`, `FUN_08204b54`, `FUN_08204c30`, `FUN_082035dc`, `FUN_082021e5` | Capstone session |
+| Mapped all `0x20001018` table registrars (`0x082036c4..0x08203788`) and the registration function `FUN_08202038` | Capstone session |
+| Decoded the calibration pointer table at `0x0803E590` and descriptor table at `0x0804A900` | Python full-flash scan |
+| Added a new analysis section to the hand-off doc | `docs/m74_9_immo_analysis.md` |
+
+Key findings:
+
+- **IMMO enable decision is already in RAM before the wrapper runs.**
+  `FUN_08204c30` returns a type (0..3) derived from markers at `0x08200000` and
+  `0x20000000`. `FUN_082035dc` then sets `SRAM[0x200003FC]` to `0` (disabled) for
+  types 0/2 and `1` for types 1/3, and clears `SRAM[0x200003FE]` to `0`.
+  The actual read of calibration byte `0x08074BF9` happens earlier, outside the
+  readable wrapper (likely in shared library `0x080xxxxx` or SLib init).
+
+- **`0x200003FE` getter found at `FUN_082037d8`.** Many IMMO functions start with
+  `bl FUN_082037d8` and fail with `0x33` if the flag is not `1`. The only stores
+  to `0x200003FE` found in the wrapper are clears (`0x08202212`, `0x08202d56`);
+  the setter that initializes it from the calibration descriptor table is still
+  missing.
+
+- **Function-pointer table `0x20001018` layout decoded.** Registrars at
+  `0x082036c4` (+0x04), `0x082036e0` (+0x10), `0x08203700` (+0x14),
+  `0x08203718` (+0x34), `0x08203734` (+0x3c), `0x08203750` (+0x40/+0x44),
+  `0x08203770` (+0x4c). `FUN_08202038` registers index `1` with function
+  pointers `0x08202019`, `0x08201e2d`, `0x08201df1`, `0x08201d85`, `0x082017d9`,
+  `0x08201ae1`, `0x082017f9`.
+
+- **Full-challenge flow confirmed.** `FUN_08202cbc` parses the first `0x0714`
+  frame, selects a slot index `0..6` from the challenge type, calls
+  `table[idx].+0x04`, and if successful sets `0x200003FC = idx` and arms timer
+  `0x20000410` for 5000 ms. `FUN_08201e2c` is the full-response entry point;
+  it routes `session_word == 0xFF00` to flash-attestation
+  (`FUN_0820630c` -> `FUN_08206108`) and `0xFF01` to the SLib path via
+  `FUN_08204bac`.
+
+- **Calibration descriptor table at `0x0804A900` contains entries for
+  `0x08074BF8` and `0x08074BF9`.** The pointer table at `0x0803E590`
+  references it, but no direct literal references to either address exist in the
+  wrapper, confirming table-driven access.
+
+Validation:
+- Capstone disassembly reproduced known `0x0713` send paths (`FUN_08201208`,
+  `FUN_08201260`, `FUN_082012e8`, `FUN_08204ab8`).
+- `parse_immo_traces.py` still shows the same 5 full + 5 quick pairs; no new
+  algorithmic match found.
+- No firmware build run (m74_9 disabled in CI; macOS host).
+
+Open follow-ups:
+- Find the shared-library/SLib setter that initializes `SRAM[0x200003FE]` from
+  descriptor table item `0x08074BF9`.
+- Locate the `0x0713` trigger generator (likely SLib call at `0x08069028` or
+  `0x080697D0`, or a not-yet-decompiled function-table slot).
+- Reconstruct the full `0x20001018` table for all 7 indices to identify the
+  quick-response function.
+
+## 2026-08-14 - m74_9: added `m74_9ImmoOff` config flag for physical immo bypass
+
+User found a physical way to bypass the immobilizer on the car and asked for a
+rusEFI config flag to disable the IMMO logic.
+
+What was done:
+
+| Change | File |
+| --- | --- |
+| Added `bit m74_9ImmoOff` next to `m74_9ImmoEnabled` in persistent config | `firmware/integration/rusefi_config.txt` |
+| Use both flags to decide whether the IMMO state machine arms and whether LimpManager cuts fuel/spark | `firmware/config/boards/m74_9/m74_9_can.cpp` |
+| Documented the new flag in the analysis notes | `docs/m74_9_immo_analysis.md` |
+
+Key decisions:
+
+- Kept `m74_9ImmoEnabled` unchanged; added `m74_9ImmoOff` as an explicit override.
+- IMMO is active only when `m74_9ImmoEnabled == true && m74_9ImmoOff == false`.
+- `m74_9ImmoOff = true` forces the car to start without any `0x0713`/`0x0714`
+  exchange, which matches a physical bypass installation.
+- Config regeneration was interrupted by the user; they will run the build
+  themselves on their Linux environment, which will regenerate
+  `engine_configuration_generated_structures_m74_9.h`, `rusefi_m74_9.ini`,
+  `VariableRegistryValues.java`, etc.
+
+Validation:
+- Code change reviewed; no compiler run locally.
+
+Open follow-ups:
+- Run `./compile_m74_9.sh` (or `gen_config_board.sh config/boards/m74_9 m74_9`) to regenerate generated files and verify the build.
+- Test on car with `m74_9ImmoOff = true` and the physical bypass installed.
