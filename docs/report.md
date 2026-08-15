@@ -1885,3 +1885,39 @@ ACTIVE because its completion ISR was delayed past the tick (interrupts-off
 window or long same-priority ISR). It wraps at 255, hence the apparent
 decrease. With lastErr=0 and the conversion count growing at 10 kHz the ADC is
 healthy; the same counter behavior exists on all GPT-triggered F4 boards.
+
+## 2026-08-15 - m74_9: IAT/CLT on ADC3-only pins - added slow ADC3 sampling (EFI_ADC3_SLOW)
+
+IAT (AC2, PF6) and CLT (AD3, PF5) did not read: on the AT32F435 (same as
+STM32F4) all F-port pins are ADC3-only (PF6 = ADC3_IN4, PF5 = ADC3_IN15,
+PF10 = ADC3_IN8, PF3 = ADC3_IN9, verified against the AT32F435/437 datasheet
+pin table), and rusEFI only sampled ADC1 (slow) + ADC2 (fast) - ADC3 was
+dedicated to software knock. The m74_9.yaml ids for those pins also pointed
+at wrong EFI_ADC_* channels (e.g. AC2 was [F6, EFI_ADC_4] where EFI_ADC_4 is
+PA4).
+
+What was done:
+
+| Change | File |
+| --- | --- |
+| New `EFI_ADC3_SLOW` capability: start ADC3, sample the 8 ADC3-only pins (IN4,5,6,7,8,9,14,15) into slow-buffer slots 32..39 via a blocking `adcConvert` in the slow loop; `#error` if combined with `EFI_SOFTWARE_KNOCK` | `firmware/hw_layer/ports/stm32/stm32_adc_v2.cpp` |
+| Enlarge the slow sample buffer to 40 entries and report channels 32..39 in `adc_report` when ADC3 slow sampling is on | `firmware/hw_layer/adc/adc_onchip_slow.cpp` |
+| Enable `EFI_ADC3_SLOW` for the board | `firmware/config/boards/m74_9/efifeatures.h` |
+| CLT = EFI_ADC_39 (PF5), IAT = EFI_ADC_32 (PF6) in defaults AND ConfigOverrides (stored tune predates the fix) | `firmware/config/boards/m74_9/board_configuration.cpp` |
+| Fix AC2/AD3/AK3/BF3 ids to EFI_ADC_32/39/37/36 (regenerates TS labels) | `firmware/config/boards/m74_9/connectors/m74_9.yaml` |
+
+Validation (bench, make clean build, 0 errors): `adc_report` shows
+`S ch[33..40] @ PF6..PF5` all sampling; `sensorinfo` shows Clt/Iat configured
+on PF5/PF6 with valid voltage. With no sensors connected the pins read
+~3.28 V raw (open input with the 1500 ohm pullup to +5V saturating the
+3.3 V-referenced ADC), so the thermistor conversion reports 0 ohms/invalid -
+expected. The 2:1 `analogInputDividerCoefficient` still has to be verified
+with a real sensor (or known resistor): if the displayed resistance is off
+by ~2x, override `getAnalogInputDividerCoefficient` (weak hook) to return 1.0
+for EFI_ADC_32/EFI_ADC_39.
+
+Open follow-ups:
+- Connect CLT/IAT (or a known resistor on AC2/AD3) and verify the resistance
+  matches; adjust the per-channel divider if needed.
+- Narrowband O2 (AK3, EFI_ADC_37) and AC pressure (BF3, EFI_ADC_36) are now
+  readable as well - configure them in the tune when needed.
