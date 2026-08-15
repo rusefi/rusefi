@@ -256,7 +256,11 @@ int getNumberOfInjections(injection_mode_e mode) {
 	case IM_SINGLE_POINT:
 		return engineConfiguration->cylindersCount;
 	case IM_BATCH:
-		return 2;
+		// Batch pairs each injector with the cylinder 360 degrees later in the firing order, so
+		// every injector fires twice per cycle. A single cylinder has no distinct twin -
+		// InjectionEvent::update() resolves secondIndex to the same injector - and FuelSchedule
+		// holds one event per cylinder, so exactly one pulse is produced. #8345
+		return engineConfiguration->cylindersCount == 1 ? 1 : 2;
 	case IM_SEQUENTIAL:
 		return 1;
 	default:
@@ -283,7 +287,9 @@ float getInjectionModeDurationMultiplier() {
 	case IM_SINGLE_POINT:
 		return 1;
 	case IM_BATCH:
-		return 0.5f;
+		// See getNumberOfInjections(): a single cylinder only gets one pulse per cycle, so halving
+		// the fuel for a second pulse which never happens leaves the engine running lean. #8345
+		return engineConfiguration->cylindersCount == 1 ? 1 : 0.5f;
 	default:
 		firmwareError(ObdCode::CUSTOM_ERR_INVALID_INJECTION_MODE, "Unexpected injection_mode_e %d", mode);
 		return 0;

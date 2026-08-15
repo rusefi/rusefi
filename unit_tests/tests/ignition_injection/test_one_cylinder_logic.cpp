@@ -55,12 +55,10 @@ TEST(issues, issueOneCylinderSpecialCase968) {
  * multi-cylinder engines every injector fires twice per cycle and half fuel per pulse is correct.
  * With one cylinder there is no distinct twin - InjectionEvent::update() computes secondIndex as
  * the same injector, and FuelSchedule only ever holds one event per cylinder - so only one pulse
- * is produced per cycle, yet the fuel is still halved, leaving the engine running lean.
- *
- * This test documents CURRENT behavior: one-cylinder batch still uses the multi-cylinder numbers.
- * Once #8345 is fixed, expect multiplier 1 and injection count 1 here.
+ * is produced per cycle. Halving the fuel for a second pulse that never happens left the engine
+ * running lean.
  */
-TEST(issues, oneCylinderBatchCurrentlyHalvesFuel) {
+TEST(issues, oneCylinderBatchDeliversWholeCycleFuel) {
 	EngineTestHelper eth(engine_type_e::GY6_139QMB);
 	ASSERT_EQ(1, engineConfiguration->cylindersCount) << "GY6 is the one cylinder engine";
 
@@ -70,12 +68,12 @@ TEST(issues, oneCylinderBatchCurrentlyHalvesFuel) {
 	engineConfiguration->injectionMode = IM_BATCH;
 	float batch = getInjectionModeDurationMultiplier();
 
+	// one pulse per cycle either way, so one cylinder must not lose half its fuel to batch
 	EXPECT_FLOAT_EQ(1, sequential);
-	// only one pulse per cycle actually happens, so this halving is a known bug (#8345)
-	EXPECT_FLOAT_EQ(0.5f, batch);
+	EXPECT_FLOAT_EQ(1, batch);
 
-	// duty cycle estimate also assumes a second pulse which never happens (#8345)
-	EXPECT_EQ(2, getNumberOfInjections(IM_BATCH));
+	// and the duty cycle estimate has to count the one pulse that actually happens
+	EXPECT_EQ(1, getNumberOfInjections(IM_BATCH));
 }
 
 TEST(issues, multiCylinderBatchHalvesFuel) {
