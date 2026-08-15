@@ -104,12 +104,17 @@ static void m74_9_boardDefaultConfiguration() {
 	engineConfiguration->iat.adcChannel = EFI_ADC_32; // ADC3 PF6
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_1; // AC3 -> 74HC14 -> RS358A -> PA1
 
-	// ?k high side/?k low side = ? ratio divider todo is the value below right?
-  engineConfiguration->analogInputDividerCoefficient = 2.0f;
+	/* Battery sense: bench adc_report shows PA3 raw ~2.29 V stable (13.4 V
+	 * through the (33k + 6.8k) / 6.8k = 5.853 divider from the schematic);
+	 * PA2 is the other candidate - verify on the bench by varying the supply
+	 * voltage and watching which channel tracks it, then move this channel
+	 * assignment if needed. VBatt feeds dwell voltage correction and injector
+	 * deadtime; with no channel assigned both clamp to the lowest table bin.
+	 * Must stay in ConfigOverrides too: the stored tune predates it. */
+	engineConfiguration->vbattAdcChannel = EFI_ADC_3; // PA3
+	engineConfiguration->vbattDividerCoeff = (33 + 6.8f) / 6.8f;
 
-//	todo engineConfiguration->vbattDividerCoeff = (33 + 6.8) / 6.8; // 5.835
-
-//	engineConfiguration->vbattAdcChannel = EFI_ADC_;
+	engineConfiguration->analogInputDividerCoefficient = 2.0f;
 	engineConfiguration->adcVcc = 3.3f;
 
   setTPS1Inputs(EFI_ADC_12, EFI_ADC_13);
@@ -141,6 +146,11 @@ static void m74_9_boardConfigOverrides() {
 	 * every boot because the stored tune predates the ADC3 slow sampling. */
 	engineConfiguration->clt.adcChannel = EFI_ADC_39; // ADC3 PF5
 	engineConfiguration->iat.adcChannel = EFI_ADC_32; // ADC3 PF6
+
+	/* Battery sense - same reasoning as CLT/IAT: the stored tune predates
+	 * the VBatt wiring, so force the channel on every boot. */
+	engineConfiguration->vbattAdcChannel = EFI_ADC_3; // PA3
+	engineConfiguration->vbattDividerCoeff = (33 + 6.8f) / 6.8f;
 
 	//CAN 1 bus overwrites
 	engineConfiguration->canRxPin = Gpio::G0;

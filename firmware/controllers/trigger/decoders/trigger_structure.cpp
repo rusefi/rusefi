@@ -674,10 +674,12 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		// compression ripple (trigger_adc_real1.csv), so the high side keeps
 		// the proven 3.75 limit. The second gap is tighter than on 36/2: 60-2
 		// teeth are twice as dense in time, adjacent teeth barely change ratio
-		// even under hard acceleration, and the tighter window rejects the
-		// noise-shifted-tooth false sync (see test_trigger_noiseless.cpp).
+		// even under hard acceleration, and the tighter window rejects both the
+		// noise-shifted-tooth false sync (test_trigger_noiseless.cpp noise#1)
+		// and the misfire-distorted pair (1.60/1.20) that false-synced on a
+		// running m74_9 engine and killed it (C9003 at 51/58).
 		setTriggerSynchronizationGap3(/*gapIndex*/0, /*from*/1.6, 3.75);
-		setTriggerSynchronizationGap3(/*gapIndex*/1, /*from*/0.8, 1.2);
+		setTriggerSynchronizationGap3(/*gapIndex*/1, /*from*/0.85, 1.15);
 		break;
 
 	case trigger_type_e::TT_TOOTHED_WHEEL_36_2:
