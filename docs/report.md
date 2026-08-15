@@ -1876,3 +1876,12 @@ Open follow-ups:
   the voltage (MT_MPX4250: ~1.86 V = 100 kPa).
 - Push the ChibiOS fork fixes to rusefi/ChibiOS and bump the submodule pointer
   in rusefi main (human pushes; commits are local).
+
+Update (same day, follow-up): user noticed `fast err` growing (109) and then
+DECREASING (56) while `fast cnt` grew 21661 -> 49311 and `lastErr=0`. This is
+expected: fastAdcErrorCount is a uint8 skip counter - startConversionI()
+increments it when a TIM6 tick lands while the previous conversion is still
+ACTIVE because its completion ISR was delayed past the tick (interrupts-off
+window or long same-priority ISR). It wraps at 255, hence the apparent
+decrease. With lastErr=0 and the conversion count growing at 10 kHz the ADC is
+healthy; the same counter behavior exists on all GPT-triggered F4 boards.
