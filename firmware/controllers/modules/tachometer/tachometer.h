@@ -13,5 +13,7 @@ public:
     void init();
     void onFastCallback() override;
 private:
-    bool tachHasInit;
+    // onFastCallback() gates everything on this flag while only init() writes it, so it has to
+    // start false rather than depend on the instance being zero initialized at file scope
+    bool tachHasInit = false;
 };

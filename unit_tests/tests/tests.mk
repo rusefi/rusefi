@@ -157,6 +157,7 @@ TESTS_SRC_CPP = \
 	tests/test_sd_log_trigger.cpp \
 	tests/test_gpiochip.cpp \
 	tests/test_deadband.cpp \
+	tests/test_uninitialized_members.cpp \
 	tests/test_sticky_pps.cpp \
 	tests/test_knock.cpp \
 	tests/test_misfire_detection.cpp \
