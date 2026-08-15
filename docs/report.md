@@ -2039,3 +2039,9 @@ Open follow-ups:
 - Confirm MAP reads ~100 kPa at key-on (earlier bench showed 10 kPa with no
   sensor - if it is still 10 kPa with the sensor connected, the VE model
   starves the engine).
+
+Update (same day): VBatt calibration validated on the car - rusEFI shows
+12.4 V with the engine off, matching the battery measurement (12.42 V).
+The 5.679 divider is correct; dwell correction and injector deadtime now
+see the real battery voltage. Next: start the engine with dwell back at
+4 ms and confirm the stall + C9003 false-sync are gone.
