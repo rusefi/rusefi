@@ -42,6 +42,28 @@ static void tsRxIRQIdleHandler(UARTDriver *uartp) {
 	reinterpret_cast<UartDmaTsChannel*>(uartp->dmaAdapterInstance)->copyDataFromDMA();
 }
 
+/* Called from the UART error ISR (overrun/framing/noise). */
+static void tsRxIRQErrHandler(UARTDriver *uartp, uartflags_t e) {
+	UNUSED(e);
+	reinterpret_cast<UartDmaTsChannel*>(uartp->dmaAdapterInstance)->onRxError();
+}
+
+void UartDmaTsChannel::onRxError() {
+	// A UART RX error - typically an overrun while the ECU is busy transmitting a large response
+	// and not draining RX - can abort the circular DMA receive. With rxerr_cb previously NULL,
+	// nothing re-armed it, so the receive stayed stopped and the tuning link went permanently
+	// silent until the next start() (a physical power cycle). Re-arm the receive here so a single
+	// glitch cannot wedge the link. This runs on the error path only; normal reception is untouched.
+	chSysLockFromISR();
+	rxErrorCounter++;
+	// uartStopReceiveI is a no-op if the receive is not active; either way rxstate ends up != ACTIVE
+	// so uartStartReceiveI's precondition holds. The DMA restarts filling dmaBuffer from index 0.
+	uartStopReceiveI(m_driver);
+	uartStartReceiveI(m_driver, sizeof(dmaBuffer), dmaBuffer);
+	readPos = 0;
+	chSysUnlockFromISR();
+}
+
 UartDmaTsChannel::UartDmaTsChannel(UARTDriver& driver)
 	: UartTsChannel(driver)
 {
@@ -57,7 +79,7 @@ void UartDmaTsChannel::start(uint32_t baud) {
 		.txend2_cb		= NULL,
 		.rxend_cb		= NULL,
 		.rxchar_cb		= NULL,
-		.rxerr_cb		= NULL,
+		.rxerr_cb		= tsRxIRQErrHandler,
 		.timeout_cb		= tsRxIRQIdleHandler,
 		.speed			= baud,
 		.cr1			= 0,

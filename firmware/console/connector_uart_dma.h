@@ -26,6 +26,12 @@ public:
 	size_t readTimeout(uint8_t* buffer, size_t size, int timeout) override;
 
 	void copyDataFromDMA();
+	// Called from the UART error ISR to re-arm the circular DMA receive after a UART error
+	// (overrun/framing/noise), which otherwise leaves reception stopped until the next start().
+	void onRxError();
+
+	// Count of UART RX errors recovered from since construction, for diagnostics.
+	volatile uint32_t rxErrorCounter = 0;
 
 private:
 	// RX FIFO implementation
