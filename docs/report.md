@@ -1759,3 +1759,67 @@ Validation:
 Open follow-ups:
 - Run `./compile_m74_9.sh` (or `gen_config_board.sh config/boards/m74_9 m74_9`) to regenerate generated files and verify the build.
 - Test on car with `m74_9ImmoOff = true` and the physical bypass installed.
+
+## 2026-08-15 - m74_9: MAP always 0 - AT32 fast ADC (TIM6 -> ADC2) does not run, switched board to slow ADC
+
+User reports MAP on AC3 (AC3 -> RS358A -> PA1, EFI_ADC_1) always reads 0 kPa
+while the rest of the board works.
+
+Investigation (console logs from user's bench):
+
+- `adc_report` showed `fast 0 samples` with `F ch[0] @ PA1 ADC2 12bit=0` while
+  `slow 805833 samples` and all slow channels (PA0, PA2, PA3, PC3, PC5...)
+  sampled fine. So the slow ADC (ADCD1/ADC1) works on AT32 with the reused
+  STM32 ADCv2 LLD, but the fast ADC (ADCD2/ADC2, triggered by GPTD6/TIM6 at
+  10 kHz) never completes a single conversion.
+- MAP is the only fast channel on this board (TPS/PPS/CLT are slow), which is
+  why only MAP showed the symptom. Both SensorType::Map branches (MapFast
+  averager and MapSlow subscription) read the fast buffer because
+  `enableFastAdcChannel("Fast MAP")` removes PA1 from the slow conversion
+  group, so MAP was 0 while everything else worked.
+- The AT32 port (ChibiOS AT32F4xx in the rusEFI fork) drives ADC via the
+  unmodified STM32 ADCv2 LLD; the Artery ADC1 works that way but the fast
+  path (TIM6 GPT interrupt -> ADC2 DMA) evidently does not. Not debugged
+  further remotely (would need JTAG/bench): unknown whether TIM6 never fires
+  or ADC2 conversion never completes. On the old firmware the "ECU: Fast ADC
+  errors" gauge distinguishes the two (grows = ADC2 path, stays 0 = TIM6).
+
+What was done:
+
+| Change | File |
+| --- | --- |
+| Disable the fast ADC for this board (`EFI_USE_FAST_ADC=FALSE`) so MAP is sampled by the working slow ADC | `firmware/config/boards/m74_9/efifeatures.h` |
+| Added `!EFI_USE_FAST_ADC` stubs for `enableFastAdcChannel`/`getFastAdc` so `calcFastAdcIndexes()` and `onFastAdcComplete()` still link on v2-port boards without a fast ADC | `firmware/hw_layer/ports/stm32/stm32_adc_v2.cpp` |
+
+Key decisions:
+
+- Did not guard `hardware.cpp` call sites with `EFI_USE_FAST_ADC` because H7
+  also builds with `EFI_USE_FAST_ADC=FALSE` but still needs the v4 fast path;
+  stubs in the v2 port keep the change local to F4/AT32 boards.
+- Workaround, not root-cause fix: MapFast stays invalid, SensorType::Map falls
+  back to MapSlow (slow-ADC rate). Map averaging (`isMapAveragingEnabled`)
+  will log "No MAP values to average" per window while spinning - disable it
+  in TS for now.
+
+Validation:
+
+- Full m74_9 build in the rusefi_build container (`make clean && bash
+  bin/compile.sh -b config/boards/m74_9/meta-info.env`) passed; `rusefi.bin`
+  produced. Map file confirms the `fastAdc` object is no longer linked (only
+  the LLD's ADCD2 definition remains).
+
+Open follow-ups:
+
+- Flash and check `adc_report`: slow channel `S ch[1] @ PA1` now shows the
+  real PA1 voltage. ~1.5-2.5 V = firmware fix confirmed; 0 V = the RS358A
+  chain/sensor supply is also broken (measure PA1 with a multimeter).
+- Proper root-cause fix of the AT32 fast ADC: re-enable `EFI_USE_FAST_ADC`,
+  watch "ECU: Fast ADC errors" to split TIM6-GPT vs ADC2-DMA, then fix the
+  ChibiOS AT32F4xx port (TIMv1 GPT or ADCv2 LLD ADC2 path).
+
+Update (same day, bench flash): user reflashed and `adc_report` now shows a
+real slow-ADC sample for PA1 (`S ch[1] @ PA1 12bit=25 0.020V`), so the slow
+path works and MAP is no longer stuck at the dead fast buffer. Note: 0.020 V
+at rest is far below the ~1.8 V expected from an MPX4250 at atmospheric
+pressure while TPS on the same +5V rail reads 3.16 V - sensor/op-amp chain
+still to be validated with vacuum and a multimeter.

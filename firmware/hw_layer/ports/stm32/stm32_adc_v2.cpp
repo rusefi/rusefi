@@ -397,6 +397,23 @@ adcsample_t getFastAdc(AdcToken token) {
 	return fastAdc.getAdcValueByToken(token);
 }
 
+#else /* !EFI_USE_FAST_ADC */
+
+#include "adc_inputs.h"
+
+/* Fast ADC (second ADC unit + GPT trigger) is disabled for this build.
+ * Provide stubs so that generic code (calcFastAdcIndexes etc.) still links.
+ * Analog inputs are then sampled by the slow ADC only - see m74_9 board which
+ * uses this because the AT32 fast ADC path (TIM6 -> ADC2) does not run. */
+
+AdcToken enableFastAdcChannel(const char*, adc_channel_e) {
+	return invalidAdcToken;
+}
+
+adcsample_t getFastAdc(AdcToken) {
+	return 0;
+}
+
 #endif // EFI_USE_FAST_ADC
 
 #ifdef EFI_SOFTWARE_KNOCK
