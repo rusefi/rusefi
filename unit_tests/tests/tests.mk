@@ -147,6 +147,7 @@ TESTS_SRC_CPP = \
 	tests/ignition_injection/test_fuel_wall_wetting.cpp \
 	tests/test_one_cylinder_logic.cpp \
 	tests/test_tunerstudio.cpp \
+	tests/test_bluetooth.cpp \
 	tests/test_pwm_generator.cpp \
 	tests/test_log_buffer.cpp \
 	tests/test_event_queue.cpp \

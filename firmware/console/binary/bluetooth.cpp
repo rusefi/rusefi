@@ -20,7 +20,7 @@
 #include <stdio.h>
 #include <ctype.h>
 
-#if EFI_BLUETOOTH_SETUP
+#if EFI_BLUETOOTH_SETUP || EFI_UNIT_TEST
 
 #ifndef EFI_BLUETOOTH_SETUP_DEBUG
 #define EFI_BLUETOOTH_SETUP_DEBUG TRUE
@@ -359,4 +359,4 @@ void bluetoothSoftwareDisconnectNotify(SerialTsChannelBase* tsChannel) {
 	}
 }
 
-#endif /* EFI_BLUETOOTH_SETUP */
+#endif /* EFI_BLUETOOTH_SETUP || EFI_UNIT_TEST */
