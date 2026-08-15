@@ -5,6 +5,8 @@
 #include "kline.h"
 #include "second_tables.h"
 #include "engine_configuration_defaults.h"
+// for ETB_DEFAULT_MAX_DUTY_CYCLE - the unit test pch hides a missing include here, firmware/simulator builds do not
+#include "electronic_throttle.h"
 #include <rusefi/manifest.h>
 #if HW_PROTEUS
 #include "proteus_meta.h"
