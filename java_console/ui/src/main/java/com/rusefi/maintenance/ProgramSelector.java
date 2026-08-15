@@ -21,8 +21,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ItemEvent;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -42,7 +44,7 @@ public class ProgramSelector {
     private static final Logging log = getLogging(ProgramSelector.class);
     private final JPanel content = new JPanel(new BorderLayout());
     private final JLabel noHardware = new JLabel("Nothing detected");
-    private final JPanel updateModeAndButton = new JPanel(new FlowLayout(FlowLayout.CENTER, 32, 5));
+    private final JPanel updateModeAndButton = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
     private final JSplitButton splitButton = new JSplitButton("Update ECU Firmware", AutoupdateUtil.loadIcon("upload48.png"));
     private final List<JComponent> additionalFirmwareControls = new ArrayList<>();
     private final ConnectivityContext connectivityContext;
@@ -221,6 +223,10 @@ public class ProgramSelector {
                 throw new IllegalArgumentException("How did you " + selectedMode);
         }
 
+        runJob(job, parent);
+    }
+
+    private void runJob(AsyncJob job, JComponent parent) {
         if (jobExecutor != null) {
             jobExecutor.startJob(job, parent);
         } else {
@@ -582,6 +588,7 @@ public class ProgramSelector {
             }
             if (hasDfuDevice) {
                 addMenuItem(popupMenu, DFU_MANUAL);
+                addCustomFirmwareMenuItem(popupMenu);
                 addMenuItem(popupMenu, DFU_ERASE);
                 if (DfuFlasher.haveBootloaderBinFile()) {
                     addMenuItem(popupMenu, INSTALL_OPENBLT);
@@ -668,12 +675,33 @@ public class ProgramSelector {
         menu.add(item);
     }
 
+    private void addCustomFirmwareMenuItem(JPopupMenu menu) {
+        JMenuItem item = new JMenuItem("Pick Custom File [DFU]");
+        item.addActionListener(e -> {
+            JFileChooser chooser = new JFileChooser();
+            chooser.setDialogTitle("Pick DFU firmware");
+            chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            chooser.setAcceptAllFileFilterUsed(false);
+            chooser.setFileFilter(new FileNameExtensionFilter("Firmware binaries (.bin)", "bin"));
+            if (chooser.showOpenDialog(splitButton) != JFileChooser.APPROVE_OPTION) {
+                return;
+            }
+
+            File firmware = chooser.getSelectedFile();
+            if (!firmware.isFile() || !chooser.getFileFilter().accept(firmware)) {
+                JOptionPane.showMessageDialog(splitButton, "Please select a .bin firmware file.",
+                    "Invalid firmware file", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            runJob(new DfuManualJob(
+                connectivityContext.getConnectedEcuTarget(), firmware.getAbsolutePath()), splitButton);
+        });
+        menu.add(item);
+    }
+
     private static boolean isUnflashableEcu(@Nullable PortResult port) {
         return port != null && (port.isUnsupportedEcu() || port.type == SerialPortType.EcuUnknown);
     }
 
-    @NotNull
-    public static JButton createUpdateFirmwareButton() {
-        return new JButton("Update Firmware", AutoupdateUtil.loadIcon("upload48.png"));
-    }
 }

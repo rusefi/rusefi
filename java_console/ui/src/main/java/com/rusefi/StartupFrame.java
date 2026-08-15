@@ -454,8 +454,6 @@ public class StartupFrame {
         firmwareTopPanel.add(selector.getControl(), BorderLayout.NORTH);
         JPanel updateButtons = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
         updateButtons.add(startupUpdateActions.getUpdateSoftwareStatus());
-        updateButtons.add(startupUpdateActions.getUpdateSoftwareButton());
-        updateButtons.add(startupUpdateActions.getUpdateFirmwareButton());
         updateButtons.add(startupUpdateActions.getRollbackFirmwareButton());
         firmwareTopPanel.add(updateButtons, BorderLayout.CENTER);
         firmwareTopPanel.add(startupUpdateActions.getMigrateSettings(), BorderLayout.SOUTH);

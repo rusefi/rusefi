@@ -224,22 +224,32 @@ public class DfuFlasher {
     }
 
     public static void runDfuProgramming(UpdateOperationCallbacks callbacks, final Runnable onJobFinished,
-                                         final ConnectedEcuTarget connectedEcuTarget) {
+                                         final ConnectedEcuTarget connectedEcuTarget,
+                                         final @Nullable String firmwareBinFile) {
         submitAction(() -> {
             JobHelper.doJob(
                 () -> {
                     // A board sitting in DFU has no live signature, so fetch the right firmware for the
                     // persisted last-connected board first; fail closed rather than flash the bundle
                     // default onto a different board on a universal bundle. [tag:better_ux_for_flashing] / #9714
-                    if (!MaintenanceUtil.ensureFirmwareForConnectedTarget(callbacks, connectedEcuTarget)) {
+                    if (firmwareBinFile == null
+                        && !MaintenanceUtil.ensureFirmwareForConnectedTarget(callbacks, connectedEcuTarget)) {
                         callbacks.error();
                         return;
                     }
-                    executeDfuAndPaintStatusPanel(callbacks, FindFileHelper.findFirmwareFileForConnectedBoard(connectedEcuTarget), connectedEcuTarget);
+                    executeDfuAndPaintStatusPanel(callbacks,
+                        resolveManualFirmwareFile(firmwareBinFile, connectedEcuTarget), connectedEcuTarget);
                 },
                 onJobFinished
             );
         });
+    }
+
+    static String resolveManualFirmwareFile(@Nullable String firmwareBinFile,
+                                            ConnectedEcuTarget connectedEcuTarget) {
+        return firmwareBinFile != null
+            ? firmwareBinFile
+            : FindFileHelper.findFirmwareFileForConnectedBoard(connectedEcuTarget);
     }
 
     public static void runOpenBltInitialProgramming(UpdateOperationCallbacks callbacks, final Runnable onJobFinished,
