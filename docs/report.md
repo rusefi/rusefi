@@ -1823,3 +1823,56 @@ path works and MAP is no longer stuck at the dead fast buffer. Note: 0.020 V
 at rest is far below the ~1.8 V expected from an MPX4250 at atmospheric
 pressure while TPS on the same +5V rail reads 3.16 V - sensor/op-amp chain
 still to be validated with vacuum and a multimeter.
+
+## 2026-08-15 - m74_9: AT32 fast ADC root cause fixed (DMAMUX TBL_SEL never enabled)
+
+After the slow-ADC workaround (previous entry) the AT32 fast ADC path (TIM6 GPT
+-> ADC2 -> DMA) was brought up for real.
+
+Investigation:
+
+- Added board-local console command `fastadcdiag` (m74_9/board_configuration.cpp)
+  dumping TIM6/GPTD6/ADC2/DMA-channel/DMAMUX state. First run: TIM6 running
+  (CR1=CEN, CNT moving), ADC2 converting (SR OCCS/EOC activity, err grew with
+  lastErr=2 = ADC_ERR_OVERFLOW), DMA channel configured (CNDTR=4, CPAR=ADC2->DR,
+  mux CTRL=36) but `DMA1 MUXSEL=0x00000000` - the flexible request table was
+  never selected, so the REQSEL=36 programmed into MUXCCTRL was ignored and the
+  DMA channel served its fixed default request (not ADC2). ADC1 worked only
+  because DMA1_CH1's default request is ADC1.
+- Cross-checked the fork's Artery compat headers against the official
+  AT32F435/437 Reference Manual (V2.07): DMA_MUXSEL is at offset 0x100, TBL_SEL
+  bit 0 = flexible mapping; the fork's `DMA_TypeDef` placed MUXSEL at 0x78
+  (ch[7] array stride 0x10 vs hardware 0x14) and `at32_registry.h` did not
+  define `STM32_DMA_HAS_DMAMUXSEL`, so `dmaInit()` never wrote it at all.
+- Even with both fixed, the write still did not land: `hal_lld_init` calls
+  `dmaInit()` right after `rccResetAHB1()` with the DMA clocks OFF - writes to
+  the unclocked AT32 DMA are silently dropped.
+
+Fixes (ChibiOS fork AT32 port):
+
+| Change | File |
+| --- | --- |
+| Enable `rccEnableDMA1/2(false)` before `dmaInit()` | `firmware/ChibiOS/os/hal/ports/AT32/AT32F4xx/hal_lld.c` |
+| `STM32_DMA_HAS_DMAMUXSEL TRUE` | `firmware/ChibiOS/os/hal/ports/AT32/AT32F4xx/at32_registry.h` |
+| Pad `DMA_TypeDef` so MUXSEL/MUXC/MUXG are at 0x100/0x104/0x120 | `firmware/ChibiOS/os/common/ext/Artery/AT32F4xx/at32f435xx.h` |
+| `STM32_ADC_ADCPRE = DIV6` -> ADCDIV = HCLK/4 = 72 MHz (was 96 MHz, RM max 80 MHz) | `firmware/hw_layer/ports/at32/at32f4/cfg/mcuconf.h` |
+| Keep fast ADC enabled for the board (comment updated) | `firmware/config/boards/m74_9/efifeatures.h` |
+
+Validation (bench, m74_9):
+
+- Built with `make clean` + `bin/compile.sh -b` (user's flow), 0 errors.
+- `fastadcdiag`: `MUXSEL=0x00000001`, `fast cnt=31770` growing, `lastErr=0`
+  (the small residual `fast err` counter ticks during conversion-overlap
+  windows, same as on working F4 boards).
+- `adc_report`: `fast 45692 samples`, `F ch[0] @ PA1 ADC2 12bit=8 0.006V`
+  (no MAP sensor connected on the bench - expected; TPS on the same +5V rail
+  reads 3.17 V).
+- MAP is back on the fast ADC; `MapFast`/map averaging functional again.
+  `fastadcdiag` kept as a board-local bring-up command.
+
+Open follow-ups:
+
+- Connect a MAP sensor (or apply pressure/vacuum) and confirm MAP kPa tracks
+  the voltage (MT_MPX4250: ~1.86 V = 100 kPa).
+- Push the ChibiOS fork fixes to rusefi/ChibiOS and bump the submodule pointer
+  in rusefi main (human pushes; commits are local).
