@@ -37,6 +37,11 @@ enum class backup_ram_e {
 	 */
 	Odometer,
 
+	/**
+	 * Odometer inverted (or other way modified) values to validate backup_ram_e::Odometer by high level code
+	 */
+	OdometerValidate,
+
 	/* The number of stored backup variables */
 	BACKUP_RAM_NUM,
 };
