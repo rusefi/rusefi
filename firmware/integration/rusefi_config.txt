@@ -1862,7 +1862,7 @@ uint8_t autoscale knockFuelTrim;Maximum Amount of Fuel trim when knock;"%", 1, 0
 
 	bit nitrousControlEnabled,"enabled","disabled"
 	bit vvlControlEnabled,"enabled","disabled"
-	bit keepIdleSolenoidWhenStopped,"enabled","disabled";By default the idle solenoid is switched off whenever the engine is not turning, to be quieter and save power. Enable this to keep driving it to its calculated position instead, for valves which need to be parked somewhere other than 0%.
+	bit keepIdleSolenoidWhenStopped,"enabled","disabled";By default the idle solenoid is switched off whenever the engine is not turning, to be quieter and save power. Enable this to park it at idleSolenoidParkPosition instead, for valves which need to rest somewhere other than de-energized. The valve is only held for idleSolenoidParkTimeout seconds after the engine stops, then switched off anyway.
 	bit unusedBit_Fancy4
 	bit unusedBit_Fancy5
 	bit unusedBit_Fancy6
@@ -2037,6 +2037,14 @@ end_struct
 	! Cranking always uses ignitionDwellForCrankingMs regardless of this setting.
 	bit dwellDutyModeEnabled,"enabled","disabled";Dwell Duty Mode: when enabled, ignores the RPM/voltage dwell tables and computes dwell as a fixed percentage of the time between consecutive ignition pulses. Required for Ford TFI modules that expect a 50% duty cycle square wave.
 	uint8_t dwellDutyPercent;Dwell Duty Mode: percentage of the inter-spark interval used as coil dwell time. 50 = half the interval between pulses (standard TFI target).;"%", 1, 0, 1, 90, 0
+
+! --- Idle solenoid parking while stopped (#9123) ---
+! Holding a solenoid energized with the engine off drains the battery and can overheat the
+! coil, so the parked position is only held for a bounded time after the engine stops
+! turning. 0 timeout means "not configured" and is migrated to the default by
+! applyDefaultsOrFixAfterBurn().
+	uint16_t idleSolenoidParkTimeout;Idle solenoid parking: how long to keep driving the valve to its parked position after the engine stops turning, before switching it off to protect the coil and the battery.;"sec", 1, 0, 1, 3600, 0
+	uint8_t idleSolenoidParkPosition;Idle solenoid parking: the position to hold while the engine is stopped, for valves which need to rest somewhere other than de-energized.;"%", 1, 0, 0, 100, 0
 
 ! end of engine_configuration_s
 end_struct

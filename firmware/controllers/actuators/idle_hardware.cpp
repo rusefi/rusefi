@@ -61,14 +61,22 @@ void applyIACposition(percent_t position) {
 	if (engineConfiguration->useStepperIdle) {
 		iacMotor.setTargetPosition(duty * engineConfiguration->idleStepperTotalSteps);
 	} else {
-		// if not spinning or running a bench test, turn off the idle valve(s) to be quieter and save power.
-		// #9123 - unless the user needs the valve parked somewhere other than 0% while stopped
+		// if not spinning or running a bench test, turn off the idle valve(s) to be quieter and save power
 #if EFI_SHAFT_POSITION_INPUT
-		if (!engineConfiguration->keepIdleSolenoidWhenStopped
-				&& !engine->triggerCentral.engineMovedRecently() && engine->timeToStopIdleTest == 0) {
-			idleSolenoidOpen.setSimplePwmDutyCycle(0);
-			idleSolenoidClose.setSimplePwmDutyCycle(0);
-			return;
+		if (!engine->triggerCentral.engineMovedRecently() && engine->timeToStopIdleTest == 0) {
+			// #9123: optionally hold the valve at a configured parked position for a bounded time
+			// after the engine stops, for valves which need to rest somewhere other than de-energized.
+			// hasElapsedSec (not a comparison against getSecondsSinceTriggerEvent, which saturates
+			// at 2^32 ticks - under 26 seconds on some ports) so the timeout works for any setting,
+			// and so a freshly booted ECU which has never seen the engine turn parks nothing.
+			if (!engineConfiguration->keepIdleSolenoidWhenStopped
+					|| engine->triggerCentral.m_lastEventTimer.hasElapsedSec(engineConfiguration->idleSolenoidParkTimeout)) {
+				idleSolenoidOpen.setSimplePwmDutyCycle(0);
+				idleSolenoidClose.setSimplePwmDutyCycle(0);
+				return;
+			}
+
+			duty = PERCENT_TO_DUTY(engineConfiguration->idleSolenoidParkPosition);
 		}
 #endif // EFI_SHAFT_POSITION_INPUT
 
