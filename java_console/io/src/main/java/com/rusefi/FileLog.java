@@ -12,19 +12,8 @@ public class FileLog {
     FileLog() {
     }
 
-    public static boolean isLinux() {
-        return getOsName().equalsIgnoreCase("Linux");
-    }
-
-    public static String getOsName() {
-        return System.getProperty("os.name");
-    }
-
     public static boolean is32bitJava() {
         return System.getProperty("os.arch").contains("86");
     }
 
-    public static boolean isWindows() {
-        return getOsName().contains("Windows");
-    }
 }

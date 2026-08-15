@@ -1,5 +1,7 @@
 package com.rusefi;
 
+import com.rusefi.core.OsUtil;
+
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.maintenance.DfuFlasher;
 import com.rusefi.maintenance.ProgramSelector;
@@ -182,7 +184,7 @@ public class DevicePane {
 
     static String bootloaderGuidance(final SessionState state) {
         if (state == SessionState.DEVICE_IN_DFU) {
-            if (FileLog.isLinux()) {
+            if (OsUtil.isLinux()) {
                 return "Board is in the DFU bootloader - click Update Firmware to flash with dfu-util.";
             }
             return DfuFlasher.isDfuProgrammingSupported()
