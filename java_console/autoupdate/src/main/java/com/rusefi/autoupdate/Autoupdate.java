@@ -10,6 +10,7 @@ import com.rusefi.core.io.ConnectedEcuTarget;
 import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.FileUtil;
+import com.rusefi.core.OsUtil;
 import com.rusefi.core.net.PropertiesHolder;
 import com.rusefi.core.rusEFIVersion;
 import com.rusefi.core.ui.AutoupdateUtil;
@@ -870,6 +871,26 @@ public class Autoupdate {
     };
 
     /**
+     * On Linux and macOS the bundle launcher is a shell script, and the executable bit does not always
+     * survive the trip through the zip (older bundles, or an unzip tool that drops permissions).
+     * {@link ProcessBuilder} would then fail with "Permission denied", so give it one best-effort
+     * chance to fix itself. See #8360.
+     */
+    private static void ensureLauncherIsExecutable(final String launcherFileName) {
+        if (OsUtil.isWindows()) {
+            return;
+        }
+        final File launcher = new File(launcherFileName);
+        if (launcher.canExecute()) {
+            return;
+        }
+        log.info(String.format("Launcher `%s` is not executable, trying to fix that", launcherFileName));
+        if (!launcher.setExecutable(true, true)) {
+            log.error(String.format("Failed to make `%s` executable", launcherFileName));
+        }
+    }
+
+    /**
      * rusefi_updater.exe/invokes rusefi_console.jar - entry point is Launcher#main
      */
     private static void startConsoleAsANewProcess(final String consoleExeFileName, final String[] args) {
@@ -881,6 +902,7 @@ public class Autoupdate {
             return;
         }
         log.info(String.format("File `%s` to launch is found", consoleExeFileName));
+        ensureLauncherIsExecutable(consoleExeFileName);
         final String[] processBuilderArgs = new String[args.length + 1];
         processBuilderArgs[0] = consoleExeFileName;
         System.arraycopy(args, 0, processBuilderArgs, 1, args.length);
@@ -890,7 +912,7 @@ public class Autoupdate {
             log.info(String.format("Process `%s` is started", consoleExeFileName));
         } catch (final IOException e) {
             final String command = String.join(" ", processBuilderArgs);
-            log.error(String.format("Failed to run `$s` command", command), e);
+            log.error(String.format("Failed to run `%s` command", command), e);
             if (!AutoupdateUtil.runHeadless) {
                 ErrorMessageHelper.showErrorDialog(String.format(
                     "Error running `%s` command.\nPlease try to run it manually again.",
