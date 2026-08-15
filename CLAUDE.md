@@ -254,6 +254,12 @@ The TLE9201 H-bridge DIS pin (11) is active-low at the chip, but on m74_9 the MC
 
 The L9779 WDA output (pin 38) nets to ETC_WD -> Q5B -> DIS as a redundant hardware kill (L9779 algorithmic watchdog can cut the bridge); likely depopulated ("not soldered" near R20). The KiCad netlist disagrees with the physical board (KiCad says DIS -> +3V3, physically +5V via R23) - trust 0-ohm measurements over netlist Y-positions.
 
+## m74_9 / AT32: fast ADC (TIM6 -> ADC2) does not run, MAP must use the slow ADC
+
+The AT32F4xx port in the rusEFI ChibiOS fork reuses the unmodified STM32 ADCv2 LLD (`firmware/ChibiOS/os/hal/ports/AT32/AT32F4xx/platform.mk` includes STM32 LLDs). On hardware: slow ADC (ADCD1/ADC1, background DMA chain) works and samples all channels, but the fast ADC (ADCD2/ADC2 triggered by GPTD6/TIM6 at 10 kHz, `adc_onchip_fast.cpp`) never completes a single conversion - `adc_report` shows `fast 0 samples` forever. MAP is the only fast channel on m74_9 (TPS/PPS/CLT are slow), and `enableFastAdcChannel("Fast MAP")` removes PA1 from the slow group, so MAP reads 0 while everything else works. Unknown whether TIM6 never fires or ADC2+DMA never completes; on a fast-ADC-enabled build the "ECU: Fast ADC errors" gauge distinguishes them (grows = ADC2 path, stays 0 = TIM6).
+
+Workaround in place (2026-08-15): `m74_9/efifeatures.h` sets `EFI_USE_FAST_ADC=FALSE`; `stm32_adc_v2.cpp` provides `!EFI_USE_FAST_ADC` stubs for `enableFastAdcChannel`/`getFastAdc` so generic code links (do NOT guard the `hardware.cpp` call sites with `EFI_USE_FAST_ADC` - H7 also builds with it FALSE but needs the v4 fast path). With fast ADC off, MapFast stays invalid and SensorType::Map falls back to MapSlow; map averaging spams "No MAP values to average" per window while spinning - disable `isMapAveragingEnabled` in TS. Note: `m74_9/board.h` sets PA1 pull-up in the static GPIO init, but `AdcSubscription::SubscribeSensor` reconfigures the pin to analog, so that is not the cause.
+
 ## OpenBLT Bootloader Version Marker ("BLxx")
 
 The OpenBLT bootloader binary carries no version of its own; rusEFI stamps an ASCII marker (currently `BL08`, historically `BL07`/`BL06` etc.) into the third *reserved* DWORD of the bootloader's vector table, at flash address `0x08000024`. To bump the version, use the `/bump-blt-version` skill (`.claude/skills/bump-blt-version/SKILL.md`) - it walks through both edits and the consistency check. The version is defined in **two places that MUST be bumped together** (both are tagged with the grep marker `search:openblt_version`):
