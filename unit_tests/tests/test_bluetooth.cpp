@@ -56,16 +56,12 @@ public:
 /**
  * Coverage for findBaudIndex() when no Bluetooth module answers at any known baud rate.
  *
- * The function is supposed to put the serial link back to the configured console/TS speed before
- * giving up - that recovery exists, but it sits INSIDE the probe loop guarded by
- * `baudIdx == efi::size(baudRates)`, while the loop condition is `baudIdx < efi::size(baudRates)`.
- * The branch is therefore unreachable and never runs, so the channel is left started at the last
- * probed rate (57600) until the ECU is rebooted.
- *
- * This test documents CURRENT behavior. Once the recovery is reachable, expect the channel to be
- * left at engineConfiguration->tunerStudioSerialSpeed instead.
+ * The recovery that puts the serial link back to the configured console/TS speed used to sit
+ * INSIDE the probe loop guarded by `baudIdx == efi::size(baudRates)`, while the loop condition is
+ * `baudIdx < efi::size(baudRates)` - unreachable, so it never ran and the channel was left started
+ * at the last probed rate (57600) until the ECU was rebooted. It now runs after the loop.
  */
-TEST(bluetooth, findBaudIndexLeavesChannelAtLastProbedRate) {
+TEST(bluetooth, findBaudIndexRestoresConsoleSpeedWhenNoModuleResponds) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	btModuleType = BLUETOOTH_HC_05;
@@ -79,6 +75,6 @@ TEST(bluetooth, findBaudIndexLeavesChannelAtLastProbedRate) {
 
 	// no module answered
 	EXPECT_EQ(255, result);
-	// the configured speed was never restored - the link is stuck on the last entry of baudRates[]
-	EXPECT_EQ(57600u, channel.lastStartedBaud);
+	// and the link is restored to the configured speed, not left on the last entry of baudRates[]
+	EXPECT_EQ(250000u, channel.lastStartedBaud);
 }
