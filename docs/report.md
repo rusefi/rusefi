@@ -1980,3 +1980,13 @@ the TS setting "Use custom sync ratio" (overrideTriggerGaps +
 triggerGapOverrideFrom/To) can widen the window in the field without a
 rebuild.
 
+
+## 2026-08-15 - m74_9 IMMO: log the 0x0713 trigger send only once
+
+The "IMMO: sent 0x0713 trigger (session 0x%04x)" line was printed from
+sendImmoTrigger() on every send, including the 500 ms retries in the
+TriggerSent state - with no BCM challenge arriving (IMMO OFF / algorithm not
+implemented) the console repeated the line every 500 ms forever. The printf
+now lives in the WaitingToTrigger -> TriggerSent transition (initial send
+only); retries stay silent. Firmware builds clean (incremental compile.sh
+run in the rusefi_build container).

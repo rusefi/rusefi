@@ -330,6 +330,9 @@ private:
         case ImmoState::WaitingToTrigger:
             if (elapsedMs >= IMMO_TRIGGER_DELAY_MS) {
                 sendImmoTrigger();
+                // log the session only on the initial send - retries below
+                // would otherwise repeat this line every 500 ms forever
+                efiPrintf("IMMO: sent 0x0713 trigger (session 0x%04x)", (unsigned)(m_immoSessionCounter - 1));
                 m_immoState      = ImmoState::TriggerSent;
                 m_immoTimerTicks = 0;
             }
@@ -396,7 +399,6 @@ private:
         msg[6] = 0xC0;
         msg[7] = 0x00;
         m_immoSessionCounter++;
-        efiPrintf("IMMO: sent 0x0713 trigger (session 0x%04x)", (unsigned)(m_immoSessionCounter-1));
     }
 
     /**
