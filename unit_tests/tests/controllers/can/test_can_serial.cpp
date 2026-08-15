@@ -230,12 +230,9 @@ TEST(testCanSerial, test64_7Message) {
  *
  * A single frame carries its payload length in the low nibble of the PCI byte, so it can encode up
  * to 15 - but a classic-CAN frame only delivers DLC bytes and CANRxFrame::data8 is 8 bytes wide.
- * receiveFrame() takes that nibble at face value and copies that many bytes from data8 + 1, so a
- * malformed frame makes it read past the end of the payload. DLC itself is only a 4-bit field, so
- * a frame can also claim DLC > 8, which is equally unchecked.
- *
- * These tests document CURRENT behavior: the claimed length is used verbatim. Once the length is
- * bounded by what the frame actually holds, expect 7 (DLC - 1) in both cases.
+ * receiveFrame() used to take that nibble at face value and copy that many bytes from data8 + 1,
+ * reading past the end of the payload. DLC itself is only a 4-bit field, so a frame can also claim
+ * DLC > 8, which was equally unchecked. The length is now bounded by both.
  *
  * The frame is embedded in a padded wrapper so that the over-read this deliberately provokes lands
  * inside memory the test owns - otherwise it is a stack-buffer-overflow and AddressSanitizer (on by
@@ -256,7 +253,7 @@ void assertOverreadStaysInsidePaddedFrame(const PaddedRxFrame& padded) {
 }
 } // namespace
 
-TEST(testCanSerial, singleFrameLengthIsNotBoundedByDlc) {
+TEST(testCanSerial, singleFrameLengthIsBoundedByDlc) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	TestCanStreamerState state;
@@ -273,11 +270,11 @@ TEST(testCanSerial, singleFrameLengthIsNotBoundedByDlc) {
 	assertOverreadStaysInsidePaddedFrame(padded);
 	int copied = state.receiveFrame(padded.frame, rxbuf, sizeof(rxbuf), 0);
 
-	// the claimed 15 bytes are copied even though only 7 payload bytes exist
-	EXPECT_EQ(15, copied);
+	// clamped to the 7 payload bytes the frame actually carries
+	EXPECT_EQ(7, copied);
 }
 
-TEST(testCanSerial, singleFrameLengthIsNotBoundedByPayloadSize) {
+TEST(testCanSerial, singleFrameLengthIsBoundedByPayloadSize) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	TestCanStreamerState state;
@@ -294,8 +291,8 @@ TEST(testCanSerial, singleFrameLengthIsNotBoundedByPayloadSize) {
 	assertOverreadStaysInsidePaddedFrame(padded);
 	int copied = state.receiveFrame(padded.frame, rxbuf, sizeof(rxbuf), 0);
 
-	// nothing bounds the copy to sizeof(data8) either
-	EXPECT_EQ(15, copied);
+	// clamped to sizeof(data8) - 1 even though DLC claims more
+	EXPECT_EQ(7, copied);
 }
 
 TEST(testCanSerial, test3_64_4Message) {
