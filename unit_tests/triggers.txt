@@ -240,10 +240,10 @@ syncEdge=RiseOnly
 isSynchronizationNeeded=true
 useOnlyPrimaryForSync=false
 shapeWithoutTdc=false
-gapFrom.0=2.250000
+gapFrom.0=1.600000
 gapTo.0=3.750000
-gapFrom.1=0.750000
-gapTo.1=1.250000
+gapFrom.1=0.800000
+gapTo.1=1.200000
 # end of meta section
 event 0 0 1 0.000000 3.000000
 event 1 0 0 0.000000 nan

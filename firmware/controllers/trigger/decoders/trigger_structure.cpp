@@ -665,6 +665,19 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 
 	case trigger_type_e::TT_TOOTHED_WHEEL_60_2:
 		initializeSkippedToothTrigger(this, 60, 2, triggerOperationMode, SyncEdge::RiseOnly);
+		// cranking-transition window: the missing-teeth gap ratio is nominally
+		// 3.0, and when the engine first catches the crank acceleration pushes
+		// it well below the default 2.25 low limit, desyncing the decoder right
+		// at the start (C9002 at 58/58, engine fails to stay running).
+		// Only the low side is widened (36/2 precedent, PR #4138): real 60-2
+		// cranking data shows the gap systematically stretched to ~3.6-3.75 by
+		// compression ripple (trigger_adc_real1.csv), so the high side keeps
+		// the proven 3.75 limit. The second gap is tighter than on 36/2: 60-2
+		// teeth are twice as dense in time, adjacent teeth barely change ratio
+		// even under hard acceleration, and the tighter window rejects the
+		// noise-shifted-tooth false sync (see test_trigger_noiseless.cpp).
+		setTriggerSynchronizationGap3(/*gapIndex*/0, /*from*/1.6, 3.75);
+		setTriggerSynchronizationGap3(/*gapIndex*/1, /*from*/0.8, 1.2);
 		break;
 
 	case trigger_type_e::TT_TOOTHED_WHEEL_36_2:

@@ -10,6 +10,7 @@ TESTS_SRC_CPP = \
 	tests/trigger/test_all_triggers.cpp \
 	tests/trigger/test_trigger_sequence_finder.cpp \
 	tests/trigger/test_2_stroke.cpp \
+	tests/trigger/test_60_2_cranking_transition.cpp \
 	tests/trigger/test_symmetrical_crank.cpp \
 	tests/trigger/test_trigger_decoder.cpp \
 	tests/trigger/test_trigger_decoder_2.cpp \
