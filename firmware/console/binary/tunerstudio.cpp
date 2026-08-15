@@ -603,7 +603,7 @@ void TunerStudio::handleBurnCommand(TsChannelBase* tsChannel, uint16_t page) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR)
 
 static bool isKnownCommand(char command) {
-	return command == TS_HELLO_COMMAND || command == TS_READ_COMMAND || command == TS_READ32_COMMAND || command == TS_OUTPUT_COMMAND
+	return command == TS_HELLO_COMMAND || command == TS_QUERY_COMMAND || command == TS_READ_COMMAND || command == TS_READ32_COMMAND || command == TS_OUTPUT_COMMAND
 			|| command == TS_BURN_COMMAND
 			|| command == TS_CHUNK_WRITE_COMMAND || command == TS_EXECUTE
 			|| command == TS_IO_TEST_COMMAND
@@ -988,6 +988,11 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 #endif // EFI_TS_SCATTER
 		break;
 	case TS_HELLO_COMMAND:
+	// TunerStudio scans serial ports with a bare unframed 'Q' (handled in handlePlainCommand), but a
+	// client that CRC-frames everything else may also frame 'Q'. Answer a framed query exactly like
+	// the framed hello ('S') instead of silently rejecting it - the reject is invisible when the
+	// channel is not yet in sync, which is the state right after a fresh (e.g. Bluetooth) connect.
+	case TS_QUERY_COMMAND:
 		handleQueryCommand(tsChannel, TS_CRC);
 		break;
 	case TS_GET_FIRMWARE_VERSION:
