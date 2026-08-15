@@ -32,6 +32,11 @@ enum class backup_ram_e {
 	 */
 	MccStatus,
 
+	/**
+	 * Odometer value in meters, 32 bit - 4m Km should be fine
+	 */
+	Odometer,
+
 	/* The number of stored backup variables */
 	BACKUP_RAM_NUM,
 };
