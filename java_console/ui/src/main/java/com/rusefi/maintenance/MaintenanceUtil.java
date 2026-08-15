@@ -1,7 +1,8 @@
 package com.rusefi.maintenance;
 
+import com.rusefi.core.OsUtil;
+
 import com.devexperts.logging.Logging;
-import com.rusefi.FileLog;
 import com.rusefi.autoupdate.Autoupdate;
 import com.rusefi.core.FindFileHelper;
 import com.rusefi.core.io.BoardCompatibility;
@@ -20,7 +21,7 @@ public class MaintenanceUtil {
     private static final String WMIC_PCAN_QUERY_COMMAND = "powershell -NoProfile -Command \"Get-CimInstance Win32_PnPEntity -Filter \\\"Caption like '%PCAN-USB%'\\\" | Select-Object Caption, ConfigManagerErrorCode | Format-List\"";
 
     static boolean detectDevice(UpdateOperationCallbacks callbacks, String queryCommand, String pattern) throws ErrorExecutingCommand {
-        if (!FileLog.isWindows()) {
+        if (!OsUtil.isWindows()) {
             return false;
         }
         long now = System.currentTimeMillis();

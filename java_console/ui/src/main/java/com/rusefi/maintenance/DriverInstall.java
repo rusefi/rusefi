@@ -1,5 +1,7 @@
 package com.rusefi.maintenance;
 
+import com.rusefi.core.OsUtil;
+
 import com.devexperts.logging.Logging;
 import com.rusefi.FileLog;
 import com.rusefi.io.UpdateOperationCallbacks;
@@ -49,7 +51,7 @@ public class DriverInstall {
     }
 
     private static void installDrivers(UpdateOperationCallbacks wnd) {
-        log.info("IsWindows=" + FileLog.isWindows());
+        log.info("IsWindows=" + OsUtil.isWindows());
         if (!new File(FOLDER).exists()) {
             String message = FOLDER + " not found";
             wnd.logLine(message);

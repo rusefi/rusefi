@@ -1,5 +1,7 @@
 package com.rusefi.maintenance;
 
+import com.rusefi.core.OsUtil;
+
 import com.rusefi.*;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autodetect.SerialAutoChecker;
@@ -49,7 +51,7 @@ public class DfuFlasher {
     }
 
     public static boolean isDfuProgrammingSupported() {
-        return FileLog.isWindows() || FileLog.isLinux();
+        return OsUtil.isWindows() || OsUtil.isLinux();
     }
 
     public static boolean doAutoDfu(
@@ -105,12 +107,12 @@ public class DfuFlasher {
         }
 
         if (!isDfuProgrammingSupported()) {
-            callbacks.logLine("DFU programming is not supported on " + FileLog.getOsName());
+            callbacks.logLine("DFU programming is not supported on " + OsUtil.getOsName());
             return false;
         }
 
         // Do not reboot a working ECU into DFU if the external Linux programmer is unavailable.
-        if (FileLog.isLinux() && !executeDfuUtilCommand(getDfuUtilVersionCommand(), callbacks)) {
+        if (OsUtil.isLinux() && !executeDfuUtilCommand(getDfuUtilVersionCommand(), callbacks)) {
             return false;
         }
 
@@ -200,15 +202,15 @@ public class DfuFlasher {
     }
 
     private static void runDfuErase(UpdateOperationCallbacks callbacks) {
-        if (FileLog.isLinux()) {
+        if (OsUtil.isLinux()) {
             if (!executeDfuUtilCommand(getDfuUtilEraseCommand(), callbacks)) {
                 callbacks.error();
             }
             return;
         }
 
-        if (!FileLog.isWindows()) {
-            callbacks.logLine("DFU erase is not supported on " + FileLog.getOsName());
+        if (!OsUtil.isWindows()) {
+            callbacks.logLine("DFU erase is not supported on " + OsUtil.getOsName());
             callbacks.error();
             return;
         }
@@ -278,7 +280,7 @@ public class DfuFlasher {
     private static boolean executeDFU(UpdateOperationCallbacks callbacks, String firmwareBinFile,
                                        ConnectedEcuTarget connectedEcuTarget) {
         if (!isDfuProgrammingSupported()) {
-            callbacks.logLine("DFU programming is not supported on " + FileLog.getOsName());
+            callbacks.logLine("DFU programming is not supported on " + OsUtil.getOsName());
             return false;
         }
 
@@ -289,7 +291,7 @@ public class DfuFlasher {
         }
         boolean driverIsHappy = detectSTM32BootloaderDriverState(callbacks, connectedEcuTarget);
         if (!driverIsHappy) {
-            if (FileLog.isLinux()) {
+            if (OsUtil.isLinux()) {
                 callbacks.logLine("STM32 DFU device 0483:df11 was not detected. Check the USB connection and lsusb access.");
             } else {
                 callbacks.logLine("*** DRIVER ERROR? *** Did you have a chance to try 'Install Drivers' button on top of rusEFI console start screen?");
@@ -297,7 +299,7 @@ public class DfuFlasher {
             return false;
         }
 
-        if (FileLog.isLinux()) {
+        if (OsUtil.isLinux()) {
             if (!executeDfuUtilCommand(getDfuUtilWriteCommand(firmwareBinFile), callbacks)) {
                 return false;
             }
@@ -339,11 +341,11 @@ public class DfuFlasher {
 
     public static boolean detectSTM32BootloaderDriverState(UpdateOperationCallbacks callbacks,
                                                            ConnectedEcuTarget connectedEcuTarget) {
-        if (!FileLog.isWindows()) {
+        if (!OsUtil.isWindows()) {
             // The WMIC/driver check below is Windows-only. On Linux the STM32 system bootloader is
             // visible directly over USB as 0483:df11 ("STM Device in DFU Mode"), so probe lsusb so the
             // console reflects the DFU state before the Linux dfu-util flasher runs.
-            return FileLog.isLinux() && detectStm32DfuViaLsusb(callbacks);
+            return OsUtil.isLinux() && detectStm32DfuViaLsusb(callbacks);
         }
         // #9714: a universal bundle's is_h7 property can't cover every board, so trust the connected
         // ECU's target first (e.g. "uaefi_pro_h7"), falling back to the bundled is_h7 property.

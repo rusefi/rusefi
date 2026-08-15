@@ -1,5 +1,7 @@
 package com.rusefi.maintenance;
 
+import com.rusefi.core.OsUtil;
+
 import com.devexperts.logging.Logging;
 import com.fazecast.jSerialComm.SerialPort;
 import com.rusefi.*;
@@ -596,7 +598,7 @@ public class ProgramSelector {
             }
         }
 
-        if (FileLog.isWindows()) {
+        if (OsUtil.isWindows()) {
             if (!requireBlt && currentHardware.isStLinkConnected()) {
                 addMenuItem(popupMenu, ST_LINK);
             }
