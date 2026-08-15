@@ -285,6 +285,17 @@ Gotchas:
 - A version bump does not change bootloader behavior by itself - it is a manual declaration that the bootloader build has materially changed; bump both places in the same commit as the bootloader change (see history: `BL06` 21e3d069285, `BL07` 438cf802ac8 / PR #9815).
 - Only `rusefi.bin` gets stamped. Images produced by other rules (e.g. the `$(BUILDDIR)/rusefi.srec` rule builds from a separately generated `$(DBIN_CRC)`) do not pass through the stamping step.
 
+## 60-2 trigger sync windows: asymmetric [1.6, 3.75] + second gap [0.8, 1.2]
+
+`TT_TOOTHED_WHEEL_60_2` overrides the default `initializeSkippedToothTrigger` windows. The asymmetry is load-bearing for real cranking:
+
+- **Low side widened to 1.6** (36-2 precedent, PR #4138): at first combustion the crank accelerates so hard that the missing-teeth gap (36 deg) takes less than 2.25x the preceding tooth time. With the old default the decoder misses the sync point, counts exactly 58 events (one full revolution of real teeth) and fires C9002 "expected 58/0 got 58/0" right where the sync point should have been - the count is exactly right, only the ratio check failed. Symptom on the car: engine catches, C9002, then spins without running.
+- **High side stays at 3.75** (NOT 3.5 like 36-2): real 60-2 cranking data (`unit_tests/tests/trigger/resources/trigger_adc_real1.csv`, 322 RPM) shows the gap systematically stretched to ~3.6-3.75 by compression ripple. Copying 36-2's 3.5 upper limit desyncs nearly every revolution on that data.
+- **Second gap [0.8, 1.2]** (tighter than 36-2's [0.7, 1.3]): 60-2 teeth are twice as dense in time as 36-2's, so adjacent teeth barely change ratio even under hard acceleration; the tighter window rejects the noise-shifted-tooth false sync that breaks `test_trigger_noiseless.cpp` noise#1 with a wider gap1.
+- Keeping the midpoint at 3.0 means `syncRatioAvg` stays 3, so the noiseless trigger filter gap prediction is unchanged.
+
+If a field setup still shows C9002 at start (ratio outside [1.6, 3.75]), TunerStudio's "Use custom sync ratio" (`overrideTriggerGaps` + `triggerGapOverrideFrom/To` + `gapTrackingLengthOverride`) widens the window without a rebuild.
+
 ## Development Notes
 
 - Supported IDE: Visual Studio Code
