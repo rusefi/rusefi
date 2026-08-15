@@ -100,8 +100,8 @@ static void m74_9_boardDefaultConfiguration() {
   engineConfiguration->triggerInputPins[0] = Gpio::F8;
   engineConfiguration->camInputs[0] = Gpio::B9;
 
-// todo	engineConfiguration->clt.adcChannel = EFI_ADC_; // ADC3 PF5
-// todo	engineConfiguration->iat.adcChannel = EFI_ADC_; // ADC3 PF6
+	engineConfiguration->clt.adcChannel = EFI_ADC_39; // ADC3 PF5
+	engineConfiguration->iat.adcChannel = EFI_ADC_32; // ADC3 PF6
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_1; // AC3 -> 74HC14 -> RS358A -> PA1
 
 	// ?k high side/?k low side = ? ratio divider todo is the value below right?
@@ -136,6 +136,11 @@ static void m74_9_boardConfigOverrides() {
 	engineConfiguration->spi2sckPin = Gpio::D1;  // PD1 AF6, ETC_SCK
 	engineConfiguration->spi2misoPin = Gpio::D3; // PD3 AF6, ETC_SO
 	engineConfiguration->spi2mosiPin = Gpio::D4; // PD4 AF6, ETC_SI
+
+	/* CLT/IAT are wired to ADC3-only pins (PF5/PF6); force the channels on
+	 * every boot because the stored tune predates the ADC3 slow sampling. */
+	engineConfiguration->clt.adcChannel = EFI_ADC_39; // ADC3 PF5
+	engineConfiguration->iat.adcChannel = EFI_ADC_32; // ADC3 PF6
 
 	//CAN 1 bus overwrites
 	engineConfiguration->canRxPin = Gpio::G0;

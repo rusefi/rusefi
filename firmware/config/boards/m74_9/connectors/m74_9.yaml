@@ -30,7 +30,7 @@ pins:
     function: Sensors power (optional)
 
   - pin: AC2
-    id: [F6, EFI_ADC_4]
+    id: [F6, EFI_ADC_32]
     class: [switch_inputs, analog_inputs]
     function: IAT intake sensor signal
     type:
@@ -58,7 +58,7 @@ pins:
     type:
 
   - pin: AD3
-    id: [F5, EFI_ADC_15]
+    id: [F5, EFI_ADC_39]
     class: [switch_inputs, analog_inputs]
     function: CLT Coolant temperature sensor signal
     type:
@@ -170,7 +170,7 @@ pins:
     type: etb
 
   - pin: AK3
-    id: [F3, EFI_ADC_9]
+    id: [F3, EFI_ADC_37]
     class: [switch_inputs, analog_inputs]
     function: Oxygen sensor 1 signal
     type:
@@ -318,7 +318,7 @@ pins:
     type: ign
 
   - pin: BF3
-    id: [F10, EFI_ADC_8]
+    id: [F10, EFI_ADC_36]
     class: [switch_inputs, analog_inputs]
     function: Air conditioner pressure sensor (2 level)
     type:

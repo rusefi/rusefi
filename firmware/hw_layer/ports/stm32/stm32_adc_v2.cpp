@@ -229,6 +229,38 @@ static /* constexpr */ ADCConversionGroup convGroupSlow = {
 	.sqr3	=   ADC_SQR3_SQ1_N(0) |   ADC_SQR3_SQ2_N(1) |   ADC_SQR3_SQ3_N(2) |  ADC_SQR3_SQ4_N(3) |   ADC_SQR3_SQ5_N(4) |   ADC_SQR3_SQ6_N(5), // Conversion group sequence 1...6
 };
 
+#if EFI_ADC3_SLOW
+/* Slow sampling of the ADC3-only pins (EFI_ADC_32..39). The rusEFI ADC3
+ * index order follows the adcChannels[] table in stm32_adc.cpp:
+ * F6(IN4), F7(IN5), F8(IN6), F9(IN7), F10(IN8), F3(IN9), F4(IN14), F5(IN15).
+ * Only usable when ADC3 is not dedicated to software knock. */
+static const ADCConversionGroup convGroupSlowAdc3 = {
+	.circular			= FALSE,
+	.num_channels		= 8,
+	.end_cb				= nullptr,
+	.error_cb			= slowAdcErrorCB,
+	/* HW dependent part.*/
+	.cr1				= 0,
+	.cr2				= ADC_CR2_SWSTART,
+	.smpr1 =
+		ADC_SMPR1_SMP_AN14(ADC_SAMPLING_SLOW) |
+		ADC_SMPR1_SMP_AN15(ADC_SAMPLING_SLOW),
+	.smpr2 =
+		ADC_SMPR2_SMP_AN4(ADC_SAMPLING_SLOW) |
+		ADC_SMPR2_SMP_AN5(ADC_SAMPLING_SLOW) |
+		ADC_SMPR2_SMP_AN6(ADC_SAMPLING_SLOW) |
+		ADC_SMPR2_SMP_AN7(ADC_SAMPLING_SLOW) |
+		ADC_SMPR2_SMP_AN8(ADC_SAMPLING_SLOW) |
+		ADC_SMPR2_SMP_AN9(ADC_SAMPLING_SLOW),
+	.htr	= 0,
+	.ltr	= 0,
+	/* EFI_ADC_32..39 in sequence order: IN4, IN5, IN6, IN7, IN8, IN9, IN14, IN15 */
+	.sqr1	= 0,
+	.sqr2	= ADC_SQR2_SQ7_N(14) | ADC_SQR2_SQ8_N(15),
+	.sqr3	= ADC_SQR3_SQ1_N(4) | ADC_SQR3_SQ2_N(5) | ADC_SQR3_SQ3_N(6) | ADC_SQR3_SQ4_N(7) | ADC_SQR3_SQ5_N(8) | ADC_SQR3_SQ6_N(9),
+};
+#endif // EFI_ADC3_SLOW
+
 #if (EFI_INTERNAL_SLOW_ADC_BACKGROUND == TRUE)
 
 typedef enum {
@@ -351,6 +383,17 @@ bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 		muxControl.setValue(0, /*force*/true);
 	#endif
 #endif
+
+#if EFI_ADC3_SLOW
+	/* Sample the ADC3-only channels (EFI_ADC_32..39) into the upper part of
+	 * the slow buffer. Blocking conversion in thread context - 8 channels at
+	 * ADC_SAMPLING_SLOW take a few microseconds, negligible at the slow rate. */
+	msg_t adc3result = adcConvert(&ADCD3, &convGroupSlowAdc3,
+			(adcsample_t *)&convertedSamples[EFI_ADC_32 - EFI_ADC_0], 1);
+	if (adc3result != MSG_OK) {
+		return false;
+	}
+#endif // EFI_ADC3_SLOW
 
 	return result;
 }
@@ -516,6 +559,14 @@ void portInitAdc() {
 
 	// Enable internal temperature reference
 	adcSTM32EnableTSVREFE(); // Internal temperature sensor
+
+#if EFI_ADC3_SLOW
+#if defined(EFI_SOFTWARE_KNOCK)
+#error "EFI_ADC3_SLOW and EFI_SOFTWARE_KNOCK cannot be combined - both own ADC3"
+#endif
+	// Init ADC3 for slow sampling of the ADC3-only pins
+	adcStart(&ADCD3, nullptr);
+#endif // EFI_ADC3_SLOW
 
 #if (EFI_INTERNAL_SLOW_ADC_BACKGROUND == TRUE)
 	adcStartConversion(&EFI_SLOW_ADC, &convGroupSlow, (adcsample_t *)slowSampleBuffer, SLOW_ADC_OVERSAMPLE);

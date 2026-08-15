@@ -20,9 +20,24 @@
 #endif // def ADC_MUX_PIN
 #endif // SLOW_ADC_CHANNEL_COUNT
 
+/* Optional ADC3 slow sampling: on boards whose analog inputs live on
+ * ADC3-only pins (EFI_ADC_32..39, e.g. F-port pins on STM32F4/AT32F435)
+ * the v2 port fills channels 32..39 into the upper part of the buffer.
+ * The buffer is indexed by hwChannel - EFI_ADC_0, so with ADC3 sampling
+ * enabled it must cover indices up to 39. */
+#ifndef SLOW_ADC3_CHANNEL_COUNT
+#if EFI_ADC3_SLOW
+#define SLOW_ADC3_CHANNEL_COUNT 8
+#define SLOW_ADC_SAMPLES_TOTAL 40
+#else
+#define SLOW_ADC3_CHANNEL_COUNT 0
+#define SLOW_ADC_SAMPLES_TOTAL SLOW_ADC_CHANNEL_COUNT
+#endif
+#endif // SLOW_ADC3_CHANNEL_COUNT
+
 /* TODO: Drop NO_CACHE for F4 and F7 couse with ADCv2 driver CPU does averaging and CPU stores result to this array */
 /* TODO: store summ of samples is this array and divide on oversample factor only when converting to float - this will increase accuracity */
-static volatile NO_CACHE adcsample_t slowAdcSamples[SLOW_ADC_CHANNEL_COUNT];
+static volatile NO_CACHE adcsample_t slowAdcSamples[SLOW_ADC_SAMPLES_TOTAL];
 
 static uint32_t slowAdcConversionCount = 0;
 
@@ -73,6 +88,14 @@ void adcOnchipSlowShowReport()
 
 		adcPrintChannelReport("S", internalIndex, hwChannel);
 	}
+
+#if SLOW_ADC3_CHANNEL_COUNT > 0
+	for (int internalIndex = 0; internalIndex < SLOW_ADC3_CHANNEL_COUNT; internalIndex++) {
+		adc_channel_e hwChannel = static_cast<adc_channel_e>(internalIndex + EFI_ADC_32);
+
+		adcPrintChannelReport("S", internalIndex + EFI_ADC_32, hwChannel);
+	}
+#endif
 }
 
 float getMCUInternalTemperature() {

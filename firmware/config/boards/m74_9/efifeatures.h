@@ -22,3 +22,8 @@
  * mapping) is fixed in the ChibiOS fork - see
  * ChibiOS/os/hal/ports/AT32/AT32F4xx/hal_lld.c (DMA clocks before dmaInit)
  * and at32_registry.h (STM32_DMA_HAS_DMAMUXSEL). */
+
+/* CLT/IAT (and O2/AC-pressure) live on ADC3-only pins (PF5/PF6/F10/F3) - the
+ * slow ADC (ADC1) cannot see them. Sample ADC3 channels EFI_ADC_32..39 in the
+ * slow loop (stm32_adc_v2.cpp convGroupSlowAdc3). */
+#define EFI_ADC3_SLOW                TRUE
