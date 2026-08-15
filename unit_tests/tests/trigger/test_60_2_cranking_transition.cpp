@@ -92,6 +92,60 @@ TEST(trigger, crankingTransition60_2Acceleration) {
 	ASSERT_EQ(4, engine->triggerCentral.triggerState.getSynchronizationCounter()) << "sync counter after the transition";
 }
 
+/**
+ * Fire one revolution with a distorted tooth pair mid-revolution - the
+ * signature of a misfire-induced crank wobble on a running engine.
+ * At tooth 25's rise the decoder sees gap0 = distRatio and gap1 = prevRatio
+ * (tooth 24 is prevRatio, tooth 25 is distRatio*prevRatio times the slot).
+ * The sync gap at the end of the revolution stays gapRatio.
+ */
+static void fire60_2RevolutionWithDistortedTeeth(EngineTestHelper& eth, float slotMs, float prevRatio, float distRatio, float gapRatio) {
+	for (int i = 0; i < 58; i++) {
+		// rise-to-rise duration for this tooth
+		float riseToRise = slotMs;
+		if (i == 24) riseToRise = prevRatio * slotMs;
+		if (i == 25) riseToRise = distRatio * prevRatio * slotMs;
+
+		// the previous fall happened slotMs/2 after the previous rise
+		eth.moveTimeForwardUs(MS2US(riseToRise - slotMs / 2));
+		eth.firePrimaryTriggerRise();
+		eth.moveTimeForwardUs(MS2US(slotMs / 2));
+		eth.firePrimaryTriggerFall();
+	}
+
+	// trailing wait: the next call's first rise lands gapRatio * slotMs after tooth 57's rise
+	eth.moveTimeForwardUs(MS2US((gapRatio - 1.0f) * slotMs));
+}
+
+TEST(trigger, crankingTransition60_2MisfireDistortedTooth) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	// the user's m74_9 runs the 60-2 wheel on the crank
+	setCrankOperationMode();
+	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
+
+	// steady revolutions to synchronize
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+
+	ASSERT_EQ(0u, getRecentWarnings()->getCount()) << "no warnings while cranking steadily";
+	ASSERT_EQ(1, engine->triggerCentral.triggerState.getSynchronizationCounter()) << "sync counter";
+
+	// one revolution with a misfire-distorted tooth pair: gap0 ratio 1.601
+	// (inside the widened window) with the pair before it at 1.195. On a
+	// running m74_9 engine this exact pair false-synced mid-revolution
+	// (C9003, expected 58 got 51) and killed the engine. The tightened
+	// second gap rejects it: the distortion is just one noisy tooth, the
+	// real gap at the end of the revolution re-synchronizes cleanly.
+	fire60_2RevolutionWithDistortedTeeth(eth, steadySlotMs, /*prevRatio*/1.195f, /*distRatio*/1.601f, /*gapRatio*/3.0f);
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+
+	ASSERT_EQ(0u, getRecentWarnings()->getCount()) << "no false sync from the distorted tooth pair";
+	EXPECT_NEAR(steadyRpm, Sensor::getOrZero(SensorType::Rpm), 10) << "RPM through the distorted revolution";
+	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized()) << "still synchronized";
+	ASSERT_EQ(3, engine->triggerCentral.triggerState.getSynchronizationCounter()) << "sync counter through the distorted revolution";
+}
+
 TEST(trigger, crankingTransition60_2DecelerationRecovers) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	// the user's m74_9 runs the 60-2 wheel on the crank

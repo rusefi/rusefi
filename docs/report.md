@@ -1990,3 +1990,52 @@ implemented) the console repeated the line every 500 ms forever. The printf
 now lives in the WaitingToTrigger -> TriggerSent transition (initial send
 only); retries stay silent. Firmware builds clean (incremental compile.sh
 run in the rusefi_build container).
+
+## 2026-08-16 - m74_9: engine stalls 2-3 s after start - VBatt missing + 60-2 false sync on misfire wobble
+
+User log (car): engine starts, runs 2-3 s, stalls. Dwell overcharge warnings
+(18/36 ms - user was experimenting with dwell manually; bigger dwell made it
+run longer). Fatal sequence: C9003 "not enough teeth: expected 58/0 got
+51/0" at 609 RPM with newerr gap0=1.601 gap1=1.195, then "engine stopped"
+6 ms later.
+
+Two root causes found:
+
+1. VBatt was never assigned on m74_9: vbattAdcChannel/vbattDividerCoeff were
+   commented out in the board defaults, so Sensor(BatteryVoltage) reads 0.
+   The dwell voltage correction (interpolate2d on dwellVoltageCorr*) and the
+   injector deadtime (battLagCorrBattBins) both clamp to their lowest table
+   bin at 0 V - wrong spark energy and wrong injector deadtime, i.e. weak
+   spark and lean/rich misfires. Assigned VBatt = EFI_ADC_3 (PA3) with the
+   (33k + 6.8k) / 6.8k = 5.853 divider in both DefaultConfiguration and
+   ConfigOverrides (stored tune predates it). Bench evidence: PA3 raw reads
+   2.29 V stable across sessions = 13.4 V through 5.853; PA2 is the backup
+   candidate - verify by varying the supply voltage and watching which
+   channel tracks it.
+
+2. The widened 60-2 sync window (gap0 [1.6, 3.75], gap1 [0.8, 1.2]) accepted
+   a misfire-distorted tooth pair as a sync point: gap0=1.601 barely inside
+   the new low edge, gap1=1.195 inside [0.8, 1.2] -> false sync
+   mid-revolution -> count 51 -> C9003 -> desync -> stall. With the old
+   gap0 [2.25, 3.75] this particular event would not have synced either, so
+   it is a regression of the window widening. Fix: tighten only the second
+   gap to [0.85, 1.15] - adjacent 60-2 teeth barely change ratio even under
+   extreme acceleration, so this still allows the cranking transition, but
+   rejects the distorted pair; the decoder then just counts one noisy tooth
+   and re-syncs cleanly at the real gap (no error at all).
+
+Tests:
+- New regression test trigger.crankingTransition60_2MisfireDistortedTooth
+  reproduces the exact user pair (gap0 1.601, gap1 1.195): fails (C9003) with
+  gap1 [0.8, 1.2], passes with [0.85, 1.15].
+- Full unit suite 1130/1130 pass; m74_9 firmware builds clean.
+
+Open follow-ups:
+- Verify PA3 = battery sense on the bench (vary supply, watch VBatt gauge);
+  if wrong, switch to PA2.
+- On the car: confirm VBatt reads ~14 V running and the dwell voltage
+  correction table is sane; the dwell table should be reset to 4 ms since
+  the user's experiments are baked into the stored tune.
+- Confirm MAP reads ~100 kPa at key-on (earlier bench showed 10 kPa with no
+  sensor - if it is still 10 kPa with the sensor connected, the VE model
+  starves the engine).
