@@ -102,7 +102,7 @@ static void m74_9_boardDefaultConfiguration() {
 
 // todo	engineConfiguration->clt.adcChannel = EFI_ADC_; // ADC3 PF5
 // todo	engineConfiguration->iat.adcChannel = EFI_ADC_; // ADC3 PF6
-// todo	engineConfiguration->map.sensor.hwChannel = EFI_ADC_;
+	engineConfiguration->map.sensor.hwChannel = EFI_ADC_1; // AC3 -> 74HC14 -> RS358A -> PA1
 
 	// ?k high side/?k low side = ? ratio divider todo is the value below right?
   engineConfiguration->analogInputDividerCoefficient = 2.0f;
@@ -265,6 +265,69 @@ void boardInit() {
 	efiPrintf("tle9201_add()=%d", ret);
 }
 
+#if EFI_PROD_CODE && HAL_USE_ADC
+
+#include "adc_device.h"
+#if EFI_USE_FAST_ADC
+extern AdcDevice fastAdc;
+#endif
+
+/* Temporary diagnostic for the AT32 fast ADC (TIM6 -> ADC2) bring-up.
+ * Prints the state of every stage of the fast ADC chain. */
+static void m74_9FastAdcDiag() {
+	/* TIM6 GPT trigger */
+	efiPrintf("TIM6 CR1=0x%08x DIER=0x%08x SR=0x%04x CNT=%u PSC=%u ARR=%u",
+		(unsigned)TIM6->CR1, (unsigned)TIM6->DIER, (unsigned)TIM6->SR,
+		(unsigned)TIM6->CNT, (unsigned)TIM6->PSC, (unsigned)TIM6->ARR);
+	efiPrintf("GPTD6 state=%d", (int)GPTD6.state);
+
+	/* ADC2 */
+	efiPrintf("ADC2 state=%d SR=0x%08x CR1=0x%08x CR2=0x%08x",
+		(int)ADCD2.state, (unsigned)ADC2->SR, (unsigned)ADC2->CR1, (unsigned)ADC2->CR2);
+	efiPrintf("ADC2 SQR1=0x%08x SQR2=0x%08x SQR3=0x%08x ADC_CCR=0x%08x",
+		(unsigned)ADC2->SQR1, (unsigned)ADC2->SQR2, (unsigned)ADC2->SQR3, (unsigned)ADC->CCR);
+
+	/* ADC2 DMA stream */
+	const stm32_dma_stream_t* s = ADCD2.dmastp;
+	if (s != nullptr) {
+		efiPrintf("ADC2 DMA dma=%p ch=%p mux=%p vector=%d shift=%d",
+			s->dma, s->channel, s->mux, (int)s->vector, (int)s->shift);
+		if (s->channel != nullptr) {
+			efiPrintf("ADC2 DMA CCR=0x%08x CNDTR=%u CPAR=%p CMAR=%p",
+				(unsigned)s->channel->CCR, (unsigned)s->channel->CNDTR,
+				(void*)s->channel->CPAR, (void*)s->channel->CMAR);
+		}
+		if (s->mux != nullptr) {
+			efiPrintf("ADC2 DMAMUX CTRL=0x%08x", (unsigned)s->mux->CCR);
+		}
+		if (s->dma != nullptr) {
+			efiPrintf("ADC2 DMA ISR=0x%08x IFCR=0x%08x MUXSEL=0x%08x",
+				(unsigned)s->dma->ISR, (unsigned)s->dma->IFCR, (unsigned)s->dma->MUXSEL);
+		}
+	} else {
+		efiPrintf("ADC2 dmastp is NULL");
+	}
+
+	/* working ADC1 DMA stream for comparison */
+	const stm32_dma_stream_t* s1 = ADCD1.dmastp;
+	if (s1 != nullptr && s1->channel != nullptr && s1->mux != nullptr) {
+		efiPrintf("ADC1 DMA ch=%p mux=%p CCR=0x%08x CNDTR=%u DMAMUX=0x%08x",
+			s1->channel, s1->mux,
+			(unsigned)s1->channel->CCR, (unsigned)s1->channel->CNDTR, (unsigned)s1->mux->CCR);
+	}
+
+#if EFI_USE_FAST_ADC
+	efiPrintf("fast err=%d cnt=%d lastErr=%d channels=%d",
+		(int)engine->outputChannels.fastAdcErrorCount,
+		(int)engine->outputChannels.fastAdcConversionCount,
+		(int)engine->outputChannels.fastAdcLastError,
+		(int)fastAdc.size());
+#else
+	efiPrintf("fast ADC compiled out");
+#endif
+}
+#endif /* EFI_PROD_CODE && HAL_USE_ADC */
+
 static Gpio OUTPUTS[] = {
 	Gpio::L9779_OUT_4, // Injector 1
 	Gpio::L9779_OUT_3, // Injector 2
@@ -293,6 +356,9 @@ void setup_custom_board_overrides() {
 	custom_board_InitHardware = m74_9_boardInitHardware;
 	custom_board_DefaultConfiguration = m74_9_boardDefaultConfiguration;
 	custom_board_ConfigOverrides = m74_9_boardConfigOverrides;
+#if EFI_PROD_CODE && HAL_USE_ADC
+	addConsoleAction("fastadcdiag", m74_9FastAdcDiag);
+#endif
 #if EFI_CAN_SUPPORT
 	initM74_9Can();
 	custom_board_isImmobilizerBlocking = m74_9_isImmobilizerBlocking;
