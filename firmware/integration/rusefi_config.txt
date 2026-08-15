@@ -281,8 +281,11 @@ struct_no_prefix engine_configuration_s
 
 #define VEHICLE_INFO_SIZE 32
 
-#define BT_NAME_SIZE 20
-#define BT_PIN_SIZE 6
+! String sizes must be a multiple of 8: the config generator aligns a custom type on
+! (size % 8), and an alignment of 5..7 can demand a fill larger than it allows.
+! See VEHICLE_INFO_SIZE / GPPWM_NOTE_SIZE which follow the same rule.
+#define BT_NAME_SIZE 24
+#define BT_PIN_SIZE 8
 
 #define FUEL_RPM_COUNT 16
 #define FUEL_LOAD_COUNT 16
@@ -2051,7 +2054,7 @@ end_struct
 	custom bluetooth_baud_e 1 bits, U08, @OFFSET@, [0:2], "2400", "4800", "9600", "19200", "38400", "57600", "115200"
 	bluetooth_baud_e btBaudRate;Baud rate to set on the Bluetooth module. Must match the serial speed of the TTL port Bluetooth uses, or the link connects but no data flows.
 	custom bt_name_t @@BT_NAME_SIZE@@ string, ASCII, @OFFSET@, @@BT_NAME_SIZE@@
-	bt_name_t btName;Bluetooth device name to advertise (up to 19 characters).
+	bt_name_t btName;Bluetooth device name to advertise (up to 20 characters).
 	custom bt_pin_t @@BT_PIN_SIZE@@ string, ASCII, @OFFSET@, @@BT_PIN_SIZE@@
 	bt_pin_t btPinCode;Bluetooth pairing PIN (4 digits).
 
