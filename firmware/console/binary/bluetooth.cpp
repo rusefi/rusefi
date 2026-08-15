@@ -334,6 +334,38 @@ void bluetoothStart(bluetooth_module_e moduleType, const char *baudRate, const c
 	btSetupIsRequested = true;
 }
 
+// Ascending, indexed by bluetooth_baud_e (the btBaudRate config field).
+static const uint32_t btBaudRateValues[] = { 2400, 4800, 9600, 19200, 38400, 57600, 115200 };
+
+void bluetoothStartFromConfiguration() {
+	uint8_t baudIndex = (uint8_t)engineConfiguration->btBaudRate;
+	if (baudIndex >= efi::size(btBaudRateValues)) {
+		efiPrintf("Invalid Bluetooth baud selection %d", baudIndex);
+		return;
+	}
+
+	char baudStr[8];
+	chsnprintf(baudStr, sizeof(baudStr), "%lu", (unsigned long)btBaudRateValues[baudIndex]);
+
+	// The config strings are fixed-width and are not guaranteed to be null-terminated when fully
+	// used, so copy into a local buffer with room for the terminator before handing them off.
+	char name[BT_NAME_SIZE + 1];
+	char pin[BT_PIN_SIZE + 1];
+	memcpy(name, engineConfiguration->btName, BT_NAME_SIZE);
+	name[BT_NAME_SIZE] = '\0';
+	memcpy(pin, engineConfiguration->btPinCode, BT_PIN_SIZE);
+	pin[BT_PIN_SIZE] = '\0';
+
+	bluetoothStart(engineConfiguration->btModuleType, baudStr, name, pin);
+}
+
+void bluetoothCancelSetup() {
+	if (btSetupIsRequested) {
+		btSetupIsRequested = false;
+		efiPrintf("Bluetooth setup cancelled");
+	}
+}
+
 // Called after 1S of silence on BT UART...
 void bluetoothSoftwareDisconnectNotify(SerialTsChannelBase* tsChannel) {
 	if (btSetupIsRequested) {

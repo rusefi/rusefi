@@ -17,18 +17,8 @@
 // Thus any bytes sent from the Console Software may interfere with the procedure.
 #define BLUETOOTH_SILENT_TIMEOUT TIME_MS2I(3000)
 
-// Supported Bluetooth module types
-typedef enum {
-	BLUETOOTH_HC_05,
-	BLUETOOTH_HC_06,
-	/**
-	 * See https://rusefi.com/forum/viewtopic.php?f=13&t=1999
-	 */
-	BLUETOOTH_BK3231,
-	// fun fact: those use BK3232 see above
-	BLUETOOTH_JDY_3x,
-  BLUETOOTH_JDY_31,
-} bluetooth_module_e;
+// bluetooth_module_e now lives in engine_types.h so it can double as a TunerStudio config field
+// type (btModuleType). It reaches here via global.h.
 
 /**
  * Start Bluetooth module initialization using UART connection:
@@ -38,6 +28,16 @@ typedef enum {
  * - restore connection to PC.
  */
 void bluetoothStart(bluetooth_module_e moduleType, const char *baudRate, const char *name, const char *pinCode);
+
+/**
+ * Arm the same setup procedure as bluetoothStart(), but taking the module type, baud rate, name and
+ * PIN from persistent configuration (btModuleType / btBaudRate / btName / btPinCode) instead of
+ * console-command arguments. This is what the TunerStudio "Apply Bluetooth Setup" button triggers.
+ */
+void bluetoothStartFromConfiguration();
+
+/** Cancel an armed Bluetooth setup procedure (TunerStudio "Cancel" button / bluetooth_cancel). */
+void bluetoothCancelSetup();
 
 /**
  * Called by runBinaryProtocolLoop() if a connection disconnect is detected.

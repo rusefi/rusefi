@@ -365,7 +365,36 @@ typedef enum {
 	TS_WIDEBAND_SET_SENS_BY_ID = 37,
 	TS_WIDEBAND_FLASH_BY_ID_FILE = 38,
 	TS_WIDEBAND_RESTART = 39,
+	// Bluetooth module setup from TunerStudio: index 0 = apply the configured settings,
+	// index 1 = cancel an armed setup. See executeTSCommand() and bluetooth.cpp.
+	TS_BLUETOOTH_SETUP = 40,
 } ts_command_e;
+
+// Supported serial Bluetooth module types. Lives here (not bluetooth.h) so it can be used as a
+// TunerStudio configuration field type (btModuleType); see rusefi_config.txt.
+typedef enum __attribute__ ((__packed__)) {
+	BLUETOOTH_HC_05 = 0,
+	BLUETOOTH_HC_06 = 1,
+	/**
+	 * See https://rusefi.com/forum/viewtopic.php?f=13&t=1999
+	 */
+	BLUETOOTH_BK3231 = 2,
+	// fun fact: those use BK3232 see above
+	BLUETOOTH_JDY_3x = 3,
+	BLUETOOTH_JDY_31 = 4,
+} bluetooth_module_e;
+
+// Baud rates the Bluetooth setup accepts, ascending. Index maps to btBaudRateValues[] in
+// bluetooth.cpp. Used as the btBaudRate TunerStudio config field type.
+typedef enum __attribute__ ((__packed__)) {
+	BT_BAUD_2400 = 0,
+	BT_BAUD_4800 = 1,
+	BT_BAUD_9600 = 2,
+	BT_BAUD_19200 = 3,
+	BT_BAUD_38400 = 4,
+	BT_BAUD_57600 = 5,
+	BT_BAUD_115200 = 6,
+} bluetooth_baud_e;
 
 typedef enum {
 	BENCH_MAIN_RELAY, // 0

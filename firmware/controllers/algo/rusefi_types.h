@@ -75,6 +75,10 @@ using warning_message_t = char[WARNING_BUFFER_SIZE];
 
 using vehicle_info_t = char[VEHICLE_INFO_SIZE];
 
+using bt_name_t = char[BT_NAME_SIZE];
+
+using bt_pin_t = char[BT_PIN_SIZE];
+
 using vin_number_t = char[VIN_NUMBER_SIZE];
 
 using gppwm_note_t = char[GPPWM_NOTE_SIZE];

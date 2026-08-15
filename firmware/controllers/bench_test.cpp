@@ -23,6 +23,7 @@
 #include "pch.h"
 #include "tunerstudio.h"
 #include "tunerstudio_calibration_channel.h"
+#include "bluetooth.h"
 #include "long_term_fuel_trim.h"
 #include "can_common.h"
 #include "can_rx.h"
@@ -867,6 +868,17 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	case TS_STOP_ENGINE:
 		doScheduleStopEngine(StopRequestedReason::TsCommand);
 		break;
+
+#if EFI_BLUETOOTH_SETUP
+	case TS_BLUETOOTH_SETUP:
+		// index 0 = apply the configured Bluetooth settings, index 1 = cancel an armed setup
+		if (index == 0) {
+			bluetoothStartFromConfiguration();
+		} else {
+			bluetoothCancelSetup();
+		}
+		break;
+#endif // EFI_BLUETOOTH_SETUP
 
 	case JUMP_DFU_COMMAND:
 #if EFI_PROD_CODE && EFI_DFU_JUMP

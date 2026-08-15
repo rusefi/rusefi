@@ -281,6 +281,9 @@ struct_no_prefix engine_configuration_s
 
 #define VEHICLE_INFO_SIZE 32
 
+#define BT_NAME_SIZE 20
+#define BT_PIN_SIZE 6
+
 #define FUEL_RPM_COUNT 16
 #define FUEL_LOAD_COUNT 16
 
@@ -2037,6 +2040,20 @@ end_struct
 	! Cranking always uses ignitionDwellForCrankingMs regardless of this setting.
 	bit dwellDutyModeEnabled,"enabled","disabled";Dwell Duty Mode: when enabled, ignores the RPM/voltage dwell tables and computes dwell as a fixed percentage of the time between consecutive ignition pulses. Required for Ford TFI modules that expect a 50% duty cycle square wave.
 	uint8_t dwellDutyPercent;Dwell Duty Mode: percentage of the inter-spark interval used as coil dwell time. 50 = half the interval between pulses (standard TFI target).;"%", 1, 0, 1, 90, 0
+
+	! --- Bluetooth module setup from TunerStudio (see "Bluetooth Setup" dialog) ---
+	! These replace the console-only bluetooth_<module> command: set the fields, then use the
+	! "Apply Bluetooth Setup" button, which runs the same AT sequence. btBaudRate MUST match the
+	! serial speed of the TTL port Bluetooth uses (secondary if the board has one, else primary)
+	! or the module pairs but transfers nothing.
+	custom bluetooth_module_e 1 bits, U08, @OFFSET@, [0:2], "HC-05", "HC-06", "BK3231", "JDY-33", "JDY-31"
+	bluetooth_module_e btModuleType;Bluetooth module type to configure.
+	custom bluetooth_baud_e 1 bits, U08, @OFFSET@, [0:2], "2400", "4800", "9600", "19200", "38400", "57600", "115200"
+	bluetooth_baud_e btBaudRate;Baud rate to set on the Bluetooth module. Must match the serial speed of the TTL port Bluetooth uses, or the link connects but no data flows.
+	custom bt_name_t @@BT_NAME_SIZE@@ string, ASCII, @OFFSET@, @@BT_NAME_SIZE@@
+	bt_name_t btName;Bluetooth device name to advertise (up to 19 characters).
+	custom bt_pin_t @@BT_PIN_SIZE@@ string, ASCII, @OFFSET@, @@BT_PIN_SIZE@@
+	bt_pin_t btPinCode;Bluetooth pairing PIN (4 digits).
 
 ! end of engine_configuration_s
 end_struct
