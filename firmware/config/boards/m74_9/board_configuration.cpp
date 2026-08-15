@@ -104,15 +104,18 @@ static void m74_9_boardDefaultConfiguration() {
 	engineConfiguration->iat.adcChannel = EFI_ADC_32; // ADC3 PF6
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_1; // AC3 -> 74HC14 -> RS358A -> PA1
 
-	/* Battery sense: bench adc_report shows PA3 raw ~2.29 V stable (13.4 V
-	 * through the (33k + 6.8k) / 6.8k = 5.853 divider from the schematic);
-	 * PA2 is the other candidate - verify on the bench by varying the supply
-	 * voltage and watching which channel tracks it, then move this channel
-	 * assignment if needed. VBatt feeds dwell voltage correction and injector
-	 * deadtime; with no channel assigned both clamp to the lowest table bin.
-	 * Must stay in ConfigOverrides too: the stored tune predates it. */
+	/* Battery sense: bench adc_report shows PA3 raw ~2.29 V stable; PA2 is
+	 * the backup candidate - verify by varying the supply voltage and watching
+	 * which channel tracks it. VBatt feeds dwell voltage correction and
+	 * injector deadtime; with no channel assigned both clamp to the lowest
+	 * table bin. Must stay in ConfigOverrides too: the stored tune predates
+	 * it. Calibrated on the car: rusEFI showed 12.8 V with the
+	 * schematic-derived (33k + 6.8k) / 6.8k = 5.853 divider while the battery
+	 * measured 12.42 V, so the true divider is 5.853 * 12.42 / 12.8 = 5.679
+	 * (within 0.4% of the standard 47k/10k = 5.7 pair). Re-verify at ~14 V
+	 * running; a drift would mean a voltage offset, not just a divider error. */
 	engineConfiguration->vbattAdcChannel = EFI_ADC_3; // PA3
-	engineConfiguration->vbattDividerCoeff = (33 + 6.8f) / 6.8f;
+	engineConfiguration->vbattDividerCoeff = 5.679f;
 
 	engineConfiguration->analogInputDividerCoefficient = 2.0f;
 	engineConfiguration->adcVcc = 3.3f;
@@ -148,9 +151,10 @@ static void m74_9_boardConfigOverrides() {
 	engineConfiguration->iat.adcChannel = EFI_ADC_32; // ADC3 PF6
 
 	/* Battery sense - same reasoning as CLT/IAT: the stored tune predates
-	 * the VBatt wiring, so force the channel on every boot. */
+	 * the VBatt wiring, so force the channel on every boot. Divider is the
+	 * on-car calibrated value (see the DefaultConfiguration comment). */
 	engineConfiguration->vbattAdcChannel = EFI_ADC_3; // PA3
-	engineConfiguration->vbattDividerCoeff = (33 + 6.8f) / 6.8f;
+	engineConfiguration->vbattDividerCoeff = 5.679f;
 
 	//CAN 1 bus overwrites
 	engineConfiguration->canRxPin = Gpio::G0;
