@@ -21,6 +21,8 @@ float getRunningFuel(float baseFuel);
 float getBaroCorrection();
 percent_t getFuelALSCorrection(float rpm);
 int getNumberOfInjections(injection_mode_e mode);
+// fraction of the cycle fuel delivered by a single injection pulse in the current mode
+float getInjectionModeDurationMultiplier();
 angle_t getInjectionOffset(float rpm, float load);
 float getIatFuelCorrection();
 float getPostCrankingFuelCorrection();
