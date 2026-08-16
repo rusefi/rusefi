@@ -971,7 +971,7 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	bit useAbsolutePressureForLagTime,"yes","no"
 	! see #8650, only used on the UI
 
-	bit idleReturnTargetRamp,"yes","no";Ramp the idle target down from the entry threshold over N seconds when returning to idle. Helps prevent overshooting (below) the idle target while returning to idle from coasting.
+	bit idleReturnTargetRamp,"yes","no";When returning to idle from coasting, start the closed-loop RPM target elevated by the 'RPM upper limit' idle detection threshold, then ramp it down to the normal target over the 'Ramp target duration'. Helps prevent RPM from dipping below the idle target on return to idle.
 	bit useInjectorFlowLinearizationTable,"yes","no"
 	bit useHbridgesToDriveIdleStepper,"yes","no";If enabled we use two H-bridges to drive stepper idle air valve
 	bit multisparkEnable,"yes","no"
@@ -1948,7 +1948,7 @@ uint8_t autoscale knockFuelTrim;Maximum Amount of Fuel trim when knock;"%", 1, 0
 
 	int8_t[8] airmassToTimingBins;;"mg", 1, 0, -100, 100, 0
 	int8_t[8] airmassToTimingValues;;"deg", 1, 0, -30, 30, 0
-	uint8_t autoscale idleReturnTargetRampDuration;idle return target ramp duration;"seconds", 0.1, 0, 0.1, 15, 1
+	uint8_t autoscale idleReturnTargetRampDuration;Time for the idle RPM target to ramp down from the elevated return-to-idle value (normal target + 'RPM upper limit') to the normal target. Longer duration gives a gentler, slower settle to idle. Only used when 'Ramp target on return to idle' is enabled.;"seconds", 0.1, 0, 0.1, 15, 1
 
 	float wastegatePositionOpenedVoltage;Voltage when the wastegate is fully open;"v", 1, 0, 0, 10, 2
 	float wastegatePositionClosedVoltage;Voltage when the wastegate is closed;"v", 1, 0, 0, 10, 2
