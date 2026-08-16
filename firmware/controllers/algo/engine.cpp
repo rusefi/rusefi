@@ -315,7 +315,7 @@ void Engine::reset() {
 
 	allowCanTx = true;
 	isPwmEnabled = true;
-	pauseCANdueToSerial = false;
+	pauseCANdueToSerialUntil = 0;
 
 	globalConfigurationVersion = 0;
 	isRunningPwmTest = false;

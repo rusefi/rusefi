@@ -94,6 +94,9 @@ void tsOverCanInit() {
 			(unsigned)state.desyncResets,
 			(unsigned)state.rxFifoBufOverflow,
 			g_listener.getRxFifoCount());
+		efiPrintf("isotp: canWriteOk=%u canWriteNotOk=%u (TX frames dropped when mailboxes busy)",
+			(unsigned)engine->outputChannels.canWriteOk,
+			(unsigned)engine->outputChannels.canWriteNotOk);
 	});
 }
 

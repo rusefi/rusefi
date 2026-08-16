@@ -2300,3 +2300,35 @@ forced by m74_9 ConfigOverrides). The value is valid firmware-side; only the
 
 Note: 'save tune' only writes a local .msq backup; per-field changes and
 Burn are unaffected, so the error was never losing ECU-side settings.
+
+## 2026-08-16 (evening) - CAN/ISO-TP link drops on tune write fixed (firmware + console)
+
+User could not write the prepared 21129.msq tune over PCAN/CAN: multi-frame TS
+responses were truncated ("Got only 137 bytes while expecting 462"), the burn
+CRC response was lost, and after the first ConnectionWatchdog restart the
+console never reconnected ("restart: port not available, skipping connect").
+
+Root causes found and fixed:
+
+- Java LinkManager.restart() only reconnected ports present in getCommPorts()
+  (serial ports). PCAN/SocketCAN/TCP never appear there, so one watchdog
+  restart killed the session for good. Now non-serial transports are treated
+  as always available and reconnected directly.
+- m74_9 BCM emulation floods the bus with ~660 frames/s. While a serial
+  (ISO-TP/TS) session is active the emulation now goes quiet (engine off
+  only - with the engine running the BCM still needs the frames for
+  IMMO/fuel pump). The IMMO tick is kept outside the gate so the one-shot
+  handshake still completes.
+- Engine::pauseCANdueToSerial was a latched bool; converted to an
+  auto-expiring timestamp (pauseCANdueToSerialUntil, CAN_SERIAL_PAUSE_MS =
+  3000) so board CAN traffic resumes when the serial session goes idle.
+- isotp.cpp FC-wait skipped at most 8 foreign frames (~12 ms on this bus)
+  before aborting a multi-frame TX; now it waits the full timeout.
+- CanTxMessage destructor TX timeout raised from 100 ms to 1000 ms for
+  CanCategory::SERIAL frames so a busy mailbox no longer truncates a
+  multi-frame response mid-stream.
+- isotpinfo console command now also prints canWriteOk/canWriteNotOk.
+
+Validation: m74_9 clean rebuild OK (deliver/rusefi.bin), unit_tests
+testCanSerial 6/6 green, java :ecu_io:test green, console jar rebuilt via
+'gradlew clean :ui:shadowJar'.

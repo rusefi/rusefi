@@ -191,6 +191,11 @@ public:
 
 #define ISOTP_RX_QUEUE_LEN	4
 
+// How long periodic CAN TX stays quiet after the last received ISO-TP frame (see
+// Engine::pauseCANdueToSerialUntil). Long enough to cover the burn-stall window where the
+// ECU cannot receive frames but still has to get its response out uncontended.
+#define CAN_SERIAL_PAUSE_MS 3000
+
 class IsoTpRx : public CanListener, public IsoTpBase {
 public:
 	IsoTpRx(size_t p_busIndex, uint32_t p_rxFrameId, uint32_t p_txFrameId)

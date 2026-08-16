@@ -461,13 +461,14 @@ public class LinkManager implements Closeable {
         log.info("restart: closing current connection");
         close(); // Explicitly kill the connection (call connectors destructor??????)
 
-        // SocketCAN is a named transport rather than an OS serial port. Avoid serial enumeration and
-        // let its stream factory decide whether the configured CAN interface is available again.
-        final Set<String> ports = isSocketCan(lastTriedPort) ? Collections.emptySet() : getCommPorts();
-        final boolean isPortAvailableAgain = isPortAvailableForReconnect(lastTriedPort, ports);
+        // PCAN / SocketCAN / TCP are not serial ports, so they never appear in getCommPorts()
+        // and are always available - reconnect them directly instead of dropping the session
+        // (previously a watchdog restart over CAN killed the console link for good).
+        final boolean isNonSerialTransport = isPcanPort(lastTriedPort) || isSocketCan(lastTriedPort) || TcpConnector.isTcpPort(lastTriedPort);
+        final boolean isPortAvailableAgain = isNonSerialTransport || getCommPorts().contains(lastTriedPort);
         log.info("restart isPortAvailableAgain=" + isPortAvailableAgain + " port=" + lastTriedPort);
         if (isPortAvailableAgain) {
-            // Use isScanningForEcu=true to prevent ExitUtil.exit() on failure —
+            // Use isScanningForEcu=true to prevent ExitUtil.exit() on failure -
             // the watchdog will retry again on the next cycle.
             log.info("restart: calling connect()");
             connect(lastTriedPort, true);

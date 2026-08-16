@@ -413,7 +413,76 @@ CanTxMessage::~CanTxMessage() {
 #endif
 #endif // EFI_SIMULATOR
 
-	submit();
+#if EFI_CAN_SUPPORT
+	ScopePerf pc(PE::CanDriverTx);
+
+	if (!engine->allowCanTx) {
+		return;
+	}
+
+	if (busIndex >= EFI_CAN_BUS_COUNT) {
+		// Error already throuwn from CanTxMessage::setBus
+		// just do not access out of bounds
+		return;
+	}
+
+	auto device = s_devices[busIndex];
+	if (!device) {
+		criticalError("Send: CAN%d device not configured %s %x", busIndex + 1, getCanCategory(category),
+		   (unsigned int)CAN_ID(m_frame));
+		return;
+	}
+
+	bool verboseCan = engineConfiguration->verboseCan && busIndex == 0;
+	verboseCan |= engineConfiguration->verboseCan2 && busIndex == 1;
+#if (EFI_CAN_BUS_COUNT >= 3)
+	verboseCan |= engineConfiguration->verboseCan3 && busIndex == 2;
+#endif
+
+	if (verboseCan) {
+		efiPrintf("%s Sending CAN%d message: ID=%x/l=%x %x %x %x %x %x %x %x %x",
+				getCanCategory(category),
+				busIndex + 1,
+				(unsigned int)CAN_ID(m_frame),
+				m_frame.DLC,
+				m_frame.data8[0], m_frame.data8[1],
+				m_frame.data8[2], m_frame.data8[3],
+				m_frame.data8[4], m_frame.data8[5],
+				m_frame.data8[6], m_frame.data8[7]);
+	}
+
+	// Wait for a free mailbox. Serial (ISO-TP) frames carry a full response packet:
+	// dropping one mid-stream truncates the response for the host and kills the session,
+	// so give them a longer budget than the periodic broadcast traffic.
+	sysinterval_t txTimeout = (category == CanCategory::SERIAL) ? TIME_MS2I(1000) : TIME_MS2I(100);
+	msg_t msg = canTransmit(device, CAN_ANY_MAILBOX, &m_frame, txTimeout);
+#if EFI_PROD_CODE && HAL_USE_USB_CDC_2
+	if ((msg == MSG_OK) && (engineConfiguration->canSniffer[busIndex].listenOurs)) {
+		canSniffer.handle_can_message(busIndex, m_frame, getTimeNowNt());
+	}
+#endif
+#if EFI_TUNER_STUDIO
+	if (msg == MSG_OK) {
+		engine->outputChannels.canWriteOk++;
+	} else {
+extern int txErrorCount[EFI_CAN_BUS_COUNT];
+		engine->outputChannels.canWriteNotOk++;
+		txErrorCount[busIndex]++;
+
+		if (verboseCanTxError) {
+		  efiPrintf("%s TX ERR CAN%d message: ID=%x/l=%x %x %x %x %x %x %x %x %x",
+				getCanCategory(category),
+				busIndex + 1,
+				(unsigned int)CAN_ID(m_frame),
+				m_frame.DLC,
+				m_frame.data8[0], m_frame.data8[1],
+				m_frame.data8[2], m_frame.data8[3],
+				m_frame.data8[4], m_frame.data8[5],
+				m_frame.data8[6], m_frame.data8[7]);
+		}
+	}
+#endif // EFI_TUNER_STUDIO
+#endif /* EFI_CAN_SUPPORT */
 }
 
 bool CanTxMessage::submit() {
