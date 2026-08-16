@@ -2482,3 +2482,26 @@ Validation on the mac (JDK 25.0.4): 'gradlew test' all modules green,
 'gradlew clean :ui:shadowJar' OK, m74_9 clean build + bundle OK (gradle
 config-gen runs under 25). The user's rusefi_build container no longer exists
 (host-only builds); the Dockerfile is ready for the next image.
+
+## 2026-08-17 - Java deps bumped + bytecode raised to Java 25
+
+- Bytecode: sourceCompatibility/targetCompatibility 8 -> 25 (class major 69,
+  verified). The [tag:java8] compat shims (CompatibilityFiles/CompatibilityOptional/
+  CompatibilitySet) are now obsolete but left in place.
+  CONSEQUENCE: the TunerStudio plugin modules can no longer run inside
+  TunerStudio's bundled Java 8 runtime (TS needs a newer JVM).
+- Dependencies (all validated by the full test suite):
+  junit 5.10.2 -> 6.1.3 (plain @Test tests, no MockitoExtension - migrated
+  cleanly), junit-platform-launcher now follows junit5Version, mockito
+  4.11.0 -> 5.23.0, snakeyaml 1.26 -> 2.6, antlr 4.13.0 -> 4.13.2,
+  jetbrains annotations 16.0.1 -> 26.1.0, commons-logging 1.2 -> 1.4.0,
+  jakarta.xml.bind-api 3.0.1 -> 4.0.5 + jaxb-runtime 3.0.2 -> 4.0.9,
+  httpclient5 5.4.2 -> 5.6.4, httpcore5 5.3.3 -> 5.4.3, javacan-core
+  3.2.4 -> 3.5.2.
+- snakeyaml 2.x migration notes: Constructor(Class) removed (now
+  Constructor(Class, LoaderOptions)); global tags are rejected by default,
+  so ConfigurationImageMetaYamlUtil whitelists tag:yaml.org,2002:com.opensr5.*
+  via LoaderOptions.setTagInspector.
+
+Validation: gradlew clean test all green (JDK 25), console jar rebuilt
+(Build-Jdk 25, bytecode 69), m74_9 clean build + bundle OK.

@@ -2,6 +2,7 @@ package com.opensr5.io;
 
 import com.opensr5.ConfigurationImageMeta;
 import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
@@ -20,7 +21,11 @@ public class ConfigurationImageMetaYamlUtil {
         final Class<MetaType> clazz,
         final InputStream is
     ) {
-        final Yaml yaml = new Yaml(new Constructor(clazz));
+        // snakeyaml 2.x rejects global tags by default; whitelist our own
+        // com.opensr5 meta classes explicitly (only they can appear here)
+        final LoaderOptions options = new LoaderOptions();
+        options.setTagInspector(tag -> tag.getValue().startsWith("tag:yaml.org,2002:com.opensr5."));
+        final Yaml yaml = new Yaml(new Constructor(clazz, options));
         return yaml.load(is);
     }
 
