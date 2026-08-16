@@ -2382,3 +2382,35 @@ Fix:
 
 Validation: m74_9 clean rebuild OK (deliver/rusefi.bin), simulator target
 also builds (bundle), testCanSerial 6/6 green, :ui:shadowJar green.
+
+## 2026-08-16 (night round 2) - m74_9: ISO-TP burst frame loss fixed (RX thread preemption + burst pacing)
+
+The FC-wait fix helped but the tune load still lost frames mid-burst: "Got
+only 25/32/74 bytes while expecting N" even with the console just idling
+(output-channel pulls only), 2719 out-of-range responses in one session,
+and the burn persisted stale page data - the user's VE table never changed.
+writeData() retried silently for 10s and then the console burned anyway,
+so the load "succeeded" while nothing was written.
+
+Root cause: the bxCAN hardware FIFO0 (3 frames deep) holds the TS id
+exclusively (hw filter routes 0x710 to FIFO0). The CAN RX thread
+(NORMALPRIO+6) sat below ETB (+9), GPIOCHIP/L9779 (+8), CAN TX (+7) and
+the main loop (+10) - during a back-to-back burst a pile-up of that
+higher-priority work stalled the RX thread past ~700 us, FIFO0 overflowed,
+and one lost frame desynced the whole ISO-TP stream (the truncation point
+moved around: 18/25/32/74 bytes across attempts).
+
+Fixes (defense in depth):
+- PRIO_CAN_RX NORMALPRIO+6 -> +11: the RX thread now outranks every
+  thread-level preemptor. Per-frame work is a few microseconds, so the CPU
+  cost is negligible even on a busy bus.
+- Java IsoTpConnector.sendStrategy paces consecutive frames with 1 ms gaps:
+  a 66-frame chunk takes ~66 ms and the receiver has multi-ms preemption
+  tolerance instead of 3 hw slots worth (~700 us).
+- BinaryProtocol.writeData throws IllegalStateException when the chunk
+  retry loop exhausts: the tune load now fails loudly instead of burning
+  stale page data (the "load succeeded but values are old" trap).
+
+Validation: m74_9 clean rebuild OK, simulator target builds, testCanSerial
+6/6 green, :ecu_io:test + :ui:shadowJar green (console jar rebuilt,
+CONSOLE_VERSION 20260816).
