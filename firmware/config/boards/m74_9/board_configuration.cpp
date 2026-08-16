@@ -187,18 +187,26 @@ static void m74_9_boardConfigOverrides() {
 /**
  * Per-channel analog input divider.
  *
- * MAP (AC3 -> RS358A -> PA1, EFI_ADC_1) is NOT 2:1 like the global
- * analogInputDividerCoefficient guess: the Bosch 0 261 230 217 T-MAP
- * outputs Vout = (0.85/95 * P[kPa] - 0.1) * Us (0.4 V @ 20 kPa,
- * 4.65 V @ 115 kPa at Us = 5 V), i.e. 3.974 V at 100 kPa, while the ADC
- * raw reads 2.555 V there. The board divider is therefore
- * 3.974 / 2.555 = 1.555 (looks like a 5.6k/10k pair). With the 2.0
- * coefficient the MAP voltage (and so the kPa load axis) was 1.29x too
- * high - the VE table picked the wrong cells and the engine barely ran.
- * TPS/pedal channels keep the global coefficient until measured.
+ * The MAP (EFI_ADC_1) and both ETB TPS channels (EFI_ADC_12/13) share one
+ * board divider chain (~1.555, looks like 5.6k/10k), NOT the 2:1 the global
+ * analogInputDividerCoefficient guess assumes:
+ * - MAP: the Bosch 0 261 230 217 T-MAP outputs
+ *   Vout = (0.85/95 * P[kPa] - 0.1) * Us (0.4 V @ 20 kPa, 4.65 V @ 115 kPa
+ *   at Us = 5 V), i.e. 3.974 V at 100 kPa, while the ADC raw reads 2.555 V
+ *   there -> divider 3.974 / 2.555 = 1.555.
+ * - TPS: cross-checked via the redundant pair sum. With 1.555 the console
+ *   readings 5.067/1.356 V (closed) and 0.520/5.807 V (open) become
+ *   3.940+1.054 = 4.99 V and 0.404+4.515 = 4.92 V - a proper complementary
+ *   ETB TPS pair summing to the 5 V rail at both ends.
+ * With the 2.0 coefficient the MAP/TPS voltages were 1.29x too high - the
+ * VE load axis and the TPS %/redundancy checks were all wrong.
+ * Pedal channels (EFI_ADC_10/11) go through the same conditioning block
+ * (console readings look inflated the same ~1.29x) and share the divider;
+ * verify after flashing via the redundant-pair sum: PPS1+PPS2 should read
+ * ~5.0 V at rest and at full pedal.
  */
 float getAnalogInputDividerCoefficient(adc_channel_e hwChannel) {
-	if (hwChannel == EFI_ADC_1) {
+	if (hwChannel == EFI_ADC_1 || hwChannel == EFI_ADC_10 || hwChannel == EFI_ADC_11 || hwChannel == EFI_ADC_12 || hwChannel == EFI_ADC_13) {
 		return 1.555f;
 	}
 	return engineConfiguration->analogInputDividerCoefficient;
