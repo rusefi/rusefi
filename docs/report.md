@@ -2332,3 +2332,23 @@ Root causes found and fixed:
 Validation: m74_9 clean rebuild OK (deliver/rusefi.bin), unit_tests
 testCanSerial 6/6 green, java :ecu_io:test green, console jar rebuilt via
 'gradlew clean :ui:shadowJar'.
+
+## 2026-08-16 (night) - m74_9: IMMO disabled entirely (m74_9ImmoOff forced on)
+
+The ECU-side IMMO challenge-response is not implemented (computeImmoResponse
+returns false), so the 0x0713/0x0714 handshake traffic (trigger, retries,
+quick-recheck responses) is pure CAN noise. The car has a physical bypass
+that answers the BCM, so the ECU's IMMO frames are useless.
+
+- m74_9_can.cpp: the whole IMMO path is now gated on the m74_9ImmoOff config
+  bit (persistent_config_s): 0x0714 challenge frames are rejected in
+  acceptFrame() (never enter the RX path), the state machine is never armed
+  on ignition-on, tickImmo() resets to Idle and returns without sending, and
+  isImmoAuthenticated() reports authenticated while the bit is set.
+- board_configuration.cpp ConfigOverrides forces config->m74_9ImmoOff = true
+  on every boot (stored tune predates the bit). Remove the force once
+  computeImmoResponse() is implemented and IMMO is wanted back.
+- m74_9_isImmobilizerBlocking() still returns false unconditionally (comment
+  updated); LimpManager ClearReason::Immobilizer stays unused.
+
+Validation: m74_9 clean rebuild OK, fresh deliver/rusefi.bin.

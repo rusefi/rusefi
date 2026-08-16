@@ -218,14 +218,20 @@ public:
     }
 
     bool isImmoAuthenticated() const {
-        return m_immoState == ImmoState::ResponseSent;
+        // With the IMMO force-off bit (physical bypass installed) the BCM does
+        // not need our responses - report authenticated so no future gating logic
+        // sees a failed handshake.
+        return config->m74_9ImmoOff || (m_immoState == ImmoState::ResponseSent);
     }
 
-    // Accept BCM state/relay frames AND IMMO challenge frames
+    // Accept BCM state/relay frames AND IMMO challenge frames.
+    // With m74_9ImmoOff set the 0x0714 challenge frames are rejected here, so
+    // they never enter the RX path or the IMMO state machine at all.
     bool acceptFrame(const size_t busIndex, const CANRxFrame& frame) const override {
         (void)busIndex;
         uint32_t id = CAN_ID(frame);
-        return (id == BCM_STATE_ID) || (id == BCM_RELAY_ID) || (id == IMMO_BCM_ID);
+        return (id == BCM_STATE_ID) || (id == BCM_RELAY_ID)
+            || ((id == IMMO_BCM_ID) && !config->m74_9ImmoOff);
     }
 
     // Called every 5 ms by CanWrite::PeriodicTask()
@@ -258,7 +264,9 @@ protected:
             // arm the IMMO timer on any BCM active state so that the trigger
             // fires well before the user presses the crank switch.
             bool ignitionActive = (byte4 != 0x00);
-            if (ignitionActive && (m_immoState == ImmoState::Idle)) {
+            // With m74_9ImmoOff the IMMO state machine stays in Idle: no trigger,
+            // no response, no 0x0713 flood (the physical bypass answers the BCM).
+            if (ignitionActive && (m_immoState == ImmoState::Idle) && !config->m74_9ImmoOff) {
                 m_immoState        = ImmoState::WaitingToTrigger;
                 m_immoTimerTicks   = 0;
             }
@@ -322,6 +330,15 @@ private:
      * Manages delays and sends 0x0713 trigger/response at the right time.
      */
     void tickImmo() {
+        // m74_9ImmoOff force-disables the whole handshake: no trigger, no
+        // retries, no challenge processing (0x0714 frames are rejected in
+        // acceptFrame() as well). The physical bypass answers the BCM instead.
+        if (config->m74_9ImmoOff) {
+            m_immoState = ImmoState::Idle;
+            m_immoTimerTicks = 0;
+            return;
+        }
+
         m_immoTimerTicks++;
         // Convert 5ms ticks to ms
         uint32_t elapsedMs = m_immoTimerTicks * 5u;
@@ -786,10 +803,10 @@ bool m74_9_immoAuthenticated() {
 }
 
 bool m74_9_isImmobilizerBlocking() {
-    // The m74_9ImmoEnabled config bit (defined in rusefi_config.txt) will gate
-    // this check once computeImmoResponse() is implemented.  Until then the
-    // function always returns false so the IMMO state machine can run and the
-    // CAN exchange can be observed without blocking fuel/ignition.
+    // The ECU never blocks fuel/ignition on IMMO today: with m74_9ImmoOff the
+    // handshake is disabled entirely (physical bypass answers the BCM), and even
+    // with it enabled computeImmoResponse() is not implemented yet, so blocking
+    // here would prevent every start.
     //
     // When the algorithm is ready, restore:
     //   return engineConfiguration->m74_9ImmoEnabled
