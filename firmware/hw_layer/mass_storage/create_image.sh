@@ -18,6 +18,10 @@ IMAGE=ramdisk.image
 
 # mkfs.fat and fatlabel are privileged on some systems
 PATH="$PATH:/usr/sbin"
+# macOS: dosfstools/mtools install into Homebrew's sbin
+if command -v brew >/dev/null 2>&1; then
+  PATH="$PATH:$(brew --prefix 2>/dev/null)/sbin"
+fi
 
 rm -f $IMAGE $IMAGE.gz
 

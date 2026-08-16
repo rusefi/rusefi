@@ -30,12 +30,15 @@ echo "[META] Reading meta env from ${BOARD_META_PATH}"
 VARS=$(grep "=" "$BOARD_META_PATH")
 
 while IFS= read -r L; do
-		# get the key and delete all spaces
-    K=$(echo "$L" | cut -d '=' -f "-1" | tr -d ' ')
+		# get the key and delete all spaces (bash parameter expansion: BSD cut
+		# on macOS does not support negative field numbers)
+    K="${L%%=*}"
+    K="${K// /}"
 		# get the value and delete any leading space
-    V=$(echo "$L" | cut -d '=' -f "2-" | awk '{$1=$1};1')
+    V="${L#*=}"
+    V=$(echo "$V" | awk '{$1=$1};1')
 		# put them together, closing the value in quotes
-		export $K="$V"
+		export "$K"="$V"
 done <<< "$VARS"
 
 if [ -z "$BUNDLE_NAME" ]; then

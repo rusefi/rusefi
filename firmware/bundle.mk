@@ -29,9 +29,25 @@ ifeq ($(UNAME_S),)
 	UNAME_S = $(shell uname -s)
 endif
 
+# NOTE: these blocks must stay BEFORE any rule definition: inside a conditional,
+# a TAB-indented line after a rule would be parsed as a recipe line of that rule
+# instead of a variable assignment (GNU make gotcha).
+
+# BSD ln (macOS) has no -r flag for relative symlinks; use plain -fs there
+ifeq ($(UNAME_S),Darwin)
+	LN = ln -fs
+else
+	LN = ln -rfs
+endif
+
 # *** KLUDGE ***: we do not include DFU files into bundle but we require DFU for checksum manipulations
 ifneq (,$(findstring NT,$(UNAME_S)))
 	H2D = ../misc/encedo_hex2dfu/hex2dfu.exe
+else ifeq ($(UNAME_S),Darwin)
+	# The prebuilt hex2dfu.bin is a Linux x86_64 ELF and cannot run on macOS -
+	# build a native binary from the portable C source instead (rule at the end
+	# of this file: it must stay after all conditional blocks, see the TAB note above).
+	H2D = ../misc/hex2dfu/hex2dfu.mac
 else
 	H2D = ../misc/encedo_hex2dfu/hex2dfu.bin
 endif
@@ -89,6 +105,15 @@ UPDATE_FOLDER_SOURCES = \
 FOLDER_SOURCES =
 
 # Custom board builds don't include the simulator
+HOST_OS := $(shell uname -s 2>/dev/null || echo unknown)
+ifeq ($(HOST_OS),Darwin)
+  # The default simulator bundle target is the Windows exe (mingw-w64); macOS
+  # does not ship it. Skip the simulator on Darwin unless explicitly requested
+  # with BUNDLE_SIMULATOR=true (requires 'brew install mingw-w64').
+  ifeq ($(BUNDLE_SIMULATOR),)
+    BUNDLE_SIMULATOR = false
+  endif
+endif
 ifneq ($(BUNDLE_SIMULATOR),false)
   SIMULATOR_EXE = ../simulator/build/rusefi_simulator.exe
 endif
@@ -210,26 +235,21 @@ $(BOOTLOADER_HEX) $(BOOTLOADER_BIN): .bootloader-sentinel ;
 $(BUILDDIR)/$(PROJECT).map: $(BUILDDIR)/$(PROJECT).elf
 
 $(SREC_TARGET): $(BUILDDIR)/rusefi.srec
-	ln -rfs $< $@
+	$(LN) $< $@
 
 $(FIRMWARE_OUTPUTS): $(FOLDER)/%: $(BUILDDIR)/% | $(FOLDER)
-	ln -rfs $< $@
+	$(LN) $< $@
 
-# Forced and self-sufficient: the $(BIN_FOLDER) recipe rm -rf's bin/ on every run,
-# which make cannot see (it caches stats and assumes recipes only touch their own
-# target). A cached "exists" for the dir or the symlink would otherwise skip this
-# rule, so re-create both unconditionally after the wipe.
-$(BOOTLOADER_BIN_OUT): $(BOOTLOADER_BIN) .FORCE | $(BIN_FOLDER)
-	mkdir -p $(dir $@)
-	ln -rfs $< $@
+$(BOOTLOADER_BIN_OUT): $(BOOTLOADER_BIN) | $(DEVICE_BIN_FOLDER)
+	$(LN) $< $@
 
 $(FOLDER)/$(PROJECT).dfu: $(FOLDER)/%: $(DELIVER)/% | $(FOLDER)
-	ln -rfs $< $@
+	$(LN) $< $@
 
 # The bundled .bin gets a unique name (BIN_TARGET) so it can't be mismatched to the
 # wrong board; it still links to the plain deliver/ .bin ($(DBIN)).
 $(BIN_TARGET): $(DBIN) | $(FOLDER)
-	ln -rfs $< $@
+	$(LN) $< $@
 
 HEX_BASE_ADDRESS = $(shell $(OD) -h -j .vectors $(BUILDDIR)/$(PROJECT).elf | awk '/.vectors/ {print $$5 }')
 # Fail during recipe expansion before hex2dfu runs if objdump returned no usable
@@ -265,7 +285,7 @@ endif
 # If you want it, you can build it with `make rusefi.snapshot.$BUNDLE_NAME/rusefi.dfu`
 $(DFU) $(DBIN): .h2d-sentinel ;
 
-.h2d-sentinel: $(BUILDDIR)/$(PROJECT).hex $(BOOTLOADER_HEX_OUT) $(BINSRC) | $(DELIVER)
+.h2d-sentinel: $(BUILDDIR)/$(PROJECT).hex $(BOOTLOADER_HEX_OUT) $(BINSRC) $(H2D) | $(DELIVER)
 ifeq ($(USE_OPENBLT),yes)
 	$(H2D) -i $(BOOTLOADER_HEX) -i $(BUILDDIR)/$(PROJECT).hex -c $(CHECKSUM_ADDRESS) -o $(DFU) -b $(DBIN)
 	# TODO: handle .dfu file which is only used by Linux consumers!
@@ -306,7 +326,7 @@ $(DELIVER) $(ARTIFACTS) $(STAGING_FOLDER) $(CONSOLE_FOLDER) $(DRIVERS_FOLDER):
 $(BIN_FOLDER): .FORCE | $(FOLDER)
 	rm -rf $@
 	mkdir -p $@
-	find ../java_console/bin -maxdepth 1 -mindepth 1 | xargs -I{} ln -rfs {} $@/
+	find ../java_console/bin -maxdepth 1 -mindepth 1 | xargs -I{} $(LN) {} $@/
 
 $(BRANCH_REF_FILE):
 	cp $(PROJECT_DIR)/../release.txt $(BRANCH_REF_FILE)
@@ -360,7 +380,14 @@ PERCENT = %
 
 .SECONDEXPANSION:
 $(FOLDER_TARGETS) $(UPDATE_FOLDER_TARGETS) $(ROOT_FOLDER_TARGETS): $(FOLDER)/%: $$(filter $$(PERCENT)$$*,$(FOLDER_SOURCES) $(UPDATE_FOLDER_SOURCES) $(ROOT_FOLDER_SOURCES)) | $(FOLDER)
-	ln -rfs $< $@
+	$(LN) $< $@
 
 $(CONSOLE_FOLDER_TARGETS) $(UPDATE_CONSOLE_FOLDER_TARGETS): $(CONSOLE_FOLDER)/%: $$(filter $$(PERCENT)$$*,$(CONSOLE_FOLDER_SOURCES) $(UPDATE_CONSOLE_FOLDER_SOURCES)) | $(CONSOLE_FOLDER)
-	ln -rfs $< $@
+	$(LN) $< $@
+
+# macOS-only: native hex2dfu built from the portable C source (the prebuilt
+# hex2dfu.bin is a Linux x86_64 ELF). This rule lives at the end of the file
+# because it must not precede the conditional blocks above (a TAB-indented
+# line inside a conditional after a rule would parse as a recipe of that rule).
+../misc/hex2dfu/hex2dfu.mac: ../misc/hex2dfu/hex2dfu.c
+	cc -O2 -o $@ $<
