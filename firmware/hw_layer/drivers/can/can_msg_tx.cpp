@@ -130,8 +130,11 @@ CanTxMessage::~CanTxMessage() {
 				m_frame.data8[6], m_frame.data8[7]);
 	}
 
-	// 100 ms timeout
-	msg_t msg = canTransmit(device, CAN_ANY_MAILBOX, &m_frame, TIME_MS2I(100));
+	// Wait for a free mailbox. Serial (ISO-TP) frames carry a full response packet:
+	// dropping one mid-stream truncates the response for the host and kills the session,
+	// so give them a longer budget than the periodic broadcast traffic.
+	sysinterval_t txTimeout = (category == CanCategory::SERIAL) ? TIME_MS2I(1000) : TIME_MS2I(100);
+	msg_t msg = canTransmit(device, CAN_ANY_MAILBOX, &m_frame, txTimeout);
 #if EFI_PROD_CODE && HAL_USE_USB_CDC_2
 	if ((msg == MSG_OK) && (engineConfiguration->canSniffer[busIndex].listenOurs)) {
 		canSniffer.handle_can_message(busIndex, m_frame, getTimeNowNt());

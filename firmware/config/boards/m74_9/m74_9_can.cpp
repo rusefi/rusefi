@@ -703,8 +703,19 @@ private:
         // 0x0000 triggers BCM error state CF and blocks the starter relay.
         uint16_t rpmEncoded = encodeRpmOrBaseline(rpm);
 
-        // IMMO state machine: tick every 5ms call
+        // IMMO state machine: tick every 5ms call. Kept outside the serial-session gate
+        // below so the one-shot trigger/response handshake still completes even while
+        // TS is connected (only 2 frames per ignition-on cycle, negligible traffic).
         tickImmo();
+
+        // While a serial (ISO-TP/TS) session is active and the engine is off, mute the
+        // BCM emulation: it sends ~660 frames/s, which contends with TS responses for
+        // CAN mailboxes (truncated multi-frame responses = "Got only N bytes" on the host)
+        // and floods the host's CAN reader during a tune write. With the engine running
+        // the BCM needs these frames (IMMO/fuel pump/dash), so keep sending regardless.
+        if ((engine->pauseCANdueToSerialUntil > getTimeNowNt()) && !isEngineActive) {
+            return;
+        }
 
         // 10 ms group: every 2nd tick
         if ((m_counter % 2) == 0) {

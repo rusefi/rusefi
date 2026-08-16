@@ -100,7 +100,10 @@ int CanStreamerState::receiveFrame(const CANRxFrame &rxmsg, uint8_t *destination
 		ignoredFrames++;
 		return 0;
 	}
-	engine->pauseCANdueToSerial = true;
+	// Ask other periodic CAN TX sources (board BCM emulation, verbose CAN) to stay quiet
+	// while a serial session is active. Auto-expires so board CAN traffic resumes when the
+	// session goes idle.
+	engine->pauseCANdueToSerialUntil = getTimeNowNt() + MS2NT(CAN_SERIAL_PAUSE_MS);
 	int frameType = (rxmsg.data8[isoHeaderByteIndex] >> 4) & 0xf;
 	if (engineConfiguration->verboseIsoTp) {
 	  efiPrintf("receiveFrame frameType=%d", frameType);
@@ -233,6 +236,12 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 	// get a flow control (FC) frame
 #if !EFI_UNIT_TEST // todo: add FC to unit-tests?
 	CANRxFrame rxmsg;
+	// Wait up to the full timeout for the FC, but skip foreign frames for the whole
+	// duration. A fixed skip count (previously 8) is consumed in ~12 ms on a busy bus
+	// (a board BCM emulation alone sends hundreds of frames/s), which aborted every
+	// multi-frame TX long before the peer's FC could arrive.
+	// Note: 'timeout' is in ChibiOS system ticks (ms), getTimeNowNt() is in NT ticks - convert.
+	efitick_t fcDeadline = getTimeNowNt() + MS2NT(TIME_I2MS(timeout));
 	for (size_t numFcReceived = 0; ; numFcReceived++) {
 		if (rxTransport->receive(&rxmsg, timeout) != CAN_MSG_OK) {
 #ifdef SERIAL_CAN_DEBUG
@@ -250,9 +259,9 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 			if ((frameType == ISO_TP_FRAME_FLOW_CONTROL) && (flowStatus == CAN_FLOW_STATUS_WAIT_MORE) && (numFcReceived < 3)) {
 				continue;
 			}
-			// a foreign frame arrived while we wait for FC: skip a few of them before giving up,
+			// a foreign frame arrived while we wait for FC: keep waiting until the deadline,
 			// otherwise a busy bus would abort every multi-frame TX
-			if ((frameType != ISO_TP_FRAME_FLOW_CONTROL) && (numFcReceived < 8)) {
+			if ((frameType != ISO_TP_FRAME_FLOW_CONTROL) && (getTimeNowNt() < fcDeadline)) {
 				continue;
 			}
 #ifdef SERIAL_CAN_DEBUG
