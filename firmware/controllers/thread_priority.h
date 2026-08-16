@@ -22,7 +22,13 @@
 
 // TX higher priority than RX because the ECU is generally the one transmitting the highest priority messages
 #define PRIO_CAN_TX (NORMALPRIO + 7)
-#define PRIO_CAN_RX (NORMALPRIO + 6)
+// CAN RX must outrank everything that could preempt it for longer than a burst frame gap:
+// the bxCAN hardware FIFOs are only 3 frames deep, and the TS-over-CAN path routes the ECU
+// serial id into FIFO0 alone. A pile-up of main-loop/ETB/gpiochip/ADC work used to stall the
+// RX thread past ~700 us, overflowing FIFO0 and truncating ISO-TP bursts ("Got only N bytes
+// while expecting M", outofrange storms, tune chunks silently lost). Per-frame RX work is a
+// few microseconds (listener dispatch), so this costs a tiny CPU fraction even on busy buses.
+#define PRIO_CAN_RX (NORMALPRIO + 11)
 
 // Less critical harware
 #define PRIO_SERVO (NORMALPRIO + 5)

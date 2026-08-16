@@ -703,11 +703,15 @@ public class BinaryProtocol {
                 } else {
                     log.error("writeData: Something is wrong, retrying... code = " + response[0]);
                 }
-                // huh?! when do we retry what here?!
                 continue;
             }
-            break;
+            return;
         }
+        // The chunk never landed in the ECU's page buffer. Proceeding to burn would persist
+        // stale data and silently drop the user's changes (observed: tune load "succeeds" but
+        // the VE table keeps old values after a power cycle). Fail loudly instead.
+        throw new IllegalStateException("Unable to write chunk offset=" + ecuOffset + " size=" + size
+            + " page=" + page + " after " + Timeouts.BINARY_IO_TIMEOUT + " ms of retries");
     }
 
     public void burn() {

@@ -10,6 +10,16 @@ import org.jetbrains.annotations.NotNull;
 public abstract class IsoTpConnector {
     private final static Logging log = Logging.getLogging(IsoTpConnector.class);
 
+    /**
+     * Gap between consecutive frames of a multi-frame send.
+     * The ECU's ISO-TP receive path buffers only 3 hardware CAN frames (bxCAN FIFO0 for the
+     * TS id), so a back-to-back burst overruns it whenever the ECU's RX thread is preempted
+     * for a few hundred microseconds - frames get dropped mid-stream and the receiver desyncs.
+     * 1 ms per frame stretches a 66-frame chunk burst to ~66 ms and gives the receiver
+     * several milliseconds of preemption tolerance.
+     */
+    private static final int CONSECUTIVE_FRAME_PACING_MS = 1;
+
     private final int canId;
 
     protected IsoTpConnector(int canId) {
@@ -50,6 +60,15 @@ public abstract class IsoTpConnector {
             connector.sendCanFrame((IsoTpConstants.ISO_TP_FRAME_CONSECUTIVE << 4) | ((idx++) & 0x0f), bytes, offset, len);
             offset += len;
             remaining -= len;
+            if (remaining > 0) {
+                // pace the burst (see CONSECUTIVE_FRAME_PACING_MS)
+                try {
+                    Thread.sleep(CONSECUTIVE_FRAME_PACING_MS);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
         }
     }
 
