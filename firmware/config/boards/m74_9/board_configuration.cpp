@@ -222,6 +222,12 @@ static void m74_9_boardConfigOverrides() {
 	copyArray(config->crankingFuelCoef, crankingFuelCoefDefault);
 	copyArray(config->crankingFuelBins, crankingFuelBinsDefault);
 
+	/* IMMO is force-disabled (physical bypass answers the BCM): the ECU-side
+	 * challenge-response algorithm is not implemented, so the 0x0713/0x0714
+	 * handshake traffic is pure noise. Forced on every boot because the stored
+	 * tune predates this bit. Remove once computeImmoResponse() is real. */
+	config->m74_9ImmoOff = true;
+
 	//CAN 1 bus overwrites
 	engineConfiguration->canRxPin = Gpio::G0;
 	engineConfiguration->canTxPin = Gpio::G1;
