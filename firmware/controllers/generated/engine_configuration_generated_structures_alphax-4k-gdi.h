@@ -2989,7 +2989,7 @@ struct engine_configuration_s {
 	offset 848 bit 27 */
 	bool useAbsolutePressureForLagTime : 1 {};
 	/**
-	 * Ramp the idle target down from the entry threshold over N seconds when returning to idle. Helps prevent overshooting (below) the idle target while returning to idle from coasting.
+	 * When returning to idle from coasting, start the closed-loop RPM target elevated by the 'RPM upper limit' idle detection threshold, then ramp it down to the normal target over the 'Ramp target duration'. Helps prevent RPM from dipping below the idle target on return to idle.
 	offset 848 bit 28 */
 	bool idleReturnTargetRamp : 1 {};
 	/**
@@ -6386,7 +6386,7 @@ struct engine_configuration_s {
 	 */
 	int8_t airmassToTimingValues[8] = {};
 	/**
-	 * idle return target ramp duration
+	 * Time for the idle RPM target to ramp down from the elevated return-to-idle value (normal target + 'RPM upper limit') to the normal target. Longer duration gives a gentler, slower settle to idle. Only used when 'Ramp target on return to idle' is enabled.
 	 * units: seconds
 	 * offset 4066
 	 */
