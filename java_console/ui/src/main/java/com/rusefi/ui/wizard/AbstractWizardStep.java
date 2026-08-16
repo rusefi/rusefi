@@ -81,6 +81,17 @@ public abstract class AbstractWizardStep implements WizardStep {
 
     /** Returns null when a persisted enum value is not exposed by the current board's INI. */
     protected static String readValue(IniField field, ConfigurationImage image) {
+        if (field instanceof EnumIniField) {
+            EnumIniField enumField = (EnumIniField) field;
+            int ordinal = (int) enumField.getType().readRawValue(image.getByteBuffer(enumField));
+            ordinal = ConfigurationImage.getBitRange(ordinal, enumField.getBitPosition(), enumField.getBitSize0() + 1);
+            // getStringValue serializes a beyond-max ordinal as a raw number so tunes round-trip;
+            // the wizard instead needs null here to force a fresh selection (the stored value
+            // belongs to a different board's INI, e.g. L9779 pins on a non-m74_9 board).
+            if ((enumField.getEnums().get(ordinal) == null) && (ordinal > enumField.getEnums().maxOrdinal())) {
+                return null;
+            }
+        }
         try {
             return stripQuotes(ConfigurationImageGetterSetter.getStringValue(field, image));
         } catch (OrdinalOutOfRangeException e) {

@@ -1,6 +1,6 @@
 plugins {
-  // [tag:java8]
-  id 'org.gradle.toolchains.foojay-resolver-convention' version '0.8.0'
+  // [tag:java8] TS plugin still needs Java 8 bytecode, but the build runs on current JDKs
+  id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
 }
 
 include ':version'

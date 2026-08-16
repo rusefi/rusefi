@@ -25,7 +25,6 @@ jar {
 shadowJar {
     archiveBaseName = 'rusefi_plugin_body'
     archiveClassifier = ''
-    manifest {
-        inheritFrom project.tasks.jar.manifest
-    }
+    // Shadow 9 inherits the jar manifest automatically; an explicit
+    // inheritFrom project.tasks.jar.manifest self-merges and recurses
 }
