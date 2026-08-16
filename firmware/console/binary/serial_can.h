@@ -33,11 +33,34 @@ public:
 		return rxFifo.getCount();
 	}
 
+	// ISO-TP flow control frames are consumed by the TX path (the FC wait in
+	// sendDataTimeout), not queued as RX data. Single-producer (CAN RX thread) /
+	// single-consumer (TS thread polling in CanTransport::waitForFlowControl).
+	void onFlowControlFrame(uint8_t blockSize, uint8_t minSeparationTime) {
+		fcBlockSize = blockSize;
+		fcMinSeparationTime = minSeparationTime;
+		// plain assignment, not '++': compound operators on volatile are deprecated in C++20
+		fcCounter = fcCounter + 1;
+	}
+
+	uint32_t getFcCounter() const {
+		return fcCounter;
+	}
+
+	void getLastFc(uint8_t &blockSize, uint8_t &minSeparationTime) const {
+		blockSize = fcBlockSize;
+		minSeparationTime = fcMinSeparationTime;
+	}
+
 protected:
   // CanStreamerState has non-sync fifo, unify?
 	fifo_buffer_sync<CanRxMessage, CAN_FIFO_FRAME_SIZE> rxFifo;
 	// diagnostics: frames dropped because rxFifo was full
 	uint32_t rxFifoOverflow = 0;
+	// latest flow control payload + a counter the FC wait polls on
+	volatile uint32_t fcCounter = 0;
+	volatile uint8_t fcBlockSize = 0;
+	volatile uint8_t fcMinSeparationTime = 0;
 };
 
 #if HAL_USE_CAN
@@ -48,6 +71,7 @@ public:
 
 	virtual can_msg_t transmit(CanTxMessage &ctfp, can_sysinterval_t timeout) override;
 	virtual can_msg_t receive(CANRxFrame *crfp, can_sysinterval_t timeout) override;
+	virtual can_msg_t waitForFlowControl(uint8_t *blockSize, uint8_t *minSeparationTime, can_sysinterval_t timeout) override;
 	virtual void onTpFirstFrame() override;
 
 	CanRxMessageSource *source;
