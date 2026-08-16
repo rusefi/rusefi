@@ -4,26 +4,25 @@ ext {
           junit5         : "org.junit.jupiter:junit-jupiter-api:$junit5Version",
           junit5engine   : "org.junit.jupiter:junit-jupiter-engine:$junit5Version",
           // Gradle 9 does not provide the JUnit Platform launcher implicitly anymore
-          junit5launcher : "org.junit.platform:junit-platform-launcher:1.10.2",
+          junit5launcher : "org.junit.platform:junit-platform-launcher:$junit5Version",
           junit5api   : "org.junit.jupiter:junit-jupiter-api:$junit5Version",
-          annotations    : "org.jetbrains:annotations:16.0.1",
+          annotations    : "org.jetbrains:annotations:26.1.0",
           jsr305         : "com.google.code.findbugs:jsr305:3.0.2",
-          antlr          : "org.antlr:antlr4:4.13.0",
+          antlr          : "org.antlr:antlr4:4.13.2",
           json           : "com.googlecode.json-simple:json-simple:1.1.1",
-          mockito        : "org.mockito:mockito-core:4.11.0",
+          mockito        : "org.mockito:mockito-core:5.23.0",
           javaxJson      : "javax.json:javax.json-api:1.1.4",
-          snakeyaml      : "org.yaml:snakeyaml:1.26",
-          commons_logging: "commons-logging:commons-logging:1.2",
+          snakeyaml      : "org.yaml:snakeyaml:2.6",
+          commons_logging: "commons-logging:commons-logging:1.4.0",
           jcip           : 'net.jcip:jcip-annotations:1.0',
-    // jakarta 3 works with java 8 which we keep for TS plugin
-    // one day once we give up on TS plugin we shall go jakarta 4 which would require java 11
-          jaxb           : 'jakarta.xml.bind:jakarta.xml.bind-api:3.0.1',
-          jaxb_runtime   : 'org.glassfish.jaxb:jaxb-runtime:3.0.2',
+    // jakarta 4 (the project bytecode is Java 25 now; jakarta 3 was kept for the TS plugin's java 8 runtime)
+          jaxb           : 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.5',
+          jaxb_runtime   : 'org.glassfish.jaxb:jaxb-runtime:4.0.9',
   ]
 
   ts_plugin_libs = [
-          httpclient  : "org.apache.httpcomponents.client5:httpclient5:5.4.2",
-          httpcore    : "org.apache.httpcomponents.core5:httpcore5:5.3.3",
+          httpclient  : "org.apache.httpcomponents.client5:httpclient5:5.6.4",
+          httpcore    : "org.apache.httpcomponents.core5:httpcore5:5.4.3",
           launcher_api: fileTree( dir: "lib", include: "TunerStudioPluginAPI.jar" )
   ]
 }

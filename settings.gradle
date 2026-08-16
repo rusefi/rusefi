@@ -1,5 +1,5 @@
 plugins {
-  // [tag:java8] TS plugin still needs Java 8 bytecode, but the build runs on current JDKs
+  // [tag:java25] the project ships Java 25 bytecode; foojay only fills toolchain gaps now
   id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
 }
 
