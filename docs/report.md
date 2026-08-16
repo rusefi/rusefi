@@ -2071,3 +2071,232 @@ Fixes:
 Firmware builds clean. User still needs to set the same MAP/IAT curves in
 their stored tune via TS (ConfigOverrides does not force curves - they must
 stay tunable). TPS divider still pending multimeter measurements.
+
+## 2026-08-16 - m74_9: parsed the rusEFI console .mlg capture, no-start diagnosis
+
+Analyzed rusEFI_outputChannels_2026-08-16_12_21_52_468.mlg (user capture of a
+failed start). Wrote mlq_dump.py (repo root) to decode the console MLQ format:
+
+- The console .mlg is the MLVLG\0 format from
+  java_console/ui/src/main/java/com/rusefi/sensor_logs/BinarySensorLog.java:
+  big-endian, 24-byte header, 89 bytes per field header (type/34B name/11B
+  unit/f32 scale/4B zero/1B precision/34B category), then 4 bytes per record
+  (0x00, counter, u16 tms) + packed fields + 1 checksum byte. Type bytes:
+  0=U8, 1=S8, 2=U16, 3=S16, 4=S32, 7=F32. Field names are the lowercase ini
+  names (rpmvalue, rawmap, ...), NOT the TS display names.
+- Gotcha: the 16-bit record timestamp is (epoch_ms * 100) & 0xFFFF, so it
+  advances 34464 per real second and wraps every ~1.9 s - unusable for
+  timing. Use the 'seconds' (uptime) field instead.
+
+What the capture shows (start attempt at uptime 41-46 s, 131 records):
+
+- Trigger is clean: trgsynchronizationcounter climbs 10->14->18->22->23,
+  totaltriggererrorcounter stays 0, no C9002/C9003. The 60-2 window work
+  holds. The user's '0 to 114' console spam is NOT an error - it is
+  printGaps() from trigger_decoder.cpp when isEngineSnifferEnabled &&
+  VerboseTriggerSynchDetails. The 60-2 shape has 116 events (58 teeth x 2
+  edges, indices 0..115), but printGaps runs only on the sync edge (the
+  user's tune syncs on Rise, i.e. even indices), the opposite edge just
+  increments the index silently - so exactly 58 prints per revolution with
+  eventIndex 0, 2, ..., 114. That is ~2 lines x 58 x ~3.7 rev/s = ~430
+  lines/s at 220 rpm. Turn both options off in TS to unload the console
+  path.
+- The engine never truly runs: rpm 219 (crank) -> 542 (one catch spike) ->
+  265/257/259 -> 0 the moment the starter disengages; 12 revolutions total.
+- MAP pulls almost no vacuum: 99.8 kPa key-on (3.97 V - correct), dips only
+  to 97.3-97.7 while cranking and 89.57 kPa (3.53 V) at the 542 rpm catch.
+  Closed-throttle cranking should read 40-60 kPa. So either the MAP port/
+  hose does not see the manifold, or the engine makes no vacuum (flooded/
+  low compression/throttle actually open).
+- Fueling follows the high MAP: cranking base 45.7 mg/cycle, running base
+  27-33 mg - roughly 2x normal, engine is flooding; plugs are likely wet.
+- Ignition: C9351/C9354 coil overcharge at the catch, dwellOverChargeCounter
+  to 18 in one second. With 4 ms dwell and instantrpm jitter of +-60-300 rpm
+  the angle-scheduled spark events arrive late and the overdwell protection
+  force-fires the coils (spark happens, just late). This is a symptom of
+  trigger jitter at low rpm, not a dwell table issue - keep dwell at 4 ms.
+
+Next steps for the user:
+
+- TS: disable Verbose Trigger Details + engine sniffer.
+- Vacuum test with the engine off: pull vacuum on the MAP port and watch kPa
+  drop in the console. If kPa moves, the sensor/board path is fine and the
+  problem is the engine side (compression, flood, throttle position).
+- Dry the plugs / crank with the throttle open to clear the flood, then
+  re-check cranking MAP: must drop to 40-60 kPa with the throttle closed.
+
+Update (same day, 13:18-13:22 captures): four new .mlg files in the repo root
+(13_18_11_642, 13_19_53_750, 13_21_17_732, 13_22_09_342) change the picture:
+
+- MAP chain is proven good: key-on 99.8 kPa (3.97 V, atmosphere), 79.9 kPa
+  at a 654 rpm catch (13_22), 75-77 kPa at 666-804 rpm (13_19), and it
+  tracks the throttle to 99.9 kPa at WOT (13_22). The Bosch curve + 1.555
+  divider are correct.
+- The 'cranking MAP must be 40-60 kPa' advice was WRONG for this car: it is
+  E-gas (ETB on TLE9201, TPS follows the pedal in 13_22, no separate IAC),
+  and E-gas engines crank with the plate cracked open - 94-96 kPa MAP while
+  cranking is expected, not a vacuum leak. User confirms the intake is
+  tight and the car starts on the OEM ECU.
+- The engine now catches every attempt (480-804 rpm) but cannot sustain.
+  Two distinct kill modes across the four captures:
+  * C9002 trigger desync 1-2 s after the catch at 500-804 rpm (13_18,
+    13_19). Best run 13_19: 270->666->804 rpm, MAP 77.6->75.3 kPa,
+    sync counter 23, then C9002 and instant stop.
+  * Slow collapse at ~260 rpm with constant coil overcharge (13_21,
+    13_22): in 13_22 the user opened the throttle to WOT (TPS 94.9%,
+    pedal 95.6%, MAP 99.9 kPa) and the engine still would not rev -
+    spark events keep arriving late (dwellOverChargeCounter 1->11->14->15)
+    and the overdwell protection force-fires.
+- The C9002 gap ratio at the failure is not yet captured. The firmware
+  prints 'newerr TRG ... gap=X.XXX expected from 1.600 to 3.750' on every
+  trigger error (silentTriggerError default off), so the user just needs to
+  capture the console text around the stall to see which side of the window
+  fails (or whether an extra noise edge appears inside the gap).
+
+Update (same day, console capture at the 10:56 catch): the failure is a
+noise burst, not a window problem. Verbose trigger capture at the catch
+(290->543 rpm) shows a ~7 ms burst of extra VR edges right at the first
+combustion: rise-to-rise intervals collapse monotonically from the normal
+3.68 ms down to ~33 us (30 kHz chatter), after one slightly stretched
+interval (~1.185x). Reconstruction of the intervals and the
+'synchronizationPoint @ index 48 expected 58/0 got 25/0' message:
+
+- A noise-distorted interval pair mid-revolution matched the sync gap
+  windows -> FALSE sync ~25 events before the real gap; the real gap then
+  arrives with the wrong count -> C9003 -> desync -> engine dies. Same
+  mechanism as the earlier C9003 at 51/58, with a different distorted pair.
+- The always-on TriggerNoiseFilter (trigger_central.cpp) cannot reject the
+  burst: it compares each level-period against the previous one with +-33%
+  tolerance, and the chatter is self-similar (each period >= 2/3 of the
+  previous). The AT32F435 EXTI has no hardware digital filter (F4-class).
+- The burst starts exactly at the transition to running (starter
+  disengagement / first strong coil+injector currents / ETB PWM) - board
+  pickup on the VR line, not a wheel or sensor defect (OEM ECU on the same
+  board/sensor runs fine).
+
+Options, cheapest first:
+
+- TS toggle useNoiselessTriggerDecoder = yes (worth retrying: the earlier
+  'masks C9002 then C9001' verdict was for the old failure mode and old
+  windows; the noiseless decoder predicts event timing and should reject
+  the burst). Watch for C9001 - revert if it appears.
+- Board-level RC on the VR trace at PF8 (e.g. 1k series + 1nF to ground,
+  tau 1 us): kills 30 kHz chatter, passes 60-2 teeth far beyond redline
+  (tooth pulse 167 us at 6500 rpm).
+- Firmware fallback: gate sync-point acceptance on the event count while
+  synced (only accept a gap at the expected count 58); this turns the
+  false-sync C9003 into 'ignore the fake gap and keep phase'. Shared
+  decoder logic - needs the full unit-test suite before landing.
+
+Update (same day, evening): root cause found for the 'catches periodically,
+then free-spins' behaviour - the board default was IM_WASTED_SPARK while the
+car has four individual COP coils (all four L9779 ignition pre-driver
+channels populated on the board). getIgnitionPinForIndex() in wasted spark
+returns cylinderIndex % (cylinders/2), so only ignitionPins[0] and [1] ever
+fire - two cylinders never get spark, the engine catches on the other two
+and free-spins in between (overcharge logs confirm: only two coil channels
+ever appear). Fix in m74_9 board config:
+
+- DefaultConfiguration: ignitionMode = IM_INDIVIDUAL_COILS, all four
+  ignitionPins = L9779_IGN_1..4 (physical: AL1=IGN_1->Coil 1, AM2=IGN_2->
+  Coil 2, AM1=IGN_3->Coil 3, AM3=IGN_4->Coil 4).
+- ConfigOverrides: force ignitionMode + the four ignitionPins on every boot
+  (the stored tune predates the fix and holds IM_WASTED_SPARK).
+- m74_9.yaml coil labels: dropped the 'Coils X,Y / not populated' wasted-
+  spark hints.
+- With IM_INDIVIDUAL_COILS the cranking runs two-wire wasted automatically
+  (spark_logic isTwoWireWasted), so cold start works even before the cam
+  half-moon syncs; full sequential needs the PB9 cam input.
+
+Injector chain verified healthy along the way: 'pins' shows L9779 WDA
+EC=0/wda_int=0/OUT_DIS=0 and OUT1-4 diag OK; the fuelbench run prints
+'Diag says Ok' while the output is on, i.e. the injector conducts current.
+The rail-pressure test was inconclusive (pump off, residual pressure, small
+pulse volume); re-test with the pump on and fuelbench 1 100 50 20.
+
+VBatt channel fixed: PA3 is NOT the battery. Charger tracking test
+(battery 12.4 -> 13.6 -> 14.42 V): PA3 moved DOWN (2.302 -> 2.184 V,
+regulated line), PA6 (1.536 -> 1.699 -> 1.798 V) and PA7 (1.577 -> 1.743 ->
+1.844 V) both follow the battery. PA6 matches the 33k/4.7k = 8.02 divider on
+all three points (PA7 looks like 68k/10k = 7.8 and is the backup).
+vbattAdcChannel = EFI_ADC_6, vbattDividerCoeff = 8.02 in both
+DefaultConfiguration and ConfigOverrides. Verify on the car: VBatt must dip
+to ~9-10 V while cranking (this is what drives the dwell voltage correction
+and injector deadtime during start).
+
+## 2026-08-16 - stock M74 calibration converted to rusEFI VE and target-AFR tables
+
+User exported two .clb maps from the original Itelma M74 calibration:
+
+- Bazovoe_modelnoe_ciklovoe_napolnenie_IM=0_dlin_vpusk.clb: 24x16 modeled
+  cycle air charge (mg per cyl per cycle) over RPM (600..6250) and MAP
+  (100..1500 mbar). This is the stock ECU's air-mass model.
+- Sostav_smesi_dlya_rezhima_PM_koef_int_=1.clb: 17x10 target lambda over
+  RPM (500..6250) and air charge (50..500 mg).
+
+Conversion to rusEFI tables on the default 16x16 axes (veRpmBins /
+lambdaRpmBins 650..7000 via setRpmBin, veLoadBins 10..160 kPa,
+lambdaLoadBins 30..250 kPa):
+
+- VE% = aircharge_mg / (MAP_kPa * 4.7526), where 4.7526 mg/kPa is the full
+  400cc-cylinder charge at 101.325 kPa / 20 C (same constant as rusEFI
+  idealGasLaw in speed_density_base.cpp).
+- Target-AFR table = ПМ lambda looked up at the stock-modeled air charge
+  for each (rpm, kPa) cell, shown in AFR units.
+
+Sanity points: 800 rpm / 35 kPa -> 113.5 mg -> VE 68% (stock model, higher
+than the generic 45-50% rule of thumb - trust the stock model); 4000 rpm /
+100 kPa -> 452 mg -> VE 95%; 6250 rpm / 100 kPa -> VE 77%.
+
+Cross-check against the 18:23/18:48 logs: at cranking (250 rpm, 94 kPa)
+the stock model gives 326 mg -> 22.2 mg stoich per cyl/cycle, so
+crankingCycleBaseFuel 20-27 mg x crankingFuelCoef 1.5-1.6 is correct, and
+the observed 124 mg/cycle (crankingFuelCoef ~4.6 in the tune) is a ~5.6x
+flood - consistent with the measured 14-17 ms cranking pulses.
+
+Open follow-ups:
+- ПМ is one stock mode; if the tuning tool has a separate main part-load
+  mixture map (or idle map), convert it the same way for a better AFR
+  table (the ПМ map has a lambda 0.84 zone at part load above ~2250 rpm).
+- Absolute scale of the stock air model may be off by a few % (the stock
+  applies extra temperature/mode coefficients on top); verify against a
+  wideband and scale the VE table.
+- Cells above 150 kPa are flat extrapolation (irrelevant for NA).
+
+Update (same day): user pointed out the engine is NA so the load axis should
+not exceed 100 kPa, and asked for the TS orientation. Regenerated both
+tables with veLoadBins/lambdaLoadBins = 20, 30, 35, 40, 45, 50, 55, 60, 65,
+70, 75, 80, 85, 90, 95, 100 (16 bins, 5 kPa steps across the idle/cruise
+range, top row 100 kPa covers WOT; interpolation is flat past the last
+bin). Tables printed rows=load, cols=RPM to match the TS table editor
+(xBins = veRpmBins, yBins = veLoadBins). User has veOverrideMode = MAP.
+
+Update (same day, evening): user could not edit the table axes in TS. Instead
+of fighting the TS curve editor, the axes are now forced from firmware:
+m74_9 ConfigOverrides sets veLoadBins and lambdaLoadBins to 20..100 kPa (16
+bins) and restores the default crankingFuelCoef curve on every boot (the
+stored tune holds ~4.6 at 20 C, a ~3x flood). TS axis editing notes: axes
+are edited via right-click -> Y Axis/X Axis curve editor, not inline in the
+grid; editing offline does not persist (rusEFI stores the tune only on the
+ECU); bins must be strictly ascending or the burn is rejected by
+validateConfig. Fresh rusefi.bin built and placed in firmware/deliver/.
+
+## 2026-08-16 - java console 'failed to save tune: ordinal out of range 280' fixed
+
+Saving the tune from the rusEFI console failed with OrdinalOutOfRangeException
+in ignitionKeyDigitalPin: the m74_9 ini gpio_list contains only brain pins
+(178 entries, max ordinal 177) while the firmware holds L9779_PIN_KEY (280,
+forced by m74_9 ConfigOverrides). The value is valid firmware-side; only the
+.msq serialization path threw. Fix in java_console (inifile module):
+
+- ConfigurationImageGetterSetter.getStringValue: an enum ordinal beyond the
+  ini list is serialized as its raw number instead of throwing, so the tune
+  file saves.
+- setValue2: accepts a raw numeric ordinal as a fallback so such tunes
+  round-trip on load.
+- ConfigurationImageGetterSetterTest updated to cover the numeric
+  serialization and its round-trip; :inifile:test passes (docker gradle).
+- Rebuilt console/rusefi_console.jar via :ui:shadowJar.
+
+Note: 'save tune' only writes a local .msq backup; per-field changes and
+Burn are unaffected, so the error was never losing ECU-side settings.

@@ -29,8 +29,13 @@ public class ConfigurationImageGetterSetter {
 
                 String label = field.getEnums().get(ordinal);
                 if (label == null) {
-                    if (ordinal > field.getEnums().maxOrdinal())
-                        throw new OrdinalOutOfRangeException("Ordinal out of range " + ordinal + " in " + field.getName() + " while " + field.getEnums().size() + " " + field.getType());
+                    if (ordinal > field.getEnums().maxOrdinal()) {
+                        // Valid firmware-side values can be absent from the board's ini enum list
+                        // (e.g. extended pseudo-pins like L9779_PIN_KEY while gpio_list only covers
+                        // the brain pins). Serialize the raw ordinal so the tune file round-trips
+                        // instead of failing the save with OrdinalOutOfRangeException.
+                        return "\"" + ordinal + "\"";
+                    }
                     // sparse key-value enum lists omit INVALID placeholder entries, see PinoutLogic.enumToOptionsList()
                     label = "INVALID";
                 }
@@ -156,6 +161,16 @@ public class ConfigurationImageGetterSetter {
             public Void visit(EnumIniField field) {
                 String v = value;
                 int ordinal = findEnumOrdinal(field, v);
+                if (ordinal == -1) {
+                    // Tolerate raw numeric ordinals serialized for values absent from the ini enum
+                    // list (see getStringValue above) so such tunes round-trip.
+                    String unquoted = EnumIniField.isQuoted(v) ? javax.management.ObjectName.unquote(v) : v;
+                    try {
+                        ordinal = Integer.parseInt(unquoted.trim());
+                    } catch (NumberFormatException ignored) {
+                        ordinal = -1;
+                    }
+                }
                 if (ordinal == -1) {
                     throw new IllegalArgumentException(name + ": Enum name not found " + v);
                 }
