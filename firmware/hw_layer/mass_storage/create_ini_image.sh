@@ -6,8 +6,10 @@
 # fail on error
 set -e
 
-if [ "$(expr substr $(uname -s) 1 6)" == "CYGWIN" ] || [ "$(expr substr $(uname -s) 1 5)" == "MINGW" ]; then
-  echo No image on $(uname -s)
+# BSD expr on macOS has no 'substr' - use bash parameter expansion instead
+OS_NAME=$(uname -s)
+if [ "${OS_NAME:0:6}" = "CYGWIN" ] || [ "${OS_NAME:0:5}" = "MINGW" ]; then
+  echo No image on $OS_NAME
   exit 0
 fi
 

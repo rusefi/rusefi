@@ -2414,3 +2414,36 @@ Fixes (defense in depth):
 Validation: m74_9 clean rebuild OK, simulator target builds, testCanSerial
 6/6 green, :ecu_io:test + :ui:shadowJar green (console jar rebuilt,
 CONSOLE_VERSION 20260816).
+
+## 2026-08-16 (macOS) - build adapted to run natively on the macOS host
+
+The user moved firmware/console/unit-test builds from the rusefi_build Docker
+container to the macOS host (arm64). All blockers found and fixed:
+
+- firmware/bin/compile.sh: prefers grealpath/gnproc (native /bin/realpath has no
+  --relative-to), sed -r -> sed -E, prefers gmake (macOS make is GNU 3.81).
+- common_script_read_meta_env.inc: 'cut -f -1' replaced with bash parameter
+  expansion (BSD cut rejects negative field numbers).
+- bundle.mk: skips the Windows simulator on Darwin (BUNDLE_SIMULATOR default
+  false there); 'ln -rfs' replaced with an LN variable (BSD ln has no -r);
+  hex2dfu: the prebuilt .bin is a Linux x86_64 ELF, so on Darwin a native binary
+  is built from misc/hex2dfu/hex2dfu.c. GOTCHA: the hex2dfu rule must live after
+  all conditional blocks - a TAB-indented line inside an ifeq that follows a
+  rule parses as a recipe of that rule, silently un-defining variables (LN
+  expanded empty and xargs ran '{}' as a command).
+- hw_layer/mass_storage/create_image.sh + create_ini_image*.sh: brew sbin added
+  to PATH for mkfs.fat/fatlabel/mcopy; GNU 'expr substr' replaced with bash
+  ${var:0:n}.
+- java_tools/java_tools.mk: flock auto-detect (brew flock or run unlocked).
+- unit_tests/test.sh + run_coverage.sh: gmake/gnproc/sysctl detection.
+
+Toolchain: Homebrew arm-none-eabi-gcc ships WITHOUT newlib (no target stdint.h)
+- unusable. Installed ARM GNU Toolchain 14.2.1 (darwin-arm64) to
+/opt/arm-gnu-toolchain (same version as the container). Gradle's
+languageVersion=11 toolchain needs the daemon on JDK 11: brew openjdk@11
+(JAVA_HOME). Installed via brew: coreutils, make, mtools, dosfstools, flock,
+python3.
+
+Validation (all on the host): m74_9 clean build OK (deliver/rusefi.bin),
+bundle + snapshot OK, unit_tests testCanSerial 6/6 green, console jar via
+gradlew clean :ui:shadowJar OK. See docs/macos-local-build.md for setup steps.

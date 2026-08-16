@@ -6,8 +6,10 @@
 # fail on error
 set -e
 
-if [ "$(expr substr $(uname -s) 1 6)" == "CYGWIN" ] || [ "$(expr substr $(uname -s) 1 5)" == "MINGW" ]; then
-  echo No image on $(uname -s)
+# BSD expr on macOS has no 'substr' - use bash parameter expansion instead
+OS_NAME=$(uname -s)
+if [ "${OS_NAME:0:6}" = "CYGWIN" ] || [ "${OS_NAME:0:5}" = "MINGW" ]; then
+  echo No image on $OS_NAME
   exit 0
 fi
 
@@ -19,6 +21,10 @@ BOARD_SPECIFIC_URL=$5
 
 # mkfs.fat and fatlabel are privileged on some systems
 PATH="$PATH:/usr/sbin"
+# macOS: dosfstools/mtools install into Homebrew's sbin
+if command -v brew >/dev/null 2>&1; then
+  PATH="$PATH:$(brew --prefix 2>/dev/null)/sbin"
+fi
 
 echo "create_ini_image_compressed: ini $FULL_INI to $H_OUTPUT size $FS_SIZE for $SHORT_BOARD_NAME [$BOARD_SPECIFIC_URL]"
 

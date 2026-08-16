@@ -21,10 +21,22 @@ if [ ! -f "venv/bin/gcovr" ]; then
 fi
 
 # 3. Clean and Build unit tests with coverage enabled
-JOBS=$(nproc)
+# macOS has no nproc and its default 'make' is BSD make; prefer GNU tools
+if command -v gmake >/dev/null 2>&1; then
+	MAKE=gmake
+else
+	MAKE=make
+fi
+if command -v nproc >/dev/null 2>&1; then
+	JOBS=$(nproc)
+elif command -v gnproc >/dev/null 2>&1; then
+	JOBS=$(gnproc)
+else
+	JOBS=$(sysctl -n hw.ncpu 2>/dev/null || echo 4)
+fi
 echo "Building unit tests with coverage using $JOBS cores..."
 # make clean
-make -j$JOBS COVERAGE=yes
+$MAKE -j$JOBS COVERAGE=yes
 
 # 4. Run unit tests
 echo "Running unit tests..."
