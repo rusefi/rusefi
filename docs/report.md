@@ -2352,3 +2352,33 @@ that answers the BCM, so the ECU's IMMO frames are useless.
   updated); LimpManager ClearReason::Immobilizer stays unused.
 
 Validation: m74_9 clean rebuild OK, fresh deliver/rusefi.bin.
+
+## 2026-08-16 (late night) - m74_9: load-tune truncation root cause fixed (FC wait consumed RX frames)
+
+After the link-drop fix the user could load 21129.msq, the burn ran (MFS write
+OK) but the ECU kept old values after reboot, and the console showed
+"Got only 18 bytes while expecting 462 for command 0x43" + an outofrange
+storm (555 out-of-range responses, zero write chunks counted).
+
+Root cause: sendDataTimeout()'s flow-control wait pulled frames from the
+shared RX FIFO and re-parsed them through receiveFrame() while looking for
+the FC. The console runs a background output-channel puller, so new request
+frames arrive while the ECU is still FC-waiting for its previous multi-frame
+response. The wait consumed the first frames of the next write chunk
+(FF + CFs -> exactly the observed 18 bytes), corrupted the ISO-TP RX state
+(desync), and everything after was mis-parsed as out-of-range garbage. The
+burn then persisted the stale page buffer - hence old values after reboot.
+
+Fix:
+- ICanReceiver::waitForFlowControl() added; CanTsListener routes FC frames
+  (0x3x) to a counter slot instead of the RX FIFO (they acknowledge OUR TX,
+  they are not RX data), and CanTransport polls that slot (1 ms granularity,
+  full timeout budget). Foreign frames stay queued for the next command.
+- sendDataTimeout() no longer consumes/parses foreign frames while waiting
+  for FC; blockSize/separationTime are read from the routed FC payload.
+- TestCanTransport mock implements the new pure virtual (unit tests).
+- UiVersion.CONSOLE_VERSION bumped 20260811 -> 20260816 (was missed when
+  LinkManager was changed), console jar rebuilt.
+
+Validation: m74_9 clean rebuild OK (deliver/rusefi.bin), simulator target
+also builds (bundle), testCanSerial 6/6 green, :ui:shadowJar green.

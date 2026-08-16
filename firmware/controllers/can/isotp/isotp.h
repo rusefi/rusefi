@@ -82,6 +82,15 @@ class ICanReceiver {
 public:
   virtual can_msg_t receive(CANRxFrame *crfp, can_sysinterval_t timeout) = 0;
   virtual void onTpFirstFrame() = 0;
+
+  /**
+   * Wait for the ISO-TP flow control frame that acknowledges our FIRST frame.
+   * Implementations MUST NOT consume regular data frames while waiting: foreign
+   * frames that arrive in the meantime (background output-channel requests, the
+   * next write chunk) have to stay queued for the next read, otherwise the shared
+   * RX state machine corrupts mid-packet and the next command gets truncated.
+   */
+  virtual can_msg_t waitForFlowControl(uint8_t *blockSize, uint8_t *minSeparationTime, can_sysinterval_t timeout) = 0;
 };
 
 class IsoTpBase {

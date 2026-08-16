@@ -47,6 +47,14 @@ void CanTsListener::decodeFrame(const CANRxFrame& frame, efitick_t /*nowNt*/) {
 	if (frame.IDE) {
 		return;
 	}
+	// ISO-TP flow control frames acknowledge OUR multi-frame TX. Route them to the FC
+	// wait (CanTransport::waitForFlowControl) instead of queuing them as RX data -
+	// otherwise a concurrent background request would be mis-parsed by the FC wait and
+	// corrupt the ISO-TP RX state (see sendDataTimeout in isotp.cpp).
+	if ((frame.DLC >= 3) && (((frame.data8[0] >> 4) & 0xf) == ISO_TP_FRAME_FLOW_CONTROL)) {
+		onFlowControlFrame(frame.data8[1], frame.data8[2]);
+		return;
+	}
 	// todo: what if the FIFO is full?
 	CanRxMessage msg(frame);
 	if (engineConfiguration->verboseIsoTp) {
@@ -80,6 +88,22 @@ can_msg_t CanTransport::receive(CANRxFrame *crfp, can_sysinterval_t timeout) {
 	if (this->source->get(msg, timeout)) {
 		*crfp = msg.frame;
 		return CAN_MSG_OK;
+	}
+	return CAN_MSG_TIMEOUT;
+}
+
+can_msg_t CanTransport::waitForFlowControl(uint8_t *blockSize, uint8_t *minSeparationTime, can_sysinterval_t timeout) {
+	// FC frames never enter the RX FIFO (CanTsListener::decodeFrame bumps a counter
+	// instead), so poll that counter. Anything else that arrives while we wait stays
+	// queued in the RX FIFO for the next command instead of being consumed here.
+	uint32_t initialCount = g_listener.getFcCounter();
+	efitick_t deadline = getTimeNowNt() + MS2NT(TIME_I2MS(timeout));
+	while (getTimeNowNt() < deadline) {
+		if (g_listener.getFcCounter() != initialCount) {
+			g_listener.getLastFc(*blockSize, *minSeparationTime);
+			return CAN_MSG_OK;
+		}
+		chThdSleepMilliseconds(1);
 	}
 	return CAN_MSG_TIMEOUT;
 }

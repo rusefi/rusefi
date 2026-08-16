@@ -245,43 +245,28 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 
 	// get a flow control (FC) frame
 #if !EFI_UNIT_TEST // todo: add FC to unit-tests?
-	CANRxFrame rxmsg;
-	// Wait up to the full timeout for the FC, but skip foreign frames for the whole
-	// duration. A fixed skip count (previously 8) is consumed in ~12 ms on a busy bus
-	// (a board BCM emulation alone sends hundreds of frames/s), which aborted every
-	// multi-frame TX long before the peer's FC could arrive.
-	// Note: 'timeout' is in ChibiOS system ticks (ms), getTimeNowNt() is in NT ticks - convert.
-	efitick_t fcDeadline = getTimeNowNt() + MS2NT(TIME_I2MS(timeout));
-	for (size_t numFcReceived = 0; ; numFcReceived++) {
-		if (rxTransport->receive(&rxmsg, timeout) != CAN_MSG_OK) {
+	// The FC is handled at the transport level: CanTsListener routes FC frames to the
+	// TX path and they never enter the RX FIFO. Foreign frames that arrive while we
+	// wait (background output-channel requests, the next write chunk) stay queued for
+	// the next command. Previously this loop consumed them through receiveFrame(),
+	// which corrupted the shared ISO-TP RX state mid-packet and truncated the next
+	// command ("Got only N bytes while expecting M" + outofrange storm -> the tune
+	// chunks were silently lost and the burn persisted stale page data).
+	uint8_t blockSize = 0;
+	uint8_t minSeparationTime = 0;
+	if (rxTransport->waitForFlowControl(&blockSize, &minSeparationTime, timeout) != CAN_MSG_OK) {
 #ifdef SERIAL_CAN_DEBUG
-				PRINT("*** ERROR: CAN Flow Control frame not received" PRINT_EOL);
+		PRINT("*** ERROR: CAN Flow Control frame not received" PRINT_EOL);
 #endif /* SERIAL_CAN_DEBUG */
-				//warning(ObdCode::CUSTOM_ERR_CAN_COMMUNICATION, "CAN Flow Control frame not received");
-				return 0;
-			}
-			// a foreign frame arrived while we wait for FC: keep waiting until the deadline,
-			// otherwise a busy bus would abort every multi-frame TX
-			if ((frameType != ISO_TP_FRAME_FLOW_CONTROL) && (getTimeNowNt() < fcDeadline)) {
-				continue;
-			}
+		//warning(ObdCode::CUSTOM_ERR_CAN_COMMUNICATION, "CAN Flow Control frame not received");
+		return 0;
+	}
+	if (blockSize != 0 || minSeparationTime != 0) {
+		// todo: process other Flow Control fields (see ISO 15765-2)
 #ifdef SERIAL_CAN_DEBUG
-				efiPrintf("*** ERROR: CAN Flow Control mode not supported");
+		efiPrintf("*** ERROR: CAN Flow Control fields not supported");
 #endif /* SERIAL_CAN_DEBUG */
-				//warning(ObdCode::CUSTOM_ERR_CAN_COMMUNICATION, "CAN Flow Control mode not supported");
-				return 0;
-			}
-			uint8_t blockSize = rxmsg.data8[isoHeaderByteIndex + 1];
-			uint8_t minSeparationTime = rxmsg.data8[isoHeaderByteIndex + 2];
-			if (blockSize != 0 || minSeparationTime != 0) {
-				// todo: process other Flow Control fields (see ISO 15765-2)
-#ifdef SERIAL_CAN_DEBUG
-				efiPrintf("*** ERROR: CAN Flow Control fields not supported");
-#endif /* SERIAL_CAN_DEBUG */
-				//warning(ObdCode::CUSTOM_ERR_CAN_COMMUNICATION, "CAN Flow Control fields not supported");
-			}
-			break;
-		}
+		//warning(ObdCode::CUSTOM_ERR_CAN_COMMUNICATION, "CAN Flow Control fields not supported");
 	}
 
 	// send the rest of the data
