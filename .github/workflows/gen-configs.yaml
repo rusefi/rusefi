@@ -20,7 +20,7 @@ jobs:
     - uses: ./.github/actions/setup-java
       with:
         # using version 21 here just for fun. See build-tsplugin-body.yaml
-        java-version: '21'
+        java-version: '25'
 
     - name: Test Compiler
       run: javac -version

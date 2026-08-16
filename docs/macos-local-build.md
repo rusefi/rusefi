@@ -9,14 +9,14 @@ documents the required local tools.
 ### 1. Homebrew packages
 
 ```bash
-brew install coreutils make mtools dosfstools flock python3 openjdk@11
+brew install coreutils make mtools dosfstools flock python3 openjdk@25
 ```
 
 - `coreutils` - GNU `realpath`/`nproc` (used as `grealpath`/`gnproc`, detected automatically)
 - `make` - GNU Make 4.x as `gmake` (macOS ships ancient GNU Make 3.81)
 - `mtools dosfstools` - `mcopy`/`mkfs.fat`/`fatlabel` for the mass-storage ramdisk image
 - `flock` - serializes parallel gradle invocations (optional; the build falls back to unlocked)
-- `openjdk@11` - gradle's `languageVersion=11` toolchain requires JDK 11
+- `openjdk@25` - the project's Java toolchain (Gradle 9.x runs on and compiles with JDK 25)
 
 ### 2. ARM cross toolchain (from ARM, NOT brew)
 
@@ -35,7 +35,7 @@ sudo tar -xJf /tmp/arm-gnu-toolchain.tar.xz -C /opt/arm-gnu-toolchain --strip-co
 
 ```bash
 export PATH="/opt/arm-gnu-toolchain/bin:$PATH"
-export JAVA_HOME=/opt/homebrew/opt/openjdk@11/libexec/openjdk.jdk/Contents/Home
+export JAVA_HOME=/opt/homebrew/opt/openjdk@25/libexec/openjdk.jdk/Contents/Home
 export PATH="$JAVA_HOME/bin:$PATH"
 ```
 
@@ -78,9 +78,9 @@ produces `console/rusefi_console.jar`.
   beyond the toolchain + JDK above.
 - `firmware/bin/compile.sh` and friends remain compatible with Linux; macOS
   branches are guarded by `uname -s`.
-- If gradle complains about a missing Java 11 toolchain, JAVA_HOME is not set
-  (see step 3); gradle's daemon must run on JDK 11 because
-  `build.gradle` pins `languageVersion=11`.
+- Gradle 9.7 runs on JVM 17-26; the project toolchain is Java 25
+  (`languageVersion=25` in the root build.gradle), while source/target stays
+  at Java 8 so the TunerStudio plugin keeps working on TS's Java 8 runtime.
 - The repo directory is shared with the Docker container if you still use it:
   `rm -rf build .gradle firmware/build` before switching build environments,
   because gradle's configuration cache and make's dependency files embed

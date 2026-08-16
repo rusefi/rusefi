@@ -18,10 +18,6 @@ def userHome = System.properties['user.home']
 jar {
   archiveBaseName = jarName
 
-  def projectToolchain = java.toolchain {
-    languageVersion = JavaLanguageVersion.of(11)
-  }
-
   manifest {
     attributes(
       'Built-Date': new Date().format('yyyy-MM-dd HH:mm:ss'),
@@ -41,9 +37,8 @@ shadowJar {
   archiveClassifier = ''
 
   destinationDirectory = file( 'build' + '/' + jarDir )
-  manifest {
-      inheritFrom project.tasks.jar.manifest
-  }
+  // Shadow 9 inherits the jar manifest automatically; an explicit
+  // inheritFrom project.tasks.jar.manifest self-merges and recurses
 
   /*
    to keep only required

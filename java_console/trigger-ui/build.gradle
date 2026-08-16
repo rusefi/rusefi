@@ -10,6 +10,12 @@ dependencies {
     api project(':autoupdate') // a mess of UI code reuse
 }
 
+// The only file under src/test is a manual sandbox (TriggerImageOnlyWheelSandbox),
+// not a JUnit test class - Gradle 9 fails the task when nothing is discovered.
+test {
+    failOnNoDiscoveredTests = false
+}
+
 shadowJar {
   manifest {
     attributes(

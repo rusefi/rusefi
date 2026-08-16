@@ -2447,3 +2447,38 @@ python3.
 Validation (all on the host): m74_9 clean build OK (deliver/rusefi.bin),
 bundle + snapshot OK, unit_tests testCanSerial 6/6 green, console jar via
 gradlew clean :ui:shadowJar OK. See docs/macos-local-build.md for setup steps.
+
+## 2026-08-16 (night) - Java stack migrated to JDK 25 (Gradle 9.7)
+
+The whole Java side now builds and tests on JDK 25:
+
+- Gradle wrapper 8.14.5 -> 9.7.0 (8.x runs on JVM <= 24; Java 25 support starts
+  at Gradle 9.1 per the official compatibility matrix). The stale "gradle 8
+  needed for java 8 compatibility" comment was wrong: Gradle 9 still compiles
+  with source/target 8, which is what the TS plugin runtime needs.
+- Root build.gradle toolchain languageVersion 11 -> 25. Bytecode stays Java 8
+  (sourceCompatibility/targetCompatibility = '8', verified: class major 52)
+  because TunerStudio ships a Java 8 runtime for the plugin.
+- ts_plugin_launcher/build.gradle: removed a stray 'java.toolchain { 11 }'
+  inside the jar block (an unused variable that silently overrode the root
+  toolchain); removed shadowJar 'manifest { inheritFrom ... }' - Shadow 9
+  inherits the jar manifest automatically and the explicit inheritFrom
+  self-merges into a StackOverflowError.
+- dependencies.gradle + root build.gradle: testRuntimeOnly
+  junit-platform-launcher (Gradle 9 removed the implicit launcher wiring).
+- trigger-ui/build.gradle: failOnNoDiscoveredTests = false (its only test
+  source is a manual sandbox, not a JUnit test).
+- AbstractWizardStep.readValue: returns null when a stored enum ordinal is
+  beyond the board's INI enum list - the numeric fallback added for the
+  L9779_PIN_KEY tune-save fix previously leaked into the wizard and broke
+  CltSensorPanelTest/TpsPanelTest (pre-existing failures from that fix,
+  surfaced by running the full 'gradlew test' for the first time in a while).
+- shadowVersion 8.3.6 -> 9.6.1, foojay-resolver-convention 0.8.0 -> 1.0.0.
+- CI: setup-java default 17 -> 25, gen-configs.yaml 21 -> 25.
+- .devcontainer/Dockerfile: Adoptium JDK 25 installed (gradle 9 refuses to run
+  on the image's default java-11).
+
+Validation on the mac (JDK 25.0.4): 'gradlew test' all modules green,
+'gradlew clean :ui:shadowJar' OK, m74_9 clean build + bundle OK (gradle
+config-gen runs under 25). The user's rusefi_build container no longer exists
+(host-only builds); the Dockerfile is ready for the next image.

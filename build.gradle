@@ -14,9 +14,10 @@ allprojects {
           // TS still comes with 1.8 and we have a plugin, lets build compatible
           sourceCompatibility = '8'
           targetCompatibility = '8'
-          // [tag:java8]
+          // [tag:java8] bytecode stays at Java 8 for the TS plugin runtime, but the
+          // COMPILER (and the gradle daemon / test JVM) run on the current JDK (25).
           toolchain {
-            languageVersion.set(JavaLanguageVersion.of(11))
+            languageVersion.set(JavaLanguageVersion.of(25))
           }
         }
 
@@ -24,6 +25,8 @@ allprojects {
             implementation global_libs.annotations
             testImplementation global_libs.junit5
             testImplementation global_libs.junit5engine
+            // Gradle 9 removed the implicit JUnit Platform launcher wiring
+            testRuntimeOnly global_libs.junit5launcher
         }
 
       test {
@@ -35,6 +38,9 @@ allprojects {
     gradle.projectsEvaluated {
         tasks.withType(JavaCompile) {
             options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+            // [tag:java8] source/target 8 is obsolete on modern javac; it is kept
+            // intentionally for the TS plugin - silence the per-build warning
+            options.compilerArgs << "-Xlint:-options"
         }
     }
 
