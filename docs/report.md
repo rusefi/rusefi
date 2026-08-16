@@ -2045,3 +2045,29 @@ Update (same day): VBatt calibration validated on the car - rusEFI shows
 The 5.679 divider is correct; dwell correction and injector deadtime now
 see the real battery voltage. Next: start the engine with dwell back at
 4 ms and confirm the stall + C9003 false-sync are gone.
+
+## 2026-08-16 - m74_9: MAP/T-MAP calibration from the Bosch 0 261 230 217 datasheet
+
+The Lada DAD 21800-1413010 is a Bosch 0 261 230 217 T-MAP (pressure + NTC,
+Delphi 28234360 is the analog). User supplied the datasheet photo (in repo as
+0261230217.jpg, OCR'd via macOS Vision):
+
+- Pressure: Vout = (0.85/95 * P[kPa] - 0.1) * Us, range 10-115 kPa
+  (0.4 V @ 20 kPa, 4.65 V @ 115 kPa at Us = 5 V) -> 3.974 V at 100 kPa.
+- NTC: -40C=45303 ... 45C=987.4, 50C=833.8 ... 130C=89.28 ohm (full table in
+  the photo), B(25/85) ~ 3550K.
+
+Fixes:
+- MAP channel (EFI_ADC_1/PA1) has a real board divider of 1.555 (raw reads
+  2.555 V at 100 kPa where the sensor outputs 3.974 V), NOT the global 2.0
+  guess. Added per-channel getAnalogInputDividerCoefficient() override for
+  m74_9. With 2.0 the MAP voltage (and the whole VE load axis) was 1.29x too
+  high - the engine ran 10 s on garbage mixture.
+- MAP curve in DefaultConfiguration: MT_CUSTOM 0.4 V @ 20 kPa / 4.65 V @
+  115 kPa (fresh configs; the stored tune keeps its own curve).
+- IAT NTC (the T-MAP's own temperature sensor) in DefaultConfiguration:
+  Steinhart-Hart points -20C=15458 / 40C=1174 / 110C=144.2 ohm, bias 1500.
+
+Firmware builds clean. User still needs to set the same MAP/IAT curves in
+their stored tune via TS (ConfigOverrides does not force curves - they must
+stay tunable). TPS divider still pending multimeter measurements.

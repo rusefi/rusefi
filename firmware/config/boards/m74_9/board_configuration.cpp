@@ -102,7 +102,29 @@ static void m74_9_boardDefaultConfiguration() {
 
 	engineConfiguration->clt.adcChannel = EFI_ADC_39; // ADC3 PF5
 	engineConfiguration->iat.adcChannel = EFI_ADC_32; // ADC3 PF6
+
+	/* IAT = the NTC inside the Bosch 0 261 230 217 T-MAP (pin 2). Steinhart-Hart
+	 * reference points from the datasheet NTC table:
+	 *   -20C = 15458, 40C = 1174, 110C = 144.2 ohm
+	 * Board pullup on thermistor inputs is 1500 ohm. */
+	engineConfiguration->iat.config.tempC_1 = -20;
+	engineConfiguration->iat.config.resistance_1 = 15458;
+	engineConfiguration->iat.config.tempC_2 = 40;
+	engineConfiguration->iat.config.resistance_2 = 1174;
+	engineConfiguration->iat.config.tempC_3 = 110;
+	engineConfiguration->iat.config.resistance_3 = 144.2f;
+	engineConfiguration->iat.config.bias_resistor = 1500;
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_1; // AC3 -> 74HC14 -> RS358A -> PA1
+
+	/* Bosch 0 261 230 217 T-MAP (Lada 21800-1413010):
+	 * Vout = (0.85/95 * P[kPa] - 0.1) * Us, datasheet curve 0.4 V @ 20 kPa,
+	 * 4.65 V @ 115 kPa at Us = 5 V. Only for fresh configs - the stored tune
+	 * keeps its own curve (set it in TS: MAP type Custom, same two points). */
+	engineConfiguration->map.sensor.type = MT_CUSTOM;
+	engineConfiguration->mapLowValueVoltage = 0.4f;
+	engineConfiguration->map.sensor.lowValue = 20;
+	engineConfiguration->mapHighValueVoltage = 4.65f;
+	engineConfiguration->map.sensor.highValue = 115;
 
 	/* Battery sense: bench adc_report shows PA3 raw ~2.29 V stable; PA2 is
 	 * the backup candidate - verify by varying the supply voltage and watching
@@ -160,6 +182,26 @@ static void m74_9_boardConfigOverrides() {
 	engineConfiguration->canRxPin = Gpio::G0;
 	engineConfiguration->canTxPin = Gpio::G1;
 	setupEtb();
+}
+
+/**
+ * Per-channel analog input divider.
+ *
+ * MAP (AC3 -> RS358A -> PA1, EFI_ADC_1) is NOT 2:1 like the global
+ * analogInputDividerCoefficient guess: the Bosch 0 261 230 217 T-MAP
+ * outputs Vout = (0.85/95 * P[kPa] - 0.1) * Us (0.4 V @ 20 kPa,
+ * 4.65 V @ 115 kPa at Us = 5 V), i.e. 3.974 V at 100 kPa, while the ADC
+ * raw reads 2.555 V there. The board divider is therefore
+ * 3.974 / 2.555 = 1.555 (looks like a 5.6k/10k pair). With the 2.0
+ * coefficient the MAP voltage (and so the kPa load axis) was 1.29x too
+ * high - the VE table picked the wrong cells and the engine barely ran.
+ * TPS/pedal channels keep the global coefficient until measured.
+ */
+float getAnalogInputDividerCoefficient(adc_channel_e hwChannel) {
+	if (hwChannel == EFI_ADC_1) {
+		return 1.555f;
+	}
+	return engineConfiguration->analogInputDividerCoefficient;
 }
 
 static struct l9779_config l9779_cfg = {
