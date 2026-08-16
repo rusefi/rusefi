@@ -184,7 +184,7 @@ pins:
   - pin: AL1
     id: L9779_IGN_1
     class: outputs
-    function: Coil 1 (< +2.5v) / Coils 1,4
+    function: Coil 1 (< +2.5v)
     type:
 
   - pin: AL4
@@ -194,19 +194,19 @@ pins:
   - pin: AM1
     id: L9779_IGN_3
     class: outputs
-    function: Coil 3  (< +2.5v) / Coils 2,4
+    function: Coil 3 (< +2.5v)
     type:
 
   - pin: AM2
     id: L9779_IGN_2
     class: outputs
-    function: Coil 2  (< +2.5v) (not populated)
+    function: Coil 2 (< +2.5v)
     type:
 
   - pin: AM3
     id: L9779_IGN_4
     class: outputs
-    function: Coil 4  (< +2.5v) (not populated)
+    function: Coil 4 (< +2.5v)
     type:
 
   - pin: AM4

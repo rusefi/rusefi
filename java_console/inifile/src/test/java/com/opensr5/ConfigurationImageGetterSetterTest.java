@@ -1,7 +1,6 @@
 package com.opensr5;
 
 import com.opensr5.ini.field.EnumIniField;
-import com.opensr5.ini.field.OrdinalOutOfRangeException;
 import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.config.FieldType;
 import org.junit.jupiter.api.Test;
@@ -53,9 +52,14 @@ public class ConfigurationImageGetterSetterTest {
         // ordinal in a gap: pin exists in the tune but is not exposed by this board's ini
         assertEquals("\"INVALID\"", ConfigurationImageGetterSetter.getStringValue(field, new ConfigurationImage(new byte[]{33, 0})));
 
-        // ordinal beyond the highest known entry
-        assertThrows(OrdinalOutOfRangeException.class,
-            () -> ConfigurationImageGetterSetter.getStringValue(field, new ConfigurationImage(new byte[]{48, 0})));
+        // ordinal beyond the highest known entry: serialized as the raw number so tunes
+        // with values absent from the ini enum list (e.g. L9779_PIN_KEY) save and round-trip
+        assertEquals("\"48\"", ConfigurationImageGetterSetter.getStringValue(field, new ConfigurationImage(new byte[]{48, 0})));
+
+        // the numeric serialization round-trips through the setter
+        ConfigurationImage roundTripImage = new ConfigurationImage(new byte[4]);
+        ConfigurationImageGetterSetter.setValue2(field, roundTripImage, "injectionPins1", "\"48\"");
+        assertEquals("\"48\"", ConfigurationImageGetterSetter.getStringValue(field, roundTripImage));
     }
 
     @Test

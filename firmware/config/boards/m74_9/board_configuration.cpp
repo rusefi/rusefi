@@ -35,9 +35,12 @@ static void setInjectorPins() {
 }
 
 static void setIgnitionPins() {
+	/* Individual coils (COP): each of the four L9779 ignition pre-driver
+	 * channels (IGN1..4, external IGBTs) drives its own cylinder coil.
+	 * Physical wiring (m74_9.yaml): AL1 = IGN_1 -> Coil 1, AM2 = IGN_2 ->
+	 * Coil 2, AM1 = IGN_3 -> Coil 3, AM3 = IGN_4 -> Coil 4. */
 	engineConfiguration->ignitionPins[0] = Gpio::L9779_IGN_1;
 	engineConfiguration->ignitionPins[1] = Gpio::L9779_IGN_2;
-	/* Two following has no IGBT populated, wasted spark is used */
 	engineConfiguration->ignitionPins[2] = Gpio::L9779_IGN_3;
 	engineConfiguration->ignitionPins[3] = Gpio::L9779_IGN_4;
 
@@ -86,7 +89,13 @@ static void m74_9_boardDefaultConfiguration() {
 	engineConfiguration->cylindersCount = 4;
 	engineConfiguration->firingOrder = FO_1_3_4_2;
 
-	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
+	/* Individual coils (COP): the board has all four L9779 ignition
+	 * pre-driver channels populated, each driving its own coil. Wasted
+	 * spark here only schedules ignitionPins[0] and [1]
+	 * (getIgnitionPinForIndex: cylinderIndex % (cylinders/2)), so with 4
+	 * COP coils two cylinders never get spark - the engine catches
+	 * periodically on two cylinders and free-spins in between. */
+	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
@@ -126,18 +135,18 @@ static void m74_9_boardDefaultConfiguration() {
 	engineConfiguration->mapHighValueVoltage = 4.65f;
 	engineConfiguration->map.sensor.highValue = 115;
 
-	/* Battery sense: bench adc_report shows PA3 raw ~2.29 V stable; PA2 is
-	 * the backup candidate - verify by varying the supply voltage and watching
-	 * which channel tracks it. VBatt feeds dwell voltage correction and
-	 * injector deadtime; with no channel assigned both clamp to the lowest
-	 * table bin. Must stay in ConfigOverrides too: the stored tune predates
-	 * it. Calibrated on the car: rusEFI showed 12.8 V with the
-	 * schematic-derived (33k + 6.8k) / 6.8k = 5.853 divider while the battery
-	 * measured 12.42 V, so the true divider is 5.853 * 12.42 / 12.8 = 5.679
-	 * (within 0.4% of the standard 47k/10k = 5.7 pair). Re-verify at ~14 V
-	 * running; a drift would mean a voltage offset, not just a divider error. */
-	engineConfiguration->vbattAdcChannel = EFI_ADC_3; // PA3
-	engineConfiguration->vbattDividerCoeff = 5.679f;
+	/* Battery sense: PA6 (EFI_ADC_6). The earlier PA3 assignment was wrong -
+	 * it is a regulated line that moves OPPOSITE to the battery (2.302 V at a
+	 * 12.4 V battery, 2.184 V at 13.6 V) and stays frozen at ~12.4 in the
+	 * console during cranking. Bench tracking test with a charger (12.4 ->
+	 * 13.6 -> 14.42 V battery): PA6 1.536 -> 1.699 -> 1.798 V and PA7
+	 * 1.577 -> 1.743 -> 1.844 V both follow the battery; PA6 matches the
+	 * 33k/4.7k = 8.02 divider cleanly on all three points. PA7 (~68k/10k =
+	 * 7.8) is the backup candidate - re-verify on the car: VBatt must dip to
+	 * ~9-10 V while cranking, otherwise switch the channel. Must stay in
+	 * ConfigOverrides too: the stored tune predates it. */
+	engineConfiguration->vbattAdcChannel = EFI_ADC_6; // PA6
+	engineConfiguration->vbattDividerCoeff = 8.02f;
 
 	engineConfiguration->analogInputDividerCoefficient = 2.0f;
 	engineConfiguration->adcVcc = 3.3f;
@@ -172,11 +181,46 @@ static void m74_9_boardConfigOverrides() {
 	engineConfiguration->clt.adcChannel = EFI_ADC_39; // ADC3 PF5
 	engineConfiguration->iat.adcChannel = EFI_ADC_32; // ADC3 PF6
 
+	/* Individual COP coils: the stored tune predates the fix and holds
+	 * IM_WASTED_SPARK, which only schedules two of the four L9779 ignition
+	 * channels - two cylinders never fire. Force the mode and the 1:1 pin
+	 * mapping on every boot (DefaultConfiguration only applies on reset). */
+	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
+	engineConfiguration->ignitionPins[0] = Gpio::L9779_IGN_1;
+	engineConfiguration->ignitionPins[1] = Gpio::L9779_IGN_2;
+	engineConfiguration->ignitionPins[2] = Gpio::L9779_IGN_3;
+	engineConfiguration->ignitionPins[3] = Gpio::L9779_IGN_4;
+
 	/* Battery sense - same reasoning as CLT/IAT: the stored tune predates
-	 * the VBatt wiring, so force the channel on every boot. Divider is the
-	 * on-car calibrated value (see the DefaultConfiguration comment). */
-	engineConfiguration->vbattAdcChannel = EFI_ADC_3; // PA3
-	engineConfiguration->vbattDividerCoeff = 5.679f;
+	 * the correct wiring (PA6 = EFI_ADC_6, 33k/4.7k divider), so force the
+	 * channel on every boot. See the DefaultConfiguration comment for the
+	 * calibration data. */
+	engineConfiguration->vbattAdcChannel = EFI_ADC_6; // PA6
+	engineConfiguration->vbattDividerCoeff = 8.02f;
+
+	/* NA 1.6: fuel-table load axes capped at 100 kPa, 16 bins with 5 kPa
+	 * steps across the 30..100 kPa working band (VE and AFR tables share
+	 * the same axes, converted from the stock M74 modeled air charge +
+	 * mixture maps, see docs/report.md 2026-08-16). Forced on every boot
+	 * because the stored tune predates these axes and TS axis editing of
+	 * veLoadBins/lambdaLoadBins is easy to get wrong. Remove once the
+	 * final tune keeps its own axes. */
+	static constexpr uint16_t fuelLoadBins[VE_LOAD_COUNT] =
+		{20, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100};
+	copyArray(config->veLoadBins, fuelLoadBins);
+	copyArray(config->lambdaLoadBins, fuelLoadBins);
+
+	/* Cranking coolant enrichment: the stored tune holds ~4.6 at 20 C
+	 * (default is 1.55), which floods the engine while cranking - measured
+	 * 124 mg per cyl/cycle vs ~22 mg stoich from the stock air-charge
+	 * model, i.e. 14-17 ms pulses instead of ~5 ms. Force the default curve
+	 * on every boot until cold start is deliberately tuned. */
+	static constexpr float crankingFuelCoefDefault[CRANKING_CURVE_SIZE] =
+		{2.8f, 2.2f, 1.8f, 1.55f, 1.3f, 1.1f, 1.0f, 1.0f};
+	static constexpr float crankingFuelBinsDefault[CRANKING_CURVE_SIZE] =
+		{-20, -10, 5, 20, 35, 50, 65, 90};
+	copyArray(config->crankingFuelCoef, crankingFuelCoefDefault);
+	copyArray(config->crankingFuelBins, crankingFuelBinsDefault);
 
 	//CAN 1 bus overwrites
 	engineConfiguration->canRxPin = Gpio::G0;
@@ -405,8 +449,10 @@ static Gpio OUTPUTS[] = {
 //	Gpio::L9779_OUT_6, // Oxygen sensor 1 heater
 //	Gpio::L9779_OUT_5, // EVAP solenoid control
 //	Gpio::L9779_OUT_7, // Oxygen sensor 2 heater
-//	Gpio::L9779_IGN_1, // Coil 1 (< +2.5v) / Coils 1,4
-//	Gpio::L9779_IGN_3, // Coil 3  (< +2.5v) / Coils 2,4
+//	Gpio::L9779_IGN_1, // Coil 1 (< +2.5v)
+//	Gpio::L9779_IGN_2, // Coil 2 (< +2.5v)
+//	Gpio::L9779_IGN_3, // Coil 3 (< +2.5v)
+//	Gpio::L9779_IGN_4, // Coil 4 (< +2.5v)
 //	Gpio::L9779_OUT_17, // Air compressor control
 //	Gpio::L9779_OUT_14, // Secondary starter relay
 //	Gpio::L9779_OUT_15, // FAN 1 relay
