@@ -2846,3 +2846,26 @@ Open follow-ups:
 - Bench check after reflash: knocktest should show ~160 kHz real rate, ADCD1
   states no longer all-ACTIVE, and tapping AA3 should move PA0 only. Then
   calibrate knockBaseNoise/gains on the car.
+
+## 2026-08-17 - m74_9 software knock: bench verification of the shared-ADC1 steal
+
+- The rebuilt firmware (single adcStart for ADCD1) boots cleanly: slow ADC1
+  channels live, ADC3 F-port channels (CLT/IAT) live, fast ADC (MAP) live.
+- knocktest initially showed bursts=0 after the divider fix: the slow
+  background chain now keeps ADCD1 ~100% ACTIVE (continuous by design) and the
+  diagnostic only did check-and-start. Fixed: knockBurstSample now steals the
+  ADC exactly like a real knock window (adcStopConversionI + adcStartConversionI
+  under osalSysLock) and hands it back via slowAdcResumeAfterKnockWindowI,
+  factored out of the ISR resume path. adcdivtest now saves/restores the real
+  RCC->CFGR / ADC->CCR instead of hardcoded historical values.
+- Bench results (user log, knocktest after reflash): 1024-sample burst
+  6600 us -> real rate ~155 kHz (expected ~160 kHz, KNOCK_SAMPLE_RATE matches);
+  bursts=200/200 on all channels; PA0 idle rms ~2180 counts (1.76 V) with
+  p2p ~50 counts - the quiet conditioner bias, as expected.
+- knockpin scan confirms PA0 = 1.758..1.762 V (spread 5) - the AA3 -> SGM321
+  -> PA0 chain is healthy; PA1 reads Vrefint because the fast ADC (MAP) owns
+  that channel in the slow chain.
+- Remaining bench step: tap/click AA3 during knocktest - PA0 p2p must jump
+  while PA1..PA3 stay flat. Then on-car: verify the steal fires with real
+  spark events (watch knock windows in TS/logs) and calibrate knockBaseNoise
+  and per-cylinder gains.
