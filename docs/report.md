@@ -2908,3 +2908,24 @@ Open follow-ups:
     normal table between 2.5-5% pedal TPS via idlePidDeactivationTpsThreshold).
 - Left for on-car work: idle PID gains, warm idle target 900 rpm (stock 840),
   idleTimingPid off (ETB idle uses the throttle).
+
+## 2026-08-17 - 21129: injector flow corrected for the 3.8 bar rail
+
+- Read injector_model.cpp: with injectorCompensationMode = "Fixed rail
+  pressure" the fuel reference IS used without any sensor: differential =
+  fuelReferencePressure + baro - MAP, flow x sqrt(differential/reference).
+  So the tune's fuelReferencePressure = 51 (kPa) was not inert - at idle
+  (MAP 38 kPa) it produced a sqrt(113/51) = 1.49x flow inflation, making the
+  idle mixture ~18% lean; at WOT it was 1.0.
+- The 215 cc/min figure is the standard 3 bar rating of the stock 21129
+  injectors; at the stock 3.8 bar rail the real flow is 242 cc/min.
+- Applied to 21129.msq (backup 21129.msq.pre-injector.bak):
+  injector_flow 215 -> 242, fuelReferencePressure 51 -> 380 kPa.
+- Expected mixture change vs the previous settings: WOT ~11% leaner (the old
+  setup ran 12.6% rich - the systematic richness flagged earlier), idle ~22%
+  richer (was lean from the 51 kPa bug), cranking ~7% leaner. The VE/lambda
+  tables (stock model) stay as they are; if a wideband shows a systematic
+  offset, injector_flow is the single knob to trim.
+- Cranking 20 mg base is a fuel MASS, independent of rail pressure - the
+  pulse width auto-adjusts through the (now correct) flow constant, so it
+  stays valid for the 1.6 at 3.8 bar.
