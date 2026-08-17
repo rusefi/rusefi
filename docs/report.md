@@ -2714,3 +2714,19 @@ Open follow-ups:
   (scale 1/147, Double.toString rendering). Page 0 is re-burned correctly each
   time; whether the ECU-side stored bytes really differ is still open - needs
   the user's lambda table editor values (or a third load) to triage.
+
+## 2026-08-17 - burn button gated on real dirtiness + lambdaTable re-migration diagnostic
+
+- The Burn to ECU button was enabled whenever the console was connected, and
+  edits of secondary pages did not show up as "pending changes". Now the
+  toolbar keeps a reference to the dialog widget; refreshState() counts
+  dirtySecondaryPages as unsaved changes, shows the pending-changes label for
+  them, and the burn button is enabled only when connected AND (page-0 or
+  secondary) changes are pending.
+- lambdaTable still appears in the restore list on every load even though the
+  msq text round-trips byte-identically through the console parser and the
+  console's editor shows the right values. Added a targeted diagnostic in
+  DefaultTuneMigrator: on the next load the console log prints
+  "lambdaTable restore diagnostic: first diff at N msq=X ecu=Y (msq cells A,
+  ecu cells B)" - the first differing cell should reveal the direction of the
+  discrepancy. To be removed once triaged.

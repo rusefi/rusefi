@@ -47,6 +47,8 @@ public class TuningToolbarWidget {
 
     private final JPanel panel;
 
+    private final CalibrationDialogWidget right;
+
     /** [tag:offline_tune] Shows offline / unburned-edit state. Empty when connected and clean. */
     private final JLabel stateLabel = new JLabel();
     private final UIContext uiContext;
@@ -86,6 +88,7 @@ public class TuningToolbarWidget {
                                  Runnable onLoadStarted,
                                  Consumer<Boolean> onLoadFinished) {
         this.uiContext = uiContext;
+        this.right = right;
         this.sessionImage = sessionImage;
         this.baselineImage = baselineImage;
         undoButton.setEnabled(false);
@@ -189,9 +192,25 @@ public class TuningToolbarWidget {
      * Empty (invisible) when connected with no pending edits.
      */
     public void refreshState() {
-        boolean dirty = hasUnsavedChanges(sessionImage.get());
+        boolean dirty = hasUnsavedChanges(sessionImage.get()) || hasDirtySecondaryPages();
         stateLabel.setText(stateLabelText(uiContext.isOfflineMode(), dirty));
         stateLabel.setForeground(dirty ? new Color(0xB0, 0x60, 0x00) : Color.GRAY);
+        updateBurnButtonState();
+    }
+
+    private boolean hasDirtySecondaryPages() {
+        return right != null && !right.getDirtySecondaryPages().isEmpty();
+    }
+
+    private void updateBurnButtonState() {
+        boolean enabled = uiContext.getBinaryProtocol() != null &&
+            (hasUnsavedChanges(sessionImage.get()) || hasDirtySecondaryPages());
+        for (Component c : panel.getComponents()) {
+            if (c instanceof JButton && "Burn to ECU".equals(((JButton) c).getText())) {
+                ((JButton) c).setEnabled(enabled);
+                break;
+            }
+        }
     }
 
     /**
@@ -258,13 +277,7 @@ public class TuningToolbarWidget {
 
     /** Call when ECU connects to enable the burn button. */
     public void onEcuConnected() {
-        Component[] components = panel.getComponents();
-        for (Component c : components) {
-            if (c instanceof JButton && "Burn to ECU".equals(((JButton) c).getText())) {
-                ((JButton) c).setEnabled(true);
-                break;
-            }
-        }
+        updateBurnButtonState();
         refreshState();
     }
 
