@@ -133,6 +133,12 @@ ROOT_FOLDER_SOURCES = \
 CONSOLE_FOLDER_SOURCES = \
   $(SIMULATOR_EXE)
 
+ifeq ($(HOST_OS),Darwin)
+  # macOS PCAN native bridge (JNI wrapper around MacCAN libPCBUSB), loaded by
+  # peak-can-basic via -Djava.library.path=console next to rusefi_console.jar
+  CONSOLE_FOLDER_SOURCES += ../java_console/libpcanbasic_jni.dylib
+endif
+
 #  $(wildcard ../java_console/*.dll) \
 
 
