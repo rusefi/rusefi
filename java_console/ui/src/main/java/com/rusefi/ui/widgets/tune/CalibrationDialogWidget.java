@@ -248,27 +248,36 @@ public class CalibrationDialogWidget {
 
             TableModel table = iniFileModel.getTable(key);
             if (table != null) {
-                contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
-                //TODO: nicer injection of this button? maybe a comment on the .ini and then hook this?
-                if ("veTableTbl".equals(table.getTableId())) {
-                    final IniFileModel capturedIni = iniFileModel;
-                    JButton genVeBtn = new JButton("Generate base VE...");
-                    genVeBtn.addActionListener(e -> showVeGeneratorPanel(capturedIni));
-                    JPanel veToolbar = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));
-                    veToolbar.add(genVeBtn);
-                    contentPane.add(veToolbar);
+                if (isSecondaryPageField(iniFileModel, table.getZBinsConstant())) {
+                    contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+                    contentPane.add(secondaryPageNotice(iniFileModel, table.getZBinsConstant(), "This table"));
+                } else {
+                    contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+                    //TODO: nicer injection of this button? maybe a comment on the .ini and then hook this?
+                    if ("veTableTbl".equals(table.getTableId())) {
+                        final IniFileModel capturedIni = iniFileModel;
+                        JButton genVeBtn = new JButton("Generate base VE...");
+                        genVeBtn.addActionListener(e -> showVeGeneratorPanel(capturedIni));
+                        JPanel veToolbar = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));
+                        veToolbar.add(genVeBtn);
+                        contentPane.add(veToolbar);
+                    }
+                    TuningTableView tuningTableView = new TuningTableView(table.getTitle());
+                    tuningTableView.displayTable(iniFileModel, table.getTableId(), workingImage);
+                    tuningTableView.setOnEdit(notifyEdit);
+                    contentPane.add(tuningTableView.getContent());
                 }
-                TuningTableView tuningTableView = new TuningTableView(table.getTitle());
-                tuningTableView.displayTable(iniFileModel, table.getTableId(), workingImage);
-                tuningTableView.setOnEdit(notifyEdit);
-                contentPane.add(tuningTableView.getContent());
             } else {
                 CurveModel curve = iniFileModel.getCurves().get(key);
                 if (curve != null) {
                     contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
-                    CurveWidget curveWidget = new CurveWidget(curve, iniFileModel, workingImage);
-                    curveWidget.setOnEdit(notifyEdit);
-                    contentPane.add(curveWidget.getContentPane());
+                    if (isSecondaryPageField(iniFileModel, curve.getyBins())) {
+                        contentPane.add(secondaryPageNotice(iniFileModel, curve.getyBins(), "This curve"));
+                    } else {
+                        CurveWidget curveWidget = new CurveWidget(curve, iniFileModel, workingImage);
+                        curveWidget.setOnEdit(notifyEdit);
+                        contentPane.add(curveWidget.getContentPane());
+                    }
                 }
             }
         }
@@ -371,6 +380,13 @@ public class CalibrationDialogWidget {
             }
         };
         Optional<IniField> iniField = iniFileModel.findIniField(field.getKey());
+        if (iniField.isPresent() && iniField.get().getPageIndex() != 0) {
+            // Fields on secondary TS pages are NOT editable through the console's
+            // page-0-only editor: reading them against the main image shows garbage and
+            // editing them writes garbage into the main config. Label-only row.
+            container.add(CalibrationFieldFactory.createLabelRow(field));
+            return;
+        }
         JPanel row = iniField.map(value -> {
             try {
                 return CalibrationFieldFactory.createFieldRow(
@@ -470,6 +486,13 @@ public class CalibrationDialogWidget {
 
         CurveModel curve = iniFileModel.getCurves().get(panel.getPanelName());
         if (curve != null) {
+            if (isSecondaryPageField(iniFileModel, curve.getyBins())) {
+                JComponent content = secondaryPageNotice(iniFileModel, curve.getyBins(), "This curve");
+                CalibrationFieldFactory.applyStyle(content);
+                content.setAlignmentX(Component.LEFT_ALIGNMENT);
+                if (constraint != null) targetContainer.add(content, constraint); else targetContainer.add(content);
+                return;
+            }
             CurveWidget curveWidget = new CurveWidget(curve, iniFileModel, workingImage);
             curveWidget.setOnEdit(notifyEdit);
             JComponent content = curveWidget.getContentPane();
@@ -481,6 +504,13 @@ public class CalibrationDialogWidget {
 
         TableModel table = iniFileModel.getTable(panel.getPanelName());
         if (table != null) {
+            if (isSecondaryPageField(iniFileModel, table.getZBinsConstant())) {
+                JComponent content = secondaryPageNotice(iniFileModel, table.getZBinsConstant(), "This table");
+                CalibrationFieldFactory.applyStyle(content);
+                content.setAlignmentX(Component.LEFT_ALIGNMENT);
+                if (constraint != null) targetContainer.add(content, constraint); else targetContainer.add(content);
+                return;
+            }
             TuningTableView tuningTableView = new TuningTableView(table.getTitle());
             tuningTableView.displayTable(iniFileModel, table.getTableId(), workingImage);
             tuningTableView.setOnEdit(notifyEdit);
@@ -541,6 +571,28 @@ public class CalibrationDialogWidget {
         for (PanelModel p : dialog.getPanels())
             list.add(new DialogModel.DialogEntry(DialogModel.DialogEntry.Kind.PANEL, p));
         return list;
+    }
+
+    /**
+     * Fields that live on secondary TS pages (second VE/ignition tables, lua, ...) must not be
+     * rendered against the console's page-0-only configuration image: their offsets are
+     * page-relative, so the console would display garbage and - worse - editing + burning
+     * would write that garbage into the main config.
+     */
+    static boolean isSecondaryPageField(IniFileModel iniFileModel, String fieldKey) {
+        return iniFileModel.findIniField(fieldKey)
+            .map(field -> field.getPageIndex() != 0)
+            .orElse(false);
+    }
+
+    private static JLabel secondaryPageNotice(IniFileModel iniFileModel, String fieldKey, String what) {
+        int displayPage = iniFileModel.findIniField(fieldKey)
+            .map(field -> IniField.toDisplayPage(field.getPageIndex()))
+            .orElse(2);
+        JLabel label = new JLabel("<html>" + what + " is stored on TunerStudio page " + displayPage +
+            " and is not editable in the console. Open it in TunerStudio.</html>");
+        CalibrationFieldFactory.applyStyle(label);
+        return label;
     }
 
     private void renderReadouts(JPanel container, DialogModel dialogModel, IniFileModel iniFileModel) {

@@ -2656,3 +2656,31 @@ bin, boot once (MFS erased, ECU starts with defaults and should connect),
 then immediately reflash the normal bin and reload the tune - the recovery
 build erases MFS on EVERY boot and must not stay on the ECU. Nothing committed:
 the source changes were build-only and reverted.
+
+## 2026-08-17 - console tuning UI no longer renders secondary-page fields (brick root cause)
+
+Root cause of the brick: the console's tuning UI (CalibrationDialogWidget)
+renders ini dialogs that reference fields on secondary TS pages - "Second VE
+Table" / "Second Ignition Table" (page 4) - but resolves them against the
+page-0-only ConfigurationImage with their PAGE-RELATIVE offsets. So the console
+DISPLAYED garbage (page-0 bytes at page-4 offsets) and - when the user edited
+those dialogs and burned - WROTE that garbage into the main config, corrupting
+it; the next boot then wedged (the recovery MFS erase + reflash brought the ECU
+back, see the entry above).
+
+Fix (CalibrationDialogWidget):
+- renderField: fields with getPageIndex() != 0 render as a label-only row, no
+  editor.
+- Table/curve rendering (both update-by-key and panel-embedded): when the data
+  array lives on a secondary page, a notice label is shown ("stored on
+  TunerStudio page N - open it in TunerStudio") instead of TuningTableView/
+  CurveWidget, so nothing is read from or written to the wrong image.
+- Added isSecondaryPageField/ secondaryPageNotice helpers.
+
+Tests: CalibrationDialogWidgetTest got testSecondaryPageTableRendersNoticeInsteadOfEditor
+and testSecondaryPageFieldRendersLabelOnlyRow; :ui:test + :ecu_io:test green.
+Console jar rebuilt (console/rusefi_console.jar).
+
+Open follow-up: the console has no proper multi-page tuning UI; editing the
+second tables remains TunerStudio-only until the tuning pane learns page-aware
+images (read page 4 from the ECU, write + burn via the multi-page path).
