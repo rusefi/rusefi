@@ -3055,3 +3055,15 @@ Follow-ups:
   JNI bridge changes, and a universal build is needed for Intel Macs.
 - The ECU-side crash during cranking (silent reset, RTC re-sync) is still open;
   the PCAN link fix removes the console-connectivity noise from that picture.
+
+## 2026-08-18 (2): local commits + cleanup
+
+Committed the pending bench-session work on maccan-tx-fix (all local, not pushed):
+- c84d82f5fa0 m74_9: real AT32 reset-cause decoding from RCC->CSR
+- a87e11fe8bc core: re-print crash report + reset cause every 5 s for the first minute
+- f6054d6963f isotp: FC counter snapshot BEFORE the FIRST frame + m74_9 DL_OUTPUT_BUFFER 16384
+- 75b1f06fdde console: PCAN detection via the driver on macOS + local_proxy pcan/socketcan/tcp
+Validation: unit_tests testCanSerial - 6/6 pass; m74_9 bundle build includes the dylib.
+Deleted java_console/PCBUSB-Library (MacCAN binary archive, 14 MB) - the bridge
+dlopens /opt/homebrew/lib or /usr/local/lib/libPCBUSB.0.dylib, the clone was
+only used for the version A/B comparison and is ignored by git anyway.
