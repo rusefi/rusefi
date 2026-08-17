@@ -144,9 +144,11 @@ public class TuningPane {
         // All edit events (dialog fields, table cells, curve drags) flow through onConfigChange.
         // Text fields fire per-keystroke; the toolbar widget coalesces them into one undo point.
         right.setOnConfigChange(image -> {
-            toolbar.onEdit(sessionImage.get());
-            // Clone because workingImage is mutated in-place by further edits.
+            ConfigurationImage previous = sessionImage.get();
+            // Update the session image BEFORE notifying the toolbar so refreshState() (and the
+            // Burn button gating) sees the new content, not the pre-edit state.
             sessionImage.set(image.clone());
+            toolbar.onEdit(previous);
             left.refreshExpressions(image);
             uiContext.fireConfigImageChanged(image);
         });

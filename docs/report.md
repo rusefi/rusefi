@@ -2757,3 +2757,13 @@ Note on the burn button: after a load-tune there are genuinely no pending
 changes, so "Burn to ECU" stays disabled until an actual edit (page 0 or a
 secondary page) - the phantom lambdaTable restore line used to make it look
 like there were pending changes.
+
+## 2026-08-17 - burn button never enabled: edit notification ordering fix
+
+After the burn-button gating, the button stayed disabled even with pending
+edits, while the exit prompt correctly detected unsaved changes. Root cause:
+TuningPane's onConfigChange called toolbar.onEdit() BEFORE updating the
+session image, so refreshState() (and the burn-button gating) always evaluated
+the pre-edit state; nothing refreshed the button afterwards. The session image
+is now updated first and onEdit() receives the previous image (undo baseline
+semantics unchanged). Console jar rebuilt (console/rusefi_console.jar).
