@@ -59,6 +59,7 @@
 #include "vvt.h"
 #include "closed_loop_fuel.h"
 #include "long_term_fuel_trim.h"
+#include "injector_deadtime_autotune.h"
 #include "second_tables.h"
 #include "electronic_throttle_generated.h"
 #include "engine_cylinder.hpp"
@@ -200,6 +201,7 @@ public:
 #endif
 #if EFI_ENGINE_CONTROL
         ShortTermFuelTrim,
+        InjectorDeadtimeAutotune,
 #endif // EFI_ENGINE_CONTROL
 #if EFI_MISFIRE_DETECTION
         Mockable<MisfireController>,
