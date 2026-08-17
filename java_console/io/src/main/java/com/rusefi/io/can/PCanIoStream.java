@@ -169,6 +169,16 @@ public class PCanIoStream extends AbstractIoStream {
             //            log.info("Decoded " + IoStream.printByteArray(decode));
         } else {
 //                   log.info("Receive " + status);
+            if (status == TPCANStatus.PCAN_ERROR_QRCVEMPTY) {
+                // MacCAN's Read (unlike the Windows PCANBasic) does not block - it returns
+                // QRCVEMPTY immediately, and a tight re-poll busy-spins a whole core.
+                // 1 ms granularity is plenty: even the 800+ fps flood only arrives every ~1.2 ms.
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
         }
     }
 
