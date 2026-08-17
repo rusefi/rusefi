@@ -203,12 +203,67 @@ int getRemainingStack(thread_t *otp) {
 __attribute__((weak)) void boardPrepareForStandby() {
 }
 
-Reset_Cause_t getMCUResetCause() {
+static Reset_Cause_t readMCUResetCause() {
+	/* Artery CRM reset flags: at32f435xx.h mirrors the STM32F4 RCC_CSR
+	 * layout (RMVF bit24, BORRSTF bit25, PINRSTF/EXTRSTF bit26, PORRSTF
+	 * bit27, SFTRSTF/SWRSTF bit28, IWDGRSTF/WDTRSTF bit29, WWDGRSTF bit30,
+	 * LPWRRSTF bit31), so the STM32F4 decoding applies as-is. */
+	uint32_t cause = RCC->CSR;
+#ifndef EFI_BOOTLOADER
+	RCC->CSR |= RCC_CSR_RMVF; // clear flags for future reset detection
+#endif
+
+	if (cause & RCC_CSR_BORRSTF) {
+		return Reset_Cause_BOR;
+	} else if (cause & RCC_CSR_PORRSTF) {
+		return Reset_Cause_POR;
+	} else if (cause & RCC_CSR_SFTRSTF) {
+		return Reset_Cause_Soft_Reset;
+	} else if (cause & RCC_CSR_IWDGRSTF) {
+		return Reset_Cause_IWatchdog;
+	} else if (cause & RCC_CSR_WWDGRSTF) {
+		return Reset_Cause_WWatchdog;
+	} else if (cause & RCC_CSR_LPWRRSTF) {
+		return Reset_Cause_Illegal_Mode;
+	} else if (cause & RCC_CSR_PINRSTF) {
+		return Reset_Cause_NRST_Pin;
+	}
 	return Reset_Cause_Unknown;
 }
 
-const char *getMCUResetCause(Reset_Cause_t) {
-	return "Unknown";
+/* Read the reset cause once, at static-init time, before anything else can
+ * touch the CRM flags. Repeated getMCUResetCause() calls (the boot banner,
+ * the periodic crash-report reprint) must all return the same value, and the
+ * RMVF clear must not run twice. */
+static const volatile Reset_Cause_t resetCause = readMCUResetCause();
+
+Reset_Cause_t getMCUResetCause() {
+	return resetCause;
+}
+
+const char *getMCUResetCause(Reset_Cause_t cause) {
+	switch (cause) {
+	case Reset_Cause_IWatchdog:
+		return "Independent hardware watchdog";
+	case Reset_Cause_WWatchdog:
+		return "Window watchdog";
+	case Reset_Cause_Soft_Reset:
+		return "NVIC_SystemReset or by debugger";
+	case Reset_Cause_NRST_Pin:
+		return "Reset from NRST pin";
+	case Reset_Cause_POR:
+		return "Power on/power-down reset";
+	case Reset_Cause_Illegal_Mode:
+		return "Reset after illegal Stop, Standby or Shutdown mode entry";
+	case Reset_Cause_BOR:
+		return "BOR reset";
+	case Reset_Cause_Firewall:
+		return "Firewall reset";
+	case Reset_Cause_Option_Byte:
+		return "Option byte load reset";
+	default:
+		return "Unknown";
+	}
 }
 
 #endif /* EFI_PROD_CODE */
