@@ -458,14 +458,52 @@ static void m74_9FastAdcDiag() {
 #endif
 }
 
-/* Bench diagnostic for knock pin identification: samples the slow ADC1
- * channels (EFI_ADC_0..15) and the 8 ADC3-only channels in a tight loop for
- * ~2 s and prints min/max per channel. With the finger (or a wire) on the
- * knock input AA3, the affected channel shows a large min/max spread while
- * the others stay flat. Note: a knock conditioner with a ~7 kHz bandpass may
- * reject 50 Hz hum - then tap the sensor instead (broadband impulse). */
-extern bool readSlowAdc1All(adcsample_t samples[16]);
+/* Bench diagnostic for knock pin identification: watches the slow-loop ADC
+ * buffers (EFI_ADC_0..15 from the slow loop + a live burst of the 8 ADC3-only
+ * channels) for ~2 s and prints min/max per channel. With the finger (or a
+ * wire) on the knock input AA3, the affected channel shows a large min/max
+ * spread while the others stay flat. Note: a knock conditioner with a ~7 kHz
+ * bandpass may reject 50 Hz hum - then tap the sensor instead (broadband
+ * impulse). ADC1 channels are read from the slow-loop buffer (no conversions
+ * started here - the ADCD1 DMA has a hang-on-boot quirk on this port). */
 extern bool readSlowAdc3All(adcsample_t samples[8]);
+extern adcsample_t adcOnchipSlowGetAvgRaw(adc_channel_e hwChannel);
+
+/* Bench diagnostic for knock pin identification: samples each ADC3 candidate
+ * channel at the knock rate (286 kHz) in bursts and prints min/max/RMS.
+ * Broadband stimulus (tapping the knock sensor, or clicking a wire on AA3)
+ * shows up as a large p2p/RMS jump on the knock channel; 50 Hz hum is
+ * rejected by the conditioner bandpass and may show nothing. */
+extern bool knockBurstSample(uint32_t adcInChannel, adcsample_t* buf, size_t count);
+
+static void m74_9KnockBurst() {
+	static const int CH = 8;
+	static const char* names[CH] = {"PF6(IN4)", "PF7(IN5)", "PF8(IN6)", "PF9(IN7)",
+		"PF10(IN8)", "PF3(IN9)", "PF4(IN14)", "PF5(IN15)"};
+	static const int chans[CH] = {4, 5, 6, 7, 8, 9, 14, 15};
+	static NO_CACHE adcsample_t buf[1024];
+
+	for (int i = 0; i < CH; i++) {
+		adcsample_t mn = 4095, mx = 0;
+		uint64_t sumSq = 0;
+		int ok = 0;
+		for (int burst = 0; burst < 200; burst++) {
+			if (!knockBurstSample(chans[i], buf, 1024)) {
+				continue;
+			}
+			ok++;
+			for (int j = 0; j < 1024; j++) {
+				adcsample_t v = buf[j];
+				mn = minI(mn, (int)v);
+				mx = maxI(mx, (int)v);
+				sumSq += (uint64_t)v * v;
+			}
+		}
+		efiPrintf("  %s: bursts=%d min=%u max=%u p2p=%u rms=%.1f", names[i], ok,
+			(unsigned)mn, (unsigned)mx, (unsigned)(mx - mn),
+			ok ? sqrtf((float)sumSq / (float)(ok * 1024)) : 0.0f);
+	}
+}
 
 static void m74_9KnockPinScan() {
 	/* convGroupSlow order = IN0..IN15, pin names per adcChannels[] */
@@ -488,16 +526,14 @@ static void m74_9KnockPinScan() {
 		mx3[i] = 0;
 	}
 
-	int ok1 = 0, ok3 = 0;
+	int ok3 = 0;
 	for (int iter = 0; iter < 2000; iter++) {
-		adcsample_t s1[CH1], s3[CH3];
-		if (readSlowAdc1All(s1)) {
-			ok1++;
-			for (int i = 0; i < CH1; i++) {
-				mn1[i] = minI(mn1[i], (int)s1[i]);
-				mx1[i] = maxI(mx1[i], (int)s1[i]);
-			}
+		for (int i = 0; i < CH1; i++) {
+			adcsample_t v = adcOnchipSlowGetAvgRaw(static_cast<adc_channel_e>(EFI_ADC_0 + i));
+			mn1[i] = minI(mn1[i], (int)v);
+			mx1[i] = maxI(mx1[i], (int)v);
 		}
+		adcsample_t s3[CH3];
 		if (readSlowAdc3All(s3)) {
 			ok3++;
 			for (int i = 0; i < CH3; i++) {
@@ -508,16 +544,20 @@ static void m74_9KnockPinScan() {
 		chThdSleepMilliseconds(1);
 	}
 
-	efiPrintf("knockpin scan: ADC1 %d, ADC3 %d conversions over ~2s", ok1, ok3);
+	efiPrintf("knockpin scan: ADC3 %d conversions over ~2s (ADC1 from slow buffer)", ok3);
 	for (int i = 0; i < CH1; i++) {
 		efiPrintf("  %s: min=%u max=%u spread=%u (%.3f..%.3f V)", names1[i],
 			(unsigned)mn1[i], (unsigned)mx1[i], (unsigned)(mx1[i] - mn1[i]),
 			mn1[i] * (3.3f / 4095.0f), mx1[i] * (3.3f / 4095.0f));
 	}
-	for (int i = 0; i < CH3; i++) {
-		efiPrintf("  %s: min=%u max=%u spread=%u (%.3f..%.3f V)", names3[i],
-			(unsigned)mn3[i], (unsigned)mx3[i], (unsigned)(mx3[i] - mn3[i]),
-			mn3[i] * (3.3f / 4095.0f), mx3[i] * (3.3f / 4095.0f));
+	if (ok3 == 0) {
+		efiPrintf("  ADC3: no conversions (busy)");
+	} else {
+		for (int i = 0; i < CH3; i++) {
+			efiPrintf("  %s: min=%u max=%u spread=%u (%.3f..%.3f V)", names3[i],
+				(unsigned)mn3[i], (unsigned)mx3[i], (unsigned)(mx3[i] - mn3[i]),
+				mn3[i] * (3.3f / 4095.0f), mx3[i] * (3.3f / 4095.0f));
+		}
 	}
 }
 #endif /* EFI_PROD_CODE && HAL_USE_ADC */
@@ -555,6 +595,7 @@ void setup_custom_board_overrides() {
 #if EFI_PROD_CODE && HAL_USE_ADC
 	addConsoleAction("fastadcdiag", m74_9FastAdcDiag);
 	addConsoleAction("knockpin", m74_9KnockPinScan);
+	addConsoleAction("knocktest", m74_9KnockBurst);
 #endif
 #if EFI_CAN_SUPPORT
 	initM74_9Can();
