@@ -449,22 +449,66 @@ static void crashDelayForConsoleFlush() {
 	}
 }
 
+/* The boot banner (where printPreviousCrashIfAny runs) is printed exactly
+ * once, right after initRtc(). The console link is usually still DOWN at that
+ * moment - it reconnects seconds later, so the banner (and with it the whole
+ * crash report) would be lost. Keep a RAM copy and re-print it every few
+ * seconds for the first minute of runtime, so a reconnecting console still
+ * catches the report. */
+static bool bootReportPending = false;
+static uint32_t crashMarkerMagic;
+static uint32_t crashMarkerArgs[5]; // BKP1R..BKP5R
+static efitick_t bootReportStart;
+
+static void printCrashReportLines() {
+	efiPrintf("*** crash marker: BKP0R=0x%08x BKP1R=0x%08x",
+		(unsigned)crashMarkerMagic, (unsigned)crashMarkerArgs[0]);
+	if (crashMarkerMagic == CRASH_MARKER_MAGIC_FAULT) {
+		efiPrintf("*** PREVIOUS CRASH: fault type=%u pc=0x%08x lr=0x%08x faultAddr=0x%08x cfsr=0x%08x",
+			(unsigned)crashMarkerArgs[0], (unsigned)crashMarkerArgs[1], (unsigned)crashMarkerArgs[2],
+			(unsigned)crashMarkerArgs[3], (unsigned)crashMarkerArgs[4]);
+	} else if (crashMarkerMagic == CRASH_MARKER_MAGIC_ASSERT) {
+		efiPrintf("*** PREVIOUS CRASH: assert (line=%u, see assert fail message if it reached the log)",
+			(unsigned)crashMarkerArgs[0]);
+	}
+	efiPrintf("Reset Cause: %s", getMCUResetCause(getMCUResetCause()));
+}
+
 void printPreviousCrashIfAny() {
 	crashMarkerEnableWrite();
-	uint32_t magic = RTC->BKP0R;
-	/* unconditional debug line while we chase the m74_9 silent-reboot cause:
-	 * shows whether the backup domain survives the reboot at all */
-	efiPrintf("*** crash marker: BKP0R=0x%08x BKP1R=0x%08x",
-		(unsigned)magic, (unsigned)RTC->BKP1R);
-	if (magic == CRASH_MARKER_MAGIC_FAULT) {
-		efiPrintf("*** PREVIOUS CRASH: fault type=%u pc=0x%08x lr=0x%08x faultAddr=0x%08x cfsr=0x%08x",
-			(unsigned)RTC->BKP1R, (unsigned)RTC->BKP2R, (unsigned)RTC->BKP3R,
-			(unsigned)RTC->BKP4R, (unsigned)RTC->BKP5R);
-	} else if (magic == CRASH_MARKER_MAGIC_ASSERT) {
-		efiPrintf("*** PREVIOUS CRASH: assert (line=%u, see assert fail message if it reached the log)",
-			(unsigned)RTC->BKP1R);
-	}
+	crashMarkerMagic = RTC->BKP0R;
+	crashMarkerArgs[0] = RTC->BKP1R;
+	crashMarkerArgs[1] = RTC->BKP2R;
+	crashMarkerArgs[2] = RTC->BKP3R;
+	crashMarkerArgs[3] = RTC->BKP4R;
+	crashMarkerArgs[4] = RTC->BKP5R;
 	RTC->BKP0R = 0; // consumed
+	bootReportPending = true;
+	bootReportStart = getTimeNowNt();
+	printCrashReportLines();
+}
+
+/* Called from doPeriodicSlowCallback (20 Hz, runs even without engine sync).
+ * Re-prints the crash report + reset cause every 5 s for the first minute
+ * after boot so the report survives the console reconnect. */
+void reprintPendingBootReport() {
+	if (!bootReportPending) {
+		return;
+	}
+
+	efitick_t now = getTimeNowNt();
+	if (now - bootReportStart > MS2NT(60 * 1000)) {
+		bootReportPending = false;
+		return;
+	}
+
+	static efitick_t lastPrint;
+	if (now - lastPrint < MS2NT(5000)) {
+		return;
+	}
+	lastPrint = now;
+
+	printCrashReportLines();
 }
 
 void logHardFault(uint32_t type, uintptr_t faultAddress, void* sp, port_extctx* ctx, uint32_t csfr) {

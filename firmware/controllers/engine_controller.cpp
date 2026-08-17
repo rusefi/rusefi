@@ -201,6 +201,12 @@ static void doPeriodicSlowCallback() {
 	tryResetWatchdog();
 
 #if EFI_PROD_CODE
+	/* keeps the crash report visible after a console reconnect (see
+	 * error_handling.cpp) - runs even without engine sync */
+	reprintPendingBootReport();
+#endif // EFI_PROD_CODE
+
+#if EFI_PROD_CODE
 	// single-shot reset all counter after 5 second of happines
 	static unsigned int slow_counter = 5 * 1000 / SLOW_CALLBACK_PERIOD_MS;
 	if ((slow_counter) && (--slow_counter == 0)) {
