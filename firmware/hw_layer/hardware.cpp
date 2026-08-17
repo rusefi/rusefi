@@ -291,6 +291,13 @@ void initHardwareNoConfig() {
 	initRtc();
 #endif // EFI_PROD_CODE && EFI_RTC
 
+#if EFI_PROD_CODE
+	/* If the previous run crashed (assert/hard fault), the RTC backup-domain
+	 * marker written by the fault handlers survives the reboot - report it
+	 * before anything else can touch the hardware. */
+	printPreviousCrashIfAny();
+#endif // EFI_PROD_CODE
+
 #if EFI_CONFIGURATION_STORAGE
 	initFlash();
 #endif

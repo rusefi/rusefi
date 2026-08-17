@@ -513,24 +513,52 @@ static void errorHandlerSaveStack(backupErrorState *err, uint32_t *sp)
 }
 #endif // EFI_BACKUP_SRAM
 
-void logDeliberateReboot(RebootReason reason) {
-#if EFI_BACKUP_SRAM
-	auto bkpram = getBackupSram();
-	auto err = &bkpram->err;
-	// First-writer-wins: never overwrite a crash cookie already stamped by a
-	// fault/panic that happened before this deliberate reset, so a fault during
-	// a pending reboot is still reported instead of being hidden as a reboot.
-	if (err->Cookie == ErrorCookie::None) {
-		err->RebootReason = (uint32_t)reason;
-		// set the cookie last so a reader keying on it sees a consistent reason
-		err->Cookie = ErrorCookie::Reboot;
-	}
-#else
-	(void)reason;
-#endif // EFI_BACKUP_SRAM
+/* Crash marker in the RTC backup-domain registers (BKPxR). These survive a
+ * soft reset (and the bootloader jump) as long as VDD keeps the backup domain
+ * alive - the RTC clock is proof: it keeps its time across our crashes. So a
+ * crash that kills the console link still reports itself on the next boot. */
+#define CRASH_MARKER_MAGIC_FAULT	0xC0FFEE01
+#define CRASH_MARKER_MAGIC_ASSERT	0xC0FFEE02
+
+static void crashMarkerEnableWrite() {
+	PWR->CR |= PWR_CR_DBP;       // disable backup domain write protection
+	RCC->BDCR |= RCC_BDCR_RTCEN; // BKP registers live on the RTC clock domain
 }
 
-void logHardFault(uint32_t type, uintptr_t faultAddress, void* sp, uint32_t csfr) {
+static void writeCrashMarker(uint32_t magic, uint32_t a, uint32_t b, uint32_t c, uint32_t d, uint32_t e) {
+	crashMarkerEnableWrite();
+	RTC->BKP0R = magic;
+	RTC->BKP1R = a;
+	RTC->BKP2R = b;
+	RTC->BKP3R = c;
+	RTC->BKP4R = d;
+	RTC->BKP5R = e;
+}
+
+/* Give the console thread a chance to flush the FAULT/assert line before the
+ * reboot. Plain busy-wait: no scheduler/lock involvement (the faulting thread
+ * may hold the system lock). ~0.5 s at 288 MHz. */
+static void crashDelayForConsoleFlush() {
+	for (volatile uint32_t i = 0; i < 50000000; i++) {
+		__asm__ volatile("");
+	}
+}
+
+void printPreviousCrashIfAny() {
+	crashMarkerEnableWrite();
+	uint32_t magic = RTC->BKP0R;
+	if (magic == CRASH_MARKER_MAGIC_FAULT) {
+		efiPrintf("*** PREVIOUS CRASH: fault type=%u pc=0x%08x lr=0x%08x faultAddr=0x%08x cfsr=0x%08x",
+			(unsigned)RTC->BKP1R, (unsigned)RTC->BKP2R, (unsigned)RTC->BKP3R,
+			(unsigned)RTC->BKP4R, (unsigned)RTC->BKP5R);
+	} else if (magic == CRASH_MARKER_MAGIC_ASSERT) {
+		efiPrintf("*** PREVIOUS CRASH: assert (line=%u, see assert fail message if it reached the log)",
+			(unsigned)RTC->BKP1R);
+	}
+	RTC->BKP0R = 0; // consumed
+}
+
+void logHardFault(uint32_t type, uintptr_t faultAddress, void* sp, port_extctx* ctx, uint32_t csfr) {
     // todo: reuse hasCriticalFirmwareErrorFlag? something?
     isInHardFaultHandler = true;
 	/* A hard fault is the most common silent-reboot cause on ports without
@@ -539,6 +567,9 @@ void logHardFault(uint32_t type, uintptr_t faultAddress, void* sp, uint32_t csfr
 	efiPrintf("FAULT type=%u pc=0x%08x lr=0x%08x faultAddr=0x%08x cfsr=0x%08x",
 		(unsigned)type, (unsigned)ctx->pc, (unsigned)ctx->lr_thd,
 		(unsigned)faultAddress, (unsigned)csfr);
+	writeCrashMarker(CRASH_MARKER_MAGIC_FAULT, type, ctx->pc, ctx->lr_thd,
+		(uint32_t)faultAddress, csfr);
+	crashDelayForConsoleFlush();
 	// Evidence first!
 #if EFI_BACKUP_SRAM
 	auto bkpram = getBackupSram();
@@ -611,6 +642,7 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 #else // EFI_PROD_CODE
 
 	criticalError("assert fail %s %s:%d", msg, file, line);
+	writeCrashMarker(CRASH_MARKER_MAGIC_ASSERT, (uint32_t)line, 0, 0, 0, 0);
 
 	// If on the main thread, longjmp back to the init process so we can keep USB alive
 	if (chThdGetSelfX()->threadId == 0) {
@@ -625,6 +657,9 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 	} else {
 		// Not the main thread.
 		// All hope is now lost.
+
+		// Give the console thread a moment to flush the assert fail line, then reboot.
+		crashDelayForConsoleFlush();
 
 		// Reboot!
 		rebootNow();
