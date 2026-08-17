@@ -84,6 +84,13 @@ extern bool hasCriticalFirmwareErrorFlag;
 
 const char* getCriticalErrorMessage();
 
+#if EFI_PROD_CODE
+/* Prints the crash record (assert/hard fault) saved by the previous run in the
+ * RTC backup-domain registers - survives the reboot and the bootloader jump.
+ * Called from initHardwareNoConfig() right after initRtc(). */
+void printPreviousCrashIfAny();
+#endif // EFI_PROD_CODE
+
 /**
  * Report a recoverable configuration error (bad/inconsistent tune).
  *
