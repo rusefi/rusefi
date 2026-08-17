@@ -2886,3 +2886,25 @@ Open follow-ups:
     format so the table is not re-burned on every load.
 - Intake flap + blend (gppwm on AA2, secondVe/secondIgnitionBlendParameter)
   deferred by the user; the plan stays in todo-21129.md.
+
+## 2026-08-17 - 21129 cranking/idle review against the M74 reference
+
+- Reference: chiptuner.ru M74.8 idle diagnostics (840+-40 rpm, УОЗ 9+-5 deg,
+  MAP 0.38-0.41 bar, fill 115-125 mg/cycle, TPS 1-4%).
+- Verified the cranking fuel path in fuel_math.cpp (getCrankingFuel3):
+  crankingCycleBaseFuel is in mg, multiplied by crankingFuelCoef(CLT) and
+  crankingTpsCoef(TPS). The tune's values (20 mg flat, coef 2.8..1.0, TPS 3.0
+  at closed throttle - flood-clear direction) were cross-checked against
+  observed pulse widths earlier; left unchanged.
+- Checked the stock ignition maps (.clb) at the idle cell: the M74.9 base
+  map really carries ~23-30 deg at 800-1000 rpm / 100-140 mg - in the stock
+  ECU the idle governor retards to ~9-14 deg. The converted rusEFI table
+  inherits this, so idle timing was too advanced.
+- Applied to 21129.msq (backup 21129.msq.pre-idle-cranking.bak):
+  - postCrankingFactor: 6x6 afterstart taper (2.2x at -20 C -> 1.0 over
+    ~200 revolutions, 1.0 flat warm); duration bins fixed to 0..200 revs.
+  - useSeparateAdvanceForIdle = enabled with idleAdvanceBins 0..2000 rpm and
+    idleAdvance 16/15/13/12/11/10/10/12 deg (anti-stall slope; blends to the
+    normal table between 2.5-5% pedal TPS via idlePidDeactivationTpsThreshold).
+- Left for on-car work: idle PID gains, warm idle target 900 rpm (stock 840),
+  idleTimingPid off (ETB idle uses the throttle).
