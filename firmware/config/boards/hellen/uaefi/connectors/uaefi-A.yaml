@@ -10,12 +10,12 @@ pins:
     color: orange
 
   - pin: A1
-    function: DC1- (ETB/stepper; disconnect when A5 is used as an output)
+    function: DC1- (ETB/stepper; disconnect when A5 is used as an GPIO output)
     type: etb
     color: white
 
   - pin: A2
-    function: DC2- (ETB/stepper; disconnect when A6 is used as an output)
+    function: DC2- (ETB/stepper; disconnect when A6 is used as an GPIO output)
     type: etb
     color: white
 
