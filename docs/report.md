@@ -2600,3 +2600,41 @@ thread; the page reads (and the merge) are now wrapped in
 linkManager.submit() with a latch, the result handed back via atomics, and the
 upload still goes through CalibrationsUpdater (which submits internally).
 :ui:test + :ecu_io:test green, console jar rebuilt.
+
+## 2026-08-17 - tune text normalized to console-exact format (no more phantom re-migrations)
+
+Symptom: after every load-tune the console listed the same fields for restore
+(secondVeTable, ignitionTable, lambdaTable, ...) and re-burned them, so it was
+impossible to tell whether the ECU actually held the values - the user read the
+persistent diff list as "values not applied".
+
+Root cause: the msq table texts were hand-formatted (%g, no leading newline) while
+the console generates array values as ArrayIniField.formatValue + StringFormatter.
+niceToString (leading newline, 8-space indent, one decimal for scale-0.1 fields).
+DefaultTuneMigrator compares the raw strings, so even identical values kept
+"migrating" on every load. lambdaTable additionally: the ini scale is
+{useLambdaOnInterface ? 1/147 : 1/10} and parseDigits on the digits expression
+falls back to 3, so the console renders 1/147-grid values with Double.toString
+trailing-zero trimming (1.0, 0.952, 0.878, ...); the 0.01-quantized "1.000/0.950"
+text could never match.
+
+Fix (m74_9_clb_to_msq.py):
+- fmt_table/fmt_rows emit byte-identical formatValue whitespace; tables rendered
+  %.1f, bins %d, lambdaTable re-rendered through the 1/147 grid with
+  Double.toString-style trailing-zero trimming, original AFR-conversion values
+  restored (LAMBDA_ORIGINAL).
+- Page-3 block re-insertion fixed: the drop regex used to eat the newline after
+  page 0's </page>, silently deleting the inserted page.
+
+Validated with a throwaway JUnit harness: all nine patched constants
+(secondVeTable/LoadBins/RpmBins, secondIgnitionTable/LoadBins/RpmBins,
+ignitionTable, ignitionLoadBins, lambdaTable) round-trip byte-identically through
+ConfigurationImageGetterSetter.setValue2/getStringValue, i.e. after one successful
+burn the next load-tune produces zero restore lines - a truthful persistence
+check. :ui:test + :ecu_io:test green. Console jar unchanged (no code change);
+the deliverable is the regenerated 21129.msq.
+
+Note: the first burn still writes page 0 + page 0x0300 and the MFS write can take
+~2 s when garbage collection kicks in (MFS_WARN_GC status 2), which trips the
+843 ms gap-in-time critical warning - cosmetic for a bench write, harmless to the
+stored data, and no longer repeated since re-loads now burn nothing.
