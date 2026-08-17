@@ -157,6 +157,7 @@ Gpio* getBoardMetaOutputs() {
     return OUTPUTS;
 }
 
+// H-bridges use the dedicated CAN_QC_ETB path instead of the on-chip-only generic output path.
 int getBoardMetaDcOutputsCount() {
     if (engineConfiguration->engineType == engine_type_e::HONDA_OBD1 ||
       engineConfiguration->engineType == engine_type_e::MAZDA_MIATA_NA6 ||
