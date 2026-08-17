@@ -369,6 +369,33 @@ static bool readBatch(adcsample_t* convertedSamples, adcsample_t* b) {
 	return true;
 }
 
+#if EFI_ADC3_SLOW
+/* Blocking conversion of the 8 ADC3-only channels (order per convGroupSlowAdc3).
+ * With EFI_SOFTWARE_KNOCK the ADC3 is shared with the knock windows, so the
+ * check-and-start is atomic with respect to a knock start; returns false when
+ * ADC3 is busy. Also used by the board-local 'knockpin' diagnostic. */
+static bool adc3SlowConvert(adcsample_t* out) {
+#if defined(EFI_SOFTWARE_KNOCK)
+	osalSysLock();
+	if ((ADCD3.state == ADC_READY) ||
+			(ADCD3.state == ADC_ERROR)) {
+		adcStartConversionI(&ADCD3, &convGroupSlowAdc3, out, 1);
+		msg_t adc3result = osalThreadSuspendS(&ADCD3.thread);
+		osalSysUnlock();
+		return adc3result == MSG_OK;
+	}
+	osalSysUnlock();
+	return false;
+#else
+	return adcConvert(&ADCD3, &convGroupSlowAdc3, out, 1) == MSG_OK;
+#endif // defined(EFI_SOFTWARE_KNOCK)
+}
+
+bool readSlowAdc3All(adcsample_t samples[8]) {
+	return adc3SlowConvert(samples);
+}
+#endif // EFI_ADC3_SLOW
+
 bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 	bool result = true;
 
@@ -391,31 +418,12 @@ bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 	 * ADC_SAMPLING_SLOW take a few microseconds, negligible at the slow rate.
 	 *
 	 * With EFI_SOFTWARE_KNOCK the same ADC3 also serves interrupt-driven
-	 * knock windows (up to a few ms each). Check-and-start must be atomic
-	 * with respect to a knock start: if a knock conversion is in progress we
-	 * skip this slow cycle and keep the previous values (CLT/IAT move slowly,
-	 * a missed 50 ms update is invisible). */
-#if defined(EFI_SOFTWARE_KNOCK)
-	osalSysLock();
-	if ((ADCD3.state == ADC_READY) ||
-			(ADCD3.state == ADC_ERROR)) {
-		adcStartConversionI(&ADCD3, &convGroupSlowAdc3,
-				(adcsample_t *)&convertedSamples[EFI_ADC_32 - EFI_ADC_0], 1);
-		msg_t adc3result = osalThreadSuspendS(&ADCD3.thread);
-		osalSysUnlock();
-		if (adc3result != MSG_OK) {
-			return false;
-		}
-	} else {
-		osalSysUnlock();
+	 * knock windows (up to a few ms each). If a knock conversion is in
+	 * progress, the guarded convert below fails and we keep the previous
+	 * values (CLT/IAT move slowly, a missed 50 ms update is invisible). */
+	if (!adc3SlowConvert((adcsample_t *)&convertedSamples[EFI_ADC_32 - EFI_ADC_0])) {
+		/* ADC3 busy with a knock window - previous values stand */
 	}
-#else
-	msg_t adc3result = adcConvert(&ADCD3, &convGroupSlowAdc3,
-			(adcsample_t *)&convertedSamples[EFI_ADC_32 - EFI_ADC_0], 1);
-	if (adc3result != MSG_OK) {
-		return false;
-	}
-#endif // defined(EFI_SOFTWARE_KNOCK)
 #endif // EFI_ADC3_SLOW
 
 	return result;

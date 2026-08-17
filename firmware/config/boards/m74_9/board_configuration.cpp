@@ -457,6 +457,45 @@ static void m74_9FastAdcDiag() {
 	efiPrintf("fast ADC compiled out");
 #endif
 }
+
+/* Bench diagnostic for knock pin identification: samples the 8 ADC3-only
+ * channels (order per convGroupSlowAdc3: IN4..IN9, IN14, IN15) in a tight
+ * loop for ~2 s and prints min/max per channel. With the finger (or a wire)
+ * on the knock input AA3, the affected channel shows a large min/max spread
+ * while the others stay flat. */
+extern bool readSlowAdc3All(adcsample_t samples[8]);
+
+static void m74_9KnockPinScan() {
+	static const int CH = 8;
+	static const char* names[CH] = {"PF6", "PF7", "PF8", "PF9", "PF10", "PF3", "PF4", "PF5"};
+	adcsample_t mn[CH], mx[CH];
+	for (int i = 0; i < CH; i++) {
+		mn[i] = 4095;
+		mx[i] = 0;
+	}
+
+	int ok = 0;
+	for (int iter = 0; iter < 2000; iter++) {
+		adcsample_t s[CH];
+		if (!readSlowAdc3All(s)) {
+			chThdSleepMilliseconds(1);
+			continue;
+		}
+		ok++;
+		for (int i = 0; i < CH; i++) {
+			mn[i] = minI(mn[i], (int)s[i]);
+			mx[i] = maxI(mx[i], (int)s[i]);
+		}
+		chThdSleepMilliseconds(1);
+	}
+
+	efiPrintf("knockpin scan: %d conversions over ~2s (order: EFI_ADC_32..39)", ok);
+	for (int i = 0; i < CH; i++) {
+		efiPrintf("  %s: min=%u max=%u spread=%u (%.3f..%.3f V)", names[i],
+			(unsigned)mn[i], (unsigned)mx[i], (unsigned)(mx[i] - mn[i]),
+			mn[i] * (3.3f / 4095.0f), mx[i] * (3.3f / 4095.0f));
+	}
+}
 #endif /* EFI_PROD_CODE && HAL_USE_ADC */
 
 static Gpio OUTPUTS[] = {
@@ -491,6 +530,7 @@ void setup_custom_board_overrides() {
 	custom_board_ConfigOverrides = m74_9_boardConfigOverrides;
 #if EFI_PROD_CODE && HAL_USE_ADC
 	addConsoleAction("fastadcdiag", m74_9FastAdcDiag);
+	addConsoleAction("knockpin", m74_9KnockPinScan);
 #endif
 #if EFI_CAN_SUPPORT
 	initM74_9Can();
