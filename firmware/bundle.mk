@@ -208,7 +208,12 @@ $(SREC_TARGET): $(BUILDDIR)/rusefi.srec
 $(FIRMWARE_OUTPUTS): $(FOLDER)/%: $(BUILDDIR)/% | $(FOLDER)
 	ln -rfs $< $@
 
-$(BOOTLOADER_BIN_OUT): $(BOOTLOADER_BIN) | $(DEVICE_BIN_FOLDER)
+# Forced and self-sufficient: the $(BIN_FOLDER) recipe rm -rf's bin/ on every run,
+# which make cannot see (it caches stats and assumes recipes only touch their own
+# target). A cached "exists" for the dir or the symlink would otherwise skip this
+# rule, so re-create both unconditionally after the wipe.
+$(BOOTLOADER_BIN_OUT): $(BOOTLOADER_BIN) .FORCE | $(BIN_FOLDER)
+	mkdir -p $(dir $@)
 	ln -rfs $< $@
 
 $(FOLDER)/$(PROJECT).dfu: $(FOLDER)/%: $(DELIVER)/% | $(FOLDER)
@@ -262,13 +267,17 @@ $(ST_DRIVERS): | $(DRIVERS_FOLDER)
 $(DELIVER) $(ARTIFACTS) $(STAGING_FOLDER) $(CONSOLE_FOLDER) $(DRIVERS_FOLDER):
 	mkdir -p $@
 
+# The rm -rf clears stale content (bundled names embed date/sha), but it also
+# deletes other rules' outputs staged under bin/ - something make's model does not
+# allow for (stat caching assumes recipes only touch their own target). Any rule
+# placing a file under bin/ must therefore be .FORCE'd, order itself after this
+# rule with "| $(BIN_FOLDER)", and mkdir -p its own subdirectory in its recipe
+# (see $(BOOTLOADER_BIN_OUT)); a plain directory target for a subdir of bin/ gets
+# silently skipped on incremental builds.
 $(BIN_FOLDER): .FORCE | $(FOLDER)
 	rm -rf $@
 	mkdir -p $@
 	find ../java_console/bin -maxdepth 1 -mindepth 1 | xargs -I{} ln -rfs {} $@/
-
-$(DEVICE_BIN_FOLDER): | $(BIN_FOLDER)
-	mkdir -p $@
 
 $(BRANCH_REF_FILE):
 	cp $(PROJECT_DIR)/../release.txt $(BRANCH_REF_FILE)
