@@ -90,6 +90,17 @@ public class SerialPortScanner implements PortScanner {
 
     private final List<PortScanner.Listener> listeners = new CopyOnWriteArrayList<>();
 
+    /**
+     * The periodic serial port probe spawns one thread per port, and each probe can live up
+     * to a minute (3 detection attempts per port). On macOS several always-present system
+     * ports (Bluetooth/wlan debug UARTs) pile these threads up until the JVM hits the native
+     * thread limit - the observed "OutOfMemoryError: unable to create native thread" storm
+     * about a minute after console start, which also dropped the live ECU link. PCAN users do
+     * not need the scan at all: launch with -Dserial.port.scan=false
+     */
+    private static final boolean PORT_SCAN_ENABLED =
+        !"false".equalsIgnoreCase(System.getProperty("serial.port.scan", "true"));
+
     @Override
     public AvailableHardware getCurrentHardware() {
         synchronized (lock) {
@@ -233,6 +244,37 @@ public class SerialPortScanner implements PortScanner {
      * Package-private so scan-policy unit tests can drive scan cycles directly with scripted probes.
      */
     void findAllAvailablePorts(boolean includeSlowLookup) {
+        if (!PORT_SCAN_ENABLED) {
+            // Never spawn per-port serial probe threads. Keep the non-serial hardware probes
+            // (DFU/STLink/PCAN) with the same throttling as the slow path so the synthetic CAN
+            // port still appears - and so we never poke the PCAN driver while a link is live
+            // (MacCAN is single-client).
+            final boolean liveEcuConnected = probes.isLiveEcuConnected();
+            final long now = probes.now();
+            if (!liveEcuConnected && (now - lastDeviceProbeMs) >= DEVICE_PROBE_INTERVAL_MS) {
+                lastDfuConnected = probes.isDfuDeviceConnected();
+                lastStLinkConnected = probes.isStLinkConnected();
+                lastPcanConnected = probes.isPcanConnected();
+                lastDeviceProbeMs = now;
+            }
+            List<PortResult> ports = new ArrayList<>();
+            if (lastPcanConnected)
+                ports.add(new PortResult(LinkManager.PCAN, SerialPortType.CAN));
+            if (lastDfuConnected)
+                ports.add(new PortResult(LinkManager.DFU, SerialPortType.Dfu));
+            AvailableHardware currentHardware = new AvailableHardware(ports, lastDfuConnected, lastStLinkConnected, lastPcanConnected);
+            boolean isListUpdated;
+            synchronized (lock) {
+                isListUpdated = !knownHardware.equals(currentHardware);
+                knownHardware = currentHardware;
+            }
+            if (isListUpdated) {
+                for (PortScanner.Listener listener : listeners)
+                    listener.onChange(currentHardware);
+            }
+            return;
+        }
+
         List<PortResult> ports = new ArrayList<>();
         boolean dfuConnected;
         boolean stLinkConnected;
