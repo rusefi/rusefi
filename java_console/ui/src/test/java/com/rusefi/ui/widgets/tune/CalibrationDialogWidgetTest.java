@@ -951,4 +951,64 @@ public class CalibrationDialogWidgetTest {
         assertEquals(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR), linkLabel.getCursor());
         assertEquals(1, linkLabel.getMouseListeners().length);
     }
+
+    @Test
+    public void testSecondaryPageTableRendersNoticeInsteadOfEditor() {
+        IniFileModel iniFileModel = mock(IniFileModel.class);
+        when(iniFileModel.getCurves()).thenReturn(Collections.emptyMap());
+        when(iniFileModel.getDialogs()).thenReturn(Collections.emptyMap());
+
+        TableModel tableModel = new TableModel("secondVeTableTbl", "map1", "Second VE Table",
+                null, "X", "Y", "secondVeRpmBins", null, false, "secondVeLoadBins", null, false, "secondVeTable",
+                null, null, null, null);
+        when(iniFileModel.getTable("secondVeTableTbl")).thenReturn(tableModel);
+
+        // the data array lives on TS page 4 (0x0300)
+        ArrayIniField zBinsField = new ArrayIniField("secondVeTable", 0, FieldType.INT16, 16, 16, "%", 0.1, "0", "999", "1");
+        zBinsField.setPageIndex(0x0300);
+        when(iniFileModel.findIniField("secondVeTable")).thenReturn(java.util.Optional.of(zBinsField));
+
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+        ConfigurationImage ci = new ConfigurationImage(new byte[1000]);
+        widget.update("secondVeTableTbl", iniFileModel, ci);
+
+        JPanel content = widget.getContentPane();
+        assertEquals(1, content.getComponentCount());
+        // must be a plain notice label, not a TuningTableView
+        Component child = content.getComponent(0);
+        assertTrue(child instanceof JLabel, "Expected a notice JLabel, got " + child.getClass());
+        assertTrue(((JLabel) child).getText().contains("TunerStudio page 4"), "Notice must mention the TS page");
+        // and the image must stay untouched
+        assertEquals(0, ci.getContent()[0]);
+    }
+
+    @Test
+    public void testSecondaryPageFieldRendersLabelOnlyRow() {
+        IniFileModel iniFileModel = mock(IniFileModel.class);
+        when(iniFileModel.getCurves()).thenReturn(Collections.emptyMap());
+
+        ArrayIniField zBinsField = new ArrayIniField("secondVeTable", 0, FieldType.INT16, 16, 16, "%", 0.1, "0", "999", "1");
+        zBinsField.setPageIndex(0x0300);
+        when(iniFileModel.findIniField("secondVeTable")).thenReturn(java.util.Optional.of(zBinsField));
+
+        List<DialogModel.Field> fields = new ArrayList<>();
+        fields.add(new DialogModel.Field("secondVeTable", "Second VE Table"));
+        DialogModel mainDialog = new DialogModel("main", "Main", fields, Collections.emptyList());
+
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+        ConfigurationImage ci = new ConfigurationImage(new byte[1000]);
+        widget.update(mainDialog, iniFileModel, ci);
+
+        JPanel content = widget.getContentPane();
+        assertEquals(1, content.getComponentCount());
+        // label-only row: no editable control inside
+        JPanel row = (JPanel) content.getComponent(0);
+        boolean hasEditor = false;
+        for (Component c : row.getComponents()) {
+            if (c instanceof JTextField || c instanceof JComboBox || c instanceof JSpinner || c instanceof JSlider) {
+                hasEditor = true;
+            }
+        }
+        assertFalse(hasEditor, "Secondary-page field must not render an editor");
+    }
 }
