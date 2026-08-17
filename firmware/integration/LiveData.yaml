@@ -292,3 +292,8 @@ Usages:
     prepend: integration/rusefi_config_shared.txt
     output_name: live_data_rotational_idle
     conditional_compilation: "ROTATIONAL_IDLE_CONTROLLER"
+
+  - name: injector_deadtime_autotune_state
+    java: InjectorDeadtimeAutotune.java
+    folder: controllers/modules/injector_deadtime_autotune
+    engineModule: InjectorDeadtimeAutotune

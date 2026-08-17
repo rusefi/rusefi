@@ -232,6 +232,7 @@ TESTS_SRC_CPP = \
 	tests/controllers/algo/test_engine_cylinder.cpp \
 	tests/controllers/algo/test_closed_loop_idle.cpp \
 	tests/controllers/modules/test_example_module.cpp \
+	tests/controllers/modules/test_injector_deadtime_autotune.cpp \
 	tests/controllers/test_flash.cpp \
 	tests/controllers/test_second_tables.cpp \
 	tests/controllers/modules/vvl_controller/vvl_controller_rpm_condition.cpp \

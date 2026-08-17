@@ -29,3 +29,4 @@ include $(PROJECT_DIR)/controllers/modules/malfunction_indicator/malfunction_ind
 include $(PROJECT_DIR)/controllers/modules/sd_log_trigger/sd_log_trigger.mk
 include $(PROJECT_DIR)/controllers/modules/configuration_wizard/configuration_wizard.mk
 include $(PROJECT_DIR)/controllers/modules/dtc_manager/dtc_manager.mk
+include $(PROJECT_DIR)/controllers/modules/injector_deadtime_autotune/injector_deadtime_autotune.mk
