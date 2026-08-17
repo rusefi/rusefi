@@ -29,6 +29,9 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+### Added
+ - h-bridge as one GPIO #9673
+
 ## August 2026 "Day 1631"
 
 ### Added
