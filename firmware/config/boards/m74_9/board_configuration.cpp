@@ -543,6 +543,11 @@ static void m74_9KnockBurst() {
 static void m74_9AdcDivTest() {
 	static NO_CACHE adcsample_t tmp[256];
 
+	/* Save/restore the real values - the fixed mcuconf setting is DIV4
+	 * (adcdiv=1), never the historical hardcoded restores. */
+	uint32_t origCfg = RCC->CFGR;
+	uint32_t origCcr = ADC->CCR;
+
 	efiPrintf("adcdivtest: sweep CRM CFG bits [18:16]");
 	for (uint32_t v = 0; v < 8; v++) {
 		uint32_t cfg = RCC->CFGR;
@@ -556,8 +561,7 @@ static void m74_9AdcDivTest() {
 			ok ? "ok" : "fail", (int)US2NT(elapsed),
 			ok ? (int)(256.0f * US_PER_SECOND_F / US2NT(elapsed)) : 0);
 	}
-	/* restore the observed value (001) */
-	RCC->CFGR = (RCC->CFGR & ~(7u << 16)) | (1u << 16);
+	RCC->CFGR = origCfg;
 	chThdSleepMilliseconds(5);
 
 	efiPrintf("adcdivtest: sweep ADC->CCR bits [17:16]");
@@ -573,8 +577,7 @@ static void m74_9AdcDivTest() {
 			ok ? "ok" : "fail", (int)US2NT(elapsed),
 			ok ? (int)(256.0f * US_PER_SECOND_F / US2NT(elapsed)) : 0);
 	}
-	/* restore DIV2 (00) - the fixed default for this port */
-	ADC->CCR = (ADC->CCR & ~(3u << 16)) | (0u << 16);
+	ADC->CCR = origCcr;
 	chThdSleepMilliseconds(5);
 }
 #endif /* EFI_PROD_CODE && HAL_USE_ADC */
