@@ -344,6 +344,7 @@ public class VariableRegistryValues {
 	public static final String CYLINDER_BORE_TOOLTIP = "Cylinder diameter in mm";
 	public static final String CYLINDER_BORE_UNITS = "mm";
 	public static final int DAC_OUTPUT_COUNT = 2;
+	public static final int dc_function_e_DC_Gpio = 5;
 	public static final int dc_function_e_DC_IdleValve = 3;
 	public static final int dc_function_e_DC_None = 0;
 	public static final int dc_function_e_DC_Throttle1 = 1;
@@ -948,6 +949,8 @@ public class VariableRegistryValues {
 	public static final int Gpio_H7 = 121;
 	public static final int Gpio_H8 = 122;
 	public static final int Gpio_H9 = 123;
+	public static final int Gpio_HBRIDGE_1_OUT = 361;
+	public static final int Gpio_HBRIDGE_2_OUT = 362;
 	public static final int Gpio_I0 = 130;
 	public static final int Gpio_I1 = 131;
 	public static final int Gpio_I10 = 140;
@@ -1847,7 +1850,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2026.08.16.stm32f429_nucleo.3200558486";
+	public static final String TS_SIGNATURE = "rusEFI master.2026.08.17.stm32f429_nucleo.3200558486";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2196;
