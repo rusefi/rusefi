@@ -103,12 +103,67 @@ def ignition_table_from_maps(air, ign):
     return rows
 
 
-def fmt_table(rows):
-    return '\n'.join('         ' + ' '.join(('%g' % v) for v in row) for row in rows)
+def fmt_rows(cell_rows):
+    """formatValue whitespace: leading newline, 8-space indent + space before the first
+    cell of each row, trailing newline."""
+    lines = []
+    for row in cell_rows:
+        lines.append('        ' + ' ' + ' '.join(row))
+    return '\n' + '\n'.join(lines) + '\n'
 
 
-def fmt_bins(bins):
-    return '\n'.join('         %d' % v for v in bins)
+def fmt_table(rows, digits=1):
+    """Console-exact text: matches ArrayIniField.formatValue + niceToString output."""
+    cell_rows = []
+    for row in rows:
+        if digits == 1:
+            cells = ['%.1f' % v for v in row]
+        elif digits == 3:
+            cells = ['%.3f' % v for v in row]
+        else:
+            cells = ['%d' % v for v in row]
+        cell_rows.append(cells)
+    return fmt_rows(cell_rows)
+
+
+# Original target-AFR (lambda) table from the stock M74 mixture map conversion
+# (docs/report.md 2026-08-16). Values are already on the ECU's 1/147 storage grid
+# ({useLambdaOnInterface ? 1/147 : 1/10} scale).
+LAMBDA_ORIGINAL = [
+    "1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 0.952 0.952 0.884 0.837 0.837 0.837 0.837",
+    "1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 0.952 0.952 0.884 0.837 0.837 0.837 0.837",
+    "1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 0.952 0.952 0.884 0.837 0.837 0.837 0.837",
+    "1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 0.925 0.912 0.871 0.837 0.837 0.837 0.837",
+    "1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 0.878 0.864 0.85 0.837 0.837 0.837 0.837",
+    "1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 0.837 0.837 0.837 0.837 0.837 0.837 0.837",
+    "1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 0.837 0.837 0.837 0.837 0.837 0.837 0.837",
+    "0.98 0.98 0.98 0.98 0.98 0.98 0.966 0.966 0.966 0.837 0.837 0.837 0.837 0.837 0.837 0.837",
+    "0.959 0.959 0.959 0.959 0.959 0.959 0.939 0.939 0.939 0.837 0.837 0.837 0.837 0.837 0.837 0.837",
+    "0.939 0.939 0.939 0.939 0.939 0.939 0.905 0.905 0.905 0.837 0.837 0.837 0.837 0.837 0.837 0.837",
+    "0.918 0.918 0.918 0.918 0.918 0.918 0.871 0.871 0.871 0.837 0.837 0.837 0.837 0.837 0.837 0.837",
+    "0.898 0.898 0.898 0.898 0.898 0.898 0.837 0.837 0.837 0.837 0.837 0.837 0.837 0.837 0.837 0.83",
+    "0.898 0.898 0.898 0.898 0.898 0.898 0.837 0.837 0.837 0.837 0.837 0.837 0.837 0.837 0.837 0.823",
+    "0.898 0.898 0.898 0.898 0.898 0.898 0.837 0.837 0.837 0.837 0.837 0.837 0.837 0.837 0.837 0.823",
+    "0.898 0.898 0.898 0.898 0.898 0.898 0.837 0.837 0.837 0.837 0.837 0.837 0.837 0.83 0.83 0.816",
+    "0.898 0.898 0.898 0.898 0.898 0.898 0.837 0.837 0.837 0.837 0.837 0.837 0.837 0.823 0.816 0.816",
+]
+
+
+def normalize_lambda_table():
+    """Restores the original lambda values and renders them exactly the way the console
+    does: 1/147 storage grid (Math.round), then Double.toString(Math.round(t*1000)/1000)
+    which trims trailing zeros (1.0 stays '1.0', not '1.000'). Any other text re-triggers
+    the migration on every load."""
+    import math
+    cells = []
+    for row in LAMBDA_ORIGINAL:
+        for v in row.split():
+            k = math.floor(float(v) * 147 + 0.5)      # Math.round(v / (1/147))
+            t = k / 147.0
+            r = math.floor(t * 1000 + 0.5) / 1000.0   # Math.round(t * 1000) / 1000
+            cells.append(repr(r))
+    assert len(cells) == 256, len(cells)
+    return fmt_rows([cells[i * 16:(i + 1) * 16] for i in range(16)])
 
 
 def main():
@@ -136,6 +191,10 @@ def main():
         patch_msq(sys.argv[5], ve1, ign_primary, ign_second)
 
 
+def fmt_bins(bins):
+    return fmt_table([[float(b)] for b in bins], 0)
+
+
 def patch_msq(msq_path, ve1, ign_primary, ign_second):
     src = open(msq_path, encoding='utf-8').read()
     orig = src
@@ -144,13 +203,20 @@ def patch_msq(msq_path, ve1, ign_primary, ign_second):
         nonlocal src
         pat = re.compile(r'<constant[^>]*name="%s"[^>]*>.*?</constant>' % re.escape(name), re.S)
         assert pat.search(src), name
-        src = pat.sub('<constant cols="%d" digits="%s" name="%s" rows="%d" units="%s">%s\n</constant>'
+        src = pat.sub('<constant cols="%d" digits="%s" name="%s" rows="%d" units="%s">%s</constant>'
                       % (cols, digits, name, rows, units, value), src, count=1)
 
     # Page 0: primary ignition table + its load bins (NA: capped at 100 kPa)
-    replace_constant('ignitionTable', 16, 16, '1', 'deg', fmt_table(ign_primary))
+    replace_constant('ignitionTable', 16, 16, '1', 'deg', fmt_table(ign_primary, 1))
     replace_constant('ignitionLoadBins', 1, 16, '0',
                      '{bitStringValue(ignLoadUnitLabels, ignLoadUnitIdx)}', fmt_bins(LOAD_BINS))
+
+    # lambdaTable: restore the original AFR-conversion values with console-exact text
+    # (1/147 storage grid + Double.toString rendering) so the migration comparison
+    # settles and the table is not re-burned on every load.
+    replace_constant('lambdaTable', 16, 16, '{useLambdaOnInterface ? 2 : 1}',
+                     '{useLambdaOnInterface ? &quot;lambda&quot; : &quot;afr&quot;}',
+                     normalize_lambda_table())
 
     # Second tables live on TS page 4 (ini) = msq page number 3 (page - 1, same
     # convention the console's MsqFactory uses: pageIndex ordinal of the
@@ -158,26 +224,21 @@ def patch_msq(msq_path, ve1, ign_primary, ign_second):
     ve_load_units = '{bitStringValue(veLoadUnitLabels, veLoadUnitIdx)}'
     ign_load_units = '{bitStringValue(ignLoadUnitLabels, ignLoadUnitIdx)}'
     page3 = ('    <page number="3" size="1268">\n'
-             '        <constant cols="16" digits="1" name="secondVeTable" rows="16" units="%">' + fmt_table(ve1) + '\n'
-             '</constant>\n'
-             '        <constant cols="1" digits="0" name="secondVeLoadBins" rows="16" units="' + ve_load_units + '">' + fmt_bins(LOAD_BINS) + '\n'
-             '</constant>\n'
-             '        <constant cols="1" digits="0" name="secondVeRpmBins" rows="16" units="RPM">' + fmt_bins(RPM_BINS) + '\n'
-             '</constant>\n'
-             '        <constant cols="16" digits="1" name="secondIgnitionTable" rows="16" units="deg">' + fmt_table(ign_second) + '\n'
-             '</constant>\n'
-             '        <constant cols="1" digits="0" name="secondIgnitionLoadBins" rows="16" units="' + ign_load_units + '">' + fmt_bins(LOAD_BINS) + '\n'
-             '</constant>\n'
-             '        <constant cols="1" digits="0" name="secondIgnitionRpmBins" rows="16" units="RPM">' + fmt_bins(RPM_BINS) + '\n'
-             '</constant>\n'
+             '        <constant cols="16" digits="1" name="secondVeTable" rows="16" units="%">' + fmt_table(ve1, 1) + '</constant>\n'
+             '        <constant cols="1" digits="0" name="secondVeLoadBins" rows="16" units="' + ve_load_units + '">' + fmt_bins(LOAD_BINS) + '</constant>\n'
+             '        <constant cols="1" digits="0" name="secondVeRpmBins" rows="16" units="RPM">' + fmt_bins(RPM_BINS) + '</constant>\n'
+             '        <constant cols="16" digits="1" name="secondIgnitionTable" rows="16" units="deg">' + fmt_table(ign_second, 1) + '</constant>\n'
+             '        <constant cols="1" digits="0" name="secondIgnitionLoadBins" rows="16" units="' + ign_load_units + '">' + fmt_bins(LOAD_BINS) + '</constant>\n'
+             '        <constant cols="1" digits="0" name="secondIgnitionRpmBins" rows="16" units="RPM">' + fmt_bins(RPM_BINS) + '</constant>\n'
              '    </page>\n')
 
-    # drop an existing secondary-table page block if one is already there, then insert after </page>
-    existing = re.search(r'\n    <page number="3" size="1268">.*?</page>\n', src, re.S)
+    # drop an existing secondary-table page block if one is already there, then insert after
+    # the main page's closing tag (the drop must not consume the newline that belongs to it).
+    existing = re.search(r'    <page number="3" size="1268">.*?</page>\n', src, re.S)
     if existing:
         src = src[:existing.start()] + src[existing.end():]
     assert 'nPages=' in src
-    src = src.replace('</page>\n', '</page>\n' + page3, 1)
+    src = src.replace('</page>', '</page>\n' + page3, 1)
     src = src.replace('nPages="1"', 'nPages="2"')
 
     assert src != orig
