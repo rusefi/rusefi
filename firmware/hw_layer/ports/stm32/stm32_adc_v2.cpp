@@ -378,11 +378,23 @@ static bool readBatch(adcsample_t* convertedSamples, adcsample_t* b) {
 
 #if EFI_ADC3_SLOW
 /* Blocking conversion of the 8 ADC3-only channels (order per convGroupSlowAdc3).
- * ADCD3 has no other users on this board (knock lives on ADC1), so a plain
- * blocking convert is safe. Also used by the board-local 'knockpin'
- * diagnostic. */
+ * ADCD3 is shared between the 500 Hz slow loop (readSlowAnalogInputs) and the
+ * board-local 'knockpin' diagnostic, which run in DIFFERENT threads. A plain
+ * adcConvert() here asserts ("already waiting" / "not ready") whenever it
+ * collides with the slow-loop conversion and halts the ECU - so check-and-start
+ * must be atomic with respect to the slow loop, and a busy ADC3 means "skip,
+ * previous values stand" (a missed 2 ms update is invisible). */
 static bool adc3SlowConvert(adcsample_t* out) {
-	return adcConvert(&ADCD3, &convGroupSlowAdc3, out, 1) == MSG_OK;
+	osalSysLock();
+	if ((ADCD3.state == ADC_READY) ||
+			(ADCD3.state == ADC_ERROR)) {
+		adcStartConversionI(&ADCD3, &convGroupSlowAdc3, out, 1);
+		msg_t result = osalThreadSuspendS(&ADCD3.thread);
+		osalSysUnlock();
+		return result == MSG_OK;
+	}
+	osalSysUnlock();
+	return false;
 }
 
 bool readSlowAdc3All(adcsample_t samples[8]) {
