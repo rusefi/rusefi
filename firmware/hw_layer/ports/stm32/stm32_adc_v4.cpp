@@ -313,6 +313,13 @@ const ADCConversionGroup* getKnockConversionGroup(uint8_t channelIdx) {
 	return &adcConvGroupCh1;
 }
 
+bool isKnockAdcSharedWithSlowAdc() {
+	/* No H7 board currently shares the slow ADC with the knock input - the
+	 * steal path is only used on the AT32/F4 m74_9 build (stm32_adc_v2.cpp).
+	 * Returning false keeps the old skip-if-busy behavior here. */
+	return false;
+}
+
 #endif // EFI_SOFTWARE_KNOCK
 
 #endif // HAL_USE_ADC

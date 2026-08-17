@@ -92,14 +92,27 @@ void onStartKnockSampling(uint8_t cylinderNumber, float samplingSeconds, uint8_t
 	// Stash the current cylinder's number so we can store the result appropriately
 	currentCylinderNumber = cylinderNumber;
 
-	/* The knock ADC may also serve the slow sampling of the ADC3-only pins
-	 * (EFI_ADC3_SLOW, e.g. CLT/IAT on m74_9). Check-and-start must be atomic
-	 * so a slow blocking conversion cannot be started in between; if the ADC
-	 * is busy with a slow conversion right now, skip this window (a slow read
-	 * lasts a few microseconds, so a missed window is rare). */
+	/* The knock ADC may also serve the slow sampling (m74_9: the PA0 knock
+	 * input and the slow channels share ADCD1). Check-and-start must be atomic
+	 * so a slow conversion cannot be started in between. When the ADC is busy
+	 * with the slow background chain it is stolen (see below); on boards with
+	 * a dedicated knock ADC a busy driver means another knock window is still
+	 * in flight and this window is skipped. */
 	osalSysLock();
 	if ((KNOCK_ADC.state == ADC_READY) ||
 			(KNOCK_ADC.state == ADC_ERROR)) {
+		adcStartConversionI(&KNOCK_ADC, conversionGroup, sampleBuffer, sampleCount);
+		lastKnockSampleTime = getTimeNowNt();
+	} else if (((KNOCK_ADC.state == ADC_ACTIVE) ||
+				(KNOCK_ADC.state == ADC_COMPLETE)) &&
+				isKnockAdcSharedWithSlowAdc()) {
+		/* Shared ADC: the slow background chain keeps the driver busy almost
+		 * continuously, so skipping would mean knock never samples. Abort the
+		 * in-flight slow batch (adcStopConversionI returns the driver to
+		 * ADC_READY) and take the ADC over for this window. The slow chain is
+		 * resumed when the window completes - knockCompletionCallback in
+		 * stm32_adc_v2.cpp re-runs the aborted batch. */
+		adcStopConversionI(&KNOCK_ADC);
 		adcStartConversionI(&KNOCK_ADC, conversionGroup, sampleBuffer, sampleCount);
 		lastKnockSampleTime = getTimeNowNt();
 	}

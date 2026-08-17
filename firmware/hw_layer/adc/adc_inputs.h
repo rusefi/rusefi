@@ -112,6 +112,9 @@ static constexpr AdcToken invalidAdcToken = (AdcToken)(-1);
 AdcToken enableFastAdcChannel(const char* msg, adc_channel_e channel);
 adcsample_t getFastAdc(AdcToken token);
 const ADCConversionGroup* getKnockConversionGroup(uint8_t channelIdx);
+// True when the knock ADC driver is also the slow ADC driver (m74_9: both are
+// ADCD1). Only then may a knock window abort an in-flight slow conversion.
+bool isKnockAdcSharedWithSlowAdc();
 void onKnockSamplingComplete();
 
 // Slow ADC stuff

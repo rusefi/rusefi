@@ -299,6 +299,35 @@ static slowAdcState_t slowAdcGetNextState(slowAdcState_t state)
 
 static slowAdcState_t slowAdcState = convertPrimary;
 
+/* Start the conversion batch for the state that slowAdcState currently holds.
+ * Must be called with the system locked (ISR context in both users: the batch
+ * end callback and the knock resume path). */
+static void slowAdcStartCurrentBatch() {
+	switch (slowAdcState) {
+	case convertPrimary:
+		#ifdef ADC_MUX_PIN
+		muxControl.setValue(0, /*force*/true);
+		#endif
+		adcStartConversionI(&EFI_SLOW_ADC, &convGroupSlow, (adcsample_t *)slowSampleBuffer, SLOW_ADC_OVERSAMPLE);
+		break;
+	#ifdef ADC_MUX_PIN
+	case convertMuxed:
+		muxControl.setValue(1, /*force*/true);
+		// convert second half
+		adcStartConversionI(&EFI_SLOW_ADC, &convGroupSlow, (adcsample_t *)slowSampleBufferMuxed, SLOW_ADC_OVERSAMPLE);
+		break;
+	#endif
+	case convertAux:
+		adcSTM32DisableVBATE();
+		adcStartConversionI(&EFI_SLOW_ADC, &aux1ConvGroup, (adcsample_t *)aux1SensorSamples, auxSensorOversample);
+		break;
+	case convertAux2:
+		adcSTM32EnableVBATE();
+		adcStartConversionI(&EFI_SLOW_ADC, &aux2ConvGroup, (adcsample_t *)aux2SensorSamples, auxSensorOversample);
+		break;
+	}
+}
+
 static void slowAdcEndCB(ADCDriver *adcp) {
 	if (adcIsBufferComplete(adcp)) {
 		chSysLockFromISR();
@@ -306,29 +335,7 @@ static void slowAdcEndCB(ADCDriver *adcp) {
 		adcp->state = ADC_READY;
 		// get next state
 		slowAdcState = slowAdcGetNextState(slowAdcState);
-		switch (slowAdcState) {
-		case convertPrimary:
-			#ifdef ADC_MUX_PIN
-			muxControl.setValue(0, /*force*/true);
-			#endif
-			adcStartConversionI(&EFI_SLOW_ADC, &convGroupSlow, (adcsample_t *)slowSampleBuffer, SLOW_ADC_OVERSAMPLE);
-			break;
-		#ifdef ADC_MUX_PIN
-		case convertMuxed:
-			muxControl.setValue(1, /*force*/true);
-			// convert second half
-			adcStartConversionI(&EFI_SLOW_ADC, &convGroupSlow, (adcsample_t *)slowSampleBufferMuxed, SLOW_ADC_OVERSAMPLE);
-			break;
-		#endif
-		case convertAux:
-			adcSTM32DisableVBATE();
-			adcStartConversionI(&EFI_SLOW_ADC, &aux1ConvGroup, (adcsample_t *)aux1SensorSamples, auxSensorOversample);
-			break;
-		case convertAux2:
-			adcSTM32EnableVBATE();
-			adcStartConversionI(&EFI_SLOW_ADC, &aux2ConvGroup, (adcsample_t *)aux2SensorSamples, auxSensorOversample);
-			break;
-		}
+		slowAdcStartCurrentBatch();
 		chSysUnlockFromISR();
 	}
 }
@@ -371,24 +378,11 @@ static bool readBatch(adcsample_t* convertedSamples, adcsample_t* b) {
 
 #if EFI_ADC3_SLOW
 /* Blocking conversion of the 8 ADC3-only channels (order per convGroupSlowAdc3).
- * With EFI_SOFTWARE_KNOCK the ADC3 is shared with the knock windows, so the
- * check-and-start is atomic with respect to a knock start; returns false when
- * ADC3 is busy. Also used by the board-local 'knockpin' diagnostic. */
+ * ADCD3 has no other users on this board (knock lives on ADC1), so a plain
+ * blocking convert is safe. Also used by the board-local 'knockpin'
+ * diagnostic. */
 static bool adc3SlowConvert(adcsample_t* out) {
-#if defined(EFI_SOFTWARE_KNOCK)
-	osalSysLock();
-	if ((ADCD3.state == ADC_READY) ||
-			(ADCD3.state == ADC_ERROR)) {
-		adcStartConversionI(&ADCD3, &convGroupSlowAdc3, out, 1);
-		msg_t adc3result = osalThreadSuspendS(&ADCD3.thread);
-		osalSysUnlock();
-		return adc3result == MSG_OK;
-	}
-	osalSysUnlock();
-	return false;
-#else
 	return adcConvert(&ADCD3, &convGroupSlowAdc3, out, 1) == MSG_OK;
-#endif // defined(EFI_SOFTWARE_KNOCK)
 }
 
 bool readSlowAdc3All(adcsample_t samples[8]) {
@@ -457,14 +451,9 @@ bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 #if EFI_ADC3_SLOW
 	/* Sample the ADC3-only channels (EFI_ADC_32..39) into the upper part of
 	 * the slow buffer. Blocking conversion in thread context - 8 channels at
-	 * ADC_SAMPLING_SLOW take a few microseconds, negligible at the slow rate.
-	 *
-	 * With EFI_SOFTWARE_KNOCK the same ADC3 also serves interrupt-driven
-	 * knock windows (up to a few ms each). If a knock conversion is in
-	 * progress, the guarded convert below fails and we keep the previous
-	 * values (CLT/IAT move slowly, a missed 50 ms update is invisible). */
+	 * ADC_SAMPLING_SLOW take a few microseconds, negligible at the slow rate. */
 	if (!adc3SlowConvert((adcsample_t *)&convertedSamples[EFI_ADC_32 - EFI_ADC_0])) {
-		/* ADC3 busy with a knock window - previous values stand */
+		/* keep the previous values */
 	}
 #endif // EFI_ADC3_SLOW
 
@@ -534,9 +523,33 @@ adcsample_t getFastAdc(AdcToken) {
 
 #ifdef EFI_SOFTWARE_KNOCK
 
+/* Resume the slow background chain after a knock window has stolen the ADC
+ * (m74_9: knock PA0 and the slow channels share ADCD1). slowAdcState still
+ * points at the batch that was aborted, so re-run that batch from scratch;
+ * its buffer may be partially written, which the slow loop tolerates (it
+ * averages asynchronously anyway). Caller runs in the ADC ISR. */
+#if (EFI_INTERNAL_SLOW_ADC_BACKGROUND == TRUE)
+static void slowAdcResumeAfterKnockWindow() {
+	chSysLockFromISR();
+	KNOCK_ADC.state = ADC_READY;
+	slowAdcStartCurrentBatch();
+	chSysUnlockFromISR();
+}
+#endif // EFI_INTERNAL_SLOW_ADC_BACKGROUND
+
 static void knockCompletionCallback(ADCDriver* adcp) {
 	if (adcIsBufferComplete(adcp)) {
 		onKnockSamplingComplete();
+
+#if (EFI_INTERNAL_SLOW_ADC_BACKGROUND == TRUE)
+		/* If the knock window stole the ADC from the slow background chain
+		 * (shared driver), resume the chain. Runtime pointer compare: boards
+		 * with a dedicated knock ADC (proteus/f407/hellen use ADC3) must not
+		 * touch the slow chain from here. */
+		if (&KNOCK_ADC == &EFI_SLOW_ADC) {
+			slowAdcResumeAfterKnockWindow();
+		}
+#endif // EFI_INTERNAL_SLOW_ADC_BACKGROUND
 	}
 
 	assertInterruptPriority(__func__, EFI_IRQ_ADC_PRIORITY);
@@ -620,6 +633,17 @@ const ADCConversionGroup* getKnockConversionGroup(uint8_t channelIdx) {
 	return &adcConvGroupCh1;
 }
 
+bool isKnockAdcSharedWithSlowAdc() {
+	/* m74_9: the knock input (PA0 = ADC1 IN0) lives on the same ADC driver as
+	 * the slow sampling. Only then may a knock window abort the in-flight slow
+	 * conversion; boards with a dedicated knock ADC (proteus, f407-discovery,
+	 * hellen all use ADC3) never steal. The steal is only safe against the
+	 * background chain - with blocking slow reads (EFI_INTERNAL_SLOW_ADC_
+	 * BACKGROUND == FALSE) a stolen conversion would leave the waiting thread
+	 * suspended forever, so those builds keep the old skip-if-busy behavior. */
+	return (&KNOCK_ADC == &EFI_SLOW_ADC) && (EFI_INTERNAL_SLOW_ADC_BACKGROUND == TRUE);
+}
+
 /* One-shot knock-style burst conversion of an arbitrary ADC3 channel - used
  * by the board-local 'knocktest' diagnostic to identify the knock input pin.
  * Local group copy with end_cb = nullptr: these bursts must not feed the
@@ -648,15 +672,33 @@ void portInitAdc() {
 	muxControl.initPin("ADC Mux", ADC_MUX_PIN);
 #endif //ADC_MUX_PIN
 
-	// Init slow ADC
+	/* Init slow ADC. When software knock uses the same ADC driver (m74_9:
+	 * the knock input PA0 lives on ADC1), the driver is started once via the
+	 * knock branch below - a second adcStart() would re-allocate the DMA
+	 * stream and wedge the boot. */
+#if defined(EFI_SOFTWARE_KNOCK)
+	if (&EFI_SLOW_ADC != &KNOCK_ADC) {
+		adcStart(&EFI_SLOW_ADC, NULL);
+	}
+#else
 	adcStart(&EFI_SLOW_ADC, NULL);
+#endif
+
+#ifdef EFI_SOFTWARE_KNOCK
+	/* Knock driver. On m74_9 this is the same ADCD1 as the slow ADC and its
+	 * start above was skipped, so this is the one and only adcStart() for it;
+	 * it also enables the ADC1 clock, which adcSTM32EnableTSVREFE() below
+	 * depends on. Must run before the background chain start. */
+	adcStart(&KNOCK_ADC, nullptr);
+#endif // EFI_SOFTWARE_KNOCK
 
 	// Enable internal temperature reference
 	adcSTM32EnableTSVREFE(); // Internal temperature sensor
 
-#if EFI_ADC3_SLOW && !defined(EFI_SOFTWARE_KNOCK)
-	// Init ADC3 for slow sampling of the ADC3-only pins. When software knock
-	// is enabled the same ADCD3 is started via the KNOCK_ADC branch below.
+#if EFI_ADC3_SLOW
+	/* Init ADC3 for slow sampling of the ADC3-only pins (CLT/IAT live on the
+	 * F-port pins, EFI_ADC_32..39). On this board knock is on ADC1, so ADCD3
+	 * has no other users and is started exactly once here. */
 	adcStart(&ADCD3, nullptr);
 #endif // EFI_ADC3_SLOW
 
@@ -683,15 +725,11 @@ void portInitAdc() {
 	 * If none of ADC users need error callback - we can disable
 	 * shared ADC IRQ and save some CPU ticks */
 	if ((adcgrpcfgSlow.error_cb == NULL) &&
-		(adcgrpcfgFast.error_cb == NULL)
-		/* TODO: Add ADC3? */) {
+			(adcgrpcfgFast.error_cb == NULL)
+			/* TODO: Add ADC3? */) {
 		nvicDisableVector(STM32_ADC_NUMBER);
 	}
 #endif
-
-#ifdef EFI_SOFTWARE_KNOCK
-	adcStart(&KNOCK_ADC, nullptr);
-#endif // EFI_SOFTWARE_KNOCK
 }
 
 #endif // HAL_USE_ADC

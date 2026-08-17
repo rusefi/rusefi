@@ -2805,3 +2805,44 @@ Open follow-ups:
 - Verify the knock pin on the bench and calibrate knockBaseNoise/gains.
 - Intake flap drive + second-table blend (gppwm on AA2), secondVeTable 7000 rpm
   column fix, lambda top-right corner - all in todo-21129.md.
+
+## 2026-08-17 - m74_9 software knock: PA0 tracing + shared-ADC1 fix + ADC clock root cause
+
+- Traced the knock input on the bench: AA3 ("Knock sensor +") feeds the
+  onboard SGM321/LM321 ("3218K" marking) conditioner; its OUT pin is AC-coupled
+  to PA0 = ADC1 IN0 (idles ~1.76 V). Earlier PF7 = ADC3 IN5 assumption was
+  wrong - knock_config.h now uses ADCD1/IN0/Gpio::A0.
+- ADC clock root cause: the Artery AT32F435 stores the ADC divider in
+  ADCCOM.cctrl.adcdiv[19:16], ADCCLK = HCLK/16/adcdiv. The old mcuconf
+  STM32_ADC_ADCPRE DIV6 mapped to a slow divider (~4.5 MHz ADCCLK); measured
+  knock burst rate ~6.8 kHz with the ADC busy 100% (all ADCD1 states ACTIVE).
+  Fixed to DIV4 -> adcdiv 1 -> 5.94 MHz (~33x faster). DIV2 cannot be used:
+  the shared ADCv2 LLD range check computes 72 MHz > 36 MHz and fails compile.
+  adcdivtest diagnostic confirms the divider bits experimentally.
+- ADC1 is now shared between software knock and the slow sampling
+  (EFI_SLOW_ADC == KNOCK_ADC == ADCD1). Implemented the mutual-exclusion
+  contract in stm32_adc_v2.cpp + software_knock.cpp:
+  - portInitAdc starts ADCD1 exactly once (runtime pointer compare; a second
+    adcStart re-allocates the DMA stream and bricks the boot). The KNOCK_ADC
+    start moved before adcSTM32EnableTSVREFE() (needs the ADC1 clock) and
+    before the background chain start (needs state READY).
+  - onStartKnockSampling steals the ADC when a slow background batch is in
+    flight: adcStopConversionI (returns the driver to READY) +
+    adcStartConversionI under osalSysLock. Boards with a dedicated knock ADC
+    (proteus/f407/hellen = ADC3) keep the old skip-if-busy behavior
+    (isKnockAdcSharedWithSlowAdc() runtime guard).
+  - knockCompletionCallback resumes the slow background chain by re-running
+    the aborted batch (slowAdcStartCurrentBatch refactor).
+  - ADCD3 (EFI_ADC3_SLOW, CLT/IAT on F-port pins) is started unconditionally
+    again - it was compiled out by the EFI_ADC3_SLOW && !EFI_SOFTWARE_KNOCK
+    guard after knock moved off ADC3.
+- Rebuilt deliver/rusefi.bin with the fix (previous build bricked boot via the
+  double adcStart on ADCD1).
+- User note: the previous flash bricks the ECU at boot (double ADC start);
+  flash the new deliver/rusefi.bin, or if the link still does not come up use
+  deliver/rusefi_recovery_erase_mfs.bin once and then rusefi.bin again.
+
+Open follow-ups:
+- Bench check after reflash: knocktest should show ~160 kHz real rate, ADCD1
+  states no longer all-ACTIVE, and tapping AA3 should move PA0 only. Then
+  calibrate knockBaseNoise/gains on the car.
