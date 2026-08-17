@@ -3067,3 +3067,28 @@ Validation: unit_tests testCanSerial - 6/6 pass; m74_9 bundle build includes the
 Deleted java_console/PCBUSB-Library (MacCAN binary archive, 14 MB) - the bridge
 dlopens /opt/homebrew/lib or /usr/local/lib/libPCBUSB.0.dylib, the clone was
 only used for the version A/B comparison and is ignored by git anyway.
+
+## 2026-08-18 (3): bench logs - NRST reset + L9779 OUT_DIS latch; console CPU fix
+
+User bench logs:
+- Spontaneous reset with the new decoder: "Reset from NRST pin", BKP0R=0 (no
+  firmware crash). NRST on m74_9 goes MCU -> 10-pin DAP/JTAG connector; the
+  KiCad dump shows no supervisor and unpopulated R* placeholders nearby -
+  a floating-ish reset line (MCU ~40k pullup) is EMI/ESD-sensitive and fits
+  the rare bench resets. To discriminate: run without console, scope NRST,
+  or add 100nF + 10k at NRST. Car crash may be the same mechanism - next
+  car test will show the cause via the decoder.
+- L9779: frame_err=1 in 1.7M frames (single glitch) and OUT_DIS=1 with all
+  DIA10 flags clean. DIA reads clear the fault flags, so the clean flags
+  are expected after the event; OUT_DIS stays latched until START. Added
+  instrumentation: log the latch transition with the raw flags + self-heal
+  a stale latch with START (commit on maccan-tx-fix).
+- TLE9201 diag drift: TLE9201 sits on SPI2, separate from the L9779 SPI1 -
+  not a bus corruption; the transitions are real chip state (bridge
+  enable/coast). Benign unless it correlates with etb errors.
+
+Java console CPU: the PCAN reader thread busy-spun on MacCAN's non-blocking
+Read (returns QRCVEMPTY immediately; Windows PCANBasic blocks). 100% of one
+core in jstack at PCANBasic.Read. Fixed PCanIoStream.readOnePacket to sleep
+1 ms on QRCVEMPTY; console jar rebuilt. User restarts the console to pick
+it up.
