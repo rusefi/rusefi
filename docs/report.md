@@ -2976,3 +2976,16 @@ Open follow-ups:
   symptom). Fix: run the console from the freshly built bundle
   firmware/rusefi.snapshot.m74_9/console/rusefi_console.jar (20260817) and
   verify the ECU signature on connect.
+
+## 2026-08-17 - lambda restore loop resolved (user confirmation)
+
+- The user updated to the matching console (20260817 from the freshly built
+  bundle) and the tune now writes cleanly - the recurring lambdaTable restore
+  message is gone. Confirms the root cause was the console/firmware version
+  mismatch (console 20260816 vs firmware 2026.08.17), not the msq content.
+- All 21129.msq fixes are now on the ECU: injector flow 168.8 cc/min @ 3.8 bar
+  (Pekar 28346052), fuelReferencePressure 380 kPa, afterstart taper, separate
+  idle advance table, lambda corner cleanup, secondVeTable 7000 column,
+  cylinderBore 82, knock on PA0.
+- Next: first start on the car - watch idle (900 rpm, УОЗ 10-14 deg, MAP
+  38-41 kPa, STFT +-10%), then knock calibration logs.
