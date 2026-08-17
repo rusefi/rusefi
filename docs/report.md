@@ -2638,3 +2638,21 @@ Note: the first burn still writes page 0 + page 0x0300 and the MFS write can tak
 ~2 s when garbage collection kicks in (MFS_WARN_GC status 2), which trips the
 843 ms gap-in-time critical warning - cosmetic for a bench write, harmless to the
 stored data, and no longer repeated since re-loads now burn nothing.
+
+## 2026-08-17 - m74_9 bricked after power-cycle during burn: MFS recovery build
+
+Symptom: after the page-0 burn (lambdaTable fix-up) the user power-cycled the ECU
+and it stopped talking (console/TS no connection), even after reflashing the
+normal rusefi.bin via OpenBLT - so the app boots but wedges before console/CAN
+init, most likely in initStorageMfs (MFS mount of banks corrupted by an
+interrupted write / the first GC this unit ever performed).
+
+Recovery tooling: a one-shot recovery build that erases BOTH MFS banks before
+mounting, guarded by M74_9_RECOVERY_ERASE_MFS (storage_mfs.cpp +
+m74_9/board.mk, changes reverted after the build). Built and saved as
+firmware/deliver/rusefi_recovery_erase_mfs.bin; the normal build was rebuilt
+afterwards so deliver/rusefi.bin is the regular image. Usage: flash the recovery
+bin, boot once (MFS erased, ECU starts with defaults and should connect),
+then immediately reflash the normal bin and reload the tune - the recovery
+build erases MFS on EVERY boot and must not stay on the ECU. Nothing committed:
+the source changes were build-only and reverted.
