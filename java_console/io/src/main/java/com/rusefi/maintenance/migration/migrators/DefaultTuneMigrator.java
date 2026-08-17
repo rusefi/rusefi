@@ -153,6 +153,26 @@ public enum DefaultTuneMigrator implements TuneMigrator {
                         newValue.getValue(),
                         prevValue.getValue()
                     ));
+                    if ("lambdaTable".equals(prevFieldName)) {
+                        // diagnostic for the persistent lambdaTable re-migration (#m74_9):
+                        // report the first differing cell instead of dumping both 16x16 tables
+                        String[] prevTokens = prevValue.getValue().trim().split("\\s+");
+                        String[] newTokens = newValue.getValue().trim().split("\\s+");
+                        int diffIndex = -1;
+                        for (int i = 0; i < Math.min(prevTokens.length, newTokens.length); i++) {
+                            if (!prevTokens[i].equals(newTokens[i])) {
+                                diffIndex = i;
+                                break;
+                            }
+                        }
+                        log.info(String.format(
+                            "lambdaTable restore diagnostic: first diff at %d msq=%s ecu=%s (msq cells %d, ecu cells %d)",
+                            diffIndex,
+                            diffIndex >= 0 ? prevTokens[diffIndex] : "-",
+                            diffIndex >= 0 ? newTokens[diffIndex] : "-",
+                            prevTokens.length,
+                            newTokens.length));
+                    }
 
                     context.addMigration(prevFieldName, newValue.cloneWithValue(valueToRestore));
                 } else {
