@@ -519,7 +519,10 @@ static void m74_9KnockBurst() {
 		adcsample_t mn = 4095, mx = 0;
 		uint64_t sumSq = 0;
 		int ok = 0;
-		for (int burst = 0; burst < 200; burst++) {
+		/* 25 bursts give plenty of samples for min/max/RMS without hogging the
+		 * console thread: each burst blocks it for ~7 ms, and the CAN/TS link
+		 * dies if it is not serviced for seconds at a time. */
+		for (int burst = 0; burst < 25; burst++) {
 			if (!knockBurstSample(chans[i], buf, 1024)) {
 				continue;
 			}
@@ -530,6 +533,7 @@ static void m74_9KnockBurst() {
 				mx = maxI(mx, (int)v);
 				sumSq += (uint64_t)v * v;
 			}
+			chThdSleepMilliseconds(2);
 		}
 		efiPrintf("  %s: bursts=%d min=%u max=%u p2p=%u rms=%.1f", names[i], ok,
 			(unsigned)mn, (unsigned)mx, (unsigned)(mx - mn),
