@@ -42,8 +42,12 @@ public:
 		return CAN_MSG_OK;
 	}
 
-	virtual can_msg_t waitForFlowControl(uint8_t *blockSize, uint8_t *minSeparationTime, can_sysinterval_t timeout) override {
-		(void)blockSize; (void)minSeparationTime; (void)timeout;
+	virtual uint32_t getFcCounterSnapshot() override {
+		return 0;
+	}
+
+	virtual can_msg_t waitForFlowControl(uint32_t initialFcCounter, uint8_t *blockSize, uint8_t *minSeparationTime, can_sysinterval_t timeout) override {
+		(void)initialFcCounter; (void)blockSize; (void)minSeparationTime; (void)timeout;
 		// the FC wait is compiled out of unit-test builds (see sendDataTimeout)
 		return CAN_MSG_TIMEOUT;
 	}

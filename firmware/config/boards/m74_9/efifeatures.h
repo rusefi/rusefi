@@ -11,6 +11,13 @@
 #define HAL_USE_MMC_SPI FALSE
 #define EFI_FILE_LOGGING FALSE
 
+/* Console log buffer (double-buffered, 2x this, static). The stm32f4ems
+ * default of 6500 truncates the 'pins' output mid-line: the pin report +
+ * L9779 SPI frame history exceed it and LogBuffer::writeInternal writes
+ * partial lines when full. 16384 x 2 = 32 KB static - fine on the 384 KB
+ * AT32F435 (the memcore pool still has ~200 KB left). */
+#define DL_OUTPUT_BUFFER 16384
+
 #include "../../stm32f4ems/efifeatures.h"
 
 /* This board has no USB wired out */

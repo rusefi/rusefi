@@ -84,13 +84,25 @@ public:
   virtual void onTpFirstFrame() = 0;
 
   /**
+   * Snapshot the flow-control frame counter. Must be called BEFORE the FIRST
+   * frame of a multi-frame send goes out - see waitForFlowControl.
+   */
+  virtual uint32_t getFcCounterSnapshot() = 0;
+
+  /**
    * Wait for the ISO-TP flow control frame that acknowledges our FIRST frame.
+   * initialFcCounter is the snapshot taken BEFORE the FIRST frame was sent:
+   * the FC can arrive while the sending thread is still inside canTransmit or
+   * is preempted right after it, and comparing against a counter captured
+   * after the send would miss exactly that FC and time out a perfectly
+   * healthy exchange (the host then never receives the consecutive frames and
+   * drops the link).
    * Implementations MUST NOT consume regular data frames while waiting: foreign
    * frames that arrive in the meantime (background output-channel requests, the
    * next write chunk) have to stay queued for the next read, otherwise the shared
    * RX state machine corrupts mid-packet and the next command gets truncated.
    */
-  virtual can_msg_t waitForFlowControl(uint8_t *blockSize, uint8_t *minSeparationTime, can_sysinterval_t timeout) = 0;
+  virtual can_msg_t waitForFlowControl(uint32_t initialFcCounter, uint8_t *blockSize, uint8_t *minSeparationTime, can_sysinterval_t timeout) = 0;
 };
 
 class IsoTpBase {

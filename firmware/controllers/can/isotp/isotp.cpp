@@ -225,6 +225,15 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 
 	// multiple frames
 
+#if !EFI_UNIT_TEST // todo: add FC to unit-tests?
+	// Snapshot the FC counter BEFORE the FIRST frame goes out. The FC can arrive
+	// while this thread is still inside sendFrame()/canTransmit or is preempted
+	// right after the send returns; capturing the counter after the send would
+	// miss exactly that FC and time out - the consecutive frames never go out,
+	// the host sees a stalled multi-frame exchange and drops the connection.
+	uint32_t initialFcCounter = rxTransport->getFcCounterSnapshot();
+#endif /* EFI_UNIT_TEST */
+
 	// send the first header frame (FF)
 	IsoTpFrameHeader header;
 	header.frameType = ISO_TP_FRAME_FIRST;
@@ -244,10 +253,13 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 	// chunks were silently lost and the burn persisted stale page data).
 	uint8_t blockSize = 0;
 	uint8_t minSeparationTime = 0;
-	if (rxTransport->waitForFlowControl(&blockSize, &minSeparationTime, timeout) != CAN_MSG_OK) {
+	if (rxTransport->waitForFlowControl(initialFcCounter, &blockSize, &minSeparationTime, timeout) != CAN_MSG_OK) {
 #ifdef SERIAL_CAN_DEBUG
 		PRINT("*** ERROR: CAN Flow Control frame not received" PRINT_EOL);
 #endif /* SERIAL_CAN_DEBUG */
+		if (engineConfiguration->verboseIsoTp) {
+			PRINT("*** INFO: CAN Flow Control frame not received" PRINT_EOL);
+		}
 		//warning(ObdCode::CUSTOM_ERR_CAN_COMMUNICATION, "CAN Flow Control frame not received");
 		return 0;
 	}

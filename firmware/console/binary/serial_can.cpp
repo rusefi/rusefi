@@ -68,6 +68,14 @@ void CanTransport::init() {
 	registerCanListener(g_listener);
 }
 
+// ISO-TP flow-control wait diagnostics (see isotpinfo): how many multi-frame
+// sends got their FC and how many timed out waiting for it. A timeout count
+// that grows while the host is connected means the host's FC frames are being
+// lost or missed - the host then never receives the consecutive frames and
+// drops the link.
+static uint32_t fcWaitOk = 0;
+static uint32_t fcWaitTimeout = 0;
+
 can_msg_t CanTransport::transmit(CanTxMessage &/*ctfp*/, can_sysinterval_t /*timeout*/) {
 	// we do nothing here - see CanTxMessage::~CanTxMessage()
 	return CAN_MSG_OK;
@@ -75,6 +83,10 @@ can_msg_t CanTransport::transmit(CanTxMessage &/*ctfp*/, can_sysinterval_t /*tim
 
 void CanTransport::onTpFirstFrame() {
   // todo: why nothing? broken iso-tp on ECU side?
+}
+
+uint32_t CanTransport::getFcCounterSnapshot() {
+	return g_listener.getFcCounter();
 }
 
 can_msg_t CanTransport::receive(CANRxFrame *crfp, can_sysinterval_t timeout) {
@@ -87,21 +99,25 @@ can_msg_t CanTransport::receive(CANRxFrame *crfp, can_sysinterval_t timeout) {
 	return CAN_MSG_TIMEOUT;
 }
 
-can_msg_t CanTransport::waitForFlowControl(uint8_t *blockSize, uint8_t *minSeparationTime, can_sysinterval_t timeout) {
-	// FC frames never enter the RX FIFO (CanTsListener::decodeFrame bumps a counter
-	// instead), so poll that counter. Anything else that arrives while we wait stays
-	// queued in the RX FIFO for the next command instead of being consumed here.
-	uint32_t initialCount = g_listener.getFcCounter();
-	efitick_t deadline = getTimeNowNt() + MS2NT(TIME_I2MS(timeout));
-	while (getTimeNowNt() < deadline) {
-		if (g_listener.getFcCounter() != initialCount) {
-			g_listener.getLastFc(*blockSize, *minSeparationTime);
-			return CAN_MSG_OK;
+can_msg_t CanTransport::waitForFlowControl(uint32_t initialFcCounter, uint8_t *blockSize, uint8_t *minSeparationTime, can_sysinterval_t timeout) {
+		// FC frames never enter the RX FIFO (CanTsListener::decodeFrame bumps a counter
+		// instead), so poll that counter. Anything else that arrives while we wait stays
+		// queued in the RX FIFO for the next command instead of being consumed here.
+		// The counter snapshot was taken BEFORE our FIRST frame went out (see
+		// sendDataTimeout), so an FC that arrived while we were still in canTransmit
+		// is correctly seen as a hit.
+		efitick_t deadline = getTimeNowNt() + MS2NT(TIME_I2MS(timeout));
+		while (getTimeNowNt() < deadline) {
+			if (g_listener.getFcCounter() != initialFcCounter) {
+				g_listener.getLastFc(*blockSize, *minSeparationTime);
+				fcWaitOk++;
+				return CAN_MSG_OK;
+			}
+			chThdSleepMilliseconds(1);
 		}
-		chThdSleepMilliseconds(1);
+		fcWaitTimeout++;
+		return CAN_MSG_TIMEOUT;
 	}
-	return CAN_MSG_TIMEOUT;
-}
 
 void tsOverCanInit() {
 	transport.init();
@@ -116,6 +132,8 @@ void tsOverCanInit() {
 		efiPrintf("isotp: canWriteOk=%u canWriteNotOk=%u (TX frames dropped when mailboxes busy)",
 			(unsigned)engine->outputChannels.canWriteOk,
 			(unsigned)engine->outputChannels.canWriteNotOk);
+		efiPrintf("isotp: fcWaitOk=%u fcWaitTimeout=%u (multi-frame sends that missed the host's FC)",
+			(unsigned)fcWaitOk, (unsigned)fcWaitTimeout);
 	});
 }
 
