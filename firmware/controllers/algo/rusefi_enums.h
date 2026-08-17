@@ -808,6 +808,8 @@ typedef enum __attribute__ ((__packed__)) {
 	// NOT to be used in dual H-bridge stepper control
 	DC_IdleValve = 3,
 	DC_Wastegate = 4,
+	// Uses one H-bridge terminal as an on/off output. The paired terminal must stay disconnected.
+	DC_Gpio = 5,
 } dc_function_e;
 
 typedef enum __attribute__ ((__packed__)) {
