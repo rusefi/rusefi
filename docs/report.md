@@ -2989,3 +2989,23 @@ Open follow-ups:
   cylinderBore 82, knock on PA0.
 - Next: first start on the car - watch idle (900 rpm, УОЗ 10-14 deg, MAP
   38-41 kPa, STFT +-10%), then knock calibration logs.
+
+## 2026-08-17 - ECU reboot during cranking: assert->rebootNow mechanism + knockpin hang fixed
+
+- Root cause of the bench hang: adc3SlowConvert was simplified to a plain
+  adcConvert() on ADCD3, which asserts ("already waiting" / "not ready") when
+  the knockpin diagnostic (console thread) collides with the 500 Hz slow-loop
+  conversion of the same driver. chDbgPanic3 -> criticalError + (non-main
+  thread) rebootNow() -> "Reset Cause: Unknown" with RTC preserved - exactly
+  the in-car symptom. Fixed: adc3SlowConvert is back to the atomic
+  check-and-start under osalSysLock, skipping the cycle when ADC3 is busy
+  (commit aca1c3af113).
+- Key mechanism recorded for future debugging: ANY assert in a non-main
+  thread silently reboots the ECU (chDbgPanic3 in error_handling.cpp calls
+  criticalError("assert fail ...") then rebootNow()); the message usually
+  reaches the console but can race the reboot. "Reset Cause: Unknown" +
+  preserved RTC = software reset (NVIC_SystemReset sets no CSR flag).
+- Rebuilt deliver/rusefi.bin (19:01). Next: re-test knockpin/knocktest on
+  the bench, then re-try the car start with the console connected - if it
+  still crashes during cranking, the "assert fail" line will identify the
+  location.
