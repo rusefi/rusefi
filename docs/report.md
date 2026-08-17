@@ -2684,3 +2684,33 @@ Console jar rebuilt (console/rusefi_console.jar).
 Open follow-up: the console has no proper multi-page tuning UI; editing the
 second tables remains TunerStudio-only until the tuning pane learns page-aware
 images (read page 4 from the ECU, write + burn via the multi-page path).
+
+## 2026-08-17 - console tuning UI now edits secondary TS pages (second VE/ignition tables)
+
+Follow-up to the exclusion fix: the user needs the second tables editable in the
+console itself, not just in TunerStudio. Implemented page-aware editing:
+
+- CalibrationDialogWidget keeps per-page editable images (pageIdentifier ->
+  ConfigurationImage) for secondary pages, loaded lazily from the ECU via
+  readFromPage on the LinkManager thread (block-and-get keeps the render path
+  synchronous). Fields/tables/curves whose ini field has getPageIndex() != 0
+  render against that page's image instead of the page-0 working image; when
+  the page cannot be read (no ECU/offline), the previous label-only/notice
+  fallback is shown.
+- Edits of secondary-page fields mark the page dirty (dirtySecondaryPages) and
+  fire setOnSecondaryEdit; the toolbar's Burn to ECU now writes each dirty page
+  via writeInBlocks + read-back verify + burnPage, then marks the pages clean.
+- After load-tune the widget's cached secondary images are dropped
+  (clearSecondaryImages) so the next render re-reads them from the ECU.
+
+Tests: CalibrationDialogWidgetTest got testSecondaryPageTableRendersEditorWithEcuImage
+(mocked BinaryProtocol/LinkManager supply a 1268-byte page-4 image; the editor
+renders instead of the notice). Full :ui:test + :ecu_io:test green, console jar
+rebuilt (console/rusefi_console.jar).
+
+Open follow-ups:
+- lambdaTable keeps showing up in the load-tune restore list even though the
+  msq text round-trips byte-identically through the console's own parser
+  (scale 1/147, Double.toString rendering). Page 0 is re-burned correctly each
+  time; whether the ECU-side stored bytes really differ is still open - needs
+  the user's lambda table editor values (or a third load) to triage.

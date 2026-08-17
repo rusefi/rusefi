@@ -26,6 +26,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
@@ -229,11 +230,28 @@ public class TuningToolbarWidget {
             return;
         }
         final ConfigurationImage image = toBurn;
+        final Map<Integer, ConfigurationImage> secondary = right.getDirtySecondaryPages();
         sessionImage.set(image);
         uiContext.getLinkManager().submit(() -> {
             bp.burn();
             bp.setConfigurationImage(image);
+            // Secondary TS pages (second VE/ignition tables): the page-0 upload protocol does
+            // not cover them, so write each edited page explicitly and burn it.
+            for (Map.Entry<Integer, ConfigurationImage> entry : secondary.entrySet()) {
+                final int pageIdentifier = entry.getKey();
+                final ConfigurationImage pageImage = entry.getValue();
+                bp.writeInBlocks(pageImage.getContent(), 0, 0, pageImage.getSize(), pageIdentifier);
+                byte[] uploaded = bp.readFromPage(pageIdentifier, 0, pageImage.getSize());
+                if (!Arrays.equals(pageImage.getContent(), uploaded)) {
+                    log.warn(String.format("Failed to verify secondary page 0x%04X after write", pageIdentifier));
+                    continue;
+                }
+                if (!bp.burnPage(pageIdentifier)) {
+                    log.warn(String.format("Failed to burn secondary page 0x%04X", pageIdentifier));
+                }
+            }
             SwingUtilities.invokeLater(() -> {
+                right.markSecondaryPagesClean();
                 setBaselineImage(image.clone());
                 if (onSuccess != null) {
                     onSuccess.run();
@@ -419,6 +437,9 @@ public class TuningToolbarWidget {
                                     final boolean loadedWhileDisconnected = (bp == null);
                                     SwingUtilities.invokeAndWait(() -> {
                                         sessionImage.set(newImage);
+                                        // A load-tune rewrites the secondary TS pages, so drop the
+                                        // dialog widget's cached copies - they get re-read on demand.
+                                        right.clearSecondaryImages();
                                         // [tag:offline_tune] Loading a tune with no ECU attached is an offline session.
                                         if (loadedWhileDisconnected) {
                                             uiContext.setOfflineMode(true);
