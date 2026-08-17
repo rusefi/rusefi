@@ -483,6 +483,37 @@ static void m74_9KnockBurst() {
 	static const int chans[CH] = {4, 5, 6, 7, 8, 9, 14, 15};
 	static NO_CACHE adcsample_t buf[1024];
 
+	/* Clocks and divider register dump - the measured burst rate (see below)
+	 * points at a wrong ADC clock divider on this port. */
+	{
+		efiPrintf("clocks: SYSCLK=%u HCLK=%u PCLK2=%u",
+			(unsigned)STM32_SYSCLK, (unsigned)STM32_HCLK, (unsigned)STM32_PCLK2);
+		efiPrintf("RCC->CFGR=0x%08x ADC->CCR=0x%08x",
+			(unsigned)RCC->CFGR, (unsigned)ADC->CCR);
+	}
+
+	/* Measure the real burst duration on the first conversion - the knock
+	 * DSP assumes a fixed sample rate (KNOCK_SAMPLE_RATE), verify it. */
+	{
+		efitick_t t0 = getTimeNowNt();
+		if (knockBurstSample(chans[0], buf, 1024)) {
+			efitick_t elapsed = getTimeNowNt() - t0;
+			efiPrintf("knocktest: 1024-sample burst took %d us -> real rate ~%d Hz",
+				(int)US2NT(elapsed), (int)(1024.0f * US_PER_SECOND_F / US2NT(elapsed)));
+		}
+	}
+
+	/* ADCD1 state distribution over ~1 s - is ADC1 ever free for knock? */
+	{
+		int counts[6] = {0};
+		for (int i = 0; i < 1000; i++) {
+			counts[ADCD1.state]++;
+			chThdSleepMilliseconds(1);
+		}
+		efiPrintf("knocktest: ADCD1 states: UNINIT=%d STOP=%d READY=%d ACTIVE=%d COMPLETE=%d ERROR=%d",
+			counts[0], counts[1], counts[2], counts[3], counts[4], counts[5]);
+	}
+
 	for (int i = 0; i < CH; i++) {
 		adcsample_t mn = 4095, mx = 0;
 		uint64_t sumSq = 0;
@@ -504,6 +535,48 @@ static void m74_9KnockBurst() {
 			ok ? sqrtf((float)sumSq / (float)(ok * 1024)) : 0.0f);
 	}
 }
+
+/* Sweep the two suspected ADC clock divider fields and measure the real
+ * burst rate for each value - identifies the Artery ADC clock divider
+ * encoding (the STM32-style CFGR writes collide with it). */
+static void m74_9AdcDivTest() {
+	static NO_CACHE adcsample_t tmp[256];
+
+	efiPrintf("adcdivtest: sweep CRM CFG bits [18:16]");
+	for (uint32_t v = 0; v < 8; v++) {
+		uint32_t cfg = RCC->CFGR;
+		cfg = (cfg & ~(7u << 16)) | (v << 16);
+		RCC->CFGR = cfg;
+		chThdSleepMilliseconds(5);
+		efitick_t t0 = getTimeNowNt();
+		bool ok = knockBurstSample(4, tmp, 256);
+		efitick_t elapsed = getTimeNowNt() - t0;
+		efiPrintf("  CFG[18:16]=%u: %s %d us -> %d Hz", (unsigned)v,
+			ok ? "ok" : "fail", (int)US2NT(elapsed),
+			ok ? (int)(256.0f * US_PER_SECOND_F / US2NT(elapsed)) : 0);
+	}
+	/* restore the observed value (001) */
+	RCC->CFGR = (RCC->CFGR & ~(7u << 16)) | (1u << 16);
+	chThdSleepMilliseconds(5);
+
+	efiPrintf("adcdivtest: sweep ADC->CCR bits [17:16]");
+	for (uint32_t v = 0; v < 4; v++) {
+		uint32_t ccr = ADC->CCR;
+		ccr = (ccr & ~(3u << 16)) | (v << 16);
+		ADC->CCR = ccr;
+		chThdSleepMilliseconds(5);
+		efitick_t t0 = getTimeNowNt();
+		bool ok = knockBurstSample(4, tmp, 256);
+		efitick_t elapsed = getTimeNowNt() - t0;
+		efiPrintf("  ADCPRE[17:16]=%u: %s %d us -> %d Hz", (unsigned)v,
+			ok ? "ok" : "fail", (int)US2NT(elapsed),
+			ok ? (int)(256.0f * US_PER_SECOND_F / US2NT(elapsed)) : 0);
+	}
+	/* restore DIV6 (10) */
+	ADC->CCR = (ADC->CCR & ~(3u << 16)) | (2u << 16);
+	chThdSleepMilliseconds(5);
+}
+#endif /* EFI_PROD_CODE && HAL_USE_ADC */
 
 static void m74_9KnockPinScan() {
 	/* convGroupSlow order = IN0..IN15, pin names per adcChannels[] */
@@ -560,7 +633,6 @@ static void m74_9KnockPinScan() {
 		}
 	}
 }
-#endif /* EFI_PROD_CODE && HAL_USE_ADC */
 
 static Gpio OUTPUTS[] = {
 	Gpio::L9779_OUT_4, // Injector 1
@@ -596,6 +668,7 @@ void setup_custom_board_overrides() {
 	addConsoleAction("fastadcdiag", m74_9FastAdcDiag);
 	addConsoleAction("knockpin", m74_9KnockPinScan);
 	addConsoleAction("knocktest", m74_9KnockBurst);
+	addConsoleAction("adcdivtest", m74_9AdcDivTest);
 #endif
 #if EFI_CAN_SUPPORT
 	initM74_9Can();
