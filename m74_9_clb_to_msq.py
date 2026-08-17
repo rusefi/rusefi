@@ -206,6 +206,18 @@ def patch_msq(msq_path, ve1, ign_primary, ign_second):
         src = pat.sub('<constant cols="%d" digits="%s" name="%s" rows="%d" units="%s">%s</constant>'
                       % (cols, digits, name, rows, units, value), src, count=1)
 
+    def set_scalar(name, value):
+        nonlocal src
+        pat = re.compile(r'(<constant[^>]*name="%s"[^>]*>).*?(</constant>)' % re.escape(name), re.S)
+        assert pat.search(src), name
+        src = pat.sub(lambda m: m.group(1) + value + m.group(2), src, count=1)
+
+    # Software knock for the m74_9 onboard knock input (connector AA3, see
+    # todo-21129.md): 21129 resonant sensors peak at ~7 kHz, single harmonic.
+    set_scalar('enableSoftwareKnock', '"enabled"')
+    set_scalar('knockFrequency', '7000.0')
+    set_scalar('knockDetectionUseDoubleFrequency', '"first harmonic"')
+
     # Page 0: primary ignition table + its load bins (NA: capped at 100 kPa)
     replace_constant('ignitionTable', 16, 16, '1', 'deg', fmt_table(ign_primary, 1))
     replace_constant('ignitionLoadBins', 1, 16, '0',

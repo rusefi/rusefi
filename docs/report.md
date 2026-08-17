@@ -2767,3 +2767,41 @@ session image, so refreshState() (and the burn-button gating) always evaluated
 the pre-edit state; nothing refreshed the button afterwards. The session image
 is now updated first and onEdit() receives the previous image (undo baseline
 semantics unchanged). Console jar rebuilt (console/rusefi_console.jar).
+
+## 2026-08-17 - 21129 tune analysis conclusions + m74_9 software knock bring-up
+
+- Created todo-21129.md with the full analysis of the 21129 tune: VE tables
+  match the stock M74 modeled charge within +/-1% up to 4700 rpm; the
+  secondVeTable 7000 rpm column holds the model's 6250 value so top-end
+  interpolation runs 2-3% lean (correction values listed); ignition maps
+  reproduce the stock calibration within +/-1.5 deg; lambda 0.84-0.82 is the
+  right power line for RON95 with no knock control; intake flap crossover is
+  ~4900 rpm; torque section is not used by the engine control.
+- Software knock for m74_9: the board has knock inputs AA3 ("Knock sensor +")
+  and AB3 (ground) in the connector yaml, but the MCU pin the onboard
+  conditioner feeds is not documented. Assumed PF7 = ADC3 IN5 following the
+  hellen precedent; bench verification procedure is in todo-21129.md
+  (adc_report: ~1.65 V idle vs ~3.28 V open input, tap test).
+- Enabled EFI_SOFTWARE_KNOCK=TRUE in board.mk and added a board knock_config.h
+  (KNOCK_ADC = ADCD3, IN5, ADC_SAMPLE_480 -> Artery SPT 239.5 cycles ->
+  ~286 kHz at the 72 MHz ADCCLK).
+- Resolved the EFI_ADC3_SLOW vs EFI_SOFTWARE_KNOCK conflict (both own ADC3):
+  removed the #error and made ADC3 shared. The slow ADC3 read now checks the
+  driver state under osalSysLock and skips the cycle when a knock window is
+  running (CLT/IAT keep their previous values); onStartKnockSampling checks
+  and starts under osalSysLock so a slow conversion cannot slip in between;
+  portInitAdc starts ADCD3 once.
+- Board defaults (fresh configs only): enableSoftwareKnock = true,
+  knockFrequency = 7000 Hz, knockDetectionUseDoubleFrequency = false (21129
+  family: 82 mm bore, resonant sensors, no usable second harmonic).
+- m74_9_clb_to_msq.py now patches enableSoftwareKnock / knockFrequency /
+  knockDetectionUseDoubleFrequency in the msq. The user's 21129.msq was
+  re-patched (backup 21129.pre-knock.msq): knock enabled, page 3 second-table
+  block re-added (Save Tune keeps dropping it).
+- Build: m74_9 firmware builds clean, knock symbols present in the elf
+  (KnockThread::ThreadTask, knockCompletionCallback, startKnockSampling).
+
+Open follow-ups:
+- Verify the knock pin on the bench and calibrate knockBaseNoise/gains.
+- Intake flap drive + second-table blend (gppwm on AA2), secondVeTable 7000 rpm
+  column fix, lambda top-right corner - all in todo-21129.md.

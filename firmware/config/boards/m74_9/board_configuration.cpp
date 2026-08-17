@@ -151,6 +151,18 @@ static void m74_9_boardDefaultConfiguration() {
 	engineConfiguration->analogInputDividerCoefficient = 2.0f;
 	engineConfiguration->adcVcc = 3.3f;
 
+	/* Board has a dedicated knock input (connector AA3 -> onboard conditioner
+	 * -> MCU ADC, pin/channel in knock_config.h). Enabled for fresh configs
+	 * only - the stored tune keeps its own value. */
+	engineConfiguration->enableSoftwareKnock = true;
+
+	/* 21129-family engines: 82 mm bore, resonant knock sensors peak at ~7 kHz.
+	 * Explicit frequency (Hz) with the single harmonic - the sensors have no
+	 * usable output at the second harmonic, so do not use the double-frequency
+	 * path. */
+	engineConfiguration->knockFrequency = 7000;
+	engineConfiguration->knockDetectionUseDoubleFrequency = false;
+
   setTPS1Inputs(EFI_ADC_12, EFI_ADC_13);
 
   setPPSInputs(EFI_ADC_10, EFI_ADC_11);

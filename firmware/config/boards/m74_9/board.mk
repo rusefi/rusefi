@@ -20,6 +20,11 @@ DDEFS += -DBOARD_L9779_COUNT=1
 DDEFS += -DBOARD_TLE9201_COUNT=1
 DDEFS += -DSTM32_SPI_USE_SPI2=TRUE
 
+# Software knock: the board has a dedicated knock input (connector AA3 ->
+# onboard conditioner -> MCU ADC). ADC3 is shared with EFI_ADC3_SLOW, see
+# knock_config.h and readSlowAnalogInputs() in stm32_adc_v2.cpp.
+DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE
+
 # This board has no storage
 DDEFS += -DEFI_FILE_LOGGING=FALSE
 DDEFS += -DEFI_STORAGE_SD=FALSE
