@@ -477,10 +477,11 @@ extern adcsample_t adcOnchipSlowGetAvgRaw(adc_channel_e hwChannel);
 extern bool knockBurstSample(uint32_t adcInChannel, adcsample_t* buf, size_t count);
 
 static void m74_9KnockBurst() {
-	static const int CH = 8;
-	static const char* names[CH] = {"PF6(IN4)", "PF7(IN5)", "PF8(IN6)", "PF9(IN7)",
-		"PF10(IN8)", "PF3(IN9)", "PF4(IN14)", "PF5(IN15)"};
-	static const int chans[CH] = {4, 5, 6, 7, 8, 9, 14, 15};
+	/* Knock input is PA0 = ADC1 IN0 (verified on the bench). Scan the ADC1
+	 * channels for the final check: taps/clicks on AA3 must show up on PA0. */
+	static const int CH = 4;
+	static const char* names[CH] = {"PA0(IN0)", "PA1(IN1)", "PA2(IN2)", "PA3(IN3)"};
+	static const int chans[CH] = {0, 1, 2, 3};
 	static NO_CACHE adcsample_t buf[1024];
 
 	/* Clocks and divider register dump - the measured burst rate (see below)
@@ -572,8 +573,8 @@ static void m74_9AdcDivTest() {
 			ok ? "ok" : "fail", (int)US2NT(elapsed),
 			ok ? (int)(256.0f * US_PER_SECOND_F / US2NT(elapsed)) : 0);
 	}
-	/* restore DIV6 (10) */
-	ADC->CCR = (ADC->CCR & ~(3u << 16)) | (2u << 16);
+	/* restore DIV2 (00) - the fixed default for this port */
+	ADC->CCR = (ADC->CCR & ~(3u << 16)) | (0u << 16);
 	chThdSleepMilliseconds(5);
 }
 #endif /* EFI_PROD_CODE && HAL_USE_ADC */
