@@ -394,6 +394,23 @@ static bool adc3SlowConvert(adcsample_t* out) {
 bool readSlowAdc3All(adcsample_t samples[8]) {
 	return adc3SlowConvert(samples);
 }
+
+/* One-shot conversion of the slow ADC1 channels in convGroupSlow order
+ * (IN0..IN15 = EFI_ADC_0..15) - used by the board-local 'knockpin'
+ * diagnostic. Guarded the same way as the slow read: skip when a conversion
+ * is in progress (only relevant with EFI_INTERNAL_SLOW_ADC_BACKGROUND). */
+bool readSlowAdc1All(adcsample_t samples[16]) {
+	osalSysLock();
+	if ((EFI_SLOW_ADC.state == ADC_READY) ||
+			(EFI_SLOW_ADC.state == ADC_ERROR)) {
+		adcStartConversionI(&EFI_SLOW_ADC, &convGroupSlow, samples, 1);
+		msg_t result = osalThreadSuspendS(&EFI_SLOW_ADC.thread);
+		osalSysUnlock();
+		return result == MSG_OK;
+	}
+	osalSysUnlock();
+	return false;
+}
 #endif // EFI_ADC3_SLOW
 
 bool readSlowAnalogInputs(adcsample_t* convertedSamples) {

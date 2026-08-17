@@ -458,42 +458,66 @@ static void m74_9FastAdcDiag() {
 #endif
 }
 
-/* Bench diagnostic for knock pin identification: samples the 8 ADC3-only
- * channels (order per convGroupSlowAdc3: IN4..IN9, IN14, IN15) in a tight
- * loop for ~2 s and prints min/max per channel. With the finger (or a wire)
- * on the knock input AA3, the affected channel shows a large min/max spread
- * while the others stay flat. */
+/* Bench diagnostic for knock pin identification: samples the slow ADC1
+ * channels (EFI_ADC_0..15) and the 8 ADC3-only channels in a tight loop for
+ * ~2 s and prints min/max per channel. With the finger (or a wire) on the
+ * knock input AA3, the affected channel shows a large min/max spread while
+ * the others stay flat. Note: a knock conditioner with a ~7 kHz bandpass may
+ * reject 50 Hz hum - then tap the sensor instead (broadband impulse). */
+extern bool readSlowAdc1All(adcsample_t samples[16]);
 extern bool readSlowAdc3All(adcsample_t samples[8]);
 
 static void m74_9KnockPinScan() {
-	static const int CH = 8;
-	static const char* names[CH] = {"PF6", "PF7", "PF8", "PF9", "PF10", "PF3", "PF4", "PF5"};
-	adcsample_t mn[CH], mx[CH];
-	for (int i = 0; i < CH; i++) {
-		mn[i] = 4095;
-		mx[i] = 0;
+	/* convGroupSlow order = IN0..IN15, pin names per adcChannels[] */
+	static const int CH1 = 16;
+	static const char* names1[CH1] = {
+		"PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7",
+		"PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5"};
+	adcsample_t mn1[CH1], mx1[CH1];
+	for (int i = 0; i < CH1; i++) {
+		mn1[i] = 4095;
+		mx1[i] = 0;
 	}
 
-	int ok = 0;
+	/* convGroupSlowAdc3 order: IN4, IN5, IN6, IN7, IN8, IN9, IN14, IN15 */
+	static const int CH3 = 8;
+	static const char* names3[CH3] = {"PF6", "PF7", "PF8", "PF9", "PF10", "PF3", "PF4", "PF5"};
+	adcsample_t mn3[CH3], mx3[CH3];
+	for (int i = 0; i < CH3; i++) {
+		mn3[i] = 4095;
+		mx3[i] = 0;
+	}
+
+	int ok1 = 0, ok3 = 0;
 	for (int iter = 0; iter < 2000; iter++) {
-		adcsample_t s[CH];
-		if (!readSlowAdc3All(s)) {
-			chThdSleepMilliseconds(1);
-			continue;
+		adcsample_t s1[CH1], s3[CH3];
+		if (readSlowAdc1All(s1)) {
+			ok1++;
+			for (int i = 0; i < CH1; i++) {
+				mn1[i] = minI(mn1[i], (int)s1[i]);
+				mx1[i] = maxI(mx1[i], (int)s1[i]);
+			}
 		}
-		ok++;
-		for (int i = 0; i < CH; i++) {
-			mn[i] = minI(mn[i], (int)s[i]);
-			mx[i] = maxI(mx[i], (int)s[i]);
+		if (readSlowAdc3All(s3)) {
+			ok3++;
+			for (int i = 0; i < CH3; i++) {
+				mn3[i] = minI(mn3[i], (int)s3[i]);
+				mx3[i] = maxI(mx3[i], (int)s3[i]);
+			}
 		}
 		chThdSleepMilliseconds(1);
 	}
 
-	efiPrintf("knockpin scan: %d conversions over ~2s (order: EFI_ADC_32..39)", ok);
-	for (int i = 0; i < CH; i++) {
-		efiPrintf("  %s: min=%u max=%u spread=%u (%.3f..%.3f V)", names[i],
-			(unsigned)mn[i], (unsigned)mx[i], (unsigned)(mx[i] - mn[i]),
-			mn[i] * (3.3f / 4095.0f), mx[i] * (3.3f / 4095.0f));
+	efiPrintf("knockpin scan: ADC1 %d, ADC3 %d conversions over ~2s", ok1, ok3);
+	for (int i = 0; i < CH1; i++) {
+		efiPrintf("  %s: min=%u max=%u spread=%u (%.3f..%.3f V)", names1[i],
+			(unsigned)mn1[i], (unsigned)mx1[i], (unsigned)(mx1[i] - mn1[i]),
+			mn1[i] * (3.3f / 4095.0f), mx1[i] * (3.3f / 4095.0f));
+	}
+	for (int i = 0; i < CH3; i++) {
+		efiPrintf("  %s: min=%u max=%u spread=%u (%.3f..%.3f V)", names3[i],
+			(unsigned)mn3[i], (unsigned)mx3[i], (unsigned)(mx3[i] - mn3[i]),
+			mn3[i] * (3.3f / 4095.0f), mx3[i] * (3.3f / 4095.0f));
 	}
 }
 #endif /* EFI_PROD_CODE && HAL_USE_ADC */
