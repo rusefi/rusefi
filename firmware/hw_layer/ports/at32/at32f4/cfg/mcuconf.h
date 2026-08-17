@@ -169,8 +169,16 @@
 
 /*
  * ADC driver system settings.
+ *
+ * Artery AT32F435 ADC clock: ADCCOM.cctrl.adcdiv[19:16], measured ADCCLK =
+ * HCLK/16/adcdiv (m74_9, see docs/report.md 2026-08-17: the old value 2 gave
+ * 4.5 MHz and knock bursts crawled at ~6.8 kHz). DIV4 writes adcdiv=1 ->
+ * ~5.94 MHz ADCCLK, ~33x faster than before and below the 80 MHz RM maximum.
+ * DIV2 (adcdiv=0, ~8.9 MHz) would be faster but the shared ADCv2 LLD range
+ * check rejects the corresponding compile-time STM32_ADCCLK of 72 MHz.
+ * The STM32-style ADCPRE encodings do not map to the Artery divider.
  */
-#define STM32_ADC_ADCPRE                    ADC_CCR_ADCPRE_DIV6
+#define STM32_ADC_ADCPRE                    ADC_CCR_ADCPRE_DIV4
 #define STM32_ADC_USE_ADC1                  TRUE
 #define STM32_ADC_USE_ADC2                  TRUE
 #define STM32_ADC_USE_ADC3                  TRUE
