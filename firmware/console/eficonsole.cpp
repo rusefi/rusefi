@@ -279,6 +279,19 @@ void initializeConsole() {
 
 	addConsoleAction("threadsinfo", cmd_threads);
 
+	addConsoleAction("uptime", [](){
+		/* seconds since boot - the same counter the console protocol reports,
+		 * useful to correlate bench events with reset moments */
+		uint32_t seconds = (uint32_t)getTimeNowS();
+		uint32_t days = seconds / 86400;
+		uint32_t h = (seconds % 86400) / 3600;
+		uint32_t m = (seconds % 3600) / 60;
+		uint32_t s = seconds % 60;
+		efiPrintf("Uptime: %u seconds (%u d %u:%02u:%02u)",
+			(unsigned int)seconds, (unsigned int)days, (unsigned int)h,
+			(unsigned int)m, (unsigned int)s);
+	});
+
 #if HAL_USE_WDG
 	addConsoleActionI("set_watchdog_timeout", startWatchdog);
 	addConsoleActionI("set_watchdog_reset", setWatchdogResetPeriod);
