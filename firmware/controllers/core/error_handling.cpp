@@ -452,6 +452,10 @@ static void crashDelayForConsoleFlush() {
 void printPreviousCrashIfAny() {
 	crashMarkerEnableWrite();
 	uint32_t magic = RTC->BKP0R;
+	/* unconditional debug line while we chase the m74_9 silent-reboot cause:
+	 * shows whether the backup domain survives the reboot at all */
+	efiPrintf("*** crash marker: BKP0R=0x%08x BKP1R=0x%08x",
+		(unsigned)magic, (unsigned)RTC->BKP1R);
 	if (magic == CRASH_MARKER_MAGIC_FAULT) {
 		efiPrintf("*** PREVIOUS CRASH: fault type=%u pc=0x%08x lr=0x%08x faultAddr=0x%08x cfsr=0x%08x",
 			(unsigned)RTC->BKP1R, (unsigned)RTC->BKP2R, (unsigned)RTC->BKP3R,
