@@ -2505,3 +2505,52 @@ config-gen runs under 25). The user's rusefi_build container no longer exists
 
 Validation: gradlew clean test all green (JDK 25), console jar rebuilt
 (Build-Jdk 25, bytecode 69), m74_9 clean build + bundle OK.
+
+## 2026-08-17 - second VE + two ignition tables filled in 21129.msq from stock M74 maps
+
+User exported the remaining stock M74 maps and asked to fill them into the
+21129.msq tune:
+
+- secondVeTable <- Bazovoe_modelnoe_ciklovoe_napolnenie_IM=1_korot_vpusk.clb
+  (short-runner air-charge model, 24 RPM x 16 mbar, mg/cyl/cycle). Variable
+  intake geometry on the car: IM=0 (long) already drives the primary VE table,
+  IM=1 (short) now drives the second VE table.
+- ignitionTable (primary) <- Bazovyj UOZ rezhim CHN.clb (17 RPM x 17 mg)
+- secondIgnitionTable <- Bazovyj UOZ rezhim PM.clb (17 RPM x 17 mg)
+
+Conversion (script m74_9_clb_to_msq.py at repo root, kept for reproducibility):
+
+- Grid: RPM bins 650..4700+7000 and load bins 20,30,35,40,45,50,55,60,65,70,
+  75,80,85,90,95,100 kPa - the same axes the primary VE/AFR tables already
+  use (rows = load, cols = RPM). RPM > 6250 clamps to the stock map's last
+  column (matches how the primary VE table was converted).
+- VE% = aircharge_mg / (MAP_kPa * 4.7526), same constant as the primary
+  conversion (report 2026-08-16). Repro of the primary table from IM=0
+  matches the tune's existing veTable within +-0.5%.
+- Ignition: the stock load axis is air charge (mg), rusEFI's is MAP (kPa).
+  For each (rpm, kPa) cell the modeled mg is computed from the matching
+  air-charge model (CHN pairs with IM=0, PM with IM=1) and the stock map is
+  looked up at (rpm, mg). This reproduces stock timing under MAP control.
+- ignitionLoadBins + secondIgnitionLoadBins changed 21..120 -> 20..100 kPa
+  (NA engine, cap at 100 kPa, axes now match the fuel tables).
+
+.msq mechanics: the second tables live on TS page 4 (page4_s), not in the
+main image. The .msq now carries a second <page number="3" size="1268">
+block (page number = ini page - 1, the convention MsqFactory writes).
+Verified end-to-end with a throwaway JUnit test running the console's own
+mergeCalibrationsWithPartialFailure path against rusefi_m74_9.ini:
+PagesToWrite=[0, 768], FailedFields=[], and the migrated page images
+round-trip the exact table values. Load through the usual console load-tune
+(no console rebuild needed - the path already existed).
+
+Assumptions to confirm on the car:
+- CHN <-> long runner (primary), PM <-> short runner (second). The stock maps
+  look nearly identical in shape; if the car runs worse on the second
+  ignition map, swapping the pairing is a one-line change in the script.
+- Nothing activates the second tables yet: switching is the user's wiring
+  decision - secondVeTableInput/secondIgnitionTableInput (hard switch pins)
+  or secondVeBlendParameter/secondIgnitionBlendParameter (gppwm channel) with
+  their blend bins/values. Until configured the ECU keeps using the primary
+  tables.
+- Firmware ConfigOverrides only force the primary veLoadBins/lambdaLoadBins;
+  the second-table bins now come from the tune itself.
