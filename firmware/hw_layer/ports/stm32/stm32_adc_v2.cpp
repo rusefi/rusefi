@@ -523,16 +523,20 @@ adcsample_t getFastAdc(AdcToken) {
 
 #ifdef EFI_SOFTWARE_KNOCK
 
-/* Resume the slow background chain after a knock window has stolen the ADC
- * (m74_9: knock PA0 and the slow channels share ADCD1). slowAdcState still
- * points at the batch that was aborted, so re-run that batch from scratch;
- * its buffer may be partially written, which the slow loop tolerates (it
- * averages asynchronously anyway). Caller runs in the ADC ISR. */
 #if (EFI_INTERNAL_SLOW_ADC_BACKGROUND == TRUE)
-static void slowAdcResumeAfterKnockWindow() {
-	chSysLockFromISR();
+/* Resume the slow background chain after the ADC has been handed back by a
+ * knock window or by the knocktest diagnostic. slowAdcState still points at
+ * the batch that was aborted, so re-run that batch from scratch; its buffer
+ * may be partially written, which the slow loop tolerates (it averages
+ * asynchronously anyway). Must be called with the system locked. */
+static void slowAdcResumeAfterKnockWindowI() {
 	KNOCK_ADC.state = ADC_READY;
 	slowAdcStartCurrentBatch();
+}
+
+static void slowAdcResumeAfterKnockWindow() {
+	chSysLockFromISR();
+	slowAdcResumeAfterKnockWindowI();
 	chSysUnlockFromISR();
 }
 #endif // EFI_INTERNAL_SLOW_ADC_BACKGROUND
@@ -644,25 +648,46 @@ bool isKnockAdcSharedWithSlowAdc() {
 	return (&KNOCK_ADC == &EFI_SLOW_ADC) && (EFI_INTERNAL_SLOW_ADC_BACKGROUND == TRUE);
 }
 
-/* One-shot knock-style burst conversion of an arbitrary ADC3 channel - used
- * by the board-local 'knocktest' diagnostic to identify the knock input pin.
- * Local group copy with end_cb = nullptr: these bursts must not feed the
- * knock processing pipeline. */
+/* One-shot knock-style burst conversion - used by the board-local 'knocktest'
+ * diagnostic to identify the knock input pin. Local group copy with
+ * end_cb = nullptr: these bursts must not feed the knock processing pipeline.
+ * When the ADC is shared with the slow background chain (m74_9) the burst
+ * steals it exactly like a real knock window and hands it back afterwards. */
 bool knockBurstSample(uint32_t adcInChannel, adcsample_t* buf, size_t count) {
 	ADCConversionGroup group = adcConvGroupCh1;
 	group.sqr3 = ADC_SQR3_SQ1_N(adcInChannel);
 	group.end_cb = nullptr;
 
+	msg_t result;
+
 	osalSysLock();
 	if ((KNOCK_ADC.state == ADC_READY) ||
 			(KNOCK_ADC.state == ADC_ERROR)) {
 		adcStartConversionI(&KNOCK_ADC, &group, buf, count);
-		msg_t result = osalThreadSuspendS(&KNOCK_ADC.thread);
+	} else if (((KNOCK_ADC.state == ADC_ACTIVE) ||
+				(KNOCK_ADC.state == ADC_COMPLETE)) &&
+				isKnockAdcSharedWithSlowAdc()) {
+		/* The slow background chain keeps the ADC busy continuously - steal
+		 * it (see onStartKnockSampling). */
+		adcStopConversionI(&KNOCK_ADC);
+		adcStartConversionI(&KNOCK_ADC, &group, buf, count);
+	} else {
 		osalSysUnlock();
-		return result == MSG_OK;
+		return false;
 	}
+	result = osalThreadSuspendS(&KNOCK_ADC.thread);
+
+#if (EFI_INTERNAL_SLOW_ADC_BACKGROUND == TRUE)
+	/* Hand the ADC back to the slow background chain: it was either aborted
+	 * by this burst (steal above) or already stalled (READY/ERROR start) -
+	 * re-running the current batch is correct in both cases. */
+	if (isKnockAdcSharedWithSlowAdc()) {
+		slowAdcResumeAfterKnockWindowI();
+	}
+#endif // EFI_INTERNAL_SLOW_ADC_BACKGROUND
+
 	osalSysUnlock();
-	return false;
+	return result == MSG_OK;
 }
 
 #endif // EFI_SOFTWARE_KNOCK
