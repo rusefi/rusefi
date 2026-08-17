@@ -74,12 +74,6 @@ void onStartKnockSampling(uint8_t cylinderNumber, float samplingSeconds, uint8_t
 		return;
 	}
 
-	// Cancel if ADC isn't ready
-	if (!((KNOCK_ADC.state == ADC_READY) ||
-			(KNOCK_ADC.state == ADC_ERROR))) {
-		return;
-	}
-
 	// If there's pending processing, skip this event
 	if (knockNeedsProcess) {
 		return;
@@ -98,8 +92,18 @@ void onStartKnockSampling(uint8_t cylinderNumber, float samplingSeconds, uint8_t
 	// Stash the current cylinder's number so we can store the result appropriately
 	currentCylinderNumber = cylinderNumber;
 
-	adcStartConversionI(&KNOCK_ADC, conversionGroup, sampleBuffer, sampleCount);
-	lastKnockSampleTime = getTimeNowNt();
+	/* The knock ADC may also serve the slow sampling of the ADC3-only pins
+	 * (EFI_ADC3_SLOW, e.g. CLT/IAT on m74_9). Check-and-start must be atomic
+	 * so a slow blocking conversion cannot be started in between; if the ADC
+	 * is busy with a slow conversion right now, skip this window (a slow read
+	 * lasts a few microseconds, so a missed window is rare). */
+	osalSysLock();
+	if ((KNOCK_ADC.state == ADC_READY) ||
+			(KNOCK_ADC.state == ADC_ERROR)) {
+		adcStartConversionI(&KNOCK_ADC, conversionGroup, sampleBuffer, sampleCount);
+		lastKnockSampleTime = getTimeNowNt();
+	}
+	osalSysUnlock();
 }
 
 class KnockThread : public ThreadController<UTILITY_THREAD_STACK_SIZE> {

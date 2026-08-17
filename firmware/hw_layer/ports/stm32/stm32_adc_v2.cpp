@@ -233,7 +233,8 @@ static /* constexpr */ ADCConversionGroup convGroupSlow = {
 /* Slow sampling of the ADC3-only pins (EFI_ADC_32..39). The rusEFI ADC3
  * index order follows the adcChannels[] table in stm32_adc.cpp:
  * F6(IN4), F7(IN5), F8(IN6), F9(IN7), F10(IN8), F3(IN9), F4(IN14), F5(IN15).
- * Only usable when ADC3 is not dedicated to software knock. */
+ * When EFI_SOFTWARE_KNOCK is enabled the same ADC3 also serves the
+ * interrupt-driven knock windows - see readSlowAnalogInputs(). */
 static const ADCConversionGroup convGroupSlowAdc3 = {
 	.circular			= FALSE,
 	.num_channels		= 8,
@@ -387,12 +388,34 @@ bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 #if EFI_ADC3_SLOW
 	/* Sample the ADC3-only channels (EFI_ADC_32..39) into the upper part of
 	 * the slow buffer. Blocking conversion in thread context - 8 channels at
-	 * ADC_SAMPLING_SLOW take a few microseconds, negligible at the slow rate. */
+	 * ADC_SAMPLING_SLOW take a few microseconds, negligible at the slow rate.
+	 *
+	 * With EFI_SOFTWARE_KNOCK the same ADC3 also serves interrupt-driven
+	 * knock windows (up to a few ms each). Check-and-start must be atomic
+	 * with respect to a knock start: if a knock conversion is in progress we
+	 * skip this slow cycle and keep the previous values (CLT/IAT move slowly,
+	 * a missed 50 ms update is invisible). */
+#if defined(EFI_SOFTWARE_KNOCK)
+	osalSysLock();
+	if ((ADCD3.state == ADC_READY) ||
+			(ADCD3.state == ADC_ERROR)) {
+		adcStartConversionI(&ADCD3, &convGroupSlowAdc3,
+				(adcsample_t *)&convertedSamples[EFI_ADC_32 - EFI_ADC_0], 1);
+		msg_t adc3result = osalThreadSuspendS(&ADCD3.thread);
+		osalSysUnlock();
+		if (adc3result != MSG_OK) {
+			return false;
+		}
+	} else {
+		osalSysUnlock();
+	}
+#else
 	msg_t adc3result = adcConvert(&ADCD3, &convGroupSlowAdc3,
 			(adcsample_t *)&convertedSamples[EFI_ADC_32 - EFI_ADC_0], 1);
 	if (adc3result != MSG_OK) {
 		return false;
 	}
+#endif // defined(EFI_SOFTWARE_KNOCK)
 #endif // EFI_ADC3_SLOW
 
 	return result;
@@ -560,11 +583,9 @@ void portInitAdc() {
 	// Enable internal temperature reference
 	adcSTM32EnableTSVREFE(); // Internal temperature sensor
 
-#if EFI_ADC3_SLOW
-#if defined(EFI_SOFTWARE_KNOCK)
-#error "EFI_ADC3_SLOW and EFI_SOFTWARE_KNOCK cannot be combined - both own ADC3"
-#endif
-	// Init ADC3 for slow sampling of the ADC3-only pins
+#if EFI_ADC3_SLOW && !defined(EFI_SOFTWARE_KNOCK)
+	// Init ADC3 for slow sampling of the ADC3-only pins. When software knock
+	// is enabled the same ADCD3 is started via the KNOCK_ADC branch below.
 	adcStart(&ADCD3, nullptr);
 #endif // EFI_ADC3_SLOW
 
