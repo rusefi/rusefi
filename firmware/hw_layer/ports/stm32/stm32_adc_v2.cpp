@@ -401,14 +401,39 @@ bool readSlowAdc3All(adcsample_t samples[8]) {
  * is in progress (only relevant with EFI_INTERNAL_SLOW_ADC_BACKGROUND). */
 bool readSlowAdc1All(adcsample_t samples[16]) {
 	osalSysLock();
-	if ((EFI_SLOW_ADC.state == ADC_READY) ||
-			(EFI_SLOW_ADC.state == ADC_ERROR)) {
+	adcstate_t state = EFI_SLOW_ADC.state;
+	if ((state == ADC_READY) ||
+			(state == ADC_ERROR)) {
 		adcStartConversionI(&EFI_SLOW_ADC, &convGroupSlow, samples, 1);
 		msg_t result = osalThreadSuspendS(&EFI_SLOW_ADC.thread);
 		osalSysUnlock();
+		if (result != MSG_OK) {
+			static int printed = 0;
+			if (printed++ < 3) {
+				efiPrintf("readSlowAdc1All: suspend result=%d", (int)result);
+			}
+		}
 		return result == MSG_OK;
 	}
 	osalSysUnlock();
+	static int printed = 0;
+	if (printed++ < 3) {
+		efiPrintf("readSlowAdc1All: ADCD1 state=%d (READY=%d ERROR=%d ACTIVE=%d COMPLETE=%d)",
+			(int)state, (int)ADC_READY, (int)ADC_ERROR, (int)ADC_ACTIVE, (int)ADC_COMPLETE);
+		efiPrintf("readSlowAdc1All: ADC1 SR=0x%08x CR1=0x%08x CR2=0x%08x SQR1=0x%08x",
+			(unsigned)ADC1->SR, (unsigned)ADC1->CR1, (unsigned)ADC1->CR2, (unsigned)ADC1->SQR1);
+		const stm32_dma_stream_t* s = EFI_SLOW_ADC.dmastp;
+		if ((s != nullptr) && (s->channel != nullptr)) {
+			efiPrintf("readSlowAdc1All: ADCD1 DMA CCR=0x%08x CNDTR=%u",
+				(unsigned)s->channel->CCR, (unsigned)s->channel->CNDTR);
+			if (s->dma != nullptr) {
+				efiPrintf("readSlowAdc1All: ADCD1 DMA ISR=0x%08x IFCR=0x%08x MUXSEL=0x%08x",
+					(unsigned)s->dma->ISR, (unsigned)s->dma->IFCR, (unsigned)s->dma->MUXSEL);
+			}
+		} else {
+			efiPrintf("readSlowAdc1All: ADCD1 dmastp is NULL");
+		}
+	}
 	return false;
 }
 #endif // EFI_ADC3_SLOW
@@ -593,6 +618,27 @@ const ADCConversionGroup* getKnockConversionGroup(uint8_t channelIdx) {
 #endif // KNOCK_HAS_CH2
 
 	return &adcConvGroupCh1;
+}
+
+/* One-shot knock-style burst conversion of an arbitrary ADC3 channel - used
+ * by the board-local 'knocktest' diagnostic to identify the knock input pin.
+ * Local group copy with end_cb = nullptr: these bursts must not feed the
+ * knock processing pipeline. */
+bool knockBurstSample(uint32_t adcInChannel, adcsample_t* buf, size_t count) {
+	ADCConversionGroup group = adcConvGroupCh1;
+	group.sqr3 = ADC_SQR3_SQ1_N(adcInChannel);
+	group.end_cb = nullptr;
+
+	osalSysLock();
+	if ((KNOCK_ADC.state == ADC_READY) ||
+			(KNOCK_ADC.state == ADC_ERROR)) {
+		adcStartConversionI(&KNOCK_ADC, &group, buf, count);
+		msg_t result = osalThreadSuspendS(&KNOCK_ADC.thread);
+		osalSysUnlock();
+		return result == MSG_OK;
+	}
+	osalSysUnlock();
+	return false;
 }
 
 #endif // EFI_SOFTWARE_KNOCK
