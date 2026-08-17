@@ -2929,3 +2929,22 @@ Open follow-ups:
 - Cranking 20 mg base is a fuel MASS, independent of rail pressure - the
   pulse width auto-adjusts through the (now correct) flow constant, so it
   stays valid for the 1.6 at 3.8 bar.
+
+## 2026-08-17 - 21129: injector identified (Pekar 28346052), flow corrected again
+
+- The user found the injector part number: Pekar 28346052 (OEM
+  21127-1132010-00), the stock 21127/21129 injector. Official PEKAR spec:
+  static flow 75.0 ml/30 s at 300 kPa = 150 cc/min at 3 bar, tolerance +-4%,
+  coil 12 +- 0.5 Ohm; dynamic 8.0 ml/30 s at 2.5/20 ms.
+- The previous 215 cc/min assumption was the Bosch 0280158237 figure, not
+  this injector: with 215 + ref 51 kPa the engine actually ran ~21% lean at
+  WOT and ~43% lean at idle (configured flow overstated, plus the 51 kPa
+  reference bug inflating the idle flow ratio).
+- Corrected 21129.msq (backup 21129.msq.pre-injector2.bak):
+  injector_flow = 168.8 cc/min (150 x sqrt(3.8/3.0)), fuelReferencePressure
+  = 380 kPa unchanged. The lambda table is now honored: WOT is a real
+  0.84-0.82 instead of ~1.05.
+- Peak duty at 6250 rpm / lambda 0.84 = ~83% - typical OEM sizing, no margin
+  left; do not raise rpmHardLimit. STFT will re-learn at idle/part load.
+- Cranking stays at 20 mg base: warm pulse ~28 ms (~2.7x stoich) - if warm
+  starts feel rich, trim crankingTpsCoef down from 3.0.
