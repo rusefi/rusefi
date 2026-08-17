@@ -280,6 +280,14 @@ struct L9779 : public GpioChip {
 	bool						key_on_status;
 	bool						key_on_valid;
 
+	/* OUT_DIS latch (DIA_REG10 bit 1): the chip disables OUT1..4/IGN1..4 and
+	 * only the START command clears it. Tracked by refresh_diag_cache() so a
+	 * latch event is logged WITH its fault flags (reading DIA_REG10 clears
+	 * them) and a stale latch (no active fault, watchdog healthy) is healed
+	 * with a single START re-issue. */
+	bool						out_dis_latched;
+	bool						out_dis_clear_tried;
+
 
 	/* statistic */
 	//int						por_cnt;
@@ -605,6 +613,40 @@ void L9779::refresh_diag_cache()
 			dia_cache[i] = val;
 			dia_valid[i] = true;
 		}
+	}
+
+	/* DIA_REG10: OUT_DIS + power-stage fault/reset flags (datasheet 6.14).
+	 * Reading it CLEARS the fault flags, so print the raw byte right here -
+	 * this is the only place that sees the flags before they vanish. */
+	uint16_t dia10 = 0;
+	if (read_diag_reg(L9779_DIA_REG10_SUB, &dia10) == 0) {
+		uint8_t d10 = MSG_GET_DATA(dia10);
+		bool out_dis = (d10 >> 1) & 1;
+		/* any bit except OUT_DIS means a fault is (or was) reported */
+		bool fault_flags = (d10 & ~0x02u) != 0;
+
+		if (out_dis && !out_dis_latched) {
+			efiPrintf(DRIVER_NAME " OUT_DIS set! DIA10=0x%02x (F1=%d F2=%d OV_RST=%d VDD5_OV=%d V3V3_UV=%d TNL_RST=%d CRK_RST=%d)",
+				d10, (d10 >> 6) & 1, (d10 >> 4) & 1, d10 & 1,
+				(d10 >> 3) & 1, (d10 >> 2) & 1, (d10 >> 7) & 1, (d10 >> 5) & 1);
+		} else if (!out_dis && out_dis_latched) {
+			efiPrintf(DRIVER_NAME " OUT_DIS cleared (DIA10=0x%02x)", d10);
+		}
+
+		/* Self-heal a stale latch: the chip only clears OUT_DIS on START, so
+		 * a transient event (e.g. a watchdog EC excursion) would keep the
+		 * injector/ignition stages dead until a power cycle. With no fault
+		 * flags and a healthy watchdog, re-issue START once per latch. */
+		if (out_dis && !fault_flags && !wd_int && !out_dis_clear_tried) {
+			if (spi_rw(CMD_START_REACT(BIT(1)), NULL) == 0) {
+				efiPrintf(DRIVER_NAME " OUT_DIS stale - re-issued START");
+			}
+			out_dis_clear_tried = true;
+		}
+		if (!out_dis)
+			out_dis_clear_tried = false;
+
+		out_dis_latched = out_dis;
 	}
 
 	/* KEY_ON input level (DIA_REG9 bit 7, KEY_ON_STATUS). This is the
@@ -1204,6 +1246,8 @@ int L9779::init()
 		dia_valid[i] = false;
 	key_on_valid = false;
 	diag_ts = 0;
+	out_dis_latched = false;
+	out_dis_clear_tried = false;
 
 	/* force chip init from driver thread */
 	need_init = true;
