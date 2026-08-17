@@ -78,7 +78,8 @@ public:
 
 	virtual can_msg_t transmit(CanTxMessage &ctfp, can_sysinterval_t timeout) override;
 	virtual can_msg_t receive(CANRxFrame *crfp, can_sysinterval_t timeout) override;
-	virtual can_msg_t waitForFlowControl(uint8_t *blockSize, uint8_t *minSeparationTime, can_sysinterval_t timeout) override;
+	virtual uint32_t getFcCounterSnapshot() override;
+	virtual can_msg_t waitForFlowControl(uint32_t initialFcCounter, uint8_t *blockSize, uint8_t *minSeparationTime, can_sysinterval_t timeout) override;
 	virtual void onTpFirstFrame() override;
 
 	CanRxMessageSource *source;
