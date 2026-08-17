@@ -48,13 +48,24 @@ public enum AfrLambdaTableMigrator implements TuneMigrator {
                         context
                     );
                     if (migratedValues.isPresent()) {
-                        final Constant migratedValue = new Constant(
+                        final String migratedText = updatedTableField.formatValue(migratedValues.get());
+                        final Constant updatedValue = context.getUpdatedTune().getConstantsAsMap().get(LAMBDA_TABLE_FIELD_NAME);
+                        if (updatedValue != null && Objects.equals(migratedText, updatedValue.getValue())) {
+                            // The table already holds exactly these values - skip, otherwise the
+                            // lambdaTable shows up in the restore list on every load even though
+                            // nothing changed (values round-trip byte-identically).
+                            return;
+                        }
+                        context.addMigration(
                             LAMBDA_TABLE_FIELD_NAME,
-                            updatedTableField.getUnits(),
-                            updatedTableField.formatValue(migratedValues.get()),
-                            updatedTableField.getDigits(),
-                            Integer.toString(updatedTableField.getRows()),
-                            Integer.toString(updatedTableFieldCols)
+                            new Constant(
+                                LAMBDA_TABLE_FIELD_NAME,
+                                updatedTableField.getUnits(),
+                                migratedText,
+                                updatedTableField.getDigits(),
+                                Integer.toString(updatedTableField.getRows()),
+                                Integer.toString(updatedTableFieldCols)
+                            )
                         );
                         final String formattedUpdatedValue = updatedTableField.formatValue(
                             updatedTableField.getValues(updatedValue.getValue())

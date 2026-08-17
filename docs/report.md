@@ -2730,3 +2730,30 @@ Open follow-ups:
   "lambdaTable restore diagnostic: first diff at N msq=X ecu=Y (msq cells A,
   ecu cells B)" - the first differing cell should reveal the direction of the
   discrepancy. To be removed once triaged.
+
+## 2026-08-17 - lambdaTable phantom re-migration root cause + fix
+
+Root cause: AfrLambdaTableMigrator (a specialized migrator that runs before
+DefaultTuneMigrator) unconditionally re-added lambdaTable to the migration set
+on every load - even when the converted values were byte-identical to the
+target tune's current text. Because DefaultTuneMigrator skips already-migrated
+fields, its value-equality check never ran, so the restore line (and the
+page-0 write) appeared on every load. The values on the ECU were correct all
+along (the console's editor showed them, and the msq text round-trips
+byte-identically through the 1/147 grid).
+
+Fix (AfrLambdaTableMigrator): after formatting the migrated values, compare the
+text with the updated tune's current lambdaTable constant and skip the
+migration when they are equal. DefaultTuneMigrator's temporary diagnostic was
+removed.
+
+Tests: AfrLambdaTableMigratorTest (identical table is not migrated, differing
+table is). End-to-end re-check with the real 21129.msq + rusefi_m74_9.ini:
+the second load of the same tune now produces ZERO migrations and zero pages
+to write. Full :ui:test + :ecu_io:test green, console jar rebuilt
+(console/rusefi_console.jar).
+
+Note on the burn button: after a load-tune there are genuinely no pending
+changes, so "Burn to ECU" stays disabled until an actual edit (page 0 or a
+secondary page) - the phantom lambdaTable restore line used to make it look
+like there were pending changes.
