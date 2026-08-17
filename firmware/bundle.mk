@@ -345,10 +345,18 @@ PERCENT = %
 
 .SECONDEXPANSION:
 $(FOLDER_TARGETS) $(UPDATE_FOLDER_TARGETS) $(ROOT_FOLDER_TARGETS): $(FOLDER)/%: $$(filter $$(PERCENT)$$*,$(FOLDER_SOURCES) $(UPDATE_FOLDER_SOURCES) $(ROOT_FOLDER_SOURCES)) | $(FOLDER)
+ifeq ($(UNAME_S),Darwin)
+	$(LN) $(abspath $<) $@
+else
 	$(LN) $< $@
+endif
 
 $(CONSOLE_FOLDER_TARGETS) $(UPDATE_CONSOLE_FOLDER_TARGETS): $(CONSOLE_FOLDER)/%: $$(filter $$(PERCENT)$$*,$(CONSOLE_FOLDER_SOURCES) $(UPDATE_CONSOLE_FOLDER_SOURCES)) | $(CONSOLE_FOLDER)
+ifeq ($(UNAME_S),Darwin)
+	$(LN) $(abspath $<) $@
+else
 	$(LN) $< $@
+endif
 
 # macOS-only: native hex2dfu built from the portable C source (the prebuilt
 # hex2dfu.bin is a Linux x86_64 ELF). This rule lives at the end of the file
