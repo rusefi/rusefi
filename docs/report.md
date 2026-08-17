@@ -2948,3 +2948,31 @@ Open follow-ups:
   left; do not raise rpmHardLimit. STFT will re-learn at idle/part load.
 - Cranking stays at 20 mg base: warm pulse ~28 ms (~2.7x stoich) - if warm
   starts feel rich, trim crankingTpsCoef down from 3.0.
+
+## 2026-08-17 - "lambdaTable restored on every load" investigation
+
+- The recurring "To restore previous calibrations ... lambdaTable" message on
+  every msq load comes from the tune-migration framework
+  (AfrLambdaTableMigrator / DefaultTuneMigrator): it fires when the file's
+  table text differs from the text the console generates for the ECU's stored
+  bytes. The burn itself re-writes the whole page, so the message only
+  persists when the console's view of the ECU differs from the file.
+- Verified the console's own round-trip byte-perfectly with a new unit test:
+  java_console/ui .../Lambda21129RoundTripTest takes the exact 21129.msq
+  lambdaTable text, writes it through ConfigurationImageGetterSetter.setValue2
+  (the burn path) and reads it back through getStringValue (the ECU read
+  path) - text is identical and neither migrator fires. The file's values are
+  on the 1/147 grid and formatted console-exact (niceToString precision 3 =
+  round(x*1000)/1000 + Double.toString), including the 0.823 corner cells.
+- The console always treats lambdaTable as lambda/1/147 (IniField.parseDouble
+  takes the true branch of the useLambdaOnInterface template, [tag:lambdaTable]);
+  the AFR/Lambda interface flag only affects TS display - no data corruption.
+- The remaining explanation for the user's persistent message is a
+  console/firmware version mismatch: the user ran console 20260816 while the
+  ECU runs firmware built 2026-08-17 (signature
+  rusEFI master.2026.08.17.m74_9.727755639). The config changed between the
+  builds (immo fields at offset 15768 - after lambdaTable, so offsets before
+  8946 look stable, but any earlier-layout drift produces exactly this
+  symptom). Fix: run the console from the freshly built bundle
+  firmware/rusefi.snapshot.m74_9/console/rusefi_console.jar (20260817) and
+  verify the ECU signature on connect.
