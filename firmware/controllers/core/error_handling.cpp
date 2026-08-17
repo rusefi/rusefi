@@ -533,6 +533,12 @@ void logDeliberateReboot(RebootReason reason) {
 void logHardFault(uint32_t type, uintptr_t faultAddress, void* sp, uint32_t csfr) {
     // todo: reuse hasCriticalFirmwareErrorFlag? something?
     isInHardFaultHandler = true;
+	/* A hard fault is the most common silent-reboot cause on ports without
+	 * backup SRAM - print the crash site so it survives in the console log
+	 * before the reboot (the console thread is usually still alive). */
+	efiPrintf("FAULT type=%u pc=0x%08x lr=0x%08x faultAddr=0x%08x cfsr=0x%08x",
+		(unsigned)type, (unsigned)ctx->pc, (unsigned)ctx->lr_thd,
+		(unsigned)faultAddress, (unsigned)csfr);
 	// Evidence first!
 #if EFI_BACKUP_SRAM
 	auto bkpram = getBackupSram();
