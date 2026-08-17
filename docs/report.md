@@ -2869,3 +2869,20 @@ Open follow-ups:
   while PA1..PA3 stay flat. Then on-car: verify the steal fires with real
   spark events (watch knock windows in TS/logs) and calibrate knockBaseNoise
   and per-cylinder gains.
+
+## 2026-08-17 - 21129.msq final tune fixes (flap work deferred by the user)
+
+- Applied to 21129.msq (backup: 21129.msq.pre-7000fix.bak):
+  - secondVeTable 7000 rpm column corrected: the converter had clamped the
+    stock model's last rpm node (6250) into the 7000 bin, so interpolation
+    ran 2-3% lean in the 6000-6250 zone. New column values extrapolate the
+    model shape so the table hits the model at 6250 (values in
+    todo-21129.md).
+  - cylinderBore 87.5 -> 82.0 (21129 is 82 x 75.6 mm; only feeds the auto
+    knock frequency, which is overridden by knockFrequency=7000 - correctness
+    fix, no tuning effect).
+  - lambdaTable top-right corner: the three 0.816 cells leveled to 0.823
+    (the 1/147 storage-grid value of 0.82), keeping the console-exact text
+    format so the table is not re-burned on every load.
+- Intake flap + blend (gppwm on AA2, secondVe/secondIgnitionBlendParameter)
+  deferred by the user; the plan stays in todo-21129.md.
