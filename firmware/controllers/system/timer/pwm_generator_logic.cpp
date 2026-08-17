@@ -321,6 +321,12 @@ void startSimplePwm(SimplePwm *state, const char *msg,
 		warning(ObdCode::CUSTOM_OBD_LOW_FREQUENCY, "low frequency %.2f %s", frequency, msg);
 		return;
 	}
+	#if EFI_UNIT_TEST || (defined(BOARD_HBRIDGE_GPIO_COUNT) && BOARD_HBRIDGE_GPIO_COUNT > 0)
+	if (output->brainPin == Gpio::HBRIDGE_1_OUT || output->brainPin == Gpio::HBRIDGE_2_OUT) {
+		configError("H-bridge GPIO supports on/off output only");
+		return;
+	}
+	#endif
 
 #if EFI_PROD_CODE
 #if (BOARD_EXT_GPIOCHIPS > 0)
