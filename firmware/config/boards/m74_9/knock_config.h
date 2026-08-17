@@ -8,9 +8,12 @@
  * divider at the ADC input). Verified on the bench with the knocktest/
  * knockpin diagnostics.
  *
- * ADC3 stays with EFI_ADC3_SLOW (CLT/IAT live on the ADC3-only F-port pins
- * PF5/PF6) - see readSlowAnalogInputs() in stm32_adc_v2.cpp for the mutual
- * exclusion contract.
+ * ADC1 is shared with the slow sampling (EFI_SLOW_ADC == KNOCK_ADC == ADCD1):
+ * the driver is started once (portInitAdc), the slow background chain is
+ * aborted and resumed around each knock window (onStartKnockSampling steals
+ * via adcStopConversionI, knockCompletionCallback in stm32_adc_v2.cpp resumes
+ * the chain). ADC3 stays with EFI_ADC3_SLOW (CLT/IAT live on the ADC3-only
+ * F-port pins PF5/PF6) and has no other users.
  *
  * Timing: ADCCLK = HCLK/16/adcdiv = 5.94 MHz with adcdiv=1 (mcuconf
  * STM32_ADC_ADCPRE = DIV4, see the mcuconf.h comment). ADC_SAMPLE_56 programs
