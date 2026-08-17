@@ -3092,3 +3092,17 @@ Read (returns QRCVEMPTY immediately; Windows PCANBasic blocks). 100% of one
 core in jstack at PCANBasic.Read. Fixed PCanIoStream.readOnePacket to sleep
 1 ms on QRCVEMPTY; console jar rebuilt. User restarts the console to pick
 it up.
+
+## 2026-08-18 (4): console thread-limit storms fixed; uptime command
+
+- User: java console still lost the ECU link and burned CPU on macOS. The
+  CPU part was already fixed (busy-spin on MacCAN's non-blocking Read, now
+  ~9% for UI rendering); the link drop was a SECOND issue: the serial port
+  scanner's per-port probe threads (each up to a minute, 3 attempts) piled
+  up on the macOS Bluetooth/wlan debug UARTs until the JVM hit the native
+  thread limit ~1 min after start - "OutOfMemoryError: unable to create
+  native thread" storms in the console log at 00:48:28 and 00:49:48.
+  Fixes: -Dserial.port.scan=false skips the scan (PCAN setups don't need
+  it), -Xss512k in the bundle launcher doubles the thread budget.
+- Firmware: new 'uptime' console command (getTimeNowS-based) for correlating
+  bench events with resets.
