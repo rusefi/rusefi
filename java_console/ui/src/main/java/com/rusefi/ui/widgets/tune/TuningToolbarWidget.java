@@ -2,12 +2,14 @@ package com.rusefi.ui.widgets.tune;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
+import com.opensr5.ConfigurationImageMetaVersion0_0;
 import com.opensr5.ConfigurationImageWithMeta;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.CalibrationsHelper;
 import com.rusefi.maintenance.CalibrationsInfo;
+import com.rusefi.maintenance.CalibrationsUpdater;
 import com.rusefi.maintenance.OfflineTuneLoader;
 import com.rusefi.maintenance.jobs.AsyncJob;
 import com.rusefi.maintenance.jobs.AsyncJobExecutor;
@@ -24,8 +26,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.ArrayDeque;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Collections;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
@@ -336,21 +339,64 @@ public class TuningToolbarWidget {
                                     ConfigurationImage base = currentImage == null
                                         ? new ConfigurationImage(targetIni.getMetaInfo().getPageSize(0))
                                         : currentImage.clone();
-                                    ConfigurationImage newImage = bp == null
-                                        ? result.image
-                                        : applyLoadedTune(result.msq, result.ini, base, targetIni, cb);
+
+                                    CalibrationsInfo mergedCalibrations = null;
+                                    ConfigurationImage newImage;
+                                    if (bp == null) {
+                                        // [tag:offline_tune] no ECU: page 0 only, editor session
+                                        newImage = result.image;
+                                    } else {
+                                        // Connected: merge the tune onto the working image (page 0)
+                                        // plus the ECU's current secondary TS pages, so fields that
+                                        // live outside the main image (second VE/ignition tables,
+                                        // lua, ...) are restored as well and only changed pages burn.
+                                        Map<Integer, ConfigurationImageWithMeta> targetPages = new TreeMap<>();
+                                        targetPages.put(0, ConfigurationImageWithMeta.valueOf(targetIni, base));
+                                        for (int pageIndex = 1; pageIndex < targetIni.getMetaInfo().getnPages(); pageIndex++) {
+                                            final int pageIdentifier = targetIni.getMetaInfo().getPageIdentifier(pageIndex);
+                                            final int pageSize = targetIni.getMetaInfo().getPageSize(pageIndex);
+                                            final byte[] content = bp.readFromPage(pageIdentifier, 0, pageSize);
+                                            if (content == null) {
+                                                cb.logLine(String.format(
+                                                    "WARNING: failed to read calibration page 0x%04X - its fields are not loaded",
+                                                    pageIdentifier));
+                                                continue;
+                                            }
+                                            targetPages.put(pageIdentifier, new ConfigurationImageWithMeta(
+                                                new ConfigurationImageMetaVersion0_0(pageSize, targetIni.getSignature()),
+                                                content));
+                                        }
+                                        CalibrationsHelper.MergeResult merge = mergeLoadedTune(
+                                            result.msq, result.ini, targetIni, targetPages, cb);
+                                        if (merge.mergedCalibrations.isPresent()) {
+                                            mergedCalibrations = merge.mergedCalibrations.get();
+                                            newImage = mergedCalibrations.getImage().getConfigurationImage();
+                                        } else {
+                                            newImage = base;
+                                        }
+                                    }
 
                                     if (bp != null) {
                                         cb.logLine("Uploading and burning to ECU...");
-                                        CountDownLatch latch = new CountDownLatch(1);
-                                        uiContext.getLinkManager().submit(() -> {
-                                            try {
-                                                bp.uploadChanges(newImage);
-                                            } finally {
-                                                latch.countDown();
+                                        if (mergedCalibrations != null) {
+                                            // multi-page upload: page 0 via TS chunk protocol,
+                                            // secondary pages via write + verify + burn per page
+                                            if (!CalibrationsUpdater.INSTANCE.updateCalibrations(
+                                                bp, uiContext.getLinkManager(), mergedCalibrations, cb)) {
+                                                cb.error();
                                             }
-                                        });
-                                        latch.await();
+                                        } else {
+                                            // no fields changed: keep the legacy single-image upload
+                                            CountDownLatch latch = new CountDownLatch(1);
+                                            uiContext.getLinkManager().submit(() -> {
+                                                try {
+                                                    bp.uploadChanges(newImage);
+                                                } finally {
+                                                    latch.countDown();
+                                                }
+                                            });
+                                            latch.await();
+                                        }
                                     }
 
                                     final boolean loadedWhileDisconnected = (bp == null);
@@ -387,20 +433,25 @@ public class TuningToolbarWidget {
         };
     }
 
-    static ConfigurationImage applyLoadedTune(Msq tune, IniFileModel sourceIni,
-                                               ConfigurationImage base, IniFileModel targetIni,
-                                               UpdateOperationCallbacks callbacks) {
-        Set<String> secondaryFields = new HashSet<>(sourceIni.getSecondaryIniFields().keySet());
-        secondaryFields.addAll(targetIni.getSecondaryIniFields().keySet());
-
-        CalibrationsInfo target = new CalibrationsInfo(
-            targetIni, ConfigurationImageWithMeta.valueOf(targetIni, base));
-        CalibrationsHelper.MergeResult result = CalibrationsHelper.mergeCalibrationsWithPartialFailure(
-            sourceIni, tune, target, callbacks, secondaryFields);
-
-        return result.mergedCalibrations
-            .map(calibrations -> calibrations.getImage().getConfigurationImage())
-            .orElse(base);
+    /**
+     * Merges the tune onto the given target pages (page 0 = main image, other entries = secondary
+     * TS pages as read from the ECU) through the standard tune-migration pipeline. Secondary fields
+     * are NOT ignored here: pages that received at least one migrated field are marked in the
+     * result's pagesToWrite for upload + burn.
+     */
+    static CalibrationsHelper.MergeResult mergeLoadedTune(
+        Msq tune,
+        IniFileModel sourceIni,
+        IniFileModel targetIni,
+        Map<Integer, ConfigurationImageWithMeta> targetPages,
+        UpdateOperationCallbacks callbacks
+    ) {
+        return CalibrationsHelper.mergeCalibrationsWithPartialFailure(
+            sourceIni,
+            tune,
+            new CalibrationsInfo(targetIni, targetPages, Collections.emptySet()),
+            callbacks,
+            Collections.emptySet());
     }
 
     public void setFirmwareUpdateInProgress(boolean inProgress) {

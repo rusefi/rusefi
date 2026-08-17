@@ -2554,3 +2554,40 @@ Assumptions to confirm on the car:
   tables.
 - Firmware ConfigOverrides only force the primary veLoadBins/lambdaLoadBins;
   the second-table bins now come from the tune itself.
+
+## 2026-08-17 - load tune now applies secondary TS pages (second VE/ignition tables)
+
+Symptom: loading the patched 21129.msq through the console's load-tune migrated
+page-0 fields (ignitionTable, lambdaTable, ...) but silently skipped the page-4
+second tables - the log showed no secondVeTable/secondIgnitionTable lines and the
+tables stayed empty on the ECU after power cycle.
+
+Root cause (all in the console): TuningToolbarWidget.applyLoadedTune merged the
+tune onto the page-0 image only and passed the whole set of secondary ini field
+names as additionalIniFieldsToIgnore (leftover from the 2026-08-03 partial-tune
+corruption fix), and the upload path (bp.uploadChanges) writes page 0 only. So
+fields living on TS page 4 (page4_s: secondVeTable, secondIgnitionTable, their
+bins) were dropped by design of that UI path - not by the msq file itself.
+
+Fix (TuningToolbarWidget):
+- Replaced applyLoadedTune with mergeLoadedTune(tune, sourceIni, targetIni,
+  targetPages, callbacks): the same mergeCalibrationsWithPartialFailure pipeline
+  but with an empty ignore set, so secondary fields migrate.
+- Connected load now reads the ECU's current secondary pages (readFromPage per
+  pageIdentifier), builds target pages = working image (page 0) + ECU pages 2..5,
+  merges, and uploads via CalibrationsUpdater.INSTANCE.updateCalibrations(bp, lm,
+  calibrations, cb) - page 0 through the TS chunk protocol, secondary pages
+  through write + read-back verify + burn per page, only for pages that actually
+  received migrated fields. Failed page reads degrade to a warning and skip that
+  page's fields instead of aborting the load.
+- Offline load (no ECU) is unchanged: page-0 image only.
+
+Tests: TuningToolbarLoadTuneTest rewritten to drive mergeLoadedTune (AFR ->
+lambda encoding case kept) + new secondaryPageFieldsAreMergedOnConnectedLoad
+(luaScript on page 0x0400 migrated, pagesToWrite = {0x0400}, value round-trips).
+:ui:test and :ecu_io:test full suites green; console jar rebuilt
+(console/rusefi_console.jar, UiVersion.CONSOLE_VERSION -> 20260817).
+
+Note: firmware-side multi-page TS protocol (R/W/C/B commands with page argument)
+was already there and is the same path LuaService uses for the lua page - only
+the console needed fixing.
