@@ -2591,3 +2591,12 @@ lambda encoding case kept) + new secondaryPageFieldsAreMergedOnConnectedLoad
 Note: firmware-side multi-page TS protocol (R/W/C/B commands with page argument)
 was already there and is the same path LuaService uses for the lua page - only
 the console needed fixing.
+
+Follow-up (same day): the first version of the load-tune fix read the ECU's
+secondary pages directly on the AsyncJobExecutor thread, which immediately
+failed with "Communication on wrong thread. Use linkManager.execute or
+linkManager.submit". All BinaryProtocol IO is thread-affine to the LinkManager
+thread; the page reads (and the merge) are now wrapped in
+linkManager.submit() with a latch, the result handed back via atomics, and the
+upload still goes through CalibrationsUpdater (which submits internally).
+:ui:test + :ecu_io:test green, console jar rebuilt.

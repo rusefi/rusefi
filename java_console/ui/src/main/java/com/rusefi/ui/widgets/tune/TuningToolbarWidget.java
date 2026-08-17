@@ -350,30 +350,47 @@ public class TuningToolbarWidget {
                                         // plus the ECU's current secondary TS pages, so fields that
                                         // live outside the main image (second VE/ignition tables,
                                         // lua, ...) are restored as well and only changed pages burn.
-                                        Map<Integer, ConfigurationImageWithMeta> targetPages = new TreeMap<>();
-                                        targetPages.put(0, ConfigurationImageWithMeta.valueOf(targetIni, base));
-                                        for (int pageIndex = 1; pageIndex < targetIni.getMetaInfo().getnPages(); pageIndex++) {
-                                            final int pageIdentifier = targetIni.getMetaInfo().getPageIdentifier(pageIndex);
-                                            final int pageSize = targetIni.getMetaInfo().getPageSize(pageIndex);
-                                            final byte[] content = bp.readFromPage(pageIdentifier, 0, pageSize);
-                                            if (content == null) {
-                                                cb.logLine(String.format(
-                                                    "WARNING: failed to read calibration page 0x%04X - its fields are not loaded",
-                                                    pageIdentifier));
-                                                continue;
+                                        // All ECU IO must run on the LinkManager thread.
+                                        AtomicReference<ConfigurationImage> newImageRef = new AtomicReference<>();
+                                        AtomicReference<CalibrationsInfo> mergedRef = new AtomicReference<>();
+                                        CountDownLatch latch = new CountDownLatch(1);
+                                        uiContext.getLinkManager().submit(() -> {
+                                            try {
+                                                Map<Integer, ConfigurationImageWithMeta> targetPages = new TreeMap<>();
+                                                targetPages.put(0, ConfigurationImageWithMeta.valueOf(targetIni, base));
+                                                for (int pageIndex = 1; pageIndex < targetIni.getMetaInfo().getnPages(); pageIndex++) {
+                                                    final int pageIdentifier = targetIni.getMetaInfo().getPageIdentifier(pageIndex);
+                                                    final int pageSize = targetIni.getMetaInfo().getPageSize(pageIndex);
+                                                    final byte[] content = bp.readFromPage(pageIdentifier, 0, pageSize);
+                                                    if (content == null) {
+                                                        cb.logLine(String.format(
+                                                            "WARNING: failed to read calibration page 0x%04X - its fields are not loaded",
+                                                            pageIdentifier));
+                                                        continue;
+                                                    }
+                                                    targetPages.put(pageIdentifier, new ConfigurationImageWithMeta(
+                                                        new ConfigurationImageMetaVersion0_0(pageSize, targetIni.getSignature()),
+                                                        content));
+                                                }
+                                                CalibrationsHelper.MergeResult merge = mergeLoadedTune(
+                                                    result.msq, result.ini, targetIni, targetPages, cb);
+                                                if (merge.mergedCalibrations.isPresent()) {
+                                                    mergedRef.set(merge.mergedCalibrations.get());
+                                                    newImageRef.set(merge.mergedCalibrations.get().getImage().getConfigurationImage());
+                                                } else {
+                                                    newImageRef.set(base);
+                                                }
+                                            } catch (Exception ex) {
+                                                log.error("Failed to merge tune onto ECU pages", ex);
+                                                cb.logLine("WARNING: failed to read/merge ECU calibration pages: " + ex);
+                                                newImageRef.set(base);
+                                            } finally {
+                                                latch.countDown();
                                             }
-                                            targetPages.put(pageIdentifier, new ConfigurationImageWithMeta(
-                                                new ConfigurationImageMetaVersion0_0(pageSize, targetIni.getSignature()),
-                                                content));
-                                        }
-                                        CalibrationsHelper.MergeResult merge = mergeLoadedTune(
-                                            result.msq, result.ini, targetIni, targetPages, cb);
-                                        if (merge.mergedCalibrations.isPresent()) {
-                                            mergedCalibrations = merge.mergedCalibrations.get();
-                                            newImage = mergedCalibrations.getImage().getConfigurationImage();
-                                        } else {
-                                            newImage = base;
-                                        }
+                                        });
+                                        latch.await();
+                                        newImage = newImageRef.get();
+                                        mergedCalibrations = mergedRef.get();
                                     }
 
                                     if (bp != null) {
