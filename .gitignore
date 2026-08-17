@@ -63,3 +63,6 @@ coverage_reports/
 .claude/settings.local.json
 
 .DS_Store
+
+# MacCAN binary archive cloned for version A/B debugging (java_console)
+java_console/PCBUSB-Library/

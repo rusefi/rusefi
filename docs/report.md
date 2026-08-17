@@ -3009,3 +3009,49 @@ Open follow-ups:
   the bench, then re-try the car start with the console connected - if it
   still crashes during cranking, the "assert fail" line will identify the
   location.
+
+## 2026-08-18: macOS PCAN console TX root cause - 64-bit DWORD in the JNI bridge (DLC=0)
+
+Symptom (m74_9 bench + PCAN-USB on Apple Silicon): console over MacCAN received
+the ECU's flood (~3800 fps) but the ECU never answered the 0x710 ISO-TP hello.
+MacCAN trace showed every TX frame as `Tx 0710 0` - DLC=0 - so the ECU's isotp
+receiveFrame early-return dropped them.
+
+Investigation path (all static + runtime analysis of libPCBUSB 0.13 arm64):
+- A/B tested MacCAN 0.10.1..0.13 (Universal_64) with a dlopen harness - all
+  identical (0.9/0.11 fail ILLHW on this macOS, unrelated). Version hunt was a
+  dead end; the driver was healthy.
+- Disassembled pcan_usb_can_write: the device-type halfword (channel table
+  entry +0x6, table base = __DATA+0x1E7E0, stride 0x6025c8) was 0x000C
+  (classic PCAN-USB) at runtime -> the LEGACY encoder was selected, and it
+  encodes DLC at byte 2 correctly. So the bug was not the FD-encoder theory.
+- The clue: the trace prints msg->LEN from offset +5 and the ID from +0; ID was
+  right (0x710) but LEN read as 0. Both offsets come from the same struct, so
+  the dylib's TPCANMsg (4-byte DWORD) and OUR struct disagreed - our
+  `typedef unsigned long DWORD;` is 8 bytes on LP64 macOS, shifting LEN to +9.
+  The dylib read +5 = the high byte of our 8-byte ID = 0 -> DLC=0 on the wire.
+  RX "worked" by luck (SetIntField truncates the 64-bit ID read to the real
+  low 32 bits).
+
+Fix (one line): `typedef unsigned int DWORD;` in
+java_console/PCANBasic_JNI_macos.c (and the C test harnesses). Rebuilt
+java_console/libpcanbasic_jni.dylib (arm64).
+
+Validation:
+- C harness (java_console/pcan_mac_test.c): ECU answers 0x710 with
+  0x720 `10 30 00 2A 00 72 75 73` ("rus..."); trace now shows
+  `Tx 0710 8 07 00 01 53 20 60 EF C3`.
+- Java end-to-end (java_console/PcanMacHello.java, real peak.can.basic classes
+  + the dylib): same 0x720 response through the exact stack the console uses
+  (PCanHelper.send -> PCANBasic.Write -> JNI bridge).
+
+Bundling: firmware/bundle.mk adds ../java_console/libpcanbasic_jni.dylib to
+CONSOLE_FOLDER_SOURCES on Darwin; misc/console_launcher/rusefi_updater.sh now
+runs java with -Djava.library.path=. so the bundle console finds the dylib
+next to rusefi_console.jar.
+
+Follow-ups:
+- The arm64-only dylib must be rebuilt (cc -dynamiclib with JDK headers) if the
+  JNI bridge changes, and a universal build is needed for Intel Macs.
+- The ECU-side crash during cranking (silent reset, RTC re-sync) is still open;
+  the PCAN link fix removes the console-connectivity noise from that picture.
