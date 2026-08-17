@@ -1306,6 +1306,9 @@ float getOutputValueByHash(const int hash) {
 // isEnabled0
 		case 1691876092:
 			return engine->dc_motors.isEnabled0;
+// dtAutotuneActive
+		case 408698318:
+			return engine->module<InjectorDeadtimeAutotune>()->dtAutotuneActive;
 #if EFI_ENGINE_CONTROL
 // totalFuelCorrection
 		case -1779658835:
