@@ -18,6 +18,7 @@ import com.rusefi.io.can.SocketCANIoStream;
 import com.rusefi.io.tcp.BinaryProtocolProxy;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.ServerSocketReference;
+import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.maintenance.ExecHelper;
 import com.rusefi.tools.online.Online;
 import com.rusefi.ts_plugin.ui.AuthTokenPanel;
@@ -88,8 +89,8 @@ public class ConsoleTools {
     on the one hand we can do low level DFU programming but c'mon we are not planning to maintain it any day soon!
         registerTool("dfu", DfuTool::run, "Program specified file into ECU via DFU");
 */
-        // java -jar rusefi_console.jar local_proxy
-        registerTool("local_proxy", ConsoleTools::localProxy, "Detect rusEFI ECU and proxy serial <> TCP");
+        // java -jar rusefi_console.jar local_proxy [serial|pcan|socketcan|tcp <host:port>]
+        registerTool("local_proxy", ConsoleTools::localProxy, "Proxy an ECU connection to local TCP port 29001: local_proxy [serial|pcan|socketcan|tcp <host:port>]");
 
         registerTool("detect", ConsoleTools::detect, "Find attached rusEFI");
         registerTool("send_command", new ConsoleTool() {
@@ -118,12 +119,41 @@ public class ConsoleTools {
     }
 
     private static void localProxy(String[] strings) throws IOException {
-        String autoDetectedPort = autoDetectPort();
-        if (autoDetectedPort == null) {
-            System.out.println(RUS_EFI_NOT_DETECTED);
-            return;
+        String source = strings.length >= 1 ? strings[0] : "serial";
+
+        IoStream ecuStream;
+        switch (source) {
+        case "pcan":
+            // Windows host with a PCAN adapter: exposes the CAN ECU as a TCP
+            // proxy so a remote console (e.g. macOS, where PCAN is unsupported)
+            // can connect via the Network/TCP connector to <host>:29001.
+            ecuStream = PCanIoStream.createStream();
+            if (ecuStream == null) {
+                System.out.println("PCAN init failed");
+                return;
+            }
+            break;
+        case "socketcan":
+            ecuStream = SocketCANIoStream.create();
+            break;
+        case "tcp":
+            if (strings.length < 2) {
+                System.out.println("usage: local_proxy tcp <host:port>");
+                return;
+            }
+            ecuStream = TcpIoStream.open(strings[1]);
+            break;
+        case "serial":
+        default: {
+            String autoDetectedPort = autoDetectPort();
+            if (autoDetectedPort == null) {
+                System.out.println(RUS_EFI_NOT_DETECTED);
+                return;
+            }
+            ecuStream = UiLinkManagerHelper.open(autoDetectedPort);
+            break;
         }
-        IoStream ecuStream = UiLinkManagerHelper.open(autoDetectedPort);
+        }
 
         ServerSocketReference serverHolder = BinaryProtocolProxy.createProxy(ecuStream, 29001, new BinaryProtocolProxy.ClientApplicationActivityListener() {
             @Override

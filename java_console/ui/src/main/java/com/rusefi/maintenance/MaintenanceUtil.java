@@ -8,6 +8,10 @@ import com.rusefi.core.io.BoardCompatibility;
 import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.io.ConnectedEcuTarget;
 import com.rusefi.io.UpdateOperationCallbacks;
+import com.rusefi.io.can.PCanHelper;
+import peak.can.basic.PCANBasic;
+import peak.can.basic.TPCANHandle;
+import peak.can.basic.TPCANStatus;
 
 import javax.swing.*;
 import java.io.File;
@@ -76,10 +80,35 @@ public class MaintenanceUtil {
     }
 
     public static boolean detectPcan(UpdateOperationCallbacks wnd) {
+        if (!FileLog.isWindows()) {
+            // No PEAK driver on macOS/Linux - probe the adapter through the
+            // PCANBasic bridge itself: on macOS the JNI bridge loads MacCAN's
+            // libPCBUSB, and a successful channel init means the PCAN-USB
+            // hardware is present. The console port dropdown surfaces the
+            // synthetic "PCAN" port when this reports true.
+            return detectPcanViaDriver();
+        }
         try {
             return detectDevice(wnd, PCAN_QUERY_COMMAND, "PCAN");
         } catch (ErrorExecutingCommand e) {
             log.error("detectPcan error: " + e, e);
+            return false;
+        }
+    }
+
+    private static boolean detectPcanViaDriver() {
+        try {
+            PCANBasic can = PCanHelper.create();
+            TPCANStatus status = PCanHelper.init(can);
+            if (status == TPCANStatus.PCAN_ERROR_OK) {
+                can.Uninitialize(TPCANHandle.PCAN_USBBUS1);
+                return true;
+            }
+            return false;
+        } catch (Throwable e) {
+            // the native bridge may not be on the library path at all (no
+            // MacCAN installed) - report "no adapter" instead of crashing
+            // the port scanner
             return false;
         }
     }
