@@ -735,4 +735,50 @@ public class CalibrationDialogWidgetTest {
         }
         assertFalse(hasEditor, "Secondary-page field must not render an editor");
     }
+
+    @Test
+    public void testSecondaryPageTableRendersEditorWithEcuImage() {
+        IniFileModel iniFileModel = mock(IniFileModel.class);
+        when(iniFileModel.getCurves()).thenReturn(Collections.emptyMap());
+        when(iniFileModel.getDialogs()).thenReturn(Collections.emptyMap());
+        com.opensr5.ini.IniFileMetaInfo meta = mock(com.opensr5.ini.IniFileMetaInfo.class);
+        when(meta.getnPages()).thenReturn(4);
+        when(meta.getPageIdentifier(3)).thenReturn(0x0300);
+        when(meta.getPageSize(3)).thenReturn(1268);
+        when(iniFileModel.getMetaInfo()).thenReturn(meta);
+
+        TableModel tableModel = new TableModel("secondVeTableTbl", "map1", "Second VE Table",
+                null, "X", "Y", "secondVeRpmBins", null, false, "secondVeLoadBins", null, false, "secondVeTable",
+                null, null, null, null);
+        when(iniFileModel.getTable("secondVeTableTbl")).thenReturn(tableModel);
+
+        ArrayIniField rpmBins = new ArrayIniField("secondVeRpmBins", 0, FieldType.INT16, 1, 16, "RPM", 1, "0", "18000", "0");
+        ArrayIniField loadBins = new ArrayIniField("secondVeLoadBins", 32, FieldType.INT16, 1, 16, "%", 1, "0", "650", "0");
+        ArrayIniField zBins = new ArrayIniField("secondVeTable", 64, FieldType.INT16, 16, 16, "%", 0.1, "0", "999", "1");
+        zBins.setPageIndex(0x0300);
+        when(iniFileModel.findIniField("secondVeRpmBins")).thenReturn(java.util.Optional.of(rpmBins));
+        when(iniFileModel.findIniField("secondVeLoadBins")).thenReturn(java.util.Optional.of(loadBins));
+        when(iniFileModel.findIniField("secondVeTable")).thenReturn(java.util.Optional.of(zBins));
+
+        com.rusefi.binaryprotocol.BinaryProtocol bp = mock(com.rusefi.binaryprotocol.BinaryProtocol.class);
+        when(bp.readFromPage(0x0300, 0, 1268)).thenReturn(new byte[1268]);
+        com.rusefi.io.LinkManager lm = mock(com.rusefi.io.LinkManager.class);
+        when(lm.submit(any(Runnable.class))).thenAnswer(inv -> {
+            ((Runnable) inv.getArgument(0)).run();
+            return java.util.concurrent.CompletableFuture.completedFuture(null);
+        });
+        UIContext uiContext = mock(UIContext.class);
+        when(uiContext.getBinaryProtocol()).thenReturn(bp);
+        when(uiContext.getLinkManager()).thenReturn(lm);
+
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(uiContext);
+        ConfigurationImage ci = new ConfigurationImage(new byte[1000]);
+        widget.update("secondVeTableTbl", iniFileModel, ci);
+
+        JPanel content = widget.getContentPane();
+        assertEquals(1, content.getComponentCount());
+        Component child = content.getComponent(0);
+        assertFalse(child instanceof JLabel, "Expected the table editor, not a notice label");
+        assertTrue(widget.getDirtySecondaryPages().isEmpty(), "no edits yet");
+    }
 }

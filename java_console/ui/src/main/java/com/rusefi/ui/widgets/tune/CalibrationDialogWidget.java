@@ -39,6 +39,7 @@ import java.awt.*;
 import java.util.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -58,6 +59,11 @@ public class CalibrationDialogWidget {
     private ConfigurationImage workingImage;
     private IniFileModel currentIniFileModel;
     private int fieldRowVerticalMargin = 3;
+
+    /** Editable images for secondary TS pages (pageIdentifier -> image), loaded from the ECU on demand. */
+    private final Map<Integer, ConfigurationImage> secondaryImages = new HashMap<>();
+    private final Set<Integer> dirtySecondaryPages = new HashSet<>();
+    private Runnable onSecondaryEdit;
     private final List<ExpressionRow> expressionRows = new ArrayList<>();
     private final List<IndicatorPanel> indicatorPanels = new ArrayList<>();
     private final List<ReadoutLabelEntry> readoutEntries = new ArrayList<>();
@@ -72,6 +78,33 @@ public class CalibrationDialogWidget {
 
     public void setOnConfigChange(Consumer<ConfigurationImage> onConfigChange) {
         this.onConfigChange = onConfigChange;
+    }
+
+    /** Called after each edit of a field on a secondary TS page (second VE/ignition tables). */
+    public void setOnSecondaryEdit(Runnable onSecondaryEdit) {
+        this.onSecondaryEdit = onSecondaryEdit;
+    }
+
+    /** Snapshots of the secondary pages that were edited since the last burn (pageIdentifier -> image). */
+    public Map<Integer, ConfigurationImage> getDirtySecondaryPages() {
+        Map<Integer, ConfigurationImage> result = new HashMap<>();
+        for (Integer page : dirtySecondaryPages) {
+            ConfigurationImage image = secondaryImages.get(page);
+            if (image != null) {
+                result.put(page, image.clone());
+            }
+        }
+        return result;
+    }
+
+    public void markSecondaryPagesClean() {
+        dirtySecondaryPages.clear();
+    }
+
+    /** Drops cached secondary-page images so the next render re-reads them from the ECU (after load-tune). */
+    public void clearSecondaryImages() {
+        secondaryImages.clear();
+        dirtySecondaryPages.clear();
     }
 
     public void setOnShowInPinout(Consumer<String> onShowInPinout) {
@@ -248,11 +281,20 @@ public class CalibrationDialogWidget {
 
             TableModel table = iniFileModel.getTable(key);
             if (table != null) {
-                if (isSecondaryPageField(iniFileModel, table.getZBinsConstant())) {
-                    contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
-                    contentPane.add(secondaryPageNotice(iniFileModel, table.getZBinsConstant(), "This table"));
+                contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+                Optional<IniField> zField = iniFileModel.findIniField(table.getZBinsConstant());
+                if (zField.isPresent() && zField.get().getPageIndex() != 0) {
+                    // Secondary TS page: edit against the per-page image when readable.
+                    ConfigurationImage pageImage = imageForPage(zField.get(), iniFileModel, ci);
+                    if (pageImage == null) {
+                        contentPane.add(secondaryPageNotice(iniFileModel, table.getZBinsConstant(), "This table"));
+                    } else {
+                        TuningTableView tuningTableView = new TuningTableView(table.getTitle());
+                        tuningTableView.displayTable(iniFileModel, table.getTableId(), pageImage, pageImage);
+                        tuningTableView.setOnEdit(markSecondaryDirty(zField.get().getPageIndex()));
+                        contentPane.add(tuningTableView.getContent());
+                    }
                 } else {
-                    contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
                     //TODO: nicer injection of this button? maybe a comment on the .ini and then hook this?
                     if ("veTableTbl".equals(table.getTableId())) {
                         final IniFileModel capturedIni = iniFileModel;
@@ -271,8 +313,16 @@ public class CalibrationDialogWidget {
                 CurveModel curve = iniFileModel.getCurves().get(key);
                 if (curve != null) {
                     contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
-                    if (isSecondaryPageField(iniFileModel, curve.getyBins())) {
-                        contentPane.add(secondaryPageNotice(iniFileModel, curve.getyBins(), "This curve"));
+                    Optional<IniField> yField = iniFileModel.findIniField(curve.getyBins());
+                    if (yField.isPresent() && yField.get().getPageIndex() != 0) {
+                        ConfigurationImage pageImage = imageForPage(yField.get(), iniFileModel, ci);
+                        if (pageImage == null) {
+                            contentPane.add(secondaryPageNotice(iniFileModel, curve.getyBins(), "This curve"));
+                        } else {
+                            CurveWidget curveWidget = new CurveWidget(curve, iniFileModel, pageImage);
+                            curveWidget.setOnEdit(markSecondaryDirty(yField.get().getPageIndex()));
+                            contentPane.add(curveWidget.getContentPane());
+                        }
                     } else {
                         CurveWidget curveWidget = new CurveWidget(curve, iniFileModel, workingImage);
                         curveWidget.setOnEdit(notifyEdit);
@@ -381,10 +431,26 @@ public class CalibrationDialogWidget {
         };
         Optional<IniField> iniField = iniFileModel.findIniField(field.getKey());
         if (iniField.isPresent() && iniField.get().getPageIndex() != 0) {
-            // Fields on secondary TS pages are NOT editable through the console's
-            // page-0-only editor: reading them against the main image shows garbage and
-            // editing them writes garbage into the main config. Label-only row.
-            container.add(CalibrationFieldFactory.createLabelRow(field));
+            // Secondary TS page: edit against the per-page image; label-only when unavailable.
+            ConfigurationImage pageImage = imageForPage(iniField.get(), iniFileModel, ci);
+            if (pageImage == null) {
+                container.add(CalibrationFieldFactory.createLabelRow(field));
+                return;
+            }
+            try {
+                JPanel row = CalibrationFieldFactory.createFieldRow(
+                    field, iniField.get(), pageImage, pageImage,
+                    markSecondaryDirty(iniField.get().getPageIndex()), onShowInPinout, fieldLabelWidth);
+                if (fieldRowVerticalMargin > 0) {
+                    row.setBorder(BorderFactory.createEmptyBorder(
+                        fieldRowVerticalMargin, 0, fieldRowVerticalMargin, 0));
+                    CalibrationFieldFactory.fixRowHeight(row);
+                }
+                container.add(row);
+            } catch (OrdinalOutOfRangeException e) {
+                log.warn("Skipping field " + field.getKey() + " with out-of-range ordinal: " + e.getMessage());
+                container.add(CalibrationFieldFactory.createLabelRow(field));
+            }
             return;
         }
         JPanel row = iniField.map(value -> {
@@ -486,16 +552,22 @@ public class CalibrationDialogWidget {
 
         CurveModel curve = iniFileModel.getCurves().get(panel.getPanelName());
         if (curve != null) {
-            if (isSecondaryPageField(iniFileModel, curve.getyBins())) {
-                JComponent content = secondaryPageNotice(iniFileModel, curve.getyBins(), "This curve");
-                CalibrationFieldFactory.applyStyle(content);
-                content.setAlignmentX(Component.LEFT_ALIGNMENT);
-                if (constraint != null) targetContainer.add(content, constraint); else targetContainer.add(content);
-                return;
+            JComponent content;
+            Optional<IniField> yField = iniFileModel.findIniField(curve.getyBins());
+            if (yField.isPresent() && yField.get().getPageIndex() != 0) {
+                ConfigurationImage pageImage = imageForPage(yField.get(), iniFileModel, ci);
+                if (pageImage == null) {
+                    content = secondaryPageNotice(iniFileModel, curve.getyBins(), "This curve");
+                } else {
+                    CurveWidget curveWidget = new CurveWidget(curve, iniFileModel, pageImage);
+                    curveWidget.setOnEdit(markSecondaryDirty(yField.get().getPageIndex()));
+                    content = curveWidget.getContentPane();
+                }
+            } else {
+                CurveWidget curveWidget = new CurveWidget(curve, iniFileModel, workingImage);
+                curveWidget.setOnEdit(notifyEdit);
+                content = curveWidget.getContentPane();
             }
-            CurveWidget curveWidget = new CurveWidget(curve, iniFileModel, workingImage);
-            curveWidget.setOnEdit(notifyEdit);
-            JComponent content = curveWidget.getContentPane();
             CalibrationFieldFactory.applyStyle(content);
             content.setAlignmentX(Component.LEFT_ALIGNMENT);
             if (constraint != null) targetContainer.add(content, constraint); else targetContainer.add(content);
@@ -504,17 +576,24 @@ public class CalibrationDialogWidget {
 
         TableModel table = iniFileModel.getTable(panel.getPanelName());
         if (table != null) {
-            if (isSecondaryPageField(iniFileModel, table.getZBinsConstant())) {
-                JComponent content = secondaryPageNotice(iniFileModel, table.getZBinsConstant(), "This table");
-                CalibrationFieldFactory.applyStyle(content);
-                content.setAlignmentX(Component.LEFT_ALIGNMENT);
-                if (constraint != null) targetContainer.add(content, constraint); else targetContainer.add(content);
-                return;
+            JComponent content;
+            Optional<IniField> zField = iniFileModel.findIniField(table.getZBinsConstant());
+            if (zField.isPresent() && zField.get().getPageIndex() != 0) {
+                ConfigurationImage pageImage = imageForPage(zField.get(), iniFileModel, ci);
+                if (pageImage == null) {
+                    content = secondaryPageNotice(iniFileModel, table.getZBinsConstant(), "This table");
+                } else {
+                    TuningTableView tuningTableView = new TuningTableView(table.getTitle());
+                    tuningTableView.displayTable(iniFileModel, table.getTableId(), pageImage, pageImage);
+                    tuningTableView.setOnEdit(markSecondaryDirty(zField.get().getPageIndex()));
+                    content = tuningTableView.getContent();
+                }
+            } else {
+                TuningTableView tuningTableView = new TuningTableView(table.getTitle());
+                tuningTableView.displayTable(iniFileModel, table.getTableId(), workingImage);
+                tuningTableView.setOnEdit(notifyEdit);
+                content = tuningTableView.getContent();
             }
-            TuningTableView tuningTableView = new TuningTableView(table.getTitle());
-            tuningTableView.displayTable(iniFileModel, table.getTableId(), workingImage);
-            tuningTableView.setOnEdit(notifyEdit);
-            JComponent content = tuningTableView.getContent();
             if ("veTableTbl".equals(table.getTableId())) {
                 final IniFileModel capturedIni = iniFileModel;
                 JButton genVeBtn = new JButton("Generate base VE...");
@@ -573,26 +652,64 @@ public class CalibrationDialogWidget {
         return list;
     }
 
-    /**
-     * Fields that live on secondary TS pages (second VE/ignition tables, lua, ...) must not be
-     * rendered against the console's page-0-only configuration image: their offsets are
-     * page-relative, so the console would display garbage and - worse - editing + burning
-     * would write that garbage into the main config.
-     */
-    static boolean isSecondaryPageField(IniFileModel iniFileModel, String fieldKey) {
-        return iniFileModel.findIniField(fieldKey)
-            .map(field -> field.getPageIndex() != 0)
-            .orElse(false);
-    }
-
     private static JLabel secondaryPageNotice(IniFileModel iniFileModel, String fieldKey, String what) {
         int displayPage = iniFileModel.findIniField(fieldKey)
             .map(field -> IniField.toDisplayPage(field.getPageIndex()))
             .orElse(2);
         JLabel label = new JLabel("<html>" + what + " is stored on TunerStudio page " + displayPage +
-            " and is not editable in the console. Open it in TunerStudio.</html>");
+            " and could not be read from the ECU. Reconnect and try again.</html>");
         CalibrationFieldFactory.applyStyle(label);
         return label;
+    }
+
+    /**
+     * Editable image for the page a field lives on: page 0 uses the regular working image,
+     * secondary pages use per-page images read from the ECU (cached per widget instance).
+     */
+    private ConfigurationImage imageForPage(IniField field, IniFileModel iniFileModel, ConfigurationImage ci) {
+        if (field == null || field.getPageIndex() == 0) {
+            return workingImage != null ? workingImage : ci;
+        }
+        final int pageIdentifier = field.getPageIndex();
+        return secondaryImages.computeIfAbsent(pageIdentifier, id -> readSecondaryPage(iniFileModel, id));
+    }
+
+    private ConfigurationImage readSecondaryPage(IniFileModel iniFileModel, int pageIdentifier) {
+        BinaryProtocol bp = uiContext.getBinaryProtocol();
+        if (bp == null || uiContext.getLinkManager() == null) {
+            return null;
+        }
+        int pageSize = -1;
+        for (int pageIndex = 0; pageIndex < iniFileModel.getMetaInfo().getnPages(); pageIndex++) {
+            if (iniFileModel.getMetaInfo().getPageIdentifier(pageIndex) == pageIdentifier) {
+                pageSize = iniFileModel.getMetaInfo().getPageSize(pageIndex);
+                break;
+            }
+        }
+        if (pageSize <= 0) {
+            return null;
+        }
+        final int size = pageSize;
+        // IO must run on the LinkManager thread; block-and-get keeps the render path synchronous.
+        AtomicReference<byte[]> contentRef = new AtomicReference<>();
+        try {
+            uiContext.getLinkManager().submit(() -> contentRef.set(bp.readFromPage(pageIdentifier, 0, size))).get();
+        } catch (Exception e) {
+            log.warn(String.format("Failed to read secondary page 0x%04X", pageIdentifier), e);
+            return null;
+        }
+        byte[] content = contentRef.get();
+        return content == null ? null : new ConfigurationImage(content);
+    }
+
+    private Runnable markSecondaryDirty(int pageIdentifier) {
+        return () -> {
+            dirtySecondaryPages.add(pageIdentifier);
+            refreshExpressions();
+            if (onSecondaryEdit != null) {
+                onSecondaryEdit.run();
+            }
+        };
     }
 
     private void renderReadouts(JPanel container, DialogModel dialogModel, IniFileModel iniFileModel) {

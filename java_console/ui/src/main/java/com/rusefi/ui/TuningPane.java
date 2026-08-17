@@ -151,6 +151,10 @@ public class TuningPane {
             uiContext.fireConfigImageChanged(image);
         });
 
+        // Edits of fields on secondary TS pages (second VE/ignition tables) mark those pages
+        // dirty; the toolbar's Burn button writes + burns them separately from page 0.
+        right.setOnSecondaryEdit(() -> toolbar.onEdit(sessionImage.get()));
+
         // The Wiring/Pinout button on a pin-enum combo fires the current value upward.
         right.setOnShowInPinout(value -> {
             if (navigateToPinout != null) navigateToPinout.accept(value);
