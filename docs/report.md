@@ -3523,3 +3523,21 @@ Tune changes:
 The transition cranking (14.5 deg at 850) -> taper idle table (~13 deg)
 -> idle (~10-12 deg) is now smooth and matches the stock start advance
 table (14.6 deg at 680-1080, 11.25 at 1200).
+
+## 2026-08-18 (23): tune-load restore loop - board was force-reverting crankingFuelCoef
+
+The user reported the same "To restore previous calibrations..." lines on
+every tune load (cltCrankingCorr, crankingFuelCoef, vvtControlMinRpm).
+Root cause for crankingFuelCoef: m74_9_boardConfigOverrides() in
+board_configuration.cpp forced the default curve {2.8,2.2,1.8,1.55,1.3,
+1.1,1.0,1.0} on EVERY boot (leftover from before cold-start tuning), so
+the deliberately tuned 21129.msq curve {2.8,2.2,1.8,1.5,1.2,1.0,0.9,0.85}
+was silently reverted at each boot and the console re-restored it on each
+load - a genuine loop. Removed the force (the tune owns the curve now).
+Also fixed the msq value formatting for cltCrankingCorr (digits 0 -> 2,
+values 124.00 etc.) and crankingFuelCoef (2.80 etc.): the console compares
+value STRINGS, so digit mismatches made the migration fire even when the
+values were equal (cosmetic loop). vvtControlMinRpm was a one-off restore
+after the layout change - resolves once the burn persists.
+Firmware rebuilt (16:54), bundle refreshed. Re-flash rusefi.bin, re-apply
+the msq once - the restore lines must not repeat on the next load.
