@@ -97,26 +97,35 @@ void onStartKnockSampling(uint8_t cylinderNumber, float samplingSeconds, uint8_t
 	 * so a slow conversion cannot be started in between. When the ADC is busy
 	 * with the slow background chain it is stolen (see below); on boards with
 	 * a dedicated knock ADC a busy driver means another knock window is still
-	 * in flight and this window is skipped. */
-	osalSysLock();
-	if ((KNOCK_ADC.state == ADC_READY) ||
-			(KNOCK_ADC.state == ADC_ERROR)) {
-		adcStartConversionI(&KNOCK_ADC, conversionGroup, sampleBuffer, sampleCount);
-		lastKnockSampleTime = getTimeNowNt();
-	} else if (((KNOCK_ADC.state == ADC_ACTIVE) ||
-				(KNOCK_ADC.state == ADC_COMPLETE)) &&
-				isKnockAdcSharedWithSlowAdc()) {
-		/* Shared ADC: the slow background chain keeps the driver busy almost
-		 * continuously, so skipping would mean knock never samples. Abort the
-		 * in-flight slow batch (adcStopConversionI returns the driver to
-		 * ADC_READY) and take the ADC over for this window. The slow chain is
-		 * resumed when the window completes - knockCompletionCallback in
-		 * stm32_adc_v2.cpp re-runs the aborted batch. */
-		adcStopConversionI(&KNOCK_ADC);
-		adcStartConversionI(&KNOCK_ADC, conversionGroup, sampleBuffer, sampleCount);
-		lastKnockSampleTime = getTimeNowNt();
+	 * in flight and this window is skipped.
+	 *
+	 * This runs in ISR context (the knock window is an angle-scheduled spark
+	 * event executed by the scheduling-timer callback). The thread-only
+	 * osalSysLock() would trip the ChibiOS system-state check here (SV#4
+	 * "chSysLock from IRQ") and reboot the ECU on the first knock window -
+	 * use the X-class locker, which is legal in both thread and ISR contexts
+	 * and no-ops when the caller (the executor) already holds the lock. */
+	{
+		chibios_rt::CriticalSectionLocker csl;
+
+		if ((KNOCK_ADC.state == ADC_READY) ||
+				(KNOCK_ADC.state == ADC_ERROR)) {
+			adcStartConversionI(&KNOCK_ADC, conversionGroup, sampleBuffer, sampleCount);
+			lastKnockSampleTime = getTimeNowNt();
+		} else if (((KNOCK_ADC.state == ADC_ACTIVE) ||
+					(KNOCK_ADC.state == ADC_COMPLETE)) &&
+					isKnockAdcSharedWithSlowAdc()) {
+			/* Shared ADC: the slow background chain keeps the driver busy almost
+			 * continuously, so skipping would mean knock never samples. Abort the
+			 * in-flight slow batch (adcStopConversionI returns the driver to
+			 * ADC_READY) and take the ADC over for this window. The slow chain is
+			 * resumed when the window completes - knockCompletionCallback in
+			 * stm32_adc_v2.cpp re-runs the aborted batch. */
+			adcStopConversionI(&KNOCK_ADC);
+			adcStartConversionI(&KNOCK_ADC, conversionGroup, sampleBuffer, sampleCount);
+			lastKnockSampleTime = getTimeNowNt();
+		}
 	}
-	osalSysUnlock();
 }
 
 class KnockThread : public ThreadController<UTILITY_THREAD_STACK_SIZE> {

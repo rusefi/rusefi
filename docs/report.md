@@ -3144,3 +3144,37 @@ The "mysterious" bench resets are the flash procedure: the user flashes with
 Recommendation: unplug the ST-Link after flashing while working with the console.
 Post-flash state is healthy: isotp rate back to ~1379 fps (the BCM-flood pause
 fix works), console polls normally.
+
+## 2026-08-18 (8): assert line=220 mystery solved - every ChibiOS halt stores chsys.c:220; knock crash = SV#4 chSysLock-from-IRQ
+
+The crash marker kept reporting "assert (line=220, ...)" during start attempts
+with software knock enabled, and nothing with knock disabled. Two discoveries:
+
+1. The stored line is ALWAYS 220 and is meaningless: ChibiOS 7 chDbgAssert
+   expands to chSysHalt(reason), and CH_CFG_SYSTEM_HALT_HOOK(reason) in
+   chconf_common.h expands chDbgPanic3(reason, __FILE__, __LINE__) at its
+   INVOCATION site - chsys.c:220 (verified: __LINE__ in a macro body resolves
+   at the invocation, not the definition). So any assert/halt (chmtx "not
+   owner", hal_adc "not ready", SV#1..SV#11 system-state checks, chDbgCheck)
+   reports line 220. The panic MESSAGE is the only identifier.
+2. The real crash: onStartKnockSampling runs in ISR context (angle-scheduled
+   spark event, executed by the TIM5 scheduling-timer callback, which does
+   OSAL_IRQ_PROLOGUE -> isr_cnt=1). It called the thread-only osalSysLock()
+   (chSysLock), whose __dbg_check_lock halts with "SV#4" when isr_cnt != 0.
+   First knock window after sync = guaranteed reboot; with
+   enableSoftwareKnock=false the function returns before locking = no crash.
+   This matches every symptom: crash exactly at first catch with knock on,
+   bench OK (no sparks = no windows), RTC time preserved across the reboot.
+
+Fixes:
+- software_knock.cpp onStartKnockSampling: osalSysLock()/osalSysUnlock() ->
+  chibios_rt::CriticalSectionLocker (X-class chSysGetStatusAndLockX, legal in
+  thread AND ISR contexts, no-ops when the executor already holds the lock -
+  same pattern as SingleTimerExecutor).
+- error_handling.cpp: the assert crash marker now packs the panic message
+  (BKP2R..BKP5R, 16 bytes) and file (BKP6R..BKP8R, 12 bytes) and prints them
+  on boot, so a future crash identifies itself ("SV#4" vs "not owner" etc.)
+  without a connected console. Line stays for compatibility.
+
+Validation: m74_9 firmware build OK, unit tests build+Knock suite pass.
+Next: user re-flashes, re-enables software knock, retries start.
