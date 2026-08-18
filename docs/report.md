@@ -3840,3 +3840,45 @@ distribution on noisy real-data recordings (Renix 44-2-2 counter 84->115,
 GM 24x finder 27->29, noisy 36-2 dwell bails 25/22->29/26) - pins updated
 with comments, functional assertions (sync recovery, RPM, no overdwell)
 unchanged. 1132/1132 pass. Committed 506d8504610.
+
+## 2026-08-18 (36): cam-phase cross-check + cranking-band sync-by-position skip
+
+Two more layers on top of the position gate, both opt-in for m74_9 via
+custom_board_* overrides:
+
+1. Cam-phase drift cross-check (custom_board_vvtDriftLimit, m74_9 = 15
+   deg): a fixed cam must report the same VVT phase every cam
+   revolution. A crank-sync basis error shifts the reading by the sync
+   error - a jump beyond the limit warns (CUSTOM_VVT_PHASE_JUMP = 6728,
+   was the unused CUSTOM_ERR_6728) and desyncs the crank decoder, which
+   re-syncs cleanly on the next real gap. VVT-phaser engines stay
+   disabled (0 = off).
+
+2. Cranking-band sync-by-position skip
+   (custom_board_syncByPositionWhileCranking, m74_9 = true): at the
+   first-combustion catch the REAL missing-teeth gap can compress below
+   the ratio window; rejecting it at the exact gap position costs a
+   full revolution and fires C9002 right when the engine caught. At the
+   exact expected position (event count == expected) the sync is now
+   accepted regardless of ratio while rpm < 2 * crankingRpm. Risk: a
+   single noise-inserted/missed tooth can make this accept a regular
+   pair one slot off the real gap - a silent 6-degree phase error that
+   self-corrects within one revolution (the next real gap syncs at
+   count expected-1 with a C9003 mismatch). Harmless at cranking speed,
+   the skip is off once running.
+
+Both were first implemented globally and reverted to board opt-in after
+the full test suite showed the global behavior change rippled across
+~20 unrelated wheel tests (4/1, VQ40, Coyote, NB2, Neon, K20, noisy
+36-2) - the m74_9 bring-up aids stay board-scoped.
+
+Debugging note: the mock trigger decoder tests run with
+engineConfiguration = nullptr; any new engineConfiguration deref in
+decodeTriggerEvent must be lazy and guarded by #if EFI_UNIT_TEST (the
+firmware build has -Werror=address - engineConfiguration is a reference
+there).
+
+Tests: cam drift (stable phase no-fire, 30-deg jump warns + desyncs,
+re-syncs); compressed 1.4x gap accepted while cranking, rejected above
+2 * crankingRpm; stretched 4.2x kick accepted while cranking. 1138/1138
+pass. Committed 4714f5071c5 + dbcc6162c3c.
