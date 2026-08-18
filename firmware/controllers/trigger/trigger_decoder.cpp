@@ -594,6 +594,36 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 				(expectedCount == 0 || eventsSinceSync + 2 >= expectedCount);
 
 			isSynchronizationPoint = atExpectedGapPosition && isSyncPoint(triggerShape, triggerConfiguration.TriggerType.type);
+
+			// First-combustion protection (board opt-in via
+			// custom_board_syncByPositionWhileCranking, m74_9): at the catch the
+			// crank accelerates so hard that the REAL missing-teeth gap can
+			// compress below the ratio window (documented below 2.25 for 36-2,
+			// same physics for 60-2) - the decoder would reject the sync at the
+			// exact gap position, count another full revolution and fire C9002
+			// right when the engine just caught. At the exact expected position
+			// the tooth count already proves this IS the gap, so accept it
+			// unconditionally while the engine is still in the cranking band
+			// (rpm < 2 * crankingRpm). The only way this mis-syncs is a single
+			// noise-inserted/missed tooth shifting the count by one: the
+			// resulting 6-degree phase error is silent (the counter check
+			// passes), but it self-corrects within one revolution - the next
+			// real gap arrives at count expected-1, syncs with a count mismatch
+			// (C9003) and the decoder re-synchronizes cleanly. Harmless at
+			// cranking speed, so the skip is off once the engine is running.
+			// Conditions are evaluated lazily: mock tests run the decoder with
+			// engineConfiguration = nullptr.
+			if (!isSynchronizationPoint && wasSynchronized && atExpectedGapPosition &&
+					get_board_override_result(custom_board_syncByPositionWhileCranking, false) &&
+					currentCycle.eventCount[(int)triggerWheel] == triggerShape.getExpectedEventCount(triggerWheel) &&
+#if EFI_UNIT_TEST
+					// mock tests run the decoder with engineConfiguration = nullptr
+					engineConfiguration != nullptr &&
+#endif
+					Sensor::getOrZero(SensorType::Rpm) < 2 * engineConfiguration->cranking.rpm) {
+				isSynchronizationPoint = true;
+			}
+
 			if (isSynchronizationPoint) {
 				enginePins.debugTriggerSync.toggle();
 			}
