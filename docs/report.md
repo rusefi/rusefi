@@ -3679,3 +3679,25 @@ occasional C9002/C9003 warnings may still appear during rough cranking
 (they now mean "gap not validated", no wrong-phase outputs), but no more
 intake backfires from trigger false syncs. If C9002 58/58 persists after
 the catch, revisit the gap0 low side vs the first-combustion compression.
+
+## 2026-08-18 (29): tooth profile learning + 'toothdump' - oscillogram without TunerStudio
+
+The user has no TunerStudio, so a board-local console command replaces
+the TS Tooth Logger. New m74_9_tooth_diag.cpp (commit 66d0d8ca3be,
+firmware 18:59 build):
+
+- boardTriggerCallback() override (the weak default in trigger_central)
+  captures every synchronized primary tooth timestamp into a 6-rev ring,
+  indexed by tooth position 0..57 via the decoded engine phase.
+- Learning: per-tooth EMA period profile (alpha 0.05) - the stock-ECU
+  'wheel non-uniformity' learning. Each tooth's time share of the
+  revolution differs consistently (VR threshold offsets + compression
+  ripple); tooth 57 carries the missing-teeth gap interval.
+- 'toothdump' command prints rpm, the learned profile in us and
+  normalized to the regular-tooth mean, plus the last 4 raw revolutions
+  as period lists. Output is chunked at 12 values per efiPrintf line
+  (256-char log line cap). The user pastes it back and we plot.
+
+Planned consumers once the profile is captured: gap validation and
+instant-rpm should use the learned per-tooth factors instead of raw time
+ratios (that is what makes the stock decoder robust on this wheel).
