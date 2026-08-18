@@ -242,8 +242,8 @@ $(BUILDDIR)/rusefi.srec: $(BUILDDIR)/$(PROJECT).hex
 ifneq (,$(OPENBLT_WIPE_OUTPUTS))
 $(OPENBLT_WIPE_OUTPUTS): $(OPENBLT_WIPE_SENTINEL) ;
 
-$(OPENBLT_WIPE_SENTINEL): $(BUILDDIR)/$(PROJECT).elf bin/generate_openblt_wipe_srec.py .FORCE | $(BIN_FOLDER)
-	python3 bin/generate_openblt_wipe_srec.py \
+$(OPENBLT_WIPE_SENTINEL): $(BUILDDIR)/$(PROJECT).elf $(OPENBLT_WIPE_GENERATOR_JAR) .FORCE | $(BIN_FOLDER)
+	java -jar $(OPENBLT_WIPE_GENERATOR_JAR) \
 		--output $(OPENBLT_WIPE_SREC) \
 		--manifest $(OPENBLT_WIPE_MANIFEST) \
 		--start 0x$(HEX_BASE_ADDRESS) \
