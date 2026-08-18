@@ -760,6 +760,15 @@ bool TriggerDecoderBase::isSyncPoint(const TriggerWaveform& triggerShape, trigge
 		return triggerSyncGapRatio < secondGap;
 	}
 
+	// Normalize tooth durations by the learned per-tooth profile when a board
+	// provides one (m74_9): the systematic compression ripple is divided out,
+	// so the missing-teeth gap ratio stays ~3.0 even under combustion instead
+	// of wandering outside the window. The weak default factor is 1.0 - no
+	// behavior change for boards without a learned profile.
+	int step = triggerShape.useOnlyRisingEdges ? 2 : 1;
+	int teethPerRev = (int)triggerShape.getSize() / step;
+	int currentTooth = currentCycle.current_index / step;
+
 	for (int i = 0; i < triggerShape.gapTrackingLength; i++) {
 		auto from = triggerShape.synchronizationRatioFrom[i];
 		auto to = triggerShape.synchronizationRatioTo[i];
@@ -769,13 +778,26 @@ bool TriggerDecoderBase::isSyncPoint(const TriggerWaveform& triggerShape, trigge
 			continue;
 		}
 
-		// This is transformed to avoid a division and use a cheaper multiply instead
-		// toothDurations[i] / toothDurations[i+1] > from
+		// duration i belongs to the tooth (currentTooth - 1 - i), wrapping
+		// around one crank revolution.
+		int toothI = (currentTooth - 1 - i + teethPerRev * 2) % teethPerRev;
+		int toothI1 = (currentTooth - 2 - i + teethPerRev * 2) % teethPerRev;
+
+		float factorI = triggerGetToothProfileFactor(toothI);
+		float factorI1 = triggerGetToothProfileFactor(toothI1);
+		if (factorI <= 0.01f || factorI1 <= 0.01f) {
+			// Not learned yet - fall back to the raw durations.
+			factorI = 1.0f;
+			factorI1 = 1.0f;
+		}
+
+		// Normalized comparison in the multiply form (no division in the ISR):
+		//   (d[i]/fI) > (d[i+1]/fI1) * from  <=>  d[i] * fI1 > d[i+1] * fI * from
 		// is an equivalent comparison to
 		// toothDurations[i] > toothDurations[i+1] * from
 		bool isGapCondition =
-			  (toothDurations[i] > toothDurations[i + 1] * from
-			&& toothDurations[i] < toothDurations[i + 1] * to);
+			  (toothDurations[i] * factorI1 > toothDurations[i + 1] * factorI * from
+			&& toothDurations[i] * factorI1 < toothDurations[i + 1] * factorI * to);
 
 		if (!isGapCondition) {
 			return false;
@@ -783,6 +805,10 @@ bool TriggerDecoderBase::isSyncPoint(const TriggerWaveform& triggerShape, trigge
 	}
 
 	return true;
+}
+
+PUBLIC_API_WEAK float triggerGetToothProfileFactor(int) {
+	return 1.0f;
 }
 
 /**

@@ -20,6 +20,7 @@
 
 #if EFI_PROD_CODE
 #include "trigger_central.h"
+#include "trigger_decoder.h"
 #include "storage.h"
 #include "m74_9_tooth_diag.h"
 
@@ -228,6 +229,44 @@ void m74_9ToothDump() {
 }
 
 // ---- persistent storage: learned profile in MFS, like the stock ECU ----
+
+// Strong override of the weak decoder hook: regularized per-tooth profile
+// factors for the sync gap check. The gap tooth (57) keeps factor 1.0 so the
+// missing-teeth gap still reads ~3x; regular teeth are normalized to their
+// learned share of the revolution, which divides out the systematic
+// compression ripple - the digital equivalent of the stock ECU's adaptive
+// VR conditioning.
+float triggerGetToothProfileFactor(int toothIndex) {
+	if (toothIndex < 0 || toothIndex >= (int)ToothCount) {
+		return 1.0f;
+	}
+
+	// Mean over the regular teeth (excluding the gap tooth 57).
+	float sum = 0;
+	int count = 0;
+	for (size_t i = 0; i < ToothCount - 1; i++) {
+		if (profileCount[i] > 0) {
+			sum += profileUs[i];
+			count++;
+		}
+	}
+
+	if (count == 0 || toothIndex == (int)ToothCount - 1) {
+		return 1.0f;
+	}
+
+	float factor = profileUs[toothIndex] / (sum / count);
+
+	// Sanity clamp: no real wheel tooth deviates more than this from the mean.
+	if (factor < 0.5f) {
+		factor = 0.5f;
+	}
+	if (factor > 1.5f) {
+		factor = 1.5f;
+	}
+
+	return factor;
+}
 
 // Called from the storage manager thread (serialized with settings writes).
 bool toothProfileStorageWrite() {
