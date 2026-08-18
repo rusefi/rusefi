@@ -3776,3 +3776,34 @@ Two bugs found in the capture itself:
 Also: the 20:34 'stack overflt/sr' marker was the same toothdump stack
 overflow caught by the ChibiOS stack check (still on the 19:49 build);
 the 20:47:52 marker was a plain power cycle (BKP0R=0, not a crash).
+
+## 2026-08-18 (34): LTO silently killed the weak board hooks - profile capture/persistence/normalization were dead code
+
+The 19:49 firmware never printed any 'tooth:' messages even after a
+clean toothdump: the strong m74_9 definitions of boardTriggerCallback,
+toothProfileStorageRead/Write and triggerGetToothProfileFactor were
+dead-code-eliminated by GCC LTO. Root cause, confirmed in the map file:
+GCC binds a call to a weak definition that lives in the SAME translation
+unit as the call site (dead-call elimination / const folding - the
+noinline attribute does not prevent this) BEFORE the linker can select
+a board's strong override. The storage dispatch folded to 'return true'
+and handleShaftSignal dropped the capture callback entirely.
+
+The triggerGetToothProfileFactor hook survived only by accident: its
+header declaration has no 'weak' attribute, so the call sites saw a
+plain declaration and emitted a real relocation.
+
+Fix: the weak defaults moved to separate translation units -
+firmware/controllers/trigger/trigger_board_hooks.cpp and
+firmware/controllers/storage_weaks.cpp; call sites see plain non-weak
+declarations. Verified in the new m74_9 build (disassembly):
+- storageWriteID id=6 now does the real profile write (TOOT magic,
+  crc32, storageWrite 248 bytes)
+- handleShaftSignal runs the capture code (ring/profile arrays live)
+- triggerGetToothProfileFactor is the strong 58-tooth body
+
+Rule for this codebase: a weak board hook must never share a
+translation unit with its call site, and its declaration at call sites
+must not carry 'weak'.
+
+unit_tests: 1131/1131 pass. Committed da385042cb3.
