@@ -273,6 +273,16 @@ public class PCanIoStream extends AbstractIoStream {
     }
 
     @Override
+    public void close() {
+        super.close();
+        /* Release the PCAN channel: MacCAN is strictly single-client, so a
+         * ConnectionWatchdog reconnect that skips Uninitialize makes the next
+         * Initialize fail with PCAN_ERROR_INITIALIZE forever - the device is
+         * occupied by this very process. */
+        can.Uninitialize(PCanHelper.CHANNEL);
+    }
+
+    @Override
     public String toString() {
         return "PCanIoStream{" +
             "totalCounter=" + totalCounter +
