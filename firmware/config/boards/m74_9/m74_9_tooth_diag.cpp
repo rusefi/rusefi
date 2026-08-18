@@ -295,6 +295,11 @@ bool toothProfileStorageWrite() {
 
 	if (status == StorageStatus::Ok) {
 		profileDirtySinceSave = false;
+		// The RAM profile is the authoritative copy after a save: the boot-time
+		// read runs once and (by design) does not re-read after a mid-boot
+		// save, so mark it loaded here - otherwise 'toothdump' reports
+		// stored=no until the next power cycle even though the record is in MFS.
+		profileLoaded = true;
 		efiPrintf("tooth: profile stored (%d revs)", (int)storedRecord.revolutionsLearned);
 		return true;
 	}
