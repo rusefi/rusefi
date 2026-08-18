@@ -3106,3 +3106,17 @@ it up.
   it), -Xss512k in the bundle launcher doubles the thread budget.
 - Firmware: new 'uptime' console command (getTimeNowS-based) for correlating
   bench events with resets.
+
+## 2026-08-18 (5): console reconnect over PCAN failed forever after a link drop
+
+Morning bench: console started WITHOUT the adapter (ILLHW storm), then the
+adapter was plugged in mid-session - MacCAN never recovered (zombie claim),
+console restart + replug fixed the init but ~20 s later a transient ISO-TP
+desync ("dropPending: Unexpected pending data: 1 byte(s)") fired the
+ConnectionWatchdog, and every reconnect then failed with
+PCAN_ERROR_INITIALIZE: PCanIoStream never uninitialized the channel, so the
+same process held the single-client MacCAN device forever.
+
+Fix: PCanIoStream.close() now calls can.Uninitialize. Console jar rebuilt;
+user restarts the console (adapter plugged in FIRST). The desync itself
+(the watchdog trigger) is still to be characterized on the next run.
