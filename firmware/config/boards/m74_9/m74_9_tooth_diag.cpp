@@ -68,6 +68,9 @@ bool profileLoaded = false;
 bool profileDirtySinceSave = false;
 bool seenEngineRunning = false;
 bool readRequested = false;
+bool readAttempted = false;
+efitick_t lastReadRequestNt = 0;
+efitick_t lastSaveRequestNt = 0;
 
 uint32_t minLearnedRevs() {
 	uint32_t minRevs = UINT32_MAX;
@@ -301,6 +304,8 @@ bool toothProfileStorageWrite() {
 
 // Called from the storage manager thread.
 bool toothProfileStorageRead() {
+	readAttempted = true;
+
 	StorageStatus status = storageRead(EFI_TOOTH_PROFILE_RECORD_ID, (uint8_t*)&storedRecord, sizeof(storedRecord));
 
 	if (status != StorageStatus::Ok) {
@@ -330,8 +335,14 @@ bool toothProfileStorageRead() {
 
 // Runs on the slow (20 Hz) board callback: lazy load + auto-save on engine stop.
 void m74_9ToothPeriodic() {
-	if (!readRequested) {
+	efitick_t nowNt = getTimeNowNt();
+
+	// Request the stored profile read. The mailbox post can be lost when the
+	// storage manager is busy at boot, so re-request every 5 s until the
+	// manager actually ran the read (readAttempted).
+	if (!readAttempted && (!readRequested || nowNt - lastReadRequestNt > 5 * NT_PER_SECOND)) {
 		readRequested = true;
+		lastReadRequestNt = nowNt;
 		storageReqestReadID(EFI_TOOTH_PROFILE_RECORD_ID);
 	}
 
@@ -341,11 +352,16 @@ void m74_9ToothPeriodic() {
 	}
 
 	if (seenEngineRunning && rpm == 0 && profileDirtySinceSave && minLearnedRevs() >= 5) {
-		// Engine just stopped: persist the learned profile (the storage manager
-		// serializes this with settings writes). Debounced by the manager's
-		// pendingWrites flag, so this fires once per stop.
-		seenEngineRunning = false;
-		storageRequestWriteID(EFI_TOOTH_PROFILE_RECORD_ID, true);
+		// Engine just stopped: persist the learned profile. The storage manager
+		// retries failed writes via its pendingWrites flag; re-post every 15 s
+		// in case the mailbox post itself was lost.
+		if (nowNt - lastSaveRequestNt > 15 * NT_PER_SECOND) {
+			lastSaveRequestNt = nowNt;
+			storageRequestWriteID(EFI_TOOTH_PROFILE_RECORD_ID, true);
+		}
+	} else {
+		// engine is running again - arm the save for the next stop
+		lastSaveRequestNt = 0;
 	}
 }
 
