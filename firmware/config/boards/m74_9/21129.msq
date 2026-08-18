@@ -798,16 +798,16 @@
         <constant name="consumeObdSensors">"no"</constant>
         <constant digits="0" name="cranking_rpm" units="RPM">850</constant>
         <constant cols="1" digits="2" name="crankingAdvance" rows="4" units="deg">
-         0.0
-         5.0
-         10.0
-         15.0
+         -5.25
+         -5.25
+         10.9
+         14.6
 </constant>
         <constant cols="1" digits="0" name="crankingAdvanceBins" rows="4" units="RPM">
          0
-         200
-         400
-         1000
+         280
+         560
+         850
 </constant>
         <constant name="crankingCondition">"None"</constant>
         <constant cols="8" digits="1" name="crankingCycleBaseFuel" rows="6" units="mg">
@@ -4707,9 +4707,9 @@
         <constant name="useMetricOnInterface">"Metric"</constant>
         <constant name="useNoiselessTriggerDecoder">"no"</constant>
         <constant name="useRawOutputToDriveIdleStepper">"no"</constant>
-        <constant name="useRunningMathForCranking">"Fixed"</constant>
+        <constant name="useRunningMathForCranking">"Fuel Map"</constant>
         <constant name="usescriptTableForCanSniffingFiltering">"no"</constant>
-        <constant name="useSeparateAdvanceForCranking">"Fixed (auto taper)"</constant>
+        <constant name="useSeparateAdvanceForCranking">"Table"</constant>
         <constant name="useSeparateAdvanceForIdle">"enabled"</constant>
         <constant name="useSeparateIdleTablesForCrankingTaper">"enabled"</constant>
         <constant name="useSeparateVeForIdle">"enabled"</constant>

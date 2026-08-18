@@ -3559,3 +3559,21 @@ the 16:55 log) - the crankingFuelCoef board force is still active there.
 The restore loop for crankingFuelCoef cannot stop until the 16:54
 firmware (force removed) is flashed. Order: flash 16:54 -> burn the
 updated msq -> reboot -> load again - no restore lines expected.
+
+## 2026-08-18 (25): cranking uses the tables now - VE fuel map + cranking advance table
+
+The user noticed that during cranking neither the fuel table nor the
+ignition table was active (cranking ran on the fixed mass tables and the
+fixed timing angle). Switched to the table-driven modes:
+
+- useRunningMathForCranking Fixed -> Fuel Map: cranking fuel now comes
+  from the normal speed-density math (main VE table, MAP load). At
+  cranking MAP ~88 kPa / VE ~72% this gives ~20 mg x crankingFuelCoef -
+  the same ballpark as the fixed tables, but baro/IAT-corrected and
+  VE-tunable. NOTE: in Fuel Map mode crankingCycleBaseFuel (the 6x8 table
+  built earlier) is bypassed - it stays in the tune for the Fixed mode.
+- useSeparateAdvanceForCranking "Fixed (auto taper)" -> "Table": the
+  crankingAdvance curve is now used directly. Filled with the stock
+  "УОЗ при пуске" shape: -5.25 deg at 0-280 rpm (anti-kickback),
+  10.9 at 560, 14.6 at 850 - hands off smoothly to the idle advance table
+  (~13 deg) at the cranking_rpm=850 transition.
