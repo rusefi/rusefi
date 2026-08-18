@@ -3639,3 +3639,43 @@ Driver note: do not touch the pedal while cranking - the ETB opens the
 throttle itself (cltCrankingCorr). The TPS enrichment above is only a
 safety net. Order of operations: flash 16:54 -> load msq -> warm start
 without touching the gas.
+
+## 2026-08-18 (28): trigger false syncs - the real source of the intake backfires
+
+The 18:03-18:07 logs show C9003 "not enough teeth: got 12/14/16" plus
+"newerr TRG gap=1.7-2.0 expected 1.6-4.2" events. Decoded the sequence:
+
+- A stretched tooth pair mid-revolution (gap0 1.70-1.97, gap1 ~1.26)
+  passes BOTH ratio windows and false-syncs the decoder 12-16 teeth
+  before the real gap. The first sync has no tooth count to validate
+  against, so the decoder accepts it and fires spark/injection at the
+  wrong phase for ~1/4 revolution - the intake backfire the user sees.
+- The real gap (gap0 3.91, gap1 1.33) arrives 12-16 teeth later, the
+  count check fails (expected 58 got 12-16) -> C9003 -> sync lost, then
+  re-acquisition. The C9002 58/58 case is the same mechanism in the
+  other direction: during a combustion kick the real gap ratio leaves
+  the [1.6, 4.2] window at the expected position -> gap missed -> sync
+  lost. The ratio windows cannot be tuned out of this: the false pairs
+  (1.7-2.0) and the first-combustion real gap (<2.25, the reason the low
+  side is 1.6) overlap.
+
+Fixes (commit 0aac4db56e1, firmware 18:44 build, all 1131 unit tests pass):
+
+- trigger_decoder: once synchronized, the sync point is evaluated ONLY at
+  the expected gap position (eventCount == expected, same condition as
+  the noise filter's isGapExpected; primary-gap wheels only, cam-pattern
+  syncs keep the ratio-only check). Mid-rev stretched pairs are now just
+  long teeth - a running engine no longer gets kicked out of sync by
+  them. test_trigger_decoder_2 updated to the new semantics.
+- trigger_central + new board override custom_board_requireValidatedSync
+  (m74_9 enables it): ignition/injection stay off for the first crank
+  revolution after a fresh sync, until the next gap arrives at the
+  expected tooth count and validates the position. Cost: first spark
+  comes ~0.2-0.3 s later at cranking rpm - same as a stock ECU that
+  validates sync before firing.
+
+To do on car: flash firmware/deliver/rusefi.bin (18:44). Expected:
+occasional C9002/C9003 warnings may still appear during rough cranking
+(they now mean "gap not validated", no wrong-phase outputs), but no more
+intake backfires from trigger false syncs. If C9002 58/58 persists after
+the catch, revisit the gap0 low side vs the first-combustion compression.
