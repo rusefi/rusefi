@@ -26,6 +26,7 @@
  */
 
 #include "pch.h"
+#include <random>
 
 /**
  * Fire one full 60-2 revolution: 58 real teeth, then the missing-teeth gap.
@@ -95,16 +96,17 @@ TEST(trigger, crankingTransition60_2Acceleration) {
 /**
  * Fire one revolution with a distorted tooth pair mid-revolution - the
  * signature of a misfire-induced crank wobble on a running engine.
- * At tooth 25's rise the decoder sees gap0 = distRatio and gap1 = prevRatio
- * (tooth 24 is prevRatio, tooth 25 is distRatio*prevRatio times the slot).
+ * At tooth (pos+1)'s rise the decoder sees gap0 = distRatio and
+ * gap1 = prevRatio (tooth pos is prevRatio, tooth pos+1 is
+ * distRatio*prevRatio times the slot).
  * The sync gap at the end of the revolution stays gapRatio.
  */
-static void fire60_2RevolutionWithDistortedTeeth(EngineTestHelper& eth, float slotMs, float prevRatio, float distRatio, float gapRatio) {
+static void fire60_2RevolutionWithDistortedTeethAt(EngineTestHelper& eth, float slotMs, int pos, float prevRatio, float distRatio, float gapRatio) {
 	for (int i = 0; i < 58; i++) {
 		// rise-to-rise duration for this tooth
 		float riseToRise = slotMs;
-		if (i == 24) riseToRise = prevRatio * slotMs;
-		if (i == 25) riseToRise = distRatio * prevRatio * slotMs;
+		if (i == pos) riseToRise = prevRatio * slotMs;
+		if (i == pos + 1) riseToRise = distRatio * prevRatio * slotMs;
 
 		// the previous fall happened slotMs/2 after the previous rise
 		eth.moveTimeForwardUs(MS2US(riseToRise - slotMs / 2));
@@ -115,6 +117,10 @@ static void fire60_2RevolutionWithDistortedTeeth(EngineTestHelper& eth, float sl
 
 	// trailing wait: the next call's first rise lands gapRatio * slotMs after tooth 57's rise
 	eth.moveTimeForwardUs(MS2US((gapRatio - 1.0f) * slotMs));
+}
+
+static void fire60_2RevolutionWithDistortedTeeth(EngineTestHelper& eth, float slotMs, float prevRatio, float distRatio, float gapRatio) {
+	fire60_2RevolutionWithDistortedTeethAt(eth, slotMs, 24, prevRatio, distRatio, gapRatio);
 }
 
 TEST(trigger, crankingTransition60_2MisfireDistortedTooth) {
@@ -239,4 +245,106 @@ TEST(trigger, crankingTransition60_2DecelerationRecovers) {
 
 	ASSERT_EQ(steadyRpm, round(Sensor::getOrZero(SensorType::Rpm))) << "RPM after recovery";
 	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized()) << "re-synchronized";
+}
+
+/**
+ * Every false-sync tooth pair captured on the m74_9 car over the whole
+ * session (grep 'newerr TRG' across the logs). gap0/gap1 as printed by the
+ * decoder at the desync event. Some pairs are out of window (rejected by the
+ * ratio check itself), the dangerous ones have BOTH ratios inside the
+ * windows - only the position gate rejects those. Each pair is replayed at
+ * a mid-rev position followed by a clean revolution: the decoder must never
+ * desync on a mid-rev pair.
+ */
+struct ObservedFalseSyncPair {
+	float gap0;
+	float gap1;
+};
+
+static const ObservedFalseSyncPair observedFalseSyncPairs[] = {
+	// rpm=290, tooth 47, 20:48 session, window was 1.6-4.199
+	{1.948f, 1.372f},
+	// rpm=292, tooth 30, 22:22 session (cam disabled), gap0 looks like the real gap
+	{3.333f, 1.022f},
+	// rpm=331, tooth 16, 20:29 session
+	{1.735f, 1.295f},
+	// rpm=369, tooth 13, 20:48 session
+	{2.776f, 1.274f},
+	// rpm=402, tooth 41, 22:11 first start attempt
+	{2.476f, 1.284f},
+	// rpm=408, tooth 16, 20:48 session, gap0 below window - ratio-rejected
+	{1.494f, 1.252f},
+};
+
+TEST(trigger, crankingTransition60_2AllObservedFalseSyncPairsRejected) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	// the user's m74_9 runs the 60-2 wheel on the crank
+	setCrankOperationMode();
+	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
+
+	// steady revolutions to synchronize
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+
+	ASSERT_EQ(0u, getRecentWarnings()->getCount()) << "no warnings while cranking steadily";
+	ASSERT_EQ(1, engine->triggerCentral.triggerState.getSynchronizationCounter()) << "sync counter";
+
+	for (size_t i = 0; i < efi::size(observedFalseSyncPairs); i++) {
+		const auto& pair = observedFalseSyncPairs[i];
+		size_t warningsBefore = getRecentWarnings()->getCount();
+
+		// one revolution with the observed pair at a mid-rev position, then a
+		// clean revolution so the real gap gets checked
+		fire60_2RevolutionWithDistortedTeethAt(eth, steadySlotMs, /*pos*/24, pair.gap1, pair.gap0, /*gapRatio*/3.0f);
+		fire60_2Revolution(eth, steadySlotMs, 3.0f);
+
+		ASSERT_EQ(warningsBefore, getRecentWarnings()->getCount())
+			<< "no false sync for observed pair #" << i << " gap0=" << pair.gap0 << " gap1=" << pair.gap1;
+		ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized())
+			<< "still synchronized through pair #" << i << " gap0=" << pair.gap0 << " gap1=" << pair.gap1;
+	}
+}
+
+TEST(trigger, crankingTransition60_2RandomMidRevPairsNeverDesync) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	// the user's m74_9 runs the 60-2 wheel on the crank
+	setCrankOperationMode();
+	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
+
+	// steady revolutions to synchronize
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+
+	ASSERT_EQ(0u, getRecentWarnings()->getCount()) << "no warnings while cranking steadily";
+	ASSERT_EQ(1, engine->triggerCentral.triggerState.getSynchronizationCounter()) << "sync counter";
+
+	// Fixed seed: reproducible sweep over mid-rev distortion positions and
+	// ratio combinations spanning the window boundaries. gap0 covers
+	// 1.45-4.3 (below, inside and above the [1.6, 3.75] window), gap1 covers
+	// 0.85-1.40 (around the [0.85, 1.35] window). A mid-rev pair must never
+	// desync the decoder regardless of the ratios - the real gap at the end
+	// of the revolution re-syncs cleanly.
+	std::mt19937 gen(20260818);
+	std::uniform_int_distribution<int> posDist(2, 54);
+	std::uniform_real_distribution<float> prevDist(0.85f, 1.40f);
+	std::uniform_real_distribution<float> distDist(1.45f, 4.30f);
+
+	for (int i = 0; i < 50; i++) {
+		int pos = posDist(gen);
+		float prevRatio = prevDist(gen);
+		float distRatio = distDist(gen);
+		size_t warningsBefore = getRecentWarnings()->getCount();
+
+		fire60_2RevolutionWithDistortedTeethAt(eth, steadySlotMs, pos, prevRatio, distRatio, /*gapRatio*/3.0f);
+		fire60_2Revolution(eth, steadySlotMs, 3.0f);
+
+		ASSERT_EQ(warningsBefore, getRecentWarnings()->getCount())
+			<< "no false sync for random pair #" << i << " pos=" << pos
+			<< " gap0=" << distRatio << " gap1=" << prevRatio;
+		ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized())
+			<< "still synchronized through random pair #" << i << " pos=" << pos
+			<< " gap0=" << distRatio << " gap1=" << prevRatio;
+	}
 }
