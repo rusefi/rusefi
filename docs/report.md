@@ -3284,3 +3284,39 @@ knock off, taper 10).
 Note: the ECU is still on the 09:24 firmware (no knock-ISR fix); the
 14:48 build in deliver/ has it. Knock is disabled in the tune so the crash
 cannot trigger, but re-flash anyway for the crash-marker improvements.
+
+## 2026-08-18 (12): best run so far still stalls - C9002 gap rejection + cranking-mode flip at 450 rpm
+
+The 15:00 MLG (user's open-loop tune + fixed idleAdvance): the engine
+catches, flares to 742 rpm with MAP 34.6 and 21.6 deg, then decays
+742 -> 457 -> 353 -> 0 in ~200 ms. Observations:
+
+- The throttle blade sits at the mechanical stop (~0.95-1.2% TPS) the whole
+  time - all idle targets (cranking 0.43%, idle 0.011% with ETB range 2%)
+  are below the stop, so the taper completing instantly does not change the
+  actual airflow. Air is not the variable in this stall.
+- 14:58 and 14:59 runs logged C9002 "too many teeth between sync points:
+  expected 58/0 got 58/0" - the count is right, the gap ratio check failed.
+  triggerSyncGapRatio reads 1.352 during the decay, outside the gap1 window
+  [0.85, 1.15] - the REAL missing-teeth gap is rejected during hard
+  deceleration (misfire/rich wobble stretches the gap ratio).
+- When rpm falls below cranking_rpm=450 during the decay, the control flips
+  back to cranking mode: advance 21 -> ~10-13 deg (cranking curve), fuel
+  -> 28 mg (rich) - an 8-11 deg retard + fuel jump exactly when torque is
+  needed most.
+- Mixture is rich through the run: SD math with the VE table gives lambda
+  ~0.7 (injected 1.4x base with CLT 1.09 + afterstart ~1.28).
+
+Tune changes (21129.msq, synced to ~/21129_new.msq and ~/Downloads):
+- cranking_rpm 450 -> 300: the decay stays in running mode down to 300 rpm,
+  no mode flip with cranking advance/fuel in the 350-450 zone.
+- crankingFuelCoef warm end trimmed (1.3/1.1/1.0/1.0 -> 1.2/1.0/0.9/0.85
+  at 20/35/50/65 C): the catch is strong (flare to 742), less wall fuel.
+- triggerGapOverrideTo2 (gap1 upper) 1.15 -> 1.35: accept the real gap
+  distorted by deceleration instead of rejecting it (C9002). Risk of false
+  sync per the 60-2 window notes, but sync rejection kills the engine
+  deterministically while a false sync is recoverable.
+
+Still to do: flash the 14:48 firmware (ECU is on 09:24), re-enable the
+lambda input eventually (mixture tuning is blind without it), and get a
+full MLG captured from before the key-on to the stall.

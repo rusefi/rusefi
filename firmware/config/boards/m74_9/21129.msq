@@ -796,7 +796,7 @@
         <constant digits="1" name="compressorDischargeTemperature_tempC_3" units="{bitStringValue(unitsLabels, useMetricOnInterface)}">0.0</constant>
         <constant name="consoleUartDevice">"Off"</constant>
         <constant name="consumeObdSensors">"no"</constant>
-        <constant digits="0" name="cranking_rpm" units="RPM">450</constant>
+        <constant digits="0" name="cranking_rpm" units="RPM">300</constant>
         <constant cols="1" digits="2" name="crankingAdvance" rows="4" units="deg">
          0.0
          5.0
@@ -842,15 +842,15 @@
          65.0
          90.0
 </constant>
-        <constant cols="1" digits="2" name="crankingFuelCoef" rows="8" units="ratio">
+        <constant cols="1" digits="2" name="crankingFuelCoef" rows="8" units="coef">
          2.8
          2.2
          1.8
-         1.55
-         1.3
-         1.1
+         1.5
+         1.2
          1.0
-         1.0
+         0.9
+         0.85
 </constant>
         <constant cols="1" digits="0" name="crankingFuelFlexBins" rows="4" units="%">
          0
@@ -4637,7 +4637,7 @@
         <constant digits="3" name="triggerGapOverrideTo16" units="ratio">0.0</constant>
         <constant digits="3" name="triggerGapOverrideTo17" units="ratio">0.0</constant>
         <constant digits="3" name="triggerGapOverrideTo18" units="ratio">0.0</constant>
-        <constant digits="3" name="triggerGapOverrideTo2" units="ratio">1.15</constant>
+        <constant digits="3" name="triggerGapOverrideTo2" units="ratio">1.35</constant>
         <constant digits="3" name="triggerGapOverrideTo3" units="ratio">0.0</constant>
         <constant digits="3" name="triggerGapOverrideTo4" units="ratio">0.0</constant>
         <constant digits="3" name="triggerGapOverrideTo5" units="ratio">0.0</constant>
