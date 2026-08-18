@@ -3541,3 +3541,21 @@ values were equal (cosmetic loop). vvtControlMinRpm was a one-off restore
 after the layout change - resolves once the burn persists.
 Firmware rebuilt (16:54), bundle refreshed. Re-flash rusefi.bin, re-apply
 the msq once - the restore lines must not repeat on the next load.
+
+## 2026-08-18 (24): restore-loop string format - verified via round-trip harness
+
+The restore lines kept repeating because the console compares value STRINGS:
+the msq carried "124.00"/"2.80" while the console generates "124.0"/"2.8"
+(trailing-zero-stripped) from the page image - so the comparison never
+matched even with equal values. Verified with a temporary round-trip test
+through CalibrationsHelper.mergeCalibrationsWithPartialFailure: after
+rewriting the msq strings to "124.0"-style / TS-style "2.8", the second
+load of the same tune produces ZERO restore lines (harness deleted).
+The remaining diffs (byFirmwareVersion, ignitionKeyDigitalPin) are
+ignored by the migrators.
+
+IMPORTANT: the ECU still runs the 16:22 firmware (Compiled: 16:22:32 in
+the 16:55 log) - the crankingFuelCoef board force is still active there.
+The restore loop for crankingFuelCoef cannot stop until the 16:54
+firmware (force removed) is flashed. Order: flash 16:54 -> burn the
+updated msq -> reboot -> load again - no restore lines expected.
