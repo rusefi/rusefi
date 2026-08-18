@@ -982,8 +982,19 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		}
 
 #if EFI_ENGINE_CONTROL
-		// Handle ignition and injection
-		mainTriggerCallback(triggerIndexForListeners, timestamp, currentEngineDecodedPhase, nextPhase);
+			// Ignition and injection stay off for the first crank revolution after a
+			// fresh synchronization on boards that opt in via
+			// custom_board_requireValidatedSync (m74_9): the first sync point has no
+			// tooth count to validate against, so a false gap (a stretched tooth pair,
+			// gap0 ~1.7-2.0 on a firing engine vs the real 3.9 gap) can sync the
+			// decoder at the wrong position. Firing from it hits the wrong phase and
+			// backfires through the intake. The position is only proven when the next
+			// gap arrives at the expected tooth count - exactly one revolution later
+			// (synchronizationCounter reaches 1).
+			bool requireValidatedSync = get_board_override_result(custom_board_requireValidatedSync, false);
+			if (!requireValidatedSync || triggerState.getSynchronizationCounter() >= 1) {
+				mainTriggerCallback(triggerIndexForListeners, timestamp, currentEngineDecodedPhase, nextPhase);
+			}
 #endif // EFI_ENGINE_CONTROL
 
     temp_mapVvt_index = triggerIndexForListeners / 2;

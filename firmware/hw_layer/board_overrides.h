@@ -204,6 +204,11 @@ extern std::optional<setup_custom_bool_type> custom_board_updateConfigError;
 
 extern std::optional<setup_custom_bool_type> custom_board_isBoardWithPowerManagement;
 extern std::optional<setup_custom_bool_type> custom_board_boardAllowTriggerActions;
+// When set and returning true, ignition/injection stay off for the first crank
+// revolution after a fresh trigger synchronization: the first sync point has no
+// tooth count to validate against, so a false gap (stretched tooth pair) can
+// sync the decoder at the wrong position. See m74_9 false-sync C9003 case.
+extern std::optional<setup_custom_bool_type> custom_board_requireValidatedSync;
 
 extern std::optional<setup_custom_bool_type> custom_board_getAcrState;
 // Additive ACR hold: when set and returning true, the Harley ACR valve is kept

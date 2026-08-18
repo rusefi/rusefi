@@ -569,7 +569,19 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 			    setTriggerErrorState(100);
 			}
 
-			isSynchronizationPoint = isSyncPoint(triggerShape, triggerConfiguration.TriggerType.type);
+			// Once synchronized, only the expected gap position may re-sync.
+			// Otherwise a stretched-tooth pair mid-revolution (gap0 ~1.7-2.0 on
+			// a firing engine vs the real 3.9 gap) passes the ratio windows and
+			// kicks a running engine out of sync with C9003 - see m74_9 logs:
+			// false sync 12-16 teeth before the real gap, then wrong-phase
+			// spark/injection and an intake backfire. Note: eventCount was already
+			// incremented for the current event (same condition as the noise
+			// filter's isGapExpected, which runs pre-increment). Cam-pattern syncs
+			// (useOnlyPrimaryForSync false) keep the ratio-only check.
+			bool atExpectedGapPosition = !wasSynchronized || !triggerShape.useOnlyPrimaryForSync ||
+				currentCycle.eventCount[(int)triggerWheel] == triggerShape.getExpectedEventCount(triggerWheel);
+
+			isSynchronizationPoint = atExpectedGapPosition && isSyncPoint(triggerShape, triggerConfiguration.TriggerType.type);
 			if (isSynchronizationPoint) {
 				enginePins.debugTriggerSync.toggle();
 			}

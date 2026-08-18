@@ -665,6 +665,11 @@ void setup_custom_board_overrides() {
 	custom_board_InitHardware = m74_9_boardInitHardware;
 	custom_board_DefaultConfiguration = m74_9_boardDefaultConfiguration;
 	custom_board_ConfigOverrides = m74_9_boardConfigOverrides;
+	// The first trigger sync point has no tooth count to validate against, and
+	// on this engine a stretched tooth pair (gap0 1.7-2.0 vs the real 3.9 gap)
+	// false-syncs the decoder mid-crank - firing from it backfires through the
+	// intake. Wait one crank revolution so the next gap validates the position.
+	custom_board_requireValidatedSync = []() { return true; };
 #if EFI_PROD_CODE && HAL_USE_ADC
 	addConsoleAction("fastadcdiag", m74_9FastAdcDiag);
 	addConsoleAction("knockpin", m74_9KnockPinScan);
