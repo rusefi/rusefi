@@ -3178,3 +3178,24 @@ Fixes:
 
 Validation: m74_9 firmware build OK, unit tests build+Knock suite pass.
 Next: user re-flashes, re-enables software knock, retries start.
+
+## 2026-08-18 (9): start-attempt log analysis - wave chart decoded, displacement fixed
+
+Decoded the wave_chart dump from the controlled start attempt (knock off):
+- engine sniffer x unit is 10 us (ENGINE_SNIFFER_UNIT_US); clean 60-2 signal,
+  gap ratio 3.02, RPM ~325 -> 281 decelerating, coils fire in wasted pairs
+  (c1+c4, c3+c2), dwell ~6.7 ms (overcharged - matches the C935x warnings),
+  injectors fire every ~106 ms (~180 deg, simultaneous mode) with ~21.4 ms
+  pulses (~44 mg per squirt at 168.8 cc/min) - 4-5x the mass-based cranking
+  math prediction (20 mg x CLT coef / 4 squirts ~= 3-5 ms). The tune's
+  TPS "MS Adder" accel table (up to 32 ms) adds fuel when the pedal is
+  pumped during cranking but does not explain a steady 21 ms. To be resolved
+  from live channels (crankingFuel, injectionDuration, CLT) at the next
+  connected start attempt.
+- The trigger CSVs are useless for now: the teeth capture only records
+  timeout/overflow rows (0 events), no real edges.
+- displacement was 2.0 L on a 1596 cc engine: +25% SD airmass -> +25% running
+  fuel right at the crank->run transition. Fixed to 1.6 in 21129.msq.
+- Knock disabled + engine not staying running: no sync errors in these
+  sessions (one C9002 got 58/0 in the 10:53 attempt), coils/injectors fire
+  correctly, so the no-start is fueling/air, not trigger.
