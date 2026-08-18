@@ -671,6 +671,12 @@ void setup_custom_board_overrides() {
 	// false-syncs the decoder mid-crank - firing from it backfires through the
 	// intake. Wait one crank revolution so the next gap validates the position.
 	custom_board_requireValidatedSync = []() { return true; };
+	// Cranking-band sync-by-position skip: the first-combustion acceleration
+	// can compress the REAL missing-teeth gap below the ratio window; at the
+	// exact expected position the tooth count proves it IS the gap, so accept
+	// it while rpm < 2 * crankingRpm (rejecting it there desyncs the decoder
+	// right at the catch - C9002, engine dies).
+	custom_board_syncByPositionWhileCranking = []() { return true; };
 	// Cam-phase continuity cross-check: the 21129 cam is belt-driven and fixed
 	// (no VVT phaser), so a crank-sync basis error shows up as a phase jump at
 	// the next cam event. Force a crank re-sync on a jump beyond 15 degrees.

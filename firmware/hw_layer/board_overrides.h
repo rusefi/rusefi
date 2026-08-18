@@ -205,6 +205,15 @@ extern std::optional<setup_custom_bool_type> custom_board_boardAllowTriggerActio
 // sync the decoder at the wrong position. See m74_9 false-sync C9003 case.
 extern std::optional<setup_custom_bool_type> custom_board_requireValidatedSync;
 
+// When set and returning true, the cranking-band sync-by-position skip is
+// enabled: at the exact expected gap position (event count == expected) the
+// sync is accepted even if the gap ratio is out of window while rpm <
+// 2 * crankingRpm. The first-combustion acceleration can compress the REAL
+// missing-teeth gap below the ratio window, and rejecting it there desyncs
+// the decoder right at the catch (C9002, engine dies). m74_9 sets true;
+// default false keeps the classic ratio-checked behavior for other boards.
+extern std::optional<setup_custom_bool_type> custom_board_syncByPositionWhileCranking;
+
 // When set and returning a positive angle (degrees), the cam/VVT position is
 // cross-checked on every cam event: a fixed cam must report the same phase
 // every cam revolution. A crank-sync basis error (false sync) shifts the

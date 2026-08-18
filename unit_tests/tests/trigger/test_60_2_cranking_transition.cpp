@@ -26,7 +26,21 @@
  */
 
 #include "pch.h"
+#include "board_overrides.h"
 #include <random>
+
+// The m74_9 board opts into the cranking-band sync-by-position skip; the
+// decoder-level tests below set the same override. Reset at test end - the
+// override global persists across tests in this binary.
+struct SyncByPositionWhileCrankingScope {
+	SyncByPositionWhileCrankingScope() {
+		custom_board_syncByPositionWhileCranking = []() { return true; };
+	}
+
+	~SyncByPositionWhileCrankingScope() {
+		custom_board_syncByPositionWhileCranking = std::nullopt;
+	}
+};
 
 /**
  * Fire one full 60-2 revolution: 58 real teeth, then the missing-teeth gap.
@@ -214,8 +228,9 @@ TEST(trigger, crankingTransition60_2GapLikeFalseSyncRejectedByPositionGate) {
 	ASSERT_EQ(3, engine->triggerCentral.triggerState.getSynchronizationCounter()) << "sync counter through the distorted revolution";
 }
 
-TEST(trigger, crankingTransition60_2DecelerationRecovers) {
+TEST(trigger, crankingTransition60_2DecelerationStaysSyncedWhileCranking) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	SyncByPositionWhileCrankingScope syncSkip;
 	// the user's m74_9 runs the 60-2 wheel on the crank
 	setCrankOperationMode();
 	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
@@ -228,22 +243,85 @@ TEST(trigger, crankingTransition60_2DecelerationRecovers) {
 	ASSERT_EQ(0u, getRecentWarnings()->getCount()) << "no warnings while cranking steadily";
 	ASSERT_EQ(1, engine->triggerCentral.triggerState.getSynchronizationCounter()) << "sync counter";
 
-	// transition revolution: the crank kicks back, the gap stretches to 4.2x
+	// transition revolution: the crank kicks back, the gap stretches to 4.2x.
+	// The ratio check rejects it, but the cranking-band sync-by-position skip
+	// accepts the gap at the exact expected position (the tooth count proves
+	// it IS the real gap) - the decoder stays synchronized through the kick.
 	fire60_2Revolution(eth, steadySlotMs, /*gapRatio*/4.2f);
 
-	// the stretched gap of the transition revolution is checked at this first
-	// rise. It is above the intentional 3.75 upper limit, so the sync point is
-	// rejected: exactly one full revolution of teeth arrives without a sync
-	// point, the decoder reports C9002 and desynchronizes.
+	// the stretched gap of the transition revolution is checked at this first rise
 	fire60_2Revolution(eth, steadySlotMs, 3.0f);
 
-	ASSERT_EQ(1u, getRecentWarnings()->getCount()) << "one C9002 for the extreme deceleration";
+	ASSERT_EQ(0u, getRecentWarnings()->getCount()) << "no C9002 while cranking";
+	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized()) << "still synchronized through the kick";
+	ASSERT_EQ(3, engine->triggerCentral.triggerState.getSynchronizationCounter()) << "sync counter";
+}
+
+/**
+ * At the first-combustion catch the crank accelerates so hard that the REAL
+ * missing-teeth gap compresses below the ratio window (1.4 here, window low
+ * side 1.6). In the cranking band the sync-by-position skip accepts it and
+ * the engine keeps running.
+ */
+TEST(trigger, crankingTransition60_2CompressedGapAcceptedWhileCranking) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	SyncByPositionWhileCrankingScope syncSkip;
+	// the user's m74_9 runs the 60-2 wheel on the crank
+	setCrankOperationMode();
+	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
+
+	// steady revolutions to synchronize
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+
+	ASSERT_EQ(0u, getRecentWarnings()->getCount()) << "no warnings while cranking steadily";
+	ASSERT_EQ(1, engine->triggerCentral.triggerState.getSynchronizationCounter()) << "sync counter";
+
+	// transition revolution: first combustion compresses the gap to 1.4x
+	fire60_2Revolution(eth, steadySlotMs, /*gapRatio*/1.4f);
+
+	// the compressed gap is checked at this first rise - the cranking-band
+	// skip accepts it: no C9002, the sync survives the catch
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+
+	ASSERT_EQ(0u, getRecentWarnings()->getCount()) << "no C9002 at the catch";
+	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized()) << "still synchronized through the catch";
+	ASSERT_EQ(3, engine->triggerCentral.triggerState.getSynchronizationCounter()) << "sync counter";
+}
+
+/**
+ * Once running (rpm above 2 * crankingRpm) the sync-by-position skip is off:
+ * a compressed gap at the expected position is rejected like before (the
+ * crank speed is uniform when running, a 1.4x gap is not physical there).
+ */
+TEST(trigger, crankingTransition60_2CompressedGapRejectedWhenRunning) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	SyncByPositionWhileCrankingScope syncSkip;
+	// the user's m74_9 runs the 60-2 wheel on the crank
+	setCrankOperationMode();
+	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
+
+	// 1250 rpm steady revolutions: above the 2 * crankingRpm skip band
+	static constexpr float runningSlotMs = 0.8f;
+	fire60_2Revolution(eth, runningSlotMs, 3.0f);
+	fire60_2Revolution(eth, runningSlotMs, 3.0f);
+	fire60_2Revolution(eth, runningSlotMs, 3.0f);
+
+	ASSERT_EQ(0u, getRecentWarnings()->getCount()) << "no warnings while running steadily";
+	ASSERT_EQ(1, engine->triggerCentral.triggerState.getSynchronizationCounter()) << "sync counter";
+	ASSERT_GT(Sensor::getOrZero(SensorType::Rpm), 2 * engineConfiguration->cranking.rpm) << "running rpm above the skip band";
+
+	// compressed gap revolution - the ratio check rejects it, the skip is off
+	fire60_2Revolution(eth, runningSlotMs, /*gapRatio*/1.4f);
+	fire60_2Revolution(eth, runningSlotMs, 3.0f);
+
+	ASSERT_EQ(1u, getRecentWarnings()->getCount()) << "one C9002 at running rpm";
 	EXPECT_EQ(ObdCode::CUSTOM_PRIMARY_TOO_MANY_TEETH, getRecentWarnings()->get(0).Code);
 
 	// the next steady revolution re-synchronizes cleanly
-	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+	fire60_2Revolution(eth, runningSlotMs, 3.0f);
 
-	ASSERT_EQ(steadyRpm, round(Sensor::getOrZero(SensorType::Rpm))) << "RPM after recovery";
 	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized()) << "re-synchronized";
 }
 
