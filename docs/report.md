@@ -3199,3 +3199,60 @@ Decoded the wave_chart dump from the controlled start attempt (knock off):
 - Knock disabled + engine not staying running: no sync errors in these
   sessions (one C9002 got 58/0 in the 10:53 attempt), coils/injectors fire
   correctly, so the no-start is fueling/air, not trigger.
+
+## 2026-08-18 (10): catch -> stall in 160 ms decoded from 14:03 MLG; idle PID + taper + ignition table fixes
+
+Decoded the 14:03:47 MLG (32 records, ~30 ms cadence with ~90 ms gaps =
+console-side record loss over PCAN). Timeline of the catch:
+
+- rec15 t=1004: cranking 293 rpm, cranking advance ~11 deg, MAP 90
+- rec16 t=1092: catch 511 rpm (instant 701 - flare), MAP 68, adv 15.0 (main
+  table), ETB target 2.1%, dwelloverchargecounter already growing
+- rec17 t=1116: 632 rpm, MAP 41.1, adv 22.7 (main table, load 40), fuel
+  8.37 mg, ETB target 1.2%, TPS actual 0.62% - healthy-looking idle state
+- rec18 t=1197: SAG 453 rpm, MAP 60.7, adv 14.6, ETB target 4.13%, TPS
+  actual 6.78% (overshoot), idle closed-loop PID output 19.96 (p-term 24.1),
+  dwell actual ratio 174% (sparks firing late), overcharge counter 10
+- rec19 t=1274: rpm 0. Death spiral total ~160 ms.
+
+Root cause chain:
+- The crank-to-idle taper (afterCrankingIACtaperDuration) completes almost
+  immediately after the catch (looksLikeCrankToIdle bit flips 1->0 within
+  24 ms in the MLG, isIdleClosedLoop goes 1 at rec17) - closed-loop idle
+  engages while the engine is still in the post-catch flare.
+- The idle PID with p=0.05 sees ~400-500 rpm error (target 1042) and slams
+  the throttle: target 1.2% -> 4.13%, actual 0.62% -> 6.78% in 80 ms.
+- MAP jumps 41 -> 61, the main ignition table collapses advance 22.7 -> 14.6
+  deg exactly when torque is needed (load 55-60 / rpm 650-800 cells were
+  14.4-15.8 deg), the angle-scheduled sparks arrive late (dwell ratio 174%,
+  C935x overcharge), and the engine dies.
+- Knock is NOT involved: m_knockRetard=0 everywhere, levels -58..-68 dBv.
+- STFT is disabled (fuelClosedLoopCorrectionEnabled=disabled) and in any
+  case gated by startupDelay + minClt 60 C, so the stuck lambda reading
+  (1.56, sensor 226905987R / 14Point7 input reads constant 6.48 V) does not
+  affect the start. Wiring/calibration of the WB input is a separate task.
+
+Tune fixes in 21129.msq (user applies via TS, mirror in Downloads):
+- idleRpmPid: p 0.05 -> 0.02, i 0.002 -> 0.001 (the 24% p-term throttle slam)
+- afterCrankingIACtaperDuration 10 -> 30 cycles (keep CL idle out of the
+  post-catch flare longer)
+- ignitionTable loads 50-75 @ rpm 650-800 raised from 14.4-18.3 to
+  16.0-19.0 deg - smooths the 22.7 -> 14.6 advance collapse when MAP rises
+  during the sag; load 45 (18.1 deg) and above left untouched
+
+Firmware rebuilt (deliver/rusefi.bin 14:48) - the ECU still runs the 09:24
+build which predates the 12:02 knock-ISR fix (chSysLock from IRQ -> SV#4),
+so re-flash rusefi.bin together with the msq.
+
+Open items:
+- MLG field list order differs from the firmware data_logs.ini order (MLG
+  header starts with oilpressure, ini with sd_present) - the console packs
+  fields in its own map order so values are self-consistent, but a few
+  fields read implausible values (m_knockThreshold=100 with a -20 dB curve,
+  trgSynchronizationCounter jumping 1->8->18->24 in 88 ms). Needs a
+  cross-check once the new firmware is flashed; do not over-interpret those
+  fields until then.
+- The stall analysis assumes the 09:24 firmware; re-verify with the 14:48
+  build (Compiled: timestamp must change).
+- Lambda input stuck at AFR 22.9 / lambda 1.561 - check the 14Point7
+  controller wiring to "Oxygen sensor 1 signal" and the curve.
