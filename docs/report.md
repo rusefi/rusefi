@@ -3605,3 +3605,37 @@ Next: load ~/21129_new.msq in the console, cold-start, send the next
 text+MLG pair. If still rich: next levers are the 5-20 C coef bins and
 the 0/20 C postCranking rows; the VE table stays untouched (SD math
 verified correct).
+
+## 2026-08-18 (27): warm start - backfire on throttle, catches at 650 rpm and dies
+
+Parsed the 17:44 MLGs (engine warm, CLT 95 C). Two findings:
+
+1. The ECU is STILL on the 16:22 firmware (Compiled: 16:22:32 in the
+   log) - the every-boot crankingFuelCoef force is active, so the warm
+   cranking multiplier is the old 0.85 (log shows cClt=0.85 at 95 C)
+   instead of the new 0.65. deliver/rusefi.bin (16:54) must be flashed.
+
+2. Warm cranking with the pedal blip: user pressed ~24% pedal during
+   cranking (ETB 5.8 -> 29%, TPS 16.3%), cranking fuel stayed ~21 mg -
+   lean pop into the intake (crankingTpsCoef was flat 1.0). Also the
+   cranking advance ran ~3 deg below the table: useAdvanceCorrectionsForCranking
+   was yes, and the ignitionIatCorrTable pulls -1..-3 deg at 100-140 kPa
+   loads - at 650 rpm the actual advance was ~9 deg (stock M74 gives
+   ~14 deg there), so the engine could not climb past the 850 rpm
+   cranking exit and died when the starter released. Coil overcharge
+   warnings (C9351-54, ~8.2 ms) appeared right before engine stopped.
+
+Changes to 21129.msq (committed 2ad1320077e, synced to ~/21129_new.msq):
+- crankingAdvance: -5.25/-5.25/10.9/14.6 -> -5.25/-3.75/12.0/14.6
+  (stock mid-curve shape).
+- useAdvanceCorrectionsForCranking yes -> no: cranking now runs the
+  pure table, no IAT/high-load pull - ~+3 deg at 650 rpm.
+- crankingTpsCoef: flat 1.0 -> 1.0/1.12/1.25/1.3/1.0/0.5/0/0 (TPS
+  enrichment up to 43% then flood-clear cut at WOT).
+- primeValues warm bins: 50/45/40 -> 30/15/10 mg at 60/80/100 C (the
+  key-on 41 mg prime at 95 C was wetting a warm engine).
+
+Driver note: do not touch the pedal while cranking - the ETB opens the
+throttle itself (cltCrankingCorr). The TPS enrichment above is only a
+safety net. Order of operations: flash 16:54 -> load msq -> warm start
+without touching the gas.
