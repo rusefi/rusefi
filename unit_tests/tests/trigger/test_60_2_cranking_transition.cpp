@@ -146,6 +146,38 @@ TEST(trigger, crankingTransition60_2MisfireDistortedTooth) {
 	ASSERT_EQ(3, engine->triggerCentral.triggerState.getSynchronizationCounter()) << "sync counter through the distorted revolution";
 }
 
+/**
+ * The false-sync pair grows with RPM: on the car the mid-rev stretched pair
+ * measured gap0=2.476 / gap1=1.284 at 402 rpm (firing) - BOTH inside the
+ * 60-2 ratio windows, so no ratio window can reject it. It false-synced 42
+ * teeth after the real sync point (C9003, expected 58 got 42) and killed the
+ * engine. Only the position gate rejects it: once synchronized, a gap is only
+ * accepted at the expected event position.
+ */
+TEST(trigger, crankingTransition60_2FalseSyncAtRunningRpmRejectedByPositionGate) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	// the user's m74_9 runs the 60-2 wheel on the crank
+	setCrankOperationMode();
+	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
+
+	// steady revolutions to synchronize
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+
+	ASSERT_EQ(0u, getRecentWarnings()->getCount()) << "no warnings while cranking steadily";
+	ASSERT_EQ(1, engine->triggerCentral.triggerState.getSynchronizationCounter()) << "sync counter";
+
+	// one revolution with the on-car false pair (both ratios inside the
+	// windows) at a mid-rev position: the position gate must reject it
+	fire60_2RevolutionWithDistortedTeeth(eth, steadySlotMs, /*prevRatio*/1.284f, /*distRatio*/2.476f, /*gapRatio*/3.0f);
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+
+	ASSERT_EQ(0u, getRecentWarnings()->getCount()) << "no false sync from the in-window distorted tooth pair";
+	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized()) << "still synchronized";
+	ASSERT_EQ(3, engine->triggerCentral.triggerState.getSynchronizationCounter()) << "sync counter through the distorted revolution";
+}
+
 TEST(trigger, crankingTransition60_2DecelerationRecovers) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	// the user's m74_9 runs the 60-2 wheel on the crank

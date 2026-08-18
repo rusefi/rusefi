@@ -53,7 +53,12 @@ TEST(triggerRenix44, renix44RealCrankingFromFile) {
 	// zero error/warning count here.
 	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized()) << "renix44 shaft sync";
 	ASSERT_NEAR(1389, Sensor::getOrZero(SensorType::Rpm), 5) << "renix44 RPM";
-	ASSERT_EQ(84, tooManyTeethCounter);
+	// The position gate (trigger_decoder.cpp) rejects early mid-rev false gap
+	// candidates. The noise in this recording now costs the decoder sync via the
+	// index-overflow path instead of the 'not enough teeth' sync path (was 84
+	// with the ratio-only decoder); the sync/RPM recovery assertions above are
+	// unchanged. See the gate comment in trigger_decoder.cpp.
+	ASSERT_EQ(115, tooManyTeethCounter);
 }
 
 TEST(triggerRenix44, renix44RealCrankingFromFileAnotherOne) {
