@@ -20,6 +20,7 @@
 
 #if EFI_PROD_CODE
 #include "trigger_central.h"
+#include "storage.h"
 #include "m74_9_tooth_diag.h"
 
 namespace {
@@ -46,6 +47,34 @@ float profileUs[ToothCount] = {};
 uint32_t profileCount[ToothCount] = {};
 
 constexpr float EmaAlpha = 0.05f;
+
+// Persistent record in MFS (storage ID EFI_TOOTH_PROFILE_RECORD_ID).
+constexpr uint32_t ProfileMagic = 0x544F4F54; // 'TOOT'
+constexpr uint32_t ProfileVersion = 1;
+
+struct ToothProfileRecord {
+	uint32_t magic;
+	uint32_t version;
+	uint32_t revolutionsLearned;
+	float profileUs[ToothCount];
+	uint32_t crc;
+};
+
+ToothProfileRecord storedRecord;
+bool profileLoaded = false;
+bool profileDirtySinceSave = false;
+bool seenEngineRunning = false;
+bool readRequested = false;
+
+uint32_t minLearnedRevs() {
+	uint32_t minRevs = UINT32_MAX;
+	for (size_t i = 0; i < ToothCount; i++) {
+		if (profileCount[i] < minRevs) {
+			minRevs = profileCount[i];
+		}
+	}
+	return minRevs == UINT32_MAX ? 0 : minRevs;
+}
 
 bool isPlausibleToothPeriod(efitick_t period) {
 	// One tooth is 6 degrees of crank. Accept roughly 6 rpm .. 6000 rpm.
@@ -175,6 +204,7 @@ void boardTriggerCallback(efitick_t timestamp, float currentPhase) {
 				profileUs[lastToothIndex] += EmaAlpha * (periodUs - profileUs[lastToothIndex]);
 			}
 			profileCount[lastToothIndex]++;
+			profileDirtySinceSave = true;
 		}
 	}
 
@@ -188,10 +218,96 @@ void boardTriggerCallback(efitick_t timestamp, float currentPhase) {
 }
 
 void m74_9ToothDump() {
-	efiPrintf("toothdump rpm=%.0f", Sensor::getOrZero(SensorType::Rpm));
+	efiPrintf("toothdump rpm=%.0f stored=%s minRev=%d",
+		Sensor::getOrZero(SensorType::Rpm),
+		profileLoaded ? "yes" : "no",
+		(int)minLearnedRevs());
 
 	printToothProfile();
 	printRawRevolutions();
+}
+
+// ---- persistent storage: learned profile in MFS, like the stock ECU ----
+
+// Called from the storage manager thread (serialized with settings writes).
+bool toothProfileStorageWrite() {
+	storedRecord.magic = ProfileMagic;
+	storedRecord.version = ProfileVersion;
+	storedRecord.revolutionsLearned = minLearnedRevs();
+	for (size_t i = 0; i < ToothCount; i++) {
+		storedRecord.profileUs[i] = profileUs[i];
+	}
+	storedRecord.crc = crc32(&storedRecord, offsetof(ToothProfileRecord, crc));
+
+	StorageStatus status = storageWrite(EFI_TOOTH_PROFILE_RECORD_ID, (uint8_t*)&storedRecord, sizeof(storedRecord));
+
+	if (status == StorageStatus::Ok) {
+		profileDirtySinceSave = false;
+		efiPrintf("tooth: profile stored (%d revs)", (int)storedRecord.revolutionsLearned);
+		return true;
+	}
+
+	return false;
+}
+
+// Called from the storage manager thread.
+bool toothProfileStorageRead() {
+	StorageStatus status = storageRead(EFI_TOOTH_PROFILE_RECORD_ID, (uint8_t*)&storedRecord, sizeof(storedRecord));
+
+	if (status != StorageStatus::Ok) {
+		efiPrintf("tooth: no stored profile (%d)", (int)status);
+		return true; // nothing stored - learning starts from scratch
+	}
+
+	uint32_t crc = crc32(&storedRecord, offsetof(ToothProfileRecord, crc));
+	if (storedRecord.magic != ProfileMagic || storedRecord.version != ProfileVersion || crc != storedRecord.crc) {
+		efiPrintf("tooth: stored profile invalid (magic=%lx crc=%lx)",
+			(unsigned long)storedRecord.magic, (unsigned long)crc);
+		return true; // corrupted - learning starts from scratch
+	}
+
+	// Seed the EMA state so learning continues from the stored profile.
+	for (size_t i = 0; i < ToothCount; i++) {
+		if (storedRecord.profileUs[i] > 0) {
+			profileUs[i] = storedRecord.profileUs[i];
+			profileCount[i] = storedRecord.revolutionsLearned;
+		}
+	}
+
+	profileLoaded = true;
+	efiPrintf("tooth: stored profile loaded (%d revs)", (int)storedRecord.revolutionsLearned);
+	return true;
+}
+
+// Runs on the slow (20 Hz) board callback: lazy load + auto-save on engine stop.
+void m74_9ToothPeriodic() {
+	if (!readRequested) {
+		readRequested = true;
+		storageReqestReadID(EFI_TOOTH_PROFILE_RECORD_ID);
+	}
+
+	float rpm = Sensor::getOrZero(SensorType::Rpm);
+	if (rpm > 0) {
+		seenEngineRunning = true;
+	}
+
+	if (seenEngineRunning && rpm == 0 && profileDirtySinceSave && minLearnedRevs() >= 5) {
+		// Engine just stopped: persist the learned profile (the storage manager
+		// serializes this with settings writes). Debounced by the manager's
+		// pendingWrites flag, so this fires once per stop.
+		seenEngineRunning = false;
+		storageRequestWriteID(EFI_TOOTH_PROFILE_RECORD_ID, true);
+	}
+}
+
+// Manual save from the console.
+void m74_9ToothSave() {
+	if (minLearnedRevs() < 1) {
+		efiPrintf("tooth: nothing learned yet");
+		return;
+	}
+	storageRequestWriteID(EFI_TOOTH_PROFILE_RECORD_ID, true);
+	efiPrintf("tooth: save requested (%d revs)", (int)minLearnedRevs());
 }
 
 #endif // EFI_PROD_CODE

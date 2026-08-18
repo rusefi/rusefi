@@ -1,11 +1,19 @@
 /**
  * @file m74_9_tooth_diag.h
  *
- * Console command 'toothdump' - prints the learned 58-tooth time profile and
- * the last few raw revolutions captured by the m74_9 tooth diagnostic module.
+ * m74_9 trigger-tooth diagnostics and learning:
+ *  - 'toothdump' console command: prints the learned 58-tooth time profile
+ *    and the last few raw revolutions (paste into the chat, plot externally).
+ *  - 'toothsave' console command: force-save the learned profile to MFS.
+ *  - m74_9ToothPeriodic(): slow-callback housekeeping - lazy load of the
+ *    stored profile and auto-save when the engine stops (like the stock ECU
+ *    stores its learned wheel data in non-volatile memory).
+ *
  * See m74_9_tooth_diag.cpp.
  */
 
 #pragma once
 
 void m74_9ToothDump();
+void m74_9ToothSave();
+void m74_9ToothPeriodic();
