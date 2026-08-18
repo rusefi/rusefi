@@ -535,6 +535,42 @@ static void writeCrashMarker(uint32_t magic, uint32_t a, uint32_t b, uint32_t c,
 	RTC->BKP5R = e;
 }
 
+/* Pack a string into 32-bit little-endian words (16 bytes max), zero padded. */
+static void packStringIntoWords(const char* s, uint32_t* w0, uint32_t* w1, uint32_t* w2, uint32_t* w3) {
+	uint32_t words[4] = { 0, 0, 0, 0 };
+	if (s != nullptr) {
+		for (size_t i = 0; i < sizeof(words) && s[i] != '\0'; i++) {
+			words[i / 4] |= (uint32_t)(uint8_t)s[i] << (8 * (i % 4));
+		}
+	}
+	*w0 = words[0];
+	*w1 = words[1];
+	*w2 = words[2];
+	*w3 = words[3];
+}
+
+static void writeAssertCrashMarker(int line, const char* msg, const char* file) {
+	/* The line number is of limited use: every ChibiOS chSysHalt/assert goes
+	 * through the CH_CFG_SYSTEM_HALT_HOOK which expands __LINE__ at its
+	 * invocation site in chsys.c (always 220). The panic MESSAGE is the real
+	 * identifier ("SV#4", "not ready", "not owner", ...), so pack it into
+	 * the backup registers: BKP2R..BKP5R = msg (16 bytes), BKP6R..BKP8R =
+	 * file (12 bytes). */
+	uint32_t m0, m1, m2, m3, f0, f1, f2;
+	packStringIntoWords(msg, &m0, &m1, &m2, &m3);
+	packStringIntoWords(file, &f0, &f1, &f2, &m3 /* dummy */);
+	crashMarkerEnableWrite();
+	RTC->BKP0R = CRASH_MARKER_MAGIC_ASSERT;
+	RTC->BKP1R = (uint32_t)line;
+	RTC->BKP2R = m0;
+	RTC->BKP3R = m1;
+	RTC->BKP4R = m2;
+	RTC->BKP5R = m3;
+	RTC->BKP6R = f0;
+	RTC->BKP7R = f1;
+	RTC->BKP8R = f2;
+}
+
 /* Give the console thread a chance to flush the FAULT/assert line before the
  * reboot. Plain busy-wait: no scheduler/lock involvement (the faulting thread
  * may hold the system lock). ~0.5 s at 288 MHz. */
@@ -555,6 +591,19 @@ static uint32_t crashMarkerMagic;
 static uint32_t crashMarkerArgs[5]; // BKP1R..BKP5R
 static efitick_t bootReportStart;
 
+static void unpackWordsIntoString(char* out, size_t outSize, uint32_t w0, uint32_t w1, uint32_t w2, uint32_t w3) {
+	uint32_t words[4] = { w0, w1, w2, w3 };
+	for (size_t i = 0; i + 1 < outSize && i < sizeof(words); i++) {
+		char c = (char)((words[i / 4] >> (8 * (i % 4))) & 0xFF);
+		if (c == '\0') {
+			out[i] = '\0';
+			return;
+		}
+		out[i] = c;
+	}
+	out[outSize - 1] = '\0';
+}
+
 static void printCrashReportLines() {
 	efiPrintf("*** crash marker: BKP0R=0x%08x BKP1R=0x%08x",
 		(unsigned)crashMarkerMagic, (unsigned)crashMarkerArgs[0]);
@@ -563,8 +612,16 @@ static void printCrashReportLines() {
 			(unsigned)crashMarkerArgs[0], (unsigned)crashMarkerArgs[1], (unsigned)crashMarkerArgs[2],
 			(unsigned)crashMarkerArgs[3], (unsigned)crashMarkerArgs[4]);
 	} else if (crashMarkerMagic == CRASH_MARKER_MAGIC_ASSERT) {
-		efiPrintf("*** PREVIOUS CRASH: assert (line=%u, see assert fail message if it reached the log)",
-			(unsigned)crashMarkerArgs[0]);
+		/* BKP2R..BKP5R hold the panic message, BKP6R..BKP8R the file (see
+		 * writeAssertCrashMarker). Note the line is usually 220 (chsys.c halt
+		 * hook) regardless of the real failing check - the message identifies
+		 * the actual assert. */
+		char msg[17] = "";
+		char file[13] = "";
+		unpackWordsIntoString(msg, sizeof(msg), crashMarkerArgs[1], crashMarkerArgs[2], crashMarkerArgs[3], crashMarkerArgs[4]);
+		unpackWordsIntoString(file, sizeof(file), RTC->BKP6R, RTC->BKP7R, RTC->BKP8R, 0);
+		efiPrintf("*** PREVIOUS CRASH: assert (line=%u, msg='%s', file='%s')",
+			(unsigned)crashMarkerArgs[0], msg, file);
 	}
 	efiPrintf("Reset Cause: %s", getMCUResetCause(getMCUResetCause()));
 }
@@ -690,7 +747,7 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 #else // EFI_PROD_CODE
 
 	criticalError("assert fail %s %s:%d", msg, file, line);
-	writeCrashMarker(CRASH_MARKER_MAGIC_ASSERT, (uint32_t)line, 0, 0, 0, 0);
+	writeAssertCrashMarker(line, msg, file);
 
 	// If on the main thread, longjmp back to the init process so we can keep USB alive
 	if (chThdGetSelfX()->threadId == 0) {
