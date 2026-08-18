@@ -3132,3 +3132,15 @@ pauseCANdueToSerialUntil was only extended on RX the flood never quiets -
 death spiral. Fix: extend the pause on every serial TX frame (isotp.cpp).
 Console-side reconnect already self-heals (previous commit); user flashes
 the new firmware.
+
+## 2026-08-18 (7): reset causes explained - user flashes via ST-Link + OpenOCD
+
+The "mysterious" bench resets are the flash procedure: the user flashes with
+`openocd -f stlink-dap.cfg ... -c "program rusefi.bin 0x08000000 verify reset exit"`.
+- "Reset Cause: NVIC_SystemReset or by debugger" = OpenOCD's `reset` (SYSRESETREQ
+  via the debug probe) after each flash - expected, not a bug.
+- "Reset from NRST pin" = the ST-Link asserts the NRST line (its reset pin is
+  wired to the DAP connector's NRST) on connect/disconnect/probe events.
+Recommendation: unplug the ST-Link after flashing while working with the console.
+Post-flash state is healthy: isotp rate back to ~1379 fps (the BCM-flood pause
+fix works), console polls normally.
