@@ -3721,3 +3721,19 @@ User questions answered:
    crc32, loads it at boot and continues learning from it, auto-saves on
    engine stop (>= 5 learned revolutions), manual save via 'toothsave'.
    'toothdump' now shows stored=yes/no and minRev.
+
+## 2026-08-18 (31): profile-normalized gap check - digital adaptive VR
+
+The user asked for the stock ECU's adaptive VR conditioning. The m74_9
+input is a passive RC + fixed-threshold 74HC14 - there is nothing to
+adjust in analog from firmware. The digital equivalent is implemented
+instead (commit 7b5329eee18's follow-up): isSyncPoint now normalizes
+each tooth duration by the learned per-tooth profile factor
+(triggerGetToothProfileFactor, weak default 1.0, strong m74_9 override
+from the EMA profile, clamped 0.5-1.5; gap tooth keeps 1.0). Multiply
+form keeps the ISR division-free. Effect: the systematic compression
+ripple is divided out, so the real gap ratio stays ~3.0 under
+combustion - directly fixing the C9002 58/58 window-exit case. False
+transient pairs stay ~2.0; once the toothdump data confirms the
+normalized distributions, gap0 can be tightened to ~[2.2, 3.9] to
+reject them outright. All 1131 unit tests pass.
