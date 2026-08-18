@@ -3366,3 +3366,25 @@ Shaped it: 24/24/22/22/20/20/19/19 mg over the 8 cycles (all CLT rows -
 the CLT dependence lives in crankingFuelCoef). Compensates the warm-end
 coef trim from f527b0d6302: first catch stays rich (~26.6 mg at 29 C),
 steady cranking tapers to ~21 mg.
+
+## 2026-08-18 (16): cranking fuel table extended to -40..+60 C (config layout change!)
+
+Per user request the crankingCycleBaseFuel table now has CLT rows from
+-40 to +60 C instead of 0..60:
+- rusefi_config.txt: CRANKING_CYCLE_CLT_SIZE 4 -> 6
+- crankingCycleFuelCltBins: -40/-20/0/20/40/60
+- crankingCycleBaseFuel shaped by temp (mg, cols = cycles 1-8):
+  -40C: 30 30 28 28 26 26 25 25
+  -20C: 27 27 25 25 23 23 22 22
+    0C: 25 25 23 23 21 21 20 20
+   20C: 23 23 21 21 19 19 18 18
+   40C: 21 21 19 19 17 17 16 16
+   60C: 19 19 17 17 15 15 14 14
+  At 29 C this gives ~22.1 mg on cycle 1 (x coef 1.11 = ~24.5 mg) -
+  close to the previous flat-table value, the working point barely moves.
+
+IMPORTANT: this changes the persistent config layout (struct grew by
+2 rows = 68 bytes) -> the TS signature changed (319381849 vs 727755639)
+and the config stored in MFS will be INVALID after flashing the new
+firmware. The user MUST re-apply 21129.msq via TunerStudio right after
+flashing. Firmware rebuilt: deliver/rusefi.bin 15:35.

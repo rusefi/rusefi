@@ -174,7 +174,7 @@ struct_no_prefix engine_configuration_s
 #define CRANKING_CLT_IDLE_CURVE_SIZE 8
 #define CLT_CRANKING_CURVE_SIZE 8
 #define CLT_CRANKING_TAPER_CURVE_SIZE 6
-#define CRANKING_CYCLE_CLT_SIZE 4
+#define CRANKING_CYCLE_CLT_SIZE 6
 ! Ethanol axis size for the opt-in 2D cranking flex-fuel enrichment table (crankingFuelFlexTable).
 ! Deliberately small (4 rows) to keep RAM usage low - cranking enrichment does not need fine ethanol resolution.
 #define CRANKING_FLEX_SIZE 4
