@@ -1328,7 +1328,7 @@
          0.0 0.0 0.0 0.0
          0.0 0.0 0.0 0.0
 </constant>
-        <constant digits="0" name="gapTrackingLengthOverride" units="count">0</constant>
+        <constant digits="0" name="gapTrackingLengthOverride" units="count">2</constant>
         <constant digits="0" name="gapVvtTrackingLengthOverride" units="count">0</constant>
         <constant cols="1" digits="1" name="gearBasedOpenLoopBoostAdder" rows="10" units="%">
          0.0
@@ -3209,7 +3209,7 @@
         <constant digits="1" name="oilTempSensor_tempC_1" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">0.0</constant>
         <constant digits="1" name="oilTempSensor_tempC_2" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">0.0</constant>
         <constant digits="1" name="oilTempSensor_tempC_3" units="{bitStringValue(unitsLabels, useMetricOnInterface)}">0.0</constant>
-        <constant name="overrideTriggerGaps">"no"</constant>
+        <constant name="overrideTriggerGaps">"yes"</constant>
         <constant name="overrideVvtTriggerGaps">"no"</constant>
         <constant name="pauseEtbControl">"no"</constant>
         <constant cols="1" digits="0" name="pedalToTpsPedalBins" rows="8" units="%">
@@ -4609,7 +4609,7 @@
         <constant name="triggerErrorPin">"NONE"</constant>
         <constant name="triggerErrorPinMode">"default"</constant>
         <constant digits="3" name="triggerEventsTimeoutMs" units="ms">0.0</constant>
-        <constant digits="3" name="triggerGapOverrideFrom1" units="ratio">0.0</constant>
+        <constant digits="3" name="triggerGapOverrideFrom1" units="ratio">1.6</constant>
         <constant digits="3" name="triggerGapOverrideFrom10" units="ratio">0.0</constant>
         <constant digits="3" name="triggerGapOverrideFrom11" units="ratio">0.0</constant>
         <constant digits="3" name="triggerGapOverrideFrom12" units="ratio">0.0</constant>
@@ -4619,7 +4619,7 @@
         <constant digits="3" name="triggerGapOverrideFrom16" units="ratio">0.0</constant>
         <constant digits="3" name="triggerGapOverrideFrom17" units="ratio">0.0</constant>
         <constant digits="3" name="triggerGapOverrideFrom18" units="ratio">0.0</constant>
-        <constant digits="3" name="triggerGapOverrideFrom2" units="ratio">0.0</constant>
+        <constant digits="3" name="triggerGapOverrideFrom2" units="ratio">0.85</constant>
         <constant digits="3" name="triggerGapOverrideFrom3" units="ratio">0.0</constant>
         <constant digits="3" name="triggerGapOverrideFrom4" units="ratio">0.0</constant>
         <constant digits="3" name="triggerGapOverrideFrom5" units="ratio">0.0</constant>
@@ -4627,7 +4627,7 @@
         <constant digits="3" name="triggerGapOverrideFrom7" units="ratio">0.0</constant>
         <constant digits="3" name="triggerGapOverrideFrom8" units="ratio">0.0</constant>
         <constant digits="3" name="triggerGapOverrideFrom9" units="ratio">0.0</constant>
-        <constant digits="3" name="triggerGapOverrideTo1" units="ratio">0.0</constant>
+        <constant digits="3" name="triggerGapOverrideTo1" units="ratio">4.2</constant>
         <constant digits="3" name="triggerGapOverrideTo10" units="ratio">0.0</constant>
         <constant digits="3" name="triggerGapOverrideTo11" units="ratio">0.0</constant>
         <constant digits="3" name="triggerGapOverrideTo12" units="ratio">0.0</constant>
@@ -4637,7 +4637,7 @@
         <constant digits="3" name="triggerGapOverrideTo16" units="ratio">0.0</constant>
         <constant digits="3" name="triggerGapOverrideTo17" units="ratio">0.0</constant>
         <constant digits="3" name="triggerGapOverrideTo18" units="ratio">0.0</constant>
-        <constant digits="3" name="triggerGapOverrideTo2" units="ratio">0.0</constant>
+        <constant digits="3" name="triggerGapOverrideTo2" units="ratio">1.15</constant>
         <constant digits="3" name="triggerGapOverrideTo3" units="ratio">0.0</constant>
         <constant digits="3" name="triggerGapOverrideTo4" units="ratio">0.0</constant>
         <constant digits="3" name="triggerGapOverrideTo5" units="ratio">0.0</constant>
