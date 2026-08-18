@@ -6,6 +6,7 @@
 #include "drivers/gpio/l9779.h"
 #include "drivers/gpio/tle9201.h"
 #include "m74_9_can.h"
+#include "m74_9_tooth_diag.h"
 
 // PB14 is error LED, configured in board.mk
 Gpio getCommsLedPin() {
@@ -670,12 +671,13 @@ void setup_custom_board_overrides() {
 	// false-syncs the decoder mid-crank - firing from it backfires through the
 	// intake. Wait one crank revolution so the next gap validates the position.
 	custom_board_requireValidatedSync = []() { return true; };
-#if EFI_PROD_CODE && HAL_USE_ADC
+	#if EFI_PROD_CODE && HAL_USE_ADC
 	addConsoleAction("fastadcdiag", m74_9FastAdcDiag);
 	addConsoleAction("knockpin", m74_9KnockPinScan);
 	addConsoleAction("knocktest", m74_9KnockBurst);
 	addConsoleAction("adcdivtest", m74_9AdcDivTest);
 #endif
+	addConsoleAction("toothdump", m74_9ToothDump);
 #if EFI_CAN_SUPPORT
 	initM74_9Can();
 	custom_board_isImmobilizerBlocking = m74_9_isImmobilizerBlocking;

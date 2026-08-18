@@ -1,6 +1,7 @@
 # List of all the board related files.
 BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp \
   $(BOARD_DIR)/m74_9_can.cpp \
+  $(BOARD_DIR)/m74_9_tooth_diag.cpp \
   $(BOARD_DIR)/../at_start_f435/board_storage.cpp
 
 DDEFS += -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::Unassigned
