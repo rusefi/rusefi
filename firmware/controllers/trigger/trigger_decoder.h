@@ -15,6 +15,17 @@
 const char *getTrigger_event_e(trigger_event_e value);
 const char *getTrigger_value_e(TriggerValue value);
 
+/**
+ * Learned per-tooth time profile factor, used to normalize tooth durations in
+ * the sync gap check (see isSyncPoint). A board that learns the wheel
+ * non-uniformity (m74_9) overrides this with a strong definition; the weak
+ * default is 1.0 = no normalization, the behavior every other board has.
+ * The factor is the tooth's regular (no-missing-teeth) time share of the
+ * revolution relative to the average tooth; the gap tooth keeps factor 1.0
+ * so the missing-teeth gap still shows its ~3x ratio.
+ */
+float triggerGetToothProfileFactor(int toothIndex);
+
 struct TriggerStateListener {
 #if EFI_SHAFT_POSITION_INPUT
 	virtual void OnTriggerStateProperState(efitick_t nowNt, size_t triggerStateIndex) = 0;
