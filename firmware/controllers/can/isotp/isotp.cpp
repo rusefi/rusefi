@@ -222,6 +222,16 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 	if (numBytes < 1)
 		return 0;
 
+	/* Keep the periodic board CAN broadcasts quiet while a serial session is
+	 * active. The pause is normally extended on RX (see receiveFrame), but
+	 * the console sends the next request only after our response arrives: if
+	 * the response stalls (TX mailboxes contended with the flood), the
+	 * RX-side pause lapses, the flood resumes at full rate and the stall
+	 * becomes permanent - the console times out and restarts, and every
+	 * cycle dies the same way. Extend the pause on TX too so the bus stays
+	 * free until the whole response is out. */
+	engine->pauseCANdueToSerialUntil = getTimeNowNt() + MS2NT(CAN_SERIAL_PAUSE_MS);
+
 	// 1 frame
 	if (numBytes <= 7 - (int)isoHeaderByteIndex) {
 		IsoTpFrameHeader header;
@@ -285,6 +295,10 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 	int idx = 1;
 	while (numBytes > 0) {
 		int len = minI(numBytes, 7 - isoHeaderByteIndex);
+		// keep the broadcast pause alive through the whole burst (a 1 KB
+		// response is ~150 frames; without this the pause can lapse mid-burst
+		// and the flood steals the TX mailboxes)
+		engine->pauseCANdueToSerialUntil = getTimeNowNt() + MS2NT(CAN_SERIAL_PAUSE_MS);
 		// send the consecutive frames
 		header.frameType = ISO_TP_FRAME_CONSECUTIVE;
 		header.index = ((idx++) & 0x0f);
