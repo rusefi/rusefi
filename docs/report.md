@@ -3737,3 +3737,19 @@ combustion - directly fixing the C9002 58/58 window-exit case. False
 transient pairs stay ~2.0; once the toothdump data confirms the
 normalized distributions, gap0 can be tightened to ~[2.2, 3.9] to
 reject them outright. All 1131 unit tests pass.
+
+## 2026-08-18 (32): toothdump stack overflow crash - fixed
+
+First on-car toothdump hard-faulted the ECU (BKP0R=0xC0FFEE01, fault
+type=3, cfsr=0x04 IMPRECISERR, pc in idle/sleep code - the imprecise
+fault surfaced after the console command thread blew its stack). The
+command built ~3.5 KB of locals (ordered[348] + two float[58] + a
+224-byte line buffer) on the console thread stack. All moved to static
+storage (commit, firmware 20:33 build).
+
+On-car positives from the same session: the cam sensor WORKS - VVT input
+reports VVT_SINGLE_TOOTH with 5/5 rising/falling edges during cranking
+(the AG2 -> PB9 path is live). The C9003 at 20:29 (gap=1.735 mid-rev,
+17 teeth before the real gap) shows the false-sync acquisition path is
+still there until the learned profile loads and the gap window gets
+tightened - expected, next step after the toothdump data.
