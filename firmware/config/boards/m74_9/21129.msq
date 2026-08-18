@@ -811,10 +811,10 @@
 </constant>
         <constant name="crankingCondition">"None"</constant>
         <constant cols="8" digits="1" name="crankingCycleBaseFuel" rows="4" units="mg">
-         20.0 20.0 20.0 20.0 20.0 20.0 20.0 20.0
-         20.0 20.0 20.0 20.0 20.0 20.0 20.0 20.0
-         20.0 20.0 20.0 20.0 20.0 20.0 20.0 20.0
-         20.0 20.0 20.0 20.0 20.0 20.0 20.0 20.0
+         24.0 24.0 22.0 22.0 20.0 20.0 19.0 19.0
+         24.0 24.0 22.0 22.0 20.0 20.0 19.0 19.0
+         24.0 24.0 22.0 22.0 20.0 20.0 19.0 19.0
+         24.0 24.0 22.0 22.0 20.0 20.0 19.0 19.0
 </constant>
         <constant cols="1" digits="0" name="crankingCycleBins" rows="8" units="counter">
          1
