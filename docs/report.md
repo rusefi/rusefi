@@ -3341,3 +3341,17 @@ Fixes in 21129.msq:
 - tpsTpsAccelTable scaled down ~3x (10-37 -> 4-16 ms).
 - tpsAccelEnrichmentThreshold 40 -> 15 %/cycle so moderate presses also
   get a small enrichment instead of a lean spike.
+
+## 2026-08-18 (14): enable the separate idle VE table, seeded from the main VE table
+
+Per user request - make idle fueling tunable in its own 4x4 table:
+- useSeparateVeForIdle disabled -> enabled
+- idleVeOverrideMode None -> MAP (the idle table's load axis is raw MAP
+  kPa, same as the main table)
+- idleVeLoadBins 30/40/50/60 kPa, idleVeRpmBins 600/800/1000/1200
+- idleVeTable seeded from the main veTable idle region (load 30-60,
+  rpm 600-1200): rows [57,67,68,68],[63,69,71,71],[65,69,72,73],[67,71,72,74]
+The resulting idle VE at MAP 38/rpm 700 is ~65, matching the main table's
+~64 - no fueling step at the switchover. The table engages only when
+isIdlingOrTaper() and blends to the main table above
+idlePidDeactivationTpsThreshold (5% pedal).
