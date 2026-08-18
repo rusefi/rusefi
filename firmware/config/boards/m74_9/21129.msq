@@ -2167,7 +2167,7 @@
          40
          60
 </constant>
-        <constant digits="1" name="ignitionDwellForCrankingMs" units="ms">3.0</constant>
+        <constant digits="1" name="ignitionDwellForCrankingMs" units="ms">5.5</constant>
         <constant cols="1" digits="0" name="ignitionIatCorrLoadBins" rows="8" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">
          0
          20
