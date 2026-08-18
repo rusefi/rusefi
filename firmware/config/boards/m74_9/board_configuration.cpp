@@ -671,6 +671,10 @@ void setup_custom_board_overrides() {
 	// false-syncs the decoder mid-crank - firing from it backfires through the
 	// intake. Wait one crank revolution so the next gap validates the position.
 	custom_board_requireValidatedSync = []() { return true; };
+	// Cam-phase continuity cross-check: the 21129 cam is belt-driven and fixed
+	// (no VVT phaser), so a crank-sync basis error shows up as a phase jump at
+	// the next cam event. Force a crank re-sync on a jump beyond 15 degrees.
+	custom_board_vvtDriftLimit = []() { return 15.0f; };
 	// Tooth profile learning housekeeping (load/save of the learned wheel
 	// profile + auto-save on engine stop).
 	custom_board_periodicSlowCallback = m74_9ToothPeriodic;
