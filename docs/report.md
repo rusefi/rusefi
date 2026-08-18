@@ -3256,3 +3256,31 @@ Open items:
   build (Compiled: timestamp must change).
 - Lambda input stuck at AFR 22.9 / lambda 1.561 - check the 14Point7
   controller wiring to "Oxygen sensor 1 signal" and the curve.
+
+## 2026-08-18 (11): user's open-loop tune runs longest - idle advance table was the killer
+
+The user hand-tuned 21129_new.msq (open-loop idle only, ETB idle range 2%,
+hot idle positions 0.5%, knock disabled, taper 10, cranking timing 10 deg,
+lambda input disconnected) - the engine catches and flares to ~595 rpm with
+MAP 40.9 kPa and 22.4 deg advance, the longest run so far.
+
+The 14:48:21 MLG shows the exact death: at t=818 the engine is healthy
+(595 rpm, MAP 40.9, adv 22.42 from the main table). At t=896 the separate
+idle-advance table engages (phase -> Idling) and, with the user's values
+(-5/0/5/8 deg at 0-700 rpm), retards the timing from 22.42 to 0.38 deg at
+422 rpm -> instant stall. A 22 deg retard at 400 rpm cannot be survived.
+
+Fixes applied to 21129_new.msq (now the canonical 21129.msq in the repo,
+synced to ~/21129_new.msq and ~/Downloads/21129.msq):
+- idleAdvance [-5,0,5,8,11,10,10,12] -> [20,21,22,20,18,16,16,16] - the
+  idle table now matches the main table's low-load region (~22 deg), so the
+  engagement retards only ~1-2 deg.
+- ignitionTable loads 50-75 @ rpm 650-800 raised to 16.0-19.0 deg (the
+  user's export predated this edit; it smooths the advance collapse if MAP
+  rises during a sag).
+Everything else kept from the user's tune (Open Loop idle, ETB range 2,
+knock off, taper 10).
+
+Note: the ECU is still on the 09:24 firmware (no knock-ISR fix); the
+14:48 build in deliver/ has it. Knock is disabled in the tune so the crash
+cannot trigger, but re-flash anyway for the crash-marker improvements.
