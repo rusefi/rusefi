@@ -807,10 +807,6 @@ bool TriggerDecoderBase::isSyncPoint(const TriggerWaveform& triggerShape, trigge
 	return true;
 }
 
-PUBLIC_API_WEAK float triggerGetToothProfileFactor(int) {
-	return 1.0f;
-}
-
 /**
  * Trigger shape is defined in a way which is convenient for trigger shape definition
  * On the other hand, trigger decoder indexing begins from synchronization event.
