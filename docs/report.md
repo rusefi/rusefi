@@ -3388,3 +3388,22 @@ IMPORTANT: this changes the persistent config layout (struct grew by
 and the config stored in MFS will be INVALID after flashing the new
 firmware. The user MUST re-apply 21129.msq via TunerStudio right after
 flashing. Firmware rebuilt: deliver/rusefi.bin 15:35.
+
+## 2026-08-18 (17): console msq validation failed on the 6-row cranking table
+
+The user loaded the new msq with the console from the bundle and got
+"crankingCycleBaseFuel: 48 values while expecting 4 by 8 total 32" - the
+console validates msq tables against the ini, and both the console jar and
+the ini in the bundle were stale (old CRANKING_CYCLE_CLT_SIZE=4 layout).
+Fixed:
+- UiVersion.CONSOLE_VERSION 20260817 -> 20260818
+- console jar rebuilt (console/rusefi_console.jar 15:45) - VariableRegistry
+  now carries CRANKING_CYCLE_CLT_SIZE=6
+- bundle zip refreshed with the new jar + new ini + firmware bin/hex.
+  NOTE: the snapshot bin/hex were dangling symlinks (relative paths) so the
+  compile.sh zip step silently skipped the firmware files in both bundle
+  builds; replaced with real copies and re-zipped.
+The msq load error also appears while the ECU still runs the old firmware:
+the console reads the ini from the ECU, so the new msq can only be loaded
+AFTER flashing the 15:35 firmware. Correct order: flash rusefi.bin ->
+connect console -> load 21129_new.msq -> apply.
