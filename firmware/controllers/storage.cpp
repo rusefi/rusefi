@@ -109,6 +109,8 @@ static bool storageWriteID(uint32_t id) {
 	} else if (id == EFI_LUA_PAGE_RECORD_ID) {
 		burnExtraFlashPage(EFI_LUA_PAGE_RECORD_ID);
 		return true;
+	} else if (id == EFI_TOOTH_PROFILE_RECORD_ID) {
+		return toothProfileStorageWrite();
 	} else {
 		efiPrintf("Requested to write unknown record id %ld", id);
 		// to clear pending bit
@@ -134,11 +136,21 @@ static bool storageReadID(uint32_t id) {
 	} else if (id == EFI_LUA_PAGE_RECORD_ID) {
 		loadExtraPage(EFI_LUA_PAGE_RECORD_ID);
 		return true;
+	} else if (id == EFI_TOOTH_PROFILE_RECORD_ID) {
+		return toothProfileStorageRead();
 	} else {
 		efiPrintf("Requested to read unknown record id %ld", id);
 		// to clear pending bit
 		return true;
 	}
+	return true;
+}
+
+PUBLIC_API_WEAK bool toothProfileStorageWrite() {
+	return true;
+}
+
+PUBLIC_API_WEAK bool toothProfileStorageRead() {
 	return true;
 }
 

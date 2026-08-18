@@ -53,12 +53,18 @@ enum StorageItemId {
 	EFI_LTFT_RECORD_ID = 3,
 	EFI_SECOND_TABLES_RECORD_ID = 4,
 	EFI_LUA_PAGE_RECORD_ID = 5,
+	EFI_TOOTH_PROFILE_RECORD_ID = 6,
 
 	EFI_STORAGE_TOTAL_ITEMS
 };
 
 // exported for unit tests only
 bool storageAllowWriteID(StorageItemId id);
+
+// Board-provided handlers for the tooth profile record (m74_9 stores the
+// learned per-tooth period profile there). Weak defaults: nothing to do.
+PUBLIC_API_WEAK bool toothProfileStorageWrite();
+PUBLIC_API_WEAK bool toothProfileStorageRead();
 
 // read and write storate item. executed in caller context
 StorageStatus storageWrite(StorageItemId id, const uint8_t *ptr, size_t size);

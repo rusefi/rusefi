@@ -671,6 +671,9 @@ void setup_custom_board_overrides() {
 	// false-syncs the decoder mid-crank - firing from it backfires through the
 	// intake. Wait one crank revolution so the next gap validates the position.
 	custom_board_requireValidatedSync = []() { return true; };
+	// Tooth profile learning housekeeping (load/save of the learned wheel
+	// profile + auto-save on engine stop).
+	custom_board_periodicSlowCallback = m74_9ToothPeriodic;
 	#if EFI_PROD_CODE && HAL_USE_ADC
 	addConsoleAction("fastadcdiag", m74_9FastAdcDiag);
 	addConsoleAction("knockpin", m74_9KnockPinScan);
@@ -678,6 +681,7 @@ void setup_custom_board_overrides() {
 	addConsoleAction("adcdivtest", m74_9AdcDivTest);
 #endif
 	addConsoleAction("toothdump", m74_9ToothDump);
+	addConsoleAction("toothsave", m74_9ToothSave);
 #if EFI_CAN_SUPPORT
 	initM74_9Can();
 	custom_board_isImmobilizerBlocking = m74_9_isImmobilizerBlocking;
