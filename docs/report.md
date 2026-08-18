@@ -3320,3 +3320,24 @@ Tune changes (21129.msq, synced to ~/21129_new.msq and ~/Downloads):
 Still to do: flash the 14:48 firmware (ECU is on 09:24), re-enable the
 lambda input eventually (mixture tuning is blind without it), and get a
 full MLG captured from before the key-on to the stall.
+
+## 2026-08-18 (13): idle fueling uses the main VE table; tip-in stall = hot TPS accel table
+
+User question: which VE table fuels idle, and why does pressing the gas
+stall the engine. Answers:
+
+- Idle uses the MAIN veTable (useSeparateVeForIdle=disabled, the idleVeTable
+  is all zeros and unused) with the MAP load axis (veOverrideMode=MAP). At
+  idle load ~35 the VE is 61-68% -> base fuel 7-8 mg -> lambda ~0.7 during
+  the afterstart phase (CLT 1.09 x afterstart ~1.28) settling to ~0.92
+  warm. The idle-region VE is stock-plausible; the rich first seconds are
+  the afterstart, not a table error.
+- Tip-in stall: the TPS accel "MS Adder" table added 10-37 ms of pulse on a
+  ~5 ms idle base (2-7x fuel) once the 40%/cycle TPS threshold was crossed
+  -> instant rich bog -> stall. Moderate presses below 40%/cycle got NO
+  adder and relied on the lagging MAP-averaged SD fuel -> lean tip-in.
+
+Fixes in 21129.msq:
+- tpsTpsAccelTable scaled down ~3x (10-37 -> 4-16 ms).
+- tpsAccelEnrichmentThreshold 40 -> 15 %/cycle so moderate presses also
+  get a small enrichment instead of a lean spike.

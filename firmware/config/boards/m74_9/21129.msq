@@ -4475,7 +4475,7 @@
         <constant digits="2" name="tps2Min" units="V">0.0</constant>
         <constant digits="2" name="tps2SecondaryMax" units="V">0.0</constant>
         <constant digits="2" name="tps2SecondaryMin" units="V">5.0</constant>
-        <constant digits="1" name="tpsAccelEnrichmentThreshold" units="roc">40.0</constant>
+        <constant digits="1" name="tpsAccelEnrichmentThreshold" units="roc">15.0</constant>
         <constant digits="2" name="tpsAccelFractionDivisor" units="coef">1.0</constant>
         <constant digits="0" name="tpsAccelFractionPeriod" units="cycles">0</constant>
         <constant digits="2" name="tpsAccelLookback" units="sec">0.0</constant>
@@ -4498,13 +4498,13 @@
 </constant>
         <constant cols="8" digits="2" name="tpsTpsAccelTable" rows="8" units="value">
          0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
-         10.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
-         17.0 10.0 0.0 0.0 0.0 0.0 0.0 0.0
-         23.0 17.0 10.0 0.0 0.0 0.0 0.0 0.0
-         28.0 23.0 17.0 10.0 0.0 0.0 0.0 0.0
-         32.0 28.0 23.0 17.0 10.0 0.0 0.0 0.0
-         35.0 32.0 28.0 23.0 17.0 10.0 0.0 0.0
-         37.0 35.0 32.0 28.0 23.0 17.0 10.0 0.0
+         4.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+         6.0 4.0 0.0 0.0 0.0 0.0 0.0 0.0
+         8.0 6.0 4.0 0.0 0.0 0.0 0.0 0.0
+         10.0 8.0 6.0 4.0 0.0 0.0 0.0 0.0
+         12.0 10.0 8.0 6.0 4.0 0.0 0.0 0.0
+         14.0 12.0 10.0 8.0 6.0 4.0 0.0 0.0
+         16.0 14.0 12.0 10.0 8.0 6.0 4.0 0.0
 </constant>
         <constant cols="1" digits="2" name="tpsTpsAccelToRpmBins" rows="8" units="%">
          0.0
