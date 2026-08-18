@@ -3701,3 +3701,23 @@ firmware 18:59 build):
 Planned consumers once the profile is captured: gap validation and
 instant-rpm should use the learned per-tooth factors instead of raw time
 ratios (that is what makes the stock decoder robust on this wheel).
+
+## 2026-08-18 (30): tooth profile persisted in MFS + crank signal path review
+
+User questions answered:
+1. Two-wire crank sensor without shield - yes, distortion is plausible.
+   The KiCad netlist shows the VR path: CRANK VR+/VR- -> RC passives ->
+   74HC14 Schmitt trigger -> PF8. Fixed thresholds (~1/3, 2/3 VCC), no
+   adaptive threshold like the stock M74 conditioner, high-impedance
+   input with no shield on the harness - noise pickup and low-rpm
+   threshold jitter are both possible. The toothdump capture will show
+   which one: smooth periodic thick/thin pattern = compression physics,
+   random single-tooth anomalies = noise/threshold.
+2. Persistent auto-learning implemented (commit 7b5329eee18, firmware
+   19:11 build): new EFI_TOOTH_PROFILE_RECORD_ID=6 with weak
+   toothProfileStorageRead/Write hooks in storage.cpp dispatched from the
+   storage manager thread (serialized with settings writes, no MFS
+   race). The m74_9 module stores the EMA profile with magic/version/
+   crc32, loads it at boot and continues learning from it, auto-saves on
+   engine stop (>= 5 learned revolutions), manual save via 'toothsave'.
+   'toothdump' now shows stored=yes/no and minRev.
