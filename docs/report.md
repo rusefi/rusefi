@@ -3577,3 +3577,31 @@ fixed timing angle). Switched to the table-driven modes:
   "УОЗ при пуске" shape: -5.25 deg at 0-280 rpm (anti-kickback),
   10.9 at 560, 14.6 at 850 - hands off smoothly to the idle advance table
   (~13 deg) at the cranking_rpm=850 transition.
+
+## 2026-08-18 (26): cold cranking flood - cut crankingFuelCoef and afterstart taper
+
+The engine now catches and briefly reaches idle (one log record: rpm 955,
+MAP 72.8 kPa) but floods. Parsed the 17:17/17:18 MLGs with the local
+parser (artifacts/tmp_mlg_parse): during cranking at CLT 17 C the chain
+was base 27.3 mg (SD math, airmass 360 mg / target AFR 13.2 - correct)
+x crankingFuelCoef 1.56 = 42.7 mg, x wall-fuel ~1.06 = ~45 mg injected
+per cylinder. The SD base already includes the target-lambda and airmass
+correction, so crankingFuelCoef was pure extra enrichment (1.56 at 17 C).
+After the catch, running fuel was base 17.9 x coolant 1.14 x postCranking
+1.44 = 28.7 mg at 955 rpm - the afterstart taper peak (2.2x row) was also
+drowning it.
+
+Changes to 21129.msq (committed a59c9ae8835, synced to ~/21129_new.msq):
+- crankingFuelCoef -20/.../90: 2.8 2.2 1.8 1.5 1.2 1.0 0.9 0.85 ->
+  1.6 1.4 1.15 1.0 0.9 0.8 0.72 0.65. At 17 C the multiplier drops
+  1.56 -> ~1.03, cranking dose 45 -> ~29 mg. Warm bins now lean the
+  dose below the SD base (0.65 at 90 C = ~18 mg warm start).
+- postCrankingFactor rows re-scaled: peak at -20 C 2.2 -> 1.5, the 0 C
+  row 1.7 -> 1.32, the 20 C row 1.4 -> 1.2, decay to 1.0 within
+  120-200 revolutions unchanged. At 17 C the afterstart start value is
+  now ~1.22 instead of ~1.44.
+
+Next: load ~/21129_new.msq in the console, cold-start, send the next
+text+MLG pair. If still rich: next levers are the 5-20 C coef bins and
+the 0/20 C postCranking rows; the VE table stays untouched (SD math
+verified correct).
