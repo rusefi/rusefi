@@ -3753,3 +3753,26 @@ reports VVT_SINGLE_TOOTH with 5/5 rising/falling edges during cranking
 17 teeth before the real gap) shows the false-sync acquisition path is
 still there until the learned profile loads and the gap window gets
 tightened - expected, next step after the toothdump data.
+
+## 2026-08-18 (33): first toothdump data - clean VR signal, indexing fix, gap window tightened
+
+First real capture (20:48, 60 revs at ~290 rpm): the tooth profile is a
+smooth 4-cycle compression ripple, NO random spikes - the VR signal is
+healthy, the false syncs are pure decoder-window artifacts. The gap
+reads 36.4 ms = 3.1x its neighbors.
+
+Two bugs found in the capture itself:
+- The phase-derived tooth index was shifted (the engine phase wraps
+  around tdcPosition: the sync tooth mapped to ~39 instead of 0 - the
+  gap landed at slot 37 and slots 38/39 never learned). Fixed by using
+  the decoder index (sync = 0); the ring boundaries now land on sync
+  events and the gap sits at slot 57 as designed. Profile version
+  bumped to 2 so the misindexed stored record is rejected.
+- Gap0 window tightened 1.6-4.2 -> 2.2-3.9: observed raw gap ratio is
+  3.05-3.11 (known cranking stretch to 3.6-3.75, both inside), observed
+  false pairs 1.7-2.0 (now outside). With the stored profile loaded the
+  normalized gap holds ~3 under combustion kicks.
+
+Also: the 20:34 'stack overflt/sr' marker was the same toothdump stack
+overflow caught by the ChibiOS stack check (still on the 19:49 build);
+the 20:47:52 marker was a plain power cycle (BKP0R=0, not a crash).
