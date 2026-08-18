@@ -3355,3 +3355,14 @@ The resulting idle VE at MAP 38/rpm 700 is ~65, matching the main table's
 ~64 - no fueling step at the switchover. The table engages only when
 isIdlingOrTaper() and blends to the main table above
 idlePidDeactivationTpsThreshold (5% pedal).
+
+## 2026-08-18 (15): shape the cranking fuel cycle table
+
+Cranking fuel in rusEFI is mass-based (useRunningMathForCranking=Fixed):
+crankingCycleBaseFuel(CLT, cycle) x crankingFuelCoef(CLT) x
+crankingTpsCoef(pedal) - this is the "separate cranking table" the user
+asked for; it already exists as a 4x8 (CLT 0-60 C x cycle 1-8) table.
+Shaped it: 24/24/22/22/20/20/19/19 mg over the 8 cycles (all CLT rows -
+the CLT dependence lives in crankingFuelCoef). Compensates the warm-end
+coef trim from f527b0d6302: first catch stays rich (~26.6 mg at 29 C),
+steady cranking tapers to ~21 mg.
