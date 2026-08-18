@@ -77,3 +77,14 @@ iterate all), mutability, naming universe, and flash layout.
 - `GetOutputValueConsumer` output has no `getOutputValueByHash` symbol in LTO board builds
   (inlined into the Lua hook); when sizing flash by symbol, its cost hides inside the
   `configureRusefiLuaHooks` lambda, while `allParameters` + lambdas stay attributable.
+- **`engineModule:` requires `conditional_compilation:`** — a `LiveData.yaml` entry with
+  `engineModule: Foo` makes the generated output lookup dereference `engine->module<Foo>()`
+  for every field. If the module's `type_list` registration in `engine.h` sits behind an
+  `#if` (e.g. `EFI_ENGINE_CONTROL`), the yaml entry MUST carry a matching
+  `conditional_compilation:` key, or any board building with that flag off (e.g.
+  small-can-board sets `EFI_ENGINE_CONTROL=FALSE`) fails with "Type not found in
+  type_list" inside `output_lookup_generated.cpp`. The `decl_frag` fragment list stays
+  unconditional either way (layout is board-independent); only the code paths get guarded,
+  and the hand-written `getLiveData` specialization in `live_data.cpp` needs the same
+  `#if`/`nullptr` treatment. Precedents: `lambda_monitor`, `vvl_controller_state`,
+  `mc33810_state`, `injector_deadtime_autotune_state`.
