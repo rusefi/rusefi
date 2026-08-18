@@ -3120,3 +3120,15 @@ same process held the single-client MacCAN device forever.
 Fix: PCanIoStream.close() now calls can.Uninitialize. Console jar rebuilt;
 user restarts the console (adapter plugged in FIRST). The desync itself
 (the watchdog trigger) is still to be characterized on the next run.
+
+## 2026-08-18 (6): overnight bench - console dies every 10 s, root cause BCM flood vs ISO-TP TX
+
+Morning: console connects but every session dies in ~10 s cycles - "Got only
+309 byte(s) while expecting 1029", no ECU confirmations, isotp rate ~1 fps
+(yesterday: 1379 fps). The unpaused m74_9 BCM emulation floods ~3 kfps and
+contends with the calibration response for the CAN TX mailboxes; the
+response trickles, the console times out, reconnects, and because
+pauseCANdueToSerialUntil was only extended on RX the flood never quiets -
+death spiral. Fix: extend the pause on every serial TX frame (isotp.cpp).
+Console-side reconnect already self-heals (previous commit); user flashes
+the new firmware.
