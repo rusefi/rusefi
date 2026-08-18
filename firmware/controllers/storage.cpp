@@ -146,14 +146,6 @@ static bool storageReadID(uint32_t id) {
 	return true;
 }
 
-PUBLIC_API_WEAK bool toothProfileStorageWrite() {
-	return true;
-}
-
-PUBLIC_API_WEAK bool toothProfileStorageRead() {
-	return true;
-}
-
 static const char *storageTypeToName(StorageType type) {
 	switch (type) {
 	case STORAGE_INT_FLASH:

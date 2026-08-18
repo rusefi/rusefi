@@ -223,6 +223,15 @@ private:
 };
 
 void triggerInfo(void);
+
+// Board hook, called once per synchronized primary trigger tooth.
+// Declared WITHOUT 'weak': a weak declaration at the call site lets GCC LTO
+// bind the call to a local weak body (dead-call elimination / const folding,
+// which noinline does not prevent) BEFORE the linker can select a board's
+// strong override. The weak default lives in trigger_board_hooks.cpp (a
+// different translation unit).
+void boardTriggerCallback(efitick_t timestamp, float currentPhase);
+
 void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp);
 void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp);
 void hwHandleVvtCamSignal(TriggerValue front, efitick_t timestamp, int index);

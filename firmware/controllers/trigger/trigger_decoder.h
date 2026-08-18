@@ -23,8 +23,11 @@ const char *getTrigger_value_e(TriggerValue value);
  * The factor is the tooth's regular (no-missing-teeth) time share of the
  * revolution relative to the average tooth; the gap tooth keeps factor 1.0
  * so the missing-teeth gap still shows its ~3x ratio.
+ * The weak default lives in trigger_board_hooks.cpp (not in
+ * trigger_decoder.cpp): a same-TU weak definition is bound by GCC LTO at
+ * the call site before a board's strong override can win at link time.
  */
-float triggerGetToothProfileFactor(int toothIndex);
+__attribute__((noinline)) float triggerGetToothProfileFactor(int toothIndex);
 
 struct TriggerStateListener {
 #if EFI_SHAFT_POSITION_INPUT

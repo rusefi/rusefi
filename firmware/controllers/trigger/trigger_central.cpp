@@ -125,8 +125,6 @@ PUBLIC_API_WEAK bool boardIsSpecialVvtDecoder(vvt_mode_e vvtMode) {
 	return false;
 }
 
-PUBLIC_API_WEAK void boardTriggerCallback(efitick_t timestamp, float currentPhase) { UNUSED(timestamp); UNUSED(currentPhase); }
-
 static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 	return vvtMode != VVT_INACTIVE
 			&& vvtMode != VVT_TOYOTA_3_TOOTH /* VVT_2JZ is an unusual 3/0 missed tooth symmetrical wheel */

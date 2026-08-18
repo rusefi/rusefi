@@ -62,9 +62,14 @@ enum StorageItemId {
 bool storageAllowWriteID(StorageItemId id);
 
 // Board-provided handlers for the tooth profile record (m74_9 stores the
-// learned per-tooth period profile there). Weak defaults: nothing to do.
-PUBLIC_API_WEAK bool toothProfileStorageWrite();
-PUBLIC_API_WEAK bool toothProfileStorageRead();
+// learned per-tooth period profile there). Weak defaults live in
+// storage_weaks.cpp. Declared WITHOUT 'weak': a weak declaration at the
+// storage manager dispatch call site lets GCC LTO bind the call to a local
+// weak body (const folding, which noinline does not prevent) BEFORE the
+// linker can select a board's strong override - the dispatch silently
+// becomes a no-op and the board handlers get dead-code-eliminated.
+bool toothProfileStorageWrite();
+bool toothProfileStorageRead();
 
 // read and write storate item. executed in caller context
 StorageStatus storageWrite(StorageItemId id, const uint8_t *ptr, size_t size);

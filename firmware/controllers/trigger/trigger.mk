@@ -27,4 +27,5 @@ TRIGGER_DECODERS_SRC_CPP = \
 
 TRIGGER_SRC_CPP = \
 	$(CONTROLLERS_DIR)/trigger/trigger_emulator_algo.cpp \
-	$(CONTROLLERS_DIR)/trigger/trigger_central.cpp
+	$(CONTROLLERS_DIR)/trigger/trigger_central.cpp \
+	$(CONTROLLERS_DIR)/trigger/trigger_board_hooks.cpp
