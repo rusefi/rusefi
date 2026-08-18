@@ -846,7 +846,7 @@
          65.0
          90.0
 </constant>
-        <constant cols="1" digits="2" name="crankingFuelCoef" rows="8" units="coef">
+        <constant cols="1" digits="2" name="crankingFuelCoef" rows="8" units="ratio">
          2.8
          2.2
          1.8
