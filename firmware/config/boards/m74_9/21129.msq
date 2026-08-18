@@ -26,7 +26,7 @@
         <constant name="acSwitch">"Air conditioner control input"</constant>
         <constant name="acSwitchMode">"DEFAULT"</constant>
         <constant digits="3" name="adcVcc" units="volts">3.3</constant>
-        <constant name="afr_hwChannel">"Oxygen sensor 1 signal"</constant>
+        <constant name="afr_hwChannel">"NONE"</constant>
         <constant name="afr_hwChannel2">"NONE"</constant>
         <constant name="afr_type">"14Point7"</constant>
         <constant digits="2" name="afr_v1" units="volts">0.0</constant>
@@ -36,12 +36,12 @@
         <constant digits="4" name="afrExpAverageAlpha" units="">1.0</constant>
         <constant name="afrOverrideMode">"MAP"</constant>
         <constant cols="1" digits="1" name="afterCrankingIACtaperDuration" rows="6" units="cycles">
-         30.0
-         30.0
-         30.0
-         30.0
-         30.0
-         30.0
+         10.0
+         10.0
+         10.0
+         10.0
+         10.0
+         10.0
 </constant>
         <constant cols="1" digits="2" name="afterCrankingIACtaperDurationBins" rows="6" units="{bitStringValue(unitsLabels, useMetricOnInterface)}">
          -40.0
@@ -719,8 +719,8 @@
          140.0
 </constant>
         <constant cols="8" digits="2" name="cltIdleCorrTable" rows="2" units="%">
-         11.0 10.0 9.0 7.0 6.0 5.0 5.0 5.0
-         11.0 10.0 9.0 7.0 6.0 5.0 5.0 5.0
+         11.0 10.0 0.5 0.5 0.5 0.5 0.5 0.5
+         11.0 10.0 0.5 0.5 0.5 0.5 0.5 0.5
 </constant>
         <constant cols="1" digits="0" name="cltIdleRpm" rows="16" units="RPM">
          1360
@@ -865,7 +865,7 @@
          2.8 2.2 1.8 1.56 1.3 1.1 1.0 1.0
 </constant>
         <constant name="crankingInjectionMode">"Simultaneous"</constant>
-        <constant digits="0" name="crankingTimingAngle" units="deg">5</constant>
+        <constant digits="0" name="crankingTimingAngle" units="deg">10</constant>
         <constant cols="1" digits="2" name="crankingTpsBins" rows="8" units="%">
          0.0
          14.0
@@ -1010,7 +1010,7 @@
         <constant name="enableKnockSpectrogramFilter">"no"</constant>
         <constant name="enableLaunchRetard">"no"</constant>
         <constant name="enableOilPressureProtect">"no"</constant>
-        <constant name="enableSoftwareKnock">"enabled"</constant>
+        <constant name="enableSoftwareKnock">"disabled"</constant>
         <constant name="enableStagedInjection">"disabled"</constant>
         <constant name="enableTrailingSparks">"no"</constant>
         <constant name="enableVerboseCanTx">"no"</constant>
@@ -1053,7 +1053,7 @@
         <constant digits="0" name="etbFreq" units="Hz">800</constant>
         <constant name="etbFunctions1">"Throttle 1"</constant>
         <constant name="etbFunctions2">"Throttle 2"</constant>
-        <constant digits="0" name="etbIdleThrottleRange" units="%">15</constant>
+        <constant digits="0" name="etbIdleThrottleRange" units="%">2</constant>
         <constant name="etbIo1_controlPin">"PB14"</constant>
         <constant name="etbIo1_directionPin1">"PB15"</constant>
         <constant name="etbIo1_directionPin2">"NONE"</constant>
@@ -1849,14 +1849,14 @@
         <constant name="idle_stepperDirectionPin">"NONE"</constant>
         <constant name="idle_stepperStepPin">"NONE"</constant>
         <constant cols="1" digits="1" name="idleAdvance" rows="8" units="deg">
+         20.0
+         21.0
+         22.0
+         20.0
+         18.0
          16.0
-         15.0
-         13.0
-         12.0
-         11.0
-         10.0
-         10.0
-         12.0
+         16.0
+         16.0
 </constant>
         <constant cols="1" digits="0" name="idleAdvanceBins" rows="8" units="RPM">
          0
@@ -1890,7 +1890,7 @@
 </constant>
         <constant name="idleIncrementalPidCic">"no"</constant>
         <constant digits="1" name="idleMaximumAirmass" units="mg">0.0</constant>
-        <constant name="idleMode">"Open Loop + Closed Loop"</constant>
+        <constant name="idleMode">"Open Loop"</constant>
         <constant digits="1" name="idlePidActivationTime" units="seconds">0.0</constant>
         <constant digits="0" name="idlePidDeactivationTpsThreshold" units="%">5</constant>
         <constant digits="0" name="idlePidRpmDeadZone" units="RPM">50</constant>
@@ -1901,14 +1901,14 @@
         <constant name="idleReturnTargetRamp">"no"</constant>
         <constant digits="1" name="idleReturnTargetRampDuration" units="seconds">3.0</constant>
         <constant digits="4" name="idleRpmPid_dFactor" units="">0.0</constant>
-        <constant digits="4" name="idleRpmPid_iFactor" units="">0.001</constant>
+        <constant digits="4" name="idleRpmPid_iFactor" units="">0.002</constant>
         <constant digits="0" name="idlerpmpid_iTermMax" units="">20</constant>
         <constant digits="0" name="idlerpmpid_iTermMin" units="">-20</constant>
         <constant digits="0" name="idleRpmPid_maxValue" units="">20</constant>
         <constant digits="0" name="idleRpmPid_minValue" units="">-20</constant>
         <constant digits="0" name="idleRpmPid_offset" units="">0</constant>
         <constant digits="0" name="idleRpmPid_periodMs" units="ms">0</constant>
-        <constant digits="4" name="idleRpmPid_pFactor" units="">0.02</constant>
+        <constant digits="4" name="idleRpmPid_pFactor" units="">0.05</constant>
         <constant digits="0" name="idleStepperReactionTime" units="ms">3</constant>
         <constant digits="0" name="idleStepperTotalSteps" units="count">200</constant>
         <constant digits="4" name="idleTimingPid_dFactor" units="">0.0</constant>
@@ -5196,118 +5196,7 @@
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <page number="3" size="1268">
-        <constant cols="16" digits="1" name="secondVeTable" rows="16" units="%">
-         50.8 49.9 52.8 55.6 59.5 60.5 58.3 59.3 68.8 72.8 76.3 84.2 78.9 75.7 73.0 61.4
-         60.3 56.8 63.7 66.1 69.5 68.6 72.4 73.4 72.0 71.9 74.3 77.6 80.3 81.4 80.9 64.9
-         56.9 61.1 66.2 68.1 70.9 69.7 73.3 74.5 73.5 73.1 75.5 78.3 81.2 82.7 82.8 68.3
-         59.3 62.9 67.5 70.0 72.2 71.5 74.2 76.2 75.2 74.8 77.1 80.0 82.4 84.0 84.2 70.8
-         60.7 64.9 68.4 70.8 73.5 72.7 75.7 77.6 76.3 76.4 78.8 81.7 84.0 85.0 85.5 71.7
-         62.9 66.2 69.8 71.8 74.5 73.6 77.0 78.7 77.7 77.8 79.9 82.5 84.6 85.9 86.4 73.0
-         65.2 67.7 70.5 73.1 75.8 74.8 77.9 79.6 78.9 78.9 81.1 83.6 85.6 86.8 87.3 74.4
-         67.2 69.0 71.1 74.1 76.9 75.7 78.6 80.4 79.9 79.9 82.1 84.4 86.5 87.5 88.1 75.5
-         67.9 69.9 72.0 75.1 77.5 76.5 79.0 80.9 80.8 80.8 83.0 85.0 87.1 88.2 88.7 76.2
-         68.6 70.7 72.7 75.8 78.0 77.1 79.4 81.4 81.5 81.6 83.7 85.5 87.6 88.7 89.2 76.9
-         69.7 71.5 73.5 76.2 78.7 77.8 80.0 81.9 82.0 82.4 84.2 86.2 88.1 89.1 89.5 77.2
-         70.7 72.1 74.2 76.5 79.3 78.4 80.5 82.4 82.4 83.0 84.7 86.7 88.6 89.5 89.9 77.4
-         71.3 72.9 74.7 77.1 79.8 78.9 80.8 82.7 82.9 83.6 85.1 87.1 89.1 89.9 90.2 78.0
-         71.9 73.5 75.1 77.7 80.2 79.4 81.0 83.1 83.4 84.1 85.5 87.4 89.6 90.4 90.5 78.3
-         74.4 74.9 75.8 78.3 80.7 80.2 81.6 83.6 84.1 84.9 86.3 88.0 89.5 90.6 90.8 79.4
-         75.0 75.6 76.9 78.5 80.9 83.5 84.7 85.5 85.6 85.6 86.6 87.4 89.4 90.7 90.9 79.0
-</constant>
-        <constant cols="1" digits="0" name="secondVeLoadBins" rows="16" units="{bitStringValue(veLoadUnitLabels, veLoadUnitIdx)}">
-         20
-         30
-         35
-         40
-         45
-         50
-         55
-         60
-         65
-         70
-         75
-         80
-         85
-         90
-         95
-         100
-</constant>
-        <constant cols="1" digits="0" name="secondVeRpmBins" rows="16" units="RPM">
-         650
-         800
-         1100
-         1400
-         1700
-         2000
-         2300
-         2600
-         2900
-         3200
-         3500
-         3800
-         4100
-         4400
-         4700
-         7000
-</constant>
-        <constant cols="16" digits="1" name="secondIgnitionTable" rows="16" units="deg">
-         34.3 35.5 39.1 41.7 42.8 43.6 44.5 44.4 44.2 44.3 44.7 43.6 44.6 44.7 44.8 45.0
-         31.5 33.7 35.3 37.0 37.7 39.0 38.9 38.8 39.1 39.1 38.7 38.1 37.8 38.1 38.6 42.4
-         30.0 29.9 31.4 32.9 34.7 36.2 36.2 36.5 36.7 36.8 36.3 35.9 35.6 35.8 36.3 40.4
-         26.6 26.4 27.7 29.2 32.0 33.6 33.8 34.0 34.2 34.5 34.4 34.1 34.1 34.4 34.8 38.5
-         23.5 23.4 25.1 26.7 29.8 31.5 32.1 32.5 32.7 33.2 33.6 33.4 33.4 33.8 34.1 37.5
-         20.6 21.0 22.9 25.1 28.1 30.4 31.0 31.4 31.9 32.4 32.9 32.9 33.1 33.3 33.6 36.9
-         18.0 18.8 21.6 23.9 26.9 29.1 30.4 30.8 31.3 31.8 32.3 32.5 32.8 33.2 33.5 36.2
-         16.3 17.7 20.7 23.1 26.2 28.4 29.8 30.4 30.9 31.4 31.7 32.1 32.4 32.9 33.1 35.6
-         15.0 16.6 20.1 22.6 25.6 27.8 29.3 30.1 30.3 30.8 31.4 31.8 32.2 32.8 33.1 35.3
-         13.8 15.5 19.4 22.2 25.1 27.2 29.1 29.8 30.2 30.7 31.1 31.6 32.1 32.7 33.1 35.0
-         12.6 14.6 18.8 21.9 24.6 26.6 28.9 29.8 30.2 30.7 31.1 31.6 32.0 32.5 33.0 34.9
-         11.9 14.0 18.3 21.5 24.1 26.3 28.7 29.8 30.2 30.7 31.1 31.5 31.8 32.2 32.8 34.9
-         11.0 13.1 17.7 21.0 23.6 26.0 28.4 29.6 30.1 30.5 30.8 31.2 31.5 31.9 32.6 34.9
-         10.1 12.3 17.2 20.5 22.8 25.3 27.8 29.1 29.7 30.2 30.5 30.8 31.1 31.5 32.2 34.9
-         8.7 11.4 16.5 19.7 21.8 24.5 27.2 28.6 29.3 29.7 29.9 30.2 30.5 31.0 31.7 34.9
-         7.7 10.6 15.7 19.0 21.0 23.0 26.1 27.8 28.4 29.0 29.3 29.6 29.8 30.3 31.0 34.3
-</constant>
-        <constant cols="1" digits="0" name="secondIgnitionLoadBins" rows="16" units="{bitStringValue(ignLoadUnitLabels, ignLoadUnitIdx)}">
-         20
-         30
-         35
-         40
-         45
-         50
-         55
-         60
-         65
-         70
-         75
-         80
-         85
-         90
-         95
-         100
-</constant>
-        <constant cols="1" digits="0" name="secondIgnitionRpmBins" rows="16" units="RPM">
-         650
-         800
-         1100
-         1400
-         1700
-         2000
-         2300
-         2600
-         2900
-         3200
-         3500
-         3800
-         4100
-         4400
-         4700
-         7000
-</constant>
-    </page>
-
-    <versionInfo firmwareInfo="20260817" nPages="2" signature="rusEFI master.2026.08.16.m74_9.727755639" version="5.0"/>
+    <versionInfo firmwareInfo="20260817" nPages="1" signature="rusEFI maccan-tx-fix.2026.08.17.m74_9.727755639" version="5.0"/>
     <bibliography author="rusEFI 20260817" writeDate="date"/>
     <settings/>
     <userComments/>
