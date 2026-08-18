@@ -195,7 +195,7 @@ TEST(TriggerDecoder, TooManyTeeth_CausesError) {
 	Sensor::resetAllMocks();
 }
 
-TEST(TriggerDecoder, NotEnoughTeeth_CausesError) {
+TEST(TriggerDecoder, GapNotAtExpectedPosition_IsIgnored) {
 	MockTriggerConfiguration cfg({trigger_type_e::TT_TOOTHED_WHEEL, 4, 1});
 	cfg.update();
 
@@ -204,9 +204,6 @@ TEST(TriggerDecoder, NotEnoughTeeth_CausesError) {
 	efitick_t t = 0;
 
 	StrictMock<MockTriggerDecoder> dut;
-	// We expect one call to onTriggerError().
-	EXPECT_CALL(dut, onTriggerError());
-	EXPECT_CALL(dut, onNotEnoughTeeth(_, _));
 
 	// Fire a few boring evenly spaced teeth
 	t += MS2NT(1);
@@ -230,22 +227,31 @@ TEST(TriggerDecoder, NotEnoughTeeth_CausesError) {
 	// Fake that we have RPM so that all trigger error detection is enabled
 	Sensor::setMockValue(SensorType::Rpm, 1000);
 
-	t += MS2NT(1);
+	// A 2x gap that arrives early (only one tooth since the last sync) is NOT a
+	// sync point anymore: once synchronized the gap is only recognized at the
+	// expected tooth position, so a stretched tooth pair mid-revolution cannot
+	// kick the decoder out of sync with a false C9003 (real-world m74_9 case:
+	// false gap 1.7-2.0 vs the real 3.9 gap). The long tooth is just a tooth.
+	t += MS2NT(2);
 	doTooth(dut, shape, cfg, t);
 	EXPECT_TRUE(dut.getShaftSynchronized());
 	EXPECT_EQ(2u, dut.currentCycle.current_index);
 	EXPECT_FALSE(dut.someSortOfTriggerError());
 	EXPECT_EQ(0u, dut.totalTriggerErrorCounter);
 
-	// Missing tooth, but it comes early - not enough teeth have happened yet!
+	// The last regular tooth of the revolution.
+	t += MS2NT(1);
+	doTooth(dut, shape, cfg, t);
+	EXPECT_TRUE(dut.getShaftSynchronized());
+	EXPECT_EQ(4u, dut.currentCycle.current_index);
+
+	// The real gap at the expected position re-syncs cleanly.
 	t += MS2NT(2);
 	doTooth(dut, shape, cfg, t);
-
-	// Sync is lost until we get to another sync point
-	EXPECT_FALSE(dut.getShaftSynchronized());
+	EXPECT_TRUE(dut.getShaftSynchronized());
 	EXPECT_EQ(0u, dut.currentCycle.current_index);
-	EXPECT_EQ(1u, dut.totalTriggerErrorCounter);
-	EXPECT_TRUE(dut.someSortOfTriggerError());
+	EXPECT_FALSE(dut.someSortOfTriggerError());
+	EXPECT_EQ(0u, dut.totalTriggerErrorCounter);
 
 	// Fire some normal revolutions to ensure we recover without additional error types.
 	for (size_t i = 0; i < 10; i++) {
