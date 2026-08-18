@@ -3418,3 +3418,13 @@ with the 4-row layout and rejected the 6-row table. Patched the versionInfo
 in 21129.msq to the new signature (2026.08.18.m74_9.319381849) and
 firmwareInfo 20260818. Now the console matches the msq against the new ini
 from the bundle/ECU and accepts the 6x8 table.
+
+## 2026-08-18 (19): crankingFuelCoef units mismatch fixed in msq
+
+After the signature fix the msq loaded, but the console skipped
+crankingFuelCoef: the msq had units="coef" while the firmware ini declares
+the field with units "ratio" (rusefi_config.txt line 2147). The console
+refuses to apply fields whose units string differs. Patched the msq:
+crankingFuelCoef units coef -> ratio. Values unchanged. Re-load and burn
+again so the curve actually lands in the ECU (the previous burn left it at
+the firmware default).
