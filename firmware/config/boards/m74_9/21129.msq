@@ -36,12 +36,12 @@
         <constant digits="4" name="afrExpAverageAlpha" units="">1.0</constant>
         <constant name="afrOverrideMode">"MAP"</constant>
         <constant cols="1" digits="1" name="afterCrankingIACtaperDuration" rows="6" units="cycles">
-         10.0
-         10.0
-         10.0
-         10.0
-         10.0
-         10.0
+         40.0
+         40.0
+         40.0
+         40.0
+         40.0
+         40.0
 </constant>
         <constant cols="1" digits="2" name="afterCrankingIACtaperDurationBins" rows="6" units="{bitStringValue(unitsLabels, useMetricOnInterface)}">
          -40.0
@@ -652,15 +652,15 @@
          80.0
          100.0
 </constant>
-        <constant cols="1" digits="2" name="cltCrankingCorr" rows="8" units="percent">
-         25.0
-         23.0
-         22.0
-         21.0
-         20.0
-         18.0
-         16.0
-         15.0
+        <constant cols="1" digits="0" name="cltCrankingCorr" rows="8" units="%">
+         124
+         84
+         67
+         65
+         55
+         48
+         41
+         38
 </constant>
         <constant cols="1" digits="2" name="cltCrankingCorrBins" rows="8" units="{bitStringValue(unitsLabels, useMetricOnInterface)}">
          -40.0
@@ -718,9 +718,9 @@
          110.0
          140.0
 </constant>
-        <constant cols="8" digits="2" name="cltIdleCorrTable" rows="2" units="%">
-         11.0 10.0 0.5 0.5 0.5 0.5 0.5 0.5
-         11.0 10.0 0.5 0.5 0.5 0.5 0.5 0.5
+        <constant cols="8" digits="0" name="cltIdleCorrTable" rows="2" units="%">
+         53.0 33.0 20.0 13.0 11.0 10.0 10.0 10.0
+         53.0 33.0 20.0 13.0 11.0 10.0 10.0 10.0
 </constant>
         <constant cols="1" digits="0" name="cltIdleRpm" rows="16" units="RPM">
          1360
@@ -796,7 +796,7 @@
         <constant digits="1" name="compressorDischargeTemperature_tempC_3" units="{bitStringValue(unitsLabels, useMetricOnInterface)}">0.0</constant>
         <constant name="consoleUartDevice">"Off"</constant>
         <constant name="consumeObdSensors">"no"</constant>
-        <constant digits="0" name="cranking_rpm" units="RPM">300</constant>
+        <constant digits="0" name="cranking_rpm" units="RPM">850</constant>
         <constant cols="1" digits="2" name="crankingAdvance" rows="4" units="deg">
          0.0
          5.0
@@ -1057,7 +1057,7 @@
         <constant digits="0" name="etbFreq" units="Hz">800</constant>
         <constant name="etbFunctions1">"Throttle 1"</constant>
         <constant name="etbFunctions2">"Throttle 2"</constant>
-        <constant digits="0" name="etbIdleThrottleRange" units="%">2</constant>
+        <constant digits="0" name="etbIdleThrottleRange" units="%">15</constant>
         <constant name="etbIo1_controlPin">"PB14"</constant>
         <constant name="etbIo1_directionPin1">"PB15"</constant>
         <constant name="etbIo1_directionPin2">"NONE"</constant>
@@ -1873,27 +1873,27 @@
          2000
 </constant>
         <constant cols="1" digits="2" name="idleFlowEstimateFlow" rows="8" units="kg/h">
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         6.57
+         9.0
+         11.67
+         14.62
+         17.99
+         25.42
+         34.8
+         73.45
 </constant>
         <constant cols="1" digits="1" name="idleFlowEstimatePosition" rows="8" units="%">
          0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         6.5
+         13.5
+         20.0
+         26.5
+         40.0
+         53.5
+         100.0
 </constant>
         <constant name="idleIncrementalPidCic">"no"</constant>
-        <constant digits="1" name="idleMaximumAirmass" units="mg">0.0</constant>
+        <constant digits="1" name="idleMaximumAirmass" units="mg">190.0</constant>
         <constant name="idleMode">"Open Loop + Closed Loop"</constant>
         <constant digits="1" name="idlePidActivationTime" units="seconds">20.0</constant>
         <constant digits="0" name="idlePidDeactivationTpsThreshold" units="%">5</constant>

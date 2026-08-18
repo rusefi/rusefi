@@ -3464,3 +3464,42 @@ firmware; we will convert it into the rusEFI curve and enable the feature
 then. Without real data the guess would risk the idle again.
 
 Firmware rebuilt (16:22), bundle refreshed with the new bin/hex/ini/jar.
+
+## 2026-08-18 (21): stock M74 start tables - the missing "vzhuh" (start flare)
+
+The user extracted the stock M74 ECU calibration (.clb files):
+- "Положение д.заслонки на пуске": start throttle 18.5% @ -40C down to
+  ~5-6% @ 100C (X axis = relative cranking speed 0.6/0.8/1.0 of exit rpm,
+  Z = CLT -40..110). At 30C the stock opens the throttle to 8.8% during
+  cranking - our tune had 0.5% (25% position x 2% range). That is why the
+  stock flares to ~1500 rpm ("вжух") and rusEFI only reached 742.
+- "Обороты выхода из пуска": 1300 rpm @ -40C down to 850 rpm @ 30C+.
+  Our cranking_rpm was 300 - the start phase ended 3x too early.
+- "Относительная/Обратная характеристика расхода д.заслонки": throttle
+  flow characteristic, 0-100% relative. With the user's anchors (4 kg/h
+  closed, 1350 kg/h full capacity) this gives 9.0 kg/h at 1% throttle -
+  matches our measured ~8.5 kg/h at the stop.
+
+Tune changes (21129.msq):
+- etbIdleThrottleRange 2 -> 15 (rusEFI default): idle position % maps to
+  real throttle % correctly, and the PID +-20 authority is +-3% throttle
+- cltCrankingCorr = stock start positions / 0.15: [124, 84, 67, 65, 55,
+  48, 41, 38] at CLT -40..100 -> 18.5%..5.7% throttle
+- cltIdleCorrTable = [53, 33, 20, 13, 11, 10, 10, 10] -> 8%..1.5% throttle
+  (stock idle is 1-3%)
+- cranking_rpm 300 -> 850 (stock warm exit rpm) - the start phase now
+  lasts through the flare, no mode flip at 300-450 rpm
+- afterCrankingIACtaperDuration 10 -> 40 cycles (the throttle now steps
+  from ~9% to ~1.7%, give the taper more room)
+- idleFlowEstimateFlow/Position filled from the stock throttle curve
+  ([6.57, 9.0, 11.67, 14.62, 17.99, 25.42, 34.8, 73.45] kg/h at [0, 6.5,
+  13.5, 20, 26.5, 40, 53.5, 100]% position) + idleMaximumAirmass 190 mg.
+  modeledFlowIdle stays OFF: the firmware's linear position->airmass model
+  (idleMaximumAirmass caps at 500 mg) cannot represent the throttle's
+  stop-leak nonlinearity (would need ~1300 mg) - enabling it would collapse
+  the open-loop position. The tables are seeded for a future firmware
+  change that lifts the cap.
+
+The stock start-advance table (-5.25 deg below 280 rpm, 14.6 deg at
+680-1080) was NOT copied: our catch works, negative advance is only
+anti-kickback.
