@@ -799,8 +799,8 @@
         <constant digits="0" name="cranking_rpm" units="RPM">850</constant>
         <constant cols="1" digits="2" name="crankingAdvance" rows="4" units="deg">
          -5.25
-         -5.25
-         10.9
+         -3.75
+         12.0
          14.6
 </constant>
         <constant cols="1" digits="0" name="crankingAdvanceBins" rows="4" units="RPM">
@@ -882,13 +882,13 @@
 </constant>
         <constant cols="1" digits="2" name="crankingTpsCoef" rows="8" units="Ratio">
          1.0
+         1.12
+         1.25
+         1.3
          1.0
-         1.0
-         1.0
-         1.0
-         1.0
-         1.0
-         1.0
+         0.5
+         0.0
+         0.0
 </constant>
         <constant digits="0" name="customSentTpsMax" units="">0</constant>
         <constant digits="0" name="customSentTpsMin" units="">0</constant>
@@ -3313,9 +3313,9 @@
          265
          140
          75
-         50
-         45
-         40
+         30
+         15
+         10
 </constant>
         <constant digits="2" name="primingDelay" units="sec">0.5</constant>
         <constant digits="0" name="referenceMapForGenerator" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">100</constant>
@@ -4684,7 +4684,7 @@
          0.0
 </constant>
         <constant name="useAbsolutePressureForLagTime">"no"</constant>
-        <constant name="useAdvanceCorrectionsForCranking">"yes"</constant>
+        <constant name="useAdvanceCorrectionsForCranking">"no"</constant>
         <constant name="useAuxSpeedForSlipRatio">"no"</constant>
         <constant name="useBiQuadOnAuxSpeedSensors">"no"</constant>
         <constant name="useCicPidForIdle">"Industrial"</constant>
