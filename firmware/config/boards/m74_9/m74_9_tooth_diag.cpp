@@ -53,7 +53,9 @@ constexpr float EmaAlpha = 0.05f;
 constexpr uint32_t ProfileMagic = 0x544F4F54; // 'TOOT'
 // v2: tooth index now comes from the decoder index (sync tooth = 0); the v1
 // records used the engine-phase mapping which was shifted by ~39 teeth.
-constexpr uint32_t ProfileVersion = 2;
+// v3: records polluted by pre-position-gate false syncs (misattributed tooth
+// periods smeared into the EMA) are rejected - learning starts clean.
+constexpr uint32_t ProfileVersion = 3;
 
 struct ToothProfileRecord {
 	uint32_t magic;
@@ -206,19 +208,31 @@ void boardTriggerCallback(efitick_t timestamp, float) {
 	// gap at profile slot 37 and two teeth never learned).
 	int index = (engine->triggerCentral.triggerState.getCurrentIndex() / 2) % ToothCount;
 
+	// A mid-rev false sync resets the decoder's index basis, so the next tooth
+	// arrives with a non-sequential index (e.g. 30 -> 0 instead of 30 -> 31).
+	// The period across such a jump spans the false sync point and belongs to
+	// no tooth - recording it into the profile would smear misattributed
+	// periods across the slots (observed on the car: a 3x gap period landed at
+	// slot 26 and diluted the real gap slot). The position gate
+	// (trigger_decoder.cpp) prevents the false sync itself; this check is the
+	// belt-and-braces guard for the learned profile.
 	if (lastToothIndex >= 0) {
-		efitick_t period = timestamp - lastToothTimestamp;
+		int expectedIndex = (lastToothIndex + 1) % ToothCount;
 
-		if (isPlausibleToothPeriod(period)) {
-			float periodUs = period;
+		if (index == expectedIndex) {
+			efitick_t period = timestamp - lastToothTimestamp;
 
-			if (profileCount[lastToothIndex] == 0) {
-				profileUs[lastToothIndex] = periodUs;
-			} else {
-				profileUs[lastToothIndex] += EmaAlpha * (periodUs - profileUs[lastToothIndex]);
+			if (isPlausibleToothPeriod(period)) {
+				float periodUs = period;
+
+				if (profileCount[lastToothIndex] == 0) {
+					profileUs[lastToothIndex] = periodUs;
+				} else {
+					profileUs[lastToothIndex] += EmaAlpha * (periodUs - profileUs[lastToothIndex]);
+				}
+				profileCount[lastToothIndex]++;
+				profileDirtySinceSave = true;
 			}
-			profileCount[lastToothIndex]++;
-			profileDirtySinceSave = true;
 		}
 	}
 

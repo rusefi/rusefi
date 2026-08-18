@@ -178,6 +178,36 @@ TEST(trigger, crankingTransition60_2FalseSyncAtRunningRpmRejectedByPositionGate)
 	ASSERT_EQ(3, engine->triggerCentral.triggerState.getSynchronizationCounter()) << "sync counter through the distorted revolution";
 }
 
+/**
+ * The 22:22:19 m74_9 log (cam disabled): at 292 rpm a mid-rev pair measured
+ * gap0=3.333 / gap1=1.022 - gap0 is indistinguishable from the real missing
+ * teeth gap (3.0-3.75), so the ratio check alone can never reject it. It
+ * false-synced 31 teeth after the real gap (C9003, expected 58 got 31).
+ * Only the position gate rejects it.
+ */
+TEST(trigger, crankingTransition60_2GapLikeFalseSyncRejectedByPositionGate) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	// the user's m74_9 runs the 60-2 wheel on the crank
+	setCrankOperationMode();
+	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
+
+	// steady revolutions to synchronize
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+
+	ASSERT_EQ(0u, getRecentWarnings()->getCount()) << "no warnings while cranking steadily";
+	ASSERT_EQ(1, engine->triggerCentral.triggerState.getSynchronizationCounter()) << "sync counter";
+
+	// one revolution with the on-car gap-like false pair at a mid-rev position
+	fire60_2RevolutionWithDistortedTeeth(eth, steadySlotMs, /*prevRatio*/1.022f, /*distRatio*/3.333f, /*gapRatio*/3.0f);
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+
+	ASSERT_EQ(0u, getRecentWarnings()->getCount()) << "no false sync from the gap-like distorted tooth pair";
+	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized()) << "still synchronized";
+	ASSERT_EQ(3, engine->triggerCentral.triggerState.getSynchronizationCounter()) << "sync counter through the distorted revolution";
+}
+
 TEST(trigger, crankingTransition60_2DecelerationRecovers) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	// the user's m74_9 runs the 60-2 wheel on the crank
