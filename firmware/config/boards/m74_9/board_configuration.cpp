@@ -222,17 +222,10 @@ static void m74_9_boardConfigOverrides() {
 	copyArray(config->veLoadBins, fuelLoadBins);
 	copyArray(config->lambdaLoadBins, fuelLoadBins);
 
-	/* Cranking coolant enrichment: the stored tune holds ~4.6 at 20 C
-	 * (default is 1.55), which floods the engine while cranking - measured
-	 * 124 mg per cyl/cycle vs ~22 mg stoich from the stock air-charge
-	 * model, i.e. 14-17 ms pulses instead of ~5 ms. Force the default curve
-	 * on every boot until cold start is deliberately tuned. */
-	static constexpr float crankingFuelCoefDefault[CRANKING_CURVE_SIZE] =
-		{2.8f, 2.2f, 1.8f, 1.55f, 1.3f, 1.1f, 1.0f, 1.0f};
-	static constexpr float crankingFuelBinsDefault[CRANKING_CURVE_SIZE] =
-		{-20, -10, 5, 20, 35, 50, 65, 90};
-	copyArray(config->crankingFuelCoef, crankingFuelCoefDefault);
-	copyArray(config->crankingFuelBins, crankingFuelBinsDefault);
+	/* Cranking fuel is deliberately tuned in 21129.msq (crankingFuelCoef
+	 * 2.8..0.85 + crankingCycleBaseFuel 6x8) - the old forced default curve
+	 * here was silently reverting the tune on every boot, which is also why
+	 * the console kept re-restoring crankingFuelCoef on every tune load. */
 
 	/* IMMO is force-disabled (physical bypass answers the BCM): the ECU-side
 	 * challenge-response algorithm is not implemented, so the 0x0713/0x0714
