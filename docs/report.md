@@ -3428,3 +3428,39 @@ refuses to apply fields whose units string differs. Patched the msq:
 crankingFuelCoef units coef -> ratio. Values unchanged. Re-load and burn
 again so the curve actually lands in the ECU (the previous burn left it at
 the firmware default).
+
+## 2026-08-18 (20): idle features round - timing PID, taper tables, return ramp, delayed CL engagement
+
+User request: enable the idle stabilisation features.
+
+Firmware (idle_thread.cpp):
+- idlePidActivationTime was declared in the config but never read anywhere -
+  wired it up: getClosedLoop() holds off the closed-loop PID until the
+  engine has been in the Idling phase for idlePidActivationTime seconds
+  (0 = legacy behaviour, no delay). Also reset m_timeInIdlePhase in init().
+- Unit test idle_v2.closedLoopActivationDelay added (hold-off -> soft
+  re-entry ramp -> full output; legacy path with 0 delay). All 20 idle_v2
+  tests pass.
+
+Tune (21129.msq):
+- idleMode Open Loop -> Open Loop + Closed Loop (the user's 20 s delay
+  request implies closed loop)
+- idlePidActivationTime 0 -> 20 s - no throttle PID during the first 20 s
+  of idle, the engine settles in open loop first
+- idleRpmPid p 0.05 -> 0.02, i 0.002 -> 0.001 (gentle gains - the old
+  p=0.05 slammed the throttle)
+- useIdleTimingPidControl no -> yes (fast ignition-timing PID, p=0.1,
+  +-10 deg) - catches RPM dips much faster than the throttle can
+- useSeparateIdleTablesForCrankingTaper disabled -> enabled (idle VE and
+  idle advance tables now apply during the post-crank taper too)
+- idleReturnTargetRamp no -> yes (target RPM ramps down from +500 over 3 s
+  when returning to idle - no step change when releasing the pedal)
+
+modeledFlowIdle NOT enabled yet: it needs the throttle flow curve
+(idleFlowEstimatePosition % vs idleFlowEstimateFlow kg/h, 8 points over
+the idle range) plus idleMaximumAirmass (mg/cyl at 100% idle position).
+The user will try to extract the flow characteristic from the stock ECU
+firmware; we will convert it into the rusEFI curve and enable the feature
+then. Without real data the guess would risk the idle again.
+
+Firmware rebuilt (16:22), bundle refreshed with the new bin/hex/ini/jar.

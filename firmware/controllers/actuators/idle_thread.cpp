@@ -329,6 +329,13 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 
 	isIdleClosedLoop = phase == IIdleController::Phase::Idling;
 
+	// Optional hold-off: keep the closed-loop PID out of a freshly-started idle
+	// for idlePidActivationTime seconds so the engine settles in open loop first
+	// (avoids post-start throttle oscillations). 0 = no delay.
+	if (isIdleClosedLoop && m_timeInIdlePhase.getElapsedSeconds() < engineConfiguration->idlePidActivationTime) {
+		isIdleClosedLoop = false;
+	}
+
 	if (!isIdleClosedLoop) {
 		// Don't store old I and D terms if PID doesn't work anymore.
 		// Otherwise they will affect the idle position much later, when the throttle is closed.¿
@@ -554,6 +561,7 @@ void IdleController::init() {
 	shouldResetPid = false;
 	mightResetPid = false;
 	wasResetPid = false;
+	m_timeInIdlePhase.reset();
 	m_timingPid.initPidClass(&engineConfiguration->idleTimingPid);
 	m_timingHpf.configureHighpass(20, 1);
 	getIdlePid()->initPidClass(&engineConfiguration->idleRpmPid);
