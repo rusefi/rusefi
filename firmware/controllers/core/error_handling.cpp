@@ -76,6 +76,22 @@ static backupErrorState lastBootError;
 static uint32_t bootCount = 0;
 #endif // EFI_BACKUP_SRAM
 
+#if EFI_USE_OPENBLT
+static void setOpenBltSwCounter(int counter) {
+	if (counter < 0 || counter > 254) {
+		efiPrintf("OpenBLT SW reset counter must be 0..254");
+		return;
+	}
+
+	SharedParamsInit();
+	if (SharedParamsWriteByIndex(2, static_cast<uint8_t>(counter))) {
+		efiPrintf("OpenBLT SW reset counter set to %d", counter);
+	} else {
+		efiPrintf("Failed to set OpenBLT SW reset counter");
+	}
+}
+#endif // EFI_USE_OPENBLT
+
 void errorHandlerInit() {
 #if EFI_BACKUP_SRAM
 	/* copy error state from backup RAM and clear it in backup RAM.
@@ -123,6 +139,9 @@ void errorHandlerInit() {
 	addConsoleAction("chibi_fault", [](){ chDbgCheck(0); } );
 	addConsoleAction("soft_fault", [](){ firmwareError(ObdCode::RUNTIME_CRITICAL_TEST_ERROR, "firmwareError: %d", getRusEfiVersion()); });
 	addConsoleAction("hard_fault", [](){ causeHardFault(); } );
+#if EFI_USE_OPENBLT
+	addConsoleActionI("set_openblt_sw_counter", setOpenBltSwCounter);
+#endif // EFI_USE_OPENBLT
 }
 
 bool errorHandlerIsStartFromError() {
