@@ -24,6 +24,7 @@ public class FindFileHelper {
     public static final String FIRMWARE_BIN_FILE = INPUT_FILES_PATH + "/" + "rusefi.bin";
     private static final String PREFIX = "";
     private static final String SUFFIX = "srec";
+    private static final String OPENBLT_WIPE_MANIFEST = "openblt_wipe.properties";
 
     @Nullable
     public static String findFile(String fileDirectory, String prefix, String suffix, AdditionalFileHandler fileMoveOperation, boolean keepOneFile) {
@@ -136,6 +137,33 @@ public class FindFileHelper {
 
     private static String getBootloaderFilesPath() {
         return INPUT_FILES_PATH + File.separator + "bin" + File.separator + "device";
+    }
+
+    @Nullable
+    public static String findOpenBltWipeManifest() {
+        File manifest = new File(getOpenBltWipeFilesPath(), OPENBLT_WIPE_MANIFEST);
+        return manifest.isFile() ? manifest.getAbsolutePath() : null;
+    }
+
+    public static boolean hasOpenBltWipeArtifact() {
+        File[] wipeFiles = getOpenBltWipeFilesPath().listFiles((dir, name) -> name.endsWith("_wipe.srec"));
+        return findOpenBltWipeManifest() != null && wipeFiles != null && wipeFiles.length == 1;
+    }
+
+    public static String findOpenBltWipeSrec(String expectedFileName) throws IOException {
+        if (!new File(expectedFileName).getName().equals(expectedFileName)) {
+            throw new IOException("Invalid wipe SREC filename: " + expectedFileName);
+        }
+
+        File[] wipeFiles = getOpenBltWipeFilesPath().listFiles((dir, name) -> name.endsWith("_wipe.srec"));
+        if (wipeFiles == null || wipeFiles.length != 1 || !wipeFiles[0].getName().equals(expectedFileName)) {
+            throw new IOException("Expected exactly one wipe SREC named " + expectedFileName);
+        }
+        return wipeFiles[0].getAbsolutePath();
+    }
+
+    private static File getOpenBltWipeFilesPath() {
+        return new File(INPUT_FILES_PATH + File.separator + "bin" + File.separator + "wipe");
     }
 
     public static boolean isObfuscated() {

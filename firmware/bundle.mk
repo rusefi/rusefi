@@ -137,6 +137,13 @@ ifeq ($(USE_OPENBLT),yes)
   BOOTLOADER_HEX_OUT = $(BOOTLOADER_HEX)
   BOOTLOADER_BIN_OUT = $(DEVICE_BIN_FOLDER)/openblt_$(BRANCH_REF_FOR_BUNDLE)_$(BUNDLE_DATE)_$(BUNDLE_NAME)_$(SIGNATURE_HASH)_$(GITHUB_SHA).bin
   SREC_TARGET = $(FOLDER)/rusefi_$(BRANCH_REF_FOR_BUNDLE)_$(BUNDLE_DATE)_$(BUNDLE_NAME)_$(SIGNATURE_HASH)_$(GITHUB_SHA)_update.srec
+ifneq (,$(OPENBLT_WIPE_FLASH_END_EXCLUSIVE))
+  OPENBLT_WIPE_FOLDER = $(BIN_FOLDER)/wipe
+  OPENBLT_WIPE_SREC = $(OPENBLT_WIPE_FOLDER)/rusefi_$(BRANCH_REF_FOR_BUNDLE)_$(BUNDLE_DATE)_$(BUNDLE_NAME)_$(SIGNATURE_HASH)_$(GITHUB_SHA)_wipe.srec
+  OPENBLT_WIPE_MANIFEST = $(OPENBLT_WIPE_FOLDER)/openblt_wipe.properties
+  OPENBLT_WIPE_OUTPUTS = $(OPENBLT_WIPE_SREC) $(OPENBLT_WIPE_MANIFEST)
+  OPENBLT_WIPE_SENTINEL = .openblt-wipe-$(BUNDLE_NAME)-sentinel
+endif
 else
   FIRMWARE_OUTPUTS = $(FOLDER)/$(PROJECT).hex
   BINSRC = $(BUILDDIR)/$(PROJECT).bin
@@ -232,6 +239,21 @@ $(BUILDDIR)/rusefi.srec: $(BUILDDIR)/$(PROJECT).hex
 	$(H2D) -i $< -c $(CHECKSUM_ADDRESS) -b $(DBIN_CRC)
 	$(CP) -I binary -O srec --change-addresses=0x$(HEX_BASE_ADDRESS) $(DBIN_CRC) $@
 
+ifneq (,$(OPENBLT_WIPE_OUTPUTS))
+$(OPENBLT_WIPE_OUTPUTS): $(OPENBLT_WIPE_SENTINEL) ;
+
+$(OPENBLT_WIPE_SENTINEL): $(BUILDDIR)/$(PROJECT).elf bin/generate_openblt_wipe_srec.py .FORCE | $(BIN_FOLDER)
+	python3 bin/generate_openblt_wipe_srec.py \
+		--output $(OPENBLT_WIPE_SREC) \
+		--manifest $(OPENBLT_WIPE_MANIFEST) \
+		--start 0x$(HEX_BASE_ADDRESS) \
+		--end-exclusive $(OPENBLT_WIPE_FLASH_END_EXCLUSIVE) \
+		--bundle-target $(BUNDLE_NAME) \
+		--bootloader-target $(SHORT_BOARD_NAME) \
+		--mcu-family $(PROJECT_CPU)
+	@touch $@
+endif
+
 # The DFU is currently not included in the bundle, so these prerequisites are listed as order-only to avoid building it.
 # If you want it, you can build it with `make rusefi.snapshot.$BUNDLE_NAME/rusefi.dfu`
 $(DFU) $(DBIN): .h2d-sentinel ;
@@ -283,11 +305,13 @@ $(BRANCH_REF_FILE):
 	cp $(PROJECT_DIR)/../release.txt $(BRANCH_REF_FILE)
 	echo "platform=$(BUNDLE_NAME)" >> $(BRANCH_REF_FILE) ; echo "release=$(BRANCH_REF_FOR_BUNDLE)" >> $(BRANCH_REF_FILE)
 
-$(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME).zip: $(BUNDLE_FILES) | $(ARTIFACTS)
+$(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME).zip: $(BUNDLE_FILES) $(OPENBLT_WIPE_OUTPUTS) | $(ARTIFACTS)
+	rm -f $@
 	zip -r $@ $(BUNDLE_FILES)
 	[ -z "$(POST_ZIP_SCRIPT)" ] || bash $(POST_ZIP_SCRIPT)
 
-$(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME)_obfuscated_public.zip:  $(OBFUSCATED_OUT) $(BUNDLE_FILES) | $(ARTIFACTS)
+$(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME)_obfuscated_public.zip:  $(OBFUSCATED_OUT) $(BUNDLE_FILES) $(OPENBLT_WIPE_OUTPUTS) | $(ARTIFACTS)
+	rm -f $@
 	zip -r $@ $(FULL_BUNDLE_CONTENT) $(MOST_COMMON_BUNDLE_FILES) $(OBFUSCATED_SREC)
 	[ -z "$(POST_O_ZIP_SCRIPT)" ] || bash $(POST_O_ZIP_SCRIPT)
 
