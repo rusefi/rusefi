@@ -3807,3 +3807,36 @@ translation unit with its call site, and its declaration at call sites
 must not carry 'weak'.
 
 unit_tests: 1131/1131 pass. Committed da385042cb3.
+
+## 2026-08-18 (35): position gate was disabled for 60-2 - false sync at 402 rpm killed the first start attempt
+
+First start attempt with the persisted profile (22:11): the engine
+caught, reached 402 rpm, then C9003 'expected 58/0 got 42/0' and died.
+The mid-rev stretched tooth pair grows with RPM: 1.7-2.0 at ~300 rpm,
+but 2.476/1.284 at 402 rpm - INSIDE the [2.2, 3.9] gap0 window, so no
+ratio window can reject it anymore.
+
+Root cause: the position gate (commit 0aac4db56e1) was keyed on
+useOnlyPrimaryForSync, which initializeSkippedToothTrigger leaves false
+for 60-2 (the cam/VVT events must reach the decoder) - the gate was
+silently bypassed exactly on the wheel it was built for.
+
+Fix: the gate is now wheel-aware and asymmetric for every gap-synced
+wheel. A real gap can only arrive LATE (noise inserts spurious teeth),
+never early, so candidates before expectedEventCount - 2 are false
+pairs and are ignored - the decoder keeps counting, the real gap
+re-syncs cleanly, no desync of a running engine. Candidates at/after
+the expected position are accepted and the too-many/few-teeth counters
+report mismatches as before. Verified against all observed false-sync
+positions on the car (12/17/42/48/51 teeth - all early, all rejected).
+
+Tune: triggerGapOverrideFrom1 2.2 -> 1.6 - the false pairs are now
+rejected by position, and the low side again covers the first-combustion
+gap compression (the 60-2 cranking-transition window rationale).
+
+Tests: new crankingTransition60_2FalseSyncAtRunningRpmRejectedByPositionGate
+uses the exact on-car 2.476/1.284 pair. The gate changes the error-path
+distribution on noisy real-data recordings (Renix 44-2-2 counter 84->115,
+GM 24x finder 27->29, noisy 36-2 dwell bails 25/22->29/26) - pins updated
+with comments, functional assertions (sync recovery, RPM, no overdwell)
+unchanged. 1132/1132 pass. Committed 506d8504610.
