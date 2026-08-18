@@ -954,7 +954,7 @@
         <constant name="disableFan1WhenStopped">"no"</constant>
         <constant digits="0" name="disableFan2AtSpeed" units="">0</constant>
         <constant name="disableFan2WhenStopped">"no"</constant>
-        <constant digits="3" name="displacement" units="L">2.0</constant>
+        <constant digits="3" name="displacement" units="L">1.6</constant>
         <constant name="displayLogicLevelsInEngineSniffer">"no"</constant>
         <constant digits="1" name="driveWheelRevPerKm" units="revs/km">1000.0</constant>
         <constant name="drv8860_cs">"NONE"</constant>
