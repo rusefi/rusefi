@@ -140,7 +140,11 @@ TEST(trigger, finder) {
 						configureQuickStartSenderWheel(form);
 					}));
 
-	ASSERT_EQ(27u, findAllSyncSequences(trigger_type_e::TT_GM_24x_3, 3, 2, [] (TriggerWaveform* form) {
+	// The position gate (trigger_decoder.cpp) keeps the decoder synchronized
+	// through mid-rev false gap candidates during the stimulated run, so two
+	// more gap configurations reach the correct final sync position (was 27
+	// with the ratio-only decoder).
+	ASSERT_EQ(29u, findAllSyncSequences(trigger_type_e::TT_GM_24x_3, 3, 2, [] (TriggerWaveform* form) {
 						initGmLS24_3deg(form);
 					}));
 

@@ -570,16 +570,28 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 			}
 
 			// Once synchronized, only the expected gap position may re-sync.
-			// Otherwise a stretched-tooth pair mid-revolution (gap0 ~1.7-2.0 on
-			// a firing engine vs the real 3.9 gap) passes the ratio windows and
-			// kicks a running engine out of sync with C9003 - see m74_9 logs:
-			// false sync 12-16 teeth before the real gap, then wrong-phase
-			// spark/injection and an intake backfire. Note: eventCount was already
-			// incremented for the current event (same condition as the noise
-			// filter's isGapExpected, which runs pre-increment). Cam-pattern syncs
-			// (useOnlyPrimaryForSync false) keep the ratio-only check.
-			bool atExpectedGapPosition = !wasSynchronized || !triggerShape.useOnlyPrimaryForSync ||
-				currentCycle.eventCount[(int)triggerWheel] == triggerShape.getExpectedEventCount(triggerWheel);
+			// Otherwise a stretched-tooth pair mid-revolution passes the ratio
+			// windows and kicks a running engine out of sync with C9003 - see the
+			// m74_9 logs: the false pair is 1.7-2.0 at ~300 rpm but grows to
+			// 2.476 at 402 rpm (firing), overlapping the real-gap window, so no
+			// ratio window can separate them. The gate is wheel-aware and
+			// asymmetric: a real gap can only arrive LATE (noise inserts spurious
+			// teeth, shifting the count up), never early - so a candidate before
+			// expectedEventCount - 2 is necessarily a false pair and is ignored
+			// (the decoder keeps counting, the real gap re-syncs cleanly). A
+			// candidate at or after the expected position is accepted, and the
+			// existing too-many/few-teeth counter machinery reports any count
+			// mismatch exactly like the ratio-only decoder did. Note: eventCount
+			// was already incremented for the current event (same condition as
+			// the noise filter's isGapExpected, which runs pre-increment). NOT
+			// keyed on useOnlyPrimaryForSync: the 60-2 wheel leaves that flag
+			// false when a cam/VVT input is configured (secondary events must
+			// reach the decoder), and the bypass disabled the gate exactly where
+			// it was needed.
+			uint32_t expectedCount = triggerShape.getExpectedEventCount(triggerWheel);
+			uint32_t eventsSinceSync = currentCycle.eventCount[(int)triggerWheel];
+			bool atExpectedGapPosition = !wasSynchronized ||
+				(expectedCount == 0 || eventsSinceSync + 2 >= expectedCount);
 
 			isSynchronizationPoint = atExpectedGapPosition && isSyncPoint(triggerShape, triggerConfiguration.TriggerType.type);
 			if (isSynchronizationPoint) {

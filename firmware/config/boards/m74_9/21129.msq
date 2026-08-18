@@ -4613,7 +4613,7 @@
         <constant name="triggerErrorPin">"NONE"</constant>
         <constant name="triggerErrorPinMode">"default"</constant>
         <constant digits="3" name="triggerEventsTimeoutMs" units="ms">0.0</constant>
-        <constant digits="3" name="triggerGapOverrideFrom1" units="ratio">2.2</constant>
+        <constant digits="3" name="triggerGapOverrideFrom1" units="ratio">1.6</constant>
         <constant digits="3" name="triggerGapOverrideFrom10" units="ratio">0.0</constant>
         <constant digits="3" name="triggerGapOverrideFrom11" units="ratio">0.0</constant>
         <constant digits="3" name="triggerGapOverrideFrom12" units="ratio">0.0</constant>
