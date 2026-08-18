@@ -208,18 +208,16 @@ TEST(Actuators, IdleSolenoidsOffWhileEngineStopped) {
 }
 
 /**
- * #9123: some valves need to rest at a specific position rather than de-energized while the
- * engine is stopped. Off-while-stopped stays the default; opting in parks the valve at a
- * configured position, and only for a bounded time - holding a solenoid energized with the
- * engine off drains the battery and can overheat the coil.
+ * #9123: some valves need to rest at a position rather than de-energized while the engine is
+ * stopped. Off-while-stopped stays the default; opting in keeps driving the valve to the position
+ * the idle controller already computed, and only for a bounded time - holding a solenoid
+ * energized with the engine off drains the battery and can overheat the coil.
  */
-TEST(Actuators, IdleSolenoidParksWhileEngineStopped) {
+TEST(Actuators, IdleSolenoidHeldWhileEngineStopped) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	engineConfiguration->isDoubleSolenoidIdle = true;
 	engine->timeToStopIdleTest = 0;
-	engineConfiguration->idleSolenoidParkPosition = 20;
-	engineConfiguration->idleSolenoidParkTimeout = 30;
 
 	// default: engine stopped means both solenoids off, unchanged from before
 	engineConfiguration->keepIdleSolenoidWhenStopped = false;
@@ -227,35 +225,32 @@ TEST(Actuators, IdleSolenoidParksWhileEngineStopped) {
 	EXPECT_EQ(0, getIdleSolenoidOpenDutyForUnitTest());
 	EXPECT_EQ(0, getIdleSolenoidCloseDutyForUnitTest());
 
-	// opted in, but this ECU has never seen the engine turn: nothing to park after, stay off
+	// opted in, but this ECU has never seen the engine turn: nothing to hold after, stay off
 	engineConfiguration->keepIdleSolenoidWhenStopped = true;
 	applyIACposition(50);
 	EXPECT_EQ(0, getIdleSolenoidOpenDutyForUnitTest());
 	EXPECT_EQ(0, getIdleSolenoidCloseDutyForUnitTest());
 
-	// the engine turned and stopped 5 seconds ago: parked at the configured position,
-	// not at the position the idle loop asked for
+	// the engine turned and stopped 5 seconds ago: still driven to the requested position
 	engine->triggerCentral.m_lastEventTimer.reset();
 	eth.moveTimeForwardSec(5);
 	ASSERT_FALSE(engine->triggerCentral.engineMovedRecently());
 	applyIACposition(50);
-	EXPECT_NEAR(0.206f, getIdleSolenoidOpenDutyForUnitTest(), EPS4D);
-	EXPECT_NEAR(0.794f, getIdleSolenoidCloseDutyForUnitTest(), EPS4D);
+	EXPECT_NEAR(0.50f, getIdleSolenoidOpenDutyForUnitTest(), EPS4D);
+	EXPECT_NEAR(0.50f, getIdleSolenoidCloseDutyForUnitTest(), EPS4D);
 
 	// past the timeout: switched off despite the option, to protect the coil and the battery
-	eth.moveTimeForwardSec(60);
+	eth.moveTimeForwardSec(IDLE_SOLENOID_HOLD_TIMEOUT_SEC);
 	applyIACposition(50);
 	EXPECT_EQ(0, getIdleSolenoidOpenDutyForUnitTest());
 	EXPECT_EQ(0, getIdleSolenoidCloseDutyForUnitTest());
 }
 
-TEST(Actuators, IdleSingleSolenoidParksWhileEngineStopped) {
+TEST(Actuators, IdleSingleSolenoidHeldWhileEngineStopped) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	engineConfiguration->isDoubleSolenoidIdle = false;
 	engine->timeToStopIdleTest = 0;
-	engineConfiguration->idleSolenoidParkPosition = 40;
-	engineConfiguration->idleSolenoidParkTimeout = 30;
 
 	engineConfiguration->keepIdleSolenoidWhenStopped = false;
 	applyIACposition(70);
@@ -265,9 +260,9 @@ TEST(Actuators, IdleSingleSolenoidParksWhileEngineStopped) {
 	engine->triggerCentral.m_lastEventTimer.reset();
 	eth.moveTimeForwardSec(5);
 	applyIACposition(70);
-	EXPECT_NEAR(0.40f, getIdleSolenoidOpenDutyForUnitTest(), EPS4D);
+	EXPECT_NEAR(0.70f, getIdleSolenoidOpenDutyForUnitTest(), EPS4D);
 
-	eth.moveTimeForwardSec(60);
+	eth.moveTimeForwardSec(IDLE_SOLENOID_HOLD_TIMEOUT_SEC);
 	applyIACposition(70);
 	EXPECT_EQ(0, getIdleSolenoidOpenDutyForUnitTest());
 }

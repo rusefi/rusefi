@@ -64,19 +64,20 @@ void applyIACposition(percent_t position) {
 		// if not spinning or running a bench test, turn off the idle valve(s) to be quieter and save power
 #if EFI_SHAFT_POSITION_INPUT
 		if (!engine->triggerCentral.engineMovedRecently() && engine->timeToStopIdleTest == 0) {
-			// #9123: optionally hold the valve at a configured parked position for a bounded time
-			// after the engine stops, for valves which need to rest somewhere other than de-energized.
+			// #9123: optionally keep driving the valve for a bounded time after the engine stops,
+			// for valves which need to rest somewhere other than de-energized. The position is
+			// whatever the idle controller already computed: at 0 rpm the phase is Cranking, so
+			// closed loop is 0 and the open loop is the cranking CLT curve - an existing
+			// calibration, not a new one.
 			// hasElapsedSec (not a comparison against getSecondsSinceTriggerEvent, which saturates
-			// at 2^32 ticks - under 26 seconds on some ports) so the timeout works for any setting,
-			// and so a freshly booted ECU which has never seen the engine turn parks nothing.
+			// at 2^32 ticks - under 26 seconds on some ports), so a freshly booted ECU which has
+			// never seen the engine turn holds nothing.
 			if (!engineConfiguration->keepIdleSolenoidWhenStopped
-					|| engine->triggerCentral.m_lastEventTimer.hasElapsedSec(engineConfiguration->idleSolenoidParkTimeout)) {
+					|| engine->triggerCentral.m_lastEventTimer.hasElapsedSec(IDLE_SOLENOID_HOLD_TIMEOUT_SEC)) {
 				idleSolenoidOpen.setSimplePwmDutyCycle(0);
 				idleSolenoidClose.setSimplePwmDutyCycle(0);
 				return;
 			}
-
-			duty = PERCENT_TO_DUTY(engineConfiguration->idleSolenoidParkPosition);
 		}
 #endif // EFI_SHAFT_POSITION_INPUT
 
