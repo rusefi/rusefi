@@ -1853,14 +1853,14 @@
         <constant name="idle_stepperDirectionPin">"NONE"</constant>
         <constant name="idle_stepperStepPin">"NONE"</constant>
         <constant cols="1" digits="1" name="idleAdvance" rows="8" units="deg">
-         20.0
-         21.0
-         22.0
-         20.0
-         18.0
-         16.0
-         16.0
-         16.0
+         10.0
+         12.0
+         14.0
+         12.0
+         10.0
+         9.0
+         9.0
+         10.0
 </constant>
         <constant cols="1" digits="0" name="idleAdvanceBins" rows="8" units="RPM">
          0
@@ -1918,7 +1918,7 @@
         <constant digits="4" name="idleTimingPid_dFactor" units="">0.0</constant>
         <constant digits="4" name="idleTimingPid_iFactor" units="">0.0</constant>
         <constant digits="0" name="idleTimingPid_maxValue" units="">10</constant>
-        <constant digits="0" name="idleTimingPid_minValue" units="">-10</constant>
+        <constant digits="0" name="idleTimingPid_minValue" units="">-30</constant>
         <constant digits="0" name="idleTimingPid_offset" units="">0</constant>
         <constant digits="0" name="idleTimingPid_periodMs" units="ms">0</constant>
         <constant digits="4" name="idleTimingPid_pFactor" units="">0.1</constant>
