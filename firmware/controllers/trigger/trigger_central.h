@@ -169,6 +169,9 @@ public:
 	// synchronization event position
 	angle_t vvtPosition[BANKS_COUNT][CAMS_PER_BANK];
 
+	// whether vvtPosition holds a valid reading (first cam event has arrived)
+	bool hasVvtPosition[BANKS_COUNT][CAMS_PER_BANK] = {};
+
 #if EFI_SHAFT_POSITION_INPUT
 	PrimaryTriggerDecoder triggerState;
 #endif //EFI_SHAFT_POSITION_INPUT

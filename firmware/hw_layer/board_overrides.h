@@ -210,6 +210,14 @@ extern std::optional<setup_custom_bool_type> custom_board_boardAllowTriggerActio
 // sync the decoder at the wrong position. See m74_9 false-sync C9003 case.
 extern std::optional<setup_custom_bool_type> custom_board_requireValidatedSync;
 
+// When set and returning a positive angle (degrees), the cam/VVT position is
+// cross-checked on every cam event: a fixed cam must report the same phase
+// every cam revolution. A crank-sync basis error (false sync) shifts the
+// reading by the sync error, so a jump beyond the limit forces the crank
+// decoder to re-sync. 0 (default) disables the check - engines with a VVT
+// phaser legitimately move the cam phase. m74_9 sets 15 (fixed cam).
+extern std::optional<setup_custom_get_float_type> custom_board_vvtDriftLimit;
+
 extern std::optional<setup_custom_bool_type> custom_board_getAcrState;
 // Additive ACR hold: when set and returning true, the Harley ACR valve is kept
 // energized regardless of the acrRevolutions countdown (the engineMovedRecently
