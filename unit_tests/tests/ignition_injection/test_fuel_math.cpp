@@ -738,6 +738,12 @@ TEST(FuelMath, SecondVeTableLoadAxisCanDifferFromPrimary) {
 	engineConfiguration->secondVeOverrideMode = VE_TPS;
 	EXPECT_NEAR(0.20f, dut.getVe(1000, 70, false), EPS4D);
 
+	// the two axes are separately observable: the primary channel still reports the primary's
+	// load, and the second table's own load is published rather than inferred
+	dut.getVe(1000, 70, true);
+	EXPECT_FLOAT_EQ(engine->engineState.veTableYAxis, 35.0f);
+	EXPECT_FLOAT_EQ(engine->engineState.veTableSecondYAxis, 20.0f);
+
 	// and the reverse
 	engineConfiguration->veOverrideMode = VE_TPS;
 	engineConfiguration->secondVeOverrideMode = VE_MAP;

@@ -121,6 +121,9 @@ float AirmassVeModelBase::getVe(float rpm, float load, bool postState) const {
 		engine->engineState.veTableIdleYAxis = idleVeLoad;
 #if EFI_PROD_CODE || EFI_UNIT_TEST
 		engine->engineState.isSecondVeTableActive = switchTableActive;
+		// #10023 the second table has its own load axis, so the primary's veTableYAxis does not
+		// say what this table was actually indexed with - publish it separately
+		engine->engineState.veTableSecondYAxis = secondVeLoad;
 #endif
 	}
 
