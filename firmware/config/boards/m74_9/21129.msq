@@ -1894,25 +1894,25 @@
 </constant>
         <constant name="idleIncrementalPidCic">"no"</constant>
         <constant digits="1" name="idleMaximumAirmass" units="mg">0.0</constant>
-        <constant name="idleMode">"Open Loop"</constant>
-        <constant digits="1" name="idlePidActivationTime" units="seconds">0.0</constant>
+        <constant name="idleMode">"Open Loop + Closed Loop"</constant>
+        <constant digits="1" name="idlePidActivationTime" units="seconds">20.0</constant>
         <constant digits="0" name="idlePidDeactivationTpsThreshold" units="%">5</constant>
         <constant digits="0" name="idlePidRpmDeadZone" units="RPM">50</constant>
         <constant digits="0" name="idlePidRpmUpperLimit" units="RPM">500</constant>
         <constant name="idlePositionChannel">"NONE"</constant>
         <constant digits="0" name="idlePositionMax" units="mv">5000</constant>
         <constant digits="0" name="idlePositionMin" units="mv">0</constant>
-        <constant name="idleReturnTargetRamp">"no"</constant>
+        <constant name="idleReturnTargetRamp">"yes"</constant>
         <constant digits="1" name="idleReturnTargetRampDuration" units="seconds">3.0</constant>
         <constant digits="4" name="idleRpmPid_dFactor" units="">0.0</constant>
-        <constant digits="4" name="idleRpmPid_iFactor" units="">0.002</constant>
+        <constant digits="4" name="idleRpmPid_iFactor" units="">0.001</constant>
         <constant digits="0" name="idlerpmpid_iTermMax" units="">20</constant>
         <constant digits="0" name="idlerpmpid_iTermMin" units="">-20</constant>
         <constant digits="0" name="idleRpmPid_maxValue" units="">20</constant>
         <constant digits="0" name="idleRpmPid_minValue" units="">-20</constant>
         <constant digits="0" name="idleRpmPid_offset" units="">0</constant>
         <constant digits="0" name="idleRpmPid_periodMs" units="ms">0</constant>
-        <constant digits="4" name="idleRpmPid_pFactor" units="">0.05</constant>
+        <constant digits="4" name="idleRpmPid_pFactor" units="">0.02</constant>
         <constant digits="0" name="idleStepperReactionTime" units="ms">3</constant>
         <constant digits="0" name="idleStepperTotalSteps" units="count">200</constant>
         <constant digits="4" name="idleTimingPid_dFactor" units="">0.0</constant>
@@ -4699,7 +4699,7 @@
         <constant name="useIacPidMultTable">"no"</constant>
         <constant name="useIacTableForCoasting">"disabled"</constant>
         <constant name="useIdleAdvanceWhileCoasting">"no"</constant>
-        <constant name="useIdleTimingPidControl">"no"</constant>
+        <constant name="useIdleTimingPidControl">"yes"</constant>
         <constant name="useInjectorFlowLinearizationTable">"no"</constant>
         <constant name="useLambdaOnInterface">"AFR"</constant>
         <constant name="useLinearCltSensor">"no"</constant>
@@ -4711,7 +4711,7 @@
         <constant name="usescriptTableForCanSniffingFiltering">"no"</constant>
         <constant name="useSeparateAdvanceForCranking">"Fixed (auto taper)"</constant>
         <constant name="useSeparateAdvanceForIdle">"enabled"</constant>
-        <constant name="useSeparateIdleTablesForCrankingTaper">"disabled"</constant>
+        <constant name="useSeparateIdleTablesForCrankingTaper">"enabled"</constant>
         <constant name="useSeparateVeForIdle">"enabled"</constant>
         <constant name="useSpiImu">"no"</constant>
         <constant name="useStepperIdle">"no"</constant>

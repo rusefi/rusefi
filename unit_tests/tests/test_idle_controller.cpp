@@ -384,6 +384,43 @@ TEST(idle_v2, closedLoopBasic) {
 	EXPECT_FLOAT_EQ(25, dut.getClosedLoop(ICP::Idling, 0, /*rpm*/ 850, /*tgt*/ 900));
 }
 
+TEST(idle_v2, closedLoopActivationDelay) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	IdleController dut;
+	dut.init();
+
+	engineConfiguration->idleMode = idle_mode_e::IM_AUTO;
+	engineConfiguration->idlePidActivationTime = 5.0f;
+
+	// Simple P-only PID for deterministic output
+	engineConfiguration->idleRpmPid.pFactor = 0.5;
+	engineConfiguration->idleRpmPid.iFactor = 0;
+	engineConfiguration->idleRpmPid.dFactor = 0;
+	engineConfiguration->idleRpmPid.periodMs = 0;
+	engineConfiguration->idleRpmPid.minValue = -50;
+	engineConfiguration->idleRpmPid.maxValue = 50;
+	engineConfiguration->idlePidRpmDeadZone = 0;
+
+	// Just entered the idle phase: the activation hold-off is in effect,
+	// the PID must not move the throttle yet
+	EXPECT_EQ(0, dut.getClosedLoop(ICP::Idling, 0, /*rpm*/ 850, /*tgt*/ 900));
+	EXPECT_FALSE(dut.isIdleClosedLoop);
+
+	// Hold-off expired: the PID may engage (first engagement resets and
+	// starts the 1 s soft re-entry ramp, so the output is still zero)
+	advanceTimeUs(6'000'000);
+	EXPECT_EQ(0, dut.getClosedLoop(ICP::Idling, 0, /*rpm*/ 850, /*tgt*/ 900));
+	EXPECT_TRUE(dut.isIdleClosedLoop);
+
+	// After the soft re-entry ramp the PID output is at full strength
+	advanceTimeUs(2'000'000);
+	EXPECT_FLOAT_EQ(25, dut.getClosedLoop(ICP::Idling, 0, /*rpm*/ 850, /*tgt*/ 900));
+
+	// Zero delay = legacy behaviour: engages immediately
+	engineConfiguration->idlePidActivationTime = 0;
+	EXPECT_FLOAT_EQ(25, dut.getClosedLoop(ICP::Idling, 0, /*rpm*/ 850, /*tgt*/ 900));
+}
+
 TEST(idle_v2, closedLoopDeadzone) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	IdleController dut;
