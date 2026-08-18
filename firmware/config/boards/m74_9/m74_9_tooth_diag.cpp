@@ -83,22 +83,25 @@ bool isPlausibleToothPeriod(efitick_t period) {
 }
 
 // Print an array of period values in chunks: efiPrintf lines are capped at
-// 256 characters, 58 values do not fit one line.
+// 256 characters, 58 values do not fit one line. Buffers are static - the
+// console command thread stack is small (a 2.7 KB local array here crashed
+// the ECU with a hard fault on the first on-car toothdump).
+static char chunkLine[224];
+
 void printPeriodChunks(const char* label, const float* values, size_t count) {
 	constexpr size_t Chunk = 12;
-	char line[224];
 
 	for (size_t start = 0; start < count; start += Chunk) {
 		size_t end = start + Chunk < count ? start + Chunk : count;
 		size_t off = 0;
 
-		off += chsnprintf(line + off, sizeof(line) - off, "%s%02d", label, (int)start);
+		off += chsnprintf(chunkLine + off, sizeof(chunkLine) - off, "%s%02d", label, (int)start);
 
 		for (size_t i = start; i < end; i++) {
-			off += chsnprintf(line + off, sizeof(line) - off, " %.0f", values[i]);
+			off += chsnprintf(chunkLine + off, sizeof(chunkLine) - off, " %.0f", values[i]);
 		}
 
-		efiPrintf("%s", line);
+		efiPrintf("%s", chunkLine);
 	}
 }
 
@@ -124,7 +127,7 @@ void printToothProfile() {
 
 	if (normalTeeth > 0) {
 		float mean = sum / normalTeeth;
-		float norm[ToothCount];
+		static float norm[ToothCount];
 		for (size_t i = 0; i < ToothCount; i++) {
 			norm[i] = profileCount[i] > 0 ? profileUs[i] / mean : 0;
 		}
@@ -137,10 +140,12 @@ void printToothProfile() {
 void printRawRevolutions() {
 	// Copy the valid part of the ring into time order (oldest -> newest).
 	// Fresh (never written) entries have index 0 and must not be treated as
-	// revolution boundaries.
+	// revolution boundaries. Static buffer: 348 x 8 = ~2.7 KB does not fit the
+	// console command thread stack (the first on-car toothdump hard-faulted
+	// because of exactly this).
 	size_t valid = ringTotalWritten < RingSize ? ringTotalWritten : RingSize;
 
-	ToothEvent ordered[RingSize];
+	static ToothEvent ordered[RingSize];
 	for (size_t i = 0; i < valid; i++) {
 		ordered[i] = ring[(ringHead + RingSize - valid + i) % RingSize];
 	}
@@ -165,11 +170,11 @@ void printRawRevolutions() {
 	// Print up to 4 complete revolutions, newest last. The last start is a
 	// partial revolution in progress - print from the one before it.
 	size_t revsPrinted = 0;
+	static float periods[ToothCount];
 	for (size_t b = 1; b + 1 < startCount + 1 && revsPrinted < 4; b++, revsPrinted++) {
 		size_t revStart = starts[startCount - b - 1];
 		size_t revEnd = starts[startCount - b];
 
-		float periods[ToothCount];
 		size_t count = 0;
 
 		// period of tooth N = time from the event at N to the event at N+1;
