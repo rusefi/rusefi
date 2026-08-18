@@ -3407,3 +3407,14 @@ The msq load error also appears while the ECU still runs the old firmware:
 the console reads the ini from the ECU, so the new msq can only be loaded
 AFTER flashing the 15:35 firmware. Correct order: flash rusefi.bin ->
 connect console -> load 21129_new.msq -> apply.
+
+## 2026-08-18 (18): msq signature was stale - patched to the new firmware signature
+
+The "expecting 4 by 8" error persisted after flashing because the msq
+still carried the OLD signature (2026.08.17.m74_9.727755639). The console
+resolves the ini by the msq signature (RealIniFileProvider: bundled ini ->
+current folder -> download -> manual picker), so it fetched the OLD ini
+with the 4-row layout and rejected the 6-row table. Patched the versionInfo
+in 21129.msq to the new signature (2026.08.18.m74_9.319381849) and
+firmwareInfo 20260818. Now the console matches the msq against the new ini
+from the bundle/ECU and accepts the 6x8 table.
