@@ -51,7 +51,9 @@ constexpr float EmaAlpha = 0.05f;
 
 // Persistent record in MFS (storage ID EFI_TOOTH_PROFILE_RECORD_ID).
 constexpr uint32_t ProfileMagic = 0x544F4F54; // 'TOOT'
-constexpr uint32_t ProfileVersion = 1;
+// v2: tooth index now comes from the decoder index (sync tooth = 0); the v1
+// records used the engine-phase mapping which was shifted by ~39 teeth.
+constexpr uint32_t ProfileVersion = 2;
 
 struct ToothProfileRecord {
 	uint32_t magic;
@@ -193,10 +195,13 @@ void printRawRevolutions() {
 } // namespace
 
 // Called from the trigger decoder for every synchronized primary tooth.
-void boardTriggerCallback(efitick_t timestamp, float currentPhase) {
-	// Tooth index within one crank revolution; the 4-stroke phase wraps
-	// 0..720 and the wheel repeats every 360 degrees.
-	int index = (int)(currentPhase * ToothCount / 360.0f + 0.5f) % ToothCount;
+void boardTriggerCallback(efitick_t timestamp, float) {
+	// Authoritative tooth position comes from the decoder index (0 = the sync
+	// tooth, 2 index units per tooth for RiseOnly wheels), NOT from the engine
+	// phase float: the phase wraps around tdcPosition() and mapped the sync
+	// tooth to ~39 instead of 0 on this setup (the first capture showed the
+	// gap at profile slot 37 and two teeth never learned).
+	int index = (engine->triggerCentral.triggerState.getCurrentIndex() / 2) % ToothCount;
 
 	if (lastToothIndex >= 0) {
 		efitick_t period = timestamp - lastToothTimestamp;
