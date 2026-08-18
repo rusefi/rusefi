@@ -1920,23 +1920,23 @@
         <constant digits="4" name="idleTimingPid_pFactor" units="">0.1</constant>
         <constant digits="1" name="idleTimingSoftEntryTime" units="">0.0</constant>
         <constant cols="1" digits="0" name="idleVeLoadBins" rows="4" units="load">
-         0
-         0
-         0
-         0
+         30
+         40
+         50
+         60
 </constant>
-        <constant name="idleVeOverrideMode">"None"</constant>
+        <constant name="idleVeOverrideMode">"MAP"</constant>
         <constant cols="1" digits="0" name="idleVeRpmBins" rows="4" units="RPM">
-         0
-         0
-         0
-         0
+         600
+         800
+         1000
+         1200
 </constant>
         <constant cols="4" digits="1" name="idleVeTable" rows="4" units="%">
-         0.0 0.0 0.0 0.0
-         0.0 0.0 0.0 0.0
-         0.0 0.0 0.0 0.0
-         0.0 0.0 0.0 0.0
+         57.0 67.0 68.0 68.0
+         63.0 69.0 71.0 71.0
+         65.0 69.0 72.0 73.0
+         67.0 71.0 72.0 74.0
 </constant>
         <constant cols="1" digits="1" name="ignBlends1_blendBins" rows="8" units="">
          0.0
@@ -4708,7 +4708,7 @@
         <constant name="useSeparateAdvanceForCranking">"Fixed (auto taper)"</constant>
         <constant name="useSeparateAdvanceForIdle">"enabled"</constant>
         <constant name="useSeparateIdleTablesForCrankingTaper">"disabled"</constant>
-        <constant name="useSeparateVeForIdle">"disabled"</constant>
+        <constant name="useSeparateVeForIdle">"enabled"</constant>
         <constant name="useSpiImu">"no"</constant>
         <constant name="useStepperIdle">"no"</constant>
         <constant name="useTLE8888_cranking_hack">"yes"</constant>
