@@ -3503,3 +3503,23 @@ Tune changes (21129.msq):
 The stock start-advance table (-5.25 deg below 280 rpm, 14.6 deg at
 680-1080) was NOT copied: our catch works, negative advance is only
 anti-kickback.
+
+## 2026-08-18 (22): stock idle advance 9+-5 deg + ignition retard authority -30 deg
+
+From the chiptuner M74 reference (https://chiptuner.ru/content/typ-m74-0/):
+stock warm idle: 840+-40 rpm, advance 9+-5 deg, throttle 1-4%, MAP
+0.38-0.41 bar, air flow 7-12 kg/h, injection 3.0-5.0 ms - our measured
+MAP/flow already match; the advance did not (we ran 20-22 deg).
+
+The user's stock parameter "минимальный УОЗ на выходе из пуска = -30 deg"
+is the retard authority of the ignition-based idle control: the stock can
+pull the advance down to -30 deg to tame the post-start flare.
+
+Tune changes:
+- idleAdvance 20-22 -> 10-14 deg (stock-shaped: 10@0, 12@400, 14@700,
+  12@900, 10@1100, 9@1300-1600, 10@2000)
+- idleTimingPid_minValue -10 -> -30 (stock retard authority; p=0.1 means
+  -30 deg only at ~300 rpm error, normal idle corrections stay ~+-5 deg)
+The transition cranking (14.5 deg at 850) -> taper idle table (~13 deg)
+-> idle (~10-12 deg) is now smooth and matches the stock start advance
+table (14.6 deg at 680-1080, 11.25 at 1200).
