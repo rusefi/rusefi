@@ -5,7 +5,6 @@
 #include "kline.h"
 #include "second_tables.h"
 #include "engine_configuration_defaults.h"
-#include "idle_hardware.h"
 #include <rusefi/manifest.h>
 #if HW_PROTEUS
 #include "proteus_meta.h"
@@ -143,13 +142,6 @@ bool applyDefaultsOrFixAfterBurn(const engine_configuration_s* previousConfigura
 
   if (engineConfiguration->mainRelayDisableTime == 0) {
     engineConfiguration->mainRelayDisableTime = 1;
-    changed = true;
-  }
-
-  // #9123: tunes which predate the parking timeout carry 0 here, which would otherwise mean
-  // "switch off immediately" and make keepIdleSolenoidWhenStopped do nothing.
-  if (engineConfiguration->idleSolenoidParkTimeout == 0) {
-    engineConfiguration->idleSolenoidParkTimeout = DEFAULT_IDLE_SOLENOID_PARK_TIMEOUT_SEC;
     changed = true;
   }
 
@@ -499,7 +491,6 @@ void setDefaultBaseEngine() {
 	engineConfiguration->idleStepperTotalSteps = 200;
 	engineConfiguration->stepperForceParkingEveryRestart = true;
 	engineConfiguration->iacByTpsTaper = 2;
-	engineConfiguration->idleSolenoidParkTimeout = DEFAULT_IDLE_SOLENOID_PARK_TIMEOUT_SEC;
 
     engineConfiguration->etbSplit = MAX_TPS_PPS_DISCREPANCY;
 
