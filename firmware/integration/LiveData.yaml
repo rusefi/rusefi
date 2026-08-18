@@ -297,3 +297,4 @@ Usages:
     java: InjectorDeadtimeAutotune.java
     folder: controllers/modules/injector_deadtime_autotune
     engineModule: InjectorDeadtimeAutotune
+    conditional_compilation: "EFI_ENGINE_CONTROL"
