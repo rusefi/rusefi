@@ -111,10 +111,14 @@ public class OpenBltCanFlasher {
                 listener.log("Bootloader station id length: " + stationIdLen + " bytes");
             }
 
-            if (cfg.probeOnly) {
-                listener.log("Probe complete.");
-                return new Result(0, 0, false, false, System.currentTimeMillis() - t0);
-            }
+            			if (cfg.probeOnly) {
+            				listener.log("Probe complete.");
+            				// Leave the ECU in the application, not stuck in the bootloader:
+            				// a probe session holds the bootloader forever (wasConnected).
+            				xcp.programReset();
+            				listener.log("ECU restarted into the application.");
+            				return new Result(0, 0, false, true, System.currentTimeMillis() - t0);
+            			}
 
             // ---- load image ----
             SrecParser.Image image = SrecParser.parse(cfg.srecPath);
