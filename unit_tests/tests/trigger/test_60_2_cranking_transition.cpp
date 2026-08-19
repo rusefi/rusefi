@@ -869,3 +869,98 @@ TEST(trigger, crankingTransition60_2RealCarProfileWithStableCam) {
 		<< "two cycles validated; the cam-alignment cycle is skipped by design";
 	EXPECT_TRUE(engine->triggerCentral.triggerState.hasSynchronizedPhase()) << "cam phase established";
 }
+
+/**
+ * Dense noise storm: the m74_9 car logs show sync-counter bursts (~7 syncs in
+ * ~10 ms at 270 rpm - 9 syncs/s while the crank makes 4.5 rev/s). A storm of
+ * edges 250 us apart (above the 100 us input debounce) inflates the event
+ * count, so a storm edge can become the 58th event since the previous sync.
+ * If that edge also lands on a ratio inside the windows (chaotic spacings
+ * occasionally do), the decoder false-syncs "cleanly": count matches,
+ * no error, no desync - just a silent +1 to the sync counter and a shifted
+ * phase basis. On the car this races the sync counter ~2-3x and fires
+ * ignition/injection from a wrong phase.
+ *
+ * The fix: a real gap can only arrive roughly one full revolution after the
+ * previous sync point. Storm edges arrive at a fraction of a revolution.
+ * The sync candidates must now pass a minimum-elapsed-time gate
+ * (lastFullRevolutionDurationNt / 4) - the storm sync at ~15% of a
+ * revolution is rejected, the revolution then ends in a visible count
+ * mismatch at the real gap (proper error + desync + recovery), and the
+ * sync counter no longer races.
+ *
+ * This test FAILS without the time gate (the storm edge false-syncs and the
+ * sync counter advances before the real gap) and PASSES with it.
+ */
+static void fire60_2RealCarStormRevolution(EngineTestHelper& eth, float scale) {
+	// tooth 0: the previous revolution's gap wait already positioned us here,
+	// this rise is the clean sync event for that gap
+	eth.firePrimaryTriggerRise();
+
+	// four more real teeth (counts 1..4)
+	for (int tooth = 1; tooth < 5; tooth++) {
+		eth.moveTimeForwardUs(MS2US(carProfileUs[tooth] * scale / 1000.0f));
+		eth.firePrimaryTriggerRise();
+	}
+
+	// 53 storm edges at 250 us (counts 5..57), then a stretched 625 us pair
+	// and the 58th event: ratio 625/250 = 2.5 inside [1.6, 3.75], the second
+	// gap 250/250 = 1.0 inside [0.85, 1.15] - a perfect false sync candidate
+	// (the revolution's first tooth is the sync event itself and is not
+	// counted into the new cycle, hence 53 and not 52)
+	for (int i = 0; i < 53; i++) {
+		eth.moveTimeForwardUs(250);
+		eth.firePrimaryTriggerRise();
+	}
+	eth.moveTimeForwardUs(625);
+	eth.firePrimaryTriggerRise(); // the 58th event: the false sync candidate
+
+	// the rest of the real teeth (5..56)
+	for (int tooth = 5; tooth < 57; tooth++) {
+		eth.moveTimeForwardUs(MS2US(carProfileUs[tooth] * scale / 1000.0f));
+		eth.firePrimaryTriggerRise();
+	}
+
+	// the gap before the next revolution
+	eth.moveTimeForwardUs(MS2US(carProfileUs[57] * scale / 1000.0f));
+}
+
+TEST(trigger, crankingTransition60_2RealCarProfileNoiseStormDoesNotFalseSync) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setCrankOperationMode();
+	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
+
+	// synchronize on clean revolutions
+	for (int i = 0; i < 4; i++) {
+		fire60_2RealCarRevolution(eth, carProfileCrankingScale);
+	}
+	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized());
+	ASSERT_EQ(2, engine->triggerCentral.triggerState.getSynchronizationCounter());
+
+	uint32_t counterBefore = engine->rpmCalculator.getRevolutionCounterSinceStart();
+	size_t warningsBefore = getRecentWarnings()->getCount();
+
+	// the storm revolution: its first tooth syncs the previous clean revolution
+	// (legitimate +1), but the storm's false-sync candidate must be rejected
+	extern bool printTriggerTrace;
+	printTriggerTrace = true;
+	fire60_2RealCarStormRevolution(eth, carProfileCrankingScale);
+	printTriggerTrace = false;
+	EXPECT_EQ(3, engine->triggerCentral.triggerState.getSynchronizationCounter())
+		<< "only the legitimate gap sync; the storm edge must not false-sync";
+
+	// the storm inflated the event count: the decoder overflows the wheel
+	// index mid-revolution -> C9002 (silent on the car) + desync, then the
+	// clean revolution's gap re-syncs it (unvalidated)
+	fire60_2RealCarRevolution(eth, carProfileCrankingScale);
+	ASSERT_EQ(warningsBefore + 1, getRecentWarnings()->getCount()) << "the stormed revolution desyncs once";
+
+	// recovery: re-sync (unvalidated), then a validated cycle
+	fire60_2RealCarRevolution(eth, carProfileCrankingScale);
+	fire60_2RealCarRevolution(eth, carProfileCrankingScale);
+	fire60_2RealCarRevolution(eth, carProfileCrankingScale);
+	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized());
+	EXPECT_EQ(3, engine->triggerCentral.triggerState.getSynchronizationCounter());
+	EXPECT_EQ(counterBefore + 1u, engine->rpmCalculator.getRevolutionCounterSinceStart())
+		<< "one validated cycle after the storm";
+}
