@@ -92,6 +92,7 @@ void TriggerDecoderBase::resetState() {
 
 	prevSignal = SHAFT_PRIMARY_FALLING;
 	startOfCycleNt = {};
+	lastFullRevolutionDurationNt = 0;
 
 	resetCurrentCycleState();
 
@@ -398,6 +399,12 @@ void TriggerDecoderBase::onShaftSynchronization(
 		bool wasSynchronized,
 		const efitick_t nowNt,
 		const TriggerWaveform& triggerShape) {
+	if (wasSynchronized) {
+		// a full trigger revolution just closed: remember its duration for
+		// the minimum-elapsed-time sync gate (decodeTriggerEvent)
+		lastFullRevolutionDurationNt = nowNt - startOfCycleNt;
+	}
+
 	startOfCycleNt = nowNt;
 	resetCurrentCycleState();
 
@@ -597,7 +604,27 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 			bool atExpectedGapPosition = !wasSynchronized ||
 				(expectedCount == 0 || eventsSinceSync + 2 >= expectedCount);
 
-			isSynchronizationPoint = atExpectedGapPosition && isSyncPoint(triggerShape, triggerConfiguration.TriggerType.type);
+			// Minimum-elapsed-time gate: a REAL gap can only arrive roughly one
+			// full revolution after the previous sync point. A noise storm
+			// injects many edges in a few ms, so the event count can reach
+			// expectedCount at a storm edge mid-revolution; that edge then
+			// passes the ratio windows (chaotic spacings occasionally land
+			// inside), the position gate and the count check and false-syncs
+			// the decoder "cleanly" - no error, no desync, just a silent +1 to
+			// the sync counter and a shifted phase basis. The m74_9 car logs
+			// show the result: ~9 syncs/s at 270 rpm (the crank makes 4.5
+			// rev/s), and the engine-cycle counter racing ~2-3x. Require at
+			// least a quarter of the previous revolution's duration - storm
+			// syncs arrive within a few percent of a revolution, and no real
+			// engine accelerates 4x within one revolution (the first-combustion
+			// catch, the fastest real transition, compresses the next revolution
+			// to ~0.3-0.5x). The first sync and re-syncs after a desync have no
+			// previous revolution to compare against and stay exempt.
+			bool tooEarlyForSync = wasSynchronized
+				&& lastFullRevolutionDurationNt > 0
+				&& (nowNt - startOfCycleNt) < lastFullRevolutionDurationNt / 4;
+
+			isSynchronizationPoint = !tooEarlyForSync && atExpectedGapPosition && isSyncPoint(triggerShape, triggerConfiguration.TriggerType.type);
 
 			// First-combustion protection (board opt-in via
 			// custom_board_syncByPositionWhileCranking, m74_9): at the catch the
@@ -617,7 +644,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 			// cranking speed, so the skip is off once the engine is running.
 			// Conditions are evaluated lazily: mock tests run the decoder with
 			// engineConfiguration = nullptr.
-			if (!isSynchronizationPoint && wasSynchronized && atExpectedGapPosition &&
+			if (!isSynchronizationPoint && !tooEarlyForSync && wasSynchronized && atExpectedGapPosition &&
 					get_board_override_result(custom_board_syncByPositionWhileCranking, false) &&
 					currentCycle.eventCount[(int)triggerWheel] == triggerShape.getExpectedEventCount(triggerWheel) &&
 #if EFI_UNIT_TEST

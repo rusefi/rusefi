@@ -192,6 +192,17 @@ public:
 	 */
 	efitick_t startOfCycleNt;
 
+	/**
+	 * Duration of the last FULLY completed trigger revolution, measured at
+	 * the sync point that closed it (nowNt - startOfCycleNt before the
+	 * start-of-cycle is moved). Used by the minimum-elapsed-time sync gate:
+	 * a real gap can only arrive roughly one revolution after the previous
+	 * sync, while a noise storm inflates the event count and can place a
+	 * window-matching edge at count == expectedCount a few ms after the
+	 * previous sync - see crankingTransition60_2RealCarProfileNoiseStormDoesNotFalseSync.
+	 */
+	efitick_t lastFullRevolutionDurationNt = 0;
+
 	uint32_t findTriggerZeroEventIndex(
 			TriggerWaveform& shape,
 			const TriggerConfiguration& triggerConfiguration
