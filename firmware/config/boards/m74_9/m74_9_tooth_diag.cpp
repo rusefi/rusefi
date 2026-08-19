@@ -24,6 +24,31 @@
 #include "storage.h"
 #include "m74_9_tooth_diag.h"
 
+/**
+ * RPM-adaptive trigger input debounce - the software half of the stock ECU's
+ * adaptive VR conditioning. The stock ECU moves the conditioner's THRESHOLD
+ * with signal amplitude; we cannot move the board's fixed comparator
+ * threshold, but we can adapt the debounce to the tooth rate:
+ *  - cranking (270 rpm): tooth period ~3.8 ms, debounce = 1.27 ms - dense
+ *    noise storms (edges 100-500 us apart) are thinned to ~1 edge per
+ *    debounce window instead of passing in full;
+ *  - running: the debounce shrinks proportionally, never below the static
+ *    100 us floor (noise bursts measure <50 us) and never above 1.5 ms
+ *    (a real 60-2 tooth cannot arrive sooner at any cranking speed; the
+ *    compression ripple at 270 rpm moves teeth 2.7-5 ms).
+ * Below 50 rpm the engine is not rotating and the static floor applies.
+ */
+float m74_9TriggerDebounceUs() {
+	float rpm = Sensor::getOrZero(SensorType::Rpm);
+	if (rpm < 50) {
+		return 100.0f;
+	}
+
+	// mean tooth period at this rpm (58 teeth per crank revolution)
+	float toothUs = 60.0f * 1000000.0f / (58.0f * rpm);
+	return clampF(100.0f, toothUs / 3.0f, 1500.0f);
+}
+
 namespace {
 
 constexpr size_t ToothCount = 58;

@@ -22,3 +22,5 @@ void m74_9ToothDump();
 void m74_9ToothSave();
 void m74_9ToothPeriodic();
 void m74_9RawTriggerDump();
+// RPM-adaptive trigger input debounce for custom_board_triggerDebounceUs.
+float m74_9TriggerDebounceUs();

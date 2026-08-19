@@ -699,9 +699,12 @@ void setup_custom_board_overrides() {
 	custom_board_vvtDriftLimit = []() { return 15.0f; };
 	// VR input debounce: the trigger logs show noise edge bursts <50 us apart
 	// (comparator ringing / starter interference) that inflate the event count
-	// and false-sync the decoder mid-crank. Drop edges closer than 100 us -
-	// below the 125 us tooth period of the 60-2 wheel at 8000 rpm on RiseOnly.
-	custom_board_triggerDebounceUs = []() { return 100.0f; };
+	// and false-sync the decoder mid-crank. The threshold is RPM-adaptive
+	// (m74_9TriggerDebounceUs): ~1.2 ms at cranking to thin noise storms,
+	// scaling down to the 100 us floor as the tooth rate rises - the software
+	// half of the stock ECU's adaptive VR conditioning (we cannot move the
+	// fixed comparator threshold on this board).
+	custom_board_triggerDebounceUs = m74_9TriggerDebounceUs;
 	// Tooth profile learning housekeeping (load/save of the learned wheel
 	// profile + auto-save on engine stop).
 	custom_board_periodicSlowCallback = m74_9ToothPeriodic;
