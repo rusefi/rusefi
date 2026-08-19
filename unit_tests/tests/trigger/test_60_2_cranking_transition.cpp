@@ -515,7 +515,7 @@ TEST(trigger, crankingTransition60_2DesyncResyncStormDoesNotRaceRevolutionCounte
 	EXPECT_LE(engine->rpmCalculator.getRevolutionCounterSinceStart() - counterBefore, 2)
 		<< "false syncs raced the revolution counter";
 
-	// recovery: clean revolutions count again, once per engine cycle
+	// Recovery: clean revolutions count again, once per engine cycle
 	uint32_t counterAtRecovery = engine->rpmCalculator.getRevolutionCounterSinceStart();
 	fire60_2Revolution(eth, steadySlotMs, 3.0f);
 	fire60_2Revolution(eth, steadySlotMs, 3.0f);
@@ -524,4 +524,348 @@ TEST(trigger, crankingTransition60_2DesyncResyncStormDoesNotRaceRevolutionCounte
 	EXPECT_GT(engine->rpmCalculator.getRevolutionCounterSinceStart(), counterAtRecovery)
 		<< "counter must resume on validated revolutions";
 	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized()) << "re-synced after the storm";
+}
+
+/**
+ * The m74_9 trigger logs show noise edge bursts <50 us apart (VR comparator
+ * ringing / starter interference). Those edges inflate the decoder's event
+ * count, open the position gate early and false-sync it mid-revolution. The
+ * board opt-in input debounce (custom_board_triggerDebounceUs = 100 us)
+ * must drop any edge closer than the threshold to the previous accepted
+ * edge - the real tooth period on cranking is 3.4 ms, so real teeth are
+ * untouched.
+ */
+TEST(trigger, crankingTransition60_2DebounceDropsNoiseEdgeBursts) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	custom_board_triggerDebounceUs = []() { return 100.0f; };
+	struct ResetOverride {
+		~ResetOverride() { custom_board_triggerDebounceUs = std::nullopt; }
+	} resetOverride;
+
+	setCrankOperationMode();
+	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
+
+	// two clean revolutions to synchronize
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized()) << "synced on clean revolutions";
+
+	uint32_t hwCountBefore = engine->triggerCentral.getHwEventCounter(SHAFT_PRIMARY_RISING);
+
+	// ten noise pairs: the first edge of each pair arrives 1 ms after the
+	// previous accepted edge (accepted), its double 30 us later (dropped).
+	for (int i = 0; i < 10; i++) {
+		eth.moveTimeForwardUs(1000);
+		eth.firePrimaryTriggerRise();
+		eth.moveTimeForwardUs(30);
+		eth.firePrimaryTriggerRise();
+	}
+
+	EXPECT_EQ(hwCountBefore + 10, engine->triggerCentral.getHwEventCounter(SHAFT_PRIMARY_RISING))
+		<< "sub-threshold edges must be debounced";
+
+	// the injected edges disturb the decoder (they look like fast teeth), but
+	// clean revolutions must re-sync it fully
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized()) << "re-synced after the noise burst";
+}
+
+/**
+ * Replay of the REAL per-tooth periods learned on the m74_9 car (toothdump
+ * 2026-08-19 21:54:50, new firmware, gap correctly at tooth 57). The car's
+ * tooth times carry the real compression ripple - slot 0 is 1.29x the mean,
+ * slot 44 1.35x, the gap 3.08x. scale=1 replays at the native ~84 rpm the
+ * profile was learned at; the tests scale it to ~300 rpm cranking speed.
+ */
+static constexpr float carProfileUs[58] = {
+	15337, 12503, 12058, 11942, 11953, 12167, 12486, 13082, 14588, 11375, 11887, 12443,
+	12314, 11869, 12450, 13180, 12852, 13047, 13517, 13350, 12840, 12225, 11605, 11081,
+	10669, 10402, 10201, 10062, 10010, 9846, 9870, 9840, 9891, 9945, 10017, 10139,
+	10307, 10479, 10756, 11108, 11571, 12211, 13087, 13651, 16077, 13899, 14008, 13296,
+	12907, 12898, 12613, 12164, 11682, 11293, 11030, 10896, 10728, 36760, // 57 = the missing-teeth gap
+};
+
+// native profile speed: 57 * 11890 + 36760 = 714.5 ms per revolution = ~84 rpm
+static constexpr float carProfileNativeRevMs = 714.5f;
+
+/**
+ * Fire one revolution with the real car tooth periods (scaled). The gap of
+ * THIS revolution is checked at the next call's first rise, exactly like the
+ * uniform helper above. One revolution = 58 real teeth (0..57): the
+ * rise-to-rise of tooth i is carProfileUs[i] for i < 57, and carProfileUs[57]
+ * is the missing-teeth gap between tooth 57 and the next revolution's tooth 0.
+ *
+ * skipTooth:       tooth index whose rise+fall are suppressed (VR threshold
+ *                  misses a real tooth at low speed)
+ * noiseAfterTooth: insert an extra rise+fall pair noiseDelayUs after this
+ *                  tooth's fall - an extra edge that passed the 100 us input
+ *                  debounce (300 us is above the threshold; the real m74_9
+ *                  noise bursts that survive the debounce look like this)
+ */
+static void fire60_2RealCarRevolution(EngineTestHelper& eth, float scale,
+		int skipTooth = -1, int noiseAfterTooth = -1, float noiseDelayUs = 300.0f,
+		int camAfterTooth = -1, bool camEdge = true) {
+	for (int tooth = 0; tooth < 58; tooth++) {
+		// rise-to-rise from this tooth to the next one; for tooth 57 that is
+		// the missing-teeth gap (its fall sits 1/3 into it: 6 deg of tooth,
+		// then 12 deg of missing teeth)
+		float riseToRiseUs = carProfileUs[tooth < 57 ? tooth : 57] * scale;
+		float fallAtUs = tooth < 57 ? riseToRiseUs / 2 : riseToRiseUs / 3;
+
+		if (tooth == skipTooth) {
+			// the tooth is invisible to the decoder, only its time passes
+			eth.moveTimeForwardUs(MS2US(riseToRiseUs / 1000.0f));
+			continue;
+		}
+
+		eth.firePrimaryTriggerRise();
+		eth.moveTimeForwardUs(MS2US(fallAtUs / 1000.0f));
+		eth.firePrimaryTriggerFall();
+		eth.moveTimeForwardUs(MS2US((riseToRiseUs - fallAtUs) / 1000.0f));
+
+		if (tooth == camAfterTooth) {
+			// the half-moon cam edge lands at this crank position (VVT_SINGLE_TOOTH
+			// only uses the RISE edge; the fall is logged and ignored)
+			hwHandleVvtCamSignal(camEdge, getTimeNowNt(), 0);
+		}
+
+		if (tooth == noiseAfterTooth) {
+			// extra edge pair noiseDelayUs after this tooth's fall
+			eth.moveTimeForwardUs(MS2US(noiseDelayUs / 1000.0f));
+			eth.firePrimaryTriggerRise();
+			eth.moveTimeForwardUs(MS2US(noiseDelayUs / 1000.0f));
+			eth.firePrimaryTriggerFall();
+		}
+	}
+
+	// the last event was tooth 57's fall; the gap wait above already advanced
+	// the full carProfileUs[57] past tooth 57's rise, so the next call's first
+	// rise (tooth 0 of the next revolution) fires at the right time
+}
+
+// scale the profile to ~300 rpm cranking: 200 ms per revolution
+static constexpr float carProfileCrankingScale = 200.0f / carProfileNativeRevMs;
+
+TEST(trigger, crankingTransition60_2RealCarProfileCleanReplay) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	// the user's m74_9 runs the 60-2 wheel on the crank
+	setCrankOperationMode();
+	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
+
+	// four revolutions to synchronize; the first sync consumes the harness's
+	// disturbed-cycle flag left by the default-trigger simulation, so the
+	// steady state is reached after rev 3 (syncCtr=2, one validated cycle)
+	for (int i = 0; i < 4; i++) {
+		fire60_2RealCarRevolution(eth, carProfileCrankingScale);
+	}
+	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized()) << "synced";
+	ASSERT_EQ(2, engine->triggerCentral.triggerState.getSynchronizationCounter());
+
+	uint32_t counterBefore = engine->rpmCalculator.getRevolutionCounterSinceStart();
+	size_t warningsBefore = getRecentWarnings()->getCount();
+
+	// eight more revolutions of the real learned profile: exactly one sync
+	// point per crank revolution, no warnings, and the revolution counter
+	// counts ENGINE CYCLES (720 deg = two crank revolutions) 1:1
+	for (int i = 0; i < 8; i++) {
+		fire60_2RealCarRevolution(eth, carProfileCrankingScale);
+	}
+
+	ASSERT_EQ(warningsBefore, getRecentWarnings()->getCount()) << "real car profile must not desync the decoder";
+	EXPECT_EQ(10, engine->triggerCentral.triggerState.getSynchronizationCounter())
+		<< "exactly one sync point per crank revolution";
+	EXPECT_EQ(counterBefore + 4u, engine->rpmCalculator.getRevolutionCounterSinceStart())
+		<< "revolution counter counts engine cycles (one per two crank revolutions)";
+	EXPECT_NEAR(300, Sensor::getOrZero(SensorType::Rpm), 30) << "rpm from the real profile";
+}
+
+/**
+ * Intermittent noise: one extra edge in ONE revolution (above the debounce
+ * threshold). The gap after that revolution arrives with count 59 - the
+ * decoder must reject it (silent C9003 on the car: silentTriggerError is on),
+ * re-sync one revolution later (accepted while unsynchronized, but NOT
+ * validated), and validate the next clean revolution again. This is the exact
+ * signature the 21:55:46 attempt showed on the car: only 3 of ~8 revolutions
+ * counted as validated.
+ */
+TEST(trigger, crankingTransition60_2RealCarProfileIntermittentNoise) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setCrankOperationMode();
+	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
+
+	// clean revolutions to synchronize
+	for (int i = 0; i < 4; i++) {
+		fire60_2RealCarRevolution(eth, carProfileCrankingScale);
+	}
+	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized());
+	ASSERT_EQ(2, engine->triggerCentral.triggerState.getSynchronizationCounter());
+
+	uint32_t counterBefore = engine->rpmCalculator.getRevolutionCounterSinceStart();
+	size_t warningsBefore = getRecentWarnings()->getCount();
+
+	// revolution with one extra noise tooth mid-rev. The extra edge shifts the
+	// decoder index: at the end of the revolution the index overflows the wheel
+	// -> silent C9002 + desync (warns here, silent on the car). The next clean
+	// revolution's gap re-syncs the decoder, but that sync is NOT validated
+	// (the previous revolution had a count mismatch).
+	fire60_2RealCarRevolution(eth, carProfileCrankingScale, /*skipTooth*/-1, /*noiseAfterTooth*/20);
+	fire60_2RealCarRevolution(eth, carProfileCrankingScale);
+
+	ASSERT_EQ(warningsBefore + 1, getRecentWarnings()->getCount()) << "noisy revolution desyncs once";
+	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized())
+		<< "re-synced by the next gap (unvalidated)";
+	EXPECT_EQ(0, engine->triggerCentral.triggerState.getSynchronizationCounter())
+		<< "sync counter restarts after the error";
+	EXPECT_EQ(counterBefore, engine->rpmCalculator.getRevolutionCounterSinceStart())
+		<< "the noisy revolution is not validated";
+
+	// two more clean revolutions: the first re-validates the sync, the full
+	// engine cycle after it counts
+	fire60_2RealCarRevolution(eth, carProfileCrankingScale);
+	fire60_2RealCarRevolution(eth, carProfileCrankingScale);
+	EXPECT_EQ(2, engine->triggerCentral.triggerState.getSynchronizationCounter());
+	EXPECT_EQ(counterBefore + 1u, engine->rpmCalculator.getRevolutionCounterSinceStart())
+		<< "one validated cycle after the noise";
+}
+
+/**
+ * Persistent noise: one extra edge in EVERY revolution. The gap always
+ * arrives with count 59: the decoder oscillates desync -> unvalidated re-sync
+ * forever, the sync counter never stays above zero for a validated
+ * revolution, and the validated-sync gate (custom_board_requireValidatedSync)
+ * never releases injection/ignition. Documenting this matters: on the car
+ * this looks like a crank that spins with NO fuel/spark at all even though
+ * the decoder 'sees' teeth.
+ */
+TEST(trigger, crankingTransition60_2RealCarProfileNoiseEveryRevolution) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setCrankOperationMode();
+	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
+
+	// synchronize on clean revolutions first
+	for (int i = 0; i < 4; i++) {
+		fire60_2RealCarRevolution(eth, carProfileCrankingScale);
+	}
+	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized());
+	ASSERT_EQ(2, engine->triggerCentral.triggerState.getSynchronizationCounter());
+
+	uint32_t counterBefore = engine->rpmCalculator.getRevolutionCounterSinceStart();
+
+	// six noisy revolutions: the decoder never validates one
+	for (int i = 0; i < 6; i++) {
+		fire60_2RealCarRevolution(eth, carProfileCrankingScale, /*skipTooth*/-1, /*noiseAfterTooth*/20);
+	}
+
+	EXPECT_EQ(counterBefore, engine->rpmCalculator.getRevolutionCounterSinceStart())
+		<< "revolution counter must not advance on unvalidated revolutions";
+
+	// recovery: one revolution to re-sync (unvalidated - its gap was noisy),
+	// then a full clean cycle validates the next one
+	fire60_2RealCarRevolution(eth, carProfileCrankingScale);
+	fire60_2RealCarRevolution(eth, carProfileCrankingScale);
+	fire60_2RealCarRevolution(eth, carProfileCrankingScale);
+	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized());
+	EXPECT_EQ(2, engine->triggerCentral.triggerState.getSynchronizationCounter());
+	EXPECT_EQ(counterBefore + 1u, engine->rpmCalculator.getRevolutionCounterSinceStart())
+		<< "one validated cycle after the noise stops";
+}
+
+/**
+ * A real tooth missed by the VR comparator (low amplitude at slow crank) in
+ * one revolution: the gap arrives with count 57 - same desync -> unvalidated
+ * re-sync -> validated-clean cycle as the inserted-noise case.
+ */
+TEST(trigger, crankingTransition60_2RealCarProfileMissedTooth) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setCrankOperationMode();
+	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
+
+	for (int i = 0; i < 4; i++) {
+		fire60_2RealCarRevolution(eth, carProfileCrankingScale);
+	}
+	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized());
+	ASSERT_EQ(2, engine->triggerCentral.triggerState.getSynchronizationCounter());
+
+	uint32_t counterBefore = engine->rpmCalculator.getRevolutionCounterSinceStart();
+	size_t warningsBefore = getRecentWarnings()->getCount();
+
+	// tooth 30 goes missing: count 57 at the gap -> desync
+	fire60_2RealCarRevolution(eth, carProfileCrankingScale, /*skipTooth*/30);
+	fire60_2RealCarRevolution(eth, carProfileCrankingScale);
+
+	ASSERT_EQ(warningsBefore + 1, getRecentWarnings()->getCount()) << "missed tooth desyncs once";
+	ASSERT_FALSE(engine->triggerCentral.triggerState.getShaftSynchronized());
+	EXPECT_EQ(counterBefore, engine->rpmCalculator.getRevolutionCounterSinceStart());
+
+	// recovery: re-sync (validated) then a full clean cycle
+	fire60_2RealCarRevolution(eth, carProfileCrankingScale);
+	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized());
+	EXPECT_EQ(0, engine->triggerCentral.triggerState.getSynchronizationCounter());
+	EXPECT_EQ(counterBefore + 1u, engine->rpmCalculator.getRevolutionCounterSinceStart());
+
+	fire60_2RealCarRevolution(eth, carProfileCrankingScale);
+	fire60_2RealCarRevolution(eth, carProfileCrankingScale);
+	EXPECT_EQ(2, engine->triggerCentral.triggerState.getSynchronizationCounter());
+	EXPECT_EQ(counterBefore + 2u, engine->rpmCalculator.getRevolutionCounterSinceStart());
+}
+
+/**
+ * Full m74_9 configuration replay: the real crank profile plus the
+ * half-moon cam at a stable phase (the car reads ~213 deg). With a stable
+ * cam the sync counter must stay at exactly one increment per crank
+ * revolution - the cam contributes nothing, no phase-jump warnings, no
+ * phase resyncs. This pins down the decoder behavior behind the car logs:
+ * the ~2x sync-counter rate seen on the car is NOT clean-signal behavior,
+ * it needs the noise scenarios above.
+ */
+TEST(trigger, crankingTransition60_2RealCarProfileWithStableCam) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	SyncByPositionWhileCrankingScope syncSkip;
+	setCrankOperationMode();
+	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
+	engineConfiguration->alwaysInstantRpm = true;
+
+	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
+	engineConfiguration->engineSyncCam = 0;
+	engineConfiguration->vvtOffsets[0] = 0;
+	custom_board_vvtDriftLimit = []() { return 15.0f; };
+	struct ResetOverride {
+		~ResetOverride() { custom_board_vvtDriftLimit = std::nullopt; }
+	} resetOverride;
+
+	// synchronize the crank
+	for (int i = 0; i < 4; i++) {
+		fire60_2RealCarRevolution(eth, carProfileCrankingScale);
+	}
+	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized()) << "crank synced";
+	ASSERT_EQ(2, engine->triggerCentral.triggerState.getSynchronizationCounter());
+
+	uint32_t counterBefore = engine->rpmCalculator.getRevolutionCounterSinceStart();
+	size_t warningsBefore = getRecentWarnings()->getCount();
+
+	// 8 revolutions; the half-moon cam fires one RISE edge per cam revolution
+	// (every 2 crank revolutions) at the same crank tooth (tooth 30) so the
+	// phase is stable - the car's cam reads a constant ~213 deg the same way.
+	// The cam lands on revolutions whose sync parity is even, so the phase
+	// alignment loop never shifts.
+	for (int rev = 0; rev < 8; rev++) {
+		bool camThisRev = (rev % 2) == 0;
+		fire60_2RealCarRevolution(eth, carProfileCrankingScale, /*skipTooth*/-1,
+				/*noiseAfterTooth*/-1, /*noiseDelayUs*/300.0f,
+				camThisRev ? /*camAfterTooth*/30 : -1, /*camEdge*/true);
+	}
+
+	ASSERT_EQ(warningsBefore, getRecentWarnings()->getCount())
+		<< "stable cam phase must not warn or desync";
+	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized());
+	// 7 syncs for 8 revolutions, plus ONE initial cam phase-alignment shift
+	// (the first cam event lands on odd sync parity and shifts the cycle basis
+	// by 360 deg). After that the stable cam adds nothing per revolution.
+	EXPECT_EQ(11, engine->triggerCentral.triggerState.getSynchronizationCounter())
+		<< "crank syncs once per revolution; the stable cam adds nothing after the initial alignment";
+	EXPECT_EQ(counterBefore + 2u, engine->rpmCalculator.getRevolutionCounterSinceStart())
+		<< "two cycles validated; the cam-alignment cycle is skipped by design";
+	EXPECT_TRUE(engine->triggerCentral.triggerState.hasSynchronizedPhase()) << "cam phase established";
 }

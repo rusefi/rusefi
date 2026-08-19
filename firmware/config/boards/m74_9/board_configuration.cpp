@@ -687,6 +687,11 @@ void setup_custom_board_overrides() {
 	// (no VVT phaser), so a crank-sync basis error shows up as a phase jump at
 	// the next cam event. Force a crank re-sync on a jump beyond 15 degrees.
 	custom_board_vvtDriftLimit = []() { return 15.0f; };
+	// VR input debounce: the trigger logs show noise edge bursts <50 us apart
+	// (comparator ringing / starter interference) that inflate the event count
+	// and false-sync the decoder mid-crank. Drop edges closer than 100 us -
+	// below the 125 us tooth period of the 60-2 wheel at 8000 rpm on RiseOnly.
+	custom_board_triggerDebounceUs = []() { return 100.0f; };
 	// Tooth profile learning housekeeping (load/save of the learned wheel
 	// profile + auto-save on engine stop).
 	custom_board_periodicSlowCallback = m74_9ToothPeriodic;
