@@ -4210,3 +4210,72 @@ Follow-ups:
   starts must not change), warm idle position ~3.5-4%, MAP 25-28 kPa.
 - If idle overshoots, trim cltIdleCorrTable warm column 45 -> 40/35.
 - Commit the msq change after bench confirmation, then ff-merge master again.
+
+## 2026-08-19 - m74_9: sync-counter semantics + real-car-profile replay tests
+
+What: settled what trgsynchronizationcounter and revolutionCounterSinceStart
+actually count on this 60-2 crank + half-moon cam setup, and added decoder
+replay tests driven by the REAL per-tooth periods learned on the car.
+
+Findings (unit tests + code reading, not speculation):
+- revolutionCounterSinceStart counts ENGINE CYCLES (720 deg = 2 crank revs):
+  rpmShaftPositionCallback increments only when trgEventIndex == 0, and on a
+  4-stroke the trigger index gets syncCtr%2 x getSize() added, so only every
+  OTHER sync point lands on index 0. The ASE/cranking tables therefore step
+  once per two crank revolutions - the user's "cycles" question answered.
+- trgsynchronizationcounter is NOT a revolution counter: +1 per sync point
+  (including error syncs - onShaftSynchronization(wasSynchronized=true)),
+  +1 per cam phase-alignment shift (syncEnginePhase parity loop), reset to 0
+  by the next sync after any decode error. The 21_54_53 log's 25 syncs for
+  ~12 revolutions can only come from noise-induced sync points, NOT from the
+  stable cam (phaseResyncCounter stayed 0 there) and NOT from clean-signal
+  behavior (the clean replay test proves exactly 1 sync/rev).
+- The tune sets silentTriggerError = "don't print": C9002/C9003-style decode
+  errors on the car happen WITHOUT text-log output. "No errors in the log"
+  does not mean no decode errors - the MLG trgtriggercounterserror/istriggererror
+  samples (2 Hz) can also miss transient errors. This hid the fact that in
+  the 21_55_46 attempt only 3 of ~8 revolutions validated.
+- A single inserted noise tooth (300 us after a real tooth - above the 100 us
+  debounce) shifts the decoder index: at the end of the revolution the index
+  overflows the wheel -> silent C9002 + desync WITHOUT a sync point; the next
+  clean revolution re-syncs unvalidated (sync counter restarts), and only the
+  cycle after that counts again. Persistent noise (every revolution) keeps the
+  decoder in the desync -> unvalidated re-sync loop forever: the validated-sync
+  gate (custom_board_requireValidatedSync) never releases injection/ignition -
+  a crank that spins with no fuel/spark at all while the decoder "sees" teeth.
+  A missed VR tooth (low amplitude at slow crank) behaves the same way.
+- The toothdump profile from 21:54:50 (new firmware) is correctly rotated:
+  the gap sits at slot 57. The rotated profiles with the gap at slot 37 were
+  from the OLD 20:48 firmware (pre-position-gate false syncs) - not a current bug.
+
+New tests (test_60_2_cranking_transition.cpp, +5):
+- crankingTransition60_2RealCarProfileCleanReplay: the real 58-tooth period
+  profile replayed for 12 revolutions - 1 sync/rev, 1 validated cycle per 2
+  revs, ~300 rpm, zero warnings.
+- crankingTransition60_2RealCarProfileIntermittentNoise / NoiseEveryRevolution
+  / MissedTooth: the desync -> unvalidated re-sync -> validated cycles
+  documented above, with exact sync-counter and cycle-counter expectations.
+- crankingTransition60_2RealCarProfileWithStableCam: crank + half-moon cam
+  (VVT_SINGLE_TOOTH, rise edge every 2 revs at the same tooth) - the cam adds
+  exactly one initial phase-alignment increment, then nothing; no phase-jump
+  warnings, no drift.
+
+Also committed with this: the board opt-in VR input debounce
+(custom_board_triggerDebounceUs, m74_9 = 100 us) - drops edges closer than
+100 us to the previous accepted edge (noise bursts measure <50 us; the
+60-2 tooth period at 8000 rpm is 125 us). The pre-existing isToothExpectedNow
+rejection only runs above 1000 rpm, so cranking noise was unfiltered before.
+
+Validation: full unit-test suite 1147/1147 pass (was 1142); m74_9 firmware
+builds with the debounce.
+
+Follow-ups:
+- On the car: with the debounce flashed, a fresh crank attempt + MLG will
+  show whether triggerIgnoredToothCount stays 0 and whether the validated
+  revolutions now track real engine cycles. The persistent-noise failure
+  mode (no fuel/spark at all) vs intermittent noise (bursts of firing) is
+  now distinguishable from the counter values alone.
+- ETB autograb moving only toward open: deferred (not start-critical), to
+  investigate after the first clean start.
+- Consider surfacing silent decode errors in the MLG for this board (or a
+  console counter) so bench diagnosis does not require the replay tests.
