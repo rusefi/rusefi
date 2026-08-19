@@ -4380,3 +4380,44 @@ Follow-ups:
   inflates a revolution - each one forces the validated-sync recovery, which
   is the correct visible behavior.
 - ETB autograb one-direction issue still deferred.
+
+## 2026-08-20 - m74_9: first real catch - C9002 at the catch, floor lowered to 0.8
+
+What: the 00:05 log (full hardening flashed) showed the first REAL catch:
+rpm 262 -> 328 (the engine fired - first combustion happened), counters
+finally correct (syncCtr 1/rev, revCtr 1/engine-cycle - the storm racing is
+gone), the cam stable at 212 deg. But a C9002 "expected 58 got 58" fired
+right at the catch and the engine died: the REAL missing-teeth gap
+compressed below the 1.2 override floor, so the sync was rejected, one full
+revolution was counted and the decoder desynced - exactly the failure mode
+the sync-by-position override was built to prevent.
+
+Fix: lower the override ratio floor 1.2 -> 0.8. Physics: the gap spans 3
+ tooth slots; even the hardest first-combustion acceleration cannot compress
+it below ~1.0 tooth times (the crank speed would have to more than triple
+across a single 6-degree tooth) - and the observed m74_9 catch went below
+1.2. The 0.8 floor sits below any physical gap and remains 10x above the
+trailing-noise case (0.07) the floor was built for; that noise case also
+desyncs via the wheel index overflow at the noise edge, so rejecting it is
+the visible path either way.
+
+Tests updated: the trailing-noise test now models the noise edge right after
+tooth 57's rise (ratio 0.08) and pins the full chain (floor rejection ->
+C9002 -> absurd-ratio gap cannot re-sync -> unvalidated re-sync -> validated
+cycle). New test crankingTransition60_2CatchGapBelow1_2AcceptedWithHardening
+pins the catch (gap ratio 1.0 must be accepted with hardening on; it fails
+with the 1.2 floor). 1150/1150 on GCC and clang.
+
+Known limitation (documented, not fixed): a VR ringing edge ~250 us after
+the LAST tooth's FALL sits ~1.2-1.3 tooth-times after the previous rise -
+above the 0.8 floor and indistinguishable from a compressed catch gap by
+ratio or duration. If accepted, it shifts the phase basis by one tooth
+(~6 deg, below the 15 deg cam drift limit) and self-corrects never. The
+stock ECU's adaptive VR conditioning prevents this class at the analog
+level; for us it is a minor phase error, not a start blocker.
+
+Follow-ups:
+- Reflash (PCAN adapter was unavailable at commit time - PCAN_ERROR_ILLHW)
+  and take the next crank attempt: the catch should now survive (no C9002),
+  and the engine should keep running after the first combustion.
+- ETB autograb one-direction issue still deferred.
