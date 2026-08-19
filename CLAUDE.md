@@ -318,3 +318,21 @@ If a field setup still shows C9002 at start (ratio outside [1.6, 3.75]), TunerSt
 - TunerStudio General Notes: `.junie/ts-readme.md`
 
 See also .junie/guidelines.md file
+
+## Idle (ETB) State Machine & Scaling
+
+- Cranking (rpm < cranking_rpm): open loop, position = `cltCrankingCorr` x `etbIdleThrottleRange` / 100. CrankToIdleTaper lasts `afterCrankingIACtaperDuration` ENGINE CYCLES (720 deg each); `RpmCalculator::getRevolutionCounterSinceStart()` counts cycles, not revolutions, despite the name. Idling phase: open loop base + RPM PID, PID held off for `idlePidActivationTime` SECONDS after Idling entry (this is the "20 s open loop then closed" behavior). `fuelClosedLoopCorrectionEnabled` (lambda STFT) is a separate switch, often disabled on bench tunes.
+- Cranking and idle tables share ONE scale: actual ETB opening = table % x `etbIdleThrottleRange` / 100 (`EtbController::getSetpointEtb`, `etbIdleAddition`). Raising the range to give warm idle headroom REQUIRES dividing `cltCrankingCorr` by the same factor to preserve cranking openings (m74_9: range 2->8, corr /4).
+
+## m74_9 Throttle Flow Model (ME17 .clb curves)
+
+- The stock .clb "Относительная/Обратная характеристика" files are the ME17 throttle flow MODEL (direct position->flow and inverse flow->position). On 21129 there is no MAF - flow is modeled from MAP (speed-density), so 4/1350/7-12 kg/h are model outputs, not measurements. The curve's 0% does NOT equal the closed stop (curve gives 2.6 kg/h at 0% while the stated closed-throttle min is 4 kg/h) - use only the slope (~+2.4 kg/h per 1% position), never absolute positions. Warm-idle position band: ~1.5-5%.
+- Empirical airflow anchor for the 1.6 L (MAP from logs): kg/h = 0.000557 x MAP(kPa) x rpm. Healthy 21129 warm idle: MAP 25-28 kPa at ~840 rpm -> ~11-13 kg/h. Criterion for idle calibration: warm idle holds target RPM at MAP 25-28 kPa.
+- Stock "position %" diagnostics are the stock's own learned/linearized range; rusEFI % is autozero-based. Measured systematic offset on m74_9: rusEFI reads ~0.4% higher than stock (real closed stop = -0.4% in rusEFI).
+
+## Building in a git worktree (merge validation)
+
+- Gradle fails if the worktree directory name starts or ends with '.' ("project name must not start or end with a '.'") - name the worktree dir without dots (e.g. `wt-master`).
+- `gen_config_board.sh <board_dir> <short_name>` needs `java_tools/configuration_definition/build/libs/config_definition-all.jar` (build with `./gradlew :config_definition:shadowJar`) AND `tunerstudio/generated/signature_<board>.txt` (run `firmware/gen_signature.sh <board>` first).
+- `make` in unit_tests/firmware triggers `git submodule update --init`, which FAILS on the rusEFI ChibiOS fork commit (not on the remote). Workaround for worktrees: symlink the populated submodule dirs from the main checkout. List needed so far: firmware/ChibiOS, firmware/ChibiOS-Contrib, firmware/libfirmware, firmware/ext/lua, firmware/ext/uzlib, firmware/ext/magic_enum, firmware/controllers/lua/luaaa, firmware/controllers/can/wideband_firmware, misc/hex2dfu, java_console/luaformatter, java_console/peak-can-basic, unit_tests/googletest.
+- ARM toolchain on this Mac: /opt/arm-gnu-toolchain/bin (add to PATH for board compiles).

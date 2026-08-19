@@ -4148,3 +4148,65 @@ Remaining:
   at the same time. Confirmed by killing all Java and watching the bus come
   back. User confirmed the console connects after the ECU was returned to
   the application.
+
+## 2026-08-19 - Merge maccan-tx-fix into master + idle/ASE calibration
+
+What: merged the whole m74_9 line (trigger profile learning, OpenBLT-over-CAN,
+toothdump, board support) into local master (no push) and re-calibrated the
+21129.msq idle path for the throttle flow data the user supplied.
+
+Merge:
+- Local master was fast-forwarded to origin/master (62028395b8b), then a real
+  merge of maccan-tx-fix (3149889524d) was done in a git worktree so the dirty
+  main checkout stayed untouched. Merge commit 41d42e2acdc, local only.
+- 11 conflicted files resolved: report.md (concatenated both append streams),
+  bundle.mk (upstream .FORCE bootloader-bin recipe + our DEVICE_BIN_FOLDER
+  recipe), limp_manager.cpp (kick-start block and immobilizer hook combined),
+  m74_9.yaml (kept our ADC3 slow-channel pin mapping for IAT/CLT), 4 Java
+  files (our PCAN/flasher/migrator fixes on top of upstream), UiVersion bumped
+  to 20260819, rusefi_updater.sh (combined exec/"$@" with our macOS flags).
+- The 3 conflicted generated files (rusefi_generated_f407-discovery.h,
+  rusefi_f407-discovery.ini, VariableRegistryValues.java) were regenerated
+  with gen_config_board.sh after building config_definition shadowJar.
+- Validation on the merged tree: unit tests 1189/1189 pass; m74_9 firmware
+  + OpenBLT bootloader compile and link (build/rusefi.bin, rusefi.srec).
+
+Idle state machine (confirmed in code, idle_thread.cpp):
+- Cranking (rpm < cranking_rpm=500): open loop, position = cltCrankingCorr
+  x etbIdleThrottleRange / 100.
+- CrankToIdleTaper: afterCrankingIACtaperDuration = 20 ENGINE CYCLES (720
+  deg each, ~3 s at 800 rpm; revolutionCounterSinceStart counts cycles, not
+  revolutions), position blends cranking -> open-loop idle. PID off.
+- Idling: open loop base + RPM PID, but the PID is held off for
+  idlePidActivationTime = 20.0 s after Idling phase entry. That is the "20 s
+  open loop then closed" the user observed. Lambda STFT is disabled in the
+  tune, so "closed" = idle position PID only.
+
+Throttle flow interpretation: the stock M74 .clb curves are the ME17 throttle
+flow MODEL (direct + inverse), and the kg/h numbers are modeled outputs (no
+MAF on 21129, speed-density). The curve is inconsistent at the origin (0%
+position -> 0.191% flow = 2.6 kg/h vs the stated 4 kg/h closed-throttle min),
+so absolute positions from the curve are unreliable - only the slope (~+2.4
+kg/h per 1% position) is usable. Honest warm-idle band: ~1.5-5% position.
+Empirical anchor: kg/h = 0.000557 x MAP(kPa) x rpm for the 1.6 L; healthy
+warm idle MAP 25-28 kPa -> ~11-13 kg/h. Calibration criterion: warm idle
+holds target RPM at MAP 25-28 kPa, whatever % that turns out to be.
+
+Tune changes (21129.msq, variant A - scale-up so idle has headroom while
+cranking keeps its exact absolute openings):
+- etbIdleThrottleRange 2 -> 8.
+- cltCrankingCorr / 4 (124,84,67,65,55,48,41,38 -> 31,21,16.75,16.25,13.75,
+  12,10.25,9.5): absolute cranking position unchanged (1.3% at +20C).
+- cltIdleCorrTable 100,75,50,30,25... -> 100,85,65,45,40,40,40,40: warm idle
+  45 x 8/100 = 3.6% (was 0.5%, which per the curve was ~4-5 kg/h - the
+  stalling regime), cold -40C = 8%.
+- ASE: postCrankingDurationBins 0,40,80,120,160,200 -> 0,40,80,120,240,400
+  cycles; postCrankingFactor only 0C@240 bumped 1.02 -> 1.03. This removes
+  the hard fuel-cut step at 200 cycles (was ~30 s at 800 rpm) and tapers to
+  1.0 by 400 cycles (~60 s) without adding fuel early.
+
+Follow-ups:
+- Bench test: burn 21129.msq, check cranking opening still ~1.3% (good
+  starts must not change), warm idle position ~3.5-4%, MAP 25-28 kPa.
+- If idle overshoots, trim cltIdleCorrTable warm column 45 -> 40/35.
+- Commit the msq change after bench confirmation, then ff-merge master again.

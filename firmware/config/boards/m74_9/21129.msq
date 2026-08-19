@@ -653,14 +653,14 @@
          100.0
 </constant>
         <constant cols="1" digits="2" name="cltCrankingCorr" rows="8" units="%">
-         124.0
-         84.0
-         67.0
-         65.0
-         55.0
-         48.0
-         41.0
-         38.0
+         31.0
+         21.0
+         16.75
+         16.25
+         13.75
+         12.0
+         10.25
+         9.5
 </constant>
         <constant cols="1" digits="2" name="cltCrankingCorrBins" rows="8" units="{bitStringValue(unitsLabels, useMetricOnInterface)}">
          -40.0
@@ -719,8 +719,8 @@
          140.0
 </constant>
         <constant cols="8" digits="0" name="cltIdleCorrTable" rows="2" units="%">
-         100.0 75.0 50.0 30.0 25.0 25.0 25.0 25.0
-         100.0 75.0 50.0 30.0 25.0 25.0 25.0 25.0
+         100.0 85.0 65.0 45.0 40.0 40.0 40.0 40.0
+         100.0 85.0 65.0 45.0 40.0 40.0 40.0 40.0
 </constant>
         <constant cols="1" digits="0" name="cltIdleRpm" rows="16" units="RPM">
          1360
@@ -1057,7 +1057,7 @@
         <constant digits="0" name="etbFreq" units="Hz">800</constant>
         <constant name="etbFunctions1">"Throttle 1"</constant>
         <constant name="etbFunctions2">"Throttle 2"</constant>
-        <constant digits="0" name="etbIdleThrottleRange" units="%">2</constant>
+        <constant digits="0" name="etbIdleThrottleRange" units="%">8</constant>
         <constant name="etbIo1_controlPin">"PB14"</constant>
         <constant name="etbIo1_directionPin1">"PB15"</constant>
         <constant name="etbIo1_directionPin2">"NONE"</constant>
@@ -3260,12 +3260,12 @@
          40
          80
          120
-         160
-         200
+         240
+         400
 </constant>
         <constant cols="6" digits="2" name="postCrankingFactor" rows="6" units="mult">
          1.5 1.35 1.22 1.12 1.05 1.0
-         1.32 1.22 1.12 1.06 1.02 1.0
+         1.32 1.22 1.12 1.06 1.03 1.0
          1.2 1.12 1.06 1.03 1.0 1.0
          1.12 1.06 1.03 1.0 1.0 1.0
          1.06 1.03 1.0 1.0 1.0 1.0
