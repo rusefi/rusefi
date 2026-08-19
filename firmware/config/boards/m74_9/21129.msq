@@ -798,10 +798,10 @@
         <constant name="consumeObdSensors">"no"</constant>
         <constant digits="0" name="cranking_rpm" units="RPM">500</constant>
         <constant cols="1" digits="2" name="crankingAdvance" rows="4" units="deg">
-         -5.25
-         -3.75
-         12.0
-         14.6
+         10.0
+         10.0
+         14.0
+         16.0
 </constant>
         <constant cols="1" digits="0" name="crankingAdvanceBins" rows="4" units="RPM">
          0
@@ -3255,21 +3255,29 @@
          60
          80
 </constant>
-        <constant cols="1" digits="0" name="postCrankingDurationBins" rows="6" units="count">
+        <constant cols="1" digits="0" name="postCrankingDurationBins" rows="14" units="count">
          0
+         10
+         20
+         30
          40
+         50
+         60
+         70
          80
-         120
-         240
+         90
+         100
+         200
+         300
          400
 </constant>
-        <constant cols="6" digits="2" name="postCrankingFactor" rows="6" units="mult">
-         1.5 1.35 1.22 1.12 1.05 1.0
-         1.32 1.22 1.12 1.06 1.03 1.0
-         1.2 1.12 1.06 1.03 1.0 1.0
-         1.12 1.06 1.03 1.0 1.0 1.0
-         1.06 1.03 1.0 1.0 1.0 1.0
-         1.0 1.0 1.0 1.0 1.0 1.0
+        <constant cols="14" digits="2" name="postCrankingFactor" rows="6" units="mult">
+         1.5 1.46 1.43 1.39 1.35 1.32 1.29 1.25 1.22 1.2 1.17 1.07 1.0 1.0
+         1.32 1.29 1.27 1.25 1.22 1.2 1.17 1.15 1.12 1.1 1.09 1.04 1.0 1.0
+         1.2 1.18 1.16 1.14 1.12 1.1 1.09 1.08 1.06 1.05 1.04 1.01 1.0 1.0
+         1.12 1.1 1.09 1.08 1.06 1.05 1.04 1.04 1.03 1.02 1.02 1.0 1.0 1.0
+         1.06 1.05 1.04 1.04 1.03 1.02 1.02 1.01 1.0 1.0 1.0 1.0 1.0 1.0
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
 </constant>
         <constant digits="1" name="ppsExpAverageAlpha" units="percent">100.0</constant>
         <constant digits="1" name="ppsSecondaryMaximum" units="%">0.0</constant>
