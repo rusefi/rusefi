@@ -21,6 +21,12 @@ PUBLIC_API_WEAK __attribute__((noinline)) void boardTriggerCallback(efitick_t ti
 	UNUSED(currentPhase);
 }
 
+PUBLIC_API_WEAK __attribute__((noinline)) void boardRawTriggerEdge(int signalIndex, bool isRising, efitick_t timestamp) {
+	UNUSED(signalIndex);
+	UNUSED(isRising);
+	UNUSED(timestamp);
+}
+
 PUBLIC_API_WEAK __attribute__((noinline)) float triggerGetToothProfileFactor(int) {
 	return 1.0f;
 }
