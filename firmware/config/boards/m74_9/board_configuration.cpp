@@ -683,6 +683,14 @@ void setup_custom_board_overrides() {
 	// it while rpm < 2 * crankingRpm (rejecting it there desyncs the decoder
 	// right at the catch - C9002, engine dies).
 	custom_board_syncByPositionWhileCranking = []() { return true; };
+	// Noise-storm sync-gap hardening: dense edge storms inflate the event
+	// count so a storm edge can become the 58th event and false-sync the
+	// decoder cleanly (count matches, ratio occasionally in window). Extra
+	// gates: the tooth before the candidate must be a real tooth (>= 1/4 of
+	// the previous revolution's mean tooth time), and the sync-by-position
+	// skip only accepts gap ratios >= 1.2 (the gap is physically 3 tooth
+	// slots). See crankingTransition60_2RealCarProfileNoiseStormDoesNotFalseSync.
+	custom_board_syncGapHardening = []() { return true; };
 	// Cam-phase continuity cross-check: the 21129 cam is belt-driven and fixed
 	// (no VVT phaser), so a crank-sync basis error shows up as a phase jump at
 	// the next cam event. Force a crank re-sync on a jump beyond 15 degrees.

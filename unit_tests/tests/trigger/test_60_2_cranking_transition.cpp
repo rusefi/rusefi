@@ -42,6 +42,17 @@ struct SyncByPositionWhileCrankingScope {
 	}
 };
 
+// Same pattern for the noise-storm sync-gap hardening (m74_9 opt-in).
+struct SyncGapHardeningScope {
+	SyncGapHardeningScope() {
+		custom_board_syncGapHardening = []() { return true; };
+	}
+
+	~SyncGapHardeningScope() {
+		custom_board_syncGapHardening = std::nullopt;
+	}
+};
+
 /**
  * Fire one full 60-2 revolution: 58 real teeth, then the missing-teeth gap.
  * The gap ratio of THIS call is checked at the NEXT call's first rise.
@@ -927,6 +938,7 @@ static void fire60_2RealCarStormRevolution(EngineTestHelper& eth, float scale) {
 
 TEST(trigger, crankingTransition60_2RealCarProfileNoiseStormDoesNotFalseSync) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	SyncGapHardeningScope hardening;
 	setCrankOperationMode();
 	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
 
@@ -963,4 +975,73 @@ TEST(trigger, crankingTransition60_2RealCarProfileNoiseStormDoesNotFalseSync) {
 	EXPECT_EQ(3, engine->triggerCentral.triggerState.getSynchronizationCounter());
 	EXPECT_EQ(counterBefore + 1u, engine->rpmCalculator.getRevolutionCounterSinceStart())
 		<< "one validated cycle after the storm";
+}
+
+/**
+ * Trailing noise edge: a VR ringing edge 250 us after the last real tooth
+ * (57) becomes the 58th event with a gap ratio of ~0.07 - far below any
+ * plausible compressed gap. The sync-by-position override used to accept it
+ * (count matches, position matches, ratio check failed - exactly the
+ * override's trigger condition), silently shifting the phase basis by one
+ * tooth. The override now requires the gap ratio to be at least 1.2 (the
+ * missing-teeth gap is physically 3 tooth slots and cannot compress below
+ * ~1.2 even at the first-combustion catch).
+ */
+static void fire60_2RealCarRevolutionWithTrailingNoiseEdge(EngineTestHelper& eth, float scale) {
+	for (int tooth = 0; tooth < 57; tooth++) {
+		float riseToRiseUs = carProfileUs[tooth] * scale;
+		eth.firePrimaryTriggerRise();
+		eth.moveTimeForwardUs(MS2US(riseToRiseUs / 1000.0f / 2));
+		eth.firePrimaryTriggerFall();
+		eth.moveTimeForwardUs(MS2US(riseToRiseUs / 1000.0f / 2));
+	}
+
+	// tooth 57: its fall sits 1/3 into the gap, then a ringing edge 250 us
+	// after the fall (the 58th event: count matches, ratio ~0.07)
+	float gapUs = carProfileUs[57] * scale;
+	eth.firePrimaryTriggerRise();
+	eth.moveTimeForwardUs(MS2US(gapUs / 1000.0f / 3));
+	eth.firePrimaryTriggerFall();
+	eth.moveTimeForwardUs(250);
+	eth.firePrimaryTriggerRise();
+
+	// finish the gap: the next revolution's first rise lands gapUs after tooth 57's rise
+	eth.moveTimeForwardUs(MS2US((gapUs - gapUs / 3 - 250.0f) / 1000.0f));
+}
+
+TEST(trigger, crankingTransition60_2RealCarProfileTrailingNoiseEdgeNotAccepted) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	SyncByPositionWhileCrankingScope syncSkip;
+	SyncGapHardeningScope hardening;
+	setCrankOperationMode();
+	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
+
+	for (int i = 0; i < 4; i++) {
+		fire60_2RealCarRevolution(eth, carProfileCrankingScale);
+	}
+	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized());
+	ASSERT_EQ(2, engine->triggerCentral.triggerState.getSynchronizationCounter());
+
+	uint32_t counterBefore = engine->rpmCalculator.getRevolutionCounterSinceStart();
+	size_t warningsBefore = getRecentWarnings()->getCount();
+
+	// the trailing noise edge must not be accepted as the sync point; the
+	// real gap then arrives with count 59 -> one proper error + desync
+	fire60_2RealCarRevolutionWithTrailingNoiseEdge(eth, carProfileCrankingScale);
+	fire60_2RealCarRevolution(eth, carProfileCrankingScale);
+
+	ASSERT_EQ(warningsBefore + 1, getRecentWarnings()->getCount()) << "the noise edge desyncs once";
+	ASSERT_FALSE(engine->triggerCentral.triggerState.getShaftSynchronized())
+		<< "desynced by the inflated count at the real gap";
+
+	// recovery: re-sync (validated - the revolution was clean), then a cycle
+	fire60_2RealCarRevolution(eth, carProfileCrankingScale);
+	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized());
+	EXPECT_EQ(0, engine->triggerCentral.triggerState.getSynchronizationCounter());
+	EXPECT_EQ(counterBefore + 1u, engine->rpmCalculator.getRevolutionCounterSinceStart());
+
+	fire60_2RealCarRevolution(eth, carProfileCrankingScale);
+	fire60_2RealCarRevolution(eth, carProfileCrankingScale);
+	EXPECT_EQ(2, engine->triggerCentral.triggerState.getSynchronizationCounter());
+	EXPECT_EQ(counterBefore + 2u, engine->rpmCalculator.getRevolutionCounterSinceStart());
 }

@@ -214,6 +214,19 @@ extern std::optional<setup_custom_bool_type> custom_board_requireValidatedSync;
 // default false keeps the classic ratio-checked behavior for other boards.
 extern std::optional<setup_custom_bool_type> custom_board_syncByPositionWhileCranking;
 
+// When set and returning true, the sync gap candidates get extra noise
+// hardening on top of the position gate (m74_9, where dense noise storms
+// produce count-58 false syncs at storm edges):
+//  - the tooth immediately before the candidate must look like a real tooth
+//    (period >= 1/4 of the previous revolution's mean tooth time - a storm
+//    edge is a few hundred us vs ~4 ms at cranking);
+//  - the sync-by-position skip above only accepts gap ratios >= 1.2 (the
+//    physical gap is 3 tooth slots and cannot compress below that, so a
+//    shorter "gap" is a noise edge right after a real tooth).
+// Default false: wheels with irregular tooth patterns or extreme cranking
+// variation would trip these on legitimate gaps.
+extern std::optional<setup_custom_bool_type> custom_board_syncGapHardening;
+
 // When set and returning a positive angle (degrees), the cam/VVT position is
 // cross-checked on every cam event: a fixed cam must report the same phase
 // every cam revolution. A crank-sync basis error (false sync) shifts the
