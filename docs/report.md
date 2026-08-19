@@ -4085,3 +4085,55 @@ linked and called, deliver/rusefi.bin re-merged with BL09 marker.
 
 On-car next step: flash the new deliver/rusefi.bin once via ST-Link, then
 --probe must answer without any power cycling (the CAN trigger works now).
+
+## 2026-08-19 - m74_9: OpenBLT-over-CAN fully working on the car bench (end-to-end)
+
+The CAN flasher now works end to end on the bench: full 663 KB image
+flashed over CAN, checksum-verified, ECU rebooted into it, and the
+bootloader passes the app through on plain power-on (boot-time CRC ok).
+
+What was actually broken (three stacked bugs, all found with on-hardware
+register dumps via openocd):
+
+| Bug | Evidence | Fix |
+| --- | --- | --- |
+| Java flasher used 0x667/0x7E1, but the configured ids are 0x10667/0x107E1 (efi_blt_ids.h, blt_can.bat agrees) | bootloader's debug echo showed it received our frames as id 0x0667 and its beacons went out on 0x107E1 | XcpConstants TX/RX ids corrected |
+| Bootloader never programmed CAN filters: bxCAN reset state has all filter banks inactive (FA1R=0) - nothing is received at all (the app does this in can_hw.cpp; the bootloader never did) | FIFO stayed empty; after the fix the CONNECT frames land in FIFO0 | canSTM32SetFilters(default accept-all) before canStart in openblt_can.cpp CanInit |
+| AT32 flash rejects a second program to a word that is not fully erased (EPPERR on the 2nd 7-byte PROGRAM_MAX frame - the EFL driver pads each word with 0xFF, re-programming the previous word) | PROGRAM at 0x08008007 failed with XCP 0x31 (generic) consistently | buffered writes in openblt_flash.cpp (one program per 4-byte word, like the H7 ECC path) + PROGRAM size=0 finalize in the flasher to flush the tail |
+
+Also fixed along the way:
+- EFI_USE_OPENBLT is FALSE by default (stm32f4ems efifeatures) and nothing
+  overrode it for m74_9: the canOpenBLT trigger, jump_to_openblt body and
+  reboot_openblt were all compiled out. Defined TRUE in the board
+  efifeatures.h before the stm32f4ems include.
+- canOpenBLT is forced true in the board ConfigOverrides (like the CAN
+  pins) so a stale/unsynced msq cannot silently disable CAN flashing.
+- can_rx.cpp trigger id comparison now normalizes extended frames
+  (EID | 0x80000000) - the old SID comparison never matched.
+- Java flasher: --verbose frame logging, PROGRAM(size=0) finalize,
+  fixed failedAt accounting in the error message, power-cycle backdoor
+  hint in the connect-timeout message.
+
+Hardware verification flow used (all with the ST-Link still attached):
+- halt-in-window pc sampling showed the bootloader runs its 1 s backdoor
+  (app starts at ~1000 ms).
+- CAN register dumps (MCR/MSR/TSR/ESR/BTR/FMR/FA1R/RF0R) + AFR/MODER
+  dumps proved the bootloader CAN setup matches the app exactly.
+- A temporary boot beacon + echo (OPENBLT_DEBUG_ECHO, since removed)
+  exposed the id mismatch: the echo of our CONNECT arrived as
+  "EE 02 67 06" - the bootloader saw id 0x0667 on the wire while its
+  beacons went out on 0x107E1.
+
+Final state: full CAN flash of 663312 bytes in 180 s (7 bytes/frame,
+synchronous XCP), BUILD_CHECKSUM verify passed, PROGRAM_RESET booted the
+new app, and the bootloader CRC gate passes on the next power-on. The
+tune (MFS) survives CAN updates - only the app region is touched.
+
+Remaining:
+- The flasher speed is protocol-bound (~180 s); the target forbids
+  pipelining via ctoPending, so speeding up needs a bootloader change
+  (e.g. accept the next frame without waiting for the previous response).
+- Wire the flasher into the Java console menu (replacing the broken
+  OpenbltJni CAN path).
+- First in-car test: ignition cycle while running the flasher (backdoor
+  window) and trigger-based reflash.

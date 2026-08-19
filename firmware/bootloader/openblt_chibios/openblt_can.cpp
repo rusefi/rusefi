@@ -71,6 +71,14 @@ extern "C" void CanInit(void) {
 	palSetPadMode(OPENBLT_CAN_RX_PORT, OPENBLT_CAN_RX_PIN, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
 
 	auto cfg = findCanConfig(B500KBPS);
+
+	// Program a default accept-all filter BEFORE canStart(). On bxCAN the
+	// reset state has every filter bank inactive (FA1R=0), so without this
+	// call the controller receives nothing at all - the bootloader never
+	// sees the host's CONNECT and no CAN update can ever start. The app
+	// does the same in can_hw.cpp; the bootloader just never did.
+	canSTM32SetFilters(&OPENBLT_CAND, STM32_CAN_MAX_FILTERS / 2, 0, NULL);
+
 	canStart(&OPENBLT_CAND, cfg);
 }
 

@@ -6,10 +6,17 @@ extern "C" {
 	#include "flash.h"
 }
 
-#ifdef STM32H7XX
+#if defined(STM32H7XX) || defined(AT32F435xx)
 //Since a 10-bit ECC code is associated to each 256-bit data Flash word,
 //only write operations by 256 bits are executed in the non-volatile memory.
+//The AT32F435 flash likewise rejects a second program to a word that is not
+//fully erased (EPPERR), so each 32-bit word may be programmed exactly once:
+//buffer the incoming bytes and flush whole words on line boundaries.
+#ifdef STM32H7XX
 #define FLASH_ECC_LINE_SIZE 	(256 / 8)
+#else
+#define FLASH_ECC_LINE_SIZE 	(32 / 8)
+#endif
 
 static blt_int8u flashBuffer[FLASH_ECC_LINE_SIZE];
 static blt_addr flashAddr = 0x0;
@@ -40,7 +47,7 @@ static blt_bool FlashBufferedWrite(blt_addr addr, blt_int32u len, blt_int8u *dat
 {
 	while (len) {
 		if ((addr & FLASH_WRITE_ADDR_MASK) != flashAddr) {
-			// crossing ECC line boundary
+			// crossing flash line boundary - program the buffered line
 			FlashBufferFlush();
 
 			flashAddr = addr & FLASH_WRITE_ADDR_MASK;
@@ -62,7 +69,7 @@ static blt_bool FlashBufferedWrite(blt_addr addr, blt_int32u len, blt_int8u *dat
 
 void FlashInit() {
 	// Flash already init by ChibiOS
-#ifdef STM32H7XX
+#if defined(STM32H7XX) || defined(AT32F435xx)
 	FlashBufferReset();
 #endif
 }
@@ -85,9 +92,9 @@ blt_bool FlashWrite(blt_addr addr, blt_int32u len, blt_int8u *data) {
 		return BLT_FALSE;
 	}
 
-#ifdef STM32H7XX
+#if defined(STM32H7XX) || defined(AT32F435xx)
 	return FlashBufferedWrite(addr, len, data);
-#else // not STM32H7
+#else // not STM32H7 / AT32F435
 	return (FLASH_RETURN_SUCCESS == intFlashWrite(addr, (const char*)data, len)) ? BLT_TRUE : BLT_FALSE;
 #endif
 }
@@ -106,7 +113,7 @@ blt_bool FlashErase(blt_addr addr, blt_int32u len) {
 }
 
 blt_bool FlashDone() {
-#ifdef STM32H7XX
+#if defined(STM32H7XX) || defined(AT32F435xx)
 	FlashBufferFlush();
 #endif
 	return BLT_TRUE;

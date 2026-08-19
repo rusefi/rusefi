@@ -237,6 +237,12 @@ static void m74_9_boardConfigOverrides() {
 	//CAN 1 bus overwrites
 	engineConfiguration->canRxPin = Gpio::G0;
 	engineConfiguration->canTxPin = Gpio::G1;
+
+	/* OpenBLT jump trigger is a board capability (the bootloader lives in the
+	 * first 32 KB of this board's flash), not a tune choice: force it on every
+	 * boot so a stale/unsynced msq cannot silently disable CAN flashing. */
+	engineConfiguration->canOpenBLT = true;
+
 	setupEtb();
 }
 

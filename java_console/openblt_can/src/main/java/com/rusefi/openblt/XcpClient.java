@@ -117,6 +117,13 @@ public class XcpClient {
         return request(cmd, XcpConstants.PROGRAM_TIMEOUT_MS);
     }
 
+    /** PROGRAM with size 0: the bootloader calls NvmDone()/FlashDone(), which
+     *  flushes the last partial flash line on platforms that buffer writes
+     *  (H7 ECC lines, AT32 one-shot words). */
+    public XcpResponse programDone() throws IOException {
+        return request(new byte[]{(byte) XcpConstants.CMD_PROGRAM, 0x00}, XcpConstants.PROGRAM_TIMEOUT_MS);
+    }
+
     /** Resets into the freshly programmed application. No response expected:
      *  the target jumps to the user program before replying. */
     public void programReset() throws IOException {

@@ -40,8 +40,8 @@ public final class XcpConstants {
      * rusEFI default CAN ids (efi_blt_ids.h): 29-bit extended frames.
      * TX is what the HOST transmits (the bootloader's RX id) and vice versa.
      */
-    public static final int TX_ID = 0x667;
-    public static final int RX_ID = 0x7E1;
+    public static final int TX_ID = 0x10667;
+    public static final int RX_ID = 0x107E1;
     public static final boolean EXTENDED = true;
 
     /** CAN baudrate of the bootloader. */
