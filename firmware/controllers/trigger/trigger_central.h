@@ -239,6 +239,13 @@ void triggerInfo(void);
 // strong override. The weak default lives in trigger_board_hooks.cpp (a
 // different translation unit).
 void boardTriggerCallback(efitick_t timestamp, float currentPhase);
+// Board hook, called for EVERY hardware shaft edge (primary or cam) before
+// any filtering - the debounce, the noise filter and the decoder all run
+// after it. Boards use it to capture the raw edge stream (a digital
+// oscilloscope of the comparator output). Weak default is a no-op in
+// trigger_board_hooks.cpp (keep the default out of this TU - LTO binds
+// same-TU weak calls to the local body).
+void boardRawTriggerEdge(int signalIndex, bool isRising, efitick_t timestamp);
 
 void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp);
 void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp);

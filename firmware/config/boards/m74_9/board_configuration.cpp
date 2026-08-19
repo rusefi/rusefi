@@ -713,6 +713,10 @@ void setup_custom_board_overrides() {
 #endif
 	addConsoleAction("toothdump", m74_9ToothDump);
 	addConsoleAction("toothsave", m74_9ToothSave);
+	// raw primary-trigger edge stream capture: a digital oscilloscope of the
+	// comparator output for noise diagnosis (deltas + histogram, see
+	// m74_9_tooth_diag.cpp)
+	addConsoleAction("rawtrg", m74_9RawTriggerDump);
 #if EFI_CAN_SUPPORT
 	initM74_9Can();
 	custom_board_isImmobilizerBlocking = m74_9_isImmobilizerBlocking;

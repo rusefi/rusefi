@@ -199,6 +199,100 @@ void printRawRevolutions() {
 
 } // namespace
 
+// ---- raw trigger edge capture: a digital oscilloscope of the comparator
+// output. Every hardware edge on the primary crank input is recorded with its
+// NT timestamp BEFORE the debounce and the decoder see it - the true noise
+// picture (what the debounce drops included). Dumped with 'rawtrg'.
+
+constexpr size_t RawEdgeRingSize = 2048;
+
+struct RawEdgeRecord {
+	efitick_t timestamp;
+	bool rising;
+};
+
+static RawEdgeRecord rawEdgeRing[RawEdgeRingSize];
+static size_t rawEdgeHead = 0;
+static size_t rawEdgeCount = 0;
+
+void boardRawTriggerEdge(int signalIndex, bool isRising, efitick_t timestamp) {
+	if (signalIndex != 0) {
+		return; // primary crank input only
+	}
+
+	rawEdgeRing[rawEdgeHead] = {timestamp, isRising};
+	rawEdgeHead = (rawEdgeHead + 1) % RawEdgeRingSize;
+	rawEdgeCount++;
+}
+
+void m74_9RawTriggerDump() {
+	size_t valid = rawEdgeCount < RawEdgeRingSize ? rawEdgeCount : RawEdgeRingSize;
+	if (valid < 2) {
+		efiPrintf("rawtrg: no edges captured");
+		return;
+	}
+
+	// copy the valid part of the ring into time order (oldest -> newest);
+	// static buffers - the console command thread stack is small (the first
+	// on-car toothdump hard-faulted on a big local array)
+	static RawEdgeRecord ordered[RawEdgeRingSize];
+	for (size_t i = 0; i < valid; i++) {
+		ordered[i] = rawEdgeRing[(rawEdgeHead + RawEdgeRingSize - valid + i) % RawEdgeRingSize];
+	}
+
+	static int32_t deltas[RawEdgeRingSize];
+	int32_t minDelta = INT32_MAX;
+	int32_t maxDelta = 0;
+	for (size_t i = 0; i + 1 < valid; i++) {
+		int32_t d = (int32_t)(ordered[i + 1].timestamp - ordered[i].timestamp);
+		deltas[i] = d;
+		if (d < minDelta) minDelta = d;
+		if (d > maxDelta) maxDelta = d;
+	}
+	size_t deltaCount = valid - 1;
+
+	efitick_t span = ordered[valid - 1].timestamp - ordered[0].timestamp;
+	efiPrintf("rawtrg: %d edges span %.1f ms min %d us max %d us",
+		(int)deltaCount, span / 1000.0f, (int)minDelta, (int)maxDelta);
+
+	// inter-edge deltas in us, 16 per line, newest last
+	static char deltaLine[224];
+	static char dirLine[224];
+	for (size_t start = 0; start < deltaCount; start += 16) {
+		size_t end = start + 16 < deltaCount ? start + 16 : deltaCount;
+		size_t off = 0;
+		off += chsnprintf(deltaLine + off, sizeof(deltaLine) - off, "raw d%03d", (int)start);
+		for (size_t i = start; i < end; i++) {
+			off += chsnprintf(deltaLine + off, sizeof(deltaLine) - off, " %6d", (int)deltas[i]);
+		}
+		efiPrintf("%s", deltaLine);
+
+		off = 0;
+		off += chsnprintf(dirLine + off, sizeof(dirLine) - off, "raw r%03d", (int)start);
+		for (size_t i = start; i < end; i++) {
+			off += chsnprintf(dirLine + off, sizeof(dirLine) - off, " %6c", ordered[i].rising ? 'R' : 'F');
+		}
+		efiPrintf("%s", dirLine);
+	}
+
+	// histogram: the storm bursts live in the 50-500 us buckets (the debounce
+	// drops <100 us); real teeth at cranking are 2-5 ms
+	size_t h50 = 0, h100 = 0, h200 = 0, h500 = 0, h1m = 0, h2m = 0, h4m = 0, hUp = 0;
+	for (size_t i = 0; i < deltaCount; i++) {
+		int32_t d = deltas[i];
+		if (d < 50) h50++;
+		else if (d < 100) h100++;
+		else if (d < 200) h200++;
+		else if (d < 500) h500++;
+		else if (d < 1000) h1m++;
+		else if (d < 2000) h2m++;
+		else if (d < 4000) h4m++;
+		else hUp++;
+	}
+	efiPrintf("rawtrg hist: <50us=%d 50-100=%d 100-200=%d 200-500=%d 500-1k=%d 1-2k=%d 2-4k=%d >4k=%d",
+		(int)h50, (int)h100, (int)h200, (int)h500, (int)h1m, (int)h2m, (int)h4m, (int)hUp);
+}
+
 // Called from the trigger decoder for every synchronized primary tooth.
 void boardTriggerCallback(efitick_t timestamp, float) {
 	// Authoritative tooth position comes from the decoder index (0 = the sync

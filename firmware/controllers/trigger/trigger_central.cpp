@@ -512,6 +512,10 @@ uint32_t triggerMaxDuration = 0;
  *  - Trigger replay from CSV (unit tests)
  */
 void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
+  // Raw board-level edge capture BEFORE any filtering: boards diagnose the
+  // input noise with this (m74_9 'rawtrg' console command).
+  boardRawTriggerEdge(signalIndex, isRising, timestamp);
+
   if (tooSoonToHandleSignal()) {
     return;
   }
