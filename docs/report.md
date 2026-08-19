@@ -3979,3 +3979,109 @@ bootloader); burn the msq (canOpenBLT=yes); then updates via
 BootCommander over PCAN with rusefi_..._update.srec. Risk to verify on
 the car: the CAN transceiver must stay powered/active while the
 bootloader runs (no enable pin in the tune - likely always-on).
+
+---
+
+## 2026-08-19 - m74_9: Java XCP-over-CAN flasher (openblt_can) + app-side jump trigger fix
+
+The Java console "OpenBLT via CAN" menu item cannot flash from macOS: the
+bundled libopenblt.dylib has only the NET transport compiled (no CAN/USB),
+and the JNI wrapper (misc/libopenblt_jni/openblt_jni.cpp) initializes the
+USB transport in its CAN setup anyway. Verified with nm on the shipped
+libraries. So instead of fixing the native path, implemented a pure-Java
+XCP 1.0 client over the already-working MacCAN/PCANBasic stack.
+
+What was done:
+
+| Change | File |
+| --- | --- |
+| New Gradle module: XCP client, SREC parser, CLI flasher, PcanLink | `java_console/openblt_can/` |
+| Gradle project registration | `settings.gradle` |
+| CLI wrapper (builds fat jar on demand) | `java_console/bin/openblt_can.sh` |
+| Fixed app-side OpenBLT trigger: extended-ID frames never matched | `firmware/controllers/can/can_rx.cpp` |
+
+Protocol facts pinned down from the target sources (ext/openblt/Target/
+Source/xcp.c + bootloader/openblt_chibios/openblt_can.cpp):
+- One XCP packet = one CAN frame, max 8 bytes; no multi-frame counter
+  byte. PROGRAM_MAX carries 7 bytes, PROGRAM carries 1..6, both
+  auto-increment the MTA.
+- SET_MTA/PROGRAM_CLEAR/BUILD_CHECKSUM read data[4..7], so DLC=8 is
+  required for those frames. Addresses/lengths little-endian.
+- CONNECT (0xFF) is the only command accepted before a session; the
+  bootloader answers 8 bytes with max CTO = 8.
+- Bootloader entry: BackDoorEntryHook always true + the 1000 ms backdoor
+  window, or the app-side jump (canOpenBLT) via shared params. The
+  flasher's CONNECT frame is DLC=2, exactly the app-side trigger, so one
+  retry loop covers both entry paths.
+- BUILD_CHECKSUM is an 8-bit additive sum (ADD11) - used for post-program
+  verification per segment.
+- The bootloader rejects erase/write below the app base (32 KB offset);
+  the flasher also refuses such images client-side.
+
+App-side trigger bug: can_rx.cpp compared CAN_SID(frame) (11 bits) to
+BOOT_COM_CAN_RX_MSG_ID = 0x80010667 - impossible to match for both
+standard and extended frames, so the canOpenBLT jump never fired on the
+extended-ID m74_9 build. Fixed by normalizing the frame id the same way
+the config constant encodes it (EID | 0x80000000 for extended frames).
+
+Validation:
+- openblt_can unit tests 25/25: SREC parser (S1/S3, checksums,
+  segmentation), XCP wire format (DLC=8 little-endian frames, error
+  packets, foreign-frame filtering, timeouts), end-to-end flash against
+  an in-memory bootloader simulation (erase chunking, PROGRAM_MAX +
+  PROGRAM tail, checksum verify catches corruption, late-bootloader
+  retries, bootloader-area protection, no-reset mode).
+- m74_9 firmware rebuilt with the can_rx.cpp fix: deliver/rusefi.bin
+  updated (BL09 marker intact).
+
+On-car procedure now: build the jar (`./gradlew :openblt_can:fatJar`),
+then `java_console/bin/openblt_can.sh firmware/build/rusefi.srec` with
+the PCAN adapter on the bench. First `--probe` to confirm the bootloader
+answers, then a full flash. Still requires the one-time ST-Link flash of
+the new deliver/rusefi.bin (contains the trigger fix).
+
+Open follow-ups:
+- Console integration: wire a menu item that runs this flasher instead of
+  the broken OpenbltJni CAN path.
+- Optional faster transport: the 7-bytes-per-frame PROGRAM_MAX gives
+  ~700 KB image in roughly 1.5-2 min at 500 kbps; acceptable but could be
+  improved with a pipelined mode (target forbids it via ctoPending, so it
+  would need a bootloader change).
+
+## 2026-08-19 - m74_9: EFI_USE_OPENBLT was FALSE - CAN trigger dead + probe failure root cause
+
+The first on-car --probe got no bootloader response. Root cause was NOT the
+Java flasher: the m74_9 app build had EFI_USE_OPENBLT = FALSE, so the whole
+app-side OpenBLT machinery was compiled out - the canOpenBLT CAN trigger in
+can_rx.cpp, jump_to_openblt's body (at32_common.cpp), the reboot_openblt
+console action and show_blt_version. Only stm32f4ems/efifeatures.h defines
+the flag (default FALSE); no board overrides it. USE_OPENBLT=yes in
+meta-info.env only adds shared_params.c to the build - it does NOT set the
+C++ define. So the trigger fix landed earlier today was dead code, and the
+only bootloader entry left was the 1 s post-reset backdoor window (the
+probe ran 8 s without a power cycle -> silence).
+
+Fixed by defining EFI_USE_OPENBLT TRUE in boards/m74_9/efifeatures.h BEFORE
+the stm32f4ems include (that header guards its FALSE default with #ifndef).
+
+Diagnosis lessons:
+- Do not verify preprocessor state with 'strings' on the ELF: the DWARF
+  debug sections contain source text and match string literals that were
+  compiled out. Verify with objdump -s -j .rodata or by disassembling
+  references (constant 0x80010667 in the trigger comparison).
+- LTO object files (.o) are GIMPLE bitcode: objdump/strings on them do not
+  show the final codegen; check the linked ELF instead.
+- efifeatures.h changes do not rebuild objects: the .o dependency is on
+  pch/pch.h, not on headers included by the pch. touch pch/pch.h (or make
+  clean) after any efifeatures.h edit.
+
+Also added --verbose to the flasher (logs every TX/RX frame - tells "no
+bus traffic at all" (wiring) from "traffic but no bootloader" (ECU state)),
+and the connect-failure message now explains the power-cycle backdoor.
+
+Verified in the 14:00 build: .rodata contains show_blt_version, the binary
+contains the 0x80010667 trigger comparison constant, jump_to_openblt is
+linked and called, deliver/rusefi.bin re-merged with BL09 marker.
+
+On-car next step: flash the new deliver/rusefi.bin once via ST-Link, then
+--probe must answer without any power cycling (the CAN trigger works now).

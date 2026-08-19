@@ -11,6 +11,13 @@
 #define HAL_USE_MMC_SPI FALSE
 #define EFI_FILE_LOGGING FALSE
 
+/* The application runs on top of the OpenBLT bootloader (USE_OPENBLT=yes in
+ * meta-info.env). Without this define the app-side OpenBLT machinery is
+ * compiled out entirely: the canOpenBLT CAN trigger, the reboot_openblt
+ * console command and show_blt_version. Must be defined BEFORE the
+ * stm32f4ems include - that header defaults the flag to FALSE. */
+#define EFI_USE_OPENBLT TRUE
+
 /* Console log buffer (double-buffered, 2x this, static). The stm32f4ems
  * default of 6500 truncates the 'pins' output mid-line: the pin report +
  * L9779 SPI frame history exceed it and LogBuffer::writeInternal writes

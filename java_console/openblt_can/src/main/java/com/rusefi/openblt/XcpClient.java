@@ -20,13 +20,21 @@ public class XcpClient {
     private final boolean extended;
     private final int rxId;
     private final int defaultTimeoutMs;
+    /** Optional frame tracer (e.g. --verbose diagnostics). */
+    private final java.util.function.Consumer<String> frameLog;
 
     public XcpClient(CanLink link, int txId, boolean extended, int rxId, int defaultTimeoutMs) {
+        this(link, txId, extended, rxId, defaultTimeoutMs, null);
+    }
+
+    public XcpClient(CanLink link, int txId, boolean extended, int rxId, int defaultTimeoutMs,
+                     java.util.function.Consumer<String> frameLog) {
         this.link = link;
         this.txId = txId;
         this.extended = extended;
         this.rxId = rxId;
         this.defaultTimeoutMs = defaultTimeoutMs;
+        this.frameLog = frameLog;
     }
 
     public int getTxId() {
@@ -129,7 +137,11 @@ public class XcpClient {
      * @return the response, or null when the timeout expired.
      */
     public XcpResponse request(byte[] cmd, int timeoutMs) throws IOException {
-        link.write(new CanFrame(txId, extended, cmd));
+        CanFrame tx = new CanFrame(txId, extended, cmd);
+        if (frameLog != null) {
+            frameLog.accept("TX " + tx);
+        }
+        link.write(tx);
 
         long deadline = System.currentTimeMillis() + timeoutMs;
         while (System.currentTimeMillis() < deadline) {
@@ -140,6 +152,9 @@ public class XcpClient {
             CanFrame frame = link.readFrame(remaining);
             if (frame == null) {
                 continue;
+            }
+            if (frameLog != null) {
+                frameLog.accept("RX " + frame);
             }
             // Skip anything that is not a reply from the bootloader on its TX id
             // (the still-running app may be broadcasting on other ids).
