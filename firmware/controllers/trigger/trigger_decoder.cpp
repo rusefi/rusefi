@@ -624,7 +624,25 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 				&& lastFullRevolutionDurationNt > 0
 				&& (nowNt - startOfCycleNt) < lastFullRevolutionDurationNt / 4;
 
-			isSynchronizationPoint = !tooEarlyForSync && atExpectedGapPosition && isSyncPoint(triggerShape, triggerConfiguration.TriggerType.type);
+			// Real-tooth-before-the-gap gate: the missing-teeth gap always
+			// follows a REAL tooth whose period is close to the revolution's
+			// mean (compression ripple moves it maybe 0.6-1.4x, never below a
+			// quarter). A storm-inflated candidate follows a storm edge - a
+			// few hundred us vs ~4 ms at cranking - no matter WHERE in the
+			// revolution the storm lands, so this gate rejects storm syncs the
+			// elapsed-time gate cannot reach (storms late in the revolution).
+			// Board opt-in (m74_9): wheels with irregular tooth patterns or
+			// real cranking logs with extreme per-tooth variation would trip
+			// this on legitimate gaps.
+			bool gapHardening = get_board_override_result(custom_board_syncGapHardening, false);
+			efitick_t minRealToothNt = (lastFullRevolutionDurationNt > 0 && expectedCount > 0)
+				? lastFullRevolutionDurationNt / expectedCount / 4
+				: 0;
+			bool previousToothNotReal = gapHardening && wasSynchronized
+				&& minRealToothNt > 0
+				&& toothDurations[1] < minRealToothNt;
+
+			isSynchronizationPoint = !tooEarlyForSync && !previousToothNotReal && atExpectedGapPosition && isSyncPoint(triggerShape, triggerConfiguration.TriggerType.type);
 
 			// First-combustion protection (board opt-in via
 			// custom_board_syncByPositionWhileCranking, m74_9): at the catch the
@@ -644,9 +662,18 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 			// cranking speed, so the skip is off once the engine is running.
 			// Conditions are evaluated lazily: mock tests run the decoder with
 			// engineConfiguration = nullptr.
-			if (!isSynchronizationPoint && !tooEarlyForSync && wasSynchronized && atExpectedGapPosition &&
+			if (!isSynchronizationPoint && !tooEarlyForSync && !previousToothNotReal && wasSynchronized && atExpectedGapPosition &&
 					get_board_override_result(custom_board_syncByPositionWhileCranking, false) &&
 					currentCycle.eventCount[(int)triggerWheel] == triggerShape.getExpectedEventCount(triggerWheel) &&
+					// the missing-teeth gap is physically 3 tooth slots and can
+					// compress to ~1.2-1.4 under the hardest first-combustion
+					// acceleration, but never to a fraction of a tooth - a much
+					// shorter "gap" is a noise edge right after a real tooth
+					// (e.g. 250 us after tooth 57: ratio 0.066), which the count
+					// check alone cannot distinguish from the real gap. Board
+					// opt-in (m74_9): some wheels legitimately override gaps at
+					// ratios below 1.2 (see subaru.overrideGap).
+					(!gapHardening || triggerSyncGapRatio >= 1.2f) &&
 #if EFI_UNIT_TEST
 					// mock tests run the decoder with engineConfiguration = nullptr
 					engineConfiguration != nullptr &&
