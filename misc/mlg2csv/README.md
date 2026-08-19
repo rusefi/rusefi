@@ -1,12 +1,29 @@
-# mlg2csv
+# mlg2csv / mlg2charts
 
-Converts rusEFI binary MLG log files (format v2, "MLVLG" magic) to CSV that
-MegaLogViewer (MS/HD) or any spreadsheet tool can open. MegaLogViewer does NOT
-read the rusEFI binary MLG format directly - convert first.
+Two tools for rusEFI binary MLG logs (format v2, "MLVLG" magic).
+MegaLogViewer does NOT read this format directly - convert first.
 
 Format reference:
 - firmware/console/binary_mlg_log/mlg_types.h (header + field descriptors)
 - firmware/console/binary_mlg_log/binary_mlg_logging.cpp (data records)
+
+## mlg2charts.py - interactive HTML charts straight from the MLG
+
+Parses the binary log directly (no CSV step) and renders a self-contained
+HTML page with zoomable per-group charts (RPM, air/load, temperatures,
+lambda/AFR, ignition advance, dwell/coils, trigger/sync, battery, fuel).
+The output HTML embeds plotly.js - open it in any browser, no server.
+
+Setup (once):
+
+    python3 -m venv venv
+    venv/bin/pip install plotly
+
+Run:
+
+    venv/bin/python mlg2charts.py input.mlg [output.html]
+
+## MlgToCsv.java - CSV export for MegaLogViewer / spreadsheets
 
 Build and run (no dependencies beyond a JDK):
 
