@@ -94,4 +94,16 @@ cd "$FDIR"
 MI=$($REALPATH --relative-to="$FDIR" "$MI")
 
 source config/boards/common_script_read_meta_env.inc "$MI"
+
+# The make run is the authoritative build step: anything failing inside it must
+# abort the script with a non-zero exit code and a loud final banner. Without
+# this, a parallel recipe (e.g. gradle) can print its own success message after
+# make already reported the failure, leaving "BUILD SUCCESSFUL" as the last line
+# of a failed build.
 $MAKE $B -j$($NPROC) -r $MAKE_ARGS
+BUILD_STATUS=$?
+if [ "$BUILD_STATUS" -ne 0 ]; then
+	echo "BUILD FAILED: make exited with status $BUILD_STATUS" >&2
+	exit "$BUILD_STATUS"
+fi
+echo "BUILD SUCCESSFUL"
