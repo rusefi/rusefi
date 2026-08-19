@@ -665,15 +665,19 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 			if (!isSynchronizationPoint && !tooEarlyForSync && !previousToothNotReal && wasSynchronized && atExpectedGapPosition &&
 					get_board_override_result(custom_board_syncByPositionWhileCranking, false) &&
 					currentCycle.eventCount[(int)triggerWheel] == triggerShape.getExpectedEventCount(triggerWheel) &&
-					// the missing-teeth gap is physically 3 tooth slots and can
-					// compress to ~1.2-1.4 under the hardest first-combustion
-					// acceleration, but never to a fraction of a tooth - a much
+					// the missing-teeth gap is physically 3 tooth slots; even the
+					// hardest first-combustion acceleration cannot compress it
+					// below ~1.0 tooth times (the crank speed would have to more
+					// than triple across a single 6-degree tooth), and the m74_9
+					// catch compressed it below 1.2 - which rejected the REAL gap
+					// and produced the 00:05 C9002 "expected 58 got 58". A much
 					// shorter "gap" is a noise edge right after a real tooth
-					// (e.g. 250 us after tooth 57: ratio 0.066), which the count
-					// check alone cannot distinguish from the real gap. Board
-					// opt-in (m74_9): some wheels legitimately override gaps at
-					// ratios below 1.2 (see subaru.overrideGap).
-					(!gapHardening || triggerSyncGapRatio >= 1.2f) &&
+					// (e.g. 250 us after tooth 57: ratio 0.07), which the count
+					// check alone cannot distinguish from the real gap. The 0.8
+					// floor sits below any physical gap and 11x above the noise
+					// case. Board opt-in (m74_9): some wheels legitimately
+					// override gaps at ratios below 0.8 (see subaru.overrideGap).
+					(!gapHardening || triggerSyncGapRatio >= 0.8f) &&
 #if EFI_UNIT_TEST
 					// mock tests run the decoder with engineConfiguration = nullptr
 					engineConfiguration != nullptr &&
