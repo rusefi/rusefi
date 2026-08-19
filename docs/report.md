@@ -4279,3 +4279,62 @@ Follow-ups:
   investigate after the first clean start.
 - Consider surfacing silent decode errors in the MLG for this board (or a
   console counter) so bench diagnosis does not require the replay tests.
+
+## 2026-08-19 - m74_9: noise-storm false syncs + minimum-elapsed-time sync gate
+
+What: found the mechanism behind the ~2-3x sync-counter race that survived
+the debounce (23:10 log: syncCtr +17 over ~7 crank revolutions at 270 rpm,
+revCtr +9 over ~3.5 engine cycles, zero visible errors, cam stable at 212 deg).
+
+The mechanism (proven by a replay test before the fix): a dense noise storm
+- edges ~250 us apart, above the 100 us debounce - inflates the decoder's
+event count, so a storm edge becomes the 58th event since the previous sync.
+If that edge lands on a tooth-pair ratio inside the sync windows (chaotic
+storm spacings occasionally do: 625/250 us = 2.5), it passes the position
+gate AND the count check and false-syncs the decoder CLEANLY: no error, no
+desync, just a silent +1 to the sync counter and a shifted phase basis.
+Every other storm sync also increments the engine-cycle counter, racing the
+ASE/cranking tables ~2-3x. No count- or ratio-based check can reject this -
+the count genuinely reads 58 and the ratio genuinely reads in-window.
+
+Fix (trigger_decoder): the only robust discriminator is TIME. A real gap can
+only arrive roughly one full revolution after the previous sync point; storm
+syncs arrive within a few percent of a revolution. Both sync paths (the
+ratio check and the custom_board_syncByPositionWhileCranking override) now
+require the candidate to arrive at least a quarter of the previous
+revolution's duration after the previous sync (lastFullRevolutionDurationNt,
+measured at each sync). The first sync and re-syncs after a desync stay
+exempt. The quarter is deliberately loose: the first-combustion catch
+compresses the next revolution to ~0.3-0.5x, and no real engine accelerates
+4x within one revolution. A stormed revolution now ends in a proper C9002
+(index overflow) + desync and recovers through the validated-sync path -
+visible behavior instead of silent miscounting.
+
+New test: crankingTransition60_2RealCarProfileNoiseStormDoesNotFalseSync
+replays a 53-edge storm with a window-matching candidate at exactly count 58
+on the real car tooth profile. Fails without the gate (sync counter advances
+on the storm edge), passes with it.
+
+Also learned while instrumenting:
+- The engine-sniffer trigger CSVs on this firmware do NOT contain the real
+  cranking edges: the ring buffer holds ~1000 stale pairs spaced exactly one
+  32-bit-microsecond wrap (71.6 min) apart - the buffer content is garbage
+  for diagnosis. Do not trust those CSVs for tooth-level analysis; use the
+  toothdump command (board-level capture) instead.
+- The MLG output-channel samples can be written in bursts (two records 14 ms
+  apart), so counter deltas between adjacent rows do not map to that time
+  delta - aggregate over the whole spin window.
+- printTriggerTrace in unit tests must be set AFTER EngineTestHelper
+  construction and setTriggerType - both reset it.
+
+Validation: unit tests 1148/1148 on GCC and clang; m74_9 firmware built and
+flashed over CAN (checksum verified).
+
+Follow-ups:
+- Fresh crank attempt on the car: syncCtr should now advance ~1 per crank
+  revolution (~4.5/s at 270 rpm) and revCtr ~1 per engine cycle (~2.25/s).
+- If the storm gate rejects the real gap at the first-combustion catch
+  (extreme single-rev acceleration), the symptom is a C9002 right at the
+  catch - the syncByPositionWhileCranking override path would then need a
+  catch-specific time exemption; verify with a catch log.
+- ETB autograb one-direction issue still deferred.
