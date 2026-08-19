@@ -257,13 +257,28 @@ public:
 				m_primaryMax = Sensor::getRaw(functionToTpsSensorPrimary(myFunction));
 				m_secondaryMax = Sensor::getRaw(functionToTpsSensorSecondary(myFunction));
 
+				// Seed the stop detector before we start closing
+				m_autocalLastPosition = Sensor::getRaw(functionToTpsSensorPrimary(myFunction));
+
 				// Next: close the throttle
 				motor->set(-0.5f);
 				return ACPhase::Close;
 			}
 			break;
-		case ACPhase::Close:
-			if (m_autocalTimer.hasElapsedMs(1000)) {
+		case ACPhase::Close: {
+			// Some throttles (e.g. the big Lada 21129 ETB on m74_9) have a return
+			// spring that slams the plate into the closed stop. Holding -50% duty
+			// against the stop for the whole 1s window stalls the motor and trips
+			// the driver's overcurrent shutdown (TLE9201 diag 0xCF), aborting the
+			// calibration. Detect the stop by the frozen TPS reading and capture
+			// immediately - no stall, no fault. The 1s timeout stays as a fallback
+			// for slow throttles that move less than the 5 mV threshold per loop.
+			float currentPosition = Sensor::getRaw(functionToTpsSensorPrimary(myFunction));
+			bool reachedStop = m_autocalTimer.hasElapsedMs(50)
+				&& std::abs(currentPosition - m_autocalLastPosition) < 0.005f;
+			m_autocalLastPosition = currentPosition;
+
+			if (reachedStop || m_autocalTimer.hasElapsedMs(1000)) {
 				// Capture closed position
 				m_primaryMin = Sensor::getRaw(functionToTpsSensorPrimary(myFunction));
 				m_secondaryMin = Sensor::getRaw(functionToTpsSensorSecondary(myFunction));
@@ -309,6 +324,7 @@ public:
 				return ACPhase::TransmitPrimaryMax;
 			}
 			break;
+		}
 		case ACPhase::TransmitPrimaryMax:
 			if (tsCalibrationIsIdle()) {
 				tsCalibrationSetData(functionToCalModePriMin(myFunction), m_primaryMin);
@@ -348,6 +364,10 @@ private:
 	Timer m_autocalTimer;
 	// Report calibrated values to TS, if false - set directly to config
 	bool m_isAutocalTs;
+
+	// Last primary TPS reading during the autocal Close phase, used to detect
+	// that the plate has reached the mechanical stop (position stops changing).
+	float m_autocalLastPosition = 0;
 
 	bool m_benchTestActive = false;
 	Timer m_benchTestTimer;
