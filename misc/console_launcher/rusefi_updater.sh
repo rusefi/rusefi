@@ -4,4 +4,5 @@
 # Arguments are forwarded so that Autoupdate#startConsoleAsANewProcess can pass them on.
 
 cd "$(dirname "$0")/console" || exit 1
+export PATH=$PWD:$PATH # search path fix for spawned processes
 exec java -jar ./rusefi_console.jar "$@"
