@@ -223,6 +223,11 @@ private:
 	// At what engine phase do we expect the next tooth to arrive?
 	// Used for checking whether your trigger pattern is correct.
 	expected<float> expectedNextPhase = unexpected;
+
+	// Input debounce (see custom_board_triggerDebounceUs): timestamp of the
+	// last trigger edge accepted by handleShaftSignal. Edges arriving sooner
+	// than the board's minimum interval after this one are dropped as noise.
+	efitick_t lastDebouncedTriggerEdgeNt = 0;
 };
 
 void triggerInfo(void);

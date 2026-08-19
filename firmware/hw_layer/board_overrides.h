@@ -222,6 +222,14 @@ extern std::optional<setup_custom_bool_type> custom_board_syncByPositionWhileCra
 // phaser legitimately move the cam phase. m74_9 sets 15 (fixed cam).
 extern std::optional<setup_custom_get_float_type> custom_board_vvtDriftLimit;
 
+// When set and returning a positive interval (microseconds), trigger edges
+// arriving sooner than that after the previous accepted edge are dropped as
+// noise before decoding - VR comparator ringing / starter interference that
+// would inflate the event count and false-sync the decoder mid-revolution
+// (m74_9: 100 us; noise bursts measure <50 us, and 100 us stays below the
+// 125 us tooth period of a 60-2 wheel at 8000 rpm on RiseOnly).
+extern std::optional<setup_custom_get_float_type> custom_board_triggerDebounceUs;
+
 extern std::optional<setup_custom_bool_type> custom_board_getAcrState;
 // Additive ACR hold: when set and returning true, the Harley ACR valve is kept
 // energized regardless of the acrRevolutions countdown (the engineMovedRecently

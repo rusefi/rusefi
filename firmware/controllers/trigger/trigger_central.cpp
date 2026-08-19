@@ -847,6 +847,22 @@ angle_t TriggerCentral::findNextTriggerToothAngle(int p_currentToothIndex) {
  * This method is NOT invoked for VR falls.
  */
 void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
+	// Board opt-in input debounce (m74_9): VR comparator ringing and starter
+	// noise arrive as edge bursts far below the real tooth period. Dropping
+	// them here keeps the event count honest, so the position gate and the
+	// tooth-count sync validation see real teeth only. RiseOnly wheels do not
+	// decode fall edges, so a short debounce stays safe at high RPM (60-2
+	// tooth period at 8000 rpm is 125 us; m74_9 noise measures <50 us,
+	// threshold 100 us). The existing isToothExpectedNow doubled-edge
+	// rejection only runs above 1000 rpm - this covers cranking too.
+	float debounceUs = get_board_override_result(custom_board_triggerDebounceUs, 0.0f);
+	if (debounceUs > 0) {
+		if (lastDebouncedTriggerEdgeNt != 0 && timestamp - lastDebouncedTriggerEdgeNt < US2NT(debounceUs)) {
+			return;
+		}
+		lastDebouncedTriggerEdgeNt = timestamp;
+	}
+
 	if (triggerShape.shapeDefinitionError) {
 		// trigger is broken, we cannot do anything here
 		warning(ObdCode::CUSTOM_ERR_UNEXPECTED_SHAFT_EVENT, "Shaft event while trigger is mis-configured");
