@@ -114,6 +114,16 @@ public:
 	 */
 	void incrementShaftSynchronizationCounter();
 
+	/**
+	 * Set by decodeTriggerEvent on every sync point: true only when the tooth
+	 * count matched the expectation exactly - the only kind of sync that
+	 * proves a real crank revolution. False gap pairs mid-revolution always
+	 * have a count mismatch and leave it false, so the engine-cycle counter
+	 * can ignore them (see rpmShaftPositionCallback: the m74_9 false-sync
+	 * storms raced the revolution counter ahead of real time).
+	 */
+	bool lastSyncWasClean = false;
+
 #if EFI_UNIT_TEST
 	/**
 	 * used only for trigger export

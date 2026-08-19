@@ -489,6 +489,10 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 		const efitick_t nowNt) {
 	ScopePerf perf(PE::DecodeTriggerEvent);
 
+	// Non-sync events clear the flag: it is only ever true for the exact sync
+	// event that validated a real crank revolution (see the sync point branch).
+	lastSyncWasClean = false;
+
 #if EFI_PROD_CODE
   getTriggerCentral()->triggerElapsedUs = previousEventTimer.getElapsedUs();
 #endif
@@ -690,6 +694,13 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 		if (isSynchronizationPoint) {
 		  triggerCountersError = getEventCountersError(triggerShape);
 			bool isDecodingError = isTriggerCounterError(triggerCountersError);
+
+			// Only a sync with the exact expected tooth count is a validated crank
+			// revolution - the only kind the engine-cycle counter must count.
+			// Wheels without gap sync (isSynchronizationNeeded == false) sync on
+			// every cycle boundary and have no false-gap mechanism, so their
+			// syncs always count (legacy behavior for single-tooth wheels).
+			lastSyncWasClean = !triggerShape.isSynchronizationNeeded || !isDecodingError;
 
 			if (triggerStateListener) {
 				triggerStateListener->OnTriggerSynchronization(wasSynchronized, isDecodingError);
