@@ -4137,3 +4137,14 @@ Remaining:
   OpenbltJni CAN path).
 - First in-car test: ignition cycle while running the flasher (backdoor
   window) and trigger-based reflash.
+
+### Session close (same day)
+
+- The console could not connect after probing because a probe session holds
+  the bootloader forever (wasConnected) - the app never restarted. Fixed:
+  --probe now sends PROGRAM_RESET at the end and restarts the app.
+- Second cause: the rusEFI console app holding the PCAN channel kills the
+  bus for everyone else (no ACKs, no RX) - console and flasher must not run
+  at the same time. Confirmed by killing all Java and watching the bus come
+  back. User confirmed the console connects after the ECU was returned to
+  the application.

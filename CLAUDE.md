@@ -269,6 +269,12 @@ Bench verification (m74_9, 2026-08-15): `fast 45692 samples`, `F ch[0] @ PA1` sa
 
 ## EFI_USE_OPENBLT: USE_OPENBLT=yes does NOT enable the app-side OpenBLT code
 
+## Console app and the CAN flasher cannot share the PCAN adapter (m74_9 bench)
+
+When the rusEFI Java console is open with a CAN/ISO-TP connection (console-over-CAN on a PCAN adapter), the bus goes dead for everything else: no ACKs (the ECU's TXs raise TERR and TEC climbs to error-passive) and no frames are visible to other tools - even though the adapter's Initialize/Write calls still succeed. Kill all Java (close the console) before running `openblt_can.sh`; the bus comes back immediately. Also: an XCP probe session holds the bootloader forever (wasConnected), so the ECU stays in the bootloader and the console cannot connect until the ECU is restarted - `--probe` in the flasher sends PROGRAM_RESET at the end to return the ECU to the app.
+
+## EFI_USE_OPENBLT: USE_OPENBLT=yes does NOT enable the app-side OpenBLT code
+
 `USE_OPENBLT=yes` in `meta-info.env` only adds `hw_layer/openblt/shared_params.c` to the build. The C++ side (`can_rx.cpp` CAN trigger, `jump_to_openblt()` body in the port's `*_common.cpp`, `reboot_openblt` console action, `show_blt_version`) is guarded by `EFI_USE_OPENBLT`, which is defined ONLY in `config/stm32f4ems/efifeatures.h` with default **FALSE** - and no board overrides it. A board that runs on top of the OpenBLT bootloader MUST `#define EFI_USE_OPENBLT TRUE` in its own `efifeatures.h` **before** including the stm32f4ems header (that header uses `#ifndef`).
 
 Also: `efifeatures.h` edits do not trigger a rebuild (object deps track `pch/pch.h`, not headers included by the pch) - `touch firmware/pch/pch.h` after any efifeatures change. And do not verify preprocessor state with `strings` on the ELF (DWARF matches compiled-out string literals) or on LTO object files (GIMPLE bitcode) - use `objdump -s -j .rodata` / disassembly of the linked ELF instead.
