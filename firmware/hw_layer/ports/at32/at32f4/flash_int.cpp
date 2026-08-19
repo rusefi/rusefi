@@ -85,9 +85,33 @@ int intFlashWrite(flashaddr_t address, const char* buffer, size_t size) {
 		return FLASH_RETURN_NO_PERMISSION;
 	}
 
-	flash_error_t err = flashProgram(&EFLD1, address - getBankBase(), size, (const uint8_t*)buffer);
-	if (err != FLASH_NO_ERROR) {
-		return FLASH_RETURN_OPERROR;
+	/* The EFL driver programs whole 32-bit words with 0xFF padding. The
+	 * OpenBLT XCP host writes the image in 7-byte PROGRAM_MAX frames, so
+	 * consecutive writes overlap words: the second write would pad the
+	 * already-programmed bytes of a word with 0xFF, which the AT32 flash
+	 * rejects (programming a 1 into a 0 bit -> EPPERR). Do a per-word
+	 * read-modify-write instead. */
+	while (size > 0) {
+		uint32_t wordAddr = address & ~3U;
+		uint32_t offset = address & 3U;
+		size_t chunk = minI(4 - offset, size);
+
+		uint32_t word;
+		if (intFlashRead(wordAddr, reinterpret_cast<char*>(&word), sizeof(word)) != FLASH_RETURN_SUCCESS) {
+			return FLASH_RETURN_OPERROR;
+		}
+		for (size_t i = 0; i < chunk; i++) {
+			reinterpret_cast<uint8_t*>(&word)[offset + i] = buffer[i];
+		}
+
+		flash_error_t err = flashProgram(&EFLD1, wordAddr - getBankBase(), sizeof(word), reinterpret_cast<const uint8_t*>(&word));
+		if (err != FLASH_NO_ERROR) {
+			return FLASH_RETURN_OPERROR;
+		}
+
+		address += chunk;
+		buffer += chunk;
+		size -= chunk;
 	}
 
 	return FLASH_RETURN_SUCCESS;

@@ -141,6 +141,15 @@ public class OpenBltCanFlasher {
                 listener.progress(done, total);
             }
 
+            // PROGRAM size=0 finalizes: NvmDone()/FlashDone() flushes the last
+            // partial flash line on buffered platforms (H7 ECC, AT32 one-shot).
+            {
+                XcpResponse fin = xcp.programDone();
+                if (fin == null || !fin.isOk()) {
+                    throw new FlashException("Finalize (PROGRAM size=0) failed: " + fin);
+                }
+            }
+
             // ---- verify ----
             boolean verified = false;
             if (cfg.verify) {
@@ -364,7 +373,7 @@ public class OpenBltCanFlasher {
                 Usage: OpenBltCanFlasher [options] [firmware.srec]
 
                 Flashes the connected ECU through the OpenBLT bootloader over CAN
-                (XCP 1.0, extended ids 0x667/0x7E1, 500 kbps) using a PCAN adapter.
+                (XCP 1.0, extended ids 0x10667/0x107E1, 500 kbps) using a PCAN adapter.
 
                   --channel <n>          PCAN USB bus number (default 1)
                   --connect-timeout <s>  seconds to wait for the bootloader (default 8);
