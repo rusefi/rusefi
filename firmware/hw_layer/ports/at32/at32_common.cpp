@@ -10,6 +10,13 @@
 #include "os_util.h"
 #include "at32_reset_cause.h"
 
+#if EFI_USE_OPENBLT
+/* communication with OpenBLT that is plain C, not to modify external file */
+extern "C" {
+	#include "openblt/shared_params.h"
+};
+#endif
+
 int at32GetMcuType(uint32_t id, const char **pn, const char **package, uint32_t *flashSize)
 {
     const struct {

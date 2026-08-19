@@ -1,4 +1,7 @@
 #include "pch.h"
+
+#if EFI_USB_SERIAL
+
 #include "usbcfg.h"
 #include "usbconsole.h"
 
@@ -145,3 +148,5 @@ static void Rs232TransmitByte(blt_int8u data)
 {
 	chnWriteTimeout(&EFI_CONSOLE_USB_DEVICE, &data, 1, TIME_INFINITE);
 }
+
+#endif // EFI_USB_SERIAL
