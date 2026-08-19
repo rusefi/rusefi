@@ -331,7 +331,8 @@ public class StartupFrame {
         dfuErrorTimer.setRepeats(false);
         dfuErrorTimer.start();
 
-        selector = new ProgramSelector(connectivityContext, portsComboBox.getComboPorts());
+        selector = new ProgramSelector(connectivityContext, portsComboBox.getComboPorts(),
+            this::showFullScreenPanel, this::closeFullScreenPanel);
         selector.setJobExecutor(asyncJobExecutor);
 
         realHardwarePanel.add(new HorizontalLine(), "right, wrap");
@@ -444,12 +445,7 @@ public class StartupFrame {
         BinaryProtocol.iniFileProvider.setStatusConsumer(firmwareStatusPanel);
         startupUpdateActions = new StartupUpdateActions(connectivityContext, firmwareStatusPanel,
             asyncJobExecutor, ecuPortToUse, softwareUpdateOutcome,
-            picker -> {
-                rollbackPicker.removeAll();
-                rollbackPicker.add(picker, BorderLayout.CENTER);
-                showCard(CARD_ROLLBACK);
-            },
-            () -> showCard(CARD_STARTUP));
+            this::showFullScreenPanel, this::closeFullScreenPanel);
         startupUpdateActions.configureFirmwareSelector(selector);
 
         JPanel firmwareTopPanel = new JPanel(new BorderLayout(0, 0));
@@ -598,6 +594,16 @@ public class StartupFrame {
         unsupportedEcuHost.setNormalContent(root);
         // Frame stays fixed-maximized (#9715) — relayout in place instead of pack()/resize.
         AutoupdateUtil.trueLayoutAndRepaint(frame);
+    }
+
+    private void showFullScreenPanel(JComponent panel) {
+        rollbackPicker.removeAll();
+        rollbackPicker.add(panel, BorderLayout.CENTER);
+        showCard(CARD_ROLLBACK);
+    }
+
+    private void closeFullScreenPanel() {
+        showCard(CARD_STARTUP);
     }
 
     private void updateConnectButtonState() {

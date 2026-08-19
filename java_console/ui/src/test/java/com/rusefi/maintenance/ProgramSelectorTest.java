@@ -170,4 +170,5 @@ public class ProgramSelectorTest {
         assertTrue(ProgramSelector.shouldEnableMainButton(true, false, false, OPENBLT_MANUAL, false));
         assertFalse(ProgramSelector.shouldEnableMainButton(true, false, true, OPENBLT_MANUAL, true));
     }
+
 }
