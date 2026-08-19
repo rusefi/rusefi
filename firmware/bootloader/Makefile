@@ -255,11 +255,11 @@ ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM) \
 	$(RUSEFIASM) \
 	$(PROJECT_DIR)/hw_layer/main_hardfault_asm.S
 
-INCDIR += $(ALLINC) \
+INCDIR += $(BOARDINC) \
+	$(ALLINC) \
 	$(PCH_DIR) \
 	.. \
 	$(MODULES_INC) \
-	$(BOARDINC) \
 	$(CHIBIOS)/os/various \
 	$(CHIBIOS)/os/ex/ST \
 	$(CONFIG)/engines \

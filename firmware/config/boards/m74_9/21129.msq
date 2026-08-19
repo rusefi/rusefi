@@ -582,7 +582,7 @@
         <constant name="canGpioType">"None"</constant>
         <constant name="canInputBCM">"disabled"</constant>
         <constant name="canNbcType">"None"</constant>
-        <constant name="canOpenBLT">"no"</constant>
+        <constant name="canOpenBLT">"yes"</constant>
         <constant name="canReadEnabled">"enable"</constant>
         <constant name="canRxPin">"PG0"</constant>
         <constant digits="2" name="canSleepPeriodMs" units="ms">50.0</constant>

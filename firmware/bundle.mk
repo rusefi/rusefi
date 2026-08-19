@@ -298,7 +298,10 @@ $(BIN_FOLDER): .FORCE | $(FOLDER)
 	mkdir -p $@
 	find ../java_console/bin -maxdepth 1 -mindepth 1 | xargs -I{} $(LN) {} $@/
 
-$(DEVICE_BIN_FOLDER): | $(BIN_FOLDER)
+# BIN_FOLDER is a .FORCE target whose recipe rm -rf's the folder, so this
+# directory can be deleted right before a consumer runs; always re-mkdir it
+# (mkdir -p is idempotent and cheap) instead of relying on up-to-date checks.
+$(DEVICE_BIN_FOLDER): .FORCE | $(BIN_FOLDER)
 	mkdir -p $@
 
 $(BRANCH_REF_FILE):

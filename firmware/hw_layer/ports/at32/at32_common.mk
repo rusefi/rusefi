@@ -4,7 +4,8 @@ HW_LAYER_PORT_CPP += \
 	$(HW_AT32_PORT_DIR)/at32_common.cpp \
 	$(HW_AT32_PORT_DIR)/at32_can.cpp \
 	$(HW_AT32_PORT_DIR)/at32_spi.cpp \
-	$(HW_AT32_PORT_DIR)/at32f4/mpu_util.cpp
+	$(HW_AT32_PORT_DIR)/at32f4/mpu_util.cpp \
+	$(HW_AT32_PORT_DIR)/at32f4/flash_int.cpp
 
 HW_INC += \
 	$(HW_AT32_PORT_DIR)

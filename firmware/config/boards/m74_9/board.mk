@@ -1,8 +1,16 @@
 # List of all the board related files.
+# The board's C++ sources need the full firmware (sensors, engine, MFS
+# storage, trigger decoding) - the OpenBLT bootloader does not use any of
+# them: it only needs board.c (early GPIO/clock init) and the ChibiOS
+# drivers. Compiling them into the bootloader pulls the whole runtime in.
+ifneq ($(IS_RE_BOOTLOADER),yes)
 BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp \
   $(BOARD_DIR)/m74_9_can.cpp \
   $(BOARD_DIR)/m74_9_tooth_diag.cpp \
   $(BOARD_DIR)/../at_start_f435/board_storage.cpp
+else
+BOARDCPPSRC = $(BOARD_DIR)/board_bootloader.cpp
+endif
 
 DDEFS += -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::Unassigned
 
@@ -20,6 +28,19 @@ DDEFS += -DSTM32_USB_USE_OTG2=FALSE
 DDEFS += -DBOARD_L9779_COUNT=1
 DDEFS += -DBOARD_TLE9201_COUNT=1
 DDEFS += -DSTM32_SPI_USE_SPI2=TRUE
+
+# OpenBLT over CAN1 (PG0 RX / PG1 TX per the tune; transceiver is always-on).
+# The running app also listens on the OpenBLT CAN IDs (canOpenBLT=yes in the
+# tune) and reboots into the bootloader when the host starts an XCP session.
+# RS232 transport is disabled: this board has no USB and the bootloader's
+# RS232 layer is USB-CDC only.
+DDEFS += -DBOOT_COM_RS232_ENABLE=0
+DDEFS += -DBOOT_COM_CAN_CHANNEL_INDEX=0
+DDEFS += -DOPENBLT_CAN_RX_PORT=GPIOG
+DDEFS += -DOPENBLT_CAN_RX_PIN=0
+DDEFS += -DOPENBLT_CAN_TX_PORT=GPIOG
+DDEFS += -DOPENBLT_CAN_TX_PIN=1
+DDEFS += -DBOOT_BACKDOOR_ENTRY_TIMEOUT_MS=1000
 
 # Software knock: the board has a dedicated knock input (connector AA3 ->
 # onboard conditioner -> PA0 = ADC1 IN0). ADC1 is shared with the slow
