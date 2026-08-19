@@ -3920,3 +3920,62 @@ Follow-ups:
   first sample rejected with m_function == nullptr) and is replayed by
   the console on every USB reconnect - not a recurring fault. Cosmetic
   fix candidate: skip the warning until the converter is attached.
+
+## 2026-08-19 - m74_9: OpenBLT bootloader over CAN
+
+Goal: flash firmware from the car without JTAG/SWD. Implemented OpenBLT
+(32 KB @ 0x08000000) with XCP-over-CAN transport (CAN1 500 kbps, XCP
+msg IDs 0x667 TX / 0x7E1 RX), matching the standard rusEFI OpenBLT setup
+(java_console/bin/blt_can.bat uses the same IDs).
+
+Firmware changes (commit 118e23d081b):
+- AT32F435ZMxx.ld got the STM32F4-style bootloader layout: bl region,
+  flash_start = 32 KB offset under HAS_BOOTLOADER, 16-byte OpenBLT
+  shared RAM params (.bl/.shared sections). Guard pages are off on AT32,
+  so the F7-style 32-byte alignment requirement does not apply here.
+- bootloader/Makefile INCDIR: BOARDINC now precedes ALLINC - with the
+  old order config/stm32f4ems/efifeatures.h (EFI_USB_SERIAL=TRUE) won
+  over the board's own header and pulled the STM32 USB LLD into the
+  AT32 build ("USB driver activated but no USB peripheral assigned").
+- openblt_usb.cpp guarded by EFI_USB_SERIAL; m74_9 disables the RS232
+  transport (BOOT_COM_RS232_ENABLE=0 - the rusEFI RS232 layer is
+  USB-CDC-only) and sets the CAN pins: PG0 RX / PG1 TX, channel 0,
+  backdoor timeout 1000 ms.
+- The board's runtime C++ sources are excluded from the bootloader
+  (board_configuration/m74_9_can/m74_9_tooth_diag/board_storage drag in
+  sensors+engine+MFS); a minimal board_bootloader.cpp provides boardInit
+  and the LED pins. board.c (__early_init, GPIO/clock) stays.
+- New hw_layer/ports/at32/at32f4/flash_int.cpp: intFlash*/flashSizeKb on
+  the ChibiOS EFL driver (EFLD1 bank 1, 4 KB uniform sectors, async
+  erase via start/query) - the STM32 register-based flash_int.cpp does
+  not exist on AT32; the EFL driver is the same one MFS settings storage
+  uses on this chip.
+- App side: jump_to_openblt() in at32_common.cpp now compiles (extern "C"
+  shared_params.h include, same pattern as stm32_common.cpp); canOpenBLT
+  = yes in 21129.msq - the running app watches the OpenBLT RX ID and
+  jumps to the bootloader when the host starts an XCP session, so
+  flashing from the car needs no console at all.
+
+Host tooling: BootCommander/libopenblt builds with NO_CAN_OR_USB on
+macOS, so the CAN host tool needs Windows (PCANBasic + BootCommander,
+blt_can.bat) or a Mac CAN flasher (the console already links MacCAN for
+mcp_can - a Java XCP-over-CAN flasher is the natural follow-up).
+
+Build fixes along the way: hex2dfu submodule bumped to the -b (binary
+output) commit and hex2dfu.mac rebuilt (the old binary predates -b and
+bundle.mk uses it); DEVICE_BIN_FOLDER in bundle.mk is .FORCE now - its
+parent is rm -rf'd by the .FORCE BIN_FOLDER rule on every bundle run,
+which broke the openblt bundle symlink on re-runs.
+
+Verified: deliver/rusefi.bin = bootloader + app merged by hex2dfu
+(SP/reset vectors at 0x0 and 0x8000, app CRC + size at 0x801C,
+'BL09' stamped at 0x24, BLT_CURRENT_VERSION 0x39304C42 matches the
+stamping script). Bootloader itself: 13.3 KB flash / 32 KB region.
+Unit tests 1138/1138 pass.
+
+On-car procedure: flash deliver/rusefi.bin once via ST-Link (do NOT
+flash app-only images with openocd afterwards - a full erase kills the
+bootloader); burn the msq (canOpenBLT=yes); then updates via
+BootCommander over PCAN with rusefi_..._update.srec. Risk to verify on
+the car: the CAN transceiver must stay powered/active while the
+bootloader runs (no enable pin in the tune - likely always-on).
