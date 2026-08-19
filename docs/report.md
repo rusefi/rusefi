@@ -4338,3 +4338,45 @@ Follow-ups:
   catch - the syncByPositionWhileCranking override path would then need a
   catch-specific time exemption; verify with a catch log.
 - ETB autograb one-direction issue still deferred.
+
+## 2026-08-19 - m74_9: sync-gap hardening (round 2) - the 23:43 log
+
+What: the 23:43 log (with the 25%-elapsed-time gate flashed) still showed
+syncCtr ~2.7x the crank rate (+11 over ~4 crank revolutions at 251-268 rpm,
+revCtr +5 over ~2 engine cycles) and one C6728 VVT phase jump of -170.8 deg
+(the cam drift net catching a big phase shift). Conclusion: storms that land
+late in the revolution pass the 25% elapsed-time gate, and a second hole was
+found in the sync-by-position override.
+
+Two more gates, board opt-in via custom_board_syncGapHardening (m74_9 true):
+- Real-tooth-before-the-gap: the tooth immediately before a sync candidate
+  must have a period >= 1/4 of the previous revolution's mean tooth time.
+  The real gap always follows a REAL tooth (compression ripple 0.6-1.4x,
+  never below a quarter); a storm-inflated candidate follows a storm edge
+  (hundreds of us vs ~4 ms at cranking) regardless of WHERE the storm sits.
+  This closes the late-rev storm hole the elapsed-time gate could not reach.
+- Override ratio floor 1.2: the sync-by-position skip previously accepted
+  ANY failing ratio at count == expected, including a trailing VR ringing
+  edge 250 us after the last real tooth (ratio ~0.07) - silently syncing
+  one tooth early. The physical gap is 3 tooth slots and cannot compress
+  below ~1.2 even at the hardest catch, so ratios below 1.2 are noise.
+
+Both gates are board opt-in because generic wheels trip them on legitimate
+gaps: realCrankingNB2/realk20 replay logs (extreme per-tooth cranking
+variation), subaru.overrideGap (legitimate sub-1.2 override), and the
+AllTriggers fixture all failed when the gates were applied unconditionally -
+the opt-in restores them (1149/1149).
+
+New test: crankingTransition60_2RealCarProfileTrailingNoiseEdgeNotAccepted
+(trailing ringing edge at count 58, ratio 0.07 - must be rejected, then the
+real gap errors with count 59 and the decoder recovers).
+
+Validation: unit tests 1149/1149 GCC + clang; m74_9 built and flashed over
+CAN (checksum verified).
+
+Follow-ups:
+- Next crank attempt: expect syncCtr ~1/rev (~4.3/s at 260 rpm) and revCtr
+  ~1/cycle (~2.1/s). C9002 storms are now possible and expected when noise
+  inflates a revolution - each one forces the validated-sync recovery, which
+  is the correct visible behavior.
+- ETB autograb one-direction issue still deferred.
