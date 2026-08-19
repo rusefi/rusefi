@@ -3882,3 +3882,41 @@ Tests: cam drift (stable phase no-fire, 30-deg jump warns + desyncs,
 re-syncs); compressed 1.4x gap accepted while cranking, rejected above
 2 * crankingRpm; stretched 4.2x kick accepted while cranking. 1138/1138
 pass. Committed 4714f5071c5 + dbcc6162c3c.
+
+## 2026-08-19 - m74_9: ETB autocal overcurrent trip + TPS zero offset
+
+On-car session (Lada 21129): with cranking_rpm 500 and etbIdleThrottleRange
+2% the engine catches cleanly (sync in ~1 revolution, no trigger errors,
+MAP drops 97.9 -> 75.3 kPa at 260 rpm with the throttle at its stop).
+
+Two findings:
+
+1. The TPS zero is offset from the mechanical stop: during the autocal
+   grab the plate parks at -0.4% on the current scale, i.e. the true
+   closed position is -0.4% and a 1.0% reading is physically 1.4% open.
+   With tpsMin=4.5 V / tpsMax=0.37 V (span 4.13 V) the stop sits at
+   ~4.517 V. The grab could not fix this because it never completed.
+
+2. The grab aborts on TLE9201 overcurrent shutdown (diag 0xCF, CL bit):
+   the autocal Close phase holds -50% duty against the closed stop for
+   the full 1 s; the stalled motor trips the chip's protection.
+
+Fix (7b36dccd370): the autocal Close phase now detects the stop from the
+frozen primary TPS reading (5 mV per 500 Hz loop, 50 ms minimum) and
+captures immediately instead of holding duty into the stop - no stall,
+no fault. The 1 s timeout remains as a fallback for slow throttles, so
+slow boards keep the old behavior exactly.
+
+Build: m74_9 firmware OK. Unit tests 1138/1138 pass.
+
+Follow-ups:
+- Re-run the ETB grab on the car: it should now complete and set
+  tpsMin/tps1SecondaryMin so the stop reads 0% (both sensors).
+- Manual alternative without reflashing: tpsMin 4.50 -> 4.517 V and
+  tps1SecondaryMin 4.51 -> 4.517 V in TS; then targets near 0% command
+  the plate truly closed (0.4% more closure for every target).
+- C6899 "Invalid MAP at 3.52" is a one-time boot artifact (fast ADC
+  starts in initAdcInputs before initMap attaches the MAP converter;
+  first sample rejected with m_function == nullptr) and is replayed by
+  the console on every USB reconnect - not a recurring fault. Cosmetic
+  fix candidate: skip the warning until the converter is attached.
