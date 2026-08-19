@@ -58,6 +58,18 @@ public class CalibrationsHelper {
      *  (no live ECU to read pre-flash like the auto path does). [tag:better_ux_for_flashing] */
     private static volatile Optional<CalibrationsInfo> lastEcuCalibrations = Optional.empty();
 
+    public static void discardLastEcuCalibrations() {
+        lastEcuCalibrations = Optional.empty();
+    }
+
+    static void setLastEcuCalibrationsForUnitTest(Optional<CalibrationsInfo> calibrations) {
+        lastEcuCalibrations = calibrations;
+    }
+
+    static boolean hasLastEcuCalibrationsForUnitTest() {
+        return lastEcuCalibrations.isPresent();
+    }
+
     public enum FirmwareUpdatePolicy {
         FORWARD_MIGRATION,
         ROLLBACK_RESTORE_OR_RESET

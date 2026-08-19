@@ -864,6 +864,8 @@ public class Autoupdate {
         if (entry.isDirectory())
             return false;
         String lower = entry.getName().toLowerCase();
+        if (lower.contains("/") || lower.contains("\\"))
+            return false;
         return lower.endsWith(".srec") || lower.endsWith(".hex")
             || lower.endsWith("rusefi.bin") || lower.endsWith("openblt.bin")
             // "rusefi_" (underscore) excludes rusefi-obfuscated.bin
