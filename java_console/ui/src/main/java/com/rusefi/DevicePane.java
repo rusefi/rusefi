@@ -49,7 +49,7 @@ public class DevicePane {
     public DevicePane(final UIContext uiContext, final ConnectivityContext connectivityContext,
                       final DeviceSessionManager sessionManager, final JTabbedPane tabbedPane,
                       final SingleAsyncJobExecutor jobExecutor, final StatusPanelWithProgressBar statusPanel,
-                      final Consumer<JComponent> showRollbackPicker, final Runnable closeRollbackPicker) {
+                      final Consumer<JComponent> showFullScreenPanel, final Runnable closeFullScreenPanel) {
         this.connectivityContext = connectivityContext;
         this.sessionManager = sessionManager;
         this.tabbedPane = tabbedPane;
@@ -61,7 +61,8 @@ public class DevicePane {
         // well as the DFU/OpenBLT bootloader states), so no separate job-executor listeners are needed.
         sessionManager.setJobExecutor(jobExecutor);
 
-        this.selector = new ProgramSelector(connectivityContext, comboPorts);
+        this.selector = new ProgramSelector(
+            connectivityContext, comboPorts, showFullScreenPanel, closeFullScreenPanel);
         selector.setJobExecutor(jobExecutor);
         selector.setLinkManager(uiContext.getLinkManager());
         rollbackController = new FirmwareRollbackController(
@@ -71,8 +72,8 @@ public class DevicePane {
             () -> Optional.ofNullable((PortResult) comboPorts.getSelectedItem()),
             () -> sessionManager.getState() == SessionState.CONNECTED,
             this::refreshFirmwareControls,
-            showRollbackPicker,
-            closeRollbackPicker);
+            showFullScreenPanel,
+            closeFullScreenPanel);
         rollbackController.setLinkManager(uiContext.getLinkManager());
         selector.setFirmwareUpdateInterceptor(rollbackController::startLatestUpdate);
         selector.setExternalBusySupplier(rollbackController::isBusy);

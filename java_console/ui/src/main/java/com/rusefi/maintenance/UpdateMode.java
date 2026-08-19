@@ -12,6 +12,7 @@ public enum UpdateMode {
     OPENBLT_CAN("OpenBLT via CAN"),
     OPENBLT_MANUAL("Manual OpenBLT Update"),
     OPENBLT_AUTO("Auto OpenBLT Update"),
+    OPENBLT_EMERGENCY_WIPE("EMERGENCY WIPE INTERNAL FLASH"),
     DFU_ERASE("Full DFU Erase");
 
     /***
