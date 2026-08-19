@@ -280,7 +280,12 @@ static Timer dashAliveTimer;
 	handleWidebandCan(busIndex, frame);
 #if EFI_USE_OPENBLT
 #include "openblt/efi_blt_ids.h"
-	if ((CAN_SID(frame) == BOOT_COM_CAN_RX_MSG_ID) && (frame.DLC == 2)) {
+	/* BOOT_COM_CAN_RX_MSG_ID encodes the 29-bit identifier with bit 31 set when the
+	 * bootloader uses an extended (29-bit) frame. Normalize the received frame the
+	 * same way before comparing: a plain 11-bit SID comparison never matches the
+	 * extended default and the jump-to-bootloader trigger silently never fires. */
+	uint32_t frameId = CAN_ISX(frame) ? (CAN_EID(frame) | 0x80000000u) : CAN_SID(frame);
+	if ((frameId == BOOT_COM_CAN_RX_MSG_ID) && (frame.DLC == 2)) {
 		/* TODO: graceful shutdown? */
 		// todo: kill the unused (?) openblt option #9733?
 		if (((busIndex == 0) && (engineConfiguration->canOpenBLT)) ||
