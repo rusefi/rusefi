@@ -39,6 +39,7 @@ public class OpenBltCanFlasher {
         boolean verify = true;
         boolean reset = true;
         boolean probeOnly = false;
+        boolean verbose = false;
         Path srecPath;
     }
 
@@ -82,7 +83,8 @@ public class OpenBltCanFlasher {
             link.open();
 
             XcpClient xcp = new XcpClient(link, XcpConstants.TX_ID, XcpConstants.EXTENDED,
-                    XcpConstants.RX_ID, XcpConstants.COMMAND_TIMEOUT_MS);
+                    XcpConstants.RX_ID, XcpConstants.COMMAND_TIMEOUT_MS,
+                    cfg.verbose ? listener::log : null);
             listener.log(String.format("XCP over CAN: host TX 0x%03X ext, ECU TX 0x%03X ext, 500 kbps",
                     XcpConstants.TX_ID, XcpConstants.RX_ID));
 
@@ -91,7 +93,11 @@ public class OpenBltCanFlasher {
             if (connect == null) {
                 throw new FlashException("No response from bootloader within "
                         + cfg.connectTimeoutSec + " s. Is the ECU powered? Is the CAN adapter connected "
-                        + "and terminated? Is canOpenBLT=yes (or power-cycle the ECU while the tool runs)?");
+                        + "and terminated?\n"
+                        + "  - with the new firmware (canOpenBLT trigger) the bootloader answers by itself;\n"
+                        + "  - with older firmware: POWER-CYCLE the ECU (ignition off/on) WHILE this tool is running "
+                        + "- the bootloader listens for 1 s after reset.\n"
+                        + "  - rerun with --verbose to see whether any CAN traffic arrives at all.");
             }
             if (!connect.isOk()) {
                 throw new FlashException("Bootloader rejected CONNECT: " + connect);
@@ -319,6 +325,7 @@ public class OpenBltCanFlasher {
                 case "--no-verify" -> cfg.verify = false;
                 case "--no-reset" -> cfg.reset = false;
                 case "--probe" -> cfg.probeOnly = true;
+                case "--verbose" -> cfg.verbose = true;
                 default -> {
                     if (args[i].startsWith("-")) {
                         System.err.println("Unknown option: " + args[i]);
@@ -366,6 +373,7 @@ public class OpenBltCanFlasher {
                   --no-verify            skip the post-program checksum verification
                   --no-reset             do not start the new firmware after programming
                   --probe                connect and print bootloader info, do not flash
+                  --verbose              log every sent/received CAN frame
 
                 The default firmware path is firmware/build/rusefi.srec.
 
