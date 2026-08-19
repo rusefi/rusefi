@@ -108,6 +108,21 @@ TEST(trigger, crankingTransition60_2Acceleration) {
 }
 
 /**
+ * Fire one revolution with one tooth missing (57 teeth instead of 58): the
+ * gap is then checked with count 57 -> C9003 -> desync. This is the signature
+ * of a real missed-tooth event that kicks off a desync -> re-sync storm.
+ */
+static void fire60_2RevolutionMissingTooth(EngineTestHelper& eth, float slotMs, float gapRatio) {
+	for (int i = 0; i < 57; i++) {
+		eth.fireRise(slotMs / 2);
+		eth.fireFall(slotMs / 2);
+	}
+
+	// trailing wait: the next call's first rise lands gapRatio * slotMs after tooth 56's rise
+	eth.moveTimeForwardUs(MS2US((gapRatio - 1.0f) * slotMs));
+}
+
+/**
  * Fire one revolution with a distorted tooth pair mid-revolution - the
  * signature of a misfire-induced crank wobble on a running engine.
  * At tooth (pos+1)'s rise the decoder sees gap0 = distRatio and
@@ -337,21 +352,27 @@ TEST(trigger, crankingTransition60_2CompressedGapRejectedWhenRunning) {
 struct ObservedFalseSyncPair {
 	float gap0;
 	float gap1;
+	// crank tooth index of the pair, from the newerr TRG eventIndex (mod 58).
+	// Informational: any mid-rev position exercises the same gate, the
+	// decoder rejects the pair regardless.
+	int position;
 };
 
 static const ObservedFalseSyncPair observedFalseSyncPairs[] = {
-	// rpm=290, tooth 47, 20:48 session, window was 1.6-4.199
-	{1.948f, 1.372f},
-	// rpm=292, tooth 30, 22:22 session (cam disabled), gap0 looks like the real gap
-	{3.333f, 1.022f},
-	// rpm=331, tooth 16, 20:29 session
-	{1.735f, 1.295f},
-	// rpm=369, tooth 13, 20:48 session
-	{2.776f, 1.274f},
-	// rpm=402, tooth 41, 22:11 first start attempt
-	{2.476f, 1.284f},
-	// rpm=408, tooth 16, 20:48 session, gap0 below window - ratio-rejected
-	{1.494f, 1.252f},
+	// rpm=290, 20:48 session, eventIndex=94 (window 1.6-4.199)
+	{1.948f, 1.372f, 36},
+	// rpm=292, 22:22 session (cam disabled), eventIndex=60 - gap0 looks like the real gap
+	{3.333f, 1.022f, 2},
+	// rpm=331, 20:29 session, eventIndex=32
+	{1.735f, 1.295f, 32},
+	// rpm=369, 20:48 session, eventIndex=13
+	{2.776f, 1.274f, 13},
+	// rpm=402, 22:11 first start attempt, eventIndex=41
+	{2.476f, 1.284f, 41},
+	// rpm=408, 20:48 session, eventIndex=16, gap0 below window - ratio-rejected
+	{1.494f, 1.252f, 16},
+	// rpm=265, 18:03 session, eventIndex=22 - gap0 above the 3.75 window, ratio-rejected
+	{3.913f, 1.328f, 22},
 };
 
 TEST(trigger, crankingTransition60_2AllObservedFalseSyncPairsRejected) {
@@ -372,9 +393,9 @@ TEST(trigger, crankingTransition60_2AllObservedFalseSyncPairsRejected) {
 		const auto& pair = observedFalseSyncPairs[i];
 		size_t warningsBefore = getRecentWarnings()->getCount();
 
-		// one revolution with the observed pair at a mid-rev position, then a
+		// one revolution with the observed pair at its logged position, then a
 		// clean revolution so the real gap gets checked
-		fire60_2RevolutionWithDistortedTeethAt(eth, steadySlotMs, /*pos*/24, pair.gap1, pair.gap0, /*gapRatio*/3.0f);
+		fire60_2RevolutionWithDistortedTeethAt(eth, steadySlotMs, pair.position, pair.gap1, pair.gap0, /*gapRatio*/3.0f);
 		fire60_2Revolution(eth, steadySlotMs, 3.0f);
 
 		ASSERT_EQ(warningsBefore, getRecentWarnings()->getCount())
@@ -409,7 +430,9 @@ TEST(trigger, crankingTransition60_2RandomMidRevPairsNeverDesync) {
 	std::uniform_real_distribution<float> prevDist(0.85f, 1.40f);
 	std::uniform_real_distribution<float> distDist(1.45f, 4.30f);
 
-	for (int i = 0; i < 50; i++) {
+	uint32_t counterBefore = engine->rpmCalculator.getRevolutionCounterSinceStart();
+
+	for (int i = 0; i < 200; i++) {
 		int pos = posDist(gen);
 		float prevRatio = prevDist(gen);
 		float distRatio = distDist(gen);
@@ -425,4 +448,80 @@ TEST(trigger, crankingTransition60_2RandomMidRevPairsNeverDesync) {
 			<< "still synchronized through random pair #" << i << " pos=" << pos
 			<< " gap0=" << distRatio << " gap1=" << prevRatio;
 	}
+
+	// Every revolution in the sweep was clean, so the revolution counter
+	// advanced exactly once per engine cycle (2 revolutions): no false sync
+	// may have raced it ahead.
+	uint32_t counterAfter = engine->rpmCalculator.getRevolutionCounterSinceStart();
+	EXPECT_EQ(200, counterAfter - counterBefore)
+		<< "revolution counter must track real engine cycles through the sweep";
+}
+
+/**
+ * The desync -> re-sync storm the m74_9 car sees during cranking chaos:
+ * a missed tooth desyncs the decoder (C9003), a false gap pair re-syncs it
+ * mid-revolution (the position gate is bypassed while unsynchronized), and
+ * the real gap then fires another count mismatch. None of those syncs is a
+ * validated crank revolution, so the revolution counter must not advance at
+ * all during the storm - it raced ~2x ahead of real time before the
+ * clean-sync guard, fast-forwarding ASE and the cranking fuel table.
+ */
+TEST(trigger, crankingTransition60_2DesyncResyncStormDoesNotRaceRevolutionCounter) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	SyncByPositionWhileCrankingScope syncSkip;
+	// the user's m74_9 runs the 60-2 wheel on the crank
+	setCrankOperationMode();
+	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
+
+	// the car's cam setup: single-tooth cam with the phase drift cross-check
+	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
+	engineConfiguration->engineSyncCam = 0;
+	engineConfiguration->vvtOffsets[0] = 0;
+	custom_board_vvtDriftLimit = []() { return 15.0f; };
+	// the override global persists across tests in this binary - clean up
+	struct ResetOverride {
+		~ResetOverride() { custom_board_vvtDriftLimit = std::nullopt; }
+	} resetOverride;
+
+	// steady revolutions to synchronize, then establish the cam phase reference
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized()) << "crank synced";
+	hwHandleVvtCamSignal(true, getTimeNowNt(), 0);
+
+	uint32_t counterBefore = engine->rpmCalculator.getRevolutionCounterSinceStart();
+
+	// one storm episode: missed tooth -> C9003 desync -> false pair re-sync ->
+	// real gap with a count mismatch -> C9003 desync again. Four revolutions
+	// are driven in total - at most two honest engine cycles.
+	fire60_2RevolutionMissingTooth(eth, steadySlotMs, 3.0f);
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+	ASSERT_FALSE(engine->triggerCentral.triggerState.getShaftSynchronized()) << "desynced by the missed tooth";
+
+	fire60_2RevolutionWithDistortedTeethAt(eth, steadySlotMs, /*pos*/24, /*prevRatio*/1.284f, /*distRatio*/2.476f, /*gapRatio*/3.0f);
+	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized()) << "false pair re-synced mid-rev";
+
+	// the cam arrives: either the drift check forces a desync or the phase
+	// reference is re-established - both leave the counter untouched
+	hwHandleVvtCamSignal(true, getTimeNowNt(), 0);
+
+	// one clean revolution: the real gap either fires a count mismatch
+	// (C9003 desync) or re-syncs the decoder
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+
+	// The storm's false syncs must not race the revolution counter ahead of
+	// the real revolutions driven (4 revolutions = 2 engine cycles max).
+	EXPECT_LE(engine->rpmCalculator.getRevolutionCounterSinceStart() - counterBefore, 2)
+		<< "false syncs raced the revolution counter";
+
+	// recovery: clean revolutions count again, once per engine cycle
+	uint32_t counterAtRecovery = engine->rpmCalculator.getRevolutionCounterSinceStart();
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+	EXPECT_GT(engine->rpmCalculator.getRevolutionCounterSinceStart(), counterAtRecovery)
+		<< "counter must resume on validated revolutions";
+	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized()) << "re-synced after the storm";
 }

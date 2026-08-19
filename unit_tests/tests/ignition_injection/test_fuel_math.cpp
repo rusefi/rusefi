@@ -496,6 +496,12 @@ TEST(FuelMath, postCrankingFactorAxis){
 	}
 	setLinearCurve(config->postCrankingCLTBins, /*from*/-20, /*to*/80, 20);
 	setLinearCurve(config->postCrankingDurationBins, /*from*/0, /*to*/150, 40);
+	// setLinearCurve's 4th arg is a rounding precision, so the first interval is not
+	// guaranteed to be wide enough for revolutionCounter=30 to land between columns 0
+	// and 1 (the two columns forced to 1 below). Pin the first interval to [0, 40]
+	// explicitly - the rest of the axis is irrelevant for these assertions.
+	config->postCrankingDurationBins[0] = 0;
+	config->postCrankingDurationBins[1] = 40;
 	setTable(config->postCrankingFactor, 5);
 
 	config->postCrankingFactor[0][0] = 1;
@@ -509,6 +515,62 @@ TEST(FuelMath, postCrankingFactorAxis){
 	Sensor::setMockValue(SensorType::Clt, 70);
 	engine->periodicFastCallback();
 	EXPECT_NEAR(engine->fuelComputer.running.postCrankingFuelCorrection, 5, EPS3D);
+}
+
+/**
+ * The revolution counter drives the ASE and cranking-cycle tables, so it must
+ * count REAL engine cycles only. A phase re-sync disturbs the cycle boundary
+ * (the RPM sample from that cycle is discarded, see #9779 double-RPM fix),
+ * and the counter must skip the same cycle. On m74_9 the unguarded counter
+ * raced ahead of real time during cranking false-sync storms while RPM held
+ * steady - ASE and the cranking fuel table were fast-forwarded.
+ */
+TEST(RpmCalculator, revolutionCounterSkipsDisturbedCycle) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	efitick_t now = getTimeNowNt();
+
+	// Direct callback calls bypass the decoder: simulate validated crank
+	// revolutions (synced with the exact tooth count).
+	engine->triggerCentral.triggerState.lastSyncWasClean = true;
+
+	// clean cycle boundary: the counter ticks
+	rpmShaftPositionCallback(SHAFT_PRIMARY_RISING, 0, now);
+	EXPECT_EQ(1, engine->rpmCalculator.getRevolutionCounterSinceStart());
+
+	// a phase re-sync disturbs the next cycle boundary
+	engine->rpmCalculator.onEnginePhaseResync();
+
+	rpmShaftPositionCallback(SHAFT_PRIMARY_RISING, 0, now + US2NT(100'000));
+	EXPECT_EQ(1, engine->rpmCalculator.getRevolutionCounterSinceStart())
+		<< "disturbed cycle must not advance the revolution counter";
+
+	// the disturbance is consumed: the following cycle counts again
+	rpmShaftPositionCallback(SHAFT_PRIMARY_RISING, 0, now + US2NT(200'000));
+	EXPECT_EQ(2, engine->rpmCalculator.getRevolutionCounterSinceStart());
+}
+
+/**
+ * An unvalidated sync (first sync, re-sync after an error, or a false gap
+ * pair) must not advance the revolution counter: it does not prove a real
+ * crank revolution. On m74_9 false-sync storms raced the counter ~2x ahead
+ * of real time while RPM held steady.
+ */
+TEST(RpmCalculator, revolutionCounterIgnoresUnvalidatedSync) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	efitick_t now = getTimeNowNt();
+
+	// false sync (e.g. a mid-rev gap pair or a re-sync after an error)
+	engine->triggerCentral.triggerState.lastSyncWasClean = false;
+	rpmShaftPositionCallback(SHAFT_PRIMARY_RISING, 0, now);
+	EXPECT_EQ(0, engine->rpmCalculator.getRevolutionCounterSinceStart())
+		<< "unvalidated sync must not advance the revolution counter";
+
+	// a validated revolution counts again
+	engine->triggerCentral.triggerState.lastSyncWasClean = true;
+	rpmShaftPositionCallback(SHAFT_PRIMARY_RISING, 0, now + US2NT(100'000));
+	EXPECT_EQ(1, engine->rpmCalculator.getRevolutionCounterSinceStart());
 }
 
 // flexCranking selects the cranking coolant-multiplier source: the 1D crankingFuelCoef curve when off

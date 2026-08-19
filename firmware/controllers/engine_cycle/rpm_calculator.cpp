@@ -353,7 +353,18 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 			engine->triggerCentral.instantRpm.movePreSynchTimestamps();
 		}
 
-		rpmState->onNewEngineCycle();
+		// The revolution counter drives the ASE and cranking-cycle tables, so it
+		// must count REAL engine cycles only. Two guards:
+		//  - a disturbed cycle boundary is not a real cycle (a phase re-sync
+		//    shifted it): its RPM sample is discarded by the guard above, and
+		//    the counter must skip the same cycle;
+		//  - only a sync with the exact expected tooth count proves a real
+		//    crank revolution - false gap pairs mid-revolution always have a
+		//    count mismatch. On m74_9 the false-sync storms raced the counter
+		//    ~2x ahead of real time while RPM held steady.
+		if (!cyclePeriodDisturbed && engine->triggerCentral.triggerState.lastSyncWasClean) {
+			rpmState->onNewEngineCycle();
+		}
 	}
 
 
