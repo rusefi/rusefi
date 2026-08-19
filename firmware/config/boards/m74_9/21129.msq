@@ -4472,7 +4472,7 @@
         <constant name="tps1_1AdcChannel">"ETB TPS position sensor 1 signal"</constant>
         <constant name="tps1_2AdcChannel">"ETB TPS position sensor 2 signal"</constant>
         <constant digits="2" name="tps1SecondaryMax" units="V">4.51</constant>
-        <constant digits="2" name="tps1SecondaryMin" units="V">0.49</constant>
+        <constant digits="2" name="tps1SecondaryMin" units="V">0.474</constant>
         <constant name="tps2_1AdcChannel">"NONE"</constant>
         <constant name="tps2_2AdcChannel">"NONE"</constant>
         <constant digits="2" name="tps2Max" units="V">5.0</constant>
@@ -4488,7 +4488,7 @@
         <constant digits="0" name="tpsErrorDetectionTooHigh" units="%">110</constant>
         <constant digits="0" name="tpsErrorDetectionTooLow" units="%">-10</constant>
         <constant digits="2" name="tpsMax" units="V">0.37</constant>
-        <constant digits="2" name="tpsMin" units="V">4.5</constant>
+        <constant digits="2" name="tpsMin" units="V">4.517</constant>
         <constant digits="1" name="tpsSecondaryMaximum" units="%">0.0</constant>
         <constant cols="1" digits="2" name="tpsTpsAccelFromRpmBins" rows="8" units="%">
          0.0
