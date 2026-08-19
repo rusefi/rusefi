@@ -996,17 +996,16 @@ static void fire60_2RealCarRevolutionWithTrailingNoiseEdge(EngineTestHelper& eth
 		eth.moveTimeForwardUs(MS2US(riseToRiseUs / 1000.0f / 2));
 	}
 
-	// tooth 57: its fall sits 1/3 into the gap, then a ringing edge 250 us
-	// after the fall (the 58th event: count matches, ratio ~0.07)
+	// tooth 57: a ringing edge 250 us after its RISE (the 58th event: count
+	// matches, ratio ~0.08 - the gap-tooth time from the previous rise)
 	float gapUs = carProfileUs[57] * scale;
 	eth.firePrimaryTriggerRise();
-	eth.moveTimeForwardUs(MS2US(gapUs / 1000.0f / 3));
-	eth.firePrimaryTriggerFall();
 	eth.moveTimeForwardUs(250);
 	eth.firePrimaryTriggerRise();
 
-	// finish the gap: the next revolution's first rise lands gapUs after tooth 57's rise
-	eth.moveTimeForwardUs(MS2US((gapUs - gapUs / 3 - 250.0f) / 1000.0f));
+	// finish the tooth fall and the gap: the next revolution's first rise
+	// lands gapUs after tooth 57's rise
+	eth.moveTimeForwardUs(MS2US((gapUs - 250.0f) / 1000.0f));
 }
 
 TEST(trigger, crankingTransition60_2RealCarProfileTrailingNoiseEdgeNotAccepted) {
@@ -1025,23 +1024,64 @@ TEST(trigger, crankingTransition60_2RealCarProfileTrailingNoiseEdgeNotAccepted) 
 	uint32_t counterBefore = engine->rpmCalculator.getRevolutionCounterSinceStart();
 	size_t warningsBefore = getRecentWarnings()->getCount();
 
-	// the trailing noise edge must not be accepted as the sync point; the
-	// real gap then arrives with count 59 -> one proper error + desync
+	// the trailing noise edge must not be accepted as the sync point: the
+	// ratio floor rejects it and its index overflows the wheel -> one proper
+	// C9002 + desync at the noise edge itself. The next revolution's gap has
+	// an absurd ratio (gap/250us) and cannot re-sync; the one after that
+	// re-syncs (unvalidated - the count was inflated), and only the cycle
+	// after that is validated again.
 	fire60_2RealCarRevolutionWithTrailingNoiseEdge(eth, carProfileCrankingScale);
-	fire60_2RealCarRevolution(eth, carProfileCrankingScale);
-
 	ASSERT_EQ(warningsBefore + 1, getRecentWarnings()->getCount()) << "the noise edge desyncs once";
 	ASSERT_FALSE(engine->triggerCentral.triggerState.getShaftSynchronized())
-		<< "desynced by the inflated count at the real gap";
+		<< "desynced by the wheel index overflow at the noise edge";
 
-	// recovery: re-sync (validated - the revolution was clean), then a cycle
+	fire60_2RealCarRevolution(eth, carProfileCrankingScale);
+	ASSERT_FALSE(engine->triggerCentral.triggerState.getShaftSynchronized())
+		<< "the absurd gap ratio cannot re-sync the decoder";
+
+	// recovery: the next revolution's gap re-syncs (unvalidated), then a
+	// full clean cycle validates again
 	fire60_2RealCarRevolution(eth, carProfileCrankingScale);
 	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized());
 	EXPECT_EQ(0, engine->triggerCentral.triggerState.getSynchronizationCounter());
-	EXPECT_EQ(counterBefore + 1u, engine->rpmCalculator.getRevolutionCounterSinceStart());
+	EXPECT_EQ(counterBefore, engine->rpmCalculator.getRevolutionCounterSinceStart());
 
 	fire60_2RealCarRevolution(eth, carProfileCrankingScale);
 	fire60_2RealCarRevolution(eth, carProfileCrankingScale);
 	EXPECT_EQ(2, engine->triggerCentral.triggerState.getSynchronizationCounter());
-	EXPECT_EQ(counterBefore + 2u, engine->rpmCalculator.getRevolutionCounterSinceStart());
+	EXPECT_EQ(counterBefore + 1u, engine->rpmCalculator.getRevolutionCounterSinceStart());
+}
+
+/**
+ * The first-combustion catch compresses the REAL gap below 1.2 (the m74_9
+ * 00:05 log showed exactly this: the gap was rejected, the decoder counted a
+ * full revolution and fired C9002 "expected 58 got 58" right as the engine
+ * caught - and died). The sync-by-position override floor must sit BELOW any
+ * physical gap compression: the gap spans 3 tooth slots and cannot compress
+ * below ~1.0 even with absurd acceleration, so a 0.8 floor accepts the catch
+ * (ratio 1.0 here) while the trailing-noise case (0.07) stays rejected.
+ */
+TEST(trigger, crankingTransition60_2CatchGapBelow1_2AcceptedWithHardening) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	SyncByPositionWhileCrankingScope syncSkip;
+	SyncGapHardeningScope hardening;
+	// the user's m74_9 runs the 60-2 wheel on the crank
+	setCrankOperationMode();
+	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
+
+	// steady revolutions to synchronize
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+	ASSERT_EQ(0u, getRecentWarnings()->getCount()) << "no warnings while cranking steadily";
+	ASSERT_EQ(1, engine->triggerCentral.triggerState.getSynchronizationCounter());
+
+	// the catch: the gap compresses to 1.0x (below the ratio window and below
+	// the old 1.2 floor) - the override must accept it
+	fire60_2Revolution(eth, steadySlotMs, /*gapRatio*/1.0f);
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+
+	ASSERT_EQ(0u, getRecentWarnings()->getCount()) << "no C9002 at the catch";
+	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized()) << "sync survives the catch";
+	ASSERT_EQ(3, engine->triggerCentral.triggerState.getSynchronizationCounter());
 }

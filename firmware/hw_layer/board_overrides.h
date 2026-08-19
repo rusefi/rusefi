@@ -220,9 +220,10 @@ extern std::optional<setup_custom_bool_type> custom_board_syncByPositionWhileCra
 //  - the tooth immediately before the candidate must look like a real tooth
 //    (period >= 1/4 of the previous revolution's mean tooth time - a storm
 //    edge is a few hundred us vs ~4 ms at cranking);
-//  - the sync-by-position skip above only accepts gap ratios >= 1.2 (the
-//    physical gap is 3 tooth slots and cannot compress below that, so a
-//    shorter "gap" is a noise edge right after a real tooth).
+//  - the sync-by-position skip above only accepts gap ratios >= 0.8 (the
+//    physical gap is 3 tooth slots and cannot compress below ~1.0, so a
+//    shorter "gap" is a noise edge right after a real tooth; the observed
+//    m74_9 catch compressed the real gap below 1.2 - hence 0.8).
 // Default false: wheels with irregular tooth patterns or extreme cranking
 // variation would trip these on legitimate gaps.
 extern std::optional<setup_custom_bool_type> custom_board_syncGapHardening;

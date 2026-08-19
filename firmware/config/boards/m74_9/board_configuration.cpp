@@ -688,8 +688,10 @@ void setup_custom_board_overrides() {
 	// decoder cleanly (count matches, ratio occasionally in window). Extra
 	// gates: the tooth before the candidate must be a real tooth (>= 1/4 of
 	// the previous revolution's mean tooth time), and the sync-by-position
-	// skip only accepts gap ratios >= 1.2 (the gap is physically 3 tooth
-	// slots). See crankingTransition60_2RealCarProfileNoiseStormDoesNotFalseSync.
+	// skip only accepts gap ratios >= 0.8 (the gap is physically 3 tooth
+	// slots and cannot compress below ~1.0 even at the catch - the observed
+	// catch ratio went below 1.2 and a 1.2 floor rejected the real gap with
+	// a C9002). See crankingTransition60_2RealCarProfileNoiseStormDoesNotFalseSync.
 	custom_board_syncGapHardening = []() { return true; };
 	// Cam-phase continuity cross-check: the 21129 cam is belt-driven and fixed
 	// (no VVT phaser), so a crank-sync basis error shows up as a phase jump at
