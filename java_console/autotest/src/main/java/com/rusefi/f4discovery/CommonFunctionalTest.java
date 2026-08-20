@@ -30,7 +30,7 @@ import static org.junit.Assert.assertTrue;
 public class CommonFunctionalTest extends RusefiTestBase {
     @Test
     public void testChangingIgnitionMode() {
-        ecu.setEngineType(engine_type_e.FORD_ASPIRE_1996);
+        ecu.setEngineType(engine_type_e.MINIMAL_PINS);
         ecu.changeRpm(2000);
 
         // First is wasted spark
@@ -110,7 +110,10 @@ public class CommonFunctionalTest extends RusefiTestBase {
 
     @Test
     public void testRevLimiter() {
-        ecu.setEngineType(engine_type_e.FORD_ASPIRE_1996);
+        ecu.setEngineType(engine_type_e.MINIMAL_PINS);
+        // MINIMAL_PINS keeps the default engineSnifferRpmThreshold of 2500 while this test revs to 3000,
+        // and above the threshold the sniffer stops producing charts, so nextChart() would time out
+        ecu.sendCommand("set " + Integration.CMD_ENGINESNIFFERRPMTHRESHOLD + " 13000");
         ecu.changeRpm(2000);
 
         // Alpha-N mode so that we actually inject some fuel (without mocking tons of sensors)

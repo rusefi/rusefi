@@ -36,7 +36,7 @@ public class DiscoveryPwmHardwareTest extends RusefiTestBase {
 
     @Test
     public void scheduleBurnDoesNotAffectTriggerIssue2839() {
-        ecu.setEngineType(engine_type_e.FORD_ASPIRE_1996);
+        ecu.setEngineType(engine_type_e.MINIMAL_PINS);
         ecu.sendCommand(IoUtil.setTriggerType(com.rusefi.enums.trigger_type_e.TT_TOOTHED_WHEEL_60_2));
         ecu.sendCommand(getDisableCommand(Integration.CMD_SELF_STIMULATION));
         ecu.sendCommand(getEnableCommand(CMD_EXTERNAL_STIMULATION));
