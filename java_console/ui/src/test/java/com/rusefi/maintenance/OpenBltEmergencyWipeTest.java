@@ -136,9 +136,12 @@ class OpenBltEmergencyWipeTest {
     @Test
     void confirmationStatesDestructiveAndExternalStoragePolicy() throws IOException {
         String message = OpenBltWipeArtifact.loadAndValidate(signedPort(TARGET)).confirmationMessage();
-        assertTrue(message.contains("OpenBLT itself will be preserved"));
+        assertTrue(message.contains("permanently erase the ECU firmware and all internal settings"));
+        assertTrue(message.contains("remain in recovery mode"));
         assertTrue(message.contains("previous tune will not be restored"));
-        assertTrue(message.contains("External SPI/QSPI flash and SD card storage will not be erased"));
+        assertTrue(message.contains("SD card and external storage will not be erased"));
+        assertFalse(message.contains("MCU:"));
+        assertFalse(message.contains("KiB"));
     }
 
     @Test

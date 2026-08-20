@@ -190,12 +190,11 @@ public class OpenBltWipeArtifact {
     }
 
     public String confirmationMessage() {
-        return "Target: " + bundleTarget + " (OpenBLT " + bootloaderTarget + ")\n"
-            + "MCU: " + mcuFamily + ", internal flash: " + getFlashSizeKiB() + " KiB\n\n"
-            + "This will erase application firmware and all internal MCU configuration after OpenBLT.\n"
-            + "OpenBLT itself will be preserved, but the ECU will not run application firmware afterward.\n"
-            + "Run a normal Manual OpenBLT Update next; the previous tune will not be restored automatically.\n"
-            + "External SPI/QSPI flash and SD card storage will not be erased.";
+        return "ECU: " + bundleTarget + "\n\n"
+            + "This will permanently erase the ECU firmware and all internal settings, including the current tune.\n\n"
+            + "The ECU will remain in recovery mode and cannot run the engine until firmware is installed again.\n"
+            + "Next, run Manual OpenBLT Update. The previous tune will not be restored automatically.\n\n"
+            + "SD card and external storage will not be erased.";
     }
 
     private static class Profile {
