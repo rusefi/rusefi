@@ -683,8 +683,48 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 					engineConfiguration != nullptr &&
 #endif
 					Sensor::getOrZero(SensorType::Rpm) < 2 * engineConfiguration->cranking.rpm) {
-				isSynchronizationPoint = true;
-			}
+					isSynchronizationPoint = true;
+				}
+
+				// Raw-ratio early-gap acceptance (board opt-in via
+				// custom_board_syncEarlyGapWhileCranking, m74_9): a candidate
+				// arriving 1-2 events EARLY whose RAW (un-normalized) gap ratios
+				// pass the windows is the real gap. Ordinary teeth on this wheel
+				// never exceed ~1.4 even with the worst compression ripple (the
+				// learned profile spans 0.81-1.40), the windows start at 1.6 - so
+				// an ordinary tooth can never false-fire this. Two cases:
+				//  - 1-2 events lost between the gaps (L9779 analog swallowing),
+				//    the gap arrives at count expected-1/-2 with a normal ~2-3
+				//    ratio - accept it at the real gap position;
+				//  - the +1 phase-basis latch seeded by the count-58 bypass above
+				//    (compressed gap + lost event -> bypass accepted the tooth
+				//    AFTER the gap): with the shifted basis the profile
+				//    normalization applies the wrong slots' factors and can keep
+				//    the real gap out of the window forever (observed: a whole
+				//    crank latched 6 degrees off). The RAW gap ratio stays ~2-3
+				//    regardless of the slot belief, so this re-anchors the basis
+				//    within one revolution instead of letting the latch persist.
+				// The acceptance itself is the cranking-band count-deficit path
+				// below (countersError -1/-2), which keeps the sync validated.
+				if (!isSynchronizationPoint && !tooEarlyForSync && !previousToothNotReal && wasSynchronized && atExpectedGapPosition &&
+						get_board_override_result(custom_board_syncEarlyGapWhileCranking, false) &&
+						currentCycle.eventCount[(int)triggerWheel] + 2 >= triggerShape.getExpectedEventCount(triggerWheel) &&
+						currentCycle.eventCount[(int)triggerWheel] < triggerShape.getExpectedEventCount(triggerWheel) &&
+#if EFI_UNIT_TEST
+						// mock tests run the decoder with engineConfiguration = nullptr
+						engineConfiguration != nullptr &&
+#endif
+						Sensor::getOrZero(SensorType::Rpm) < 2 * engineConfiguration->cranking.rpm) {
+					float rawGap0 = 1.0f * toothDurations[0] / toothDurations[1];
+					bool rawGapOk = isInRange(triggerShape.synchronizationRatioFrom[0], rawGap0, triggerShape.synchronizationRatioTo[0]);
+					if (triggerShape.gapTrackingLength >= 2) {
+						float rawGap1 = 1.0f * toothDurations[1] / toothDurations[2];
+						rawGapOk = rawGapOk && isInRange(triggerShape.synchronizationRatioFrom[1], rawGap1, triggerShape.synchronizationRatioTo[1]);
+					}
+					if (rawGapOk) {
+						isSynchronizationPoint = true;
+					}
+				}
 
 			if (isSynchronizationPoint) {
 				enginePins.debugTriggerSync.toggle();

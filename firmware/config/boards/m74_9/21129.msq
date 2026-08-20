@@ -1357,7 +1357,7 @@
         <constant digits="2" name="gearRatio7" units="ratio">0.0</constant>
         <constant digits="2" name="gearRatio8" units="ratio">0.0</constant>
         <constant digits="2" name="gearRatio9" units="ratio">0.0</constant>
-        <constant digits="0" name="globalTriggerAngleOffset" units="deg btdc">114</constant>
+        <constant digits="0" name="globalTriggerAngleOffset" units="deg btdc">112</constant>
         <constant digits="0" name="gppwm1_dutyIfError" units="%">0</constant>
         <constant name="gppwm1_loadAxis">"Zero"</constant>
         <constant cols="1" digits="1" name="gppwm1_loadBins" rows="8" units="">
