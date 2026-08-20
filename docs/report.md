@@ -4582,3 +4582,19 @@ syncCtr=0 / nothing-scheduled session). With the sensor physically
 UNPLUGGED (2026-08-18 session) no cam events arrive, so cam-less operation
 worked and fuel was delivered. Keep the cam connected and vvtMode = Single
 Tooth; the no-start problem is ignition/fuel calibration, not trigger.
+
+## 2026-08-20 - m74_9: ROOT CAUSE of no-start - L9779 direct-channel enables broken
+
+The injectors never opened and bench sparks were irregular because the
+L9779 direct-driven outputs (IGN1..4 on PF12..15, OUT1..4 on PE8..11) are
+an AND of the SPI enable bit and the parallel input pin, and two bugs
+broke the enable: update_output() clobbered its own o_data with o_state
+(enable followed the pin state, so a low pin = disabled channel), and
+writePad() did not wake the driver thread for direct pins (the enable
+update arrived only on the ~105 ms watchdog cycle). Bench pulses and
+injection pulses were truncated to a random 0-5 ms or never happened:
+missing coil clicks, no rail pressure drop in fuelbench2, no fuel to the
+engine - the whole no-start. Fixed in 6b3a686c30d: enables now carry
+o_oe_mask permanently, the parallel pins alone switch the channels in
+real time, and the driver thread is woken on every write. Flashed
+(verified, reset OK). Next: re-run the bench tests, then crank.
