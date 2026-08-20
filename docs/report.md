@@ -5032,3 +5032,52 @@ stalls - events ON time, so fuel/air: sequential injection above
 cranking_rpm=500 without cam sync. The Simultaneous injectionMode tune
 change (0fe5651b5b1) targets (b); the systime/keep-alive firmware targets
 the misleading diagnostics. Re-test discriminates the two.
+
+## 2026-08-21 - m74_9: the "phantom time jump" is REAL elapsed time; MLG time source identified
+
+CORRECTION of the 2026-08-20 entry: the inter-cluster time gaps are not a
+clock artifact. Cross-checking the 22:31:06 session (efi_log + the MLG the
+user recorded simultaneously) against BOTH independent timebases:
+
+| Evidence | Crank #1 | Crank #2 | Delta |
+| --- | --- | --- | --- |
+| Console PC wall clock (coil overcharge + "engine stopped" lines) | 22:31:42.0 | 22:32:46.8 | 64.8 s |
+| ECU NT clock (synctrace t= column) | 33.9 s | 97.3 s | 63.4 s |
+
+Both clocks agree to the second - the gap between the two sync-event
+clusters IS the real pause between two start attempts (engine caught at
+622 rpm and died, user tried again a minute later, caught at 969 rpm and
+died). The synctrace ring (32 events) simply concatenates all attempts
+since boot, which looked like "one crank with time jumps" when pasted.
+The WrapAround62 miscount theory from 2026-08-20 is wrong on its face:
+the classifier window is 2^30 ticks = 268 s, so a 63 s sampling gap cannot
+be misclassified. rawtrg's 1516 s max delta (17:43 log) is likewise the
+ring holding edges from previous cranks (span = real idle time).
+
+Where each log's time comes from (user asked; his PC-time guess was right):
+- rusEFI_outputChannels_*.mlg = written by the JAVA console
+  (SensorLogger -> BinarySensorLog). Record header timestamp =
+  System.currentTimeMillis()*100 mod 65536 (PC wall clock), one record
+  per ~330 ms output-channels response. The console MLG has NO packedTime
+  field: mlg2csv hardcodes the "time" CSV column and reconstructs it from
+  the 16-bit record-header ts, so it is always smooth by construction and
+  starts at 0 relative to the first record.
+- The ECU's own SD-card MLG (writeSdBlock, binary_mlg_logging.cpp) stamps
+  packedTime = getTimeNowMs() = the NT clock (TIM5 4 MHz). Different
+  producer, different timebase - not what the user's files were.
+- synctrace (HEAD): SysTick ms via chVTGetSystemTimeX, plus a new nt= ms
+  column (getTimeNowMs) printed in the SAME event so the two timebases can
+  be compared inside one crank without any external reference.
+- rawtrg: NT clock us deltas (correct for intra-crank tooth deltas).
+
+Added 'timecheck' console command (board_configuration.cpp +
+m74_9_tooth_diag.cpp): prints systick_ms + nt_lower_ticks (raw TIM5->CNT) +
+nt_ms in one line. Run it twice with a known wall-clock gap - each field
+must advance by the same amount. This settles any future timebase dispute
+from one paste instead of a cross-log archaeology session.
+
+Status: m74_9 firmware built (00:18 build/rusefi.srec). Not flashed yet:
+PCAN re-plug needed (PCAN_ERROR_ILLHW). This build also carries the
+reverted L9779 VRS config (b8af57617b0, 617fe9aa6af) which the car has
+NOT run yet - the 22:31 session still ran the VRS-commit firmware
+("l9779 VRS: stock ramp" lines in the log).

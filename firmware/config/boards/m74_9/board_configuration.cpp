@@ -755,6 +755,9 @@ void setup_custom_board_overrides() {
 	addConsoleAction("toothdump", m74_9ToothDump);
 	addConsoleAction("toothsave", m74_9ToothSave);
 	addConsoleAction("synctrace", m74_9SyncTrace);
+	// one-shot multi-clock dump: run twice with a known wall-clock gap to
+	// verify which timebase (if any) diverges
+	addConsoleAction("timecheck", m74_9TimeCheck);
 	// raw primary-trigger edge stream capture: a digital oscilloscope of the
 	// comparator output for noise diagnosis (deltas + histogram, see
 	// m74_9_tooth_diag.cpp)
