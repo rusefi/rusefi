@@ -862,6 +862,12 @@ void setDefaultEtbParameters() {
 
 void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *previousConfiguration) {
 	for (int i = 0; i < ETB_COUNT; i++) {
+		if (engineConfiguration->etbFunctions[i] != previousConfiguration->etbFunctions[i]) {
+			return;
+		}
+	}
+
+	for (int i = 0; i < ETB_COUNT; i++) {
 		etbControllers[i]->onConfigurationChange(&previousConfiguration->etb);
 	}
 }

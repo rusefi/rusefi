@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "defaults.h"
+#include "basic_configuration.h"
 #include "hellen_meta.h"
 #include "mega-uaefi.h"
 
@@ -29,6 +30,15 @@ void setUaefiBoardDefaultETBPins() {
 	// DC1 positive#1/negative#2 to pin D/C
 	setupTLE9201IncludingStepper(/*PWM controlPin*/Gpio::MM100_OUT_PWM3, Gpio::MM100_OUT_PWM4, Gpio::MM100_SPI2_MISO);
 	setupTLE9201IncludingStepper(/*PWM controlPin*/Gpio::MM100_OUT_PWM5, Gpio::MM100_SPI2_MOSI, Gpio::MM100_USB1ID, 1);
+}
+
+bool applyUaefiBasicConfiguration(BasicConfigurationAction action) {
+	return applyBasicConfiguration(action,
+		setUaefiBoardDefaultETBPins,
+		MM100_IN_TPS_ANALOG,
+		MM100_IN_AUX1_ANALOG,
+		MM100_IN_PPS_ANALOG,
+		MM100_IN_AUX2_ANALOG);
 }
 
 static void setUaefiInjectorPins() {

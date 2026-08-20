@@ -188,6 +188,7 @@ void setup_custom_board_overrides() {
 	custom_board_ConfigOverrides = uaefi_boardConfigOverrides;
 	custom_board_periodicSlowCallback = uaefi_slowCallback;
 	custom_board_fix_configuration = uaefi_fixConfiguration;
+	custom_board_applyBasicConfiguration = applyUaefiBasicConfiguration;
 }
 
 int boardGetAnalogInputDiagnostic(adc_channel_e hwChannel, float voltage) {

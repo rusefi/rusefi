@@ -36,6 +36,7 @@
 
 #include "fw_configuration.h"
 #include "board_overrides.h"
+#include "basic_configuration.h"
 
 static bool isRunningBench = false;
 static OutputPin *outputOnTheBenchTest = nullptr;
@@ -853,11 +854,10 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		applyPreset(index);
 		break;
 
-  case TS_BOARD_ACTION:
-      // TODO: use call_board_override
-	  if (custom_board_ts_command.has_value()) {
-		  custom_board_ts_command.value()(subsystem, index);
-	  }
+	case TS_BOARD_ACTION:
+		if (!handleBasicConfigurationAction(index)) {
+			call_board_override(custom_board_ts_command, subsystem, index);
+		}
 		break;
 
 	case TS_SET_DEFAULT_ENGINE:
