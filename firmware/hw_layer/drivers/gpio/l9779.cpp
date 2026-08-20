@@ -221,6 +221,7 @@ struct L9779 : public GpioChip {
 	int chip_init_data();
 	int chip_init();
 	int vrs_configure();
+	int vrs_ramp_up();
 	int wd_feed();
 	void debug() override;
 
@@ -288,6 +289,10 @@ struct L9779 : public GpioChip {
 	 * with a single START re-issue. */
 	bool						out_dis_latched;
 	bool						out_dis_clear_tried;
+	/* VRS hysteresis ramp: false = stock ramp START written, true = the
+	 * ramp END (maximum floor) has been written once cranking amplitude is
+	 * established (see vrs_configure/vrs_ramp_up). */
+	bool						vrs_ramped = false;
 
 
 	/* statistic */
@@ -838,6 +843,14 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 			now = chVTGetSystemTimeX();
 		}
 
+		/* Stock-style VRS hysteresis ramp: once the cranking signal
+		 * amplitude is established, step the conditioner to the maximum
+		 * hysteresis floor (stock config script end) to reject noise. */
+		if (!chip->vrs_ramped && Sensor::getOrZero(SensorType::Rpm) >= 300) {
+			chip->vrs_ramp_up();
+			chip->vrs_ramped = true;
+		}
+
 		/* Refresh the power-stage diagnosis cache. Reading a DIA register
 		 * clears its fault bits on the chip, so this runs at a low rate;
 		 * getOutputDiag() reads the cache from other threads. */
@@ -1191,24 +1204,66 @@ err_gpios:
  */
 int L9779::vrs_configure(void)
 {
-	/* CONFIG_REG1: bit1 = 1 -> full adaptive VRS mode; bit0 (MRD_OT_DIS)
-	 * and the reserved bit3 keep their reset values. */
-	static const uint8_t cfg1 = 0x0a;
-	/* CONFIG_REG5: reserved bits 7:6 as reset; bit5 VRS diag on; VRS_MODE
-	 * 11 = auto-adaptive hysteresis + auto-adaptive filter both on;
-	 * VRS_HYST 001 = 5 uA floor (100 mV with the 10k ext resistors) so
-	 * low cranking amplitude still gets through. */
-	static const uint8_t cfg5 = 0xf9;
+	/* Stock ECU VRS configuration, extracted from the Lada M74 stock firmware
+	 * dump (Read_FULLFLASH_I865LB52_w2404b1____(240626_103727).bin, the
+	 * L9779 "IC_EMS" module, config script after the WDA response table at
+	 * 0x4EF8C):
+	 *   REG1: ramp 0x86..0x02 (final 0x02 = full adaptive only)
+	 *   REG5: 0x0C -> 0x0D -> 0x0E -> 0x0F  (VRS_HYST 100..111: the MCU
+	 *         RAMPS the hysteresis floor up as the signal amplitude grows)
+	 *   REG4: 0x0B -> 0x0A -> 0x09 -> 0x08
+	 *   REG6: 0x07 -> 0x05 -> 0x06
+	 * Our previous guess (REG1=0x0A, REG5=0xF9) selected the SMALLEST
+	 * hysteresis floor (VRS_HYST 001 = 5 uA = ~100 mV with the 10k ext
+	 * resistors) - maximum noise sensitivity, and the cranking noise came
+	 * straight through the conditioner. The stock ends at VRS_HYST 111
+	 * (maximum floor) with the mode bits cleared.
+	 *
+	 * We start at the stock's ramp START (low floor - low cranking signal
+	 * amplitude) and switch to the ramp END once the engine is clearly
+	 * cranking (vrs_ramp_up, from the driver thread). */
+	static const uint8_t cfg1 = 0x02;
+	static const uint8_t cfg4 = 0x0b;
+	static const uint8_t cfg5 = 0x0c;
+	static const uint8_t cfg6 = 0x07;
 
 	int ret = spi_rw(MSG_W(0x01, cfg1), NULL);
 	if (ret)
 		return ret;
-
+	ret = spi_rw(MSG_W(0x04, cfg4), NULL);
+	if (ret)
+		return ret;
 	ret = spi_rw(MSG_W(0x05, cfg5), NULL);
 	if (ret)
 		return ret;
+	ret = spi_rw(MSG_W(0x06, cfg6), NULL);
+	if (ret)
+		return ret;
 
-	efiPrintf(DRIVER_NAME " VRS: full adaptive mode (CONFIG_REG1=0x%02x CONFIG_REG5=0x%02x)", cfg1, cfg5);
+	efiPrintf(DRIVER_NAME " VRS: stock ramp start (REG1=0x%02x REG4=0x%02x REG5=0x%02x REG6=0x%02x)", cfg1, cfg4, cfg5, cfg6);
+	return 0;
+}
+
+int L9779::vrs_ramp_up(void)
+{
+	/* Stock ramp END: maximum hysteresis floor, written once the cranking
+	 * signal amplitude is established (~300 rpm) - the software half of the
+	 * stock's adaptive conditioning. */
+	static const uint8_t cfg4 = 0x08;
+	static const uint8_t cfg5 = 0x0f;
+	static const uint8_t cfg6 = 0x06;
+
+	int ret = spi_rw(MSG_W(0x04, cfg4), NULL);
+	if (ret)
+		return ret;
+	ret = spi_rw(MSG_W(0x05, cfg5), NULL);
+	if (ret)
+		return ret;
+	ret = spi_rw(MSG_W(0x06, cfg6), NULL);
+	if (ret)
+		return ret;
+
+	efiPrintf(DRIVER_NAME " VRS: stock ramp end (REG4=0x%02x REG5=0x%02x REG6=0x%02x)", cfg4, cfg5, cfg6);
 	return 0;
 }
 
