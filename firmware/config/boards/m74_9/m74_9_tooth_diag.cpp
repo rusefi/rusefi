@@ -279,8 +279,13 @@ void m74_9RawTriggerDump() {
 	size_t deltaCount = valid - 1;
 
 	efitick_t span = ordered[valid - 1].timestamp - ordered[0].timestamp;
+	// timestamps are NT ticks at US_TO_NT_MULTIPLIER per us (4 MHz); convert to
+	// real us/ms for the dump (the first on-car dumps printed raw ticks labeled
+	// as us/ms - everything 4x too large, which looked like a phantom 251 s
+	// inter-edge gap and sent the time-jump investigation down the wrong path).
 	efiPrintf("rawtrg: %d edges span %.1f ms min %d us max %d us",
-		(int)deltaCount, span / 1000.0f, (int)minDelta, (int)maxDelta);
+		(int)deltaCount, span / (US_TO_NT_MULTIPLIER * 1000.0f),
+		(int)(minDelta / US_TO_NT_MULTIPLIER), (int)(maxDelta / US_TO_NT_MULTIPLIER));
 
 	// inter-edge deltas in us, 16 per line, NEWEST FIRST: a truncated console
 	// capture (the user closing the console mid-dump) then still contains the
@@ -300,7 +305,7 @@ void m74_9RawTriggerDump() {
 		size_t off = 0;
 		off += chsnprintf(deltaLine + off, sizeof(deltaLine) - off, "raw d%03d", (int)begin);
 		for (size_t i = begin; i < start; i++) {
-			off += chsnprintf(deltaLine + off, sizeof(deltaLine) - off, " %6d", (int)deltas[i]);
+			off += chsnprintf(deltaLine + off, sizeof(deltaLine) - off, " %6d", (int)(deltas[i] / US_TO_NT_MULTIPLIER));
 		}
 		efiPrintf("%s", deltaLine);
 
@@ -317,11 +322,14 @@ void m74_9RawTriggerDump() {
 		start = begin;
 	}
 
-	// histogram: the storm bursts live in the 50-500 us buckets (the debounce
-	// drops <100 us); real teeth at cranking are 2-5 ms
+	// histogram: comparator noise bursts live in the sub-125 us buckets
+	// (the earlier "50-500 us" readings were raw 4 MHz ticks, 4x the real
+	// us); the debounce drops <100 us. Real teeth at cranking are 2-5 ms.
+	// Buckets are real us - the deltas array holds NT ticks, divide by
+	// US_TO_NT_MULTIPLIER first.
 	size_t h50 = 0, h100 = 0, h200 = 0, h500 = 0, h1m = 0, h2m = 0, h4m = 0, hUp = 0;
 	for (size_t i = 0; i < deltaCount; i++) {
-		int32_t d = deltas[i];
+		int32_t d = deltas[i] / US_TO_NT_MULTIPLIER;
 		if (d < 50) h50++;
 		else if (d < 100) h100++;
 		else if (d < 200) h200++;
