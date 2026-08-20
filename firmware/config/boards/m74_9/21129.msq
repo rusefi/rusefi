@@ -2361,7 +2361,7 @@
 </constant>
         <constant name="imuType">"None"</constant>
         <constant digits="0" name="initialIgnitionCutPercent" units="%">0</constant>
-        <constant name="injectionMode">"Sequential"</constant>
+        <constant name="injectionMode">"Simultaneous"</constant>
         <constant cols="3" digits="0" name="injectionPhase" rows="3" units="deg">
          -400 -400 -400
          -400 -400 -400
