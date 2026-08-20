@@ -290,9 +290,10 @@ struct L9779 : public GpioChip {
 	 * with a single START re-issue. */
 	bool						out_dis_latched;
 	bool						out_dis_clear_tried;
-	/* VRS hysteresis ramp: false = stock ramp START written, true = the
-	 * ramp END (maximum floor) has been written once cranking amplitude is
-	 * established (see vrs_configure/vrs_ramp_up). */
+	/* VRS hysteresis state: false = boot config active (ramp START floor),
+	 * true = teeth were seen at speed (>= 300 rpm) since the last re-arm.
+	 * The ramp END is disabled - vrs_ramped now gates the spindown re-arm
+	 * only (see vrs_configure/vrs_ramp_down and the driver thread). */
 	bool						vrs_ramped = false;
 
 
@@ -844,15 +845,20 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 			now = chVTGetSystemTimeX();
 		}
 
-		/* Stock-style VRS hysteresis ramp: once the cranking signal
-		 * amplitude is established, step the conditioner to the maximum
-		 * hysteresis floor (stock config script end) to reject noise. */
-		if (!chip->vrs_ramped && Sensor::getOrZero(SensorType::Rpm) >= 300) {
-			chip->vrs_ramp_up();
+		/* VRS hysteresis floor strategy (m74_9, 2026-08-20): the floor STAYS at
+		 * the boot value (stock ramp START, REG5=0x0C ~ 34 uA ~ 340 mV). The
+		 * floor is only a MINIMUM - in full adaptive mode the hysteresis scales
+		 * with the actual amplitude, so noise rejection at speed is unchanged.
+		 * Raising the floor to the stock ramp END (REG5=0x0F, 80 uA ~ 800 mV)
+		 * is what latched the VRS output dead on spindown (amplitude below the
+		 * floor) and caused the 40-65 s mid-crank tooth dropouts. vrs_ramped now
+		 * just means "teeth were seen at speed"; when rpm collapses below 100
+		 * the conditioner config is re-written as a deadlock safety net
+		 * (vrs_ramp_down writes the same values, resetting the adaptive state). */
+		float vrsRpm = Sensor::getOrZero(SensorType::Rpm);
+		if (vrsRpm >= 300) {
 			chip->vrs_ramped = true;
-		} else if (chip->vrs_ramped && Sensor::getOrZero(SensorType::Rpm) < 100) {
-			/* Engine spindown/stall: re-arm the conditioner on the low floor
-			 * (deadlock escape, see vrs_ramp_down). */
+		} else if (chip->vrs_ramped && vrsRpm < 100) {
 			chip->vrs_ramp_down();
 			chip->vrs_ramped = false;
 		}
@@ -1225,9 +1231,9 @@ int L9779::vrs_configure(void)
 	 * straight through the conditioner. The stock ends at VRS_HYST 111
 	 * (maximum floor) with the mode bits cleared.
 	 *
-	 * We start at the stock's ramp START (low floor - low cranking signal
-	 * amplitude) and switch to the ramp END once the engine is clearly
-	 * cranking (vrs_ramp_up, from the driver thread). */
+	 * We stay at the stock's ramp START permanently: the floor is a minimum,
+	 * the adaptive hysteresis scales with amplitude at speed, and the ramp END
+	 * (0x0F) deadlocked the VRS on spindown (see the driver thread). */
 	static const uint8_t cfg1 = 0x02;
 	static const uint8_t cfg4 = 0x0b;
 	static const uint8_t cfg5 = 0x0c;
@@ -1252,9 +1258,11 @@ int L9779::vrs_configure(void)
 
 int L9779::vrs_ramp_up(void)
 {
-	/* Stock ramp END: maximum hysteresis floor, written once the cranking
-	 * signal amplitude is established (~300 rpm) - the software half of the
-	 * stock's adaptive conditioning. */
+	/* Stock ramp END: DISABLED for m74_9 - the maximum hysteresis floor
+	 * (80 uA ~ 800 mV) latches the VRS output dead when the engine spools
+	 * down below that amplitude (the 40-65 s mid-crank tooth dropouts). The
+	 * floor stays at the ramp START permanently. Kept for reference (the
+	 * stock config script's end). */
 	static const uint8_t cfg4 = 0x08;
 	static const uint8_t cfg5 = 0x0f;
 	static const uint8_t cfg6 = 0x06;
