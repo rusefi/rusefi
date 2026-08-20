@@ -21,9 +21,14 @@ import java.util.TreeMap;
  * to which vehicle-adapter plug pin, in phases following the Universal Patchcord Color Scheme
  * wiring order, with connector photos highlighting the pins of each phase.
  * <p>
- * ECU pins and adapter pins are matched by function text (parenthesized suffixes such as
- * "(pin 6)" / "(OEM 2-8)" are ignored); pins without a match on the other side are listed
- * at the end of the generated document for manual review.
+ * ECU pins and adapter pins are matched by function text (all parenthesized text, such as
+ * "(pin 6)" / "(OEM 2-8)" / descriptive notes, is ignored); pins without a match on the
+ * other side are listed at the end of the generated document for manual review.
+ * <p>
+ * Matching works best when both yamls use the canonical function strings from the
+ * "Pinout language conventions" section of firmware/config/boards/readme-boards.md
+ * (e.g. "Injector N", "Smart Ignition Coil N") - align adapter yaml function texts
+ * with those conventions to improve the match rate.
  */
 public class PatchCordHelper {
     static class PinRef {
@@ -116,18 +121,17 @@ public class PatchCordHelper {
     }
 
     /**
-     * "WBO1 Vs (Un) (pin 6)" and "WBO1 Vs (Un) (OEM 2-8)" both normalize to "wbo1 vs un"
+     * "WBO1 Vs (Un) (pin 6)" and "WBO1 Vs (OEM 2-8)" both normalize to "wbo1 vs": every
+     * parenthesized group is dropped, so descriptive notes on either side never break a match
      */
     static String normalizeFunction(String function) {
         if (function == null) {
             return "";
         }
-        String s = function.toLowerCase(Locale.ROOT)
-                .replaceAll("\\(pin [^)]*\\)", " ")
-                .replaceAll("\\(oem [^)]*\\)", " ")
+        return function.toLowerCase(Locale.ROOT)
+                .replaceAll("\\([^)]*\\)", " ")
                 .replaceAll("[^a-z0-9+/]+", " ")
                 .trim();
-        return s;
     }
 
     /**

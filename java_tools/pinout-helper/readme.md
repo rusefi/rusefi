@@ -25,8 +25,8 @@ java -jar java_tools/pinout-helper/build/libs/pinout-helper-all.jar [ecuBoardFol
 Run from the rusefi repo root. Defaults are super-uaefi and ../private-hardware/BMW-N52-adapter;
 output goes to `<breakoutBoardFolder>/patchcord/` as `patchcord.md` plus per-step PNG images.
 
-`PatchCordHelper` matches ECU pins to adapter pins by function text (parenthesized suffixes such
-as `(pin 6)` / `(OEM 2-8)` are ignored), groups the resulting wires into assembly steps following
+`PatchCordHelper` matches ECU pins to adapter pins by function text (all parenthesized text such
+as `(pin 6)` / `(OEM 2-8)` / descriptive notes is ignored), groups the resulting wires into assembly steps following
 the Universal Patchcord Color Scheme wiring order, and renders each step's pins onto the connector
 photos using the `info:` x/y coordinates - current-step pins as solid circles in wire color,
 previously wired pins as dimmed circles. Pins with no function match on the other side are listed

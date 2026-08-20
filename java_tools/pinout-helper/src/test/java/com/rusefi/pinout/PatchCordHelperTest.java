@@ -14,9 +14,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class PatchCordHelperTest {
     @Test
     public void testNormalizeFunction() {
-        assertEquals("wbo1 vs un", PatchCordHelper.normalizeFunction("WBO1 Vs (Un) (pin 6)"));
-        assertEquals("wbo1 vs un", PatchCordHelper.normalizeFunction("WBO1 Vs (Un) (OEM 2-8)"));
-        assertEquals("wbo2 vs/ip vm", PatchCordHelper.normalizeFunction("WBO2 Vs/Ip (Vm) (OEM 2-11)"));
+        assertEquals("wbo1 vs", PatchCordHelper.normalizeFunction("WBO1 Vs (Un) (pin 6)"));
+        assertEquals("wbo1 vs", PatchCordHelper.normalizeFunction("WBO1 Vs (Un) (OEM 2-8)"));
+        assertEquals("wbo2 vs/ip", PatchCordHelper.normalizeFunction("WBO2 Vs/Ip (Vm) (OEM 2-11)"));
+        assertEquals("wbo1 heater negative",
+                PatchCordHelper.normalizeFunction("WBO1 Heater Negative (pin 3) (and heater +12 could use 18C)"));
         assertEquals("", PatchCordHelper.normalizeFunction(null));
     }
 
