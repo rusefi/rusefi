@@ -25,10 +25,22 @@ float GppwmChannel::setOutput(float result) {
 					m_config->onAboveDuty);
 		}
 		// Apply hysteresis with provided values
+		bool desiredState = m_state;
 		if (m_state && result < m_config->offBelowDuty) {
-			m_state = false;
+			desiredState = false;
 		} else if (!m_state && result > m_config->onAboveDuty) {
-			m_state = true;
+			desiredState = true;
+		}
+
+		// #9386 the duty band alone does not help when the table value sits on a threshold and
+		// jitters across it - the relay still chatters. Hold each state for at least the
+		// configured time. 0 means no minimum, which is the historical behaviour.
+		if (desiredState != m_state) {
+			float minimumStateTime = m_config->minimumStateTime;
+			if (minimumStateTime <= 0 || m_stateChangeTimer.hasElapsedSec(minimumStateTime)) {
+				m_state = desiredState;
+				m_stateChangeTimer.reset();
+			}
 		}
 
 		m_output->setValue(m_state);
