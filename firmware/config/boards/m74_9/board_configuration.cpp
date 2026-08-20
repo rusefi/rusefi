@@ -204,16 +204,6 @@ static void m74_9_boardConfigOverrides() {
 	engineConfiguration->ignitionPins[2] = Gpio::L9779_IGN_3;
 	engineConfiguration->ignitionPins[3] = Gpio::L9779_IGN_4;
 
-	/* Crank-only trigger operation: the 60-2 wheel alone drives sync. The
-	 * cam input and the single-tooth cam sync are forced off on every boot
-	 * (the stored tune may re-enable them). The pin is unassigned too:
-	 * with VVT_INACTIVE the decoder logs CUSTOM_VVT_MODE_NOT_SELECTED on
-	 * every cam edge. Without cam sync the engine runs half-sync - coils
-	 * fire once per crank revolution (wasted COP), injection batches.
-	 * Remove this block to return to cam-sync/sequential operation. */
-	engineConfiguration->vvtMode[0] = VVT_INACTIVE;
-	engineConfiguration->camInputs[0] = Gpio::Unassigned;
-
 	/* Battery sense - same reasoning as CLT/IAT: the stored tune predates
 	 * the correct wiring (PA6 = EFI_ADC_6, 33k/4.7k divider), so force the
 	 * channel on every boot. See the DefaultConfiguration comment for the
@@ -733,9 +723,10 @@ void setup_custom_board_overrides() {
 	// catch ratio went below 1.2 and a 1.2 floor rejected the real gap with
 	// a C9002). See crankingTransition60_2RealCarProfileNoiseStormDoesNotFalseSync.
 	custom_board_syncGapHardening = []() { return true; };
-	// Cam sync is forced off (see ConfigOverrides) until the engine runs
-	// crank-only; the cam-phase drift cross-check is therefore not opted in
-	// (custom_board_vvtDriftLimit stays at the 0 = disabled default).
+	// Cam sync is switched off in the tune (21129.msq: vvtMode1 = Inactive,
+	// camInputs1 = NONE) - crank-only until the engine runs. The cam-phase
+	// drift cross-check is therefore not opted in (custom_board_vvtDriftLimit
+	// stays at the 0 = disabled default).
 	// VR input debounce: the trigger logs show noise edge bursts <50 us apart
 	// (comparator ringing / starter interference) that inflate the event count
 	// and false-sync the decoder mid-crank. The threshold is RPM-adaptive
