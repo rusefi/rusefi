@@ -4947,3 +4947,42 @@ Note: MFS settings writes failed with status -1 (MFS_ERR_INV_STATE) after
 a tune burn - the MFS driver had wedged into MFS_ERROR on a transient flash
 failure; a power cycle cleared it. If it recurs, look at SPI contention
 between the MFS flash and the L9779 driver during burns.
+
+## 2026-08-20 - m74_9: SV#6 crash root cause = rawtrg print loop wrap; fault marker now survives
+
+The recurring on-car crash (SV#6 assert, "at catch") was chased through
+three instrumented builds and turned out to be a red herring chain:
+
+1. REAL root cause: the newest-first 'rawtrg' dump loop did
+   'start -= 16' on a size_t. With an edge count not divisible by 16 the
+   final partial chunk underflows the counter; the loop then walks the
+   whole address space printing garbage and hard faults. PRECISERR,
+   faultAddr=0x1FFEFF00 = ordered + begin*16 with begin negative (=-11241),
+   pc/lr in m74_9RawTriggerDump. The user always ran rawtrg after a catch,
+   hence the fake catch correlation - the engine itself never crashed.
+2. SV#6 was SECONDARY: logHardFault called efiPrintf inside the HardFault
+   handler; CriticalSectionLocker -> chSysGetStatusAndLockX sees IPSR != 0
+   (fault handlers have no OSAL_IRQ_PROLOGUE, isr_cnt == 0) -> routes to
+   chSysLockFromISR -> SV#6 assert. Its marker (C0FFEE02) overwrote the
+   real fault marker (C0FFEE01), hiding pc/lr/cfsr.
+3. Instrumentation that found it (kept, cheap - two word stores per
+   X-class lock):
+   - ChibiOS chdebug.c __dbg_check_lock_from_isr records the
+     chSysLockFromISR caller + lock/isr counters;
+   - ChibiOS chsys.c chSysGetStatusAndLockX records its caller + IPSR;
+   - error_handling.cpp persists them in BKP9..BKP12 and prints them with
+     the assert report ("sv6 caller=...", "xlock caller=... ipsr=...").
+   The ipsr value alone identified the HardFault context (ipsr=3).
+
+Fixes (rusEFI commit 72f348db1d8, ChibiOS e8525e0cc1):
+- rawtrg loop terminates explicitly after the partial chunk; the ring copy
+  uses a one-shot head snapshot (edges arriving during the dump no longer
+  shift the copy base).
+- logHardFault writes the fault crash marker BEFORE any printf.
+- efiPrintfInternal and chDbgPanic3 skip lock-taking prints / marker writes
+  while isInHardFaultHandler is set, so a fault-context print can never
+  trip SV#6 again.
+
+Validation: m74_9 firmware builds, unit tests 1156/1156, flashed (666616
+bytes verified). On-car: rawtrg now survives any edge count - pending the
+user's next crank session.
