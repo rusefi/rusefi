@@ -2,6 +2,8 @@
 
 #include "fan_control.h"
 
+#include "defaults.h"
+
 static void updateFans() {
 	engine->module<FanControl1>()->onSlowCallback();
 }
@@ -272,4 +274,18 @@ TEST(Actuators, FanPwm_RelayModeUnchanged) {
 	Sensor::setMockValue(SensorType::Clt, 75);
 	updateFans();
 	EXPECT_EQ(false, enginePins.fanRelay.getLogicValue());
+}
+
+TEST(Actuators, FanPwm_FrequencyMigration) {
+    EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	// Migrate legacy tunes with zero frequency to default 250Hz
+    engineConfiguration->fan1PwmFrequency = 0;
+    engineConfiguration->fan2PwmFrequency = 0;
+
+    bool changed = applyDefaultsOrFixAfterBurn(nullptr);
+
+    EXPECT_EQ(true, changed);
+    EXPECT_EQ(250, engineConfiguration->fan1PwmFrequency);
+    EXPECT_EQ(250, engineConfiguration->fan2PwmFrequency);
 }
