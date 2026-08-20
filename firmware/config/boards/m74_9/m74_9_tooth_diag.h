@@ -27,5 +27,8 @@ void m74_9ToothSave();
 void m74_9ToothPeriodic();
 void m74_9RawTriggerDump();
 void m74_9SyncTrace();
+// 'timecheck' console command: prints systick ms + NT clock ms + raw TIM5->CNT
+// in one line for cross-checking the two timebases.
+void m74_9TimeCheck();
 // RPM-adaptive trigger input debounce for custom_board_triggerDebounceUs.
 float m74_9TriggerDebounceUs();

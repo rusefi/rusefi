@@ -345,6 +345,8 @@ constexpr size_t SyncTraceRingSize = 32;
 
 struct SyncTraceEvent {
 	uint32_t timeMs;      // ChibiOS system tick ms (chVTGetSystemTimeX) at the event - reliable clock, unlike the NT clock
+	uint32_t ntMs;        // NT clock ms (getTimeNowMs, TIM5 4 MHz) at the SAME event - printed so the two
+	                      // timebases can be compared inside one event (equal deltas = both run at the right rate)
 	char kind;            // 'S' validated sync, 'R' first sync/re-sync, 'E' count-error desync, 'A' early-gap acceptance
 	int8_t countersError; // eventCount - expectedEventCount at the sync (0 for S/R)
 	float gap0;
@@ -365,6 +367,7 @@ void boardTriggerSyncEvent(char kind, int countersError, float gap0, float gap1)
 	 * the timestamps (m74_9, 2026-08-20). */
 	syncTraceRing[syncTraceHead] = {
 		(uint32_t)TIME_I2MS(chVTGetSystemTimeX()),
+		(uint32_t)getTimeNowMs(),
 		kind,
 		clampedError,
 		gap0,
@@ -387,9 +390,22 @@ void m74_9SyncTrace() {
 
 	for (size_t i = 0; i < valid; i++) {
 		const SyncTraceEvent& e = syncTraceRing[(syncTraceHead + SyncTraceRingSize - valid + i) % SyncTraceRingSize];
-		efiPrintf(" sync %c t=%u ms countErr=%d gap0=%.3f gap1=%.3f rpm=%u",
-			e.kind, (unsigned)e.timeMs, (int)e.countersError, e.gap0, e.gap1, (unsigned)e.rpm);
+		efiPrintf(" sync %c t=%u ms nt=%u ms countErr=%d gap0=%.3f gap1=%.3f rpm=%u",
+			e.kind, (unsigned)e.timeMs, (unsigned)e.ntMs, (int)e.countersError, e.gap0, e.gap1, (unsigned)e.rpm);
 	}
+}
+
+// 'timecheck' - dump every timebase in one shot. Run it twice with a known
+// wall-clock gap in between (e.g. 60 s): systick_ms and nt_ms must each
+// advance by the same amount. If one advances and the other does not (or
+// jumps), that is the broken clock. nt_lower_ticks is the raw TIM5->CNT
+// (4 MHz) and must also advance at ~4e6 per wall second.
+void m74_9TimeCheck() {
+	uint32_t systickMs = TIME_I2MS(chVTGetSystemTimeX());
+	uint32_t ntLower = getTimeNowLowerNt();
+	uint32_t ntMs = (uint32_t)(NT2US(getTimeNowNt()) / 1000);
+	efiPrintf("timecheck: systick_ms=%u nt_lower_ticks=%u nt_ms=%u",
+		(unsigned)systickMs, (unsigned)ntLower, (unsigned)ntMs);
 }
 
 // Called from the trigger decoder for every synchronized primary tooth.

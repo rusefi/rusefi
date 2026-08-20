@@ -396,6 +396,14 @@ Gotchas:
 
 If a field setup still shows C9002 at start (ratio outside [1.6, 3.75]), TunerStudio's "Use custom sync ratio" (`overrideTriggerGaps` + `triggerGapOverrideFrom/To` + `gapTrackingLengthOverride`) widens the window without a rebuild.
 
+## Diagnostic timestamps: console MLG vs ECU clocks (m74_9 time-jump saga)
+
+- `rusEFI_outputChannels_*.mlg` files in the console log dir are written by the **Java console** (SensorLogger -> BinarySensorLog), stamped with **PC wall clock** (`System.currentTimeMillis()*100` in the record header, one record per ~330 ms output-channels response). They contain NO packedTime field: `misc/mlg2csv/MlgToCsv.java` hardcodes the "time" CSV column and reconstructs it from the 16-bit record-header timestamps, so it always starts at 0 and is always smooth - it proves nothing about ECU clocks.
+- The ECU's own SD-card MLG (`writeSdBlock` in `binary_mlg_logging.cpp`) stamps `packedTime = getTimeNowMs()` (NT clock, TIM5 4 MHz). Different producer, different timebase - check the file header's 69-byte `"Capture Date"` text block after the field descriptors to tell them apart (console-written files have it, ECU-written ones do not).
+- synctrace/rawtrg are ECU-side. The sync ring (32 events) concatenates **all start attempts since boot**: a tens-of-seconds jump between event clusters is the real pause between attempts, not a clock bug. Cross-check against the console log's PC-timestamped "engine stopped"/coil-overcharge lines before blaming clocks (verified 2026-08-21: PC 64.8 s vs NT 63.4 s on the same two cranks - both correct).
+- WrapAround62 (`rusefi_time_wraparound.h`) can only misclassify sampling gaps **larger than its 2^30-tick window (268 s at 4 MHz)**; smaller gaps always produce correct absolute timestamps.
+- m74_9 has a `timecheck` console command (prints systick_ms + raw TIM5->CNT + nt_ms in one line) and synctrace prints both `t=` (SysTick ms) and `nt=` (NT ms) per event - run timecheck twice with a known wall gap to settle any timebase dispute from one paste.
+
 ## Development Notes
 
 - Supported IDE: Visual Studio Code
