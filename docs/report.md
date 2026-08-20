@@ -5081,3 +5081,44 @@ PCAN re-plug needed (PCAN_ERROR_ILLHW). This build also carries the
 reverted L9779 VRS config (b8af57617b0, 617fe9aa6af) which the car has
 NOT run yet - the 22:31 session still ran the VRS-commit firmware
 ("l9779 VRS: stock ramp" lines in the log).
+
+## 2026-08-21 - m74_9: rawtrg printed NT ticks as us/ms (4x); inter-crank gaps are real pauses; key cycle does NOT reset the MCU
+
+USER GROUND TRUTH (recorded): the ignition lock does not allow a second
+starter crank without returning the key to OFF first; the user is certain
+every ignition cycle boots the firmware fresh ("fresh boot -> synctrace is
+empty"). Both true for LONG key-off, both false for the quick OFF->ON->START
+flick used between start attempts - proven by the 22:31 session:
+
+| Evidence between the 22:31:42 and 22:32:46 cranks | Says |
+| --- | --- |
+| synctrace NT clock: 33.9 s -> 97.3 s, no t-reset to 0 | no MCU reset |
+| no boot-synthetic sync events (gap0=3.0) between the groups | sync state survived |
+| console USB link up the whole time, one connect, one RTC sync | no power loss |
+| rawtrg ring holds BOTH cranks in one continuous timestamp stream | RAM + TIM5 survived |
+
+The L9779 SBC on m74_9 keeps VCC up through a quick key cycle (KEY is only
+a logic input read back via DIA_REG9 KEY_ON_STATUS for the ETB gate; the
+firmware has no key-off shutdown path). Only a longer key-off (seconds+)
+collapses VCC - that is the "fresh boot" the user observes between
+sessions. Consequence: a synctrace dump always mixes ALL start attempts
+of the current boot; the inter-group gaps are the real pauses between
+attempts. Average across every dump of 2026-08-20: 14 gaps, min 14.0 s,
+max 237 s, mean 65.2 s, median 48.4 s - matches the PC-clock distances
+between "engine stopped" lines (e.g. 22:31 session: NT 63.3 s vs PC 64.8 s).
+
+RAWTRG UNITS BUG (root cause of the "phantom time jump"): the rawtrg
+dump printed NT ticks (4 MHz, 250 ns) labeled as us/ms - every value 4x
+too large. The 22:32:52 header "span 262312.5 ms max 251419151 us" is
+really 65.6 s / 62.85 s = exactly the pause between the two cranks. The
+morning "span 15598.6 ms" = 3.9 s of cranking at ~272 rpm; the 17:43
+"span 1533951.5 ms" = 383.5 s of ring retention across attempts. No clock
+ever jumped. Fixed: m74_9RawTriggerDump now divides by
+US_TO_NT_MULTIPLIER (span, deltas, histogram).
+
+Collateral note: the noise-storm widths quoted from the old dumps ("50-500
+us", "<50 us") were also 4x - real noise bursts are <125 us, sub-12.5 us
+ringing included. The RPM-adaptive debounce was tuned against the buggy
+prints; it is empirically validated (C9003 fixes) and left unchanged.
+The falling/rising-edge duty analysis (38/62 split) is ratio-based and
+unaffected by the 4x scale.
