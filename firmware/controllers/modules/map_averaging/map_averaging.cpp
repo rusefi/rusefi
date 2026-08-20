@@ -47,6 +47,10 @@ static NamedOutputPin mapAveragingPin("map");
 static float averagedMapRunningBuffer[MAX_MAP_BUFFER_LENGTH];
 static int mapMinBufferLength = 0;
 static int averagedMapBufIdx = 0;
+// True once the MAP sensor converted a sample successfully: gates the
+// C6899 warning so the startup init race does not alarm (see
+// mapAveragingAdcCallback).
+static bool hasEverDecodedMap = false;
 
 
 static void endAveraging(MapAverager* arg);
@@ -143,10 +147,20 @@ void mapAveragingAdcCallback(float instantVoltage) {
 	SensorResult mapResult = getMapAvg(currentMapAverager).submit(instantVoltage);
 
 	if (!mapResult) {
-		// hopefully this warning is not too much CPU consumption for fast ADC callback
-		warning(ObdCode::CUSTOM_INSTANT_MAP_DECODING, "Invalid MAP at %f", instantVoltage);
+		// The very first fast-ADC samples can arrive before the MAP sensor
+		// configuration (curve points, divider) is applied at boot, so their
+		// conversion fails and would raise a misleading one-shot C6899 right
+		// after power-on. Suppress the warning until the sensor has proven it
+		// can convert at least once - a genuinely broken sensor still gets
+		// reported on every sample after that first success (and by the
+		// sensor checker).
+		if (hasEverDecodedMap) {
+			// hopefully this warning is not too much CPU consumption for fast ADC callback
+			warning(ObdCode::CUSTOM_INSTANT_MAP_DECODING, "Invalid MAP at %f", instantVoltage);
+		}
 		engine->outputChannels.isMapValid = false;
 	} else {
+		hasEverDecodedMap = true;
 		engine->outputChannels.isMapValid = true;
 	}
 
