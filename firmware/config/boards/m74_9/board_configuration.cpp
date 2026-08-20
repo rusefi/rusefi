@@ -668,6 +668,31 @@ int getBoardMetaOutputsCount() {
 int getBoardMetaDcOutputsCount() {
     return 1;
 }
+
+/* Scheduler-free coil click: drives the L9779 IGN parallel inputs (PF12..15)
+ * directly from this thread with exact timing. sparkbench2 routes through the
+ * microsecond scheduler - if the two give different click regularity, the
+ * scheduler path is the suspect, not the coil hardware. */
+static void m74_9CoilClick(int cyl, int count) {
+	if (cyl < 1 || cyl > 4 || count < 1 || count > 100) {
+		efiPrintf("usage: coilclick <cyl 1..4> <count 1..100>");
+		return;
+	}
+
+	/* IGN1..4 direct pads (l9779_cfg.direct_gpio[0..3]) */
+	static const ioportid_t clickPorts[4] = { GPIOF, GPIOF, GPIOF, GPIOF };
+	static const uint8_t clickPads[4] = { 12, 13, 14, 15 };
+
+	efiPrintf("coilclick: cyl %d, %d clicks of 5 ms on / 995 ms off (direct GPIO)", cyl, count);
+	for (int i = 0; i < count; i++) {
+		palSetPad(clickPorts[cyl - 1], clickPads[cyl - 1]);
+		chThdSleepMilliseconds(5);
+		palClearPad(clickPorts[cyl - 1], clickPads[cyl - 1]);
+		chThdSleepMilliseconds(995);
+	}
+	efiPrintf("coilclick: done");
+}
+
 void setup_custom_board_overrides() {
 	custom_board_InitHardware = m74_9_boardInitHardware;
 	custom_board_DefaultConfiguration = m74_9_boardDefaultConfiguration;
@@ -720,6 +745,11 @@ void setup_custom_board_overrides() {
 	// comparator output for noise diagnosis (deltas + histogram, see
 	// m74_9_tooth_diag.cpp)
 	addConsoleAction("rawtrg", m74_9RawTriggerDump);
+	// Scheduler-free coil click: drives the L9779 IGN parallel inputs
+	// (PF12..15) directly from this thread with exact timing. sparkbench2
+	// routes through the microsecond scheduler - if the two give different
+	// click regularity, the scheduler path is the suspect, not the coils.
+	addConsoleActionII("coilclick", m74_9CoilClick);
 #if EFI_CAN_SUPPORT
 	initM74_9Can();
 	custom_board_isImmobilizerBlocking = m74_9_isImmobilizerBlocking;
