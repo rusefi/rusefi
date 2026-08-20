@@ -664,12 +664,16 @@ void L9779::refresh_diag_cache()
 	}
 }
 
-/* use datasheet numbering, starting from 1, skip 4 ignition channels */
-#define OUT_ENABLED(n)			(!!(o_state & BIT((n) + L9779_OUTPUTS_IGN - 1)))
+/* use datasheet numbering, starting from 1, skip 4 ignition channels.
+ * NOTE: these macros expand inside update_output() and read the LOCAL
+ * o_data (permanent enables for direct pins, live state for the rest),
+ * NOT the o_state member - reading the member here was a bug that made
+ * the 'permanent enable' fix dead code (6b3a686c30d). */
+#define OUT_ENABLED(n)			(!!(o_data & BIT((n) + L9779_OUTPUTS_IGN - 1)))
 #define SHIFT_N_OUT_TO_M(n, m)	(OUT_ENABLED(n) << (m))
 
 /* use datasheet numbering, starting from 1 */
-#define IGN_ENABLED(n)			(!!(o_state & BIT((n) - 1)))
+#define IGN_ENABLED(n)			(!!(o_data & BIT((n) - 1)))
 #define SHIFT_N_IGN_TO_M(n, m)	(IGN_ENABLED(n) << (m))
 
 int L9779::update_output()
@@ -982,9 +986,14 @@ int L9779::writePad(size_t pin, int value) {
 			o_state &= ~(1 << pin);
 		}
 
-		/* the SPI control register mirrors o_state (e.g. CMD_IGN1..4 in
-		 * CONTR_REG2), so every change must be pushed to the chip */
-		o_dirty = true;
+		/* Direct-driven pins keep their SPI enable bit permanently set
+		 * (o_oe_mask -> o_data in update_output): their CONTR bits do not
+		 * change with o_state, so pushing o_dirty for them would only waste
+		 * SPI bandwidth (8 pins toggling ~20 times/s each while running).
+		 * Non-direct pins mirror o_state into CONTR and must be pushed. */
+		if (!(OUT_DIRECT_DRIVE_MASK & BIT(pin))) {
+			o_dirty = true;
+		}
 	}
 
 	/* direct driven? */
