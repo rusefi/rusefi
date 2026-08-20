@@ -1954,6 +1954,9 @@ This is the pressure at which your injector flow is known.\nFor example if your 
 ### vvlControlEnabled
 
 
+### keepIdleSolenoidWhenStopped
+By default the idle solenoid is switched off whenever the engine is not turning, to be quieter and save power. Enable this to keep driving it to the position the idle controller asks for, which at zero RPM is the cranking curve for the current coolant temperature - for valves which need to rest somewhere other than de-energized. The valve is only driven for a minute after the engine stops turning, then switched off anyway to protect the coil and the battery.
+
 ### nitrousLuaGaugeArmingValue
 
 
