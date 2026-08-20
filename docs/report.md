@@ -4986,3 +4986,49 @@ Fixes (rusEFI commit 72f348db1d8, ChibiOS e8525e0cc1):
 Validation: m74_9 firmware builds, unit tests 1156/1156, flashed (666616
 bytes verified). On-car: rawtrg now survives any edge count - pending the
 user's next crank session.
+
+## 2026-08-20 - m74_9: sync/raw trace timestamps lie between cranks; clock keep-alive + systime
+
+USER GROUND TRUTH (recorded): the crank attempts are short starter
+impulses (1-1.5 s each, never >10 s in the whole project). The synctrace
+of ONE impulse shows the stored time running from ~30 ms (boot events) to
+~30 s and then to ~90 s while only 1-1.5 s of real time passed - the
+stored timestamps jump FORWARD at the cluster boundaries. Verified across
+all five sessions (22:27-22:31): inter-cluster stored gaps of 42.3/46.2/
+63.3 s and a 251 s rawtrg gap, while the intra-crank times are correct
+(sync every ~229 ms at 262 rpm, etc.). The teeth NEVER disappeared - the
+40-65 s "VRS dropout" was a clock artifact, and the L9779 VRS changes
+(4402c35d398, 1307b3cbede) were reverted as wrong-theory meddling.
+
+Mechanism: getTimeNowNt() = TIM5 CNT (4 MHz) extended by WrapAround62
+(2^30-tick window = 268 s). The clock is sampled on trigger edges and by
+console traffic; between cranks nothing polls it, and the classifier
+miscounts the gap on the next sample - the error surfaces as forward time
+jumps at cluster boundaries. The low 32 bits of the NT clock are always
+the raw TIM5 counter, and the angle scheduler uses only those (compare vs
+CNT), so spark/injection timing was NEVER affected - only the diagnostic
+timestamps and 64-bit durations lied.
+
+Fixes (3d74ff9b23c):
+- doPeriodicSlowCallback samples getTimeNowNt() at 20 Hz - the wrap
+  classifier never sees a stale gap again (50 ms vs 268 s window = 5000x
+  margin; the cost is one timer-register read per tick).
+- synctrace timestamps switch to TIME_I2MS(chVTGetSystemTimeX()) - the
+  1 kHz kernel-maintained SysTick, trustworthy by construction (the whole
+  RTOS timing - thread sleeps, L9779 WDA windows, console timeouts - runs
+  on it and behaves). rawtrg keeps the NT clock for us-resolution tooth
+  deltas (its intra-crank deltas were always correct).
+- The RTC (wall clock) drift the console keeps correcting is the separate
+  LSI-clocked RTC - expected on this board, unrelated to the NT clock.
+
+Stall analysis (five text + four MLG logs): sparkCut=0 everywhere (no
+spark cut), sparkOutOfOrder=0, trgErr=0, no C9xxx errors in the best
+runs; coil overcharge warnings every run (dwell 5.5 ms > ~3 ms coil
+saturation). Two distinct failure patterns: (a) the basis latches on an
+ordinary tooth (gap0 -> 1.0 at ~313 rpm, events off by one tooth = 6 deg,
+engine rough-stalls) - the user's "events not on time"; (b) a fully clean
+run (gap0 2.0-3.0 the whole time) reaching 969 rpm that still decays and
+stalls - events ON time, so fuel/air: sequential injection above
+cranking_rpm=500 without cam sync. The Simultaneous injectionMode tune
+change (0fe5651b5b1) targets (b); the systime/keep-alive firmware targets
+the misleading diagnostics. Re-test discriminates the two.
