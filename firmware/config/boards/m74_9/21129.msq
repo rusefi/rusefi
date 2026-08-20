@@ -2491,7 +2491,7 @@
 </constant>
         <constant name="invertCamVVTSignal">"Rising"</constant>
         <constant name="invertExhaustCamVVTSignal">"Rising"</constant>
-        <constant name="invertPrimaryTriggerSignal">"Rising"</constant>
+        <constant name="invertPrimaryTriggerSignal">"Falling"</constant>
         <constant name="invertSecondaryTriggerSignal">"Rising"</constant>
         <constant name="invertVvtControlExhaust">"advance"</constant>
         <constant name="invertVvtControlIntake">"advance"</constant>
