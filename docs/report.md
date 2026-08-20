@@ -4491,3 +4491,23 @@ Open items:
   cam wiring; the crank side itself is clean.
 - Real-car crank is the next validation step: watch istriggererror,
   syncCtr ~1/rev, revCounter 1/engine-cycle, and whether it catches.
+
+## 2026-08-20 - m74_9: correction - car-session logs fully consistent, no sync racing
+
+Correction to the previous entry: the 09:55-09:57 captures were from the car,
+not the bench. Session-wide totals (MLG timestamps are write times, never
+compare adjacent rows): triggerprimaryrise=929 over ~15 s of slow rotation
+(~60-100 rpm, wheel spin-down) + ~1 s of cranking at 248-264 rpm - exactly
+consistent with the clean rawtrg rings (no delta below 2 ms). syncCtr=16 over
+the same window matches ~1 sync/s slow rotation + crank syncs + cam
+phase-alignments: no racing.
+
+One C6728 (VVT phase jump -177.6 deg) fired at ~60 rpm: the decoder synced
+one crank revolution off (60-2 alone cannot resolve the 720-degree phase),
+the cam cross-check (custom_board_vvtDriftLimit 15 deg) caught it and forced
+a clean re-sync. The protection works as designed.
+
+Zero C9002/C9003/newerr in both car logs - the first session ever without
+trigger decode errors. Next step: a real start attempt (ignition on, crank to
+catch); the previous catch blocker (C9002 right at first combustion) should
+be gone.
