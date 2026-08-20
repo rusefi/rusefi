@@ -564,7 +564,7 @@
         <constant digits="0" name="calibrationBirthday" units="">20260815</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="angle">95</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40</constant>
-        <constant name="camInputs1">"Camshaft position sensor signal"</constant>
+        <constant name="camInputs1">"NONE"</constant>
         <constant name="camInputs2">"NONE"</constant>
         <constant name="camInputs3">"NONE"</constant>
         <constant name="camInputs4">"NONE"</constant>
@@ -5055,7 +5055,7 @@
         <constant name="vvtBooleanForVerySpecialCases">"false"</constant>
         <constant digits="0" name="vvtControlMinClt" units="{bitStringValue(unitsLabels, useMetricOnInterface)}">0</constant>
         <constant digits="0" name="vvtControlMinRpm" units="RPM">600</constant>
-        <constant name="vvtMode1">"Single Tooth"</constant>
+        <constant name="vvtMode1">"Inactive"</constant>
         <constant name="vvtMode2">"Inactive"</constant>
         <constant digits="1" name="vvtOffsets1" units="value">0.0</constant>
         <constant digits="1" name="vvtOffsets2" units="value">0.0</constant>
