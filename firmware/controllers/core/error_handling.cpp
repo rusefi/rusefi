@@ -520,6 +520,20 @@ static void errorHandlerSaveStack(backupErrorState *err, uint32_t *sp)
 #define CRASH_MARKER_MAGIC_FAULT	0xC0FFEE01
 #define CRASH_MARKER_MAGIC_ASSERT	0xC0FFEE02
 
+/* Debug aid populated by the ChibiOS fork's __dbg_check_lock_from_isr()
+ * (SV#6 path): the return address of the chSysLockFromISR() caller and the
+ * dbg counters at the halt. Persisted into BKP9R/BKP10R by
+ * writeAssertCrashMarker and reported on the next boot - see chdebug.c. */
+uint32_t rusEfiLastSv6Caller = 0;
+uint32_t rusEfiLastSv6State = 0;
+
+/* Debug aid populated by the ChibiOS fork's chSysGetStatusAndLockX() on every
+ * X-class lock: the return address of the locker and the IPSR (active
+ * exception number) at that moment. The last pair written before an SV#6
+ * identifies the crashing context. Persisted into BKP11R/BKP12R. */
+uint32_t rusEfiLastXLockCaller = 0;
+uint32_t rusEfiLastXLockState = 0;
+
 static void crashMarkerEnableWrite() {
 	PWR->CR |= PWR_CR_DBP;       // disable backup domain write protection
 	RCC->BDCR |= RCC_BDCR_RTCEN; // BKP registers live on the RTC clock domain
@@ -569,6 +583,14 @@ static void writeAssertCrashMarker(int line, const char* msg, const char* file) 
 	RTC->BKP6R = f0;
 	RTC->BKP7R = f1;
 	RTC->BKP8R = f2;
+#if EFI_PROD_CODE
+	/* SV#6 call-site debug aid (see chdebug.c __dbg_check_lock_from_isr). */
+	RTC->BKP9R = rusEfiLastSv6Caller;
+	RTC->BKP10R = rusEfiLastSv6State;
+	/* X-lock context debug aid (see chsys.c chSysGetStatusAndLockX). */
+	RTC->BKP11R = rusEfiLastXLockCaller;
+	RTC->BKP12R = rusEfiLastXLockState;
+#endif
 }
 
 /* Give the console thread a chance to flush the FAULT/assert line before the
@@ -622,6 +644,21 @@ static void printCrashReportLines() {
 		unpackWordsIntoString(file, sizeof(file), RTC->BKP6R, RTC->BKP7R, RTC->BKP8R, 0);
 		efiPrintf("*** PREVIOUS CRASH: assert (line=%u, msg='%s', file='%s')",
 			(unsigned)crashMarkerArgs[0], msg, file);
+		/* SV#6 call-site debug aid: nonzero only when the halt came from
+		 * __dbg_check_lock_from_isr (persisted across the reboot). */
+		uint32_t sv6Caller = RTC->BKP9R;
+		uint32_t sv6State = RTC->BKP10R;
+		if (sv6Caller != 0) {
+			efiPrintf("*** PREVIOUS CRASH: sv6 caller=0x%08x lock=%u isr=%u",
+				(unsigned)sv6Caller, (unsigned)(sv6State >> 16), (unsigned)(sv6State & 0xffff));
+		}
+		/* X-lock context debug aid: last chSysGetStatusAndLockX caller + IPSR. */
+		uint32_t xlockCaller = RTC->BKP11R;
+		uint32_t xlockIpsr = RTC->BKP12R;
+		if (xlockCaller != 0) {
+			efiPrintf("*** PREVIOUS CRASH: xlock caller=0x%08x ipsr=%u",
+				(unsigned)xlockCaller, (unsigned)xlockIpsr);
+		}
 	}
 	efiPrintf("Reset Cause: %s", getMCUResetCause(getMCUResetCause()));
 }
@@ -666,14 +703,20 @@ void reprintPendingBootReport() {
 void logHardFault(uint32_t type, uintptr_t faultAddress, void* sp, port_extctx* ctx, uint32_t csfr) {
     // todo: reuse hasCriticalFirmwareErrorFlag? something?
     isInHardFaultHandler = true;
-	/* A hard fault is the most common silent-reboot cause on ports without
-	 * backup SRAM - print the crash site so it survives in the console log
-	 * before the reboot (the console thread is usually still alive). */
+
+	/* Write the fault crash marker BEFORE any printf: efiPrintf takes the
+	 * X-class system lock, whose chSysLockFromISR branch trips SV#6 in the
+	 * fault-handler context (IPSR != 0 but no OSAL_IRQ_PROLOGUE, isr_cnt 0),
+	 * and the secondary assert halt would overwrite this marker with
+	 * C0FFEE02, hiding the real fault (m74_9, 2026-08-20). */
+	writeCrashMarker(CRASH_MARKER_MAGIC_FAULT, type, ctx->pc, ctx->lr_thd,
+		(uint32_t)faultAddress, csfr);
+
+	/* Best-effort console print: skipped by efiPrintfInternal while the fault
+	 * handler is active, so the marker above is the authoritative record. */
 	efiPrintf("FAULT type=%u pc=0x%08x lr=0x%08x faultAddr=0x%08x cfsr=0x%08x",
 		(unsigned)type, (unsigned)ctx->pc, (unsigned)ctx->lr_thd,
 		(unsigned)faultAddress, (unsigned)csfr);
-	writeCrashMarker(CRASH_MARKER_MAGIC_FAULT, type, ctx->pc, ctx->lr_thd,
-		(uint32_t)faultAddress, csfr);
 	crashDelayForConsoleFlush();
 	// Evidence first!
 #if EFI_BACKUP_SRAM
@@ -706,6 +749,16 @@ void logHardFault(uint32_t type, uintptr_t faultAddress, void* sp, port_extctx* 
 #if EFI_SIMULATOR || EFI_PROD_CODE
 
 void chDbgPanic3(const char *msg, const char * file, int line) {
+#if EFI_PROD_CODE
+	/* Inside the fault handler any lock-taking print (criticalError ->
+	 * efiPrintf -> X-class lock) re-trips SV#6 via chSysLockFromISR and the
+	 * assert crash marker would overwrite the fault marker written by
+	 * logHardFault. The fault marker is already persisted - reboot now. */
+	if (isInHardFaultHandler) {
+		crashDelayForConsoleFlush();
+		rebootNow();
+	}
+#endif // EFI_PROD_CODE
 #if EFI_PROD_CODE
 #if EFI_BACKUP_SRAM
 	// following is allocated on stack
