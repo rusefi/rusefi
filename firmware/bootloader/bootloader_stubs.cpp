@@ -12,6 +12,13 @@
 void chDbgPanic3(const char* /*msg*/, const char* /*file*/, int /*line*/) {
 }
 
+/* SV#6 call-site debug aid (see ChibiOS chdebug.c __dbg_check_lock_from_isr
+ * and error_handling.cpp). The bootloader does not record crash markers. */
+uint32_t rusEfiLastSv6Caller = 0;
+uint32_t rusEfiLastSv6State = 0;
+uint32_t rusEfiLastXLockCaller = 0;
+uint32_t rusEfiLastXLockState = 0;
+
 extern "C" {
 void logHardFault(uint32_t /*type*/, uintptr_t /*faultAddress*/, void* /*sp*/, struct port_extctx* /*ctx*/, uint32_t /*csfr*/) { }
 }

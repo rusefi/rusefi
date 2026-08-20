@@ -259,10 +259,12 @@ void m74_9RawTriggerDump() {
 
 	// copy the valid part of the ring into time order (oldest -> newest);
 	// static buffers - the console command thread stack is small (the first
-	// on-car toothdump hard-faulted on a big local array)
+	// on-car toothdump hard-faulted on a big local array). Snapshot the head
+	// once so edges arriving during the dump do not shift the copy base.
 	static RawEdgeRecord ordered[RawEdgeRingSize];
+	size_t headSnapshot = rawEdgeHead;
 	for (size_t i = 0; i < valid; i++) {
-		ordered[i] = rawEdgeRing[(rawEdgeHead + RawEdgeRingSize - valid + i) % RawEdgeRingSize];
+		ordered[i] = rawEdgeRing[(headSnapshot + RawEdgeRingSize - valid + i) % RawEdgeRingSize];
 	}
 
 	static int32_t deltas[RawEdgeRingSize];
@@ -287,7 +289,13 @@ void m74_9RawTriggerDump() {
 	// stream.
 	static char deltaLine[224];
 	static char dirLine[224];
-	for (size_t start = deltaCount; start > 0; start -= 16) {
+	/* Walk the chunks newest first. 'start' is decremented by 16 per chunk;
+	 * the LAST chunk is partial (start < 16), so 'start -= 16' on a size_t
+	 * would wrap to a huge value and the loop would walk the whole address
+	 * space printing garbage until it hits an unmapped page - the on-car
+	 * hard fault (PRECISERR at 0x1FFEFF00, 2026-08-20). Terminate explicitly
+	 * after the partial chunk instead. */
+	for (size_t start = deltaCount; start > 0; ) {
 		size_t begin = start >= 16 ? start - 16 : 0;
 		size_t off = 0;
 		off += chsnprintf(deltaLine + off, sizeof(deltaLine) - off, "raw d%03d", (int)begin);
@@ -302,6 +310,11 @@ void m74_9RawTriggerDump() {
 			off += chsnprintf(dirLine + off, sizeof(dirLine) - off, " %6c", ordered[i].rising ? 'R' : 'F');
 		}
 		efiPrintf("%s", dirLine);
+
+		if (begin == 0) {
+			break;
+		}
+		start = begin;
 	}
 
 	// histogram: the storm bursts live in the 50-500 us buckets (the debounce

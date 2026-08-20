@@ -29,6 +29,13 @@
 /* for isprint() */
 #include <ctype.h>
 
+#if EFI_PROD_CODE
+/* Defined in controllers/core/error_handling.cpp; set while the HardFault
+ * handler is active. efiPrintfInternal must not take the system lock in that
+ * context (see the guard below). */
+extern bool isInHardFaultHandler;
+#endif
+
 template <size_t TBufferSize>
 void LogBuffer<TBufferSize>::writeLine(LogLineBuffer* line) {
 	writeInternal(line->buffer);
@@ -200,6 +207,15 @@ void efiPrintfInternal(const char *format, ...) {
 	}
 #endif
 #if (EFI_PROD_CODE || EFI_SIMULATOR) && EFI_TEXT_LOGGING
+	/* Never take the system lock inside the fault handler: chSysGetStatusAndLockX
+	 * sees IPSR != 0 there (no OSAL_IRQ_PROLOGUE in fault handlers) and routes
+	 * to chSysLockFromISR, whose SV#6 check trips and reboots the ECU while the
+	 * real fault info is being handled (m74_9, 2026-08-20). The fault marker in
+	 * the backup registers is written before any printf, so nothing is lost. */
+	if (::isInHardFaultHandler) {
+		return;
+	}
+
 	LogLineBuffer* lineBuffer;
 	msg_t msg;
 
