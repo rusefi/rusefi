@@ -4538,3 +4538,33 @@ a timing light is the reference.
 Next steps: timing light on cyl 1 during cranking (compare with the stock
 ECU), then adjust globalTriggerAngleOffset around 114 deg and retry; if
 timing is right, move to cranking fueling.
+
+## 2026-08-20 - m74_9: offset sweep (120..108) - no catch; cam phase flips mid-crank
+
+What: four car cranks with different globalTriggerAngleOffset values
+(current tune ends at 108, one attempt at 120 was reverted to 114 by the
+console's tune migrator). No catch in any session (rpm never above ~303).
+
+Findings:
+- Trigger pipeline stays healthy everywhere: 56-58 rises/sync, rpm ~285-303,
+  zero trigger errors.
+- The offset sweep DID improve ignition scheduling: dwell overcharge dropped
+  from 42/51 (offset 114, earlier session) to 2-14 per crank.
+- Cam phase basis flips ~175-187 deg mid-crank in 2 of 4 sessions (10:52:56:
+  200 -> -27 deg; 10:54:19: 218 -> -33 deg; drift-limit cross-check fired,
+  forced re-sync, basis stays flipped -> sparks on the wrong stroke). The
+  other two sessions hold a stable 206-218 deg (matching the known-good
+  212 deg) and STILL do not catch.
+- MAP reads garbage (C6899 Invalid MAP 3.52 kPa at boot, fallbackmap 60 kPa
+  is used for fueling).
+
+Conclusion: trigger/sync is solved; no-catch is now a calibration/hardware
+issue, not a decoder issue. Remaining suspects in order: (a) actual spark
+landing (timing light on cyl 1, compare with the stock ECU - the offset
+range tried may still be wrong or coils are swapped), (b) coil order
+(ignition bench test per coil), (c) cranking fuel with the broken MAP.
+
+Also noted: the drift-limit cross-check (custom_board_vvtDriftLimit) forced
+re-syncs can leave the phase basis flipped 180 deg after a mid-crank
+desync - worth gating to above cranking rpm or making the re-sync validate
+against the last known basis.
