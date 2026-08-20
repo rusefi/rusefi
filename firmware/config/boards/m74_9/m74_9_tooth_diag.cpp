@@ -344,7 +344,7 @@ void m74_9RawTriggerDump() {
 constexpr size_t SyncTraceRingSize = 32;
 
 struct SyncTraceEvent {
-	uint32_t timeMs;      // getTimeNowMs() at the event
+	uint32_t timeMs;      // ChibiOS system tick ms (chVTGetSystemTimeX) at the event - reliable clock, unlike the NT clock
 	char kind;            // 'S' validated sync, 'R' first sync/re-sync, 'E' count-error desync, 'A' early-gap acceptance
 	int8_t countersError; // eventCount - expectedEventCount at the sync (0 for S/R)
 	float gap0;
@@ -359,8 +359,12 @@ static size_t syncTraceTotal = 0;
 void boardTriggerSyncEvent(char kind, int countersError, float gap0, float gap1) {
 	int8_t clampedError = (int8_t)(countersError < -127 ? -127 : (countersError > 127 ? 127 : countersError));
 
+	/* The ChibiOS system tick (1 kHz) is the reliable clock for diagnostics:
+	 * the NT-based getTimeNowMs() can drift between cranks (WrapAround62
+	 * sampling gap misclassification) and produced 40-65 s phantom jumps in
+	 * the timestamps (m74_9, 2026-08-20). */
 	syncTraceRing[syncTraceHead] = {
-		(uint32_t)getTimeNowMs(),
+		(uint32_t)TIME_I2MS(chVTGetSystemTimeX()),
 		kind,
 		clampedError,
 		gap0,

@@ -174,6 +174,15 @@ static void resetAccel() {
 }
 
 static void doPeriodicSlowCallback() {
+#if EFI_PROD_CODE
+	/* Keep-alive for the WrapAround62 time base: getTimeNowNt() must be
+	 * sampled at least every ~2^30 ticks (268 s at the 4 MHz scheduler timer)
+	 * or the next sample misclassifies the gap and the clock jumps by tens of
+	 * seconds (m74_9: the synctrace/rawtrg timestamps drifted between cranks
+	 * while the engine was stopped). 20 Hz is far more than enough. */
+	(void)getTimeNowNt();
+#endif // EFI_PROD_CODE
+
 #if EFI_SHAFT_POSITION_INPUT
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6661, getCurrentRemainingStack() > 64, "lowStckOnEv");
 
