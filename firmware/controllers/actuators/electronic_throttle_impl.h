@@ -259,6 +259,8 @@ public:
 
 				// Seed the stop detector before we start closing
 				m_autocalLastPosition = Sensor::getRaw(functionToTpsSensorPrimary(myFunction));
+				// The freeze clock starts when the Close drive starts
+				m_autocalFreezeTimer.reset();
 
 				// Next: close the throttle
 				motor->set(-0.5f);
@@ -270,13 +272,32 @@ public:
 			// spring that slams the plate into the closed stop. Holding -50% duty
 			// against the stop for the whole 1s window stalls the motor and trips
 			// the driver's overcurrent shutdown (TLE9201 diag 0xCF), aborting the
-			// calibration. Detect the stop by the frozen TPS reading and capture
-			// immediately - no stall, no fault. The 1s timeout stays as a fallback
-			// for slow throttles that move less than the 5 mV threshold per loop.
+			// calibration, so the stop is detected by the frozen TPS reading.
+			//
+			// Two safeguards make "frozen" mean the real mechanical stop and not
+			// a stale ADC sample:
+			//  - the reading must stay frozen for >= 100 ms CONSECUTIVELY (the
+			//    TPS ADC updates slower than this loop, so a single equal pair of
+			//    reads only proves the sensor has not produced a new sample yet;
+			//    a moving plate produces a new, different sample and restarts
+			//    the freeze clock),
+			//  - the plate must have actually travelled away from the open
+			//    capture (>= 0.2V, ~4% of the full ~4.5V travel): a throttle that
+			//    never moved hits the 1s fallback and the |max-min| check below
+			//    reports the wiring problem instead of storing a bogus scale.
 			float currentPosition = Sensor::getRaw(functionToTpsSensorPrimary(myFunction));
-			bool reachedStop = m_autocalTimer.hasElapsedMs(50)
-				&& std::abs(currentPosition - m_autocalLastPosition) < 0.005f;
+			if (std::abs(currentPosition - m_autocalLastPosition) < 0.005f) {
+				// keep the freeze clock running
+			} else {
+				// plate still moving - restart the freeze window
+				m_autocalFreezeTimer.reset();
+			}
 			m_autocalLastPosition = currentPosition;
+
+			bool movedFromOpen = std::abs(currentPosition - m_primaryMax) > 0.2f;
+			bool reachedStop = m_autocalTimer.hasElapsedMs(50)
+				&& movedFromOpen
+				&& m_autocalFreezeTimer.hasElapsedMs(100);
 
 			if (reachedStop || m_autocalTimer.hasElapsedMs(1000)) {
 				// Capture closed position
@@ -362,6 +383,10 @@ public:
 private:
 	ACPhase m_autocalPhase = ACPhase::Stopped;
 	Timer m_autocalTimer;
+	// Consecutive-frozen TPS clock for the Close-phase stop detector: only a
+	// SUSTAINED freeze (>= 100 ms) counts as the mechanical stop, a single
+	// stale ADC pair does not.
+	Timer m_autocalFreezeTimer;
 	// Report calibrated values to TS, if false - set directly to config
 	bool m_isAutocalTs;
 
