@@ -222,6 +222,7 @@ struct L9779 : public GpioChip {
 	int chip_init();
 	int vrs_configure();
 	int vrs_ramp_up();
+	int vrs_ramp_down();
 	int wd_feed();
 	void debug() override;
 
@@ -849,6 +850,11 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 		if (!chip->vrs_ramped && Sensor::getOrZero(SensorType::Rpm) >= 300) {
 			chip->vrs_ramp_up();
 			chip->vrs_ramped = true;
+		} else if (chip->vrs_ramped && Sensor::getOrZero(SensorType::Rpm) < 100) {
+			/* Engine spindown/stall: re-arm the conditioner on the low floor
+			 * (deadlock escape, see vrs_ramp_down). */
+			chip->vrs_ramp_down();
+			chip->vrs_ramped = false;
 		}
 
 		/* Refresh the power-stage diagnosis cache. Reading a DIA register
@@ -1264,6 +1270,36 @@ int L9779::vrs_ramp_up(void)
 		return ret;
 
 	efiPrintf(DRIVER_NAME " VRS: stock ramp end (REG4=0x%02x REG5=0x%02x REG6=0x%02x)", cfg4, cfg5, cfg6);
+	return 0;
+}
+
+int L9779::vrs_ramp_down(void)
+{
+	/* Deadlock escape (datasheet 6.14): in full adaptive mode the VRS output
+	 * latches dead when the sensor amplitude stays below the hysteresis floor
+	 * (engine spindown after a stall - the floor was ramped to the maximum
+	 * 80 uA / ~800 mV at 300 rpm). The user keeps cranking, but no teeth
+	 * reach the MCU for tens of seconds until a random amplitude transient
+	 * wakes the conditioner - the 40-65 s mid-crank trigger dropouts seen on
+	 * m74_9 (2026-08-20). Re-programming the conditioner back to the ramp
+	 * START (low floor) re-arms the hysteresis on the still-cranking signal,
+	 * like the stock ECU does on each key cycle. Written when rpm collapses
+	 * below the cranking floor. */
+	static const uint8_t cfg4 = 0x0b;
+	static const uint8_t cfg5 = 0x0c;
+	static const uint8_t cfg6 = 0x07;
+
+	int ret = spi_rw(MSG_W(0x04, cfg4), NULL);
+	if (ret)
+		return ret;
+	ret = spi_rw(MSG_W(0x05, cfg5), NULL);
+	if (ret)
+		return ret;
+	ret = spi_rw(MSG_W(0x06, cfg6), NULL);
+	if (ret)
+		return ret;
+
+	efiPrintf(DRIVER_NAME " VRS: stall re-arm (REG4=0x%02x REG5=0x%02x REG6=0x%02x)", cfg4, cfg5, cfg6);
 	return 0;
 }
 
