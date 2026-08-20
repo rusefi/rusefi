@@ -312,11 +312,16 @@ static struct l9779_config l9779_cfg = {
 		[1] = {.port = GPIOF, .pad = 13},
 		[2] = {.port = GPIOF, .pad = 14},
 		[3] = {.port = GPIOF, .pad = 15},
-		/* IN1 .. IN7 */
-		[4] = {.port = GPIOE, .pad = 8},
-		[5] = {.port = GPIOE, .pad = 9},
-		[6] = {.port = GPIOE, .pad = 10},
-		[7] = {.port = GPIOE, .pad = 11},
+		/* IN1 .. IN7 (parallel inputs for OUT1 .. OUT7). Buzzed out on the
+		 * real board: the KiCad netlist/schematic has this mapping REVERSED -
+		 * the measured wiring is IN1=PE11, IN2=PE10, IN3=PE9, IN4=PE8. The
+		 * old (schematic) order kept every injector channel shut: L9779
+		 * outputs are an AND of the SPI command bit and this parallel input,
+		 * and with the wrong pins the two terms never agreed. */
+		[4] = {.port = GPIOE, .pad = 11}, /* IN1 -> OUT1 (injector, reversed mapping) */
+		[5] = {.port = GPIOE, .pad = 10}, /* IN2 -> OUT2 */
+		[6] = {.port = GPIOE, .pad = 9},  /* IN3 -> OUT3 */
+		[7] = {.port = GPIOE, .pad = 8},  /* IN4 -> OUT4 */
 		[8] = {.port = GPIOG, .pad = 5},
 		[9] = {.port = GPIOG, .pad = 6},
 		[10] = {.port = GPIOG, .pad = 7},
