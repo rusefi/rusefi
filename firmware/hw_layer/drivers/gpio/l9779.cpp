@@ -679,9 +679,14 @@ int L9779::update_output()
 
 	/* set value only for non-direct driven pins */
 	uint32_t o_data = o_state & ~OUT_DIRECT_DRIVE_MASK;
-	/* direct driven outputs are logicaly-AND spi bit and dedicated input
-	 * set bits to all enabled direct driven outputs */
-	o_data = o_state | (o_oe_mask & OUT_DIRECT_DRIVE_MASK);
+	/* direct driven outputs are logically-AND of the spi enable bit and the
+	 * dedicated parallel input: keep the enable PERMANENTLY set (o_oe_mask),
+	 * the parallel MCU pin alone switches the channel in real time. Writing
+	 * o_state here instead disabled the channel whenever the pin was low, and
+	 * with the thread not woken for direct writes the enable arrived only on
+	 * the next watchdog cycle (~105 ms) - bench clicks and injection pulses
+	 * were truncated or never happened at all. */
+	o_data |= (o_oe_mask & OUT_DIRECT_DRIVE_MASK);
 
 	/* nightmare... briliant mapping */
 	regs[0] =
@@ -984,12 +989,14 @@ int L9779::writePad(size_t pin, int value) {
 
 	/* direct driven? */
 	if (OUT_DIRECT_DRIVE_MASK & BIT(pin)) {
-		return update_direct_output(pin, value);
-	} else {
-		return wake_driver();
+		update_direct_output(pin, value);
 	}
 
-	return 0;
+	/* Wake the driver regardless: the SPI enable bits are permanent
+	 * (o_oe_mask, see update_output), but the thread must stay informed so
+	 * the CONTR registers stay consistent and the watchdog keeps a healthy
+	 * bus owner. */
+	return wake_driver();
 }
 
 brain_pin_diag_e L9779::getOutputDiag(size_t pin)
