@@ -1,6 +1,7 @@
 package com.rusefi.ui;
 
 import com.devexperts.logging.Logging;
+import com.rusefi.io.can.HexUtil;
 import com.rusefi.io.can.slcan.SlcanClient;
 
 import javax.swing.*;
@@ -228,12 +229,10 @@ public class SlcanTab {
             return;
         }
         File file = chooser.getSelectedFile();
-        long firstMs = snapshot.get(0).wallClockMs;
         try (PrintWriter writer = new PrintWriter(Files.newBufferedWriter(file.toPath(), StandardCharsets.US_ASCII))) {
-            writer.println("; rusEFI SLCAN capture " + new Date() + ", " + snapshot.size() + " frame(s)");
-            writer.println("; relative-ms raw-slcan-line decoded");
             for (FrameRecord record : snapshot) {
-                writer.printf("%d %s %s%n", record.wallClockMs - firstMs, record.frame.raw, record.frame.decode());
+                String hexData = record.frame.rtr ? "" : HexUtil.asString(record.frame.data);
+                writer.printf("(%d.%06d) can0 %X#%s%n", record.wallClockMs / 1000, (record.wallClockMs % 1000) * 1000, record.frame.id, hexData);
             }
         } catch (IOException e) {
             messageHandler.accept("Failed to save: " + e);
