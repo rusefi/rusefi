@@ -4663,7 +4663,7 @@
         <constant name="triggerSimulatorPinModes2">"default"</constant>
         <constant name="triggerSimulatorPins1">"NONE"</constant>
         <constant name="triggerSimulatorPins2">"NONE"</constant>
-        <constant digits="0" name="triggerSimulatorRpm" units="RPM">1200</constant>
+        <constant digits="0" name="triggerSimulatorRpm" units="RPM">0</constant>
         <constant digits="3" name="triggerVVTGapOverrideFrom1" units="ratio">0.0</constant>
         <constant digits="3" name="triggerVVTGapOverrideFrom2" units="ratio">0.0</constant>
         <constant digits="3" name="triggerVVTGapOverrideFrom3" units="ratio">0.0</constant>
@@ -4713,7 +4713,7 @@
         <constant name="useLinearCltSensor">"no"</constant>
         <constant name="useLinearIatSensor">"no"</constant>
         <constant name="useMetricOnInterface">"Metric"</constant>
-        <constant name="useNoiselessTriggerDecoder">"no"</constant>
+        <constant name="useNoiselessTriggerDecoder">"yes"</constant>
         <constant name="useRawOutputToDriveIdleStepper">"no"</constant>
         <constant name="useRunningMathForCranking">"Fuel Map"</constant>
         <constant name="usescriptTableForCanSniffingFiltering">"no"</constant>
