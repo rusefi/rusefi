@@ -80,6 +80,13 @@ public:
 	// GND input pins instead of leaving them floating
 	bool hwTriggerInputEnabled = true;
 
+	// Diagnostic counters: primary-trigger edges dropped between the pin and
+	// the decoder (m74_9 trigger diagnostics, exposed via the board 'synctrace'
+	// console command). The rawtrg board capture sees the pin BEFORE these
+	// drops, so rawtrg-vs-decoder discrepancies localize the culprit stage.
+	uint32_t triggerDebounceDropCount = 0;
+	uint32_t triggerNoiseFilterDropCount = 0;
+
 	cyclic_buffer<int> triggerErrorDetection;
 
 	/**

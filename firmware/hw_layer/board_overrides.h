@@ -233,6 +233,19 @@ extern std::optional<setup_custom_bool_type> custom_board_syncByPositionWhileCra
 // variation would trip these on legitimate gaps.
 extern std::optional<setup_custom_bool_type> custom_board_syncGapHardening;
 
+// When set and returning true, a ratio-validated sync candidate that arrived
+// 1-2 events BEFORE the expected count (count deficit - events were LOST
+// between the gaps: the analog VR conditioner swallows 1-2 teeth during the
+// first-combustion catch; noise only INSERTS events, so a deficit cannot be
+// noise) is accepted as a valid sync while rpm < 2 * crankingRpm instead of
+// firing C9003 and desyncing. Desyncing there cuts fuel/spark exactly when
+// the engine first catches - the observed m74_9 failure mode (C9003 'got
+// 56/0', engine dies right after the catch). The 6-12 degree phase offset of
+// the lost events only affects the already-elapsed part of the revolution
+// (the sync re-anchors at the gap). Count excess keeps the classic C9003
+// path. m74_9 sets true; default false preserves the strict behavior.
+extern std::optional<setup_custom_bool_type> custom_board_syncEarlyGapWhileCranking;
+
 // When set and returning a positive angle (degrees), the cam/VVT position is
 // cross-checked on every cam event: a fixed cam must report the same phase
 // every cam revolution. A crank-sync basis error (false sync) shifts the

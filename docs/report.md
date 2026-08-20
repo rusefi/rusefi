@@ -4598,3 +4598,278 @@ engine - the whole no-start. Fixed in 6b3a686c30d: enables now carry
 o_oe_mask permanently, the parallel pins alone switch the channels in
 real time, and the driver thread is woken on every write. Flashed
 (verified, reset OK). Next: re-run the bench tests, then crank.
+
+## 2026-08-20 - m74_9: crank-only sync forced in firmware, cam drift check removed
+
+What: per user request the engine now runs crank-only. ConfigOverrides
+forces vvtMode[0]=VVT_INACTIVE AND camInputs[0]=Gpio::Unassigned on every
+boot (stored tune cannot re-enable cam sync), and the
+custom_board_vvtDriftLimit opt-in (15 deg) is removed from the board
+overrides (8a2795d7639).
+
+Why: the cam variable was masking the start sequence - the drift cross-check
+forced crank re-syncs during cranking-band phase jitter and one session left
+the basis flipped 180 deg. Both the cam pin AND the mode are forced off:
+with VVT_INACTIVE alone the decoder still processes cam edges and logs
+CUSTOM_VVT_MODE_NOT_SELECTED per edge, and (from the 2026-08-18 session)
+cam events with an inactive mode previously desynced the crank decoder.
+Unassigning the pin is equivalent to physically unplugging the sensor - no
+events, no warnings, no cross-check.
+
+Consequence: without cam sync the engine runs half-sync - each coil fires
+once per crank revolution (wasted COP), injection batches. This is the
+intended crank-only fallback; sequential operation requires removing the
+ConfigOverrides block.
+
+Validation: m74_9 firmware builds clean (BUILD SUCCESSFUL), rusefi.bin /
+rusefi.srec refreshed in deliver/. Not flashed yet - PCAN adapter was not
+attached during the last flash attempt. Flash via openblt_can before the
+next crank.
+
+## 2026-08-20 - m74_9: cam-off is a tune setting, not a firmware force (correction)
+
+Per user: the ConfigOverrides forcing of vvtMode[0]=VVT_INACTIVE and
+camInputs[0]=Unassigned from 8a2795d7639 is reverted (7a833ca5e70). The
+crank-only switch now lives in the tune: 21129.msq sets vvtMode1 = Inactive
+and camInputs1 = NONE. The drift-cross-check removal stays - it has no TS
+parameter and was the actual crank-desync source when cam events arrived
+with an inactive mode (2026-08-18).
+
+Note for the future: loading an older 21129.msq (or any tune with
+vvtMode1 = Single Tooth) re-enables cam sync silently; the drift check is
+gone either way now, so the only side effect is log noise
+(CUSTOM_VVT_MODE_NOT_SELECTED) unless the cam pin is unassigned too.
+
+## 2026-08-20 - m74_9: flashed 7a833ca5e70 over CAN (OpenBLT/XCP)
+
+Flash of the cam-off-in-tune build (7a833ca5e70) succeeded on the second
+attempt: the first run died mid-erase at 0x08020000 with PROGRAM_CLEAR
+failed (the known intermittent XCP glitch, same as 2026-08-19 on
+6b3a686c30d), the retry passed with verified=true, reset=true.
+The ECU now runs: injector parallel map fix (c52438880cc), L9779
+enable/wakeup fix (6b3a686c30d), drift-check removal, no firmware-side
+cam force. Next on the car: load the updated 21129.msq (vvtMode1 =
+Inactive, camInputs1 = NONE), then fuelpumpbench + fuelbench2 1, then
+crank with a binary log.
+
+## 2026-08-20 - m74_9: trigger edge polarity - falling is the stable edge (data-proven)
+
+Question was whether the 74HC14 inversion means the decoder must use the
+falling edge. Answered from data, not theory: rawtrg dump analysis
+(2026-08-20 10:16 log, 1021 teeth, ~60-90 rpm) compares tooth periods
+anchored on each edge type. F-anchored (rising) periods: 6.02% detrended
+std; R-anchored (falling): 2.63% - the falling edge is the zero-crossing
+reference (speed/amplitude independent), the rising edge carries the
+hysteresis-return jitter. Cross-check: the F->R split is a constant 38% of
+the tooth in two independent dumps (10:16 and 10:18), a fixed hysteresis
+asymmetry, not noise.
+
+Fix (978264b9309): 21129.msq invertPrimaryTriggerSignal Rising -> Falling.
+The sync reference moves ~2.3 deg later (38% of a 6 deg tooth), so
+globalTriggerAngleOffset needs roughly -2 deg (114 -> ~112) and a timing
+light check once the engine runs. Sync-ratio windows stay valid: the gap
+duration on falling edges is the same physical span.
+
+Analysis script kept at .tmp_edge_analysis.py (parses rawtrg rows from a
+text log; dump convention: rXXX[i] = type of the edge STARTING delta
+dXXX[i]).
+
+## 2026-08-20 - m74_9: edge-finding caveats (user review)
+
+User correctly pointed out that the digital stream does not expose the
+analog domain. Clarified in CLAUDE.md: the rawtrg variance analysis proves
+only that the PF8 falling edge is the most REGULAR edge in the digital
+stream (captured pre-debounce, so the only shapers upstream are the L9779
+conditioner and the 74HC14). The zero-crossing interpretation is a
+hypothesis - final confirmation is a strobe at fixed cranking timing
+(10 deg in the tune): the mark must not drift with starter speed.
+
+Also flagged: custom_board_triggerDebounceUs (floor 100 us) debounces BOTH
+polarities; with the constant 38/62 F/R duty the useful edge arrives
+61-98 us after the previous opposite edge at 6500 rpm - below the floor
+(tooth period 159 us). Fine at cranking (2-5 ms gaps), but the debounce
+must be tied to the selected polarity or the floor lowered before
+sustained high-rpm running.
+
+## 2026-08-20 - m74_9: ETB autocal Close-phase stop detector fixed (a498a11bca5)
+
+Symptom: after the earlier stop-detector fix the throttle only drove open -
+the autocal never visibly rode it closed. Root cause: the detector fired on
+a single pair of equal TPS reads at 50 ms, but the TPS ADC updates slower
+than the ETB loop, so two equal reads mean "no new sample yet", not "plate
+stopped". The calibration captured tpsMin mid-travel, cut the closing drive
+after ~50 ms and stored a broken TPS scale (which also explains the
+one-direction behavior in normal operation).
+
+Fix: the stop is declared only when the reading has been frozen for >= 100 ms
+CONSECUTIVELY (freeze clock restarts on every new sample) AND the plate has
+travelled >= 0.2V from the open capture. A never-moving throttle falls
+through to the 1s timeout and the existing |max-min| < 0.5V wiring check.
+
+Validation: m74_9 build OK, full unit test suite 1151/1151. Not flashed yet
+(PCAN adapter not visible on USB). After flashing: run the autocal on the
+bench - the plate must open ~1s, then ride closed to the stop and the
+calibration must report sane min/max (no Overcurrent shutdown diag).
+
+## 2026-08-20 - m74_9: MAP is healthy, boot C6899 was an init race (correction)
+
+Earlier sessions assumed MAP was broken (C6899 + fallback 60 kPa). Wrong:
+MLG analysis shows isMapValid=1 throughout and physical pressures - 100.7 kPa
+at key-on engine-off, 91.6 kPa cranking with the throttle open, 79.3 kPa at
+the 462 rpm catch as vacuum builds. Fueling uses the REAL MAP; the
+fallbackMap channel (60) is the estimation-table value and is only engaged
+when isMapValid=0, which never happened in these logs.
+
+The one-shot "Invalid MAP at 3.53" at power-on is a startup init race: the
+first fast-ADC sample arrives before the MAP sensor configuration (curve,
+divider) is applied. Fixed cosmetically (warning gated on
+hasEverDecodedMap, map_averaging.cpp) - a genuinely broken sensor is still
+reported after its first successful conversion and by the sensor checker.
+Baro capture was already reading correctly (101.32 kPa at boot).
+
+Validation: m74_9 build OK, unit tests 1151/1151.
+
+## 2026-08-20 - m74_9: noise-inflated decoder cycles - noiseless filter enabled
+
+On-car rawtrg (15:43) shows noise edges at 1.9-3 ms during cranking; bench
+captures were clean (>= 4.6 ms). The debounce cannot stop them: at 280 rpm
+the legit F->R gap is 1.44 ms and the adaptive debounce is already at
+1.23 ms - any higher and the useful falling edge dies. The noise inflates
+the decoder event count so fake 58-event revolutions complete with EXACT
+counts (no C9002/C9003), syncCtr advances ~29/s while the wheel turns
+4.7 rev/s, revCtr races ~5x, and each fake sync re-anchors the 720-degree
+basis - spark and injection fire from a moving zero, the engine never
+catches. RPM reads correctly (averaged), which masked the problem.
+
+Fix: useNoiselessTriggerDecoder = yes (rejects off-schedule events before
+the decoder counts them; sync windows keep syncRatioAvg=3 for its gap
+prediction). Also triggerSimulatorRpm 1200 -> 0 (self-stimulation would
+gate out the real trigger input entirely).
+
+Observation rule of thumb: if syncCtr advances faster than revolutions
+while istriggererror stays 0, the decoder is completing exact-count fake
+revolutions from noise - enable the noiseless filter, do not raise the
+debounce (F->R gap ceiling).
+
+## 2026-08-20 - m74_9: flashed (ETB autocal fix + MAP C6899 suppression)
+
+Flashed over CAN: 665352 bytes, verified=true, reset=true (237 s, no XCP
+retry needed this time). The ECU now runs a498a11bca5 (ETB autocal Close
+phase: sustained-freeze + travel stop detector) and be414f3d80e (boot-time
+C6899 suppression). Tune changes (Falling edge, cam off, noiseless filter,
+triggerSimulatorRpm=0) live in 21129.msq and are NOT in the firmware - the
+user must load ~/21129.msq in the console.
+
+## 2026-08-20 - m74_9: injectors dry despite events - permanent-enable fix was dead code
+
+Symptom: plugs absolutely dry while the ECU reported 40 injection events
+(3.2 ms pulses, actuallastinjectionratio ~1.0), no fuel cut, no faults;
+bench clicks worked and rail pressure was present.
+
+Root cause: update_output() computed o_data (permanent enables from
+o_oe_mask) but the CONTR macros read the o_state member - 6b3a686c30d was
+dead code. Every direct-pin LOW also cleared the SPI enable bit; on the
+bench the driver thread re-wrote CMD=1 while the pin was still high (50-100
+ms pulses), but during engine run (3.2 ms pulses, ~76 pin toggles/s) the
+CMD=1 write arrived after the pin fell - the AND gate never opened.
+
+Fix: macros read o_data; writePad skips o_dirty for direct pins (their
+CONTR bits are static). Now the parallel pin alone switches the channel in
+real time. Flashed next.
+
+## 2026-08-20 - m74_9: L9779 WDA watchdog window misses during cranking (109d17209ae follow-up)
+
+Symptom on the car: occasional spark/fuel bursts ("иногда попадает
+таймер"), mostly dead outputs, plugs dry; bench worked right after cranking.
+pins during cranking showed the smoking gun: l9779 WDA ec=7 wda_int=1
+ok=479 fail=0 - the driver's answers kept missing the chip's ~12.6 ms VDA
+2.0 answer window because the thread ran at PRIO_GPIOCHIP (NORMALPRIO+8),
+below main loop/ADC (+10), ETB (+9) and CAN RX (+11). EC > 4 forces
+OUT1..4 + IGN1..4 off in hardware; the driver saw zero SPI errors so no
+fault was ever flagged. After cranking the workload dropped, answers landed
+in the window, EC recovered to 0 and the bench clicked again.
+
+Fix: the L9779 driver thread now runs at NORMALPRIO+12 - above all cranking
+workloads. Rule of thumb added to CLAUDE.md-adjacent knowledge: when ECU
+counters are healthy but physical outputs are intermittent only during
+cranking, dump pins and check l9779 WDA ec/wda_int before touching the
+event path.
+
+## 2026-08-20 - m74_9: stock L9779 VRS config extracted from the stock firmware dump
+
+User pointed out the stock ECU runs the same board flawlessly, so the
+hardware is fine and OUR VRS register values were the suspect. Found the
+stock L9779 module in Read_FULLFLASH_I865LB52_w2404b1____(240626_103727).bin
+('IC_EMS' string, WDA response table matching ours byte-for-byte at
+0x4EF4C) with the config script at 0x4EF8C.
+
+The stock RAMPS the VRS registers (REG5: 0x0C->0x0D->0x0E->0x0F = VRS_HYST
+100..111, i.e. the MCU raises the hysteresis floor as amplitude grows -
+the software version of the adaptive conditioning). Our REG5=0xF9 had
+picked the SMALLEST floor (001 = 5 uA = ~100 mV with the 10k resistors) -
+maximum noise sensitivity; the cranking noise passed straight through.
+
+Implemented the stock scheme: vrs_configure() writes the ramp START
+(REG1=0x02 REG4=0x0B REG5=0x0C REG6=0x07), the driver thread writes the
+ramp END (REG4=0x08 REG5=0x0F REG6=0x06) once rpm >= 300. Flashed next;
+if the noise persists, extract the exact ramp timing from the stock code
+(the table pairs suggest per-crank stepping).
+
+## 2026-08-20 - m74_9: C9003 'got 56/0' kills the engine at the first-combustion catch - early-gap acceptance + sync trace
+
+Symptom (17:45 session, stock VRS ramp already flashed): the engine caught
+like the stock ECU (rpm 189-281, first real combustion behavior) and died
+right at the catch. Log: C9003 'not enough teeth between sync points:
+expected 58/0 got 56/0' at rpm=189 with newerr gap0=2.171 gap1=1.309 -
+BOTH gap ratios inside the tune's override windows [1.6, 3.9] / [0.85, 1.35]
+(21129.msq: overrideTriggerGaps=yes), the position gate passed (56 + 2 >=
+58), only the count check failed. countersError=-2 confirmed in the MLG
+(trgtriggercounterserror). The desync cut fuel/spark exactly when the
+engine first fired.
+
+Input forensics: the rawtrg ring (1003 edges, same crank) is PERFECT -
+strict F/R alternation, zero edges < 500 us (the stock L9779 VRS ramp fixed
+the noise storms), exactly 58 fall-to-fall teeth between the real gaps in
+the running region. Offline simulation of the full pipeline (debounce 1.5
+ms adaptive, noiseless filter, position gate, sync-by-position bypass) on
+that stream gives 8 clean syncs and NO C9003 - the 2-event deficit cannot
+be reproduced from the captured pin stream. The decoder state carried over
+from before the ring buffer start (intermittent cranking), so the lost
+events happened outside the captured window; where exactly the 2 events
+were lost (L9779 analog edge swallowing during the catch is the prime
+suspect - the spin-down shows it loses dozens below ~70 rpm) stays open
+until the new sync trace catches the next one.
+
+Fix 1 - cranking-band early-gap acceptance (board opt-in
+custom_board_syncEarlyGapWhileCranking, m74_9 sets true): a
+ratio-validated sync candidate arriving 1-2 events EARLY (count deficit)
+is accepted as a valid sync while rpm < 2 * crankingRpm instead of
+desyncing. A deficit cannot be noise (noise only inserts events, shifting
+the count up); the 6-12 deg phase offset of the lost events only affects
+the already-elapsed part of the revolution (the sync re-anchors at the
+gap). Count excess and deficits >= 3 keep the classic C9002/C9003 paths.
+The acceptance prints 'earlygap' via printGaps for the logs.
+
+Fix 2 - diagnostics: boardTriggerSyncEvent() board hook (weak default in
+trigger_board_hooks.cpp) fires at every sync point with kind/count/gap0/
+gap1; m74_9 records a 32-event ring + 'synctrace' console command which
+also prints the new triggerDebounceDropCount/triggerNoiseFilterDropCount
+and the existing ignoredTooth/ordering counters. Next crank will show the
+decoder-side truth next to the pin-side rawtrg.
+
+Unit tests (test_60_2_cranking_transition.cpp): new helper
+fire60_2RevolutionWithLostEvents (1-3 events lost mid-rev, merged tooth
+carries their time); 4 tests - early gap accepted while cranking, C9003
+without the opt-in, rejected when running (above 2 * crankingRpm), and
+3-event deficit still desyncs via C9002 index overflow. Full suite 1154
+tests pass (host clang). Firmware built for m74_9.
+
+Also fixed: map_averaging hasEverDecodedMap is now inside #if HAL_USE_ADC
+(the unit-test build with HAL_USE_ADC=0 failed -Wunused-variable), and the
+unit-test build needed touch firmware/integration/rusefi_config.txt after
+the stale value_lookup_generated.cpp checkout stamping issue.
+
+Open: flash the new firmware (PCAN adapter was not attached -
+PCAN_ERROR_ILLHW), then one 2-3 s crank with binary log + immediate
+rawtrg + synctrace; expect either 'earlygap' acceptance keeping the engine
+alive at the catch or a clean 58/58 sync.

@@ -771,18 +771,55 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 			// In either case, we should wait for another sync point before doing anything to try and run an engine,
 			// so we clear the synchronized flag.
 			if (wasSynchronized && isDecodingError) {
-				setTriggerErrorState();
-				onNotEnoughTeeth(currentCycle.current_index, triggerShape.getSize());
+				// Cranking-band early-gap acceptance (board opt-in via
+				// custom_board_syncEarlyGapWhileCranking, m74_9): a ratio-validated
+				// candidate that arrived 1-2 events before the expected count means
+				// events were LOST between the gaps (the analog VR conditioner
+				// swallows 1-2 teeth during the first-combustion catch; noise only
+				// INSERTS events, so a deficit cannot be noise). At the catch,
+				// desyncing here cuts fuel/spark exactly when the engine first fires
+				// - the observed m74_9 C9003 'got 56/0' kill right after the catch.
+				// A 1-2 event deficit shifts the phase basis by 6-12 degrees only
+				// for the already-elapsed part of the revolution (the sync
+				// re-anchors at the gap), which is harmless in the cranking band.
+				// Count excess keeps the classic C9003 path since that IS the
+				// noise signature. The sync is treated as validated: the candidate
+				// passed the ratio windows, the position gate and the elapsed-time
+				// gate, and the count deficit direction proves it is the real gap.
+				bool earlyGapAccepted =
+					get_board_override_result(custom_board_syncEarlyGapWhileCranking, false)
+					&& triggerCountersError <= 0 && triggerCountersError >= -2
+#if EFI_UNIT_TEST
+					// mock tests run the decoder with engineConfiguration = nullptr
+					&& engineConfiguration != nullptr
+#endif
+					&& Sensor::getOrZero(SensorType::Rpm) < 2 * engineConfiguration->cranking.rpm;
 
-				// Something wrong, no longer synchronized
-				setShaftSynchronized(false);
+				if (earlyGapAccepted) {
+					// keep the synchronization, count the revolution as validated
+					lastSyncWasClean = true;
+					setShaftSynchronized(true);
+					printGaps("earlygap", triggerConfiguration, triggerShape);
+					boardTriggerSyncEvent('A', triggerCountersError, triggerSyncGapRatio,
+						triggerShape.gapTrackingLength >= 2 ? 1.0f * toothDurations[1] / toothDurations[2] : 0.0f);
+				} else {
+					setTriggerErrorState();
+					onNotEnoughTeeth(currentCycle.current_index, triggerShape.getSize());
 
-				// This is a decoding error
-				onTriggerError();
-				printGaps("newerr", triggerConfiguration, triggerShape);
+					// Something wrong, no longer synchronized
+					setShaftSynchronized(false);
+
+					// This is a decoding error
+					onTriggerError();
+					printGaps("newerr", triggerConfiguration, triggerShape);
+					boardTriggerSyncEvent('E', triggerCountersError, triggerSyncGapRatio,
+						triggerShape.gapTrackingLength >= 2 ? 1.0f * toothDurations[1] / toothDurations[2] : 0.0f);
+				}
 			} else {
 				// If this was the first sync point OR no decode error, we're synchronized!
 				setShaftSynchronized(true);
+				boardTriggerSyncEvent(wasSynchronized ? 'S' : 'R', 0, triggerSyncGapRatio,
+					triggerShape.gapTrackingLength >= 2 ? 1.0f * toothDurations[1] / toothDurations[2] : 0.0f);
 			}
 
 			// this call would update duty cycle values

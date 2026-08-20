@@ -29,6 +29,21 @@ const char *getTrigger_value_e(TriggerValue value);
  */
 __attribute__((noinline)) float triggerGetToothProfileFactor(int toothIndex);
 
+/**
+ * Board diagnostics hook, called at every trigger sync point with the event
+ * kind and the count/gap state at the sync:
+ *   kind: 'S' = validated (clean-count) sync, 'R' = first sync / re-sync,
+ *         'E' = count-error desync (the C9003 path),
+ *         'A' = early-gap acceptance (count deficit of 1-2, cranking band,
+ *              board opt-in via custom_board_syncEarlyGapWhileCranking).
+ * countersError = eventCount - expectedEventCount at the sync (0 for S/R).
+ * gap0/gap1 are the decoder's ratio windows values (0 if not tracked).
+ * The weak default lives in trigger_board_hooks.cpp (not in
+ * trigger_decoder.cpp): a same-TU weak definition is bound by GCC LTO at
+ * the call site before a board's strong override can win at link time.
+ */
+__attribute__((noinline)) void boardTriggerSyncEvent(char kind, int countersError, float gap0, float gap1);
+
 struct TriggerStateListener {
 #if EFI_SHAFT_POSITION_INPUT
 	virtual void OnTriggerStateProperState(efitick_t nowNt, size_t triggerStateIndex) = 0;

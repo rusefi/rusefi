@@ -906,6 +906,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	float debounceUs = get_board_override_result(custom_board_triggerDebounceUs, 0.0f);
 	if (debounceUs > 0) {
 		if (lastDebouncedTriggerEdgeNt != 0 && timestamp - lastDebouncedTriggerEdgeNt < US2NT(debounceUs)) {
+			triggerDebounceDropCount++;
 			return;
 		}
 		lastDebouncedTriggerEdgeNt = timestamp;
@@ -920,6 +921,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	// This code gathers some statistics on signals and compares accumulated periods to filter interference
 	if (engineConfiguration->useNoiselessTriggerDecoder) {
 		if (!noiseFilter.noiseFilter(timestamp, &triggerState, signal)) {
+			triggerNoiseFilterDropCount++;
 			return;
 		}
 		if (!isUsefulSignal(signal, triggerShape)) {

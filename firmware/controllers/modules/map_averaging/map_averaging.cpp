@@ -50,7 +50,9 @@ static int averagedMapBufIdx = 0;
 // True once the MAP sensor converted a sample successfully: gates the
 // C6899 warning so the startup init race does not alarm (see
 // mapAveragingAdcCallback).
+#if HAL_USE_ADC
 static bool hasEverDecodedMap = false;
+#endif // HAL_USE_ADC
 
 
 static void endAveraging(MapAverager* arg);
