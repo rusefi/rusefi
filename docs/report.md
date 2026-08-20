@@ -4511,3 +4511,30 @@ Zero C9002/C9003/newerr in both car logs - the first session ever without
 trigger decode errors. Next step: a real start attempt (ignition on, crank to
 catch); the previous catch blocker (C9002 right at first combustion) should
 be gone.
+
+## 2026-08-20 - m74_9: trigger pipeline verified healthy on the car; remaining blocker is ignition timing
+
+What: analyzed the car sessions with cam sync off (10:16) and on (10:25).
+Session totals across the two cam-on binary logs: 1537 and 1306 rising
+edges for 27 and 23 syncs = 57-58 teeth per sync - exactly the 60-2 wheel,
+1 sync per revolution. Cam events 12 per 27 syncs = 1 per 2 revs (the
+expected half-rate). rpm reads correctly (~285). Zero trigger errors. The
+earlier "3-6x counter inflation" reading was an artifact of MLG record
+timestamps (write-time, not sample-time) - aggregate totals scale perfectly
+with crank duration. The trigger pipeline (L9779 adaptive VRS + debounce +
+gates) is healthy.
+
+Remaining blocker: the engine does not catch. Evidence: coils fire (51
+sparks) but nearly all overcharge (42/51, dwell 8.24 ms, dwellactualratio
+120-154%) - the discharge does not land at the scheduled angle. One cam
+phase re-sync per crank (phaseresync=1) shifts the basis mid-dwell. The
+leading hypothesis: the ignition timing reference moved - the VRS full
+adaptive mode switches near the tooth zero-crossing while the old limited
+mode (347 mV floor) switched early on the tooth slope, so the tune's 114
+deg trigger offset no longer matches the edge the decoder uses. The stock
+ECU uses the same adaptive conditioning, so matching the stock timing with
+a timing light is the reference.
+
+Next steps: timing light on cyl 1 during cranking (compare with the stock
+ECU), then adjust globalTriggerAngleOffset around 114 deg and retry; if
+timing is right, move to cranking fueling.
