@@ -66,6 +66,11 @@ extern std::optional<custom_fix_configuration_type> custom_board_fix_configurati
 using setup_custom_board_ts_command_override_type = void (*)(uint16_t /*subsystem*/, uint16_t /*index*/);
 extern std::optional<setup_custom_board_ts_command_override_type> custom_board_ts_command;
 
+enum class BasicConfigurationAction : uint16_t;
+// Applies board pin/ADC changes for a supported Basic Configurations action.
+using board_basic_configuration_type = bool (*)(BasicConfigurationAction);
+extern std::optional<board_basic_configuration_type> custom_board_applyBasicConfiguration;
+
 // Board-specific TunerStudio binary command handler. Unlike custom_board_ts_command
 // (which rides on TS_EXECUTE and is fire-and-forget), this hook receives the channel and
 // the raw request payload so a board can implement a full binary request/response. It is invoked for opcodes the
