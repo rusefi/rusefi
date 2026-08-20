@@ -102,6 +102,12 @@ static void benchOn(OutputPin* output) {
 }
 
 static void benchOff(OutputPin* output) {
+	/* Drive the edge FIRST: this action runs in the scheduler executor under
+	 * the kernel lock, and the diag print below (USB/CAN console traffic) must
+	 * not delay the spark edge - a 5 ms bench pulse is exactly the dwell the
+	 * coil sees in real ignition. */
+	output->setValue(BENCH_MSG, false, /*isForce*/ true);
+
 #if EFI_PROD_CODE && (BOARD_EXT_GPIOCHIPS > 0)
 	static char pin_error[64];
 
@@ -113,7 +119,6 @@ static void benchOff(OutputPin* output) {
 		efiPrintf("Diag says %s", pin_error);
 	}
 #endif // EFI_PROD_CODE
-	output->setValue(BENCH_MSG, false, /*isForce*/ true);
 }
 
 static void runBench(OutputPin *output, float onTimeMs, float offTimeMs, int count, bool swapOnOff) {
