@@ -4568,3 +4568,17 @@ Also noted: the drift-limit cross-check (custom_board_vvtDriftLimit) forced
 re-syncs can leave the phase basis flipped 180 deg after a mid-crank
 desync - worth gating to above cranking rpm or making the re-sync validate
 against the last known basis.
+
+## 2026-08-20 - m74_9: cam-less (two-stroke) experiment rolled back
+
+What: attempted cam-less operation (early-return on VVT_INACTIVE cam events
++ two-stroke mode for 360-degree firing). Rolled back per user: the cam sync
+works fine and cam-less operation is not wanted.
+
+Key insight retained: with the cam SENSOR physically connected and vvtMode
+= Inactive in the tune, the cam events still arrive and the drift
+cross-check desynced the crank decoder on every cam event (today's
+syncCtr=0 / nothing-scheduled session). With the sensor physically
+UNPLUGGED (2026-08-18 session) no cam events arrive, so cam-less operation
+worked and fuel was delivered. Keep the cam connected and vvtMode = Single
+Tooth; the no-start problem is ignition/fuel calibration, not trigger.
