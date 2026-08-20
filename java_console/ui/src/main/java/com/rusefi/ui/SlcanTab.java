@@ -193,8 +193,8 @@ public class SlcanTab {
         synchronized (lock) {
             bufferSize = buffer.size();
             for (FrameRecord record : lastFrames) {
-                text.append(String.format("%s %-30s %s%n",
-                    timeFormat.format(new Date(record.wallClockMs)), record.frame.raw, record.frame.decode()));
+                text.append(String.format("%s %s%n",
+                    timeFormat.format(new Date(record.wallClockMs)), record.frame.decode()));
             }
         }
 
