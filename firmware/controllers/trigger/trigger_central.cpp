@@ -855,18 +855,21 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	// Board opt-in input debounce (m74_9): VR comparator ringing and starter
 	// noise arrive as edge bursts far below the real tooth period. Dropping
 	// them here keeps the event count honest, so the position gate and the
-	// tooth-count sync validation see real teeth only. RiseOnly wheels do not
-	// decode fall edges, so a short debounce stays safe at high RPM (60-2
-	// tooth period at 8000 rpm is 125 us; m74_9 noise measures <50 us,
-	// threshold 100 us). The existing isToothExpectedNow doubled-edge
-	// rejection only runs above 1000 rpm - this covers cranking too.
+	// tooth-count sync validation see real teeth only. The window is applied
+	// PER POLARITY: a burst is a same-polarity double edge, while the
+	// OPPOSITE edge of a real tooth arrives sooner than the window at high
+	// rpm (the L9779 output duty compresses - at 295 rpm the short half-tooth
+	// is ~1.16 ms against the ~1.17 ms threshold), so any-edge debounce eats
+	// real useful edges there and shifts the decoder's phase basis. A real
+	// same-polarity edge is a full tooth away, far above toothUs/3.
 	float debounceUs = get_board_override_result(custom_board_triggerDebounceUs, 0.0f);
 	if (debounceUs > 0) {
-		if (lastDebouncedTriggerEdgeNt != 0 && timestamp - lastDebouncedTriggerEdgeNt < US2NT(debounceUs)) {
+		int polarity = isTriggerUpEvent(signal) ? 0 : 1;
+		if (lastDebouncedTriggerEdgeNt[polarity] != 0 && timestamp - lastDebouncedTriggerEdgeNt[polarity] < US2NT(debounceUs)) {
 			triggerDebounceDropCount++;
 			return;
 		}
-		lastDebouncedTriggerEdgeNt = timestamp;
+		lastDebouncedTriggerEdgeNt[polarity] = timestamp;
 	}
 
 	if (triggerShape.shapeDefinitionError) {

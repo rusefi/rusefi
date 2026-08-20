@@ -4920,3 +4920,30 @@ Note: a static-profile distortion cannot be unit-tested for the latch (any
 static slot distortion that breaks the shifted-basis check also corrupts
 the first sync through the sliding window) - the profile gate removes the
 mechanism by construction instead.
+
+## 2026-08-20 - m74_9: per-polarity trigger debounce + newest-first rawtrg dump
+
+The 20:45 car log showed the +1-basis latch AGAIN even with the profile
+gated to running rpm (nine 'S' syncs at gap0 0.93-1.12, 210-290 rpm) - so
+the profile distortion was not the only latch mechanism. The 20:38 ring
+(min delta 2346 us) shows the L9779 output duty compresses with rpm: at
+295 rpm the tooth is 3.5 ms and one half-tooth can be ~1.16 ms against the
+debounce threshold toothUs/3 = 1.17 ms - the any-edge debounce can eat a
+REAL edge right at that boundary, which shifts the decoder's phase basis
+and makes the gap ratio check fail every revolution (the bypass then
+anchors the basis on an ordinary tooth).
+
+Fix: the debounce window is now applied PER POLARITY (a noise burst is a
+same-polarity double edge; a real same-polarity edge is a full tooth away,
+far above toothUs/3). The opposite edge of a real tooth no longer arms the
+debounce, so the high-rpm duty compression cannot eat useful edges.
+
+Also: 'rawtrg' now dumps NEWEST FIRST - a console capture truncated
+mid-dump (the user closing the console) still contains the most recent
+edges, the interesting end. Lines keep their real edge indices; parse and
+sort when reconstructing the stream.
+
+Note: MFS settings writes failed with status -1 (MFS_ERR_INV_STATE) after
+a tune burn - the MFS driver had wedged into MFS_ERROR on a transient flash
+failure; a power cycle cleared it. If it recurs, look at SPI contention
+between the MFS flash and the L9779 driver during burns.

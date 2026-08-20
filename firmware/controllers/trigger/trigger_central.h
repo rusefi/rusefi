@@ -231,10 +231,15 @@ private:
 	// Used for checking whether your trigger pattern is correct.
 	expected<float> expectedNextPhase = unexpected;
 
-	// Input debounce (see custom_board_triggerDebounceUs): timestamp of the
-	// last trigger edge accepted by handleShaftSignal. Edges arriving sooner
-	// than the board's minimum interval after this one are dropped as noise.
-	efitick_t lastDebouncedTriggerEdgeNt = 0;
+	// Input debounce (see custom_board_triggerDebounceUs): per-polarity
+	// timestamps of the last accepted trigger edge. Edges arriving sooner than
+	// the board's minimum interval after the previous edge OF THE SAME
+	// POLARITY are dropped as noise. Same-polarity comparison only: a noise
+	// burst is a same-polarity double edge, while the OPPOSITE edge of a real
+	// tooth arrives sooner than the window at high rpm (the L9779 output duty
+	// compresses - at 295 rpm the short half-tooth is ~1.16 ms against the
+	// ~1.17 ms threshold), so any-edge debounce eats real useful edges there.
+	efitick_t lastDebouncedTriggerEdgeNt[2] = {0, 0};
 };
 
 void triggerInfo(void);
