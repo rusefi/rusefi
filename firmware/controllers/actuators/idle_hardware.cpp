@@ -97,6 +97,11 @@ void applyIACposition(percent_t position) {
 }
 
 bool isIdleHardwareRestartNeeded() {
+	if (isConfigurationChanged(etbFunctions[0]) || isConfigurationChanged(etbFunctions[1])) {
+		// ETB ownership is boot-only, so its pins are not available to idle hardware until restart.
+		return false;
+	}
+
 	return  isConfigurationChanged(stepperEnablePin) ||
 			isConfigurationChanged(stepperEnablePinMode) ||
 			isConfigurationChanged(idle.stepperStepPin) ||

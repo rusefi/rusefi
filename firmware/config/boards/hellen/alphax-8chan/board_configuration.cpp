@@ -9,6 +9,7 @@
  */
 
 #include "pch.h"
+#include "basic_configuration.h"
 #include "hellen_meta.h"
 #include "defaults.h"
 #include "board_overrides.h"
@@ -253,10 +254,20 @@ int getBoardMetaDcOutputsCount() {
     return 2;
 }
 
+static bool applyAlphaxBasicConfiguration(BasicConfigurationAction action) {
+	return applyBasicConfiguration(action,
+		set8chanDefaultETBPins,
+		MM176_IN_TPS_ANALOG,
+		MM176_IN_TPS2_ANALOG,
+		MM176_IN_PPS1_ANALOG,
+		MM176_IN_PPS2_ANALOG);
+}
+
 void setup_custom_board_overrides() {
 	custom_board_InitHardware = alphax_8chan_boardInitHardware;
 	custom_board_DefaultConfiguration = alphax_8chan_defaultConfiguration;
 	custom_board_ConfigOverrides = alphax_8chan_boardConfigOverrides;
+	custom_board_applyBasicConfiguration = applyAlphaxBasicConfiguration;
 
 	custom_board_OnConfigurationChange = customBoardOnConfigurationChange;
 }
