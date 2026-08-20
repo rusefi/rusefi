@@ -4421,3 +4421,45 @@ Follow-ups:
   and take the next crank attempt: the catch should now survive (no C9002),
   and the engine should keep running after the first combustion.
 - ETB autograb one-direction issue still deferred.
+
+## 2026-08-20 - m74_9: VR path mapped on hardware; L9779 VRS switched to full adaptive mode
+
+What: the user buzzed out the board (the KiCad schematic is known-unreliable,
+e.g. it draws OUT_VRS on L9779 pin 25 while the datasheet says pin 8).
+Measured path: crank sensor connector AA1/AB1 -> 10k -> L9779 pin 6 (VRSP) /
+pin 7 (VRSN); L9779 pin 8 (OUT_VRS, open drain) -> series R -> 74HC14 pin 1
+-> pin 2 -> PF8 (triggerInputPins[0] = Gpio::F8). The 10k series resistors
+are the ST reference circuit: the datasheet hysteresis table is quoted
+"with 10 kOhm ext resistors".
+
+Key finding: the rusEFI l9779 driver never wrote CONFIG_REG1/CONFIG_REG5,
+so the VRS interface ran on power-on defaults: limited adaptive mode
+(CONFIG_REG1 reset 0x08, bit1=0), auto temporal filter OFF (CONFIG_REG5
+reset 0xd8, VRS_MODE=01), hysteresis floor 17 uA (347 mV with 10k). In that
+mode the interface behaves almost like a fixed-threshold comparator with a
+4 us mask - the noise storms pass through to PF8 and false-sync the decoder
+during cranking. The hardware always had the adaptive conditioning; it was
+never switched on.
+
+Fix: vrs_configure() in hw_layer/drivers/gpio/l9779.cpp writes
+CONFIG_REG1=0x0a (full adaptive) and CONFIG_REG5=0xf9 (VRS diag on, auto
+hysteresis + auto filter both on, hysteresis floor 5 uA / 100 mV so weak
+cranking amplitude still passes) from chip_init() after START. Fully
+adaptive mode scales the hysteresis with the actual tooth amplitude (peak
+detector + 5-level quantizer) and enables the adaptive masking filter -
+the stock ECU's conditioning of the same sensor through the same chip, no
+hardware mod needed. Config registers are write-only and reset on power
+cycle, so a bad value is always recoverable.
+
+Validation: m74_9 firmware build clean (BUILD SUCCESSFUL). Unit tests not
+run: the driver compiles only into firmware builds (ChibiOS HAL, not part
+of the host test binary).
+
+Follow-ups:
+- Flash over CAN and take a crank: the console must show "L9779 VRS: full
+  adaptive mode" at boot; then rawtrg/toothdump should show clean tooth
+  spacing without the 50-500 us noise bursts.
+- The pullup on the OUT_VRS net (open drain) is not yet located on the
+  board - verify it exists.
+- 74HC14 inverts the signal; trigger edge polarity may need re-checking
+  once the analog stage is clean.

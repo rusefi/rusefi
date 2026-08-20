@@ -351,6 +351,22 @@ Also: `efifeatures.h` edits do not trigger a rebuild (object deps track `pch/pch
 
 ## F-port pins are ADC3-only (STM32F4 / AT32F435): EFI_ADC3_SLOW
 
+## L9779 VRS (flying wheel) input on m74_9: full adaptive mode is software-only
+
+The crank VR signal on m74_9 does NOT reach the MCU directly. Measured on the board (the KiCad schematic lies: it draws OUT_VRS on L9779 pin 25, the datasheet says pin 8; the 74HC14 power pins are drawn swapped):
+
+- crank sensor connector AA1/AB1 -> 10k -> L9779 pin 6 (VRSP) / pin 7 (VRSN)
+- L9779 pin 8 (OUT_VRS, **open drain** - needs an external pullup) -> series R -> 74HC14 pin 1 (input, INVERTING) -> pin 2 -> PF8 (`triggerInputPins[0] = Gpio::F8`)
+- The 10k series resistors are the ST reference circuit: the datasheet hysteresis table is quoted "with 10 kOhm ext resistors" (hysteresis current x 10k = hysteresis volts at the input).
+
+The L9779 has a full adaptive VR conditioner (differential amp -> peak detector -> 5-level quantizer -> hysteresis scaling + adaptive temporal mask filter + sensor OL/SC diagnostics), configured over SPI:
+
+- CONFIG_REG1 @ 0x01, bit1: 0 = limited adaptive (reset default), 1 = full adaptive. Reset 0x08.
+- CONFIG_REG5 @ 0x05: bit5 = VRS diag enable (full mode) / force 5 uA min hysteresis (limited mode); VRS_MODE [4:3] = 11 -> auto hysteresis + auto filter both ON; VRS_HYST [2:0] 000 = 17 uA / 347 mV @10k, 001 = 5 uA / 100 mV. Reset 0xd8 (= filter OFF, mode 01).
+- The rusEFI driver `hw_layer/drivers/gpio/l9779.cpp` originally wrote NO VRS config: the chip ran limited-adaptive + filter OFF + 347 mV floor, i.e. near-fixed-threshold with a 4 us mask - the m74_9 cranking noise storms (50-500 us bursts) pass straight to PF8. `vrs_configure()` (called from `chip_init()` after START) now writes CONFIG_REG1=0x0a, CONFIG_REG5=0xf9. Registers are write-only and reset on power cycle - a bad value is always recoverable.
+- Deadlock escape (datasheet 6.14): if the VR amplitude stays persistently below the minimum hysteresis the output can deadlock; in limited mode CONFIG_REG5 bit5 forces 5 uA min hysteresis (not glitch-free).
+
+
 On both STM32F4 and AT32F435 every F-port pin (PF3-PF10) is an ADC3-only input - the ADC1/ADC2 slow+fast sampling cannot see them at all. Boards that wire CLT/IAT/O2/AC-pressure to F-pins (m74_9 does: CLT=PF5=ADC3_IN15, IAT=PF6=ADC3_IN4) need the `EFI_ADC3_SLOW` capability (stm32_adc_v2.cpp): it starts ADC3, samples the 8 F-pin channels (physical IN4,5,6,7,8,9,14,15 -> rusEFI EFI_ADC_32..39, order per the `adcChannels[]` table in stm32_adc.cpp) with a blocking `adcConvert` in the slow loop, and stores them at slow-buffer indices 32..39. Cannot be combined with `EFI_SOFTWARE_KNOCK` (compile error guards it). With ADC3 slow sampling the open-input reading of a thermistor pin (1500 ohm pullup to +5V, 3.3V-referenced ADC) is ~3.28V raw - the resistance conversion then reports 0 ohms/invalid, which is expected until a sensor is connected.
 
 ## OpenBLT Bootloader Version Marker ("BLxx")

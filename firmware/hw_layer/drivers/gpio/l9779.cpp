@@ -220,6 +220,7 @@ struct L9779 : public GpioChip {
 	int chip_reset();
 	int chip_init_data();
 	int chip_init();
+	int vrs_configure();
 	int wd_feed();
 	void debug() override;
 
@@ -1156,6 +1157,45 @@ err_gpios:
 	return ret;
 }
 
+/* Configure the flying-wheel (VRS) sensor interface for fully adaptive
+ * operation (datasheet 6.14). The power-on defaults are limited adaptive
+ * mode (CONFIG_REG1 reset 0x08: VRS_mode = 0) with the auto-adaptive
+ * temporal filter switched OFF (CONFIG_REG5 reset 0xd8: VRS_MODE = 01)
+ * and a 17 uA hysteresis floor. In that mode the interface behaves almost
+ * like a plain fixed-threshold comparator: noise bursts pass through to
+ * OUT_VRS and false-sync the crank decoder during cranking.
+ *
+ * Fully adaptive mode scales the hysteresis with the actual sensor
+ * amplitude (peak detector + 5-level quantizer) and enables the adaptive
+ * masking filter - the way the stock ECU conditions the same sensor
+ * through the same chip.
+ *
+ * CONFIG_REG5 bit5 doubles as the VRS diagnosis enable in this mode
+ * (open/short detection of the sensor, datasheet 6.14).
+ */
+int L9779::vrs_configure(void)
+{
+	/* CONFIG_REG1: bit1 = 1 -> full adaptive VRS mode; bit0 (MRD_OT_DIS)
+	 * and the reserved bit3 keep their reset values. */
+	static const uint8_t cfg1 = 0x0a;
+	/* CONFIG_REG5: reserved bits 7:6 as reset; bit5 VRS diag on; VRS_MODE
+	 * 11 = auto-adaptive hysteresis + auto-adaptive filter both on;
+	 * VRS_HYST 001 = 5 uA floor (100 mV with the 10k ext resistors) so
+	 * low cranking amplitude still gets through. */
+	static const uint8_t cfg5 = 0xf9;
+
+	int ret = spi_rw(MSG_W(0x01, cfg1), NULL);
+	if (ret)
+		return ret;
+
+	ret = spi_rw(MSG_W(0x05, cfg5), NULL);
+	if (ret)
+		return ret;
+
+	efiPrintf(DRIVER_NAME " VRS: full adaptive mode (CONFIG_REG1=0x%02x CONFIG_REG5=0x%02x)", cfg1, cfg5);
+	return 0;
+}
+
 int L9779::chip_init()
 {
 	int ret;
@@ -1172,6 +1212,12 @@ int L9779::chip_init()
 	 * datasheet Table 57) clears OUT_DIS. With OUT_DIS = 1 all control
 	 * register writes are ignored and the power stages stay off. */
 	ret = spi_rw(CMD_START_REACT(BIT(1)), NULL);
+	if (ret)
+		return ret;
+
+	/* Enable the flying-wheel interface in fully adaptive mode before the
+	 * engine can run: the reset defaults let VR noise storms through. */
+	ret = vrs_configure();
 	if (ret)
 		return ret;
 
