@@ -233,7 +233,8 @@ extern std::optional<setup_custom_bool_type> custom_board_syncGapHardening;
 // every cam revolution. A crank-sync basis error (false sync) shifts the
 // reading by the sync error, so a jump beyond the limit forces the crank
 // decoder to re-sync. 0 (default) disables the check - engines with a VVT
-// phaser legitimately move the cam phase. m74_9 sets 15 (fixed cam).
+// phaser legitimately move the cam phase. Currently no board opts in
+// (m74_9 used to set 15 for its fixed cam, removed with the cam-sync disable).
 extern std::optional<setup_custom_get_float_type> custom_board_vvtDriftLimit;
 
 // When set and returning a positive interval (microseconds), trigger edges

@@ -482,7 +482,8 @@ void handleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 		// error, so a jump beyond the board's drift limit forces the crank
 		// decoder to desync and re-sync cleanly on the next real gap. Only
 		// boards with a fixed cam opt in via custom_board_vvtDriftLimit
-		// (m74_9: 15 deg) - VVT-phaser engines legitimately move the cam.
+		// (no board currently opts in) - VVT-phaser engines legitimately move
+		// the cam.
 		float driftLimit = get_board_override_result(custom_board_vvtDriftLimit, 0.0f);
 		if (driftLimit > 0 && tc->hasVvtPosition[bankIndex][camIndex]) {
 			float drift = wrapVvt(vvtPosition - tc->vvtPosition[bankIndex][camIndex], FOUR_STROKE_CYCLE_DURATION / 2);
