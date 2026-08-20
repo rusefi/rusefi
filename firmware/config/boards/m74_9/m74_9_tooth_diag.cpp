@@ -280,21 +280,25 @@ void m74_9RawTriggerDump() {
 	efiPrintf("rawtrg: %d edges span %.1f ms min %d us max %d us",
 		(int)deltaCount, span / 1000.0f, (int)minDelta, (int)maxDelta);
 
-	// inter-edge deltas in us, 16 per line, newest last
+	// inter-edge deltas in us, 16 per line, NEWEST FIRST: a truncated console
+	// capture (the user closing the console mid-dump) then still contains the
+	// most recent edges - the interesting end of the capture. Lines keep their
+	// real edge indices; parse and sort by index when reconstructing the
+	// stream.
 	static char deltaLine[224];
 	static char dirLine[224];
-	for (size_t start = 0; start < deltaCount; start += 16) {
-		size_t end = start + 16 < deltaCount ? start + 16 : deltaCount;
+	for (size_t start = deltaCount; start > 0; start -= 16) {
+		size_t begin = start >= 16 ? start - 16 : 0;
 		size_t off = 0;
-		off += chsnprintf(deltaLine + off, sizeof(deltaLine) - off, "raw d%03d", (int)start);
-		for (size_t i = start; i < end; i++) {
+		off += chsnprintf(deltaLine + off, sizeof(deltaLine) - off, "raw d%03d", (int)begin);
+		for (size_t i = begin; i < start; i++) {
 			off += chsnprintf(deltaLine + off, sizeof(deltaLine) - off, " %6d", (int)deltas[i]);
 		}
 		efiPrintf("%s", deltaLine);
 
 		off = 0;
-		off += chsnprintf(dirLine + off, sizeof(dirLine) - off, "raw r%03d", (int)start);
-		for (size_t i = start; i < end; i++) {
+		off += chsnprintf(dirLine + off, sizeof(dirLine) - off, "raw r%03d", (int)begin);
+		for (size_t i = begin; i < start; i++) {
 			off += chsnprintf(dirLine + off, sizeof(dirLine) - off, " %6c", ordered[i].rising ? 'R' : 'F');
 		}
 		efiPrintf("%s", dirLine);
