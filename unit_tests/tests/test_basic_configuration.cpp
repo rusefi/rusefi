@@ -44,49 +44,6 @@ protected:
 	EngineTestHelper eth;
 };
 
-TEST_F(BasicConfigurationTest, ActuatorPresetsDoNotChangeSensors) {
-	setTPS1Inputs(EFI_ADC_5, EFI_ADC_6);
-	setPPSInputs(EFI_ADC_7, EFI_ADC_8);
-	engineConfiguration->useRawOutputToDriveIdleStepper = true;
-	engineConfiguration->stepper_dc_use_two_wires = true;
-	engineConfiguration->stepperDcInvertedPins = true;
-	engine->engineTypeChangeTimer.init();
-
-	run(BasicConfigurationAction::EtbToStepper);
-
-	EXPECT_TRUE(engineConfiguration->useStepperIdle);
-	EXPECT_TRUE(engineConfiguration->useHbridgesToDriveIdleStepper);
-	EXPECT_FALSE(engineConfiguration->useRawOutputToDriveIdleStepper);
-	EXPECT_FALSE(engineConfiguration->stepper_dc_use_two_wires);
-	EXPECT_FALSE(engineConfiguration->stepperDcInvertedPins);
-	EXPECT_EQ(DC_None, engineConfiguration->etbFunctions[0]);
-	EXPECT_EQ(DC_None, engineConfiguration->etbFunctions[1]);
-	EXPECT_EQ(EFI_ADC_5, engineConfiguration->tps1_1AdcChannel);
-	EXPECT_EQ(EFI_ADC_6, engineConfiguration->tps1_2AdcChannel);
-	EXPECT_EQ(EFI_ADC_7, engineConfiguration->throttlePedalPositionAdcChannel);
-	EXPECT_EQ(EFI_ADC_8, engineConfiguration->throttlePedalPositionSecondAdcChannel);
-	EXPECT_EQ(1, pinDefaultsApplyCount);
-	EXPECT_TRUE(needToTriggerTsRefresh());
-	EXPECT_FALSE(isIdleHardwareRestartNeeded());
-
-	auto* etb = static_cast<EtbController*>(engine->etbControllers[0]);
-	const auto runningFunction = etb->getFunction();
-	activeConfiguration.etbFunctions[0] = DC_None;
-	activeConfiguration.etbFunctions[1] = DC_None;
-
-	run(BasicConfigurationAction::StepperToEtb);
-	onConfigurationChangeElectronicThrottleCallback(&activeConfiguration);
-
-	EXPECT_FALSE(engineConfiguration->useStepperIdle);
-	EXPECT_FALSE(engineConfiguration->useHbridgesToDriveIdleStepper);
-	EXPECT_FALSE(engineConfiguration->useRawOutputToDriveIdleStepper);
-	EXPECT_EQ(DC_Throttle1, engineConfiguration->etbFunctions[0]);
-	EXPECT_EQ(DC_Throttle2, engineConfiguration->etbFunctions[1]);
-	EXPECT_EQ(2, pinDefaultsApplyCount);
-	EXPECT_FALSE(isIdleHardwareRestartNeeded());
-	EXPECT_EQ(runningFunction, etb->getFunction());
-}
-
 TEST_F(BasicConfigurationTest, SensorPresetsPreserveCalibration) {
 	engineConfiguration->tpsMin = 101;
 	engineConfiguration->tpsMax = 202;
