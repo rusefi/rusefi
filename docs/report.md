@@ -4463,3 +4463,31 @@ Follow-ups:
   board - verify it exists.
 - 74HC14 inverts the signal; trigger edge polarity may need re-checking
   once the analog stage is clean.
+
+## 2026-08-20 - m74_9: VRS full adaptive mode verified on the bench (rawtrg/toothdump/MLG)
+
+What: flashed 6dbec586c14, boot line confirms "l9779 VRS: full adaptive mode
+(CONFIG_REG1=0x0A CONFIG_REG5=0xF9)". Two bench captures analyzed
+(rawtrg/toothdump + one MLG).
+
+Results:
+- Noise storms are GONE: both rawtrg rings (1047 and 1857 edges) have zero
+  deltas below 2 ms; the old captures were full of 50-500 us bursts. Edges
+  alternate F/R strictly (6 same-polarity anomalies in 1047 edges).
+- The 60-2 gap is seen cleanly and consistently: in capture 1 the big
+  deltas land exactly every 116 edges = 58 teeth (9 gaps, spacing exactly
+  116); the toothdump captured 4 full revolutions with the gap at slot 57
+  in every revolution (39.5 ms vs 15 ms tooth = ratio 2.6, inside the
+  [1.6, 3.75] window - the hand-spin decelerates through the gap).
+- The ECU synced on the bench wheel; no trigger errors anywhere
+  (istriggererror=0 in the MLG, no C9002/C9003 in the text logs).
+
+Open items:
+- The 09:56:52 MLG crank at 248-264 rpm shows syncCtr racing (1->16 in
+  ~0.6 s) and a C6728 (CUSTOM_VVT_PHASE_JUMP) at spin end: the cam
+  cross-check (custom_board_vvtDriftLimit 15 deg) forced re-syncs while
+  the crank decelerates. triggersecondaryrise=0 throughout - the cam sensor
+  appears disconnected (it was unplugged on 2026-08-18 for a test). Confirm
+  cam wiring; the crank side itself is clean.
+- Real-car crank is the next validation step: watch istriggererror,
+  syncCtr ~1/rev, revCounter 1/engine-cycle, and whether it catches.
