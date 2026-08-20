@@ -1324,9 +1324,18 @@ int L9779::init()
 	/* init semaphore */
 	chSemObjectInit(&wake, 10);
 
-	/* start thread */
+	/* start thread.
+	 * Priority matters: the VDA 2.0 answer window is only ~12.6 ms wide
+	 * (default RESPTIME), and a response outside the window increments the
+	 * chip error counter - EC > 4 forces OUT1..4 + IGN1..4 off in hardware
+	 * (observed on the car: the cranking workload at main-loop/ADC/ETB/CAN-RX
+	 * priorities preempted the PRIO_GPIOCHIP thread past the window, EC pegged
+	 * at 7 with wda_int set - no fuel/spark while every ECU-side counter
+	 * looked healthy, and the bench worked again as soon as cranking stopped).
+	 * Per-cycle work is a handful of 16-bit SPI frames, so running above all
+	 * of those threads costs a negligible CPU fraction. */
 	thread = chThdCreateStatic(thread_wa, sizeof(thread_wa),
-									 PRIO_GPIOCHIP, l9779_driver_thread, this);
+											NORMALPRIO + 12, l9779_driver_thread, this);
 
 	return 0;
 }
