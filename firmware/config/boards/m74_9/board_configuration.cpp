@@ -727,6 +727,14 @@ void setup_custom_board_overrides() {
 	// camInputs1 = NONE) - crank-only until the engine runs. The cam-phase
 	// drift cross-check is therefore not opted in (custom_board_vvtDriftLimit
 	// stays at the 0 = disabled default).
+	// Early-gap acceptance: a ratio-validated sync candidate that arrives 1-2
+	// events before the expected count means the L9779 VR conditioner lost
+	// 1-2 teeth between the gaps (it does this at the first-combustion catch
+	// and below ~70 rpm; noise only INSERTS events, so a deficit cannot be
+	// noise). Accept it while cranking instead of C9003-desyncing - the
+	// observed failure mode was C9003 'got 56/0' killing the engine right at
+	// the catch.
+	custom_board_syncEarlyGapWhileCranking = []() { return true; };
 	// VR input debounce: the trigger logs show noise edge bursts <50 us apart
 	// (comparator ringing / starter interference) that inflate the event count
 	// and false-sync the decoder mid-crank. The threshold is RPM-adaptive
@@ -746,6 +754,7 @@ void setup_custom_board_overrides() {
 #endif
 	addConsoleAction("toothdump", m74_9ToothDump);
 	addConsoleAction("toothsave", m74_9ToothSave);
+	addConsoleAction("synctrace", m74_9SyncTrace);
 	// raw primary-trigger edge stream capture: a digital oscilloscope of the
 	// comparator output for noise diagnosis (deltas + histogram, see
 	// m74_9_tooth_diag.cpp)

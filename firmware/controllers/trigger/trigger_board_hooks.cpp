@@ -30,3 +30,6 @@ PUBLIC_API_WEAK __attribute__((noinline)) void boardRawTriggerEdge(int signalInd
 PUBLIC_API_WEAK __attribute__((noinline)) float triggerGetToothProfileFactor(int) {
 	return 1.0f;
 }
+
+PUBLIC_API_WEAK __attribute__((noinline)) void boardTriggerSyncEvent(char, int, float, float) {
+}

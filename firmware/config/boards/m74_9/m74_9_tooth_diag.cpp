@@ -318,6 +318,59 @@ void m74_9RawTriggerDump() {
 		(int)h50, (int)h100, (int)h200, (int)h500, (int)h1m, (int)h2m, (int)h4m, (int)hUp);
 }
 
+// ---- decoder sync-event trace ----
+// Ring of the decoder's last sync/desync events: the decoder-side view that
+// correlates with the pin-side 'rawtrg' capture. Filled by
+// boardTriggerSyncEvent() (strong override of the weak trigger hook) at every
+// sync point; dumped with 'synctrace'.
+
+constexpr size_t SyncTraceRingSize = 32;
+
+struct SyncTraceEvent {
+	uint32_t timeMs;      // getTimeNowMs() at the event
+	char kind;            // 'S' validated sync, 'R' first sync/re-sync, 'E' count-error desync, 'A' early-gap acceptance
+	int8_t countersError; // eventCount - expectedEventCount at the sync (0 for S/R)
+	float gap0;
+	float gap1;
+	uint16_t rpm;
+};
+
+static SyncTraceEvent syncTraceRing[SyncTraceRingSize];
+static size_t syncTraceHead = 0;
+static size_t syncTraceTotal = 0;
+
+void boardTriggerSyncEvent(char kind, int countersError, float gap0, float gap1) {
+	int8_t clampedError = (int8_t)(countersError < -127 ? -127 : (countersError > 127 ? 127 : countersError));
+
+	syncTraceRing[syncTraceHead] = {
+		(uint32_t)getTimeNowMs(),
+		kind,
+		clampedError,
+		gap0,
+		gap1,
+		(uint16_t)Sensor::getOrZero(SensorType::Rpm)
+	};
+	syncTraceHead = (syncTraceHead + 1) % SyncTraceRingSize;
+	syncTraceTotal++;
+}
+
+void m74_9SyncTrace() {
+	size_t valid = syncTraceTotal < SyncTraceRingSize ? syncTraceTotal : SyncTraceRingSize;
+
+	efiPrintf("synctrace: %d sync events (newest last), drops: debounce=%u noiseFilter=%u ignoredTooth=%u ordering=%u",
+		(int)valid,
+		(unsigned)getTriggerCentral()->triggerDebounceDropCount,
+		(unsigned)getTriggerCentral()->triggerNoiseFilterDropCount,
+		(unsigned)getTriggerCentral()->triggerIgnoredToothCount,
+		(unsigned)getTriggerCentral()->triggerState.orderingErrorCounter);
+
+	for (size_t i = 0; i < valid; i++) {
+		const SyncTraceEvent& e = syncTraceRing[(syncTraceHead + SyncTraceRingSize - valid + i) % SyncTraceRingSize];
+		efiPrintf(" sync %c t=%u ms countErr=%d gap0=%.3f gap1=%.3f rpm=%u",
+			e.kind, (unsigned)e.timeMs, (int)e.countersError, e.gap0, e.gap1, (unsigned)e.rpm);
+	}
+}
+
 // Called from the trigger decoder for every synchronized primary tooth.
 void boardTriggerCallback(efitick_t timestamp, float) {
 	// Authoritative tooth position comes from the decoder index (0 = the sync

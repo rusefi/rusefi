@@ -53,6 +53,19 @@ struct SyncGapHardeningScope {
 	}
 };
 
+// Same pattern for the cranking-band early-gap acceptance (m74_9 opt-in): a
+// ratio-validated gap candidate arriving 1-2 events early (events LOST
+// between the gaps) is accepted as a valid sync instead of C9003-desyncing.
+struct SyncEarlyGapWhileCrankingScope {
+	SyncEarlyGapWhileCrankingScope() {
+		custom_board_syncEarlyGapWhileCranking = []() { return true; };
+	}
+
+	~SyncEarlyGapWhileCrankingScope() {
+		custom_board_syncEarlyGapWhileCranking = std::nullopt;
+	}
+};
+
 /**
  * Fire one full 60-2 revolution: 58 real teeth, then the missing-teeth gap.
  * The gap ratio of THIS call is checked at the NEXT call's first rise.
@@ -130,6 +143,34 @@ static void fire60_2RevolutionMissingTooth(EngineTestHelper& eth, float slotMs, 
 	}
 
 	// trailing wait: the next call's first rise lands gapRatio * slotMs after tooth 56's rise
+	eth.moveTimeForwardUs(MS2US((gapRatio - 1.0f) * slotMs));
+}
+
+/**
+ * Fire one revolution with 'missing' (1-2) events LOST: the lost teeth merge
+ * into the tooth at mergePos, so that tooth takes (missing + 1) * slotMs rise
+ * to rise and the revolution has (58 - missing) teeth total. The real
+ * missing-teeth gap then arrives at count 58 - missing - the exact signature
+ * of the m74_9 first-combustion catch (the L9779 VR conditioner swallows 1-2
+ * teeth, the decoder's C9003 printed 'got 56/0').
+ * The merged tooth's mid-rev gap0 of 2.0-3.0 is rejected by the position gate
+ * (count ~31, far from the expected gap position).
+ */
+static void fire60_2RevolutionWithLostEvents(EngineTestHelper& eth, float slotMs, int missing, float gapRatio) {
+	const int mergePos = 30;
+	for (int i = 0; i < 58 - missing; i++) {
+		// rise-to-rise duration for this tooth: the merged tooth carries the
+		// time of the lost teeth (their events never arrive)
+		float riseToRise = (i == mergePos) ? slotMs * (missing + 1) : slotMs;
+
+		// the previous fall happened slotMs/2 after the previous rise
+		eth.moveTimeForwardUs(MS2US(riseToRise - slotMs / 2));
+		eth.firePrimaryTriggerRise();
+		eth.moveTimeForwardUs(MS2US(slotMs / 2));
+		eth.firePrimaryTriggerFall();
+	}
+
+	// trailing wait: the next call's first rise lands gapRatio * slotMs after the last rise
 	eth.moveTimeForwardUs(MS2US((gapRatio - 1.0f) * slotMs));
 }
 
@@ -466,6 +507,158 @@ TEST(trigger, crankingTransition60_2RandomMidRevPairsNeverDesync) {
 	uint32_t counterAfter = engine->rpmCalculator.getRevolutionCounterSinceStart();
 	EXPECT_EQ(200, counterAfter - counterBefore)
 		<< "revolution counter must track real engine cycles through the sweep";
+}
+
+/**
+ * The m74_9 first-combustion catch failure: the L9779 VR conditioner swallows
+ * 1-2 teeth mid-revolution, the real missing-teeth gap arrives at count 56
+ * (C9003 'expected 58/0 got 56/0'), the decoder desyncs and cuts fuel/spark
+ * exactly when the engine first catches - it dies right after the catch.
+ * With the cranking-band early-gap acceptance (m74_9 opt-in) the gap is
+ * accepted as a valid sync: the ratio windows, the position gate and the
+ * count-deficit direction (lost events, not noise) all prove it is the real
+ * gap. The decoder stays synchronized through the catch.
+ */
+TEST(trigger, crankingTransition60_2EarlyGapAcceptedWhileCranking) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	SyncEarlyGapWhileCrankingScope earlyGap;
+	SyncGapHardeningScope hardening;
+	// the user's m74_9 runs the 60-2 wheel on the crank
+	setCrankOperationMode();
+	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
+
+	// rev1 + rev2: rev2's first rise is the first sync (counter 0)
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+
+	// rev3 = the revolution after the first sync, with 2 events lost: the
+	// next call's first rise (the real gap) arrives at count 56
+	fire60_2RevolutionWithLostEvents(eth, steadySlotMs, /*missing*/2, /*gapRatio*/3.0f);
+
+	// rev4's first rise checks rev3's gap at count 56
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+
+	ASSERT_EQ(0u, getRecentWarnings()->getCount()) << "no warnings while cranking steadily";
+
+	// accepted as the real gap: no C9003, the sync survives the catch
+	ASSERT_EQ(0u, getRecentWarnings()->getCount()) << "no C9003 at the catch with 2 lost events";
+	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized()) << "still synchronized through the catch";
+	ASSERT_EQ(2, engine->triggerCentral.triggerState.getSynchronizationCounter()) << "sync counter through the catch";
+
+	// one more steady revolution: everything continues normally
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+
+	ASSERT_EQ(0u, getRecentWarnings()->getCount());
+	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized());
+	ASSERT_EQ(3, engine->triggerCentral.triggerState.getSynchronizationCounter()) << "sync counter after the catch";
+}
+
+/**
+ * Without the m74_9 opt-in the classic behavior is preserved: the early gap
+ * (count 56) desyncs the decoder with C9003 exactly like the on-car log.
+ */
+TEST(trigger, crankingTransition60_2EarlyGapDesyncsWithoutOverride) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	// the user's m74_9 runs the 60-2 wheel on the crank
+	setCrankOperationMode();
+	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
+
+	// rev1 + rev2: rev2's first rise is the first sync (counter 0)
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+
+	// rev3 = the revolution after the first sync, with 2 events lost
+	fire60_2RevolutionWithLostEvents(eth, steadySlotMs, /*missing*/2, /*gapRatio*/3.0f);
+
+	// rev4's first rise checks rev3's gap at count 56
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+
+	// classic C9003: warning + desync
+	ASSERT_EQ(1u, getRecentWarnings()->getCount()) << "one C9003 without the opt-in";
+	EXPECT_EQ(ObdCode::CUSTOM_PRIMARY_NOT_ENOUGH_TEETH, getRecentWarnings()->get(0).Code);
+	ASSERT_FALSE(engine->triggerCentral.triggerState.getShaftSynchronized()) << "desynced without the opt-in";
+
+	// the next steady revolution re-synchronizes cleanly
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+
+	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized()) << "re-synchronized";
+}
+
+/**
+ * Once running (rpm above 2 * crankingRpm) the early-gap acceptance is off:
+ * a count-56 gap is rejected like before (a tooth deficit at speed means
+ * something else is wrong, and the phase cost of accepting it is not
+ * harmless anymore).
+ */
+TEST(trigger, crankingTransition60_2EarlyGapRejectedWhenRunning) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	SyncEarlyGapWhileCrankingScope earlyGap;
+	SyncGapHardeningScope hardening;
+	// the user's m74_9 runs the 60-2 wheel on the crank
+	setCrankOperationMode();
+	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
+
+	// 1250 rpm steady revolutions: above the 2 * crankingRpm acceptance band
+	static constexpr float runningSlotMs = 0.8f;
+	fire60_2Revolution(eth, runningSlotMs, 3.0f);
+	fire60_2Revolution(eth, runningSlotMs, 3.0f);
+
+	// 2 events lost at running speed: the early gap desyncs with C9003
+	fire60_2RevolutionWithLostEvents(eth, runningSlotMs, /*missing*/2, /*gapRatio*/3.0f);
+	fire60_2Revolution(eth, runningSlotMs, 3.0f);
+
+	ASSERT_GT(Sensor::getOrZero(SensorType::Rpm), 2 * engineConfiguration->cranking.rpm) << "running rpm above the acceptance band";
+
+	// At running rpm the merged tooth also trips the bad-tooth-timing check,
+	// so expect the C9003 among the warnings rather than an exact count.
+	bool hasNotEnoughTeeth = false;
+	for (size_t i = 0; i < getRecentWarnings()->getCount(); i++) {
+		if (getRecentWarnings()->get(i).Code == ObdCode::CUSTOM_PRIMARY_NOT_ENOUGH_TEETH) {
+			hasNotEnoughTeeth = true;
+		}
+	}
+	ASSERT_TRUE(hasNotEnoughTeeth) << "C9003 at running rpm";
+	ASSERT_FALSE(engine->triggerCentral.triggerState.getShaftSynchronized()) << "desynced at running rpm";
+
+	// the next steady revolution re-synchronizes cleanly
+	fire60_2Revolution(eth, runningSlotMs, 3.0f);
+
+	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized()) << "re-synchronized";
+}
+
+/**
+ * A deficit of 3+ events is outside the acceptance range: the first early gap
+ * is skipped by the position gate (55 + 2 < 58), the index overruns the shape
+ * (116) at count 59 and the decoder desyncs with C9002 'too many teeth'.
+ * The acceptance must not mask a trigger input that is losing whole chunks
+ * of teeth.
+ */
+TEST(trigger, crankingTransition60_2ThreeMissingEventsStillDesync) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	SyncEarlyGapWhileCrankingScope earlyGap;
+	// the user's m74_9 runs the 60-2 wheel on the crank
+	setCrankOperationMode();
+	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
+
+	// rev1 + rev2: rev2's first rise is the first sync (counter 0)
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+
+	// rev3 = the revolution after the first sync, with 3 events lost
+	fire60_2RevolutionWithLostEvents(eth, steadySlotMs, /*missing*/3, /*gapRatio*/3.0f);
+
+	// rev4's first rise: count 55 -> position gate skips the candidate; the
+	// index then overruns at count 59 -> C9002 + desync
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+
+	ASSERT_EQ(1u, getRecentWarnings()->getCount()) << "one C9002 for a 3-event deficit";
+	EXPECT_EQ(ObdCode::CUSTOM_PRIMARY_TOO_MANY_TEETH, getRecentWarnings()->get(0).Code);
+	ASSERT_FALSE(engine->triggerCentral.triggerState.getShaftSynchronized()) << "desynced";
+
+	// rev5's first rise re-synchronizes cleanly
+	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+
+	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized()) << "re-synchronized";
 }
 
 /**
