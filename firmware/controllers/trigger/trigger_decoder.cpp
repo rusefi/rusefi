@@ -683,48 +683,8 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 					engineConfiguration != nullptr &&
 #endif
 					Sensor::getOrZero(SensorType::Rpm) < 2 * engineConfiguration->cranking.rpm) {
-					isSynchronizationPoint = true;
-				}
-
-				// Raw-ratio early-gap acceptance (board opt-in via
-				// custom_board_syncEarlyGapWhileCranking, m74_9): a candidate
-				// arriving 1-2 events EARLY whose RAW (un-normalized) gap ratios
-				// pass the windows is the real gap. Ordinary teeth on this wheel
-				// never exceed ~1.4 even with the worst compression ripple (the
-				// learned profile spans 0.81-1.40), the windows start at 1.6 - so
-				// an ordinary tooth can never false-fire this. Two cases:
-				//  - 1-2 events lost between the gaps (L9779 analog swallowing),
-				//    the gap arrives at count expected-1/-2 with a normal ~2-3
-				//    ratio - accept it at the real gap position;
-				//  - the +1 phase-basis latch seeded by the count-58 bypass above
-				//    (compressed gap + lost event -> bypass accepted the tooth
-				//    AFTER the gap): with the shifted basis the profile
-				//    normalization applies the wrong slots' factors and can keep
-				//    the real gap out of the window forever (observed: a whole
-				//    crank latched 6 degrees off). The RAW gap ratio stays ~2-3
-				//    regardless of the slot belief, so this re-anchors the basis
-				//    within one revolution instead of letting the latch persist.
-				// The acceptance itself is the cranking-band count-deficit path
-				// below (countersError -1/-2), which keeps the sync validated.
-				if (!isSynchronizationPoint && !tooEarlyForSync && !previousToothNotReal && wasSynchronized && atExpectedGapPosition &&
-						get_board_override_result(custom_board_syncEarlyGapWhileCranking, false) &&
-						currentCycle.eventCount[(int)triggerWheel] + 2 >= triggerShape.getExpectedEventCount(triggerWheel) &&
-						currentCycle.eventCount[(int)triggerWheel] < triggerShape.getExpectedEventCount(triggerWheel) &&
-#if EFI_UNIT_TEST
-						// mock tests run the decoder with engineConfiguration = nullptr
-						engineConfiguration != nullptr &&
-#endif
-						Sensor::getOrZero(SensorType::Rpm) < 2 * engineConfiguration->cranking.rpm) {
-					float rawGap0 = 1.0f * toothDurations[0] / toothDurations[1];
-					bool rawGapOk = isInRange(triggerShape.synchronizationRatioFrom[0], rawGap0, triggerShape.synchronizationRatioTo[0]);
-					if (triggerShape.gapTrackingLength >= 2) {
-						float rawGap1 = 1.0f * toothDurations[1] / toothDurations[2];
-						rawGapOk = rawGapOk && isInRange(triggerShape.synchronizationRatioFrom[1], rawGap1, triggerShape.synchronizationRatioTo[1]);
-					}
-					if (rawGapOk) {
-						isSynchronizationPoint = true;
-					}
-				}
+				isSynchronizationPoint = true;
+			}
 
 			if (isSynchronizationPoint) {
 				enginePins.debugTriggerSync.toggle();
@@ -953,6 +913,25 @@ bool TriggerDecoderBase::isSyncPoint(const TriggerWaveform& triggerShape, trigge
 	// so the missing-teeth gap ratio stays ~3.0 even under combustion instead
 	// of wandering outside the window. The weak default factor is 1.0 - no
 	// behavior change for boards without a learned profile.
+	// The profile is applied ONLY at running rpm (>= 2 * crankingRpm): during
+	// cranking the raw ratios are stable (observed 2.0-3.2 on m74_9) and the
+	// cranking-band position-based acceptances (count-58 bypass, count-56/57
+	// early gap) cover the first-combustion compression. Below the threshold
+	// the profile is actively harmful: when the phase basis is shifted by one
+	// tooth (the bypass accepting the tooth AFTER a compressed+lost-event
+	// gap), the sliding slot window applies the wrong teeth's factors and can
+	// keep the REAL gap out of the windows forever - the observed 19:53:34
+	// whole-crank latch at 6 degrees off. With raw factors there the real gap
+	// always reads ~2-3 and the decoder re-anchors within one revolution.
+	// Combustion ripple at idle (~840 rpm on this engine) is below the
+	// threshold too - the count-58 bypass covers a compressed idle gap there.
+	bool useProfile =
+#if EFI_UNIT_TEST
+		// mock tests run the decoder with engineConfiguration = nullptr
+		engineConfiguration != nullptr &&
+#endif
+		Sensor::getOrZero(SensorType::Rpm) >= 2 * engineConfiguration->cranking.rpm;
+
 	int step = triggerShape.useOnlyRisingEdges ? 2 : 1;
 	int teethPerRev = (int)triggerShape.getSize() / step;
 	int currentTooth = currentCycle.current_index / step;
@@ -971,8 +950,8 @@ bool TriggerDecoderBase::isSyncPoint(const TriggerWaveform& triggerShape, trigge
 		int toothI = (currentTooth - 1 - i + teethPerRev * 2) % teethPerRev;
 		int toothI1 = (currentTooth - 2 - i + teethPerRev * 2) % teethPerRev;
 
-		float factorI = triggerGetToothProfileFactor(toothI);
-		float factorI1 = triggerGetToothProfileFactor(toothI1);
+		float factorI = useProfile ? triggerGetToothProfileFactor(toothI) : 1.0f;
+		float factorI1 = useProfile ? triggerGetToothProfileFactor(toothI1) : 1.0f;
 		if (factorI <= 0.01f || factorI1 <= 0.01f) {
 			// Not learned yet - fall back to the raw durations.
 			factorI = 1.0f;

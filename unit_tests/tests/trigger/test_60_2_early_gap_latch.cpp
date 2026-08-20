@@ -19,14 +19,13 @@
  *
  * Heal: at the next revolution the REAL gap arrives at count 57 with a raw
  * ratio ~3.0 and the cranking-band early-gap acceptance re-anchors the
- * decoder at the real gap ('A' sync event) instead of desyncing. With the
- * neutral profile of this test (factor 1.0 everywhere, the weak default)
- * the normalized check already passes and the regular early-gap path heals;
- * on the car the learned profile can distort the normalized check at the
- * shifted slots (the observed latch), and the raw-ratio acceptance
- * (custom_board_syncEarlyGapWhileCranking) covers exactly that case - the
- * raw gap ratio stays ~2-3 regardless of the slot belief. That path is
- * exercised on hardware; here the seed + heal chain is pinned end to end.
+ * decoder at the real gap ('A' sync event) instead of desyncing. On the
+ * firmware the learned profile is now applied ONLY at running rpm (>= 2 *
+ * crankingRpm), so during cranking the normalized check IS the raw check
+ * and the heal above always works; before that gate the profile could
+ * distort the normalized check at the shifted slots and keep the latch for
+ * the whole crank (the 19:53:34 car log). The seed + heal chain is pinned
+ * here end to end.
  */
 
 #include "pch.h"
@@ -171,7 +170,7 @@ TEST(trigger, crankingTransition60_2LatchSeedHealsAtTheRealGap) {
 }
 
 /**
- * A clean revolution at the correct basis must not false-fire the raw-ratio
+ * A clean revolution at the correct basis must not false-fire the early-gap
  * acceptance: the ordinary tooth at count 57 has ratio ~1.0, far below the
  * 1.6 window low side, so the real gap at count 58 syncs cleanly.
  */

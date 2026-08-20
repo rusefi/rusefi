@@ -4874,7 +4874,7 @@ PCAN_ERROR_ILLHW), then one 2-3 s crank with binary log + immediate
 rawtrg + synctrace; expect either 'earlygap' acceptance keeping the engine
 alive at the catch or a clean 58/58 sync.
 
-## 2026-08-20 - m74_9: +1 phase-basis latch (whole crank 6 deg off) - raw-ratio early-gap heal + offset 114->112
+## 2026-08-20 - m74_9: +1 phase-basis latch (whole crank 6 deg off) - profile gated to running rpm + offset 114->112
 
 User report after the early-gap fix: the engine now catches almost every
 crank, but sometimes it will not and it "hits the wrong ignition angle".
@@ -4885,23 +4885,25 @@ tooth for the whole crank, every scheduled event fired 6 degrees late.
 Seed chain (reconstructed + unit-tested):
   1. 1 event lost mid-revolution AND the missing-teeth gap compresses to
      ~1.0-1.2x at the catch -> the gap arrives at count 57 with a ratio
-     below the windows; no sync there (ratio and raw checks both fail).
+     below the windows; no sync there.
   2. At count 58 the tooth AFTER the gap arrives with ratio 1/gapRatio
      (~0.83-1.0, above the 0.8 bypass floor) and the cranking-band
      sync-by-position bypass accepts IT -> phase basis +1 tooth (6 deg).
   3. With the shifted basis the profile-normalized gap check applies the
-     wrong slots' factors (the sliding window overlaps slot pairs between
-     the correct and the shifted basis) and can keep the REAL gap out of
-     the windows - the latch persists for the whole crank.
+     wrong slots' factors (the sliding slot window overlaps slot pairs
+     between the correct and the shifted basis) and could keep the REAL gap
+     out of the windows forever - the latch persisted for the whole crank.
 
-Fix: raw-ratio early-gap acceptance - while cranking and at count 56-57
-(expected-1/-2), accept the candidate if the UN-normalized gap ratios pass
-the windows. Ordinary teeth on this wheel never exceed ~1.4 (profile spans
-0.81-1.40), the window starts at 1.6, so an ordinary tooth cannot false
-fire; the raw gap stays ~2-3 regardless of the slot belief, so a latched
-basis re-anchors at the real gap within one revolution. Count-58 bypass
-(0.8 floor) unchanged; deficit >= 3 and count excess keep the classic
-C9002/C9003 paths.
+Fix (per the user's design intuition "survive cranking first, the learned
+table only after"): the learned-tooth-profile normalization now applies
+ONLY at running rpm (>= 2 * crankingRpm). During cranking the normalized
+check IS the raw check, the real gap always reads ~2-3 regardless of the
+slot belief, so a latched basis re-anchors at the real gap within one
+revolution through the existing early-gap acceptance (kind 'A'). The
+combustion ripple the profile exists for starts to matter at running rpm;
+idle (~840) is still below the threshold but the count-58 bypass covers a
+compressed idle gap there. Count-58 bypass (0.8 floor), count-56/57 early
+gap and the classic C9002/C9003 paths unchanged.
 
 Tune: globalTriggerAngleOffset 114 -> 112 (falling-edge reference moved the
 sync edge ~2-3 deg later; MUST be strobe-verified at fixed cranking timing
@@ -4914,8 +4916,7 @@ real gap (kind 'A', countErr -1, gap0 3.0) then a clean 'S'; plus a clean
 revolution never false-fires. 1156 tests pass. Firmware flashed, tune
 updated (user must re-load ~/21129.msq after the flash for the new offset).
 
-Note for the next session: the static-profile latch persistence cannot be
-unit-tested (any static slot distortion that breaks the shifted-basis check
-also corrupts the first sync through the sliding window) - the raw-ratio
-path is exercised on hardware; synctrace will show 'A' with gap0 2-3
-instead of 'S' with gap0 ~1.0 when it heals.
+Note: a static-profile distortion cannot be unit-tested for the latch (any
+static slot distortion that breaks the shifted-basis check also corrupts
+the first sync through the sliding window) - the profile gate removes the
+mechanism by construction instead.
