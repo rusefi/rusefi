@@ -7,6 +7,7 @@
 #include "drivers/gpio/tle9201.h"
 #include "m74_9_can.h"
 #include "m74_9_tooth_diag.h"
+#include "runtime_state.h"
 
 // PB14 is error LED, configured in board.mk
 Gpio getCommsLedPin() {
@@ -758,6 +759,14 @@ void setup_custom_board_overrides() {
 	// one-shot multi-clock dump: run twice with a known wall-clock gap to
 	// verify which timebase (if any) diverges
 	addConsoleAction("timecheck", m74_9TimeCheck);
+	// interrupt-lock / trigger-path statistics: prints the longest single
+	// IRQ-masked window (maxLockedDuration), the longest trigger event
+	// callback and the trigger ISR reentrancy, then resets the counters.
+	// Run before/after a crank to see who stalls the system tick.
+	addConsoleAction("lockstats", [](){
+		printRuntimeStats();
+		resetMaxValues();
+	});
 	// raw primary-trigger edge stream capture: a digital oscilloscope of the
 	// comparator output for noise diagnosis (deltas + histogram, see
 	// m74_9_tooth_diag.cpp)
