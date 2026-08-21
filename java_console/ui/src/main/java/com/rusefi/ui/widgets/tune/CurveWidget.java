@@ -17,6 +17,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.KeyEvent;
+import java.awt.geom.AffineTransform;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
@@ -45,6 +46,7 @@ public class CurveWidget {
     private Double[] xValues;
     private Double[] yValues;
     private String xUnits;
+    private String yUnits;
     private int xDigits;
     private int yDigits;
     private ConfigurationImage imageTarget;
@@ -113,6 +115,7 @@ public class CurveWidget {
         this.xBinsField = xField instanceof ArrayIniField ? (ArrayIniField) xField : null;
 
         IniField yField = iniFile.findIniField(curveModel.getyBins()).get();
+        this.yUnits = resolveUnits(yField.getUnits(), iniFile, ci);
         this.yDigits = parseDigits(yField.getDigits());
         this.yBinsField = yField instanceof ArrayIniField ? (ArrayIniField) yField : null;
 
@@ -296,6 +299,14 @@ public class CurveWidget {
                 int unitsWidth = g2.getFontMetrics().stringWidth(xUnits);
                 g2.drawString(xUnits, (getWidth() - unitsWidth) / 2, getHeight() - 5);
             }
+
+            if (yUnits != null && !yUnits.isEmpty()) {
+                int unitsWidth = g2.getFontMetrics().stringWidth(yUnits);
+                AffineTransform transform = g2.getTransform();
+                g2.rotate(-Math.PI / 2);
+                g2.drawString(yUnits, -(getHeight() + unitsWidth) / 2, 12);
+                g2.setTransform(transform);
+            }
         }
 
         public void drawGrid(Graphics2D g2) {
@@ -429,7 +440,8 @@ public class CurveWidget {
 
         @Override
         public String getColumnName(int column) {
-            return column == 0 ? "X Axis" : "Y Axis";
+            String label = column == 0 ? curveModel.getXLabel() : curveModel.getYLabel();
+            return label != null ? label : (column == 0 ? "X Axis" : "Y Axis");
         }
 
         @Override

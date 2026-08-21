@@ -482,6 +482,7 @@ todo: spllit into smaller tests?
             "scriptCurve1 = array, F32, 64, [16], \"y\", 1, 0, 0, 100, 3\n " +
             "[CurveEditor]\n" +
             "\tcurve = scriptCurve1, \"Script Curve #1\"\n" +
+            "\t\tcolumnLabel = \"Coolant\", \"RPM Limit\"\n" +
             "\t\txAxis\t\t=  0, 100, 10\n" +
             "\t\tyAxis\t\t=  0, 200, 20\n" +
             "\t\txBins\t\t= scriptCurve1Bins\n" +
@@ -518,6 +519,8 @@ todo: spllit into smaller tests?
         assertNotNull(table);
         assertEquals(16, table.getRowCount());
         assertEquals(2, table.getColumnCount());
+        assertEquals("Coolant", table.getColumnName(0));
+        assertEquals("RPM Limit", table.getColumnName(1));
         assertTrue(table.getCellSelectionEnabled());
 
         table.setRowSelectionInterval(0, 1);
@@ -541,7 +544,7 @@ todo: spllit into smaller tests?
     public void testCurveWidgetGridLines() {
         AxisModel xAxis = new AxisModel(0, 100, 5); // 6 lines expected: 0, 20, 40, 60, 80, 100
         AxisModel yAxis = new AxisModel(0, 200, 10); // 11 lines expected: 0, 20, ..., 200
-        CurveModel curveModel = new CurveModel("id", "title", xAxis, yAxis, "xBins", "yBins");
+        CurveModel curveModel = new CurveModel("id", "title", null, null, xAxis, yAxis, "xBins", "yBins");
 
         IniFileModel model = new com.opensr5.ini.IniFileModel() {
             @Override public String getSignature() { return null; }
@@ -592,6 +595,11 @@ todo: spllit into smaller tests?
         };
 
         com.rusefi.ui.widgets.tune.CurveWidget widget = new com.rusefi.ui.widgets.tune.CurveWidget(curveModel, model, null);
+
+        JTable table = findTable(widget.getContentPane());
+        assertNotNull(table);
+        assertEquals("X Axis", table.getColumnName(0));
+        assertEquals("Y Axis", table.getColumnName(1));
 
         // Find the CurveCanvas
         com.rusefi.ui.widgets.tune.CurveWidget.CurveCanvas canvas = null;
@@ -705,7 +713,8 @@ todo: spllit into smaller tests?
         canvas.paintComponent(spyG2);
 
         assertTrue(drawnStrings.contains("title"), "Should draw title");
-        assertTrue(drawnStrings.contains("RPM"), "Should draw units");
+        assertTrue(drawnStrings.contains("RPM"), "Should draw X-axis units");
+        assertTrue(drawnStrings.contains("Deg"), "Should draw Y-axis units");
         assertTrue(drawnStrings.contains("0"), "Should draw 0 for X axis");
         assertTrue(drawnStrings.contains("100"), "Should draw 100 for X axis");
         assertTrue(drawnStrings.contains("0.00"), "Should draw 0.00 for Y axis with 2 digits");

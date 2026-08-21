@@ -11,6 +11,8 @@ public class CurveBuilder {
 
     private String curveId;
     private String title;
+    private String xLabel;
+    private String yLabel;
     private AxisModel xAxis;
     private AxisModel yAxis;
     private String xBins;
@@ -19,6 +21,11 @@ public class CurveBuilder {
     public void setCurveDefinition(String curveId, String title) {
         this.curveId = curveId;
         this.title = title;
+    }
+
+    public void setColumnLabels(String xLabel, String yLabel) {
+        this.xLabel = xLabel;
+        this.yLabel = yLabel;
     }
 
     public void setXAxis(double min, double max, int step) {
@@ -50,12 +57,14 @@ public class CurveBuilder {
     }
 
     public CurveModel build() {
-        return new CurveModel(curveId, title, xAxis, yAxis, xBins, yBins);
+        return new CurveModel(curveId, title, xLabel, yLabel, xAxis, yAxis, xBins, yBins);
     }
 
     public void reset() {
         curveId = null;
         title = null;
+        xLabel = null;
+        yLabel = null;
         xAxis = null;
         yAxis = null;
         xBins = null;
@@ -77,7 +86,11 @@ public class CurveBuilder {
             return false;
         }
 
-        if (first.equalsIgnoreCase("xAxis")) {
+        if (first.equalsIgnoreCase("columnLabel")) {
+            list.removeFirst();
+            setColumnLabels(list.removeFirst(), list.removeFirst());
+            return true;
+        } else if (first.equalsIgnoreCase("xAxis")) {
             list.removeFirst();
             double min = com.opensr5.ini.field.IniField.parseDouble(list.removeFirst());
             double max = com.opensr5.ini.field.IniField.parseDouble(list.removeFirst());
