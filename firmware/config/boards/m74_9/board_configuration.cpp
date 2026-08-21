@@ -718,7 +718,10 @@ void setup_custom_board_overrides() {
 	// on this engine a stretched tooth pair (gap0 1.7-2.0 vs the real 3.9 gap)
 	// false-syncs the decoder mid-crank - firing from it backfires through the
 	// intake. Wait one crank revolution so the next gap validates the position.
-	custom_board_requireValidatedSync = []() { return true; };
+	// DISABLED 2026-08-22: stock-rollback test - the L9779 ramp config now
+	// gives a clean signal and the flash-timing fix removed the C9002 class.
+	// Re-enable if mid-crank false sync (intake backfire) returns.
+	custom_board_requireValidatedSync = []() { return false; };
 	// Cranking-band sync-by-position skip: the first-combustion acceleration
 	// can compress the REAL missing-teeth gap below the ratio window; at the
 	// exact expected position the tooth count proves it IS the gap, so accept
@@ -737,8 +740,11 @@ void setup_custom_board_overrides() {
 	// skip only accepts gap ratios >= 0.8 (the gap is physically 3 tooth
 	// slots and cannot compress below ~1.0 even at the catch - the observed
 	// catch ratio went below 1.2 and a 1.2 floor rejected the real gap with
-	// a C9002). See crankingTransition60_2RealCarProfileNoiseStormDoesNotFalseSync.
-	custom_board_syncGapHardening = []() { return true; };
+	// See crankingTransition60_2RealCarProfileNoiseStormDoesNotFalseSync.
+	// DISABLED 2026-08-22: stock-rollback test (clean L9779 signal).
+	// Re-enable if a noise storm false-syncs mid-crank (C9003 with a clean
+	// count, backfires).
+	custom_board_syncGapHardening = []() { return false; };
 	// Cam sync is switched off in the tune (21129.msq: vvtMode1 = Inactive,
 	// camInputs1 = NONE) - crank-only until the engine runs. The cam-phase
 	// drift cross-check is therefore not opted in (custom_board_vvtDriftLimit
@@ -762,10 +768,19 @@ void setup_custom_board_overrides() {
 	// scaling down to the 100 us floor as the tooth rate rises - the software
 	// half of the stock ECU's adaptive VR conditioning (we cannot move the
 	// fixed comparator threshold on this board).
-	custom_board_triggerDebounceUs = m74_9TriggerDebounceUs;
+	// DISABLED 2026-08-22: stock-rollback test - no software debounce (the
+	// default 0.0f in trigger_central.cpp skips the window entirely).
+	// Re-enable if edge-burst noise storms return (event count inflation /
+	// mid-crank false syncs).
+	// custom_board_triggerDebounceUs = m74_9TriggerDebounceUs;
 	// Tooth profile learning housekeeping (load/save of the learned wheel
 	// profile + auto-save on engine stop).
-	custom_board_periodicSlowCallback = m74_9ToothPeriodic;
+	// DISABLED 2026-08-22: stock-rollback test - without the periodic load the
+	// decoder's per-tooth profile factors stay 1.0 (identical to a board with
+	// no learned profile). The synctrace/rawtrg diagnostics are fed by
+	// separate trigger hooks and keep working. Re-enable to restore profile
+	// learning.
+	// custom_board_periodicSlowCallback = m74_9ToothPeriodic;
 	#if EFI_PROD_CODE && HAL_USE_ADC
 	addConsoleAction("fastadcdiag", m74_9FastAdcDiag);
 	addConsoleAction("knockpin", m74_9KnockPinScan);
