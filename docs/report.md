@@ -5620,3 +5620,19 @@ is nearly flat (45-48) in this region so the MAP lag was only a few %
 of fuel - timing was the real arrestor. Note the user's 'hold right
 after idle entry, then lower' is exactly idleReturnTargetRamp (5 s,
 target 1402 -> 905) - it engages only AFTER the taper completes.
+
+## 2026-08-21 (night, in car) - the taper->idle handoff hole: PID hold-offs are the hidden transition timers
+
+23:25 log: after the taper hold (1000-1120 rpm for ~11 s) a SECOND dip
+appears at the taper->Idling handoff (955 -> 743). Cause: two
+deliberate PID hold-offs act exactly there - idleTimingSoftEntryTime
+3.0 s (timing PID error amplification 0->1, correction stayed 0.0 in
+the log while the target was already 1407) and idlePidActivationTime
+1.0 s (air PID off). The user's 'transition timer' intuition was right;
+cranking itself ends by rpm (cranking_rpm), the cycle-based timer is
+the taper, but the handoff killers were these two. Set soft entry 1.0 s
+(safe with p=0.03 - the 3 s originally protected a 0.1 pFactor slam),
+air PID hold 0.5 s, idleAdvance 400/700 to 20/23 for a higher arrest of
+the catch undershoot (665 rpm bottom). Remaining profile after this
+change: catch ~1700 -> brief undershoot ~800 -> taper hold ~1100-1200
+-> PIDs engage in 0.5-1 s -> target glide 1407->905 over 5 s.
