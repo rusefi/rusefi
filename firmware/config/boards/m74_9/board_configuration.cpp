@@ -724,7 +724,11 @@ void setup_custom_board_overrides() {
 	// exact expected position the tooth count proves it IS the gap, so accept
 	// it while rpm < 2 * crankingRpm (rejecting it there desyncs the decoder
 	// right at the catch - C9002, engine dies).
-	custom_board_syncByPositionWhileCranking = []() { return true; };
+	// DISABLED 2026-08-21: the C9002 root cause was the slow flash (no DIVR /
+	// NZW setup), fixed in the ChibiOS fork. This path double-counts sync
+	// validations per revolution and races the cranking-taper counter ~1.5-2x.
+	// Re-enable only if a catch C9002 returns.
+	custom_board_syncByPositionWhileCranking = []() { return false; };
 	// Noise-storm sync-gap hardening: dense edge storms inflate the event
 	// count so a storm edge can become the 58th event and false-sync the
 	// decoder cleanly (count matches, ratio occasionally in window). Extra
@@ -746,7 +750,11 @@ void setup_custom_board_overrides() {
 	// noise). Accept it while cranking instead of C9003-desyncing - the
 	// observed failure mode was C9003 'got 56/0' killing the engine right at
 	// the catch.
-	custom_board_syncEarlyGapWhileCranking = []() { return true; };
+	// DISABLED 2026-08-21: with the flash timing fixed the early gap no
+	// longer appears; this path was the second source of the cranking-taper
+	// counter race (extra sync validation per revolution). Re-enable only if
+	// a catch C9003 'got 56/0' returns.
+	custom_board_syncEarlyGapWhileCranking = []() { return false; };
 	// VR input debounce: the trigger logs show noise edge bursts <50 us apart
 	// (comparator ringing / starter interference) that inflate the event count
 	// and false-sync the decoder mid-crank. The threshold is RPM-adaptive
