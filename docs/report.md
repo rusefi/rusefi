@@ -5667,3 +5667,15 @@ the catch, a momentary torque hole; (3) the timing is lowest right at
 the flare peak. (1) is addressed by raising cltCrankingCorr; (2)/(3)
 are next if the dip persists (fuel step at catch, higher 1600-2000
 advance cells).
+
+## 2026-08-21 (night, in car) - taper anchored to the first catch
+
+Counter math from the 23:42 log: taper counter ~13 at the first catch
+(3.43 s), taper (60) ended at 4.95 s -> 1.5 s of open-loop descent,
+which is exactly where the dip bottomed (612 at 3.78 s). Warm taper set
+to 15 so the fraction reaches 1 at the catch: Idling + the 1407 target
+ramp + timing PID take over immediately and catch the flare from above.
+Side benefit: the recrank taper-exhaustion stall class disappears - the
+PIDs own the catch regardless of the counter. The remaining fuel step
+at the catch (cranking PW -> running VE) is still in the pocket if the
+dip persists: raise warm crankingFuelCoef toward 1.0.
