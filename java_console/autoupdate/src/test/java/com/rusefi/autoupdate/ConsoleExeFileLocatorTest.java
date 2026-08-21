@@ -8,6 +8,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * #8360: the launcher lives at the bundle root while the console runs with `console` as its working
@@ -97,6 +99,40 @@ class ConsoleExeFileLocatorTest {
             "rusefi_updater.sh",
             ConsoleExeFileLocator.resolveDefaultLauncher(PREFIX, false, consoleFolder)
         );
+    }
+
+    @Test
+    void packagedBundleWithoutInstallationMarkerIsExtracted() throws IOException {
+        final Path consoleFolder = createConsoleFolderWithRelease();
+
+        assertTrue(ConsoleExeFileLocator.isRunningFromUnzippedBundle(consoleFolder, true));
+    }
+
+    @Test
+    void installationMarkerDistinguishesInstalledBundle() throws IOException {
+        final Path consoleFolder = createConsoleFolderWithRelease();
+        createFile(consoleFolder.resolve("installation.properties"));
+
+        assertFalse(ConsoleExeFileLocator.isRunningFromUnzippedBundle(consoleFolder, true));
+    }
+
+    @Test
+    void developmentAndInvalidLayoutsAreNotExtractedBundles() throws IOException {
+        final Path consoleFolder = Files.createDirectories(bundleRoot.resolve("console"));
+
+        assertFalse(ConsoleExeFileLocator.isRunningFromUnzippedBundle(consoleFolder, true));
+
+        Files.write(consoleFolder.resolve("release.txt"), "not bundle metadata".getBytes());
+        assertFalse(ConsoleExeFileLocator.isRunningFromUnzippedBundle(consoleFolder, true));
+
+        Files.write(consoleFolder.resolve("release.txt"), "platform=universal\nrelease=development\n".getBytes());
+        assertFalse(ConsoleExeFileLocator.isRunningFromUnzippedBundle(consoleFolder, false));
+    }
+
+    private Path createConsoleFolderWithRelease() throws IOException {
+        final Path consoleFolder = Files.createDirectories(bundleRoot.resolve("console"));
+        Files.write(consoleFolder.resolve("release.txt"), "platform=universal\nrelease=development\n".getBytes());
+        return consoleFolder;
     }
 
     private static Path createFile(final Path path) throws IOException {

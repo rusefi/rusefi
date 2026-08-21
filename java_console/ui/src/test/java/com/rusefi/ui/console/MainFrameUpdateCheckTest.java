@@ -70,6 +70,31 @@ public class MainFrameUpdateCheckTest {
     }
 
     @Test
+    public void installerAnnouncementRequiresExtractedPublicWindowsBundleAndCompatibleLiveTarget() {
+        String compatibility = "uaefi, proteus_f7";
+        String installerUrl = "https://example.test/universal-updater.exe";
+
+        assertTrue(MainFrame.shouldAnnounceInstaller(
+            true, true, true, true, true, false, "PROTEUS_F7", compatibility, installerUrl));
+        assertFalse(MainFrame.shouldAnnounceInstaller(
+            false, true, true, true, true, false, "proteus_f7", compatibility, installerUrl));
+        assertFalse(MainFrame.shouldAnnounceInstaller(
+            true, false, true, true, true, false, "proteus_f7", compatibility, installerUrl));
+        assertFalse(MainFrame.shouldAnnounceInstaller(
+            true, true, false, true, true, false, "proteus_f7", compatibility, installerUrl));
+        assertFalse(MainFrame.shouldAnnounceInstaller(
+            true, true, true, false, true, false, "proteus_f7", compatibility, installerUrl));
+        assertFalse(MainFrame.shouldAnnounceInstaller(
+            true, true, true, true, false, false, "proteus_f7", compatibility, installerUrl));
+        assertFalse(MainFrame.shouldAnnounceInstaller(
+            true, true, true, true, true, true, "proteus_f7", compatibility, installerUrl));
+        assertFalse(MainFrame.shouldAnnounceInstaller(
+            true, true, true, true, true, false, "hellen121nissan", compatibility, installerUrl));
+        assertFalse(MainFrame.shouldAnnounceInstaller(
+            true, true, true, true, true, false, "proteus_f7", compatibility, ""));
+    }
+
+    @Test
     public void newFormatSameHashReturnsFalse() {
         // SREC numeric hash matches ECU numeric hash → no update needed
         String srec = "rusefi_development_2026-05-09_uaefi_pro_4226383888_8849742d4267db6407b1400ae917a1ed39795d32_update.srec";

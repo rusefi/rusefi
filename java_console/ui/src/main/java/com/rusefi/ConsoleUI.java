@@ -570,7 +570,7 @@ console live data tab is broken #8402
                 && !unsupportedEcuHost.isBlocking());
         AutoupdateUtil.setAppIcon(mainFrame.getFrame().getFrame());
 
-        unsupportedEcuHost.setNormalContent(rootPanel);
+        unsupportedEcuHost.setNormalContent(mainFrame.wrapContentWithInstallerBanner(rootPanel));
         mainFrame.getFrame().showFrame(unsupportedEcuHost.getContent());
     }
 
