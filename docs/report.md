@@ -5587,3 +5587,20 @@ idleAdvance 1100-1600 raised to 20/19/18 so the engine holds rpm during
 the taper (also keeps it from crossing back under 600). The profile is
 approximate because the taper counter race is firmware-side; a code fix
 (count real revolutions) would make the timing exact.
+
+## 2026-08-21 (night, in car) - the start-flare dip was DFCO, not the taper
+
+23:15 log: the catch flares to 1611 rpm which crosses
+coastingFuelCutRpmHigh=1500 - DFCO cut the fuel AND applied its 10 deg
+retard right on the flare (timing dropped to 4.88 deg), collapsing
+1611 -> 660. DfcoController::getTimingRetard applies the retard whenever
+the DFCO STATE is true, it is not gated by dfcoDelay - so the delay
+alone cannot protect the flare. msq fix: dfcoDelay 2.0 s (cut only after
+2 s of sustained overrun; the flare is shorter), dfcoRetardDeg 0 (no
+retard to cripple the catch). Hold extended: taper warm 200 (~6 s real
+with the counter race) + idleReturnTargetRampDuration 5 s -> ~10 s
+catch-to-idle. Cleanest fix is firmware: gate DFCO on idle phase
+(skip during Cranking/CrankToIdleTaper), then 1500/1450 and the retard
+ramp can return as spec'd. Also note: any DFCO retard hurts the start
+flare whenever RpmHigh sits below the flare peak (~1600-1700 on this
+engine) - keep that in mind when re-tuning DFCO.
