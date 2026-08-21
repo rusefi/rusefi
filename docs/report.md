@@ -5471,3 +5471,24 @@ Also note: the taper cycle counter (revolutionCounterSinceStart /
 afterCrankingIACtaperDuration) runs ahead of real cycles on m74_9 (up to
 ~2.7x during the catch surge, seen in the 22:25a log) - treat taper
 durations as roughly half their nominal value when tuning.
+
+## 2026-08-21 (night, in car) - flare works, fall-through fixed: idle advance table + base air
+
+22:33 logs: with cranking_rpm=700 the flare is back (catch 1394-1466,
+instant 1522-1528) but the engine fell through to 292-412 rpm and then
+hung at 550-700, never reaching 900. Root causes, both visible in the
+log:
+- useSeparateAdvanceForIdle + useSeparateIdleTablesForCrankingTaper are
+  BOTH enabled, so the whole CrankToIdleTaper phase (fuel AND timing)
+  comes from the idle tables. idleAdvance had 9-10 deg in the 1100-1600
+  band -> ~7-8 deg effective at the catch (minus IAT corr ~-2) - far too
+  retarded to hold the falling rpm, hence the 292 rpm near-stall.
+- warm cltIdleCorrTable base 10 units = 2.0% tps: the gentle air PID
+  (+0.2-0.4%) plus the timing PID pinned at +16 (26 deg total) could not
+  lift 600 -> 900.
+Fix: idleAdvance 17 deg at 700-900, 11-15 deg at 1100-1600 (timing PID
+modulates around it; min -20 gives retard headroom), cltIdleCorrTable
+warm 14/13/13 (2.6% base) so the PIDs trim instead of fighting a deficit.
+Note for later: 2.6% is still above the stock 1-1.5% target - the rich
+mixture demands the extra air; drop the base only AFTER lambda closed
+loop is live and the mixture is honest.
