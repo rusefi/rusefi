@@ -5177,3 +5177,31 @@ sequence after flashing:
 4. If still slow: add a `clockinfo` command (RCC->CR/CFGR/PLLCFGR dump) and
    audit HICK/HSE/PLLFR against the RM, but PLL forensics above say it is
    already correct.
+
+Update (same day, hardware validation of the flash fix, m74_9):
+
+- DIVR=/3 alone: flashperf 205 -> 136 ms; + CONTR continue-read: 136 ->
+  88-95 ms. Total ~2.3x. FDIV=1 and contRead=1 confirmed in the register
+  readback. The trigger ISR cost scales accordingly (~335 -> ~145 us/tooth
+  estimated at cranking rpm).
+- NZW_BST (PSR bit 12) is UNUSABLE on this chip in every phase: live write
+  at full HCLK hangs the flash read path (no fault, no crash marker,
+  power-cycle recovery), AND so does setting it at boot before the PLL
+  switch - the app never starts (console dead, CAN dead, bootloader still
+  answers on reset). Reverted; the Artery SDK reference configs never
+  enable it either. flashnzw console command is now read-only.
+- ELF forensics: the flashperf loop lives at 0x0807118C (~463 KB into the
+  668 KB image), i.e. deep in the non-zero-wait flash area - the measured
+  ~25 cycles per 7-instruction iteration is the NZW-area fetch cost with
+  continue-read, not a ZW-area number. EOPB0 (USD + 0x10) reads 0x5FA, not
+  a documented value - the zero-wait area size on this chip is unresolved,
+  but even the maximum (512 KB) would not cover the whole image.
+- PCAN gotchas observed again: PCAN_ERROR_ILLHW (reseat adapter),
+  PCAN_ERROR_INITIALIZE (the open rusEFI Java console holds the adapter -
+  kill it before flashing), SET_MTA null once mid-flash (rerun fixed it;
+  the bootloader stays in session and reconnects immediately).
+
+Next decision point: crank with the 2.3x faster fetch path and check C9002.
+If the catch still dies, the remaining lever is moving the trigger decoder
+hot path (and/or the trigger ISR) into RAM (CCM SRAM), not more flash
+register twiddling.
