@@ -5492,3 +5492,22 @@ warm 14/13/13 (2.6% base) so the PIDs trim instead of fighting a deficit.
 Note for later: 2.6% is still above the stock 1-1.5% target - the rich
 mixture demands the extra air; drop the base only AFTER lambda closed
 loop is live and the mixture is honest.
+
+## 2026-08-21 (night, in car) - the cranking_rpm flap: engine reached idle then fell back into cranking
+
+22:38/22:39 logs: the engine reached idle (937-1074) but oscillated
+480-1074 and repeatedly re-entered cranking mode. cranking_rpm=700 sat
+INSIDE the idle band: every dip below 700 switched fuel to the cranking
+path (useRunningMathForCranking=Fuel Map x warm coef 0.65-0.72 = ~30%
+less fuel than running) and cranking timing interpolation - a relay
+oscillation around the threshold. Second amplifier: the taper cycle
+counter runs 3-5x fast in the catch band (the early-gap and
+sync-by-position acceptance paths each re-validate and add increments),
+so the 30-cycle taper collapses in ~0.6 s, dumps the throttle and digs
+the dip below the threshold. msq fix: cranking_rpm 600 (below the steady
+dip range 620-660; 4x trigger acceptance ceiling 2400 vs observed 1726
+catch surge), taper warm 50 (~1.5 s real), warm crankingFuelCoef
+0.9/0.9/0.85 (smaller fuel step if crossed). The taper counter race is
+a firmware bug to fix later (count one increment per REAL revolution);
+until then treat afterCrankingIACtaperDuration as ~2x its nominal value
+when tuning.
