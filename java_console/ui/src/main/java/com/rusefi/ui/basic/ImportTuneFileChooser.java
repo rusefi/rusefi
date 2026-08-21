@@ -5,6 +5,7 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.io.LinkManager;
 import com.rusefi.maintenance.jobs.ImportTuneJob;
+import com.rusefi.ui.util.UiUtils;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -53,12 +54,12 @@ public class ImportTuneFileChooser {
     }
 
     private static JFileChooser createTuneToImportFileChooser() {
-        final JFileChooser fc = new JFileChooser();
+        final JFileChooser fc = new JFileChooser(UiUtils.getConsoleLaunchDirectory());
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fc.setFileFilter(new FileNameExtensionFilter("Tune files (.msq)", "msq"));
 
         final String currentDirectory = loadTuneToImportDefaultDirectory();
-        if (currentDirectory != null) {
+        if (currentDirectory != null && !currentDirectory.isEmpty()) {
             fc.setCurrentDirectory(new File(currentDirectory));
         }
 

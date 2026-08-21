@@ -39,10 +39,24 @@ public class UiUtils {
 
     @NotNull
     public static JFileChooser getFileChooser(FileNameExtensionFilter filter) {
-        JFileChooser fc = new JFileChooser();
+        JFileChooser fc = new JFileChooser(getConsoleLaunchDirectory());
         fc.setFileFilter(filter);
         fc.addChoosableFileFilter(filter);
         return fc;
+    }
+
+    /**
+     * Directory the console was launched from - the natural starting point for file choosers,
+     * instead of the OS default (usually the user home). Falls back to home if {@code user.dir}
+     * is unavailable.
+     */
+    @NotNull
+    public static File getConsoleLaunchDirectory() {
+        String userDir = System.getProperty("user.dir");
+        if (userDir == null || userDir.isEmpty()) {
+            userDir = System.getProperty("user.home", ".");
+        }
+        return new File(userDir);
     }
 
     public static void saveImage(String fileName, Component component) {

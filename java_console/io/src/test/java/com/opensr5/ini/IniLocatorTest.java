@@ -61,4 +61,26 @@ public class IniLocatorTest {
         Files.write(dir.resolve("notrusefi.ini"), new byte[]{1});
         assertNull(IniLocator.findIniFile(dir.toString(), SIG_A));
     }
+
+    @Test
+    public void recursiveSearchFindsIniInSubfolder(@TempDir Path dir) throws IOException {
+        Path nested = Files.createDirectories(dir.resolve("firmware/tunerstudio/generated"));
+        File wanted = writeIni(nested, "rusefi_custom-fw.ini", SIG_A);
+        assertEquals(wanted.getAbsolutePath(),
+            IniLocator.findIniFileRecursively(dir.toString(), SIG_A, 3));
+    }
+
+    @Test
+    public void recursiveSearchRespectsDepthLimit(@TempDir Path dir) throws IOException {
+        Path tooDeep = Files.createDirectories(dir.resolve("a/b/c"));
+        writeIni(tooDeep, "rusefi_deep.ini", SIG_A);
+        assertNull(IniLocator.findIniFileRecursively(dir.toString(), SIG_A, 2));
+    }
+
+    @Test
+    public void recursiveSearchSkipsHiddenFolders(@TempDir Path dir) throws IOException {
+        Path hidden = Files.createDirectories(dir.resolve(".git/nested"));
+        writeIni(hidden, "rusefi_hidden.ini", SIG_A);
+        assertNull(IniLocator.findIniFileRecursively(dir.toString(), SIG_A, 3));
+    }
 }

@@ -4,6 +4,7 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.io.LinkManager;
 import com.rusefi.maintenance.jobs.ExportTuneJob;
+import com.rusefi.ui.util.UiUtils;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -38,7 +39,7 @@ public class ExportTuneFileChooser {
     }
 
     private static JFileChooser createTuneToExportFileChooser() {
-        final JFileChooser fc = new JFileChooser();
+        final JFileChooser fc = new JFileChooser(UiUtils.getConsoleLaunchDirectory());
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fc.setFileFilter(new FileNameExtensionFilter("Tune files (.msq)", "msq"));
 

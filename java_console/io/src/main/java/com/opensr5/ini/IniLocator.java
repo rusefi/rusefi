@@ -45,6 +45,40 @@ public class IniLocator {
         return null;
     }
 
+    /**
+     * Like {@link #findIniFile(String, String)} but also descends into subfolders, up to
+     * {@code maxDepth} levels below {@code root}. Lets the console locate an ini that was
+     * unpacked into a nested folder (e.g. running from a repo checkout or a deep bundle dir)
+     * instead of prompting the user every start. Hidden directories (leading '.') are skipped.
+     */
+    public static @Nullable String findIniFileRecursively(String root, @Nullable String signature, int maxDepth) {
+        File rootFile = new File(root);
+        if (!rootFile.isDirectory()) {
+            return null;
+        }
+        String direct = findIniFile(root, signature);
+        if (direct != null) {
+            return direct;
+        }
+        if (maxDepth <= 0) {
+            return null;
+        }
+        File[] children = rootFile.listFiles(File::isDirectory);
+        if (children == null) {
+            return null;
+        }
+        for (File child : children) {
+            if (child.getName().startsWith(".")) {
+                continue;
+            }
+            String found = findIniFileRecursively(child.getAbsolutePath(), signature, maxDepth - 1);
+            if (found != null) {
+                return found;
+            }
+        }
+        return null;
+    }
+
     private static List<File> listIniFiles(String iniFilePath) {
         final List<File> result = new ArrayList<>();
         final File[] files = new File(iniFilePath).listFiles((dir, name) ->

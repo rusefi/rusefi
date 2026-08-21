@@ -3,6 +3,7 @@ package com.rusefi.maintenance;
 import com.devexperts.logging.Logging;
 import com.rusefi.binaryprotocol.RealIniFileProvider;
 import com.rusefi.core.SignatureHelper;
+import com.rusefi.ui.util.UiUtils;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -35,7 +36,7 @@ public class ManualIniFilePicker {
             return;
         }
 
-        JFileChooser chooser = new JFileChooser();
+        JFileChooser chooser = new JFileChooser(UiUtils.getConsoleLaunchDirectory());
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         chooser.setFileFilter(new FileNameExtensionFilter("INI files", "ini"));
 

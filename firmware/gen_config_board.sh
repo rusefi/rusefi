@@ -72,6 +72,14 @@ java \
 
 [ $? -eq 0 ] || { echo "ERROR generating TunerStudio config for ${BOARD_DIR}"; exit 1; }
 
+# Stamp any default .msq tunes in the board folder with the signature that was just
+# generated, so checked-in tunes always match the freshly built firmware (build date
+# and config hash refresh automatically on every config re-run).
+for msq_file in ${BOARD_DIR}/*.msq; do
+	[ -f "${msq_file}" ] || continue
+	bash bin/stamp_msq_signature.sh "${msq_file}" "controllers/generated/signature_${SHORT_BOARD_NAME}.h"
+done
+
 
 echo "$SCRIPT_NAME: Happy ${SHORT_BOARD_NAME}!"
 exit 0

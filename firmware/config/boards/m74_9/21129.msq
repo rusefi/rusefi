@@ -4959,7 +4959,7 @@
         <constant name="verboseCan">"Do not print"</constant>
         <constant name="verboseCan2">"Do not print"</constant>
         <constant digits="0" name="verboseCanBaseAddress" units="">512</constant>
-        <constant name="verboseIsoTp">"true"</constant>
+        <constant name="verboseIsoTp">"yes"</constant>
         <constant name="verboseKLine">"no"</constant>
         <constant name="verboseQuad">"no"</constant>
         <constant name="verboseTLE8888">"no"</constant>
@@ -5208,8 +5208,8 @@
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260818" nPages="1" signature="rusEFI maccan-tx-fix.2026.08.18.m74_9.319381849" version="5.0"/>
-    <bibliography author="rusEFI 20260817" writeDate="date"/>
+    <versionInfo firmwareInfo="20260821" nPages="1" signature="rusEFI maccan-tx-fix.2026.08.21.m74_9.1930129764" version="5.0"/>
+    <bibliography author="rusEFI 20260821" writeDate="date"/>
     <settings/>
     <userComments/>
 </msq>

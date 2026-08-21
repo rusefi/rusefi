@@ -5205,3 +5205,75 @@ Next decision point: crank with the 2.3x faster fetch path and check C9002.
 If the catch still dies, the remaining lever is moving the trigger decoder
 hot path (and/or the trigger ISR) into RAM (CCM SRAM), not more flash
 register twiddling.
+
+## 2026-08-21 - build date now refreshes on every build: console (auto), firmware signature, board .msq stamping + ini_database stale-cache drop
+
+Symptom chain: console showed "Console version 20260818" and the msq
+produced "No INI file available for this tune (signature: rusEFI
+maccan-tx-fix.2026.08.18.m74_9.319381849). The tune was not opened." after
+the console was rebuilt on a later day - UiVersion.CONSOLE_VERSION was a
+manually bumped constant and the board default tune (21129.msq) carried the
+signature of the firmware build that saved it. A stale msq signature cannot
+be resolved: dev-branch inis are not on rusefi.com, and the ini_database
+cache is keyed by config hash only, so a rebuild on a later day (same hash,
+newer date) leaves a cached ini whose embedded signature diverges.
+
+Changes:
+
+| Change | File |
+| --- | --- |
+| CONSOLE_VERSION now generated from the build date (YYYYMMDD, Europe/London, same tz as gen_signature.sh) by a new Gradle task; UiVersion delegates to GeneratedUiVersion; the generator only rewrites when the date rolled over, so same-day builds stay incremental | `java_tools/version/build.gradle`, `java_tools/version/src/main/java/com/rusefi/UiVersion.java` |
+| gen_config_board.sh stamps every *.msq in the board folder (signature=/firmwareInfo=/bibliography author=) with the just-generated signature, only when changed | `firmware/gen_config_board.sh`, `firmware/bin/stamp_msq_signature.sh` |
+| SignatureHelper.downloadIfNotAvailable(p, signature) validates a cache hit against the requested signature and drops the ini_database entry when the embedded signature diverges, falling through to download/manual picker | `java_console/shared_io/.../core/SignatureHelper.java`, `java_console/io/.../binaryprotocol/RealIniFileProvider.java` |
+| tests for signature extraction and staleness detection (date diverged, missing line, unreadable) | `java_console/shared_io/src/test/java/com/rusefi/core/SignatureHelperCacheStalenessTest.java` |
+
+Validation: `:shared_io:test` and `:ecu_io:test` green; `:ui:shadowJar`
+rebuilt (jar carries GeneratedUiVersion with ConstantValue 20260821);
+gen_config_board.sh for m74_9 stamped 21129.msq with
+rusEFI maccan-tx-fix.2026.08.21.m74_9.1930129764 / firmwareInfo 20260821
+(idempotent second run, xmllint OK). Firmware signature date already
+refreshed automatically on plain `make` (SIG_FILE .FORCE + gen_signature.sh
+cmp/mv) - the console and msq were the manual/stale parts.
+
+Open follow-ups: none; if the date ever looks stale again, rebuild the
+console jar and re-run config gen (no make clean needed on either side).
+
+## 2026-08-21 (same day, follow-up) - macOS bundle was missing the srec/bin: symlink rules used non-relative ln targets
+
+The full bundle zip (artifacts/rusefi_bundle_m74_9.zip) contained no firmware
+files at all: zip follows bundle symlinks to store content, but on macOS the
+srec/bin/bootloader rules used `ln -fs $< $@` without `-r`, so the links
+stored the literal relative target (build/rusefi.srec) - wrong relative to the
+bundle folder, unresolvable, silently skipped by zip. The ini/console-jar
+links were absolute (the FOLDER_TARGETS rule already used `abspath` on Darwin)
+and were stored fine. Fixed: the SREC_TARGET/FIRMWARE_OUTPUTS/
+BOOTLOADER_BIN_OUT/dfu/BIN_TARGET rules now use `$(abspath $<)` on Darwin,
+mirroring FOLDER_TARGETS (`firmware/bundle.mk`).
+
+Validation: fresh `make bundle` for m74_9 - zip now carries
+rusefi_development_260821_m74_9_1930129764_local.bin (702896 bytes),
+..._update.srec (2010446), bin/device/openblt_..._local.bin, rusefi_m74_9.ini
+and console/rusefi_console.jar; no stale 319381849/yymmdd entries; staging
+symlinks resolve through the link. Bundle zip = 57 MB.
+
+## 2026-08-21 - console ini resolution: recursive search + remembered location; bundle tune folder; 21129.msq enum migration
+
+User pain: the console asked for the ini path on every start and on every
+tune load ("failed locate to ini"), and loading 21129.msq failed with
+"verboseIsoTp: Enum name not found "true"".
+
+Changes:
+
+| Change | File |
+| --- | --- |
+| IniLocator.findIniFileRecursively(root, signature, maxDepth): descends into subfolders (depth 3, hidden dirs skipped) so an ini unpacked into a nested folder is found without prompting | `java_console/io/.../ini/IniLocator.java` |
+| RealIniFileProvider now tries bundled ini -> cwd -> cwd recursive -> bundled-root recursive, and remembers any locally found ini by copying it into ~/.rusEFI/ini_database/<hash>.ini (best effort, once) | `java_console/io/.../binaryprotocol/RealIniFileProvider.java` |
+| Cache staleness refined: an entry is dropped only when it carries no signature line or has the SAME config hash with a diverged (newer-date) signature; a DIFFERENT embedded hash is a deliberate manual-picker import and is kept - this is what stops the pick-then-prompt-again loop when the ECU still runs an older firmware than the picked ini | `java_console/shared_io/.../core/SignatureHelper.java` |
+| Bundle now ships the board default tunes in tune/ (real copies, not symlinks) so the bundled ini + tune of one build always match | `firmware/bundle.mk` |
+| 21129.msq: verboseIsoTp "true" -> "yes" - the only enum mismatch after the config hash change 319381849 -> 1930129764 (old bit labels "false"/"true", new "no"/"yes"); full scan of every msq constant against the new ini shows 0 invalid now | `firmware/config/boards/m74_9/21129.msq` |
+| tests: recursive search (found/depth limit/hidden dirs), staleness matrix incl. different-hash-kept | `IniLocatorTest`, `SignatureHelperCacheStalenessTest` |
+
+Validation: :shared_io:test + :ecu_io:test green; console jar rebuilt and a
+jshell smoke test against the jar finds a nested ini recursively; bundle
+rebuilt - zip now contains tune/21129.msq (verboseIsoTp="yes", signature
+2026.08.21.m74_9.1930129764) alongside the ini, srec and bin.
