@@ -28,7 +28,7 @@
         <constant digits="3" name="adcVcc" units="volts">3.3</constant>
         <constant name="afr_hwChannel">"Oxygen sensor 1 signal"</constant>
         <constant name="afr_hwChannel2">"NONE"</constant>
-        <constant name="afr_type">"Narrow Band"</constant>
+        <constant name="afr_type">"Custom"</constant>
         <constant digits="2" name="afr_v1" units="volts">0.1</constant>
         <constant digits="2" name="afr_v2" units="volts">0.9</constant>
         <constant digits="2" name="afr_value1" units="AFR">15.0</constant>
