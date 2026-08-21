@@ -40,8 +40,8 @@
          20.0
          25.0
          25.0
-         80.0
-         80.0
+         120.0
+         120.0
 </constant>
         <constant cols="1" digits="2" name="afterCrankingIACtaperDurationBins" rows="6" units="{bitStringValue(unitsLabels, useMetricOnInterface)}">
          -40.0
@@ -1857,9 +1857,9 @@
          14.0
          17.0
          17.0
+         20.0
+         19.0
          18.0
-         17.0
-         16.0
          14.0
 </constant>
         <constant cols="1" digits="0" name="idleAdvanceBins" rows="8" units="RPM">
@@ -1903,7 +1903,7 @@
         <constant digits="0" name="idlePositionMax" units="mv">5000</constant>
         <constant digits="0" name="idlePositionMin" units="mv">0</constant>
         <constant name="idleReturnTargetRamp">"yes"</constant>
-        <constant digits="1" name="idleReturnTargetRampDuration" units="seconds">2.5</constant>
+        <constant digits="1" name="idleReturnTargetRampDuration" units="seconds">5.0</constant>
         <constant digits="4" name="idleRpmPid_dFactor" units="">0.0</constant>
         <constant digits="4" name="idleRpmPid_iFactor" units="">0.0005</constant>
         <constant digits="0" name="idlerpmpid_iTermMax" units="">20</constant>
