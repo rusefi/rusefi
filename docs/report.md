@@ -5695,3 +5695,33 @@ no instant snap). Lesson: a closed-loop catch from ABOVE (rpm > target)
 is weak in rusEFI idle code because the open-loop base is calibrated
 for the target rpm; the ramp target must sit above the transient rpm
 for the PIDs to add air/timing during the descent.
+
+## 2026-08-22 (night) - ECU-side ISO-TP TX stall finally closed (silent reconnect / gauges dead loop)
+
+The user's 'console silently reconnects, no data, binary log resets' is
+the branch's long-running ECU-side ISO-TP TX stall (b42a7e99b89 lineage).
+Three remaining holes found in the firmware and closed:
+
+1. can_msg_tx.cpp: the serial send happens in the CanTxMessage destructor,
+   its result never reached the ISO-TP layer, and there was a single 5s
+   mailbox attempt - a dropped frame silently truncated the multi-frame
+   response ('Got only N bytes while expecting M'). Now: 3 x 500ms retry
+   attempts; on persistent failure canTryAbortX (ABRQ) clears all 3 TX
+   mailboxes so an un-ACKed frame cannot wedge the bus forever.
+2. isotp.cpp: the flow-control wait (1s) could expire while the FIRST
+   frame was still delayed in the mailbox (up to 5s) - the host's FC
+   arrived late, the consecutive frames never went out. FC wait now has
+   +2s slack.
+3. isotp.h: CAN_SERIAL_PAUSE_MS 3000 -> 10000. The 3s window lapsed
+   during the console's 10s watchdog/reconnect cycle, the BCM flood
+   resumed at full rate and contended with the first post-reconnect
+   response - every reconnect died the same way. 10s keeps the flood at
+   1/4 rate through the whole reconnect window.
+
+Validation: m74_9 build clean, 45 CAN unit tests + 190 trigger tests
+pass. The console's own reconnect already re-runs connectAndRead
+Configuration and restarts the pull thread (startPullThread on connect),
+so with the ECU stall gone the link should stay up continuously; the
+binary-log file reset on reconnect remains a console-side follow-up if
+ever needed. Flash the new srec and watch isotpinfo: fcWaitTimeout and
+canWriteNotOk should stop growing.
