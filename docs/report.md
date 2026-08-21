@@ -5303,3 +5303,44 @@ N") - heavy overhead during any ISO-TP exchange, keep it off unless
 diagnosing. (2) SensorGauge now logs "Gauge resolved: <name> channel=...
 title=..." at INFO so a future UI-side ini problem is visible in the
 console log instead of requiring forensics.
+
+## 2026-08-21 (night) - engine runs; catch C9002, gauges-over-CAN stall and cold idle hunt
+
+The RAM-moved trigger path worked on the car: the engine starts and runs
+(lockstats: triggerIsr avg ~38 us, 98% of runs <100 us, vs ~220 us avg and
+45% in the 250-500 us bucket before the move; clean sync to 600+ rpm while
+cranking, no lost teeth). Three issues remained and were fixed:
+
+1. C9002 "expected 58/0 got 58/0" at EVERY start attempt. Root cause: the
+   first-combustion gap acceptance (m74_9 board opt-in) had a ceiling of
+   2x crankingRpm, but at the catch the per-tooth INSTANT rpm spikes past
+   that (cranking_rpm=500 -> ceiling 1000 rpm; the catch pushes 1050-1250
+   instant) - the real gap was rejected at the exact expected position and
+   the decoder fired C9002. Raised both acceptance ceilings to 4x; all
+   other gates (position, count 58, elapsed-time, real-tooth, 0.8 ratio
+   floor) unchanged. Non-fatal before (decoder re-syncs), but each error
+   message carries a ~700-byte wave_chart over the same ISO-TP TX as the
+   gauges.
+2. Gauges dead while the engine runs, power cycle "does not help". The
+   logs show the signature/config exchanges fine but output-channels
+   responses truncated mid-burst ("Got only 348 byte(s) while expecting
+   1029", isotp rate 0) while the ECU's own BCM CAN frames keep flowing.
+   Two contributors fixed: the m74_9 BCM emulation (~660 f/s) did not
+   yield to serial sessions while the engine was running (now 1/4 rate
+   during the 3 s pause; engine-off full mute unchanged, IMMO outside the
+   gate), and the SERIAL TX mailbox budget was 1 s (now 5 s - bounded
+   because the ECU announce shares the category from a 250 ms periodic
+   task). caninfo prints txErrorCount + TEC/REC if the stall returns.
+3. Cold idle hunted 530-1100 rpm (pedal 0, fixed tps 4.4-5.0%, timing
+   ~22 deg) and stalled. The idle RPM PID was held off for 20 s after
+   entering Idling and, at idle tps ~4.7%, the 5% idlePidDeactivationTps
+   Threshold attenuated the PID gain ~94% and kept the idle advance table
+   (~10-12 deg, flat) blended out - timing followed the swinging main
+   table instead. msq: activation 20->4 s, threshold 5->10%,
+   pidExtraForLowRpm 0->20%, mapExpAverageAlpha 0.8->0.5.
+
+Validation: m74_9 build clean; unit tests - all 178 trigger/sync tests
+pass (the two running-rpm rejection tests moved to 2500 rpm, above the
+new 4x band). To verify on the car: flash the srec, burn tune/21129.msq,
+then check lockstats/synctrace after a start (no C9002) and the idle PID
+(isIdleClosedLoop flag) ~4 s after the catch.
