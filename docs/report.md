@@ -5451,3 +5451,23 @@ at the catch, the throttle dumps to idle base instantly and the engine
 stalls again. A SHORTER taper duration worsens this; if recrank-stalls
 appear, lengthen the warm taper cells back or force a key-off between
 attempts.
+
+## 2026-08-21 (night, in car) - cranking_rpm=1400 rejected: flare must come from the taper, not cranking mode
+
+Two-start-log evidence (22:25): cranking_rpm=1400 is unreachable by the
+warm engine. In cranking phase the ignition is interpolation-capped
+(crankingAdvance 10 deg -> full running advance only AT cranking_rpm, so
+~16 deg at 1100) and fuel is the fixed cranking PW - the engine tops at
+~1115-1470 rpm. Attempt 1 crossed 1400 for a moment: phase flipped to
+CrankToIdleTaper, the (racing) cycle counter had already consumed the 15
+cycle taper, the throttle dumped to idle base in 0.2 s, rpm fell back
+under 1400 into cranking fuel and the engine died. Attempt 2 never crossed
+1400: phase stayed Cranking forever, engine idled ~900 on the fixed 3.4%
+cranking throttle with zero idle control - the audible 'idling on the
+throttle'. Fix (msq): cranking_rpm 700 (clean one-way exit at the catch),
+taper warm cells 30 (flare = cranking position held by the taper; longer
+budget absorbs the ~2x counter race), cltCrankingCorr warm 22/20/18.
+Also note: the taper cycle counter (revolutionCounterSinceStart /
+afterCrankingIACtaperDuration) runs ahead of real cycles on m74_9 (up to
+~2.7x during the catch surge, seen in the 22:25a log) - treat taper
+durations as roughly half their nominal value when tuning.
