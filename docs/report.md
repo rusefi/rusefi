@@ -5604,3 +5604,19 @@ catch-to-idle. Cleanest fix is firmware: gate DFCO on idle phase
 ramp can return as spec'd. Also note: any DFCO retard hurts the start
 flare whenever RpmHigh sits below the flare peak (~1600-1700 on this
 engine) - keep that in mind when re-tuning DFCO.
+
+## 2026-08-21 (night, in car) - post-catch fall: timing arrest + MAP EMA speed
+
+23:20 log: the taper hold works (1030-1100 rpm for ~5 s at 3.4-3.7%
+throttle) but the first 0.3 s after the catch still fall 1608 -> 920 ->
+600. In CrankToIdleTaper there is no PID; the only rpm control is the
+idleAdvance table - 13-15 deg effective at 600-1600 rpm (minus IAT corr)
+cannot arrest the fall. Raised idleAdvance low cells to 18/21/21
+(400/700/900) and 22/21/20 (1100/1300/1600) - the descent should now
+stop around 1100-1300. Secondary: mapExpAverageAlpha 0.5 -> 0.85 - the
+windowed-minimum sampling already rejects pulse noise so the EMA can be
+fast; MAP (fuel/load axis) then tracks within ~1 cycle. The idleVeTable
+is nearly flat (45-48) in this region so the MAP lag was only a few %
+of fuel - timing was the real arrestor. Note the user's 'hold right
+after idle entry, then lower' is exactly idleReturnTargetRamp (5 s,
+target 1402 -> 905) - it engages only AFTER the taper completes.
