@@ -719,8 +719,8 @@
          140.0
 </constant>
         <constant cols="8" digits="0" name="cltIdleCorrTable" rows="2" units="%">
-         55.0 47.0 36.0 25.0 14.0 13.0 13.0 10.0
-         55.0 47.0 36.0 25.0 14.0 13.0 13.0 10.0
+         55.0 47.0 36.0 25.0 15.0 15.0 14.0 10.0
+         55.0 47.0 36.0 25.0 15.0 15.0 14.0 10.0
 </constant>
         <constant cols="1" digits="0" name="cltIdleRpm" rows="16" units="RPM">
          1360
@@ -1921,7 +1921,7 @@
         <constant digits="0" name="idleTimingPid_minValue" units="">-20</constant>
         <constant digits="0" name="idleTimingPid_offset" units="">0</constant>
         <constant digits="0" name="idleTimingPid_periodMs" units="ms">0</constant>
-        <constant digits="4" name="idleTimingPid_pFactor" units="">0.05</constant>
+        <constant digits="4" name="idleTimingPid_pFactor" units="">0.03</constant>
         <constant digits="1" name="idleTimingSoftEntryTime" units="">3.0</constant>
         <constant cols="1" digits="0" name="idleVeLoadBins" rows="4" units="load">
          30
