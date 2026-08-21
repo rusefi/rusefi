@@ -13,6 +13,7 @@
 #include "main_trigger_callback.h"
 #include "listener_array.h"
 #include "logic_analyzer.h"
+#include "system/timer/isr_duration_histogram.h"
 
 #include "local_version_holder.h"
 #include "trigger_simulator.h"
@@ -531,46 +532,12 @@ void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 	handleShaftSignal(signalIndex, isRising, timestamp);
 }
 
-#if EFI_ENGINE_CONTROL
-static scheduling_s kickStartScheduling;
+// ---- trigger ISR duration histogram (m74_9 diagnosis: the trigger ISR runs
+// at the highest priority and can starve the lower-priority periodic SysTick) ----
+static IsrDurationHistogram triggerIsrHistogram;
 
-static void kickStartFire() {
-	// Fire both coils!
-	enginePins.coils[0].setLow();
-	enginePins.coils[1].setLow();
-}
-
-/**
- * Kick-start cranking mode for Ural bikes #4569: while the engine spins too slowly for normal
- * angle-based spark scheduling, charge both coils right at the trigger mark and fire them
- * a dwell-time later. LimpManager suppresses normal spark output (ClearReason::KickStart)
- * while this mode is active.
- *
- * "I see the trigger mark, after 3ms I plan to ignite in both cylinders"
- */
-static void handleKickStart(trigger_event_e signal, efitick_t timestamp) {
-	if (!engineConfiguration->kickStartCranking || !engineConfiguration->isIgnitionEnabled) {
-		return;
-	}
-	if (signal != SHAFT_PRIMARY_RISING) {
-		return;
-	}
-	if (Sensor::getOrZero(SensorType::Rpm) >= KICK_START_MODE_MAX_RPM) {
-		return;
-	}
-	floatms_t dwellMs = engine->ignitionState.getDwell();
-	if (std::isnan(dwellMs) || dwellMs <= 0) {
-		// refuse to charge a coil we would not know when to release
-		return;
-	}
-	// charge both coils now...
-	enginePins.coils[0].setHigh();
-	enginePins.coils[1].setHigh();
-	// ...and fire them once the dwell period is over
-	// if the previous fire event is still pending the scheduler ignores this reschedule
-	engine->scheduler.schedule("kickstart", &kickStartScheduling, sumTickAndFloat(timestamp, MSF2NT(dwellMs)), action_s::make<kickStartFire>());
-}
-#endif // EFI_ENGINE_CONTROL
+void resetTriggerIsrHistogram() { triggerIsrHistogram.reset(); }
+void printTriggerIsrHistogram() { triggerIsrHistogram.print("triggerIsr"); }
 
 // Handle all shaft signals - hardware or emulated both
 void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
@@ -637,6 +604,7 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 	triggerReentrant--;
 	triggerDuration = getTimeNowLowerNt() - triggerHandlerEntryTime;
 	triggerMaxDuration = maxI(triggerMaxDuration, triggerDuration);
+	triggerIsrHistogram.add(triggerDuration);
 }
 
 void TriggerCentral::resetCounters() {

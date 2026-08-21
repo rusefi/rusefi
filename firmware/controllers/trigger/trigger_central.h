@@ -259,6 +259,10 @@ void boardTriggerCallback(efitick_t timestamp, float currentPhase);
 // same-TU weak calls to the local body).
 void boardRawTriggerEdge(int signalIndex, bool isRising, efitick_t timestamp);
 
+// trigger ISR duration histogram diagnostics (isr_duration_histogram.h)
+void resetTriggerIsrHistogram();
+void printTriggerIsrHistogram();
+
 void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp);
 void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp);
 void hwHandleVvtCamSignal(TriggerValue front, efitick_t timestamp, int index);
