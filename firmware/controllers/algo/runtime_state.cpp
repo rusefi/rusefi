@@ -43,8 +43,15 @@ void printRuntimeStats(void) {
 	efiPrintf("maxSchedulingPrecisionLoss=%lu", maxSchedulingPrecisionLoss);
 
 #if EFI_CLOCK_LOCKS
-	efiPrintf("maxLockedDuration=%lu / maxTriggerReentrant=%d", maxLockedDuration, maxTriggerReentrant);
+	efiPrintf("maxLockedDuration=%lu ticks / maxTriggerReentrant=%d", maxLockedDuration, maxTriggerReentrant);
 #endif // EFI_CLOCK_LOCKS
 
 	efiPrintf("maxEventCallbackDuration=%lu", maxEventCallbackDuration);
+#if EFI_PROD_CODE
+	// triggerMaxDuration: longest single trigger input ISR (EXTI path),
+	// maxPrecisionCallbackDuration: longest single scheduler ISR (TIM5 CC1).
+	// One of these >1 ms is what makes the periodic SysTick lose ticks during
+	// cranking (SysTick runs at the lowest priority and cannot catch up).
+	efiPrintf("triggerMaxDuration=%lu ticks / maxPrecisionCallbackDuration=%lu", triggerMaxDuration, maxPrecisionCallbackDuration);
+#endif // EFI_PROD_CODE
 }
