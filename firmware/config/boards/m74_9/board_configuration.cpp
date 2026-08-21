@@ -699,6 +699,17 @@ static void m74_9CoilClick(int cyl, int count) {
 	efiPrintf("coilclick: done");
 }
 
+// The NZW-flash continue-read path is sensitive to code alignment: the same
+// loop measured 88 vs 100 ms across linker layouts. Pin the probe to a
+// 256-byte boundary so the diagnostic number is comparable across builds.
+static __attribute__((aligned(256), noinline)) uint32_t flashperfLoop() {
+	volatile uint32_t acc = 0;
+	for (uint32_t i = 0; i < 1000000; i++) {
+		acc += i * 2654435761u;
+	}
+	return acc;
+}
+
 void setup_custom_board_overrides() {
 	custom_board_InitHardware = m74_9_boardInitHardware;
 	custom_board_DefaultConfiguration = m74_9_boardDefaultConfiguration;
@@ -773,6 +784,9 @@ void setup_custom_board_overrides() {
 	// continue-read, see stm32_clock_init in the ChibiOS AT32 port) the loop
 	// takes ~20-35 ms; hundreds of ms means every instruction fetch pays
 	// maximum wait states.
+	// The NZW-flash continue-read path is sensitive to code alignment: the
+	// same loop measured 88 vs 100 ms across linker layouts. Pin the probe to
+	// a 256-byte boundary so the diagnostic number is comparable across builds.
 	addConsoleAction("flashperf", [](){
 		uint32_t psr = FLASH1->PSR;
 		uint32_t divr = FLASH1->DIVR;
@@ -785,16 +799,14 @@ void setup_custom_board_overrides() {
 		                 (eopb0 == 0x03) ? "320K" : (eopb0 == 0x04) ? "384K" :
 		                 (eopb0 == 0x05) ? "448K" : (eopb0 == 0x06) ? "512K" : "?";
 		uint32_t t0 = getTimeNowLowerNt();
-		volatile uint32_t acc = 0;
-		for (uint32_t i = 0; i < 1000000; i++) {
-			acc += i * 2654435761u;
-		}
+		uint32_t acc = flashperfLoop();
 		uint32_t t1 = getTimeNowLowerNt();
-		efiPrintf("flashperf: PSR=0x%08x (NZW_BST=%lu) DIVR=0x%08x (FDIV=%lu) CONTR=0x%08x (contRead=%lu) EOPB0=0x%02x (ZW=%s) loop1000k=%lu ticks (%.2f ms) acc=%lu",
+		efiPrintf("flashperf: PSR=0x%08x (NZW_BST=%lu) DIVR=0x%08x (FDIV=%lu) CONTR=0x%08x (contRead=%lu) EOPB0=0x%02x (ZW=%s) loop@0x%08x loop1000k=%lu ticks (%.2f ms) acc=%lu",
 			(unsigned)psr, (unsigned long)((psr & FLASH_PSR_NZW_BST_Msk) >> FLASH_PSR_NZW_BST_Pos),
 			(unsigned)divr, (unsigned long)(divr & FLASH_DIVR_FDIV_Msk),
 			(unsigned)contr, (unsigned long)((contr & FLASH_CONTR_FCONTR_EN_Msk) >> FLASH_CONTR_FCONTR_EN_Pos),
 			(unsigned)eopb0, zw,
+			(unsigned)(uintptr_t)&flashperfLoop,
 			(unsigned long)(t1 - t0), (t1 - t0) / 4000.0f, (unsigned long)acc);
 	});
 	// NZW_BST is read-only here on purpose: toggling PSR.NZW_BST at full
