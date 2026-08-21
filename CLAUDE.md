@@ -279,6 +279,11 @@ Build commands, host callback tests, and hardware checks: [H7 ADC mux](docs/h7-a
 - The board bundle ships default tunes in `tune/` (`$(FOLDER)/tune`, real copies via `cp`, see `TUNE_FOLDER_TARGETS` in bundle.mk) so the bundled tune and ini of one build always match each other.
 - A stale enum label in a saved msq (e.g. `verboseIsoTp="true"` after the bit labels changed to "no"/"yes") surfaces as `IllegalArgumentException: <field>: Enum name not found "..."` on tune load - scan every msq constant against the new ini before declaring a tune compatible (the console's `Msq.applyOnto` skips incompatible values, `asImage` throws on the first one).
 
+## Console-over-CAN "no data" vs ECU-side ISO-TP stall (diagnosis recipe)
+
+When the console shows no gauge values / raw gauge names / no indicators while commands and the Messages pane still work, do NOT start with the ini code: the ini auto-discovery logs everything needed. Check `artifacts/logs/` for (a) `Got [signature]` + `connectAndReadConfiguration: completed successfully` (link fine), (b) `IncomingDataBuffer ... Got only N byte(s) while expecting M` (the ECU's ISO-TP response stalled mid-stream - an ECU-side TX stall, the branch's long-running bug, recovered by ECU power cycle), (c) `Skipping non 720 packet` + `Total rate`/`isotp rate` counters (transport alive). A headless probe with the same console jar (PCanIoStream + BinaryProtocol.requestOutputChannels, run from the same cwd as the console) proves the data path independently of the UI. Since 2026-08-21 SensorGauge logs `Gauge resolved: <name> channel=... title=...` at INFO, so a genuine UI-side ini problem shows up directly in the log.
+- `verboseIsoTp = yes` in the tune floods the TS text channel with one `*** INFO: CanTsListener decodeFrame N` line per CAN frame during any ISO-TP exchange - measurable overhead and log spam; enable only while diagnosing the CAN link.
+
 ## MCP Servers
 
 rusEFI provides two MCP (Model Context Protocol) servers for LLM-driven tooling over stdio JSON-RPC:
