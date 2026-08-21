@@ -214,8 +214,12 @@ public:
 
 // How long periodic CAN TX stays quiet after the last received ISO-TP frame (see
 // Engine::pauseCANdueToSerialUntil). Long enough to cover the burn-stall window where the
-// ECU cannot receive frames but still has to get its response out uncontended.
-#define CAN_SERIAL_PAUSE_MS 3000
+// ECU cannot receive frames but still has to get its response out uncontended, AND the
+// console's 10s watchdog/reconnect cycle: if the pause lapses while the console is
+// reconnecting, the board CAN flood resumes at full rate and the first response after the
+// reconnect contends with it - the old 3s window let the flood win exactly there and every
+// reconnect cycle died the same way (the 'silent reconnect, gauges dead' loop).
+#define CAN_SERIAL_PAUSE_MS 10000
 
 class IsoTpRx : public CanListener, public IsoTpBase {
 public:

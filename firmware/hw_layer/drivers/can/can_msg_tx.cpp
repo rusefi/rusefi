@@ -451,17 +451,41 @@ CanTxMessage::~CanTxMessage() {
 				m_frame.data8[6], m_frame.data8[7]);
 	}
 
-	// Wait for a free mailbox. Serial (ISO-TP) frames carry a full response packet:
-	// dropping one mid-stream truncates the response for the host and kills the session,
-	// so give them a much longer budget than the periodic broadcast traffic. A 1s budget
-	// truncated multi-frame responses whenever the board CAN flood (m74_9 BCM emulation,
-	// ~660 f/s with the engine running) held all 3 mailboxes at once: the ECU kept
-	// sending BCM frames while the 720 responses stopped mid-burst ("Got only N bytes
-	// while expecting M" on the host). Bounded at 5s (not infinite): the ECU announce
-	// frame also uses this category from a 250ms periodic callback, which must not
-	// block forever on a wedged bus.
-	sysinterval_t txTimeout = (category == CanCategory::SERIAL) ? TIME_MS2I(5000) : TIME_MS2I(100);
-	msg_t msg = canTransmit(device, CAN_ANY_MAILBOX, &m_frame, txTimeout);
+	// Wait for a free mailbox. Serial (ISO-TP) frames carry the TS/console session:
+	// a dropped frame truncates the response mid-burst for the host and kills the
+	// session, so serial sends retry transient mailbox failures instead of giving
+	// up after one timeout. The per-attempt budget is short (500ms - with the board
+	// BCM flood throttled during serial sessions the bus has ~99% idle time): the
+	// previous single 5s attempt could hold the FIRST frame in the mailbox longer
+	// than the 1s flow-control wait, so the host's FC arrived after the wait had
+	// already expired and the whole exchange died. On persistent failure the TX
+	// mailboxes are aborted (ABRQ) to clear any un-ACKed frame that would otherwise
+	// retry forever and wedge the bus for every later burst. Non-serial broadcast
+	// traffic keeps the short 100ms budget - dropping a BCM frame is harmless (it
+	// repeats at ~165/s).
+	msg_t msg;
+	if (category == CanCategory::SERIAL) {
+		bool sent = false;
+		for (int attempt = 0; attempt < 3; attempt++) {
+			msg = canTransmit(device, CAN_ANY_MAILBOX, &m_frame, TIME_MS2I(500));
+			if (msg == MSG_OK) {
+				sent = true;
+				break;
+			}
+			if (attempt < 2) {
+				chThdSleepMilliseconds(2);
+			}
+		}
+		if (!sent) {
+			// Clear any wedged mailbox so the next burst starts clean.
+			for (canmbx_t mailbox = 1; mailbox <= CAN_TX_MAILBOXES; mailbox++) {
+				canTryAbortX(device, mailbox);
+			}
+			msg = MSG_TIMEOUT;
+		}
+	} else {
+		msg = canTransmit(device, CAN_ANY_MAILBOX, &m_frame, TIME_MS2I(100));
+	}
 #if EFI_PROD_CODE && HAL_USE_USB_CDC_2
 	if ((msg == MSG_OK) && (engineConfiguration->canSniffer[busIndex].listenOurs)) {
 		canSniffer.handle_can_message(busIndex, m_frame, getTimeNowNt());
