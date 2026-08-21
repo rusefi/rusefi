@@ -719,8 +719,8 @@
          140.0
 </constant>
         <constant cols="8" digits="0" name="cltIdleCorrTable" rows="2" units="%">
-         55.0 47.0 36.0 25.0 22.0 22.0 22.0 22.0
-         55.0 47.0 36.0 25.0 22.0 22.0 22.0 22.0
+         55.0 47.0 36.0 25.0 20.0 17.0 17.0 17.0
+         55.0 47.0 36.0 25.0 20.0 17.0 17.0 17.0
 </constant>
         <constant cols="1" digits="0" name="cltIdleRpm" rows="16" units="RPM">
          1360
