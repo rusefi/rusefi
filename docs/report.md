@@ -5411,3 +5411,22 @@ pinned at +10 (the +16 max now gives headroom - verify the droop is gone);
 step the idleVeTable lean-out in SMALL steps once lambda closed loop works;
 heater (L9779 OUT6=PG6 -> HEAT_OX_1/AC4) requires board config + rebuild,
 not msq.
+
+## 2026-08-21 (night, in car) - cranking_rpm 700->1200 for the post-catch flare
+
+The "vzhuh to ~1500" was impossible with cranking_rpm=700: the engine left
+the Cranking phase right at the catch (~700), so the 4% cranking ETB
+position (cltCrankingCorr 20 x range 20) never had a chance to rev the
+engine - the after-cranking taper pulled the throttle toward idle base
+immediately. cranking_rpm=1200 (pure msq) keeps the engine in cranking
+fuel + cranking timing + 4% position until 1200 rpm, then
+afterCrankingIACtaperDuration (30 warm cycles ~3 s) glides to the 913
+idle target; the idle target itself is untouched. Timing interpolates from
+crankingAdvance 10 deg to full running advance across the rev-up, which
+adds a natural push near 1200. Trigger first-combustion ceiling is
+4x cranking_rpm = 4800 rpm - a ~1500 flare is far from it.
+Risk to watch: if the engine cannot reach 1200 (cold, weak battery) it
+stays in cranking mode indefinitely (cranking PW at 1000+ rpm, idle PIDs
+off). Next levers if the flare is too small: warm cltCrankingCorr
+20/18/16 -> ~24/22/20; if the settle is too fast: warm taper 30 -> 40-50
+cycles.

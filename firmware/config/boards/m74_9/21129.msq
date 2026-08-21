@@ -796,7 +796,7 @@
         <constant digits="1" name="compressorDischargeTemperature_tempC_3" units="{bitStringValue(unitsLabels, useMetricOnInterface)}">0.0</constant>
         <constant name="consoleUartDevice">"Off"</constant>
         <constant name="consumeObdSensors">"no"</constant>
-        <constant digits="0" name="cranking_rpm" units="RPM">700</constant>
+        <constant digits="0" name="cranking_rpm" units="RPM">1200</constant>
         <constant cols="1" digits="2" name="crankingAdvance" rows="4" units="deg">
          10.0
          10.0
