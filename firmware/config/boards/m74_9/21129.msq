@@ -1921,7 +1921,7 @@
         <constant digits="0" name="idleTimingPid_minValue" units="">-15</constant>
         <constant digits="0" name="idleTimingPid_offset" units="">0</constant>
         <constant digits="0" name="idleTimingPid_periodMs" units="ms">0</constant>
-        <constant digits="4" name="idleTimingPid_pFactor" units="">0.05</constant>
+        <constant digits="4" name="idleTimingPid_pFactor" units="">0.1</constant>
         <constant digits="1" name="idleTimingSoftEntryTime" units="">0.0</constant>
         <constant cols="1" digits="0" name="idleVeLoadBins" rows="4" units="load">
          30
@@ -4707,7 +4707,7 @@
         <constant name="useIacPidMultTable">"no"</constant>
         <constant name="useIacTableForCoasting">"disabled"</constant>
         <constant name="useIdleAdvanceWhileCoasting">"no"</constant>
-        <constant name="useIdleTimingPidControl">"no"</constant>
+        <constant name="useIdleTimingPidControl">"yes"</constant>
         <constant name="useInjectorFlowLinearizationTable">"no"</constant>
         <constant name="useLambdaOnInterface">"AFR"</constant>
         <constant name="useLinearCltSensor">"no"</constant>
