@@ -719,8 +719,8 @@
          140.0
 </constant>
         <constant cols="8" digits="0" name="cltIdleCorrTable" rows="2" units="%">
-         100.0 85.0 65.0 45.0 40.0 40.0 40.0 40.0
-         100.0 85.0 65.0 45.0 40.0 40.0 40.0 40.0
+         55.0 47.0 36.0 25.0 22.0 22.0 22.0 22.0
+         55.0 47.0 36.0 25.0 22.0 22.0 22.0 22.0
 </constant>
         <constant cols="1" digits="0" name="cltIdleRpm" rows="16" units="RPM">
          1360
@@ -1905,7 +1905,7 @@
         <constant name="idleReturnTargetRamp">"yes"</constant>
         <constant digits="1" name="idleReturnTargetRampDuration" units="seconds">3.0</constant>
         <constant digits="4" name="idleRpmPid_dFactor" units="">0.0</constant>
-        <constant digits="4" name="idleRpmPid_iFactor" units="">0.001</constant>
+        <constant digits="4" name="idleRpmPid_iFactor" units="">0.002</constant>
         <constant digits="0" name="idlerpmpid_iTermMax" units="">20</constant>
         <constant digits="0" name="idlerpmpid_iTermMin" units="">-20</constant>
         <constant digits="0" name="idleRpmPid_maxValue" units="">20</constant>
@@ -1918,10 +1918,10 @@
         <constant digits="4" name="idleTimingPid_dFactor" units="">0.0</constant>
         <constant digits="4" name="idleTimingPid_iFactor" units="">0.0</constant>
         <constant digits="0" name="idleTimingPid_maxValue" units="">10</constant>
-        <constant digits="0" name="idleTimingPid_minValue" units="">-30</constant>
+        <constant digits="0" name="idleTimingPid_minValue" units="">-15</constant>
         <constant digits="0" name="idleTimingPid_offset" units="">0</constant>
         <constant digits="0" name="idleTimingPid_periodMs" units="ms">0</constant>
-        <constant digits="4" name="idleTimingPid_pFactor" units="">0.1</constant>
+        <constant digits="4" name="idleTimingPid_pFactor" units="">0.05</constant>
         <constant digits="1" name="idleTimingSoftEntryTime" units="">0.0</constant>
         <constant cols="1" digits="0" name="idleVeLoadBins" rows="4" units="load">
          30
