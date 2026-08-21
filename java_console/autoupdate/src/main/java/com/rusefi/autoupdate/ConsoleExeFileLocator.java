@@ -2,13 +2,18 @@ package com.rusefi.autoupdate;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.core.OsUtil;
+import com.rusefi.core.io.BundleInfo;
+import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.net.JarFileUtil;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.CodeSource;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Properties;
 
@@ -39,6 +44,30 @@ public class ConsoleExeFileLocator {
     static final String WINDOWS_LAUNCHER_SUFFIX = "_updater.exe";
 
     static final String UNIX_LAUNCHER_SUFFIX = "_updater.sh";
+
+    public static boolean isRunningFromUnzippedBundle() {
+        return isRunningFromUnzippedBundle(Paths.get("."), isRunningFromJar());
+    }
+
+    static boolean isRunningFromUnzippedBundle(final Path workingDirectory, final boolean runningFromJar) {
+        if (!runningFromJar || Files.exists(workingDirectory.resolve(INSTALLATION_PROPERTIES_FILE_NAME))) {
+            return false;
+        }
+
+        final Path releaseFile = workingDirectory.resolve(BundleUtil.BRANCH_REF_FILE);
+        try {
+            BundleInfo bundleInfo = BundleUtil.parse(Files.readAllLines(releaseFile));
+            return !BundleInfo.isUndefined(bundleInfo);
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    private static boolean isRunningFromJar() {
+        CodeSource codeSource = ConsoleExeFileLocator.class.getProtectionDomain().getCodeSource();
+        return codeSource != null
+            && codeSource.getLocation().getPath().toLowerCase(Locale.ROOT).endsWith(".jar");
+    }
 
     String getConsoleExeFileName() {
         final Optional<Properties> installationProperties = loadInstallationProperties();
