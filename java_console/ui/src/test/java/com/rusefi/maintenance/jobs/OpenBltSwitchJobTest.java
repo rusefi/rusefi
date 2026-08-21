@@ -39,7 +39,8 @@ public class OpenBltSwitchJobTest {
     private final AtomicInteger jobFinishedCount = new AtomicInteger();
 
     private OpenBltSwitchJob newJob(final LinkManager linkManager) {
-        return new OpenBltSwitchJob(new PortResult(PORT, SerialPortType.EcuWithOpenblt), null, linkManager, rebooter);
+        return new OpenBltSwitchJob(new PortResult(PORT, SerialPortType.EcuWithOpenblt), null,
+            linkManager, scanner, rebooter);
     }
 
     @Test

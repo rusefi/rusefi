@@ -215,7 +215,8 @@ public class ProgramSelector {
                 job = new DfuSwitchJob(selectedPort, parent, linkManager);
                 break;
             case OPENBLT_SWITCH:
-                job = new OpenBltSwitchJob(selectedPort, parent, linkManager, OpenbltRebooter.PRODUCTION_REBOOTER);
+                job = new OpenBltSwitchJob(selectedPort, parent, linkManager,
+                    connectivityContext.getPortScanner(), OpenbltRebooter.PRODUCTION_REBOOTER);
                 break;
             case OPENBLT_CAN:
                 job = new OpenBltCanJob(parent);
