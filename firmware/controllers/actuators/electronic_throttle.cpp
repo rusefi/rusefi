@@ -159,9 +159,57 @@ static TsCalMode functionToCalModeSecMax(dc_function_e func) {
 }
 #endif // EFI_TUNER_STUDIO
 
-#define ETB_DUTY_LIMIT 0.9
-// this macro clamps both positive and negative percentages from about -100% to 100%
-#define ETB_PERCENT_TO_DUTY(x) (clampF(-ETB_DUTY_LIMIT, 0.01f * (x), ETB_DUTY_LIMIT))
+/**
+ * #9799: the ceiling used to be hard-coded at 90%. Some H-bridge drivers trip their own
+ * overcurrent/thermal protection before reaching it, and a throttle which is mechanically wide
+ * open well below that never needs the rest of the range, so it is configurable per H-bridge now.
+ *
+ * Anything outside the configurable range - including the 0 carried by tunes which predate the
+ * field, should one reach here before applyDefaultsOrFixAfterBurn() runs - falls back to the
+ * historical limit rather than to "throttle stays shut".
+ */
+float EtbController::getMaxDutyCycle() const {
+	uint8_t configured = engineConfiguration->etbMaxDutyCycle[getHBridgeIndex()];
+	if (configured < ETB_MIN_MAX_DUTY_CYCLE || configured > ETB_DEFAULT_MAX_DUTY_CYCLE) {
+		return 0.01f * ETB_DEFAULT_MAX_DUTY_CYCLE;
+	}
+	return 0.01f * configured;
+}
+
+/**
+ * etbFunctions[] is what maps a function onto an H-bridge slot, so finding our function in it
+ * gives the index of the hardware we drive. init() deliberately keeps its existing signature -
+ * it is a pure virtual with a couple of dozen call sites in the tests.
+ */
+size_t EtbController::getHBridgeIndex() const {
+	for (size_t i = 0; i < efi::size(engineConfiguration->etbFunctions); i++) {
+		if (engineConfiguration->etbFunctions[i] == m_function) {
+			return i;
+		}
+	}
+	return 0;
+}
+
+// clamps both positive and negative percentages down to the configured ceiling
+float EtbController::percentToDuty(float percent) const {
+	float limit = getMaxDutyCycle();
+	return clampF(-limit, 0.01f * percent, limit);
+}
+
+/**
+ * The bench test and the TPS autocal drive the motor directly rather than through setOutput(),
+ * so they would otherwise ignore the ceiling entirely. On the hardware which motivated #9799 that
+ * is the worst case: the fixed 50% those two command is above the limit the user lowered the
+ * ceiling to in order to stop the driver faulting.
+ *
+ * Note this can make autocal less accurate on a throttle which needs more than the configured
+ * ceiling to reach its mechanical stops - but exceeding a limit the user set for hardware
+ * protection is the worse of the two.
+ */
+float EtbController::clampToMaxDutyCycle(float duty) const {
+	float limit = getMaxDutyCycle();
+	return clampF(-limit, duty, limit);
+}
 
 PUBLIC_API_WEAK bool isBoardAllowingLackOfPps() {
   return false;
@@ -570,7 +618,7 @@ void EtbController::setOutput(expected<percent_t> outputValue) {
 	// If not ETB, or ETB is allowed, output is valid, and we aren't paused, output to motor.
 	if (isEnabled) {
 		m_motor->enable();
-		m_motor->set(ETB_PERCENT_TO_DUTY(outputValue.Value));
+		m_motor->set(percentToDuty(outputValue.Value));
 	} else {
 		// Otherwise disable the motor.
 		m_motor->disable("no-ETB");
