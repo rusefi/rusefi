@@ -3238,13 +3238,13 @@
 </constant>
         <constant cols="8" digits="0" name="pedalToTpsTable" rows="8" units="%">
          0 0 0 0 0 0 0 0
-         14 14 14 14 14 14 14 14
-         29 29 29 29 29 29 29 29
-         43 43 43 43 43 43 43 43
-         57 57 57 57 57 57 57 57
-         71 71 71 71 71 71 71 71
-         86 86 86 86 86 86 86 86
-         100 100 100 100 100 100 100 100
+         0 14 14 14 14 14 14 14
+         0 29 29 29 29 29 29 29
+         0 43 43 43 43 43 43 43
+         0 57 57 57 57 57 57 57
+         0 71 71 71 71 71 71 71
+         0 86 86 86 86 86 86 86
+         0 100 100 100 100 100 100 100
 </constant>
         <constant digits="0" name="pidExtraForLowRpm" units="%">0</constant>
         <constant cols="1" digits="0" name="postCrankingCLTBins" rows="6" units="{bitStringValue(unitsLabels, useMetricOnInterface)}">
