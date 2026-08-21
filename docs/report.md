@@ -5636,3 +5636,17 @@ air PID hold 0.5 s, idleAdvance 400/700 to 20/23 for a higher arrest of
 the catch undershoot (665 rpm bottom). Remaining profile after this
 change: catch ~1700 -> brief undershoot ~800 -> taper hold ~1100-1200
 -> PIDs engage in 0.5-1 s -> target glide 1407->905 over 5 s.
+
+## 2026-08-21 (night, in car) - dip removal: raise the post-catch equilibrium
+
+23:30 log: dip bottom 632 (was 588-665), taper hold ~1000 rpm solid.
+The remaining undershoot is physical: the catch flare (1736) decays
+toward the equilibrium that the 3.8% cranking throttle holds (~1000),
+overshooting to 632 on the way. Fix by raising the equilibrium itself:
+cltCrankingCorr warm 26/24/22 (4.4-4.6% cranking throttle -> flare and
+undershoot center around ~1300), idleAdvance 1600/2000 -> 22/18 (less
+torque deficit at the flare top). DFCO is safe: the 2 s delay + zero
+retard cannot touch a flare of any height. If the flare now sits too
+high (>1800), lower cltCrankingCorr in 1-unit steps; if the dip
+persists below ~1000, next lever is the fuel transition (cranking coef
+step at the catch) or a firmware ASE.
