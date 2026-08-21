@@ -725,14 +725,29 @@ private:
         // TS is connected (only 2 frames per ignition-on cycle, negligible traffic).
         tickImmo();
 
-        // While a serial (ISO-TP/TS) session is active and the engine is off, mute the
-        // BCM emulation: it sends ~660 frames/s, which contends with TS responses for
-        // CAN mailboxes (truncated multi-frame responses = "Got only N bytes" on the host)
-        // and floods the host's CAN reader during a tune write. With the engine running
-        // the BCM needs these frames (IMMO/fuel pump/dash), so keep sending regardless.
-        if ((engine->pauseCANdueToSerialUntil > getTimeNowNt()) && !isEngineActive) {
-            return;
-        }
+        		// While a serial (ISO-TP/TS) session is active:
+        		//   - engine off: mute the BCM emulation entirely. It sends ~660 frames/s,
+        		//     which contends with TS responses for CAN mailboxes (truncated
+        		//     multi-frame responses = "Got only N bytes" on the host) and floods
+        		//     the host's CAN reader during a tune write.
+        		//   - engine running: the BCM needs these frames (IMMO/fuel pump/dash),
+        		//     so keep sending, but at 1/4 rate. The serial response bursts are
+        		//     ~150 frames per output-channels poll; at full flood rate the BCM
+        		//     frames keep the 3 TX mailboxes occupied through the serial frames'
+        		//     1s per-frame transmit timeout and the burst dies mid-stream (the
+        		//     "gauges dead while the engine runs" failure - the ECU keeps
+        		//     sending BCM frames, only the 720 responses stop). 1/4 rate is ~165
+        		//     frames/s, which the dash/IMMO/pump logic tolerates for the 3 s
+        		//     pause window.
+        		bool serialSessionActive = (engine->pauseCANdueToSerialUntil > getTimeNowNt());
+        		if (serialSessionActive) {
+        			if (!isEngineActive) {
+        				return;
+        			}
+        			if ((m_counter & 3) != 0) {
+        				return;
+        			}
+        		}
 
         // 10 ms group: every 2nd tick
         if ((m_counter % 2) == 0) {

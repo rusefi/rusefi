@@ -453,8 +453,14 @@ CanTxMessage::~CanTxMessage() {
 
 	// Wait for a free mailbox. Serial (ISO-TP) frames carry a full response packet:
 	// dropping one mid-stream truncates the response for the host and kills the session,
-	// so give them a longer budget than the periodic broadcast traffic.
-	sysinterval_t txTimeout = (category == CanCategory::SERIAL) ? TIME_MS2I(1000) : TIME_MS2I(100);
+	// so give them a much longer budget than the periodic broadcast traffic. A 1s budget
+	// truncated multi-frame responses whenever the board CAN flood (m74_9 BCM emulation,
+	// ~660 f/s with the engine running) held all 3 mailboxes at once: the ECU kept
+	// sending BCM frames while the 720 responses stopped mid-burst ("Got only N bytes
+	// while expecting M" on the host). Bounded at 5s (not infinite): the ECU announce
+	// frame also uses this category from a 250ms periodic callback, which must not
+	// block forever on a wedged bus.
+	sysinterval_t txTimeout = (category == CanCategory::SERIAL) ? TIME_MS2I(5000) : TIME_MS2I(100);
 	msg_t msg = canTransmit(device, CAN_ANY_MAILBOX, &m_frame, txTimeout);
 #if EFI_PROD_CODE && HAL_USE_USB_CDC_2
 	if ((msg == MSG_OK) && (engineConfiguration->canSniffer[busIndex].listenOurs)) {
