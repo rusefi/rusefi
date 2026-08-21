@@ -142,23 +142,10 @@ public:
 		return m_lastEventTimer.getElapsedSeconds(nowNt);
 	}
 
-	TRIGGER_RAM_CODE bool engineMovedRecently(efitick_t nowNt) const {
-		// todo: this user-defined property is a quick solution, proper fix https://github.com/rusefi/rusefi/issues/6593 is needed
-		if (engineConfiguration->triggerEventsTimeoutMs != 0 && m_lastEventTimer.hasElapsedMs(engineConfiguration->triggerEventsTimeoutMs)) {
-			return false;
-		}
-
-		constexpr float oneRevolutionLimitInSeconds = 60.0 / RPM_LOW_THRESHOLD;
-		auto maxAverageToothTime = oneRevolutionLimitInSeconds / triggerShape.getSize();
-
-		// Some triggers may have long gaps (with many teeth), don't count that as stopped!
-		auto maxAllowedGap = maxAverageToothTime * 10;
-
-		// Clamp between 0.1 seconds ("instant" for a human) and worst case of one engine cycle on low tooth count wheel
-		maxAllowedGap = clampF(0.1f, maxAllowedGap, oneRevolutionLimitInSeconds);
-
-		return (getSecondsSinceTriggerEvent(nowNt) < maxAllowedGap) || directSelfStimulation;
-	}
+	// Out-of-line in trigger_central.cpp: LTO clones of inline methods ignore
+	// the TRIGGER_RAM_CODE section attribute, so this per-edge check must not
+	// stay inline or it runs from the slow flash NZW area.
+	TRIGGER_RAM_CODE bool engineMovedRecently(efitick_t nowNt) const;
 
 	bool engineMovedRecently() const {
 		return engineMovedRecently(getTimeNowNt());

@@ -12,6 +12,7 @@
  */
 
 #include "global.h"
+#include "loggingcentral.h"
 
 struct IsrDurationHistogram {
 	static constexpr int Buckets = 6;
@@ -19,17 +20,10 @@ struct IsrDurationHistogram {
 	uint32_t count[Buckets] = {0};
 	uint32_t sumUs = 0;
 
-	TRIGGER_RAM_CODE void add(uint32_t ticks) {
-		for (int i = 0; i < Buckets - 1; i++) {
-			if (ticks < bounds[i]) {
-				count[i]++;
-				sumUs += ticks / US_TO_NT_MULTIPLIER;
-				return;
-			}
-		}
-		count[Buckets - 1]++;
-		sumUs += ticks / US_TO_NT_MULTIPLIER;
-	}
+	// Out-of-line in isr_duration_histogram.cpp: LTO clones of inline methods
+	// ignore the TRIGGER_RAM_CODE section attribute, so this per-ISR method
+	// must not stay inline or it runs from the slow flash NZW area.
+	TRIGGER_RAM_CODE void add(uint32_t ticks);
 
 	void reset() {
 		for (size_t i = 0; i < Buckets; i++) {
