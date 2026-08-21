@@ -777,23 +777,32 @@ void setup_custom_board_overrides() {
 		uint32_t psr = FLASH1->PSR;
 		uint32_t divr = FLASH1->DIVR;
 		uint32_t contr = FLASH1->CONTR;
+		uint16_t eopb0 = USD->eopb0;
+		// EOPB0: 0x00=SRAM512K/ZW128K 0x01=448/192 0x02=384/256 0x03=320/320
+		//        0x04=256/384 0x05=192/448 0x06=128/512; 0xFF = factory default
+		const char* zw = (eopb0 == 0x00 || eopb0 == 0xFF) ? "128K" :
+		                 (eopb0 == 0x01) ? "192K" : (eopb0 == 0x02) ? "256K" :
+		                 (eopb0 == 0x03) ? "320K" : (eopb0 == 0x04) ? "384K" :
+		                 (eopb0 == 0x05) ? "448K" : (eopb0 == 0x06) ? "512K" : "?";
 		uint32_t t0 = getTimeNowLowerNt();
 		volatile uint32_t acc = 0;
 		for (uint32_t i = 0; i < 1000000; i++) {
 			acc += i * 2654435761u;
 		}
 		uint32_t t1 = getTimeNowLowerNt();
-		efiPrintf("flashperf: PSR=0x%08x DIVR=0x%08x (FDIV=%lu) CONTR=0x%08x (contRead=%lu) loop1000k=%lu ticks (%.2f ms) acc=%lu",
-			(unsigned)psr, (unsigned)divr, (unsigned long)(divr & FLASH_DIVR_FDIV_Msk),
+		efiPrintf("flashperf: PSR=0x%08x (NZW_BST=%lu) DIVR=0x%08x (FDIV=%lu) CONTR=0x%08x (contRead=%lu) EOPB0=0x%02x (ZW=%s) loop1000k=%lu ticks (%.2f ms) acc=%lu",
+			(unsigned)psr, (unsigned long)((psr & FLASH_PSR_NZW_BST_Msk) >> FLASH_PSR_NZW_BST_Pos),
+			(unsigned)divr, (unsigned long)(divr & FLASH_DIVR_FDIV_Msk),
 			(unsigned)contr, (unsigned long)((contr & FLASH_CONTR_FCONTR_EN_Msk) >> FLASH_CONTR_FCONTR_EN_Pos),
+			(unsigned)eopb0, zw,
 			(unsigned long)(t1 - t0), (t1 - t0) / 4000.0f, (unsigned long)acc);
 	});
 	// NZW_BST is read-only here on purpose: toggling PSR.NZW_BST at full
 	// HCLK hangs the flash read path (hard lockup, no fault, recoverable only
-	// by power cycle) - it may only be changed before the PLL switch.
+	// by power cycle) - it is now set at boot in stm32_clock_init.
 	addConsoleActionS("flashnzw", [](const char*){
 		efiPrintf("flashnzw: NZW_BST is %s - live toggle is DISABLED (hangs the flash read path at 288 MHz)."
-			" Change it in stm32_clock_init (ChibiOS AT32 port) and reflash.",
+			" It is set at boot in stm32_clock_init (ChibiOS AT32 port).",
 			(FLASH1->PSR & FLASH_PSR_NZW_BST_Msk) ? "ON" : "OFF");
 	});
 	// raw primary-trigger edge stream capture: a digital oscilloscope of the
