@@ -5430,3 +5430,24 @@ stays in cranking mode indefinitely (cranking PW at 1000+ rpm, idle PIDs
 off). Next levers if the flare is too small: warm cltCrankingCorr
 20/18/16 -> ~24/22/20; if the settle is too fast: warm taper 30 -> 40-50
 cycles.
+
+## 2026-08-21 (night, in car) - idle transition speed after the 1400 cranking catch
+
+cranking_rpm=1400 (burned in TS, synced into msq) gives the wanted flare:
+the engine holds the 4% cranking position until 1400 rpm. The post-catch
+settle has two serial ramps, both pure msq:
+  1. CrankToIdleTaper: throttle walks 4% -> idle base over
+     afterCrankingIACtaperDuration ENGINE CYCLES (taper fraction =
+     revolutionCounterSinceStart / duration). Warm cells 20 -> 15 cycles
+     (~1.3 s at 1400).
+  2. Idling entry: idle target ramps idle+idlePidRpmUpperLimit (913+500)
+     -> 913 over idleReturnTargetRampDuration, now 1.5 s (was 3.0). Air
+     PID holds off 1 s (idlePidActivationTime), timing PID ramps in over
+     3 s (idleTimingSoftEntryTime) - total settle ~2.5-3 s.
+Known trap (22:20 stall): revolutionCounterSinceStart resets only in
+setStopSpinning (no-trigger timeout or explicit stop). A quick re-crank
+after a stall inherits the old counter, the taper fraction is already ~1
+at the catch, the throttle dumps to idle base instantly and the engine
+stalls again. A SHORTER taper duration worsens this; if recrank-stalls
+appear, lengthen the warm taper cells back or force a key-off between
+attempts.
