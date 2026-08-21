@@ -4959,7 +4959,7 @@
         <constant name="verboseCan">"Do not print"</constant>
         <constant name="verboseCan2">"Do not print"</constant>
         <constant digits="0" name="verboseCanBaseAddress" units="">512</constant>
-        <constant name="verboseIsoTp">"yes"</constant>
+        <constant name="verboseIsoTp">"no"</constant>
         <constant name="verboseKLine">"no"</constant>
         <constant name="verboseQuad">"no"</constant>
         <constant name="verboseTLE8888">"no"</constant>
