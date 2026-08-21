@@ -658,9 +658,9 @@
          16.75
          16.25
          13.75
+         26.0
+         24.0
          22.0
-         20.0
-         18.0
 </constant>
         <constant cols="1" digits="2" name="cltCrankingCorrBins" rows="8" units="{bitStringValue(unitsLabels, useMetricOnInterface)}">
          -40.0
@@ -1859,8 +1859,8 @@
          21.0
          22.0
          21.0
-         20.0
-         15.0
+         22.0
+         18.0
 </constant>
         <constant cols="1" digits="0" name="idleAdvanceBins" rows="8" units="RPM">
          0
