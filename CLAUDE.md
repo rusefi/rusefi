@@ -277,7 +277,7 @@ Authoritative reference is in-tree: `firmware/ChibiOS-Contrib/os/hal/ports/AT32/
 
 Symptom of missing flash setup (fixed 2026-08-21, fork commit e4d262bbd7): every instruction fetch pays maximum wait states - `flashperf` 1M-iteration multiply loop took ~205 ms instead of ~10-20 ms, and the trigger ISR histograms (lockstats) showed ~335 us per tooth at cranking, overlapping the next tooth edge (~1.2 ms @ 850 rpm on 60-2) -> lost teeth -> C9002 on the catch. Distinguish this from a PLL problem: if systick_ms and nt_ms agree (timecheck) and USB/CAN work, the core clock is right - it is a fetch-speed problem, not a clock-tree problem.
 
-m74_9 diagnostics (board-local console): `flashperf` prints PSR + DIVR + the loop time; `flashnzw on|off` toggles PSR.NZW_BST live for A/B without a reboot (NZW_BST is off at boot, matching the ChibiOS-Contrib default; bake it in only if the A/B shows a win).
+m74_9 diagnostics (board-local console): `flashperf` prints PSR + DIVR + CONTR + EOPB0 + the loop time; the loop code lives at ~0x0807118C (NZW area), so the number is the NZW-area fetch cost. `flashnzw` is READ-ONLY on purpose: NZW_BST (PSR bit 12) hangs the flash read path in EVERY phase - live write at full HCLK AND set-at-boot before the PLL switch both produce a hard lockup (no fault, power-cycle-only recovery, bootloader still answers; observed four times 2026-08-21). Leave it off; the Artery SDK never enables it either. EOPB0 (USD + 0x10) reads 0x5FA on m74_9 - not a documented value, ZW-area size unresolved. Measured levers: DIVR=/3 (205 -> 136 ms on the 1M loop) and CONTR[31] continue-read (136 -> ~90 ms); enabled at boot as of fork commit 33f0f243a1.
 
 ## EFI_USE_OPENBLT: USE_OPENBLT=yes does NOT enable the app-side OpenBLT code
 
