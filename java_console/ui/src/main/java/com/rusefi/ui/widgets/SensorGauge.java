@@ -62,14 +62,15 @@ public class SensorGauge {
         if (iniFile != null) {
             GaugeModel gaugeModel = iniFile.getGauge(gaugeName);
             if (gaugeModel != null) {
+                log.info("Gauge resolved: " + gaugeName + " channel=" + gaugeModel.getChannel() + " title=" + gaugeModel.getTitle());
                 createGauge(uiContext, gaugeName, wrapper, listener, extraMenuItem, gaugeModel);
             } else {
-                log.warn("Gauge not found: " + gaugeName);
+                log.warn("Gauge not found: " + gaugeName + " (ini=" + iniFile.getSignature() + ")");
             }
         } else {
             wrapper.removeAllChildrenAndListeners();
             wrapper.add(new JLabel("Connecting..."));
-            log.warn("Gauge not found by " + gaugeName);
+            log.warn("Gauge not found by " + gaugeName + " (no ini model)");
         }
     }
 
