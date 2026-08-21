@@ -5122,3 +5122,58 @@ ringing included. The RPM-adaptive debounce was tuned against the buggy
 prints; it is empirically validated (C9003 fixes) and left unchanged.
 The falling/rising-edge duty analysis (38/62 split) is ratio-based and
 unaffected by the 4x scale.
+
+## 2026-08-21 - m74_9: systemic AT32 slowdown root cause - flash timing never configured (DIVR)
+
+Symptom chain: engine catches (up to ~850-970 rpm) but dies on the catch with
+C9002 (expected 58/0 got 58/0) + coil overcharge x4; the trigger ISR was
+measured (lockstats histograms) at ~335 us per tooth (trgPreDecode ~63 us,
+trgDecode ~77 us, trgPostDecode ~195 us), i.e. 11-23% CPU at cranking rpm,
+overlapping the next tooth edge at ~1.2 ms tooth period -> lost teeth ->
+C9002 on the catch. maxLockedDuration=0 (no chSysLock), but systick_ms fell
+behind nt_ms by hundreds of ms per crank - the periodic SysTick starved by
+the slow EXTI ISR (EXTI prio 0, SysTick prio 8), without any lock.
+
+Flash hypothesis (confirmed by register forensics, not just timing):
+- The old ChibiOS AT32 port's stm32_clock_init had the flash setup #if 0'd
+  out: flash_clock_divider_set(FLASH_CLOCK_DIV_3) was never compiled - the
+  function does not even exist in the fork's minimal Artery headers.
+- AT32F435/437 has no FLASH ACR at all. The flash clock divider is
+  FLASH->DIVR[1:0] (offset 0x60: 0=/2, 1=/3, 2=/4) and the non-zero-wait
+  boost is FLASH->PSR bit 12 (NZW_BST). The fork's FLASH_TypeDef stopped at
+  ADDR (0x14), so DIVR was not even addressable.
+- Verified the PLL configuration is CORRECT against the official
+  AT32F435_437 CMSIS header (ChibiOS-Contrib): PLLMS[3:0]@0, PLLNS[8:0]@6,
+  PLLFR@16, PLLRCS@22 - the old port's STM32-style writes land on the right
+  bits (PLLMS=1, PLLNS=144, FR=2=div4, RCS=HEXT 8 MHz -> VCO 1152 MHz,
+  SYSCLK 288 MHz, HCLK 288, APB 144). Corroborated by working USB 48 MHz,
+  CAN 500 kbps flasher and systick/NT agreement - the core is at 288 MHz,
+  the slowdown is flash-side, not PLL-side.
+- flashperf baseline: PSR=0x00000330, 1M-iteration multiply loop = 808-858k
+  NT ticks (202-215 ms) vs the expected ~10-20 ms at 288 MHz with proper
+  flash timing -> every instruction fetch pays maximum wait states.
+
+Fixes (ChibiOS fork AT32 port + m74_9 board):
+
+| Change | File |
+| --- | --- |
+| FLASH_TypeDef extended to official F435/437 layout (DIVR @ 0x60) + FLASH_PSR/FLASH_DIVR bit defs | `firmware/ChibiOS/os/common/ext/Artery/AT32F4xx/at32f435xx.h` |
+| stm32_clock_init: DIVR=/3 (flash 96 MHz, RM limit 100 MHz) before PLL switch; NZW_BST off at boot | `firmware/ChibiOS/os/hal/ports/AT32/AT32F4xx/hal_lld.c` |
+| flashperf now prints DIVR/FDIV too | `firmware/config/boards/m74_9/board_configuration.cpp` |
+| new `flashnzw on|off` console command: live A/B of PSR.NZW_BST without reboot | `firmware/config/boards/m74_9/board_configuration.cpp` |
+
+ChibiOS fork commit: e4d262bbd7 (detached HEAD in the submodule; submodule
+pointer bump to be done in the main repo commit).
+
+Validation: m74_9 firmware builds clean (bin/compile.sh -b, 13:40). Hardware
+verification PENDING at time of writing: the user's ECU did not answer the
+OpenBLT CAN flasher within 30 s (ECU off / PCAN not seated). Planned bench
+sequence after flashing:
+1. `flashperf` - loop time must drop to ~10-20 ms, DIVR must read FDIV=1.
+2. `flashnzw on` / `flashnzw off` + `flashperf` A/B - bake NZW_BST=1 into
+   boot if it measurably helps.
+3. `lockstats` -> crank -> `lockstats` -> `synctrace` - trigger ISR
+   histograms should collapse below ~50 us; no C9002 on the catch.
+4. If still slow: add a `clockinfo` command (RCC->CR/CFGR/PLLCFGR dump) and
+   audit HICK/HSE/PLLFR against the RM, but PLL forensics above say it is
+   already correct.
