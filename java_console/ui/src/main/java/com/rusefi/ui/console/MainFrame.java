@@ -180,6 +180,13 @@ public class MainFrame {
     private boolean firmwareUpdateCheckInProgress;
     private int firmwareUpdateCheckGeneration;
     private boolean unsupportedEcuBlocking;
+    /** The ECU's RTC runs off the LSI (no LSE crystal on m74_9), so it drifts
+     *  minutes per hour and re-syncing it is only meaningful once per console
+     *  process (on the first real connect). Re-sending `set date` on every
+     *  ConnectionWatchdog reconnect was the visible "time jumps" symptom: the
+     *  watchdog reconnects after a 10 s ISO-TP stall, and the reconnect handler
+     *  rewrote the RTC date each time. */
+    private boolean ecuDateSyncedThisProcess;
     private final UnsupportedEcuCardHost unsupportedEcuHost;
     private FirmwareUpdateCheckOverlay firmwareUpdateCheckOverlay;
     private Component previousGlassPane;
@@ -580,11 +587,14 @@ public class MainFrame {
                 // this would repaint status label
                 AutoupdateUtil.trueLayoutAndRepaint(tabbedPane.tabbedPane);
                 if (isFirmwareUpdateConnectionReady(status)) {
-                    LocalDateTime dateTime = LocalDateTime.now(ZoneOffset.systemDefault());
-                    String isoDateTime = dateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-                    consoleUI.uiContext.getLinkManager().execute(() -> consoleUI.uiContext.getCommandQueue().write(IoUtil.getSetCommand(Integration.CMD_DATE) +
-                                    " " + isoDateTime, CommandQueue.DEFAULT_TIMEOUT,
-                            InvocationConfirmationListener.VOID, false));
+                    if (!ecuDateSyncedThisProcess) {
+                        LocalDateTime dateTime = LocalDateTime.now(ZoneOffset.systemDefault());
+                        String isoDateTime = dateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+                        consoleUI.uiContext.getLinkManager().execute(() -> consoleUI.uiContext.getCommandQueue().write(IoUtil.getSetCommand(Integration.CMD_DATE) +
+                                        " " + isoDateTime, CommandQueue.DEFAULT_TIMEOUT,
+                                InvocationConfirmationListener.VOID, false));
+                        ecuDateSyncedThisProcess = true;
+                    }
                     BinaryProtocol bp = consoleUI.uiContext.getBinaryProtocol();
                     if (bp != null && bp.signature != null) {
                         requestFirmwareUpdateCheck(false);
