@@ -1937,10 +1937,10 @@
          1200
 </constant>
         <constant cols="4" digits="1" name="idleVeTable" rows="4" units="%">
-         51.0 60.0 61.0 61.0
-         57.0 62.0 64.0 64.0
-         58.0 62.0 65.0 66.0
-         60.0 64.0 65.0 66.0
+         38.0 45.0 46.0 46.0
+         42.0 46.0 48.0 48.0
+         44.0 46.0 48.0 49.0
+         45.0 48.0 48.0 50.0
 </constant>
         <constant cols="1" digits="1" name="ignBlends1_blendBins" rows="8" units="">
          0.0
