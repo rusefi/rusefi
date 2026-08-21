@@ -736,9 +736,9 @@ private:
         		//     frames keep the 3 TX mailboxes occupied through the serial frames'
         		//     1s per-frame transmit timeout and the burst dies mid-stream (the
         		//     "gauges dead while the engine runs" failure - the ECU keeps
-        		//     sending BCM frames, only the 720 responses stop). 1/4 rate is ~165
-        		//     frames/s, which the dash/IMMO/pump logic tolerates for the 3 s
-        		//     pause window.
+		//     sending BCM frames, only the 720 responses stop). 1/4 rate is ~165
+		//     frames/s, which the dash/IMMO/pump logic tolerates for the 10 s
+		//     pause window.
         		bool serialSessionActive = (engine->pauseCANdueToSerialUntil > getTimeNowNt());
         		if (serialSessionActive) {
         			if (!isEngineActive) {

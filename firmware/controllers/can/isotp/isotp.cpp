@@ -263,7 +263,13 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 	// chunks were silently lost and the burn persisted stale page data).
 	uint8_t blockSize = 0;
 	uint8_t minSeparationTime = 0;
-	if (rxTransport->waitForFlowControl(initialFcCounter, &blockSize, &minSeparationTime, timeout) != CAN_MSG_OK) {
+	// The FC deadline must cover the worst-case mailbox delay of the FIRST
+	// frame that just went out (serial sends retry up to 3 x 500ms in
+	// can_msg_tx.cpp). With the old 1s window the host's FC (sent immediately
+	// after receiving the FF) could arrive after the wait had expired - the
+	// consecutive frames never went out and the host hung on a truncated
+	// response. The +2s slack is harmless: the console's read timeout is 10s.
+	if (rxTransport->waitForFlowControl(initialFcCounter, &blockSize, &minSeparationTime, timeout + TIME_MS2I(2000)) != CAN_MSG_OK) {
 #ifdef SERIAL_CAN_DEBUG
 		PRINT("*** ERROR: CAN Flow Control frame not received" PRINT_EOL);
 #endif /* SERIAL_CAN_DEBUG */
