@@ -5344,3 +5344,24 @@ pass (the two running-rpm rejection tests moved to 2500 rpm, above the
 new 4x band). To verify on the car: flash the srec, burn tune/21129.msq,
 then check lockstats/synctrace after a start (no C9002) and the idle PID
 (isIdleClosedLoop flag) ~4 s after the catch.
+
+## 2026-08-21 (late night) - high-idle lockout -> 2 Hz idle limit cycle -> narrowband lambda on
+
+Post-burn observations from the binary logs (console MLGs, mapvalue = real kPa):
+- 20:17 log: rpm held at ~1650 with tps 8.4%, isidling=0 - the base air
+  (cltIdleCorrTable 40 x range 20 = 8.4%) settled the engine ABOVE the idle
+  band (target 900 + idlePidRpmUpperLimit 500), so the phase stayed Coasting
+  and both idle PIDs stayed off. Fixed by scaling the table 0.55x (warm base
+  4.4%). Note: rawmap in the MLG is raw VOLTS (1.8 V at idle); the console
+  MAP gauge shows mapvalue - at 1650 rpm/8.4% tps it was a real 51 kPa (the
+  user was right, the sensor curve 0.4V=20kPa/4.65V=115kPa checks out).
+- 20:22 log: with the air fix burned, rpm oscillated 527-1176 at ~2 Hz.
+  Both PIDs were fighting: idleclosedloop +-7.8 of +-20, timingpidcorrection
+  +10..-14.6 (saturating), ETB overshooting the command (tps 0.6<->7.1 vs
+  commanded 2.8-6.0). Fix: useIdleTimingPidControl=no (air-only idle; the
+  20:17 log proved air-only stable) - the timing PID was the troublemaker
+  all evening.
+- Rich exhaust smell: enabled the narrowband lambda - O2 sensor 1 signal =
+  AK3/PF3/EFI_ADC_37 (ADC3 slow path), curve 0.1V->15 AFR / 0.9V->14 AFR,
+  fuelClosedLoopCorrectionEnabled=on, heater left off as requested. STFT
+  authority +-5% per cell, timeConstant 30 s, minClt 60 C.
