@@ -1854,13 +1854,13 @@
         <constant name="idle_stepperStepPin">"NONE"</constant>
         <constant cols="1" digits="1" name="idleAdvance" rows="8" units="deg">
          10.0
-         14.0
-         17.0
-         17.0
-         20.0
-         19.0
          18.0
-         14.0
+         21.0
+         21.0
+         22.0
+         21.0
+         20.0
+         15.0
 </constant>
         <constant cols="1" digits="0" name="idleAdvanceBins" rows="8" units="RPM">
          0
@@ -3036,7 +3036,7 @@
          93.3
          100.0
 </constant>
-        <constant digits="3" name="mapExpAverageAlpha" units="">0.5</constant>
+        <constant digits="3" name="mapExpAverageAlpha" units="">0.85</constant>
         <constant digits="2" name="mapHighValueVoltage" units="v">4.65</constant>
         <constant digits="2" name="mapLowValueVoltage" units="v">0.4</constant>
         <constant digits="0" name="mapMinBufferLength" units="count">1</constant>
