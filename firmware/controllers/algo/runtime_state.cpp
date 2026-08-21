@@ -7,6 +7,8 @@
 
 #include "pch.h"
 #include "runtime_state.h"
+#include "trigger_central.h"
+#include "microsecond_timer.h"
 
 // todo: revive implementation! we shall measure how far is actual execution timestamp from desired execution timestamp
 uint32_t maxSchedulingPrecisionLoss = 0;
@@ -26,6 +28,7 @@ extern uint32_t maxSchedulingPrecisionLoss;
 void resetMaxValues() {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) && EFI_SHAFT_POSITION_INPUT
 	maxEventCallbackDuration = triggerMaxDuration = 0;
+	resetTriggerIsrHistogram();
 #endif // EFI_PROD_CODE || EFI_SIMULATOR
 
 	maxSchedulingPrecisionLoss = 0;
@@ -36,6 +39,7 @@ void resetMaxValues() {
 
 #if EFI_PROD_CODE
 	maxPrecisionCallbackDuration = 0;
+	resetSchedulerIsrHistogram();
 #endif // EFI_PROD_CODE
 }
 
@@ -53,5 +57,9 @@ void printRuntimeStats(void) {
 	// One of these >1 ms is what makes the periodic SysTick lose ticks during
 	// cranking (SysTick runs at the lowest priority and cannot catch up).
 	efiPrintf("triggerMaxDuration=%lu ticks / maxPrecisionCallbackDuration=%lu", triggerMaxDuration, maxPrecisionCallbackDuration);
+#if EFI_SHAFT_POSITION_INPUT
+	printTriggerIsrHistogram();
+#endif // EFI_SHAFT_POSITION_INPUT
+	printSchedulerIsrHistogram();
 #endif // EFI_PROD_CODE
 }

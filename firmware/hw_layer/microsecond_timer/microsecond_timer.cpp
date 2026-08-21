@@ -14,10 +14,18 @@
 #include "pch.h"
 #include "microsecond_timer.h"
 #include "port_microsecond_timer.h"
+#include "system/timer/isr_duration_histogram.h"
 
 #if EFI_PROD_CODE
 
 #include "periodic_thread_controller.h"
+#include "system/timer/isr_duration_histogram.h"
+
+// scheduler ISR duration histogram diagnostics
+static IsrDurationHistogram schedulerIsrHistogram;
+
+void resetSchedulerIsrHistogram() { schedulerIsrHistogram.reset(); }
+void printSchedulerIsrHistogram() { schedulerIsrHistogram.print("schedulerIsr"); }
 
 // Just in case we have a mechanism to validate that hardware timer is clocked right and all the
 // conversions between wall clock and hardware frequencies are done right
@@ -108,6 +116,7 @@ void portMicrosecondTimerCallback() {
 	if (precisionCallbackDuration > maxPrecisionCallbackDuration) {
 		maxPrecisionCallbackDuration = precisionCallbackDuration;
 	}
+	schedulerIsrHistogram.add(precisionCallbackDuration);
 }
 
 struct MicrosecondTimerWatchdogController : public PeriodicController<TIMER_WATCHDOG_THREAD_STACK_SIZE> {

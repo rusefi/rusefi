@@ -13,6 +13,7 @@
 #include "main_trigger_callback.h"
 #include "listener_array.h"
 #include "logic_analyzer.h"
+#include "system/timer/isr_duration_histogram.h"
 
 #include "local_version_holder.h"
 #include "trigger_simulator.h"
@@ -531,6 +532,13 @@ void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 	handleShaftSignal(signalIndex, isRising, timestamp);
 }
 
+// ---- trigger ISR duration histogram (m74_9 diagnosis: the trigger ISR runs
+// at the highest priority and can starve the lower-priority periodic SysTick) ----
+static IsrDurationHistogram triggerIsrHistogram;
+
+void resetTriggerIsrHistogram() { triggerIsrHistogram.reset(); }
+void printTriggerIsrHistogram() { triggerIsrHistogram.print("triggerIsr"); }
+
 // Handle all shaft signals - hardware or emulated both
 void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 	bool isPrimary = signalIndex == 0;
@@ -594,6 +602,7 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 	triggerReentrant--;
 	triggerDuration = getTimeNowLowerNt() - triggerHandlerEntryTime;
 	triggerMaxDuration = maxI(triggerMaxDuration, triggerDuration);
+	triggerIsrHistogram.add(triggerDuration);
 }
 
 void TriggerCentral::resetCounters() {
