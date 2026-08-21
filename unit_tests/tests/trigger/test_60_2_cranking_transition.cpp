@@ -358,7 +358,7 @@ TEST(trigger, crankingTransition60_2CompressedGapAcceptedWhileCranking) {
 }
 
 /**
- * Once running (rpm above 2 * crankingRpm) the sync-by-position skip is off:
+ * Once running (rpm above 4 * crankingRpm) the sync-by-position skip is off:
  * a compressed gap at the expected position is rejected like before (the
  * crank speed is uniform when running, a 1.4x gap is not physical there).
  */
@@ -369,15 +369,15 @@ TEST(trigger, crankingTransition60_2CompressedGapRejectedWhenRunning) {
 	setCrankOperationMode();
 	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
 
-	// 1250 rpm steady revolutions: above the 2 * crankingRpm skip band
-	static constexpr float runningSlotMs = 0.8f;
+	// 2500 rpm steady revolutions: above the 4 * crankingRpm skip band
+	static constexpr float runningSlotMs = 0.4f;
 	fire60_2Revolution(eth, runningSlotMs, 3.0f);
 	fire60_2Revolution(eth, runningSlotMs, 3.0f);
 	fire60_2Revolution(eth, runningSlotMs, 3.0f);
 
 	ASSERT_EQ(0u, getRecentWarnings()->getCount()) << "no warnings while running steadily";
 	ASSERT_EQ(1, engine->triggerCentral.triggerState.getSynchronizationCounter()) << "sync counter";
-	ASSERT_GT(Sensor::getOrZero(SensorType::Rpm), 2 * engineConfiguration->cranking.rpm) << "running rpm above the skip band";
+	ASSERT_GT(Sensor::getOrZero(SensorType::Rpm), 4 * engineConfiguration->cranking.rpm) << "running rpm above the skip band";
 
 	// compressed gap revolution - the ratio check rejects it, the skip is off
 	fire60_2Revolution(eth, runningSlotMs, /*gapRatio*/1.4f);
@@ -585,7 +585,7 @@ TEST(trigger, crankingTransition60_2EarlyGapDesyncsWithoutOverride) {
 }
 
 /**
- * Once running (rpm above 2 * crankingRpm) the early-gap acceptance is off:
+ * Once running (rpm above 4 * crankingRpm) the early-gap acceptance is off:
  * a count-56 gap is rejected like before (a tooth deficit at speed means
  * something else is wrong, and the phase cost of accepting it is not
  * harmless anymore).
@@ -598,8 +598,8 @@ TEST(trigger, crankingTransition60_2EarlyGapRejectedWhenRunning) {
 	setCrankOperationMode();
 	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
 
-	// 1250 rpm steady revolutions: above the 2 * crankingRpm acceptance band
-	static constexpr float runningSlotMs = 0.8f;
+	// 2500 rpm steady revolutions: above the 4 * crankingRpm acceptance band
+	static constexpr float runningSlotMs = 0.4f;
 	fire60_2Revolution(eth, runningSlotMs, 3.0f);
 	fire60_2Revolution(eth, runningSlotMs, 3.0f);
 
@@ -607,7 +607,7 @@ TEST(trigger, crankingTransition60_2EarlyGapRejectedWhenRunning) {
 	fire60_2RevolutionWithLostEvents(eth, runningSlotMs, /*missing*/2, /*gapRatio*/3.0f);
 	fire60_2Revolution(eth, runningSlotMs, 3.0f);
 
-	ASSERT_GT(Sensor::getOrZero(SensorType::Rpm), 2 * engineConfiguration->cranking.rpm) << "running rpm above the acceptance band";
+	ASSERT_GT(Sensor::getOrZero(SensorType::Rpm), 4 * engineConfiguration->cranking.rpm) << "running rpm above the acceptance band";
 
 	// At running rpm the merged tooth also trips the bad-tooth-timing check,
 	// so expect the C9003 among the warnings rather than an exact count.

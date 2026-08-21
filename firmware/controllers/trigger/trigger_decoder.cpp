@@ -652,14 +652,20 @@ TRIGGER_RAM_CODE expected<TriggerDecodeResult> TriggerDecoderBase::decodeTrigger
 			// exact gap position, count another full revolution and fire C9002
 			// right when the engine just caught. At the exact expected position
 			// the tooth count already proves this IS the gap, so accept it
-			// unconditionally while the engine is still in the cranking band
-			// (rpm < 2 * crankingRpm). The only way this mis-syncs is a single
-			// noise-inserted/missed tooth shifting the count by one: the
-			// resulting 6-degree phase error is silent (the counter check
-			// passes), but it self-corrects within one revolution - the next
-			// real gap arrives at count expected-1, syncs with a count mismatch
-			// (C9003) and the decoder re-synchronizes cleanly. Harmless at
-			// cranking speed, so the skip is off once the engine is running.
+			// unconditionally while the engine is still in the cranking band.
+			// The ceiling is 4x crankingRpm, not 2x: at the catch the per-tooth
+			// INSTANT rpm spikes to 2-3x cranking speed on the same revolution
+			// the gap arrives (m74_9 cranking_rpm=500 -> gap rejected at
+			// ~1050-1250 instant rpm, C9002 "expected 58 got 58" at every start
+			// attempt). 4x only extends the opt-in acceptance window; the
+			// position/count/elapsed-time/real-tooth gates all still apply.
+			// The only way this mis-syncs is a single noise-inserted/missed
+			// tooth shifting the count by one: the resulting 6-degree phase
+			// error is silent (the counter check passes), but it self-corrects
+			// within one revolution - the next real gap arrives at count
+			// expected-1, syncs with a count mismatch (C9003) and the decoder
+			// re-synchronizes cleanly. Harmless in the cranking band, so the
+			// skip is off once the engine is running.
 			// Conditions are evaluated lazily: mock tests run the decoder with
 			// engineConfiguration = nullptr.
 			if (!isSynchronizationPoint && !tooEarlyForSync && !previousToothNotReal && wasSynchronized && atExpectedGapPosition &&
@@ -682,7 +688,7 @@ TRIGGER_RAM_CODE expected<TriggerDecodeResult> TriggerDecoderBase::decodeTrigger
 					// mock tests run the decoder with engineConfiguration = nullptr
 					engineConfiguration != nullptr &&
 #endif
-					Sensor::getOrZero(SensorType::Rpm) < 2 * engineConfiguration->cranking.rpm) {
+					Sensor::getOrZero(SensorType::Rpm) < 4 * engineConfiguration->cranking.rpm) {
 				isSynchronizationPoint = true;
 			}
 
@@ -793,7 +799,10 @@ TRIGGER_RAM_CODE expected<TriggerDecodeResult> TriggerDecoderBase::decodeTrigger
 					// mock tests run the decoder with engineConfiguration = nullptr
 					&& engineConfiguration != nullptr
 #endif
-					&& Sensor::getOrZero(SensorType::Rpm) < 2 * engineConfiguration->cranking.rpm;
+					// 4x crankingRpm (was 2x): the per-tooth instant rpm spikes past
+					// 2x cranking speed at the first-combustion catch, exactly when
+					// the conditioner swallows the 1-2 teeth this acceptance exists for.
+					&& Sensor::getOrZero(SensorType::Rpm) < 4 * engineConfiguration->cranking.rpm;
 
 				if (earlyGapAccepted) {
 					// keep the synchronization, count the revolution as validated
