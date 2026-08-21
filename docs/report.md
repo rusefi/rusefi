@@ -5570,3 +5570,20 @@ for 1.5 s, 5 s decay) catches ~1500 and glides to idle. Note: the msq
 already carried a coastingFuelCut block (disabled/Map 30/RpmLow 1300/Tps
 2) - a second block added by hand would duplicate fields; always update
 the existing block in place.
+
+## 2026-08-21 (night, in car) - post-start rpm hold: taper + target-ramp as a two-stage profile
+
+23:12 log: the catch flare is not held - rpm fell 1459 -> 588 in 0.6 s
+(dip below cranking_rpm 600 re-enters cranking timing/fuel, deepening
+the dip), because the taper-phase timing (idleAdvance table) gave only
+13-15 deg effective and the throttle walked to base in ~2 s. The
+requested profile (hold ~1300 for ~5 s, then descend) is built from two
+msq levers: a long afterCrankingIACtaperDuration (120 warm cycles ~
+2.5-3.5 s real with the 1.5-2x counter race) keeps the throttle near the
+cranking position through the flare, and idleReturnTargetRampDuration
+5.0 s makes the idle TARGET glide 1402 -> 905 over 5 s once Idling
+starts - the timing/air PIDs then follow the moving target down.
+idleAdvance 1100-1600 raised to 20/19/18 so the engine holds rpm during
+the taper (also keeps it from crossing back under 600). The profile is
+approximate because the taper counter race is firmware-side; a code fix
+(count real revolutions) would make the timing exact.
