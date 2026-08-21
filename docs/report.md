@@ -5679,3 +5679,19 @@ Side benefit: the recrank taper-exhaustion stall class disappears - the
 PIDs own the catch regardless of the counter. The remaining fuel step
 at the catch (cranking PW -> running VE) is still in the pocket if the
 dip persists: raise warm crankingFuelCoef toward 1.0.
+
+## 2026-08-21 (night, in car) - the catch handoff stall: PIDs had no positive error to act on
+
+23:47 log: taper=15 stalled the engine. At the handoff the throttle
+snapped 4.6% (cranking) -> 3.0% (idle base) while rpm was 1429; the
+engine needed ~4.6% there (~1.6% missing). The PIDs could not help
+because the return-target ramp started at only 1403
+(idlePidRpmUpperLimit=500) - rpm was ABOVE the target, so both PIDs saw
+zero/negative error and added nothing; the engine fell through to 427
+and died. Fix: idlePidRpmUpperLimit 700 (ramp starts 1603, above the
+typical flare -> positive error at the handoff -> catch from below),
+air PID p/i 0.01/0.0008, timing soft entry 0.5 s, taper 30 (short walk,
+no instant snap). Lesson: a closed-loop catch from ABOVE (rpm > target)
+is weak in rusEFI idle code because the open-loop base is calibrated
+for the target rpm; the ramp target must sit above the transient rpm
+for the PIDs to add air/timing during the descent.
