@@ -5365,3 +5365,49 @@ Post-burn observations from the binary logs (console MLGs, mapvalue = real kPa):
   AK3/PF3/EFI_ADC_37 (ADC3 slow path), curve 0.1V->15 AFR / 0.9V->14 AFR,
   fuelClosedLoopCorrectionEnabled=on, heater left off as requested. STFT
   authority +-5% per cell, timeConstant 30 s, minClt 60 C.
+
+## 2026-08-21 (night, in car) - idle: timing-primary regime, dashpot, softened+widened timing PID
+
+Progress and decisions after the 2 Hz limit-cycle diagnosis:
+- The 20:22 air-only config was a dead end for the stock-behavior goal: the
+  user wants the STOCK architecture - nearly stationary throttle (1-3%),
+  RPM held by ignition timing. Re-enabled useIdleTimingPidControl=yes with a
+  GENTLE air PID (idleRpmPid p=0.008 i=0.0005) as the slow trim. Steady
+  idle ~850-920 rpm with tps ~2.6-2.7% fixed and timing PID ~+-5 deg - the
+  timing-primary regime is confirmed correct: angle reacts instantly, the
+  throttle barely moves, no manifold delay.
+- Timing PID authority widened but made gentler (this commit): maxValue
+  12->16, minValue -15->-20, pFactor 0.07->0.05, idleTimingSoftEntryTime
+  0->3.0 s. The soft entry ramps error amplification 0->1 over 3 s after
+  the crank taper, so a wider min cannot slam entry negative (the earlier
+  0.1 pFactor entry slam to -10 deg is documented as a pitfall). p=0.05
+  needs a 320 rpm error to reach the -16 limit - swings stay small, limits
+  only exist as headroom.
+- Throttle-release stall/oscillation: enabled the iacByTps dashpot -
+  iacByTpsDecayTime 4.0 s, iacByTpsHoldTime 1.5 s, iacByTpsTaper 8%. This
+  is the "catch at ~1500 and glide down" behavior the user asked for.
+- idleVeTable restored to 38-50 (the 32-43 step with the big lean-out
+  caused stall on the drive test - do NOT re-apply it in one step; the fuel
+  model is not yet calibrated so lean-out must move in small increments).
+- Lambda: afr_type=Custom, 0.1V->15 AFR, 0.9V->14 AFR on PF3 (AK3). Sensor
+  0258006537 confirmed present and honest once the exhaust is hot (PF3
+  drops from the 6.4 V rail to ~1.2-1.6 V after a drive; cools back up at
+  idle without heater). Cold-idle afrvalue is rail voltage through the
+  curve - meaningless; closed loop needs the heater (board edit, not msq).
+- Snapshot/bundle propagation is now mandatory for every msq edit: source
+  firmware/config/boards/m74_9/21129.msq -> artifacts/rusefi.snapshot.m74_9/
+  tune/21129.msq + firmware/rusefi.snapshot.m74_9/tune/21129.msq, then
+  'cd artifacts && zip -q rusefi_bundle_m74_9.zip
+  rusefi.snapshot.m74_9/tune/21129.msq'. The snapshot dirs and the zip are
+  NOT git-tracked - the source msq is the only committed copy.
+
+Validation: m74_9 board build clean (compile_m74_9.sh), unit tests - all
+178 trigger/sync tests pass. On-car validation: steady warm idle logged at
+~850-920 rpm with timing PID active and tps ~2.6-2.7%; the widened PID,
+soft entry and dashpot from this commit still need a drive check.
+
+Open follow-ups: warm idle still sits 50-100 rpm below target with timing
+pinned at +10 (the +16 max now gives headroom - verify the droop is gone);
+step the idleVeTable lean-out in SMALL steps once lambda closed loop works;
+heater (L9779 OUT6=PG6 -> HEAT_OX_1/AC4) requires board config + rebuild,
+not msq.
