@@ -3036,7 +3036,7 @@
          93.3
          100.0
 </constant>
-        <constant digits="3" name="mapExpAverageAlpha" units="">1.0</constant>
+        <constant digits="3" name="mapExpAverageAlpha" units="">0.4</constant>
         <constant digits="2" name="mapHighValueVoltage" units="v">4.65</constant>
         <constant digits="2" name="mapLowValueVoltage" units="v">0.4</constant>
         <constant digits="0" name="mapMinBufferLength" units="count">1</constant>
@@ -3279,7 +3279,7 @@
          1.06 1.05 1.04 1.04 1.03 1.02 1.02 1.01 1.0 1.0 1.0 1.0 1.0 1.0
          1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
 </constant>
-        <constant digits="1" name="ppsExpAverageAlpha" units="percent">100.0</constant>
+        <constant digits="1" name="ppsExpAverageAlpha" units="percent">0.4</constant>
         <constant digits="1" name="ppsSecondaryMaximum" units="%">0.0</constant>
         <constant cols="1" digits="0" name="predictiveMapBlendDurationBins" rows="4" units="RPM">
          650
