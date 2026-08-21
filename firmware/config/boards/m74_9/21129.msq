@@ -2489,7 +2489,7 @@
          800
          7000
 </constant>
-        <constant name="invertCamVVTSignal">"Rising"</constant>
+        <constant name="invertCamVVTSignal">"Falling"</constant>
         <constant name="invertExhaustCamVVTSignal">"Rising"</constant>
         <constant name="invertPrimaryTriggerSignal">"Falling"</constant>
         <constant name="invertSecondaryTriggerSignal">"Rising"</constant>
