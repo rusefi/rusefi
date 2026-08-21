@@ -719,8 +719,8 @@
          140.0
 </constant>
         <constant cols="8" digits="0" name="cltIdleCorrTable" rows="2" units="%">
-         55.0 47.0 36.0 25.0 20.0 17.0 17.0 17.0
-         55.0 47.0 36.0 25.0 20.0 17.0 17.0 17.0
+         55.0 47.0 36.0 25.0 13.0 11.0 11.0 11.0
+         55.0 47.0 36.0 25.0 13.0 11.0 11.0 11.0
 </constant>
         <constant cols="1" digits="0" name="cltIdleRpm" rows="16" units="RPM">
          1360
@@ -1905,14 +1905,14 @@
         <constant name="idleReturnTargetRamp">"yes"</constant>
         <constant digits="1" name="idleReturnTargetRampDuration" units="seconds">3.0</constant>
         <constant digits="4" name="idleRpmPid_dFactor" units="">0.0</constant>
-        <constant digits="4" name="idleRpmPid_iFactor" units="">0.001</constant>
+        <constant digits="4" name="idleRpmPid_iFactor" units="">0.0005</constant>
         <constant digits="0" name="idlerpmpid_iTermMax" units="">20</constant>
         <constant digits="0" name="idlerpmpid_iTermMin" units="">-20</constant>
         <constant digits="0" name="idleRpmPid_maxValue" units="">20</constant>
         <constant digits="0" name="idleRpmPid_minValue" units="">-20</constant>
         <constant digits="0" name="idleRpmPid_offset" units="">0</constant>
         <constant digits="0" name="idleRpmPid_periodMs" units="ms">0</constant>
-        <constant digits="4" name="idleRpmPid_pFactor" units="">0.015</constant>
+        <constant digits="4" name="idleRpmPid_pFactor" units="">0.008</constant>
         <constant digits="0" name="idleStepperReactionTime" units="ms">3</constant>
         <constant digits="0" name="idleStepperTotalSteps" units="count">200</constant>
         <constant digits="4" name="idleTimingPid_dFactor" units="">0.0</constant>
