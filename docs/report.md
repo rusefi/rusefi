@@ -5650,3 +5650,20 @@ retard cannot touch a flare of any height. If the flare now sits too
 high (>1800), lower cltCrankingCorr in 1-unit steps; if the dip
 persists below ~1000, next lever is the fuel transition (cranking coef
 step at the catch) or a firmware ASE.
+
+## 2026-08-21 (night, in car) - transition shortening + why the catch dips
+
+Phase chain (user asked): Cranking (rpm < cranking_rpm 600) ->
+CrankToIdleTaper (pure open loop: throttle walk + idle tables, no PIDs)
+-> Idling (open-loop base + closed-loop PIDs). The transition duration
+= afterCrankingIACtaperDuration; 200 warm cycles x the 1.5-2x counter
+race kept the engine in open loop for ~6-9 s. Shortened to 60 (~2-3 s
+real) so the PIDs and the 5 s idleReturnTargetRamp take over quickly.
+Why the rpm dips after the catch (three stacked causes): (1) the flare
+overshoots the equilibrium the cranking throttle can hold (~1300 at
+4.4-4.6%, was ~1000 at 3.8%) and undershoots it on the way down -
+pure mechanics; (2) the fuel steps from cranking PW to running VE at
+the catch, a momentary torque hole; (3) the timing is lowest right at
+the flare peak. (1) is addressed by raising cltCrankingCorr; (2)/(3)
+are next if the dip persists (fuel step at catch, higher 1600-2000
+advance cells).
