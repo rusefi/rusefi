@@ -535,9 +535,24 @@ void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 // ---- trigger ISR duration histogram (m74_9 diagnosis: the trigger ISR runs
 // at the highest priority and can starve the lower-priority periodic SysTick) ----
 static IsrDurationHistogram triggerIsrHistogram;
+// sub-phase breakdown of the decoded-edge cost: gates before the decoder,
+// decodeTriggerEvent itself, and the post-decode listeners (rpm callback,
+// event scheduling, MAP cam decode, board hooks, wave chart)
+static IsrDurationHistogram triggerPhase[3];
 
-void resetTriggerIsrHistogram() { triggerIsrHistogram.reset(); }
-void printTriggerIsrHistogram() { triggerIsrHistogram.print("triggerIsr"); }
+void resetTriggerIsrHistogram() {
+	triggerIsrHistogram.reset();
+	for (int i = 0; i < 3; i++) {
+		triggerPhase[i].reset();
+	}
+}
+
+void printTriggerIsrHistogram() {
+	triggerIsrHistogram.print("triggerIsr");
+	triggerPhase[0].print("trgPreDecode");
+	triggerPhase[1].print("trgDecode");
+	triggerPhase[2].print("trgPostDecode");
+}
 
 // Handle all shaft signals - hardware or emulated both
 void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
@@ -861,6 +876,7 @@ angle_t TriggerCentral::findNextTriggerToothAngle(int p_currentToothIndex) {
  * This method is NOT invoked for VR falls.
  */
 void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
+	uint32_t t0 = getTimeNowLowerNt();
 	// Board opt-in input debounce (m74_9): VR comparator ringing and starter
 	// noise arrive as edge bursts far below the real tooth period. Dropping
 	// them here keeps the event count honest, so the position gate and the
@@ -922,12 +938,14 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	hwEventCounters[eventIndex]++;
 
 	// Decode the trigger!
+	uint32_t t1 = getTimeNowLowerNt();
 	auto decodeResult = triggerState.decodeTriggerEvent(
 			"trigger",
 			triggerShape,
 			engine,
 			primaryTriggerConfiguration,
 			signal, timestamp);
+	uint32_t t2 = getTimeNowLowerNt();
 
 	// Don't propagate state if we don't know where we are
 	if (decodeResult) {
@@ -1018,6 +1036,11 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 
 		expectedNextPhase = unexpected;
 	}
+
+	uint32_t t3 = getTimeNowLowerNt();
+	triggerPhase[0].add(t1 - t0);
+	triggerPhase[1].add(t2 - t1);
+	triggerPhase[2].add(t3 - t2);
 }
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
