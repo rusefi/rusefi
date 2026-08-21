@@ -3036,7 +3036,7 @@
          93.3
          100.0
 </constant>
-        <constant digits="3" name="mapExpAverageAlpha" units="">0.4</constant>
+        <constant digits="3" name="mapExpAverageAlpha" units="">0.8</constant>
         <constant digits="2" name="mapHighValueVoltage" units="v">4.65</constant>
         <constant digits="2" name="mapLowValueVoltage" units="v">0.4</constant>
         <constant digits="0" name="mapMinBufferLength" units="count">1</constant>
@@ -4959,7 +4959,7 @@
         <constant name="verboseCan">"Do not print"</constant>
         <constant name="verboseCan2">"Do not print"</constant>
         <constant digits="0" name="verboseCanBaseAddress" units="">512</constant>
-        <constant name="verboseIsoTp">"no"</constant>
+        <constant name="verboseIsoTp">"true"</constant>
         <constant name="verboseKLine">"no"</constant>
         <constant name="verboseQuad">"no"</constant>
         <constant name="verboseTLE8888">"no"</constant>
