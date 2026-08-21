@@ -5556,3 +5556,17 @@ is idleRpmPid.iFactor=0.002, the tune has 0.0005, so every flash the
 calibration restore prints the line while writing the CORRECT 0.0005
 back. Harmless by design; a board-default override was offered and the
 user declined - the message will keep appearing on every flash.
+
+## 2026-08-21 (night, in car) - DFCO on: overrun fuel cut above 1500, resume at 1450
+
+The dashpot-only coast-down was rejected by the user: it decelerates
+with fuel across the whole rpm range, stock behavior is fuel cut on
+overrun. Enabled DFCO in the tune: coastingFuelCutRpmHigh 1500 /
+RpmLow 1450 (hysteresis), Tps 5, Map 60 (cut only in vacuum), Clt 60
+(warm only), VSS 0/0 unused. Resume smoothness: dfcoRetardDeg 10 retards
+timing during cut and ramps it back in over 0.5 s after fuel restore
+(DfcoController::getTimingRetard), then the dashpot (base 3.0% + 2.0%
+for 1.5 s, 5 s decay) catches ~1500 and glides to idle. Note: the msq
+already carried a coastingFuelCut block (disabled/Map 30/RpmLow 1300/Tps
+2) - a second block added by hand would duplicate fields; always update
+the existing block in place.
