@@ -5277,3 +5277,29 @@ Validation: :shared_io:test + :ecu_io:test green; console jar rebuilt and a
 jshell smoke test against the jar finds a nested ini recursively; bundle
 rebuilt - zip now contains tune/21129.msq (verboseIsoTp="yes", signature
 2026.08.21.m74_9.1930129764) alongside the ini, srec and bin.
+
+## 2026-08-21 (evening) - console "no data / raw gauge names" scare: ECU-side ISO-TP stall, not the ini changes
+
+User reported the gauges showing raw names (RPMGauge/CLTGauge instead of
+titles), no values and no fuel-pump/ETB/main-relay indicators after the
+console update. Forensics (console logs + a headless PcanProbe run against
+the live ECU with the same console jar):
+
+- The new ini auto-discovery worked: signature read OK, ini found in the
+  unzipped bundle folder via the recursive search, model loaded, gauges
+  resolve (verified in jshell: getGauge("CLTGauge") -> "Coolant temp").
+- The data path worked: PcanProbe (same jar, same cwd) got
+  requestOutputChannels=true every ~160 ms with real values (vbatt 12.14 V).
+- The actual failure: one mid-response ISO-TP stall on the ECU side -
+  "IncomingDataBuffer ... output channels body: timeout 10000ms. Got only
+  921 byte(s) while expecting 1029" right at a tune-burn/ECU-reset, then
+  the watchdog reconnected. This is the known ECU-side TX stall the branch
+  has been fighting (b42a7e99b89 etc.), not the console.
+- Recovery: ECU power cycle - graphs and gauges came back immediately.
+
+Follow-ups: (1) verboseIsoTp=yes in the burned tune floods the TS text
+channel with one line per CAN frame ("*** INFO: CanTsListener decodeFrame
+N") - heavy overhead during any ISO-TP exchange, keep it off unless
+diagnosing. (2) SensorGauge now logs "Gauge resolved: <name> channel=...
+title=..." at INFO so a future UI-side ini problem is visible in the
+console log instead of requiring forensics.
