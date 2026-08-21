@@ -5532,3 +5532,27 @@ pre-accumulation), recovery, and a stable 810-890 idle with tps
 Follow-up when allowed to touch code: reset m_crankTaperEndTime /
 m_idleTimingSoftEntryEndTime on engine stop so the soft entry works on
 every start, and make the taper counter count real revolutions.
+
+## 2026-08-21 (night, in car) - controlled 2-3s descent, PXH-style release catch, iFactor restore message explained
+
+22:48 log: catch 1654 then free-fall to 627 in 0.36 s - the throttle was
+still 3.2-3.5%, so the fall was carried by nothing: during
+CrankToIdleTaper the timing comes from the idleAdvance table
+(useSeparateAdvanceForIdle), whose 1100-2000 cells were 8-12 deg
+effective. Raised those cells to 18/17/16/14 (700-900 steady cells
+untouched) so the engine holds rpm during the descent and the throttle
+walk controls the rate; taper warm 80 (~2.5-3 s real walk with the
+counter race), idleReturnTargetRampDuration 2.5 s for the final
+1400->905 glide - the stock-PXH profile. Throttle release: dashpot
+iacByTpsTaper 10 (2.0% extra air on top of 3.0% base), decay 5 s, hold
+1.5 s - catch ~1500 and glide down. ETB always adds the idle position
+(including dashpot) via interpolateClamped(0, idleAddition, 100, 100,
+pedalTarget), so the dashpot reaches the throttle on release even in
+Coasting phase.
+
+The recurring 'To restore previous calibrations ... idleRpmPid_iFactor
+0.0005' message: the generic firmware default (engine_configuration.cpp)
+is idleRpmPid.iFactor=0.002, the tune has 0.0005, so every flash the
+calibration restore prints the line while writing the CORRECT 0.0005
+back. Harmless by design; a board-default override was offered and the
+user declined - the message will keep appearing on every flash.
