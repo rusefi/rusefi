@@ -267,6 +267,18 @@ Fixes (all in the ChibiOS fork AT32 port): `hal_lld.c` enables `rccEnableDMA1/2(
 
 Bench verification (m74_9, 2026-08-15): `fast 45692 samples`, `F ch[0] @ PA1` samples valid, `fastadcdiag` shows `MUXSEL=0x00000001`, `fast err` no longer growing (`lastErr=0`). Note: `fastAdcErrorCount` is a uint8 **skip counter**, not a hardware error counter - `AdcDevice::startConversionI()` increments it whenever a TIM6 tick lands while the previous conversion is still ACTIVE (its completion ISR was delayed past the tick by an interrupt-disabled window / long ISR), and it wraps at 255, so it can appear to decrease. `lastErr=0` + growing conversion count = healthy ADC; the same counting happens on all GPT-triggered F4 boards. `fastadcdiag` is a board-local console command in `m74_9/board_configuration.cpp` that dumps TIM6/GPTD6/ADC2/DMA/DMAMUX state - keep it for AT32 bring-up. `m74_9/efifeatures.h` leaves `EFI_USE_FAST_ADC` at the default TRUE; the `!EFI_USE_FAST_ADC` stubs added to `stm32_adc_v2.cpp` (2026-08-15, commit 988b087fd46) remain as a valid slow-ADC-only configuration.
 
+## AT32F435/437 flash timing: no ACR - DIVR[1:0] divider + PSR.NZW_BST (m74_9 slowdown root cause)
+
+The AT32F435/437 flash controller has **no ACR** (unlike STM32F4). Flash speed is controlled by:
+- `FLASH->DIVR` (offset 0x60) bits [1:0]: flash clock = HCLK/2, /3, /4 (0, 1, 2); bits [5:4] = FDIV status. Flash clock limit for F435 is 100 MHz -> at HCLK=288 MHz use `/3` = 96 MHz.
+- `FLASH->PSR` (offset 0x00) bit 12 = NZW_BST (non-zero-wait boost), bit 13 = its status. The fork's minimal `at32f435xx.h` originally ended FLASH_TypeDef at ADDR (0x14) - DIVR was not even addressable.
+
+Authoritative reference is in-tree: `firmware/ChibiOS-Contrib/os/hal/ports/AT32/AT32F435_437/hal_lld.c` (`at32_clock_init`: DIVR + PSR writes right after selecting HICK, before the PLL switch) and the official CMSIS bit defs in `firmware/ChibiOS-Contrib/os/common/ext/CMSIS/ArteryTek/AT32F435_437/at32f435_437cx.h` (PLLCFG: PLLMS[3:0]@0, PLLNS[8:0]@6, PLLFR@16, PLLRCS@22 - the old port's STM32-style PLL writes land on the correct AT32 bits; m74_9 = PLLMS 1, PLLNS 144, FR 2 (/4), HEXT 8 MHz -> VCO 1152 MHz -> SYSCLK 288 MHz, HCLK 288, APB 144).
+
+Symptom of missing flash setup (fixed 2026-08-21, fork commit e4d262bbd7): every instruction fetch pays maximum wait states - `flashperf` 1M-iteration multiply loop took ~205 ms instead of ~10-20 ms, and the trigger ISR histograms (lockstats) showed ~335 us per tooth at cranking, overlapping the next tooth edge (~1.2 ms @ 850 rpm on 60-2) -> lost teeth -> C9002 on the catch. Distinguish this from a PLL problem: if systick_ms and nt_ms agree (timecheck) and USB/CAN work, the core clock is right - it is a fetch-speed problem, not a clock-tree problem.
+
+m74_9 diagnostics (board-local console): `flashperf` prints PSR + DIVR + the loop time; `flashnzw on|off` toggles PSR.NZW_BST live for A/B without a reboot (NZW_BST is off at boot, matching the ChibiOS-Contrib default; bake it in only if the A/B shows a win).
+
 ## EFI_USE_OPENBLT: USE_OPENBLT=yes does NOT enable the app-side OpenBLT code
 
 ## Console app and the CAN flasher cannot share the PCAN adapter (m74_9 bench)

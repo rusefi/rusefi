@@ -767,22 +767,39 @@ void setup_custom_board_overrides() {
 		printRuntimeStats();
 		resetMaxValues();
 	});
-	// Systemic CPU speed probe: reads the AT32 flash performance register
-	// and times a fixed 1M-iteration loop. At 288 MHz with correct flash
-	// wait states the loop takes ~5-8 ms; a much larger number means the
-	// flash access timing (never configured on this port - the hal_lld.c
-	// flash_clock_divider_set call is #if 0'd out) is running at the reset
-	// default and slowing every instruction fetch ~4-6x.
+	// Systemic CPU speed probe: reads the AT32 flash performance/divider
+	// registers and times a fixed 1M-iteration loop. At 288 MHz with correct
+	// flash timing (DIVR=/3 -> 96 MHz flash clock, see stm32_clock_init in
+	// the ChibiOS AT32 port) the loop takes ~10-20 ms; hundreds of ms means
+	// every instruction fetch pays maximum wait states.
 	addConsoleAction("flashperf", [](){
 		uint32_t psr = FLASH1->PSR;
+		uint32_t divr = FLASH1->DIVR;
 		uint32_t t0 = getTimeNowLowerNt();
 		volatile uint32_t acc = 0;
 		for (uint32_t i = 0; i < 1000000; i++) {
 			acc += i * 2654435761u;
 		}
 		uint32_t t1 = getTimeNowLowerNt();
-		efiPrintf("flashperf: PSR=0x%08x loop1000k=%lu ticks (%.2f ms) acc=%lu",
-			(unsigned)psr, (unsigned long)(t1 - t0), (t1 - t0) / 4000.0f, (unsigned long)acc);
+		efiPrintf("flashperf: PSR=0x%08x DIVR=0x%08x (FDIV=%lu) loop1000k=%lu ticks (%.2f ms) acc=%lu",
+			(unsigned)psr, (unsigned)divr, (unsigned long)(divr & FLASH_DIVR_FDIV_Msk),
+			(unsigned long)(t1 - t0), (t1 - t0) / 4000.0f, (unsigned long)acc);
+	});
+	// Live A/B of the flash non-zero-wait boost: toggles PSR.NZW_BST (bit 12)
+	// without a reboot. Run 'flashperf' before/after to compare fetch speed.
+	addConsoleActionS("flashnzw", [](const char* arg){
+		if (rusefi::stringutil::strEqualCaseInsensitive(arg, "on")) {
+			FLASH1->PSR |= FLASH_PSR_NZW_BST;
+		} else if (rusefi::stringutil::strEqualCaseInsensitive(arg, "off")) {
+			FLASH1->PSR &= ~FLASH_PSR_NZW_BST_Msk;
+		} else {
+			efiPrintf("flashnzw on|off  (current NZW_BST=%lu)",
+				(unsigned long)((FLASH1->PSR & FLASH_PSR_NZW_BST_Msk) >> FLASH_PSR_NZW_BST_Pos));
+			return;
+		}
+		efiPrintf("flashnzw: PSR=0x%08x NZW_BST=%lu",
+			(unsigned)FLASH1->PSR,
+			(unsigned long)((FLASH1->PSR & FLASH_PSR_NZW_BST_Msk) >> FLASH_PSR_NZW_BST_Pos));
 	});
 	// raw primary-trigger edge stream capture: a digital oscilloscope of the
 	// comparator output for noise diagnosis (deltas + histogram, see
