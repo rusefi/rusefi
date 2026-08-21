@@ -74,25 +74,11 @@ public class RealIniFileProvider implements IniFileProvider {
     }
 
     /**
-     * @return .ini copied from TunerStudio's cache into ours (so the next connect is a plain cache
-     * hit), the TunerStudio file itself if the copy failed, or null if TunerStudio does not have it
+     * How deep {@link IniLocator#findIniFileRecursively} descends when looking for an ini in
+     * subfolders of the working directory / bundle root. Deep enough for a repo checkout
+     * (e.g. firmware/tunerstudio/generated) but bounded to keep the scan cheap.
      */
-    @Nullable
-    private static String importFromTunerStudioCache(String signature) {
-        String tsIniFile = PrimeTunerStudioCache.findInTunerStudioCache(signature);
-        if (tsIniFile == null) {
-            return null;
-        }
-        try {
-            String imported = SignatureHelper.importIntoCache(signature, new File(tsIniFile));
-            if (imported != null) {
-                return imported;
-            }
-        } catch (IOException e) {
-            log.warn("Failed to import " + tsIniFile + " into local cache: " + e);
-        }
-        return tsIniFile;
-    }
+    private static final int MAX_LOCAL_INI_DEPTH = 3;
 
     @Override
     @NotNull
@@ -104,16 +90,23 @@ public class RealIniFileProvider implements IniFileProvider {
             localIniFile = IniLocator.findIniFile(".", signature);
         }
         if (localIniFile == null) {
-            // 3. Cache or download from server
-            // Once the manual picker has been requested, keep checking its cache but do not make every
-            // later scanner probe repeat the same unavailable remote lookup (#10158).
-            localIniFile = iniDownloader.findOrDownload(
-                SignatureHelper.getUrl(signature), !promptedSignatures.contains(signature));
+            // 2.5 Current folder and its subfolders, so an ini unpacked into a nested dir is
+            //     found automatically instead of prompting the user on every start.
+            localIniFile = IniLocator.findIniFileRecursively(".", signature, MAX_LOCAL_INI_DEPTH);
         }
         if (localIniFile == null) {
-            // 4. TunerStudio's own ecuDef cache: the server may not have this build (custom board,
-            // local compile) while TunerStudio has already loaded its .ini
-            localIniFile = importFromTunerStudioCache(signature);
+            // 2.6 Bundled root recursively (the bundle ini usually sits one level up, but a dev
+            //     may run the console from a nested folder of the checkout).
+            localIniFile = IniLocator.findIniFileRecursively(IniFileReader.INI_FILE_PATH, signature, MAX_LOCAL_INI_DEPTH);
+        }
+        if (localIniFile != null) {
+            // Remember the location: copy it into the ini_database cache so the next start
+            // resolves it instantly without rescanning or prompting.
+            rememberIniLocation(signature, localIniFile);
+        } else {
+            // 3. Cache or download from server; a cached .ini whose embedded signature diverges
+            //    from the requested one (firmware rebuilt on a later day) is dropped as stale.
+            localIniFile = SignatureHelper.downloadIfNotAvailable(SignatureHelper.getUrl(signature), signature);
         }
         ManualIniPicker picker = manualPicker;
         if (localIniFile == null) {
@@ -141,5 +134,31 @@ public class RealIniFileProvider implements IniFileProvider {
         }
         PrimeTunerStudioCache.prime(iniFileModel, localIniFile);
         return iniFileModel;
+    }
+
+    /**
+     * Copies a locally found .ini into the ini_database cache (keyed by the signature hash) so
+     * its location survives restarts. Best effort: a failure only means the scan re-runs next
+     * time. Never imports the cache file onto itself, and leaves an existing entry alone.
+     */
+    private static void rememberIniLocation(String signature, String localIniFile) {
+        try {
+            String cacheTarget = SignatureHelper.getLocalIniCacheFile(signature);
+            if (cacheTarget == null) {
+                return;
+            }
+            File source = new File(localIniFile);
+            File target = new File(cacheTarget);
+            if (source.getCanonicalPath().equals(target.getCanonicalPath())) {
+                return; // the found file IS the cache entry
+            }
+            if (target.exists()) {
+                return; // already remembered
+            }
+            SignatureHelper.importIntoCache(signature, source);
+            log.info("Remembered ini location " + localIniFile + " in cache as " + cacheTarget);
+        } catch (IOException e) {
+            log.info("Could not remember ini location " + localIniFile + ": " + e);
+        }
     }
 }

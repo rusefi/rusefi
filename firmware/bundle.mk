@@ -212,7 +212,8 @@ FULL_BUNDLE_CONTENT = \
   $(ST_DRIVERS) \
   $(BIN_FOLDER) \
   $(ROOT_FOLDER_TARGETS) \
-  $(CONSOLE_FOLDER_TARGETS)
+  $(CONSOLE_FOLDER_TARGETS) \
+  $(TUNE_FOLDER_TARGETS)
 
 BUNDLE_FILES = \
   $(UPDATE_BUNDLE_FILES) \
@@ -241,21 +242,41 @@ $(BOOTLOADER_HEX) $(BOOTLOADER_BIN): .bootloader-sentinel ;
 $(BUILDDIR)/$(PROJECT).map: $(BUILDDIR)/$(PROJECT).elf
 
 $(SREC_TARGET): $(BUILDDIR)/rusefi.srec
+ifeq ($(UNAME_S),Darwin)
+	$(LN) $(abspath $<) $@
+else
 	$(LN) $< $@
+endif
 
 $(FIRMWARE_OUTPUTS): $(FOLDER)/%: $(BUILDDIR)/% | $(FOLDER)
+ifeq ($(UNAME_S),Darwin)
+	$(LN) $(abspath $<) $@
+else
 	$(LN) $< $@
+endif
 
 $(BOOTLOADER_BIN_OUT): $(BOOTLOADER_BIN) | $(DEVICE_BIN_FOLDER)
+ifeq ($(UNAME_S),Darwin)
+	$(LN) $(abspath $<) $@
+else
 	$(LN) $< $@
+endif
 
 $(FOLDER)/$(PROJECT).dfu: $(FOLDER)/%: $(DELIVER)/% | $(FOLDER)
+ifeq ($(UNAME_S),Darwin)
+	$(LN) $(abspath $<) $@
+else
 	$(LN) $< $@
+endif
 
 # The bundled .bin gets a unique name (BIN_TARGET) so it can't be mismatched to the
 # wrong board; it still links to the plain deliver/ .bin ($(DBIN)).
 $(BIN_TARGET): $(DBIN) | $(FOLDER)
+ifeq ($(UNAME_S),Darwin)
+	$(LN) $(abspath $<) $@
+else
 	$(LN) $< $@
+endif
 
 HEX_BASE_ADDRESS = $(shell $(OD) -h -j .vectors $(BUILDDIR)/$(PROJECT).elf | awk '/.vectors/ {print $$5 }')
 # Fail during recipe expansion before hex2dfu runs if objdump returned no usable
@@ -319,7 +340,17 @@ $(OBFUSCATED_OUT): .obfuscated-sentinel
 $(ST_DRIVERS): | $(DRIVERS_FOLDER)
 	cp ext/rusefi-gha/static-content/silent_st_drivers2.exe $(DRIVERS_FOLDER)
 
-$(DELIVER) $(ARTIFACTS) $(STAGING_FOLDER) $(CONSOLE_FOLDER) $(DRIVERS_FOLDER):
+TUNE_FOLDER = $(FOLDER)/tune
+
+# Default tunes shipped with the board land in tune/ (copied, not symlinked, so they survive
+# in the zip), keeping the bundled tune and ini of one build consistent.
+BOARD_TUNE_FILES = $(wildcard $(BOARD_DIR)/*.msq)
+TUNE_FOLDER_TARGETS = $(addprefix $(TUNE_FOLDER)/,$(notdir $(BOARD_TUNE_FILES)))
+
+$(TUNE_FOLDER_TARGETS): $(TUNE_FOLDER)/%: $(BOARD_DIR)/% | $(TUNE_FOLDER)
+	cp $< $@
+
+$(DELIVER) $(ARTIFACTS) $(STAGING_FOLDER) $(CONSOLE_FOLDER) $(DRIVERS_FOLDER) $(TUNE_FOLDER):
 	mkdir -p $@
 
 # The rm -rf clears stale content (bundled names embed date/sha), but it also

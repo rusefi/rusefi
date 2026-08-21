@@ -38,26 +38,39 @@ public class SignatureHelper {
     /**
      * Checks the local cache before optionally contacting the remote INI archive.
      */
-    public static String downloadIfNotAvailable(Pair<String, String> p, boolean allowDownload) {
-        return downloadIfNotAvailable(p, allowDownload, LOCAL_INI_CACHE_FOLDER);
+    public static String downloadIfNotAvailable(Pair<String, String> p) {
+        return downloadIfNotAvailable(p, null, LOCAL_INI_CACHE_FOLDER);
     }
 
-    static String downloadIfNotAvailable(Pair<String, String> p, boolean allowDownload, String cacheFolder) {
-        if (p == null) {
+    /**
+     * Same as {@link #downloadIfNotAvailable(Pair)}, but also validates a cache hit against the
+     * requested {@code signature}: a cached .ini whose embedded signature diverges from the
+     * requested one (in practice: the firmware was rebuilt on a later day with the same config
+     * hash) is stale, so the entry is dropped and the regular download/manual-picker path takes over.
+     */
+    public static String downloadIfNotAvailable(Pair<String, String> p, String signature) {
+        return downloadIfNotAvailable(p, signature, LOCAL_INI_CACHE_FOLDER);
+    }
+
+    // package-private for tests
+    static String downloadIfNotAvailable(Pair<String, String> p, String signature, String cacheFolder) {
+        if (p == null)
             return null;
-        }
         new File(cacheFolder).mkdirs();
         String localIniFile = cacheFolder + File.separator + p.second;
         File file = new File(localIniFile);
         if (file.exists() && file.length() > 10000) {
-            log.info("Found cached at " + cacheFolder);
-            return localIniFile;
+            if (signature != null && isStaleCachedIni(file, signature)) {
+                log.info("Dropping stale cached ini " + localIniFile
+                        + ": embedded signature does not match requested " + signature);
+                file.delete();
+            } else {
+                log.info("Found cached at " + cacheFolder);
+                return localIniFile;
+            }
         }
         if (EXTRA_INI_SOURCE != null) {
             return EXTRA_INI_SOURCE;
-        }
-        if (!allowDownload) {
-            return null;
         }
         log.info(".ini not found in " + cacheFolder + "(" + localIniFile + "), trying to download " + p.first);
 
@@ -93,6 +106,75 @@ public class SignatureHelper {
                 httpURLConnection.disconnect();
             }
         }
+    }
+
+    /**
+     * A cached .ini is stale when it carries no {@code signature =} line, or when its embedded
+     * signature diverges from the requested one while still sharing the requested config hash.
+     * The cache is keyed by hash, so a hit with a different hash means the user explicitly
+     * imported a non-matching ini via the manual picker - respect that choice and keep it. A hit
+     * with the SAME hash but a different date is the "ini_database and firmware dates diverged"
+     * situation (firmware rebuilt on a later day, config unchanged) and must be dropped.
+     */
+    static boolean isStaleCachedIni(File cachedIni, String requestedSignature) {
+        String embeddedSignature = readIniSignature(cachedIni);
+        if (embeddedSignature == null) {
+            // no signature line - cannot be trusted
+            return true;
+        }
+        if (requestedSignature.equals(embeddedSignature)) {
+            return false;
+        }
+        RusEfiSignature requested = parse(requestedSignature);
+        RusEfiSignature embedded = parse(embeddedSignature);
+        if (requested == null || embedded == null) {
+            // unparseable signatures - not enough information to declare staleness
+            return false;
+        }
+        return java.util.Objects.equals(requested.getHash(), embedded.getHash());
+    }
+
+    /**
+     * Extract the {@code signature = "rusEFI ..."} value declared near the top of a TunerStudio
+     * .ini without a full parse (the first 200 lines are enough). Returns null when the file is
+     * unreadable or has no signature line.
+     */
+    static String readIniSignature(File iniFile) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(iniFile))) {
+            String line;
+            int scanned = 0;
+            while ((line = reader.readLine()) != null && scanned++ < 200) {
+                final String trimmed = line.trim();
+                if (trimmed.startsWith("signature")) {
+                    final int eq = trimmed.indexOf('=');
+                    if (eq < 0 || !trimmed.substring(0, eq).trim().equals("signature")) {
+                        // some other "signature..." token, not the signature declaration
+                        continue;
+                    }
+                    final int first = trimmed.indexOf('"', eq);
+                    final int last = trimmed.lastIndexOf('"');
+                    if (first >= 0 && last > first) {
+                        return trimmed.substring(first + 1, last);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            // unreadable candidate - treat as "no signature"
+        }
+        return null;
+    }
+
+    /**
+     * Path under which the .ini matching {@code signature} would be cached, or null if the
+     * signature cannot be parsed. Lets callers remember a locally found ini in the cache
+     * without duplicating the cache-folder logic.
+     */
+    public static String getLocalIniCacheFile(String signature) {
+        Pair<String, String> p = getUrl(signature);
+        if (p == null) {
+            return null;
+        }
+        return LOCAL_INI_CACHE_FOLDER + File.separator + p.second;
     }
 
     /**
