@@ -18,7 +18,7 @@
  * todo: should this method be invoked somewhere deeper? at the moment we have too many usages too high
  * @return true if front should be decoded further, false if we are not interested
  */
-bool isUsefulSignal(trigger_event_e signal, const TriggerWaveform& shape) {
+TRIGGER_RAM_CODE bool isUsefulSignal(trigger_event_e signal, const TriggerWaveform& shape) {
 	if (shape.useOnlyRisingEdges) {
 		return isTriggerUpEvent(signal);
 	}

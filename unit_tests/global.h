@@ -15,6 +15,10 @@
 #include "common_headers.h"
 #include "test_executor.h"
 
+// Host build (unit tests): there is no .fast_text linker section, so the
+// trigger fast-path placement attribute is a no-op.
+#define TRIGGER_RAM_CODE
+
 #define EFU_UNIT_TESTS fail("typo please EFU_UNIT_TEST");
 
 typedef uint32_t iomode_t;

@@ -26,7 +26,7 @@ bool TriggerScheduler::assertNotInList(AngleBasedEvent *head, AngleBasedEvent *e
 	return false;
 }
 
-void TriggerScheduler::schedule(const char *msg, AngleBasedEvent* event, angle_t angle, action_s const& action) {
+TRIGGER_RAM_CODE void TriggerScheduler::schedule(const char *msg, AngleBasedEvent* event, angle_t angle, action_s const& action) {
 	event->setAngle(angle);
 
 	schedule(msg, event, action);
@@ -38,7 +38,7 @@ void TriggerScheduler::schedule(const char *msg, AngleBasedEvent* event, angle_t
  * @return true if event corresponds to current tooth and was time-based scheduler
  *         false if event was put into queue for scheduling at a later tooth
  */
-bool TriggerScheduler::scheduleOrQueue(const char *msg, AngleBasedEvent *event,
+TRIGGER_RAM_CODE bool TriggerScheduler::scheduleOrQueue(const char *msg, AngleBasedEvent *event,
 		efitick_t edgeTimestamp,
 		angle_t angle,
 		action_s action,
@@ -64,7 +64,7 @@ bool TriggerScheduler::scheduleOrQueue(const char *msg, AngleBasedEvent *event,
 	}
 }
 
-void TriggerScheduler::schedule(const char *msg, AngleBasedEvent* event, action_s const& action) {
+TRIGGER_RAM_CODE void TriggerScheduler::schedule(const char *msg, AngleBasedEvent* event, action_s const& action) {
 	if (event->getAngle() < 0) {
 	    // at the moment we expect API consumer to wrap angle. shall we do the wrapping in the enginePhase setter?
 	    // i.e. what is the best level to take care of the range constraint?
@@ -93,7 +93,7 @@ void TriggerScheduler::cancel(AngleBasedEvent* event) {
 	LL_DELETE2(m_angleBasedEventsHead, event, nextToothEvent);
 }
 
-void TriggerScheduler::scheduleEventsUntilNextTriggerTooth(float rpm,
+TRIGGER_RAM_CODE void TriggerScheduler::scheduleEventsUntilNextTriggerTooth(float rpm,
 							   efitick_t edgeTimestamp, float currentPhase, float nextPhase) {
 
 	if (rpm == 0) {

@@ -223,7 +223,7 @@ void SoftSparkLimiter::updateTargetSkipRatio(
 
 static tinymt32_t tinymt;
 
-bool SoftSparkLimiter::shouldSkip()  {
+TRIGGER_RAM_CODE bool SoftSparkLimiter::shouldSkip()  {
 	if (targetSkipRatio == 0 || (!allowHardCut && wasJustSkipped)) {
 		wasJustSkipped = false;
 		return false;

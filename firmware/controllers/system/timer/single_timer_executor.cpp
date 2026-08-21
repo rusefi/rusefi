@@ -45,7 +45,7 @@ SingleTimerExecutor::SingleTimerExecutor()
 {
 }
 
-void SingleTimerExecutor::schedule(const char *msg, scheduling_s* scheduling, efitick_t nt, action_s const& action) {
+TRIGGER_RAM_CODE void SingleTimerExecutor::schedule(const char *msg, scheduling_s* scheduling, efitick_t nt, action_s const& action) {
 	ScopePerf perf(PE::SingleTimerExecutorScheduleByTimestamp);
 
 #if EFI_ENABLE_ASSERTS
@@ -73,7 +73,7 @@ void SingleTimerExecutor::schedule(const char *msg, scheduling_s* scheduling, ef
 	}
 }
 
-void SingleTimerExecutor::cancel(scheduling_s* scheduling) {
+TRIGGER_RAM_CODE void SingleTimerExecutor::cancel(scheduling_s* scheduling) {
 	// Lock for queue removal - we may already be locked, but that's ok
 	chibios_rt::CriticalSectionLocker csl;
 

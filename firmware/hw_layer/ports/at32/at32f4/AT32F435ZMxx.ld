@@ -42,6 +42,13 @@ MEMORY
     flash7 (rx) : org = 0x00000000, len = 0
     shared  : org = 0x20000000, len = _OpenBLT_Shared_Params_Size
     ram0   (wx) : org = 0x20000000 + _OpenBLT_Shared_Params_Size, len = 64k + 320k - _OpenBLT_Shared_Params_Size    /* SRAM1 + SRAM2 */
+    /* 64 KB carved off the top of ram0 for the trigger fast-path code: the
+       AT32 flash NZW area is too slow for the per-tooth ISR (measured ~25
+       cycles per 7-instruction iteration with continue-read at 288 MHz),
+       while SRAM is zero-wait. The heap shrinks by the same 64 KB (FatFs
+       allocations are small, plenty of headroom). */
+    ram_fast (wx) : org = 0x20050000, len = 64k
+    ram_heap (wx) : org = 0x20000000 + _OpenBLT_Shared_Params_Size, len = 64k + 320k - 64k - _OpenBLT_Shared_Params_Size
     ram1   (wx) : org = 0x20000000 + _OpenBLT_Shared_Params_Size, len = 64k - _OpenBLT_Shared_Params_Size     /* SRAM1 */
     ram2   (wx) : org = 0x20010000, len = 320k    /* SRAM2 */
     ram3   (wx) : org = 0x20020000, len = 0
@@ -93,7 +100,7 @@ REGION_ALIAS("DATA_RAM_LMA", flash0);
 REGION_ALIAS("BSS_RAM", ram0);
 
 /* RAM region to be used for the default heap.*/
-REGION_ALIAS("HEAP_RAM", ram0);
+REGION_ALIAS("HEAP_RAM", ram_heap);
 
 SECTIONS
 {
@@ -123,3 +130,24 @@ SECTIONS
 
 /* Generic rules inclusion.*/
 INCLUDE rules.ld
+
+/* Trigger fast path: code copied from flash to zero-wait SRAM at boot
+   (see m74_9 board init). Note: rules.ld opens its own SECTIONS block, so
+   this must be a separate SECTIONS block after the include. Its LMA
+   continues the flash image and its VMA sits in the carved-out ram_fast
+   region. */
+SECTIONS
+{
+    .fast_text : ALIGN(4)
+    {
+        . = ALIGN(4);
+        __fast_text_start__ = .;
+        *(.fast_text)
+        *(.fast_text.*)
+        . = ALIGN(4);
+        __fast_text_end__ = .;
+    } > ram_fast AT > flash0
+}
+
+__fast_text_load__ = LOADADDR(.fast_text);
+__fast_text_size__ = __fast_text_end__ - __fast_text_start__;

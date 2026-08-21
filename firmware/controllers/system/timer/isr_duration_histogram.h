@@ -19,7 +19,7 @@ struct IsrDurationHistogram {
 	uint32_t count[Buckets] = {0};
 	uint32_t sumUs = 0;
 
-	void add(uint32_t ticks) {
+	TRIGGER_RAM_CODE void add(uint32_t ticks) {
 		for (int i = 0; i < Buckets - 1; i++) {
 			if (ticks < bounds[i]) {
 				count[i]++;

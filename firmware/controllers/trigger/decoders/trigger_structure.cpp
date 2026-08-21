@@ -41,7 +41,7 @@
 #include "trigger_mercedes.h"
 #include "engine_state.h"
 
-void wrapAngle(angle_t& angle, const char* msg, ObdCode code) {
+TRIGGER_RAM_CODE void wrapAngle(angle_t& angle, const char* msg, ObdCode code) {
 	if (std::isnan(angle)) {
 		firmwareError(ObdCode::CUSTOM_ERR_ANGLE, "a NaN %s", msg);
 		angle = 0;
@@ -113,7 +113,7 @@ int TriggerWaveform::getTriggerWaveformSynchPointIndex() const {
  * @see getEngineCycle
  * @see getCrankDivider
  */
-angle_t TriggerWaveform::getCycleDuration() const {
+TRIGGER_RAM_CODE angle_t TriggerWaveform::getCycleDuration() const {
 	switch (operationMode) {
 	case FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR:
 		// Pattern repeats every 180 crank degrees. 4 times per 720 degree engine cycle.
@@ -162,7 +162,7 @@ bool TriggerWaveform::needsDisambiguation() const {
  *
  * 'engine->engineCycleEventCount' hold a pre-calculated copy of this value as a performance optimization
  */
-size_t TriggerWaveform::getLength() const {
+TRIGGER_RAM_CODE size_t TriggerWaveform::getLength() const {
 	/**
 	 * 24 for FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR
 	 * 10 for FOUR_STROKE_FIVE_TIMES_CRANK_SENSOR

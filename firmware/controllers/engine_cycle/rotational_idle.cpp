@@ -5,7 +5,7 @@ RotationalIdle::RotationalIdle(){
 
 }
 
-bool RotationalIdle::shouldEngageRotationalIdle() {
+TRIGGER_RAM_CODE bool RotationalIdle::shouldEngageRotationalIdle() {
 	rotationalIdleEngaged = false;
 	rotIdleEngineTooSlow = false;
 	rotIdleEngineTooFast = false;

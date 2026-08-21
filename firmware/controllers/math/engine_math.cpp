@@ -75,7 +75,7 @@ void setSingleCoilDwell() {
  * @return IM_WASTED_SPARK if in SPINNING mode and IM_INDIVIDUAL_COILS setting
  * @return engineConfiguration->ignitionMode otherwise
  */
-ignition_mode_e getCurrentIgnitionMode() {
+TRIGGER_RAM_CODE ignition_mode_e getCurrentIgnitionMode() {
 	ignition_mode_e ignitionMode = engineConfiguration->ignitionMode;
 #if EFI_SHAFT_POSITION_INPUT
 	// In spin-up cranking mode we don't have full phase sync info yet, so wasted spark mode is better
@@ -128,7 +128,7 @@ void prepareOutputSignals() {
 	engine->injectionEvents.invalidate();
 }
 
-angle_t getPerCylinderFiringOrderOffset(uint8_t cylinderIndex, uint8_t cylinderNumber) {
+TRIGGER_RAM_CODE angle_t getPerCylinderFiringOrderOffset(uint8_t cylinderIndex, uint8_t cylinderNumber) {
 	// base = position of this cylinder in the firing order.
 	// We get a cylinder every n-th of an engine cycle where N is the number of cylinders
 	auto firingOrderOffset = engine->engineState.engineCycle * cylinderIndex / engineConfiguration->cylindersCount;

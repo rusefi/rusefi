@@ -74,6 +74,14 @@
 #define EFI_USE_OPENBLT FALSE
 #endif
 
+#ifndef EFI_TRIGGER_IN_RAM
+// AT32 boards run the per-tooth trigger path from zero-wait SRAM (.fast_text
+// section, copied at boot) because the NZW flash area is too slow for the
+// 60-2 decode at high rpm. Harmless on other boards (no section defined,
+// attribute expands to nothing unless a board defines it TRUE).
+#define EFI_TRIGGER_IN_RAM FALSE
+#endif
+
 #ifndef EFI_ETHERNET
 #define EFI_ETHERNET FALSE
 #endif

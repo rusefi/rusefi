@@ -144,7 +144,7 @@ void WaveChart::publish() {
 /**
  * @brief	Register an event for digital sniffer
  */
-void WaveChart::addEvent3(const char *name, const char * msg) {
+TRIGGER_RAM_CODE void WaveChart::addEvent3(const char *name, const char * msg) {
 #if EFI_TEXT_LOGGING
 	ScopePerf perf(PE::EngineSniffer);
 	efitick_t nowNt = getTimeNowNt();
@@ -254,7 +254,7 @@ void addEngineSnifferLogicAnalyzerEvent(int laIndex, FrontDirection frontDirecti
 	addEngineSnifferEvent(name, frontDirection == FrontDirection::UP ? PROTOCOL_ES_UP : PROTOCOL_ES_DOWN);
 }
 
-void addEngineSnifferCrankEvent(int wheelIndex, int triggerEventIndex, FrontDirection frontDirection) {
+TRIGGER_RAM_CODE void addEngineSnifferCrankEvent(int wheelIndex, int triggerEventIndex, FrontDirection frontDirection) {
 	static const char *crankName[2] = { PROTOCOL_CRANK1, PROTOCOL_CRANK2 };
 
 	shaft_signal_msg_index[0] = frontDirection == FrontDirection::UP ? 'u' : 'd';

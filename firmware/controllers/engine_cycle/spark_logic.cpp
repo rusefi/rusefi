@@ -85,7 +85,7 @@ static int getIgnitionPinForIndex(int cylinderIndex, ignition_mode_e ignitionMod
 	}
 }
 
-static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_t sparkDwell, IgnitionEvent *event) {
+TRIGGER_RAM_CODE static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_t sparkDwell, IgnitionEvent *event) {
 	// todo: clean up this implementation? does not look too nice as is.
 
 	// let's save planned duration so that we can later compare it with reality
@@ -186,7 +186,7 @@ static void fireTrailingSpark(IgnitionOutputPin* pin) {
 	pin->setLow();
 }
 
-static void overFireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
+TRIGGER_RAM_CODE static void overFireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 #if SPARK_EXTREME_LOGGING
 	efiPrintf("[%s] %d %s",
 		event->getOutputForLoggins()->getName(), event->sparkCounter,
@@ -209,7 +209,7 @@ static void overFireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 /**
  * TL,DR: each IgnitionEvent is in charge of it's own scheduling forever, we plant next event while finishing handling of the current one
  */
-void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
+TRIGGER_RAM_CODE void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 #if EFI_UNIT_TEST
 	if (engine->onIgnitionEvent) {
 		engine->onIgnitionEvent(event, false);
@@ -337,7 +337,7 @@ static bool startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutput
 	return false;
 }
 
-void turnSparkPinHighStartCharging(IgnitionEvent *event) {
+TRIGGER_RAM_CODE void turnSparkPinHighStartCharging(IgnitionEvent *event) {
 	efitick_t nowNt = getTimeNowNt();
 
 	event->actualDwellTimer.reset(nowNt);
@@ -384,7 +384,7 @@ void turnSparkPinHighStartCharging(IgnitionEvent *event) {
 }
 
 
-static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
+TRIGGER_RAM_CODE static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 		float rpm, float dwellMs, float dwellAngle, float sparkAngle, efitick_t edgeTimestamp, float currentPhase, float nextPhase) {
 	UNUSED(rpm);
 
@@ -561,7 +561,7 @@ static void prepareIgnitionSchedule() {
 	initializeIgnitionActions();
 }
 
-void onTriggerEventSparkLogic(float rpm, efitick_t edgeTimestamp, float currentPhase, float nextPhase) {
+TRIGGER_RAM_CODE void onTriggerEventSparkLogic(float rpm, efitick_t edgeTimestamp, float currentPhase, float nextPhase) {
 	ScopePerf perf(PE::OnTriggerEventSparkLogic);
 
 	if (!engineConfiguration->isIgnitionEnabled) {

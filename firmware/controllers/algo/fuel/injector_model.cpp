@@ -210,7 +210,7 @@ floatms_t InjectorModelBase::getInjectionDuration(float fuelMassGram) const {
 	return baseDuration + m_deadtime;
 }
 
-floatms_t InjectorModelWithConfig::getInjectionDuration(float fuelMassGram) const {
+TRIGGER_RAM_CODE floatms_t InjectorModelWithConfig::getInjectionDuration(float fuelMassGram) const {
 	if (fuelMassGram <= 0) {
 		// If 0 mass, don't do any math, just skip the injection.
 		return 0.0f;
@@ -256,7 +256,7 @@ float InjectorModelBase::getFuelMassForDuration(floatms_t duration) const {
 }
 
 // todo: all that *1000 and *0.001f is pretty annoying, we need a cleaner approach for units!
-floatms_t InjectorModelBase::getBaseDurationImpl(float fuelMassGram) const {
+TRIGGER_RAM_CODE floatms_t InjectorModelBase::getBaseDurationImpl(float fuelMassGram) const {
 	floatms_t baseDuration = fuelMassGram / m_massFlowRate * 1000;
 
 	switch (getNonlinearMode()) {

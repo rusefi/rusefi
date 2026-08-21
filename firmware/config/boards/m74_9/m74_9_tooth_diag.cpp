@@ -240,7 +240,7 @@ static RawEdgeRecord rawEdgeRing[RawEdgeRingSize];
 static size_t rawEdgeHead = 0;
 static size_t rawEdgeCount = 0;
 
-void boardRawTriggerEdge(int signalIndex, bool isRising, efitick_t timestamp) {
+TRIGGER_RAM_CODE void boardRawTriggerEdge(int signalIndex, bool isRising, efitick_t timestamp) {
 	if (signalIndex != 0) {
 		return; // primary crank input only
 	}
@@ -366,7 +366,7 @@ static SyncTraceEvent syncTraceRing[SyncTraceRingSize];
 static size_t syncTraceHead = 0;
 static size_t syncTraceTotal = 0;
 
-void boardTriggerSyncEvent(char kind, int countersError, float gap0, float gap1) {
+TRIGGER_RAM_CODE void boardTriggerSyncEvent(char kind, int countersError, float gap0, float gap1) {
 	int8_t clampedError = (int8_t)(countersError < -127 ? -127 : (countersError > 127 ? 127 : countersError));
 
 	/* The ChibiOS system tick (1 kHz) is the reliable clock for diagnostics:
@@ -417,7 +417,7 @@ void m74_9TimeCheck() {
 }
 
 // Called from the trigger decoder for every synchronized primary tooth.
-void boardTriggerCallback(efitick_t timestamp, float) {
+TRIGGER_RAM_CODE void boardTriggerCallback(efitick_t timestamp, float) {
 	// Authoritative tooth position comes from the decoder index (0 = the sync
 	// tooth, 2 index units per tooth for RiseOnly wheels), NOT from the engine
 	// phase float: the phase wraps around tdcPosition() and mapped the sync
@@ -480,7 +480,7 @@ void m74_9ToothDump() {
 // learned share of the revolution, which divides out the systematic
 // compression ripple - the digital equivalent of the stock ECU's adaptive
 // VR conditioning.
-float triggerGetToothProfileFactor(int toothIndex) {
+TRIGGER_RAM_CODE float triggerGetToothProfileFactor(int toothIndex) {
 	if (toothIndex < 0 || toothIndex >= (int)ToothCount) {
 		return 1.0f;
 	}

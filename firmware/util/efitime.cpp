@@ -16,7 +16,7 @@ static WrapAround62 timeNt;
 /**
  * 64-bit counter CPU/timer cycles since MCU reset
  */
-efitick_t getTimeNowNt() {
+TRIGGER_RAM_CODE efitick_t getTimeNowNt() {
 	return timeNt.update(getTimeNowLowerNt());
 }
 

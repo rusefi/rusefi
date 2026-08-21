@@ -21,6 +21,7 @@
 
 #include "hal.h"
 #include "stm32_gpio.h"
+#include <string.h>
 
 /*===========================================================================*/
 /* Driver local definitions.                                                 */
@@ -181,6 +182,17 @@ void __early_init(void) {
 
   stm32_gpio_init();
   stm32_clock_init();
+
+  /* Copy the trigger fast-path code from its flash load address into the
+     zero-wait SRAM region (ram_fast, see AT32F435ZMxx.ld) before anything
+     can use it: the per-tooth ISR must not run from the slow NZW flash.
+     Unconditional: the section always exists in the AT32 linker script and
+     the copy degenerates to a no-op when no function is placed in it. */
+  extern char __fast_text_start__[];
+  extern char __fast_text_end__[];
+  extern const char __fast_text_load__[];
+  memcpy(__fast_text_start__, __fast_text_load__,
+         (size_t)(__fast_text_end__ - __fast_text_start__));
 }
 
 #if HAL_USE_SDC || defined(__DOXYGEN__)

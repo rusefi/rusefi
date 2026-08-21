@@ -147,7 +147,7 @@ bool RpmCalculator::checkIfSpinning(efitick_t nowNt) const {
 	return true;
 }
 
-void RpmCalculator::assignRpmValue(float floatRpmValue) {
+TRIGGER_RAM_CODE void RpmCalculator::assignRpmValue(float floatRpmValue) {
 	previousRpmValue = cachedRpmValue;
 
 	cachedRpmValue = floatRpmValue;
@@ -168,7 +168,7 @@ void RpmCalculator::assignRpmValue(float floatRpmValue) {
 	}
 }
 
-void RpmCalculator::setRpmValue(float value) {
+TRIGGER_RAM_CODE void RpmCalculator::setRpmValue(float value) {
 	if (value > MAX_ALLOWED_RPM) {
 		value = 0;
 	}
@@ -302,7 +302,7 @@ void RpmCalculator::setSpinningUp(efitick_t nowNt) {
  * updated here.
  * This callback is invoked on interrupt thread.
  */
-void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
+TRIGGER_RAM_CODE void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		uint32_t trgEventIndex, efitick_t nowNt) {
 
 	bool alwaysInstantRpm = engineConfiguration->alwaysInstantRpm;
@@ -416,7 +416,7 @@ static void onTdcCallback() {
 /**
  * This trigger callback schedules the actual physical TDC callback in relation to trigger synchronization point.
  */
-void tdcMarkCallback(
+TRIGGER_RAM_CODE void tdcMarkCallback(
 		uint32_t trgEventIndex, efitick_t nowNt) {
 #if EFI_ENGINE_CONTROL
 	bool isTriggerSynchronizationPoint = trgEventIndex == 0;
@@ -454,7 +454,7 @@ void tdcMarkCallback(
  *
  * @return tick time of scheduled action
  */
-efitick_t scheduleByAngle(scheduling_s *timer, efitick_t nowNt, angle_t angle, action_s const& action) {
+TRIGGER_RAM_CODE efitick_t scheduleByAngle(scheduling_s *timer, efitick_t nowNt, angle_t angle, action_s const& action) {
 	float delayUs = engine->rpmCalculator.oneDegreeUs * angle;
 
 	efitick_t actionTimeNt = sumTickAndFloat(nowNt, USF2NT(delayUs));

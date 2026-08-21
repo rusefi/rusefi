@@ -243,7 +243,7 @@ static const uint8_t* getFiringOrderTable() {
  * @param index from zero to cylindersCount - 1
  * @return cylinderId from one to cylindersCount
  */
-size_t getCylinderNumberAtIndex(size_t index) {
+TRIGGER_RAM_CODE size_t getCylinderNumberAtIndex(size_t index) {
 	const size_t firingOrderLength = getFiringOrderLength();
 
 	if (firingOrderLength < 1 || firingOrderLength > MAX_CYLINDER_COUNT) {

@@ -18,6 +18,12 @@
  * stm32f4ems include - that header defaults the flag to FALSE. */
 #define EFI_USE_OPENBLT TRUE
 
+/* AT32F435 NZW flash is too slow for the per-tooth trigger path at high rpm
+ * (~25 cycles per 7-instruction iteration at 288 MHz). Run the trigger decode
+ * and event scheduling from zero-wait SRAM: the .fast_text linker section is
+ * copied from flash at boot (see AT32F435ZMxx.ld and board.c __early_init). */
+#define EFI_TRIGGER_IN_RAM TRUE
+
 /* Console log buffer (double-buffered, 2x this, static). The stm32f4ems
  * default of 6500 truncates the 'pins' output mid-line: the pin report +
  * L9779 SPI frame history exceed it and LogBuffer::writeInternal writes

@@ -487,7 +487,7 @@ bool NamedOutputPin::stop() {
 	return false;
 }
 
-void InjectorOutputPin::reset() {
+TRIGGER_RAM_CODE void InjectorOutputPin::reset() {
 	// If this injector was open, close it and reset state
 	if (overlappingCounter != 0) {
 		overlappingCounter = 0;
@@ -602,7 +602,7 @@ void OutputPin::resetToggleStats() {
 }
 #endif // EFI_SIMULATOR
 
-void OutputPin::setValue(const char *msg, int logicValue, bool isForce) {
+TRIGGER_RAM_CODE void OutputPin::setValue(const char *msg, int logicValue, bool isForce) {
     UNUSED(msg);
     if ((isHwQcMode() || getOutputOnTheBenchTest() == this) && !isForce) {
         return;

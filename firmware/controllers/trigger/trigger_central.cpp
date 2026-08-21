@@ -67,7 +67,7 @@ angle_t TriggerCentral::getVVTPosition(uint8_t bankIndex, uint8_t camIndex) {
 /**
  * @return angle since trigger synchronization point, NOT angle since TDC.
  */
-expected<float> TriggerCentral::getCurrentEnginePhase(efitick_t nowNt) const {
+TRIGGER_RAM_CODE expected<float> TriggerCentral::getCurrentEnginePhase(efitick_t nowNt) const {
 	floatus_t oneDegreeUs = engine->rpmCalculator.oneDegreeUs;
 
 	if (std::isnan(oneDegreeUs)) {
@@ -91,7 +91,7 @@ expected<float> TriggerCentral::getCurrentEnginePhase(efitick_t nowNt) const {
 /**
  * todo: why is this method NOT reciprocal to getRpmMultiplier?!
  */
-int getCrankDivider(operation_mode_e operationMode) {
+TRIGGER_RAM_CODE int getCrankDivider(operation_mode_e operationMode) {
 	switch (operationMode) {
 	case FOUR_STROKE_CRANK_SENSOR:
 		return 2;
@@ -280,7 +280,7 @@ static void logVvtFront(bool useOnlyRise, bool isImportantFront, TriggerValue fr
 #endif /* EFI_TOOTH_LOGGER */
 }
 
-static bool tooSoonToHandleSignal() {
+TRIGGER_RAM_CODE static bool tooSoonToHandleSignal() {
 #if EFI_PROD_CODE
 extern bool main_loop_started;
 	if (!main_loop_started) {
@@ -513,7 +513,7 @@ uint32_t triggerMaxDuration = 0;
  *  - Hardware triggers
  *  - Trigger replay from CSV (unit tests)
  */
-void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
+TRIGGER_RAM_CODE void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
   // Raw board-level edge capture BEFORE any filtering: boards diagnose the
   // input noise with this (m74_9 'rawtrg' console command).
   boardRawTriggerEdge(signalIndex, isRising, timestamp);
@@ -555,7 +555,7 @@ void printTriggerIsrHistogram() {
 }
 
 // Handle all shaft signals - hardware or emulated both
-void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
+TRIGGER_RAM_CODE void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 	bool isPrimary = signalIndex == 0;
 	if (!isPrimary && !TRIGGER_WAVEFORM(needSecondTriggerInput)) {
 		return;
@@ -626,7 +626,7 @@ void TriggerCentral::resetCounters() {
 
 static const int wheelIndeces[4] = { 0, 0, 1, 1};
 
-static void reportEventToWaveChart(trigger_event_e ckpSignalType, int triggerEventIndex, bool addOppositeEvent) {
+TRIGGER_RAM_CODE static void reportEventToWaveChart(trigger_event_e ckpSignalType, int triggerEventIndex, bool addOppositeEvent) {
 	if (!getTriggerCentral()->isEngineSnifferEnabled) { // this is here just as a shortcut so that we avoid engine sniffer as soon as possible
 		return; // engineSnifferRpmThreshold is accounted for inside getTriggerCentral()->isEngineSnifferEnabled
 	}
@@ -751,7 +751,7 @@ float mapAtAngle[200];
 
 #endif
 
-void TriggerCentral::decodeMapCam(int toothIndexForListeners, efitick_t timestamp, float currentPhase) {
+TRIGGER_RAM_CODE void TriggerCentral::decodeMapCam(int toothIndexForListeners, efitick_t timestamp, float currentPhase) {
 	UNUSED(toothIndexForListeners);
 
     isDecodingMapCam = engineConfiguration->vvtMode[0] == VVT_MAP_V_TWIN &&
@@ -784,7 +784,7 @@ void TriggerCentral::decodeMapCam(int toothIndexForListeners, efitick_t timestam
 	}
 }
 
-bool TriggerCentral::isToothExpectedNow(efitick_t timestamp) {
+TRIGGER_RAM_CODE bool TriggerCentral::isToothExpectedNow(efitick_t timestamp) {
 	// Check that the expected next phase (from the last tooth) is close to the actual current phase:
 	// basically, check that the tooth width is correct
 	auto estimatedCurrentPhase = getCurrentEnginePhase(timestamp);
@@ -850,7 +850,7 @@ bool boardAllowTriggerActions() {
 	return get_board_override_result(custom_board_boardAllowTriggerActions, true);
 }
 
-angle_t TriggerCentral::findNextTriggerToothAngle(int p_currentToothIndex) {
+TRIGGER_RAM_CODE angle_t TriggerCentral::findNextTriggerToothAngle(int p_currentToothIndex) {
   int currentToothIndex = p_currentToothIndex;
 		// TODO: is this logic to compute next trigger tooth angle correct?
 		angle_t nextToothAngle = 0;
@@ -875,7 +875,7 @@ angle_t TriggerCentral::findNextTriggerToothAngle(int p_currentToothIndex) {
 /**
  * This method is NOT invoked for VR falls.
  */
-void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
+TRIGGER_RAM_CODE void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 	uint32_t t0 = getTimeNowLowerNt();
 	// Board opt-in input debounce (m74_9): VR comparator ringing and starter
 	// noise arrive as edge bursts far below the real tooth period. Dropping

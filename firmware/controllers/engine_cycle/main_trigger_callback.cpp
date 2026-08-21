@@ -75,7 +75,7 @@ static void turnInjectionPinLowStage2(InjectionEvent* event) {
 	}
 }
 
-void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float nextPhase) {
+TRIGGER_RAM_CODE void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float nextPhase) {
 	auto eventAngle = injectionStartAngle;
 
 	// Determine whether our angle is going to happen before (or near) the next tooth
@@ -230,7 +230,7 @@ void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float n
 #endif /* EFI_DETAILED_LOGGING */
 }
 
-static void handleFuel(efitick_t nowNt, float currentPhase, float nextPhase) {
+TRIGGER_RAM_CODE static void handleFuel(efitick_t nowNt, float currentPhase, float nextPhase) {
 	ScopePerf perf(PE::HandleFuel);
 
 	efiAssertVoid(ObdCode::CUSTOM_STACK_6627, hasLotsOfRemainingStack(), "lowstck#3");
@@ -264,7 +264,7 @@ static void handleFuel(efitick_t nowNt, float currentPhase, float nextPhase) {
  * This is the main trigger event handler.
  * Both injection and ignition are controlled from this method.
  */
-void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_t currentPhase, angle_t nextPhase) {
+TRIGGER_RAM_CODE void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_t currentPhase, angle_t nextPhase) {
 	ScopePerf perf(PE::MainTriggerCallback);
 
 	if (hasFirmwareError()) {

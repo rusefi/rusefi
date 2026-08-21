@@ -24,7 +24,7 @@
 static ioline_t shaftLines[TRIGGER_INPUT_PIN_COUNT];
 static ioline_t camLines[CAM_INPUTS_COUNT];
 
-static void shaft_callback(void *arg, efitick_t stamp) {
+TRIGGER_RAM_CODE static void shaft_callback(void *arg, efitick_t stamp) {
 	// do the time sensitive things as early as possible!
 	int index = (int)arg;
 	ioline_t pal_line = shaftLines[index];

@@ -339,7 +339,7 @@ bool LimpManager::allowTriggerInput() const {
 	return m_allowTriggerInput;
 }
 
-LimpState LimpManager::allowInjection() const {
+TRIGGER_RAM_CODE LimpState LimpManager::allowInjection() const {
 	if (!m_allowInjection) {
 		return {false, m_allowInjection.clearReason};
 	}
@@ -349,7 +349,7 @@ LimpState LimpManager::allowInjection() const {
 	return {true, ClearReason::None};
 }
 
-LimpState LimpManager::allowIgnition() const {
+TRIGGER_RAM_CODE LimpState LimpManager::allowIgnition() const {
 	if (!m_allowIgnition) {
 		return {false, m_allowIgnition.clearReason};
 	}
