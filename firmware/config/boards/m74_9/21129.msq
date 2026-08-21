@@ -26,13 +26,13 @@
         <constant name="acSwitch">"Air conditioner control input"</constant>
         <constant name="acSwitchMode">"DEFAULT"</constant>
         <constant digits="3" name="adcVcc" units="volts">3.3</constant>
-        <constant name="afr_hwChannel">"NONE"</constant>
+        <constant name="afr_hwChannel">"Oxygen sensor 1 signal"</constant>
         <constant name="afr_hwChannel2">"NONE"</constant>
-        <constant name="afr_type">"14Point7"</constant>
-        <constant digits="2" name="afr_v1" units="volts">0.0</constant>
-        <constant digits="2" name="afr_v2" units="volts">5.0</constant>
-        <constant digits="2" name="afr_value1" units="AFR">10.0</constant>
-        <constant digits="2" name="afr_value2" units="AFR">19.99</constant>
+        <constant name="afr_type">"Narrow Band"</constant>
+        <constant digits="2" name="afr_v1" units="volts">0.1</constant>
+        <constant digits="2" name="afr_v2" units="volts">0.9</constant>
+        <constant digits="2" name="afr_value1" units="AFR">15.0</constant>
+        <constant digits="2" name="afr_value2" units="AFR">14.0</constant>
         <constant digits="4" name="afrExpAverageAlpha" units="">1.0</constant>
         <constant name="afrOverrideMode">"MAP"</constant>
         <constant cols="1" digits="1" name="afterCrankingIACtaperDuration" rows="6" units="cycles">
@@ -1208,7 +1208,7 @@
         <constant digits="3" name="fordInjectorSmallPulseBreakPoint" units="mg">0.0</constant>
         <constant digits="3" name="fordInjectorSmallPulseSlope" units="g/s">0.0</constant>
         <constant name="fuelAlgorithm">"Speed Density"</constant>
-        <constant name="fuelClosedLoopCorrectionEnabled">"disabled"</constant>
+        <constant name="fuelClosedLoopCorrectionEnabled">"enabled"</constant>
         <constant name="FuelHighPressureSentInput">"None"</constant>
         <constant name="FuelHighPressureSentType">"None"</constant>
         <constant digits="4" name="fuelLevelAveragingAlpha" units="">0.001</constant>
@@ -4707,7 +4707,7 @@
         <constant name="useIacPidMultTable">"no"</constant>
         <constant name="useIacTableForCoasting">"disabled"</constant>
         <constant name="useIdleAdvanceWhileCoasting">"no"</constant>
-        <constant name="useIdleTimingPidControl">"yes"</constant>
+        <constant name="useIdleTimingPidControl">"no"</constant>
         <constant name="useInjectorFlowLinearizationTable">"no"</constant>
         <constant name="useLambdaOnInterface">"AFR"</constant>
         <constant name="useLinearCltSensor">"no"</constant>
