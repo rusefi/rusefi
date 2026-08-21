@@ -10,6 +10,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PatchCordHelperTest {
     @Test
@@ -20,6 +21,12 @@ public class PatchCordHelperTest {
         assertEquals("wbo1 heater negative",
                 PatchCordHelper.normalizeFunction("WBO1 Heater Negative (pin 3) (and heater +12 could use 18C)"));
         assertEquals("", PatchCordHelper.normalizeFunction(null));
+    }
+
+    @Test
+    public void testMarkdownFileName() {
+        assertEquals("patchcord-BMW-N52-adapter.md", PatchCordHelper.markdownFileName("BMW-N52-adapter"));
+        assertEquals("patchcord-VW_1_8T.md", PatchCordHelper.markdownFileName("VW 1.8T"));
     }
 
     @Test
@@ -91,5 +98,45 @@ public class PatchCordHelperTest {
         assertEquals(1, adapterPins.size());
         assertEquals("2D", ecuPins.get(0).pin.pin);
         assertEquals("4D", adapterPins.get(0).pin.pin);
+    }
+
+    @Test
+    public void testAdapterColumnHasWireAndMarkerDots() throws IOException {
+        File root = Files.createTempDirectory("patchcord").toFile();
+        File ecuConnectors = new File(root, "ecu/connectors");
+        File adapterConnectors = new File(root, "N52-adapter/connectors");
+        assertTrue(ecuConnectors.mkdirs());
+        assertTrue(adapterConnectors.mkdirs());
+        Files.write(new File(ecuConnectors, "26pin.yaml").toPath(), (
+                "pins:\n" +
+                "  - pin: 17D\n" +
+                "    function: Power/Chassis GND ground\n" +
+                "    type: gnd\n" +
+                "    color: black\n").getBytes(StandardCharsets.UTF_8));
+        Files.write(new File(adapterConnectors, "N52-60pin.yaml").toPath(), (
+                "pins:\n" +
+                "  - pin: 10A\n" +
+                "    function: Power/Chassis GND ground (OEM 3-3)\n" +
+                "    type: gnd\n").getBytes(StandardCharsets.UTF_8));
+        File out = new File(root, "out");
+
+        PatchCordHelper.main(new String[]{new File(root, "ecu").getPath(),
+                new File(root, "N52-adapter").getPath(), out.getPath()});
+
+        File md = new File(out, "patchcord-N52-adapter.md");
+        assertTrue(md.isFile());
+        String text = new String(Files.readAllBytes(md.toPath()), StandardCharsets.UTF_8);
+        assertTrue(text.contains("| ![black](dot-black.png) ![paint marker]("
+                + PatchCordHelper.PAINT_MARKER_DOT + ") N52-60pin / 10A |"), text);
+        assertTrue(new File(out, "dot-black.png").isFile());
+        assertTrue(new File(out, PatchCordHelper.PAINT_MARKER_DOT).isFile());
+    }
+
+    @Test
+    public void testDotFileName() {
+        assertEquals("dot-black.png", PatchCordHelper.dotFileName("Black"));
+        assertEquals("dot-orange_brown.png", PatchCordHelper.dotFileName("orange/brown"));
+        assertEquals("dot-unknown.png", PatchCordHelper.dotFileName(null));
+        assertEquals("dot-unknown.png", PatchCordHelper.dotFileName("  "));
     }
 }

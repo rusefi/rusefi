@@ -14,6 +14,12 @@ public final class WireColors {
 
     public static final Color UNKNOWN = Color.MAGENTA;
 
+    /**
+     * Paint marker on the vehicle end of every wire: the four corner circles of vehicle-side
+     * connector images and the second dot in the "Adapter pin" column of the wire tables.
+     */
+    public static final Color PAINT_MARKER = new Color(255, 102, 0);
+
     private static final Map<String, Color> BY_NAME = new HashMap<>();
 
     static {

@@ -44,7 +44,7 @@ public class StepImageRenderer {
 
         if (vehicleSide) {
             // clearly distinct from the yellow wire-color circles
-            g.setColor(new Color(255, 102, 0));
+            g.setColor(WireColors.PAINT_MARKER);
             int inset = 2 * RADIUS;
             for (int cx : new int[]{inset, width - inset}) {
                 for (int cy : new int[]{inset, height - inset}) {
