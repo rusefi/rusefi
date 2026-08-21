@@ -767,39 +767,34 @@ void setup_custom_board_overrides() {
 		printRuntimeStats();
 		resetMaxValues();
 	});
-	// Systemic CPU speed probe: reads the AT32 flash performance/divider
-	// registers and times a fixed 1M-iteration loop. At 288 MHz with correct
-	// flash timing (DIVR=/3 -> 96 MHz flash clock, see stm32_clock_init in
-	// the ChibiOS AT32 port) the loop takes ~10-20 ms; hundreds of ms means
-	// every instruction fetch pays maximum wait states.
+	// Systemic CPU speed probe: reads the AT32 flash performance/divider/
+	// continue-read registers and times a fixed 1M-iteration loop. At 288 MHz
+	// with correct flash timing (DIVR=/3 -> 96 MHz flash clock + CONTR
+	// continue-read, see stm32_clock_init in the ChibiOS AT32 port) the loop
+	// takes ~20-35 ms; hundreds of ms means every instruction fetch pays
+	// maximum wait states.
 	addConsoleAction("flashperf", [](){
 		uint32_t psr = FLASH1->PSR;
 		uint32_t divr = FLASH1->DIVR;
+		uint32_t contr = FLASH1->CONTR;
 		uint32_t t0 = getTimeNowLowerNt();
 		volatile uint32_t acc = 0;
 		for (uint32_t i = 0; i < 1000000; i++) {
 			acc += i * 2654435761u;
 		}
 		uint32_t t1 = getTimeNowLowerNt();
-		efiPrintf("flashperf: PSR=0x%08x DIVR=0x%08x (FDIV=%lu) loop1000k=%lu ticks (%.2f ms) acc=%lu",
+		efiPrintf("flashperf: PSR=0x%08x DIVR=0x%08x (FDIV=%lu) CONTR=0x%08x (contRead=%lu) loop1000k=%lu ticks (%.2f ms) acc=%lu",
 			(unsigned)psr, (unsigned)divr, (unsigned long)(divr & FLASH_DIVR_FDIV_Msk),
+			(unsigned)contr, (unsigned long)((contr & FLASH_CONTR_FCONTR_EN_Msk) >> FLASH_CONTR_FCONTR_EN_Pos),
 			(unsigned long)(t1 - t0), (t1 - t0) / 4000.0f, (unsigned long)acc);
 	});
-	// Live A/B of the flash non-zero-wait boost: toggles PSR.NZW_BST (bit 12)
-	// without a reboot. Run 'flashperf' before/after to compare fetch speed.
-	addConsoleActionS("flashnzw", [](const char* arg){
-		if (rusefi::stringutil::strEqualCaseInsensitive(arg, "on")) {
-			FLASH1->PSR |= FLASH_PSR_NZW_BST;
-		} else if (rusefi::stringutil::strEqualCaseInsensitive(arg, "off")) {
-			FLASH1->PSR &= ~FLASH_PSR_NZW_BST_Msk;
-		} else {
-			efiPrintf("flashnzw on|off  (current NZW_BST=%lu)",
-				(unsigned long)((FLASH1->PSR & FLASH_PSR_NZW_BST_Msk) >> FLASH_PSR_NZW_BST_Pos));
-			return;
-		}
-		efiPrintf("flashnzw: PSR=0x%08x NZW_BST=%lu",
-			(unsigned)FLASH1->PSR,
-			(unsigned long)((FLASH1->PSR & FLASH_PSR_NZW_BST_Msk) >> FLASH_PSR_NZW_BST_Pos));
+	// NZW_BST is read-only here on purpose: toggling PSR.NZW_BST at full
+	// HCLK hangs the flash read path (hard lockup, no fault, recoverable only
+	// by power cycle) - it may only be changed before the PLL switch.
+	addConsoleActionS("flashnzw", [](const char*){
+		efiPrintf("flashnzw: NZW_BST is %s - live toggle is DISABLED (hangs the flash read path at 288 MHz)."
+			" Change it in stm32_clock_init (ChibiOS AT32 port) and reflash.",
+			(FLASH1->PSR & FLASH_PSR_NZW_BST_Msk) ? "ON" : "OFF");
 	});
 	// raw primary-trigger edge stream capture: a digital oscilloscope of the
 	// comparator output for noise diagnosis (deltas + histogram, see
