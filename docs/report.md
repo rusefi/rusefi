@@ -5511,3 +5511,24 @@ catch surge), taper warm 50 (~1.5 s real), warm crankingFuelCoef
 a firmware bug to fix later (count one increment per REAL revolution);
 until then treat afterCrankingIACtaperDuration as ~2x its nominal value
 when tuning.
+
+## 2026-08-21 (night, in car) - post-start settle: first stable idle reached, entry slam damped
+
+22:43 log: first time the full chain works end to end - catch 1670,
+taper dip only 545 (the 50-cycle budget absorbed the recrank
+pre-accumulation), recovery, and a stable 810-890 idle with tps
+2.9-3.2% and timing correction modulating +2-6. Two remaining issues:
+- the first ~5 s oscillate 556->1062->602->926: the timing PID enters
+  saturated (+16 from the +500 return-target error, error 770 rpm),
+  overshoots, then the -6.7 retard overshoots the other way. Note the
+  idleTimingSoftEntryTime ramp did NOT engage on this start - it keys
+  off m_crankTaperEndTime which is only initialized once per power
+  cycle (the engine had been started before this log), so on any
+  re-start after a stall the soft entry is already expired. msq lever
+  used instead: pFactor 0.05->0.03.
+- steady state sat 50-90 below target with a permanent +2-6 timing
+  bias: the 2.65% base air was short of the ~3.0% the engine needs
+  (rich mixture), so the air PID crept +2.3. Base raised to 15/15/14.
+Follow-up when allowed to touch code: reset m_crankTaperEndTime /
+m_idleTimingSoftEntryEndTime on engine stop so the soft entry works on
+every start, and make the taper counter count real revolutions.
