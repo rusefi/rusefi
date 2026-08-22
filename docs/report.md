@@ -6002,3 +6002,16 @@ B1MBPS + PCAN_BAUD_1M) - bench-only, the vehicle bus is 500k and the fork has
 no XCP baudrate-switch; multi-frame XCP block mode - the real floor of the
 single-frame request/response protocol (bxCAN has only 3 RX mailboxes, so
 pipelining more than 2-3 frames risks overrun).
+
+## 2026-08-22 (evening) - msq: etbBiasValues 9 values -> 8 (tune load fix)
+
+Console tune load failed with `IllegalStateException: etbBiasValues: 9 values
+while expecting 8 by 1 total 8` - the ETB bias array is fixed 8x1
+(ETB_BIAS_CURVE_LENGTH=8) but the msq carried 9 values
+(-12/-10/-8/-5/0/20/21/22/25), an editing slip when the zero crossing was
+moved to the spring-rest bin (7%): the old positive value 20 at bin 7 stayed
+as a stray entry. Fixed to -12/-10/-8/-5/0/21/22/25 (bins unchanged
+0/1/2/4/7/98/99/100): bins 98/99/100 keep the proven 21/22/25 high end,
+zero stays at the spring rest. Scanned the whole msq: every other multiline
+array constant now matches its rows/cols declaration. Bundle rebuilt so the
+shipped default tune is loadable.
