@@ -391,6 +391,21 @@ Flashing the ~670 KB app over CAN took 4-5 min (~2.75 ms per XCP frame, ~95.7k P
 - Remaining levers (NOT done): 1 Mbit/s CAN (bootloader `efi_blt_ids.h` + `CanInit` B1MBPS + PCAN_BAUD_1M) - another ~1.5-2x, but bench-only (the vehicle bus is 500k; needs OpenBLT's XCP baudrate-switch to be safe in-car), and multi-frame XCP transport (block mode) - the real floor is the single-frame request/response protocol; bxCAN has only 3 RX mailboxes so pipelining >2-3 frames risks overrun.
 - Flasher: `java_console/bin/openblt_can.sh` -> `:openblt_can:fatJar` (auto-builds) -> `com.rusefi.openblt.OpenBltCanFlasher`. Unit tests: `./gradlew :openblt_can:test`.
 
+### m74_9 flash procedure over CAN (memorized commands, run from the repo root)
+
+1. Close ALL Java (the console steals the PCAN adapter - see above). ECU powered, PCAN-USB connected.
+2. Connectivity check (connects to the bootloader, prints the station id, then PROGRAM_RESET returns the ECU to the app):
+   ```bash
+   java_console/bin/openblt_can.sh --probe
+   ```
+3. Flash the fresh srec (the jar auto-builds via `:openblt_can:fatJar` if missing; the script cd's to java_console/ so the default srec path does NOT resolve - always pass the path):
+   ```bash
+   java_console/bin/openblt_can.sh firmware/build/rusefi.srec
+   # same image under the bundle name (symlink to the file above):
+   # firmware/rusefi.snapshot.m74_9/rusefi_development_260822_m74_9_1930129764_local_update.srec
+   ```
+   Options: `--channel <n>` (default 1), `--connect-timeout <s>` (default 8), `--no-verify`, `--no-reset`, `--verbose`. No response within the timeout = old firmware without the canOpenBLT trigger: power-cycle the ECU WHILE the tool is running (the bootloader listens ~1 s after reset); the tool retries CONNECT for the whole timeout. Expected duration after the 2026-08-22 host-poll fix: ~1.5-2 min for the ~670 KB app.
+
 ## EFI_USE_OPENBLT: USE_OPENBLT=yes does NOT enable the app-side OpenBLT code
 
 `USE_OPENBLT=yes` in `meta-info.env` only adds `hw_layer/openblt/shared_params.c` to the build. The C++ side (`can_rx.cpp` CAN trigger, `jump_to_openblt()` body in the port's `*_common.cpp`, `reboot_openblt` console action, `show_blt_version`) is guarded by `EFI_USE_OPENBLT`, which is defined ONLY in `config/stm32f4ems/efifeatures.h` with default **FALSE** - and no board overrides it. A board that runs on top of the OpenBLT bootloader MUST `#define EFI_USE_OPENBLT TRUE` in its own `efifeatures.h` **before** including the stm32f4ems header (that header uses `#ifndef`).
