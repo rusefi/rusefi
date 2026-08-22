@@ -8,7 +8,11 @@
 #include "flash_int.h"
 
 bool mcuCanFlashWhileRunning() {
-	// AT32F43x bank-2 programming/erase can stall execution from bank 1.
+    /* The AT32F43X has dual-bank flash, but programming the second bank still
+     * freezes the CPU (no true read-while-write on this silicon - verified the
+     * hard way: a 2.4 s MFS GC erase mid-run stalled the engine and wedged the
+     * NT clock). Report false so settings writes take the
+     * custom_board_allowFlashNow deferral path in storage.cpp. */
 	return false;
 }
 
