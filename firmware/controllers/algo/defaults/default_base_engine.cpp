@@ -243,6 +243,16 @@ bool applyDefaultsOrFixAfterBurn(const engine_configuration_s* previousConfigura
 		changed = true;
 	}
 
+	if (engineConfiguration->fan1PwmFrequency == 0) {
+        engineConfiguration->fan1PwmFrequency = 250;
+        changed = true;
+    }
+
+    if (engineConfiguration->fan2PwmFrequency == 0) {
+        engineConfiguration->fan2PwmFrequency = 250;
+        changed = true;
+    }
+
 	if (engineConfiguration->vvtControlMinRpm < engineConfiguration->cranking.rpm) {
 		engineConfiguration->vvtControlMinRpm = engineConfiguration->cranking.rpm;
 		changed = true;
