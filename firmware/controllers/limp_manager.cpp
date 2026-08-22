@@ -90,6 +90,10 @@ void LimpManager::updateState(float rpm, efitick_t nowNt) {
 	) {
 		allowFuel.clear(ClearReason::IgnitionOff);
 		allowSpark.clear(ClearReason::IgnitionOff);
+		// Ignition off also cuts the ETB power stage: otherwise the throttle
+		// keeps being driven against the spring with the key out (PWM dither
+		// = the audible whine). Restored in onIgnitionStateChanged(true).
+		m_allowEtb.clear(ClearReason::IgnitionOff);
 	}
 #endif
 
@@ -304,6 +308,13 @@ void LimpManager::updateState(float rpm, efitick_t nowNt) {
 
 void LimpManager::onIgnitionStateChanged(bool ignitionOn) {
 	m_ignitionOn = ignitionOn;
+
+	if (ignitionOn) {
+		// The ETB power stage was cut while the key was off - bring it back.
+		// A permanent fault (Fatal/EtbProblem/...) is untouched: restore()
+		// only acts when the clear reason is exactly IgnitionOff.
+		m_allowEtb.restore(ClearReason::IgnitionOff);
+	}
 }
 
 void LimpManager::reportEtbJammed() {

@@ -69,6 +69,20 @@ public:
 		}
 	}
 
+	/**
+	 * Re-allow a previously cleared value, but only if it is still cleared
+	 * for the given reason. Lets transient cuts (e.g. ignition off) be
+	 * undone without touching permanent faults (Fatal, EtbProblem, ...).
+	 */
+	bool restore(ClearReason p_clearReason) {
+		if (!m_value && clearReason == p_clearReason) {
+			m_value = true;
+			clearReason = ClearReason::None;
+			return true;
+		}
+		return false;
+	}
+
 	operator bool() const {
 		return m_value;
 	}

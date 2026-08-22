@@ -855,6 +855,20 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 			chip->vrs_ramped = true;
 		}
 
+		/* The ramp must follow every start attempt: on a quick key cycle
+		 * neither the L9779 nor the MCU is power-cycled, so the chip's
+		 * write-only VRS registers keep the ramp END (maximum hysteresis
+		 * floor) from the previous run, and the next cranking's low-amplitude
+		 * teeth get swallowed by the floor -> C9002 + sync storm at the
+		 * catch. Re-arm the ramp START whenever the engine stops or the
+		 * ignition key goes off. */
+		bool engineStopped = Sensor::getOrZero(SensorType::Rpm) == 0;
+		bool ignitionOff = chip->key_on_valid && !chip->key_on_status;
+		if (chip->vrs_ramped && (engineStopped || ignitionOff)) {
+			chip->vrs_configure();
+			chip->vrs_ramped = false;
+		}
+
 		/* Refresh the power-stage diagnosis cache. Reading a DIA register
 		 * clears its fault bits on the chip, so this runs at a low rate;
 		 * getOutputDiag() reads the cache from other threads. */
