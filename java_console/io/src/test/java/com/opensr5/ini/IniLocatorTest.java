@@ -83,4 +83,23 @@ public class IniLocatorTest {
         writeIni(hidden, "rusefi_hidden.ini", SIG_A);
         assertNull(IniLocator.findIniFileRecursively(dir.toString(), SIG_A, 3));
     }
+
+    @Test
+    public void findLocalIniFileFallsBackToNestedSubfolder(@TempDir Path dir) throws IOException {
+        // Console launched from a folder whose ini sits one level down (an unzipped bundle dir):
+        // the startup lookup must find it without a connection status rebuild.
+        Path bundle = Files.createDirectories(dir.resolve("rusefi.snapshot.m74_9"));
+        File wanted = writeIni(bundle, "rusefi_m74_9.ini", SIG_A);
+        assertEquals(wanted.getAbsolutePath(),
+            PrimeTunerStudioCache.findLocalIniFile(dir.toString(), dir.toString()));
+    }
+
+    @Test
+    public void findLocalIniFilePrefersTopLevelMatch(@TempDir Path dir) throws IOException {
+        File topLevel = writeIni(dir, "rusefi_top.ini", SIG_A);
+        Path nested = Files.createDirectories(dir.resolve("nested/deeper"));
+        writeIni(nested, "rusefi_nested.ini", SIG_B);
+        assertEquals(topLevel.getAbsolutePath(),
+            PrimeTunerStudioCache.findLocalIniFile(dir.toString(), dir.toString()));
+    }
 }

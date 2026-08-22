@@ -46,44 +46,35 @@ public class PrimeTunerStudioCache {
     }
 
     /**
-     * @return TunerStudio's cached .ini for this signature, or null if TS has never seen it
+     * How deep {@link IniLocator#findIniFileRecursively} descends when looking for an ini in
+     * subfolders. Matches {@code RealIniFileProvider.MAX_LOCAL_INI_DEPTH} so the startup lookup
+     * sees the same files as the connect-time provider.
      */
-    @Nullable
-    public static String findInTunerStudioCache(String signature) {
-        return findInTunerStudioCache(signature, ECU_DEF_FOLDER);
-    }
-
-    // package-private for tests
-    @Nullable
-    static String findInTunerStudioCache(String signature, String ecuDefFolder) {
-        if (signature == null) {
-            return null;
-        }
-        File candidate = new File(ecuDefFolder + ecuDefFileName(signature));
-        if (!candidate.isFile()) {
-            log.info("Not found in TunerStudio cache: " + candidate);
-            return null;
-        }
-        // the file is named after the signature but we still verify the content: a stale or
-        // hand-edited file with the wrong signature would be worse than no file at all
-        String actualSignature = IniLocator.readIniSignature(candidate);
-        if (!signature.equals(actualSignature)) {
-            log.warn("TunerStudio cache " + candidate + " declares signature [" + actualSignature + "], expected [" + signature + "]");
-            return null;
-        }
-        log.info("Found in TunerStudio cache " + candidate);
-        return candidate.getAbsolutePath();
-    }
-
-    private static String ecuDefFileName(String signature) {
-        return signature.replaceAll(" ", "") + ".ini";
-    }
+    private static final int MAX_LOCAL_INI_DEPTH = 3;
 
     public static String findLocalIniFile() {
-        @Nullable String localIniFile = IniLocator.findIniFile(".");
+        return findLocalIniFile(".", IniFileReader.INI_FILE_PATH);
+    }
+
+    /**
+     * Search order mirrors the connect-time provider (see {@code RealIniFileProvider.provide}):
+     * top-level {@code currentDir} and {@code fallbackPath}, then both recursively. The recursive
+     * steps matter when the console runs from a folder whose ini sits in a nested subfolder (an
+     * unzipped bundle dir, a repo checkout): without them the startup {@code IniFileModel} is null,
+     * gauges keep their raw key names and the front-page indicator panel never appears until a
+     * connection status change happens to rebuild the UI.
+     */
+    static String findLocalIniFile(String currentDir, String fallbackPath) {
+        @Nullable String localIniFile = IniLocator.findIniFile(currentDir);
         if (localIniFile == null) {
             // another option: one level up or environment variable direction
-            localIniFile = IniLocator.findIniFile(IniFileReader.INI_FILE_PATH);
+            localIniFile = IniLocator.findIniFile(fallbackPath);
+        }
+        if (localIniFile == null) {
+            localIniFile = IniLocator.findIniFileRecursively(currentDir, null, MAX_LOCAL_INI_DEPTH);
+        }
+        if (localIniFile == null) {
+            localIniFile = IniLocator.findIniFileRecursively(fallbackPath, null, MAX_LOCAL_INI_DEPTH);
         }
         return localIniFile;
     }
