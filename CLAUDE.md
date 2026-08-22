@@ -234,6 +234,10 @@ Key preprocessor flags that control compilation. These three are **mutually excl
 - `EFI_SIMULATOR=1` - Desktop simulator build (`simulator/`), ChibiOS available via the simulator port.
 - `EFI_UNIT_TEST=1` - Host-side Google Test build under `unit_tests/`. No ChibiOS, no real HAL — runs as a plain native binary on Linux (GCC/Clang), macOS (Clang) and Windows (MSVC and MinGW).
 
+### CRITICAL: the firmware build passes `-DEFI_UNIT_TEST=0` on the command line
+
+`defined(EFI_UNIT_TEST)` is therefore **always TRUE in every build** (firmware, simulator AND unit tests). Any guard written as `#if !defined(EFI_UNIT_TEST)` is dead code everywhere - use the VALUE `#if !EFI_UNIT_TEST` (or `#if EFI_UNIT_TEST == 0`). Learned the hard way 2026-08-22: the m74_9 storage-deferral gate was written as `#if EFI_SHAFT_POSITION_INPUT && !defined(EFI_UNIT_TEST)` and never compiled - the LTFT saves kept writing to the internal-flash MFS every ~5 s while the engine ran, and the 2.4 s GC erase stalled the CPU mid-run (C9002/C9007 + engine stopped). Same for the older settings-gate in storage.cpp: `(EFI_STORAGE_INT_FLASH == TRUE) || defined(EFI_UNIT_TEST)` is active on m74_9 (INT_FLASH=FALSE) purely because defined() is true - that one happens to be wanted, but it was not what the condition says.
+
 #### Using `EFI_UNIT_TEST` in code
 
 - `#if EFI_UNIT_TEST` — include a host-only path: stub out HAL/ChibiOS/board-specific calls, expose extra accessors for tests, or substitute portable C++ for embedded primitives.

@@ -6015,3 +6015,34 @@ as a stray entry. Fixed to -12/-10/-8/-5/0/21/22/25 (bins unchanged
 zero stays at the spring rest. Scanned the whole msq: every other multiline
 array constant now matches its rows/cols declaration. Bundle rebuilt so the
 shipped default tune is loadable.
+
+## 2026-08-22 (evening) - root cause of the recurring mid-run stall: the storage deferral gate was DEAD CODE
+
+The engine stalled again at 19:23:48 and 19:36:09 (C9002 "expected 58/0 got
+58/0" + C9007, TLE9201 outputs disabled, MFS write 2451 ms status 2) - the
+14:39 wedge signature, despite the 15:48 "defer storage writes" fix being
+flashed. The user also noticed writes to flash every ~5 s without pressing
+burn (LTFT auto-saves).
+
+Root cause: the firmware build passes -DEFI_UNIT_TEST=0 on the command line,
+so defined(EFI_UNIT_TEST) is TRUE in EVERY build. The fix's gate was
+guarded by `#if EFI_SHAFT_POSITION_INPUT && !defined(EFI_UNIT_TEST)` -
+never compiled, in firmware OR unit tests (1156/1156 green could not catch
+it). Proven two ways: preprocessing the exact build command (the gate
+vanished from storageAllowWriteID) and disassembling the storage manager
+loop (straight storageIsIdAvailableForId -> storageWriteID, no gate; exactly
+one reference to custom_board_allowFlashNow - the assignment).
+
+Fixes:
+- storage.cpp: the all-IDs gate guard is now `!EFI_UNIT_TEST` (value).
+  Verified in the rebuilt ELF: the manager loop now consults
+  get_board_override_result(custom_board_allowFlashNow) and defers writes
+  while the engine runs.
+- AT32 mpu_util.cpp: mcuCanFlashWhileRunning() returned true "for dual-bank"
+  while the TODO admits the CPU still freezes during a bank-2 write - now
+  returns false, so the settings path also takes the deferral gate.
+- CLAUDE.md: recorded the -DEFI_UNIT_TEST=0 gotcha (defined() is always true;
+  use the value).
+
+Firmware rebuilt (build/rusefi.srec 19:46, deliver/rusefi.bin 19:47) and the
+bundle re-zipped. The ECU must be reflashed for the fix to take effect.
