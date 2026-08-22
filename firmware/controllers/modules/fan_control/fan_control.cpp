@@ -79,8 +79,12 @@ void FanController::initPwm() {
 	if (!isBrainPinValid(getConfigPin())) {
 		return;
 	}
-	startSimplePwm(&m_pwm, "Fan PWM", &engine->scheduler, &getPin(), getPwmFrequency(), 0);
-	m_pwmInitialized = true;
+
+	float freq = getPwmFrequency();
+    if (freq > 0) {
+        startSimplePwm(&m_pwm, "Fan PWM", &engine->scheduler, &getPin(), freq, 0);
+        m_pwmInitialized = true;
+	}
 #endif
 }
 
