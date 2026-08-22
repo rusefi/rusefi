@@ -5849,3 +5849,26 @@ Open follow-ups: burn 21129.msq (bias+/range 30/fan 0/gap 4.5), log warm
 idle; decide on the noise filter (currently off); if a trigger storm ever
 returns, the frozen-NT-clock auto-reset remains an option but should no
 longer be needed.
+
+## 2026-08-22 (late evening) - pedalToTpsTable made 1:1
+
+The user asked for the throttle to follow the pedal 1:1 ("14 on the
+pedal is 14 at the throttle"). The old table was a row-flat map (any
+pedal above zero opened a fixed TPS per rpm row), which made the
+throttle feel disconnected from the pedal.
+
+Changes (commit d25713ff6b6):
+- 21129.msq pedalToTpsTable: every rpm row is now the diagonal
+  0/14/29/43/57/71/86/100 against the same pedal bins, so pedal % =
+  TPS % everywhere.
+- The 700 rpm row stays all-zero as requested ("zeros at the start"),
+  so at the lowest table row the throttle request is still zero.
+
+Deliberately NOT touched: etbBiasValues (it is a feedforward DUTY
+curve, not a position map) and the idle path (the idle target still
+sums on top of the pedal map via etbIdleAddition, so idle behavior is
+unchanged).
+
+Open follow-ups: reflash the storage-deferral build once the PCAN
+adapter is reconnected, burn the updated msq, then re-check warm idle
+and pedal feel from a fresh binary log.
