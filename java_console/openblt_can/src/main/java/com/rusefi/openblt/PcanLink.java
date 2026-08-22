@@ -11,6 +11,7 @@ import peak.can.basic.TPCANType;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.concurrent.locks.LockSupport;
 
 /**
  * CanLink over PCANBasic. On macOS this loads libpcanbasic_jni.dylib, which
@@ -71,13 +72,17 @@ public class PcanLink implements CanLink {
             if (status != TPCANStatus.PCAN_ERROR_QRCVEMPTY) {
                 throw new IOException("PCAN Read failed: " + status);
             }
-            // MacCAN's Read does not block: poll on a 1 ms granularity.
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new IOException("Interrupted while waiting for CAN frame", e);
+            // MacCAN's Read does not block: poll at fine granularity instead
+            // of a coarse Thread.sleep(1). The 1 ms granularity costs ~2 ms
+            // per XCP frame (~100k frames per 670 KB image = 4+ min); the ECU
+            // reply normally lands ~0.5-1 ms after the request, so busy-spin
+            // that window and fall back to short parks only for slower replies
+            // (erase, connect).
+            long spinUntil = System.nanoTime() + 1_000_000L; // 1 ms busy spin
+            while (System.nanoTime() < spinUntil) {
+                Thread.onSpinWait();
             }
+            LockSupport.parkNanos(100_000L); // 0.1 ms slices for slow replies
         }
         return null;
     }
