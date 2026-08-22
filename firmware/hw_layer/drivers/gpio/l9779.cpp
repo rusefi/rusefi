@@ -221,7 +221,7 @@ struct L9779 : public GpioChip {
 	int chip_init_data();
 	int chip_init();
 	int vrs_configure();
-	int vrs_ramp_up();
+	int vrs_ramp_to_step(int step);
 	int wd_feed();
 	void debug() override;
 
@@ -289,10 +289,11 @@ struct L9779 : public GpioChip {
 	 * with a single START re-issue. */
 	bool						out_dis_latched;
 	bool						out_dis_clear_tried;
-	/* VRS hysteresis ramp: false = stock ramp START written, true = the
-	 * ramp END (maximum floor) has been written once cranking amplitude is
-	 * established (see vrs_configure/vrs_ramp_up). */
-	bool						vrs_ramped = false;
+	/* VRS hysteresis ramp: step 0 = stock ramp START written (chip_init /
+	 * re-arm), steps 1..3 = the stock config script ramp (see
+	 * vrs_configure/vrs_ramp_to_step). Advanced by rpm thresholds from the
+	 * driver thread, re-armed per start attempt. */
+	int							vrs_step = 0;
 	/* Last moment the engine was NOT stopped - debounces the ramp re-arm
 	 * (see the driver thread: a trigger storm flaps rpm 0/300+ at ~1 kHz
 	 * and would toggle the VRS config at the same rate). */
@@ -847,12 +848,17 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 			now = chVTGetSystemTimeX();
 		}
 
-		/* Stock-style VRS hysteresis ramp: once the cranking signal
-		 * amplitude is established, step the conditioner to the maximum
-		 * hysteresis floor (stock config script end) to reject noise. */
-		if (!chip->vrs_ramped && Sensor::getOrZero(SensorType::Rpm) >= 300) {
-			chip->vrs_ramp_up();
-			chip->vrs_ramped = true;
+		/* Stock-style VRS hysteresis ramp: the chip's peak detector is not
+		 * readable (write-only registers), so rpm is the only proxy for the
+		 * growing cranking signal amplitude. Step the hysteresis floor up
+		 * through the stock's 4-step config script; the last step lands
+		 * exactly at cranking_rpm, so the conditioner is in its final state
+		 * the moment the engine is declared running. */
+		static const float VRS_RAMP_RPM[3] = { 150.0f, 300.0f, 600.0f };
+		if (chip->vrs_step < 3 &&
+				Sensor::getOrZero(SensorType::Rpm) >= VRS_RAMP_RPM[chip->vrs_step]) {
+			chip->vrs_step++;
+			chip->vrs_ramp_to_step(chip->vrs_step);
 		}
 
 		/* The ramp must follow every start attempt: on a quick key cycle
@@ -875,9 +881,9 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 		bool ignitionOff = chip->key_on_valid && !chip->key_on_status;
 		bool stoppedLongEnough = engineStopped &&
 			(now - chip->vrs_stop_ts) >= TIME_MS2I(500);
-		if (chip->vrs_ramped && (stoppedLongEnough || ignitionOff)) {
+		if (chip->vrs_step > 0 && (stoppedLongEnough || ignitionOff)) {
 			chip->vrs_configure();
-			chip->vrs_ramped = false;
+			chip->vrs_step = 0;
 		}
 
 		/* Refresh the power-stage diagnosis cache. Reading a DIA register
@@ -1231,68 +1237,60 @@ err_gpios:
  * CONFIG_REG5 bit5 doubles as the VRS diagnosis enable in this mode
  * (open/short detection of the sensor, datasheet 6.14).
  */
+/*
+ * Stock VRS hysteresis ramp, extracted from the Lada M74 stock firmware
+ * (Read_FULLFLASH_I865LB52_w2404b1____(240626_103727).bin, the L9779
+ * "IC_EMS" module, config script at 0x4EF8C):
+ *   REG1: 0x02 (full adaptive only)
+ *   REG5: 0x0C -> 0x0D -> 0x0E -> 0x0F  (VRS_HYST 100..111)
+ *   REG4: 0x0B -> 0x0A -> 0x09 -> 0x08
+ *   REG6: 0x07 -> 0x05 -> 0x06
+ * The stock steps the hysteresis floor up as the cranking signal amplitude
+ * grows and ends at VRS_HYST 111, handing the conditioner over to the
+ * fully-adaptive loop once the amplitude is established.
+ *
+ * Step 0 is the ramp START (low floor - low cranking signal amplitude),
+ * written by vrs_configure() at init and on every start re-arm; steps 1..3
+ * are advanced by rpm thresholds from the driver thread.
+ */
+static const uint8_t vrs_ramp_cfg4[] = { 0x0b, 0x0a, 0x09, 0x08 };
+static const uint8_t vrs_ramp_cfg5[] = { 0x0c, 0x0d, 0x0e, 0x0f };
+static const uint8_t vrs_ramp_cfg6[] = { 0x07, 0x05, 0x05, 0x06 };
+
 int L9779::vrs_configure(void)
 {
-	/* Stock ECU VRS configuration, extracted from the Lada M74 stock firmware
-	 * dump (Read_FULLFLASH_I865LB52_w2404b1____(240626_103727).bin, the
-	 * L9779 "IC_EMS" module, config script after the WDA response table at
-	 * 0x4EF8C):
-	 *   REG1: ramp 0x86..0x02 (final 0x02 = full adaptive only)
-	 *   REG5: 0x0C -> 0x0D -> 0x0E -> 0x0F  (VRS_HYST 100..111: the MCU
-	 *         RAMPS the hysteresis floor up as the signal amplitude grows)
-	 *   REG4: 0x0B -> 0x0A -> 0x09 -> 0x08
-	 *   REG6: 0x07 -> 0x05 -> 0x06
-	 * Our previous guess (REG1=0x0A, REG5=0xF9) selected the SMALLEST
-	 * hysteresis floor (VRS_HYST 001 = 5 uA = ~100 mV with the 10k ext
-	 * resistors) - maximum noise sensitivity, and the cranking noise came
-	 * straight through the conditioner. The stock ends at VRS_HYST 111
-	 * (maximum floor) with the mode bits cleared.
-	 *
-	 * We start at the stock's ramp START (low floor - low cranking signal
-	 * amplitude) and switch to the ramp END once the engine is clearly
-	 * cranking (vrs_ramp_up, from the driver thread). */
+	/* Full adaptive mode + the stock's ramp START. */
 	static const uint8_t cfg1 = 0x02;
-	static const uint8_t cfg4 = 0x0b;
-	static const uint8_t cfg5 = 0x0c;
-	static const uint8_t cfg6 = 0x07;
 
 	int ret = spi_rw(MSG_W(0x01, cfg1), NULL);
 	if (ret)
 		return ret;
-	ret = spi_rw(MSG_W(0x04, cfg4), NULL);
-	if (ret)
-		return ret;
-	ret = spi_rw(MSG_W(0x05, cfg5), NULL);
-	if (ret)
-		return ret;
-	ret = spi_rw(MSG_W(0x06, cfg6), NULL);
+	ret = vrs_ramp_to_step(0);
 	if (ret)
 		return ret;
 
-	efiPrintf(DRIVER_NAME " VRS: stock ramp start (REG1=0x%02x REG4=0x%02x REG5=0x%02x REG6=0x%02x)", cfg1, cfg4, cfg5, cfg6);
+	efiPrintf(DRIVER_NAME " VRS: stock ramp start (REG1=0x%02x REG4=0x%02x REG5=0x%02x REG6=0x%02x)", cfg1, vrs_ramp_cfg4[0], vrs_ramp_cfg5[0], vrs_ramp_cfg6[0]);
 	return 0;
 }
 
-int L9779::vrs_ramp_up(void)
+int L9779::vrs_ramp_to_step(int step)
 {
-	/* Stock ramp END: maximum hysteresis floor, written once the cranking
-	 * signal amplitude is established (~300 rpm) - the software half of the
-	 * stock's adaptive conditioning. */
-	static const uint8_t cfg4 = 0x08;
-	static const uint8_t cfg5 = 0x0f;
-	static const uint8_t cfg6 = 0x06;
+	/* 0 = ramp start, 3 = ramp end (maximum floor -> fully-adaptive
+	 * handover). Steps 1..3 mirror the stock config script. */
+	if (step < 0 || step > 3)
+		return -1;
 
-	int ret = spi_rw(MSG_W(0x04, cfg4), NULL);
+	int ret = spi_rw(MSG_W(0x04, vrs_ramp_cfg4[step]), NULL);
 	if (ret)
 		return ret;
-	ret = spi_rw(MSG_W(0x05, cfg5), NULL);
+	ret = spi_rw(MSG_W(0x05, vrs_ramp_cfg5[step]), NULL);
 	if (ret)
 		return ret;
-	ret = spi_rw(MSG_W(0x06, cfg6), NULL);
+	ret = spi_rw(MSG_W(0x06, vrs_ramp_cfg6[step]), NULL);
 	if (ret)
 		return ret;
 
-	efiPrintf(DRIVER_NAME " VRS: stock ramp end (REG4=0x%02x REG5=0x%02x REG6=0x%02x)", cfg4, cfg5, cfg6);
+	efiPrintf(DRIVER_NAME " VRS: stock ramp step %d (REG4=0x%02x REG5=0x%02x REG6=0x%02x)", step, vrs_ramp_cfg4[step], vrs_ramp_cfg5[step], vrs_ramp_cfg6[step]);
 	return 0;
 }
 
