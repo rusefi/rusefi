@@ -8,10 +8,12 @@
 #include "flash_int.h"
 
 bool mcuCanFlashWhileRunning() {
-    /* TODO: check for actual flash configuration? */
-    /* currently we support only AT32F43X with dual-bank flash, so allow flashing to second bank */
-    /* TODO: Seems AT32 is still freezes even write is happen to second bank, while executing code from first */
-	return true;
+    /* The AT32F43X has dual-bank flash, but programming the second bank still
+     * freezes the CPU (no true read-while-write on this silicon - verified the
+     * hard way: a 2.4 s MFS GC erase mid-run stalled the engine and wedged the
+     * NT clock). Report false so settings writes take the
+     * custom_board_allowFlashNow deferral path in storage.cpp. */
+	return false;
 }
 
 /* TODO: fix name! */
