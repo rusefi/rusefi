@@ -272,6 +272,20 @@ float getAnalogInputDividerCoefficient(adc_channel_e hwChannel) {
 	if (hwChannel == EFI_ADC_1 || hwChannel == EFI_ADC_10 || hwChannel == EFI_ADC_11 || hwChannel == EFI_ADC_12 || hwChannel == EFI_ADC_13) {
 		return 1.555f;
 	}
+
+	/* Narrowband lambda input AK3 -> PF3 (EFI_ADC_37) is a direct 1:1 input,
+	 * NO divider. Proven from the 2026-08-22 logs with a known-very-rich
+	 * mixture: a rich narrowband saturates at ~0.85-0.9 V and PF3 raw read
+	 * exactly 0.77-0.87 V (MLGs 13_02_39 min 0.843 V, 14_46_52 min 0.770 V).
+	 * A 2:1 divider would read ~0.42-0.45 V, the board's 1.555 divider
+	 * ~0.55 V - neither matches. With the global 2.0 coefficient the hot
+	 * sensor shows 1.7 V - above the AFR curve top (0.9 V), so the gauge
+	 * extrapolates into meaningless AFRs. Cold/disconnected sensor floats at
+	 * 3.23 V raw (6.46 V "input") - the board pull-up for open-circuit
+	 * detection, not a mixture value. */
+	if (hwChannel == EFI_ADC_37) {
+		return 1.0f;
+	}
 	return engineConfiguration->analogInputDividerCoefficient;
 }
 
