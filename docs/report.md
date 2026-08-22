@@ -6046,3 +6046,32 @@ Fixes:
 
 Firmware rebuilt (build/rusefi.srec 19:46, deliver/rusefi.bin 19:47) and the
 bundle re-zipped. The ECU must be reflashed for the fix to take effect.
+
+## 2026-08-22 (night) - open-loop idle table expanded 2 -> 16 target-RPM bins; flashed
+
+The cltIdleCorrTable had only 2 RPM bins (700 and 7000) with a flat row
+(30/26/20/15/11/11/11/9), so the 5 s idleReturnTargetRamp (target+700 ->
+target) rode a flat curve: after cranking the blade dropped too fast and the
+engine stalled, and a flat value high enough to survive the entry made the
+settled idle too high (user: 20 works but idle high, 10 stalls).
+
+Change (commit e70b80fd92a):
+- firmware/integration/rusefi_config.txt: CLT_IDLE_TABLE_RPM_SIZE 2 -> 16,
+  FLASH_DATA_VERSION 260805 -> 260822 (struct layout change).
+- firmware/config/boards/m74_9/21129.msq: rpmIdleCorrBins now 700..2200 step
+  100; cltIdleCorrTable now 16x8, warm columns (CLT 60..140) go 8 -> 9.9
+  (at 1000 rpm) -> 21.5 (2200 rpm), i.e. +0.9 per 100 rpm; cold columns keep
+  the old shape shifted +0.9 per 100 rpm (27..40.5 at 700..2200). The settled
+  warm idle (~840 rpm) now requests ~9.3% instead of 11%, while the ramp
+  entry (1540 rpm) requests ~16.5% instead of 11% - more air during entry,
+  less at settle. This is a first cut; validate on the car.
+
+Validation: bundle rebuilt (artifacts/rusefi_bundle_m74_9.zip 20:15,
+signature 1767756910); CAN flash of build/rusefi.srec: 669756 bytes, checksum
+verified, 266.3 s; ECU reset into the new firmware.
+
+IMPORTANT follow-up for the user: FLASH_DATA_VERSION changed, so the stored
+tune is incompatible with the new firmware - load 21129.msq in TunerStudio
+and Burn once before running. Then watch: baseidleposition should ramp down
+with the target during the 5 s idleReturnTargetRamp; no MFS "Writing storage
+ID 3" lines while running; no C9002/C9007; steady warm idle status near 0.
