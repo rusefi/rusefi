@@ -49,6 +49,8 @@ public class TuningPane {
     private final TuneOperationStatusPanel loadStatusCard;
     private final CalibrationDialogWidget right;
     private TextGaugeStrip gaugeStrip;
+    /** Hosts the front-page indicator panel; rebuilt when the ini model changes (startup/connect). */
+    private final JPanel indicatorPanelContainer = new JPanel();
     /** Accumulated tune edits across all dialogs for this session. Field so offline seeding can set it. */
     private final AtomicReference<ConfigurationImage> sessionImage = new AtomicReference<>();
     /** Single-element holder for the currently displayed menu key. Field so the connect handler can access it. */
@@ -238,6 +240,10 @@ public class TuningPane {
             } else {
                 SwingUtilities.invokeLater(() -> {
                     triggerPrevValues.clear();
+                    // The connected ECU's ini model is loaded by now (connectAndReadConfiguration
+                    // completes before onConnectionEstablished fires) - rebuild the front-page
+                    // indicators so they appear even if the startup model was missing or stale.
+                    rebuildIndicatorPanel();
                     BinaryProtocol bp = uiContext.getBinaryProtocol();
                     if (bp == null || bp.getControllerConfiguration() == null) {
                         return;
@@ -271,10 +277,9 @@ public class TuningPane {
         JPanel northPanel = new JPanel();
         northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
         northPanel.add(toolbar.getPanel());
-        JPanel indicatorPanel = buildFrontendIndicatorPanel(uiContext);
-        if (indicatorPanel != null) {
-            northPanel.add(indicatorPanel);
-        }
+        indicatorPanelContainer.setLayout(new BorderLayout());
+        rebuildIndicatorPanel();
+        northPanel.add(indicatorPanelContainer);
         if (gaugeStrip != null) {
             northPanel.add(gaugeStrip.getContent());
         }
@@ -301,6 +306,16 @@ public class TuningPane {
             return null;
         }
         return new IndicatorPanel(indicators, ini, 0).getPanel();
+    }
+
+    private void rebuildIndicatorPanel() {
+        indicatorPanelContainer.removeAll();
+        JPanel indicatorPanel = buildFrontendIndicatorPanel(uiContext);
+        if (indicatorPanel != null) {
+            indicatorPanelContainer.add(indicatorPanel, BorderLayout.CENTER);
+        }
+        indicatorPanelContainer.revalidate();
+        indicatorPanelContainer.repaint();
     }
 
     public JPanel getContent() {
