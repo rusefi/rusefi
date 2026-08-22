@@ -36,12 +36,12 @@
         <constant digits="4" name="afrExpAverageAlpha" units="">1.0</constant>
         <constant name="afrOverrideMode">"MAP"</constant>
         <constant cols="1" digits="1" name="afterCrankingIACtaperDuration" rows="6" units="cycles">
-         15.0
-         12.0
-         10.0
-         8.0
-         5.0
-         5.0
+         20.0
+         20.0
+         25.0
+         25.0
+         30.0
+         30.0
 </constant>
         <constant cols="1" digits="2" name="afterCrankingIACtaperDurationBins" rows="6" units="{bitStringValue(unitsLabels, useMetricOnInterface)}">
          -40.0
