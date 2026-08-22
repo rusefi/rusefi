@@ -5908,3 +5908,97 @@ Open follow-ups: reflash the storage-deferral build once PCAN is back,
 burn this msq, log warm idle and check that duty at the ~5% target is
 -15..-20 with the integral off the rail, then tune point by point with
 bias += (duty - ff) from steady-state logs.
+
+## 2026-08-22 (afternoon) - m74_9 lambda log analysis: AK3/PF3 input is 1:1, divider 2.0 was wrong
+
+User request: find the correct reference voltage for the narrowband
+lambda - the displayed voltage was too high (narrowband range is
+0.1-0.9 V; mixture on the car was known very rich).
+
+Analysis (logs only, KiCad not trusted for this board):
+
+| Source | PF3 raw | "input" (x2) | Meaning |
+| --- | --- | --- | --- |
+| bench MLGs 15:00-15:02 (22.08) | 3.23 V | 6.46 V | pull-up rail: sensor cold/disconnected |
+| adcdebug efi_log 21_20_17 (21.08) | 3.231 -> 1.479 -> 0.623 -> 0.79-0.95 -> 1.19-1.34 V | - | sensor warming on the running engine, re-catch C9002 at 21:35:21 |
+| MLG 13_02_39 (22.08) | min 0.843 V | 1.686 V | hot sensor, very rich mixture |
+| MLG 14_46_52 (22.08) | 1.488 -> 0.770 V (still falling) | 1.541 V min | warmup trace, gauge AFR 11.4->13.2 = pure extrapolation, loop inactive (stft 100%) |
+| MLG 15_04_25 (22.08) | rising 2.26 -> 2.51 V | 4.5 -> 5.0 V | cooling back up at idle (heater off) |
+
+Conclusion: AK3/PF3/EFI_ADC_37 has NO divider - with a very rich mixture
+the sensor saturates at ~0.85-0.9 V and the pin reads exactly 0.77-0.87 V
+(a 2:1 divider would read ~0.42-0.45 V, the 1.555 chain ~0.55 V). Correct
+reference for the AFR curve: 0.1-0.9 V direct (stoich ~0.45 V, very rich
+~0.85-0.9 V). The 2.0 global analogInputDividerCoefficient was applied to
+the channel, doubling every reading - the "voltage too high" complaint.
+The 6.46 V rail is the input pull-up for open-circuit detection, not a
+mixture value. adcdebug also confirms PF3 is the only pin that leaves its
+rail with exhaust heat (PF4 switched once and stayed; PF5/6/7/9/10, PC5
+flat; PC0/1/3 move only with the pedal).
+
+Fix (this commit): getAnalogInputDividerCoefficient() in
+board_configuration.cpp returns 1.0f for EFI_ADC_37 (precedent: s105 does
+the same for its AFR channel). MAP/TPS/PPS stay 1.555, everything else
+keeps the global 2.0. Board build (compile_m74_9.sh) clean.
+
+Corrections to earlier notes: the O2 heater IS enabled in the tune
+(o2heaterPin = L9779_OUT_6, msq line 3202) - "heater left off as
+requested" is outdated. m74_9 has no "Narrow Band" afr_type preset, only
+Custom (msq curve: 0.1 V -> 15 AFR, 0.9 V -> 14 AFR).
+
+Open follow-ups:
+- With divider 1.0 the current curve tops out at 14.0 AFR at full rich, so
+  "very rich" displays ~14.0 and a closed-loop target of 13.2 is
+  unreachable (STFT enriches to its authority). Curve re-anchor (e.g.
+  0.9 V -> 12.5 AFR) is a separate tuning decision - user to confirm.
+- There is no voltage-based readiness gate for the analog narrowband
+  (FunctionPointerSensor always valid, lambdaCurrentlyGood is the
+  protection monitor): closed loop can chase a cold sensor on the 3.23 V
+  rail. Needs a voltage threshold (~<1 V) and/or the heater working.
+
+## 2026-08-22 (evening) - bundle build: BUNDLE_DATE now defaults to today
+
+The per-board bundle (console + merged bin + OpenBLT srec + ini + default
+tune in one zip) is built with:
+
+  cd firmware
+  export PATH="/opt/arm-gnu-toolchain/bin:$PATH"
+  bash bin/compile.sh -b config/boards/m74_9/meta-info.env
+
+Output: artifacts/rusefi_bundle_m74_9.zip (rusefi.snapshot.m74_9/ with
+console/rusefi_console.jar, rusefi_development_260822_m74_9_1930129764_local.bin
+and _update.srec, rusefi_m74_9.ini, tune/21129.msq, bin/device/openblt_*.bin,
+updater launchers, drivers).
+
+bundle.mk change: BUNDLE_DATE defaults to $(shell date +%y%m%d) instead of
+the literal "yymmdd", so local builds no longer need the env var (CI passes
+it explicitly and still wins). First run of the day must clean the stale
+rusefi.snapshot.m74_9/ and the old zip before re-zipping - zip -r never
+removes obsolete entries, and a stale 11:48 srec without the lambda divider
+fix had lingered in the archive from the earlier build.
+
+The zip warnings "name not matched: rusefi.snapshot.m74_9/bin/*" are normal:
+bundle.mk symlinks java_console/bin helper scripts with ln -fs (no -r on
+macOS), the relative targets dangle and zip skips them - not a deliverable.
+
+This bundle carries the lambda divider fix (getAnalogInputDividerCoefficient
+returns 1.0 for EFI_ADC_37): deliver/rusefi.bin 17:09 (702644 bytes),
+rusefi_development_260822_*_local_update.srec 17:05 - flash the srec via
+OpenBLT to get the fix on the ECU.
+
+## 2026-08-22 (evening) - OpenBLT CAN flashing: 4-5 min -> ~1.5-2 min (host poll fix)
+
+Analysis of the 4-5 min CAN flash of the ~670 KB app: 95.7k PROGRAM_MAX
+frames x ~2.75 ms/frame. Per frame: CAN bus 500k request+response ~0.52 ms,
+bootloader XCP + 2-3 AT32 word programs ~0.2-0.4 ms, host poll ~1.5-2 ms -
+the bottleneck was PcanLink.readFrame's Thread.sleep(1) (MacCAN Read does
+not block, so every empty read cost a full 1 ms+). Fixed: 1 ms
+Thread.onSpinWait spin + LockSupport.parkNanos(100 us) fallback in
+java_console/openblt_can/src/main/java/com/rusefi/openblt/PcanLink.java.
+:openblt_can:test + fatJar green, jar rebuilt. Expected total ~1.5-2 min.
+
+Remaining levers (not done): 1 Mbit/s CAN (bootloader efi_blt_ids.h + CanInit
+B1MBPS + PCAN_BAUD_1M) - bench-only, the vehicle bus is 500k and the fork has
+no XCP baudrate-switch; multi-frame XCP block mode - the real floor of the
+single-frame request/response protocol (bxCAN has only 3 RX mailboxes, so
+pipelining more than 2-3 frames risks overrun).
