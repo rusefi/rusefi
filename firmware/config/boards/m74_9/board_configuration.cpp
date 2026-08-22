@@ -761,6 +761,18 @@ void setup_custom_board_overrides() {
 	// counter race (extra sync validation per revolution). Re-enable only if
 	// a catch C9003 'got 56/0' returns.
 	custom_board_syncEarlyGapWhileCranking = []() { return false; };
+	// Storage writes must be deferred while the engine runs: the MFS lives on
+	// the AT32 internal flash (bank 2) and a sector erase stalls the whole CPU
+	// (no read-while-erase on this silicon). The periodic LTFT save hitting an
+	// MFS garbage collection froze the firmware for ~2.4 s mid-run and wedged
+	// the NT clock (14:39 'gap in time' flood, identical now= forever, only a
+	// power cycle recovers - throttle stayed driven). Deferred writes are
+	// flushed by the storage manager once the engine stops; self-stimulation
+	// (bench) stays allowed.
+	custom_board_allowFlashNow = []() {
+		return engine->triggerCentral.directSelfStimulation ||
+			engine->rpmCalculator.isStopped();
+	};
 	// VR input debounce: the trigger logs show noise edge bursts <50 us apart
 	// (comparator ringing / starter interference) that inflate the event count
 	// and false-sync the decoder mid-crank. The threshold is RPM-adaptive

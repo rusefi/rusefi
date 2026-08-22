@@ -56,6 +56,21 @@ bool storageAllowWriteID(StorageItemId id)
 	}
 #endif // EFI_STORAGE_INT_FLASH
 
+#if EFI_SHAFT_POSITION_INPUT && !defined(EFI_UNIT_TEST)
+	/* Boards whose (only) storage backend sits on the INTERNAL flash - e.g.
+	 * AT32 m74_9: the MFS lives on flash bank 2 - stall the whole CPU during
+	 * a sector erase (no read-while-erase on this silicon). A periodic write
+	 * (LTFT saves every ~5 s) that hits MFS garbage collection then freezes
+	 * the firmware for ~2.4 s mid-run and wedges the NT clock - the 14:39
+	 * 'gap in time' signature (identical now= forever, only a power cycle
+	 * recovers). The board opts in by returning false from
+	 * custom_board_allowFlashNow while the engine runs; deferred writes are
+	 * flushed by the storage manager once the engine stops. */
+	if (!get_board_override_result(custom_board_allowFlashNow, true)) {
+		return false;
+	}
+#endif // EFI_SHAFT_POSITION_INPUT && !defined(EFI_UNIT_TEST)
+
 	// TODO: we expect every other ID to be stored in external flash...
 	return true;
 }

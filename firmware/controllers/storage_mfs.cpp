@@ -57,6 +57,13 @@ StorageStatus SettingStorageMFS::store(size_t id, const uint8_t *ptr, size_t siz
 	efiPrintf("MFS: Writing storage ID %d ... %d bytes", id, size);
 	efitick_t startNt = getTimeNowNt();
 
+	/* An MFS garbage-collection write on internal flash can stall the CPU for
+	 * seconds (the ~2.4 s erase on AT32). These writes are deferred until the
+	 * engine stops (see storageAllowWriteID), but even then the stall would
+	 * trip the linear-time watchdog - suspend it for the duration, same as
+	 * the internal-flash settings path. */
+	suspendLinearTimeWatcher();
+
 	// TODO: add watchdog disable and enable in case MFS is on internal flash and one bank
 	mfs_error_t err = mfsWriteRecord(m_drv, id, size, ptr);
 
