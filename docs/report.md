@@ -6075,3 +6075,37 @@ tune is incompatible with the new firmware - load 21129.msq in TunerStudio
 and Burn once before running. Then watch: baseidleposition should ramp down
 with the target during the 5 s idleReturnTargetRamp; no MFS "Writing storage
 ID 3" lines while running; no C9002/C9007; steady warm idle status near 0.
+
+## 2026-08-22 (late night) - console restart roulette: raw gauge names + missing indicators fixed
+
+User: gauges showed raw key names (RPMGauge/CLTGauge) and the front-page
+indicators were missing; restarting the console a few times made values
+appear. Logs (artifacts/logs/efi_log_2026-08-22_20_42/20_44_*.log.0) show
+every session began with "PrimeTunerStudioCache - .ini file not located"
+and "Gauge not found by RPMGauge (no ini model)" at startup, then resolved
+only after a connection-status rebuild fired post-connect.
+
+Root cause: PrimeTunerStudioCache.findLocalIniFile searched only the TOP
+level of "." and ini_file_path (".."). The console runs from artifacts/
+with the ini one level down (artifacts/rusefi.snapshot.m74_9/rusefi_m74_9.ini),
+so the startup IniFileModel was null: gauges could not resolve and
+TuningPane.buildFrontendIndicatorPanel returned null (the indicator panel
+was built once at startup and never again). The connect-time provider
+already searched recursively, which is why a restart eventually repaired
+the UI via the connection-status rebuild.
+
+Fix (commit 5ff9ae591c6, Java only - no reflash needed):
+- findLocalIniFile mirrors the connect-time order: top-level ".", then
+  ini_file_path, then both recursively (depth 3, hidden dirs skipped).
+- TuningPane hosts the indicator panel in a rebuildable container and
+  rebuilds it when connection status becomes connected (safety net for a
+  stale or wrong-board startup model).
+- IniLocatorTest +2: nested-subfolder fallback, top-level priority.
+Validation: :ecu_io IniLocatorTest 10/10, :ui 407 tests 0 failures.
+Bundle rebuilt (rusefi_bundle_m74_9.zip 21:05) and the console jar in the
+user's unzipped artifacts/rusefi.snapshot.m74_9/console/ replaced.
+
+Also noted (bench): the ~5 s ECU resets remain the known debug behavior of
+the bench build (reset-cause label differs between builds) - marked RED in
+CLAUDE.md. The ECU-side ISO-TP TX stall is still present (TS_GET_TEXT got
+181/338 bytes at 20:48:36) despite 93d404e7e00 - still the open branch bug.
