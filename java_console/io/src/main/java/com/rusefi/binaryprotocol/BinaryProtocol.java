@@ -24,6 +24,7 @@ import com.rusefi.core.io.UnsupportedEcuInfo;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.io.*;
 import com.rusefi.io.commands.*;
+import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.ui.livedocs.LiveDocsRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -54,9 +55,12 @@ import static com.rusefi.util.TuneBackupUtil.saveConfigurationImageToFiles;
 public class BinaryProtocol {
     private static final Logging log = getLogging(BinaryProtocol.class);
     private static final ThreadFactory THREAD_FACTORY = new NamedThreadFactory("ECU text pull", true);
+    // Intended for high-latency TCP links to firmware built with CUSTOM_TS_BUFFER_SIZE.
+    private static final Integer BLOCKING_FACTOR_OVERRIDE = Integer.getInteger("blockingFactorOverride");
 
     private final LinkManager linkManager;
     private final IoStream stream;
+    private final Integer blockingFactorOverride;
     private boolean isBurnPending;
     public String signature;
     public boolean isGoodOutputChannels;
@@ -68,6 +72,9 @@ public class BinaryProtocol {
     static {
         log.info("BINARY_IO_TIMEOUT=" + Timeouts.BINARY_IO_TIMEOUT);
         log.info("CONNECTION_RESTART_DELAY=" + Timeouts.CONNECTION_RESTART_DELAY);
+        if (BLOCKING_FACTOR_OVERRIDE != null) {
+            log.info("blockingFactorOverride=" + BLOCKING_FACTOR_OVERRIDE);
+        }
     }
 
     private final BinaryProtocolLogger binaryProtocolLogger;
@@ -115,8 +122,13 @@ public class BinaryProtocol {
     public final CommunicationLoggingListener communicationLoggingListener;
 
     public BinaryProtocol(LinkManager linkManager, IoStream stream) {
+        this(linkManager, stream, BLOCKING_FACTOR_OVERRIDE);
+    }
+
+    BinaryProtocol(LinkManager linkManager, IoStream stream, Integer blockingFactorOverride) {
         this.linkManager = linkManager;
         this.stream = Objects.requireNonNull(stream);
+        this.blockingFactorOverride = blockingFactorOverride;
 
         communicationLoggingListener = linkManager.messageListener::postMessage;
 
@@ -134,6 +146,13 @@ public class BinaryProtocol {
             }
             SensorCentral.getInstance().reset();
         });
+    }
+
+    int getBlockingFactor() {
+        int configuredBlockingFactor = getIniFile().getBlockingFactor();
+        return blockingFactorOverride != null && stream instanceof TcpIoStream
+            ? blockingFactorOverride
+            : configuredBlockingFactor;
     }
 
     public boolean isClosed() {
@@ -428,7 +447,7 @@ public class BinaryProtocol {
                 return ConfigurationImageWithMeta.VOID;
 
             int remainingSize = image.getSize() - offset;
-            int requestSize = Math.min(remainingSize, iniFile.getBlockingFactor());
+            int requestSize = Math.min(remainingSize, getBlockingFactor());
 
             byte[] packet = smartPacketPrefix(offset, requestSize);
 
@@ -481,7 +500,7 @@ public class BinaryProtocol {
     public byte[] readFromPage(int page, int offset, int size) {
         byte[] result = new byte[size];
         int idx = 0;
-        int blockingFactor = getIniFile().getBlockingFactor();
+        int blockingFactor = getBlockingFactor();
         while (idx < size) {
             if (stream.isClosed()) {
                 return null;
@@ -672,7 +691,7 @@ public class BinaryProtocol {
     public void writeInBlocks(byte[] content, int contentOffset, int ecuOffset, int size, int page) {
         int idx = 0;
         int remaining;
-        int blockingFactor = getIniFile().getBlockingFactor();
+        int blockingFactor = getBlockingFactor();
 
         do {
             remaining = size - idx;
@@ -847,7 +866,7 @@ public class BinaryProtocol {
 
         while (remaining > 0) {
             // If less than one full chunk left, do a smaller read
-            int chunkSize = Math.min(remaining, iniFile.getBlockingFactor());
+            int chunkSize = Math.min(remaining, getBlockingFactor());
 
             byte[] response = executeCommand(
                 Integration.TS_OUTPUT_COMMAND,
