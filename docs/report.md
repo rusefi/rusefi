@@ -6109,3 +6109,28 @@ Also noted (bench): the ~5 s ECU resets remain the known debug behavior of
 the bench build (reset-cause label differs between builds) - marked RED in
 CLAUDE.md. The ECU-side ISO-TP TX stall is still present (TS_GET_TEXT got
 181/338 bytes at 20:48:36) despite 93d404e7e00 - still the open branch bug.
+
+## 2026-08-22 (night) - catch storm: VRS 4-step ramp + time-gated revolution counter
+
+The 20:55 MLGs showed revolutionCounterSinceStart racing ~5x at the catch
+(8->37 in 0.2 s vs ~6 real) with ALL board trigger validations already off
+(db9c155d820 + f0447b280ce). The race is the stock decoder: once the cycle
+anchor drifts mid-revolution, every exact-58-event false sync re-anchors
+and ticks the counter -> afterCrankingIACtaperDuration/ASE fast-forward.
+
+Fixes (two commits, firmware build clean, 1157/1157 unit tests):
+- 439d6b7efa8: L9779 VRS ramp 2-step latch -> the stock's 4-step script
+  (REG5 0x0C->0x0D->0x0E->0x0F, REG4 0x0B->0x0A->0x09->0x08, REG6
+  0x07->0x05->0x06), advanced at 150/300/600 rpm (last = cranking_rpm).
+  Re-arm per start unchanged.
+- d1868f1658c: rpm_calculator rate-limits the counter by real time
+  (>= 30/rpm s per revolution, 2x acceleration slack; no rate limit until
+  the first cycle RPM is measured). New test
+  RpmCalculator.revolutionCounterRateLimitedByTime.
+
+Noted while testing: the host mock NT tick is 10 ns (US_TO_NT_MULTIPLIER
+100) and the mock clock starts at 0 - a 'lastNt == 0' sentinel collides
+with a real timestamp; use a bool flag instead (see CLAUDE.md).
+
+Firmware rebuilt (firmware/build/rusefi.srec). The ECU still runs the old
+build - reflash needed for the VRS ramp + counter gate to take effect.
