@@ -1717,9 +1717,9 @@
         <constant name="i2c4_sclPin">"NONE"</constant>
         <constant name="i2c4_sdaPin">"NONE"</constant>
         <constant name="i2c4_speed">"Standart mode 100K"</constant>
-        <constant digits="1" name="iacByTpsDecayTime" units="seconds">3.0</constant>
-        <constant digits="1" name="iacByTpsHoldTime" units="seconds">1.5</constant>
-        <constant digits="0" name="iacByTpsTaper" units="percent">3</constant>
+        <constant digits="1" name="iacByTpsDecayTime" units="seconds">0.0</constant>
+        <constant digits="1" name="iacByTpsHoldTime" units="seconds">0.0</constant>
+        <constant digits="0" name="iacByTpsTaper" units="percent">0</constant>
         <constant cols="1" digits="1" name="iacCoasting" rows="16" units="%">
          0.0
          0.0
