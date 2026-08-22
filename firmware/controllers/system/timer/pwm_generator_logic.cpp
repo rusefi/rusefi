@@ -128,6 +128,12 @@ void PwmConfig::setFrequency(float frequency) {
 		return;
 	}
 	/**
+	 * Zero frequency is NOT legal here: it would produce an infinite periodNt, which slips past the
+	 * NaN pause check in togglePwmState() and trips the "iterationLimit invalid" assert in
+	 * handleCycleStart(). NaN is the sanctioned "output off" value - callers with a computed
+	 * frequency follow the "below 1 Hz -> NAN" convention (see tachometer, speedometer,
+	 * setTriggerEmulatorRPM), while Lua and DcHardware clamp to a positive minimum instead.
+	 *
 	 * see #handleCycleStart()
 	 * 'periodNt' is below 10 seconds here so we use 32 bit type for performance reasons
 	 */
@@ -323,6 +329,11 @@ void startSimplePwm(SimplePwm *state, const char *msg,
 	efiAssertVoid(ObdCode::CUSTOM_ERR_PWM_STATE_ASSERT, state != NULL, "state");
 	efiAssertVoid(ObdCode::CUSTOM_ERR_PWM_DUTY_ASSERT, dutyCycle >= 0 && dutyCycle <= PWM_MAX_DUTY, "dutyCycle");
 	if (frequency < 1) {
+		// This rejects zero frequency too. Note the consequence: the driver is never started
+		// (weComplexInit() below never runs), so later setSimplePwmDutyCycle() calls on this
+		// SimplePwm change 'mode' but nothing ever applies it to the pin. To run an output that
+		// may be off, start with a valid frequency and dutyCycle 0, or pause a running PWM with
+		// setFrequency(NAN).
 		warning(ObdCode::CUSTOM_OBD_LOW_FREQUENCY, "low frequency %.2f %s", frequency, msg);
 		return;
 	}

@@ -68,7 +68,10 @@ public:
 	bool isStopRequested = false;
 
 	/**
-	 * @param use NAN frequency to pause PWM
+	 * @param frequency positive frequency in Hz, or NAN to pause PWM: while paused, the timer loop
+	 * drives the pin inactive and re-checks every NAN_FREQUENCY_SLEEP_PERIOD_MS until a real
+	 * frequency is set again. Zero is NOT a valid way to stop output - it produces an infinite
+	 * period and trips an assert in handleCycleStart(); convert anything below 1 Hz to NAN instead.
 	 */
 	void setFrequency(float frequency);
 
@@ -139,6 +142,10 @@ void applyPinState(int stateIndex, PwmConfig* state) /* pwm_gen_callback */;
  * driver into PM_ZERO mode where the pin is held inactive with no pulses, mirrored by PM_FULL above
  * 99%. The timer loop still ticks once per period in these modes, so a later setSimplePwmDutyCycle()
  * call resumes normal pulse generation.
+ *
+ * @param frequency must be at least 1 Hz - zero included, anything lower is rejected with a warning
+ * and the driver is NOT started, leaving the pin untouched and later duty cycle updates inert.
+ * A running PWM can be paused with setFrequency(NAN), never with zero.
  *
  * This method should be called after scheduling layer is started by initSignalExecutor()
  */
