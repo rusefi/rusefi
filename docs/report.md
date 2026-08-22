@@ -5872,3 +5872,39 @@ unchanged).
 Open follow-ups: reflash the storage-deferral build once the PCAN
 adapter is reconnected, burn the updated msq, then re-check warm idle
 and pedal feel from a fresh binary log.
+
+## 2026-08-22 (night) - ETB bias curve rebuilt from logs: zero at the spring rest
+
+Analyzed the 14:46-15:04 binary logs (tpsvalue / etb1dutycycle /
+etb1etbfeedforward). Two findings:
+
+1. The ECU was still running the OLD default bias curve
+   (-20/-18/-17/0/20/21/22/25): the logged feedforward values (5.22 at
+   target 4.78%, 11.0 at 5.65%, 2.83 at 4.42%, 13.56 at 6.03%)
+   interpolate exactly onto that curve, while the new positive curve
+   would give ~18.3-18.7 there. So the previous positive-bias msq was
+   never burned in (or was burned before the bias edit).
+
+2. Measured static behavior of this throttle: the return spring rests
+   the blade at ~6.5% with zero duty (coast). Below that, holding the
+   blade needs CLOSING duty: ~-15..-21 at 4.65%, ~-24 at 3.0%, ~-29 at
+   the stop. With the old curve feeding +7.3 (opening) at the 5.1%
+   idle target, the iTerm was pinned at the -30 rail and the blade hung
+   at 6.5-6.8% - idle stuck at 1500-1700 rpm.
+
+Fix (commit 95743edec54): etbBiasValues 0/8/12/18/20/21/22/25 ->
+-12/-10/-8/-5/0/20/21/22/25 (bins unchanged 0/1/2/4/7/98/99/100). The
+zero crossing now sits at the spring rest (7% bin), a gentle closing
+assist below it (not the old deep -17..-20 that could slip the blade to
+the stop on the catch), and the proven positive high end is untouched.
+
+Also answered the TLE9201 overcurrent question from the datasheet: the
+8A chopper current limitation limits torque but does NOT disable the
+outputs (only SC latch / overtemperature / VS undervoltage do), and the
+driver only logs DIA changes - it has no path to reset the MCU. No
+overcurrent messages in this session's logs.
+
+Open follow-ups: reflash the storage-deferral build once PCAN is back,
+burn this msq, log warm idle and check that duty at the ~5% target is
+-15..-20 with the integral off the rail, then tune point by point with
+bias += (duty - ff) from steady-state logs.
