@@ -1024,15 +1024,15 @@
         <constant digits="0" name="engineSnifferRpmThreshold" units="RPM">2500</constant>
         <constant name="engineSyncCam">"Intake First Bank"</constant>
         <constant name="engineType">"MINIMAL_PINS"</constant>
-        <constant digits="4" name="etb_dFactor" units="">0.05</constant>
-        <constant digits="4" name="etb_iFactor" units="">10.0</constant>
+        <constant digits="4" name="etb_dFactor" units="">0.03</constant>
+        <constant digits="4" name="etb_iFactor" units="">3.0</constant>
         <constant digits="0" name="etb_iTermMax" units="">30</constant>
         <constant digits="0" name="etb_iTermMin" units="">-30</constant>
         <constant digits="0" name="etb_maxValue" units="">100</constant>
         <constant digits="0" name="etb_minValue" units="">-100</constant>
         <constant digits="0" name="etb_offset" units="">0</constant>
         <constant digits="0" name="etb_periodMs" units="ms">0</constant>
-        <constant digits="4" name="etb_pFactor" units="">1.0</constant>
+        <constant digits="4" name="etb_pFactor" units="">0.4</constant>
         <constant name="etb_use_two_wires">"no"</constant>
         <constant cols="1" digits="0" name="etbBiasBins" rows="8" units="target TPS position">
          0
