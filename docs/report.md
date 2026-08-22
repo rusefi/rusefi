@@ -6150,3 +6150,22 @@ goes through clean re-syncs after the cycle anchor drifts (stale VRS
 adaptation: Tfilter = 1/32*Tn uses the previous period, 6x too long at
 the catch; gap ratio up to 4.1 vs the 3.75 window). The time gate, not
 sync validation, is the correct guard.
+
+## 2026-08-22 (night) - counter race resolved; recorded 720-deg semantics; open: catch-then-stall
+
+Post-flash logs (23:32-23:35): the revolution counter now tracks engine
+cycles exactly (rpm/120) with only a residual +2-8 cycle spike in the
+first 0.1-0.2 s of the catch. Key facts recorded in CLAUDE.md:
+- The counter counts 720-deg ENGINE CYCLES (getCrankDivider=2), not crank
+  revolutions - afterCrankingIACtaperDuration 20-30 cycles = 1.6-2.4 s at
+  1500 rpm.
+- The console MLG 'time' axis compresses during the ISO-TP TX stall -
+  always time analysis by the ECU-side running_timesincecrankinginsecs
+  (23:32:34 showed tSinceCrank=2.3 s at MLG t=+0.3 s).
+- Taper now lives ~2.3 s of ECU time (27/30 cycles) instead of ~0.2 s.
+- VRS at running rpm is clean: synctrace 32/32 countErr=0.
+
+OPEN for the next session: the car catches well (~1100-1678 rpm) and then
+falls/stalls (23:32:34: rpm 0 at tCrk 3.5 s). Suspects: post-catch airflow
+(taper blend 21.94 -> 17.78 -> 10.x), idleMode = Open Loop, warm idle
+table ~9-10% at 944-960 rpm target.
