@@ -718,9 +718,23 @@
          110.0
          140.0
 </constant>
-        <constant cols="8" digits="0" name="cltIdleCorrTable" rows="2" units="%">
-         30.0 26.0 20.0 15.0 11.0 11.0 11.0 9.0
-         30.0 26.0 20.0 15.0 11.0 11.0 11.0 9.0
+        <constant cols="8" digits="0" name="cltIdleCorrTable" rows="16" units="%">
+         27.0 23.0 17.0 12.0 8.0 8.0 8.0 6.0
+         27.9 23.9 17.9 12.9 8.9 8.9 8.9 6.9
+         28.8 24.8 18.8 13.8 9.8 9.8 9.8 7.8
+         29.7 25.7 19.7 14.7 10.7 10.7 10.7 8.7
+         30.6 26.6 20.6 15.6 11.6 11.6 11.6 9.6
+         31.5 27.5 21.5 16.5 12.5 12.5 12.5 10.5
+         32.4 28.4 22.4 17.4 13.4 13.4 13.4 11.4
+         33.3 29.3 23.3 18.3 14.3 14.3 14.3 12.3
+         34.2 30.2 24.2 19.2 15.2 15.2 15.2 13.2
+         35.1 31.1 25.1 20.1 16.1 16.1 16.1 14.1
+         36.0 32.0 26.0 21.0 17.0 17.0 17.0 15.0
+         36.9 32.9 26.9 21.9 17.9 17.9 17.9 15.9
+         37.8 33.8 27.8 22.8 18.8 18.8 18.8 16.8
+         38.7 34.7 28.7 23.7 19.7 19.7 19.7 17.7
+         39.6 35.6 29.6 24.6 20.6 20.6 20.6 18.6
+         40.5 36.5 30.5 25.5 21.5 21.5 21.5 19.5
 </constant>
         <constant cols="1" digits="0" name="cltIdleRpm" rows="16" units="RPM">
          1360
@@ -3347,9 +3361,23 @@
         <constant digits="0" name="rotationalIdleController_max_tps" units="%TPS">0</constant>
         <constant digits="0" name="rpmHardLimit" units="rpm">6250</constant>
         <constant digits="0" name="rpmHardLimitHyst" units="RPM">50</constant>
-        <constant cols="1" digits="0" name="rpmIdleCorrBins" rows="2" units="Target RPM">
+        <constant cols="1" digits="0" name="rpmIdleCorrBins" rows="16" units="Target RPM">
          700
-         7000
+         800
+         900
+         1000
+         1100
+         1200
+         1300
+         1400
+         1500
+         1600
+         1700
+         1800
+         1900
+         2000
+         2100
+         2200
 </constant>
         <constant digits="1" name="rpmSoftLimitFuelAdded" units="%">0.0</constant>
         <constant digits="1" name="rpmSoftLimitTimingRetard" units="deg">4.0</constant>
@@ -5208,7 +5236,7 @@
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260822" nPages="1" signature="rusEFI maccan-tx-fix.2026.08.22.m74_9.1930129764" version="5.0"/>
+    <versionInfo firmwareInfo="20260822" nPages="1" signature="rusEFI maccan-tx-fix.2026.08.22.m74_9.1767756910" version="5.0"/>
     <bibliography author="rusEFI 20260822" writeDate="date"/>
     <settings/>
     <userComments/>
