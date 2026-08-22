@@ -5814,3 +5814,38 @@ commits e1d82f4a7e1 and 2b024763f11, flashed twice via openblt_can.sh.
   openblt_can.sh, checksum verified both times.
 - Trigger errors (C9002/C9008/DPKV log spam) gone after the gap-top +
   ramp fixes (15:00-15:04 logs).
+
+## 2026-08-22 (evening) - root fix of the 14:39 firmware wedge: defer MFS writes while running
+
+The m74_9 stores ALL persistent data in the ChibiOS MFS on the AT32
+internal flash bank 2 (at_start_f435 board_storage.cpp reused). A sector
+erase on this silicon stalls the whole CPU (no read-while-erase). The
+periodic LTFT save (~5 s, ID 3, 2048 bytes) that hit MFS garbage
+collection froze the firmware for ~2.4 s mid-run ('MFS: Write done after
+2441 mS MFS status 2') and wedged the NT clock: 'CRITICAL error: gap in
+time' flood with identical now=1845193 forever, the angle scheduler dead,
+the throttle staying driven, ignition-off not helping, only a power
+cycle recovering.
+
+The engine-stopped write deferral existed only for the settings record
+under EFI_STORAGE_INT_FLASH=TRUE; on this board INT_FLASH=FALSE (the
+settings live in the MFS too), so every write ran un-gated while the
+engine ran.
+
+Changes (commit 03c428e6776):
+- storage.cpp: storageAllowWriteID consults custom_board_allowFlashNow
+  for ALL ids (was: settings-only under INT_FLASH). Deferred writes are
+  flushed by the storage manager once the engine stops.
+- storage_mfs.cpp: suspendLinearTimeWatcher() around mfsWriteRecord so a
+  deferred GC write at engine-off (2.4 s stall) does not trip the
+  linear-time watchdog.
+- m74_9 board: custom_board_allowFlashNow = isStopped() || self-stim.
+
+Validation: unit tests 1156/1156 green, m74_9 build clean. Flashing was
+attempted but the PCAN adapter reported PCAN_ERROR_ILLHW (detached) -
+reflash pending the adapter.
+
+Open follow-ups: burn 21129.msq (bias+/range 30/fan 0/gap 4.5), log warm
+idle; decide on the noise filter (currently off); if a trigger storm ever
+returns, the frozen-NT-clock auto-reset remains an option but should no
+longer be needed.
