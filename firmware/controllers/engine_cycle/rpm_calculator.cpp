@@ -380,11 +380,27 @@ TRIGGER_RAM_CODE void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 			bool gateOpen = true;
 			if (gateRpm > 0) {
 				if (gateRpm < 100.0f) {
-					// slow-crank floor: ~300 ms bound, still tight enough to reject
-					// the catch storm and loose enough for real cranking revolutions
+					// slow-crank floor: still tight enough to reject the catch
+					// storm and loose enough for real cranking revolutions
 					gateRpm = 100.0f;
 				}
-				efitick_t minPeriodNt = US2NT((uint32_t)(US_PER_SECOND_F / gateRpm * 30.0f));
+				// Predict the NEXT revolution's rpm from the measured crank
+				// acceleration (rpmRate is updated only on undisturbed cycles, so
+				// a sync storm cannot inflate it). Covers the whole 800..7000 rpm
+				// band plus real crank acceleration/deceleration: the gate follows
+				// the predicted period, so a real revolution is never rejected by
+				// real dynamics - only syncs arriving > 2x faster than the
+				// predicted revolution (the catch storm) are.
+				float predictedRpm = gateRpm + rpmState->rpmRate * (60.0f / gateRpm);
+				if (predictedRpm < 50.0f) {
+					// hard deceleration floor: below this no real engine runs
+					predictedRpm = 50.0f;
+				}
+				if (predictedRpm > gateRpm * 4.0f) {
+					// bound the gate opening to a 4x-per-revolution acceleration
+					predictedRpm = gateRpm * 4.0f;
+				}
+				efitick_t minPeriodNt = US2NT((uint32_t)(US_PER_SECOND_F / predictedRpm * 30.0f));
 				gateOpen = !rpmState->hasCountedRevolution ||
 					(nowNt - rpmState->lastCountedRevolutionNt) >= minPeriodNt;
 			}
