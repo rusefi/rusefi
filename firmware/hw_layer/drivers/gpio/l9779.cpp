@@ -293,6 +293,10 @@ struct L9779 : public GpioChip {
 	 * ramp END (maximum floor) has been written once cranking amplitude is
 	 * established (see vrs_configure/vrs_ramp_up). */
 	bool						vrs_ramped = false;
+	/* Last moment the engine was NOT stopped - debounces the ramp re-arm
+	 * (see the driver thread: a trigger storm flaps rpm 0/300+ at ~1 kHz
+	 * and would toggle the VRS config at the same rate). */
+	systime_t					vrs_stop_ts = 0;
 
 
 	/* statistic */
@@ -856,11 +860,22 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 		 * write-only VRS registers keep the ramp END (maximum hysteresis
 		 * floor) from the previous run, and the next cranking's low-amplitude
 		 * teeth get swallowed by the floor -> C9002 + sync storm at the
-		 * catch. Re-arm the ramp START whenever the engine stops or the
-		 * ignition key goes off. */
-		bool engineStopped = Sensor::getOrZero(SensorType::Rpm) == 0;
+		 * catch. Re-arm the ramp START whenever the engine has been stopped
+		 * for a while or the ignition key goes off.
+		 *
+		 * The stop side is debounced: during a trigger storm the rpm sensor
+		 * flaps 0/300+ at ~1 kHz, and an undebounced rpm==0 reset toggled
+		 * the VRS config start/end at the same rate (~800 SPI frames in
+		 * 1.6 s, see the 14:34 log) - saturating the SPI bus and yanking
+		 * the hysteresis floor, which fed the storm it was reacting to. */
+		bool engineStopped = engine->rpmCalculator.isStopped();
+		if (!engineStopped) {
+			chip->vrs_stop_ts = now;
+		}
 		bool ignitionOff = chip->key_on_valid && !chip->key_on_status;
-		if (chip->vrs_ramped && (engineStopped || ignitionOff)) {
+		bool stoppedLongEnough = engineStopped &&
+			(now - chip->vrs_stop_ts) >= TIME_MS2I(500);
+		if (chip->vrs_ramped && (stoppedLongEnough || ignitionOff)) {
 			chip->vrs_configure();
 			chip->vrs_ramped = false;
 		}
