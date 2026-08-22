@@ -573,6 +573,49 @@ TEST(RpmCalculator, revolutionCounterIgnoresUnvalidatedSync) {
 	EXPECT_EQ(1, engine->rpmCalculator.getRevolutionCounterSinceStart());
 }
 
+/**
+ * A validated sync alone must not advance the revolution counter faster than
+ * real time: at the first-combustion catch a noise storm re-syncs the decoder
+ * several times per real revolution, each clean-flagged, and the unguarded
+ * counter raced ~5x ahead on m74_9. The time gate (>= ~30/rpm seconds per
+ * revolution, 2x acceleration slack over the real 60/rpm) rejects the storm
+ * while real revolutions still pass.
+ */
+TEST(RpmCalculator, revolutionCounterRateLimitedByTime) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	efitick_t now = getTimeNowNt();
+
+	// bootstrap: the first validated revolution is accepted unconditionally
+	engine->triggerCentral.triggerState.lastSyncWasClean = true;
+	rpmShaftPositionCallback(SHAFT_PRIMARY_RISING, 0, now);
+	EXPECT_EQ(1, engine->rpmCalculator.getRevolutionCounterSinceStart());
+
+	// Prime the gate's rpm source directly: in this direct-callback test no
+	// trigger events are fed, so no cycle RPM would ever be computed and the
+	// gate would stay at its 100 rpm floor (300 ms).
+	engine->rpmCalculator.setRpmValue(600);
+
+	// a real cranking revolution (100 ms >= the 50 ms gate at 600 rpm) counts
+	rpmShaftPositionCallback(SHAFT_PRIMARY_RISING, 0, now + US2NT(100'000));
+	EXPECT_EQ(2, engine->rpmCalculator.getRevolutionCounterSinceStart());
+
+	// catch storm: clean-flagged syncs every 10 ms. Each storm cycle is phase-
+	// disturbed (the real storm signature), so the cycle RPM sample is
+	// discarded and the gate keeps the last sane rpm (~600 rpm -> 50 ms bound)
+	// - all storm syncs must be rejected.
+	for (int i = 1; i <= 4; i++) {
+		engine->rpmCalculator.onEnginePhaseResync();
+		rpmShaftPositionCallback(SHAFT_PRIMARY_RISING, 0, now + US2NT(100'000 + 10'000 * i));
+	}
+	EXPECT_EQ(2, engine->rpmCalculator.getRevolutionCounterSinceStart())
+		<< "storm syncs must be rate-limited by real time";
+
+	// the storm passed: a real revolution at the real period counts again
+	rpmShaftPositionCallback(SHAFT_PRIMARY_RISING, 0, now + US2NT(200'000));
+	EXPECT_EQ(3, engine->rpmCalculator.getRevolutionCounterSinceStart());
+}
+
 // flexCranking selects the cranking coolant-multiplier source: the 1D crankingFuelCoef curve when off
 // (or when no flex sensor is present), and the 2D crankingFuelFlexTable when on with a flex sensor.
 TEST(FuelMath, crankingFlexFallbackToCurve) {

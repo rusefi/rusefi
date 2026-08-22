@@ -262,6 +262,8 @@ void RpmCalculator::onSlowCallback() {
 void RpmCalculator::setStopSpinning() {
 	isSpinning = false;
 	revolutionCounterSinceStart = 0;
+	lastCountedRevolutionNt = 0;
+	hasCountedRevolution = false;
 	rpmRate = 0;
 	m_cyclePeriodDisturbed = false;
 
@@ -362,8 +364,35 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		//    crank revolution - false gap pairs mid-revolution always have a
 		//    count mismatch. On m74_9 the false-sync storms raced the counter
 		//    ~2x ahead of real time while RPM held steady.
+		// The revolution counter drives ASE and the cranking-taper tables, so it
+		// must track REAL revolutions. Clean-flagged syncs are not enough: at
+		// the first-combustion catch a noise storm re-syncs the decoder several
+		// times per real revolution (each with an exact event count once the
+		// cycle anchor drifts), racing the counter ~5x ahead on m74_9.
+		// Rate-limit by real time instead: a real revolution cannot complete
+		// faster than ~30/rpm seconds (2x acceleration slack over the real
+		// 60/rpm). Lost teeth make the counter lag (the safe direction - ASE /
+		// taper last longer), storms are rejected. Until the first cycle RPM is
+		// measured there is no rate reference, so the clean-sync gate above
+		// applies alone (the first revolution has no storm to reject anyway).
 		if (!cyclePeriodDisturbed && engine->triggerCentral.triggerState.lastSyncWasClean) {
-			rpmState->onNewEngineCycle();
+			float gateRpm = rpmState->getCachedRpm();
+			bool gateOpen = true;
+			if (gateRpm > 0) {
+				if (gateRpm < 100.0f) {
+					// slow-crank floor: ~300 ms bound, still tight enough to reject
+					// the catch storm and loose enough for real cranking revolutions
+					gateRpm = 100.0f;
+				}
+				efitick_t minPeriodNt = US2NT((uint32_t)(US_PER_SECOND_F / gateRpm * 30.0f));
+				gateOpen = !rpmState->hasCountedRevolution ||
+					(nowNt - rpmState->lastCountedRevolutionNt) >= minPeriodNt;
+			}
+			if (gateOpen) {
+				rpmState->onNewEngineCycle();
+				rpmState->lastCountedRevolutionNt = nowNt;
+				rpmState->hasCountedRevolution = true;
+			}
 		}
 	}
 
