@@ -5725,3 +5725,15 @@ so with the ECU stall gone the link should stay up continuously; the
 binary-log file reset on reconnect remains a console-side follow-up if
 ever needed. Flash the new srec and watch isotpinfo: fcWaitTimeout and
 canWriteNotOk should stop growing.
+
+## 2026-08-22 (night) - bench flash over CAN: stock-rollback + ISO-TP fixes on the ECU
+
+Flashed the m74_9 via openblt_can.sh (PCAN, XCP over CAN 500 kbps):
+rusefi_development_260821_m74_9_1930129764_local_update.srec, 669628
+bytes, checksum verified, ECU reset into the new firmware. The flash
+carries both this night's changes: the trigger stock-rollback (all
+board sync-validation switches off) and the ISO-TP TX stall fixes
+(serial frame retries + mailbox abort, FC-wait slack, 10s flood pause).
+Next: console connect, burn tune/21129.msq, then a start - watch
+synctrace for C900x/backfires (stock decoder test) and isotpinfo
+counters (should stay at zero).
