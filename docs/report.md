@@ -5737,3 +5737,80 @@ board sync-validation switches off) and the ISO-TP TX stall fixes
 Next: console connect, burn tune/21129.msq, then a start - watch
 synctrace for C900x/backfires (stock decoder test) and isotpinfo
 counters (should stay at zero).
+
+## 2026-08-22 (day) - m74_9 idle/trigger marathon: VRS ramp per start, ETB bias, gap windows
+
+Full car-tuning session (Lada 21129, m74_9, console over CAN). Landed
+commits e1d82f4a7e1 and 2b024763f11, flashed twice via openblt_can.sh.
+
+### Trigger: gap window top 3.9 -> 4.5 (measured, not guessed)
+- synctrace 14:15 (clean run to 1804 rpm): gap0 = 2.19-2.63, gap1 =
+  0.97-1.07 - windows [1.6,3.9]/[0.85,1.35] hold fine in a clean run.
+- 14:09 failed run: trgtriggersyncgapratio = 4.1 at the catch (the real
+  missing-teeth gap stretched by the flare collapse) -> rejected ->
+  C9002 -> desync -> sync storm (trgSync 0->20->31 in 0.3 s) -> the
+  revolution counter raced -> the idle taper collapsed -> stall.
+- Low side 1.6 and gap1 stay: the 1.60/1.20 false pair and the noise
+  false-sync are the load-bearing cases.
+
+### VRS ramp: re-arm per start, debounced (the user's diagnosis, confirmed)
+- The L9779 VRS config is write-only and survives a quick key cycle
+  (SBC holds VCC): the ramp END (max hysteresis floor) from the previous
+  run swallowed the next cranking's low-amplitude teeth -> C9002 at the
+  catch. Fixed: re-write ramp START when the engine is stopped OR the
+  ignition key goes off.
+- First version used rpm==0 as the stop trigger: during a trigger storm
+  the rpm sensor flaps 0/300+ at ~1 kHz and the re-arm toggled the VRS
+  config start/end at the same rate (800 SPI frames in 1.6 s, 14:34
+  log), saturating SPI and feeding the storm. Debounced: isStopped()
+  state + 500 ms minimum stopped time.
+
+### ETB: negative bias zone was killing the idle (root cause of 'only range 50 works')
+- On this board positive duty = open (the pedal works through +21 bias).
+- The old bias curve was -17..-20 duty at 0-4% targets - exactly the
+  idle target zone at range 20-30. The idle target got a CLOSING
+  feedforward, the blade sat on the physical stop (0.6%) and the engine
+  stalled after cranking.
+- Range 50 'worked' by accident: the target (5.5%) landed in the
+  positive zone, and the blade hung on the limp-home spring equilibrium
+  (~6%) while the start-rail integral (-30) kept the net duty negative.
+- Fixed: bias 0/8/12/18/20/21/22/25 - no negative zone (0 is the
+  physical stop, the blade cannot go negative - the user's point).
+- etbIdleThrottleRange: 20 -> 30, calculated: proven-good warm idle
+  (12:45 log) = TPS 3.0-3.1% / 960-990 rpm at base 15 x range 20; warm
+  base table now 11%, so 3.25 / 11 ~= 30.
+
+### Ignition-off power-stage cut
+- LimpManager now clears m_allowEtb(ClearReason::IgnitionOff) when the
+  key is off (fuel/spark were already cut); Clearable got restore() so
+  the ETB comes back on key-on without touching permanent faults.
+- Note: bypassed under directSelfStimulation (bench mode), by design.
+
+### Idle air/fuel tuning (msq, iterated on logs)
+- idleVeTable cut 38-50% -> 28-40% (~37% less idle fuel; the Delphi
+  28346052 injector spec 150 cc/min @ 3 bar matches injector_flow
+  168.8 @ 380 kPa exactly - left alone).
+- veTable idle corner (20-45 kPa x 650-1400 rpm) cut 45-72% -> 38-54%
+  (the 2x fuel jump when the phase flaps onto the main table).
+- Dashpot: iacByTpsHoldTime 1.5->3 s, iacByTpsDecayTime 5->8 s.
+- cltIdleCorrTable warm cells 15/15/14/10 -> 11/11/11/9; fan1ExtraIdle
+  2 -> 0 (the fan adder stepped in at ~95C and the idle oscillation was
+  tied to it).
+
+### Known-open: the 14:39 firmware wedge (priority, not yet fixed)
+- Signature: C9007 (tooth 134.8 deg error) + C9002 -> TLE9201 outputs
+  disabled -> MFS SD write 2441 ms (status 2) -> 'CRITICAL error: gap in
+  time' flood with IDENTICAL now=1845193mS forever. getTimeNowMs() (the
+  NT/TIM5 clock) froze: the trigger ISR storm starves the TIM5 ISR, the
+  whole angle scheduler dies, the ETB duty freezes (throttle 'not
+  released'), ignition-off does not help (the gates live in the dead
+  slow loop), only a power cycle recovers.
+- Planned fix: efiWatchdog detects a frozen NT clock and issues
+  NVIC_SystemReset instead of limping forever. Not yet implemented.
+
+### Validation
+- Unit tests: idle_v2 (20), limp (14) green.
+- compile_m74_9.sh clean; flashed 669628 and 669804 bytes via
+  openblt_can.sh, checksum verified both times.
+- Trigger errors (C9002/C9008/DPKV log spam) gone after the gap-top +
+  ramp fixes (15:00-15:04 logs).
