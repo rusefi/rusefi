@@ -6134,3 +6134,19 @@ with a real timestamp; use a bool flag instead (see CLAUDE.md).
 
 Firmware rebuilt (firmware/build/rusefi.srec). The ECU still runs the old
 build - reflash needed for the VRS ramp + counter gate to take effect.
+
+## 2026-08-22 (late night) - flashed: VRS 4-step ramp + dynamics-aware revolution gate
+
+Flashed build/rusefi.srec (HEAD 54e87e6abae) over CAN: 669988 bytes,
+checksum verified, 265.6 s. Contains 439d6b7efa8 (VRS stock 4-step ramp)
+and 54e87e6abae (revolution counter time gate with rpmRate-based
+prediction). FLASH_DATA_VERSION unchanged (260822) - the stored tune
+stays compatible, no msq re-load needed.
+
+Analysis of the catch race (m2055/m2055a): the counter races only in a
+~0.2-0.3 s window at the first-combustion catch (~5x), then is exact
+(28.6 rev/s vs ~1700 rpm in m2055). No trigger-error flags - the race
+goes through clean re-syncs after the cycle anchor drifts (stale VRS
+adaptation: Tfilter = 1/32*Tn uses the previous period, 6x too long at
+the catch; gap ratio up to 4.1 vs the 3.75 window). The time gate, not
+sync validation, is the correct guard.
