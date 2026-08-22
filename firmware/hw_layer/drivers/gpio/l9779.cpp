@@ -855,7 +855,12 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 		 * exactly at cranking_rpm, so the conditioner is in its final state
 		 * the moment the engine is declared running. */
 		static const float VRS_RAMP_RPM[3] = { 150.0f, 300.0f, 600.0f };
-		if (chip->vrs_step < 3 &&
+		bool ignitionOff = chip->key_on_valid && !chip->key_on_status;
+		/* Step up only while the key is on: after an ignition-off re-arm the
+		 * wind-down rpm still crosses 150 and would immediately re-step the
+		 * ramp, toggling start/step-1 at driver-thread rate (SPI flood, seen
+		 * at 23:16:08 - the 800-frames storm class from the 14:34 log). */
+		if (!ignitionOff && chip->vrs_step < 3 &&
 				Sensor::getOrZero(SensorType::Rpm) >= VRS_RAMP_RPM[chip->vrs_step]) {
 			chip->vrs_step++;
 			chip->vrs_ramp_to_step(chip->vrs_step);
@@ -878,7 +883,6 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 		if (!engineStopped) {
 			chip->vrs_stop_ts = now;
 		}
-		bool ignitionOff = chip->key_on_valid && !chip->key_on_status;
 		bool stoppedLongEnough = engineStopped &&
 			(now - chip->vrs_stop_ts) >= TIME_MS2I(500);
 		if (chip->vrs_step > 0 && (stoppedLongEnough || ignitionOff)) {
