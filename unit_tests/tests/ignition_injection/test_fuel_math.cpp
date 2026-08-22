@@ -619,10 +619,10 @@ TEST(RpmCalculator, revolutionCounterRateLimitedByTime) {
 /**
  * The gate must never reject a REAL revolution anywhere in the operating
  * band (idle ~800 rpm to redline ~7000 rpm), including real crank
- * acceleration and deceleration. It predicts the next revolution's period
- * from rpmRate (updated only on undisturbed cycles, so a storm cannot
- * inflate it): real dynamics pass, only syncs arriving > 2x faster than the
- * predicted revolution are rejected.
+ * acceleration and deceleration. The rpm sample updates every undisturbed
+ * cycle, so the gate (30/rpm, half the real period) follows real dynamics
+ * within one revolution; an extreme >2x-per-revolution transient (only the
+ * catch) delays the count by a single revolution - the safe direction.
  */
 TEST(RpmCalculator, revolutionCounterGateFollowsCrankDynamics) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
@@ -634,25 +634,29 @@ TEST(RpmCalculator, revolutionCounterGateFollowsCrankDynamics) {
 	rpmShaftPositionCallback(SHAFT_PRIMARY_RISING, 0, now);
 	engine->rpmCalculator.setRpmValue(1000);
 
-	// hard rev-up: +25000 rpm/s. The next real revolution arrives after 24 ms
-	// (1000 -> ~2500 rpm): the prediction opens the gate to 30/2500 = 12 ms;
-	// a naive 30/1000 = 30 ms gate would wrongly reject it.
-	engine->rpmCalculator.rpmRate = 25'000;
+	// >2x acceleration within one revolution (1000 -> ~2500 rpm in 24 ms):
+	// the gate (30/1000 = 30 ms) delays the count by one revolution - the
+	// safe direction, ASE/taper just get one extra revolution. The rpm
+	// sample itself is unaffected (it updates every undisturbed cycle).
 	rpmShaftPositionCallback(SHAFT_PRIMARY_RISING, 0, now + US2NT(24'000));
-	EXPECT_EQ(2, engine->rpmCalculator.getRevolutionCounterSinceStart())
-		<< "real acceleration must not be rejected";
+	EXPECT_EQ(1, engine->rpmCalculator.getRevolutionCounterSinceStart())
+		<< "an extreme >2x/revolution acceleration may delay one count";
+
+	// once rpm catches up (as it does on the next real revolution), the
+	// gate follows: 12 ms gate at 2500 rpm, real period 24 ms passes
+	engine->rpmCalculator.setRpmValue(2500);
+	rpmShaftPositionCallback(SHAFT_PRIMARY_RISING, 0, now + US2NT(24'000 + 24'000));
+	EXPECT_EQ(2, engine->rpmCalculator.getRevolutionCounterSinceStart());
 
 	// steady-state redline: 7000 rpm, real period 8.57 ms, gate 4.29 ms
 	engine->rpmCalculator.setRpmValue(7000);
-	engine->rpmCalculator.rpmRate = 0;
-	rpmShaftPositionCallback(SHAFT_PRIMARY_RISING, 0, now + US2NT(24'000 + 8'570));
+	rpmShaftPositionCallback(SHAFT_PRIMARY_RISING, 0, now + US2NT(48'000 + 8'570));
 	EXPECT_EQ(3, engine->rpmCalculator.getRevolutionCounterSinceStart())
 		<< "steady 7000 rpm revolution must pass";
 
 	// decelerating crank: a stretched revolution (10 ms vs 8.57 ms steady)
-	// must pass - the prediction loosens the gate for deceleration
-	engine->rpmCalculator.rpmRate = -30'000;
-	rpmShaftPositionCallback(SHAFT_PRIMARY_RISING, 0, now + US2NT(24'000 + 8'570 + 10'000));
+	// must pass - the gate is always half the last real period
+	rpmShaftPositionCallback(SHAFT_PRIMARY_RISING, 0, now + US2NT(48'000 + 8'570 + 10'000));
 	EXPECT_EQ(4, engine->rpmCalculator.getRevolutionCounterSinceStart())
 		<< "real deceleration must not be rejected";
 }

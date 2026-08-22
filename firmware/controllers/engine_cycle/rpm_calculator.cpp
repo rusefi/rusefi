@@ -371,36 +371,26 @@ TRIGGER_RAM_CODE void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		// cycle anchor drifts), racing the counter ~5x ahead on m74_9.
 		// Rate-limit by real time instead: a real revolution cannot complete
 		// faster than ~30/rpm seconds (2x acceleration slack over the real
-		// 60/rpm). Lost teeth make the counter lag (the safe direction - ASE /
-		// taper last longer), storms are rejected. Until the first cycle RPM is
-		// measured there is no rate reference, so the clean-sync gate above
-		// applies alone (the first revolution has no storm to reject anyway).
+		// 60/rpm). The rpm sample itself updates every undisturbed cycle, so
+		// the gate follows real acceleration/deceleration within one
+		// revolution; an extreme >2x-per-revolution transient (only the catch)
+		// delays the count by a single revolution - the safe direction (ASE /
+		// taper last longer). An rpmRate-based prediction was tried and
+		// reverted: at the catch the measured acceleration opened the gate to
+		// the storm rate (23:18 log, counter +24 in ~0.2 s). Until the first
+		// cycle RPM is measured there is no rate reference, so the clean-sync
+		// gate applies alone (the first revolution has no storm to reject
+		// anyway).
 		if (!cyclePeriodDisturbed && engine->triggerCentral.triggerState.lastSyncWasClean) {
 			float gateRpm = rpmState->getCachedRpm();
 			bool gateOpen = true;
 			if (gateRpm > 0) {
 				if (gateRpm < 100.0f) {
-					// slow-crank floor: still tight enough to reject the catch
-					// storm and loose enough for real cranking revolutions
+					// slow-crank floor: ~300 ms bound, still tight enough to reject
+					// the catch storm and loose enough for real cranking revolutions
 					gateRpm = 100.0f;
 				}
-				// Predict the NEXT revolution's rpm from the measured crank
-				// acceleration (rpmRate is updated only on undisturbed cycles, so
-				// a sync storm cannot inflate it). Covers the whole 800..7000 rpm
-				// band plus real crank acceleration/deceleration: the gate follows
-				// the predicted period, so a real revolution is never rejected by
-				// real dynamics - only syncs arriving > 2x faster than the
-				// predicted revolution (the catch storm) are.
-				float predictedRpm = gateRpm + rpmState->rpmRate * (60.0f / gateRpm);
-				if (predictedRpm < 50.0f) {
-					// hard deceleration floor: below this no real engine runs
-					predictedRpm = 50.0f;
-				}
-				if (predictedRpm > gateRpm * 4.0f) {
-					// bound the gate opening to a 4x-per-revolution acceleration
-					predictedRpm = gateRpm * 4.0f;
-				}
-				efitick_t minPeriodNt = US2NT((uint32_t)(US_PER_SECOND_F / predictedRpm * 30.0f));
+				efitick_t minPeriodNt = US2NT((uint32_t)(US_PER_SECOND_F / gateRpm * 30.0f));
 				gateOpen = !rpmState->hasCountedRevolution ||
 					(nowNt - rpmState->lastCountedRevolutionNt) >= minPeriodNt;
 			}
