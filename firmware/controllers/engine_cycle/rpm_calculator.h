@@ -127,6 +127,15 @@ public:
 	float previousRpmValue = 0;
 
 	/**
+	 * Timestamp of the last revolution accepted by the revolution-counter
+	 * rate-limit (see rpmShaftPositionCallback), paired with
+	 * hasCountedRevolution (0 is a valid timestamp, so the timestamp alone
+	 * cannot be the 'none yet' sentinel). Reset on engine stop.
+	 */
+	efitick_t lastCountedRevolutionNt = 0;
+	bool hasCountedRevolution = false;
+
+	/**
 	 * This is a performance optimization: let's pre-calculate this each time RPM changes
 	 * NaN while engine is not spinning
 	 */
