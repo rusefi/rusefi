@@ -5,7 +5,9 @@ ifeq (,$(BUNDLE_NAME))
 endif
 
 ifeq (,$(BUNDLE_DATE))
-  BUNDLE_DATE = yymmdd
+  # Local builds default to today's date (YYMMDD, same format CI passes in explicitly);
+  # CI/release builds set BUNDLE_DATE in the environment, which wins here.
+  BUNDLE_DATE = $(shell date +%y%m%d)
 endif
 
 ifeq (,$(GITHUB_SHA))
