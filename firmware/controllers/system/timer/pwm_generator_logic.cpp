@@ -16,6 +16,8 @@
 #include "gpio_ext.h"
 #endif // EFI_PROD_CODE
 
+// Duty cycles below/above these thresholds switch the state machine into PM_ZERO/PM_FULL mode:
+// instead of generating sub-1% pulses, the output is held at a constant level (see setSimplePwmDutyCycle).
 // 1% duty cycle
 #define ZERO_PWM_THRESHOLD 0.01
 // 99% duty cycle
@@ -69,7 +71,10 @@ void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
 	}
 #endif
 
-	// Handle near-zero and near-full duty cycle.  This will cause the PWM output to behave like a plain digital output.
+	// Handle near-zero and near-full duty cycle.  This will cause the PWM output to behave like a plain digital output:
+	// in PM_ZERO/PM_FULL mode togglePwmState() ignores the switch-time table and re-asserts the constant pin state
+	// once per period, so we also fire the matching edge manually here for an immediate reaction instead of waiting
+	// up to one full period for the next timer callback.
 	if (dutyCycle < ZERO_PWM_THRESHOLD) {
 		mode = PM_ZERO;
 
@@ -360,6 +365,11 @@ void startSimplePwm(SimplePwm *state, const char *msg,
 	state->outputPins[0] = output;
 
 	state->setFrequency(frequency);
+	// Set the mode before weComplexInit(): starting with dutyCycle 0 produces switch times {0, 1} and
+	// dutyCycle 1 produces {1, 1}, both of which would fail checkSwitchTimes() - copyPwmParameters()
+	// only runs that validation in PM_NORMAL mode. Note that the "manual edge" inside
+	// setSimplePwmDutyCycle() does not fire here since m_stateChangeCallback is not set yet; the
+	// initial pin state is applied by the first timerCallback() invoked synchronously below.
 	state->setSimplePwmDutyCycle(dutyCycle);
 	state->weComplexInit(executor, &state->seq, nullptr, callback);
 }

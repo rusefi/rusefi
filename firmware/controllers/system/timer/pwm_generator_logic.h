@@ -39,8 +39,10 @@ typedef void (pwm_cycle_callback)(PwmConfig *state);
 typedef void (pwm_gen_callback)(int stateIndex, PwmConfig* pwm);
 
 typedef enum {
+	// duty cycle below 1% (ZERO_PWM_THRESHOLD): output held constantly inactive, no pulses generated
 	PM_ZERO,
 	PM_NORMAL,
+	// duty cycle above 99% (FULL_PWM_THRESHOLD): output held constantly active
 	PM_FULL
 } pwm_mode_e;
 
@@ -131,6 +133,12 @@ void applyPinState(int stateIndex, PwmConfig* state) /* pwm_gen_callback */;
 
 /**
  * Start a one-channel software PWM driver.
+ *
+ * @param dutyCycle value in the [0, 1] range, inclusive. Starting with zero duty cycle is legal and
+ * common (e.g. fan and GPPWM outputs start "off"): any value below ZERO_PWM_THRESHOLD (1%) puts the
+ * driver into PM_ZERO mode where the pin is held inactive with no pulses, mirrored by PM_FULL above
+ * 99%. The timer loop still ticks once per period in these modes, so a later setSimplePwmDutyCycle()
+ * call resumes normal pulse generation.
  *
  * This method should be called after scheduling layer is started by initSignalExecutor()
  */
