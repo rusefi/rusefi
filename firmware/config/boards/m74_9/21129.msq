@@ -1041,7 +1041,7 @@
         <constant digits="4" name="etb_dFactor" units="">0.06</constant>
         <constant digits="4" name="etb_iFactor" units="">1.0</constant>
         <constant digits="0" name="etb_iTermMax" units="">30</constant>
-        <constant digits="0" name="etb_iTermMin" units="">-12</constant>
+        <constant digits="0" name="etb_iTermMin" units="">-30</constant>
         <constant digits="0" name="etb_maxValue" units="">100</constant>
         <constant digits="0" name="etb_minValue" units="">-100</constant>
         <constant digits="0" name="etb_offset" units="">0</constant>
@@ -1059,11 +1059,11 @@
          100
 </constant>
         <constant cols="1" digits="2" name="etbBiasValues" rows="8" units="ETB duty cycle bias">
-         -12.0
-         -10.0
-         -8.0
-         -5.0
-         0.0
+         -22.0
+         -20.0
+         -18.0
+         -15.0
+         -9.0
          21.0
          22.0
          25.0
