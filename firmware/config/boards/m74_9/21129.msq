@@ -1028,7 +1028,7 @@
         <constant name="enableKnockSpectrogramFilter">"no"</constant>
         <constant name="enableLaunchRetard">"no"</constant>
         <constant name="enableOilPressureProtect">"no"</constant>
-        <constant name="enableSoftwareKnock">"disabled"</constant>
+        <constant name="enableSoftwareKnock">"enabled"</constant>
         <constant name="enableStagedInjection">"disabled"</constant>
         <constant name="enableTrailingSparks">"no"</constant>
         <constant name="enableVerboseCanTx">"no"</constant>
@@ -2700,7 +2700,7 @@
          4700
          7000
 </constant>
-        <constant digits="1" name="knockRetardAggression" units="%">20.0</constant>
+        <constant digits="1" name="knockRetardAggression" units="%">0.0</constant>
         <constant digits="1" name="knockRetardReapplyRate" units="deg/s">3.0</constant>
         <constant digits="0" name="knockSamplingDuration" units="Deg">15</constant>
         <constant digits="2" name="knockSpectrumSensitivity" units="sense">1.0</constant>
