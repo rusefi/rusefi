@@ -63,6 +63,13 @@ static void setupEtb() {
 	// throttle is proven on the bench. Note this overrides the TS field on
 	// every boot while it lives in ConfigOverrides.
 	engineConfiguration->etbFunctions[0] = DC_Throttle1;
+	// The board has exactly ONE TLE9201 H-bridge (see getBoardMetaDcOutputsCount).
+	// Force ETB#2 to None regardless of what the stored tune carries: a leftover
+	// "Throttle 2" (with all pins NONE) makes doInitElectronicThrottle create a
+	// phantom soft-PWM channel on pin 0 that floods the microsecond executor
+	// (~100k+ events, visible as the lockstats "soft 800Hz" channel) while
+	// writing to no physical output.
+	engineConfiguration->etbFunctions[1] = DC_None;
 
 	// PWM pin
 	engineConfiguration->etbIo[0].controlPin = Gpio::B14;

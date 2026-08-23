@@ -6503,3 +6503,46 @@ Also: a stray `gmake` at the firmware root rebuilds for the DEFAULT
 board (f407-discovery) into the SAME build/ dir and poisons the
 incremental m74_9 build - always rebuild the board via its compile
 script after such an accident (gmake clean first).
+
+## 2026-08-23 - ETB hardware PWM verified working; phantom ETB#2 soft-PWM flood found + disabled
+
+Goal: move the m74_9 ETB throttle PWM off the microsecond executor (soft-PWM) onto
+hardware TIM12 (PB14 = TIM12_CH1 AF9, the only non-complementary timer channel for
+PB14 on AT32F435) and confirm idle control still works.
+
+State verified on the bench (18:14 flash, boot log 18:27): `hardPWM ETB Enable pin 32
+freq 800: HW PWM acquired ch0 AF9 -> OK` (pin 32 = Gpio::B14). Autocalibrate sweeps the
+blade 0-100%, proving the hardware PWM path AND the DIR (PB15) switching both work.
+
+Important: the lockstats lower table ("PWM channels (softPwmEvents=...)") only lists
+channels registered in g_pwmList; the hardware-PWM path (startSimplePwmHard success)
+does NOT call weComplexInit, so a hardware ETB shows up as NO soft-PWM line (not even
+as "hard/stopped"). So "soft 800Hz softPwmEvents=111427" in lockstats is NOT the real
+ETB - it is the phantom second ETB.
+
+Root cause of the executor flood: the stored tune carried etbFunctions2="Throttle 2"
+with all pins NONE. doInitElectronicThrottle() still creates a DcHardware for it, which
+runs startSimplePwmHard on pin 0 -> "no timer map -> soft PWM" -> a soft-PWM channel at
+etbFreq (800 Hz) that re-arms the executor ~100k+ times (lockstats othercb 0806DBE3)
+while writing to NO physical output. The board has exactly one TLE9201 H-bridge.
+
+Fix (firmware, applied in ConfigOverrides so it overrides any stored tune on every boot):
+
+| Change | File |
+| --- | --- |
+| Force etbFunctions[1] = DC_None in setupEtb() | `firmware/config/boards/m74_9/board_configuration.cpp` |
+| etbFunctions2 -> "None" in the default tune | `firmware/config/boards/m74_9/21129.msq` |
+
+Also added a comment documenting why etbFunctions[1] must stay None.
+
+Validation: fresh m74_9 build succeeds; not yet flashed/on-car. Expected after flash:
+lockstats loses the "soft 800Hz" line and sched exec total drops sharply; the real ETB
+(PB14 hardware) is simply absent from the soft table. On-car retest of idle pending.
+
+Open follow-ups:
+- Re-check idle closed-loop now that TPS is freshly autocalibrated on the hard-PWM
+  build (earlier "blade freewheels at idle" was observed on a pre-autocalibrate state;
+  hardware PWM itself is proven by autocalibrate).
+- Hard-PWM channels are invisible to printPwmStats; if per-channel visibility of the
+  hardware PWM is ever wanted, register hardware channels too (they'd show
+  softPwmEvents=0 / "hard").
