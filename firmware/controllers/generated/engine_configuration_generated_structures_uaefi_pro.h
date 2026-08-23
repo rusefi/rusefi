@@ -449,12 +449,12 @@ static_assert(sizeof(MAP_sensor_config_s) == 140);
 // start of thermistor_conf_s
 struct thermistor_conf_s {
 	/**
-	 * units: {bitStringValue(pressureUnitsLabels, useMetricOnInterface)}
+	 * units: {bitStringValue(unitsLabels, useMetricOnInterface)}
 	 * offset 0
 	 */
 	float tempC_1;
 	/**
-	 * units: {bitStringValue(pressureUnitsLabels, useMetricOnInterface)}
+	 * units: {bitStringValue(unitsLabels, useMetricOnInterface)}
 	 * offset 4
 	 */
 	float tempC_2;
@@ -519,6 +519,41 @@ struct linear_sensor_s {
 	float value2;
 };
 static_assert(sizeof(linear_sensor_s) == 20);
+
+// start of pressure_sensor_s
+struct pressure_sensor_s {
+	/**
+	 * offset 0
+	 */
+	adc_channel_e hwChannel;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 1
+	 */
+	uint8_t alignmentFill_at_1[3] = {};
+	/**
+	 * units: volts
+	 * offset 4
+	 */
+	float v1;
+	/**
+	 * units: {bitStringValue(pressureUnitsLabels, useMetricOnInterface)}
+	 * offset 8
+	 */
+	float value1;
+	/**
+	 * units: volts
+	 * offset 12
+	 */
+	float v2;
+	/**
+	 * units: {bitStringValue(pressureUnitsLabels, useMetricOnInterface)}
+	 * offset 16
+	 */
+	float value2;
+};
+static_assert(sizeof(pressure_sensor_s) == 20);
 
 // start of ThermistorConf
 struct ThermistorConf {
@@ -4780,7 +4815,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2068
 	 */
-	linear_sensor_s oilPressure;
+	pressure_sensor_s oilPressure;
 	/**
 	 * offset 2088
 	 */
@@ -4873,11 +4908,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 2120
 	 */
-	linear_sensor_s highPressureFuel;
+	pressure_sensor_s highPressureFuel;
 	/**
 	 * offset 2140
 	 */
-	linear_sensor_s lowPressureFuel;
+	pressure_sensor_s lowPressureFuel;
 	/**
 	 * offset 2160
 	 */
@@ -5883,7 +5918,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 3860
 	 */
-	linear_sensor_s acPressure;
+	pressure_sensor_s acPressure;
 	/**
 	 * value of A/C pressure in kPa/psi before that compressor is disengaged
 	 * units: {bitStringValue(pressureUnitsLabels, useMetricOnInterface)}

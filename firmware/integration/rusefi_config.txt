@@ -511,12 +511,12 @@ air_pressure_sensor_config_s sensor
 end_struct
 
 struct_no_prefix thermistor_conf_s @brief Thermistor known values
-float tempC_1;;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -55 : -67}, {useMetricOnInterface ? 200 : 392}, 1
-float tempC_2;;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -55 : -67}, {useMetricOnInterface ? 200 : 392}, 1
-float tempC_3;;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -55 : -67}, {useMetricOnInterface ? 200 : 392}, 1
-float resistance_1;;"Ohm", 1, 0, 0, 1000000, 1
-float resistance_2;;"Ohm", 1, 0, 0, 1000000, 1
-float resistance_3;;"Ohm", 1, 0, 0, 1000000, 1
+	float tempC_1;;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -55 : -67}, {useMetricOnInterface ? 200 : 392}, 1
+	float tempC_2;;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -55 : -67}, {useMetricOnInterface ? 200 : 392}, 1
+	float tempC_3;;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -55 : -67}, {useMetricOnInterface ? 200 : 392}, 1
+	float resistance_1;;"Ohm", 1, 0, 0, 1000000, 1
+	float resistance_2;;"Ohm", 1, 0, 0, 1000000, 1
+	float resistance_3;;"Ohm", 1, 0, 0, 1000000, 1
 
 	float bias_resistor;Pull-up resistor value on your board;"Ohm", 1, 0, 0, 200000, 1
 end_struct
@@ -527,6 +527,14 @@ struct linear_sensor_s
 	float value1;;"", 1, 0, -100000, 1000000, 2
 	float v2;;"volts", 1, 0, 0, 10, 2
 	float value2;;"", 1, 0, -100000, 1000000, 2
+end_struct
+
+struct pressure_sensor_s
+	adc_channel_e hwChannel;
+	float v1;;"volts", 1, 0, 0, 10, 2
+	float value1;;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? 30000 : 30000 * @@UNITS_KPA_TO_PSI@@}, 2
+	float v2;;"volts", 1, 0, 0, 10, 2
+	float value2;;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? 30000 : 30000 * @@UNITS_KPA_TO_PSI@@}, 2
 end_struct
 
 struct ThermistorConf
@@ -1513,7 +1521,7 @@ custom stepper_num_micro_steps_e 1 bits, U08,	@OFFSET@,	[0:3], @@stepper_num_mic
 #define PRIME_FLEX_SIZE 4
 	int16_t[PRIME_CURVE_COUNT] autoscale primeBins;;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -40 : -40}, {useMetricOnInterface ? @@CLT_UPPER_LIMIT@@ : @@CLT_UPPER_LIMIT@@ * 1.8 + 32}, 0
 
-	linear_sensor_s oilPressure;
+	pressure_sensor_s oilPressure;
 
 	spi_device_e accelerometerSpiDevice;
 
@@ -1539,8 +1547,8 @@ custom stepper_num_micro_steps_e 1 bits, U08,	@OFFSET@,	[0:3], @@stepper_num_mic
 	int16_t coastingFuelCutMap;MAP value above which fuel injection is re-enabled.;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@}, 0
 
 
-	linear_sensor_s highPressureFuel;
-	linear_sensor_s lowPressureFuel;
+	pressure_sensor_s highPressureFuel;
+	pressure_sensor_s lowPressureFuel;
 
 gppwm_note_t[SCRIPT_CURVE_COUNT iterate] scriptCurveName;
 
@@ -1825,7 +1833,7 @@ int anotherCiTest
 	uint8_t autoscale mc33810Nomi;Nominal coil charge current, 0.25A step;"A", 0.25, 0, 3.00, 10.75, 2
 	uint8_t mc33810Maxi;Maximum coil charge current, 1A step;"A", 1, 0, 6, 21, 0
 
-    linear_sensor_s acPressure
+    pressure_sensor_s acPressure
     uint16_t minAcPressure;value of A/C pressure in kPa/psi before that compressor is disengaged;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? 500 : 72.5}, 0
     uint16_t maxAcPressure;value of A/C pressure in kPa/psi after that compressor is disengaged;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? 500 : 72.5}, 0
 
