@@ -6409,3 +6409,55 @@ jitter is upstream (trigger edges); a fat >=16 us bucket means the
 dispatch floats (IRQ locks / long ISRs). The coil overcharge 6.06-6.45
 ms at the events is the spark turn-off firing late or being cancelled
 by the sync loss - the stats will show which.
+
+## 2026-08-23 - ROOT CAUSE + fix: TIM5 executor ran at priority 7 (LLD default), below the trigger handoff and the ADC
+
+The lockstats runs confirmed the float: at stable 1887 rpm 11-30% of all
+scheduled commands went out >=10 us late, worst 389 us (bench with the
+CAN console streaming: 11% late even with the engine off). The trigger
+ISR histograms showed the trigger handoff (priority 3) at 44 us average
+with 100-1000 us tails, ~2200/s at 1887 rpm - and the executor was
+BELOW it.
+
+Root cause: the AT32 mcuconf defines no STM32_PWM_TIM5_IRQ_PRIORITY,
+and the shared STM32 TIMv1 LLD defaults it to 7. On the car the
+actual layout was: raw EXTI capture 0 (fast IRQ, correct), trigger
+handoff decode 3, ADC 6, **executor (TIM5 CC1) 7**, SysTick 8, CAN 11.
+So EVERY trigger decode (44 us avg, tails to ~1 ms) and every ADC
+completion delayed the spark/dwell/injection dispatch - the measured
+floating command execution. (The EFI_IRQ_SCHEDULING_TIMER_PRIORITY=4
+define existed but was never consumed: the LLD reads
+STM32_PWM_TIM5_IRQ_PRIORITY, not the EFI define; assertInterruptPriority
+is a no-op stub on the AT32 port, so nothing caught it.)
+
+The fix (flashed 13:35, verified 671020 bytes):
+
+| Change | File |
+| --- | --- |
+| Executor now the highest-priority kernel IRQ: EFI_IRQ_SCHEDULING_TIMER_PRIORITY 3 + STM32_PWM_TIM5_IRQ_PRIORITY defined from it; trigger handoff moved to 4 | `firmware/hw_layer/ports/at32/interrupt_priority.h` |
+| schedule() no longer runs due events inline from ISR context (unit tests/simulator keep inline execution) | `firmware/controllers/system/timer/single_timer_executor.cpp` |
+| Per-command-class lateness stats (dwell/spark/overdwell/fuel/other), printed by lockstats | `single_timer_executor.cpp/.h`, `firmware/config/boards/m74_9/board_configuration.cpp` |
+| overFireSparkAndPrepareNextSchedule de-static'd for attribution | `firmware/controllers/engine_cycle/spark_logic.cpp/.h` |
+
+Why this is deterministic now: spark/dwell/injection moments fire from
+the TIM5 ISR at priority 3 (CORTEX_MAX_KERNEL_PRIORITY), which
+preempts the trigger handoff (4), the ADC (6) and everything else;
+only the raw EXTI capture (0, ~1 us) can preempt it. Tooth timestamps
+are captured in the raw EXTI ISR into a 32-entry queue BEFORE any
+decode, so the decode being preempted by due events cannot distort
+tooth timing. Expected dispatch latency: fixed ~1-3 us per command.
+
+Validation: 1158 unit tests green; firmware builds; compile-time probe
+confirms STM32_PWM_TIM5_IRQ_PRIORITY=3 and handoff=4 through the real
+mcuconf chain. On-car validation pending: run lockstats at ~1887 rpm -
+all of dwell/spark/overdwell/fuel must show late>=10us=0 and small
+maxLateUs.
+
+Build pitfall hit along the way: commas outside parentheses split
+addConsoleAction macro arguments (the C standard protects only
+parentheses, GCC too) - a brace-initializer array inside the lockstats
+lambda broke the macro; the kind names now come from a helper function.
+Also: a stray `gmake` at the firmware root rebuilds for the DEFAULT
+board (f407-discovery) into the SAME build/ dir and poisons the
+incremental m74_9 build - always rebuild the board via its compile
+script after such an accident (gmake clean first).

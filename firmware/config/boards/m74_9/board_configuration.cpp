@@ -724,6 +724,24 @@ static __attribute__((aligned(256), noinline)) uint32_t flashperfLoop() {
 	return acc;
 }
 
+// Printable name of an executor command class. A helper instead of an
+// in-lambda array because commas outside parentheses split macro arguments
+// (addConsoleAction is a function-like macro).
+static const char* m74_9ExecKindName(int kind) {
+	switch (kind) {
+	case (int)ExecEventKind::Dwell:
+		return "dwell";
+	case (int)ExecEventKind::Spark:
+		return "spark";
+	case (int)ExecEventKind::Overdwell:
+		return "overdwell";
+	case (int)ExecEventKind::Fuel:
+		return "fuel";
+	default:
+		return "other";
+	}
+}
+
 void setup_custom_board_overrides() {
 	custom_board_InitHardware = m74_9_boardInitHardware;
 	custom_board_DefaultConfiguration = m74_9_boardDefaultConfiguration;
@@ -851,6 +869,21 @@ void setup_custom_board_overrides() {
 			(unsigned)sched.lateHistogram[0], (unsigned)sched.lateHistogram[1], (unsigned)sched.lateHistogram[2],
 			(unsigned)sched.lateHistogram[3], (unsigned)sched.lateHistogram[4], (unsigned)sched.lateHistogram[5],
 			(unsigned)sched.lateHistogram[6]);
+
+		// Per-command-class breakdown: WHICH commands float. The engine
+		// timing commands (dwell/spark/overdwell/fuel) must show
+		// late>=10us=0 and small maxLateUs - the executor now runs above
+		// the trigger decode and the ADC, so it dispatches with a fixed
+		// ~1-2 us entry latency. 'other' carries the periodic/ADC/TS
+		// events where a few us of jitter does not matter.
+		// NOTE: commas outside parentheses split macro arguments, so the
+		// kind name comes from a helper, not an in-lambda array.
+		for (int i = 0; i < (int)ExecEventKind::Count; i++) {
+			const auto& k = sched.kindStats[i];
+			efiPrintf("sched %s: n=%u late>=10us=%u maxLateUs=%u",
+				m74_9ExecKindName(i), (unsigned)k.executedEventCount, (unsigned)k.lateEventCount,
+				(unsigned)(k.maxLateNt / (NT_PER_SECOND / 1000000)));
+		}
 		sched.resetExecutionLatenessStats();
 	});
 	// Systemic CPU speed probe: reads the AT32 flash performance/divider/
