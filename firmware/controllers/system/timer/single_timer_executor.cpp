@@ -170,20 +170,23 @@ void SingleTimerExecutor::executeAllPendingActions() {
 		efitick_t nowNt = getTimeNowNt();
 		efitick_t momentNt = 0;
 		efitick_t executedAtNt = 0;
+		efitick_t cbDurationNt = 0;
 
 		// Classify the head event BEFORE execution: executeOne unlinks it,
 		// so this is the only place the action is still reachable.
 		uint8_t kind = (uint8_t)ExecEventKind::Other;
+		uint32_t cbAddr = 0;
 		scheduling_s* head = queue.getHead();
 		if (head) {
 			kind = (uint8_t)classifyAction(head->action);
+			cbAddr = (uint32_t)(uintptr_t)head->action.getCallback();
 		}
 
-		didExecute = queue.executeOne(nowNt, &momentNt, &executedAtNt);
+		didExecute = queue.executeOne(nowNt, &momentNt, &executedAtNt, &cbDurationNt);
 
 		if (didExecute) {
 			// Dispatch lateness telemetry: how late the command went out.
-			recordExecutionLateness(kind, executedAtNt - momentNt);
+			recordExecutionLateness(kind, cbAddr, executedAtNt - momentNt, cbDurationNt);
 		}
 
 		// if we're stuck in a loop executing lots of events, panic!
@@ -227,7 +230,7 @@ void initSingleTimerExecutorHardware() {
 	initMicrosecondTimer();
 }
 
-void SingleTimerExecutor::recordExecutionLateness(uint8_t kind, efitick_t late) {
+void SingleTimerExecutor::recordExecutionLateness(uint8_t kind, uint32_t cbAddr, efitick_t late, efitick_t cbDurationNt) {
 	executedEventCount++;
 	if (late > maxLateNt) {
 		maxLateNt = late;
@@ -263,7 +266,50 @@ void SingleTimerExecutor::recordExecutionLateness(uint8_t kind, efitick_t late) 
 		if (late >= US2NT(10)) {
 			k.lateEventCount++;
 		}
+		if (cbDurationNt > maxCbDurationNt[kind]) {
+			maxCbDurationNt[kind] = cbDurationNt;
+		}
 	}
+
+	if (kind == (uint8_t)ExecEventKind::Other) {
+		recordOtherCbStat(cbAddr, late, cbDurationNt);
+	}
+}
+
+void SingleTimerExecutor::recordOtherCbStat(uint32_t cbAddr, efitick_t late, efitick_t durationNt) {
+	if (cbAddr == 0) {
+		return;
+	}
+
+	for (auto& s : otherCbStats) {
+		if (s.cbAddr == cbAddr) {
+			s.count++;
+			if (late >= US2NT(10)) {
+				s.lateCount++;
+			}
+			if (late > s.maxLateNt) {
+				s.maxLateNt = late;
+			}
+			if (durationNt > s.maxDurationNt) {
+				s.maxDurationNt = durationNt;
+			}
+			return;
+		}
+	}
+
+	for (auto& s : otherCbStats) {
+		if (s.cbAddr == 0) {
+			s.cbAddr = cbAddr;
+			s.count = 1;
+			s.lateCount = late >= US2NT(10) ? 1 : 0;
+			s.maxLateNt = late;
+			s.maxDurationNt = durationNt;
+			return;
+		}
+	}
+
+	// table full - drop (the top few distinct callbacks are enough to
+	// identify the offender; the table resets with lockstats)
 }
 
 void SingleTimerExecutor::resetExecutionLatenessStats() {
@@ -275,6 +321,10 @@ void SingleTimerExecutor::resetExecutionLatenessStats() {
 	}
 	for (size_t i = 0; i < efi::size(kindStats); i++) {
 		kindStats[i] = {};
+		maxCbDurationNt[i] = 0;
+	}
+	for (size_t i = 0; i < efi::size(otherCbStats); i++) {
+		otherCbStats[i] = {};
 	}
 }
 
