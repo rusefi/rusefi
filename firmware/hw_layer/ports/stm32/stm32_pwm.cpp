@@ -235,6 +235,7 @@ void resetStm32PwmForUnitTest() {
 /*static*/ hardware_pwm* hardware_pwm::tryInitPin(const char* msg, brain_pin_e pin, float frequencyHz, float duty) {
 	// Hardware PWM can't do very slow PWM - the timer counter is only 16 bits, so at 2MHz counting, that's a minimum of 31hz.
 	if (frequencyHz < 50) {
+		efiPrintf("hardPWM %s pin %d: freq %.0fHz too low (<50) -> soft PWM", msg, (int)pin, frequencyHz);
 		return nullptr;
 	}
 
@@ -242,6 +243,7 @@ void resetStm32PwmForUnitTest() {
 
 	// This pin can't do hardware PWM
 	if (!cfg) {
+		efiPrintf("hardPWM %s pin %d freq %.0fHz: no timer map -> soft PWM", msg, (int)pin, frequencyHz);
 		return nullptr;
 	}
 
@@ -251,6 +253,8 @@ void resetStm32PwmForUnitTest() {
 		// Finally connect the timer to physical pin
 		efiSetPadMode(msg, pin, PAL_MODE_ALTERNATE(cfg.Value.AlternateFunc));
 
+		efiPrintf("hardPWM %s pin %d freq %.0fHz: HW PWM acquired ch%d AF%d -> OK",
+			msg, (int)pin, frequencyHz, cfg.Value.Channel, cfg.Value.AlternateFunc);
 		return device;
 	}
 
