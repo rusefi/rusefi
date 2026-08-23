@@ -6268,3 +6268,28 @@ XCP handler -> 3-word flash program (each AT32 word program stalls
 instruction fetch) -> TX response chain plus the MacCAN USB pump
 (~1 ms, host floor Java cannot remove). Future levers if needed: 1 Mbit
 CAN, block-mode XCP, batching buffered PROGRAM_MAX frames.
+
+## 2026-08-23 - 1 Mbit CAN for OpenBLT/main firmware: analysis, NOT enabling
+
+Asked: can we run 1 Mbit CAN for both OpenBLT and the main firmware.
+Answer: NO for the main firmware, NOT worth it for the bootloader.
+
+- Main firmware MUST stay at 500k (tune canBaudRate): the bus speed is
+  a property of the whole bus and CAN1 carries live car traffic (BCM
+  immobilizer handshake 0x0713/0x0714, ABS, cluster) plus the
+  console-over-CAN PCAN link. 1M would put two bit timings on one bus -
+  mutual error frames, IMMO/ABS/cluster dead, console-over-CAN dead.
+- Bootloader at 1M is technically possible (AT32 bxCAN + PCAN support
+  B1MBPS) but bench-only: with ignition on the other car nodes transmit
+  at 500k and would wreck the XCP frames. A permanently-1M bootloader
+  would also make in-car CAN flashing impossible - would need a separate
+  bench build or a custom baudrate-switch command (OpenBLT has no XCP
+  baud switch).
+- Expected gain is ~8% anyway: wire time per frame 0.45 -> 0.25 ms at
+  1M, out of 2.77 ms/frame total; the bottleneck is the per-frame
+  request/response, not the bus. Decision deferred until the RTT
+  histogram from the next flash settles where the time goes.
+- Real levers: block-mode XCP / PROGRAM_MAX batching in the bootloader
+  (firmware-side, documented only), or a dedicated CAN2 flashing bus -
+  PB5/PB6 are free on m74_9 (PIN5/PIN6, unused) and could be wired to a
+  separate connector at any speed without touching the car bus.
