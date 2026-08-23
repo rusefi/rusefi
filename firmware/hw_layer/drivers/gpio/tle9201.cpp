@@ -13,6 +13,9 @@
 
 #include "gpio/gpio_ext.h"
 #include "gpio/tle9201.h"
+#if (BOARD_L9779_COUNT > 0)
+#include "gpio/l9779.h"
+#endif
 
 #if EFI_PROD_CODE && (BOARD_TLE9201_COUNT > 0)
 
@@ -99,6 +102,8 @@ struct Tle9201 {
 	// being silently swallowed because the initial value matches.
 	int detectedRev = -1;
 	uint8_t savedDiag = 0;
+	// latched warning for the external DIS kill (see process_diag_and_rev)
+	bool warnedOutputsDisabledWhileRunning = false;
 	char name[11];
 };
 
@@ -201,6 +206,36 @@ void Tle9201::process_diag_and_rev(uint8_t diag, uint8_t rev) {
 
 		savedDiag = diag;
 	}
+
+#if (BOARD_L9779_COUNT > 0)
+	// The EN bit mirrors the DIS pin (0 = DIS high = bridge disabled). On
+	// boards like m74_9 the firmware never drives DIS (PB13/ETC_EN is fixed
+	// high after board init), so EN=0 means the EXTERNAL kill chain cut the
+	// bridge - typically the L9779 WDA output going low when its watchdog
+	// error counter exceeds 4 (datasheet 6.15). If the engine is running at
+	// that moment the blade just dropped: log ONE warning line with the WDA
+	// counters so the cause lands in the log right next to the stall.
+	bool outputsDisabled = !(diag & TLE9201_DIAG_EN);
+	bool engineRunning = !engine->rpmCalculator.isStopped();
+	if (outputsDisabled && engineRunning && !warnedOutputsDisabledWhileRunning) {
+		warnedOutputsDisabledWhileRunning = true;
+
+		uint8_t wdaEc = 0;
+		bool wdaInt = false;
+		int wdaOk = 0;
+		int wdaFail = 0;
+		if (l9779_getWdaCounters(&wdaEc, &wdaInt, &wdaOk, &wdaFail)) {
+			efiPrintf("WARNING: TLE9201 outputs disabled while engine running (DIS pin high; l9779 WDA ec=%d wda_int=%d ok=%d fail=%d)",
+				(int)wdaEc, (int)wdaInt, wdaOk, wdaFail);
+		} else {
+			efiPrintf("WARNING: TLE9201 outputs disabled while engine running (DIS pin high)");
+		}
+	}
+
+	if (!outputsDisabled || !engineRunning) {
+		warnedOutputsDisabledWhileRunning = false;
+	}
+#endif
 }
 
 /*==========================================================================*/

@@ -326,6 +326,22 @@ struct L9779 : public GpioChip {
 
 static L9779 chips[BOARD_L9779_COUNT];
 
+bool l9779_getWdaCounters(uint8_t *ec, bool *wda_int, int *ok, int *fail)
+{
+	/* WDA counters are written by the driver thread only; the reads below
+	 * are single-word atomic accesses, safe from other threads. */
+	L9779 *chip = &chips[0];
+	if (ec)
+		*ec = chip->wd_last_ec;
+	if (wda_int)
+		*wda_int = chip->wd_int;
+	if (ok)
+		*ok = chip->wd_ok_cnt;
+	if (fail)
+		*fail = chip->wd_fail_cnt;
+	return true;
+}
+
 static const char* l9779_pin_names[L9779_SIGNALS] = {
 	"L9779.IGN1",	"L9779.IGN2",	"L9779.IGN3",	"L9779.IGN4",
 	"L9779.OUT1",	"L9779.OUT2",	"L9779.OUT3",	"L9779.OUT4",
