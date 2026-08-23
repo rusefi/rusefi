@@ -6293,3 +6293,23 @@ Answer: NO for the main firmware, NOT worth it for the bootloader.
   (firmware-side, documented only), or a dedicated CAN2 flashing bus -
   PB5/PB6 are free on m74_9 (PIN5/PIN6, unused) and could be wired to a
   separate connector at any speed without touching the car bus.
+
+## 2026-08-23 - fresh flash: 182.3 s, RTT histogram settles the bottleneck
+
+Flashed 670,272 bytes over CAN (new host fix + RTT histogram, log:
+artifacts/logs/openblt_flash_260823_rusefi_srec.log):
+- 182.3 s vs 265.4 s before the readFrame rework - the host fix removed
+  ~0.9 ms/frame. Verified=true, reset into the new app (blade-drop
+  fixes + WDA warning + TS burn gate).
+- RTT: 95,802 frames, avg 1.90 ms, max 466.74 ms (erases). Buckets
+  <1/1-2/2-3/3-4/4-5/5-7/7-10/>=10 ms: [0, 79592, 11462, 3243, 1414, 68,
+  0, 23]. 83% of program frames land in 1-2 ms = ECU processing
+  (~0.5-1 ms) + wire (~0.45 ms) + MacCAN USB pump (~0.5-1 ms).
+- Conclusion: the bus is no longer the bottleneck. 1 Mbit CAN would save
+  only ~0.2 ms of 1.9 (~10%, ~165 s); the real lever is block-mode XCP /
+  PROGRAM_MAX batching in the bootloader (firmware-side, documented
+  only, not implemented).
+- openblt_can.sh now resolves relative file args against the caller's
+  cwd (the first 2026-08-23 attempt failed with NoSuchFileException
+  because the script cd's into java_console/ before the flasher
+  resolves its path).
