@@ -6313,3 +6313,30 @@ artifacts/logs/openblt_flash_260823_rusefi_srec.log):
   cwd (the first 2026-08-23 attempt failed with NoSuchFileException
   because the script cd's into java_console/ before the flasher
   resolves its path).
+
+## 2026-08-23 - cranking blade drops: WDA path ruled out, PB13/3.3V prime suspect
+
+The new warning line fired twice on the car (efi_log_2026-08-23_11_42_36_849)
+with HEALTHY watchdog counters both times: ec=4 wda_int=0 ok=1007 fail=0
+(11:43:16) and ec=4 wda_int=0 ok=123 fail=0 (11:44:13). ec=4 is the
+watchdog's healthy floor, fail=0 since boot -> the EC>4 -> WDA-low ->
+ETC_WD kill chain is ruled out for the cranking drops, and so is an
+L9779 reset (EC would read 6). The battery recovers to 12.2 V ~2 s
+BEFORE the 11:43:16 drop (MLG 11_43_11_631: 10.7 V only at starter
+inrush) - a battery sag does not explain it.
+
+DIS high physically requires Q5A to stop conducting (PB13 high holds
+DIS low regardless of the 5V rail), so the prime suspect is a 3.3V
+MCU-supply dip during cranking dropping PB13's GPIO drive while the
+core keeps running; secondary suspect is the Q5B/ETC_WD chain if
+populated. The drop is INTERMITTENT - not every cranking produces the
+0x5C (user-confirmed): the 11:44:13 event recovered in ~0.8 s right at
+the catch (engine started fine - the blade rests on the closed stop
+during cranking, so the drop is harmless for starting), the 11:43:16
+event showed no DF until the next power cycle (starter held longer /
+key-off; the tle9201 diag thread stops polling when ignition is off,
+so 'no DF' can be a polling artifact).
+
+Open steps (hardware): buzz Q5B/R20 population; scope PB13 and DIS
+during cranking in the car. Firmware option: add PB13 readback +
+key_on_status + VREFINT to the warning line.
