@@ -38,6 +38,18 @@ import static com.devexperts.logging.Logging.getLogging;
  * recording duration and buffer size, 'Stop' ends recording and offers a 'Save file as'
  * dialog, 'Reset' clears the buffer.
  * <p>
+ * "Scanning for SLCAN port..." mechanics: the constructor starts a daemon reader threadt
+ * ({@link #readerLoop()}) which calls {@link SlcanClient#findAndConnect(Consumer)} -- that
+ * enumerates all serial ports, opens each one, skips any port answering the TunerStudio
+ * HELLO with a rusEFI signature (the primary console VCP), then probes the rest with the
+ * SLCAN 'V' (version) command and opens the CAN channel (C/S6/O sequence) on the first
+ * port that responds. While nothing is found the loop retries every {@link #RESCAN_PERIOD_MS};
+ * once connected it blocks reading frame lines, using a periodic 'F' status write as a
+ * liveness probe on a silent bus, and on any IOException drops back to scanning. The
+ * connection state is published via the volatile {@link #connectedPort} (null while
+ * scanning); a 250 ms Swing timer ({@link #refresh()}) renders it as the status text
+ * ("Scanning for SLCAN port..." vs "Connected to ...") and the indicator color.
+ * <p>
  * Shown in ConsoleUI behind the 'show_slcan_sniffer' flag; construct lazily (the reader
  * thread starts scanning serial ports as soon as the tab is instantiated).
  *
