@@ -474,42 +474,22 @@ void m74_9ToothDump() {
 
 // ---- persistent storage: learned profile in MFS, like the stock ECU ----
 
-// Strong override of the weak decoder hook: regularized per-tooth profile
-// factors for the sync gap check. The gap tooth (57) keeps factor 1.0 so the
-// missing-teeth gap still reads ~3x; regular teeth are normalized to their
-// learned share of the revolution, which divides out the systematic
-// compression ripple - the digital equivalent of the stock ECU's adaptive
-// VR conditioning.
+// Strong override of the weak decoder hook.
+//
+// DISABLED 2026-08-23: the decoder CONSUMED the RAM-learned EMA profile at
+// rpm >= 2 * crankingRpm (useProfile gate in trigger_decoder.cpp) even
+// though the board's load/save housekeeping (custom_board_periodicSlowCallback)
+// is switched off - disabling the periodic load stops neither the learner
+// (trigger hook, boardTriggerCallback) nor the consumer. On the car this
+// periodically warped the sync gap ratio at STABLE high rpm: smooth teeth
+// (real jitter ~1%) divided by cranking-learned factors (0.79..1.51x)
+// produced a fake ripple -> false sync decisions -> C9002 + C9007 + coil
+// recharge jerks at constant rpm, recovering on the next revolution.
+// The decoder now compares RAW durations on this board; the learner keeps
+// running to feed the toothdump/rawtrg diagnostics only.
 TRIGGER_RAM_CODE float triggerGetToothProfileFactor(int toothIndex) {
-	if (toothIndex < 0 || toothIndex >= (int)ToothCount) {
-		return 1.0f;
-	}
-
-	// Mean over the regular teeth (excluding the gap tooth 57).
-	float sum = 0;
-	int count = 0;
-	for (size_t i = 0; i < ToothCount - 1; i++) {
-		if (profileCount[i] > 0) {
-			sum += profileUs[i];
-			count++;
-		}
-	}
-
-	if (count == 0 || toothIndex == (int)ToothCount - 1) {
-		return 1.0f;
-	}
-
-	float factor = profileUs[toothIndex] / (sum / count);
-
-	// Sanity clamp: no real wheel tooth deviates more than this from the mean.
-	if (factor < 0.5f) {
-		factor = 0.5f;
-	}
-	if (factor > 1.5f) {
-		factor = 1.5f;
-	}
-
-	return factor;
+	(void)toothIndex;
+	return 1.0f;
 }
 
 // Called from the storage manager thread (serialized with settings writes).
