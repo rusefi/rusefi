@@ -13,3 +13,7 @@
 
 #define INJ_PHASE_RPM_COUNT 3
 #define INJ_PHASE_LOAD_COUNT 3
+
+// Dense ETB pedal->TPS map: 32 pedal bins + 19 rpm bins (m74_9 custom)
+#define PEDAL_TO_TPS_SIZE 32
+#define PEDAL_TO_TPS_RPM_SIZE 19
