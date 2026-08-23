@@ -1059,10 +1059,10 @@
          100
 </constant>
         <constant cols="1" digits="2" name="etbBiasValues" rows="8" units="ETB duty cycle bias">
-         0.0
-         0.0
-         0.0
-         0.0
+         -12.0
+         -10.0
+         -8.0
+         -5.0
          0.0
          21.0
          22.0
@@ -1070,7 +1070,7 @@
 </constant>
         <constant digits="0" name="etbFreq" units="Hz">800</constant>
         <constant name="etbFunctions1">"Throttle 1"</constant>
-        <constant name="etbFunctions2">"Throttle 2"</constant>
+        <constant name="etbFunctions2">"None"</constant>
         <constant digits="0" name="etbIdleThrottleRange" units="%">30</constant>
         <constant name="etbIo1_controlPin">"PB14"</constant>
         <constant name="etbIo1_directionPin1">"PB15"</constant>
@@ -5236,8 +5236,8 @@
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260822" nPages="1" signature="rusEFI maccan-tx-fix.2026.08.22.m74_9.1767756910" version="5.0"/>
-    <bibliography author="rusEFI 20260822" writeDate="date"/>
+    <versionInfo firmwareInfo="20260823" nPages="1" signature="rusEFI maccan-tx-fix.2026.08.23.m74_9.1767756910" version="5.0"/>
+    <bibliography author="rusEFI 20260823" writeDate="date"/>
     <settings/>
     <userComments/>
 </msq>
