@@ -359,6 +359,14 @@ The TLE9201 H-bridge DIS pin (11) is active-low at the chip, but on m74_9 the MC
 
 The L9779 WDA output (pin 38) nets to ETC_WD -> Q5B -> DIS as a redundant hardware kill (L9779 algorithmic watchdog can cut the bridge); likely depopulated ("not soldered" near R20). The KiCad netlist disagrees with the physical board (KiCad says DIS -> +3V3, physically +5V via R23) - trust 0-ohm measurements over netlist Y-positions.
 
+### Cranking-time blade drops: WDA watchdog path RULED OUT, PB13/3.3V side is the prime suspect (2026-08-23)
+
+Measured on the car (log efi_log_2026-08-23_11_42_36_849): the new TLE9201 warning fired twice during cranking with HEALTHY L9779 counters both times - `ec=4 wda_int=0 ok=1007 fail=0` and `ec=4 wda_int=0 ok=123 fail=0`. ec=4 is the watchdog's healthy floor (EC starts at 6 after reset and decrements per correct answer), fail=0 since boot. So the EC>4 -> WDA-low kill chain is NOT the cause of the cranking drops, and the L9779 was not reset (EC would read 6). The battery is also clean: it dips to 10.7 V only at starter inrush and is back at 12.2 V ~2 s BEFORE the DIS drop in the 11:43:16 event - a plain battery sag does not explain it.
+
+Since DIS is held low by Q5A whenever PB13 is high (independent of the 5V rail), DIS-high means Q5A stopped conducting: the prime suspect is a 3.3V MCU-supply dip during cranking that drops PB13's GPIO drive while the core keeps running (no reset lines at the drop instants; logs/VRS ramp keep flowing). Secondary suspect: the Q5B/ETC_WD chain, IF it is actually populated, and its base pullup sags on the 5V rail. The drop is INTERMITTENT - not every cranking produces the 0x5C (user-confirmed 2026-08-23): the 11:44:13 event recovered in ~0.8 s right at the catch (engine started fine, blade limp at the closed stop is harmless for starting), while the 11:43:16 event showed no DF until the next power cycle (starter held longer / key-off; note the tle9201 diag thread also stops polling when isIgnVoltage() is false, so 'no DF' can be a polling artifact).
+
+Open diagnostic steps (hardware, not done): buzz Q5B/R20 population; scope PB13 and DIS during cranking in the car; firmware-side option - add PB13 GPIO readback + key_on_status + VREFINT (AT32 internal 1.2V bandgap shows 3.3V dips) to the warning line.
+
 ## m74_9 / AT32: fast ADC (TIM6 -> ADC2) root cause - DMAMUX TBL_SEL never enabled
 
 The AT32F4xx port in the rusEFI ChibiOS fork reuses the unmodified STM32 ADCv2/DMAv1 LLDs (`firmware/ChibiOS/os/hal/ports/AT32/AT32F4xx/platform.mk` includes STM32 LLDs). Fixed 2026-08-15 after MAP read 0 (fast ADC dead, `adc_report` showed `fast 0 samples` forever).
