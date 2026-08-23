@@ -1909,7 +1909,7 @@
         <constant name="idleIncrementalPidCic">"no"</constant>
         <constant digits="1" name="idleMaximumAirmass" units="mg">190.0</constant>
         <constant name="idleMode">"Open Loop + Closed Loop"</constant>
-        <constant digits="1" name="idlePidActivationTime" units="seconds">0.5</constant>
+        <constant digits="1" name="idlePidActivationTime" units="seconds">0.0</constant>
         <constant digits="0" name="idlePidDeactivationTpsThreshold" units="%">10</constant>
         <constant digits="0" name="idlePidRpmDeadZone" units="RPM">10</constant>
         <constant digits="0" name="idlePidRpmUpperLimit" units="RPM">400</constant>
@@ -1919,7 +1919,7 @@
         <constant name="idleReturnTargetRamp">"no"</constant>
         <constant digits="1" name="idleReturnTargetRampDuration" units="seconds">5.0</constant>
         <constant digits="4" name="idleRpmPid_dFactor" units="">0.0</constant>
-        <constant digits="4" name="idleRpmPid_iFactor" units="">0.0008</constant>
+        <constant digits="4" name="idleRpmPid_iFactor" units="">0.003</constant>
         <constant digits="0" name="idlerpmpid_iTermMax" units="">20</constant>
         <constant digits="0" name="idlerpmpid_iTermMin" units="">-20</constant>
         <constant digits="0" name="idleRpmPid_maxValue" units="">20</constant>
