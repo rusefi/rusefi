@@ -257,7 +257,12 @@ else
 	$(LN) $< $@
 endif
 
-$(BOOTLOADER_BIN_OUT): $(BOOTLOADER_BIN) | $(DEVICE_BIN_FOLDER)
+# BIN_FOLDER is a .FORCE target whose recipe rm -rf's the folder (and with it
+# this symlink) on every bundle run, so it must be a NORMAL prerequisite here:
+# with an order-only dependency make can decide this target is up to date
+# BEFORE BIN_FOLDER's recipe deletes it, and the symlink never comes back
+# (the 2026-08-23 zip shipped an empty bin/device/).
+$(BOOTLOADER_BIN_OUT): $(BOOTLOADER_BIN) $(BIN_FOLDER) | $(DEVICE_BIN_FOLDER)
 ifeq ($(UNAME_S),Darwin)
 	$(LN) $(abspath $<) $@
 else
