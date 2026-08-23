@@ -115,7 +115,37 @@ void SingleTimerExecutor::executeAllPendingActions() {
 	bool didExecute;
 	do {
 		efitick_t nowNt = getTimeNowNt();
-		didExecute = queue.executeOne(nowNt);
+		efitick_t momentNt = 0;
+		efitick_t executedAtNt = 0;
+		didExecute = queue.executeOne(nowNt, &momentNt, &executedAtNt);
+
+		if (didExecute) {
+			// Dispatch lateness telemetry: how late the command went out.
+			executedEventCount++;
+			efitick_t late = executedAtNt - momentNt;
+			if (late > maxLateNt) {
+				maxLateNt = late;
+			}
+			if (late >= US2NT(10)) {
+				lateEventCount++;
+			}
+			uint32_t lateUs = (uint32_t)(late / (NT_PER_SECOND / 1000000));
+			if (lateUs < 1) {
+				lateHistogram[0]++;
+			} else if (lateUs < 4) {
+				lateHistogram[1]++;
+			} else if (lateUs < 16) {
+				lateHistogram[2]++;
+			} else if (lateUs < 64) {
+				lateHistogram[3]++;
+			} else if (lateUs < 256) {
+				lateHistogram[4]++;
+			} else if (lateUs < 1024) {
+				lateHistogram[5]++;
+			} else {
+				lateHistogram[6]++;
+			}
+		}
 
 		// if we're stuck in a loop executing lots of events, panic!
 		if (executeCounter++ == 500) {
@@ -156,6 +186,15 @@ void SingleTimerExecutor::scheduleTimerCallback() {
 
 void initSingleTimerExecutorHardware() {
 	initMicrosecondTimer();
+}
+
+void SingleTimerExecutor::resetExecutionLatenessStats() {
+	maxLateNt = 0;
+	executedEventCount = 0;
+	lateEventCount = 0;
+	for (size_t i = 0; i < efi::size(lateHistogram); i++) {
+		lateHistogram[i] = 0;
+	}
 }
 
 void executorStatistics() {

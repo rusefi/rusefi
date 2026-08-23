@@ -252,7 +252,7 @@ int EventQueue::executeAll(efitick_t now) {
 	return executionCounter;
 }
 
-bool EventQueue::executeOne(efitick_t now) {
+bool EventQueue::executeOne(efitick_t now, efitick_t* executedMomentNt, efitick_t* executedAtNt) {
 	// Read the head every time - a previously executed event could
 	// have inserted something new at the head
 	scheduling_s* current = m_head;
@@ -284,6 +284,18 @@ bool EventQueue::executeOne(efitick_t now) {
 	// yes, that's a busy wait but that's what we need here
 	while (current->getMomentNt() > getTimeNowNt()) {
 		UNIT_TEST_BUSY_WAIT_CALLBACK();
+	}
+
+	// Dispatch lateness telemetry: the scheduled moment vs the instant the
+	// action actually starts (right after the spin). The spin guarantees
+	// executedAt >= moment; the delta is the ISR dispatch delay.
+	efitick_t eventMomentNt = current->getMomentNt();
+	efitick_t actualTimeNt = getTimeNowNt();
+	if (executedMomentNt) {
+		*executedMomentNt = eventMomentNt;
+	}
+	if (executedAtNt) {
+		*executedAtNt = actualTimeNt;
 	}
 
 	// step the head forward, unlink this element, clear scheduled flag
