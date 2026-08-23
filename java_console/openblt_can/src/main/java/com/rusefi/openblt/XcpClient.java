@@ -1,6 +1,7 @@
 package com.rusefi.openblt;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * Synchronous XCP 1.0 client for the rusEFI OpenBLT bootloader over CAN.
@@ -22,6 +23,40 @@ public class XcpClient {
     private final int defaultTimeoutMs;
     /** Optional frame tracer (e.g. --verbose diagnostics). */
     private final java.util.function.Consumer<String> frameLog;
+
+    // ---- per-frame round-trip timing (flash-speed diagnostics) -------
+    // Measured from the request write until the matching XCP reply arrives.
+    // The histogram separates the program-frame hot path (<2 ms) from slow
+    // replies (erase, connect) so the next flash run shows WHERE the time
+    // goes: host polling vs ECU-side processing vs bus.
+    private long rttCount;
+    private long rttSumNanos;
+    private long rttMaxNanos;
+    /** buckets: <1, 1-2, 2-3, 3-4, 4-5, 5-7, 7-10, >=10 ms */
+    private final long[] rttBuckets = new long[8];
+
+    private void recordRtt(long startNanos) {
+        long rtt = System.nanoTime() - startNanos;
+        rttCount++;
+        rttSumNanos += rtt;
+        if (rtt > rttMaxNanos) {
+            rttMaxNanos = rtt;
+        }
+        long ms = rtt / 1_000_000L;
+        int bucket = ms < 1 ? 0 : ms < 2 ? 1 : ms < 3 ? 2 : ms < 4 ? 3
+                : ms < 5 ? 4 : ms < 7 ? 5 : ms < 10 ? 6 : 7;
+        rttBuckets[bucket]++;
+    }
+
+    public String rttStats() {
+        if (rttCount == 0) {
+            return "XCP RTT: no frames";
+        }
+        return String.format(
+                "XCP RTT: %d frames, avg %.2f ms, max %.2f ms; <1/1-2/2-3/3-4/4-5/5-7/7-10/>=10 ms: %s",
+                rttCount, rttSumNanos / rttCount / 1_000_000.0, rttMaxNanos / 1_000_000.0,
+                Arrays.toString(rttBuckets));
+    }
 
     public XcpClient(CanLink link, int txId, boolean extended, int rxId, int defaultTimeoutMs) {
         this(link, txId, extended, rxId, defaultTimeoutMs, null);
@@ -148,6 +183,7 @@ public class XcpClient {
         if (frameLog != null) {
             frameLog.accept("TX " + tx);
         }
+        long rttStart = System.nanoTime();
         link.write(tx);
 
         long deadline = System.currentTimeMillis() + timeoutMs;
@@ -174,9 +210,11 @@ public class XcpClient {
             }
             int pid = data[0] & 0xFF;
             if (pid == XcpConstants.PID_RES) {
+                recordRtt(rttStart);
                 return XcpResponse.ok(data);
             }
             if (pid == XcpConstants.PID_ERR) {
+                recordRtt(rttStart);
                 return XcpResponse.error(data);
             }
             // Unknown packet id: ignore and keep waiting.

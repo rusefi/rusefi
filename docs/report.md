@@ -6243,3 +6243,28 @@ compile + 1158 unit tests green):
    is forceO2Heating || isRunning() (engine.cpp). Remaining hardware
    unknowns if the heater does not heat: PG6<->IN6 wiring (schematic
    only, not buzzed out) and the +12V feed side of the heater.
+
+## 2026-08-23 - openblt_can host-side rework: blind-spin fix, stale-jar trap, RTT histogram
+
+The 2026-08-22 poll fix did not speed up flashing (265.4 s for 669924
+bytes = 2.77 ms/frame, unchanged; the jar DID contain the fix). Two
+host-side bugs found and fixed:
+- PcanLink.readFrame spun blind for 1 ms between queue checks - a frame
+  arriving during the spin was read only after the spin ended, so every
+  frame paid ~1.0-1.2 ms host dead time regardless of reply timing.
+  Now: tight Read-poll during a 1 ms hot window (checks every few tens
+  of us), then 0.1 ms parks for slow replies (erase/connect).
+- openblt_can.sh rebuilt the fat jar only "if missing" - a stale jar
+  could silently run old code. Now always runs :openblt_can:fatJar
+  (gradle no-ops when up to date).
+- The flasher prints a per-frame XCP RTT histogram at the end
+  (XcpClient.rttStats, <1/1-2/2-3/... ms buckets) so the next run
+  settles where the remaining ~2.7 ms/frame goes.
+
+Working hypothesis (firmware-side, documented only - NOT fixed): the
+ECU answers each PROGRAM_MAX frame in ~1-2 ms; the bootloader main loop
+runs BootTask() tight while connected (no sleep), so it is the CAN RX ->
+XCP handler -> 3-word flash program (each AT32 word program stalls
+instruction fetch) -> TX response chain plus the MacCAN USB pump
+(~1 ms, host floor Java cannot remove). Future levers if needed: 1 Mbit
+CAN, block-mode XCP, batching buffered PROGRAM_MAX frames.

@@ -171,6 +171,9 @@ public class OpenBltCanFlasher {
             long elapsedMs = System.currentTimeMillis() - t0;
             listener.log(String.format("Flash complete: %d bytes in %d segments, %.1f s.",
                     total, segments.size(), elapsedMs / 1000.0));
+            // Per-frame XCP round-trip histogram: shows where the time went -
+            // host polling vs ECU-side processing vs bus (see XcpClient.rttStats).
+            listener.log(xcp.rttStats());
             return new Result(segments.size(), total, verified, cfg.reset, elapsedMs);
         } finally {
             link.close();

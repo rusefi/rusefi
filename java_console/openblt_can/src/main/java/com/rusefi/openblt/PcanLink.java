@@ -56,9 +56,17 @@ public class PcanLink implements CanLink {
     @Override
     public CanFrame readFrame(int timeoutMs) throws IOException {
         long deadline = System.currentTimeMillis() + timeoutMs;
+        // MacCAN's Read does not block. The reply to a freshly sent XCP frame
+        // normally lands well under ~1 ms, so poll the queue tightly for the
+        // first 1 ms of every wait - checking the queue every few tens of us
+        // - and only fall back to 0.1 ms parks for slow replies (erase,
+        // connect) to keep the CPU idle. The previous loop spun BLIND for a
+        // fixed 1 ms between queue checks, which guaranteed ~1 ms dead time
+        // per XCP frame (~95k frames per 670 KB image).
+        long hotSpinUntil = System.nanoTime() + 1_000_000L; // 1 ms hot window
+        TPCANMsg msg = new TPCANMsg();
+        TPCANTimestamp ts = new TPCANTimestamp();
         while (System.currentTimeMillis() < deadline) {
-            TPCANMsg msg = new TPCANMsg();
-            TPCANTimestamp ts = new TPCANTimestamp();
             TPCANStatus status = can.Read(channel, msg, ts);
             if (status == TPCANStatus.PCAN_ERROR_OK) {
                 int rawId = msg.getID();
@@ -72,17 +80,14 @@ public class PcanLink implements CanLink {
             if (status != TPCANStatus.PCAN_ERROR_QRCVEMPTY) {
                 throw new IOException("PCAN Read failed: " + status);
             }
-            // MacCAN's Read does not block: poll at fine granularity instead
-            // of a coarse Thread.sleep(1). The 1 ms granularity costs ~2 ms
-            // per XCP frame (~100k frames per 670 KB image = 4+ min); the ECU
-            // reply normally lands ~0.5-1 ms after the request, so busy-spin
-            // that window and fall back to short parks only for slower replies
-            // (erase, connect).
-            long spinUntil = System.nanoTime() + 1_000_000L; // 1 ms busy spin
-            while (System.nanoTime() < spinUntil) {
+            if (System.nanoTime() < hotSpinUntil) {
+                // Hot window: tight poll, onSpinWait keeps the pause hint so
+                // the MacCAN receive-pump thread keeps its CPU share.
                 Thread.onSpinWait();
+            } else {
+                // Slow reply: poll in 0.1 ms slices instead of burning a core.
+                LockSupport.parkNanos(100_000L);
             }
-            LockSupport.parkNanos(100_000L); // 0.1 ms slices for slow replies
         }
         return null;
     }
