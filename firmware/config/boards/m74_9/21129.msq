@@ -792,8 +792,8 @@
         <constant digits="0" name="coastingFuelCutClt" units="{bitStringValue(unitsLabels, useMetricOnInterface)}">60</constant>
         <constant name="coastingFuelCutEnabled">"enabled"</constant>
         <constant digits="0" name="coastingFuelCutMap" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">60</constant>
-        <constant digits="0" name="coastingFuelCutRpmHigh" units="rpm">1500</constant>
-        <constant digits="0" name="coastingFuelCutRpmLow" units="rpm">1450</constant>
+        <constant digits="0" name="coastingFuelCutRpmHigh" units="rpm">1700</constant>
+        <constant digits="0" name="coastingFuelCutRpmLow" units="rpm">1500</constant>
         <constant digits="0" name="coastingFuelCutTps" units="%">5</constant>
         <constant digits="0" name="coastingFuelCutVssHigh" units="{bitStringValue(velocityUnitsLabels, useMetricOnInterface)}">0</constant>
         <constant digits="0" name="coastingFuelCutVssLow" units="{bitStringValue(velocityUnitsLabels, useMetricOnInterface)}">0</constant>
@@ -959,7 +959,7 @@
         <constant digits="0" name="device_uid1" units="">0</constant>
         <constant digits="0" name="device_uid2" units="">0</constant>
         <constant digits="0" name="device_uid3" units="">0</constant>
-        <constant digits="1" name="dfcoDelay" units="sec">2.0</constant>
+        <constant digits="1" name="dfcoDelay" units="sec">0.0</constant>
         <constant digits="0" name="dfcoRetardDeg" units="deg">0</constant>
         <constant digits="1" name="dfcoRetardRampInTime" units="s">0.0</constant>
         <constant name="digitalPotentiometerChipSelect1">"NONE"</constant>
@@ -1039,14 +1039,14 @@
         <constant name="engineSyncCam">"Intake First Bank"</constant>
         <constant name="engineType">"MINIMAL_PINS"</constant>
         <constant digits="4" name="etb_dFactor" units="">0.06</constant>
-        <constant digits="4" name="etb_iFactor" units="">1.0</constant>
+        <constant digits="4" name="etb_iFactor" units="">2.0</constant>
         <constant digits="0" name="etb_iTermMax" units="">30</constant>
         <constant digits="0" name="etb_iTermMin" units="">-30</constant>
         <constant digits="0" name="etb_maxValue" units="">100</constant>
         <constant digits="0" name="etb_minValue" units="">-100</constant>
         <constant digits="0" name="etb_offset" units="">0</constant>
         <constant digits="0" name="etb_periodMs" units="ms">0</constant>
-        <constant digits="4" name="etb_pFactor" units="">0.7</constant>
+        <constant digits="4" name="etb_pFactor" units="">2.0</constant>
         <constant name="etb_use_two_wires">"no"</constant>
         <constant cols="1" digits="0" name="etbBiasBins" rows="8" units="target TPS position">
          0
@@ -1059,11 +1059,11 @@
          100
 </constant>
         <constant cols="1" digits="2" name="etbBiasValues" rows="8" units="ETB duty cycle bias">
-         -22.0
+         -28.0
+         -26.0
+         -24.0
          -20.0
-         -18.0
-         -15.0
-         -9.0
+         -12.0
          21.0
          22.0
          25.0
@@ -1916,7 +1916,7 @@
         <constant name="idlePositionChannel">"NONE"</constant>
         <constant digits="0" name="idlePositionMax" units="mv">5000</constant>
         <constant digits="0" name="idlePositionMin" units="mv">0</constant>
-        <constant name="idleReturnTargetRamp">"yes"</constant>
+        <constant name="idleReturnTargetRamp">"no"</constant>
         <constant digits="1" name="idleReturnTargetRampDuration" units="seconds">5.0</constant>
         <constant digits="4" name="idleRpmPid_dFactor" units="">0.0</constant>
         <constant digits="4" name="idleRpmPid_iFactor" units="">0.0008</constant>
