@@ -38,6 +38,32 @@ void portSetHardwareSchedulerTimer(efitick_t nowNt, efitick_t setTimeNt) {
 
 	pwm_lld_enable_channel(&SCHEDULER_PWM_DEVICE, 0, compare);
 	pwmEnableChannelNotificationI(&SCHEDULER_PWM_DEVICE, 0);
+
+	// ROOT-CAUSE fix for the silent scheduler hang (the 2026-08-23 20:17 lockup:
+	// ccr1 stuck in the past, sr=0x0, dier=0x2, isr/setHw frozen - a lost compare
+	// event, not a too-small re-arm slack).
+	//
+	// pwm_lld_enable_channel_notification() clears CC1IF (SR = ~CC1IF) right before
+	// setting DIER CC1IE, and only when CC1IE was previously off - which is exactly
+	// the re-arm path we are on, because hwTimerCallback() disables CC1IE before
+	// invoking the callback. If the free-running counter crosses `compare` in the
+	// window between the CCR write above and that SR-clear, the just-set CC1IF is
+	// erased: the channel, now with CCR in the past, can never match again, the ISR
+	// never fires and the whole event scheduler sleeps until the counter wraps or
+	// the MCU resets. The 4 us clamp only narrows that window; over a long run under
+	// heavy executor+trigger/fast-IRQ load the window occasionally exceeds it (e.g.
+	// nested re-arms from schedule() inside executeAllPendingActions while CC1IE is
+	// still off, or preemption by the level-0 fast tooth IRQ), so the hang is rare
+	// but real.
+	//
+	// Fix the root cause (a lost compare, not the slack): if after arming the
+	// counter has already reached/passed `compare`, force the missed event with a
+	// software capture/compare generation (EGR CC1G). This guarantees the ISR
+	// always fires and re-arms on a future trip, independent of how wide the arm
+	// window was. In the normal case (compare still in the future) nothing happens.
+	if (static_cast<int32_t>(SCHEDULER_TIMER_DEVICE->CNT - compare) >= 0) {
+		SCHEDULER_TIMER_DEVICE->EGR = STM32_TIM_EGR_CC1G;
+	}
 }
 
 static void hwTimerCallback(PWMDriver*) {
