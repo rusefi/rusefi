@@ -1,5 +1,47 @@
 # Work Report
 
+## 2026-08-23 - m74_9: ETB throttle PWM moved off the executor + soft-PWM load telemetry
+
+Goal: find and remove the scheduling latencies behind the 2026-08-23 16:50 lockstats
+(~29% of all executor events >=10us late, max 370us). Root cause of 100% of the
+lateness: a single self-rearming callback (othercb 0806DA45, 63130/63171 events) -
+the signature of a soft-PWM generator on the microsecond executor (TIM5). On a
+bench with spark/fuel=0 the main suspect was the ETB throttle PWM (etbFreq=800Hz)
+on PB14, which has NO hardware-PWM path here and fell back to software PWM.
+
+What was done:
+
+| Item | File(s) |
+|------|---------|
+| ETB PWM => hardware TIM12_CH1 (PB14 = AF9) when `startSimplePwmHard` is called | `hw_layer/ports/stm32/stm32_pwm.cpp` (getConfigForPin B14 case), `hw_layer/ports/at32/at32f4/cfg/mcuconf.h` (STM32_PWM_USE_TIM12=TRUE + STM32_TIM12_SUPPRESS_ISR) |
+| Per-channel soft-PWM executor-load counter + intrusive channel list | `controllers/system/timer/pwm_generator_logic.h/.cpp` (executorFireCount, m_nextInPwmList, g_pwmList) |
+| `printPwmStats()` table (name/hard-soft/freq/softPwmEvents) wired into lockstats | `controllers/system/timer/pwm_generator_logic.cpp`, `config/boards/m74_9/board_configuration.cpp` |
+
+Key decisions:
+- PB14 on AT32F435 has NO plain timer channel: only complementary TIM1_CH2N /
+  TIM8_CH2N (which rusEFI's stm32_hardware_pwm cannot drive - no CCxNE/MOE
+  support) and TIM12_CH1. TIM12 is the only clean hardware-PWM option: it is a
+  plain 2-channel APB1 GPT, supported by the reused TIMv1 PWM LLD (PWMD12,
+  has_bdtr=false), and free on m74_9. ISR suppressed (ETB driver only writes
+  CCR via pwm_lld_enable_channel, never uses notifications).
+- No gate/stop of ETB PWM on engine-off was added: the flap must stay alive
+  always; the hardware path removes the executor load by itself.
+- Why the old diagnostics could not name the offender: every soft-PWM channel
+  shares the single static `PwmConfig::timerCallback`, so the executor's
+  otherCbStats (dedup by address) collapses them into one entry. printPwmStats
+  counts per channel to disambiguate.
+
+Validation: m74_9 firmware builds (BUILD SUCCESSFUL, linker shows PWMD12 +
+printPwmStats + the "PWM channels (softPwmEvents=" rodata string in the final
+ELF); unit tests build and PWM.testPwmGenerator + 47 DcMotor/etb tests pass.
+On-car: flash and run lockstats - the sched othercb line for timerCallback should
+vanish/fall and the new "PWM channels" block should show the ETB as hard/stopped
+(executorFireCount=0) instead of soft.
+
+Open: confirm on hardware that PB14 TIM12_CH1 AF9 toggles the TLE9201 enable
+identically to the soft-PWM output (same active-high polarity, same duty), and
+re-measure lockstats with the engine running.
+
 ## 2026-08-14 - m74_9: IMMO OFF flag landed + confirmed against original ECU
 
 Added the `m74_9ImmoOff` configuration bit and confirmed that the original ECU

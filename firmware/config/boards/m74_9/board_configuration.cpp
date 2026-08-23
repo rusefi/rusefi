@@ -9,6 +9,7 @@
 #include "m74_9_tooth_diag.h"
 #include "runtime_state.h"
 #include "digital_input_exti.h"
+#include "pwm_generator_logic.h"
 
 // PB14 is error LED, configured in board.mk
 Gpio getCommsLedPin() {
@@ -913,10 +914,15 @@ void setup_custom_board_overrides() {
 				break;
 			}
 			efiPrintf("sched othercb %08x: n=%u late>=10us=%u maxLateUs=%u maxDurUs=%u",
-				(unsigned)s.cbAddr, (unsigned)s.count, (unsigned)s.lateCount,
-				(unsigned)(s.maxLateNt / (NT_PER_SECOND / 1000000)),
-				(unsigned)(s.maxDurationNt / (NT_PER_SECOND / 1000000)));
+					(unsigned)s.cbAddr, (unsigned)s.count, (unsigned)s.lateCount,
+					(unsigned)(s.maxLateNt / (NT_PER_SECOND / 1000000)),
+					(unsigned)(s.maxDurationNt / (NT_PER_SECOND / 1000000)));
 		}
+
+		// Which soft-PWM channels are loading the executor: they all share the
+		// static timerCallback address above, so name them individually here.
+		printPwmStats();
+
 		sched.resetExecutionLatenessStats();
 	});
 	// Systemic CPU speed probe: reads the AT32 flash performance/divider/

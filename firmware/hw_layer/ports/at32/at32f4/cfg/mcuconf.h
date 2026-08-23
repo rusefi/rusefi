@@ -306,7 +306,19 @@
 #define STM32_PWM_USE_TIM9                  FALSE
 #define STM32_PWM_USE_TIM10                 FALSE
 #define STM32_PWM_USE_TIM11                 FALSE
-#define STM32_PWM_USE_TIM12                 FALSE
+/* TIM12 drives the m74_9 ETB throttle PWM (PB14 = TIM12_CH1). It is a
+ * plain (non-complementary) general-purpose timer channel, unlike the
+ * complementary-only TIM1_CH2N/TIM8_CH2N options for PB14, so it works with
+ * so it works with rusEFI's stm32_hardware_pwm unchanged and keeps the throttle PWM off
+ * the microsecond executor (the soft-PWM timerCallback was 29% of all executor
+ * events, 10-370us late). The ETB never uses channel-notification callbacks,
+ * so the ISR is suppressed (see STM32_TIM12_SUPPRESS_ISR below). */
+#define STM32_PWM_USE_TIM12                 TRUE
+/* No ISR vector is wired for TIM12 on this port. The ETB hardware-PWM driver
+ * only writes CCR duty cycles (pwm_lld_enable_channel) and never enables
+ * channel/period notifications, so the TIMv1 LLD's compile-time ISR requirement
+ * is satisfied by suppressing it (hal_pwm_lld.h aborts without this define). */
+#define STM32_TIM12_SUPPRESS_ISR            TRUE
 #define STM32_PWM_USE_TIM13                 FALSE
 #define STM32_PWM_USE_TIM14                 FALSE
 

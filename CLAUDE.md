@@ -356,6 +356,22 @@ Spark/dwell/injection dispatch happens in the TIM5 CC1 ISR (`SingleTimerExecutor
 
 Build pitfalls from the same session: (1) commas outside parentheses split `addConsoleAction` macro arguments (C standard protects only parens, GCC too) - no brace-initializer arrays inside those lambdas; (2) a bare `gmake` at the firmware root builds the DEFAULT board (m74_9) into the SAME `build/` dir and silently poisons the next incremental board build - `gmake clean` and rebuild via the board compile script after such an accident; (3) compile-time verification of preprocessor priorities: probe with `arm-none-eabi-gcc -E -I./hw_layer/ports/at32/at32f4/cfg` including `mcuconf.h`, don't try to grep LTO'd binaries for NVIC constants.
 
+## m74_9 / AT32F435: PB14 has NO plain PWM channel - ETB PWM uses TIM12_CH1
+
+PB14's timer options on AT32F435 are only the *complementary* outputs TIM1_CH2N /
+TIM8_CH2N (rusEFI's `stm32_hardware_pwm` cannot drive those - it never sets the
+CCxNE/MOE bits) and **TIM12_CH1** (plain). So the m74_9 ETB PWM pin (PB14) has a
+hardware path ONLY via TIM12: `STM32_PWM_USE_TIM12=TRUE` + `STM32_TIM12_SUPPRESS_ISR`
+in the at32 mcuconf, and `case Gpio::B14: {&PWMD12,0,9}` (AF9) in
+`stm32_pwm.cpp::getConfigForPin`. Without this the ETB falls back to soft-PWM on the
+microsecond executor (the 2026-08-23 16:50 lockstats: a single self-rearming othercb
+fired 63130/63171 executor events, 29% >=10us late, max 370us - the soft-PWM
+`timerCallback`). `stm32_hardware_pwm` only writes CCR duty (no notifications), so
+suppressing the TIM12 ISR is correct. Durable diagnostic gotcha: ALL soft-PWM
+channels share the ONE static `PwmConfig::timerCallback`, so the executor's
+`otherCbStats` (dedup by address) collapses them into a single entry - use
+`printPwmStats()` (per-channel `executorFireCount`) to name the flooder.
+
 ## m74_9 / Itelma ETB: TLE9201 enable chain (ETC_EN) and the inverted-disable gotcha
 
 The TLE9201 H-bridge DIS pin (11) is active-low at the chip, but on m74_9 the MCU-side enable is ACTIVE-HIGH and inverted through a transistor: PB13 (ETC_EN) -> Q5A (MUN5311DW1 NPN, inverts) -> DIS pulled up to +5V (R23). PB13 high = Q5A on = DIS low = bridge enabled. Consequences:

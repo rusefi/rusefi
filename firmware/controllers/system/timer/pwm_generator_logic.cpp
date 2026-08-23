@@ -273,6 +273,10 @@ efitick_t PwmConfig::togglePwmState() {
 static void timerCallback(PwmConfig *state) {
 	ScopePerf perf(PE::PwmGeneratorCallback);
 
+	// count this as one executor callback for this PWM channel - this is
+	// the soft-PWM load metric (see printPwmStats / executorFireCount)
+	state->executorFireCount++;
+
 	state->dbgNestingLevel++;
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6581, state->dbgNestingLevel < 25, "PWM nesting issue");
 
@@ -305,6 +309,12 @@ void copyPwmParameters(PwmConfig *state, MultiChannelStateSequence const * seq) 
  * this method also starts the timer cycle
  * See also startSimplePwm
  */
+// Head of the intrusive list of active PWM channels (see m_nextInPwmList).
+// Grows as channels are initialized; there is no removal - the channels are
+// static/global for the ECU lifetime, so the list only ever grows. Only
+// pwm_iterator/PwmConfig touches this.
+static PwmConfig* g_pwmList = nullptr;
+
 void PwmConfig::weComplexInit(Scheduler *executor,
 		MultiChannelStateSequence const * seq,
 		pwm_cycle_callback *pwmCycleCallback, pwm_gen_callback *stateChangeCallback) {
@@ -316,6 +326,10 @@ void PwmConfig::weComplexInit(Scheduler *executor,
 	criticalAssertVoid(seq->phaseCount != 0, "signal length cannot be zero");
 	criticalAssertVoid(seq->phaseCount <= PWM_PHASE_MAX_COUNT, "too many phases in PWM");
 	criticalAssertVoid(seq->waveCount > 0, "waveCount should be positive");
+
+	// register this channel for the pwm list (for printPwmStats)
+	m_nextInPwmList = g_pwmList;
+	g_pwmList = this;
 
 	m_pwmCycleCallback = pwmCycleCallback;
 	m_stateChangeCallback = stateChangeCallback;
@@ -444,4 +458,27 @@ void applyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
 		OutputPin *output = state->outputPins[channelIndex];
 		state->applyPwmValue(output, stateIndex, channelIndex);
 	}
+}
+
+/**
+ * Print a table of every active PWM channel and its executor load. Because all
+ * soft-PWM channels share one static timerCallback address, the executor's
+ * otherCbStats collapses them into a single entry - this table is what names
+ * the individual channels (and their ~event-rate) behind that address.
+ */
+void printPwmStats() {
+	efiPrintf("PWM channels (softPwmEvents=executor re-arms since start):");
+	int count = 0;
+	uint32_t totalSoftEvents = 0;
+	for (const PwmConfig* p = g_pwmList; p != nullptr; p = p->m_nextInPwmList) {
+		count++;
+		totalSoftEvents += p->executorFireCount;
+		// executorFireCount>0 == this channel drives its pin from the microsecond
+		// executor (soft PWM). ==0 means it runs on hardware PWM (or is stopped).
+		const char* kind = p->executorFireCount > 0 ? "soft" : "hard/stopped";
+		efiPrintf("  %-24s %-12s freq=%5.0fHz softPwmEvents=%u",
+			p->m_name ? p->m_name : "[noname]", kind,
+			p->getFrequencyHz(), (unsigned)p->executorFireCount);
+	}
+	efiPrintf("PWM summary: %d channel(s), total softPwmEvents=%u", count, (unsigned)totalSoftEvents);
 }
