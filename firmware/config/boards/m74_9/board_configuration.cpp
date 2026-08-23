@@ -8,6 +8,7 @@
 #include "m74_9_can.h"
 #include "m74_9_tooth_diag.h"
 #include "runtime_state.h"
+#include "digital_input_exti.h"
 
 // PB14 is error LED, configured in board.mk
 Gpio getCommsLedPin() {
@@ -234,6 +235,13 @@ static void m74_9_boardConfigOverrides() {
 	 * handshake traffic is pure noise. Forced on every boot because the stored
 	 * tune predates this bit. Remove once computeImmoResponse() is real. */
 	config->m74_9ImmoOff = true;
+
+	// Raw EXTI9_5 capture (crank PF8/line 8) MUST be highest-priority IRQ.
+	// The handoff ISR (I2C1_EV) decodes the previous edge; if EXTI9_5 were
+	// delayed by the handoff (44 us avg) the timestamp would be wrong by up
+	// to ~50 us, enough to push the gap ratio outside [1.6, 3.75] at 1887 rpm.
+	nvicEnableVector(EXTI9_5_IRQn, 0);   // Raw edge capture: priority 0 (fast IRQ)
+	nvicEnableVector(I2C1_EV_IRQn, 4);   // Handoff ISR: priority 4 (below executor)
 
 	//CAN 1 bus overwrites
 	engineConfiguration->canRxPin = Gpio::G0;
