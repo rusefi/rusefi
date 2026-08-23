@@ -20,6 +20,18 @@
 
 #ifdef EFI_IRQ_EXTI_HANDOFF_PRIORITY
 void efiExtiInit() {
+	// Raw EXTI9_5 capture MUST be the highest-priority interrupt (priority 0,
+	// fast IRQ). It runs before the handoff ISR (priority 4) and captures
+	// the exact moment of the crank edge. If this handler is delayed by the
+	// handoff decoding the previous edge (44 us average, up to ~1 ms in tails)
+	// the captured timestamp is wrong by up to ~50 us. On m74_9 that is ~10% of
+	// the 530 us tooth period at 1887 rpm — enough to push the gap ratio outside
+	// the [1.6, 3.75] sync window and cause intermittent C9002 / coil
+	// overcharge. The handler takes only ~2-3 us (read timestamp, push ring,
+	// STIR handoff) so priority 0 has negligible CPU impact.
+#ifdef EXTI9_5_IRQn
+	nvicEnableVector(EXTI9_5_IRQn, EFI_IRQ_EXTI_PRIORITY);
+#endif
 	nvicEnableVector(I2C1_EV_IRQn, EFI_IRQ_EXTI_HANDOFF_PRIORITY);
 }
 
