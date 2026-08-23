@@ -37,7 +37,7 @@ public:
 	 * measure dispatch lateness: executedAtNt - executedMomentNt >= 0 is how
 	 * late the command went out.
 	 */
-	bool executeOne(efitick_t now, efitick_t* executedMomentNt = nullptr, efitick_t* executedAtNt = nullptr);
+	bool executeOne(efitick_t now, efitick_t* executedMomentNt = nullptr, efitick_t* executedAtNt = nullptr, efitick_t* executedDurationNt = nullptr);
 
 	expected<efitick_t> getNextEventTime(efitick_t nowUs) const;
 	void clear();

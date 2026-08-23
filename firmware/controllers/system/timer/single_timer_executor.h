@@ -31,6 +31,17 @@ struct ExecLatenessStats {
 	uint32_t lateEventCount = 0;
 };
 
+// Attribution for the unclassified ('other') commands: the raw callback
+// address plus the same lateness/duration stats. The lockstats output
+// prints these; the address is mapped back to a function with nm.
+struct OtherCbStat {
+	uint32_t cbAddr = 0;
+	uint32_t count = 0;
+	uint32_t lateCount = 0;
+	efitick_t maxLateNt = 0;
+	efitick_t maxDurationNt = 0;
+};
+
 class SingleTimerExecutor final : public Scheduler {
 public:
 	SingleTimerExecutor();
@@ -57,13 +68,18 @@ public:
 	uint32_t lateEventCount = 0;
 	uint32_t lateHistogram[7] = {}; // <1, 1-4, 4-16, 16-64, 64-256, 256-1024, >=1024 us
 	ExecLatenessStats kindStats[(int)ExecEventKind::Count] = {};
+	// Longest single callback duration per command class (the executor ISR
+	// is busy for this long; a slow callback delays all other due commands).
+	efitick_t maxCbDurationNt[(int)ExecEventKind::Count] = {};
+	OtherCbStat otherCbStats[8] = {};
 	void resetExecutionLatenessStats();
 private:
 	EventQueue queue;
 	bool reentrantFlag = false;
 	void executeAllPendingActions();
 	void scheduleTimerCallback();
-	void recordExecutionLateness(uint8_t kind, efitick_t late);
+	void recordExecutionLateness(uint8_t kind, uint32_t cbAddr, efitick_t late, efitick_t cbDurationNt);
+	void recordOtherCbStat(uint32_t cbAddr, efitick_t late, efitick_t durationNt);
 };
 
 void initSingleTimerExecutorHardware();

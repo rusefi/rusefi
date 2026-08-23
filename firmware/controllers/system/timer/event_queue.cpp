@@ -252,7 +252,7 @@ int EventQueue::executeAll(efitick_t now) {
 	return executionCounter;
 }
 
-bool EventQueue::executeOne(efitick_t now, efitick_t* executedMomentNt, efitick_t* executedAtNt) {
+bool EventQueue::executeOne(efitick_t now, efitick_t* executedMomentNt, efitick_t* executedAtNt, efitick_t* executedDurationNt) {
 	// Read the head every time - a previously executed event could
 	// have inserted something new at the head
 	scheduling_s* current = m_head;
@@ -318,7 +318,13 @@ bool EventQueue::executeOne(efitick_t now, efitick_t* executedMomentNt, efitick_
 #if EFI_DETAILED_LOGGING && EFI_UNIT_TEST_VERBOSE_ACTION
 		std::cout << "EventQueue::executeOne: " << action.getCallbackName() << "(" << reinterpret_cast<uintptr_t>(action.getCallback()) << ") with raw arg = " << action.getArgumentRaw() << std::endl;
 #endif
+		// Measure the callback's own duration (the executor ISR is busy for
+		// this long; a long callback delays every other due command).
+		efitick_t cbStart = getTimeNowLowerNt();
 		action.execute();
+		if (executedDurationNt) {
+			*executedDurationNt = getTimeNowLowerNt() - cbStart;
+		}
 
 #if EFI_UNIT_TEST
 		// std::cout << "Executed at " << now << std::endl;
