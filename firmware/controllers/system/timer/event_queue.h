@@ -30,7 +30,14 @@ public:
 	void remove(scheduling_s* scheduling);
 
 	int executeAll(efitick_t now);
-	bool executeOne(efitick_t now);
+	/**
+	 * Execute the head event if it is due. When executedMomentNt/executedAtNt
+	 * are provided they receive the event's scheduled moment and the time at
+	 * which it actually started running (after the busy-wait), so callers can
+	 * measure dispatch lateness: executedAtNt - executedMomentNt >= 0 is how
+	 * late the command went out.
+	 */
+	bool executeOne(efitick_t now, efitick_t* executedMomentNt = nullptr, efitick_t* executedAtNt = nullptr);
 
 	expected<efitick_t> getNextEventTime(efitick_t nowUs) const;
 	void clear();

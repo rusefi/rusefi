@@ -6387,3 +6387,25 @@ Diagnostics extended (built + 1158 tests green):
 - The TLE9201 drop warning now prints miss=N and dia10=0xNN, so the
   next event shows BOTH whether the watchdog answers were late and
   whether the chip saw a power event (CRK_RST/V3V3_UV).
+
+## 2026-08-23 - executor lateness instrumentation (user report: rpm floats, misfires, bad tooth counting at stable high rpm)
+
+User symptom: at stable high rpm the rpm starts to float, misfires
+begin, tooth counting degrades. Question: does the L9779 act late, or
+do we send the commands late? The output switching itself is direct
+(parallel pins PF12-15 / PE8-11 via palSetPort from the scheduler ISR,
+SPI enable bits latched at boot - no float there); the float can only
+come from the executor dispatch (TIM5 ISR) or from upstream (trigger
+edge timing feeding the angle->time conversion).
+
+Instrumented the dispatch: EventQueue::executeOne now reports the
+scheduled moment and the actual start time; SingleTimerExecutor
+accumulates lateness stats (maxLateNt, events >= 10 us late, 7-bucket
+histogram <1/1-4/4-16/16-64/64-256/256-1k/>=1k us). The m74_9
+lockstats command prints and resets them:
+  sched exec=N late>=10us=N maxLateUs=N hist<1/...>=...
+A clean histogram (<4 us) proves the executor is deterministic and the
+jitter is upstream (trigger edges); a fat >=16 us bucket means the
+dispatch floats (IRQ locks / long ISRs). The coil overcharge 6.06-6.45
+ms at the events is the spark turn-off firing late or being cancelled
+by the sync loss - the stats will show which.

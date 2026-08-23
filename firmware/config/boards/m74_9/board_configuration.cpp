@@ -837,6 +837,21 @@ void setup_custom_board_overrides() {
 	addConsoleAction("lockstats", [](){
 		printRuntimeStats();
 		resetMaxValues();
+
+		// Event execution lateness: proves whether scheduled commands
+		// (spark, injection, dwell) go out at their scheduled moment. A
+		// large maxLateUs or a fat >=16us bucket means the TIM5 dispatch
+		// was delayed - the command timing floats and the engine misfires.
+		// A clean histogram (<4us) means the executor is deterministic and
+		// any misfire jitter comes from upstream (trigger edge timing).
+		auto& sched = engine->scheduler;
+		efiPrintf("sched exec=%u late>=10us=%u maxLateUs=%u hist<1/1-4/4-16/16-64/64-256/256-1k/>=1k us: %u %u %u %u %u %u %u",
+			(unsigned)sched.executedEventCount, (unsigned)sched.lateEventCount,
+			(unsigned)(sched.maxLateNt / (NT_PER_SECOND / 1000000)),
+			(unsigned)sched.lateHistogram[0], (unsigned)sched.lateHistogram[1], (unsigned)sched.lateHistogram[2],
+			(unsigned)sched.lateHistogram[3], (unsigned)sched.lateHistogram[4], (unsigned)sched.lateHistogram[5],
+			(unsigned)sched.lateHistogram[6]);
+		sched.resetExecutionLatenessStats();
 	});
 	// Systemic CPU speed probe: reads the AT32 flash performance/divider/
 	// continue-read registers and times a fixed 1M-iteration loop. At 288 MHz

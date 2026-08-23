@@ -22,6 +22,19 @@ public:
 	int maxExecuteCounter = 0;
 	int executeCounter;
 	int executeAllPendingActionsInvocationCounter = 0;
+
+	// Event execution lateness stats: scheduled moment vs the instant the
+	// action actually started (see EventQueue::executeOne). The executor
+	// fires from the TIM5 ISR, so a large maxLateNt means the dispatch was
+	// delayed (IRQ locks / long higher-priority ISRs) - i.e. spark/injection
+	// commands went out late. lateEventCount counts events >= 10 us late.
+	// Reset via resetExecutionLatenessStats() (the board lockstats command
+	// prints and resets these).
+	efitick_t maxLateNt = 0;
+	uint32_t executedEventCount = 0;
+	uint32_t lateEventCount = 0;
+	uint32_t lateHistogram[7] = {}; // <1, 1-4, 4-16, 16-64, 64-256, 256-1024, >=1024 us
+	void resetExecutionLatenessStats();
 private:
 	EventQueue queue;
 	bool reentrantFlag = false;
