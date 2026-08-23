@@ -263,7 +263,8 @@ struct L9779 : public GpioChip {
 	int							wd_delay_ms;	/* response delay, aimed at window center */
 	sysinterval_t				wd_ts;			/* when to send the next response */
 	int							wd_ok_cnt;		/* cycles answered correctly */
-	int							wd_fail_cnt;	/* cycles missed (timing or value) */
+	int							wd_fail_cnt;	/* cycles missed (SPI-level failures) */
+	int							wd_timing_miss_cnt;	/* responses outside the window (REQUHI flags) - the EC climbs on these too */
 	uint16_t					ident_reg;		/* IDENT_REG readback (0x10 | 0x00) */
 
 	/* Cached power-stage diagnosis, DIA_REG1..8 (datasheet 6.14). Refreshed
@@ -274,6 +275,12 @@ struct L9779 : public GpioChip {
 	uint16_t					dia_cache[8];
 	bool						dia_valid[8];
 	sysinterval_t				diag_ts;	/* when to refresh the cache next */
+	/* DIA_REG10 byte: OUT_DIS + power-event flags (CRK_RST, V3V3_UV, OV_RST,
+	 * VDD5_OV, TNL_RST, F1/F2). Cached together with REG1..8 - the flags are
+	 * cleared by the read, so cross-driver consumers (the TLE9201 warning)
+	 * see the last known value. */
+	uint8_t						dia10_cache;
+	bool						dia10_valid;
 
 	/* KEY_ON input level (DIA_REG9 bit 7, datasheet 6.14), cached by the
 	 * driver thread together with the power-stage diagnosis. Unlike the
@@ -326,7 +333,7 @@ struct L9779 : public GpioChip {
 
 static L9779 chips[BOARD_L9779_COUNT];
 
-bool l9779_getWdaCounters(uint8_t *ec, bool *wda_int, int *ok, int *fail)
+bool l9779_getWdaCounters(uint8_t *ec, bool *wda_int, int *ok, int *fail, int *timing_miss, uint8_t *dia10)
 {
 	/* WDA counters are written by the driver thread only; the reads below
 	 * are single-word atomic accesses, safe from other threads. */
@@ -339,6 +346,10 @@ bool l9779_getWdaCounters(uint8_t *ec, bool *wda_int, int *ok, int *fail)
 		*ok = chip->wd_ok_cnt;
 	if (fail)
 		*fail = chip->wd_fail_cnt;
+	if (timing_miss)
+		*timing_miss = chip->wd_timing_miss_cnt;
+	if (dia10)
+		*dia10 = chip->dia10_cache;
 	return true;
 }
 
@@ -652,6 +663,8 @@ void L9779::refresh_diag_cache()
 	uint16_t dia10 = 0;
 	if (read_diag_reg(L9779_DIA_REG10_SUB, &dia10) == 0) {
 		uint8_t d10 = MSG_GET_DATA(dia10);
+		dia10_cache = d10;
+		dia10_valid = true;
 		bool out_dis = (d10 >> 1) & 1;
 		/* any bit except OUT_DIS means a fault is (or was) reported */
 		bool fault_flags = (d10 & ~0x02u) != 0;
@@ -987,12 +1000,17 @@ int L9779::wd_feed()
 	}
 
 	/* REQUHI flags report the timing of the previous response and are used
-	 * to keep the response delay centered in the answer window */
+	 * to keep the response delay centered in the answer window. Both flags
+	 * mean the previous answer was NOT accepted (outside the window), so
+	 * the chip's EC incremented - count them separately from wd_fail_cnt,
+	 * which only tracks SPI-level failures. */
 	if (requhi & 0x01) {
 		/* RESP_TO_EARLY: response before the window opened */
+		wd_timing_miss_cnt++;
 		wd_delay_ms++;
 	} else if (requhi & 0x02) {
 		/* NO_RESP: response after the window closed */
+		wd_timing_miss_cnt++;
 		wd_delay_ms--;
 	}
 	/* keep the delay in a sane range: 60..150 ms */
@@ -1152,8 +1170,8 @@ void L9779::debug() {
 			(int)((cfg->spi_config.ssport->ODR >> cfg->spi_config.sspad) & 1),
 			(int)((cfg->spi_config.ssport->IDR >> cfg->spi_config.sspad) & 1));
 	}
-	efiPrintf(DRIVER_NAME " WDA: req=0x%x ec=%d wda_int=%d ok=%d fail=%d delay=%dms",
-		wd_last_req, wd_last_ec, wd_int ? 1 : 0, wd_ok_cnt, wd_fail_cnt, wd_delay_ms);
+	efiPrintf(DRIVER_NAME " WDA: req=0x%x ec=%d wda_int=%d ok=%d fail=%d miss=%d delay=%dms",
+		wd_last_req, wd_last_ec, wd_int ? 1 : 0, wd_ok_cnt, wd_fail_cnt, wd_timing_miss_cnt, wd_delay_ms);
 
 	/* Power-stage status (DIA_REG10, datasheet section 6.14): OUT_DIS must
 	 * be 0 for OUTx/IGNx to switch at all; F1/F2 report output faults,
