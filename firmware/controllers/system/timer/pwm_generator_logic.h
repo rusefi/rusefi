@@ -60,6 +60,22 @@ public:
 	Scheduler *m_executor = nullptr;
 
 	/**
+	 * Number of times this PWM's executor callback has fired (i.e. how many
+	 * times it re-armed itself on the microsecond executor). This is the
+	 * soft-PWM load contribution of this channel. Hard-PWM channels never
+	 * increment it (they have no executor callback).
+	 */
+	uint32_t executorFireCount = 0;
+
+	/**
+	 * Intrusive self-registering list of all active soft/full-PWM channels
+	 * (see weComplexInit). Lets a console command enumerate the running PWM
+	 * sources and their load - the executorFireCount distinguishes the
+	 * channels even though they all share the static timerCallback address.
+	 */
+	PwmConfig* m_nextInPwmList = nullptr;
+
+	/**
 	 * We need to handle zero duty cycle and 100% duty cycle in a special way
 	 */
 	pwm_mode_e mode;
@@ -72,6 +88,9 @@ public:
 
 	void handleCycleStart();
 	const char *m_name;
+
+	/** current PWM frequency in Hz (0 if not set / NaN period) */
+	float getFrequencyHz() const { return (std::isnan(periodNt) || periodNt <= 0) ? 0.0f : (1000000.0f / NT2US(periodNt)); }
 
 	// todo: 'outputPins' should be extracted away from here since technically one can want PWM scheduler without actual pin output
 	OutputPin *outputPins[PWM_PHASE_MAX_WAVE_PER_PWM];
@@ -156,4 +175,11 @@ void startSimplePwmHard(SimplePwm *state, const char *msg,
 		float dutyCycle);
 
 void copyPwmParameters(PwmConfig *state, MultiChannelStateSequence const * seq);
+
+/**
+ * Print a table of all active PWM channels (name, hard/soft, frequency,
+ * cumulative executor fire count / event rate) - the lockstats addition that
+ * names which soft-PWM channel is loading the microsecond executor.
+ */
+void printPwmStats();
 

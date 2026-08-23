@@ -156,6 +156,15 @@ static expected<stm32_pwm_config> getConfigForPin(brain_pin_e pin) {
 	case Gpio::E5:  return stm32_pwm_config{&PWMD9, 0, 3};
 	case Gpio::E6:  return stm32_pwm_config{&PWMD9, 1, 3};
 #endif
+
+#if STM32_PWM_USE_TIM12
+	/* PB14 = TIM12_CH1 (AF9): the only non-complementary timer option for PB14
+	 * on AT32F435 (TIM1_CH2N/TIM8_CH2N are complementary outputs the driver
+	 * cannot drive). Used by the m74_9 ETB throttle PWM - keeps it off the
+	 * microsecond soft-PWM executor path. */
+	case Gpio::B14: return stm32_pwm_config{&PWMD12, 0, 9};
+#endif
+
 	default: return unexpected;
 	}
 };
