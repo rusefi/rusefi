@@ -226,6 +226,13 @@ rusEFI provides two MCP (Model Context Protocol) servers for LLM-driven tooling 
 
 All rusEFI serial connections use the USB CDC (Communications Device Class) profile. Baud rate is irrelevant and never a concern — the USB serial profile handles throughput natively regardless of any baud rate setting in host software or code.
 
+### SLCAN CAN sniffer on the second VCP
+
+Boards built with `HAL_USE_USB_CDC_2` (uaefi pro, purple-gateway) expose an SLCAN (Lawicel ASCII) CAN sniffer on the **second** USB VCP (`CanSniffer` on `SDU[1]`) — full doc: `firmware/controllers/can/can_sniffer.md`. Non-obvious traps (each verified on hardware 2026-08-23):
+- Both VCPs share one composite USB identity — identify the sniffer port by probing (`V` command), like the console's `SlcanTab` does; do not trust `/dev/ttyACM*` ordering.
+- `O` (open) is refused with BELL unless an `S0`..`S8` was accepted since the last close, and `C` clears that state — the (re)open sequence is always `C`/`S6`/`O`.
+- Defaults stream **only the ECU's own TX** (`canSnifferN_listenOurs` on, `canSnifferN_read` off, `canSnifferTxBus` None): a live bus shows zero foreign frames until `canSnifferN_read` is enabled in the tune. An ID inventory identical to the ECU's own TX schedule means the `read` flag is off, not that the bus is dead.
+
 ### USB Mass Storage SCSI (known Wireshark false-positive)
 
 When sniffing the ECU's USB link, Wireshark flags the SCSI `Mode Sense(6)` (opcode 0x1a) replies as *"Malformed Packet: SCSI: length of contained item exceeds length of containing item."* This is **not** bad wire data. The reply is a valid but *short* Caching mode page (page code 0x08, `PageLength = 0x0a`) instead of the SBC-2 mandated 0x12; Wireshark's dissector decodes the full 20-byte caching-page layout, overruns the buffer, and raises the exception. Windows accepts the reply and the device works. The response is hardcoded in the ChibiOS-Contrib USB-MSD SCSI target (`os/hal/src/hal_usb_msd.c`, a submodule usually not checked out), used by `firmware/hw_layer/mass_storage/mass_storage_device.cpp`. Treat it as cosmetic unless a host actually rejects it.
