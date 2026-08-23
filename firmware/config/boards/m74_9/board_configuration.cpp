@@ -808,13 +808,15 @@ void setup_custom_board_overrides() {
 	// Re-enable if edge-burst noise storms return (event count inflation /
 	// mid-crank false syncs).
 	// custom_board_triggerDebounceUs = m74_9TriggerDebounceUs;
-	// Tooth profile learning housekeeping (load/save of the learned wheel
-	// profile + auto-save on engine stop).
-	// DISABLED 2026-08-22: stock-rollback test - without the periodic load the
-	// decoder's per-tooth profile factors stay 1.0 (identical to a board with
-	// no learned profile). The synctrace/rawtrg diagnostics are fed by
-	// separate trigger hooks and keep working. Re-enable to restore profile
-	// learning.
+	// Tooth profile learning: the load/save housekeeping is switched off
+	// (stock-rollback test), and since 2026-08-23 the decoder CONSUMPTION is
+	// off too - triggerGetToothProfileFactor() in m74_9_tooth_diag.cpp returns
+	// 1.0 unconditionally. The earlier "without the periodic load the factors
+	// stay 1.0" comment was WRONG: the learner runs on a trigger hook and the
+	// decoder's useProfile gate (rpm >= 2*cranking) consumed the RAM profile
+	// anyway, warping the sync ratio at stable high rpm (periodic C9002 +
+	// coil-recharge jerks at constant rpm). The synctrace/rawtrg/toothdump
+	// diagnostics are fed by separate trigger hooks and keep working.
 	// custom_board_periodicSlowCallback = m74_9ToothPeriodic;
 	#if EFI_PROD_CODE && HAL_USE_ADC
 	addConsoleAction("fastadcdiag", m74_9FastAdcDiag);

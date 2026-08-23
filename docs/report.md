@@ -6340,3 +6340,27 @@ so 'no DF' can be a polling artifact).
 Open steps (hardware): buzz Q5B/R20 population; scope PB13 and DIS
 during cranking in the car. Firmware option: add PB13 readback +
 key_on_status + VREFINT to the warning line.
+
+## 2026-08-23 - high-rpm periodic sync loss root cause: decoder consumed the "disabled" tooth profile
+
+The 12:01-12:02 events (C9002 x4 + one C9007 tooth #114 error 11.7
+deg, intervals 23/10/12 s at stable ~1850 rpm, engine jerks and
+recovers) were NOT a VRS signal problem - the profile learning was
+supposed to be disabled but the decoder still consumed it:
+- Disabled: only the load/save housekeeping
+  (custom_board_periodicSlowCallback commented out).
+- Active: the learner (trigger hook boardTriggerCallback, 3113 revs in
+  RAM) AND the consumer - trigger_decoder.cpp isSyncPoint() applies
+  triggerGetToothProfileFactor at rpm >= 2*cranking (1200) via the
+  useProfile gate. The setup comment "without the periodic load the
+  factors stay 1.0" was wrong.
+- Effect at stable high rpm: smooth teeth (real jitter ~1%) divided by
+  cranking-learned factors (0.79..1.51x compression shape) = fake
+  ripple in the sync ratio -> periodic false sync decisions -> C9002 +
+  phase jump (C9007, 11.7 deg = 2 slots) + coil recharge jerks at
+  constant rpm, clean re-sync a revolution later. Matches the observed
+  smooth->jerk->smooth cycle exactly.
+- Fix: m74_9 triggerGetToothProfileFactor now returns 1.0
+  unconditionally - the decoder compares raw durations; the learner
+  keeps feeding toothdump/rawtrg diagnostics only. Board build green,
+  1158 unit tests green.
