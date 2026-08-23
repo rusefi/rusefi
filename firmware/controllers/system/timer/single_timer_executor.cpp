@@ -26,6 +26,15 @@
 #include "single_timer_executor.h"
 #include "efitime.h"
 
+// Command-class attribution for the dispatch-lateness telemetry: the
+// callbacks of the four engine-timing commands are compared by trampoline
+// pointer (action_s::make instantiates one trampoline per function/arg pair,
+// so the pointer identifies the command class without touching the
+// scheduling call sites).
+#include "spark_logic.h"
+#include "main_trigger_callback.h"
+#include "fuel_schedule.h"
+
 #if EFI_SIGNAL_EXECUTOR_ONE_TIMER
 
 #include "microsecond_timer.h"
@@ -38,6 +47,32 @@ void globalTimerCallback() {
 
 	___engine.scheduler.onTimerCallback();
 }
+
+namespace {
+
+ExecEventKind classifyAction(const action_s& action) {
+	auto cb = action.getCallback();
+
+	if (cb == action_s::make<turnSparkPinHighStartCharging>(static_cast<IgnitionEvent*>(nullptr)).getCallback()) {
+		return ExecEventKind::Dwell;
+	}
+	if (cb == action_s::make<fireSparkAndPrepareNextSchedule>(static_cast<IgnitionEvent*>(nullptr)).getCallback()) {
+		return ExecEventKind::Spark;
+	}
+	if (cb == action_s::make<overFireSparkAndPrepareNextSchedule>(static_cast<IgnitionEvent*>(nullptr)).getCallback()) {
+		return ExecEventKind::Overdwell;
+	}
+	if (cb == action_s::make<turnInjectionPinHigh>(scheduler_arg_t(0)).getCallback()) {
+		return ExecEventKind::Fuel;
+	}
+	if (cb == action_s::make<turnInjectionPinLow>(static_cast<InjectionEvent*>(nullptr)).getCallback()) {
+		return ExecEventKind::Fuel;
+	}
+
+	return ExecEventKind::Other;
+}
+
+} // namespace
 
 SingleTimerExecutor::SingleTimerExecutor()
 	// 8us is roughly the cost of the interrupt + overhead of a single timer event
@@ -66,7 +101,25 @@ void SingleTimerExecutor::schedule(const char *msg, scheduling_s* scheduling, ef
 
 	bool needToResetTimer = queue.insertTask(scheduling, nt, action);
 	if (!reentrantFlag) {
-		executeAllPendingActions();
+#if EFI_PROD_CODE
+		// In interrupt context (trigger handoff ISR) do NOT run due events
+		// inline. The executor (TIM5 CC1) runs at
+		// EFI_IRQ_SCHEDULING_TIMER_PRIORITY, above the trigger handoff, so
+		// it preempts this ISR exactly at the scheduled moment and
+		// dispatches with a fixed entry latency. Inline execution here
+		// would batch callbacks + busy-wait spins into the trigger ISR and
+		// make its duration variable - the variable tail that delays both
+		// the decode of queued edges and the dispatch of other due
+		// commands (the measured floating spark timing).
+		bool executeInline = !port_is_isr_context();
+#else
+		// Unit tests and the simulator execute events inline from thread
+		// context - keep that behavior.
+		bool executeInline = true;
+#endif
+		if (executeInline) {
+			executeAllPendingActions();
+		}
 		if (needToResetTimer) {
 			scheduleTimerCallback();
 		}
@@ -117,34 +170,20 @@ void SingleTimerExecutor::executeAllPendingActions() {
 		efitick_t nowNt = getTimeNowNt();
 		efitick_t momentNt = 0;
 		efitick_t executedAtNt = 0;
+
+		// Classify the head event BEFORE execution: executeOne unlinks it,
+		// so this is the only place the action is still reachable.
+		uint8_t kind = (uint8_t)ExecEventKind::Other;
+		scheduling_s* head = queue.getHead();
+		if (head) {
+			kind = (uint8_t)classifyAction(head->action);
+		}
+
 		didExecute = queue.executeOne(nowNt, &momentNt, &executedAtNt);
 
 		if (didExecute) {
 			// Dispatch lateness telemetry: how late the command went out.
-			executedEventCount++;
-			efitick_t late = executedAtNt - momentNt;
-			if (late > maxLateNt) {
-				maxLateNt = late;
-			}
-			if (late >= US2NT(10)) {
-				lateEventCount++;
-			}
-			uint32_t lateUs = (uint32_t)(late / (NT_PER_SECOND / 1000000));
-			if (lateUs < 1) {
-				lateHistogram[0]++;
-			} else if (lateUs < 4) {
-				lateHistogram[1]++;
-			} else if (lateUs < 16) {
-				lateHistogram[2]++;
-			} else if (lateUs < 64) {
-				lateHistogram[3]++;
-			} else if (lateUs < 256) {
-				lateHistogram[4]++;
-			} else if (lateUs < 1024) {
-				lateHistogram[5]++;
-			} else {
-				lateHistogram[6]++;
-			}
+			recordExecutionLateness(kind, executedAtNt - momentNt);
 		}
 
 		// if we're stuck in a loop executing lots of events, panic!
@@ -188,12 +227,54 @@ void initSingleTimerExecutorHardware() {
 	initMicrosecondTimer();
 }
 
+void SingleTimerExecutor::recordExecutionLateness(uint8_t kind, efitick_t late) {
+	executedEventCount++;
+	if (late > maxLateNt) {
+		maxLateNt = late;
+	}
+	if (late >= US2NT(10)) {
+		lateEventCount++;
+	}
+	uint32_t lateUs = (uint32_t)(late / (NT_PER_SECOND / 1000000));
+	if (lateUs < 1) {
+		lateHistogram[0]++;
+	} else if (lateUs < 4) {
+		lateHistogram[1]++;
+	} else if (lateUs < 16) {
+		lateHistogram[2]++;
+	} else if (lateUs < 64) {
+		lateHistogram[3]++;
+	} else if (lateUs < 256) {
+		lateHistogram[4]++;
+	} else if (lateUs < 1024) {
+		lateHistogram[5]++;
+	} else {
+		lateHistogram[6]++;
+	}
+
+	// Per-command-class stats: proves WHICH commands float (dwell/spark/
+	// overdwell/fuel/other) - printed by the m74_9 lockstats command.
+	if (kind < (uint8_t)ExecEventKind::Count) {
+		ExecLatenessStats& k = kindStats[kind];
+		k.executedEventCount++;
+		if (late > k.maxLateNt) {
+			k.maxLateNt = late;
+		}
+		if (late >= US2NT(10)) {
+			k.lateEventCount++;
+		}
+	}
+}
+
 void SingleTimerExecutor::resetExecutionLatenessStats() {
 	maxLateNt = 0;
 	executedEventCount = 0;
 	lateEventCount = 0;
 	for (size_t i = 0; i < efi::size(lateHistogram); i++) {
 		lateHistogram[i] = 0;
+	}
+	for (size_t i = 0; i < efi::size(kindStats); i++) {
+		kindStats[i] = {};
 	}
 }
 

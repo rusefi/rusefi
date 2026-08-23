@@ -186,7 +186,7 @@ static void fireTrailingSpark(IgnitionOutputPin* pin) {
 	pin->setLow();
 }
 
-static void overFireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
+void overFireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 #if SPARK_EXTREME_LOGGING
 	efiPrintf("[%s] %d %s",
 		event->getOutputForLoggins()->getName(), event->sparkCounter,
