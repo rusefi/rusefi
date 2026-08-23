@@ -6546,3 +6546,34 @@ Open follow-ups:
 - Hard-PWM channels are invisible to printPwmStats; if per-channel visibility of the
   hardware PWM is ever wanted, register hardware channels too (they'd show
   softPwmEvents=0 / "hard").
+
+## 2026-08-23 - lockstats callback address map + delay analysis; enable alwaysInstantRpm + idle closed loop
+
+Decoded the othercb addresses in lockstats against the 20:36 m74_9 ELF
+(addr2line): 08055169=startAveraging (MAP start), 08055075=endAveraging (MAP end),
+080491CD=startKnockSampling, 08048E19=onTdcCallback, 0806CFFD=watchDogBuddyCallback,
+0803D711=timerValidationCallback.
+
+Key delay-analysis findings (goal: ideal ignition/injection timing):
+- startAveraging (MAP) is ALWAYS ~100% late (20:54 n=5640 late=5618; 20:56 n=227 l=227)
+and showed the single worst hitch maxLateUs=22694 (22.7 ms). Root:
+onEnginePhase schedules samplingStart-currentPhase inside [currentPhase,nextPhase) -
+tiny lead from now, executor cannot dispatch on time. MAP, not ignition - cosmetic.
+- spark/dwell/fuel late of 10-80 us (38-67%) is scheduling jitter, NOT the timing enemy:
+at 6000 rpm 1 deg=27.8 us, 1000 rpm=167 us; 10-20 us typical = 0.1-0.4 deg. Cannot be
+removed (near-future event queued at exec ISR finish always pays dispatch latency).
+- REAL timing inaccuracy is invisible to late: scheduleByAngle uses oneDegreeUs*angle
+from edgeTimestamp, and oneDegreeUs is RPM-averaged over 720 deg when
+alwaysInstantRpm=no. Under accel/decel the linear extrapolation places the event at the
+wrong absolute moment - fires on time (late~0) but at wrong crank angle.
+
+Changes to 21129.msq:
+| field | was | now | effect |
+| alwaysInstantRpm | no | yes | oneDegreeUs from ~90-deg instant rpm -> better angular accuracy in transients; does NOT change late |
+| idleMode | Open Loop | Open Loop + Closed Loop | close idle RPM PID loop for idle hold |
+| idleTimingSoftEntryTime | 0.5 | 0.1 | faster soft entry into idle timing PID |
+
+Notes: useIdleTimingPidControl already yes; measureMapOnlyInOneCylinder stays no (shared
+plenum); idleReturnTargetRamp stays no. Validation: tune only, no flash. Expected better
+angular accuracy in throttle-release/accel - watch MLG; late will NOT improve. Risk:
+instant rpm noisier at idle - revert that one bit if idle hunts.
