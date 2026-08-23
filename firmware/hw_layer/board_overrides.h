@@ -283,6 +283,13 @@ extern std::optional<setup_custom_bool_type> custom_board_requirePhaseSyncForFir
 // Used by boards that implement an external immobilizer challenge-response (e.g. m74_9).
 extern std::optional<setup_custom_bool_type> custom_board_isImmobilizerBlocking;
 extern std::optional<setup_custom_bool_type> custom_board_allowFlashNow;
+// When set and returning false, TS-triggered burns (settings page and the
+// extra pages) are skipped with a log warning. m74_9 sets it: a burn while
+// the engine runs would hit the AT32 internal-flash MFS whose sector erase
+// stalls the whole CPU (no read-while-erase) - the exact trigger of the
+// L9779 watchdog -> ETC_WD -> TLE9201 blade-drop chain. Default true keeps
+// the classic behavior. Defined in tunerstudio.cpp.
+extern std::optional<setup_custom_bool_type> custom_board_allowTsBurn;
 
 /**
  * This function checks if an override is present and calls it if available.

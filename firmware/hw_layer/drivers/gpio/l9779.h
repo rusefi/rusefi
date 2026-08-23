@@ -40,11 +40,10 @@ struct l9779_config {
 
 int l9779_add(brain_pin_e base, unsigned int index, const l9779_config *cfg);
 
-/* Snapshot the VDA 2.0 watchdog state for diagnostics. */
-bool l9779_getWdaCounters(uint8_t *ec, bool *wdaInt, int *ok, int *fail,
-	int *timingMiss, uint8_t *dia10, int *delayMs, int *deferCount,
-	int *killCount, uint8_t *requhi, int *wrongCount, int *countBad);
-
-/* Request an ignition-gated power-stage transition. The flag may be changed
- * from an interrupt; all SPI work is deferred to the L9779 driver thread. */
-void l9779_setPowerStage(bool on);
+/* WDA (VDA 2.0) watchdog counters of the first registered L9779: the last
+ * error counter value, the WDA_INT flag (EC > 4 -> WDA output pin low), and
+ * the totals of answered/missed response cycles. Cross-driver diagnostics -
+ * e.g. the TLE9201 drop warning on boards where the L9779 WDA output kills
+ * the ETB bridge (m74_9 ETC_WD chain). Returns false when no L9779 chip is
+ * registered on this board. */
+bool l9779_getWdaCounters(uint8_t *ec, bool *wda_int, int *ok, int *fail);

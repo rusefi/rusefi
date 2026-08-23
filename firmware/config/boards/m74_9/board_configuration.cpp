@@ -787,6 +787,15 @@ void setup_custom_board_overrides() {
 		return engine->triggerCentral.directSelfStimulation ||
 			engine->rpmCalculator.isStopped();
 	};
+	// TS burns are rejected while the engine runs, same rationale as the
+	// storage-deferral gate above: the settings page is already deferred by
+	// the storage manager, but the extra-page burns (secondary tables, lua)
+	// go straight to the flash from the TS thread and would stall the CPU
+	// mid-run. Bench self-stimulation stays allowed.
+	custom_board_allowTsBurn = []() {
+		return engine->triggerCentral.directSelfStimulation ||
+			engine->rpmCalculator.isStopped();
+	};
 	// VR input debounce: the trigger logs show noise edge bursts <50 us apart
 	// (comparator ringing / starter interference) that inflate the event count
 	// and false-sync the decoder mid-crank. The threshold is RPM-adaptive

@@ -103,6 +103,7 @@
 #include "bench_test.h"
 #include "status_loop.h"
 #include "mmc_card.h"
+#include "board_overrides.h"
 
 #if EFI_SIMULATOR
 #include "rusEfiFunctionalTest.h"
@@ -555,6 +556,26 @@ void requestBurn() {
 #endif // !EFI_UNIT_TEST
 }
 
+// Board policy gate for TS burns: see the declaration in board_overrides.h.
+std::optional<setup_custom_bool_type> custom_board_allowTsBurn;
+
+// Burn a flash-backed extra page unless the board forbids burns right now
+// (engine running). Returns false when the burn was skipped.
+static bool burnExtraFlashPageIfAllowed(StorageItemId id) {
+#if !EFI_UNIT_TEST
+	if (get_board_override_result(custom_board_allowTsBurn, true)) {
+		burnExtraFlashPage(id);
+		return true;
+	}
+
+	efiPrintf("WARNING: TS burn skipped - engine is running (board policy)");
+	return false;
+#else
+	(void)id;
+	return true;
+#endif // !EFI_UNIT_TEST
+}
+
 #if EFI_TUNER_STUDIO
 // TS normally waits 500ms; 2s keeps clients without a CRC check from blocking forever the write.
 static constexpr float SETTINGS_BURN_TIMEOUT_MS = 2000;
@@ -572,14 +593,18 @@ void TunerStudio::finishPendingBurn(TsChannelBase* tsChannel) {
 	efiPrintf("Finishing pending TS burn");
 	validateConfigOnStartUpOrBurn(true);
 
-		// problem: 'popular vehicles' dialog has 'Burn' which is very NOT helpful on that dialog
-		// since users often click both buttons producing a conflict between ECU desire to change settings
-		// and TS desire to send TS calibration snapshot into ECU
-		// Skip the burn if a preset was just loaded - we don't want to overwrite it
-		// [tag:popular_vehicle]
-  if (!needToTriggerTsRefresh()) {
-    efiPrintf("TS -> Burn, we are allowed to burn");
-		requestBurn();
+	// problem: 'popular vehicles' dialog has 'Burn' which is very NOT helpful on that dialog
+	// since users often click both buttons producing a conflict between ECU desire to change settings
+	// and TS desire to send TS calibration snapshot into ECU
+	// Skip the burn if a preset was just loaded - we don't want to overwrite it
+	// [tag:popular_vehicle]
+	if (!needToTriggerTsRefresh()) {
+		if (get_board_override_result(custom_board_allowTsBurn, true)) {
+			efiPrintf("TS -> Burn, we are allowed to burn");
+			requestBurn();
+		} else {
+			efiPrintf("WARNING: TS burn skipped - engine is running (board policy)");
+		}
 	}
 
 	if (crcBefore != crc32(engineConfiguration, sizeof(persistent_config_s))) {
@@ -609,13 +634,9 @@ void TunerStudio::handleBurnCommand(TsChannelBase* tsChannel, uint16_t page) {
 	} else if (page == TS_PAGE_SCATTER_OFFSETS) {
 		/* do nothing */
 	} else if (page == TS_PAGE_SECOND_TABLES) {
-#if !EFI_UNIT_TEST
-		burnExtraFlashPage(EFI_SECOND_TABLES_RECORD_ID);
-#endif
+		burnExtraFlashPageIfAllowed(EFI_SECOND_TABLES_RECORD_ID);
 	} else if (page == TS_PAGE_LUA) {
-#if !EFI_UNIT_TEST
-		burnExtraFlashPage(EFI_LUA_PAGE_RECORD_ID);
-#endif
+		burnExtraFlashPageIfAllowed(EFI_LUA_PAGE_RECORD_ID);
 	} else {
 		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, "ERROR: Burn invalid page");
 		return;

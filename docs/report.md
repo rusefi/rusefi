@@ -6169,3 +6169,77 @@ OPEN for the next session: the car catches well (~1100-1678 rpm) and then
 falls/stalls (23:32:34: rpm 0 at tCrk 3.5 s). Suspects: post-catch airflow
 (taper blend 21.94 -> 17.78 -> 10.x), idleMode = Open Loop, warm idle
 table ~9-10% at 944-960 rpm target.
+
+## 2026-08-23 - TLE9201 blade drop root cause: L9779 WDA watchdog kill chain
+
+Decoded the "Outputs disabled" stall. TLE9201 diag 0x5C = EN=0 = DIS pin
+HIGH (datasheet: EN bit reflects the DIS input, not an internal fault;
+OT=1, CL=1 = no fault). Only two drivers of DIS on m74_9: PB13 (driven
+high once in board init, never again) and the ETC_WD chain L9779 WDA
+(pin 38, open-drain low-active) -> Q5B -> DIS.
+
+L9779 datasheet 6.15: WDA goes LOW when the VDA 2.0 watchdog error
+counter EC > 4 (also on any L9779 reset - EC starts at 6 - and on
+external AB1 low). So the blade drops whenever the watchdog is
+unanswered (EC>4) or the chip resets (UV dips).
+
+Proof from the 2026-08-23 00:18-00:30 log, two perfect pairs:
+- 00:19:02 / 00:20:13: Diag 5C appears INSIDE an MFS settings write that
+  stalled 2379/2360 ms (status 2), and DF returns ~200 ms after the
+  write completes. The MFS lives in AT32 internal flash bank 2 (EFLD2);
+  a sector erase stalls instruction fetch (no read-while-erase) -> ~20
+  watchdog cycles unanswered -> EC>4 -> WDA low -> DIS high -> bridge
+  tristate -> spring slams the blade shut -> engine stalls. This is the
+  same chain as the 08-22 19:36:09 / 00:22:14 car stalls (MFS write
+  2419-2451 ms in the same second as the drop), fixed at the source by
+  the storage-deferral gate (periodic LTFT saves deferred while running).
+- The 08-23 00:22:14 stall had NO flash write in flight - same actuator,
+  different trigger (candidates: VS/ignition dip -> L9779 RST_UV, EMI on
+  SPI1 while running, AB1 low). Coil overcharge C9351-4 at the same
+  timestamp is a CONSEQUENCE of the rpm collapse (dwell overflow), not a
+  cause.
+
+Cranking-time 0x5C clusters (00:19:25, 3 toggles in 1.2 s) = starter
+battery sag resetting the L9779 (EC=6 -> WDA low -> DF after two good
+answers).
+
+Diagnostic for the next stall: console command 'pins' prints
+"l9779 WDA: req=.. ec=.. wda_int=.. ok=.. fail=.." and spi error
+counters - run it right after a drop (key still on). wda_int=1/ec>4
+confirms the watchdog path; healthy ec means PB13/AB1/hardware.
+Fix directions (not implemented yet): forbid TS Burn while running on
+this board; explicit warning on EN=0 while running; hardware decision on
+the ETC_WD kill chain (Q5B/R20 populated or not - TLE9201 has its own
+chopper/OC/OT protections).
+
+## 2026-08-23 - blade-drop fixes: TS burn gate, EN=0 warning with WDA counters, heater verified
+
+Following the WDA kill-chain analysis, three firmware changes (board
+compile + 1158 unit tests green):
+1. TS Burn forbidden while the engine runs (new board hook
+   custom_board_allowTsBurn in board_overrides.h, defined in
+   tunerstudio.cpp; m74_9 sets it like custom_board_allowFlashNow:
+   allowed only when engine stopped or bench self-stimulation). The
+   settings page was already deferred by the storage manager, but the
+   extra-page burns (secondary tables, lua) went STRAIGHT to the flash
+   from the TS thread - a mid-run burn of page 4/5 would stall the CPU
+   and re-trigger the WDA kill chain. Skipped burns print
+   "WARNING: TS burn skipped - engine is running (board policy)".
+2. TLE9201 driver now logs ONE warning line when the outputs get
+   disabled (EN=0, i.e. DIS pin high) while the engine is running,
+   merged with the L9779 watchdog counters via the new
+   l9779_getWdaCounters() accessor:
+   "WARNING: TLE9201 outputs disabled while engine running (DIS pin
+   high; l9779 WDA ec=N wda_int=N ok=N fail=N)". ec>4/wda_int=1
+   confirms the watchdog-answer starvation; healthy counters mean the
+   kill came from elsewhere (PB13/AB1/hardware).
+3. O2 heater (point 4) VERIFIED - no code change needed: OUT6 is the
+   L9779 LSb low-side driver (5 A, datasheet "R,L Load (Heater)"), so
+   it switches to GND by construction. Chain: o2heaterPin L9779_OUT_6
+   -> OutputPin::setValue(1) -> gpiochips_writePad -> L9779::writePad
+   (driver pin 9) -> palSetPort PG6 -> IN6 -> OUT6 conducts to GND.
+   Positive logic, CONTR enable bit latched at boot (o_oe_mask bit 9 ->
+   CONTR_REG2 bit 0), nothing in board logic disables it; the only gate
+   is forceO2Heating || isRunning() (engine.cpp). Remaining hardware
+   unknowns if the heater does not heat: PG6<->IN6 wiring (schematic
+   only, not buzzed out) and the +12V feed side of the heater.
