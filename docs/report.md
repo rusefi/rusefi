@@ -6577,3 +6577,42 @@ Notes: useIdleTimingPidControl already yes; measureMapOnlyInOneCylinder stays no
 plenum); idleReturnTargetRamp stays no. Validation: tune only, no flash. Expected better
 angular accuracy in throttle-release/accel - watch MLG; late will NOT improve. Risk:
 instant rpm noisier at idle - revert that one bit if idle hunts.
+
+## 2026-08-23 - scheduling dispatch jitter analysis (spark/dwell/fuel late) - deferred
+
+Asked: can the scheduler's `late` (spark/dwell/fuel) be reduced? Analyzed the dispatch
+pipeline (single_timer_executor.cpp + event_queue.cpp + trigger_scheduler.cpp).
+
+Where `late` comes from (3 levels):
+1. PHYSICAL dispatch floor (not removable): TIM5 ISR entry -> CriticalSectionLocker ->
+   queue walk -> unlink -> execute = ~1-3 us minimum even for an ideally-placed event.
+2. CLOSE-LEAD planning (main, partly removable): spark/dwell/fuel are scheduled from the
+   CURRENT tooth (edgeTimestamp) to an enginePhase lying inside the current tooth
+   interval. 60-2 tooth = 6 deg; at 6000 rpm 1 deg = 27.8 us, so an event can sit only a
+   few us ahead of now. Inside the 8 us pool hysteresis (EventQueue(US2NT(8))),
+   executeOne spin-waits then measures late = how much it "rotted" - the bigger the
+   rot, the higher the RPM/share of late (matches: spark 36%, fuel 50%, dwell 65%).
+3. Queue batching: executeAllPendingActions runs all due events in one ISR pass;
+   a long callback (dwell cbmaxUs=167) delays the following events in the same pass.
+
+What could reduce it (honest cost/benefit):
+- SCHEDULE 1 TOOTH AHEAD (always place spark/dwell/fuel from the NEXT tooth, not the
+  current one) -> big lead >> floor -> removes the "chasing" late. Risk: angular
+  accuracy under hard accel (already helped by alwaysInstantRpm). Needs bench/car
+  validation. This is THE candidate if we ever act.
+- Lower the 8 us pool hysteresis: marginal (dispatch floor remains), raises timer
+  re-arm overhead - not worth it.
+- Exclude sub-hysteresis-lead events from `late` stats: cosmetic only, changes no
+  real jitter.
+- long callback in same ISR pass: already tracked via cbmaxUs/cbDuration.
+
+KEY: this late barely affects ideal timing - 10-20 us typical = 0.1-0.4 deg at 6000,
+~0.1 deg at idle; maxLate 156 us = ~0.6-1 deg (rare). Fuel 1-10 ms injection:
+10-20 us is 0.1-2% duration - negligible. The things that DID improve ideal timing:
+lost-TIM5-compare fix (removed brick/wedge) and alwaysInstantRpm (angular accuracy).
+`late` is a cosmetic dispatch floor, not real timing loss.
+
+DECISION (deferred): do NOT touch scheduling code yet. First validate MLG with
+alwaysInstantRpm=yes on throttle-release/accel. If transients are clean, leave `late`
+alone (don't fix what isn't broken). Only if MLG shows unexplained UOZ jitter in
+transients, revisit scheduling-1-tooth-ahead. Pick this thread back up with fresh MLG.
