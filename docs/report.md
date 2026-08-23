@@ -6364,3 +6364,26 @@ supposed to be disabled but the decoder still consumed it:
   unconditionally - the decoder compares raw durations; the learner
   keeps feeding toothdump/rawtrg diagnostics only. Board build green,
   1158 unit tests green.
+
+## 2026-08-23 - engine died at 12:20:00: WDA watchdog trip (ec=5, wda_int=1), diagnostics extended
+
+Session 12:19:21 log: the car started and ran, then the L9779 "switched
+off" at 12:20:00 - this time the WDA path tripped for real:
+12:20:00.326 drop with ec=4 wda_int=0 (the healthy-watchdog DIS glitch
+class), then ~200 ms later a second drop with ec=5 wda_int=1 -> WDA pin
+low -> L9779 disabled OUT1-4/IGN1-4 (ignition cut = "l9779 turned off")
++ ETC_WD killed the ETB -> engine stopped 12:20:01.9. No power sag
+involved - it is a watchdog TIMING trip: an answer landed outside the
+~12.6 ms window and the EC climbed 4->5. fail=0 was misleading - it
+only counts SPI-level failures; timing misses (REQUHI RESP_TO_EARLY /
+NO_RESP flags) silently increment the EC.
+
+Diagnostics extended (built + 1158 tests green):
+- l9779 driver counts timing misses separately (wd_timing_miss_cnt) and
+  caches the DIA_REG10 byte (CRK_RST=0x20 short-VDD-UV reset,
+  V3V3_UV=0x04 3.3V regulator UV, OV_RST, VDD5_OV, TNL_RST, F1/F2) -
+  refreshed every 100 ms; the existing "OUT_DIS set! DIA10=0xNN" print
+  captures the flags for every event.
+- The TLE9201 drop warning now prints miss=N and dia10=0xNN, so the
+  next event shows BOTH whether the watchdog answers were late and
+  whether the chip saw a power event (CRK_RST/V3V3_UV).
