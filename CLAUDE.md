@@ -564,3 +564,9 @@ Fixes:
   read back, or RAM lastWrittenCrc). Kills the 168 ms/2.3 s stall for no-op burns.
 - CONSOLE diagnostic: log field NAMES in "Need to patch" (currently raw byte offsets) - the offset->ini mapping is what took hours.
 - "TS burn CRC timeout" is NORMAL console behavior (the console never sends the CRC check; the 2 s timeout path is how console burns complete) - not a bug by itself.
+
+## L9779 WDA timing: window center measured 115 ms, single window per cycle (2026-08-24)
+
+- The VDA watchdog is tied to the CHIP's internal monitoring cycle (~112 ms: ~99 ms response phase + ~12.6 ms answer window), NOT to engine cycles and NOT to MCU time. The answer (4 bytes keyed by the 4-bit question) must land INSIDE the ~12.6 ms window; the cycle restarts at the accepted RESP_BYTE0. An answer outside the window (early OR late) is reported via the REQUHI flags and INCREMENTS the EC - so answering more often is impossible and harmful: extra answers land outside the single window and each one is a miss (EC++, kill pulse). 2x/5x feeding = 2x/5x kills + extra SPI traffic. The only lever is phase precision.
+- Measured on m74_9 (16:21:41 log): the window center is ~115 ms after the previous accepted answer (the old 105 ms start value sat BEFORE the window). With the feed at 115 ms the loop locks with ZERO misses over 206 answers; the feed's dispatch jitter is <=150 us against the 12.6 ms window. The 5 ms adaptation step (half the window) recenters in 1-2 cycles from any drift. Starting at 115 ms removes the boot-convergence misses that fired the kills=2 pulses.
+- Residual miss source: the chip's internal oscillator drifting (temperature / supply sag) shifts the window relative to the feed; the +-5 ms step catches it with at most one single miss. If misses reappear, read the instrumented warning line (delay=/defer=/kills=) - delay walking = chip clock drift (points at the L9779-side supply again), defer growing = thread/executor SPI contention.
