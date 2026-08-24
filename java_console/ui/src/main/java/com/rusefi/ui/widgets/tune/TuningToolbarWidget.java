@@ -36,14 +36,17 @@ import java.util.function.Consumer;
 
 /**
  * Toolbar for the Tune tab: Burn, Discard, Undo, and Redo buttons.
- * Also owns the undo/redo history stacks and the upload/debounce timers
+ * Also owns the undo/redo history stacks and the undo debounce timer
  * so they are kept out of TuningPane.
+ * <p>
+ * The ECU configuration is written ONLY when the user presses the Burn
+ * button (or confirms the exit prompt): edits update the local session
+ * image only - there is no live upload and no automatic re-write.
  */
 public class TuningToolbarWidget {
     private static final Logging log = Logging.getLogging(TuningToolbarWidget.class);
     private static final int MAX_UNDO = 15;
     private static final int IDLE_TIMEOUT_MS = 300;
-    private static final int UPLOAD_DELAY_MS = 100;
 
     private final JPanel panel;
 
@@ -69,7 +72,6 @@ public class TuningToolbarWidget {
     private final JFileChooser saveTuneChooser = createMsqFileChooser();
 
     private final Timer undoCommitTimer;
-    private final Timer uploadTimer;
     private volatile boolean firmwareUpdateInProgress;
     private Consumer<String> errorHandler = message -> JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
 
@@ -116,20 +118,6 @@ public class TuningToolbarWidget {
 
         undoCommitTimer = new Timer(IDLE_TIMEOUT_MS, e -> flushUndoBaseline.run());
         undoCommitTimer.setRepeats(false);
-
-        uploadTimer = new Timer(UPLOAD_DELAY_MS, e -> {
-            if (firmwareUpdateInProgress) {
-                return;
-            }
-            BinaryProtocol bp = uiContext.getBinaryProtocol();
-            ConfigurationImage image = sessionImage.get();
-            if (bp == null || image == null) {
-                return;
-            }
-            final ConfigurationImage snapshot = image.clone();
-            uiContext.getLinkManager().submit(() -> bp.uploadChangesWithoutBurn(snapshot));
-        });
-        uploadTimer.setRepeats(false);
 
         JButton burnButton = getBurnToEcuButton(uiContext, right, sessionImage);
         burnButton.setEnabled(uiContext.getBinaryProtocol() != null);
@@ -252,8 +240,18 @@ public class TuningToolbarWidget {
         final Map<Integer, ConfigurationImage> secondary = right.getDirtySecondaryPages();
         sessionImage.set(image);
         uiContext.getLinkManager().submit(() -> {
-            bp.burn();
-            bp.setConfigurationImage(image);
+            // Single write path: diff the image against the ECU, upload only the changed
+            // regions, and burn. With no differences this is a no-op (nothing is written,
+            // nothing is burned) - the Burn button is the ONLY source of configuration
+            // writes to the ECU.
+            try {
+                bp.uploadChanges(image);
+            } catch (Exception ex) {
+                log.error("Burn to ECU failed", ex);
+                SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(
+                    panel, "Failed to burn to ECU: " + ex.getMessage(), "Burn failed", JOptionPane.ERROR_MESSAGE));
+                return;
+            }
             // Secondary TS pages (second VE/ignition tables): the page-0 upload protocol does
             // not cover them, so write each edited page explicitly and burn it.
             for (Map.Entry<Integer, ConfigurationImage> entry : secondary.entrySet()) {
@@ -507,9 +505,6 @@ public class TuningToolbarWidget {
 
     public void setFirmwareUpdateInProgress(boolean inProgress) {
         firmwareUpdateInProgress = inProgress;
-        if (inProgress) {
-            uploadTimer.stop();
-        }
         loadTuneAction.setEnabled(!inProgress);
     }
 
@@ -649,12 +644,13 @@ public class TuningToolbarWidget {
 
     /**
      * Must be called on every edit event (from {@code right.setOnConfigChange}).
-     * Captures the pre-edit baseline for undo and restarts the debounce + upload timers.
+     * Captures the pre-edit baseline for undo and restarts the undo debounce timer.
+     * Nothing is written to the ECU here - the session image is local until the user
+     * presses the Burn button.
      */
     public void onEdit(ConfigurationImage previousSessionImage) {
         undoBaseline.compareAndSet(null, previousSessionImage);
         undoCommitTimer.restart();
-        uploadTimer.restart();
         refreshState();
     }
 
@@ -691,7 +687,6 @@ public class TuningToolbarWidget {
      */
     public void onDisconnect() {
         undoCommitTimer.stop();
-        uploadTimer.stop();
         undoStack.clear();
         redoStack.clear();
         undoBaseline.set(null);

@@ -618,8 +618,18 @@ Chain (all verified in code + logs):
 - A burn follows (bp.burn(), "Need to burn"/"BURN OK"). On the ECU, page-0 burns are deferred: "TS -> Burn, waiting for CRC" -> console NEVER sends the CRC-check command (BurnCommand.execute only checks the BURN_OK response) -> 2 s later "TS burn CRC timeout" -> "Finishing pending TS burn" -> requestBurn() -> setNeedToWriteConfiguration() -> writeToFlashNowImpl() (flash_main.cpp) writes BOTH copies UNCONDITIONALLY - no compare against existing flash, no CRC skip. AT32/MFS: 168 ms per copy, ~2.3 s on GC, no read-while-erase -> full CPU stall (this is the stall class that sits next to several WDA kills).
 - The diff never converges because the debug ECU resets every ~5 s (cache only refreshes on full reconnect, ~every 1-3 min) while the tune is actively evolving - the patched fields (idleRpmPid_iFactor, fan2ExtraIdle, coastingFuelCut*, noFuelTrimAfterDfcoTime, dfco*, etb_*, cltIdleCorrTable) are EXACTLY the fields the msq commits around the sessions were changing (8837fa256e5 "upd msq" etc.), and the pushed values are the intermediate values of that tuning.
 
-Fixes (not yet implemented):
-- FIRMWARE (strongest): writeToFlashNowImpl() - skip the storageWrite calls when the new persistentState matches what is already stored (compare crc read back, or RAM lastWrittenCrc). Kills the 168 ms/2.3 s stall for no-op burns.
-- CONSOLE: uploadChangesWithoutBurn must advance the cached image (source of the infinite re-diff); burn paths should no-op when nothing is pending/unchanged.
+Fixes:
+- CONSOLE (IMPLEMENTED 2026-08-24): the Tune tab no longer uploads live - the 100 ms edit-upload
+  timer is gone, and the Burn button is the ONLY configuration writer:
+  TuningToolbarWidget.onEdit only does undo bookkeeping; burnToEcuAndThen calls
+  BinaryProtocol.uploadChanges(image) (diff + patch changed regions + burn + advance cache),
+  so with no differences it is a complete no-op. uploadChangesWithoutBurn now advances the
+  cached image to the uploaded snapshot (setConfigurationImage after the chunk loop) so no
+  caller can re-diff the same regions forever. Remaining user-gated writes outside the Burn
+  button: the offline-reconcile dialog on connect (TuningPane.reconcileOfflineEditsOnConnect,
+  explicit dialog choice), KnockPane start/stop toggle, wizard panels.
+- FIRMWARE (still pending, strongest against ECU-side stalls): writeToFlashNowImpl() - skip the
+  storageWrite calls when the new persistentState matches what is already stored (compare crc
+  read back, or RAM lastWrittenCrc). Kills the 168 ms/2.3 s stall for no-op burns.
 - CONSOLE diagnostic: log field NAMES in "Need to patch" (currently raw byte offsets) - the offset->ini mapping is what took hours.
 - "TS burn CRC timeout" is NORMAL console behavior (the console never sends the CRC check; the 2 s timeout path is how console burns complete) - not a bug by itself.

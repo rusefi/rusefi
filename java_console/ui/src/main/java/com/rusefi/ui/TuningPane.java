@@ -235,11 +235,9 @@ public class TuningPane {
 
         // When the ECU disconnects (e.g. after a firmware flash or board swap), drop stale
         // undo/redo state so the next connection starts fresh, but preserve sessionImage
-        // and baselineImage so the user can continue editing offline.
-        // Without clearing sessionImage, the old board's image would be used as the diff
-        // baseline in uploadChangesWithoutBurn — but that's fine because on reconnect
-        // we re-seed from the ECU below.
-        connectionStatusListener = isConnected -> {
+        // and baselineImage so the user can continue editing offline. Edits are local until
+        // the Burn button is pressed; on reconnect we re-seed from the ECU below.
+        ConnectionStatusLogic.INSTANCE.addListener(isConnected -> {
             if (!isConnected) {
                 SwingUtilities.invokeLater(() -> {
                     toolbar.onDisconnect();

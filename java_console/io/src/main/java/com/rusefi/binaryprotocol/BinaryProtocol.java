@@ -368,7 +368,10 @@ public class BinaryProtocol {
 
     /**
      * Patches configuration inside ECU RAM by writing only regions with different content.
-     * Does not burn to flash or update the local configuration image.
+     * Does not burn to flash. The local configuration image is advanced to the uploaded
+     * snapshot so that a subsequent upload of the same image finds no differences - without
+     * this, the diff is recomputed against the stale image forever (the self-burn loop seen
+     * in the m74_9 2026-08-24 logs).
      */
     public void uploadChangesWithoutBurn(ConfigurationImage newVersion) {
         ConfigurationImage current = getControllerConfiguration();
@@ -396,6 +399,9 @@ public class BinaryProtocol {
 
             offset = range.second;
         }
+        // The RAM image on the ECU now matches newVersion; keep the local cache in sync
+        // (writeData throws on failure, so we only get here when every chunk landed).
+        setConfigurationImage(newVersion);
     }
 
     /**
