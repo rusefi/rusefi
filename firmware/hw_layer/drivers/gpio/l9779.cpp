@@ -1272,6 +1272,14 @@ void L9779::wdFeedFromExecutor()
 	 * the chip's EC incremented - count them separately from wd_fail_cnt,
 	 * which only tracks SPI-level failures.
 	 *
+	 * ORDER MATTERS: a too-late response sets BOTH NO_RESP and RESP_TO_EARLY
+	 * (datasheet 6.15: a too-late response is at the same time a too-early
+	 * response of the next cycle, the NO_RESP monitoring is overwritten by
+	 * the RESP_TO_EARLY one). Check NO_RESP FIRST - with the old order the
+	 * both-flags case was classified as EARLY and the delay walked UP (+5)
+	 * until it pegged at the 27 ms clamp, sitting on the window edge and
+	 * never recovering (the 20:12 session: delay=27ms, reqhi=0xDB).
+	 *
 	 * The correction step is 5 ms (just under half of the ~12.6 ms window):
 	 * a single miss jumps the phase from just-outside to near center without
 	 * overshooting to the other edge. With the shortened RESPTIME the
@@ -1279,16 +1287,16 @@ void L9779::wdFeedFromExecutor()
 	 * should be a rare event; when it happens it costs 1-2 misses, and each
 	 * miss sets EC > 4 and fires the chip's WDA kill output (the blade
 	 * drop) - converging fast is the whole game. */
-	if (requhi & 0x01) {
-		/* RESP_TO_EARLY: response before the window opened */
-		wd_timing_miss_cnt++;
-		wd_last_miss_dir = 1;
-		wd_delay_ms += 5;
-	} else if (requhi & 0x02) {
-		/* NO_RESP: response after the window closed */
+	if (requhi & 0x02) {
+		/* NO_RESP (and NO_RESP+EARLY): response after the window closed */
 		wd_timing_miss_cnt++;
 		wd_last_miss_dir = 2;
 		wd_delay_ms -= 5;
+	} else if (requhi & 0x01) {
+		/* RESP_TO_EARLY alone: response before the window opened */
+		wd_timing_miss_cnt++;
+		wd_last_miss_dir = 1;
+		wd_delay_ms += 5;
 	}
 	/* keep the period inside the answer window [response_time, response_time+window] */
 	if (wd_delay_ms < WDA_DELAY_MIN_MS)
@@ -1314,8 +1322,20 @@ void L9779::wdFeedFromExecutor()
 	wd_last_requhi = requhi;
 	if (requhi & 0x04)			/* W_RESP: value rejected */
 		wd_wrong_cnt++;
-	if ((requhi & 0xc0) != 0xc0)	/* RESP_CNT != 11: stream desynced */
+
+	/* RESP_CNT != 11: the answer stream is SHIFTED by one byte (a stray late
+	 * byte landed in the wrong position). Writing the burst into a shifted
+	 * stream would complete a wrong-value response (EC++) AND keep the shift
+	 * for every following cycle. Skip the burst instead: the window expires
+	 * unanswered (one EC via NO_RESP), the sequencer resets RESP_CNT to 11
+	 * and the next burst re-aligns deterministically. */
+	if ((requhi & 0xc0) != 0xc0) {
 		wd_cnt_bad++;
+		engine->scheduler.schedule("l9779wda", &wd_sched,
+			getTimeNowNt() + MS2NT(wd_delay_ms) - US2NT(WDA_BURST_LEAD_US),
+			action_s::make<l9779WdaFeedExec, L9779*>(this));
+		return;
+	}
 
 	/* EC=7 + WDA_INT is the LATCHED fault state: a chip reset (SW_RST) is
 	 * needed to re-arm. Ask the driver thread to do that via the need_init
