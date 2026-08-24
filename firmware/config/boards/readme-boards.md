@@ -3,6 +3,12 @@
 This is an overview of the board directories with active builds. Completely disabled boards and
 connector/.yaml-only directories are intentionally not listed here.
 
+See [readme.md](readme.md) for what a board directory is and the new-board procedure.
+For Hellen-platform boards, [docs/hellen-board-mapping.md](../../../docs/hellen-board-mapping.md)
+explains how connector yaml entries map through meta headers to STM32 pins, and
+[docs/board-configuration-override-hooks.md](../../../docs/board-configuration-override-hooks.md)
+covers the board_configuration.cpp configuration hooks.
+
 ## Development boards - not recommended as real ECU
 
 | Board | Notes |
@@ -66,6 +72,9 @@ Connector yaml pin entries use these canonical `function:` strings:
 | `av` (PPS) | `Universal analog input. Suggested PPS input N` |
 | `at` (IAT) | `IAT Sensor Input` |
 | `at` (CLT) | `ECT CLT Coolant Sensor Input` |
+| `av` (spare) | `Auxiliary analog input N PullDown 500K` |
+| `din` (flex) | `Digital Input / Flex fuel sensor` |
+| `can` | `CAN bus High` / `CAN bus Low`; second bus `CAN2 bus High` / `CAN2 bus Low` |
 
 `Smart Ignition Coil N` means a logic-level ignition output: it drives a smart coil
 (built-in igniter) or an external igniter module, never a dumb coil directly. Coils are
@@ -88,6 +97,14 @@ information rides along in the same value where meaningful (microrusefi
 ` or SENT input!`, s105 pull-up specs, hellen154hyundai wire color). Some
 boards declare these pins `type: av` instead of `at` (alphax-gold/silver,
 hellen-gm-e67, hellen128) - existing explicit types were left as-is.
+
+Spare ADC pins use `Auxiliary analog input N PullDown 500K` (numbered per
+board). The `PullDown 500K` suffix states the hellen-family input circuit;
+proteus and microrusefi use the same base name without it, keeping their own
+hardware notes instead (`, for aux see R84`, `without R30, ...`) - confirm
+their pulldown values before unifying further. The first CAN bus is
+unnumbered (`CAN bus High`, not `CAN1 ...`); additional buses are `CAN2`,
+`CAN3`, ...
 
 Exceptions:
 

@@ -566,7 +566,7 @@ AEM X-Series or rusEFI Wideband
 
 
 ### idleReturnTargetRamp
-Ramp the idle target down from the entry threshold over N seconds when returning to idle. Helps prevent overshooting (below) the idle target while returning to idle from coasting.
+When returning to idle from coasting, start the closed-loop RPM target elevated by the 'RPM upper limit' idle detection threshold, then ramp it down to the normal target over the 'Ramp target duration'. Helps prevent RPM from dipping below the idle target on return to idle.
 
 ### useInjectorFlowLinearizationTable
 
@@ -1954,6 +1954,9 @@ This is the pressure at which your injector flow is known.\nFor example if your 
 ### vvlControlEnabled
 
 
+### keepIdleSolenoidWhenStopped
+By default the idle solenoid is switched off whenever the engine is not turning, to be quieter and save power. Enable this to keep driving it to the position the idle controller asks for, which at zero RPM is the cranking curve for the current coolant temperature - for valves which need to rest somewhere other than de-energized. The valve is only driven for a minute after the engine stops turning, then switched off anyway to protect the coil and the battery.
+
 ### nitrousLuaGaugeArmingValue
 
 
@@ -2015,7 +2018,7 @@ Compensates for trigger delay due to belt stretch, or other electromechanical is
 Delay before cutting fuel due to extra high oil pressure. Use this to ignore short pressure blips and sensor noise.
 
 ### idleReturnTargetRampDuration
-idle return target ramp duration
+Time for the idle RPM target to ramp down from the elevated return-to-idle value (normal target + 'RPM upper limit') to the normal target. Longer duration gives a gentler, slower settle to idle. Only used when 'Ramp target on return to idle' is enabled.
 
 ### wastegatePositionOpenedVoltage
 Voltage when the wastegate is fully open

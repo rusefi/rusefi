@@ -30,6 +30,11 @@ Release template (copy/paste this for new release):
 ## Unreleased
 
 ### Added
+ - h-bridge as one GPIO #9673
+
+## August 2026 "Day 1631"
+
+### Added
  - ETB bench test button: open throttle 300ms without sensors (#9171)
  - PWM support for fan control #5407
  - Per cylinder knock control individual gain control #9404

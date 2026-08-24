@@ -86,8 +86,9 @@
 #define EFI_BOR_LEVEL TRUE
 #endif
 
+// 'pow' usage costs couple of K of flash
 #ifndef EFI_DYNO_VIEW
-#define EFI_DYNO_VIEW TRUE
+#define EFI_DYNO_VIEW FALSE
 #endif
 
 #ifndef EFI_CDM_INTEGRATION
@@ -96,6 +97,15 @@
 
 #ifndef EFI_TOOTH_LOGGER
 #define EFI_TOOTH_LOGGER TRUE
+#endif
+
+// We need static buffers only for DTC manager
+#ifndef EFI_TOOTH_LOGGER_STATICBUFFER_COUNT
+	#if MODULE_DTC_MANAGER
+	#define EFI_TOOTH_LOGGER_STATICBUFFER_COUNT 4
+	#else
+	#define EFI_TOOTH_LOGGER_STATICBUFFER_COUNT 0
+	#endif
 #endif
 
 #ifndef EFI_TEXT_LOGGING

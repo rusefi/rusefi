@@ -15,6 +15,7 @@ HW_LAYER_DRIVERS_CORE = \
 HW_LAYER_DRIVERS_CORE_CPP = \
 	$(DRIVERS_DIR)/dac.cpp \
 	$(DRIVERS_DIR)/gpio/core.cpp \
+	$(DRIVERS_DIR)/gpio/hbridge_gpio.cpp \
 	$(DRIVERS_DIR)/sent/sent.cpp \
 	$(DRIVERS_DIR)/i2c/i2c_bb.cpp \
 	$(DRIVERS_DIR)/can/auto_generated_can_category.cpp \

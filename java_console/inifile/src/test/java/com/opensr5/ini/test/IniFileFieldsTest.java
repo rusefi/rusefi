@@ -41,6 +41,8 @@ public class IniFileFieldsTest {
         assertNotNull(model.getCurves());
         CurveModel curve = model.getCurves().get("scriptCurve1");
         assertNotNull(curve);
+        assertEquals("X", curve.getXLabel());
+        assertEquals("Y", curve.getYLabel());
         assertEquals(0, curve.getxAxis().getMin());
         assertEquals(128, curve.getxAxis().getMax());
         assertEquals(10, curve.getxAxis().getStep());

@@ -13,5 +13,6 @@ CPPSRC += 	$(PROJECT_DIR)/../unit_tests/tests/util/test_buffered_writer.cpp \
 	$(PROJECT_DIR)/../unit_tests/tests/util/test_hash.cpp \
 	$(PROJECT_DIR)/../unit_tests/tests/util/test_table_helper.cpp \
 	$(PROJECT_DIR)/../unit_tests/tests/util/test_rotate_array.cpp \
+	$(PROJECT_DIR)/../unit_tests/tests/util/test_datetime.cpp \
 
 INCDIR += $(PROJECT_DIR)/controllers/system

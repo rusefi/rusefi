@@ -1,5 +1,7 @@
 package com.rusefi;
 
+import com.rusefi.core.OsUtil;
+
 import com.devexperts.logging.Logging;
 import com.rusefi.io.LinkManager;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +30,7 @@ import java.util.stream.Collectors;
 public class SerialPortScanner implements PortScanner {
     private final static Logging log = Logging.getLogging(SerialPortScanner.class);
 
-    private static final boolean SHOW_SOCKETCAN = FileLog.isLinux();
+    private static final boolean SHOW_SOCKETCAN = OsUtil.isLinux();
     private static final long DETECTED_ECU_CACHE_MS = 3000;
 
     /**

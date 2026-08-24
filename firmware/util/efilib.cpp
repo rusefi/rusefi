@@ -33,7 +33,7 @@ float efiFloor(float value, float precision) {
  */
 float efiRound(float value, float precision) {
 	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, precision != 0, "Zero precision is not valid for efiRound maybe you mean '1'?", NAN);
-	float a = round(value / precision);
+	float a = roundf(value / precision);
 	return fixNegativeZero(a * precision);
 }
 

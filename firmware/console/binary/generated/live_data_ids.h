@@ -49,6 +49,7 @@ LDS_long_term_fuel_trim_state,
 LDS_short_term_fuel_trim_state,
 LDS_vvl_controller_state,
 LDS_live_data_rotational_idle,
+LDS_injector_deadtime_autotune_state,
 } live_data_e;
 #define OUTPUT_CHANNELS_BASE_ADDRESS 0
 #define FUEL_COMPUTER_BASE_ADDRESS 932
@@ -89,3 +90,4 @@ LDS_live_data_rotational_idle,
 #define SHORT_TERM_FUEL_TRIM_STATE_BASE_ADDRESS 2172
 #define VVL_CONTROLLER_STATE_BASE_ADDRESS 2188
 #define LIVE_DATA_ROTATIONAL_IDLE_BASE_ADDRESS 2192
+#define INJECTOR_DEADTIME_AUTOTUNE_STATE_BASE_ADDRESS 2196

@@ -31,6 +31,8 @@ Outputs are placed in `firmware/deliver/`:
 - `rusefi.bin` - Complete image (bootloader + firmware) for blank ECUs
 - `rusefi_update.srec` - Update image for bootloader flashing
 
+Firmware and unit-test builds keep dependency files in `firmware/.dep/` and `unit_tests/.dep/` (separate from the object dirs). After a source file is moved or deleted (e.g. a controller promoted into `controllers/modules/`), incremental builds fail with `No rule to make target '<old path>.cpp'` until the stale `.dep` is removed - `make clean` or `rm -rf .dep` fixes it; wiping only `build/obj` does not. Also note the first build after such a wipe can measure several KB larger than an identical follow-up build - for flash-size comparisons, compare consecutive rebuilds of each variant, never a single post-wipe build. `firmware/bin/compile.sh` has been observed to exit 0 even when the underlying `make` failed - check the log (or that `build/rusefi.elf` got a new timestamp), not just the exit code.
+
 ### Unit Tests
 
 ```bash
@@ -114,9 +116,11 @@ For detailed technical documentation intended for AI assistants, see:
 - [Ignition System](docs/AI/ignition_system.md) - Timing calculation and spark scheduling.
 - [Engine Protection](docs/AI/protection_system.md) - LimpManager and cut logic.
 - [Sensor Framework](docs/AI/sensors_system.md) - Sensor registry, conversion pipeline, redundancy and mocking.
+- [Kick-Start Cranking](docs/AI/kick-start.md) - kickStartCranking mode: both coils charged off the trigger edge and fired a dwell-time later below 800 RPM, normal spark suppressed via ClearReason::KickStart.
 - [Scheduling & Timing](docs/AI/scheduling_system.md) - Microsecond timer, event queue/executor, angle-based scheduling, periodic callback rates (fast 200 Hz / slow 20 Hz) and other fixed-rate loops.
 - [Lua Scripting API](docs/AI/lua_scripting.md) - Custom Lua hooks (lua_hooks.cpp and friends) grouped by category, indexing conventions, how to add a hook.
 - [SD Card Logging](docs/AI/sd_card_logging.md) - SD thread mode state machine, .mlg/.teeth formats, f_expand pre-allocation.
+- [Lookups & Log Field Metadata](docs/AI/lookup.md) - The three generated per-field tables (config value_lookup, output_lookup, MLG log fields): shared codegen machinery, differing direction/naming/flash shape, EFI_LUA_LOOKUP gating, dead switch-variant ODR hazard.
 - [Hardware Quality Control & Direct I/O](docs/AI/hardware-quality-control.md) - Bench test subsystem, direct pin console commands, CAN QC protocol (0x770000) for factory test rigs, smart-driver diagnostics, trigger self-stimulation, ETB bench/autocal.
 - [Configuration Storage](docs/AI/configuration_storage.md) - Storage manager, INT_FLASH/MFS/SD backends, double-copy settings write, extra flash pages piggybacked on the settings sector.
 - [Hellen Board Mapping](docs/hellen-board-mapping.md) - Connector-pin -> hellen-one module -> STM32 pin mapping chain: meta headers (H144_/MM100_ namespaces), connector YAMLs + PinoutLogic codegen, resistor-based board ID; also how to recover the mapping from module schematic PDFs (pdftotext + Altium hidden-text artifacts).
@@ -221,6 +225,13 @@ rusEFI provides two MCP (Model Context Protocol) servers for LLM-driven tooling 
 ## Serial Connectivity
 
 All rusEFI serial connections use the USB CDC (Communications Device Class) profile. Baud rate is irrelevant and never a concern — the USB serial profile handles throughput natively regardless of any baud rate setting in host software or code.
+
+### SLCAN CAN sniffer on the second VCP
+
+Boards built with `HAL_USE_USB_CDC_2` (uaefi pro, purple-gateway) expose an SLCAN (Lawicel ASCII) CAN sniffer on the **second** USB VCP (`CanSniffer` on `SDU[1]`) — full doc: `firmware/controllers/can/can_sniffer.md`. Non-obvious traps (each verified on hardware 2026-08-23):
+- Both VCPs share one composite USB identity — identify the sniffer port by probing (`V` command), like the console's `SlcanTab` does; do not trust `/dev/ttyACM*` ordering.
+- `O` (open) is refused with BELL unless an `S0`..`S8` was accepted since the last close, and `C` clears that state — the (re)open sequence is always `C`/`S6`/`O`.
+- Defaults stream **only the ECU's own TX** (`canSnifferN_listenOurs` on, `canSnifferN_read` off, `canSnifferTxBus` None): a live bus shows zero foreign frames until `canSnifferN_read` is enabled in the tune. An ID inventory identical to the ECU's own TX schedule means the `read` flag is off, not that the bus is dead.
 
 ### USB Mass Storage SCSI (known Wireshark false-positive)
 

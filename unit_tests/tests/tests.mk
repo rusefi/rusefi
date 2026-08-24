@@ -23,6 +23,7 @@ TESTS_SRC_CPP = \
 	tests/trigger/test_real_cranking_miata_na6.cpp \
 	tests/trigger/test_real_cranking_nissan_vq40.cpp \
 	tests/trigger/test_real_nissan_maxima.cpp \
+	tests/trigger/test_real_kawasaki_8_minus_1.cpp \
 	tests/trigger/test_real_bmw_e90_cam.cpp \
 	tests/trigger/test_real_cas_24_plus_1.cpp \
 	tests/trigger/test_real_4b11.cpp \
@@ -128,6 +129,7 @@ TESTS_SRC_CPP = \
 	tests/lua/test_lua_vin.cpp \
 	tests/lua/test_lua_debounce.cpp \
 	tests/test_change_engine_type.cpp \
+	tests/test_basic_configuration.cpp \
 	tests/test_big_buffer.cpp \
 	tests/system/test_periodic_thread_controller.cpp \
 	tests/system/test_scheduler.cpp \
@@ -147,6 +149,7 @@ TESTS_SRC_CPP = \
 	tests/ignition_injection/test_fuel_wall_wetting.cpp \
 	tests/test_one_cylinder_logic.cpp \
 	tests/test_tunerstudio.cpp \
+	tests/test_bluetooth.cpp \
 	tests/test_pwm_generator.cpp \
 	tests/test_log_buffer.cpp \
 	tests/test_event_queue.cpp \
@@ -157,6 +160,7 @@ TESTS_SRC_CPP = \
 	tests/test_sd_log_trigger.cpp \
 	tests/test_gpiochip.cpp \
 	tests/test_deadband.cpp \
+	tests/test_uninitialized_members.cpp \
 	tests/test_sticky_pps.cpp \
 	tests/test_knock.cpp \
 	tests/test_misfire_detection.cpp \
@@ -230,6 +234,7 @@ TESTS_SRC_CPP = \
 	tests/controllers/algo/test_engine_cylinder.cpp \
 	tests/controllers/algo/test_closed_loop_idle.cpp \
 	tests/controllers/modules/test_example_module.cpp \
+	tests/controllers/modules/test_injector_deadtime_autotune.cpp \
 	tests/controllers/test_flash.cpp \
 	tests/controllers/test_second_tables.cpp \
 	tests/controllers/modules/vvl_controller/vvl_controller_rpm_condition.cpp \

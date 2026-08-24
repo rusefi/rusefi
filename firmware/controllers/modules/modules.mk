@@ -6,6 +6,7 @@ MODULES_INC += $(PROJECT_DIR)/controllers/modules/stubs
 
 MODULE_CHECK_ENGINE_LIGHT ?= yes
 MODULE_MIL ?= yes
+MODULE_DTC_MANAGER ?= yes
 
 ifeq ($(MODULE_MIL),yes)
 ifneq ($(MODULE_CHECK_ENGINE_LIGHT),yes)
@@ -27,3 +28,5 @@ include $(PROJECT_DIR)/controllers/modules/check_engine_light/check_engine_light
 include $(PROJECT_DIR)/controllers/modules/malfunction_indicator/malfunction_indicator.mk
 include $(PROJECT_DIR)/controllers/modules/sd_log_trigger/sd_log_trigger.mk
 include $(PROJECT_DIR)/controllers/modules/configuration_wizard/configuration_wizard.mk
+include $(PROJECT_DIR)/controllers/modules/dtc_manager/dtc_manager.mk
+include $(PROJECT_DIR)/controllers/modules/injector_deadtime_autotune/injector_deadtime_autotune.mk

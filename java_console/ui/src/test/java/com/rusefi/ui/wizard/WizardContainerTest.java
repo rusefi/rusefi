@@ -154,6 +154,7 @@ public class WizardContainerTest {
                 WizardContainer container = new WizardContainer(new UIContext(), compact);
                 container.startSingleStep(new StubStep());
                 assertFalse(container.isProgressVisibleForTests());
+                assertEquals("rusEFI Setup Wizard", container.getWizardTitleForTests());
             }
         });
     }

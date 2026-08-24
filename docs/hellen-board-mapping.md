@@ -14,7 +14,12 @@ Three repositories participate:
 | https://github.com/rusefi/uaefi (example) | One board: a KiCAD "frame" design that places hellen-one modules; produces fabrication files |
 
 See also https://wiki.rusefi.com/Hellen-One-Platform and the hellen-one wiki
-at https://github.com/andreika-git/hellen-one/wiki.
+at https://github.com/andreika-git/hellen-one/wiki. In this repo, see the
+[boards directory readme](../firmware/config/boards/readme.md) for the general
+board build process, [readme-boards.md](../firmware/config/boards/readme-boards.md)
+for the connector yaml pinout naming conventions, and
+[board-configuration-override-hooks.md](board-configuration-override-hooks.md)
+for the board_configuration.cpp configuration hooks.
 
 ## The layers, top to bottom
 

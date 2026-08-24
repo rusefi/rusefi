@@ -763,7 +763,17 @@ void OutputPin::initPin(const char *msg, brain_pin_e p_brainPin, pin_output_mode
 	}
 	#if (BOARD_EXT_GPIOCHIPS > 0)
 		else {
+			if (!gpiochips_getChipName(p_brainPin)) {
+				configError("%s: no GPIO chip registered for pin %d", msg, static_cast<int>(p_brainPin));
+				return;
+			}
+
 			this->ext = true;
+		}
+	#else
+		else {
+			configError("%s: external GPIO pin %d is not supported", msg, static_cast<int>(p_brainPin));
+			return;
 		}
 	#endif
 #endif // briefly leave the include guard because we need to set default state in tests

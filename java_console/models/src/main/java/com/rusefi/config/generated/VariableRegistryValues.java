@@ -344,6 +344,7 @@ public class VariableRegistryValues {
 	public static final String CYLINDER_BORE_TOOLTIP = "Cylinder diameter in mm";
 	public static final String CYLINDER_BORE_UNITS = "mm";
 	public static final int DAC_OUTPUT_COUNT = 2;
+	public static final int dc_function_e_DC_Gpio = 5;
 	public static final int dc_function_e_DC_IdleValve = 3;
 	public static final int dc_function_e_DC_None = 0;
 	public static final int dc_function_e_DC_Throttle1 = 1;
@@ -948,6 +949,8 @@ public class VariableRegistryValues {
 	public static final int Gpio_H7 = 121;
 	public static final int Gpio_H8 = 122;
 	public static final int Gpio_H9 = 123;
+	public static final int Gpio_HBRIDGE_1_OUT = 361;
+	public static final int Gpio_HBRIDGE_2_OUT = 362;
 	public static final int Gpio_I0 = 130;
 	public static final int Gpio_I1 = 131;
 	public static final int Gpio_I10 = 140;
@@ -1521,6 +1524,7 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
+	public static final int SIGNATURE_HASH = 708787359;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1729,6 +1733,7 @@ public class VariableRegistryValues {
 	public static final int ts_14_command_COMMAND_X14_UNUSED_1 = 0x01;
 	public static final int ts_14_command_COMMAND_X14_UNUSED_15 = 0x15;
 	public static final int ts_14_command_COMMAND_X14_UNUSED_2 = 0x02;
+	public static final int ts_14_command_TS_DTC_MANAGER_SHOT = 0x26;
 	public static final int ts_14_command_TS_ESTIMATE_TORQUE_TABLE = 0x23;
 	public static final int ts_14_command_TS_ETB_AUTOCAL_0 = 0x0E;
 	public static final int ts_14_command_TS_ETB_AUTOCAL_0_FAST = 0x1C;
@@ -1846,10 +1851,10 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2026.08.12.stm32f767_nucleo.2248539466";
+	public static final String TS_SIGNATURE = "rusEFI master.2026.08.24.stm32f429_nucleo.708787359";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
-	public static final int TS_TOTAL_OUTPUT_SIZE = 2196;
+	public static final int TS_TOTAL_OUTPUT_SIZE = 2200;
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_1_NAME = "Channel 1";
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_2_NAME = "Channel 2";
 	public static final int TS_TRIGGER_SCOPE_DISABLE = 5;

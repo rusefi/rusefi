@@ -16,7 +16,7 @@ import static com.devexperts.logging.Logging.getLogging;
 public class BundleUtil {
     private static final Logging log = getLogging(BundleUtil.class);
 
-    private static final String BRANCH_REF_FILE = "release.txt";
+    public static final String BRANCH_REF_FILE = "release.txt";
 
     /**
      * @return null in case of error
@@ -51,6 +51,12 @@ public class BundleUtil {
         Map<String, String> keyValues = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         for (String line : info) {
             String[] pair = line.split("=", 2);
+            if (pair.length < 2) {
+                // a blank, commented or truncated line must not take the whole updater down with
+                // an ArrayIndexOutOfBoundsException - see #6564
+                log.info(BRANCH_REF_FILE + " ignoring line without '=': " + line);
+                continue;
+            }
             keyValues.put(pair[0], pair[1]);
         }
         String target = keyValues.get("platform");

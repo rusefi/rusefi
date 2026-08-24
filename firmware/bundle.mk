@@ -137,6 +137,13 @@ ifeq ($(USE_OPENBLT),yes)
   BOOTLOADER_HEX_OUT = $(BOOTLOADER_HEX)
   BOOTLOADER_BIN_OUT = $(DEVICE_BIN_FOLDER)/openblt_$(BRANCH_REF_FOR_BUNDLE)_$(BUNDLE_DATE)_$(BUNDLE_NAME)_$(SIGNATURE_HASH)_$(GITHUB_SHA).bin
   SREC_TARGET = $(FOLDER)/rusefi_$(BRANCH_REF_FOR_BUNDLE)_$(BUNDLE_DATE)_$(BUNDLE_NAME)_$(SIGNATURE_HASH)_$(GITHUB_SHA)_update.srec
+ifneq (,$(OPENBLT_WIPE_FLASH_END_EXCLUSIVE))
+  OPENBLT_WIPE_FOLDER = $(BIN_FOLDER)/wipe
+  OPENBLT_WIPE_SREC = $(OPENBLT_WIPE_FOLDER)/rusefi_$(BRANCH_REF_FOR_BUNDLE)_$(BUNDLE_DATE)_$(BUNDLE_NAME)_$(SIGNATURE_HASH)_$(GITHUB_SHA)_wipe.srec
+  OPENBLT_WIPE_MANIFEST = $(OPENBLT_WIPE_FOLDER)/openblt_wipe.properties
+  OPENBLT_WIPE_OUTPUTS = $(OPENBLT_WIPE_SREC) $(OPENBLT_WIPE_MANIFEST)
+  OPENBLT_WIPE_SENTINEL = .openblt-wipe-$(BUNDLE_NAME)-sentinel
+endif
 else
   FIRMWARE_OUTPUTS = $(FOLDER)/$(PROJECT).hex
   BINSRC = $(BUILDDIR)/$(PROJECT).bin
@@ -208,7 +215,12 @@ $(SREC_TARGET): $(BUILDDIR)/rusefi.srec
 $(FIRMWARE_OUTPUTS): $(FOLDER)/%: $(BUILDDIR)/% | $(FOLDER)
 	ln -rfs $< $@
 
-$(BOOTLOADER_BIN_OUT): $(BOOTLOADER_BIN) | $(DEVICE_BIN_FOLDER)
+# Forced and self-sufficient: the $(BIN_FOLDER) recipe rm -rf's bin/ on every run,
+# which make cannot see (it caches stats and assumes recipes only touch their own
+# target). A cached "exists" for the dir or the symlink would otherwise skip this
+# rule, so re-create both unconditionally after the wipe.
+$(BOOTLOADER_BIN_OUT): $(BOOTLOADER_BIN) .FORCE | $(BIN_FOLDER)
+	mkdir -p $(dir $@)
 	ln -rfs $< $@
 
 $(FOLDER)/$(PROJECT).dfu: $(FOLDER)/%: $(DELIVER)/% | $(FOLDER)
@@ -226,6 +238,21 @@ $(BUILDDIR)/rusefi.srec: $(BUILDDIR)/$(PROJECT).hex
 	# make sure we create the srec from a binary with crc
 	$(H2D) -i $< -c $(CHECKSUM_ADDRESS) -b $(DBIN_CRC)
 	$(CP) -I binary -O srec --change-addresses=0x$(HEX_BASE_ADDRESS) $(DBIN_CRC) $@
+
+ifneq (,$(OPENBLT_WIPE_OUTPUTS))
+$(OPENBLT_WIPE_OUTPUTS): $(OPENBLT_WIPE_SENTINEL) ;
+
+$(OPENBLT_WIPE_SENTINEL): $(BUILDDIR)/$(PROJECT).elf $(OPENBLT_WIPE_GENERATOR_JAR) .FORCE | $(BIN_FOLDER)
+	java -jar $(OPENBLT_WIPE_GENERATOR_JAR) \
+		--output $(OPENBLT_WIPE_SREC) \
+		--manifest $(OPENBLT_WIPE_MANIFEST) \
+		--start 0x$(HEX_BASE_ADDRESS) \
+		--end-exclusive $(OPENBLT_WIPE_FLASH_END_EXCLUSIVE) \
+		--bundle-target $(BUNDLE_NAME) \
+		--bootloader-target $(SHORT_BOARD_NAME) \
+		--mcu-family $(PROJECT_CPU)
+	@touch $@
+endif
 
 # The DFU is currently not included in the bundle, so these prerequisites are listed as order-only to avoid building it.
 # If you want it, you can build it with `make rusefi.snapshot.$BUNDLE_NAME/rusefi.dfu`
@@ -262,23 +289,29 @@ $(ST_DRIVERS): | $(DRIVERS_FOLDER)
 $(DELIVER) $(ARTIFACTS) $(STAGING_FOLDER) $(CONSOLE_FOLDER) $(DRIVERS_FOLDER):
 	mkdir -p $@
 
+# The rm -rf clears stale content (bundled names embed date/sha), but it also
+# deletes other rules' outputs staged under bin/ - something make's model does not
+# allow for (stat caching assumes recipes only touch their own target). Any rule
+# placing a file under bin/ must therefore be .FORCE'd, order itself after this
+# rule with "| $(BIN_FOLDER)", and mkdir -p its own subdirectory in its recipe
+# (see $(BOOTLOADER_BIN_OUT)); a plain directory target for a subdir of bin/ gets
+# silently skipped on incremental builds.
 $(BIN_FOLDER): .FORCE | $(FOLDER)
 	rm -rf $@
 	mkdir -p $@
 	find ../java_console/bin -maxdepth 1 -mindepth 1 | xargs -I{} ln -rfs {} $@/
 
-$(DEVICE_BIN_FOLDER): | $(BIN_FOLDER)
-	mkdir -p $@
-
 $(BRANCH_REF_FILE):
 	cp $(PROJECT_DIR)/../release.txt $(BRANCH_REF_FILE)
 	echo "platform=$(BUNDLE_NAME)" >> $(BRANCH_REF_FILE) ; echo "release=$(BRANCH_REF_FOR_BUNDLE)" >> $(BRANCH_REF_FILE)
 
-$(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME).zip: $(BUNDLE_FILES) | $(ARTIFACTS)
+$(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME).zip: $(BUNDLE_FILES) $(OPENBLT_WIPE_OUTPUTS) | $(ARTIFACTS)
+	rm -f $@
 	zip -r $@ $(BUNDLE_FILES)
 	[ -z "$(POST_ZIP_SCRIPT)" ] || bash $(POST_ZIP_SCRIPT)
 
-$(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME)_obfuscated_public.zip:  $(OBFUSCATED_OUT) $(BUNDLE_FILES) | $(ARTIFACTS)
+$(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME)_obfuscated_public.zip:  $(OBFUSCATED_OUT) $(BUNDLE_FILES) $(OPENBLT_WIPE_OUTPUTS) | $(ARTIFACTS)
+	rm -f $@
 	zip -r $@ $(FULL_BUNDLE_CONTENT) $(MOST_COMMON_BUNDLE_FILES) $(OBFUSCATED_SREC)
 	[ -z "$(POST_O_ZIP_SCRIPT)" ] || bash $(POST_O_ZIP_SCRIPT)
 

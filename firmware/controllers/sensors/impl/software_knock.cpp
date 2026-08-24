@@ -177,7 +177,7 @@ void initSoftwareKnock() {
 
 #ifdef KNOCK_SPECTROGRAM
 static uint8_t toDb(const float& voltage) {
-	float db = 200 * log10(voltage*voltage) + 40; // best scaling for view
+	float db = 200 * log10f(voltage*voltage) + 40; // best scaling for view
 	db = clampF(0, db, 255);
 	return uint8_t(db);
 }
@@ -269,7 +269,7 @@ static void processLastKnockEvent() {
 	float meanSquares = sumSq / localCount;
 
 	// RMS
-	float db = 10 * log10(meanSquares);
+	float db = 10 * log10f(meanSquares);
 
 	// clamp to reasonable range
 	db = clampF(-100, db, 100);

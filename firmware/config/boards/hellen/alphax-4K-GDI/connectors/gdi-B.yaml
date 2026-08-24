@@ -92,12 +92,12 @@ pins:
     color: green
 
   - pin: 15B
-    function: CAN bus high (CANH)
+    function: CAN bus High
     type: can
     color: green
 
   - pin: 16B
-    function: CAN1 bus low (CANL)
+    function: CAN bus Low
     type: can
     color: blue
 

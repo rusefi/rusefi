@@ -27,6 +27,15 @@ static inline systime_t chTimeAddX(systime_t systime,
   return systime + (systime_t)interval;
 }
 
+// There is no tick clock on the host, so an interval is just the millisecond count itself.
+#ifndef TIME_MS2I
+#define TIME_MS2I(ms) (ms)
+#endif
+
+// Nothing to sleep on: host tests drive time explicitly (setTimeNowUs/advanceTimeUs) rather than
+// waiting, so sleeping is a no-op.
+static inline void chThdSleepMilliseconds(uint32_t /*milliseconds*/) { }
+
 #define PAL_MODE_OUTPUT_PUSHPULL 0
 
 namespace chibios_rt {

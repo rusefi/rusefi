@@ -104,11 +104,18 @@ int CanStreamerState::receiveFrame(const CANRxFrame &rxmsg, uint8_t *destination
 	int numBytesAvailable, frameIdx;
 	const uint8_t *srcBuf;
 	switch (frameType) {
-	case ISO_TP_FRAME_SINGLE:
-		numBytesAvailable = rxmsg.data8[isoHeaderByteIndex] & 0xf;
+	case ISO_TP_FRAME_SINGLE: {
+		// The low nibble is the single-frame data length and can encode up to 15, but the frame
+		// only carries DLC bytes - and DLC is itself a 4-bit field, so a malformed frame can claim
+		// more than data8[] is wide. Bound the length by both before copying, the same way the
+		// FIRST and CONSECUTIVE branches below bound their own reads. Well-formed single frames
+		// always satisfy SF_DL <= DLC - 1, so they are unaffected.
+		int payloadBytes = minI(rxmsg.DLC, (int)sizeof(rxmsg.data8)) - 1 - (int)isoHeaderByteIndex;
+		numBytesAvailable = minI(rxmsg.data8[isoHeaderByteIndex] & 0xf, payloadBytes);
 		this->waitingForNumBytes = numBytesAvailable;
 		srcBuf = rxmsg.data8 + 1 + isoHeaderByteIndex;
 		break;
+	}
 	case ISO_TP_FRAME_FIRST:
 		this->waitingForNumBytes = ((rxmsg.data8[isoHeaderByteIndex] & 0xf) << 8) | rxmsg.data8[isoHeaderByteIndex + 1];
 		this->waitingForFrameIndex = 1;

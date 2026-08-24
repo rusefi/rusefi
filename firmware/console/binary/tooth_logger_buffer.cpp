@@ -18,7 +18,7 @@
 std::optional<board_tooth_log_sample_type> custom_board_toothLogSample;
 
 bool ToothLoggerBufferPool::startI() {
-#if (BACKGROUND_TOOTH_LOGGER_SIZE > 0)
+#if (EFI_TOOTH_LOGGER_STATICBUFFER_COUNT > 0)
 	// we already have static buffers
 	CompositeBuffer* buffers = m_buffers;
 #else
@@ -57,7 +57,7 @@ void ToothLoggerBufferPool::stopI() {
 	// Drop the partial buffer - it lives in memory we are about to hand back
 	m_currentBuffer = nullptr;
 
-#if (BACKGROUND_TOOTH_LOGGER_SIZE > 0)
+#if (EFI_TOOTH_LOGGER_STATICBUFFER_COUNT > 0)
 	// static buffers, nothing to release
 #else
 	// Release the big buffer for another user
@@ -228,19 +228,8 @@ CompositeBuffer* ToothLoggerBufferPool::flushCurrentI() {
 	return buffer;
 }
 
-bool ToothLoggerBufferPool::setCircularModeI(bool circular) {
-	if (m_circularMode != circular) {
-		m_circularMode = circular;
-		if (m_circularMode) {
-			// 50% trigger position, so event is in the middle of log
-			toothLoggerEntriesToCapture = toothLoggerEntriesTotal / 2;
-		}
-
-		// mode has changed
-		return true;
-	}
-
-	return false;
+void ToothLoggerBufferPool::setCircularModeI(bool circular) {
+	m_circularMode = circular;
 }
 
 bool ToothLoggerBufferPool::hasDataI() {

@@ -149,9 +149,9 @@ angle_t TriggerCentral::syncEnginePhaseAndReport(int divider, int remainder) {
 
 		// Adjust phase-dependent variables
 		if (expectedNextPhase) {
-			expectedNextPhase.Value = fmod(expectedNextPhase.Value - totalShift + engineCycle, engineCycle);
+			expectedNextPhase.Value = wrapAngleMethod(expectedNextPhase.Value - totalShift, "syncEnginePhase", ObdCode::CUSTOM_ERR_6555);
 		}
-		m_lastToothPhaseFromSyncPoint = fmod(m_lastToothPhaseFromSyncPoint - totalShift + engineCycle, engineCycle);
+		m_lastToothPhaseFromSyncPoint = wrapAngleMethod(m_lastToothPhaseFromSyncPoint - totalShift, "syncEnginePhase", ObdCode::CUSTOM_ERR_6555);
 		triggerToothAngleError = 0;
 
 #if EFI_ENGINE_CONTROL

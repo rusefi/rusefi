@@ -52,6 +52,12 @@ void MisfireController::onEngineStop() {
 	resetDetectionState();
 }
 
+void MisfireController::onSlowCallback() {
+	if (misfireLatched) {
+		addError(ObdCode::OBD_Random_Misfire);
+	}
+}
+
 void MisfireController::recordFiring(bool flagged) {
 	m_window[m_windowHead] = flagged;
 	m_windowHead = (m_windowHead + 1) % MISFIRE_WINDOW_MAX;
@@ -271,6 +277,7 @@ void MisfireController::onEnginePhase(float /*rpm*/, efitick_t edgeTimestamp,
 
 void MisfireController::onEnginePhase(float, efitick_t, angle_t, angle_t) {}
 void MisfireController::onEngineStop() {}
+void MisfireController::onSlowCallback() {}
 void MisfireController::evaluateSegment(float) {}
 void MisfireController::registerMisfire() {}
 void MisfireController::resetDetectionState() {}

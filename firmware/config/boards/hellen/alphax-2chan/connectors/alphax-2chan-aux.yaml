@@ -3,7 +3,8 @@ meta: config/boards/hellen_meta.h
 pins:
   - pin: X1
     meta: H144_IN_AUX1_ANALOG
-    function: Analog Input 1
+    function: Auxiliary analog input 1 PullDown 500K
+    type: av
     class: analog_inputs
     ts_name: X1 - AIN1
 
@@ -16,7 +17,8 @@ pins:
 
   - pin: X3
     meta: H144_IN_AUX2_ANALOG
-    function: Analog Input 2
+    function: Auxiliary analog input 2 PullDown 500K
+    type: av
     class: analog_inputs
     ts_name: X3 - AIN2
 
@@ -36,7 +38,8 @@ pins:
 
   - pin: X7
     meta: H144_IN_AUX4_ANALOG
-    function: Analog Input 4
+    function: Auxiliary analog input 4 PullDown 500K
+    type: av
     class: analog_inputs
     ts_name: X7 - AIN4
 

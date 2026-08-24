@@ -561,7 +561,7 @@
         <constant name="brakePedalPin">"NONE"</constant>
         <constant name="brakePedalPinMode">"PULLUP"</constant>
         <constant digits="0" name="byFirmwareVersion" units="index">0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">20260812</constant>
+        <constant digits="0" name="calibrationBirthday" units="">20260824</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="angle">95</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -578,7 +578,7 @@
         <constant name="can2RxPin">"NONE"</constant>
         <constant name="can2TxPin">"NONE"</constant>
         <constant name="canBaudRate">"500kbps"</constant>
-        <constant name="canBroadcastUseChannel">"first"</constant>
+        <constant name="canBroadcastUseChannel">"Primary CAN"</constant>
         <constant name="canGpioType">"None"</constant>
         <constant name="canInputBCM">"disabled"</constant>
         <constant name="canNbcType">"None"</constant>
@@ -2524,6 +2524,7 @@
         <constant name="isTuningDetectorEnabled">"yes"</constant>
         <constant name="isWaveAnalyzerEnabled">"yes"</constant>
         <constant digits="0" name="justATempTest" units="">0</constant>
+        <constant name="keepIdleSolenoidWhenStopped">"disabled"</constant>
         <constant name="kickStartCranking">"no"</constant>
         <constant digits="0" name="kLineBaudRate" units="">10400</constant>
         <constant name="kLineDoHondaSend">"no"</constant>
@@ -5176,8 +5177,8 @@
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260811" nPages="1" signature="rusEFI master.2026.08.12.f407-discovery.1736042103" version="5.0"/>
-    <bibliography author="rusEFI 20260811" writeDate="date"/>
+    <versionInfo firmwareInfo="20260824" nPages="1" signature="rusEFI master.2026.08.24.f407-discovery.424942567" version="5.0"/>
+    <bibliography author="rusEFI 20260824" writeDate="date"/>
     <settings/>
     <userComments/>
 </msq>

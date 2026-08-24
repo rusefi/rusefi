@@ -1358,6 +1358,9 @@ float getOutputValueByHash(const int hash) {
 // injectorHwIssue
 		case -1237512821:
 			return engine->fuelComputer.injectorHwIssue;
+// dtAutotuneActive
+		case 408698318:
+			return engine->module<InjectorDeadtimeAutotune>()->dtAutotuneActive;
 #endif
 #if EFI_ENGINE_CONTROL && EFI_BOOST_CONTROL
 // isTpsInvalid

@@ -157,6 +157,7 @@ Gpio* getBoardMetaOutputs() {
     return OUTPUTS;
 }
 
+// H-bridges use the dedicated CAN_QC_ETB path instead of the on-chip-only generic output path.
 int getBoardMetaDcOutputsCount() {
     if (engineConfiguration->engineType == engine_type_e::HONDA_OBD1 ||
       engineConfiguration->engineType == engine_type_e::MAZDA_MIATA_NA6 ||
@@ -187,6 +188,7 @@ void setup_custom_board_overrides() {
 	custom_board_ConfigOverrides = uaefi_boardConfigOverrides;
 	custom_board_periodicSlowCallback = uaefi_slowCallback;
 	custom_board_fix_configuration = uaefi_fixConfiguration;
+	custom_board_applyBasicConfiguration = applyUaefiBasicConfiguration;
 }
 
 int boardGetAnalogInputDiagnostic(adc_channel_e hwChannel, float voltage) {

@@ -91,6 +91,19 @@ static void testSwitchToNanPeriod() {
 	assertNextEvent("exec3@NAN", LOW_VALUE, &executor, pin);
 }
 
+TEST(PWM, HbridgeGpioRejectsPwm) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	OutputPin pin;
+	SimplePwm pwm;
+	TestExecutor executor;
+
+	pin.initPin("H-bridge GPIO", Gpio::HBRIDGE_1_OUT);
+	startSimplePwm(&pwm, "H-bridge GPIO", &executor, &pin, 100, 0.5f);
+
+	EXPECT_TRUE(hasConfigError());
+	EXPECT_EQ(0, executor.size());
+}
+
 TEST(PWM, testPwmGenerator) {
 	test100dutyCycle();
 	testSwitchToNanPeriod();

@@ -1,5 +1,7 @@
 package com.rusefi;
 
+import com.rusefi.core.OsUtil;
+
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -27,10 +29,10 @@ public class DevicePaneTest {
     public void dfuGuidanceMentionsDfuAndReflectsPlatformSupport() {
         String guidance = DevicePane.bootloaderGuidance(SessionState.DEVICE_IN_DFU);
         assertTrue(guidance.contains("DFU"), guidance);
-        if (FileLog.isLinux()) {
+        if (OsUtil.isLinux()) {
             assertTrue(guidance.contains("dfu-util"), guidance);
             assertTrue(guidance.contains("Update Firmware"), guidance);
-        } else if (FileLog.isWindows()) {
+        } else if (OsUtil.isWindows()) {
             assertTrue(guidance.contains("Update Firmware"), guidance);
         } else {
             assertTrue(guidance.contains("not supported"), guidance);

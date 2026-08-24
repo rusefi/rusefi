@@ -162,12 +162,12 @@ pins:
     color: gray
 
   - pin: C5
-    function: CAN bus high (CANH)
+    function: CAN bus High
     type: can
     color: green
 
   - pin: C6
-    function: CAN bus low (CANL)
+    function: CAN bus Low
     type: can
     color: blue
 
