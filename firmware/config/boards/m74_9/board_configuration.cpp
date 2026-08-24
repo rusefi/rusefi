@@ -836,6 +836,25 @@ void setup_custom_board_overrides() {
 		float rpm = Sensor::getOrZero(SensorType::Rpm);
 		return rpm >= engineConfiguration->cranking.rpm && rpm < 7000;
 	};
+	// Sync-anchor correction: the L9779's gap output is systematically
+	// compressed - a spurious missing-region edge fires ~0.63 pitch early
+	// (the auto-hysteresis re-quantizes down during the gap, the latch then
+	// suppresses the real first-tooth edge; measured gap0 2.36-2.5 vs the
+	// physical 3.0, constant in angle across rpm). The decoder would anchor
+	// all scheduling ~3.8 deg advanced; the correction measures the deficit
+	// per validated sync and retards the scheduling basis by it. Same rpm
+	// band as the tooth-loss tolerance: below cranking the gap can compress
+	// from acceleration and the correction would misfire (it only corrects
+	// the compression direction anyway, clamped to [0, 1.5] pitch).
+	custom_board_syncGapAnchorCorrection = []() {
+		if (engine->triggerCentral.directSelfStimulation) {
+			// clean synthetic gap: nothing to correct
+			return false;
+		}
+
+		float rpm = Sensor::getOrZero(SensorType::Rpm);
+		return rpm >= engineConfiguration->cranking.rpm && rpm < 7000;
+	};
 	// Storage writes must be deferred while the engine runs: the MFS lives on
 	// the AT32 internal flash (bank 2) and a sector erase stalls the whole CPU
 	// (no read-while-erase on this silicon). The periodic LTFT save hitting an

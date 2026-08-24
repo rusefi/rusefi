@@ -80,6 +80,20 @@ struct SyncAcceptToothLossScope {
 	}
 };
 
+// Same pattern for the sync-anchor correction (m74_9 opt-in): the L9779's gap
+// output is systematically compressed (spurious missing-region edge ~0.63
+// pitch early), so the decoder learns (3.0 - measuredGap) * pitch and retards
+// the scheduling basis by it.
+struct SyncGapAnchorCorrectionScope {
+	SyncGapAnchorCorrectionScope() {
+		custom_board_syncGapAnchorCorrection = []() { return true; };
+	}
+
+	~SyncGapAnchorCorrectionScope() {
+		custom_board_syncGapAnchorCorrection = std::nullopt;
+	}
+};
+
 /**
  * Fire one full 60-2 revolution: 58 real teeth, then the missing-teeth gap.
  * The gap ratio of THIS call is checked at the NEXT call's first rise.
@@ -801,6 +815,77 @@ TEST(trigger, crankingTransition60_2ThreeMissingEventsStillDesyncWhenRunning) {
 	fire60_2Revolution(eth, runningSlotMs, 3.0f);
 
 	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized()) << "re-synchronized";
+}
+
+/**
+ * The L9779 gap output is systematically compressed: a spurious missing-region
+ * edge fires ~0.63 pitch early (the auto-hysteresis re-quantizes down during
+ * the gap, the squared-signal latch suppresses the real first-tooth edge), so
+ * the measured sync gap reads ~2.36 instead of the physical 3.0 slots. The
+ * decoder would anchor all scheduling ~3.8 degrees advanced. With the
+ * gap-anchor correction (custom_board_syncGapAnchorCorrection) the decoder
+ * learns (3.0 - measuredGap) * 6 deg per validated sync (EMA), retards the
+ * scheduling phase pair by it, and releases it when a clean 3.0 gap returns.
+ */
+TEST(trigger, crankingTransition60_2GapAnchorCorrection) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	SyncGapAnchorCorrectionScope anchorCorr;
+	// the user's m74_9 runs the 60-2 wheel on the crank
+	setCrankOperationMode();
+	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
+
+	// 2500 rpm steady revolutions with the compressed spurious-edge gap (2.36)
+	static constexpr float runningSlotMs = 0.4f;
+	for (int i = 0; i < 5; i++) {
+		fire60_2Revolution(eth, runningSlotMs, 2.36f);
+	}
+
+	// the compressed gap stays inside the [1.6, 4.5] sync windows: no desync
+	ASSERT_EQ(0u, getRecentWarnings()->getCount()) << "compressed gap is a valid sync";
+	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized());
+
+	// (3.0 - 2.36) * 6 = 3.84 deg, EMA 0.5 -> ~3.6 after 4 updates
+	EXPECT_NEAR(3.84f, engine->triggerCentral.gapAnchorCorrectionDeg, 0.6f) << "learned anchor correction";
+
+	// a clean 3.0 gap releases the correction (EMA decay toward 0)
+	for (int i = 0; i < 3; i++) {
+		fire60_2Revolution(eth, runningSlotMs, 3.0f);
+	}
+	EXPECT_LT(engine->triggerCentral.gapAnchorCorrectionDeg, 1.5f) << "correction decays with a clean gap";
+
+	// the compressed gap returns - the correction re-learns
+	for (int i = 0; i < 3; i++) {
+		fire60_2Revolution(eth, runningSlotMs, 2.36f);
+	}
+	EXPECT_GT(engine->triggerCentral.gapAnchorCorrectionDeg, 2.0f) << "correction re-learns";
+	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized());
+}
+
+/**
+ * A STRETCHED gap (measured > nominal, the first-combustion acceleration
+ * signature) must never update the correction - it is not an early anchor,
+ * it is the crank genuinely accelerating through the gap.
+ */
+TEST(trigger, crankingTransition60_2GapAnchorCorrectionIgnoresStretchedGap) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	SyncGapAnchorCorrectionScope anchorCorr;
+	// the user's m74_9 runs the 60-2 wheel on the crank
+	setCrankOperationMode();
+	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
+
+	static constexpr float runningSlotMs = 0.4f;
+
+	// sync with a compressed gap first so there is something to decay
+	for (int i = 0; i < 3; i++) {
+		fire60_2Revolution(eth, runningSlotMs, 2.36f);
+	}
+	EXPECT_GT(engine->triggerCentral.gapAnchorCorrectionDeg, 1.0f);
+
+	// a stretched gap (3.6) is above the nominal 3.0: correctionPitch < 0 ->
+	// the update is skipped, the learned value must NOT go negative
+	fire60_2Revolution(eth, runningSlotMs, 3.6f);
+	fire60_2Revolution(eth, runningSlotMs, 3.6f);
+	EXPECT_GT(engine->triggerCentral.gapAnchorCorrectionDeg, 0.0f) << "no negative correction from a stretched gap";
 }
 
 /**

@@ -241,6 +241,21 @@ extern std::optional<setup_custom_bool_type> custom_board_syncGapHardening;
 // path. m74_9 sets true; default false preserves the strict behavior.
 extern std::optional<setup_custom_bool_type> custom_board_syncEarlyGapWhileCranking;
 
+// When set and returning true, the decoder corrects the sync anchor by the
+// gap geometry: the missing-teeth gap is physically (skipped + 1) slots, so a
+// measured sync gap ratio below syncRatioAvg means the sync event fired EARLY
+// relative to the true first-tooth crossing. On the m74_9 the L9779's output
+// gap is systematically compressed to ~2.36-2.5 (a spurious edge from the
+// missing region fires ~0.63 pitch early, the auto-hysteresis having
+// re-quantized down during the gap; the squared-signal latch then suppresses
+// the real first-tooth edge). The decoder would otherwise anchor the phase
+// ~3.8 degrees advanced. The correction (in degrees, EMA-smoothed, clamped to
+// [0, 1.5] pitch) is applied to the scheduling phase pair. The board's lambda
+// picks the rpm band (m74_9: cranking..7000; below cranking the gap can
+// compress from acceleration and the correction would misfire). Default
+// false: other boards' VR signals do not have the spurious-edge signature.
+extern std::optional<setup_custom_bool_type> custom_board_syncGapAnchorCorrection;
+
 // When set and returning true, a ratio-validated sync candidate with a 1-2
 // event count DEFICIT is accepted as a valid sync regardless of the cranking
 // band (the custom_board_syncEarlyGapWhileCranking acceptance above is
