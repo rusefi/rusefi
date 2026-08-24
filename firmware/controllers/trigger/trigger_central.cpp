@@ -1022,7 +1022,17 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 			// (synchronizationCounter reaches 1).
 			bool requireValidatedSync = get_board_override_result(custom_board_requireValidatedSync, false);
 			if (!requireValidatedSync || triggerState.getSynchronizationCounter() >= 1) {
-				mainTriggerCallback(triggerIndexForListeners, timestamp, currentEngineDecodedPhase, nextPhase);
+				// Sync-anchor correction (board opt-in via
+				// custom_board_syncGapAnchorCorrection, m74_9): the sync edge fires
+				// EARLY (spurious missing-region edge, see the decoder-side update of
+				// gapAnchorCorrectionDeg), so the scheduling phase basis is advanced
+				// by the learned correction; retard the phase pair by it. The pair is
+				// shifted uniformly so the scheduler's between-teeth interpolation
+				// stays consistent. 0 when the hook is off.
+				float anchorCorrection = gapAnchorCorrectionDeg;
+				angle_t correctedPhase = wrapAngleMethod(currentEngineDecodedPhase - anchorCorrection, "anchorCorrPhase", ObdCode::CUSTOM_ERR_6555);
+				angle_t correctedNextPhase = wrapAngleMethod(nextPhase - anchorCorrection, "anchorCorrNext", ObdCode::CUSTOM_ERR_6555);
+				mainTriggerCallback(triggerIndexForListeners, timestamp, correctedPhase, correctedNextPhase);
 			}
 #endif // EFI_ENGINE_CONTROL
 

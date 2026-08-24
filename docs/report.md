@@ -7248,3 +7248,40 @@ gap-adjacent tooth) is a 'rawtrg' capture at ~3000 rpm right at a C9003. The
 tolerance covers both, but the capture would confirm the quantization-boundary
 mechanism. Follow-up if a heal storm reappears: vrs_configure resets Tfilter
 to 200 us, eats 1-2 teeth above ~2375 rpm, absorbed by the same tolerance.
+
+## 2026-08-24 - m74_9: the compressed gap is a spurious edge - gap-anchor correction
+
+Analysis of the full rawtrg dump (18 revolutions, 373-1129 rpm coast): the
+measured gap compression (gap0 2.36-2.5 vs the physical 3.0) is NOT an early
+real tooth edge. The peak detector re-quantizes DOWN during the missing-teeth
+gap, the missing region's residual signal crosses the lowered threshold ~0.63
+pitch early, and the squared-signal LATCH suppresses the real first-tooth
+rising edge (output already high) until the true falling edge at 3.0 pitch.
+Count is preserved (57 real + 1 spurious = 58, synctrace countErr=0), but the
+decoder anchors the phase ~3.8 degrees ADVANCED. The shift is constant in
+ANGLE across rpm (0.63 +-0.03 pitch at 373-1129 rpm) because the auto-H
+tracks amplitude - the hysteresis quantization table made observable.
+
+Fix: new board hook custom_board_syncGapAnchorCorrection (m74_9: cranking..
+7000 rpm, off for self-stim). The decoder measures (syncRatioAvg -
+measuredGap) per validated sync, EMA 0.5, clamped to [0, 1.5] pitch (a
+stretched gap from acceleration never yields a negative correction), stores
+gapAnchorCorrectionDeg in TriggerCentral, and TriggerCentral::
+handleShaftSignal retards the scheduling phase pair (current + next) by it.
+The correction self-releases when a clean 3.0 gap returns.
+
+| File | Change |
+| --- | --- |
+| firmware/hw_layer/board_overrides.h, hardware.cpp | custom_board_syncGapAnchorCorrection |
+| firmware/controllers/trigger/trigger_decoder.cpp | syncValidated flag + per-sync correction update (EMA, clamped) |
+| firmware/controllers/trigger/trigger_central.h | gapAnchorCorrectionDeg member |
+| firmware/controllers/trigger/trigger_central.cpp | retard the phase pair at mainTriggerCallback |
+| firmware/config/boards/m74_9/board_configuration.cpp | hook enabled (cranking..7000, off for self-stim) |
+| unit_tests/tests/trigger/test_60_2_cranking_transition.cpp | 2 new tests: learn/release/re-learn at 2.36/3.0 gap; stretched gap (3.6) never updates |
+
+Validation: unit tests 1163/1163 pass, compile_m74_9.sh BUILD SUCCESSFUL.
+
+Still open: the eaten-tooth mechanism at 1763-4005 rpm (57/58) was NOT present
+in the coast dump - the gap structure there preserves the count. The definitive
+capture is a rawtrg at ~3000 rpm right at a C9003; the anchor correction and
+the tooth-loss tolerance both cover the known failure until then.

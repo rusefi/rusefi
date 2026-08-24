@@ -776,6 +776,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 			//  - Due to some mistake in timing, we found what looks like a sync point but actually isn't
 			// In either case, we should wait for another sync point before doing anything to try and run an engine,
 			// so we clear the synchronized flag.
+			bool syncValidated = false;
 			if (wasSynchronized && isDecodingError) {
 				// Cranking-band early-gap acceptance (board opt-in via
 				// custom_board_syncEarlyGapWhileCranking, m74_9): a ratio-validated
@@ -832,6 +833,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 				if (earlyGapAccepted || runningToothLossAccepted) {
 					// keep the synchronization, count the revolution as validated
 					lastSyncWasClean = true;
+					syncValidated = true;
 					setShaftSynchronized(true);
 					printGaps(runningToothLossAccepted ? "toothloss" : "earlygap", triggerConfiguration, triggerShape);
 					boardTriggerSyncEvent(runningToothLossAccepted ? 'T' : 'A', triggerCountersError, triggerSyncGapRatio,
@@ -851,9 +853,41 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 				}
 			} else {
 				// If this was the first sync point OR no decode error, we're synchronized!
+				syncValidated = true;
 				setShaftSynchronized(true);
 				boardTriggerSyncEvent(wasSynchronized ? 'S' : 'R', 0, triggerSyncGapRatio,
 					triggerShape.gapTrackingLength >= 2 ? 1.0f * toothDurations[1] / toothDurations[2] : 0.0f);
+			}
+
+			// Sync-anchor correction (board opt-in via
+			// custom_board_syncGapAnchorCorrection, m74_9): the missing-teeth gap
+			// is PHYSICALLY syncRatioAvg slots (3.0 for a 60-2), but the L9779
+			// conditioner emits the sync edge ~0.6 pitch EARLY - a spurious edge
+			// from the missing region whose auto-hysteresis re-quantized down
+			// during the gap, with the squared-signal latch then suppressing the
+			// real first-tooth edge (measured on the car: gap0 2.36-2.5, shift
+			// constant in angle across rpm because the auto-H tracks amplitude).
+			// The decoder would anchor the phase at that early edge, advancing
+			// ALL scheduling by ~3.8 degrees. Correct the basis by the measured
+			// deficit: correctionDeg = (syncRatioAvg - measuredGap) * pitchDeg,
+			// EMA-smoothed and clamped to [0, 1.5] pitch - a STRETCHED gap
+			// (measured > nominal, e.g. first-combustion acceleration) must never
+			// yield a negative/runaway correction, so those revs do not update it.
+			// Only validated syncs (clean count or accepted 1-2 deficit) update.
+			if (syncValidated && get_board_override_result(custom_board_syncGapAnchorCorrection, false)) {
+				if (toothDurations[1] > 0) {
+					float measuredGapRatio = 1.0f * toothDurations[0] / toothDurations[1];
+					float correctionPitch = triggerShape.syncRatioAvg - measuredGapRatio;
+					if (correctionPitch >= 0 && correctionPitch <= 1.5f) {
+						// one slot = 360 / totalTeeth degrees; totalTeeth = expectedEvents + skipped
+						// (58 + 2 = 60 for the 60-2 -> 6 deg per pitch)
+						float pitchDeg = 360.0f / (triggerShape.getExpectedEventCount(TriggerWheel::T_PRIMARY) + triggerShape.syncRatioAvg - 1);
+						float correctionDeg = correctionPitch * pitchDeg;
+						// EMA: follow slow drifts (rpm-dependent level state), reject single-rev noise
+						getTriggerCentral()->gapAnchorCorrectionDeg =
+							0.5f * getTriggerCentral()->gapAnchorCorrectionDeg + 0.5f * correctionDeg;
+					}
+				}
 			}
 
 			// this call would update duty cycle values

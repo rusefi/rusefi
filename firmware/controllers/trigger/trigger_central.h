@@ -87,6 +87,19 @@ public:
 	uint32_t triggerDebounceDropCount = 0;
 	uint32_t triggerNoiseFilterDropCount = 0;
 
+	// Sync-anchor correction (degrees, board opt-in via
+	// custom_board_syncGapAnchorCorrection): the measured missing-teeth gap is
+	// systematically compressed (~2.36 vs the physical 3.0 slots) on boards
+	// whose VR conditioner emits a spurious edge ~0.6 pitch early after the
+	// gap (m74_9 L9779: the auto-hysteresis re-quantizes down during the
+	// missing teeth, the squared-signal latch then suppresses the real
+	// first-tooth edge). The decoder anchors the phase at that early edge,
+	// advancing all scheduling by ~3.8 deg. This value (EMA-smoothed, clamped
+	// to [0, 1.5] pitch) is subtracted from the scheduling phase pair in
+	// TriggerCentral::handleShaftSignal. Updated by the decoder at every
+	// validated sync; 0 when the hook is off.
+	float gapAnchorCorrectionDeg = 0;
+
 	cyclic_buffer<int> triggerErrorDetection;
 
 	/**
