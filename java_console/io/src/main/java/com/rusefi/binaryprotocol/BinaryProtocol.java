@@ -643,7 +643,14 @@ public class BinaryProtocol {
      */
     public byte[] executeCommand(char opcode, byte[] packet, String msg, int timeoutMs) {
         linkManager.assertCommunicationThread();
-        return doExecute(opcode, packet, msg, stream, timeoutMs);
+        byte[] response = doExecute(opcode, packet, msg, stream, timeoutMs);
+        if (response != null) {
+            // any completed binary round trip proves the link is alive; without this a long
+            // operation monopolizing the communication thread (e.g. SD card file transfer)
+            // starves the output-channel poll and ConnectionWatchdog restarts a healthy link
+            HeartBeatListeners.onDataArrived();
+        }
+        return response;
     }
 
     private static byte @Nullable [] doExecute(char opcode, byte[] packet, String msg, IoStream stream, int timeoutMs) {
