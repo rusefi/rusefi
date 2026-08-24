@@ -8,6 +8,7 @@
 #include "pch.h"
 #include "logicdata_csv_reader.h"
 #include "unit_test_logger.h"
+#include "io_pins.h"
 
 static char* trim(char *str) {
 	while (str != nullptr && str[0] == ' ') {
@@ -169,6 +170,23 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 #endif
 
 	eth->setTimeAndInvokeEventsUs(1'000'000 * timeStamp);
+
+	// Update mock cam pin levels before the crank edges are processed so that
+	// VVT_POLLED_BINARY can sample the cam level at each crank edge.
+	for (size_t vvtIndex = 0; vvtIndex < m_vvtCount; vvtIndex++) {
+		int bankIndex;
+		int camIndex;
+		if (twoBanksSingleCamMode) {
+			bankIndex = vvtIndex;
+			camIndex = 0;
+		} else {
+			bankIndex = vvtIndex / 2;
+			camIndex = vvtIndex % 2;
+		}
+		Gpio camPin = engineConfiguration->camInputs[bankIndex * 2 + camIndex];
+		setMockState(static_cast<brain_pin_e>(camPin), newVvtState[vvtIndex]);
+	}
+
 	for (size_t index = 0; index < m_triggerCount; index++) {
 		if (currentState[index] == newTriggerState[index]) {
 			continue;

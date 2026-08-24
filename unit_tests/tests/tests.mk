@@ -42,6 +42,7 @@ TESTS_SRC_CPP = \
 	tests/trigger/test_real_subaru_ej20g.cpp \
 	tests/trigger/test_real_noisy_trigger.cpp \
 	tests/trigger/test_map_cam.cpp \
+	tests/trigger/test_binary_cam_sync.cpp \
 	tests/trigger/test_rpm_multiplier.cpp \
 	tests/trigger/test_rpm_acceleration.cpp \
 	tests/trigger/test_quad_cam.cpp \

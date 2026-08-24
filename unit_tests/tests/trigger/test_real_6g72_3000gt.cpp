@@ -108,6 +108,7 @@ void generateLog(const char* filename) {
 
     int n = 0;
     bool firstRpm = false;
+    bool firstCamSync = false;
     while (reader.haveMore()) {
         reader.processLine(&eth);
         auto rpm = Sensor::getOrZero(SensorType::Rpm);
@@ -115,8 +116,18 @@ void generateLog(const char* filename) {
             printf("Got first RPM %f, at %d\n", rpm, n);
             firstRpm = true;
         }
+        if (!firstCamSync && engine->triggerCentral.triggerState.hasSynchronizedPhase()) {
+            float syncTime = getTimeNowUs() / 1'000'000.0f;
+            printf("Got first cam sync at %f s, at %d\n", syncTime, n);
+            firstCamSync = true;
+        }
         n++;
     }
+    printf("%s: shaftSynchronized=%d hasSynchronizedPhase=%d resyncs=%d\n",
+        filename,
+        engine->triggerCentral.triggerState.getShaftSynchronized(),
+        engine->triggerCentral.triggerState.hasSynchronizedPhase(),
+        engine->triggerCentral.triggerState.phaseResyncCounter);
 }
 
 TEST(real6g72, sync_3000gt_cranking_rusefi) {
