@@ -109,8 +109,8 @@
  *       moves to [25.9, 38.5] ms and the clamped 27 ms feed misses.
  *   [0] PWL/SEO timeout priority = 0 (default)
  * 0x06 is exactly the stock's steady-state value (the stock steps this
- * register 0x07 -> 0x05 -> 0x05 -> 0x06 during its config script - see the
- * vrs_ramp comment - but for rusEFI the time base must never flip). */
+ * register 0x07 -> 0x05 -> 0x06 during its config script - but for rusEFI
+ * the time base must never flip; it is applied ONCE and never stepped). */
 #define L9779_CONFIG6_PWR			(0x06)
 
 /* DIA_REG10 (datasheet 6.14) bits, verified against the register layout:
@@ -309,7 +309,6 @@ struct L9779 : public GpioChip {
 	int chip_init();
 	int chip_heal_out_dis(bool configWiped);
 	int vrs_configure();
-	int vrs_ramp_to_step(int step);
 	/* ISR-safe polled SPI (executor context, no bus mutex) */
 	int spi_frame_isr(uint16_t tx, uint16_t *rx_ptr);
 	void wdFeedFromExecutor();
@@ -427,7 +426,7 @@ struct L9779 : public GpioChip {
 	 * latch event is logged WITH its fault flags (reading DIA_REG10 clears
 	 * them) and healed promptly, rate-limited by out_dis_heal_ts: a chip
 	 * reset (TNL_RST/OV_RST/CRK_RST) wiped the whole config, so START +
-	 * CONFIG_REG6 + RESPTIME + the VRS ramp at the CURRENT step + the output
+	 * CONFIG_REG6 + RESPTIME + the VRS full-adaptive config + the output
 	 * registers are re-applied (the datasheet's recovery recipe); a plain
 	 * driver cut (VDD5_OV/V3V3_UV/output faults, no reset) keeps its config
 	 * and only needs START + CONTR. */
@@ -437,15 +436,10 @@ struct L9779 : public GpioChip {
 	 * rate-limited so a persisting fault does not SPI-flood and does not
 	 * re-anchor the WDA cycle too often (each RESPTIME write costs one EC). */
 	systime_t					out_dis_heal_ts;
-	/* VRS hysteresis ramp: step 0 = stock ramp START written (chip_init /
-	 * re-arm), steps 1..3 = the stock config script ramp (see
-	 * vrs_configure/vrs_ramp_to_step). Advanced by rpm thresholds from the
-	 * driver thread, re-armed per start attempt. */
-	int							vrs_step = 0;
-	/* Last moment the engine was NOT stopped - debounces the ramp re-arm
-	 * (see the driver thread: a trigger storm flaps rpm 0/300+ at ~1 kHz
-	 * and would toggle the VRS config at the same rate). */
-	systime_t					vrs_stop_ts = 0;
+	/* VRS conditioner: configured once (vrs_configure) into fully adaptive
+	 * mode - auto hysteresis + auto time filter both adapt to rpm inside the
+	 * chip, no software ramp. Re-applied by chip_init() and
+	 * chip_heal_out_dis() (a chip reset reverts the write-only registers). */
 
 
 	/* statistic */
@@ -1068,7 +1062,6 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 			chip->chip_init();
 			/* sync pins state */
 			chip->update_output();
-			chip->vrs_step = 0;
 		}
 
 		/* Kick the executor-side WDA feed once after the chip is up. The first
@@ -1092,47 +1085,10 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 			}
 		}
 
-		/* Stock-style VRS hysteresis ramp: the chip's peak detector is not
-		 * readable (write-only registers), so rpm is the only proxy for the
-		 * growing cranking signal amplitude. Step the hysteresis floor up
-		 * through the stock's 4-step config script; the last step lands
-		 * exactly at cranking_rpm, so the conditioner is in its final state
-		 * the moment the engine is declared running. */
-		static const float VRS_RAMP_RPM[3] = { 150.0f, 300.0f, 600.0f };
-		bool ignitionOff = chip->key_on_valid && !chip->key_on_status;
-		/* Step up only while the key is on: after an ignition-off re-arm the
-		 * wind-down rpm still crosses 150 and would immediately re-step the
-		 * ramp, toggling start/step-1 at driver-thread rate (SPI flood, seen
-		 * at 23:16:08 - the 800-frames storm class from the 14:34 log). */
-		if (!ignitionOff && chip->vrs_step < 3 &&
-				Sensor::getOrZero(SensorType::Rpm) >= VRS_RAMP_RPM[chip->vrs_step]) {
-			chip->vrs_step++;
-			chip->vrs_ramp_to_step(chip->vrs_step);
-		}
-
-		/* The ramp must follow every start attempt: on a quick key cycle
-		 * neither the L9779 nor the MCU is power-cycled, so the chip's
-		 * write-only VRS registers keep the ramp END (maximum hysteresis
-		 * floor) from the previous run, and the next cranking's low-amplitude
-		 * teeth get swallowed by the floor -> C9002 + sync storm at the
-		 * catch. Re-arm the ramp START whenever the engine has been stopped
-		 * for a while or the ignition key goes off.
-		 *
-		 * The stop side is debounced: during a trigger storm the rpm sensor
-		 * flaps 0/300+ at ~1 kHz, and an undebounced rpm==0 reset toggled
-		 * the VRS config start/end at the same rate (~800 SPI frames in
-		 * 1.6 s, see the 14:34 log) - saturating the SPI bus and yanking
-		 * the hysteresis floor, which fed the storm it was reacting to. */
-		bool engineStopped = engine->rpmCalculator.isStopped();
-		if (!engineStopped) {
-			chip->vrs_stop_ts = now;
-		}
-		bool stoppedLongEnough = engineStopped &&
-			(now - chip->vrs_stop_ts) >= TIME_MS2I(500);
-		if (chip->vrs_step > 0 && (stoppedLongEnough || ignitionOff)) {
-			chip->vrs_configure();
-			chip->vrs_step = 0;
-		}
+		/* The VRS conditioner runs fully adaptive (see vrs_configure): the
+		 * auto hysteresis and the auto time filter (Tfilter = 1/32*Tn) both
+		 * adapt to rpm inside the chip, so there is no software ramp and
+		 * nothing to re-arm per start attempt. */
 
 		/* Refresh the power-stage diagnosis cache. Reading a DIA register
 		 * clears its fault bits on the chip, so this runs at a low rate;
@@ -1591,94 +1547,43 @@ err_gpios:
 	return ret;
 }
 
-/* Configure the flying-wheel (VRS) sensor interface for fully adaptive
- * operation (datasheet 6.14). The power-on defaults are limited adaptive
- * mode (CONFIG_REG1 reset 0x08: VRS_mode = 0) with the auto-adaptive
- * temporal filter switched OFF (CONFIG_REG5 reset 0xd8: VRS_MODE = 01)
- * and a 17 uA hysteresis floor. In that mode the interface behaves almost
- * like a plain fixed-threshold comparator: noise bursts pass through to
- * OUT_VRS and false-sync the crank decoder during cranking.
+/* Configure the flying-wheel (VRS) sensor interface per the DATASHEET's
+ * own design (6.14), not the stock config script:
  *
- * Fully adaptive mode scales the hysteresis with the actual sensor
- * amplitude (peak detector + 5-level quantizer) and enables the adaptive
- * masking filter - the way the stock ECU conditions the same sensor
- * through the same chip.
+ * - CONFIG_REG1 bit1 = 1: fully adaptive VRS mode. The auto-adaptive
+ *   hysteresis (differential amp -> peak detector -> 5-level quantizer ->
+ *   hysteresis selection) scales the hysteresis with the actual sensor
+ *   amplitude.
+ * - CONFIG_REG5 VRS_MODE[4:3] = 11: auto-adaptive hysteresis ON AND
+ *   auto-adaptive time filter ON. The filter (Tfilter = 1/32 * Tn,
+ *   4..200 us, adaptive to the tooth period) is the chip's designed
+ *   noise-spike rejection for VR sensors; with it OFF short spikes pass
+ *   straight through to OUT_VRS.
+ * - CONFIG_REG5 VRS_HYST[2:0] = 000: 17 uA hysteresis floor.
  *
- * CONFIG_REG5 bit5 doubles as the VRS diagnosis enable in this mode
- * (open/short detection of the sensor, datasheet 6.14).
- */
-/*
- * Stock VRS hysteresis ramp, extracted from the Lada M74 stock firmware
- * (Read_FULLFLASH_I865LB52_w2404b1____(240626_103727).bin, the L9779
- * "IC_EMS" module, config script at 0x4EF8C). The stock steps THREE
- * registers per step:
- *   REG5: 0x0C -> 0x0D -> 0x0E -> 0x0F  (VRS_HYST 100..111)
- *   REG4: 0x0B -> 0x0A -> 0x09 -> 0x08
- *   REG6: 0x07 -> 0x05 -> 0x05 -> 0x06
- * The stock steps the hysteresis floor up as the cranking signal amplitude
- * grows and ends at VRS_HYST 111, handing the conditioner over to the
- * fully-adaptive loop once the amplitude is established.
- *
- * Register semantics (2026-08-24): only REG5 (0x05) is a VRS register
- * (VRS_HYST/VRS_MODE/VRS_DIAG). REG4 (0x04) is power management
- * (PWL_TIMEOUT_CONF/ISO_SRC/LOCK) and REG6 (0x06) is power management +
- * the WDA time base (PWL_EN_N, PSOFF, VDD5_UV RST/WDA masks, CONFIG6 bit1
- * = f_clk 64/39 kHz). The stock steps them all, and after removing the
- * REG4/REG6 writes the car started losing one tooth per revolution at
- * ~2000 rpm (C9003 57/58) - the stock's register traffic is reproduced
- * byte-for-byte here. The ONE deliberate deviation: REG6 bit1 (WDA time
- * base) is PINNED to 1 = 64 kHz - the stock's 0x05 values at steps 1..2
- * flip it to 39 kHz exactly during cranking (150..600 rpm), which moves
- * the answer window from [15.8, 28.4] ms to [25.9, 38.5] ms and makes the
- * 27 ms-clamped executor feed miss -> EC climb -> WDA kill pulses at the
- * catch (the miss=5..8 counters in the 16:02/16:09 logs).
- *
- * Step 0 is the ramp START (low floor - low cranking signal amplitude),
- * written by vrs_configure() at init and on every start re-arm; steps 1..3
- * are advanced by rpm thresholds from the driver thread.
- */
-static const uint8_t vrs_ramp_cfg4[] = { 0x0b, 0x0a, 0x09, 0x08 };
-static const uint8_t vrs_ramp_cfg5[] = { 0x0c, 0x0d, 0x0e, 0x0f };
-/* stock values with CONFIG6 bit1 forced to 1 (64 kHz): 0x05 -> 0x07 */
-static const uint8_t vrs_ramp_cfg6[] = { 0x07, 0x07, 0x07, 0x06 };
-
+ * With both mechanisms adaptive there is NO software ramp - the chip tracks
+ * the rpm itself. This replaces the previous stock-script ramp (VRS_MODE=01
+ * = auto filter OFF, VRS_HYST stepped 100..111 = 32/51/17/0 uA where 111 is
+ * "test purpose only"): with that config the car lost one tooth per
+ * revolution at ~2000-3400 rpm (C9003 57/58, C9007/C9008 tooth errors).
+ * The value 0xd8 for REG5 is exactly the chip's own reset default (VRS_MODE
+ * 11 + 17 uA floor + VRS_DIAG off); VRS_DIAG (bit5) stays off like the
+ * stock. CONFIG_REG4/REG6 are NOT written here (their reset defaults
+ * match what we want; CONFIG_REG6 is applied separately in chip_init() /
+ * chip_heal_out_dis() with the WDA time base pinned to 64 kHz). */
 int L9779::vrs_configure(void)
 {
-	/* Full adaptive mode + the stock's ramp START. */
-	static const uint8_t cfg1 = 0x02;
+	static const uint8_t cfg1 = 0x02;	/* full adaptive */
+	static const uint8_t cfg5 = 0xd8;	/* auto hyst ON + auto filter ON, 17 uA floor */
 
 	int ret = spi_rw(MSG_W(0x01, cfg1), NULL);
 	if (ret)
 		return ret;
-	ret = vrs_ramp_to_step(0);
+	ret = spi_rw(MSG_W(0x05, cfg5), NULL);
 	if (ret)
 		return ret;
 
-	efiPrintf(DRIVER_NAME " VRS: stock ramp start (REG1=0x%02x REG4=0x%02x REG5=0x%02x REG6=0x%02x)", cfg1, vrs_ramp_cfg4[0], vrs_ramp_cfg5[0], vrs_ramp_cfg6[0]);
-	return 0;
-}
-
-int L9779::vrs_ramp_to_step(int step)
-{
-	/* 0 = ramp start, 3 = ramp end (maximum floor -> fully-adaptive
-	 * handover). Steps 1..3 mirror the stock config script - REG4/REG5/REG6,
-	 * see the comment above: the stock's full register traffic is kept (the
-	 * REG4/REG6 removal cost the car a tooth per revolution), with only the
-	 * WDA time base pinned to 64 kHz. */
-	if (step < 0 || step > 3)
-		return -1;
-
-	int ret = spi_rw(MSG_W(0x04, vrs_ramp_cfg4[step]), NULL);
-	if (ret)
-		return ret;
-	ret = spi_rw(MSG_W(0x05, vrs_ramp_cfg5[step]), NULL);
-	if (ret)
-		return ret;
-	ret = spi_rw(MSG_W(0x06, vrs_ramp_cfg6[step]), NULL);
-	if (ret)
-		return ret;
-
-	efiPrintf(DRIVER_NAME " VRS: stock ramp step %d (REG4=0x%02x REG5=0x%02x REG6=0x%02x)", step, vrs_ramp_cfg4[step], vrs_ramp_cfg5[step], vrs_ramp_cfg6[step]);
+	efiPrintf(DRIVER_NAME " VRS: full adaptive (REG1=0x%02x REG5=0x%02x: auto-hyst + auto-filter, 17uA floor)", cfg1, cfg5);
 	return 0;
 }
 
@@ -1759,11 +1664,10 @@ int L9779::chip_init()
  * window every cycle), the VRS conditioner back to limited-adaptive +
  * filter OFF (noise storms at speed), the CONTR1..4 output enables cleared.
  *
- * With configWiped the whole config is re-applied, including the VRS ramp
- * at the CURRENT step - never step 0 while running, that would hand a
- * cranking config to a running engine. Without a reset the config survived
- * and only START + CONTR are needed (the datasheet's recipe for a plain
- * VDD5_OV driver cut).
+ * With configWiped the whole config is re-applied, including the VRS
+ * full-adaptive config (a chip reset reverts the write-only REG1/REG5).
+ * Without a reset the config survived and only START + CONTR are needed
+ * (the datasheet's recipe for a plain VDD5_OV driver cut).
  *
  * Callable only from the driver thread (plain spi_rw path). The executor's
  * WDA exchange is kept out of each frame by spi_busy, and a chip reset
@@ -1791,11 +1695,9 @@ int L9779::chip_heal_out_dis(bool configWiped)
 		if (ret)
 			return ret;
 
-		/* VRS back to full adaptive mode (REG1) at the current ramp step. */
-		ret = spi_rw(MSG_W(0x01, 0x02), NULL);
-		if (ret)
-			return ret;
-		ret = vrs_ramp_to_step(vrs_step);
+		/* VRS back to the full-adaptive config (a chip reset reverts the
+		 * write-only REG1/REG5 to the limited-adaptive defaults). */
+		ret = vrs_configure();
 		if (ret)
 			return ret;
 	}
@@ -1851,8 +1753,8 @@ int L9779::init()
 	/* WDA watchdog: the response time is shortened via RESPTIME=10 (see the
 	 * WDA_RESPTIME comment at the top): response time 15.8 ms, fixed answer
 	 * window 12.6 ms, cycle 28.4 ms. The feed is kicked by the driver thread
-	 * after chip_init and then runs on the TIM5 executor as a prepare/BYTE0
-	 * pair; the period is adapted from REQUHI flags. */
+	 * after chip_init and then runs on the TIM5 executor as a single atomic
+	 * burst per cycle; the period is adapted from REQUHI flags. */
 	wd_delay_ms = WDA_DELAY_INIT_MS;
 	wd_running = false;
 	spi_busy = false;
