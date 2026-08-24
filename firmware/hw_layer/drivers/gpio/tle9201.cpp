@@ -225,10 +225,13 @@ void Tle9201::process_diag_and_rev(uint8_t diag, uint8_t rev) {
 		int wdaOk = 0;
 		int wdaFail = 0;
 		int wdaMiss = 0;
+		int wdaDelayMs = 0;
+		int wdaDefer = 0;
+		int wdaKills = 0;
 		uint8_t dia10 = 0;
-		if (l9779_getWdaCounters(&wdaEc, &wdaInt, &wdaOk, &wdaFail, &wdaMiss, &dia10)) {
-			efiPrintf("WARNING: TLE9201 outputs disabled while engine running (DIS pin high; l9779 WDA ec=%d wda_int=%d ok=%d fail=%d miss=%d dia10=0x%02x)",
-				(int)wdaEc, (int)wdaInt, wdaOk, wdaFail, wdaMiss, (int)dia10);
+		if (l9779_getWdaCounters(&wdaEc, &wdaInt, &wdaOk, &wdaFail, &wdaMiss, &dia10, &wdaDelayMs, &wdaDefer, &wdaKills)) {
+			efiPrintf("WARNING: TLE9201 outputs disabled while engine running (DIS pin high; l9779 WDA ec=%d wda_int=%d ok=%d fail=%d miss=%d delay=%dms defer=%d kills=%d dia10=0x%02x)",
+				(int)wdaEc, (int)wdaInt, wdaOk, wdaFail, wdaMiss, wdaDelayMs, wdaDefer, wdaKills, (int)dia10);
 		} else {
 			efiPrintf("WARNING: TLE9201 outputs disabled while engine running (DIS pin high)");
 		}

@@ -277,9 +277,13 @@ struct L9779 : public GpioChip {
 	 * only kicks the first feed after chip_init. */
 	scheduling_s				wd_sched;
 	bool						wd_running;
-	int							wd_ok_cnt;		/* cycles answered correctly */
-	int							wd_fail_cnt;	/* cycles missed (SPI-level failures) */
-	int							wd_timing_miss_cnt;	/* responses outside the window (REQUHI flags) - the EC climbs on these too */
+	int						wd_ok_cnt;		/* cycles answered correctly */
+	int						wd_fail_cnt;	/* cycles missed (SPI-level failures) */
+	int						wd_timing_miss_cnt;	/* responses outside the window (REQUHI flags) - the EC climbs on these too */
+	int						wd_defer_cnt;	/* feeds deferred by the spi_busy flag */
+	int						wd_kill_cnt;	/* WDA_INT rising edges (watchdog kill pulses) */
+	int						wd_last_miss_dir;	/* last REQUHI miss: 1=early 2=late */
+	bool						wd_prev_int;
 	uint16_t					ident_reg;		/* IDENT_REG readback (0x10 | 0x00) */
 
 	/* Cached power-stage diagnosis, DIA_REG1..8 (datasheet 6.14). Refreshed
@@ -368,9 +372,10 @@ struct L9779 : public GpioChip {
 
 static L9779 chips[BOARD_L9779_COUNT];
 
-bool l9779_getWdaCounters(uint8_t *ec, bool *wda_int, int *ok, int *fail, int *timing_miss, uint8_t *dia10)
+bool l9779_getWdaCounters(uint8_t *ec, bool *wda_int, int *ok, int *fail, int *timing_miss, uint8_t *dia10,
+		int *delay_ms, int *defer_cnt, int *kill_cnt)
 {
-	/* WDA counters are written by the driver thread only; the reads below
+	/* WDA counters are written by the executor feed (ISR); the reads below
 	 * are single-word atomic accesses, safe from other threads. */
 	L9779 *chip = &chips[0];
 	if (ec)
@@ -385,6 +390,12 @@ bool l9779_getWdaCounters(uint8_t *ec, bool *wda_int, int *ok, int *fail, int *t
 		*timing_miss = chip->wd_timing_miss_cnt;
 	if (dia10)
 		*dia10 = chip->dia10_cache;
+	if (delay_ms)
+		*delay_ms = chip->wd_delay_ms;
+	if (defer_cnt)
+		*defer_cnt = chip->wd_defer_cnt;
+	if (kill_cnt)
+		*kill_cnt = chip->wd_kill_cnt;
 	return true;
 }
 
@@ -1135,15 +1146,25 @@ int L9779::wd_feed_isr()
 	 * to keep the response delay centered in the answer window. Both flags
 	 * mean the previous answer was NOT accepted (outside the window), so
 	 * the chip's EC incremented - count them separately from wd_fail_cnt,
-	 * which only tracks SPI-level failures. */
+	 * which only tracks SPI-level failures.
+	 *
+	 * The correction step is 5 ms (just under half of the ~12.6 ms window):
+	 * a single miss jumps the phase from just-outside to near center without
+	 * overshooting to the other edge, so a lock loss costs 1-2 misses instead
+	 * of the 5-7 that the old 1 ms steps needed. Each miss sets EC > 4 and
+	 * fires the chip's WDA kill output (the blade drop), so the number of
+	 * CONSECUTIVE misses is what turns a momentary pulse into an engine
+	 * stall - converging fast is the whole game. */
 	if (requhi & 0x01) {
 		/* RESP_TO_EARLY: response before the window opened */
 		wd_timing_miss_cnt++;
-		wd_delay_ms++;
+		wd_last_miss_dir = 1;
+		wd_delay_ms += 5;
 	} else if (requhi & 0x02) {
 		/* NO_RESP: response after the window closed */
 		wd_timing_miss_cnt++;
-		wd_delay_ms--;
+		wd_last_miss_dir = 2;
+		wd_delay_ms -= 5;
 	}
 	/* keep the delay in a sane range: 60..150 ms */
 	if (wd_delay_ms < 60)
@@ -1154,6 +1175,11 @@ int L9779::wd_feed_isr()
 	wd_last_req = requlo & 0x0f;
 	wd_last_ec  = (requlo >> 4) & 0x07;
 	wd_int      = !!(requlo & 0x80);
+	/* A rising WDA_INT edge is a watchdog kill pulse: EC crossed 4 and the
+	 * chip forced its outputs off until correct answers bring it back. */
+	if (wd_int && !wd_prev_int)
+		wd_kill_cnt++;
+	wd_prev_int = wd_int;
 
 	/* write the expected 32-bit response: RESP_BYTE3..0 via WD_ANSW */
 	const uint8_t *resp = wd_resp_table[wd_last_req];
@@ -1181,6 +1207,7 @@ void L9779::wdFeedFromExecutor()
 	 * console). Defer a couple of ms - the answer window is ~12.6 ms wide, so
 	 * a 2 ms deferral can not miss it. */
 	if (spi_busy) {
+		wd_defer_cnt++;
 		engine->scheduler.schedule("l9779wda", &wd_sched,
 			getTimeNowNt() + MS2NT(2),
 			action_s::make<l9779WdaFeedExec, L9779*>(this));
@@ -1580,6 +1607,10 @@ int L9779::init()
 	wd_running = false;
 	spi_busy = false;
 	spi_configured = false;
+	wd_defer_cnt = 0;
+	wd_kill_cnt = 0;
+	wd_last_miss_dir = 0;
+	wd_prev_int = false;
 
 	/* power-stage diagnosis cache: nothing valid until the driver thread
 	 * performs the first refresh (diag_ts = 0 -> immediate) */
