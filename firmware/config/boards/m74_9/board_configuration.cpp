@@ -809,6 +809,33 @@ void setup_custom_board_overrides() {
 	// counter race (extra sync validation per revolution). Re-enable only if
 	// a catch C9003 'got 56/0' returns.
 	custom_board_syncEarlyGapWhileCranking = []() { return false; };
+	// Running-band tooth-loss tolerance: the L9779 VR conditioner (full
+	// adaptive mode) intermittently EATS one output edge per revolution at
+	// 1763-4005 rpm (datasheet 6.14: the auto-adaptive filter suppresses the
+	// output edge when the squared signal high level falls below Tfilter,
+	// driven by the auto-hysteresis re-quantizing near a peak-detector
+	// boundary). The 2026-08-24 20:43 drive: 19 C9003 clusters, 837/837
+	// 'newerr' lines with the gap ratio windows PASSING and the count short
+	// by exactly one (57/58) - a single lost decode edge, not noise. Accept
+	// the deficit at the ratio-validated real gap as a valid sync: the phase
+	// shifts 6-12 deg only for the already-elapsed part of the revolution
+	// and re-anchors at the gap. The alternative (C9003 desync) cuts
+	// fuel/spark, flaps the rpm sensor, and opens the storage gate into an
+	// MFS-write storm - strictly worse. Deficit-only bound: noise inserts
+	// edges, it never deletes them, so a deficit cannot be noise; 3+ lost
+	// teeth keep the strict path. Active from cranking to 7000 rpm - above
+	// that the 148 us tooth period approaches the conditioner's ~100 us
+	// minimum output period and a whole different regime starts.
+	custom_board_syncAcceptToothLoss = []() {
+		if (engine->triggerCentral.directSelfStimulation) {
+			// bench self-stim generates a clean tooth stream; keep the strict
+			// path so the simulator stays a meaningful decoder test bench
+			return false;
+		}
+
+		float rpm = Sensor::getOrZero(SensorType::Rpm);
+		return rpm >= engineConfiguration->cranking.rpm && rpm < 7000;
+	};
 	// Storage writes must be deferred while the engine runs: the MFS lives on
 	// the AT32 internal flash (bank 2) and a sector erase stalls the whole CPU
 	// (no read-while-erase on this silicon). The periodic LTFT save hitting an
