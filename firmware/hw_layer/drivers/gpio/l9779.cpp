@@ -56,6 +56,35 @@
  * few frames (see spi_busy). */
 #define DIAG_REFRESH_REGS			(3)
 
+/* WDA response-time shortening (datasheet 6.15.2). With the default
+ * RESPTIME (0x3f) the response time is (1+101*63)/64kHz = 99.4 ms and the
+ * answer window sits ~99..112 ms after each cycle start. That whole timing
+ * runs on the chip's INTERNAL oscillator CLK1 with a +-5% accuracy, which
+ * drifts with temperature and supply: +-5% of ~100 ms is +-5 ms - half the
+ * 12.6 ms window - so a fixed feed period can miss when the oscillator
+ * drifts (measured: the window center moved from ~115 ms to >120 ms between
+ * two boots on 2026-08-24). Each miss fires a WDA kill pulse (EC>4).
+ *
+ * RESPTIME=10 shortens the response time to (1+101*10)/64kHz = 15.8 ms
+ * (cycle = 15.8 + 12.6 = 28.4 ms): the same +-5% drift now moves the
+ * window by only +-0.8 ms, so a centered feed essentially cannot miss, and
+ * any transient recovers ~5x faster. Cost: the feed runs ~45x/s (well under
+ * 1% executor), and the one-time RESPTIME write costs one EC increment
+ * (EC 6->7, the outputs enable ~3 cycles later - before the fuel pump
+ * primes). */
+#define WDA_RESPTIME				(10)
+/* BYTE0-to-BYTE0 answer period: window center = 15.8 + 12.6/2 = 22.1 ms. */
+#define WDA_DELAY_INIT_MS			(22)
+/* The answer period must stay inside [response_time, response_time+window].
+ * With CLK1 +-5% the window is always within [16.6, 27.0] ms; clamp with a
+ * little margin. */
+#define WDA_DELAY_MIN_MS			(17)
+#define WDA_DELAY_MAX_MS			(27)
+/* The prepare phase (question read + RESP_BYTE3..1, which the datasheet
+ * allows before the window) leads the critical RESP_BYTE0 write by this
+ * much - comfortably inside the 15.8 ms response time. */
+#define WDA_BYTE0_LEAD_MS			(5)
+
 /* L9779WD-SPI timing requirements (datasheet Table 53):
  *  - tlead >= 525 ns: CS low to first SCK edge
  *  - tcsn  >= 640 ns: CS high between two frames
@@ -227,8 +256,10 @@ struct L9779 : public GpioChip {
 	int vrs_ramp_to_step(int step);
 	/* ISR-safe polled SPI (executor context, no bus mutex) */
 	int spi_frame_isr(uint16_t tx, uint16_t *rx_ptr);
-	int wd_feed_isr();
-	void wdFeedFromExecutor();
+	int wd_prepare_isr();
+	int wd_byte0_isr();
+	void wdPrepareFromExecutor();
+	void wdByte0FromExecutor();
 	void debug() override;
 
 	brain_pin_diag_e getOutputDiag(size_t pin);
@@ -273,9 +304,17 @@ struct L9779 : public GpioChip {
 	 * delayed past that by trigger-decode ISR load at cranking (the observed
 	 * wd_timing_miss/EC>4 kills). The executor (priority 3) preempts the
 	 * trigger handoff, so the feed stays on time whenever the CPU executes
-	 * at all. The callback self-reschedules via wd_sched; the driver thread
-	 * only kicks the first feed after chip_init. */
-	scheduling_s				wd_sched;
+	 * at all.
+	 *
+	 * The feed is two executor events per monitoring cycle:
+	 *  - wd_sched_prep: question read (REQUHI/REQULO), answer-period
+	 *    adaptation, and the three EARLY answer bytes (RESP_BYTE3..1 - the
+	 *    datasheet allows them before the window). Not timing-critical.
+	 *  - wd_sched_b0: the single critical RESP_BYTE0 frame, scheduled to
+	 *    land in the window center. The driver thread only kicks the first
+	 *    prepare after chip_init. */
+	scheduling_s				wd_sched_prep;
+	scheduling_s				wd_sched_b0;
 	bool						wd_running;
 	int						wd_ok_cnt;		/* cycles answered correctly */
 	int						wd_fail_cnt;	/* cycles missed (SPI-level failures) */
@@ -913,10 +952,14 @@ int L9779::chip_reset() {
 /* Driver thread.															*/
 /*==========================================================================*/
 
-/* Executor trampoline: the WDA feed runs in the TIM5 ISR, see the
+/* Executor trampolines: the WDA feed runs in the TIM5 ISR, see the
  * wd_running/wd_sched comment in the struct. */
-static void l9779WdaFeedExec(L9779 *chip) {
-	chip->wdFeedFromExecutor();
+static void l9779WdaPrepareExec(L9779 *chip) {
+	chip->wdPrepareFromExecutor();
+}
+
+static void l9779WdaByte0Exec(L9779 *chip) {
+	chip->wdByte0FromExecutor();
 }
 
 static THD_FUNCTION(l9779_driver_thread, p) {
@@ -960,12 +1003,12 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 		}
 
 		/* Kick the executor-side WDA feed once after the chip is up. The
-		 * callback self-reschedules from then on. */
+		 * prepare/BYTE0 events self-reschedule from then on. */
 		if (!chip->wd_running) {
 			chip->wd_running = true;
-			engine->scheduler.schedule("l9779wda", &chip->wd_sched,
+			engine->scheduler.schedule("l9779wda", &chip->wd_sched_prep,
 				getTimeNowNt() + MS2NT(5),
-				action_s::make<l9779WdaFeedExec, L9779*>(chip));
+				action_s::make<l9779WdaPrepareExec, L9779*>(chip));
 		}
 
 		/* send the output registers only when the pin state changed: with the
@@ -1086,26 +1129,28 @@ int L9779::spi_frame_isr(uint16_t tx, uint16_t *rx_ptr)
 	return ret;
 }
 
-/* ISR-context VDA 2.0 level 3 query-answer watchdog feed (datasheet 6.15).
- * Identical protocol to the old thread-side wd_feed(), but polled-LLD SPI
- * only, so it runs on the TIM5 executor (priority 3, above the trigger
- * handoff) where a late scheduler wakeup can no longer miss the answer
- * window.
+/* ISR-context VDA 2.0 level 3 query-answer watchdog feed (datasheet 6.15),
+ * split into two executor events per monitoring cycle:
  *
- * The chip generates a new 4-bit question every monitoring cycle
- * (response time + fixed window, ~112 ms with default RESPTIME). A wrong
- * value or a response outside the window increments the error counter EC;
- * with EC > 4 the WDA_INT flag is set and OUT1..4 + IGN1..4 are forced
- * off. EC starts at 6 after any reset, so the watchdog must be answered
- * correctly (value AND timing) at least twice before the outputs get
- * enabled, and must keep being answered afterwards.
+ *  - prepare: read REQUHI/REQULO (previous answer verdict + current
+ *    question), adapt the answer period, and send the three EARLY answer
+ *    bytes RESP_BYTE3..1. The datasheet explicitly allows everything but
+ *    the last byte before the window opens, so this phase is not timing
+ *    critical.
+ *  - BYTE0: the single critical frame - the chip accepts the response when
+ *    the END of the RESP_BYTE0 write falls inside the fixed 12.6 ms window.
+ *
+ * The chip generates a 4-bit question per monitoring cycle and repeats it
+ * until answered correctly in value and time. A wrong value or a response
+ * outside the window increments EC; EC > 4 sets WDA_INT and forces
+ * OUT1..4 + IGN1..4 off. EC starts at 6 after reset.
  *
  * The DO reply to a request arrives in one of the frames that follow the
  * request (datasheet 6.16.2), so the reads are pipelined: REQUHI/REQULO
- * are requested first and their replies are collected while the four
- * answer bytes are being sent. The filler REQUHI reads flush the pipeline
- * without side effects and work with a one or two frame reply delay. */
-int L9779::wd_feed_isr()
+ * are requested first and their replies are collected while the early
+ * answer bytes are being sent. The filler REQUHI read flushes the pipeline
+ * without side effects. */
+int L9779::wd_prepare_isr()
 {
 	int ret = 0;
 	uint16_t rx;
@@ -1116,8 +1161,7 @@ int L9779::wd_feed_isr()
 	static const uint16_t req_tx[] = {
 		L9779_WD_REQUHI,	/* status of the previous response */
 		L9779_WD_REQULO,	/* current question + error counter */
-		L9779_WD_REQUHI,	/* filler */
-		L9779_WD_REQUHI,	/* filler */
+		L9779_WD_REQUHI,	/* filler: flush the pipelined replies */
 	};
 
 	/* No spi_lld_start here: the bus configuration (CR1/CR2) persists from
@@ -1145,7 +1189,6 @@ int L9779::wd_feed_isr()
 
 	if (ret < 0) {
 		/* keep the current response delay but retry sooner than a full cycle */
-		wd_fail_cnt++;
 		return -1;
 	}
 
@@ -1157,11 +1200,11 @@ int L9779::wd_feed_isr()
 	 *
 	 * The correction step is 5 ms (just under half of the ~12.6 ms window):
 	 * a single miss jumps the phase from just-outside to near center without
-	 * overshooting to the other edge, so a lock loss costs 1-2 misses instead
-	 * of the 5-7 that the old 1 ms steps needed. Each miss sets EC > 4 and
-	 * fires the chip's WDA kill output (the blade drop), so the number of
-	 * CONSECUTIVE misses is what turns a momentary pulse into an engine
-	 * stall - converging fast is the whole game. */
+	 * overshooting to the other edge. With the shortened RESPTIME the
+	 * window drifts by only ~0.8 ms (CLK1 +-5% of 15.8 ms), so a lock loss
+	 * should be a rare event; when it happens it costs 1-2 misses, and each
+	 * miss sets EC > 4 and fires the chip's WDA kill output (the blade
+	 * drop) - converging fast is the whole game. */
 	if (requhi & 0x01) {
 		/* RESP_TO_EARLY: response before the window opened */
 		wd_timing_miss_cnt++;
@@ -1173,11 +1216,11 @@ int L9779::wd_feed_isr()
 		wd_last_miss_dir = 2;
 		wd_delay_ms -= 5;
 	}
-	/* keep the delay in a sane range: 60..150 ms */
-	if (wd_delay_ms < 60)
-		wd_delay_ms = 60;
-	if (wd_delay_ms > 150)
-		wd_delay_ms = 150;
+	/* keep the period inside the answer window [response_time, response_time+window] */
+	if (wd_delay_ms < WDA_DELAY_MIN_MS)
+		wd_delay_ms = WDA_DELAY_MIN_MS;
+	if (wd_delay_ms > WDA_DELAY_MAX_MS)
+		wd_delay_ms = WDA_DELAY_MAX_MS;
 
 	wd_last_req = requlo & 0x0f;
 	wd_last_ec  = (requlo >> 4) & 0x07;
@@ -1203,45 +1246,84 @@ int L9779::wd_feed_isr()
 		wd_latch_cnt = 0;
 	}
 
-	/* write the expected 32-bit response: RESP_BYTE3..0 via WD_ANSW */
+	/* send the early answer bytes: RESP_BYTE3, RESP_BYTE2, RESP_BYTE1 (the
+	 * datasheet allows them before the window opens). RESP_BYTE0 goes out
+	 * in the separate timing-critical BYTE0 event. */
 	const uint8_t *resp = wd_resp_table[wd_last_req];
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 3; i++) {
 		ret = spi_frame_isr(L9779_WD_ANSW(resp[i]), NULL);
 		if (ret < 0)
 			break;
 	}
+
+	return ret;
+}
+
+/* The timing-critical half: write RESP_BYTE0 so its END lands in the
+ * window. A single frame - the executor is blocked for ~20 us. */
+int L9779::wd_byte0_isr()
+{
+	const uint8_t *resp = wd_resp_table[wd_last_req];
+	return spi_frame_isr(L9779_WD_ANSW(resp[3]), NULL);
+}
+
+/* Executor callback (TIM5 ISR), prepare phase: run the ISR-safe reads and
+ * early bytes, then arm the BYTE0 event. */
+void L9779::wdPrepareFromExecutor()
+{
+	/* Never run while the thread owns an SPI batch: spiStart() briefly clears
+	 * SPE, and spi_lld_polled_exchange() then spins on RXNE forever inside this
+	 * kernel-priority ISR (board bricked right after boot - no fuel pump, no
+	 * console). This phase has ~15 ms of slack, so deferring is harmless. */
+	if (spi_busy) {
+		wd_defer_cnt++;
+		engine->scheduler.schedule("l9779wda", &wd_sched_prep,
+			getTimeNowNt() + MS2NT(1),
+			action_s::make<l9779WdaPrepareExec, L9779*>(this));
+		return;
+	}
+
+	int ret = wd_prepare_isr();
+	if (ret < 0) {
+		wd_fail_cnt++;
+		/* SPI-level failure: retry the whole prepare soon (the BYTE0 is
+		 * skipped this cycle - the window expires unanswered, one miss). */
+		engine->scheduler.schedule("l9779wda", &wd_sched_prep,
+			getTimeNowNt() + MS2NT(10),
+			action_s::make<l9779WdaPrepareExec, L9779*>(this));
+		return;
+	}
+
+	/* BYTE0 lands at the anchored time (this prepare's scheduled time + the
+	 * lead) - the critical byte's timing does NOT follow the prepare's
+	 * execution jitter. */
+	engine->scheduler.schedule("l9779wda", &wd_sched_b0,
+		getTimeNowNt() + MS2NT(WDA_BYTE0_LEAD_MS),
+		action_s::make<l9779WdaByte0Exec, L9779*>(this));
+}
+
+/* Executor callback (TIM5 ISR), BYTE0 phase: the single critical frame,
+ * then arm the next prepare so BYTE0-to-BYTE0 stays at wd_delay_ms. */
+void L9779::wdByte0FromExecutor()
+{
+	if (spi_busy) {
+		/* The window is 12.6 ms wide - a sub-ms deferral can not miss it. */
+		wd_defer_cnt++;
+		engine->scheduler.schedule("l9779wda", &wd_sched_b0,
+			getTimeNowNt() + MS2NT(1),
+			action_s::make<l9779WdaByte0Exec, L9779*>(this));
+		return;
+	}
+
+	int ret = wd_byte0_isr();
 	if (ret == 0)
 		wd_ok_cnt++;
 	else
 		wd_fail_cnt++;
 
-	return ret;
-}
-
-/* Executor callback (TIM5 ISR): run the ISR-safe feed, then re-arm the
- * next one. On success the monitoring cycle restarts at the end of the
- * RESP_BYTE0 write - aim for the middle of the response window. */
-void L9779::wdFeedFromExecutor()
-{
-	/* Never run while the thread owns an SPI batch: spiStart() briefly clears
-	 * SPE, and spi_lld_polled_exchange() then spins on RXNE forever inside this
-	 * kernel-priority ISR (board bricked right after boot - no fuel pump, no
-	 * console). Defer a couple of ms - the answer window is ~12.6 ms wide, so
-	 * a 2 ms deferral can not miss it. */
-	if (spi_busy) {
-		wd_defer_cnt++;
-		engine->scheduler.schedule("l9779wda", &wd_sched,
-			getTimeNowNt() + MS2NT(2),
-			action_s::make<l9779WdaFeedExec, L9779*>(this));
-		return;
-	}
-
-	int ret = wd_feed_isr();
-
-	efitick_t nextNt = getTimeNowNt() + MS2NT(ret < 0 ? 20 : wd_delay_ms);
-
-	engine->scheduler.schedule("l9779wda", &wd_sched, nextNt,
-		action_s::make<l9779WdaFeedExec, L9779*>(this));
+	engine->scheduler.schedule("l9779wda", &wd_sched_prep,
+		getTimeNowNt() + MS2NT(wd_delay_ms - WDA_BYTE0_LEAD_MS),
+		action_s::make<l9779WdaPrepareExec, L9779*>(this));
 }
 
 /*==========================================================================*/
@@ -1556,6 +1638,16 @@ int L9779::chip_init()
 	if (ret)
 		return ret;
 
+	/* Shorten the WDA response time (CONFIG_REG9, address 0x07): see the
+	 * WDA_RESPTIME comment - the +-5% CLK1 tolerance then moves the answer
+	 * window by ~0.8 ms instead of ~5 ms, making the feed drift-proof. The
+	 * write costs one EC increment (EC 6->7, recovered by ~3 correct
+	 * answers before the fuel pump primes) and starts a fresh monitoring
+	 * cycle, which anchors the first window ~15.8 ms after this write. */
+	ret = spi_rw(MSG_W(0x07, WDA_RESPTIME), NULL);
+	if (ret)
+		return ret;
+
 	/* Enable the flying-wheel interface in fully adaptive mode before the
 	 * engine can run: the reset defaults let VR noise storms through. */
 	ret = vrs_configure();
@@ -1621,21 +1713,12 @@ int L9779::init()
 		efiPrintf(DRIVER_NAME " IDENT read failed: SPI link problem?");
 	}
 
-	/* WDA watchdog: with the default RESPTIME (0x3f) the response time is
-	 * ~99 ms and the fixed answer window is ~12.6 ms. The feed is kicked
-	 * by the driver thread after chip_init and then runs on the TIM5
-	 * executor; the delay is adapted from REQUHI flags.
-	 *
-	 * NOTE: the chip's internal oscillator makes the window position vary
-	 * between boots (measured 115 ms on the 16:21 boot, >115 on the 16:31
-	 * boot), so a fixed start value can miss on the first answers. Starting
-	 * from 105 (just after the earliest window edge) lets the 5 ms
-	 * adaptation walk into the window; the first answers land EARLY and
-	 * miss, but the first answer right after START is accepted, so those
-	 * misses hit EC <= 6 and recover. A first-answer miss at EC=6 would
-	 * latch EC=7 and brick the outputs - that latch is healed by the
-	 * wd_latch_cnt logic in wd_feed_isr. */
-	wd_delay_ms = 105;
+	/* WDA watchdog: the response time is shortened via RESPTIME=10 (see the
+	 * WDA_RESPTIME comment at the top): response time 15.8 ms, fixed answer
+	 * window 12.6 ms, cycle 28.4 ms. The feed is kicked by the driver thread
+	 * after chip_init and then runs on the TIM5 executor as a prepare/BYTE0
+	 * pair; the period is adapted from REQUHI flags. */
+	wd_delay_ms = WDA_DELAY_INIT_MS;
 	wd_running = false;
 	spi_busy = false;
 	spi_configured = false;
