@@ -1598,8 +1598,15 @@ int L9779::init()
 	/* WDA watchdog: with the default RESPTIME (0x3f) the response time is
 	 * ~99 ms and the fixed answer window is ~12.6 ms. The feed is kicked
 	 * by the driver thread after chip_init and then runs on the TIM5
-	 * executor; delay will be adapted from REQUHI flags. */
-	wd_delay_ms = 105;
+	 * executor; the delay is adapted from REQUHI flags.
+	 *
+	 * 115 ms is the MEASURED window-center delay on m74_9 (16:21:41 log:
+	 * starting from 105 the first answers landed BEFORE the window, the
+	 * loop stepped 5 ms per miss and locked at delay=115 with zero further
+	 * misses over 206 answers). Starting locked avoids the boot-convergence
+	 * misses entirely - each such miss sets EC > 4 and fires a WDA kill
+	 * pulse (kills=2 observed: the second pulse hit a running engine). */
+	wd_delay_ms = 115;
 	wd_running = false;
 	spi_busy = false;
 	spi_configured = false;
