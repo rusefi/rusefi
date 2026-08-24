@@ -50,4 +50,5 @@ int l9779_add(brain_pin_e base, unsigned int index, const l9779_config *cfg);
  * dia10 returns the cached DIA_REG10 byte (CRK_RST=0x20, V3V3_UV=0x04,
  * OV_RST=0x01, OUT_DIS=0x02, ...) - the chip's own power-event flags.
  * Returns false when no L9779 chip is registered on this board. */
-bool l9779_getWdaCounters(uint8_t *ec, bool *wda_int, int *ok, int *fail, int *timing_miss, uint8_t *dia10);
+bool l9779_getWdaCounters(uint8_t *ec, bool *wda_int, int *ok, int *fail, int *timing_miss, uint8_t *dia10,
+		int *delay_ms, int *defer_cnt, int *kill_cnt);
