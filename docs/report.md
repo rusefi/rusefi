@@ -6991,3 +6991,39 @@ Fix:
 - The WDA time base now never flips mid-run.
 
 Validation: compile_m74_9.sh BUILD SUCCESSFUL, bundle rebuilt.
+
+## 2026-08-24 - m74_9: WDA RESP_CNT desync fixed - single atomic answer burst (19:09 session)
+
+After the time-base fix the engine still died: `ec=7 wda_int=1 ok=950 fail=0
+miss=2 delay=22ms defer=14 kills=2 dia10=0x50`. Hardware is fine (stock
+firmware runs the same chip perfectly), so this was ours. The counters were
+the clue: 950 BYTE0 frames sent, only 2 timing misses, yet EC pinned at 7
+with WDA_INT latched.
+
+Root cause (datasheet 6.15 "Response comparison"): the chip tracks the
+response progress in the 2-bit RESP_CNT counter ('11' waiting BYTE3 ... '00'
+waiting BYTE0) and compares EVERY received byte against the expected value of
+the CURRENT position (the expected bytes depend on RESP_CNT via the
+RESP_SOLL7..0 formulas). The two-phase feed (BYTE3..1 in a "prepare" event,
+BYTE0 5 ms later) left a gap in which a cycle could end unanswered - a
+deferred/failed BYTE0, or one landing after the window end - and the window
+end resets RESP_CNT to '11'. The late BYTE0 is then compared AS IF IT WERE
+BYTE3: wrong value, and every subsequent byte stays off by one position
+forever. Each cycle then completes with a wrong value: the EC increments
+every cycle (invisible - only timing flags are counted, `miss=2`), pins at 7
+and the WDA kills the blade until the SW_RST latch-heal fires (that is why
+`kills` climbed slowly and the warnings showed ec=7 across hundreds of
+"ok" answers). An out-of-order byte can never re-align because RESP_CNT only
+resets at a sequencer run, and the sequencer runs on the WRONG byte position.
+
+Fix: the feed is now ONE executor callback per cycle doing pipelined
+REQUHI/REQULO reads + adaptation + the whole RESP_BYTE3..0 as a single
+atomic 4-frame burst, positioned so BYTE0's END lands at the window center
+(schedule = previous BYTE0 end + wd_delay_ms - WDA_BURST_LEAD_US=80us).
+A perturbation now costs at most one missed cycle: RESP_CNT resets at every
+sequencer run and the contiguous burst re-aligns. First kick moved +5 ms ->
++17 ms so the first BYTE0 lands inside the first window anchored by the
+RESPTIME write (no boot miss). The prepare/BYTE0 split, wd_prepare_isr/
+wd_byte0_isr/wdPrepareFromExecutor/wdByte0FromExecutor are gone.
+
+Validation: compile_m74_9.sh BUILD SUCCESSFUL, bundle rebuilt.
