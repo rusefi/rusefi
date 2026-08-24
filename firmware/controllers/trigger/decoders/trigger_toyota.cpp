@@ -94,7 +94,6 @@ void initializeUzCam(TriggerWaveform *s) {
 
 void initialize_3GRfSE_CAM(TriggerWaveform* s) {
     s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Fall);
-
     s->shapeWithoutTdc = true;
 
     // Fall-to-fall: 145°, 65°, 150°
