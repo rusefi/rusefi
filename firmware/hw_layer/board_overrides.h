@@ -241,6 +241,24 @@ extern std::optional<setup_custom_bool_type> custom_board_syncGapHardening;
 // path. m74_9 sets true; default false preserves the strict behavior.
 extern std::optional<setup_custom_bool_type> custom_board_syncEarlyGapWhileCranking;
 
+// When set and returning true, a ratio-validated sync candidate with a 1-2
+// event count DEFICIT is accepted as a valid sync regardless of the cranking
+// band (the custom_board_syncEarlyGapWhileCranking acceptance above is
+// rpm-limited to 4 * crankingRpm). This is for analog VR conditioners that
+// intermittently swallow a single tooth mid-revolution at RUNNING rpm: the
+// m74_9 L9779's auto-adaptive hysteresis/filter eats the output edge when the
+// squared signal's high level falls below Tfilter (datasheet 6.14: 'if
+// int_vrs high level lasts less than Tfilter out_vrs is not set to high') -
+// the 2026-08-24 20:43 drive showed 837/837 C9003 events with the gap ratio
+// windows passing ('Y') and the count short by exactly one (57/58), the
+// signature of a single lost decode edge. The deficit direction proves LOST
+// (not noise-inserted) events, the ratio windows and the position/elapsed-time
+// gates already passed, and the phase shifts only 6-12 degrees for the rest
+// of the revolution before the gap re-anchors. The board decides the rpm band
+// in its lambda (m74_9: cranking..7000). Default false: other boards keep the
+// strict C9003 desync at running rpm.
+extern std::optional<setup_custom_bool_type> custom_board_syncAcceptToothLoss;
+
 // When set and returning a positive angle (degrees), the cam/VVT position is
 // cross-checked on every cam event: a fixed cam must report the same phase
 // every cam revolution. A crank-sync basis error (false sync) shifts the

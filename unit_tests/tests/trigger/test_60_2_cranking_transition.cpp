@@ -66,6 +66,20 @@ struct SyncEarlyGapWhileCrankingScope {
 	}
 };
 
+// Same pattern for the RUNNING-band tooth-loss tolerance (m74_9 opt-in): the
+// L9779 VR conditioner intermittently eats one decode edge mid-revolution at
+// running rpm, leaving the decoder 1-2 teeth short at the real gap - accept
+// the deficit as a valid sync instead of C9003-desyncing.
+struct SyncAcceptToothLossScope {
+	SyncAcceptToothLossScope() {
+		custom_board_syncAcceptToothLoss = []() { return true; };
+	}
+
+	~SyncAcceptToothLossScope() {
+		custom_board_syncAcceptToothLoss = std::nullopt;
+	}
+};
+
 /**
  * Fire one full 60-2 revolution: 58 real teeth, then the missing-teeth gap.
  * The gap ratio of THIS call is checked at the NEXT call's first rise.
@@ -657,6 +671,134 @@ TEST(trigger, crankingTransition60_2ThreeMissingEventsStillDesync) {
 
 	// rev5's first rise re-synchronizes cleanly
 	fire60_2Revolution(eth, steadySlotMs, 3.0f);
+
+	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized()) << "re-synchronized";
+}
+
+/**
+ * The m74_9 RUNNING-band failure (2026-08-24 20:43 drive): the L9779 VR
+ * conditioner eats ONE decode edge mid-revolution at 1763-4005 rpm (datasheet
+ * 6.14: the adaptive filter suppresses the output edge when the squared
+ * signal high level falls below Tfilter). The real gap arrives at count 57
+ * with the ratio windows PASSING - 837/837 'newerr' lines with 'Y' - and the
+ * decoder C9003-desyncs. With the running-band tooth-loss tolerance
+ * (custom_board_syncAcceptToothLoss) the deficit is accepted as a valid sync:
+ * the ratio/position/elapsed-time gates already passed, the deficit direction
+ * proves LOST (not noise-inserted) events, and the phase shifts 6-12 degrees
+ * only for the already-elapsed part of the revolution before the gap
+ * re-anchors. Desyncing instead cuts fuel/spark, flaps rpm and opens the
+ * storage gate into an MFS-write storm - strictly worse.
+ */
+TEST(trigger, crankingTransition60_2ToothLossAcceptedWhileRunning) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	SyncAcceptToothLossScope acceptLoss;
+	// the user's m74_9 runs the 60-2 wheel on the crank
+	setCrankOperationMode();
+	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
+
+	// 2500 rpm steady revolutions to synchronize
+	static constexpr float runningSlotMs = 0.4f;
+	fire60_2Revolution(eth, runningSlotMs, 3.0f);
+	fire60_2Revolution(eth, runningSlotMs, 3.0f);
+
+	ASSERT_GT(Sensor::getOrZero(SensorType::Rpm), engineConfiguration->cranking.rpm) << "running rpm above the cranking band";
+	// the first sync (rev2's first rise) does not increment the counter:
+	// onShaftSynchronization counts only wasSynchronized=true syncs
+	ASSERT_EQ(0, engine->triggerCentral.triggerState.getSynchronizationCounter()) << "sync counter after the first sync";
+
+	// 2 events lost at running rpm (the merged-tooth harness; on the car the
+	// chip eats a single edge - the acceptance covers both)
+	fire60_2RevolutionWithLostEvents(eth, runningSlotMs, /*missing*/2, /*gapRatio*/3.0f);
+	fire60_2Revolution(eth, runningSlotMs, 3.0f);
+
+	// the merged tooth trips the bad-tooth-timing warning at running rpm,
+	// but the C9003 desync must be gone
+	bool hasNotEnoughTeeth = false;
+	for (size_t i = 0; i < getRecentWarnings()->getCount(); i++) {
+		if (getRecentWarnings()->get(i).Code == ObdCode::CUSTOM_PRIMARY_NOT_ENOUGH_TEETH) {
+			hasNotEnoughTeeth = true;
+		}
+	}
+	ASSERT_FALSE(hasNotEnoughTeeth) << "no C9003 with the tooth-loss tolerance at running rpm";
+	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized()) << "still synchronized through the lost tooth";
+	ASSERT_EQ(2, engine->triggerCentral.triggerState.getSynchronizationCounter()) << "sync counter through the accepted tooth loss";
+
+	// one more steady revolution: everything continues normally
+	fire60_2Revolution(eth, runningSlotMs, 3.0f);
+
+	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized());
+	ASSERT_EQ(3, engine->triggerCentral.triggerState.getSynchronizationCounter()) << "sync counter after the accepted tooth loss";
+}
+
+/**
+ * Without the running-band tolerance the classic C9003 desync is preserved at
+ * running rpm even when the cranking-band acceptance is enabled (it is
+ * rpm-limited to 4 * crankingRpm).
+ */
+TEST(trigger, crankingTransition60_2ToothLossDesyncsWhenRunningWithoutTolerance) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	SyncEarlyGapWhileCrankingScope earlyGap;
+	SyncGapHardeningScope hardening;
+	// the user's m74_9 runs the 60-2 wheel on the crank
+	setCrankOperationMode();
+	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
+
+	// 2500 rpm steady revolutions to synchronize
+	static constexpr float runningSlotMs = 0.4f;
+	fire60_2Revolution(eth, runningSlotMs, 3.0f);
+	fire60_2Revolution(eth, runningSlotMs, 3.0f);
+
+	// 2 events lost at running speed: no tolerance active -> C9003 + desync
+	fire60_2RevolutionWithLostEvents(eth, runningSlotMs, /*missing*/2, /*gapRatio*/3.0f);
+	fire60_2Revolution(eth, runningSlotMs, 3.0f);
+
+	bool hasNotEnoughTeeth = false;
+	for (size_t i = 0; i < getRecentWarnings()->getCount(); i++) {
+		if (getRecentWarnings()->get(i).Code == ObdCode::CUSTOM_PRIMARY_NOT_ENOUGH_TEETH) {
+			hasNotEnoughTeeth = true;
+		}
+	}
+	ASSERT_TRUE(hasNotEnoughTeeth) << "C9003 without the running tolerance";
+	ASSERT_FALSE(engine->triggerCentral.triggerState.getShaftSynchronized()) << "desynced without the running tolerance";
+
+	// the next steady revolution re-synchronizes cleanly
+	fire60_2Revolution(eth, runningSlotMs, 3.0f);
+
+	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized()) << "re-synchronized";
+}
+
+/**
+ * A deficit of 3+ events stays outside the tolerance at running rpm too: the
+ * acceptance must not mask a trigger input losing whole chunks of teeth.
+ */
+TEST(trigger, crankingTransition60_2ThreeMissingEventsStillDesyncWhenRunning) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	SyncAcceptToothLossScope acceptLoss;
+	// the user's m74_9 runs the 60-2 wheel on the crank
+	setCrankOperationMode();
+	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
+
+	// 2500 rpm steady revolutions to synchronize
+	static constexpr float runningSlotMs = 0.4f;
+	fire60_2Revolution(eth, runningSlotMs, 3.0f);
+	fire60_2Revolution(eth, runningSlotMs, 3.0f);
+
+	// 3 events lost: count 55 -> the position gate skips the candidate, the
+	// index overruns at count 59 -> C9002 + desync, tolerance or not
+	fire60_2RevolutionWithLostEvents(eth, runningSlotMs, /*missing*/3, /*gapRatio*/3.0f);
+	fire60_2Revolution(eth, runningSlotMs, 3.0f);
+
+	bool hasTooManyTeeth = false;
+	for (size_t i = 0; i < getRecentWarnings()->getCount(); i++) {
+		if (getRecentWarnings()->get(i).Code == ObdCode::CUSTOM_PRIMARY_TOO_MANY_TEETH) {
+			hasTooManyTeeth = true;
+		}
+	}
+	ASSERT_TRUE(hasTooManyTeeth) << "C9002 for a 3-event deficit at running rpm";
+	ASSERT_FALSE(engine->triggerCentral.triggerState.getShaftSynchronized()) << "desynced";
+
+	// the next steady revolution re-synchronizes cleanly
+	fire60_2Revolution(eth, runningSlotMs, 3.0f);
 
 	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized()) << "re-synchronized";
 }

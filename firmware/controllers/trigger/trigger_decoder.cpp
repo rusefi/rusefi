@@ -804,12 +804,37 @@ TRIGGER_RAM_CODE expected<TriggerDecodeResult> TriggerDecoderBase::decodeTrigger
 					// the conditioner swallows the 1-2 teeth this acceptance exists for.
 					&& Sensor::getOrZero(SensorType::Rpm) < 4 * engineConfiguration->cranking.rpm;
 
-				if (earlyGapAccepted) {
+				// Running-band tooth-loss tolerance (board opt-in via
+				// custom_board_syncAcceptToothLoss, m74_9): the same deficit
+				// signature accepted above the cranking band. The L9779 VR
+				// conditioner intermittently eats ONE decode edge mid-revolution
+				// at running rpm (datasheet 6.14: the adaptive filter/hysteresis
+				// suppresses the output edge when the squared signal high level
+				// falls below Tfilter) - the 2026-08-24 20:43 drive: 19 C9003
+				// clusters at 1763-4005 rpm, 837/837 'newerr' lines with the gap
+				// ratio windows PASSING ('Y') and the count short by exactly one
+				// (57/58). Desyncing there cuts fuel/spark for a revolution, flaps
+				// the rpm sensor, and opens the storage gate right into an MFS
+				// write storm - far worse than the 6-12 degree phase offset of
+				// accepting the real gap and re-anchoring. Same guards as the
+				// cranking acceptance: deficit-only bound (noise inserts, never
+				// deletes), ratio/position/elapsed-time gates already passed. The
+				// board's lambda picks the rpm band (m74_9: cranking..7000); the
+				// decoder applies no rpm ceiling itself.
+				bool runningToothLossAccepted =
+					get_board_override_result(custom_board_syncAcceptToothLoss, false)
+					&& triggerCountersError <= 0 && triggerCountersError >= -2
+#if EFI_UNIT_TEST
+					&& engineConfiguration != nullptr
+#endif
+					&& Sensor::getOrZero(SensorType::Rpm) >= engineConfiguration->cranking.rpm;
+
+				if (earlyGapAccepted || runningToothLossAccepted) {
 					// keep the synchronization, count the revolution as validated
 					lastSyncWasClean = true;
 					setShaftSynchronized(true);
-					printGaps("earlygap", triggerConfiguration, triggerShape);
-					boardTriggerSyncEvent('A', triggerCountersError, triggerSyncGapRatio,
+					printGaps(runningToothLossAccepted ? "toothloss" : "earlygap", triggerConfiguration, triggerShape);
+					boardTriggerSyncEvent(runningToothLossAccepted ? 'T' : 'A', triggerCountersError, triggerSyncGapRatio,
 						triggerShape.gapTrackingLength >= 2 ? 1.0f * toothDurations[1] / toothDurations[2] : 0.0f);
 				} else {
 					setTriggerErrorState();

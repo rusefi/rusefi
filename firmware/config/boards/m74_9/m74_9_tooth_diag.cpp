@@ -356,6 +356,7 @@ struct SyncTraceEvent {
 	uint32_t ntMs;        // NT clock ms (getTimeNowMs, TIM5 4 MHz) at the SAME event - printed so the two
 	                      // timebases can be compared inside one event (equal deltas = both run at the right rate)
 	char kind;            // 'S' validated sync, 'R' first sync/re-sync, 'E' count-error desync, 'A' early-gap acceptance
+	                      // (cranking), 'T' tooth-loss acceptance (running band, L9779 eats an edge)
 	int8_t countersError; // eventCount - expectedEventCount at the sync (0 for S/R)
 	float gap0;
 	float gap1;

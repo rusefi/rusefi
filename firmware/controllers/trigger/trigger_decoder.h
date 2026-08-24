@@ -35,7 +35,9 @@ __attribute__((noinline)) float triggerGetToothProfileFactor(int toothIndex);
  *   kind: 'S' = validated (clean-count) sync, 'R' = first sync / re-sync,
  *         'E' = count-error desync (the C9003 path),
  *         'A' = early-gap acceptance (count deficit of 1-2, cranking band,
- *              board opt-in via custom_board_syncEarlyGapWhileCranking).
+ *              board opt-in via custom_board_syncEarlyGapWhileCranking),
+ *         'T' = tooth-loss acceptance (count deficit of 1-2, running band,
+ *              board opt-in via custom_board_syncAcceptToothLoss).
  * countersError = eventCount - expectedEventCount at the sync (0 for S/R).
  * gap0/gap1 are the decoder's ratio windows values (0 if not tracked).
  * The weak default lives in trigger_board_hooks.cpp (not in

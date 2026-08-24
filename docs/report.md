@@ -7200,3 +7200,51 @@ C9003 (rawtrg = the EXTI edges BEFORE the noise filter; if the tooth is
 missing there it is analog, if present but dropped it is the decoder).
 
 Validation: compile_m74_9.sh BUILD SUCCESSFUL, bundle rebuilt.
+
+## 2026-08-24 - m74_9: L9779 VRS filter conditions + running-band tooth-loss tolerance
+
+Goal: make rusEFI fully understand the L9779 VRS output. The 20:43-21:14 drive
+showed 19 C9003 clusters at 1763-4005 rpm (avg 2220), 837/837 'newerr' lines
+with the gap ratio windows PASSING ('Y') and the count short by exactly one
+(57/58) - the signature of a single lost decode edge, not noise. The user
+confirmed the noiseless filter was on for only ~5 min of the session, so the
+tooth loss is in the analog domain (the chip), not the software filter.
+
+L9779 VRS time-filter conditions (datasheet 6.14.2), the key facts:
+
+- Rising edge of int_vrs (= OUT_VRS rise = PF8 fall = the rusEFI decode edge):
+  if the high level lasts < Tfilter the edge is SUPPRESSED entirely; otherwise
+  it appears DELAYED by Tfilter. This is the only edge the chip can eat.
+- Falling edge: not delayed; masked for Tfilter after the edge.
+- Tfilter(n+1) = 1/32*Tn (one period behind), clamped 4-200 us, reset to
+  200 us on every re-enable of the flying-wheel function (every vrs_configure,
+  i.e. boot and every OUT_DIS heal). The 'if int_vrs > Tfilter(n)' guard only
+  blocks a ~32x speedup, so a heal eats at most 1-2 teeth before re-adapting.
+- Measured on the car: the 46/54 edge duty = Tfilter + Td_off (~15 us) delay
+  on the decode edge; the post-gap edge arrives ~0.5 pitch early (gap reads
+  2.4-2.5 instead of 3.0) - the auto-hysteresis re-quantizing on the missing
+  teeth' small peak. Steady-state eat margin is ~15x (t_high 0.46*T vs
+  Tfilter T/32), so a real tooth is eaten only when the auto-hysteresis
+  momentarily reaches the local amplitude near a peak-detector quantization
+  boundary - the 1763-4005 rpm band.
+
+Fix (decoder tolerates the chip's documented behavior; no VRS re-tuning):
+
+| File | Change |
+| --- | --- |
+| firmware/hw_layer/board_overrides.h | new hook custom_board_syncAcceptToothLoss |
+| firmware/hw_layer/hardware.cpp | hook definition |
+| firmware/controllers/trigger/trigger_decoder.cpp | running-band acceptance: a ratio-validated gap candidate with a 1-2 event count DEFICIT is a validated sync (kind 'T' via boardTriggerSyncEvent, 'toothloss' printGaps). Same guards as the cranking early-gap path: deficit-only bound (noise inserts, never deletes), ratio/position/elapsed-time gates already passed. 3+ deficit keeps the strict C9002 path. |
+| firmware/controllers/trigger/trigger_decoder.h | 'T' kind documented |
+| firmware/config/boards/m74_9/board_configuration.cpp | hook enabled: cranking..7000 rpm, off for directSelfStimulation (bench stays strict) |
+| firmware/config/boards/m74_9/m74_9_tooth_diag.cpp | 'T' kind documented in the synctrace ring comment |
+| unit_tests/tests/trigger/test_60_2_cranking_transition.cpp | 3 new tests: accepted while running, desync without tolerance, 3-missing still desyncs |
+
+Validation: unit tests 1161/1161 pass (new tests included), compile_m74_9.sh
+BUILD SUCCESSFUL.
+
+Still open: the definitive discriminator for the eat position (mid-rev vs
+gap-adjacent tooth) is a 'rawtrg' capture at ~3000 rpm right at a C9003. The
+tolerance covers both, but the capture would confirm the quantization-boundary
+mechanism. Follow-up if a heal storm reappears: vrs_configure resets Tfilter
+to 200 us, eats 1-2 teeth above ~2375 rpm, absorbed by the same tolerance.
