@@ -390,12 +390,13 @@ void boardTriggerSyncEvent(char kind, int countersError, float gap0, float gap1)
 void m74_9SyncTrace() {
 	size_t valid = syncTraceTotal < SyncTraceRingSize ? syncTraceTotal : SyncTraceRingSize;
 
-	efiPrintf("synctrace: %d sync events (newest last), drops: debounce=%u noiseFilter=%u ignoredTooth=%u ordering=%u",
+	efiPrintf("synctrace: %d sync events (newest last), drops: debounce=%u noiseFilter=%u ignoredTooth=%u ordering=%u anchor=%.2f deg",
 		(int)valid,
 		(unsigned)getTriggerCentral()->triggerDebounceDropCount,
 		(unsigned)getTriggerCentral()->triggerNoiseFilterDropCount,
 		(unsigned)getTriggerCentral()->triggerIgnoredToothCount,
-		(unsigned)getTriggerCentral()->triggerState.orderingErrorCounter);
+		(unsigned)getTriggerCentral()->triggerState.orderingErrorCounter,
+		(double)getTriggerCentral()->gapAnchorCorrectionDeg);
 
 	for (size_t i = 0; i < valid; i++) {
 		const SyncTraceEvent& e = syncTraceRing[(syncTraceHead + SyncTraceRingSize - valid + i) % SyncTraceRingSize];
