@@ -6880,3 +6880,42 @@ Validation: ./gradlew :ui:compileJava :ecu_io:compileJava -> OK; ./gradlew :ui:t
 Still pending: firmware-side CRC-compare skip in writeToFlashNowImpl() so that any
 burn (console, TS, wizard) costs nothing when the config is byte-identical - the
 strongest remaining guard against the 168 ms / 2.3 s MFS stall class.
+
+## 2026-08-24 - m74_9: WDA-executor brick fixed (SPI preemption deadlock)
+
+Symptom after the WDA-executor bundle (260824): the block does not come online at
+all - fuel pump never switches on, the console cannot connect.
+
+Root cause: the WDA feed moved into the TIM5 executor ISR (kernel priority 3), and
+the thread-side SPI batches were assumed to be protected by
+chibios_rt::CriticalSectionLocker. That assumption is WRONG: chSysLock /
+CriticalSectionLocker do NOT mask kernel-priority IRQs (ARMv7-M BASEPRI is set to
+CORTEX_BASEPRI_KERNEL, which leaves the kernel IRQs enabled). So the executor CAN
+preempt the driver thread mid-batch. The batch runs spiStart() on every call, and
+spi_lld_start() re-programs CR1 by clearing SPE first:
+
+  CR1 &= ~SPE; CR1 = cfg; CR2 = cfg; CR1 |= SPE;   (hal_spi_lld.c)
+
+If the executor lands in that SPE=0 window, its spi_lld_polled_exchange()
+busy-waits on RXNE:
+
+  DR = frame; while ((SR & RXNE) == 0);            (hal_spi_lld.c)
+
+With the peripheral disabled RXNE never sets -> the TIM5 kernel ISR spins forever
+-> the whole system is dead (no fuel pump drive, no USB CDC/console, watchdog
+thread can no longer run). The collision is a matter of seconds at boot: the diag
+refresh re-runs spiStart every ~7 ms and the feed fires every ~105 ms.
+
+Fix (firmware/hw_layer/drivers/gpio/l9779.cpp):
+- volatile bool spi_busy: set for the whole thread-side batch in spi_rw() and
+  spi_rw_array(); the executor feed (wdFeedFromExecutor) checks it and defers
+  2 ms instead of exchanging. The answer window is ~12.6 ms, so a 2 ms deferral
+  can not miss it.
+- spiStart() is now called only ONCE (spi_configured guard): the CR1/CR2 config
+  persists, the bus is dedicated, and re-running it only re-opens the SPE=0
+  window. Belt-and-suspenders on top of the flag.
+- Removed the now-misleading CriticalSectionLocker wrappers around the SPI
+  batches and corrected the comments (the real serialization is spi_busy).
+  wake_driver()/writePad() keep their lockers - those protect non-SPI state.
+
+Validation: compile_m74_9.sh -> BUILD SUCCESSFUL.
