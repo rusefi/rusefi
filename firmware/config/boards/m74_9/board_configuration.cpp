@@ -817,18 +817,52 @@ void setup_custom_board_overrides() {
 	// power cycle recovers - throttle stayed driven). Deferred writes are
 	// flushed by the storage manager once the engine stops; self-stimulation
 	// (bench) stays allowed.
+	// Storage writes must be deferred while the engine runs: the MFS lives on
+	// the AT32 internal flash (bank 2) and a sector erase stalls the whole CPU
+	// (no read-while-erase on this silicon). The periodic LTFT save hitting an
+	// MFS garbage collection froze the firmware for ~2.4 s mid-run and wedged
+	// the NT clock (14:39 'gap in time' flood, identical now= forever, only a
+	// power cycle recovers - throttle stayed driven). Deferred writes are
+	// flushed by the storage manager once the engine stops; self-stimulation
+	// (bench) stays allowed.
+	//
+	// STOPPED DEBOUNCED (2026-08-24): a trigger storm flaps the rpm sensor
+	// 0/300+ at ~1 kHz, and a single isStopped() poll admitted the deferred
+	// LTFT write right INTO the storm - the 17-38 ms stall then lost teeth
+	// and deepened it (the 20:43-21:05 drive: the ID-3 writes landed
+	// millisecond-exact on the C9003 clusters, e.g. 20:45:49.267). Require
+	// N consecutive stopped polls (~1 s at the storage manager's 100 ms
+	// cadence) before the flash is allowed.
 	custom_board_allowFlashNow = []() {
-		return engine->triggerCentral.directSelfStimulation ||
-			engine->rpmCalculator.isStopped();
+		if (engine->triggerCentral.directSelfStimulation) {
+			return true;
+		}
+
+		static int stoppedPolls = 0;
+		if (engine->rpmCalculator.isStopped()) {
+			stoppedPolls++;
+		} else {
+			stoppedPolls = 0;
+		}
+
+		return stoppedPolls >= 10;
 	};
 	// TS burns are rejected while the engine runs, same rationale as the
-	// storage-deferral gate above: the settings page is already deferred by
-	// the storage manager, but the extra-page burns (secondary tables, lua)
-	// go straight to the flash from the TS thread and would stall the CPU
-	// mid-run. Bench self-stimulation stays allowed.
+	// storage-deferral gate above (the extra-page burns go straight to the
+	// flash from the TS thread) + the same stopped-debounce.
 	custom_board_allowTsBurn = []() {
-		return engine->triggerCentral.directSelfStimulation ||
-			engine->rpmCalculator.isStopped();
+		if (engine->triggerCentral.directSelfStimulation) {
+			return true;
+		}
+
+		static int stoppedPolls = 0;
+		if (engine->rpmCalculator.isStopped()) {
+			stoppedPolls++;
+		} else {
+			stoppedPolls = 0;
+		}
+
+		return stoppedPolls >= 10;
 	};
 	// VR input debounce: the trigger logs show noise edge bursts <50 us apart
 	// (comparator ringing / starter interference) that inflate the event count

@@ -7167,3 +7167,36 @@ Fixes:
   no timing flags, so the +-5 ms adaptation alone cannot leave the clamp edge.
 
 Validation: compile_m74_9.sh BUILD SUCCESSFUL, bundle rebuilt.
+
+## 2026-08-24 - m74_9: drive analysis (20:43-21:14) - MFS writes land on trigger storms; flash gate debounced
+
+Full drive log analyzed (efi_log_2026-08-24_20_43_06_592.log.0, 31 min):
+- WDA/blade: ZERO "TLE9201 outputs disabled" warnings the whole drive - the
+  watchdog category is CLOSED (ec=0 wda_int=0 miss=0 wrong=0 cntbad=0
+  delay=22ms reqhi=0xC0 at 20:47).
+- Remaining: repeating trigger clusters (C9003 57/58 + C9007 tooth#114 +11.9
+  + C9002 58/58 + C9009 skipped spark + C9353 coil overcharge), 19x C9003 /
+  17x C9002 / 32x C9009 over the drive, every 1-5 min, rpm-banded 2000-3400.
+
+Correlation found: the LTFT MFS writes (ID 3, 2048 bytes, 17-38 ms full-CPU
+stall on AT32 - no read-while-erase) land MILLISECOND-EXACT on the C9003
+clusters: 20:45:49.267, 20:49:33.142, 20:55:46.392, 20:56:22.989,
+21:04:40.674 (plus 2x full ID-1/2 burns of 168 ms each at 20:56:56 and
+20:59:54). The chain: a trigger storm flaps isStopped() true -> the single
+poll in custom_board_allowFlashNow admits the deferred write -> the 17-38 ms
+stall coalesces ~90 tooth edges (3000 rpm) -> teeth lost -> the storm
+deepens. The executor lockstats on the move confirm the stall class:
+maxLateUs=44143 (44 ms) on the WDA callback = exactly one such write.
+
+Fix: custom_board_allowFlashNow / custom_board_allowTsBurn now debounce the
+stopped condition - 10 consecutive stopped polls (~1 s at the storage
+manager's 100 ms cadence) before the flash is allowed. A storm flap can no
+longer admit a write.
+
+Still open (next step): the FIRST desync of each cluster (e.g. 20:43:33, no
+MFS write before it) - the VRS gap-region distortion at 2000-3400 rpm. To
+decide analog vs decoder-side: capture 'rawtrg' at ~3000 rpm right after a
+C9003 (rawtrg = the EXTI edges BEFORE the noise filter; if the tooth is
+missing there it is analog, if present but dropped it is the decoder).
+
+Validation: compile_m74_9.sh BUILD SUCCESSFUL, bundle rebuilt.
