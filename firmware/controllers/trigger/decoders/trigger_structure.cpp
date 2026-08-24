@@ -673,8 +673,8 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 
 	case trigger_type_e::TT_TOOTHED_WHEEL_36_2:
 		initializeSkippedToothTrigger(this, 36, 2, triggerOperationMode, SyncEdge::RiseOnly);
-		setTriggerSynchronizationGap3(/*gapIndex*/0, /*from*/2.7, 4);
-		setTriggerSynchronizationGap3(/*gapIndex*/1, /*from*/0.5, 2); // second gap is not required to synch on perfect signal but is needed to handle to reject cranking transition noise
+		setTriggerSynchronizationGap3(/*gapIndex*/0, /*from*/2.2, 4);
+		setTriggerSynchronizationGap3(/*gapIndex*/1, /*from*/0.35, 1.8); // second gap is not required to synch on perfect signal but is needed to handle to reject cranking transition noise
 		break;
 
 	case trigger_type_e::TT_60_2_WRONG_POLARITY:
