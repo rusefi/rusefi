@@ -7085,3 +7085,32 @@ the 19:49:03 DIA10=0x8F event was recovered in ~1 ms ("OUT_DIS heal: config
 re-applied ... OUT_DIS cleared") and the engine kept running.
 
 Validation: compile_m74_9.sh BUILD SUCCESSFUL, bundle rebuilt.
+
+## 2026-08-24 - m74_9: WDA read batch hardened (4 frames) + REQUHI instrumentation
+
+The pre-VRS build log (19:56) showed the WDA feed collapse WHILE DRIVING:
+fail 9 -> 816 and miss 10 -> 712 in ~20 s, delay clamped at 17 ms,
+ec=4 wda_int=1 (kill-active with a healthy EC - the chip's WDA_INT flaps as
+EC crosses 4 during the collapse). The user's read is right: this is a
+timing problem, and the errors accumulate/feed themselves.
+
+Root cause: the DO reply to a read request arrives one or TWO frames after
+the request (the init() IDENT probe sees the same). The feed's read batch
+had only THREE frames (REQUHI/REQULO/filler), so a 2-frame-delayed REQULO
+reply landed in the first answer write - the question was lost, the cycle
+failed (fail++), the window expired unanswered (miss++), and once a few
+cycles destabilize the phase walks and the collapse feeds itself: late
+answers keep the NO_RESP flag up, the delay adaptation clamps at 17 ms, and
+every window-end sequencer run + late response double-increments the EC
+(WDA_INT sticks on -> blade killed in motion).
+
+Fix:
+- the read batch is now FOUR frames (REQUHI/REQULO/REQUHI/REQUHI): the
+  REQULO reply is captured even with a 2-frame delay.
+- REQUHI instrumentation, exposed in the warning line and l9779 debug:
+  reqhi=0xNN (raw DIA_REG15), wrong= (W_RESP: value rejected), cntbad=
+  (RESP_CNT != 11 at read time: answer-stream desync). These increment the
+  EC WITHOUT setting the timing flags - they made the 19:09 'ec=7 miss=2'
+  session look healthy; next time the exact mechanism is visible in one line.
+
+Validation: compile_m74_9.sh BUILD SUCCESSFUL, bundle rebuilt.
