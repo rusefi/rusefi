@@ -30,4 +30,9 @@ public class DfuFlasherTest {
             "--dfuse-address", "0x08000000:mass-erase:force"
         ), DfuFlasher.getDfuUtilEraseCommand());
     }
+
+    @Test
+    public void explicitManualFirmwareDoesNotResolveConnectedTarget() {
+        assertEquals("custom.bin", DfuFlasher.resolveManualFirmwareFile("custom.bin", null));
+    }
 }

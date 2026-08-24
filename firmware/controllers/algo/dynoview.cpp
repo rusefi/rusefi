@@ -22,10 +22,10 @@ void DynoView::init()
 
     wheelOverallDiameterMm = (uint16_t)((float)config->dynoCarWheelDiaInch * 25.4f + (float)config->dynoCarWheelTireWidthMm * (float)config->dynoCarWheelAspectRatio * 0.01f * 2.0f);
 
-    saeVaporPressure = 6.1078f * pow(10.0f, (7.5f * (float)config->dynoSaeTemperatureC) / (237.3f + (float)config->dynoSaeTemperatureC)) * .02953f * ((float)config->dynoSaeRelativeHumidity / 100.0f);
+    saeVaporPressure = 6.1078f * powf(10.0f, (7.5f * (float)config->dynoSaeTemperatureC) / (237.3f + (float)config->dynoSaeTemperatureC)) * .02953f * ((float)config->dynoSaeRelativeHumidity / 100.0f);
     saeBaroMmhg = 29.23f * (config->dynoSaeBaro / 100.0f);
     saeBaroCorrectionFactor = 29.23f / (saeBaroMmhg - saeVaporPressure);
-    saeTempCorrectionFactor = pow((((float)config->dynoSaeTemperatureC + C_K_OFFSET) / 298.0f), 0.5f);
+    saeTempCorrectionFactor = sqrtf(((float)config->dynoSaeTemperatureC + C_K_OFFSET) / 298.0f);
     saeCorrectionFactor = 1.176f * (saeBaroCorrectionFactor * saeTempCorrectionFactor) - .176f;
 
     reset();

@@ -10,6 +10,7 @@ import com.rusefi.core.io.ConnectedEcuTarget;
 import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.FileUtil;
+import com.rusefi.core.OsUtil;
 import com.rusefi.core.net.PropertiesHolder;
 import com.rusefi.core.rusEFIVersion;
 import com.rusefi.core.ui.AutoupdateUtil;
@@ -129,7 +130,7 @@ import static com.rusefi.core.FindFileHelper.findFirmwareFile;
  */
 public class Autoupdate {
     private static final Logging log = getLogging(Autoupdate.class);
-    private static final int AUTOUPDATE_VERSION = 20260804; // separate from rusEFIVersion#CONSOLE_VERSION
+    private static final int AUTOUPDATE_VERSION = 20260813; // separate from rusEFIVersion#CONSOLE_VERSION
     private static final String userHomeSubDirectory = FileUtil.RUSEFI_SETTINGS_FOLDER + "updates" + File.separator;
 
     /**
@@ -193,12 +194,14 @@ public class Autoupdate {
         try {
             FileLogger.init();
             log.info("Version " + AUTOUPDATE_VERSION);
-            log.info("Compiled " + new Date(rusEFIVersion.classBuildTimeMillis(Autoupdate.class)));
+            log.info("Compiled " + rusEFIVersion.classBuildTimeString(Autoupdate.class));
             log.info("Current folder " + new File(".").getCanonicalPath());
+            // toURI() rather than getPath(): the location is percent-encoded, so an installation
+            // under "Program Files" used to be logged as `C:\Program%20Files\...` - see #6836
             log.info("Source " + new File(Autoupdate.class.getProtectionDomain()
                 .getCodeSource()
                 .getLocation()
-                .getPath())
+                .toURI())
                 .getCanonicalPath());
             autoupdate(args);
         } catch (Throwable e) {
@@ -244,6 +247,17 @@ public class Autoupdate {
         BundleInfo bundleInfo = BundleUtil.readBundleFullNameNotNull();
         if (BundleInfo.isUndefined(bundleInfo)) {
             log.error("ERROR: Autoupdate: unable to perform without bundleFullName");
+            // #6564 the launcher is a GUI exe with no console attached, so without a dialog the user
+            // double-clicks it and simply sees nothing happen
+            if (!AutoupdateUtil.runHeadless) {
+                ErrorMessageHelper.showErrorDialog(String.format(
+                    "Unable to update: `%s` is missing or does not describe this bundle.\n"
+                        + "It is expected next to rusefi_console.jar, in\n%s\n\n"
+                        + "Please re-extract the bundle without moving or renaming files inside it.",
+                    BundleUtil.BRANCH_REF_FILE,
+                    System.getProperty("user.dir")
+                ), "Autoupdate Error " + TITLE);
+            }
             System.exit(-1);
         }
 
@@ -850,11 +864,33 @@ public class Autoupdate {
         if (entry.isDirectory())
             return false;
         String lower = entry.getName().toLowerCase();
+        if (lower.contains("/") || lower.contains("\\"))
+            return false;
         return lower.endsWith(".srec") || lower.endsWith(".hex")
             || lower.endsWith("rusefi.bin") || lower.endsWith("openblt.bin")
             // "rusefi_" (underscore) excludes rusefi-obfuscated.bin
             || (lower.contains("rusefi_") && lower.endsWith(".bin"));
     };
+
+    /**
+     * On Linux and macOS the bundle launcher is a shell script, and the executable bit does not always
+     * survive the trip through the zip (older bundles, or an unzip tool that drops permissions).
+     * {@link ProcessBuilder} would then fail with "Permission denied", so give it one best-effort
+     * chance to fix itself. See #8360.
+     */
+    private static void ensureLauncherIsExecutable(final String launcherFileName) {
+        if (OsUtil.isWindows()) {
+            return;
+        }
+        final File launcher = new File(launcherFileName);
+        if (launcher.canExecute()) {
+            return;
+        }
+        log.info(String.format("Launcher `%s` is not executable, trying to fix that", launcherFileName));
+        if (!launcher.setExecutable(true, true)) {
+            log.error(String.format("Failed to make `%s` executable", launcherFileName));
+        }
+    }
 
     /**
      * rusefi_updater.exe/invokes rusefi_console.jar - entry point is Launcher#main
@@ -868,6 +904,7 @@ public class Autoupdate {
             return;
         }
         log.info(String.format("File `%s` to launch is found", consoleExeFileName));
+        ensureLauncherIsExecutable(consoleExeFileName);
         final String[] processBuilderArgs = new String[args.length + 1];
         processBuilderArgs[0] = consoleExeFileName;
         System.arraycopy(args, 0, processBuilderArgs, 1, args.length);
@@ -877,7 +914,7 @@ public class Autoupdate {
             log.info(String.format("Process `%s` is started", consoleExeFileName));
         } catch (final IOException e) {
             final String command = String.join(" ", processBuilderArgs);
-            log.error(String.format("Failed to run `$s` command", command), e);
+            log.error(String.format("Failed to run `%s` command", command), e);
             if (!AutoupdateUtil.runHeadless) {
                 ErrorMessageHelper.showErrorDialog(String.format(
                     "Error running `%s` command.\nPlease try to run it manually again.",

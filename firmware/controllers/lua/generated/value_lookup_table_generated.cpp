@@ -2011,6 +2011,9 @@ const ConfigParameter allParameters[] = {
 	{ 0xE70EE490, // useSeparateIdleTablesForCrankingTaper
 		[]() -> float { return engineConfiguration->useSeparateIdleTablesForCrankingTaper; },
 		[](float value) { engineConfiguration->useSeparateIdleTablesForCrankingTaper = value; } },
+	{ 0xE74DCE76, // keepIdleSolenoidWhenStopped
+		[]() -> float { return engineConfiguration->keepIdleSolenoidWhenStopped; },
+		[](float value) { engineConfiguration->keepIdleSolenoidWhenStopped = value; } },
 	{ 0xE75AA57E, // issFilterReciprocal
 		[]() -> float { return engineConfiguration->issFilterReciprocal; },
 		[](float value) { engineConfiguration->issFilterReciprocal = value; } },

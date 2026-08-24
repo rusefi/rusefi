@@ -52,7 +52,6 @@ DDEFS += $(TS_PAGE_GUARD_DEFS)
 # Configure precompiled header
 PCH_DIR = $(PROJECT_DIR)/pch
 PCHSRC = $(PCH_DIR)/pch.h
-PCHSUB = simulator
 
 # used by USE_SMART_BUILD
 CONFDIR = .

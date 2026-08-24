@@ -11,7 +11,7 @@ pins:
 
   - pin: 1A
     meta: MM176_IN_CRANK_ANALOG
-    function: Aux Analog 1 / External MAP
+    function: Auxiliary analog input 1 PullDown 500K / External MAP
     type: av
     class: analog_inputs
     ts_name: 1A - Aux Analog 1
@@ -19,7 +19,7 @@ pins:
 
   - pin: 2A
     meta: MM176_IN_MAP1_ANALOG
-    function: Aux Analog 4
+    function: Auxiliary analog input 4 PullDown 500K
     type: av
     class: analog_inputs
     ts_name: 2A - Aux Analog 4
@@ -27,7 +27,7 @@ pins:
 
   - pin: 3A
     meta: MM176_IN_O2S_ANALOG
-    function: Aux Analog 2
+    function: Auxiliary analog input 2 PullDown 500K
     type: av
     class: analog_inputs
     ts_name: 3A - Aux Analog 2
@@ -36,7 +36,7 @@ pins:
   - pin: 4A
     meta: MM176_IN_AUX2_ANALOG
     type: av
-    function: Aux Analog 7
+    function: Auxiliary analog input 7 PullDown 500K
     class: analog_inputs
     ts_name: 4A - Aux Analog 7
     color: blue
@@ -76,7 +76,7 @@ pins:
 
   - pin: 10A
     meta: MM176_IN_MAP2_ANALOG
-    function: Aux Analog 5
+    function: Auxiliary analog input 5 PullDown 500K
     type: av
     class: analog_inputs
     ts_name: 10A - Aux Analog 5
@@ -84,7 +84,7 @@ pins:
 
   - pin: 11A
     meta: MM176_IN_O2S2_ANALOG
-    function: Aux Analog 3
+    function: Auxiliary analog input 3 PullDown 500K
     type: av
     class: analog_inputs
     ts_name: 11A - Aux Analog 3
@@ -92,7 +92,7 @@ pins:
 
   - pin: 12A
     meta: MM176_IN_AUX3_ANALOG
-    function: Aux Analog 8
+    function: Auxiliary analog input 8 PullDown 500K
     type: av
     class: analog_inputs
     ts_name: 12A - Aux Analog 8
@@ -139,7 +139,7 @@ pins:
 
   - pin: 19A
     meta: MM176_IN_AUX1_ANALOG
-    function: Aux Analog 6
+    function: Auxiliary analog input 6 PullDown 500K
     type: av
     class: analog_inputs
     ts_name: 19A - Aux Analog 6
@@ -147,7 +147,7 @@ pins:
 
   - pin: 20A
     meta: MM176_IN_AUX4_ANALOG
-    function: Aux Analog 9
+    function: Auxiliary analog input 9 PullDown 500K
     type: av
     class: analog_inputs
     ts_name: 20A - Aux Analog 9
@@ -156,8 +156,8 @@ pins:
   - pin: 21A
     id: [MM176_IN_SENS3, MM176_IN_SENS3]
     class: [event_inputs, switch_inputs]
-    function: Flex
-    type: hall
+    function: Digital Input / Flex fuel sensor
+    type: din
     ts_name: ___ - Flex
     color: blue
 

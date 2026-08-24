@@ -862,6 +862,12 @@ void setDefaultEtbParameters() {
 
 void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *previousConfiguration) {
 	for (int i = 0; i < ETB_COUNT; i++) {
+		if (engineConfiguration->etbFunctions[i] != previousConfiguration->etbFunctions[i]) {
+			return;
+		}
+	}
+
+	for (int i = 0; i < ETB_COUNT; i++) {
 		etbControllers[i]->onConfigurationChange(&previousConfiguration->etb);
 	}
 }
@@ -906,6 +912,15 @@ void doInitElectronicThrottle(bool isStartupInit) {
 		if (func == DC_None) {
 			// do not touch HW pins if function not selected, this way Lua can use DC motor hardware pins directly
 			continue;
+		}
+		if (func == DC_Gpio) {
+		#if EFI_UNIT_TEST || (defined(BOARD_HBRIDGE_GPIO_COUNT) && BOARD_HBRIDGE_GPIO_COUNT > 0)
+			// The H-bridge GPIO driver owns and initializes this DC hardware slot.
+			continue;
+		#else
+			configError("DC%d GPIO is not supported on this board", i + 1);
+			continue;
+		#endif
 		}
 		auto motor = initDcMotor("ETB disable",
 				engineConfiguration->etbIo[i], i, engineConfiguration->etb_use_two_wires);

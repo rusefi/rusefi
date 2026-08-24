@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Sun Aug 09 03:05:40 UTC 2026
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Thu Aug 13 15:24:45 UTC 2026
 // see also gen_config_and_enums.bat
 
 
@@ -439,6 +439,8 @@ const char *getTs_14_command(ts_14_command value) {
 			return "COMMAND_X14_UNUSED_15";
 		case COMMAND_X14_UNUSED_2:
 			return "COMMAND_X14_UNUSED_2";
+		case TS_DTC_MANAGER_SHOT:
+			return "TS_DTC_MANAGER_SHOT";
 		case TS_ESTIMATE_TORQUE_TABLE:
 			return "TS_ESTIMATE_TORQUE_TABLE";
 		case TS_ETB_AUTOCAL_0:

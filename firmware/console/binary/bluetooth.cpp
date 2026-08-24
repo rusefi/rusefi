@@ -20,7 +20,7 @@
 #include <stdio.h>
 #include <ctype.h>
 
-#if EFI_BLUETOOTH_SETUP
+#if EFI_BLUETOOTH_SETUP || EFI_UNIT_TEST
 
 #ifndef EFI_BLUETOOTH_SETUP_DEBUG
 #define EFI_BLUETOOTH_SETUP_DEBUG TRUE
@@ -236,12 +236,6 @@ uint8_t findBaudIndex(SerialTsChannelBase* tsChannel) {
 		tsChannel->stop();
 		chThdSleepMilliseconds(10);	// safety
 
-		if (baudIdx == efi::size(baudRates)) {
-			efiPrintf("Failed to find current BT module baudrate");
-			tsChannel->start(engineConfiguration->tunerStudioSerialSpeed);
-			return 255;//failed
-		}
-
 		efiPrintf("Restarting at %lu", baudRates[baudIdx].rate);
 		tsChannel->start(baudRates[baudIdx].rate);
 		chThdSleepMilliseconds(10);	// safety
@@ -269,6 +263,16 @@ uint8_t findBaudIndex(SerialTsChannelBase* tsChannel) {
 		}
 		/* try next baudrate */
 	}
+
+	// None of the known baud rates responded. The channel is currently running at the last probe
+	// rate, so restore the configured console/TS speed before giving up - otherwise a failed setup
+	// attempt leaves the serial link at the wrong baud until reboot. This recovery used to sit
+	// inside the loop above, guarded by baudIdx == efi::size(baudRates), which the loop condition
+	// makes unreachable.
+	efiPrintf("Failed to find current BT module baudrate");
+	tsChannel->stop();
+	chThdSleepMilliseconds(10);	// safety
+	tsChannel->start(engineConfiguration->tunerStudioSerialSpeed);
 	return 255;//failed
 }
 
@@ -359,4 +363,4 @@ void bluetoothSoftwareDisconnectNotify(SerialTsChannelBase* tsChannel) {
 	}
 }
 
-#endif /* EFI_BLUETOOTH_SETUP */
+#endif /* EFI_BLUETOOTH_SETUP || EFI_UNIT_TEST */

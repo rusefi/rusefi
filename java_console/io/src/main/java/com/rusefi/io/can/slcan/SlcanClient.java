@@ -81,7 +81,11 @@ public class SlcanClient implements Closeable {
                 stream.getDataBuffer().dropPending();
 
                 String version = command(stream, "V");
-                if (version == null || version.isEmpty() || version.charAt(0) != 'V') {
+                if (version == null || version.isEmpty()) {
+                    logger.accept(port + ": no response to SLCAN V command, skipping");
+                    continue;
+                }
+                if (version.charAt(0) != 'V' && Frame.parse(version) == null) {
                     logger.accept(port + ": not SLCAN (V response: " + printable(version) + ")");
                     continue;
                 }
@@ -104,6 +108,14 @@ public class SlcanClient implements Closeable {
     private void openChannel() throws IOException {
         // close first in case a previous session left the terminal open; error ack is fine here
         command(stream, "C");
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IOException(e);
+        }
+        stream.getDataBuffer().dropPending();
+
         expectOk("S6");
         expectOk("O");
         log.info(port + ": SLCAN channel open");

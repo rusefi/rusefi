@@ -3,11 +3,9 @@
 # Target ECU board design
 BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 
-
-# This board has trigger scope hardware!
-DDEFS += -DTRIGGER_SCOPE
-
-export USE_OPENBLT=yes
+#we are low on flash
+DDEFS += -DEFI_LOGIC_ANALYZER=FALSE
+DDEFS += -DEFI_HPFP=FALSE
 
 # Add them all together
 DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE -DSTM32_ADC_USE_ADC3=TRUE

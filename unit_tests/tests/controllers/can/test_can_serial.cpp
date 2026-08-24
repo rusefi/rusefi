@@ -225,6 +225,76 @@ TEST(testCanSerial, test64_7Message) {
 	}, 71, { 64 + 7 });
 }
 
+/**
+ * Coverage for the ISO-TP single-frame length field.
+ *
+ * A single frame carries its payload length in the low nibble of the PCI byte, so it can encode up
+ * to 15 - but a classic-CAN frame only delivers DLC bytes and CANRxFrame::data8 is 8 bytes wide.
+ * receiveFrame() used to take that nibble at face value and copy that many bytes from data8 + 1,
+ * reading past the end of the payload. DLC itself is only a 4-bit field, so a frame can also claim
+ * DLC > 8, which was equally unchecked. The length is now bounded by both.
+ *
+ * The frame is embedded in a padded wrapper so that the over-read this deliberately provokes lands
+ * inside memory the test owns - otherwise it is a stack-buffer-overflow and AddressSanitizer (on by
+ * default for these tests) aborts the run.
+ */
+namespace {
+struct PaddedRxFrame {
+	CANRxFrame frame;
+	// room for the largest over-read the unclamped code can perform: SF_DL 15 starting at data8[1]
+	uint8_t overreadGuard[16];
+};
+
+// Fails the test rather than corrupting the stack if the guard above is ever too small for the
+// over-read these tests provoke (last byte read is data8[15], so data8 + 16 must stay inside).
+void assertOverreadStaysInsidePaddedFrame(const PaddedRxFrame& padded) {
+	const uint8_t* objectEnd = reinterpret_cast<const uint8_t*>(&padded) + sizeof(padded);
+	ASSERT_LE(padded.frame.data8 + 16, objectEnd) << "overreadGuard too small";
+}
+} // namespace
+
+TEST(testCanSerial, singleFrameLengthIsBoundedByDlc) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	TestCanStreamerState state;
+
+	PaddedRxFrame padded;
+	memset(&padded, 0, sizeof(padded));
+	padded.frame.DLC = 8;
+	// frame type 0 (SINGLE), SF_DL nibble = 15 - more than the 8-byte frame can possibly hold
+	padded.frame.data8[0] = 0x0F;
+
+	uint8_t rxbuf[64];
+	memset(rxbuf, 0xCC, sizeof(rxbuf));
+
+	assertOverreadStaysInsidePaddedFrame(padded);
+	int copied = state.receiveFrame(padded.frame, rxbuf, sizeof(rxbuf), 0);
+
+	// clamped to the 7 payload bytes the frame actually carries
+	EXPECT_EQ(7, copied);
+}
+
+TEST(testCanSerial, singleFrameLengthIsBoundedByPayloadSize) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	TestCanStreamerState state;
+
+	PaddedRxFrame padded;
+	memset(&padded, 0, sizeof(padded));
+	// DLC is a 4-bit field, so a malformed frame can claim more than data8[] can hold
+	padded.frame.DLC = 15;
+	padded.frame.data8[0] = 0x0F;
+
+	uint8_t rxbuf[64];
+	memset(rxbuf, 0xCC, sizeof(rxbuf));
+
+	assertOverreadStaysInsidePaddedFrame(padded);
+	int copied = state.receiveFrame(padded.frame, rxbuf, sizeof(rxbuf), 0);
+
+	// clamped to sizeof(data8) - 1 even though DLC claims more
+	EXPECT_EQ(7, copied);
+}
+
 TEST(testCanSerial, test3_64_4Message) {
 	std::array<char, 64> buffer64;
 

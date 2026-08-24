@@ -20,16 +20,22 @@ void jsonTraceEntry(const char* name, int pid, bool isEnter, efitick_t timestamp
 
 enum class TLmode : uint8_t {
 	Full,
-	PrimaryTooth
+	PrimaryTooth,
+	Background
 };
 
+// Enable/disable interface:
 bool EnableToothLoggerIfNotEnabled(TLmode mode = TLmode::Full);
-
 // Enable the tooth logger - this clears the buffer starts logging
 bool EnableToothLogger(TLmode mode = TLmode::Full);
-
 // Stop logging - leave buffer intact
-void DisableToothLogger();
+bool DisableToothLogger(TLmode mode = TLmode::Full);
+
+#if MODULE_DTC_MANAGER
+void ToothLoggerSetLimit(size_t toothsToCapture);
+void ToothLoggerReset();
+void ToothLoggerRelease();
+#endif
 
 bool IsToothLoggerEnabled();
 
@@ -128,7 +134,6 @@ CompositeBuffer* GetToothLoggerBufferNonblocking();
 
 // Return a buffer to the pool once its contents have been read
 void ReturnToothLoggerBuffer(CompositeBuffer*);
-
 
 #if EFI_FILE_LOGGING
 

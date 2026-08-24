@@ -36,6 +36,7 @@
 
 #include "fw_configuration.h"
 #include "board_overrides.h"
+#include "basic_configuration.h"
 
 static bool isRunningBench = false;
 static OutputPin *outputOnTheBenchTest = nullptr;
@@ -67,6 +68,10 @@ void setOutputOnTheBenchTestForUnitTest(OutputPin* output) {
 #include "vvt.h"
 #include "microsecond_timer.h"
 #include "rusefi_wideband.h"
+
+#if MODULE_DTC_MANAGER
+#include "dtc_manager.h"
+#endif
 
 #if EFI_PROD_CODE
 #include "rusefi.h"
@@ -637,6 +642,12 @@ static void handleCommandX14(uint16_t index) {
 	case TS_SD_DELETE_REPORTS:
 		sdCardRemoveReportFiles();
 		return;
+
+#if MODULE_DTC_MANAGER
+	case TS_DTC_MANAGER_SHOT:
+		DtcTriggerEvent("TS");
+		return;
+#endif // MODULE_DTC_MANAGER
 #endif // EFI_FILE_LOGGING
 
 	default:
@@ -843,11 +854,10 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		applyPreset(index);
 		break;
 
-  case TS_BOARD_ACTION:
-      // TODO: use call_board_override
-	  if (custom_board_ts_command.has_value()) {
-		  custom_board_ts_command.value()(subsystem, index);
-	  }
+	case TS_BOARD_ACTION:
+		if (!handleBasicConfigurationAction(index)) {
+			call_board_override(custom_board_ts_command, subsystem, index);
+		}
 		break;
 
 	case TS_SET_DEFAULT_ENGINE:

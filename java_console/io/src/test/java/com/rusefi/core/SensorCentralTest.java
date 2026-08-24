@@ -268,10 +268,10 @@ public class SensorCentralTest {
     @Test
     void onGaugeLabelsResolvedStoresLabels() {
         Map<String, ISensorHolder.ResolvedGaugeLabels> labels = Collections.singletonMap(
-                "somegauge", new ISensorHolder.ResolvedGaugeLabels("Title", "Units"));
+                "someGauge", new ISensorHolder.ResolvedGaugeLabels("Title", "Units"));
         sensorCentral.onGaugeLabelsResolved(labels);
 
-        assertSame(labels, sensorCentral.getResolvedGaugeLabels());
+        assertEquals(1, sensorCentral.getResolvedGaugeLabels().size());
         ISensorHolder.ResolvedGaugeLabels resolved = sensorCentral.getResolvedLabels("someGauge");
         assertNotNull(resolved);
         assertEquals("Title", resolved.getTitle());

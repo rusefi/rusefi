@@ -24,7 +24,7 @@ if [ "" = "$BOARD_SPECIFIC_URL" ]; then
 fi
 echo "BOARD_SPECIFIC_URL=[$BOARD_SPECIFIC_URL]"
 
-INI_IMAGE_SIZE=${INI_IMAGE_SIZE:-128}
+INI_IMAGE_SIZE=${INI_IMAGE_SIZE:-136}
 INI_IMAGE_COMPRESSED_SIZE=${INI_IMAGE_COMPRESSED_SIZE:-1088}
 
 # we generate both versions of the header but only one would be actually included due to conditional compilation see EFI_USE_COMPRESSED_INI_MSD

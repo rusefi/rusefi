@@ -41,6 +41,7 @@
 
 // Less important things
 #define PRIO_MMC (NORMALPRIO - 1)
+#define PRIO_DTC_MANAGER (NORMALPRIO - 5)
 
 // These can get starved without too much adverse effect
 #define PRIO_AUX_SERIAL NORMALPRIO

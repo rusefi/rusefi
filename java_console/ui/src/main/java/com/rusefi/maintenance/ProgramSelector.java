@@ -1,5 +1,7 @@
 package com.rusefi.maintenance;
 
+import com.rusefi.core.OsUtil;
+
 import com.devexperts.logging.Logging;
 import com.fazecast.jSerialComm.SerialPort;
 import com.rusefi.*;
@@ -16,19 +18,24 @@ import com.rusefi.maintenance.jobs.*;
 import com.rusefi.ui.basic.SingleAsyncJobExecutor;
 import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.widgets.JSplitButton;
+import com.rusefi.ui.wizard.EmergencyWipePanel;
 import com.rusefi.updater.OpenbltDetectorStrategy;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ItemEvent;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.io.EOFException;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -42,11 +49,13 @@ public class ProgramSelector {
     private static final Logging log = getLogging(ProgramSelector.class);
     private final JPanel content = new JPanel(new BorderLayout());
     private final JLabel noHardware = new JLabel("Nothing detected");
-    private final JPanel updateModeAndButton = new JPanel(new FlowLayout(FlowLayout.CENTER, 32, 5));
+    private final JPanel updateModeAndButton = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
     private final JSplitButton splitButton = new JSplitButton("Update ECU Firmware", AutoupdateUtil.loadIcon("upload48.png"));
     private final List<JComponent> additionalFirmwareControls = new ArrayList<>();
     private final ConnectivityContext connectivityContext;
     private final JComboBox<PortResult> comboPorts;
+    private final Consumer<JComponent> showFullScreenPanel;
+    private final Runnable closeFullScreenPanel;
     @Nullable
     private SingleAsyncJobExecutor jobExecutor;
     @Nullable
@@ -54,9 +63,12 @@ public class ProgramSelector {
     private Function<JComponent, Boolean> firmwareUpdateInterceptor = source -> false;
     private BooleanSupplier externalBusy = () -> false;
 
-    public ProgramSelector(ConnectivityContext connectivityContext, JComboBox<PortResult> comboPorts) {
+    public ProgramSelector(ConnectivityContext connectivityContext, JComboBox<PortResult> comboPorts,
+                           Consumer<JComponent> showFullScreenPanel, Runnable closeFullScreenPanel) {
         this.connectivityContext = connectivityContext;
         this.comboPorts = comboPorts;
+        this.showFullScreenPanel = Objects.requireNonNull(showFullScreenPanel);
+        this.closeFullScreenPanel = Objects.requireNonNull(closeFullScreenPanel);
         noHardware.setBorder(BorderFactory.createEmptyBorder(5, 8, 5, 8));
         noHardware.setFont(noHardware.getFont().deriveFont(noHardware.getFont().getSize2D() + 2));
         content.add(updateModeAndButton, BorderLayout.NORTH);
@@ -203,7 +215,8 @@ public class ProgramSelector {
                 job = new DfuSwitchJob(selectedPort, parent, linkManager);
                 break;
             case OPENBLT_SWITCH:
-                job = new OpenBltSwitchJob(selectedPort, parent, linkManager, OpenbltRebooter.PRODUCTION_REBOOTER);
+                job = new OpenBltSwitchJob(selectedPort, parent, linkManager,
+                    connectivityContext.getPortScanner(), OpenbltRebooter.PRODUCTION_REBOOTER);
                 break;
             case OPENBLT_CAN:
                 job = new OpenBltCanJob(parent);
@@ -214,6 +227,9 @@ public class ProgramSelector {
             case OPENBLT_AUTO:
                 job = new OpenBltAutoJob(selectedPort, parent, connectivityContext, linkManager);
                 break;
+            case OPENBLT_EMERGENCY_WIPE:
+                showEmergencyWipeConfirmation(parent, selectedPort);
+                return;
             case DFU_ERASE:
                 job = new DfuEraseJob();
                 break;
@@ -221,6 +237,28 @@ public class ProgramSelector {
                 throw new IllegalArgumentException("How did you " + selectedMode);
         }
 
+        runJob(job, parent);
+    }
+
+    private void showEmergencyWipeConfirmation(JComponent parent, PortResult selectedPort) {
+        final OpenBltWipeArtifact artifact;
+        try {
+            artifact = OpenBltWipeArtifact.loadAndValidate(selectedPort);
+        } catch (IOException e) {
+            log.error("Emergency wipe validation failed", e);
+            JOptionPane.showMessageDialog(parent, e.getMessage(), "Emergency wipe unavailable",
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        showFullScreenPanel.accept(new EmergencyWipePanel(artifact.confirmationMessage(), () -> {
+            closeFullScreenPanel.run();
+            runJob(OpenBltManualJobFactory.createEmergencyWipe(
+                selectedPort, parent, connectivityContext, artifact), parent);
+        }, closeFullScreenPanel));
+    }
+
+    private void runJob(AsyncJob job, JComponent parent) {
         if (jobExecutor != null) {
             jobExecutor.startJob(job, parent);
         } else {
@@ -535,6 +573,25 @@ public class ProgramSelector {
         }
     }
 
+    public static boolean wipeOpenbltSerial(String port, UpdateOperationCallbacks callbacks,
+                                            OpenBltWipeArtifact artifact) {
+        OpenbltJni.OpenbltCallbacks cb = makeOpenbltCallbacks(callbacks);
+
+        // Once a wipe is confirmed, fail safe: never let a later manual flash restore the suspect tune,
+        // even if this erase is interrupted after invalidating the application vector.
+        CalibrationsHelper.discardLastEcuCalibrations();
+        callbacks.logLine("Previous session tune discarded; the next manual update will keep firmware defaults.");
+        try {
+            OpenBltFlasher.eraseSerial(artifact, port, cb);
+            callbacks.logLine("Emergency wipe completed. The ECU remains in OpenBLT.");
+            return true;
+        } catch (Throwable e) {
+            callbacks.logLine("Emergency OpenBLT wipe error: " + e);
+            log.error("wipeOpenbltSerial " + e, e);
+            return false;
+        }
+    }
+
     @NotNull
     public static JComponent createHelpButton() {
         return new URLLabel("HOWTO Update Firmware", UiProperties.getUpdateHelpUrl());
@@ -582,6 +639,7 @@ public class ProgramSelector {
             }
             if (hasDfuDevice) {
                 addMenuItem(popupMenu, DFU_MANUAL);
+                addCustomFirmwareMenuItem(popupMenu);
                 addMenuItem(popupMenu, DFU_ERASE);
                 if (DfuFlasher.haveBootloaderBinFile()) {
                     addMenuItem(popupMenu, INSTALL_OPENBLT);
@@ -589,7 +647,7 @@ public class ProgramSelector {
             }
         }
 
-        if (FileLog.isWindows()) {
+        if (OsUtil.isWindows()) {
             if (!requireBlt && currentHardware.isStLinkConnected()) {
                 addMenuItem(popupMenu, ST_LINK);
             }
@@ -601,6 +659,10 @@ public class ProgramSelector {
         if (hasSerialPorts) {
             addMenuItem(popupMenu, OPENBLT_SWITCH);
             addMenuItem(popupMenu, OPENBLT_MANUAL);
+            PortResult selected = resolveFlashPort();
+            if (isEmergencyWipeAvailable(selected)) {
+                addMenuItem(popupMenu, OPENBLT_EMERGENCY_WIPE);
+            }
         }
 
         int menuItemCount = popupMenu.getComponentCount();
@@ -620,6 +682,10 @@ public class ProgramSelector {
 
     static boolean hasRealSerialPort(List<PortResult> ports) {
         return ports.stream().anyMatch(port -> port.type != SerialPortType.Dfu && !isUnflashableEcu(port));
+    }
+
+    static boolean isEmergencyWipeAvailable(@Nullable PortResult port) {
+        return OpenBltWipeArtifact.isAvailableFor(port);
     }
 
     static boolean shouldEnableMainButton(
@@ -659,7 +725,9 @@ public class ProgramSelector {
     private void addMenuItem(JPopupMenu menu, UpdateMode mode) {
         JMenuItem item = new JMenuItem(mode.displayText);
         item.addActionListener(e -> {
-            PortResult selected = (PortResult) comboPorts.getSelectedItem();
+            PortResult selected = mode == OPENBLT_EMERGENCY_WIPE
+                ? resolveFlashPort()
+                : (PortResult) comboPorts.getSelectedItem();
             if (isUnflashableEcu(selected)) {
                 return;
             }
@@ -668,12 +736,33 @@ public class ProgramSelector {
         menu.add(item);
     }
 
+    private void addCustomFirmwareMenuItem(JPopupMenu menu) {
+        JMenuItem item = new JMenuItem("Pick Custom File [DFU]");
+        item.addActionListener(e -> {
+            JFileChooser chooser = new JFileChooser();
+            chooser.setDialogTitle("Pick DFU firmware");
+            chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            chooser.setAcceptAllFileFilterUsed(false);
+            chooser.setFileFilter(new FileNameExtensionFilter("Firmware binaries (.bin)", "bin"));
+            if (chooser.showOpenDialog(splitButton) != JFileChooser.APPROVE_OPTION) {
+                return;
+            }
+
+            File firmware = chooser.getSelectedFile();
+            if (!firmware.isFile() || !chooser.getFileFilter().accept(firmware)) {
+                JOptionPane.showMessageDialog(splitButton, "Please select a .bin firmware file.",
+                    "Invalid firmware file", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            runJob(new DfuManualJob(
+                connectivityContext.getConnectedEcuTarget(), firmware.getAbsolutePath()), splitButton);
+        });
+        menu.add(item);
+    }
+
     private static boolean isUnflashableEcu(@Nullable PortResult port) {
         return port != null && (port.isUnsupportedEcu() || port.type == SerialPortType.EcuUnknown);
     }
 
-    @NotNull
-    public static JButton createUpdateFirmwareButton() {
-        return new JButton("Update Firmware", AutoupdateUtil.loadIcon("upload48.png"));
-    }
 }

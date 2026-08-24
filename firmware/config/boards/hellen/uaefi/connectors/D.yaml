@@ -31,7 +31,8 @@ pins:
     class: [switch_inputs, event_inputs]
     ts_name: ___ FLEX
     color: orange
-    function: Flex input (10K PU)
+    function: Digital Input / Flex fuel sensor (10K PU)
+    type: din
 
   - pin: D6
     meta: MM100_IN_PPS_ANALOG
@@ -42,12 +43,12 @@ pins:
     color: white
 
   - pin: D7
-    function: CAN1 bus high
+    function: CAN bus High
     color: green
     type: can
 
   - pin: D8
-    function: CAN1 bus low
+    function: CAN bus Low
     color: blue
     type: can
 

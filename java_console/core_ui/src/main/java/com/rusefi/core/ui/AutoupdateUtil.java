@@ -26,6 +26,11 @@ public class AutoupdateUtil {
     // todo: figure out a better way to work with absolute path
     private static final String APPICON = "/appicon.png";
 
+    /**
+     * Where icons and logos actually live on the classpath, see java_console/shared_ui/resources.
+     */
+    static final String RUSEFI_RESOURCE_PACKAGE = "/com/rusefi/";
+
     public static JComponent wrap(JComponent component) {
         AutoupdateUtil.assertAwtThread();
         JPanel result = new JPanel();
@@ -183,7 +188,7 @@ public class AutoupdateUtil {
             return new ImageIcon(imgURL);
         } else {
             log.info("Using secondary resource path for " + strPath);
-            imgURL = dynamicResourcesLoader.getResource("/com/rusefi/" + strPath);
+            imgURL = dynamicResourcesLoader.getResource(secondaryResourcePath(strPath));
             if (imgURL != null) {
                 return new ImageIcon(imgURL);
             }
@@ -192,11 +197,26 @@ public class AutoupdateUtil {
         }
     }
 
+    /**
+     * Maps a bare resource name onto the package our resources actually live in, e.g.
+     * {@code /appicon.png} to {@code /com/rusefi/appicon.png}.
+     * <p>
+     * Careful with the slash: plain concatenation produced {@code /com/rusefi//appicon.png}, and a
+     * jar entry lookup is an exact string match, so the doubled slash silently resolved to nothing
+     * whenever the console ran from its jar rather than from an IDE class directory. That is why
+     * {@link #setAppIcon} used to leave the default Java coffee cup on the frame - see #6928.
+     */
+    static String secondaryResourcePath(String strPath) {
+        String relative = strPath.startsWith("/") ? strPath.substring(1) : strPath;
+        return RUSEFI_RESOURCE_PACKAGE + relative;
+    }
+
     public static void setAppIcon(JFrame frame) {
         // huh? sometimes we are making icon from logo and sometimes we have dedicated icon file?!
         ImageIcon icon = loadIcon(APPICON);
-        if (icon != null)
+        if (icon != null) {
             frame.setIconImage(icon.getImage());
+        }
     }
 
     public static void pack(Window window) {

@@ -151,7 +151,9 @@ public class SensorCentral implements ISensorCentral {
 
     @Override
     public void onGaugeLabelsResolved(Map<String, ResolvedGaugeLabels> labels) {
-        this.resolvedGaugeLabels = labels;
+        Map<String, ResolvedGaugeLabels> normalizedLabels = new LowercaseHashMap<>();
+        normalizedLabels.putAll(labels);
+        this.resolvedGaugeLabels = normalizedLabels;
     }
 
     /**

@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sun Aug 09 03:05:39 UTC 2026
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Mon Aug 17 02:56:26 UTC 2026
 // see also gen_config_and_enums.bat
 
 
@@ -567,6 +567,8 @@ const char *getCranking_condition_e(cranking_condition_e value) {
 }
 const char *getDc_function_e(dc_function_e value) {
 	switch (value) {
+		case DC_Gpio:
+			return "DC_Gpio";
 		case DC_IdleValve:
 			return "DC_IdleValve";
 		case DC_None:

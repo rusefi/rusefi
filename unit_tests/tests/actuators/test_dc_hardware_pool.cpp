@@ -14,6 +14,7 @@
 
 #include "dc_motors.h"
 #include "electronic_throttle.h"
+#include "gpio/hbridge_gpio.h"
 
 TEST(DcHardwarePool, EtbAndStepperSlotsAreDistinct) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
@@ -87,6 +88,38 @@ TEST(DcHardwarePool, TooHighEtbFrequencyIsFatal) {
 
 	engineConfiguration->etbFreq = ETB_HW_MAX_FREQUENCY + 1;
 	EXPECT_FATAL_ERROR(initDcMotor("ETB disable", engineConfiguration->etbIo[0], 0, false));
+}
+
+TEST(DcHardwarePool, HbridgeGpioDrivesSelectedDcSlot) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	engineConfiguration->etbFunctions[0] = DC_Gpio;
+	engineConfiguration->etbFunctions[1] = DC_None;
+	resetDcHardwareForUnitTest();
+
+	auto& gpio = getHbridgeGpioForUnitTest();
+	ASSERT_EQ(0, gpio.init());
+
+	auto motor = getDcMotorForUnitTest(0);
+	ASSERT_NE(nullptr, motor->msg());
+
+	// OutputPin writes the safe state before changing the pin to output mode.
+	EXPECT_EQ(0, gpio.writePad(0, 0));
+	EXPECT_EQ(0, gpio.setPadMode(0, PAL_MODE_OUTPUT_PUSHPULL));
+	EXPECT_EQ(nullptr, motor->msg());
+	EXPECT_FLOAT_EQ(0, motor->get());
+
+	EXPECT_EQ(0, gpio.writePad(0, 1));
+	EXPECT_EQ(1, gpio.readPad(0));
+	EXPECT_FLOAT_EQ(1, motor->get());
+
+	EXPECT_EQ(0, gpio.writePad(0, 0));
+	EXPECT_EQ(0, gpio.setPadMode(0, static_cast<iomode_t>(1)));
+	EXPECT_NE(nullptr, motor->msg());
+	EXPECT_FLOAT_EQ(0, motor->get());
+
+	EXPECT_EQ(-1, gpio.writePad(1, 1));
+	EXPECT_EQ(-1, gpio.writePad(ETB_COUNT, 1));
 }
 
 // pickEtbOrStepper(): H-bridge idle stepper and DC functions compete for the same

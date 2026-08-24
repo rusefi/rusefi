@@ -6,6 +6,7 @@ import com.rusefi.libopenblt.transport.IXcpTransport;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -25,6 +26,7 @@ public class XcpLoader {
     private static final byte XCPLOADER_CMD_PROGRAM = (byte)0xD0;    // XCP program command code
     private static final byte XCPLOADER_CMD_PROGRAM_RESET = (byte)0xCF;    // XCP program reset command code
     private static final byte XCPLOADER_CMD_PROGRAM_MAX = (byte)0xC9;    // XCP program max command code
+    private static final byte XCPLOADER_CMD_GET_SIGNATURE = (byte)0xBF;
 
     private static final byte XCPLOADER_CMD_PID_RES = (byte)0xFF;   // positive response
     private static final byte XCPLOADER_CMD_PID_ERR = (byte)0xFE;   // negative response
@@ -52,22 +54,62 @@ public class XcpLoader {
     }
 
     private TargetInfo mTargetInfo;
+    private String mExpectedStationId;
+    private boolean mVerifyStationId;
 
     public XcpLoader(IXcpTransport transport, XcpSettings settings) {
         mTransport = transport;
         mSettings = settings;
     }
 
+    public void requireStationIdCheck(String expectedStationId) {
+        mExpectedStationId = expectedStationId;
+        mVerifyStationId = true;
+    }
+
     public void start() throws IOException {
-        mTransport.connect();
-        connect();
+        boolean connected = false;
+        try {
+            mTransport.connect();
+            connected = true;
+            connect();
+        } catch (IOException | RuntimeException | Error e) {
+            if (connected) {
+                disconnectAfterFailure(e);
+            }
+            throw e;
+        }
     }
 
     public void stop() throws IOException {
-        // Send a null program to conclude the programming session
-        sendCmdProgram(new byte[0]);
-        sendCmdProgramReset();
-        mTransport.disconnect();
+        Throwable failure = null;
+        try {
+            // Send a null program to conclude the programming session
+            sendCmdProgram(new byte[0]);
+            sendCmdProgramReset();
+        } catch (IOException | RuntimeException | Error e) {
+            failure = e;
+            throw e;
+        } finally {
+            try {
+                mTransport.disconnect();
+                mTargetInfo = null;
+            } catch (IOException | RuntimeException e) {
+                if (failure != null) {
+                    failure.addSuppressed(e);
+                } else {
+                    throw e;
+                }
+            }
+        }
+    }
+
+    private void disconnectAfterFailure(Throwable failure) {
+        try {
+            mTransport.disconnect();
+        } catch (IOException | RuntimeException e) {
+            failure.addSuppressed(e);
+        }
     }
 
     private void connect() throws IOException {
@@ -107,10 +149,26 @@ public class XcpLoader {
             throw new IllegalStateException("Controller returned invalid max DTO configuration: " + ti.maxDto);
         }
 
+        if (mVerifyStationId) {
+            verifyStationId();
+        }
+
         // Place the target in programming mode
         ti.maxProgCto = programStart();
 
         mTargetInfo = ti;
+    }
+
+    private void verifyStationId() throws IOException {
+        byte[] response = mTransport.sendPacket(new byte[]{XCPLOADER_CMD_GET_SIGNATURE},
+            mSettings.timeoutT1, mExpectedStationId == null ? 1 : mExpectedStationId.length() + 1);
+        String actual = response.length > 1 && response[0] == XCPLOADER_CMD_PID_RES
+            ? new String(response, 1, response.length - 1, StandardCharsets.US_ASCII)
+            : null;
+        if (mExpectedStationId == null ? actual != null : !mExpectedStationId.equals(actual)) {
+            throw new IOException("OpenBLT target changed before programming: expected "
+                + mExpectedStationId + ", received " + actual);
+        }
     }
 
     // Place the target in programming mode, and return the maximum programming CTO

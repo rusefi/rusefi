@@ -7,6 +7,7 @@
  */
 
 #include "pch.h"
+#include "basic_configuration.h"
 #include "proteus_meta.h"
 #include "board_overrides.h"
 
@@ -75,30 +76,17 @@ static void setupVbatt() {
 }
 
 static void setupEtb() {
-	// TLE9201 driver
-	// This chip has three control pins:
-	// DIR - sets direction of the motor
-	// PWM - pwm control (enable high, coast low)
-	// DIS - disables motor (enable low)
+	setupTLE9201IncludingStepper(Gpio::D12, Gpio::D10, Gpio::D11);
+	setupTLE9201IncludingStepper(Gpio::D13, Gpio::D9, Gpio::D8, 1);
+}
 
-	// Throttle #1
-	// PWM pin
-	engineConfiguration->etbIo[0].controlPin = Gpio::D12;
-	// DIR pin
-	engineConfiguration->etbIo[0].directionPin1 = Gpio::D10;
-	// Disable pin
-	engineConfiguration->etbIo[0].disablePin = Gpio::D11;
-
-	// Throttle #2
-	// PWM pin
-	engineConfiguration->etbIo[1].controlPin = Gpio::D13;
-	// DIR pin
-	engineConfiguration->etbIo[1].directionPin1 = Gpio::D9;
-	// Disable pin
-	engineConfiguration->etbIo[1].disablePin = Gpio::D8;
-
-	// we only have pwm/dir, no dira/dirb
-	engineConfiguration->etb_use_two_wires = false;
+static bool applyProteusBasicConfiguration(BasicConfigurationAction action) {
+	return applyBasicConfiguration(action,
+		setupEtb,
+		PROTEUS_IN_TPS,
+		PROTEUS_IN_TPS1_2,
+		PROTEUS_IN_PPS,
+		PROTEUS_IN_PPS2);
 }
 
 static void setupDefaultSensorInputs() {
@@ -381,4 +369,5 @@ Gpio* getBoardMetaOutputs() {
 void setup_custom_board_overrides() {
 	custom_board_DefaultConfiguration = proteus_boardDefaultConfiguration;
 	custom_board_ConfigOverrides = proteus_boardConfigOverrides;
+	custom_board_applyBasicConfiguration = applyProteusBasicConfiguration;
 }

@@ -8,7 +8,7 @@ pins:
 
   - pin: A2
     function: +12V from main relay
-    type: 12v from main relay
+    type: 12v
     color: red
 
   - pin: A3
@@ -166,12 +166,12 @@ pins:
     color: gray
 
   - pin: C5
-    function: CAN bus high (CANH)
+    function: CAN bus High
     type: can
     color: green
 
   - pin: C6
-    function: CAN bus low (CANL)
+    function: CAN bus Low
     type: can
     color: blue
 
@@ -314,6 +314,7 @@ pins:
     class: event_inputs
     ts_name: E7 - Flex
     function: Digital Input / Flex fuel sensor
+    type: din
     color: brown
 
   - pin: E8

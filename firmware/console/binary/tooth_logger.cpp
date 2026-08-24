@@ -49,6 +49,10 @@
 
 #include "tooth_logger_buffer.h"
 
+#if MODULE_DTC_MANAGER
+#include "dtc_manager.h"
+#endif
+
 /**
  * Engine idles around 20Hz and revs up to 140Hz, at 60/2 and 8 cylinders we have about 20Khz events
  * If we can read buffer at 50Hz we want buffer to be about 400 elements.
@@ -105,8 +109,10 @@ bool EnableToothLogger(TLmode mode) {
 	return ToothLoggerEnabled;
 }
 
-void DisableToothLogger() {
+bool DisableToothLogger(TLmode mode) {
 	ToothLoggerEnabled = false;
+
+	return true;
 }
 
 #else // not EFI_UNIT_TEST
@@ -122,42 +128,88 @@ static void setToothLogReady(bool value) {
 #endif // EFI_TUNER_STUDIO
 }
 
-static ToothLoggerBufferPool toothBuffers{setToothLogReady};
+ToothLoggerBufferPool toothBuffers{setToothLogReady};
+
+#if MODULE_DTC_MANAGER
+// buffer is ready to write to file
+static volatile bool circularBufferFilled = false;
+// how many entries to capture after trigger have fired
+static volatile size_t toothLoggerEntriesToCapture = 0;
+#endif
 
 bool EnableToothLogger(TLmode mode) {
-	chibios_rt::CriticalSectionLocker csl;
+	{
+		chibios_rt::CriticalSectionLocker csl;
 
-	if (ToothLoggerEnabled) {
-		return false;
+		if (ToothLoggerEnabled) {
+			return false;
+		}
+
+		if (!toothBuffers.startI()) {
+			return false;
+		}
+
+		// Enable logging of edges as they come
+		ToothLoggerMode = mode;
+		toothBuffers.setCircularModeI(mode == TLmode::Background);
+		ToothLoggerEnabled = true;
+
+		setToothLogReady(false);
 	}
 
-	if (!toothBuffers.startI()) {
-		return false;
-	}
-
-	// Enable logging of edges as they come
-	ToothLoggerEnabled = true;
-	ToothLoggerMode = mode;
-
-	setToothLogReady(false);
+	efiPrintf("ToothLogger enabled mode %d", (int)ToothLoggerMode);
 
 	return true;
 }
 
-void DisableToothLogger() {
-	chibios_rt::CriticalSectionLocker csl;
+bool DisableToothLogger(TLmode mode) {
+	{
+		chibios_rt::CriticalSectionLocker csl;
 
-	if (!ToothLoggerEnabled) {
-		return;
+		if (mode != ToothLoggerMode) {
+			return false;
+		}
+
+		if (!ToothLoggerEnabled) {
+			return false;
+		}
+
+		toothBuffers.stopI();
+
+		ToothLoggerEnabled = false;
+		setToothLogReady(false);
 	}
 
-	toothBuffers.stopI();
+	efiPrintf("ToothLogger disabled");
 
-	ToothLoggerEnabled = false;
-	setToothLogReady(false);
+	return true;
 }
 
+#if MODULE_DTC_MANAGER
+void ToothLoggerSetLimit(size_t toothsToCapture) {
+	toothBuffers.setCircularModeI(true);
+	toothLoggerEntriesToCapture = toothsToCapture;
+}
+
+void ToothLoggerReset() {
+	toothLoggerEntriesToCapture = 0;
+	circularBufferFilled = false;
+}
+
+void ToothLoggerRelease() {
+	ToothLoggerReset();
+}
+#endif
+
+// This is use by TS only
 CompositeBuffer* GetToothLoggerBufferNonblocking() {
+#if MODULE_DTC_MANAGER
+	// in circular mode buffers may be reserved for the crash dump writer,
+	// do not let the TS composite reader steal them
+	if (toothBuffers.isCircularMode()) {
+		return nullptr;
+	}
+#endif
 	return toothBuffers.getFilled(TIME_IMMEDIATE);
 }
 
@@ -171,17 +223,38 @@ static void SetNextCompositeEntry(efitick_t timestamp) {
 	// This is called from multiple interrupts/threads, so we need a lock.
 	chibios_rt::CriticalSectionLocker csl;
 
+#if MODULE_DTC_MANAGER
+	// Circular buffer is fully filled and pending to be writen to storage
+	if (circularBufferFilled) {
+		return;
+	}
+#endif
+
 	toothBuffers.appendI(cur, timestamp);
+
+#if MODULE_DTC_MANAGER
+	if (toothLoggerEntriesToCapture) {
+		toothLoggerEntriesToCapture = toothLoggerEntriesToCapture - 1;
+		if (toothLoggerEntriesToCapture == 0) {
+			circularBufferFilled = true;
+			if (DtcToothLoggerFilled() < 0) {
+				// DTC manager is not interested in collected data
+				ToothLoggerReset();
+			}
+		}
+	}
+#endif
 }
 
 #endif // not EFI_UNIT_TEST
 
-#define JSON_TRG_PID 4
-#define JSON_CAM_PID 10
-
 static void LogTriggerTooth(efitick_t timestamp) {
 	// bail if we aren't enabled
-	if (!ToothLoggerEnabled) {
+	if ((!ToothLoggerEnabled)
+#if EFI_PROD_CODE
+		&& (!toothBuffers.isCircularMode())
+#endif
+		) {
 		return;
 	}
 
@@ -208,6 +281,9 @@ void LogPrimaryTriggerTooth(efitick_t timestamp, bool state) {
 	LogTriggerTooth(timestamp);
 
 #if EFI_UNIT_TEST
+	#define JSON_TRG_PID 4
+	#define JSON_CAM_PID 10
+
 	jsonTraceEntry("trg0", JSON_TRG_PID, /*isEnter*/state, timestamp);
 #endif // EFI_UNIT_TEST
 }
@@ -349,6 +425,12 @@ static int ToothLoggerWriteBufferBin(Writer &writer, CompositeBuffer* buffer) {
 bool ToothLoggerHasData() {
 	chibios_rt::CriticalSectionLocker csl;
 
+#if (EFI_TOOTH_LOGGER_STATICBUFFER_COUNT > 0)
+	if (toothBuffers.isCircularMode()) {
+		// in circular mode data is written by the crash dump writer only
+		return false;
+	}
+#endif
 	return toothBuffers.hasDataI();
 }
 

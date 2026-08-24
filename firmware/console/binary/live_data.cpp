@@ -313,6 +313,15 @@ const live_data_example_s* getLiveData(size_t) {
 }
 
 template<>
+const injector_deadtime_autotune_state_s* getLiveData(size_t) {
+#if EFI_ENGINE_CONTROL
+	return &engine->module<InjectorDeadtimeAutotune>().unmock();
+#else
+	return nullptr;
+#endif
+}
+
+template<>
 const vvl_controller_state_s* getLiveData(size_t) {
 #if MODULE_VVL_CONTROLLER
 	return &engine->module<VvlController>().unmock();

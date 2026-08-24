@@ -71,6 +71,10 @@ const char* getBoardSpecificPinName(brain_pin_e brainPin) {
 			return "B14 Coil 2";
 		case Gpio::E6:
 			return "B8 Fan Relay Weak Low Side output 2 (no flyback here)";
+		case Gpio::HBRIDGE_1_OUT:
+			return "A5 - DC1+ H-Bridge Output";
+		case Gpio::HBRIDGE_2_OUT:
+			return "A6 - DC2+ H-Bridge Output";
 		case Gpio::MSIOBOX_0_OUT_1:
 			return "MS IO-Box 0 OUT 1";
 		case Gpio::MSIOBOX_0_OUT_2:

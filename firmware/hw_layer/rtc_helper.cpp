@@ -11,6 +11,7 @@
 #include <string.h>
 
 #include "rtc_helper.h"
+#include "efitime.h"
 
 #if EFI_RTC
 #include "rusefi_types.h"
@@ -58,19 +59,10 @@ void setRtcDateTime(efidatetime_t const * const dateTime) {
 	rtcSetTime(&RTCD1, &timespec);
 }
 
-static time_t rtc_encode(const RTCDateTime *timespec) {
-  struct tm tim;
-
-  // todo: looks like this pulls a lot of library code? 4K+?
-  // todo: reimplement lighter? https://github.com/rusefi/rusefi/issues/6876
-  rtcConvertDateTimeToStructTm(timespec, &tim, NULL);
-  return mktime(&tim);
-}
-
 uint32_t getEpochTime() {
-	RTCDateTime timespec;
-	rtcGetTime(&RTCD1, &timespec);
-	return rtc_encode(&timespec);
+	// RTC is treated as UTC; dateTimeToEpochTime avoids newlib mktime which pulls tzset+sscanf, see #6876
+	efidatetime_t dateTime = getRtcDateTime();
+	return dateTimeToEpochTime(dateTime);
 }
 
 efidatetime_t getRtcDateTime() {

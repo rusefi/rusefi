@@ -41,7 +41,9 @@ public:
 	void fillRandom();
 
 private:
-	LtftState *m_state;
+	// only init() ever writes this, and store() null-checks it - that guard is only meaningful
+	// if the pointer starts null rather than relying on the instance living at file scope
+	LtftState *m_state = nullptr;
 	// TODO: move to livedata and kill isVeUpdated() ?
 	bool veNeedRefresh = false;
 	bool showUpdateToUser = false;

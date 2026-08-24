@@ -199,7 +199,7 @@ pins:
     id: [A4, A4, EFI_ADC_4]
     class: [outputs, switch_inputs, analog_inputs]
     color: light blue left
-    function: AN volt 10, for aux see R85
+    function: Auxiliary analog input 10, for aux see R85
     ts_name: 28 - AN volt 10, Aux Reuse
     type: av
 
@@ -275,7 +275,7 @@ pins:
     id: [B0, B0, EFI_ADC_8]
     class: [outputs, switch_inputs, analog_inputs]
     color: orange left
-    function: AN volt 8, for aux see R84
+    function: Auxiliary analog input 8, for aux see R84
     ts_name: 36 - AN volt 8, Aux Reuse
     type: av
 
@@ -304,7 +304,7 @@ pins:
     id: [B1, B1, EFI_ADC_9]
     class: [outputs, switch_inputs, analog_inputs]
     color: grey
-    function: AN volt 9 without R30, low side output with R30
+    function: Auxiliary analog input 9 without R30, low side output with R30
     ts_name: 40 - AN volt 9, Aux Reuse
     type: av
 

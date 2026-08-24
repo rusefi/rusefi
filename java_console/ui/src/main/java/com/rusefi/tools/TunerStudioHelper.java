@@ -1,7 +1,8 @@
 package com.rusefi.tools;
 
+import com.rusefi.core.OsUtil;
+
 import com.devexperts.logging.Logging;
-import com.rusefi.FileLog;
 import com.rusefi.NamedThreadFactory;
 
 import com.rusefi.StartupFrame;
@@ -107,7 +108,7 @@ public class TunerStudioHelper {
 
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogTitle("Locate TunerStudio executable");
-        if (FileLog.isWindows()) {
+        if (OsUtil.isWindows()) {
             chooser.setFileFilter(new FileNameExtensionFilter("Executables (*.exe)", "exe"));
             File pf = new File(System.getenv().getOrDefault("ProgramFiles", "C:\\Program Files"));
             if (pf.isDirectory()) chooser.setCurrentDirectory(pf);
@@ -121,7 +122,7 @@ public class TunerStudioHelper {
 
     private static List<String> defaultTsCandidatePaths() {
         String home = System.getProperty("user.home");
-        if (FileLog.isWindows()) {
+        if (OsUtil.isWindows()) {
             String pf = System.getenv().getOrDefault("ProgramFiles", "C:\\Program Files");
             String pf86 = System.getenv().getOrDefault("ProgramFiles(x86)", "C:\\Program Files (x86)");
             return Arrays.asList(
@@ -131,7 +132,7 @@ public class TunerStudioHelper {
                 pf86 + "\\TunerStudioMS\\TunerStudio.exe"
             );
         }
-        if (FileLog.isLinux()) {
+        if (OsUtil.isLinux()) {
             return Arrays.asList(
                 home + "/TunerStudioMS/TunerStudio.sh",
                 home + "/.TunerStudioMS/TunerStudio.sh",
@@ -148,7 +149,7 @@ public class TunerStudioHelper {
     }
 
     public static boolean isTsRunning() {
-        if (!FileLog.isWindows())
+        if (!OsUtil.isWindows())
             return false;
         try {
             Process powerShellProcess = Runtime.getRuntime().exec("powershell \"" + FIND_TS_PROCESS + "\"");

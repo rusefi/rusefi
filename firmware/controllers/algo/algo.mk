@@ -13,6 +13,7 @@ CONTROLLERS_ALGO_SRC_CPP = $(PROJECT_DIR)/controllers/algo/ignition/ignition_sta
 	$(PROJECT_DIR)/controllers/algo/antilag_system.cpp \
 	$(PROJECT_DIR)/controllers/algo/dynoview.cpp \
 	$(PROJECT_DIR)/controllers/algo/runtime_state.cpp \
+	$(PROJECT_DIR)/controllers/algo/basic_configuration.cpp \
 	$(PROJECT_DIR)/controllers/algo/engine_configuration.cpp \
 	$(PROJECT_DIR)/controllers/algo/engine_type_impl.cpp \
 	$(PROJECT_DIR)/controllers/algo/engine.cpp \
