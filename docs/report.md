@@ -6847,3 +6847,36 @@ uploadChangesWithoutBurn never updates the local cache and the ECU keeps resetti
   writes (105345, 105510, 105523, 110309, 110424, 110646). The 105531 kill had no MFS
   write nearby - that one is the thread-latency mode B (fixed separately by the WDA
   executor move).
+
+## 2026-08-24 - m74_9: console Burn-button-only writes (implemented)
+
+User decision: the console must write configuration ONLY on the Burn button - no live
+parameter updates, no automatic re-writes (the self-burn loop from the previous entry
+pushed intermediate tune values into the ECU while the user was tuning).
+
+Changes (java_console):
+- TuningToolbarWidget: removed the 100 ms edit-upload timer entirely. onEdit now only
+  does undo bookkeeping + state refresh; setFirmwareUpdateInProgress/onDisconnect no
+  longer touch a timer. burnToEcuAndThen is the single write path: it calls
+  BinaryProtocol.uploadChanges(image) (diff + upload changed regions + burn + advance
+  the cache) with an error dialog on failure, then writes/burns the dirty secondary
+  TS pages as before.
+- BinaryProtocol.uploadChangesWithoutBurn: now advances the cached controller image to
+  the uploaded snapshot (setConfigurationImage after the chunk loop - writeData throws
+  on failure, so the advance only happens when every chunk landed). This kills the
+  infinite re-diff of the same regions regardless of the caller.
+- TuningPane: updated the stale comment about the uploadChangesWithoutBurn diff
+  baseline on reconnect.
+
+Behavior now: edits stay local ("Pending changes not burned" label), pressing Burn
+uploads only the changed regions and burns; a Burn with no changes is a complete
+no-op (no chunks, no TS burn command, no MFS write). Remaining user-gated writers
+outside the Burn button: the offline-reconcile dialog on connect (explicit choice),
+the KnockPane start/stop toggle, wizard panels.
+
+Validation: ./gradlew :ui:compileJava :ecu_io:compileJava -> OK; ./gradlew :ui:test
+:ecu_io:test -> all pass.
+
+Still pending: firmware-side CRC-compare skip in writeToFlashNowImpl() so that any
+burn (console, TS, wizard) costs nothing when the config is byte-identical - the
+strongest remaining guard against the 168 ms / 2.3 s MFS stall class.
