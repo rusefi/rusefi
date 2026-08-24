@@ -7142,3 +7142,28 @@ update race during the EC 4<->5 flapping the marginal delay=27 state caused
 delay converges to 22 ms (6 ms margins) and EC never touches 5.
 
 Validation: compile_m74_9.sh BUILD SUCCESSFUL, bundle rebuilt.
+
+## 2026-08-24 - m74_9: diag refresh avoids the WDA burst window + delay recenter (20:28 session)
+
+The 20:28 warning: ec=4 wda_int=1 ok=10793 fail=0 miss=28 wrong=4 cntbad=11
+delay=27ms defer=123 kills=8 reqhi=0xF8. The fail storm stays gone (fail=0),
+and reqhi=0xF8 = RESP_CNT 11 (aligned) + RESP_ERR (a wrong byte in the last
+cycle) with CLEAN timing flags - value-only misses do not carry timing flags,
+so the adaptation could not move the delay off the 27 ms clamp (1.4 ms
+window-close margin).
+
+The chain behind the remaining kills: the diag refresh (thread, every ~100 ms)
+collides with the WDA burst -> the executor defers +1 ms (defer=123) -> at
+delay=27 the deferred BYTE0 lands past the window close -> a late byte shifts
+the answer stream -> wrong values (EC++ without timing flags) -> EC 4<->5
+flapping -> 8 kill pulses.
+
+Fixes:
+- the driver thread skips a diag-refresh chunk while the WDA burst is imminent
+  (wd_sched.getMomentNt() within the next 2 ms) - the refresh is 100 ms
+  cadenced, a skipped chunk costs ~7 ms;
+- on a value rejection (W_RESP) or a stream shift (RESP_CNT != 11) the delay
+  is recentered to the nominal 22 ms (WDA_DELAY_INIT_MS) - these misses carry
+  no timing flags, so the +-5 ms adaptation alone cannot leave the clamp edge.
+
+Validation: compile_m74_9.sh BUILD SUCCESSFUL, bundle rebuilt.

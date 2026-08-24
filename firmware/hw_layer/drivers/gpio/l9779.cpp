@@ -1110,9 +1110,23 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 			chip->diag_ts = chTimeAddX(chVTGetSystemTimeX(), TIME_MS2I(DIAG_REFRESH_MS));
 		}
 		if (chip->diag_pending > 0) {
-			chip->diag_pending -= chip->refresh_diag_cache(DIAG_REFRESH_REGS);
-			if (chip->diag_pending < 0)
-				chip->diag_pending = 0;
+			/* The WDA burst must not be deferred: the executor reschedules
+			 * +1 ms when spi_busy is set, and at delay=27 the window-close
+			 * margin is only ~1.4 ms - a deferred BYTE0 lands late, shifts the
+			 * answer stream and costs EC increments (the 20:28 session:
+			 * defer=123 -> late bytes -> cntbad=11 -> kills=8). Skip this
+			 * pass's chunk while the burst is imminent; the refresh is
+			 * 100 ms-cadenced, so a skipped chunk costs ~7 ms. */
+			efitick_t nowNt = getTimeNowNt();
+			efitick_t wdMomentNt = chip->wd_sched.getMomentNt();
+			bool burstImminent = (wdMomentNt != 0) &&
+				(wdMomentNt > nowNt) &&
+				(wdMomentNt < nowNt + MS2NT(2));
+			if (!burstImminent) {
+				chip->diag_pending -= chip->refresh_diag_cache(DIAG_REFRESH_REGS);
+				if (chip->diag_pending < 0)
+					chip->diag_pending = 0;
+			}
 		}
 	}
 }
@@ -1320,17 +1334,26 @@ void L9779::wdFeedFromExecutor()
 	 * setting the timing flags, which made the 19:09 'ec=7 miss=2' session
 	 * look healthy. Exposed via l9779_getWdaCounters(). */
 	wd_last_requhi = requhi;
-	if (requhi & 0x04)			/* W_RESP: value rejected */
+	if (requhi & 0x04) {			/* W_RESP: value rejected */
 		wd_wrong_cnt++;
+		/* A value rejection correlates with a shifted stream / marginal
+		 * timing; recenter the delay so the thin-edge state (delay pegged at
+		 * the clamp, 1.4 ms margin) does not persist - a value-only miss does
+		 * not carry the timing flags, so the adaptation alone cannot move
+		 * the delay back (the 20:28 session). */
+		wd_delay_ms = WDA_DELAY_INIT_MS;
+	}
 
 	/* RESP_CNT != 11: the answer stream is SHIFTED by one byte (a stray late
 	 * byte landed in the wrong position). Writing the burst into a shifted
 	 * stream would complete a wrong-value response (EC++) AND keep the shift
 	 * for every following cycle. Skip the burst instead: the window expires
 	 * unanswered (one EC via NO_RESP), the sequencer resets RESP_CNT to 11
-	 * and the next burst re-aligns deterministically. */
+	 * and the next burst re-aligns deterministically. Recenter the delay too -
+	 * the shift implies the timing sat at the window edge. */
 	if ((requhi & 0xc0) != 0xc0) {
 		wd_cnt_bad++;
+		wd_delay_ms = WDA_DELAY_INIT_MS;
 		engine->scheduler.schedule("l9779wda", &wd_sched,
 			getTimeNowNt() + MS2NT(wd_delay_ms) - US2NT(WDA_BURST_LEAD_US),
 			action_s::make<l9779WdaFeedExec, L9779*>(this));
