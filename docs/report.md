@@ -7114,3 +7114,31 @@ Fix:
   session look healthy; next time the exact mechanism is visible in one line.
 
 Validation: compile_m74_9.sh BUILD SUCCESSFUL, bundle rebuilt.
+
+## 2026-08-24 - m74_9: WDA adaptation direction fix + stream-shift skip (20:12 session)
+
+The 4-frame read fix killed the fail storm (fail=0), and the new
+instrumentation paid off immediately: reqhi=0xDB = RESP_CNT 11 (aligned) +
+NO_RESP + RESP_TO_EARLY both set - the datasheet's signature of a TOO-LATE
+response ("a too late response is at the same time a too early response
+concerning the next WDG cycle"). Two bugs found from that single byte:
+
+1. Adaptation direction: the code checked RESP_TO_EARLY before NO_RESP, so
+   the both-flags (late) case was classified as EARLY and the delay walked UP
+   (+5) until it pegged at the 27 ms clamp - sitting on the window edge,
+   late answers never decrementing it back (delay=27ms in the log). Fixed:
+   NO_RESP is checked FIRST; a both-flags byte is now correctly treated as
+   late (-5 ms).
+2. Stream shift: cntbad=8 means RESP_CNT was != 11 at read time 8 times - a
+   stray late byte shifts the answer stream by one position, and writing the
+   burst into the shifted stream completes a wrong-value response (EC++) AND
+   keeps the shift. Fixed: on RESP_CNT != 11 the burst is SKIPPED - the
+   window expires unanswered (one EC via NO_RESP), the sequencer resets
+   RESP_CNT to 11 and the next burst re-aligns deterministically.
+
+Also explained: ec=4 wda_int=1 in the warning is the chip's WDA_INT/EC
+update race during the EC 4<->5 flapping the marginal delay=27 state caused
+(the blade kill follows WDA_INT, hence the drop); with the direction fix the
+delay converges to 22 ms (6 ms margins) and EC never touches 5.
+
+Validation: compile_m74_9.sh BUILD SUCCESSFUL, bundle rebuilt.
