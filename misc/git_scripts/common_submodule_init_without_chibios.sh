@@ -3,6 +3,7 @@
         git submodule update --init --depth=1 .github/workflows/hw-ci/gethla
         git submodule update --init --depth=1 firmware/libfirmware
         git submodule update --init --depth=1 firmware/ext/lua
+        git submodule update --init --depth=1 firmware/ext/magic_enum
         git submodule update --init --depth=1 firmware/ext/rusefi-gha
         git submodule update --init --depth=1 firmware/ext/uzlib
         git submodule update --init --depth=1 firmware/ext/openblt

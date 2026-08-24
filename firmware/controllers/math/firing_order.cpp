@@ -1,3 +1,12 @@
+/**
+ * @file firing_order.cpp
+ * @brief Cylinder firing-order tables.
+ *
+ * Defines the predefined firing-order sequences for the supported cylinder counts
+ * and provides lookup helpers that map an ignition/injection event index to the
+ * corresponding physical cylinder.
+ */
+
 #include "pch.h"
 
 static const uint8_t order_1[] = {1};
@@ -12,6 +21,7 @@ static const uint8_t order_1_THEN_3_THEN_4_THEN2[] = { 1, 3, 4, 2 };
 static const uint8_t order_1_THEN_2_THEN_4_THEN3[] = { 1, 2, 4, 3 };
 static const uint8_t order_1_THEN_3_THEN_2_THEN4[] = { 1, 3, 2, 4 };
 static const uint8_t order_1_THEN_4_THEN_3_THEN2[] = { 1, 4, 3, 2 };
+static const uint8_t order_1_THEN_2_THEN_3_THEN4[] = { 1, 2, 3, 4 };
 
 // 5 cylinder
 static const uint8_t order_1_2_4_5_3[] = {1, 2, 4, 5, 3};
@@ -23,6 +33,7 @@ static const uint8_t order_1_THEN_2_THEN_3_THEN_4_THEN_5_THEN_6[] = { 1, 2, 3, 4
 static const uint8_t order_1_6_3_2_5_4[] = {1, 6, 3, 2, 5, 4};
 static const uint8_t order_1_4_3_6_2_5[] = {1, 4, 3, 6, 2, 5};
 static const uint8_t order_1_6_2_4_3_5[] = {1, 6, 2, 4, 3, 5};
+static const uint8_t order_1_6_2_5_3_4[] = {1, 6, 2, 5, 3, 4};
 static const uint8_t order_1_6_5_4_3_2[] = {1, 6, 5, 4, 3, 2};
 static const uint8_t order_1_4_5_2_3_6[] = {1, 4, 5, 2, 3, 6};
 
@@ -71,6 +82,7 @@ static size_t getFiringOrderLength() {
 	case FO_1_2_4_3:
 	case FO_1_3_2_4:
 	case FO_1_4_3_2:
+	case FO_1_2_3_4:
 		return 4;
 // 5 cylinder
 	case FO_1_2_4_5_3:
@@ -83,6 +95,7 @@ static size_t getFiringOrderLength() {
 	case FO_1_6_3_2_5_4:
 	case FO_1_4_3_6_2_5:
 	case FO_1_6_2_4_3_5:
+	case FO_1_6_2_5_3_4:
 	case FO_1_6_5_4_3_2:
 	case FO_1_4_5_2_3_6:
 		return 6;
@@ -146,6 +159,8 @@ static const uint8_t* getFiringOrderTable() {
 		return order_1_THEN_3_THEN_2_THEN4;
 	case FO_1_4_3_2:
 		return order_1_THEN_4_THEN_3_THEN2;
+	case FO_1_2_3_4:
+		return order_1_THEN_2_THEN_3_THEN4;
 // 5 cylinder
 	case FO_1_2_4_5_3:
 		return order_1_2_4_5_3;
@@ -163,6 +178,8 @@ static const uint8_t* getFiringOrderTable() {
 		return order_1_4_3_6_2_5;
 	case FO_1_6_2_4_3_5:
 		return order_1_6_2_4_3_5;
+	case FO_1_6_2_5_3_4:
+		return order_1_6_2_5_3_4;
 	case FO_1_6_5_4_3_2:
 		return order_1_6_5_4_3_2;
 	case FO_1_4_5_2_3_6:

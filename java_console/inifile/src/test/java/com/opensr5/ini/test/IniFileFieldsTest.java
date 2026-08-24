@@ -41,6 +41,8 @@ public class IniFileFieldsTest {
         assertNotNull(model.getCurves());
         CurveModel curve = model.getCurves().get("scriptCurve1");
         assertNotNull(curve);
+        assertEquals("X", curve.getXLabel());
+        assertEquals("Y", curve.getYLabel());
         assertEquals(0, curve.getxAxis().getMin());
         assertEquals(128, curve.getxAxis().getMax());
         assertEquals(10, curve.getxAxis().getStep());
@@ -48,6 +50,31 @@ public class IniFileFieldsTest {
         assertEquals(-155, curve.getyAxis().getMin());
         assertEquals(150, curve.getyAxis().getMax());
         assertEquals(12, curve.getyAxis().getStep());
+    }
+
+    @Test
+    public void testCurveAxisWithoutStep() {
+        // seen in a real TS project mainController.ini: "yAxis = -5,  5," - min and max only,
+        // trailing comma, no step value
+        String string =
+            "[Constants]\n" +
+                "page = 1\n" +
+                "scriptCurve1Bins = array, F32, 4828, [16], \"x\", 1, 0, -10000, 10000, 3\n" +
+                "scriptCurve1 = array, F32, 4892, [16], \"y\", 1, 0, -10000, 10000, 3\n" +
+                "[CurveEditor]\n" +
+                "\tcurve = scriptCurve1, \"Script Curve #1\"\n" +
+                "\t\txAxis\t\t=  0, 128, 10\n" +
+                "\t\tyAxis\t\t= -5,  5,\n" +
+                "\t\txBins\t\t= scriptCurve1Bins\n" +
+                "\t\tyBins\t\t= scriptCurve1\n";
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = IniFileReaderTest.readLines(lines);
+
+        CurveModel curve = model.getCurves().get("scriptCurve1");
+        assertNotNull(curve);
+        assertEquals(-5, curve.getyAxis().getMin());
+        assertEquals(5, curve.getyAxis().getMax());
+        assertEquals(10, curve.getyAxis().getStep());
     }
 
     @Test
@@ -78,6 +105,27 @@ public class IniFileFieldsTest {
         EnumIniField field = (EnumIniField) model.getAllIniFields().get("iat_adcChannel");
         assertEquals(7, field.getEnums().size());
         assertEquals(2, model.getAllIniFields().size());
+    }
+
+    @Test
+    public void testEnumListFieldsKeyValueDefine() {
+        // human-sorted key-value form with gaps, see PinoutLogic.enumToOptionsList()
+        String string = "#define output_pin_e_list=0=\"NONE\",5=\"Injector 1\",4=\"Injector 2\",47=\"Coil 1\"\n" +
+            "page = 1\n" +
+            "[Constants]\n" +
+            "\tinjectionPins1\t\t\t\t = bits, U16, 312, [0:8] $output_pin_e_list\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = IniFileReaderTest.readLines(lines);
+        assertEquals(1, model.getDefines().size());
+
+        EnumIniField field = (EnumIniField) model.getAllIniFields().get("injectionPins1");
+        assertEquals(4, field.getEnums().size());
+        assertEquals("NONE", field.getEnums().get(0));
+        assertEquals("Injector 2", field.getEnums().get(4));
+        assertEquals("Injector 1", field.getEnums().get(5));
+        assertEquals("Coil 1", field.getEnums().get(47));
+        assertEquals(47, field.getEnums().indexOf("Coil 1"));
     }
 
     @Test

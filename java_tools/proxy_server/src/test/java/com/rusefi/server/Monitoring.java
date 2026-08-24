@@ -13,7 +13,6 @@ import javax.json.JsonObjectBuilder;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
-import java.util.Date;
 
 import static com.rusefi.Timeouts.SECOND;
 import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
@@ -73,7 +72,7 @@ public class Monitoring {
         builder.add("controllersCount", backend.getControllersCount());
         builder.add("backend version", ProxyClient.BACKEND_VERSION);
         builder.add("framework version", UiVersion.CONSOLE_VERSION);
-        builder.add("compiled", new Date(rusEFIVersion.classBuildTimeMillis()).toString());
+        builder.add("compiled", rusEFIVersion.classBuildTimeString());
         builder.add("now", System.currentTimeMillis());
         builder.add(SessionDetails.AGE, birthday.getDuration());
 

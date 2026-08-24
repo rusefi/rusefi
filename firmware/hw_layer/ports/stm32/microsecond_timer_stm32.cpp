@@ -68,7 +68,9 @@ void portInitMicrosecondTimer() {
 	#if defined(STM32F4XX) || defined (STM32F7XX)
 		DBGMCU->APB1FZ |= DBGMCU_APB1_FZ_DBG_TIM5_STOP;
 	#endif
-		/* TODO: stm32h7? */
+	#if defined(STM32H7XX)
+		DBGMCU->APB1LFZ1 |= DBGMCU_APB1LFZ1_DBG_TIM5;
+	#endif
 	}
 }
 

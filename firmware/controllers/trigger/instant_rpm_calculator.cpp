@@ -1,6 +1,6 @@
 
 #include "pch.h"
-#include "instant_rpm_calculator.h"
+#include "arrays_util.h"
 
 /**
  * sensorChartMode
@@ -41,6 +41,22 @@ void InstantRpmCalculator::movePreSynchTimestamps() {
 	}
 
 	memcpy(timeOfLastEvent + firstDst, spinningEvents + firstSrc, eventsToCopy * sizeof(timeOfLastEvent[0]));
+}
+
+
+void InstantRpmCalculator::offsetIndices(int indexOffset) {
+	auto triggerSize = getTriggerCentral()->triggerShape.getSize();
+	int crankDivider = getCrankDivider(getTriggerCentral()->triggerShape.getWheelOperationMode());
+	int totalSize = triggerSize * crankDivider;
+
+	// We want to shift indices by indexOffset.
+	// If index 0 becomes index -indexOffset (mod totalSize),
+	// this is a rotation.
+	// Positive indexOffset means the data moves "forward" in the array,
+	// so the element at i moves to (i + indexOffset) % totalSize.
+
+	rotateArray(timeOfLastEvent, totalSize, indexOffset);
+	rotateArray(instantRpmValue, totalSize, indexOffset);
 }
 
 float InstantRpmCalculator::calculateInstantRpm(
@@ -111,6 +127,18 @@ float InstantRpmCalculator::calculateInstantRpm(
 	}
 
 	prevInstantRpmValue = instantRpm;
+
+	// Track min/max within the engine cycle; publish the range once per cycle.
+	// An index at or below the previous one means the trigger wrapped: a new engine cycle started.
+	// '<=' also covers single-tooth triggers where every event lands on the same index.
+	if (current_index <= m_lastRangeIndex) {
+		m_rpmRangeLastCycle = m_cycleMinRpm > 0 ? m_cycleMaxRpm - m_cycleMinRpm : 0;
+		m_cycleMinRpm = m_cycleMaxRpm = instantRpm;
+	} else {
+		m_cycleMinRpm = m_cycleMinRpm == 0 ? instantRpm : std::min(m_cycleMinRpm, instantRpm);
+		m_cycleMaxRpm = std::max(m_cycleMaxRpm, instantRpm);
+	}
+	m_lastRangeIndex = current_index;
 
 	m_instantRpmRatio = instantRpm / instantRpmValue[prevIndex];
 

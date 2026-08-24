@@ -60,9 +60,9 @@ public class ConfigurationImage {
     }
 
     public void setBitValue(EnumIniField enumIniField, int ordinal) {
-        int value = getByteBuffer(enumIniField).getInt();
+        int value = (int) enumIniField.getType().readRawValue(getByteBuffer(enumIniField));
         value = EnumIniField.setBitRange(value, ordinal, enumIniField.getBitPosition(), enumIniField.getBitSize0() + 1);
-        getByteBuffer(enumIniField).putInt(value);
+        enumIniField.getType().writeRawValue(getByteBuffer(enumIniField), value);
     }
 
     @NotNull
@@ -122,7 +122,7 @@ public class ConfigurationImage {
 
         if (field instanceof EnumIniField) {
             EnumIniField enumField = (EnumIniField) field;
-            ByteBuffer bb = getByteBuffer(enumField.getOffset(), 4);
+            ByteBuffer bb = getByteBuffer(enumField.getOffset(), enumField.getSize());
             int rawValue = (int) enumField.getType().readRawValue(bb);
             int bitCount = enumField.getBitSize0() + 1;
             int mask = (1 << bitCount) - 1;
@@ -135,8 +135,9 @@ public class ConfigurationImage {
     @NotNull
     public ByteBuffer getByteBuffer(EnumIniField enumIniField) {
         Objects.requireNonNull(this, "image enum getter");
-        if (getSize() < enumIniField.getOffset() + 4)
+        int size = enumIniField.getSize();
+        if (getSize() < enumIniField.getOffset() + size)
             throw new IllegalArgumentException("OutOfBounds while " + enumIniField.getName() + " " + enumIniField.getOffset());
-        return getByteBuffer(enumIniField.getOffset(), 4);
+        return getByteBuffer(enumIniField.getOffset(), size);
     }
 }

@@ -18,7 +18,7 @@ pins:
   - pin: 3
     id: EFI_ADC_14
     class: analog_inputs
-    function: CLT sensor
+    function: ECT CLT Coolant Sensor Input
     ts_name: A03 - Coolant t Ain
     type: at
 
@@ -59,15 +59,15 @@ pins:
 
   - pin: 9
     function: Cam and Crank 2 VR sensor GND
-    type: sgnd
+    type: agnd
 
   - pin: 10
     function: Cam and Crank 2 VR sensors shield
-    type: sgnd
+    type: agnd
 
   - pin: 11
-    function: Power GND
-    type: pgnd
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 12
     id: MC33810_1_OUT_2
@@ -82,7 +82,7 @@ pins:
 
   - pin: 14
     function: Ground (Body)
-    type: pgnd
+    type: gnd
 
   - pin: 15
     function: Backup 12V supply (always on)
@@ -97,7 +97,7 @@ pins:
 
   - pin: 17
     function: AFR sensors shield
-    type: sgnd
+    type: agnd
 
   - pin: 18
     id: EFI_ADC_11
@@ -120,13 +120,9 @@ pins:
     ts_name: A20 - Torque Ctrl Din
     type: av
 
-#  - pin: 21
-#    function: Sensors GND
-#    type: sgnd
-
   - pin: 22
-    function: Power GND
-    type: pgnd
+    function: Power/Chassis GND ground
+    type: gnd
 
 info:
   cid: a

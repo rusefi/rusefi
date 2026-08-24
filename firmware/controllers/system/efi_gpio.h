@@ -32,7 +32,7 @@ public:
 	// 6000 RPM is 100Hz we can fit a few years worth of sparks into 32 bits, right?
 	// 2_000_000_000 / 100 = 20_000_000 seconds = 231 days?
 	// [tag:duration_limit]
-	int signalFallSparkId;
+	uint32_t signalFallSparkId;
 	int8_t coilIndex;
 };
 
@@ -107,7 +107,8 @@ public:
 	OutputPin warningLedPin; // orange LED on brain board by default
 	OutputPin runningLedPin; // green LED on brain board by default
 
-	OutputPin debugTriggerSync;
+	OutputPin debugTriggerSync; // toggle on sync events regardless tooth count and error
+	OutputPin debugTriggerState; // higher lever isSynchronized or not state
 	RegisteredOutputPin boostPin;
 	RegisteredOutputPin idleSolenoidPin;
 	RegisteredOutputPin secondIdleSolenoidPin;

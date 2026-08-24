@@ -211,6 +211,7 @@
         <constant digits="1" name="driveWheelRevPerKm" units="revs/km">1000.0</constant>
         <constant digits="2" name="canSleepPeriodMs" units="ms">50.0</constant>
         <constant digits="0" name="byFirmwareVersion" units="index">2.0250206E7</constant>
+        <constant name="hash3">new-firmware-sha</constant>
         <constant name="tps1_1AdcChannel">"D13 TPS1"</constant>
         <constant name="vbattAdcChannel">"A7 Voltage From Key"</constant>
         <constant name="fuelLevelSensor">"NONE"</constant>

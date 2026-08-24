@@ -17,18 +17,20 @@ void initIfValid(const char* msg, adc_channel_e channel) {
 	}
 
 #if EFI_PROD_CODE && HAL_USE_ADC
-/**
-TODO: this code is similar to AdcSubscription::SubscribeSensor, what is the plan? shall we extract helper method or else?
- */
+	/**
+	TODO: this code is similar to AdcSubscription::SubscribeSensor, what is the plan? shall we extract helper method or
+	else?
+	 */
 
 	brain_pin_e pin = getAdcChannelBrainPin(msg, channel);
 	if (pin == Gpio::Invalid) {
-	// todo: external muxes for internal ADC #3350
-	    return;
+		// todo: external muxes for internal ADC #3350
+		return;
 	}
 	efiSetPadMode(msg, pin, PAL_MODE_INPUT_ANALOG);
 #else
-  UNUSED(msg);UNUSED(channel);
+	UNUSED(msg);
+	UNUSED(channel);
 #endif // EFI_PROD_CODE && HAL_USE_ADC
 }
 
@@ -41,14 +43,15 @@ void deInitIfValid(const char* msg, adc_channel_e channel) {
 	brain_pin_e pin = getAdcChannelBrainPin(msg, channel);
 	efiSetPadUnused(pin);
 #else
-  UNUSED(msg);UNUSED(channel);
+	UNUSED(msg);
+	UNUSED(channel);
 #endif // EFI_PROD_CODE && HAL_USE_ADC
 }
 
 static void initOldAnalogInputs() {
-    if (isAdcChannelValid(engineConfiguration->afr.hwChannel) && engineConfiguration->enableAemXSeries) {
-        criticalError("Please pick either analog AFR or CAN AFR input not both.");
-    }
+	if (isAdcChannelValid(engineConfiguration->afr.hwChannel) && engineConfiguration->enableAemXSeries) {
+		criticalError("Please pick either analog AFR or CAN AFR input not both.");
+	}
 	initIfValid("AFR", engineConfiguration->afr.hwChannel);
 	initIfValid("AUXF#1", engineConfiguration->auxFastSensor1_adcChannel);
 }
@@ -60,22 +63,25 @@ static void deInitOldAnalogInputs() {
 
 static void initAuxDigital() {
 #if EFI_PROD_CODE
-	for (size_t i = 0;i<efi::size(engineConfiguration->luaDigitalInputPins);i++) {
-		efiSetPadMode("Lua Digital", engineConfiguration->luaDigitalInputPins[i], engineConfiguration->luaDigitalInputPinModes[i]);
+	for (size_t i = 0; i < efi::size(engineConfiguration->luaDigitalInputPins); i++) {
+		efiSetPadMode(
+				"Lua Digital",
+				engineConfiguration->luaDigitalInputPins[i],
+				engineConfiguration->luaDigitalInputPinModes[i]);
 	}
 #endif // EFI_PROD_CODE
 }
 
 void pokeAuxDigital() {
 #if EFI_PROD_CODE
-	for (size_t i = 0;i<efi::size(engineConfiguration->luaDigitalInputPins);i++) {
-	  engine->luaDigitalInputState[i].state.update(getAuxDigital(i));
+	for (size_t i = 0; i < efi::size(engineConfiguration->luaDigitalInputPins); i++) {
+		engine->luaDigitalInputState[i].state.update(getAuxDigital(i));
 	}
 #endif // EFI_PROD_CODE
 }
 
 static void deInitAuxDigital() {
-	for (size_t i = 0;i<efi::size(activeConfiguration.luaDigitalInputPins);i++) {
+	for (size_t i = 0; i < efi::size(activeConfiguration.luaDigitalInputPins); i++) {
 		brain_pin_markUnused(activeConfiguration.luaDigitalInputPins[i]);
 	}
 }
@@ -86,10 +92,10 @@ static LuaOverrideSensor overrideClt(SensorType::DashOverrideClt, SensorType::Cl
 static LuaOverrideSensor overrideBatteryVoltage(SensorType::DashOverrideBatteryVoltage, SensorType::BatteryVoltage);
 
 void initOverrideSensors() {
-	  overrideRpm.Register();
-	  overrideVehicleSpeed.Register();
-	  overrideClt.Register();
-	  overrideBatteryVoltage.Register();
+	overrideRpm.Register();
+	overrideVehicleSpeed.Register();
+	overrideClt.Register();
+	overrideBatteryVoltage.Register();
 }
 
 // todo: closer alignment with 'stopSensors'
@@ -110,7 +116,6 @@ static void sensorStartUpOrReconfiguration(bool isFirstTime) {
 	initFlexSensor(isFirstTime);
 }
 
-
 // one-time start-up
 // see also 'reconfigureSensors'
 void initNewSensors() {
@@ -120,8 +125,8 @@ void initNewSensors() {
 
 	initOverrideSensors();
 
-  sensorStartUpOrReconfiguration(true);
-  // todo:
+	sensorStartUpOrReconfiguration(true);
+	// todo:
 	initLambda();
 	// todo: 'isFirstTime' approach for initEgt vs startEgt
 	initEgt();
@@ -195,8 +200,5 @@ static void initSensorCli() {
 
 	addConsoleAction("reset_sensor_mocks", Sensor::resetAllMocks);
 	addConsoleAction("show_sensors", Sensor::showAllSensorInfo);
-	addConsoleActionI("show_sensor",
-		[](int idx) {
-			Sensor::showInfo(static_cast<SensorType>(idx));
-		});
+	addConsoleActionI("show_sensor", [](int idx) { Sensor::showInfo(static_cast<SensorType>(idx)); });
 }

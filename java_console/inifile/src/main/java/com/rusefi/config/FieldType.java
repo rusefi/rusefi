@@ -85,7 +85,7 @@ public enum FieldType {
 
     /**
      * Read a raw numeric value from a little-endian ByteBuffer according to this type.
-     * The buffer must contain at least 4 bytes from the current position.
+     * The buffer must contain at least {@link #getStorageSize()} bytes from the current position.
      */
     public double readRawValue(ByteBuffer bb) {
         switch (this) {
@@ -94,15 +94,36 @@ public enum FieldType {
             case INT:
                 return bb.getInt();
             case UINT16:
-                return bb.getInt() & 0xFFFF;
+                return bb.getShort() & 0xFFFF;
             case INT16:
-                return (short) (bb.getInt() & 0xFFFF);
+                return bb.getShort();
             case UINT8:
-                return bb.getInt() & 0xFF;
+                return bb.get() & 0xFF;
             case INT8:
-                return (byte) (bb.getInt() & 0xFF);
+                return bb.get();
             default:
                 throw new UnsupportedOperationException("type " + this);
+        }
+    }
+
+    /**
+     * Write a raw integer value into a little-endian ByteBuffer according to this type.
+     */
+    public void writeRawValue(ByteBuffer bb, int value) {
+        switch (this) {
+            case INT:
+                bb.putInt(value);
+                break;
+            case UINT16:
+            case INT16:
+                bb.putShort((short) value);
+                break;
+            case UINT8:
+            case INT8:
+                bb.put((byte) value);
+                break;
+            default:
+                throw new UnsupportedOperationException("writeRawValue for type " + this);
         }
     }
 

@@ -48,14 +48,17 @@ void populateFrame(Status& msg) {
 	msg.warningCounter = engine->engineState.warnings.warningCounter;
 	msg.lastErrorCode = static_cast<uint16_t>(engine->engineState.warnings.lastErrorCode);
 
+#if EFI_ENGINE_CONTROL
 	msg.revLimit = !engine->module<LimpManager>()->allowInjection() || !engine->module<LimpManager>()->allowIgnition();
+#endif // EFI_ENGINE_CONTROL
+
 	msg.mainRelay = enginePins.mainRelay.getLogicValue();
 	msg.fuelPump = enginePins.fuelPumpRelay.getLogicValue();
 	msg.checkEngine = enginePins.checkEnginePin.getLogicValue();
 	msg.o2Heater = enginePins.o2heater.getLogicValue();
-#if EFI_SHAFT_POSITION_INPUT
+#if EFI_SHAFT_POSITION_INPUT && EFI_ENGINE_CONTROL
 	msg.lambdaProtectActive = engine->lambdaMonitor.isCut();
-#endif // EFI_SHAFT_POSITION_INPUT
+#endif // EFI_SHAFT_POSITION_INPUT && EFI_ENGINE_CONTROL
 	msg.fan = enginePins.fanRelay.getLogicValue();
 	msg.fan2 = enginePins.fanRelay2.getLogicValue();
 
@@ -208,7 +211,7 @@ struct PerCylinderKnock {
 };
 
 void populateFrame(PerCylinderKnock& msg) {
-  for (size_t index = 0;index<std::min(8, MAX_CYLINDER_COUNT);index++) {
+  for (int index = 0; index<std::min(8, MAX_CYLINDER_COUNT); index++) {
 	  msg.knock[index] = engine->module<KnockController>()->m_knockCyl[index];
   }
 }
@@ -257,7 +260,7 @@ void sendCanVerbose() {
 #endif // HW_HELLEN
 	auto base = engineConfiguration->verboseCanBaseAddress;
 	auto isExt = engineConfiguration->rusefiVerbose29b;
-	auto canChannel = engineConfiguration->canBroadcastUseChannelTwo;
+	auto canChannel = (int)engineConfiguration->canBroadcastUseChannel;
 
 	transmitStruct<Status>		(CanCategory::VERBOSE, base + 0, isExt, canChannel);
 	transmitStruct<Speeds>		(CanCategory::VERBOSE, base + 1, isExt, canChannel);

@@ -5,6 +5,7 @@ import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ini.AxisModel;
 import com.opensr5.ini.CurveModel;
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.TsStringFunction;
 import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.IniField;
 import com.rusefi.config.StringFormatter;
@@ -15,8 +16,12 @@ import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.KeyEvent;
+import java.awt.geom.AffineTransform;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.EventObject;
 
 /**
  * curve panel consists of two parts
@@ -41,6 +46,7 @@ public class CurveWidget {
     private Double[] xValues;
     private Double[] yValues;
     private String xUnits;
+    private String yUnits;
     private int xDigits;
     private int yDigits;
     private ConfigurationImage imageTarget;
@@ -51,9 +57,36 @@ public class CurveWidget {
     public CurveWidget(CurveModel curveModel, IniFileModel iniFileModel, ConfigurationImage ci) {
         table.getTableHeader().setReorderingAllowed(false);
         table.setDefaultRenderer(Object.class, new GradientRenderer());
+        table.setDefaultEditor(Object.class, new DefaultCellEditor(new JTextField()) {
+            private boolean keyboardEditing;
+
+            @Override
+            public boolean isCellEditable(EventObject event) {
+                keyboardEditing = event instanceof KeyEvent;
+                return super.isCellEditable(event);
+            }
+
+            @Override
+            public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+                JTextField editor = (JTextField) super.getTableCellEditorComponent(table, value, isSelected, row, column);
+                if (keyboardEditing) {
+                    editor.setText("");
+                }
+                return editor;
+            }
+        });
+        table.setCellSelectionEnabled(true);
+        table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        table.getSelectionModel().addListSelectionListener(e -> canvas.repaint());
+        table.getColumnModel().getSelectionModel().addListSelectionListener(e -> canvas.repaint());
+        // JTable defaults to a 450x400 preferredScrollableViewportSize; left unchanged the table would
+        // claim ~450px of fixed preferred width and starve the canvas (which only receives the GridBag
+        // remainder) on narrow windows. Size the table to its actual content so the 0.8/0.2 weights hold.
+        table.setPreferredScrollableViewportSize(new Dimension(180, 300));
 
         JPanel rightPanel = new JPanel(new BorderLayout());
-        rightPanel.add(table.getTableHeader(), BorderLayout.NORTH);
+        // The table header is reparented into the JScrollPane's column header by configureEnclosingScrollPane(),
+        // so it does not need (and must not get) a separate NORTH slot here.
         rightPanel.add(new JScrollPane(table), BorderLayout.CENTER);
 
         content.setLayout(new GridBagLayout());
@@ -77,11 +110,12 @@ public class CurveWidget {
         this.imageTarget = ci;
 
         IniField xField = iniFile.findIniField(curveModel.getxBins()).get();
-        this.xUnits = xField.getUnits();
+        this.xUnits = resolveUnits(xField.getUnits(), iniFile, ci);
         this.xDigits = parseDigits(xField.getDigits());
         this.xBinsField = xField instanceof ArrayIniField ? (ArrayIniField) xField : null;
 
         IniField yField = iniFile.findIniField(curveModel.getyBins()).get();
+        this.yUnits = resolveUnits(yField.getUnits(), iniFile, ci);
         this.yDigits = parseDigits(yField.getDigits());
         this.yBinsField = yField instanceof ArrayIniField ? (ArrayIniField) yField : null;
 
@@ -102,6 +136,28 @@ public class CurveWidget {
         if (imageTarget == null) return;
         if (xBinsField != null) ConfigurationImageGetterSetter.setArrayValues(xBinsField, imageTarget, xValues);
         if (yBinsField != null) ConfigurationImageGetterSetter.setArrayValues(yBinsField, imageTarget, yValues);
+    }
+
+    /**
+     * The units token may be a TunerStudio expression such as {@code {bitStringValue(unitsLabels,
+     * useMetricOnInterface)}}, which picks a °C/°F label depending on a config setting. Resolve it so the
+     * canvas shows the actual unit instead of the raw expression (issue #9635). {@code useMetricOnInterface}
+     * lives in the configuration image, so {@code ci} is passed as the config source (not output channels).
+     */
+    public static String resolveUnits(String raw, IniFileModel ini, ConfigurationImage ci) {
+        if (raw == null) {
+            return null;
+        }
+        if (TsStringFunction.containsStringFunction(raw)) {
+            String resolved = TsStringFunction.resolve(raw, ini, ci, null);
+            // On failure (e.g. no config image) show nothing rather than the raw expression text.
+            return resolved != null ? resolved : "";
+        }
+        String t = raw.trim();
+        if (t.startsWith("{")) {
+            t = t.replaceAll("^\\{\\s*", "").replaceAll("\\s*}$", "").trim();
+        }
+        return t;
     }
 
     private int parseDigits(String digits) {
@@ -158,6 +214,12 @@ public class CurveWidget {
 
         public CurveCanvas() {
             setBackground(Color.BLACK);
+            // An empty JPanel reports a near-zero preferred width, so GridBagLayout has no canvas baseline
+            // to defend while shrinking and the plot collapses to a sliver on small windows (issue #9635).
+            // A real preferred size lets the 0.8 weight keep the canvas usefully wide as the window resizes.
+            // (No minimumSize on purpose: with the no-horizontal-scroll container a minimum could push the
+            // table off the right edge on a very narrow window; the preferred size already carries the fix.)
+            setPreferredSize(new Dimension(400, 300));
             MouseAdapter mouseAdapter = new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
@@ -237,6 +299,14 @@ public class CurveWidget {
                 int unitsWidth = g2.getFontMetrics().stringWidth(xUnits);
                 g2.drawString(xUnits, (getWidth() - unitsWidth) / 2, getHeight() - 5);
             }
+
+            if (yUnits != null && !yUnits.isEmpty()) {
+                int unitsWidth = g2.getFontMetrics().stringWidth(yUnits);
+                AffineTransform transform = g2.getTransform();
+                g2.rotate(-Math.PI / 2);
+                g2.drawString(yUnits, -(getHeight() + unitsWidth) / 2, 12);
+                g2.setTransform(transform);
+            }
         }
 
         public void drawGrid(Graphics2D g2) {
@@ -248,6 +318,9 @@ public class CurveWidget {
             FontMetrics fm = g2.getFontMetrics();
 
             // Draw vertical grid lines
+            // Track the right edge of the last drawn x-axis label so that, on narrow canvases, we skip
+            // labels that would overlap their neighbour (the grid lines themselves are always drawn).
+            int lastXLabelRight = Integer.MIN_VALUE;
             for (int i = 0; i < xAxis.getStep(); i++) {
                 double val = xAxis.getMin() + (xAxis.getMax() - xAxis.getMin()) * i / (xAxis.getStep() - 1);
                 Point p1 = worldToCanvas(val, yAxis.getMin());
@@ -256,10 +329,15 @@ public class CurveWidget {
                 g2.setColor(gridColor);
                 g2.drawLine(p1.x, p1.y, p2.x, p2.y);
 
-                g2.setColor(Color.RED);
-                String label = String.format("%." + xDigits + "f", val);
+                // Locale.ROOT so the decimal separator is always a dot (e.g. "0.00", not "0,00" on es_* systems).
+                String label = String.format(Locale.ROOT, "%." + xDigits + "f", val);
                 int labelWidth = fm.stringWidth(label);
-                g2.drawString(label, p1.x - labelWidth / 2, p1.y + fm.getAscent() + 2);
+                int labelLeft = p1.x - labelWidth / 2;
+                if (labelLeft > lastXLabelRight) {
+                    g2.setColor(Color.RED);
+                    g2.drawString(label, labelLeft, p1.y + fm.getAscent() + 2);
+                    lastXLabelRight = labelLeft + labelWidth + 4; // 4px minimum gap between labels
+                }
             }
 
             // Draw horizontal grid lines
@@ -272,7 +350,7 @@ public class CurveWidget {
                 g2.drawLine(p1.x, p1.y, p2.x, p2.y);
 
                 g2.setColor(Color.RED);
-                String label = String.format("%." + yDigits + "f", val);
+                String label = String.format(Locale.ROOT, "%." + yDigits + "f", val);
                 int labelWidth = fm.stringWidth(label);
                 g2.drawString(label, p1.x - labelWidth - 5, p1.y + fm.getAscent() / 2);
             }
@@ -293,6 +371,12 @@ public class CurveWidget {
             for (int i = 0; i < x.length; i++) {
                 Point p = worldToCanvas(x[i], y[i]);
                 g2.fillOval(p.x - 4, p.y - 4, 8, 8);
+            }
+
+            g2.setColor(Color.MAGENTA);
+            for (int row : table.getSelectedRows()) {
+                Point p = worldToCanvas(x[row], y[row]);
+                g2.fillOval(p.x - 5, p.y - 5, 10, 10);
             }
         }
 
@@ -356,7 +440,8 @@ public class CurveWidget {
 
         @Override
         public String getColumnName(int column) {
-            return column == 0 ? "X Axis" : "Y Axis";
+            String label = column == 0 ? curveModel.getXLabel() : curveModel.getYLabel();
+            return label != null ? label : (column == 0 ? "X Axis" : "Y Axis");
         }
 
         @Override
@@ -375,19 +460,27 @@ public class CurveWidget {
         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
             try {
                 double val = Double.parseDouble(aValue.toString());
-                if (columnIndex == 0) {
-                    // Check order
-                    double min = (rowIndex == 0) ? curveModel.getxAxis().getMin() : xValues[rowIndex - 1];
-                    double max = (rowIndex == xValues.length - 1) ? curveModel.getxAxis().getMax() : xValues[rowIndex + 1];
-                    xValues[rowIndex] = Math.max(min, Math.min(max, val));
-                } else {
-                    yValues[rowIndex] = Math.max(curveModel.getyAxis().getMin(), Math.min(curveModel.getyAxis().getMax(), val));
+                for (int row : table.getSelectedRows()) {
+                    for (int column : table.getSelectedColumns()) {
+                        setValue(row, column, val);
+                    }
                 }
-                fireTableCellUpdated(rowIndex, columnIndex);
+                fireTableDataChanged();
                 canvas.repaint();
                 writeBackToImage();
                 if (onEdit != null) onEdit.run();
             } catch (NumberFormatException ignored) {}
+        }
+
+        private void setValue(int row, int column, double value) {
+            if (column == 0) {
+                // Keep adjacent X values in their required order.
+                double min = (row == 0) ? curveModel.getxAxis().getMin() : xValues[row - 1];
+                double max = (row == xValues.length - 1) ? curveModel.getxAxis().getMax() : xValues[row + 1];
+                xValues[row] = Math.max(min, Math.min(max, value));
+            } else {
+                yValues[row] = Math.max(curveModel.getyAxis().getMin(), Math.min(curveModel.getyAxis().getMax(), value));
+            }
         }
     }
 

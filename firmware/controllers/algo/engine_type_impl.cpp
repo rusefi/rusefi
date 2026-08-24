@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "bmw_m52.h"
+#include "bmw.h"
 #include "bmw_m73.h"
 
 #include "canam.h"
@@ -45,6 +45,7 @@
 #include "ford_festiva.h"
 
 #include "board_overrides.h"
+#include <magic_enum.hpp>
 
 static_assert(libPROTEUS_STIM_QC == (int)engine_type_e::PROTEUS_STIM_QC);
 static_assert(libHELLEN_2CHAN_STIM_QC == (int)engine_type_e::HELLEN_2CHAN_STIM_QC);
@@ -80,8 +81,6 @@ void applyEngineType(engine_type_e engineType) {
 	case engine_type_e::SIMULATOR_CONFIG:
 	case engine_type_e::HELLEN_121_VAG_4_CYL:
 	case engine_type_e::MINIMAL_PINS:
-	case engine_type_e::UNUSED_5:
-	case engine_type_e::UNUSED_16:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		// nothing to do - we do it all in setBoardDefaultConfiguration
 		break;
@@ -217,6 +216,7 @@ void applyEngineType(engine_type_e engineType) {
 		break;
 
 #if defined(HW_HELLEN_UAEFI) || defined(HW_HELLEN_UAEFI121) || defined(HW_HELLEN_SUPER_UAEFI) || defined(HW_HELLEN_8CHAN) || HW_PROTEUS || EFI_SIMULATOR
+	case engine_type_e::GM_SBC_GEN3:
 	case engine_type_e::GM_SBC_GEN4:
 		setGmLs4();
 		break;
@@ -354,7 +354,7 @@ void applyEngineType(engine_type_e engineType) {
 	case engine_type_e::DODGE_NEON_1995:
 		setDodgeNeon1995EngineConfiguration();
 		break;
-	case engine_type_e::DODGE_NEON_2003_CRANK:
+	case engine_type_e::ET_DODGE_NEON_2003:
 		setDodgeNeonNGCEngineConfiguration();
 		break;
 	case engine_type_e::FORD_ASPIRE_1996:
@@ -411,6 +411,9 @@ void applyEngineType(engine_type_e engineType) {
 	case engine_type_e::BMW_M52:
 	  bmwM52();
     break;
+	case engine_type_e::BMW_N52:
+	  bmwN52();
+    break;
 #if defined(HW_SUBARU_EG33) || EFI_SIMULATOR
 	case engine_type_e::SUBARU_EG33:
 		setSubaruEG33Defaults();
@@ -427,6 +430,7 @@ void applyEngineType(engine_type_e engineType) {
   call_board_override(custom_board_AfterTuneDefaults, engineType);
 }
 
-PUBLIC_API_WEAK_SOMETHING_WEIRD engine_type_e getLastEngineType() {
-  return engine_type_e::UNUSED_105;
+engine_type_e getLastEngineType() {
+  auto last_val = magic_enum::enum_value<engine_type_e>(magic_enum::enum_count<engine_type_e>() - 1);
+  return last_val;
 }

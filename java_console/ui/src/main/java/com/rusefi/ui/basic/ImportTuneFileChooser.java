@@ -1,26 +1,31 @@
 package com.rusefi.ui.basic;
 
 import com.rusefi.ConnectivityContext;
-import com.rusefi.PortResult;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
+import com.rusefi.io.LinkManager;
 import com.rusefi.maintenance.jobs.ImportTuneJob;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.io.File;
+import java.util.function.Consumer;
 
 public class ImportTuneFileChooser {
     private static final String TUNE_TO_IMPORT_DEFAULT_DIRECTORY_PROPERTY_NAME = "tune_to_import_default_directory";
     private final SingleAsyncJobExecutor singleAsyncJobExecutor;
+    private final Consumer<String> errorHandler;
     private final JFileChooser tuneToImportFileChooser = createTuneToImportFileChooser();
 
-    public ImportTuneFileChooser(final SingleAsyncJobExecutor singleAsyncJobExecutor) {
+    public ImportTuneFileChooser(final SingleAsyncJobExecutor singleAsyncJobExecutor, Consumer<String> errorHandler) {
         this.singleAsyncJobExecutor = singleAsyncJobExecutor;
+        this.errorHandler = errorHandler;
     }
 
-    void showFileChooserToImportTuneAction(
-        final PortResult port,
+    public void showFileChooserToImportTuneAction(
+        final BinaryProtocol bp,
+        final LinkManager lm,
         final JComponent parent,
         final ConnectivityContext connectivityContext
     ) {
@@ -28,8 +33,22 @@ public class ImportTuneFileChooser {
         if (selectedOption == JFileChooser.APPROVE_OPTION) {
             final File selectedFile = tuneToImportFileChooser.getSelectedFile();
             saveTuneToImportDefaultDirectory(selectedFile.getParent());
-            String tuneFileName = selectedFile.getAbsolutePath();
-            ImportTuneJob.importTuneIntoDevice(port, parent, connectivityContext, tuneFileName, singleAsyncJobExecutor);
+            ImportTuneJob.importTuneIntoDeviceViaLiveConnection(bp, lm, parent, connectivityContext,
+                selectedFile.getAbsolutePath(), singleAsyncJobExecutor, errorHandler);
+        }
+    }
+
+    public void showFileChooserToImportTuneAction(
+        final LinkManager lm,
+        final JComponent parent,
+        final ConnectivityContext connectivityContext
+    ) {
+        final int selectedOption = tuneToImportFileChooser.showOpenDialog(parent);
+        if (selectedOption == JFileChooser.APPROVE_OPTION) {
+            final File selectedFile = tuneToImportFileChooser.getSelectedFile();
+            saveTuneToImportDefaultDirectory(selectedFile.getParent());
+            ImportTuneJob.importTuneIntoDeviceViaLiveConnection(lm, parent, connectivityContext,
+                selectedFile.getAbsolutePath(), singleAsyncJobExecutor, errorHandler);
         }
     }
 

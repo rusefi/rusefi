@@ -6,7 +6,7 @@
 .NOTPARALLEL:
 .DEFAULT_GOAL := help
 
-.PHONY: help firmware simulator unit_tests clean all
+.PHONY: help firmware simulator unit_tests clean all bundle
 
 SUBDIRS := firmware simulator unit_tests
 
@@ -26,7 +26,7 @@ help:
 	@echo "#   * to execute from root dir"
 	@echo "#   * to set number of jobs via -j# or --jobs=#, this is not shown in examples below"
 	@echo ""
-	@echo "  make all                         # Calls make in firmware/unit_tests/simulator"
+	@echo "  make all                         # Calls make in firmware/unit_tests/simulator, plus firmware bootloader"
 	@echo ""
 	@echo "  make clean                       # Calls make clean in firmware/unit_tests/simulator"
 	@echo ""
@@ -55,6 +55,11 @@ help:
 	@echo "                                               #   BOARD_DIR=./config/boards/hellen/super-uaefi"
 	@echo "                                               #   SHORT_BOARD_NAME=super-uaefi"
 	@echo ""
+	@echo "  make bundle                      # Packages full firmware bundle ('make bundle' in firmware dir)"
+	@echo "                                   # Optional board args work like 'make firmware':"
+	@echo "  make bundle f407-discovery       #   BOARD_DIR=./config/boards/f407-discovery"
+	@echo "  make bundle hellen/uaefi uaefi   #   BOARD_DIR=./config/boards/hellen/uaefi SHORT_BOARD_NAME=uaefi"
+	@echo ""
 	@echo "  make simulator        # Builds default target in simulator dir"
 	@echo "  make simulator clean  # Runs 'make clean' in simulator dir"
 	@echo ""
@@ -71,7 +76,7 @@ FIRMWARE_POTENTIAL_ARG2 := $(word 3,$(TARGETS))
 FIRMWARE_POTENTIAL_ARG3 := $(word 4,$(TARGETS))
 
 # List of allowed top-level targets
-EXCLUSIVE_TARGETS := help firmware simulator unit_tests all
+EXCLUSIVE_TARGETS := help firmware simulator unit_tests all bundle
 
 # Count how many exclusive targets are present in the command
 EXCLUSIVE_COUNT := $(words $(filter $(EXCLUSIVE_TARGETS),$(TARGETS)))
@@ -92,6 +97,7 @@ clean:
 all:
 	$(info Running make with default target in all subdirs: $(SUBDIRS))
 	$(MAKE) -C firmware
+	$(MAKE) -C firmware bootloader
 	$(MAKE) -C simulator
 	$(MAKE) -C unit_tests
 
@@ -110,6 +116,20 @@ ifeq ($(FIRMWARE_POTENTIAL_ARG3),)
   endif
 else
 	$(error Too many arguments for 'firmware'. Max 2.)
+endif
+
+bundle:
+	$(info Building firmware bundle)
+ifeq ($(FIRMWARE_POTENTIAL_ARG3),)
+  ifeq ($(FIRMWARE_POTENTIAL_ARG1),)
+	$(MAKE) -C firmware bundle
+  else ifeq ($(FIRMWARE_POTENTIAL_ARG2),)
+	$(MAKE) -C firmware bundle BOARD_DIR=./config/boards/$(FIRMWARE_POTENTIAL_ARG1) SHORT_BOARD_NAME=$(FIRMWARE_POTENTIAL_ARG1)
+  else
+	$(MAKE) -C firmware bundle BOARD_DIR=./config/boards/$(FIRMWARE_POTENTIAL_ARG1) SHORT_BOARD_NAME=$(FIRMWARE_POTENTIAL_ARG2)
+  endif
+else
+	$(error Too many arguments for 'bundle'. Max 2.)
 endif
 
 simulator:

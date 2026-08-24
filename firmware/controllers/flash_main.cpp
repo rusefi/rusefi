@@ -9,8 +9,41 @@
 
 #include "pch.h"
 
+#include "flash_main.h"
+
 #if EFI_CONFIGURATION_STORAGE || defined(EFI_UNIT_TEST)
 #include "storage.h"
+
+// A failed settings write stays pending and is retried by the storage manager thread;
+// once it has been failing this long, checkSettingsWriteFailure() escalates to
+// configError so the TS user learns their changes are not persisted
+static constexpr float SETTINGS_WRITE_FAIL_ALERT_SEC = 10.0f;
+
+static Timer settingsWriteFailTimer;
+static bool settingsWriteFailing = false;
+
+void trackSettingsWriteResult(bool success) {
+	if (success) {
+		settingsWriteFailing = false;
+	} else if (!settingsWriteFailing) {
+		settingsWriteFailing = true;
+		settingsWriteFailTimer.reset();
+	}
+}
+
+// level-triggered producer evaluated from refreshConfigErrorState(); the auto-clear
+// once the condition goes away (e.g. a later retry succeeded) happens there
+bool checkSettingsWriteFailure() {
+	if (settingsWriteFailing && settingsWriteFailTimer.hasElapsedSec(SETTINGS_WRITE_FAIL_ALERT_SEC)) {
+		configError("Settings write keeps failing - your changes are NOT saved to flash");
+		return true;
+	}
+	return false;
+}
+#else
+bool checkSettingsWriteFailure() {
+	return false;
+}
 #endif
 
 /* If any setting storage is exist */
@@ -25,6 +58,8 @@
 #if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
 #endif
+
+#include "extra_flash_pages.h"
 
 
 #include "runtime_state.h"
@@ -50,9 +85,13 @@ bool settingsLtftRequestWriteToFlash() {
 	return storageRequestWriteID(EFI_LTFT_RECORD_ID, false);
 }
 
+void suspendLinearTimeWatcher() {
+  engine->configBurnTimer.reset();
+}
+
 /* TODO: extract to persistentState method */
 bool writeToFlashNowImpl() {
-	engine->configBurnTimer.reset();
+	suspendLinearTimeWatcher();
 
 	// Set up the container
 	persistentState.size = sizeof(persistentState);
@@ -61,13 +100,25 @@ bool writeToFlashNowImpl() {
 
 	// Do actual write
 	auto result1 = storageWrite(EFI_SETTINGS_RECORD_ID, (uint8_t *)&persistentState, sizeof(persistentState));
+#if EFI_STORAGE_INT_FLASH == TRUE
+	// The sector was just erased above — write all extra pages into the
+	// now-blank shared region. This also applies to hybrid INT_FLASH+MFS
+	// builds: the external backend may not be available at runtime.
+	if (result1 == StorageStatus::Ok) {
+		burnExtraFlashPages();
+	}
+#endif
 	auto result2 = storageWrite(EFI_SETTINGS_BACKUP_RECORD_ID, (uint8_t *)&persistentState, sizeof(persistentState));
 
 	resetMaxValues();
 
 	// Some MCU have no enough flash to store two copies. First one is mandatory.
-	return ((result1 == StorageStatus::Ok) &&
+	bool success = ((result1 == StorageStatus::Ok) &&
 			((result2 == StorageStatus::Ok) || (result2 == StorageStatus::NotSupported)));
+
+	trackSettingsWriteResult(success);
+
+	return success;
 }
 
 static StorageStatus validatePersistentState() {
@@ -124,6 +175,7 @@ void readFromFlash() {
 		case StorageStatus::NotFound:
 		case StorageStatus::Failed:
 		case StorageStatus::NotSupported:
+		default:
 			resetConfigurationExt(DEFAULT_ENGINE_TYPE);
 			break;
 		case StorageStatus::IncompatibleVersion:

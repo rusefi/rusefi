@@ -60,7 +60,7 @@ static const int16_t supportedPids4160[] = {
 };
 
 void obdSendPacket(int mode, int PID, int numBytes, uint32_t iValue, size_t busIndex) {
-	CanTxMessage resp(CanCategory::OBD, OBD_TEST_RESPONSE);
+	CanTxMessage resp(CanCategory::OBD, OBD_TEST_RESPONSE, 8, DEFAULT_BUS_INDEX);
 
 	// Respond on the same bus we got the request from
 	resp.busIndex = busIndex;

@@ -2,6 +2,7 @@ package com.rusefi.maintenance.migration.default_migration;
 
 import static com.rusefi.maintenance.migration.default_migration.CalibrationsTestHelpers.checkField;
 import static com.rusefi.maintenance.migration.default_migration.DefaultTestTuneMigrationContext.*;
+import static com.rusefi.maintenance.migration.IniFieldMigrationUtils.checkIfUnitsCanBeMigrated;
 import static com.rusefi.maintenance.migration.migrators.TableAddColumnsMigrator.VE_RPM_BINS_FIELD_NAME;
 import static com.rusefi.maintenance.migration.migrators.TableAddColumnsMigrator.VE_TABLE_FIELD_NAME;
 import static java.util.Collections.emptySet;
@@ -20,6 +21,23 @@ import com.rusefi.maintenance.TestTuneMigrationContext;
 import com.rusefi.maintenance.migration.migrators.ComposedTuneMigrator;
 import com.rusefi.tune.xml.Constant;
 
+/**
+ * DefaultTuneMigratorTest is an integration-style test for the full tune migration pipeline.
+ *
+ * It uses a set of "previous" and "updated" .ini and .msq files located in the {@code test_data/} folder.
+ * The test simulates a scenario where a user upgrades from an older firmware (represented by {@code prev_calibrations})
+ * to a newer one (represented by {@code updated_calibrations}).
+ *
+ * Testing Strategy:
+ * 1. Load the test context with previous and updated configuration/tune.
+ * 2. Execute the {@link com.rusefi.maintenance.migration.migrators.ComposedTuneMigrator#INSTANCE}.
+ * 3. Verify that individual fields are correctly migrated from the old tune to the new one.
+ *
+ * The {@link #checkValueToUpdateExist} helper method is used to assert that a field:
+ * - Had a specific value in the old tune.
+ * - Has a (possibly different) default value in the new tune.
+ * - Was correctly migrated (the old value was carried over to the new configuration).
+ */
 public class DefaultTuneMigratorTest {
     private TestTuneMigrationContext testContext;
 
@@ -32,6 +50,11 @@ public class DefaultTuneMigratorTest {
     @Test
     public void testVehicleName() {
         checkValueToUpdateExist(VEHICLE_NAME_FIELD_NAME, PREV_VEHICLE_NAME_VALUE, null);
+    }
+
+    @Test
+    public void testDifferentUnitsAreNotMigratable() {
+        assertFalse(checkIfUnitsCanBeMigrated("afr", "lambda"));
     }
 
     @Test
@@ -211,11 +234,16 @@ public class DefaultTuneMigratorTest {
     }
 
     @Test
+    public void testFirmwareHashIsNotMigrated() {
+        assertEquals("old-firmware-sha", testContext.getPrevValue("hash3").getValue());
+        assertEquals("new-firmware-sha", testContext.getUpdatedValue("hash3").getValue());
+        assertNull(testContext.getMigratedConstants().get("hash3"));
+    }
+
+    @Test
     public void testContent() {
         assertEquals(
-            "WARNING! Type of `map_samplingAngleBins` ini-field is expected to be `UINT16` instead of `FLOAT`\r\n" +
-                "WARNING! Type of `map_samplingAngleBins` ini-field is expected to be `UINT16` instead of `FLOAT`\r\n" +
-                "We aren't going to restore field `auxSerialRxPin`: it is missed in new .ini file\r\n" +
+            "We aren't going to restore field `auxSerialRxPin`: it is missed in new .ini file\r\n" +
                 "We aren't going to restore field `auxSerialSpeed`: it is missed in new .ini file\r\n" +
                 "We aren't going to restore field `auxSerialTxPin`: it is missed in new .ini file\r\n" +
                 "We aren't going to restore field `boardUse2stepPullDown`: it is missed in new .ini file\r\n" +
@@ -256,6 +284,13 @@ public class DefaultTuneMigratorTest {
         );
     }
 
+    /**
+     * Asserts that a field was correctly migrated.
+     *
+     * @param fieldName The name of the field to check.
+     * @param expectedPrevFieldValue The value the field had in the "old" tune.
+     * @param expectedUpdatedFieldValue The default value the field has in the "new" tune (can be null if missing).
+     */
     private void checkValueToUpdateExist(
         final String fieldName,
         final String expectedPrevFieldValue,
@@ -286,4 +321,3 @@ public class DefaultTuneMigratorTest {
         assertEquals(expectedValueToUpdate.getName(), valueToUpdate.getName());
     }
 }
-

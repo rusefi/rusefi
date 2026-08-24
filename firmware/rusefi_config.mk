@@ -49,9 +49,11 @@ CONFIG_FILES = \
   $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/generated/signature_$(SHORT_BOARD_NAME).h \
   $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/generated/engine_configuration_generated_structures_$(SHORT_BOARD_NAME).h \
   $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/generated/generated_fields_api_header.h \
-  $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/generated/page_1_generated.h \
   $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/generated/page_2_generated.h \
+  $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/generated/page_3_generated.h \
+  $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/generated/page_4_generated.h \
   $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/lua/generated/value_lookup_generated.cpp \
+  $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/lua/generated/value_lookup_table_generated.cpp \
   $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/lua/generated/value_lookup_generated.md \
   $(PROJECT_DIR)/../java_console/models/src/main/java/com/rusefi/config/generated/VariableRegistryValues.java \
   $(FIELDS) \
@@ -66,10 +68,16 @@ CONFIG_FILES = \
 $(TCOBJS): $(CONFIG_FILES)
 $(TCPPOBJS): $(RAMDISK)
 
+# Codegen recipes below write shared files under the firmware tree (generated headers,
+# .ini fragments, java sources), so concurrent makes (firmware + simulator + unit_tests)
+# must not run them at the same time. Serialize them on the same inter-process lock that
+# java_tools.mk uses for gradle ($(FLOCK)); the generators use LazyFile, so a second,
+# same-content run under the lock is a no-op and does not churn mtimes.
+
 # Always try to rebuild the signature file.
 # The script won't actually update the file if the signature hasn't changed, so it won't trigger a config file generation.
 $(SIG_FILE): .FORCE
-	bash $(PROJECT_DIR)/gen_signature.sh $(SHORT_BOARD_NAME)
+	$(FLOCK) bash $(PROJECT_DIR)/gen_signature.sh $(SHORT_BOARD_NAME)
 
 # Most sentinels are used for multiple targets that are created with a single recipe.
 # In newer versions of GNU Make this is done using the &: operator,
@@ -78,7 +86,7 @@ $(SIG_FILE): .FORCE
 $(RAMDISK): .ramdisk-sentinel ;
 
 .ramdisk-sentinel: $(INI_FILE) $(TGT_SENTINEL)
-	bash $(PROJECT_DIR)/bin/gen_image_board.sh $(BOARD_DIR) $(SHORT_BOARD_NAME)
+	$(FLOCK) bash $(PROJECT_DIR)/bin/gen_image_board.sh $(BOARD_DIR) $(SHORT_BOARD_NAME)
 	@touch $@
 
 $(CONFIG_FILES): .config-sentinel;
@@ -87,9 +95,9 @@ $(CONFIG_FILES): .config-sentinel;
 # so it won't trigger a config file generation unless it needs to.
 .config-sentinel: $(CONFIG_INPUTS) $(CONFIG_DEFINITION_JAR) $(TGT_SENTINEL)
 ifneq (,$(CUSTOM_GEN_CONFIG))
-	bash $(BOARD_DIR)/$(CUSTOM_GEN_CONFIG)
+	$(FLOCK) bash $(BOARD_DIR)/$(CUSTOM_GEN_CONFIG)
 else
-	bash $(PROJECT_DIR)/gen_config_board.sh $(BOARD_DIR) $(SHORT_BOARD_NAME)
+	$(FLOCK) bash $(PROJECT_DIR)/gen_config_board.sh $(BOARD_DIR) $(SHORT_BOARD_NAME)
 endif
 	@touch $@
 

@@ -54,12 +54,12 @@ pins:
     type: ls
 
   - pin: 1a
-    function: GND
-    type: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 2a
-    function: GND
-    type: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 3a
     function: +12v
@@ -98,7 +98,7 @@ pins:
     id: F13
     class: outputs
     ts_name: 19 - INJ 7
-    function: OUT_INJ7
+    function: Injector 7
     type: inj
 
   - pin: 21a
@@ -117,7 +117,7 @@ pins:
     id: F14
     class: outputs
     ts_name: 24 - INJ 8
-    function: OUT_INJ8
+    function: Injector 8
     type: inj
 
 # something weird same IAT on pin 85? figure this out one day
@@ -128,7 +128,8 @@ pins:
 #    function: IAT sensor
 
   - pin: 27a
-    function: GNDA
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: 29a
     id: EFI_ADC_10
@@ -137,10 +138,12 @@ pins:
     function: MAF_IN
 
   - pin: 32a
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 33a
-    function: GNDA
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: 34a
     id: EFI_ADC_3
@@ -155,7 +158,8 @@ pins:
     function: IN_PPS2
 
   - pin: 36a
-    function: GNDA
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: 37
     id: D13
@@ -184,7 +188,8 @@ pins:
     type: ls
 
   - pin: 50a
-    function: GNDA
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: 51a
     function: LSU_U/PUMP_I
@@ -284,7 +289,8 @@ pins:
     id: EFI_ADC_13
     class: analog_inputs
     ts_name: 85 - IAT
-    function: IAT sensor
+    function: IAT Sensor Input
+    type: at
 
   - pin: 86a
     id: [A6, EFI_ADC_6]
@@ -302,21 +308,22 @@ pins:
     id: D10
     class: outputs
     ts_name: 88 - INJ_4
-    function: Injector #4
+    function: Injector 4
     type: inj
 
   - pin: 89a
     id: G8
     class: outputs
     ts_name: 89 - INJ_2
-    function: Injector #2
+    function: Injector 2
     type: inj
 
   - pin: 90a
     function: IN_CRANK-
 
   - pin: 91a
-    function: GNDA
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: 92a
     id: EFI_ADC_4
@@ -328,7 +335,8 @@ pins:
     id: EFI_ADC_12
     class: analog_inputs
     ts_name: 93 - CLT
-    function: CLT sensor
+    function: ECT CLT Coolant Sensor Input
+    type: at
 
   - pin: 94a
     id: E3
@@ -346,21 +354,22 @@ pins:
     id: G7
     class: outputs
     ts_name: 96 - INJ_1
-    function: Injector #1
+    function: Injector 1
     type: inj
 
   - pin: 97a
     id: D11
     class: outputs
     ts_name: 97 - INJ_3
-    function: Injector #3
+    function: Injector 3
     type: inj
 
   - pin: 98a
     function: +5v
 
   - pin: 99a
-    function: GNDA
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: 101a
     id: [C1, EFI_ADC_11]
@@ -413,7 +422,8 @@ pins:
     function: Knock 2
 
   - pin: 108a
-    function: GNDA
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: 110a
     id: I5
@@ -431,14 +441,14 @@ pins:
     id: F12
     class: outputs
     ts_name: 112 INJ 6
-    function: INJ_6
+    function: Injector 6
     type: inj
 
   - pin: 113a
     id: D9
     class: outputs
     ts_name: 113 INJ 5
-    function: INJ_5
+    function: Injector 5
     type: inj
 
   - pin: 115a

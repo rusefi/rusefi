@@ -10,15 +10,15 @@ pins:
 
   - pin: 2
     function: Crank 1 VR sensors GND
-    type: sgnd
+    type: agnd
 
   - pin: 3
     function: Crank 1 VR sensors shield
-    type: sgnd
+    type: agnd
 
   - pin: 4
     function: Knock sensors shield
-    type: sgnd
+    type: agnd
 
   - pin: 5
     function: Knock input 1

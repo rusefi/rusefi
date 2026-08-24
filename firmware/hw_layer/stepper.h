@@ -96,6 +96,8 @@ protected:
 
 class StepperMotor final : public StepperMotorBase, private ThreadController<UTILITY_THREAD_STACK_SIZE> {
 public:
+	using ThreadController::stackSize;
+
 	StepperMotor() : ThreadController("stepper", PRIO_STEPPER) {}
 
 	void initialize(StepperHw* hardware, int totalSteps);
@@ -111,4 +113,7 @@ public:
 		}
 	}
 };
+#else
+// no dedicated thread in unit tests - tests pump doIteration() by hand
+using StepperMotor = StepperMotorBase;
 #endif

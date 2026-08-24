@@ -6,7 +6,8 @@ pins:
     function: SWD clock
 
   - pin: 3
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 4
     function: SWDIO

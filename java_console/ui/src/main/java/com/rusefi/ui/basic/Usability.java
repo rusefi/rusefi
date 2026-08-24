@@ -3,6 +3,7 @@ package com.rusefi.ui.basic;
 import com.opensr5.ini.field.IniField;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.CalibrationsInfo;
+import com.rusefi.ui.hd81.HdConstants;
 
 import java.util.Optional;
 
@@ -11,7 +12,7 @@ public enum Usability {
 
 
     public void onCalibrations(UpdateOperationCallbacks updateOperationCallbacks, CalibrationsInfo calibrations) {
-        if (!calibrations.getIniFile().getSignature().contains("hd81"))
+        if (!calibrations.getIniFile().getSignature().contains(HdConstants.HD_81))
             return;
 
         String ppsExpAverageAlphaName = "ppsExpAverageAlpha";

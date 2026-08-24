@@ -34,18 +34,21 @@ pins:
     id: I8
     class: outputs
     ts_name: 1G - Ignition 1 & 4 (rev C)
+    function: Smart Ignition Coil 1
     type: ign
 
   - pin: 1G
     id: C13
     class: outputs
     ts_name: 1G - Ignition 1 & 4 (rev D)
+    function: Smart Ignition Coil 1
     type: ign
 
   - pin: 1H
     id: E5
     class: outputs
     ts_name: 1H - Ignition 2 & 3
+    function: Smart Ignition Coil 2
     type: ign
 
   - pin: 1I
@@ -103,7 +106,8 @@ pins:
     type: din
 
   - pin: 2A
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 2B
     function: +5v
@@ -140,7 +144,8 @@ pins:
     function: Boost Control Solenoid
 
   - pin: 2K
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 2L
     id: F3
@@ -167,23 +172,23 @@ pins:
     function: Knock Input
 
   - pin: 3A
-    function: Power GND
-    type: pgnd
+    function: Power/Chassis GND ground
+    type: gnd
     color: white
 
   - pin: 3B
-    function: Power GND
-    type: pgnd
+    function: Power/Chassis GND ground
+    type: gnd
     color: white
 
   - pin: 3C
-    function: Sensor GND
-    type: gnd
+    function: GNDA Analog/Sensor Ground
+    type: agnd
     color: white
 
   - pin: 3D
-    function: Sensor GND
-    type: gnd
+    function: GNDA Analog/Sensor Ground
+    type: agnd
     color: white
 
   - pin: 3E
@@ -239,7 +244,8 @@ pins:
     id: EFI_ADC_13
     class: analog_inputs
     ts_name: 3P - IAT
-    function: IAT sensor
+    function: IAT Sensor Input
+    type: at
 
   - pin: 3S
     id: D9
@@ -264,20 +270,21 @@ pins:
     id: EFI_ADC_12
     class: analog_inputs
     ts_name: 3Q - CLT
-    function: CLT sensor
+    function: ECT CLT Coolant Sensor Input
+    type: at
 
   - pin: 3U
     id: G7
     class: outputs
     ts_name: 3U - Injector 1
-    function: Injector #1
+    function: Injector 1
     type: inj
 
   - pin: 3V
     id: G8
     class: outputs
     ts_name: 3V - Injector 2
-    function: Injector #2
+    function: Injector 2
     type: inj
 
   - pin: 3W
@@ -291,14 +298,14 @@ pins:
     id: D11
     class: outputs
     ts_name: 3Y - Injector 3
-    function: Injector #3
+    function: Injector 3
     type: inj
 
   - pin: 3Z
     id: D10
     class: outputs
     ts_name: 3Z - Injector 4
-    function: Injector #4
+    function: Injector 4
     type: inj
 
   - pin: int_map
@@ -319,10 +326,12 @@ pins:
     function: ETB -
 
   - pin: 4E
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 4F
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 4G
     id: [A7, EFI_ADC_7]

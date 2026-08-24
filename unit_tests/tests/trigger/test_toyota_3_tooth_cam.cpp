@@ -2,8 +2,6 @@
 #include "logicdata_csv_reader.h"
 
 TEST(Toyota3ToothCam, RealEngineRunning) {
-	extern bool unitTestTaskNoFastCallWhileAdvancingTimeHack;
-	unitTestTaskNoFastCallWhileAdvancingTimeHack = true;
 
 	CsvReader reader(1, /* vvtCount */ 1);
 
@@ -36,7 +34,7 @@ TEST(Toyota3ToothCam, RealEngineRunning) {
 		}
 	}
 
-	EXPECT_EQ(getTriggerCentral()->triggerState.camResyncCounter, 0);
+	EXPECT_EQ(getTriggerCentral()->triggerState.phaseResyncCounter, 0);
 
 	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/0), 0, 1);
 	ASSERT_EQ(3078, round(Sensor::getOrZero(SensorType::Rpm)));
@@ -47,9 +45,7 @@ TEST(Toyota3ToothCam, RealEngineRunning) {
 	ASSERT_EQ(ObdCode::CUSTOM_PRIMARY_TOO_MANY_TEETH, eth.recentWarnings()->get(0).Code);
 }
 
-static void test3tooth(size_t revsBeforeVvt, size_t teethBeforeVvt, bool expectSync, int expectCamResyncCounter) {
-	extern bool unitTestTaskNoFastCallWhileAdvancingTimeHack;
-	unitTestTaskNoFastCallWhileAdvancingTimeHack = true;
+static void test3tooth(size_t revsBeforeVvt, size_t teethBeforeVvt, bool expectSync, int expectPhaseResyncCounter) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->vvtMode[0] = VVT_TOYOTA_3_TOOTH;
 	engineConfiguration->skippedWheelOnCam = false;
@@ -80,7 +76,7 @@ static void test3tooth(size_t revsBeforeVvt, size_t teethBeforeVvt, bool expectS
 
 	// Do some number of revolutions before firing the cam tooth
 	for (size_t i = 0; i < revsBeforeVvt; i++) {
-		for (size_t j = 0; i < 10; i++)
+		for (size_t j = 0; j < 10; j++)
 		{
 			eth.fireFall(1);
 			eth.fireRise(9);
@@ -105,7 +101,7 @@ static void test3tooth(size_t revsBeforeVvt, size_t teethBeforeVvt, bool expectS
 	// should set VVT position
 	hwHandleVvtCamSignal(true, getTimeNowNt(), 0);
 
-	EXPECT_EQ(expectCamResyncCounter, getTriggerCentral()->triggerState.camResyncCounter);
+	EXPECT_EQ(expectPhaseResyncCounter, getTriggerCentral()->triggerState.phaseResyncCounter);
 	EXPECT_EQ(expectSync, getTriggerCentral()->triggerState.hasSynchronizedPhase());
 
 	if (expectSync) {

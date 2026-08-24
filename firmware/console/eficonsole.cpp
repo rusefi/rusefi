@@ -115,9 +115,9 @@ static void sayHello() {
 	efiPrintf("MCU F_SIZE %d KB", flashSize);
 	efiPrintf("MCU RAM %d KB", at32GetRamSizeKb());
 #else
-#define MCU_REVISION_MASK  0xfff
-	int mcuRevision = DBGMCU->IDCODE & MCU_REVISION_MASK;
-	efiPrintf("MCU rev=%x flashSize=%d", mcuRevision, flashSize);
+	int mcuRevision = GET_MCU_REVISION();
+	const char *mcuHumanName = getStm32McuName(mcuRevision);
+	efiPrintf("MCU rev=%x %s flashSize=%d", mcuRevision, mcuHumanName, flashSize);
 #endif
 #endif
 
@@ -170,8 +170,13 @@ static void sayHello() {
 }
 
 #if CH_DBG_THREADS_PROFILING && CH_DBG_FILL_THREADS
+#ifndef PORT_GUARD_PAGE_SIZE
+// only the ARMv7-M port has MPU guard pages, the simulator port has no such concept
+#define PORT_GUARD_PAGE_SIZE 0U
+#endif
 int CountFreeStackSpace(const void* wabase) {
-	const uint8_t* stackBase = reinterpret_cast<const uint8_t*>(wabase);
+	// the guard page at the working area base is no-access, skip it
+	const uint8_t* stackBase = reinterpret_cast<const uint8_t*>(wabase) + PORT_GUARD_PAGE_SIZE;
 	const uint8_t* stackUsage = stackBase;
 
 	// thread stacks are filled with CH_DBG_STACK_FILL_VALUE
@@ -250,6 +255,12 @@ void initializeConsole() {
 
 #if defined(STM32F4) || defined(STM32F7) || defined(STM32H7)
 	addConsoleAction("uid", printUid);
+#endif
+
+#if defined(STM32F4) || defined(STM32F7) || defined(STM32H7)
+	addConsoleAction("print_wrp", [](){ printWRPBits();});
+	addConsoleAction("print_opt", [](){ printOptBytes();});
+	addConsoleAction("remove_wrp", [](){ removeWRP();});
 #endif
 
 	sayHello();

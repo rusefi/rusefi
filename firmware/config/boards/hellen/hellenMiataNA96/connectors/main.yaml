@@ -64,7 +64,8 @@ pins:
     function: VSS in
 
   - pin: 1O
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 1Q
     id: [F9]
@@ -120,7 +121,8 @@ pins:
     id: EFI_ADC_12
     class: analog_inputs
     ts_name: 2G - Coolant
-    function: CLT sensor
+    function: ECT CLT Coolant Sensor Input
+    type: at
 
   - pin: 2i
     function: +5v
@@ -129,13 +131,16 @@ pins:
     id: EFI_ADC_13
     class: analog_inputs
     ts_name: 2B - IAT
-    function: IAT sensor
+    function: IAT Sensor Input
+    type: at
 
   - pin: 2O
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 3A
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 3B
     id: EFI_ADC_5
@@ -145,10 +150,12 @@ pins:
     type: 12V
 
   - pin: 3C
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 3D
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: int_map
 # H144_IN_MAP3
@@ -182,7 +189,7 @@ pins:
     id: C13
     class: outputs
     ts_name: 3N - IGN_1 (1&4)
-    function: Coil #1
+    function: Smart Ignition Coil 1
     type: ign
 
   - pin: 3Q
@@ -196,7 +203,7 @@ pins:
     id: E5
     class: outputs
     ts_name: 3R - IGN_2 (2&3)
-    function: Coil #2
+    function: Smart Ignition Coil 2
     type: ign
 
   - pin: 3S
@@ -209,28 +216,28 @@ pins:
     id: G7
     class: outputs
     ts_name: 3U - INJ_1
-    function: Injector #1
+    function: Injector 1
     type: inj
 
   - pin: 3V
     id: G8
     class: outputs
     ts_name: 3V - INJ_2
-    function: Injector #2
+    function: Injector 2
     type: inj
 
   - pin: 3W
     id: D11
     class: outputs
     ts_name: 3W - INJ_3
-    function: Injector #3
+    function: Injector 3
     type: inj
 
   - pin: 3X
     id: D10
     class: outputs
     ts_name: 3X - INJ_4
-    function: Injector #4
+    function: Injector 4
     type: inj
 
   - pin: 3Z
@@ -241,7 +248,8 @@ pins:
     type: ls
 
   - pin: 4A
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 4B
     id: E12

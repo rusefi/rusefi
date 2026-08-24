@@ -60,6 +60,49 @@ public class IniFileReaderTest {
         assertEquals("X", meta.getPageReadCommand(1));
     }
 
+    @Test
+    public void testVeAnalyze() {
+        String string = "  signature      = \"unit test\"\n" +
+                "[VeAnalyze]\n" +
+                "\n" +
+                "\t\t;\ttableName,  lambdaTargetTableName, lambdaChannel, egoCorrectionChannel, activeCondition\n" +
+                "\t\tveAnalyzeMap = veTableTbl, lambdaTableTbl, lambdaValue, egoCorrectionForVeAnalyze, { useLambdaOnInterface }\n" +
+                "\t\tveAnalyzeMap = veTableTbl, afrTableTbl, afrGasolineScale, egoCorrectionForVeAnalyze, { !useLambdaOnInterface }\n" +
+                "\t\tlambdaTargetTables = lambdaTableTbl, afrTSCustom\n" +
+                "\n" +
+                "\t\t; filter =  Name,\t\t\"DisplayName\", outputChannel, operator, defaultVal, userAdjustable\n" +
+                "\t\tfilter = minRPMFilter, \"Minimum RPM\", RPMValue,\t\t\t<\t\t, 500,\t\t, true\n" +
+                "\n" +
+                "\t\tfilter = minCltFilter, \"Minimum CLT\", coolant,\t\t<\t\t, 60,\t\t, true\n";
+
+        RawIniFile lines = fromString(string);
+        IniFileModel model = readLines(lines);
+
+        List<VeAnalyzeMap> maps = model.getVeAnalyzeMaps();
+        assertEquals(2, maps.size());
+        assertEquals("veTableTbl", maps.get(0).getTableName());
+        assertEquals("lambdaTableTbl", maps.get(0).getLambdaTargetTableName());
+        assertEquals("lambdaValue", maps.get(0).getLambdaChannel());
+        assertEquals("egoCorrectionForVeAnalyze", maps.get(0).getEgoCorrectionChannel());
+        assertEquals("{ useLambdaOnInterface }", maps.get(0).getActiveCondition());
+
+        assertEquals("afrTableTbl", maps.get(1).getLambdaTargetTableName());
+
+        List<String> lambdaTables = model.getLambdaTargetTables();
+        assertEquals(2, lambdaTables.size());
+        assertEquals("lambdaTableTbl", lambdaTables.get(0));
+        assertEquals("afrTSCustom", lambdaTables.get(1));
+
+        List<VeAnalyzeFilter> filters = model.getVeAnalyzeFilters();
+        assertEquals(2, filters.size());
+        assertEquals("minRPMFilter", filters.get(0).getName());
+        assertEquals("Minimum RPM", filters.get(0).getDisplayName());
+        assertEquals("RPMValue", filters.get(0).getOutputChannel());
+        assertEquals("<", filters.get(0).getOperator());
+        assertEquals(500.0, filters.get(0).getDefaultValue());
+        assertTrue(filters.get(0).isUserAdjustable());
+    }
+
     @NotNull
     private RawIniFile fromString(String string) {
         return IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
@@ -797,6 +840,202 @@ public class IniFileReaderTest {
         assertEquals("black", indicator.getOffFg());
         assertEquals("green", indicator.getOnBg());
         assertEquals("black", indicator.getOnFg());
+    }
+
+    @Test
+    public void testEventTriggersEmpty() {
+        String string = "[EventTriggers]\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        assertTrue(model.getEventTriggers().isEmpty());
+    }
+
+    @Test
+    public void testEventTriggersSingleEntry() {
+        String string =
+            "[EventTriggers]\n" +
+            "triggeredPageRefresh = 1, { triggerPageRefreshFlag }\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        List<EventTriggerModel> triggers = model.getEventTriggers();
+        assertEquals(1, triggers.size());
+        assertEquals(1, triggers.get(0).getPage());
+        assertEquals("{ triggerPageRefreshFlag }", triggers.get(0).getExpression());
+    }
+
+    @Test
+    public void testEventTriggersMultipleEntries() {
+        String string =
+            "[EventTriggers]\n" +
+            "  triggeredPageRefresh = 1, { triggerPageRefreshFlag }\n" +
+            "  triggeredPageRefresh = 3, { ltftPageRefreshFlag }\n" +
+            "  triggeredPageRefresh = 4, { triggerPageRefreshFlag }\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        List<EventTriggerModel> triggers = model.getEventTriggers();
+        assertEquals(3, triggers.size());
+
+        assertEquals(1, triggers.get(0).getPage());
+        assertEquals("{ triggerPageRefreshFlag }", triggers.get(0).getExpression());
+
+        assertEquals(3, triggers.get(1).getPage());
+        assertEquals("{ ltftPageRefreshFlag }", triggers.get(1).getExpression());
+
+        assertEquals(4, triggers.get(2).getPage());
+        assertEquals("{ triggerPageRefreshFlag }", triggers.get(2).getExpression());
+    }
+
+    @Test
+    public void testEventTriggersTooFewTokensIgnored() {
+        String string =
+            "[EventTriggers]\n" +
+            "triggeredPageRefresh = 1\n" +       // only 2 tokens — ignored
+            "triggeredPageRefresh\n" +            // only 1 token — ignored
+            "triggeredPageRefresh = 2, { validFlag }\n"; // valid
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        List<EventTriggerModel> triggers = model.getEventTriggers();
+        assertEquals(1, triggers.size());
+        assertEquals(2, triggers.get(0).getPage());
+    }
+
+    @Test
+    public void testEventTriggersUnknownKeywordIgnored() {
+        String string =
+            "[EventTriggers]\n" +
+            "unknownDirective = 1, { someFlag }\n" +
+            "triggeredPageRefresh = 5, { myFlag }\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        List<EventTriggerModel> triggers = model.getEventTriggers();
+        assertEquals(1, triggers.size());
+        assertEquals(5, triggers.get(0).getPage());
+        assertEquals("{ myFlag }", triggers.get(0).getExpression());
+    }
+
+    @Test
+    public void testEventTriggersInvalidPageIgnored() {
+        String string =
+            "[EventTriggers]\n" +
+            "triggeredPageRefresh = notANumber, { someFlag }\n" +
+            "triggeredPageRefresh = 2, { validFlag }\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        List<EventTriggerModel> triggers = model.getEventTriggers();
+        assertEquals(1, triggers.size());
+        assertEquals(2, triggers.get(0).getPage());
+    }
+
+    @Test
+    public void testEventTriggersSectionCaseInsensitive() {
+        String string =
+            "[eventtriggers]\n" +
+            "TRIGGEREDPAGEREFRESH = 7, { myChannelFlag }\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        List<EventTriggerModel> triggers = model.getEventTriggers();
+        assertEquals(1, triggers.size());
+        assertEquals(7, triggers.get(0).getPage());
+        assertEquals("{ myChannelFlag }", triggers.get(0).getExpression());
+    }
+
+    @Test
+    public void testEventTriggersMultiTokenExpressionJoined() {
+        // When the expression is split across multiple comma-separated tokens,
+        // handleEventTrigger re-joins them with ", ".
+        String string =
+            "[EventTriggers]\n" +
+            "triggeredPageRefresh = 1, flagA, flagB, flagC\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        List<EventTriggerModel> triggers = model.getEventTriggers();
+        assertEquals(1, triggers.size());
+        assertEquals(1, triggers.get(0).getPage());
+        assertEquals("flagA, flagB, flagC", triggers.get(0).getExpression());
+    }
+
+    @Test
+    public void testEventTriggersAbsentWhenSectionMissing() {
+        // When [EventTriggers] section is absent entirely, the list must be empty.
+        String string =
+            "[FrontPage]\n" +
+            "indicator = { coolant > 90 }, \"Cold\", \"Warm\"\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        assertTrue(model.getEventTriggers().isEmpty());
+    }
+
+    @Test
+    public void testParsePageIdentifier() {
+        // The generator emits each identifier little-endian as two \xNN byte escapes.
+        assertEquals(0x0000, IniFileMetaInfoImpl.parsePageIdentifier("\\x00\\x00"));
+        assertEquals(0x0100, IniFileMetaInfoImpl.parsePageIdentifier("\\x00\\x01"));
+        assertEquals(0x0400, IniFileMetaInfoImpl.parsePageIdentifier("\\x00\\x04")); // Lua page
+        // plain numeric fallback
+        assertEquals(7, IniFileMetaInfoImpl.parsePageIdentifier("7"));
+    }
+
+    @Test
+    public void testLuaPageWireIdentifier() {
+        // Regression for #9693: a field on a secondary TS page must resolve to the real wire
+        // page identifier (Lua = 0x0400), NOT the page ordinal (4).  Sending the ordinal made
+        // the firmware reject the write ("WR out of range"), breaking the Lua write button.
+        String string = "   nPages              = 5\n" +
+            SIGNATURE_UNIT_TEST +
+            "    pageReadCommand     = \"X\", \"X\", \"X\", \"X\", \"X\"\n" +
+            "ochBlockSize=1\n" +
+            "    pageSize            = 100, 256, 2048, 1268, 8000\n" +
+            "    pageIdentifier      = \"\\x00\\x00\", \"\\x00\\x01\", \"\\x00\\x02\", \"\\x00\\x03\", \"\\x00\\x04\"\n" +
+            "page = 5\n" +
+            "[Constants]\n" +
+            "luaScript = string, ASCII, 0, 8000\n" +
+            "page = 1\n" +
+            "[Constants]\n" +
+            "someMainField = scalar, U08, 0, \"\", 1, 0, 0, 255, 0\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileMetaInfo metaInfo = new IniFileMetaInfoImpl(lines);
+
+        // metaInfo decodes the pageIdentifier list directly...
+        assertEquals(0x0000, metaInfo.getPageIdentifier(0));
+        assertEquals(0x0400, metaInfo.getPageIdentifier(4));
+
+        // ...and the reader stamps that identifier onto each field.
+        IniFileModel model;
+        try {
+            model = IniFileReaderUtil.readIniFile(lines, "", metaInfo);
+        } catch (IniParsingException e) {
+            throw new RuntimeException(e);
+        }
+
+        IniField lua = model.findIniField("luaScript").orElseThrow();
+        assertEquals(0x0400, lua.getPageIndex(), "Lua field must carry the 0x0400 wire page identifier");
+
+        IniField main = model.findIniField("someMainField").orElseThrow();
+        assertEquals(0x0000, main.getPageIndex(), "Main page field stays on identifier 0x0000");
+
+        // ...but user-facing messages show the friendly 1-based TS page, not the raw wire id (#9766).
+        assertEquals(5, lua.getDisplayPage(), "Lua page 0x0400 displays as TS page 5, not 1024");
+        assertEquals(1, main.getDisplayPage(), "Main page 0x0000 displays as TS page 1");
+        assertEquals(5, IniField.toDisplayPage(4), "legacy 0-based ordinal 4 displays as TS page 5");
     }
 
 }

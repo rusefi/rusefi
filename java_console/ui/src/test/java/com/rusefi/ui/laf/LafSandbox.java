@@ -7,6 +7,9 @@ import java.awt.*;
 
 import static com.rusefi.ui.basic.UiHelper.commonUiStartup;
 
+/**
+ * Visual sandbox for the custom Swing look-and-feel.
+ */
 public class LafSandbox {
     public static void main(String[] args) {
         commonUiStartup();

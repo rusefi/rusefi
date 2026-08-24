@@ -16,7 +16,8 @@ pins:
     color: red
 
   - pin: I5
-    function: Ground
+    function: Power/Chassis GND ground
+    type: gnd
     color: black
 
   - pin: I6

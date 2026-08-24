@@ -6,6 +6,7 @@ import com.opensr5.ini.GroupMenuModel;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.MenuItem;
 import com.opensr5.ini.MenuModel;
+import com.opensr5.ini.SeparatorMenuItem;
 import com.opensr5.ini.SubMenuModel;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.ui.AutoupdateUtil;
@@ -18,6 +19,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -50,6 +52,21 @@ public class MainMenuTreeWidget {
     /** Keys of currently disabled submenus for a quick lookup during click handling. */
     private final Set<String> disabledKeys = new HashSet<>();
 
+    /** Renders a "std_separator" menu entry as a horizontal line. */
+    private static class SeparatorRenderer extends JComponent {
+        SeparatorRenderer() {
+            setPreferredSize(new Dimension(120, 9));
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            Color color = UIManager.getColor("Separator.foreground");
+            g.setColor(color != null ? color : Color.GRAY);
+            int y = getHeight() / 2;
+            g.drawLine(0, y, getWidth(), y);
+        }
+    }
+
     private static class ExpressionEntry {
         final DefaultMutableTreeNode node;
         final SubMenuModel subMenu;
@@ -68,14 +85,39 @@ public class MainMenuTreeWidget {
             populate(model);
         }
 
-        // Refresh the disabled state as soon as the tune is read from the ECU.
-        ConnectionStatusLogic.INSTANCE.addListener(isConnected -> {
-            if (isConnected) {
-                SwingUtilities.invokeLater(this::refreshExpressions);
+        tree = new JTree(root);
+        tree.setSelectionModel(new DefaultTreeSelectionModel() {
+            {
+                setSelectionMode(SINGLE_TREE_SELECTION);
+            }
+
+            @Override
+            public void setSelectionPaths(TreePath[] paths) {
+                if (paths == null || paths.length == 0) {
+                    super.setSelectionPaths(paths);
+                    return;
+                }
+                for (TreePath path : paths) {
+                    if (isSelectable(path)) {
+                        super.setSelectionPaths(new TreePath[]{path});
+                        return;
+                    }
+                }
+            }
+
+            @Override
+            public void addSelectionPaths(TreePath[] paths) {
+                if (paths == null) {
+                    return;
+                }
+                for (TreePath path : paths) {
+                    if (isSelectable(path)) {
+                        super.addSelectionPaths(new TreePath[]{path});
+                        return;
+                    }
+                }
             }
         });
-
-        tree = new JTree(root);
         tree.setToggleClickCount(1);
         tree.addMouseListener(new MouseAdapter() {
             @Override
@@ -99,35 +141,70 @@ public class MainMenuTreeWidget {
         tree.setFont(new Font(font.getName(), font.getStyle(), (int)(font.getSize() * 1.2)));
         tree.setRootVisible(false);
 
-        ImageIcon setupIcon = scaleIcon(AutoupdateUtil.loadIcon("setup48.png"), 24);
-        ImageIcon fuelIcon = scaleIcon(AutoupdateUtil.loadIcon("fuel48.png"), 24);
-        ImageIcon ignitionIcon = scaleIcon(AutoupdateUtil.loadIcon("ignition48.png"), 24);
-        ImageIcon idleIcon = scaleIcon(AutoupdateUtil.loadIcon("idle48.png"), 24);
-        ImageIcon crankingIcon = scaleIcon(AutoupdateUtil.loadIcon("cranking48.png"), 24);
+        ImageIcon setupIcon = loadTuningIcon("setup", 24);
+        Map<String, ImageIcon> categoryIcons = new HashMap<>();
+        categoryIcons.put("Setup", setupIcon);
+        categoryIcons.put("Base Engine", setupIcon);
+        categoryIcons.put("Fuel", loadTuningIcon("fuel", 24));
+        categoryIcons.put("Ignition", loadTuningIcon("ignition", 24));
+        categoryIcons.put("Cranking", loadTuningIcon("cranking", 24));
+        categoryIcons.put("Idle", loadTuningIcon("idle", 24));
+        categoryIcons.put("Advanced", loadTuningIcon("advanced", 24));
+        categoryIcons.put("Sensors", loadTuningIcon("sensors", 24));
+        categoryIcons.put("CAN-bus", loadTuningIcon("can", 24));
+        categoryIcons.put("Controller", loadTuningIcon("controller", 24));
+        categoryIcons.put("Help", loadTuningIcon("help", 24));
+        categoryIcons.put("View", loadTuningIcon("view", 24));
+
+        ImageIcon groupIcon = loadTuningIcon("group", 18);
+        ImageIcon tableIcon = loadTuningIcon("table", 18);
+        ImageIcon curveIcon = loadTuningIcon("curve", 18);
+        ImageIcon dialogIcon = loadTuningIcon("dialog", 18);
+        Map<String, ImageIcon> featureIcons = new HashMap<>();
+        featureIcons.put("fanSettings", loadTuningIcon("fan", 18));
+        featureIcons.put("acSettings", loadTuningIcon("snowflake", 18));
+        featureIcons.put("energySystems", loadTuningIcon("battery", 18));
+        featureIcons.put("ignitionInputDialog", loadTuningIcon("key", 18));
+        featureIcons.put("engineChars", loadTuningIcon("file-info", 18));
 
         tree.setCellRenderer(new DefaultTreeCellRenderer() {
+            private final SeparatorRenderer separatorRenderer = new SeparatorRenderer();
+
             @Override
             public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
                 super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
                 if (value instanceof DefaultMutableTreeNode) {
                     DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
                     Object userObject = node.getUserObject();
+                    if (userObject instanceof SeparatorMenuItem) {
+                        return separatorRenderer;
+                    }
                     String name = userObject.toString();
                     if (userObject instanceof SubMenuModel) {
                         name = ((SubMenuModel) userObject).getName();
                     }
                     setText(name);
 
-                    if ("Setup".equals(name)) {
-                        setIcon(setupIcon);
-                    } else if ("Fuel".equals(name)) {
-                        setIcon(fuelIcon);
-                    } else if ("Ignition".equals(name)) {
-                        setIcon(ignitionIcon);
-                    } else if ("Idle".equals(name)) {
-                        setIcon(idleIcon);
-                    } else if ("Cranking".equals(name)) {
-                        setIcon(crankingIcon);
+                    ImageIcon categoryIcon = categoryIcons.get(name);
+                    if (categoryIcon != null) {
+                        setIcon(categoryIcon);
+                    } else if (userObject instanceof SubMenuModel) {
+                        IniFileModel currentModel = uiContext.iniFileState.getIniFileModel();
+                        String key = ((SubMenuModel) userObject).getKey();
+                        ImageIcon featureIcon = featureIcons.get(key);
+                        if (featureIcon != null) {
+                            setIcon(featureIcon);
+                        } else if (currentModel != null) {
+                            if (currentModel.getDialogs().containsKey(key)) {
+                                setIcon(dialogIcon);
+                            } else if (currentModel.getTable(key) != null) {
+                                setIcon(tableIcon);
+                            } else if (currentModel.getCurves().containsKey(key)) {
+                                setIcon(curveIcon);
+                            }
+                        }
+                    } else if (!leaf) {
+                        setIcon(groupIcon);
                     }
 
                     if (disabledNodes.contains(node)) {
@@ -139,6 +216,7 @@ public class MainMenuTreeWidget {
         });
 
         JPanel topPanel = new JPanel(new BorderLayout());
+        searchField.putClientProperty("JTextField.placeholderText", "search here");
         searchField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -170,11 +248,30 @@ public class MainMenuTreeWidget {
         buttonPanel.add(expandAll);
         buttonPanel.add(collapseAll);
 
-        topPanel.add(searchField, BorderLayout.CENTER);
-        topPanel.add(buttonPanel, BorderLayout.EAST);
+        topPanel.add(searchField, BorderLayout.NORTH);
+        topPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         contentPane.add(topPanel, BorderLayout.NORTH);
         contentPane.add(new JScrollPane(tree), BorderLayout.CENTER);
+
+        // Refresh the disabled state as soon as the tune is read from the ECU.
+        // If the tree was not populated at startup (no local ini file), populate it now.
+        ConnectionStatusLogic.INSTANCE.addListener(isConnected -> {
+            if (isConnected) {
+                SwingUtilities.invokeLater(() -> {
+                    if (root.getChildCount() == 0) {
+                        IniFileModel iniModel = uiContext.iniFileState.getIniFileModel();
+                        if (iniModel != null) {
+                            populate(iniModel);
+                            ((DefaultTreeModel) tree.getModel()).nodeStructureChanged(root);
+                        }
+                    }
+                    refreshExpressions();
+                });
+            }
+        });
+
+        refreshExpressions();
     }
 
     private void populate(IniFileModel model) {
@@ -262,6 +359,18 @@ public class MainMenuTreeWidget {
         }
     }
 
+    private boolean isSelectable(TreePath path) {
+        if (path == null) {
+            return false;
+        }
+        Object userObject = ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
+        if (userObject instanceof SeparatorMenuItem) {
+            return false;
+        }
+        return !(userObject instanceof SubMenuModel)
+            || !disabledKeys.contains(((SubMenuModel) userObject).getKey());
+    }
+
     /**
      * [search logic]: display all elements if text is empty
      *
@@ -292,6 +401,10 @@ public class MainMenuTreeWidget {
 
     private boolean filterNode(DefaultMutableTreeNode originalNode, DefaultMutableTreeNode filteredNode, String[] tokens, String path) {
         Object userObject = originalNode.getUserObject();
+        // separators are decoration, they never match a search and would show up as stray lines
+        if (userObject instanceof SeparatorMenuItem) {
+            return false;
+        }
         String nodeText = userObject.toString();
         if (userObject instanceof SubMenuModel) {
             nodeText = ((SubMenuModel) userObject).getName();
@@ -358,6 +471,8 @@ public class MainMenuTreeWidget {
             for (MenuItem child : group.getItems()) {
                 addMenuItem(groupNode, child);
             }
+        } else if (item instanceof SeparatorMenuItem) {
+            parent.add(new DefaultMutableTreeNode(item));
         } else if (item instanceof SubMenuModel) {
             SubMenuModel subMenu = (SubMenuModel) item;
             DefaultMutableTreeNode node = new DefaultMutableTreeNode(subMenu);
@@ -408,6 +523,10 @@ public class MainMenuTreeWidget {
             }
         }
 
+        if (!isSelectable(tree.getSelectionPath())) {
+            tree.clearSelection();
+        }
+
         tree.repaint();
     }
 
@@ -432,6 +551,9 @@ public class MainMenuTreeWidget {
         DefaultMutableTreeNode node = findSubMenuNode(root, subMenuKey);
         if (node != null) {
             TreePath path = new TreePath(node.getPath());
+            if (!isSelectable(path)) {
+                return;
+            }
             tree.setSelectionPath(path);
             tree.scrollPathToVisible(path);
             handleSelection(path);
@@ -456,8 +578,14 @@ public class MainMenuTreeWidget {
     }
 
     private static ImageIcon scaleIcon(ImageIcon icon, int size) {
-        if (icon == null) return null;
+        if (icon == null) {
+            return null;
+        }
         return new ImageIcon(icon.getImage().getScaledInstance(size, size, java.awt.Image.SCALE_SMOOTH));
+    }
+
+    private static ImageIcon loadTuningIcon(String name, int size) {
+        return scaleIcon(AutoupdateUtil.loadIcon("icons/tuning/" + name + "48.png"), size);
     }
 
     public JPanel getContentPane() {

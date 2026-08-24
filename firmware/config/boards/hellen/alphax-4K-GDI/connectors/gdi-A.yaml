@@ -108,11 +108,12 @@ pins:
   - pin: 18A
     id: [H144_IN_SENS4, H144_IN_SENS4]
     class: [event_inputs, switch_inputs]
-    function: Flex Input
+    function: Digital Input / Flex fuel sensor
+    type: din
     ts_name: ___ Flex Input 1
 
   - pin: 19A
-    function: PPS 1
+    function: Universal analog input. Suggested PPS input 1
     type: av
     meta: H144_IN_PPS
     class: analog_inputs
@@ -120,7 +121,7 @@ pins:
     color: white
 
   - pin: 20A
-    function: PPS 2
+    function: Universal analog input. Suggested PPS input 2
     type: av
     meta: H144_IN_PPS2
     class: analog_inputs
@@ -161,7 +162,7 @@ pins:
     color: blue
 
   - pin: 26A
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: 27A

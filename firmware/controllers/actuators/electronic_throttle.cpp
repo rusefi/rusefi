@@ -489,20 +489,7 @@ expected<percent_t> EtbController::getClosedLoopAutotune(percent_t target, perce
 			break;
 		}
 
-		// Also output to debug channels if configured
-		if (engineConfiguration->debugMode == DBG_ETB_AUTOTUNE) {
-			// a - amplitude of output (TPS %)
-			engine->outputChannels.debugFloatField1 = m_a;
-			// b - amplitude of input (Duty cycle %)
-			engine->outputChannels.debugFloatField2 = b;
-			// Tu - oscillation period (seconds)
-			engine->outputChannels.debugFloatField3 = m_tu;
-
-			engine->outputChannels.debugFloatField4 = ku;
-			engine->outputChannels.debugFloatField5 = kp;
-			engine->outputChannels.debugFloatField6 = ki;
-			engine->outputChannels.debugFloatField7 = kd;
-		}
+		efiPrintf("ETB autotune: a=%.3f b=%.3f Tu=%.3f Ku=%.3f Kp=%.3f Ki=%.3f Kd=%.3f", m_a, b, m_tu, ku, kp, ki, kd);
 #endif
 		// TODO: directly update PID settings in engineConfiguration
 	}
@@ -742,7 +729,7 @@ void blinkEtbErrorCodes(bool blinkPhase) {
 
 #if !EFI_UNIT_TEST
 
-struct DcThread final : public PeriodicController<512> {
+struct DcThread final : public PeriodicController<DC_THREAD_STACK_SIZE> {
 	DcThread() : PeriodicController("DC", PRIO_ETB, ETB_LOOP_FREQUENCY) {}
 
 	void PeriodicTask(efitick_t) override {
@@ -754,6 +741,8 @@ struct DcThread final : public PeriodicController<512> {
 		}
 	}
 };
+
+RUSEFI_STACK_ROOT(DcThread, PeriodicTask);
 
 static DcThread dcThread CCM_OPTIONAL;
 
@@ -873,6 +862,12 @@ void setDefaultEtbParameters() {
 
 void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *previousConfiguration) {
 	for (int i = 0; i < ETB_COUNT; i++) {
+		if (engineConfiguration->etbFunctions[i] != previousConfiguration->etbFunctions[i]) {
+			return;
+		}
+	}
+
+	for (int i = 0; i < ETB_COUNT; i++) {
 		etbControllers[i]->onConfigurationChange(&previousConfiguration->etb);
 	}
 }
@@ -917,6 +912,15 @@ void doInitElectronicThrottle(bool isStartupInit) {
 		if (func == DC_None) {
 			// do not touch HW pins if function not selected, this way Lua can use DC motor hardware pins directly
 			continue;
+		}
+		if (func == DC_Gpio) {
+		#if EFI_UNIT_TEST || (defined(BOARD_HBRIDGE_GPIO_COUNT) && BOARD_HBRIDGE_GPIO_COUNT > 0)
+			// The H-bridge GPIO driver owns and initializes this DC hardware slot.
+			continue;
+		#else
+			configError("DC%d GPIO is not supported on this board", i + 1);
+			continue;
+		#endif
 		}
 		auto motor = initDcMotor("ETB disable",
 				engineConfiguration->etbIo[i], i, engineConfiguration->etb_use_two_wires);
@@ -1100,6 +1104,7 @@ const electronic_throttle_s* getLiveData(size_t idx) {
 
 	return etbControllers[idx];
 #else
+	UNUSED(idx);
 	return nullptr;
 #endif
 }

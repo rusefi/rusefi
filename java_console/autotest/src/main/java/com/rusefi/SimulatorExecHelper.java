@@ -1,5 +1,7 @@
 package com.rusefi;
 
+import com.rusefi.core.OsUtil;
+
 import com.devexperts.logging.Logging;
 
 import java.io.BufferedReader;
@@ -29,7 +31,7 @@ public class SimulatorExecHelper {
     private static Process simulatorProcess;
 
     private static String getSimulatorBinary() {
-        return FileLog.isWindows() ? SIMULATOR_BUILD_RUSEFI_SIMULATOR + ".exe" : SIMULATOR_BUILD_RUSEFI_SIMULATOR;
+        return OsUtil.isWindows() ? SIMULATOR_BUILD_RUSEFI_SIMULATOR + ".exe" : SIMULATOR_BUILD_RUSEFI_SIMULATOR;
     }
 
     /**

@@ -1,3 +1,5 @@
 #define LUA_SCRIPT_SIZE 48000
 #define EFI_CAN_BUS_COUNT 3
 #define EFI_CAN_CANFD TRUE
+
+#define ts_show_canbus_sniffer true

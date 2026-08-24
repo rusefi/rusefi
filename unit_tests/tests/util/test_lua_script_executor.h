@@ -24,8 +24,8 @@ private:
 template<typename... Args>
 void TestLuaScriptExecutor::executeFormattedLuaScript(const char* const luaScriptFormatString, Args... args) {
 	char luaScript[256];
-	const size_t luaScriptLength = std::snprintf(luaScript, sizeof(luaScript), luaScriptFormatString, args...);
+	const int luaScriptLength = std::snprintf(luaScript, sizeof(luaScript), luaScriptFormatString, args...);
 	ASSERT_TRUE(0 <= luaScriptLength) << "Encoding error" << std::endl << luaScriptFormatString;
-	ASSERT_TRUE(luaScriptLength < sizeof(luaScript)) << "Insufficient buffer" << std::endl <<  luaScriptFormatString;
+	ASSERT_TRUE(static_cast<size_t>(luaScriptLength) < sizeof(luaScript)) << "Insufficient buffer" << std::endl <<  luaScriptFormatString;
 	executeLuaScript(luaScript);
 }

@@ -28,7 +28,7 @@ pins:
   - pin: 3A
     # H144_LS_2
     id: G8
-    function: Injector 2 Output
+    function: Injector 2
     class: outputs
     type: inj
     ts_name: 3A - Injector 2
@@ -37,7 +37,7 @@ pins:
   - pin: 4A
     # H144_LS_1
     id: G7
-    function: Injector 1 Output
+    function: Injector 1
     class: outputs
     type: inj
     ts_name: 4A - Injector 1
@@ -49,9 +49,9 @@ pins:
     color: red
 
   - pin: 7A
-    function: Analog Ground
+    function: GNDA Analog/Sensor Ground
     color: black
-    type: gnd
+    type: agnd
 
   - pin: 8A
     function: Crank VR (configurable VR or HALL with pull-up)
@@ -71,7 +71,7 @@ pins:
     # H144_IGN_4
     id: E3
     class: outputs
-    function: Smart Ignition 4 Output
+    function: Smart Ignition Coil 4
     type: ign
     ts_name: 10A - Ignition 4
     color: yellow
@@ -80,7 +80,7 @@ pins:
     # H144_IGN_3
     id: E4
     class: outputs
-    function: Smart Ignition 3 Output
+    function: Smart Ignition Coil 3
     type: ign
     ts_name: 11A - Ignition 3
     color: yellow
@@ -90,7 +90,7 @@ pins:
     # H144_IGN_2
     id: E5
     class: outputs
-    function: Smart Ignition 2 Output
+    function: Smart Ignition Coil 2
     type: ign
     ts_name: 12A - Ignition 2
     color: yellow
@@ -100,7 +100,7 @@ pins:
     # H144_IGN_1
     id: C13
     class: outputs
-    function: Smart Ignition 1 Output
+    function: Smart Ignition Coil 1
     type: ign
     ts_name: 13A - Ignition 1
     color: yellow
@@ -109,7 +109,8 @@ pins:
     # H144_IN_CRANK_ANALOG
     id: EFI_ADC_9
     class: analog_inputs
-    function: Aux Analog 1
+    function: Auxiliary analog input 1 PullDown 500K
+    type: av
     ts_name: 14A - Analog 1
     color: orange
 
@@ -118,6 +119,7 @@ pins:
     id: EFI_ADC_13
     class: analog_inputs
     function: IAT Sensor Input
+    type: at
     ts_name: 15A - IAT
     color: orange
 
@@ -125,7 +127,8 @@ pins:
     # H144_IN_CLT AIN11 PC2
     id: EFI_ADC_12
     class: analog_inputs
-    function: CLT Sensor Input
+    function: ECT CLT Coolant Sensor Input
+    type: at
     ts_name: 16A - CLT
     color: orange
 
@@ -133,7 +136,8 @@ pins:
     # IN_PPS
     id: EFI_ADC_3
     class: analog_inputs
-    function: PPS Sensor Input
+    function: Universal analog input. Suggested PPS input 1
+    type: av
     ts_name: 17A - PPS
     color: orange
 
@@ -171,7 +175,8 @@ pins:
     # IN_MAP1
     id: EFI_ADC_10
     class: analog_inputs
-    function: Aux Analog 22
+    function: Auxiliary analog input 22 PullDown 500K
+    type: av
     ts_name: 22A - Analog 22
     color: orange
 
@@ -183,12 +188,12 @@ pins:
     ts_name: 23A - Hall Input 1
 
   - pin: 24A
-    function: Analog Ground
+    function: GNDA Analog/Sensor Ground
     color: black
-    type: gnd
+    type: agnd
 
   - pin: 25A
-    function: Power Ground
+    function: Power/Chassis GND ground
     color: black
     type: gnd
 
@@ -239,7 +244,7 @@ pins:
 
 
   - pin: 34A
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: 2B
@@ -339,14 +344,14 @@ pins:
     # H144_GP2
     id: [D2, D2]
     class: [event_inputs, switch_inputs]
-    function: Digital Input Flex (5v pull-up, with hysteresis)
-    type: hall
+    function: Digital Input / Flex fuel sensor (5v pull-up, with hysteresis)
+    type: din
     ts_name: 17B - Digital In Flex
     color: green
 
 
   - pin: 26B
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
 
 info:

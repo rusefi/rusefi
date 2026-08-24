@@ -92,12 +92,12 @@ pins:
     color: green
 
   - pin: 15B
-    function: CAN bus high (CANH)
+    function: CAN bus High
     type: can
     color: green
 
   - pin: 16B
-    function: CAN1 bus low (CANL)
+    function: CAN bus Low
     type: can
     color: blue
 
@@ -112,7 +112,7 @@ pins:
     color: red
 
   - pin: 19B
-    function: TPS 1 signal
+    function: Universal analog input. Suggested TPS 1 sensor input
     ts_name: ___ TPS1
     meta: H144_IN_TPS
     color: green
@@ -120,7 +120,7 @@ pins:
     class: analog_inputs
 
   - pin: 20B
-    function: TPS 2 signal
+    function: Universal analog input. Suggested TPS 2 sensor input
     ts_name: ___ TPS2
     meta: H144_IN_TPS2
     color: blue
@@ -129,7 +129,7 @@ pins:
 
 
   - pin: 21B
-    function: ECT CLT Coolant
+    function: ECT CLT Coolant Sensor Input
     color: grey
     type: at
     meta: H144_IN_CLT
@@ -137,7 +137,7 @@ pins:
 
 
   - pin: 22B
-    function: IAT
+    function: IAT Sensor Input
     color: blue
     type: at
     meta: H144_IN_IAT
@@ -162,12 +162,12 @@ pins:
 
 
   - pin: 26B
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
     color: black
 
   - pin: 27B
-    function: Sensor GND
+    function: GNDA Analog/Sensor Ground
     type: agnd
     color: black
 

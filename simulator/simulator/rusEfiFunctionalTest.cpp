@@ -25,6 +25,7 @@
 #include "rusefi_lua.h"
 #include "can_hw.h"
 #include "flash_main.h"
+#include "extra_flash_pages.h"
 #include "can_msg_tx.h"
 #include "fifo_buffer.h"
 #include "script_impl.h"
@@ -123,7 +124,7 @@ static void runToothLoggerTest() {
 
 	for (int i = 0;i < 400;i++) {
 		efitick_t nowNt = getTimeNowNt();
-		LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt);
+		LogPrimaryTriggerTooth(nowNt, true);
 	}
 
 	{
@@ -184,9 +185,9 @@ void rusEfiFunctionalTest() {
 
 	initFlash();
 
-  printf("[CannedTunes]: %d \n", (int)getLastEngineType());
+  printf("[CannedTunes] getLastEngineType=%d\n", (int)getLastEngineType());
   // [CannedTunes] let's export all just for simplicity. See also WriteSimulatorConfiguration.java
-	for (size_t typeIndex = 0;typeIndex<(size_t)getLastEngineType();typeIndex++) {
+	for (size_t typeIndex = 0;typeIndex<=(size_t)getLastEngineType();typeIndex++) {
     engine_type_e type = (engine_type_e)typeIndex;
 		printf("[CannedTunes]: testing engineConfig: %d \n", (int)type);
 		writeEngineTypeDefaultConfig(type);
@@ -194,6 +195,9 @@ void rusEfiFunctionalTest() {
 
 	// this here is really 'reset to default configuration'
 	loadConfiguration();
+
+	// Load extra pages (e.g. second VE/ignition tables) after main config
+	loadExtraPages();
 
 	commonInitEngineController();
 

@@ -24,7 +24,10 @@ extern bool verboseMode;
 	extern bool printFuelDebug;
 #endif // EFI_PRINTF_FUEL_DETAILS
 
+#if !EFI_UNIT_TEST
+// only consumed by the skipped-spark detection in startDwellByTurningSparkPinHigh()
 static const char *prevSparkName = nullptr;
+#endif // EFI_UNIT_TEST
 
 static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *output) {
 #if SPARK_EXTREME_LOGGING
@@ -224,7 +227,7 @@ void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 	efitick_t nowNt = getTimeNowNt();
 
 #if EFI_TOOTH_LOGGER
-	LogTriggerCoilState(nowNt, false, event->coilIndex);
+	LogTriggerCoilState(nowNt, event->coilIndex, false);
 #endif // EFI_TOOTH_LOGGER
 	if (!event->wasSparkLimited) {
 		/**
@@ -253,6 +256,11 @@ void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 	// If there are more sparks to fire, schedule them
 	if (event->sparksRemaining > 0) {
 		event->sparksRemaining--;
+
+		// each restrike is its own spark: grab a fresh id, otherwise the out-of-order
+		// protection in startDwellByTurningSparkPinHigh bails restrike dwell since
+		// signalFallSparkId already matches this event's sparkCounter
+		event->sparkCounter = engine->engineState.globalSparkCounter++;
 
 		efitick_t nextDwellStart = nowNt + engine->engineState.multispark.delay;
 		efitick_t nextFiring = nextDwellStart + engine->engineState.multispark.dwell;
@@ -360,7 +368,7 @@ void turnSparkPinHighStartCharging(IgnitionEvent *event) {
 #endif
 
 #if EFI_TOOTH_LOGGER
-  	LogTriggerCoilState(nowNt, true, event->coilIndex);
+		LogTriggerCoilState(nowNt, event->coilIndex, true);
 #endif // EFI_TOOTH_LOGGER
   }
 
@@ -634,6 +642,12 @@ void onTriggerEventSparkLogic(float rpm, efitick_t edgeTimestamp, float currentP
 				warning(ObdCode::CUSTOM_ARTIFICIAL_MISFIRE, "artificial misfire on cylinder #1 for testing purposes %d", engine->engineState.globalSparkCounter);
 				continue;
 			}
+#if ROTATIONAL_IDLE_CONTROLLER
+		if (engine->rotationalIdleController.shouldSkipSparkRotationalIdle()) {
+			continue;
+		}
+#endif // ROTATIONAL_IDLE_CONTROLLER
+
 #if EFI_LAUNCH_CONTROL
             bool sparkLimited = engine->softSparkLimiter.shouldSkip() || engine->hardSparkLimiter.shouldSkip();
             engine->ignitionState.luaIgnitionSkip = sparkLimited;

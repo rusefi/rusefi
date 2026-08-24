@@ -82,6 +82,108 @@ public class IniMenuReaderTest {
         assertNotNull(limitsAndFallback, "limitsAndFallback groupChildMenu should exist");
         assertNull(limitsAndFallback.getEnableExpression(), "limitsAndFallback should have no enableExpression");
         assertNull(limitsAndFallback.getVisibleExpression(), "limitsAndFallback should have no visibleExpression");
+
+        // 13. "subMenu = std_separator" becomes a SeparatorMenuItem, never a SubMenuModel
+        //    subMenu = triggerConfiguration_gap, "Trigger Gap Override", ...
+        //    subMenu = std_separator
+        //    subMenu = energySystems, "Battery and alternator"
+        List<MenuItem> setupItems = setupMenu.getItems();
+        int gapIndex = indexOfSubMenu(setupItems, "triggerConfiguration_gap");
+        assertTrue(gapIndex >= 0, "triggerConfiguration_gap should exist in Setup");
+        assertInstanceOf(SeparatorMenuItem.class, setupItems.get(gapIndex + 1),
+                "item after triggerConfiguration_gap should be a separator");
+        assertSubMenu(setupItems, "energySystems", "Battery and alternator");
+        for (MenuModel menu : menus) {
+            assertNull(findSubMenu(menu.getItems(), "std_separator"),
+                    "std_separator must not leak into menu '" + menu.getName() + "' as a SubMenuModel");
+        }
+    }
+
+    @Test
+    public void testGroupChildSeparator() throws com.rusefi.ini.reader.IniParsingException {
+        String string = "[Menu]\n" +
+                "\tmenu = \"Fuel\"\n" +
+                "\t\tsubMenu = veTableDialog, \"VE\"\n" +
+                "\t\tsubMenu = std_separator\n" +
+                "\t\tgroupMenu = \"Cylinder fuel trims\"\n" +
+                "\t\t\tgroupChildMenu = fuelTrim1, \"Trim 1\"\n" +
+                "\t\t\tgroupChildMenu = std_separator\n" +
+                "\t\t\tgroupChildMenu = fuelTrim2, \"Trim 2\"\n";
+
+        IniFileMetaInfo metaInfo = new IniFileMetaInfo() {
+            @Override public int getnPages() { return 1; }
+            @Override public int getOchBlockSize() { return 0; }
+            @Override public String getSignature() { return "test"; }
+            @Override public String getPageReadCommand(int pageIndex) { return "r"; }
+            @Override public int getPageSize(int pageIndex) { return 100; }
+        };
+        RawIniFile lines = IniFileReaderUtil.read(new java.io.ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = IniFileReaderUtil.readIniFile(lines, "test", metaInfo);
+
+        assertEquals(1, model.getMenus().size());
+        MenuModel fuelMenu = model.getMenus().get(0);
+        List<MenuItem> items = fuelMenu.getItems();
+        assertEquals(3, items.size(), "Fuel menu should have VE, separator, group");
+        assertSubMenu(items, "veTableDialog", "VE");
+        assertInstanceOf(SeparatorMenuItem.class, items.get(1));
+
+        GroupMenuModel group = (GroupMenuModel) items.get(2);
+        List<MenuItem> groupItems = group.getItems();
+        assertEquals(3, groupItems.size(), "group should have trim1, separator, trim2");
+        assertSubMenu(groupItems, "fuelTrim1", "Trim 1");
+        assertInstanceOf(SeparatorMenuItem.class, groupItems.get(1));
+        assertSubMenu(groupItems, "fuelTrim2", "Trim 2");
+    }
+
+    @Test
+    public void testConsecutiveSeparatorsCollapsed() throws com.rusefi.ini.reader.IniParsingException {
+        // conditional .ini templating can emit two std_separator lines in a row once the
+        // items between them are excluded from the build; only one divider should survive
+        String string = "[Menu]\n" +
+                "\tmenu = \"Fuel\"\n" +
+                "\t\tsubMenu = veTableDialog, \"VE\"\n" +
+                "\t\tsubMenu = std_separator\n" +
+                "\t\tsubMenu = std_separator\n" +
+                "\t\tsubMenu = lambdaDialog, \"Lambda\"\n" +
+                "\t\tgroupMenu = \"Cylinder fuel trims\"\n" +
+                "\t\t\tgroupChildMenu = fuelTrim1, \"Trim 1\"\n" +
+                "\t\t\tgroupChildMenu = std_separator\n" +
+                "\t\t\tgroupChildMenu = std_separator\n" +
+                "\t\t\tgroupChildMenu = fuelTrim2, \"Trim 2\"\n";
+
+        IniFileMetaInfo metaInfo = new IniFileMetaInfo() {
+            @Override public int getnPages() { return 1; }
+            @Override public int getOchBlockSize() { return 0; }
+            @Override public String getSignature() { return "test"; }
+            @Override public String getPageReadCommand(int pageIndex) { return "r"; }
+            @Override public int getPageSize(int pageIndex) { return 100; }
+        };
+        RawIniFile lines = IniFileReaderUtil.read(new java.io.ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = IniFileReaderUtil.readIniFile(lines, "test", metaInfo);
+
+        MenuModel fuelMenu = model.getMenus().get(0);
+        List<MenuItem> items = fuelMenu.getItems();
+        assertEquals(4, items.size(), "Fuel menu should have VE, one separator, Lambda, group");
+        assertSubMenu(items, "veTableDialog", "VE");
+        assertInstanceOf(SeparatorMenuItem.class, items.get(1));
+        assertSubMenu(items, "lambdaDialog", "Lambda");
+
+        GroupMenuModel group = (GroupMenuModel) items.get(3);
+        List<MenuItem> groupItems = group.getItems();
+        assertEquals(3, groupItems.size(), "group should have trim1, one separator, trim2");
+        assertSubMenu(groupItems, "fuelTrim1", "Trim 1");
+        assertInstanceOf(SeparatorMenuItem.class, groupItems.get(1));
+        assertSubMenu(groupItems, "fuelTrim2", "Trim 2");
+    }
+
+    private int indexOfSubMenu(List<MenuItem> items, String key) {
+        for (int i = 0; i < items.size(); i++) {
+            MenuItem item = items.get(i);
+            if (item instanceof SubMenuModel && ((SubMenuModel) item).getKey().equals(key)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     private SubMenuModel findSubMenu(List<MenuItem> items, String key) {

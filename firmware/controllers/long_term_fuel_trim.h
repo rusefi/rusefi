@@ -1,4 +1,9 @@
 // file long_term_fuel_trim.h
+//
+// [tag:disable_engine_module] Optional engine module gated by EFI_LTFT_CONTROL; it owns
+// TS page 0x0200 (TS_PAGE_LTFT_TRIMS), so the flag is a TS-page guard flag declared in the
+// board prepend.txt only.
+// See engine_module.h for the full how-to before copying this pattern.
 
 #pragma once
 
@@ -36,7 +41,9 @@ public:
 	void fillRandom();
 
 private:
-	LtftState *m_state;
+	// only init() ever writes this, and store() null-checks it - that guard is only meaningful
+	// if the pointer starts null rather than relying on the instance living at file scope
+	LtftState *m_state = nullptr;
 	// TODO: move to livedata and kill isVeUpdated() ?
 	bool veNeedRefresh = false;
 	bool showUpdateToUser = false;

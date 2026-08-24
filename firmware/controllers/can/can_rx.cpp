@@ -281,7 +281,8 @@ static Timer dashAliveTimer;
 #if EFI_USE_OPENBLT
 #include "openblt/efi_blt_ids.h"
 	if ((CAN_SID(frame) == BOOT_COM_CAN_RX_MSG_ID) && (frame.DLC == 2)) {
-		/* TODO: gracefull shutdown? */
+		/* TODO: graceful shutdown? */
+		// todo: kill the unused (?) openblt option #9733?
 		if (((busIndex == 0) && (engineConfiguration->canOpenBLT)) ||
 			((busIndex == 1) && (engineConfiguration->can2OpenBLT))) {
 			jump_to_openblt();

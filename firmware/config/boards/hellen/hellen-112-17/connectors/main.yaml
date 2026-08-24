@@ -20,17 +20,17 @@ pins:
     type: ls
 
   - pin: A03
-    function: Analog GND
-    type: GND
+    function: GNDA Analog/Sensor Ground
+    type: agnd
   - pin: A04
-    function: Analog GND
-    type: GND
+    function: GNDA Analog/Sensor Ground
+    type: agnd
   - pin: A05
-    function: Analog GND
-    type: GND
+    function: GNDA Analog/Sensor Ground
+    type: agnd
   - pin: A06
-    function: Analog GND
-    type: GND
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: A07
     meta: MM100_IN_CAM_ANALOG
@@ -42,7 +42,7 @@ pins:
   - pin: A08
 # jumper
     function: Sometimes GND
-    type: GND
+    type: gnd
 
   - pin: A09
     meta: MM100_IN_MAP2_ANALOG
@@ -207,11 +207,11 @@ pins:
     type: ls
     ts_name: ___ relay output
   - pin: A53
-    function: Power GND
-    type: GND
+    function: Power/Chassis GND ground
+    type: gnd
   - pin: A54
-    function: Power GND
-    type: GND
+    function: Power/Chassis GND ground
+    type: gnd
   - pin: A55
     function: +12V From Main Relay
   - pin: A56
@@ -231,23 +231,23 @@ pins:
     ts_name: ___ TPS Throttle Position 1
 
   - pin: B04
-    function: Analog GND
-    type: GND
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: B05
-    function: Analog GND
-    type: GND
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: B06
-    function: Analog GND
-    type: GND
+    function: GNDA Analog/Sensor Ground
+    type: agnd
   - pin: B07
-    function: Analog GND
-    type: GND
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 # Polaris CLT GND
   - pin: B08
-    function: Analog GND
-    type: GND
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: B10
     function: Pedal +5V Supply
@@ -261,7 +261,8 @@ pins:
     meta: MM100_IN_CLT_ANALOG
     class: analog_inputs
     ts_name: ___ CLT
-    function: CLT sensor
+    function: ECT CLT Coolant Sensor Input
+    type: at
   - pin: B19
     meta: MM100_IN_MAP1_ANALOG
     class: analog_inputs
@@ -282,7 +283,8 @@ pins:
     class: analog_inputs
     meta: MM100_IN_IAT_ANALOG
     ts_name: ___ IAT
-    function: ___ Intake Air Temperature
+    function: IAT Sensor Input
+    type: at
   - pin: B31
     meta: MM100_IN_D1
     class: event_inputs
@@ -313,7 +315,7 @@ pins:
   - pin: B38
     # jumper
     function: Analog GND for Knock
-    type: GND
+    type: agnd
 
   - pin: B42
     meta: MM100_INJ2
@@ -341,12 +343,12 @@ pins:
     ts_name: ___ low side 1.5A output
     type: ls
   - pin: B47
-    function: Analog GND
-    type: GND
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: B50
-    function: Power GND
-    type: GND
+    function: Power/Chassis GND ground
+    type: gnd
   - pin: B51
     # jumper
     function: ETB positive DC Motor

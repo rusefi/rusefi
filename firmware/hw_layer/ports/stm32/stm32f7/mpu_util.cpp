@@ -18,10 +18,6 @@ static bool isDualBank() {
 #endif
 }
 
-static uint16_t flashSize() {
-	return *reinterpret_cast<const volatile uint16_t*>(FLASHSIZE_BASE);
-}
-
 enum class DeviceType {
 	DualBank1MB,
 	DualBank2MB,
@@ -32,7 +28,7 @@ enum class DeviceType {
 
 static DeviceType determineDevice() {
 	bool db = isDualBank();
-	uint16_t fs = flashSize();
+	uint16_t fs = flashSizeKb();
 
 	if (db) {
 		if (fs == 1024) {
@@ -55,8 +51,13 @@ static DeviceType determineDevice() {
 }
 
 bool mcuCanFlashWhileRunning() {
+#if EFI_FLASH_USE_1500_OF_2MB
+	// Don't care if MCU is dual bank. Half of second bank is allocated for code
+	return false;
+#else
 	// Allow flash-while-running if dual bank mode is enabled, and we're a 2MB device (ie, no code located in second bank)
 	return determineDevice() == DeviceType::DualBank2MB;
+#endif
 }
 
 // See ST AN4826
@@ -71,7 +72,7 @@ size_t flashSectorSize(flashsector_t sector) {
 	}
 
 	// On 1MB devices, sectors 8-11 don't exist, therefore have zero size.
-	if (flashSize() == 1024) {
+	if (flashSizeKb() == 1024) {
 		if (sector > 7 && sector < 12) {
 			return 0;
 		}

@@ -38,6 +38,7 @@ LoopPeriod MainLoop::makePeriodFlags() {
 	return lp;
 }
 
+RUSEFI_STACK_ROOT(MainLoop, PeriodicTask);
 void MainLoop::PeriodicTask(efitick_t nowNt) {
 	ScopePerf perf(PE::MainLoop);
 

@@ -151,3 +151,52 @@ TEST(fuel, testTpsAccelEnrichment) {
 	// should return 0 if we are using predictive map
 	EXPECT_EQ(0, engine->module<TpsAccelEnrichment>()->getTpsEnrichment());
 }
+
+TEST(fuel, tpsAccelFlexFuelCompensation) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	engineConfiguration->tpsAccelEnrichmentThreshold = 5;
+	engineConfiguration->tpsAccelLookback = 2;
+	// non-fractional so the raw enrichment is the table value directly
+	engineConfiguration->tpsAccelFractionPeriod = 1;
+	engineConfiguration->tpsAccelFractionDivisor = 1;
+
+	// Constant AE table (1.0) and flat RPM correction so the base enrichment is a known 1.0
+	setTable(config->tpsTpsAccelTable, 1.0f);
+	setRpmTableBin(config->tpsTspCorrValuesBins);
+	setLinearCurve(config->tpsTspCorrValues, 1, 1);
+
+	// Flex transient AE table = 2.0 everywhere
+	setLinearCurve(config->flexTransientCltBins, -40, 100, 1);
+	setLinearCurve(config->flexTransientEthanolBins, 0, 100, 1);
+	setTable(config->flexAeMult, 2.0f);
+
+	engineConfiguration->flexFuelTransientComp = true;
+	Sensor::setMockValue(SensorType::Clt, 20);
+
+	initAccelEnrichment();
+	engine->rpmCalculator.setRpmValue(600);
+	engine->periodicFastCallback();
+
+	auto ae = engine->module<TpsAccelEnrichment>();
+	ae->setLength(2);
+
+	auto triggerAccel = [&]() {
+		ae->resetAE();
+		ae->onNewValue(0);
+		ae->onNewValue(10); // delta 10 > threshold 5 -> table value 1.0
+		return ae->getTpsEnrichment();
+	};
+
+	// No flex sensor -> compensation neutral, enrichment = base 1.0
+	Sensor::resetMockValue(SensorType::FuelEthanolPercent);
+	EXPECT_NEAR(1.0f, triggerAccel(), EPS4D);
+
+	// E100 with compensation enabled -> enrichment doubles
+	Sensor::setMockValue(SensorType::FuelEthanolPercent, 100);
+	EXPECT_NEAR(2.0f, triggerAccel(), EPS4D);
+
+	// Disable flag -> back to neutral even with a flex sensor present
+	engineConfiguration->flexFuelTransientComp = false;
+	EXPECT_NEAR(1.0f, triggerAccel(), EPS4D);
+}

@@ -20,6 +20,7 @@
 #include "can_sensor.h"
 #include "can_bench_test.h"
 #include "rusefi_wideband.h"
+#include "tunerstudio_io.h"
 
 extern CanListener* canListeners_head;
 
@@ -50,6 +51,7 @@ static uint16_t m_cycleCount = 0;
 }
 
 // this is invoked at CAN_CYCLE_FREQ frequency
+RUSEFI_STACK_ROOT(CanWrite, PeriodicTask);
 void CanWrite::PeriodicTask(efitick_t) {
 	ScopePerf pc(PE::CanThreadTx);
 	CanCycle cycle(m_cycleCount);
@@ -97,11 +99,19 @@ void CanWrite::PeriodicTask(efitick_t) {
 		  sendQcBenchButtonCounters();
 		  sendQcBenchAuxDigitalCounters();
 	  }
+
+
+#if EFI_CAN_SERIAL
+    // todo: separate enable bit? no?
+	  announceCanConsole(cycle);
+#endif
+
 	}
 
 	if (engineConfiguration->enableAemXSeries && cycle.isInterval(CI::_50ms) && boardEnableSendWidebandInfo()) {
 		sendWidebandInfo();
 	}
+
 
 	m_cycleCount++;
 }

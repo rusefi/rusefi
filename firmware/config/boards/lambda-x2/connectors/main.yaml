@@ -89,7 +89,7 @@ pins:
     function: L EGT-
 
   - pin: C1
-    function: GND
+    function: Power/Chassis GND ground
     type: gnd
     color: black
 

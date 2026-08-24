@@ -78,22 +78,22 @@ static std::string readFixedSizeString(std::ifstream &ifs, int size) {
 	return s;
 }
 
-int BinarySensorReader::readRecordsMetadata(std::ifstream &ifs,
+int BinarySensorReader::readRecordsMetadata(std::ifstream &input,
 		int numberOfFields) {
 	int lineTotalSize = 0;
 	for (int i = 0; i < numberOfFields; ++i) {
-		int8_t typeCode = readByte(&ifs);
-		std::string fieldName = readFixedSizeString(ifs, 34);
-		std::string units = readFixedSizeString(ifs, 10);
+		int8_t typeCode = readByte(&input);
+		std::string fieldName = readFixedSizeString(input, 34);
+		std::string units = readFixedSizeString(input, 10);
 
 //		std::cout << "fieldName [" << fieldName << "]" << std::endl;
 //		std::cout << "units [" << units << "]" << std::endl;
 
-		/*int8_t style = */readByte(&ifs);
-		float scale = readSwappedFloat(&ifs);
-		float transform = readSwappedFloat(&ifs);
-		int8_t digits = readByte(&ifs);
-		/*category*/readFixedSizeString(ifs, 34);
+		/*int8_t style = */readByte(&input);
+		float scale = readSwappedFloat(&input);
+		/*float transform = */readSwappedFloat(&input);
+		/*int8_t digits = */readByte(&input);
+		/*category*/readFixedSizeString(input, 34);
 
 		MlgDataType type = findByOrdinal(typeCode);
 		lineTotalSize += getRecordSize(type);
@@ -111,7 +111,7 @@ int BinarySensorReader::readRecordsMetadata(std::ifstream &ifs,
 }
 
 void BinarySensorReader::readLoggerFieldData() {
-	/*uint16_t timestamp =*/static_cast<uint16_t>(readSwappedShort(&ifs));
+	/*uint16_t timestamp =*/(void)readSwappedShort(&ifs);
 
 //    std::cout << "Reading for record " << recordCounter << std::endl;
 
@@ -120,7 +120,7 @@ void BinarySensorReader::readLoggerFieldData() {
 		currentSnapshot[record->getFieldName()] = value;
 	}
 
-	/*uint8_t crc = */static_cast<uint8_t>(readByte(&ifs)); // Use the new helper
+	/*uint8_t crc = */(void)readByte(&ifs);
 
 	recordCounter++;
 	//logContent.emplace_back(currentSnapshot);
@@ -128,7 +128,7 @@ void BinarySensorReader::readLoggerFieldData() {
 
 std::map<const std::string, float>& BinarySensorReader::readBlock() {
 	uint8_t blockType = static_cast<uint8_t>(readByte(&ifs)); // Use the new helper
-	uint8_t counter = static_cast<uint8_t>(readByte(&ifs)); // Use the new helper
+	/*uint8_t counter = */(void)readByte(&ifs);
 
 	if (blockType == 0) {
 		readLoggerFieldData();
@@ -197,7 +197,7 @@ void BinarySensorReader::openMlg(const std::string fileName) {
 				<< std::endl;
 	}
 
-	int lineTotalSize = readRecordsMetadata(ifs, numberOfFields);
+	readRecordsMetadata(ifs, numberOfFields);
 
 	if (isInfoBlockExpected) {
 

@@ -1,9 +1,8 @@
 # Combine the related files for a specific platform and MCU.
 
 # Target ECU board design
-BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
-
-
+BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp \
+  $(BOARD_DIR)/../uaefi121/mega-uaefi.cpp
 
 #no mux on mm100
 

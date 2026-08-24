@@ -23,6 +23,7 @@
 
 #include "pch.h"
 #include "accel_enrichment.h"
+#include "flex_transient.h"
 #include "tunerstudio.h"
 
 
@@ -93,7 +94,11 @@ float TpsAccelEnrichment::getTpsEnrichment() {
 		mult = 1;
 	}
 
-	return extraFuel * mult;
+	// Flex fuel transient compensation (CLT x ethanol). Neutral (1.0) without a flex sensor.
+	// Note: AE_MODE_PREDICTIVE_MAP returns earlier, so this does not apply in that mode.
+	float flexMult = getFlexTransientMult(config->flexAeMult);
+	engine->outputChannels.flexAeMultiplier = flexMult;
+	return extraFuel * mult * flexMult;
 }
 
 void TpsAccelEnrichment::onEngineCycleTps() {
@@ -213,11 +218,23 @@ TpsAccelEnrichment::TpsAccelEnrichment() {
 
 void TpsAccelEnrichment::onConfigurationChange(engine_configuration_s const* /*previousConfig*/) {
 	constexpr float slowCallbackPeriodSecond = SLOW_CALLBACK_PERIOD_MS / 1000.0f;
-	int length = engineConfiguration->tpsAccelLookback / slowCallbackPeriodSecond;
+	int length;
 
-	if (length < 1) {
-		efiPrintf("setTpsAccelLen: Length should be positive [%d]", length);
-		return;
+	if (engineConfiguration->accelEnrichmentMode == AE_MODE_PREDICTIVE_MAP) {
+		// In predictive MAP mode, size the lookback buffer to cover the longest possible
+		// blend duration so the TPS history window is consistent with the prediction window.
+		float maxBlendDuration = 0;
+		for (int i = 0; i < TPS_TPS_ACCEL_CLT_CORR_TABLE; i++) {
+			maxBlendDuration = maxF(maxBlendDuration, config->predictiveMapBlendDurationValues[i]);
+		}
+		length = maxF(2, ceilf(maxBlendDuration / slowCallbackPeriodSecond));
+	} else {
+		length = engineConfiguration->tpsAccelLookback / slowCallbackPeriodSecond;
+
+		if (length < 1) {
+			efiPrintf("setTpsAccelLen: Length should be positive [%d]", length);
+			return;
+		}
 	}
 
 	setLength(length);

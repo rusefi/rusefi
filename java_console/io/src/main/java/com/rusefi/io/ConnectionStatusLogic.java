@@ -22,8 +22,9 @@ public class ConnectionStatusLogic {
             r.run();
         } else {
             addListener(isConnected -> {
-                if (getValue() == ConnectionStatusValue.CONNECTED)
+                if (getValue() == ConnectionStatusValue.CONNECTED) {
                     r.run();
+                }
             });
         }
     }
@@ -37,23 +38,27 @@ public class ConnectionStatusLogic {
         MessagesCentral.getInstance().addListener(new MessagesCentral.MessageListener() {
             @Override
             public void onMessage(Class clazz, String message) {
-                if (message.startsWith(Integration.CRITICAL_PREFIX))
+                if (message.startsWith(Integration.CRITICAL_PREFIX)) {
                     markConnected();
+                }
             }
         });
     }
 
     public void markConnected() {
-        if (value == ConnectionStatusValue.NOT_CONNECTED)
+        if (value == ConnectionStatusValue.NOT_CONNECTED) {
             setValue(ConnectionStatusValue.LOADING);
+        }
     }
 
     public void setValue(@NotNull ConnectionStatusValue value) {
-        if (value == this.value)
+        if (value == this.value) {
             return;
+        }
         this.value = value;
-        for (Listener listener : listeners)
+        for (Listener listener : listeners) {
             listener.onConnectionStatus(isConnected());
+        }
     }
 
     public boolean isConnected() {
@@ -65,14 +70,12 @@ public class ConnectionStatusLogic {
         return value;
     }
 
-    /**
-     * todo: note that we do not have removeListener! in general we are not great in terms of memory leaks in
-     * case of dynamic UI elements like detachable gauges
-     *
-     * @see #setValue
-     */
     public void addListener(Listener listener) {
         listeners.add(listener);
+    }
+
+    public void removeListener(Listener listener) {
+        listeners.remove(listener);
     }
 
     public void addAndFireListener(Listener listener) {

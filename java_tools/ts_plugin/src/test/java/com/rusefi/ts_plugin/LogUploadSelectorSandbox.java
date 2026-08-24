@@ -8,6 +8,9 @@ import com.rusefi.ts_plugin.ui.LogUploadSelector;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
+/**
+ * Visual sandbox for the log-upload selector with a mocked ControllerAccess.
+ */
 public class LogUploadSelectorSandbox {
     public static void main(String[] args) {
         String projectName = "mre_f4";

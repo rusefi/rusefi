@@ -23,6 +23,8 @@
 #include "idle_thread.h"
 #include "launch_control.h"
 #include "gppwm_channel.h"
+#include "spark_logic.h"
+#include "engine_math.h"
 
 #if EFI_ENGINE_CONTROL
 
@@ -44,6 +46,38 @@ angle_t getRunningAdvance(float rpm, float engineLoad) {
 
 	// compute base ignition angle from main table
 	float advanceAngle = IgnitionState::getInterpolatedIgnitionAngle(rpm, engineLoad);
+
+#if EFI_PROD_CODE || EFI_UNIT_TEST
+	bool secondIgnitionTableActive = false;
+
+	const bool ignPinActive = isBrainPinValid(secondTablesGetState()->secondIgnitionTableInput) &&
+		efiReadPin(secondTablesGetState()->secondIgnitionTableInput, secondTablesGetState()->secondIgnitionTableInputMode);
+
+	if (ignPinActive) {
+		// Hard switch: pin overrides everything, replace ignition table entirely
+		advanceAngle = interpolate3d(
+			secondTablesGetState()->secondIgnitionTable,
+			secondTablesGetState()->secondIgnitionLoadBins, engineLoad,
+			secondTablesGetState()->secondIgnitionRpmBins, rpm
+		);
+		secondIgnitionTableActive = true;
+	} else {
+		auto result = calculateBlend(
+			secondTablesGetState()->secondIgnitionBlendParameter,
+			secondTablesGetState()->secondIgnitionBlendBins, secondTablesGetState()->secondIgnitionBlendValues,
+			secondTablesGetState()->secondIgnitionTable,
+			secondTablesGetState()->secondIgnitionLoadBins, engineLoad,
+			secondTablesGetState()->secondIgnitionRpmBins, rpm
+		);
+		if (result.Bias > 0) {
+			advanceAngle = interpolateClamped(0, advanceAngle, 100, result.Value, result.Bias);
+			secondIgnitionTableActive = true;
+		}
+		engine->outputChannels.secondIgnitionBlendParameter = result.BlendParameter;
+		engine->outputChannels.secondIgnitionBlendBias = result.Bias;
+	}
+	engine->engineState.isSecondIgnitionTableActive = secondIgnitionTableActive;
+#endif // EFI_PROD_CODE || EFI_UNIT_TEST
 
   float vehicleSpeed = Sensor::getOrZero(SensorType::VehicleSpeed);
   float wheelSlip = Sensor::getOrZero(SensorType::WheelSlipRatio);
@@ -253,8 +287,14 @@ angle_t IgnitionState::getWrappedAdvance(const float rpm, const float engineLoad
     return angle;
 }
 
-PUBLIC_API_WEAK_SOMETHING_WEIRD
+#include "board_overrides.h"
+
+std::optional<setup_custom_get_cylinder_ignition_trim_type> custom_board_getCylinderIgnitionTrim;
+
 angle_t getCylinderIgnitionTrim(size_t cylinderNumber, float rpm, float ignitionLoad) {
+	if (custom_board_getCylinderIgnitionTrim.has_value()) {
+		return custom_board_getCylinderIgnitionTrim.value()(cylinderNumber, rpm, ignitionLoad);
+	}
 	return IgnitionState::getInterpolatedIgnitionTrim(cylinderNumber, rpm, ignitionLoad);
 }
 
@@ -308,6 +348,15 @@ floatms_t IgnitionState::getSparkDwell(float rpm, bool isCranking) {
 	float dwellMs;
 	if (isCranking) {
 		dwellMs = engineConfiguration->ignitionDwellForCrankingMs;
+	} else if (engineConfiguration->dwellDutyModeEnabled) {
+		efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !std::isnan(rpm), "invalid rpm", NAN);
+		// Duty mode: dwell = duty% × (engine cycle duration / sparks per cycle).
+		// Exact inverse of getCoilDutyCycle() — gives the dwell that produces the
+		// requested duty on the coil output pin (e.g. 50% for Ford TFI modules).
+		float intervalMs = getEngineCycleDuration(rpm) / getNumberOfSparks(getCurrentIgnitionMode());
+		baseDwell = engineConfiguration->dwellDutyPercent / 100.0f * intervalMs;
+		dwellVoltageCorrection = 1.0f;
+		dwellMs = baseDwell;
 	} else {
 		efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !std::isnan(rpm), "invalid rpm", NAN);
 

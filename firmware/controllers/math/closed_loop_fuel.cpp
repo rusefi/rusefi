@@ -1,3 +1,12 @@
+/**
+ * @file closed_loop_fuel.cpp
+ * @brief Closed-loop fuel correction (short-term fuel trim).
+ *
+ * Computes a fueling correction from O2/lambda sensor feedback versus the target
+ * lambda, optionally split into independent cells (by RPM/load) so each operating
+ * region learns its own short-term trim.
+ */
+
 #include "pch.h"
 
 #include "closed_loop_fuel.h"

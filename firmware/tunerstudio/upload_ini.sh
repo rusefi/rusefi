@@ -13,7 +13,11 @@ if [ ! "$SHORT_BOARD_NAME" ]; then
 fi
 
 if [ ! "$USER" ] || [ ! "$PASS" ] || [ ! "$HOST" ]; then
- echo "upload_ini.sh says No Secrets, exiting"
+ MISSING=""
+ [ -z "$USER" ] && MISSING="${MISSING} USER(arg1)"
+ [ -z "$PASS" ] && MISSING="${MISSING} PASS(arg2)"
+ [ -z "$HOST" ] && MISSING="${MISSING} HOST(arg3)"
+ echo "$SCRIPT_NAME: Upload not configured: missing${MISSING} - typically RUSEFI_ONLINE_FTP_USER/RUSEFI_ONLINE_FTP_PASS/RUSEFI_FTP_SERVER secrets are not available on this build"
  exit 0
 fi
 

@@ -6,16 +6,42 @@ public abstract class IniField {
     private final String name;
     // offset within binary page
     private final int offset;
+    // TunerStudio protocol page identifier (0x0000 = main settings page, 0x0100 scatter,
+    // 0x0200 LTFT, 0x0300 second tables, 0x0400 Lua - see firmware tunerstudio.h).  This is
+    // the value sent on the wire in read/write/burn commands, NOT the ini's 1-based page
+    // ordinal.  Set by IniFileReader.registerField from the ini's pageIdentifier list.
+    private int pageIndex = 0;
 
     public IniField(String name, int offset) {
         this.name = name;
         this.offset = offset;
     }
 
+    public int getPageIndex() {
+        return pageIndex;
+    }
+
+    public void setPageIndex(int pageIndex) {
+        this.pageIndex = pageIndex;
+    }
+
+    /**
+     * Human-friendly 1-based TS page for user messages/logs. {@link #pageIndex} holds the TS wire
+     * identifier whose high byte is the page ordinal (0x0400 -> Lua page 5).
+     */
+    public int getDisplayPage() {
+        return toDisplayPage(pageIndex);
+    }
+
+    public static int toDisplayPage(int pageIndexOrIdentifier) {
+        int ordinal = pageIndexOrIdentifier >= 0x100 ? (pageIndexOrIdentifier >> 8) : pageIndexOrIdentifier;
+        return ordinal + 1;
+    }
+
     public static double parseDouble(String s) {
         // todo: real implementation
         // TODO: replace with new ExpressionEvaluator
-        s = s.replaceAll("\\{", "").replaceAll("\\}", "").trim();
+        s = s.replace("{", "").replace("}", "").trim();
         // If this is a complex expression with ternary operator, try to extract the true branch
         // this is related to the lambdaTable using the true branch as default on the fuel tests
         // [tag:lambdaTable]

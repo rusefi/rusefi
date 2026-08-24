@@ -1,11 +1,20 @@
 # Combine the related files for a specific platform and MCU.
 
 # Target ECU board design
-BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
+BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp \
+  $(BOARD_DIR)/../uaefi121/mega-uaefi.cpp
 
 ifeq ($(PROJECT_CPU),ARCH_STM32F7)
+	include $(PROJECT_DIR)/hw_layer/ports/stm32/2mb_flash.mk
 	DDEFS += -DLUA_RX_MAX_FILTER_COUNT=96
+	# Format stays the F7 default (compressed MSD).
+	DDEFS += -DEFI_EMBED_INI_MSD=TRUE
 endif
+
+# 1mb is not enough for everything we have
+DDEFS += -DEFI_LOGIC_ANALYZER=FALSE
+DDEFS += -DEFI_HPFP=FALSE
+MODULE_MIL = no
 
 #no mux on mm100
 
@@ -15,13 +24,15 @@ DDEFS += -DFIRMWARE_ID=\"uaefi\" $(VAR_DEF_ENGINE_TYPE)
 #Knock is available on F4 and F7
 ifeq ($(PROJECT_CPU),ARCH_STM32H7)
 	# Default H743 linker script is not compatible
-	LDSCRIPT = $(PROJECT_DIR)/hw_layer/ports/stm32/stm32h7/STM32H723xG_ITCM64k.ld
+	LDSCRIPT = $(PROJECT_DIR)/hw_layer/ports/stm32/stm32h7/STM32H723xG_ITCM64k_AXI_NC.ld
 	# Do not use HSE autodetection
 	DDEFS += -DSTM32_HSECLK=20000000
 	DDEFS += -DENABLE_AUTO_DETECT_HSE=FALSE
 	# We are limited in flash
 	DDEFS += -DRAMDISK_INVALID
 	DEBUG_LEVEL_OPT = -Os -ggdb -g
+	# We have enough USB endpoints for one more CDC ACM, lets use it for CAN sniffer
+	DDEFS += -DHAL_USE_USB_CDC_2=TRUE
 else
 	#Knock is available on F4 and F7 only
 	DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE -DSTM32_ADC_USE_ADC3=TRUE
@@ -39,6 +50,7 @@ DDEFS += -DHW_HELLEN_SKIP_BOARD_TYPE=TRUE
 DDEFS += -DSTATIC_BOARD_ID=BOARD_ID_UAEFI_B
 
 DDEFS += -DHW_HELLEN_UAEFI=1
+DDEFS += -DBOARD_HBRIDGE_GPIO_COUNT=1
 DDEFS += -DDIAG_5VP_PIN=Gpio::MM100_SPI3_MOSI
 
 DDEFS += -DSTM32_ICU_USE_TIM1=TRUE -DSTM32_PWM_USE_TIM1=FALSE

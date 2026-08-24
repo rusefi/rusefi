@@ -49,6 +49,35 @@ public class Msq {
     }
 
     @NotNull
+    public static Msq valueOf(Map<Integer, ConfigurationImage> images, String tsSignature, IniFileModel ini) {
+        Msq tune = new Msq();
+        tune.versionInfo.setSignature(tsSignature);
+        tune.page.add(new Page(null, null));
+
+        int pageCount = 0;
+        for (int pageIndex = 0; pageIndex < ini.getMetaInfo().getnPages(); pageIndex++) {
+            int pageIdentifier = ini.getMetaInfo().getPageIdentifier(pageIndex);
+            ConfigurationImage image = images.get(pageIdentifier);
+            if (image == null) {
+                continue;
+            }
+            Page outputPage = new Page(pageIndex, image.getSize());
+            tune.page.add(outputPage);
+            Collection<IniField> fields = pageIdentifier == 0
+                ? ini.getAllIniFields().values()
+                : ini.getSecondaryIniFields().values();
+            for (IniField field : fields) {
+                if (field.getPageIndex() == pageIdentifier) {
+                    tune.loadConstant(field, image, outputPage);
+                }
+            }
+            pageCount++;
+        }
+        tune.versionInfo.setPageCount(pageCount);
+        return tune;
+    }
+
+    @NotNull
     public static Msq create(int totalConfigSize, String tsSignature) {
         Msq tune = new Msq();
         tune.versionInfo.setSignature(tsSignature);
@@ -73,9 +102,40 @@ public class Msq {
                 continue;
             }
             IniField field = instance.getAllIniFields().get(constant.getName());
-            Objects.requireNonNull(field, "Field for " + constant.getName());
+            if (field == null) {
+                log.info("asImage: skipping unknown field " + constant.getName());
+                continue;
+            }
             log.debug("Setting " + field);
             ConfigurationImageGetterSetter2.setValue(field, ci, constant);
+        }
+        return ci;
+    }
+
+    /**
+     * Applies constants from this MSQ onto an existing image instead of a blank one.
+     * Fields present in the MSQ but absent from {@code instance} are skipped.
+     * Fields present in {@code base} but absent from the MSQ retain their current value.
+     * This is preferable to {@link #asImage} when loading into a live ECU because it
+     * preserves the correct image size and handles firmware-version differences gracefully.
+     */
+    public ConfigurationImage applyOnto(ConfigurationImage base, IniFileModel instance) {
+        Objects.requireNonNull(instance, "ini model");
+        ConfigurationImage ci = base.clone();
+        Page page = findPage();
+        if (page == null) return ci;
+        for (Constant constant : page.constant) {
+            if (constant.getName().startsWith("UNALLOCATED_SPACE")) continue;
+            IniField field = instance.getAllIniFields().get(constant.getName());
+            if (field == null) {
+                log.info("applyOnto: skipping unknown field " + constant.getName());
+                continue;
+            }
+            try {
+                ConfigurationImageGetterSetter2.setValue(field, ci, constant);
+            } catch (IllegalArgumentException e) {
+                log.info("applyOnto: skipping incompatible value for " + constant.getName() + ": " + e.getMessage());
+            }
         }
         return ci;
     }
@@ -95,8 +155,11 @@ public class Msq {
 
     public void loadConstant(IniFileModel ini, String key, ConfigurationImage image) {
         IniField field = ini.getAllIniFields().get(key);
+        loadConstant(field, image, findPage());
+    }
+
+    private void loadConstant(IniField field, ConfigurationImage image, Page page) {
         String value = ConfigurationImageGetterSetter.getStringValue(field, image);
-        Page page = findPage();
         if (page == null) {
             log.error("Msq: No page");
             return;
@@ -139,7 +202,12 @@ public class Msq {
     }
 
     public Map<String, Constant> getConstantsAsMap() {
-        return findPage().getConstantsAsMap();
+        Map<String, Constant> result = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        for (Page p : page) {
+            if (p.getSize() != null) {
+                result.putAll(p.getConstantsAsMap());
+            }
+        }
+        return result;
     }
 }
-

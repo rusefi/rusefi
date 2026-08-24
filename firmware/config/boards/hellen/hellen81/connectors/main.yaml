@@ -40,7 +40,7 @@ pins:
     color: red
 
   - pin: 6
-    function: Injector 2 Output
+    function: Injector 2
     id: G8
     class: outputs
     ts_name: 6 - INJ_2
@@ -48,7 +48,7 @@ pins:
     color: blue
 
   - pin: 7
-    function: Injector 3 Output
+    function: Injector 3
     id: D11
     class: outputs
     ts_name: 7 - INJ_3
@@ -120,7 +120,7 @@ pins:
 
   - pin: 17
     function: TMOT, TPS sensor analog GND
-    type: gnd
+    type: agnd
     color: black
 
   - pin: 18
@@ -171,7 +171,7 @@ pins:
     color: red
 
   - pin: 25
-    function: Injector 6 Output
+    function: Injector 6
     id: F12
     class: outputs
     ts_name: 25 - INJ_6
@@ -183,7 +183,7 @@ pins:
     color: green
 
   - pin: 27
-    function: Injector 1 Output
+    function: Injector 1
     id: G7
     class: outputs
     ts_name: 27 - INJ_1
@@ -203,7 +203,7 @@ pins:
     color: green
 
   - pin: 30
-    function: Injector 5 Output
+    function: Injector 5
     id: D9
     class: outputs
     ts_name: 30 - INJ_5
@@ -235,7 +235,7 @@ pins:
   - pin: 35
     function: MAP/MAF Sensor Analog GND
     color: black
-    type: gnd
+    type: agnd
 
   - pin: 36
     function: Lambda O2-sensor Gnd
@@ -257,14 +257,16 @@ pins:
     color: white
 
   - pin: 39
-    function: Engine Coolant Temp. (CLT) Analog Input
+    function: ECT CLT Coolant Sensor Input
+    type: at
     id: EFI_ADC_12
     class: analog_inputs
     ts_name: 39 - IN_CLT
     color: white
 
   - pin: 40
-    function: Intake Air Temperature (IAT) Analog Input
+    function: IAT Sensor Input
+    type: at
     id: EFI_ADC_13
     class: analog_inputs
     ts_name: 40 - IN_IAT
@@ -300,7 +302,7 @@ pins:
     color: orange
 
   - pin: 47
-    function: Injector 4 Output
+    function: Injector 4
     id: D10
     class: outputs
     ts_name: 47 - INJ_4
@@ -332,7 +334,7 @@ pins:
     color: orange
 
   - pin: 51
-    function: Power Ground
+    function: Power/Chassis GND ground
     type: gnd
     color: black
 
@@ -379,7 +381,7 @@ pins:
     color: green
 
   - pin: 61
-    function: Power Ground
+    function: Power/Chassis GND ground
     type: gnd
     color: black
 
@@ -446,7 +448,7 @@ pins:
     function: K-Line
 
   - pin: 72
-    function: Injector 7 Output
+    function: Injector 7
     id: F13
     class: outputs
     ts_name: 72 - INJ_7
@@ -454,7 +456,7 @@ pins:
     color: blue
 
   - pin: 73
-    function: Injector 8 Output
+    function: Injector 8
     id: F14
     class: outputs
     ts_name: 73 - INJ_8
@@ -504,7 +506,7 @@ pins:
     color: white
 
   - pin: 80
-    function: Power Ground
+    function: Power/Chassis GND ground
     type: gnd
     color: black
 

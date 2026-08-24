@@ -11,6 +11,9 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 
+/**
+ * Manual harness that reads a TunerStudio .msq tune file and prints its signature.
+ */
 public class MsqSandbox {
     public static void main(String[] args) throws JAXBException, IOException {
         if (args.length != 1) {

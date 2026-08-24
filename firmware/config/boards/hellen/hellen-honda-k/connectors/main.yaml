@@ -22,10 +22,10 @@ pins:
     type: 12v
     color: red
   - pin: A4
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
   - pin: A5
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: A7
@@ -41,11 +41,11 @@ pins:
     ts_name: A9 - KNOCK
     function: Knock Sensor
   - pin: A10
-    function: Analog GND
-    type: gnda
+    function: GNDA Analog/Sensor Ground
+    type: agnd
   - pin: A11
-    function: Analog GND
-    type: gnda
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: A12
     meta: H144_LS_6
@@ -68,8 +68,8 @@ pins:
 
 
   - pin: A16
-    function: Analog GND
-    type: gnda
+    function: GNDA Analog/Sensor Ground
+    type: agnd
     color: black
 
   - pin: A18
@@ -93,13 +93,13 @@ pins:
     color: orange
 
   - pin: A23
-    function: Analog GND
-    type: gnda
+    function: GNDA Analog/Sensor Ground
+    type: agnd
     color: black
 
   - pin: A24
-    function: Analog GND
-    type: gnda
+    function: GNDA Analog/Sensor Ground
+    type: agnd
     color: black
 
   - pin: A25
@@ -122,23 +122,27 @@ pins:
     class: outputs
     ts_name: A27 - IGN4
     function: Ignition 4
+    type: ign
   - pin: A28
     meta: H144_IGN_3
     class: outputs
     ts_name: A28 - IGN3
     function: Ignition 3
+    type: ign
 
   - pin: A29
     meta: H144_IGN_2
     class: outputs
     ts_name: A29 - IGN2
     function: Ignition 2
+    type: ign
 
   - pin: A30
     meta: H144_IGN_1
     class: outputs
     ts_name: A30 - IGN1
     function: Ignition 1
+    type: ign
 
   - pin: B1
     function: VTC +12 supply
@@ -168,6 +172,7 @@ pins:
     class: outputs
     ts_name: B5 - Injector 1
     function: Injector 1
+    type: inj
   - pin: B6
     meta: H144_OUT_IO12
     class: outputs
@@ -185,7 +190,8 @@ pins:
     meta: H144_IN_CLT
     class: analog_inputs
     ts_name: B8 - CLT
-    function: CLT
+    function: ECT CLT Coolant Sensor Input
+    type: at
 
   - pin: B9
     ts_name: B9 - VTEC PRESSURE SW
@@ -209,7 +215,8 @@ pins:
     meta: H144_IN_IAT
     class: analog_inputs
     ts_name: ___ IAT
-    function: IAT
+    function: IAT Sensor Input
+    type: at
   - pin: B18
     meta: H144_OUT_IO9
     class: outputs
@@ -315,7 +322,7 @@ pins:
 
   - pin: C20
     function: Aux GND
-    type: gnda
+    type: agnd
     color: black
 
   - pin: C21
@@ -335,13 +342,13 @@ pins:
     ts_name: E1 Fuel Relay
     function: Fuel Relay
   - pin: E3
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
     color: black
 
   - pin: E4
-    function: Analog GND
-    type: gnda
+    function: GNDA Analog/Sensor Ground
+    type: agnd
     color: black
 
   - pin: E5

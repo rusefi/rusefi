@@ -52,21 +52,21 @@ pins:
 
   - pin: 3
     id: D9
-    function: Injector 5 Output
+    function: Injector 5
     class: outputs
     ts_name: 3 - INJ_5
     type: inj
 
   - pin: 4
     id: F12
-    function: Injector 6 Output
+    function: Injector 6
     class: outputs
     ts_name: 4 - INJ_6
     type: inj
 
   - pin: 5
     id: D10
-    function: Injector 4 Output
+    function: Injector 4
     class: outputs
     ts_name: 5 - INJ_4
     type: inj
@@ -129,28 +129,28 @@ pins:
 
   - pin: 31
     id: D11
-    function: Injector 3 Output
+    function: Injector 3
     class: outputs
     ts_name: 31 - INJ_3
     type: inj
 
   - pin: 32
     id: G8
-    function: Injector 2 Output
+    function: Injector 2
     class: outputs
     ts_name: 32 - INJ_2
     type: inj
 
   - pin: 33
     id: G7
-    function: Injector 1 Output
+    function: Injector 1
     class: outputs
     ts_name: 33 - INJ_1
     type: inj
 
   - pin: 35
     id: F14
-    function: Injector 8 Output
+    function: Injector 8
     class: outputs
     ts_name: 35 - INJ_8
     type: inj
@@ -203,13 +203,15 @@ pins:
     id: EFI_ADC_13
     class: analog_inputs
     ts_name: 77 - IAT
-    function: IAT sensor
+    function: IAT Sensor Input
+    type: at
 
   - pin: 78
     id: EFI_ADC_12
     class: analog_inputs
     ts_name: 78 - CLT
-    function: CLT sensor
+    function: ECT CLT Coolant Sensor Input
+    type: at
 
   - pin: Aux MAP
 # H144_IN_MAP2

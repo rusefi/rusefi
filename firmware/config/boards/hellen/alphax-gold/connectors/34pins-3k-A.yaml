@@ -9,33 +9,33 @@ pins:
     color: orange
 
   - pin: 1A
-    function: Injector 8 Output
+    function: Injector 8
     class: outputs
-    type: ls
+    type: inj
     id: TLE9104_1_OUT_3
     ts_name: ___ - Injector 8
     color: green
 
   - pin: 2A
-    function: Injector 7 Output
+    function: Injector 7
     class: outputs
-    type: ls
+    type: inj
     id: TLE9104_1_OUT_2
     ts_name: ___ - Injector 7
     color: white
 
   - pin: 3A
-    function: Injector 6 Output
+    function: Injector 6
     class: outputs
-    type: ls
+    type: inj
     id: TLE9104_1_OUT_1
     ts_name: ___ - Injector 6
     color: yellow
 
   - pin: 4A
-    function: Injector 5 Output
+    function: Injector 5
     class: outputs
-    type: ls
+    type: inj
     id: TLE9104_1_OUT_0
     ts_name: ___ - Injector 5
     color: brown
@@ -205,8 +205,8 @@ pins:
     function: Flex Fuel Input
 
   - pin: 28A
-    function: GND
-    type: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 29A
     function: WBO2 Heater Negative (pin 3)

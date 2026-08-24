@@ -389,10 +389,10 @@ TEST(trigger, testTriggerDecoder) {
 
 	testTriggerDecoder2("test1+1", engine_type_e::DEFAULT_FRANKENSO, 0, 0.7500, 0.2500);
 
-	testTriggerDecoder2("neon NGC4", engine_type_e::DODGE_NEON_2003_CRANK, 6, 0.5000, 0.0, CHRYSLER_NGC4_GAP);
+	testTriggerDecoder2("neon NGC4", engine_type_e::ET_DODGE_NEON_2003, 6, 0.5000, 0.0, CHRYSLER_NGC4_GAP);
 
 	{
-		EngineTestHelper eth(engine_type_e::DODGE_NEON_2003_CRANK);
+		EngineTestHelper eth(engine_type_e::ET_DODGE_NEON_2003);
 
 		printf("!!!!!!!!!!!!!!!!!! Now trying with only rising edges !!!!!!!!!!!!!!!!!\r\n");
 
@@ -411,12 +411,14 @@ static void assertInjectionEventBase(const char *msg, InjectionEvent *ev, int in
 	EXPECT_NEAR_M4(angleOffset, ev->injectionStartAngle) << msg << "inj index";
 }
 
+#if FUEL_RPM_COUNT == 16
 static void assertInjectionEvent(const char *msg, InjectionEvent *ev, int injectorIndex, int eventIndex, angle_t angleOffset) {
 	assertInjectionEventBase(msg, ev, injectorIndex, eventIndex, angleOffset);
 
 	// There should NOT be a second injector configured
 	EXPECT_EQ(nullptr, ev->outputs[1]);
 }
+#endif //FUEL_RPM_COUNT == 16
 
 static void assertInjectionEventBatch(const char *msg, InjectionEvent *ev, int injectorIndex, int secondInjectorIndex, int eventIndex, angle_t angleOffset) {
 	assertInjectionEventBase(msg, ev, injectorIndex, eventIndex, angleOffset);
@@ -432,8 +434,7 @@ static void setTestBug299(EngineTestHelper *eth) {
 	EXPECT_CALL(*eth->mockAirmass, getAirmass(_, _))
 		.WillRepeatedly(Return(AirmassResult{0.1008001f, 50.0f}));
 
-	Engine *engine = &eth->engine;
-
+	// the 'engine' global already points at eth->engine
 
 	ASSERT_EQ(0, Sensor::getOrZero(SensorType::Rpm));
 
@@ -443,7 +444,7 @@ static void setTestBug299(EngineTestHelper *eth) {
 	eth->fireTriggerEventsWithDuration(20);
 	ASSERT_EQ(3000, Sensor::getOrZero(SensorType::Rpm));
 
-	eth->clearQueue();
+	eth->clearQueuePreservingTime();
 
 	/**
 	 * Trigger up - scheduling fuel for full engine cycle
@@ -544,18 +545,10 @@ static void setTestBug299(EngineTestHelper *eth) {
 	EXPECT_EQ(value1, enginePins.injectors[1].currentLogicValue) << msg; \
 }
 
-static void setArray(float* p, size_t count, float value) {
-	while (count--) {
-		*p++ = value;
-	}
-}
-
 void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	printf("*************************************************** testFuelSchedulerBug299 small to medium\r\n");
 
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	extern bool unitTestBusyWaitHack;
-	unitTestBusyWaitHack = true;
 	setTable(config->injectionPhase, -180.0f);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	engine->tdcMarkEnabled = false;
@@ -924,8 +917,6 @@ TEST(big, testSinglePoint) {
 #if FUEL_RPM_COUNT == 16
 TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	extern bool unitTestBusyWaitHack;
-	unitTestBusyWaitHack = true;
 	engineConfiguration->hpfpCamLobes = 0;
 	setTable(config->injectionPhase, -180.0f);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
@@ -971,11 +962,11 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 //	assertInjectorDownEvent("L04@8", 8, MS2US(50.0), 0);
 
 
-	engine->scheduler.executeAll(getTimeNowUs() + 1);
+	eth.executeAllPreservingTimeUs(getTimeNowUs() + 1);
 	// injector goes high...
 	ASSERT_FALSE(enginePins.injectors[0].currentLogicValue) << "injector@1";
 
-	engine->scheduler.executeAll(getTimeNowUs() + MS2US(17.5) + 1);
+	eth.executeAllPreservingTimeUs(getTimeNowUs() + MS2US(17.5) + 1);
 	// injector does not go low too soon, that's a feature :)
 	ASSERT_TRUE(enginePins.injectors[0].currentLogicValue) << "injector@2";
 
@@ -991,7 +982,7 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 //todo	assertInjectorDownEvent("L015@5", 5, MS2US(30), 0);
 
 
-	engine->scheduler.executeAll(getTimeNowUs() + MS2US(10) + 1);
+	eth.executeAllPreservingTimeUs(getTimeNowUs() + MS2US(10) + 1);
 	// end of combined injection
 	ASSERT_FALSE(enginePins.injectors[0].currentLogicValue) << "injector@3";
 

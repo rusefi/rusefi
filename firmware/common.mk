@@ -1,3 +1,8 @@
+#
+# this file is shared between embedded, simulator and unit_tests - BUT NOT BOOTLOADER?
+# see rusefi_rules.mk which is more shared
+#
+
 include $(PROJECT_DIR)/init/init.mk
 include $(PROJECT_DIR)/util/util.mk
 include $(PROJECT_DIR)/config/engines/engines.mk
@@ -55,7 +60,14 @@ ifneq ("$(wildcard $(BOARD_DIR)/board_unit_tests.mk)","")
 	# technical debt: this should be in a shared location for all private or custom repos!
 	LIVE_DATA_GENERATED_DIRS := $(BOARD_DIR)/generated/live_data_generated
 endif
+LIVE_DATA_GENERATED_DIRS := $(LIVE_DATA_GENERATED_DIRS) $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)live_data_generated
 LIVE_DATA_GENERATED_DIRS += $(PROJECT_DIR)/live_data_generated
+
+ifeq ($(SHORT_BOARD_NAME),)
+  SHORT_BOARD_NAME = f407-discovery
+endif
+
+# Board-specific generated header overrides are now in rusefi_rules.mk (shared by all configurations).
 
 ALLINC += \
 	$(FW_CONFIG_DIR) \
@@ -65,6 +77,7 @@ ALLINC += \
 	$(PROJECT_DIR)/config/engines \
 	$(LIVE_DATA_GENERATED_DIRS) \
 	$(BOARDS_DIR) \
+	$(PROJECT_DIR)/ext/magic_enum/include/magic_enum \
 	$(PROJECT_DIR)/hw_layer/algo \
     $(PROJECT_DIR)/init \
     $(PROJECT_DIR)/ext_algo \
@@ -74,5 +87,6 @@ ALLINC += \
 	$(UTIL_INC) \
 	$(CONTROLLERS_SENSORS_INC) \
 	$(CONTROLLERS_INC) \
-	$(PROJECT_DIR)/console/binary/generated \
+	$(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)console/binary/generated \
+	$(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/lua/generated \
 

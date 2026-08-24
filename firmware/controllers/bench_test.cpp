@@ -30,9 +30,13 @@
 #include "value_lookup.h"
 #include "can_msg_tx.h"
 #include "gm_sbc.h" // setStepperHw
+#if EFI_PROD_CODE
+#include "mass_storage_init.h"
+#endif // EFI_PROD_CODE
 
 #include "fw_configuration.h"
 #include "board_overrides.h"
+#include "basic_configuration.h"
 
 static bool isRunningBench = false;
 static OutputPin *outputOnTheBenchTest = nullptr;
@@ -44,6 +48,12 @@ bool isRunningBenchTest() {
 const OutputPin *getOutputOnTheBenchTest() {
     return outputOnTheBenchTest;
 }
+
+#if EFI_UNIT_TEST
+void setOutputOnTheBenchTestForUnitTest(OutputPin* output) {
+	outputOnTheBenchTest = output;
+}
+#endif
 
 #if !EFI_UNIT_TEST
 
@@ -58,6 +68,10 @@ const OutputPin *getOutputOnTheBenchTest() {
 #include "vvt.h"
 #include "microsecond_timer.h"
 #include "rusefi_wideband.h"
+
+#if MODULE_DTC_MANAGER
+#include "dtc_manager.h"
+#endif
 
 #if EFI_PROD_CODE
 #include "rusefi.h"
@@ -208,7 +222,7 @@ static void doRunSolenoidBench(size_t humanIndex, float onTime, float offTime, i
 	pinbench(onTime, offTime, count, &enginePins.tcuSolenoids[humanIndex - 1]);
 }
 
-static void doRunBenchTestLuaOutput(size_t humanIndex, float onTimeMs, float offTimeMs, int count) {
+void doRunBenchTestLuaOutput(size_t humanIndex, float onTimeMs, float offTimeMs, int count) {
 	if (humanIndex < 1 || humanIndex > LUA_PWM_COUNT) {
 		efiPrintf("Invalid index: %d", humanIndex);
 		return;
@@ -296,6 +310,11 @@ static void hpfpValveBench() {
 		&enginePins.hpfpValve);
 }
 
+static void boostValveBench() {
+	pinbench(engineConfiguration->benchTestOnTime, engineConfiguration->benchTestOffTime, engineConfiguration->benchTestCount,
+		&enginePins.boostPin);
+}
+
 void fuelPumpBench() {
 	fuelPumpBenchExt(BENCH_FUEL_PUMP_DURATION);
 }
@@ -344,6 +363,8 @@ private:
 		}
 	}
 };
+
+RUSEFI_STACK_ROOT(BenchController, ThreadTask);
 
 static BenchController instance;
 
@@ -434,6 +455,9 @@ void handleBenchCategory(uint16_t index) {
 #endif // EFI_HD_ACR
 	case BENCH_HPFP_VALVE:
 		hpfpValveBench();
+		return;
+	case BENCH_BOOST_VALVE:
+		boostValveBench();
 		return;
 	case BENCH_FUEL_PUMP:
 		// cmd_test_fuel_pump
@@ -618,6 +642,12 @@ static void handleCommandX14(uint16_t index) {
 	case TS_SD_DELETE_REPORTS:
 		sdCardRemoveReportFiles();
 		return;
+
+#if MODULE_DTC_MANAGER
+	case TS_DTC_MANAGER_SHOT:
+		DtcTriggerEvent("TS");
+		return;
+#endif // MODULE_DTC_MANAGER
 #endif // EFI_FILE_LOGGING
 
 	default:
@@ -688,6 +718,23 @@ static void processCanRequestCalibration(const CANRxFrame& frame) {
 #endif // EFI_LUA_LOOKUP
 }
 
+// totally wrong place for this code but well
+static void sendECU_IMAGE_INFO() {
+	  CanTxMessage msg(CanCategory::BENCH_TEST, (int)bench_test_packet_ids_e::ECU_IMAGE_INFO, 8, /*bus*/0, /*isExtended*/true);
+#if EFI_PROD_CODE
+   #if EFI_EMBED_INI_MSD
+    #if EFI_USE_COMPRESSED_INI_MSD
+     msg[0] = 1;
+     msg.setIntValueLsb(getStorageImageSize(), /*offset*/4);
+    #else // EFI_USE_COMPRESSED_INI_MSD
+     msg[0] = 2;
+     msg.setIntValueLsb(getStorageImageSize(), /*offset*/4);
+    #endif // EFI_USE_COMPRESSED_INI_MSD
+   #endif //EFI_EMBED_INI_MSD
+#endif// EFI_PROD_CODE
+  efiPrintf("ECU_IMAGE_INFO %d", msg[0]);
+}
+
 void processCanEcuControl(const CANRxFrame& frame) {
 	if (frame.data8[0] != (int)bench_test_magic_numbers_e::BENCH_HEADER) {
 		return;
@@ -698,6 +745,8 @@ void processCanEcuControl(const CANRxFrame& frame) {
     processCanSetCalibration(frame);
   } else if (eid == (int)bench_test_packet_ids_e::ECU_REQ_CALIBRATION) {
     processCanRequestCalibration(frame);
+  } else if (eid == (int)bench_test_packet_ids_e::DASH_ALIVE) {
+    sendECU_IMAGE_INFO();
   } else if (eid == (int)bench_test_packet_ids_e::ECU_CAN_BUS_USER_CONTROL) {
     processCanUserControl(frame);
   }
@@ -706,6 +755,7 @@ void processCanEcuControl(const CANRxFrame& frame) {
 #endif // EFI_CAN_SUPPORT
 
 std::optional<setup_custom_board_ts_command_override_type> custom_board_ts_command;
+std::optional<board_ts_binary_command_type> custom_board_ts_binary_command;
 
 void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	efiPrintf("IO test subsystem=%d index=%d", subsystem, index);
@@ -713,12 +763,9 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	bool running = !engine->rpmCalculator.isStopped();
 
 	switch (subsystem) {
+	case TS_UNUSED_0:
 	case TS_CLEAR_WARNINGS:
 		clearWarnings();
-		break;
-
-	case TS_DEBUG_MODE:
-		engineConfiguration->debugMode = (debug_mode_e)index;
 		break;
 
 	case TS_IGNITION_CATEGORY:
@@ -807,11 +854,10 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		applyPreset(index);
 		break;
 
-  case TS_BOARD_ACTION:
-      // TODO: use call_board_override
-	  if (custom_board_ts_command.has_value()) {
-		  custom_board_ts_command.value()(subsystem, index);
-	  }
+	case TS_BOARD_ACTION:
+		if (!handleBasicConfigurationAction(index)) {
+			call_board_override(custom_board_ts_command, subsystem, index);
+		}
 		break;
 
 	case TS_SET_DEFAULT_ENGINE:
@@ -822,7 +868,7 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		doScheduleStopEngine(StopRequestedReason::TsCommand);
 		break;
 
-	case 0xba:
+	case JUMP_DFU_COMMAND:
 #if EFI_PROD_CODE && EFI_DFU_JUMP
 		jump_to_bootloader();
 #endif /* EFI_DFU_JUMP */
@@ -835,7 +881,8 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		break;
 
 #if EFI_USE_OPENBLT
-	case 0xbc:
+	case JUMP_BLT_COMMAND:
+	  // todo: is _anyone_ using this? console seems to use CMD_REBOOT_OPENBLT text command?
 		/* Jump to OpenBLT if present */
 		jump_to_openblt();
 		break;
@@ -891,6 +938,7 @@ void initBenchTest() {
 	addConsoleAction(CMD_STARTER_BENCH, starterRelayBench);
 	addConsoleAction(CMD_MIL_BENCH, milBench);
 	addConsoleAction(CMD_HPFP_BENCH, hpfpValveBench);
+	addConsoleAction(CMD_BOOST_BENCH, boostValveBench);
 
 #if EFI_CAN_SUPPORT
   addConsoleActionI("ping_wideband", [](int index) {
@@ -898,17 +946,6 @@ void initBenchTest() {
   });
 #endif // EFI_CAN_SUPPORT
 
-#if EFI_LUA
-  // this commands facilitates TS Lua Button scripts development
-  addConsoleActionI("lua_button", [](int index) {
-    if (index < 0 || index > LUA_BUTTON_COUNT)
-      return;
-    luaCommandCounters[index - 1]++;
-  });
-  addConsoleActionFFFF("luabench2", [](float humanIndex, float onTime, float offTimeMs, float count) {
-	  doRunBenchTestLuaOutput((int)humanIndex, onTime, offTimeMs, (int)count);
-  });
-#endif // EFI_LUA
 	instance.start();
 	onConfigurationChangeBenchTest();
 }

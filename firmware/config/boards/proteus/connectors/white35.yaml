@@ -1,35 +1,35 @@
 pins:
   - pin: 1
-    function: Sensor GND
-    type: sgnd
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: 2
-    function: Sensor GND
-    type: sgnd
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: 3
-    function: Sensor GND
-    type: sgnd
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: 4
-    function: Sensor GND
-    type: sgnd
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: 5
-    function: Sensor GND
-    type: sgnd
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: 6
-    function: Sensor GND
-    type: sgnd
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: 7
-    function: Sensor GND
-    type: sgnd
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: 8
-    function: Sensor GND
-    type: sgnd
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: 9
     function: "Analog Voltage +5 supply #1"
@@ -59,7 +59,7 @@ pins:
     id: [C2, EFI_ADC_12]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Volt 3
-    function: "Analog Voltage Input #3 TPS2/TPS1_2"
+    function: Universal analog input. Suggested TPS 2 / TPS1_2 sensor input
     type: av
     color: blue
 
@@ -67,14 +67,14 @@ pins:
     id: [A0, EFI_ADC_0]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Volt 5
-    function: "Analog Voltage Input #5"
+    function: Auxiliary analog input 5
     type: av
 
   - pin: 16
     id: [A2, EFI_ADC_2]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Volt 7
-    function: "Analog Voltage Input #7 (PPS2)"
+    function: Universal analog input. Suggested PPS input 2
     type: av
     color: orange/brown
 
@@ -82,7 +82,7 @@ pins:
     id: [A4, EFI_ADC_4]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Volt 9
-    function: "Analog Voltage Input #9 (PPS)"
+    function: Universal analog input. Suggested PPS input 1
     type: av
     color: white
 
@@ -90,7 +90,7 @@ pins:
     id: [A6, EFI_ADC_6]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Volt 11
-    function: "Analog Voltage Input #11"
+    function: Auxiliary analog input 11
     type: av
 
   - pin: 19
@@ -104,7 +104,7 @@ pins:
     id: [B0, EFI_ADC_8]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Temp 3
-    function: "Analog Thermistor Input #3 (CLT)"
+    function: ECT CLT Coolant Sensor Input
     type: at
     color: grey
 
@@ -117,14 +117,14 @@ pins:
     type: 5v
 
   - pin: 23
-    function: Sensor GND
-    type: sgnd
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: 24
     id: [C1, EFI_ADC_11]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Volt 2
-    function: "Analog Voltage Input #2 TPS"
+    function: Universal analog input. Suggested TPS 1 sensor input
     type: av
     color: green
 
@@ -132,39 +132,39 @@ pins:
     id: [C3, EFI_ADC_13]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Volt 4
-    function: "Analog Voltage Input #4"
+    function: Auxiliary analog input 4
     type: av
 
   - pin: 26
     id: [A1, EFI_ADC_1]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Volt 6
-    function: "Analog Voltage Input #6"
+    function: Auxiliary analog input 6
     type: av
 
   - pin: 27
     id: [A3, EFI_ADC_3]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Volt 8
-    function: "Analog Voltage Input #8"
+    function: Auxiliary analog input 8
     type: av
 
   - pin: 28
     id: [A5, EFI_ADC_5]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Volt 10
-    function: "Analog Voltage Input #10"
+    function: Auxiliary analog input 10
     type: av
 
   - pin: 29
-    function: Sensor GND
-    type: sgnd
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: 30
     id: [C5, EFI_ADC_15]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Temp 2
-    function: Intake air temperature IAT
+    function: IAT Sensor Input
     type: at
     color: blue
 

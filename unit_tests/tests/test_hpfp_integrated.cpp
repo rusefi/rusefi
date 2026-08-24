@@ -8,6 +8,7 @@
 #include "pch.h"
 using ::testing::_;
 
+#if FUEL_RPM_COUNT == 16
 static int hpfpTotalToggle = 0;
 
 static void assertToggleCounterExtra(EngineTestHelper *eth, int extra, const char *msg) {
@@ -16,12 +17,9 @@ static void assertToggleCounterExtra(EngineTestHelper *eth, int extra, const cha
 	hpfpTotalToggle += extra;
 }
 
-#if FUEL_RPM_COUNT == 16
 TEST(HPFP, IntegratedSchedule) {
-	extern bool unitTestTaskPrecisionHack;
-	unitTestTaskPrecisionHack = true;
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
-		engineConfiguration->hpfpValvePin = Gpio::A2; // arbitrary
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* cfg) {
+		cfg->hpfpValvePin = Gpio::A2; // arbitrary
 	});
 
 	engineConfiguration->cylindersCount = 4;

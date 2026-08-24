@@ -17,7 +17,7 @@ pins:
     ts_name: Aux ___
 
   - pin: K1
-    function: GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: K2
@@ -27,14 +27,14 @@ pins:
     function: V ign
 
   - pin: K3
-    function: GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: K4
     function: +12v from main relay
 
   - pin: K5
-    function: GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: K6
@@ -47,17 +47,20 @@ pins:
     ts_name: K10 Sensor
 
   - pin: K11
-    function: Analog Ground
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: K12
     ts_name: KNOCK - k12
     function: Knock sens. in
 
   - pin: K13
-    function: Analog Ground
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: K14
-    function: Analog Ground
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: K15
     meta: H144_ORIGINAL_MCU_IN_D_AUX4
@@ -66,7 +69,8 @@ pins:
     ts_name: Cam - K15
 
   - pin: K16
-    function: Analog Ground
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
 
   - pin: K17b
@@ -149,10 +153,12 @@ pins:
     meta: H144_IN_CLT
     class: analog_inputs
     ts_name: CLT
-    function: CLT
+    function: ECT CLT Coolant Sensor Input
+    type: at
 
   - pin: K34
-    function: Analog Ground
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: K35
     meta: H144_IN_AUX2_ANALOG
@@ -165,10 +171,12 @@ pins:
     type: 5v
 
   - pin: K37
-    function: Analog Ground
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: K39
-    function: Analog Ground
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: K40
     meta: H144_IN_VSS
@@ -184,7 +192,8 @@ pins:
     type: 5v
 
   - pin: K44
-    function: Analog Ground
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: K47
     meta: H144_LS_7
@@ -196,7 +205,8 @@ pins:
     meta: H144_IN_IAT
     class: analog_inputs
     ts_name: IAT
-    function: 'IAT (2014: green)'
+    function: 'IAT Sensor Input (2014: green)'
+    type: at
 
   - pin: K54
     meta: H144_IN_MAP3
@@ -289,7 +299,8 @@ pins:
     type: can
 
   - pin: K79
-    function: Analog Ground
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: K80
     meta: H144_IN_TPS
@@ -304,7 +315,8 @@ pins:
     function: PPS 1 sensor input
 
   - pin: K85
-    function: Analog Ground
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: K86
     meta: H144_OUT_PWM7
@@ -346,7 +358,8 @@ pins:
     function: Shield Ground
 
   - pin: A15
-    function: Ground
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: A16
     meta: H144_IGN_2

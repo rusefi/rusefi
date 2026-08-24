@@ -42,6 +42,10 @@ const char *SettingStorageSD::getIdFileName(size_t id) {
 	switch (id) {
 	case EFI_LTFT_RECORD_ID:
 		return "ltft.bin";
+	case EFI_SECOND_TABLES_RECORD_ID:
+		return "second_tables.bin";
+	case EFI_LUA_PAGE_RECORD_ID:
+		return "lua_script.bin";
 	default:
 		return nullptr;
 	}
@@ -60,6 +64,13 @@ StorageStatus SettingStorageSD::store(size_t id, const uint8_t *ptr, size_t size
 
 	if (fileName == nullptr) {
 		return StorageStatus::NotSupported;
+	}
+
+	FsGuard guard;
+	if (!guard.isLocked()) {
+		efiPrintf("SD: write: failed to lock FS");
+		return StorageStatus::NotAvailable;
+
 	}
 
 	efiPrintf("SD: Writing storage ID %d  %s... %d bytes", id, fileName, size);
@@ -100,6 +111,13 @@ StorageStatus SettingStorageSD::read(size_t id, uint8_t *ptr, size_t size) {
 
 	if (fileName == nullptr) {
 		return StorageStatus::NotSupported;
+	}
+
+	FsGuard guard;
+	if (!guard.isLocked()) {
+		efiPrintf("SD: read: failed to lock FS");
+		return StorageStatus::NotAvailable;
+
 	}
 
 	efiPrintf("SD: Reading storage ID %d %s ... %d bytes", id, fileName, size);

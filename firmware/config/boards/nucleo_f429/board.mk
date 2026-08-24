@@ -1,18 +1,28 @@
 # List of all the board related files.
+
+# this board has 2Mb chip
+include $(PROJECT_DIR)/hw_layer/ports/stm32/2mb_flash.mk
+
 BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 DDEFS += -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::B14
 
 # Enable ethernet
-LWIP = yes
-ALLOW_SHADOW = yes
-DDEFS += -DCH_CFG_USE_DYNAMIC=TRUE
-DDEFS += -DEFI_ETHERNET=TRUE
+EFI_ETHERNET = yes
 
 # This is an F429!
 IS_STM32F429 = yes
 
 BUNDLE_OPENOCD = yes
 
+# because of RAM
+MODULE_DTC_MANAGER = no
+
 DDEFS += -DFIRMWARE_ID=\"nucleo_f429\"
 DDEFS += -DDEFAULT_ENGINE_TYPE=engine_type_e::MINIMAL_PINS
 DDEFS += -DSTATIC_BOARD_ID=STATIC_BOARD_ID_NUCLEO_F429
+
+# reducing RAM consumption for EFI_ETHERNET to fit
+DDEFS += -DEFI_ALTERNATOR_CONTROL=FALSE -DEFI_LOGIC_ANALYZER=FALSE -DEFI_ENABLE_ASSERTS=FALSE
+
+# Save some RAM: EFI_LUA=FALSE is declared in
+# prepend.txt and lifted into DDEFS by the Makefile - see [tag:ts_page_table]

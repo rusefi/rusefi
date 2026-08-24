@@ -7,6 +7,7 @@
 #include "spark_logic.h"
 #include "GY6_139QMB.h"
 #include "defaults.h"
+#include "fuel_math.h"
 
 TEST(issues, issueOneCylinderSpecialCase968) {
 	EngineTestHelper eth(engine_type_e::GY6_139QMB);
@@ -47,4 +48,46 @@ TEST(issues, issueOneCylinderSpecialCase968) {
 
 	eth.fireTriggerEvents2(/* count */ 1, 50 /* ms */);
 	ASSERT_EQ( 4,  engine->scheduler.size()) << "first revolution(s)";
+}
+
+/**
+ * #8345: batch pairs each injector with the cylinder 360 degrees later in the firing order, so on
+ * multi-cylinder engines every injector fires twice per cycle and half fuel per pulse is correct.
+ * With one cylinder there is no distinct twin - InjectionEvent::update() computes secondIndex as
+ * the same injector, and FuelSchedule only ever holds one event per cylinder - so only one pulse
+ * is produced per cycle. Halving the fuel for a second pulse that never happens left the engine
+ * running lean.
+ */
+TEST(issues, oneCylinderBatchDeliversWholeCycleFuel) {
+	EngineTestHelper eth(engine_type_e::GY6_139QMB);
+	ASSERT_EQ(1, engineConfiguration->cylindersCount) << "GY6 is the one cylinder engine";
+
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
+	float sequential = getInjectionModeDurationMultiplier();
+
+	engineConfiguration->injectionMode = IM_BATCH;
+	float batch = getInjectionModeDurationMultiplier();
+
+	// one pulse per cycle either way, so one cylinder must not lose half its fuel to batch
+	EXPECT_FLOAT_EQ(1, sequential);
+	EXPECT_FLOAT_EQ(1, batch);
+
+	// and the duty cycle estimate has to count the one pulse that actually happens
+	EXPECT_EQ(1, getNumberOfInjections(IM_BATCH));
+}
+
+TEST(issues, multiCylinderBatchHalvesFuel) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	engineConfiguration->injectionMode = IM_BATCH;
+
+	// two cylinders: injector 0 fires on its own event and again on cylinder 1's event,
+	// so two pulses per cycle and half the fuel each is correct
+	engineConfiguration->cylindersCount = 2;
+	EXPECT_FLOAT_EQ(0.5f, getInjectionModeDurationMultiplier());
+	EXPECT_EQ(2, getNumberOfInjections(IM_BATCH));
+
+	engineConfiguration->cylindersCount = 4;
+	EXPECT_FLOAT_EQ(0.5f, getInjectionModeDurationMultiplier());
+	EXPECT_EQ(2, getNumberOfInjections(IM_BATCH));
 }

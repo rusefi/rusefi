@@ -2,7 +2,7 @@
 null
 
 ### launchRpm
-A secondary Rev limit engaged by the driver to help launch the vehicle faster
+The target engine speed (RPM) to maintain during launch.
 
 ### rpmHardLimit
 set rpm_hard_limit X
@@ -71,7 +71,7 @@ LTIT table regional smoothing intensity (0=no smoothing)
 Minimum threshold of PID integrator for LTIT correction
 
 ### launchFuelAdderPercent
-
+Fuel enrichment adder percentage.
 
 ### etbJamTimeout
 Time after which the throttle is considered jammed.
@@ -131,7 +131,7 @@ Switch between Industrial and Cic PID implementation
 
 
 ### kickStartCranking
-
+Kick-start cranking mode: below 800 RPM both coils are charged right at the trigger mark and fired a dwell-time later, normal spark scheduling is suppressed.
 
 ### useSeparateIdleTablesForCrankingTaper
 This uses separate ignition timing and VE tables not only for idle conditions, also during the postcranking-to-idle taper transition (See also afterCrankingIACtaperDuration).
@@ -143,7 +143,7 @@ This uses separate ignition timing and VE tables not only for idle conditions, a
 
 
 ### useRunningMathForCranking
-For cranking either use the specified fixed base fuel mass, or use the normal running math (VE table).
+For cranking either use the specified fixed base fuel mass, or use the normal running math (VE table). Note: in 'Fuel Map' (running math) mode the base mass already reflects the flex-adjusted stoich ratio, so the cranking flex multipliers act as ADDITIONAL enrichment on top of that - do not re-apply the full ethanol correction there.
 
 ### displayLogicLevelsInEngineSniffer
 Shall we display real life signal or just the part consumed by trigger decoder.\nApplies to both trigger and cam/vvt input.
@@ -251,7 +251,7 @@ Pull-up resistor value on your board
 Pull-up resistor value on your board
 
 ### launchTimingRetard
-
+The target absolute ignition timing value (e.g., -10 means -10 degrees, not 10 degrees of retard relative to base timing).
 
 ### idleMaximumAirmass
 Maximum commanded airmass for the idle controller.
@@ -342,6 +342,42 @@ Inhibit operation of this fan while the engine is not running.
 
 ### disableFan2WhenStopped
 Inhibit operation of this fan while the engine is not running.
+
+### fan1PwmEnabled
+Enable PWM mode for Fan 1. When enabled, the fan output is driven by the PWM curve instead of on/off relay logic.
+
+### fan2PwmEnabled
+Enable PWM mode for Fan 2. When enabled, the fan output is driven by the PWM curve instead of on/off relay logic.
+
+### fan1PwmFrequency
+Fan 1 PWM frequency
+
+### fan2PwmFrequency
+Fan 2 PWM frequency
+
+### fan1MinPwm
+Minimum PWM output clamp (Fan 1)
+
+### fan1MaxPwm
+Maximum PWM output clamp (Fan 1)
+
+### fan2MinPwm
+Minimum PWM output clamp (Fan 2)
+
+### fan2MaxPwm
+Maximum PWM output clamp (Fan 2)
+
+### fan1AcAdder
+PWM adder when AC compressor is active (Fan 1)
+
+### fan2AcAdder
+PWM adder when AC compressor is active (Fan 2)
+
+### fan1SoftStartSec
+Soft-start ramp time ? how long to ramp from 0 to target PWM (Fan 1)
+
+### fan2SoftStartSec
+Soft-start ramp time ? how long to ramp from 0 to target PWM (Fan 2)
 
 ### wizardPanelToShow
 
@@ -482,13 +518,13 @@ CAN broadcast using custom rusEFI protocol
 
 
 ### measureMapOnlyInOneCylinder
-Useful for individual intakes
+Sample MAP during only one cylinder's intake per engine cycle instead of every cylinder.\nEnable for individual throttle bodies, where the MAP sensor reads a single runner with its own pressure pulses. Leave disabled for a shared plenum or single throttle so every intake event is averaged together for a smoother reading.
 
 ### stepperForceParkingEveryRestart
 
 
 ### isFasterEngineSpinUpEnabled
-If enabled, try to fire the engine before a full engine cycle has been completed using RPM estimated from the last 90 degrees of engine rotation. As soon as the trigger syncs plus 90 degrees rotation, fuel and ignition events will occur. If disabled, worst case may require up to 4 full crank rotations before any events are scheduled.
+If enabled, RPM is estimated from ~90 degrees of rotation using tooth timestamps collected even before trigger sync, and fuel/ignition scheduling starts as soon as the trigger syncs (sequential ignition temporarily runs as wasted spark until full phase sync). As soon as the trigger syncs plus 90 degrees rotation, fuel and ignition events will occur. If disabled, worst case may require up to 4 full crank rotations before any events are scheduled.
 
 ### coastingFuelCutEnabled
 This setting disables fuel injection while the engine is in overrun, this is useful as a fuel saving measure and to prevent back firing.
@@ -529,65 +565,8 @@ AEM X-Series or rusEFI Wideband
 ### useAbsolutePressureForLagTime
 
 
-### verboseCanBaseAddress
-
-
-### mc33_hvolt
-Boost Voltage
-
-### minimumBoostClosedLoopMap
-Minimum MAP before closed loop boost is enabled. Use to prevent misbehavior upon entering boost.
-
-### initialIgnitionCutPercent
-
-
-### finalIgnitionCutPercentBeforeLaunch
-
-
-### idlePidRpmUpperLimit
-How far above idle speed do we consider idling, i.e. coasting detection threshold.\nFor example, if target = 800, this param = 200, then anything below 1000 RPM is considered idle.
-
-### applyNonlinearBelowPulse
-Apply nonlinearity correction below a pulse of this duration. Pulses longer than this duration will receive no adjustment.
-
-### torqueReductionArmingRpm
-Since torque reduction pin is usually shared with launch control, most people have an RPM where behavior under that is Launch Control, over that is Flat Shift/Torque Reduction
-
-### stoichRatioSecondary
-Stoichiometric ratio for your secondary fuel. This value is used when the Flex Fuel sensor indicates E100, typically 9.0
-
-### etbMaximumPosition
-Maximum allowed ETB position. Some throttles go past fully open, so this allows you to limit it to fully open.
-
-### sdCardLogFrequency
-Rate the ECU will log to the SD card, in hz (log lines per second).
-
-### launchCorrectionsEndRpm
-
-
-### lambdaProtectionRestoreRpm
-
-
-### mapMinBufferLength
-This many MAP samples are used to estimate the current MAP. This many samples are considered, and the minimum taken. Recommended value is 1 for single-throttle engines, and your number of cylinders for individual throttle bodies.
-
-### idlePidDeactivationTpsThreshold
-Below this throttle position, the engine is considered idling. If you have an electronic throttle, this checks accelerator pedal position instead of throttle position, and should be set to 1-2%.
-
-### stepperParkingExtraSteps
-
-
-### startCrankingDuration
-Maximum time to crank starter when start/stop button is pressed
-
-### lambdaProtectionMinTps
-
-
-### lambdaProtectionTimeout
-Only respond once lambda is out of range for this period of time. Use to avoid transients triggering lambda protection when not needed
-
 ### idleReturnTargetRamp
-Ramp the idle target down from the entry threshold over N seconds when returning to idle. Helps prevent overshooting (below) the idle target while returning to idle from coasting.
+When returning to idle from coasting, start the closed-loop RPM target elevated by the 'RPM upper limit' idle detection threshold, then ramp it down to the normal target over the 'Ramp target duration'. Helps prevent RPM from dipping below the idle target on return to idle.
 
 ### useInjectorFlowLinearizationTable
 
@@ -599,7 +578,7 @@ If enabled we use two H-bridges to drive stepper idle air valve
 
 
 ### enableLaunchRetard
-
+Enables absolute ignition timing control during launch (sets timing to the "Absolute Timing at Launch" value).
 
 ### canInputBCM
 
@@ -667,14 +646,71 @@ When set to yes, it enables intake air temperature-based corrections for Alpha-N
 ### tcuEnabled
 
 
-### canBroadcastUseChannelTwo
-
-
 ### useRawOutputToDriveIdleStepper
 If enabled we use four Push-Pull outputs to directly drive stepper idle air valve coils
 
 ### verboseCan2
 Print incoming and outgoing second bus CAN messages in rusEFI console
+
+### mainRelayDisableTime
+Time after ignition turn-off before the main relay is disabled.
+
+### verboseCanBaseAddress
+
+
+### mc33_hvolt
+Boost Voltage
+
+### minimumBoostClosedLoopMap
+Minimum MAP before closed loop boost is enabled. Use to prevent misbehavior upon entering boost.
+
+### initialIgnitionCutPercent
+The percentage of ignition events to cut when entering the launch control window (e.g., at Launch RPM minus Launch Control Window).
+
+### finalIgnitionCutPercentBeforeLaunch
+The percentage of ignition events to cut when the engine speed reaches the end of the corrections RPM (Launch RPM minus Launch Corrections End RPM). Between the start of the window and the end of corrections RPM, the cut percentage interpolates linearly from initial to final cut percentage.
+
+### idlePidRpmUpperLimit
+How far above idle speed do we consider idling, i.e. coasting detection threshold.\nFor example, if target = 800, this param = 200, then anything below 1000 RPM is considered idle.
+
+### applyNonlinearBelowPulse
+Apply nonlinearity correction below a pulse of this duration. Pulses longer than this duration will receive no adjustment.
+
+### torqueReductionArmingRpm
+Since torque reduction pin is usually shared with launch control, most people have an RPM where behavior under that is Launch Control, over that is Flat Shift/Torque Reduction
+
+### stoichRatioSecondary
+Stoichiometric ratio for your secondary fuel. This value is used when the Flex Fuel sensor indicates E100, typically 9.0
+
+### etbMaximumPosition
+Maximum allowed ETB position. Some throttles go past fully open, so this allows you to limit it to fully open.
+
+### sdCardLogFrequency
+Rate the ECU will log to the SD card, in hz (log lines per second).
+
+### launchCorrectionsEndRpm
+The RPM difference below the Launch RPM at which corrections (timing retard interpolation and/or ignition cut ramp) reach their final/maximum target. For example, if Launch RPM is 4000, and this is 50, corrections reach their final target at 3950 RPM.
+
+### lambdaProtectionRestoreRpm
+
+
+### mapMinBufferLength
+This many MAP samples are used to estimate the current MAP. This many samples are considered, and the minimum taken. Recommended value is 1 for single-throttle engines, and your number of cylinders for individual throttle bodies.
+
+### idlePidDeactivationTpsThreshold
+Below this throttle position, the engine is considered idling. If you have an electronic throttle, this checks accelerator pedal position instead of throttle position, and should be set to 1-2%.
+
+### stepperParkingExtraSteps
+
+
+### startCrankingDuration
+Maximum time to crank starter when start/stop button is pressed
+
+### lambdaProtectionMinTps
+
+
+### lambdaProtectionTimeout
+Only respond once lambda is out of range for this period of time. Use to avoid transients triggering lambda protection when not needed
 
 ### boostPid.pFactor
 
@@ -719,7 +755,7 @@ Pause closed loop fueling after acceleration fuel occurs. Set this to a little l
 Launch disabled above this speed if setting is above zero
 
 ### launchRpmWindow
-Starting Launch RPM window to activate (subtracts from Launch RPM)
+The RPM window before the Launch RPM where launch control strategies (like retard/cut) begin to activate. For example, if Launch RPM is 4000 and Window is 500, activation starts at 3500 RPM.
 
 ### triggerEventsTimeoutMs
 
@@ -836,7 +872,7 @@ When selected, this option cuts the spark to limit RPM. Cutting spark can produc
 
 
 ### launchSparkCutEnable
-This is the Cut Mode normally used
+Enables or disables ignition/spark cut during launch control.
 
 ### torqueReductionEnabled
 
@@ -908,7 +944,10 @@ In Constant mode, timing is automatically tapered to running as RPM increases.\n
 This enables the various ignition corrections during cranking (IAT, CLT and PID idle).\nYou probably don't need this.
 
 ### flexCranking
-Enable a second cranking table to use for E100 flex fuel, interpolating between the two based on flex fuel sensor.
+Enable flex-fuel compensation for engine start. When on (and a flex fuel sensor is present) the cranking coolant multiplier and the priming pulse mass each come from a 2D table over coolant and ethanol % (crankingFuelFlexTable / primeFlexTable, 4-row ethanol axis) instead of their 1D coolant curves. When off, the 1D curves (crankingFuelCoef / primeValues) are used.
+
+### flexFuelTransientComp
+Enable flex-fuel transient fueling compensation (acceleration enrichment and wall wetting tau/beta) based on ethanol content and coolant temperature.
 
 ### useIacPidMultTable
 This flag allows to use a special 'PID Multiplier' table (0.0-1.0) to compensate for nonlinear nature of IAC-RPM controller
@@ -917,7 +956,7 @@ This flag allows to use a special 'PID Multiplier' table (0.0-1.0) to compensate
 
 
 ### launchSmoothRetard
-Interpolates the Ignition Retard from 0 to 100% within the RPM Range
+Gradually interpolates the ignition timing from the base timing table value down to the target "Absolute Timing at Launch" value, starting from the beginning of the launch window.
 
 ### isPhaseSyncRequiredForIgnition
 Some engines are OK running semi-random sequential while other engine require phase synchronization
@@ -937,14 +976,35 @@ If increased VVT duty cycle increases the indicated VVT angle, set this to 'adva
 ### useBiQuadOnAuxSpeedSensors
 
 
-### sdTriggerLog
-'Trigger' mode will write a high speed log of trigger events (warning: uses lots of space!). 'Normal' mode will write a standard MLG of sensors, engine function, etc. similar to the one captured in TunerStudio.
-
 ### stepper_dc_use_two_wires
 
 
 ### watchOutForLinearTime
 
+
+### sdCardConditionalLogging
+Only write the SD log while trigger conditions are met (start/stop). Off = always log, the current behavior.
+
+### useCompensatedMap
+Compensated MAP: in Speed Density mode, normalize MAP by barometric pressure before it is used as a table load axis.\nMAP_ref = MAP / (baro / 101.325 kPa) feeds the VE lookup and the fuel/spark load axes, so the same table cells are hit regardless of altitude (WOT reads ~100 kPa at any elevation).\nThe physical air mass calculation still uses actual MAP. Requires a barometric pressure sensor; without a valid baro reading no compensation is applied.\nWorks together with the Barometric pressure correction table, which serves a different goal: this setting keeps table lookups stable across altitude, while the baro table multiplies fueling for exhaust-side scavenging effects. Either or both can be used.
+
+### sdLogStartRpm
+Start logging at/above this RPM
+
+### sdLogStopRpm
+Stop logging below this RPM. Set below 'start' for hysteresis
+
+### sdLogStopDelay
+Keep logging this many seconds after RPM drops below the stop threshold
+
+### sdLogMinTps
+Also require TPS at/above this to start logging (0 = ignore)
+
+### sdLogMinMap
+Also require MAP at/above this to start logging (0 = ignore)
+
+### sdLogMinVss
+Also require vehicle speed at/above this to start logging (0 = ignore)
 
 ### engineChartSize
 
@@ -971,10 +1031,10 @@ set warningPeriod X
 Pedal position to realize that we need to reduce torque when the trigger pin is triggered
 
 ### referenceTorqueForGenerator
-null
+Reference Torque value
 
 ### referenceMapForGenerator
-null
+kPa/psi value at which Reference Torque is archived
 
 ### referenceVeForGenerator
 null
@@ -1864,6 +1924,9 @@ Delay before cutting fuel due to low oil pressure. Use this to ignore short pres
 ### auxLinear4.value2
 
 
+### engineShutDownPeriod
+
+
 ### knockSuppressMinTps
 Below TPS value all knock suppression will be disabled.
 
@@ -1874,7 +1937,7 @@ Fuel to odd when a knock event occurs. Advice: 5% (mild), 10% (turbo/high comp.)
 After a knock event, reapply fuel at this rate.
 
 ### knockFuelTrim
-Fuel trim when knock, max 30%
+Maximum Amount of Fuel trim when knock
 
 ### knockSpectrumSensitivity
 
@@ -1890,6 +1953,9 @@ This is the pressure at which your injector flow is known.\nFor example if your 
 
 ### vvlControlEnabled
 
+
+### keepIdleSolenoidWhenStopped
+By default the idle solenoid is switched off whenever the engine is not turning, to be quieter and save power. Enable this to keep driving it to the position the idle controller asks for, which at zero RPM is the cranking curve for the current coolant temperature - for valves which need to rest somewhere other than de-energized. The valve is only driven for a minute after the engine stops turning, then switched off anyway to protect the coil and the battery.
 
 ### nitrousLuaGaugeArmingValue
 
@@ -1952,7 +2018,7 @@ Compensates for trigger delay due to belt stretch, or other electromechanical is
 Delay before cutting fuel due to extra high oil pressure. Use this to ignore short pressure blips and sensor noise.
 
 ### idleReturnTargetRampDuration
-idle return target ramp duration
+Time for the idle RPM target to ramp down from the elevated return-to-idle value (normal target + 'RPM upper limit') to the normal target. Longer duration gives a gentler, slower settle to idle. Only used when 'Ramp target on return to idle' is enabled.
 
 ### wastegatePositionOpenedVoltage
 Voltage when the wastegate is fully open
@@ -2001,6 +2067,51 @@ Rotational Idle Auto engage CLT
 
 ### rotationalIdleController.auto_engage_clt
 Rotational Idle Auto engage CLT.
+
+### launchRpmThreshold
+Launch RPM Threshold: when above 0, launch only engages if the activation switch (button/clutch) is pressed at or below this RPM, and stays latched while held - even past this RPM. This lets a standing launch (switch pressed low, revved up) coexist with flat shift / torque reduction (switch blipped high during an upshift). 0 disables the gate (legacy behavior).
+
+### misfireDetectionEnabled
+Misfire Detection: master enable. Active at idle only. Latches check-engine light (P0300) once the count threshold is reached.
+
+### misfireConsecutiveCount
+Misfire Detection: minimum flagged firings within the recent-firings window before a misfire is counted.
+
+### misfireWindowFirings
+Misfire Detection: sliding window size in firings across all cylinders.
+
+### misfireCountThreshold
+Misfire Detection: total counted misfires before the MIL latches. 0 = monitor-only.
+
+### misfireK
+Misfire Detection: threshold multiplier (baseline + K * wobble). Default 3.0.
+
+### misfireWindowStart
+Misfire Detection: window start, degrees after each cylinder's TDC.
+
+### misfireWindowEnd
+Misfire Detection: window end, degrees after each cylinder's TDC.
+
+### misfireEmaAlphaDecel
+Misfire Detection: EMA alpha when segment is slowing (above baseline).
+
+### misfireEmaAlphaAccel
+Misfire Detection: EMA alpha when segment is recovering (below baseline).
+
+### misfireWobbleAlphaRise
+Misfire Detection: wobble EMA alpha when spread is increasing.
+
+### misfireWobbleAlphaFall
+Misfire Detection: wobble EMA alpha when spread is decreasing.
+
+### misfireSettleCycles
+Misfire Detection: firings to wait after entering idle before flagging starts. 0 = immediate.
+
+### dwellDutyModeEnabled
+Dwell Duty Mode: when enabled, ignores the RPM/voltage dwell tables and computes dwell as a fixed percentage of the time between consecutive ignition pulses. Required for Ford TFI modules that expect a 50% duty cycle square wave.
+
+### dwellDutyPercent
+Dwell Duty Mode: percentage of the inter-spark interval used as coil dwell time. 50 = half the interval between pulses (standard TFI target).
 
 ### tcu_shiftTime
 
@@ -2087,5 +2198,20 @@ Rotational Idle Auto engage CLT.
 
 
 ### wizardInjectorFlow
+
+
+### wizardDisplacement
+
+
+### wizardCltSensor
+
+
+### wizardTps
+
+
+### wizardIgnitionOutputs
+
+
+### wizardInjectorOutputs
 
 

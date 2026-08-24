@@ -51,7 +51,6 @@ PROJECT_DIR = .
 # Configure precompiled header
 PCH_DIR = $(PROJECT_DIR)/pch
 PCHSRC = $(PCH_DIR)/pch.h
-PCHSUB = firmware
 
 # Imported source files and paths
 CHIBIOS_CONTRIB = ChibiOS-Contrib
@@ -117,7 +116,7 @@ endif
 
 # Linker extra options here.
 ifeq ($(USE_LDOPT),)
-  USE_LDOPT =
+  USE_LDOPT = --print-memory-usage
 endif
 
 # Enable this if you want link time optimizations (LTO)
@@ -208,6 +207,17 @@ endif
 endif
 DDEFS += -DSHORT_BOARD_NAME=$(SHORT_BOARD_NAME)
 
+# TS-page guard flags (see [tag:ts_page_table]) are declared once in the board's
+# prepend.txt - the only input the .ini generator can see. Lift them into DDEFS here
+# so the firmware compiles with the same value and the .ini page table can never
+# diverge from the pages the firmware actually serves (a divergence makes the firmware
+# answer reads of a page the .ini still lists with out_of_range, and TunerStudio
+# retries that page until it drops the connection).
+# Keep the list in sync with the guardFlag column of TS_PAGES in TSProjectConsumer.java.
+TS_PAGE_GUARD_FLAGS = EFI_LTFT_CONTROL|EFI_LUA
+TS_PAGE_GUARD_DEFS := $(shell sed -nE 's/^#define[[:space:]]+($(TS_PAGE_GUARD_FLAGS))[[:space:]]+(TRUE|FALSE)[[:space:]]*$$/-D\1=\2/p' $(BOARD_DIR)/prepend.txt $(BOARD_DIR)/prepend_$(SHORT_BOARD_NAME).txt 2>/dev/null)
+DDEFS += $(TS_PAGE_GUARD_DEFS)
+
 # Include various ChibiOS mk files
 # Licensing files.
 include $(CHIBIOS)/os/license/license.mk
@@ -244,11 +254,6 @@ ifeq ($(EFI_ONBOARD_MEMS_LIS3DSH),yes)
 endif
 include $(CHIBIOS)/os/hal/lib/streams/streams.mk
 include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
-
-ifeq ($(LWIP),yes)
-  include $(CHIBIOS)/os/various/lwip_bindings/lwip.mk
-endif
-
 include $(CHIBIOS)/os/hal/lib/complex/mfs/hal_mfs.mk
 
 ifeq ($(USE_FATFS),yes)
@@ -263,8 +268,19 @@ ifeq ($(USE_FATFS),yes)
 endif
 
 ifeq ($(USE_WIFI),yes)
+  LWIP = yes
   include $(PROJECT_DIR)/ext/atwinc1500/atwinc1500.mk
   DDEFS += -DEFI_WIFI=1
+endif
+
+ifeq ($(EFI_ETHERNET),yes)
+  LWIP = yes
+  DDEFS += -DEFI_ETHERNET=TRUE
+  DDEFS += -DCH_CFG_USE_DYNAMIC=TRUE
+endif
+
+ifeq ($(LWIP),yes)
+  include $(CHIBIOS)/os/various/lwip_bindings/lwip.mk
 endif
 
 include $(PROJECT_DIR)/hw_layer/mass_storage/mass_storage.mk
@@ -306,7 +322,6 @@ CSRC =  gcc_version_check.c \
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CPPSRC = \
-  configuration_check.cpp \
   $(ALLCPPSRC) \
   $(BOARDCPPSRC) \
   $(DEV_SRC_CPP) \
@@ -433,6 +448,8 @@ ULIBS = -lm --specs=nano.specs -Wl,--sort-section=alignment
 
 include $(RULESFILE)
 
+$(BUILDDIR)/$(PROJECT).elf: $(LDSCRIPT_DEPS)
+
 include target_sentinel.mk
 
 # this one would include ../java_tools/java_tools.mk for gradlew for config and console and plugin jars
@@ -453,8 +470,8 @@ CLEAN_PCH_HOOK:
 
 CLEAN_BUNDLE_HOOK:
 
-POST_MAKE_ALL_RULE_HOOK: $(BUILDDIR)/$(PROJECT).elf
-	@java -jar ../java_tools/gcc_map_reader.jar $(BUILDDIR)/$(PROJECT).map | grep Total || echo Unable to run gcc_map_reader
+POST_MAKE_ALL_RULE_HOOK: $(BUILDDIR)/$(PROJECT).elf $(GCC_MAP_READER_JAR)
+	@java -jar $(GCC_MAP_READER_JAR) $(BUILDDIR)/$(PROJECT).map | grep Total
 	@$(TRGT)objdump -h $(BUILDDIR)/$(PROJECT).elf | grep -w ram4
 
 VPATH     = $(patsubst ./%,%,$(SRCPATHS))

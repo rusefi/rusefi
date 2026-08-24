@@ -325,4 +325,91 @@ blt_int8u XcpVerifyKeyHook(blt_int8u resource, blt_int8u *key, blt_int8u len)
 #endif /* BOOT_XCP_SEED_KEY_ENABLE > 0 */
 
 
+#if (BOOT_XCP_PACKET_RECEIVED_HOOK > 0)
+#define RUSEFI_XCP_CMD_GET_SIGNATURE    (0xBF)
+#define RUSEFI_XCP_CMD_GET_VERSION      ('?')
+
+/************************************************************************************//**
+** \brief     Appends the decimal representation of value to buf, returning the new
+**            length. Used to build the plain-text version banner.
+**
+****************************************************************************************/
+static blt_int8u BltAppendUInt(blt_int8u *buf, blt_int8u pos, blt_int32u value)
+{
+  blt_int8u tmp[10];
+  blt_int8u n = 0;
+
+  /* at least one digit even for a zero value */
+  do {
+    tmp[n++] = (blt_int8u)('0' + (value % 10));
+    value /= 10;
+  } while (value != 0);
+
+  while (n > 0) {
+    buf[pos++] = tmp[--n];
+  }
+  return pos;
+} /*** end of BltAppendUInt ***/
+
+
+/************************************************************************************//**
+** \brief     Handles the rusEFI plain-text probes: '?' replies with
+**            "blt <version>\r\n"; board-specific overrides can add
+**            "features=<comma-separated list>".
+**            (for dev tools / putty), 0xBF replies with the board station id.
+**            Weak so a board-specific implementation can provide a richer banner.
+** \param     data Pointer to received packet data.
+** \param     len Number of bytes in the packet.
+** \return    BLT_TRUE when consumed, BLT_FALSE otherwise.
+**
+****************************************************************************************/
+__attribute__((weak)) blt_bool XcpPacketReceivedHook(blt_int8u *data, blt_int8u len)
+{
+  if (len != 1) {
+    return BLT_FALSE;
+  }
+
+  if (data[0] == RUSEFI_XCP_CMD_GET_VERSION) {
+    blt_int8u response[BOOT_COM_TX_MAX_DATA];
+    blt_int8u pos = 0;
+
+    response[pos++] = 'b';
+    response[pos++] = 'l';
+    response[pos++] = 't';
+    response[pos++] = ' ';
+
+    pos = BltAppendUInt(response, pos, BOOT_VERSION_CORE_MAIN);
+    response[pos++] = '.';
+    pos = BltAppendUInt(response, pos, BOOT_VERSION_CORE_MINOR);
+    response[pos++] = '.';
+    pos = BltAppendUInt(response, pos, BOOT_VERSION_CORE_PATCH);
+    response[pos++] = '\r';
+    response[pos++] = '\n';
+
+    ComTransmitPacket(response, pos);
+    return BLT_TRUE;
+  }
+
+  if (data[0] == RUSEFI_XCP_CMD_GET_SIGNATURE) {
+    blt_int8u response[BOOT_COM_TX_MAX_DATA];
+    blt_int16u responseLen = 1;
+    blt_int16u responseMax = ComGetActiveInterfaceMaxTxLen();
+
+    response[0] = XCP_PID_RES;
+    while ((responseLen < responseMax) && (responseLen < sizeof(response)) &&
+           (XCP_STATION_ID[responseLen - 1] != '\0'))
+    {
+      response[responseLen] = XCP_STATION_ID[responseLen - 1];
+      responseLen++;
+    }
+
+    ComTransmitPacket(response, responseLen);
+    return BLT_TRUE;
+  }
+
+  return BLT_FALSE;
+}
+#endif /* BOOT_XCP_PACKET_RECEIVED_HOOK > 0 */
+
+
 /*********************************** end of hooks.c ************************************/

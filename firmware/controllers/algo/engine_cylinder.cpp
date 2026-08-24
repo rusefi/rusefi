@@ -38,6 +38,7 @@ angle_t OneCylinder::getAngleOffset() const {
 }
 
 void EngineCylinders::updateCylinders() {
+#if EFI_ENGINE_CONTROL
     // Update valid cylinders with their position in the firing order
     uint16_t cylinderUpdateMask = 0;
     for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
@@ -59,4 +60,5 @@ void EngineCylinders::updateCylinders() {
     for (size_t i = engineConfiguration->cylindersCount; i < efi::size(engine->cylinders); i++) {
         engine->cylinders[i].invalidCylinder();
     }
+#endif // EFI_ENGINE_CONTROL
 }

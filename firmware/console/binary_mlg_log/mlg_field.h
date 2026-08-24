@@ -87,6 +87,46 @@ public:
 
 	constexpr size_t getSize() const { return m_size; }
 	constexpr const void* getAddr() const { return m_addr; }
+	constexpr const char* getName() const { return m_name; }
+	constexpr const char* getUnits() const { return m_units; }
+	constexpr const char* getCategory() const { return m_category; }
+	constexpr float getMultiplier() const { return m_multiplier; }
+	constexpr int8_t getDigits() const { return m_digits; }
+	constexpr uint8_t getTypeId() const { return m_type_id; }
+	constexpr bool isBitField() const { return m_isBitField; }
+
+	// Reads the field's current value, applies endianness, scale and bit extraction, and returns it as a double.
+	// 'offset' has the same semantics as in writeData (unit-test engine pointer correction).
+	double readValueAsDouble(void* offset) const {
+		using namespace Types::Field;
+		if (m_isBitField) {
+			const char* const bitsBlockAddr = static_cast<const char*>(m_addr) + m_bitsBlockOffset;
+			const char* const byteWithBitAddr = bitsBlockAddr + m_bitNumber / 8;
+			unsigned char byteWithBit = 0;
+			memcpy_swapend(&byteWithBit, byteWithBitAddr, 1, offset);
+			const uint8_t bitNumberInByte = m_bitNumber % 8;
+			return (byteWithBit & (1 << bitNumberInByte)) ? 1.0 : 0.0;
+		}
+		uint8_t raw[8] = {0};
+		// Note: writeData swaps endianness for the binary log; here we want native value.
+		const char* src = static_cast<const char*>(m_addr) + reinterpret_cast<uintptr_t>(offset);
+		for (size_t i = 0; i < m_size; i++) {
+			raw[i] = static_cast<uint8_t>(src[i]);
+		}
+		double rawValue = 0;
+		switch (static_cast<Scalar>(m_type_id)) {
+			case Scalar::U08: rawValue = *reinterpret_cast<uint8_t*>(raw); break;
+			case Scalar::S08: rawValue = *reinterpret_cast<int8_t*>(raw); break;
+			case Scalar::U16: rawValue = *reinterpret_cast<uint16_t*>(raw); break;
+			case Scalar::S16: rawValue = *reinterpret_cast<int16_t*>(raw); break;
+			case Scalar::U32: rawValue = *reinterpret_cast<uint32_t*>(raw); break;
+			case Scalar::S32: rawValue = *reinterpret_cast<int32_t*>(raw); break;
+			case Scalar::S64: rawValue = static_cast<double>(*reinterpret_cast<int64_t*>(raw)); break;
+			case Scalar::F32: rawValue = *reinterpret_cast<float*>(raw); break;
+			default: rawValue = 0; break;
+		}
+		return rawValue * m_multiplier;
+	}
 
 	// Write the header data describing this field.
 	// Returns the number of bytes written.

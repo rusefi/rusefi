@@ -3,7 +3,8 @@ meta: config/boards/hellen_meta.h
 pins:
   - pin: aux1
     ts_name: 1 GND
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: aux2
     class: outputs

@@ -10,6 +10,7 @@ import com.rusefi.ini.reader.IniFileReaderUtil;
 import com.rusefi.ui.UIContext;
 
 import java.io.FileNotFoundException;
+import java.util.Objects;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -23,6 +24,8 @@ public class IniFileState {
     private final UIContext uiContext;
 
     private IniFileModel iniFileModel;
+    // Signature of the ECU whose INI model is currently cached. Null means local fallback.
+    private String lastSignature;
 
     public IniFileState(UIContext uiContext) {
         this.uiContext = uiContext;
@@ -45,10 +48,25 @@ public class IniFileState {
     public IniFileModel getIniFileModel() {
         BinaryProtocol bp = uiContext.getBinaryProtocol();
         if (bp != null) {
-            // do not lose reference on disconnect
+            String currentSignature = bp.signature;
             IniFileModel current = bp.getIniFileNullable();
-            if (current != null)
+            if (current != null) {
+                // bp has a fully-loaded model — always take it and track the signature.
+                if (!Objects.equals(currentSignature, lastSignature)) {
+                    log.info("ECU signature changed [" + lastSignature + "] -> [" + currentSignature + "], updating INI model");
+                    lastSignature = currentSignature;
+                }
                 iniFileModel = current;
+            } else if (currentSignature != null && !Objects.equals(currentSignature, lastSignature)) {
+                // bp is connected, but the INI hasn't loaded yet, and the ECU signature differs
+                // from the last cached one — discard the stale model so callers don't use wrong
+                // field offsets from the old firmware while waiting for the new INI to load.
+                log.info("ECU signature changed [" + lastSignature + "] -> [" + currentSignature + "], invalidating stale INI model");
+                lastSignature = currentSignature;
+                iniFileModel = null;
+            }
+            // else: same-ECU reconnect (signature unchanged or not yet known) — keep cached model
+            // so the UI stays populated during a transient drop, matching original intent.
         }
         return iniFileModel;
     }

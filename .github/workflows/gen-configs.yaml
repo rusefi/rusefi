@@ -11,15 +11,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
 
     - name: Checkout Submodules Without ChibiOS
       run: |
         misc/git_scripts/common_submodule_init_without_chibios.sh
 
-    - uses: actions/setup-java@v5
+    - uses: ./.github/actions/setup-java
       with:
-        distribution: 'zulu'
         # using version 21 here just for fun. See build-tsplugin-body.yaml
         java-version: '21'
 
@@ -59,14 +58,19 @@ jobs:
         git config --local user.name "GitHub gen-configs Action"
         # per-board .ini
         .github/workflows/bin/smart-git-add.sh 'firmware/tunerstudio/generated/*.ini' 4
-        .github/workflows/bin/smart-git-add.sh firmware/controllers/generated 4
-        .github/workflows/bin/smart-git-add.sh 'firmware/*/*generated*.cpp'
-        .github/workflows/bin/smart-git-add.sh 'firmware/*/*generated*.h'
+        .github/workflows/bin/smart-git-add.sh 'firmware/controllers/generated/rusefi_generated*.h' 2
+        .github/workflows/bin/smart-git-add.sh 'firmware/**/*generated*.cpp'
+        .github/workflows/bin/smart-git-add.sh 'firmware/**/*generated*.h'
         .github/workflows/bin/smart-git-add.sh 'firmware/config/boards/*/generated_ts_name_by_pin.cpp'
         # misc live data etc. reference files TODO change extention since not really .ini?
-        .github/workflows/bin/smart-git-add.sh 'firmware/console/binary/generated/*.ini' 4
+        .github/workflows/bin/smart-git-add.sh 'firmware/console/binary/generated/*.ini'
+        # live_data_fragments.h / live_data_ids.h live in a generated/ dir but their
+        # basenames lack the "generated" token, so the *generated*.h glob above misses
+        # them (bash globstar matches on basename, unlike the old `git add` pathspec
+        # where the directory name counted). Add them explicitly. See issue #9700.
+        .github/workflows/bin/smart-git-add.sh 'firmware/console/binary/generated/*.h'
         .github/workflows/bin/smart-git-add.sh 'firmware/controllers/lua/generated/*.md'
-        .github/workflows/bin/smart-git-add.sh '*.java'
+        .github/workflows/bin/smart-git-add.sh '**/*.java'
         .github/workflows/bin/smart-git-add.sh '*_generated.h'
         git status
         OUT=$(git commit -m "Auto-generated configs and docs" 2>&1) || echo "commit failed, finding out why"
@@ -74,8 +78,12 @@ jobs:
           echo "headers: looks like nothing to commit"
           exit 0
         elif echo "$OUT" | grep 'changed'; then
-          echo "COMMIT=true" >> $GITHUB_ENV
-          echo "headers: looks like something has changed"
+          if [ "${{github.repository}}" == "rusefi/rusefi" ]; then
+            echo "COMMIT=true" >> $GITHUB_ENV
+            echo "headers: looks like something has changed, we are on main, so pushing"
+          else
+            echo "headers: looks like something has changed, but we are fork"
+          fi
           exit 0
         else
           echo "headers: looks like something unexpected"
@@ -109,8 +117,12 @@ jobs:
           echo "triggers: looks like nothing to commit"
           exit 0
         elif echo "$OUT" | grep 'changed'; then
-          echo "COMMIT=true" >> $GITHUB_ENV
-          echo "triggers: looks like something has changed"
+          if [ "${{github.repository}}" == "rusefi/rusefi" ]; then
+            echo "COMMIT=true" >> $GITHUB_ENV
+            echo "triggers: looks like something has changed, we are on main, so pushing"
+          else
+            echo "triggers: looks like something has changed, but we are fork"
+          fi
           exit 0
         else
           echo "triggers: looks like something unexpected"

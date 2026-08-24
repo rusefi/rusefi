@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Manual harness that converts a CSV composite-log into a Saleae Logic .logicdata file.
+ */
 public class LogicdataStreamFileCsvSandbox {
 
     // 1 second

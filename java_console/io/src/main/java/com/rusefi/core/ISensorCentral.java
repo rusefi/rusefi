@@ -21,8 +21,6 @@ public interface ISensorCentral extends ISensorHolder {
         }
     }
 
-    SensorCentral.ListenerToken addListener(Sensor sensor, SensorCentral.SensorListener listener);
-
     SensorCentral.ListenerToken addListener(String sensorName, SensorCentral.SensorListener listener);
 
     void removeListener(String sensorName, SensorCentral.SensorListener listener);

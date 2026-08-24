@@ -1,8 +1,9 @@
 #include "pch.h"
-
 #include "defaults.h"
+#include "board_overrides.h"
 #include "vr_pwm.h"
 #include "kline.h"
+#include "second_tables.h"
 #include "engine_configuration_defaults.h"
 #include <rusefi/manifest.h>
 #if HW_PROTEUS
@@ -126,45 +127,161 @@ void setDynoDefaults() {
     config->dynoCarFrontalAreaM2 = 1.85;
  }
 
-void defaultsOrFixOnBurn() {
+bool applyDefaultsOrFixAfterBurn(const engine_configuration_s* previousConfiguration) {
+  bool changed = false;
+
   if (config->dynoCarCarMassKg == 0) {
     setDynoDefaults();
+    changed = true;
+  }
+
+  if (engineConfiguration->engineShutDownPeriod == 0) {
+    engineConfiguration->engineShutDownPeriod = 5;
+    changed = true;
+  }
+
+  if (engineConfiguration->mainRelayDisableTime == 0) {
+    engineConfiguration->mainRelayDisableTime = 1;
+    changed = true;
+  }
+
+  // Seed the 2D cranking flex table for tunes that predate it (all-zero ethanol axis). Mirror the existing
+  // E0 coolant curve at every ethanol level so turning on flexCranking stays neutral with respect to ethanol
+  // until the user calibrates it.
+  {
+    bool flexBinsEmpty = true;
+    for (size_t i = 0; i < efi::size(config->crankingFuelFlexBins); i++) {
+      if (config->crankingFuelFlexBins[i] != 0) {
+        flexBinsEmpty = false;
+        break;
+      }
+    }
+    if (flexBinsEmpty) {
+      static const uint8_t crankingFlexEthanolBins[] = { 0, 35, 65, 100 };
+      copyArray(config->crankingFuelFlexBins, crankingFlexEthanolBins);
+      for (size_t ethanolIdx = 0; ethanolIdx < efi::size(config->crankingFuelFlexTable); ethanolIdx++) {
+        for (size_t cltIdx = 0; cltIdx < CRANKING_CURVE_SIZE; cltIdx++) {
+          config->crankingFuelFlexTable[ethanolIdx][cltIdx] = config->crankingFuelCoef[cltIdx];
+        }
+      }
+      changed = true;
+    }
+  }
+
+  // Same migration for the 2D priming flex table: seed it from the existing 1D priming curve (primeValues)
+  // so turning on flexCranking does not change priming behaviour until the user calibrates the ethanol axis.
+  {
+    bool primeFlexBinsEmpty = true;
+    for (size_t i = 0; i < efi::size(engineConfiguration->primeFlexBins); i++) {
+      if (engineConfiguration->primeFlexBins[i] != 0) {
+        primeFlexBinsEmpty = false;
+        break;
+      }
+    }
+    if (primeFlexBinsEmpty) {
+      static const uint8_t primeFlexEthanolBins[] = { 0, 35, 65, 100 };
+      copyArray(engineConfiguration->primeFlexBins, primeFlexEthanolBins);
+      for (size_t ethanolIdx = 0; ethanolIdx < efi::size(engineConfiguration->primeFlexTable); ethanolIdx++) {
+        for (size_t cltIdx = 0; cltIdx < PRIME_CURVE_COUNT; cltIdx++) {
+          engineConfiguration->primeFlexTable[ethanolIdx][cltIdx] = engineConfiguration->primeValues[cltIdx];
+        }
+      }
+      changed = true;
+    }
+  }
+
+#if HW_PROTEUS && defined(STM32F4XX)
+  // should have been proteus per-board validation
+  if (engineConfiguration->is_enabled_spi_5) {
+    engineConfiguration->is_enabled_spi_5 = false;
+    changed = true;
+  }
+#endif
+
+  if (engineConfiguration->launchTpsThreshold < MIN_launchTpsThreshold) {
+    engineConfiguration->launchTpsThreshold = MIN_launchTpsThreshold;
+    changed = true;
   }
 
 	if (engineConfiguration->mapExpAverageAlpha <= 0 || engineConfiguration->mapExpAverageAlpha > 1) {
 	  engineConfiguration->mapExpAverageAlpha = 1;
+	  changed = true;
 	}
 
 	if (engineConfiguration->ppsExpAverageAlpha <= 0 || engineConfiguration->ppsExpAverageAlpha > 1) {
 	  engineConfiguration->ppsExpAverageAlpha = 1;
+	  changed = true;
 	}
 	if (engineConfiguration->afrExpAverageAlpha <= 0 || engineConfiguration->afrExpAverageAlpha > 1) {
 	  engineConfiguration->afrExpAverageAlpha = 1;
+	  changed = true;
 	}
 
 	if (engineConfiguration->referenceTorqueForGenerator == 0) {
   	engineConfiguration->referenceTorqueForGenerator = 250;
+  	changed = true;
 	}
 	if (engineConfiguration->referenceMapForGenerator == 0) {
   	engineConfiguration->referenceMapForGenerator = 100;
+  	changed = true;
 	}
 	if (engineConfiguration->referenceVeForGenerator == 0) {
   	engineConfiguration->referenceVeForGenerator = 75;
+  	changed = true;
 	}
 
 	if (engineConfiguration->alternator_iTermMin == 0) {
   	engineConfiguration->alternator_iTermMin = -1000;
+  	changed = true;
 	}
 	if (engineConfiguration->alternator_iTermMax == 0) {
   	engineConfiguration->alternator_iTermMax = 1000;
+  	changed = true;
 	}
 	if (engineConfiguration->idleReturnTargetRampDuration <= 0.1){
 		engineConfiguration->idleReturnTargetRampDuration = 3;
+		changed = true;
 	}
+
+	if (engineConfiguration->fan1PwmFrequency == 0) {
+        engineConfiguration->fan1PwmFrequency = 250;
+        changed = true;
+    }
+
+    if (engineConfiguration->fan2PwmFrequency == 0) {
+        engineConfiguration->fan2PwmFrequency = 250;
+        changed = true;
+    }
 
 	if (engineConfiguration->vvtControlMinRpm < engineConfiguration->cranking.rpm) {
 		engineConfiguration->vvtControlMinRpm = engineConfiguration->cranking.rpm;
+		changed = true;
 	}
+
+	// Conditional SD logging: seed sensible start/stop/delay for tunes that predate the
+	// feature (a zero start RPM means it was never configured), so enabling conditional
+	// logging does not start from a degenerate "always on, never off" state.
+	if (engineConfiguration->sdLogStartRpm == 0) {
+		engineConfiguration->sdLogStartRpm = 800;
+		engineConfiguration->sdLogStopRpm = 700;
+		engineConfiguration->sdLogStopDelay = 30;
+		changed = true;
+	}
+
+	// Flex fuel transient compensation: give tunes that predate the feature sensible
+	// CLT x ethanol axis bins so the tables aren't degenerate when enabled (values stay
+	// neutral via the helper guard until the user fills them in).
+	if (config->flexTransientCltBins[FLEX_TRANSIENT_CLT_SIZE - 1] == 0) {
+		setLinearCurve(config->flexTransientCltBins, -40, 100, 1);
+		setLinearCurve(config->flexTransientEthanolBins, 0, 100, 1);
+		changed = true;
+	}
+
+	if (get_board_override_result(custom_board_fix_configuration, false, previousConfiguration)) {
+		changed = true;
+	}
+
+	return changed;
 }
 
 void setDefaultBaseEngine() {
@@ -237,9 +354,9 @@ void setDefaultBaseEngine() {
 
 	mc33810defaults();
 
- 	setRpmTableBin(config->torqueRpmBins);
+ 	setRpmTableBin(secondTablesGetState()->torqueRpmBins);
  	// here we assume load is TPS
- 	setLinearCurve(config->torqueLoadBins, 0, 100, 1);
+ 	setLinearCurve(secondTablesGetState()->torqueLoadBins, 0, 100, 1);
 
 	engineConfiguration->fuelAlgorithm = engine_load_mode_e::LM_SPEED_DENSITY;
 	// let's have valid default while we still have the field
@@ -292,7 +409,9 @@ void setDefaultBaseEngine() {
 
   setRpmTableBin(config->maxKnockRetardRpmBins);
   setLinearCurve(config->maxKnockRetardLoadBins, 0, 100, 1);
-  setTable(config->maxKnockRetardTable, 20);
+  setRpmTableBin(config->knockGainRpmBins);
+  setLinearCurve(config->knockGainLoadBins, 0, 100, 1);
+  setTable(config->maxKnockRetardTable, 2);
 
 	// Trigger
 	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL_60_2;
@@ -301,6 +420,9 @@ void setDefaultBaseEngine() {
 	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
 	engineConfiguration->vvtOffsets[0] = 450;
 	engineConfiguration->vvtPins[0] = Gpio::A0; // a random unused pin needed to unblock startSimplePwmExt()
+	// non-zero target so VVT control stays enabled (targets near 0 disable control),
+	// SimulatorFunctionalTest expects the VVT valve pin to be actively PWMing
+	setTable(config->vvtTable1, 25);
 #endif // EFI_SIMULATOR
 
 #if EFI_SIMULATOR
@@ -415,12 +537,14 @@ void setDefaultBaseEngine() {
 	engineConfiguration->issFilterReciprocal = 2;
 
 	//knock
-#ifdef KNOCK_SPECTROGRAM
+	// Still set defaults, even spectrogram is not enaled.
+	// these fields unsconditionaly exists in config, lets keep safe defaults
+//#ifdef KNOCK_SPECTROGRAM
 	engineConfiguration->enableKnockSpectrogram = false;
 	engineConfiguration->enableKnockSpectrogramFilter = false;
 	engineConfiguration->knockSpectrumSensitivity = 1.0;
 	engineConfiguration->knockFrequency = 0.0;
-#endif
+//#endif
 
 	// Check engine light
 #if EFI_PROD_CODE
@@ -441,7 +565,7 @@ void setDefaultBaseEngine() {
 	engineConfiguration->useMetricOnInterface = true;
 
   // we invoke this last so that we can validate even defaults
-  defaultsOrFixOnBurn();
+  applyDefaultsOrFixAfterBurn(/*previousConfiguration*/nullptr);
 }
 
 void setPPSInputs(adc_channel_e pps1, adc_channel_e pps2) {

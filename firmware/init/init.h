@@ -4,6 +4,9 @@
 
 #pragma once
 
+// see sensor_type.h
+enum class SensorType : unsigned char;
+
 // fine-grained method to facilitate testing
 void initOverrideSensors();
 
@@ -26,6 +29,8 @@ void initMap();
 void initTps();
 void initFluidPressure();
 void initThermistors();
+// Live measured resistance of a thermistor-type temperature sensor, in ohms. 0 if unavailable.
+float getThermistorResistance(SensorType type);
 void initCanSensors();
 void initLambda();
 void initEgt();

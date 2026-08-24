@@ -98,8 +98,8 @@ static void qcSetEtbState(uint8_t dcIndex, uint8_t direction) {
   }
 }
 
-static void setPin(const CANRxFrame& frame, int value) {
-		size_t outputIndex = frame.data8[2];
+static void setPin(const CANRxFrame& frame, [[maybe_unused]] int value) {
+		int outputIndex = frame.data8[2];
 		if (outputIndex >= getBoardMetaOutputsCount()) {
 		  criticalError("QC pin index %d out of range", outputIndex);
 			return;

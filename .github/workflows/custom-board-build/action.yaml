@@ -157,6 +157,9 @@ runs:
     - name: Set Env Variables
       id: set-env-variables
       shell: bash
+      env:
+        # ref names may contain shell metacharacters - never interpolate them into scripts with ${{ }}
+        REF_NAME: ${{ github.ref_name }}
       run: |
         : Set Env Variables
         echo "WHITE_LABEL=${{steps.find-out-white-label.outputs.white_label}}" >> $GITHUB_ENV
@@ -167,7 +170,7 @@ runs:
         echo "AUTOMATION_LTS=${{toJSON(inputs.lts)}}" >> $GITHUB_ENV
         echo "BUNDLE_SIMULATOR=${{toJSON(inputs.bundle_simulator)}}" >> $GITHUB_ENV
         echo "RUN_SIMULATOR=${{toJSON(inputs.run_simulator)}}" >> $GITHUB_ENV
-        echo "AUTOMATION_REF=${{github.ref_name}}" >> $GITHUB_ENV
+        echo "AUTOMATION_REF=$REF_NAME" >> $GITHUB_ENV
         echo "${{ inputs.ADDITIONAL_ENV }}" >> $GITHUB_ENV
         shopt -s expand_aliases
         if which grealpath >/dev/null 2>&1; then alias realpath='grealpath'; fi
@@ -197,25 +200,26 @@ runs:
 
     - name: Set Build Env Variables
       shell: bash
+      env:
+        # ref names may contain shell metacharacters - never interpolate them into scripts with ${{ }}
+        REF_NAME: ${{ github.ref_name }}
+        GH_REF: ${{ github.ref }}
       run: |
         : Set Build Env Variables
-        if [[ ${{github.ref_name}} == "lts"* ]]; then
+        if [[ "$REF_NAME" == "lts"* ]]; then
           echo AUTOMATION_LTS=true >> $GITHUB_ENV
-          echo AUTOMATION_REF=${{github.ref_name}} >> $GITHUB_ENV
-          echo "On LTS branch [${{github.ref}}]"
+          echo "AUTOMATION_REF=$REF_NAME" >> $GITHUB_ENV
+          echo "On LTS branch [$GH_REF]"
         else
-          echo "Not LTS branch [${{github.ref}}]"
+          echo "Not LTS branch [$GH_REF]"
         fi
 
     - name: Install Arm GNU Toolchain (arm-none-eabi-gcc)
-      uses: carlosperate/arm-none-eabi-gcc-action@v1.12.0
+      uses: carlosperate/arm-none-eabi-gcc-action@v1.12.1
       with:
         release: '14.2.Rel1'
 
-    - uses: actions/setup-java@v4
-      with:
-        distribution: 'zulu'
-        java-version: '17'
+    - uses: rusefi/rusefi/.github/actions/setup-java@master
 
     - name: Test Compiler
       shell: bash
@@ -341,14 +345,18 @@ runs:
       if: ${{ contains(inputs.uploads, 'ftp_upload_bundles') }}
       working-directory: ${{inputs.rusefi_dir}}/artifacts
       shell: bash
+      env:
+        # ref names may contain shell metacharacters - never interpolate them into scripts with ${{ }}
+        REF_NAME: ${{ github.ref_name }}
+        GH_REF: ${{ github.ref }}
       run: |
         : Ftp Upload Both Bundles
-        if [ "${{github.ref}}" = "refs/heads/master" ] || [ "${{github.ref}}" = "refs/heads/main" ]; then
+        if [ "$GH_REF" = "refs/heads/master" ] || [ "$GH_REF" = "refs/heads/main" ]; then
           echo "On master branch"
-        elif [[ ${{github.ref_name}} == "lts"* ]]; then
-          echo "On LTS branch [${{github.ref}}]"
+        elif [[ "$REF_NAME" == "lts"* ]]; then
+          echo "On LTS branch [$GH_REF]"
         else
-          echo "Not uploading [${{github.ref}}]"
+          echo "Not uploading [$GH_REF]"
           exit 0
         fi
         bash ../firmware/bin/upload_bundle.sh "${{ env.RUSEFI_SSH_USER }}" "${{ env.RUSEFI_SSH_PASS }}" "${{ env.RUSEFI_SSH_SERVER }}" "${{ env.BUNDLE_NAME }}"
@@ -383,9 +391,16 @@ runs:
       if: ${{ inputs.push == 'true' }}
       shell: bash
       run: |
+        : generated pages live here
+        git add "${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}/controllers/generated/*.h"
         : Add Config to Commit
         ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh "${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*msq" 6
-        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh "${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*.h" 4
+        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh "${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}/**/*.h" 4
+        : live data headers often change by only 1-2 lines, below the smart-git-add threshold, so add them unconditionally
+        git add "${{inputs.meta_output}}/live_data_generated/*.h"
+        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh "${{inputs.meta_output}}/**/*generated*.h" 4
+        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh "${{inputs.meta_output}}/**/*generated*.cpp" 4
+        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh "${{inputs.meta_output}}/controllers/lua/generated/*.md"
         ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh "${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}/tunerstudio/generated/*ini" 4
         ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh "${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}/tunerstudio/generated/*txt" 4
         : # TODO handle extra headers but only if those exist
@@ -511,16 +526,16 @@ runs:
 
     - name: Upload github action bundle artifact
       if: ${{ contains(inputs.artifacts, 'bundle') }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
-        name: ${{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_${{env.current_date}}.zip.zip
+        archive: false
         path: ${{inputs.rusefi_dir}}/artifacts/${{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}.zip
 
     - name: Upload github action bundle autoupdate artifact
       if: ${{ contains(inputs.artifacts, 'autoupdate') }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
-        name: ${{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_autoupdate_${{env.current_date}}.zip.zip
+        archive: false
         path: ${{inputs.rusefi_dir}}/artifacts/${{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_autoupdate.zip
 
     - uses: mukunku/tag-exists-action@v1.6.0

@@ -33,8 +33,8 @@ static char shaft_signal_msg_index[15];
 
 #if EFI_ENGINE_SNIFFER
 #define addEngineSnifferEvent(name, msg) { if (getTriggerCentral()->isEngineSnifferEnabled) { waveChart.addEvent3((name), (msg)); } }
- #else
-#define addEngineSnifferEvent(name, msg) { UNUSED(name); }
+#else
+#define addEngineSnifferEvent(name, msg) { UNUSED(name); UNUSED(msg); }
 #endif /* EFI_ENGINE_SNIFFER */
 
 #if EFI_ENGINE_SNIFFER
@@ -56,8 +56,6 @@ extern WaveChart waveChart;
 #endif
 
 static char WAVE_LOGGING_BUFFER[WAVE_LOGGING_SIZE] CCM_OPTIONAL;
-
-int waveChartUsedSize;
 
 /**
  * We want to skip some engine cycles to skip what was scheduled before parameters were changed
@@ -136,7 +134,6 @@ void WaveChart::publishIfFull() {
 void WaveChart::publish() {
 #if EFI_ENGINE_SNIFFER
 	logging.appendPrintf( LOG_DELIMITER);
-	waveChartUsedSize = logging.loggingSize();
 
 	if (getTriggerCentral()->isEngineSnifferEnabled) {
 		scheduleLogging(&logging);
@@ -247,7 +244,7 @@ void addEngineSnifferTdcEvent(int rpm) {
 #if EFI_ENGINE_SNIFFER
 	waveChart.startDataCollection();
 #endif
-	addEngineSnifferEvent(TOP_DEAD_CENTER_MESSAGE, (char* ) rpmBuffer);
+	addEngineSnifferEvent(TOP_DEAD_CENTER_MESSAGE, rpmBuffer);
 }
 
 void addEngineSnifferLogicAnalyzerEvent(int laIndex, FrontDirection frontDirection) {
@@ -264,7 +261,7 @@ void addEngineSnifferCrankEvent(int wheelIndex, int triggerEventIndex, FrontDire
 	// shaft_signal_msg_index[1] is assigned once and forever in the init method below
 	itoa10(&shaft_signal_msg_index[2], triggerEventIndex);
 
-	addEngineSnifferEvent(crankName[wheelIndex], (char* ) shaft_signal_msg_index);
+	addEngineSnifferEvent(crankName[wheelIndex], shaft_signal_msg_index);
 }
 
 void addEngineSnifferVvtEvent(int vvtIndex, FrontDirection frontDirection) {

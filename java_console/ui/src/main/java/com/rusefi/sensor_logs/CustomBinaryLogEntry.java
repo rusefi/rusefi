@@ -1,29 +1,28 @@
 package com.rusefi.sensor_logs;
 
-import com.opensr5.ini.GaugeModel;
+import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
 import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.config.FieldType;
 import com.rusefi.core.ISensorHolder;
 import com.rusefi.core.SensorCategory;
-import com.rusefi.core.SensorCentral;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
 public class CustomBinaryLogEntry implements BinaryLogEntry {
-    private final GaugeModel gaugeModel;
-    private final ScalarIniField scalarField;
+    private final String name;
+    private final IniField field;
 
-    public CustomBinaryLogEntry(GaugeModel gaugeModel, ScalarIniField scalarField) {
-        this.gaugeModel = gaugeModel;
-        this.scalarField = scalarField;
+    public CustomBinaryLogEntry(String name, IniField field) {
+        this.name = name;
+        this.field = field;
     }
 
     @Override
     public String getName() {
-        return gaugeModel.getName();
+        return name;
     }
 
     @Override
@@ -33,12 +32,12 @@ public class CustomBinaryLogEntry implements BinaryLogEntry {
 
     @Override
     public String getUnit() {
-        return gaugeModel.getUnits();
+        return field instanceof ScalarIniField ? ((ScalarIniField) field).getUnits() : "";
     }
 
     @Override
     public int getByteSize() {
-        switch (scalarField.getType()) {
+        switch (getLogType()) {
             case UINT8:
                 return 0; // Wait, Sensor.java says 0 for UINT8. Is that right?
             case INT8:
@@ -52,13 +51,18 @@ public class CustomBinaryLogEntry implements BinaryLogEntry {
             case FLOAT:
                 return 7;
             default:
-                throw new UnsupportedOperationException("" + scalarField.getType());
+                throw new UnsupportedOperationException("" + getLogType());
         }
     }
 
     @Override
+    public float getScale() {
+        return field instanceof ScalarIniField ? (float) ((ScalarIniField) field).getMultiplier() : 1;
+    }
+
+    @Override
     public void writeToLog(DataOutputStream dos, double value) throws IOException {
-        switch (scalarField.getType()) {
+        switch (getLogType()) {
             case INT8:
             case UINT8:
                 dos.write((int) value);
@@ -74,32 +78,35 @@ public class CustomBinaryLogEntry implements BinaryLogEntry {
                 dos.writeInt((int) value);
                 return;
             default:
-                throw new UnsupportedOperationException("type " + scalarField.getType());
+                throw new UnsupportedOperationException("type " + getLogType());
         }
     }
 
     public double getValue(byte[] response) {
-        ByteBuffer bb = ISensorHolder.getByteBuffer(response, getName(), scalarField.getOffset());
-        double rawValue = getValueForChannel(bb);
-        return rawValue * scalarField.getMultiplier();
+        ByteBuffer bb = ISensorHolder.getByteBuffer(response, getName(), field.getOffset(), field.getSize());
+        if (field instanceof ScalarIniField) {
+            return ((ScalarIniField) field).getType().readRawValue(bb);
+        }
+
+        EnumIniField enumField = (EnumIniField) field;
+        long rawValue = (long) enumField.getType().readRawValue(bb);
+        int bitCount = enumField.getBitSize0() + 1;
+        long mask = bitCount == 32 ? 0xFFFFFFFFL : (1L << bitCount) - 1;
+        return (rawValue >>> enumField.getBitPosition()) & mask;
     }
 
-    private double getValueForChannel(ByteBuffer bb) {
-        switch (scalarField.getType()) {
-            case FLOAT:
-                return bb.getFloat();
-            case INT:
-                return bb.getInt();
-            case UINT16:
-                return bb.getInt() & 0xFFFF;
-            case INT16:
-                return (short) (bb.getInt() & 0xFFFF);
-            case UINT8:
-                return bb.getInt() & 0xFF;
-            case INT8:
-                return (byte) (bb.getInt() & 0xFF);
-            default:
-                throw new UnsupportedOperationException("type " + scalarField.getType());
+    private FieldType getLogType() {
+        if (field instanceof ScalarIniField) {
+            return ((ScalarIniField) field).getType();
         }
+
+        int bitCount = ((EnumIniField) field).getBitSize0() + 1;
+        if (bitCount <= 8) {
+            return FieldType.UINT8;
+        }
+        if (bitCount <= 16) {
+            return FieldType.UINT16;
+        }
+        return FieldType.INT;
     }
 }

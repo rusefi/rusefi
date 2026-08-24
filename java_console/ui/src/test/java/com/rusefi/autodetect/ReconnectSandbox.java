@@ -7,6 +7,9 @@ import com.rusefi.io.LinkManager;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * Manual harness that exercises ECU auto-reconnect logic against real hardware.
+ */
 public class ReconnectSandbox {
     public static void main(String[] args) throws InterruptedException {
 

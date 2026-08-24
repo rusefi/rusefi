@@ -2,8 +2,8 @@ meta: config/boards/hellen_meta.h
 
 pins:
   - pin: 1a
-    function: GND
-    type: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 2a
     function: LSU 4.2 Heater1
@@ -102,7 +102,8 @@ pins:
     id: EFI_ADC_13
     class: analog_inputs
     ts_name: 34 - IAT
-    function: IAT sensor
+    function: IAT Sensor Input
+    type: at
 
   - pin: 40a
 # Q311
@@ -168,14 +169,14 @@ pins:
     id: E2
     class: outputs
     ts_name: 60 - Coil 5
-    function: Coil 5
+    function: Smart Ignition Coil 5
     type: ign
 
   - pin: 61a
     id: E4
     class: outputs
     ts_name: 61 - Coil 3
-    function: Coil 3
+    function: Smart Ignition Coil 3
     type: ign
 
   - pin: 62a
@@ -183,7 +184,7 @@ pins:
     id: C13
     class: outputs
     ts_name: 62 - Coil 1
-    function: Coil 1
+    function: Smart Ignition Coil 1
     type: ign
 
 
@@ -222,7 +223,8 @@ pins:
     id: EFI_ADC_12
     class: analog_inputs
     ts_name: 73 - CLT
-    function: CLT sensor
+    function: ECT CLT Coolant Sensor Input
+    type: at
 
   - pin: 75a
     function: LSU 4.2 IA1
@@ -235,27 +237,28 @@ pins:
 
 
   - pin: 78a
-    function: GNDA
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: 79a
     id: B8
     class: outputs
     ts_name: 79 - Coil 6
-    function: Coil 6
+    function: Smart Ignition Coil 6
     type: ign
 
   - pin: 80a
     id: E3
     class: outputs
     ts_name: 80 - Coil 4
-    function: Coil 4
+    function: Smart Ignition Coil 4
     type: ign
 
   - pin: 81a
     id: E5
     class: outputs
     ts_name: 81 - Coil 2
-    function: Coil 2
+    function: Smart Ignition Coil 2
     type: ign
 
 
@@ -341,12 +344,12 @@ pins:
     type: ls
 
   - pin: 115a
-    function: GND
-    type: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 116a
-    function: GND
-    type: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 119a
     function: +12v from main relay

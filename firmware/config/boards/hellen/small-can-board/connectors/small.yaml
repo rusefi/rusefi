@@ -2,7 +2,7 @@ meta: config/boards/hellen_mm64_meta.h
 
 pins:
   - pin: A1
-    function: Power Ground
+    function: Power/Chassis GND ground
     type: gnd
     color: black
 
@@ -27,8 +27,8 @@ pins:
     color: yellow
 
   - pin: A5
-    function: Sensor Ground
-    type: gnd
+    function: GNDA Analog/Sensor Ground
+    type: agnd
     color: brown
 
   - pin: A6
@@ -52,7 +52,7 @@ pins:
     color: green
 
   - pin: B1
-    function: Power Ground
+    function: Power/Chassis GND ground
     type: gnd
     color: black
 

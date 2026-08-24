@@ -19,10 +19,34 @@ public class UiProperties {
     }
 
     public static String getUpdateHelpUrl() {
-        return PropertiesHolder.getProperty("UPDATE_FW_HELP_URL", "https://wiki.rusefi.com/HOWTO-Update-Firmware");
+        return PropertiesHolder.getUpdateHelpUrl("https://wiki.rusefi.com/HOWTO-Update-Firmware");
     }
 
     public static boolean skipEcuTypeDetection() {
         return ConnectionAndMeta.getBoolean(SKIP_ECU_TYPE_DETECTION);
+    }
+
+    public static boolean isEngineSnifferEnabled() {
+        return ConnectionAndMeta.getBoolean("show_engine_sniffer_tab", PropertiesHolder.INSTANCE.getProperties());
+    }
+
+    public static boolean isPinoutEnabled() {
+        return ConnectionAndMeta.getBoolean("show_pinout_tab", PropertiesHolder.INSTANCE.getProperties());
+    }
+
+    public static boolean isSlcanSnifferEnabled() {
+        return ConnectionAndMeta.getBoolean("show_slcan_sniffer", PropertiesHolder.INSTANCE.getProperties());
+    }
+
+    public static boolean isKnockAnalyzerEnabled() {
+        return ConnectionAndMeta.getBoolean("show_knock_analyzer_tab", PropertiesHolder.INSTANCE.getProperties(), true);
+    }
+
+    public static boolean isLaunchWizardEnabled() {
+        return ConnectionAndMeta.getBoolean("show_launch_wizard", PropertiesHolder.INSTANCE.getProperties(), true);
+    }
+
+    public static boolean isWizardAutoLaunchEnabled() {
+        return ConnectionAndMeta.getBoolean("auto_launch_wizard", PropertiesHolder.INSTANCE.getProperties(), true);
     }
 }

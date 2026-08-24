@@ -2,7 +2,7 @@ meta: config/boards/hellen_meta.h
 
 pins:
   - pin: X1
-    function: GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: X2

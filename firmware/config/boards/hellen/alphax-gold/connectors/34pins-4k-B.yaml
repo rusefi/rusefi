@@ -2,33 +2,33 @@ meta: config/boards/hellen_meta.h
 
 pins:
   - pin: 1B
-    function: Injector 4 Output
+    function: Injector 4
     class: outputs
-    type: ls
+    type: inj
     id: TLE9104_0_OUT_3
     ts_name: ___ - Injector 4
     color: orange
 
   - pin: 2B
-    function: Injector 3 Output
+    function: Injector 3
     class: outputs
-    type: ls
+    type: inj
     id: TLE9104_0_OUT_2
     ts_name: ___ - Injector 3
     color: blue
 
   - pin: 3B
-    function: Injector 2 Output
+    function: Injector 2
     class: outputs
-    type: ls
+    type: inj
     id: TLE9104_0_OUT_1
     ts_name: ___ - Injector 2
     color: white
 
   - pin: 4B
-    function: Injector 1 Output
+    function: Injector 1
     class: outputs
-    type: ls
+    type: inj
     id: TLE9104_0_OUT_0
     ts_name: ___ - Injector 1
     color: green
@@ -145,7 +145,7 @@ pins:
   - pin: 19B
     meta: H144_IN_CLT
     class: analog_inputs
-    function: CLT Sensor Input
+    function: ECT CLT Coolant Sensor Input
     ts_name: ___ - CLT
     type: av
     color: grey
@@ -202,12 +202,12 @@ pins:
     ts_name: 24A/25A VR Input 3 (MAX9924)
 
   - pin: 26B
-    function: GND
-    type: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 27B
-    function: GNDA
-    type: gnd
+    function: GNDA Analog/Sensor Ground
+    type: agnd
     color: black
 
   - pin: 28B

@@ -30,7 +30,7 @@ public class ConfigFieldImpl implements ConfigField {
     public static final String VOID_BIT = "void";
     public static final ConfigFieldImpl VOID = new ConfigFieldImpl(null, "", null, null, null, new int[0], null, false, false, VOID_BIT, VOID_BIT);
 
-    private static final String typePattern = "([\\w\\d_]+)(\\s*\\[([\\w\\d]+)(\\sx\\s([\\w\\d]+))?(\\s([\\w\\d]+))?\\])?";
+    private static final String typePattern = "([\\w\\d_]+(?:<[^>]+>)?)(\\s*\\[([\\w\\d]+)(\\sx\\s([\\w\\d]+))?(\\s([\\w\\d]+))?\\])?";
 
     private static final String namePattern = "[[@\\w\\d\\s_]]+";
     private static final String commentPattern = ";([^;]*)";
@@ -59,6 +59,10 @@ public class ConfigFieldImpl implements ConfigField {
     private boolean isFromIterate;
     private String iterateOriginalName;
     private int iterateIndex;
+
+    // index of this bit within its 32-bit word, only meaningful when isBit(), assigned by
+    // ConfigStructureImpl#addBitField at parse time
+    private int bitPositionInWord;
 
     // this is used to override the units used on rusefi_config.txt
     // only used to replace "SPECIAL_CASE_TEMPERATURE" to "C" and "F", and apply the correct scale
@@ -142,6 +146,9 @@ public class ConfigFieldImpl implements ConfigField {
             return;
         // Skip validation if min or max are expressions - see #8650
         if (isExpression(tokens[3]) || (tokens.length >= 5 && isExpression(tokens[4])))
+            return;
+        // Skip validation if scale contains template variables (e.g., @@TABLE_SCALE@@)
+        if (tokens.length > 1 && tokens[1].contains("@@"))
             return;
         double scale = autoscaleSpecNumber();
         double min = getMin();
@@ -329,11 +336,20 @@ public class ConfigFieldImpl implements ConfigField {
         return matcher.matches();
     }
 
+    public void setBitPositionInWord(int bitPositionInWord) {
+        this.bitPositionInWord = bitPositionInWord;
+    }
+
+    public int getBitPositionInWord() {
+        return bitPositionInWord;
+    }
+
     @Override
     public int getSize(ConfigField next) {
         if (isBit() && next.isBit()) {
-            // we have a protection from 33+ bits in a row in BitState, see BitState.TooManyBitsInARow
-            return 0;
+            // bits are packed into 32-bit words: the last bit of a word closes it even when more
+            // bits follow - the run continues in the next word
+            return bitPositionInWord == BitState.WORD_SIZE_BITS - 1 ? 4 : 0;
         }
         if (isBit())
             return 4;
@@ -477,7 +493,11 @@ public class ConfigFieldImpl implements ConfigField {
                 throw new IllegalArgumentException(name + ": Expected simple number or division in " + innerExpression);
             }
         } else {
-            factor = Double.parseDouble(scale);
+            try {
+                factor = Double.parseDouble(scale);
+            } catch (NumberFormatException e) {
+                return new Pair<>(1, 1);
+            }
         }
         int mul, div;
         if (factor < 1.d) {

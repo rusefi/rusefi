@@ -55,12 +55,12 @@ void canDashboardNissanVQ(CanCycle cycle) {
 
 	if (cycle.isInterval(CI::_50ms)) {
 		{
-			CanTxMessage msg(CanCategory::NBC, NISSAN_ENGINE_1_RPM_1F9_505, 8);
+			CanTxMessage msg(CanCategory::NBC, NISSAN_ENGINE_1_RPM_1F9_505, 8, DEFAULT_BUS_INDEX);
 			msg.setShortValueMsb(Sensor::getOrZero(SensorType::Rpm) * 8, /*offset*/ 2);
 		}
 
 		{
-			CanTxMessage msg(CanCategory::OBD, NISSAN_ENGINE_5_CLT_551_1361, 8);
+			CanTxMessage msg(CanCategory::OBD, NISSAN_ENGINE_5_CLT_551_1361, 8, DEFAULT_BUS_INDEX);
 
 			int clt = Sensor::getOrZero(SensorType::Clt);
 			msg[0] = clt + 45;
@@ -68,7 +68,7 @@ void canDashboardNissanVQ(CanCycle cycle) {
 
 
 		{
-			CanTxMessage msg(CanCategory::NBC, NISSAN_ENGINE_3_23D_573, 8);
+			CanTxMessage msg(CanCategory::NBC, NISSAN_ENGINE_3_23D_573, 8, DEFAULT_BUS_INDEX);
 
 			rollingId = (rollingId + 1) % 4;
 			const uint8_t magicByte[4] = {0x03, 0x23, 0x42, 0x63};

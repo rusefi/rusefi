@@ -1,4 +1,5 @@
 CONSOLE_COMMON_SRC_CPP = 	$(PROJECT_DIR)/console/binary/tooth_logger.cpp \
+	                        $(PROJECT_DIR)/console/binary/tooth_logger_buffer.cpp \
 	                        $(PROJECT_DIR)/console/binary_mlg_log/binary_mlg_logging.cpp \
                          	$(PROJECT_DIR)/console/status_loop.cpp \
 

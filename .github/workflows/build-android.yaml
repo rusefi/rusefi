@@ -9,16 +9,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Checkout Submodules Without ChibiOS
         run: |
           misc/git_scripts/common_submodule_init_without_chibios.sh
 
-      - uses: actions/setup-java@v5
-        with:
-          distribution: 'zulu'
-          java-version: '17'
+      - uses: ./.github/actions/setup-java
 
       - name: Install Tools
         run: |

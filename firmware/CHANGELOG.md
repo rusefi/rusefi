@@ -14,10 +14,11 @@ Release template (copy/paste this for new release):
  -
 
 ### Added
- -
+ - MAP Prediction AE Improvements #9482
+ - 1-2-3-4 firing order for 982 honda sabre 750 reverse rotation V4
 
 ### Fixed
- -
+ - wasted to sequential transition when phase is detected #9613
 
 ### Removed
  -
@@ -29,7 +30,30 @@ Release template (copy/paste this for new release):
 ## Unreleased
 
 ### Added
+ - h-bridge as one GPIO #9673
+
+## August 2026 "Day 1631"
+
+### Added
  - ETB bench test button: open throttle 300ms without sensors (#9171)
+ - PWM support for fan control #5407
+ - Per cylinder knock control individual gain control #9404
+ - 6G75 Cam trigger support #9533
+ - minimal launchTpsThreshold is required to reduce confusion
+ - New firing order 1-6-2-5-3-4 (Maserati V6 and Porsche Boxster Flat-6)
+
+### Breaking Changes
+ - Dodge Neon 2003 crank actually uses crank decoder #8977
+ - uaEFI PPS2 calibration #9549
+ - uaefi121, super-uaefi, huge, 121vag PPS2 calibration #9551
+
+### Fixed
+ - Idle VE table when using an electronic throttle correctly uses accel pedal to match main idle logic
+ - 6G75 crank Trigger fixes #8827
+ - SD card access over USB is not reliable #9664
+ - wmic.exe command-line utility is being completely eliminated. #9672
+ - USB serial stability in some scenarios #9860
+ - multispark
 
 ## February 2026 "Day 1458"
 

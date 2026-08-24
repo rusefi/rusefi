@@ -19,6 +19,13 @@
 fifo_buffer<CANTxFrame, TEST_CAN_BUFFER_SIZE> txCanBuffer;
 #endif // EFI_SIMULATOR
 
+#if EFI_PROD_CODE && HAL_USE_USB_CDC_2
+#include "can_sniffer.h"
+extern CanSniffer canSniffer;
+#endif
+
+bool verboseCanTxError = false;
+
 #if EFI_CAN_SUPPORT
 /*static*/ CANDriver* CanTxMessage::s_devices[EFI_CAN_BUS_COUNT] = {
 	nullptr,
@@ -29,8 +36,8 @@ fifo_buffer<CANTxFrame, TEST_CAN_BUFFER_SIZE> txCanBuffer;
 };
 
 /*static*/ void CanTxMessage::setDevice(size_t idx, CANDriver* device) {
-	if (idx > efi::size(s_devices)) {
-		criticalError("Attemp to install CAN%d bus!", idx + 1);
+	if (idx >= efi::size(s_devices)) {
+		criticalError("Cannot install CAN%d bus!", idx + 1);
 		return;
 	}
 	s_devices[idx] = device;
@@ -54,7 +61,7 @@ CanTxMessage::CanTxMessage(CanCategory p_category, uint32_t eid, uint8_t dlc, si
 		CAN_EID(m_frame) = eid;
 	} else {
 	    if (eid >= 0x800) {
-	        criticalError("Looks like extended CAN ID %x %s", eid, getCanCategory(category));
+	        criticalError("CAN TX error extended CAN ID 0x%x/%d %s", eid, eid, getCanCategory(category));
 	        return;
 	    }
 		CAN_SID(m_frame) = eid;
@@ -72,7 +79,7 @@ CanTxMessage::~CanTxMessage() {
 #if EFI_SIMULATOR || EFI_UNIT_TEST
 	txCanBuffer.put(m_frame);
 
-#if EFI_UNIT_TEST
+#if 0 && EFI_UNIT_TEST
 	printf("%s Sending CAN%d message: ID=%x/l=%x %x %x %x %x %x %x %x %x \n",
 		   getCanCategory(category),
 		   busIndex + 1,
@@ -125,6 +132,11 @@ CanTxMessage::~CanTxMessage() {
 
 	// 100 ms timeout
 	msg_t msg = canTransmit(device, CAN_ANY_MAILBOX, &m_frame, TIME_MS2I(100));
+#if EFI_PROD_CODE && HAL_USE_USB_CDC_2
+	if ((msg == MSG_OK) && (engineConfiguration->canSniffer[busIndex].listenOurs)) {
+		canSniffer.handle_can_message(busIndex, m_frame, getTimeNowNt());
+	}
+#endif
 #if EFI_TUNER_STUDIO
 	if (msg == MSG_OK) {
 		engine->outputChannels.canWriteOk++;
@@ -132,6 +144,18 @@ CanTxMessage::~CanTxMessage() {
 extern int txErrorCount[EFI_CAN_BUS_COUNT];
 		engine->outputChannels.canWriteNotOk++;
 		txErrorCount[busIndex]++;
+
+		if (verboseCanTxError) {
+		  efiPrintf("%s TX ERR CAN%d message: ID=%x/l=%x %x %x %x %x %x %x %x %x",
+				getCanCategory(category),
+				busIndex + 1,
+				(unsigned int)CAN_ID(m_frame),
+				m_frame.DLC,
+				m_frame.data8[0], m_frame.data8[1],
+				m_frame.data8[2], m_frame.data8[3],
+				m_frame.data8[4], m_frame.data8[5],
+				m_frame.data8[6], m_frame.data8[7]);
+		}
 	}
 #endif // EFI_TUNER_STUDIO
 #endif /* EFI_CAN_SUPPORT */
@@ -161,6 +185,13 @@ void CanTxMessage::setBus(size_t bus) {
 void CanTxMessage::setShortValue(uint16_t value, size_t offset) {
 	m_frame.data8[offset] = value & 0xFF;
 	m_frame.data8[offset + 1] = value >> 8;
+}
+
+void CanTxMessage::setIntValueLsb(uint32_t value, size_t offset) {
+	m_frame.data8[offset] = value & 0xFF;
+	m_frame.data8[offset + 1] = (value >> 8) & 0xFF;
+	m_frame.data8[offset + 2] = (value >> 16) & 0xFF;
+	m_frame.data8[offset + 3] = (value >> 24) & 0xFF;
 }
 
 // MOTOROLA order, MSB (Most Significant Byte/Big Endian) comes first.

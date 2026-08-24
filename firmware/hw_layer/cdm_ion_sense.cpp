@@ -59,7 +59,7 @@ int getCurrentCdmValue(int currentRevolution) {
 }
 
 #if EFI_TUNER_STUDIO
-void ionPostState(TunerStudioOutputChannels *tsOutputChannels) {
+void ionPostState(output_channels_s *tsOutputChannels) {
 	tsOutputChannels->debugIntField1 = instance.totalCdmEvents;
 }
 #endif /* EFI_TUNER_STUDIO */

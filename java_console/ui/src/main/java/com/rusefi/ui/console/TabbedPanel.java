@@ -1,8 +1,8 @@
 package com.rusefi.ui.console;
 
-import com.rusefi.PaneSettings;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.MessagesCentral;
+import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.ConnectionStatusValue;
 import com.rusefi.ui.LogDownloader;
@@ -10,8 +10,7 @@ import com.rusefi.ui.UIContext;
 
 import javax.swing.*;
 import java.awt.*;
-
-import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
+import java.awt.event.HierarchyEvent;
 
 public class TabbedPanel {
     // todo: the logic around 'criticalError' could be implemented nicer
@@ -20,43 +19,49 @@ public class TabbedPanel {
 //    public final SettingsTab settingsTab;
     public final LogDownloader logsManager;
 
-    public final JTabbedPane tabbedPane = new JTabbedPane() {
+    /**
+     * Glass pane drawn above all content — always painted last by Swing, so child component
+     * repaints (e.g. JProgressBar updates) can never cover it the way a paint() override can.
+     * Mouse events pass through so the normal UI remains interactive.
+     * Visibility is toggled instead of trying to clear pixels, since AlphaComposite.Clear
+     * punches through the entire window buffer on most rendering pipelines.
+     */
+    private final JComponent statusGlassPane = new JComponent() {
         @Override
-        public void paint(Graphics g) {
-            super.paint(g);
-            paintStatusText(g);
+        public boolean contains(int x, int y) {
+            return false; // pass mouse events through to components below
         }
 
-        private void paintStatusText(Graphics g) {
+        @Override
+        protected void paintComponent(Graphics g) {
+            Dimension d = getSize();
             Font f = g.getFont();
             g.setFont(new Font(f.getName(), f.getStyle(), f.getSize() * 4));
-            Dimension d = getSize();
             String text;
+            Color textColor;
             if (criticalError != null) {
                 text = criticalError;
-                g.setColor(Color.red);
+                textColor = Color.red;
+            } else if (Boolean.TRUE.equals(tabbedPane.getClientProperty("isUpdating"))) {
+                text = "Updating";
+                textColor = Color.orange;
             } else {
-                switch (ConnectionStatusLogic.INSTANCE.getValue()) {
-                    case NOT_CONNECTED:
-                        text = "Not connected";
-                        g.setColor(Color.white);
-                        break;
-                    case LOADING:
-                        text = "Loading";
-                        g.setColor(Color.white);
-                        break;
-                    default:
-                        text = "";
+                ConnectionStatusValue status = ConnectionStatusLogic.INSTANCE.getValue();
+                if (status == ConnectionStatusValue.LOADING) {
+                    text = "Loading";
+                    textColor = Color.white;
+                } else {
+                    // Don't show "Not connected" overlay — the status is visible in the
+                    // title bar and corner icon. Blocking the entire UI with a black overlay
+                    // is too aggressive, especially for offline editing.
+                    return;
                 }
             }
-            if (text.isEmpty())
-                return;
             FontMetrics fm = g.getFontMetrics();
             int labelWidth = fm.stringWidth(text);
             int x = (d.width - labelWidth) / 2;
             int y = d.height / 2;
             int padding = 12;
-            Color textColor = g.getColor();
             g.setColor(new Color(0, 0, 0, 180));
             g.fillRoundRect(x - padding, y - fm.getAscent() - padding, labelWidth + padding * 2, fm.getHeight() + padding * 2, 16, 16);
             g.setColor(textColor);
@@ -64,7 +69,34 @@ public class TabbedPanel {
         }
     };
 
+    public final JTabbedPane tabbedPane = new JTabbedPane();
+
+    private void installGlassPane() {
+        JRootPane rootPane = tabbedPane.getRootPane();
+        if (rootPane == null)
+            return;
+        statusGlassPane.setOpaque(false);
+        statusGlassPane.setFocusable(false);
+        rootPane.setGlassPane(statusGlassPane);
+        refreshOverlay();
+    }
+
+    private boolean hasOverlay() {
+        return criticalError != null
+            || Boolean.TRUE.equals(tabbedPane.getClientProperty("isUpdating"))
+            || ConnectionStatusLogic.INSTANCE.getValue() == ConnectionStatusValue.LOADING;
+    }
+
+    private void refreshOverlay() {
+        statusGlassPane.setVisible(hasOverlay());
+    }
+
     public TabbedPanel(UIContext uiContext) {
+        tabbedPane.addHierarchyListener(e -> {
+            if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0 && tabbedPane.isShowing())
+                SwingUtilities.invokeLater(this::installGlassPane);
+        });
+
         MessagesCentral.getInstance().addListener((clazz, message) -> {
             if (message.startsWith(Integration.CRITICAL_PREFIX))
                 criticalError = message;
@@ -75,15 +107,63 @@ public class TabbedPanel {
             if (ConnectionStatusLogic.INSTANCE.getValue() == ConnectionStatusValue.CONNECTED) {
                 criticalError = null;
             }
-            tabbedPane.repaint();
+            refreshOverlay();
         }));
+
+        tabbedPane.addPropertyChangeListener("isUpdating", e -> refreshOverlay());
 
 //        settingsTab = new SettingsTab(uiContext);
         logsManager = new LogDownloader(uiContext);
     }
 
     public void addTab(String title, Component component) {
-        tabbedPane.addTab(title, component);
+        tabbedPane.addTab(title, loadTabIcon(title), component);
+    }
+
+    static Icon loadTabIcon(String title) {
+        String iconName;
+        switch (title) {
+            case "Gauges":
+                iconName = "idle";
+                break;
+            case "Messages":
+                iconName = "message";
+                break;
+            case "Lua Scripting":
+                iconName = "braces";
+                break;
+            case "Engine Sniffer":
+                iconName = "sensors";
+                break;
+            case "Tuning":
+                iconName = "dialog";
+                break;
+            case "Knock Analyzer":
+                iconName = "curve";
+                break;
+            case "Pinout":
+                iconName = "resistor";
+                break;
+            case "Manage Tunes":
+                iconName = "group";
+                break;
+            case "Device":
+                iconName = "controller";
+                break;
+            default:
+                return null;
+        }
+
+        ImageIcon icon = AutoupdateUtil.loadIcon("icons/tuning/" + iconName + "48.png");
+        if (icon == null) {
+            return null;
+        }
+        return new ImageIcon(icon.getImage().getScaledInstance(18, 18, Image.SCALE_SMOOTH));
+    }
+
+    public void selectTab(String title) {
+        int idx = tabbedPane.indexOfTab(title);
+        if (idx >= 0) tabbedPane.setSelectedIndex(idx);
     }
 
     public JComponent getContent() {

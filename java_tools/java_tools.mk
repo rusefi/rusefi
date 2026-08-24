@@ -16,7 +16,8 @@ ENUM_TO_STRING_JAR = $(JAVA_TOOLS)/enum_to_string/build/libs/enum_to_string-all.
 # TUNE_TOOLS_JAR = $(JAVA_TOOLS)/tune-tools/build/libs/tune-tools-all.jar
 TS_PLUGIN_LAUNCHER_JAR = $(JAVA_TOOLS)/ts_plugin_launcher/build/jar/rusefi_ts_plugin_launcher.jar
 CONSOLE_JAR = $(PROJECT_DIR)/../console/rusefi_console.jar
-AUTOUPDATE_JAR = $(PROJECT_DIR)/../console/rusefi_autoupdate.jar
+GCC_MAP_READER_JAR = $(JAVA_TOOLS)/gcc_map_reader/build/libs/gcc_map_reader-all.jar
+OPENBLT_WIPE_GENERATOR_JAR = $(JAVA_TOOLS)/openblt_wipe_generator/build/libs/openblt_wipe_generator-all.jar
 
 # We use .FORCE to always rebuild these tools. Gradle won't actually touch the jars if it doesn't need to,
 # so we don't have to worry about triggering rebuilds of things that have these tools as a prerequisite.
@@ -24,23 +25,23 @@ AUTOUPDATE_JAR = $(PROJECT_DIR)/../console/rusefi_autoupdate.jar
 $(CONFIG_DEFINITION_JAR): .docsenums-sentinel .FORCE
 	cd $(GRADLE_ROOT) && $(FLOCK) ./gradlew :config_definition:shadowJar
 
-$(CONFIG_DEFINITION_BASE_JAR): .FORCE
-	cd $(GRADLE_ROOT) && $(FLOCK) ./gradlew :config_definition_base:shadowJar
+# These jars depend on no generated code, so they can be built before anything else.
+# Build all of them with a single gradle invocation: every separate ./gradlew call pays a
+# full gradle round-trip while holding $(FLOCK), and these calls sit on the serial critical
+# path at the head of every build (nothing compiles until config/docs codegen has its jars;
+# gcc_map_reader is only consumed after the elf link, but a separate invocation for it
+# still holds the lock ahead of the codegen chain when make schedules it early).
+# Same sentinel idiom as .config-sentinel (see rusefi_config.mk for why not grouped targets).
+$(CONFIG_DEFINITION_BASE_JAR) $(ENUM_TO_STRING_JAR) $(TS_PLUGIN_LAUNCHER_JAR) $(GCC_MAP_READER_JAR) $(OPENBLT_WIPE_GENERATOR_JAR): .tooljars-sentinel ;
 
-$(ENUM_TO_STRING_JAR): .FORCE
-	cd $(GRADLE_ROOT) && $(FLOCK) ./gradlew :enum_to_string:shadowJar
+.tooljars-sentinel: .FORCE
+	cd $(GRADLE_ROOT) && $(FLOCK) ./gradlew :config_definition_base:shadowJar :enum_to_string:shadowJar :ts_plugin_launcher:shadowJar :gcc_map_reader:shadowJar :openblt_wipe_generator:shadowJar
+	@touch $@
 
 #$(TUNE_TOOLS_JAR):
-	#cd $(GRADLE_ROOT) && $(FLOCK) ./gradlew :tune-tools:shadowJar
-
-$(TS_PLUGIN_LAUNCHER_JAR): .FORCE
-	cd $(GRADLE_ROOT) && $(FLOCK) ./gradlew :ts_plugin_launcher:shadowJar
+#	cd $(GRADLE_ROOT) && $(FLOCK) ./gradlew :tune-tools:shadowJar
 
 $(CONSOLE_JAR): .docsenums-sentinel .config-sentinel .FORCE
 	cd $(GRADLE_ROOT) && $(FLOCK) ./gradlew :ui:shadowJar
 
-$(AUTOUPDATE_JAR): .FORCE
-	cd $(GRADLE_ROOT) && $(FLOCK) ./gradlew :autoupdate:shadowJar
-
 .FORCE:
-

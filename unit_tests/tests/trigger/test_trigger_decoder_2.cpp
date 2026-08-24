@@ -13,10 +13,10 @@ struct MockTriggerDecoder : public TriggerDecoderBase {
 	MOCK_METHOD(void, onTooManyTeeth, (int actual, int expected), (override));
 };
 
-static auto makeTriggerShape(operation_mode_e mode, const TriggerConfiguration& config) {
+static auto makeTriggerShape(operation_mode_e mode, const TriggerConfiguration& triggerConfig) {
 	// huh? do we return local method instance? how come it's not a SegmFault? is it not allocated on stack?!
 	TriggerWaveform shape;
-	shape.initializeTriggerWaveform(mode, config.TriggerType);
+	shape.initializeTriggerWaveform(mode, triggerConfig.TriggerType);
 
 	return shape;
 }

@@ -1,5 +1,12 @@
 #include "pch.h"
 
+// [tag:disable_engine_module] LTFT is a example of a compile-time optional engine
+// module that owns a TunerStudio page (pageIdentifier 0x0200, TS_PAGE_LTFT_TRIMS). Because of
+// that page, boards
+// must disable it via `#define EFI_LTFT_CONTROL FALSE` in their prepend.txt (never board.mk
+// or efifeatures.h): the .ini generator drops the page from that same declaration and
+// firmware/Makefile lifts it into DDEFS, so firmware and .ini cannot disagree. See the
+// how-to in engine_module.h and the static_assert next to the page table in tunerstudio.cpp.
 #if EFI_LTFT_CONTROL
 
 #include "storage.h"
@@ -105,8 +112,11 @@ void LongTermFuelTrim::learn(ClosedLoopFuelResult clResult, float rpm, float fue
 	const auto& cfg = engineConfiguration->ltft;
 
 	// LTFT uses STFT output, so if STFT is not correcting for some reason - LTFT also should not learn
-	if ((!cfg.enabled) || (ltftSavePending) || (ltftLoadPending) ||
-		(engine->module<ShortTermFuelTrim>()->stftCorrectionState != stftEnabled)) {
+	if ((!cfg.enabled) || (ltftSavePending) || (ltftLoadPending)
+#if EFI_ENGINE_CONTROL
+	 || (engine->module<ShortTermFuelTrim>()->stftCorrectionState != stftEnabled)
+#endif // EFI_ENGINE_CONTROL
+		) {
 		ltftLearning = false;
 		return;
 	}

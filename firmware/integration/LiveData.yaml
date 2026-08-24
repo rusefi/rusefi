@@ -104,7 +104,7 @@ Usages:
     output_name: boost
     constexpr: "engine->module<BoostController>()"
     isPtr: true
-    conditional_compilation: "EFI_BOOST_CONTROL"
+    conditional_compilation: "EFI_ENGINE_CONTROL && EFI_BOOST_CONTROL"
 
   - name: ac_control
     java: AcControl.java
@@ -120,7 +120,7 @@ Usages:
     prepend: integration/rusefi_config_shared.txt
     output_name: nitrous
     engineModule: NitrousController
-    conditional_compilation: "EFI_LAUNCH_CONTROL"
+    conditional_compilation: "EFI_ENGINE_CONTROL && EFI_LAUNCH_CONTROL"
 
   - name: fan_control
     java: FanControl.java
@@ -180,6 +180,8 @@ Usages:
     java: TriggerStatePrimary.java
     folder: controllers/trigger
     prepend: integration/rusefi_config_shared.txt
+    constexpr: [ "static_cast<trigger_state_primary_s&>(engine->triggerCentral.triggerState)" ]
+    conditional_compilation: "EFI_SHAFT_POSITION_INPUT"
 
   - name: wall_fuel_state
     cppFileName: wall_fuel
@@ -190,6 +192,14 @@ Usages:
     cppFileName: closed_loop_idle
     java: closed_loop_idle.java
     folder: controllers/math
+
+  - name: misfire_detection_state
+    java: MisfireDetection.java
+    folder: controllers/algo
+    prepend: integration/rusefi_config_shared.txt
+    output_name: misfire
+    engineModule: MisfireController
+    conditional_compilation: "EFI_ENGINE_CONTROL && EFI_MISFIRE_DETECTION"
 
   - name: live_data_example
     cppFileName: live_data_example
@@ -245,15 +255,16 @@ Usages:
     java: LambdaMonitor.java
     folder: controllers/math
     constexpr: "engine->lambdaMonitor"
-    conditional_compilation: "EFI_SHAFT_POSITION_INPUT"
+    conditional_compilation: "EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT"
 
   - name: mc33810_state
     cppFileName: mc33810
     java: Mc33810State.java
     folder: hw_layer/drivers/gpio/
     prepend: integration/rusefi_config_shared.txt
+    constexpr: "mc33810getLiveData(0)"
     isPtr: true
-    conditional_compilation: "EFI_PROD_CODE"
+    conditional_compilation: "EFI_PROD_CODE && (BOARD_MC33810_COUNT > 0)"
 
   - name: long_term_fuel_trim_state
     cppFileName: long_term_fuel_trim
@@ -281,3 +292,9 @@ Usages:
     prepend: integration/rusefi_config_shared.txt
     output_name: live_data_rotational_idle
     conditional_compilation: "ROTATIONAL_IDLE_CONTROLLER"
+
+  - name: injector_deadtime_autotune_state
+    java: InjectorDeadtimeAutotune.java
+    folder: controllers/modules/injector_deadtime_autotune
+    engineModule: InjectorDeadtimeAutotune
+    conditional_compilation: "EFI_ENGINE_CONTROL"

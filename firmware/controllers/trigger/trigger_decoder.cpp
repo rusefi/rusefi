@@ -27,6 +27,9 @@
 #include "global_shared.h"
 #include "engine_configuration.h"
 #include "transition_events.h"
+#include "board_overrides.h"
+
+std::optional<setup_custom_board_overrides_type> custom_board_TriggerResetState;
 
 /**
  * decoder uses TriggerStimulatorHelper in findTriggerZeroEventIndex
@@ -48,11 +51,11 @@ bool TriggerDecoderBase::getShaftSynchronized() const {
 }
 
 void TriggerDecoderBase::setShaftSynchronized(bool value) {
-#if EFI_UNIT_TEST
+#if EFI_TOOTH_LOGGER
 	if (value != shaft_is_synchronized) {
-		LogTriggerSync(value, getTimeNowNt());
+		LogTriggerSync(getTimeNowNt(), value);
 	}
-#endif
+#endif /* EFI_TOOTH_LOGGER */
 
 	if (value) {
 		if (!shaft_is_synchronized) {
@@ -64,8 +67,18 @@ void TriggerDecoderBase::setShaftSynchronized(bool value) {
 		mostRecentSyncTime = 0;
 	}
 	shaft_is_synchronized = value;
+	onShaftSynchronized(value);
 }
 
+/**
+ * Resets the base decoder state.
+ *
+ * This handles fields common to all trigger inputs (primary, VVT, etc),
+ * such as tooth durations and basic synchronization flags.
+ *
+ * This is called during initialization, when engine rotation stops,
+ * or during trigger re-sync search.
+ */
 void TriggerDecoderBase::resetState() {
 	setShaftSynchronized(false);
 	toothed_previous_time = 0;
@@ -84,6 +97,14 @@ void TriggerDecoderBase::resetState() {
 
 	totalEventCountBase = 0;
 	isFirstEvent = true;
+
+	vvtToothDurations0 = 0;
+	vvtCurrentPosition = 0;
+	setArrayValues(vvtToothPosition, 0);
+	triggerSyncGapRatio = 0;
+	triggerStateIndex = 0;
+
+	call_board_override(custom_board_TriggerResetState);
 }
 
 void TriggerDecoderBase::setTriggerErrorState(int errorIncrement) {
@@ -116,7 +137,7 @@ void TriggerWaveform::initializeSyncPoint(TriggerDecoderBase& state,
 
 void TriggerFormDetails::prepareEventAngles(TriggerWaveform *shape) {
 	int triggerShapeSynchPointIndex = shape->triggerShapeSynchPointIndex;
-	if (triggerShapeSynchPointIndex == EFI_ERROR_CODE) {
+	if (triggerShapeSynchPointIndex == (int)EFI_ERROR_CODE) {
 		return;
 	}
 	angle_t firstAngle = shape->getAngle(triggerShapeSynchPointIndex);
@@ -185,14 +206,36 @@ int64_t TriggerDecoderBase::getTotalEventCounter() const {
 	return totalEventCountBase + currentCycle.current_index;
 }
 
+/**
+ * @return number of completed wheel synchronization cycles for this decoder since reset.
+ * Incremented once per full trigger cycle via incrementShaftSynchronizationCounter().
+ * For the primary (crank) decoder this effectively counts engine revolutions/cycles
+ * and is used widely (e.g. crank-vs-cam phase alignment, knock indexing, VVT validation).
+ */
 int TriggerDecoderBase::getSynchronizationCounter() const {
 	return synchronizationCounter;
 }
 
+/**
+ * Resets the primary decoder state, including its phase sync state.
+ *
+ * This overrides TriggerDecoderBase::resetState() to handle primary-specific
+ * state like crank/phase sync flags, while calling the base implementation
+ * to clear common fields.
+ *
+ * This is called during initialization, when engine rotation stops,
+ * or during trigger re-sync search.
+ */
 void PrimaryTriggerDecoder::resetState() {
 	TriggerDecoderBase::resetState();
 
+	/**
+	 * resetHasFullSync() resets m_hasSynchronizedPhase to true OR false
+	 * depending on m_needsDisambiguation
+	 */
 	resetHasFullSync();
+	m_hasSynchronizedCrank = false;
+	m_phaseAdjustment = 0;
 }
 
 
@@ -240,7 +283,9 @@ angle_t PrimaryTriggerDecoder::syncEnginePhase(int divider, int remainder, angle
 	m_hasSynchronizedPhase = true;
 
 	if (totalShift > 0) {
-		camResyncCounter++;
+		m_phaseAdjustment = totalShift;
+		// Resync angle changed - count how many times this happens
+		phaseResyncCounter++;
 		onTransitionEvent(TransitionEvent::EngineResync);
 	}
 
@@ -249,6 +294,11 @@ angle_t PrimaryTriggerDecoder::syncEnginePhase(int divider, int remainder, angle
 
 void TriggerDecoderBase::incrementShaftSynchronizationCounter() {
 	synchronizationCounter++;
+}
+
+void PrimaryTriggerDecoder::onShaftSynchronized(bool value) {
+	enginePins.debugTriggerState.setValue(value);
+	m_hasSynchronizedCrank = value;
 }
 
 void PrimaryTriggerDecoder::onTriggerError() {
@@ -502,7 +552,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 			printf("%s event %s %lld\r\n",
 					getTrigger_type_e(triggerConfiguration.TriggerType.type),
 					getTrigger_event_e(signal),
-					nowNt);
+					(long long)nowNt);
 			printf("decodeTriggerEvent ratio %.2f: current=%d previous=%d\r\n", 1.0 * toothDurations[0] / toothDurations[1],
 					toothDurations[0], toothDurations[1]);
 		}
@@ -529,9 +579,9 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 			 * todo: figure out exact threshold as a function of RPM and tooth count?
 			 * Open question what is 'triggerShape.getSize()' for 60/2 is it 58 or 58*2 or 58*4?
 			 */
+#if EFI_PROD_CODE || EFI_SIMULATOR
 			bool silentTriggerError = triggerShape.getSize() > 40 && engineConfiguration->silentTriggerError;
 
-#if EFI_PROD_CODE || EFI_SIMULATOR
 			bool verbose = getTriggerCentral()->isEngineSnifferEnabled && triggerConfiguration.VerboseTriggerSynchDetails;
 
 			if (verbose || (someSortOfTriggerError() && !silentTriggerError)) {
@@ -570,7 +620,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 						getShaftSynchronized(),
 					isSynchronizationPoint,
 					currentCycle.current_index,
-					triggerShape.getSize());
+					(int)triggerShape.getSize());
 			}
 #endif /* EFI_UNIT_TEST */
 		}
@@ -755,7 +805,7 @@ uint32_t TriggerDecoderBase::findTriggerZeroEventIndex(
 
 #if EFI_UNIT_TEST
 	if (printTriggerDebug) {
-		printf("findTriggerZeroEventIndex: syncIndex located %lu!\r\n", syncIndex.Value);
+		printf("findTriggerZeroEventIndex: syncIndex located %u!\r\n", syncIndex.Value);
 	}
 #endif /* EFI_UNIT_TEST */
 

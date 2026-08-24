@@ -11,27 +11,27 @@ pins:
     color: purple
 
   - pin: 3D
-    function: CAN2 bus high (CANH)
+    function: CAN2 bus High
     type: can
     color: green
 
   - pin: 4D
-    function: CAN2 bus low (CANL)
+    function: CAN2 bus Low
     type: can
     color: blue
 
   - pin: 5D
-    function: CAN1 bus high (CANH)
+    function: CAN bus High
     type: can
     color: green
 
   - pin: 6D
-    function: CAN1 bus low (CANL)
+    function: CAN bus Low
     type: can
     color: blue
 
   - pin: 7D
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: 8D
@@ -125,9 +125,9 @@ pins:
     function: +5v sensors
 
   - pin: 24D
-    function: Analog Ground
+    function: GNDA Analog/Sensor Ground
     color: black
-    type: gnd
+    type: agnd
 
 info:
   title: AlphaX 8chan

@@ -1,13 +1,16 @@
 package com.rusefi.ui.widgets;
 
 import com.devexperts.logging.Logging;
+import com.opensr5.ini.ExpressionEvaluator;
 import com.opensr5.ini.GaugeModel;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.core.ISensorCentral;
 import com.rusefi.core.ISensorHolder;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCategory;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.core.SensorSubscription;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.ui.GaugesPanel;
 import com.rusefi.ui.UIContext;
@@ -19,6 +22,8 @@ import eu.hansolo.steelseries.tools.ColorDef;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.HashSet;
+import java.util.Set;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -77,7 +82,7 @@ public class SensorGauge {
         gauge.setBackgroundColor(BackgroundColor.LIGHT_GRAY);
 
         String channelName = gaugeModel.getChannel();
-        SensorCentral.getInstance().addListener(channelName,
+        ISensorCentral.ListenerToken valueToken = SensorCentral.getInstance().addListener(channelName,
             value -> {
                 if (GaugesPanel.IS_PAUSED)
                     return;
@@ -85,18 +90,45 @@ public class SensorGauge {
             }
         );
 
-        // For expression-based labels, show empty placeholder until resolved by the data cycle
-        if (gaugeModel.getTitleValue().isExpression()) {
-            gauge.setTitle("");
-        }
-        if (gaugeModel.getUnitsValue().isExpression()) {
-            gauge.setUnitString("");
-        }
-
+        // For expression-based labels, show empty placeholder until resolved by the data cycle.
+        // Cache last-applied values to avoid calling setTitle/setUnitString (and the
+        // reInitialize() they trigger in SteelSeries) on every response frame unchanged.
+        final SensorCentral.ResponseListener responseListener;
         if (gaugeModel.getTitleValue().isExpression() || gaugeModel.getUnitsValue().isExpression()) {
-            SensorCentral.getInstance().addListener((SensorCentral.ResponseListener) () ->
-                SwingUtilities.invokeLater(() -> applyResolvedLabels(gauge, gaugeName))
-            );
+            if (gaugeModel.getTitleValue().isExpression()) {
+                gauge.setTitle("");
+            }
+            if (gaugeModel.getUnitsValue().isExpression()) {
+                gauge.setUnitString("");
+            }
+            final String[] lastLabels = {null, null}; // [title, units]
+            Set<String> labelsSensors = new HashSet<>();
+            labelsSensors.addAll(ExpressionEvaluator.extractVariables(gaugeModel.getTitle()));
+            labelsSensors.addAll(ExpressionEvaluator.extractVariables(gaugeModel.getUnits()));
+
+            responseListener = () ->
+                SwingUtilities.invokeLater(() -> {
+                    ISensorHolder.ResolvedGaugeLabels labels = SensorCentral.getInstance().getResolvedLabels(gaugeName);
+                    if (labels != null) {
+                        boolean changed = false;
+                        if (!labels.getTitle().equals(lastLabels[0])) {
+                            lastLabels[0] = labels.getTitle();
+                            gauge.setTitle(labels.getTitle());
+                            changed = true;
+                        }
+                        if (!labels.getUnits().equals(lastLabels[1])) {
+                            lastLabels[1] = labels.getUnits();
+                            gauge.setUnitString(labels.getUnits());
+                            changed = true;
+                        }
+                        if (changed) {
+                            gauge.repaint();
+                        }
+                    }
+                });
+            SensorCentral.getInstance().addListener(responseListener, new SensorSubscription(labelsSensors.toArray(new String[0])));
+        } else {
+            responseListener = null;
         }
 
         gauge.setValue(SensorCentral.getInstance().getValue(channelName));
@@ -113,7 +145,13 @@ public class SensorGauge {
             }
         };
         gauge.addMouseListener(mouseListener);
+        // Remove previous gauge's children and run its cleanup actions (removes its
+        // SensorCentral listeners), then register cleanup for the new listeners above.
         wrapper.removeAllChildrenAndListeners();
+        wrapper.addCleanupAction(valueToken::remove);
+        if (responseListener != null) {
+            wrapper.addCleanupAction(() -> SensorCentral.getInstance().removeListener(responseListener));
+        }
         wrapper.addMouseListener(mouseListener);
         wrapper.add(gauge, BorderLayout.CENTER);
         AutoupdateUtil.trueLayoutAndRepaint(wrapper.getParent());
@@ -174,15 +212,6 @@ public class SensorGauge {
         final DetachedSensor ds = new DetachedSensor(uiContext, gaugeName, DetachedSensor.DEFAULT_WIDTH);
 
         ds.show(e);
-    }
-
-    private static void applyResolvedLabels(Radial gauge, String gaugeName) {
-        ISensorHolder.ResolvedGaugeLabels labels = SensorCentral.getInstance().getResolvedLabels(gaugeName);
-        if (labels != null) {
-            gauge.setTitle(labels.getTitle());
-            gauge.setUnitString(labels.getUnits());
-            gauge.repaint();
-        }
     }
 
     public static Radial createRadial(double maxValue, double minValue, GaugeModel gaugeModel) {

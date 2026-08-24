@@ -9,15 +9,15 @@
 
 struct_no_prefix output_channels_s
 
-bit sd_present;SD: Present
-bit sd_logging_internal;SD: Logging
+bit @#OUTPUT_CHANNEL_SD_PRESENT#@;SD: Present
+bit @#OUTPUT_CHANNEL_SD_LOGGING_INTERNAL#@;SD: Logging
 bit triggerScopeReady
 bit antilagTriggered
 bit isO2HeaterOn;
 bit checkEngine;
 bit needBurn;
 
-bit sd_msd;SD: MSD
+bit @#OUTPUT_CHANNEL_SD_MSD#@;SD: MSD
 bit toothLogReady;Tooth Logger Ready
 bit isTpsError;Error: TPS
 bit isCltError;Error: CLT
@@ -75,6 +75,7 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 	uint16_t autoscale lambdaValue;@@GAUGE_NAME_LAMBDA@@;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 3
 
 	uint16_t autoscale VBatt;@@GAUGE_NAME_VBAT@@;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 2
+	uint16_t autoscale VIgn;@@GAUGE_NAME_VIGN@@;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 2
 
 	uint16_t autoscale oilPressure;@@GAUGE_NAME_OIL_PRESSURE@@;"kPa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
 	int16_t autoscale vvtPositionB1I;@@GAUGE_NAME_VVT_B1I@@;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 1
@@ -94,6 +95,11 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 ! Wall model AE
 	uint16_t autoscale wallFuelAmount;@@GAUGE_NAME_FUEL_WALL_AMOUNT@@;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 3
 	int16_t autoscale wallFuelCorrectionValue;@@GAUGE_NAME_FUEL_WALL_CORRECTION@@;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 3
+
+! Flex fuel transient compensation multipliers (1.0 = neutral)
+	uint16_t autoscale flexAeMultiplier;Flex: AE multiplier;"mult", 0.001, 0, 0, 5, 3
+	uint16_t autoscale flexWwTauMultiplier;Flex: WW tau multiplier;"mult", 0.001, 0, 0, 5, 3
+	uint16_t autoscale flexWwBetaMultiplier;Flex: WW beta multiplier;"mult", 0.001, 0, 0, 5, 3
 
 	uint16_t revolutionCounterSinceStart;;"",1, 0, 0, 0, 0
 
@@ -270,6 +276,8 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 
 	uint16_t autoscale fallbackMap;;"kPa", 0.1, 0, 0, 1000, 1
 	uint16_t autoscale effectiveMap;Effective MAP;"kPa", 0.1, 0, 0, 1000, 1
+	uint16_t predTimerResetCnt;AE: Map Pred New Cycles;"", 1, 0, 0, 65535, 0
+	uint16_t mapPredEventOver;AE: Map Pred Expired;"", 1, 0, 0, 65535, 0
 
 	uint16_t autoscale instantMAPValue;Instant MAP;"kPa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 655, 2
 
@@ -320,6 +328,12 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 	int16_t[VE_BLEND_COUNT iterate] autoscale veBlendOutput;;"%", 0.01, 0, -50, 50, 2
 	int16_t[VE_BLEND_COUNT iterate] autoscale veBlendYAxis;;"", 0.1, 0, -1000, 1000, 1
 
+	int16_t autoscale secondVeBlendParameter;;"", 0.1, 0, -1000, 1000, 1
+	uint8_t autoscale secondVeBlendBias;;"%", 0.5, 0, 0, 100, 1
+
+	int16_t autoscale secondIgnitionBlendParameter;;"", 0.1, 0, -1000, 1000, 1
+	uint8_t autoscale secondIgnitionBlendBias;;"%", 0.5, 0, 0, 100, 1
+
 	int16_t[BOOST_BLEND_COUNT iterate] autoscale boostOpenLoopBlendParameter;;"", 0.1, 0, -1000, 1000, 1
 	uint8_t[BOOST_BLEND_COUNT iterate] autoscale boostOpenLoopBlendBias;;"%", 0.5, 0, 0, 100, 1
 	int8_t[BOOST_BLEND_COUNT iterate] boostOpenLoopBlendOutput;;"%", 1, 0, -100, 100, 0
@@ -367,6 +381,8 @@ bit vvtChannel3;bank 2 intake cam input
 ! bit 29
 bit vvtChannel4;bank 2 exhaust cam input
 bit isMapPredictionActive;AE: Map Prediction Active
+! bit 31 - last one!
+bit isFlexError;Error: Flex
 
 uint32_t outputRequestPeriod
 float mapFast
@@ -444,6 +460,8 @@ float mapFast
 
   uint8_t sd_error;
 
+	uint8_t sdLoggingState;SD: Logging state;"code", 1, 0, 0, 0, 0
+
 	uint8_t fastAdcOverrunCount;ECU: Fast ADC overruns;"", 1, 0, 0, 255, 0
 	uint8_t slowAdcOverrunCount;ECU: Slow ADC overruns;"", 1, 0, 0, 255, 0
 	uint8_t fastAdcLastError;ECU: Fast ADC error type;"", 1, 0, 0, 255, 0
@@ -459,4 +477,12 @@ float mapFast
   uint16_t transitionEventsCounter
 
   uint8_t[MAX_CYLINDER_COUNT iterate] mapPerCylinder;;"kPa", 1, 0, 0, 0, 0
+
+	! Live measured thermistor resistance, exact value computed by ResistanceFunc, see issue #9788
+	float cltResistance;CLT: measured resistance;"Ohm", 1, 0, 0, 1000000, 0
+	float iatResistance;IAT: measured resistance;"Ohm", 1, 0, 0, 1000000, 0
+	float auxTemp1Resistance;Aux temp 1: measured resistance;"Ohm", 1, 0, 0, 1000000, 0
+	float auxTemp2Resistance;Aux temp 2: measured resistance;"Ohm", 1, 0, 0, 1000000, 0
+
+	uint16_t instantRpmRange;sync: instant RPM range\nMax minus min instant RPM within the last complete engine cycle, 0 when RPM is perfectly steady;"rpm", 1, 0, 0, 65535, 0
 end_struct

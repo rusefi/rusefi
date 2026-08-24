@@ -10,34 +10,40 @@ pins:
     color: orange
 
   - pin: A1
-    function: DC1- (usually electronic throttle body)
+    function: DC1- (ETB/stepper; disconnect when A5 is used as an GPIO output)
     type: etb
     color: white
 
   - pin: A2
-    function: DC2-
+    function: DC2- (ETB/stepper; disconnect when A6 is used as an GPIO output)
     type: etb
     color: white
 
   - pin: A3
-    function: Power Ground
+    function: Power/Chassis GND ground
     color: black
     type: gnd
 
   - pin: A4
-    function: Power Ground
+    function: Power/Chassis GND ground
     color: black
     type: gnd
 
   - pin: A5
-    function: DC1+ (usually electronic throttle body)
+    id: HBRIDGE_1_OUT
+    class: outputs
+    function: DC1+ / H-Bridge 1 on-off output
     type: etb
     color: blue
+    ts_name: A5 - DC1+ H-Bridge Output
 
   - pin: A6
-    function: DC2+
+    id: HBRIDGE_2_OUT
+    class: outputs
+    function: DC2+ / H-Bridge 2 on-off output
     type: etb
     color: blue
+    ts_name: A6 - DC2+ H-Bridge Output
 
   - pin: A7
     meta: MM100_IN_VBATT
@@ -53,6 +59,7 @@ pins:
 info:
   cid: a
   title: uaefi
+  name: connector A
   directory: hellen/uaefi
   board_url: https://wiki.rusefi.com/uaefi
   image:

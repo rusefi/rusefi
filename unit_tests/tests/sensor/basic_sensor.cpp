@@ -89,6 +89,25 @@ TEST_F(SensorBasic, DoubleUnRegister) {
 	ASSERT_TRUE(Sensor::get(SensorType::Tps1).Valid);// huh? is that a bug?
 }
 
+// https://github.com/rusefi/rusefi/issues/9822
+TEST_F(SensorBasic, UnregisterOnlyRemovesOwnSensor) {
+	// A Lua-created sensor owns the slot
+	MockSensor luaSensor(SensorType::AcceleratorPedalUnfiltered);
+	ASSERT_TRUE(luaSensor.Register());
+
+	// A sensor of the same type that never registered (no ADC channel configured)
+	// gets deinitialized, for example on settings burn
+	MockSensor neverRegistered(SensorType::AcceleratorPedalUnfiltered);
+	neverRegistered.unregister();
+
+	// The Lua sensor must still be registered
+	EXPECT_EQ(Sensor::getSensorOfType(SensorType::AcceleratorPedalUnfiltered), &luaSensor);
+
+	// The actual owner can still unregister itself
+	luaSensor.unregister();
+	EXPECT_FALSE(Sensor::getSensorOfType(SensorType::AcceleratorPedalUnfiltered));
+}
+
 TEST_F(SensorBasic, SensorInitialized) {
 	MockSensor dut(SensorType::Clt);
 	ASSERT_TRUE(dut.Register());

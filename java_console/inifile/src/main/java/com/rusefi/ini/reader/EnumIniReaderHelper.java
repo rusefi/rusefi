@@ -8,11 +8,21 @@ import org.jetbrains.annotations.NotNull;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 public class EnumIniReaderHelper {
     private static final String STARTS_WITH_NUMBERS_OPTIONAL_SPACES_AND_EQUALS = "^\\d+\\s*=.*";
     private static final Pattern IS_KEY_VALUE_SYNTAX = Pattern.compile(STARTS_WITH_NUMBERS_OPTIONAL_SPACES_AND_EQUALS);
+    private static final Pattern BIT_RANGE_DELIMITERS = Pattern.compile("[]\\[:]");
+    private static final Set<String> PIN_ENUM_LISTS = Set.of(
+        "$gpio_list",
+        "$output_pin_e_list",
+        "$brain_input_pin_e_list",
+        "$switch_input_pin_e_list",
+        "$adc_channel_e_list",
+        "$sent_input_pin_e_list"
+    );
 
     private EnumIniReaderHelper() {
     }
@@ -28,7 +38,8 @@ public class EnumIniReaderHelper {
         int bitSize0 = parseBitRange.getBitSize0();
 
         EnumIniField.EnumKeyValueMap enums = EnumIniField.EnumKeyValueMap.valueOf(line.getRawText(), defines);
-        return new EnumIniField(name, offset, type, enums, bitPosition, bitSize0);
+        boolean pinEnum = PIN_ENUM_LISTS.contains(getEnumValuesSection(line.getRawText()));
+        return new EnumIniField(name, offset, type, enums, bitPosition, bitSize0, pinEnum);
     }
 
     public static boolean isKeyValueSyntax(String rawText) {
@@ -38,15 +49,15 @@ public class EnumIniReaderHelper {
 
     @NotNull
     public static String getEnumValuesSection(String rawText) {
-        int interestingIndex = ordinalIndexOf(rawText, ",", 4);
+        int interestingIndex = ordinalIndexOf(rawText, 4);
         // yes that could have been done with a regex as well
         return rawText.substring(interestingIndex + /*skipping comma*/1).trim();
     }
 
-    private static int ordinalIndexOf(String str, String substr, int n) {
-        int pos = str.indexOf(substr);
+    private static int ordinalIndexOf(String str, int n) {
+        int pos = str.indexOf(",");
         while (--n > 0 && pos != -1)
-            pos = str.indexOf(substr, pos + 1);
+            pos = str.indexOf(",", pos + 1);
         return pos;
     }
 
@@ -63,7 +74,7 @@ public class EnumIniReaderHelper {
         }
 
         public ParseBitRange invoke(String bitRange) {
-            bitRange = bitRange.replaceAll("[\\]\\[:]", " ").trim();
+            bitRange = BIT_RANGE_DELIMITERS.matcher(bitRange).replaceAll(" ").trim();
             String bitPositions[] = bitRange.split(" ");
             if (bitPositions.length != 2)
                 throw new IllegalStateException("Bit position " + bitRange);

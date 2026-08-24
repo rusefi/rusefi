@@ -215,7 +215,7 @@ private:
 	// Time since the last tooth
 	Timer m_lastToothTimer;
 	// Phase of the last tooth relative to the sync point
-	float m_lastToothPhaseFromSyncPoint;
+	float m_lastToothPhaseFromSyncPoint = 0;
 
 	// At what engine phase do we expect the next tooth to arrive?
 	// Used for checking whether your trigger pattern is correct.
@@ -240,6 +240,7 @@ void onConfigurationChangeTriggerCallback();
 #define SYMMETRICAL_CRANK_SENSOR_DIVIDER (2 * 2)
 #define SYMMETRICAL_THREE_TIMES_CRANK_SENSOR_DIVIDER (3 * 2)
 #define SYMMETRICAL_SIX_TIMES_CRANK_SENSOR_DIVIDER (6 * 2)
+#define SYMMETRICAL_FIVE_TIMES_CRANK_SENSOR_DIVIDER (5 * 2)
 #define SYMMETRICAL_TWELVE_TIMES_CRANK_SENSOR_DIVIDER (12 * 2)
 
 TriggerCentral * getTriggerCentral();

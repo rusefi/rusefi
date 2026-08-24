@@ -118,6 +118,11 @@ public class LuaTextEditor {
         if (bp == null)
             return;
         StringIniField field = LuaScriptPanel.getLuaScriptField(bp);
+        // field is null when the active .ini has no luaScript field yet — e.g. during config
+        // migration before the ini is wired up. Match the bp==null guard above instead of NPEing
+        // on every document change (see #9709).
+        if (field == null)
+            return;
         int limit = field.getSize();
         sizeLabel.setText(textArea.getText().length() + "/" + limit);
     }

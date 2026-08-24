@@ -44,7 +44,7 @@ void onTriggerChanged(efitick_t stamp, bool isPrimary, bool isRising) {
 	hwHandleShaftSignal(isPrimary ? 0 : 1, isRising, stamp);
 }
 
-static void simulateTrigger(EngineTestHelper &eth, TriggerAdcDetector &trigAdcState, CsvReader &reader, float voltageDiv, float adcMaxVoltage) {
+static void simulateTrigger(EngineTestHelper &eth, TriggerAdcDetector &detector, CsvReader &reader, float voltageDiv, float adcMaxVoltage) {
 	static const float Vil = 0.3f * adcMaxVoltage;
 	static const float Vih = 0.7f * adcMaxVoltage;
 
@@ -60,7 +60,7 @@ static void simulateTrigger(EngineTestHelper &eth, TriggerAdcDetector &trigAdcSt
 
 		// convert into mcu-adc voltage
 		value = minF(maxF(value / voltageDiv, 0), adcMaxVoltage);
-		if (trigAdcState.curAdcMode == TRIGGER_ADC_EXTI) {
+		if (detector.curAdcMode == TRIGGER_ADC_EXTI) {
 			int logicValue = 0;
 			// imitate Schmitt trigger input
 			if (value < Vil || value > Vih) {
@@ -69,16 +69,16 @@ static void simulateTrigger(EngineTestHelper &eth, TriggerAdcDetector &trigAdcSt
 				if (prevLogicValue != -1) {
 //					printf("--> DIGITAL %d %d\r\n", logicValue, prevLogicValue);
 
-					trigAdcState.digitalCallback(stampNt, true, logicValue > prevLogicValue ? true : false);
+					detector.digitalCallback(stampNt, true, logicValue > prevLogicValue ? true : false);
 				}
 				prevLogicValue = logicValue;
 			}
-		} else if (trigAdcState.curAdcMode == TRIGGER_ADC_ADC) {
+		} else if (detector.curAdcMode == TRIGGER_ADC_ADC) {
 			triggerAdcSample_t sampleValue = value * ADC_MAX_VALUE / adcMaxVoltage;
 			
 //			printf("--> ANALOG %d\r\n", sampleValue);
 
-			trigAdcState.analogCallback(stampNt, sampleValue);
+			detector.analogCallback(stampNt, sampleValue);
 		}
 	}
 }

@@ -22,7 +22,7 @@ void ShiftTorqueReductionController::update() {
         updateAppConditionSatisfied();
 
         isFlatShiftConditionSatisfied = torqueReductionTriggerPinState && isTimeConditionSatisfied
-            && isRpmConditionSatisfied && isAppConditionSatisfied;
+            && isRpmConditionSatisfied && isAppConditionSatisfied && !engine->launchController.ownsSharedTrigger();
     }
 }
 

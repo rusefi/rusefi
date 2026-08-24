@@ -16,15 +16,9 @@ struct GetAfrWrapper {
 
 static GetAfrWrapper afrWrapper;
 
-static FunctionPointerSensor lambdaSensor(SensorType::Lambda1,
-[]() {
-	return afrWrapper.getLambda();
-});
+static FunctionPointerSensor lambdaSensor(SensorType::Lambda1, []() { return afrWrapper.getLambda(); });
 
-static FunctionPointerSensor lambdaSensor2(SensorType::Lambda2,
-[]() {
-	return afrWrapper.getLambda2();
-});
+static FunctionPointerSensor lambdaSensor2(SensorType::Lambda2, []() { return afrWrapper.getLambda2(); });
 
 #include "AemXSeriesLambda.h"
 
@@ -33,8 +27,7 @@ AemXSeriesWideband aem1(0, SensorType::Lambda1);
 static AemXSeriesWideband aem2(1, SensorType::Lambda2);
 #endif
 
-template <>
-const wideband_state_s* getLiveData(size_t idx) {
+template <> const wideband_state_s* getLiveData(size_t idx) {
 #if EFI_CAN_SUPPORT
 	switch (idx) {
 		case 0:
@@ -50,7 +43,7 @@ const wideband_state_s* getLiveData(size_t idx) {
 }
 
 void initLambda() {
-  	// first we register the smoothed sensors for the early return on the can wbo case
+	// first we register the smoothed sensors for the early return on the can wbo case
 	smoothedLambda1Sensor.Register();
 	smoothedLambda2Sensor.Register();
 
@@ -69,16 +62,16 @@ void initLambda() {
 #endif
 
 #if EFI_UNIT_TEST
-  constexpr bool isUnitTest = true;
+	constexpr bool isUnitTest = true;
 #else
-  constexpr bool isUnitTest = false;
+	constexpr bool isUnitTest = false;
 #endif
 
-  // CANbus option is handled above, let's handle analog inputs conditionally to give Lua sensors a chance
-  if (isAdcChannelValid(engineConfiguration->afr.hwChannel) || isUnitTest) {
-	  lambdaSensor.Register();
+	// CANbus option is handled above, let's handle analog inputs conditionally to give Lua sensors a chance
+	if (isAdcChannelValid(engineConfiguration->afr.hwChannel) || isUnitTest) {
+		lambdaSensor.Register();
 	}
 	if (isAdcChannelValid(engineConfiguration->afr.hwChannel2) || isUnitTest) {
-	  lambdaSensor2.Register();
-  }
+		lambdaSensor2.Register();
+	}
 }

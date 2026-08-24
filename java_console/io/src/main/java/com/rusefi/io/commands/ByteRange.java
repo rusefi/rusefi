@@ -29,7 +29,11 @@ public class ByteRange {
     }
 
     public static void packPageOffsetAndSize(int offset, int requestSize, byte[] packet) {
-        putShort(packet, 0, swap16(/*page*/0));
+        packPageOffsetAndSize(0, offset, requestSize, packet);
+    }
+
+    public static void packPageOffsetAndSize(int page, int offset, int requestSize, byte[] packet) {
+        putShort(packet, 0, swap16(page));
         putShort(packet, 2, swap16(offset));
         putShort(packet, 4, swap16(requestSize));
     }

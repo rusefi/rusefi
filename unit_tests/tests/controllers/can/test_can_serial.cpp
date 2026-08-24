@@ -132,6 +132,7 @@ TEST(testCanSerial, test1Frame) {
 
 	{
 		TestCanStreamerState state;
+		state.paddingByte = 0;
 		state.test({ "1" }, { "\x01"s "1\0\0\0\0\0\0"s }, 1, { 1 }); // 1 byte -> 1 frame, 1 byte in FIFO
 	}
 	{
@@ -155,14 +156,17 @@ TEST(testCanSerial, test1Frame) {
 TEST(testCanSerial, test2Frames) {
 	{
 		TestCanStreamerState state;
+		state.paddingByte = 0;
 		state.test({ "01234567" }, { "\x10"s "\x08"s "012345"s, "\x21"s "67\0\0\0\0\0"s }, 8, { 8 }); // 8 bytes -> 2 8-byte frames, 8 bytes in FIFO
 	}
 	{
 		TestCanStreamerState state;
+		state.paddingByte = 0;
 		state.test({ "0123456789A" }, { "\x10"s "\x0B"s "012345"s, "\x21"s "6789A\0\0"s }, 11, { 2, 5, 4 }); // 11 bytes -> 2 8-byte frames
 	}
 	{
 		TestCanStreamerState state;
+		state.paddingByte = 0;
 		state.test({ "0123456ABCDEFG" }, { "\x10"s  "\x0E"s "012345"s, "\x21"s "6ABCDEF"s, "\x22"s "G\0\0\0\0\0\0"s }, 14, { 14 }); // 14 bytes -> 3 8-byte frames, empty FIFO
 	}
 }
@@ -170,10 +174,12 @@ TEST(testCanSerial, test2Frames) {
 TEST(testCanSerial, testIrregularSplits) {
 	{
 		TestCanStreamerState state;
+		state.paddingByte = 0;
 		state.test({ "012", "3456ABCDEFG" }, { "\x10"s  "\x0E"s "012345"s, "\x21"s "6ABCDEF"s, "\x22"s "G\0\0\0\0\0\0"s }, 14, { 7, 7 }); // 14 bytes -> 2 8-byte frames, empty FIFO
 	}
 	{
 		TestCanStreamerState state;
+		state.paddingByte = 0;
 		state.test({ "0123456ABC", "DEFG" }, { "\x10"s  "\x0E"s "012345"s, "\x21"s "6ABCDEF"s, "\x22"s "G\0\0\0\0\0\0"s }, 14, { 14 }); // 14 bytes -> 2 8-byte frames, empty FIFO
 	}
 }
@@ -185,7 +191,7 @@ TEST(testCanSerial, testLongMessage) {
 				"\x10"s  "\x1A"s "abcdef"s,
 				"\x21"s "ghijklm"s,
 				"\x22"s "nopqrst"s,
-			    "\x23"s "uvwxyz\0"s }, 26, { 26 }); // 26 bytes -> 4 8-byte frames, 5 bytes left in FIFO
+ 		    "\x23"s "uvwxyz\x0A"s }, 26, { 26 }); // 26 bytes -> 4 8-byte frames, 5 bytes left in FIFO
 	}
 }
 
@@ -214,9 +220,79 @@ TEST(testCanSerial, test64_7Message) {
 		    "\x29"s "\0\0\0\0\0\0\0"s,
 
 			/* 10 */
-			"\x2A"s "\0\4\0\0\0\0\0"s,
+			"\x2A"s "\0\4\x0A\x0A\x0A\x0A\x0A"s,
 
 	}, 71, { 64 + 7 });
+}
+
+/**
+ * Coverage for the ISO-TP single-frame length field.
+ *
+ * A single frame carries its payload length in the low nibble of the PCI byte, so it can encode up
+ * to 15 - but a classic-CAN frame only delivers DLC bytes and CANRxFrame::data8 is 8 bytes wide.
+ * receiveFrame() used to take that nibble at face value and copy that many bytes from data8 + 1,
+ * reading past the end of the payload. DLC itself is only a 4-bit field, so a frame can also claim
+ * DLC > 8, which was equally unchecked. The length is now bounded by both.
+ *
+ * The frame is embedded in a padded wrapper so that the over-read this deliberately provokes lands
+ * inside memory the test owns - otherwise it is a stack-buffer-overflow and AddressSanitizer (on by
+ * default for these tests) aborts the run.
+ */
+namespace {
+struct PaddedRxFrame {
+	CANRxFrame frame;
+	// room for the largest over-read the unclamped code can perform: SF_DL 15 starting at data8[1]
+	uint8_t overreadGuard[16];
+};
+
+// Fails the test rather than corrupting the stack if the guard above is ever too small for the
+// over-read these tests provoke (last byte read is data8[15], so data8 + 16 must stay inside).
+void assertOverreadStaysInsidePaddedFrame(const PaddedRxFrame& padded) {
+	const uint8_t* objectEnd = reinterpret_cast<const uint8_t*>(&padded) + sizeof(padded);
+	ASSERT_LE(padded.frame.data8 + 16, objectEnd) << "overreadGuard too small";
+}
+} // namespace
+
+TEST(testCanSerial, singleFrameLengthIsBoundedByDlc) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	TestCanStreamerState state;
+
+	PaddedRxFrame padded;
+	memset(&padded, 0, sizeof(padded));
+	padded.frame.DLC = 8;
+	// frame type 0 (SINGLE), SF_DL nibble = 15 - more than the 8-byte frame can possibly hold
+	padded.frame.data8[0] = 0x0F;
+
+	uint8_t rxbuf[64];
+	memset(rxbuf, 0xCC, sizeof(rxbuf));
+
+	assertOverreadStaysInsidePaddedFrame(padded);
+	int copied = state.receiveFrame(padded.frame, rxbuf, sizeof(rxbuf), 0);
+
+	// clamped to the 7 payload bytes the frame actually carries
+	EXPECT_EQ(7, copied);
+}
+
+TEST(testCanSerial, singleFrameLengthIsBoundedByPayloadSize) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	TestCanStreamerState state;
+
+	PaddedRxFrame padded;
+	memset(&padded, 0, sizeof(padded));
+	// DLC is a 4-bit field, so a malformed frame can claim more than data8[] can hold
+	padded.frame.DLC = 15;
+	padded.frame.data8[0] = 0x0F;
+
+	uint8_t rxbuf[64];
+	memset(rxbuf, 0xCC, sizeof(rxbuf));
+
+	assertOverreadStaysInsidePaddedFrame(padded);
+	int copied = state.receiveFrame(padded.frame, rxbuf, sizeof(rxbuf), 0);
+
+	// clamped to sizeof(data8) - 1 even though DLC claims more
+	EXPECT_EQ(7, copied);
 }
 
 TEST(testCanSerial, test3_64_4Message) {
@@ -244,7 +320,7 @@ TEST(testCanSerial, test3_64_4Message) {
 		    "\x29"s "\0\0\0\0\4ab"s,
 
 			/* 10 */
-			"\x2A"s "cd\0\0\0\0\0"s,
+			"\x2A"s "cd\x0A\x0A\x0A\x0A\x0A"s,
 
 	}, 71, { 64 + 7 });
 }

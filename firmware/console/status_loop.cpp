@@ -54,6 +54,7 @@
 #include "frequency_sensor.h"
 #include "digital_input_exti.h"
 #include "dc_motors.h"
+#include "init.h"
 
 #if EFI_PROD_CODE
 // todo: move this logic to algo folder!
@@ -233,8 +234,10 @@ void initWarningRunningPins() {
 
 #if EFI_PROD_CODE
 static void initStatusLeds() {
+	// getCommsLedPin() is a hard-coded per-board constant - this runs before settings are loaded
 	enginePins.communicationLedPin.initPin("led: comm status", getCommsLedPin(), LED_PIN_MODE, true);
-	// checkEnginePin is already initialized by the time we get here
+	// checkEnginePin is config-dependent and initialized later during initHardware();
+	// until then setValue() on it is a no-op
 }
 
 static bool isTriggerErrorNow() {
@@ -245,8 +248,6 @@ static bool isTriggerErrorNow() {
 	return false;
 #endif /* EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT */
 }
-
-extern bool consoleByteArrived;
 
 class CommunicationBlinkingTask : public PeriodicTimerController {
 
@@ -292,7 +293,7 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 				// differentiates software firmware error from critical interrupt error with CPU halt.
 				offTimeMs = 50;
 				onTimeMs = 450;
-			} else if (consoleByteArrived) {
+			} else if (TunerstudioThread::isAnyConsoleActive()) {
 				offTimeMs = 100;
 				onTimeMs = 33;
 #if EFI_CONFIGURATION_STORAGE
@@ -403,19 +404,21 @@ static void updateThrottles() {
 }
 
 static void updateLambda() {
-	float lambdaValue = Sensor::getOrZero(SensorType::Lambda1);
+#if EFI_ENGINE_CONTROL
+	float lambdaValue = Sensor::getOrDefault(SensorType::Lambda1, 0.5 / STOICH_RATIO, 0.0 / STOICH_RATIO, 30.5 / STOICH_RATIO);
 	engine->outputChannels.lambdaValue = lambdaValue;
 	engine->outputChannels.AFRValue = lambdaValue * engine->fuelComputer.stoichiometricRatio;
 	// TODO: this can be calculated on PC side!
 	engine->outputChannels.afrGasolineScale = lambdaValue * STOICH_RATIO;
-	engine->outputChannels.SmoothedAFRValue = Sensor::getOrZero(SensorType::SmoothedLambda1);
+	engine->outputChannels.SmoothedAFRValue = Sensor::getOrZero(SensorType::SmoothedLambda1) * engine->fuelComputer.stoichiometricRatio;
 
-	float lambda2Value = Sensor::getOrZero(SensorType::Lambda2);
+	float lambda2Value = Sensor::getOrDefault(SensorType::Lambda2, 0.5 / STOICH_RATIO, 0.0 / STOICH_RATIO, 30.5 / STOICH_RATIO);
 	engine->outputChannels.lambdaValue2 = lambda2Value;
 	engine->outputChannels.AFRValue2 = lambda2Value * engine->fuelComputer.stoichiometricRatio;
 	// TODO: this can be calculated on PC side!
 	engine->outputChannels.afr2GasolineScale = lambda2Value * STOICH_RATIO;
-	engine->outputChannels.SmoothedAFRValue2 = Sensor::getOrZero(SensorType::SmoothedLambda2);
+	engine->outputChannels.SmoothedAFRValue2 = Sensor::getOrZero(SensorType::SmoothedLambda2) * engine->fuelComputer.stoichiometricRatio;
+#endif // EFI_ENGINE_CONTROL
 }
 
 static void updateFuelSensors() {
@@ -424,7 +427,10 @@ static void updateFuelSensors() {
 	// High pressure is in bar, aka 100 kpa
 	engine->outputChannels.highFuelPressure = KPA2BAR(Sensor::getOrZero(SensorType::FuelPressureHigh));
 
-	engine->outputChannels.flexPercent = Sensor::getOrZero(SensorType::FuelEthanolPercent);
+	SensorResult flex = Sensor::get(SensorType::FuelEthanolPercent);
+	engine->outputChannels.flexPercent = flex.value_or(0);
+	// Only report fail if a flex sensor is actually configured (many engines don't have one)
+	engine->outputChannels.isFlexError = Sensor::hasSensor(SensorType::FuelEthanolPercent) ? !flex.Valid : false;
 
 	engine->outputChannels.fuelTankLevel = Sensor::getOrZero(SensorType::FuelLevel);
 }
@@ -484,6 +490,12 @@ static void updateRawSensors() {
 	engine->outputChannels.rawIat = Sensor::getRaw(SensorType::Iat);
 	engine->outputChannels.rawAuxTemp1 = Sensor::getRaw(SensorType::AuxTemp1);
 	engine->outputChannels.rawAuxTemp2 = Sensor::getRaw(SensorType::AuxTemp2);
+
+	// Live thermistor resistance as computed inside the firmware, for calibration dialogs, see issue #9788
+	engine->outputChannels.cltResistance = getThermistorResistance(SensorType::Clt);
+	engine->outputChannels.iatResistance = getThermistorResistance(SensorType::Iat);
+	engine->outputChannels.auxTemp1Resistance = getThermistorResistance(SensorType::AuxTemp1);
+	engine->outputChannels.auxTemp2Resistance = getThermistorResistance(SensorType::AuxTemp2);
 	engine->outputChannels.rawAmbientTemp = Sensor::getRaw(SensorType::AmbientTemperature);
 	engine->outputChannels.rawOilPressure = Sensor::getRaw(SensorType::OilPressure);
 	engine->outputChannels.rawFuelLevel = Sensor::getRaw(SensorType::FuelLevel);
@@ -526,7 +538,9 @@ static void updatePressures() {
 
  	engine->outputChannels.compressorDischargePressure = Sensor::getOrZero(SensorType::CompressorDischargePressure);
  	engine->outputChannels.throttleInletPressure = Sensor::getOrZero(SensorType::ThrottleInletPressure);
+#if EFI_ENGINE_CONTROL
  	engine->outputChannels.throttlePressureRatio = getThrottlePressureRatio(mapValue);
+#endif // EFI_ENGINE_CONTROL
 
 	engine->outputChannels.auxLinear1 = Sensor::getOrZero(SensorType::AuxLinear1);
 	engine->outputChannels.auxLinear2 = Sensor::getOrZero(SensorType::AuxLinear2);
@@ -536,6 +550,7 @@ static void updatePressures() {
 
 static void updateMiscSensors() {
 	engine->outputChannels.VBatt = Sensor::getOrZero(SensorType::BatteryVoltage);
+	engine->outputChannels.VIgn = Sensor::getOrZero(SensorType::IgnKeyVoltage);
 
 	engine->outputChannels.idlePositionSensor = Sensor::getOrZero(SensorType::IdlePosition);
 
@@ -625,7 +640,7 @@ static void updateFlags() {
 // As of 2022 it's preferred to leverage LiveData where all state is exposed
 // this method is invoked ONLY if we SD card log or have serial connection with some frontend app
 void updateTunerStudioState() {
-	TunerStudioOutputChannels *tsOutputChannels = &engine->outputChannels;
+	output_channels_s *tsOutputChannels = &engine->outputChannels;
 #if EFI_USB_SERIAL
   // pretty much SD card logs know if specifically USB serial is active
 	engine->outputChannels.isUsbConnected =	is_usb_serial_ready();
@@ -664,6 +679,7 @@ void updateTunerStudioState() {
 	tsOutputChannels->RPMValue = rpm;
 #if EFI_SHAFT_POSITION_INPUT
 	tsOutputChannels->instantRpm = engine->triggerCentral.instantRpm.getInstantRpm();
+	tsOutputChannels->instantRpmRange = engine->triggerCentral.instantRpm.getInstantRpmRange();
 	tsOutputChannels->totalTriggerErrorCounter = engine->triggerCentral.triggerState.totalTriggerErrorCounter;
 	tsOutputChannels->rpmAcceleration = engine->rpmCalculator.getRpmAcceleration();
 
@@ -713,7 +729,11 @@ void updateTunerStudioState() {
 
 	tsOutputChannels->hasCriticalError = hasFirmwareError() || hasConfigError() || engine->engineState.warnings.hasWarningMessage();
 	tsOutputChannels->hasFaultReportFile = hasErrorReportFile();
-	tsOutputChannels->triggerPageRefreshFlag = needToTriggerTsRefresh() || ltftNeedVeRefresh();
+	tsOutputChannels->triggerPageRefreshFlag = needToTriggerTsRefresh() ||
+#if EFI_LTFT_CONTROL
+		ltftNeedVeRefresh() ||
+#endif
+		0;
 
 	tsOutputChannels->isWarnNow = engine->engineState.warnings.isWarningNow();
 
@@ -761,10 +781,16 @@ void updateTunerStudioState() {
 
 #endif /* EFI_TUNER_STUDIO */
 
+// Invoked from runRusEfi() BEFORE loadConfiguration() so that the LED blinks even if
+// config load/validation fails: nothing reachable from here may read engineConfiguration
+// (values are defaults/zeros at that point). Pin selection relies on compile-time board
+// constants only, and CommunicationBlinkingTask reads global flags, never settings.
+// Prerequisites: initPinRepository() and detectBoardType() must have already run.
 void startStatusThreads() {
 	// todo: refactoring needed, this file should probably be split into pieces
 #if EFI_PROD_CODE
 	initStatusLeds();
+	// runs on virtual timer interrupts, keeps blinking even if the main thread hangs
 	communicationsBlinkingTask.start();
 #endif /* EFI_PROD_CODE */
 }

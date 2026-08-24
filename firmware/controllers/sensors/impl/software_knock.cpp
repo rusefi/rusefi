@@ -1,3 +1,19 @@
+/**
+ * @file software_knock.cpp
+ * @brief Digital Signal Processing (DSP) implementation for knock detection.
+ *
+ * This module implements software-based knock detection using the microcontroller's ADC.
+ * The process follows these steps:
+ * 1. ADC Capture: High-speed sampling of the knock sensor signal into a circular or DMA buffer.
+ * 2. Bandpass Filtering: A Biquad filter is applied to the raw samples to isolate the
+ *    knocking frequency (calculated from cylinder bore or manually configured).
+ * 3. Energy Calculation: Computes the RMS (Root Mean Square) energy level of the filtered signal.
+ * 4. Reporting: The calculated dB level is sent to the KnockController for high-level logic.
+ *
+ * Additionally, if enabled, it can perform FFT (Fast Fourier Transform) to generate
+ * spectrogram data for tuning and visualization in TunerStudio.
+ */
+
 #include "pch.h"
 
 #if EFI_SOFTWARE_KNOCK
@@ -48,6 +64,11 @@ void onKnockSamplingComplete() {
 	chSysUnlockFromISR();
 }
 
+/**
+ * Prepares the hardware for a new sampling window.
+ * Calculates the number of samples needed based on RPM and the configured crank angle duration.
+ * Triggers the ADC conversion in the background using DMA.
+ */
 void onStartKnockSampling(uint8_t cylinderNumber, float samplingSeconds, uint8_t channelIdx) {
 	if (!engineConfiguration->enableSoftwareKnock) {
 		return;
@@ -156,12 +177,20 @@ void initSoftwareKnock() {
 
 #ifdef KNOCK_SPECTROGRAM
 static uint8_t toDb(const float& voltage) {
-	float db = 200 * log10(voltage*voltage) + 40; // best scaling for view
+	float db = 200 * log10f(voltage*voltage) + 40; // best scaling for view
 	db = clampF(0, db, 255);
 	return uint8_t(db);
 }
 #endif
 
+/**
+ * The core DSP routine executed in a dedicated high-priority thread (KnockThread).
+ * 1. Applies the Biquad bandpass filter to each ADC sample.
+ * 2. Calculates the sum of squares of the filtered signal.
+ * 3. (Optional) Performs FFT for spectrogram visualization.
+ * 4. Calculates the RMS value in decibels (dB).
+ * 5. Passes the result to the engine's KnockController.
+ */
 static void processLastKnockEvent() {
 	if (!knockNeedsProcess) {
 		return;
@@ -184,10 +213,10 @@ static void processLastKnockEvent() {
 		float volts = ratio * sampleBuffer[i];
 
 		float filtered = knockFilter.filter(volts);
-		if (i == localCount - 1 && engineConfiguration->debugMode == DBG_KNOCK) {
-			engine->outputChannels.debugFloatField1 = volts;
-			engine->outputChannels.debugFloatField2 = filtered;
-		}
+//		if (i == localCount - 1 && engineConfiguration->debugMode == DBG_KNOCK) {
+//			engine->outputChannels.debugFloatField1 = volts;
+//			engine->outputChannels.debugFloatField2 = filtered;
+//		}
 
 		sumSq += filtered * filtered;
 	}
@@ -240,7 +269,7 @@ static void processLastKnockEvent() {
 	float meanSquares = sumSq / localCount;
 
 	// RMS
-	float db = 10 * log10(meanSquares);
+	float db = 10 * log10f(meanSquares);
 
 	// clamp to reasonable range
 	db = clampF(-100, db, 100);
@@ -248,6 +277,7 @@ static void processLastKnockEvent() {
 	engine->module<KnockController>()->onKnockSenseCompleted(currentCylinderNumber, db, lastKnockTime);
 }
 
+RUSEFI_STACK_ROOT(KnockThread, ThreadTask);
 void KnockThread::ThreadTask() {
 	while (1) {
 		knockSem.wait();

@@ -30,10 +30,12 @@ TEST(harley, hdCrankingWithCam1) {
 	runTest("tests/ignition_injection/resources/hd-req-sync_1.csv");
 }
 
+TEST(harley, hdCranking2006) {
+	runTest("tests/trigger/resources/hd-re-sd.teeth");
+}
+
 TEST(harley, hdCrankingWithCam3) {
 	HdCranking test("tests/ignition_injection/resources/hd-req-sync_3.csv");
-	extern bool unitTestTaskNoFastCallWhileAdvancingTimeHack;
-	unitTestTaskNoFastCallWhileAdvancingTimeHack = true;
 
 	EngineCsvReader &reader = test.reader;
 
@@ -41,7 +43,6 @@ TEST(harley, hdCrankingWithCam3) {
 		reader.processLine(&test.eth);
 
 		reader.assertFirstRpm(184, 60);
-		auto rpm = Sensor::getOrZero(SensorType::Rpm);
 
 		if (!reader.gotSync && engine->triggerCentral.triggerState.hasSynchronizedPhase()) {
 			EXPECT_EQ(reader.lineIndex(), 269);
@@ -54,7 +55,7 @@ TEST(harley, hdCrankingWithCam3) {
 		}
 	}
 
-	ASSERT_EQ(2, engine->triggerCentral.triggerState.camResyncCounter); // interesting!
+	ASSERT_EQ(2, engine->triggerCentral.triggerState.phaseResyncCounter); // interesting!
 }
 
 TEST(harley, hdCrankingWithCam4) {

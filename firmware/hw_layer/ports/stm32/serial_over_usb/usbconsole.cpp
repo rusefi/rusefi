@@ -32,8 +32,10 @@ void usb_serial_start() {
 	/*
 	 * Initializes a serial-over-USB CDC driver.
 	 */
-	sduObjectInit(&SDU1);
-	sduStart(&SDU1, &serusbcfg);
+	for (size_t i = 0; i < NUM_CDC_INSTANCES; i++) {
+		sduObjectInit(&SDU[i]);
+		sduStart(&SDU[i], &serusbcfg[i]);
+	}
 
 	/*
 	 * Activates the USB driver and then the USB bus pull-up on D+.
@@ -42,21 +44,23 @@ void usb_serial_start() {
 	 */
 // See also https://github.com/rusefi/rusefi/issues/705
 #ifndef EFI_SKIP_USB_DISCONNECT
-	usbDisconnectBus(serusbcfg.usbp);
+	usbDisconnectBus(serusbcfg[0].usbp);
 	chThdSleepMilliseconds(250);
 #endif/* EFI_SKIP_USB_DISCONNECT */
-	usbStart(serusbcfg.usbp, &usbcfg);
-	usbConnectBus(serusbcfg.usbp);
+	usbStart(serusbcfg[0].usbp, &usbcfg);
+	usbConnectBus(serusbcfg[0].usbp);
 
 	isUsbSerialInitialized = true;
 }
 
+// Primary CDC channel only
 bool is_usb_serial_ready() {
-	return isUsbSerialInitialized && SDU1.config->usbp->state == USB_ACTIVE;
+	return isUsbSerialInitialized && SDU[0].config->usbp->state == USB_ACTIVE;
 }
 
+// Primary CDC channel only
 void usb_serial_flush() {
-	usbTransmitWait(serusbcfg.usbp, serusbcfg.bulk_in);
+	usbTransmitWait(serusbcfg[0].usbp, serusbcfg[0].bulk_in);
 }
 
 #else

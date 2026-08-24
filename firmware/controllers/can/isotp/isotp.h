@@ -113,6 +113,10 @@ public:
 	// but some vendors add some specific data in first CAN byte
 	size_t isoHeaderByteIndex = 0;
 
+	// default padding byte
+	// Normally a "0xA" is used as padding since it will produce no stuffing bits on the CAN.
+	uint8_t paddingByte = 0x0A;
+
 	ICanTransmitter *txTransport;
 
 	size_t busIndex;

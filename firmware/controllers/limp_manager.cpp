@@ -1,8 +1,20 @@
+/**
+ * @file limp_manager.cpp
+ * @brief Limp-home / protection manager.
+ *
+ * Central place that decides when fuel, spark or engine power must be cut or limited.
+ * Aggregates the various protection inputs (RPM/CLT/oil-pressure/boost limits, lambda
+ * protection, etc.) into the allowed-injection/allowed-ignition state machine.
+ */
+
 #include "pch.h"
 
 #include "limp_manager.h"
 #include "fuel_math.h"
 #include "main_trigger_callback.h"
+#include "board_overrides.h"
+
+std::optional<setup_custom_bool_type> custom_board_requirePhaseSyncForFiring;
 
 #if EFI_ENGINE_CONTROL
 
@@ -13,6 +25,7 @@ static bool noFiringUntilVvtSync() {
 	auto operationMode = getEngineRotationState()->getOperationMode();
 
 	if (engineConfiguration->isPhaseSyncRequiredForIgnition) {
+	  warningTsReport(ObdCode::CUSTOM_NEED_PHASE, "Phase sync required per Setting");
 		// in rare cases engines do not like random sequential mode
 		return true;
 	}
@@ -30,10 +43,20 @@ static bool noFiringUntilVvtSync() {
 	// Symmetrical crank modes require cam sync before firing
 	// non-symmetrical cranks can use faster spin-up mode (firing in wasted/batch before VVT sync)
 	// Examples include Nissan MR/VQ, Miata NB, etc
-	return
+	// see limp.noFiringUntilCamSyncOnSymmetricalCrank unit test
+	bool result =
 		operationMode == FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR ||
 		operationMode == FOUR_STROKE_THREE_TIMES_CRANK_SENSOR ||
+		operationMode == FOUR_STROKE_FIVE_TIMES_CRANK_SENSOR ||
+		operationMode == FOUR_STROKE_SIX_TIMES_CRANK_SENSOR ||
 		operationMode == FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR;
+  if (result) {
+    float rpm = Sensor::getOrZero(SensorType::Rpm);
+    if (rpm > 200) { // only showing warning above specific RPM to reduce confusion
+	    warningTsReport(ObdCode::CUSTOM_SYMMETRICAL_CRANK, "Not firing until we get cam sync");
+    }
+	}
+	return result;
 }
 #endif // EFI_SHAFT_POSITION_INPUT
 
@@ -83,6 +106,12 @@ void LimpManager::updateState(float rpm, efitick_t nowNt) {
 		allowFuel.clear(ClearReason::Lua);
 	}
 
+	if (engineConfiguration->kickStartCranking && rpm < KICK_START_MODE_MAX_RPM) {
+		// normal spark scheduling is suppressed: kick-start logic in handleShaftSignal()
+		// fires both coils directly off the trigger edge, see #4569
+		allowSpark.clear(ClearReason::KickStart);
+	}
+
 	updateRevLimit(rpm);
 	if (m_revLimitHysteresis.test(rpm, m_revLimit, resumeRpm)) {
 		if (engineConfiguration->cutFuelOnHardLimit) {
@@ -99,14 +128,20 @@ void LimpManager::updateState(float rpm, efitick_t nowNt) {
 		allowFuel.clear(ClearReason::LambdaProtection);
 	}
 
-	if (noFiringUntilVvtSync()
-			&& !engine->triggerCentral.triggerState.hasSynchronizedPhase()) {
+  if (!engine->triggerCentral.triggerState.hasSynchronizedPhase()) {
+	  // The board hook is a dynamic version of isPhaseSyncRequiredForIgnition:
+	  // it can require phase sync for a bounded cranking window (while a
+	  // board-side phase detector votes) and then release, see board_overrides.h
+	  bool boardRequiresPhaseSync = custom_board_requirePhaseSyncForFiring.has_value()
+			  && custom_board_requirePhaseSyncForFiring.value()();
+	  if (noFiringUntilVvtSync() || boardRequiresPhaseSync) {
 		// Any engine that requires cam-assistance for a full crank sync (symmetrical crank) can't schedule until we have cam sync
 		// examples:
 		// NB2, Nissan VQ/MR: symmetrical crank wheel and we need to make sure no spark happens out of sync
 		// VTwin Harley: uneven firing order, so we need "cam" MAP sync to make sure no spark happens out of sync
-		allowFuel.clear(ClearReason::EnginePhase);
-		allowSpark.clear(ClearReason::EnginePhase);
+		  allowFuel.clear(ClearReason::EnginePhase);
+		  allowSpark.clear(ClearReason::EnginePhase);
+		}
 	}
 
 	// Force fuel limiting on the fault rev limit
@@ -179,7 +214,16 @@ void LimpManager::updateState(float rpm, efitick_t nowNt) {
 		m_lowOilPressureTimer.reset(nowNt);
 	}
 
-	// If we're in engine stop mode, inhibit fuel
+	// If we're in the engine-stop window (a stop was requested recently via start button, Lua,
+	// console, TS command or a board hook - see ShutdownController::isEngineStop and
+	// StopRequestedReason), inhibit fuel so the engine actually winds down instead of restarting
+	// from residual trigger events.
+	//
+	// Note: this works together with RpmCalculator::checkIfSpinning(), which also consults
+	// shutdownController.isEngineStop() and forces the "not spinning" state during the same
+	// window. That in turn lets trigger-related state (noise filter accumulators, shaft sync,
+	// instant-RPM state) be reset cleanly via RpmCalculator::setStopSpinning() ->
+	// triggerCentral.noiseFilter.resetAccumSignalData() and engine->onEngineStopped().
 	if (shutdownController.isEngineStop(nowNt)) {
 		/**
 		 * todo: we need explicit clarification on why do we cut fuel but do not cut spark here!

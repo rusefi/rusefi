@@ -114,11 +114,23 @@ bool RpmCalculator::isRunning() const {
 
 /**
  * @return true if engine is spinning (cranking or running)
+ *
+ * If a stop was recently requested (see ShutdownController::isEngineStop and
+ * StopRequestedReason - start button, Lua, console, TS command, board hook), we
+ * deliberately return false here even if trigger pulses are still arriving while the
+ * engine winds down. This guarantees the engine is treated as stopped during the
+ * shutdown window, which - via the STOPPED state path and RpmCalculator::setStopSpinning() -
+ * lets trigger state (noise filter accumulators, shaft sync, instant-RPM history) be
+ * reset cleanly without re-entering RUNNING/CRANKING from leftover trigger events.
  */
 bool RpmCalculator::checkIfSpinning(efitick_t nowNt) const {
+#if EFI_ENGINE_CONTROL
+	// Engine-stop window: force "not spinning" so the rest of the code path resets trigger
+	// state instead of latching back into a running state from residual trigger pulses.
 	if (getLimpManager()->shutdownController.isEngineStop(nowNt)) {
 		return false;
 	}
+#endif // EFI_ENGINE_CONTROL
 
 	// Anything below 60 rpm is not running
 	bool noRpmEventsForTooLong = lastTdcTimer.getElapsedSeconds(nowNt) > NO_RPM_EVENTS_TIMEOUT_SECS;
@@ -162,7 +174,10 @@ void RpmCalculator::setRpmValue(float value) {
 	}
 
 	assignRpmValue(value);
+#if EFI_ENGINE_CONTROL
+	// only read in the guarded cranking-to-running transition check below
 	spinning_state_e oldState = state;
+#endif // EFI_ENGINE_CONTROL
 	// Change state
 	if (cachedRpmValue == 0) {
 		// Reset minCrankingRpm between attempts
@@ -209,6 +224,16 @@ void RpmCalculator::onNewEngineCycle() {
 	revolutionCounterSinceStart++;
 }
 
+void RpmCalculator::onEnginePhaseResync() {
+	m_cyclePeriodDisturbed = true;
+}
+
+bool RpmCalculator::consumeCyclePeriodDisturbed() {
+	bool result = m_cyclePeriodDisturbed;
+	m_cyclePeriodDisturbed = false;
+	return result;
+}
+
 uint32_t RpmCalculator::getRevolutionCounterM(void) const {
 	return revolutionCounterSinceBoot;
 }
@@ -220,19 +245,38 @@ void RpmCalculator::onSlowCallback() {
 	}
 }
 
+/**
+ * Called when we conclude the engine is no longer spinning - either because no trigger events
+ * have been seen for a while (see RpmCalculator::onSlowCallback -> engineMovedRecently) or as
+ * part of an explicit engine stop request (see ShutdownController / LimpManager).
+ *
+ * This is where trigger-related state is reset back to a clean "engine off" baseline so that
+ * the next start attempt begins from a known state:
+ *   - noise filter accumulators are cleared (required by 'useNoiselessTriggerDecoder')
+ *   - revolution counter since start is zeroed
+ *   - cached RPM and rpmRate are zeroed
+ *   - spinning_state_e is forced to STOPPED
+ *   - engine->onEngineStopped() notifies all engine modules so they can reset their own
+ *     per-run state (trigger sync, instant RPM, schedulers, etc.) - see Engine::onEngineStopped.
+ */
 void RpmCalculator::setStopSpinning() {
 	isSpinning = false;
 	revolutionCounterSinceStart = 0;
 	rpmRate = 0;
+	m_cyclePeriodDisturbed = false;
 
 	if (cachedRpmValue != 0) {
 		assignRpmValue(0);
+		// Reset trigger-decoder noise filter accumulators - otherwise stale per-tooth statistics
+		// from the previous run would bias the noiseless trigger decoder on the next start.
 		// needed by 'useNoiselessTriggerDecoder'
 		engine->triggerCentral.noiseFilter.resetAccumSignalData();
 		efiPrintf("engine stopped");
 	}
 	state = STOPPED;
 
+	// Broadcast "engine stopped" to all engine modules so they can reset their own state
+	// (trigger sync, instant RPM history, schedulers, etc.). See Engine::onEngineStopped.
 	engine->onEngineStopped();
 }
 
@@ -275,6 +319,11 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 
 		float periodSeconds = engine->rpmCalculator.lastTdcTimer.getElapsedSecondsAndReset(nowNt);
 
+		// An engine phase re-sync since the previous cycle start shifted which trigger cycle
+		// begins the engine cycle, so 'periodSeconds' does not span exactly one engine cycle.
+		// Drop this one sample, otherwise RPM momentarily reads double on a crank-speed trigger.
+		bool cyclePeriodDisturbed = rpmState->consumeCyclePeriodDisturbed();
+
 		if (hadRpmRecently) {
 		/**
 		 * Four stroke cycle is two crankshaft revolutions
@@ -283,7 +332,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		 * and each revolution of crankshaft consists of two engine cycles revolutions
 		 *
 		 */
-			if (!alwaysInstantRpm) {
+			if (!alwaysInstantRpm && !cyclePeriodDisturbed) {
 				if (periodSeconds == 0) {
 					rpmState->setRpmValue(0);
 					rpmState->rpmRate = 0;
@@ -337,6 +386,7 @@ float RpmCalculator::getSecondsSinceEngineStart(efitick_t nowNt) const {
  * This callback has nothing to do with actual engine control, it just sends a Top Dead Center mark to the rusEfi console
  * digital sniffer.
  */
+#if EFI_ENGINE_CONTROL
 static void onTdcCallback() {
 #if EFI_UNIT_TEST
 	if (!engine->needTdcCallback) {
@@ -350,12 +400,14 @@ static void onTdcCallback() {
 	LogTriggerTopDeadCenter(getTimeNowNt());
 #endif /* EFI_TOOTH_LOGGER */
 }
+#endif // EFI_ENGINE_CONTROL
 
 /**
  * This trigger callback schedules the actual physical TDC callback in relation to trigger synchronization point.
  */
 void tdcMarkCallback(
 		uint32_t trgEventIndex, efitick_t nowNt) {
+#if EFI_ENGINE_CONTROL
 	bool isTriggerSynchronizationPoint = trgEventIndex == 0;
 	if (isTriggerSynchronizationPoint && getTriggerCentral()->isEngineSnifferEnabled) {
 
@@ -377,6 +429,11 @@ void tdcMarkCallback(
 			scheduleByAngle(&engine->tdcScheduler[revIndex2], nowNt, tdcPosition, action_s::make<onTdcCallback>());
 		}
 	}
+#else
+	// no tdcScheduler to schedule the engine sniffer TDC mark on without engine control
+	UNUSED(trgEventIndex);
+	UNUSED(nowNt);
+#endif // EFI_ENGINE_CONTROL
 }
 
 /**

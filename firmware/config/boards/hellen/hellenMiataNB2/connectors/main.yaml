@@ -9,7 +9,7 @@ pins:
     id: G7
     class: outputs
     ts_name: 2A - INJ_1
-    function: Injector #1
+    function: Injector 1
     type: inj
     color: orange Y1
 
@@ -33,7 +33,7 @@ pins:
     id: G8
     class: outputs
     ts_name: 2D - INJ_2
-    function: Injector #2
+    function: Injector 2
     type: inj
     color: blue Y1
 
@@ -56,7 +56,7 @@ pins:
     id: D11
     class: outputs
     ts_name: 2G - INJ_3
-    function: Injector #3
+    function: Injector 3
     type: inj
     color: white Y1
 
@@ -79,7 +79,7 @@ pins:
     id: D10
     class: outputs
     ts_name: 2J - INJ_4
-    function: Injector #4
+    function: Injector 4
     type: inj
     color: green Y1
 
@@ -109,6 +109,7 @@ pins:
     id: E4
     class: outputs
     ts_name: 2O - IGN_3
+    function: Smart Ignition Coil 3
     type: ign
 
   - pin: 2P
@@ -166,7 +167,7 @@ pins:
     id: I8
     class: outputs
     ts_name: 3F - IGN_1 (1&4)
-    function: Coil #1
+    function: Smart Ignition Coil 1
     type: ign
     color: white B4
 
@@ -182,7 +183,7 @@ pins:
     id: E5
     class: outputs
     ts_name: 3I - IGN_2 (2&3)
-    function: Coil #2
+    function: Smart Ignition Coil 2
     type: ign
     color: orange B4
 
@@ -214,6 +215,7 @@ pins:
     id: E3
     class: outputs
     ts_name: 3N - IGN_4
+    function: Smart Ignition Coil 4
     type: ign
 
   - pin: 3O
@@ -279,7 +281,7 @@ pins:
     type: ign
 
   - pin: 4A
-    function: Ground
+    function: Power/Chassis GND ground
     type: gnd
     color: black W4
 
@@ -354,19 +356,21 @@ pins:
     id: EFI_ADC_13
     class: analog_inputs
     ts_name: 4N - IAT (A14)
-    function: IAT sensor
+    function: IAT Sensor Input
+    type: at
     color: green B2
 
   - pin: 4O
-    function: Sensor GND
-    type: gnd
+    function: GNDA Analog/Sensor Ground
+    type: agnd
     color: black B2
 
   - pin: 4P
     id: EFI_ADC_12
     class: analog_inputs
     ts_name: 4P - CLT (A11)
-    function: CLT sensor
+    function: ECT CLT Coolant Sensor Input
+    type: at
     color: blue B2
 
   - pin: 4Q
@@ -507,7 +511,8 @@ pins:
  #   function: high output
 
   - pin: 5H
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 5I
     id: E12
@@ -554,10 +559,12 @@ pins:
     function: +5v
 
   - pin: 5T
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 5U
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 5V
     function: +12V
@@ -566,7 +573,8 @@ pins:
     function: +12V
 
   - pin: 5X
-    function: GND
+    function: Power/Chassis GND ground
+    type: gnd
 
   - pin: 5Z
     function: WBO_Vs/Ip

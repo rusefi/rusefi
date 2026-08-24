@@ -18,10 +18,10 @@ pins:
 #    color: grey
 
   - pin: 3C
-    function: WBO2 SWD
+    function: WBO2 SWD (low-level controller programming access)
 
   - pin: 4C
-    function: WBO2 SWC
+    function: WBO2 SWC (low-level controller programming access)
 
   - pin: 5C
     function: WBO2 Vs (Un) (pin 6)
@@ -44,17 +44,17 @@ pins:
     color: yellow
 
   - pin: 9C
-    function: WBO2 Heater Negative (pin 3)
+    function: WBO2 Heater Negative (pin 3) (and heater +12 could use 11C)
     color: white
     type: wbo
 
   - pin: 10C
-    function: +12v from main relay INPUT
+    function: +12v from main relay (ecu input to feed h-bridges)
     type: 12V
     color: red
 
   - pin: 11C
-    function: +12v from main relay OUTPUT
+    function: +12v from main relay OUTPUT (most users would NOT use this. hard-wired via fuse for auxiliary pin to daisy chain switched power to consumers like WBO heater)
     type: 12V
 
   - pin: 12C
@@ -77,7 +77,7 @@ pins:
 #    function:
 
   - pin: 18C
-    function: +12v from main relay OUTPUT
+    function: +12v from main relay OUTPUT (most users would NOT use this. hard-wired via fuse for auxiliary pin to daisy chain switched power to consumers like WBO heater)
     type: 12V
 
 #  - pin: 19C
@@ -87,13 +87,13 @@ pins:
 #    function:
 
   - pin: 21C
-    function: GND
-    type: GND
+    function: Power/Chassis GND ground
+    type: gnd
 #   color: red / black
 
   - pin: 22C
-    function: GND
-    type: GND
+    function: Power/Chassis GND ground
+    type: gnd
 #   color: red / black
 
 #  - pin: 23C
@@ -121,14 +121,14 @@ pins:
     ts_name: ___ LS6_HOT
     meta: MM100_IGN8
     class: outputs
-    function: Low-Side 6 fuel relay always hot / relay capable output
+    function: Low-Side 6 fuel relay (always hot capable / relay capable output)
     type: ls
 
   - pin: 30C
     ts_name: ___ LS5_HOT
     meta: MM100_IGN7
     class: outputs
-    function: Low-Side 5 main relay / always hot / relay capable output
+    function: Low-Side 5 main relay Control Output (always hot capable / relay capable output)
     type: ls
 
   - pin: 31C

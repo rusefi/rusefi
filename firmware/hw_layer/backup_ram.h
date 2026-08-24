@@ -26,6 +26,22 @@ enum class backup_ram_e {
 	 */
 	IgnCounter,
 
+	/**
+	 * MMC card status
+	 * 32 bits value, see mmc_card.c for details
+	 */
+	MccStatus,
+
+	/**
+	 * Odometer value in meters, 32 bit - 4m Km should be fine
+	 */
+	Odometer,
+
+	/**
+	 * Odometer inverted (or other way modified) values to validate backup_ram_e::Odometer by high level code
+	 */
+	OdometerValidate,
+
 	/* The number of stored backup variables */
 	BACKUP_RAM_NUM,
 };

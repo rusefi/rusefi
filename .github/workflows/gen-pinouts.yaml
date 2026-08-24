@@ -14,10 +14,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
 
     - name: Generate Pinouts
-      uses: chuckwagoncomputing/interactive-pinout@2.17
+      uses: chuckwagoncomputing/interactive-pinout@2.18
       with:
         mapping-path: firmware/config/boards/*/connectors/*.yaml
         warnings: "false"
@@ -63,8 +63,7 @@ jobs:
           "inj":"maroon",
           "ls":"lightgreen",
           "mr":"firebrick",
-          "pgnd":"coral",
-          "sgnd":"olive",
+          "agnd":"olive",
           "usb":"lightseagreen",
           "vr":"sienna"
           }

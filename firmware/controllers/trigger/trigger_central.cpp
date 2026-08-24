@@ -23,6 +23,7 @@
 #include "status_loop.h"
 #include "engine_sniffer.h"
 #include "auto_generated_sync_edge.h"
+#include "board_overrides.h"
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
@@ -97,6 +98,8 @@ int getCrankDivider(operation_mode_e operationMode) {
 		return SYMMETRICAL_CRANK_SENSOR_DIVIDER;
 	case FOUR_STROKE_THREE_TIMES_CRANK_SENSOR:
 		return SYMMETRICAL_THREE_TIMES_CRANK_SENSOR_DIVIDER;
+	case FOUR_STROKE_FIVE_TIMES_CRANK_SENSOR:
+		return SYMMETRICAL_FIVE_TIMES_CRANK_SENSOR_DIVIDER;
 	case FOUR_STROKE_SIX_TIMES_CRANK_SENSOR:
 		return SYMMETRICAL_SIX_TIMES_CRANK_SENSOR_DIVIDER;
 	case FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR:
@@ -136,11 +139,34 @@ static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 angle_t TriggerCentral::syncEnginePhaseAndReport(int divider, int remainder) {
 	angle_t engineCycle = getEngineCycle(getEngineRotationState()->getOperationMode());
 
+	int oldSyncCounter = triggerState.getSynchronizationCounter();
 	angle_t totalShift = triggerState.syncEnginePhase(divider, remainder, engineCycle);
 	if (totalShift != 0) {
-		// Reset instant RPM, since the engine phase has now changed, invalidating the tooth history buffer
-		// maybe TODO: could/should we rotate the buffer around to re-align it instead? Is that worth it?
-		instantRpm.resetInstantRpm();
+		int newSyncCounter = triggerState.getSynchronizationCounter();
+		int indexOffset = (newSyncCounter - oldSyncCounter) * triggerShape.getSize();
+
+		instantRpm.offsetIndices(indexOffset);
+
+		// Adjust phase-dependent variables
+		if (expectedNextPhase) {
+			expectedNextPhase.Value = wrapAngleMethod(expectedNextPhase.Value - totalShift, "syncEnginePhase", ObdCode::CUSTOM_ERR_6555);
+		}
+		m_lastToothPhaseFromSyncPoint = wrapAngleMethod(m_lastToothPhaseFromSyncPoint - totalShift, "syncEnginePhase", ObdCode::CUSTOM_ERR_6555);
+		triggerToothAngleError = 0;
+
+#if EFI_ENGINE_CONTROL
+		// Reset schedulers to avoid "out-of-order" warnings/errors when transitioning phase
+		engine->injectionEvents.resetOverlapping();
+#endif // EFI_ENGINE_CONTROL
+
+		// On a crank-speed trigger the sync counter parity picks which trigger cycle starts the
+		// engine cycle, so a parity-changing shift means the next trigger index 0 is no longer one
+		// full engine cycle after the previous one - that cycle-RPM sample must be discarded.
+		// On a cam-speed trigger (crank divider 1) index 0 cadence is not affected.
+		int crankDivider = getCrankDivider(triggerShape.getWheelOperationMode());
+		if ((newSyncCounter - oldSyncCounter) % crankDivider != 0) {
+			engine->rpmCalculator.onEnginePhaseResync();
+		}
 	}
 	return totalShift;
 }
@@ -179,7 +205,7 @@ static angle_t adjustCrankPhase(int camIndex) {
 	case VVT_SINGLE_TOOTH:
 	case VVT_NISSAN_VQ:
 	case VVT_BOSCH_QUICK_START:
-	case VVT_BMW_N63TU:
+	case VVT_BMW_VANOS_RELUCTOR:
 	case VVT_MIATA_NB:
 	case VVT_TOYOTA_3TOOTH_UZ:
 	case VVT_TOYOTA_3_TOOTH:
@@ -199,6 +225,7 @@ static angle_t adjustCrankPhase(int camIndex) {
 	case VVT_HONDA_K_EXHAUST:
 	case VVT_HONDA_CBR_600:
 	case VVT_SUBARU_7TOOTH:
+	case VVT_MITSUBISHI_6G75:
 		return tc->syncEnginePhaseAndReport(crankDivider, 0);
 	case VVT_CUSTOM_25:
 	case VVT_CUSTOM_26:
@@ -210,6 +237,9 @@ static angle_t adjustCrankPhase(int camIndex) {
         [[fallthrough]];
 	case VVT_CUSTOM_1:
 	case VVT_CUSTOM_2:
+	case VVT_CUSTOM_3:
+	case VVT_CUSTOM_4:
+	case VVT_CUSTOM_5:
 	case VVT_INACTIVE:
 		// do nothing
 		return 0;
@@ -232,27 +262,23 @@ static angle_t wrapVvt(angle_t vvtPosition, int period) {
 }
 
 static void logVvtFront(bool useOnlyRise, bool isImportantFront, TriggerValue front, efitick_t nowNt, int index) {
+	UNUSED(nowNt);
 	if (!useOnlyRise || engineConfiguration->displayLogicLevelsInEngineSniffer) {
 		// If we care about both edges OR displayLogicLevel is set, log every front exactly as it is
 		addEngineSnifferVvtEvent(index, front == TriggerValue::RISE ? FrontDirection::UP : FrontDirection::DOWN);
-
-#if EFI_TOOTH_LOGGER
-		LogTriggerCamTooth(front == TriggerValue::RISE, nowNt, index);
-#else
-  UNUSED(nowNt);
-#endif /* EFI_TOOTH_LOGGER */
 	} else {
 		if (isImportantFront) {
 			// On the important edge, log a rise+fall pair, and nothing on the real falling edge
 			addEngineSnifferVvtEvent(index, FrontDirection::UP);
 			addEngineSnifferVvtEvent(index, FrontDirection::DOWN);
-
-#if EFI_TOOTH_LOGGER
-			LogTriggerCamTooth(true, nowNt, index);
-			LogTriggerCamTooth(false, nowNt, index);
-#endif /* EFI_TOOTH_LOGGER */
 		}
 	}
+
+#if EFI_TOOTH_LOGGER
+	LogCamTriggerTooth(nowNt, index, front == TriggerValue::RISE);
+#else
+	UNUSED(nowNt);
+#endif /* EFI_TOOTH_LOGGER */
 }
 
 static bool tooSoonToHandleSignal() {
@@ -483,6 +509,47 @@ void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 	handleShaftSignal(signalIndex, isRising, timestamp);
 }
 
+#if EFI_ENGINE_CONTROL
+static scheduling_s kickStartScheduling;
+
+static void kickStartFire() {
+	// Fire both coils!
+	enginePins.coils[0].setLow();
+	enginePins.coils[1].setLow();
+}
+
+/**
+ * Kick-start cranking mode for Ural bikes #4569: while the engine spins too slowly for normal
+ * angle-based spark scheduling, charge both coils right at the trigger mark and fire them
+ * a dwell-time later. LimpManager suppresses normal spark output (ClearReason::KickStart)
+ * while this mode is active.
+ *
+ * "I see the trigger mark, after 3ms I plan to ignite in both cylinders"
+ */
+static void handleKickStart(trigger_event_e signal, efitick_t timestamp) {
+	if (!engineConfiguration->kickStartCranking || !engineConfiguration->isIgnitionEnabled) {
+		return;
+	}
+	if (signal != SHAFT_PRIMARY_RISING) {
+		return;
+	}
+	if (Sensor::getOrZero(SensorType::Rpm) >= KICK_START_MODE_MAX_RPM) {
+		return;
+	}
+	floatms_t dwellMs = engine->ignitionState.getDwell();
+	if (std::isnan(dwellMs) || dwellMs <= 0) {
+		// refuse to charge a coil we would not know when to release
+		return;
+	}
+	// charge both coils now...
+	enginePins.coils[0].setHigh();
+	enginePins.coils[1].setHigh();
+	// ...and fire them once the dwell period is over
+	// if the previous fire event is still pending the scheduler ignores this reschedule
+	engine->scheduler.schedule("kickstart", &kickStartScheduling, sumTickAndFloat(timestamp, MSF2NT(dwellMs)), action_s::make<kickStartFire>());
+}
+#endif // EFI_ENGINE_CONTROL
+
 // Handle all shaft signals - hardware or emulated both
 void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 	bool isPrimary = signalIndex == 0;
@@ -507,23 +574,24 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 		engine->outputChannels.triggerChannel2 = signal == SHAFT_SECONDARY_RISING;
 	}
 
+#if EFI_ENGINE_CONTROL
 	// Don't accept trigger input in case of some problems
 	if (!getLimpManager()->allowTriggerInput()) {
 		return;
 	}
+
+	handleKickStart(signal, timestamp);
+#endif // EFI_ENGINE_CONTROL
 
 #if EFI_TOOTH_LOGGER
 	// Log to the Tunerstudio tooth logger
 	// We want to do this before anything else as we
 	// actually want to capture any noise/jitter that may be occurring
 
-	bool logLogicState = engineConfiguration->displayLogicLevelsInEngineSniffer && getTriggerCentral()->triggerShape.useOnlyRisingEdges;
-
-	if (!logLogicState) {
-		// we log physical state even if displayLogicLevelsInEngineSniffer if both fronts are used by decoder
-		LogTriggerTooth(signal, timestamp);
+	// only primary, respect invert settings
+	if (isPrimary) {
+		LogPrimaryTriggerTooth(timestamp, signal == SHAFT_PRIMARY_RISING);
 	}
-
 #endif /* EFI_TOOTH_LOGGER */
 
 	// for effective noise filtering, we need both signal edges,
@@ -536,19 +604,6 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 			return;
 		}
 	}
-
-#if EFI_TOOTH_LOGGER
-	if (logLogicState) {
-		// first log rising normally
-		LogTriggerTooth(signal, timestamp);
-		// in 'logLogicState' mode we log opposite front right after logical rising away
-		if (signal == SHAFT_PRIMARY_RISING) {
-			LogTriggerTooth(SHAFT_PRIMARY_FALLING, timestamp);
-		} else {
-			LogTriggerTooth(SHAFT_SECONDARY_FALLING, timestamp);
-		}
-	}
-#endif /* EFI_TOOTH_LOGGER */
 
 	uint32_t triggerHandlerEntryTime = getTimeNowLowerNt();
 	if (triggerReentrant > maxTriggerReentrant)
@@ -787,7 +842,10 @@ bool TriggerCentral::isToothExpectedNow(efitick_t timestamp) {
 	return true;
 }
 
-PUBLIC_API_WEAK bool boardAllowTriggerActions() { return true; }
+// todo: make this static in Dec 2026
+bool boardAllowTriggerActions() {
+	return get_board_override_result(custom_board_boardAllowTriggerActions, true);
+}
 
 angle_t TriggerCentral::findNextTriggerToothAngle(int p_currentToothIndex) {
   int currentToothIndex = p_currentToothIndex;
@@ -923,8 +981,10 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 			engine->module<TpsAccelEnrichment>()->onEngineCycleTps();
 		}
 
+#if EFI_ENGINE_CONTROL
 		// Handle ignition and injection
 		mainTriggerCallback(triggerIndexForListeners, timestamp, currentEngineDecodedPhase, nextPhase);
+#endif // EFI_ENGINE_CONTROL
 
     temp_mapVvt_index = triggerIndexForListeners / 2;
 
@@ -940,8 +1000,8 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	}
 }
 
-static void triggerShapeInfo() {
 #if EFI_PROD_CODE || EFI_SIMULATOR
+static void triggerShapeInfo() {
 	TriggerWaveform *shape = &getTriggerCentral()->triggerShape;
 	TriggerFormDetails *triggerFormDetails = &getTriggerCentral()->triggerFormDetails;
 	efiPrintf("syncEdge=%s", getSyncEdge(TRIGGER_WAVEFORM(syncEdge)));
@@ -950,8 +1010,8 @@ static void triggerShapeInfo() {
 	for (size_t i = 0; i < shape->getSize(); i++) {
 		efiPrintf("event %d %.2f", i, triggerFormDetails->eventAngles[i]);
 	}
-#endif
 }
+#endif // EFI_PROD_CODE || EFI_SIMULATOR
 
 #if EFI_PROD_CODE
 extern PwmConfig triggerEmulatorSignals[NUM_EMULATOR_CHANNELS];
@@ -1048,12 +1108,12 @@ void triggerInfo(void) {
 
 }
 
+#if EFI_PROD_CODE || EFI_SIMULATOR
 static void resetRunningTriggerCounters() {
-#if !EFI_UNIT_TEST
 	getTriggerCentral()->resetCounters();
 	triggerInfo();
-#endif
 }
+#endif // EFI_PROD_CODE || EFI_SIMULATOR
 
 void onConfigurationChangeTriggerCallback() {
 	bool changed = false;
@@ -1100,7 +1160,7 @@ void onConfigurationChangeTriggerCallback() {
 	#endif
 	}
 #if EFI_DETAILED_LOGGING
-	efiPrintf("isTriggerConfigChanged=%d", triggerConfigChanged);
+	efiPrintf("isTriggerConfigChanged=%d", changed);
 #endif /* EFI_DETAILED_LOGGING */
 
 	// we do not want to miss two updates in a row

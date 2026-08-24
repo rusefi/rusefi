@@ -1,3 +1,11 @@
+/**
+ * @file lua_can_rx.cpp
+ * @brief Lua CAN receive support.
+ *
+ * Implements the CAN frame filtering and buffering that lets Lua scripts subscribe
+ * to and read incoming CAN messages via the onCanRx hook.
+ */
+
 #include "pch.h"
 
 #include "can_filter.h"

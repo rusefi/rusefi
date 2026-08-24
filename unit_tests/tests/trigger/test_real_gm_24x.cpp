@@ -2,9 +2,6 @@
 #include "real_trigger_helper.h"
 
 TEST(crankingGm24x_5, gmRealCrankingFromFile) {
-	extern bool unitTestTaskNoFastCallWhileAdvancingTimeHack;
-	unitTestTaskNoFastCallWhileAdvancingTimeHack = true;
-
 	RealTriggerHelper helper;
 	helper.expectedFirstRpm = 77;
 	helper.expectedFirstRpmLineIndex = 23;

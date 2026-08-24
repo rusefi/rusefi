@@ -9,10 +9,19 @@
 #include "global.h"
 #include "tunerstudio_io.h"
 
+// [tag:ts_page_table] these page identifiers must agree with the generator's TS_PAGES table
+// (TSProjectConsumer.java) and the @@TS_PAGE_*@@ block in tunerstudio.template.ini - see issue #9699
 #define TS_PAGE_SETTINGS			0x0000
 // Issue TS zeroes LSB byte of pageIdentifier
 #define TS_PAGE_SCATTER_OFFSETS		0x0100
 #define TS_PAGE_LTFT_TRIMS			0x0200
+#define TS_PAGE_SECOND_TABLES		0x0300
+#define TS_PAGE_LUA					0x0400
+
+// Special RusEFI pages accessable only using READ32 command
+// Two MSB bytes are "RE"
+#define TS_PAGE_FS_IMAGE_SIZE		0x52450000
+#define TS_PAGE_FS_IMAGE_DATA		0x52450001
 
 typedef struct {
 	int queryCommandCounter;
@@ -56,6 +65,9 @@ int getSecondsSinceChannelsRequest();
 void updateTunerStudioState();
 
 bool isTuningVeNow();
+#if EFI_UNIT_TEST
+void resetCalibrationTimerForTest();
+#endif
 void startTunerStudioConnectivity();
 bool needToTriggerTsRefresh();
 void onApplyPreset();
@@ -74,7 +86,7 @@ struct TunerStudioPageRWChunkRequest {
 static_assert(sizeof(TunerStudioPageRWChunkRequest) == 6);
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
-#define CONNECTIVITY_THREAD_STACK (3 * UTILITY_THREAD_STACK_SIZE)
+#define CONNECTIVITY_THREAD_STACK (3*UTILITY_THREAD_STACK_SIZE)
 
 class TunerstudioThread : public ThreadController<CONNECTIVITY_THREAD_STACK> {
 public:
@@ -88,6 +100,15 @@ public:
 
 	void ThreadTask() override;
 
+	static bool isAnyConsoleActive(void);
+
+private:
+	static int getInstanceCounter() {
+		static int instances = 0;
+		return instances++;
+	}
+	static inline uint32_t consoleActiveMask = 0;
+	static void onDataArrived(int instance, bool valid);
 };
 #endif
 

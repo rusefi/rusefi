@@ -160,6 +160,9 @@ float getOutputValueByHash(const int hash) {
 // VBatt
 		case 277722310:
 			return engine->outputChannels.VBatt;
+// VIgn
+		case 2090832025:
+			return engine->outputChannels.VIgn;
 // oilPressure
 		case 598268994:
 			return engine->outputChannels.oilPressure;
@@ -193,6 +196,15 @@ float getOutputValueByHash(const int hash) {
 // wallFuelCorrectionValue
 		case -1511514122:
 			return engine->outputChannels.wallFuelCorrectionValue;
+// flexAeMultiplier
+		case -1150933023:
+			return engine->outputChannels.flexAeMultiplier;
+// flexWwTauMultiplier
+		case 740257907:
+			return engine->outputChannels.flexWwTauMultiplier;
+// flexWwBetaMultiplier
+		case 644684517:
+			return engine->outputChannels.flexWwBetaMultiplier;
 // revolutionCounterSinceStart
 		case -1555114948:
 			return engine->outputChannels.revolutionCounterSinceStart;
@@ -490,6 +502,12 @@ float getOutputValueByHash(const int hash) {
 // effectiveMap
 		case -1724101868:
 			return engine->outputChannels.effectiveMap;
+// predTimerResetCnt
+		case -1457567239:
+			return engine->outputChannels.predTimerResetCnt;
+// mapPredEventOver
+		case -1250788372:
+			return engine->outputChannels.mapPredEventOver;
 // instantMAPValue
 		case -1162308767:
 			return engine->outputChannels.instantMAPValue;
@@ -628,6 +646,18 @@ float getOutputValueByHash(const int hash) {
 // rawBattery
 		case 1520918538:
 			return engine->outputChannels.rawBattery;
+// secondVeBlendParameter
+		case 778639874:
+			return engine->outputChannels.secondVeBlendParameter;
+// secondVeBlendBias
+		case 173882720:
+			return engine->outputChannels.secondVeBlendBias;
+// secondIgnitionBlendParameter
+		case 1275938568:
+			return engine->outputChannels.secondIgnitionBlendParameter;
+// secondIgnitionBlendBias
+		case 441036454:
+			return engine->outputChannels.secondIgnitionBlendBias;
 // coilState1
 		case -1124698530:
 			return engine->outputChannels.coilState1;
@@ -721,6 +751,9 @@ float getOutputValueByHash(const int hash) {
 // isMapPredictionActive
 		case 884518764:
 			return engine->outputChannels.isMapPredictionActive;
+// isFlexError
+		case 43207706:
+			return engine->outputChannels.isFlexError;
 // outputRequestPeriod
 		case 1894184322:
 			return engine->outputChannels.outputRequestPeriod;
@@ -865,6 +898,9 @@ float getOutputValueByHash(const int hash) {
 // sd_error
 		case -1811686395:
 			return engine->outputChannels.sd_error;
+// sdLoggingState
+		case -1766098652:
+			return engine->outputChannels.sdLoggingState;
 // fastAdcOverrunCount
 		case -1422787851:
 			return engine->outputChannels.fastAdcOverrunCount;
@@ -898,6 +934,21 @@ float getOutputValueByHash(const int hash) {
 // transitionEventsCounter
 		case 1163075685:
 			return engine->outputChannels.transitionEventsCounter;
+// cltResistance
+		case -1105741991:
+			return engine->outputChannels.cltResistance;
+// iatResistance
+		case 2145185076:
+			return engine->outputChannels.iatResistance;
+// auxTemp1Resistance
+		case 261721451:
+			return engine->outputChannels.auxTemp1Resistance;
+// auxTemp2Resistance
+		case -1795800404:
+			return engine->outputChannels.auxTemp2Resistance;
+// instantRpmRange
+		case -748456478:
+			return engine->outputChannels.instantRpmRange;
 // baseDwell
 		case -1777838088:
 			return engine->ignitionState.baseDwell;
@@ -979,6 +1030,12 @@ float getOutputValueByHash(const int hash) {
 // m_knockFuelTrimMultiplier
 		case 95716118:
 			return engine->module<KnockController>()->m_knockFuelTrimMultiplier;
+// hasKnockRecently
+		case -96478755:
+			return engine->module<KnockController>()->hasKnockRecently;
+// hasKnockRetardNow
+		case 1438916461:
+			return engine->module<KnockController>()->hasKnockRetardNow;
 // m_isPriming
 		case -612624925:
 			return engine->module<PrimeController>()->m_isPriming;
@@ -1012,6 +1069,18 @@ float getOutputValueByHash(const int hash) {
 // fan1radiatorFanStatus
 		case -1478067590:
 			return engine->module<FanControl1>()->radiatorFanStatus;
+// fan1pwmCurvePwm
+		case 86008152:
+			return engine->module<FanControl1>()->pwmCurvePwm;
+// fan1pwmTargetPwm
+		case -850386982:
+			return engine->module<FanControl1>()->pwmTargetPwm;
+// fan1pwmAppliedPwm
+		case -1368130286:
+			return engine->module<FanControl1>()->pwmAppliedPwm;
+// fan1pwmActive
+		case 638039515:
+			return engine->module<FanControl1>()->pwmActive;
 // fan2cranking
 		case 1841224793:
 			return engine->module<FanControl2>()->cranking;
@@ -1042,6 +1111,18 @@ float getOutputValueByHash(const int hash) {
 // fan2radiatorFanStatus
 		case -1778606949:
 			return engine->module<FanControl2>()->radiatorFanStatus;
+// fan2pwmCurvePwm
+		case 907263673:
+			return engine->module<FanControl2>()->pwmCurvePwm;
+// fan2pwmTargetPwm
+		case 481241435:
+			return engine->module<FanControl2>()->pwmTargetPwm;
+// fan2pwmAppliedPwm
+		case -374065485:
+			return engine->module<FanControl2>()->pwmAppliedPwm;
+// fan2pwmActive
+		case 705840892:
+			return engine->module<FanControl2>()->pwmActive;
 // isPrime
 		case -1429286498:
 			return engine->module<FuelPumpController>()->isPrime;
@@ -1138,6 +1219,12 @@ float getOutputValueByHash(const int hash) {
 // acrActive
 		case -1548941801:
 			return engine->engineState.acrActive;
+// isSecondVeTableActive
+		case 2127810012:
+			return engine->engineState.isSecondVeTableActive;
+// isSecondIgnitionTableActive
+		case -643103326:
+			return engine->engineState.isSecondIgnitionTableActive;
 // acrEngineMovedRecently
 		case -791147982:
 			return engine->engineState.acrEngineMovedRecently;
@@ -1219,7 +1306,63 @@ float getOutputValueByHash(const int hash) {
 // isEnabled0
 		case 1691876092:
 			return engine->dc_motors.isEnabled0;
-#if EFI_BOOST_CONTROL
+#if EFI_ENGINE_CONTROL
+// totalFuelCorrection
+		case -1779658835:
+			return engine->fuelComputer.totalFuelCorrection;
+// running.postCrankingFuelCorrection
+		case -1288205717:
+			return engine->fuelComputer.running.postCrankingFuelCorrection;
+// running.intakeTemperatureCoefficient
+		case 197173469:
+			return engine->fuelComputer.running.intakeTemperatureCoefficient;
+// running.coolantTemperatureCoefficient
+		case 1822238385:
+			return engine->fuelComputer.running.coolantTemperatureCoefficient;
+// running.timeSinceCrankingInSecs
+		case 526786951:
+			return engine->fuelComputer.running.timeSinceCrankingInSecs;
+// running.baseFuel
+		case -42886021:
+			return engine->fuelComputer.running.baseFuel;
+// running.fuel
+		case -794283008:
+			return engine->fuelComputer.running.fuel;
+// afrTableYAxis
+		case 995190836:
+			return engine->fuelComputer.afrTableYAxis;
+// targetLambda
+		case -734904659:
+			return engine->fuelComputer.targetLambda;
+// targetAFR
+		case 2122891301:
+			return engine->fuelComputer.targetAFR;
+// stoichiometricRatio
+		case 341978922:
+			return engine->fuelComputer.stoichiometricRatio;
+// sdTcharge_coff
+		case 1417236183:
+			return engine->fuelComputer.sdTcharge_coff;
+// sdAirMassInOneCylinder
+		case 1650433343:
+			return engine->fuelComputer.sdAirMassInOneCylinder;
+// normalizedCylinderFilling
+		case 1599780729:
+			return engine->fuelComputer.normalizedCylinderFilling;
+// idealEngineTorque
+		case -791713926:
+			return engine->fuelComputer.idealEngineTorque;
+// brokenInjector
+		case -1453554940:
+			return engine->fuelComputer.brokenInjector;
+// injectorHwIssue
+		case -1237512821:
+			return engine->fuelComputer.injectorHwIssue;
+// dtAutotuneActive
+		case 408698318:
+			return engine->module<InjectorDeadtimeAutotune>()->dtAutotuneActive;
+#endif
+#if EFI_ENGINE_CONTROL && EFI_BOOST_CONTROL
 // isTpsInvalid
 		case -575666209:
 			return engine->module<BoostController>()->isTpsInvalid;
@@ -1278,58 +1421,68 @@ float getOutputValueByHash(const int hash) {
 		case 1239062717:
 			return engine->module<BoostController>()->boostOutput;
 #endif
-#if EFI_ENGINE_CONTROL
-// totalFuelCorrection
-		case -1779658835:
-			return engine->fuelComputer.totalFuelCorrection;
-// running.postCrankingFuelCorrection
-		case -1288205717:
-			return engine->fuelComputer.running.postCrankingFuelCorrection;
-// running.intakeTemperatureCoefficient
-		case 197173469:
-			return engine->fuelComputer.running.intakeTemperatureCoefficient;
-// running.coolantTemperatureCoefficient
-		case 1822238385:
-			return engine->fuelComputer.running.coolantTemperatureCoefficient;
-// running.timeSinceCrankingInSecs
-		case 526786951:
-			return engine->fuelComputer.running.timeSinceCrankingInSecs;
-// running.baseFuel
-		case -42886021:
-			return engine->fuelComputer.running.baseFuel;
-// running.fuel
-		case -794283008:
-			return engine->fuelComputer.running.fuel;
-// afrTableYAxis
-		case 995190836:
-			return engine->fuelComputer.afrTableYAxis;
-// targetLambda
-		case -734904659:
-			return engine->fuelComputer.targetLambda;
-// targetAFR
-		case 2122891301:
-			return engine->fuelComputer.targetAFR;
-// stoichiometricRatio
-		case 341978922:
-			return engine->fuelComputer.stoichiometricRatio;
-// sdTcharge_coff
-		case 1417236183:
-			return engine->fuelComputer.sdTcharge_coff;
-// sdAirMassInOneCylinder
-		case 1650433343:
-			return engine->fuelComputer.sdAirMassInOneCylinder;
-// normalizedCylinderFilling
-		case 1599780729:
-			return engine->fuelComputer.normalizedCylinderFilling;
-// brokenInjector
-		case -1453554940:
-			return engine->fuelComputer.brokenInjector;
-// idealEngineTorque
-		case -791713926:
-			return engine->fuelComputer.idealEngineTorque;
-// injectorHwIssue
-		case -1237512821:
-			return engine->fuelComputer.injectorHwIssue;
+#if EFI_ENGINE_CONTROL && EFI_LAUNCH_CONTROL
+// isNitrousArmed
+		case 595683774:
+			return engine->module<NitrousController>()->isNitrousArmed;
+// isNitrousSpeedCondition
+		case 2135736269:
+			return engine->module<NitrousController>()->isNitrousSpeedCondition;
+// isNitrousTpsCondition
+		case 1400235571:
+			return engine->module<NitrousController>()->isNitrousTpsCondition;
+// isNitrousCltCondition
+		case 31747807:
+			return engine->module<NitrousController>()->isNitrousCltCondition;
+// isNitrousMapCondition
+		case 541066842:
+			return engine->module<NitrousController>()->isNitrousMapCondition;
+// isNitrousAfrCondition
+		case 2008830549:
+			return engine->module<NitrousController>()->isNitrousAfrCondition;
+// isNitrousRpmCondition
+		case -649083733:
+			return engine->module<NitrousController>()->isNitrousRpmCondition;
+// isNitrousCondition
+		case -454003684:
+			return engine->module<NitrousController>()->isNitrousCondition;
+#endif
+#if EFI_ENGINE_CONTROL && EFI_MISFIRE_DETECTION
+// misfireDetectionActive
+		case 1980253487:
+			return engine->module<MisfireController>()->misfireDetectionActive;
+// misfireLatched
+		case 385260457:
+			return engine->module<MisfireController>()->misfireLatched;
+// misfireTotalCount
+		case 2130189985:
+			return engine->module<MisfireController>()->misfireTotalCount;
+// misfireEmaUs
+		case 1057331407:
+			return engine->module<MisfireController>()->misfireEmaUs;
+// misfireLastSegUs
+		case -1971271249:
+			return engine->module<MisfireController>()->misfireLastSegUs;
+// misfireThreshUs
+		case 1848662122:
+			return engine->module<MisfireController>()->misfireThreshUs;
+// misfireWobbleUs
+		case 675334487:
+			return engine->module<MisfireController>()->misfireWobbleUs;
+// misfireWobbleThreshUs
+		case -783525499:
+			return engine->module<MisfireController>()->misfireWobbleThreshUs;
+#endif
+#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
+// lambdaCurrentlyGood
+		case 350535927:
+			return engine->lambdaMonitor.lambdaCurrentlyGood;
+// lambdaMonitorCut
+		case 1849938842:
+			return engine->lambdaMonitor.lambdaMonitorCut;
+// lambdaTimeSinceGood
+		case 481450608:
+			return engine->lambdaMonitor.lambdaTimeSinceGood;
 #endif
 #if EFI_LAUNCH_CONTROL
 // retardThresholdRpm
@@ -1374,6 +1527,9 @@ float getOutputValueByHash(const int hash) {
 // luaLaunchState
 		case 707453027:
 			return engine->launchController.luaLaunchState;
+// isLaunchLatched
+		case 1386353137:
+			return engine->launchController.isLaunchLatched;
 // isTorqueReductionTriggerPinValid
 		case 1922853657:
 			return engine->shiftTorqueReductionController.isTorqueReductionTriggerPinValid;
@@ -1404,30 +1560,6 @@ float getOutputValueByHash(const int hash) {
 // trqRedIgnRetXaxisValue
 		case 892591242:
 			return engine->shiftTorqueReductionController.trqRedIgnRetXaxisValue;
-// isNitrousArmed
-		case 595683774:
-			return engine->module<NitrousController>()->isNitrousArmed;
-// isNitrousSpeedCondition
-		case 2135736269:
-			return engine->module<NitrousController>()->isNitrousSpeedCondition;
-// isNitrousTpsCondition
-		case 1400235571:
-			return engine->module<NitrousController>()->isNitrousTpsCondition;
-// isNitrousCltCondition
-		case 31747807:
-			return engine->module<NitrousController>()->isNitrousCltCondition;
-// isNitrousMapCondition
-		case 541066842:
-			return engine->module<NitrousController>()->isNitrousMapCondition;
-// isNitrousAfrCondition
-		case 2008830549:
-			return engine->module<NitrousController>()->isNitrousAfrCondition;
-// isNitrousRpmCondition
-		case -649083733:
-			return engine->module<NitrousController>()->isNitrousRpmCondition;
-// isNitrousCondition
-		case -454003684:
-			return engine->module<NitrousController>()->isNitrousCondition;
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 // etb1etbCurrentTarget
@@ -1704,15 +1836,18 @@ float getOutputValueByHash(const int hash) {
 // triggerElapsedUs
 		case 767689023:
 			return engine->triggerCentral.triggerElapsedUs;
-// lambdaCurrentlyGood
-		case 350535927:
-			return engine->lambdaMonitor.lambdaCurrentlyGood;
-// lambdaMonitorCut
-		case 1849938842:
-			return engine->lambdaMonitor.lambdaMonitorCut;
-// lambdaTimeSinceGood
-		case 481450608:
-			return engine->lambdaMonitor.lambdaTimeSinceGood;
+// phaseResyncCounter
+		case 1065880714:
+			return static_cast<trigger_state_primary_s&>(engine->triggerCentral.triggerState).phaseResyncCounter;
+// m_phaseAdjustment
+		case -739701471:
+			return static_cast<trigger_state_primary_s&>(engine->triggerCentral.triggerState).m_phaseAdjustment;
+// m_hasSynchronizedPhase
+		case 900196958:
+			return static_cast<trigger_state_primary_s&>(engine->triggerCentral.triggerState).m_hasSynchronizedPhase;
+// m_hasSynchronizedCrank
+		case 885139196:
+			return static_cast<trigger_state_primary_s&>(engine->triggerCentral.triggerState).m_hasSynchronizedCrank;
 #endif
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
 // trgsynchronizationCounter

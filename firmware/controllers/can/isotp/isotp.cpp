@@ -36,9 +36,12 @@ int IsoTpBase::sendFrame(const IsoTpFrameHeader &header, const uint8_t *data, in
 		return 0;
 	}
 
-	int dlc = offset + numBytes;
+	int dlc = 8;
 	CanTxMessage txmsg(CanCategory::SERIAL, txFrameId, dlc, busIndex, IS_EXT_RANGE_ID(txFrameId));
-
+	// fill message with padding byte
+	for (int i = offset; i < dlc; i++) {
+		txmsg[i] = paddingByte;
+	}
 	// fill the frame data according to the CAN-TP protocol (ISO 15765-2)
 	txmsg[isoHeaderByteIndex] = (uint8_t)((header.frameType & 0xf) << 4);
 	switch (header.frameType) {
@@ -101,11 +104,18 @@ int CanStreamerState::receiveFrame(const CANRxFrame &rxmsg, uint8_t *destination
 	int numBytesAvailable, frameIdx;
 	const uint8_t *srcBuf;
 	switch (frameType) {
-	case ISO_TP_FRAME_SINGLE:
-		numBytesAvailable = rxmsg.data8[isoHeaderByteIndex] & 0xf;
+	case ISO_TP_FRAME_SINGLE: {
+		// The low nibble is the single-frame data length and can encode up to 15, but the frame
+		// only carries DLC bytes - and DLC is itself a 4-bit field, so a malformed frame can claim
+		// more than data8[] is wide. Bound the length by both before copying, the same way the
+		// FIRST and CONSECUTIVE branches below bound their own reads. Well-formed single frames
+		// always satisfy SF_DL <= DLC - 1, so they are unaffected.
+		int payloadBytes = minI(rxmsg.DLC, (int)sizeof(rxmsg.data8)) - 1 - (int)isoHeaderByteIndex;
+		numBytesAvailable = minI(rxmsg.data8[isoHeaderByteIndex] & 0xf, payloadBytes);
 		this->waitingForNumBytes = numBytesAvailable;
 		srcBuf = rxmsg.data8 + 1 + isoHeaderByteIndex;
 		break;
+	}
 	case ISO_TP_FRAME_FIRST:
 		this->waitingForNumBytes = ((rxmsg.data8[isoHeaderByteIndex] & 0xf) << 8) | rxmsg.data8[isoHeaderByteIndex + 1];
 		this->waitingForFrameIndex = 1;
@@ -196,7 +206,7 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 		return 0;
 
 	// 1 frame
-	if (numBytes <= 7 - isoHeaderByteIndex) {
+	if (numBytes <= 7 - (int)isoHeaderByteIndex) {
 		IsoTpFrameHeader header;
 		header.frameType = ISO_TP_FRAME_SINGLE;
 		header.numBytes = numBytes;
@@ -443,7 +453,7 @@ int IsoTpRx::readTimeout(uint8_t *rxbuf, size_t *size, sysinterval_t timeout)
 		}
 
 		if (isFirstFrame) {
-			if ((buf) && (waitingForNumBytes > availableAtBuffer)) {
+			if ((buf) && (waitingForNumBytes > (int)availableAtBuffer)) {
 				efiPrintf("receive buffer is not enough %d > %d", waitingForNumBytes, availableAtBuffer);
 			}
 			isFirstFrame = false;
@@ -457,7 +467,7 @@ int IsoTpRx::readTimeout(uint8_t *rxbuf, size_t *size, sysinterval_t timeout)
 			availableAtBuffer -= numBytesToCopy;
 
 			// if there are some more bytes left, receive and drop
-			if (numBytesAvailable > numBytesToCopy) {
+			if ((int)numBytesAvailable > numBytesToCopy) {
 				overflow = true;
 			}
 		}
@@ -493,7 +503,7 @@ int IsoTpRxTx::writeTimeout(const uint8_t *txbuf, size_t size, sysinterval_t tim
 	int offset = 0;
 
 	if (engineConfiguration->verboseIsoTp) {
-		PRINT("*** INFO: sendDataTimeout %d" PRINT_EOL, size);
+		PRINT("*** INFO: sendDataTimeout %d" PRINT_EOL, (int)size);
 	}
 
 	if (size < 1)

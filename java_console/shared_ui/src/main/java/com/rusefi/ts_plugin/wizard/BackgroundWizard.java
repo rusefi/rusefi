@@ -14,6 +14,7 @@ import javax.swing.SwingUtilities;
 import com.devexperts.logging.Logging;
 import com.efiAnalytics.plugin.ecu.*;
 import com.rusefi.output.HashUtil;
+import com.rusefi.ui.hd81.HdConstants;
 
 import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 import static com.rusefi.config.generated.VariableRegistryValues.DIALOG_NAME_VEHICLE_INFORMATION;
@@ -182,7 +183,7 @@ public class BackgroundWizard {
         boolean signatureValid = serialSignature != null && !serialSignature.isEmpty();
 
         if (signatureValid) {
-            pluginEnabled = serialSignature.contains("hd81");
+            pluginEnabled = serialSignature.contains(HdConstants.HD_81);
         } else {
             log.info("ECU signature invalid for this plugin: " + serialSignature);
         }

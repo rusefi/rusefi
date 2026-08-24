@@ -36,12 +36,12 @@ float getAfr(SensorType type) {
 	switch (type) {
 		case SensorType::Lambda1: {
 			expAverageLambda1.setSmoothingFactor(engineConfiguration->afrExpAverageAlpha);
-			smoothedLambda1Sensor.setValidValue(expAverageLambda1.initOrAverage(interpolatedAfr), getTimeNowNt());
+			smoothedLambda1Sensor.setValidValue(expAverageLambda1.initOrAverage(interpolatedAfr / STOICH_RATIO), getTimeNowNt());
 			break;
 		}
 		case SensorType::Lambda2: {
 			expAverageLambda2.setSmoothingFactor(engineConfiguration->afrExpAverageAlpha);
-			smoothedLambda2Sensor.setValidValue(expAverageLambda2.initOrAverage(interpolatedAfr), getTimeNowNt());
+			smoothedLambda2Sensor.setValidValue(expAverageLambda2.initOrAverage(interpolatedAfr / STOICH_RATIO), getTimeNowNt());
 			break;
 		}
 		default:

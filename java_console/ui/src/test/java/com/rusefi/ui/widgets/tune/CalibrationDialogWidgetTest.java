@@ -2,6 +2,7 @@ package com.rusefi.ui.widgets.tune;
 
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.DialogModel;
+import com.opensr5.ini.IndicatorModel;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.PanelModel;
 import com.opensr5.ini.TableModel;
@@ -19,6 +20,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -417,6 +419,179 @@ public class CalibrationDialogWidgetTest {
     }
 
     @Test
+    public void testGridIndicatorsHaveFixedWidth() {
+        IndicatorModel indicator = new IndicatorModel("{value}",
+            "A very long disabled indicator label", "A very long enabled indicator label",
+            "white", "black", "green", "black");
+        IndicatorPanel panel = new IndicatorPanel(Collections.singletonList(indicator), mock(IniFileModel.class), 2);
+
+        assertEquals(IndicatorPanel.GRID_INDICATOR_WIDTH,
+            panel.getPanel().getComponent(0).getPreferredSize().width);
+    }
+
+    @Test
+    public void testLongComboIsWidthLimited() {
+        String longOption = "B18 VVT2 or Idle or Low Side output 2 or injector 8 with flyback protection";
+        EnumIniField field = createEnumField(longOption, "NONE");
+        ConfigurationImage image = new ConfigurationImage(new byte[1]);
+        JPanel row = CalibrationFieldFactory.createFieldRow(
+            new DialogModel.Field("test", "Output"), field, image, image.clone());
+
+        JComboBox<?> combo = null;
+        for (Component component : row.getComponents()) {
+            if (component instanceof JComboBox) {
+                combo = (JComboBox<?>) component;
+                break;
+            }
+        }
+        assertNotNull(combo);
+        assertEquals(CalibrationFieldFactory.MAX_COMBO_WIDTH, combo.getPreferredSize().width);
+        assertEquals(0, combo.getMinimumSize().width);
+        assertEquals(longOption, combo.getToolTipText());
+    }
+
+    @Test
+    public void testCopiedFieldTextUsesDisplayedLabelAndValue() {
+        assertEquals("SD card logging: enabled",
+            CalibrationFieldFactory.copiedFieldText("SD card logging", "enabled"));
+    }
+
+    @Test
+    public void testPinoutButton() {
+        EnumIniField field = createEnumField("B16 Low Side output 4", "NONE");
+        ConfigurationImage image = new ConfigurationImage(new byte[1]);
+        AtomicReference<String> selectedPin = new AtomicReference<>();
+        JPanel row = CalibrationFieldFactory.createFieldRow(
+            new DialogModel.Field("injectionPins1", "Injection Output 1"),
+            field, image, image.clone(), null, selectedPin::set);
+
+        JButton button = getButtonFromRow(row);
+        assertNotNull(button);
+        assertEquals("W", button.getText());
+        assertEquals("Wiring/Pinout", button.getToolTipText());
+        assertTrue(button.isEnabled());
+        button.doClick();
+        assertEquals("B16 Low Side output 4", selectedPin.get());
+
+        JComboBox<?> combo = getComboBoxFromRow(row);
+        assertNotNull(combo);
+        combo.setSelectedItem("NONE");
+        assertFalse(button.isEnabled());
+        button.setEnabled(true);
+        assertFalse(button.isEnabled());
+        selectedPin.set(null);
+        button.doClick();
+        assertNull(selectedPin.get());
+
+        combo.setSelectedItem("B16 Low Side output 4");
+        assertTrue(button.isEnabled());
+
+        JPanel nonPinRow = CalibrationFieldFactory.createFieldRow(
+            new DialogModel.Field("algorithm", "Algorithm"),
+            field, image, image.clone(), null, selectedPin::set);
+        assertNull(getButtonFromRow(nonPinRow));
+    }
+
+    @Test
+    public void testLongFieldLabelWrapsToTwoRows() {
+        String text = "Use absolute fuel pressure for dead time calculation";
+        com.opensr5.ini.field.StringIniField field =
+            new com.opensr5.ini.field.StringIniField("test", 0, 10);
+        ConfigurationImage image = new ConfigurationImage(new byte[10]);
+        JPanel row = CalibrationFieldFactory.createFieldRow(
+            new DialogModel.Field("test", text), field, image, image.clone(), null, null, 200);
+
+        JLabel label = getLabelFromRow(row);
+        assertNotNull(label);
+        assertTrue(label.getText().startsWith("<html>"));
+        assertEquals(text, label.getToolTipText());
+        int lineHeight = label.getFontMetrics(label.getFont()).getHeight();
+        assertTrue(label.getPreferredSize().height > lineHeight);
+        assertTrue(label.getPreferredSize().height <= lineHeight * 2);
+    }
+
+    @Test
+    public void testFieldEditorsShareColumn() {
+        IniFileModel iniFileModel = mock(IniFileModel.class);
+        when(iniFileModel.getCurves()).thenReturn(Collections.emptyMap());
+
+        com.opensr5.ini.field.StringIniField shortField =
+            new com.opensr5.ini.field.StringIniField("short", 0, 10);
+        com.opensr5.ini.field.StringIniField longField =
+            new com.opensr5.ini.field.StringIniField("long", 10, 17);
+        when(iniFileModel.findIniField("short")).thenReturn(java.util.Optional.of(shortField));
+        when(iniFileModel.findIniField("long")).thenReturn(java.util.Optional.of(longField));
+
+        DialogModel nestedDialog = new DialogModel("nested", "Nested",
+            Collections.singletonList(new DialogModel.Field("long", "A much longer field label")),
+            Collections.emptyList());
+        Map<String, DialogModel> dialogs = new HashMap<>();
+        dialogs.put("nested", nestedDialog);
+        when(iniFileModel.getDialogs()).thenReturn(dialogs);
+
+        DialogModel mainDialog = new DialogModel("main", "Main",
+            Collections.singletonList(new DialogModel.Field("short", "Mode")),
+            Collections.emptyList(),
+            Collections.singletonList(new PanelModel("nested", "north", null, null)), null);
+
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+        widget.update(mainDialog, iniFileModel, new ConfigurationImage(new byte[27]));
+
+        JPanel content = widget.getContentPane();
+        JPanel firstRow = (JPanel) content.getComponent(0);
+        JPanel nestedPanel = (JPanel) content.getComponent(1);
+        JPanel secondRow = (JPanel) nestedPanel.getComponent(0);
+        layoutTree(content);
+
+        JTextField firstEditor = getTextFieldFromRow(firstRow);
+        JTextField secondEditor = getTextFieldFromRow(secondRow);
+        assertNotNull(firstEditor);
+        assertNotNull(secondEditor);
+        assertEquals(10, firstEditor.getColumns());
+        assertEquals(17, secondEditor.getColumns());
+        assertEquals(
+            SwingUtilities.convertPoint(firstRow, firstEditor.getLocation(), content).x,
+            SwingUtilities.convertPoint(secondRow, secondEditor.getLocation(), content).x);
+    }
+
+    private static void layoutTree(Container container) {
+        container.setSize(container.getPreferredSize());
+        container.doLayout();
+        for (Component component : container.getComponents()) {
+            if (component instanceof Container) {
+                layoutTree((Container) component);
+            }
+        }
+    }
+
+    private static JTextField getTextFieldFromRow(JPanel row) {
+        for (Component component : row.getComponents()) {
+            if (component instanceof JTextField) {
+                return (JTextField) component;
+            }
+        }
+        return null;
+    }
+
+    private static JComboBox<?> getComboBoxFromRow(JPanel row) {
+        for (Component component : row.getComponents()) {
+            if (component instanceof JComboBox) {
+                return (JComboBox<?>) component;
+            }
+        }
+        return null;
+    }
+
+    private static JButton getButtonFromRow(JPanel row) {
+        for (Component component : row.getComponents()) {
+            if (component instanceof JButton) {
+                return (JButton) component;
+            }
+        }
+        return null;
+    }
+
+    @Test
     public void testTextOnlyFieldBackgroundColor() {
         IniFileModel iniFileModel = mock(IniFileModel.class);
         when(iniFileModel.getCurves()).thenReturn(Collections.emptyMap());
@@ -457,6 +632,33 @@ public class CalibrationDialogWidgetTest {
             if (c instanceof JLabel) return (JLabel) c;
         }
         return null;
+    }
+
+    @Test
+    public void testDecodeIniCommandBytesTypicalPayload() {
+        // "Z\x00\x13\x00\x01" → [0x5A, 0x00, 0x13, 0x00, 0x01]
+        byte[] result = CalibrationDialogWidget.decodeIniCommandBytes("Z\\x00\\x13\\x00\\x01");
+        assertArrayEquals(new byte[]{0x5A, 0x00, 0x13, 0x00, 0x01}, result);
+    }
+
+    @Test
+    public void testDecodeIniCommandBytesAllEscapes() {
+        // Payload with all-escape content
+        byte[] result = CalibrationDialogWidget.decodeIniCommandBytes("\\x00\\xFF\\x1e\\x22");
+        assertArrayEquals(new byte[]{0x00, (byte) 0xFF, 0x1e, 0x22}, result);
+    }
+
+    @Test
+    public void testDecodeIniCommandBytesOnlyLiteral() {
+        // No escape sequences, just ASCII
+        byte[] result = CalibrationDialogWidget.decodeIniCommandBytes("ZAB");
+        assertArrayEquals(new byte[]{'Z', 'A', 'B'}, result);
+    }
+
+    @Test
+    public void testDecodeIniCommandBytesEmpty() {
+        byte[] result = CalibrationDialogWidget.decodeIniCommandBytes("");
+        assertArrayEquals(new byte[0], result);
     }
 
     @Test

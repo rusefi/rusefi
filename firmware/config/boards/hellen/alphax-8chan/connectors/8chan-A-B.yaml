@@ -11,7 +11,7 @@ pins:
 
   - pin: 1A
     meta: MM176_IN_CRANK_ANALOG
-    function: Aux Analog 1 / External MAP
+    function: Auxiliary analog input 1 PullDown 500K / External MAP
     type: av
     class: analog_inputs
     ts_name: 1A - Aux Analog 1
@@ -19,7 +19,7 @@ pins:
 
   - pin: 2A
     meta: MM176_IN_MAP1_ANALOG
-    function: Aux Analog 4
+    function: Auxiliary analog input 4 PullDown 500K
     type: av
     class: analog_inputs
     ts_name: 2A - Aux Analog 4
@@ -27,7 +27,7 @@ pins:
 
   - pin: 3A
     meta: MM176_IN_O2S_ANALOG
-    function: Aux Analog 2
+    function: Auxiliary analog input 2 PullDown 500K
     type: av
     class: analog_inputs
     ts_name: 3A - Aux Analog 2
@@ -36,7 +36,7 @@ pins:
   - pin: 4A
     meta: MM176_IN_AUX2_ANALOG
     type: av
-    function: Aux Analog 7
+    function: Auxiliary analog input 7 PullDown 500K
     class: analog_inputs
     ts_name: 4A - Aux Analog 7
     color: blue
@@ -56,12 +56,12 @@ pins:
     color: white
 
   - pin: 7A
-    function: Power Ground
+    function: Power/Chassis GND ground
     type: gnd
     color: black
 
   - pin: 8A
-    function: Analog Ground
+    function: GNDA Analog/Sensor Ground
     type: agnd
     color: black
 
@@ -76,7 +76,7 @@ pins:
 
   - pin: 10A
     meta: MM176_IN_MAP2_ANALOG
-    function: Aux Analog 5
+    function: Auxiliary analog input 5 PullDown 500K
     type: av
     class: analog_inputs
     ts_name: 10A - Aux Analog 5
@@ -84,7 +84,7 @@ pins:
 
   - pin: 11A
     meta: MM176_IN_O2S2_ANALOG
-    function: Aux Analog 3
+    function: Auxiliary analog input 3 PullDown 500K
     type: av
     class: analog_inputs
     ts_name: 11A - Aux Analog 3
@@ -92,7 +92,7 @@ pins:
 
   - pin: 12A
     meta: MM176_IN_AUX3_ANALOG
-    function: Aux Analog 8
+    function: Auxiliary analog input 8 PullDown 500K
     type: av
     class: analog_inputs
     ts_name: 12A - Aux Analog 8
@@ -127,19 +127,19 @@ pins:
     type: 5v
 
   - pin: 17A
-    function: Analog Ground
+    function: GNDA Analog/Sensor Ground
     type: agnd
     color: black
 
 
   - pin: 18A
-    function: Power Ground
+    function: Power/Chassis GND ground
     type: gnd
     color: black
 
   - pin: 19A
     meta: MM176_IN_AUX1_ANALOG
-    function: Aux Analog 6
+    function: Auxiliary analog input 6 PullDown 500K
     type: av
     class: analog_inputs
     ts_name: 19A - Aux Analog 6
@@ -147,7 +147,7 @@ pins:
 
   - pin: 20A
     meta: MM176_IN_AUX4_ANALOG
-    function: Aux Analog 9
+    function: Auxiliary analog input 9 PullDown 500K
     type: av
     class: analog_inputs
     ts_name: 20A - Aux Analog 9
@@ -156,8 +156,8 @@ pins:
   - pin: 21A
     id: [MM176_IN_SENS3, MM176_IN_SENS3]
     class: [event_inputs, switch_inputs]
-    function: Flex
-    type: hall
+    function: Digital Input / Flex fuel sensor
+    type: din
     ts_name: ___ - Flex
     color: blue
 
@@ -185,7 +185,7 @@ pins:
     color: black
 
   - pin: 25A
-    function: Analog Ground
+    function: GNDA Analog/Sensor Ground
     type: agnd
     color: black
 
@@ -216,7 +216,7 @@ pins:
   - pin: 29A
     meta: MM176_IN_CLT_ANALOG
     class: analog_inputs
-    function: CLT Sensor Input
+    function: ECT CLT Coolant Sensor Input
     type: at
     ts_name: 29A - CLT Sensor Input
     color: purple
@@ -231,7 +231,7 @@ pins:
   - pin: 31A
     meta: MM176_IN_TPS_ANALOG
     class: analog_inputs
-    function: Universal analog input. Suggested TPS Sensor Input
+    function: Universal analog input. Suggested TPS 1 sensor input
     color: green
     type: av
     ts_name: 31A - TPS Sensor Input
@@ -239,7 +239,7 @@ pins:
   - pin: 32A
     meta: MM176_IN_PPS1_ANALOG
     class: analog_inputs
-    function: Universal analog input. Suggested PPS Sensor Input
+    function: Universal analog input. Suggested PPS input 1
     ts_name: ___ - PPS Sensor Input
     type: av
     color: orange
@@ -249,14 +249,14 @@ pins:
     class: analog_inputs
     color: blue
     type: av
-    function: Universal analog input. Suggested TPS2 Sensor Input
+    function: Universal analog input. Suggested TPS 2 sensor input
     ts_name: ___ - TPS2 Sensor Input
 
   - pin: 34A
     meta: MM176_IN_PPS2_ANALOG
     class: analog_inputs
     type: av
-    function: Universal analog input. Suggested PPS2 Sensor Input
+    function: Universal analog input. Suggested PPS input 2
     ts_name: 34A - PPS2 Sensor Input
     color: white
 
@@ -369,7 +369,7 @@ pins:
     type: 12v
 
   - pin: 20B
-    function: Analog Ground
+    function: GNDA Analog/Sensor Ground
     type: agnd
 
   - pin: 21B
@@ -400,7 +400,7 @@ pins:
     type: 12v
 
   - pin: 25B
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: 26B

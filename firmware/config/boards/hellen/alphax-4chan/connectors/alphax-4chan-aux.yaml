@@ -3,51 +3,57 @@ meta: config/boards/hellen_meta.h
 pins:
   - pin: X1
     meta: H144_IN_TPS2
-    function: Analog Input 1
+    function: Auxiliary analog input 1 PullDown 500K
+    type: av
     class: analog_inputs
     ts_name: ___ - AIN1 and D5 on older boards
 
   - pin: X2
     meta: H144_LS_5
-    function: Inj 5
+    function: Injector 5
     class: outputs
-    type: ls
+    type: inj
     ts_name: Aux2 - Inj 5
 
   - pin: X3
     meta: H144_IN_PPS2
-    function: Analog Input 2
+    function: Auxiliary analog input 2 PullDown 500K
+    type: av
     class: analog_inputs
     ts_name: ___ - AIN2
 
   - pin: X4
     meta: H144_LS_6
-    function: Inj 6
+    function: Injector 6
     class: outputs
-    type: ls
+    type: inj
     ts_name: Aux4 - Inj 6
 
   - pin: X5
     meta: H144_IN_MAP1
-    function: Analog Input 3
+    function: Auxiliary analog input 3 PullDown 500K
+    type: av
     class: analog_inputs
     ts_name: ___ - AIN3
 
   - pin: X6
     meta: H144_IGN_5
-    function: Ignition 5
+    function: Smart Ignition Coil 5
+    type: ign
     class: outputs
     ts_name: Aux6 - Ignition 5
 
   - pin: X7
     meta: H144_IN_AUX3_ANALOG
-    function: Analog Input 4
+    function: Auxiliary analog input 4 PullDown 500K
+    type: av
     class: analog_inputs
     ts_name: ___ - AIN4
 
   - pin: X8
     meta: H144_IGN_6
-    function: Ignition 6
+    function: Smart Ignition Coil 6
+    type: ign
     class: outputs
     ts_name: Aux8 - Ignition 6
 

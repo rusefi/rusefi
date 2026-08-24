@@ -35,7 +35,7 @@ jobs:
 
     steps:
 # we are not using 'recursive' here, we have common_submodule_init.sh instead probably as a performance optimization?
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           submodules: true
 
@@ -103,7 +103,7 @@ jobs:
 
     - name: Create Release
       if: ${{ env.upload == 'release' }}
-      uses: ncipollo/release-action@v1.19.1
+      uses: ncipollo/release-action@v1.21.0
       with:
         tag: ${{ env.date }}
         name: "Nightly ${{ env.date }}"
@@ -132,7 +132,7 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
 
     - name: Set matrix
       id: set-matrix
@@ -170,6 +170,9 @@ jobs:
       run: echo "BUNDLE_DATE=$(date +'%Y-%m-%d')">> $GITHUB_ENV
 
     - name: Set run condition variables 2
+      env:
+        # ref names may contain shell metacharacters - never interpolate them into scripts with ${{ }}
+        GH_REF: ${{ github.ref }}
       run: |
         if [ "${{github.event_name}}" = "schedule" ] && [ "${{github.repository}}" = "rusefi/rusefi" ]; then
           echo "Creating nightly build"
@@ -177,7 +180,7 @@ jobs:
           echo "upload=release" >> $GITHUB_ENV
           echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
         elif [ "${{github.event_name}}" = "push" ]\
-        && [ "${{github.ref}}" = "refs/heads/master" ]\
+        && [ "$GH_REF" = "refs/heads/master" ]\
         || [ "${{toJSON(inputs.lts)}}" = "true" ]; then
           echo "Server upload mode"
           echo "full=true" >> $GITHUB_ENV
@@ -187,16 +190,13 @@ jobs:
           echo "upload=gha_artifact" >> $GITHUB_ENV
         fi
 
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
 
     - name: Checkout Submodules
       run: |
         misc/git_scripts/common_submodule_init.sh
 
-    - uses: actions/setup-java@v5
-      with:
-        distribution: 'zulu'
-        java-version: '17'
+    - uses: ./.github/actions/setup-java
 
     - name: Install multilib, mingw, sshpass and mtools
       run: |
@@ -204,10 +204,14 @@ jobs:
         sudo bash misc/actions/ubuntu-install-tools.sh
 
     - name: Set Build Env Variables
+      env:
+        # ref names may contain shell metacharacters - never interpolate them into scripts with ${{ }}
+        REF_NAME: ${{ github.ref_name }}
+        META_INFO: ${{ matrix.meta-info }}
       run: |
         echo AUTOMATION_LTS=${{toJSON(inputs.lts)}} >> $GITHUB_ENV
-        echo AUTOMATION_REF=${{github.ref_name}} >> $GITHUB_ENV
-        echo BOARD_META_PATH=${{matrix.meta-info}} >> $GITHUB_ENV
+        echo "AUTOMATION_REF=$REF_NAME" >> $GITHUB_ENV
+        echo "BOARD_META_PATH=$META_INFO" >> $GITHUB_ENV
         echo "WHITE_LABEL=rusefi" >> $GITHUB_ENV
 
     - name: Git Status
@@ -219,7 +223,7 @@ jobs:
 #
       # TODO: address `Acquire GCC` version copy paste, maybe a tiny action to acquire specific version?
     - name: Acquire Arm GNU Toolchain (arm-none-eabi-gcc)
-      uses: carlosperate/arm-none-eabi-gcc-action@v1.12.0
+      uses: carlosperate/arm-none-eabi-gcc-action@v1.13.0
       with:
         release: '14.2.Rel1'
 
@@ -287,7 +291,7 @@ jobs:
 
     - name: Add Bundles to Release
       if: ${{ env.upload == 'release' }}
-      uses: ncipollo/release-action@v1.19.1
+      uses: ncipollo/release-action@v1.21.0
       with:
         tag: ${{ env.date }}
         name: "Nightly ${{ env.date }}"
@@ -360,11 +364,53 @@ jobs:
     - name: Upload bundle artifact
       uses: actions/upload-artifact@v7
       with:
+        archive: false
         name: rusefi_bundle_${{matrix.build-target}}.zip
         path: ./artifacts/rusefi_bundle_${{matrix.build-target}}.zip
 
     - name: Upload github action autoupdate artifact
       uses: actions/upload-artifact@v7
       with:
+        archive: false
         name: rusefi_bundle_${{matrix.build-target}}_autoupdate.zip
         path: ./artifacts/rusefi_bundle_${{matrix.build-target}}_autoupdate.zip
+
+  build-universal-bundle:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v7
+
+    - name: Checkout bundle submodules
+      run: git submodule update --init --depth=1 firmware/ext/rusefi-gha java_console/luaformatter java_console/peak-can-basic
+
+    - uses: ./.github/actions/setup-java
+
+    - name: Build console jar
+      run: ./gradlew :ui:shadowJar :ts_plugin_launcher:shadowJar
+
+    - name: Assemble universal bundle
+      run: |
+        mkdir -p artifacts
+        WHITE_LABEL=rusefi bash firmware/bin/assemble_universal_bundle.sh ./artifacts universal
+
+    - name: Upload universal bundle artifact
+      uses: actions/upload-artifact@v7
+      with:
+        archive: false
+        name: rusefi_bundle_universal.zip
+        path: ./artifacts/rusefi_bundle_universal.zip
+
+    - name: Upload universal autoupdate artifact
+      uses: actions/upload-artifact@v7
+      with:
+        archive: false
+        name: rusefi_bundle_universal_autoupdate.zip
+        path: ./artifacts/rusefi_bundle_universal_autoupdate.zip
+
+    - name: Upload universal bundle to rusEFI server
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && github.repository == 'rusefi/rusefi' }}
+      working-directory: ./artifacts
+      env:
+        WHITE_LABEL: rusefi
+      run: |
+        bash ../firmware/bin/upload_bundle.sh "${{ secrets.RUSEFI_SSH_USER }}" "${{ secrets.RUSEFI_SSH_PASS }}" "${{ secrets.RUSEFI_SSH_SERVER }}" universal

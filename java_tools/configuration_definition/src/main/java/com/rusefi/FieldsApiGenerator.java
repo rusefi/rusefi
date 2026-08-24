@@ -6,7 +6,7 @@ import com.rusefi.util.LazyFile;
 import java.io.IOException;
 
 public class FieldsApiGenerator {
-    public static void run() throws IOException {
+    public static void run(String destinationPath) throws IOException {
         VariableRegistry variableRegistry = new VariableRegistry();
         variableRegistry.readPrependValues("integration/fields_api.txt", false);
 
@@ -19,7 +19,7 @@ public class FieldsApiGenerator {
             sb.append("#define " + key + "_HASH " + hash + "\n");
 
         }
-        LazyFile lazyFile = LazyFile.REAL.create("controllers/generated/generated_fields_api_header.h");
+        LazyFile lazyFile = LazyFile.REAL.create(destinationPath);
 
         lazyFile.write(sb);
         lazyFile.close();

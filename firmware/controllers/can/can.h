@@ -64,7 +64,9 @@ void unregisterCanListener(CanListener& listener);
 void registerCanSensor(CanSensorBase& sensor);
 // TODO: unregisterCanSensor()?
 
-class CanWrite final : public PeriodicController</*TStackSize*/512> {
+#define CAN_WRITE_THREAD_STACK_SIZE 1536
+
+class CanWrite final : public PeriodicController<CAN_WRITE_THREAD_STACK_SIZE> {
 public:
 	CanWrite();
 	void PeriodicTask(efitick_t nowNt) override;
@@ -111,11 +113,12 @@ private:
 #define CAN_SID(f) ((f).std.SID)
 #define CAN_EID(f) ((f).ext.EID)
 #define CAN_ISX(f) ((f).common.XTD)
+#define CAN_ISRTR(f) ((f).common.RTR)
 #else
 #define CAN_SID(f) ((f).SID)
 #define CAN_EID(f) ((f).EID)
 #define CAN_ISX(f) ((f).IDE)
+#define CAN_ISRTR(f) ((f).RTR)
 #endif
 
 #define CAN_ID(f) (CAN_ISX(f) ? CAN_EID(f) : CAN_SID(f))
-

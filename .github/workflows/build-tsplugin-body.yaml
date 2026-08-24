@@ -10,17 +10,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Checkout Submodules
         run: |
           git submodule update --init --depth=1 java_console/peak-can-basic
 
-      - uses: actions/setup-java@v5
-        with:
-          distribution: 'zulu'
           # As of 2025 rusEFI TS plugin is useful again: it provides a knock spectrogram! TS uses java 8 [tag:java8]
-          java-version: '17'
+      - uses: ./.github/actions/setup-java
 
       - name: Test Compiler
         run: javac -version

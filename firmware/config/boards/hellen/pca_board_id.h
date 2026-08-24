@@ -70,6 +70,6 @@ static uint32_t getBoardRevision() {
 	return variant;
 }
 
-/*PUBLIC_API_WEAK*/ int hackHellenBoardId(int /* detectedId */) {
+int pcaHackHellenBoardId(int /* detectedId */) {
 	return getBoardRevision();
 }

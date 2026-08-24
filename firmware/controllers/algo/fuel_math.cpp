@@ -60,34 +60,39 @@ float getCrankingFuel3(float baseFuel, uint32_t revolutionCounterSinceStart) {
 	 * If the sensor is failed, use 20 deg C
 	 */
 	auto clt = Sensor::get(SensorType::Clt).value_or(20);
-	auto e0Mult = interpolate2d(clt, config->crankingFuelBins, config->crankingFuelCoef);
 
 	bool alreadyWarned = false;
-	if (e0Mult <= 0.1f) {
-		warning(ObdCode::CUSTOM_ERR_ZERO_E0_MULT, "zero e0 multiplier");
+
+	/**
+	 * Resolve the cranking coolant-temperature multiplier:
+	 *   - Flex fuel ON (flexCranking) with a present flex sensor -> 2D table over (coolant, ethanol%),
+	 *     so the whole E0..E100 range is calibrated directly (4-row ethanol axis).
+	 *   - Otherwise -> the single coolant curve crankingFuelCoef.
+	 *
+	 * Note on the base mass this multiplies: with useRunningMathForCranking the base already reflects the
+	 * flex-adjusted stoich ratio, so this multiplier is ADDITIONAL ethanol enrichment, not the full correction.
+	 */
+	float coolantMult;
+
+	if (engineConfiguration->flexCranking && Sensor::hasSensor(SensorType::FuelEthanolPercent)) {
+		// If the flex sensor has failed, default to 50% ethanol.
+		auto flex = Sensor::get(SensorType::FuelEthanolPercent).value_or(50);
+
+		coolantMult = interpolate3d(
+			config->crankingFuelFlexTable,
+			config->crankingFuelFlexBins, flex,
+			config->crankingFuelBins, clt
+		);
+	} else {
+		coolantMult = interpolate2d(clt, config->crankingFuelBins, config->crankingFuelCoef);
+	}
+
+	if (coolantMult <= 0.1f) {
+		warning(ObdCode::CUSTOM_ERR_ZERO_E0_MULT, "zero cranking coolant multiplier");
 		alreadyWarned = true;
 	}
 
-	if (engineConfiguration->flexCranking && Sensor::hasSensor(SensorType::FuelEthanolPercent)) {
-		auto e85Mult = interpolate2d(clt, config->crankingFuelBins, config->crankingFuelCoefE100);
-
-		if (e85Mult <= 0.1f) {
-			warning(ObdCode::CUSTOM_ERR_ZERO_E85_MULT, "zero e85 multiplier");
-			alreadyWarned = true;
-		}
-
-		// If failed flex sensor, default to 50% E
-		auto flex = Sensor::get(SensorType::FuelEthanolPercent).value_or(50);
-
-		engine->engineState.crankingFuel.coolantTemperatureCoefficient =
-			interpolateClamped(
-				0, e0Mult,
-				85, e85Mult,
-				flex
-			);
-	} else {
-		engine->engineState.crankingFuel.coolantTemperatureCoefficient = e0Mult;
-	}
+	engine->engineState.crankingFuel.coolantTemperatureCoefficient = coolantMult;
 
 	auto tps = Sensor::get(SensorType::DriverThrottleIntent);
 	engine->engineState.crankingFuel.tpsCoefficient =
@@ -251,7 +256,11 @@ int getNumberOfInjections(injection_mode_e mode) {
 	case IM_SINGLE_POINT:
 		return engineConfiguration->cylindersCount;
 	case IM_BATCH:
-		return 2;
+		// Batch pairs each injector with the cylinder 360 degrees later in the firing order, so
+		// every injector fires twice per cycle. A single cylinder has no distinct twin -
+		// InjectionEvent::update() resolves secondIndex to the same injector - and FuelSchedule
+		// holds one event per cylinder, so exactly one pulse is produced. #8345
+		return engineConfiguration->cylindersCount == 1 ? 1 : 2;
 	case IM_SEQUENTIAL:
 		return 1;
 	default:
@@ -278,7 +287,9 @@ float getInjectionModeDurationMultiplier() {
 	case IM_SINGLE_POINT:
 		return 1;
 	case IM_BATCH:
-		return 0.5f;
+		// See getNumberOfInjections(): a single cylinder only gets one pulse per cycle, so halving
+		// the fuel for a second pulse which never happens leaves the engine running lean. #8345
+		return engineConfiguration->cylindersCount == 1 ? 1 : 0.5f;
 	default:
 		firmwareError(ObdCode::CUSTOM_ERR_INVALID_INJECTION_MODE, "Unexpected injection_mode_e %d", mode);
 		return 0;
@@ -487,8 +498,14 @@ float getStandardAirCharge() {
 	return idealGasLaw(cylDisplacement, STD_ATMOSPHERE, C_K_OFFSET + STD_IAT);
 }
 
-PUBLIC_API_WEAK_SOMETHING_WEIRD
+#include "board_overrides.h"
+
+std::optional<setup_custom_get_cylinder_fuel_trim_type> custom_board_getCylinderFuelTrim;
+
 float getCylinderFuelTrim(size_t cylinderNumber, float rpm, float fuelLoad) {
+	if (custom_board_getCylinderFuelTrim.has_value()) {
+		return custom_board_getCylinderFuelTrim.value()(cylinderNumber, rpm, fuelLoad);
+	}
 	auto trimPercent = interpolate3d(
 		config->fuelTrims[cylinderNumber].table,
 		config->fuelTrimLoadBins, fuelLoad,

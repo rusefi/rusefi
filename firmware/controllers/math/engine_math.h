@@ -8,6 +8,7 @@
 #pragma once
 
 #include "rusefi_enums.h"
+#include "gppwm_channel_reader.h"
 
 void setAlgorithm(engine_load_mode_e algo);
 
@@ -68,4 +69,63 @@ struct BlendResult {
 	float TableYAxis;
 };
 
-BlendResult calculateBlend(blend_table_s& cfg, float rpm, float load);
+// Convert blend percent (0-100) to ratio (0-1)
+// blendValues stores percent, so interpolate2d returns percent directly
+static constexpr float BLEND_PERCENT_TO_RATIO = 1.0f / 100.0f;
+
+template<typename TBlendTable>
+BlendResult calculateBlend(TBlendTable& cfg, float rpm, float load) {
+	// If set to 0, skip the math as its disabled
+	if (cfg.blendParameter == GPPWM_Zero) {
+		return { 0, 0, 0, 0 };
+	}
+
+	auto value = readGppwmChannel(cfg.blendParameter);
+
+	if (!value) {
+		return { 0, 0, 0, 0 };
+	}
+
+	// Override Y axis value (if necessary)
+	if (cfg.yAxisOverride != GPPWM_Zero) {
+		// TODO: is this value_or(0) correct or even reasonable?
+		load = readGppwmChannel(cfg.yAxisOverride).value_or(0);
+	}
+
+	float tableValue = interpolate3d(
+		cfg.table,
+		cfg.loadBins, load,
+		cfg.rpmBins, rpm
+	);
+
+	float blendFactor = interpolate2d(value.Value, cfg.blendBins, cfg.blendValues);
+
+	return { value.Value, blendFactor, BLEND_PERCENT_TO_RATIO * blendFactor * tableValue, load };
+}
+
+// Overload for tables with flat (non-struct) blend config, e.g. veSwitchTable.
+// Unlike the blend_table_s overload, BlendResult::Value is the raw table lookup
+// (not bias-scaled)
+template<typename TBlendBins, typename TBlendValues, typename TTable, typename TLoadBins, typename TRpmBins>
+BlendResult calculateBlend(
+    gppwm_channel_e blendParameter,
+    const TBlendBins& blendBins,
+    const TBlendValues& blendValues,
+    const TTable& table,
+    const TLoadBins& loadBins, float load,
+    const TRpmBins& rpmBins, float rpm)
+{
+    if (blendParameter == GPPWM_Zero) {
+        return { 0, 0, 0, 0 };
+    }
+
+    auto value = readGppwmChannel(blendParameter);
+    if (!value) {
+        return { 0, 0, 0, 0 };
+    }
+
+    float tableValue = interpolate3d(table, loadBins, load, rpmBins, rpm);
+    float blendFactor = interpolate2d(value.Value, blendBins, blendValues);
+
+    return { value.Value, blendFactor, tableValue, load };
+}

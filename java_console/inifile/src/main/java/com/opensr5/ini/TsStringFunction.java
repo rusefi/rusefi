@@ -8,6 +8,10 @@ import com.opensr5.ini.field.StringIniField;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -178,7 +182,7 @@ public class TsStringFunction {
                                            @Nullable Map<String, Double> outputChannelValues) {
         // Try as a simple variable name first
         String simpleVar = expr.trim();
-        if (simpleVar.matches("[a-zA-Z_][a-zA-Z0-9_]*")) {
+        if (ExpressionEvaluator.IS_SIMPLE_IDENTIFIER.matcher(simpleVar).matches()) {
             // Try output channel values first
             if (outputChannelValues != null && outputChannelValues.containsKey(simpleVar)) {
                 return outputChannelValues.get(simpleVar);
@@ -239,11 +243,57 @@ public class TsStringFunction {
     }
 
     private static String stripBraces(String s) {
-        return s.trim().replaceAll("^\\{\\s*", "").replaceAll("\\s*}$", "").trim();
+        return ExpressionEvaluator.stripBraces(s);
     }
 
     private static String trimNulls(String s) {
         int end = s.indexOf('\0');
         return end >= 0 ? s.substring(0, end) : s;
+    }
+
+    /**
+     * Returns all possible resolved strings for a label expression.
+     * For labels containing {@code bitStringValue(enumName, varExpr)} where {@code varExpr} is not a
+     * numeric literal, every enum option is substituted to produce the full candidate list.
+     * For static labels or literal-indexed calls, returns a single-element list.
+     * Used to pre-compute the maximum display width of an indicator label so its size stays stable.
+     */
+    public static List<String> allPossibleResolutions(String expression, IniFileModel ini) {
+        if (expression == null || expression.isEmpty()) return Collections.singletonList(" ");
+        String cleaned = stripBraces(expression);
+        Matcher m = BIT_STRING_VALUE_PATTERN.matcher(cleaned);
+        if (!m.find()) {
+            return Collections.singletonList(cleaned.trim());
+        }
+        String enumName = m.group(1);
+        String indexExpr = m.group(2).trim();
+        int matchStart = m.start();
+        int matchEnd = m.end();
+        String prefix = cleaned.substring(0, matchStart);
+        String suffix = cleaned.substring(matchEnd);
+
+        // If the index is a numeric literal, only one value is possible
+        try {
+            int index = Integer.parseInt(indexExpr);
+            Optional<IniField> optField = ini.findIniField(enumName);
+            if (optField.isPresent() && optField.get() instanceof EnumIniField) {
+                String val = ((EnumIniField) optField.get()).getEnums().get(index);
+                if (val != null) return Collections.singletonList((prefix + val + suffix).trim());
+            }
+            return Collections.singletonList(cleaned.trim());
+        } catch (NumberFormatException ignored) {
+            // Variable index — list all options
+        }
+
+        Optional<IniField> optField = ini.findIniField(enumName);
+        if (!optField.isPresent() || !(optField.get() instanceof EnumIniField)) {
+            return Collections.singletonList(cleaned.trim());
+        }
+        Collection<String> enumVals = ((EnumIniField) optField.get()).getEnums().values();
+        List<String> results = new ArrayList<>(enumVals.size());
+        for (String val : enumVals) {
+            results.add((prefix + val + suffix).trim());
+        }
+        return results;
     }
 }

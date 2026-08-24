@@ -3,12 +3,10 @@ package com.rusefi.core;
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.ExpressionEvaluator;
-import com.opensr5.ini.DialogModel;
-import com.opensr5.ini.FrontPageModel;
 import com.opensr5.ini.GaugeModel;
-import com.opensr5.ini.IndicatorModel;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniMemberNotFound;
+import com.opensr5.ini.LowercaseHashMap;
 import com.opensr5.ini.TsStringFunction;
 import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
@@ -17,13 +15,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.core.ByteBufferUtil.littleEndianWrap;
@@ -38,112 +32,65 @@ public interface ISensorHolder {
      * @param ini the INI file model with gauge definitions
      * @param configImage optional configuration image for resolving config values in expressions
      */
+    /**
+     * Returns a map to accumulate output channel values during {@link #grabSensorValues}.
+     * The default creates a fresh map each call; override to return a cached instance
+     * (the map will be cleared at the start of each call).
+     */
+    default Map<String, Double> getOutputChannelMap() {
+        return new LowercaseHashMap<>();
+    }
+
     default void grabSensorValues(byte[] response, @NotNull IniFileModel ini, @Nullable ConfigurationImage configImage) {
-        Map<String, Double> outputChannelValues = new HashMap<>();
-        List<Map.Entry<String, GaugeModel>> expressionGauges = new ArrayList<>();
+        // Use case-insensitive map so that gauge channel names like "CLTValue" match
+        // output channel keys regardless of capitalisation differences.
+        Map<String, Double> outputChannelValues = getOutputChannelMap();
+        outputChannelValues.clear();
 
-        // First pass: resolve direct output channel references
-        for (Map.Entry<String, GaugeModel> e : ini.getGauges().entrySet()) {
-            String gaugeName = e.getKey();
-            String channel = e.getValue().getChannel();
-
-            // Try the channel name directly
-            Double value = tryReadOutputChannel(response, gaugeName, ini, channel);
+        // Pass 1: read every direct output channel defined in the ini.
+        // This single pass covers what was previously spread across gauge, indicator,
+        // gauge-label, and datalog-only channels.
+        for (String name : ini.getAllOutputChannels().keySet()) {
+            Double value = tryReadOutputChannel(response, name, ini, name);
             if (value != null) {
-                setValue(value, channel);
-                outputChannelValues.put(channel, value);
-                continue;
-            }
-
-            // For simple wrapped expressions like "{ intake }", try the inner variable
-            if (ExpressionEvaluator.looksLikeExpression(channel)) {
-                String simpleVar = ExpressionEvaluator.extractSimpleVariableName(channel);
-                if (simpleVar != null) {
-                    value = tryReadOutputChannel(response, gaugeName, ini, simpleVar);
-                    if (value != null) {
-                        setValue(value, simpleVar);
-                        outputChannelValues.put(simpleVar, value);
-                        continue;
-                    }
-                }
-                expressionGauges.add(e);
-            } else if (ini.getExpressionOutputChannel(channel) != null) {
-                expressionGauges.add(e);
-            } else {
-                log.warn("Member not found for " + e);
+                setValue(value, name);
+                outputChannelValues.put(name, value);
             }
         }
 
-        // Second pass: evaluate expression-based gauges
-        for (Map.Entry<String, GaugeModel> e : expressionGauges) {
-            String gaugeName = e.getKey();
+        // Pass 2: evaluate expression-based gauge channels (e.g. "{ coolant * 1.8 + 32 }").
+        // These are not in allOutputChannels, so they were not handled by pass 1.
+        for (Map.Entry<String, GaugeModel> e : ini.getGauges().entrySet()) {
             String channel = e.getValue().getChannel();
+            if (outputChannelValues.containsKey(channel))
+                continue;
+
+            // Skip the synthetic runtimeDataRateGauge — its value is published directly
+            // by SensorCentral, added around 1634284766aeee57bf1315e61238371ae8137758, not evaluated as an expression here.
+            // since this gauge is not real, we can't find it on the ini, but we find it inside the gauges, so we fail under the check of resolveExpression
+            // ending up with "Member not found for gauge" logs of around 30/second, not nice
+            if (com.opensr5.ini.ImmutableIniFileModel.RUNTIME_DATA_RATE_GAUGE.equalsIgnoreCase(e.getKey())) {
+                continue;
+            }
 
             String expression = resolveExpression(ini, channel);
             if (expression == null) {
-                log.warn("No expression found for gauge " + gaugeName + ": " + channel);
+                log.warn("Member not found for gauge " + e.getKey() + ": " + channel);
                 continue;
             }
 
-            Map<String, Double> context = new HashMap<>(outputChannelValues);
-            resolveExpressionVariables(response, ini, configImage, expression, context, outputChannelValues);
+            resolveExpressionVariables(response, ini, configImage, expression, outputChannelValues, outputChannelValues);
 
-            Double result = ExpressionEvaluator.tryEvaluateWithContext(expression, context);
+            Double result = ExpressionEvaluator.tryEvaluateWithContext(expression, outputChannelValues);
             if (result != null) {
                 setValue(result, channel);
+                outputChannelValues.put(channel, result);
             } else {
-                log.warn("Could not evaluate expression for gauge " + gaugeName + ": " + expression);
+                log.warn("Could not evaluate expression for gauge " + e.getKey() + ": " + expression);
             }
         }
 
-        // Third pass: read output channels referenced by any indicator (front-page or dialog
-        // indicatorPanels) that were not already covered by a gauge definition.
-        // Include label variables so bitStringValue() index args (e.g. fuelCutReason) are fetched.
-        Set<String> indicatorVars = new HashSet<>();
-        FrontPageModel frontPage = ini.getFrontPage();
-        if (frontPage != null) {
-            for (IndicatorModel indicator : frontPage.getIndicators()) {
-                indicatorVars.addAll(ExpressionEvaluator.extractVariables(indicator.getExpression()));
-                indicatorVars.addAll(ExpressionEvaluator.extractVariables(indicator.getOnLabel()));
-                indicatorVars.addAll(ExpressionEvaluator.extractVariables(indicator.getOffLabel()));
-            }
-        }
-        for (DialogModel dialog : ini.getDialogs().values()) {
-            for (IndicatorModel indicator : dialog.getIndicators()) {
-                indicatorVars.addAll(ExpressionEvaluator.extractVariables(indicator.getExpression()));
-                indicatorVars.addAll(ExpressionEvaluator.extractVariables(indicator.getOnLabel()));
-                indicatorVars.addAll(ExpressionEvaluator.extractVariables(indicator.getOffLabel()));
-            }
-        }
-        for (String varName : indicatorVars) {
-            if (!outputChannelValues.containsKey(varName)) {
-                Double value = tryReadOutputChannel(response, varName, ini, varName);
-                if (value != null) {
-                    setValue(value, varName);
-                    outputChannelValues.put(varName, value);
-                }
-            }
-        }
-
-        // Fourth pass: fetch output channels referenced by gauge label expressions
-        for (GaugeModel gauge : ini.getGauges().values()) {
-            Set<String> labelVars = new HashSet<>();
-            if (gauge.getTitleValue().isExpression())
-                labelVars.addAll(ExpressionEvaluator.extractVariables(gauge.getTitle()));
-            if (gauge.getUnitsValue().isExpression())
-                labelVars.addAll(ExpressionEvaluator.extractVariables(gauge.getUnits()));
-            for (String varName : labelVars) {
-                if (!outputChannelValues.containsKey(varName)) {
-                    Double value = tryReadOutputChannel(response, varName, ini, varName);
-                    if (value != null) {
-                        setValue(value, varName);
-                        outputChannelValues.put(varName, value);
-                    }
-                }
-            }
-        }
-
-        // Fifth pass: resolve string-valued gauge labels (bitStringValue, stringValue)
+        // Pass 3: resolve string-valued gauge labels (bitStringValue, stringValue).
         onGaugeLabelsResolved(resolveGaugeLabels(ini, configImage, outputChannelValues));
     }
 
@@ -235,7 +182,7 @@ public interface ISensorHolder {
      */
     @Nullable
     static Double readFieldValue(byte[] response, String label, IniField field) {
-        ByteBuffer bb = getByteBuffer(response, label, field.getOffset());
+        ByteBuffer bb = getByteBuffer(response, label, field.getOffset(), field.getSize());
         if (field instanceof ScalarIniField) {
             ScalarIniField scalarField = (ScalarIniField) field;
             double rawValue = scalarField.getType().readRawValue(bb);
@@ -250,20 +197,38 @@ public interface ISensorHolder {
         return null;
     }
 
+    // Cached ByteBuffer per thread, re-wrapped whenever the response array changes.
+    // This avoids allocating a new HeapByteBuffer for every output channel read per ECU frame.
+    ThreadLocal<ByteBuffer[]> RESPONSE_BB_HOLDER = ThreadLocal.withInitial(() -> new ByteBuffer[1]);
+
+    // Legacy overload: callers that always read a full 32-bit word (e.g. CustomBinaryLogEntry
+    // masks a getInt(), PanamaHelper reads a 4-byte serial) rely on the fixed 4-byte window.
     static @NotNull ByteBuffer getByteBuffer(byte[] response, String message, int fieldOffset) {
+        return getByteBuffer(response, message, fieldOffset, 4);
+    }
+
+    static @NotNull ByteBuffer getByteBuffer(byte[] response, String message, int fieldOffset, int size) {
         int offset = fieldOffset + 1; // first byte is response code
-        int size = 4;
+        // Use the field's actual storage size (1/2/4 bytes) rather than assuming 4: a 1- or 2-byte
+        // channel at the very end of the output block would otherwise fail this bounds check and read as null.
         if (offset + size > response.length) {
             throw new IllegalArgumentException(message + String.format(" but %d+%d in %d", offset, size, response.length));
         }
-        return littleEndianWrap(response, offset, size);
+        // Re-use a single ByteBuffer per thread per response array; wrap the full array once.
+        ByteBuffer[] holder = RESPONSE_BB_HOLDER.get();
+        ByteBuffer bb = holder[0];
+        if (bb == null || bb.array() != response) {
+            bb = littleEndianWrap(response, 0, response.length);
+            holder[0] = bb;
+        }
+        bb.limit(offset + size);
+        bb.position(offset);
+        return bb;
     }
 
     double getValue(Sensor sensor);
 
     double getValue(String sensorName);
-
-    boolean setValue(double value, Sensor sensor);
 
     boolean setValue(double value, String sensorName);
 

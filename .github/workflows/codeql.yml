@@ -46,7 +46,7 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
       with:
         submodules: recursive
 
@@ -55,17 +55,14 @@ jobs:
         sudo bash misc/actions/add-ubuntu-latest-apt-mirrors.sh
         sudo apt-get install mtools dosfstools zip
 
-    - uses: actions/setup-java@v5
-      with:
-        distribution: 'zulu'
-        java-version: '17'
+    - uses: ./.github/actions/setup-java
 
     - name: Code generation tools
       working-directory: .
       run: ./gradlew :config_definition:shadowJar
 
     - name: Install Arm GNU Toolchain (arm-none-eabi-gcc)
-      uses: carlosperate/arm-none-eabi-gcc-action@v1.12.0
+      uses: carlosperate/arm-none-eabi-gcc-action@v1.13.0
       with:
         release: '14.2.Rel1'
 

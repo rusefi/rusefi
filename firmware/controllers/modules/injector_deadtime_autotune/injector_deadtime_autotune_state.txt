@@ -1,0 +1,5 @@
+struct_no_prefix injector_deadtime_autotune_state_s
+
+bit dtAutotuneActive
+
+end_struct

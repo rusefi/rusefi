@@ -28,8 +28,8 @@ void MainRelayController::onSlowCallback() {
 }
 
 bool MainRelayController::needsDelayedShutoff() {
-	// Prevent main relay from turning off if we had ignition voltage in the past 1 second
+	// Prevent main relay from turning off if we had ignition voltage in the past N seconds.
 	// This avoids accidentally killing the car during a transient, for example
 	// right when the starter is engaged.
-	return !m_lastIgnitionTime.hasElapsedSec(1);
+	return !m_lastIgnitionTime.hasElapsedSec(engineConfiguration->mainRelayDisableTime);
 }

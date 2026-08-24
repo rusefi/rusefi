@@ -69,3 +69,40 @@ TEST(priming, duration) {
 	Sensor::resetMockValue(SensorType::Clt);
 	EXPECT_EQ(0, engine->module<PrimeController>()->getPrimeDuration());
 }
+
+// With flexCranking enabled and a flex sensor present, the priming mass comes from the 2D
+// coolant-vs-ethanol table (primeFlexTable) instead of the 1D primeValues curve.
+TEST(priming, flexTableDuration) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	MockInjectorModel2 injectorModel;
+	engine->module<InjectorModelPrimary>().set(&injectorModel);
+
+	// Linear coolant axis; the table is flat across coolant so only the ethanol axis matters.
+	for (size_t i = 0; i < efi::size(engineConfiguration->primeBins); i++) {
+		engineConfiguration->primeBins[i] = i * 10;
+	}
+
+	const uint8_t ethanolBins[] = { 0, 35, 65, 100 };
+	copyArray(engineConfiguration->primeFlexBins, ethanolBins);
+
+	const uint16_t rowMassMg[] = { 100, 200, 300, 400 };	// mg per ethanol row (multiples of the 5 mg LSB)
+	for (size_t row = 0; row < efi::size(engineConfiguration->primeFlexTable); row++) {
+		for (size_t col = 0; col < PRIME_CURVE_COUNT; col++) {
+			engineConfiguration->primeFlexTable[row][col] = rowMassMg[row];
+		}
+	}
+
+	engineConfiguration->flexCranking = true;
+	Sensor::setMockValue(SensorType::Clt, 50);
+
+	// E35 -> row 1 -> 200 mg -> 0.2 g
+	EXPECT_CALL(injectorModel, getInjectionDuration(::testing::FloatNear(0.2f, 1e-4f))).WillOnce(Return(22.0f));
+	Sensor::setMockValue(SensorType::FuelEthanolPercent, 35);
+	EXPECT_EQ(22, engine->module<PrimeController>()->getPrimeDuration());
+
+	// E50 -> halfway between rows at 35 (200 mg) and 65 (300 mg) -> 250 mg -> 0.25 g
+	EXPECT_CALL(injectorModel, getInjectionDuration(::testing::FloatNear(0.25f, 1e-4f))).WillOnce(Return(28.0f));
+	Sensor::setMockValue(SensorType::FuelEthanolPercent, 50);
+	EXPECT_EQ(28, engine->module<PrimeController>()->getPrimeDuration());
+}

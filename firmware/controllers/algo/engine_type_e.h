@@ -23,7 +23,7 @@ enum class engine_type_e : uint16_t {
 	 */
 	MRE_SECONDARY_CAN = 4,
 
-	UNUSED_5 = 5,
+	GM_SBC_GEN3 = 5,
 	HARLEY = 6,
 	FORD_INLINE_6_1995 = 7,
 	/**
@@ -42,7 +42,7 @@ enum class engine_type_e : uint16_t {
 	FORD_ESCORT_GT = 14,
 	// this is pretty close to body control module/BCM use-case!
 	FUEL_BENCH = 15,
-	UNUSED_16 = 16,
+	BMW_N52 = 16,
 	TCU_4R70W = 17,
 
 	TEST_33816 = 18,
@@ -107,7 +107,7 @@ enum class engine_type_e : uint16_t {
 
 	TEST_ENGINE_VVT = 45,
 
-	DODGE_NEON_2003_CRANK = 46,
+	ET_DODGE_NEON_2003 = 46,
 
 	GM_LCV = 47,
 
@@ -208,8 +208,6 @@ enum class engine_type_e : uint16_t {
   UNUSED_105 = 105,
 
 // board_engine_types_tag
-
-  // [CannedTunes] please keep this always last always unused
 };
 
 engine_type_e getLastEngineType();

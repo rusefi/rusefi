@@ -23,8 +23,8 @@ pins:
     type: etb
 
   - pin: 3a
-    function: GND
-    type: GND
+    function: Power/Chassis GND ground
+    type: gnd
     color: black
 
   - pin: 4a
@@ -55,7 +55,7 @@ pins:
     class: outputs
     meta: MM100_IGN6
     ts_name: Coil 6
-    function: Coil 6
+    function: Smart Ignition Coil 6
     color: yellow
     type: ign
 
@@ -63,7 +63,7 @@ pins:
     class: outputs
     meta: MM100_IGN5
     ts_name: Coil 5
-    function: Coil 5
+    function: Smart Ignition Coil 5
     color: brown
     type: ign
 
@@ -71,7 +71,7 @@ pins:
     class: outputs
     meta: MM100_IGN4
     ts_name: Coil 4
-    function: Coil 4
+    function: Smart Ignition Coil 4
     type: ign
     color: orange
 
@@ -79,7 +79,7 @@ pins:
     class: outputs
     meta: MM100_IGN3
     ts_name: Coil 3
-    function: Coil 3
+    function: Smart Ignition Coil 3
     type: ign
     color: blue
 
@@ -87,7 +87,7 @@ pins:
     class: outputs
     meta: MM100_IGN2
     ts_name: Coil 2
-    function: Coil 2
+    function: Smart Ignition Coil 2
     type: ign
     color: white
 
@@ -95,7 +95,7 @@ pins:
     class: outputs
     meta: MM100_IGN1
     ts_name: Coil 1
-    function: Coil 1 (5v)
+    function: Smart Ignition Coil 1
     type: ign
     color: green
 
@@ -176,37 +176,37 @@ pins:
   - pin: 27a
     class: outputs
     ts_name: Coil 6
-    function: Coil 6 second wire to split current per pin
+    function: Smart Ignition Coil 6
     type: ign
 
   - pin: 28a
     class: outputs
     ts_name: Coil 5
-    function: Coil 5
+    function: Smart Ignition Coil 5
     type: ign
 
   - pin: 29a
     class: outputs
     ts_name: Coil 4
-    function: Coil 4
+    function: Smart Ignition Coil 4
     type: ign
 
   - pin: 30a
     class: outputs
     ts_name: Coil 3
-    function: Coil 3
+    function: Smart Ignition Coil 3
     type: ign
 
   - pin: 31a
     class: outputs
     ts_name: Coil 2
-    function: Coil 2
+    function: Smart Ignition Coil 2
     type: ign
 
   - pin: 32a
     class: outputs
     ts_name: Coil 1
-    function: Coil 1 second wire to split current per pin
+    function: Smart Ignition Coil 1
     type: ign
 
   - pin: 33a
@@ -265,17 +265,18 @@ pins:
     meta: MM100_IN_O2S_ANALOG
     type: av
     ts_name: AIN 1
-    function: AUX1 analog input
+    function: Auxiliary analog input 1 PullDown 500K
 
   - pin: 41a
     class: analog_inputs
     meta: MM100_IN_O2S2_ANALOG
     type: av
     ts_name: AIN 2
-    function: AUX2 analog input
+    function: Auxiliary analog input 2 PullDown 500K
 
   - pin: 42a
-    function: FLEX
+    function: Digital Input / Flex fuel sensor
+    type: din
     class: [switch_inputs, event_inputs]
     id: [MM100_IN_VSS, MM100_IN_VSS]
     ts_name: FLEX
@@ -400,7 +401,7 @@ pins:
     color: black
 
   - pin: 62a
-    function: Analog ground also known as GNDA
+    function: Analog GND / sensor ground
     type: agnd
     color: black
 
@@ -408,7 +409,7 @@ pins:
     class: analog_inputs
     meta: MM100_IN_IAT_ANALOG
     ts_name: ___ IAT
-    function: IAT input
+    function: IAT Sensor Input
     type: at
     color: blue
 
@@ -421,7 +422,7 @@ pins:
     class: analog_inputs
     meta: MM100_IN_CLT_ANALOG
     ts_name: ___ CLT Coolant
-    function: CLT input
+    function: ECT CLT Coolant Sensor Input
     type: at
     color: grey
 
@@ -495,12 +496,12 @@ pins:
     function: KNOCK sensor (other sensor pin goes to analog ground)
 
   - pin: 82a
-    function: CAN bus high
+    function: CAN bus High
     color: green
     type: can
 
   - pin: 83a
-    function: CAN bus low
+    function: CAN bus Low
     color: blue
     type: can
 
@@ -509,14 +510,14 @@ pins:
     class: switch_inputs
     color: yellow
     ts_name: BUTTON1
-    function: BUTTON1 sensor
+    function: BUTTON1 sensor PullDown 10K by default, see BT1 area on the board
 
   - pin: 85a
     meta: MM100_IN_CAM
     class: switch_inputs
     color: green
     ts_name: BUTTON2
-    function: BUTTON2 sensor
+    function: BUTTON2 sensor PullDown 10K by default, see BT2 area on the board
 
   - pin: 86a
     ts_name: ___ LS5_HOT
@@ -544,7 +545,7 @@ pins:
     class: switch_inputs
     color: grey
     ts_name: BUTTON3
-    function: BUTTON3 input
+    function: BUTTON3 input no resistor by default, see BT3 area on the board
 
   - pin: 90a
     class: analog_inputs
@@ -590,10 +591,12 @@ pins:
 
   - pin: 98a
     function: GNDA PPS1 sensor
+    type: agnd
     color: black
 
   - pin: 99a
     function: GNDA PPS2 sensor
+    type: agnd
     color: black
 
   - pin: 100a
@@ -655,17 +658,17 @@ pins:
 
   - pin: 113a
     function: GND USB
-    type: GND
+    type: gnd
     color: red
 
   - pin: 114a
-    function: GND
-    type: GND
+    function: Power/Chassis GND ground
+    type: gnd
     color: red
 
   - pin: 115a
-    function: GND
-    type: GND
+    function: Power/Chassis GND ground
+    type: gnd
     color: red
 
   - pin: 116a

@@ -35,25 +35,25 @@ public class RpmLabel {
         rpmValue.setForeground(Color.red);
 
         content.setBorder(BorderFactory.createLineBorder(Color.white));
-        if (withCaption)
+        if (withCaption) {
             content.add(rpmCaption);
+        }
         content.add(rpmValue, "grow, wrap");
 
         RpmModel.getInstance().addListener(new RpmModel.RpmListener() {
             public void onRpmChange(RpmModel rpm) {
-                int value = rpm.getSmoothedValue();
-                if (value == -1)
-                    rpmValue.setText("Noise");
-                else
-                    rpmValue.setText(value + "");
+                if (ConnectionStatusLogic.INSTANCE.isConnected()) {
+                    updateRpmValue(rpm.getSmoothedValue());
+                    rpmValue.setForeground(Color.green);
+                }
             }
         });
 
-        ConnectionStatusLogic.INSTANCE.addListener(new ConnectionStatusLogic.Listener() {
+        ConnectionStatusLogic.INSTANCE.addAndFireListener(new ConnectionStatusLogic.Listener() {
             @Override
             public void onConnectionStatus(boolean isConnected) {
                 if (isConnected) {
-                    rpmValue.setText("" + SensorCentral.getInstance().getValue(WellKnownGauges.RPMGauge.getOutputChannelName()));
+                    updateRpmValue(RpmModel.getInstance().getSmoothedValue());
                     rpmValue.setForeground(Color.green);
                 } else {
                     rpmValue.setText(NO_CONNECTION);
@@ -62,6 +62,14 @@ public class RpmLabel {
             }
         });
         setSize(size);
+    }
+
+    private void updateRpmValue(int value) {
+        if (value == -1) {
+            rpmValue.setText("Noise");
+        } else {
+            rpmValue.setText(value + "");
+        }
     }
 
     public JPanel getContent() {

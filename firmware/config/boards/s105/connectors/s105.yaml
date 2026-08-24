@@ -15,7 +15,7 @@ pins:
 
   - pin: 3a
     function: Ignition GND
-    type: GND
+    type: gnd
 
   - pin: 4a
     id: D15
@@ -37,14 +37,14 @@ pins:
     function: Injector 2
     class: outputs
     ts_name: 6 - INJ_2
-    type: ls
+    type: inj
 
   - pin: 7a
     id: D10
     function: Injector 3
     class: outputs
     ts_name: 7 - INJ_3
-    type: ls
+    type: inj
 
   - pin: 8a
     id: B8
@@ -122,7 +122,7 @@ pins:
     function: Injector 1
     class: outputs
     ts_name: 27 - INJ_1
-    type: ls
+    type: inj
 
   - pin: 28a
     id: C7
@@ -182,13 +182,15 @@ pins:
   - pin: 39a
     id: EFI_ADC_3
     class: analog_inputs
-    function: CLT (1.5K pull-up to 3.3V, 22K pull-down)
+    function: ECT CLT Coolant Sensor Input (1.5K pull-up to 3.3V, 22K pull-down)
+    type: at
     ts_name: 39 - CLT
 
   - pin: 40a
     id: EFI_ADC_14
     class: analog_inputs
-    function: IAT (1.5K pull-up to 3.3V, 22K pull-down)
+    function: IAT Sensor Input (1.5K pull-up to 3.3V, 22K pull-down)
+    type: at
     ts_name: 40 - IAT
 
   - pin: 43a
@@ -213,7 +215,7 @@ pins:
     function: Injector 4
     class: outputs
     ts_name: 47 - INJ_4
-    type: ls
+    type: inj
 
   - pin: 48a
     id: E5

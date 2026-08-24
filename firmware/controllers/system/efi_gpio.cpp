@@ -698,6 +698,7 @@ void initMiscOutputPins() {
 #if EFI_SHAFT_POSITION_INPUT
 	// todo: migrate remaining OutputPin to RegisteredOutputPin in order to get consistent dynamic pin init/deinit
 	enginePins.debugTriggerSync.initPin("debug: sync", engineConfiguration->debugTriggerSync);
+	enginePins.debugTriggerState.initPin("debug: state", engineConfiguration->debugTriggerState);
 #endif // EFI_SHAFT_POSITION_INPUT
 
 	enginePins.o2heater.initPin("O2 heater", engineConfiguration->o2heaterPin);
@@ -762,7 +763,17 @@ void OutputPin::initPin(const char *msg, brain_pin_e p_brainPin, pin_output_mode
 	}
 	#if (BOARD_EXT_GPIOCHIPS > 0)
 		else {
+			if (!gpiochips_getChipName(p_brainPin)) {
+				configError("%s: no GPIO chip registered for pin %d", msg, static_cast<int>(p_brainPin));
+				return;
+			}
+
 			this->ext = true;
+		}
+	#else
+		else {
+			configError("%s: external GPIO pin %d is not supported", msg, static_cast<int>(p_brainPin));
+			return;
 		}
 	#endif
 #endif // briefly leave the include guard because we need to set default state in tests

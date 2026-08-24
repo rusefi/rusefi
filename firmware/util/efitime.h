@@ -127,6 +127,11 @@ efitimems_t getTimeNowMs();
  */
 efitimesec_t getTimeNowS();
 
+/**
+ * @brief   UTC date-time to Unix epoch seconds, valid for years 1970..2105
+ */
+uint32_t dateTimeToEpochTime(const efidatetime_t& dateTime);
+
 #if EFI_UNIT_TEST
 void setTimeNowUs(int us);
 void advanceTimeUs(int us);

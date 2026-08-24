@@ -59,6 +59,8 @@
 #include "vvt.h"
 #include "closed_loop_fuel.h"
 #include "long_term_fuel_trim.h"
+#include "injector_deadtime_autotune.h"
+#include "second_tables.h"
 #include "electronic_throttle_generated.h"
 #include "engine_cylinder.hpp"
 
@@ -70,6 +72,10 @@
 
 #ifndef EFI_BOOTLOADER
 #include "engine_modules_generated.h"
+#endif
+
+#if EFI_MISFIRE_DETECTION
+#include "misfire_detection.h"
 #endif
 
 static_assert(MAX_CYLINDER_COUNT > 0);
@@ -109,8 +115,7 @@ public:
 
     StartStopState startStopState{};
 
-
-    TunerStudioOutputChannels outputChannels{};
+    output_channels_s outputChannels{};
 
     /**
      * Sometimes for instance during shutdown we need to completely supress CAN TX
@@ -143,6 +148,10 @@ public:
     FuelComputer fuelComputer{};
 #endif // EFI_ENGINE_CONTROL
 
+    // [tag:disable_engine_module] Entries wrapped in #if EFI_<NAME> are compile-time optional
+    // modules. Before adding or disabling one, read the how-to in engine_module.h - especially
+    // the TS-page rules: a module that owns a TunerStudio page (like LongTermFuelTrim below)
+    // must have its flag declared in the board prepend.txt, not in board.mk or efifeatures.h.
     type_list<
         Mockable<InjectorModelPrimary>,
         Mockable<InjectorModelSecondary>,
@@ -190,7 +199,13 @@ public:
 #if EFI_LTFT_CONTROL
         LongTermFuelTrim,
 #endif
+#if EFI_ENGINE_CONTROL
         ShortTermFuelTrim,
+        InjectorDeadtimeAutotune,
+#endif // EFI_ENGINE_CONTROL
+#if EFI_MISFIRE_DETECTION
+        Mockable<MisfireController>,
+#endif // EFI_MISFIRE_DETECTION
 
 #include "modules_list_generated.h"
 
@@ -236,9 +251,9 @@ public:
 //    SoftSparkLimiter ALSsoftSparkLimiter{false};
 #endif /* EFI_ANTILAG_SYSTEM */
 
-#if EFI_SHAFT_POSITION_INPUT
+#if EFI_SHAFT_POSITION_INPUT && EFI_ENGINE_CONTROL
     LambdaMonitor lambdaMonitor{};
-#endif // EFI_ENGINE_CONTROL
+#endif // EFI_SHAFT_POSITION_INPUT && EFI_ENGINE_CONTROL
 
 #if ROTATIONAL_IDLE_CONTROLLER
     RotationalIdle rotationalIdleController{};
@@ -246,6 +261,7 @@ public:
 
     IgnitionState ignitionState{};
     void resetLua();
+    void reset();
 
 #if EFI_SHAFT_POSITION_INPUT
     void OnTriggerStateProperState(efitick_t nowNt, size_t triggerStateIndex) override;
@@ -385,8 +401,6 @@ public:
 #endif
 
 private:
-    void reset();
-
     void injectEngineReferences();
 };
 

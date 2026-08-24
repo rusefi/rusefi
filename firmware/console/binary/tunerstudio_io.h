@@ -9,7 +9,7 @@
 #pragma once
 #include "global.h"
 #include "tunerstudio_impl.h"
-#include "page_1_generated.h"
+#include "page_2_generated.h"
 
 #if EFI_USB_SERIAL
 #include "usbconsole.h"
@@ -18,6 +18,9 @@
 #if EFI_PROD_CODE
 #include "pin_repository.h"
 #endif
+
+#include "can.h"
+#include <rusefi/timer.h>
 
 #ifndef USART_CR2_STOP1_BITS
 // todo: acticulate why exactly does prometheus_469 as for this hack
@@ -63,7 +66,7 @@ public:
 	 */
 	char scratchBuffer[scratchBuffer_SIZE + 30];
 #if EFI_TS_SCATTER
-	page1_s page1;
+	page2_s page2;
 #endif
 	const char *name;
 
@@ -90,6 +93,8 @@ public:
 	 * by one read. Instead after getting packet size it will try to receive one byte of
 	 * command and check if it is supported. */
 	bool in_sync = false;
+	bool settingsBurnPending = false;
+	Timer settingsBurnTimer;
 
 private:
 	bool isBigPacket(size_t size);
@@ -149,3 +154,4 @@ void startSerialChannels();
 SerialTsChannelBase* getBluetoothChannel();
 
 void startCanConsole();
+void announceCanConsole(CanCycle cycle);

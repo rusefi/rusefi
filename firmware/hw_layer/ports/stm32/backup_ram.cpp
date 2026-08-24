@@ -13,6 +13,12 @@ uint32_t backupRamLoad(backup_ram_e idx) {
 		return RTCD1.rtc->BKP0R & 0xffff;
 	case backup_ram_e::IgnCounter:
 		return (RTCD1.rtc->BKP0R >> 16) & 0xff;
+	case backup_ram_e::MccStatus:
+		return RTCD1.rtc->BKP1R;
+	case backup_ram_e::Odometer:
+		return RTCD1.rtc->BKP2R;
+	case backup_ram_e::OdometerValidate:
+		return RTCD1.rtc->BKP3R;
 	default:
 		criticalError("Invalid backup ram idx %d", (int)idx);
 		return 0;
@@ -30,6 +36,15 @@ void backupRamSave(backup_ram_e idx, uint32_t value) {
 		break;
 	case backup_ram_e::IgnCounter:
 		RTCD1.rtc->BKP0R = (RTCD1.rtc->BKP0R & ~0x00ff0000) | ((value & 0xff) << 16);
+		break;
+	case backup_ram_e::MccStatus:
+		RTCD1.rtc->BKP1R = value;
+		break;
+	case backup_ram_e::Odometer:
+		RTCD1.rtc->BKP2R = value;
+		break;
+	case backup_ram_e::OdometerValidate:
+		RTCD1.rtc->BKP3R = value;
 		break;
 	default:
 		criticalError("Invalid backup ram idx %d, value %lx", (int)idx, value);

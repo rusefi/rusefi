@@ -1,3 +1,12 @@
+/**
+ * @file ac_control.cpp
+ * @brief Air conditioning control logic.
+ *
+ * Decides when the A/C compressor clutch may be engaged based on the A/C request
+ * input and a set of safety limits (max RPM, CLT, TPS and refrigerant pressure),
+ * applying deadbands and hysteresis to prevent rapid on/off cycling.
+ */
+
 #include "pch.h"
 
 #include "ac_control.h"

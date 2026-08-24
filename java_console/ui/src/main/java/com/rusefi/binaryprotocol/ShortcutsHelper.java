@@ -6,22 +6,24 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.util.function.BooleanSupplier;
 
 public class ShortcutsHelper {
-    public static void installConnectAndDisconnect(UIContext uiContext, JComponent control) {
+    public static void installConnectAndDisconnect(UIContext uiContext, JComponent control,
+                                                   BooleanSupplier connectionActionsAllowed) {
         KeyStroke disconnectKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_MASK);
         KeyStroke connectKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_MASK);
         installKeyAction(connectKeyStroke, "connectCommand", control, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                reconnect(uiContext);
+                runIfAllowed(connectionActionsAllowed, () -> reconnect(uiContext));
             }
         });
 
         installKeyAction(disconnectKeyStroke, "disconnectCommand", control, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                disconnect(uiContext);
+                runIfAllowed(connectionActionsAllowed, () -> disconnect(uiContext));
             }
         });
     }
@@ -32,6 +34,12 @@ public class ShortcutsHelper {
 
     public static void disconnect(UIContext uiContext) {
         uiContext.getLinkManager().disconnect();
+    }
+
+    static void runIfAllowed(BooleanSupplier allowed, Runnable action) {
+        if (allowed.getAsBoolean()) {
+            action.run();
+        }
     }
 
     public static void installKeyAction(KeyStroke undoKeyStroke, String actionName, JComponent control, AbstractAction action) {

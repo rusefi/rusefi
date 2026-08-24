@@ -305,7 +305,10 @@ public class ExpressionEvaluatorTest {
 
     @Test
     public void testLooksLikeExpression_WithDivide() {
-        assertTrue(ExpressionEvaluator.looksLikeExpression("10/2"));
+        assertTrue(ExpressionEvaluator.looksLikeExpression("{10/2}"));
+        // Unbraced "10/2" is NOT detected as expression because "/" is common in unit strings
+        // like "Air/Fuel Ratio", "km/h". Real INI expressions are always braced.
+        assertFalse(ExpressionEvaluator.looksLikeExpression("10/2"));
     }
 
     @Test
@@ -951,5 +954,42 @@ public class ExpressionEvaluatorTest {
     public void testBooleanExpression_EmptyExpression() {
         Boolean result = ExpressionEvaluator.evaluateBooleanExpression("", new HashMap<>());
         assertNull(result);
+    }
+
+    // ========== evaluateNumericExpression() - Null Guards ==========
+
+    @Test
+    public void testNumericExpression_NullExpression() {
+        assertNull(ExpressionEvaluator.evaluateNumericExpression(null, null, null));
+    }
+
+    @Test
+    public void testNumericExpression_NullIni() {
+        assertNull(ExpressionEvaluator.evaluateNumericExpression("{useMetric ? 300 : 43.5}", null, null));
+    }
+
+    // ========== ternary expressions with numbers ==========
+    // These model the exact high-value expression on MAPGauge:
+    //   {useMetricOnInterface ? 300 : 43.5}
+    // The bug they exercise: without evaluation, the gauge got min=max=0 and displayed "max=10".
+
+    @Test
+    public void testMapGaugeHighValue_Metric() {
+        Map<String, Double> context = new HashMap<>();
+        context.put("useMetricOnInterface", 1.0);
+        Double result = ExpressionEvaluator.tryEvaluateWithContext(
+            "{useMetricOnInterface ? 300 : 43.5}", context);
+        assertNotNull(result);
+        assertEquals(300.0, result, EPS);
+    }
+
+    @Test
+    public void testMapGaugeHighValue_Imperial() {
+        Map<String, Double> context = new HashMap<>();
+        context.put("useMetricOnInterface", 0.0);
+        Double result = ExpressionEvaluator.tryEvaluateWithContext(
+            "{useMetricOnInterface ? 300 : 43.5}", context);
+        assertNotNull(result);
+        assertEquals(43.5, result, EPS);
     }
 }

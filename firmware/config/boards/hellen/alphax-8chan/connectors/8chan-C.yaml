@@ -66,20 +66,20 @@ pins:
   - pin: 11C
     meta: MM176_IGN1
     class: outputs
-    function: Smart Ignition 1 Output
+    function: Smart Ignition Coil 1
     type: ign
     ts_name: 11C - Ignition 1
     color: green
 
   - pin: 12C
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
     color: yellow
 
   - pin: 13C
     meta: MM176_IGN3
     class: outputs
-    function: Smart Ignition 3 Output
+    function: Smart Ignition Coil 3
     type: ign
     ts_name: 13C - Ignition 3
     color: blue
@@ -87,7 +87,7 @@ pins:
   - pin: 14C
     meta: MM176_IGN5
     class: outputs
-    function: Smart Ignition 5 Output
+    function: Smart Ignition Coil 5
     type: ign
     ts_name: 14C - Ignition 5
     color: green
@@ -95,13 +95,13 @@ pins:
   - pin: 15C
     meta: MM176_IGN8
     class: outputs
-    function: Smart Ignition 8 Output
+    function: Smart Ignition Coil 8
     type: ign
     ts_name: 15C - Ignition 8
     color: orange/brown
 
   - pin: 16C
-    function: CAN2 bus low (CAN2L)
+    function: CAN2 bus Low
     type: can
     color: blue
 
@@ -119,7 +119,7 @@ pins:
   - pin: 19C
     meta: MM176_IGN2
     class: outputs
-    function: Smart Ignition 2 Output
+    function: Smart Ignition Coil 2
     type: ign
     ts_name: 19C - Ignition 2
     color: white
@@ -127,7 +127,7 @@ pins:
   - pin: 20C
     meta: MM176_IGN4
     class: outputs
-    function: Smart Ignition 4 Output
+    function: Smart Ignition Coil 4
     type: ign
     ts_name: 20C - Ignition 4
     color: orange/brown
@@ -135,26 +135,26 @@ pins:
   - pin: 21C
     meta: MM176_IGN7
     class: outputs
-    function: Smart Ignition 7 Output
+    function: Smart Ignition Coil 7
     type: ign
     ts_name: 21C - Ignition 7
     color: blue
 
   - pin: 22C
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
     color: orange
 
   - pin: 23C
     meta: MM176_SPI3_MISO
     class: outputs
-    function: Smart Ignition 10 Output
+    function: Smart Ignition Coil 10
     type: ign
     ts_name: 23C - Ignition 10
     color: orange
 
   - pin: 24C
-    function: CAN2 bus high (CAN2H)
+    function: CAN2 bus High
     type: can
     color: green
 
@@ -178,7 +178,7 @@ pins:
   - pin: 28C
     meta: MM176_IGN6
     class: outputs
-    function: Smart Ignition 6 Output
+    function: Smart Ignition Coil 6
     type: ign
     ts_name: 28C - Ignition 6
     color: white
@@ -186,32 +186,32 @@ pins:
   - pin: 29C
     meta: MM176_SPI3_SCK
     class: outputs
-    function: Smart Ignition 9 Output
+    function: Smart Ignition Coil 9
     type: ign
     ts_name: 29C - Ignition 9
 
   - pin: 30C
     meta: MM176_SPI3_MOSI
     class: outputs
-    function: Smart Ignition 11 Output
+    function: Smart Ignition Coil 11
     type: ign
     ts_name: 30C - Ignition 11
 
   - pin: 31C
     meta: MM176_SPI3_CS
     class: outputs
-    function: Smart Ignition 12 Output
+    function: Smart Ignition Coil 12
     type: ign
     ts_name: 31C - Ignition 12
     color: orange
 
   - pin: 32C
-    function: CAN bus high (CANH)
+    function: CAN bus High
     type: can
     color: green
 
   - pin: 33C
-    function: CAN bus low (CANL)
+    function: CAN bus Low
     type: can
     color: blue
 

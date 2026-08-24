@@ -7,7 +7,7 @@
 #include "pch.h"
 #include "engine_configuration.h"
 
-static void setTestFuelCrankingTable(float fuelMass) {
+static inline void setTestFuelCrankingTable(float fuelMass) {
     setTable(config->crankingCycleBaseFuel, fuelMass);
     for (int cltIndex = 0;cltIndex<CRANKING_CYCLE_CLT_SIZE;cltIndex++) {
         // kludge: we have a few unit tests which depend on these magic numbers

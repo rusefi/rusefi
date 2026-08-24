@@ -34,8 +34,9 @@ public class RpmModel {
     public void setValue(int rpm) {
         value = rpm;
 
-        for (RpmListener listener : listeners)
+        for (RpmListener listener : listeners) {
             listener.onRpmChange(this);
+        }
     }
 
     public int getValue() {

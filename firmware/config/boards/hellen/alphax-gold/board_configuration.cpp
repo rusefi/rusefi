@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "basic_configuration.h"
 #include "hellen_meta.h"
 #include "defaults.h"
 #include "smart_gpio.h"
@@ -339,7 +340,7 @@ static void alphax_gold_boardInitHardware() {
 	board_init_ext_gpios();
 }
 
-static void alphax_gold_OnConfigurationChange(engine_configuration_s * /*previousConfiguration*/) {
+static void alphax_gold_OnConfigurationChange(const engine_configuration_s * /*previousConfiguration*/) {
 	alphaTempPullUp.setValue(engineConfiguration->boardEnTempPullUp);
 	alphaKnock1PullUp.setValue(engineConfiguration->boardEnKnock1PullUp);
 	alphaKnock2PullUp.setValue(engineConfiguration->boardEnKnock2PullUp);
@@ -398,10 +399,19 @@ int getBoardMetaDcOutputsCount() {
     return 2;
 }
 
+static bool applyAlphaxGoldBasicConfiguration(BasicConfigurationAction action) {
+	return applyBasicConfiguration(action,
+		setDefaultETBPins,
+		H144_IN_TPS,
+		H144_IN_TPS2,
+		H144_IN_PPS,
+		H144_IN_PPS2);
+}
+
 void setup_custom_board_overrides() {
 	custom_board_InitHardware = alphax_gold_boardInitHardware;
 	custom_board_DefaultConfiguration = alphax_gold_boardDefaultConfiguration;
 	custom_board_ConfigOverrides = alphax_gold_boardConfigOverrides;
 	custom_board_OnConfigurationChange = alphax_gold_OnConfigurationChange;
+	custom_board_applyBasicConfiguration = applyAlphaxGoldBasicConfiguration;
 }
-

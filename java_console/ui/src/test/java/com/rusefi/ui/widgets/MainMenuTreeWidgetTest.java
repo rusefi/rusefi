@@ -1,5 +1,6 @@
 package com.rusefi.ui.widgets;
 
+import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.AxisModel;
 import com.opensr5.ini.CurveModel;
 import com.opensr5.ini.DialogModel;
@@ -7,6 +8,8 @@ import com.opensr5.ini.IniFileMetaInfo;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.RawIniFile;
 import com.opensr5.ini.SubMenuModel;
+import com.opensr5.ini.VeAnalyzeFilter;
+import com.opensr5.ini.VeAnalyzeMap;
 import com.rusefi.ini.reader.IniFileReaderUtil;
 import com.rusefi.ini.reader.IniParsingException;
 import com.rusefi.ui.UIContext;
@@ -21,6 +24,7 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
 import java.awt.image.ImageObserver;
@@ -31,12 +35,18 @@ import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * MainMenuTreeWidget
+ */
 public class MainMenuTreeWidgetTest {
     private static IniFileModel readLines(RawIniFile lines) {
         IniFileMetaInfo metaInfo = new IniFileMetaInfo() {
@@ -184,37 +194,138 @@ todo: spllit into smaller tests?
         // Check if we have some top-level menus
         assertTrue(root.getChildCount() > 0, "Tree should have top-level menus");
 
-        // Find "Setup" menu
+        List<String> categories = Arrays.asList(
+            "Setup", "Fuel", "Ignition", "Cranking", "Idle", "Advanced",
+            "Sensors", "CAN-bus", "Controller", "Help", "View"
+        );
+        Set<Icon> categoryIcons = new HashSet<>();
+        for (String category : categories) {
+            DefaultMutableTreeNode node = findNode(root, category);
+            assertNotNull(node, category + " node should exist");
+            categoryIcons.add(verifyIcon(tree, node, category, 24));
+        }
+        assertEquals(categories.size(), categoryIcons.size(), "Each category should have a distinct icon");
+
         DefaultMutableTreeNode setupNode = findNode(root, "Setup");
-        assertNotNull(setupNode, "Setup node should exist");
-
-        // Verify icon for Setup
-        verifyIcon(tree, setupNode, "Setup");
-
-        // Find "Fuel" menu
-        DefaultMutableTreeNode fuelNode = findNode(root, "Fuel");
-        assertNotNull(fuelNode, "Fuel node should exist");
-        verifyIcon(tree, fuelNode, "Fuel");
-
-        // Find "Ignition" menu
-        DefaultMutableTreeNode ignitionNode = findNode(root, "Ignition");
-        assertNotNull(ignitionNode, "Ignition node should exist");
-        verifyIcon(tree, ignitionNode, "Ignition");
-
-        // Find "Idle" menu
-        DefaultMutableTreeNode idleNode = findNode(root, "Idle");
-        assertNotNull(idleNode, "Idle node should exist");
-        verifyIcon(tree, idleNode, "Idle");
-
-        // Find "Cranking" menu
-        DefaultMutableTreeNode crankingNode = findNode(root, "Cranking");
-        assertNotNull(crankingNode, "Cranking node should exist");
-        verifyIcon(tree, crankingNode, "Cranking");
-
-        // Find "Limits and protection" group in Setup
         DefaultMutableTreeNode limitsNode = findNode(setupNode, "Limits and protection");
         assertNotNull(limitsNode, "Limits and protection node should exist");
         assertTrue(limitsNode.getChildCount() > 0, "Limits group should have children");
+        Icon groupIcon = verifyIcon(tree, limitsNode, "Limits and protection", 18);
+
+        DefaultMutableTreeNode triggerNode = findNode(setupNode, "Trigger");
+        assertNotNull(triggerNode);
+        Icon dialogIcon = verifyIcon(tree, triggerNode, "Trigger", 18);
+
+        DefaultMutableTreeNode vehicleNode = findNode(setupNode, "Vehicle Information");
+        assertNotNull(vehicleNode);
+        Icon vehicleIcon = verifyIcon(tree, vehicleNode, "Vehicle Information", 18);
+
+        DefaultMutableTreeNode batteryNode = findNode(setupNode, "Battery and alternator");
+        assertNotNull(batteryNode);
+        Icon batteryIcon = verifyIcon(tree, batteryNode, "Battery and alternator", 18);
+
+        DefaultMutableTreeNode ignitionKeyNode = findNode(setupNode, "Ignition key input Settings");
+        assertNotNull(ignitionKeyNode);
+        Icon ignitionKeyIcon = verifyIcon(tree, ignitionKeyNode, "Ignition key input Settings", 18);
+
+        DefaultMutableTreeNode acNode = findNode(setupNode, "Air Conditioning");
+        assertNotNull(acNode);
+        Icon acIcon = verifyIcon(tree, acNode, "Air Conditioning", 18);
+
+        DefaultMutableTreeNode fanNode = new DefaultMutableTreeNode(
+            new SubMenuModel("fanSettings", "Cooling Fans"));
+        Icon fanIcon = verifyIcon(tree, fanNode, "Cooling Fans", 18);
+        assertEquals(6, new HashSet<>(Arrays.asList(
+            dialogIcon, vehicleIcon, batteryIcon, ignitionKeyIcon, acIcon, fanIcon)).size(),
+            "Feature icons should differ from each other and the generic dialog icon");
+
+        DefaultMutableTreeNode fuelNode = findNode(root, "Fuel");
+        DefaultMutableTreeNode fuelTrimsNode = findNode(fuelNode, "Cylinder fuel trims");
+        DefaultMutableTreeNode fuelTrimNode = findNode(fuelTrimsNode, "Fuel trim cyl 1");
+        assertNotNull(fuelTrimNode);
+        Icon tableIcon = verifyIcon(tree, fuelTrimNode, "Fuel trim cyl 1", 18);
+
+        DefaultMutableTreeNode crankingNode = findNode(root, "Cranking");
+        DefaultMutableTreeNode crankingFuelNode = findNode(crankingNode, "Cranking Fuel multiplier");
+        assertNotNull(crankingFuelNode);
+        Icon curveIcon = verifyIcon(tree, crankingFuelNode, "Cranking Fuel multiplier", 18);
+
+        assertEquals(4, new HashSet<>(Arrays.asList(groupIcon, dialogIcon, tableIcon, curveIcon)).size(),
+            "Each node type should have a distinct icon");
+    }
+
+    @Test
+    public void testSeparatorNodes() throws FileNotFoundException {
+        UIContext uiContext = new UIContext();
+        String iniPath = "../../java_console/io/src/test/java/com/rusefi/io/pin_output_mode_with_and_without_dollar/test_data/rusefi_uaefi.ini";
+        IniFileModel model = IniFileReaderUtil.readIniFile(iniPath);
+        uiContext.iniFileState.setIniFileModelForTest(model);
+
+        com.rusefi.ui.widgets.tune.MainMenuTreeWidget widget = new MainMenuTreeWidget(uiContext);
+        JPanel content = widget.getContentPane();
+        JPanel topPanel = (JPanel) content.getComponent(0);
+        JTextField searchField = (JTextField) topPanel.getComponent(0);
+        JScrollPane scrollPane = (JScrollPane) content.getComponent(1);
+        JTree tree = (JTree) scrollPane.getViewport().getView();
+        DefaultMutableTreeNode root = (DefaultMutableTreeNode) tree.getModel().getRoot();
+
+        DefaultMutableTreeNode setupNode = findNode(root, "Setup");
+        assertNotNull(setupNode);
+        DefaultMutableTreeNode separatorNode = null;
+        for (int i = 0; i < setupNode.getChildCount(); i++) {
+            DefaultMutableTreeNode child = (DefaultMutableTreeNode) setupNode.getChildAt(i);
+            if (child.getUserObject() instanceof com.opensr5.ini.SeparatorMenuItem) {
+                separatorNode = child;
+                break;
+            }
+        }
+        assertNotNull(separatorNode, "Setup menu should contain separator nodes");
+
+        // separator renders as a horizontal line component, not as the usual label
+        Component rendered = tree.getCellRenderer().getTreeCellRendererComponent(tree, separatorNode, false, false, true, 0, false);
+        assertFalse(rendered instanceof JLabel, "separator should not render as a text label");
+
+        tree.setSelectionPaths(new TreePath[]{new TreePath(separatorNode.getPath())});
+        assertNull(tree.getSelectionPath(), "separator should not be selectable");
+
+        // separators are excluded from search results
+        searchField.setText("setup");
+        DefaultMutableTreeNode filteredRoot = (DefaultMutableTreeNode) tree.getModel().getRoot();
+        assertNoSeparators(filteredRoot);
+    }
+
+    @Test
+    public void testDisabledNodesAreNotSelectable() throws FileNotFoundException {
+        UIContext uiContext = new UIContext();
+        String iniPath = "../../java_console/io/src/test/java/com/rusefi/io/pin_output_mode_with_and_without_dollar/test_data/rusefi_uaefi.ini";
+        IniFileModel model = IniFileReaderUtil.readIniFile(iniPath);
+        uiContext.iniFileState.setIniFileModelForTest(model);
+
+        MainMenuTreeWidget widget = new MainMenuTreeWidget(uiContext);
+        JTree tree = (JTree) ((JScrollPane) widget.getContentPane().getComponent(1)).getViewport().getView();
+        DefaultMutableTreeNode root = (DefaultMutableTreeNode) tree.getModel().getRoot();
+        DefaultMutableTreeNode fuel = findNode(root, "Fuel");
+        DefaultMutableTreeNode trims = findNode(fuel, "Cylinder fuel trims");
+        DefaultMutableTreeNode disabled = findNode(trims, "Fuel trim cyl 5");
+        assertNotNull(disabled);
+
+        widget.refreshExpressions(new ConfigurationImage(new byte[model.getMetaInfo().getPageSize(0)]));
+        Component rendered = tree.getCellRenderer().getTreeCellRendererComponent(
+            tree, disabled, false, false, true, 0, false);
+        assertTrue(rendered instanceof JLabel);
+        assertEquals(UIManager.getColor("Label.disabledForeground"), rendered.getForeground());
+        TreePath fuelPath = new TreePath(fuel.getPath());
+        tree.setSelectionPath(fuelPath);
+        tree.setSelectionPaths(new TreePath[]{new TreePath(disabled.getPath())});
+
+        assertEquals(fuelPath, tree.getSelectionPath(), "disabled node should not replace the selection");
+    }
+
+    private void assertNoSeparators(DefaultMutableTreeNode node) {
+        assertFalse(node.getUserObject() instanceof com.opensr5.ini.SeparatorMenuItem, "search results must not contain separators");
+        for (int i = 0; i < node.getChildCount(); i++) {
+            assertNoSeparators((DefaultMutableTreeNode) node.getChildAt(i));
+        }
     }
 
     @Test
@@ -352,14 +463,16 @@ todo: spllit into smaller tests?
         return null;
     }
 
-    private void verifyIcon(JTree tree, DefaultMutableTreeNode node, String name) {
+    private Icon verifyIcon(JTree tree, DefaultMutableTreeNode node, String name, int size) {
         TreeCellRenderer renderer = tree.getCellRenderer();
-        Component rendererComponent = renderer.getTreeCellRendererComponent(tree, node, false, false, false, 0, false);
+        Component rendererComponent = renderer.getTreeCellRendererComponent(
+            tree, node, false, false, node.isLeaf(), 0, false);
         assertTrue(rendererComponent instanceof JLabel, name + " renderer should be a JLabel");
         JLabel label = (JLabel) rendererComponent;
         assertNotNull(label.getIcon(), name + " should have an icon");
-        assertEquals(24, label.getIcon().getIconWidth(), name + " icon width");
-        assertEquals(24, label.getIcon().getIconHeight(), name + " icon height");
+        assertEquals(size, label.getIcon().getIconWidth(), name + " icon width");
+        assertEquals(size, label.getIcon().getIconHeight(), name + " icon height");
+        return label.getIcon();
     }
     @Test
     public void testCurveWidgetInCalibrationWidget() {
@@ -369,6 +482,7 @@ todo: spllit into smaller tests?
             "scriptCurve1 = array, F32, 64, [16], \"y\", 1, 0, 0, 100, 3\n " +
             "[CurveEditor]\n" +
             "\tcurve = scriptCurve1, \"Script Curve #1\"\n" +
+            "\t\tcolumnLabel = \"Coolant\", \"RPM Limit\"\n" +
             "\t\txAxis\t\t=  0, 100, 10\n" +
             "\t\tyAxis\t\t=  0, 200, 20\n" +
             "\t\txBins\t\t= scriptCurve1Bins\n" +
@@ -405,13 +519,32 @@ todo: spllit into smaller tests?
         assertNotNull(table);
         assertEquals(16, table.getRowCount());
         assertEquals(2, table.getColumnCount());
+        assertEquals("Coolant", table.getColumnName(0));
+        assertEquals("RPM Limit", table.getColumnName(1));
+        assertTrue(table.getCellSelectionEnabled());
+
+        table.setRowSelectionInterval(0, 1);
+        table.setColumnSelectionInterval(1, 1);
+        table.setValueAt("42", 0, 1);
+        assertEquals(42, Double.parseDouble(table.getValueAt(0, 1).toString()));
+        assertEquals(42, Double.parseDouble(table.getValueAt(1, 1).toString()));
+
+        assertTrue(table.editCellAt(0, 1, new MouseEvent(table, MouseEvent.MOUSE_PRESSED,
+            System.currentTimeMillis(), 0, 0, 0, 2, false)));
+        assertEquals(42, Double.parseDouble(((JTextField) table.getEditorComponent()).getText()));
+        table.getCellEditor().cancelCellEditing();
+
+        assertTrue(table.editCellAt(0, 1, new KeyEvent(table, KeyEvent.KEY_PRESSED,
+            System.currentTimeMillis(), 0, KeyEvent.VK_5, '5')));
+        assertEquals("", ((JTextField) table.getEditorComponent()).getText());
+        table.getCellEditor().cancelCellEditing();
     }
 
     @Test
     public void testCurveWidgetGridLines() {
         AxisModel xAxis = new AxisModel(0, 100, 5); // 6 lines expected: 0, 20, 40, 60, 80, 100
         AxisModel yAxis = new AxisModel(0, 200, 10); // 11 lines expected: 0, 20, ..., 200
-        CurveModel curveModel = new CurveModel("id", "title", xAxis, yAxis, "xBins", "yBins");
+        CurveModel curveModel = new CurveModel("id", "title", null, null, xAxis, yAxis, "xBins", "yBins");
 
         IniFileModel model = new com.opensr5.ini.IniFileModel() {
             @Override public String getSignature() { return null; }
@@ -431,6 +564,7 @@ todo: spllit into smaller tests?
             @Override public com.opensr5.ini.field.IniField getIniField(com.rusefi.config.Field field) { return null; }
             @Override public com.opensr5.ini.field.IniField getIniField(String key) { return null; }
             @Override public com.opensr5.ini.field.IniField getOutputChannel(String key) { return null; }
+            @Override public Map<String, com.opensr5.ini.field.IniField> getAllOutputChannels() { return java.util.Collections.emptyMap(); }
             @Override public String getExpressionOutputChannel(String key) { return null; }
             @Override public Map<String, String> getExpressionOutputChannels() { return java.util.Collections.emptyMap(); }
             @Override public Map<String, String> getProtocolMeta() { return null; }
@@ -453,9 +587,19 @@ todo: spllit into smaller tests?
             @Override public com.opensr5.ini.TableModel getTable(String name) { return null; }
             @Override public com.opensr5.ini.FrontPageModel getFrontPage() { return null; }
             @Override public List<com.opensr5.ini.MenuModel> getMenus() { return null; }
+            @Override public Map<String, String> getControllerCommands() { return java.util.Collections.emptyMap(); }
+            @Override public List<VeAnalyzeMap> getVeAnalyzeMaps() { return java.util.Collections.emptyList(); }
+            @Override public List<String> getLambdaTargetTables() { return java.util.Collections.emptyList(); }
+            @Override public List<VeAnalyzeFilter> getVeAnalyzeFilters() { return java.util.Collections.emptyList(); }
+            @Override public List<com.opensr5.ini.EventTriggerModel> getEventTriggers() { return java.util.Collections.emptyList(); }
         };
 
         com.rusefi.ui.widgets.tune.CurveWidget widget = new com.rusefi.ui.widgets.tune.CurveWidget(curveModel, model, null);
+
+        JTable table = findTable(widget.getContentPane());
+        assertNotNull(table);
+        assertEquals("X Axis", table.getColumnName(0));
+        assertEquals("Y Axis", table.getColumnName(1));
 
         // Find the CurveCanvas
         com.rusefi.ui.widgets.tune.CurveWidget.CurveCanvas canvas = null;
@@ -569,7 +713,8 @@ todo: spllit into smaller tests?
         canvas.paintComponent(spyG2);
 
         assertTrue(drawnStrings.contains("title"), "Should draw title");
-        assertTrue(drawnStrings.contains("RPM"), "Should draw units");
+        assertTrue(drawnStrings.contains("RPM"), "Should draw X-axis units");
+        assertTrue(drawnStrings.contains("Deg"), "Should draw Y-axis units");
         assertTrue(drawnStrings.contains("0"), "Should draw 0 for X axis");
         assertTrue(drawnStrings.contains("100"), "Should draw 100 for X axis");
         assertTrue(drawnStrings.contains("0.00"), "Should draw 0.00 for Y axis with 2 digits");
@@ -605,5 +750,106 @@ todo: spllit into smaller tests?
             }
         }
         return null;
+    }
+
+    private Component findCanvas(Container container) {
+        for (Component c : container.getComponents()) {
+            if (c.getClass().getName().endsWith("CurveCanvas")) return c;
+            if (c instanceof Container) {
+                Component found = findCanvas((Container) c);
+                if (found != null) return found;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Regression test for issue #9635: on small windows the curve plot collapsed to a sliver while the
+     * JTable held a large fixed width. Root cause: a JTable reports its preferredScrollableViewportSize
+     * (default 450x400) as the enclosing JScrollPane's preferred width, so GridBagLayout reserved ~450px
+     * for the table and gave the canvas (which started with a near-zero preferred size) only the weighted
+     * remainder. The fix shrinks the table's preferred footprint and gives the canvas a real preferred
+     * size so the 0.8/0.2 weights actually keep the plot wide.
+     *
+     * This asserts the layout *mechanism* (preferred sizes) rather than rendered widths: in this test
+     * environment GridBag was observed to distribute width by weight alone (the canvas never collapsed at
+     * any width), so a pixel-width assertion would not exercise the crush seen in the real app. The bug is
+     * documented by the issue screenshots, where the table holds its large preferred width while the canvas
+     * absorbs all the shrinkage.
+     */
+    @Test
+    public void testCurveWidgetCanvasKeepsWidthWhenNarrow() {
+        String string = "[Constants]\n" +
+            "page = 1\n" +
+            "scriptCurve1Bins = array, F32, 0, [16], \"x\", 1, 0, 0, 100, 3\n" +
+            "scriptCurve1 = array, F32, 64, [16], \"y\", 1, 0, 0, 100, 3\n " +
+            "[CurveEditor]\n" +
+            "\tcurve = scriptCurve1, \"Script Curve #1\"\n" +
+            "\t\txAxis\t\t=  0, 100, 10\n" +
+            "\t\tyAxis\t\t=  0, 200, 20\n" +
+            "\t\txBins\t\t= scriptCurve1Bins\n" +
+            "\t\tyBins\t\t= scriptCurve1\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        CurveModel curve = model.getCurves().get("scriptCurve1");
+        assertNotNull(curve, "curve scriptCurve1 should exist");
+
+        com.rusefi.ui.widgets.tune.CurveWidget widget =
+            new com.rusefi.ui.widgets.tune.CurveWidget(curve, model, null);
+        JPanel curvePanel = widget.getContentPane();
+
+        Component canvas = findCanvas(curvePanel);
+        assertNotNull(canvas, "curve canvas should be present");
+        JTable table = findTable(curvePanel);
+        assertNotNull(table, "curve table should be present");
+
+        // The table must no longer claim the JTable default of 450px (which starved the canvas). It keeps
+        // a modest preferred footprint and grows only via its 0.2 GridBag weight on wide windows.
+        assertTrue(table.getPreferredScrollableViewportSize().width <= 220,
+            "table preferred viewport width should be shrunk well below the 450px JTable default, was "
+                + table.getPreferredScrollableViewportSize().width);
+
+        // The canvas must advertise a real preferred width so the 0.8 weight has a baseline to defend as
+        // the window shrinks (an empty JPanel would report a near-zero preferred width).
+        assertTrue(canvas.getPreferredSize().width >= 300,
+            "canvas should advertise a usable preferred width, was " + canvas.getPreferredSize().width);
+    }
+
+    /**
+     * Regression test for issue #9635: a curve whose axis units are a TunerStudio expression such as
+     * {@code {bitStringValue(unitsLabels, useMetricOnInterface)}} used to render the raw expression text
+     * under the plot. CurveWidget.resolveUnits must evaluate it against the config image (where
+     * useMetricOnInterface lives) and yield the actual °C / °F label.
+     */
+    @Test
+    public void testCurveWidgetResolvesUnitsExpression() {
+        String iniContent = "[Constants]\n" +
+            "page = 1\n" +
+            "useMetricOnInterface = bits, U32, 772, [29:29], \"Imperial\", \"Metric\"\n" +
+            "[PcVariables]\n" +
+            "unitsLabels = bits, U08, [0:2], \"F\", \"C\"\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(iniContent.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        String unitsExpr = "{bitStringValue(unitsLabels, useMetricOnInterface)}";
+
+        // Metric: bit 29 of the U32 at offset 772 set (LE byte 775 = 0x20) -> "C"
+        byte[] metric = new byte[800];
+        metric[775] = 0x20;
+        assertEquals("C", com.rusefi.ui.widgets.tune.CurveWidget.resolveUnits(
+            unitsExpr, model, new ConfigurationImage(metric)),
+            "metric config should resolve units to C");
+
+        // Imperial: bit 29 clear -> "F"
+        assertEquals("F", com.rusefi.ui.widgets.tune.CurveWidget.resolveUnits(
+            unitsExpr, model, new ConfigurationImage(new byte[800])),
+            "imperial config should resolve units to F");
+
+        // Plain (non-expression) units pass through, with surrounding braces stripped.
+        assertEquals("RPM", com.rusefi.ui.widgets.tune.CurveWidget.resolveUnits("RPM", model, null));
+        assertEquals("deg", com.rusefi.ui.widgets.tune.CurveWidget.resolveUnits("{ deg }", model, null));
     }
 }

@@ -38,6 +38,7 @@ public class ConfigDefinition {
     public static final String CONFIG_PATH = "java_tools/configuration_definition/src/main/resources/config_definition.options";
     public static final String READFILE_OPTION = "-readfile";
     public static final String KEY_ENUMS_CONFIG_PATH = "-enumsConfig";
+    public static final String KEY_IGNORE_GAUGES_FILE = "-ignore_gauges_file";
 
     public static void main(String[] args) {
         try {
@@ -71,6 +72,8 @@ public class ConfigDefinition {
 
         String tsInputFileFolder = null;
         List<String> softPrePrependsFileNames = new ArrayList<>();
+        GaugeIgnoreList ignoreList = new GaugeIgnoreList();
+        TreeSet<String> usedNames = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
 
         DefinitionsState parseState = state.getEnumsReader().parseState;
         String signatureDestination = null;
@@ -111,8 +114,14 @@ public class ConfigDefinition {
                 case "-field_lookup_file": {
                     String cppFile = args[i + 1];
                     String mdFile = args[i + 2];
+                    String tableFile = args.length > i + 3 ? args[i + 3] : null;
+                    if (tableFile != null && tableFile.startsWith("-")) {
+                        tableFile = null;
+                    } else if (tableFile != null) {
+                        i++;
+                    }
                     i++;
-                    state.addDestination(new GetConfigValueConsumer(cppFile, mdFile, LazyFile.REAL));
+                    state.addDestination(new GetConfigValueConsumer(cppFile, tableFile, mdFile, LazyFile.REAL));
                 }
                 break;
                 case READFILE_OPTION:
@@ -174,6 +183,9 @@ public class ConfigDefinition {
                     for (String inputFile : pinoutLogic.getInputFiles())
                         state.addInputFile(inputFile);
                     break;
+                case KEY_IGNORE_GAUGES_FILE:
+                    ignoreList.addPatternsFrom(args[i + 1]);
+                    break;
                 case KEY_ENUMS_CONFIG_PATH:
                     String enumsDefinitionsFilePath = args[i + 1];
                     String enumsDefinitionsFilePathFixed = IoUtil3.prependIfNotAbsolute(RootHolder.ROOT, enumsDefinitionsFilePath);
@@ -182,9 +194,12 @@ public class ConfigDefinition {
             }
         }
 
-        FieldsApiGenerator.run();
-        handlePage(state, 1, softPrePrependsFileNames);
-        handlePage(state, 2, softPrePrependsFileNames);
+        FieldsApiGenerator.run(ConfigDefinitionRootOutputFolder.getValue() + "controllers/generated/generated_fields_api_header.h");
+        System.out.println("FieldsApiGenerator: Result written to " + ConfigDefinitionRootOutputFolder.getValue() + "controllers/generated/generated_fields_api_header.h");
+        handlePage(state, 2, softPrePrependsFileNames, usedNames);
+        handlePage(state, 3, softPrePrependsFileNames, usedNames);
+        handlePage(state, 4, softPrePrependsFileNames, usedNames);
+        handlePage(state, 5, softPrePrependsFileNames, usedNames);
 
         if (tsInputFileFolder != null) {
             // used to update .ini files
@@ -203,7 +218,7 @@ public class ConfigDefinition {
         }
 
         if (tsInputFileFolder != null) {
-            state.addDestination(new TSProjectConsumer(tsInputFileFolder, state));
+            state.addDestination(new TSProjectConsumer(tsInputFileFolder, state, ignoreList, usedNames));
 
             VariableRegistry tmpRegistry = new VariableRegistry();
             // store the CRC32 as a built-in variable
@@ -215,10 +230,10 @@ public class ConfigDefinition {
         state.doJob();
     }
 
-    private static void handlePage(ReaderStateImpl parentState, int pageIndex, List<String> softPrepends) throws IOException {
-        PlainConfigHandler page = new PlainConfigHandler("integration/config_page_" + pageIndex + ".txt", pageIndex, softPrepends);
+    private static void handlePage(ReaderStateImpl parentState, int pageIndex, List<String> softPrepends, TreeSet<String> usedNames) throws IOException {
+        PlainConfigHandler page = new PlainConfigHandler("integration/config_page_" + pageIndex + ".txt", pageIndex, softPrepends, usedNames);
         page.doJob();
-        // PAGE_CONTENT_1 is handled here!
+        // PAGE_CONTENT_N is handled here!
         parentState.getVariableRegistry().put("PAGE_CONTENT_" + pageIndex, page.tsProjectConsumer.getContent());
         parentState.getVariableRegistry().register("PAGE_SIZE_" + pageIndex, Integer.toString(page.tsProjectConsumer.getTotalSize()));
     }

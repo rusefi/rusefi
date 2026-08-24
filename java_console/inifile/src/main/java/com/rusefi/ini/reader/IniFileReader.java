@@ -38,9 +38,13 @@ public class IniFileReader {
                 contextHelp,
                 allTables,
                 allCurves,
-                menuDialogString,
                 menus,
-                frontPage);
+                frontPage,
+                controllerCommands,
+                veAnalyzeMaps,
+                lambdaTargetTables,
+                veAnalyzeFilters,
+                eventTriggers);
     }
     private static final Logging log = Logging.getLogging(IniFileReader.class);
     public static final String RUSEFI_INI_PREFIX = "rusefi";
@@ -68,6 +72,8 @@ public class IniFileReader {
     private int currentReadoutColumns = 1;
     private final List<String> gaugeNamesOfCurrentDialog = new ArrayList<>();
     private final List<DialogModel.DialogEntry> orderedEntriesOfCurrentDialog = new ArrayList<>();
+    private final List<DialogModel.SettingSelector> settingSelectorsOfCurrentDialog = new ArrayList<>();
+    private DialogModel.SettingSelector currentSettingSelector;
     private final Map<String, IniField> allIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<String, IniField> secondaryIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<String, IniField> allOutputChannels = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -91,7 +97,6 @@ public class IniFileReader {
     private final Map<String, String> topicHelpMap = new TreeMap<>();
 
     private final Map<String, ContextHelpModel> contextHelp = new LinkedHashMap<>();
-    private String menuDialog;
     private String currentHelpReferenceName;
     private String currentHelpTitle;
     private final List<String> currentHelpTextLines = new ArrayList<>();
@@ -99,10 +104,10 @@ public class IniFileReader {
 
     private boolean isTableEditorSection = false;
     private boolean isMenuSection = false;
+    private boolean isControllerCommandsSection = false;
     private final List<MenuModel> menus = new ArrayList<>();
     private MenuModel currentMenu;
     private GroupMenuModel currentGroup;
-    private String menuDialogString;
     private final Map<String, TableModel> allTables = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final TableBuilder tableBuilder = new TableBuilder();
 
@@ -112,18 +117,19 @@ public class IniFileReader {
     private final Map<String, CurveModel> allCurves = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final CurveBuilder curveBuilder = new CurveBuilder();
 
+    private final Map<String, String> controllerCommands = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+
+    private boolean isVeAnalyzeSection = false;
+    private final List<VeAnalyzeMap> veAnalyzeMaps = new ArrayList<>();
+    private final List<String> lambdaTargetTables = new ArrayList<>();
+    private final List<VeAnalyzeFilter> veAnalyzeFilters = new ArrayList<>();
+
+    private boolean isEventTriggersSection = false;
+    private final List<EventTriggerModel> eventTriggers = new ArrayList<>();
+
     private boolean isInSettingContextHelp = false;
     private boolean isInsidePageDefinition;
     private int blockingFactor;
-    // useful when connecting remotely via TCP/IP, if CUSTOM_TS_BUFFER_SIZE is available
-	// For proteus_f7 over TCP/IP recommended to set blockingFactorOverride=32000
-	// java -jar -DblockingFactorOverride=32000 rusefi_console.jar host:port
-    private static final Integer blockingFactorOverride = Integer.getInteger("blockingFactorOverride");
-
-    static {
-        if (blockingFactorOverride != null)
-            log.info("blockingFactorOverride=" + blockingFactorOverride);
-    }
 
     private int currentPageIndex;
 
@@ -133,8 +139,6 @@ public class IniFileReader {
     }
 
     public int getBlockingFactor() {
-        if (blockingFactorOverride != null)
-            return blockingFactorOverride;
         return blockingFactor;
     }
 
@@ -151,12 +155,13 @@ public class IniFileReader {
     void finishDialog() {
         if (fieldsOfCurrentDialog.isEmpty() && commandsOfCurrentDialog.isEmpty()
                 && panelsOfCurrentDialog.isEmpty() && indicatorsOfCurrentDialog.isEmpty()
-                && readoutsOfCurrentDialog.isEmpty() && gaugeNamesOfCurrentDialog.isEmpty())
+                && readoutsOfCurrentDialog.isEmpty() && gaugeNamesOfCurrentDialog.isEmpty()
+                && settingSelectorsOfCurrentDialog.isEmpty())
             return;
         if (dialogUiName == null)
             dialogUiName = dialogId;
         // Store dialogs by their key (dialogId), not by UI name, for easier panel resolution
-        dialogs.put(dialogId, new DialogModel(dialogId, dialogUiName, fieldsOfCurrentDialog, commandsOfCurrentDialog, panelsOfCurrentDialog, indicatorsOfCurrentDialog, readoutsOfCurrentDialog, currentReadoutColumns, gaugeNamesOfCurrentDialog, dialogTopicHelp, dialogLayoutHint, orderedEntriesOfCurrentDialog));
+        dialogs.put(dialogId, new DialogModel(dialogId, dialogUiName, fieldsOfCurrentDialog, commandsOfCurrentDialog, panelsOfCurrentDialog, indicatorsOfCurrentDialog, readoutsOfCurrentDialog, currentReadoutColumns, gaugeNamesOfCurrentDialog, dialogTopicHelp, dialogLayoutHint, orderedEntriesOfCurrentDialog, settingSelectorsOfCurrentDialog));
         dialogId = null;
         dialogTopicHelp = null;
         dialogLayoutHint = null;
@@ -168,6 +173,8 @@ public class IniFileReader {
         currentReadoutColumns = 1;
         gaugeNamesOfCurrentDialog.clear();
         orderedEntriesOfCurrentDialog.clear();
+        settingSelectorsOfCurrentDialog.clear();
+        currentSettingSelector = null;
     }
 
     void handleLine(RawIniFile.Line line) throws IniParsingException {
@@ -234,7 +241,10 @@ public class IniFileReader {
                 isTableEditorSection = first.equalsIgnoreCase("[TableEditor]");
                 isCurveEditorSection = first.equalsIgnoreCase("[CurveEditor]");
                 isMenuSection = first.equalsIgnoreCase("[Menu]");
+                isControllerCommandsSection = first.equalsIgnoreCase("[ControllerCommands]");
                 isFrontPageSection = first.equalsIgnoreCase("[FrontPage]");
+                isVeAnalyzeSection = first.equalsIgnoreCase("[VeAnalyze]");
+                isEventTriggersSection = first.equalsIgnoreCase("[EventTriggers]");
 
                 if (wasGaugeSection && !isGaugeConfigurationsSection) {
                     finishGaugeCategory();
@@ -278,6 +288,17 @@ public class IniFileReader {
             } else if (isFrontPageSection) {
                 handleFrontPage(list);
                 return;
+            } else if (isVeAnalyzeSection) {
+                handleVeAnalyze(list);
+                return;
+            } else if (isEventTriggersSection) {
+                handleEventTrigger(list);
+                return;
+            } else if (isControllerCommandsSection) {
+                if (list.size() >= 2) {
+                    controllerCommands.put(list.get(0), list.get(1));
+                }
+                return;
             }
 
 
@@ -311,6 +332,12 @@ public class IniFileReader {
                     break;
                 case "panel":
                     handlePanel(list);
+                    break;
+                case "settingSelector":
+                    handleSettingSelector(list);
+                    break;
+                case "settingOption":
+                    handleSettingOption(list);
                     break;
                 case "topicHelp":
                     handleTopicHelp(list);
@@ -447,6 +474,14 @@ public class IniFileReader {
     }
 
     private void registerField(IniField field) {
+        // The ini uses 1-based page numbering (page = 1, 2, ...).  The value sent on the wire
+        // for read/write/burn is the TS page identifier from the ini's pageIdentifier list
+        // (0x0000 main, 0x0100 scatter, 0x0200 LTFT, 0x0300 second tables, 0x0400 Lua), NOT the
+        // page ordinal.  Looking it up by position keeps it correct even when a page is compiled
+        // out and the blocks are renumbered (#9699).  Falls back to the ordinal when metaInfo or
+        // the pageIdentifier line is unavailable (still correct for the main page).
+        int zeroBasedPage = currentPageIndex - 1;
+        field.setPageIndex(metaInfo != null ? metaInfo.getPageIdentifier(zeroBasedPage) : zeroBasedPage);
         if (currentPageIndex != 1) {
             log.info("Skipping field from secondary page: " + field);
             secondaryIniFields.put(field.getName(), field);
@@ -539,6 +574,33 @@ public class IniFileReader {
         log.debug("IniFileModel: Dialog key=" + keyword + ": name=[" + name + "] layoutHint=[" + layoutHint + "]");
     }
 
+    private void handleSettingSelector(LinkedList<String> list) {
+        if (dialogId == null || list.size() < 2) {
+            return;
+        }
+        list.removeFirst();
+        String label = list.removeFirst();
+        String enableExpression = list.stream().filter(PanelModel::isExpression).findFirst().orElse(null);
+        currentSettingSelector = new DialogModel.SettingSelector(label, enableExpression);
+        settingSelectorsOfCurrentDialog.add(currentSettingSelector);
+    }
+
+    private void handleSettingOption(LinkedList<String> list) {
+        if (currentSettingSelector == null || list.size() < 2) {
+            return;
+        }
+        list.removeFirst();
+        String label = list.removeFirst();
+        if ((list.size() & 1) != 0) {
+            throw new IllegalArgumentException("Setting option assignments must be name/value pairs");
+        }
+        Map<String, String> assignments = new LinkedHashMap<>();
+        while (!list.isEmpty()) {
+            assignments.put(list.removeFirst(), list.removeFirst());
+        }
+        currentSettingSelector.addOption(new DialogModel.SettingOption(label, assignments));
+    }
+
     private void handleIndicatorPanel(LinkedList<String> list) {
         finishDialog();
         list.removeFirst(); // "indicatorPanel"
@@ -560,14 +622,19 @@ public class IniFileReader {
         // format: indicator, expression, offLabel, onLabel[, offBg, offFg, onBg, onFg]
         // Colors are optional
         if (list.size() < 4) return;
-        IndicatorModel indicator = new IndicatorModel(
+
+        IndicatorModel indicator = makeIndicatorFromIniField(list);
+        indicatorsOfCurrentDialog.add(indicator);
+        orderedEntriesOfCurrentDialog.add(new DialogModel.DialogEntry(DialogModel.DialogEntry.Kind.INDICATOR, indicator));
+    }
+
+    private IndicatorModel makeIndicatorFromIniField(LinkedList<String> list) {
+        return new IndicatorModel(
                 list.get(1), list.get(2), list.get(3),
                 list.size() > 4 ? list.get(4) : null,
                 list.size() > 5 ? list.get(5) : "black",
                 list.size() > 6 ? list.get(6) : "green",
                 list.size() > 7 ? list.get(7) : "black");
-        indicatorsOfCurrentDialog.add(indicator);
-        orderedEntriesOfCurrentDialog.add(new DialogModel.DialogEntry(DialogModel.DialogEntry.Kind.INDICATOR, indicator));
     }
 
     private void handleDialogGauge(LinkedList<String> list) {
@@ -653,9 +720,6 @@ public class IniFileReader {
     private void handleMenu(LinkedList<String> list) {
         String keyword = list.removeFirst();
         switch (keyword) {
-            case "menuDialog":
-                menuDialogString = list.get(0);
-                break;
             case "menu":
                 currentMenu = new MenuModel(IniFileReaderUtil.removeMenuAmpersand(list.get(0)));
                 menus.add(currentMenu);
@@ -663,6 +727,11 @@ public class IniFileReader {
                 break;
             case "subMenu":
                 if (currentMenu != null) {
+                    if (SeparatorMenuItem.STD_SEPARATOR.equals(list.get(0))) {
+                        addSeparator(currentMenu.getItems());
+                        currentGroup = null;
+                        break;
+                    }
                     String name = list.size() > 1 ? list.get(1) : "";
                     // format: key, name, [enableExpr], [visibleExpr]
                     // positions 2 and 3 are optional; "0" is used as a placeholder meaning no expression
@@ -681,6 +750,10 @@ public class IniFileReader {
                 break;
             case "groupChildMenu":
                 if (currentGroup != null) {
+                    if (SeparatorMenuItem.STD_SEPARATOR.equals(list.get(0))) {
+                        addSeparator(currentGroup.getItems());
+                        break;
+                    }
                     String name = list.size() > 1 ? list.get(1) : "";
                     // format: key, name, [enableExpr], [visibleExpr]
                     // positions 2 and 3 are optional; "0" is used as a placeholder meaning no expression
@@ -690,6 +763,17 @@ public class IniFileReader {
                 }
                 break;
         }
+    }
+
+    /**
+     * Conditional .ini templating can leave two std_separator lines in a row; a duplicate divider is noise,
+     * so consecutive separators collapse into one.
+     */
+    private static void addSeparator(List<MenuItem> items) {
+        if (!items.isEmpty() && items.get(items.size() - 1) instanceof SeparatorMenuItem) {
+            return;
+        }
+        items.add(SeparatorMenuItem.INSTANCE);
     }
 
     private void handleTopicHelp(LinkedList<String> list) {
@@ -719,7 +803,15 @@ public class IniFileReader {
 
         if (gaugeName.equalsIgnoreCase("gaugeCategory")) {
             finishGaugeCategory();
-            currentGaugeCategory = list.get(1);
+            // Unquoted multi-word category names (e.g. `gaugeCategory = Boost PID`) are
+            // tokenized into multiple list entries because space is a token separator;
+            // re-join them so the category key matches what the firmware emits.
+            // Quoted forms (e.g. `gaugeCategory = "ECU Status"`) yield a single token already.
+            StringBuilder name = new StringBuilder(list.get(1));
+            for (int i = 2; i < list.size(); i++) {
+                name.append(' ').append(list.get(i));
+            }
+            currentGaugeCategory = name.toString();
             return;
         }
 
@@ -852,6 +944,59 @@ public class IniFileReader {
         }
     }
 
+    private void handleVeAnalyze(LinkedList<String> list) {
+        if (list.size() < 2) {
+            return;
+        }
+        String key = list.get(0);
+        if (key.equalsIgnoreCase("veAnalyzeMap")) {
+            if (list.size() >= 6) {
+                veAnalyzeMaps.add(new VeAnalyzeMap(list.get(1), list.get(2), list.get(3), list.get(4), list.get(5)));
+            }
+        } else if (key.equalsIgnoreCase("lambdaTargetTables")) {
+            for (int i = 1; i < list.size(); i++) {
+                lambdaTargetTables.add(list.get(i));
+            }
+        } else if (key.equalsIgnoreCase("filter")) {
+            if (list.size() >= 6) {
+                String name = list.get(1);
+                String displayName = list.get(2);
+                String outputChannel = list.get(3);
+                String operator = list.get(4);
+                double defaultValue = Double.parseDouble(list.get(5));
+
+                boolean userAdjustable = false;
+                for (int i = 6; i < list.size(); i++) {
+                    if (list.get(i).equalsIgnoreCase("true")) {
+                        userAdjustable = true;
+                        break;
+                    }
+                }
+                veAnalyzeFilters.add(new VeAnalyzeFilter(name, displayName, outputChannel, operator, defaultValue, userAdjustable));
+            }
+        }
+    }
+
+    private void handleEventTrigger(LinkedList<String> list) {
+        if (list.size() < 3)
+            return;
+        if (!list.get(0).equalsIgnoreCase("triggeredPageRefresh"))
+            return;
+        int page;
+        try {
+            page = Integer.parseInt(list.get(1));
+        } catch (NumberFormatException e) {
+            return;
+        }
+        // Tokens after the page number form the expression; rejoin them with space.
+        StringBuilder expr = new StringBuilder();
+        for (int i = 2; i < list.size(); i++) {
+            if (i > 2) expr.append(", ");
+            expr.append(list.get(i));
+        }
+        eventTriggers.add(new EventTriggerModel(page, expr.toString().trim()));
+    }
+
     private void handleFrontPage(LinkedList<String> list) {
         String first = list.getFirst();
         if (first.startsWith("gauge")) {
@@ -861,16 +1006,7 @@ public class IniFileReader {
         } else if (first.equalsIgnoreCase("indicator")) {
             // format: indicator, expression, offLabel, onLabel[, offBg, offFg, onBg, onFg]
             if (list.size() >= 4) {
-                IndicatorModel indicator = new IndicatorModel(
-                        list.get(1),
-                        list.get(2),
-                        list.get(3),
-                        list.size() > 4 ? list.get(4) : null,
-                        list.size() > 5 ? list.get(5) : "black",
-                        list.size() > 6 ? list.get(6) : "green",
-                        list.size() > 7 ? list.get(7) : "black"
-                );
-                frontPage.getIndicators().add(indicator);
+                frontPage.getIndicators().add(makeIndicatorFromIniField(list));
             }
         }
     }

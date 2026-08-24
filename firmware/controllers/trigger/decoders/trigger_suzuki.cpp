@@ -34,29 +34,40 @@ void initializeSuzukiG13B(TriggerWaveform *s) {
 	s->setSecondTriggerSynchronizationGap(1);
 }
 
+void initializeSuzukiG16B(TriggerWaveform *s) {
+	static const angle_t angles[] = { 35, 50, 90, 125, 165, 180, 215, 270, 305, 345, 360 };
+	initializeRiseOnlyTrigger(s, 5, angles, efi::size(angles));
+
+	// Set sync gap based on largest gap between teeth
+	// Calculate gaps: 15,40,35,40,15,35,55,35,40,15,35 (degrees)
+	// Largest is 55° between 180-235, one before is 35°
+	// Ratio largest/previous 1.57
+	s->setTriggerSynchronizationGap(1.57);
+}
+
 void initializeSuzukiK6A(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 	float w = 5;
 
-  int secondTooth = 15;
+	int secondTooth = 15;
 
-  // a bit lame: we start with falling front of first tooth
-  s->addEvent360(5, TriggerValue::FALL);
+	// a bit lame: we start with falling front of first tooth
+	s->addEvent360(5, TriggerValue::FALL);
 
-  s->addToothRiseFall(secondTooth, w);
-  s->addToothRiseFall(43, w);
+	s->addToothRiseFall(secondTooth, w);
+	s->addToothRiseFall(43, w);
 
-  s->addToothRiseFall(120, w);
-  s->addToothRiseFall(120 + secondTooth, w);
-  s->addToothRiseFall(158, w);
-  s->addToothRiseFall(158 + secondTooth, w);
+	s->addToothRiseFall(120, w);
+	s->addToothRiseFall(120 + secondTooth, w);
+	s->addToothRiseFall(158, w);
+	s->addToothRiseFall(158 + secondTooth, w);
 
-  s->addToothRiseFall(240, w);
-  s->addToothRiseFall(240 + secondTooth, w);
-  s->addToothRiseFall(283, w);
+	s->addToothRiseFall(240, w);
+	s->addToothRiseFall(240 + secondTooth, w);
+	s->addToothRiseFall(283, w);
 
-  // a bit lame: we end with rising front of first tooth
-  s->addEvent360(360, TriggerValue::RISE);
+	// a bit lame: we end with rising front of first tooth
+	s->addEvent360(360, TriggerValue::RISE);
 
 	s->setTriggerSynchronizationGap(4.47);
 	s->setSecondTriggerSynchronizationGap(0.65);

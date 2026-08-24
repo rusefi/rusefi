@@ -311,9 +311,7 @@ void gpio_pin_markUnused(ioportid_t port, ioportmask_t pin) {
 }
 
 const char *getPinFunction(brain_input_pin_e brainPin) {
-	int index;
-
-	index = brainPin_to_index(brainPin);
+	int index = brainPin_to_index(brainPin);
 	if (index < 0)
 		return NULL;
 

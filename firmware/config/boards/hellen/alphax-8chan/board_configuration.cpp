@@ -9,6 +9,7 @@
  */
 
 #include "pch.h"
+#include "basic_configuration.h"
 #include "hellen_meta.h"
 #include "defaults.h"
 #include "board_overrides.h"
@@ -74,7 +75,9 @@ static void setupDefaultSensorInputs() {
 }
 
 static void alphax_8chan_boardInitHardware() {
-  // technically same thing as setHellenMegaEnPin() since underlying pin E10 is same as H144_GP8
+	setupHellenSharedInputs();
+
+	// technically same thing as setHellenMegaEnPin() since underlying pin E10 is same as H144_GP8
 	setHellenEnPin(Gpio::MM176_EN_PIN);
 
 	alphaCrankPPullUp.initPin("Crank-PullUp", Gpio::MM176_GP16);
@@ -87,7 +90,7 @@ static void alphax_8chan_boardInitHardware() {
 	tempPullUp.initPin("Temp PullUp", Gpio::MM176_OUT_IO12);
 }
 
-static void customBoardOnConfigurationChange(engine_configuration_s * /*previousConfiguration*/) {
+static void customBoardOnConfigurationChange(const engine_configuration_s * /*previousConfiguration*/) {
 	alphaCrankPPullUp.setValue(config->boardUseCrankPullUp);
 	alphaHall1PullDown.setValue(config->boardUseH1PullDown);
 	alphaHall2PullDown.setValue(config->boardUseH2PullDown);
@@ -251,10 +254,20 @@ int getBoardMetaDcOutputsCount() {
     return 2;
 }
 
+static bool applyAlphaxBasicConfiguration(BasicConfigurationAction action) {
+	return applyBasicConfiguration(action,
+		set8chanDefaultETBPins,
+		MM176_IN_TPS_ANALOG,
+		MM176_IN_TPS2_ANALOG,
+		MM176_IN_PPS1_ANALOG,
+		MM176_IN_PPS2_ANALOG);
+}
+
 void setup_custom_board_overrides() {
 	custom_board_InitHardware = alphax_8chan_boardInitHardware;
 	custom_board_DefaultConfiguration = alphax_8chan_defaultConfiguration;
 	custom_board_ConfigOverrides = alphax_8chan_boardConfigOverrides;
+	custom_board_applyBasicConfiguration = applyAlphaxBasicConfiguration;
 
 	custom_board_OnConfigurationChange = customBoardOnConfigurationChange;
 }

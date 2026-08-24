@@ -24,12 +24,17 @@ public class ConfigurationImageGetterSetter {
 
             @Override
             public String visit(EnumIniField field) {
-                int ordinal = image.getByteBuffer(field).getInt();
+                int ordinal = (int) field.getType().readRawValue(image.getByteBuffer(field));
                 ordinal = ConfigurationImage.getBitRange(ordinal, field.getBitPosition(), field.getBitSize0() + 1);
 
-                if (ordinal >= field.getEnums().size())
-                    throw new OrdinalOutOfRangeException("Ordinal out of range " + ordinal + " in " + field.getName() + " while " + field.getEnums().size() + " " + field.getType());
-                return "\"" + field.getEnums().get(ordinal) + "\"";
+                String label = field.getEnums().get(ordinal);
+                if (label == null) {
+                    if (ordinal > field.getEnums().maxOrdinal())
+                        throw new OrdinalOutOfRangeException("Ordinal out of range " + ordinal + " in " + field.getName() + " while " + field.getEnums().size() + " " + field.getType());
+                    // sparse key-value enum lists omit INVALID placeholder entries, see PinoutLogic.enumToOptionsList()
+                    label = "INVALID";
+                }
+                return "\"" + label + "\"";
             }
 
             @Override
@@ -104,6 +109,38 @@ public class ConfigurationImageGetterSetter {
         }
     }
 
+    private static int findEnumOrdinal(EnumIniField field, String value) {
+        int ordinal = field.getEnums().indexOf(value);
+        if (ordinal != -1) {
+            return ordinal;
+        }
+        if (!field.isPinEnum()) {
+            return -1;
+        }
+
+        // MSQ files persist labels, so tolerate a unique additive suffix added by a newer INI.
+        String oldLabel = EnumIniField.isQuoted(value) ? javax.management.ObjectName.unquote(value) : value;
+        for (String currentLabel : field.getEnums().values()) {
+            if (hasDocumentationSuffix(oldLabel, currentLabel)) {
+                if (ordinal != -1) {
+                    return -1;
+                }
+                ordinal = field.getEnums().indexOf(currentLabel);
+            }
+        }
+        return ordinal;
+    }
+
+    private static boolean hasDocumentationSuffix(String oldLabel, String currentLabel) {
+        if (!currentLabel.startsWith(oldLabel)) {
+            return false;
+        }
+
+        String suffix = currentLabel.substring(oldLabel.length());
+        return suffix.startsWith(" (") || suffix.startsWith(" or ") || suffix.startsWith(" for ")
+            || suffix.startsWith(" best ") || suffix.startsWith(", ") || suffix.startsWith(" legacy ");
+    }
+
     public static void setValue2(IniField iniField, ConfigurationImage image, final String name, final String value) {
         iniField.accept(new IniFieldVisitor<Void>() {
             @Override
@@ -118,9 +155,10 @@ public class ConfigurationImageGetterSetter {
             @Override
             public Void visit(EnumIniField field) {
                 String v = value;
-                int ordinal = field.getEnums().indexOf(v);
-                if (ordinal == -1)
+                int ordinal = findEnumOrdinal(field, v);
+                if (ordinal == -1) {
                     throw new IllegalArgumentException(name + ": Enum name not found " + v);
+                }
                 image.setBitValue(field, ordinal);
                 return null;
             }
@@ -148,6 +186,15 @@ public class ConfigurationImageGetterSetter {
 
             @Override
             public Void visit(StringIniField field) {
+                if (value.length() > field.getSize()) {
+                    throw new IllegalArgumentException(name + ": String does not fit in " + field.getSize() + " bytes");
+                }
+                java.util.Arrays.fill(
+                    image.getContent(),
+                    field.getOffset(),
+                    field.getOffset() + field.getSize(),
+                    (byte) 0
+                );
                 for (int i = 0; i < value.length(); i++)
                     image.getContent()[field.getOffset() + i] = (byte) value.charAt(i);
                 return null;

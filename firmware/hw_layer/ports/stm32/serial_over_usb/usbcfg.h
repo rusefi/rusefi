@@ -16,8 +16,25 @@
 
 #pragma once
 
+#ifndef HAL_USE_USB_CDC_2
+#define HAL_USE_USB_CDC_2 FALSE
+#endif
+
+#ifndef HAL_USE_USB_CDC_3
+#define HAL_USE_USB_CDC_3 FALSE
+#endif
+
+#ifndef HAL_USE_USB_CDC_4
+#define HAL_USE_USB_CDC_4 FALSE
+#endif
+
+#define NUM_CDC_INSTANCES ( (1) + \
+                            (HAL_USE_USB_CDC_2 ? 1 : 0) + \
+                            (HAL_USE_USB_CDC_3 ? 1 : 0) + \
+                            (HAL_USE_USB_CDC_4 ? 1 : 0) )
+
 extern const USBConfig usbcfg;
-extern const SerialUSBConfig serusbcfg;
-extern SerialUSBDriver SDU1;
+extern const SerialUSBConfig serusbcfg[NUM_CDC_INSTANCES];
+extern SerialUSBDriver SDU[NUM_CDC_INSTANCES];
 
 void usbPopulateSerialNumber(const uint8_t* serialNumber, size_t bytes);

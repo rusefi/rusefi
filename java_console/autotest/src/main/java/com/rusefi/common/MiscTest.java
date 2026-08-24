@@ -2,8 +2,8 @@ package com.rusefi.common;
 
 import com.rusefi.RusefiTestBase;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.core.SensorNames;
 import org.junit.Test;
 
 import java.util.concurrent.CountDownLatch;
@@ -32,7 +32,7 @@ public class MiscTest extends RusefiTestBase {
         long start = System.currentTimeMillis();
         while (Double.isNaN(mcuTemp) && (System.currentTimeMillis() - start) < 5 * SECOND) {
             Thread.sleep(100);
-            mcuTemp = SensorCentral.getInstance().getValue(Sensor.internalMcuTemperatureGauge);
+            mcuTemp = SensorCentral.getInstance().getValue(SensorNames.internalMcuTemperatureGauge);
         }
 
         System.out.println("MCU temperature is " + mcuTemp + " deg C");

@@ -25,6 +25,14 @@ public class VariableRegistryTest {
     }
 
     @Test
+    public void testDollarSignInValue() {
+        VariableRegistry registry = new VariableRegistry();
+        registry.register("content", "bits, U16, 0, [0:8], $switch_input_pin_e_list");
+        assertEquals("bits, U16, 0, [0:8], $switch_input_pin_e_list",
+                registry.applyVariables("@@content@@"));
+    }
+
+    @Test
     public void testReplace() {
         VariableRegistry registry = new VariableRegistry();
         registry.register("var", 256);
@@ -80,6 +88,15 @@ public class VariableRegistryTest {
         input.put(2, "Z");
         input.put(3, "N");
         assertEquals("0=\"NONE\",1=\"A\",3=\"N\",2=\"Z\"", VariableRegistry.getHumanSortedTsKeyValueString(input));
+    }
+
+    @Test
+    public void testEmptyDefineNoTrailingSpace() {
+        VariableRegistry registry = new VariableRegistry();
+        registry.register("BOARD_CAM_SETTINGS_FILE", "");
+        String defines = registry.getDefinesSection();
+        // When value is empty, #define should not have a trailing space
+        assertEquals("#define BOARD_CAM_SETTINGS_FILE\n", defines);
     }
 
     @Test

@@ -109,7 +109,7 @@ typedef enum  __attribute__ ((__packed__)) {
 	 */
 	VVT_HONDA_K_EXHAUST = 16,
 
-	VVT_BMW_N63TU = 17,
+	VVT_BMW_VANOS_RELUCTOR = 17,
 
 	// also 4G92/93/94
 	VVT_MITSUBISHI_4G63 = 18,
@@ -137,6 +137,14 @@ typedef enum  __attribute__ ((__packed__)) {
   VVT_CUSTOM_1 = 29,
 
   VVT_CUSTOM_2 = 30,
+
+  VVT_MITSUBISHI_6G75 = 31,
+
+  VVT_CUSTOM_3 = 32,
+
+  VVT_CUSTOM_4 = 33,
+
+  VVT_CUSTOM_5 = 34,
 
 } vvt_mode_e;
 
@@ -281,13 +289,17 @@ typedef enum {
 	TWO_STROKE = 3,
 
 	/**
-	 * 720 degree engine cycle but trigger is defined using a 180 cycle which is when repeated three more times
+	 * 720 degree engine cycle but trigger is defined using a 180 cycle which is then repeated three more times.
 	 * In other words, same pattern is repeated on the crank wheel twice.
+	 * Total 4 trigger cycles per engine cycle.
+	 * Used by Renix 44-2-2.
 	 */
 	FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR = 4,
 
 	/**
-	 * Same pattern repeated three times on crank wheel. Crazy, I know!
+	 * Same pattern repeated three times on crank wheel (every 120 crank degrees).
+	 * Total 6 trigger cycles per engine cycle.
+	 * Used by Renix 66-2-2-2.
 	 */
 	FOUR_STROKE_THREE_TIMES_CRANK_SENSOR = 5,
 
@@ -300,6 +312,11 @@ typedef enum {
 	 * Same pattern repeated six times on crank wheel like 1995 Lamborghini Diablo
 	 */
 	FOUR_STROKE_SIX_TIMES_CRANK_SENSOR = 7,
+
+	// Same pattern repeated five times per crank revolution.
+	// Used by some V10 engines (e.g. Dodge Viper) whose crank trigger has 5-fold symmetry.
+	FOUR_STROKE_FIVE_TIMES_CRANK_SENSOR = 8,
+
 } operation_mode_e;
 
 /**
@@ -372,6 +389,24 @@ typedef enum __attribute__ ((__packed__)) {
 } spi_device_e;
 
 #define SPI_TOTAL_COUNT 6
+
+typedef enum __attribute__ ((__packed__)) {
+	I2C_NONE = 0,
+	I2C_BUS_1 = 1,
+	I2C_BUS_2 = 2,
+	I2C_BUS_3 = 3,
+	I2C_BUS_4 = 4,
+} i2c_bus_e;
+
+#define I2C_BUS_TOTAL_COUNT 4
+
+typedef enum __attribute__ ((__packed__)) {
+	I2C_SPEED_100K = 0,
+	I2C_SPEED_400K = 1,
+	I2C_SPEED_1M = 2,
+	I2C_SPEED_3p4M = 3,
+	I2C_SPEED_5M = 4,
+} i2c_speed_e;
 
 typedef enum __attribute__ ((__packed__)) {
 	BMW_e46 = 0,
@@ -491,6 +526,12 @@ typedef enum __attribute__ ((__packed__)) {
 	 */
 	MT_MPXH6300 = 15,
 
+	/**
+	 * Bosch 3 bar TMAP with integrated IAT, 11..310 kPa at 0.39..4.65V
+	 * 0261230566 / 0281002976 (VAG 03G906051E / 03G906051M / 038906051C)
+	 */
+	MT_BOSCH_3_BAR = 16,
+
 } air_pressure_sensor_type_e;
 
 typedef enum {
@@ -521,6 +562,7 @@ typedef enum __attribute__ ((__packed__)) {
 	CCNONE = 0,
 	CC_BRAKE = 1,
 	CC_CLUTCH = 2,
+	CC_CLUTCH_DOWN = 3,
 } cranking_condition_e;
 
 /**
@@ -541,8 +583,20 @@ typedef enum __attribute__ ((__packed__)) {
 	CAN_BUS_HONDA_K = 11,
 	CAN_AIM_DASH = 12,
 	CAN_BUS_MS_SIMPLE_BROADCAST = 13,
-
 } can_nbc_e;
+
+typedef enum __attribute__ ((__packed__)) {
+	CAN_BUS_FIRST = 0,
+	CAN_BUS_SECOND = 1,
+	CAN_BUS_THIRD = 2,
+} can_broadcast_channel_e;
+
+typedef enum __attribute__ ((__packed__)) {
+	CAN_BUS_NONE = 0,
+	CAN_BUS_CAN1 = 1,
+	CAN_BUS_CAN2 = 2,
+	CAN_BUS_CAN3 = 3,
+} can_bus_channel_e;
 
 typedef enum __attribute__ ((__packed__)) {
 	TCHARGE_MODE_RPM_TPS = 0,
@@ -754,6 +808,8 @@ typedef enum __attribute__ ((__packed__)) {
 	// NOT to be used in dual H-bridge stepper control
 	DC_IdleValve = 3,
 	DC_Wastegate = 4,
+	// Uses one H-bridge terminal as an on/off output. The paired terminal must stay disconnected.
+	DC_Gpio = 5,
 } dc_function_e;
 
 typedef enum __attribute__ ((__packed__)) {
@@ -887,6 +943,14 @@ typedef enum __attribute__((__packed__)) {
 	ftRegionPower = 2,
 	ftRegionCruise = 3,
 } ft_region_e;
+
+enum class SDLoggerMode : uint8_t {
+	None = 0,
+	Mlg = 1,
+	ToothBin = 2,
+	ToothCsv = 3,
+	Dtc = 4,
+};
 
 #endif // __cplusplus
 

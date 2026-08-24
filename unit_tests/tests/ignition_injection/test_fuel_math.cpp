@@ -170,6 +170,55 @@ TEST(AirmassModes, VeOverride) {
 	EXPECT_FLOAT_EQ(engine->engineState.veTableYAxis, 30.0f);
 }
 
+TEST(AirmassModes, SpeedDensityCompensatedMap) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->displacement = 2.0f;
+	engineConfiguration->cylindersCount = 4;
+
+	StrictMock<MockVp3d> veTable;
+	StrictMock<MockVp3d> mapFallback;
+
+	{
+		InSequence is;
+
+		// Feature disabled: VE is looked up at actual MAP
+		EXPECT_CALL(veTable, getValue(1200, FloatNear(80.0f, EPS4D))).WillOnce(Return(50.0f));
+		// Enabled with baro at 80% of standard atmosphere: VE is looked up at MAP_ref = 80 / 0.8 = 100
+		EXPECT_CALL(veTable, getValue(1200, FloatNear(100.0f, EPS4D))).WillOnce(Return(50.0f));
+		// Enabled but no baro sensor: no compensation
+		EXPECT_CALL(veTable, getValue(1200, FloatNear(80.0f, EPS4D))).WillOnce(Return(50.0f));
+	}
+
+	SpeedDensityAirmass dut(veTable, mapFallback);
+
+	float tChargeK = 273.15f + 20.0f;
+	engine->engineState.sd.tChargeK = tChargeK;
+
+	float map = 80;
+	mass_t expectedAirmass = SpeedDensityBase::getAirmassImpl(0.5f, map, tChargeK);
+
+	// Feature disabled: load axis is actual MAP
+	auto result = dut.getAirmass(1200, map, false);
+	EXPECT_NEAR(result.CylinderAirmass, expectedAirmass, EPS4D);
+	EXPECT_NEAR(result.EngineLoadPercent, 80.0f, EPS4D);
+
+	// Enable with a baro sensor at 80% of standard atmosphere
+	engineConfiguration->useCompensatedMap = true;
+	Sensor::setMockValue(SensorType::BarometricPressure, 0.8f * STD_ATMOSPHERE);
+
+	result = dut.getAirmass(1200, map, false);
+	// Physical air mass calculation still uses actual MAP
+	EXPECT_NEAR(result.CylinderAirmass, expectedAirmass, EPS4D);
+	// Load axis is normalized to standard atmosphere
+	EXPECT_NEAR(result.EngineLoadPercent, 100.0f, EPS4D);
+
+	// Enabled but baro sensor missing: no compensation applied
+	Sensor::resetMockValue(SensorType::BarometricPressure);
+	result = dut.getAirmass(1200, map, false);
+	EXPECT_NEAR(result.CylinderAirmass, expectedAirmass, EPS4D);
+	EXPECT_NEAR(result.EngineLoadPercent, 80.0f, EPS4D);
+}
+
 TEST(AirmassModes, FallbackMap) {
 	StrictMock<MockVp3d> veTable;
 	StrictMock<MockVp3d> mapFallback;
@@ -306,7 +355,7 @@ TEST(FuelMath, IdleVeTable) {
 	engineConfiguration->idlePidDeactivationTpsThreshold = 10;
 
 	// Set TPS so this works
-	Sensor::setMockValue(SensorType::Tps1, 0);
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 0);
 
 	// Gets normal VE table
 	idler.isIdling = false;
@@ -317,21 +366,82 @@ TEST(FuelMath, IdleVeTable) {
 	EXPECT_FLOAT_EQ(dut.getVe(1000, 50, false), 0.4f);
 
 	// Below half threshold, fully use idle VE table
-	Sensor::setMockValue(SensorType::Tps1, 0);
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 0);
 	EXPECT_FLOAT_EQ(dut.getVe(1000, 50, false), 0.4f);
-	Sensor::setMockValue(SensorType::Tps1, 2);
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 2);
 	EXPECT_FLOAT_EQ(dut.getVe(1000, 50, false), 0.4f);
-	Sensor::setMockValue(SensorType::Tps1, 5);
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 5);
 	EXPECT_FLOAT_EQ(dut.getVe(1000, 50, false), 0.4f);
 
 	// As TPS approaches idle threshold, phase-out the idle VE table
 
-	Sensor::setMockValue(SensorType::Tps1, 6);
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 6);
 	EXPECT_FLOAT_EQ(dut.getVe(1000, 50, false), 0.42f);
-	Sensor::setMockValue(SensorType::Tps1, 8);
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 8);
 	EXPECT_FLOAT_EQ(dut.getVe(1000, 50, false), 0.46f);
-	Sensor::setMockValue(SensorType::Tps1, 10);
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 10);
 	EXPECT_FLOAT_EQ(dut.getVe(1000, 50, false), 0.5f);
+}
+
+TEST(FuelMath, VeSwitchTable) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	MockAirmass dut;
+
+	// Primary VE table returns 50%
+	EXPECT_CALL(dut.veTable, getValue(_, _)).WillRepeatedly(Return(50));
+
+	// Second VE table returns 80%
+	setTable(secondTablesGetState()->secondVeTable, 80);
+
+	secondTablesGetState()->secondVeTableInput = Gpio::A0;
+
+	// Pin HIGH -> second table
+	setMockState(Gpio::A0, true);
+	EXPECT_NEAR(dut.getVe(1000, 50, false), 0.8f, EPS4D);
+
+	// Pin LOW -> primary table
+	setMockState(Gpio::A0, false);
+	EXPECT_NEAR(dut.getVe(1000, 50, false), 0.5f, EPS4D);
+
+	// No pin configured -> primary table
+	secondTablesGetState()->secondVeTableInput = Gpio::Unassigned;
+	EXPECT_NEAR(dut.getVe(1000, 50, false), 0.5f, EPS4D);
+}
+
+TEST(FuelMath, VeSwitchTableBlend) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	MockAirmass dut;
+
+	// Primary VE table returns 50%, switch table returns 80%
+	EXPECT_CALL(dut.veTable, getValue(_, _)).WillRepeatedly(Return(50));
+	setTable(secondTablesGetState()->secondVeTable, 80);
+
+	secondTablesGetState()->secondVeTableInput = Gpio::Unassigned; // no pin, blend controls it
+
+	// Configure blend: TPS controls blend, 0% TPS -> 0% blend, 100% TPS -> 100% blend
+	secondTablesGetState()->secondVeBlendParameter = GPPWM_Tps;
+	setLinearCurve(secondTablesGetState()->secondVeBlendBins, 0, 100, 1);
+	setLinearCurve(secondTablesGetState()->secondVeBlendValues, 0, 100, 1);
+
+	// TPS = 0 -> 0% blend -> primary table (50%)
+	Sensor::setMockValue(SensorType::Tps1, 0);
+	EXPECT_NEAR(dut.getVe(1000, 50, false), 0.5f, EPS4D);
+
+	// TPS = 50 -> 50% blend -> midpoint between 50% and 80% = 65%
+	Sensor::setMockValue(SensorType::Tps1, 50);
+	EXPECT_NEAR(dut.getVe(1000, 50, false), 0.65f, EPS4D);
+
+	// TPS = 100 -> 100% blend -> fully switched (80%)
+	Sensor::setMockValue(SensorType::Tps1, 100);
+	EXPECT_NEAR(dut.getVe(1000, 50, false), 0.8f, EPS4D);
+
+	// Pin takes priority over blend when active
+	secondTablesGetState()->secondVeTableInput = Gpio::A0;
+	setMockState(Gpio::A0, true);
+	Sensor::setMockValue(SensorType::Tps1, 0); // blend would give primary, but pin forces switch
+	EXPECT_NEAR(dut.getVe(1000, 50, false), 0.8f, EPS4D);
 }
 
 TEST(FuelMath, getCycleFuelMassTest) {
@@ -399,6 +509,61 @@ TEST(FuelMath, postCrankingFactorAxis){
 	Sensor::setMockValue(SensorType::Clt, 70);
 	engine->periodicFastCallback();
 	EXPECT_NEAR(engine->fuelComputer.running.postCrankingFuelCorrection, 5, EPS3D);
+}
+
+// flexCranking selects the cranking coolant-multiplier source: the 1D crankingFuelCoef curve when off
+// (or when no flex sensor is present), and the 2D crankingFuelFlexTable when on with a flex sensor.
+TEST(FuelMath, crankingFlexFallbackToCurve) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	// Pass the base mass straight through so the return value equals the coolant multiplier.
+	engineConfiguration->useRunningMathForCranking = true;
+
+	setArrayValues(config->crankingFuelCoef, 2.0f);  // flat 1D curve
+	Sensor::setMockValue(SensorType::Clt, 20);
+
+	// flex off -> 1D curve, regardless of any ethanol reading.
+	engineConfiguration->flexCranking = false;
+	Sensor::setMockValue(SensorType::FuelEthanolPercent, 85);
+	EXPECT_NEAR(2.0f, getCrankingFuel3(1, 0), EPS4D);
+
+	// flex on but no flex sensor present -> still the 1D curve.
+	engineConfiguration->flexCranking = true;
+	Sensor::resetMockValue(SensorType::FuelEthanolPercent);
+	EXPECT_NEAR(2.0f, getCrankingFuel3(1, 0), EPS4D);
+}
+
+// flexCranking on + flex sensor present resolves the cranking coolant multiplier from the 2D ethanol table.
+TEST(FuelMath, crankingFlex2dTable) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	engineConfiguration->useRunningMathForCranking = true;
+	engineConfiguration->flexCranking = true;
+
+	Sensor::setMockValue(SensorType::Clt, 20);
+
+	// Ethanol axis plus a table that is flat across coolant so only the ethanol axis matters.
+	const uint8_t ethanolBins[] = { 0, 35, 65, 100 };
+	copyArray(config->crankingFuelFlexBins, ethanolBins);
+
+	const float rowMult[] = { 2.0f, 2.5f, 3.5f, 5.0f };
+	for (size_t row = 0; row < efi::size(config->crankingFuelFlexTable); row++) {
+		for (size_t col = 0; col < CRANKING_CURVE_SIZE; col++) {
+			config->crankingFuelFlexTable[row][col] = rowMult[row];
+		}
+	}
+
+	// Exact ethanol bins hit their row.
+	Sensor::setMockValue(SensorType::FuelEthanolPercent, 0);
+	EXPECT_NEAR(2.0f, getCrankingFuel3(1, 0), EPS4D);
+	Sensor::setMockValue(SensorType::FuelEthanolPercent, 35);
+	EXPECT_NEAR(2.5f, getCrankingFuel3(1, 0), EPS4D);
+	Sensor::setMockValue(SensorType::FuelEthanolPercent, 100);
+	EXPECT_NEAR(5.0f, getCrankingFuel3(1, 0), EPS4D);
+
+	// Between bins -> linear interpolation on the ethanol axis (35 -> 65 at 50%).
+	Sensor::setMockValue(SensorType::FuelEthanolPercent, 50);
+	EXPECT_NEAR(3.0f, getCrankingFuel3(1, 0), EPS4D);
 }
 
 
@@ -479,4 +644,43 @@ TEST(AirmassModes, PredictiveMapCalculation) {
 
 	// Should use the fallback MAP from the table
 	EXPECT_FLOAT_EQ(dut.getMap(1500, false), 85.0f);
+}
+
+// Verifies that the blend target tracks the rising sensor value rather than
+// the stale pre-event snapshot, avoiding a lean dip during long transients.
+TEST(AirmassModes, PredictiveMapBlendTowardRisingSensor) {
+	StrictMock<MockVp3d> veTable;
+	StrictMock<MockVp3d> mapFallback;
+
+	EXPECT_CALL(mapFallback, getValue(1500, 30.0f))
+		.WillRepeatedly(Return(85.0f));
+
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	engineConfiguration->accelEnrichmentMode = AE_MODE_PREDICTIVE_MAP;
+	for (auto index = 0; index < efi::size(config->predictiveMapBlendDurationValues); index++) {
+		config->predictiveMapBlendDurationValues[index] = 0.5f; // 500ms blend
+	}
+
+	SpeedDensityAirmass dut(veTable, mapFallback);
+
+	Sensor::setMockValue(SensorType::Tps1, 30.0f);
+	Sensor::setMockValue(SensorType::Map, 65.0f);
+
+	// Trigger prediction: predicted=85, sensor=65
+	auto& tpsAccel = *engine->module<TpsAccelEnrichment>();
+	tpsAccel.m_accelEventJustOccurred = true;
+	EXPECT_FLOAT_EQ(dut.getMap(1500, false), 85.0f);
+
+	// Sensor rises to 75 kPa (manifold filling up)
+	Sensor::setMockValue(SensorType::Map, 75.0f);
+
+	// At 50% blend with rising sensor: 85 + (75-85)*0.5 = 80.0
+	// Old code would give: 85 + (65-85)*0.5 = 75.0
+	eth.moveTimeForwardMs(250);
+	EXPECT_NEAR(dut.getMap(1500, false), 80.0f, EPS4D);
+
+	// Sensor catches up to predicted — prediction exits early
+	Sensor::setMockValue(SensorType::Map, 90.0f);
+	EXPECT_FLOAT_EQ(dut.getMap(1500, false), 90.0f);
 }

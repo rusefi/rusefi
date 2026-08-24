@@ -89,6 +89,26 @@ public:
 	}
 
 	/*
+	 * Get a reading from the specified sensor, or one of limit values depending on error code.
+	 * Returned value can be outside limits if it is valid
+	 */
+	static float getOrDefault(SensorType type, float valueLow, float valueDefault, float valueHigh) {
+		SensorResult res = Sensor::get(type);
+		if (res) {
+			return res.Value;
+		} else {
+			if (res.Code == UnexpectedCode::High) {
+				return valueHigh;
+			}
+			if (res.Code == UnexpectedCode::Low) {
+				return valueLow;
+			}
+			// in all other cases - return low
+			return valueDefault;
+		}
+	}
+
+	/*
 	 * Get a raw (unconverted) value from the sensor, if available.
 	 */
 	static float getRaw(SensorType type);
@@ -153,6 +173,10 @@ public:
 		return 0;
 	}
 
+	virtual bool hasRaw() const {
+		return false;
+	}
+
 	/*
 	 * Get whether this sensor is redundant (backed by multiple other sensors)
 	 */
@@ -161,6 +185,9 @@ public:
 		return false;
 	}
 
+	// Remove this sensor from the sensor registry.
+	// No-op if a different sensor instance of the same type currently owns the
+	// registry slot (for example a Lua-created sensor while this one never registered).
 	void unregister();
 
 	SensorType type() const {

@@ -28,8 +28,6 @@ static void constructTriggerFromRecording(CsvReader *reader) {
 
 		double time360 = last - reader->history.get(magic - 1 - 8);
 
-		float current = 0;
-
 		for (int i=len - 1;i>=0;i--) {
 			double tooth = last - reader->history.get(magic - 1 - i);
 //				printf("index=%d width=%f\n", i, tooth);
@@ -40,14 +38,14 @@ static void constructTriggerFromRecording(CsvReader *reader) {
 			const char * front = isRise ? "RISE" : "FALL";
 
 			printf("\ts->addEvent360(%f, TriggerValue::%s);\n", angle, front);
-			current += tooth;
 		}
 
 //		printf("time360=%f\n", time360);
 	}
 }
 
-static void runTriggerTest(const char *fileName, uint32_t totalErrors, int syncCounter, float firstRpm) {
+// only referenced by the currently-disabled (commented-out) real6g72 tests below
+[[maybe_unused]] static void runTriggerTest(const char *fileName, uint32_t totalErrors, int syncCounter, float firstRpm) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	prepare(&eth, trigger_type_e::TT_VVT_MITSU_6G72);

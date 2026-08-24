@@ -4,17 +4,21 @@ import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
+import com.opensr5.ini.field.StringIniField;
 import com.opensr5.ini.DialogModel;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,6 +29,8 @@ import java.util.regex.Pattern;
  * @see CalibrationDialogWidget
  */
 public class CalibrationFieldFactory {
+    static final int MAX_COMBO_WIDTH = 360;
+    static final int MAX_LABEL_WIDTH = 300;
 
     // we need to maintain this in sync with the ones used on tunerstudio.template
     private static final String[][] CheckboxPairs = {
@@ -33,34 +39,75 @@ public class CalibrationFieldFactory {
     };
 
     public static JPanel createFieldRow(DialogModel.Field field, IniField iniField, ConfigurationImage ci, ConfigurationImage workingImage) {
-        return createFieldRow(field, iniField, ci, workingImage, null);
+        return createFieldRow(field, iniField, ci, workingImage, null, null);
     }
 
     public static JPanel createFieldRow(DialogModel.Field field, IniField iniField, ConfigurationImage ci, ConfigurationImage workingImage, Runnable onChange) {
+        return createFieldRow(field, iniField, ci, workingImage, onChange, null);
+    }
+
+    public static JPanel createFieldRow(DialogModel.Field field, IniField iniField, ConfigurationImage ci, ConfigurationImage workingImage, Runnable onChange, Consumer<String> onShowInPinout) {
+        return createFieldRow(field, iniField, ci, workingImage, onChange, onShowInPinout, 0);
+    }
+
+    static JPanel createFieldRow(DialogModel.Field field, IniField iniField, ConfigurationImage ci,
+                                 ConfigurationImage workingImage, Runnable onChange,
+                                 Consumer<String> onShowInPinout, int labelWidth) {
         JPanel row = createRowPanel();
         row.add(Box.createHorizontalStrut(10));
 
-        JLabel label = new JLabel(field.getUiName());
+        String labelText = field.getUiName();
+        JLabel label = new JLabel(labelText);
         applyStyle(label);
+        if (labelWidth > 0) {
+            if (labelText != null && label.getPreferredSize().width > labelWidth && !labelText.startsWith("<html>")) {
+                label.setText("<html><div style='width: " + (labelWidth - 4) + "px'>" +
+                    escapeHtml(labelText) + "</div></html>");
+                label.setToolTipText(labelText);
+            }
+            Dimension size = label.getPreferredSize();
+            size.width = labelWidth;
+            size.height = Math.min(size.height, label.getFontMetrics(label.getFont()).getHeight() * 2);
+            label.setMinimumSize(size);
+            label.setPreferredSize(size);
+            label.setMaximumSize(size);
+        }
         row.add(label);
         row.add(Box.createHorizontalStrut(16));
 
+        Supplier<String> value;
         if (iniField instanceof EnumIniField) {
             EnumIniField enumField = (EnumIniField) iniField;
             String currentValue = ci == null ? "" : ConfigurationImageGetterSetter.getStringValue(iniField, ci);
 
             if (isCheckboxEnum(enumField)) {
-                row.add(createCheckBox(enumField, iniField, currentValue, workingImage, onChange));
+                JCheckBox checkBox = createCheckBox(enumField, iniField, currentValue, workingImage, onChange);
+                row.add(checkBox);
+                value = () -> checkBox.isSelected() ? "enabled" : "disabled";
             } else {
-                row.add(createComboBox(enumField, iniField, currentValue, workingImage, onChange));
+                JComboBox<String> comboBox = createComboBox(enumField, iniField, currentValue, workingImage, onChange);
+                row.add(comboBox);
+                value = () -> String.valueOf(comboBox.getSelectedItem());
+                JButton pinoutButton = createPinoutButton(comboBox, field.getKey(), onShowInPinout);
+                if (pinoutButton != null) {
+                    row.add(Box.createHorizontalStrut(4));
+                    row.add(pinoutButton);
+                }
             }
         } else {
             String currentValue = ci == null ? "" : ConfigurationImageGetterSetter.getStringValue(iniField, ci);
-            row.add(createTextField(iniField, currentValue, workingImage, onChange));
+            JTextField textField = createTextField(iniField, currentValue, workingImage, onChange);
+            row.add(textField);
+            value = textField::getText;
         }
+        installCopyListener(label, labelText, value);
 
         fixRowHeight(row);
         return row;
+    }
+
+    private static String escapeHtml(String text) {
+        return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
     }
 
     /**
@@ -83,16 +130,20 @@ public class CalibrationFieldFactory {
     }
 
     /**
-     * Creates a button row for a dialog command.
+     * Creates a button row for a dialog command. {@code onExecute} is called on the EDT when
+     * the button is clicked; it is responsible for dispatching the command to the ECU on the
+     * IO thread. May be null, in which case the button is rendered but does nothing.
      */
-    public static JPanel createCommandRow(DialogModel.Command command) {
+    public static JPanel createCommandRow(DialogModel.Command command, Runnable onExecute) {
         JButton button = new JButton(command.getUiName());
         applyStyle(button);
         button.setAlignmentX(Component.LEFT_ALIGNMENT);
-        button.addActionListener(e -> {
-            // TODO: implement command execution
-            System.out.println("Executing command: " + command.getCommand());
-        });
+        if (onExecute != null) {
+            button.addActionListener(e -> onExecute.run());
+        } else {
+            // disable button since we can get the action
+            button.setEnabled(false);
+        }
 
         JPanel row = createRowPanel();
         row.add(Box.createHorizontalStrut(10));
@@ -125,12 +176,18 @@ public class CalibrationFieldFactory {
         JComboBox<String> comboBox = new JComboBox<>(comboValues);
         applyStyle(comboBox);
         comboBox.setSelectedItem(cleanValue);
+        comboBox.setToolTipText(cleanValue);
         applyBackgroundColor(comboBox, cleanValue);
-        comboBox.setMaximumSize(comboBox.getPreferredSize());
+        Dimension size = comboBox.getPreferredSize();
+        size.width = Math.min(size.width, MAX_COMBO_WIDTH);
+        comboBox.setMinimumSize(new Dimension(0, size.height));
+        comboBox.setPreferredSize(size);
+        comboBox.setMaximumSize(size);
         comboBox.addActionListener(e -> {
             if (workingImage == null) return;
             String selected = (String) comboBox.getSelectedItem();
             if (selected != null) {
+                comboBox.setToolTipText(selected);
                 ConfigurationImageGetterSetter.setValue2(iniField, workingImage, iniField.getName(), selected);
                 if (onChange != null) onChange.run();
             }
@@ -138,8 +195,53 @@ public class CalibrationFieldFactory {
         return comboBox;
     }
 
+    /**
+     * For pin-enum fields (name matches .*pins?\d*), adds a button that fires the
+     * current combo value up to the caller for cross-tab navigation.
+     */
+    private static JButton createPinoutButton(JComboBox<String> comboBox, String fieldKey, Consumer<String> onShowInPinout) {
+        if (onShowInPinout == null || fieldKey == null) {
+            return null;
+        }
+        if (!fieldKey.toLowerCase().matches(".*pins?\\d*")) {
+            return null;
+        }
+
+        JButton button = new JButton("W") {
+            @Override
+            public void setEnabled(boolean enabled) {
+                super.setEnabled(enabled && getSelectedPin(comboBox) != null);
+            }
+        };
+        button.setToolTipText("Wiring/Pinout");
+        button.setMargin(new Insets(0, 6, 0, 6));
+        button.setMaximumSize(button.getPreferredSize());
+        button.setEnabled(comboBox.isEnabled());
+        comboBox.addActionListener(e -> button.setEnabled(comboBox.isEnabled()));
+        button.addActionListener(e -> {
+            String value = getSelectedPin(comboBox);
+            if (value == null) {
+                return;
+            }
+            onShowInPinout.accept(value);
+        });
+        return button;
+    }
+
+    private static String getSelectedPin(JComboBox<String> comboBox) {
+        Object selected = comboBox.getSelectedItem();
+        if (selected == null) {
+            return null;
+        }
+        String value = selected.toString().replace("\"", "").trim();
+        return value.isEmpty() || "NONE".equalsIgnoreCase(value) || "INVALID".equalsIgnoreCase(value)
+            ? null : value;
+    }
+
     private static JTextField createTextField(IniField iniField, String currentValue, ConfigurationImage workingImage, Runnable onChange) {
-        JTextField textField = new JTextField(currentValue);
+        int columns = iniField instanceof StringIniField
+            ? Math.min(((StringIniField) iniField).getSize(), 32) : 0;
+        JTextField textField = new JTextField(currentValue, columns);
         applyStyle(textField);
         applyBackgroundColor(textField, currentValue);
         textField.setMaximumSize(textField.getPreferredSize());
@@ -177,6 +279,48 @@ public class CalibrationFieldFactory {
         row.setLayout(new BoxLayout(row, BoxLayout.X_AXIS));
         row.setAlignmentX(Component.LEFT_ALIGNMENT);
         return row;
+    }
+
+    static String copiedFieldText(String label, String value) {
+        return label + ": " + value;
+    }
+
+    private static void installCopyListener(JLabel label, String labelText, Supplier<String> value) {
+        if (label.getToolTipText() == null) {
+            label.setToolTipText("Double-click to copy");
+        }
+        label.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent event) {
+                if (event.getClickCount() != 2) {
+                    return;
+                }
+
+                String copied = copiedFieldText(labelText, value.get());
+                Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(copied), null);
+                showCopiedMessage(label, copied);
+            }
+        });
+    }
+
+    private static void showCopiedMessage(JLabel label, String copied) {
+        if (!label.isShowing()) {
+            return;
+        }
+
+        JLabel message = new JLabel("Copied: " + copied);
+        message.setOpaque(true);
+        message.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(Color.DARK_GRAY),
+            BorderFactory.createEmptyBorder(4, 8, 4, 8)));
+        message.setBackground(Color.DARK_GRAY);
+        message.setForeground(Color.WHITE);
+        Point location = label.getLocationOnScreen();
+        Popup popup = PopupFactory.getSharedInstance().getPopup(label, message, location.x, location.y + label.getHeight());
+        popup.show();
+        Timer timer = new Timer(1500, event -> popup.hide());
+        timer.setRepeats(false);
+        timer.start();
     }
 
     static void fixRowHeight(JPanel row) {

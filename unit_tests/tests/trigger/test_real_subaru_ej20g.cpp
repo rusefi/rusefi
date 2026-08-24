@@ -84,8 +84,6 @@ TEST(real, SubaruEj20gDefaultCrankingSeparateTrigger) {
 // TODO: investigate
 // TODO: this test also triggers a watchdog warning after clearing the EngineTestHelper!
 TEST(real, SubaruEj20gDefaultRev) {
-	extern bool unitTestTaskNoFastCallWhileAdvancingTimeHack;
-	unitTestTaskNoFastCallWhileAdvancingTimeHack = true;
 
 	RealTriggerHelper helper;
 	/* 1 - cam

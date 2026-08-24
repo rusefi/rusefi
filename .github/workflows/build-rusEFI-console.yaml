@@ -1,4 +1,4 @@
-name: rusEFI console
+name: rusEFI validate console, also generate trigger images
 
 on:
   push:
@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Checkout Submodules Without ChibiOS
         run: |
@@ -19,10 +19,7 @@ jobs:
       # as of 2025 TS unfortunately still uses java 8
       # we use JDK11 but sourceCompatibility/targetCompatibility 8 so that rusEFI TS plugin is compatible with TS
       #  [tag:java8]
-      - uses: actions/setup-java@v5
-        with:
-          distribution: 'zulu'
-          java-version: '17'
+      - uses: ./.github/actions/setup-java
 
       - name: Test Compiler
         run: javac -version
@@ -31,11 +28,12 @@ jobs:
         run: |
           sudo bash misc/actions/add-ubuntu-latest-apt-mirrors.sh
           sudo bash misc/actions/ubuntu-install-tools.sh
+          sudo apt-get install xvfb
 
       - name: Build All Java
         working-directory: .
         run: |
-          ./gradlew jar :config_definition_base:shadowJar :enum_to_string:shadowJar
+          ./gradlew jar :config_definition_base:shadowJar :enum_to_string:shadowJar :trigger-ui:shadowJar
 
       - name: Generate Enums & Live Documentation
         working-directory: ./firmware/
@@ -48,6 +46,14 @@ jobs:
         # at the moment 'jar' task does not depend on tests?! maybe because tests take some time?
         working-directory: .
         run: ./gradlew test
+
+      - name: MCP ECU Tests
+        working-directory: .
+        run: ./gradlew :mcp_ecu:test
+
+      - name: MCP CAN Tests
+        working-directory: .
+        run: ./gradlew :mcp_can:test
 
       - name: Publish Gradle Test Report
         uses: mikepenz/action-junit-report@v6
@@ -67,6 +73,15 @@ jobs:
       - name: Generate Enums using freshly compiled tool
         working-directory: ./firmware/
         run: ./gen_enum_to_string.sh
+
+      - name: Run TriggerImage
+        run: xvfb-run java -cp java_console/trigger-ui/build/libs/trigger-ui-all.jar com.rusefi.trigger.TriggerImage unit_tests
+
+      - name: Upload trigger images
+        uses: actions/upload-artifact@v7
+        with:
+          name: triggers
+          path: triggers
 
 #      - name: Upload rusEFI server
 #        working-directory: .

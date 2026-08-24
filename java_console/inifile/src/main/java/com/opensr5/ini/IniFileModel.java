@@ -15,6 +15,7 @@ public interface IniFileModel {
 
     Map<String, List<String>> getDefines();
 
+    // [Constants]
     // todo: rename to 'getPrimaryPageIniFields()'?
     Map<String, IniField> getAllIniFields();
 
@@ -27,7 +28,10 @@ public interface IniFileModel {
     @Deprecated // always use 'Field' generated parameter with code-generated name?
     IniField getIniField(String key);
 
+    // [OutputChannels]
     IniField getOutputChannel(String key) throws IniMemberNotFound;
+
+    Map<String, IniField> getAllOutputChannels();
 
     /**
      * Get an expression-based output channel by name.
@@ -91,4 +95,14 @@ public interface IniFileModel {
     FrontPageModel getFrontPage();
 
     List<MenuModel> getMenus();
+
+    Map<String, String> getControllerCommands();
+
+    List<VeAnalyzeMap> getVeAnalyzeMaps();
+
+    List<String> getLambdaTargetTables();
+
+    List<VeAnalyzeFilter> getVeAnalyzeFilters();
+
+    List<EventTriggerModel> getEventTriggers();
 }

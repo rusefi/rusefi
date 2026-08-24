@@ -13,7 +13,6 @@ TEST(realBQS, realHarleyCranking) {
 	while (reader.haveMore()) {
  		reader.processLine(&eth);
 
-		auto rpm = Sensor::getOrZero(SensorType::Rpm);
 		if (reader.gotRpm) {
 			  ASSERT_TRUE(Sensor::get(SensorType::Rpm).Valid);
 		}
@@ -65,6 +64,6 @@ TEST(realBQS, readAsCam) {
 			EXPECT_EQ(reader.lineIndex(), 13);
 		}
 	}
-	ASSERT_DOUBLE_EQ(-247.03125, tc->getVVTPosition(0, 0));
+	ASSERT_NEAR(112.96875, tc->getVVTPosition(0, 0), 0.1);
 	ASSERT_TRUE(vvtDecoder.getShaftSynchronized());
 }

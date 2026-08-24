@@ -5,6 +5,7 @@ import com.opensr5.ini.CurveModel;
 import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.ExpressionEvaluator;
 import com.opensr5.ini.GaugeModel;
+import com.opensr5.ini.IniValue;
 import com.opensr5.ini.IndicatorModel;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.TsStringFunction;
@@ -15,6 +16,8 @@ import com.opensr5.ini.field.IniField;
 import com.opensr5.ini.field.OrdinalOutOfRangeException;
 import com.rusefi.core.ISensorHolder;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.core.SensorSubscription;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.widgets.SensorGauge;
 import eu.hansolo.steelseries.gauges.Radial;
@@ -23,12 +26,18 @@ import com.rusefi.ui.laf.GradientTitleBorder;
 import com.rusefi.ui.util.ScrollablePanel;
 import com.rusefi.ui.util.SwingUtil;
 import com.rusefi.ui.util.WrapLayout;
+import com.rusefi.trigger.TriggerImage;
+import com.rusefi.trigger.TriggerWheelInfo;
+import com.opensr5.ConfigurationImageGetterSetter;
+import java.io.File;
 
 import com.devexperts.logging.Logging;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.util.*;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -42,20 +51,35 @@ import static com.devexperts.logging.Logging.getLogging;
  */
 public class CalibrationDialogWidget {
     private static final Logging log = getLogging(CalibrationDialogWidget.class);
+
     private final JPanel contentPane = new ScrollablePanel();
     private final UIContext uiContext;
+    private final List<Runnable> triggerImageUpdaters = new ArrayList<>();
     private ConfigurationImage workingImage;
     private IniFileModel currentIniFileModel;
+    private int fieldRowVerticalMargin = 3;
     private final List<ExpressionRow> expressionRows = new ArrayList<>();
-    private final List<IndicatorLabelEntry> indicatorEntries = new ArrayList<>();
+    private final List<IndicatorPanel> indicatorPanels = new ArrayList<>();
     private final List<ReadoutLabelEntry> readoutEntries = new ArrayList<>();
     private final List<GaugeReadoutEntry> gaugeReadoutEntries = new ArrayList<>();
     private static final int READOUT_GAUGE_SIZE = 150;
     /** Called after each user edit with the current working image, so listeners can re-evaluate their own expressions. */
     private Consumer<ConfigurationImage> onConfigChange;
+    /** Called when the user opens Wiring/Pinout from a pin-enum field; arg is the current enum value. */
+    private Consumer<String> onShowInPinout;
+    /** Restores the last navigated view; set on every update() call so the VE generator panel can return to it. */
+    private Runnable currentViewRestorer;
 
     public void setOnConfigChange(Consumer<ConfigurationImage> onConfigChange) {
         this.onConfigChange = onConfigChange;
+    }
+
+    public void setOnShowInPinout(Consumer<String> onShowInPinout) {
+        this.onShowInPinout = onShowInPinout;
+    }
+
+    public void setFieldRowVerticalMargin(int margin) {
+        fieldRowVerticalMargin = margin;
     }
 
     /**
@@ -70,17 +94,6 @@ public class CalibrationDialogWidget {
             this.row = row;
             this.enableExpression = enableExpression;
             this.visibleExpression = visibleExpression;
-        }
-    }
-
-    /** Tracks an indicator label inside a dialog indicatorPanel for config-driven refresh. */
-    private static class IndicatorLabelEntry {
-        final JLabel label;
-        final IndicatorModel indicator;
-
-        IndicatorLabelEntry(JLabel label, IndicatorModel indicator) {
-            this.label = label;
-            this.indicator = indicator;
         }
     }
 
@@ -118,13 +131,29 @@ public class CalibrationDialogWidget {
         this.uiContext = uiContext;
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
         contentPane.setAlignmentX(Component.LEFT_ALIGNMENT);
-        // Refresh dialog indicators and readouts whenever the ECU sends new output-channel data.
+        // Refresh readouts whenever the ECU sends new output-channel data.
+        // Indicator panels register their own SensorCentral listeners independently.
         SensorCentral.getInstance().addListener(() -> {
-            if (!indicatorEntries.isEmpty() || !readoutEntries.isEmpty() || !gaugeReadoutEntries.isEmpty()) {
-                SwingUtilities.invokeLater(() -> {
-                    refreshIndicators();
-                    refreshReadouts();
-                });
+            if (!readoutEntries.isEmpty() || !gaugeReadoutEntries.isEmpty()) {
+                SwingUtilities.invokeLater(this::refreshReadouts);
+            }
+        }, new SensorSubscription() {
+            @Override
+            public boolean isInterestedInAny(Set<String> updatedSensors) {
+                if (readoutEntries.isEmpty() && gaugeReadoutEntries.isEmpty()) {
+                    return false;
+                }
+                for (ReadoutLabelEntry entry : readoutEntries) {
+                    if (updatedSensors.contains(entry.channel.toLowerCase())) return true;
+                }
+                for (GaugeReadoutEntry entry : gaugeReadoutEntries) {
+                    if (updatedSensors.contains(entry.channel.toLowerCase())) return true;
+                    // Also interested if ANY sensor updated if we have expression labels,
+                    // because we don't know which sensors are in the expression without parsing it again.
+                    // But we could parse it once. For now, let's be safe.
+                    if (entry.hasExpressionLabels) return true;
+                }
+                return false;
             }
         });
     }
@@ -143,18 +172,44 @@ public class CalibrationDialogWidget {
         return workingImage;
     }
 
+    /**
+     * Drops any in-progress edits. Called when the ECU disconnects so stale calibrations
+     * from the previous board are not carried over to the next connection.
+     */
+    public void reset() {
+        workingImage = null;
+        contentPane.removeAll();
+        contentPane.revalidate();
+        contentPane.repaint();
+    }
+
     public void update(DialogModel dialogModel, IniFileModel iniFileModel, ConfigurationImage ci) {
+        final DialogModel capturedDm = dialogModel;
+        final IniFileModel capturedIni = iniFileModel;
+        currentViewRestorer = () -> update(capturedDm, capturedIni, workingImage);
         workingImage = ci != null ? ci.clone() : null;
         currentIniFileModel = iniFileModel;
         expressionRows.clear();
-        indicatorEntries.clear();
+        indicatorPanels.clear();
         readoutEntries.clear();
         gaugeReadoutEntries.clear();
+        triggerImageUpdaters.clear();
         contentPane.removeAll();
         if (dialogModel != null) {
+            String uiName = dialogModel.getUiName();
+            if (uiName == null || uiName.isEmpty()) {
+                uiName = dialogModel.getKey();
+            }
+            contentPane.setName(uiName);
+
             applyLayout(contentPane, dialogModel.getLayoutHint());
             contentPane.setAlignmentX(Component.LEFT_ALIGNMENT);
-            fillPanel(contentPane, dialogModel, iniFileModel, ci);
+            fillPanel(contentPane, dialogModel, iniFileModel, ci,
+                getFieldLabelWidth(dialogModel, iniFileModel, new HashSet<>()));
+
+            if (TriggerImageHelper.isTriggerPanel(dialogModel.getKey(), uiName)) {
+                addTriggerImage(contentPane, dialogModel.getKey(), uiName);
+            }
         }
         contentPane.revalidate();
         contentPane.repaint();
@@ -177,6 +232,9 @@ public class CalibrationDialogWidget {
     }
 
     public void update(String key, IniFileModel iniFileModel, ConfigurationImage ci) {
+        final String capturedKey = key;
+        final IniFileModel capturedIniForRestore = iniFileModel;
+        currentViewRestorer = () -> update(capturedKey, capturedIniForRestore, workingImage);
         contentPane.removeAll();
         if (key != null) {
             DialogModel dialog = iniFileModel.getDialogs().get(key);
@@ -191,6 +249,15 @@ public class CalibrationDialogWidget {
             TableModel table = iniFileModel.getTable(key);
             if (table != null) {
                 contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+                //TODO: nicer injection of this button? maybe a comment on the .ini and then hook this?
+                if ("veTableTbl".equals(table.getTableId())) {
+                    final IniFileModel capturedIni = iniFileModel;
+                    JButton genVeBtn = new JButton("Generate base VE...");
+                    genVeBtn.addActionListener(e -> showVeGeneratorPanel(capturedIni));
+                    JPanel veToolbar = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));
+                    veToolbar.add(genVeBtn);
+                    contentPane.add(veToolbar);
+                }
                 TuningTableView tuningTableView = new TuningTableView(table.getTitle());
                 tuningTableView.displayTable(iniFileModel, table.getTableId(), workingImage);
                 tuningTableView.setOnEdit(notifyEdit);
@@ -209,7 +276,8 @@ public class CalibrationDialogWidget {
         contentPane.repaint();
     }
 
-    private void fillPanel(JPanel container, DialogModel dialogModel, IniFileModel iniFileModel, ConfigurationImage ci) {
+    private void fillPanel(JPanel container, DialogModel dialogModel, IniFileModel iniFileModel,
+                           ConfigurationImage ci, int fieldLabelWidth) {
         Runnable notifyEdit = () -> { if (onConfigChange != null) onConfigChange.accept(workingImage); };
 
         List<DialogModel.DialogEntry> entries = dialogModel.getOrderedEntries();
@@ -244,10 +312,12 @@ public class CalibrationDialogWidget {
 
             switch (entry.kind) {
                 case FIELD:
-                    renderField(container, entry.getAs(DialogModel.Field.class), iniFileModel, ci);
+                    renderField(container, entry.getAs(DialogModel.Field.class), iniFileModel, ci, fieldLabelWidth);
                     break;
                 case COMMAND:
-                    container.add(CalibrationFieldFactory.createCommandRow(entry.getAs(DialogModel.Command.class)));
+                    container.add(CalibrationFieldFactory.createCommandRow(
+                        entry.getAs(DialogModel.Command.class),
+                        buildCommandExecutor(entry.getAs(DialogModel.Command.class).getCommand())));
                     break;
                 case INDICATOR:
                     pendingIndicators.add(entry.getAs(IndicatorModel.class));
@@ -257,7 +327,7 @@ public class CalibrationDialogWidget {
                     break;
                 case PANEL:
                     renderPanelEntry(container, entry.getAs(PanelModel.class), iniFileModel, ci,
-                            isBorderLayout, horizontalPanelRef, notifyEdit);
+                            isBorderLayout, horizontalPanelRef, notifyEdit, fieldLabelWidth);
                     break;
             }
         }
@@ -271,17 +341,50 @@ public class CalibrationDialogWidget {
         }
     }
 
-    private void renderField(JPanel container, DialogModel.Field field, IniFileModel iniFileModel, ConfigurationImage ci) {
-        Runnable onChange = this::refreshExpressions;
+    private static int getFieldLabelWidth(DialogModel dialog, IniFileModel iniFileModel, Set<String> visited) {
+        if (dialog == null || !visited.add(dialog.getKey())) {
+            return 0;
+        }
+        int width = 0;
+        for (DialogModel.Field field : dialog.getFields()) {
+            if (!iniFileModel.findIniField(field.getKey()).isPresent()) {
+                continue;
+            }
+            JLabel label = new JLabel(field.getUiName());
+            CalibrationFieldFactory.applyStyle(label);
+            width = Math.max(width, label.getPreferredSize().width);
+        }
+        for (PanelModel panel : dialog.getPanels()) {
+            width = Math.max(width, getFieldLabelWidth(panel.resolveDialog(iniFileModel), iniFileModel, visited));
+        }
+        return Math.min(width, CalibrationFieldFactory.MAX_LABEL_WIDTH);
+    }
+
+    private void renderField(JPanel container, DialogModel.Field field, IniFileModel iniFileModel,
+                             ConfigurationImage ci, int fieldLabelWidth) {
+        Runnable onChange = () -> {
+            refreshExpressions();
+            if ("trigger_type".equalsIgnoreCase(field.getKey()) ||
+                "vvtMode1".equalsIgnoreCase(field.getKey()) ||
+                "vvtMode2".equalsIgnoreCase(field.getKey())) {
+                updateTriggerImage();
+            }
+        };
         Optional<IniField> iniField = iniFileModel.findIniField(field.getKey());
         JPanel row = iniField.map(value -> {
             try {
-                return CalibrationFieldFactory.createFieldRow(field, value, ci, workingImage, onChange);
+                return CalibrationFieldFactory.createFieldRow(
+                    field, value, ci, workingImage, onChange, onShowInPinout, fieldLabelWidth);
             } catch (OrdinalOutOfRangeException e) {
                 log.warn("Skipping field " + field.getKey() + " with out-of-range ordinal: " + e.getMessage());
                 return CalibrationFieldFactory.createLabelRow(field);
             }
         }).orElseGet(() -> CalibrationFieldFactory.createLabelRow(field));
+        if (fieldRowVerticalMargin > 0 && iniField.isPresent()) {
+            row.setBorder(BorderFactory.createEmptyBorder(
+                fieldRowVerticalMargin, 0, fieldRowVerticalMargin, 0));
+            CalibrationFieldFactory.fixRowHeight(row);
+        }
 
         boolean hasExpressions = field.getEnableExpression() != null || field.getVisibleExpression() != null;
         if (hasExpressions) {
@@ -296,21 +399,10 @@ public class CalibrationDialogWidget {
     }
 
     private void renderIndicatorGroup(JPanel container, List<IndicatorModel> indicators, IniFileModel iniFileModel, ConfigurationImage ci, int cols) {
-        int columns = Math.max(1, cols);
-        JPanel indicatorWrapper = new JPanel(new GridLayout(0, columns, 4, 4));
-        indicatorWrapper.setAlignmentX(Component.LEFT_ALIGNMENT);
-        ConfigurationImage evalImage = workingImage != null ? workingImage : ci;
-        for (IndicatorModel indicator : indicators) {
-            JLabel label = new JLabel();
-            label.setOpaque(true);
-            label.setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createLineBorder(Color.GRAY, 1),
-                    BorderFactory.createEmptyBorder(4, 8, 4, 8)));
-            applyIndicatorState(label, indicator, iniFileModel, evalImage);
-            indicatorEntries.add(new IndicatorLabelEntry(label, indicator));
-            indicatorWrapper.add(label);
-        }
-        container.add(indicatorWrapper);
+        IndicatorPanel ip = new IndicatorPanel(indicators, iniFileModel, Math.max(1, cols));
+        ip.refresh(workingImage != null ? workingImage : ci);
+        indicatorPanels.add(ip);
+        container.add(ip.getPanel());
     }
 
     private void renderGaugeGroup(JPanel container, List<String> gaugeNames, IniFileModel iniFileModel) {
@@ -336,8 +428,24 @@ public class CalibrationDialogWidget {
         }
     }
 
+    private void showVeGeneratorPanel(IniFileModel ini) {
+        if (workingImage == null) return;
+        Runnable restorer = currentViewRestorer;
+        contentPane.removeAll();
+        contentPane.setLayout(new BorderLayout());
+        VeTableGeneratorPanel panel = new VeTableGeneratorPanel(
+            ini, workingImage,
+            patched -> { workingImage = patched; if (onConfigChange != null) onConfigChange.accept(workingImage); },
+            () -> { if (restorer != null) restorer.run(); }
+        );
+        contentPane.add(panel, BorderLayout.CENTER);
+        contentPane.revalidate();
+        contentPane.repaint();
+    }
+
     private void renderPanelEntry(JPanel container, PanelModel panel, IniFileModel iniFileModel, ConfigurationImage ci,
-                                  boolean isBorderLayout, JPanel[] horizontalPanelRef, Runnable notifyEdit) {
+                                  boolean isBorderLayout, JPanel[] horizontalPanelRef, Runnable notifyEdit,
+                                  int fieldLabelWidth) {
         String placement = panel.getPlacement();
 
         JPanel targetContainer;
@@ -377,6 +485,17 @@ public class CalibrationDialogWidget {
             tuningTableView.displayTable(iniFileModel, table.getTableId(), workingImage);
             tuningTableView.setOnEdit(notifyEdit);
             JComponent content = tuningTableView.getContent();
+            if ("veTableTbl".equals(table.getTableId())) {
+                final IniFileModel capturedIni = iniFileModel;
+                JButton genVeBtn = new JButton("Generate base VE...");
+                genVeBtn.addActionListener(e -> showVeGeneratorPanel(capturedIni));
+                JPanel veToolbar = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));
+                veToolbar.add(genVeBtn);
+                JPanel wrapper = new JPanel(new BorderLayout());
+                wrapper.add(veToolbar, BorderLayout.NORTH);
+                wrapper.add(content, BorderLayout.CENTER);
+                content = wrapper;
+            }
             CalibrationFieldFactory.applyStyle(content);
             content.setAlignmentX(Component.LEFT_ALIGNMENT);
             if (constraint != null) targetContainer.add(content, constraint); else targetContainer.add(content);
@@ -396,7 +515,12 @@ public class CalibrationDialogWidget {
             }
             panelWidget.setName(uiName);
             GradientTitleBorder.installBorder(uiName, panelWidget);
-            fillPanel(panelWidget, subDialog, iniFileModel, ci);
+            fillPanel(panelWidget, subDialog, iniFileModel, ci,
+                Math.max(0, fieldLabelWidth - panelWidget.getInsets().left));
+
+            if (TriggerImageHelper.isTriggerPanel(subDialog.getKey(), uiName) || "Sub Panel".equals(uiName)) {
+                addTriggerImage(panelWidget, subDialog.getKey(), uiName);
+            }
         } else {
             panelWidget.setName(panel.getPanelName());
             GradientTitleBorder.installBorder(panel.getPanelName(), panelWidget);
@@ -404,7 +528,6 @@ public class CalibrationDialogWidget {
         if (constraint != null) targetContainer.add(panelWidget, constraint); else targetContainer.add(panelWidget);
     }
 
-    /** older render logic, used only for test, TODO: refactor the test and remove */
     private static List<DialogModel.DialogEntry> synthesizeOrderedEntries(DialogModel dialog) {
         List<DialogModel.DialogEntry> list = new ArrayList<>();
         for (DialogModel.Field f : dialog.getFields())
@@ -449,17 +572,28 @@ public class CalibrationDialogWidget {
         }
     }
 
-    /**
-     * Re-evaluates indicator labels using both the current config image and live sensor values.
-     * Called from the SensorCentral listener (on EDT via invokeLater) and from refreshExpressions.
-     */
-    private void refreshIndicators() {
-        if (currentIniFileModel == null) return;
-        for (IndicatorLabelEntry entry : indicatorEntries) {
-            applyIndicatorState(entry.label, entry.indicator, currentIniFileModel, workingImage);
+    private void updateTriggerImage() {
+        for (Runnable updater : triggerImageUpdaters) {
+            updater.run();
         }
-        contentPane.revalidate();
-        contentPane.repaint();
+    }
+
+    private void addTriggerImage(JPanel panel, String key, String uiName) {
+        TriggerImageHelper helper = new TriggerImageHelper();
+        helper.addTriggerPanelExtras(panel);
+        TriggerImageHelper.Channel channel = TriggerImageHelper.getChannel(key, uiName);
+        Runnable updater = channel == TriggerImageHelper.Channel.SECONDARY
+            ? () -> helper.updateVvtTriggerImage(currentIniFileModel, workingImage)
+            : () -> helper.updateTriggerImage(currentIniFileModel, workingImage, channel);
+        triggerImageUpdaters.add(updater);
+        updater.run();
+    }
+
+    /** Pushes the current working image to all indicator panels (called when config fields change). */
+    private void refreshIndicators() {
+        for (IndicatorPanel ip : indicatorPanels) {
+            ip.refresh(workingImage);
+        }
     }
 
     private void refreshReadouts() {
@@ -521,8 +655,21 @@ public class CalibrationDialogWidget {
         return cell;
     }
 
+    private double resolveGaugeValue(IniValue v, double fallback) {
+        if (v == null) return fallback;
+        if (!v.isExpression()) return v.getNumericValue();
+        Double evaluated = ExpressionEvaluator.evaluateNumericExpression(v.getRawString(), currentIniFileModel, workingImage);
+        return evaluated != null ? evaluated : fallback;
+    }
+
     private JComponent buildGaugeCell(GaugeModel gaugeModel) {
-        Radial radial = SensorGauge.createRadial(gaugeModel.getHighValue(), gaugeModel.getLowValue(), gaugeModel);
+        if (GraphicsEnvironment.isHeadless()) {
+            return new JLabel(gaugeModel.getName());
+        }
+
+        double lo = resolveGaugeValue(gaugeModel.getLowValueValue(), gaugeModel.getLowValue());
+        double hi = resolveGaugeValue(gaugeModel.getHighValueValue(), gaugeModel.getHighValue());
+        Radial radial = SensorGauge.createRadial(hi, lo, gaugeModel);
         radial.setBackgroundColor(BackgroundColor.LIGHT_GRAY);
         radial.setLcdDecimals(gaugeModel.getValueDecimalPlaces());
         Dimension size = new Dimension(READOUT_GAUGE_SIZE, READOUT_GAUGE_SIZE);
@@ -566,63 +713,55 @@ public class CalibrationDialogWidget {
         }
     }
 
-    private static void applyIndicatorState(JLabel label, IndicatorModel indicator, IniFileModel ini, ConfigurationImage ci) {
-        // Build evaluation context: config image fields first, then live sensor/output-channel values.
-        // Include variables from the labels so bitStringValue() index args are resolved.
-        Set<String> vars = new HashSet<>();
-        vars.addAll(ExpressionEvaluator.extractVariables(indicator.getExpression()));
-        vars.addAll(ExpressionEvaluator.extractVariables(indicator.getOnLabel()));
-        vars.addAll(ExpressionEvaluator.extractVariables(indicator.getOffLabel()));
-        Map<String, Double> context = new HashMap<>();
-        for (String var : vars) {
-            Optional<IniField> field = ini.findIniField(var);
-            if (field.isPresent() && ci != null) {
-                Double val = ci.readNumericValue(field.get());
-                if (val != null) { context.put(var, val); continue; }
+    /**
+     * Returns a Runnable that, when invoked on the EDT, looks up the command's binary payload in
+     * {@code [ControllerCommands]}, decodes {@code \xNN} escapes, and submits it to the ECU on the
+     * IO thread. Falls back to TS_EXECUTE text if the command is not found in the table.
+     */
+    private Runnable buildCommandExecutor(String commandName) {
+        return () -> {
+            BinaryProtocol bp = uiContext.getBinaryProtocol();
+            if (bp == null) {
+                return;
             }
-            double sensorVal = SensorCentral.getInstance().getValue(var);
-            if (!Double.isNaN(sensorVal)) context.put(var, sensorVal);
-        }
-        Boolean active = ExpressionEvaluator.evaluateBooleanExpression(indicator.getExpression(), context);
-        if (Boolean.TRUE.equals(active)) {
-            label.setText(resolveLabel(indicator.getOnLabel(), ini, context));
-            label.setBackground(parseDialogIndicatorColor(indicator.getOnBg()));
-            label.setForeground(parseDialogIndicatorColor(indicator.getOnFg()));
-        } else {
-            String offText = resolveLabel(indicator.getOffLabel(), ini, context);
-            label.setText(offText.isEmpty() ? " " : offText);
-            label.setBackground(parseDialogIndicatorColor(indicator.getOffBg()));
-            label.setForeground(parseDialogIndicatorColor(indicator.getOffFg()));
-        }
+            IniFileModel ini = uiContext.iniFileState.getIniFileModel();
+            String payloadStr = ini != null ? ini.getControllerCommands().get(commandName) : null;
+            if (payloadStr != null) {
+                byte[] raw = decodeIniCommandBytes(payloadStr);
+                if (raw.length < 1) {
+                    log.warn("Empty payload for command: " + commandName);
+                    return;
+                }
+                char opcode = (char) (raw[0] & 0xFF);
+                byte[] payload = new byte[raw.length - 1];
+                System.arraycopy(raw, 1, payload, 0, payload.length);
+                uiContext.getLinkManager().submit(() ->
+                    bp.executeCommand(opcode, payload, commandName)
+                );
+            } else {
+                log.warn("Command not found in [ControllerCommands]: " + commandName);
+            }
+        };
     }
 
-    private static String resolveLabel(String label, IniFileModel ini, Map<String, Double> context) {
-        if (label == null) return "";
-        if (TsStringFunction.containsStringFunction(label)) {
-            String resolved = TsStringFunction.resolve(label, ini, null, context);
-            return resolved != null ? resolved : "";
+    /**
+     * Decodes an INI binary string such as {@code Z\x00\x13\x00\x01} into bytes.
+     * Each {@code \xNN} sequence becomes one byte; other characters are taken as-is.
+     */
+    static byte[] decodeIniCommandBytes(String s) {
+        byte[] buf = new byte[s.length()];
+        int out = 0;
+        int i = 0;
+        while (i < s.length()) {
+            if (i + 3 < s.length() && s.charAt(i) == '\\' && s.charAt(i + 1) == 'x') {
+                buf[out++] = (byte) Integer.parseInt(s.substring(i + 2, i + 4), 16);
+                i += 4;
+            } else {
+                buf[out++] = (byte) s.charAt(i);
+                i++;
+            }
         }
-        return stripBraces(label);
-    }
-
-    private static String stripBraces(String s) {
-        if (s == null) return "";
-        String t = s.trim();
-        if (t.startsWith("{")) t = t.replaceAll("^\\{\\s*", "").replaceAll("\\s*}$", "").trim();
-        return t;
-    }
-
-    private static Color parseDialogIndicatorColor(String name) {
-        if (name == null) return Color.LIGHT_GRAY;
-        switch (name.toLowerCase().trim()) {
-            case "white":  return Color.WHITE;
-            case "black":  return Color.BLACK;
-            case "red":    return Color.RED;
-            case "yellow": return Color.YELLOW;
-            case "green":  return Color.GREEN;
-            case "blue":   return Color.BLUE;
-            default:       return Color.LIGHT_GRAY;
-        }
+        return Arrays.copyOf(buf, out);
     }
 
     public JPanel getContentPane() {

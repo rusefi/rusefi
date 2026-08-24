@@ -2,19 +2,24 @@
 DOCS_ENUMS_INPUTS = \
   $(PROJECT_DIR)/integration/rusefi_config.txt \
   $(PROJECT_DIR)/integration/rusefi_config_shared.txt \
-  $(PROJECT_DIR)/integration/config_page_1.txt \
   $(PROJECT_DIR)/integration/config_page_2.txt \
+  $(PROJECT_DIR)/integration/config_page_3.txt \
+  $(PROJECT_DIR)/integration/config_page_4.txt \
   $(PROJECT_DIR)/console/binary/output_channels.txt \
+  $(PROJECT_DIR)//tunerstudio/gauge_declarations.ini \
   $(PROJECT_DIR)/controllers/engine_cycle/knock_controller.txt \
   $(PROJECT_DIR)/controllers/engine_cycle/prime_injection.txt \
   $(PROJECT_DIR)/controllers/trigger/trigger_central.txt \
   $(PROJECT_DIR)/controllers/long_term_fuel_trim_state.txt \
   $(PROJECT_DIR)/controllers/math/short_term_fuel_trim_state.txt \
   $(PROJECT_DIR)/controllers/trigger/trigger_state.txt \
+  $(PROJECT_DIR)/controllers/trigger/trigger_state_primary.txt \
   $(PROJECT_DIR)/controllers/algo/shift_torque_reduction_state.txt \
+  $(PROJECT_DIR)/controllers/algo/launch_control_state.txt \
   $(PROJECT_DIR)/controllers/engine_cycle/high_pressure_fuel_pump.txt \
   $(PROJECT_DIR)/controllers/actuators/idle_state.txt \
   $(PROJECT_DIR)/controllers/actuators/electronic_throttle.txt \
+  $(PROJECT_DIR)/controllers/algo/misfire_detection_state.txt \
   $(PROJECT_DIR)/hw_layer/drivers/gpio/mc33810_state.txt \
   $(PROJECT_DIR)/integration/LiveData.yaml \
   $(PROJECT_DIR)/controllers/sensors/sensor_type.h \
@@ -83,9 +88,15 @@ ifneq ("$(wildcard $(BOARD_DIR)/board_config.txt)","")
   DOCS_ENUMS_INPUTS += $(BOARD_DIR)/board_config.txt
 endif
 
+#
+# java code generators use LazyFile to avoid unneeded file updates so that we have incremental builds
+#
+# gen_live_documentation.sh writes shared generated files (console/binary/generated,
+# java enums, unit_tests/test-framework/trigger_meta_generated.h), so serialize against
+# other concurrent makes (firmware/simulator/unit_tests) on the shared $(FLOCK) lock.
 .docsenums-sentinel: $(DOCS_ENUMS_INPUTS) $(CONFIG_DEFINITION_BASE_JAR) $(ENUM_TO_STRING_JAR)
 	bash $(PROJECT_DIR)/bin/detect_github.sh
-	bash $(PROJECT_DIR)/gen_live_documentation.sh
+	$(FLOCK) bash $(PROJECT_DIR)/gen_live_documentation.sh
 	@touch $@
 
 .PHONY: docs-enums

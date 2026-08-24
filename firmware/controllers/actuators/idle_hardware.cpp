@@ -15,17 +15,37 @@
 #include "electronic_throttle.h"
 
 #include "dc_motors.h"
-#if ! EFI_UNIT_TEST
 #include "stepper.h"
+
 /* Storing two following structs in CCM memory cause HardFault (at least on F4)
  * This need deep debuging. Until it is moved out of CMM. */
 static StepDirectionStepper iacStepperHw /*CCM_OPTIONAL*/;
 static DualHBridgeStepper iacHbridgeHw /*CCM_OPTIONAL*/;
 StepperMotor iacMotor CCM_OPTIONAL;
-#endif /* EFI_UNIT_TEST */
 
 static SimplePwm idleSolenoidOpen("idle open");
 static SimplePwm idleSolenoidClose("idle close");
+
+#if EFI_UNIT_TEST
+static float getEffectiveDuty(const SimplePwm& pwm) {
+	// near-zero and near-full duty do not update the state sequence, they only switch the mode
+	if (pwm.mode == PM_ZERO) {
+		return 0;
+	}
+	if (pwm.mode == PM_FULL) {
+		return 1;
+	}
+	return pwm.seq.getSwitchTime(0);
+}
+
+float getIdleSolenoidOpenDutyForUnitTest() {
+	return getEffectiveDuty(idleSolenoidOpen);
+}
+
+float getIdleSolenoidCloseDutyForUnitTest() {
+	return getEffectiveDuty(idleSolenoidClose);
+}
+#endif // EFI_UNIT_TEST
 
 void applyIACposition(percent_t position) {
 	/**
@@ -38,21 +58,26 @@ void applyIACposition(percent_t position) {
 	setEtbIdlePosition(position);
 #endif // EFI_ELECTRONIC_THROTTLE_BODY
 
-#if EFI_UNIT_TEST
-	if (false) {
-#endif // EFI_UNIT_TEST
-
-#if ! EFI_UNIT_TEST
 	if (engineConfiguration->useStepperIdle) {
 		iacMotor.setTargetPosition(duty * engineConfiguration->idleStepperTotalSteps);
-#endif /* EFI_UNIT_TEST */
 	} else {
 		// if not spinning or running a bench test, turn off the idle valve(s) to be quieter and save power
 #if EFI_SHAFT_POSITION_INPUT
 		if (!engine->triggerCentral.engineMovedRecently() && engine->timeToStopIdleTest == 0) {
-			idleSolenoidOpen.setSimplePwmDutyCycle(0);
-			idleSolenoidClose.setSimplePwmDutyCycle(0);
-			return;
+			// #9123: optionally keep driving the valve for a bounded time after the engine stops,
+			// for valves which need to rest somewhere other than de-energized. The position is
+			// whatever the idle controller already computed: at 0 rpm the phase is Cranking, so
+			// closed loop is 0 and the open loop is the cranking CLT curve - an existing
+			// calibration, not a new one.
+			// hasElapsedSec (not a comparison against getSecondsSinceTriggerEvent, which saturates
+			// at 2^32 ticks - under 26 seconds on some ports), so a freshly booted ECU which has
+			// never seen the engine turn holds nothing.
+			if (!engineConfiguration->keepIdleSolenoidWhenStopped
+					|| engine->triggerCentral.m_lastEventTimer.hasElapsedSec(IDLE_SOLENOID_HOLD_TIMEOUT_SEC)) {
+				idleSolenoidOpen.setSimplePwmDutyCycle(0);
+				idleSolenoidClose.setSimplePwmDutyCycle(0);
+				return;
+			}
 		}
 #endif // EFI_SHAFT_POSITION_INPUT
 
@@ -71,9 +96,12 @@ void applyIACposition(percent_t position) {
 	}
 }
 
-#if !EFI_UNIT_TEST
-
 bool isIdleHardwareRestartNeeded() {
+	if (isConfigurationChanged(etbFunctions[0]) || isConfigurationChanged(etbFunctions[1])) {
+		// ETB ownership is boot-only, so its pins are not available to idle hardware until restart.
+		return false;
+	}
+
 	return  isConfigurationChanged(stepperEnablePin) ||
 			isConfigurationChanged(stepperEnablePinMode) ||
 			isConfigurationChanged(idle.stepperStepPin) ||
@@ -168,6 +196,19 @@ void initIdleHardware() {
 	}
 }
 
-#endif
+#if EFI_UNIT_TEST
+#include <new>
+
+StepperMotorBase& getIacMotorForUnitTest() {
+	return iacMotor;
+}
+
+void resetIdleHardwareForUnitTest() {
+	// these objects are file-scope statics: reconstruct them so every test starts from scratch
+	new (&iacStepperHw) StepDirectionStepper();
+	new (&iacHbridgeHw) DualHBridgeStepper();
+	new (&iacMotor) StepperMotor();
+}
+#endif // EFI_UNIT_TEST
 
 #endif // EFI_IDLE_HARDWARE

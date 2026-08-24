@@ -98,11 +98,11 @@ pins:
     type: ls
 
   - pin: A7
-    function: power GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: A8
-    function: power GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: B1
@@ -190,8 +190,8 @@ pins:
     type: 5v
 
   - pin: C23
-    function: analog GND
-    type: gnd
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: C24
     id: [A3, EFI_ADC_3]
@@ -206,8 +206,8 @@ pins:
     function: PPS2 analog input
 
   - pin: C26
-    function: analog GND
-    type: gnd
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: C27
     function: sensor +5v feed
@@ -387,14 +387,14 @@ pins:
     id: D9
     class: outputs
     ts_name: E13 - INJ 4
-    function: injector output 4
+    function: Injector 4
     type: inj
 
   - pin: E14
     id: F12
     class: outputs
     ts_name: E14 - INJ 2
-    function: injector output 2
+    function: Injector 2
     type: inj
 
   - pin: E15
@@ -430,15 +430,15 @@ pins:
     type: av
 
   - pin: E24
-    function: analog GND
-    type: gnd
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: E25
 # H144_LS_7
     id: F13
     class: outputs
     ts_name: E25 - INJ 1
-    function: injector output 1
+    function: Injector 1
     type: inj
 
   - pin: E26
@@ -446,21 +446,21 @@ pins:
     id: F14
     class: outputs
     ts_name: E26 - INJ 3
-    function: injector output 3
+    function: Injector 3
     type: inj
 
   - pin: E27
     function: NC
 
   - pin: E28
-    function: analog GND
-    type: gnd
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: E29
     id: [C2, EFI_ADC_12]
     class: [event_inputs, analog_inputs]
     ts_name: E29 - Coolant Temp
-    function: analog input CLT
+    function: ECT CLT Coolant Sensor Input
     type: av
 
   - pin: E30
@@ -474,8 +474,8 @@ pins:
     type: av
 
   - pin: E32
-    function: analog GND
-    type: gnd
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: E33
     function: sensor +5v feed
@@ -506,8 +506,8 @@ pins:
     type: vr
 
   - pin: E39
-    function: analog GND
-    type: gnd
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: E40
     id: [A6, EFI_ADC_6]
@@ -535,7 +535,7 @@ pins:
     id: [C3, EFI_ADC_13]
     class: [event_inputs, analog_inputs]
     ts_name: E45 - IAT
-    function: analog input IAT
+    function: IAT Sensor Input
     type: av
 
   - pin: E46
@@ -550,8 +550,8 @@ pins:
     type: av
 
   - pin: E48
-    function: analog GND
-    type: gnd
+    function: GNDA Analog/Sensor Ground
+    type: agnd
 
   - pin: F1
     ts_name: F1 - ETB (-)
@@ -589,7 +589,7 @@ pins:
     type: ign
 
   - pin: F8
-    function: power GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: F9
@@ -629,7 +629,7 @@ pins:
     type: ign
 
   - pin: F15
-    function: power GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: F16

@@ -48,16 +48,28 @@ static int getSpiAf(SPIDriver *driver) {
 }
 
 void turnOnSpi(spi_device_e device) {
-	if (isSpiInitialized[device])
+	if (isSpiInitialized[device]) {
 		return; // already initialized
+	}
 	isSpiInitialized[device] = true;
+
+	brain_pin_e sckPin = getSckPin(device);
+	brain_pin_e misoPin = getMisoPin(device);
+	brain_pin_e mosiPin = getMosiPin(device);
+
+	if (!isBrainPinValid(sckPin) ||
+	    !isBrainPinValid(misoPin)
+	    /* EGT is a case when MOSI is not assigned || !isBrainPinValid(mosiPin)*/) {
+		criticalError("SPI%d pin(s) are not valid", device);
+	}
+
 	if (device == SPI_DEVICE_1) {
 // todo: introduce a nice structure with all fields for same SPI
 #if STM32_SPI_USE_SPI1
 //	scheduleMsg(&logging, "Turning on SPI1 pins");
-		initSpiModule(&SPID1, getSckPin(device),
-				getMisoPin(device),
-				getMosiPin(device),
+		initSpiModule(&SPID1, sckPin,
+				misoPin,
+				mosiPin,
 				engineConfiguration->spi1SckMode,
 				engineConfiguration->spi1MosiMode,
 				engineConfiguration->spi1MisoMode);
@@ -68,9 +80,9 @@ void turnOnSpi(spi_device_e device) {
 	if (device == SPI_DEVICE_2) {
 #if STM32_SPI_USE_SPI2
 //	scheduleMsg(&logging, "Turning on SPI2 pins");
-		initSpiModule(&SPID2, getSckPin(device),
-				getMisoPin(device),
-				getMosiPin(device),
+		initSpiModule(&SPID2, sckPin,
+				misoPin,
+				mosiPin,
 				engineConfiguration->spi2SckMode,
 				engineConfiguration->spi2MosiMode,
 				engineConfiguration->spi2MisoMode);
@@ -81,9 +93,9 @@ void turnOnSpi(spi_device_e device) {
 	if (device == SPI_DEVICE_3) {
 #if STM32_SPI_USE_SPI3
 //	scheduleMsg(&logging, "Turning on SPI3 pins");
-		initSpiModule(&SPID3, getSckPin(device),
-				getMisoPin(device),
-				getMosiPin(device),
+		initSpiModule(&SPID3, sckPin,
+				misoPin,
+				mosiPin,
 				engineConfiguration->spi3SckMode,
 				engineConfiguration->spi3MosiMode,
 				engineConfiguration->spi3MisoMode);
@@ -93,9 +105,9 @@ void turnOnSpi(spi_device_e device) {
 	}
 	if (device == SPI_DEVICE_4) {
 #if STM32_SPI_USE_SPI4
-		initSpiModule(&SPID4, getSckPin(device),
-				getMisoPin(device),
-				getMosiPin(device),
+		initSpiModule(&SPID4, sckPin,
+				misoPin,
+				mosiPin,
 				engineConfiguration->spi4SckMode,
 				engineConfiguration->spi4MosiMode,
 				engineConfiguration->spi4MisoMode);
@@ -105,9 +117,9 @@ void turnOnSpi(spi_device_e device) {
 	}
 	if (device == SPI_DEVICE_5) {
 #if STM32_SPI_USE_SPI5
-		initSpiModule(&SPID5, getSckPin(device),
-				getMisoPin(device),
-				getMosiPin(device),
+		initSpiModule(&SPID5, sckPin,
+				misoPin,
+				mosiPin,
 				engineConfiguration->spi5SckMode,
 				engineConfiguration->spi5MosiMode,
 				engineConfiguration->spi5MisoMode);
@@ -117,9 +129,9 @@ void turnOnSpi(spi_device_e device) {
 	}
 	if (device == SPI_DEVICE_6) {
 #if STM32_SPI_USE_SPI6
-		initSpiModule(&SPID6, getSckPin(device),
-				getMisoPin(device),
-				getMosiPin(device),
+		initSpiModule(&SPID6, sckPin,
+				misoPin,
+				mosiPin,
 				engineConfiguration->spi6SckMode,
 				engineConfiguration->spi6MosiMode,
 				engineConfiguration->spi6MisoMode);
@@ -170,6 +182,83 @@ void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin) {
 	efiSetPadMode("chip select", csPin, PAL_STM32_MODE_OUTPUT);
 }
 
+#ifdef STM32H7XX
+
+int spiGetBaseClock(SPIDriver *spip)
+{
+#if STM32_SPI_USE_SPI1
+	if (spip == &SPID1) {
+		return STM32_SPI1CLK;
+	}
+#endif
+#if STM32_SPI_USE_SPI2
+	if (spip == &SPID2) {
+		return STM32_SPI2CLK;
+	}
+#endif
+#if STM32_SPI_USE_SPI3
+	if (spip == &SPID3) {
+		return STM32_SPI3CLK;
+	}
+#endif
+#if STM32_SPI_USE_SPI4
+	if (spip == &SPID4) {
+		return STM32_SPI4CLK;
+	}
+#endif
+#if STM32_SPI_USE_SPI5
+	if (spip == &SPID5) {
+		return STM32_SPI5CLK;
+	}
+#endif
+#if STM32_SPI_USE_SPI6
+	if (spip == &SPID6) {
+		return STM32_SPI6CLK;
+	}
+#endif
+
+	return 0;
+}
+
+int spiCalcClockDiv(SPIDriver *spip, SPIConfig *spiConfig, unsigned int clk)
+{
+	if (clk == 0) {
+		return -1;
+	}
+
+	unsigned int baseClock = spiGetBaseClock(spip);
+
+	if (baseClock == 0) {
+		return -1;
+	}
+
+	// round down
+	int div = (baseClock + clk - 1) / clk;
+
+	spiConfig->cfg1 &= ~SPI_CFG1_MBR_Msk;
+	if (div <= 2) {
+		spiConfig->cfg1 |= SPI_BaudRatePrescaler_2;
+	} else if (div <= 4) {
+		spiConfig->cfg1 |= SPI_BaudRatePrescaler_4;
+	} else if (div <= 8) {
+		spiConfig->cfg1 |= SPI_BaudRatePrescaler_8;
+	} else if (div <= 16) {
+		spiConfig->cfg1 |= SPI_BaudRatePrescaler_16;
+	} else if (div <= 32) {
+		spiConfig->cfg1 |= SPI_BaudRatePrescaler_32;
+	} else if (div <= 64) {
+		spiConfig->cfg1 |= SPI_BaudRatePrescaler_64;
+	} else if (div <= 128) {
+		spiConfig->cfg1 |= SPI_BaudRatePrescaler_128;
+	} else {
+		spiConfig->cfg1 |= SPI_BaudRatePrescaler_256;
+	}
+
+	return 0;
+}
+
+#else
+
 int spiGetBaseClock(SPIDriver *spip)
 {
 #if STM32_SPI_USE_SPI1
@@ -211,16 +300,6 @@ int spiGetBaseClock(SPIDriver *spip)
 
 	return 0;
 }
-
-#ifdef STM32H7XX
-
-int spiCalcClockDiv(SPIDriver*, SPIConfig*, unsigned int)
-{
-	// TODO: implement
-	return -1;
-}
-
-#else
 
 int spiCalcClockDiv(SPIDriver *spip, SPIConfig *spiConfig, unsigned int clk)
 {
@@ -277,7 +356,7 @@ SPIConfig mmc_hs_spicfg = {
 	.sspad = 0,
 	.cfg1 = 7 // 8 bits per byte
 		| 0 /* MBR = 0, divider = 2 */,
-	.cfg2 = 0
+	.cfg2 = SPI_CFG2_AFCNTR // keep control of all associated GPIOs
 };
 
 // Slow mode is 80mhz/4 = 20MHz
@@ -294,7 +373,7 @@ SPIConfig mmc_ls_spicfg = {
 	.sspad = 0,
 	.cfg1 = 7 // 8 bits per byte
 		| SPI_CFG1_MBR_0 /* MBR = 001, divider = 4 */,
-	.cfg2 = 0
+	.cfg2 = SPI_CFG2_AFCNTR // keep control of all associated GPIOs
 };
 
 #else /* not STM32H7XX */

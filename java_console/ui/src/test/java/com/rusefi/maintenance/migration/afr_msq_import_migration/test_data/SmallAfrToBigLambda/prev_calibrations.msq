@@ -20,6 +20,24 @@
          12.8 12.8 12.8 12.8 12.8 12.8 12.8 12.8 12.8 12.7 12.7 12.7 12.7 12.6 12.6 12.6
          12.8 12.8 12.8 12.8 12.8 12.8 12.8 12.8 12.8 12.7 12.7 12.7 12.7 12.6 12.6 12.6
       </constant>
-      <constant digits="1" name="stoichRatioPrimary" units=":1">14.7</constant>
+       <constant cols="1" digits="0" name="lambdaRpmBins" rows="16" units="RPM">
+         800.0
+         1000.0
+         1300.0
+         1600.0
+         1900.0
+         2300.0
+         2700.0
+         3100.0
+         3500.0
+         4000.0
+         4500.0
+         5000.0
+         5500.0
+         6000.0
+         7250.0
+         8500.0
+       </constant>
+       <constant digits="1" name="stoichRatioPrimary" units=":1">14.7</constant>
     </page>
 </msq>

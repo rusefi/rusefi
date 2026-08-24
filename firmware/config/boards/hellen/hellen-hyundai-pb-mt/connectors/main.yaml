@@ -39,7 +39,8 @@ pins:
 
   - pin: A23
     class: analog_inputs
-    function: CLT Coolant Temperature Signal
+    function: ECT CLT Coolant Sensor Input
+    type: at
   - pin: A24
     function: CLT Coolant Ground
     type: gnd
@@ -64,9 +65,11 @@ pins:
   - pin: A31
     class: outputs
     function: Coil 3
+    type: ign
   - pin: A32
     class: outputs
     function: Coil 1
+    type: ign
   - pin: A33
     class: outputs
     function: Injector 1 Negative
@@ -97,9 +100,11 @@ pins:
   - pin: A46
     class: outputs
     function: Coil 4
+    type: ign
   - pin: A47
     class: outputs
     function: Coil 2
+    type: ign
   - pin: A48
     class: outputs
     function: Injector 4 Negative
@@ -135,13 +140,13 @@ pins:
     function: VIS Control
 
   - pin: K1
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
   - pin: K2
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
   - pin: K3
-    function: Power GND
+    function: Power/Chassis GND ground
     type: gnd
 
   - pin: K4
@@ -343,7 +348,8 @@ pins:
 
   - pin: K79
     class: analog_inputs
-    function: Intake Air Signal
+    function: IAT Sensor Input
+    type: at
   - pin: K80
     class: analog_inputs
     function: Map Signal

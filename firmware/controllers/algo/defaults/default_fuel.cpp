@@ -78,6 +78,7 @@ static void setDefaultWarmupFuelEnrichment() {
 
 static void setDefaultVETable() {
 	setRpmTableBin(config->veRpmBins);
+
 #if (VE_LOAD_COUNT == 16) && (VE_RPM_COUNT == 16)
 	static const float hardCodedveTable[16][16] = {
 {49.300,	49.300,	49.400,	49.600,	50.200,	51.400,	52.600,	53.800,	54.400,	54.600,	54.400,	53.700,	52.800,	51.800,	50.900,	50.000,	},
@@ -281,6 +282,16 @@ void setDefaultWallWetting() {
 	copyArray(config->wwBetaMapValues, betaMap);
 }
 
+static void setDefaultFlexTransientComp() {
+	setLinearCurve(config->flexTransientCltBins, -40, 100, 1);
+	setLinearCurve(config->flexTransientEthanolBins, 0, 100, 1);
+
+	// Default to neutral (1.0) so transient fueling is unchanged until the user tunes these
+	setTable(config->flexAeMult, 1.0f);
+	setTable(config->flexWwTauMult, 1.0f);
+	setTable(config->flexWwBetaMult, 1.0f);
+}
+
 static void setDefaultWboSettings() {
 	for (size_t i = 0; i < CAN_WBO_COUNT; i++) {
 		engineConfiguration->canWbo[i].type = RUSEFI;
@@ -309,6 +320,17 @@ static void setDefaultPriming() {
 
 	copyArray(engineConfiguration->primeBins, primeBins);
 	copyArray(engineConfiguration->primeValues, primeValues);
+
+	// Opt-in 2D priming flex table: seed every ethanol row with the same coolant curve so it starts
+	// neutral with respect to ethanol (identical to the non-flex curve) until the user calibrates it.
+	static constexpr uint8_t primeFlexEthanolBins[] = { 0, 35, 65, 100 };
+	copyArray(engineConfiguration->primeFlexBins, primeFlexEthanolBins);
+
+	for (size_t ethanolIdx = 0; ethanolIdx < efi::size(engineConfiguration->primeFlexTable); ethanolIdx++) {
+		for (size_t cltIdx = 0; cltIdx < PRIME_CURVE_COUNT; cltIdx++) {
+			engineConfiguration->primeFlexTable[ethanolIdx][cltIdx] = primeValues[cltIdx];
+		}
+	}
 }
 
 void setDefaultFuel() {
@@ -380,6 +402,9 @@ void setDefaultFuel() {
 	engineConfiguration->tpsAccelEnrichmentThreshold = 40; // TPS % change, per engine cycle
 
 	setDefaultWallWetting();
+
+	// Flex fuel transient compensation (CLT x ethanol) - neutral by default
+	setDefaultFlexTransientComp();
 
 	// TPS/TPS AE curve
 	setMazdaMiataNbTpsTps();

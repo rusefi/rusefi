@@ -15,9 +15,9 @@
 
 #define ASSERT_LTFT_RESULT(action, val0, val1)	\
 	{ \
-		ClosedLoopFuelResult clResult = action;	\
-		ASSERT_FLOAT_EQ(clResult.banks[0], val0);	\
-		ASSERT_FLOAT_EQ(clResult.banks[1], val1);	\
+		ClosedLoopFuelResult ltftClResult = action;	\
+		ASSERT_FLOAT_EQ(ltftClResult.banks[0], val0);	\
+		ASSERT_FLOAT_EQ(ltftClResult.banks[1], val1);	\
 	}
 
 TEST(LTFT, testLearning)

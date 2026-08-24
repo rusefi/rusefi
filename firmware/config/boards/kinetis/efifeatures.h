@@ -190,12 +190,6 @@
 
 #define EFI_HAS_RESET FALSE
 
-/**
- * Do we need Malfunction Indicator blinking logic?
- */
-#define EFI_MALFUNCTION_INDICATOR FALSE
-//#define EFI_MALFUNCTION_INDICATOR FALSE
-
 #define CONSOLE_MAX_ACTIONS 1
 #define EFI_DISABLE_CONSOLE_ACTIONS FALSE
 

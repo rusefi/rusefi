@@ -30,8 +30,8 @@ void setStepperHw() {
 #endif // HW_HELLEN_8CHAN
 
 #ifdef HW_HELLEN_UAEFI
-void setUaefiDefaultETBPins();
-  setUaefiDefaultETBPins();
+void setUaefiBoardDefaultETBPins();
+  setUaefiBoardDefaultETBPins();
 #endif // HW_HELLEN_UAEFI
 
 #ifdef HW_PROTEUS

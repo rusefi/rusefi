@@ -11,6 +11,7 @@ public:
 
   bool gotRpm = false;
   bool gotSync = false;
+  bool gotPhaseSync = false;
   bool prevSync = false;
 
   int expectedFirstRpm = -1;
@@ -45,15 +46,28 @@ public:
     cvsReader.processLine(eth);
   }
 
-  void assertFirstRpm(int expectedFirstRpm, int expectedFirstRpmAtIndex) {
+  void assertFirstRpm(int expectedRpm, int expectedRpmAtIndex) {
     auto rpm = Sensor::getOrZero(SensorType::Rpm);
 
 		if (!gotRpm && rpm) {
 			gotRpm = true;
 
-  			EXPECT_NEAR(rpm, expectedFirstRpm, 1);
-		  	EXPECT_EQ(lineIndex(), expectedFirstRpmAtIndex);
+  			EXPECT_NEAR(rpm, expectedRpm, 1);
+		  	EXPECT_EQ(lineIndex(), expectedRpmAtIndex);
 		}
   }
 
+  void assertSyncAtIndex(EngineTestHelper *eth, int expectedSyncAtIndex) {
+    if (!gotSync && eth->engine.triggerCentral.triggerState.getShaftSynchronized()) {
+      gotSync = true;
+      EXPECT_EQ(lineIndex(), expectedSyncAtIndex);
+    }
+  }
+
+  void assertPhaseSyncAtIndex(EngineTestHelper *eth, int expectedPhaseSyncAtIndex) {
+    if (!gotPhaseSync && eth->engine.triggerCentral.triggerState.hasSynchronizedPhase()) {
+      gotPhaseSync = true;
+      EXPECT_EQ(lineIndex(), expectedPhaseSyncAtIndex);
+    }
+  }
 };

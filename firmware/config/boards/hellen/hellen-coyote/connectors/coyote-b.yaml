@@ -2,10 +2,13 @@ pins:
 
   - pin: B1
     function: Injector 1
+    type: inj
   - pin: B2
     function: Injector 5
+    type: inj
   - pin: B3
     function: Injector 4
+    type: inj
   - pin: B4
     function: VVT12 Solenoid
   - pin: B5
@@ -31,6 +34,7 @@ pins:
     function: LinePressureControl TCU (bypass for TCU molex)
   - pin: B16
     function: Injector 8
+    type: inj
   - pin: B17
     function: Cam Sensors Power (share and pass for TCU molex)
   - pin: B18
@@ -46,11 +50,13 @@ pins:
   - pin: B26
     function: Output Shaft Speed (VSS, digital input + pass for TCU molex)
   - pin: B27
-    function: Intake Air Temperature
+    function: IAT Sensor Input
+    type: at
   - pin: B30
     function: Oil Level Switch
   - pin: B31
     function: Injector 6
+    type: inj
   - pin: B34
     function: Cam Sensor Power
   - pin: B37
@@ -69,12 +75,14 @@ pins:
     function: IMRC Sensor 2
   - pin: B46
     function: Injector 3
+    type: inj
   - pin: B47
     function: Cylinder Head Temperature
   - pin: B48
     function: UNUSED Oil Pressure Switch
   - pin: B49
-    function: Analog Ground
+    function: GNDA Analog/Sensor Ground
+    type: agnd
   - pin: B52
     function: Knock1 Neg
   - pin: B53
@@ -93,8 +101,10 @@ pins:
     function: Intake Manifold Runner Control Solenoid
   - pin: B61
     function: Injector 7
+    type: inj
   - pin: B62
     function: Injector 2
+    type: inj
   - pin: B67
     function: Knock2 Neg
   - pin: B68
@@ -121,22 +131,30 @@ pins:
     function: Throttle Actuator Pos
   - pin: B87
     function: Coil 7
+    type: ign
   - pin: B88
     function: Coil 6
+    type: ign
   - pin: B89
     function: Coil 5
+    type: ign
   - pin: B90
     function: Coil 8
+    type: ign
   - pin: B91
     function: TSPC TRANSAXLE SOLENOID POWER CONTROL TCU (bypass for TCU molex)
   - pin: B92
     function: Coil 4
+    type: ign
   - pin: B93
     function: Coil 1
+    type: ign
   - pin: B94
     function: Coil 3
+    type: ign
   - pin: B95
     function: Coil 2
+    type: ign
 
 info:
   title: coyote

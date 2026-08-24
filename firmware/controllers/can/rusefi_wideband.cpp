@@ -1,3 +1,12 @@
+/**
+ * @file rusefi_wideband.cpp
+ * @brief rusEFI wideband O2 controller CAN integration.
+ *
+ * Handles communication with on-board and external rusEFI wideband modules over
+ * CAN, including CAN-ID conflict resolution for vehicle integration and decoding
+ * of the reported lambda/AFR values into the sensor subsystem.
+ */
+
 #include "pch.h"
 
 /*

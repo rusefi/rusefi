@@ -29,7 +29,7 @@ public class TsPluginLauncher implements ApplicationPlugin {
     private final JPanel content = new JPanel(new VerticalFlowLayout());
 
     public TsPluginLauncher() {
-        log.info("init " + this);
+        log.info("init " + this + " " + UiVersion.CONSOLE_VERSION);
         Thread pluginFetchThread = new Thread(() -> {
             // first download current version of actual plugin
             TsPluginBodyFetcher.downloadLatestIfNeeded();

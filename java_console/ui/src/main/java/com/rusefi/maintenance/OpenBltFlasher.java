@@ -16,6 +16,9 @@ import java.util.List;
 import static com.devexperts.logging.Logging.getLogging;
 
 public class OpenBltFlasher {
+    // 16 full PROGRAM_MAX packets with a 240-byte CTO, while still updating progress often.
+    private static final int PROGRAM_CHUNK_SIZE = 16 * 239;
+
     private static final Logging log = getLogging(OpenBltFlasher.class);
 
     private final XcpLoader mLoader;
@@ -24,7 +27,7 @@ public class OpenBltFlasher {
     private List<SrecParser.SRecord> mSegments;
     private int mTotalFileSize;
 
-    private OpenBltFlasher(IXcpTransport transport, XcpSettings settings, OpenbltJni.OpenbltCallbacks callbacks) {
+    OpenBltFlasher(IXcpTransport transport, XcpSettings settings, OpenbltJni.OpenbltCallbacks callbacks) {
         mLoader = new XcpLoader(transport, settings);
         mCallbacks = callbacks;
     }
@@ -45,22 +48,52 @@ public class OpenBltFlasher {
         f.flash(fileName);
     }
 
+    public static void eraseSerial(OpenBltWipeArtifact artifact, String port,
+                                   OpenbltJni.OpenbltCallbacks callbacks) throws IOException {
+        OpenBltFlasher f = OpenBltFlasher.makeSerial(port, new XcpSettings(), callbacks);
+        f.erase(artifact);
+    }
+
     public void flash(String filename) throws IOException {
         loadFile(filename);
+        execute(true);
+    }
 
+    void erase(OpenBltWipeArtifact artifact) throws IOException {
+        mCallbacks.setPhase("Load emergency wipe image", false);
+        setSegments(artifact.getSegments(), "Emergency wipe image");
+        mLoader.requireStationIdCheck(artifact.getReportedStationId());
+        execute(false);
+    }
+
+    private void execute(boolean writeData) throws IOException {
         mCallbacks.setPhase("Connect to target", false);
-        // Prepare loader
-        mLoader.start();
-
-        // Erase memory
-        erase();
-
-        // Write new data
-        write();
-
-        mCallbacks.setPhase("Cleanup", false);
-        // Done, stop the session!
-        mLoader.stop();
+        boolean started = false;
+        Throwable failure = null;
+        try {
+            mLoader.start();
+            started = true;
+            erase();
+            if (writeData) {
+                write();
+            }
+            mCallbacks.setPhase("Cleanup", false);
+        } catch (IOException | RuntimeException | Error e) {
+            failure = e;
+            throw e;
+        } finally {
+            if (started) {
+                try {
+                    mLoader.stop();
+                } catch (IOException | RuntimeException e) {
+                    if (failure != null) {
+                        failure.addSuppressed(e);
+                    } else {
+                        throw e;
+                    }
+                }
+            }
+        }
     }
 
     private void loadFile(String filename) throws IOException {
@@ -69,14 +102,21 @@ public class OpenBltFlasher {
 
         SrecParser file = new SrecParser();
         file.parse(new File(filename));
+        setSegments(file.getSegments(), "Firmware file");
+    }
 
-        mSegments = file.getSegments();
+    private void setSegments(List<SrecParser.SRecord> segments, String description) throws IOException {
+        if (segments.isEmpty()) {
+            throw new IOException(description + " contains no data records");
+        }
+
+        mSegments = segments;
 
         mTotalFileSize = mSegments.stream()
             .map(s -> s.data.length).reduce(0, Integer::sum);
 
-        mCallbacks.log("Firmware file parsed:");
-        mCallbacks.log("\tfirst address: 0x" + Integer.toString(mSegments.get(0).address, 16));
+        mCallbacks.log(description + " parsed:");
+        mCallbacks.log(String.format("\tfirst address: 0x%08X", mSegments.get(0).address));
         mCallbacks.log("\ttotal size: " + mTotalFileSize);
     }
 
@@ -118,7 +158,7 @@ public class OpenBltFlasher {
         mCallbacks.setPhase("Program", true);
         final ProgressUpdater pu = new ProgressUpdater();
 
-        forEachFirmwareChunk(1024, (Chunk c) -> {
+        forEachFirmwareChunk(PROGRAM_CHUNK_SIZE, (Chunk c) -> {
             mLoader.writeData(c.address, c.data);
 
             pu.processBytes(c.data.length);

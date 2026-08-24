@@ -8,6 +8,7 @@ import com.opensr5.ini.field.OrdinalOutOfRangeException;
 import com.opensr5.io.ConfigurationImageFile;
 import com.rusefi.tune.xml.MsqFactory;
 import com.rusefi.tune.xml.Msq;
+import com.rusefi.maintenance.CalibrationsInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,6 +34,19 @@ public class TuneBackupUtil {
         }
     }
 
+    public static void saveConfigurationImageToFiles(
+        final CalibrationsInfo calibrations,
+        @Nullable final String binaryFileName,
+        @Nullable final String xmlFileName
+    ) throws JAXBException, IOException {
+        if (binaryFileName != null) {
+            ConfigurationImageFile.saveToFile(calibrations.getPages(), binaryFileName);
+        }
+        if (xmlFileName != null) {
+            calibrations.generateMsq().writeXmlFile(xmlFileName);
+        }
+    }
+
     private static void saveXmlFile(
         final ConfigurationImageWithMeta imageWithMeta,
         final IniFileModel ini,
@@ -52,4 +66,3 @@ public class TuneBackupUtil {
         }
     }
 }
-

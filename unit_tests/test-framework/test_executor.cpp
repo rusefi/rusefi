@@ -48,10 +48,6 @@ void TestExecutor::schedule(const char *msg, scheduling_s* scheduling, efitick_t
   // by the way we have loss of precision while converting NT to integer US
   // technical debt: looks like our unit tests were all created with us precision?
 	efitimeus_t scheduleTime = timeNt;
-	extern bool unitTestTaskPrecisionHack;
-  	if(unitTestTaskPrecisionHack) {
-    	scheduleTime = US2NT(NT2US(timeNt));
-   	}
 	schedulingQueue.insertTask(scheduling, scheduleTime, action);
 }
 

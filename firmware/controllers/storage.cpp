@@ -9,6 +9,8 @@
 #include "pch.h"
 
 #include "storage.h"
+#include "extra_flash_pages.h"
+#include "board_overrides.h"
 
 #if EFI_CONFIGURATION_STORAGE
 #include "mpu_util.h"
@@ -17,8 +19,12 @@
 /* If any setting storage is exist or we are in unit test */
 #if EFI_CONFIGURATION_STORAGE || defined(EFI_UNIT_TEST)
 
-/* TODO: no weak please */
-__attribute__((weak)) bool boardAllowFlashNow() { return true; }
+bool boardAllowFlashNow() {
+  // placeholder, remove Oct 2026
+  return true;
+}
+
+std::optional<setup_custom_bool_type> custom_board_allowFlashNow;
 
 bool storageAllowWriteID(StorageItemId id)
 {
@@ -33,7 +39,7 @@ bool storageAllowWriteID(StorageItemId id)
 			return true;
 		}
 
-		if (!boardAllowFlashNow()) {
+		if (!get_board_override_result(custom_board_allowFlashNow, true)) {
 			return false;
 		}
 
@@ -92,8 +98,16 @@ static bool storageWriteID(uint32_t id) {
 	// Do the actual flash write operation for given ID
 	if (id == EFI_SETTINGS_RECORD_ID) {
 		return writeToFlashNowImpl();
+#if EFI_LTFT_CONTROL
 	} else if (id == EFI_LTFT_RECORD_ID) {
 		engine->module<LongTermFuelTrim>()->store();
+		return true;
+#endif
+	} else if (id == EFI_SECOND_TABLES_RECORD_ID) {
+		burnExtraFlashPage(EFI_SECOND_TABLES_RECORD_ID);
+		return true;
+	} else if (id == EFI_LUA_PAGE_RECORD_ID) {
+		burnExtraFlashPage(EFI_LUA_PAGE_RECORD_ID);
 		return true;
 	} else {
 		efiPrintf("Requested to write unknown record id %ld", id);
@@ -106,14 +120,26 @@ static bool storageWriteID(uint32_t id) {
 static bool storageReadID(uint32_t id) {
 	// Do actual read and call consumers callback
 
-	if (id == EFI_LTFT_RECORD_ID) {
+	if (id == EFI_SETTINGS_RECORD_ID) {
+		/* TODO */
+		return true;
+#if EFI_LTFT_CONTROL
+	} else if (id == EFI_LTFT_RECORD_ID) {
 		engine->module<LongTermFuelTrim>()->load();
+		return true;
+#endif
+	} else if (id == EFI_SECOND_TABLES_RECORD_ID) {
+		loadExtraPage(EFI_SECOND_TABLES_RECORD_ID);
+		return true;
+	} else if (id == EFI_LUA_PAGE_RECORD_ID) {
+		loadExtraPage(EFI_LUA_PAGE_RECORD_ID);
 		return true;
 	} else {
 		efiPrintf("Requested to read unknown record id %ld", id);
 		// to clear pending bit
 		return true;
 	}
+	return true;
 }
 
 static const char *storageTypeToName(StorageType type) {
@@ -257,12 +283,9 @@ bool storagRequestUnregisterStorage(StorageType id)
 static uint32_t pendingWrites = 0;
 static uint32_t pendingReads = 0;
 
-#if (EFI_STORAGE_MFS == TRUE) || (EFI_STORAGE_SD == TRUE)
 /* in case of MFS or SD card we need more stack */
-static THD_WORKING_AREA(storageManagerThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);
-#else
-static THD_WORKING_AREA(storageManagerThreadStack, UTILITY_THREAD_STACK_SIZE);
-#endif
+static constexpr int storageManagerThreadStackSize = STORAGE_MANAGER_THREAD_STACK_SIZE;
+static THD_WORKING_AREA(storageManagerThreadStack, storageManagerThreadStackSize);
 
 static void storageManagerThread(void*) {
 	chRegSetThreadName("storage manger");
@@ -359,9 +382,36 @@ static void storageManagerThread(void*) {
 	}
 }
 
+RUSEFI_STACK_ROOT_EXPLICIT(storageManagerThread, storageManagerThreadStackSize);
+
 /* misc helpers */
 bool getNeedToWriteConfiguration() {
 	return (pendingWrites & BIT(EFI_SETTINGS_RECORD_ID)) != 0;
+}
+
+bool storageIsBusy() {
+	bool requestQueued;
+	{
+		// a request that was posted but not yet fetched by the manager thread
+		// is not reflected in pendingWrites yet
+		chibios_rt::CriticalSectionLocker csl;
+		requestQueued = storageManagerMb.getUsedCountI() > 0;
+	}
+	// a pendingWrites bit stays set while storageWriteID() is executing, so
+	// this also covers a write that is currently in flight
+	return requestQueued || (pendingWrites != 0);
+}
+
+bool storageWaitIdle(unsigned int timeoutMs) {
+	while (storageIsBusy()) {
+		if (timeoutMs < 10) {
+			// writes are deferred while the engine is running - give up
+			return false;
+		}
+		chThdSleepMilliseconds(10);
+		timeoutMs -= 10;
+	}
+	return true;
 }
 
 void initStorage() {
@@ -391,6 +441,17 @@ void initStorage() {
 #endif // EFI_STORAGE_MFS
 
 	chThdCreateStatic(storageManagerThreadStack, sizeof(storageManagerThreadStack), PRIO_STORAGE_MANAGER, storageManagerThread, nullptr);
+}
+
+#else // !EFI_CONFIGURATION_STORAGE
+
+/* stubs so that reboot paths link on builds without configuration storage */
+bool storageIsBusy() {
+	return false;
+}
+
+bool storageWaitIdle(unsigned int /*timeoutMs*/) {
+	return true;
 }
 
 #endif // EFI_CONFIGURATION_STORAGE

@@ -2,7 +2,7 @@ meta: config/boards/hellen_meta.h
 
 pins:
   - pin: A1
-    function: Power Ground
+    function: Power/Chassis GND ground
     type: gnd
     color: black
 
@@ -13,7 +13,7 @@ pins:
     ts_name: A2 Battery Sense
     type: 12v
     color: red
-  
+
   - pin: A3
     meta: H144_OUT_PWM2
     class: outputs
@@ -30,14 +30,14 @@ pins:
     color: purple
 
   - pin: A5
-    function: Sensor Ground
-    type: gnd
+    function: GNDA Analog/Sensor Ground
+    type: agnd
     color: brown
 
   - pin: A6
     meta: H144_IGN_1
     class: outputs
-    function: Smart Ignition A Output
+    function: Smart Ignition Coil 1
     type: ign
     ts_name: A6 - Ignition A
     color: yellow
@@ -45,21 +45,21 @@ pins:
   - pin: A7
     meta: H144_IGN_2
     class: outputs
-    function: Smart Ignition B Output
+    function: Smart Ignition Coil 2
     type: ign
     ts_name: A7 - Ignition B
     color: yellow
 
   - pin: A8
     meta: H144_LS_1
-    function: Injector A Output
+    function: Injector 1
     class: outputs
     type: inj
     ts_name: A8 - Injector A
     color: blue
 
   - pin: B1
-    function: Power Ground
+    function: Power/Chassis GND ground
     type: gnd
     color: black
 
@@ -81,6 +81,7 @@ pins:
     meta: H144_IN_IAT
     class: analog_inputs
     function: IAT Sensor Input
+    type: at
     ts_name: B3 - IAT
     color: orange
 
@@ -94,7 +95,8 @@ pins:
   - pin: B5
     meta: H144_IN_TPS
     class: analog_inputs
-    function: TPS Sensor Input
+    function: Universal analog input. Suggested TPS sensor input
+    type: av
     ts_name: B5 - TPS
     color: orange
 
@@ -106,13 +108,14 @@ pins:
   - pin: B7
     meta: H144_IN_CLT
     class: analog_inputs
-    function: CLT Sensor Input
+    function: ECT CLT Coolant Sensor Input
+    type: at
     ts_name: ___ - CLT
     color: orange
 
   - pin: B8
     meta: H144_LS_2
-    function: Injector B Output
+    function: Injector 2
     class: outputs
     type: inj
     ts_name: ___ - Injector B
@@ -159,12 +162,12 @@ pins:
     color: gray
 
   - pin: C5
-    function: CAN bus high (CANH)
+    function: CAN bus High
     type: can
     color: green
 
   - pin: C6
-    function: CAN bus low (CANL)
+    function: CAN bus Low
     type: can
     color: blue
 

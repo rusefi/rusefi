@@ -18,7 +18,7 @@ public:
     // or use `std::unordered_map` with a custom hash function for `Record`.
     std::map<const Record*, float> snapshot;
 
-    LogLine(const std::map<const Record*, float>& snapshot) : snapshot(snapshot) {}
+    LogLine(const std::map<const Record*, float>& snapshotParam) : snapshot(snapshotParam) {}
     // If you prefer to move the map to avoid copy (C++11 and later):
     // LogLine(std::map<const Record*, float>&& snapshot) : snapshot(std::move(snapshot)) {}
 };

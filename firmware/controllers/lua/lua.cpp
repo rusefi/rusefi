@@ -1,3 +1,12 @@
+/**
+ * @file lua.cpp
+ * @brief Lua scripting engine integration.
+ *
+ * Owns the embedded Lua virtual machine lifecycle: allocation, loading user scripts,
+ * the periodic Lua thread that runs onTick/onCanRx callbacks, and reset/reload
+ * handling. User-facing rusEFI APIs are registered separately in lua_hooks.cpp.
+ */
+
 #include "pch.h"
 
 #include "rusefi_lua.h"
@@ -9,6 +18,8 @@
 #include "lua_heap.h"
 #include "lua_hooks.h"
 #include "can_filter.h"
+#include "lua_config_page.h"
+#include "bench_test.h"
 
 #define TAG "LUA "
 
@@ -87,10 +98,16 @@ static LuaHandle setupLuaState(lua_Alloc alloc) {
 	return ls;
 }
 
+// this function is needed for a correct graph on the stackUsageReport
+static int doString(lua_State* ls, const char* script) {
+	return luaL_loadbufferx(ls, script, std::strlen(script), script, "t")
+		|| lua_pcall(ls, 0, LUA_MULTRET, 0);
+}
+
 static bool loadScript(LuaHandle& ls, const char* scriptStr) {
 	efiPrintf(TAG "loading script length: %u...", std::strlen(scriptStr));
 
-	if (0 != luaL_dostring(ls, scriptStr)) {
+	if (0 != doString(ls, scriptStr)) {
 	  withErrorLoading = true;
 		efiPrintf(TAG "ERROR loading script: %s", lua_tostring(ls, -1));
 		lua_pop(ls, 1);
@@ -116,7 +133,7 @@ static void doInteractive(LuaHandle& ls) {
 		return;
 	}
 
-	auto status = luaL_dostring(ls, interactiveCmd);
+	auto status = doString(ls, interactiveCmd);
 
 	if (0 == status) {
 		// Function call was OK, resolve return value and print it
@@ -176,7 +193,7 @@ static void invokeTick(LuaHandle& ls) {
 	lua_settop(ls, 0);
 }
 
-struct LuaThread : ThreadController<4096> {
+struct LuaThread : ThreadController<LUA_THREAD_STACK_SIZE> {
 	LuaThread() : ThreadController("lua", PRIO_LUA) { }
 
 	void ThreadTask() override;
@@ -248,9 +265,10 @@ static bool runOneLua(lua_Alloc alloc, const char* script) {
 	return true;
 }
 
+RUSEFI_STACK_ROOT(LuaThread, ThreadTask);
 void LuaThread::ThreadTask() {
 	while (!chThdShouldTerminateX()) {
-		bool wasOk = runOneLua(luaHeapAlloc, config->luaScript);
+		bool wasOk = runOneLua(luaHeapAlloc, luaConfigPageGetState()->luaScript);
 
 		auto usedAfterRun = luaHeapUsed();
 		if (usedAfterRun != 0) {
@@ -302,8 +320,20 @@ void startLua() {
 		interactivePending = true;
 	});
 
-	addConsoleAction("luareset", [](){
+	addConsoleAction(CMD_LUA_RESET, [](){
 		needsReset = true;
+	});
+
+	// these commands facilitate TS Lua Button scripts development; registered here rather than
+	// in initBenchTest() so that they exist on boards without EFI_ENGINE_CONTROL
+	addConsoleActionI("lua_button", [](int index) {
+		if (index < 1 || index > LUA_BUTTON_COUNT) {
+			return;
+		}
+		luaCommandCounters[index - 1]++;
+	});
+	addConsoleActionFFFF("luabench2", [](float humanIndex, float onTime, float offTimeMs, float count) {
+		doRunBenchTestLuaOutput((int)humanIndex, onTime, offTimeMs, (int)count);
 	});
 
 	addConsoleAction("luamemory", [](){

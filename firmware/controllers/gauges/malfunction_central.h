@@ -17,8 +17,6 @@ struct error_codes_set_s {
 	ObdCode error_codes[MAX_ERROR_CODES_COUNT];
 };
 
-// TODO: wow this is not used by real firmware?!
-#if EFI_UNIT_TEST
 /**
  * @brief Adds an error code into the set of current errors.
  * The error code is placed into the fixed-size data structure if it fits into it.
@@ -31,7 +29,6 @@ void addError(ObdCode errorCode);
  *
  */
 void removeError(ObdCode errorCode);
-#endif // EFI_UNIT_TEST
 
 void clearWarnings(void);
 /**

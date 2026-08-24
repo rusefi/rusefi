@@ -44,8 +44,16 @@
  */
 #define SHARED_PARAMS_CFG_BUFFER_DATA_LEN        (16 - 4 - 2)
 
+
+/****************************************************************************************
+* Bytes allocation
+****************************************************************************************/
+
 /* TODO: add enum with shared parameters idx/offset to avoid magic numbers in Read/Write calls */
 
+// Byte 0 is "boot to OpenBLT" flag
+// Byte 1 is WatchDog reset counter, automaticly reseted by FW 3 seconds after start
+// Byte 2 is Software counter (ie counts reset with NVIC_SystemReset())
 
 /****************************************************************************************
 * Function prototypes

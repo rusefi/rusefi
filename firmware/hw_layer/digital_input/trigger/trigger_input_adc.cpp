@@ -252,7 +252,6 @@ void TriggerAdcDetector::digitalCallback(efitick_t stamp, bool isPrimary, bool r
 		return;
 	}
 
-
 	onTriggerChanged(stamp, isPrimary, rise);
 
 #if (HAL_TRIGGER_USE_ADC && HAL_USE_ADC) || EFI_UNIT_TEST

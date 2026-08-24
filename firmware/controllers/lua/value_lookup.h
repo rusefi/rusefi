@@ -29,6 +29,17 @@ struct plain_get_float_s {
 	float *value;
 };
 
+struct ConfigParameter {
+	uint32_t hash;
+	float (*getter)();
+	void (*setter)(float);
+};
+
+extern const ConfigParameter allParameters[];
+extern const size_t allParametersCount;
+
+const ConfigParameter* findParamByHash(uint32_t hash);
+
 float getOutputValueByHash(const int hash);
 
 float getConfigValueByHash(const int hash);
