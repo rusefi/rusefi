@@ -7027,3 +7027,29 @@ RESPTIME write (no boot miss). The prepare/BYTE0 split, wd_prepare_isr/
 wd_byte0_isr/wdPrepareFromExecutor/wdByte0FromExecutor are gone.
 
 Validation: compile_m74_9.sh BUILD SUCCESSFUL, bundle rebuilt.
+
+## 2026-08-24 - m74_9: restore REG4/REG6 in the VRS ramp (time base pinned to 64 kHz)
+
+After the WDA single-burst fix the engine runs, but the trigger started losing
+exactly one tooth per revolution at ~2000 rpm (C9003 "expected 58/0 got 57/0",
+newerr storm at time=55, then C9007/C9008 tooth errors + coil overcharge at
+3454 rpm). The only VRS-adjacent change in the previous commit was removing the
+REG4/REG6 writes from the ramp (REG5 only).
+
+Even though per the datasheet only REG5 is a VRS register, the stock firmware
+writes all three at every ramp step, and it runs this same chip/wheel
+flawlessly - so its register traffic is reproduced byte-for-byte. The ONE
+deliberate deviation: CONFIG6 bit1 (WDA time base) is pinned to 1 (64 kHz):
+the stock's 0x05 values at steps 1..2 would flip it to 39 kHz during cranking
+and break the executor's 22 ms feed again. REG6 ramp values are now
+0x07/0x07/0x07/0x06 instead of the stock's 0x07/0x05/0x05/0x06.
+
+Observations for the next session if the tooth loss persists: the C9009
+"skipped spark" lines at 19:31:21/36/49 sit right on the bench debug-ECU's
+~5 s reset cadence, and every MCU reset re-runs init() -> chip_reset() (SW_RST)
+-> outputs cut + VRS re-armed at step 0 while the engine spins - skipped spark
+and coil overcharge mid-run are expected from that alone (bench-only, does not
+exist on the car). The steady per-rev tooth loss at ~2000 rpm between resets is
+what the REG4/REG6 restore targets.
+
+Validation: compile_m74_9.sh BUILD SUCCESSFUL, bundle rebuilt.
