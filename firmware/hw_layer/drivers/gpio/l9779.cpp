@@ -85,6 +85,14 @@
  * allows before the window) leads the critical RESP_BYTE0 write by this
  * much - comfortably inside the 15.8 ms response time. */
 #define WDA_BYTE0_LEAD_MS			(5)
+/* CONFIG_REG9 (SPI RESPTIME) register address, per the datasheet register
+ * descriptions: REG5=0x05, REG6=0x06, REG7=0x07, REG8/WD_ANSW=0x0e,
+ * REG9/RESPTIME=0x11, REG10/CPS=0x12 (the summary table's 0x07 row is a
+ * misaligned REG7 duplicate). Writing 0x07 hits CONFIG_REG7 (output enable
+ * latches) and does NOT change the response time - observed 2026-08-24
+ * 17:28: every answer missed EARLY with the period pegged at the 27 ms
+ * clamp. */
+#define L9779_WD_RESPTIME_REG		(0x11)
 
 /* L9779WD-SPI timing requirements (datasheet Table 53):
  *  - tlead >= 525 ns: CS low to first SCK edge
@@ -154,6 +162,7 @@ typedef enum {
  * (datasheet Table 55); the reply carries the sub-address in the ADD field */
 #define L9779_WD_REQULO_SUB			0x0e	/* WDA question + error counter (DIA_REG14) */
 #define L9779_WD_REQUHI_SUB			0x0f	/* WDA response status (DIA_REG15) */
+#define L9779_WD_RESPTIME_SUB			0x0d	/* WDA response-time readback (DIA_REG13) */
 #define L9779_IDENT_SUB				0x00	/* identifier register */
 #define L9779_DIA_REG1_SUB			0x01	/* OUT1..4 diagnosis */
 #define L9779_DIA_REG6_SUB			0x06	/* OUT21..24 diagnosis */
@@ -325,6 +334,7 @@ struct L9779 : public GpioChip {
 	int						wd_last_miss_dir;	/* last REQUHI miss: 1=early 2=late */
 	bool						wd_prev_int;
 	int						wd_latch_cnt;	/* consecutive feeds with EC=7 + WDA_INT (latched fault) */
+	efitick_t					wd_last_heal;	/* last latch self-heal, cooldown */
 	uint16_t					ident_reg;		/* IDENT_REG readback (0x10 | 0x00) */
 
 	/* Cached power-stage diagnosis, DIA_REG1..8 (datasheet 6.14). Refreshed
@@ -1232,11 +1242,17 @@ int L9779::wd_prepare_isr()
 	 * pushed EC to 7 and the chip kept the power stages off forever (no
 	 * fuel pump) even though the following 77 answers were accepted. It
 	 * needs a chip reset (SW_RST) to re-arm. Ask the driver thread to do
-	 * that via the need_init path. */
+	 * that via the need_init path, with a 5 s cooldown so a persistent
+	 * fault (e.g. a rejected RESPTIME write) does not turn into a
+	 * reset/re-init storm. */
 	if (wd_int && wd_last_ec >= 7) {
 		if (++wd_latch_cnt >= 10) {
 			wd_latch_cnt = 0;
-			need_init = true;
+			efitick_t nowNt = getTimeNowNt();
+			if (nowNt - wd_last_heal > MS2NT(5000)) {
+				wd_last_heal = nowNt;
+				need_init = true;
+			}
 		}
 	} else {
 		wd_latch_cnt = 0;
@@ -1634,15 +1650,24 @@ int L9779::chip_init()
 	if (ret)
 		return ret;
 
-	/* Shorten the WDA response time (CONFIG_REG9, address 0x07): see the
+	/* Shorten the WDA response time (CONFIG_REG9, address 0x11): see the
 	 * WDA_RESPTIME comment - the +-5% CLK1 tolerance then moves the answer
 	 * window by ~0.8 ms instead of ~5 ms, making the feed drift-proof. The
 	 * write costs one EC increment (EC 6->7, recovered by ~3 correct
 	 * answers before the fuel pump primes) and starts a fresh monitoring
 	 * cycle, which anchors the first window ~15.8 ms after this write. */
-	ret = spi_rw(MSG_W(0x07, WDA_RESPTIME), NULL);
+	ret = spi_rw(MSG_W(L9779_WD_RESPTIME_REG, WDA_RESPTIME), NULL);
 	if (ret)
 		return ret;
+
+	/* Verify the write landed: DIA_REG13 (sub 0x0d) reads back the active
+	 * response time. 0x0a = applied; 0x3f = default (the write went to the
+	 * wrong address - the 0x07/0x11 trap - and the feed will miss EARLY
+	 * every cycle). */
+	uint16_t rptime = 0;
+	if (read_diag_reg(L9779_WD_RESPTIME_SUB, &rptime) == 0) {
+		efiPrintf(DRIVER_NAME " WDA RESPTIME readback = 0x%02x", MSG_GET_DATA(rptime) & 0x3f);
+	}
 
 	/* Enable the flying-wheel interface in fully adaptive mode before the
 	 * engine can run: the reset defaults let VR noise storms through. */
@@ -1723,6 +1748,7 @@ int L9779::init()
 	wd_last_miss_dir = 0;
 	wd_prev_int = false;
 	wd_latch_cnt = 0;
+	wd_last_heal = 0;
 
 	/* power-stage diagnosis cache: nothing valid until the driver thread
 	 * performs the first refresh (diag_ts = 0 -> immediate) */
