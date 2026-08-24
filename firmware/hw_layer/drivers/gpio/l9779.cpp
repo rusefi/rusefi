@@ -373,6 +373,9 @@ struct L9779 : public GpioChip {
 	int						wd_ok_cnt;		/* cycles answered correctly */
 	int						wd_fail_cnt;	/* cycles missed (SPI-level failures) */
 	int						wd_timing_miss_cnt;	/* responses outside the window (REQUHI flags) - the EC climbs on these too */
+	int						wd_wrong_cnt;	/* responses rejected on VALUE (REQUHI W_RESP) */
+	int						wd_cnt_bad;		/* RESP_CNT != 11 at read time - the answer stream desynced */
+	uint8_t					wd_last_requhi;	/* raw REQUHI byte of the last cycle */
 	int						wd_defer_cnt;	/* feeds deferred by the spi_busy flag */
 	int						wd_kill_cnt;	/* WDA_INT rising edges (watchdog kill pulses) */
 	int						wd_last_miss_dir;	/* last REQUHI miss: 1=early 2=late */
@@ -471,7 +474,7 @@ struct L9779 : public GpioChip {
 static L9779 chips[BOARD_L9779_COUNT];
 
 bool l9779_getWdaCounters(uint8_t *ec, bool *wda_int, int *ok, int *fail, int *timing_miss, uint8_t *dia10,
-		int *delay_ms, int *defer_cnt, int *kill_cnt)
+		int *delay_ms, int *defer_cnt, int *kill_cnt, uint8_t *requhi, int *wrong_cnt, int *cnt_bad)
 {
 	/* WDA counters are written by the executor feed (ISR); the reads below
 	 * are single-word atomic accesses, safe from other threads. */
@@ -494,6 +497,12 @@ bool l9779_getWdaCounters(uint8_t *ec, bool *wda_int, int *ok, int *fail, int *t
 		*defer_cnt = chip->wd_defer_cnt;
 	if (kill_cnt)
 		*kill_cnt = chip->wd_kill_cnt;
+	if (requhi)
+		*requhi = chip->wd_last_requhi;
+	if (wrong_cnt)
+		*wrong_cnt = chip->wd_wrong_cnt;
+	if (cnt_bad)
+		*cnt_bad = chip->wd_cnt_bad;
 	return true;
 }
 
@@ -1204,11 +1213,20 @@ void L9779::wdFeedFromExecutor()
 	 * the config never changes, and the first feed is only kicked after
 	 * the thread's chip_init(). */
 
-	/* Pipelined status/question reads. */
+	/* Pipelined status/question reads. FOUR frames, not three: the DO reply
+	 * to a read request arrives one or TWO frames after the request (the
+	 * init() IDENT probe sees the same), and the REQULO reply must land
+	 * within this batch - with only three frames a 2-frame-delayed reply
+	 * lands in the first answer write, the question is lost and the cycle
+	 * fails. The observed failure mode (2026-08-24 19:56 log, pre-VRS
+	 * build): fail 9 -> 816 and miss 10 -> 712 in ~20 s of driving - the
+	 * reads started missing the reply once the phase destabilized, each
+	 * failed cycle then expires unanswered, and the collapse feeds itself. */
 	static const uint16_t req_tx[] = {
 		L9779_WD_REQUHI,	/* status of the previous response */
 		L9779_WD_REQULO,	/* current question + error counter */
-		L9779_WD_REQUHI,	/* filler: flush the pipelined replies */
+		L9779_WD_REQUHI,	/* filler: the REQULO reply (1 frame late) */
+		L9779_WD_REQUHI,	/* filler: the REQULO reply (2 frames late) */
 	};
 	int ret = 0;
 	uint16_t rx;
@@ -1282,6 +1300,18 @@ void L9779::wdFeedFromExecutor()
 	if (wd_int && !wd_prev_int)
 		wd_kill_cnt++;
 	wd_prev_int = wd_int;
+
+	/* Instrument the REQUHI byte (datasheet DIA_REG15): [7:6] RESP_CNT,
+	 * [5] RESP_ERR, [4] RESP_Z0, [3] CHRT, [2] W_RESP (wrong value),
+	 * [1] NO_RESP (late), [0] RESP_TO_EARLY. W_RESP and a RESP_CNT != 11
+	 * are the desync/wrong-value signatures - they increment the EC without
+	 * setting the timing flags, which made the 19:09 'ec=7 miss=2' session
+	 * look healthy. Exposed via l9779_getWdaCounters(). */
+	wd_last_requhi = requhi;
+	if (requhi & 0x04)			/* W_RESP: value rejected */
+		wd_wrong_cnt++;
+	if ((requhi & 0xc0) != 0xc0)	/* RESP_CNT != 11: stream desynced */
+		wd_cnt_bad++;
 
 	/* EC=7 + WDA_INT is the LATCHED fault state: a chip reset (SW_RST) is
 	 * needed to re-arm. Ask the driver thread to do that via the need_init
@@ -1450,8 +1480,8 @@ void L9779::debug() {
 			(int)((cfg->spi_config.ssport->ODR >> cfg->spi_config.sspad) & 1),
 			(int)((cfg->spi_config.ssport->IDR >> cfg->spi_config.sspad) & 1));
 	}
-	efiPrintf(DRIVER_NAME " WDA: req=0x%x ec=%d wda_int=%d ok=%d fail=%d miss=%d delay=%dms",
-		wd_last_req, wd_last_ec, wd_int ? 1 : 0, wd_ok_cnt, wd_fail_cnt, wd_timing_miss_cnt, wd_delay_ms);
+	efiPrintf(DRIVER_NAME " WDA: req=0x%x ec=%d wda_int=%d ok=%d fail=%d miss=%d wrong=%d cntbad=%d delay=%dms reqhi=0x%02x",
+		wd_last_req, wd_last_ec, wd_int ? 1 : 0, wd_ok_cnt, wd_fail_cnt, wd_timing_miss_cnt, wd_wrong_cnt, wd_cnt_bad, wd_delay_ms, wd_last_requhi);
 
 	/* Power-stage status (DIA_REG10, datasheet section 6.14): OUT_DIS must
 	 * be 0 for OUTx/IGNx to switch at all; F1/F2 report output faults,
@@ -1757,6 +1787,9 @@ int L9779::init()
 	spi_configured = false;
 	wd_defer_cnt = 0;
 	wd_kill_cnt = 0;
+	wd_wrong_cnt = 0;
+	wd_cnt_bad = 0;
+	wd_last_requhi = 0;
 	wd_last_miss_dir = 0;
 	wd_prev_int = false;
 	wd_latch_cnt = 0;
