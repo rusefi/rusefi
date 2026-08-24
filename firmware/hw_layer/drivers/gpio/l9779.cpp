@@ -1619,23 +1619,28 @@ err_gpios:
  * grows and ends at VRS_HYST 111, handing the conditioner over to the
  * fully-adaptive loop once the amplitude is established.
  *
- * IMPORTANT (found 2026-08-24): only REG5 (0x05) is a VRS register. REG4
- * (0x04) is power management (PWL_TIMEOUT_CONF/ISO_SRC/LOCK) and REG6
- * (0x06) is power management + the WDA time base (PWL_EN_N, PSOFF,
- * VDD5_UV RST/WDA masks, CONFIG6 bit1 = f_clk 64/39 kHz). The stock
- * deliberately steps those too, but for rusEFI the REG6 values 0x05 at
- * steps 1..2 FLIP THE WDA TIME BASE to 39 kHz exactly during cranking
- * (150..600 rpm): the answer window moves from [15.8, 28.4] ms to
- * [25.9, 38.5] ms and the 27 ms-clamped feed misses -> EC climbs -> WDA
- * kill pulses during the catch. The ramp below therefore writes REG5 ONLY;
- * CONFIG_REG6 is applied once with the 64 kHz time base at init
- * (L9779_CONFIG6_PWR) and never touched again.
+ * Register semantics (2026-08-24): only REG5 (0x05) is a VRS register
+ * (VRS_HYST/VRS_MODE/VRS_DIAG). REG4 (0x04) is power management
+ * (PWL_TIMEOUT_CONF/ISO_SRC/LOCK) and REG6 (0x06) is power management +
+ * the WDA time base (PWL_EN_N, PSOFF, VDD5_UV RST/WDA masks, CONFIG6 bit1
+ * = f_clk 64/39 kHz). The stock steps them all, and after removing the
+ * REG4/REG6 writes the car started losing one tooth per revolution at
+ * ~2000 rpm (C9003 57/58) - the stock's register traffic is reproduced
+ * byte-for-byte here. The ONE deliberate deviation: REG6 bit1 (WDA time
+ * base) is PINNED to 1 = 64 kHz - the stock's 0x05 values at steps 1..2
+ * flip it to 39 kHz exactly during cranking (150..600 rpm), which moves
+ * the answer window from [15.8, 28.4] ms to [25.9, 38.5] ms and makes the
+ * 27 ms-clamped executor feed miss -> EC climb -> WDA kill pulses at the
+ * catch (the miss=5..8 counters in the 16:02/16:09 logs).
  *
  * Step 0 is the ramp START (low floor - low cranking signal amplitude),
  * written by vrs_configure() at init and on every start re-arm; steps 1..3
  * are advanced by rpm thresholds from the driver thread.
  */
+static const uint8_t vrs_ramp_cfg4[] = { 0x0b, 0x0a, 0x09, 0x08 };
 static const uint8_t vrs_ramp_cfg5[] = { 0x0c, 0x0d, 0x0e, 0x0f };
+/* stock values with CONFIG6 bit1 forced to 1 (64 kHz): 0x05 -> 0x07 */
+static const uint8_t vrs_ramp_cfg6[] = { 0x07, 0x07, 0x07, 0x06 };
 
 int L9779::vrs_configure(void)
 {
@@ -1649,25 +1654,31 @@ int L9779::vrs_configure(void)
 	if (ret)
 		return ret;
 
-	efiPrintf(DRIVER_NAME " VRS: stock ramp start (REG1=0x%02x REG5=0x%02x)", cfg1, vrs_ramp_cfg5[0]);
+	efiPrintf(DRIVER_NAME " VRS: stock ramp start (REG1=0x%02x REG4=0x%02x REG5=0x%02x REG6=0x%02x)", cfg1, vrs_ramp_cfg4[0], vrs_ramp_cfg5[0], vrs_ramp_cfg6[0]);
 	return 0;
 }
 
 int L9779::vrs_ramp_to_step(int step)
 {
 	/* 0 = ramp start, 3 = ramp end (maximum floor -> fully-adaptive
-	 * handover). Steps 1..3 mirror the stock config script. Only CONFIG_REG5
-	 * is written - the stock script's REG4/REG6 writes hit the power
-	 * management registers (see the comment above), and in particular the
-	 * REG6 time-base flip to 39 kHz would break the executor's WDA feed. */
+	 * handover). Steps 1..3 mirror the stock config script - REG4/REG5/REG6,
+	 * see the comment above: the stock's full register traffic is kept (the
+	 * REG4/REG6 removal cost the car a tooth per revolution), with only the
+	 * WDA time base pinned to 64 kHz. */
 	if (step < 0 || step > 3)
 		return -1;
 
-	int ret = spi_rw(MSG_W(0x05, vrs_ramp_cfg5[step]), NULL);
+	int ret = spi_rw(MSG_W(0x04, vrs_ramp_cfg4[step]), NULL);
+	if (ret)
+		return ret;
+	ret = spi_rw(MSG_W(0x05, vrs_ramp_cfg5[step]), NULL);
+	if (ret)
+		return ret;
+	ret = spi_rw(MSG_W(0x06, vrs_ramp_cfg6[step]), NULL);
 	if (ret)
 		return ret;
 
-	efiPrintf(DRIVER_NAME " VRS: stock ramp step %d (REG5=0x%02x)", step, vrs_ramp_cfg5[step]);
+	efiPrintf(DRIVER_NAME " VRS: stock ramp step %d (REG4=0x%02x REG5=0x%02x REG6=0x%02x)", step, vrs_ramp_cfg4[step], vrs_ramp_cfg5[step], vrs_ramp_cfg6[step]);
 	return 0;
 }
 
