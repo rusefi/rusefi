@@ -284,6 +284,7 @@ struct L9779 : public GpioChip {
 	int						wd_kill_cnt;	/* WDA_INT rising edges (watchdog kill pulses) */
 	int						wd_last_miss_dir;	/* last REQUHI miss: 1=early 2=late */
 	bool						wd_prev_int;
+	int						wd_latch_cnt;	/* consecutive feeds with EC=7 + WDA_INT (latched fault) */
 	uint16_t					ident_reg;		/* IDENT_REG readback (0x10 | 0x00) */
 
 	/* Cached power-stage diagnosis, DIA_REG1..8 (datasheet 6.14). Refreshed
@@ -944,12 +945,18 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 		if (chip->need_init) {
 			/* clear first, as flag can be raised again during init */
 			chip->need_init = false;
-			/* re-init chip! The executor's WDA exchange is kept out of the
+			/* Full chip reset (SW_RST) before re-init: a latched WDA fault
+			 * (EC=7, outputs forced off) does NOT recover on correct answers
+			 * (observed 16:31 - no fuel pump until power cycle). SW_RST
+			 * re-arms the watchdog (EC=6) and the re-init below restores
+			 * START/VRS/OUT. The executor's WDA exchange is kept out of the
 			 * batch by spi_busy (kernel IRQs are NOT masked by critical
 			 * sections), no CS locker is needed for that. */
+			chip->chip_reset();
 			chip->chip_init();
 			/* sync pins state */
 			chip->update_output();
+			chip->vrs_step = 0;
 		}
 
 		/* Kick the executor-side WDA feed once after the chip is up. The
@@ -1180,6 +1187,21 @@ int L9779::wd_feed_isr()
 	if (wd_int && !wd_prev_int)
 		wd_kill_cnt++;
 	wd_prev_int = wd_int;
+
+	/* EC=7 + WDA_INT is the LATCHED fault state: observed 2026-08-24 16:31 -
+	 * a single miss at EC=6 (the first answer landing before the window)
+	 * pushed EC to 7 and the chip kept the power stages off forever (no
+	 * fuel pump) even though the following 77 answers were accepted. It
+	 * needs a chip reset (SW_RST) to re-arm. Ask the driver thread to do
+	 * that via the need_init path. */
+	if (wd_int && wd_last_ec >= 7) {
+		if (++wd_latch_cnt >= 10) {
+			wd_latch_cnt = 0;
+			need_init = true;
+		}
+	} else {
+		wd_latch_cnt = 0;
+	}
 
 	/* write the expected 32-bit response: RESP_BYTE3..0 via WD_ANSW */
 	const uint8_t *resp = wd_resp_table[wd_last_req];
@@ -1604,13 +1626,16 @@ int L9779::init()
 	 * by the driver thread after chip_init and then runs on the TIM5
 	 * executor; the delay is adapted from REQUHI flags.
 	 *
-	 * 115 ms is the MEASURED window-center delay on m74_9 (16:21:41 log:
-	 * starting from 105 the first answers landed BEFORE the window, the
-	 * loop stepped 5 ms per miss and locked at delay=115 with zero further
-	 * misses over 206 answers). Starting locked avoids the boot-convergence
-	 * misses entirely - each such miss sets EC > 4 and fires a WDA kill
-	 * pulse (kills=2 observed: the second pulse hit a running engine). */
-	wd_delay_ms = 115;
+	 * NOTE: the chip's internal oscillator makes the window position vary
+	 * between boots (measured 115 ms on the 16:21 boot, >115 on the 16:31
+	 * boot), so a fixed start value can miss on the first answers. Starting
+	 * from 105 (just after the earliest window edge) lets the 5 ms
+	 * adaptation walk into the window; the first answers land EARLY and
+	 * miss, but the first answer right after START is accepted, so those
+	 * misses hit EC <= 6 and recover. A first-answer miss at EC=6 would
+	 * latch EC=7 and brick the outputs - that latch is healed by the
+	 * wd_latch_cnt logic in wd_feed_isr. */
+	wd_delay_ms = 105;
 	wd_running = false;
 	spi_busy = false;
 	spi_configured = false;
@@ -1618,6 +1643,7 @@ int L9779::init()
 	wd_kill_cnt = 0;
 	wd_last_miss_dir = 0;
 	wd_prev_int = false;
+	wd_latch_cnt = 0;
 
 	/* power-stage diagnosis cache: nothing valid until the driver thread
 	 * performs the first refresh (diag_ts = 0 -> immediate) */
