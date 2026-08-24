@@ -1,5 +1,140 @@
 # Work Report
 
+## 2026-08-24 - m74_9: test-log error analysis (car sessions 10:04 and 10:52)
+
+Goal: inventory the errors in the 2026-08-24 test logs, find the FIRST error, and
+explain the cause. Two user hypotheses to check: (1) interrupts not keeping up
+with event processing, (2) the L9779 watchdog not being fed in time (the TLE9201
+blade-drop warning as a scheduler/IRQ symptom).
+
+Files analyzed:
+
+| File | What it is |
+| --- | --- |
+| efi_log_2026-08-24_10_04_00_849.log.0 | console log, session 1, ~57 min, 218 `newerr` trigger dumps |
+| efi_log_2026-08-24_10_52_50_618.log.0 | console log, session 2, ~17 min, 74 `newerr` dumps |
+| rusEFI_outputChannels_2026-08-24_10_54_37_190.mlg | output channels, 17.4 s, clean idle ~1000 rpm (car, `isbenchtest=0`) |
+| rusEFI_outputChannels_2026-08-24_11_09_27_798.mlg | output channels, 21.5 s, clean idle ~1000 rpm, AFTER the 10:56 storm |
+
+Error inventory (OBD C-codes and warnings, both sessions):
+
+| Code | S1 | S2 | Meaning |
+| --- | --- | --- | --- |
+| C9002 too many teeth "expected 58/0 got 58/0" | 13 | 6 | sync point not accepted, full 58-tooth revolution counted |
+| C9003 not enough teeth "got 56/0" | 7 | 2 | 2 teeth lost between sync points |
+| C9007 tooth #114 early | 7 | 2 | tooth-angle diagnostic (does NOT drop teeth) |
+| C9008 tooth #30/32/34/36 late | 7 | 2 | tooth-angle diagnostic (does NOT drop teeth) |
+| C9009 skipped spark event | 29 | 17 | coil still high when next dwell requested |
+| C9351..C9354 coil overcharge 6.2-8.3 ms | 31 | 12 | dwell ran past the requested spark |
+| TLE9201 "outputs disabled while engine running" | 9 | 5 | blade drop; see taxonomy below |
+
+First-error timeline (session 1):
+
+- 100513.476-100515.973: settings burn (MFS ID 1, 2327 ms, status 2) - engine
+  stopped, not an error.
+- **100523.247: FIRST warning** - `TLE9201 outputs disabled while engine running
+  (l9779 WDA ec=4 wda_int=0 ok=781 fail=0 miss=6)`. WDA healthy -> not a watchdog
+  kill, the DIS line went high through the PB13/ETC_EN or ETC_WD hardware chain.
+- **100524.417: FIRST OBD code** - `C9354 cylinder 4 Coil 2 overcharge 8.25 ms`,
+  immediately followed by `C9002 expected 58/0 got 58/0` and the VRS ramp re-arm
+  (engine stopped -> next cranking attempt).
+- Session 2 first error: C9009 skipped spark at 105416; first blade drop at
+  105531 with `ec=3` -> 1 ms later `ec=5 wda_int=1` (WDA kill), 0.7 s later all
+  four coils overcharge + engine stop.
+
+The chain is: blade/output drop -> fuel/spark cut -> crank speed collapses at the
+catch -> the missing-teeth gap leaves the ratio window -> C9002/C9003 -> engine
+stops -> VRS ramp re-arms -> next attempt, repeating all session.
+
+Root-cause findings:
+
+1. Hypothesis 1 (ISR overload): RULED OUT. `extioverflowcount` (uint8 lifetime
+   EXTI-queue-overflow counter) reads 0 in the MLG taken AFTER the 4300-5100 rpm
+   desync storms, as do `maxtriggerreentrant` and `triggerignoredtoothcount`.
+   `newerr TRG` dumps show the gap ratio windows PASSED (`Y`, gap 2.31-2.34 /
+   0.99-1.01 inside [1.6,4.5]/[0.85,1.35]) while the event count at the gap was
+   wrong (`eventIndex=110/112` vs ~116) - 2-3 teeth are lost per revolution in
+   the ANALOG VR path (L9779 VRS at ramp step 3 = full adaptive + 17 uA
+   hysteresis floor), consistently, at 4300-5100 rpm only. The clean idle MLG
+   windows prove the EXTI/decode chain keeps up easily at ~1000 rpm. The
+   C9007/C9008 tooth-angle warnings are diagnostics that do NOT reject teeth.
+
+2. Hypothesis 2 (watchdog not fed): CONFIRMED as one real drop mode. 6 of 14
+   blade drops carry `ec>=5 + wda_int=1` - the VDA answers landed outside the
+   ~12.6 ms window (miss counter climbs), EC crossed 4 and the L9779 forced
+   OUT1..4+IGN1..4 off. Session 2 was 4 of 5 mode B (dominant). The other 8
+   drops show `ec=4 + wda_int=0` (healthy floor) - the PB13/3.3V-dip mode from
+   the 2026-08-23 note. So the drops are bimodal; the miss counter is a
+   l9779-driver-THREAD timing symptom under cranking/catch load, not EXTI/ISR.
+
+3. MFS LTFT write flushed mid-storm (new): `MFS: Writing storage ID 3 ...
+   2048 bytes` executed inside `newerr` storms at 103717.963 (36 ms) and
+   103846.092 (38 ms) at 3700-4500 rpm. The deferral gate
+   `custom_board_allowFlashNow = directSelfStimulation || isStopped()` opened
+   because `isStopped()` flapped true during desync. Harmless at 36 ms, but the
+   same gate admitting a GC-erase write (the status-2 ~2.3 s writes seen in the
+   log) mid-storm is the 14:39 NT-clock wedge signature. The gate is not
+   storm-proof.
+
+Validation: numbers above were produced by grepping the two console logs and by
+parsing the two console-written MLG files with a Python parser
+(misc/mlg2csv/MlgToCsv.java documents the MLVLG v2 format used). No firmware
+changes in this entry - analysis only; the durable facts were folded into
+CLAUDE.md (new "trigger-error taxonomy" and "blade-drop UPDATE" sections).
+
+Open follow-ups (hardware, not done):
+- `lockstats` + `printPwmStats` during a 4500 rpm pull and during cranking (no
+  lockstats output exists in these logs).
+- `l9779` debug line during cranking: does `wd_delay_ms` walk out of the 60-150
+  clamp, does `miss` climb - and what delays a NORMALPRIO+12 thread past 12.6 ms.
+- L9779 VRS ramp step 3 (REG5=0x0F) is the prime suspect for the high-rpm tooth
+  loss: try a high-rpm step-down of the hysteresis floor (keep 0x0E above ~3000
+  rpm) or re-enable software debounce for sub-125 us bursts only.
+- Buzz Q5B/R20 (ETC_WD chain) - the ec=5/wda_int=1 events correlating with
+  DIS-high strongly suggest that chain IS populated, contradicting the earlier
+  "likely depopulated" note.
+
+Update same day (user hardware input + fix plan):
+
+- USER FACT: the blade enable chain is supplied by BOTH the L9779 and the AT32;
+  if either stops supplying the blade dies. The user probed the board and
+  determined it is the L9779 side that stops supplying in the observed drops ->
+  Mode A is an L9779-side rail/ETC_WD problem, and the Q5B/ETC_WD chain is
+  populated. Recorded in CLAUDE.md.
+- The ДПКВ path also lives inside the L9779 (VRSP/VRSN -> OUT_VRS -> 74HC14 ->
+  PF8), so a L9779 power loss kills the crank signal (and IGN1..4 spark) while
+  the MCU keeps running - matches the C9002/C9003 right after the drops.
+- The MFS "storage ID 1/2" writes are TS burns from the connected tool (84
+  burn cycles, each preceded by "TS -> Burn, waiting for CRC"), NOT fuel trim
+  (LTFT = the separate 2048-byte ID-3 writes). The firmware writes both config
+  copies unconditionally - no unchanged-skip - so every burn costs 165-168 ms
+  (2.3 s when MFS GC fires). LTIT is disabled in the tune.
+
+Implemented same day:
+
+- WDA feed moved from the l9779 driver thread to the TIM5 executor
+  (`firmware/hw_layer/drivers/gpio/l9779.cpp`): self-rescheduling event
+  `l9779WdaFeedExec` -> `wdFeedFromExecutor` -> `wd_feed_isr`, ISR-safe polled
+  LLD SPI (`spiSelectI`/`spiUnselectI` + `spi_lld_polled_exchange`, no bus
+  mutex). Thread-side SPI batches run under `CriticalSectionLocker`; the diag
+  refresh is chunked (3 registers/pass) to bound the critical section. The
+  feed is kicked after chip_init and self-heals through a silent chip reset.
+  Validation: m74_9 BUILD SUCCESSFUL; ELF contains the trampoline,
+  spi_frame_isr, wd_feed_isr and the "l9779wda" schedule string. On-car
+  validation: lockstats otherCbStats now shows the WDA feed's dispatch
+  lateness; the TLE9201 warning counters (ok/miss/ec) should stop climbing
+  under cranking load.
+- Decision (user): NO on-the-fly VRS re-config/ramp re-jerking while running -
+  the L9779 must work without resets; hardware owns the power-drop root cause.
+
+Open follow-ups (unchanged):
+- `lockstats` during a 4500 rpm pull and during cranking (feed lateness now
+  visible in otherCbStats).
+- CRC-compare skip in `writeToFlashNowImpl()` so identical TS burns cost
+  nothing (kills the 168 ms / 2.3 s stall class).
+- L9779 VRS ramp step 3 (REG5=0x0F) as the high-rpm tooth-loss suspect (no
+  runtime re-jerking: any change is a static config/ramp table change only).
+
 ## 2026-08-23 - m74_9: ETB throttle PWM moved off the executor + soft-PWM load telemetry
 
 Goal: find and remove the scheduling latencies behind the 2026-08-23 16:50 lockstats
@@ -6616,3 +6751,99 @@ DECISION (deferred): do NOT touch scheduling code yet. First validate MLG with
 alwaysInstantRpm=yes on throttle-release/accel. If transients are clean, leave `late`
 alone (don't fix what isn't broken). Only if MLG shows unexplained UOZ jitter in
 transients, revisit scheduling-1-tooth-ahead. Pick this thread back up with fresh MLG.
+
+## 2026-08-24 - m74_9: console self-burn root cause (the "nobody clicks Burn" mystery)
+
+Question: MFS settings writes (ID 1/2, 17544 bytes, 168 ms each) appear every ~1-3 min
+in both sessions although nobody presses Burn and nothing is edited in the console.
+Also "TS -> Burn, waiting for CRC" + "TS burn CRC timeout" + "Finishing pending TS burn".
+
+Answer: it IS the console burning - its own TS-protocol burn, triggered by its Tune tab
+upload loop, not by the Burn button. The writes are full-config burns, NOT fuel trim
+(LTFT is the separate small ID 3 = 2048 bytes, 17-38 ms).
+
+### Established mechanism (all facts from the logs + code)
+
+1. The console Tune tab keeps a "session image" (the model). Any edit event in the
+   dialogs calls TuningToolbarWidget.onEdit -> 100 ms upload timer ->
+   BinaryProtocol.uploadChangesWithoutBurn(sessionImage) -> diffs sessionImage against
+   the console's cached ECU image (getControllerConfiguration) -> writes only differing
+   regions ("Need to patch: Pair{first=..., second=...}, size=N" log lines) ->
+   sets isBurnPending=true.
+2. uploadChangesWithoutBurn deliberately does NOT update the cached ECU image
+   (comment in BinaryProtocol.java L321-324). So once the cache and the session image
+   diverge, EVERY subsequent edit event re-diffs and re-writes the SAME regions.
+   Observed: the identical patch fired twice 26 ms apart at 110250.792/.808 (two
+   upload passes over the same stale diff).
+3. A burn follows via bp.burn() (logs "Need to burn" + "BURN OK"). On the ECU, page-0
+   burns are deferred: "TS -> Burn, waiting for CRC" -> the console NEVER sends the
+   CRC-check command (BurnCommand.execute only checks the BURN_OK response, by design)
+   -> firmware times out after 2 s ("TS burn CRC timeout") -> "Finishing pending TS
+   burn" -> "we are allowed to burn" -> requestBurn() -> setNeedToWriteConfiguration()
+   -> writeToFlashNowImpl() writes BOTH settings copies (ID 1 AND ID 2) UNCONDITIONALLY.
+   No comparison against existing flash content, no CRC skip. On AT32/MFS: 168 ms per
+   copy, ~2.3 s when MFS GC fires, no read-while-erase -> full CPU stall.
+4. Why it never converges: the ECU resets every ~5 s (debug bench build, known
+   behavior). Resets reload config from flash; the console's cache refreshes only on
+   full reconnect (~every 1-3 min). Meanwhile the values on the ECU, in the console
+   cache, and in the session image keep drifting apart because the tune is being
+   actively edited - see the field-level evidence below.
+5. Session 1 additionally ran the Load Tune flow 3 times on 21129.msq (101511.462,
+   102321.776, 102340.161: "Loading 21129.msq..." -> "Applying tune fields..." ->
+   migration "Field X is going to be restored" -> "Uploading and burning to ECU...").
+   Those produced the DefaultTuneMigrator restores (etb_iFactor 3.0->1.0 etc.) and
+   their burns.
+
+### Field-level proof (patched offsets vs the msq commits)
+
+Patched offsets in session 2 map to: 1580=idleRpmPid_iFactor, 1624=idlePidRpmDeadZone,
+1774=fan2ExtraIdle, 2108/2110/2112/2116=coastingFuelCutRpmLow/Tps/Clt/Map,
+1077=noFuelTrimAfterDfcoTime, 3201=dfcoDelay, 3989=dfcoRetardRampInTime. Session 1
+additionally patched 816/882/1576-1586 (idle PID), 6572=cltCrankingCorr,
+6628=afterCrankingIACtaperDuration, 6648=idleAdvance, 7308+=cltIdleCorrTable, and
+migrated etb_iFactor/etb_pFactor/idle_antiwindupFreq.
+
+These are EXACTLY the fields changed by the tune commits around the sessions
+(8837fa256e5 "upd msq" 11:13, 3b8de553e13 iFactor, ed1ff009170 deadzone, ...):
+coastingFuelCutMap 60->100, dfcoDelay 0->1.0, fan2ExtraIdle 2->0, idleRpmPid_iFactor
+0.003->0.001, noFuelTrimAfterDfcoTime 5->1.0, etb_iFactor 3->1, idlePidRpmDeadZone
+10->50. The values the console pushed during the sessions (fan2ExtraIdle=1,
+coastingFuelCutMap=10, noFuelTrimAfterDfcoTime=0, idleRpmPid_iFactor=0.0) are the
+INTERMEDIATE values of that same ongoing tuning - the ECU ran the pre-commit tune
+(noFuelTrimAfterDfcoTime=5.0, fan2ExtraIdle=2, coastingFuelCutMap=60 all observed as
+"old" in the patches), the session image held the evolving edited tune.
+
+Conclusion: the "mystery" writes are the console repeatedly pushing the evolving tune
+onto the ECU. Nobody pressed Burn in TunerStudio, but the console's own edit-upload
+timer + upload/burn paths ran the TS-protocol burns. The burns repeat forever because
+uploadChangesWithoutBurn never updates the local cache and the ECU keeps resetting.
+
+### Fixes (recommended, not yet implemented)
+
+- FIRMWARE (strongest, kills the 168 ms / 2.3 s stall class): in
+  writeToFlashNowImpl() (firmware/controllers/flash_main.cpp L93) compare the new
+  persistentState.crc (or full bytes) with the last-written content and skip the
+  storageWrite calls when identical. Cheapest correct version: read back the stored
+  crc from the settings record (read is ~ms on MFS vs 168 ms write) or keep a RAM
+  "lastWrittenCrc" (resets on boot - acceptable, first burn after boot writes once).
+- CONSOLE: uploadChangesWithoutBurn should advance the cached image to the uploaded
+  snapshot (it is the source of the infinite re-diff); burnToEcuAndThen /
+  uploadChanges should no-op when isBurnPending is false and the image is unchanged.
+- CONSOLE diagnostic: log field NAMES in "Need to patch" (currently raw offsets) -
+  would have turned this multi-hour analysis into a one-line answer.
+- The ECU-side burn already waits 2 s for a CRC check the console never sends; the
+  timeout path is the console's normal burn completion (not a bug by itself), but it
+  means every console burn costs an extra 2 s - cosmetic.
+
+### Answers to the user's specific questions
+
+- "Может быть это fuel trim correction?" - NO. LTFT = ID 3 (2048 B). The ID 1/2
+  writes are full-config burns of the console's own upload loop (above).
+- "Почему запись идет, конфигурация не изменяется" - the config DID differ (ongoing
+  tuning + stale cache + ECU resets), and even when it did not, the firmware writes
+  unconditionally - there is no change-skip.
+- "Кто съедает процессорное время" - on AT32 the 168 ms x2 MFS write (and ~2.3 s GC)
+  per burn stalls the whole CPU including ISRs; several WDA kills sit next to these
+  writes (105345, 105510, 105523, 110309, 110424, 110646). The 105531 kill had no MFS
+  write nearby - that one is the thread-latency mode B (fixed separately by the WDA
+  executor move).

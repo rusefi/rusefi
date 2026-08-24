@@ -52,6 +52,10 @@
  * one chip monitoring cycle (~112 ms): reading a DIA register clears its
  * fault bits on the chip, so a faster poll would mask latched faults. */
 #define DIAG_REFRESH_MS				(100)
+/* Registers refreshed per driver-thread pass. The refresh runs under a
+ * critical section (the executor's WDA exchange must not preempt
+ * mid-batch), so the batch is split into short chunks. */
+#define DIAG_REFRESH_REGS			(3)
 
 /* L9779WD-SPI timing requirements (datasheet Table 53):
  *  - tlead >= 525 ns: CS low to first SCK edge
@@ -209,7 +213,7 @@ struct L9779 : public GpioChip {
 	int spi_rw(uint16_t tx, uint16_t *rx_ptr);
 	int spi_rw_array(const uint16_t *tx, uint16_t *rx, int n);
 	int read_diag_reg(uint8_t sub, uint16_t *out);
-	void refresh_diag_cache();
+	int refresh_diag_cache(int maxRegs);
 
 	int update_output();
 	int update_direct_output(size_t pin, int value);
@@ -222,7 +226,10 @@ struct L9779 : public GpioChip {
 	int chip_init();
 	int vrs_configure();
 	int vrs_ramp_to_step(int step);
-	int wd_feed();
+	/* ISR-safe polled SPI (executor context, no bus mutex) */
+	int spi_frame_isr(uint16_t tx, uint16_t *rx_ptr);
+	int wd_feed_isr();
+	void wdFeedFromExecutor();
 	void debug() override;
 
 	brain_pin_diag_e getOutputDiag(size_t pin);
@@ -262,7 +269,15 @@ struct L9779 : public GpioChip {
 	uint8_t						wd_last_ec;		/* error counter as reported by the chip */
 	bool						wd_int;			/* WDA_INT flag (EC > 4) */
 	int							wd_delay_ms;	/* response delay, aimed at window center */
-	sysinterval_t				wd_ts;			/* when to send the next response */
+	/* The WDA feed runs on the TIM5 executor (ISR context): the answer must
+	 * land inside the chip's ~12.6 ms window, and a thread wakeup can be
+	 * delayed past that by trigger-decode ISR load at cranking (the observed
+	 * wd_timing_miss/EC>4 kills). The executor (priority 3) preempts the
+	 * trigger handoff, so the feed stays on time whenever the CPU executes
+	 * at all. The callback self-reschedules via wd_sched; the driver thread
+	 * only kicks the first feed after chip_init. */
+	scheduling_s				wd_sched;
+	bool						wd_running;
 	int							wd_ok_cnt;		/* cycles answered correctly */
 	int							wd_fail_cnt;	/* cycles missed (SPI-level failures) */
 	int							wd_timing_miss_cnt;	/* responses outside the window (REQUHI flags) - the EC climbs on these too */
@@ -276,6 +291,12 @@ struct L9779 : public GpioChip {
 	uint16_t					dia_cache[8];
 	bool						dia_valid[8];
 	sysinterval_t				diag_ts;	/* when to refresh the cache next */
+	/* The refresh is chunked (a few registers per thread pass): each pass
+	 * runs under a critical section so the executor's WDA exchange can not
+	 * preempt mid-batch. diag_next_reg is the cursor, diag_pending the
+	 * registers left in the current 100 ms refresh cycle. */
+	int							diag_next_reg;
+	int							diag_pending;
 	/* DIA_REG10 byte: OUT_DIS + power-event flags (CRK_RST, V3V3_UV, OV_RST,
 	 * VDD5_OV, TNL_RST, F1/F2). Cached together with REG1..8 - the flags are
 	 * cleared by the read, so cross-driver consumers (the TLE9201 warning)
@@ -639,64 +660,76 @@ int L9779::read_diag_reg(uint8_t sub, uint16_t *out)
 	return -1;
 }
 
-/* Refresh the cached power-stage diagnosis (DIA_REG1..8). Must only be
- * called from the driver thread, which owns the SPI exchanges: the reads
- * are pipelined through the same rd_pending/rx_subaddr state as the WDA
- * traffic. A failed read leaves the previous cache value in place. */
-void L9779::refresh_diag_cache()
+/* Refresh up to maxRegs registers of the cached power-stage diagnosis
+ * (DIA_REG1..8 + REG9 + REG10), advancing the diag_next_reg cursor.
+ * Returns how many registers were processed. Must only be called from the
+ * driver thread (inside a critical section - the executor's WDA exchange
+ * must not preempt mid-batch): the reads are pipelined through the same
+ * rd_pending/rx_subaddr state as the WDA traffic. A failed read leaves
+ * the previous cache value in place. */
+int L9779::refresh_diag_cache(int maxRegs)
 {
-	for (int i = 0; i < 8; i++) {
-		uint16_t val;
-		if (read_diag_reg(L9779_DIA_REG1_SUB + i, &val) == 0) {
-			dia_cache[i] = val;
-			dia_valid[i] = true;
-		}
-	}
-
-	/* DIA_REG10: OUT_DIS + power-stage fault/reset flags (datasheet 6.14).
-	 * Reading it CLEARS the fault flags, so print the raw byte right here -
-	 * this is the only place that sees the flags before they vanish. */
-	uint16_t dia10 = 0;
-	if (read_diag_reg(L9779_DIA_REG10_SUB, &dia10) == 0) {
-		uint8_t d10 = MSG_GET_DATA(dia10);
-		dia10_cache = d10;
-		dia10_valid = true;
-		bool out_dis = (d10 >> 1) & 1;
-		/* any bit except OUT_DIS means a fault is (or was) reported */
-		bool fault_flags = (d10 & ~0x02u) != 0;
-
-		if (out_dis && !out_dis_latched) {
-			efiPrintf(DRIVER_NAME " OUT_DIS set! DIA10=0x%02x (F1=%d F2=%d OV_RST=%d VDD5_OV=%d V3V3_UV=%d TNL_RST=%d CRK_RST=%d)",
-				d10, (d10 >> 6) & 1, (d10 >> 4) & 1, d10 & 1,
-				(d10 >> 3) & 1, (d10 >> 2) & 1, (d10 >> 7) & 1, (d10 >> 5) & 1);
-		} else if (!out_dis && out_dis_latched) {
-			efiPrintf(DRIVER_NAME " OUT_DIS cleared (DIA10=0x%02x)", d10);
-		}
-
-		/* Self-heal a stale latch: the chip only clears OUT_DIS on START, so
-		 * a transient event (e.g. a watchdog EC excursion) would keep the
-		 * injector/ignition stages dead until a power cycle. With no fault
-		 * flags and a healthy watchdog, re-issue START once per latch. */
-		if (out_dis && !fault_flags && !wd_int && !out_dis_clear_tried) {
-			if (spi_rw(CMD_START_REACT(BIT(1)), NULL) == 0) {
-				efiPrintf(DRIVER_NAME " OUT_DIS stale - re-issued START");
+	int done = 0;
+	for (; done < maxRegs && diag_next_reg < 10; done++, diag_next_reg++) {
+		if (diag_next_reg < 8) {
+			uint16_t val;
+			if (read_diag_reg(L9779_DIA_REG1_SUB + diag_next_reg, &val) == 0) {
+				dia_cache[diag_next_reg] = val;
+				dia_valid[diag_next_reg] = true;
 			}
-			out_dis_clear_tried = true;
+		} else if (diag_next_reg == 8) {
+			/* KEY_ON input level (DIA_REG9 bit 7, KEY_ON_STATUS). This is the
+			 * ignition switch line on boards that route IGN_KEY to the L9779
+			 * KEY_ON pin (e.g. m74_9); isIgnVoltage() reads it via readPad(). */
+			uint16_t key;
+			if (read_diag_reg(L9779_DIA_REG9_SUB, &key) == 0) {
+				key_on_status = !!(MSG_GET_DATA(key) & 0x80);
+				key_on_valid = true;
+			}
+		} else {
+			/* DIA_REG10: OUT_DIS + power-stage fault/reset flags (datasheet
+			 * 6.14). Reading it CLEARS the fault flags, so print the raw byte
+			 * right here - this is the only place that sees the flags before
+			 * they vanish. */
+			uint16_t dia10 = 0;
+			if (read_diag_reg(L9779_DIA_REG10_SUB, &dia10) == 0) {
+				uint8_t d10 = MSG_GET_DATA(dia10);
+				dia10_cache = d10;
+				dia10_valid = true;
+				bool out_dis = (d10 >> 1) & 1;
+				/* any bit except OUT_DIS means a fault is (or was) reported */
+				bool fault_flags = (d10 & ~0x02u) != 0;
+
+				if (out_dis && !out_dis_latched) {
+					efiPrintf(DRIVER_NAME " OUT_DIS set! DIA10=0x%02x (F1=%d F2=%d OV_RST=%d VDD5_OV=%d V3V3_UV=%d TNL_RST=%d CRK_RST=%d)",
+						d10, (d10 >> 6) & 1, (d10 >> 4) & 1, d10 & 1,
+						(d10 >> 3) & 1, (d10 >> 2) & 1, (d10 >> 7) & 1, (d10 >> 5) & 1);
+				} else if (!out_dis && out_dis_latched) {
+					efiPrintf(DRIVER_NAME " OUT_DIS cleared (DIA10=0x%02x)", d10);
+				}
+
+				/* Self-heal a stale latch: the chip only clears OUT_DIS on START, so
+				 * a transient event (e.g. a watchdog EC excursion) would keep the
+				 * injector/ignition stages dead until a power cycle. With no fault
+				 * flags and a healthy watchdog, re-issue START once per latch. */
+				if (out_dis && !fault_flags && !wd_int && !out_dis_clear_tried) {
+					if (spi_rw(CMD_START_REACT(BIT(1)), NULL) == 0) {
+						efiPrintf(DRIVER_NAME " OUT_DIS stale - re-issued START");
+					}
+					out_dis_clear_tried = true;
+				}
+				if (!out_dis)
+					out_dis_clear_tried = false;
+
+				out_dis_latched = out_dis;
+			}
 		}
-		if (!out_dis)
-			out_dis_clear_tried = false;
-
-		out_dis_latched = out_dis;
 	}
 
-	/* KEY_ON input level (DIA_REG9 bit 7, KEY_ON_STATUS). This is the
-	 * ignition switch line on boards that route IGN_KEY to the L9779
-	 * KEY_ON pin (e.g. m74_9); isIgnVoltage() reads it via readPad(). */
-	uint16_t key;
-	if (read_diag_reg(L9779_DIA_REG9_SUB, &key) == 0) {
-		key_on_status = !!(MSG_GET_DATA(key) & 0x80);
-		key_on_valid = true;
-	}
+	if (diag_next_reg >= 10)
+		diag_next_reg = 0;
+
+	return done;
 }
 
 /* use datasheet numbering, starting from 1, skip 4 ignition channels.
@@ -828,6 +861,12 @@ int L9779::chip_reset() {
 /* Driver thread.															*/
 /*==========================================================================*/
 
+/* Executor trampoline: the WDA feed runs in the TIM5 ISR, see the
+ * wd_running/wd_sched comment in the struct. */
+static void l9779WdaFeedExec(L9779 *chip) {
+	chip->wdFeedFromExecutor();
+}
+
 static THD_FUNCTION(l9779_driver_thread, p) {
 	L9779 *chip = reinterpret_cast<L9779*>(p);
 	sysinterval_t poll_interval = 0;
@@ -854,27 +893,32 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 		if (chip->need_init) {
 			/* clear first, as flag can be raised again during init */
 			chip->need_init = false;
-			/* re-init chip! */
+			/* re-init chip! The batch runs under a critical section: the
+			 * executor's WDA exchange must not preempt mid-batch. */
+			chibios_rt::CriticalSectionLocker csl;
 			chip->chip_init();
 			/* sync pins state */
 			chip->update_output();
+		}
+
+		/* Kick the executor-side WDA feed once after the chip is up. The
+		 * callback self-reschedules from then on. */
+		if (!chip->wd_running) {
+			chip->wd_running = true;
+			engine->scheduler.schedule("l9779wda", &chip->wd_sched,
+				getTimeNowNt() + MS2NT(5),
+				action_s::make<l9779WdaFeedExec, L9779*>(chip));
 		}
 
 		/* send the output registers only when the pin state changed: with the
 		 * watchdog armed the thread wakes up every millisecond, re-writing
 		 * all four CONTR registers on every wakeup would saturate the SPI bus */
 		if (chip->o_dirty) {
+			chibios_rt::CriticalSectionLocker csl;
 			ret = chip->update_output();
 			if (ret) {
 				/* o_dirty stays set - retry on the next loop */
 			}
-		}
-
-		/* Feed the VDA 2.0 watchdog: without correct answers the chip
-		 * keeps OUT1..4 and IGN1..4 disabled (EC > 4 after reset) */
-		if (chip->wd_ts <= now) {
-			chip->wd_feed();
-			now = chVTGetSystemTimeX();
 		}
 
 		/* Stock-style VRS hysteresis ramp: the chip's peak detector is not
@@ -892,6 +936,7 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 		if (!ignitionOff && chip->vrs_step < 3 &&
 				Sensor::getOrZero(SensorType::Rpm) >= VRS_RAMP_RPM[chip->vrs_step]) {
 			chip->vrs_step++;
+			chibios_rt::CriticalSectionLocker csl;
 			chip->vrs_ramp_to_step(chip->vrs_step);
 		}
 
@@ -915,32 +960,82 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 		bool stoppedLongEnough = engineStopped &&
 			(now - chip->vrs_stop_ts) >= TIME_MS2I(500);
 		if (chip->vrs_step > 0 && (stoppedLongEnough || ignitionOff)) {
+			chibios_rt::CriticalSectionLocker csl;
 			chip->vrs_configure();
 			chip->vrs_step = 0;
 		}
 
 		/* Refresh the power-stage diagnosis cache. Reading a DIA register
 		 * clears its fault bits on the chip, so this runs at a low rate;
-		 * getOutputDiag() reads the cache from other threads. */
+		 * getOutputDiag() reads the cache from other threads. The refresh
+		 * is CHUNKED (DIAG_REFRESH_REGS per pass): each pass runs under a
+		 * critical section, and the executor must not be blocked for the
+		 * whole ~20-frame batch. */
 		if (chip->diag_ts <= now) {
-			chip->refresh_diag_cache();
+			chip->diag_pending = 8 + 2;	/* DIA_REG1..8 + REG9 + REG10 */
 			chip->diag_ts = chTimeAddX(chVTGetSystemTimeX(), TIME_MS2I(DIAG_REFRESH_MS));
 		}
-
-		/* wake up in time for the next watchdog response */
-		sysinterval_t wd_delay = chTimeDiffX(now, chip->wd_ts);
-		if ((int32_t)wd_delay < (int32_t)TIME_MS2I(DIAG_PERIOD_MS)) {
-			if ((int32_t)wd_delay <= 0)
-				poll_interval = TIME_MS2I(1);
-			else
-				poll_interval = wd_delay;
+		if (chip->diag_pending > 0) {
+			chibios_rt::CriticalSectionLocker csl;
+			chip->diag_pending -= chip->refresh_diag_cache(DIAG_REFRESH_REGS);
+			if (chip->diag_pending < 0)
+				chip->diag_pending = 0;
 		}
 	}
 }
 
 RUSEFI_STACK_ROOT_EXPLICIT(l9779_driver_thread, 256);
 
-/* Feed VDA 2.0 level 3 query-answer watchdog (datasheet 6.15).
+/* ISR-safe polled single-frame exchange: raw LLD calls only - no bus
+ * mutex, no blocking. Callable from the TIM5 executor ISR (which preempts
+ * all threads) and from the driver thread inside a critical section.
+ * Mirrors spi_rw() minus the acquire/start/release wrapper. */
+int L9779::spi_frame_isr(uint16_t tx, uint16_t *rx_ptr)
+{
+	SPIDriver *spi = cfg->spi_bus;
+	uint16_t rx;
+
+	/* set parity */
+	tx |= !spi_parity_odd(tx);
+
+	/* Slave Select assertion (I-class: ISR-safe in every CS mode). */
+	spiSelectI(spi);
+	/* meet tlead: CS low to first SCK edge */
+	l9779_delay_us(L9779_TLEAD_DELAY_US);
+	/* data transfer */
+	uint32_t cyc0 = DWT->CYCCNT;
+	rx = spi_lld_polled_exchange(spi, tx);
+	recent_frame_cycles = DWT->CYCCNT - cyc0;
+	/* Slave Select de-assertion. */
+	spiUnselectI(spi);
+	/* meet tcsn: CS high between frames */
+	l9779_delay_us(L9779_TCSN_DELAY_US);
+
+	/* statistics and debug */
+	recentTx = tx;
+	recentRx = rx;
+	this->spi_cnt++;
+
+	if (rx_ptr)
+		*rx_ptr = rx;
+
+	/* the reply to THIS request arrives in one of the following frames,
+	 * remember the request; then validate the reply received in this
+	 * frame, which answers a previously issued request */
+	if (MSG_GET_ADDR(tx) == MSG_READ_ADDR)
+		spi_queue_read(MSG_GET_SUBADDR(tx));
+
+	int ret = spi_validate(rx);
+	dbg_add_frame(recentTx, rx, rx_subaddr, ret);
+
+	return ret;
+}
+
+/* ISR-context VDA 2.0 level 3 query-answer watchdog feed (datasheet 6.15).
+ * Identical protocol to the old thread-side wd_feed(), but polled-LLD SPI
+ * only, so it runs on the TIM5 executor (priority 3, above the trigger
+ * handoff) where a late scheduler wakeup can no longer miss the answer
+ * window.
  *
  * The chip generates a new 4-bit question every monitoring cycle
  * (response time + fixed window, ~112 ms with default RESPTIME). A wrong
@@ -955,7 +1050,7 @@ RUSEFI_STACK_ROOT_EXPLICIT(l9779_driver_thread, 256);
  * are requested first and their replies are collected while the four
  * answer bytes are being sent. The filler REQUHI reads flush the pipeline
  * without side effects and work with a one or two frame reply delay. */
-int L9779::wd_feed()
+int L9779::wd_feed_isr()
 {
 	int ret = 0;
 	uint16_t rx;
@@ -970,8 +1065,13 @@ int L9779::wd_feed()
 		L9779_WD_REQUHI,	/* filler */
 	};
 
+	/* No spi_lld_start here: the bus configuration (CR1/CR2) persists from
+	 * the driver thread's spiStart() - the bus is dedicated to this chip,
+	 * the config never changes, and the first feed is only kicked after
+	 * the thread's chip_init(). */
+
 	for (size_t i = 0; i < efi::size(req_tx); i++) {
-		ret = spi_rw(req_tx[i], &rx);
+		ret = spi_frame_isr(req_tx[i], &rx);
 		if (ret < 0)
 			break;
 
@@ -991,7 +1091,6 @@ int L9779::wd_feed()
 	if (ret < 0) {
 		/* keep the current response delay but retry sooner than a full cycle */
 		wd_fail_cnt++;
-		wd_ts = chTimeAddX(chVTGetSystemTimeX(), TIME_MS2I(20));
 		return -1;
 	}
 
@@ -1021,22 +1120,30 @@ int L9779::wd_feed()
 
 	/* write the expected 32-bit response: RESP_BYTE3..0 via WD_ANSW */
 	const uint8_t *resp = wd_resp_table[wd_last_req];
-	uint16_t tx[4];
 	for (int i = 0; i < 4; i++) {
-		tx[i] = L9779_WD_ANSW(resp[i]);
+		ret = spi_frame_isr(L9779_WD_ANSW(resp[i]), NULL);
+		if (ret < 0)
+			break;
 	}
-
-	ret = spi_rw_array(tx, NULL, 4);
 	if (ret == 0)
 		wd_ok_cnt++;
 	else
 		wd_fail_cnt++;
 
-	/* the monitoring cycle restarts at the end of the RESP_BYTE0 write;
-	 * aim for the middle of the response window */
-	wd_ts = chTimeAddX(chVTGetSystemTimeX(), TIME_MS2I(wd_delay_ms));
-
 	return ret;
+}
+
+/* Executor callback (TIM5 ISR): run the ISR-safe feed, then re-arm the
+ * next one. On success the monitoring cycle restarts at the end of the
+ * RESP_BYTE0 write - aim for the middle of the response window. */
+void L9779::wdFeedFromExecutor()
+{
+	int ret = wd_feed_isr();
+
+	efitick_t nextNt = getTimeNowNt() + MS2NT(ret < 0 ? 20 : wd_delay_ms);
+
+	engine->scheduler.schedule("l9779wda", &wd_sched, nextNt,
+		action_s::make<l9779WdaFeedExec, L9779*>(this));
 }
 
 /*==========================================================================*/
@@ -1417,10 +1524,11 @@ int L9779::init()
 	}
 
 	/* WDA watchdog: with the default RESPTIME (0x3f) the response time is
-	 * ~99 ms and the fixed answer window is ~12.6 ms. Start feeding as
-	 * soon as the thread starts; delay will be adapted from REQUHI flags. */
+	 * ~99 ms and the fixed answer window is ~12.6 ms. The feed is kicked
+	 * by the driver thread after chip_init and then runs on the TIM5
+	 * executor; delay will be adapted from REQUHI flags. */
 	wd_delay_ms = 105;
-	wd_ts = 0;
+	wd_running = false;
 
 	/* power-stage diagnosis cache: nothing valid until the driver thread
 	 * performs the first refresh (diag_ts = 0 -> immediate) */
@@ -1428,6 +1536,8 @@ int L9779::init()
 		dia_valid[i] = false;
 	key_on_valid = false;
 	diag_ts = 0;
+	diag_next_reg = 0;
+	diag_pending = 0;
 	out_dis_latched = false;
 	out_dis_clear_tried = false;
 
