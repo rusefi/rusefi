@@ -6955,3 +6955,39 @@ decoupling are the prime suspects for the 5V overvoltage transient.
 
 Validation: compile_m74_9.sh -> BUILD SUCCESSFUL; bundle rusefi_bundle_m74_9.zip
 built (contains the heal).
+
+## 2026-08-24 - m74_9: the VRS ramp was mis-writing the power-management registers (WDA time-base flip during cranking)
+
+Answering "is the L9779 regulator configurable": the 5V/3.3V setpoints and
+OV/UV thresholds are NOT (fixed pre-trimmed references). But the power-management
+register CONFIG_REG6 IS - and the driver has been mis-writing it for weeks.
+
+The "stock VRS ramp" copied from the stock firmware's config script writes THREE
+registers per step: REG4 (0x04), REG5 (0x05), REG6 (0x06). Per the datasheet
+register map only REG5 is VRS (VRS_HYST/VRS_MODE/VRS_DIAG). REG4 is power
+management (PWL_TIMEOUT_CONF, ISO_SRC, LOCK) and REG6 is power management + the
+WDA time base (PWL_EN_N, PSOFF, VDD5_UV RST/WDA masks, and CONFIG6 bit1 =
+f_clk 64/39 kHz - cross-referenced in datasheet 6.15: "f_clk depends on CONFIG6
+bit1 value").
+
+The stock's REG6 steps are 0x07 -> 0x05 -> 0x05 -> 0x06. The 0x05 values (ramp
+steps 1..2, active at 150..600 rpm) have bit1=0 -> the WDA time base flips to
+39 kHz exactly during cranking. With RESPTIME=10: response time (1+101*10)/39kHz
+= 25.9 ms, window [25.9, 38.5] ms, while the executor feed is clamped to 27 ms -
+it drifts against the 38.5 ms cycle and misses ~2/3 of cycles -> EC climbs ->
+WDA kill pulses during the catch. This matches the miss=5..8 counters right at
+the catch in the 16:02/16:09 logs and is very likely the cranking blade-drop
+mechanism (Mode B at cranking), independent of the thread-latency misses of the
+old thread-based feed.
+
+Fix:
+- vrs_ramp_to_step() now writes REG5 ONLY; the REG4/REG6 writes are gone.
+- CONFIG_REG6 = 0x06 (L9779_CONFIG6_PWR, the stock's steady-state value: power
+  latch enabled, VDD5_UV->WDA masked, 64 kHz time base) is applied ONCE in
+  chip_init() BEFORE the RESPTIME anchor, and re-applied in
+  chip_heal_out_dis(true) after a chip reset (the reset reverts it: power latch
+  off, VDD5_UV->WDA UNMASKED - unmasked, a VDD5 undervoltage pulls WDA low and
+  kills the blade on every cranking rail dip).
+- The WDA time base now never flips mid-run.
+
+Validation: compile_m74_9.sh BUILD SUCCESSFUL, bundle rebuilt.

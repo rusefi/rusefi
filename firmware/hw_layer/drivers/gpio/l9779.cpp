@@ -94,6 +94,24 @@
  * clamp. */
 #define L9779_WD_RESPTIME_REG		(0x11)
 
+/* CONFIG_REG6 (power management + WDA time base, datasheet 6.15) - the
+ * value applied ONCE at init and re-applied after a chip reset. Bit map:
+ *   [5] PWL_EN_N = 0: power latch ENABLED (the stock's choice - keeps VCC
+ *       held across quick key cycles on m74_9)
+ *   [4] PSOFF = 0
+ *   [3] VDD5_UV RST mask = 0 (default): a long VDD5 undervoltage generates
+ *       RST (CRK_RST) - safety, keep it
+ *   [2] VDD5_UV WDA mask = 1: a VDD5 undervoltage does NOT pull WDA low -
+ *       avoids blade kills on cranking rail dips (the stock's choice)
+ *   [1] WDA time base = 1 (64 kHz) - REQUIRED: RESPTIME=10 and the 22 ms
+ *       feed are tuned for the 15.8 ms response time. At 39 kHz the window
+ *       moves to [25.9, 38.5] ms and the clamped 27 ms feed misses.
+ *   [0] PWL/SEO timeout priority = 0 (default)
+ * 0x06 is exactly the stock's steady-state value (the stock steps this
+ * register 0x07 -> 0x05 -> 0x05 -> 0x06 during its config script - see the
+ * vrs_ramp comment - but for rusEFI the time base must never flip). */
+#define L9779_CONFIG6_PWR			(0x06)
+
 /* DIA_REG10 (datasheet 6.14) bits, verified against the register layout:
  * [7] TNL_RST, [6] F1, [5] CRK_RST, [4] F2, [3] VDD5_OV, [2] V3V3_UV,
  * [1] OUT_DIS, [0] OV_RST. F1/F2 are output-fault flags (0x50 is the
@@ -410,10 +428,10 @@ struct L9779 : public GpioChip {
 	 * latch event is logged WITH its fault flags (reading DIA_REG10 clears
 	 * them) and healed promptly, rate-limited by out_dis_heal_ts: a chip
 	 * reset (TNL_RST/OV_RST/CRK_RST) wiped the whole config, so START +
-	 * RESPTIME + the VRS ramp at the CURRENT step + the output registers are
-	 * re-applied (the datasheet's recovery recipe); a plain driver cut
-	 * (VDD5_OV/V3V3_UV/output faults, no reset) keeps its config and only
-	 * needs START + CONTR. */
+	 * CONFIG_REG6 + RESPTIME + the VRS ramp at the CURRENT step + the output
+	 * registers are re-applied (the datasheet's recovery recipe); a plain
+	 * driver cut (VDD5_OV/V3V3_UV/output faults, no reset) keeps its config
+	 * and only needs START + CONTR. */
 	bool						out_dis_latched;
 	/* Last OUT_DIS heal attempt - the heal is retried while the latch
 	 * persists (a first attempt can land while the chip is still resetting),
@@ -855,7 +873,7 @@ int L9779::refresh_diag_cache(int maxRegs)
 						bool configWiped = (d10 & L9779_DIA10_RESET_EVENTS) != 0;
 						if (chip_heal_out_dis(configWiped) == 0) {
 							efiPrintf(DRIVER_NAME " OUT_DIS heal: %s (DIA10=0x%02x)",
-								configWiped ? "config re-applied (START+RESPTIME+VRS+CONTR)"
+								configWiped ? "config re-applied (START+CONFIG6+RESPTIME+VRS+CONTR)"
 								            : "re-issued START+CONTR", d10);
 						}
 					}
@@ -1622,22 +1640,32 @@ err_gpios:
 /*
  * Stock VRS hysteresis ramp, extracted from the Lada M74 stock firmware
  * (Read_FULLFLASH_I865LB52_w2404b1____(240626_103727).bin, the L9779
- * "IC_EMS" module, config script at 0x4EF8C):
- *   REG1: 0x02 (full adaptive only)
+ * "IC_EMS" module, config script at 0x4EF8C). The stock steps THREE
+ * registers per step:
  *   REG5: 0x0C -> 0x0D -> 0x0E -> 0x0F  (VRS_HYST 100..111)
  *   REG4: 0x0B -> 0x0A -> 0x09 -> 0x08
- *   REG6: 0x07 -> 0x05 -> 0x06
+ *   REG6: 0x07 -> 0x05 -> 0x05 -> 0x06
  * The stock steps the hysteresis floor up as the cranking signal amplitude
  * grows and ends at VRS_HYST 111, handing the conditioner over to the
  * fully-adaptive loop once the amplitude is established.
+ *
+ * IMPORTANT (found 2026-08-24): only REG5 (0x05) is a VRS register. REG4
+ * (0x04) is power management (PWL_TIMEOUT_CONF/ISO_SRC/LOCK) and REG6
+ * (0x06) is power management + the WDA time base (PWL_EN_N, PSOFF,
+ * VDD5_UV RST/WDA masks, CONFIG6 bit1 = f_clk 64/39 kHz). The stock
+ * deliberately steps those too, but for rusEFI the REG6 values 0x05 at
+ * steps 1..2 FLIP THE WDA TIME BASE to 39 kHz exactly during cranking
+ * (150..600 rpm): the answer window moves from [15.8, 28.4] ms to
+ * [25.9, 38.5] ms and the 27 ms-clamped feed misses -> EC climbs -> WDA
+ * kill pulses during the catch. The ramp below therefore writes REG5 ONLY;
+ * CONFIG_REG6 is applied once with the 64 kHz time base at init
+ * (L9779_CONFIG6_PWR) and never touched again.
  *
  * Step 0 is the ramp START (low floor - low cranking signal amplitude),
  * written by vrs_configure() at init and on every start re-arm; steps 1..3
  * are advanced by rpm thresholds from the driver thread.
  */
-static const uint8_t vrs_ramp_cfg4[] = { 0x0b, 0x0a, 0x09, 0x08 };
 static const uint8_t vrs_ramp_cfg5[] = { 0x0c, 0x0d, 0x0e, 0x0f };
-static const uint8_t vrs_ramp_cfg6[] = { 0x07, 0x05, 0x05, 0x06 };
 
 int L9779::vrs_configure(void)
 {
@@ -1651,28 +1679,25 @@ int L9779::vrs_configure(void)
 	if (ret)
 		return ret;
 
-	efiPrintf(DRIVER_NAME " VRS: stock ramp start (REG1=0x%02x REG4=0x%02x REG5=0x%02x REG6=0x%02x)", cfg1, vrs_ramp_cfg4[0], vrs_ramp_cfg5[0], vrs_ramp_cfg6[0]);
+	efiPrintf(DRIVER_NAME " VRS: stock ramp start (REG1=0x%02x REG5=0x%02x)", cfg1, vrs_ramp_cfg5[0]);
 	return 0;
 }
 
 int L9779::vrs_ramp_to_step(int step)
 {
 	/* 0 = ramp start, 3 = ramp end (maximum floor -> fully-adaptive
-	 * handover). Steps 1..3 mirror the stock config script. */
+	 * handover). Steps 1..3 mirror the stock config script. Only CONFIG_REG5
+	 * is written - the stock script's REG4/REG6 writes hit the power
+	 * management registers (see the comment above), and in particular the
+	 * REG6 time-base flip to 39 kHz would break the executor's WDA feed. */
 	if (step < 0 || step > 3)
 		return -1;
 
-	int ret = spi_rw(MSG_W(0x04, vrs_ramp_cfg4[step]), NULL);
-	if (ret)
-		return ret;
-	ret = spi_rw(MSG_W(0x05, vrs_ramp_cfg5[step]), NULL);
-	if (ret)
-		return ret;
-	ret = spi_rw(MSG_W(0x06, vrs_ramp_cfg6[step]), NULL);
+	int ret = spi_rw(MSG_W(0x05, vrs_ramp_cfg5[step]), NULL);
 	if (ret)
 		return ret;
 
-	efiPrintf(DRIVER_NAME " VRS: stock ramp step %d (REG4=0x%02x REG5=0x%02x REG6=0x%02x)", step, vrs_ramp_cfg4[step], vrs_ramp_cfg5[step], vrs_ramp_cfg6[step]);
+	efiPrintf(DRIVER_NAME " VRS: stock ramp step %d (REG5=0x%02x)", step, vrs_ramp_cfg5[step]);
 	return 0;
 }
 
@@ -1692,6 +1717,14 @@ int L9779::chip_init()
 	 * datasheet Table 57) clears OUT_DIS. With OUT_DIS = 1 all control
 	 * register writes are ignored and the power stages stay off. */
 	ret = spi_rw(CMD_START_REACT(BIT(1)), NULL);
+	if (ret)
+		return ret;
+
+	/* Power management + WDA time base (see L9779_CONFIG6_PWR). MUST be
+	 * written before the RESPTIME anchor below: the response time is scaled
+	 * by f_clk (64 kHz with bit1=1), and the RESPTIME write starts a fresh
+	 * sequencer run on whatever time base is active at that moment. */
+	ret = spi_rw(MSG_W(0x06, L9779_CONFIG6_PWR), NULL);
 	if (ret)
 		return ret;
 
@@ -1740,6 +1773,7 @@ int L9779::chip_init()
 /* OUT_DIS recovery (datasheet 6.14): OUT_DIS keeps the power stages dead
  * until START, and a chip reset (RST asserted by the smart-reset unit -
  * TNL_RST/OV_RST/CRK_RST) additionally wipes the configuration registers:
+ * CONFIG_REG6 back to defaults (power latch off, VDD5_UV WDA unmasked),
  * RESPTIME back to 0x3f (the executor feed then misses the ~112 ms default
  * window every cycle), the VRS conditioner back to limited-adaptive +
  * filter OFF (noise storms at speed), the CONTR1..4 output enables cleared.
@@ -1761,6 +1795,13 @@ int L9779::chip_heal_out_dis(bool configWiped)
 		return ret;
 
 	if (configWiped) {
+		/* A chip reset reverts CONFIG_REG6 (power latch off, VDD5_UV WDA
+		 * unmasked, time base default) - restore it BEFORE the RESPTIME write
+		 * so the new cycle is anchored on the 64 kHz time base. */
+		ret = spi_rw(MSG_W(0x06, L9779_CONFIG6_PWR), NULL);
+		if (ret)
+			return ret;
+
 		/* Restore the shortened response time (see the WDA_RESPTIME comment)
 		 * - a reset reverts it to the 0x3f default and the 22 ms feed would
 		 * miss the ~112 ms cycle forever. The write costs one EC increment
