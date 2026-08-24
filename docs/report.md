@@ -7053,3 +7053,35 @@ exist on the car). The steady per-rev tooth loss at ~2000 rpm between resets is
 what the REG4/REG6 restore targets.
 
 Validation: compile_m74_9.sh BUILD SUCCESSFUL, bundle rebuilt.
+
+## 2026-08-24 - m74_9: VRS switched to the datasheet config - full adaptive + auto filter, no ramp
+
+The restored stock-ramp build still lost exactly one tooth per revolution at
+~2000-3400 rpm (C9003 57/58 at 3129 rpm, C9007 tooth #114 +11.9, C9008 tooth
+#30 -11.3, coil overcharge) - so the stock ramp bytes themselves are the
+problem, not the REG4/REG6 traffic. Datasheet analysis (6.14):
+
+- the stock's ramp values run VRS_MODE=01 = auto hysteresis ON, auto-adaptive
+  time filter OFF at every step, and step VRS_HYST 100..111 (32/51/17/0 uA);
+  the datasheet says VRS_HYST only selects the hysteresis when auto-hyst is
+  OFF ("If the auto adaptive hysteresis is OFF..."), and 111 = "test purpose
+  only" - the ramp is largely a no-op that ends in a test value.
+- the datasheet's own design for a VR sensor is fully adaptive mode with BOTH
+  mechanisms ON: auto hysteresis (peak detector + 5-level quantizer) AND the
+  auto-adaptive time filter Tfilter = 1/32*Tn (4..200 us), which adapt to rpm
+  automatically - no software ramp needed. The chip's reset default REG5=0xd8
+  is exactly VRS_MODE 11 + 17 uA floor.
+
+New vrs_configure(): REG1=0x02 (full adaptive) + REG5=0xd8 (auto hyst ON +
+auto filter ON + 17 uA floor), applied once at chip_init and re-applied by
+chip_heal_out_dis(true) after a chip reset. The whole ramp machinery is gone:
+vrs_ramp_to_step, the rpm-threshold stepping and the stop/key re-arm in the
+driver thread, vrs_step/vrs_stop_ts. This also removes the REG6 3-vs-4-step
+ambiguity (REG6 is now written once as L9779_CONFIG6_PWR=0x06, time base
+pinned to 64 kHz).
+
+Also confirmed in this session: the OUT_DIS heal works on a real power event -
+the 19:49:03 DIA10=0x8F event was recovered in ~1 ms ("OUT_DIS heal: config
+re-applied ... OUT_DIS cleared") and the engine kept running.
+
+Validation: compile_m74_9.sh BUILD SUCCESSFUL, bundle rebuilt.
