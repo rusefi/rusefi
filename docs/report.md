@@ -6919,3 +6919,39 @@ Fix (firmware/hw_layer/drivers/gpio/l9779.cpp):
   wake_driver()/writePad() keep their lockers - those protect non-SPI state.
 
 Validation: compile_m74_9.sh -> BUILD SUCCESSFUL.
+
+## 2026-08-24 - m74_9: OUT_DIS heal after L9779 power event (Mode A root cause)
+
+The 18:04 bench log proved the blade-drop root cause is INSIDE the L9779 power
+tree: DIA10=0x8F = OV_RST + VDD5_OV + V3V3_UV + TNL_RST right after a throttle
+blip. The L9779WD-SPI is a System Basis Chip that CONTAINS the board regulators -
+5V precision regulator (external NMOS pass element driven via charge pump on pin
+CP, 400 mA), 3.3V regulator (from VDD5, 100 mA, this feeds the MCU) and 2x 5V
+tracking sensor supplies VTRK1/2. So "the L9779 side stops supplying" means the
+chip's own regulator monitors tripped: 5V overvoltage + 3.3V undervoltage + a
+smart-reset (TNL_RST) -> all config registers wiped, OUT_DIS=1, drivers off.
+
+Two consequences fixed in firmware (l9779.cpp):
+1. The old OUT_DIS self-heal was gated on !fault_flags && !wd_int and never
+   fired: F1/F2 (0x50) are set in the steady state, so ANY flag blocked it. The
+   chip stayed latched ~574 ms and the engine died before the EC=7 path
+   recovered it.
+2. A chip reset wipes the whole config (RESPTIME back to 0x3f, VRS back to
+   limited-adaptive + filter off, CONTR1..4 cleared) - re-issuing START alone
+   leaves the WDA feed missing the ~112 ms default window every cycle and the
+   VRS conditioner unfiltered at speed.
+
+New chip_heal_out_dis(): START + (on a reset event) RESPTIME + VRS at the
+CURRENT ramp step + CONTR restore, rate-limited to 200 ms, called from
+refresh_diag_cache() the moment OUT_DIS is seen (~100 ms worst case). DIA10
+reset-event mask = TNL_RST | CRK_RST | OV_RST; VDD5_OV/V3V3_UV/F1/F2 cuts keep
+their config and only need START + CONTR (the datasheet's recipe for a VDD5_OV
+driver cut). Datasheet facts verified: VDD5_OV flag "does not inhibit the
+drivers switch on"; OUT_DIS is cleared only by START/SW_RST/RST, not by reads.
+
+Hardware action (user side): scope VB, VDD5, the external NMOS gate (pin CP),
+V3V3 during a throttle blip. The charge-pump cap on CP and the VDD5/V3V3
+decoupling are the prime suspects for the 5V overvoltage transient.
+
+Validation: compile_m74_9.sh -> BUILD SUCCESSFUL; bundle rusefi_bundle_m74_9.zip
+built (contains the heal).
