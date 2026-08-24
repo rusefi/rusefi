@@ -51,9 +51,9 @@
  * one chip monitoring cycle (~112 ms): reading a DIA register clears its
  * fault bits on the chip, so a faster poll would mask latched faults. */
 #define DIAG_REFRESH_MS				(100)
-/* Registers refreshed per driver-thread pass. The refresh runs under a
- * critical section (the executor's WDA exchange must not preempt
- * mid-batch), so the batch is split into short chunks. */
+/* Registers refreshed per driver-thread pass. The refresh is split into
+ * short chunks so the executor's WDA exchange is deferred for at most a
+ * few frames (see spi_busy). */
 #define DIAG_REFRESH_REGS			(3)
 
 /* L9779WD-SPI timing requirements (datasheet Table 53):
@@ -291,8 +291,8 @@ struct L9779 : public GpioChip {
 	bool						dia_valid[8];
 	sysinterval_t				diag_ts;	/* when to refresh the cache next */
 	/* The refresh is chunked (a few registers per thread pass): each pass
-	 * runs under a critical section so the executor's WDA exchange can not
-	 * preempt mid-batch. diag_next_reg is the cursor, diag_pending the
+	 * sets spi_busy around its frames and the executor's WDA exchange defers
+	 * while it runs. diag_next_reg is the cursor, diag_pending the
 	 * registers left in the current 100 ms refresh cycle. */
 	int							diag_next_reg;
 	int							diag_pending;
@@ -308,6 +308,20 @@ struct L9779 : public GpioChip {
 	 * DIA_REG1..8 faults, reading it clears nothing on the chip. */
 	bool						key_on_status;
 	bool						key_on_valid;
+
+	/* Executor/thread SPI serialization. The WDA feed runs in the TIM5 ISR at
+	 * kernel priority - chSysLock/CriticalSectionLocker do NOT mask kernel
+	 * IRQs, so a critical section does not stop the executor from preempting
+	 * the driver thread mid-batch. spi_busy is set for the whole thread-side
+	 * batch (spi_rw/spi_rw_array); the executor feed checks it and defers.
+	 * This matters because spiStart() briefly clears SPE (spi_lld_start
+	 * re-programs CR1), and spi_lld_polled_exchange() busy-waits on RXNE -
+	 * with the peripheral disabled it spins forever inside the kernel ISR and
+	 * the board bricks right after boot (no fuel pump, no console). */
+	volatile bool				spi_busy;
+	/* CR1/CR2 persist from the first spiStart; re-running it on every batch
+	 * only re-opens the SPE=0 window, so spi_rw/spi_rw_array call it once. */
+	bool						spi_configured;
 
 	/* OUT_DIS latch (DIA_REG10 bit 1): the chip disables OUT1..4/IGN1..4 and
 	 * only the START command clears it. Tracked by refresh_diag_cache() so a
@@ -546,10 +560,22 @@ int L9779::spi_rw(uint16_t tx, uint16_t *rx_ptr)
 	/* set parity */
 	tx |= !spi_parity_odd(tx);
 
+	/* Executor exclusion (see the spi_busy comment in the struct): the WDA
+	 * feed defers while any thread-side batch is in flight, so the executor
+	 * can never land in spiStart()'s SPE=0 window. */
+	spi_busy = true;
+
 	/* Acquire ownership of the bus. */
 	spiAcquireBus(spi);
-	/* Setup transfer parameters. */
-	spiStart(spi, &cfg->spi_config);
+	/* Setup transfer parameters - first call only: the config never changes
+	 * and the bus is dedicated to this chip. Re-running spiStart() on every
+	 * batch re-executes spi_lld_start(), which clears SPE before re-enabling
+	 * it - a window in which spi_lld_polled_exchange() (used by the executor
+	 * feed) spins on RXNE forever. */
+	if (!spi_configured) {
+		spiStart(spi, &cfg->spi_config);
+		spi_configured = true;
+	}
 	/* Slave Select assertion. */
 	spiSelect(spi);
 	/* meet tlead: CS low to first SCK edge */
@@ -564,6 +590,8 @@ int L9779::spi_rw(uint16_t tx, uint16_t *rx_ptr)
 	l9779_delay_us(L9779_TCSN_DELAY_US);
 	/* Ownership release. */
 	spiReleaseBus(spi);
+
+	spi_busy = false;
 
 	/* statistics and debug */
 	recentTx = tx;
@@ -596,10 +624,16 @@ int L9779::spi_rw_array(const uint16_t *tx, uint16_t *rx, int n)
 		return -2;
 	}
 
+	/* Executor exclusion, same as spi_rw(). */
+	spi_busy = true;
+
 	/* Acquire ownership of the bus. */
 	spiAcquireBus(spi);
-	/* Setup transfer parameters. */
-	spiStart(spi, &cfg->spi_config);
+	/* Setup transfer parameters - first call only, see spi_rw(). */
+	if (!spi_configured) {
+		spiStart(spi, &cfg->spi_config);
+		spi_configured = true;
+	}
 
 	for (int i = 0; i < n; i++) {
 		/* set parity, same as spi_rw(): frames with an even number of set
@@ -643,6 +677,8 @@ int L9779::spi_rw_array(const uint16_t *tx, uint16_t *rx, int n)
 	/* Ownership release. */
 	spiReleaseBus(spi);
 
+	spi_busy = false;
+
 	/* no errors for now */
 	return ret;
 }
@@ -667,10 +703,10 @@ int L9779::read_diag_reg(uint8_t sub, uint16_t *out)
 /* Refresh up to maxRegs registers of the cached power-stage diagnosis
  * (DIA_REG1..8 + REG9 + REG10), advancing the diag_next_reg cursor.
  * Returns how many registers were processed. Must only be called from the
- * driver thread (inside a critical section - the executor's WDA exchange
- * must not preempt mid-batch): the reads are pipelined through the same
- * rd_pending/rx_subaddr state as the WDA traffic. A failed read leaves
- * the previous cache value in place. */
+ * driver thread: the reads are pipelined through the same
+ * rd_pending/rx_subaddr state as the WDA traffic, and spi_busy (set by
+ * spi_rw) keeps the executor's WDA exchange out of the batch. A failed
+ * read leaves the previous cache value in place. */
 int L9779::refresh_diag_cache(int maxRegs)
 {
 	int done = 0;
@@ -897,9 +933,9 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 		if (chip->need_init) {
 			/* clear first, as flag can be raised again during init */
 			chip->need_init = false;
-			/* re-init chip! The batch runs under a critical section: the
-			 * executor's WDA exchange must not preempt mid-batch. */
-			chibios_rt::CriticalSectionLocker csl;
+			/* re-init chip! The executor's WDA exchange is kept out of the
+			 * batch by spi_busy (kernel IRQs are NOT masked by critical
+			 * sections), no CS locker is needed for that. */
 			chip->chip_init();
 			/* sync pins state */
 			chip->update_output();
@@ -918,7 +954,6 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 		 * watchdog armed the thread wakes up every millisecond, re-writing
 		 * all four CONTR registers on every wakeup would saturate the SPI bus */
 		if (chip->o_dirty) {
-			chibios_rt::CriticalSectionLocker csl;
 			ret = chip->update_output();
 			if (ret) {
 				/* o_dirty stays set - retry on the next loop */
@@ -940,7 +975,6 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 		if (!ignitionOff && chip->vrs_step < 3 &&
 				Sensor::getOrZero(SensorType::Rpm) >= VRS_RAMP_RPM[chip->vrs_step]) {
 			chip->vrs_step++;
-			chibios_rt::CriticalSectionLocker csl;
 			chip->vrs_ramp_to_step(chip->vrs_step);
 		}
 
@@ -964,7 +998,6 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 		bool stoppedLongEnough = engineStopped &&
 			(now - chip->vrs_stop_ts) >= TIME_MS2I(500);
 		if (chip->vrs_step > 0 && (stoppedLongEnough || ignitionOff)) {
-			chibios_rt::CriticalSectionLocker csl;
 			chip->vrs_configure();
 			chip->vrs_step = 0;
 		}
@@ -972,15 +1005,14 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 		/* Refresh the power-stage diagnosis cache. Reading a DIA register
 		 * clears its fault bits on the chip, so this runs at a low rate;
 		 * getOutputDiag() reads the cache from other threads. The refresh
-		 * is CHUNKED (DIAG_REFRESH_REGS per pass): each pass runs under a
-		 * critical section, and the executor must not be blocked for the
-		 * whole ~20-frame batch. */
+		 * is CHUNKED (DIAG_REFRESH_REGS per pass): each pass sets spi_busy
+		 * around its frames, and the executor's WDA exchange must not be
+		 * deferred for the whole ~20-frame batch. */
 		if (chip->diag_ts <= now) {
 			chip->diag_pending = 8 + 2;	/* DIA_REG1..8 + REG9 + REG10 */
 			chip->diag_ts = chTimeAddX(chVTGetSystemTimeX(), TIME_MS2I(DIAG_REFRESH_MS));
 		}
 		if (chip->diag_pending > 0) {
-			chibios_rt::CriticalSectionLocker csl;
 			chip->diag_pending -= chip->refresh_diag_cache(DIAG_REFRESH_REGS);
 			if (chip->diag_pending < 0)
 				chip->diag_pending = 0;
@@ -992,8 +1024,9 @@ RUSEFI_STACK_ROOT_EXPLICIT(l9779_driver_thread, 256);
 
 /* ISR-safe polled single-frame exchange: raw LLD calls only - no bus
  * mutex, no blocking. Callable from the TIM5 executor ISR (which preempts
- * all threads) and from the driver thread inside a critical section.
- * Mirrors spi_rw() minus the acquire/start/release wrapper. */
+ * all threads); the thread side calls it only inside spi_rw/spi_rw_array
+ * with spi_busy set. Mirrors spi_rw() minus the acquire/start/release
+ * wrapper. */
 int L9779::spi_frame_isr(uint16_t tx, uint16_t *rx_ptr)
 {
 	SPIDriver *spi = cfg->spi_bus;
@@ -1142,6 +1175,18 @@ int L9779::wd_feed_isr()
  * RESP_BYTE0 write - aim for the middle of the response window. */
 void L9779::wdFeedFromExecutor()
 {
+	/* Never run while the thread owns an SPI batch: spiStart() briefly clears
+	 * SPE, and spi_lld_polled_exchange() then spins on RXNE forever inside this
+	 * kernel-priority ISR (board bricked right after boot - no fuel pump, no
+	 * console). Defer a couple of ms - the answer window is ~12.6 ms wide, so
+	 * a 2 ms deferral can not miss it. */
+	if (spi_busy) {
+		engine->scheduler.schedule("l9779wda", &wd_sched,
+			getTimeNowNt() + MS2NT(2),
+			action_s::make<l9779WdaFeedExec, L9779*>(this));
+		return;
+	}
+
 	int ret = wd_feed_isr();
 
 	efitick_t nextNt = getTimeNowNt() + MS2NT(ret < 0 ? 20 : wd_delay_ms);
@@ -1533,6 +1578,8 @@ int L9779::init()
 	 * executor; delay will be adapted from REQUHI flags. */
 	wd_delay_ms = 105;
 	wd_running = false;
+	spi_busy = false;
+	spi_configured = false;
 
 	/* power-stage diagnosis cache: nothing valid until the driver thread
 	 * performs the first refresh (diag_ts = 0 -> immediate) */
