@@ -7312,3 +7312,32 @@ a known rpm, or a fit from the measured shift). Persisting k as a tune field
 the model is validated.
 
 Validation: unit tests 1164/1164 pass, compile_m74_9.sh BUILD SUCCESSFUL.
+
+## 2026-08-24 - m74_9: the VR model is the correction state (model as default)
+
+Architecture flip: the per-level shift TABLE is now the gap-anchor correction
+state (the model is the DEFAULT), and the per-sync gap measurement TRAINS it
+(alpha 0.1, in-band only). The decoder applies table[level] directly - no
+fast EMA, no fallback - and observes in-band measurements via the weak hook
+triggerObserveGapShift (strong override in m74_9_vr_model.cpp). A stretched/
+corrupted measurement never trains the table, and the model value keeps
+applying. Level switches apply instantly (the scalar EMA used to re-converge
+through every rpm sweep).
+
+Persistence: the table + k persist to MFS on engine stop
+(EFI_VR_MODEL_RECORD_ID = 7, magic/version/CRC, 'VRML'), loaded at boot -
+after the first drive the car starts already calibrated. The save goes
+through the debounced flash gate (custom_board_allowFlashNow), cooldown 15 s,
+requested from custom_board_periodicSlowCallback (m74_9VrModelPeriodic).
+
+| File | Change |
+| --- | --- |
+| firmware/config/boards/m74_9/m74_9_vr_model.h/.cpp | learned table (alpha 0.1), triggerObserveGapShift override, MFS record handlers, m74_9VrModelPeriodic, vrmodel prints the whole table |
+| firmware/controllers/trigger/trigger_decoder.h/.cpp | model applies directly; measurement only trains |
+| firmware/controllers/trigger/trigger_board_hooks.cpp | weak triggerObserveGapShift default |
+| firmware/hw_layer/board_overrides.h | custom_board_vrGapShiftPitch is the state, not a fallback |
+| firmware/controllers/storage.h/.cpp, storage_weaks.cpp | EFI_VR_MODEL_RECORD_ID + dispatch + weak handlers |
+| firmware/config/boards/m74_9/board_configuration.cpp | custom_board_periodicSlowCallback = m74_9VrModelPeriodic |
+| unit_tests/tests/trigger/test_60_2_cranking_transition.cpp | model-applies + in-band-training tests |
+
+Validation: unit tests 1163/1163 pass, compile_m74_9.sh BUILD SUCCESSFUL.

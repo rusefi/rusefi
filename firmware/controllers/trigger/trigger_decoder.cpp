@@ -868,33 +868,29 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 			// real first-tooth edge (measured on the car: gap0 2.36-2.5, shift
 			// constant in angle across rpm because the auto-H tracks amplitude).
 			// The decoder would anchor the phase at that early edge, advancing
-			// ALL scheduling by ~3.8 degrees. Correct the basis by the measured
-			// deficit: correctionDeg = (syncRatioAvg - measuredGap) * pitchDeg,
-			// EMA-smoothed and clamped to [0, 1.5] pitch - a STRETCHED gap
-			// (measured > nominal, e.g. first-combustion acceleration) must never
-			// yield a negative/runaway correction.
-			// When the measurement is out of band, fall back to the board's
-			// amplitude-model prediction (custom_board_vrGapShiftPitch, m74_9:
-			// Vp = k*rpm -> hysteresis level -> expected shift) instead of
-			// freezing the last value; negative = model off = freeze as before.
-			// Only validated syncs (clean count or accepted 1-2 deficit) update.
+			// ALL scheduling by ~3.8 degrees.
+			// The per-level VR amplitude MODEL is the correction state (the
+			// default, m74_9_vr_model.cpp): rpm -> hysteresis level -> learned
+			// shift per level. The in-band measurement TRAINS the model (weak
+			// hook triggerObserveGapShift); a stretched/corrupted measurement
+			// (out of [0, 1.5] pitch) never trains it and the model value keeps
+			// applying. Only validated syncs participate.
 			if (syncValidated && get_board_override_result(custom_board_syncGapAnchorCorrection, false)) {
 				if (toothDurations[1] > 0) {
 					float measuredGapRatio = 1.0f * toothDurations[0] / toothDurations[1];
-					float correctionPitch = triggerShape.syncRatioAvg - measuredGapRatio;
-					if (correctionPitch < 0 || correctionPitch > 1.5f) {
-						// invalid measurement (stretched gap / corrupted ratio): use
-						// the model estimate if the board provides one
-						correctionPitch = get_board_override_result(custom_board_vrGapShiftPitch, -1.0f);
+					float measuredPitch = triggerShape.syncRatioAvg - measuredGapRatio;
+
+					if (measuredPitch >= 0 && measuredPitch <= 1.5f) {
+						triggerObserveGapShift(measuredPitch);
 					}
-					if (correctionPitch >= 0 && correctionPitch <= 1.5f) {
+
+					// apply the model's current value (negative = board has no model)
+					float expectedPitch = get_board_override_result(custom_board_vrGapShiftPitch, -1.0f);
+					if (expectedPitch >= 0 && expectedPitch <= 1.5f) {
 						// one slot = 360 / totalTeeth degrees; totalTeeth = expectedEvents + skipped
 						// (58 + 2 = 60 for the 60-2 -> 6 deg per pitch)
 						float pitchDeg = 360.0f / (triggerShape.getExpectedEventCount(TriggerWheel::T_PRIMARY) + triggerShape.syncRatioAvg - 1);
-						float correctionDeg = correctionPitch * pitchDeg;
-						// EMA: follow slow drifts (rpm-dependent level state), reject single-rev noise
-						getTriggerCentral()->gapAnchorCorrectionDeg =
-							0.5f * getTriggerCentral()->gapAnchorCorrectionDeg + 0.5f * correctionDeg;
+						getTriggerCentral()->gapAnchorCorrectionDeg = expectedPitch * pitchDeg;
 					}
 				}
 			}

@@ -856,10 +856,10 @@ void setup_custom_board_overrides() {
 		float rpm = Sensor::getOrZero(SensorType::Rpm);
 		return rpm >= engineConfiguration->cranking.rpm && rpm < 7000;
 	};
-	// Model fallback for the gap-anchor correction: when the per-sync
-	// measurement is out of band (stretched/accelerating gap), use the VR
-	// amplitude-model prediction (Vp = k*rpm -> hysteresis level -> expected
-	// shift) instead of freezing. Negative = model off (k=0).
+	// Model fallback -> now the DEFAULT for the gap-anchor correction: the
+	// per-level shift table IS the correction state; the decoder trains it
+	// from the per-sync measurement (triggerObserveGapShift) and applies
+	// table[level] as the scheduling anchor correction.
 	custom_board_vrGapShiftPitch = []() {
 		return vrExpectedShiftPitchForRpm(Sensor::getOrZero(SensorType::Rpm));
 	};
@@ -940,6 +940,9 @@ void setup_custom_board_overrides() {
 	// coil-recharge jerks at constant rpm). The synctrace/rawtrg/toothdump
 	// diagnostics are fed by separate trigger hooks and keep working.
 	// custom_board_periodicSlowCallback = m74_9ToothPeriodic;
+	// VR amplitude model: boot read + save-on-stop through the debounced
+	// flash gate (see m74_9_vr_model.cpp).
+	custom_board_periodicSlowCallback = m74_9VrModelPeriodic;
 	#if EFI_PROD_CODE && HAL_USE_ADC
 	addConsoleAction("fastadcdiag", m74_9FastAdcDiag);
 	addConsoleAction("knockpin", m74_9KnockPinScan);

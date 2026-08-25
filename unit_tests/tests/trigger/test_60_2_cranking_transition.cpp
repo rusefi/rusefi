@@ -817,107 +817,95 @@ TEST(trigger, crankingTransition60_2ThreeMissingEventsStillDesyncWhenRunning) {
 	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized()) << "re-synchronized";
 }
 
+// Strong override of the weak triggerObserveGapShift (trigger_board_hooks.cpp)
+// for the anchor-correction tests: captures the in-band measurements the
+// decoder feeds to the board's VR amplitude model.
+static float observedShifts[16];
+static size_t observedShiftCount;
+
+void triggerObserveGapShift(float measuredPitch) {
+	if (observedShiftCount < efi::size(observedShifts)) {
+		observedShifts[observedShiftCount++] = measuredPitch;
+	}
+}
+
 /**
  * The L9779 gap output is systematically compressed: a spurious missing-region
  * edge fires ~0.63 pitch early (the auto-hysteresis re-quantizes down during
  * the gap, the squared-signal latch suppresses the real first-tooth edge), so
  * the measured sync gap reads ~2.36 instead of the physical 3.0 slots. The
- * decoder would anchor all scheduling ~3.8 degrees advanced. With the
- * gap-anchor correction (custom_board_syncGapAnchorCorrection) the decoder
- * learns (3.0 - measuredGap) * 6 deg per validated sync (EMA), retards the
- * scheduling phase pair by it, and releases it when a clean 3.0 gap returns.
+ * decoder would anchor all scheduling ~3.8 degrees advanced.
+ *
+ * The VR amplitude MODEL is the correction state (the default): the decoder
+ * applies custom_board_vrGapShiftPitch (the per-level table value) directly
+ * and TRAINS the model from in-band measurements via triggerObserveGapShift.
  */
-TEST(trigger, crankingTransition60_2GapAnchorCorrection) {
+TEST(trigger, crankingTransition60_2GapAnchorCorrectionAppliesModel) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	SyncGapAnchorCorrectionScope anchorCorr;
+	custom_board_vrGapShiftPitch = []() { return 0.64f; };
+	struct ResetVrModel {
+		~ResetVrModel() { custom_board_vrGapShiftPitch = std::nullopt; }
+	} resetVrModel;
 	// the user's m74_9 runs the 60-2 wheel on the crank
 	setCrankOperationMode();
 	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
 
-	// 2500 rpm steady revolutions with the compressed spurious-edge gap (2.36)
+	// 2500 rpm with the compressed spurious-edge gap (2.36)
 	static constexpr float runningSlotMs = 0.4f;
-	for (int i = 0; i < 5; i++) {
-		fire60_2Revolution(eth, runningSlotMs, 2.36f);
-	}
+	fire60_2Revolution(eth, runningSlotMs, 2.36f);
+	fire60_2Revolution(eth, runningSlotMs, 2.36f);
 
 	// the compressed gap stays inside the [1.6, 4.5] sync windows: no desync
 	ASSERT_EQ(0u, getRecentWarnings()->getCount()) << "compressed gap is a valid sync";
 	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized());
 
-	// (3.0 - 2.36) * 6 = 3.84 deg, EMA 0.5 -> ~3.6 after 4 updates
-	EXPECT_NEAR(3.84f, engine->triggerCentral.gapAnchorCorrectionDeg, 0.6f) << "learned anchor correction";
+	// the model value applies directly: 0.64 pitch * 6 deg = 3.84 deg, at the
+	// FIRST sync (no EMA convergence needed)
+	EXPECT_NEAR(3.84f, engine->triggerCentral.gapAnchorCorrectionDeg, 0.01f) << "model value applied";
 
-	// a clean 3.0 gap releases the correction (EMA decay toward 0)
-	for (int i = 0; i < 3; i++) {
-		fire60_2Revolution(eth, runningSlotMs, 3.0f);
-	}
-	EXPECT_LT(engine->triggerCentral.gapAnchorCorrectionDeg, 1.5f) << "correction decays with a clean gap";
-
-	// the compressed gap returns - the correction re-learns
-	for (int i = 0; i < 3; i++) {
-		fire60_2Revolution(eth, runningSlotMs, 2.36f);
-	}
-	EXPECT_GT(engine->triggerCentral.gapAnchorCorrectionDeg, 2.0f) << "correction re-learns";
+	// the model switches - the correction follows on the next sync
+	custom_board_vrGapShiftPitch = []() { return 0.5f; };
+	fire60_2Revolution(eth, runningSlotMs, 2.36f);
+	EXPECT_NEAR(3.0f, engine->triggerCentral.gapAnchorCorrectionDeg, 0.01f) << "model switch applied immediately";
 	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized());
 }
 
 /**
- * A STRETCHED gap (measured > nominal, the first-combustion acceleration
- * signature) must never update the correction - it is not an early anchor,
- * it is the crank genuinely accelerating through the gap.
+ * Only IN-BAND measurements (shift in [0, 1.5] pitch) train the model. A
+ * stretched gap (measured > nominal - the first-combustion acceleration
+ * signature) must not be observed, and the model value keeps applying.
  */
-TEST(trigger, crankingTransition60_2GapAnchorCorrectionIgnoresStretchedGap) {
+TEST(trigger, crankingTransition60_2GapAnchorCorrectionTrainsFromInBandOnly) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	SyncGapAnchorCorrectionScope anchorCorr;
+	custom_board_vrGapShiftPitch = []() { return 0.64f; };
+	struct ResetVrModel {
+		~ResetVrModel() { custom_board_vrGapShiftPitch = std::nullopt; }
+	} resetVrModel;
 	// the user's m74_9 runs the 60-2 wheel on the crank
 	setCrankOperationMode();
 	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
 
+	observedShiftCount = 0;
 	static constexpr float runningSlotMs = 0.4f;
 
-	// sync with a compressed gap first so there is something to decay
-	for (int i = 0; i < 3; i++) {
-		fire60_2Revolution(eth, runningSlotMs, 2.36f);
-	}
-	EXPECT_GT(engine->triggerCentral.gapAnchorCorrectionDeg, 1.0f);
+	// compressed gaps: 3 revs -> 2 syncs -> 2 observations of 0.64 pitch
+	fire60_2Revolution(eth, runningSlotMs, 2.36f);
+	fire60_2Revolution(eth, runningSlotMs, 2.36f);
+	fire60_2Revolution(eth, runningSlotMs, 2.36f);
+	ASSERT_EQ(2u, observedShiftCount) << "in-band measurements are observed";
+	EXPECT_NEAR(0.64f, observedShifts[0], 0.01f) << "observed shift = 3.0 - 2.36";
 
-	// a stretched gap (3.6) is above the nominal 3.0: correctionPitch < 0 ->
-	// the update is skipped, the learned value must NOT go negative
+	// stretched gaps (3.6): the FIRST stretched call still checks the last
+	// compressed rev (one more observation), then every stretched rev checks
+	// out of band and must not train
 	fire60_2Revolution(eth, runningSlotMs, 3.6f);
 	fire60_2Revolution(eth, runningSlotMs, 3.6f);
-	EXPECT_GT(engine->triggerCentral.gapAnchorCorrectionDeg, 0.0f) << "no negative correction from a stretched gap";
-}
-
-/**
- * With the amplitude-model fallback (custom_board_vrGapShiftPitch, m74_9) an
- * out-of-band measurement (stretched gap) pulls the correction toward the
- * model's expected shift instead of freezing the last value.
- */
-TEST(trigger, crankingTransition60_2GapAnchorCorrectionModelFallback) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	SyncGapAnchorCorrectionScope anchorCorr;
-	struct ModelScope {
-		ModelScope() { custom_board_vrGapShiftPitch = []() { return 0.7f; }; }
-		~ModelScope() { custom_board_vrGapShiftPitch = std::nullopt; }
-	} model;
-	// the user's m74_9 runs the 60-2 wheel on the crank
-	setCrankOperationMode();
-	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
-
-	static constexpr float runningSlotMs = 0.4f;
-
-	// learn from a compressed gap first
-	for (int i = 0; i < 3; i++) {
-		fire60_2Revolution(eth, runningSlotMs, 2.36f);
-	}
-	EXPECT_GT(engine->triggerCentral.gapAnchorCorrectionDeg, 2.0f) << "learned from the compressed gap";
-
-	// a stretched gap is out of band: the correction moves toward the model's
-	// 0.7 pitch = 4.2 deg instead of freezing
 	fire60_2Revolution(eth, runningSlotMs, 3.6f);
-	fire60_2Revolution(eth, runningSlotMs, 3.6f);
-	EXPECT_NEAR(4.2f, engine->triggerCentral.gapAnchorCorrectionDeg, 0.8f) << "model fallback pulls the correction";
-	EXPECT_GT(engine->triggerCentral.gapAnchorCorrectionDeg, 3.4f) << "no freeze at the last measured value";
+	ASSERT_EQ(3u, observedShiftCount) << "stretched gaps never train the model";
+	EXPECT_NEAR(3.84f, engine->triggerCentral.gapAnchorCorrectionDeg, 0.01f) << "model value unchanged";
+	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized());
 }
 
 /**

@@ -33,3 +33,7 @@ PUBLIC_API_WEAK __attribute__((noinline)) float triggerGetToothProfileFactor(int
 
 PUBLIC_API_WEAK __attribute__((noinline)) void boardTriggerSyncEvent(char, int, float, float) {
 }
+
+PUBLIC_API_WEAK __attribute__((noinline)) void triggerObserveGapShift(float) {
+	// weak default: no board VR amplitude model to train
+}
