@@ -487,3 +487,92 @@ Validation:
   green, 7 new tests among them.
 - Not exercised by launching an installed bundle from a spaced path - verified
   at the unit level and by the side-by-side reproduction only.
+
+## 2026-08-24 - Units-expression migration gap: minimal GREEN coverage
+
+What was done:
+- Added java_console/io/src/test/java/com/rusefi/maintenance/migration/
+  UnitsExpressionMigrationTest.java - 4 JUnit5 tests, all GREEN against
+  current behavior, documenting the bug that lost a Harley hd81 customer's
+  VE/ignition load axes during the Kansas -> Lima firmware update: the
+  customer's 20..180 bins were silently replaced by the new defaults
+  (10..160 / 21..120).
+- Root cause under test: IniFieldMigrationUtils.checkIfUnitsCanBeMigrated
+  compares RAW unevaluated TS units strings. Lima changed units from
+  Kansas's `{bitStringValue(fuelUnits, fuelAlgorithm) }` (veLoadBins) /
+  literal `Load` (ignitionLoadBins) / literal `kPa` (boostCutPressure) to
+  new `{bitStringValue(...)}` expressions for kPa/psi display support; the
+  strings differ textually while the physical unit (kPa) is unchanged, so
+  DefaultTuneMigrator refuses with "WARNING! Field `...` cannot be updated
+  because its units are updated" and the tuned value is dropped.
+
+Key decisions and why:
+- Tests parse the VERBATIM hd81 Kansas/Lima ini lines through the
+  production tokenizer (RawIniFile.Line -> ArrayIniField/ScalarIniField
+  .parse) rather than passing hand-written unit strings - this pins the
+  actual contract: splitTokens strips quotes (`"Load"` -> `Load`) but keeps
+  `{...}` expressions raw and whole (spaces, trailing ` }` included), which
+  is exactly what reaches the comparison in the updater flow (both tunes
+  come from CalibrationsInfo.generateMsq; TS-saved .msq files carry
+  EVALUATED units and do NOT reproduce the bug).
+- assertFalse() calls are marked as bug-documenting: flip to assertTrue()
+  when checkIfUnitsCanBeMigrated learns to evaluate or tolerate expression
+  units. A control test shows identical expressions still migrate.
+- Placed in the io module (":ecu_io" in gradle) next to the code under
+  test; the end-to-end board-level RED repro already lives in fw-iws
+  (java-tests/board-specific-tests KansasLimaMigrationTest, see that
+  repo's docs/report.md 2026-08-24 fourth entry).
+
+Validation:
+- ./gradlew :ecu_io:test --tests '*UnitsExpressionMigrationTest*' - 4/4
+  pass (JUnit XML confirms all 4 testcases executed, 0 failures).
+
+Open follow-ups:
+- Implement the fix in checkIfUnitsCanBeMigrated (evaluate/ignore `{...}`
+  expression units, ideally with a same-evaluated-unit check), then flip
+  the three assertFalse() to assertTrue() and un-RED the fw-iws
+  KansasLimaMigrationTest.
+
+## 2026-08-24 - Fix: TS `{...}` expression units no longer block tune migration
+
+What was done:
+- Fixed checkIfUnitsCanBeMigrated (java_console/io/.../migration/
+  IniFieldMigrationUtils.java): if either side's units string is a TS
+  `{...}` expression (trimmed string starts with `{`), the units check
+  passes. Expressions reach the migrator unevaluated, so the same
+  physical unit can be spelled as a literal in one ini and as an
+  expression in the other (or as two different expressions) - a raw
+  string mismatch involving an expression says nothing about the
+  physical unit, while refusing silently replaces the user's tuned
+  value with the new firmware default (the Kansas -> Lima load-axis
+  loss from the previous entry).
+- Updated UnitsExpressionMigrationTest to assert the FIXED behavior:
+  the three former bug-documenting assertFalse() flipped to
+  assertTrue(); added differentLiteralUnitsAreStillRefused (afr vs
+  lambda) proving the literal-vs-literal guard is untouched.
+
+Key decisions and why:
+- Tolerate (skip) expression units rather than evaluate them: proper
+  evaluation of bitStringValue(...) needs the ini's string lists plus
+  the live selector field values - far beyond this comparison's reach.
+  The check keeps guarding real literal unit changes; the remaining
+  type/row/col checks in DefaultTuneMigrator and
+  DefaultIniFieldMigrationStrategy still apply to expression-unit
+  fields.
+- Both call sites (DefaultTuneMigrator, DefaultIniFieldMigrationStrategy)
+  share the helper, so scalars (boostCutPressure & friends) are covered
+  by the same one-line policy.
+
+Validation:
+- ./gradlew :ecu_io:test - all 25 suites green, including the 5-test
+  UnitsExpressionMigrationTest.
+- ./gradlew :ui:test --tests '*Migrat*' --tests '*migration*' - all
+  migration suites green, notably DefaultTuneMigratorTest (26 tests,
+  includes the afr-vs-lambda refusal) and CalibrationsHelperTest (19).
+
+Open follow-ups:
+- fw-iws's end-to-end KansasLimaMigrationTest (RED repro against the
+  submodule copy of this code) flips green once ext/fw-private/ext/rusefi
+  picks up this change.
+- Optional future hardening: same-evaluated-unit check for expressions
+  once an expression evaluator with ini context is available.
