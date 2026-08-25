@@ -106,6 +106,9 @@ void generateLog(const char* filename) {
     engineConfiguration->alwaysInstantRpm = true;
     engineConfiguration->isPhaseSyncRequiredForIgnition = true;
 
+    engineConfiguration->useNoiselessTriggerDecoder = false;
+    engineConfiguration->triggerMinPulseWidthPercent = 5;
+
     int n = 0;
     bool firstRpmSeen = false;
     bool firstCamSyncSeen = false;

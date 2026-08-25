@@ -14,6 +14,9 @@ static void runPolledBinaryLog(const char* filename) {
 	engineConfiguration->engineSyncCam = static_cast<engineSyncCam_e>(0); // intake first bank
 	engineConfiguration->binarySyncRemainderOffset = 0;
 
+	engineConfiguration->useNoiselessTriggerDecoder = false;
+	engineConfiguration->triggerMinPulseWidthPercent = 5;
+
 	eth.setTriggerType(trigger_type_e::TT_3_TOOTH_CRANK);
 
 	CsvReader reader(/*triggerCount*/ 1, /*vvtCount*/ 1);
