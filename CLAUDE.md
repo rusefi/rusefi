@@ -442,6 +442,17 @@ All ECU->BCM 10 ms frames in `m74_9_can.cpp`. The trc files (PCAN-View, repo roo
 - 0x01F6 [1] 0x20 running, [2] 0x02 | 0x40 cranking | 0x80 running, [3] 0x2D/0x30 battery-derived; 0x0217 [2] 0x70 engine active, [7] 0x88.
 - rusEFI sources: flow = `engine->module<TripOdometer>()->getConsumptionGramPerSecond() * 3600 / 0.745` (g/s -> mL/h; if the BC reads ~25% low vs a flowmeter, the stock unit may be g/h - drop the density), CLT = `Sensor::getOrZero(SensorType::Clt)`, Vbatt = `Sensor::getOrZero(SensorType::BatteryVoltage)`, advance = `engine->engineState.timingAdvance[0]`, rpm = `Sensor::getOrZero(SensorType::Rpm)`.
 
+## m74_9 / stock LIN alternator protocol (extracted from Read_FULLFLASH_I865LB52_w2404b1, 2026-08-25)
+
+The 21129 alternator (LIN regulator) is controlled by the ECU as LIN master. Extracted from the stock flash dump (Cortex-M Thumb @ 0x08000000, 4 MB; bank1 = app+calibration, bank2 0x08201000 = second image; LIN driver code 0x08016680-0x08017000, module table has "LIN"/"UART" names near 0x0804BF40):
+
+- **19200 baud** (divisor = 10 MHz / 19200 = 520 computed at 0x0801688E).
+- **Frame table** at 0x08048CC1: 16 slots {id, len|cx}: bit4 of byte2 = checksum type (1 = classic LIN 1.x with PID added, 0 = enhanced LIN 2.x), bits3:0 = length. Frames: **0x16 (PID 0xD6) len 6 TX enhanced = alternator control**, **0x08 (PID 0xC8) len 8 RX classic = alternator status**, 0x08 len 2/3 TX enhanced, 0x1D (PID 0x9D) len 4 TX enhanced, id 0x00 = pause/service slots.
+- **Default setpoint 15.0 V** in the frame buffers (0x08062FB0+: 0x0096 = 150 dV and 0x3A98 = 15000 mV; also 14.8 V = 0x0094, 0x0320 = 800, 0x7FFF sentinels). Voltage calibration at 0x08064720+ (mV): setpoints 12.8/13.6/14.0/14.4/14.8/15.2 V + protection 16.4-24.0 V; duplicated block at 0x08064D60/0x08065060; PID gains at 0x0806D65A (Q12: 0.6/0.2/0.125).
+- **Checksums differ by direction**: TX frames = enhanced, RX frame = classic - the regulator chip speaks LIN 1.x classic.
+- **VDA protocol reference (ST L9918 datasheet, compliant to VDA LIN-Generator-Regulator spec)**: setpoint code6 = (V - 10.6) x 10 (10.6-16 V, 0.1 V steps), code8 = (V - 10.6) x 40 (0.025 V); code 0 = 10.6 V = OFF/pre-excitation. Master control frame = setpoint + LRC-rise (0-15 s) + LRC-cut speed (2400-8000 rpm) + excitation current limit + output-selection (R). Regulator responses: F_T/F_M/F_E fault flags, F_L1/F_L0 LIN errors, DCE duty cycle, EXC excitation current, alternator ID, RB confirmation, K feedback byte (R selects: VSPFBK8 setpoint echo / BV8 B+ voltage / TJ8 junction temp / RPM8 alternator speed).
+- Not decoded: the exact byte offset/scale of the setpoint in the 6-byte 0x16 payload (proven to be a voltage, but live layout needs a car LIN capture). rusEFI has NO LIN support yet - implementing m74_9 LIN master is the follow-up.
+
 ## m74_9 / trigger-error taxonomy from the 2026-08-24 logs (durable decoder facts)
 
 - **`trgsynchronizationcounter` (MLG) counts CLEANLY COMPLETED WHEEL REVOLUTIONS, not desyncs**: `TriggerDecoderBase::onShaftSynchronization(wasSynchronized=true)` -> `incrementShaftSynchronizationCounter()`. At N rpm it ticks at rpm/60 per second. Seeing it climb ~17/s at ~1000 rpm means the trigger was PERFECTLY synced, not desyncing. Do not misread it as a sync-loss counter.

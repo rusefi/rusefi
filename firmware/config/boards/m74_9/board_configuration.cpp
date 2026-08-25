@@ -8,6 +8,7 @@
 #include "m74_9_can.h"
 #include "m74_9_tooth_diag.h"
 #include "m74_9_vr_model.h"
+#include "m74_9_lin.h"
 #include "runtime_state.h"
 #include "digital_input_exti.h"
 #include "pwm_generator_logic.h"
@@ -100,6 +101,21 @@ static void m74_9_boardDefaultConfiguration() {
 
 	engineConfiguration->cylindersCount = 4;
 	engineConfiguration->firingOrder = FO_1_3_4_2;
+
+	// LIN smart-alternator gates: off while cranking / below 600 rpm, off
+	// above 5000 rpm, off during MAP > 80 kPa acceleration for at most 60 s,
+	// smooth load pickup via LRC-Rise (5 s), LRC-Cut at 4790 rpm (code 10).
+	engineConfiguration->m74_9LinAltMinRpm = 600;
+	engineConfiguration->m74_9LinAltMaxRpm = 5000;
+	engineConfiguration->m74_9LinAltMapOffKpa = 80;
+	engineConfiguration->m74_9LinAltMapOffMaxSeconds = 60;
+	// After any OFF event clears (MAP gate, low rpm/cranking, over-rev) keep
+	// the generator off for this many more seconds - prevents on/off churn
+	// during gear shifts when MAP dips below the threshold for a moment.
+	engineConfiguration->m74_9LinOffHoldSeconds = 5;
+	engineConfiguration->m74_9LinLrcRiseCode = 5;
+	engineConfiguration->m74_9LinLrcCutCode = 10;
+	engineConfiguration->m74_9LinAltFeedbackSel = 2; // R = 0b010: BV8 B+ voltage feedback
 
 	/* Individual coils (COP): the board has all four L9779 ignition
 	 * pre-driver channels populated, each driving its own coil. Wasted
@@ -941,8 +957,12 @@ void setup_custom_board_overrides() {
 	// diagnostics are fed by separate trigger hooks and keep working.
 	// custom_board_periodicSlowCallback = m74_9ToothPeriodic;
 	// VR amplitude model: boot read + save-on-stop through the debounced
-	// flash gate (see m74_9_vr_model.cpp).
-	custom_board_periodicSlowCallback = m74_9VrModelPeriodic;
+	// flash gate (see m74_9_vr_model.cpp), plus the LIN alternator master
+	// tick (see m74_9_lin.cpp).
+	custom_board_periodicSlowCallback = []() {
+		m74_9VrModelPeriodic();
+		m74_9LinAlternatorPeriodic();
+	};
 	#if EFI_PROD_CODE && HAL_USE_ADC
 	addConsoleAction("fastadcdiag", m74_9FastAdcDiag);
 	addConsoleAction("knockpin", m74_9KnockPinScan);
@@ -1081,5 +1101,8 @@ void setup_custom_board_overrides() {
 	initM74_9Can();
 	custom_board_isImmobilizerBlocking = m74_9_isImmobilizerBlocking;
 #endif // EFI_CAN_SUPPORT
+#if EFI_PROD_CODE
+	initM74_9LinAlternator();
+#endif // EFI_PROD_CODE
 }
 

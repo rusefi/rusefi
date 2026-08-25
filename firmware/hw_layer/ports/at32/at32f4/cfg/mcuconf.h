@@ -348,7 +348,8 @@
 #define STM32_SERIAL_USE_USART1             FALSE
 #endif
 #define STM32_SERIAL_USE_USART2             FALSE
-#define STM32_SERIAL_USE_USART3             FALSE
+// USART3 (PB10 TX / PB11 RX) = LIN master for the smart alternator
+#define STM32_SERIAL_USE_USART3             TRUE
 #define STM32_SERIAL_USE_UART4              FALSE
 #define STM32_SERIAL_USE_UART5              FALSE
 #define STM32_SERIAL_USE_USART6             TRUE
