@@ -7341,3 +7341,164 @@ requested from custom_board_periodicSlowCallback (m74_9VrModelPeriodic).
 | unit_tests/tests/trigger/test_60_2_cranking_transition.cpp | model-applies + in-band-training tests |
 
 Validation: unit tests 1163/1163 pass, compile_m74_9.sh BUILD SUCCESSFUL.
+
+## 2026-08-25 - m74_9: 13:41-13:55 drive analysis - flap storm at 3400-4300 rpm + persistence fix
+
+Full parse of efi_log_2026-08-25_13_41_54_666 / _13_51_47_528 plus the 4 rawtrg
+blocks and the trigger-log CSVs.
+
+Progress vs the 08-24 20:43 drive: ZERO 'newerr' lines (was 837), the tooth-loss
+tolerance keeps sync alive through the events, the engine reached 4276 rpm for
+the first time (previous ceiling 4005). rawtrg: below ~2500 rpm the gap is
+perfect - F-to-F gap ratio 2.36 +-0.02 at 1295/1821/2155/2463 rpm, countErr=0,
+zero drops. Anchor correction stable 3.84-3.90 deg, the L1 table trains
+(0.635 -> 0.651 pitch over ~9500 revs).
+
+New signature at 3400-4300 rpm (13:53 storm): the gap anchor FLAPS between the
+normal 2.35 and 1.91-2.01 at the SAME rpm (3927: 1.976 vs 3939: 2.378) with the
+sync eventIndex jumping 112 <-> 110 - a bistable state flip, not a smooth rpm
+effect. Consequence chain: flap sync lands one tooth early -> the position gate
+misses the next sync point -> C9002 'too many teeth' (code path: !isValidIndex
+= sync point MISSED, not extra teeth) -> C9007 +11.9 deg early / C9008 -15.8
+deg late -> instant-rpm reset -> C9011 duplicate queue element + C9009 skipped
+sparks + C9351/C9353 overcharges. C9011 is a validation-only warning in
+trigger_scheduler.cpp (element already in the queue after a time-based
+re-schedule) - a symptom of the storm, not an independent bug.
+
+Root cause: this is the L9779 peak-detector PV level transition (the model's
+risk=YES band made observable) - bistable at fixed rpm, threshold-correlated,
+index jumps by a whole tooth. NOT the Tfilter eat (t_high/T = 0.46 >> 1/32 at
+any rpm) and NOT Tout-min (F phase 126-160 us at 3400-4300 rpm > 100 us spec).
+The flap's gap1 is also elevated (1.05-1.08 vs 1.00) - the post-gap tooth pair
+distorts in flap mode.
+
+Why the model did not engage: k=0 (first boot, seed) -> Vp = 0 -> everything
+trains into L1, so 'no level transition' is by design until k is calibrated;
+the flap samples (measuredPitch ~1.09) land inside the [0, 1.5] training band
+and pull the single L1 EMA against the normal 0.63-0.65 samples.
+
+FIXED: persistence never worked on a first boot - vrModelStorageRead() left
+vrLoaded=false on the 'no stored record'/'invalid record' paths, and
+m74_9VrModelPeriodic() gates the saver on !vrLoaded, so the model was never
+written (no 'Writing storage ID 7' in either session log). Both failure paths
+now set vrLoaded=true (load attempt complete, RAM is authoritative).
+
+| File | Change |
+| --- | --- |
+| firmware/config/boards/m74_9/m74_9_vr_model.cpp | vrLoaded=true on both read-failure paths |
+
+Validation: unit tests 1163/1163 pass, crankingTransition suite 30/30.
+
+Open: k calibration (flap band 3400-4300 = a PV boundary; trial k via 'vrk',
+cross-check 'vrmodel level boundaries at rpm:' against the flap band), rawtrg
+DURING the flap (the missing capture), decoder hardening for accepted-flap ->
+next-revolution C9002 (position gate vs re-anchor interaction).
+
+## 2026-08-25 (afternoon) - m74_9: VR model save contract + idle-vs-mid shift step (k evidence)
+
+When the model saves (m74_9VrModelPeriodic, 20 Hz): async MFS read done
+(vrLoaded=true even on 'no record' after the fix), vrDirty (any training or
+vrk), isStopped() (~0.5-1 s debounce), the 10-consecutive-stopped-polls flash
+gate (~0.5 s more), 15 s cooldown -> storageRequestWriteID(7). Expected visible
+signature ~1.5-2.5 s after 'engine stopped': 'MFS: Writing storage ID 7 ... 40
+bytes' + 'vrmodel: stored (N revs)'. The 14:07-14:09 car paste shows stored=no
+forever because the flashed build predates the vrLoaded fix - the saver is dead
+on first boot there.
+
+New k evidence from the same paste: the L1 EMA converges to 0.610-0.631 at
+idle/stop (~1000 rpm, 231 syncs over 14 s of steady idle) vs 0.644-0.651 at
+1300-3900 rpm - a ~0.04 pitch step between ~1000 and ~1300 rpm = a
+peak-detector level transition (PV1 = 930 mV) at ~1100-1300 rpm -> k ~ 0.7-0.85
+mV/rpm. Cross-check: k=0.78 puts PV4 (3000 mV) at 3850 rpm, inside the observed
+3400-4300 flap band. Two independent features point at k ~ 0.6-0.8; calibrate
+on the car with 'vrk 0.7' and compare 'vrmodel level boundaries at rpm:' with
+the observed flap band and the idle step.
+
+Bundle rebuilt with the vrLoaded fix: artifacts/rusefi_bundle_m74_9.zip
+(rusefi_development_260825_m74_9_1244431765_local_update.srec).
+Validation: unit tests 1163/1163, crankingTransition 30/30, compile_m74_9.sh
+BUILD SUCCESSFUL, bundle BUILD SUCCESSFUL.
+
+## 2026-08-25 (late afternoon) - m74_9: root cause of high-rpm sync loss = software edge-polarity read
+
+Retracted the earlier "Mode B = L9779 Tout-min hardware wall" conclusion: the
+stock ME17 runs the same L9779 to 7000 rpm, so the chip is not the limit. New
+log (efi_log_2026-08-25_14_50_27_870): engine reached 5465 rpm, gap ratio stays
+2.34-2.40 at 4900-5500 rpm - the conditioner output is fine at high rpm.
+
+Root cause found in the capture path (analysis, no fix yet):
+
+- m74_9 capture: FAST IRQ (priority 0, handleExtiIsr in digital_input_exti.cpp)
+  latches only {timestamp, channel} into the 32-deep queue and STIRs the
+  handoff. The EDGE DIRECTION is not captured there.
+- The handoff ISR (I2C1_EV, priority 4) pops the queue and calls shaft_callback
+  (trigger_input_exti.cpp), which reads the pin level via palReadLine AT
+  HANDOFF TIME and calls hwHandleShaftSignal. The whole decode chain runs in
+  this same ISR (44 us average, tails to ~1 ms in the triggerIsr histograms).
+- When the handoff latency exceeds the inter-edge interval (113 us at 4557 rpm,
+  ~250 us at 4000), the level read returns the state of a LATER edge -> the
+  logical edge type flips. For RiseOnly decoding one misread = one phantom
+  eaten decode edge (deficit) or one phantom extra decode edge (excess).
+- This produces exactly the observed high-rpm signatures: count deficits at
+  syncs (the "toothloss" lines), C9007 +11.9 deg early / C9008 -11.3 deg late
+  pairs (phantom eat -> teeth arrive early, phantom extra -> late), C9002
+  missed syncs when 3+ events corrupt in one revolution. Corruption rate grows
+  with rpm (interval shrinks, ISR tail does not) - clean below ~2500, ~10% of
+  revolutions corrupted at 3500-5500.
+- The rawtrg "same-edge runs" at 4557 rpm are the SAME misreads recorded into
+  the raw edge ring: the deltas stay a clean ~113 us cadence (timestamps are
+  correct) while the R/F flags are wrong. Zero runs at 1181 rpm.
+- orderingErrorCounter is disabled for RiseOnly wheels (useOnlyRisingEdgeForTrigger
+  guard in trigger_decoder.cpp:526), so the corruption never shows as
+  ordering errors.
+
+Fix direction (agreed, not yet implemented): push the pin LEVEL into the queue
+from the fast IRQ (2-3 us after the edge - 40x margin at 7000 rpm) and pass it
+through the ExtiCallback signature instead of palReadLine in the handoff; or
+move to timer input-capture (hardware direction latch). The stock ECU latches
+the direction in hardware - that is why it tolerates 7000 rpm.
+
+The VR model side: model persisted across power cycles (stored record loaded,
+k=0.699, per-level table), risk=YES at 5465 rpm (near PV4 boundary at k=0.7).
+
+## 2026-08-25 (evening) - m74_9: root-cause fix - edge polarity captured in the EXTI fast IRQ
+
+The high-rpm trigger corruption (phantom eaten/extra teeth, C9002 sync misses,
+C9007 +11.9 deg / C9008 -11.3 deg pairs, rawtrg same-edge runs) was NOT the
+L9779 output degrading (the stock ME17 runs the same chip to 7000 rpm; the new
+log reached 5465 rpm with clean 2.34-2.40 gaps). The polarity of each edge was
+RECONSTRUCTED by palReadLine in the handoff ISR (priority 4), which runs the
+whole decode chain and can be delayed up to ~1 ms - longer than the 113 us edge
+interval at 4557 rpm, so the read returned the level of a LATER edge.
+
+Fix: the fast EXTI IRQ (priority 0, ~2-3 us after the edge) now captures the pin
+level together with the timestamp into the queue {timestamp, channel, level};
+the handoff passes it to the callback. shaft_callback/cam_callback and every
+other efiExtiEnablePin user no longer read the pin. The L9779 output filter
+clamps the minimum edge spacing to ~4 us, so the fast-IRQ read is always inside
+the quiet zone (20x margin at 7000 rpm).
+
+ExtiCallback signature changed to void(*)(void*, efitick_t, bool level) - all
+10 call sites updated (trigger PAL + ADC paths, flex, hellen board ID, logic
+analyzer, wifi, mc33810, ion sense, frequency sensor, hella oil level).
+
+Why not the timer ICU (hardware direction latch): STM32_ICU_USE_TIM12/13/14
+exists in the at32 mcuconf and the TIMv1 icu_lld compiles, but (1) PF8's timer
+AF on AT32F435 is unverified (no AF table in the repo; F429-style TIM13_CH1/AF9
+is likely), (2) the ICU driver has never been exercised on the AT32 port, (3)
+TMR13 shares its vector with TMR8_UP (F4 layout). The fast-IRQ read closes the
+actual bug now; ICU remains a precision/robustness follow-up if the AF is
+confirmed.
+
+| File | Change |
+| --- | --- |
+| firmware/hw_layer/digital_input/digital_input_exti.h/.cpp | level captured in handleExtiIsr, carried in ExtiQueueEntry, ExtiCallback takes bool level, channel stores its line |
+| firmware/hw_layer/digital_input/trigger/trigger_input_exti.cpp | shaft/cam callbacks use the captured level, dropped palReadLine + line arrays |
+| firmware/hw_layer/digital_input/trigger/trigger_input_adc.cpp | same for the ADC-triggered path |
+| 8 other efiExtiEnablePin users | callback signatures updated |
+
+Validation: compile_m74_9.sh BUILD SUCCESSFUL, unit tests trigger suite 54/54
+(full 1163 pass earlier), bundle rebuilt
+(artifacts/rusefi_bundle_m74_9.zip, srec 260825_1244431765). On-car validation:
+rawtrg at 4000+ rpm must now show clean alternating F/R (no same-edge runs)
+and the high-rpm C9002 events must be gone.

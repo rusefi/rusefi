@@ -131,7 +131,7 @@ inline bool isCor(uint16_t rx) {
 	return rx & REP_FLAG_COR;
 }
 
-static void mc33810_spkdur_cb(void *ptr, efitick_t now);
+static void mc33810_spkdur_cb(void *ptr, efitick_t now, bool);
 
 /**
  * @brief MC33810 spi CS release helper with workaround
@@ -710,7 +710,7 @@ RUSEFI_STACK_ROOT_EXPLICIT(mc33810_driver_thread, 256);
 /* Driver interrupt handlers.												*/
 /*==========================================================================*/
 
-static void mc33810_spkdur_cb(void *ptr, efitick_t now)
+static void mc33810_spkdur_cb(void *ptr, efitick_t now, bool /*level*/)
 {
 	Mc33810 *chip = (Mc33810 *)ptr;
 

@@ -79,15 +79,16 @@ void setTriggerAdcMode(triggerAdcMode_t adcMode) {
 		(adcMode == TRIGGER_ADC_ADC) ? PAL_MODE_INPUT_ANALOG : PAL_MODE_EXTINT);
 }
 
-static void shaft_callback(void *arg, efitick_t stamp) {
+static void shaft_callback(void *arg, efitick_t stamp, bool level) {
 	// do the time sensitive things as early as possible!
-	ioline_t pal_line = (ioline_t)arg;
-	bool rise = (palReadLine(pal_line) == PAL_HIGH);
+	// The pin level was captured in the EXTI fast IRQ and travelled through
+	// the queue - do not re-read it here (late read = wrong edge direction).
+	bool rise = level;
 
 	trigAdcState.digitalCallback(stamp, true, rise);
 }
 
-static void cam_callback(void *, efitick_t stamp) {
+static void cam_callback(void *, efitick_t stamp, bool /*level*/) {
 	// TODO: implement...
 }
 
@@ -121,7 +122,7 @@ int adcTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft) {
 	efiPrintf("turnOnTriggerInputPin %s l=%ld", hwPortname(brainPin), pal_line);
 
 	if (efiExtiEnablePin(msg, brainPin, PAL_EVENT_MODE_BOTH_EDGES,
-		isTriggerShaft ? shaft_callback : cam_callback, (void *)pal_line) < 0) {
+		isTriggerShaft ? shaft_callback : cam_callback, nullptr) < 0) {
 		return -1;
 	}
 

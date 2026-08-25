@@ -684,3 +684,32 @@ Fixes:
 - **Writing RESPTIME increments EC by one** and starts a fresh cycle (anchors the window). RESPTIME=0 is poisoned: EC++ per correct answer. So: write RESPTIME once at init (EC 6->7, recovered by ~3 answers), never per-cycle.
 - **The drift-proof strategy (implemented 2026-08-24, commit d6b319ce95c)**: RESPTIME=10 -> response time 15.8 ms, cycle 28.4 ms, drift +-0.8 ms (8x margin vs the 12.6 ms window). ONE executor event per cycle: pipelined REQUHI/REQULO reads + period adaptation + the whole 4-byte response (RESP_BYTE3..0) as a single atomic burst positioned so RESP_BYTE0's END lands at the window center (period = wd_delay_ms in [17, 27] ms, 5 ms adaptation steps). The burst must never be split across executor events - see the RESP_CNT desync note in the WDA-executor section.
 - The EC=7 state after a first-answer miss at EC=6 (16:31 log) latched the outputs off despite 77 accepted answers - unexplained by the decrement rule; healed via need_init (SW_RST + re-init) after ~10 consecutive EC=7 feeds.
+
+## Trigger edge polarity: capture it in the fast EXTI IRQ, never in the handoff (m74_9, fixed 2026-08-25)
+
+`digital_input_exti.cpp` two-stage capture: the fast IRQ (priority 0) latches `{timestamp, channel, level}` into the 32-deep queue and STIRs the handoff (priority 4), which runs the whole decode chain. The edge DIRECTION must be captured in the fast IRQ (`palReadLine` there, ~2-3 us after the edge): reading it in the handoff was the root cause of the high-rpm trigger corruption - the handoff runs up to ~1 ms late (decode + scheduling in the same ISR), longer than the 113 us edge interval at 4557 rpm, so the read returned the level of a LATER edge -> phantom eaten/extra decode teeth, C9002 "too many teeth" sync misses (that message = `!isValidIndex`, a MISSED sync point, not extra teeth), C9007 +11.9 deg / C9008 -11.3 deg pairs, and same-edge runs in rawtrg (misreported polarity with correct timestamps - deltas stay clean). The L9779 output filter clamps min edge spacing to ~4 us, so the fast-IRQ read is inside the quiet zone (20x margin at 7000 rpm). `ExtiCallback` is now `void(*)(void*, efitick_t, bool level)` - all `efiExtiEnablePin` users take the level param; do not add a new pin-read in any callback. `orderingErrorCounter` is disabled for RiseOnly wheels, so polarity corruption never shows as ordering errors. The timer ICU (hardware direction latch) exists in the at32 mcuconf (STM32_ICU_USE_TIM12/13/14) but is unexercised on AT32 and PF8's timer AF is unverified - the stock ME17 latches direction in hardware, which is why the same L9779 works to 7000 rpm there.
+
+## Trigger edge polarity: option A vs option B (decision record, 2026-08-25)
+
+Problem: the m74_9 high-rpm sync losses were caused by reconstructing the edge
+direction from a late pin read. Two candidate fixes, both recorded here:
+
+- OPTION A (IMPLEMENTED): capture the pin level in the fast EXTI IRQ together
+  with the timestamp, carry it through the queue, callbacks receive it. ~15
+  small edits, no fork changes. Correct because the L9779 filter guarantees
+  >=4 us between output edges and the fast IRQ reads within ~2-3 us (20x
+  margin at 7000 rpm). Residual weakness: level and timestamp are ~2-3 us
+  apart (not atomic); only matters for edges closer than ~3 us = pure noise.
+- OPTION B (NOT DONE, follow-up): timer input capture (ICU) - the hardware
+  latches direction + timestamp atomically, exactly what the stock ME17 does.
+  Blockers: (1) PF8's timer AF on AT32F435 must be confirmed from the Artery
+  datasheet (F429-style TIM13_CH1/AF9 is likely but unverified - the repo has
+  no AF table); (2) STM32_ICU_USE_TIM12/13/14 exist in the at32 mcuconf and
+  the TIMv1 icu_lld compiles, but the ICU driver has never been exercised on
+  the AT32 port; (3) TMR13 shares its interrupt vector with TMR8_UP (F4
+  layout) - dispatch plumbing unverified. If the AF exists, B is the
+  production-grade upgrade (also removes the 2-3 us timestamp jitter from the
+  IRQ latency).
+
+On-car validation of A: rawtrg at 4000+ rpm must show clean alternating F/R
+(no same-edge runs) and the high-rpm C9002 events must disappear.

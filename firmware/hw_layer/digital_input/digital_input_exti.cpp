@@ -40,6 +40,15 @@ struct ExtiChannel
 	ExtiCallback Callback = nullptr;
 	void* CallbackData;
 
+	// Line for the fast-IRQ level capture: the pin level is read HERE, a few us
+	// after the edge, and travels with the timestamp through the queue. Reading
+	// it in the handoff (like the old code) is wrong at high rpm - the handoff
+	// can run up to ~1 ms after the edge, by which time the pin may already
+	// have toggled again (the 113 us edge interval at 4557 rpm) and the
+	// callback would reconstruct the WRONG edge direction: phantom eaten/extra
+	// teeth, C9002 sync misses, the whole high-rpm trigger storm.
+	ioline_t Line = PAL_NOLINE;
+
 	// Name is also used as an enable bit
 	const char* Name = nullptr;
 };
@@ -82,6 +91,7 @@ int efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, ExtiC
 	channel.Name = msg;
 
 	ioline_t line = PAL_LINE(port, index);
+	channel.Line = line;
 	palEnableLineEvent(line, mode);
 
 	return 0;
@@ -114,6 +124,7 @@ void efiExtiDisablePin(brain_pin_e brainPin)
 	/* mark unused */
 	channel.Name = nullptr;
 	channel.Callback = nullptr;
+	channel.Line = PAL_NOLINE;
 	channel.CallbackData = nullptr;
 }
 
@@ -125,6 +136,11 @@ static inline void triggerInterrupt() {
 struct ExtiQueueEntry {
 	efitick_t Timestamp;
 	uint8_t Channel;
+	// Pin level captured in the fast IRQ, ~2-3 us after the edge - the only
+	// place where it is still guaranteed to describe THIS edge. The L9779
+	// output filter clamps the minimum edge spacing to ~4 us, so the read is
+	// inside the quiet zone even at 7000 rpm (68 us half-tooth).
+	bool Level;
 };
 
 template <typename T, size_t TSize>
@@ -195,7 +211,7 @@ CH_IRQ_HANDLER(STM32_I2C1_EVENT_HANDLER) {
 			auto& channel = channels[entry.Channel];
 
 			if (channel.Callback) {
-				channel.Callback(channel.CallbackData, timestamp);
+				channel.Callback(channel.CallbackData, timestamp, entry.Level);
 			}
 		} else {
 			overflowCounter++;
@@ -218,7 +234,13 @@ void handleExtiIsr(uint8_t index) {
 	extiGetAndClearGroup1(1U << index, pr);
 
 	if (pr & (1 << index)) {
-		queue.push({getTimeNowNt(), index});
+		// Capture the pin level HERE, in the fast IRQ: EXTI tells us only that
+		// an edge happened, not its direction. The handoff callback runs up to
+		// ~1 ms later (the decode chain lives in the same ISR), and by then the
+		// level belongs to a later edge at running rpm - a wrong-direction
+		// event that the decoder sees as a phantom eaten/extra tooth.
+		bool level = palReadLine(channels[index].Line);
+		queue.push({getTimeNowNt(), index, level});
 
 		triggerInterrupt();
 	}

@@ -65,8 +65,9 @@
 
 #if EFI_PROD_CODE && defined( HELLEN_BOARD_ID_PIN_1) && !defined(HW_HELLEN_SKIP_BOARD_TYPE)
 
-static void hellenBoardIdInputCallback(void *arg, efitick_t nowNt) {
+static void hellenBoardIdInputCallback(void *arg, efitick_t nowNt, bool level) {
 	UNUSED(arg);
+	UNUSED(level);
 	HellenBoardIdFinderState *state = (HellenBoardIdFinderState *)arg;
 	// Now start discharging immediately! This should be the first command in the interrupt handler.
 	palClearPad(state->rOutputPinPort, state->rOutputPinIdx);
