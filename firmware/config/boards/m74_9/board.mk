@@ -7,6 +7,7 @@ ifneq ($(IS_RE_BOOTLOADER),yes)
 BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp \
   $(BOARD_DIR)/m74_9_can.cpp \
   $(BOARD_DIR)/m74_9_tooth_diag.cpp \
+  $(BOARD_DIR)/m74_9_vr_model.cpp \
   $(BOARD_DIR)/../at_start_f435/board_storage.cpp
 else
 BOARDCPPSRC = $(BOARD_DIR)/board_bootloader.cpp

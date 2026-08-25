@@ -7285,3 +7285,30 @@ Still open: the eaten-tooth mechanism at 1763-4005 rpm (57/58) was NOT present
 in the coast dump - the gap structure there preserves the count. The definitive
 capture is a rawtrg at ~3000 rpm right at a C9003; the anchor correction and
 the tooth-loss tolerance both cover the known failure until then.
+
+## 2026-08-24 - m74_9: VR amplitude model (hysteresis level estimator)
+
+The L9779 auto-hysteresis quantizes the VR peak into 5 levels (PV1-4: 930/
+1600/2300/3000 mV; HI1-5: 5/10/17/32/51 uA = 50/100/173/322/510 mV on this
+board's 10k). The VR peak scales with rpm (Vp = k*rpm), so one calibration
+scalar k predicts from rpm alone: the hysteresis level, the expected gap
+shift per level, and the eat-risk (Vp near a PV quantization boundary is
+where the auto-H can momentarily reach the local amplitude).
+
+| File | Change |
+| --- | --- |
+| firmware/config/boards/m74_9/m74_9_vr_model.h/.cpp | NEW: model + tables, 'vrmodel'/'vrk' console commands (k in RAM, 0 = off) |
+| firmware/config/boards/m74_9/board.mk | new source added |
+| firmware/config/boards/m74_9/board_configuration.cpp | custom_board_vrGapShiftPitch + console command registration |
+| firmware/hw_layer/board_overrides.h, hardware.cpp | custom_board_vrGapShiftPitch (float hook) |
+| firmware/controllers/trigger/trigger_decoder.cpp | out-of-band gap measurement falls back to the model estimate instead of freezing |
+| unit_tests/tests/trigger/test_60_2_cranking_transition.cpp | model-fallback test |
+
+The expected shift table is SEEDED with the coast measurement (0.63 pitch
+per level); the per-level split needs the 2000-7000 rpm car captures. k is
+calibrated on the car with 'vrk <mV/rpm>' (one bench VR-peak measurement at
+a known rpm, or a fit from the measured shift). Persisting k as a tune field
+(board_engine_configuration.txt + settings storage) is the follow-up once
+the model is validated.
+
+Validation: unit tests 1164/1164 pass, compile_m74_9.sh BUILD SUCCESSFUL.

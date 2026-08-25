@@ -889,6 +889,38 @@ TEST(trigger, crankingTransition60_2GapAnchorCorrectionIgnoresStretchedGap) {
 }
 
 /**
+ * With the amplitude-model fallback (custom_board_vrGapShiftPitch, m74_9) an
+ * out-of-band measurement (stretched gap) pulls the correction toward the
+ * model's expected shift instead of freezing the last value.
+ */
+TEST(trigger, crankingTransition60_2GapAnchorCorrectionModelFallback) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	SyncGapAnchorCorrectionScope anchorCorr;
+	struct ModelScope {
+		ModelScope() { custom_board_vrGapShiftPitch = []() { return 0.7f; }; }
+		~ModelScope() { custom_board_vrGapShiftPitch = std::nullopt; }
+	} model;
+	// the user's m74_9 runs the 60-2 wheel on the crank
+	setCrankOperationMode();
+	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
+
+	static constexpr float runningSlotMs = 0.4f;
+
+	// learn from a compressed gap first
+	for (int i = 0; i < 3; i++) {
+		fire60_2Revolution(eth, runningSlotMs, 2.36f);
+	}
+	EXPECT_GT(engine->triggerCentral.gapAnchorCorrectionDeg, 2.0f) << "learned from the compressed gap";
+
+	// a stretched gap is out of band: the correction moves toward the model's
+	// 0.7 pitch = 4.2 deg instead of freezing
+	fire60_2Revolution(eth, runningSlotMs, 3.6f);
+	fire60_2Revolution(eth, runningSlotMs, 3.6f);
+	EXPECT_NEAR(4.2f, engine->triggerCentral.gapAnchorCorrectionDeg, 0.8f) << "model fallback pulls the correction";
+	EXPECT_GT(engine->triggerCentral.gapAnchorCorrectionDeg, 3.4f) << "no freeze at the last measured value";
+}
+
+/**
  * The desync -> re-sync storm the m74_9 car sees during cranking chaos:
  * a missed tooth desyncs the decoder (C9003), a false gap pair re-syncs it
  * mid-revolution (the position gate is bypassed while unsynchronized), and
