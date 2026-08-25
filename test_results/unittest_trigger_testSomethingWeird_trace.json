@@ -1,0 +1,6 @@
+{"traceEvents": [
+{"name":"process_name","ph":"M","pid":-16,"tid":0,"args":{"name":"Main"}}
+,
+{"name":"sync","ph":"E","tid":0,"pid":3,"ts":0.000000},
+{"name":"sync","ph":"B","tid":0,"pid":3,"ts":0.000000},
+{"name":"sync","ph":"B","tid":0,"pid":3,"ts":0.000000}]}

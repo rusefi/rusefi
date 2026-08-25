@@ -26,4 +26,11 @@ struct_no_prefix trigger_central_s
 
 	uint32_t triggerElapsedUs
 
+// VVT_POLLED_BINARY state
+bit binaryCamAtCrankRise
+bit binaryCamAtCrankFall
+bit m_binaryCamRiseSampleValid
+int8_t m_lastBinarySyncCode
+int8_t m_cachedCrankDivider
+
 end_struct

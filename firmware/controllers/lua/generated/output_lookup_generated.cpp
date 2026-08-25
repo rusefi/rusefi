@@ -1830,6 +1830,21 @@ float getOutputValueByHash(const int hash) {
 // triggerElapsedUs
 		case 767689023:
 			return engine->triggerCentral.triggerElapsedUs;
+// binaryCamAtCrankRise
+		case -1964255950:
+			return engine->triggerCentral.binaryCamAtCrankRise;
+// binaryCamAtCrankFall
+		case -1964696130:
+			return engine->triggerCentral.binaryCamAtCrankFall;
+// m_binaryCamRiseSampleValid
+		case -942428116:
+			return engine->triggerCentral.m_binaryCamRiseSampleValid;
+// m_lastBinarySyncCode
+		case -165857758:
+			return engine->triggerCentral.m_lastBinarySyncCode;
+// m_cachedCrankDivider
+		case 257033311:
+			return engine->triggerCentral.m_cachedCrankDivider;
 // phaseResyncCounter
 		case 1065880714:
 			return static_cast<trigger_state_primary_s&>(engine->triggerCentral.triggerState).phaseResyncCounter;

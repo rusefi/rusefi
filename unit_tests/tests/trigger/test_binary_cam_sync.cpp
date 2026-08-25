@@ -21,28 +21,34 @@ static void runPolledBinaryLog(const char* filename) {
 
 	bool gotRpm = false;
 	bool firstCamSync = false;
+	float firstRpm = 0;
+	int firstRpmAt = 0;
+	float firstCamSyncTime = 0;
+	int firstCamSyncAt = 0;
 	int n = 0;
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
 
 		auto rpm = Sensor::getOrZero(SensorType::Rpm);
 		if (!gotRpm && rpm) {
-			printf("Got first RPM %f at %d for %s\n", rpm, n, filename);
+			firstRpm = rpm;
+			firstRpmAt = n;
 			gotRpm = true;
 		}
 		if (!firstCamSync && engine->triggerCentral.triggerState.hasSynchronizedPhase()) {
-			float syncTime = getTimeNowUs() / 1'000'000.0f;
-			printf("Got first cam sync at %f s, at %d for %s\n", syncTime, n, filename);
+			firstCamSyncTime = getTimeNowUs() / 1'000'000.0f;
+			firstCamSyncAt = n;
 			firstCamSync = true;
 		}
 		n++;
 	}
 
-	printf("%s: shaftSynchronized=%d hasSynchronizedPhase=%d resyncs=%d\n",
-		filename,
+	printf("POLLED BINARY, %f at %d, %f s at %d, %d, %d, %d, %s\n",
+		firstRpm, firstRpmAt, firstCamSyncTime, firstCamSyncAt,
 		engine->triggerCentral.triggerState.getShaftSynchronized(),
 		engine->triggerCentral.triggerState.hasSynchronizedPhase(),
-		engine->triggerCentral.triggerState.phaseResyncCounter);
+		engine->triggerCentral.triggerState.phaseResyncCounter,
+		filename);
 }
 
 TEST(trigger, polledBinaryCamSyncCsv3000gt_cranking_rusefi) {

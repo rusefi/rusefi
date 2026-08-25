@@ -78,12 +78,12 @@ void setSingleCoilDwell() {
 ignition_mode_e getCurrentIgnitionMode() {
 	ignition_mode_e ignitionMode = engineConfiguration->ignitionMode;
 #if EFI_SHAFT_POSITION_INPUT
-	// In spin-up cranking mode we don't have full phase sync info yet, so wasted spark mode is better
+	// Only fall back to wasted spark if we are missing phase sync, not just because we are spinning up
 	if (ignitionMode == IM_INDIVIDUAL_COILS) {
 		bool missingPhaseInfoForSequential =
 			!engine->triggerCentral.triggerState.hasSynchronizedPhase();
 
-		if (engine->rpmCalculator.isSpinningUp() || missingPhaseInfoForSequential) {
+		if (missingPhaseInfoForSequential) {
 			ignitionMode = IM_WASTED_SPARK;
 		}
 	}

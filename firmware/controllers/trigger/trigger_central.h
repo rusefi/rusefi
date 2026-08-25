@@ -55,6 +55,7 @@ public:
 	 * not to be confused with a totally different trigger _wheel_ sync which could be either crank wheel sync or cam wheel sync
 	 */
 	angle_t syncEnginePhaseAndReport(int divider, int remainder);
+	void handlePolledBinaryCamSync(bool isCrankRising, efitick_t nowNt);
 	void handleShaftSignal(trigger_event_e signal, efitick_t timestamp);
 	int getHwEventCounter(int index) const;
 	void resetCounters();

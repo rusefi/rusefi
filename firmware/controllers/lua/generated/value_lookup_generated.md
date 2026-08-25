@@ -1933,12 +1933,6 @@ Delay before cutting fuel due to low oil pressure. Use this to ignore short pres
 ### engineShutDownPeriod
 
 
-### can3ListenMode
-
-
-### verboseCan3
-
-
 ### knockSuppressMinTps
 Below TPS value all knock suppression will be disabled.
 
@@ -2116,6 +2110,9 @@ Misfire Detection: wobble EMA alpha when spread is decreasing.
 ### misfireSettleCycles
 Misfire Detection: firings to wait after entering idle before flagging starts. 0 = immediate.
 
+### binarySyncRemainderOffset
+VVT Polled Binary: crank phase remainder offset for binary cam sync
+
 ### tcu_shiftTime
 
 
@@ -2216,8 +2213,5 @@ Misfire Detection: firings to wait after entering idle before flagging starts. 0
 
 
 ### wizardInjectorOutputs
-
-
-### cyl8certification
 
 

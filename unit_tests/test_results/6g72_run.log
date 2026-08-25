@@ -1,0 +1,1008 @@
+Note: Google Test filter = real6g72.*:trigger.polledBinaryCamSyncCsv3000gt*
+[==========] Running 10 tests from 2 test suites.
+[----------] Global test environment set-up.
+[----------] 5 tests from trigger
+[ RUN      ] trigger.polledBinaryCamSyncCsv3000gt_cranking_rusefi
+Writing MLS [test_results/unittest_trigger_polledBinaryCamSyncCsv3000gt_cranking_rusefi.msl]
+Writing CSV [test_results/unittest_trigger_polledBinaryCamSyncCsv3000gt_cranking_rusefi.csv]
+shaft sync Yes at 0.000000 s (errors=0)
+commonInitEngineController
+getSpeedDensityAirmass map=96.26
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+Reading from tests/trigger/resources/3000gt_cranking_rusefi.csv
+shaft sync Yes at 1.623576 s (errors=0)
+Got first RPM 112.550507 at 7 for tests/trigger/resources/3000gt_cranking_rusefi.csv
+polledBinary resolve at 1.766444 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=127.9
+phaseResync at 1.766444 s: totalShift=360.00, syncCounter=3, divider=6, remainder=3
+syncEnginePhaseAndReport at 1.766444 s: totalShift=360.00, oldSync=0
+Got first cam sync at 1.766444 s, at 11 for tests/trigger/resources/3000gt_cranking_rusefi.csv
+polledBinary resolve at 2.150364 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=160.0
+syncEnginePhaseAndReport at 2.150364 s: totalShift=0.00, oldSync=6
+polledBinary resolve at 2.500608 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=175.1
+syncEnginePhaseAndReport at 2.500608 s: totalShift=0.00, oldSync=9
+polledBinary resolve at 2.853118 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=170.5
+syncEnginePhaseAndReport at 2.853118 s: totalShift=0.00, oldSync=12
+polledBinary resolve at 3.191454 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=178.6
+syncEnginePhaseAndReport at 3.191454 s: totalShift=0.00, oldSync=15
+shaft sync No at 3.252230 s (errors=1)
+shaft sync Yes at 3.315034 s (errors=1)
+polledBinary resolve at 3.387844 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=0.0
+syncEnginePhaseAndReport at 3.387844 s: totalShift=0.00, oldSync=0
+polledBinary resolve at 3.604738 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=285.7
+syncEnginePhaseAndReport at 3.604738 s: totalShift=0.00, oldSync=3
+polledBinary resolve at 3.867204 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=221.4
+syncEnginePhaseAndReport at 3.867204 s: totalShift=0.00, oldSync=6
+shaft sync No at 3.922412 s (errors=2)
+shaft sync Yes at 3.977296 s (errors=2)
+polledBinary resolve at 4.037978 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=0.0
+phaseResync at 4.037978 s: totalShift=360.00, syncCounter=3, divider=6, remainder=3
+syncEnginePhaseAndReport at 4.037978 s: totalShift=360.00, oldSync=0
+polledBinary resolve at 4.267810 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=253.1
+syncEnginePhaseAndReport at 4.267810 s: totalShift=0.00, oldSync=6
+shaft sync No at 4.333950 s (errors=3)
+shaft sync Yes at 4.403390 s (errors=3)
+polledBinary resolve at 4.478354 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=0.0
+phaseResync at 4.478354 s: totalShift=360.00, syncCounter=3, divider=6, remainder=3
+syncEnginePhaseAndReport at 4.478354 s: totalShift=360.00, oldSync=0
+shaft sync No at 4.574494 s (errors=4)
+shaft sync Yes at 4.678014 s (errors=4)
+polledBinary resolve at 4.841381 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=353.4
+phaseResync at 4.841381 s: totalShift=120.00, syncCounter=3, divider=6, remainder=3
+syncEnginePhaseAndReport at 4.841381 s: totalShift=120.00, oldSync=2
+polledBinary resolve at 5.123766 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=204.0
+syncEnginePhaseAndReport at 5.123766 s: totalShift=0.00, oldSync=6
+shaft sync No at 5.123766 s (errors=5)
+tests/trigger/resources/3000gt_cranking_rusefi.csv: shaftSynchronized=0 hasSynchronizedPhase=0 resyncs=4
+Writing 356 records to test_results/unittest_trigger_polledBinaryCamSyncCsv3000gt_cranking_rusefi.logicdata
+Writing 356 records to test_results/unittest_trigger_polledBinaryCamSyncCsv3000gt_cranking_rusefi.events.txt
+[       OK ] trigger.polledBinaryCamSyncCsv3000gt_cranking_rusefi (548 ms)
+[ RUN      ] trigger.polledBinaryCamSyncCsv3000gt_cranking_rusefi_2
+Writing MLS [test_results/unittest_trigger_polledBinaryCamSyncCsv3000gt_cranking_rusefi_2.msl]
+Writing CSV [test_results/unittest_trigger_polledBinaryCamSyncCsv3000gt_cranking_rusefi_2.csv]
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+commonInitEngineController
+getSpeedDensityAirmass map=96.26
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+Reading from tests/trigger/resources/3000gt_cranking_rusefi_2.csv
+shaft sync Yes at 1.964394 s (errors=0)
+Got first RPM 117.630455 at 7 for tests/trigger/resources/3000gt_cranking_rusefi_2.csv
+polledBinary resolve at 2.103776 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=132.5
+phaseResync at 2.103776 s: totalShift=360.00, syncCounter=3, divider=6, remainder=3
+syncEnginePhaseAndReport at 2.103776 s: totalShift=360.00, oldSync=0
+Got first cam sync at 2.103776 s, at 11 for tests/trigger/resources/3000gt_cranking_rusefi_2.csv
+polledBinary resolve at 2.481202 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=162.9
+syncEnginePhaseAndReport at 2.481202 s: totalShift=0.00, oldSync=6
+polledBinary resolve at 2.828808 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=176.5
+syncEnginePhaseAndReport at 2.828808 s: totalShift=0.00, oldSync=9
+polledBinary resolve at 3.175218 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=173.4
+syncEnginePhaseAndReport at 3.175218 s: totalShift=0.00, oldSync=12
+polledBinary resolve at 3.506320 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=179.4
+syncEnginePhaseAndReport at 3.506320 s: totalShift=0.00, oldSync=15
+shaft sync No at 3.506320 s (errors=1)
+shaft sync Yes at 3.619404 s (errors=1)
+polledBinary resolve at 3.684784 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=0.0
+syncEnginePhaseAndReport at 3.684784 s: totalShift=0.00, oldSync=0
+polledBinary resolve at 3.947796 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=229.7
+syncEnginePhaseAndReport at 3.947796 s: totalShift=0.00, oldSync=3
+shaft sync No at 3.947796 s (errors=2)
+shaft sync Yes at 5.502046 s (errors=2)
+polledBinary resolve at 5.641928 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=0.0
+syncEnginePhaseAndReport at 5.641928 s: totalShift=0.00, oldSync=0
+polledBinary resolve at 6.011574 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=166.1
+syncEnginePhaseAndReport at 6.011574 s: totalShift=0.00, oldSync=3
+polledBinary resolve at 6.373126 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=167.1
+syncEnginePhaseAndReport at 6.373126 s: totalShift=0.00, oldSync=6
+polledBinary resolve at 6.721430 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=174.9
+syncEnginePhaseAndReport at 6.721430 s: totalShift=0.00, oldSync=9
+shaft sync No at 6.831942 s (errors=3)
+shaft sync Yes at 6.940288 s (errors=3)
+polledBinary resolve at 7.157760 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=258.1
+phaseResync at 7.157760 s: totalShift=120.00, syncCounter=3, divider=6, remainder=3
+syncEnginePhaseAndReport at 7.157760 s: totalShift=120.00, oldSync=2
+polledBinary resolve at 7.456919 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=194.4
+syncEnginePhaseAndReport at 7.456919 s: totalShift=0.00, oldSync=6
+shaft sync No at 7.666694 s (errors=4)
+shaft sync Yes at 7.777034 s (errors=4)
+polledBinary resolve at 7.919006 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=283.5
+phaseResync at 7.919006 s: totalShift=600.00, syncCounter=6, divider=6, remainder=0
+syncEnginePhaseAndReport at 7.919006 s: totalShift=600.00, oldSync=1
+polledBinary resolve at 8.202223 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=207.3
+syncEnginePhaseAndReport at 8.202223 s: totalShift=0.00, oldSync=9
+polledBinary resolve at 8.532916 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=173.3
+syncEnginePhaseAndReport at 8.532916 s: totalShift=0.00, oldSync=12
+shaft sync No at 8.752298 s (errors=5)
+shaft sync Yes at 8.856926 s (errors=5)
+polledBinary resolve at 8.954708 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=408.0
+phaseResync at 8.954708 s: totalShift=600.00, syncCounter=6, divider=6, remainder=0
+syncEnginePhaseAndReport at 8.954708 s: totalShift=600.00, oldSync=1
+polledBinary resolve at 9.146747 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=294.1
+syncEnginePhaseAndReport at 9.146747 s: totalShift=0.00, oldSync=9
+shaft sync No at 9.257054 s (errors=6)
+tests/trigger/resources/3000gt_cranking_rusefi_2.csv: shaftSynchronized=0 hasSynchronizedPhase=0 resyncs=4
+Writing 547 records to test_results/unittest_trigger_polledBinaryCamSyncCsv3000gt_cranking_rusefi_2.logicdata
+Writing 547 records to test_results/unittest_trigger_polledBinaryCamSyncCsv3000gt_cranking_rusefi_2.events.txt
+[       OK ] trigger.polledBinaryCamSyncCsv3000gt_cranking_rusefi_2 (966 ms)
+[ RUN      ] trigger.polledBinaryCamSyncCsv3000gt_crank_cam_cranking
+Writing MLS [test_results/unittest_trigger_polledBinaryCamSyncCsv3000gt_crank_cam_cranking.msl]
+Writing CSV [test_results/unittest_trigger_polledBinaryCamSyncCsv3000gt_crank_cam_cranking.csv]
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+commonInitEngineController
+getSpeedDensityAirmass map=96.26
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+Reading from tests/trigger/resources/3000gt_crank_cam_cranking.csv
+shaft sync Yes at 2.256000 s (errors=0)
+Got first RPM 116.992592 at 7 for tests/trigger/resources/3000gt_crank_cam_cranking.csv
+polledBinary resolve at 2.515726 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=149.1
+phaseResync at 2.515726 s: totalShift=600.00, syncCounter=6, divider=6, remainder=0
+syncEnginePhaseAndReport at 2.515726 s: totalShift=600.00, oldSync=1
+shaft sync No at 2.515726 s (errors=1)
+shaft sync Yes at 2.627848 s (errors=1)
+polledBinary resolve at 2.697100 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=916.4
+phaseResync at 2.697100 s: totalShift=480.00, syncCounter=6, divider=6, remainder=0
+syncEnginePhaseAndReport at 2.697100 s: totalShift=480.00, oldSync=2
+Got first cam sync at 2.697100 s, at 35 for tests/trigger/resources/3000gt_crank_cam_cranking.csv
+polledBinary resolve at 2.762992 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=913.0
+syncEnginePhaseAndReport at 2.762992 s: totalShift=0.00, oldSync=9
+shaft sync No at 2.774746 s (errors=2)
+shaft sync Yes at 2.802314 s (errors=2)
+polledBinary resolve at 2.820820 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=0.0
+syncEnginePhaseAndReport at 2.820820 s: totalShift=0.00, oldSync=0
+polledBinary resolve at 2.874072 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1141.8
+syncEnginePhaseAndReport at 2.874072 s: totalShift=0.00, oldSync=3
+polledBinary resolve at 2.924308 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1204.2
+syncEnginePhaseAndReport at 2.924308 s: totalShift=0.00, oldSync=6
+polledBinary resolve at 2.972672 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1247.2
+syncEnginePhaseAndReport at 2.972672 s: totalShift=0.00, oldSync=9
+polledBinary resolve at 3.019060 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1302.3
+syncEnginePhaseAndReport at 3.019060 s: totalShift=0.00, oldSync=12
+polledBinary resolve at 3.063854 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1346.6
+syncEnginePhaseAndReport at 3.063854 s: totalShift=0.00, oldSync=15
+polledBinary resolve at 3.107620 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1373.8
+syncEnginePhaseAndReport at 3.107620 s: totalShift=0.00, oldSync=18
+polledBinary resolve at 3.150698 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1396.3
+syncEnginePhaseAndReport at 3.150698 s: totalShift=0.00, oldSync=21
+polledBinary resolve at 3.193490 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1401.0
+syncEnginePhaseAndReport at 3.193490 s: totalShift=0.00, oldSync=24
+polledBinary resolve at 3.236162 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1405.5
+syncEnginePhaseAndReport at 3.236162 s: totalShift=0.00, oldSync=27
+polledBinary resolve at 3.278956 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1398.8
+syncEnginePhaseAndReport at 3.278956 s: totalShift=0.00, oldSync=30
+polledBinary resolve at 3.322054 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1390.0
+syncEnginePhaseAndReport at 3.322054 s: totalShift=0.00, oldSync=33
+polledBinary resolve at 3.365554 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1373.8
+syncEnginePhaseAndReport at 3.365554 s: totalShift=0.00, oldSync=36
+polledBinary resolve at 3.409698 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1355.7
+syncEnginePhaseAndReport at 3.409698 s: totalShift=0.00, oldSync=39
+polledBinary resolve at 3.454266 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1342.3
+syncEnginePhaseAndReport at 3.454266 s: totalShift=0.00, oldSync=42
+shaft sync No at 3.477882 s (errors=3)
+shaft sync Yes at 3.499306 s (errors=3)
+polledBinary resolve at 3.545028 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1306.7
+phaseResync at 3.545028 s: totalShift=480.00, syncCounter=6, divider=6, remainder=0
+syncEnginePhaseAndReport at 3.545028 s: totalShift=480.00, oldSync=2
+polledBinary resolve at 3.591450 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1288.3
+syncEnginePhaseAndReport at 3.591450 s: totalShift=0.00, oldSync=9
+polledBinary resolve at 3.638724 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1263.3
+syncEnginePhaseAndReport at 3.638724 s: totalShift=0.00, oldSync=12
+polledBinary resolve at 3.686822 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1241.8
+syncEnginePhaseAndReport at 3.686822 s: totalShift=0.00, oldSync=15
+polledBinary resolve at 3.735920 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1216.1
+syncEnginePhaseAndReport at 3.735920 s: totalShift=0.00, oldSync=18
+polledBinary resolve at 3.785944 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1194.2
+syncEnginePhaseAndReport at 3.785944 s: totalShift=0.00, oldSync=21
+polledBinary resolve at 3.837292 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1162.5
+syncEnginePhaseAndReport at 3.837292 s: totalShift=0.00, oldSync=24
+polledBinary resolve at 3.889798 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1135.2
+syncEnginePhaseAndReport at 3.889798 s: totalShift=0.00, oldSync=27
+polledBinary resolve at 3.943890 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1102.9
+syncEnginePhaseAndReport at 3.943890 s: totalShift=0.00, oldSync=30
+shaft sync No at 3.954770 s (errors=4)
+shaft sync Yes at 3.980890 s (errors=4)
+polledBinary resolve at 4.000038 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=0.0
+phaseResync at 4.000038 s: totalShift=360.00, syncCounter=3, divider=6, remainder=3
+syncEnginePhaseAndReport at 4.000038 s: totalShift=360.00, oldSync=0
+polledBinary resolve at 4.060696 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=972.7
+syncEnginePhaseAndReport at 4.060696 s: totalShift=0.00, oldSync=6
+polledBinary resolve at 4.127189 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=885.3
+syncEnginePhaseAndReport at 4.127189 s: totalShift=0.00, oldSync=9
+polledBinary resolve at 4.201738 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=785.6
+syncEnginePhaseAndReport at 4.201738 s: totalShift=0.00, oldSync=12
+polledBinary resolve at 4.288066 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=673.9
+syncEnginePhaseAndReport at 4.288066 s: totalShift=0.00, oldSync=15
+polledBinary resolve at 4.392748 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=550.7
+syncEnginePhaseAndReport at 4.392748 s: totalShift=0.00, oldSync=18
+polledBinary resolve at 4.526890 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=426.2
+syncEnginePhaseAndReport at 4.526890 s: totalShift=0.00, oldSync=21
+polledBinary resolve at 4.738475 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=260.5
+syncEnginePhaseAndReport at 4.738475 s: totalShift=0.00, oldSync=24
+shaft sync No at 4.738475 s (errors=5)
+tests/trigger/resources/3000gt_crank_cam_cranking.csv: shaftSynchronized=0 hasSynchronizedPhase=0 resyncs=4
+Writing 563 records to test_results/unittest_trigger_polledBinaryCamSyncCsv3000gt_crank_cam_cranking.logicdata
+Writing 563 records to test_results/unittest_trigger_polledBinaryCamSyncCsv3000gt_crank_cam_cranking.events.txt
+[       OK ] trigger.polledBinaryCamSyncCsv3000gt_crank_cam_cranking (518 ms)
+[ RUN      ] trigger.polledBinaryCamSyncCsv3000gt_crank_cam_cranking_2
+Writing MLS [test_results/unittest_trigger_polledBinaryCamSyncCsv3000gt_crank_cam_cranking_2.msl]
+Writing CSV [test_results/unittest_trigger_polledBinaryCamSyncCsv3000gt_crank_cam_cranking_2.csv]
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+commonInitEngineController
+getSpeedDensityAirmass map=96.26
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+Reading from tests/trigger/resources/3000gt_crank_cam_cranking_2.csv
+shaft sync Yes at 2.236442 s (errors=0)
+Got first RPM 126.876984 at 12 for tests/trigger/resources/3000gt_crank_cam_cranking_2.csv
+shaft sync No at 2.375244 s (errors=1)
+shaft sync Yes at 2.545752 s (errors=1)
+polledBinary resolve at 2.570400 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=0.0
+phaseResync at 2.570400 s: totalShift=360.00, syncCounter=3, divider=6, remainder=3
+syncEnginePhaseAndReport at 2.570400 s: totalShift=360.00, oldSync=0
+Got first cam sync at 2.570400 s, at 32 for tests/trigger/resources/3000gt_crank_cam_cranking_2.csv
+polledBinary resolve at 2.636308 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=946.3
+syncEnginePhaseAndReport at 2.636308 s: totalShift=0.00, oldSync=6
+polledBinary resolve at 2.695680 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1038.0
+syncEnginePhaseAndReport at 2.695680 s: totalShift=0.00, oldSync=9
+polledBinary resolve at 2.749080 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1140.1
+syncEnginePhaseAndReport at 2.749080 s: totalShift=0.00, oldSync=12
+polledBinary resolve at 2.798954 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1217.0
+syncEnginePhaseAndReport at 2.798954 s: totalShift=0.00, oldSync=15
+polledBinary resolve at 2.846174 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1282.7
+syncEnginePhaseAndReport at 2.846174 s: totalShift=0.00, oldSync=18
+polledBinary resolve at 2.891012 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1349.3
+syncEnginePhaseAndReport at 2.891012 s: totalShift=0.00, oldSync=21
+polledBinary resolve at 2.934356 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1389.3
+syncEnginePhaseAndReport at 2.934356 s: totalShift=0.00, oldSync=24
+polledBinary resolve at 2.976696 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1422.9
+syncEnginePhaseAndReport at 2.976696 s: totalShift=0.00, oldSync=27
+polledBinary resolve at 3.018368 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1441.1
+syncEnginePhaseAndReport at 3.018368 s: totalShift=0.00, oldSync=30
+polledBinary resolve at 3.059678 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1453.9
+syncEnginePhaseAndReport at 3.059678 s: totalShift=0.00, oldSync=33
+polledBinary resolve at 3.100936 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1451.0
+syncEnginePhaseAndReport at 3.100936 s: totalShift=0.00, oldSync=36
+polledBinary resolve at 3.142338 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1446.8
+syncEnginePhaseAndReport at 3.142338 s: totalShift=0.00, oldSync=39
+polledBinary resolve at 3.184022 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1436.0
+syncEnginePhaseAndReport at 3.184022 s: totalShift=0.00, oldSync=42
+polledBinary resolve at 3.226214 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1416.8
+syncEnginePhaseAndReport at 3.226214 s: totalShift=0.00, oldSync=45
+polledBinary resolve at 3.269022 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1395.7
+syncEnginePhaseAndReport at 3.269022 s: totalShift=0.00, oldSync=48
+polledBinary resolve at 3.312430 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1378.5
+syncEnginePhaseAndReport at 3.312430 s: totalShift=0.00, oldSync=51
+polledBinary resolve at 3.356634 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1351.9
+syncEnginePhaseAndReport at 3.356634 s: totalShift=0.00, oldSync=54
+polledBinary resolve at 3.401880 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1317.3
+syncEnginePhaseAndReport at 3.401880 s: totalShift=0.00, oldSync=57
+polledBinary resolve at 3.448222 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1288.5
+syncEnginePhaseAndReport at 3.448222 s: totalShift=0.00, oldSync=60
+polledBinary resolve at 3.495478 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1265.0
+syncEnginePhaseAndReport at 3.495478 s: totalShift=0.00, oldSync=63
+polledBinary resolve at 3.543802 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1236.6
+syncEnginePhaseAndReport at 3.543802 s: totalShift=0.00, oldSync=66
+polledBinary resolve at 3.593166 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1209.2
+syncEnginePhaseAndReport at 3.593166 s: totalShift=0.00, oldSync=69
+polledBinary resolve at 3.644064 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1171.9
+syncEnginePhaseAndReport at 3.644064 s: totalShift=0.00, oldSync=72
+polledBinary resolve at 3.696150 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1145.9
+syncEnginePhaseAndReport at 3.696150 s: totalShift=0.00, oldSync=75
+polledBinary resolve at 3.750014 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1107.7
+syncEnginePhaseAndReport at 3.750014 s: totalShift=0.00, oldSync=78
+polledBinary resolve at 3.805252 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1078.3
+syncEnginePhaseAndReport at 3.805252 s: totalShift=0.00, oldSync=81
+polledBinary resolve at 3.862382 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1042.3
+syncEnginePhaseAndReport at 3.862382 s: totalShift=0.00, oldSync=84
+polledBinary resolve at 3.921106 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1016.5
+syncEnginePhaseAndReport at 3.921106 s: totalShift=0.00, oldSync=87
+shaft sync No at 3.952572 s (errors=2)
+shaft sync Yes at 3.981278 s (errors=2)
+polledBinary resolve at 4.042744 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=971.3
+phaseResync at 4.042744 s: totalShift=120.00, syncCounter=3, divider=6, remainder=3
+syncEnginePhaseAndReport at 4.042744 s: totalShift=120.00, oldSync=2
+polledBinary resolve at 4.105640 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=950.5
+syncEnginePhaseAndReport at 4.105640 s: totalShift=0.00, oldSync=6
+polledBinary resolve at 4.169472 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=936.7
+syncEnginePhaseAndReport at 4.169472 s: totalShift=0.00, oldSync=9
+polledBinary resolve at 4.234700 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=916.5
+syncEnginePhaseAndReport at 4.234700 s: totalShift=0.00, oldSync=12
+polledBinary resolve at 4.300905 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=902.9
+syncEnginePhaseAndReport at 4.300905 s: totalShift=0.00, oldSync=15
+polledBinary resolve at 4.368236 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=888.6
+syncEnginePhaseAndReport at 4.368236 s: totalShift=0.00, oldSync=18
+shaft sync No at 4.403822 s (errors=3)
+shaft sync Yes at 4.436091 s (errors=3)
+polledBinary resolve at 4.490824 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1064.5
+phaseResync at 4.490824 s: totalShift=480.00, syncCounter=6, divider=6, remainder=0
+syncEnginePhaseAndReport at 4.490824 s: totalShift=480.00, oldSync=2
+shaft sync No at 4.494940 s (errors=4)
+shaft sync Yes at 4.527526 s (errors=4)
+polledBinary resolve at 4.573350 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=873.6
+phaseResync at 4.573350 s: totalShift=240.00, syncCounter=3, divider=6, remainder=3
+syncEnginePhaseAndReport at 4.573350 s: totalShift=240.00, oldSync=1
+polledBinary resolve at 4.642714 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=864.5
+syncEnginePhaseAndReport at 4.642714 s: totalShift=0.00, oldSync=6
+polledBinary resolve at 4.711996 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=865.4
+syncEnginePhaseAndReport at 4.711996 s: totalShift=0.00, oldSync=9
+polledBinary resolve at 4.781429 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=863.0
+syncEnginePhaseAndReport at 4.781429 s: totalShift=0.00, oldSync=12
+polledBinary resolve at 4.850563 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=868.4
+syncEnginePhaseAndReport at 4.850563 s: totalShift=0.00, oldSync=15
+polledBinary resolve at 4.919589 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=869.0
+syncEnginePhaseAndReport at 4.919589 s: totalShift=0.00, oldSync=18
+polledBinary resolve at 4.988254 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=874.3
+syncEnginePhaseAndReport at 4.988254 s: totalShift=0.00, oldSync=21
+polledBinary resolve at 5.056788 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=875.6
+syncEnginePhaseAndReport at 5.056788 s: totalShift=0.00, oldSync=24
+polledBinary resolve at 5.124524 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=887.0
+syncEnginePhaseAndReport at 5.124524 s: totalShift=0.00, oldSync=27
+polledBinary resolve at 5.191806 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=893.2
+syncEnginePhaseAndReport at 5.191806 s: totalShift=0.00, oldSync=30
+polledBinary resolve at 5.258304 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=904.2
+syncEnginePhaseAndReport at 5.258304 s: totalShift=0.00, oldSync=33
+polledBinary resolve at 5.324374 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=908.9
+syncEnginePhaseAndReport at 5.324374 s: totalShift=0.00, oldSync=36
+polledBinary resolve at 5.389737 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=919.6
+syncEnginePhaseAndReport at 5.389737 s: totalShift=0.00, oldSync=39
+shaft sync No at 5.402232 s (errors=5)
+shaft sync Yes at 5.433040 s (errors=5)
+polledBinary resolve at 5.454587 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=0.0
+syncEnginePhaseAndReport at 5.454587 s: totalShift=0.00, oldSync=0
+polledBinary resolve at 5.518796 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=935.2
+syncEnginePhaseAndReport at 5.518796 s: totalShift=0.00, oldSync=3
+polledBinary resolve at 5.569984 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1146.4
+syncEnginePhaseAndReport at 5.569984 s: totalShift=0.00, oldSync=6
+shaft sync No at 5.573913 s (errors=6)
+shaft sync Yes at 5.604150 s (errors=6)
+polledBinary resolve at 5.646502 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=944.4
+phaseResync at 5.646502 s: totalShift=240.00, syncCounter=3, divider=6, remainder=3
+syncEnginePhaseAndReport at 5.646502 s: totalShift=240.00, oldSync=1
+polledBinary resolve at 5.709668 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=949.7
+syncEnginePhaseAndReport at 5.709668 s: totalShift=0.00, oldSync=6
+polledBinary resolve at 5.772304 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=959.1
+syncEnginePhaseAndReport at 5.772304 s: totalShift=0.00, oldSync=9
+polledBinary resolve at 5.834790 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=960.8
+syncEnginePhaseAndReport at 5.834790 s: totalShift=0.00, oldSync=12
+polledBinary resolve at 5.896794 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=968.7
+syncEnginePhaseAndReport at 5.896794 s: totalShift=0.00, oldSync=15
+polledBinary resolve at 5.958570 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=971.7
+syncEnginePhaseAndReport at 5.958570 s: totalShift=0.00, oldSync=18
+polledBinary resolve at 6.020104 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=975.8
+syncEnginePhaseAndReport at 6.020104 s: totalShift=0.00, oldSync=21
+polledBinary resolve at 6.081443 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=976.8
+syncEnginePhaseAndReport at 6.081443 s: totalShift=0.00, oldSync=24
+polledBinary resolve at 6.142492 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=982.9
+syncEnginePhaseAndReport at 6.142492 s: totalShift=0.00, oldSync=27
+polledBinary resolve at 6.203907 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=976.1
+syncEnginePhaseAndReport at 6.203907 s: totalShift=0.00, oldSync=30
+polledBinary resolve at 6.265117 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=980.5
+syncEnginePhaseAndReport at 6.265117 s: totalShift=0.00, oldSync=33
+polledBinary resolve at 6.313574 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1220.0
+syncEnginePhaseAndReport at 6.313574 s: totalShift=0.00, oldSync=36
+shaft sync No at 6.317494 s (errors=7)
+shaft sync Yes at 6.346292 s (errors=7)
+polledBinary resolve at 6.386833 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=985.8
+phaseResync at 6.386833 s: totalShift=240.00, syncCounter=3, divider=6, remainder=3
+syncEnginePhaseAndReport at 6.386833 s: totalShift=240.00, oldSync=1
+polledBinary resolve at 6.447865 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=981.9
+syncEnginePhaseAndReport at 6.447865 s: totalShift=0.00, oldSync=6
+polledBinary resolve at 6.508871 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=983.1
+syncEnginePhaseAndReport at 6.508871 s: totalShift=0.00, oldSync=9
+polledBinary resolve at 6.569954 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=981.9
+syncEnginePhaseAndReport at 6.569954 s: totalShift=0.00, oldSync=12
+polledBinary resolve at 6.630891 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=984.4
+syncEnginePhaseAndReport at 6.630891 s: totalShift=0.00, oldSync=15
+polledBinary resolve at 6.691975 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=982.4
+syncEnginePhaseAndReport at 6.691975 s: totalShift=0.00, oldSync=18
+polledBinary resolve at 6.752797 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=986.7
+syncEnginePhaseAndReport at 6.752797 s: totalShift=0.00, oldSync=21
+polledBinary resolve at 6.813618 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=986.5
+syncEnginePhaseAndReport at 6.813618 s: totalShift=0.00, oldSync=24
+polledBinary resolve at 6.874301 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=988.9
+syncEnginePhaseAndReport at 6.874301 s: totalShift=0.00, oldSync=27
+polledBinary resolve at 6.934953 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=988.1
+syncEnginePhaseAndReport at 6.934953 s: totalShift=0.00, oldSync=30
+polledBinary resolve at 6.995477 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=990.6
+syncEnginePhaseAndReport at 6.995477 s: totalShift=0.00, oldSync=33
+polledBinary resolve at 7.056184 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=987.9
+syncEnginePhaseAndReport at 7.056184 s: totalShift=0.00, oldSync=36
+polledBinary resolve at 7.116645 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=991.7
+syncEnginePhaseAndReport at 7.116645 s: totalShift=0.00, oldSync=39
+polledBinary resolve at 7.177406 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=987.5
+syncEnginePhaseAndReport at 7.177406 s: totalShift=0.00, oldSync=42
+polledBinary resolve at 7.237915 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=991.4
+syncEnginePhaseAndReport at 7.237915 s: totalShift=0.00, oldSync=45
+polledBinary resolve at 7.298605 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=987.7
+syncEnginePhaseAndReport at 7.298605 s: totalShift=0.00, oldSync=48
+polledBinary resolve at 7.359229 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=989.8
+syncEnginePhaseAndReport at 7.359229 s: totalShift=0.00, oldSync=51
+polledBinary resolve at 7.419945 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=988.3
+syncEnginePhaseAndReport at 7.419945 s: totalShift=0.00, oldSync=54
+polledBinary resolve at 7.480303 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=993.9
+syncEnginePhaseAndReport at 7.480303 s: totalShift=0.00, oldSync=57
+polledBinary resolve at 7.540489 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=996.5
+syncEnginePhaseAndReport at 7.540489 s: totalShift=0.00, oldSync=60
+polledBinary resolve at 7.600747 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=992.7
+syncEnginePhaseAndReport at 7.600747 s: totalShift=0.00, oldSync=63
+polledBinary resolve at 7.661546 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=987.1
+syncEnginePhaseAndReport at 7.661546 s: totalShift=0.00, oldSync=66
+polledBinary resolve at 7.721903 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=994.8
+syncEnginePhaseAndReport at 7.721903 s: totalShift=0.00, oldSync=69
+tests/trigger/resources/3000gt_crank_cam_cranking_2.csv: shaftSynchronized=1 hasSynchronizedPhase=1 resyncs=6
+Writing 1350 records to test_results/unittest_trigger_polledBinaryCamSyncCsv3000gt_crank_cam_cranking_2.logicdata
+Writing 1350 records to test_results/unittest_trigger_polledBinaryCamSyncCsv3000gt_crank_cam_cranking_2.events.txt
+[       OK ] trigger.polledBinaryCamSyncCsv3000gt_crank_cam_cranking_2 (882 ms)
+[ RUN      ] trigger.polledBinaryCamSyncCsv3000gt_crank_cam_cranking_idle
+Writing MLS [test_results/unittest_trigger_polledBinaryCamSyncCsv3000gt_crank_cam_cranking_idle.msl]
+Writing CSV [test_results/unittest_trigger_polledBinaryCamSyncCsv3000gt_crank_cam_cranking_idle.csv]
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+commonInitEngineController
+getSpeedDensityAirmass map=96.26
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+Reading from tests/trigger/resources/3000gt_crank_cam_cranking_idle.csv
+shaft sync Yes at 2.322570 s (errors=0)
+Got first RPM 114.856720 at 28 for tests/trigger/resources/3000gt_crank_cam_cranking_idle.csv
+polledBinary resolve at 2.687500 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=197.3
+phaseResync at 2.687500 s: totalShift=480.00, syncCounter=6, divider=6, remainder=0
+syncEnginePhaseAndReport at 2.687500 s: totalShift=480.00, oldSync=2
+shaft sync No at 2.687500 s (errors=1)
+shaft sync Yes at 2.835974 s (errors=1)
+polledBinary resolve at 2.856318 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=0.0
+syncEnginePhaseAndReport at 2.856318 s: totalShift=0.00, oldSync=0
+Got first cam sync at 2.856318 s, at 89 for tests/trigger/resources/3000gt_crank_cam_cranking_idle.csv
+polledBinary resolve at 2.913962 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1072.7
+syncEnginePhaseAndReport at 2.913962 s: totalShift=0.00, oldSync=3
+polledBinary resolve at 2.964980 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1194.7
+syncEnginePhaseAndReport at 2.964980 s: totalShift=0.00, oldSync=6
+polledBinary resolve at 3.012620 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1275.0
+syncEnginePhaseAndReport at 3.012620 s: totalShift=0.00, oldSync=9
+polledBinary resolve at 3.058044 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1330.7
+syncEnginePhaseAndReport at 3.058044 s: totalShift=0.00, oldSync=12
+polledBinary resolve at 3.101634 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1390.4
+syncEnginePhaseAndReport at 3.101634 s: totalShift=0.00, oldSync=15
+polledBinary resolve at 3.143380 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1446.3
+syncEnginePhaseAndReport at 3.143380 s: totalShift=0.00, oldSync=18
+polledBinary resolve at 3.183822 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1491.6
+syncEnginePhaseAndReport at 3.183822 s: totalShift=0.00, oldSync=21
+polledBinary resolve at 3.223472 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1516.1
+syncEnginePhaseAndReport at 3.223472 s: totalShift=0.00, oldSync=24
+polledBinary resolve at 3.262640 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1535.9
+syncEnginePhaseAndReport at 3.262640 s: totalShift=0.00, oldSync=27
+polledBinary resolve at 3.301588 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1539.9
+syncEnginePhaseAndReport at 3.301588 s: totalShift=0.00, oldSync=30
+polledBinary resolve at 3.340496 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1542.0
+syncEnginePhaseAndReport at 3.340496 s: totalShift=0.00, oldSync=33
+polledBinary resolve at 3.379512 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1534.2
+syncEnginePhaseAndReport at 3.379512 s: totalShift=0.00, oldSync=36
+polledBinary resolve at 3.419046 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1514.9
+syncEnginePhaseAndReport at 3.419046 s: totalShift=0.00, oldSync=39
+polledBinary resolve at 3.458952 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1499.0
+syncEnginePhaseAndReport at 3.458952 s: totalShift=0.00, oldSync=42
+polledBinary resolve at 3.499296 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1485.2
+syncEnginePhaseAndReport at 3.499296 s: totalShift=0.00, oldSync=45
+polledBinary resolve at 3.539948 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1472.1
+syncEnginePhaseAndReport at 3.539948 s: totalShift=0.00, oldSync=48
+polledBinary resolve at 3.581070 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1454.8
+syncEnginePhaseAndReport at 3.581070 s: totalShift=0.00, oldSync=51
+polledBinary resolve at 3.622870 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1429.8
+syncEnginePhaseAndReport at 3.622870 s: totalShift=0.00, oldSync=54
+polledBinary resolve at 3.665378 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1407.1
+syncEnginePhaseAndReport at 3.665378 s: totalShift=0.00, oldSync=57
+polledBinary resolve at 3.708498 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1385.8
+syncEnginePhaseAndReport at 3.708498 s: totalShift=0.00, oldSync=60
+polledBinary resolve at 3.752400 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1362.4
+syncEnginePhaseAndReport at 3.752400 s: totalShift=0.00, oldSync=63
+polledBinary resolve at 3.797056 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1338.5
+syncEnginePhaseAndReport at 3.797056 s: totalShift=0.00, oldSync=66
+polledBinary resolve at 3.842216 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1326.4
+syncEnginePhaseAndReport at 3.842216 s: totalShift=0.00, oldSync=69
+polledBinary resolve at 3.888100 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1303.3
+syncEnginePhaseAndReport at 3.888100 s: totalShift=0.00, oldSync=72
+polledBinary resolve at 3.934886 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1277.3
+syncEnginePhaseAndReport at 3.934886 s: totalShift=0.00, oldSync=75
+polledBinary resolve at 3.982568 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1254.2
+syncEnginePhaseAndReport at 3.982568 s: totalShift=0.00, oldSync=78
+polledBinary resolve at 4.031037 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1231.9
+syncEnginePhaseAndReport at 4.031037 s: totalShift=0.00, oldSync=81
+polledBinary resolve at 4.080479 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1208.8
+syncEnginePhaseAndReport at 4.080479 s: totalShift=0.00, oldSync=84
+polledBinary resolve at 4.131217 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1171.2
+syncEnginePhaseAndReport at 4.131217 s: totalShift=0.00, oldSync=87
+polledBinary resolve at 4.183578 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1140.0
+syncEnginePhaseAndReport at 4.183578 s: totalShift=0.00, oldSync=90
+polledBinary resolve at 4.237121 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1114.7
+syncEnginePhaseAndReport at 4.237121 s: totalShift=0.00, oldSync=93
+polledBinary resolve at 4.291990 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1088.3
+syncEnginePhaseAndReport at 4.291990 s: totalShift=0.00, oldSync=96
+polledBinary resolve at 4.348144 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1062.5
+syncEnginePhaseAndReport at 4.348144 s: totalShift=0.00, oldSync=99
+polledBinary resolve at 4.405918 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1033.9
+syncEnginePhaseAndReport at 4.405918 s: totalShift=0.00, oldSync=102
+polledBinary resolve at 4.464626 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=1018.6
+syncEnginePhaseAndReport at 4.464626 s: totalShift=0.00, oldSync=105
+polledBinary resolve at 4.524548 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=997.4
+syncEnginePhaseAndReport at 4.524548 s: totalShift=0.00, oldSync=108
+polledBinary resolve at 4.585706 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=976.7
+syncEnginePhaseAndReport at 4.585706 s: totalShift=0.00, oldSync=111
+polledBinary resolve at 4.648302 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=955.5
+syncEnginePhaseAndReport at 4.648302 s: totalShift=0.00, oldSync=114
+polledBinary resolve at 4.712160 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=933.8
+syncEnginePhaseAndReport at 4.712160 s: totalShift=0.00, oldSync=117
+polledBinary resolve at 4.777234 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=919.7
+syncEnginePhaseAndReport at 4.777234 s: totalShift=0.00, oldSync=120
+polledBinary resolve at 4.842995 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=909.7
+syncEnginePhaseAndReport at 4.842995 s: totalShift=0.00, oldSync=123
+polledBinary resolve at 4.909956 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=893.4
+syncEnginePhaseAndReport at 4.909956 s: totalShift=0.00, oldSync=126
+polledBinary resolve at 4.977412 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=887.8
+syncEnginePhaseAndReport at 4.977412 s: totalShift=0.00, oldSync=129
+polledBinary resolve at 5.045643 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=878.6
+syncEnginePhaseAndReport at 5.045643 s: totalShift=0.00, oldSync=132
+polledBinary resolve at 5.113906 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=878.5
+syncEnginePhaseAndReport at 5.113906 s: totalShift=0.00, oldSync=135
+polledBinary resolve at 5.182364 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=875.6
+syncEnginePhaseAndReport at 5.182364 s: totalShift=0.00, oldSync=138
+polledBinary resolve at 5.250870 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=874.0
+syncEnginePhaseAndReport at 5.250870 s: totalShift=0.00, oldSync=141
+polledBinary resolve at 5.320016 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=867.0
+syncEnginePhaseAndReport at 5.320016 s: totalShift=0.00, oldSync=144
+polledBinary resolve at 5.374976 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=1060.6
+phaseResync at 5.374976 s: totalShift=360.00, syncCounter=150, divider=6, remainder=0
+syncEnginePhaseAndReport at 5.374976 s: totalShift=360.00, oldSync=147
+shaft sync No at 5.379010 s (errors=2)
+shaft sync Yes at 5.434460 s (errors=2)
+polledBinary resolve at 5.457278 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=0.0
+syncEnginePhaseAndReport at 5.457278 s: totalShift=0.00, oldSync=0
+polledBinary resolve at 5.525294 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=883.7
+syncEnginePhaseAndReport at 5.525294 s: totalShift=0.00, oldSync=3
+polledBinary resolve at 5.593109 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=885.2
+syncEnginePhaseAndReport at 5.593109 s: totalShift=0.00, oldSync=6
+polledBinary resolve at 5.660304 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=894.3
+syncEnginePhaseAndReport at 5.660304 s: totalShift=0.00, oldSync=9
+polledBinary resolve at 5.727244 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=897.5
+syncEnginePhaseAndReport at 5.727244 s: totalShift=0.00, oldSync=12
+polledBinary resolve at 5.793544 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=906.0
+syncEnginePhaseAndReport at 5.793544 s: totalShift=0.00, oldSync=15
+polledBinary resolve at 5.859740 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=905.9
+syncEnginePhaseAndReport at 5.859740 s: totalShift=0.00, oldSync=18
+polledBinary resolve at 5.925586 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=911.5
+syncEnginePhaseAndReport at 5.925586 s: totalShift=0.00, oldSync=21
+polledBinary resolve at 5.991435 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=911.8
+syncEnginePhaseAndReport at 5.991435 s: totalShift=0.00, oldSync=24
+polledBinary resolve at 6.057172 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=912.4
+syncEnginePhaseAndReport at 6.057172 s: totalShift=0.00, oldSync=27
+polledBinary resolve at 6.122821 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=913.6
+syncEnginePhaseAndReport at 6.122821 s: totalShift=0.00, oldSync=30
+polledBinary resolve at 6.188130 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=919.1
+syncEnginePhaseAndReport at 6.188130 s: totalShift=0.00, oldSync=33
+polledBinary resolve at 6.253690 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=914.7
+syncEnginePhaseAndReport at 6.253690 s: totalShift=0.00, oldSync=36
+polledBinary resolve at 6.319476 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=909.3
+syncEnginePhaseAndReport at 6.319476 s: totalShift=0.00, oldSync=39
+polledBinary resolve at 6.385490 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=908.5
+syncEnginePhaseAndReport at 6.385490 s: totalShift=0.00, oldSync=42
+polledBinary resolve at 6.451332 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=911.2
+syncEnginePhaseAndReport at 6.451332 s: totalShift=0.00, oldSync=45
+polledBinary resolve at 6.517352 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=907.8
+syncEnginePhaseAndReport at 6.517352 s: totalShift=0.00, oldSync=48
+polledBinary resolve at 6.583348 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=908.7
+syncEnginePhaseAndReport at 6.583348 s: totalShift=0.00, oldSync=51
+polledBinary resolve at 6.649357 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=908.2
+syncEnginePhaseAndReport at 6.649357 s: totalShift=0.00, oldSync=54
+polledBinary resolve at 6.715090 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=913.0
+syncEnginePhaseAndReport at 6.715090 s: totalShift=0.00, oldSync=57
+polledBinary resolve at 6.781225 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=906.5
+syncEnginePhaseAndReport at 6.781225 s: totalShift=0.00, oldSync=60
+polledBinary resolve at 6.847551 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=902.3
+syncEnginePhaseAndReport at 6.847551 s: totalShift=0.00, oldSync=63
+shaft sync No at 6.860340 s (errors=3)
+shaft sync Yes at 6.891941 s (errors=3)
+polledBinary resolve at 6.914060 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=0.0
+syncEnginePhaseAndReport at 6.914060 s: totalShift=0.00, oldSync=0
+polledBinary resolve at 6.980346 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=904.7
+syncEnginePhaseAndReport at 6.980346 s: totalShift=0.00, oldSync=3
+polledBinary resolve at 7.047639 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=891.2
+syncEnginePhaseAndReport at 7.047639 s: totalShift=0.00, oldSync=6
+polledBinary resolve at 7.114534 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=897.0
+syncEnginePhaseAndReport at 7.114534 s: totalShift=0.00, oldSync=9
+polledBinary resolve at 7.181088 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=901.6
+syncEnginePhaseAndReport at 7.181088 s: totalShift=0.00, oldSync=12
+polledBinary resolve at 7.247479 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=903.8
+syncEnginePhaseAndReport at 7.247479 s: totalShift=0.00, oldSync=15
+polledBinary resolve at 7.313855 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=904.7
+syncEnginePhaseAndReport at 7.313855 s: totalShift=0.00, oldSync=18
+polledBinary resolve at 7.379734 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=911.3
+syncEnginePhaseAndReport at 7.379734 s: totalShift=0.00, oldSync=21
+polledBinary resolve at 7.445507 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=912.7
+syncEnginePhaseAndReport at 7.445507 s: totalShift=0.00, oldSync=24
+polledBinary resolve at 7.511212 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=912.2
+syncEnginePhaseAndReport at 7.511212 s: totalShift=0.00, oldSync=27
+polledBinary resolve at 7.576873 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=914.5
+syncEnginePhaseAndReport at 7.576873 s: totalShift=0.00, oldSync=30
+polledBinary resolve at 7.641985 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=923.4
+syncEnginePhaseAndReport at 7.641985 s: totalShift=0.00, oldSync=33
+polledBinary resolve at 7.707109 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=921.7
+syncEnginePhaseAndReport at 7.707109 s: totalShift=0.00, oldSync=36
+polledBinary resolve at 7.771862 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=926.0
+syncEnginePhaseAndReport at 7.771862 s: totalShift=0.00, oldSync=39
+polledBinary resolve at 7.836355 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=930.2
+syncEnginePhaseAndReport at 7.836355 s: totalShift=0.00, oldSync=42
+polledBinary resolve at 7.900402 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=937.7
+syncEnginePhaseAndReport at 7.900402 s: totalShift=0.00, oldSync=45
+polledBinary resolve at 7.964544 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=934.8
+syncEnginePhaseAndReport at 7.964544 s: totalShift=0.00, oldSync=48
+polledBinary resolve at 8.028644 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=936.5
+syncEnginePhaseAndReport at 8.028644 s: totalShift=0.00, oldSync=51
+polledBinary resolve at 8.092445 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=940.7
+syncEnginePhaseAndReport at 8.092445 s: totalShift=0.00, oldSync=54
+polledBinary resolve at 8.155989 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=943.4
+syncEnginePhaseAndReport at 8.155989 s: totalShift=0.00, oldSync=57
+polledBinary resolve at 8.219726 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=940.0
+syncEnginePhaseAndReport at 8.219726 s: totalShift=0.00, oldSync=60
+polledBinary resolve at 8.283598 s: currentSyncCode=2, lastSyncCode=0, shaftSync=1, rpm=938.7
+syncEnginePhaseAndReport at 8.283598 s: totalShift=0.00, oldSync=63
+polledBinary resolve at 8.347448 s: currentSyncCode=3, lastSyncCode=0, shaftSync=1, rpm=939.9
+syncEnginePhaseAndReport at 8.347448 s: totalShift=0.00, oldSync=66
+tests/trigger/resources/3000gt_crank_cam_cranking_idle.csv: shaftSynchronized=1 hasSynchronizedPhase=1 resyncs=2
+Writing 1494 records to test_results/unittest_trigger_polledBinaryCamSyncCsv3000gt_crank_cam_cranking_idle.logicdata
+Writing 1494 records to test_results/unittest_trigger_polledBinaryCamSyncCsv3000gt_crank_cam_cranking_idle.events.txt
+[       OK ] trigger.polledBinaryCamSyncCsv3000gt_crank_cam_cranking_idle (1020 ms)
+[----------] 5 tests from trigger (3937 ms total)
+
+[----------] 5 tests from real6g72
+[ RUN      ] real6g72.sync_3000gt_cranking_rusefi
+Reading from tests/trigger/resources/3000gt_cranking_rusefi.csv
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+commonInitEngineController
+getSpeedDensityAirmass map=96.26
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+shaft sync Yes at 1.623576 s (errors=0)
+Got first RPM 112.550507, at 7
+shaft sync Yes at 2.764716 s (errors=0)
+phaseResync at 2.764716 s: totalShift=360.00, syncCounter=12, divider=6, remainder=0
+syncEnginePhaseAndReport at 2.764716 s: totalShift=360.00, oldSync=9
+Got first cam sync at 2.764716 s, at 38
+shaft sync No at 3.252230 s (errors=1)
+shaft sync Yes at 3.315034 s (errors=1)
+shaft sync No at 3.408800 s (errors=1)
+shaft sync Yes at 3.800782 s (errors=1)
+syncEnginePhaseAndReport at 3.800782 s: totalShift=0.00, oldSync=6
+shaft sync No at 3.922412 s (errors=2)
+shaft sync Yes at 3.977296 s (errors=2)
+shaft sync No at 4.205988 s (errors=2)
+phaseResync at 4.205988 s: totalShift=360.00, syncCounter=6, divider=6, remainder=0
+syncEnginePhaseAndReport at 4.205988 s: totalShift=360.00, oldSync=3
+shaft sync No at 4.333950 s (errors=3)
+shaft sync Yes at 4.403390 s (errors=3)
+shaft sync No at 4.574494 s (errors=4)
+shaft sync Yes at 4.678014 s (errors=4)
+shaft sync Yes at 5.013707 s (errors=2)
+phaseResync at 5.013707 s: totalShift=120.00, syncCounter=6, divider=6, remainder=0
+syncEnginePhaseAndReport at 5.013707 s: totalShift=120.00, oldSync=5
+shaft sync No at 5.123766 s (errors=5)
+tests/trigger/resources/3000gt_cranking_rusefi.csv: shaftSynchronized=0 hasSynchronizedPhase=0 resyncs=3
+Writing 243 records to test_results/unittest_real6g72_sync_3000gt_cranking_rusefi.logicdata
+Writing 243 records to test_results/unittest_real6g72_sync_3000gt_cranking_rusefi.events.txt
+[       OK ] real6g72.sync_3000gt_cranking_rusefi (11 ms)
+[ RUN      ] real6g72.sync_3000gt_cranking_rusefi_2
+Reading from tests/trigger/resources/3000gt_cranking_rusefi_2.csv
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+commonInitEngineController
+getSpeedDensityAirmass map=96.26
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+shaft sync Yes at 1.964394 s (errors=0)
+Got first RPM 117.630455, at 7
+shaft sync Yes at 3.088702 s (errors=0)
+phaseResync at 3.088702 s: totalShift=360.00, syncCounter=12, divider=6, remainder=0
+syncEnginePhaseAndReport at 3.088702 s: totalShift=360.00, oldSync=9
+Got first cam sync at 3.088702 s, at 38
+shaft sync No at 3.506320 s (errors=1)
+shaft sync Yes at 3.619404 s (errors=1)
+shaft sync No at 3.743034 s (errors=1)
+shaft sync No at 3.947796 s (errors=2)
+shaft sync Yes at 5.502046 s (errors=2)
+shaft sync Yes at 6.283096 s (errors=1)
+syncEnginePhaseAndReport at 6.283096 s: totalShift=0.00, oldSync=6
+shaft sync No at 6.831942 s (errors=3)
+shaft sync Yes at 6.940288 s (errors=3)
+shaft sync No at 6.987494 s (errors=1)
+shaft sync Yes at 7.379276 s (errors=1)
+phaseResync at 7.379276 s: totalShift=120.00, syncCounter=6, divider=6, remainder=0
+syncEnginePhaseAndReport at 7.379276 s: totalShift=120.00, oldSync=5
+shaft sync No at 7.666694 s (errors=4)
+shaft sync Yes at 7.777034 s (errors=4)
+shaft sync No at 8.032764 s (errors=2)
+shaft sync Yes at 8.448610 s (errors=2)
+phaseResync at 8.448610 s: totalShift=600.00, syncCounter=12, divider=6, remainder=0
+syncEnginePhaseAndReport at 8.448610 s: totalShift=600.00, oldSync=7
+shaft sync No at 8.752298 s (errors=5)
+shaft sync Yes at 8.856926 s (errors=5)
+shaft sync No at 9.026658 s (errors=3)
+shaft sync No at 9.257054 s (errors=6)
+tests/trigger/resources/3000gt_cranking_rusefi_2.csv: shaftSynchronized=0 hasSynchronizedPhase=0 resyncs=3
+Writing 375 records to test_results/unittest_real6g72_sync_3000gt_cranking_rusefi_2.logicdata
+Writing 375 records to test_results/unittest_real6g72_sync_3000gt_cranking_rusefi_2.events.txt
+[       OK ] real6g72.sync_3000gt_cranking_rusefi_2 (19 ms)
+[ RUN      ] real6g72.sync_3000gt_crank_cam_cranking
+Reading from tests/trigger/resources/3000gt_crank_cam_cranking.csv
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+commonInitEngineController
+getSpeedDensityAirmass map=96.26
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+shaft sync Yes at 2.256000 s (errors=0)
+Got first RPM 116.992592, at 7
+shaft sync No at 2.515726 s (errors=1)
+shaft sync Yes at 2.627848 s (errors=1)
+shaft sync No at 2.774746 s (errors=2)
+shaft sync Yes at 2.802314 s (errors=2)
+shaft sync Yes at 2.912356 s (errors=0)
+syncEnginePhaseAndReport at 2.912356 s: totalShift=0.00, oldSync=6
+Got first cam sync at 2.912356 s, at 75
+syncEnginePhaseAndReport at 3.007996 s: totalShift=0.00, oldSync=12
+syncEnginePhaseAndReport at 3.097096 s: totalShift=0.00, oldSync=18
+syncEnginePhaseAndReport at 3.183136 s: totalShift=0.00, oldSync=24
+syncEnginePhaseAndReport at 3.268572 s: totalShift=0.00, oldSync=30
+syncEnginePhaseAndReport at 3.354940 s: totalShift=0.00, oldSync=36
+syncEnginePhaseAndReport at 3.443454 s: totalShift=0.00, oldSync=42
+shaft sync No at 3.477882 s (errors=3)
+shaft sync Yes at 3.499306 s (errors=3)
+shaft sync No at 3.557000 s (errors=1)
+shaft sync Yes at 3.627206 s (errors=1)
+phaseResync at 3.627206 s: totalShift=480.00, syncCounter=12, divider=6, remainder=0
+syncEnginePhaseAndReport at 3.627206 s: totalShift=480.00, oldSync=8
+syncEnginePhaseAndReport at 3.723948 s: totalShift=0.00, oldSync=18
+syncEnginePhaseAndReport at 3.824760 s: totalShift=0.00, oldSync=24
+syncEnginePhaseAndReport at 3.930664 s: totalShift=0.00, oldSync=30
+shaft sync No at 3.954770 s (errors=4)
+shaft sync Yes at 3.980890 s (errors=4)
+shaft sync No at 4.077288 s (errors=2)
+shaft sync Yes at 4.182755 s (errors=2)
+phaseResync at 4.182755 s: totalShift=360.00, syncCounter=12, divider=6, remainder=0
+syncEnginePhaseAndReport at 4.182755 s: totalShift=360.00, oldSync=9
+syncEnginePhaseAndReport at 4.365142 s: totalShift=0.00, oldSync=18
+syncEnginePhaseAndReport at 4.669682 s: totalShift=0.00, oldSync=24
+shaft sync No at 4.738475 s (errors=5)
+tests/trigger/resources/3000gt_crank_cam_cranking.csv: shaftSynchronized=0 hasSynchronizedPhase=0 resyncs=2
+Writing 536 records to test_results/unittest_real6g72_sync_3000gt_crank_cam_cranking.logicdata
+Writing 536 records to test_results/unittest_real6g72_sync_3000gt_crank_cam_cranking.events.txt
+[       OK ] real6g72.sync_3000gt_crank_cam_cranking (14 ms)
+[ RUN      ] real6g72.sync_3000gt_crank_cam_cranking_2
+Reading from tests/trigger/resources/3000gt_crank_cam_cranking_2.csv
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+commonInitEngineController
+getSpeedDensityAirmass map=96.26
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+shaft sync Yes at 2.236442 s (errors=0)
+Got first RPM 126.876984, at 12
+shaft sync No at 2.375244 s (errors=1)
+shaft sync Yes at 2.545752 s (errors=1)
+shaft sync Yes at 2.736476 s (errors=0)
+phaseResync at 2.736476 s: totalShift=360.00, syncCounter=12, divider=6, remainder=0
+syncEnginePhaseAndReport at 2.736476 s: totalShift=360.00, oldSync=9
+Got first cam sync at 2.736476 s, at 59
+shaft sync No at 2.811512 s (errors=1)
+shaft sync Yes at 2.834986 s (errors=1)
+syncEnginePhaseAndReport at 2.834986 s: totalShift=0.00, oldSync=18
+syncEnginePhaseAndReport at 2.923976 s: totalShift=0.00, oldSync=24
+syncEnginePhaseAndReport at 3.008334 s: totalShift=0.00, oldSync=30
+syncEnginePhaseAndReport at 3.090942 s: totalShift=0.00, oldSync=36
+syncEnginePhaseAndReport at 3.173916 s: totalShift=0.00, oldSync=42
+syncEnginePhaseAndReport at 3.258606 s: totalShift=0.00, oldSync=48
+syncEnginePhaseAndReport at 3.345864 s: totalShift=0.00, oldSync=54
+syncEnginePhaseAndReport at 3.436908 s: totalShift=0.00, oldSync=60
+syncEnginePhaseAndReport at 3.532042 s: totalShift=0.00, oldSync=66
+syncEnginePhaseAndReport at 3.631630 s: totalShift=0.00, oldSync=72
+syncEnginePhaseAndReport at 3.736838 s: totalShift=0.00, oldSync=78
+syncEnginePhaseAndReport at 3.848364 s: totalShift=0.00, oldSync=84
+shaft sync No at 3.952572 s (errors=2)
+shaft sync Yes at 3.981278 s (errors=2)
+shaft sync No at 3.987122 s (errors=1)
+shaft sync Yes at 4.090301 s (errors=1)
+phaseResync at 4.090301 s: totalShift=120.00, syncCounter=6, divider=6, remainder=0
+syncEnginePhaseAndReport at 4.090301 s: totalShift=120.00, oldSync=5
+syncEnginePhaseAndReport at 4.218812 s: totalShift=0.00, oldSync=12
+syncEnginePhaseAndReport at 4.351858 s: totalShift=0.00, oldSync=18
+shaft sync No at 4.403822 s (errors=3)
+shaft sync Yes at 4.436091 s (errors=3)
+shaft sync No at 4.487966 s (errors=102)
+shaft sync No at 4.494940 s (errors=4)
+shaft sync Yes at 4.527526 s (errors=4)
+shaft sync Yes at 4.764600 s (errors=102)
+phaseResync at 4.764600 s: totalShift=240.00, syncCounter=12, divider=6, remainder=0
+syncEnginePhaseAndReport at 4.764600 s: totalShift=240.00, oldSync=10
+syncEnginePhaseAndReport at 4.902890 s: totalShift=0.00, oldSync=18
+syncEnginePhaseAndReport at 5.040234 s: totalShift=0.00, oldSync=24
+syncEnginePhaseAndReport at 5.175564 s: totalShift=0.00, oldSync=30
+syncEnginePhaseAndReport at 5.308414 s: totalShift=0.00, oldSync=36
+shaft sync No at 5.402232 s (errors=5)
+shaft sync Yes at 5.433040 s (errors=5)
+shaft sync No at 5.438922 s (errors=202)
+shaft sync Yes at 5.567430 s (errors=202)
+syncEnginePhaseAndReport at 5.567430 s: totalShift=0.00, oldSync=6
+shaft sync No at 5.573913 s (errors=6)
+shaft sync Yes at 5.604150 s (errors=6)
+shaft sync No at 5.725908 s (errors=203)
+shaft sync Yes at 5.819684 s (errors=203)
+phaseResync at 5.819684 s: totalShift=240.00, syncCounter=12, divider=6, remainder=0
+syncEnginePhaseAndReport at 5.819684 s: totalShift=240.00, oldSync=10
+syncEnginePhaseAndReport at 5.943610 s: totalShift=0.00, oldSync=18
+syncEnginePhaseAndReport at 6.066578 s: totalShift=0.00, oldSync=24
+syncEnginePhaseAndReport at 6.189032 s: totalShift=0.00, oldSync=30
+syncEnginePhaseAndReport at 6.311322 s: totalShift=0.00, oldSync=36
+shaft sync No at 6.317494 s (errors=7)
+shaft sync Yes at 6.346292 s (errors=7)
+shaft sync No at 6.463654 s (errors=204)
+shaft sync Yes at 6.555154 s (errors=204)
+phaseResync at 6.555154 s: totalShift=240.00, syncCounter=12, divider=6, remainder=0
+syncEnginePhaseAndReport at 6.555154 s: totalShift=240.00, oldSync=10
+syncEnginePhaseAndReport at 6.677174 s: totalShift=0.00, oldSync=18
+syncEnginePhaseAndReport at 6.798886 s: totalShift=0.00, oldSync=24
+syncEnginePhaseAndReport at 6.920258 s: totalShift=0.00, oldSync=30
+syncEnginePhaseAndReport at 7.041487 s: totalShift=0.00, oldSync=36
+syncEnginePhaseAndReport at 7.162684 s: totalShift=0.00, oldSync=42
+syncEnginePhaseAndReport at 7.283887 s: totalShift=0.00, oldSync=48
+syncEnginePhaseAndReport at 7.405250 s: totalShift=0.00, oldSync=54
+syncEnginePhaseAndReport at 7.525912 s: totalShift=0.00, oldSync=60
+syncEnginePhaseAndReport at 7.646836 s: totalShift=0.00, oldSync=66
+tests/trigger/resources/3000gt_crank_cam_cranking_2.csv: shaftSynchronized=1 hasSynchronizedPhase=1 resyncs=5
+Writing 1318 records to test_results/unittest_real6g72_sync_3000gt_crank_cam_cranking_2.logicdata
+Writing 1318 records to test_results/unittest_real6g72_sync_3000gt_crank_cam_cranking_2.events.txt
+[       OK ] real6g72.sync_3000gt_crank_cam_cranking_2 (22 ms)
+[ RUN      ] real6g72.sync_3000gt_crank_cam_cranking_idle
+Reading from tests/trigger/resources/3000gt_crank_cam_cranking_idle.csv
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+commonInitEngineController
+getSpeedDensityAirmass map=96.26
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+shaft sync No at 0.000000 s (errors=0)
+shaft sync Yes at 0.000000 s (errors=0)
+shaft sync Yes at 2.322570 s (errors=0)
+Got first RPM 114.856720, at 28
+shaft sync No at 2.687500 s (errors=1)
+shaft sync Yes at 2.835974 s (errors=1)
+shaft sync Yes at 2.953022 s (errors=0)
+syncEnginePhaseAndReport at 2.953022 s: totalShift=0.00, oldSync=6
+Got first cam sync at 2.953022 s, at 107
+syncEnginePhaseAndReport at 3.047244 s: totalShift=0.00, oldSync=12
+syncEnginePhaseAndReport at 3.133434 s: totalShift=0.00, oldSync=18
+syncEnginePhaseAndReport at 3.213944 s: totalShift=0.00, oldSync=24
+syncEnginePhaseAndReport at 3.292192 s: totalShift=0.00, oldSync=30
+syncEnginePhaseAndReport at 3.370032 s: totalShift=0.00, oldSync=36
+syncEnginePhaseAndReport at 3.449236 s: totalShift=0.00, oldSync=42
+syncEnginePhaseAndReport at 3.530094 s: totalShift=0.00, oldSync=48
+syncEnginePhaseAndReport at 3.612724 s: totalShift=0.00, oldSync=54
+syncEnginePhaseAndReport at 3.698000 s: totalShift=0.00, oldSync=60
+syncEnginePhaseAndReport at 3.786224 s: totalShift=0.00, oldSync=66
+syncEnginePhaseAndReport at 3.876958 s: totalShift=0.00, oldSync=72
+syncEnginePhaseAndReport at 3.970988 s: totalShift=0.00, oldSync=78
+syncEnginePhaseAndReport at 4.068457 s: totalShift=0.00, oldSync=84
+syncEnginePhaseAndReport at 4.170820 s: totalShift=0.00, oldSync=90
+syncEnginePhaseAndReport at 4.278604 s: totalShift=0.00, oldSync=96
+syncEnginePhaseAndReport at 4.391840 s: totalShift=0.00, oldSync=102
+syncEnginePhaseAndReport at 4.509944 s: totalShift=0.00, oldSync=108
+syncEnginePhaseAndReport at 4.633077 s: totalShift=0.00, oldSync=114
+syncEnginePhaseAndReport at 4.761424 s: totalShift=0.00, oldSync=120
+syncEnginePhaseAndReport at 4.893706 s: totalShift=0.00, oldSync=126
+syncEnginePhaseAndReport at 5.029126 s: totalShift=0.00, oldSync=132
+syncEnginePhaseAndReport at 5.165789 s: totalShift=0.00, oldSync=138
+syncEnginePhaseAndReport at 5.303300 s: totalShift=0.00, oldSync=144
+shaft sync No at 5.379010 s (errors=2)
+shaft sync Yes at 5.434460 s (errors=2)
+shaft sync No at 5.486450 s (errors=1)
+shaft sync Yes at 5.576738 s (errors=1)
+syncEnginePhaseAndReport at 5.576738 s: totalShift=0.00, oldSync=6
+syncEnginePhaseAndReport at 5.711104 s: totalShift=0.00, oldSync=12
+shaft sync No at 5.810785 s (errors=2)
+shaft sync Yes at 5.843734 s (errors=2)
+syncEnginePhaseAndReport at 5.843734 s: totalShift=0.00, oldSync=18
+shaft sync No at 5.942743 s (errors=3)
+shaft sync Yes at 5.975508 s (errors=3)
+syncEnginePhaseAndReport at 5.975508 s: totalShift=0.00, oldSync=24
+syncEnginePhaseAndReport at 6.106948 s: totalShift=0.00, oldSync=30
+syncEnginePhaseAndReport at 6.237826 s: totalShift=0.00, oldSync=36
+syncEnginePhaseAndReport at 6.369516 s: totalShift=0.00, oldSync=42
+syncEnginePhaseAndReport at 6.501361 s: totalShift=0.00, oldSync=48
+syncEnginePhaseAndReport at 6.633375 s: totalShift=0.00, oldSync=54
+syncEnginePhaseAndReport at 6.765212 s: totalShift=0.00, oldSync=60
+shaft sync No at 6.860340 s (errors=3)
+shaft sync Yes at 6.891941 s (errors=3)
+shaft sync No at 6.898000 s (errors=103)
+shaft sync Yes at 7.031384 s (errors=103)
+syncEnginePhaseAndReport at 7.031384 s: totalShift=0.00, oldSync=6
+syncEnginePhaseAndReport at 7.164995 s: totalShift=0.00, oldSync=12
+syncEnginePhaseAndReport at 7.297828 s: totalShift=0.00, oldSync=18
+syncEnginePhaseAndReport at 7.429608 s: totalShift=0.00, oldSync=24
+syncEnginePhaseAndReport at 7.561004 s: totalShift=0.00, oldSync=30
+syncEnginePhaseAndReport at 7.691398 s: totalShift=0.00, oldSync=36
+syncEnginePhaseAndReport at 7.820770 s: totalShift=0.00, oldSync=42
+syncEnginePhaseAndReport at 7.949012 s: totalShift=0.00, oldSync=48
+syncEnginePhaseAndReport at 8.077028 s: totalShift=0.00, oldSync=54
+syncEnginePhaseAndReport at 8.204274 s: totalShift=0.00, oldSync=60
+syncEnginePhaseAndReport at 8.332023 s: totalShift=0.00, oldSync=66
+tests/trigger/resources/3000gt_crank_cam_cranking_idle.csv: shaftSynchronized=1 hasSynchronizedPhase=1 resyncs=0
+Writing 1473 records to test_results/unittest_real6g72_sync_3000gt_crank_cam_cranking_idle.logicdata
+Writing 1473 records to test_results/unittest_real6g72_sync_3000gt_crank_cam_cranking_idle.events.txt
+[       OK ] real6g72.sync_3000gt_crank_cam_cranking_idle (24 ms)
+[----------] 5 tests from real6g72 (92 ms total)
+
+[----------] Global test environment tear-down
+[==========] 10 tests from 2 test suites ran. (4030 ms total)
+[  PASSED  ] 10 tests.
+Total tests execution time: 4.033 s
+DONE returning 0
+test results are in /home/avobook/rus/unit_tests/test_results folder
+unit test log files: 1144

@@ -36,7 +36,13 @@ static FunctionalSensor auxLinear4Sensor(SensorType::AuxLinear4, /* timeout = */
 /**
  * @param bandwidth Hertz, used by low pass filter in to analog subscribers
  */
-static void initFluidPressure(LinearFunc& func, FunctionalSensor& sensor, const linear_sensor_s& cfg, float bandwidth) {
+template <typename T>
+static void initLinearSensor(LinearFunc& func, FunctionalSensor& sensor, const T& cfg, float bandwidth) {
+	static_assert(
+		std::is_same_v<T, linear_sensor_s> || std::is_same_v<T, pressure_sensor_s>,
+		"initLinearSensor only supports linear or pressure sensors"
+	);
+
 	auto channel = cfg.hwChannel;
 
 	// Only register if we have a sensor
@@ -47,12 +53,12 @@ static void initFluidPressure(LinearFunc& func, FunctionalSensor& sensor, const 
 	float val1 = cfg.value1;
 	float val2 = cfg.value2;
 
-	// Limit to max given pressure - val1 or val2 could be larger
+	// Clamp output to the two calibration points; val1 or val2 could be larger
 	// (sensor may be backwards, high voltage = low pressure)
+	float lesserOutput = val1 < val2 ? val1 : val2;
 	float greaterOutput = val1 > val2 ? val1 : val2;
 
-	// Allow slightly negative output (-5kpa) so as to not fail the sensor when engine is off
-	func.configure(cfg.v1, val1, cfg.v2, val2, /*minOutput*/ -5, greaterOutput);
+	func.configure(cfg.v1, val1, cfg.v2, val2, /*minOutput*/ lesserOutput, greaterOutput);
 
 	sensor.setFunction(func);
 
@@ -60,6 +66,7 @@ static void initFluidPressure(LinearFunc& func, FunctionalSensor& sensor, const 
 
 	sensor.Register();
 }
+
 
 #if EFI_SENT_SUPPORT
 static void initSentLinearSensor(
@@ -73,8 +80,8 @@ static void initSentLinearSensor(
 #endif
 
 void initFluidPressure() {
-	initFluidPressure(oilpSensorFunc, oilpSensor, engineConfiguration->oilPressure, 10);
-	initFluidPressure(fuelPressureFuncLow, fuelPressureSensorLow, engineConfiguration->lowPressureFuel, 10);
+	initLinearSensor(oilpSensorFunc, oilpSensor, engineConfiguration->oilPressure, 10);
+	initLinearSensor(fuelPressureFuncLow, fuelPressureSensorLow, engineConfiguration->lowPressureFuel, 10);
 
 #if EFI_SENT_SUPPORT
 	if ((engineConfiguration->FuelHighPressureSentType != SentFuelHighPressureType::NONE) &&
@@ -100,13 +107,13 @@ void initFluidPressure() {
 	} else
 #endif
 	{
-		initFluidPressure(fuelPressureFuncHigh, fuelPressureSensorHigh, engineConfiguration->highPressureFuel, 100);
+		initLinearSensor(fuelPressureFuncHigh, fuelPressureSensorHigh, engineConfiguration->highPressureFuel, 100);
 	}
-	initFluidPressure(acPressureFunc, acPressureSensor, engineConfiguration->acPressure, 10);
-	initFluidPressure(auxLinear1Func, auxLinear1Sensor, engineConfiguration->auxLinear1, 10);
-	initFluidPressure(auxLinear2Func, auxLinear2Sensor, engineConfiguration->auxLinear2, 10);
-	initFluidPressure(auxLinear3Func, auxLinear3Sensor, engineConfiguration->auxLinear3, 10);
-	initFluidPressure(auxLinear4Func, auxLinear4Sensor, engineConfiguration->auxLinear4, 10);
+	initLinearSensor(acPressureFunc, acPressureSensor, engineConfiguration->acPressure, 10);
+	initLinearSensor(auxLinear1Func, auxLinear1Sensor, engineConfiguration->auxLinear1, 10);
+	initLinearSensor(auxLinear2Func, auxLinear2Sensor, engineConfiguration->auxLinear2, 10);
+	initLinearSensor(auxLinear3Func, auxLinear3Sensor, engineConfiguration->auxLinear3, 10);
+	initLinearSensor(auxLinear4Func, auxLinear4Sensor, engineConfiguration->auxLinear4, 10);
 
 	injectorPressure.setProxiedSensor(
 			engineConfiguration->injectorPressureType == IPT_High ? SensorType::FuelPressureHigh

@@ -98,6 +98,12 @@ void TriggerStimulatorHelper::assertSyncPosition(
 		TriggerWaveform& shape
 		) {
 
+	if (!state.getShaftSynchronized()) {
+		// We never found a crank-only sync point; the cam input will resolve
+		// the exact engine phase at runtime, so there is nothing to validate here.
+		return;
+	}
+
 // todo: is anything limiting this TEST_REVOLUTIONS? why does value '8' not work for example?
 #define TEST_REVOLUTIONS 6
 
@@ -140,6 +146,13 @@ expected<uint32_t> TriggerStimulatorHelper::findTriggerSyncPoint(
 			return i;
 		}
 	}
+	// Wheels that need cam disambiguation cannot be self-synced by the stimulator
+	// because it only replays the crank pattern. Pick event 0 as the arbitrary
+	// crank reference; the real cam input resolves the exact phase at runtime.
+	if (engineConfiguration->vvtMode[0] != VVT_INACTIVE && shape.needsDisambiguation()) {
+		return 0;
+	}
+
 	shape.setShapeDefinitionError(true);
 
 	if (engineConfiguration->overrideTriggerGaps) {

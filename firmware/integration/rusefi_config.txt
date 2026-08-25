@@ -2026,6 +2026,8 @@ end_struct
 	end_struct
 
 	i2c_config_s[I2C_BUS_TOTAL_COUNT iterate] i2c;
+
+	int8_t binarySyncRemainderOffset;VVT Polled Binary: crank phase remainder offset for binary cam sync;"", 1, 0, -128, 127, 0
 ! end of engine_configuration_s
 end_struct
 

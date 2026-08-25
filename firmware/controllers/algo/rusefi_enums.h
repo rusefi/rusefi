@@ -144,6 +144,8 @@ typedef enum  __attribute__ ((__packed__)) {
 
   VVT_CUSTOM_4 = 34,
 
+  VVT_POLLED_BINARY = 35,
+
 } vvt_mode_e;
 
 typedef enum __attribute__ ((__packed__)) {

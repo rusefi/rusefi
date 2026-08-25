@@ -41,6 +41,7 @@ TriggerCentral::TriggerCentral() :
 		vvtPosition(),
 		triggerState("TRG")
 {
+	m_cachedCrankDivider = -1;
 	setArrayValues(hwEventCounters, 0);
 	triggerState.resetState();
 	noiseFilter.resetAccumSignalData();
@@ -132,6 +133,8 @@ static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 			&& vvtMode != VVT_TOYOTA_3_TOOTH /* VVT_2JZ is an unusual 3/0 missed tooth symmetrical wheel */
 			&& vvtMode != VVT_HONDA_K_INTAKE
 			&& vvtMode != VVT_MAP_V_TWIN
+			// cam level is polled at crank edges, cam edge timing is not decoded
+			&& vvtMode != VVT_POLLED_BINARY
 			&& !boardIsSpecialVvtDecoder(vvtMode)
 			&& vvtMode != VVT_SINGLE_TOOTH;
 }
@@ -141,6 +144,10 @@ angle_t TriggerCentral::syncEnginePhaseAndReport(int divider, int remainder) {
 
 	int oldSyncCounter = triggerState.getSynchronizationCounter();
 	angle_t totalShift = triggerState.syncEnginePhase(divider, remainder, engineCycle);
+// #if EFI_UNIT_TEST
+// 	printf("   syncEnginePhaseAndReport at %.6f s: totalShift=%.2f, oldSync=%d\r\n",
+// 		getTimeNowUs() / 1'000'000.0f, totalShift, oldSyncCounter);
+// #endif
 	if (totalShift != 0) {
 		int newSyncCounter = triggerState.getSynchronizationCounter();
 		int indexOffset = (newSyncCounter - oldSyncCounter) * triggerShape.getSize();
@@ -239,6 +246,8 @@ static angle_t adjustCrankPhase(int camIndex) {
 	case VVT_CUSTOM_2:
 	case VVT_CUSTOM_3:
 	case VVT_CUSTOM_4:
+	case VVT_POLLED_BINARY:
+		// phase sync happens in the crank edge path, see TriggerCentral::handlePolledBinaryCamSync()
 	case VVT_INACTIVE:
 		// do nothing
 		return 0;
@@ -482,6 +491,83 @@ void handleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 	}
 }
 
+/**
+ * VVT_POLLED_BINARY: read the current physical level of the engine sync cam input.
+ * In unit tests the level is provided via setMockState().
+ */
+static bool readPolledBinaryCamLevel(int camSensorIndex) {
+	Gpio camPin = engineConfiguration->camInputs[camSensorIndex];
+	if (!isBrainPinValid(camPin)) {
+		return false;
+	}
+	bool invert = CAM_BY_INDEX(camSensorIndex) == 0
+			? engineConfiguration->invertCamVVTSignal
+			: engineConfiguration->invertExhaustCamVVTSignal;
+	return efiReadPin(camPin) != invert;
+}
+
+/**
+ * VVT_POLLED_BINARY: cam and crank form a data/clock pair. We sample the cam signal level at
+ * every crank edge; the (cam @ rise, cam @ fall) pair forms a two-bit code per crank tooth:
+ *   HIGH/HIGH - the cylinder 1 TDC crank segment
+ *   HIGH/LOW  - the crank segment 360 degrees later
+ *   other     - not a unique position, only counted (future: position tracking)
+ * Cam edge *timing* is intentionally not used for synchronization in this mode.
+ */
+void TriggerCentral::handlePolledBinaryCamSync(bool isCrankRising, efitick_t nowNt) {
+	UNUSED(nowNt);
+	//binaryCamAtCrankRise declared in trigger_central.txt
+	//binaryCamAtCrankFall declared in trigger_central.txt
+
+	bool camLevel = readPolledBinaryCamLevel(engineConfiguration->engineSyncCam); // sample the physical cam pin level right at this crank edge
+
+	if (isCrankRising) {
+		binaryCamAtCrankRise = camLevel; //store cam level for rising edge
+		m_binaryCamRiseSampleValid = true; //mark that we actually saw a rising edge previously
+		return;
+	}
+	// else: process the falling edge
+
+	if (!m_binaryCamRiseSampleValid) { return; }  //if you didn't see the rising edge but saw a fall, early return
+	
+	m_binaryCamRiseSampleValid = false; //I did see the rising edge, now reset the bool for the next time
+	binaryCamAtCrankFall = camLevel;
+	int8_t currentSyncCode = (binaryCamAtCrankRise ? 2 : 0) | (binaryCamAtCrankFall ? 1 : 0);
+
+	// tooth-level crank sync is a prerequisite for engine phase sync
+	if (!triggerState.getShaftSynchronized()) {
+		m_lastBinarySyncCode=currentSyncCode; 
+		return;
+	}
+
+	
+	float maxSyncThreshold = engineConfiguration->maxCamPhaseResolveRpm;
+	if (maxSyncThreshold != 0 && Sensor::getOrZero(SensorType::Rpm) > maxSyncThreshold) {
+		m_lastBinarySyncCode=currentSyncCode; 
+		return; // The user has elected to stop trying to resolve crank phase after some RPM
+	}
+	if (m_cachedCrankDivider < 0) { m_cachedCrankDivider = getCrankDivider(triggerShape.getWheelOperationMode()); }
+	if (m_cachedCrankDivider == 1) { m_lastBinarySyncCode=currentSyncCode; return; } // no ambiguity to resolve
+
+	int remainder;
+	if (currentSyncCode==2 && (m_lastBinarySyncCode==0 || !triggerState.hasSynchronizedPhase()) ) {
+		remainder = (engineConfiguration->binarySyncRemainderOffset + m_cachedCrankDivider / 2) % m_cachedCrankDivider; // cam fell between crank rise and fall: 360 degrees out of the 720 cycle
+	} else {
+		m_lastBinarySyncCode=currentSyncCode;
+		return;
+	}
+
+	#if EFI_UNIT_TEST
+		printf("DEBUG POLLED BINARY  resolve at %.6f s: currentSyncCode=%d, lastSyncCode=%d, shaftSync=%d, rpm=%.1f\r\n",
+			getTimeNowUs() / 1'000'000.0f, currentSyncCode, m_lastBinarySyncCode,
+			triggerState.getShaftSynchronized(), Sensor::getOrZero(SensorType::Rpm));
+	#endif
+
+	// no-op if we are already in the correct phase, corrective shift otherwise
+	syncEnginePhaseAndReport(m_cachedCrankDivider, remainder);
+	m_lastBinarySyncCode=currentSyncCode; 
+}
+
 int triggerReentrant = 0;
 int maxTriggerReentrant = 0;
 uint32_t triggerDuration;
@@ -548,6 +634,13 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 		LogPrimaryTriggerTooth(timestamp, signal == SHAFT_PRIMARY_RISING);
 	}
 #endif /* EFI_TOOTH_LOGGER */
+
+	// VVT_POLLED_BINARY: sample cam level at every crank edge, including falling edges
+	// which a rise-only crank decoder would otherwise discard just below
+	if (isPrimary
+			&& engineConfiguration->vvtMode[CAM_BY_INDEX(engineConfiguration->engineSyncCam)] == VVT_POLLED_BINARY) {
+		getTriggerCentral()->handlePolledBinaryCamSync(signal == SHAFT_PRIMARY_RISING, timestamp);
+	}
 
 	// for effective noise filtering, we need both signal edges,
 	// so we pass them to handleShaftSignal() and defer this test

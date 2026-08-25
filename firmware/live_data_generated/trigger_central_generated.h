@@ -198,8 +198,118 @@ struct trigger_central_s {
 	 * offset 68
 	 */
 	uint32_t triggerElapsedUs = (uint32_t)0;
+	/**
+	offset 72 bit 0 */
+	bool binaryCamAtCrankRise : 1 {};
+	/**
+	offset 72 bit 1 */
+	bool binaryCamAtCrankFall : 1 {};
+	/**
+	offset 72 bit 2 */
+	bool m_binaryCamRiseSampleValid : 1 {};
+	/**
+	offset 72 bit 3 */
+	bool unusedBit_54_3 : 1 {};
+	/**
+	offset 72 bit 4 */
+	bool unusedBit_54_4 : 1 {};
+	/**
+	offset 72 bit 5 */
+	bool unusedBit_54_5 : 1 {};
+	/**
+	offset 72 bit 6 */
+	bool unusedBit_54_6 : 1 {};
+	/**
+	offset 72 bit 7 */
+	bool unusedBit_54_7 : 1 {};
+	/**
+	offset 72 bit 8 */
+	bool unusedBit_54_8 : 1 {};
+	/**
+	offset 72 bit 9 */
+	bool unusedBit_54_9 : 1 {};
+	/**
+	offset 72 bit 10 */
+	bool unusedBit_54_10 : 1 {};
+	/**
+	offset 72 bit 11 */
+	bool unusedBit_54_11 : 1 {};
+	/**
+	offset 72 bit 12 */
+	bool unusedBit_54_12 : 1 {};
+	/**
+	offset 72 bit 13 */
+	bool unusedBit_54_13 : 1 {};
+	/**
+	offset 72 bit 14 */
+	bool unusedBit_54_14 : 1 {};
+	/**
+	offset 72 bit 15 */
+	bool unusedBit_54_15 : 1 {};
+	/**
+	offset 72 bit 16 */
+	bool unusedBit_54_16 : 1 {};
+	/**
+	offset 72 bit 17 */
+	bool unusedBit_54_17 : 1 {};
+	/**
+	offset 72 bit 18 */
+	bool unusedBit_54_18 : 1 {};
+	/**
+	offset 72 bit 19 */
+	bool unusedBit_54_19 : 1 {};
+	/**
+	offset 72 bit 20 */
+	bool unusedBit_54_20 : 1 {};
+	/**
+	offset 72 bit 21 */
+	bool unusedBit_54_21 : 1 {};
+	/**
+	offset 72 bit 22 */
+	bool unusedBit_54_22 : 1 {};
+	/**
+	offset 72 bit 23 */
+	bool unusedBit_54_23 : 1 {};
+	/**
+	offset 72 bit 24 */
+	bool unusedBit_54_24 : 1 {};
+	/**
+	offset 72 bit 25 */
+	bool unusedBit_54_25 : 1 {};
+	/**
+	offset 72 bit 26 */
+	bool unusedBit_54_26 : 1 {};
+	/**
+	offset 72 bit 27 */
+	bool unusedBit_54_27 : 1 {};
+	/**
+	offset 72 bit 28 */
+	bool unusedBit_54_28 : 1 {};
+	/**
+	offset 72 bit 29 */
+	bool unusedBit_54_29 : 1 {};
+	/**
+	offset 72 bit 30 */
+	bool unusedBit_54_30 : 1 {};
+	/**
+	offset 72 bit 31 */
+	bool unusedBit_54_31 : 1 {};
+	/**
+	 * offset 76
+	 */
+	int8_t m_lastBinarySyncCode = (int8_t)0;
+	/**
+	 * offset 77
+	 */
+	int8_t m_cachedCrankDivider = (int8_t)0;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 78
+	 */
+	uint8_t alignmentFill_at_78[2] = {};
 };
-static_assert(sizeof(trigger_central_s) == 72);
+static_assert(sizeof(trigger_central_s) == 80);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/trigger/trigger_central.txt
