@@ -49,6 +49,14 @@ class UnitsExpressionMigrationTest {
     private static final String LIMA_BOOST_CUT_PRESSURE_LINE =
         "boostCutPressure = scalar, F32, 1700, {bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 0.145038}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? 650 : 650 * 0.145038}, 0";
 
+    // same customer, next symptom: the IAT sensor calibration temperatures ("Bosch Various" preset,
+    // -10/30/70 *C) were replaced by Lima defaults while the paired "Ohm" resistances survived -
+    // Lima moved the temperatures to expression units (plus a C/F ternary multiplier AND translate)
+    private static final String KANSAS_IAT_TEMP_LINE =
+        "iat_tempC_1 = scalar, F32, 388, \"*C\", 1, 0, -55, 200, 1";
+    private static final String LIMA_IAT_TEMP_LINE =
+        "iat_tempC_1 = scalar, F32, 392, {bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -55 : -67}, {useMetricOnInterface ? 200 : 392}, 1";
+
     private static String parseArrayUnits(final String iniLine) {
         return ArrayIniField.parse(tokenize(iniLine)).getUnits();
     }
@@ -95,6 +103,28 @@ class UnitsExpressionMigrationTest {
         assertEquals("{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}", limaUnits);
 
         assertTrue(checkIfUnitsCanBeMigrated(kansasUnits, limaUnits));
+    }
+
+    @Test
+    void iatSensorTemperatureCelsiusToExpressionIsMigratable() {
+        final String kansasUnits = parseScalarUnits(KANSAS_IAT_TEMP_LINE);
+        final String limaUnits = parseScalarUnits(LIMA_IAT_TEMP_LINE);
+
+        assertEquals("*C", kansasUnits);
+        assertEquals("{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}", limaUnits);
+
+        // refusing here replaced the customer's Bosch -10/30/70 *C calibration temperatures with
+        // Lima defaults (-20/23.9/120) while the literal-"Ohm" resistances migrated fine
+        assertTrue(checkIfUnitsCanBeMigrated(kansasUnits, limaUnits));
+    }
+
+    @Test
+    void iatSensorTemperatureExpressionScalingResolvesToMetricBranch() {
+        // the value copy is only numerically safe because the ini parser resolves Lima's ternary
+        // multiplier/translate to their metric (true) branches, matching Kansas's 1 / 0
+        final ScalarIniField limaField = ScalarIniField.parse(tokenize(LIMA_IAT_TEMP_LINE));
+        assertEquals(1.0, limaField.getMultiplier());
+        assertEquals(0.0, limaField.getSerializationOffset());
     }
 
     @Test
