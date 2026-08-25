@@ -7546,3 +7546,137 @@ engine->engineState.timingAdvance[0].
 Validation: compile_m74_9.sh BUILD SUCCESSFUL.  On-car check: warm idle should
 show live rpm on the tach, ~0.6-0.8 L/h instant consumption on the BC, and the
 CLT gauge tracking warm-up.
+
+## 2026-08-25 (night 2) - m74_9: LIN generator parameters extracted from the stock firmware
+
+The 21129's alternator is controlled over LIN by the stock ECU. The user asked
+to extract the LIN parameters from Read_FULLFLASH_I865LB52_w2404b1 (Itelma
+M74.9, Largus 21129, build 2024-01-10, 4 MB flash dump @ 0x08000000, Cortex-M
+Thumb). Static analysis (objdump + table forensics, no Ghidra):
+
+- Flash layout: bank1 (0x08000000-0x081FFFFF) holds the app + calibration
+  (vectors at 0x08000000; real startup images at 0x08080000 and in bank2 at
+  0x08201000; VRS ramp table verified at 0x0804EF8C). Module name table with
+  "LIN", "UART", "GPIO", "IGNCTRL", "KNOCK_DRIVER", "IC_ETC", "IC_EMS" etc.
+- LIN driver code at 0x08016680-0x08017000: PID calculator (mask 0x3F +
+  P0/P1 parity - classic LIN protected-ID) and the checksum function (16-bit
+  sum + carry folds + invert; r3==1 adds the PID = classic LIN 1.x, else
+  enhanced LIN 2.x). Baud: 10 MHz / baud divisor computed at 0x0801688E
+  (10,000,000 / 19200 = 520) - standard 19200.
+- Frame table at 0x08048CC1, 16 slots of {id, len|cks_type}: bit 4 of the
+  second byte selects classic(1)/enhanced(0) checksum, bits 3:0 = length.
+  Non-trivial frames: ID 0x16 (protected 0xD6) len 6 TX enhanced (the
+  alternator CONTROL frame), ID 0x08 (protected 0xC8) len 8 RX CLASSIC (the
+  alternator status response), ID 0x08 len 2 and len 3 TX enhanced, ID 0x1D
+  (protected 0x9D) len 4 TX enhanced, ID 0x00 = pauses/service slots.
+- Frame buffers (flash initial payloads) at 0x08062FB0-0x08063310: contain
+  15.0 V in two encodings (0x0096 = 150 dV, 0x3A98 = 15000 mV), 14.8 V
+  (0x0094), 800 (0x0320), 0x7FFF sentinels - the ECU's default alternator
+  setpoint is 15.0 V.
+- Voltage calibration block at 0x08064720-0x08064780 (mV): setpoints/thresholds
+  12.8 / 13.6 / 14.0 / 14.4 / 14.8 / 15.2 V plus protection thresholds
+  16.4 / 17.6 / 18.4 / 19.2 / 20.0 / 20.8 / 21.6 / 22.4 / 24.0 V. Duplicated
+  calibration block at 0x08064D60/0x08065060 (two copies) with 13.0/14.0/
+  14.75/12.75 V entries (/32 scale). PID gain block at 0x0806D65A (Q12:
+  Kp 0.6, Ki 0.2, Kd 0.125, plus 0.8/7.8/0.278 groups) - the alternator
+  voltage regulator gains.
+- Schedule machinery: 20-slot task array in RAM 0x2000D89E (12-byte records,
+  counter vs period fields).
+
+NOT yet decoded: the exact byte position/scale of the voltage setpoint inside
+the 6-byte 0x16 payload (the buffers prove it carries voltage, but the live
+frame layout needs either a car LIN capture or deeper decompilation of the
+regulator task). Follow-up: LIN sniff on the car (logic analyzer on the
+alternator LIN line, or PLIN-USB), then implement a LIN master for m74_9
+(rusEFI has no LIN support yet).
+
+## 2026-08-25 (night 3) - m74_9: LIN generator bus protocol from the ST L9918 datasheet (VDA)
+
+The exact 21129 payload layout still needed the "how to work with the bus"
+reference. Downloaded the ST L9918 datasheet (alternator voltage regulator
+with LIN, "compliant to VDA LIN-Generator-Regulator specification") - the
+generic VDA protocol the 21129 regulator follows:
+
+- Physical/data link: LIN 2.2A, 19200, single wire; responses of 2/4/8 bytes
+  only; checksum classic (LIN 1.3) or enhanced (2.x) selectable.
+- Master control frame (RX for the regulator): setpoint + LRC + current limit
+  + output selection. SETPOINT ENCODING (the key): 6-bit A6 = (V - 10.6) x 10
+  (0.1 V steps, 10.6-16 V), 8-bit A8 = (V - 10.6) x 40 (0.025 V steps);
+  code 0 = 10.6 V = OFF / pre-excitation command (VBSPLINRG = 10.6 V keeps
+  EXC off until a valid setpoint arrives).
+- LRC fields: B (LRC-Rise, 4 bits: 0-15 s ramp), C (LRC-Cut speed, 4 bits:
+  2400-8000 rpm / "always active"), D (excitation current limit 5/7/8 bits:
+  0 = no limit, else 0.1-10 A+).
+- Regulator response frames: F_T/F_M/F_E fault flags (thermal/mechanical/
+  electrical), F_L1/F_L0 LIN error flags, DCE5/8 excitation PWM duty, EXC6/8
+  excitation current, alternator ID (AltS/AltL), RB output-confirmation code,
+  and the K feedback byte selected by the master's R field: VSPFBK8 setpoint
+  echo ((V-10.6)x10), BV8 B+ voltage, TJ8 junction temperature, RPM8
+  alternator speed (567-6000+ rpm).
+
+Cross-check with the 21129 firmware frame table: master 0x16 (PID 0xD6) 6
+bytes enhanced = the control frame (VDA-style: setpoint + LRC + current limit,
+6 bytes = A8 variant with extra fields), response 0x08 (PID 0xC8) 8 bytes
+CLASSIC = the regulator's status frame (VDA-style flags + duty + current +
+feedback byte; the L9918's Version F Tx_2F is also 8 bytes). The L9918's own
+frame IDs (0x20/0x29/0x2A/0x11-0x16) differ - the 21129 chip is a sibling in
+the VDA family with a customer frame set, but the field semantics are shared.
+
+Implementing rusEFI LIN master for m74_9: send header PID 0xD6 + 6 bytes
+(byte0 = setpoint (V-10.6)x10, 0 = off; LRC/current-limit bytes) with enhanced
+checksum at ~100-500 ms, read the 0xC8 8-byte response with classic checksum.
+Exact byte positions of the 6-byte 21129 frame still to be confirmed with one
+car capture (or by identifying the exact regulator chip).
+
+## 2026-08-25 (night 4) - m74_9: LIN alternator master implementation
+
+Implemented the LIN master + smart-alternator control for m74_9 (the 21129
+alternator is LIN-controlled, VDA generator-regulator family; protocol facts
+extracted earlier from the stock firmware and the ST L9918 datasheet):
+
+- New board-local driver firmware/config/boards/m74_9/m74_9_lin.cpp/.h:
+  USART3 (SD3, PB10 TX / PB11 RX) @ 19200 8N1 with LINEN in CR2, hardware
+  break via the SBK bit, classic protected-ID calculator, classic (LIN 1.x)
+  and enhanced (LIN 2.x) checksums. Master frame 0x16 (PID 0xD6, 6 bytes,
+  enhanced) = setpoint + LRC; status poll on 0x08 (PID 0xC8, 8 bytes, classic).
+- Control policy (per user request): OFF while cranking/below 600 rpm; smooth
+  load pickup via the LRC-Rise field; OFF above 5000 rpm; OFF during hard
+  acceleration (MAP > 80 kPa) capped at 60 s continuous (battery protection).
+  Setpoint = code6 (V - 10.6) x 10 from alternatorVoltageTargetTable
+  (load x rpm, filled in the msq: 13.8-14.6 V); code 0 = 10.6 V = OFF.
+- Tunable board fields via board_engine_configuration.txt (first use on m74_9):
+  m74_9LinAltEnabled/MinRpm/MaxRpm/MapOffKpa/MapOffMaxSeconds/LrcRiseCode/
+  LrcCutCode/AltFeedbackSel - defaults set in m74_9_boardDefaultConfiguration.
+- mcuconf: STM32_SERIAL_USE_USART3 = TRUE (USART6 stays the console).
+- Debug: console command 'linalt' prints the gate state, setpoint, LRC codes,
+  the last TX frame and the last RX status frame with checksum validation.
+
+The 6-byte payload layout is PROVISIONAL (VDA field order, padded with 0xFF) -
+to be confirmed against the real regulator with 'linalt' and adjusted in
+buildControlFrame(). Wiring: connector AF3 "Alternator DFM signal" is the
+stock LIN wire; it must reach PB10/PB11 on the m74_9 board.
+
+| File | Change |
+| --- | --- |
+| firmware/config/boards/m74_9/m74_9_lin.cpp/.h | new LIN master + alternator control |
+| firmware/config/boards/m74_9/board_engine_configuration.txt | new tune fields |
+| firmware/config/boards/m74_9/board_configuration.cpp | defaults, init + periodic hooks |
+| firmware/config/boards/m74_9/board.mk | compiles m74_9_lin.cpp |
+| firmware/config/boards/m74_9/21129.msq | alternator voltage table + bins filled, new fields |
+| firmware/hw_layer/ports/at32/at32f4/cfg/mcuconf.h | STM32_SERIAL_USE_USART3 = TRUE |
+
+Validation: compile_m74_9.sh BUILD SUCCESSFUL (config regen picked up the new
+board fields; ini has m74_9LinAlt*). On-car: enable m74_9LinAltEnabled, watch
+'linalt' (TX 6 bytes, RX 8 bytes + classic checksum OK) while the engine runs.
+
+## 2026-08-25 (night 5) - m74_9 LIN alternator: 5 s off-hold after gate events
+
+Added hysteresis to the alternator OFF gates: after any of the immediate OFF
+events clears (MAP gate, low rpm / cranking, over-rev above 5000) the
+generator stays off for m74_9LinOffHoldSeconds (default 5 s) more. During a
+gear shift the MAP dips below the 80 kPa threshold for a moment - without the
+hold the generator switches on and immediately off again; with the hold the
+OFF state persists through the dip. The timer re-arms while any event is
+still active and counts down once all events clear. New tune field
+m74_9LinOffHoldSeconds (board_engine_configuration.txt, default 5, shown in
+the 'linalt' console output as hold=X.X/Y.Ys). Build: BUILD SUCCESSFUL.

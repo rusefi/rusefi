@@ -1,0 +1,9 @@
+bit m74_9LinAltEnabled,"Disabled","Enabled"
+uint16_t m74_9LinAltMinRpm
+uint16_t m74_9LinAltMaxRpm
+uint8_t m74_9LinAltMapOffKpa
+uint8_t m74_9LinAltMapOffMaxSeconds
+uint8_t m74_9LinOffHoldSeconds
+uint8_t m74_9LinLrcRiseCode
+uint8_t m74_9LinLrcCutCode
+uint8_t m74_9LinAltFeedbackSel
