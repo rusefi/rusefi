@@ -39,6 +39,14 @@ public class IniFieldMigrationUtils {
         if ((prevUnits == null) || prevUnits.isEmpty()) {
             return true;
         } else if (newUnits != null) {
+            if (isUnitsExpression(prevUnits) || isUnitsExpression(newUnits)) {
+                // TS `{...}` units expressions (e.g. {bitStringValue(pressureUnitsLabels, useMetricOnInterface)})
+                // reach us unevaluated, so the same physical unit can be spelled as a literal in one ini and as
+                // an expression in the other, or as two different expressions. A raw-string mismatch here says
+                // nothing about the physical unit, and refusing migration silently replaces the user's tuned
+                // value with the new default - so expression units never block migration.
+                return true;
+            }
             final String lcPrevUnits = prevUnits.toLowerCase();
             final String lcNewUnits = newUnits.toLowerCase();
             if (lcPrevUnits.equals(lcNewUnits)) {
@@ -52,6 +60,10 @@ public class IniFieldMigrationUtils {
             }
         }
         return false;
+    }
+
+    private static boolean isUnitsExpression(final String units) {
+        return units.trim().startsWith("{");
     }
 
     //TODO: reuse on BattLagCorrExtensionMigrator.java
