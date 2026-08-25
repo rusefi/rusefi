@@ -261,6 +261,14 @@ extern std::optional<setup_custom_bool_type> custom_board_syncEarlyGapWhileCrank
 // false: other boards' VR signals do not have the spurious-edge signature.
 extern std::optional<setup_custom_bool_type> custom_board_syncGapAnchorCorrection;
 
+// When set and returning a non-negative value, the gap-anchor correction
+// falls back to this EXPECTED shift (pitch units) whenever the per-sync
+// measurement is out of band (a stretched/accelerating gap or a corrupted
+// measurement) instead of freezing the last value. m74_9 returns its VR
+// amplitude-model prediction (Vp = k*rpm -> hysteresis level -> expected
+// shift, see m74_9_vr_model.cpp); negative = model off = freeze as before.
+extern std::optional<setup_custom_get_float_type> custom_board_vrGapShiftPitch;
+
 // When set and returning true, a ratio-validated sync candidate with a 1-2
 // event count DEFICIT is accepted as a valid sync regardless of the cranking
 // band (the custom_board_syncEarlyGapWhileCranking acceptance above is

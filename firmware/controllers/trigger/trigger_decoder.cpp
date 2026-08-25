@@ -872,12 +872,21 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 			// deficit: correctionDeg = (syncRatioAvg - measuredGap) * pitchDeg,
 			// EMA-smoothed and clamped to [0, 1.5] pitch - a STRETCHED gap
 			// (measured > nominal, e.g. first-combustion acceleration) must never
-			// yield a negative/runaway correction, so those revs do not update it.
+			// yield a negative/runaway correction.
+			// When the measurement is out of band, fall back to the board's
+			// amplitude-model prediction (custom_board_vrGapShiftPitch, m74_9:
+			// Vp = k*rpm -> hysteresis level -> expected shift) instead of
+			// freezing the last value; negative = model off = freeze as before.
 			// Only validated syncs (clean count or accepted 1-2 deficit) update.
 			if (syncValidated && get_board_override_result(custom_board_syncGapAnchorCorrection, false)) {
 				if (toothDurations[1] > 0) {
 					float measuredGapRatio = 1.0f * toothDurations[0] / toothDurations[1];
 					float correctionPitch = triggerShape.syncRatioAvg - measuredGapRatio;
+					if (correctionPitch < 0 || correctionPitch > 1.5f) {
+						// invalid measurement (stretched gap / corrupted ratio): use
+						// the model estimate if the board provides one
+						correctionPitch = get_board_override_result(custom_board_vrGapShiftPitch, -1.0f);
+					}
 					if (correctionPitch >= 0 && correctionPitch <= 1.5f) {
 						// one slot = 360 / totalTeeth degrees; totalTeeth = expectedEvents + skipped
 						// (58 + 2 = 60 for the 60-2 -> 6 deg per pitch)

@@ -7,6 +7,7 @@
 #include "drivers/gpio/tle9201.h"
 #include "m74_9_can.h"
 #include "m74_9_tooth_diag.h"
+#include "m74_9_vr_model.h"
 #include "runtime_state.h"
 #include "digital_input_exti.h"
 #include "pwm_generator_logic.h"
@@ -855,6 +856,13 @@ void setup_custom_board_overrides() {
 		float rpm = Sensor::getOrZero(SensorType::Rpm);
 		return rpm >= engineConfiguration->cranking.rpm && rpm < 7000;
 	};
+	// Model fallback for the gap-anchor correction: when the per-sync
+	// measurement is out of band (stretched/accelerating gap), use the VR
+	// amplitude-model prediction (Vp = k*rpm -> hysteresis level -> expected
+	// shift) instead of freezing. Negative = model off (k=0).
+	custom_board_vrGapShiftPitch = []() {
+		return vrExpectedShiftPitchForRpm(Sensor::getOrZero(SensorType::Rpm));
+	};
 	// Storage writes must be deferred while the engine runs: the MFS lives on
 	// the AT32 internal flash (bank 2) and a sector erase stalls the whole CPU
 	// (no read-while-erase on this silicon). The periodic LTFT save hitting an
@@ -1055,6 +1063,12 @@ void setup_custom_board_overrides() {
 	// comparator output for noise diagnosis (deltas + histogram, see
 	// m74_9_tooth_diag.cpp)
 	addConsoleAction("rawtrg", m74_9RawTriggerDump);
+	// VR amplitude model (L9779 auto-hysteresis): 'vrk <mV/rpm>' sets the
+	// calibration scalar (0 = off), 'vrmodel' prints the level/shift/risk.
+	addConsoleAction("vrmodel", m74_9VrModel);
+	addConsoleActionS("vrk", [](const char* arg) {
+		m74_9VrModelSetK(arg);
+	});
 	// Scheduler-free coil click: drives the L9779 IGN parallel inputs
 	// (PF12..15) directly from this thread with exact timing. sparkbench2
 	// routes through the microsecond scheduler - if the two give different
