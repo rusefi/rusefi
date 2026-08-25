@@ -22,3 +22,11 @@ PUBLIC_API_WEAK __attribute__((noinline)) bool toothProfileStorageWrite() {
 PUBLIC_API_WEAK __attribute__((noinline)) bool toothProfileStorageRead() {
 	return true;
 }
+
+PUBLIC_API_WEAK __attribute__((noinline)) bool vrModelStorageWrite() {
+	return true;
+}
+
+PUBLIC_API_WEAK __attribute__((noinline)) bool vrModelStorageRead() {
+	return true;
+}

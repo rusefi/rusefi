@@ -129,6 +129,8 @@ static bool storageWriteID(uint32_t id) {
 		return true;
 	} else if (id == EFI_TOOTH_PROFILE_RECORD_ID) {
 		return toothProfileStorageWrite();
+	} else if (id == EFI_VR_MODEL_RECORD_ID) {
+		return vrModelStorageWrite();
 	} else {
 		efiPrintf("Requested to write unknown record id %ld", id);
 		// to clear pending bit
@@ -156,6 +158,8 @@ static bool storageReadID(uint32_t id) {
 		return true;
 	} else if (id == EFI_TOOTH_PROFILE_RECORD_ID) {
 		return toothProfileStorageRead();
+	} else if (id == EFI_VR_MODEL_RECORD_ID) {
+		return vrModelStorageRead();
 	} else {
 		efiPrintf("Requested to read unknown record id %ld", id);
 		// to clear pending bit

@@ -46,6 +46,16 @@ __attribute__((noinline)) float triggerGetToothProfileFactor(int toothIndex);
  */
 __attribute__((noinline)) void boardTriggerSyncEvent(char kind, int countersError, float gap0, float gap1);
 
+/**
+ * Board hook called by the decoder at every validated sync with the measured
+ * missing-teeth gap shift in pitch units (syncRatioAvg - measuredGap), when
+ * the measurement is in band [0, 1.5]. Boards with a VR amplitude model
+ * (m74_9) train their per-level shift table from it - the model is the
+ * correction state, the measurement is the teacher. The weak default lives
+ * in trigger_board_hooks.cpp (same LTO reason as boardTriggerSyncEvent).
+ */
+__attribute__((noinline)) void triggerObserveGapShift(float measuredPitch);
+
 struct TriggerStateListener {
 #if EFI_SHAFT_POSITION_INPUT
 	virtual void OnTriggerStateProperState(efitick_t nowNt, size_t triggerStateIndex) = 0;
