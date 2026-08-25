@@ -431,6 +431,17 @@ Every "MFS: Writing storage ID 1/2 (17544 bytes)" in the 10:04/10:52 logs is a f
 
 - **Decision (user, 2026-08-24): NO on-the-fly VRS re-config / ramp re-jerking while running.** The L9779 must run without resets (hardware/power fix owns the reset root cause); firmware must NOT compensate with runtime VRS rewrites. The only firmware-side WDA hardening is the executor feed above.
 
+## m74_9 / stock-ECU CAN frame encodings for the dash (reverse-engineered from orig_1/2/3.trc, 2026-08-25)
+
+All ECU->BCM 10 ms frames in `m74_9_can.cpp`. The trc files (PCAN-View, repo root) cover IGN-on, cranking, catch, warm idle, a DFCO blip and shutdown - enough to disambiguate rpm vs fuel flow vs temperature vs voltage.
+
+- **0x0189**: [0:1] rpm*16 BE (0x3203 = 800.19 baseline at rest - BCM reads 0x0000 as "calibration not loaded" and blocks the starter); [2:3] = battery voltage, **little-endian mV** (0x3220 = 12.83 V rest, 0x38CD..0x3CE9 = 14.5..15.6 V charging); [4] rolling down-counter F0->00 sawtooth while running / 0x00 rest (dash freshness check - a frozen value makes the cluster treat frames as stale); [5] 0xB9 IGN / 0xB8 running; [6:7] 0.
+- **0x0186** (7 bytes): [0:1] = **instantaneous fuel flow, mL/h BE** - 0x0000 stopped, 77..237 cranking, peak ~864 at the catch, ~620 warm idle, 0x0000 during DFCO even while rpm climbs (that zero-while-rpm-rises is what proves flow, not rpm/PW). [2:3] = rpm*16 BE (filtered/lagging variant). [4] = **rpm - 768** (the dash tach byte: 775 rpm -> 0x07, 800 -> 0x20, 889 -> 0x79). [5] 0, [6] 0x20. The old static 0x281C in [0:1] was the idle flow value ~642 hardcoded as if it were rpm*16.
+- **0x018A** (6 bytes): [0:1] rpm*16 BE (same live value as 0x0189); [2] 0; [3] 0x07 IGN / 0x06 running; [4] = **ignition advance as 256 - 2*advance** while running (0xFA = 3 deg at the catch -> 0xE2 = 15 deg warm idle, retarding to ~0xF2 = 7 deg in DFCO), 0x02 cranking, 0x00 at IGN-on; [5] 0.
+- **0x066A** (burst, 100 ms): [0] 0x08 IGN / 0x00 running; [1] 0xFF; [2] 0; **[3] = [4] = coolant temperature, raw degC** (both bytes equal: climbs only after engine start, saturates at the thermostat 95..98 degC in orig_1/orig_3, frozen after shutdown). [5] 0xC0, [6:7] 0.
+- 0x01F6 [1] 0x20 running, [2] 0x02 | 0x40 cranking | 0x80 running, [3] 0x2D/0x30 battery-derived; 0x0217 [2] 0x70 engine active, [7] 0x88.
+- rusEFI sources: flow = `engine->module<TripOdometer>()->getConsumptionGramPerSecond() * 3600 / 0.745` (g/s -> mL/h; if the BC reads ~25% low vs a flowmeter, the stock unit may be g/h - drop the density), CLT = `Sensor::getOrZero(SensorType::Clt)`, Vbatt = `Sensor::getOrZero(SensorType::BatteryVoltage)`, advance = `engine->engineState.timingAdvance[0]`, rpm = `Sensor::getOrZero(SensorType::Rpm)`.
+
 ## m74_9 / trigger-error taxonomy from the 2026-08-24 logs (durable decoder facts)
 
 - **`trgsynchronizationcounter` (MLG) counts CLEANLY COMPLETED WHEEL REVOLUTIONS, not desyncs**: `TriggerDecoderBase::onShaftSynchronization(wasSynchronized=true)` -> `incrementShaftSynchronizationCounter()`. At N rpm it ticks at rpm/60 per second. Seeing it climb ~17/s at ~1000 rpm means the trigger was PERFECTLY synced, not desyncing. Do not misread it as a sync-loss counter.

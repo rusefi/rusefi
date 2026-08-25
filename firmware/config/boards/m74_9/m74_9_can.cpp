@@ -129,6 +129,65 @@ static inline uint16_t encodeRpmOrBaseline(float rpm) {
     return (uint16_t)(rpm * 16.0f);
 }
 
+/**
+ * Instantaneous fuel flow for the dash BC (бортовой компьютер), in mL/h.
+ *
+ * Reverse-engineered from orig_1/2/3.trc: 0x0186 bytes 0-1 are 0x0000 with the
+ * engine stopped, 0x004D..0x00ED (77..237) while cranking, peak ~0x0360 (864)
+ * at the catch and settle to ~0x026C (620) at warm idle - and drop to 0x0000
+ * during DFCO (fuel cut) even though rpm was still climbing.  That is a fuel
+ * FLOW, not rpm and not pulse width (both of those would not zero out in DFCO
+ * while rpm rises).  The same field is a static 0x281C in the old rusEFI
+ * emulation, which is exactly the "frozen packets" the dash shows.
+ *
+ * If the BC reads ~25% low vs a known-good flowmeter, the stock field may be
+ * g/h instead of mL/h - remove the density division (use gPerHour directly).
+ */
+static inline uint16_t encodeFuelFlowMlPerHour() {
+#ifdef MODULE_ODOMETER
+    float gPerSecond = engine->module<TripOdometer>()->getConsumptionGramPerSecond();
+#else
+    float gPerSecond = 0;
+#endif // MODULE_ODOMETER
+    // g/s -> mL/h: *3600 (s->h), /0.745 g/mL (gasoline density)
+    float mlPerHour = gPerSecond * 3600.0f / 0.745f;
+    return (uint16_t)clampF(0.0f, mlPerHour, 65535.0f);
+}
+
+/**
+ * Battery voltage, little-endian millivolts - 0x0189 bytes 2-3.
+ * orig traces: 0x3220 LE = 12832 mV = 12.83 V at rest, 0x38CD..0x3CE9 LE
+ * (14.5..15.6 V) while the alternator/bench supply charges.
+ */
+static inline uint16_t encodeBatteryMillivoltsLE() {
+    float volts = Sensor::getOrZero(SensorType::BatteryVoltage);
+    return (uint16_t)clampF(0.0f, volts * 1000.0f, 65535.0f);
+}
+
+/**
+ * Coolant temperature for the dash gauge - 0x066A bytes 3 and 4, raw degC.
+ * orig traces: both bytes track the CLT ramp and saturate at the thermostat
+ * (95..98 degC in orig_1/orig_3, frozen after shutdown) - the signature of a
+ * coolant-temperature gauge value, duplicated in two byte positions.
+ */
+static inline uint8_t encodeCltDegC() {
+    float clt = Sensor::getOrZero(SensorType::Clt);
+    return (uint8_t)clampF(0.0f, clt, 255.0f);
+}
+
+/**
+ * Ignition-advance byte - 0x018A byte 4: 256 - 2*advance while running.
+ * orig_1 trace: 0xFA (250 -> 3 deg) at the catch, decaying to 0xE2 (226 ->
+ * 15 deg) at warm idle, retarding back to ~0xF2 (242 -> 7 deg) during the DFCO
+ * blip, 0x02 cranking and 0x00 at IGN-on.  That is exactly the stock warm-up
+ * advance curve (7 deg at catch -> 15 deg warm idle) with the DFCO retard.
+ */
+static inline uint8_t encodeIgnitionAdvanceByte(float timingAdvanceDeg) {
+    // 256 - 2*advance; clamp so the byte stays in [0x02, 0xFE]
+    float encoded = 256.0f - 2.0f * timingAdvanceDeg;
+    return (uint8_t)clampF(2.0f, encoded, 254.0f);
+}
+
 // ---------------------------------------------------------------------------
 // IMMO response computation
 // ---------------------------------------------------------------------------
@@ -458,9 +517,9 @@ private:
     /**
      * 0x0189 - RPM primary (10 ms, 8 bytes)
      *   bytes 0-1: RPM*16 big-endian (or 0x3200 baseline when engine stopped)
-     *   bytes 2-3: 0x20, 0x32 (static idle approximation)
-     *   byte 4:   0x00 (no RPM) / 0x70 (running)
-     *   byte 5:   0xB9 (fixed CLT-derived approximation)
+     *   bytes 2-3: battery voltage, little-endian millivolts (live)
+     *   byte 4:   0x00 (no RPM) / rolling down-counter (running)
+     *   byte 5:   0xB9 at IGN-only, 0xB8 while running (original captures)
      *   bytes 6-7: 0x00
      *
      * NOTE: bytes 0-1 must not be 0x0000 even when stopped — BCM uses the
@@ -471,31 +530,44 @@ private:
         CanTxMessage msg(CanCategory::NBC, ECU_RPM_PRIMARY_ID, 8, DEFAULT_BUS_INDEX);
         msg[0] = (uint8_t)(rpmEncoded >> 8);
         msg[1] = (uint8_t)(rpmEncoded & 0xFF);
-        msg[2] = 0x20;
-        msg[3] = 0x32;
-        msg[4] = isRunning ? 0x70 : 0x00;
-        msg[5] = 0xB9;
+        // battery voltage, little-endian millivolts (orig: 0x3220 = 12.83 V
+        // at rest, 0x3CE9 = 15.59 V while charging)
+        uint16_t vbattMv = encodeBatteryMillivoltsLE();
+        msg[2] = (uint8_t)(vbattMv & 0xFF);
+        msg[3] = (uint8_t)(vbattMv >> 8);
+        // byte 4: rolling down-counter (original: F0->00 sawtooth while
+        // running, 0x00 at rest) - the dash may use it as a frame-freshness
+        // check; a frozen value makes the cluster treat the frames as stale.
+        msg[4] = isRunning ? m_dashCounter : 0x00;
+        m_dashCounter--;
+        // byte 5: 0xB9 at IGN-only, 0xB8 while running (original captures)
+        msg[5] = isRunning ? 0xB8 : 0xB9;
         msg[6] = 0x00;
         msg[7] = 0x00;
     }
 
     /**
-     * 0x0186 - RPM aux (10 ms, 7 bytes)
-     *   bytes 0-1: 0x00 0x00 (IGN on) / 0x28 0x1C (engine active) - static
+     * 0x0186 - RPM aux / fuel flow (10 ms, 7 bytes)
+     *   bytes 0-1: instantaneous fuel flow, mL/h big-endian (0 when stopped,
+     *             ~0x026C = 620 mL/h at idle, 0 during DFCO)
      *   bytes 2-3: RPM*16 big-endian (or 0x3200 baseline when stopped)
-     *   byte 4:   0x20
+     *   byte 4:   rpm - 768 (THE dash tach byte - exact linear fit vs the
+     *             original captures: 775 rpm -> 0x07, 800 -> 0x20, 889 -> 0x79)
      *   byte 5:   0x00
      *   byte 6:   0x20
      *
      * NOTE: bytes 2-3 carry the same RPM baseline as 0x0189[0:1].
      */
-    void send0x0186(uint16_t rpmEncoded, bool isEngineActive) {
+    void send0x0186(uint16_t rpmEncoded, float rpm) {
         CanTxMessage msg(CanCategory::NBC, ECU_RPM_AUX_ID, 7, DEFAULT_BUS_INDEX);
-        msg[0] = isEngineActive ? 0x28 : 0x00;
-        msg[1] = isEngineActive ? 0x1C : 0x00;
+        uint16_t fuelFlowMlPerHour = encodeFuelFlowMlPerHour();
+        msg[0] = (uint8_t)(fuelFlowMlPerHour >> 8);
+        msg[1] = (uint8_t)(fuelFlowMlPerHour & 0xFF);
         msg[2] = (uint8_t)(rpmEncoded >> 8);
         msg[3] = (uint8_t)(rpmEncoded & 0xFF);
-        msg[4] = 0x20;
+        // dash tach: rpm - 768, clamped to the byte (original sends 0x20 at
+        // rest = 800 rpm baseline)
+        msg[4] = (uint8_t)clampF(0.0f, rpm - 768.0f, 255.0f);
         msg[5] = 0x00;
         msg[6] = 0x20;
     }
@@ -504,20 +576,24 @@ private:
      * 0x018A - RPM aux2 (10 ms, 6 bytes)
      *   bytes 0-1: RPM*16 big-endian (or 0x3200 baseline when stopped)
      *   byte 2:   0x00
-     *   byte 3:   0x06
-     *   byte 4:   0xFE (IGN on) / 0xE8 (running)
+     *   byte 3:   0x07 at IGN-only, 0x06 while running (original captures)
+     *   byte 4:   ignition advance: 256 - 2*advance while running, 0x02
+     *             cranking, 0x00 at IGN-on (orig: 0xE2 = 15 deg idle,
+     *             0xFA = 3 deg at the catch)
      *   byte 5:   0x00
      *
      * NOTE: byte 0 must be 0x32 even when stopped — same baseline rule as
      * 0x0189/0x0186.  Original sends 0x32 0x00 = 0x3200 at rest.
      */
-    void send0x018A(uint16_t rpmEncoded, bool isRunning) {
+    void send0x018A(uint16_t rpmEncoded, bool isRunning, bool isCranking, float timingAdvanceDeg) {
         CanTxMessage msg(CanCategory::NBC, ECU_RPM_AUX2_ID, 6, DEFAULT_BUS_INDEX);
         msg[0] = (uint8_t)(rpmEncoded >> 8);
         msg[1] = (uint8_t)(rpmEncoded & 0xFF);
         msg[2] = 0x00;
-        msg[3] = 0x06;
-        msg[4] = isRunning ? 0xE8 : 0xFE;
+        // byte 3: 0x07 at IGN-only, 0x06 while running (original captures)
+        msg[3] = isRunning ? 0x06 : 0x07;
+        msg[4] = isRunning ? encodeIgnitionAdvanceByte(timingAdvanceDeg)
+                           : (isCranking ? 0x02 : 0x00);
         msg[5] = 0x00;
     }
 
@@ -657,16 +733,20 @@ private:
             msg[7] = 0x00;
         }
 
-        // 0x066A - ECU operating state
-        // IGN on:  {0x08, 0xFF, 0x00, 0x01, 0x01, 0xC0, 0x00, 0x00}
-        // running: {0x00, 0xFF, 0x00, 0x1D, 0x1D, 0xC0, 0x00, 0x00}
+        // 0x066A - ECU operating state + coolant temperature for the dash
+        // bytes 3-4: CLT degC (both bytes carry the same value - orig traces
+        // show the warm-up ramp 53->95 degC saturating at the thermostat,
+        // frozen after shutdown)
+        // IGN on:  {0x08, 0xFF, 0x00, <clt>, <clt>, 0xC0, 0x00, 0x00}
+        // running: {0x00, 0xFF, 0x00, <clt>, <clt>, 0xC0, 0x00, 0x00}
         {
             CanTxMessage msg(CanCategory::NBC, BURST_ID_066A, 8, DEFAULT_BUS_INDEX);
             msg[0] = isRunning ? 0x00 : 0x08;
             msg[1] = 0xFF;
             msg[2] = 0x00;
-            msg[3] = isRunning ? 0x1D : 0x01;
-            msg[4] = isRunning ? 0x1D : 0x01;
+            uint8_t cltDegC = encodeCltDegC();
+            msg[3] = cltDegC;
+            msg[4] = cltDegC;
             msg[5] = 0xC0;
             msg[6] = 0x00;
             msg[7] = 0x00;
@@ -720,6 +800,9 @@ private:
         // 0x0000 triggers BCM error state CF and blocks the starter relay.
         uint16_t rpmEncoded = encodeRpmOrBaseline(rpm);
 
+        // Snapshot the current spark advance once per call (used by 0x018A[4])
+        float timingAdvanceDeg = engine->engineState.timingAdvance[0];
+
         // IMMO state machine: tick every 5ms call. Kept outside the serial-session gate
         // below so the one-shot trigger/response handshake still completes even while
         // TS is connected (only 2 frames per ignition-on cycle, negligible traffic).
@@ -753,8 +836,8 @@ private:
         if ((m_counter % 2) == 0) {
             send0x01F6(isRunning, isCranking);
             send0x0189(rpmEncoded, isRunning);
-            send0x0186(rpmEncoded, isEngineActive);
-            send0x018A(rpmEncoded, isRunning);
+            send0x0186(rpmEncoded, rpm);
+            send0x018A(rpmEncoded, isRunning, isCranking, timingAdvanceDeg);
             send0x0217(isEngineActive);
             send0x02A9();
         }
@@ -786,6 +869,10 @@ private:
 
     // Counter incremented once per 5 ms call to request(); drives timing logic
     uint32_t m_counter = 0;
+
+    // Rolling down-counter embedded in 0x0189[4] while running (original F0->00
+    // sawtooth) - the cluster may use it as a frame-freshness check.
+    uint8_t m_dashCounter = 0xF0;
 
     // -----------------------------------------------------------------------
     // IMMO state

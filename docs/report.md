@@ -7502,3 +7502,47 @@ Validation: compile_m74_9.sh BUILD SUCCESSFUL, unit tests trigger suite 54/54
 (artifacts/rusefi_bundle_m74_9.zip, srec 260825_1244431765). On-car validation:
 rawtrg at 4000+ rpm must now show clean alternating F/R (no same-edge runs)
 and the high-rpm C9002 events must be gone.
+
+## 2026-08-25 (night) - m74_9: live dash values over CAN (rpm/tach/CLT/Vbatt/fuel flow/advance)
+
+The BCM emulation (m74_9_can.cpp) was sending STATIC byte fields where the
+original ECU broadcasts live values - the user saw frozen dash packets. All
+four fields were re-derived from orig_1/2/3.trc (PCAN-View, stock ECU):
+
+- 0x0186[0:1] = instantaneous fuel flow, mL/h big-endian: 0x0000 stopped,
+  0x004D..0x00ED (77..237) cranking, peak ~0x0360 (864) at the catch, ~0x026C
+  (620) at warm idle, 0x0000 during DFCO (fuel cut) even while rpm climbs.
+  Was a static 0x281C (the old author read the idle value ~642 and hardcoded it
+  as if it were rpm*16).  Fuel flow is NOT rpm and NOT pulse width - both would
+  not zero out in DFCO while rpm rises.
+- 0x0189[2:3] = battery voltage, little-endian millivolts: 0x3220 = 12.83 V at
+  rest, 0x38CD..0x3CE9 (14.5..15.6 V) while the alternator/bench supply runs.
+  Was static 0x2032.
+- 0x066A[3] = 0x066A[4] = coolant temperature, raw degC in both bytes: climbs
+  only after engine start, saturates at the thermostat (95..98 degC in
+  orig_1/orig_3), frozen after shutdown - the dash gauge signature.  Was
+  static 0x1D/0x01.
+- 0x018A[4] = ignition advance: 256 - 2*advance while running (0xFA = 3 deg at
+  the catch -> 0xE2 = 15 deg warm idle, retarding to ~0xF2 = 7 deg during the
+  DFCO blip), 0x02 cranking, 0x00 at IGN-on.  Was static 0xE8/0xFE.
+- 0x0186[4] = rpm - 768 (dash tach byte) - confirmed exact from the traces:
+  775 rpm -> 0x07, 800 -> 0x20, 889 -> 0x79; 0x0189[0:1] = 0x018A[0:1] =
+  rpm*16 BE, all three carry the same live value.
+- 0x0189[4] = rolling down-counter F0->00 sawtooth while running (freshness
+  check), 0x00 at rest; 0x0189[5] = 0xB9 IGN / 0xB8 running; 0x018A[3] =
+  0x07 IGN / 0x06 running.
+
+Fuel-flow source: engine->module<TripOdometer>()->getConsumptionGramPerSecond()
+* 3600 / 0.745 (g/s -> mL/h at gasoline density).  If the BC reads ~25% low
+against a known-good flowmeter, the stock unit may be g/h - drop the density
+division.  CLT: Sensor::getOrZero(SensorType::Clt), Vbatt:
+Sensor::getOrZero(SensorType::BatteryVoltage), advance:
+engine->engineState.timingAdvance[0].
+
+| File | Change |
+| --- | --- |
+| firmware/config/boards/m74_9/m74_9_can.cpp | encodeFuelFlowMlPerHour / encodeBatteryMillivoltsLE / encodeCltDegC / encodeIgnitionAdvanceByte; 0x0189/0x0186/0x018A/0x066A live fields |
+
+Validation: compile_m74_9.sh BUILD SUCCESSFUL.  On-car check: warm idle should
+show live rpm on the tach, ~0.6-0.8 L/h instant consumption on the BC, and the
+CLT gauge tracking warm-up.
