@@ -292,13 +292,27 @@ TRIGGER_RAM_CODE void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 }
 
 static bool startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutputPin *output) {
+	// Out-of-order bail (spark already fired for this counter) computed BEFORE the
+	// warning so the warning can report which case it is: bail=yes = the safe path
+	// (dwell refused, coil keeps its charge until the spark), bail=no + charged=1 =
+	// the coil is still charging from the previous dwell and this one started on
+	// top of it - the dangerous double-charge case worth chasing.
+	bool bail = output->signalFallSparkId >= event->sparkCounter;
+
 	// todo: no reason for this to be disabled in unit_test mode?!
 #if ! EFI_UNIT_TEST
 
 	if (Sensor::getOrZero(SensorType::Rpm) > 2 * engineConfiguration->cranking.rpm) {
 		const char *outputName = output->getName();
 		if (prevSparkName == outputName && getCurrentIgnitionMode() != IM_ONE_COIL) {
-			warning(ObdCode::CUSTOM_OBD_SKIPPED_SPARK, "looks like skipped spark event revolution=%d [%s]", getRevolutionCounter(), outputName);
+			warning(ObdCode::CUSTOM_OBD_SKIPPED_SPARK,
+				"looks like skipped spark event revolution=%d [%s] rpm=%d charged=%d bail=%s fall=%u counter=%u",
+				getRevolutionCounter(), outputName,
+				(int)Sensor::getOrZero(SensorType::Rpm),
+				output->currentLogicValue ? 1 : 0,
+				bail ? "yes" : "no",
+				(unsigned)output->signalFallSparkId,
+				(unsigned)event->sparkCounter);
 		}
 		prevSparkName = outputName;
 	}
@@ -315,7 +329,7 @@ static bool startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutput
 	// Reset error flag(s)
 	event->wasSparkCanceled = false;
 
-	if (output->signalFallSparkId >= event->sparkCounter) {
+	if (bail) {
 	  /**
 	   * fact: we schedule both start of dwell and spark firing using a combination of time and trigger event domain
 	   * in case of bad/noisy signal we can get unexpected trigger events and a small time delay for spark firing before
