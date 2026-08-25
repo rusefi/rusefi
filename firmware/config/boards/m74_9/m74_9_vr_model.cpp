@@ -145,6 +145,18 @@ void m74_9VrModel() {
 		proximity * 100.0f,
 		proximity > 0.5f ? "YES" : "no",
 		(double)getTriggerCentral()->gapAnchorCorrectionDeg);
+
+	// k self-calibration helper: the rpm where each PV boundary is crossed for
+	// the current k. Compare against the rpm where the measured gap shift
+	// STEPS (synctrace gap0 per sync) - each step is a level transition, and
+	// k = PV threshold / rpm at the step. No oscilloscope needed.
+	if (vrAmplitudePerRpm > 0) {
+		efiPrintf("vrmodel level boundaries at rpm: L2>=%.0f L3>=%.0f L4>=%.0f L5>=%.0f",
+			vrPvThresholdsMv[0] / vrAmplitudePerRpm,
+			vrPvThresholdsMv[1] / vrAmplitudePerRpm,
+			vrPvThresholdsMv[2] / vrAmplitudePerRpm,
+			vrPvThresholdsMv[3] / vrAmplitudePerRpm);
+	}
 }
 
 void m74_9VrModelSetK(const char* arg) {
