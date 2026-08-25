@@ -12,8 +12,8 @@ static FlexSensor flexSensor(MS2NT(30000));
 #if EFI_PROD_CODE
 static Gpio flexPin = Gpio::Unassigned;
 
-static void flexExtiCallback(void*, efitick_t nowNt) {
-	flexSensor.callback(nowNt, efiReadPin(flexPin) ^ engineConfiguration->flexSensorInverted);
+static void flexExtiCallback(void*, efitick_t nowNt, bool level) {
+	flexSensor.callback(nowNt, level ^ engineConfiguration->flexSensorInverted);
 }
 #endif
 

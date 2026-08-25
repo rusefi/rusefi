@@ -174,6 +174,17 @@ void m74_9VrModelSetK(const char* arg) {
 	vrAmplitudePerRpm = k;
 	vrDirty = true;
 	m74_9VrModel();
+
+	// Persistence contract: the save is gated on the engine being stopped
+	// (a write while running is a flash stall). On the bench the debug ECU
+	// resets every ~5 s and reloads the STORED record, so a 'vrk' sent while
+	// the engine runs bounces back to the stored value after each reset -
+	// set k with the engine stopped, or expect it to persist only on stop.
+	if (engine->rpmCalculator.isStopped()) {
+		efiPrintf("vrk: engine stopped - model will save on the next slow callback (~2 s)");
+	} else {
+		efiPrintf("vrk: engine running - k will persist when the engine stops");
+	}
 }
 
 // ---- persistence handlers ----
@@ -209,6 +220,11 @@ bool vrModelStorageRead() {
 	StorageStatus status = storageRead(EFI_VR_MODEL_RECORD_ID, (uint8_t*)&vrStoredRecord, sizeof(vrStoredRecord));
 	if (status != StorageStatus::Ok) {
 		efiPrintf("vrmodel: no stored record (%d) - learning from seed", (int)status);
+		// The load attempt is COMPLETE even though nothing was stored: the RAM
+		// table (seed) is now authoritative. vrLoaded gates the periodic saver
+		// below - if it stays false on a first boot, the model is NEVER persisted
+		// and every power cycle starts from the seed again.
+		vrLoaded = true;
 		return true;
 	}
 
@@ -216,6 +232,8 @@ bool vrModelStorageRead() {
 	if (vrStoredRecord.magic != VrModelMagic || vrStoredRecord.version != VrModelVersion || crc != vrStoredRecord.crc) {
 		efiPrintf("vrmodel: stored record invalid (magic=%lx crc=%lx) - learning from seed",
 			(unsigned long)vrStoredRecord.magic, (unsigned long)crc);
+		// Same contract as the no-record path above: load done, RAM is the truth.
+		vrLoaded = true;
 		return true;
 	}
 

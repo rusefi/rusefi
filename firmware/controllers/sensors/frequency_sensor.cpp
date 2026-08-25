@@ -10,7 +10,7 @@
 
 #if EFI_PROD_CODE
 // Callback adapter since we can't pass a member function to a callback
-static void freqSensorExtiCallback(void* arg, efitick_t nowNt) {
+static void freqSensorExtiCallback(void* arg, efitick_t nowNt, bool /*level*/) {
 	reinterpret_cast<FrequencySensor*>(arg)->onEdge(nowNt);
 }
 #endif // EFI_PROD_CODE
