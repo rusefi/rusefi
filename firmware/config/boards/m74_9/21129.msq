@@ -36,12 +36,12 @@
         <constant digits="4" name="afrExpAverageAlpha" units="">1.0</constant>
         <constant name="afrOverrideMode">"MAP"</constant>
         <constant cols="1" digits="1" name="afterCrankingIACtaperDuration" rows="6" units="cycles">
-         20.0
-         20.0
-         25.0
-         25.0
-         10.0
-         0.0
+         100.0
+         100.0
+         100.0
+         100.0
+         100.0
+         100.0
 </constant>
         <constant cols="1" digits="2" name="afterCrankingIACtaperDurationBins" rows="6" units="{bitStringValue(unitsLabels, useMetricOnInterface)}">
          -40.0
@@ -1936,7 +1936,7 @@
         <constant digits="0" name="idleTimingPid_offset" units="">0</constant>
         <constant digits="0" name="idleTimingPid_periodMs" units="ms">0</constant>
         <constant digits="4" name="idleTimingPid_pFactor" units="">0.08</constant>
-        <constant digits="1" name="idleTimingSoftEntryTime" units="">0.1</constant>
+        <constant digits="1" name="idleTimingSoftEntryTime" units="">3.0</constant>
         <constant cols="1" digits="0" name="idleVeLoadBins" rows="4" units="load">
          30
          40
