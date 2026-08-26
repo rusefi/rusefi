@@ -3,6 +3,8 @@
 #include "engine_test_helper.h"
 #include "logicdata_csv_reader.h"
 
+extern bool printTriggerDebug;
+
 static void runPolledBinaryLog(const char* filename) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
@@ -16,8 +18,10 @@ static void runPolledBinaryLog(const char* filename) {
 
 	engineConfiguration->useNoiselessTriggerDecoder = false;
 	engineConfiguration->triggerMinPulseWidthPercent = 5;
+	engineConfiguration->triggerMinToothOnTimeUs = 2000; // 2ms minimum tooth high time below cranking rpm
 
 	eth.setTriggerType(trigger_type_e::TT_3_TOOTH_CRANK);
+	printTriggerDebug = true;
 
 	CsvReader reader(/*triggerCount*/ 1, /*vvtCount*/ 1);
 	reader.open(filename, NORMAL_ORDER, NORMAL_ORDER);
@@ -25,28 +29,26 @@ static void runPolledBinaryLog(const char* filename) {
 	bool gotRpm = false;
 	bool firstCamSync = false;
 	float firstRpm = 0;
-	int firstRpmAt = 0;
+	float firstRpmAt = 0;
 	float firstCamSyncTime = 0;
-	int firstCamSyncAt = 0;
-	int n = 0;
+	float firstCamSyncAt = 0;
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
 
 		auto rpm = Sensor::getOrZero(SensorType::Rpm);
 		if (!gotRpm && rpm) {
 			firstRpm = rpm;
-			firstRpmAt = n;
+			firstRpmAt = getTimeNowUs() / 1'000'000.0f;
 			gotRpm = true;
 		}
 		if (!firstCamSync && engine->triggerCentral.triggerState.hasSynchronizedPhase()) {
 			firstCamSyncTime = getTimeNowUs() / 1'000'000.0f;
-			firstCamSyncAt = n;
+			firstCamSyncAt = firstCamSyncTime;
 			firstCamSync = true;
 		}
-		n++;
 	}
 
-	printf("POLLED BINARY, %f at %d, %f s at %d, %d, %d, %d, %s\n",
+	printf("POLLED BINARY, %f at %f, %f s at %f, %d, %d, %d, %s\n",
 		firstRpm, firstRpmAt, firstCamSyncTime, firstCamSyncAt,
 		engine->triggerCentral.triggerState.getShaftSynchronized(),
 		engine->triggerCentral.triggerState.hasSynchronizedPhase(),

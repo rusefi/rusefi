@@ -2,6 +2,8 @@
 
 #include "logicdata_csv_reader.h"
 
+extern bool printTriggerDebug;
+
 static void prepare(EngineTestHelper *eth, trigger_type_e trigger) {
 
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
@@ -96,7 +98,7 @@ void generateLog(const char* filename) {
     reader.open(filename, NORMAL_ORDER, NORMAL_ORDER);
 
     EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-//    setVerboseTrigger(true);
+    printTriggerDebug = true;
 
     engineConfiguration->vvtMode[0] = vvt_mode_e::VVT_MITSUBISHI_6G72;
     eth.setTriggerType(trigger_type_e::TT_3_TOOTH_CRANK);
@@ -108,30 +110,29 @@ void generateLog(const char* filename) {
 
     engineConfiguration->useNoiselessTriggerDecoder = false;
     engineConfiguration->triggerMinPulseWidthPercent = 5;
+    engineConfiguration->triggerMinToothOnTimeUs = 2000; // 2ms minimum tooth high time below cranking rpm
 
-    int n = 0;
     bool firstRpmSeen = false;
     bool firstCamSyncSeen = false;
     float firstRpm = 0;
-    int firstRpmAt = 0;
+    float firstRpmAt = 0;
     float firstCamSync = 0;
-    int firstCamSyncAt = 0;
+    float firstCamSyncAt = 0;
     while (reader.haveMore()) {
         reader.processLine(&eth);
         auto rpm = Sensor::getOrZero(SensorType::Rpm);
         if ((rpm) && (!firstRpmSeen)) {
             firstRpm = rpm;
-            firstRpmAt = n;
+            firstRpmAt = getTimeNowUs() / 1'000'000.0f;
             firstRpmSeen = true;
         }
         if (!firstCamSyncSeen && engine->triggerCentral.triggerState.hasSynchronizedPhase()) {
             firstCamSync = getTimeNowUs() / 1'000'000.0f;
-            firstCamSyncAt = n;
+            firstCamSyncAt = firstCamSync;
             firstCamSyncSeen = true;
         }
-        n++;
     }
-    printf("6G72 SYNC, %f at %d, %f s at %d, %d, %d, %d, %s\n",
+    printf("6G72 SYNC, %f at %f, %f s at %f, %d, %d, %d, %s\n",
         firstRpm, firstRpmAt, firstCamSync, firstCamSyncAt,
         engine->triggerCentral.triggerState.getShaftSynchronized(),
         engine->triggerCentral.triggerState.hasSynchronizedPhase(),
