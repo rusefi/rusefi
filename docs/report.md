@@ -7680,3 +7680,49 @@ OFF state persists through the dip. The timer re-arms while any event is
 still active and counts down once all events clear. New tune field
 m74_9LinOffHoldSeconds (board_engine_configuration.txt, default 5, shown in
 the 'linalt' console output as hold=X.X/Y.Ys). Build: BUILD SUCCESSFUL.
+
+## 2026-08-26 - m74_9: burn-gate fix + LIN tick moved off SysTick (crash fix)
+
+Two user-blocking regressions found and fixed on the bench:
+
+1. TS burn always refused with the engine stopped. custom_board_allowTsBurn
+   (board_configuration.cpp) copied the stoppedPolls >= 10 debounce from
+   custom_board_allowFlashNow, but unlike the storage-manager gate (polled
+   every 100 ms while a write is pending) the TS-burn hook runs ONCE per burn
+   request - the counter could never reach 10, so every burn was skipped
+   ("TS burn skipped - engine is running" with the engine off, config never
+   persisted). Fixed: single isStopped() check, debounce removed. The
+   flash-now gate keeps its debounce - it is polled periodically, so it works
+   as designed. Also retitled the misleading log message in tunerstudio.cpp
+   ("TS burn skipped (board policy)").
+
+2. ECU halt on m74_9LinAltEnabled=Enabled. Crash marker: SV#10 (misplaced
+   I-class), xlock caller inside L9779::writePad with ipsr=15 - the debug aid
+   proved the m74_9 slow callback (custom_board_periodicSlowCallback) runs in
+   the ChibiOS virtual-timer callback INSIDE the SysTick ISR (periodic_task.h
+   even warns about it). The LIN tick was hooked there and did blocking
+   serial I/O (chnWrite/chnReadTimeout, S-class) from ISR context -> ChibiOS
+   class check -> halt -> reboot loop, config not applied. Fixed: the LIN
+   control tick now runs in its own LOWPRIO thread (lin alt, 100 ms) started
+   in initM74_9LinAlternator(); the call was removed from the board slow
+   callback. m74_9VrModelPeriodic stays in the slow callback (no blocking
+   I/O there - its flash gate defers while running).
+
+LIN RX hardening in the same change: the status-poll parse now takes the LAST
+9 bytes of whatever was received (robust to the UART queueing the own-break
+as a 0x00 in LIN mode - the old fixed 2-byte echo read desynced the response
+by one byte), and linalt prints rxBytes (raw byte count of the last poll) to
+distinguish a dead wire (0) from a responding-but-unparseable slave (>0).
+
+PID parity note: the stock frame-table extraction recorded PID 0xC8 for
+status ID 0x08, but standard LIN parity makes that impossible (P0 =
+ID0^ID1^ID2^ID4 = 0 for 0x08, so the PID can only be 0x08 or 0x48). 0xC8
+was a mis-extraction; linComputePid(0x08) = 0x08 is correct and matches the
+0x16->0xD6 / 0x1D->0x9D standard-parity records.
+
+Validation: compile_m74_9.sh BUILD SUCCESSFUL; on the bench linalt now shows
+state=charging, target=14.5V -> code6=39 (0x27), tx=27 A5 00 02 FF FF,
+txFrames climbing with no reboot. RX still 0 bytes - the alternator is not on
+the PB10/PB11 wire yet (AF3 wiring unconfirmed); rxBytes=0 in the next dump
+will confirm the wire is dead, >0 means the slave answers and the
+layout/checksum needs work.

@@ -164,6 +164,9 @@ static uint8_t lastTxFrame[LIN_CONTROL_FRAME_LEN];
 static uint8_t lastRxData[LIN_STATUS_FRAME_LEN];
 static uint8_t lastRxChecksum;
 static bool lastRxValid = false;
+// Raw byte count of the last status-poll read - distinguishes a dead wire
+// (0 bytes) from a responding-but-unparseable slave (>0 bytes).
+static size_t lastRxByteCount = 0;
 
 // Counters / timing
 static uint32_t txFrameCount = 0;
@@ -252,7 +255,7 @@ static void linAlternatorControlTick() {
 	// continuous (battery protection - force charging after the cap).
 	bool mapAbove = map > engineConfiguration->m74_9LinAltMapOffKpa;
 	if (mapAbove) {
-		// the control tick runs every 100 ms (every 2nd slow callback)
+		// the control tick runs every 100 ms (dedicated thread)
 		mapOffSeconds += 0.10f;
 	} else {
 		mapOffSeconds = 0.0f;
@@ -314,51 +317,67 @@ static void linAlternatorControlTick() {
 	txFrameCount++;
 	linDrainRx();
 
-	// Poll the status response: send the 0xC8 header, the regulator answers
-	// with 8 data bytes + classic checksum.  Our own header echo (0x55, PID)
-	// lands in the RX queue first - read and discard it, then the response.
+	// Poll the status response: send the 0x08 (PID 0x08) header, the
+	// regulator answers with 8 data bytes + classic checksum.  Our own echo
+	// lands in the RX queue first; the slave response is always the LAST 9
+	// bytes on the wire, so read everything available and parse the tail -
+	// robust to whether or not the UART queues the own-break as a 0x00 byte.
 	{
 		linSendBreak();
 		uint8_t pollHeader[2] = { 0x55, linComputePid(LIN_ID_ALTERNATOR_STATUS) };
 		chnWrite(linDriver, pollHeader, sizeof(pollHeader));
 
-		uint8_t echo[2];
-		size_t echoRead = chnReadTimeout(linDriver, echo, sizeof(echo), TIME_MS2I(5));
+		uint8_t buf[3 + LIN_STATUS_FRAME_LEN + 1]; // break echo + sync + PID + 8 data + cks
+		size_t read = chnReadTimeout(linDriver, buf, sizeof(buf), TIME_MS2I(30));
+		lastRxByteCount = read;
 
-		uint8_t response[LIN_STATUS_FRAME_LEN + 1]; // 8 data + checksum
-		size_t read = 0;
-		read = chnReadTimeout(linDriver, response, sizeof(response), TIME_MS2I(30));
-
-		lastRxValid = (echoRead == sizeof(echo)) && (read == sizeof(response));
-		if (lastRxValid) {
+		lastRxValid = false;
+		if (read >= LIN_STATUS_FRAME_LEN + 1) {
+			const uint8_t* response = buf + read - (LIN_STATUS_FRAME_LEN + 1);
 			memcpy(lastRxData, response, LIN_STATUS_FRAME_LEN);
 			lastRxChecksum = response[LIN_STATUS_FRAME_LEN];
 			uint8_t expectedCks = linClassicChecksum(linComputePid(LIN_ID_ALTERNATOR_STATUS), response, LIN_STATUS_FRAME_LEN);
-			lastRxValid = (lastRxChecksum == expectedCks);
-			rxFrameCount++;
+			if (lastRxChecksum == expectedCks) {
+				lastRxValid = true;
+				rxFrameCount++;
+			}
 		}
 	}
 }
 
 // ---------------------------------------------------------------------------
-// Periodic entry point (board slow callback, ~50 ms -> frame every 100 ms)
+// Control thread
 // ---------------------------------------------------------------------------
 
-static uint32_t linTickCounter = 0;
+// The control tick MUST NOT run in the board slow callback: that callback is
+// driven by a ChibiOS virtual timer, i.e. it executes INSIDE the SysTick ISR
+// (PeriodicTimerController, see periodic_task.h: "virtual_timer_t which works
+// on interrupts"), and the blocking serial I/O below (chnWrite/chnReadTimeout
+// are S-class, thread-only) is illegal there. The first enabled frame used to
+// halt the ECU with the ChibiOS class check (SV#10, xlock ipsr=15 - the
+// debug aid showed the L9779 writePad X-lock from the same SysTick context).
+// A dedicated low-priority thread is the correct context; 100 ms is plenty
+// for alternator control.
 
-void m74_9LinAlternatorPeriodic() {
-	if (!engineConfiguration->m74_9LinAltEnabled) {
-		// Master switch off: keep the line quiet and the regulator on its
-		// internal default setpoint (no frames at all).  Reset the gate
-		// timers so a re-enable starts from a clean state.
-		mapOffSeconds = 0.0f;
-		offHoldSeconds = 0.0f;
-		return;
-	}
+static constexpr int LIN_TICK_PERIOD_MS = 100;
+static THD_WORKING_AREA(linAlternatorThreadStack, 512);
 
-	linTickCounter++;
-	if ((linTickCounter & 1) == 0) {
-		linAlternatorControlTick();
+static void linAlternatorThread(void*) {
+	chRegSetThreadName("lin alt");
+
+	while (true) {
+		if (engineConfiguration->m74_9LinAltEnabled) {
+			linAlternatorControlTick();
+		} else {
+			// Master switch off: keep the line quiet and the regulator on its
+			// internal default setpoint (no frames at all). Reset the gate
+			// timers so a re-enable starts from a clean state.
+			mapOffSeconds = 0.0f;
+			offHoldSeconds = 0.0f;
+			offReason = "disabled";
+		}
+
+		chThdSleepMilliseconds(LIN_TICK_PERIOD_MS);
 	}
 }
 
@@ -367,13 +386,17 @@ void m74_9LinAlternatorPeriodic() {
 // ---------------------------------------------------------------------------
 
 static void printLinAltState() {
+	// Live table lookup even while the master switch is off - lets the user
+	// verify that the alternatorVoltageTargetTable actually burned into the
+	// config (a fresh/unburned config reads the all-zero table as 0.0 V).
+	float tableTarget = alternatorTargetVoltage(Sensor::getOrZero(SensorType::Rpm));
 	efiPrintf("linalt: enabled=%s state=%s rpm=%.0f map=%.1f",
 		engineConfiguration->m74_9LinAltEnabled ? "yes" : "no",
 		offReason,
 		Sensor::getOrZero(SensorType::Rpm),
 		Sensor::getOrZero(SensorType::Map));
 	efiPrintf("linalt: target=%.1fV setpoint=%.1fV code6=%d minRpm=%d maxRpm=%d mapOffKpa=%d maxOff=%.1fs hold=%.1f/%.1fs",
-		lastTargetVoltage, lastSetpointVoltage, encodeSetpointCode6(lastSetpointVoltage),
+		tableTarget, lastSetpointVoltage, encodeSetpointCode6(lastSetpointVoltage),
 		engineConfiguration->m74_9LinAltMinRpm,
 		engineConfiguration->m74_9LinAltMaxRpm,
 		engineConfiguration->m74_9LinAltMapOffKpa,
@@ -388,10 +411,11 @@ static void printLinAltState() {
 	efiPrintf("linalt: tx=%02x %02x %02x %02x %02x %02x",
 		lastTxFrame[0], lastTxFrame[1], lastTxFrame[2],
 		lastTxFrame[3], lastTxFrame[4], lastTxFrame[5]);
-	efiPrintf("linalt: rx=%02x %02x %02x %02x %02x %02x %02x %02x cks=%02x %s frames=%u",
+	efiPrintf("linalt: rx=%02x %02x %02x %02x %02x %02x %02x %02x cks=%02x %s frames=%u rxBytes=%u",
 		lastRxData[0], lastRxData[1], lastRxData[2], lastRxData[3],
 		lastRxData[4], lastRxData[5], lastRxData[6], lastRxData[7],
-		lastRxChecksum, lastRxValid ? "OK" : "BAD", (unsigned)rxFrameCount);
+		lastRxChecksum, lastRxValid ? "OK" : "BAD", (unsigned)rxFrameCount,
+		(unsigned)lastRxByteCount);
 }
 
 // ---------------------------------------------------------------------------
@@ -412,6 +436,9 @@ void initM74_9LinAlternator() {
 	efiSetPadMode("LIN RX", LIN_RX_PIN, LIN_AF_MODE);
 
 	sdStart(linDriver, &linCfg);
+
+	chThdCreateStatic(linAlternatorThreadStack, sizeof(linAlternatorThreadStack),
+		LOWPRIO, linAlternatorThread, nullptr);
 
 	addConsoleAction("linalt", printLinAltState);
 

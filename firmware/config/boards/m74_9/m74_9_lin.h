@@ -16,16 +16,10 @@
 #if EFI_PROD_CODE
 
 /**
- * Initialize the LIN UART and register the console diagnostics.
- * Call from board setup after the engine configuration is loaded.
+ * Initialize the LIN UART, start the dedicated control thread and register
+ * the console diagnostics. Call from board setup after the engine
+ * configuration is loaded.
  */
 void initM74_9LinAlternator();
-
-/**
- * Periodic control tick (called from the board slow callback, ~50 ms).
- * Computes the setpoint from alternatorVoltageTargetTable, applies the
- * rpm/MAP gates and the LRC shaping, and transmits the control frame.
- */
-void m74_9LinAlternatorPeriodic();
 
 #endif // EFI_PROD_CODE
