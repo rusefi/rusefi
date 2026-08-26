@@ -568,7 +568,7 @@ static bool burnExtraFlashPageIfAllowed(StorageItemId id) {
 		return true;
 	}
 
-	efiPrintf("WARNING: TS burn skipped - engine is running (board policy)");
+	efiPrintf("WARNING: TS burn skipped (board policy)");
 	return false;
 #else
 	(void)id;
@@ -603,7 +603,7 @@ void TunerStudio::finishPendingBurn(TsChannelBase* tsChannel) {
 			efiPrintf("TS -> Burn, we are allowed to burn");
 			requestBurn();
 		} else {
-			efiPrintf("WARNING: TS burn skipped - engine is running (board policy)");
+			efiPrintf("WARNING: TS burn skipped (board policy)");
 		}
 	}
 

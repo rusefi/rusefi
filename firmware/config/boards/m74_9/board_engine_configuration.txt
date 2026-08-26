@@ -1,4 +1,4 @@
-bit m74_9LinAltEnabled,"Disabled","Enabled"
+bit m74_9LinAltEnabled,"Enabled","Disabled"
 uint16_t m74_9LinAltMinRpm
 uint16_t m74_9LinAltMaxRpm
 uint8_t m74_9LinAltMapOffKpa

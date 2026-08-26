@@ -447,6 +447,12 @@ void boardInit() {
 
 	int ret = tle9201_add(0, &tle9201_cfg);
 	efiPrintf("tle9201_add()=%d", ret);
+
+	// LIN alternator master (USART3 + console diagnostics). Must run here:
+	// sdStart() uses OS primitives, so starting it from
+	// setup_custom_board_overrides() (pre-halInit, before chSysInit) hangs
+	// the board at power-on - the same trap as tle9201_add() above.
+	initM74_9LinAlternator();
 }
 
 #if EFI_PROD_CODE && HAL_USE_ADC
@@ -919,20 +925,23 @@ void setup_custom_board_overrides() {
 	};
 	// TS burns are rejected while the engine runs, same rationale as the
 	// storage-deferral gate above (the extra-page burns go straight to the
-	// flash from the TS thread) + the same stopped-debounce.
+	// flash from the TS thread).
+	// NOTE: do NOT copy the stoppedPolls debounce from custom_board_allowFlashNow
+	// here. That gate is polled every 100 ms by the storage manager while a
+	// deferred write is pending, so the counter can accumulate; a TS burn is a
+	// ONE-SHOT request (finishPendingBurn runs exactly once per burn), so a
+	// '10 consecutive polls' requirement can never be met and every burn gets
+	// refused even with the engine stopped (the 2026-08-26 bricked-tune report:
+	// 'TS burn skipped - engine is running' with the engine off). A single
+	// isStopped() check is the only workable policy here; the trigger-storm
+	// flap case that motivated the flash-gate debounce is a periodic-write
+	// concern and does not apply to an explicit user-initiated burn.
 	custom_board_allowTsBurn = []() {
 		if (engine->triggerCentral.directSelfStimulation) {
 			return true;
 		}
 
-		static int stoppedPolls = 0;
-		if (engine->rpmCalculator.isStopped()) {
-			stoppedPolls++;
-		} else {
-			stoppedPolls = 0;
-		}
-
-		return stoppedPolls >= 10;
+		return engine->rpmCalculator.isStopped();
 	};
 	// VR input debounce: the trigger logs show noise edge bursts <50 us apart
 	// (comparator ringing / starter interference) that inflate the event count
@@ -957,11 +966,12 @@ void setup_custom_board_overrides() {
 	// diagnostics are fed by separate trigger hooks and keep working.
 	// custom_board_periodicSlowCallback = m74_9ToothPeriodic;
 	// VR amplitude model: boot read + save-on-stop through the debounced
-	// flash gate (see m74_9_vr_model.cpp), plus the LIN alternator master
-	// tick (see m74_9_lin.cpp).
+	// flash gate (see m74_9_vr_model.cpp). The LIN alternator master runs
+	// in its own thread (see m74_9_lin.cpp) - NOT here: the slow callback
+	// executes inside the SysTick ISR (PeriodicTimerController virtual
+	// timer), where the LIN blocking serial I/O is illegal (SV#10 crash).
 	custom_board_periodicSlowCallback = []() {
 		m74_9VrModelPeriodic();
-		m74_9LinAlternatorPeriodic();
 	};
 	#if EFI_PROD_CODE && HAL_USE_ADC
 	addConsoleAction("fastadcdiag", m74_9FastAdcDiag);
@@ -1101,8 +1111,5 @@ void setup_custom_board_overrides() {
 	initM74_9Can();
 	custom_board_isImmobilizerBlocking = m74_9_isImmobilizerBlocking;
 #endif // EFI_CAN_SUPPORT
-#if EFI_PROD_CODE
-	initM74_9LinAlternator();
-#endif // EFI_PROD_CODE
 }
 
