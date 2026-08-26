@@ -76,7 +76,12 @@ See also unit_tests/test_results/readme.md for unit tests output.
 
 **Cross-platform requirement**: Unit test code MUST build and run on all supported host platforms — Linux (GCC/Clang), macOS (Clang), and Windows (MSVC and MinGW). Avoid POSIX-only APIs (e.g. `realpath`, `PATH_MAX`, `dirent.h` without guards) unless wrapped in `#ifdef` guards or replaced by portable C++ equivalents. Prefer `std::filesystem` over POSIX path APIs.
 
-### Code Generation
+### Simulator Functional Test (local WSL quirks)
+
+`./gradlew simulatorFunctionalTestLauncherWithSimulator` (repo root; also CI `build-simulator.yaml`, Linux-only) launches `simulator/build/rusefi_simulator` and talks TS protocol over TCP :29001. Two local traps, both hit 2026-08-25:
+
+- **Anything already listening/connecting on :29001 corrupts the run.** Windows-side apps (e.g. `rusefi_dash.exe`) reach the WSL simulator via WSL2 localhost forwarding and auto-connect to every simulator the test launches; the launcher then fails with "No response from simulator". Check `tasklist.exe` for dash/console processes before debugging "mystery" connection failures.
+- **Bench-pin timing asserts (`testPwmPin`, `testOutputPin`) are wall-clock based and flaky under WSL2 load** — a loaded machine fails a *different* pin test each run with duration mismatches. The FS-image / CAN / trigger asserts are deterministic; treat lone pin-duration failures locally as environmental and let CI arbitrate.
 
 ```bash
 # Generate configs for a specific board

@@ -54,6 +54,8 @@ public:
 #endif
 	void writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size, bool allowLongPackets = false);
 	void sendResponse(ts_response_format_e mode, const uint8_t * buffer, int size, bool allowLongPackets = false);
+	// true if the response would not fit scratchBuffer and would have to stream via writeCrcPacketLarge
+	bool isBigPacket(size_t size);
 
 #ifdef CUSTOM_TS_BUFFER_SIZE
   #define scratchBuffer_SIZE CUSTOM_TS_BUFFER_SIZE
@@ -97,7 +99,6 @@ public:
 	Timer settingsBurnTimer;
 
 private:
-	bool isBigPacket(size_t size);
 	void writeCrcPacketLarge(uint8_t responseCode, const uint8_t* buf, size_t size);
 };
 

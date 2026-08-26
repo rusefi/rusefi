@@ -17,7 +17,11 @@ public class FsImageReader {
     public static final int TS_PAGE_FS_IMAGE_SIZE = 0x52450000;
     public static final int TS_PAGE_FS_IMAGE_DATA = 0x52450001;
 
-    private static final int READ_CHUNK_SIZE = 2048;
+    // mirrors lvgl dashboard client behavior: optimistically try a chunk larger than
+    // BLOCKING_FACTOR first - the firmware answers TS_RESPONSE_OUT_OF_RANGE (it must NOT
+    // criticalError) and we fall back to a chunk its response buffer can actually hold
+    private static final int READ_CHUNK_SIZE_FAST = 4080;
+    private static final int READ_CHUNK_SIZE_FALLBACK = 1000;
 
     /**
      * Must be invoked on the {@link com.rusefi.io.LinkManager} communication thread.
@@ -31,16 +35,12 @@ public class FsImageReader {
             throw new IllegalStateException("FS image not available, size=" + totalSize);
         }
 
-        byte[] image = new byte[totalSize];
-        int offset = 0;
-        while (offset < totalSize) {
-            int toRead = Math.min(READ_CHUNK_SIZE, totalSize - offset);
-            byte[] response = bp.executeCommand(Integration.TS_READ32_COMMAND,
-                    makePageOffsetCountPayload(TS_PAGE_FS_IMAGE_DATA, offset, toRead),
-                    "read FS image offset=" + offset + " size=" + toRead);
-            assertOkResponse(response, toRead, "FS image data at offset " + offset);
-            System.arraycopy(response, 1, image, offset, toRead);
-            offset += toRead;
+        byte[] image = readImageData(bp, totalSize, READ_CHUNK_SIZE_FAST);
+        if (image == null) {
+            image = readImageData(bp, totalSize, READ_CHUNK_SIZE_FALLBACK);
+        }
+        if (image == null) {
+            throw new IllegalStateException("FS image read failed with both chunk sizes");
         }
 
         int expectedCrc = readImageCrc(bp, totalSize);
@@ -65,6 +65,34 @@ public class FsImageReader {
                 | ((response[2] & 0xff) << 8)
                 | ((response[3] & 0xff) << 16)
                 | ((response[4] & 0xff) << 24);
+    }
+
+    /**
+     * @return the image, or null when the ECU rejects this chunk size with an error code
+     */
+    private static byte[] readImageData(BinaryProtocol bp, int totalSize, int chunkSize) {
+        byte[] image = new byte[totalSize];
+        int offset = 0;
+        while (offset < totalSize) {
+            int toRead = Math.min(chunkSize, totalSize - offset);
+            byte[] response = bp.executeCommand(Integration.TS_READ32_COMMAND,
+                    makePageOffsetCountPayload(TS_PAGE_FS_IMAGE_DATA, offset, toRead),
+                    "read FS image offset=" + offset + " size=" + toRead);
+            if (response == null) {
+                throw new IllegalStateException("FS image data at offset " + offset + ": no response");
+            }
+            if (response[0] != Integration.TS_RESPONSE_OK) {
+                // e.g. TS_RESPONSE_OUT_OF_RANGE for a chunk larger than the response buffer
+                return null;
+            }
+            if (response.length != toRead + 1) {
+                throw new IllegalStateException("FS image data at offset " + offset + ": expected "
+                        + toRead + " bytes, got " + (response.length - 1));
+            }
+            System.arraycopy(response, 1, image, offset, toRead);
+            offset += toRead;
+        }
+        return image;
     }
 
     private static int readImageCrc(BinaryProtocol bp, int totalSize) {

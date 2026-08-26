@@ -511,6 +511,17 @@ void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, uint32_t page,
 		return;
 	}
 
+  // todo: do we need this in PROD code?
+#if EFI_SIMULATOR
+	// An oversized request is a client bug (clients must chunk by blockingFactor) - answer
+	// with a protocol error so the client can fall back to smaller chunks; remote input
+	// must never criticalError() the ECU like sendResponse would for a too-long response.
+	if (tsChannel->isBigPacket(count)) {
+		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, "ERROR: RD chunk too large");
+		return;
+	}
+#endif
+
 	tsChannel->sendResponse(TS_CRC, addr, count);
 #if EFI_TUNER_STUDIO_VERBOSE
 //	efiPrintf("Sending %d done", count);
