@@ -7935,3 +7935,42 @@ Power-stage gate plan (L9779, not implemented yet):
   stop the WDA feed.
 - TLE9201 side is separate: PB13/ETC_EN is driven high at board init
   (m74_9_boardInitHardware) and is not gated by ignition yet.
+
+## 2026-08-26 - m74_9: "throttle alive for hours" root cause + BCM main-relay hypothesis
+
+User facts: the ETB blade stays energized for hours after key-off and only
+full power removal (unplugging the ECU) resets it; hypothesis that the
+stock firmware sends the BCM a packet on some timeout to cut the main relay.
+
+Throttle-alive root cause (fully explained by the board wiring + our code):
+- The L9779 SBC holds VCC from VBAT (KEY is a logic-only input), so the MCU
+  runs indefinitely with the key off.
+- m74_9_boardInitHardware() drives PB13 (ETC_EN) HIGH at boot ->
+  Q5A (NPN, inverts) on -> TLE9201 DIS low -> H-bridge enabled. Nothing in
+  the current firmware ever de-asserts PB13 or de-arms the TLE at runtime.
+- Result: the blade stays energized while VBAT is present. Unplugging
+  collapses VCC -> PB13 floats -> Q5A off -> DIS pulled high -> tristate.
+  That is the observed "reset".
+- Fix = the planned ignition gate: drive PB13 low + PSOFF on the L9779 when
+  isIgnVoltage() is false.
+
+BCM main-relay hypothesis - analysis of the 8 trc captures:
+- ignoff.trc (IGN off, 2186 frames, ~4 s): ZERO ECU dash frames - 0x0189,
+  0x0186, 0x018A, 0x066A, 0x01F6, 0x0217 all absent. The remaining traffic
+  (0x0090, 0x0242, 0x029A, 0x029C, 0x0211, 0x0214, 0x0352 + the ~100 ms
+  burst group) is other nodes (dash/cluster chatter).
+- Every IGN-on capture (ignon, ignon_and_start, orig_1/2/3, rusefi_*) streams
+  the ECU dash frames at 10 ms.
+- Conclusion: at ignition-off the stock ECU's CAN node is COMPLETELY SILENT.
+  No dedicated "cut the main relay" packet exists in any capture. The
+  observed "timeout" is most likely the BCM-side heartbeat timeout: the BCM
+  watches the 0x0189 10 ms stream and drops the main relay when it dies.
+- Caveat: no capture spans the key-off transition (all end with the stream
+  still flowing), so a final "going to sleep" packet right before silence
+  cannot be fully excluded. Settle it with a bench capture across key-off:
+  start recording with IGN on, turn the key off, keep recording ~30 s.
+
+Consequence for rusEFI: the ignition gate must also stop the dash CAN stream
+when isIgnVoltage() is false (stock = silence). Keeping 0x0189 alive with a
+"not running" state would make the BCM/dash treat the ECU as alive and the
+main relay may never drop.
