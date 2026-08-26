@@ -87,9 +87,10 @@ public class PatchCordHelper {
             new Phase("Everything else"));
 
     public static void main(String[] args) throws IOException {
-        String ecuFolder = args.length > 0 ? args[0] : "firmware/config/boards/hellen/super-uaefi";
+//        String ecuFolder = args.length > 0 ? args[0] : "firmware/config/boards/hellen/super-uaefi";
+        String ecuFolder = args.length > 0 ? args[0] : "firmware/config/boards/hellen/alphax-8chan";
         String breakoutBoard = args.length > 1 ? args[1] : "../private-hardware/BMW-N52-adapter";
-        String outputFolder = args.length > 2 ? args[2] : breakoutBoard + "/patchcord";
+        String outputFolder = args.length > 2 ? args[2] : breakoutBoard + "/patchcord-" + new File(ecuFolder).getName();
 
         List<ConnectorYaml> ecuConnectors = ConnectorYaml.readFolder(new File(ecuFolder, "connectors"));
         List<ConnectorYaml> adapterConnectors = ConnectorYaml.readFolder(new File(breakoutBoard, "connectors"));
