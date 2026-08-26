@@ -73,6 +73,7 @@
 #include "resource_protector.h"
 
 #if EFI_STORAGE_SD == TRUE
+#include "storage.h"
 #include "storage_sd.h"
 #endif // EFI_STORAGE_SD
 
@@ -1068,6 +1069,12 @@ static SD_MODE sdModeSelector() {
 	}
 
 #if HAL_USE_USB_MSD
+	// Let startup storage consumers finish before giving the raw block device
+	// to the PC. The next pass transitions to PC/MSD mode automatically.
+	if (storageIsBusy()) {
+		return SD_MODE_ECU;
+	}
+
 	if (usbConnected) {
 		return SD_MODE_PC;
 	}
@@ -1152,6 +1159,14 @@ static int sdModeExecuter(SD_MODE mode)
 		// nothing to do in these state, just sleep
 		return 0;
 	case SD_MODE_ECU:
+		// Automatic USB startup briefly mounts the filesystem for storage reads.
+		// Do not create a log during this transient mount before MSD takes over.
+#if HAL_USE_USB_MSD
+		if (usbConnected && !engineConfiguration->alwaysWriteSdCard && !sdTargetModeRequested) {
+			return 0;
+		}
+#endif
+
 		if (sdNeedRemoveReports) {
 			errorHandlerDeleteReports();
 			sdNeedRemoveReports = false;

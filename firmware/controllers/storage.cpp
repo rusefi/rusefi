@@ -29,8 +29,13 @@ std::optional<setup_custom_bool_type> custom_board_allowFlashNow;
 bool storageAllowWriteID(StorageItemId id)
 {
 #if (EFI_STORAGE_INT_FLASH == TRUE) || defined(EFI_UNIT_TEST)
-	if ((id == EFI_SETTINGS_RECORD_ID) ||
-		(id == EFI_SETTINGS_BACKUP_RECORD_ID)) {
+	bool mayWriteInternalFlash = (id == EFI_SETTINGS_RECORD_ID) ||
+		(id == EFI_SETTINGS_BACKUP_RECORD_ID);
+#if EFI_STORAGE_INT_FLASH == TRUE
+	mayWriteInternalFlash = mayWriteInternalFlash || (getExtraPageFlashOffset(id) > 0);
+#endif
+
+	if (mayWriteInternalFlash) {
 		// special case, settings can be stored in internal flash
 
 		// writing internal flash can cause cpu freeze
@@ -56,7 +61,7 @@ bool storageAllowWriteID(StorageItemId id)
 	}
 #endif // EFI_STORAGE_INT_FLASH
 
-	// TODO: we expect every other ID to be stored in external flash...
+	// Remaining IDs are stored in external storage on this configuration.
 	return true;
 }
 #endif // EFI_CONFIGURATION_STORAGE || defined(EFI_UNIT_TEST)
@@ -100,8 +105,7 @@ static bool storageWriteID(uint32_t id) {
 		return writeToFlashNowImpl();
 #if EFI_LTFT_CONTROL
 	} else if (id == EFI_LTFT_RECORD_ID) {
-		engine->module<LongTermFuelTrim>()->store();
-		return true;
+		return engine->module<LongTermFuelTrim>()->store();
 #endif
 	} else if (id == EFI_SECOND_TABLES_RECORD_ID) {
 		burnExtraFlashPage(EFI_SECOND_TABLES_RECORD_ID);
@@ -397,9 +401,9 @@ bool storageIsBusy() {
 		chibios_rt::CriticalSectionLocker csl;
 		requestQueued = storageManagerMb.getUsedCountI() > 0;
 	}
-	// a pendingWrites bit stays set while storageWriteID() is executing, so
-	// this also covers a write that is currently in flight
-	return requestQueued || (pendingWrites != 0);
+	// Pending bits stay set while the corresponding operation is executing, so
+	// this also covers reads and writes that are currently in flight.
+	return requestQueued || (pendingWrites != 0) || (pendingReads != 0);
 }
 
 bool storageWaitIdle(unsigned int timeoutMs) {

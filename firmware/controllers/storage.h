@@ -83,7 +83,7 @@ bool storagRequestUnregisterStorage(StorageType id);
 bool getNeedToWriteConfiguration();
 
 /**
- * @return true if any storage write is queued or currently executing
+ * @return true if any storage request is queued or currently executing
  */
 bool storageIsBusy();
 

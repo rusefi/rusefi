@@ -129,7 +129,18 @@ public:
 				return nullptr;
 			}
 
-			if (chCondWaitTimeoutS(&cond_var, remaining) != MSG_OK) {
+			// MutexLocker uses the normal thread-level mutex API, so the matching
+			// condition wait must also be the normal API. Calling the S-class API
+			// here without chSysLock() triggers a ChibiOS system-state panic.
+			const msg_t waitResult = chCondWaitTimeout(&cond_var, remaining);
+			if (waitResult == MSG_TIMEOUT) {
+				// ChibiOS deliberately does not reacquire the mutex on timeout.
+				// Reacquire it so MutexLocker's destructor can release it safely.
+				mutex.lock();
+				return nullptr;
+			}
+
+			if (waitResult != MSG_OK) {
 				return nullptr;
 			}
 		}

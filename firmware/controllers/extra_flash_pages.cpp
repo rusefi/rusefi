@@ -96,7 +96,9 @@ void burnExtraFlashPage(StorageItemId id) {
 	// A full config burn erases the sector, then burnExtraFlashPages()
 	// writes all extra pages into the now-blank region in one pass.
 	(void)id;
-	writeToFlashNow();
+	// Queue the normal guarded settings write. A forced write can halt an F4
+	// while the engine is running, stopping fuel and ignition outputs.
+	setNeedToWriteConfiguration();
 #else
 	// MFS/SD boards or simulator: write the specific page directly to all backends.
 	if (id == EFI_SECOND_TABLES_RECORD_ID) {

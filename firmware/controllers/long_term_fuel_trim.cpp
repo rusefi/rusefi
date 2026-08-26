@@ -28,21 +28,20 @@ static LtftState ltftState;
 // LTFT to VE table custom apply algo
 std::optional<setup_custom_board_overrides_type> custom_board_LtftTrimToVeApply;
 
-void LtftState::save() {
+bool LtftState::save() {
 #if EFI_PROD_CODE
-	storageWrite(EFI_LTFT_RECORD_ID, (const uint8_t *)trims, sizeof(trims));
+	return storageWrite(EFI_LTFT_RECORD_ID, (const uint8_t *)trims, sizeof(trims)) == StorageStatus::Ok;
+#else
+	return true;
 #endif //EFI_PROD_CODE
 }
 
-void LtftState::load() {
+bool LtftState::load() {
 #if EFI_PROD_CODE
-	if (storageRead(EFI_LTFT_RECORD_ID, (uint8_t *)trims, sizeof(trims)) != StorageStatus::Ok) {
+	return storageRead(EFI_LTFT_RECORD_ID, (uint8_t *)trims, sizeof(trims)) == StorageStatus::Ok;
 #else
-	if (1) {
+	return false;
 #endif
-		//Reset to some defaules
-		reset();
-	}
 }
 
 void LtftState::reset() {
@@ -233,21 +232,37 @@ ClosedLoopFuelResult LongTermFuelTrim::getTrims(float rpm, float fuelLoad) {
 
 // Called from storage manager thread when requested ID is ready
 void LongTermFuelTrim::load() {
-	m_state->load();
+	// A storage backend can become ready after the startup timeout. Accept that
+	// delayed load while stopped, but never replace live trims while running.
+#if EFI_SHAFT_POSITION_INPUT
+	if (!ltftLoadPending && !engine->rpmCalculator.isStopped()) {
+		efiPrintf("LTFT: ignoring delayed calibration load");
+		return;
+	}
+#endif
+
+	const bool loaded = m_state && m_state->load();
 
 	ltftLoadPending = false;
+	ltftLoadError = !loaded;
+	if (!loaded) {
+		efiPrintf("LTFT: calibration file is unavailable or invalid; keeping RAM trims");
+	}
 }
 
-void LongTermFuelTrim::store() {
+bool LongTermFuelTrim::store() {
 	// TODO: lock to avoid modification while writing
 	ltftSavePending = true;
 
-	if (m_state) {
-		m_state->save();
-	}
+	const bool stored = m_state && m_state->save();
 
 	// TODO: unlock
 	ltftSavePending = false;
+	if (!stored) {
+		efiPrintf("LTFT: failed to store calibrations; write remains pending");
+	}
+
+	return stored;
 }
 
 void LongTermFuelTrim::reset() {
@@ -300,8 +315,7 @@ void LongTermFuelTrim::onSlowCallback() {
 		(engine->rpmCalculator.getSecondsSinceEngineStart(getTimeNowNt()) > 5.0) &&
 #endif
 		(1)) {
-		efiPrintf("LTFT: failed to load calibrations");
-		m_state->reset();
+		efiPrintf("LTFT: calibration load delayed; continuing with RAM trims");
 		ltftLoadPending = false;
 		ltftLoadError = true;
 	}

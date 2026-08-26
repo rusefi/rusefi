@@ -14,8 +14,8 @@ struct LtftState {
   // todo: probably reuse page_2_generated.h?
 	float trims[FT_BANK_COUNT][VE_LOAD_COUNT][VE_RPM_COUNT];
 
-	void save();
-	void load();
+	bool save();
+	bool load();
 	void reset();
 	void applyToVe();
 	// Development only, to be removed
@@ -32,7 +32,7 @@ public:
 	void learn(ClosedLoopFuelResult clResult, float rpm, float fuelLoad);
 	ClosedLoopFuelResult getTrims(float rpm, float fuelLoad);
 	void load();
-	void store();
+	bool store();
 	void reset();
 	void applyTrimsToVe();
 	bool isVeUpdated();

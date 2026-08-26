@@ -35,6 +35,9 @@ public:
 
 private:
 	const char *getIdFileName(size_t id);
+	const char *getIdTemporaryFileName(size_t id);
+	const char *getIdBackupFileName(size_t id);
+	StorageStatus readExactFile(const char *fileName, uint8_t *ptr, size_t size);
 	FIL *m_fd;
 };
 
@@ -51,6 +54,32 @@ const char *SettingStorageSD::getIdFileName(size_t id) {
 	}
 }
 
+const char *SettingStorageSD::getIdTemporaryFileName(size_t id) {
+	switch (id) {
+	case EFI_LTFT_RECORD_ID:
+		return "ltft.tmp";
+	case EFI_SECOND_TABLES_RECORD_ID:
+		return "second_tables.tmp";
+	case EFI_LUA_PAGE_RECORD_ID:
+		return "lua_script.tmp";
+	default:
+		return nullptr;
+	}
+}
+
+const char *SettingStorageSD::getIdBackupFileName(size_t id) {
+	switch (id) {
+	case EFI_LTFT_RECORD_ID:
+		return "ltft.bak";
+	case EFI_SECOND_TABLES_RECORD_ID:
+		return "second_tables.bak";
+	case EFI_LUA_PAGE_RECORD_ID:
+		return "lua_script.bak";
+	default:
+		return nullptr;
+	}
+}
+
 bool SettingStorageSD::isReady() {
 	return (sdCardGetCurrentMode() == SD_MODE_ECU);
 }
@@ -61,8 +90,10 @@ bool SettingStorageSD::isIdSupported(size_t id) {
 
 StorageStatus SettingStorageSD::store(size_t id, const uint8_t *ptr, size_t size) {
 	const char *fileName = getIdFileName(id);
+	const char *temporaryFileName = getIdTemporaryFileName(id);
+	const char *backupFileName = getIdBackupFileName(id);
 
-	if (fileName == nullptr) {
+	if ((fileName == nullptr) || (temporaryFileName == nullptr) || (backupFileName == nullptr)) {
 		return StorageStatus::NotSupported;
 	}
 
@@ -76,10 +107,11 @@ StorageStatus SettingStorageSD::store(size_t id, const uint8_t *ptr, size_t size
 	efiPrintf("SD: Writing storage ID %d  %s... %d bytes", id, fileName, size);
 	efitick_t startNt = getTimeNowNt();
 
-	/* Create new or truncate file. */
-	FRESULT err = f_open(m_fd, fileName, FA_CREATE_ALWAYS | FA_WRITE);
+	// Never truncate the last known-good file. Write and flush a sibling first,
+	// then rotate the old primary to a backup before promoting the new file.
+	FRESULT err = f_open(m_fd, temporaryFileName, FA_CREATE_ALWAYS | FA_WRITE);
 	if (err != FR_OK) {
-		printFatFsError("SD: failed to create file", err);
+		printFatFsError("SD: failed to create temporary file", err);
 		return StorageStatus::Failed;
 	}
 
@@ -96,7 +128,51 @@ StorageStatus SettingStorageSD::store(size_t id, const uint8_t *ptr, size_t size
 		status = StorageStatus::Failed;
 	}
 
-	f_close(m_fd);
+	if (status == StorageStatus::Ok) {
+		err = f_sync(m_fd);
+		if (err != FR_OK) {
+			printFatFsError("SD: failed to sync temporary file", err);
+			status = StorageStatus::Failed;
+		}
+	}
+
+	err = f_close(m_fd);
+	if (err != FR_OK) {
+		printFatFsError("SD: failed to close temporary file", err);
+		status = StorageStatus::Failed;
+	}
+
+	if (status != StorageStatus::Ok) {
+		(void)f_unlink(temporaryFileName);
+		return status;
+	}
+
+	err = f_unlink(backupFileName);
+	if ((err != FR_OK) && (err != FR_NO_FILE)) {
+		printFatFsError("SD: failed to remove previous backup", err);
+		(void)f_unlink(temporaryFileName);
+		return StorageStatus::Failed;
+	}
+
+	bool primaryMoved = false;
+	err = f_rename(fileName, backupFileName);
+	if (err == FR_OK) {
+		primaryMoved = true;
+	} else if (err != FR_NO_FILE) {
+		printFatFsError("SD: failed to preserve previous file", err);
+		(void)f_unlink(temporaryFileName);
+		return StorageStatus::Failed;
+	}
+
+	err = f_rename(temporaryFileName, fileName);
+	if (err != FR_OK) {
+		printFatFsError("SD: failed to promote temporary file", err);
+		if (primaryMoved) {
+			(void)f_rename(backupFileName, fileName);
+		}
+		(void)f_unlink(temporaryFileName);
+		return StorageStatus::Failed;
+	}
 
 	efitick_t endNt = getTimeNowNt();
 	int elapsed_Ms = US2MS(NT2US(endNt - startNt));
@@ -106,10 +182,44 @@ StorageStatus SettingStorageSD::store(size_t id, const uint8_t *ptr, size_t size
 	return status;
 }
 
+StorageStatus SettingStorageSD::readExactFile(const char *fileName, uint8_t *ptr, size_t size) {
+	FRESULT err = f_open(m_fd, fileName, FA_READ);
+	if (err != FR_OK) {
+		return (err == FR_NO_FILE) ? StorageStatus::NotFound : StorageStatus::Failed;
+	}
+
+	const FSIZE_t fileSize = f_size(m_fd);
+	if (fileSize != size) {
+		efiPrintf("SD: invalid storage file size %d != %d for %s", (size_t)fileSize, size, fileName);
+		(void)f_close(m_fd);
+		return StorageStatus::Failed;
+	}
+
+	size_t bytesRead = 0;
+	err = f_read(m_fd, ptr, size, &bytesRead);
+	StorageStatus status = StorageStatus::Ok;
+	if (err != FR_OK) {
+		printFatFsError("SD: failed to read", err);
+		status = StorageStatus::Failed;
+	} else if (bytesRead != size) {
+		efiPrintf("SD: failed to read whole file %d != %d", bytesRead, size);
+		status = StorageStatus::Failed;
+	}
+
+	err = f_close(m_fd);
+	if (err != FR_OK) {
+		printFatFsError("SD: failed to close file", err);
+		status = StorageStatus::Failed;
+	}
+
+	return status;
+}
+
 StorageStatus SettingStorageSD::read(size_t id, uint8_t *ptr, size_t size) {
 	const char *fileName = getIdFileName(id);
+	const char *backupFileName = getIdBackupFileName(id);
 
-	if (fileName == nullptr) {
+	if ((fileName == nullptr) || (backupFileName == nullptr)) {
 		return StorageStatus::NotSupported;
 	}
 
@@ -122,27 +232,14 @@ StorageStatus SettingStorageSD::read(size_t id, uint8_t *ptr, size_t size) {
 
 	efiPrintf("SD: Reading storage ID %d %s ... %d bytes", id, fileName, size);
 
-	/* Create new or truncate file. */
-	FRESULT err = f_open(m_fd, fileName, FA_READ);
-	if (err != FR_OK) {
-		printFatFsError("SD: failed to open file", err);
-		return StorageStatus::NotFound;
+	StorageStatus status = readExactFile(fileName, ptr, size);
+	if (status != StorageStatus::Ok) {
+		efiPrintf("SD: primary storage file invalid, trying %s", backupFileName);
+		status = readExactFile(backupFileName, ptr, size);
+		if (status == StorageStatus::Ok) {
+			efiPrintf("SD: recovered storage ID %d from backup", id);
+		}
 	}
-
-	StorageStatus status = StorageStatus::Ok;
-	size_t bytesRead = 0;
-	err = f_read(m_fd, ptr, size, &bytesRead);
-	if (err != FR_OK) {
-		printFatFsError("SD: failed to read", err);
-		status = StorageStatus::Failed;
-	}
-
-	if (bytesRead != size) {
-		efiPrintf("SD: failed to read whole file %d != %d", bytesRead, size);
-		status = StorageStatus::Failed;
-	}
-
-	f_close(m_fd);
 
 	efiPrintf("SD: Reading done");
 
