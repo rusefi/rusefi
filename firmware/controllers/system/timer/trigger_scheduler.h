@@ -38,4 +38,13 @@ private:
 	 * some RAM and probably not needed yet.
 	 */
 	AngleBasedEvent *m_angleBasedEventsHead = nullptr;
+
+	/**
+	 * Events which scheduleEventsUntilNextTriggerTooth() has determined are due at
+	 * the current tooth and is in the process of promoting to the time-based
+	 * scheduler. Kept as a member (not a detached local) so that a concurrent
+	 * cancel() still finds and removes a not-yet-promoted event,
+	 * see https://github.com/rusefi/rusefi/issues/9435
+	 */
+	AngleBasedEvent *m_dueEventsHead = nullptr;
 };
