@@ -576,3 +576,41 @@ Open follow-ups:
   picks up this change.
 - Optional future hardening: same-evaluated-unit check for expressions
   once an expression evaluator with ini context is available.
+
+## 2026-08-26 - Bound SD startup reads and retry delayed LTFT loads safely
+
+What was done:
+- Read requests now set their pending bitmap synchronously before waking the
+  storage manager. A short-lived SD mount therefore cannot miss a request that
+  is still waiting in the manager mailbox.
+- Added a read-ID-specific wait with an explicit deadline. The SD startup mount
+  waits only for the LTFT record, never for unrelated reads or writes, and
+  proceeds with USB handoff when the deadline expires.
+- An LTFT startup timeout now preserves the live RAM table. A delayed read is
+  retained by the storage manager while the engine is running and is requested
+  again when the engine stops, preventing late data from replacing values
+  learned during that run.
+- If USB connects between SD mode selection and the ECU logging iteration,
+  report cleanup still runs but logging is suppressed until the normal
+  unmount-and-handoff transition completes.
+
+Key decisions and why:
+- The wait is deliberately scoped to one read ID. A global storage-idle gate
+  can include deferred flash writes or unavailable backends and therefore
+  cannot provide a reliable USB handoff deadline.
+- The existing pending bit remains set when the LTFT consumer defers a late
+  read. This reuses the manager's normal retry mechanism without heap memory,
+  another worker, or an unbounded wait.
+- Timeout changes only state flags; it no longer clears the active trim table.
+  The error remains visible until a later successful load clears it.
+
+Validation:
+- The regression test first failed on the old implementation: a retained cell
+  changed from `0.123` to `0`, and engine stop left the read non-pending.
+- After the fix, the focused regression test passes and also confirms that a
+  late load is deferred while the engine is active.
+- The complete unit-test suite passes: 1193/1193 tests from 235 suites.
+- The uaEFI production firmware builds with GCC 12.2.1. Its SD-enabled image
+  uses 740252 of 753664 flash bytes (98.22%).
+- The STM32H743 Nucleo production firmware also builds with GCC 12.2.1 and
+  `EFI_STORAGE_SD=FALSE`, validating the no-SD compile guards.

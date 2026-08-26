@@ -68,6 +68,13 @@ StorageStatus storageRead(StorageItemId id, uint8_t *ptr, size_t size);
 bool storageRequestWriteID(StorageItemId id, bool forced);
 bool storageReqestReadID(StorageItemId id);
 
+/**
+ * Wait for one queued storage read to complete, up to timeoutMs.
+ * This does not wait for unrelated reads or any pending writes.
+ * @return true if this read is no longer pending, false on timeout
+ */
+bool storageWaitReadDone(StorageItemId id, unsigned int timeoutMs);
+
 bool storageRegisterStorage(StorageType type, SettingStorageBase *storage);
 bool storageUnregisterStorage(StorageType type);
 

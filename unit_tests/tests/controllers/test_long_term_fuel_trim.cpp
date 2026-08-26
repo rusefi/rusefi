@@ -118,6 +118,7 @@ TEST(LTFT, testSlowCallbackLoadError) {
 	EXPECT_FALSE(ltft.ltftLoadPending);
 	EXPECT_TRUE(ltft.ltftLoadError);
 	EXPECT_FLOAT_EQ(0.123f, ltftState.trims[0][0][0]);
+	EXPECT_FALSE(ltft.load());
 
 	ltft.onEngineStop();
 	EXPECT_TRUE(ltft.ltftLoadPending);

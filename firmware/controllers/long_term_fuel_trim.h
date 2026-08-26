@@ -26,12 +26,13 @@ class LongTermFuelTrim : public EngineModule, public long_term_fuel_trim_state_s
 public:
 	// EngineModule implementation
 	void onSlowCallback() override;
+	void onEngineStop() override;
 	bool needsDelayedShutoff() override;
 
 	void init(LtftState *state);
 	void learn(ClosedLoopFuelResult clResult, float rpm, float fuelLoad);
 	ClosedLoopFuelResult getTrims(float rpm, float fuelLoad);
-	void load();
+	bool load();
 	void store();
 	void reset();
 	void applyTrimsToVe();
@@ -47,6 +48,7 @@ private:
 	// TODO: move to livedata and kill isVeUpdated() ?
 	bool veNeedRefresh = false;
 	bool showUpdateToUser = false;
+	bool m_loadTimedOut = false;
 
 	float getIntegratorGain(const ltft_s& cfg, ft_region_e region) const;
 	float getMaxAdjustment(const ltft_s& cfg) const;

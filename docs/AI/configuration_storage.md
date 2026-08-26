@@ -83,11 +83,18 @@ the buffer, so with both INT_FLASH and MFS holding a copy the MFS copy
 
 Asynchronous operation goes through a dedicated low-priority thread
 ("storage manger", `PRIO_STORAGE_MANAGER`, larger stack when MFS/SD is in)
-fed by a 16-entry mailbox. Commands: `WRITE`, `WRITE_NOW`, `READ`, `PING`,
-`REG`, `UNREG`. Requests set bits in `pendingWrites`/`pendingReads` bitmaps
-(bit index = record id); every 100 ms poll the thread retries any pending id
-whose backend is available, so a write requested before a backend is ready
-(e.g. SD not yet mounted) completes later without the caller caring.
+fed by a 16-entry mailbox. Commands include `WRITE`, `WRITE_NOW`, `PING`,
+`REG`, and `UNREG`. A read request sets its `pendingReads` bit synchronously
+before pinging the manager, so a short-lived backend mount cannot miss a
+request that is still waiting in the mailbox. Every 100 ms poll retries any
+pending id whose backend is available, so work requested before a backend is
+ready (e.g. SD not yet mounted) completes later without the caller caring.
+
+`storageWaitReadDone(id, timeoutMs)` is a targeted, bounded completion gate.
+It observes only the requested read; unrelated reads and all writes are
+excluded. The SD startup mount uses it for the LTFT record before handing the
+card to another owner. A missing or slow record can therefore delay the
+handoff only up to the explicit deadline, never indefinitely.
 
 Write deferral: `storageAllowWriteID()` blocks settings writes while the
 engine is spinning **if** the MCU stalls on internal flash writes.
