@@ -160,9 +160,33 @@ enum class ErrorCookie : uint32_t {
     FirmwareError = 0xcafebabe,
     HardFault = 0xdeadbeef,
     ChibiOsPanic = 0xdeadfa11,
+    // Deliberate reboot (NOT a crash). Without this a soft reset that leaves no
+    // fault evidence is indistinguishable from a silent crash - see issue #9931.
+    Reboot = 0xb007b007,
 };
 
 const char *errorCookieToName(ErrorCookie cookie);
+
+// Identifies which deliberate-reboot path triggered a Reboot cookie, so a
+// command/CAN/DFU reboot can be told apart from a fault at the next boot.
+enum class RebootReason : uint32_t {
+    Unknown = 0,     // NMI handler or any rebootNow() reached without a specific reason
+    Command,         // deliberate reboot request: TS/console/CAN reboot, engine-type or unlock change
+    DfuJump,         // reboot into the DFU bootloader
+    OpenBltJump,     // reboot into the OpenBLT bootloader
+};
+
+const char *rebootReasonToName(RebootReason reason);
+
+// Stamp a deliberate-reboot cookie into backup SRAM just before resetting.
+// First-writer-wins: a crash cookie already stored (HardFault/panic/firmwareError)
+// is preserved, so a fault during a pending reboot is never masked.
+#if defined(EFI_BOOTLOADER)
+// the bootloader does not link error_handling.cpp - stamping is a no-op there
+static inline void logDeliberateReboot(RebootReason /*reason*/) { }
+#else
+void logDeliberateReboot(RebootReason reason);
+#endif
 
 // Error handling/recovery/reporting information
 
@@ -170,6 +194,8 @@ const char *errorCookieToName(ErrorCookie cookie);
 
 typedef struct {
     ErrorCookie Cookie;
+    // valid only when Cookie == ErrorCookie::Reboot, see enum RebootReason
+    uint32_t RebootReason;
 
     critical_msg_t msg;
     critical_msg_t file;
