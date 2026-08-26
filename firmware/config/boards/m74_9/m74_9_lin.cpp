@@ -47,11 +47,22 @@
 // Physical layer
 // ---------------------------------------------------------------------------
 
-// LIN UART: USART3 on PB10 (TX) / PB11 (RX).  These pins are free on the
-// m74_9 board (the yaml leaves them unassigned) - wire the alternator LIN to
-// PB10/PB11 (connector AF3 "Alternator DFM signal" is the stock LIN wire).
-static constexpr brain_pin_e LIN_TX_PIN = Gpio::B10;
-static constexpr brain_pin_e LIN_RX_PIN = Gpio::B11;
+// LIN UART: USART3 on PD8 (TX) / PD9 (RX), MUX 7 - the classic USART3 pair.
+// Buzzed out on the physical board (2026-08-26): the LIN physical layer is
+// the L9779's ISO9141 K-line transceiver, NOT a direct UART-to-wire
+// connection:
+//   PD8 (USART3_TX) -> L9779 K_TX (pin 47)
+//   L9779 K_LINE (pin 45) -> alternator wire (AF3 "ALT DFM" / ALT_LT)
+//   L9779 K_RX (pin 46) -> PD9 (USART3_RX)
+// This matches the stock firmware: its LIN driver uses USART3 with the pin
+// table entry on port D. The K-line transceiver is a single-wire,
+// dominant-low physical layer - electrically a LIN bus. The MCU-side UART
+// connects to K_TX/K_RX directly; the L9779 handles the bus drive.
+// (The KiCad schematic draws this net to PB5 - wrong, as usual for this
+// board. The 74HC14 -> PC10 cascade and the 16k tap to PC11 are the DFM
+// monitor, separate from the LIN path.)
+static constexpr brain_pin_e LIN_TX_PIN = Gpio::D8;
+static constexpr brain_pin_e LIN_RX_PIN = Gpio::D9;
 static constexpr iomode_t LIN_AF_MODE = PAL_MODE_ALTERNATE(7); // USART3 on F4/AT32
 
 static SerialDriver* const linDriver = &SD3;

@@ -7723,7 +7723,7 @@ was a mis-extraction; linComputePid(0x08) = 0x08 is correct and matches the
 Validation: compile_m74_9.sh BUILD SUCCESSFUL; on the bench linalt now shows
 state=charging, target=14.5V -> code6=39 (0x27), tx=27 A5 00 02 FF FF,
 txFrames climbing with no reboot. RX still 0 bytes - the alternator is not on
-the PB10/PB11 wire yet (AF3 wiring unconfirmed); rxBytes=0 in the next dump
+the PB10/PB11 wire yet (LIN wiring unconfirmed then); rxBytes=0 in the next dump
 will confirm the wire is dead, >0 means the slave answers and the
 layout/checksum needs work.
 
@@ -7788,7 +7788,7 @@ wired for LIN and we get no answer - we may be on the wrong pins). Facts:
   The board has NO LIN transceiver and no master pullup in the schematic -
   direct UART drive (push-pull TX + RX on one wire) is the only option, with
   the pullup added on the wire.
-- Next step: buzz connector AF3 to find the real MCU pin (schematic
+- Next step: buzz the connector pins to find the real MCU pin (schematic
   unreliable), then repoint LIN_TX_PIN/LIN_RX_PIN (and SDx if not USART3).
 
 ## 2026-08-26 - m74_9 dash CAN: tach byte fit + rpm hold + flow smoothing
@@ -7827,3 +7827,50 @@ consistent with the trigger desync at 2500-3000 zeroing the rpm sensor (the
 active high-rpm desync issue) - the hold mitigates it, the desync is the root
 cause. A car-side capture of OUR CAN frames while driving would settle the
 dash's exact scale.
+
+## 2026-08-26 - m74_9 DFM wiring buzzed out: AF3 -> 74HC14 -> PC10
+
+User buzzed the physical board: the ALT DFM signal goes AF3 -> R/C network ->
+74HC14 (Schmitt input) -> 74HC14 output -> AT32 **PC10**. (The KiCad
+schematic's PB5 drawing is wrong, as suspected.)
+
+Firmware: PC10 = USART3_TX (MUX7), PC11 = USART3_RX (MUX7) - the SAME USART3
+(SD3) the LIN master already uses, so only LIN_TX_PIN/LIN_RX_PIN changed in
+m74_9_lin.cpp (B10/B11 -> C10/C11).
+
+Hardware for the bidirectional LIN bus (still needed):
+- TX: PC10 must reach the wire on the 74HC14 INPUT side - the 74HC14 is a
+  one-way buffer, TX cannot cross it backwards. Jumper PC10 to the AF3 wire
+  (or cut the 74HC14-output trace); the 74HC14 output on PC10 weakly fights
+  the UART driver through its series R - bypass it for a clean bus.
+- RX: PC11 must reach the same wire point.
+- Add the ~1k master pullup to VBAT (no LIN transceiver on the board; the
+  L9779 only has K-line, so the UART drives the bus directly).
+
+## 2026-08-26 - m74_9 buzzed wiring: final LIN + DFM map (user-buzzed, authoritative)
+
+- DFM monitor: sits on **PC11 through the 74HC14** (user fact, verbatim) -
+  the AF3 "ALT DFM" wire -> R/C -> 74HC14 -> PC11 chain is the alternator
+  DFM read, NOT the LIN path.
+- LIN physical layer = the L9779 ISO9141 K-line transceiver:
+  PD8 (USART3_TX) -> L9779 K_TX (pin 47); L9779 K_RX (pin 46) -> PD9
+  (USART3_RX); L9779 K_LINE (pin 45) -> AG3 (the LIN wire to the alternator). All
+  buzzes confirmed. Matches the stock firmware (LIN driver uses USART3, port D).
+- Firmware now uses LIN_TX_PIN=D8 / LIN_RX_PIN=D9 (same SD3, AF7).
+- Closed: K_LINE (pin 45) -> AG3 confirmed. Open: verify K-line polarity/
+  ISO_SRC (CONFIG_REG4) empirically via the echo test in linalt.
+
+## 2026-08-26 - m74_9 LIN wiring COMPLETE (all buzzed, user facts)
+
+- L9779 K_LINE (pin 45) -> **AG3** (buzzed, user fact) - the LIN wire to
+  the alternator. The DFM monitor is a SEPARATE connector pin: AF3
+  "ALT DFM" -> R/C -> 74HC14 -> PC11.
+- Full chain:
+  PD8 (USART3_TX) -> L9779 K_TX (47); L9779 K_LINE (45) -> AG3 ->
+  alternator; L9779 K_RX (46) -> PD9 (USART3_RX). Bus pullup to VBAT
+  present on AG3. DFM monitor separately: AF3 -> 74HC14 -> PC11.
+- Firmware: LIN_TX_PIN=D8, LIN_RX_PIN=D9 (SD3/USART3, AF7). Built.
+- Next: flash, linalt -> expect the own-echo through the K-line transceiver
+  (rxBytes >= 2-3 even with the alternator disconnected); with the
+  alternator connected, rxBytes >= 11-12 and cks=OK. Watch polarity - if
+  the echo parses, the K-line transceiver is non-inverting as expected.
