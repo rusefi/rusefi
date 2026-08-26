@@ -145,13 +145,77 @@ static inline uint16_t encodeRpmOrBaseline(float rpm) {
  */
 static inline uint16_t encodeFuelFlowMlPerHour() {
 #ifdef MODULE_ODOMETER
-    float gPerSecond = engine->module<TripOdometer>()->getConsumptionGramPerSecond();
+	float gPerSecond = engine->module<TripOdometer>()->getConsumptionGramPerSecond();
 #else
-    float gPerSecond = 0;
+	float gPerSecond = 0;
 #endif // MODULE_ODOMETER
-    // g/s -> mL/h: *3600 (s->h), /0.745 g/mL (gasoline density)
-    float mlPerHour = gPerSecond * 3600.0f / 0.745f;
-    return (uint16_t)clampF(0.0f, mlPerHour, 65535.0f);
+
+	// Fuel cut: zero flow. The original ECU does exactly this - the flow
+	// field drops to 0x0000 during DFCO even while rpm is still climbing
+	// (orig_1/2/3 captures).
+	if (engine->module<DfcoController>()->cutFuel()) {
+		gPerSecond = 0;
+	}
+
+	// The trip-odometer rate is per-injection-event and spiky; the 10 ms CAN
+	// sampling would otherwise freeze one event's instantaneous rate between
+	// cycles and feed the dash garbage. EMA-smooth it towards a steady value
+	// (~200 ms time constant at the 10 ms send rate).
+	static float smoothedGps = 0;
+	smoothedGps += 0.05f * (gPerSecond - smoothedGps);
+
+	// g/s -> mL/h: *3600 (s->h), /0.745 g/mL (gasoline density)
+	float mlPerHour = smoothedGps * 3600.0f / 0.745f;
+	return (uint16_t)clampF(0.0f, mlPerHour, 65535.0f);
+}
+
+/**
+ * Dash tach byte - 0x0186 byte 4. Stock fit (orig_1/2/3): 0x20 at the
+ * 800 rpm rest/idle baseline, 0x33-0x35 at the ~1100 rpm rev blip.
+ * The bench captures never exceed ~915 rpm, so the dash's real scale above
+ * idle is a guess - the encoding is switchable on the car with 'cantach'
+ * until the needle agrees with the console rpm at a known engine speed.
+ */
+static int s_tachEncoding = 0;
+
+static const char* tachEncodingDescription(int mode) {
+	switch (mode) {
+		case 1: return "rpm - 768 (caps at 1023)";
+		case 2: return "rpm/8 - 68 (caps at 2584)";
+		case 3: return "rpm/32 + 7 (covers ~7900)";
+		default: return "rpm/16 - 18 (capture fit, caps at ~4368)";
+	}
+}
+
+static uint8_t encodeTachByte(float rpm) {
+	if (rpm < 1.0f) {
+		// rest baseline - all modes agree at the 800 rpm point (0x20 = 32)
+		return 0x20;
+	}
+
+	switch (s_tachEncoding) {
+		case 1: return (uint8_t)clampF(0.0f, rpm - 768.0f, 255.0f);
+		case 2: return (uint8_t)clampF(0.0f, rpm / 8.0f - 68.0f, 255.0f);
+		case 3: return (uint8_t)clampF(0.0f, rpm / 32.0f + 7.0f, 255.0f);
+		default: return (uint8_t)clampF(0.0f, rpm / 16.0f - 18.0f, 255.0f);
+	}
+}
+
+static void setTachEncoding(const char* arg) {
+	if (arg == nullptr || arg[0] == 0) {
+		efiPrintf("cantach: current=%d (%s). 0=rpm/16-18 1=rpm-768 2=rpm/8-68 3=rpm/32+7",
+			s_tachEncoding, tachEncodingDescription(s_tachEncoding));
+		return;
+	}
+
+	int mode = atoi(arg);
+	if (mode < 0 || mode > 3) {
+		efiPrintf("cantach: bad mode %d (0..3)", mode);
+		return;
+	}
+
+	s_tachEncoding = mode;
+	efiPrintf("cantach: mode=%d (%s)", mode, tachEncodingDescription(mode));
 }
 
 /**
@@ -565,9 +629,8 @@ private:
         msg[1] = (uint8_t)(fuelFlowMlPerHour & 0xFF);
         msg[2] = (uint8_t)(rpmEncoded >> 8);
         msg[3] = (uint8_t)(rpmEncoded & 0xFF);
-        // dash tach: rpm - 768, clamped to the byte (original sends 0x20 at
-        // rest = 800 rpm baseline)
-        msg[4] = (uint8_t)clampF(0.0f, rpm - 768.0f, 255.0f);
+        // dash tach: rpm/16 - 18, 0x20 at rest (see encodeTachByte)
+        msg[4] = encodeTachByte(rpm);
         msg[5] = 0x00;
         msg[6] = 0x20;
     }
@@ -789,7 +852,10 @@ private:
     // -----------------------------------------------------------------------
 
     void sendPeriodic() {
-        // Snapshot engine state once per call
+        // Snapshot engine state once per call. The dash rpm is the LIVE sensor
+        // value - exactly what the Java console shows, no holding/filtering:
+        // the console rpm has no dropouts, so any dash dropout is an encoding
+        // problem, not a sensor problem.
         float rpm = Sensor::getOrZero(SensorType::Rpm);
         bool isRunning      = (rpm > engineConfiguration->cranking.rpm);
         bool isCranking     = (rpm > 0) && !isRunning;
@@ -918,6 +984,7 @@ bool m74_9_isImmobilizerBlocking() {
 
 void initM74_9Can() {
     registerCanListener(m74_9BcmListener);
+    addConsoleActionS("cantach", setTachEncoding);
 }
 
 #endif // EFI_CAN_SUPPORT

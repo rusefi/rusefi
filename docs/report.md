@@ -7790,3 +7790,40 @@ wired for LIN and we get no answer - we may be on the wrong pins). Facts:
   the pullup added on the wire.
 - Next step: buzz connector AF3 to find the real MCU pin (schematic
   unreliable), then repoint LIN_TX_PIN/LIN_RX_PIN (and SDx if not USART3).
+
+## 2026-08-26 - m74_9 dash CAN: tach byte fit + rpm hold + flow smoothing
+
+Re-derived the dash encodings from orig_1/2/3.trc (bench captures, revs to
+~915 rpm):
+
+- CORRECTION (user, verbatim): 0x0189[0:1] and 0x018A[0:1] ARE live rpm -
+  the bench captures sit in the 771-790 idle band simply because the engine
+  idled; 0x0186[2:3] carries the same rpm with more lag. All three rpm*16
+  fields are live in the stock. The dash rpm must mirror the Java console
+  rpm exactly (no dropouts there -> a dash dropout is an encoding problem,
+  not a sensor problem).
+- Tach byte fit: 0x20 at the 800 rpm rest/idle baseline, 0x33-0x35 at the
+  ~1100 rpm rev blip -> byte = rpm/16 - 18 (~16 rpm per count). The old
+  rpm-768 formula saturates at 1023 rpm and does not match the captures.
+- Fuel flow 0x0186[0:1]: the stock zeroes it during DFCO (flow 0x0000 while
+  rpm climbs - the DFCO signature).
+
+Changes in m74_9_can.cpp:
+- encodeTachByte(): rpm/16 - 18, 0x20 at rest.
+- Tach byte encoding is switchable on the car: 'cantach <0..3>' console
+  command (0=rpm/16-18 capture fit, 1=rpm-768 old, 2=rpm/8-68, 3=rpm/32+7).
+  The bench captures never exceed ~915 rpm, so the dash's real scale above
+  idle is unknown - pick the mode whose needle agrees with the console rpm
+  at a known speed. NO rpm hold-through-dropout: the dash rpm is the live
+  sensor value exactly as the console shows it (per user: the console has no
+  dropouts, so the dash problem is the encoding, not the source).
+- Fuel flow: zeroed during DFCO + EMA smoothing (~200 ms) - the trip-odometer
+  per-event rate is spiky and froze garbage at the 10 ms sampling rate.
+- CLT was already live in 0x066A[3:4]; no change.
+
+Open: the bench captures never exceed ~915 rpm, so the tach byte above idle
+is a fit, not a measurement. The 700-800-at-real-2500 dash symptom is also
+consistent with the trigger desync at 2500-3000 zeroing the rpm sensor (the
+active high-rpm desync issue) - the hold mitigates it, the desync is the root
+cause. A car-side capture of OUR CAN frames while driving would settle the
+dash's exact scale.
