@@ -858,6 +858,8 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 
 	case REBOOT_COMMAND:
 #if EFI_PROD_CODE
+		// record that this reset was a deliberate command (issue #9931) before we go down
+		logDeliberateReboot(RebootReason::Command);
 		rebootNow();
 #endif /* EFI_PROD_CODE */
 		break;
