@@ -31,7 +31,6 @@ static void runPolledBinaryLog(const char* filename) {
 	float firstRpm = 0;
 	float firstRpmAt = 0;
 	float firstCamSyncTime = 0;
-	float firstCamSyncAt = 0;
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
 
@@ -43,13 +42,12 @@ static void runPolledBinaryLog(const char* filename) {
 		}
 		if (!firstCamSync && engine->triggerCentral.triggerState.hasSynchronizedPhase()) {
 			firstCamSyncTime = getTimeNowUs() / 1'000'000.0f;
-			firstCamSyncAt = firstCamSyncTime;
 			firstCamSync = true;
 		}
 	}
 
-	printf("POLLED BINARY, %f at %f, %f s at %f, %d, %d, %d, %s\n",
-		firstRpm, firstRpmAt, firstCamSyncTime, firstCamSyncAt,
+	printf("POLLED BINARY, %f at %f, %f s, %d, %d, %d, %s\n",
+		firstRpm, firstRpmAt, firstCamSyncTime,
 		engine->triggerCentral.triggerState.getShaftSynchronized(),
 		engine->triggerCentral.triggerState.hasSynchronizedPhase(),
 		engine->triggerCentral.triggerState.phaseResyncCounter,
