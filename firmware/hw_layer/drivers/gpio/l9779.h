@@ -55,3 +55,13 @@ int l9779_add(brain_pin_e base, unsigned int index, const l9779_config *cfg);
  * Returns false when no L9779 chip is registered on this board. */
 bool l9779_getWdaCounters(uint8_t *ec, bool *wda_int, int *ok, int *fail, int *timing_miss, uint8_t *dia10,
 		int *delay_ms, int *defer_cnt, int *kill_cnt, uint8_t *requhi, int *wrong_cnt, int *cnt_bad);
+
+/* Ignition-gated power stage (m74_9): call from the board's periodic
+ * callback (ISR/thread context - this only sets a flag and wakes the
+ * driver thread; all SPI work happens in the driver thread). ON = full
+ * re-init (SW_RST + START + CONFIG_REG6 + RESPTIME + VRS + outputs + WDA
+ * kick) via the need_init path; OFF = CONFIG_REG6 PSOFF (0x16, power
+ * stages dead, chip logic + regulators + SPI + WDA + KEY_ON stay alive)
+ * and the WDA feed stops. Default ON - boards that do not call this behave
+ * exactly as before. No-op when no L9779 is registered. */
+void l9779_setPowerStage(bool on);

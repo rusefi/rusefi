@@ -12,6 +12,7 @@
 #include "runtime_state.h"
 #include "digital_input_exti.h"
 #include "pwm_generator_logic.h"
+#include "ignition_controller.h"
 
 // PB14 is error LED, configured in board.mk
 Gpio getCommsLedPin() {
@@ -438,12 +439,22 @@ void boardInit() {
 	/* ETC_EN on PB13 -> Q5A (NPN, inverts) -> TLE9201 DIS (pin 11, pulled up
 	 * to +5V). PB13 high = Q5A on = DIS low = bridge enabled. Must be driven
 	 * here (not via etbIo[].disablePin: that path is fixed OM_DEFAULT, and
-	 * low=enable would leave DIS high = outputs tristate). At boot PB13 is a
-	 * weak pullup only, insufficient to turn Q5A on (internal 10k base-emitter
-	 * divider), so DIS stays pulled high -> tristate until this runs. */
+	 * low=enable would leave DIS high = outputs tristate). Boot default is
+	 * LOW (bridge disabled): the ignition gate in m74_9IgnitionGatePeriodic()
+	 * raises PB13 only after the L9779 KEY_ON read confirms the key is on,
+	 * and drops it on key-off - with the key off the blade must NOT stay
+	 * energized for hours (the 2026-08-26 report: only unplugging the ECU
+	 * reset it). The weak pullup alone cannot turn Q5A on (internal 10k
+	 * base-emitter divider), so the disabled state is safe by construction. */
 	gpio_pin_markUsed(GPIOB, 13, "ETC_EN");
 	palSetPadMode(GPIOB, 13, PAL_MODE_OUTPUT_PUSHPULL);
-	palSetPad(GPIOB, 13);
+	palClearPad(GPIOB, 13);
+
+	/* Park the L9779 power stages until the ignition gate confirms the key
+	 * (this flag is picked up by the driver thread, which starts later via
+	 * gpiochips_init - with it false the boot chip_init and the WDA feed are
+	 * skipped and the chip stays in its power-on-off state). */
+	l9779_setPowerStage(false);
 
 	int ret = tle9201_add(0, &tle9201_cfg);
 	efiPrintf("tle9201_add()=%d", ret);
@@ -453,6 +464,46 @@ void boardInit() {
 	// setup_custom_board_overrides() (pre-halInit, before chSysInit) hangs
 	// the board at power-on - the same trap as tle9201_add() above.
 	initM74_9LinAlternator();
+}
+
+/* -----------------------------------------------------------------------
+ * Ignition-gated power stage
+ *
+ * With the key off: the L9779 power stages are PSOFF'd, the TLE9201 bridge
+ * is disabled (PB13 low) and the dash CAN stream stops (m74_9_can.cpp -
+ * the stock ECU is completely CAN-silent with ignition off, and the BCM
+ * drops the main relay when the 0x0189 heartbeat dies). On the key-on edge
+ * the L9779 is fully re-initialized (SW_RST + START + REG6 + RESPTIME +
+ * VRS + outputs) through its driver thread.
+ *
+ * Runs from custom_board_periodicSlowCallback = the 20 Hz slow callback,
+ * which executes inside the SysTick ISR (PeriodicTimerController virtual
+ * timer): only flags and a plain GPIO are touched here, ALL L9779 SPI work
+ * happens in the l9779 driver thread. */
+
+static bool m74_9_ignitionOn = false;
+
+/* TLE9201 bridge enable: PB13 -> Q5A (NPN, inverts) -> DIS (pulled up to
+ * +5V). PB13 high = Q5A on = DIS low = bridge enabled. */
+static void m74_9_setEtcEnable(bool on) {
+	palWritePad(GPIOB, 13, on ? 1 : 0);
+}
+
+static void m74_9IgnitionGatePeriodic() {
+	bool ign = isIgnVoltage();
+
+	if (ign == m74_9_ignitionOn) {
+		return;
+	}
+
+	m74_9_ignitionOn = ign;
+	efiPrintf("m74_9 ignition gate: %s",
+		ign ? "ON (L9779 re-init + ETB enable)" : "OFF (PSOFF + ETB disable)");
+
+	/* ETB bridge first (plain GPIO, independent of the L9779 SPI), then the
+	 * L9779 power stages. */
+	m74_9_setEtcEnable(ign);
+	l9779_setPowerStage(ign);
 }
 
 #if EFI_PROD_CODE && HAL_USE_ADC
@@ -972,6 +1023,7 @@ void setup_custom_board_overrides() {
 	// timer), where the LIN blocking serial I/O is illegal (SV#10 crash).
 	custom_board_periodicSlowCallback = []() {
 		m74_9VrModelPeriodic();
+		m74_9IgnitionGatePeriodic();
 	};
 	#if EFI_PROD_CODE && HAL_USE_ADC
 	addConsoleAction("fastadcdiag", m74_9FastAdcDiag);

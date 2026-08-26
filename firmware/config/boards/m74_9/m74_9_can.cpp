@@ -37,6 +37,7 @@
 #include "m74_9_can.h"
 #include "can_listener.h"
 #include "can_msg_tx.h"
+#include "ignition_controller.h"
 
 // ---------------------------------------------------------------------------
 // Frame IDs - BCM -> ECU (receive)
@@ -852,6 +853,19 @@ private:
     // -----------------------------------------------------------------------
 
     void sendPeriodic() {
+        // Stock behavior: with ignition off the ECU's CAN node is COMPLETELY
+        // silent (verified in ignoff.trc - zero ECU frames of any kind; the
+        // remaining traffic is dash/cluster chatter). The BCM drops the main
+        // relay when the 0x0189 heartbeat dies - if we keep streaming with
+        // the key off, the BCM treats the ECU as alive and the relay never
+        // drops. So the whole dash/IMMO/keepalive stream stops until ignition
+        // returns. The console ISO-TP path is a separate protocol (rx-driven)
+        // and is unaffected. isIgnVoltage() reads the L9779 KEY_ON cache
+        // (DIA_REG9), false for the first ~100 ms after boot - safe default.
+        if (!isIgnVoltage()) {
+            return;
+        }
+
         // Snapshot engine state once per call. The dash rpm is the LIVE sensor
         // value - exactly what the Java console shows, no holding/filtering:
         // the console rpm has no dropouts, so any dash dropout is an encoding

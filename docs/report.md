@@ -7974,3 +7974,45 @@ Consequence for rusEFI: the ignition gate must also stop the dash CAN stream
 when isIgnVoltage() is false (stock = silence). Keeping 0x0189 alive with a
 "not running" state would make the BCM/dash treat the ECU as alive and the
 main relay may never drop.
+
+## 2026-08-26 - m74_9 ignition-gated power stage: IMPLEMENTED
+
+The gate from the analysis above is implemented (build passes, not yet
+flashed/bench-verified):
+
+- l9779.cpp: `L9779_CONFIG6_PSOFF (0x16)`; `chip_power_off()` (driver thread
+  context): wd_running=false FIRST, then scheduler.cancel(&wd_sched), then
+  REG6=0x16. The executor feed checks wd_running at its entry and fizzles
+  out without rescheduling - a plain cancel is racy because the feed
+  self-reschedules at its end (a concurrent executor run would resurrect
+  it). The driver thread's need_init/WDA-kick/output pushes are all gated
+  on power_stage_on; the diag refresh (KEY_ON polling) runs while parked.
+  The OUT_DIS heal is gated on power_stage_on (chip_heal_out_dis(true)
+  writes REG6=0x06 and would fight the gate). l9779_setPowerStage(on):
+  ISR-safe flag + thread wake; default ON, so non-m74_9 boards are
+  unchanged. Boot safety: the flag is set false in
+  m74_9_boardInitHardware BEFORE gpiochips_init creates the driver thread,
+  so the boot chip_init never arms the stages with the key off - the chip
+  stays in its power-on-off state (OUT_DIS=1).
+- board_configuration.cpp: PB13 (ETC_EN) boot default changed HIGH -> LOW
+  (deterministic tristate); m74_9IgnitionGatePeriodic() in the 20 Hz slow
+  callback (SysTick ISR - flags/GPIO only) flips PB13 and calls
+  l9779_setPowerStage() on isIgnVoltage() changes. Key-on-at-boot costs one
+  extra PSOFF write + ~100 ms (DIA_REG9 KEY cache latency) before the
+  stages arm; key-off PSOFFs immediately.
+- m74_9_can.cpp: sendPeriodic() returns immediately when !isIgnVoltage() -
+  the whole dash/IMMO/keepalive stream stops (stock = total ECU CAN silence
+  at ign-off, the BCM drops the main relay on the heartbeat timeout). The
+  console ISO-TP path is rx-driven and unaffected.
+
+Boot sequence now: power-on -> PB13 low, L9779 parked (single REG6=0x16
+write, no chip_init, no WDA) -> KEY_ON polling fills the cache -> gate
+raises PB13 + full SW_RST re-init on key-on. Fail-safe: if the L9779 SPI
+never answers, the gate stays parked (stages off).
+
+Open/not done: bench+car verification (expect: no power-stage activity with
+ignition off; init sequence on key-on; BCM drops the main relay once the
+dash stream dies; no re-init storm on quick key flicks), the LIN thread is
+not gated (it keeps sending the OFF setpoint - harmless), and the self-stim
+bench path stays parked without ignition (turn the bench key on for output
+tests).
