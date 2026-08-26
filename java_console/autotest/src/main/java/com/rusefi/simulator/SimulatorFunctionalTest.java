@@ -11,6 +11,7 @@ import com.rusefi.enums.bench_mode_e;
 import com.rusefi.enums.bench_test_magic_numbers_e;
 import com.rusefi.enums.bench_test_packet_ids_e;
 import com.rusefi.enums.bench_test_io_control_e;
+import com.rusefi.binaryprotocol.FsImageReader;
 import com.rusefi.functional_tests.EcuTestHelper;
 import com.rusefi.io.LinkManager;
 import etch.util.CircularByteBuffer;
@@ -18,6 +19,7 @@ import etch.util.CircularByteBuffer;
 import java.io.EOFException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static com.rusefi.IoUtil.getDisableCommand;
 import static com.rusefi.binaryprotocol.IoHelper.swap16;
@@ -41,6 +43,7 @@ public class SimulatorFunctionalTest {
         assertHappyTriggerSimulator();
         assertVvtPosition();
         assertRawAnalogPackets();
+        assertFsImageContainsIni();
 
         int vvtOutputFrequency = 300; // todo: move the constant to Fields
         testPwmPin(bench_mode_e.BENCH_VVT0_VALVE, vvtOutputFrequency);
@@ -65,6 +68,59 @@ public class SimulatorFunctionalTest {
         Thread.sleep(5 * Timeouts.SECOND);
         double triggerErrors = SensorCentral.getInstance().getValue(Sensor.totalTriggerErrorCounter);
         assertTrue("triggerErrors " + triggerErrors, triggerErrors < 5);
+    }
+
+    /**
+     * External displays (e.g. lvgl dashboards) self-configure by pulling the embedded filesystem
+     * image over TS_READ32_COMMAND and extracting the .ini from it - assert the simulator serves
+     * a valid image so that path stays covered by CI.
+     */
+    private void assertFsImageContainsIni() throws InterruptedException {
+        CountDownLatch done = new CountDownLatch(1);
+        AtomicReference<Object> result = new AtomicReference<>();
+        linkManager.submit(() -> {
+            try {
+                result.set(FsImageReader.readImage(linkManager.getBinaryProtocol()));
+            } catch (Throwable e) {
+                result.set(e);
+            } finally {
+                done.countDown();
+            }
+        });
+        if (!done.await(1, TimeUnit.MINUTES)) {
+            throw new IllegalStateException("Timeout reading FS image");
+        }
+        if (result.get() instanceof Throwable) {
+            throw new IllegalStateException("FS image read failed", (Throwable) result.get());
+        }
+        byte[] image = (byte[]) result.get();
+        log.info("FS image: got " + image.length + " CRC-validated bytes");
+
+        // FAT boot sector signature proves we got a filesystem, not garbage
+        assertTrue("FS image too small: " + image.length, image.length > 512);
+        assertTrue("FAT boot sector signature missing",
+                (image[510] & 0xff) == 0x55 && (image[511] & 0xff) == 0xAA);
+
+        // the .ini is stored inside the image as rusefi.ini.7z (see create_ini_image.sh) -
+        // 7z archive magic bytes prove the payload displays extract is actually present
+        byte[] sevenZipMagic = {0x37, 0x7A, (byte) 0xBC, (byte) 0xAF, 0x27, 0x1C};
+        assertTrue("7z magic (compressed .ini) not found in FS image", contains(image, sevenZipMagic));
+    }
+
+    private static boolean contains(byte[] haystack, byte[] needle) {
+        for (int i = 0; i <= haystack.length - needle.length; i++) {
+            boolean match = true;
+            for (int j = 0; j < needle.length; j++) {
+                if (haystack[i + j] != needle[j]) {
+                    match = false;
+                    break;
+                }
+            }
+            if (match) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void assertVvtPosition() {
