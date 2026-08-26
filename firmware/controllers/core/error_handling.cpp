@@ -106,7 +106,8 @@ void errorHandlerInit() {
 	// reset to None to avoid generating 'Unknown' fail report
 	if ((lastBootError.Cookie != ErrorCookie::FirmwareError) &&
 		(lastBootError.Cookie != ErrorCookie::HardFault) &&
-		(lastBootError.Cookie != ErrorCookie::ChibiOsPanic)) {
+		(lastBootError.Cookie != ErrorCookie::ChibiOsPanic) &&
+		(lastBootError.Cookie != ErrorCookie::Reboot)) {
 		lastBootError.Cookie = ErrorCookie::None;
 	}
 
@@ -163,9 +164,27 @@ const char *errorCookieToName(ErrorCookie cookie)
 		return "HardFault";
 	case ErrorCookie::ChibiOsPanic:
 		return "ChibiOS panic";
+	case ErrorCookie::Reboot:
+		return "Deliberate reboot";
 	}
 
 	return "Unknown";
+}
+
+const char *rebootReasonToName(RebootReason reason)
+{
+	switch (reason) {
+	case RebootReason::Unknown:
+		return "unspecified";
+	case RebootReason::Command:
+		return "command (TS/console/CAN)";
+	case RebootReason::DfuJump:
+		return "jump to DFU bootloader";
+	case RebootReason::OpenBltJump:
+		return "jump to OpenBLT bootloader";
+	}
+
+	return "unknown";
 }
 
 #define printResetReason()											\
@@ -235,6 +254,12 @@ do {																\
 			PRINT("line %d", err->line);							\
 		}															\
 		break;														\
+	case ErrorCookie::Reboot:										\
+		{															\
+			PRINT("Deliberate reboot: %s",							\
+				rebootReasonToName((RebootReason)err->RebootReason));	\
+		}															\
+		break;														\
 	default:														\
 		/* No cookie stored or invalid cookie (ie, backup RAM contains random garbage) */	\
 		break;														\
@@ -294,6 +319,8 @@ static const char *errorHandlerGetErrorName(ErrorCookie cookie)
 		return "HardFault";
 	case ErrorCookie::ChibiOsPanic:
 		return "OSpanic";
+	case ErrorCookie::Reboot:
+		return "Reboot";
 	}
 
 	return "unknown";
@@ -436,6 +463,23 @@ static void errorHandlerSaveStack(backupErrorState *err, uint32_t *sp)
 	}
 }
 #endif // EFI_BACKUP_SRAM
+
+void logDeliberateReboot(RebootReason reason) {
+#if EFI_BACKUP_SRAM
+	auto bkpram = getBackupSram();
+	auto err = &bkpram->err;
+	// First-writer-wins: never overwrite a crash cookie already stamped by a
+	// fault/panic that happened before this deliberate reset, so a fault during
+	// a pending reboot is still reported instead of being hidden as a reboot.
+	if (err->Cookie == ErrorCookie::None) {
+		err->RebootReason = (uint32_t)reason;
+		// set the cookie last so a reader keying on it sees a consistent reason
+		err->Cookie = ErrorCookie::Reboot;
+	}
+#else
+	(void)reason;
+#endif // EFI_BACKUP_SRAM
+}
 
 void logHardFault(uint32_t type, uintptr_t faultAddress, void* sp, port_extctx* ctx, uint32_t csfr) {
     // todo: reuse hasCriticalFirmwareErrorFlag? something?
