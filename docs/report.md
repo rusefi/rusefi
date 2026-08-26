@@ -7874,3 +7874,64 @@ Hardware for the bidirectional LIN bus (still needed):
   (rxBytes >= 2-3 even with the alternator disconnected); with the
   alternator connected, rxBytes >= 11-12 and cks=OK. Watch polarity - if
   the echo parses, the K-line transceiver is non-inverting as expected.
+
+## 2026-08-26 - m74_9 ignition-gated power stage: analysis (no code yet)
+
+User request: the L9779/TLE power side must be OFF with ignition off and
+fully re-initialize on ignition on. Analysis + isIgnVoltage() verification.
+
+isIgnVoltage() chain (firmware/controllers/ignition_controller.cpp:12):
+- EFI_PROD_CODE: if isBrainPinValid(ignitionKeyDigitalPin) -> efiReadPin
+  (pin, mode). The digital pin ALWAYS wins over the analog fallback.
+- Fallback (only when no valid pin): SensorType::IgnKeyVoltage if present,
+  else BatteryVoltage > 6.0 V.
+
+On m74_9 the tune CANNOT unset the pin: m74_9_boardConfigOverrides()
+(board_configuration.cpp:199) assigns ignitionKeyDigitalPin =
+Gpio::L9779_PIN_KEY (280) on EVERY boot - loadConfiguration() runs
+custom_board_ConfigOverrides AFTER readFromFlash()
+(engine_configuration.cpp:673), so the board assignment always wins over
+the stored msq. The "if the tune does not set ignitionKeyDigitalPin"
+concern does NOT apply to this board.
+
+If it were NOT set (other boards / hypothetical m74_9 misconfig): the
+fallback reads BatteryVoltage > 6 V. The m74_9 MCU is permanently powered
+from VBAT through the L9779 (KEY is only a logic input to the chip), so
+the fallback would be TRUE with the key off - the ignition gate would
+never close: LimpManager keeps fuel/spark/ETB enabled, MainRelayController
+never shuts off, cranking protection gone, and a future L9779 power gate
+would never disarm. The forced pin assignment is load-bearing.
+
+L9779_PIN_KEY read path: efiReadPin -> gpiochips_readPad(280) ->
+L9779::readPad(0): returns 1/0 from the key_on_status cache (DIA_REG9
+bit 7, KEY_ON_STATUS), refreshed by the driver thread at the ~100 ms diag
+cadence (refresh_diag_cache, l9779.cpp:837). key_on_valid=false until the
+first refresh, so isIgnVoltage() reads FALSE for the first ~100 ms after
+boot (safe default, but a real KEY latency for the planned gate). The
+DIA_REG9 read clears nothing on the chip, so polling it fast is safe.
+
+What isIgnVoltage() gates today:
+- LimpManager::updateState (limp_manager.cpp): m_ignitionOn=false clears
+  allowFuel/allowSpark (ClearReason::IgnitionOff) and cuts the ETB power
+  stage, except under directSelfStimulation.
+- IgnitionController::onSlowCallback: broadcasts onIgnitionStateChanged to
+  all engine modules (0.2 s transient filter on the falling edge).
+- MainRelayController::onSlowCallback (main_relay.cpp): main relay +
+  delayed shutoff.
+- start_stop.cpp: cranking is refused without ignition.
+- tle9201.cpp diag thread: ETB diagnostics only while ignition on.
+
+Power-stage gate plan (L9779, not implemented yet):
+- Disable: CONFIG_REG6 PSOFF (bit 4) = 1 (write 0x16) kills the power
+  stages but keeps the chip logic alive (regulators, SPI, WDA, KEY_ON).
+  The MCU keeps running - the regulators are unaffected by PSOFF.
+- Current boot behavior to change: chip_init() runs at power-on and writes
+  L9779_CONFIG6_PWR = 0x06 (PSOFF=0 - stages ON) + START + RESPTIME + VRS
+  before ignition, so the power side arms with the key off.
+- Planned life cycle: ignition off -> no boot chip_init (or REG6=0x16), no
+  WDA feed, slow KEY_ON polling; ignition rising edge -> need_init = true
+  -> chip_reset() + chip_init() + update_output() + WDA kick (the existing,
+  proven re-init path); ignition off after running -> write REG6=0x16,
+  stop the WDA feed.
+- TLE9201 side is separate: PB13/ETC_EN is driven high at board init
+  (m74_9_boardInitHardware) and is not gated by ignition yet.
