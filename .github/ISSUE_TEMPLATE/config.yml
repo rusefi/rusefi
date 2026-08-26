@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Support
+    url: https://github.com/rusefi/rusefi/wiki/Support
+    about: When in doubt, go the Support route before creating a ticket - especially for LLM-assisted findings.
+  - name: LLM policy
+    url: https://github.com/rusefi/rusefi/wiki/LLM-policy
+    about: Required reading before filing an LLM-generated or LLM-assisted ticket.
