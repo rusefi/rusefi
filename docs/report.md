@@ -7726,3 +7726,67 @@ txFrames climbing with no reboot. RX still 0 bytes - the alternator is not on
 the PB10/PB11 wire yet (AF3 wiring unconfirmed); rxBytes=0 in the next dump
 will confirm the wire is dead, >0 means the slave answers and the
 layout/checksum needs work.
+
+## 2026-08-26 (late) - m74_9 KiCad: ALT DFM wiring is read-only DFM monitor, NOT LIN
+
+Traced the ALT DFM net in /Users/vladimir/rusefibuildcontainer/repo/m74.9/hardware/m749.kicad_sch
+(MCU instance U5 at (860.425, 351.79), pins resolved via lib_symbol pin offsets):
+
+- connector label "ALT DFM" (left sheet edge, y=335.28) is the alternator wire;
+  same-name labels chain it through the hellen module to "I_ALT DFM"
+- "I_ALT DFM" (module right edge, (911.86, 379.73)) is wired DIRECTLY to MCU
+  PB5 (pin 135, abs (890.905, 379.73) - verified by pin-coordinate match)
+- the net passes through input conditioning (series R, C to GND) and a
+  74HC14 Schmitt gate (U4 unit 3 at (661.67, 156.21) sits between the two
+  wire segments at y=156.21)
+- PB10 (pin 69, abs (890.905, 367.03)) and PB11 (pin 70, abs (890.905,
+  364.49)) have NO wires at all on the schematic - they float
+
+Consequence: the board reads the stock DFM signal (one-directional, Schmitt-
+conditioned) into PB5. It cannot carry the bidirectional LIN bus, and PB5 has
+no USART3 AF. The LIN master (USART3 on PB10/PB11) is unwired on this board;
+rxBytes=0 on the bench is expected. Hardware rework is required to connect
+the alternator LIN line to PB10/PB11 (+ ~1k pullup to VBAT, tap the wire on
+the connector side before the 74HC14 so PB5 keeps working as the DFM monitor).
+
+## 2026-08-26 (correction, user fact) - m74_9 LIN wiring: schematic is NOT trustworthy
+
+User fact (recorded verbatim): the m74_9 block is a STOCK ECU and the stock
+firmware controls the alternator over LIN - so the LIN path exists in the
+hardware. The KiCad schematic is badly drawn (it already disagrees with the
+physical board elsewhere, e.g. the DIS->+3V3 vs +5V netlist error noted for
+the ETB chain). Therefore the ALT DFM -> 74HC14 -> PB5 trace above must NOT
+be treated as the real board state; it is one more schematic-vs-board
+disagreement. Source of truth for the LIN wire: buzz the connector pin to the
+MCU pins on the physical board (and check the pullup), not the schematic.
+
+## 2026-08-26 - m74_9 LIN pin options on AT32F435 (all LIN-capable UART pins)
+
+User asked how many AT32F435 pins can drive a LIN bus (since the stock box is
+wired for LIN and we get no answer - we may be on the wrong pins). Facts:
+
+- AT32F435 has 7 UARTs: USART1/2/3, UART4/5, USART6, UART7 (no UART8,
+  AT32_HAS_UART8=FALSE in the AT32F435_437 registry). ALL support LIN mode
+  (SBK break generation + LINEN) - LIN is a standard USART feature.
+- Pin options (Artery AF table, mirrors STM32F4 AF layout; USART1-3 = MUX 7,
+  UART4/5 + USART6/7 = MUX 8):
+  USART1: TX PA9/PB6, RX PA10/PB7
+  USART2: TX PA2/PD5, RX PA3/PD6
+  USART3: TX PB10/PC10/PD8, RX PB11/PC11/PD9
+  UART4:  TX PA0/PC10, RX PA1/PC11
+  UART5:  TX PC12, RX PD2
+  USART6: TX PC6/PG14, RX PC7/PG9
+  UART7:  TX PE8/PF7, RX PE7/PF6
+  13 TX/RX pairs, 26 pins total.
+- On m74_9 known-taken pins that rule out UART7 and part of USART6: PF5=CLT,
+  PF6=IAT, PF8=trigger(VR), PF7/PF9/PF10 analog/digital inputs; PC6/PC7 are
+  ADC channels. Free candidates: PB10/PB11 (currently wired in code, no
+  answer), PC10/PC11 + PD8/PD9 (still USART3 - same SD3 driver, only the two
+  pin constants change), PA2/PA3 (USART2), PA9/PA10 (USART1), PD5/PD6, PD2/
+  PC12, PG9/PG14.
+- The L9779 SBC has K_LINE/K_TX/K_RX (ISO9141 K-line transceiver), NOT LIN.
+  The board has NO LIN transceiver and no master pullup in the schematic -
+  direct UART drive (push-pull TX + RX on one wire) is the only option, with
+  the pullup added on the wire.
+- Next step: buzz connector AF3 to find the real MCU pin (schematic
+  unreliable), then repoint LIN_TX_PIN/LIN_RX_PIN (and SDx if not USART3).
