@@ -132,7 +132,9 @@ public:
 
 			if (!protected_resource_detail::waitForUsers(
 					mutex,
-					[&]() { return chCondWaitTimeoutS(&cond_var, remaining); },
+					// MutexLocker uses the normal thread-level mutex API, so the
+					// matching condition wait must also use the normal API.
+					[&]() { return chCondWaitTimeout(&cond_var, remaining); },
 					MSG_OK,
 					MSG_TIMEOUT)) {
 				return nullptr;

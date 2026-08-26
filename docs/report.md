@@ -576,3 +576,27 @@ Open follow-ups:
   picks up this change.
 - Optional future hardening: same-evaluated-unit check for expressions
   once an expression evaluator with ini context is available.
+
+## 2026-08-26 - Fix ProtectedResource condition-variable wait context
+
+What was done:
+- Replaced the S-class condition-variable wait in ProtectedResource::free()
+  with the matching thread-level ChibiOS API.
+- Added a small testable wait helper that restores mutex ownership after a
+  timeout, before MutexLocker's destructor attempts to unlock it.
+- Added unit coverage for both the timeout and successful-signal paths.
+
+Key decisions and why:
+- ProtectedResource acquires its mutex through the normal thread-level API,
+  so entering an S-class wait without chSysLock() violates the ChibiOS API
+  contract and can trigger a system-state panic.
+- ChibiOS deliberately leaves the mutex unlocked after a timed wait expires;
+  explicitly relocking it preserves the ownership expected by MutexLocker.
+
+Validation:
+- ProtectedResource.ReacquiresMutexAfterWaitTimeout reproduced the old
+  behavior before the fix: the mutex remained unlocked.
+- The focused ProtectedResource unit tests pass after the fix.
+
+Open follow-ups:
+- None.
