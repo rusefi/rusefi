@@ -29,6 +29,7 @@
 #pragma once
 
 #include "ch.hpp"
+#include "resource_protector_detail.h"
 
 template <typename T>
 class ProtectedResource {
@@ -129,7 +130,11 @@ public:
 				return nullptr;
 			}
 
-			if (chCondWaitTimeoutS(&cond_var, remaining) != MSG_OK) {
+			if (!protected_resource_detail::waitForUsers(
+					mutex,
+					[&]() { return chCondWaitTimeoutS(&cond_var, remaining); },
+					MSG_OK,
+					MSG_TIMEOUT)) {
 				return nullptr;
 			}
 		}

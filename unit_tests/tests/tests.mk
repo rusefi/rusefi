@@ -236,6 +236,7 @@ TESTS_SRC_CPP = \
 	tests/controllers/modules/test_example_module.cpp \
 	tests/controllers/modules/test_injector_deadtime_autotune.cpp \
 	tests/controllers/test_flash.cpp \
+	tests/controllers/test_resource_protector.cpp \
 	tests/controllers/test_second_tables.cpp \
 	tests/controllers/modules/vvl_controller/vvl_controller_rpm_condition.cpp \
 	tests/controllers/modules/vvl_controller/vvl_controller_clt_condition.cpp \
