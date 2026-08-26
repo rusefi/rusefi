@@ -113,6 +113,12 @@
  * register 0x07 -> 0x05 -> 0x06 during its config script - but for rusEFI
  * the time base must never flip; it is applied ONCE and never stepped). */
 #define L9779_CONFIG6_PWR			(0x06)
+/* CONFIG_REG6 with PSOFF (bit 4) set: power stages off, chip logic +
+ * regulators + SPI + WDA monitoring + KEY_ON input all stay alive. Written
+ * by the ignition gate on key-off; the MCU keeps running and isIgnVoltage()
+ * keeps seeing the key via DIA_REG9. The next ignition-on re-init (SW_RST
+ * via need_init) wipes it and reapplies L9779_CONFIG6_PWR. */
+#define L9779_CONFIG6_PSOFF			(0x16)
 
 /* DIA_REG10 (datasheet 6.14) bits, verified against the register layout:
  * [7] TNL_RST, [6] F1, [5] CRK_RST, [4] F2, [3] VDD5_OV, [2] V3V3_UV,
@@ -309,6 +315,7 @@ struct L9779 : public GpioChip {
 	int chip_init_data();
 	int chip_init();
 	int chip_heal_out_dis(bool configWiped);
+	int chip_power_off();
 	int vrs_configure();
 	/* ISR-safe polled SPI (executor context, no bus mutex) */
 	int spi_frame_isr(uint16_t tx, uint16_t *rx_ptr);
@@ -411,6 +418,17 @@ struct L9779 : public GpioChip {
 	bool						key_on_status;
 	bool						key_on_valid;
 
+	/* Ignition-gated power stage (l9779_setPowerStage): power_stage_on is
+	 * written by the board's periodic callback (SysTick ISR) and read by the
+	 * driver thread - volatile, single-word, one core. power_stage_applied is
+	 * what the thread has actually applied to the chip. OFF transition =
+	 * chip_power_off() (PSOFF + WDA feed stop); ON transition = need_init
+	 * (full SW_RST re-init). Both default true so boards that never call the
+	 * gate keep today's behavior. power_stage_on must NOT be reset in init():
+	 * m74_9 sets it false before the driver thread starts. */
+	volatile bool				power_stage_on = true;
+	bool						power_stage_applied = true;
+
 	/* Executor/thread SPI serialization. The WDA feed runs in the TIM5 ISR at
 	 * kernel priority - chSysLock/CriticalSectionLocker do NOT mask kernel
 	 * IRQs, so a critical section does not stop the executor from preempting
@@ -504,6 +522,19 @@ bool l9779_getWdaCounters(uint8_t *ec, bool *wda_int, int *ok, int *fail, int *t
 	if (cnt_bad)
 		*cnt_bad = chip->wd_cnt_bad;
 	return true;
+}
+
+void l9779_setPowerStage(bool on)
+{
+	L9779 *chip = &chips[0];
+
+	chip->power_stage_on = on;
+
+	/* The wake semaphore only exists once init() has created the driver
+	 * thread; before that the thread picks the flag up on its first pass. */
+	if (chip->thread != nullptr) {
+		chip->wake_driver();
+	}
 }
 
 static const char* l9779_pin_names[L9779_SIGNALS] = {
@@ -868,8 +899,12 @@ int L9779::refresh_diag_cache(int maxRegs)
 				 * config (a chip reset wipes RESPTIME/VRS/CONTR - without it the
 				 * WDA feed misses the ~112 ms default window every cycle and
 				 * the VRS conditioner runs unfiltered at speed); a driver cut
-				 * keeps its config and only needs START + CONTR. */
-				if (out_dis) {
+				 * keeps its config and only needs START + CONTR.
+				 * Gated on power_stage_on: chip_heal_out_dis(true) writes
+				 * REG6=0x06 (PSOFF=0) and would fight the ignition gate while
+				 * parked; the latch heals anyway on the next ignition-on
+				 * re-init (SW_RST wipes it). */
+				if (out_dis && power_stage_on) {
 					systime_t now = chVTGetSystemTimeX();
 					if (now - out_dis_heal_ts >= TIME_MS2I(OUT_DIS_HEAL_MS)) {
 						out_dis_heal_ts = now;
@@ -1053,40 +1088,66 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 			(chip->drv_state == L9779_FAILED))
 			continue;
 
-		if (chip->need_init) {
-			/* clear first, as flag can be raised again during init */
-			chip->need_init = false;
-			/* Full chip reset (SW_RST) before re-init: a latched WDA fault
-			 * (EC=7, outputs forced off) does NOT recover on correct answers
-			 * (observed 16:31 - no fuel pump until power cycle). SW_RST
-			 * re-arms the watchdog (EC=6) and the re-init below restores
-			 * START/VRS/OUT. The executor's WDA exchange is kept out of the
-			 * batch by spi_busy (kernel IRQs are NOT masked by critical
-			 * sections), no CS locker is needed for that. */
-			chip->chip_reset();
-			chip->chip_init();
-			/* sync pins state */
-			chip->update_output();
+		/* Ignition-gated power stage (m74_9): the board's 20 Hz slow callback
+		 * (SysTick ISR) flips power_stage_on via l9779_setPowerStage(); all SPI
+		 * work lands here in thread context. The OFF transition must PSOFF the
+		 * chip BEFORE anything else - chip_init() below writes REG6=0x06
+		 * (PSOFF=0) and would re-arm the stages. */
+		if (chip->power_stage_on != chip->power_stage_applied) {
+			chip->power_stage_applied = chip->power_stage_on;
+			if (chip->power_stage_on) {
+				/* ignition on: full re-init via the proven need_init path
+				 * (SW_RST re-arms the WDA at EC=6 and wipes the parked
+				 * PSOFF register state) */
+				chip->need_init = true;
+			} else {
+				/* ignition off: PSOFF the power stages and stop the WDA
+				 * feed (see chip_power_off) */
+				chip->chip_power_off();
+			}
 		}
 
-		/* Kick the executor-side WDA feed once after the chip is up. The first
-		 * burst lands its RESP_BYTE0 at the RESPTIME anchor + ~17 ms, i.e.
-		 * inside the first answer window ([15.8, 28.4] ms after the RESPTIME
-		 * write); the events self-reschedule from then on. */
-		if (!chip->wd_running) {
-			chip->wd_running = true;
-			engine->scheduler.schedule("l9779wda", &chip->wd_sched,
-				getTimeNowNt() + MS2NT(17),
-				action_s::make<l9779WdaFeedExec, L9779*>(chip));
-		}
+		/* Power-stage gates: while the ignition gate holds the stages off,
+		 * do NOT run chip_init (it writes REG6=0x06 PSOFF=0 and re-arms the
+		 * stages), do NOT kick the WDA feed and do NOT push output registers.
+		 * The diag refresh below stays active either way - it is what feeds
+		 * the KEY_ON cache for isIgnVoltage(). */
+		if (chip->power_stage_on) {
+			if (chip->need_init) {
+				/* clear first, as flag can be raised again during init */
+				chip->need_init = false;
+				/* Full chip reset (SW_RST) before re-init: a latched WDA fault
+				 * (EC=7, outputs forced off) does NOT recover on correct answers
+				 * (observed 16:31 - no fuel pump until power cycle). SW_RST
+				 * re-arms the watchdog (EC=6) and the re-init below restores
+				 * START/VRS/OUT. The executor's WDA exchange is kept out of the
+				 * batch by spi_busy (kernel IRQs are NOT masked by critical
+				 * sections), no CS locker is needed for that. */
+				chip->chip_reset();
+				chip->chip_init();
+				/* sync pins state */
+				chip->update_output();
+			}
 
-		/* send the output registers only when the pin state changed: with the
-		 * watchdog armed the thread wakes up every millisecond, re-writing
-		 * all four CONTR registers on every wakeup would saturate the SPI bus */
-		if (chip->o_dirty) {
-			ret = chip->update_output();
-			if (ret) {
-				/* o_dirty stays set - retry on the next loop */
+			/* Kick the executor-side WDA feed once after the chip is up. The first
+			 * burst lands its RESP_BYTE0 at the RESPTIME anchor + ~17 ms, i.e.
+			 * inside the first answer window ([15.8, 28.4] ms after the RESPTIME
+			 * write); the events self-reschedule from then on. */
+			if (!chip->wd_running) {
+				chip->wd_running = true;
+				engine->scheduler.schedule("l9779wda", &chip->wd_sched,
+					getTimeNowNt() + MS2NT(17),
+					action_s::make<l9779WdaFeedExec, L9779*>(chip));
+			}
+
+			/* send the output registers only when the pin state changed: with the
+			 * watchdog armed the thread wakes up every millisecond, re-writing
+			 * all four CONTR registers on every wakeup would saturate the SPI bus */
+			if (chip->o_dirty) {
+				ret = chip->update_output();
+				if (ret) {
+					/* o_dirty stays set - retry on the next loop */
+				}
 			}
 		}
 
@@ -1210,6 +1271,16 @@ int L9779::spi_frame_isr(uint16_t tx, uint16_t *rx_ptr)
  * burst writes follow immediately after. */
 void L9779::wdFeedFromExecutor()
 {
+	/* Ignition gate: the driver thread clears wd_running (and cancels this
+	 * event) when the power stages are PSOFF'd. If the executor had already
+	 * dispatched this callback, fizzle out WITHOUT touching the bus or
+	 * rescheduling - a plain cancel() is racy because the feed reschedules
+	 * itself at its end (a concurrent executor run would resurrect the feed
+	 * after the cancel). */
+	if (!wd_running) {
+		return;
+	}
+
 	/* Never run while the thread owns an SPI batch: spiStart() briefly clears
 	 * SPE, and spi_lld_polled_exchange() then spins on RXNE forever inside this
 	 * kernel-priority ISR (board bricked right after boot - no fuel pump, no
@@ -1723,6 +1794,35 @@ int L9779::chip_init()
 	}
 
 	return 0;
+}
+
+/* Ignition-gated power-stage OFF (driver thread context, called on the
+ * key-off edge by the thread's power_stage_on transition):
+ *  - stop the executor WDA feed FIRST (flag, then cancel): the feed checks
+ *    wd_running at its entry, so a feed already in flight when we get here
+ *    fizzles out without rescheduling (plain cancel alone is racy - the
+ *    feed self-reschedules at its end).
+ *  - write CONFIG_REG6 = 0x16 (PSOFF=1): the power stages die but the chip
+ *    logic, regulators, SPI, the WDA monitoring and the KEY_ON input all
+ *    stay alive, so the MCU keeps running and isIgnVoltage() keeps seeing
+ *    the key via DIA_REG9. With no answers the EC climbs and WDA_INT
+ *    latches - irrelevant while PSOFF holds the stages off; the next
+ *    ignition-on re-init (SW_RST via need_init) clears it.
+ * The CONTR1..4 enables stay latched in the chip and are re-applied by
+ * chip_init()+update_output() on the next ignition-on. */
+int L9779::chip_power_off()
+{
+	int ret;
+
+	wd_running = false;
+	engine->scheduler.cancel(&wd_sched);
+
+	ret = spi_rw(MSG_W(0x06, L9779_CONFIG6_PSOFF), NULL);
+	if (ret) {
+		efiPrintf(DRIVER_NAME " PSOFF write failed (%d)", ret);
+	}
+
+	return ret;
 }
 
 /* OUT_DIS recovery (datasheet 6.14): OUT_DIS keeps the power stages dead
