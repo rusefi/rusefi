@@ -117,3 +117,17 @@ TEST(LTFT, testSlowCallbackLoadError) {
 	EXPECT_FALSE(ltft.ltftLoadPending);
 	EXPECT_TRUE(ltft.ltftLoadError);
 }
+
+TEST(LTFT, FailedLoadPreservesExistingTrims) {
+	LtftState state;
+	state.fillRandom();
+
+	const float expected = state.trims[0][1][1];
+	ASSERT_NE(0.0f, expected);
+
+	// EFI_UNIT_TEST exercises the same failure path as an unavailable or
+	// incomplete storage record.
+	state.load();
+
+	EXPECT_FLOAT_EQ(expected, state.trims[0][1][1]);
+}
