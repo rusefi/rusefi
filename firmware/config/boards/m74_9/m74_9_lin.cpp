@@ -74,7 +74,6 @@ static constexpr int LIN_BAUD = 19200;
 // ---------------------------------------------------------------------------
 
 static constexpr uint8_t LIN_ID_ALTERNATOR_CONTROL = 0x16; // PID 0xD6, 6 bytes
-static constexpr uint8_t LIN_ID_ALTERNATOR_STATUS  = 0x08; // PID 0xC8, 8 bytes
 static constexpr uint8_t LIN_CONTROL_FRAME_LEN    = 6;
 static constexpr uint8_t LIN_STATUS_FRAME_LEN     = 8;
 
@@ -178,6 +177,19 @@ static bool lastRxValid = false;
 // Raw byte count of the last status-poll read - distinguishes a dead wire
 // (0 bytes) from a responding-but-unparseable slave (>0 bytes).
 static size_t lastRxByteCount = 0;
+// Raw bytes of the last status-poll read (own header echo + any slave
+// response), for on-car polarity/content diagnosis: 55 <pid> = own echo
+// through a non-inverting transceiver, AA xx = inverting transceiver,
+// >= 11 bytes = the slave is alive.
+static uint8_t lastRxRaw[3 + LIN_STATUS_FRAME_LEN + 1];
+
+/* The status poll PID: the STOCK's literal frame-table value 0xC8 (LIN 1.x
+ * parity for id 0x08), NOT the LIN 2.x-computed 0x08. The stock firmware
+ * stores the full PID byte in its frame table and the regulator answers it;
+ * with the computed 0x08 the regulator stays silent (2026-08-27 on the car:
+ * rxBytes=2 = own header echo only, zero response frames). Runtime A/B
+ * switch for the on-car test: 'linpid 08' / 'linpid c8'. */
+static volatile uint8_t linStatusPid = 0xC8;
 
 // Counters / timing
 static uint32_t txFrameCount = 0;
@@ -335,19 +347,20 @@ static void linAlternatorControlTick() {
 	// robust to whether or not the UART queues the own-break as a 0x00 byte.
 	{
 		linSendBreak();
-		uint8_t pollHeader[2] = { 0x55, linComputePid(LIN_ID_ALTERNATOR_STATUS) };
+		uint8_t pollHeader[2] = { 0x55, linStatusPid };
 		chnWrite(linDriver, pollHeader, sizeof(pollHeader));
 
 		uint8_t buf[3 + LIN_STATUS_FRAME_LEN + 1]; // break echo + sync + PID + 8 data + cks
 		size_t read = chnReadTimeout(linDriver, buf, sizeof(buf), TIME_MS2I(30));
 		lastRxByteCount = read;
+		memcpy(lastRxRaw, buf, read);
 
 		lastRxValid = false;
 		if (read >= LIN_STATUS_FRAME_LEN + 1) {
 			const uint8_t* response = buf + read - (LIN_STATUS_FRAME_LEN + 1);
 			memcpy(lastRxData, response, LIN_STATUS_FRAME_LEN);
 			lastRxChecksum = response[LIN_STATUS_FRAME_LEN];
-			uint8_t expectedCks = linClassicChecksum(linComputePid(LIN_ID_ALTERNATOR_STATUS), response, LIN_STATUS_FRAME_LEN);
+			uint8_t expectedCks = linClassicChecksum(linStatusPid, response, LIN_STATUS_FRAME_LEN);
 			if (lastRxChecksum == expectedCks) {
 				lastRxValid = true;
 				rxFrameCount++;
@@ -427,6 +440,10 @@ static void printLinAltState() {
 		lastRxData[4], lastRxData[5], lastRxData[6], lastRxData[7],
 		lastRxChecksum, lastRxValid ? "OK" : "BAD", (unsigned)rxFrameCount,
 		(unsigned)lastRxByteCount);
+	efiPrintf("linalt: raw=%02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x",
+		lastRxRaw[0], lastRxRaw[1], lastRxRaw[2], lastRxRaw[3],
+		lastRxRaw[4], lastRxRaw[5], lastRxRaw[6], lastRxRaw[7],
+		lastRxRaw[8], lastRxRaw[9], lastRxRaw[10], lastRxRaw[11]);
 }
 
 // ---------------------------------------------------------------------------
@@ -452,8 +469,27 @@ void initM74_9LinAlternator() {
 		LOWPRIO, linAlternatorThread, nullptr);
 
 	addConsoleAction("linalt", printLinAltState);
+	addConsoleActionS("linpid", [](const char* arg) {
+		uint8_t v = 0;
+		for (const char* p = (arg && *arg) ? arg : ""; *p; p++) {
+			v <<= 4;
+			char c = *p;
+			if ((c >= '0') && (c <= '9')) {
+				v |= (uint8_t)(c - '0');
+			} else if ((c >= 'a') && (c <= 'f')) {
+				v |= (uint8_t)(c - 'a' + 10);
+			} else if ((c >= 'A') && (c <= 'F')) {
+				v |= (uint8_t)(c - 'A' + 10);
+			} else {
+				efiPrintf("linpid: bad hex byte '%s'", arg ? arg : "");
+				return;
+			}
+		}
+		linStatusPid = v;
+		efiPrintf("linpid set to 0x%02x (status poll uses it from the next cycle)", (unsigned)v);
+	});
 
-	efiPrintf("LIN alternator master: USART3 19200, control 0x16/PID 0xD6 (enhanced), status 0x08/PID 0xC8 (classic)");
+	efiPrintf("LIN alternator master: USART3 19200, control 0x16/PID 0xD6 (enhanced), status PID 0xC8 stock-literal (switchable via 'linpid', classic cks)");
 }
 
 #endif // EFI_PROD_CODE
