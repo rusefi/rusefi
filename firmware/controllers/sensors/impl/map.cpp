@@ -11,14 +11,14 @@
 
 /**
  * This function checks if Baro/MAP sensor value is inside of expected range
- * @return unchanged mapKPa parameter or NaN
+ * @return unchanged mapKPa parameter, or unexpected if it is not a plausible atmospheric pressure
  */
-static float validateBaroMap(float mapKPa) {
+static SensorResult validateBaroMap(float mapKPa) {
 	// Highest interstate is the Eisenhower Tunnel at 11158 feet -> 66 kpa
 	// Lowest point is the Dead Sea, -1411 feet -> 106 kpa
 	if (std::isnan(mapKPa) || mapKPa > 110 || mapKPa < 60) {
 		warning(ObdCode::OBD_Barometric_Press_Circ, "Invalid start-up baro pressure = %.2fkPa", mapKPa);
-		return NAN;
+		return unexpected;
 	}
 	return mapKPa;
 }
@@ -103,17 +103,17 @@ void updateFixedBaroFromMap() {
 	// whatever this sample says, we only get one shot at it
 	baroFromMapPending = false;
 
-	efiPrintf("Get initial baro MAP pressure = %.2fkPa", mapKPa.Value);
 	// validate if it's within a reasonable range (the engine should not be spinning etc.)
-	float storedInitialBaroPressure = validateBaroMap(mapKPa.Value);
-	if (!std::isnan(storedInitialBaroPressure)) {
-		efiPrintf("Using this fixed MAP pressure to override the baro correction!");
-
-		// TODO: do literally anything other than this
-		Sensor::setMockValue(SensorType::BarometricPressure, storedInitialBaroPressure);
-	} else {
-		efiPrintf("The baro pressure is invalid. The fixed baro correction will be disabled!");
+	SensorResult baroKPa = validateBaroMap(mapKPa.Value);
+	if (!baroKPa) {
+		efiPrintf("Start-up MAP pressure %.2fkPa is not a plausible baro pressure, the fixed baro correction will be disabled!", mapKPa.Value);
+		return;
 	}
+
+	efiPrintf("Using fixed baro pressure %.2fkPa grabbed from MAP at start-up", baroKPa.Value);
+
+	// TODO: do literally anything other than this
+	Sensor::setMockValue(SensorType::BarometricPressure, baroKPa.Value);
 }
 
 void initMapDecoder() {

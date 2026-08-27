@@ -648,3 +648,43 @@ Open follow-ups:
   `initMapDecoder()` is not re-run on Burn, so toggling it in TS still needs a
   reboot. Not listed in the ini `requiresPowerCycle` set - candidate for
   docs/hardware-reinit-and-power-cycle.md if it ever confuses someone.
+
+## 2026-08-27 - Review round on PR #10153 (baro from MAP)
+
+What was done:
+- Addressed both inline comments from dron0gus's CHANGES_REQUESTED review on
+  PR #10153 (the #9744 fix from the previous entry). No objection was raised to
+  the mechanism itself - deferring the grab to the slow callback, the
+  engine-turning guard and the timeout all stood.
+
+  | Comment | Change |
+  |---|---|
+  | "Making validateBaroMap() return SensorResult will simplify further code." | `validateBaroMap()` returns `SensorResult` instead of float-with-NaN-sentinel |
+  | "Print actual value instead of \"this\"?" | Confirmation message now carries the kPa value; the two prints collapsed to one per outcome |
+
+Key decisions and why:
+- Kept the parameter as `float` and changed only the return type. The caller
+  already validated the `SensorResult` from `Sensor::get(MapSlow)` before
+  calling, so taking a `SensorResult` in would just move the same check around.
+  The `std::isnan()` guard inside stays - it is now the only NaN handling left.
+- Dropped the pre-validation `"Get initial baro MAP pressure = %.2fkPa"` line.
+  With the value printed in both outcome messages (and `validateBaroMap()`
+  already warning with the value on rejection) it carried no information that
+  is not printed elsewhere, and it read as a success line even when the value
+  was about to be rejected.
+- Both findings were in code carried over unchanged from the original
+  implementation rather than written fresh for the fix - worth noting as a
+  pattern: moving code into a new function is a good moment to clean up its
+  idioms, not just relocate them.
+
+Validation:
+- Build on master base: 0 errors. Full suite 1201 tests / 237 suites, all pass,
+  BaroFromMap 5/5.
+- CI on the previous commit (4173a63ed6) was fully green: 64 checks, 0 failures,
+  including `build (macos-latest)` - which closes the "clang not verified"
+  follow-up from the previous entry - plus `build (ubuntu-latest)`,
+  `clang-format`, and `hardware-ci` on f407-discovery and nucleo_f767.
+
+Open follow-ups:
+- `unit_tests/mocks.cpp:38` still trips GCC 16's `-Wmaybe-uninitialized`; only
+  a local concern until CI moves to that compiler (see previous entry).
