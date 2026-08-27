@@ -93,10 +93,11 @@ void burnExtraFlashPage(StorageItemId id) {
 #if EFI_CONFIGURATION_STORAGE
 #if (EFI_STORAGE_INT_FLASH == TRUE) && (EFI_STORAGE_MFS != TRUE) && !EFI_SIMULATOR
 	// INT_FLASH boards: extra pages share a flash sector with the main config.
-	// A full config burn erases the sector, then burnExtraFlashPages()
-	// writes all extra pages into the now-blank region in one pass.
+	// A deferred full config burn erases the sector, then burnExtraFlashPages()
+	// writes all extra pages into the now-blank region in one pass. Deferring
+	// keeps the normal engine-running flash-write interlock in effect.
 	(void)id;
-	writeToFlashNow();
+	setNeedToWriteConfiguration();
 #else
 	// MFS/SD boards or simulator: write the specific page directly to all backends.
 	if (id == EFI_SECOND_TABLES_RECORD_ID) {

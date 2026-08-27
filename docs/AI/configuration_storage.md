@@ -74,12 +74,12 @@ build (e.g. microrusefi with external W25Q flash). In hybrids the split is:
 the SD backend registers/unregisters at runtime as the card comes and goes
 (`sdCardGetCurrentMode() == SD_MODE_ECU` gates `isReady()`).
 
-`storageWrite(id, ...)` / `storageRead(id, ...)` iterate **all** registered,
-ready backends that claim the id (`isIdSupported`). Writes go to every such
-backend (mirroring); the call reports `Ok` if at least one backend succeeded.
-Reads also iterate all backends - a later backend's successful read overwrites
-the buffer, so with both INT_FLASH and MFS holding a copy the MFS copy
-(higher `StorageType` index) effectively wins.
+`storageWrite(id, ...)` iterates **all** registered, ready backends that claim
+the id (`isIdSupported`). Writes go to every such backend (mirroring); the
+call reports `Ok` if at least one backend succeeded. `storageRead(id, ...)`
+tries backends in descending `StorageType` order and returns on the first
+successful read. This preserves the higher-index backend priority without
+allowing a failed fallback read to partially overwrite valid data.
 
 Asynchronous operation goes through a dedicated low-priority thread
 ("storage manger", `PRIO_STORAGE_MANAGER`, larger stack when MFS/SD is in)
@@ -156,8 +156,10 @@ Consequences of sharing the sector:
 - An extra page can only be written **immediately after a main-config burn
   has erased the sector** (`SettingStorageFlash::store()` skips erase for
   extra-page ids and fails if the area is not blank). Hence
-  `burnExtraFlashPage(id)` on INT_FLASH-only boards simply triggers a full
-  `writeToFlashNow()`, which piggybacks all extra pages via
+  `burnExtraFlashPage(id)` on INT_FLASH-only boards requests a normal deferred
+  settings write with `setNeedToWriteConfiguration()`. The storage manager
+  waits when the target MCU cannot safely write internal flash while the
+  engine is spinning; the eventual full burn piggybacks all extra pages via
   `burnExtraFlashPages()`.
 - Reading a blank extra-page area returns `NotFound` -> defaults are used.
 - Exception: the usual STM32F7 build without `EFI_FLASH_USE_1500_OF_2MB` is a
@@ -199,7 +201,11 @@ external flash chip is missing or dead.
 `ltft.bin`, `second_tables.bin`, `lua_script.bin`. It requires the card in
 `SD_MODE_ECU` (not handed to the PC as USB mass storage) and takes the
 FatFS `FsGuard` lock around each operation, coexisting with SD logging. It is
-registered/unregistered dynamically as the card mounts/unmounts.
+registered/unregistered dynamically as the card mounts/unmounts. Writes first
+create and sync a `.tmp` file, rotate the previous primary to `.bak`, then
+promote the complete temporary file. Reads require an exact-size primary and
+fall back to the backup. This is a recoverable rotation scheme; it does not
+claim stronger atomicity than the underlying FatFS rename operation.
 
 ## History: PR #9949 (July 2026)
 

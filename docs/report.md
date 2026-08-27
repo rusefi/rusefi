@@ -576,3 +576,36 @@ Open follow-ups:
   picks up this change.
 - Optional future hardening: same-evaluated-unit check for expressions
   once an expression evaluator with ini context is available.
+
+## 2026-08-26 - Recover persistent calibration data after interrupted SD writes
+
+What was done:
+- SD-backed calibration records are now written to a synchronized temporary
+  file, with the previous primary rotated to a backup before promotion. Reads
+  validate the exact record size and fall back to that backup.
+- Storage reads now try higher-priority backends first and stop after the first
+  success, so a failed lower-priority read cannot partially overwrite valid
+  data already returned by another backend.
+- LTFT reads stage data in static BSS and copy it into the active table only
+  after a complete storage read succeeds. A failed read preserves the current
+  RAM state instead of clearing learned values.
+- Extra pages that share the internal settings sector now request the normal
+  deferred configuration write, retaining the engine-running flash interlock.
+
+Key decisions and why:
+- The SD update is described as recoverable rotation rather than strictly
+  atomic because power loss semantics ultimately depend on FatFS and the
+  underlying media's rename implementation.
+- The LTFT staging object consumes one fixed table-sized block in BSS. It does
+  not use the storage thread stack or heap, and it prevents partially read data
+  from becoming live.
+- The direct-storage write policy was left unchanged; only shared-sector
+  internal-flash writes are routed through the guarded settings path.
+
+Validation:
+- Added `LTFT.FailedLoadPreservesExistingTrims`; before the fix it failed with
+  the retained cell changing from `0.011` to `0`, proving the regression.
+- The focused LTFT/storage set passed 5/5 and the full unit suite passed
+  1196/1196.
+- The uaEFI firmware build completed with GCC 12.2.1; flash0 used 741496 bytes
+  (98.39%) and the final image was generated successfully.

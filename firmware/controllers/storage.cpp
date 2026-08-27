@@ -9,6 +9,7 @@
 #include "pch.h"
 
 #include "storage.h"
+#include "storage_detail.h"
 #include "extra_flash_pages.h"
 #include "board_overrides.h"
 
@@ -192,21 +193,10 @@ StorageStatus storageWrite(StorageItemId id, const uint8_t *ptr, size_t size) {
 }
 
 StorageStatus storageRead(StorageItemId id, uint8_t *ptr, size_t size) {
-	bool success = false;
-	StorageStatus status = StorageStatus::NotSupported;
-
-	for_all_storages {
-		if ((!storage->isReady()) || (!storage->isIdSupported(id))) {
-			continue;
-		}
-
-		status = storage->read(id, ptr, size);
-		if (status == StorageStatus::Ok) {
-			success = true;
-		}
-	}
-
-	return (success ? StorageStatus::Ok : status);
+	// Read in reverse registration priority. This selects the same successful
+	// backend that the old forward scan selected last, but a later failed read
+	// can no longer partially overwrite data from an earlier successful read.
+	return storage_detail::readFirstSuccessful(storages, storagesCount, id, ptr, size);
 }
 
 static bool storageManagerSendCmd(uint32_t cmd, uint32_t arg)
