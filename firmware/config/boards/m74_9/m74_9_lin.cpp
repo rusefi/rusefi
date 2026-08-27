@@ -212,13 +212,12 @@ static size_t lastRxByteCount = 0;
 // >= 11 bytes = the slave is alive.
 static uint8_t lastRxRaw[3 + LIN_STATUS_FRAME_LEN + 1];
 
-/* The status poll PID: the STOCK's literal frame-table value 0xC8 (LIN 1.x
- * parity for id 0x08), NOT the LIN 2.x-computed 0x08. The stock firmware
- * stores the full PID byte in its frame table and the regulator answers it;
- * with the computed 0x08 the regulator stays silent (2026-08-27 on the car:
- * rxBytes=2 = own header echo only, zero response frames). Runtime A/B
- * switch for the on-car test: 'linpid 08' / 'linpid c8'. */
-static volatile uint8_t linStatusPid = 0xC8;
+/* The status poll PID: computed with the STANDARD LIN parity (verified in
+ * the stock's own PID function at 0x80166e2 - identical formula). Default
+ * id 0x08 (the stock table's 8-byte RX frame). The actual regulator may
+ * answer a different id (the L9918 family TX ids are 0x0B/0x0C/0x0F and
+ * friends); 'linpid <id>' switches the poll id live on the car. */
+static volatile uint8_t linStatusPid = 0x08;
 
 /* Control-frame checksum convention toggle: the stock frame-table bit said
  * enhanced (LIN 2.x, data only), but the extraction also notes the regulator
@@ -519,23 +518,24 @@ void initM74_9LinAlternator() {
 
 	addConsoleAction("linalt", printLinAltState);
 	addConsoleActionS("linpid", [](const char* arg) {
-		uint8_t v = 0;
+		uint8_t id = 0;
 		for (const char* p = (arg && *arg) ? arg : ""; *p; p++) {
-			v <<= 4;
+			id <<= 4;
 			char c = *p;
 			if ((c >= '0') && (c <= '9')) {
-				v |= (uint8_t)(c - '0');
+				id |= (uint8_t)(c - '0');
 			} else if ((c >= 'a') && (c <= 'f')) {
-				v |= (uint8_t)(c - 'a' + 10);
+				id |= (uint8_t)(c - 'a' + 10);
 			} else if ((c >= 'A') && (c <= 'F')) {
-				v |= (uint8_t)(c - 'A' + 10);
+				id |= (uint8_t)(c - 'A' + 10);
 			} else {
 				efiPrintf("linpid: bad hex byte '%s'", arg ? arg : "");
 				return;
 			}
 		}
-		linStatusPid = v;
-		efiPrintf("linpid set to 0x%02x (status poll uses it from the next cycle)", (unsigned)v);
+		id &= 0x3F;
+		linStatusPid = linComputePid(id);
+		efiPrintf("linpid: status poll id 0x%02X -> PID 0x%02X (next poll cycle)", id, linStatusPid);
 	});
 	addConsoleActionS("linck", [](const char* arg) {
 		if (rusefi::stringutil::strEqual(arg, "classic")) {
