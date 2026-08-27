@@ -7,7 +7,8 @@
 class LuaHandle final {
 public:
 	LuaHandle() : LuaHandle(nullptr) { }
-	LuaHandle(lua_State* ptr) : m_ptr(ptr) { }
+	// Explicit constructor to avoid accidential captures
+	explicit LuaHandle(lua_State* ptr) : m_ptr(ptr) { }
 
 	// Don't allow copying!
 	LuaHandle(const LuaHandle&) = delete;
@@ -21,9 +22,12 @@ public:
 
 	// Move assignment operator
 	LuaHandle& operator=(LuaHandle&& rhs) {
+		if(this == &rhs)
+			return *this;
+		// Don't forget to swap values, otherwise potential memory leak
+		lua_State* lhs_handle = m_ptr;
 		m_ptr = rhs.m_ptr;
-		rhs.m_ptr = nullptr;
-
+		rhs.m_ptr = lhs_handle;
 		return *this;
 	}
 
