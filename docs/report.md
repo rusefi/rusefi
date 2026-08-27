@@ -8289,3 +8289,35 @@ msq changes (21129.msq):
 Also committed in this file (user's own console edits, part of the same
 work): alternatorVoltageTargetTable all 14.6 V, cltIdleCorrTable cold
 row +4%, postCrankingFactor tail columns zeroed.
+
+## 2026-08-27 - m74_9 idle: open-loop base explained, base set to 3.5% (msq)
+
+Question answered (no code change): the idle open-loop base is
+cltIdleCorrTable[targetRpm][CLT] x etbIdleThrottleRange / 100 - the
+table is indexed by the TARGET rpm (m_lastTargetRpm in
+IdleController::getRunningOpenLoop), not instant rpm. With range=20 the
+warm (90C, 900rpm) cell 11.8 -> 2.36% real opening.
+
+Dashpot/Taper Initial IAC Adder = iacByTpsTaper: extra air held at full
+value for iacByTpsHoldTime after TPS drops below
+idlePidDeactivationTpsThreshold, then decayed to zero over
+iacByTpsDecayTime (idle_thread.cpp getRunningOpenLoop L188-211). Same
+units as the table (scaled by range/100). Currently 0/0/0 = off. With
+useIacTableForCoasting=enabled the coasting table iacCoasting replaces
+the whole open-loop path during Coasting, so the dashpot only acts once
+the engine is in Idling.
+
+User decision: warm idle base ~3.5%. Applied surgically - only the
+cltIdleCorrTable 900rpm row warm cells changed (40/60/90/110/140C:
+14.0/15.0/17.5/18.0/18.5), cold cells untouched, so cranking/fan/PID
+scaling stays as-is. 17.5 x 20/100 = 3.5%; fan adds +5 -> 4.5%.
+Deliberately NOT etbIdleThrottleRange 20->30 (would give 3.54% but
+scales cranking +50% and everything else - would need cltCrankingCorr
+/1.5).
+
+Commit 7a3815ce570 carries the full current on-car tune state (the msq
+also holds the user's own console edits since e1dd91948d0: idleRpmPid
+p=1.5/i=0.009/d=0.5 +/-6, fan1/2ExtraIdle 5, pidExtraForLowRpm 20,
+useIdleTimingPidControl=no, iacCoasting 6/5/3.5/3/3.5/3, coastingFuelCut
+disabled, cranking_rpm 400, LIN minRpm 300/mapOff 90/hold 2s, lambda
+table 0.898 low-load, fan soft start 10s, disable fans when stopped).
