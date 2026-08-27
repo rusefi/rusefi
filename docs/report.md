@@ -8172,3 +8172,15 @@ regulator answers id 0x12 but intermittently: some polls get the full
 windows gave up mid-response. Windows widened to 50/20/20/20 ms (worst
 case ~130 ms per silent poll, tick period grows to ~230 ms - the regulator
 LIN COM timeout tolerates this easily).
+
+## 2026-08-27 - m74_9 LIN: classic checksum confirmed, linset runtime override
+
+Live A/B on the car (MCP over PCAN): with 'linck classic' on control id
+0x29 the battery climbed 13.13 -> 14.05+ V and holds - the regulator
+follows the setpoint (battery reads ~0.35 V below the alternator B+
+setpoint - normal harness drop at idle). With enhanced checksum the frame
+is ignored (voltage floats at the regulator's ~13.9 V default). So the
+control frame = id 0x29, 4 bytes, 8-bit setpoint, CLASSIC checksum.
+Added 'linset <volts>' - runtime setpoint override (0 = back to the
+alternatorVoltageTargetTable) and made classic the default cks. The table
+field itself: array S16 @16264, [4x4], scale 0.1 (ini).

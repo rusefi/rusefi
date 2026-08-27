@@ -219,19 +219,23 @@ static uint8_t lastRxRaw[3 + LIN_STATUS_FRAME_LEN + 1];
  * switches the poll id live. */
 static volatile uint8_t linStatusPid = 0x92; /* PID of id 0x12 */
 
-/* Control-frame checksum convention toggle: the stock frame-table bit said
- * enhanced (LIN 2.x, data only), but the extraction also notes the regulator
- * speaks LIN 1.x classic. If the regulator rejects the control frame it may
- * stay inactive and never answer the status poll at all (2026-08-27: both
- * PIDs tested, regulator silent, echo clean, polarity verified non-inverting).
- * Runtime A/B on the car: 'linck classic' / 'linck enhanced'. */
-static volatile bool linControlClassicCks = false;
+/* Control-frame checksum convention: CLASSIC (LIN 1.x, checksum includes
+ * the PID) - verified live on the car 2026-08-27: with enhanced the
+ * regulator ignored the frame (voltage stayed at its ~13.9 V default),
+ * with classic it started regulating to the setpoint (battery climbed
+ * 13.13 -> 14.05+). Runtime A/B: 'linck classic' / 'linck enhanced'. */
+static volatile bool linControlClassicCks = true;
 
 /* Control-frame send toggle: 'linctl off' polls the status header WITHOUT
  * sending the control frame first - isolates whether the control frame
  * (wrong checksum/layout) poisons the schedule, or whether the regulator
  * answers the poll unconditionally. */
 static volatile bool linSendControl = true;
+
+/* Runtime setpoint override for on-car tuning: 'linset 14.6' forces the
+ * control setpoint (the regulator follows it), 'linset 0' returns to the
+ * alternatorVoltageTargetTable. 0 = no override. */
+static volatile float linSetpointOverride = 0.0f;
 
 /* Control frame bytes 2/3 - runtime switches: byte 2 = excitation current
  * limitation (7 bits, Version B Rx), byte 3 = RB(2:0) | BZ(3) | F(6:4) |
@@ -362,7 +366,9 @@ static void linAlternatorControlTick() {
 	// time on the transition from OFF to charging - the field itself is
 	// static, the chip applies the ramp on state entry (VDA behaviour).
 
-	float targetVoltage = alternatorTargetVoltage(rpm);
+	float targetVoltage = (linSetpointOverride > 0.0f)
+		? linSetpointOverride
+		: alternatorTargetVoltage(rpm);
 	float setpointVoltage = charging ? targetVoltage : 10.6f; // 10.6 V = OFF code
 
 	// Diagnostics
@@ -648,6 +654,12 @@ void initM74_9LinAlternator() {
 		}
 		linControlId = id & 0x3F;
 		efiPrintf("linctlid: control id 0x%02X -> PID 0x%02X", linControlId, linComputePid(linControlId));
+	});
+	addConsoleActionS("linset", [](const char* arg) {
+		float v = arg ? (float)atof(arg) : 0.0f;
+		linSetpointOverride = v;
+		efiPrintf("linset: setpoint override = %.2fV (%s)", (double)v,
+			(v > 0.0f) ? "forced" : "back to table");
 	});
 	addConsoleActionS("linctl2", [](const char* arg) {
 		linControlByte2 = parseHexByte(arg, linControlByte2);
