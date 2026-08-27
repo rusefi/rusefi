@@ -8016,3 +8016,30 @@ dash stream dies; no re-init storm on quick key flicks), the LIN thread is
 not gated (it keeps sending the OFF setpoint - harmless), and the self-stim
 bench path stays parked without ignition (turn the bench key on for output
 tests).
+
+## 2026-08-27 - m74_9 LIN on the car: transceiver alive (own echo), regulator silent
+
+First on-car linalt after the K-line rewiring (260827 bundle): rxBytes=2 vs
+0 before - the L9779 K-line transceiver echoes the master's own poll header
+(sync + PID) back on RX. The physical path PD8 -> K_TX -> K_LINE(45) -> AG3
+-> wire and K_RX(46) -> PD9 is CONFIRMED alive; the 2-byte echo (not 3)
+shows the break does not queue as a byte - clean LIN-mode UART.
+
+But the regulator does not answer: rxBytes=2 = header echo only, no 8-byte
+status frame in the 30 ms window, frames=0. Prime suspect: the status poll
+PID. The stock's frame table stores the FULL PID byte 0xC8 for id 0x08
+(LIN 1.x parity); we computed the LIN 2.x PID 0x08 and the regulator stays
+silent. Note 0xD6 (control) is identical under both conventions, so only
+the status frame was affected.
+
+Changes: linStatusPid defaults to 0xC8 (stock literal); 'linpid <hex>'
+console switch for live A/B on the car; the classic checksum verification
+now uses linStatusPid too (classic cks covers PID+data, so the PID byte
+must match); linalt prints the RAW received bytes - the next log shows the
+echo content: 55 C8 ... = non-inverting transceiver + correct header on the
+wire, AA xx ... = inverting transceiver, >= 11 bytes = slave responding.
+
+Next on the car: run linalt. If raw=55 C8 (2 bytes, no response) try
+'linpid 08' to close the A/B; if still silent the next suspects are the
+control-frame checksum convention (enhanced vs classic), the LRC/control
+payload layout and the CONFIG_REG4 ISO_SRC K-line config.
