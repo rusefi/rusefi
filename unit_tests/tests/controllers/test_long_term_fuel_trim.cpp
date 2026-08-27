@@ -101,6 +101,7 @@ TEST(LTFT, testSlowCallbackLoadError) {
 	// mock loading state
 	ltft.ltftLearning = false;
 	ltft.ltftLoadPending = true;
+	ltftState.trims[0][0][0] = 0.123f;
 	engine->rpmCalculator.setRpmValue(1000);
 
 	ltft.onSlowCallback();
@@ -116,4 +117,9 @@ TEST(LTFT, testSlowCallbackLoadError) {
 	ltft.onSlowCallback();
 	EXPECT_FALSE(ltft.ltftLoadPending);
 	EXPECT_TRUE(ltft.ltftLoadError);
+	EXPECT_FLOAT_EQ(0.123f, ltftState.trims[0][0][0]);
+	EXPECT_FALSE(ltft.load());
+
+	ltft.onEngineStop();
+	EXPECT_TRUE(ltft.ltftLoadPending);
 }

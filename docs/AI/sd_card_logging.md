@@ -39,7 +39,10 @@ static `FIL`.
 Boot sequence: wait for `boardSdCardEnable()`, check backup RAM state from the
 previous boot (counts "unsafe unmount" power-offs while mounted), init the card
 (give up until next reboot on failure), then briefly mount once to drop/scan crash
-report files (`errorHandlerWriteReportFile`). After that it loops forever:
+report files (`errorHandlerWriteReportFile`). When SD-backed LTFT is enabled,
+that startup mount waits up to one second for that specific pending read. The
+deadline excludes writes and unrelated storage work, so USB mass-storage
+ownership cannot be held indefinitely. After that it loops forever:
 
 1. `sdModeSelector()` picks the desired mode: a user request (`sdmode` console
    command or TS) always wins and sticks until power-off; otherwise USB connected
@@ -50,7 +53,10 @@ report files (`errorHandlerWriteReportFile`). After that it loops forever:
    (`sdModeSwitchToIdle()` stops the logger + unmounts, or detaches MSD), then
    enters the target mode (mount + start logger, attach MSD, or format).
 3. `sdModeExecuter()` does one iteration of the current mode's work; only ECU
-   mode has real work - everything else sleeps 100ms.
+   mode has real work - everything else sleeps 100ms. If USB connects after
+   mode selection but before the ECU iteration runs, report housekeeping still
+   completes but logging is suppressed until the next iteration switches the
+   card through `IDLE` to `PC`.
 
 Modes: `IDLE`, `ECU` (logging), `PC` (card exposed to host as USB mass storage),
 `UNMOUNT`, `FORMAT`. Current mode/status are persisted to battery-backed RAM

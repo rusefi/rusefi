@@ -84,10 +84,33 @@ static SettingStorageBase *storages[storagesCount];
 
 chibios_rt::Mailbox<msg_t, 16> storageManagerMb;
 
+// Bitmap of read requests. Set by the caller before waking the manager so a
+// short-lived storage mount cannot miss a request still queued in the mailbox.
+static uint32_t pendingReads = 0;
+
+static void setPendingRead(StorageItemId id) {
+	chibios_rt::CriticalSectionLocker csl;
+	pendingReads |= BIT(id);
+}
+
+static bool isReadPending(StorageItemId id) {
+	chibios_rt::CriticalSectionLocker csl;
+	return (pendingReads & BIT(id)) != 0;
+}
+
+static uint32_t getPendingReads() {
+	chibios_rt::CriticalSectionLocker csl;
+	return pendingReads;
+}
+
+static void clearPendingRead(StorageItemId id) {
+	chibios_rt::CriticalSectionLocker csl;
+	pendingReads &= ~BIT(id);
+}
+
 #define MSG_CMD_WRITE		(0)
 // force settings save independently of mcuCanFlashWhileRunning()
 #define MSG_CMD_WRITE_NOW	(1)
-#define MSG_CMD_READ		(2)
 #define MSG_CMD_PING		(3)
 #define MSG_CMD_REG			(4)
 #define MSG_CMD_UNREG		(5)
@@ -125,8 +148,7 @@ static bool storageReadID(uint32_t id) {
 		return true;
 #if EFI_LTFT_CONTROL
 	} else if (id == EFI_LTFT_RECORD_ID) {
-		engine->module<LongTermFuelTrim>()->load();
-		return true;
+		return engine->module<LongTermFuelTrim>()->load();
 #endif
 	} else if (id == EFI_SECOND_TABLES_RECORD_ID) {
 		loadExtraPage(EFI_SECOND_TABLES_RECORD_ID);
@@ -222,7 +244,15 @@ bool storageRequestWriteID(StorageItemId id, bool forced) {
 }
 
 bool storageReqestReadID(StorageItemId id) {
-	return storageManagerSendCmd(MSG_CMD_READ, (uint32_t)id);
+	if ((id <= 0) || (id >= EFI_STORAGE_TOTAL_ITEMS)) {
+		return false;
+	}
+
+	setPendingRead(id);
+	// The manager also polls, so a full mailbox only delays the request; it does
+	// not lose it. The ping normally wakes the manager immediately.
+	(void)storageManagerSendCmd(MSG_CMD_PING, 0);
+	return true;
 }
 
 bool storageRegisterStorage(StorageType type, SettingStorageBase *storage) {
@@ -281,7 +311,6 @@ bool storagRequestUnregisterStorage(StorageType id)
 
 // bitmap of flags per pageId. Reminder that page numbers start from 1, see StorageItemId
 static uint32_t pendingWrites = 0;
-static uint32_t pendingReads = 0;
 
 /* in case of MFS or SD card we need more stack */
 static constexpr int storageManagerThreadStackSize = STORAGE_MANAGER_THREAD_STACK_SIZE;
@@ -301,9 +330,6 @@ static void storageManagerThread(void*) {
 			uint32_t id = msg & MSG_ID_MASK;
 
 			switch (cmd) {
-			case MSG_CMD_READ:
-				pendingReads |= BIT(id);
-				break;
 			case MSG_CMD_WRITE:
 				pendingWrites |= BIT(id);
 				break;
@@ -343,9 +369,11 @@ static void storageManagerThread(void*) {
 			}
 		}
 
-		// check if we can read some of pending IDs...
-		for (size_t i = 0; (i < EFI_STORAGE_TOTAL_ITEMS) && pendingReads; i++) {
-			if ((pendingReads & BIT(i)) == 0) {
+		// Check if we can read some of the pending IDs. Snapshot under the
+		// system lock because requests can arrive from another thread.
+		uint32_t reads = getPendingReads();
+		for (size_t i = 0; (i < EFI_STORAGE_TOTAL_ITEMS) && reads; i++) {
+			if ((reads & BIT(i)) == 0) {
 				continue;
 			}
 
@@ -355,7 +383,7 @@ static void storageManagerThread(void*) {
 			}
 
 			if (storageReadID(id)) {
-				pendingReads &= ~BIT(id);
+				clearPendingRead(id);
 			}
 		}
 
@@ -414,6 +442,20 @@ bool storageWaitIdle(unsigned int timeoutMs) {
 	return true;
 }
 
+bool storageWaitReadDone(StorageItemId id, unsigned int timeoutMs) {
+	while (isReadPending(id)) {
+		if (timeoutMs == 0) {
+			return false;
+		}
+
+		unsigned int sleepMs = timeoutMs < 10 ? timeoutMs : 10;
+		chThdSleepMilliseconds(sleepMs);
+		timeoutMs -= sleepMs;
+	}
+
+	return true;
+}
+
 void initStorage() {
 	bool settingsStorageReady = false;
 	// may be unused
@@ -451,6 +493,10 @@ bool storageIsBusy() {
 }
 
 bool storageWaitIdle(unsigned int /*timeoutMs*/) {
+	return true;
+}
+
+bool storageWaitReadDone(StorageItemId /*id*/, unsigned int /*timeoutMs*/) {
 	return true;
 }
 

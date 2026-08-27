@@ -84,6 +84,7 @@ void LtftState::applyToVe() {
 
 void LongTermFuelTrim::init(LtftState *state) {
 	m_state = state;
+	m_loadTimedOut = false;
 
 #if EFI_PROD_CODE
 	ltftLoadPending = storageReqestReadID(EFI_LTFT_RECORD_ID);
@@ -232,10 +233,22 @@ ClosedLoopFuelResult LongTermFuelTrim::getTrims(float rpm, float fuelLoad) {
 }
 
 // Called from storage manager thread when requested ID is ready
-void LongTermFuelTrim::load() {
+bool LongTermFuelTrim::load() {
+#if EFI_SHAFT_POSITION_INPUT
+	// A startup read that arrives after the timeout must not overwrite trims
+	// learned while the engine is running. Keep the manager request pending and
+	// consume it after onEngineStop() asks for the retry.
+	if (m_loadTimedOut && !engine->rpmCalculator.isStopped()) {
+		return false;
+	}
+#endif
+
 	m_state->load();
 
 	ltftLoadPending = false;
+	ltftLoadError = false;
+	m_loadTimedOut = false;
+	return true;
 }
 
 void LongTermFuelTrim::store() {
@@ -301,13 +314,26 @@ void LongTermFuelTrim::onSlowCallback() {
 #endif
 		(1)) {
 		efiPrintf("LTFT: failed to load calibrations");
-		m_state->reset();
 		ltftLoadPending = false;
 		ltftLoadError = true;
+		m_loadTimedOut = true;
 	}
 	// Do some magic math here?
 
 	/* ... */
+}
+
+void LongTermFuelTrim::onEngineStop() {
+	if (!m_loadTimedOut) {
+		return;
+	}
+
+#if EFI_PROD_CODE
+	ltftLoadPending = storageReqestReadID(EFI_LTFT_RECORD_ID);
+#else
+	// Unit tests have no storage manager thread, but still exercise retry state.
+	ltftLoadPending = true;
+#endif
 }
 
 bool LongTermFuelTrim::needsDelayedShutoff() {

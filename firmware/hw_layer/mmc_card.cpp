@@ -73,6 +73,7 @@
 #include "resource_protector.h"
 
 #if EFI_STORAGE_SD == TRUE
+#include "storage.h"
 #include "storage_sd.h"
 #endif // EFI_STORAGE_SD
 
@@ -1157,6 +1158,17 @@ static int sdModeExecuter(SD_MODE mode)
 			sdNeedRemoveReports = false;
 		}
 
+#if HAL_USE_USB_MSD
+		// USB can connect after mode selection but before this executor runs.
+		// Avoid starting or extending a log during that handoff window; the next
+		// loop iteration will unmount the filesystem before exposing the card.
+		if (usbConnected && !engineConfiguration->alwaysWriteSdCard && !sdTargetModeRequested) {
+			engine->outputChannels.sdLoggingState = SD_LOG_SUPPRESSED;
+			engine->outputChannels.sd_logging_internal = false;
+			return 0;
+		}
+#endif
+
 		sdLoggerStart();
 		if ((sdLoggedSuppressed) || (sdLoggerFailed)) {
 			// logger is dead or paused, do not waste CPU
@@ -1261,9 +1273,13 @@ static THD_FUNCTION(MMCmonThread, arg) {
 	if (mountMmc()) {
 		sdReportStorageInit();
 
-#if EFI_STORAGE_SD == TRUE
-		// Give some time for storage manager to load settings from SD
-		chThdSleepMilliseconds(1000);
+#if (EFI_STORAGE_SD == TRUE) && EFI_LTFT_CONTROL
+		// Wait only for the startup record that needs this short-lived mount.
+		// Never include writes or unrelated work: USB ownership must remain
+		// bounded even if the record cannot be loaded.
+		if (!storageWaitReadDone(EFI_LTFT_RECORD_ID, 1000)) {
+			efiPrintf("SD: LTFT startup read timed out");
+		}
 #endif
 
 		unmountMmc();
