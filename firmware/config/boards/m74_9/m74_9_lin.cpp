@@ -264,12 +264,15 @@ static float alternatorTargetVoltage(float rpm) {
 }
 
 /**
- * Encode a voltage as the VDA 6-bit setpoint code:
- * code = (V - 10.6) x 10, clamped to [0, 63]; 0 = 10.6 V = OFF.
+ * Encode a voltage as the VDA 8-bit setpoint (Version B/D/E/F Rx frames:
+ * id 0x1D uses the 8-bit setpoint, Table 62 VSPFBK8B):
+ * code = (V - 10.6) / 0.025 = (V - 10.6) x 40, 0 = 10.6 V = OFF.
+ * The old 6-bit code6 belongs to Version A (id 0x29), which the stock
+ * does NOT use - the stock's id 0x1D is Version B/D/E/F, 8-bit setpoint.
  */
-static uint8_t encodeSetpointCode6(float voltage) {
-	float code = (voltage - 10.6f) * 10.0f;
-	return (uint8_t)clampF(0.0f, code, 63.0f);
+static uint8_t encodeSetpointCode8(float voltage) {
+	float code = (voltage - 10.6f) * 40.0f;
+	return (uint8_t)clampF(0.0f, code, 255.0f);
 }
 
 // ---------------------------------------------------------------------------
@@ -277,27 +280,25 @@ static uint8_t encodeSetpointCode6(float voltage) {
 // ---------------------------------------------------------------------------
 
 /**
- * Build the 4-byte control frame - L9918 Rx_A/Rx_D layout (datasheet
- * 5.3.1.1, matches the stock's 0x1D len-4 TX frame):
- *   [0] A6: setpoint code6 (bits 5:0), bits 7:6 don't care
- *   [1] B1: LRC-rise (bits 3:0) | C1: LRC-cut (bits 7:4)
- *   [2] D5: excitation current limitation (bits 4:0), 0 = no limit
- *   [3] R: output selection for the status frame (bits 2:0:
- *       001=setpoint echo, 010=VB+, 011=Tjunction, 100=rpm);
- *       bit3 BZ (LRC blind zone), bits 6:4 F (setpoint limit), bit7 WB
- *       all 0 like the stock steady state.
+ * Build the 4-byte control frame - L9918 Rx_B/Rx_D/Rx_E/Rx_F layout (the
+ * stock's id 0x1D, 4-byte TX frame; datasheet 5.3.2.1, Table 62):
+ *   [0] A8: setpoint, 8 bits (V = 10.6 + code x 0.025)
+ *   [1] B2: LRC-rise (bits 3:0) | C1: LRC-cut (bits 7:4)
+ *   [2] D7: excitation current limitation, 7 bits (stock default 0x1E = 30)
+ *   [3] RB: output selection (bits 2:0: 000/111 = byte3 invalid),
+ *       bit3 BZ (LRC blind zone), bits 6:4 F (setpoint limit delta),
+ *       bit7 WB - the stock's default buffer uses 0xFF here.
  */
 static void buildControlFrame(uint8_t frame[LIN_CONTROL_FRAME_LEN], float setpointVoltage, bool charging) {
-	uint8_t setpointCode = charging ? encodeSetpointCode6(setpointVoltage) : 0x00;
+	uint8_t setpointCode = charging ? encodeSetpointCode8(setpointVoltage) : 0x00;
 
 	uint8_t lrcRise = (uint8_t)clampF(0.0f, (float)engineConfiguration->m74_9LinLrcRiseCode, 15.0f);
 	uint8_t lrcCut  = (uint8_t)clampF(0.0f, (float)engineConfiguration->m74_9LinLrcCutCode, 15.0f);
-	uint8_t feedbackSel = (uint8_t)clampF(0.0f, (float)engineConfiguration->m74_9LinAltFeedbackSel, 7.0f);
 
 	frame[0] = setpointCode;
 	frame[1] = (uint8_t)((lrcCut << 4) | lrcRise);
-	frame[2] = 0x00;                        // excitation current limitation: no limit
-	frame[3] = (uint8_t)(feedbackSel & 0x07); // R selection, BZ/F/WB = 0
+	frame[2] = 0x1E;                        // excitation limitation 30 (stock default)
+	frame[3] = 0xFF;                        // RB invalid, BZ/F/WB = stock default
 }
 
 // ---------------------------------------------------------------------------
@@ -464,8 +465,8 @@ static void printLinAltState() {
 		offReason,
 		Sensor::getOrZero(SensorType::Rpm),
 		Sensor::getOrZero(SensorType::Map));
-	efiPrintf("linalt: target=%.1fV setpoint=%.1fV code6=%d minRpm=%d maxRpm=%d mapOffKpa=%d maxOff=%.1fs hold=%.1f/%.1fs",
-		tableTarget, lastSetpointVoltage, encodeSetpointCode6(lastSetpointVoltage),
+	efiPrintf("linalt: target=%.1fV setpoint=%.1fV code8=%d minRpm=%d maxRpm=%d mapOffKpa=%d maxOff=%.1fs hold=%.1f/%.1fs",
+		tableTarget, lastSetpointVoltage, encodeSetpointCode8(lastSetpointVoltage),
 		engineConfiguration->m74_9LinAltMinRpm,
 		engineConfiguration->m74_9LinAltMaxRpm,
 		engineConfiguration->m74_9LinAltMapOffKpa,
