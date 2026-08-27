@@ -8116,3 +8116,16 @@ The stock's default frame buffer parses cleanly as the Version-B layout:
 0xFF (RB invalid, BZ/F/WB defaults)]. Firmware now sends [setpoint8, LRC,
 0x1E, 0xFF] on 0x1D - the previous code6 frame read as ~11.6 V garbage on
 this scale. Status poll unchanged (0x08, 8 bytes).
+
+## 2026-08-27 - m74_9 LIN: correct frame still silent - status-id scan tooling
+
+The 0x1D control frame with the 8-bit setpoint (stock default bytes
+[0x98,0x3A,0x1E,0xFF] format) is still unanswered. The stock's frame-table
+region turned out to be 184-byte per-frame structs at 0x08048CC0 (index
+map at 0x08048C78, `mla r0, r0, #184` in the init fn), so the earlier
+2-byte {id,len} read was an artifact - the status id is NOT proven to be
+0x08. 'linpid <id>' now takes the RAW LIN id and computes the standard PID
+(the stock's PID fn is the standard parity, verified by disasm), so all
+candidate status ids (L9918 TX family 0x0B/0x0C/0x0D/0x0E/0x0F/0x10/0x11/
+0x12/0x14/0x15/0x16/0x18/0x21 + 0x08) can be scanned live on the car in
+one flash. rxBytes >= 3 beyond the echo = the regulator answered.
