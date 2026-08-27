@@ -115,7 +115,11 @@ public:
 	 * @return the detached object pointer on success, or nullptr on timeout
 	 */
 	T* free(sysinterval_t timeout) {
-		chibios_rt::MutexLocker lock(mutex);
+		//chibios_rt::MutexLocker lock(mutex);
+		// Manually manipulate mutex
+		// Exiting the chCondWaitTimeout() function because a timeout does not re-acquire the
+		// mutex, the mutex ownership will be lost.
+		mutex.lock();
 
 		is_closing = true;
 
@@ -125,11 +129,18 @@ public:
 			sysinterval_t remaining = chTimeDiffX(chVTGetSystemTimeX(), deadline);
 
 			// TIMEOUT ENCOUNTERED HERE
-			if (remaining <= 0) {
+			if (remaining == 0) {
+				mutex.unlock();
 				return nullptr;
 			}
 
-			if (chCondWaitTimeoutS(&cond_var, remaining) != MSG_OK) {
+			msg_t ret = chCondWaitTimeout(&cond_var, remaining);
+			if (ret ==  MSG_TIMEOUT) {
+				// timeout does not re-acquire the mutex
+				return nullptr;
+			}
+			if (ret != MSG_OK) {
+				mutex.unlock();
 				return nullptr;
 			}
 		}
@@ -137,6 +148,7 @@ public:
 		// --- SAFE ZONE / FORCE ZONE ---
 		T* temp = resource;
 		resource = nullptr; // Immediately clear reference so incoming users get nullptr
+		mutex.unlock();
 		return temp;        // Return the pointer for deletion/deinit
 	}
 
