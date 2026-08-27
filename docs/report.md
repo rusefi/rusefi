@@ -8080,3 +8080,28 @@ linalt - at a true 19200 the 13-bit break reads ~677 us (1354 us = 9600).
 Plus 'linbrk double|single' (extended break) and 'linctl on|off' (poll-only
 mode) toggles to close the break-length and control-frame-poisoning
 hypotheses in one flash.
+
+## 2026-08-27 - m74_9 LIN ROOT CAUSE FOUND: wrong control id (0x16 -> 0x1D)
+
+Disassembled the stock LIN driver (0x8016778 frame-builder loop) and read
+its literal: the frame table IS at 0x08048CC1, 16 slots of 2 bytes
+{id, len|cx}, stride 2 (ldrb [r5, r4<<1] / ldrb [r5+2s+1]). Slots 2-5:
+{0x1D len 4 enhanced}, {0x08 len 8}, {0x16 len 6 enhanced}, {0x08 len 2}.
+The stock's PID function (0x80166e2) is the STANDARD LIN 2.x parity.
+
+L9918 datasheet (Table 11, 15 configs): NONE listen on 0x16/0x08. The
+control (Rx) frame is id 0x1D (29) = Rx_A/Rx_D, 4 bytes, in Version A/B/D.
+The stock's 0x1D len-4 TX frame matches Rx_A EXACTLY. The earlier
+"0x16 = alternator control" extraction was WRONG - 0x16 is an L9918 TX
+(slave->master) id (LIN2/LIN4 Version A Tx_3A), the regulator never
+listens on it. Everything we sent was correct EXCEPT the control id.
+
+L9918 Rx_A 4-byte layout (5.3.1.1): [0] A6 = setpoint code6 (bits 5:0);
+[1] B1 = LRC-rise (3:0) | C1 = LRC-cut (7:4); [2] D5 = excitation current
+limit (4:0); [3] R (2:0: 001=setpoint echo, 010=VB+, 011=Tjunction,
+100=rpm) | BZ (3) | F (6:4) | WB (7).
+
+Firmware changed: control id 0x16/6B -> 0x1D/4B (PID 0xDD computed by the
+same standard parity), enhanced checksum, L9918 Rx_A layout. Status poll
+stays on 0x08 (the stock's 8-byte RX frame - the actual chip is an
+L9918-family part whose TX is 0x08/8B, not the bare L9918).
