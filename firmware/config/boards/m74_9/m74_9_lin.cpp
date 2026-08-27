@@ -73,14 +73,14 @@ static constexpr int LIN_BAUD = 19200;
 // Frame identifiers
 // ---------------------------------------------------------------------------
 
-/* Control frame id: 0x1D (PID 0xDD by the standard parity the stock uses
- * - verified in the stock's own PID function at 0x80166e2). This is the
- * L9918 Rx_A/Rx_D control id (datasheet Table 11: Rx_A = 29 = 0x1D, 4
- * bytes), and the stock's frame table has exactly {0x1D, len 4, enhanced}
- * at slot 2 (0x08048CC5). The old 0x16/6-byte guess was WRONG - 0x16 is
- * an L9918 TX (slave->master) id, the regulator never listens on it.
- * Status stays on 0x08 (the stock's 8-byte RX frame, slot 3). */
-static constexpr uint8_t LIN_ID_ALTERNATOR_CONTROL = 0x1D; // PID 0xDD
+/* Control frame id: 0x29 (PID 0xE9, standard parity). This is the L9918
+ * Rx_B/Rx_A/Rx_D/Rx_F id for LIN1 (datasheet Table 16: "Identifiers: 0x29
+ * (LIN1)") - the ON-CAR scan proved the frame set: the regulator answers
+ * the identification frame on id 0x12 (Tx_1B, 2 data + classic checksum)
+ * with valid checksum. The earlier 0x1D guess was a decimal/hex misread
+ * (29 = 0x1D decimal, but the datasheet column is HEX). Switchable live:
+ * 'linctlid <id>'. Layout = Version B Rx (8-bit setpoint, Table 62). */
+static volatile uint8_t linControlId = 0x29; // PID 0xE9
 static constexpr uint8_t LIN_CONTROL_FRAME_LEN    = 4;
 static constexpr uint8_t LIN_STATUS_FRAME_LEN     = 8;
 
@@ -214,10 +214,10 @@ static uint8_t lastRxRaw[3 + LIN_STATUS_FRAME_LEN + 1];
 
 /* The status poll PID: computed with the STANDARD LIN parity (verified in
  * the stock's own PID function at 0x80166e2 - identical formula). Default
- * id 0x08 (the stock table's 8-byte RX frame). The actual regulator may
- * answer a different id (the L9918 family TX ids are 0x0B/0x0C/0x0F and
- * friends); 'linpid <id>' switches the poll id live on the car. */
-static volatile uint8_t linStatusPid = 0x08;
+ * id 0x12 - PROVEN live on the car (2026-08-27 scan: the regulator
+ * answered with 2 data bytes + valid classic checksum). 'linpid <id>'
+ * switches the poll id live. */
+static volatile uint8_t linStatusPid = 0x92; /* PID of id 0x12 */
 
 /* Control-frame checksum convention toggle: the stock frame-table bit said
  * enhanced (LIN 2.x, data only), but the extraction also notes the regulator
@@ -379,7 +379,7 @@ static void linAlternatorControlTick() {
 	// starts on the poll header's echo.
 	linDrainRx();
 	if (linSendControl) {
-		linSendFrame(LIN_ID_ALTERNATOR_CONTROL, frame, LIN_CONTROL_FRAME_LEN, /*classic*/linControlClassicCks);
+		linSendFrame(linControlId, frame, LIN_CONTROL_FRAME_LEN, /*classic*/linControlClassicCks);
 	}
 	memcpy(lastTxFrame, frame, sizeof(frame));
 	txFrameCount++;
@@ -401,14 +401,18 @@ static void linAlternatorControlTick() {
 		memcpy(lastRxRaw, buf, read);
 
 		lastRxValid = false;
-		if (read >= LIN_STATUS_FRAME_LEN + 1) {
-			const uint8_t* response = buf + read - (LIN_STATUS_FRAME_LEN + 1);
-			memcpy(lastRxData, response, LIN_STATUS_FRAME_LEN);
-			lastRxChecksum = response[LIN_STATUS_FRAME_LEN];
-			uint8_t expectedCks = linClassicChecksum(linStatusPid, response, LIN_STATUS_FRAME_LEN);
-			if (lastRxChecksum == expectedCks) {
+		if (read >= 3) {
+			/* L9918 Tx_1B-style response: 2 data bytes + classic checksum
+			 * (id 0x12, verified live on the car 2026-08-27). The echo is
+			 * 2-3 bytes, so the LAST 3 received bytes are the response. */
+			const uint8_t* tail = buf + read - 3;
+			uint8_t expectedCks = linClassicChecksum(linStatusPid, tail, 2);
+			if (tail[2] == expectedCks) {
 				lastRxValid = true;
 				rxFrameCount++;
+				lastRxData[0] = tail[0];
+				lastRxData[1] = tail[1];
+				lastRxChecksum = tail[2];
 			}
 		}
 	}
@@ -488,6 +492,12 @@ static void printLinAltState() {
 		lastRxData[4], lastRxData[5], lastRxData[6], lastRxData[7],
 		lastRxChecksum, lastRxValid ? "OK" : "BAD", (unsigned)rxFrameCount,
 		(unsigned)lastRxByteCount);
+	/* Tx_1B (id 0x12) content: [0] = AltS(3) | AltL(5), [1] = DieS(3) | DieL(5) */
+	if (lastRxValid) {
+		efiPrintf("linalt: altS=%d altL=%d dieS=%d dieL=%d",
+			lastRxData[0] >> 5, lastRxData[0] & 0x1F,
+			lastRxData[1] >> 5, lastRxData[1] & 0x1F);
+	}
 	efiPrintf("linalt: raw=%02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x",
 		lastRxRaw[0], lastRxRaw[1], lastRxRaw[2], lastRxRaw[3],
 		lastRxRaw[4], lastRxRaw[5], lastRxRaw[6], lastRxRaw[7],
@@ -570,8 +580,27 @@ void initM74_9LinAlternator() {
 		}
 		efiPrintf("linctl: control frame = %s", linSendControl ? "on" : "off");
 	});
+	addConsoleActionS("linctlid", [](const char* arg) {
+		uint8_t id = 0;
+		for (const char* p = (arg && *arg) ? arg : ""; *p; p++) {
+			id <<= 4;
+			char c = *p;
+			if ((c >= '0') && (c <= '9')) {
+				id |= (uint8_t)(c - '0');
+			} else if ((c >= 'a') && (c <= 'f')) {
+				id |= (uint8_t)(c - 'a' + 10);
+			} else if ((c >= 'A') && (c <= 'F')) {
+				id |= (uint8_t)(c - 'A' + 10);
+			} else {
+				efiPrintf("linctlid: bad hex byte '%s'", arg ? arg : "");
+				return;
+			}
+		}
+		linControlId = id & 0x3F;
+		efiPrintf("linctlid: control id 0x%02X -> PID 0x%02X", linControlId, linComputePid(linControlId));
+	});
 
-	efiPrintf("LIN alternator master: USART3 19200, control 0x1D/PID 0xDD (4B, enhanced, L9918 Rx_A layout), status PID 0xC8 stock-literal (switchable via 'linpid')");
+	efiPrintf("LIN alternator master: USART3 19200, control 0x29/PID 0xE9 (4B, enhanced, L9918 Rx_B), status 0x12/PID 0x92 (Tx_1B, 2B + classic)");
 }
 
 #endif // EFI_PROD_CODE
