@@ -928,15 +928,12 @@ public class ConfigFieldParserTest {
     }
 
     @Test
-    public void testStructTemplateMacroNameScaleIsSilentlyBroken() {
+    public void testStructTemplateMacroNameScaleResolvesThroughRegistry() {
         // Production rusefi_config.txt instantiates blend_table_s<BLEND_PRECISION> - a macro
-        // NAME, not a numeric literal like the tests above. The template machinery substitutes
-        // the name verbatim: the TS emitter's IniField.parseDouble silently falls back to 0
-        // (every board's ini has shipped all blend tables with multiplier 0 since June 2026,
-        // zeroing reads and corrupting writes - see the Kansas->Lima customer data loss), and
-        // the C header falls back to scale 1 (firmware precision degraded 0.1% -> 1%).
-        // GREEN against the current broken behavior on purpose: when template arguments are
-        // resolved through the variable registry, flip these to 10/1 scaled_channel and 0.1.
+        // NAME, not a numeric literal like the tests above. Template arguments must resolve
+        // through the variable registry before substitution; a verbatim name used to reach
+        // tsInfo, where the TS emitter degraded the multiplier to 0 and the C header to
+        // scale 1 (see the Kansas->Lima customer data loss).
         String test = "#define BLEND_PRECISION 0.1\n" +
                 "struct blend_table_s<TABLE_SCALE>\n" +
                 "\tint16_t[2 x 2] autoscale table;;\"\", @@TABLE_SCALE@@, 0, -100, 100, 1\n" +
@@ -950,10 +947,10 @@ public class ConfigFieldParserTest {
         TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
         state.readBufferedReader(test, cConsumer, tsProjectConsumer);
 
-        assertTrue(cConsumer.getContent().contains("scaled_channel<int16_t, 1, 1>"),
-            "macro-name scale currently degrades to 1 in C; a 10, 1 here means the generator is fixed - flip this test");
-        assertTrue(tsProjectConsumer.getContent().contains("ignBlends_table = array, S16, 0, [2x2], \"\", 0, 0, -100, 100, 1"),
-            "macro-name scale currently degrades to ts multiplier 0; 0.1 here means the generator is fixed - flip this test");
+        assertTrue(cConsumer.getContent().contains("scaled_channel<int16_t, 10, 1>"),
+            "macro-name scale must resolve to the #define value 0.1 -> scaled_channel<int16_t, 10, 1>");
+        assertTrue(tsProjectConsumer.getContent().contains("ignBlends_table = array, S16, 0, [2x2], \"\", 0.1, 0, -100, 100, 1"),
+            "macro-name scale must resolve to ts multiplier 0.1");
     }
 
     @Test
