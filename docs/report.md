@@ -8262,3 +8262,30 @@ Re-analysis of all trc captures + the firmware history:
   rpm-768, byte-exact vs stock at idle) - the needle must jump to
   ~800-900 at idle, confirming the cross-check model at idle; then
   flash mode 4 and check a held ~2500 rpm reads ~2500.
+
+## 2026-08-27 - m74_9 idle torque reserve via ignition advance (stock scheme, msq)
+
+User decision: the stock ECU regulates idle torque ONLY through ignition
+advance - fixed throttle blade, no rpm-target or air adders (fan, brake
+creep, electrical loads must not sag rpm). The architecture was already
+in the tune (useIdleTimingPidControl=yes, air RPM PID zeroed) but the
+reserve was EMPTY: idleAdvance base 26-30 deg at 700-1100 rpm vs
+idleTimingPid_maxValue +30 -> ~3 deg of headroom, so any load saturated
+the PID instantly; plus idleTimingPid_iFactor=0 (pure P -> permanent
+droop).
+
+msq changes (21129.msq):
+- idleAdvance 700/900/1100/1300: 30/26/27/27 -> 10/10/12/14 (retarded
+  base = reserve; 1600: 22 -> 20 for a smooth ramp, 400 stays 20 as the
+  dip floor).
+- idleTimingPid: max +30 -> +20 (total ceiling base 10 + 20 = 30 deg),
+  min -30 -> -10 (total floor 10 - 10 = 0 deg, never over-retard),
+  p 0.08 -> 0.15, i 0 -> 0.03, soft entry 3.0 -> 1.0 s.
+- Air loop untouched (idleRpmPid_* still zero, fan adders 0) per the
+  user's scheme. If timing-only (~15-20% torque) is not enough for the
+  stock brake-creep feel, the second layer is the air RPM PID with small
+  authority - same knobs.
+
+Also committed in this file (user's own console edits, part of the same
+work): alternatorVoltageTargetTable all 14.6 V, cltIdleCorrTable cold
+row +4%, postCrankingFactor tail columns zeroed.
