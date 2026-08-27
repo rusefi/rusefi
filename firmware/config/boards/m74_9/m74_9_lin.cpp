@@ -251,6 +251,21 @@ static volatile uint8_t linControlByte3 = 0x02;
 // Counters / timing
 static uint32_t txFrameCount = 0;
 static uint32_t rxFrameCount = 0;
+/* Status-poll outcome counters: the regulator answers only a fraction of
+ * polls (2026-08-27: ~4% - the rest echo-only or partial). Polls sent,
+ * full valid responses, partial (bytes beyond the echo but no valid cks)
+ * and no-response. Plus the response delay (header -> parse) of the last
+ * valid frame. */
+static uint32_t linPollCount = 0;
+static uint32_t linRespFull = 0;
+static uint32_t linRespPartial = 0;
+static uint32_t linRespNone = 0;
+static uint32_t lastRespDelayMs = 0;
+/* Tick parity: the control frame goes out every OTHER tick so the status
+ * poll on the alternating tick runs after a quiet ~100 ms window - the
+ * regulator seems to miss polls that follow the control frame too
+ * closely (its LIN block is busy processing the setpoint). */
+static uint32_t linTickCounter = 0;
 static float mapOffSeconds = 0.0f;
 static float offHoldSeconds = 0.0f;
 static const char* offReason = "enabled";
@@ -394,12 +409,17 @@ static void linAlternatorControlTick() {
 	// Transmit the control frame (enhanced checksum), then drain its own echo
 	// (9 bytes: sync + PID + 6 data + checksum) so the response read below
 	// starts on the poll header's echo.
+	linTickCounter++;
+	bool controlThisTick = linSendControl && ((linTickCounter & 1) == 0);
+
 	linDrainRx();
-	if (linSendControl) {
+	if (controlThisTick) {
 		linSendFrame(linControlId, frame, LIN_CONTROL_FRAME_LEN, /*classic*/linControlClassicCks);
 	}
 	memcpy(lastTxFrame, frame, sizeof(frame));
-	txFrameCount++;
+	if (controlThisTick) {
+		txFrameCount++;
+	}
 	linDrainRx();
 
 	// Poll the status response: send the 0x08 (PID 0x08) header, the
@@ -411,6 +431,7 @@ static void linAlternatorControlTick() {
 		linSendBreak();
 		uint8_t pollHeader[2] = { 0x55, linStatusPid };
 		chnWrite(linDriver, pollHeader, sizeof(pollHeader));
+		efitick_t tHeader = getTimeNowNt();
 
 		uint8_t buf[3 + LIN_STATUS_FRAME_LEN + 1]; // break echo + sync + PID + data + cks
 		size_t read = 0;
@@ -433,6 +454,16 @@ static void linAlternatorControlTick() {
 		}
 		lastRxByteCount = read;
 		memcpy(lastRxRaw, buf, read);
+
+		linPollCount++;
+		if (lastRxValid) {
+			linRespFull++;
+			lastRespDelayMs = (uint32_t)(NT2US(getTimeNowNt() - tHeader) / 1000);
+		} else if (read > 3) {
+			linRespPartial++;
+		} else {
+			linRespNone++;
+		}
 
 		lastRxValid = false;
 		if (read >= 3) {
@@ -533,6 +564,9 @@ static void printLinAltState() {
 			lastRxData[0] >> 5, lastRxData[0] & 0x1F,
 			lastRxData[1] >> 5, lastRxData[1] & 0x1F);
 	}
+	efiPrintf("linalt: polls=%u full=%u part=%u none=%u respMs=%u",
+		(unsigned)linPollCount, (unsigned)linRespFull, (unsigned)linRespPartial,
+		(unsigned)linRespNone, (unsigned)lastRespDelayMs);
 	efiPrintf("linalt: raw=%02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x",
 		lastRxRaw[0], lastRxRaw[1], lastRxRaw[2], lastRxRaw[3],
 		lastRxRaw[4], lastRxRaw[5], lastRxRaw[6], lastRxRaw[7],

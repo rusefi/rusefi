@@ -8184,3 +8184,12 @@ control frame = id 0x29, 4 bytes, 8-bit setpoint, CLASSIC checksum.
 Added 'linset <volts>' - runtime setpoint override (0 = back to the
 alternatorVoltageTargetTable) and made classic the default cks. The table
 field itself: array S16 @16264, [4x4], scale 0.1 (ini).
+
+## 2026-08-27 - m74_9 LIN: poll-outcome counters + control on alternate ticks
+
+The regulator answers only ~4% of polls (47/1174) - the misses correlate
+with polls sent right after the control frame (its LIN block busy with the
+setpoint). Changed: the control frame goes out every OTHER tick, so the
+status poll alternates with a quiet ~100 ms window; added poll outcome
+counters (full/partial/none) and the last response delay to linalt.
+Charging itself is unaffected (vbatt=14.17 following the 14.6 setpoint).
