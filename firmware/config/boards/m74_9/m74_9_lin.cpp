@@ -122,16 +122,38 @@ static uint8_t linEnhancedChecksum(const uint8_t* data, size_t len) {
 	return (uint8_t)~sum;
 }
 
+/* Break length toggle: SBK in LIN mode = exactly 13 bit times (the spec
+ * minimum). If the regulator's break detector is picky, a second break
+ * back-to-back gives it a longer dominant level (the ~1-bit recessive
+ * glitch between the two is legal - the slave re-arms on the second break).
+ * 'linbrk double|single'. */
+static volatile bool linDoubleBreak = false;
+
+/* Measured duration of the last transmitted break (us), from the SBK spin
+ * with the NT clock (4 MHz). At a TRUE 19200 baud a 13-bit break takes
+ * ~677 us; if the UART clock tree is off, this number exposes the real
+ * baud (e.g. ~1354 us = 9600) - the own echo CANNOT detect a baud error
+ * because TX and RX share the same clock. */
+static uint32_t lastBreakUs = 0;
+
 /**
  * Transmit a LIN break (dominant >= 13 bit times) using the hardware SBK.
  * Requires LINEN in the USART CR2 (set in the SerialConfig below).
  */
 static void linSendBreak() {
+	efitick_t t0 = getTimeNowNt();
 	SD3.usart->CR1 |= USART_CR1_SBK;
 	// SBK self-clears when the break completes (~700 us at 19200)
 	while (SD3.usart->CR1 & USART_CR1_SBK) {
 		// spin
 	}
+	if (linDoubleBreak) {
+		SD3.usart->CR1 |= USART_CR1_SBK;
+		while (SD3.usart->CR1 & USART_CR1_SBK) {
+			// spin
+		}
+	}
+	lastBreakUs = (uint32_t)NT2US(getTimeNowNt() - t0);
 }
 
 /**
@@ -198,6 +220,12 @@ static volatile uint8_t linStatusPid = 0xC8;
  * PIDs tested, regulator silent, echo clean, polarity verified non-inverting).
  * Runtime A/B on the car: 'linck classic' / 'linck enhanced'. */
 static volatile bool linControlClassicCks = false;
+
+/* Control-frame send toggle: 'linctl off' polls the status header WITHOUT
+ * sending the control frame first - isolates whether the control frame
+ * (wrong checksum/layout) poisons the schedule, or whether the regulator
+ * answers the poll unconditionally. */
+static volatile bool linSendControl = true;
 
 // Counters / timing
 static uint32_t txFrameCount = 0;
@@ -343,7 +371,9 @@ static void linAlternatorControlTick() {
 	// (9 bytes: sync + PID + 6 data + checksum) so the response read below
 	// starts on the poll header's echo.
 	linDrainRx();
-	linSendFrame(LIN_ID_ALTERNATOR_CONTROL, frame, LIN_CONTROL_FRAME_LEN, /*classic*/linControlClassicCks);
+	if (linSendControl) {
+		linSendFrame(LIN_ID_ALTERNATOR_CONTROL, frame, LIN_CONTROL_FRAME_LEN, /*classic*/linControlClassicCks);
+	}
 	memcpy(lastTxFrame, frame, sizeof(frame));
 	txFrameCount++;
 	linDrainRx();
@@ -435,12 +465,15 @@ static void printLinAltState() {
 		(float)engineConfiguration->m74_9LinAltMapOffMaxSeconds,
 		offHoldSeconds,
 		(float)engineConfiguration->m74_9LinOffHoldSeconds);
-	efiPrintf("linalt: lrcRise=%d lrcCut=%d fbSel=%d txFrames=%u ctlCks=%s",
+	efiPrintf("linalt: lrcRise=%d lrcCut=%d fbSel=%d txFrames=%u ctlCks=%s brk=%s ctl=%s brkUs=%u",
 		engineConfiguration->m74_9LinLrcRiseCode,
 		engineConfiguration->m74_9LinLrcCutCode,
 		engineConfiguration->m74_9LinAltFeedbackSel,
 		(unsigned)txFrameCount,
-		linControlClassicCks ? "classic" : "enhanced");
+		linControlClassicCks ? "classic" : "enhanced",
+		linDoubleBreak ? "double" : "single",
+		linSendControl ? "on" : "off",
+		(unsigned)lastBreakUs);
 	efiPrintf("linalt: tx=%02x %02x %02x %02x %02x %02x",
 		lastTxFrame[0], lastTxFrame[1], lastTxFrame[2],
 		lastTxFrame[3], lastTxFrame[4], lastTxFrame[5]);
@@ -507,6 +540,28 @@ void initM74_9LinAlternator() {
 			return;
 		}
 		efiPrintf("linck: control frame checksum = %s", linControlClassicCks ? "classic" : "enhanced");
+	});
+	addConsoleActionS("linbrk", [](const char* arg) {
+		if (rusefi::stringutil::strEqual(arg, "double")) {
+			linDoubleBreak = true;
+		} else if (rusefi::stringutil::strEqual(arg, "single")) {
+			linDoubleBreak = false;
+		} else {
+			efiPrintf("linbrk: use 'single' or 'double'");
+			return;
+		}
+		efiPrintf("linbrk: break = %s", linDoubleBreak ? "double (2x13b)" : "single (13b)");
+	});
+	addConsoleActionS("linctl", [](const char* arg) {
+		if (rusefi::stringutil::strEqual(arg, "off")) {
+			linSendControl = false;
+		} else if (rusefi::stringutil::strEqual(arg, "on")) {
+			linSendControl = true;
+		} else {
+			efiPrintf("linctl: use 'on' or 'off'");
+			return;
+		}
+		efiPrintf("linctl: control frame = %s", linSendControl ? "on" : "off");
 	});
 
 	efiPrintf("LIN alternator master: USART3 19200, control 0x16/PID 0xD6 (enhanced), status PID 0xC8 stock-literal (switchable via 'linpid', classic cks)");
