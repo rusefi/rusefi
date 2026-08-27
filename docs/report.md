@@ -8160,3 +8160,15 @@ steadily (frames=40, rx=32 01 cks=3A). Two issues:
   defaults: byte2 = 0x7F (max limit), byte3 = 0x02 (RB=2 Vmeas, WB=0).
   Live tuning switches added: 'linctl2 <hex>' / 'linctl3 <hex>', and the
   linalt first line now prints vbatt for the remote charging check.
+
+## 2026-08-27 - m74_9 LIN: charging restored (WB=1 was the killer), RX windows widened
+
+Remote verification (MCP over PCAN, engine idling): vbatt=13.9V rising -
+the corrected byte2/3 (0x7F excitation limit, 0x02 RB=2/WB=0) restored the
+charging that 0xFF (WB=1 = "regulation Without Battery") had killed. The
+regulator answers id 0x12 but intermittently: some polls get the full
+32 01 3A response, others only the first data byte (rxBytes=4 = echo + 32)
+- the answer sometimes starts tens of ms late, and the 30/10/10 ms read
+windows gave up mid-response. Windows widened to 50/20/20/20 ms (worst
+case ~130 ms per silent poll, tick period grows to ~230 ms - the regulator
+LIN COM timeout tolerates this easily).

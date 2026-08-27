@@ -412,10 +412,14 @@ static void linAlternatorControlTick() {
 		 * wake-up - with the slave response arriving right behind the echo
 		 * this split reads at 2 or 5 bytes and missed the trailing checksum
 		 * (the 2026-08-27 flaky frames: rxBytes=5, cks byte absent). Loop
-		 * until the full echo+response (>= 6 bytes) or an idle gap. */
-		for (int i = 0; (i < 3) && (read < 6); i++) {
+		 * until the full echo+response (>= 6 bytes) or an idle gap. The
+		 * follow-up windows are 20 ms because the regulator's answer
+		 * sometimes starts tens of ms late (observed on the car: the first
+		 * response byte arrives, then a long stall - a 10 ms follow-up
+		 * window gave up mid-response, rxBytes=4). */
+		for (int i = 0; (i < 5) && (read < 6); i++) {
 			size_t n = chnReadTimeout(linDriver, buf + read, sizeof(buf) - read,
-				(i == 0) ? TIME_MS2I(30) : TIME_MS2I(10));
+				(i == 0) ? TIME_MS2I(50) : TIME_MS2I(20));
 			if (n == 0) {
 				break;
 			}
