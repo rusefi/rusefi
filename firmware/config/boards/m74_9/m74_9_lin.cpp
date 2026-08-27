@@ -191,6 +191,14 @@ static uint8_t lastRxRaw[3 + LIN_STATUS_FRAME_LEN + 1];
  * switch for the on-car test: 'linpid 08' / 'linpid c8'. */
 static volatile uint8_t linStatusPid = 0xC8;
 
+/* Control-frame checksum convention toggle: the stock frame-table bit said
+ * enhanced (LIN 2.x, data only), but the extraction also notes the regulator
+ * speaks LIN 1.x classic. If the regulator rejects the control frame it may
+ * stay inactive and never answer the status poll at all (2026-08-27: both
+ * PIDs tested, regulator silent, echo clean, polarity verified non-inverting).
+ * Runtime A/B on the car: 'linck classic' / 'linck enhanced'. */
+static volatile bool linControlClassicCks = false;
+
 // Counters / timing
 static uint32_t txFrameCount = 0;
 static uint32_t rxFrameCount = 0;
@@ -335,7 +343,7 @@ static void linAlternatorControlTick() {
 	// (9 bytes: sync + PID + 6 data + checksum) so the response read below
 	// starts on the poll header's echo.
 	linDrainRx();
-	linSendFrame(LIN_ID_ALTERNATOR_CONTROL, frame, LIN_CONTROL_FRAME_LEN, /*classic*/false);
+	linSendFrame(LIN_ID_ALTERNATOR_CONTROL, frame, LIN_CONTROL_FRAME_LEN, /*classic*/linControlClassicCks);
 	memcpy(lastTxFrame, frame, sizeof(frame));
 	txFrameCount++;
 	linDrainRx();
@@ -427,11 +435,12 @@ static void printLinAltState() {
 		(float)engineConfiguration->m74_9LinAltMapOffMaxSeconds,
 		offHoldSeconds,
 		(float)engineConfiguration->m74_9LinOffHoldSeconds);
-	efiPrintf("linalt: lrcRise=%d lrcCut=%d fbSel=%d txFrames=%u",
+	efiPrintf("linalt: lrcRise=%d lrcCut=%d fbSel=%d txFrames=%u ctlCks=%s",
 		engineConfiguration->m74_9LinLrcRiseCode,
 		engineConfiguration->m74_9LinLrcCutCode,
 		engineConfiguration->m74_9LinAltFeedbackSel,
-		(unsigned)txFrameCount);
+		(unsigned)txFrameCount,
+		linControlClassicCks ? "classic" : "enhanced");
 	efiPrintf("linalt: tx=%02x %02x %02x %02x %02x %02x",
 		lastTxFrame[0], lastTxFrame[1], lastTxFrame[2],
 		lastTxFrame[3], lastTxFrame[4], lastTxFrame[5]);
@@ -487,6 +496,17 @@ void initM74_9LinAlternator() {
 		}
 		linStatusPid = v;
 		efiPrintf("linpid set to 0x%02x (status poll uses it from the next cycle)", (unsigned)v);
+	});
+	addConsoleActionS("linck", [](const char* arg) {
+		if (rusefi::stringutil::strEqual(arg, "classic")) {
+			linControlClassicCks = true;
+		} else if (rusefi::stringutil::strEqual(arg, "enhanced")) {
+			linControlClassicCks = false;
+		} else {
+			efiPrintf("linck: use 'classic' or 'enhanced'");
+			return;
+		}
+		efiPrintf("linck: control frame checksum = %s", linControlClassicCks ? "classic" : "enhanced");
 	});
 
 	efiPrintf("LIN alternator master: USART3 19200, control 0x16/PID 0xD6 (enhanced), status PID 0xC8 stock-literal (switchable via 'linpid', classic cks)");

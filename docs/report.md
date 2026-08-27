@@ -8043,3 +8043,20 @@ Next on the car: run linalt. If raw=55 C8 (2 bytes, no response) try
 'linpid 08' to close the A/B; if still silent the next suspects are the
 control-frame checksum convention (enhanced vs classic), the LRC/control
 payload layout and the CONFIG_REG4 ISO_SRC K-line config.
+
+## 2026-08-27 - m74_9 LIN: polarity verified, PID ruled out, control-frame checksum next
+
+On-car iteration:
+- raw echo = 00 55 C8 / 00 C8 with the engine running at 974-1808 rpm:
+  the full poll header (break+sync+PID) is visible on RX, PID 0xC8 confirmed
+  on the wire - regulator still silent (rxBytes 2-3, frames=0). The PID
+  hypothesis is CLOSED (0x08 and 0xC8 both tested).
+- readpin PD9 = 1 at idle: the K-line transceiver is NON-inverting (double
+  inversion ruled out) - the regulator sees the same clean signal we echo.
+- Remaining top suspect: the regulator rejects the CONTROL frame (checksum
+  convention: we send enhanced/LIN 2.x, the extraction also notes the
+  regulator speaks LIN 1.x classic) and stays inactive, never answering the
+  status poll. Added 'linck classic|enhanced' runtime toggle + ctlCks in the
+  linalt print. If classic does not wake it either: break length (SBK = 13
+  bits exactly, the spec minimum) and the provisional control payload layout
+  are next.
