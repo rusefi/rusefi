@@ -8145,3 +8145,18 @@ Remote PCAN scan on the running engine (MCP ecu server + linpid):
   runtime switch 'linctlid <id>'; status default 0x12/PID 0x92, parse =
   2 data + classic cks, decoded as altS/altL/dieS/dieL; 'linpid' still
   switches the poll id live.
+
+## 2026-08-27 - m74_9 LIN: link live, tuning the charging (WB=1 was killing it)
+
+Remote linalt on the car (MCP over PCAN): the regulator answers id 0x12
+steadily (frames=40, rx=32 01 cks=3A). Two issues:
+- RX read split: a single chnReadTimeout returned 2 or 5 bytes (the burst
+  available at first-byte wake-up) and missed the trailing checksum -
+  the parse flickered (rxBytes=5, BAD). Fixed with a read loop (30 ms first
+  wait, 10 ms follow-ups) until >= 6 bytes or an idle gap.
+- The user reports NO CHARGE with the accepted control frame [setpoint,
+  LRC, 0x1E, 0xFF]: 0xFF has WB=1 = L9918 "regulation Without Battery"
+  loop parameters, and 0x1E caps the excitation at 30 units. Corrected
+  defaults: byte2 = 0x7F (max limit), byte3 = 0x02 (RB=2 Vmeas, WB=0).
+  Live tuning switches added: 'linctl2 <hex>' / 'linctl3 <hex>', and the
+  linalt first line now prints vbatt for the remote charging check.

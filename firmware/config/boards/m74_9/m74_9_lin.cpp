@@ -233,6 +233,17 @@ static volatile bool linControlClassicCks = false;
  * answers the poll unconditionally. */
 static volatile bool linSendControl = true;
 
+/* Control frame bytes 2/3 - runtime switches: byte 2 = excitation current
+ * limitation (7 bits, Version B Rx), byte 3 = RB(2:0) | BZ(3) | F(6:4) |
+ * WB(7). The first live frame [.. 0x1E 0xFF] WAS accepted (the generator
+ * reacted - the user reports no charge) but 0xFF has WB=1 = the L9918
+ * "regulation Without Battery" loop parameters, and 0x1E caps the
+ * excitation at 30 units. Corrected defaults: 0x7F (max limit) and 0x02
+ * (RB=2 Vmeas feedback, WB=0 with-battery). Tune live on the car:
+ * 'linctl2 <hex>' / 'linctl3 <hex>'. */
+static volatile uint8_t linControlByte2 = 0x7F;
+static volatile uint8_t linControlByte3 = 0x02;
+
 // Counters / timing
 static uint32_t txFrameCount = 0;
 static uint32_t rxFrameCount = 0;
@@ -296,8 +307,8 @@ static void buildControlFrame(uint8_t frame[LIN_CONTROL_FRAME_LEN], float setpoi
 
 	frame[0] = setpointCode;
 	frame[1] = (uint8_t)((lrcCut << 4) | lrcRise);
-	frame[2] = 0x1E;                        // excitation limitation 30 (stock default)
-	frame[3] = 0xFF;                        // RB invalid, BZ/F/WB = stock default
+	frame[2] = linControlByte2;              // excitation limitation (7 bits)
+	frame[3] = linControlByte3;              // RB/BZ/F/WB
 }
 
 // ---------------------------------------------------------------------------
@@ -395,8 +406,21 @@ static void linAlternatorControlTick() {
 		uint8_t pollHeader[2] = { 0x55, linStatusPid };
 		chnWrite(linDriver, pollHeader, sizeof(pollHeader));
 
-		uint8_t buf[3 + LIN_STATUS_FRAME_LEN + 1]; // break echo + sync + PID + 8 data + cks
-		size_t read = chnReadTimeout(linDriver, buf, sizeof(buf), TIME_MS2I(30));
+		uint8_t buf[3 + LIN_STATUS_FRAME_LEN + 1]; // break echo + sync + PID + data + cks
+		size_t read = 0;
+		/* A single chnReadTimeout returns the burst available at first-byte
+		 * wake-up - with the slave response arriving right behind the echo
+		 * this split reads at 2 or 5 bytes and missed the trailing checksum
+		 * (the 2026-08-27 flaky frames: rxBytes=5, cks byte absent). Loop
+		 * until the full echo+response (>= 6 bytes) or an idle gap. */
+		for (int i = 0; (i < 3) && (read < 6); i++) {
+			size_t n = chnReadTimeout(linDriver, buf + read, sizeof(buf) - read,
+				(i == 0) ? TIME_MS2I(30) : TIME_MS2I(10));
+			if (n == 0) {
+				break;
+			}
+			read += n;
+		}
 		lastRxByteCount = read;
 		memcpy(lastRxRaw, buf, read);
 
@@ -463,11 +487,12 @@ static void printLinAltState() {
 	// verify that the alternatorVoltageTargetTable actually burned into the
 	// config (a fresh/unburned config reads the all-zero table as 0.0 V).
 	float tableTarget = alternatorTargetVoltage(Sensor::getOrZero(SensorType::Rpm));
-	efiPrintf("linalt: enabled=%s state=%s rpm=%.0f map=%.1f",
+	efiPrintf("linalt: enabled=%s state=%s rpm=%.0f map=%.1f vbatt=%.2fV",
 		engineConfiguration->m74_9LinAltEnabled ? "yes" : "no",
 		offReason,
 		Sensor::getOrZero(SensorType::Rpm),
-		Sensor::getOrZero(SensorType::Map));
+		Sensor::getOrZero(SensorType::Map),
+		Sensor::getOrZero(SensorType::BatteryVoltage));
 	efiPrintf("linalt: target=%.1fV setpoint=%.1fV code8=%d minRpm=%d maxRpm=%d mapOffKpa=%d maxOff=%.1fs hold=%.1f/%.1fs",
 		tableTarget, lastSetpointVoltage, encodeSetpointCode8(lastSetpointVoltage),
 		engineConfiguration->m74_9LinAltMinRpm,
@@ -507,6 +532,27 @@ static void printLinAltState() {
 // ---------------------------------------------------------------------------
 // Init
 // ---------------------------------------------------------------------------
+
+static uint8_t parseHexByte(const char* arg, uint8_t current) {
+	if (!arg || !*arg) {
+		return current;
+	}
+	uint8_t v = 0;
+	for (const char* p = arg; *p; p++) {
+		v <<= 4;
+		char c = *p;
+		if ((c >= '0') && (c <= '9')) {
+			v |= (uint8_t)(c - '0');
+		} else if ((c >= 'a') && (c <= 'f')) {
+			v |= (uint8_t)(c - 'a' + 10);
+		} else if ((c >= 'A') && (c <= 'F')) {
+			v |= (uint8_t)(c - 'A' + 10);
+		} else {
+			return current;
+		}
+	}
+	return v;
+}
 
 void initM74_9LinAlternator() {
 	// USART3, 19200 8N1, LIN mode (LINEN enables break detection + the SBK
@@ -598,6 +644,15 @@ void initM74_9LinAlternator() {
 		}
 		linControlId = id & 0x3F;
 		efiPrintf("linctlid: control id 0x%02X -> PID 0x%02X", linControlId, linComputePid(linControlId));
+	});
+	addConsoleActionS("linctl2", [](const char* arg) {
+		linControlByte2 = parseHexByte(arg, linControlByte2);
+		efiPrintf("linctl2: excitation limit byte = 0x%02X", linControlByte2);
+	});
+	addConsoleActionS("linctl3", [](const char* arg) {
+		linControlByte3 = parseHexByte(arg, linControlByte3);
+		efiPrintf("linctl3: RB/BZ/F/WB byte = 0x%02X (RB=%d WB=%d)",
+			linControlByte3, linControlByte3 & 7, (linControlByte3 >> 7) & 1);
 	});
 
 	efiPrintf("LIN alternator master: USART3 19200, control 0x29/PID 0xE9 (4B, enhanced, L9918 Rx_B), status 0x12/PID 0x92 (Tx_1B, 2B + classic)");
