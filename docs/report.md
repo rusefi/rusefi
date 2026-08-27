@@ -8105,3 +8105,14 @@ Firmware changed: control id 0x16/6B -> 0x1D/4B (PID 0xDD computed by the
 same standard parity), enhanced checksum, L9918 Rx_A layout. Status poll
 stays on 0x08 (the stock's 8-byte RX frame - the actual chip is an
 L9918-family part whose TX is 0x08/8B, not the bare L9918).
+
+## 2026-08-27 - m74_9 LIN: control layout fixed - 8-bit setpoint (Version B), not 6-bit
+
+L9918 datasheet: id 0x1D is used by Version B/D/E/F, whose Rx setpoint is
+8-bit (A8, Table 62 VSPFBK8B: V = 10.6 + code x 0.025; 0x98 = 14.4 V) -
+Version A (6-bit code6) lives on id 0x29, which the stock does NOT use.
+The stock's default frame buffer parses cleanly as the Version-B layout:
+[0x98 = 14.4 V, 0x3A (LRC rise 10/cut 3), 0x1E = 30 (excitation limit),
+0xFF (RB invalid, BZ/F/WB defaults)]. Firmware now sends [setpoint8, LRC,
+0x1E, 0xFF] on 0x1D - the previous code6 frame read as ~11.6 V garbage on
+this scale. Status poll unchanged (0x08, 8 bytes).
