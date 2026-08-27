@@ -6813,7 +6813,7 @@ struct blend_table_s_BLEND_PRECISION {
 	/**
 	 * offset 0
 	 */
-	scaled_channel<int16_t, 1, 1> table[BLEND_TABLE_COUNT][BLEND_TABLE_COUNT] = {};
+	scaled_channel<int16_t, 10, 1> table[BLEND_TABLE_COUNT][BLEND_TABLE_COUNT] = {};
 	/**
 	 * units: Load
 	 * offset 128
@@ -6855,7 +6855,7 @@ struct blend_table_s_TARGET_AFR_BLEND_PRECISION {
 	/**
 	 * offset 0
 	 */
-	scaled_channel<int16_t, 1, 1> table[BLEND_TABLE_COUNT][BLEND_TABLE_COUNT] = {};
+	scaled_channel<int16_t, 100, 1> table[BLEND_TABLE_COUNT][BLEND_TABLE_COUNT] = {};
 	/**
 	 * units: Load
 	 * offset 128
