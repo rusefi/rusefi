@@ -8060,3 +8060,23 @@ On-car iteration:
   linalt print. If classic does not wake it either: break length (SBK = 13
   bits exactly, the spec minimum) and the provisional control payload layout
   are next.
+
+## 2026-08-27 - m74_9 LIN: checksum ruled out, baud suspect (echo is baud-blind)
+
+User confirmed the regulator has power. Both control-frame checksum
+conventions tested on the running engine - still silent. Datasheet check
+(l9779wd-spi.txt, Table 39): VKOUTL row proves K_TX low -> K_LINE low
+(non-inverting TX); readpin PD9=1 + clean echo prove non-inverting RX -
+the regulator sees the same clean signal we echo.
+
+KEY INSIGHT: the own echo CANNOT reveal a baud error - TX and RX share the
+same UART clock, so the echo always self-parses. Everything verified so far
+(echo/polarity/PID/checksums) is baud-blind. If the AT32 USART clock tree
+gives anything but a true 19200, the regulator sees garbage break/frame
+timing and stays silent.
+
+Added: lastBreakUs measured around the SBK spin (NT clock) and printed in
+linalt - at a true 19200 the 13-bit break reads ~677 us (1354 us = 9600).
+Plus 'linbrk double|single' (extended break) and 'linctl on|off' (poll-only
+mode) toggles to close the break-length and control-frame-poisoning
+hypotheses in one flash.
