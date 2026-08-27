@@ -73,8 +73,15 @@ static constexpr int LIN_BAUD = 19200;
 // Frame identifiers
 // ---------------------------------------------------------------------------
 
-static constexpr uint8_t LIN_ID_ALTERNATOR_CONTROL = 0x16; // PID 0xD6, 6 bytes
-static constexpr uint8_t LIN_CONTROL_FRAME_LEN    = 6;
+/* Control frame id: 0x1D (PID 0xDD by the standard parity the stock uses
+ * - verified in the stock's own PID function at 0x80166e2). This is the
+ * L9918 Rx_A/Rx_D control id (datasheet Table 11: Rx_A = 29 = 0x1D, 4
+ * bytes), and the stock's frame table has exactly {0x1D, len 4, enhanced}
+ * at slot 2 (0x08048CC5). The old 0x16/6-byte guess was WRONG - 0x16 is
+ * an L9918 TX (slave->master) id, the regulator never listens on it.
+ * Status stays on 0x08 (the stock's 8-byte RX frame, slot 3). */
+static constexpr uint8_t LIN_ID_ALTERNATOR_CONTROL = 0x1D; // PID 0xDD
+static constexpr uint8_t LIN_CONTROL_FRAME_LEN    = 4;
 static constexpr uint8_t LIN_STATUS_FRAME_LEN     = 8;
 
 // ---------------------------------------------------------------------------
@@ -270,13 +277,15 @@ static uint8_t encodeSetpointCode6(float voltage) {
 // ---------------------------------------------------------------------------
 
 /**
- * Build the 6-byte control frame.  Layout is the VDA field order, PROVISIONAL
- * until the on-car capture confirms it (see the file header):
- *   [0] setpoint code6 (bits 0-5)
- *   [1] LRC-rise (bits 0-3) | LRC-cut (bits 4-7)
- *   [2] excitation current limit (0 = no limit)
- *   [3] R feedback selection (bits 0-2) | BZ (3) | F (4-6) | WB (7)
- *   [4..5] 0xFF padding
+ * Build the 4-byte control frame - L9918 Rx_A/Rx_D layout (datasheet
+ * 5.3.1.1, matches the stock's 0x1D len-4 TX frame):
+ *   [0] A6: setpoint code6 (bits 5:0), bits 7:6 don't care
+ *   [1] B1: LRC-rise (bits 3:0) | C1: LRC-cut (bits 7:4)
+ *   [2] D5: excitation current limitation (bits 4:0), 0 = no limit
+ *   [3] R: output selection for the status frame (bits 2:0:
+ *       001=setpoint echo, 010=VB+, 011=Tjunction, 100=rpm);
+ *       bit3 BZ (LRC blind zone), bits 6:4 F (setpoint limit), bit7 WB
+ *       all 0 like the stock steady state.
  */
 static void buildControlFrame(uint8_t frame[LIN_CONTROL_FRAME_LEN], float setpointVoltage, bool charging) {
 	uint8_t setpointCode = charging ? encodeSetpointCode6(setpointVoltage) : 0x00;
@@ -287,10 +296,8 @@ static void buildControlFrame(uint8_t frame[LIN_CONTROL_FRAME_LEN], float setpoi
 
 	frame[0] = setpointCode;
 	frame[1] = (uint8_t)((lrcCut << 4) | lrcRise);
-	frame[2] = 0x00;                       // excitation current limit: no limit
+	frame[2] = 0x00;                        // excitation current limitation: no limit
 	frame[3] = (uint8_t)(feedbackSel & 0x07); // R selection, BZ/F/WB = 0
-	frame[4] = 0xFF;
-	frame[5] = 0xFF;
 }
 
 // ---------------------------------------------------------------------------
@@ -474,9 +481,8 @@ static void printLinAltState() {
 		linDoubleBreak ? "double" : "single",
 		linSendControl ? "on" : "off",
 		(unsigned)lastBreakUs);
-	efiPrintf("linalt: tx=%02x %02x %02x %02x %02x %02x",
-		lastTxFrame[0], lastTxFrame[1], lastTxFrame[2],
-		lastTxFrame[3], lastTxFrame[4], lastTxFrame[5]);
+	efiPrintf("linalt: tx=%02x %02x %02x %02x",
+		lastTxFrame[0], lastTxFrame[1], lastTxFrame[2], lastTxFrame[3]);
 	efiPrintf("linalt: rx=%02x %02x %02x %02x %02x %02x %02x %02x cks=%02x %s frames=%u rxBytes=%u",
 		lastRxData[0], lastRxData[1], lastRxData[2], lastRxData[3],
 		lastRxData[4], lastRxData[5], lastRxData[6], lastRxData[7],
@@ -564,7 +570,7 @@ void initM74_9LinAlternator() {
 		efiPrintf("linctl: control frame = %s", linSendControl ? "on" : "off");
 	});
 
-	efiPrintf("LIN alternator master: USART3 19200, control 0x16/PID 0xD6 (enhanced), status PID 0xC8 stock-literal (switchable via 'linpid', classic cks)");
+	efiPrintf("LIN alternator master: USART3 19200, control 0x1D/PID 0xDD (4B, enhanced, L9918 Rx_A layout), status PID 0xC8 stock-literal (switchable via 'linpid')");
 }
 
 #endif // EFI_PROD_CODE
