@@ -8193,3 +8193,41 @@ setpoint). Changed: the control frame goes out every OTHER tick, so the
 status poll alternates with a quiet ~100 ms window; added poll outcome
 counters (full/partial/none) and the last response delay to linalt.
 Charging itself is unaffected (vbatt=14.17 following the 14.6 setpoint).
+
+## 2026-08-27 - m74_9 LIN: post-flash analysis of the poll counters (16:08 log)
+
+First live data from the alternate-tick build (eaea6891a2d) on the car:
+polls=270, full=27 (10%), part=50 (18.5%), none=193 (71.5%), respMs=69,
+txFrames=135 = polls/2 - the every-other-tick control send works exactly.
+
+Key findings:
+- Charging confirmed live: vbatt=14.16V at a 14.6V setpoint (control
+  frame A0 A5 7F 02 accepted). Regulation does NOT depend on the status
+  response - the setpoint rides on the control frame alone.
+- Every response that ARRIVES parses 100% (frames=27 == full=27): the
+  response is 2 data bytes + checksum 3A = ~(0x92+0x32+0x01), a
+  PID-inclusive sum (the code's "classic"). The 'BAD' label in the
+  linalt rx line refers ONLY to the LAST poll (2 echo bytes read), not
+  to the accumulated good frames - no checksum bug.
+- respMs=69: the regulator answers ~65-70 ms after the header. A LIN
+  slave must answer in-slot (~1-5 ms); 69 ms means the chip services the
+  LIN block on its own slow internal loop and answers only headers it
+  catches idle. Inter-byte gaps >20 ms truncate started responses
+  (part=50) against the 50+4x20 ms read window.
+- The tick period drifts: the thread sleeps 100 ms AFTER the tick, and
+  the tick itself blocks 0-130 ms on the reads -> real poll period
+  100-230 ms, sampling the chip's internal schedule at a drifting phase
+  - the likely reason only 10-28% of polls get any answer.
+- The raw= line mixes the current poll (2 echo bytes 00 92) with stale
+  bytes from the previous poll (92 32 01 3A = PID + data + cks) -
+  lastRxRaw is not zeroed between polls; rxBytes= belongs to the current
+  poll only.
+
+Open leads (analysis-first, no code yet per user request):
+- The stock polls status on id 0x08 (PID 0xC8), 8 data bytes (the
+  frame-table extraction) - we poll 0x12 (Tx_1B identification, 2
+  bytes). 'linpid 08' live test first; if it answers better, the parser
+  must handle an 8-byte response.
+- Slow the poll cadence (every 2nd/3rd tick) to give the chip's slow
+  LIN loop more quiet windows; or make the tick period deterministic
+  (sleep = 100 - tick duration) to stop the phase drift.
