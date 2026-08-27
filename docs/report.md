@@ -8129,3 +8129,19 @@ map at 0x08048C78, `mla r0, r0, #184` in the init fn), so the earlier
 candidate status ids (L9918 TX family 0x0B/0x0C/0x0D/0x0E/0x0F/0x10/0x11/
 0x12/0x14/0x15/0x16/0x18/0x21 + 0x08) can be scanned live on the car in
 one flash. rxBytes >= 3 beyond the echo = the regulator answered.
+
+## 2026-08-27 - m74_9 LIN BREAKTHROUGH: regulator answers id 0x12, control is 0x29
+
+Remote PCAN scan on the running engine (MCP ecu server + linpid):
+- id 0x12 answered: raw=00 55 92 32 01 3A -> echo + response 32 01 with
+  classic checksum 3A = ~(0x92+0x32+0x01) - VERIFIED on the car.
+- 0x12 = L9918 Tx Frame 1 version-B (Table 17: 0x12 (LIN1)) = the
+  identification frame (AltS/AltL/DieS/DieL).
+- The control id is therefore Rx_B = 0x29 (Table 16: 0x29 (LIN1)) - the
+  datasheet column is HEX; my decimal conversion (29 -> 0x1D) was the error
+  that cascaded through the last iterations. Tx_2B (0x15, the 4-byte
+  status) stayed silent because it waits for a valid control frame on 0x29.
+- Firmware: control id now 0x29/PID 0xE9 (4B, Version B 8-bit setpoint),
+  runtime switch 'linctlid <id>'; status default 0x12/PID 0x92, parse =
+  2 data + classic cks, decoded as altS/altL/dieS/dieL; 'linpid' still
+  switches the poll id live.
