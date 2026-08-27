@@ -576,3 +576,115 @@ Open follow-ups:
   picks up this change.
 - Optional future hardening: same-evaluated-unit check for expressions
   once an expression evaluator with ini context is available.
+
+## 2026-08-27 - Fix: "Grab baro value from MAP" latched 101.325 kPa (#9744)
+
+What was done:
+- Root-caused rusefi#9744: with `useFixedBaroCorrFromMap` enabled, barometric
+  pressure stayed at 101.325 kPa even though MAP reported ~95 kPa at key-on.
+- `initMapDecoder()` (controllers/sensors/impl/map.cpp) read
+  `Sensor::get(SensorType::MapSlow).value_or(STD_ATMOSPHERE)`. In
+  commonInitEngineController() `initNewSensors()` (engine_controller.cpp:440)
+  only *subscribes* slowMapSensor to the ADC; `initSensors()` ->
+  `initMapDecoder()` runs three lines later on the same thread, so no slow-ADC
+  callback has fired and MapSlow is always invalid. The `.value_or()` therefore
+  returned STD_ATMOSPHERE = 101.325, `validateBaroMap()` accepted it (plausible
+  range is 60..110 kPa), and `Sensor::setMockValue(BarometricPressure, ...)`
+  latched it permanently (`m_useMock` is sticky, sensor.cpp:19).
+- Deferred the grab to the slow callback:
+
+  | File | Change |
+  |---|---|
+  | controllers/sensors/impl/map.cpp | `initMapDecoder()` now only arms `baroFromMapPending` + resets a Timer; new `updateFixedBaroFromMap()` performs the grab |
+  | controllers/sensors/impl/map.h | declares `updateFixedBaroFromMap()` (reaches all TUs via pch -> allsensors.h) |
+  | controllers/algo/engine.cpp | calls it from `periodicSlowCallback()`, right after `updateSlowSensors()` |
+  | unit_tests/tests/sensor/test_baro_from_map.cpp | new, 5 tests |
+  | unit_tests/tests/tests.mk | registers the new test file |
+
+Key decisions and why:
+- One shot per valid sample: as soon as MapSlow becomes valid we validate and
+  either latch or disable, and never retry. Retrying would re-run
+  `validateBaroMap()` every slow callback and spam `warning()`.
+- Engine-turning guard (`Rpm > 0` -> give up): MAP only reads atmosphere with
+  the engine stopped, so a late first sample must not be trusted.
+- 3 s timeout -> one `OBD_Barometric_Press_Circ` warning, then give up. Covers
+  MAP not configured / sensor faulted, without waiting forever.
+- On any failure path we leave BarometricPressure *unregistered* rather than
+  mocking STD_ATMOSPHERE. That matches the pre-existing "the fixed baro
+  correction will be disabled" branch: `getBaroCorrection()` returns 1 when
+  `!hasSensor(BarometricPressure)` (fuel_math.cpp:457). It also makes the up-to
+  50 ms delay before the first grab harmless - correction is neutral meanwhile.
+- Not made an EngineModule: no TS page, and a two-line hook keeps the change
+  small. The pre-existing "TODO: do literally anything other than this" on the
+  setMockValue hack is left in place - out of scope here.
+
+Validation:
+- RED first (per .junie/guidelines.md "Bug Fix Process"), retrofitted: I wrote
+  fix and test together, which violates the mandated order, so I proved the
+  test's RED afterwards by temporarily restoring the pre-fix behaviour in
+  map.cpp. 4 of 5 tests failed, with the diagnostic literally reading
+  `Which is: 101.325` - the issue's symptom. Restored, all 5 pass.
+- Full suite after restore: 1198 tests / 236 suites, all pass.
+
+Environment notes (not repo changes):
+- This machine had no `make`/gcc on PATH, so `unit_tests/test.sh` fails with
+  `make: command not found`. Built with the MSYS2 UCRT64 toolchain by exporting
+  PATH=/c/msys64/ucrt64/bin:/c/msys64/usr/bin.
+- That GCC is 16.1.0 (much newer than CI) and rejects pre-existing
+  `unit_tests/mocks.cpp:38` (`MockAirmass::MockAirmass() :
+  AirmassVeModelBase(veTable)`) with `-Werror=maybe-uninitialized`. Worked
+  around on the command line only, via `make UDEFS='-Wno-error=maybe-uninitialized'`.
+  `UDEFS` is the free additive slot (rules.mk:53 `DEFS = $(DDEFS) $(UDEFS)`,
+  `UDEFS =` empty at unit_test_rules.mk:235). Do NOT use `DDEFS` for this - it
+  carries the real project `-D`s including `META_GENERATED_H_OVERRIDE`, and
+  overriding it from the command line breaks the whole build.
+
+Open follow-ups:
+- clang build of unit tests not verified: no clang in this environment (MSYS2
+  install has no clang64/ucrt64 clang). CLAUDE.md wants both compilers; left to CI.
+- `unit_tests/mocks.cpp:38` will need a real fix (or a targeted suppression)
+  whenever CI moves to GCC 16.
+- `useFixedBaroCorrFromMap` remains boot-only (unchanged by this fix):
+  `initMapDecoder()` is not re-run on Burn, so toggling it in TS still needs a
+  reboot. Not listed in the ini `requiresPowerCycle` set - candidate for
+  docs/hardware-reinit-and-power-cycle.md if it ever confuses someone.
+
+## 2026-08-27 - Review round on PR #10153 (baro from MAP)
+
+What was done:
+- Addressed both inline comments from dron0gus's CHANGES_REQUESTED review on
+  PR #10153 (the #9744 fix from the previous entry). No objection was raised to
+  the mechanism itself - deferring the grab to the slow callback, the
+  engine-turning guard and the timeout all stood.
+
+  | Comment | Change |
+  |---|---|
+  | "Making validateBaroMap() return SensorResult will simplify further code." | `validateBaroMap()` returns `SensorResult` instead of float-with-NaN-sentinel |
+  | "Print actual value instead of \"this\"?" | Confirmation message now carries the kPa value; the two prints collapsed to one per outcome |
+
+Key decisions and why:
+- Kept the parameter as `float` and changed only the return type. The caller
+  already validated the `SensorResult` from `Sensor::get(MapSlow)` before
+  calling, so taking a `SensorResult` in would just move the same check around.
+  The `std::isnan()` guard inside stays - it is now the only NaN handling left.
+- Dropped the pre-validation `"Get initial baro MAP pressure = %.2fkPa"` line.
+  With the value printed in both outcome messages (and `validateBaroMap()`
+  already warning with the value on rejection) it carried no information that
+  is not printed elsewhere, and it read as a success line even when the value
+  was about to be rejected.
+- Both findings were in code carried over unchanged from the original
+  implementation rather than written fresh for the fix - worth noting as a
+  pattern: moving code into a new function is a good moment to clean up its
+  idioms, not just relocate them.
+
+Validation:
+- Build on master base: 0 errors. Full suite 1201 tests / 237 suites, all pass,
+  BaroFromMap 5/5.
+- CI on the previous commit (4173a63ed6) was fully green: 64 checks, 0 failures,
+  including `build (macos-latest)` - which closes the "clang not verified"
+  follow-up from the previous entry - plus `build (ubuntu-latest)`,
+  `clang-format`, and `hardware-ci` on f407-discovery and nucleo_f767.
+
+Open follow-ups:
+- `unit_tests/mocks.cpp:38` still trips GCC 16's `-Wmaybe-uninitialized`; only
+  a local concern until CI moves to that compiler (see previous entry).
