@@ -8231,3 +8231,34 @@ Open leads (analysis-first, no code yet per user request):
 - Slow the poll cadence (every 2nd/3rd tick) to give the chip's slow
   LIN loop more quiet windows; or make the tick period deterministic
   (sleep = 100 - tick duration) to stop the phase drift.
+
+## 2026-08-27 - m74_9 dash tach: 0x0186[4] is a plausibility cross-check, not the needle
+
+Symptom: at 800-900 idle the dash tach showed 100-200 (new firmware),
+and earlier at a real 2500 it showed 700-800 (old firmware).
+
+Re-analysis of all trc captures + the firmware history:
+- The stock byte 0x0186[4] = rpm - 768 EXACTLY across the full captured
+  range (702-912 rpm, slope 1.0, three files): 775->0x07, 800->0x20,
+  889->0x79, rest = 0x20. No capture exceeds 912 rpm, so the high-rpm
+  byte was previously unproven.
+- The dash needle follows the 16-bit rpm fields (0x0189[0:1] = rpm*16
+  BE, same in 0x0186[2:3]/0x018A[0:1]); byte 4 is a PLAUSIBILITY
+  CROSS-CHECK. When it diverges from the cluster's own rpm estimate,
+  the cluster ignores/holds the needle (stale or limp value).
+- Evidence: old firmware (clamp(rpm-768)) read correctly at idle (byte
+  82 = 850-768 passes) but failed at 2500 (saturated 255 vs the stock's
+  wrapped 196) -> needle held at ~700-800. The rpm/16-18 default failed
+  at idle (byte 35 vs 82) -> needle held at ~100-200. No simple
+  needle = f(byte4) formula fits all observations; the cross-check
+  model fits every one.
+- Fix: new default tach mode 4 = (uint8_t)(int32_t)(rpm - 768.0f) -
+  the stock formula with u8 wrap-around (196 at 2500). The float->uint8
+  direct cast would be UB for negative rpm, so it goes through int32.
+  Old modes 0-3 stay switchable live via 'cantach <0..4>' for the
+  on-car A/B. Built: m74_9 compile passes, fresh
+  firmware/build/rusefi.srec ready to flash.
+- To validate on the car WITHOUT flashing first: 'cantach 1' (clamped
+  rpm-768, byte-exact vs stock at idle) - the needle must jump to
+  ~800-900 at idle, confirming the cross-check model at idle; then
+  flash mode 4 and check a held ~2500 rpm reads ~2500.

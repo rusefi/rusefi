@@ -171,19 +171,32 @@ static inline uint16_t encodeFuelFlowMlPerHour() {
 }
 
 /**
- * Dash tach byte - 0x0186 byte 4. Stock fit (orig_1/2/3): 0x20 at the
- * 800 rpm rest/idle baseline, 0x33-0x35 at the ~1100 rpm rev blip.
- * The bench captures never exceed ~915 rpm, so the dash's real scale above
- * idle is a guess - the encoding is switchable on the car with 'cantach'
- * until the needle agrees with the console rpm at a known engine speed.
+ * Dash tach byte - 0x0186 byte 4. Stock fit (orig_1/2/3): tach = rpm - 768
+ * EXACTLY (slope 1.0 across every captured point, 702-912 rpm): 775 -> 0x07,
+ * 800 -> 0x20, 889 -> 0x79; 0x20 at rest (800 rpm baseline).
+ *
+ * The dash needle itself follows the 16-bit rpm fields (0x0189[0:1] =
+ * rpm*16); byte 4 is a PLAUSIBILITY CROSS-CHECK: the cluster compares it
+ * against its own rpm estimate and ignores/holds the needle when it
+ * diverges. Evidence (on the car): the old clamp(rpm-768) firmware read
+ * correctly at idle but showed ~700-800 at a real 2500 (byte saturated at
+ * 255 vs the stock's wrapped 196); the rpm/16-18 default showed ~100-200
+ * at idle (byte 35 vs the stock's 82). Sending the stock formula for the
+ * whole range keeps the check passing and the needle live.
+ *
+ * Mode 4 = the stock formula with u8 wrap-around ((uint8_t)(int32_t)
+ * (rpm - 768)) - at 2500 rpm it wraps to 196, matching what a C-compiled
+ * stock ECU computes. Modes 0-3 are the old on-car A/B candidates, kept
+ * behind 'cantach' until mode 4 is validated on the road.
  */
-static int s_tachEncoding = 0;
+static int s_tachEncoding = 4;
 
 static const char* tachEncodingDescription(int mode) {
 	switch (mode) {
-		case 1: return "rpm - 768 (caps at 1023)";
+		case 1: return "rpm - 768 clamped (caps at 1023, old)";
 		case 2: return "rpm/8 - 68 (caps at 2584)";
 		case 3: return "rpm/32 + 7 (covers ~7900)";
+		case 4: return "rpm - 768, u8 wrap (stock formula)";
 		default: return "rpm/16 - 18 (capture fit, caps at ~4368)";
 	}
 }
@@ -198,20 +211,21 @@ static uint8_t encodeTachByte(float rpm) {
 		case 1: return (uint8_t)clampF(0.0f, rpm - 768.0f, 255.0f);
 		case 2: return (uint8_t)clampF(0.0f, rpm / 8.0f - 68.0f, 255.0f);
 		case 3: return (uint8_t)clampF(0.0f, rpm / 32.0f + 7.0f, 255.0f);
+		case 4: return (uint8_t)(int32_t)(rpm - 768.0f); // u8 wrap, stock formula
 		default: return (uint8_t)clampF(0.0f, rpm / 16.0f - 18.0f, 255.0f);
 	}
 }
 
 static void setTachEncoding(const char* arg) {
 	if (arg == nullptr || arg[0] == 0) {
-		efiPrintf("cantach: current=%d (%s). 0=rpm/16-18 1=rpm-768 2=rpm/8-68 3=rpm/32+7",
+		efiPrintf("cantach: current=%d (%s). 0=rpm/16-18 1=rpm-768clamp 2=rpm/8-68 3=rpm/32+7 4=rpm-768wrap",
 			s_tachEncoding, tachEncodingDescription(s_tachEncoding));
 		return;
 	}
 
 	int mode = atoi(arg);
-	if (mode < 0 || mode > 3) {
-		efiPrintf("cantach: bad mode %d (0..3)", mode);
+	if (mode < 0 || mode > 4) {
+		efiPrintf("cantach: bad mode %d (0..4)", mode);
 		return;
 	}
 
