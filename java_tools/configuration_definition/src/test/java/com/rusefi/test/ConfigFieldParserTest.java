@@ -928,6 +928,35 @@ public class ConfigFieldParserTest {
     }
 
     @Test
+    public void testStructTemplateMacroNameScaleIsSilentlyBroken() {
+        // Production rusefi_config.txt instantiates blend_table_s<BLEND_PRECISION> - a macro
+        // NAME, not a numeric literal like the tests above. The template machinery substitutes
+        // the name verbatim: the TS emitter's IniField.parseDouble silently falls back to 0
+        // (every board's ini has shipped all blend tables with multiplier 0 since June 2026,
+        // zeroing reads and corrupting writes - see the Kansas->Lima customer data loss), and
+        // the C header falls back to scale 1 (firmware precision degraded 0.1% -> 1%).
+        // GREEN against the current broken behavior on purpose: when template arguments are
+        // resolved through the variable registry, flip these to 10/1 scaled_channel and 0.1.
+        String test = "#define BLEND_PRECISION 0.1\n" +
+                "struct blend_table_s<TABLE_SCALE>\n" +
+                "\tint16_t[2 x 2] autoscale table;;\"\", @@TABLE_SCALE@@, 0, -100, 100, 1\n" +
+                "end_struct\n" +
+                "struct_no_prefix engine_configuration_s\n" +
+                "blend_table_s<BLEND_PRECISION> ignBlends\n" +
+                "end_struct\n";
+
+        ReaderStateImpl state = new ReaderStateImpl();
+        BaseCHeaderConsumer cConsumer = new BaseCHeaderConsumer();
+        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
+        state.readBufferedReader(test, cConsumer, tsProjectConsumer);
+
+        assertTrue(cConsumer.getContent().contains("scaled_channel<int16_t, 1, 1>"),
+            "macro-name scale currently degrades to 1 in C; a 10, 1 here means the generator is fixed - flip this test");
+        assertTrue(tsProjectConsumer.getContent().contains("ignBlends_table = array, S16, 0, [2x2], \"\", 0, 0, -100, 100, 1"),
+            "macro-name scale currently degrades to ts multiplier 0; 0.1 here means the generator is fixed - flip this test");
+    }
+
+    @Test
     public void testStructTemplateWrongArgCount() {
         String test = "struct blend_table_s<TABLE_SCALE, OTHER_SCALE>\n" +
                 "\tint16_t[2 x 2] autoscale table;;\"\", @@TABLE_SCALE@@, 0, -100, 100, 1\n" +
