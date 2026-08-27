@@ -63,22 +63,63 @@ static void printMAPInfo() {
 }
 #endif /* EFI_PROD_CODE */
 
-void initMapDecoder() {
-	if (engineConfiguration->useFixedBaroCorrFromMap) {
-		// Read initial MAP sensor value and store it for Baro correction.
-		float storedInitialBaroPressure = Sensor::get(SensorType::MapSlow).value_or(STD_ATMOSPHERE);
-		efiPrintf("Get initial baro MAP pressure = %.2fkPa", storedInitialBaroPressure);
-		// validate if it's within a reasonable range (the engine should not be spinning etc.)
-		storedInitialBaroPressure = validateBaroMap(storedInitialBaroPressure);
-		if (!std::isnan(storedInitialBaroPressure)) {
-			efiPrintf("Using this fixed MAP pressure to override the baro correction!");
+// How long after start-up we keep waiting for the first valid MAP sample before giving up on
+// the "grab baro value from MAP" feature. The slow MAP channel is sampled at 100Hz, so this is
+// only about tolerating a slow ADC/sensor start-up, not about a running engine.
+static constexpr float baroFromMapTimeoutSec = 3;
 
-			// TODO: do literally anything other than this
-			Sensor::setMockValue(SensorType::BarometricPressure, storedInitialBaroPressure);
-		} else {
-			efiPrintf("The baro pressure is invalid. The fixed baro correction will be disabled!");
-		}
+static bool baroFromMapPending = false;
+static Timer baroFromMapTimer;
+
+/**
+ * Latch the current MAP reading as the fixed barometric pressure.
+ *
+ * This has to happen from the slow callback and not from initMapDecoder(): sensors are registered
+ * just a few instructions earlier, so at init time the ADC has not delivered a single MAP sample
+ * yet and MapSlow is still invalid. Defaulting to STD_ATMOSPHERE back then latched 101.325kPa
+ * forever, no matter what the MAP sensor reported a moment later - see #9744.
+ */
+void updateFixedBaroFromMap() {
+	if (!baroFromMapPending) {
+		return;
 	}
+
+	// MAP only reads atmospheric pressure while the engine is not turning
+	if (Sensor::getOrZero(SensorType::Rpm) > 0) {
+		baroFromMapPending = false;
+		efiPrintf("Engine started before a valid MAP sample, the fixed baro correction will be disabled!");
+		return;
+	}
+
+	SensorResult mapKPa = Sensor::get(SensorType::MapSlow);
+	if (!mapKPa) {
+		if (baroFromMapTimer.hasElapsedSec(baroFromMapTimeoutSec)) {
+			baroFromMapPending = false;
+			warning(ObdCode::OBD_Barometric_Press_Circ, "No valid MAP sample for start-up baro pressure");
+		}
+		return;
+	}
+
+	// whatever this sample says, we only get one shot at it
+	baroFromMapPending = false;
+
+	efiPrintf("Get initial baro MAP pressure = %.2fkPa", mapKPa.Value);
+	// validate if it's within a reasonable range (the engine should not be spinning etc.)
+	float storedInitialBaroPressure = validateBaroMap(mapKPa.Value);
+	if (!std::isnan(storedInitialBaroPressure)) {
+		efiPrintf("Using this fixed MAP pressure to override the baro correction!");
+
+		// TODO: do literally anything other than this
+		Sensor::setMockValue(SensorType::BarometricPressure, storedInitialBaroPressure);
+	} else {
+		efiPrintf("The baro pressure is invalid. The fixed baro correction will be disabled!");
+	}
+}
+
+void initMapDecoder() {
+	// the actual grab is deferred to updateFixedBaroFromMap(), MAP has no valid sample yet
+	baroFromMapPending = engineConfiguration->useFixedBaroCorrFromMap;
+	baroFromMapTimer.reset();
 
 #if EFI_PROD_CODE
 	addConsoleAction("mapinfo", printMAPInfo);
@@ -88,6 +129,9 @@ void initMapDecoder() {
 #else /* EFI_ANALOG_SENSORS */
 
 void initMapDecoder() {
+}
+
+void updateFixedBaroFromMap() {
 }
 
 #endif /* EFI_ANALOG_SENSORS */
