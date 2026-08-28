@@ -14,7 +14,7 @@ static void runPolledBinaryLog(const char* filename) {
 	engineConfiguration->camInputs[0] = Gpio::A0;
 	engineConfiguration->vvtMode[0] = VVT_POLLED_BINARY;
 	engineConfiguration->engineSyncCam = static_cast<engineSyncCam_e>(0); // intake first bank
-	engineConfiguration->binarySyncRemainderOffset = 0;
+	engineConfiguration->binarySyncRemainderOffset = 3; // 360° offset for 6-divider (3-tooth crank)
 
 	engineConfiguration->useNoiselessTriggerDecoder = false;
 	engineConfiguration->triggerMinPulseWidthPercent = 5;
@@ -31,6 +31,9 @@ static void runPolledBinaryLog(const char* filename) {
 	float firstRpm = 0;
 	float firstRpmAt = 0;
 	float firstCamSyncTime = 0;
+	bool prevShaftSync = false;
+	int syncLossCount = 0;
+	int prevPhaseResync = 0;
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
 
@@ -44,6 +47,25 @@ static void runPolledBinaryLog(const char* filename) {
 			firstCamSyncTime = getTimeNowUs() / 1'000'000.0f;
 			firstCamSync = true;
 		}
+		bool curShaftSync = engine->triggerCentral.triggerState.getShaftSynchronized();
+		if (prevShaftSync && !curShaftSync) {
+			syncLossCount++;
+			printf("CRANK SYNC LOSS #%d at %.6f s, rpm=%.1f, counter=%d\n",
+				syncLossCount,
+				getTimeNowUs() / 1'000'000.0f,
+				rpm,
+				engine->triggerCentral.triggerState.getSynchronizationCounter());
+		}
+		prevShaftSync = curShaftSync;
+		int curPhaseResync = engine->triggerCentral.triggerState.phaseResyncCounter;
+		if (curPhaseResync > prevPhaseResync) {
+			printf("PHASE RESYNC #%d at %.6f s, rpm=%.1f, counter=%d\n",
+				curPhaseResync,
+				getTimeNowUs() / 1'000'000.0f,
+				rpm,
+				engine->triggerCentral.triggerState.getSynchronizationCounter());
+		}
+		prevPhaseResync = curPhaseResync;
 	}
 
 	printf("POLLED BINARY, %f at %f, %f s, %d, %d, %d, %s\n",
