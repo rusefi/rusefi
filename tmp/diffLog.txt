@@ -1,0 +1,1721 @@
+diff --git a/.github/workflows/hw-ci/gethla b/.github/workflows/hw-ci/gethla
+--- a/.github/workflows/hw-ci/gethla
++++ b/.github/workflows/hw-ci/gethla
+@@ -1 +1 @@
+-Subproject commit 27a03eff2d5df85799469b9cdc183539697b4a76
++Subproject commit 27a03eff2d5df85799469b9cdc183539697b4a76-dirty
+diff --git a/firmware/ChibiOS b/firmware/ChibiOS
+--- a/firmware/ChibiOS
++++ b/firmware/ChibiOS
+@@ -1 +1 @@
+-Subproject commit c43c9fb2fffb20fb1d6055403c431c8e77d713da
++Subproject commit c43c9fb2fffb20fb1d6055403c431c8e77d713da-dirty
+diff --git a/firmware/ChibiOS-Contrib b/firmware/ChibiOS-Contrib
+--- a/firmware/ChibiOS-Contrib
++++ b/firmware/ChibiOS-Contrib
+@@ -1 +1 @@
+-Subproject commit 7f6678f2c6a7a7dfd4a918162102c336d4db1735
++Subproject commit 7f6678f2c6a7a7dfd4a918162102c336d4db1735-dirty
+diff --git a/firmware/console/binary/output_channels.txt b/firmware/console/binary/output_channels.txt
+index 38a04166511..84328cddaa7 100644
+--- a/firmware/console/binary/output_channels.txt
++++ b/firmware/console/binary/output_channels.txt
+@@ -97,9 +97,9 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
+ 	int16_t autoscale wallFuelCorrectionValue;@@GAUGE_NAME_FUEL_WALL_CORRECTION@@;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 3
+ 
+ ! Flex fuel transient compensation multipliers (1.0 = neutral)
+-	uint16_t autoscale flexAeMultiplier;Flex: AE multiplier;"mult", 0.001, 0, 0, 5, 3
+-	uint16_t autoscale flexWwTauMultiplier;Flex: WW tau multiplier;"mult", 0.001, 0, 0, 5, 3
+-	uint16_t autoscale flexWwBetaMultiplier;Flex: WW beta multiplier;"mult", 0.001, 0, 0, 5, 3
++	uint16_t autoscale flexAeMultiplier;Flex: AE multiplier;"factor", 0.001, 0, 0, 5, 3
++	uint16_t autoscale flexWwTauMultiplier;Flex: WW tau multiplier;"factor", 0.001, 0, 0, 5, 3
++	uint16_t autoscale flexWwBetaMultiplier;Flex: WW beta multiplier;"factor", 0.001, 0, 0, 5, 3
+ 
+ 	uint16_t revolutionCounterSinceStart;;"",1, 0, 0, 0, 0
+ 
+@@ -120,7 +120,7 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
+ 
+ 	int16_t autoscale TPS2Value;@@GAUGE_NAME_TPS2@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
+ 	uint16_t tuneCrc16;@@GAUGE_NAME_TUNE_CRC16@@;"crc16", 1, 0, 0, 0, 0
+-	uint16_t autoscale veValue;@@GAUGE_NAME_FUEL_VE@@;"ratio",{1/10}, 0, 0, 0, 1
++	uint16_t autoscale veValue;@@GAUGE_NAME_FUEL_VE@@;"factor",{1/10}, 0, 0, 0, 1
+ 
+ ! integration magic: TS requires exact 'seconds' name
+ 	uint32_t seconds;@@GAUGE_NAME_UPTIME@@;"sec", 1, 0, 0, 0, 0
+@@ -164,7 +164,7 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
+ 	uint8_t idleStepperTargetPosition;Idle: Stepper target position;"", 1, 0, 0, 0, 0
+ 
+ ! Errors
+-	uint32_t totalTriggerErrorCounter;@@GAUGE_NAME_TRG_ERR@@;"counter",1, 0, 0, 0, 0
++	uint32_t totalTriggerErrorCounter;@@GAUGE_NAME_TRG_ERR@@;"count",1, 0, 0, 0, 0
+ 	uint32_t orderingErrorCounter;;"",1, 0, 0, 0, 0
+ 
+ 	uint16_t warningCounter;@@GAUGE_NAME_WARNING_COUNTER@@;"count",1, 0, 0, 0, 0
+@@ -230,7 +230,7 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
+ 	int16_t autoscale gyroYaw;@@GAUGE_NAME_GYRO_YAW@@;"deg/sec",{1/1000}, 0, 0, 0, 0
+ 
+ 	int8_t[4 iterate] vvtTargets;;"deg",1, 0, 0, 0, 0
+-	uint16_t turboSpeed;@@GAUGE_NAME_TURBO_SPEED@@;"hz",1, 0, 0, 0, 0
++	uint16_t turboSpeed;@@GAUGE_NAME_TURBO_SPEED@@;"Hz",1, 0, 0, 0, 0
+ 
+ 	int16_t[MAX_CYLINDER_COUNT iterate] autoscale ignitionAdvanceCyl;Ign: Timing Cyl;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 1
+ 
+@@ -254,7 +254,7 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
+ 	int8_t fuelCutReason;Fuel: Cut Code;"code",1, 0, 0, 0, 0
+ 
+ 	uint16_t autoscale mafEstimate;@@GAUGE_NAME_AIR_FLOW_ESTIMATE@@;"kg/h",{1/@@PACK_MULT_MASS_FLOW@@}, 0, 0, 0, 0
+-	uint16_t instantRpm;sync: instant RPM;"rpm", 1, 0, 0, 0, 0
++	uint16_t instantRpm;sync: instant RPM;"RPM", 1, 0, 0, 0, 0
+ 
+ 	uint16_t autoscale rawMap;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
+ 	uint16_t autoscale rawMapFast;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
+diff --git a/firmware/controllers/actuators/boost_control.txt b/firmware/controllers/actuators/boost_control.txt
+index c0382280b64..c4a5fccaab5 100644
+--- a/firmware/controllers/actuators/boost_control.txt
++++ b/firmware/controllers/actuators/boost_control.txt
+@@ -12,15 +12,15 @@ bit mapTooLow
+ bit isPlantValid
+ bit isBoostControlled
+ 
+-    int16_t autoscale luaTargetAdd;"Boost: Lua target add";"percent", 0.5,0, -100,100, 1, @@GAUGE_CATEGORY_BOOST_CONTROL@@
++    int16_t autoscale luaTargetAdd;"Boost: Lua target add";"%", 0.5,0, -100,100, 1, @@GAUGE_CATEGORY_BOOST_CONTROL@@
+     float luaTargetMult;"Boost: Lua target mult";"", 1,0, -100,100, 1, @@GAUGE_CATEGORY_BOOST_CONTROL@@
+     int16_t autoscale boostControlTarget;@@GAUGE_NAME_BOOST_TARGET@@;"kPa",{1/@@PACK_MULT_PRESSURE@@},0, 0, 300, 1, @@GAUGE_CATEGORY_BOOST_CONTROL@@
+ 
+-    float openLoopPart;@@GAUGE_NAME_BOOST_OPEN_LOOP@@;"percent", 1,0, -100,100, 1, @@GAUGE_CATEGORY_BOOST_CONTROL@@
++    float openLoopPart;@@GAUGE_NAME_BOOST_OPEN_LOOP@@;"%", 1,0, -100,100, 1, @@GAUGE_CATEGORY_BOOST_CONTROL@@
+     int16_t autoscale openLoopYAxis;;"", 0.1, 0, -1000, 1000, 1
+-    float luaOpenLoopAdd;"Boost: Lua open loop add";"percent", 1,0, -100,100, 1, @@GAUGE_CATEGORY_BOOST_CONTROL@@
++    float luaOpenLoopAdd;"Boost: Lua open loop add";"%", 1,0, -100,100, 1, @@GAUGE_CATEGORY_BOOST_CONTROL@@
+ 
+     int8_t autoscale boostControllerClosedLoopPart;@@GAUGE_NAME_BOOST_CLOSED_LOOP@@;"%", 0.5,0, -50,50, 1, @@GAUGE_CATEGORY_BOOST_CONTROL@@
+ 
+-    int16_t autoscale boostOutput;@@GAUGE_NAME_BOOST_OUTPUT@@;"percent", 0.01,0, -100,100, 2, @@GAUGE_CATEGORY_BOOST_CONTROL@@
++    int16_t autoscale boostOutput;@@GAUGE_NAME_BOOST_OUTPUT@@;"%", 0.01,0, -100,100, 2, @@GAUGE_CATEGORY_BOOST_CONTROL@@
+ end_struct
+diff --git a/firmware/controllers/actuators/boost_control_config.txt b/firmware/controllers/actuators/boost_control_config.txt
+index 88cb24d73a0..c7103076147 100644
+--- a/firmware/controllers/actuators/boost_control_config.txt
++++ b/firmware/controllers/actuators/boost_control_config.txt
+@@ -1,8 +1,8 @@
+ float[BOOST_CURVE_SIZE] cltBoostCorrBins;;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
+-float[BOOST_CURVE_SIZE] cltBoostCorr;;"ratio", 1, 0, 0, 5, 2
++float[BOOST_CURVE_SIZE] cltBoostCorr;;"factor", 1, 0, 0, 5, 2
+ 
+ float[BOOST_CURVE_SIZE] iatBoostCorrBins;;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
+-float[BOOST_CURVE_SIZE] iatBoostCorr;;"ratio", 1, 0, 0, 5, 2
++float[BOOST_CURVE_SIZE] iatBoostCorr;;"factor", 1, 0, 0, 5, 2
+ 
+ float[BOOST_CURVE_SIZE] cltBoostAdderBins;;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
+ float[BOOST_CURVE_SIZE] cltBoostAdder;;"", 1, 0, 0, 5, 2
+diff --git a/firmware/controllers/actuators/electronic_throttle.txt b/firmware/controllers/actuators/electronic_throttle.txt
+index 6043ca4a948..6f3ab6e754b 100644
+--- a/firmware/controllers/actuators/electronic_throttle.txt
++++ b/firmware/controllers/actuators/electronic_throttle.txt
+@@ -13,7 +13,7 @@ struct_no_prefix electronic_throttle_s
+ 
+ 	float m_wastegatePosition;"DC: wastegatePosition";"%", 1,0, 0,3, 2,@@GAUGE_CATEGORY_ETB@@
+ 
+-	float m_lastPidDtMs;"EBT: last PID dT";"mS", 1, 0, 0, 4, 3,@@GAUGE_CATEGORY_ETB@@
++	float m_lastPidDtMs;"EBT: last PID dT";"ms", 1, 0, 0, 4, 3,@@GAUGE_CATEGORY_ETB@@
+ 
+ 	custom percent_t 4 scalar, F32, @OFFSET@, "", 1, 0, 0, 100, 2
+ 
+@@ -31,7 +31,7 @@ struct_no_prefix electronic_throttle_s
+ 	int8_t etbErrorCodeBlinker
+ 	int8_t tcEtbDrop;ETB traction control;"%", 1, 0, 0, 100, 0
+ 
+-	uint16_t autoscale jamTimer;ETB jam timer;"sec", 0.01, 0, 0, 100, 2
++	uint16_t autoscale jamTimer;ETB jam timer;"s", 0.01, 0, 0, 100, 2
+ 	uint8_t state
+ 
+ end_struct
+diff --git a/firmware/controllers/algo/accel_enrichment.engineConfiguration.txt b/firmware/controllers/algo/accel_enrichment.engineConfiguration.txt
+index eb2eced8412..cc19793bdcb 100644
+--- a/firmware/controllers/algo/accel_enrichment.engineConfiguration.txt
++++ b/firmware/controllers/algo/accel_enrichment.engineConfiguration.txt
+@@ -1,4 +1,4 @@
+-	uint8_t autoscale tpsAccelLookback;How long to look back for TPS-based acceleration enrichment. Increasing this time will trigger enrichment for longer when a throttle position change occurs.;"sec", 0.05, 0, 0, 5, 2
++	uint8_t autoscale tpsAccelLookback;How long to look back for TPS-based acceleration enrichment. Increasing this time will trigger enrichment for longer when a throttle position change occurs.;"s", 0.05, 0, 0, 5, 2
+ 	float tpsDecelEnleanmentThreshold;For decel we simply multiply delta of TPS and tFor decel we do not use table?!;"roc", 1, 0, 0, 200, 1
+ 	float tpsDecelEnleanmentMultiplier;Magic multiplier, we multiply delta of TPS and get fuel squirt duration;"coeff", 1, 0, 0, 200, 2
+ 
+diff --git a/firmware/controllers/algo/engine.cpp b/firmware/controllers/algo/engine.cpp
+index f414c005bfa..c87163a207d 100644
+--- a/firmware/controllers/algo/engine.cpp
++++ b/firmware/controllers/algo/engine.cpp
+@@ -89,7 +89,7 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
+ 	case VVT_SINGLE_TOOTH:
+ 	case VVT_MAP_V_TWIN:
+ 	case VVT_POLLED_BINARY:
+-		return trigger_type_e::TT_HALF_MOON;
++		return trigger_type_e::TT_VVT_MITSU_6G72;
+ 	case VVT_FORD_ST170:
+ 		return trigger_type_e::TT_FORD_ST170;
+ 	case VVT_BARRA_3_PLUS_1:
+diff --git a/firmware/controllers/algo/fuel/fuel_computer.txt b/firmware/controllers/algo/fuel/fuel_computer.txt
+index 7ebfb8aeb45..09d8b70ace0 100644
+--- a/firmware/controllers/algo/fuel/fuel_computer.txt
++++ b/firmware/controllers/algo/fuel/fuel_computer.txt
+@@ -1,11 +1,11 @@
+ struct_no_prefix fuel_computer_s
+ 
+-	float totalFuelCorrection;Fuel: Total correction;"mult", 1,0, 0,3, 2,@@GAUGE_CATEGORY_FUEL_MATH@@
++	float totalFuelCorrection;Fuel: Total correction;"factor", 1,0, 0,3, 2,@@GAUGE_CATEGORY_FUEL_MATH@@
+ 	struct running_fuel_s
+ 		float postCrankingFuelCorrection;Fuel: Post cranking mult
+ 		float intakeTemperatureCoefficient;@@GAUGE_NAME_FUEL_IAT_CORR@@
+ 		float coolantTemperatureCoefficient;@@GAUGE_NAME_FUEL_CLT_CORR@@
+-		float timeSinceCrankingInSecs;;"secs", 1,0, 0,600000, 0, @@GAUGE_CATEGORY_FUEL_MATH@@
++		float timeSinceCrankingInSecs;;"s", 1,0, 0,600000, 0, @@GAUGE_CATEGORY_FUEL_MATH@@
+ 
+ 		uint16_t autoscale baseFuel;@@GAUGE_NAME_FUEL_BASE@@\nThis is the raw value we take from the fuel map or base fuel algorithm, before the corrections;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 3
+ 		uint16_t autoscale fuel;@@GAUGE_NAME_FUEL_RUNNING@@\nTotal fuel with CLT IAT and TPS acceleration without injector lag corrections per cycle, as pulse per cycle;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 3
+@@ -17,9 +17,9 @@ struct_no_prefix fuel_computer_s
+ 
+ 	uint16_t autoscale afrTableYAxis;;"%",{1/100},0, 0, 0, 0
+ 	uint16_t autoscale targetLambda;@@GAUGE_NAME_TARGET_LAMBDA@@;"",{1/@@PACK_MULT_LAMBDA@@},0, 0.5,1.5, 2,@@GAUGE_CATEGORY_FUEL_MATH@@
+-	uint16_t autoscale targetAFR;@@GAUGE_NAME_TARGET_AFR@@;"ratio", {1/@@PACK_MULT_AFR@@},0, 10,20, 2,@@GAUGE_CATEGORY_FUEL_MATH@@
++	uint16_t autoscale targetAFR;@@GAUGE_NAME_TARGET_AFR@@;"factor", {1/@@PACK_MULT_AFR@@},0, 10,20, 2,@@GAUGE_CATEGORY_FUEL_MATH@@
+ 
+-	uint16_t autoscale stoichiometricRatio;Fuel: Stoich ratio;"ratio",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 2
++	uint16_t autoscale stoichiometricRatio;Fuel: Stoich ratio;"factor",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 2
+ 
+ 	! c'mon, not the whole LiveData spaghetti for SD class?
+ 	float sdTcharge_coff
+diff --git a/firmware/controllers/algo/ignition/ignition_state.txt b/firmware/controllers/algo/ignition/ignition_state.txt
+index d9f7c12a65c..b54dd5f4c2e 100644
+--- a/firmware/controllers/algo/ignition/ignition_state.txt
++++ b/firmware/controllers/algo/ignition/ignition_state.txt
+@@ -19,7 +19,7 @@ struct_no_prefix ignition_state_s
+ float dwellVoltageCorrection;Ign: Dwell voltage correction
+ 
+     float luaTimingAdd;Ign: Lua timing add;"deg",1, 0, -20, 20, 2, @@GAUGE_CATEGORY_TIMING@@
+-    float luaTimingMult;Ign: Lua timing mult;"deg",1, 0, -20, 20, 2, @@GAUGE_CATEGORY_TIMING@@
++    float luaTimingMult;Ign: Lua timing mult;"factor",1, 0, 0.5, 2, 2, @@GAUGE_CATEGORY_TIMING@@
+ bit luaIgnitionSkip;Ign: Lua Spark Skip
+ 
+     int16_t autoscale trailingSparkAngle;Ign: Trailing spark deg;"deg",{1/@@PACK_MULT_PERCENT@@},0, -20,20, 2,@@GAUGE_CATEGORY_TIMING@@
+diff --git a/firmware/controllers/can/wideband_firmware b/firmware/controllers/can/wideband_firmware
+--- a/firmware/controllers/can/wideband_firmware
++++ b/firmware/controllers/can/wideband_firmware
+@@ -1 +1 @@
+-Subproject commit 27e115b7faa136d7d1b0554e1694322daca983b9
++Subproject commit 27e115b7faa136d7d1b0554e1694322daca983b9-dirty
+diff --git a/firmware/controllers/engine_cycle/knock_controller.txt b/firmware/controllers/engine_cycle/knock_controller.txt
+index 24015c8d151..8390a773929 100644
+--- a/firmware/controllers/engine_cycle/knock_controller.txt
++++ b/firmware/controllers/engine_cycle/knock_controller.txt
+@@ -1,5 +1,5 @@
+ struct_no_prefix knock_controller_s
+-	float m_knockLevel;@@GAUGE_NAME_KNOCK_LEVEL@@;"Volts", 1, 0, 0, 0, 2
++	float m_knockLevel;@@GAUGE_NAME_KNOCK_LEVEL@@;"V", 1, 0, 0, 0, 2
+ 	int8_t[MAX_CYLINDER_COUNT iterate] m_knockCyl;Knock: Cyl;"dBv",1, 0, 0, 0, 0
+ 
+ 	angle_t m_knockRetard;@@GAUGE_NAME_KNOCK_RETARD@@;"deg",1,0,0,0,1
+@@ -11,7 +11,7 @@ struct_no_prefix knock_controller_s
+ 	uint16_t m_knockSpectrumChannelCyl;Knock: ChannelAndCylNumber;"compressed N + N", 1, 0, 0, 0, 0
+ 	uint16_t m_knockFrequencyStart;Knock: Start Freq;"Hz", 1, 0, 0, 0, 0
+ 	float    m_knockFrequencyStep;Knock: Step Freq;"Hz", 1, 0, 0, 0, 0
+-	float  	 m_knockFuelTrimMultiplier;Knock: Fuel trim when knock;"multiplier", 1, 0, 0, 0, 0
++	float  	 m_knockFuelTrimMultiplier;Knock: Fuel trim when knock;"factor", 1, 0, 0, 0, 0
+ 	bit hasKnockRecently;Knock: Detected recently
+ 	bit hasKnockRetardNow;Knock: Retard active
+ end_struct
+diff --git a/firmware/controllers/generated/engine_configuration_generated_structures_f407-discovery.h b/firmware/controllers/generated/engine_configuration_generated_structures_f407-discovery.h
+index ef923cb39e5..624cfb81541 100644
+--- a/firmware/controllers/generated/engine_configuration_generated_structures_f407-discovery.h
++++ b/firmware/controllers/generated/engine_configuration_generated_structures_f407-discovery.h
+@@ -6549,11 +6549,17 @@ struct engine_configuration_s {
+ 	 */
+ 	int8_t binarySyncRemainderOffset;
+ 	/**
+-	 * need 4 byte alignment
+-	 * units: units
++	 * Reject primary trigger edges arriving sooner than this percent of the previous edge-to-edge interval. 0 disables spike rejection.
++	 * units: %
+ 	 * offset 4249
+ 	 */
+-	uint8_t alignmentFill_at_4249[3] = {};
++	uint8_t triggerMinPulseWidthPercent;
++	/**
++	 * Below cranking RPM only: reject primary trigger teeth whose high time from rise to fall is shorter than this. 0 disables on-time validation.
++	 * units: us
++	 * offset 4250
++	 */
++	uint16_t triggerMinToothOnTimeUs;
+ };
+ static_assert(sizeof(engine_configuration_s) == 4252);
+ 
+diff --git a/firmware/controllers/generated/rusefi_generated_f407-discovery.h b/firmware/controllers/generated/rusefi_generated_f407-discovery.h
+index 6bb845564d8..40829a18f39 100644
+--- a/firmware/controllers/generated/rusefi_generated_f407-discovery.h
++++ b/firmware/controllers/generated/rusefi_generated_f407-discovery.h
+@@ -1627,7 +1627,7 @@
+ #define SentInput_NONE 0
+ #define show_tcu_gauges false
+ #define show_vvt_output_pin true
+-#define SIGNATURE_HASH 852015461
++#define SIGNATURE_HASH 1215646984
+ #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
+ #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
+ #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
+@@ -2264,7 +2264,7 @@
+ #define ts_show_wbo_canbus_index true
+ #define ts_show_wbo_canbus_set_index true
+ #define ts_show_wbo_canbus_set_type false
+-#define TS_SIGNATURE "rusEFI master.2026.08.25.f407-discovery.852015461"
++#define TS_SIGNATURE "rusEFI master.2026.08.27.f407-discovery.1215646984"
+ #define TS_SIMULATE_CAN '>'
+ #define TS_SIMULATE_CAN_char >
+ #define TS_TEST_COMMAND 't'
+diff --git a/firmware/controllers/long_term_fuel_trim_state.txt b/firmware/controllers/long_term_fuel_trim_state.txt
+index ef7f3045393..b74db764f6a 100644
+--- a/firmware/controllers/long_term_fuel_trim_state.txt
++++ b/firmware/controllers/long_term_fuel_trim_state.txt
+@@ -1,7 +1,7 @@
+ struct_no_prefix long_term_fuel_trim_state_s
+-	uint32_t ltftCntHit;LTFT learning: hits;"cnt", 1, 0, 0, 10000, 0
+-	uint32_t ltftCntMiss;LTFT learning: miss;"cnt", 1, 0, 0, 10000, 0
+-	uint32_t ltftCntDeadband;LTFT learning: in deadband;"cnt", 1, 0, 0, 10000, 0
++	uint32_t ltftCntHit;LTFT learning: hits;"count", 1, 0, 0, 10000, 0
++	uint32_t ltftCntMiss;LTFT learning: miss;"count", 1, 0, 0, 10000, 0
++	uint32_t ltftCntDeadband;LTFT learning: in deadband;"count", 1, 0, 0, 10000, 0
+ 
+ 	bit ltftLearning;LTFT learning
+ 	bit ltftCorrecting;LTFT correcting
+diff --git a/firmware/controllers/lua/generated/value_lookup_generated.cpp b/firmware/controllers/lua/generated/value_lookup_generated.cpp
+index 06b1cf1ee8e..dc9538de841 100644
+--- a/firmware/controllers/lua/generated/value_lookup_generated.cpp
++++ b/firmware/controllers/lua/generated/value_lookup_generated.cpp
+@@ -2119,6 +2119,12 @@ float getConfigValueByHash(const int hash) {
+ // binarySyncRemainderOffset
+ 		case 1184021349:
+ 			return engineConfiguration->binarySyncRemainderOffset;
++// triggerMinPulseWidthPercent
++		case -1221647017:
++			return engineConfiguration->triggerMinPulseWidthPercent;
++// triggerMinToothOnTimeUs
++		case 1040445727:
++			return engineConfiguration->triggerMinToothOnTimeUs;
+ // tcu_shiftTime
+ 		case -1658957891:
+ 			return config->tcu_shiftTime;
+@@ -5755,6 +5761,16 @@ bool setConfigValueByName(const char *name, float value) {
+ 	{
+ 		engineConfiguration->binarySyncRemainderOffset = (int)value;
+ 		return 1;
++	}
++		case -1221647017:
++	{
++		engineConfiguration->triggerMinPulseWidthPercent = (int)value;
++		return 1;
++	}
++		case 1040445727:
++	{
++		engineConfiguration->triggerMinToothOnTimeUs = (int)value;
++		return 1;
+ 	}
+ 		case -1658957891:
+ 	{
+diff --git a/firmware/controllers/lua/generated/value_lookup_generated.md b/firmware/controllers/lua/generated/value_lookup_generated.md
+index 455dbb98701..156236ae03a 100644
+--- a/firmware/controllers/lua/generated/value_lookup_generated.md
++++ b/firmware/controllers/lua/generated/value_lookup_generated.md
+@@ -2113,6 +2113,12 @@ Misfire Detection: firings to wait after entering idle before flagging starts. 0
+ ### binarySyncRemainderOffset
+ VVT Polled Binary: crank phase remainder offset for binary cam sync
+ 
++### triggerMinPulseWidthPercent
++Reject primary trigger edges arriving sooner than this percent of the previous edge-to-edge interval. 0 disables spike rejection.
++
++### triggerMinToothOnTimeUs
++Below cranking RPM only: reject primary trigger teeth whose high time from rise to fall is shorter than this. 0 disables on-time validation.
++
+ ### tcu_shiftTime
+ 
+ 
+diff --git a/firmware/controllers/lua/luaaa b/firmware/controllers/lua/luaaa
+--- a/firmware/controllers/lua/luaaa
++++ b/firmware/controllers/lua/luaaa
+@@ -1 +1 @@
+-Subproject commit 75762ca0127c001f88e5e04709f761367642fdc5
++Subproject commit 75762ca0127c001f88e5e04709f761367642fdc5-dirty
+diff --git a/firmware/controllers/math/lambda_monitor.txt b/firmware/controllers/math/lambda_monitor.txt
+index c2848e016bb..8104064d8df 100644
+--- a/firmware/controllers/math/lambda_monitor.txt
++++ b/firmware/controllers/math/lambda_monitor.txt
+@@ -1,5 +1,5 @@
+ struct_no_prefix lambda_monitor_s
+ 	bit lambdaCurrentlyGood
+ 	bit lambdaMonitorCut
+-	uint16_t autoscale lambdaTimeSinceGood;;"sec", 0.01, 0, 0, 1, 2
++	uint16_t autoscale lambdaTimeSinceGood;;"s", 0.01, 0, 0, 1, 2
+ end_struct
+diff --git a/firmware/controllers/trigger/decoders/trigger_structure.cpp b/firmware/controllers/trigger/decoders/trigger_structure.cpp
+index 11024e1d804..a2fc10351b8 100644
+--- a/firmware/controllers/trigger/decoders/trigger_structure.cpp
++++ b/firmware/controllers/trigger/decoders/trigger_structure.cpp
+@@ -80,6 +80,7 @@ void TriggerWaveform::initialize(operation_mode_e p_operationMode, SyncEdge p_sy
+ 		setTriggerSynchronizationGap3(gapIndex, NAN, 100000);
+ 	}
+ 	gapTrackingLength = 1;
++	symmetricalSyncLossDebounce = 1;
+ 
+ 	tdcPosition = 0;
+ 	shapeDefinitionError = false;
+diff --git a/firmware/controllers/trigger/decoders/trigger_structure.h b/firmware/controllers/trigger/decoders/trigger_structure.h
+index 8c59ba3fca7..33491afbabd 100644
+--- a/firmware/controllers/trigger/decoders/trigger_structure.h
++++ b/firmware/controllers/trigger/decoders/trigger_structure.h
+@@ -64,6 +64,12 @@ public:
+ 	 * number of consecutive trigger gaps needed to synchronize
+ 	 */
+ 	int gapTrackingLength = 1;
++	/**
++	 * number of consecutive sync decode errors before shaft sync is cleared.
++	 * 1 means the legacy single-error behavior; values >1 debounce sync loss.
++	 */
++	uint8_t symmetricalSyncLossDebounce = 1;
++
+ 	/**
+ 	 * special case for triggers which do not provide exact TDC location
+ 	 * For example pick-up in distributor with mechanical ignition firing order control.
+diff --git a/firmware/controllers/trigger/decoders/trigger_universal.cpp b/firmware/controllers/trigger/decoders/trigger_universal.cpp
+index 69a094ddc1a..63655b57b2a 100644
+--- a/firmware/controllers/trigger/decoders/trigger_universal.cpp
++++ b/firmware/controllers/trigger/decoders/trigger_universal.cpp
+@@ -150,11 +150,11 @@ void configureQuickStartSenderWheel(TriggerWaveform *s) {
+ 	s->addToothRiseFall(360, /* width*/ 70);
+ }
+ 
+-static void commonSymmetrical(TriggerWaveform* s, int count, float gapFrom, float gapTo) {
++static void commonSymmetrical(TriggerWaveform* s, int count, float gapFrom, float gapTo, int syncGaps = 2) {
+ 	s->shapeWithoutTdc = true;
++	s->symmetricalSyncLossDebounce = 2;
+ 
+-	// Sync after 2 good teeth
+-	for (size_t i = 0; i < 2; i++) {
++	for (int i = 0; i < syncGaps; i++) {
+ 		/**
+ 		 * https://github.com/rusefi/rusefi/issues/4943#issuecomment-1376289608
+ 		 * gaps would be nice during running but horrible during running
+@@ -182,7 +182,7 @@ void configure12ToothCrank(TriggerWaveform* s) {
+ 
+ void configure3ToothCrank(TriggerWaveform* s) {
+ 	s->initialize(FOUR_STROKE_THREE_TIMES_CRANK_SENSOR, SyncEdge::RiseOnly);
+-  commonSymmetrical(s, 3, 0.5, 1.4);
++  commonSymmetrical(s, 3, 0.4, 1.5, 1);
+ }
+ 
+ void configure6ToothCrank(TriggerWaveform* s) {
+diff --git a/firmware/controllers/trigger/instant_rpm_calculator.cpp b/firmware/controllers/trigger/instant_rpm_calculator.cpp
+index 52bd208a02a..5cfc9bddf01 100644
+--- a/firmware/controllers/trigger/instant_rpm_calculator.cpp
++++ b/firmware/controllers/trigger/instant_rpm_calculator.cpp
+@@ -161,7 +161,7 @@ void InstantRpmCalculator::updateInstantRpm(
+ 					   nowNt);
+ #if EFI_UNIT_TEST
+ 	if (printTriggerDebug) {
+-		printf("instantRpm = %f\n", m_instantRpm);
++		printf("instantRpm t=%.3f s = %f\n", NT2US(nowNt) / 1'000'000.0f, m_instantRpm);
+ 	}
+ #endif
+ 
+diff --git a/firmware/controllers/trigger/trigger_central.cpp b/firmware/controllers/trigger/trigger_central.cpp
+index 8e0661d6dfe..2e8c1d1bc19 100644
+--- a/firmware/controllers/trigger/trigger_central.cpp
++++ b/firmware/controllers/trigger/trigger_central.cpp
+@@ -25,6 +25,10 @@
+ #include "auto_generated_sync_edge.h"
+ #include "board_overrides.h"
+ 
++#if EFI_UNIT_TEST
++extern bool printTriggerDebug;
++#endif
++
+ #if EFI_TUNER_STUDIO
+ #include "tunerstudio.h"
+ #endif /* EFI_TUNER_STUDIO */
+@@ -514,12 +518,16 @@ static bool readPolledBinaryCamLevel(int camSensorIndex) {
+  *   other     - not a unique position, only counted (future: position tracking)
+  * Cam edge *timing* is intentionally not used for synchronization in this mode.
+  */
+-void TriggerCentral::handlePolledBinaryCamSync(bool isCrankRising, efitick_t nowNt) {
++void TriggerCentral::handlePolledBinaryCamSync(bool isCrankRising, efitick_t nowNt, int camLevelOverride) {
+ 	UNUSED(nowNt);
+ 	//binaryCamAtCrankRise declared in trigger_central.txt
+ 	//binaryCamAtCrankFall declared in trigger_central.txt
+ 
+-	bool camLevel = readPolledBinaryCamLevel(engineConfiguration->engineSyncCam); // sample the physical cam pin level right at this crank edge
++	// sample the physical cam pin level right at this crank edge, unless the on-time filter
++	// already sampled it at the actual edge moment before deferring the edge
++	bool camLevel = camLevelOverride >= 0
++			? camLevelOverride != 0
++			: readPolledBinaryCamLevel(engineConfiguration->engineSyncCam);
+ 
+ 	if (isCrankRising) {
+ 		binaryCamAtCrankRise = camLevel; //store cam level for rising edge
+@@ -535,9 +543,11 @@ void TriggerCentral::handlePolledBinaryCamSync(bool isCrankRising, efitick_t now
+ 	int8_t currentSyncCode = (binaryCamAtCrankRise ? 2 : 0) | (binaryCamAtCrankFall ? 1 : 0);
+ 
+ 	// tooth-level crank sync is a prerequisite for engine phase sync
++	bool triedToSyncButShaftWasnt = false;
+ 	if (!triggerState.getShaftSynchronized()) {
+-		m_lastBinarySyncCode=currentSyncCode; 
+-		return;
++		m_lastBinarySyncCode=currentSyncCode;
++		triedToSyncButShaftWasnt = true;
++		// return;
+ 	}
+ 
+ 	
+@@ -546,6 +556,9 @@ void TriggerCentral::handlePolledBinaryCamSync(bool isCrankRising, efitick_t now
+ 		m_lastBinarySyncCode=currentSyncCode; 
+ 		return; // The user has elected to stop trying to resolve crank phase after some RPM
+ 	}
++	if(Sensor::getOrZero(SensorType::Rpm) == 0) { 
++		return;
++	}
+ 	if (m_cachedCrankDivider < 0) { m_cachedCrankDivider = getCrankDivider(triggerShape.getWheelOperationMode()); }
+ 	if (m_cachedCrankDivider == 1) { m_lastBinarySyncCode=currentSyncCode; return; } // no ambiguity to resolve
+ 
+@@ -563,6 +576,10 @@ void TriggerCentral::handlePolledBinaryCamSync(bool isCrankRising, efitick_t now
+ 			triggerState.getShaftSynchronized(), Sensor::getOrZero(SensorType::Rpm));
+ 	#endif
+ 
++	// if(triedToSyncButShaftWasnt) {
++	// 	return;
++	// }
++
+ 	// no-op if we are already in the correct phase, corrective shift otherwise
+ 	syncEnginePhaseAndReport(m_cachedCrankDivider, remainder);
+ 	m_lastBinarySyncCode=currentSyncCode; 
+@@ -593,6 +610,8 @@ void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
+ 	handleShaftSignal(signalIndex, isRising, timestamp);
+ }
+ 
++static void dispatchShaftSignal(trigger_event_e signal, bool isPrimary, efitick_t timestamp, int camLevelOverride = -1);
++
+ // Handle all shaft signals - hardware or emulated both
+ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
+ 	bool isPrimary = signalIndex == 0;
+@@ -635,13 +654,81 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
+ 	}
+ #endif /* EFI_TOOTH_LOGGER */
+ 
++	// minimum pulse-width spike rejection, before cam sampling and decoding so that
++	// interference spikes cannot corrupt either, see triggerMinPulseWidthPercent
++	if (isPrimary && getTriggerCentral()->isPrimaryEdgeSpike(timestamp)) {
++		getTriggerCentral()->triggerIgnoredToothCount++;
++		return;
++	}
++
++	// On-time tooth validation: hold each primary rise until the matching fall confirms
++	// the tooth high time is long enough to be a real tooth, see triggerMinToothOnTimeUs.
++	// While running, the threshold is dynamic: 10^7 / RPM us (half the tooth period for
++	// a 3-tooth crank). Rejected rise/fall pairs never reach cam sampling or decoding.
++	if (isPrimary && engineConfiguration->triggerMinToothOnTimeUs > 0) {
++		TriggerCentral *tc = getTriggerCentral();
++		if (signal == SHAFT_PRIMARY_RISING) {
++			tc->m_pendingRiseTimestamp = timestamp;
++			// sample the cam now: by dispatch time the cam level may have changed
++			tc->m_pendingRiseCamLevel = readPolledBinaryCamLevel(engineConfiguration->engineSyncCam);
++			tc->m_hasPendingRise = true;
++			return;
++		}
++		if (tc->m_hasPendingRise) {
++			tc->m_hasPendingRise = false;
++			efitick_t onTime = timestamp - tc->m_pendingRiseTimestamp;
++			// Dynamic threshold while running: 10^7 / RPM us
++			// Static threshold while cranking: triggerMinToothOnTimeUs
++			float rpm = engine->rpmCalculator.getCachedRpm();
++			efitick_t thresholdUs;
++			if (engine->rpmCalculator.isRunning() && rpm > 0) {
++				thresholdUs = (efitick_t)(5000000.0f / rpm);
++			} else {
++				thresholdUs = engineConfiguration->triggerMinToothOnTimeUs;
++			}
++			efitick_t thresholdNt = US2NT(thresholdUs);
++#if EFI_UNIT_TEST
++			if (printTriggerDebug) {
++				printf("primary on-time %s: t=%.3f s onTime=%lld us threshold=%lld us\r\n",
++						onTime < thresholdNt ? "REJECT" : "ACCEPT",
++						NT2US(timestamp) / 1'000'000.0f,
++						(long long)NT2US(onTime),
++						(long long)thresholdUs);
++			}
++#endif
++			if (onTime < thresholdNt) {
++				// too short to be a real tooth: drop both edges of the spike
++				tc->triggerIgnoredToothCount += 2;
++				return;
++			}
++			// real tooth confirmed: forward the buffered rise with its original timestamp
++			// and rise-time cam level, then fall through to forward this fall
++			dispatchShaftSignal(SHAFT_PRIMARY_RISING, true, tc->m_pendingRiseTimestamp, tc->m_pendingRiseCamLevel ? 1 : 0);
++		}
++	}
++
++	dispatchShaftSignal(signal, isPrimary, timestamp);
++}
++
++// Forward a filtered shaft signal to cam sampling and trigger decoding
++static void dispatchShaftSignal(trigger_event_e signal, bool isPrimary, efitick_t timestamp, int camLevelOverride) {
+ 	// VVT_POLLED_BINARY: sample cam level at every crank edge, including falling edges
+ 	// which a rise-only crank decoder would otherwise discard just below
+ 	if (isPrimary
+ 			&& engineConfiguration->vvtMode[CAM_BY_INDEX(engineConfiguration->engineSyncCam)] == VVT_POLLED_BINARY) {
+-		getTriggerCentral()->handlePolledBinaryCamSync(signal == SHAFT_PRIMARY_RISING, timestamp);
++		getTriggerCentral()->handlePolledBinaryCamSync(signal == SHAFT_PRIMARY_RISING, timestamp, camLevelOverride);
+ 	}
+ 
++#if EFI_UNIT_TEST
++	if (isPrimary && printTriggerDebug) {
++		bool useful = isUsefulSignal(signal, getTriggerCentral()->triggerShape);
++		printf("crank edge %s: t=%.3f s %s\r\n",
++				useful ? "ACCEPT" : "REJECT",
++				NT2US(timestamp) / 1'000'000.0f,
++				signal == SHAFT_PRIMARY_RISING ? "RISE" : "FALL");
++	}
++#endif
++
+ 	// for effective noise filtering, we need both signal edges,
+ 	// so we pass them to handleShaftSignal() and defer this test
+ 	if (!engineConfiguration->useNoiselessTriggerDecoder) {
+@@ -750,6 +837,36 @@ bool TriggerNoiseFilter::noiseFilter(efitick_t nowNt,
+ 	return false;
+ }
+ 
++/**
++ * Minimum pulse-width spike rejection: reject a primary trigger edge which arrives sooner than
++ * triggerMinPulseWidthPercent percent of the previous accepted edge-to-edge interval.
++ * Real teeth are milliseconds apart even at high rpm while interference spikes are microseconds wide,
++ * so a small percentage threshold separates them cleanly.
++ * @return true if this edge is a noise spike and should be discarded
++ */
++bool TriggerCentral::isPrimaryEdgeSpike(efitick_t timestamp) {
++	efitick_t elapsed = timestamp - m_lastPrimaryEdgeTimestamp;
++
++	// first edge ever, or engine was stopped: accept the edge and restart interval tracking
++	if (m_lastPrimaryEdgeTimestamp == 0 || elapsed > NT_PER_SECOND) {
++		m_lastPrimaryEdgeTimestamp = timestamp;
++		m_lastPrimaryEdgeInterval = 0;
++		return false;
++	}
++
++	int percent = engineConfiguration->triggerMinPulseWidthPercent;
++	if (percent > 0 && m_lastPrimaryEdgeInterval > 0
++			&& elapsed * 100 < m_lastPrimaryEdgeInterval * percent) {
++		// too soon after the previous accepted edge: treat as interference,
++		// intentionally do not update tracking state so a burst of spikes is fully rejected
++		return true;
++	}
++
++	m_lastPrimaryEdgeInterval = elapsed;
++	m_lastPrimaryEdgeTimestamp = timestamp;
++	return false;
++}
++
+ bool TriggerCentral::isMapCamSync(efitick_t timestamp, float currentPhase) {
+ 	UNUSED(timestamp);
+ 
+diff --git a/firmware/controllers/trigger/trigger_central.h b/firmware/controllers/trigger/trigger_central.h
+index 61504939ffb..7fa31f71c10 100644
+--- a/firmware/controllers/trigger/trigger_central.h
++++ b/firmware/controllers/trigger/trigger_central.h
+@@ -55,7 +55,10 @@ public:
+ 	 * not to be confused with a totally different trigger _wheel_ sync which could be either crank wheel sync or cam wheel sync
+ 	 */
+ 	angle_t syncEnginePhaseAndReport(int divider, int remainder);
+-	void handlePolledBinaryCamSync(bool isCrankRising, efitick_t nowNt);
++	// camLevelOverride: -1 to sample the cam pin now, 0/1 to use a level sampled earlier
++	void handlePolledBinaryCamSync(bool isCrankRising, efitick_t nowNt, int camLevelOverride = -1);
++	// returns true if this primary edge should be rejected as a noise spike, see triggerMinPulseWidthPercent
++	bool isPrimaryEdgeSpike(efitick_t timestamp);
+ 	void handleShaftSignal(trigger_event_e signal, efitick_t timestamp);
+ 	int getHwEventCounter(int index) const;
+ 	void resetCounters();
+@@ -112,6 +115,16 @@ public:
+ 	float mapCamPrevCycleValue = 0;
+ 	int prevChangeAtCycle = 0;
+ 
++	// minimum pulse-width spike rejection state, primary channel only
++	efitick_t m_lastPrimaryEdgeTimestamp = 0;
++	efitick_t m_lastPrimaryEdgeInterval = 0;
++
++	// on-time tooth validation state, primary channel only, see triggerMinToothOnTimeUs
++	bool m_hasPendingRise = false;
++	efitick_t m_pendingRiseTimestamp = 0;
++	// cam level sampled at the buffered rise so deferred dispatch keeps a correct polled binary code
++	bool m_pendingRiseCamLevel = false;
++
+ 	/**
+ 	 * value of 'triggerShape.getLength()'
+ 	 * pre-calculating this value is a performance optimization
+diff --git a/firmware/controllers/trigger/trigger_decoder.cpp b/firmware/controllers/trigger/trigger_decoder.cpp
+index 09a7290d398..8f469d69915 100644
+--- a/firmware/controllers/trigger/trigger_decoder.cpp
++++ b/firmware/controllers/trigger/trigger_decoder.cpp
+@@ -103,6 +103,7 @@ void TriggerDecoderBase::resetState() {
+ 	setArrayValues(vvtToothPosition, 0);
+ 	triggerSyncGapRatio = 0;
+ 	triggerStateIndex = 0;
++	consecutiveTriggerErrors = 0;
+ 
+ 	call_board_override(custom_board_TriggerResetState);
+ }
+@@ -412,7 +413,8 @@ void TriggerDecoderBase::onShaftSynchronization(
+ 
+ #if EFI_UNIT_TEST
+ 	if (printTriggerDebug) {
+-		printf("onShaftSynchronization index=%d %d\r\n",
++		printf("onShaftSynchronization t=%.3f s index=%d counter=%d\r\n",
++				NT2US(nowNt) / 1'000'000.0f,
+ 				currentCycle.current_index,
+ 				synchronizationCounter);
+ 	}
+@@ -648,17 +650,24 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
+ 			// In either case, we should wait for another sync point before doing anything to try and run an engine,
+ 			// so we clear the synchronized flag.
+ 			if (wasSynchronized && isDecodingError) {
+-				setTriggerErrorState();
+-				onNotEnoughTeeth(currentCycle.current_index, triggerShape.getSize());
++				consecutiveTriggerErrors++;
++				if (consecutiveTriggerErrors >= triggerShape.symmetricalSyncLossDebounce) {
++					setTriggerErrorState();
++					onNotEnoughTeeth(currentCycle.current_index, triggerShape.getSize());
+ 
+-				// Something wrong, no longer synchronized
+-				setShaftSynchronized(false);
++					// Something wrong, no longer synchronized
++					setShaftSynchronized(false);
+ 
+-				// This is a decoding error
+-				onTriggerError();
+-				printGaps("newerr", triggerConfiguration, triggerShape);
++					// This is a decoding error
++					onTriggerError();
++					printGaps("newerr", triggerConfiguration, triggerShape);
++				} else {
++					// transient error: keep sync but mark an error
++					setTriggerErrorState();
++				}
+ 			} else {
+ 				// If this was the first sync point OR no decode error, we're synchronized!
++				consecutiveTriggerErrors = 0;
+ 				setShaftSynchronized(true);
+ 			}
+ 
+diff --git a/firmware/controllers/trigger/trigger_decoder.h b/firmware/controllers/trigger/trigger_decoder.h
+index 3f4caf4d8cb..a5669718f72 100644
+--- a/firmware/controllers/trigger/trigger_decoder.h
++++ b/firmware/controllers/trigger/trigger_decoder.h
+@@ -202,6 +202,8 @@ private:
+ 
+ 	bool isFirstEvent;
+ 
++	uint8_t consecutiveTriggerErrors = 0;
++
+ 	Timer m_timeSinceDecodeError;
+ };
+ 
+diff --git a/firmware/controllers/trigger/trigger_state_primary.txt b/firmware/controllers/trigger/trigger_state_primary.txt
+index 29585fe39ef..b67048455b3 100644
+--- a/firmware/controllers/trigger/trigger_state_primary.txt
++++ b/firmware/controllers/trigger/trigger_state_primary.txt
+@@ -1,5 +1,5 @@
+ struct_no_prefix trigger_state_primary_s
+-	uint8_t phaseResyncCounter;sync: Phase Re-Sync Counter;"cnt",1, 0, 0, 0, 0, "Sync"
++	uint8_t phaseResyncCounter;sync: Phase Re-Sync Counter;"count",1, 0, 0, 0, 0, "Sync"
+ 	uint16_t m_phaseAdjustment;sync: phase adjustment;"deg",1, 0, 0, 0, 0, "Sync"
+ 	bit m_hasSynchronizedPhase;sync: We Know Engine Phase
+ 	bit m_hasSynchronizedCrank;sync: We have sync
+diff --git a/firmware/ext/lua b/firmware/ext/lua
+--- a/firmware/ext/lua
++++ b/firmware/ext/lua
+@@ -1 +1 @@
+-Subproject commit 037aa8bd0741c66ef886f12170987a94aaeaa602
++Subproject commit 037aa8bd0741c66ef886f12170987a94aaeaa602-dirty
+diff --git a/firmware/ext/magic_enum b/firmware/ext/magic_enum
+--- a/firmware/ext/magic_enum
++++ b/firmware/ext/magic_enum
+@@ -1 +1 @@
+-Subproject commit 7d87efb4a3dddbbe8caa9ca14eff05ede1102ab8
++Subproject commit 7d87efb4a3dddbbe8caa9ca14eff05ede1102ab8-dirty
+diff --git a/firmware/ext/openblt b/firmware/ext/openblt
+--- a/firmware/ext/openblt
++++ b/firmware/ext/openblt
+@@ -1 +1 @@
+-Subproject commit 13727fc42ba423942907cba36e3dfee587332fa5
++Subproject commit 13727fc42ba423942907cba36e3dfee587332fa5-dirty
+diff --git a/firmware/ext/uzlib b/firmware/ext/uzlib
+--- a/firmware/ext/uzlib
++++ b/firmware/ext/uzlib
+@@ -1 +1 @@
+-Subproject commit 27e4f4c15ba30c2cfc89575159e8efb50f95037e
++Subproject commit 27e4f4c15ba30c2cfc89575159e8efb50f95037e-dirty
+diff --git a/firmware/integration/rusefi_config.txt b/firmware/integration/rusefi_config.txt
+index d7553da39f6..3d38b5b7f21 100644
+--- a/firmware/integration/rusefi_config.txt
++++ b/firmware/integration/rusefi_config.txt
+@@ -346,7 +346,7 @@ struct_no_prefix engine_configuration_s
+ struct stft_cell_cfg_s
+ 	uint8_t autoscale maxAdd;Maximum % that the short term fuel trim can add;"%", 0.1, 0, 0, 25, 1
+ 	uint8_t autoscale maxRemove;Maximum % that the short term fuel trim can remove;"%", 0.1, 0, 0, 25, 1
+-	uint16_t autoscale timeConstant;Commonly referred as Integral gain.\nTime constant for correction while in this cell: this sets responsiveness of the closed loop correction. A value of 5.0 means it will try to make most of the correction within 5 seconds, and a value of 1.0 will try to correct within 1 second.\nLower values makes the correction more sensitive, higher values slow the correction down.;"sec", 0.1, 0, 0.1, 100, 2
++	uint16_t autoscale timeConstant;Commonly referred as Integral gain.\nTime constant for correction while in this cell: this sets responsiveness of the closed loop correction. A value of 5.0 means it will try to make most of the correction within 5 seconds, and a value of 1.0 will try to correct within 1 second.\nLower values makes the correction more sensitive, higher values slow the correction down.;"s", 0.1, 0, 0.1, 100, 2
+ end_struct
+ 
+ struct stft_s
+@@ -358,7 +358,7 @@ struct stft_s
+ 	int8_t minClt;Minimum coolant temperature before closed loop operation is allowed.;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -20 : -4}, {useMetricOnInterface ? 100 : 212}, 0
+ 	uint8_t autoscale minAfr;Below this AFR, correction is paused;"afr", 0.1, 0, 10, 20, 1
+ 	uint8_t autoscale maxAfr;Above this AFR, correction is paused;"afr", 0.1, 0, 10, 20, 1
+-	uint8_t startupDelay;Time after startup before closed loop operation is allowed.;"seconds", 1, 0, 0, 250, 0
++	uint8_t startupDelay;Time after startup before closed loop operation is allowed.;"s", 1, 0, 0, 250, 0
+ 
+ 	stft_cell_cfg_s[STFT_CELL_COUNT iterate] cellCfgs;
+ end_struct
+@@ -369,7 +369,7 @@ struct ltft_s
+ 	uint8_t autoscale deadband;When close to correct AFR, pause correction. This can improve stability by not changing the adjustment if the error is extremely small, but is not required.;"%", 0.1, 0, 0, 3, 1
+ 	uint8_t autoscale maxAdd;Maximum % that the long term fuel trim can add;"%", 0.1, 0, 0, 25, 1
+ 	uint8_t autoscale maxRemove;Maximum % that the long term fuel trim can remove;"%", 0.1, 0, 0, 25, 1
+-	uint16_t[STFT_CELL_COUNT iterate] autoscale timeConstant;Commonly referred as Integral gain.\nTime constant for correction while in this cell: this sets responsiveness of the closed loop correction. A value of 30.0 means it will try to make most of the correction within 30 seconds, and a value of 300.0 will try to correct within 5 minutes.\nLower values makes the correction more sensitive, higher values slow the correction down.;"sec", 0.1, 0, 0.1, 3000, 1
++	uint16_t[STFT_CELL_COUNT iterate] autoscale timeConstant;Commonly referred as Integral gain.\nTime constant for correction while in this cell: this sets responsiveness of the closed loop correction. A value of 30.0 means it will try to make most of the correction within 30 seconds, and a value of 300.0 will try to correct within 5 minutes.\nLower values makes the correction more sensitive, higher values slow the correction down.;"s", 0.1, 0, 0.1, 3000, 1
+ end_struct
+ 
+ struct pid_s
+@@ -472,7 +472,7 @@ custom gppwm_channel_e 1 bits, U08, @OFFSET@, [0:5], $gppwm_channel_e_enum
+ struct gppwm_channel
+ 	output_pin_e pin;Select a pin to use for PWM or on-off output.;
+ 	uint8_t dutyIfError;If an error (with a sensor, etc) is detected, this value is used instead of reading from the table.\nThis should be a safe value for whatever hardware is connected to prevent damage.;"%", 1, 0, 0, 100, 0
+-	uint16_t pwmFrequency;Select a frequency to run PWM at.\nSet this to 0hz to enable on-off mode.;"hz", 1, 0, 0, 500, 0
++	uint16_t pwmFrequency;Select a frequency to run PWM at.\nSet this to 0hz to enable on-off mode.;"Hz", 1, 0, 0, 500, 0
+ 
+ 	uint8_t onAboveDuty;Hysteresis: in on-off mode, turn the output on when the table value is above this duty.;"%", 1, 0, 0, 100, 0
+ 	uint8_t offBelowDuty;Hysteresis: in on-off mode, turn the output off when the table value is below this duty.;"%", 1, 0, 0, 100, 0
+@@ -523,17 +523,17 @@ end_struct
+ 
+ struct linear_sensor_s
+ 	adc_channel_e hwChannel;
+-	float v1;;"volts", 1, 0, 0, 10, 2
++	float v1;;"V", 1, 0, 0, 10, 2
+ 	float value1;;"", 1, 0, -100000, 1000000, 2
+-	float v2;;"volts", 1, 0, 0, 10, 2
++	float v2;;"V", 1, 0, 0, 10, 2
+ 	float value2;;"", 1, 0, -100000, 1000000, 2
+ end_struct
+ 
+ struct pressure_sensor_s
+ 	adc_channel_e hwChannel;
+-	float v1;;"volts", 1, 0, 0, 10, 2
++	float v1;;"V", 1, 0, 0, 10, 2
+ 	float value1;;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? 30000 : 30000 * @@UNITS_KPA_TO_PSI@@}, 2
+-	float v2;;"volts", 1, 0, 0, 10, 2
++	float v2;;"V", 1, 0, 0, 10, 2
+ 	float value2;;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? 30000 : 30000 * @@UNITS_KPA_TO_PSI@@}, 2
+ end_struct
+ 
+@@ -547,16 +547,16 @@ engine_type_e engineType;http://rusefi.com/wiki/index.php?title=Manual:Engine_Ty
+ 
+ uint16_t startButtonSuppressOnStartUpMs
+ 
+-uint16_t launchRpm;The target engine speed (RPM) to maintain during launch.;"rpm", 1, 0, 0, 20000, 0
+-uint16_t rpmHardLimit;set rpm_hard_limit X;"rpm", 1, 0, 0, 20000, 0
++uint16_t launchRpm;The target engine speed (RPM) to maintain during launch.;"RPM", 1, 0, 0, 20000, 0
++uint16_t rpmHardLimit;set rpm_hard_limit X;"RPM", 1, 0, 0, 20000, 0
+ uint16_t engineSnifferRpmThreshold;Engine sniffer would be disabled above this rpm\nset engineSnifferRpmThreshold X;"RPM", 1, 0, 0, 30000, 0
+ 
+ 	bit ltitEnabled,"yes","no";Enable LTIT (Long Term Idle Trim) learning
+ 	bit useMetricOnInterface,"Metric","Imperial"
+ 	bit useLambdaOnInterface,"Lambda","AFR"
+ 
+-	uint8_t autoscale multisparkMaxRpm;Disable multispark above this engine speed.;"rpm", 50, 0, 0, 3000, 0
+-	uint8_t autoscale maxAcRpm;Above this RPM, disable AC. Set to 0 to disable check.;"rpm", 50, 0, 0, 10000, 0
++	uint8_t autoscale multisparkMaxRpm;Disable multispark above this engine speed.;"RPM", 50, 0, 0, 3000, 0
++	uint8_t autoscale maxAcRpm;Above this RPM, disable AC. Set to 0 to disable check.;"RPM", 50, 0, 0, 10000, 0
+ 	uint8_t maxAcTps;Above this TPS, disable AC. Set to 0 to disable check.;"%", 1, 0, 0, 100, 0
+ 	int16_t maxAcClt;Above this CLT, disable AC to prevent overheating the engine. Set to 0 to disable check.;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? 0 : 32}, {useMetricOnInterface ? @@CLT_UPPER_LIMIT@@ : @@CLT_UPPER_LIMIT@@ * 1.8 + 32}, 0
+ 
+@@ -565,14 +565,14 @@ uint16_t engineSnifferRpmThreshold;Engine sniffer would be disabled above this r
+ 	uint16_t idlePositionMax;Voltage when the idle valve is open.\nYou probably don't have one of these!\n1 volt = 1000 units;"mv", 1, 0, 0, 5000, 0
+ 
+ 	uint8_t ltitEmaAlpha;EMA filter constant for LTIT (0-255);"0-255",1,0,1,255,0
+-	uint8_t ltitStableRpmThreshold;RPM range to consider stable idle;"rpm",1,0,1,100,0
++	uint8_t ltitStableRpmThreshold;RPM range to consider stable idle;"RPM",1,0,1,100,0
+ 	uint8_t ltitStableTime;Minimum time of stable idle before learning;"s",1,0,1,30,0
+ 	uint8_t ltitCorrectionRate;LTIT learning rate;"%/s",1,0,1,100,0
+ 	uint8_t ltitIgnitionOnDelay;Delay after ignition ON before LTIT learning/application;"s",1,0,1,60,0
+ 	uint8_t ltitIgnitionOffSaveDelay;Delay after ignition OFF before LTIT save;"s",1,0,1,60,0
+ 	float ltitClampMin;Minimum LTIT multiplicative correction value;"%", 1, 0, 0, 100, 1
+ 	float ltitClampMax;Maximum LTIT multiplicative correction value;"%", 1, 0, 100, 300, 1
+-	uint8_t autoscale ltitSmoothingIntensity;LTIT table regional smoothing intensity (0=no smoothing);"ratio", 0.01, 0, 0, 2.5, 2
++	uint8_t autoscale ltitSmoothingIntensity;LTIT table regional smoothing intensity (0=no smoothing);"factor", 0.01, 0, 0, 2.5, 2
+ 	float ltitIntegratorThreshold;Minimum threshold of PID integrator for LTIT correction;"%", 1, 0, 0, 25, 0
+ 
+ 	! [tag:coding_by_convention]
+@@ -583,7 +583,7 @@ uint16_t engineSnifferRpmThreshold;Engine sniffer would be disabled above this r
+ 
+ 	switch_input_pin_e torqueReductionTriggerPin;Pin that activates the reduction/cut for shifting. Sometimes shared with the Launch Control pin
+ 	int8_t launchFuelAdderPercent;Fuel enrichment adder percentage.;"%", 1, 0, -100, 100, 0
+-	uint8_t autoscale etbJamTimeout;Time after which the throttle is considered jammed.;"sec", 0.02, 0, 0, 5, 2
++	uint8_t autoscale etbJamTimeout;Time after which the throttle is considered jammed.;"s", 0.02, 0, 0, 5, 2
+ 
+ 	output_pin_e tachOutputPin;
+ 	pin_output_mode_e tachOutputPinMode;
+@@ -597,7 +597,7 @@ uint16_t engineSnifferRpmThreshold;Engine sniffer would be disabled above this r
+ 
+ struct injector_s
+ 	float @@MEMBER_FLOW@@;This is your injector flow at the fuel pressure used in the vehicle\nSee units setting below;"", 1, 0, 0, 99999, 2
+-    int16_t[VBAT_INJECTOR_CURVE_SIZE] autoscale battLagCorrBattBins;;"volts", 0.01, 0, 0, 22, 2
++    int16_t[VBAT_INJECTOR_CURVE_SIZE] autoscale battLagCorrBattBins;;"V", 0.01, 0, 0, 22, 2
+     ! 30k Kpa considering the highest value I found online for a GDI engine, for a Mustang GT PP1
+     uint32_t[VBAT_INJECTOR_CURVE_PRESSURE_SIZE] autoscale battLagCorrPressBins;Injector correction pressure;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 0.1 : 0.0145038}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? 30000 : 4351}, 2
+     int16_t[VBAT_INJECTOR_CURVE_PRESSURE_SIZE x VBAT_INJECTOR_CURVE_SIZE] autoscale battLagCorrTable;ms delay between injector open and close dead times;"ms", 0.01, 0, 0, 50, 2
+@@ -651,8 +651,8 @@ int16_t tpsErrorDetectionTooHigh;TPS error detection: what throttle % is unreali
+ 
+ cranking_parameters_s cranking
+ 	float ignitionDwellForCrankingMs;Dwell duration while cranking;"ms", 1, 0, 0, 200, 1
+-	uint16_t etbRevLimitStart;Once engine speed passes this value, start reducing ETB angle.;"rpm", 1, 0, 0, 15000, 0
+-	uint16_t etbRevLimitRange;This far above 'Soft limiter start', fully close the throttle. At the bottom of the range, throttle control is normal. At the top of the range, the throttle is fully closed.;"rpm", 1, 0, 0, 2000, 0
++	uint16_t etbRevLimitStart;Once engine speed passes this value, start reducing ETB angle.;"RPM", 1, 0, 0, 15000, 0
++	uint16_t etbRevLimitRange;This far above 'Soft limiter start', fully close the throttle. At the bottom of the range, throttle control is normal. At the top of the range, the throttle is fully closed.;"RPM", 1, 0, 0, 2000, 0
+ 
+ MAP_sensor_config_s map;@see isMapAveragingEnabled
+ 
+@@ -757,7 +757,7 @@ timing_mode_e timingMode;Dynamic uses the timing map to decide the ignition timi
+ custom can_nbc_e 1 bits, U08, @OFFSET@, [0:4], "None", "FIAT", "VAG", "MAZDA RX8", "BMW E46", "W202", "BMW E90", "Haltech", "VAG MQB", "Nissan VQ35", "Genesis Coupe", "Honda K", "AiM", "MS Simplified Broadcast"
+ can_nbc_e canNbcType
+ 
+-angle_t fixedModeTiming;This value is the ignition timing used when in 'fixed timing' mode, i.e. constant timing\nThis mode is useful when adjusting distributor location.;"RPM", 1, 0, 0, 3000, 0
++angle_t fixedModeTiming;This value is the ignition timing used when in 'fixed timing' mode, i.e. constant timing\nThis mode is useful when adjusting distributor location.;"deg", 1, 0, 0, 720, 0
+ 
+ angle_t globalTriggerAngleOffset;Angle between Top Dead Center (TDC) and the first trigger event.\nPositive value in case of synchronization point before TDC and negative in case of synchronization point after TDC\n.Knowing this angle allows us to control timing and other angles in reference to TDC.\nHOWTO:\n1: Switch to fixed timing mode on 'ignition setting' dialog\n2: use an actual timing light to calibrate\n3: add/subtract until timing light confirms desired fixed timing value!';"deg btdc", 1, 0, -720, 720, 0
+ 
+@@ -808,16 +808,16 @@ trigger_config_s trigger;
+ ! date on which this configuration was reset to default
+ int calibrationBirthday
+ 
+-	float adcVcc;;"volts", 1, 0, 0, 6, 3
+-	float mapCamDetectionAnglePosition;Magic engine phase: we compare instant MAP at X to instant MAP at x+360 angle in one complete cycle;"Deg", 1, 0, 0, 360, 0
++	float adcVcc;;"V", 1, 0, 0, 6, 3
++	float mapCamDetectionAnglePosition;Magic engine phase: we compare instant MAP at X to instant MAP at x+360 angle in one complete cycle;"deg", 1, 0, 0, 360, 0
+ 	brain_input_pin_e[CAM_INPUTS_COUNT iterate] camInputs;Camshaft input could be used either just for engine phase detection if your trigger shape does not include cam sensor as 'primary' channel, or it could be used for Variable Valve timing on one of the camshafts.
+ 
+ struct afr_sensor_s
+ 	adc_channel_e hwChannel;
+ 	adc_channel_e hwChannel2;
+-	float v1;;"volts", 1, 0, 0, 10, 2
++	float v1;;"V", 1, 0, 0, 10, 2
+ 	float value1;;"AFR", 1, 0, 0, 1000, 2
+-	float v2;;"volts", 1, 0, 0, 10, 2
++	float v2;;"V", 1, 0, 0, 10, 2
+ 	float value2;;"AFR", 1, 0, 0, 1000, 2
+ end_struct
+ 
+@@ -1008,7 +1008,7 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
+ 	! 536870911 = 2^29-1, the maximum valid extended ID
+ 	uint32_t verboseCanBaseAddress;;"", 1, 0, 0, 536870911, 0
+ 
+-	uint8_t mc33_hvolt;Boost Voltage;"v", 1, 0, 40, 70, 0
++	uint8_t mc33_hvolt;Boost Voltage;"V", 1, 0, 40, 70, 0
+ 	uint16_t minimumBoostClosedLoopMap;Minimum MAP before closed loop boost is enabled. Use to prevent misbehavior upon entering boost.;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@}, 0
+ 
+     int8_t initialIgnitionCutPercent;The percentage of ignition events to cut when entering the launch control window (e.g., at Launch RPM minus Launch Control Window).;"%", 1, 0, 0, 100, 0
+@@ -1037,7 +1037,7 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
+ 
+ 	Gpio[EGT_CHANNEL_COUNT iterate] max31855_cs;
+ 	brain_input_pin_e flexSensorPin;Continental/GM flex fuel sensor, 50-150hz type;
+-	uint16_t torqueReductionArmingRpm;Since torque reduction pin is usually shared with launch control, most people have an RPM where behavior under that is Launch Control, over that is Flat Shift/Torque Reduction;"rpm", 1, 0, 0, 20000, 0
++	uint16_t torqueReductionArmingRpm;Since torque reduction pin is usually shared with launch control, most people have an RPM where behavior under that is Launch Control, over that is Flat Shift/Torque Reduction;"RPM", 1, 0, 0, 20000, 0
+ 	pin_output_mode_e stepperDirectionPinMode;
+ 
+ 	spi_device_e mc33972spiDevice;
+@@ -1046,7 +1046,7 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
+ 
+ 
+ custom uart_device_e 1 bits, U08, @OFFSET@, [0:1], "Off", "UART1", "UART2", "UART3"
+-	uint16_t sdCardLogFrequency;Rate the ECU will log to the SD card, in hz (log lines per second).;"hz", 1, 0, 1, 250, 0
++	uint16_t sdCardLogFrequency;Rate the ECU will log to the SD card, in hz (log lines per second).;"Hz", 1, 0, 1, 250, 0
+ 	adc_channel_e idlePositionChannel;
+ 	uint16_t launchCorrectionsEndRpm;The RPM difference below the Launch RPM at which corrections (timing retard interpolation and/or ignition cut ramp) reach their final/maximum target. For example, if Launch RPM is 4000, and this is 50, corrections reach their final target at 3950 RPM.;"RPM", 1, 0, 0, 1000, 0
+ 	output_pin_e starterRelayDisablePin;
+@@ -1062,7 +1062,7 @@ custom uart_device_e 1 bits, U08, @OFFSET@, [0:1], "Off", "UART1", "UART2", "UAR
+ 
+ 	tps_limit_t tps1SecondaryMin;Closed voltage for secondary throttle position sensor
+ 	tps_limit_t tps1SecondaryMax;Fully opened voltage for secondary throttle position sensor
+-	uint16_t startCrankingDuration;Maximum time to crank starter when start/stop button is pressed;"Seconds", 1, 0, 0, 30, 0
++	uint16_t startCrankingDuration;Maximum time to crank starter when start/stop button is pressed;"s", 1, 0, 0, 30, 0
+ 
+ 	Gpio triggerErrorPin;This pin is used for debugging - snap a logic analyzer on it and see if it's ever high
+ 	pin_output_mode_e triggerErrorPinMode;
+@@ -1132,13 +1132,13 @@ cranking_condition_e crankingCondition;
+ 
+ include_file controllers/algo/accel_enrichment.engineConfiguration.txt
+ 
+-	uint8_t autoscale noFuelTrimAfterDfcoTime;Pause closed loop fueling after deceleration fuel cut occurs. Set this to a little longer than however long is required for normal fueling behavior to resume after fuel cut.;"sec", 0.1, 0, 0, 10, 1
+-	uint8_t autoscale noFuelTrimAfterAccelTime;Pause closed loop fueling after acceleration fuel occurs. Set this to a little longer than however long is required for normal fueling behavior to resume after fuel accel.;"sec", 0.1, 0, 0, 10, 1
++	uint8_t autoscale noFuelTrimAfterDfcoTime;Pause closed loop fueling after deceleration fuel cut occurs. Set this to a little longer than however long is required for normal fueling behavior to resume after fuel cut.;"s", 0.1, 0, 0, 10, 1
++	uint8_t autoscale noFuelTrimAfterAccelTime;Pause closed loop fueling after acceleration fuel occurs. Set this to a little longer than however long is required for normal fueling behavior to resume after fuel accel.;"s", 0.1, 0, 0, 10, 1
+ 
+     int launchSpeedThreshold;Launch disabled above this speed if setting is above zero;{bitStringValue(velocityUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KMH_TO_MPH@@}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? 300 : 186}, 0
+     int launchRpmWindow;The RPM window before the Launch RPM where launch control strategies (like retard/cut) begin to activate. For example, if Launch RPM is 4000 and Window is 500, activation starts at 3500 RPM.;"RPM", 1, 0, 0, 8000, 0
+     float triggerEventsTimeoutMs;;"ms", 1, 0, 0, 3000, 3
+-    float ppsExpAverageAlpha;A higher alpha (closer to 1) means the EMA reacts more quickly to changes in the data.\n'100%' means no filtering, 98% would be some filtering.;"percent", 100, 0, 0, 100, 1
++    float ppsExpAverageAlpha;A higher alpha (closer to 1) means the EMA reacts more quickly to changes in the data.\n'100%' means no filtering, 98% would be some filtering.;"%", 100, 0, 0, 100, 1
+     float mapExpAverageAlpha;A higher alpha (closer to 1) means the EMA reacts more quickly to changes in the data.\n'1' means no filtering, 0.98 would be some filtering.;"", 1, 0, 0, 1, 3
+ 	float magicNumberAvailableForDevTricks
+ 	float turbochargerFilter
+@@ -1171,8 +1171,8 @@ include_file controllers/algo/accel_enrichment.engineConfiguration.txt
+     float[CAM_INPUTS_COUNT iterate] vvtOffsets;Angle between cam sensor and VVT zero position;"value", 1, 0, -720, 1000, 1
+ 
+ struct vr_threshold_s
+-	uint8_t[6] autoscale rpmBins;;"rpm", 50, 0, 0, 12000, 0
+-	uint8_t[6] autoscale values;;"volts", {1/@@PACK_PERCENT_BYTE_MULT@@}, 0, 0, 2.5, 2
++	uint8_t[6] autoscale rpmBins;;"RPM", 50, 0, 0, 12000, 0
++	uint8_t[6] autoscale values;;"V", {1/@@PACK_PERCENT_BYTE_MULT@@}, 0, 0, 2.5, 2
+ 	Gpio pin;
+ end_struct
+ 
+@@ -1253,9 +1253,9 @@ bit watchOutForLinearTime,"yes","no"
+ bit sdTriggerLogCsv,"CSV","Binary"
+ bit sdCardConditionalLogging,"enabled","disabled";Only write the SD log while trigger conditions are met (start/stop). Off = always log, the current behavior.
+ bit useCompensatedMap,"enabled","disabled";Compensated MAP: in Speed Density mode, normalize MAP by barometric pressure before it is used as a table load axis.\nMAP_ref = MAP / (baro / 101.325 kPa) feeds the VE lookup and the fuel/spark load axes, so the same table cells are hit regardless of altitude (WOT reads ~100 kPa at any elevation).\nThe physical air mass calculation still uses actual MAP. Requires a barometric pressure sensor; without a valid baro reading no compensation is applied.\nWorks together with the Barometric pressure correction table, which serves a different goal: this setting keeps table lookups stable across altitude, while the baro table multiplies fueling for exhaust-side scavenging effects. Either or both can be used.
+-uint16_t sdLogStartRpm;Start logging at/above this RPM;"rpm", 1, 0, 0, 30000, 0
+-uint16_t sdLogStopRpm;Stop logging below this RPM. Set below 'start' for hysteresis;"rpm", 1, 0, 0, 30000, 0
+-uint8_t sdLogStopDelay;Keep logging this many seconds after RPM drops below the stop threshold;"sec", 1, 0, 0, 255, 0
++uint16_t sdLogStartRpm;Start logging at/above this RPM;"RPM", 1, 0, 0, 30000, 0
++uint16_t sdLogStopRpm;Stop logging below this RPM. Set below 'start' for hysteresis;"RPM", 1, 0, 0, 30000, 0
++uint8_t sdLogStopDelay;Keep logging this many seconds after RPM drops below the stop threshold;"s", 1, 0, 0, 255, 0
+ uint8_t sdLogMinTps;Also require TPS at/above this to start logging (0 = ignore);"%", 1, 0, 0, 100, 0
+ uint16_t sdLogMinMap;Also require MAP at/above this to start logging (0 = ignore);"kPa", 1, 0, 0, 1000, 0
+ uint8_t sdLogMinVss;Also require vehicle speed at/above this to start logging (0 = ignore);"kph", 1, 0, 0, 255, 0
+@@ -1266,13 +1266,13 @@ pin_input_mode_e sdLogTriggerPinMode;
+ 
+ 
+ 
+-	float turboSpeedSensorMultiplier;;"mult", 1, 0, 0, 7000, 3
++	float turboSpeedSensorMultiplier;;"factor", 1, 0, 0, 7000, 3
+ 
+ 	int16_t acIdleRpmTarget;Idle target speed when A/C is enabled. Some cars need the extra speed to keep the AC efficient while idling.;"RPM", 1, 0, 0, 2000, 0
+ 
+-	int16_t warningPeriod;set warningPeriod X;"seconds", 1, 0, 0, 60, 0
++	int16_t warningPeriod;set warningPeriod X;"s", 1, 0, 0, 60, 0
+ 
+-	float knockDetectionWindowStart;;"angle", 1, 0, -1000, 1000, 2
++	float knockDetectionWindowStart;;"deg", 1, 0, -1000, 1000, 2
+ 
+ 
+ float idleStepperReactionTime;;"ms", 1, 0, 1, 300, 0
+@@ -1293,7 +1293,7 @@ custom pin_mode_e 1 bits, U08, @OFFSET@, [0:6], $pin_mode_e_enum
+ 	float tachPulseDuractionMs;Duration in ms or duty cycle depending on selected mode;"", 1, 0, 0, 100, 2
+ 
+ 
+-	float wwaeTau;Length of time the deposited wall fuel takes to dissipate after the start of acceleration. ;"Seconds", 1, 0, 0, 3, 2
++	float wwaeTau;Length of time the deposited wall fuel takes to dissipate after the start of acceleration. ;"s", 1, 0, 0, 3, 2
+ 	pid_s alternatorControl;
+ 	pid_s etb;
+ 	int16_t airTaperRpmRange;RPM range above upper limit for extra air taper;"RPM", 1, 0, 0, 1500, 0
+@@ -1322,10 +1322,10 @@ tps_limit_t tps2Max;Fully opened voltage for primary throttle position sensor
+ 	switch_input_pin_e tcuUpshiftButtonPin
+ 	switch_input_pin_e tcuDownshiftButtonPin
+ 
+-	float throttlePedalUpVoltage;;"volts", 1, 0, -6, 6, 2
+-	float throttlePedalWOTVoltage;Pedal in the floor;"volts", 1, 0, -6, 6, 2
++	float throttlePedalUpVoltage;;"V", 1, 0, -6, 6, 2
++	float throttlePedalWOTVoltage;Pedal in the floor;"V", 1, 0, -6, 6, 2
+ 
+-	int16_t startUpFuelPumpDuration;on IGN voltage detection turn fuel pump on to build fuel pressure;"seconds", 1, 0, 0, 6000, 0
++	int16_t startUpFuelPumpDuration;on IGN voltage detection turn fuel pump on to build fuel pressure;"s", 1, 0, 0, 6000, 0
+ 	uint16_t mafFilterParameter;larger value = larger intake manifold volume;"", 1, 0, 0, 10000, 0
+ 
+ 	int16_t idlePidRpmDeadZone;If the RPM closer to target than this value, disable closed loop idle correction to prevent oscillation;"RPM", 1, 0, 0, 800, 0
+@@ -1362,7 +1362,7 @@ tps_limit_t tps2Max;Fully opened voltage for primary throttle position sensor
+ 	bit enableKnockSpectrogram,"yes","no";"Available via TS Plugin see https://rusefi.com/s/knock"
+ 	bit enableKnockSpectrogramFilter,"yes","no"
+ 
+-	int16_t iacByTpsTaper;This value is an added for base idle value. Idle Value added when coasting and transitioning into idle.;"percent", 1, 0, 0, 500, 0
++	int16_t iacByTpsTaper;This value is an added for base idle value. Idle Value added when coasting and transitioning into idle.;"%", 1, 0, 0, 500, 0
+ 
+ 	Gpio accelerometerCsPin;
+ 	uint8_t coastingFuelCutVssLow;Below this speed, disable DFCO. Use this to prevent jerkiness from fuel enable/disable in low gears.;{bitStringValue(velocityUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KMH_TO_MPH@@}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? 255 : 158}, 0
+@@ -1383,8 +1383,8 @@ tps_limit_t tps2Max;Fully opened voltage for primary throttle position sensor
+ 	uint32_t uartConsoleSerialSpeed;Band rate for primary TTL;"BPs", 1, 0, 0, 1000000, 0
+ 
+ 
+-	float throttlePedalSecondaryUpVoltage;;"volts", 1, 0, -6, 6, 2
+-	float throttlePedalSecondaryWOTVoltage;Pedal in the floor;"volts", 1, 0, -6, 6, 2
++	float throttlePedalSecondaryUpVoltage;;"V", 1, 0, -6, 6, 2
++	float throttlePedalSecondaryWOTVoltage;Pedal in the floor;"V", 1, 0, -6, 6, 2
+ 
+ 	#define can_baudrate_e_enum "33.33kbps", "50kbps", "83.33kbps", "100kbps", "125kbps", "250kbps", "500kbps", "666kbps", "1Mbps"
+ 	custom can_baudrate_e 1 bits, U08, @OFFSET@, [0:3], @@can_baudrate_e_enum@@
+@@ -1411,8 +1411,8 @@ tps_limit_t tps2Max;Fully opened voltage for primary throttle position sensor
+ 	bit kLineDoHondaSend,"yes","no"
+ 	bit can1ListenMode,"yes","no";ListenMode is about acknowledging CAN traffic on the protocol level. Different from canWriteEnabled
+ 	bit can2ListenMode,"yes","no"
+-	uint16_t camDecoder2jzPosition;Angle of tooth detection within engine phase cycle;"angle", 1, 0, 0, 360, 0
+-	custom mc33810maxDwellTimer_e 1 bits, U08, @OFFSET@, [0:2], "2 mS", "4 mS", "8 mS", "16 mS", "32 mS", "64 mS"
++	uint16_t camDecoder2jzPosition;Angle of tooth detection within engine phase cycle;"deg", 1, 0, 0, 360, 0
++	custom mc33810maxDwellTimer_e 1 bits, U08, @OFFSET@, [0:2], "2 ms", "4 ms", "8 ms", "16 ms", "32 ms", "64 ms"
+ 	mc33810maxDwellTimer_e mc33810maxDwellTimer;
+ 	uint16_t autoscale benchTestOnTime;Duration of each test pulse;"ms", 0.01, 0, 1, 500, 2
+ 
+@@ -1436,11 +1436,11 @@ tps_limit_t tps2Max;Fully opened voltage for primary throttle position sensor
+ 	float boostCutPressure;Specifies the boost pressure allowed before triggering a cut. Setting this to 0 will DISABLE overboost cut.;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@}, 0
+ 
+ 	uint8_t[16] autoscale tchargeBins;;"kg/h", 5, 0, 0, 1200, 0
+-	uint8_t[16] autoscale tchargeValues;;"ratio", 0.01, 0, 0, 1, 2
++	uint8_t[16] autoscale tchargeValues;;"factor", 0.01, 0, 0, 1, 2
+ 
+ 	float fixedTiming;Fixed timing, useful for TDC testing;"deg", 1, 0, -720, 720, 2
+-	float mapLowValueVoltage;MAP voltage for low point;"v", 1, 0, 0, 10, 2
+-	float mapHighValueVoltage;MAP voltage for low point;"v", 1, 0, 0, 10, 2
++	float mapLowValueVoltage;MAP voltage for low point;"V", 1, 0, 0, 10, 2
++	float mapHighValueVoltage;MAP voltage for low point;"V", 1, 0, 0, 10, 2
+ 	float egoValueShift;EGO value correction;"value", 1, 0, -10, 10, 2
+ 
+ 	output_pin_e[CAM_INPUTS_COUNT iterate] vvtPins;VVT output solenoid pin for this cam
+@@ -1460,7 +1460,7 @@ custom pwm_freq_t 2 scalar, U16, @OFFSET@, "Hz", 1, 0, 0, 3000, 0
+ 
+ 	vvt_mode_e[CAMS_PER_BANK iterate] vvtMode
+ 	uint8_t fan2ExtraIdle;Additional idle % when fan #2 is active;"%", 1, 0, 0, 100, 0
+-	uint8_t autoscale primingDelay;Delay to allow fuel pressure to build before firing the priming pulse.;"sec", 0.01, 0, 0, 1, 2
++	uint8_t autoscale primingDelay;Delay to allow fuel pressure to build before firing the priming pulse.;"s", 0.01, 0, 0, 1, 2
+ ! todo: rename to luaAnalogInputs
+ 	adc_channel_e[LUA_ANALOG_INPUT_COUNT iterate] auxAnalogInputs;
+ 
+@@ -1477,7 +1477,7 @@ tle8888_mode_e tle8888mode;
+ 
+ 	ThermistorConf auxTempSensor1
+ 	ThermistorConf auxTempSensor2
+-	int16_t knockSamplingDuration;;"Deg", 1, 0, 0, 720, 0
++	int16_t knockSamplingDuration;;"deg", 1, 0, 0, 720, 0
+ 	int16_t etbFreq;;"Hz", 1, 0, 0, @@ETB_HW_MAX_FREQUENCY@@, 0
+ 	pid_s etbWastegatePid;
+ 
+@@ -1491,7 +1491,7 @@ custom stepper_num_micro_steps_e 1 bits, U08,	@OFFSET@,	[0:3], @@stepper_num_mic
+ 	angle_t[MAX_CYLINDER_COUNT iterate] timing_offset_cylinder;per-cylinder ignition and fueling timing correction for uneven engines;"deg", 1, 0, -720, 720, 1
+ 
+ 
+-	float idlePidActivationTime;;"seconds", 1, 0, 0, 60, 1
++	float idlePidActivationTime;;"s", 1, 0, 0, 60, 1
+ 
+ 	int16_t vvtControlMinClt;Minimum coolant temperature to activate VVT;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -40 : -40}, {useMetricOnInterface ? @@CLT_UPPER_LIMIT@@ : @@CLT_UPPER_LIMIT@@ * 1.8 + 32}, 0
+ 
+@@ -1533,13 +1533,13 @@ custom stepper_num_micro_steps_e 1 bits, U08,	@OFFSET@,	[0:3], @@stepper_num_mic
+ 	pin_output_mode_e tle8888_csPinMode;
+ 	Gpio mc33816_cs;
+ 
+-	float auxFrequencyFilter;;"hz", 1, 0, 0, 100, 1
++	float auxFrequencyFilter;;"Hz", 1, 0, 0, 100, 1
+ 
+ 	sent_input_pin_e[SENT_INPUT_COUNT iterate] sentInputPins;
+ 
+ 
+-	int16_t coastingFuelCutRpmHigh;This sets the RPM above which fuel cut is active.;"rpm", 1, 0, 0, 5000, 0
+-	int16_t coastingFuelCutRpmLow;This sets the RPM below which fuel cut is deactivated, this prevents jerking or issues transitioning to idle;"rpm", 1, 0, 0, 5000, 0
++	int16_t coastingFuelCutRpmHigh;This sets the RPM above which fuel cut is active.;"RPM", 1, 0, 0, 5000, 0
++	int16_t coastingFuelCutRpmLow;This sets the RPM below which fuel cut is deactivated, this prevents jerking or issues transitioning to idle;"RPM", 1, 0, 0, 5000, 0
+ 	int16_t coastingFuelCutTps;Throttle position below which fuel cut is active. With an electronic throttle enabled, this checks against pedal position.;"%", 1, 0, 0, 20, 0
+ 	int16_t coastingFuelCutClt;Fuel cutoff is disabled when the engine is cold.;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -100 : -148}, {useMetricOnInterface ? @@CLT_UPPER_LIMIT@@ : @@CLT_UPPER_LIMIT@@ * 1.8 + 32}, 0
+ 
+@@ -1632,10 +1632,10 @@ uint8_t[TRACTION_CONTROL_ETB_DROP_SPEED_SIZE] tractionControlSpeedBins;;"RPM", 1
+ 	float[GAP_TRACKING_LENGTH iterate] triggerGapOverrideFrom;;"ratio", 1, 0, 0, 20, 3
+ 	float[GAP_TRACKING_LENGTH iterate] triggerGapOverrideTo;;"ratio", 1, 0, 0, 20, 3
+ 
+-	uint8_t autoscale maxCamPhaseResolveRpm;Below this RPM, use camshaft information to synchronize the crank's position for full sequential operation. Use this if your cam sensor does weird things at high RPM. Set to 0 to disable, and always use cam to help sync crank.;"rpm", 50, 0, 0, 12500, 0
++	uint8_t autoscale maxCamPhaseResolveRpm;Below this RPM, use camshaft information to synchronize the crank's position for full sequential operation. Use this if your cam sensor does weird things at high RPM. Set to 0 to disable, and always use cam to help sync crank.;"RPM", 50, 0, 0, 12500, 0
+ 
+-	uint8_t autoscale dfcoDelay;Delay before cutting fuel. Set to 0 to cut immediately with no delay. May cause rumbles and pops out of your exhaust...;"sec", 0.1, 0, 0, 10, 1
+-	uint8_t autoscale acDelay;Delay before engaging the AC compressor. Set to 0 to engage immediately with no delay. Use this to prevent bogging at idle when AC engages.;"sec", 0.1, 0, 0, 10, 1
++	uint8_t autoscale dfcoDelay;Delay before cutting fuel. Set to 0 to cut immediately with no delay. May cause rumbles and pops out of your exhaust...;"s", 0.1, 0, 0, 10, 1
++	uint8_t autoscale acDelay;Delay before engaging the AC compressor. Set to 0 to engage immediately with no delay. Use this to prevent bogging at idle when AC engages.;"s", 0.1, 0, 0, 10, 1
+ #define tChargeMode_e_enum "RPM+TPS (Default)", "Air Mass Interpolation", "Table"
+ custom tChargeMode_e 1 bits, U08, @OFFSET@, [0:1], @@tChargeMode_e_enum@@
+ tChargeMode_e tChargeMode;
+@@ -1715,9 +1715,9 @@ custom fuel_pressure_sensor_mode_e 1 bits, U08, @OFFSET@, [0:1], @@fuel_pressure
+ fuel_pressure_sensor_mode_e fuelPressureSensorMode
+ 
+ switch_input_pin_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPins;
+-	int16_t ALSMinRPM;;"rpm", 1, 0, 0, 20000, 0
+-	int16_t ALSMaxRPM;;"rpm", 1, 0, 0, 20000, 0
+-int16_t ALSMaxDuration;;"sec", 1, 0, 0, 10, 0
++	int16_t ALSMinRPM;;"RPM", 1, 0, 0, 20000, 0
++	int16_t ALSMaxRPM;;"RPM", 1, 0, 0, 20000, 0
++int16_t ALSMaxDuration;;"s", 1, 0, 0, 10, 0
+ 	int8_t ALSMinCLT;;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? 0 : 32}, {useMetricOnInterface ? 90 : 194}, 0
+ 	int8_t ALSMaxCLT;;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? 0 : 32}, {useMetricOnInterface ? 105 : 221}, 0
+ uint8_t alsMinTimeBetween;;"", 1, 0, 0, 250, 0
+@@ -1748,13 +1748,13 @@ pin_input_mode_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPinModes;
+ 	int8_t[TCU_GEAR_COUNT] autoscale gearBasedOpenLoopBoostAdder;Boost duty cycle modified by gear;"%", 0.5, 0, -63, 63, 1
+ 
+ 	uint32_t benchTestCount;How many test bench pulses do you want;"", 1, 0, 1, 10000000, 0
+-	uint8_t autoscale iacByTpsHoldTime;How long initial idle adder is held before starting to decay.;"seconds", 0.1, 0, 0, 25, 1
+-	uint8_t autoscale iacByTpsDecayTime;How long it takes to remove initial IAC adder to return to normal idle.;"seconds", 0.1, 0, 0, 25, 1
++	uint8_t autoscale iacByTpsHoldTime;How long initial idle adder is held before starting to decay.;"s", 0.1, 0, 0, 25, 1
++	uint8_t autoscale iacByTpsDecayTime;How long it takes to remove initial IAC adder to return to normal idle.;"s", 0.1, 0, 0, 25, 1
+ 
+ 	switch_input_pin_e[RANGE_INPUT_COUNT iterate] tcu_rangeInput;
+ 	pin_input_mode_e[RANGE_INPUT_COUNT iterate] tcu_rangeInputMode;
+ 
+-	uint16_t autoscale canVssScaling;Scale the reported vehicle speed value from CAN. Example: Parameter set to 1.1, CAN VSS reports 50kph, ECU will report 55kph instead.;"ratio", 0.0001, 0, 0.5, 1.5, 4
++	uint16_t autoscale canVssScaling;Scale the reported vehicle speed value from CAN. Example: Parameter set to 1.1, CAN VSS reports 50kph, ECU will report 55kph instead.;"factor", 0.0001, 0, 0.5, 1.5, 4
+ 
+ 	ThermistorConf oilTempSensor
+ 	ThermistorConf fuelTempSensor
+@@ -1784,11 +1784,11 @@ int8_t[TRACTION_CONTROL_ETB_DROP_SPEED_SIZE x TRACTION_CONTROL_ETB_DROP_SLIP_SIZ
+ 
+ 	uint8_t maxInjectorDutyInstant;This sets an immediate limit on injector duty cycle. If this threshold is reached, the system will immediately cut the injectors.;"%", 1, 0, 50, 200, 0
+ 	uint8_t maxInjectorDutySustained;This limit allows injectors to operate up to the specified duty cycle percentage for a short period (as defined by the delay). After this delay, if the duty cycle remains above the limit, it will trigger a cut. ;"%", 1, 0, 50, 120, 0
+-	uint8_t autoscale maxInjectorDutySustainedTimeout;Timeout period for duty cycle over the sustained limit to trigger duty cycle protection.;"sec", 0.1, 0, 0, 5, 1
++	uint8_t autoscale maxInjectorDutySustainedTimeout;Timeout period for duty cycle over the sustained limit to trigger duty cycle protection.;"s", 0.1, 0, 0, 5, 1
+ 
+ 	output_pin_e[MAX_CYLINDER_COUNT iterate] injectionPinsStage2;
+ 
+-int8_t[TRACTION_CONTROL_ETB_DROP_SPEED_SIZE x TRACTION_CONTROL_ETB_DROP_SLIP_SIZE] tractionControlTimingDrop;;"Deg", 1, 0, -100, 100, 0
++int8_t[TRACTION_CONTROL_ETB_DROP_SPEED_SIZE x TRACTION_CONTROL_ETB_DROP_SLIP_SIZE] tractionControlTimingDrop;;"deg", 1, 0, -100, 100, 0
+ int8_t[TRACTION_CONTROL_ETB_DROP_SPEED_SIZE x TRACTION_CONTROL_ETB_DROP_SLIP_SIZE] tractionControlIgnitionSkip;;"%", 1, 0, 0, 100, 0
+ 
+ float auxSpeed1Multiplier
+@@ -1837,7 +1837,7 @@ int anotherCiTest
+     uint16_t minAcPressure;value of A/C pressure in kPa/psi before that compressor is disengaged;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? 500 : 72.5}, 0
+     uint16_t maxAcPressure;value of A/C pressure in kPa/psi after that compressor is disengaged;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? 500 : 72.5}, 0
+ 
+-	uint8_t autoscale minimumOilPressureTimeout;Delay before cutting fuel due to low oil pressure. Use this to ignore short pressure blips and sensor noise.;"sec", 0.1, 0, 0, 5, 1
++	uint8_t autoscale minimumOilPressureTimeout;Delay before cutting fuel due to low oil pressure. Use this to ignore short pressure blips and sensor noise.;"s", 0.1, 0, 0, 5, 1
+ 
+ linear_sensor_s auxLinear3
+ linear_sensor_s auxLinear4
+@@ -1919,9 +1919,9 @@ uint8_t autoscale knockFuelTrim;Maximum Amount of Fuel trim when knock;"%", 1, 0
+ 	int16_t nitrousMaximumMap;;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@}, 0
+ 	uint8_t autoscale nitrousMaximumAfr;;"afr", 0.1, 0, 10, 20, 1
+ 
+-	uint16_t nitrousActivationRpm;;"rpm", 1, 0, 0, 20000, 0
+-	uint16_t nitrousDeactivationRpm;;"rpm", 1, 0, 0, 20000, 0
+-	uint16_t nitrousDeactivationRpmWindow;;"rpm", 1, 0, 0, 20000, 0
++	uint16_t nitrousActivationRpm;;"RPM", 1, 0, 0, 20000, 0
++	uint16_t nitrousDeactivationRpm;;"RPM", 1, 0, 0, 20000, 0
++	uint16_t nitrousDeactivationRpmWindow;;"RPM", 1, 0, 0, 20000, 0
+ 
+ 	uint8_t dfcoRetardDeg;Retard timing by this amount during DFCO. Smooths the transition back from fuel cut. After fuel is restored, ramp timing back in over the period specified.;"deg", 1, 0, 0, 30, 0
+ 	uint8_t autoscale dfcoRetardRampInTime;Smooths the transition back from fuel cut. After fuel is restored, ramp timing back in over the period specified.;"s", 0.1, 0, 0, 1, 1
+@@ -1934,26 +1934,26 @@ uint8_t autoscale knockFuelTrim;Maximum Amount of Fuel trim when knock;"%", 1, 0
+     uint16_t nitrousMinimumVehicleSpeed;;{bitStringValue(velocityUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KMH_TO_MPH@@}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? 300 : 186}, 0
+ 
+     float fuelLevelAveragingAlpha;Exponential Average Alpha filtering parameter;"", 1, 0, 0.0001, 1, 4
+-    float fuelLevelUpdatePeriodSec;How often do we update fuel level gauge;"seconds", 1, 0, 0, 60000, 3
++    float fuelLevelUpdatePeriodSec;How often do we update fuel level gauge;"s", 1, 0, 0, 60000, 3
+ 
+-	float fuelLevelLowThresholdVoltage;Error below specified value;"v", 1, 0, 0, 10, 2
+-	float fuelLevelHighThresholdVoltage;Error above specified value;"v", 1, 0, 0, 10, 2
++	float fuelLevelLowThresholdVoltage;Error below specified value;"V", 1, 0, 0, 10, 2
++	float fuelLevelHighThresholdVoltage;Error above specified value;"V", 1, 0, 0, 10, 2
+ 
+     float afrExpAverageAlpha;A higher alpha (closer to 1) means the EMA reacts more quickly to changes in the data.\n'1' means no filtering, 0.98 would be some filtering.;"", 1, 0, 0, 1, 4
+ 
+ 	uint8_t autoscale sparkHardwareLatencyCorrection;Compensates for trigger delay due to belt stretch, or other electromechanical issues. beware that raising this value advances ignition timing!;"uS", 1, 0, 0, 250, 0
+ 
+-	uint8_t autoscale maxOilPressureTimeout;Delay before cutting fuel due to extra high oil pressure. Use this to ignore short pressure blips and sensor noise.;"sec", 0.1, 0, 0, 5, 1
++	uint8_t autoscale maxOilPressureTimeout;Delay before cutting fuel due to extra high oil pressure. Use this to ignore short pressure blips and sensor noise.;"s", 0.1, 0, 0, 5, 1
+ 
+ 	uint16_t[8] autoscale idleFlowEstimateFlow;;"kg/h", 0.01, 0, 0, 200, 2
+ 	uint8_t[8] autoscale idleFlowEstimatePosition;;"%", 0.5, 0, 0, 100, 1
+ 
+ 	int8_t[8] airmassToTimingBins;;"mg", 1, 0, -100, 100, 0
+ 	int8_t[8] airmassToTimingValues;;"deg", 1, 0, -30, 30, 0
+-	uint8_t autoscale idleReturnTargetRampDuration;idle return target ramp duration;"seconds", 0.1, 0, 0.1, 15, 1
++	uint8_t autoscale idleReturnTargetRampDuration;idle return target ramp duration;"s", 0.1, 0, 0.1, 15, 1
+ 
+-	float wastegatePositionOpenedVoltage;Voltage when the wastegate is fully open;"v", 1, 0, 0, 10, 2
+-	float wastegatePositionClosedVoltage;Voltage when the wastegate is closed;"v", 1, 0, 0, 10, 2
++	float wastegatePositionOpenedVoltage;Voltage when the wastegate is fully open;"V", 1, 0, 0, 10, 2
++	float wastegatePositionClosedVoltage;Voltage when the wastegate is closed;"V", 1, 0, 0, 10, 2
+ 
+ 	#define can_wbo_type_e_enum "RusEFI", "AEM X-series", "Disabled/Analog"
+ 	custom can_wbo_type_e 1 bits, U08, @OFFSET@, [0:1], @@can_wbo_type_e_enum@@
+@@ -1983,9 +1983,9 @@ struct vvl_s
+     int16_t maximumMap;;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@}, 0
+     uint8_t autoscale maximumAfr;;"afr", 0.1, 0, 0, 20, 1
+ 
+-    uint16_t activationRpm;;"rpm", 1, 0, 0, 20000, 0
+-    uint16_t deactivationRpm;;"rpm", 1, 0, 0, 20000, 0
+-    uint16_t deactivationRpmWindow;;"rpm", 1, 0, 0, 20000, 0
++    uint16_t activationRpm;;"RPM", 1, 0, 0, 20000, 0
++    uint16_t deactivationRpm;;"RPM", 1, 0, 0, 20000, 0
++    uint16_t deactivationRpmWindow;;"RPM", 1, 0, 0, 20000, 0
+ end_struct
+ 
+     vvl_s vvlController;
+@@ -1998,7 +1998,7 @@ end_struct
+ 
+ ! historically 'unusedOftenChangesDuringFirmwareUpdate' was here - now that's just an anchor reminding where to insert new fields
+ 
+-	uint16_t launchRpmThreshold;Launch RPM Threshold: when above 0, launch only engages if the activation switch (button/clutch) is pressed at or below this RPM, and stays latched while held - even past this RPM. This lets a standing launch (switch pressed low, revved up) coexist with flat shift / torque reduction (switch blipped high during an upshift). 0 disables the gate (legacy behavior).;"rpm", 1, 0, 0, 20000, 0
++	uint16_t launchRpmThreshold;Launch RPM Threshold: when above 0, launch only engages if the activation switch (button/clutch) is pressed at or below this RPM, and stays latched while held - even past this RPM. This lets a standing launch (switch pressed low, revved up) coexist with flat shift / torque reduction (switch blipped high during an upshift). 0 disables the gate (legacy behavior).;"RPM", 1, 0, 0, 20000, 0
+ 
+ 	! --- Misfire Detection ---
+ 	bit misfireDetectionEnabled,"enabled","disabled";Misfire Detection: master enable. Active at idle only. Latches check-engine light (P0300) once the count threshold is reached.
+@@ -2028,6 +2028,10 @@ end_struct
+ 	i2c_config_s[I2C_BUS_TOTAL_COUNT iterate] i2c;
+ 
+ 	int8_t binarySyncRemainderOffset;VVT Polled Binary: crank phase remainder offset for binary cam sync;"", 1, 0, -128, 127, 0
++
++	uint8_t triggerMinPulseWidthPercent;Reject primary trigger edges arriving sooner than this percent of the previous edge-to-edge interval. 0 disables spike rejection.;"%", 1, 0, 0, 50, 0
++
++	uint16_t triggerMinToothOnTimeUs;Below cranking RPM only: reject primary trigger teeth whose high time from rise to fall is shorter than this. 0 disables on-time validation.;"us", 1, 0, 0, 65000, 0
+ ! end of engine_configuration_s
+ end_struct
+ 
+@@ -2044,7 +2048,7 @@ float[TMF_RATIO_SIZE x TMF_SIZE] tmfTable;;"", 1, 0, 0, 255, 2
+ #define CRANKING_ENRICH_COUNT 6
+ #define CRANKING_ENRICH_CLT_COUNT 6
+ 
+-	float[CRANKING_ENRICH_CLT_COUNT x CRANKING_ENRICH_COUNT] postCrankingFactor;;"mult", 1, 0, 1, 3, 2
++	float[CRANKING_ENRICH_CLT_COUNT x CRANKING_ENRICH_COUNT] postCrankingFactor;;"factor", 1, 0, 1, 3, 2
+ 	uint16_t[CRANKING_ENRICH_COUNT] postCrankingDurationBins;;"count", 1, 0, 0, 64000, 0
+ 	int16_t[CRANKING_ENRICH_CLT_COUNT] postCrankingCLTBins;;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -100 : -148}, {useMetricOnInterface ? @@CLT_UPPER_LIMIT@@ : @@CLT_UPPER_LIMIT@@ * 1.8 + 32}, 0
+ 
+@@ -2089,9 +2093,9 @@ float[TMF_RATIO_SIZE x TMF_SIZE] tmfTable;;"", 1, 0, 0, 255, 2
+ 	float[BARO_CORR_SIZE] baroCorrPressureBins;;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? 120 : 17.4}, 2
+     float[BARO_CORR_SIZE] baroCorrRpmBins;;"RPM", 1, 0, 0, 18000, 0
+ 
+-    float[BARO_CORR_SIZE x BARO_CORR_SIZE] baroCorrTable;;"ratio", 1, 0, 0, 2, 2
++    float[BARO_CORR_SIZE x BARO_CORR_SIZE] baroCorrTable;;"factor", 1, 0, 0, 2, 2
+ 
+-	float[CRANKING_CURVE_SIZE] crankingTpsCoef;Cranking fuel correction coefficient based on TPS;"Ratio", 1, 0, 0, 700, 2
++	float[CRANKING_CURVE_SIZE] crankingTpsCoef;Cranking fuel correction coefficient based on TPS;"factor", 1, 0, 0, 700, 2
+ 	float[CRANKING_CURVE_SIZE] crankingTpsBins;;"%", 1, 0, 0, 100, 2
+ 
+ uint16_t[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvanceBins;Optional timing advance table for Cranking (see useSeparateAdvanceForCranking);"RPM", 1, 0, 0, 25000, 0
+@@ -2111,7 +2115,7 @@ uint8_t[PEDAL_TO_TPS_SIZE] pedalToTpsPedalBins;;"%", 1, 0, 0, 120, 0
+ uint8_t[PEDAL_TO_TPS_RPM_SIZE] autoscale pedalToTpsRpmBins;;"RPM", @@RPM_AS_BYTE_SCALE@@, 0, 0, @@RPM_AS_BYTE_LIMIT@@, 0
+ 
+ float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorrBins;CLT-based cranking position %. The values in this curve represent a percentage of the ETB Maximum angle. e.g. If "ETB Idle Maximum Angle" is 10, a value of 70 means 7% ETB Position.;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -100 : -148}, {useMetricOnInterface ? @@CLT_UPPER_LIMIT@@ : @@CLT_UPPER_LIMIT@@ * 1.8 + 32}, 2
+-float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorr    ;CLT-based cranking position %. The values in this curve represent a percentage of the ETB Maximum angle. e.g. If "ETB Idle Maximum Angle" is 10, a value of 70 means 7% ETB Position.;"percent", 1, 0, 0, 100, 2
++float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorr    ;CLT-based cranking position %. The values in this curve represent a percentage of the ETB Maximum angle. e.g. If "ETB Idle Maximum Angle" is 10, a value of 70 means 7% ETB Position.;"%", 1, 0, 0, 100, 2
+ 
+ float[CLT_CRANKING_TAPER_CURVE_SIZE] afterCrankingIACtaperDurationBins;;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -100 : -148}, {useMetricOnInterface ? @@CLT_UPPER_LIMIT@@ : @@CLT_UPPER_LIMIT@@ * 1.8 + 32}, 2
+ uint16_t[CLT_CRANKING_TAPER_CURVE_SIZE] afterCrankingIACtaperDuration;This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.\nShould be 100 once tune is better;"cycles", 1, 0, 0, 500, 1
+@@ -2128,16 +2132,16 @@ uint16_t[IDLE_VE_SIZE x IDLE_VE_SIZE_RPM] autoscale idleVeTable;;"%", 0.1, 0, 0,
+ 
+ #define CLT_FUEL_CURVE_SIZE 16
+ float[CLT_FUEL_CURVE_SIZE] cltFuelCorrBins;;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -100 : -148}, {useMetricOnInterface ? @@CLT_UPPER_LIMIT@@ : @@CLT_UPPER_LIMIT@@ * 1.8 + 32}, 2
+-float[CLT_FUEL_CURVE_SIZE] cltFuelCorr;;"ratio", 1, 0, 0, 5, 2
++float[CLT_FUEL_CURVE_SIZE] cltFuelCorr;;"factor", 1, 0, 0, 5, 2
+ 
+ #define IAT_CURVE_SIZE 16
+ float[IAT_CURVE_SIZE] iatFuelCorrBins;;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -100 : -148}, {useMetricOnInterface ? @@CLT_UPPER_LIMIT@@ : @@CLT_UPPER_LIMIT@@ * 1.8 + 32}, 2
+-float[IAT_CURVE_SIZE] iatFuelCorr;;"ratio", 1, 0, 0, 5, 2
++float[IAT_CURVE_SIZE] iatFuelCorr;;"factor", 1, 0, 0, 5, 2
+ 
+-	float[CRANKING_CURVE_SIZE] crankingFuelCoef;;"ratio", 1, 0, 0, 50, 2
++	float[CRANKING_CURVE_SIZE] crankingFuelCoef;;"factor", 1, 0, 0, 50, 2
+ 	float[CRANKING_CURVE_SIZE] crankingFuelBins;;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -80 : -112}, {useMetricOnInterface ? @@CLT_UPPER_LIMIT@@ : @@CLT_UPPER_LIMIT@@ * 1.8 + 32}, 2
+ 
+-	float[CRANKING_CURVE_SIZE] crankingCycleBins;;"counter", 1, 0, -80, 170, 0
++	float[CRANKING_CURVE_SIZE] crankingCycleBins;;"count", 1, 0, -80, 170, 0
+   int16_t[CRANKING_CYCLE_CLT_SIZE] crankingCycleFuelCltBins;;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -100 : -148}, {useMetricOnInterface ? @@CLT_UPPER_LIMIT@@ : @@CLT_UPPER_LIMIT@@ * 1.8 + 32}, 2
+ 	float[CRANKING_CYCLE_CLT_SIZE x CRANKING_CURVE_SIZE] crankingCycleBaseFuel;Base mass of the per-cylinder fuel injected during cranking. This is then modified by the multipliers for IAT, TPS ect, to give the final cranking pulse width.\nA reasonable starting point is 60mg per liter per cylinder.\nex: 2 liter 4 cyl = 500cc/cyl, so 30mg cranking fuel.;"mg", 1, 0, 0, 500, 1
+ 
+@@ -2235,24 +2239,24 @@ end_struct
+ 
+ ! All ign trim tables share axes
+ uint16_t[IGN_TRIM_SIZE] ignTrimLoadBins;;{bitStringValue(ignLoadUnitLabels, ignLoadUnitIdx)}, {!(ignOverrideMode == 1 || (ignOverrideMode == 0 && fuelAlgorithm == 0)) || useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, 0, {ignOverrideMode == 1 || (ignOverrideMode == 0 && fuelAlgorithm == 0) ? (useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@) : @@MAP_UPPER_LIMIT@@}, 0
+-uint16_t[IGN_TRIM_SIZE] ignTrimRpmBins;;"rpm", 1, 0, 0, 20000, 0
++uint16_t[IGN_TRIM_SIZE] ignTrimRpmBins;;"RPM", 1, 0, 0, 20000, 0
+ ign_cyl_trim_s[MAX_CYLINDER_COUNT iterate] ignTrims
+ 
+ ! All fuel trim tables share axes
+ uint16_t[FUEL_TRIM_SIZE] fuelTrimLoadBins;;{bitStringValue(veLoadUnitLabels, veLoadUnitIdx)}, {!(veOverrideMode == 1 || (veOverrideMode == 0 && fuelAlgorithm == 0)) || useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, 0, {veOverrideMode == 1 || (veOverrideMode == 0 && fuelAlgorithm == 0) ? (useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@) : @@MAP_UPPER_LIMIT@@}, 0
+-uint16_t[FUEL_TRIM_SIZE] fuelTrimRpmBins;;"rpm", 1, 0, 0, 20000, 0
++uint16_t[FUEL_TRIM_SIZE] fuelTrimRpmBins;;"RPM", 1, 0, 0, 20000, 0
+ fuel_cyl_trim_s[MAX_CYLINDER_COUNT iterate] fuelTrims
+ 
+ ! Retired field: the old 1D E100 cranking multiplier. Cranking flex now uses crankingFuelFlexTable, and old
+ ! tunes are migrated into it by CrankingFlexTableMigrator (java_console). Renamed with the 'unused' prefix so the
+ ! byte slot stays reserved (stable offsets, reusable later) and the tune-migration framework ignores it.
+-uint16_t[CRANKING_CURVE_SIZE] autoscale unusedCrankingFuelCoefE100;;"ratio", 0.01, 0, 0, 50, 2
++uint16_t[CRANKING_CURVE_SIZE] autoscale unusedCrankingFuelCoefE100;;"factor", 0.01, 0, 0, 50, 2
+ 
+ ! 2D cranking coolant multiplier vs ethanol %, used when flexCranking is enabled.
+ ! A real ethanol axis (default 0/35/65/100) lets the whole E0..E100 range be calibrated directly.
+ ! uint8 (0.02 resolution) keeps RAM tiny.
+ uint8_t[CRANKING_FLEX_SIZE] crankingFuelFlexBins;Ethanol % axis (Y) for crankingFuelFlexTable.;"%", 1, 0, 0, 100, 0
+-uint8_t[CRANKING_FLEX_SIZE x CRANKING_CURVE_SIZE] autoscale crankingFuelFlexTable;Cranking coolant multiplier as a function of coolant (X axis, shared crankingFuelBins) and ethanol % (Y axis, crankingFuelFlexBins). Used instead of crankingFuelCoef when flexCranking is enabled and a flex sensor is present.;"mult", 0.02, 0, 0, 5, 2
++uint8_t[CRANKING_FLEX_SIZE x CRANKING_CURVE_SIZE] autoscale crankingFuelFlexTable;Cranking coolant multiplier as a function of coolant (X axis, shared crankingFuelBins) and ethanol % (Y axis, crankingFuelFlexBins). Used instead of crankingFuelCoef when flexCranking is enabled and a flex sensor is present.;"factor", 0.02, 0, 0, 5, 2
+ 
+ #define TCU_TABLE_WIDTH 8
+ 
+@@ -2314,11 +2318,11 @@ int16_t[ALS_SIZE x ALS_RPM_SIZE] autoscale ALSTimingRetardTable;;"deg", 0.1, 0,
+ uint16_t[ALS_SIZE] alsIgnRetardLoadBins;;"TPS", 1, 0, 0, 100, 0
+ uint16_t[ALS_RPM_SIZE] alsIgnRetardrpmBins;;"RPM",	   1, 0, 0, 25000, 0
+ 
+-int16_t[ALS_SIZE x ALS_RPM_SIZE] autoscale ALSFuelAdjustment;;"percent", 0.1, 0, 0, 50, 1
++int16_t[ALS_SIZE x ALS_RPM_SIZE] autoscale ALSFuelAdjustment;;"%", 0.1, 0, 0, 50, 1
+ uint16_t[ALS_SIZE] alsFuelAdjustmentLoadBins;;"TPS", 1, 0, 0, 100, 0
+ uint16_t[ALS_RPM_SIZE] alsFuelAdjustmentrpmBins;;"RPM",	1, 0, 0, 25000, 0
+ 
+-int16_t[ALS_SIZE x ALS_RPM_SIZE] autoscale ALSIgnSkipTable;;"ratio", 10, 0, 0, 50, 1
++int16_t[ALS_SIZE x ALS_RPM_SIZE] autoscale ALSIgnSkipTable;;"factor", 10, 0, 0, 50, 1
+ uint16_t[ALS_SIZE] alsIgnSkipLoadBins;;"TPS", 1, 0, 0, 100, 0
+ uint16_t[ALS_RPM_SIZE] alsIgnSkiprpmBins;;"RPM",	   1, 0, 0, 25000, 0
+ 
+@@ -2387,7 +2391,7 @@ uint8_t[WWAE_TABLE_SIZE] autoscale wwBetaMapValues;;"", 0.01, 0, 0, 2.5, 2
+ 
+ uint8_t[HPFP_LOBE_PROFILE_SIZE] autoscale hpfpLobeProfileQuantityBins;;"%", 0.5, 0, 0, 100, 1
+ uint8_t[HPFP_LOBE_PROFILE_SIZE] autoscale hpfpLobeProfileAngle;;"deg", 0.5, 0, 0, 125, 1
+-uint8_t[HPFP_DEADTIME_SIZE] hpfpDeadtimeVoltsBins;;"volts", 1, 0, 0, 255, 0
++uint8_t[HPFP_DEADTIME_SIZE] hpfpDeadtimeVoltsBins;;"V", 1, 0, 0, 255, 0
+ uint16_t[HPFP_DEADTIME_SIZE] autoscale hpfpDeadtimeMS;;"ms", 0.001, 0, 0, 65, 3
+ uint16_t[HPFP_TARGET_SIZE x HPFP_TARGET_SIZE] hpfpTarget;;"kPa", 1, 0, 0, 65000, 0
+ uint16_t[HPFP_TARGET_SIZE] autoscale hpfpTargetLoadBins;;"load", 0.1, 0, 0, 6500, 1
+@@ -2411,10 +2415,10 @@ uint16_t[ENGINE_NOISE_CURVE_SIZE] knockNoiseRpmBins;;"RPM", 1, 0, 0, 30000, 0
+ int8_t[ENGINE_NOISE_CURVE_SIZE] autoscale knockBaseNoise;Knock sensor output knock detection threshold depending on current RPM.;"dB", 0.5, 0, -64, 10, 1
+ 
+ uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale tpsTspCorrValuesBins;;"RPM", 50, 0, 0, 12500, 0
+-uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale tpsTspCorrValues;;"multiplier", 0.02, 0, 0, 5, 2
++uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale tpsTspCorrValues;;"factor", 0.02, 0, 0, 5, 2
+ 
+ uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale predictiveMapBlendDurationBins;;"RPM", 50, 0, 0, 12500, 0
+-uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale predictiveMapBlendDurationValues;;"second", 0.02, 0, 0, 5, 2
++uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale predictiveMapBlendDurationValues;;"s", 0.02, 0, 0, 5, 2
+ 
+ ! Flex-fuel transient fueling compensation: CLT (X) x Ethanol% (Y) multiplier tables
+ #define FLEX_TRANSIENT_CLT_SIZE 8
+@@ -2422,19 +2426,19 @@ uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale predictiveMapBlendDurationValues
+ 
+ int16_t[FLEX_TRANSIENT_CLT_SIZE] flexTransientCltBins;Coolant temperature axis for the flex-fuel transient compensation tables;"C", 1, 0, -40, 200, 0
+ uint8_t[FLEX_TRANSIENT_ETH_SIZE] flexTransientEthanolBins;Ethanol percentage axis for the flex-fuel transient compensation tables;"%", 1, 0, 0, 100, 0
+-uint8_t[FLEX_TRANSIENT_ETH_SIZE x FLEX_TRANSIENT_CLT_SIZE] autoscale flexAeMult;Acceleration enrichment multiplier as a function of CLT (X) and ethanol % (Y);"mult", 0.02, 0, 0, 5, 2
+-uint8_t[FLEX_TRANSIENT_ETH_SIZE x FLEX_TRANSIENT_CLT_SIZE] autoscale flexWwTauMult;Wall wetting tau multiplier as a function of CLT (X) and ethanol % (Y);"mult", 0.02, 0, 0, 5, 2
+-uint8_t[FLEX_TRANSIENT_ETH_SIZE x FLEX_TRANSIENT_CLT_SIZE] autoscale flexWwBetaMult;Wall wetting beta multiplier as a function of CLT (X) and ethanol % (Y);"mult", 0.02, 0, 0, 5, 2
++uint8_t[FLEX_TRANSIENT_ETH_SIZE x FLEX_TRANSIENT_CLT_SIZE] autoscale flexAeMult;Acceleration enrichment multiplier as a function of CLT (X) and ethanol % (Y);"factor", 0.02, 0, 0, 5, 2
++uint8_t[FLEX_TRANSIENT_ETH_SIZE x FLEX_TRANSIENT_CLT_SIZE] autoscale flexWwTauMult;Wall wetting tau multiplier as a function of CLT (X) and ethanol % (Y);"factor", 0.02, 0, 0, 5, 2
++uint8_t[FLEX_TRANSIENT_ETH_SIZE x FLEX_TRANSIENT_CLT_SIZE] autoscale flexWwBetaMult;Wall wetting beta multiplier as a function of CLT (X) and ethanol % (Y);"factor", 0.02, 0, 0, 5, 2
+ 
+ ! yes, 200C region is legit for some air-cooled engines
+ int16_t[CLT_LIMITER_CURVE_SIZE] autoscale cltRevLimitRpmBins;;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -40 : -40}, {useMetricOnInterface ? 200 : 392}, 0
+ uint16_t[CLT_LIMITER_CURVE_SIZE] cltRevLimitRpm;;"RPM", 1, 0, 0, 20000, 0
+ 
+-uint16_t[FUEL_LEVEL_TABLE_COUNT] autoscale fuelLevelBins;;"volt", {1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
++uint16_t[FUEL_LEVEL_TABLE_COUNT] autoscale fuelLevelBins;;"V", {1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
+ uint8_t[FUEL_LEVEL_TABLE_COUNT] fuelLevelValues;;"%", 1, 0, 0, 100, 0
+ 
+-uint8_t[DWELL_CURVE_SIZE] autoscale dwellVoltageCorrVoltBins;;"volts", 0.1, 0, 0, 20, 1
+-uint8_t[DWELL_CURVE_SIZE] autoscale dwellVoltageCorrValues;;"multiplier", 0.02, 0, 0, 5, 2
++uint8_t[DWELL_CURVE_SIZE] autoscale dwellVoltageCorrVoltBins;;"V", 0.1, 0, 0, 20, 1
++uint8_t[DWELL_CURVE_SIZE] autoscale dwellVoltageCorrValues;;"factor", 0.02, 0, 0, 5, 2
+ 
+ uint8_t[TCU_TABLE_WIDTH] autoscale tcu_shiftTpsBins;;"%", 1, 0, 0, 255, 2
+ uint8_t[TCU_TABLE_WIDTH] tcu_shiftSpeed12;;{bitStringValue(velocityUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KMH_TO_MPH@@}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? 255 : 158}, 0
+@@ -2449,7 +2453,7 @@ float tcu_shiftTime;;"ms", 1, 0, 0, 3000, 0
+ #define ALTERNATOR_VOLTAGE_TARGET_SIZE 4
+ #define ALTERNATOR_VOLTAGE_RPM_SIZE 4
+ 
+-int16_t[ALTERNATOR_VOLTAGE_TARGET_SIZE x ALTERNATOR_VOLTAGE_RPM_SIZE] autoscale alternatorVoltageTargetTable;;"volts", 0.1, 0, 0, 30, 1
++int16_t[ALTERNATOR_VOLTAGE_TARGET_SIZE x ALTERNATOR_VOLTAGE_RPM_SIZE] autoscale alternatorVoltageTargetTable;;"V", 0.1, 0, 0, 30, 1
+ uint16_t[ALTERNATOR_VOLTAGE_TARGET_SIZE] alternatorVoltageTargetLoadBins;;"Load", 1, 0, 0, 1000, 0
+ uint16_t[ALTERNATOR_VOLTAGE_RPM_SIZE] alternatorVoltageTargetRpmBins;;"RPM", 1, 0, 0, 18000, 0
+ 
+@@ -2520,7 +2524,7 @@ float   autoscale dynoCarCoeffOfDrag;@@DYNO_CAR_COEFF_OF_DRAG_TOOLTIP@@;@@DYNO_C
+ float   autoscale dynoCarFrontalAreaM2;@@DYNO_CAR_FRONTAL_AREA_TOOLTIP@@;@@DYNO_CAR_FRONTAL_AREA_UNITS@@, 1, 0, 0, 100, 2
+ 
+ int8_t[TRAILING_SPARK_SIZE x TRAILING_SPARK_RPM_SIZE] autoscale trailingSparkTable;;"deg", 0.1, 0, 0, 12, 1
+-uint8_t[TRAILING_SPARK_RPM_SIZE] autoscale trailingSparkRpmBins;;"rpm", 50, 0, 0, 12000, 0
++uint8_t[TRAILING_SPARK_RPM_SIZE] autoscale trailingSparkRpmBins;;"RPM", 50, 0, 0, 12000, 0
+ uint8_t[TRAILING_SPARK_SIZE] autoscale trailingSparkLoadBins;;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 5 : 5 * @@UNITS_KPA_TO_PSI@@}, 0, 0, {useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@}, 0
+ 
+ uint8_t[4] autoscale maximumOilPressureBins;;"RPM", @@RPM_AS_BYTE_SCALE@@, 0, 0, @@RPM_AS_BYTE_LIMIT@@, 0
+diff --git a/firmware/libfirmware b/firmware/libfirmware
+--- a/firmware/libfirmware
++++ b/firmware/libfirmware
+@@ -1 +1 @@
+-Subproject commit f37be6c3c8ca040efdffc9a6dbad9637b32ebda0
++Subproject commit f37be6c3c8ca040efdffc9a6dbad9637b32ebda0-dirty
+diff --git a/firmware/tunerstudio/gauge_declarations.ini b/firmware/tunerstudio/gauge_declarations.ini
+index cab91bf726c..07fccd5dbd0 100644
+--- a/firmware/tunerstudio/gauge_declarations.ini
++++ b/firmware/tunerstudio/gauge_declarations.ini
+@@ -72,13 +72,13 @@ gaugeCategory = CAN
+ 	canWriteNotOkGauge = canWriteNotOk,@@GAUGE_NAME_CAN_WRITE_ERR@@, "", 0,64000, 0,64000, 0,64000, 0,0
+ 
+ gaugeCategory = GDI
+-	di_nextStartGauge = di_nextStart,"DI: next start", "v", 0.0,100.0, 0.0,100.0, 0.0,100.0, 0,0
++	di_nextStartGauge = di_nextStart,"DI: next start", "V", 0.0,100.0, 0.0,100.0, 0.0,100.0, 0,0
+ 	m_requested_pumpGauge = m_requested_pump,"DI: Pump Angle", "deg", 0.0,0.0, 0.0,0.0, 0.0,0.0, 0,0
+ 	fuel_requested_percentGauge = fuel_requested_percent,"DI: HPFP requested duty", "%", 0.0, 100.0, 0.0, 0.0, 80.0, 90.0, 0,0
+-	fuel_requested_percent_piGauge = fuel_requested_percent_pi,"DI: fuel_requested_percent_pi", "v", 0.0,100.0, 0.0,100.0, 0.0,100.0, 0,0
++	fuel_requested_percent_piGauge = fuel_requested_percent_pi,"DI: fuel_requested_percent_pi", "V", 0.0,100.0, 0.0,100.0, 0.0,100.0, 0,0
+ 	;todo see comment in HpfpQuantity class definition
+-	;m_I_sum_percentGauge = m_I_sum_percent,"DI: m_I_sum_percent", "v", 0.0,100.0, 0.0,100.0, 0.0,100.0, 0,0
+-	;m_pressureTarget_kPaGauge = m_pressureTarget_kPa,"DI: m_pressureTarget_kPa", "v", 0.0,100.0, 0.0,100.0, 0.0,100.0, 0,0
++	;m_I_sum_percentGauge = m_I_sum_percent,"DI: m_I_sum_percent", "V", 0.0,100.0, 0.0,100.0, 0.0,100.0, 0,0
++	;m_pressureTarget_kPaGauge = m_pressureTarget_kPa,"DI: m_pressureTarget_kPa", "V", 0.0,100.0, 0.0,100.0, 0.0,100.0, 0,0
+ 	highFuelPressureGauge = highFuelPressure, @@GAUGE_NAME_FUEL_PRESSURE_HIGH@@, @@GAUGE_NAME_FUEL_PRESSURE_HIGH_UNITS@@, 0, 200, 0, 0, 200, 200, 1, 0
+ 
+ gaugeCategory = @@GAUGE_CATEGORY_ECU_STATUS@@
+@@ -95,10 +95,10 @@ gaugeCategory = @@GAUGE_CATEGORY_ECU_STATUS@@
+ 	recentErrorCode6Gauge = recentErrorCode6, "Error#6", "",	0,  18000,	0,	0,	18000, 18000,	0,	0
+ 	recentErrorCode7Gauge = recentErrorCode7, "Error#7", "",	0,  18000,	0,	0,	18000, 18000,	0,	0
+ 	recentErrorCode8Gauge = recentErrorCode8, "Error#8", "",	0,  18000,	0,	0,	18000, 18000,	0,	0
+-	firmwareVersionGauge  = firmwareVersion , @@GAUGE_NAME_FW_VERSION@@, "%",	0,	100,	0,	0,	100,  100,	0,	0
+-	timeSecondsGauge	=	seconds, @@GAUGE_NAME_UPTIME@@, "sec",	0,	100,	0,	0,	100,  100,	0,	0
++	firmwareVersionGauge  = firmwareVersion , @@GAUGE_NAME_FW_VERSION@@, "",	0,	100,	0,	0,	100,  100,	0,	0
++	timeSecondsGauge	=	seconds, @@GAUGE_NAME_UPTIME@@, "s",	0,	100,	0,	0,	100,  100,	0,	0
+ 	tuneCrc16Gauge = tuneCrc16, @@GAUGE_NAME_TUNE_CRC16@@, "",	0,  64000,	0,	0,	64000, 64000,	0,	0
+-	rtcUnixEpochTimeGauge	=	rtcUnixEpochTime, "Epoch Time", "sec",	0,	100,	0,	0,	100,  100,	0,	0
++	rtcUnixEpochTimeGauge	=	rtcUnixEpochTime, "Epoch Time", "s",	0,	100,	0,	0,	100,  100,	0,	0
+ 
+ gaugeCategory = Debug
+ 	debugF1Gauge = debugFloatField1, {bitStringValue( debugFieldF1List,  debugMode )}, "",	0,	100,	0,	0,	100,  100,	4,	4
+@@ -139,7 +139,7 @@ gaugeCategory = Sensors - Extra 1
+ 	OilPressGauge		= OilPressure,		@@GAUGE_NAME_OIL_PRESSURE@@,		{ bitStringValue(pressureUnitsLabels, useMetricOnInterface) },		0,	{ useMetricOnInterface ? 750 : 108.77 },		{ useMetricOnInterface ? 35 : 5.07 },	{ useMetricOnInterface ? 75 : 10.87 },	{ useMetricOnInterface ? 550 : 79.77 },	{ useMetricOnInterface ? 700 : 101 },	0,	0
+ 	OilTempGauge		= OilTemp,			@@GAUGE_NAME_OIL_TEMPERATURE@@,		{bitStringValue(unitsLabels, useMetricOnInterface)},		-40,	{ useMetricOnInterface ? 140 : 284 },	{ useMetricOnInterface ? -15 : -5 },		{ useMetricOnInterface ? 1 : 33.8 },		{ useMetricOnInterface ? 95 : 203 },	{ useMetricOnInterface ? 110 : 230 },	{ useMetricOnInterface ? @@GAUGE_PRECISION_TEMPERATURE_C@@ : @@GAUGE_PRECISION_TEMPERATURE_F@@ }
+ 	wheelSlipRatioGauge			= wheelSlipRatio,		"Wheel Slip Ratio",			"",		0,	5,		0,		1,		3,	4,	3,	3
+-	turboSpeedGauge	= turboSpeed,			@@GAUGE_NAME_TURBO_SPEED@@, "hz",			0,	200,		0,		1,		3,	4,	1,	1
++	turboSpeedGauge	= turboSpeed,			@@GAUGE_NAME_TURBO_SPEED@@, "Hz",			0,	200,		0,		1,		3,	4,	1,	1
+ 	AuxT1Gauge		= AuxTemp1,	@@GAUGE_NAME_AUX_TEMP1@@,		{bitStringValue(unitsLabels, useMetricOnInterface)},		-40,	{ useMetricOnInterface ? 140 : 284 },	{ useMetricOnInterface ? -15 : 5 },		{ useMetricOnInterface ? 1 : 33.8 },		{ useMetricOnInterface ? 95 : 203 },	{ useMetricOnInterface ? 110 : 230 },	{ useMetricOnInterface ? @@GAUGE_PRECISION_TEMPERATURE_C@@ : @@GAUGE_PRECISION_TEMPERATURE_F@@ }
+ 	AuxT2Gauge		= AuxTemp2,	@@GAUGE_NAME_AUX_TEMP2@@,		{bitStringValue(unitsLabels, useMetricOnInterface)},		-40,	{ useMetricOnInterface ? 140 : 284 },	{ useMetricOnInterface ? -15 : 5 },		{ useMetricOnInterface ? 1 : 33.8 },		{ useMetricOnInterface ? 95 : 203 },	{ useMetricOnInterface ? 110 : 230 },	{ useMetricOnInterface ? @@GAUGE_PRECISION_TEMPERATURE_C@@ : @@GAUGE_PRECISION_TEMPERATURE_F@@ }
+ 	ambientTempGauge		= AmbientTemp,	@@GAUGE_LONG_NAME_AAT@@,		{bitStringValue(unitsLabels, useMetricOnInterface)},		-40,	{ useMetricOnInterface ? 140 : 284 },	{ useMetricOnInterface ? -15 : 5 },		{ useMetricOnInterface ? 1 : 33.8 },		{ useMetricOnInterface ? 95 : 203 },	{ useMetricOnInterface ? 110 : 230 },	{ useMetricOnInterface ? @@GAUGE_PRECISION_TEMPERATURE_C@@ : @@GAUGE_PRECISION_TEMPERATURE_F@@ }
+@@ -160,8 +160,8 @@ gaugeCategory = Sensors - Extra 2
+ 	gyroYawGauge 		  = gyroYaw,			@@GAUGE_NAME_GYRO_YAW@@,		"acc",		-100,	100, -100, -100, 100, 100, 3, 1
+ 	rpmAccelerationGa = rpmAcceleration,	"rpm delta",		"RPM/s",		-2000,		2000,		-2000,		2000,		-2000,	2000,	0,	0
+ 	wastegatePosGauge = wastegatePositionSensor, @@GAUGE_NAME_WG_POSITION@@,  "%",		0,	100,		0,		0,	100,	100,	1,	1
+-	auxSpeed1Gauge = auxSpeed1, "Aux Freq Input1", "hz", 0, 30000, 0, 0, 30000, 30000, 0, 0
+-	auxSpeed2Gauge = auxSpeed2, "Aux Freq Input2", "hz", 0, 30000, 0, 0, 30000, 30000, 0, 0
++	auxSpeed1Gauge = auxSpeed1, "Aux Freq Input1", "Hz", 0, 30000, 0, 0, 30000, 30000, 0, 0
++	auxSpeed2Gauge = auxSpeed2, "Aux Freq Input2", "Hz", 0, 30000, 0, 0, 30000, 30000, 0, 0
+   throttleInletPressureGauge		= throttleInletPressure,					"throttleInletPressure",		{ bitStringValue(pressureUnitsLabels, useMetricOnInterface) },		0,	{ useMetricOnInterface ? 300 : 43.5 },		{ useMetricOnInterface ? 10 : 1.45 },	{ useMetricOnInterface ? 10 : 1.45 },	{ useMetricOnInterface ? 200 : 29 },	{ useMetricOnInterface ? 200 : 29 },	0,	0
+ 
+ gaugeCategory = Sensors - EGT
+@@ -203,9 +203,9 @@ gaugeCategory = VVT
+ 
+ gaugeCategory = Ignition
+ 	sparkCutReasonGauge = sparkCutReason,"Spark Cut Code", "code", 0.0,0.0, 0.0,0.0, 0.0,0.0, 0,0
+-	baseIgnAdvGauge = baseIgnitionAdvance,		@@GAUGE_NAME_TIMING_ADVANCE@@,	"degrees",	-100,	100,	-999,	-999,	999,	999,	1, 1
+-	correctedIgnAdvGauge = correctedIgnitionAdvance,		@@GAUGE_NAME_ADJUSTED_TIMING@@,	"degrees",	-100,	100,	-999,	-999,	999,	999,	1, 1
+-	dwellGauge		= sparkDwell,			"Dwell",		"mSec",		0,	10,	0.5,	1.0,	6.0,	8.0,	1, 1
++	baseIgnAdvGauge = baseIgnitionAdvance,		@@GAUGE_NAME_TIMING_ADVANCE@@,	"deg",	-100,	100,	-999,	-999,	999,	999,	1, 1
++	correctedIgnAdvGauge = correctedIgnitionAdvance,		@@GAUGE_NAME_ADJUSTED_TIMING@@,	"deg",	-100,	100,	-999,	-999,	999,	999,	1, 1
++	dwellGauge		= sparkDwell,			"Dwell",		"ms",		0,	10,	0.5,	1.0,	6.0,	8.0,	1, 1
+ 	coilDutyCycleGauge = coilDutyCycle,		@@GAUGE_NAME_DWELL_DUTY@@,		"%",		0,	110,	0,	0,		90,	100,	1, 1
+ 	ignitionLoadGauge = ignitionLoad, @@GAUGE_NAME_IGNITION_LOAD@@, "%", 0, 300, 0, 0, 300, 300, 1, 1
+ 
+@@ -219,20 +219,20 @@ gaugeCategory = Fueling
+ 	;Name					Var				Title					Units		Lo		Hi		LoD	LoW		HiW	HiD	vd  ld
+ 	fuelCutReasonGauge = fuelCutReason,"Fuel Cut Code", "code", 0.0,0.0, 0.0,0.0, 0.0,0.0, 0,0
+ 	tChargeGauge			= TCharge,	@@GAUGE_NAME_FUEL_CHARGE_TEMP@@,		{bitStringValue(unitsLabels, useMetricOnInterface)},		-40,	{ useMetricOnInterface ? 140 : 284 },	{ useMetricOnInterface ? -15 : 5 },		{ useMetricOnInterface ? 1 : 33.8 },		{ useMetricOnInterface ? 95 : 203 },	{ useMetricOnInterface ? 110 : 230 },	{ useMetricOnInterface ? @@GAUGE_PRECISION_TEMPERATURE_C@@ : @@GAUGE_PRECISION_TEMPERATURE_F@@ }
+-	baroCorrectionGauge  = baroCorrection,@@GAUGE_NAME_FUEL_BARO_CORR@@,			"ratio",		0.5,	1.5,		0.6,	0.7,	1.3,	1.4,	1,	1
++	baroCorrectionGauge  = baroCorrection,@@GAUGE_NAME_FUEL_BARO_CORR@@,			"factor",		0.5,	1.5,		0.6,	0.7,	1.3,	1.4,	1,	1
+ 	crankingFuelGauge = crankingFuel_fuel,	@@GAUGE_NAME_FUEL_CRANKING@@,		"mg",		0,	100,	0, 0,		100,	100,	3, 1
+-	iatCorrectionGauge = running_intakeTemperatureCoefficient, @@GAUGE_NAME_FUEL_IAT_CORR@@, "mult",	0,	3,	0,	0,	3,  3,	2,	2
+-	cltCorrectionGauge = running_coolantTemperatureCoefficient, @@GAUGE_NAME_FUEL_CLT_CORR@@, "mult",	0,	3,	0,	0,	3,  3,	2,	2
++	iatCorrectionGauge = running_intakeTemperatureCoefficient, @@GAUGE_NAME_FUEL_IAT_CORR@@, "factor",	0,	3,	0,	0,	3,  3,	2,	2
++	cltCorrectionGauge = running_coolantTemperatureCoefficient, @@GAUGE_NAME_FUEL_CLT_CORR@@, "factor",	0,	3,	0,	0,	3,  3,	2,	2
+ 	injectorDutyCycleGauge=injectorDutyCycle, @@GAUGE_NAME_FUEL_INJ_DUTY@@,"%",		0,	120,		10,	10,	100,	100,	1,	1
+ 	injectorDutyCycleStg2Gauge=injectorDutyCycleStage2, @@GAUGE_NAME_FUEL_INJ_DUTY_STAGE_2@@,"%",		0,	120,		10,	10,	100,	100,	1,	1
+-	actualLastInjectionGauge	= actualLastInjection,	@@GAUGE_NAME_FUEL_LAST_INJECTION@@, "mSec",		0,	25.5,	1.0,	1.2,		20,	25,	3, 1
+-	actualLastInjectionStg2Gauge	= actualLastInjectionStage2,	@@GAUGE_NAME_FUEL_LAST_INJECTION_STAGE_2@@, "mSec",		0,	25.5,	1.0,	1.2,		20,	25,	3, 1
++	actualLastInjectionGauge	= actualLastInjection,	@@GAUGE_NAME_FUEL_LAST_INJECTION@@, "ms",		0,	25.5,	1.0,	1.2,		20,	25,	3, 1
++	actualLastInjectionStg2Gauge	= actualLastInjectionStage2,	@@GAUGE_NAME_FUEL_LAST_INJECTION_STAGE_2@@, "ms",		0,	25.5,	1.0,	1.2,		20,	25,	3, 1
+ 	actualLastInjectionRatioGauge	= actualLastInjectionRatio,	@@GAUGE_NAME_FUEL_LAST_INJECTION_RATIO@@, "",		0,	10,	0.2,	0.5,		2,	5,	3, 1
+ 	actualLastInjectionRatioStg2Gauge	= actualLastInjectionRatioStage2,	@@GAUGE_NAME_FUEL_LAST_INJECTION_RATIO_STAGE_2@@, "",		0,	10,	0.2,	0.5,		2,	5,	3, 1
+ 	veValueGauge		= veValue,					@@GAUGE_NAME_FUEL_VE@@,				"",		0,	120,		10,	10,	100,	100,	1,	1
+   gegoGauge            = Gego,                                      "EGO",                             "",             50,      160,            10,     10,     100,    100,    1,      1
+ 
+-	injectorLagMsGauge = m_deadtime,		@@GAUGE_NAME_INJECTOR_LAG@@,		"mSec",		0,	10,	0,	0,		10,	10,	3, 1
++	injectorLagMsGauge = m_deadtime,		@@GAUGE_NAME_INJECTOR_LAG@@,		"ms",		0,	10,	0,	0,		10,	10,	3, 1
+ 	fuelRunningGauge	= running_fuel,		@@GAUGE_NAME_FUEL_RUNNING@@,		"mg",		0,	100,	0,	0,		100,	100,	3, 1
+ 	baseFuelGauge	= running_baseFuel,		@@GAUGE_NAME_FUEL_BASE@@,		"mg",		0,	100, 0, 0, 100, 100,	2, 0
+ 	fuelStftInputError1Gauge = stftInputError1,		@@GAUGE_NAME_FUEL_STFT_INPUT_1@@,		"%",		-30,	30,	-15, -5, 5, 15,	1, 0
+@@ -241,16 +241,16 @@ gaugeCategory = Fueling
+ 	fuelStftCorrection2Gauge = stftCorrection2,		@@GAUGE_NAME_FUEL_STFT_2@@,		"%",		-30,	30,	-15, -5, 5, 15,	1, 0
+ 	fuelLtftCorrection1Gauge = ltftCorrection1,		@@GAUGE_NAME_FUEL_LTFT_1@@,		"%",		-30,	30,	-15, -5, 5, 15,	1, 0
+ 	fuelLtftCorrection2Gauge = ltftCorrection2,		@@GAUGE_NAME_FUEL_LTFT_2@@,		"%",		-30,	30,	-15, -5, 5, 15,	1, 0
+-	fuelLtftCntHitGauge = ltftCntHit, "LTFT learning: hits", "cnt", 0, 1000, 0, 1000, 0, 1000, 1, 0
+-	fuelLtftCntMissGauge = ltftCntMiss, "LTFT learning: miss", "cnt", 0, 1000, 0, 1000, 0, 1000, 1, 0
+-	fuelLtftCntDeadbandGauge = ltftCntDeadband, "LTFT learning: deadband", "cnt", 0, 1000, 0, 1000, 0, 1000, 1, 0
++	fuelLtftCntHitGauge = ltftCntHit, "LTFT learning: hits", "count", 0, 1000, 0, 1000, 0, 1000, 1, 0
++	fuelLtftCntMissGauge = ltftCntMiss, "LTFT learning: miss", "count", 0, 1000, 0, 1000, 0, 1000, 1, 0
++	fuelLtftCntDeadbandGauge = ltftCntDeadband, "LTFT learning: deadband", "count", 0, 1000, 0, 1000, 0, 1000, 1, 0
+ 	fuelLtftAccumulatedCorrection1Gauge = ltftAccummulatedCorrection1,		@@GAUGE_NAME_FUEL_LTFT_ACC_1@@,		"%",		-100,	100,	-90, -75, 75, 90,	1, 0
+ 	fuelLtftAccumulatedCorrection2Gauge = ltftAccummulatedCorrection2,		@@GAUGE_NAME_FUEL_LTFT_ACC_2@@,		"%",		-100,	100,	-90, -75, 75, 90,	1, 0
+ 	fuelingLoadGauge = fuelingLoad, @@GAUGE_NAME_FUEL_LOAD@@, "%", 0, 300, 0, 0, 300, 300, 1, 1
+ 	totalFuelConsumptionGauge = totalFuelConsumption, @@GAUGE_NAME_FUEL_CONSUMPTION@@, "g", 0, 10000, 0, 0, 10000, 10000, 0, 0
+ 	fuelFlowRateGauge = fuelFlowRate, @@GAUGE_NAME_FUEL_FLOW@@, "g/s", 0, 50, 0, 0, 50, 50, 2, 0
+-	targetLambdaGauge = targetLambda,"fuel: target lambda", "",		10,	19.4,		12,	13,		15,	16,	2,	2
+-	currentTargetAfrGauge = targetAFR,"fuel: target AFR", "",		0.65,	1.2,		0.7,	0.75,		1.1,	1.15,	3,	2
++	targetLambdaGauge = targetLambda,"fuel: target lambda", "",		0.65,	1.2,		0.7,	0.75,		1.1,	1.15,	3,	2
++	currentTargetAfrGauge = targetAFR,"fuel: target AFR", "",		10,	19.4,		12,	13,		15,	16,	2,	2
+ 	fuelPressureCorrectionReferenceGauge  = pressureCorrectionReference,	@@GAUGE_NAME_FUEL_CORRECTION_REFERENCE_PRESSURE@@, "kPa", 0, 1000, 0, 0, 1000, 1000, 0, 0
+ 	fuelClosedLoopBinIdxGauge			= stftCorrectionBinIdx		, "STFT using",			"bin", 0, 5, 0, 0, 4, 5, 3, 0
+ 	fuelClosedLoopLearningBinIdxGauge	= stftLearningBinIdx, "STFT learning",		"bin", 0, 5, 0, 0, 4, 5, 3, 0
+@@ -308,8 +308,8 @@ gaugeCategory = Sensors - Raw
+ 	rawMapGauge			= rawMap		, "Raw MAP",			"V", 0, 5, 0.2, 0.2, 4.8, 4.8, 3, 0
+ 	rawMapFastGauge		= rawMapFast	, "Raw MAP Fast",		"V", 0, 5, 0.2, 0.2, 4.8, 4.8, 3, 0
+ 	rawAfrGauge			= rawAfr		, "Raw EGO",			"V", 0, 5, 0, 0, 5, 5, 3, 0
+-	vssEdgeCounterGauge  = vssEdgeCounter, "Raw VSS",			"counter", 0, 5, 0, 0, 5, 5, 0, 0
+-	issEdgeCounterGauge  = issEdgeCounter, "Raw ISS",			"counter", 0, 5, 0, 0, 5, 5, 0, 0
++	vssEdgeCounterGauge  = vssEdgeCounter, "Raw VSS",			"count", 0, 5, 0, 0, 5, 5, 0, 0
++	issEdgeCounterGauge  = issEdgeCounter, "Raw ISS",			"count", 0, 5, 0, 0, 5, 5, 0, 0
+ 	rawFlexFreqGauge = rawFlexFreq, "Raw Flex",			"Hz", 0, 5, 0, 0, 5, 5, 3, 0
+ 
+ gaugeCategory = Transmission
+@@ -319,7 +319,7 @@ gaugeCategory = Transmission
+ 	speedToRpmRatioGauge = speedToRpmRatio, @@GAUGE_NAME_GEAR_RATIO@@, "",	0,	100,	0,	0,	100,  100,	4,	4
+ 	ISSGauge = ISSValue, @@GAUGE_NAME_ISS@@, "RPM", 0, {rpmHardLimit + 2000}, 200, {cranking_rpm}, {rpmHardLimit - 500}, {rpmHardLimit}, 0, 0@@if_show_tcu_gauges
+ 	tcRatioGauge = tcRatio, @@GAUGE_NAME_TC_RATIO@@, "",	0,	100,	0,	0,	100,  100,	4,	4@@if_show_tcu_gauges
+-	shiftTimeGauge = lastShiftTime, "Last Shift Time", "S", 0, 2, 0, 0, 2, 2, 4, 4
++	shiftTimeGauge = lastShiftTime, "Last Shift Time", "s", 0, 2, 0, 0, 2, 2, 4, 4
+ 	idealEngineTorqueGauge = idealEngineTorque, "idealEngineTorque", "",	0,	100,	0,	0,	100,  100,	4,	4
+ 	pressureControlGauge = pressureControlDuty, "EPC Duty Cycle", "%", 0, 100, 0, 0, 100, 100, 0, 0
+ 	torqueConverterGauge = torqueConverterDuty, "TC Duty Cycle", "%", 0, 100, 0, 0, 100, 100, 0, 0
+@@ -343,7 +343,7 @@ gaugeCategory = Knock
+ 	knockSpectrumChannelCylGauge = m_knockSpectrumChannelCyl, "Knock Frequency Start", "Hz", 0, 0, 0, 0, 10000, 10000, 0, 0
+ 	knockFrequencyStartGauge = m_knockFrequencyStart, "Knock Frequency Start", "Hz", 0, 0, 0, 0, 10000, 10000, 0, 0
+ 	knockFrequencyStepGauge = m_knockFrequencyStep, "Knock Frequency Step", "Hz", 0, 0, 0, 0, 10000, 10000, 0, 0
+-	knockFuelTrimMultiplier = m_knockFuelTrimMultiplier, "Knock Fuel Trim", "mult", 0, 0, 0, 0, 0, 30, 1, 1
++	knockFuelTrimMultiplier = m_knockFuelTrimMultiplier, "Knock Fuel Trim", "factor", 0, 0, 0, 0, 0, 30, 1, 1
+ 	knockSpectrum1 = m_knockSpectrum1, "Knock Spectrum1", "Volume", 0, 0, 0, 0, 0, 256, 0, 0
+ 	knockSpectrum2 = m_knockSpectrum2, "knockSpectrum2", "Volume", 0, 0, 0, 0, 0, 256, 0, 0
+ 	knockSpectrum3 = m_knockSpectrum3, "knockSpectrum3", "Volume", 0, 0, 0, 0, 0, 256, 0, 0
+diff --git a/firmware/tunerstudio/generated/rusefi_f407-discovery.ini b/firmware/tunerstudio/generated/rusefi_f407-discovery.ini
+index 648d594ae2a..7e98717d1fe 100644
+--- a/firmware/tunerstudio/generated/rusefi_f407-discovery.ini
++++ b/firmware/tunerstudio/generated/rusefi_f407-discovery.ini
+@@ -48,7 +48,7 @@ enable2ndByteCanID = false
+ [TunerStudio]
+ 	queryCommand	= "S"
+ 	versionInfo	= "V"  ; firmware version for title bar.
+-	signature= "rusEFI master.2026.08.25.f407-discovery.852015461" ; signature is expected to be 7 or more characters.
++	signature= "rusEFI master.2026.08.27.f407-discovery.1215646984" ; signature is expected to be 7 or more characters.
+ 
+ 	; TS will try to use legacy temp units in some cases, showing "deg F" on a CLT gauge that's actually deg C
+ 	useLegacyFTempUnits = false
+@@ -1589,6 +1589,8 @@ i2c4_speed = bits, U08, , 4240, [0:2], $i2c_speed_e_list
+ i2c4_sdaPin = bits, U16, 4242, [0:8], $gpio_list
+ i2c4_sclPin = bits, U16, 4244, [0:8], $gpio_list
+ binarySyncRemainderOffset = scalar, S08, 4248, "", 1, 0, -128, 127, 0
++triggerMinPulseWidthPercent = scalar, U08, 4249, "%", 1, 0, 0, 50, 0
++triggerMinToothOnTimeUs = scalar, U16, 4250, "us", 1, 0, 0, 65000, 0
+ tmfTable = array, F32, 4252, [2x2], "", 1, 0, 0, 255, 2
+ tmfRatioBins = array, F32, 4268, [2], "", 1, 0, 0, 65000, 1
+ tmfOpeningBins = array, F32, 4276, [2], "", 1, 0, 0, 65000, 1
+@@ -2845,6 +2847,8 @@ knockGains12_table = array, S08, 15752, [6x6], "dB", 1, 0, -80, 80, 0
+ 	misfireWobbleAlphaFall = "Misfire Detection: wobble EMA alpha when spread is decreasing."
+ 	misfireSettleCycles = "Misfire Detection: firings to wait after entering idle before flagging starts. 0 = immediate."
+ 	binarySyncRemainderOffset = "VVT Polled Binary: crank phase remainder offset for binary cam sync"
++	triggerMinPulseWidthPercent = "Reject primary trigger edges arriving sooner than this percent of the previous edge-to-edge interval. 0 disables spike rejection."
++	triggerMinToothOnTimeUs = "Below cranking RPM only: reject primary trigger teeth whose high time from rise to fall is shorter than this. 0 disables on-time validation."
+ 	etbBiasBins = "target TPS value, 0 to 100%\nTODO: use int8 data date once we template interpolation method"
+ 	etbBiasValues = "PWM bias, open loop component of PID closed loop control"
+ 	dcWastegateBiasBins = "target Wastegate value, 0 to 100%"
+diff --git a/hardware/InteractiveHtmlBom b/hardware/InteractiveHtmlBom
+--- a/hardware/InteractiveHtmlBom
++++ b/hardware/InteractiveHtmlBom
+@@ -1 +1 @@
+-Subproject commit c444135ba2fcab8e8dd4af5a25d8d068d8f9eb69
++Subproject commit c444135ba2fcab8e8dd4af5a25d8d068d8f9eb69-dirty
+diff --git a/hardware/rusefi_lib b/hardware/rusefi_lib
+--- a/hardware/rusefi_lib
++++ b/hardware/rusefi_lib
+@@ -1 +1 @@
+-Subproject commit 6f95125ede0cd79ac943646ba923cc5db0515922
++Subproject commit 6f95125ede0cd79ac943646ba923cc5db0515922-dirty
+diff --git a/java_console/luaformatter b/java_console/luaformatter
+--- a/java_console/luaformatter
++++ b/java_console/luaformatter
+@@ -1 +1 @@
+-Subproject commit b61e805660164947e11f09c7671379d87d570da2
++Subproject commit b61e805660164947e11f09c7671379d87d570da2-dirty
+diff --git a/java_console/models/src/main/java/com/rusefi/config/generated/VariableRegistryValues.java b/java_console/models/src/main/java/com/rusefi/config/generated/VariableRegistryValues.java
+index d2ce36fc7b3..c58d9373733 100644
+--- a/java_console/models/src/main/java/com/rusefi/config/generated/VariableRegistryValues.java
++++ b/java_console/models/src/main/java/com/rusefi/config/generated/VariableRegistryValues.java
+@@ -1512,7 +1512,7 @@ public class VariableRegistryValues {
+ 	public static final int SentInput_INPUT6 = 6;
+ 	public static final int SentInput_INPUT7 = 7;
+ 	public static final int SentInput_NONE = 0;
+-	public static final int SIGNATURE_HASH = 852015461;
++	public static final int SIGNATURE_HASH = 1215646984;
+ 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
+ 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
+ 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
+@@ -1837,7 +1837,7 @@ public class VariableRegistryValues {
+ 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
+ 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
+ 	public static final char TS_SET_LOGGER_SWITCH = 'l';
+-	public static final String TS_SIGNATURE = "rusEFI master.2026.08.25.f407-discovery.852015461";
++	public static final String TS_SIGNATURE = "rusEFI master.2026.08.27.f407-discovery.1215646984";
+ 	public static final char TS_SIMULATE_CAN = '>';
+ 	public static final char TS_TEST_COMMAND = 't';
+ 	public static final int TS_TOTAL_OUTPUT_SIZE = 2200;
+diff --git a/java_console/peak-can-basic b/java_console/peak-can-basic
+--- a/java_console/peak-can-basic
++++ b/java_console/peak-can-basic
+@@ -1 +1 @@
+-Subproject commit 95ecb90a0e5c4c6082548191f91a4181b143698b
++Subproject commit 95ecb90a0e5c4c6082548191f91a4181b143698b-dirty
+diff --git a/misc/hex2dfu b/misc/hex2dfu
+--- a/misc/hex2dfu
++++ b/misc/hex2dfu
+@@ -1 +1 @@
+-Subproject commit 02535ca53a95bf3ae9a4a37312a9eadd65d934eb
++Subproject commit 02535ca53a95bf3ae9a4a37312a9eadd65d934eb-dirty
+diff --git a/unit_tests/googletest b/unit_tests/googletest
+--- a/unit_tests/googletest
++++ b/unit_tests/googletest
+@@ -1 +1 @@
+-Subproject commit 35b75a2cba6ef72b7ce2b6b94b05c54ca07df866
++Subproject commit 35b75a2cba6ef72b7ce2b6b94b05c54ca07df866-dirty
+diff --git a/unit_tests/tests/trigger/test_binary_cam_sync.cpp b/unit_tests/tests/trigger/test_binary_cam_sync.cpp
+index 2d0f4e342f9..6ec8a1eb6ac 100644
+--- a/unit_tests/tests/trigger/test_binary_cam_sync.cpp
++++ b/unit_tests/tests/trigger/test_binary_cam_sync.cpp
+@@ -14,7 +14,7 @@ static void runPolledBinaryLog(const char* filename) {
+ 	engineConfiguration->camInputs[0] = Gpio::A0;
+ 	engineConfiguration->vvtMode[0] = VVT_POLLED_BINARY;
+ 	engineConfiguration->engineSyncCam = static_cast<engineSyncCam_e>(0); // intake first bank
+-	engineConfiguration->binarySyncRemainderOffset = 0;
++	engineConfiguration->binarySyncRemainderOffset = 3; // 360° offset for 6-divider (3-tooth crank)
+ 
+ 	engineConfiguration->useNoiselessTriggerDecoder = false;
+ 	engineConfiguration->triggerMinPulseWidthPercent = 5;
+@@ -31,6 +31,9 @@ static void runPolledBinaryLog(const char* filename) {
+ 	float firstRpm = 0;
+ 	float firstRpmAt = 0;
+ 	float firstCamSyncTime = 0;
++	bool prevShaftSync = false;
++	int syncLossCount = 0;
++	int prevPhaseResync = 0;
+ 	while (reader.haveMore()) {
+ 		reader.processLine(&eth);
+ 
+@@ -44,6 +47,25 @@ static void runPolledBinaryLog(const char* filename) {
+ 			firstCamSyncTime = getTimeNowUs() / 1'000'000.0f;
+ 			firstCamSync = true;
+ 		}
++		bool curShaftSync = engine->triggerCentral.triggerState.getShaftSynchronized();
++		if (prevShaftSync && !curShaftSync) {
++			syncLossCount++;
++			printf("CRANK SYNC LOSS #%d at %.6f s, rpm=%.1f, counter=%d\n",
++				syncLossCount,
++				getTimeNowUs() / 1'000'000.0f,
++				rpm,
++				engine->triggerCentral.triggerState.getSynchronizationCounter());
++		}
++		prevShaftSync = curShaftSync;
++		int curPhaseResync = engine->triggerCentral.triggerState.phaseResyncCounter;
++		if (curPhaseResync > prevPhaseResync) {
++			printf("PHASE RESYNC #%d at %.6f s, rpm=%.1f, counter=%d\n",
++				curPhaseResync,
++				getTimeNowUs() / 1'000'000.0f,
++				rpm,
++				engine->triggerCentral.triggerState.getSynchronizationCounter());
++		}
++		prevPhaseResync = curPhaseResync;
+ 	}
+ 
+ 	printf("POLLED BINARY, %f at %f, %f s, %d, %d, %d, %s\n",

@@ -202,6 +202,8 @@ private:
 
 	bool isFirstEvent;
 
+	uint8_t consecutiveTriggerErrors = 0;
+
 	Timer m_timeSinceDecodeError;
 };
 

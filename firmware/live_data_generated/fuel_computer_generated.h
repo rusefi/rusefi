@@ -21,7 +21,7 @@ struct running_fuel_s {
 	 */
 	float coolantTemperatureCoefficient = (float)0;
 	/**
-	 * units: secs
+	 * units: s
 	 * offset 12
 	 */
 	float timeSinceCrankingInSecs = (float)0;
@@ -46,7 +46,7 @@ static_assert(sizeof(running_fuel_s) == 20);
 struct fuel_computer_s {
 	/**
 	 * Fuel: Total correction
-	 * units: mult
+	 * units: factor
 	 * offset 0
 	 */
 	float totalFuelCorrection = (float)0;
@@ -61,6 +61,7 @@ struct fuel_computer_s {
 	scaled_channel<uint16_t, 100, 1> afrTableYAxis = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_TARGET_LAMBDA@@
+	 * units: lambda
 	 * offset 26
 	 */
 	scaled_channel<uint16_t, 10000, 1> targetLambda = (uint16_t)0;

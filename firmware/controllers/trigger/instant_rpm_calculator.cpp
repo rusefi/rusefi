@@ -161,7 +161,7 @@ void InstantRpmCalculator::updateInstantRpm(
 					   nowNt);
 #if EFI_UNIT_TEST
 	if (printTriggerDebug) {
-		printf("instantRpm = %f\n", m_instantRpm);
+		printf("instantRpm t=%.3f s = %f\n", NT2US(nowNt) / 1'000'000.0f, m_instantRpm);
 	}
 #endif
 

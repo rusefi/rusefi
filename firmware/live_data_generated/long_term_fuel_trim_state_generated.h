@@ -7,19 +7,19 @@
 struct long_term_fuel_trim_state_s {
 	/**
 	 * LTFT learning: hits
-	 * units: cnt
+	 * units: count
 	 * offset 0
 	 */
 	uint32_t ltftCntHit = (uint32_t)0;
 	/**
 	 * LTFT learning: miss
-	 * units: cnt
+	 * units: count
 	 * offset 4
 	 */
 	uint32_t ltftCntMiss = (uint32_t)0;
 	/**
 	 * LTFT learning: in deadband
-	 * units: cnt
+	 * units: count
 	 * offset 8
 	 */
 	uint32_t ltftCntDeadband = (uint32_t)0;

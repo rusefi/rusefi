@@ -7,7 +7,7 @@
 struct knock_controller_s {
 	/**
 	 * @@GAUGE_NAME_KNOCK_LEVEL@@
-	 * units: Volts
+	 * units: V
 	 * offset 0
 	 */
 	float m_knockLevel = (float)0;
@@ -64,7 +64,7 @@ struct knock_controller_s {
 	float m_knockFrequencyStep = (float)0;
 	/**
 	 * Knock: Fuel trim when knock
-	 * units: multiplier
+	 * units: factor
 	 * offset 104
 	 */
 	float m_knockFuelTrimMultiplier = (float)0;

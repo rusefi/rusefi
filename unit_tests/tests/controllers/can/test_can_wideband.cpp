@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include "AemXSeriesLambda.h"
+#include "ego.h"
 
 TEST(CanWideband, AcceptFrameId0) {
 	AemXSeriesWideband dut(0, SensorType::Lambda1);
@@ -165,6 +166,7 @@ TEST(CanWideband,DecodeAemXSeriesValidLambda){
 	wbo.decodeAemXSeries(frame, getTimeNowNt());
 
 	EXPECT_FLOAT_EQ(1.2032f, Sensor::get(SensorType::Lambda1).value_or(-1));
+	updateSmoothedLambda();
 	EXPECT_FLOAT_EQ(1.2032f, Sensor::get(SensorType::SmoothedLambda1).value_or(-1));
 	Sensor::resetRegistry();
 }
@@ -281,6 +283,7 @@ TEST(CanWideband, DecodeRusefiStandard)
 	dut.processFrame(0, frame, getTimeNowNt());
 	dut.processFrame(0, diagFrame, getTimeNowNt());
 	EXPECT_FLOAT_EQ(0.7f, Sensor::get(SensorType::Lambda1).value_or(-1));
+	updateSmoothedLambda();
 	EXPECT_FLOAT_EQ(0.7f, Sensor::get(SensorType::SmoothedLambda1).value_or(-1));
 
 	// Check that temperature updates

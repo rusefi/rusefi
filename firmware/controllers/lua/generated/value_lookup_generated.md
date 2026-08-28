@@ -2113,6 +2113,12 @@ Misfire Detection: firings to wait after entering idle before flagging starts. 0
 ### binarySyncRemainderOffset
 VVT Polled Binary: crank phase remainder offset for binary cam sync
 
+### triggerMinPulseWidthPercent
+Reject primary trigger edges arriving sooner than this percent of the previous edge-to-edge interval. 0 disables spike rejection.
+
+### triggerMinToothOnTimeUs
+Below cranking RPM only: reject primary trigger teeth whose high time from rise to fall is shorter than this. 0 disables on-time validation.
+
 ### tcu_shiftTime
 
 

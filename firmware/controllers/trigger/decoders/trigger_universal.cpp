@@ -150,11 +150,11 @@ void configureQuickStartSenderWheel(TriggerWaveform *s) {
 	s->addToothRiseFall(360, /* width*/ 70);
 }
 
-static void commonSymmetrical(TriggerWaveform* s, int count, float gapFrom, float gapTo) {
+static void commonSymmetrical(TriggerWaveform* s, int count, float gapFrom, float gapTo, int syncGaps = 2) {
 	s->shapeWithoutTdc = true;
+	s->symmetricalSyncLossDebounce = 2;
 
-	// Sync after 2 good teeth
-	for (size_t i = 0; i < 2; i++) {
+	for (int i = 0; i < syncGaps; i++) {
 		/**
 		 * https://github.com/rusefi/rusefi/issues/4943#issuecomment-1376289608
 		 * gaps would be nice during running but horrible during running
@@ -182,7 +182,7 @@ void configure12ToothCrank(TriggerWaveform* s) {
 
 void configure3ToothCrank(TriggerWaveform* s) {
 	s->initialize(FOUR_STROKE_THREE_TIMES_CRANK_SENSOR, SyncEdge::RiseOnly);
-  commonSymmetrical(s, 3, 0.5, 1.4);
+  commonSymmetrical(s, 3, 0.4, 1.5, 1);
 }
 
 void configure6ToothCrank(TriggerWaveform* s) {

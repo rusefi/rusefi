@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "stored_value_sensor.h"
+#include "filtered_sensor.h"
 #include "proxy_sensor.h"
 #include "functional_sensor.h"
 #include "fuel_level_sensor.h"
@@ -17,6 +18,11 @@
 void StoredValueSensor::showInfo(const char* sensorName) const {
 	const auto value = get();
 	efiPrintf("StoredValue Sensor \"%s\": valid: %s, value: %.2f", sensorName, boolToString(value.Valid), value.Value);
+}
+
+void FilteredSensor::showInfo(const char* sensorName) const {
+	const auto value = get();
+	efiPrintf("Filtered Sensor \"%s\": valid: %s, value: %.2f, source: \"%s\"", sensorName, boolToString(value.Valid), value.Value, getSensorName(m_sourceType));
 }
 
 void ProxySensor::showInfo(const char* sensorName) const {

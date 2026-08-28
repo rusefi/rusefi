@@ -5,6 +5,7 @@
 #include "redundant_sensor.h"
 #include "redundant_ford_tps.h"
 #include "proxy_sensor.h"
+#include "filtered_sensor.h"
 #include "linear_func.h"
 #include "tps.h"
 #include "auto_generated_sensor.h"
@@ -226,7 +227,13 @@ void updateUnfilteredRawPedal() {
 
 // This sensor indicates the driver's throttle intent - Pedal if we have one, TPS if not.
 static ProxySensor driverIntent(SensorType::DriverThrottleIntent);
-static ProxySensor ppsFilterSensor(SensorType::AcceleratorPedal);
+
+static FilteredSensor ppsFilterSensor(SensorType::AcceleratorPedal, MS2NT(100), SensorType::AcceleratorPedalUnfiltered);
+
+void updatePpsFilter() {
+	ppsFilterSensor.setSmoothingFactor(engineConfiguration->ppsExpAverageAlpha);
+	ppsFilterSensor.update();
+}
 
 // These sensors are TPS-like, so handle them in here too
 static LinearSensorUnit wastegate(1, SensorType::WastegatePosition);
@@ -234,6 +241,7 @@ static LinearSensorUnit idlePos(PACK_MULT_VOLTAGE, SensorType::IdlePosition);
 
 void initTps() {
 	criticalAssertVoid(engineConfiguration != nullptr, "null engineConfiguration");
+	ppsFilterSensor.reset();
 	percent_t minTpsPps = engineConfiguration->tpsErrorDetectionTooLow;
 	percent_t maxTpsPps = engineConfiguration->tpsErrorDetectionTooHigh;
 
@@ -306,16 +314,6 @@ void initTps() {
 				 minTpsPps,
 				 maxTpsPps},
 				engineConfiguration->allowIdenticalPps);
-		ppsFilterSensor.setProxiedSensor(SensorType::AcceleratorPedalUnfiltered);
-		ppsFilterSensor.setConverter([](SensorResult arg) {
-			if (!arg) {
-				return arg;
-			}
-			static ExpAverage ppsExpAverage;
-			ppsExpAverage.setSmoothingFactor(engineConfiguration->ppsExpAverageAlpha);
-			SensorResult result = ppsExpAverage.initOrAverage(arg.Value);
-			return result;
-		});
 		ppsFilterSensor.Register();
 
 		// TPS-like stuff that isn't actually a TPS

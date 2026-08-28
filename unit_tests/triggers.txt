@@ -4885,15 +4885,13 @@ crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
 cycleDuration=120
-gapsCount=2
+gapsCount=1
 syncEdge=RiseOnly
 isSynchronizationNeeded=true
 useOnlyPrimaryForSync=true
 shapeWithoutTdc=true
-gapFrom.0=0.500000
-gapTo.0=1.400000
-gapFrom.1=0.500000
-gapTo.1=1.400000
+gapFrom.0=0.400000
+gapTo.0=1.500000
 # end of meta section
 event 0 0 1 0.000000 1.000000
 event 1 0 0 0.000000 nan

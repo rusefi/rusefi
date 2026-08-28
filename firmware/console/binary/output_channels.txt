@@ -97,9 +97,9 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 	int16_t autoscale wallFuelCorrectionValue;@@GAUGE_NAME_FUEL_WALL_CORRECTION@@;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 3
 
 ! Flex fuel transient compensation multipliers (1.0 = neutral)
-	uint16_t autoscale flexAeMultiplier;Flex: AE multiplier;"mult", 0.001, 0, 0, 5, 3
-	uint16_t autoscale flexWwTauMultiplier;Flex: WW tau multiplier;"mult", 0.001, 0, 0, 5, 3
-	uint16_t autoscale flexWwBetaMultiplier;Flex: WW beta multiplier;"mult", 0.001, 0, 0, 5, 3
+	uint16_t autoscale flexAeMultiplier;Flex: AE multiplier;"factor", 0.001, 0, 0, 5, 3
+	uint16_t autoscale flexWwTauMultiplier;Flex: WW tau multiplier;"factor", 0.001, 0, 0, 5, 3
+	uint16_t autoscale flexWwBetaMultiplier;Flex: WW beta multiplier;"factor", 0.001, 0, 0, 5, 3
 
 	uint16_t revolutionCounterSinceStart;;"",1, 0, 0, 0, 0
 
@@ -120,7 +120,7 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 
 	int16_t autoscale TPS2Value;@@GAUGE_NAME_TPS2@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
 	uint16_t tuneCrc16;@@GAUGE_NAME_TUNE_CRC16@@;"crc16", 1, 0, 0, 0, 0
-	uint16_t autoscale veValue;@@GAUGE_NAME_FUEL_VE@@;"ratio",{1/10}, 0, 0, 0, 1
+	uint16_t autoscale veValue;@@GAUGE_NAME_FUEL_VE@@;"factor",{1/10}, 0, 0, 0, 1
 
 ! integration magic: TS requires exact 'seconds' name
 	uint32_t seconds;@@GAUGE_NAME_UPTIME@@;"sec", 1, 0, 0, 0, 0
@@ -164,7 +164,7 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 	uint8_t idleStepperTargetPosition;Idle: Stepper target position;"", 1, 0, 0, 0, 0
 
 ! Errors
-	uint32_t totalTriggerErrorCounter;@@GAUGE_NAME_TRG_ERR@@;"counter",1, 0, 0, 0, 0
+	uint32_t totalTriggerErrorCounter;@@GAUGE_NAME_TRG_ERR@@;"count",1, 0, 0, 0, 0
 	uint32_t orderingErrorCounter;;"",1, 0, 0, 0, 0
 
 	uint16_t warningCounter;@@GAUGE_NAME_WARNING_COUNTER@@;"count",1, 0, 0, 0, 0
@@ -230,7 +230,7 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 	int16_t autoscale gyroYaw;@@GAUGE_NAME_GYRO_YAW@@;"deg/sec",{1/1000}, 0, 0, 0, 0
 
 	int8_t[4 iterate] vvtTargets;;"deg",1, 0, 0, 0, 0
-	uint16_t turboSpeed;@@GAUGE_NAME_TURBO_SPEED@@;"hz",1, 0, 0, 0, 0
+	uint16_t turboSpeed;@@GAUGE_NAME_TURBO_SPEED@@;"Hz",1, 0, 0, 0, 0
 
 	int16_t[MAX_CYLINDER_COUNT iterate] autoscale ignitionAdvanceCyl;Ign: Timing Cyl;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 1
 
@@ -254,7 +254,7 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 	int8_t fuelCutReason;Fuel: Cut Code;"code",1, 0, 0, 0, 0
 
 	uint16_t autoscale mafEstimate;@@GAUGE_NAME_AIR_FLOW_ESTIMATE@@;"kg/h",{1/@@PACK_MULT_MASS_FLOW@@}, 0, 0, 0, 0
-	uint16_t instantRpm;sync: instant RPM;"rpm", 1, 0, 0, 0, 0
+	uint16_t instantRpm;sync: instant RPM;"RPM", 1, 0, 0, 0, 0
 
 	uint16_t autoscale rawMap;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 	uint16_t autoscale rawMapFast;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3

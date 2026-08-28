@@ -17,6 +17,7 @@ static EtbController * initEtbIntegratedTest() {
 
 
 	Sensor::setMockValue(SensorType::Tps1, 25.0f, true);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0, true);
 
 	initTps();
 	doInitElectronicThrottle(/*isInit*/true);
@@ -37,7 +38,9 @@ TEST(etb, integrated) {
 
 	Sensor::setMockValue(SensorType::AcceleratorPedalPrimary, 40);
 	Sensor::setMockValue(SensorType::AcceleratorPedalSecondary, 40);
+	Sensor::resetMockValue(SensorType::AcceleratorPedal);
 
+	updatePpsFilter();
 	etb->update();
 
 	ASSERT_EQ(etb->m_adjustedTarget, 40);
@@ -106,8 +109,8 @@ TEST(etb, intermittentTps) {
 TEST(etb, intermittentPps) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE); // we have a destructor so cannot move EngineTestHelper into utility method
 
-	Sensor::setMockValue(SensorType::AcceleratorPedal, 10, true);
 	EtbController *etb = initEtbIntegratedTest();
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 10, true);
 
 	// Tell the sensor checker that the ignition is on
 	engine->module<SensorChecker>()->onIgnitionStateChanged(true);

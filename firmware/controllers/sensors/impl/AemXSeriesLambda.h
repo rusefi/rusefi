@@ -21,8 +21,6 @@ public:
 
 	void refreshState(void);
 
-	void refreshSmoothedLambda(float lambda);
-
   bool hasSeenRx = false;
 
 protected:

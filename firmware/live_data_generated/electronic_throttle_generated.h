@@ -55,7 +55,7 @@ struct electronic_throttle_s {
 	float m_wastegatePosition = (float)0;
 	/**
 	 * "EBT: last PID dT"
-	 * units: mS
+	 * units: ms
 	 * offset 28
 	 */
 	float m_lastPidDtMs = (float)0;
@@ -198,7 +198,7 @@ struct electronic_throttle_s {
 	uint8_t alignmentFill_at_51[1] = {};
 	/**
 	 * ETB jam timer
-	 * units: sec
+	 * units: s
 	 * offset 52
 	 */
 	scaled_channel<uint16_t, 100, 1> jamTimer = (uint16_t)0;

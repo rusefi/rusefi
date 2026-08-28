@@ -87,7 +87,7 @@ struct ignition_state_s {
 	float luaTimingAdd = (float)0;
 	/**
 	 * Ign: Lua timing mult
-	 * units: deg
+	 * units: factor
 	 * offset 36
 	 */
 	float luaTimingMult = (float)0;

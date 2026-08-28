@@ -27,6 +27,7 @@ void initVbatt();
 void initMaf();
 void initMap();
 void initTps();
+void updatePpsFilter();
 void initFluidPressure();
 void initThermistors();
 // Live measured resistance of a thermistor-type temperature sensor, in ohms. 0 if unavailable.

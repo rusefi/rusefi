@@ -21,7 +21,7 @@ struct stft_cell_cfg_s {
 	 * Commonly referred as Integral gain.
 	 * Time constant for correction while in this cell: this sets responsiveness of the closed loop correction. A value of 5.0 means it will try to make most of the correction within 5 seconds, and a value of 1.0 will try to correct within 1 second.
 	 * Lower values makes the correction more sensitive, higher values slow the correction down.
-	 * units: sec
+	 * units: s
 	 * offset 2
 	 */
 	scaled_channel<uint16_t, 10, 1> timeConstant;
@@ -82,7 +82,7 @@ struct stft_s {
 	scaled_channel<uint8_t, 10, 1> maxAfr;
 	/**
 	 * Time after startup before closed loop operation is allowed.
-	 * units: seconds
+	 * units: s
 	 * offset 10
 	 */
 	uint8_t startupDelay;
@@ -228,7 +228,7 @@ struct ltft_s {
 	 * Commonly referred as Integral gain.
 	 * Time constant for correction while in this cell: this sets responsiveness of the closed loop correction. A value of 30.0 means it will try to make most of the correction within 30 seconds, and a value of 300.0 will try to correct within 5 minutes.
 	 * Lower values makes the correction more sensitive, higher values slow the correction down.
-	 * units: sec
+	 * units: s
 	 * offset 8
 	 */
 	scaled_channel<uint16_t, 10, 1> timeConstant[STFT_CELL_COUNT] = {};
@@ -334,7 +334,7 @@ struct gppwm_channel {
 	/**
 	 * Select a frequency to run PWM at.
 	 * Set this to 0hz to enable on-off mode.
-	 * units: hz
+	 * units: Hz
 	 * offset 4
 	 */
 	uint16_t pwmFrequency;
@@ -500,7 +500,7 @@ struct linear_sensor_s {
 	 */
 	uint8_t alignmentFill_at_1[3] = {};
 	/**
-	 * units: volts
+	 * units: V
 	 * offset 4
 	 */
 	float v1;
@@ -509,7 +509,7 @@ struct linear_sensor_s {
 	 */
 	float value1;
 	/**
-	 * units: volts
+	 * units: V
 	 * offset 12
 	 */
 	float v2;
@@ -533,7 +533,7 @@ struct pressure_sensor_s {
 	 */
 	uint8_t alignmentFill_at_1[3] = {};
 	/**
-	 * units: volts
+	 * units: V
 	 * offset 4
 	 */
 	float v1;
@@ -543,7 +543,7 @@ struct pressure_sensor_s {
 	 */
 	float value1;
 	/**
-	 * units: volts
+	 * units: V
 	 * offset 12
 	 */
 	float v2;
@@ -583,7 +583,7 @@ struct injector_s {
 	 */
 	float flow;
 	/**
-	 * units: volts
+	 * units: V
 	 * offset 4
 	 */
 	scaled_channel<int16_t, 100, 1> battLagCorrBattBins[VBAT_INJECTOR_CURVE_SIZE] = {};
@@ -639,7 +639,7 @@ struct afr_sensor_s {
 	 */
 	uint8_t alignmentFill_at_2[2] = {};
 	/**
-	 * units: volts
+	 * units: V
 	 * offset 4
 	 */
 	float v1;
@@ -649,7 +649,7 @@ struct afr_sensor_s {
 	 */
 	float value1;
 	/**
-	 * units: volts
+	 * units: V
 	 * offset 12
 	 */
 	float v2;
@@ -718,12 +718,12 @@ static_assert(sizeof(dc_io) == 8);
 // start of vr_threshold_s
 struct vr_threshold_s {
 	/**
-	 * units: rpm
+	 * units: RPM
 	 * offset 0
 	 */
 	scaled_channel<uint8_t, 1, 50> rpmBins[6] = {};
 	/**
-	 * units: volts
+	 * units: V
 	 * offset 6
 	 */
 	scaled_channel<uint8_t, 100, 1> values[6] = {};
@@ -902,17 +902,17 @@ struct vvl_s {
 	 */
 	uint8_t alignmentFill_at_17[1] = {};
 	/**
-	 * units: rpm
+	 * units: RPM
 	 * offset 18
 	 */
 	uint16_t activationRpm;
 	/**
-	 * units: rpm
+	 * units: RPM
 	 * offset 20
 	 */
 	uint16_t deactivationRpm;
 	/**
-	 * units: rpm
+	 * units: RPM
 	 * offset 22
 	 */
 	uint16_t deactivationRpmWindow;
@@ -1420,13 +1420,13 @@ struct engine_configuration_s {
 	uint16_t startButtonSuppressOnStartUpMs;
 	/**
 	 * The target engine speed (RPM) to maintain during launch.
-	 * units: rpm
+	 * units: RPM
 	 * offset 4
 	 */
 	uint16_t launchRpm;
 	/**
 	 * set rpm_hard_limit X
-	 * units: rpm
+	 * units: RPM
 	 * offset 6
 	 */
 	uint16_t rpmHardLimit;
@@ -1542,13 +1542,13 @@ struct engine_configuration_s {
 	bool unusedBit_9_31 : 1 {};
 	/**
 	 * Disable multispark above this engine speed.
-	 * units: rpm
+	 * units: RPM
 	 * offset 16
 	 */
 	scaled_channel<uint8_t, 1, 50> multisparkMaxRpm;
 	/**
 	 * Above this RPM, disable AC. Set to 0 to disable check.
-	 * units: rpm
+	 * units: RPM
 	 * offset 17
 	 */
 	scaled_channel<uint8_t, 1, 50> maxAcRpm;
@@ -1605,7 +1605,7 @@ struct engine_configuration_s {
 	uint8_t ltitEmaAlpha;
 	/**
 	 * RPM range to consider stable idle
-	 * units: rpm
+	 * units: RPM
 	 * offset 33
 	 */
 	uint8_t ltitStableRpmThreshold;
@@ -1653,7 +1653,7 @@ struct engine_configuration_s {
 	float ltitClampMax;
 	/**
 	 * LTIT table regional smoothing intensity (0=no smoothing)
-	 * units: ratio
+	 * units: factor
 	 * offset 48
 	 */
 	scaled_channel<uint8_t, 100, 1> ltitSmoothingIntensity;
@@ -1698,7 +1698,7 @@ struct engine_configuration_s {
 	int8_t launchFuelAdderPercent;
 	/**
 	 * Time after which the throttle is considered jammed.
-	 * units: sec
+	 * units: s
 	 * offset 67
 	 */
 	scaled_channel<uint8_t, 50, 1> etbJamTimeout;
@@ -1890,13 +1890,13 @@ struct engine_configuration_s {
 	float ignitionDwellForCrankingMs;
 	/**
 	 * Once engine speed passes this value, start reducing ETB angle.
-	 * units: rpm
+	 * units: RPM
 	 * offset 216
 	 */
 	uint16_t etbRevLimitStart;
 	/**
 	 * This far above 'Soft limiter start', fully close the throttle. At the bottom of the range, throttle control is normal. At the top of the range, the throttle is fully closed.
-	 * units: rpm
+	 * units: RPM
 	 * offset 218
 	 */
 	uint16_t etbRevLimitRange;
@@ -2109,7 +2109,7 @@ struct engine_configuration_s {
 	/**
 	 * This value is the ignition timing used when in 'fixed timing' mode, i.e. constant timing
 	 * This mode is useful when adjusting distributor location.
-	 * units: RPM
+	 * units: deg
 	 * offset 484
 	 */
 	angle_t fixedModeTiming;
@@ -2486,13 +2486,13 @@ struct engine_configuration_s {
 	 */
 	int calibrationBirthday;
 	/**
-	 * units: volts
+	 * units: V
 	 * offset 644
 	 */
 	float adcVcc;
 	/**
 	 * Magic engine phase: we compare instant MAP at X to instant MAP at x+360 angle in one complete cycle
-	 * units: Deg
+	 * units: deg
 	 * offset 648
 	 */
 	float mapCamDetectionAnglePosition;
@@ -3062,7 +3062,7 @@ struct engine_configuration_s {
 	uint32_t verboseCanBaseAddress;
 	/**
 	 * Boost Voltage
-	 * units: v
+	 * units: V
 	 * offset 872
 	 */
 	uint8_t mc33_hvolt;
@@ -3157,7 +3157,7 @@ struct engine_configuration_s {
 	brain_input_pin_e flexSensorPin;
 	/**
 	 * Since torque reduction pin is usually shared with launch control, most people have an RPM where behavior under that is Launch Control, over that is Flat Shift/Torque Reduction
-	 * units: rpm
+	 * units: RPM
 	 * offset 914
 	 */
 	uint16_t torqueReductionArmingRpm;
@@ -3183,7 +3183,7 @@ struct engine_configuration_s {
 	uint8_t etbMaximumPosition;
 	/**
 	 * Rate the ECU will log to the SD card, in hz (log lines per second).
-	 * units: hz
+	 * units: Hz
 	 * offset 920
 	 */
 	uint16_t sdCardLogFrequency;
@@ -3266,7 +3266,7 @@ struct engine_configuration_s {
 	tps_limit_t tps1SecondaryMax;
 	/**
 	 * Maximum time to crank starter when start/stop button is pressed
-	 * units: Seconds
+	 * units: s
 	 * offset 948
 	 */
 	uint16_t startCrankingDuration;
@@ -3415,7 +3415,7 @@ struct engine_configuration_s {
 	cranking_condition_e crankingCondition;
 	/**
 	 * How long to look back for TPS-based acceleration enrichment. Increasing this time will trigger enrichment for longer when a throttle position change occurs.
-	 * units: sec
+	 * units: s
 	 * offset 1067
 	 */
 	scaled_channel<uint8_t, 20, 1> tpsAccelLookback;
@@ -3438,13 +3438,13 @@ struct engine_configuration_s {
 	accel_enrichment_mode_e accelEnrichmentMode;
 	/**
 	 * Pause closed loop fueling after deceleration fuel cut occurs. Set this to a little longer than however long is required for normal fueling behavior to resume after fuel cut.
-	 * units: sec
+	 * units: s
 	 * offset 1077
 	 */
 	scaled_channel<uint8_t, 10, 1> noFuelTrimAfterDfcoTime;
 	/**
 	 * Pause closed loop fueling after acceleration fuel occurs. Set this to a little longer than however long is required for normal fueling behavior to resume after fuel accel.
-	 * units: sec
+	 * units: s
 	 * offset 1078
 	 */
 	scaled_channel<uint8_t, 10, 1> noFuelTrimAfterAccelTime;
@@ -3474,7 +3474,7 @@ struct engine_configuration_s {
 	/**
 	 * A higher alpha (closer to 1) means the EMA reacts more quickly to changes in the data.
 	 * '100%' means no filtering, 98% would be some filtering.
-	 * units: percent
+	 * units: %
 	 * offset 1092
 	 */
 	float ppsExpAverageAlpha;
@@ -3871,19 +3871,19 @@ struct engine_configuration_s {
 	bool useCompensatedMap : 1 {};
 	/**
 	 * Start logging at/above this RPM
-	 * units: rpm
+	 * units: RPM
 	 * offset 1444
 	 */
 	uint16_t sdLogStartRpm;
 	/**
 	 * Stop logging below this RPM. Set below 'start' for hysteresis
-	 * units: rpm
+	 * units: RPM
 	 * offset 1446
 	 */
 	uint16_t sdLogStopRpm;
 	/**
 	 * Keep logging this many seconds after RPM drops below the stop threshold
-	 * units: sec
+	 * units: s
 	 * offset 1448
 	 */
 	uint8_t sdLogStopDelay;
@@ -3932,7 +3932,7 @@ struct engine_configuration_s {
 	 */
 	uint32_t engineChartSize;
 	/**
-	 * units: mult
+	 * units: factor
 	 * offset 1464
 	 */
 	float turboSpeedSensorMultiplier;
@@ -3944,12 +3944,12 @@ struct engine_configuration_s {
 	int16_t acIdleRpmTarget;
 	/**
 	 * set warningPeriod X
-	 * units: seconds
+	 * units: s
 	 * offset 1470
 	 */
 	int16_t warningPeriod;
 	/**
-	 * units: angle
+	 * units: deg
 	 * offset 1472
 	 */
 	float knockDetectionWindowStart;
@@ -3991,7 +3991,7 @@ struct engine_configuration_s {
 	float tachPulseDuractionMs;
 	/**
 	 * Length of time the deposited wall fuel takes to dissipate after the start of acceleration.
-	 * units: Seconds
+	 * units: s
 	 * offset 1504
 	 */
 	float wwaeTau;
@@ -4103,19 +4103,19 @@ struct engine_configuration_s {
 	 */
 	switch_input_pin_e tcuDownshiftButtonPin;
 	/**
-	 * units: volts
+	 * units: V
 	 * offset 1612
 	 */
 	float throttlePedalUpVoltage;
 	/**
 	 * Pedal in the floor
-	 * units: volts
+	 * units: V
 	 * offset 1616
 	 */
 	float throttlePedalWOTVoltage;
 	/**
 	 * on IGN voltage detection turn fuel pump on to build fuel pressure
-	 * units: seconds
+	 * units: s
 	 * offset 1620
 	 */
 	int16_t startUpFuelPumpDuration;
@@ -4241,7 +4241,7 @@ struct engine_configuration_s {
 	bool unusedBit_629_31 : 1 {};
 	/**
 	 * This value is an added for base idle value. Idle Value added when coasting and transitioning into idle.
-	 * units: percent
+	 * units: %
 	 * offset 1632
 	 */
 	int16_t iacByTpsTaper;
@@ -4304,13 +4304,13 @@ struct engine_configuration_s {
 	 */
 	uint32_t uartConsoleSerialSpeed;
 	/**
-	 * units: volts
+	 * units: V
 	 * offset 1656
 	 */
 	float throttlePedalSecondaryUpVoltage;
 	/**
 	 * Pedal in the floor
-	 * units: volts
+	 * units: V
 	 * offset 1660
 	 */
 	float throttlePedalSecondaryWOTVoltage;
@@ -4459,7 +4459,7 @@ struct engine_configuration_s {
 	bool unusedBit_663_31 : 1 {};
 	/**
 	 * Angle of tooth detection within engine phase cycle
-	 * units: angle
+	 * units: deg
 	 * offset 1676
 	 */
 	uint16_t camDecoder2jzPosition;
@@ -4552,7 +4552,7 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint8_t, 1, 5> tchargeBins[16] = {};
 	/**
-	 * units: ratio
+	 * units: factor
 	 * offset 1720
 	 */
 	scaled_channel<uint8_t, 100, 1> tchargeValues[16] = {};
@@ -4564,13 +4564,13 @@ struct engine_configuration_s {
 	float fixedTiming;
 	/**
 	 * MAP voltage for low point
-	 * units: v
+	 * units: V
 	 * offset 1740
 	 */
 	float mapLowValueVoltage;
 	/**
 	 * MAP voltage for low point
-	 * units: v
+	 * units: V
 	 * offset 1744
 	 */
 	float mapHighValueVoltage;
@@ -4634,7 +4634,7 @@ struct engine_configuration_s {
 	uint8_t fan2ExtraIdle;
 	/**
 	 * Delay to allow fuel pressure to build before firing the priming pulse.
-	 * units: sec
+	 * units: s
 	 * offset 1775
 	 */
 	scaled_channel<uint8_t, 100, 1> primingDelay;
@@ -4685,7 +4685,7 @@ struct engine_configuration_s {
 	 */
 	ThermistorConf auxTempSensor2;
 	/**
-	 * units: Deg
+	 * units: deg
 	 * offset 1880
 	 */
 	int16_t knockSamplingDuration;
@@ -4726,7 +4726,7 @@ struct engine_configuration_s {
 	 */
 	angle_t timing_offset_cylinder[MAX_CYLINDER_COUNT] = {};
 	/**
-	 * units: seconds
+	 * units: s
 	 * offset 1956
 	 */
 	float idlePidActivationTime;
@@ -4855,7 +4855,7 @@ struct engine_configuration_s {
 	 */
 	uint8_t alignmentFill_at_2098[2] = {};
 	/**
-	 * units: hz
+	 * units: Hz
 	 * offset 2100
 	 */
 	float auxFrequencyFilter;
@@ -4865,13 +4865,13 @@ struct engine_configuration_s {
 	sent_input_pin_e sentInputPins[SENT_INPUT_COUNT] = {};
 	/**
 	 * This sets the RPM above which fuel cut is active.
-	 * units: rpm
+	 * units: RPM
 	 * offset 2106
 	 */
 	int16_t coastingFuelCutRpmHigh;
 	/**
 	 * This sets the RPM below which fuel cut is deactivated, this prevents jerking or issues transitioning to idle
-	 * units: rpm
+	 * units: RPM
 	 * offset 2108
 	 */
 	int16_t coastingFuelCutRpmLow;
@@ -5191,19 +5191,19 @@ struct engine_configuration_s {
 	float triggerGapOverrideTo[GAP_TRACKING_LENGTH] = {};
 	/**
 	 * Below this RPM, use camshaft information to synchronize the crank's position for full sequential operation. Use this if your cam sensor does weird things at high RPM. Set to 0 to disable, and always use cam to help sync crank.
-	 * units: rpm
+	 * units: RPM
 	 * offset 3200
 	 */
 	scaled_channel<uint8_t, 1, 50> maxCamPhaseResolveRpm;
 	/**
 	 * Delay before cutting fuel. Set to 0 to cut immediately with no delay. May cause rumbles and pops out of your exhaust...
-	 * units: sec
+	 * units: s
 	 * offset 3201
 	 */
 	scaled_channel<uint8_t, 10, 1> dfcoDelay;
 	/**
 	 * Delay before engaging the AC compressor. Set to 0 to engage immediately with no delay. Use this to prevent bogging at idle when AC engages.
-	 * units: sec
+	 * units: s
 	 * offset 3202
 	 */
 	scaled_channel<uint8_t, 10, 1> acDelay;
@@ -5442,17 +5442,17 @@ struct engine_configuration_s {
 	 */
 	switch_input_pin_e luaDigitalInputPins[LUA_DIGITAL_INPUT_COUNT] = {};
 	/**
-	 * units: rpm
+	 * units: RPM
 	 * offset 3364
 	 */
 	int16_t ALSMinRPM;
 	/**
-	 * units: rpm
+	 * units: RPM
 	 * offset 3366
 	 */
 	int16_t ALSMaxRPM;
 	/**
-	 * units: sec
+	 * units: s
 	 * offset 3368
 	 */
 	int16_t ALSMaxDuration;
@@ -5618,13 +5618,13 @@ struct engine_configuration_s {
 	uint32_t benchTestCount;
 	/**
 	 * How long initial idle adder is held before starting to decay.
-	 * units: seconds
+	 * units: s
 	 * offset 3436
 	 */
 	scaled_channel<uint8_t, 10, 1> iacByTpsHoldTime;
 	/**
 	 * How long it takes to remove initial IAC adder to return to normal idle.
-	 * units: seconds
+	 * units: s
 	 * offset 3437
 	 */
 	scaled_channel<uint8_t, 10, 1> iacByTpsDecayTime;
@@ -5638,7 +5638,7 @@ struct engine_configuration_s {
 	pin_input_mode_e tcu_rangeInputMode[RANGE_INPUT_COUNT] = {};
 	/**
 	 * Scale the reported vehicle speed value from CAN. Example: Parameter set to 1.1, CAN VSS reports 50kph, ECU will report 55kph instead.
-	 * units: ratio
+	 * units: factor
 	 * offset 3456
 	 */
 	scaled_channel<uint16_t, 10000, 1> canVssScaling;
@@ -5744,7 +5744,7 @@ struct engine_configuration_s {
 	uint8_t maxInjectorDutySustained;
 	/**
 	 * Timeout period for duty cycle over the sustained limit to trigger duty cycle protection.
-	 * units: sec
+	 * units: s
 	 * offset 3682
 	 */
 	scaled_channel<uint8_t, 10, 1> maxInjectorDutySustainedTimeout;
@@ -5759,7 +5759,7 @@ struct engine_configuration_s {
 	 */
 	output_pin_e injectionPinsStage2[MAX_CYLINDER_COUNT] = {};
 	/**
-	 * units: Deg
+	 * units: deg
 	 * offset 3708
 	 */
 	int8_t tractionControlTimingDrop[TRACTION_CONTROL_ETB_DROP_SPEED_SIZE][TRACTION_CONTROL_ETB_DROP_SLIP_SIZE] = {};
@@ -5933,7 +5933,7 @@ struct engine_configuration_s {
 	uint16_t maxAcPressure;
 	/**
 	 * Delay before cutting fuel due to low oil pressure. Use this to ignore short pressure blips and sensor noise.
-	 * units: sec
+	 * units: s
 	 * offset 3884
 	 */
 	scaled_channel<uint8_t, 10, 1> minimumOilPressureTimeout;
@@ -6190,17 +6190,17 @@ struct engine_configuration_s {
 	 */
 	uint8_t alignmentFill_at_3981[1] = {};
 	/**
-	 * units: rpm
+	 * units: RPM
 	 * offset 3982
 	 */
 	uint16_t nitrousActivationRpm;
 	/**
-	 * units: rpm
+	 * units: RPM
 	 * offset 3984
 	 */
 	uint16_t nitrousDeactivationRpm;
 	/**
-	 * units: rpm
+	 * units: RPM
 	 * offset 3986
 	 */
 	uint16_t nitrousDeactivationRpmWindow;
@@ -6259,19 +6259,19 @@ struct engine_configuration_s {
 	float fuelLevelAveragingAlpha;
 	/**
 	 * How often do we update fuel level gauge
-	 * units: seconds
+	 * units: s
 	 * offset 4008
 	 */
 	float fuelLevelUpdatePeriodSec;
 	/**
 	 * Error below specified value
-	 * units: v
+	 * units: V
 	 * offset 4012
 	 */
 	float fuelLevelLowThresholdVoltage;
 	/**
 	 * Error above specified value
-	 * units: v
+	 * units: V
 	 * offset 4016
 	 */
 	float fuelLevelHighThresholdVoltage;
@@ -6289,7 +6289,7 @@ struct engine_configuration_s {
 	scaled_channel<uint8_t, 1, 1> sparkHardwareLatencyCorrection;
 	/**
 	 * Delay before cutting fuel due to extra high oil pressure. Use this to ignore short pressure blips and sensor noise.
-	 * units: sec
+	 * units: s
 	 * offset 4025
 	 */
 	scaled_channel<uint8_t, 10, 1> maxOilPressureTimeout;
@@ -6315,7 +6315,7 @@ struct engine_configuration_s {
 	int8_t airmassToTimingValues[8] = {};
 	/**
 	 * idle return target ramp duration
-	 * units: seconds
+	 * units: s
 	 * offset 4066
 	 */
 	scaled_channel<uint8_t, 10, 1> idleReturnTargetRampDuration;
@@ -6327,13 +6327,13 @@ struct engine_configuration_s {
 	uint8_t alignmentFill_at_4067[1] = {};
 	/**
 	 * Voltage when the wastegate is fully open
-	 * units: v
+	 * units: V
 	 * offset 4068
 	 */
 	float wastegatePositionOpenedVoltage;
 	/**
 	 * Voltage when the wastegate is closed
-	 * units: v
+	 * units: V
 	 * offset 4072
 	 */
 	float wastegatePositionClosedVoltage;
@@ -6365,7 +6365,7 @@ struct engine_configuration_s {
 	rotational_idle_s rotationalIdleController;
 	/**
 	 * Launch RPM Threshold: when above 0, launch only engages if the activation switch (button/clutch) is pressed at or below this RPM, and stays latched while held - even past this RPM. This lets a standing launch (switch pressed low, revved up) coexist with flat shift / torque reduction (switch blipped high during an upshift). 0 disables the gate (legacy behavior).
-	 * units: rpm
+	 * units: RPM
 	 * offset 4156
 	 */
 	uint16_t launchRpmThreshold;
@@ -6549,11 +6549,17 @@ struct engine_configuration_s {
 	 */
 	int8_t binarySyncRemainderOffset;
 	/**
-	 * need 4 byte alignment
-	 * units: units
+	 * Reject primary trigger edges arriving sooner than this percent of the previous edge-to-edge interval. 0 disables spike rejection.
+	 * units: %
 	 * offset 4249
 	 */
-	uint8_t alignmentFill_at_4249[3] = {};
+	uint8_t triggerMinPulseWidthPercent;
+	/**
+	 * Below cranking RPM only: reject primary trigger teeth whose high time from rise to fall is shorter than this. 0 disables on-time validation.
+	 * units: us
+	 * offset 4250
+	 */
+	uint16_t triggerMinToothOnTimeUs;
 };
 static_assert(sizeof(engine_configuration_s) == 4252);
 
@@ -6730,7 +6736,7 @@ struct persistent_config_s {
 	 */
 	float tmfOpeningBins[TMF_SIZE] = {};
 	/**
-	 * units: mult
+	 * units: factor
 	 * offset 4284
 	 */
 	float postCrankingFactor[CRANKING_ENRICH_CLT_COUNT][CRANKING_ENRICH_COUNT] = {};
@@ -6900,13 +6906,13 @@ struct persistent_config_s {
 	 */
 	float baroCorrRpmBins[BARO_CORR_SIZE] = {};
 	/**
-	 * units: ratio
+	 * units: factor
 	 * offset 5312
 	 */
 	float baroCorrTable[BARO_CORR_SIZE][BARO_CORR_SIZE] = {};
 	/**
 	 * Cranking fuel correction coefficient based on TPS
-	 * units: Ratio
+	 * units: factor
 	 * offset 5376
 	 */
 	float crankingTpsCoef[CRANKING_CURVE_SIZE] = {};
@@ -6983,7 +6989,7 @@ struct persistent_config_s {
 	float cltCrankingCorrBins[CLT_CRANKING_CURVE_SIZE] = {};
 	/**
 	 * CLT-based cranking position %. The values in this curve represent a percentage of the ETB Maximum angle. e.g. If "ETB Idle Maximum Angle" is 10, a value of 70 means 7% ETB Position.
-	 * units: percent
+	 * units: %
 	 * offset 5768
 	 */
 	float cltCrankingCorr[CLT_CRANKING_CURVE_SIZE] = {};
@@ -7032,7 +7038,7 @@ struct persistent_config_s {
 	 */
 	float cltFuelCorrBins[CLT_FUEL_CURVE_SIZE] = {};
 	/**
-	 * units: ratio
+	 * units: factor
 	 * offset 5980
 	 */
 	float cltFuelCorr[CLT_FUEL_CURVE_SIZE] = {};
@@ -7042,12 +7048,12 @@ struct persistent_config_s {
 	 */
 	float iatFuelCorrBins[IAT_CURVE_SIZE] = {};
 	/**
-	 * units: ratio
+	 * units: factor
 	 * offset 6108
 	 */
 	float iatFuelCorr[IAT_CURVE_SIZE] = {};
 	/**
-	 * units: ratio
+	 * units: factor
 	 * offset 6172
 	 */
 	float crankingFuelCoef[CRANKING_CURVE_SIZE] = {};
@@ -7057,7 +7063,7 @@ struct persistent_config_s {
 	 */
 	float crankingFuelBins[CRANKING_CURVE_SIZE] = {};
 	/**
-	 * units: counter
+	 * units: count
 	 * offset 6236
 	 */
 	float crankingCycleBins[CRANKING_CURVE_SIZE] = {};
@@ -7325,7 +7331,7 @@ struct persistent_config_s {
 	 */
 	uint16_t ignTrimLoadBins[IGN_TRIM_SIZE] = {};
 	/**
-	 * units: rpm
+	 * units: RPM
 	 * offset 9952
 	 */
 	uint16_t ignTrimRpmBins[IGN_TRIM_SIZE] = {};
@@ -7339,7 +7345,7 @@ struct persistent_config_s {
 	 */
 	uint16_t fuelTrimLoadBins[FUEL_TRIM_SIZE] = {};
 	/**
-	 * units: rpm
+	 * units: RPM
 	 * offset 10160
 	 */
 	uint16_t fuelTrimRpmBins[FUEL_TRIM_SIZE] = {};
@@ -7348,7 +7354,7 @@ struct persistent_config_s {
 	 */
 	fuel_cyl_trim_s fuelTrims[MAX_CYLINDER_COUNT] = {};
 	/**
-	 * units: ratio
+	 * units: factor
 	 * offset 10360
 	 */
 	scaled_channel<uint16_t, 100, 1> unusedCrankingFuelCoefE100[CRANKING_CURVE_SIZE] = {};
@@ -7360,7 +7366,7 @@ struct persistent_config_s {
 	uint8_t crankingFuelFlexBins[CRANKING_FLEX_SIZE] = {};
 	/**
 	 * Cranking coolant multiplier as a function of coolant (X axis, shared crankingFuelBins) and ethanol % (Y axis, crankingFuelFlexBins). Used instead of crankingFuelCoef when flexCranking is enabled and a flex sensor is present.
-	 * units: mult
+	 * units: factor
 	 * offset 10380
 	 */
 	scaled_channel<uint8_t, 50, 1> crankingFuelFlexTable[CRANKING_FLEX_SIZE][CRANKING_CURVE_SIZE] = {};
@@ -7500,7 +7506,7 @@ struct persistent_config_s {
 	 */
 	uint16_t alsIgnRetardrpmBins[ALS_RPM_SIZE] = {};
 	/**
-	 * units: percent
+	 * units: %
 	 * offset 10700
 	 */
 	scaled_channel<int16_t, 10, 1> ALSFuelAdjustment[ALS_SIZE][ALS_RPM_SIZE] = {};
@@ -7515,7 +7521,7 @@ struct persistent_config_s {
 	 */
 	uint16_t alsFuelAdjustmentrpmBins[ALS_RPM_SIZE] = {};
 	/**
-	 * units: ratio
+	 * units: factor
 	 * offset 10748
 	 */
 	scaled_channel<int16_t, 1, 10> ALSIgnSkipTable[ALS_SIZE][ALS_RPM_SIZE] = {};
@@ -7678,7 +7684,7 @@ struct persistent_config_s {
 	 */
 	scaled_channel<uint8_t, 2, 1> hpfpLobeProfileAngle[HPFP_LOBE_PROFILE_SIZE] = {};
 	/**
-	 * units: volts
+	 * units: V
 	 * offset 13544
 	 */
 	uint8_t hpfpDeadtimeVoltsBins[HPFP_DEADTIME_SIZE] = {};
@@ -7764,7 +7770,7 @@ struct persistent_config_s {
 	 */
 	scaled_channel<uint8_t, 1, 50> tpsTspCorrValuesBins[TPS_TPS_ACCEL_CLT_CORR_TABLE] = {};
 	/**
-	 * units: multiplier
+	 * units: factor
 	 * offset 14156
 	 */
 	scaled_channel<uint8_t, 50, 1> tpsTspCorrValues[TPS_TPS_ACCEL_CLT_CORR_TABLE] = {};
@@ -7774,7 +7780,7 @@ struct persistent_config_s {
 	 */
 	scaled_channel<uint8_t, 1, 50> predictiveMapBlendDurationBins[TPS_TPS_ACCEL_CLT_CORR_TABLE] = {};
 	/**
-	 * units: second
+	 * units: s
 	 * offset 14164
 	 */
 	scaled_channel<uint8_t, 50, 1> predictiveMapBlendDurationValues[TPS_TPS_ACCEL_CLT_CORR_TABLE] = {};
@@ -7792,19 +7798,19 @@ struct persistent_config_s {
 	uint8_t flexTransientEthanolBins[FLEX_TRANSIENT_ETH_SIZE] = {};
 	/**
 	 * Acceleration enrichment multiplier as a function of CLT (X) and ethanol % (Y)
-	 * units: mult
+	 * units: factor
 	 * offset 14192
 	 */
 	scaled_channel<uint8_t, 50, 1> flexAeMult[FLEX_TRANSIENT_ETH_SIZE][FLEX_TRANSIENT_CLT_SIZE] = {};
 	/**
 	 * Wall wetting tau multiplier as a function of CLT (X) and ethanol % (Y)
-	 * units: mult
+	 * units: factor
 	 * offset 14256
 	 */
 	scaled_channel<uint8_t, 50, 1> flexWwTauMult[FLEX_TRANSIENT_ETH_SIZE][FLEX_TRANSIENT_CLT_SIZE] = {};
 	/**
 	 * Wall wetting beta multiplier as a function of CLT (X) and ethanol % (Y)
-	 * units: mult
+	 * units: factor
 	 * offset 14320
 	 */
 	scaled_channel<uint8_t, 50, 1> flexWwBetaMult[FLEX_TRANSIENT_ETH_SIZE][FLEX_TRANSIENT_CLT_SIZE] = {};
@@ -7819,7 +7825,7 @@ struct persistent_config_s {
 	 */
 	uint16_t cltRevLimitRpm[CLT_LIMITER_CURVE_SIZE] = {};
 	/**
-	 * units: volt
+	 * units: V
 	 * offset 14400
 	 */
 	scaled_channel<uint16_t, 1000, 1> fuelLevelBins[FUEL_LEVEL_TABLE_COUNT] = {};
@@ -7829,12 +7835,12 @@ struct persistent_config_s {
 	 */
 	uint8_t fuelLevelValues[FUEL_LEVEL_TABLE_COUNT] = {};
 	/**
-	 * units: volts
+	 * units: V
 	 * offset 14424
 	 */
 	scaled_channel<uint8_t, 10, 1> dwellVoltageCorrVoltBins[DWELL_CURVE_SIZE] = {};
 	/**
-	 * units: multiplier
+	 * units: factor
 	 * offset 14432
 	 */
 	scaled_channel<uint8_t, 50, 1> dwellVoltageCorrValues[DWELL_CURVE_SIZE] = {};
@@ -7879,7 +7885,7 @@ struct persistent_config_s {
 	 */
 	float tcu_shiftTime;
 	/**
-	 * units: volts
+	 * units: V
 	 * offset 14500
 	 */
 	scaled_channel<int16_t, 10, 1> alternatorVoltageTargetTable[ALTERNATOR_VOLTAGE_TARGET_SIZE][ALTERNATOR_VOLTAGE_RPM_SIZE] = {};
@@ -7899,7 +7905,7 @@ struct persistent_config_s {
 	 */
 	float cltBoostCorrBins[BOOST_CURVE_SIZE] = {};
 	/**
-	 * units: ratio
+	 * units: factor
 	 * offset 14568
 	 */
 	float cltBoostCorr[BOOST_CURVE_SIZE] = {};
@@ -7909,7 +7915,7 @@ struct persistent_config_s {
 	 */
 	float iatBoostCorrBins[BOOST_CURVE_SIZE] = {};
 	/**
-	 * units: ratio
+	 * units: factor
 	 * offset 14608
 	 */
 	float iatBoostCorr[BOOST_CURVE_SIZE] = {};
@@ -8089,7 +8095,7 @@ struct persistent_config_s {
 	 */
 	scaled_channel<int8_t, 10, 1> trailingSparkTable[TRAILING_SPARK_SIZE][TRAILING_SPARK_RPM_SIZE] = {};
 	/**
-	 * units: rpm
+	 * units: RPM
 	 * offset 15160
 	 */
 	scaled_channel<uint8_t, 1, 50> trailingSparkRpmBins[TRAILING_SPARK_RPM_SIZE] = {};

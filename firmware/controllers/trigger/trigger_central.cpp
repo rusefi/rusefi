@@ -25,6 +25,10 @@
 #include "auto_generated_sync_edge.h"
 #include "board_overrides.h"
 
+#if EFI_UNIT_TEST
+extern bool printTriggerDebug;
+#endif
+
 #if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
 #endif /* EFI_TUNER_STUDIO */
@@ -514,12 +518,16 @@ static bool readPolledBinaryCamLevel(int camSensorIndex) {
  *   other     - not a unique position, only counted (future: position tracking)
  * Cam edge *timing* is intentionally not used for synchronization in this mode.
  */
-void TriggerCentral::handlePolledBinaryCamSync(bool isCrankRising, efitick_t nowNt) {
+void TriggerCentral::handlePolledBinaryCamSync(bool isCrankRising, efitick_t nowNt, int camLevelOverride) {
 	UNUSED(nowNt);
 	//binaryCamAtCrankRise declared in trigger_central.txt
 	//binaryCamAtCrankFall declared in trigger_central.txt
 
-	bool camLevel = readPolledBinaryCamLevel(engineConfiguration->engineSyncCam); // sample the physical cam pin level right at this crank edge
+	// sample the physical cam pin level right at this crank edge, unless the on-time filter
+	// already sampled it at the actual edge moment before deferring the edge
+	bool camLevel = camLevelOverride >= 0
+			? camLevelOverride != 0
+			: readPolledBinaryCamLevel(engineConfiguration->engineSyncCam);
 
 	if (isCrankRising) {
 		binaryCamAtCrankRise = camLevel; //store cam level for rising edge
@@ -535,9 +543,11 @@ void TriggerCentral::handlePolledBinaryCamSync(bool isCrankRising, efitick_t now
 	int8_t currentSyncCode = (binaryCamAtCrankRise ? 2 : 0) | (binaryCamAtCrankFall ? 1 : 0);
 
 	// tooth-level crank sync is a prerequisite for engine phase sync
+	bool triedToSyncButShaftWasnt = false;
 	if (!triggerState.getShaftSynchronized()) {
-		m_lastBinarySyncCode=currentSyncCode; 
-		return;
+		m_lastBinarySyncCode=currentSyncCode;
+		triedToSyncButShaftWasnt = true;
+		// return;
 	}
 
 	
@@ -545,6 +555,9 @@ void TriggerCentral::handlePolledBinaryCamSync(bool isCrankRising, efitick_t now
 	if (maxSyncThreshold != 0 && Sensor::getOrZero(SensorType::Rpm) > maxSyncThreshold) {
 		m_lastBinarySyncCode=currentSyncCode; 
 		return; // The user has elected to stop trying to resolve crank phase after some RPM
+	}
+	if(Sensor::getOrZero(SensorType::Rpm) == 0) { 
+		return;
 	}
 	if (m_cachedCrankDivider < 0) { m_cachedCrankDivider = getCrankDivider(triggerShape.getWheelOperationMode()); }
 	if (m_cachedCrankDivider == 1) { m_lastBinarySyncCode=currentSyncCode; return; } // no ambiguity to resolve
@@ -562,6 +575,10 @@ void TriggerCentral::handlePolledBinaryCamSync(bool isCrankRising, efitick_t now
 			getTimeNowUs() / 1'000'000.0f, currentSyncCode, m_lastBinarySyncCode,
 			triggerState.getShaftSynchronized(), Sensor::getOrZero(SensorType::Rpm));
 	#endif
+
+	// if(triedToSyncButShaftWasnt) {
+	// 	return;
+	// }
 
 	// no-op if we are already in the correct phase, corrective shift otherwise
 	syncEnginePhaseAndReport(m_cachedCrankDivider, remainder);
@@ -592,6 +609,8 @@ void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 
 	handleShaftSignal(signalIndex, isRising, timestamp);
 }
+
+static void dispatchShaftSignal(trigger_event_e signal, bool isPrimary, efitick_t timestamp, int camLevelOverride = -1);
 
 // Handle all shaft signals - hardware or emulated both
 void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
@@ -635,12 +654,80 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 	}
 #endif /* EFI_TOOTH_LOGGER */
 
+	// minimum pulse-width spike rejection, before cam sampling and decoding so that
+	// interference spikes cannot corrupt either, see triggerMinPulseWidthPercent
+	if (isPrimary && getTriggerCentral()->isPrimaryEdgeSpike(timestamp)) {
+		getTriggerCentral()->triggerIgnoredToothCount++;
+		return;
+	}
+
+	// On-time tooth validation: hold each primary rise until the matching fall confirms
+	// the tooth high time is long enough to be a real tooth, see triggerMinToothOnTimeUs.
+	// While running, the threshold is dynamic: 10^7 / RPM us (half the tooth period for
+	// a 3-tooth crank). Rejected rise/fall pairs never reach cam sampling or decoding.
+	if (isPrimary && engineConfiguration->triggerMinToothOnTimeUs > 0) {
+		TriggerCentral *tc = getTriggerCentral();
+		if (signal == SHAFT_PRIMARY_RISING) {
+			tc->m_pendingRiseTimestamp = timestamp;
+			// sample the cam now: by dispatch time the cam level may have changed
+			tc->m_pendingRiseCamLevel = readPolledBinaryCamLevel(engineConfiguration->engineSyncCam);
+			tc->m_hasPendingRise = true;
+			return;
+		}
+		if (tc->m_hasPendingRise) {
+			tc->m_hasPendingRise = false;
+			efitick_t onTime = timestamp - tc->m_pendingRiseTimestamp;
+			// Dynamic threshold while running: 10^7 / RPM us
+			// Static threshold while cranking: triggerMinToothOnTimeUs
+			float rpm = engine->rpmCalculator.getCachedRpm();
+			efitick_t thresholdUs;
+			if (engine->rpmCalculator.isRunning() && rpm > 0) {
+				thresholdUs = (efitick_t)(5000000.0f / rpm);
+			} else {
+				thresholdUs = engineConfiguration->triggerMinToothOnTimeUs;
+			}
+			efitick_t thresholdNt = US2NT(thresholdUs);
+#if EFI_UNIT_TEST
+			if (printTriggerDebug) {
+				printf("primary on-time %s: t=%.3f s onTime=%lld us threshold=%lld us\r\n",
+						onTime < thresholdNt ? "REJECT" : "ACCEPT",
+						NT2US(timestamp) / 1'000'000.0f,
+						(long long)NT2US(onTime),
+						(long long)thresholdUs);
+			}
+#endif
+			if (onTime < thresholdNt) {
+				// too short to be a real tooth: drop both edges of the spike
+				tc->triggerIgnoredToothCount += 2;
+				return;
+			}
+			// real tooth confirmed: forward the buffered rise with its original timestamp
+			// and rise-time cam level, then fall through to forward this fall
+			dispatchShaftSignal(SHAFT_PRIMARY_RISING, true, tc->m_pendingRiseTimestamp, tc->m_pendingRiseCamLevel ? 1 : 0);
+		}
+	}
+
+	dispatchShaftSignal(signal, isPrimary, timestamp);
+}
+
+// Forward a filtered shaft signal to cam sampling and trigger decoding
+static void dispatchShaftSignal(trigger_event_e signal, bool isPrimary, efitick_t timestamp, int camLevelOverride) {
 	// VVT_POLLED_BINARY: sample cam level at every crank edge, including falling edges
 	// which a rise-only crank decoder would otherwise discard just below
 	if (isPrimary
 			&& engineConfiguration->vvtMode[CAM_BY_INDEX(engineConfiguration->engineSyncCam)] == VVT_POLLED_BINARY) {
-		getTriggerCentral()->handlePolledBinaryCamSync(signal == SHAFT_PRIMARY_RISING, timestamp);
+		getTriggerCentral()->handlePolledBinaryCamSync(signal == SHAFT_PRIMARY_RISING, timestamp, camLevelOverride);
 	}
+
+#if EFI_UNIT_TEST
+	if (isPrimary && printTriggerDebug) {
+		bool useful = isUsefulSignal(signal, getTriggerCentral()->triggerShape);
+		printf("crank edge %s: t=%.3f s %s\r\n",
+				useful ? "ACCEPT" : "REJECT",
+				NT2US(timestamp) / 1'000'000.0f,
+				signal == SHAFT_PRIMARY_RISING ? "RISE" : "FALL");
+	}
+#endif
 
 	// for effective noise filtering, we need both signal edges,
 	// so we pass them to handleShaftSignal() and defer this test
@@ -747,6 +834,36 @@ bool TriggerNoiseFilter::noiseFilter(efitick_t nowNt,
 		return true;
 	}
 	// all premature or extra-long events are ignored - treated as interference
+	return false;
+}
+
+/**
+ * Minimum pulse-width spike rejection: reject a primary trigger edge which arrives sooner than
+ * triggerMinPulseWidthPercent percent of the previous accepted edge-to-edge interval.
+ * Real teeth are milliseconds apart even at high rpm while interference spikes are microseconds wide,
+ * so a small percentage threshold separates them cleanly.
+ * @return true if this edge is a noise spike and should be discarded
+ */
+bool TriggerCentral::isPrimaryEdgeSpike(efitick_t timestamp) {
+	efitick_t elapsed = timestamp - m_lastPrimaryEdgeTimestamp;
+
+	// first edge ever, or engine was stopped: accept the edge and restart interval tracking
+	if (m_lastPrimaryEdgeTimestamp == 0 || elapsed > NT_PER_SECOND) {
+		m_lastPrimaryEdgeTimestamp = timestamp;
+		m_lastPrimaryEdgeInterval = 0;
+		return false;
+	}
+
+	int percent = engineConfiguration->triggerMinPulseWidthPercent;
+	if (percent > 0 && m_lastPrimaryEdgeInterval > 0
+			&& elapsed * 100 < m_lastPrimaryEdgeInterval * percent) {
+		// too soon after the previous accepted edge: treat as interference,
+		// intentionally do not update tracking state so a burst of spikes is fully rejected
+		return true;
+	}
+
+	m_lastPrimaryEdgeInterval = elapsed;
+	m_lastPrimaryEdgeTimestamp = timestamp;
 	return false;
 }
 

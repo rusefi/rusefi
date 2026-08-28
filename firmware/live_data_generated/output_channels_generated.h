@@ -348,19 +348,19 @@ struct output_channels_s {
 	scaled_channel<int16_t, 100, 1> wallFuelCorrectionValue = (int16_t)0;
 	/**
 	 * Flex: AE multiplier
-	 * units: mult
+	 * units: factor
 	 * offset 68
 	 */
 	scaled_channel<uint16_t, 1000, 1> flexAeMultiplier = (uint16_t)0;
 	/**
 	 * Flex: WW tau multiplier
-	 * units: mult
+	 * units: factor
 	 * offset 70
 	 */
 	scaled_channel<uint16_t, 1000, 1> flexWwTauMultiplier = (uint16_t)0;
 	/**
 	 * Flex: WW beta multiplier
-	 * units: mult
+	 * units: factor
 	 * offset 72
 	 */
 	scaled_channel<uint16_t, 1000, 1> flexWwBetaMultiplier = (uint16_t)0;
@@ -433,7 +433,7 @@ struct output_channels_s {
 	uint16_t tuneCrc16 = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_VE@@
-	 * units: ratio
+	 * units: factor
 	 * offset 96
 	 */
 	scaled_channel<uint16_t, 10, 1> veValue = (uint16_t)0;
@@ -561,7 +561,7 @@ struct output_channels_s {
 	uint8_t alignmentFill_at_142[2] = {};
 	/**
 	 * @@GAUGE_NAME_TRG_ERR@@
-	 * units: counter
+	 * units: count
 	 * offset 144
 	 */
 	uint32_t totalTriggerErrorCounter = (uint32_t)0;
@@ -796,7 +796,7 @@ struct output_channels_s {
 	int8_t vvtTargets[4] = {};
 	/**
 	 * @@GAUGE_NAME_TURBO_SPEED@@
-	 * units: hz
+	 * units: Hz
 	 * offset 298
 	 */
 	uint16_t turboSpeed = (uint16_t)0;
@@ -851,7 +851,7 @@ struct output_channels_s {
 	scaled_channel<uint16_t, 10, 1> mafEstimate = (uint16_t)0;
 	/**
 	 * sync: instant RPM
-	 * units: rpm
+	 * units: RPM
 	 * offset 338
 	 */
 	uint16_t instantRpm = (uint16_t)0;

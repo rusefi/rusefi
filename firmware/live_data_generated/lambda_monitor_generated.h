@@ -102,7 +102,7 @@ struct lambda_monitor_s {
 	offset 0 bit 31 */
 	bool unusedBit_2_31 : 1 {};
 	/**
-	 * units: sec
+	 * units: s
 	 * offset 4
 	 */
 	scaled_channel<uint16_t, 100, 1> lambdaTimeSinceGood = (uint16_t)0;

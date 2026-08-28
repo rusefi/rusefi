@@ -7,7 +7,7 @@
 struct trigger_state_primary_s {
 	/**
 	 * sync: Phase Re-Sync Counter
-	 * units: cnt
+	 * units: count
 	 * offset 0
 	 */
 	uint8_t phaseResyncCounter = (uint8_t)0;

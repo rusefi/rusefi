@@ -17,6 +17,7 @@
 #include "speed_density.h"
 #include "advance_map.h"
 #include "init.h"
+#include "ego.h"
 
 #include "aux_valves.h"
 #include "perf_trace.h"
@@ -89,7 +90,7 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	case VVT_SINGLE_TOOTH:
 	case VVT_MAP_V_TWIN:
 	case VVT_POLLED_BINARY:
-		return trigger_type_e::TT_HALF_MOON;
+		return trigger_type_e::TT_VVT_MITSU_6G72;
 	case VVT_FORD_ST170:
 		return trigger_type_e::TT_FORD_ST170;
 	case VVT_BARRA_3_PLUS_1:
@@ -598,6 +599,9 @@ void Engine::periodicFastCallback() {
 	call_board_override(custom_board_periodicFastCallback);
 
 	engineState.periodicFastCallback();
+
+	updatePpsFilter();
+	updateSmoothedLambda();
 
 	speedoUpdate();
 

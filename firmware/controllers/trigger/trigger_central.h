@@ -55,7 +55,10 @@ public:
 	 * not to be confused with a totally different trigger _wheel_ sync which could be either crank wheel sync or cam wheel sync
 	 */
 	angle_t syncEnginePhaseAndReport(int divider, int remainder);
-	void handlePolledBinaryCamSync(bool isCrankRising, efitick_t nowNt);
+	// camLevelOverride: -1 to sample the cam pin now, 0/1 to use a level sampled earlier
+	void handlePolledBinaryCamSync(bool isCrankRising, efitick_t nowNt, int camLevelOverride = -1);
+	// returns true if this primary edge should be rejected as a noise spike, see triggerMinPulseWidthPercent
+	bool isPrimaryEdgeSpike(efitick_t timestamp);
 	void handleShaftSignal(trigger_event_e signal, efitick_t timestamp);
 	int getHwEventCounter(int index) const;
 	void resetCounters();
@@ -111,6 +114,16 @@ public:
 
 	float mapCamPrevCycleValue = 0;
 	int prevChangeAtCycle = 0;
+
+	// minimum pulse-width spike rejection state, primary channel only
+	efitick_t m_lastPrimaryEdgeTimestamp = 0;
+	efitick_t m_lastPrimaryEdgeInterval = 0;
+
+	// on-time tooth validation state, primary channel only, see triggerMinToothOnTimeUs
+	bool m_hasPendingRise = false;
+	efitick_t m_pendingRiseTimestamp = 0;
+	// cam level sampled at the buffered rise so deferred dispatch keeps a correct polled binary code
+	bool m_pendingRiseCamLevel = false;
 
 	/**
 	 * value of 'triggerShape.getLength()'

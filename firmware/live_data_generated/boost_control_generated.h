@@ -103,7 +103,7 @@ struct boost_control_s {
 	bool unusedBit_11_31 : 1 {};
 	/**
 	 * "Boost: Lua target add"
-	 * units: percent
+	 * units: %
 	 * offset 4
 	 */
 	scaled_channel<int16_t, 2, 1> luaTargetAdd = (int16_t)0;
@@ -132,7 +132,7 @@ struct boost_control_s {
 	uint8_t alignmentFill_at_14[2] = {};
 	/**
 	 * @@GAUGE_NAME_BOOST_OPEN_LOOP@@
-	 * units: percent
+	 * units: %
 	 * offset 16
 	 */
 	float openLoopPart = (float)0;
@@ -148,7 +148,7 @@ struct boost_control_s {
 	uint8_t alignmentFill_at_22[2] = {};
 	/**
 	 * "Boost: Lua open loop add"
-	 * units: percent
+	 * units: %
 	 * offset 24
 	 */
 	float luaOpenLoopAdd = (float)0;
@@ -166,7 +166,7 @@ struct boost_control_s {
 	uint8_t alignmentFill_at_29[1] = {};
 	/**
 	 * @@GAUGE_NAME_BOOST_OUTPUT@@
-	 * units: percent
+	 * units: %
 	 * offset 30
 	 */
 	scaled_channel<int16_t, 100, 1> boostOutput = (int16_t)0;

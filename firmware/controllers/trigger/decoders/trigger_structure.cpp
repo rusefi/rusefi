@@ -80,6 +80,7 @@ void TriggerWaveform::initialize(operation_mode_e p_operationMode, SyncEdge p_sy
 		setTriggerSynchronizationGap3(gapIndex, NAN, 100000);
 	}
 	gapTrackingLength = 1;
+	symmetricalSyncLossDebounce = 1;
 
 	tdcPosition = 0;
 	shapeDefinitionError = false;

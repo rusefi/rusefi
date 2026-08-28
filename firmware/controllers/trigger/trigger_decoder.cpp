@@ -103,6 +103,7 @@ void TriggerDecoderBase::resetState() {
 	setArrayValues(vvtToothPosition, 0);
 	triggerSyncGapRatio = 0;
 	triggerStateIndex = 0;
+	consecutiveTriggerErrors = 0;
 
 	call_board_override(custom_board_TriggerResetState);
 }
@@ -412,7 +413,8 @@ void TriggerDecoderBase::onShaftSynchronization(
 
 #if EFI_UNIT_TEST
 	if (printTriggerDebug) {
-		printf("onShaftSynchronization index=%d %d\r\n",
+		printf("onShaftSynchronization t=%.3f s index=%d counter=%d\r\n",
+				NT2US(nowNt) / 1'000'000.0f,
 				currentCycle.current_index,
 				synchronizationCounter);
 	}
@@ -648,17 +650,24 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 			// In either case, we should wait for another sync point before doing anything to try and run an engine,
 			// so we clear the synchronized flag.
 			if (wasSynchronized && isDecodingError) {
-				setTriggerErrorState();
-				onNotEnoughTeeth(currentCycle.current_index, triggerShape.getSize());
+				consecutiveTriggerErrors++;
+				if (consecutiveTriggerErrors >= triggerShape.symmetricalSyncLossDebounce) {
+					setTriggerErrorState();
+					onNotEnoughTeeth(currentCycle.current_index, triggerShape.getSize());
 
-				// Something wrong, no longer synchronized
-				setShaftSynchronized(false);
+					// Something wrong, no longer synchronized
+					setShaftSynchronized(false);
 
-				// This is a decoding error
-				onTriggerError();
-				printGaps("newerr", triggerConfiguration, triggerShape);
+					// This is a decoding error
+					onTriggerError();
+					printGaps("newerr", triggerConfiguration, triggerShape);
+				} else {
+					// transient error: keep sync but mark an error
+					setTriggerErrorState();
+				}
 			} else {
 				// If this was the first sync point OR no decode error, we're synchronized!
+				consecutiveTriggerErrors = 0;
 				setShaftSynchronized(true);
 			}
 

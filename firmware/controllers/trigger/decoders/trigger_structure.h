@@ -65,6 +65,12 @@ public:
 	 */
 	int gapTrackingLength = 1;
 	/**
+	 * number of consecutive sync decode errors before shaft sync is cleared.
+	 * 1 means the legacy single-error behavior; values >1 debounce sync loss.
+	 */
+	uint8_t symmetricalSyncLossDebounce = 1;
+
+	/**
 	 * special case for triggers which do not provide exact TDC location
 	 * For example pick-up in distributor with mechanical ignition firing order control.
 	 */

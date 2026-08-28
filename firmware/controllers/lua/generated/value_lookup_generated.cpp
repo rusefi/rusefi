@@ -2119,6 +2119,12 @@ float getConfigValueByHash(const int hash) {
 // binarySyncRemainderOffset
 		case 1184021349:
 			return engineConfiguration->binarySyncRemainderOffset;
+// triggerMinPulseWidthPercent
+		case -1221647017:
+			return engineConfiguration->triggerMinPulseWidthPercent;
+// triggerMinToothOnTimeUs
+		case 1040445727:
+			return engineConfiguration->triggerMinToothOnTimeUs;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -5754,6 +5760,16 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1184021349:
 	{
 		engineConfiguration->binarySyncRemainderOffset = (int)value;
+		return 1;
+	}
+		case -1221647017:
+	{
+		engineConfiguration->triggerMinPulseWidthPercent = (int)value;
+		return 1;
+	}
+		case 1040445727:
+	{
+		engineConfiguration->triggerMinToothOnTimeUs = (int)value;
 		return 1;
 	}
 		case -1658957891:

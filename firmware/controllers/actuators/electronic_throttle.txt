@@ -13,7 +13,7 @@ struct_no_prefix electronic_throttle_s
 
 	float m_wastegatePosition;"DC: wastegatePosition";"%", 1,0, 0,3, 2,@@GAUGE_CATEGORY_ETB@@
 
-	float m_lastPidDtMs;"EBT: last PID dT";"mS", 1, 0, 0, 4, 3,@@GAUGE_CATEGORY_ETB@@
+	float m_lastPidDtMs;"EBT: last PID dT";"ms", 1, 0, 0, 4, 3,@@GAUGE_CATEGORY_ETB@@
 
 	custom percent_t 4 scalar, F32, @OFFSET@, "", 1, 0, 0, 100, 2
 
@@ -31,7 +31,7 @@ struct_no_prefix electronic_throttle_s
 	int8_t etbErrorCodeBlinker
 	int8_t tcEtbDrop;ETB traction control;"%", 1, 0, 0, 100, 0
 
-	uint16_t autoscale jamTimer;ETB jam timer;"sec", 0.01, 0, 0, 100, 2
+	uint16_t autoscale jamTimer;ETB jam timer;"s", 0.01, 0, 0, 100, 2
 	uint8_t state
 
 end_struct
