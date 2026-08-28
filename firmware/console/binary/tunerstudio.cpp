@@ -435,6 +435,11 @@ void TunerStudio::handleCrc32Check(TsChannelBase *tsChannel, uint32_t page, uint
 }
 
 #if EFI_TS_SCATTER
+// Each page-2 entry packs a 3-bit type in the top bits: 0 = unused, 1..4 = 1/2/4/8 byte field.
+// Types 5..7 have no meaning in the TS protocol and would decode to 16/32/64 bytes.
+static constexpr uint16_t TS_SCATTER_MAX_TYPE = 4;
+static constexpr size_t TS_SCATTER_MAX_FIELD_SIZE = 1 << (TS_SCATTER_MAX_TYPE - 1);
+
 void TunerStudio::handleScatteredReadCommand(TsChannelBase* tsChannel) {
 	tsState.readScatterCommandsCounter++;
 
@@ -442,6 +447,14 @@ void TunerStudio::handleScatteredReadCommand(TsChannelBase* tsChannel) {
 	for (size_t i = 0; i < TS_SCATTER_OFFSETS_COUNT; i++) {
 		uint16_t packed = tsChannel->page2.highSpeedOffsets[i];
 		uint16_t type = packed >> 13;
+
+		// Page 2 is host-writable and its contents are never validated on write, so reject
+		// malformed entries here, before any part of the response goes out (#10155)
+		if (type > TS_SCATTER_MAX_TYPE) {
+			tunerStudioError(tsChannel, "ERROR: scatter entry type out of range");
+			sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
+			return;
+		}
 
 		size_t size = type == 0 ? 0 : 1 << (type - 1);
 #if EFI_SIMULATOR
@@ -456,15 +469,18 @@ void TunerStudio::handleScatteredReadCommand(TsChannelBase* tsChannel) {
 	// Command part of CRC
 	uint32_t crc = tsChannel->writePacketHeader(TS_RESPONSE_OK, totalResponseSize);
 
-	uint8_t dataBuffer[8];
+	uint8_t dataBuffer[TS_SCATTER_MAX_FIELD_SIZE];
 	for (size_t i = 0; i < TS_SCATTER_OFFSETS_COUNT; i++) {
 		uint16_t packed = tsChannel->page2.highSpeedOffsets[i];
 		uint16_t type = packed >> 13;
 		uint16_t offset = packed & 0x1FFF;
 
-		if (type == 0)
+		if (type == 0) {
 			continue;
+		}
 		size_t size = 1 << (type - 1);
+		// validated by the loop above; keep the invariant visible next to the copy
+		criticalAssertVoid(size <= sizeof(dataBuffer), "scatter field size");
 
 		// write each data point and CRC incrementally
 		copyRange(dataBuffer, getLiveDataFragments(), offset, size);
