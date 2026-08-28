@@ -20,9 +20,9 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | log flush | 400 | 124 | mailbox wait/flush | 660 | 692 | REVIEW PROXY +32; partial proxy: 25 unknown, 2 indirect, recursion |
 | firmware | Lua | 4096 | - | - | - | 3212 | NOT REVIEWED: 44 unknown, 15 indirect, recursion |
 | firmware | main loop | 1024 | - | - | - | 684 | NOT REVIEWED: 21 unknown, 3 indirect, recursion |
-| firmware | main/process | 1536 | - | - | - | 1212 | NOT REVIEWED: 70 unknown, 24 indirect, recursion |
+| firmware | main/process | 1536 | - | - | - | 1196 | NOT REVIEWED: 70 unknown, 24 indirect, recursion |
 | firmware | MAX3185x | 400 | 192 | normal sensor read | 756 | 788 | REVIEW PROXY +32; partial proxy: 27 unknown, 2 indirect, recursion |
-| firmware | SD/MMC | 1600 | 1432 | exFAT log creation | 2052 | 1852 | PROXY -200; partial proxy: 52 unknown, 19 indirect, recursion |
+| firmware | SD/MMC | 1600 | 1432 | exFAT log creation | 2052 | 1852 | PROXY -200; partial proxy: 54 unknown, 19 indirect, recursion |
 | firmware | software knock | 400 | 144 | normal RMS processing | 628 | 652 | REVIEW PROXY +24; partial proxy: 24 unknown, 2 indirect, recursion |
 | firmware | stepper | 400 | 280 | dual H-bridge stepping | 676 | 708 | REVIEW PROXY +32; partial proxy: 25 unknown, 6 indirect, recursion |
 | firmware | storage manager | 1200 | 1032 | SD extra-page burn | 660 | 692 | REVIEW PROXY +32, PROXY BELOW REVIEWED; partial proxy: 28 unknown, 5 indirect, recursion |
@@ -95,7 +95,7 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | Image | Frame bytes | Function | Source |
 |---|---:|---|---|
 | firmware | 328 | canDashboardHondaK(CanCycle) | controllers/can/can_dash_honda.cpp:46:6 |
-| firmware | 256 | Engine::periodicFastCallback() | controllers/algo/engine.cpp:599:6 |
+| firmware | 256 | Engine::periodicFastCallback() | controllers/algo/engine.cpp:600:6 |
 | firmware | 248 | luaO_pushvfstring | ext/lua/lobject.c:480:13 |
 | firmware | 240 | luaO_str2num | ext/lua/lobject.c:308:8 |
 | firmware | 200 | luaD_rawrunprotected | ext/lua/ldo.c:135:5 |
@@ -136,8 +136,8 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | lwIP driver | 672 | 192 | normal Ethernet delivery | 812 | 868 | REVIEW PROXY +56; partial proxy: 33 unknown, 6 indirect, recursion |
 | firmware | lwIP TCP/IP | 1024 | 584 | TCP write with ARP | 660 | 716 | REVIEW PROXY +56; partial proxy: 15 unknown, 5 indirect, recursion |
 | firmware | main loop | 1024 | 208 | normal ADC processing | 620 | 676 | REVIEW PROXY +56; partial proxy: 14 unknown, 3 indirect, recursion |
-| firmware | main/process | 1536 | 704 | startup fast callback | 1196 | 1236 | REVIEW PROXY +40; partial proxy: 62 unknown, 24 indirect, recursion |
-| firmware | SD/MMC | 1600 | 1436 | exFAT log creation | 2036 | 1852 | PROXY -184; partial proxy: 44 unknown, 19 indirect, recursion |
+| firmware | main/process | 1536 | 704 | startup fast callback | 1196 | 1228 | REVIEW PROXY +32; partial proxy: 62 unknown, 24 indirect, recursion |
+| firmware | SD/MMC | 1600 | 1436 | exFAT log creation | 2036 | 1852 | PROXY -184; partial proxy: 46 unknown, 19 indirect, recursion |
 | firmware | stepper | 400 | 280 | startup redundant pedal check | 652 | 708 | REVIEW PROXY +56; partial proxy: 15 unknown, 6 indirect, recursion |
 | firmware | storage manager | 400 | 292 | internal-flash tune burn | 644 | 700 | REVIEW PROXY +56; partial proxy: 17 unknown, 5 indirect, recursion |
 | firmware | timer watchdog | 256 | 112 | normal watchdog sleep | 528 | 584 | REVIEW PROXY +56; partial proxy: 11 unknown, 2 indirect, recursion |
@@ -193,9 +193,9 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | log flush | 400 | - | - | - | 692 | NOT REVIEWED: 17 unknown, 2 indirect, recursion |
 | firmware | Lua | 4096 | - | - | - | 3148 | NOT REVIEWED: 35 unknown, 15 indirect, recursion |
 | firmware | main loop | 1024 | - | - | - | 700 | NOT REVIEWED: 14 unknown, 4 indirect, recursion |
-| firmware | main/process | 1536 | - | - | - | 1252 | NOT REVIEWED: 59 unknown, 27 indirect, recursion |
+| firmware | main/process | 1536 | - | - | - | 1244 | NOT REVIEWED: 59 unknown, 27 indirect, recursion |
 | firmware | MAX3185x | 400 | - | - | - | 788 | NOT REVIEWED: 19 unknown, 2 indirect, recursion |
-| firmware | SD/MMC | 1600 | - | - | - | 1852 | NOT REVIEWED: 42 unknown, 20 indirect, recursion |
+| firmware | SD/MMC | 1600 | - | - | - | 1852 | NOT REVIEWED: 44 unknown, 20 indirect, recursion |
 | firmware | software knock | 400 | - | - | - | 668 | NOT REVIEWED: 17 unknown, 2 indirect, recursion |
 | firmware | stepper | 400 | - | - | - | 708 | NOT REVIEWED: 16 unknown, 6 indirect, recursion |
 | firmware | storage manager | 1200 | - | - | - | 684 | NOT REVIEWED: 19 unknown, 5 indirect, recursion |
