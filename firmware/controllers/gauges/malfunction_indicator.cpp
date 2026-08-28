@@ -116,8 +116,8 @@ static MILController instance;
 
 #if TEST_MIL_CODE
 static void testMil() {
-	addError(ObdCode::OBD_Engine_Coolant_Temperature_Circuit_Malfunction);
-	addError(ObdCode::OBD_Intake_Air_Temperature_Circuit_Malfunction);
+	addError(ObdCode::OBD_Clt_High);
+	addError(ObdCode::OBD_Iat_High);
 }
 #endif /* TEST_MIL_CODE */
 

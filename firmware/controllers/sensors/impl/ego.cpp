@@ -38,7 +38,7 @@ float getAfr(SensorType type) {
 
 	float interpolatedAfr = interpolateMsg("AFR", sensor->v1, sensor->value1, sensor->v2, sensor->value2, volts.value_or(0));
 
-	return interpolateMsg("AFR", sensor->v1, sensor->value1, sensor->v2, sensor->value2, volts.value_or(0))
+	return interpolatedAfr
 			+ engineConfiguration->egoValueShift;
 }
 

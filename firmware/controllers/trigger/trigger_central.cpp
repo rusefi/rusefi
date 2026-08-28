@@ -543,10 +543,8 @@ void TriggerCentral::handlePolledBinaryCamSync(bool isCrankRising, efitick_t now
 	int8_t currentSyncCode = (binaryCamAtCrankRise ? 2 : 0) | (binaryCamAtCrankFall ? 1 : 0);
 
 	// tooth-level crank sync is a prerequisite for engine phase sync
-	bool triedToSyncButShaftWasnt = false;
 	if (!triggerState.getShaftSynchronized()) {
 		m_lastBinarySyncCode=currentSyncCode;
-		triedToSyncButShaftWasnt = true;
 		// return;
 	}
 
@@ -575,10 +573,6 @@ void TriggerCentral::handlePolledBinaryCamSync(bool isCrankRising, efitick_t now
 			getTimeNowUs() / 1'000'000.0f, currentSyncCode, m_lastBinarySyncCode,
 			triggerState.getShaftSynchronized(), Sensor::getOrZero(SensorType::Rpm));
 	#endif
-
-	// if(triedToSyncButShaftWasnt) {
-	// 	return;
-	// }
 
 	// no-op if we are already in the correct phase, corrective shift otherwise
 	syncEnginePhaseAndReport(m_cachedCrankDivider, remainder);
