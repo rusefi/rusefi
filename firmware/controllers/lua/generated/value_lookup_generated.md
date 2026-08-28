@@ -1555,6 +1555,9 @@ iTerm max value
 ### etbIdleThrottleRange
 This sets the range of the idle control on the ETB. At 100% idle position, the value specified here sets the base ETB position. Can also be interpreted as the maximum allowed TPS% Opening for Idle Control.
 
+### etbDashpotClosingRate
+Maximum rate at which the ETB target position can decrease, mimicking a mechanical dashpot. 0 disables the rate limiter. 100 means it takes 1 second to close from 100% to 0%.
+
 ### triggerCompCenterVolt
 Trigger comparator center point voltage
 

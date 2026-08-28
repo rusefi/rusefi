@@ -212,6 +212,9 @@ bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParam
 	// Ignore 3% position error before complaining
 	m_targetErrorAccumulator.init(3.0f, etbPeriodSeconds);
 
+	m_dashpotTarget = 0;
+	m_dashpotTimer.reset();
+
 	state = (uint8_t)EtbState::SuccessfulInit;
 	return true;
 }
@@ -225,6 +228,8 @@ void EtbController::reset(const char *reason) {
 	m_shouldResetPid = true;
 	etbTpsErrorCounter = 0;
 	etbPpsErrorCounter = 0;
+	m_dashpotTarget = 0;
+	m_dashpotTimer.reset();
 #if EFI_UNIT_TEST
 	ebtResetCounter++;
 #endif // EFI_UNIT_TEST
@@ -376,6 +381,18 @@ expected<percent_t> EtbController::getSetpointEtb() {
 	maxPosition = std::min(maxPosition, 100.0f);
 
 	targetPosition = clampF(minPosition, targetPosition, maxPosition);
+
+	// Dashpot rate limiter: prevent target from closing faster than configured rate
+	float closingRate = engineConfiguration->etbDashpotClosingRate;
+	if (closingRate > 0) {
+		float dt = m_dashpotTimer.getElapsedSecondsAndReset(getTimeNowNt());
+		if (targetPosition < m_dashpotTarget) {
+			float maxDelta = closingRate * dt;
+			targetPosition = std::max(targetPosition, m_dashpotTarget - maxDelta);
+		}
+	}
+	m_dashpotTarget = targetPosition;
+
 	m_adjustedTarget = targetPosition;
 
 	return targetPosition;

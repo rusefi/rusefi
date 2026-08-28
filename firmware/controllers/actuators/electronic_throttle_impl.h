@@ -131,6 +131,10 @@ private:
 
 	Timer m_luaAdjustmentTimer;
 
+	// Dashpot rate limiter: prevents ETB target from closing faster than configured rate
+	float m_dashpotTarget = 0;
+	Timer m_dashpotTimer;
+
 	efitimeus_t lastTickUs;
 };
 

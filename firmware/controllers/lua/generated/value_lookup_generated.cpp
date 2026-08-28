@@ -1561,6 +1561,9 @@ float getConfigValueByHash(const int hash) {
 // etbIdleThrottleRange
 		case -54532767:
 			return engineConfiguration->etbIdleThrottleRange;
+// etbDashpotClosingRate
+		case 255737070:
+			return engineConfiguration->etbDashpotClosingRate;
 // triggerCompCenterVolt
 		case 1455224910:
 			return engineConfiguration->triggerCompCenterVolt;
@@ -4830,6 +4833,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -54532767:
 	{
 		engineConfiguration->etbIdleThrottleRange = value;
+		return 1;
+	}
+		case 255737070:
+	{
+		engineConfiguration->etbDashpotClosingRate = value;
 		return 1;
 	}
 		case 1455224910:

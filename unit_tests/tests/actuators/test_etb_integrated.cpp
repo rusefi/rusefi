@@ -178,3 +178,55 @@ TEST(etb, sentTpsIntegratedDecode) {
 	engineConfiguration->customSentTpsMax = 1000;
 	ASSERT_NEAR(75, decodeTpsSentValue(2000), EPS2D);
 }
+
+TEST(etb, dashpotRateLimiter) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	EtbController *etb = initEtbIntegratedTest();
+
+	// No rate limiter by default - opening should be instant
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 50, true);
+	etb->update();
+	EXPECT_NEAR(50, etb->m_adjustedTarget, EPS2D);
+
+	// Enable rate limiter: 100%/sec means 1 second to close from 100 to 0
+	engineConfiguration->etbDashpotClosingRate = 100;
+
+	// Snap pedal closed - should not reach 0 instantly
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0, true);
+	advanceTimeUs(MS2US(100)); // 0.1 sec
+	etb->update();
+	// Should only have dropped by ~10% (100%/sec * 0.1sec)
+	EXPECT_NEAR(40, etb->m_adjustedTarget, 1.0f);
+
+	// After more time, should continue decaying
+	advanceTimeUs(MS2US(200)); // 0.2 sec
+	etb->update();
+	EXPECT_NEAR(20, etb->m_adjustedTarget, 1.0f);
+
+	advanceTimeUs(MS2US(300)); // 0.3 sec
+	etb->update();
+	// Should reach etbMinimumPosition (default 1)
+	EXPECT_NEAR(1, etb->m_adjustedTarget, 1.0f);
+
+	// Opening should NOT be rate-limited
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 80, true);
+	advanceTimeUs(MS2US(1));
+	etb->update();
+	EXPECT_NEAR(80, etb->m_adjustedTarget, EPS2D);
+}
+
+TEST(etb, dashpotDisabled) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	EtbController *etb = initEtbIntegratedTest();
+
+	// Rate limiter disabled (0) - closing should be instant
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 50, true);
+	etb->update();
+	EXPECT_NEAR(50, etb->m_adjustedTarget, EPS2D);
+
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0, true);
+	advanceTimeUs(MS2US(1));
+	etb->update();
+	// Target clamped to etbMinimumPosition (default 1)
+	EXPECT_NEAR(1, etb->m_adjustedTarget, EPS2D);
+}

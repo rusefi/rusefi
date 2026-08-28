@@ -1589,6 +1589,8 @@ float tChargeAirDecrLimit;Maximum allowed rate of decrease allowed for the estim
 
 	float etbIdleThrottleRange;This sets the range of the idle control on the ETB. At 100% idle position, the value specified here sets the base ETB position. Can also be interpreted as the maximum allowed TPS% Opening for Idle Control.;"%", 1, 0, 0, 45, 0
 
+	float etbDashpotClosingRate;Maximum rate at which the ETB target position can decrease, mimicking a mechanical dashpot. 0 disables the rate limiter. 100 means it takes 1 second to close from 100% to 0%.;"%/sec", 1, 0, 0, 10000, 0
+
 	uint8_t[MAX_CYLINDER_COUNT iterate] cylinderBankSelect;Select which fuel correction bank this cylinder belongs to. Group cylinders that share the same O2 sensor;"", 1, 1, 1, 2, 0
 
 	uint8_t[PRIME_CURVE_COUNT] autoscale primeValues;;"mg", 5, 0, 0, 1250, 0
