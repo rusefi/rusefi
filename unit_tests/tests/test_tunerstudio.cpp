@@ -209,6 +209,58 @@ TEST(TunerstudioCommands, outOfRangeWriteChunkSendsExactlyOneError) {
 	EXPECT_EQ(tsState.errorOutOfRange - prevErrors, 1);
 }
 
+#if EFI_TS_SCATTER
+// Page 2 entries pack a 3-bit type in bits 15..13 (0 = unused, 1..4 = 1/2/4/8 bytes)
+// and a 13-bit live-data offset in the low bits.
+static constexpr uint16_t packScatterEntry(uint16_t type, uint16_t offset) {
+	return static_cast<uint16_t>((type << 13) | (offset & 0x1FFF));
+}
+
+// #10155: a host-writable type 5..7 entry used to decode to 16/32/64 bytes and
+// overflow the 8-byte stack buffer in handleScatteredReadCommand()
+TEST(TunerstudioCommands, scatteredReadRejectsOversizedEntryType) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	BufferTsChannel channel;
+	int prevErrors = tsState.errorOutOfRange;
+
+	channel.page2 = page2_s{};
+	channel.page2.highSpeedOffsets[0] = packScatterEntry(4, 0);
+	// entry in the middle of the list, so the loop must not stop early on the first valid one
+	channel.page2.highSpeedOffsets[5] = packScatterEntry(7, 0);
+
+	TunerStudio ts;
+	ts.handleScatteredReadCommand(&channel);
+
+	EXPECT_EQ(channel.writeIdx, TS_ERROR_PACKET_SIZE);
+	EXPECT_EQ(st5TestBuffer[2], TS_RESPONSE_OUT_OF_RANGE);
+	EXPECT_EQ(tsState.errorOutOfRange - prevErrors, 1);
+}
+
+TEST(TunerstudioCommands, scatteredReadAcceptsAllValidEntryTypes) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	BufferTsChannel channel;
+	int prevErrors = tsState.errorOutOfRange;
+
+	channel.page2 = page2_s{};
+	// one entry of each valid size: 1 + 2 + 4 + 8 bytes
+	channel.page2.highSpeedOffsets[0] = packScatterEntry(1, 0);
+	channel.page2.highSpeedOffsets[1] = packScatterEntry(2, 0);
+	channel.page2.highSpeedOffsets[2] = packScatterEntry(3, 0);
+	channel.page2.highSpeedOffsets[3] = packScatterEntry(4, 0);
+	static constexpr size_t expectedPayload = 1 + 2 + 4 + 8;
+
+	TunerStudio ts;
+	ts.handleScatteredReadCommand(&channel);
+
+	// 2-byte length + 1-byte response code + payload + 4-byte CRC
+	EXPECT_EQ(channel.writeIdx, 2 + 1 + expectedPayload + 4);
+	EXPECT_EQ(st5TestBuffer[0], 0);
+	EXPECT_EQ(st5TestBuffer[1], 1 + expectedPayload);
+	EXPECT_EQ(st5TestBuffer[2], TS_RESPONSE_OK);
+	EXPECT_EQ(tsState.errorOutOfRange - prevErrors, 0);
+}
+#endif // EFI_TS_SCATTER
+
 // ---------------------------------------------------------------------------
 // isTuningVeNow — detect tuning and suspend STFT/LTFT
 // ---------------------------------------------------------------------------

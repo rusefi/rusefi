@@ -13,6 +13,9 @@
 
 #define EFI_TUNER_STUDIO TRUE
 
+// scattered ("Full Optimized - High Speed") output channel reads, see handleScatteredReadCommand()
+#define EFI_TS_SCATTER TRUE
+
 #define EFI_AUX_VALVES TRUE
 
 #define EFI_EMULATE_POSITION_SENSORS TRUE
