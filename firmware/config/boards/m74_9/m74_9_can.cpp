@@ -625,30 +625,32 @@ private:
         msg[7] = 0x00;
     }
 
-    /**
-     * 0x0186 - RPM aux / fuel flow (10 ms, 7 bytes)
-     *   bytes 0-1: instantaneous fuel flow, mL/h big-endian (0 when stopped,
-     *             ~0x026C = 620 mL/h at idle, 0 during DFCO)
-     *   bytes 2-3: RPM*16 big-endian (or 0x3200 baseline when stopped)
-     *   byte 4:   rpm - 768 (THE dash tach byte - exact linear fit vs the
-     *             original captures: 775 rpm -> 0x07, 800 -> 0x20, 889 -> 0x79)
-     *   byte 5:   0x00
-     *   byte 6:   0x20
-     *
-     * NOTE: bytes 2-3 carry the same RPM baseline as 0x0189[0:1].
-     */
-    void send0x0186(uint16_t rpmEncoded, float rpm) {
-        CanTxMessage msg(CanCategory::NBC, ECU_RPM_AUX_ID, 7, DEFAULT_BUS_INDEX);
-        uint16_t fuelFlowMlPerHour = encodeFuelFlowMlPerHour();
-        msg[0] = (uint8_t)(fuelFlowMlPerHour >> 8);
-        msg[1] = (uint8_t)(fuelFlowMlPerHour & 0xFF);
-        msg[2] = (uint8_t)(rpmEncoded >> 8);
-        msg[3] = (uint8_t)(rpmEncoded & 0xFF);
-        // dash tach: rpm/16 - 18, 0x20 at rest (see encodeTachByte)
-        msg[4] = encodeTachByte(rpm);
-        msg[5] = 0x00;
-        msg[6] = 0x20;
-    }
+    	/**
+    	 * 0x0186 - RPM aux / fuel flow (10 ms, 7 bytes)
+    	 *   bytes 0-1: instantaneous fuel flow, mL/h big-endian (0 when stopped,
+    	 *             ~0x026C = 620 mL/h at unloaded idle, 0 during DFCO; today's
+    	 *             19:14/19:27 captures show ~0x29D8 = 10.7 L/h with the
+    	 *             alternator at 15.9 V - the field IS load-dependent flow)
+    	 *   bytes 2-3: RPM*16 big-endian (or 0x3200 baseline when stopped)
+    	 *   byte 4:   rpm - 768 (THE dash tach byte - exact linear fit vs the
+    	 *             original captures: 775 rpm -> 0x07, 800 -> 0x20, 889 -> 0x79)
+    	 *   byte 5:   0x00 at IGN-only / 0x06 while running (2026-08-29 captures)
+    	 *   byte 6:   0x20
+    	 *
+    	 * NOTE: bytes 2-3 carry the same RPM baseline as 0x0189[0:1].
+    	 */
+    	void send0x0186(uint16_t rpmEncoded, float rpm, bool isRunning) {
+    		CanTxMessage msg(CanCategory::NBC, ECU_RPM_AUX_ID, 7, DEFAULT_BUS_INDEX);
+    		uint16_t fuelFlowMlPerHour = encodeFuelFlowMlPerHour();
+    		msg[0] = (uint8_t)(fuelFlowMlPerHour >> 8);
+    		msg[1] = (uint8_t)(fuelFlowMlPerHour & 0xFF);
+    		msg[2] = (uint8_t)(rpmEncoded >> 8);
+    		msg[3] = (uint8_t)(rpmEncoded & 0xFF);
+    		// dash tach: rpm/16 - 18, 0x20 at rest (see encodeTachByte)
+    		msg[4] = encodeTachByte(rpm);
+    		msg[5] = isRunning ? 0x06 : 0x00;
+    		msg[6] = 0x20;
+    	}
 
     /**
      * 0x018A - RPM aux2 (10 ms, 6 bytes)
@@ -928,10 +930,10 @@ private:
 
         // 10 ms group: every 2nd tick
         if ((m_counter % 2) == 0) {
-            send0x01F6(isRunning, isCranking);
-            send0x0189(rpmEncoded, isRunning);
-            send0x0186(rpmEncoded, rpm);
-            send0x018A(rpmEncoded, isRunning, isCranking, timingAdvanceDeg);
+    	        send0x01F6(isRunning, isCranking);
+    	        send0x0189(rpmEncoded, isRunning);
+    	        send0x0186(rpmEncoded, rpm, isRunning);
+    	        send0x018A(rpmEncoded, isRunning, isCranking, timingAdvanceDeg);
             send0x0217(isEngineActive);
             send0x02A9();
         }
