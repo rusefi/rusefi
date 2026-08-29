@@ -44,9 +44,11 @@ extern "C" {
 void CopInitHook(void) {
 	// Start the hardware watchdog: any bootloader wedge (e.g. a failed CAN
 	// baudrate switch) resets the CPU back into the bootloader at 500k instead
-	// of requiring a power cycle. 500 ms is far above the longest busy-wait
-	// (flash erase ~50 ms, batch flash write ~13 ms) and far below 1 s, so the
-	// recovery is fast and the host's reconnect window catches it.
+	// of requiring a power cycle. 500 ms is above every busy-wait in the main
+	// loop EXCEPT the 32 KB flash-erase chunk (~400-460 ms, 8x4 KB sectors) -
+	// that one is fed from inside intFlashErase (wdgResetI between sectors,
+	// see flash_int.cpp), so the window here only needs to cover the ~50 ms
+	// single-sector erase and the ~13 ms batch write.
 #if HAL_USE_WDG
 	static WDGConfig wdgcfg;
 	// AT32 reuses the STM32 WDG LLD: timeout = (rlr+1) * 64 / LSI; the AT32

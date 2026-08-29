@@ -73,6 +73,17 @@ int intFlashErase(flashaddr_t address, size_t size) {
 		if (err != FLASH_NO_ERROR) {
 			return FLASH_RETURN_OPERROR;
 		}
+
+		/* One 4 KB sector erase is ~50 ms, but an XCP PROGRAM_CLEAR erases a
+		 * whole 32 KB chunk (8 sectors, ~400-460 ms measured) in one command -
+		 * during that busy-wait the bootloader main loop cannot run BootTask,
+		 * so nothing else feeds the IWDG (window ~411 ms at the 40 kHz LSI).
+		 * The un-fed chunk used to race the watchdog and reset the ECU mid-
+		 * flash. Feed between sectors: a long but healthy erase is now safe,
+		 * while a HUNG single sector still trips the watchdog. */
+#if HAL_USE_WDG
+		wdgResetI(&WDGD1);
+#endif
 	}
 
 	return FLASH_RETURN_SUCCESS;
