@@ -37,7 +37,20 @@ extern "C" {
 
 // Functions for controlling the watchdog
 void CopInitHook(void) {
-	// Nothing to do...
+	// Start the hardware watchdog: any bootloader wedge (e.g. a failed CAN
+	// baudrate switch) resets the CPU back into the bootloader at 500k instead
+	// of requiring a power cycle. 500 ms is far above the longest busy-wait
+	// (flash erase ~50 ms, batch flash write ~13 ms) and far below 1 s, so the
+	// recovery is fast and the host's reconnect window catches it.
+#if HAL_USE_WDG
+	static WDGConfig wdgcfg;
+	// AT32 reuses the STM32 WDG LLD: timeout = (rlr+1) * 64 / LSI; the AT32
+	// LSI runs at 40 kHz (vs the 32.768 kHz the formula assumes), so the real
+	// timeout is ~0.8x the configured 500 ms - still >> the busy-waits above.
+	wdgcfg.pr = STM32_IWDG_PR_64;
+	wdgcfg.rlr = STM32_IWDG_RL((uint32_t)((32.768f / 64.0f) * 500));
+	wdgStart(&WDGD1, &wdgcfg);
+#endif // HAL_USE_WDG
 }
 
 void CopServiceHook(void) {
