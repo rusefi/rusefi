@@ -338,7 +338,11 @@ public class OpenBltCanFlasher {
             long writeStart = System.nanoTime();
             xcp.writeProgramMax(chunk);
             writeNanos += System.nanoTime() - writeStart;
-            nextSendAt = System.nanoTime() + pipelinePaceNanos;
+            // Schedule from the frame START, not from after the write: the
+            // blocking MacCAN Write (~0.4 ms) then overlaps with the pace
+            // slot instead of adding to it. The bus self-arbitrates at its
+            // ~0.68 ms frame+ACK cycle; the dongle buffers the small surplus.
+            nextSendAt = writeStart + pipelinePaceNanos;
             off += chunk.length;
         }
         drainPipeline(xcp);
@@ -473,6 +477,18 @@ public class OpenBltCanFlasher {
                 case "--probe" -> cfg.probeOnly = true;
                 case "--verbose" -> cfg.verbose = true;
                 case "--no-pipeline" -> cfg.pipeline = false;
+                case "--pace-us" -> {
+                    if (i + 1 >= args.length) {
+                        System.err.println("--pace-us requires a value");
+                        return null;
+                    }
+                    try {
+                        cfg.pipelinePaceNanos = Long.parseLong(args[++i]) * 1000L;
+                    } catch (NumberFormatException e) {
+                        System.err.println("--pace-us requires a number, got " + args[i]);
+                        return null;
+                    }
+                }
                 default -> {
                     if (args[i].startsWith("-")) {
                         System.err.println("Unknown option: " + args[i]);
@@ -522,6 +538,9 @@ public class OpenBltCanFlasher {
                   --probe                connect and print bootloader info, do not flash
                   --no-pipeline          fall back to one-request-one-reply programming
                                          (slow, useful to isolate link problems)
+                  --pace-us <n>          pipelined frame-to-frame spacing in microseconds
+                                         (default 620); 0 = no pacing, the 8-frame
+                                         window alone throttles the stream
                   --verbose              log every sent/received CAN frame
 
                 The default firmware path is firmware/build/rusefi.srec.
