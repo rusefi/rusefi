@@ -192,9 +192,16 @@ public class OpenBltCanFlasher {
                 }
             } finally {
                 // The car/console bus is 500k: always come back before the
-                // verify/reset phase, even when programming threw.
+                // verify/reset phase, even when programming threw. A failed
+                // switch-back must not mask the original error: the bootloader
+                // watchdog recovers the ECU at 500k on its own.
                 if (oneMbitEnabled) {
-                    switchBaudrate(xcp, link, XcpConstants.BAUD_500K);
+                    try {
+                        switchBaudrate(xcp, link, XcpConstants.BAUD_500K);
+                    } catch (IOException | FlashException e) {
+                        listener.log("WARNING: could not switch back to 500 kbit: " + e.getMessage()
+                                + " - the bootloader watchdog resets the ECU back to 500k by itself.");
+                    }
                 }
             }
 
@@ -444,6 +451,8 @@ public class OpenBltCanFlasher {
      * switches back before verify/reset.
      */
     private void switchBaudrate(XcpClient xcp, CanLink link, int rate) throws IOException, FlashException {
+        String speed = rate == XcpConstants.BAUD_1M ? "1 Mbit" : "500 kbit";
+        listener.log("Switching the link to " + speed + "...");
         XcpResponse res = xcp.setCanBaudrate(rate);
         if (res == null || !res.isOk()) {
             throw new FlashException("SET_CAN_BAUDRATE(" + rate + ") failed: " + res);
@@ -453,9 +462,10 @@ public class OpenBltCanFlasher {
         sleepMs(30);
         link.setBaudrate(rate);
         sleepMs(10);
-        String speed = rate == XcpConstants.BAUD_1M ? "1 Mbit" : "500 kbit";
+        // Re-verify with short timeouts: a hung GET_STATUS at 5 s each would
+        // make the failure look like a freeze. 20 x 350 ms bounds this to ~7 s.
         for (int attempt = 0; attempt < 20; attempt++) {
-            XcpResponse status = xcp.getStatus();
+            XcpResponse status = xcp.getStatus(300);
             if (status != null && status.isOk()) {
                 listener.log("Link switched to " + speed + ".");
                 return;
@@ -463,7 +473,9 @@ public class OpenBltCanFlasher {
             sleepMs(50);
         }
         throw new FlashException("No XCP response after switching to " + speed
-                + " - the bootloader falls back to 500k on its own after 5 s; power-cycle the ECU and rerun.");
+                + ". The 1 Mbit mode does not work on this adapter/driver (MacCAN usually does not "
+                + "support it). The bootloader watchdog resets the ECU back to 500k on its own "
+                + "(and the 5 s fallback does too) - just rerun WITHOUT --1mbit.");
     }
 
     private static void sleepMs(long ms) {

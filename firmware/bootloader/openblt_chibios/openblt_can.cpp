@@ -181,7 +181,10 @@ extern "C" blt_bool CanReceivePacket(blt_int8u *data, blt_int8u *len)
 		return BLT_FALSE;
 	}
 
-	canTrafficSinceSwitch = BLT_TRUE;
+	// The baudrate-fallback timer is reset only by a frame that actually
+	// passed the ID/type validation below - garbage decoded at a mismatched
+	// bus speed must NOT count as traffic, otherwise the 5 s fallback to
+	// 500k would never fire while the host hammers the wrong speed.
 
 	// Check that the ID type matches this frame (std vs ext)
 	constexpr bool configuredAsExt = (rxMsgId & 0x80000000) != 0;
@@ -206,6 +209,8 @@ extern "C" blt_bool CanReceivePacket(blt_int8u *data, blt_int8u *len)
 	// Copy data and length out
 	*len = frame.DLC;
 	memcpy(data, frame.data8, frame.DLC);
+
+	canTrafficSinceSwitch = BLT_TRUE;
 
 	return BLT_TRUE;
 

@@ -134,6 +134,10 @@ public class XcpClient {
         return request(new byte[]{(byte) XcpConstants.CMD_GET_STATUS}, defaultTimeoutMs);
     }
 
+    public XcpResponse getStatus(int timeoutMs) throws IOException {
+        return request(new byte[]{(byte) XcpConstants.CMD_GET_STATUS}, timeoutMs);
+    }
+
     /** GET_ID response reports the station-id length at data[4..7] (LE). */
     public XcpResponse getId() throws IOException {
         return request(new byte[]{(byte) XcpConstants.CMD_GET_ID}, defaultTimeoutMs);

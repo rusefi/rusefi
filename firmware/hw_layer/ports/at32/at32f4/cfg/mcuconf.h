@@ -443,7 +443,11 @@
 
 /*
  * WDG driver system settings.
+ * Enabled for the bootloader build (HAL_USE_WDG=TRUE in bootloader/Makefile):
+ * the bootloader watchdog recovers the ECU from any wedge (e.g. a failed CAN
+ * baudrate switch) by resetting back to 500k instead of a power cycle. The
+ * app build keeps HAL_USE_WDG=FALSE, so this assignment is inert there.
  */
-#define STM32_WDG_USE_IWDG                  FALSE
+#define STM32_WDG_USE_IWDG                  TRUE
 
 #endif /* MCUCONF_H */

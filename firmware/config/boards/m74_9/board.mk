@@ -63,6 +63,11 @@ CONFDIR = $(PROJECT_DIR)/hw_layer/ports/at32/at32f4/cfg
 DDEFS += -DHAL_USE_EFL=TRUE
 include $(PROJECT_DIR)/hw_layer/ports/stm32/use_higher_level_flash_api.mk
 
+# Hardware watchdog: the bootloader starts the IWDG (500 ms, recover its own
+# wedges); the IWDG cannot be stopped, so the app re-configures it to ~4 s in
+# m74_9_boardInitHardware and feeds it from the 20 Hz slow callback.
+DDEFS += -DHAL_USE_WDG=TRUE
+
 DDEFS += -DFIRMWARE_ID=\"m74_9\"
 DDEFS += -DDEFAULT_ENGINE_TYPE=engine_type_e::MINIMAL_PINS
 DDEFS += -DSTATIC_BOARD_ID=STATIC_BOARD_ID_M74_9

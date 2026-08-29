@@ -13,6 +13,9 @@ DDEFS += -DCH_CFG_USE_MEMCORE=FALSE -DCH_CFG_USE_HEAP=FALSE
 # disable some modules to shrink bootloader binary
 DDEFS += -DEFI_BOOTLOADER
 DDEFS += -DHAL_USE_EXT=FALSE -DHAL_USE_ICU=FALSE -DHAL_USE_PWM=FALSE -DHAL_USE_RTC=FALSE
+# Hardware watchdog: recovers the bootloader from any wedge (failed baudrate
+# switch etc.) by resetting back to 500k instead of requiring a power cycle.
+DDEFS += -DHAL_USE_WDG=TRUE
 DDEFS += $(TS_PAGE_GUARD_DEFS)
 #disable ChibiOS flash driver and prevent header from include
 DDEFS += -DHAL_USE_FLASH=FALSE

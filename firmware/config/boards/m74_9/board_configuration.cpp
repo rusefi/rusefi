@@ -456,6 +456,21 @@ void boardInit() {
 	 * skipped and the chip stays in its power-on-off state). */
 	l9779_setPowerStage(false);
 
+#if HAL_USE_WDG
+	{
+		/* The bootloader starts the IWDG (500 ms) to recover its own wedges;
+		 * the IWDG keeps running across the jump and cannot be stopped, so the
+		 * app must re-configure it right here and feed it from then on. 4 s
+		 * nominal (~3.3 s real at the AT32 40 kHz LSI) covers the longest known
+		 * stall (MFS GC ~2.3 s) with margin; the 20 Hz slow callback (SysTick
+		 * virtual timer) feeds it every 50 ms. */
+		static WDGConfig wdgcfg;
+		wdgcfg.pr = STM32_IWDG_PR_64;
+		wdgcfg.rlr = STM32_IWDG_RL((uint32_t)((32.768f / 64.0f) * 4000));
+		wdgStart(&WDGD1, &wdgcfg);
+	}
+#endif // HAL_USE_WDG
+
 	int ret = tle9201_add(0, &tle9201_cfg);
 	efiPrintf("tle9201_add()=%d", ret);
 
@@ -1022,6 +1037,13 @@ void setup_custom_board_overrides() {
 	// executes inside the SysTick ISR (PeriodicTimerController virtual
 	// timer), where the LIN blocking serial I/O is illegal (SV#10 crash).
 	custom_board_periodicSlowCallback = []() {
+#if HAL_USE_WDG
+		/* Feed the hardware watchdog started by the bootloader (and re-configured
+		 * in m74_9_boardInitHardware). SysTick keeps firing through thread stalls
+		 * (e.g. the ~2.3 s MFS GC), so this never causes a spurious reset while
+		 * the core runs; only a real core hang trips the reset. */
+		wdgResetI(&WDGD1);
+#endif // HAL_USE_WDG
 		m74_9VrModelPeriodic();
 		m74_9IgnitionGatePeriodic();
 	};
