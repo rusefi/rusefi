@@ -14,6 +14,7 @@
 #include "pwm_generator_logic.h"
 #include "ignition_controller.h"
 #include "thermistors.h"
+#include "angle_clock.h"
 
 // PB14 is error LED, configured in board.mk
 Gpio getCommsLedPin() {
@@ -1146,6 +1147,20 @@ void setup_custom_board_overrides() {
 		// Which soft-PWM channels are loading the executor: they all share the
 		// static timerCallback address above, so name them individually here.
 		printPwmStats();
+
+#if EFI_ANGLE_CLOCK
+		// Hardware angle clock (TMR2): fired = compare ISR dispatches,
+		// lateArm = handoff armed past the tick (fell back to TIM5),
+		// noChannel = all 4 channels busy (fell back to TIM5). maxLateUs
+		// is the fixed ISR entry latency - expect single-digit us.
+		// nvic 28 = TIM2 (want 3).
+		efiPrintf("angclk fired=%u lateArm=%u noChannel=%u maxLateUs=%u nvic=%u (want 3)",
+			(unsigned)angleClockFiredCount(), (unsigned)angleClockProgrammedLateCount(),
+			(unsigned)angleClockArmFailCount(),
+			(unsigned)(angleClockMaxLateTicks() / (NT_PER_SECOND / 1000000)),
+			(unsigned)((NVIC->IP[28] >> 4) & 0xF));
+		angleClockResetStats();
+#endif // EFI_ANGLE_CLOCK
 
 		sched.resetExecutionLatenessStats();
 	});

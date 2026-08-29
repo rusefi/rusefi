@@ -3,6 +3,7 @@ HW_LAYER_INC=	$(PROJECT_DIR)/hw_layer $(PROJECT_DIR)/hw_layer/adc \
 	$(PROJECT_DIR)/hw_layer/digital_input \
 	$(PROJECT_DIR)/hw_layer/digital_input/trigger \
 	$(PROJECT_DIR)/hw_layer/microsecond_timer \
+	$(PROJECT_DIR)/hw_layer/angle_clock \
 	$(PROJECT_DIR)/hw_layer/atwinc1500 \
 
 HW_INC = hw_layer/$(CPU_HWLAYER) \
@@ -12,6 +13,7 @@ HW_INC = hw_layer/$(CPU_HWLAYER) \
 HW_LAYER_CPP = \
 	$(PROJECT_DIR)/hw_layer/pin_repository.cpp \
 	$(PROJECT_DIR)/hw_layer/microsecond_timer/microsecond_timer.cpp \
+	$(PROJECT_DIR)/hw_layer/angle_clock/angle_clock.cpp \
 	$(PROJECT_DIR)/hw_layer/digital_input/digital_input_exti.cpp \
 	$(PROJECT_DIR)/hw_layer/digital_input/trigger/trigger_input.cpp \
 	$(PROJECT_DIR)/hw_layer/digital_input/trigger/trigger_input_exti.cpp \

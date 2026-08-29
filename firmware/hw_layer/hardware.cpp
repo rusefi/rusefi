@@ -12,6 +12,7 @@
 #include "trigger_input.h"
 #include "can_hw.h"
 #include "hardware.h"
+#include "angle_clock.h"
 #include "rtc_helper.h"
 #include "bench_test.h"
 #include "yaw_rate_sensor.h"
@@ -291,6 +292,13 @@ void initHardwareNoConfig() {
 	// it's important to initialize this pretty early in the game before any scheduling usages
 	initSingleTimerExecutorHardware();
 #endif // EFI_PROD_CODE && EFI_SIGNAL_EXECUTOR_ONE_TIMER
+
+#if EFI_ANGLE_CLOCK
+	// The TMR2 angle clock converts NT timestamps to angle-clock ticks with a
+	// constant offset measured against the just-started TIM5 - init it right
+	// after the executor, before any trigger processing.
+	initAngleClock();
+#endif // EFI_ANGLE_CLOCK
 
 #if EFI_PROD_CODE && EFI_RTC
 	initRtc();

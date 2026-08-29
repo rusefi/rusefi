@@ -8995,3 +8995,82 @@ tooth = 166 us @6000) but does NOT cure the 1 ms tails - they still miss
 the teeth they span (those events fall back to TIM5). Sequence: lockstats
 + tail localization first, then the angle clock as the target
 architecture with the TIM5 fallback as the safety net.
+
+## 2026-08-29 - m74_9: TMR2 hardware angle clock implemented (one-tooth-ahead firing)
+
+Goal: eliminate the spark/injection timing jitter vs CKP. The stock ME17 fires
+edges from hardware compare outputs of an angle-clock timer; rusEFI converted
+every event angle->time at the tooth immediately before the event, so the whole
+decode chain (~65 us typical, 1 ms tails) had to fit inside one tooth (166 us
+@6000 rpm) - late handoffs fired events late by up to the whole tail. Per the
+user decision, implement the angle clock rather than verify the stock scheme in
+Ghidra first.
+
+What was built:
+
+| File | Change |
+| --- | --- |
+| firmware/hw_layer/angle_clock/angle_clock.h/.cpp | NEW TMR2 driver: 4 OC channels as pure software comparators (CCxE=0, OCxM=1, CCxIF fires at CNT==CCR), free-running 32-bit @ 4 MHz (PSC=71), prio-3 ISR executes the armed action |
+| firmware/hw_layer/hw_layer.mk | angle_clock added to the hw-layer build + include path |
+| firmware/controllers/system/timer/trigger_scheduler.cpp/.h | scheduleEventsUntilNextTriggerTooth arms events due in [nextPhase, nextNextPhase) one tooth ahead on TMR2; TIM5 fallback when the tick passed or all channels busy; cancel() also kills an armed TMR2 compare |
+| firmware/controllers/trigger/trigger_central.cpp | computes nextNextPhase (findNextTriggerToothAngle(index+1), same anchor correction) and passes it down |
+| firmware/controllers/engine_cycle/main_trigger_callback.cpp/.h | passes nextNextPhase through |
+| firmware/hw_layer/hardware.cpp | initAngleClock() right after the TIM5 executor init |
+| firmware/config/boards/m74_9/efifeatures.h + config/stm32f4ems/efifeatures.h | EFI_ANGLE_CLOCK flag (TRUE on m74_9, default FALSE) |
+| firmware/hw_layer/ports/{at32,stm32}/interrupt_priority.h | EFI_IRQ_ANGLE_CLOCK_PRIORITY (3 on at32 = same as the TIM5 executor) |
+| firmware/config/boards/m74_9/board_configuration.cpp | lockstats prints angclk fired/lateArm/noChannel/maxLateUs + NVIC prio check |
+| unit_tests/tests/trigger/test_angle_clock.cpp | 4 host tests for the tick math |
+
+Key design decisions:
+- FREE-RUNNING counter, no per-tooth CNT reset, ARR = 0xFFFFFFFF. The
+  originally planned scheme (reset CNT/ARR in the fast EXTI ISR) cannot fire
+  one-tooth-ahead events: an event armed for tooth N+1 as fraction x ARR would
+  be reached by CNT while it still counts tooth N - spurious early fire unless
+  the priority-0 fast IRQ also clears flags and toggles the channel IEs every
+  edge (grows the fast IRQ from ~2-3 to ~4-5 us). With the free-running counter
+  events are armed as ABSOLUTE ticks (edge timestamp + NT offset + angle
+  delay); the fast EXTI ISR is not touched at all. The only cost is carrying
+  the prediction error of BOTH the epoch tooth and the fraction tooth (both
+  negligible: oneDegreeUs is a 90-deg moving average, ~0.003 deg at 4000 rpm/s).
+- The NT<->angle-clock conversion is a constant offset measured at init: TMR2
+  and TIM5 both free-run at 4 MHz from the same TIMCLK1 (288 MHz, PSC=71).
+  DBGMCU freezes TMR2 together with TIM5 on core halt so the offset survives
+  debugger halts.
+- Arming order in the handoff (prio 4) is race-proof against the prio-3 ISR
+  preempting mid-arm: clear stale CCxIF -> write future CCR -> store action ->
+  enable CCxIE. The ISR releases the channel (clear flag, disable IE, move the
+  action out) BEFORE executing it, so a re-arm from inside the action is safe.
+- The overdwell contract is preserved: arming cancels the overdwell TIM5 event
+  one tooth earlier (the same cancel the due-tooth branch did). If no handoff
+  ever arms the event, overdwell still fires at 1.5x dwell. If TMR2 fires after
+  a trigger desync, the spark still goes out at the predicted time (time-based
+  counter) - same safety envelope as the TIM5 path.
+- spark fire + all other TriggerScheduler queue events (VVT/aux) get the angle
+  clock. Dwell start and injection start are still scheduled edge-based on TIM5
+  at their due tooth (they are not queue events) - a follow-up if the on-car
+  measurement shows their 0-1 tooth lead still matters.
+
+Validation:
+- m74_9 firmware builds (EFI_ANGLE_CLOCK path active; VectorB0 handler, the
+  ISR, angleClockArm and angleClockTickForNt verified in .fast_text at
+  0x2005053c via nm/objdump - the ISR body reads TMR2 SR/DIER/CNT at
+  0x40000000 as expected).
+- Full unit-test suite: 1169/1169 pass, including the new angle-clock math
+  tests and the updated test_aux_valves/test_hpfp call sites.
+
+On-car validation tool: 'lockstats' now prints
+'angclk fired=N lateArm=N noChannel=N maxLateUs=N nvic=3 (want 3)'. Expect
+fired to carry most spark events, lateArm/noChannel near zero, maxLateUs in
+single digits. The sched dwell/spark/fuel lines show what still runs on TIM5.
+
+Open follow-ups:
+1. The 1 ms decode tails are NOT cured - a 6-tooth tail still misses arming
+   the teeth it spans (their events fall back to TIM5). Localize via
+   trgDecode/trgPostDecode histograms.
+2. Dwell start + injection start still use the 0-1 tooth lead (scheduled at
+   their due tooth). Move them to the angle clock if lockstats shows residual
+   lateness in the dwell/fuel classes.
+3. Revisit the stock-dump TMR2 disassembly now that the scheme exists - the
+   CCR layout of the stock (compare values vs predicted ARR fractions) would
+   confirm whether the stock uses per-tooth reset (needs the fast-IRQ work
+   this design avoided) or absolute ticks.

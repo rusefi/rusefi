@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include "event_queue.h"
+#include "angle_clock.h"
 
 bool TriggerScheduler::assertNotInList(AngleBasedEvent *head, AngleBasedEvent *element) {
 	/* this code is just to validate state, no functional load*/
@@ -91,13 +92,24 @@ void TriggerScheduler::cancel(AngleBasedEvent* event) {
 	chibios_rt::CriticalSectionLocker csl;
 
 	LL_DELETE2(m_angleBasedEventsHead, event, nextToothEvent);
+
+#if EFI_ANGLE_CLOCK
+	// The event may already be armed on the hardware angle clock (armed one
+	// tooth ahead and removed from this queue). Kill the armed compare too -
+	// angleClockCancel is a no-op when nothing matching is armed.
+	angleClockCancel(event->action);
+#endif // EFI_ANGLE_CLOCK
 }
 
 TRIGGER_RAM_CODE void TriggerScheduler::scheduleEventsUntilNextTriggerTooth(float rpm,
-							   efitick_t edgeTimestamp, float currentPhase, float nextPhase) {
+							   efitick_t edgeTimestamp, float currentPhase, float nextPhase,
+							   float nextNextPhase) {
+#if !EFI_ANGLE_CLOCK
+	UNUSED(nextNextPhase);
+#endif // !EFI_ANGLE_CLOCK
 
 	if (rpm == 0) {
-		 // this might happen for instance in case of a single trigger event after a pause
+			 // this might happen for instance in case of a single trigger event after a pause
 		return;
 	}
 
@@ -143,10 +155,37 @@ TRIGGER_RAM_CODE void TriggerScheduler::scheduleEventsUntilNextTriggerTooth(floa
 				current->getAngleFromNow(currentPhase),
 				current->action
 			);
-		} else {
-			keeptail = current; // Used for fast list concatenation
+#if EFI_ANGLE_CLOCK
+	} else if (nextNextPhase != nextPhase && current->shouldSchedule(nextPhase, nextNextPhase)) {
+		// Due during the NEXT tooth: arm it on the hardware angle clock
+		// one full tooth early, so a late handoff (decode tails up to
+		// ~1 ms) cannot shift it. The nextNextPhase != nextPhase guard
+		// rejects single-tooth triggers, where every event angle maps to
+		// the same phase and the range test is meaningless.
+		LL_DELETE2(keephead, current, nextToothEvent);
+
+		scheduling_s * sDown = &current->eventScheduling;
+
+		// Same contract as the due-now branch: a previous time-based arm
+		// (the overdwell protection) is superseded by this scheduling.
+		engine->scheduler.cancel(sDown);
+
+		float angleFromNow = current->getAngleFromNow(currentPhase);
+
+		// Convert the angle offset from THIS edge into an absolute TMR2
+		// tick. If the armed tick is already in the past (this handoff
+		// ran late) or all four channels are busy, angleClockArm returns
+		// false and the event falls back to the time-based executor - the
+		// same scheduleByAngle the due-now branch uses.
+		uint32_t atTick = angleClockTickForNt(edgeTimestamp) + angleClockDelayTicks(angleFromNow, engine->rpmCalculator.oneDegreeUs);
+		if (!angleClockArm(atTick, current->action)) {
+			scheduleByAngle(sDown, edgeTimestamp, angleFromNow, current->action);
 		}
+#endif // EFI_ANGLE_CLOCK
+	} else {
+		keeptail = current; // Used for fast list concatenation
 	}
+}
 
 	if (keephead) {
 		chibios_rt::CriticalSectionLocker csl;

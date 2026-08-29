@@ -27,6 +27,11 @@
 // Precise scheduling timer
 #define EFI_IRQ_SCHEDULING_TIMER_PRIORITY 4
 
+// TMR2 angle clock: fires armed compare events with the same priority as
+// the executor so it can preempt the trigger handoff (only enabled on
+// boards with EFI_ANGLE_CLOCK).
+#define EFI_IRQ_ANGLE_CLOCK_PRIORITY      4
+
 // Relatively high priority for ADC - needed for MAP sensor sampling
 #define EFI_IRQ_ADC_PRIORITY 5
 

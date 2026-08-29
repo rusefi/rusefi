@@ -264,7 +264,7 @@ TRIGGER_RAM_CODE static void handleFuel(efitick_t nowNt, float currentPhase, flo
  * This is the main trigger event handler.
  * Both injection and ignition are controlled from this method.
  */
-TRIGGER_RAM_CODE void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_t currentPhase, angle_t nextPhase) {
+TRIGGER_RAM_CODE void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_t currentPhase, angle_t nextPhase, angle_t nextNextPhase) {
 	ScopePerf perf(PE::MainTriggerCallback);
 
 	if (hasFirmwareError()) {
@@ -306,7 +306,7 @@ TRIGGER_RAM_CODE void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edge
 	handleFuel(edgeTimestamp, currentPhase, nextPhase);
 
 	engine->module<TriggerScheduler>()->scheduleEventsUntilNextTriggerTooth(
-		rpm, edgeTimestamp, currentPhase, nextPhase);
+		rpm, edgeTimestamp, currentPhase, nextPhase, nextNextPhase);
 
 	/**
 	 * For spark we schedule both start of coil charge and actual spark based on trigger angle
