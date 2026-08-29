@@ -23,6 +23,13 @@ public interface CanLink extends AutoCloseable {
      */
     CanFrame readFrame(int timeoutMs) throws IOException;
 
+    /**
+     * One immediate receive attempt: returns the next frame or null when the
+     * queue is empty. Must NOT busy-wait - the pipelined flasher calls this
+     * in a tight pacing loop and a spin here adds ~1 ms per frame.
+     */
+    CanFrame pollFrame() throws IOException;
+
     @Override
     void close();
 }

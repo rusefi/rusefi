@@ -93,6 +93,26 @@ public class PcanLink implements CanLink {
     }
 
     @Override
+    public CanFrame pollFrame() throws IOException {
+        TPCANMsg msg = new TPCANMsg();
+        TPCANTimestamp ts = new TPCANTimestamp();
+        TPCANStatus status = can.Read(channel, msg, ts);
+        if (status == TPCANStatus.PCAN_ERROR_QRCVEMPTY) {
+            return null;
+        }
+        if (status != TPCANStatus.PCAN_ERROR_OK) {
+            throw new IOException("PCAN Read failed: " + status);
+        }
+        int rawId = msg.getID();
+        boolean extended = (rawId & 0x80000000) != 0
+                || (msg.getType() & 0xFF) == (TPCANMessageType.PCAN_MESSAGE_EXTENDED.getValue() & 0xFF);
+        int id = rawId & 0x1FFFFFFF;
+        int len = msg.getLength() & 0xFF;
+        byte[] data = Arrays.copyOf(msg.getData(), Math.min(len, msg.getData().length));
+        return new CanFrame(id, extended, data);
+    }
+
+    @Override
     public void close() {
         can.Uninitialize(channel);
     }

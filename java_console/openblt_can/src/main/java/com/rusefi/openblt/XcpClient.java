@@ -200,34 +200,52 @@ public class XcpClient {
                 break;
             }
             CanFrame frame = link.readFrame(remaining);
-            if (frame == null) {
-                continue;
+            XcpResponse res = matchReply(frame);
+            if (res != null) {
+                return res;
             }
-            if (frameLog != null) {
-                frameLog.accept("RX " + frame);
-            }
-            // Skip anything that is not a reply from the bootloader on its TX id
-            // (the still-running app may be broadcasting on other ids).
-            if (frame.id() != rxId || frame.extended() != extended) {
-                continue;
-            }
-            byte[] data = frame.data();
-            if (data.length == 0) {
-                continue;
-            }
-            int pid = data[0] & 0xFF;
-            if (pid == XcpConstants.PID_RES || pid == XcpConstants.PID_ERR) {
-                Long sentAt = inflightSendTimes.pollFirst();
-                if (sentAt != null) {
-                    recordRtt(sentAt);
-                }
-                return pid == XcpConstants.PID_RES
-                        ? XcpResponse.ok(data)
-                        : XcpResponse.error(data);
-            }
-            // Unknown packet id: ignore and keep waiting.
         }
         return null;
+    }
+
+    /**
+     * One immediate receive attempt for a pipelined reply; returns null when
+     * nothing is queued. Cheap (no spin, no timeout) - safe to call from the
+     * TX pacing loop on every frame slot.
+     */
+    public XcpResponse pollProgramAck() throws IOException {
+        return matchReply(link.pollFrame());
+    }
+
+    /** Interprets a received frame as a pipelined reply, or null. */
+    private XcpResponse matchReply(CanFrame frame) throws IOException {
+        if (frame == null) {
+            return null;
+        }
+        if (frameLog != null) {
+            frameLog.accept("RX " + frame);
+        }
+        // Skip anything that is not a reply from the bootloader on its TX id
+        // (the still-running app may be broadcasting on other ids).
+        if (frame.id() != rxId || frame.extended() != extended) {
+            return null;
+        }
+        byte[] data = frame.data();
+        if (data.length == 0) {
+            return null;
+        }
+        int pid = data[0] & 0xFF;
+        if (pid != XcpConstants.PID_RES && pid != XcpConstants.PID_ERR) {
+            // Unknown packet id: ignore.
+            return null;
+        }
+        Long sentAt = inflightSendTimes.pollFirst();
+        if (sentAt != null) {
+            recordRtt(sentAt);
+        }
+        return pid == XcpConstants.PID_RES
+                ? XcpResponse.ok(data)
+                : XcpResponse.error(data);
     }
 
     /** Programs 1..6 bytes at the current MTA; the target auto-increments MTA. */

@@ -349,22 +349,24 @@ public class OpenBltCanFlasher {
     /**
      * Waits until {@code targetNanos} (bus pacing) while opportunistically
      * collecting already-arrived acknowledgements, so the in-flight window
-     * stays shallow and the per-frame RTT histogram stays accurate.
+     * stays shallow and the per-frame RTT histogram stays accurate. Uses
+     * {@link XcpClient#pollProgramAck()} - a single non-blocking queue read -
+     * because the blocking read spins its hot window for a full ~1 ms on an
+     * empty queue, which would cost more than the pace slot itself.
      */
     private void paceUntil(long targetNanos, XcpClient xcp) throws IOException, FlashException {
-        long wait = targetNanos - System.nanoTime();
-        while (wait > 0) {
-            int slice = (int) Math.min(50, wait / 1_000_000 + 1);
+        while (true) {
+            long wait = targetNanos - System.nanoTime();
+            if (wait <= 0) {
+                return;
+            }
             if (xcp.getInFlight() > 0) {
-                XcpResponse res = xcp.readProgramAck(slice);
+                XcpResponse res = xcp.pollProgramAck();
                 if (res != null && !res.isOk()) {
                     throw new FlashException("PROGRAM_MAX failed during pipelining: " + res);
                 }
             }
-            wait = targetNanos - System.nanoTime();
-            if (wait > 200_000) {
-                LockSupport.parkNanos(Math.min(wait, 200_000));
-            }
+            LockSupport.parkNanos(Math.min(wait, 100_000L));
         }
     }
 
