@@ -15,8 +15,9 @@ import java.util.concurrent.locks.LockSupport;
  * Entry sequence: the CONNECT frame is DLC=2, which is exactly the trigger
  * the running firmware reacts to when canOpenBLT is enabled - it jumps to the
  * bootloader and the bootloader answers the next CONNECT. When the app is not
- * running, the bootloader's post-reset backdoor window (1 s on m74_9) answers
- * the same retried CONNECT. So one retry loop covers both entry paths.
+ * running, the bootloader's post-reset backdoor window (1 s on m74_9, 6 s
+ * after a 1 Mbit baudrate-switch reboot) answers the same retried CONNECT.
+ * So one retry loop covers both entry paths.
  *
  * Flash sequence (mirrors BootCommander / LibOpenBLT xcploader):
  *   CONNECT -> per segment: SET_MTA + PROGRAM_CLEAR in 32 KB chunks ->
@@ -54,6 +55,19 @@ public class OpenBltCanFlasher {
         boolean pipeline = true;
         boolean batch = true;
         boolean oneMbit = false;
+        /**
+         * Bound on the CONNECT retry loop after a baudrate-switch reboot.
+         * The bootloader's backdoor window is 6 s at 1 Mbit and 500 ms at
+         * 500k, so the reconnect must not sleep between attempts.
+         */
+        int baudReconnectMs = 3000;
+        /**
+         * Total time after the SET_CAN_BAUDRATE request by which the ECU has
+         * recovered to 500 kbit on its own (bootloader no-traffic fallback at
+         * 5 s + app backdoor). The host sleeps the remainder and reconnects
+         * at 500k.
+         */
+        int baudFallbackAfterMs = 7000;
         /**
          * Pipelined PROGRAM_MAX TX spacing in nanoseconds. 0 (default) = no
          * explicit pacing: the 8-frame window alone throttles the stream, the
@@ -100,6 +114,10 @@ public class OpenBltCanFlasher {
     private boolean batchEnabled = true;
     /** Set from Config before programming: switch the link to 1 Mbit for the program phase. */
     private boolean oneMbitEnabled = false;
+    /** Set from Config: CONNECT retry bound after a baudrate-switch reboot. */
+    private int baudReconnectMs = 3000;
+    /** Set from Config: time after the switch request by which the ECU is back at 500k. */
+    private int baudFallbackAfterMs = 7000;
     /** Set from Config before programming: pipelined TX spacing in nanoseconds. */
     private long pipelinePaceNanos = 0;
     // Per-phase wall-time accounting for the program loop (bench diagnostics:
@@ -118,6 +136,8 @@ public class OpenBltCanFlasher {
         pipelineEnabled = cfg.pipeline;
         batchEnabled = cfg.batch;
         oneMbitEnabled = cfg.oneMbit;
+        baudReconnectMs = cfg.baudReconnectMs;
+        baudFallbackAfterMs = cfg.baudFallbackAfterMs;
         pipelinePaceNanos = cfg.pipelinePaceNanos;
         listener.log("Opening CAN channel...");
 
@@ -181,7 +201,12 @@ public class OpenBltCanFlasher {
             // ---- erase + program ----
             long done = 0;
             if (oneMbitEnabled) {
-                switchBaudrate(xcp, link, XcpConstants.BAUD_1M);
+                if (!switchBaudrate(xcp, link, XcpConstants.BAUD_1M)) {
+                    // 1 Mbit is not usable with this adapter/driver: the ECU
+                    // recovered to 500 kbit by itself and we reconnected there.
+                    // Continue the flash at 500k instead of failing.
+                    oneMbitEnabled = false;
+                }
             }
             try {
                 for (SrecParser.Segment seg : segments) {
@@ -200,7 +225,7 @@ public class OpenBltCanFlasher {
                         switchBaudrate(xcp, link, XcpConstants.BAUD_500K);
                     } catch (IOException | FlashException e) {
                         listener.log("WARNING: could not switch back to 500 kbit: " + e.getMessage()
-                                + " - the bootloader watchdog resets the ECU back to 500k by itself.");
+                                + " - the bootloader's no-traffic fallback returns it to 500k by itself.");
                     }
                 }
             }
@@ -443,65 +468,108 @@ public class OpenBltCanFlasher {
     }
 
     /**
-     * Switches both sides of the link to a new baudrate (rusEFI extension):
-     * SET_CAN_BAUDRATE is answered at the old speed, the bootloader switches
-     * ~5 ms later, the host reconfigures the adapter and re-verifies with
-     * GET_STATUS at the new speed. The car/console bus stays at 500k: the
-     * 1 Mbit phase covers only the erase+program window and the caller
-     * switches back before verify/reset.
+     * Switches both sides of the link to a new baudrate (rusEFI extension).
+     *
+     * The switch is a REBOOT on the ECU side: SET_CAN_BAUDRATE is answered at
+     * the old speed, then the bootloader stores the request in SharedParams
+     * slot 4, resets and comes back up at the new speed (a runtime
+     * canStop/canStart wedges the AT32 CAN peripheral - that is why the
+     * switch is a reboot). The XCP session dies with the reboot, so the host
+     * re-initializes its adapter and re-CONNECTs instead of GET_STATUS.
+     *
+     * The car/console bus stays at 500k: the 1 Mbit phase covers only the
+     * erase+program window and the caller switches back before verify/reset.
+     *
+     * Safety: when the host cannot follow to 1 Mbit, the ECU recovers by
+     * itself - the bootloader's 5 s no-traffic fallback reboots it back to
+     * 500k, and after that its 500 ms backdoor exits into the app (which
+     * answers a CONNECT trigger at 500k as well).
+     *
+     * @return true when the link is confirmed at the requested rate; false
+     *         when a 1 Mbit switch failed and the session was re-established
+     *         at 500k (only possible for rate == BAUD_1M).
      */
-    private void switchBaudrate(XcpClient xcp, CanLink link, int rate) throws IOException, FlashException {
+    private boolean switchBaudrate(XcpClient xcp, CanLink link, int rate) throws IOException, FlashException {
         String speed = rate == XcpConstants.BAUD_1M ? "1 Mbit" : "500 kbit";
         listener.log("Switching the link to " + speed + "...");
+        long switchStartedAt = System.currentTimeMillis();
         XcpResponse res = xcp.setCanBaudrate(rate);
         if (res == null || !res.isOk()) {
             throw new FlashException("SET_CAN_BAUDRATE(" + rate + ") failed: " + res);
         }
-        // The ACK went out at the old speed; let it drain, then re-init the
-        // adapter (the bootloader applies its switch ~5 ms after answering).
-        sleepMs(30);
-        link.setBaudrate(rate);
-        sleepMs(10);
-        // Re-verify with short timeouts: a hung GET_STATUS at 5 s each would
-        // make the failure look like a freeze. 20 x 350 ms bounds this to ~7 s.
-        for (int attempt = 0; attempt < 20; attempt++) {
-            XcpResponse status = xcp.getStatus(300);
-            if (status != null && status.isOk()) {
-                listener.log("Link switched to " + speed + ".");
-                return;
+        // The ACK went out at the old speed. Give it time to leave the wire
+        // and the ECU to reboot, then point the adapter at the new speed.
+        sleepMs(50);
+        try {
+            link.setBaudrate(rate);
+        } catch (IOException e) {
+            // The adapter/driver cannot do the requested rate (MacCAN does
+            // not support 1 Mbit): the ECU is at the requested speed, but no
+            // valid frame will ever arrive, so its own fallback brings it
+            // back to 500k. Wait for that and reconnect there.
+            if (rate != XcpConstants.BAUD_1M) {
+                throw new FlashException("Adapter cannot switch to " + speed + ": " + e.getMessage()
+                        + ". Power-cycle the ECU and rerun WITHOUT --1mbit.", e);
             }
-            sleepMs(50);
+            listener.log("Adapter cannot switch to 1 Mbit (" + e.getMessage()
+                    + ") - waiting for the ECU's own fallback to 500 kbit...");
+            return awaitEcuFallbackTo500K(xcp, link, switchStartedAt);
         }
+        // Re-CONNECT at the new speed. The bootloader's backdoor window is
+        // short, so retry immediately - no sleeps between attempts; each
+        // failed attempt costs the CONNECT timeout.
+        if (reconnect(xcp, baudReconnectMs)) {
+            listener.log("Link switched to " + speed + ".");
+            return true;
+        }
+        if (rate != XcpConstants.BAUD_1M) {
+            throw new FlashException("No CONNECT response at 500 kbit after the switch-back. "
+                    + "Power-cycle the ECU and rerun WITHOUT --1mbit.");
+        }
+        listener.log("No response at 1 Mbit - waiting for the ECU's own fallback to 500 kbit...");
+        return awaitEcuFallbackTo500K(xcp, link, switchStartedAt);
+    }
 
-        if (rate == XcpConstants.BAUD_1M) {
-            // Diagnostic that decides WHERE the switch failed: go back to
-            // 500k and try to connect. The ECU either (a) wedged during its
-            // own switch and the watchdog reset it, (b) fell back on the 5 s
-            // no-traffic timer, or (c) is fine at 1M and the adapter ignored
-            // the rate. (a)+(b) answer here; (c) does not.
-            listener.log("Probing the ECU at 500 kbit to see whether it recovered...");
-            link.setBaudrate(XcpConstants.BAUD_500K);
-            XcpResponse con = null;
-            for (int attempt = 0; attempt < 20; attempt++) {
-                con = xcp.connect(0, 300);
-                if (con != null && con.isOk()) {
-                    break;
-                }
-                sleepMs(50);
-            }
+    /** Tight CONNECT retry loop: the bootloader's post-reboot backdoor
+     *  window is short (6 s at 1 Mbit, 500 ms at 500k), so the attempts must
+     *  not be separated by sleeps. A CONNECT also triggers the running app
+     *  to jump back into the bootloader, so this covers every ECU state. */
+    private boolean reconnect(XcpClient xcp, int timeoutMs) throws IOException {
+        long deadline = System.currentTimeMillis() + timeoutMs;
+        while (System.currentTimeMillis() < deadline) {
+            XcpResponse con = xcp.connect(0, 300);
             if (con != null && con.isOk()) {
-                // The ECU is alive at 500k: its own switch failed and the
-                // watchdog/fallback recovered it - the problem is ECU-side
-                // (or the adapter never really changed the rate).
-                throw new FlashException("1 Mbit switch failed, but the ECU recovered at 500 kbit by itself "
-                        + "(watchdog/fallback) - so the switch fails on the ECU side, not the adapter. "
-                        + "Rerun WITHOUT --1mbit.");
+                return true;
             }
+        }
+        return false;
+    }
+
+    /**
+     * Waits until the ECU must have recovered to 500k by itself (bootloader
+     * no-traffic fallback at 5 s, then the 500 ms backdoor exits into the
+     * app, which answers the CONNECT trigger too), re-points the adapter at
+     * 500k and re-CONNECTs.
+     *
+     * @return false: the flash continues at 500k, the 1 Mbit phase is over.
+     */
+    private boolean awaitEcuFallbackTo500K(XcpClient xcp, CanLink link, long switchStartedAt)
+            throws IOException, FlashException {
+        long remaining = Math.max(0,
+                baudFallbackAfterMs - (System.currentTimeMillis() - switchStartedAt));
+        sleepMs(remaining);
+        try {
+            link.setBaudrate(XcpConstants.BAUD_500K);
+        } catch (IOException e) {
+            throw new FlashException("Adapter cannot return to 500 kbit: " + e.getMessage()
+                    + ". Power-cycle the ECU and rerun WITHOUT --1mbit.", e);
+        }
+        if (!reconnect(xcp, baudReconnectMs)) {
             throw new FlashException("1 Mbit switch failed and the ECU does not answer at 500 kbit either. "
                     + "Power-cycle the ECU and rerun WITHOUT --1mbit.");
         }
-        throw new FlashException("No XCP response after switching back to " + speed
-                + ". Power-cycle the ECU and rerun WITHOUT --1mbit.");
+        listener.log("ECU recovered at 500 kbit - continuing the flash at 500 kbit.");
+        return false;
     }
 
     private static void sleepMs(long ms) {
@@ -708,7 +776,9 @@ public class OpenBltCanFlasher {
                                          use the window-pipelined PROGRAM_MAX mode
                   --1mbit                switch the CAN link to 1 Mbit/s for the
                                          erase+program phase only (the console/car bus
-                                         stays at 500k; back to 500k before verify/reset)
+                                         stays at 500k; back to 500k before verify/reset;
+                                         the ECU falls back to 500k by itself if the host
+                                         cannot follow)
                   --pace-us <n>          pipelined frame-to-frame spacing in microseconds
                                          (default 0: window-only flow control, fastest);
                                          620 = the old spaced-out mode

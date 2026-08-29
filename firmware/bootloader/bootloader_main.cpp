@@ -22,6 +22,11 @@ extern "C" void OpenBltCanApplyBaudrate(void);
 // used externaly by openblt_usb.cpp
 blt_bool stayInBootloader;
 
+// rusEFI extension: runtime CAN baudrate switch. The SET_CAN_BAUDRATE handler
+// stores the request in SharedParams slot 4 and the main loop reboots;
+// main() reads it here and CanInit() applies it on the next boot. 1 = 1 Mbit.
+extern blt_int8u bootBaudrateRequest;
+
 static blt_bool waitedLongerThanTimeout = BLT_FALSE;
 static blt_bool rebootLoop;
 static blt_bool wdReset;
@@ -50,6 +55,9 @@ void CopInitHook(void) {
 	wdgcfg.pr = STM32_IWDG_PR_64;
 	wdgcfg.rlr = STM32_IWDG_RL((uint32_t)((32.768f / 64.0f) * 500));
 	wdgStart(&WDGD1, &wdgcfg);
+	/* Diagnostic marker: the app prints this so the console boot log proves
+	 * whether the bootloader really armed the IWDG (SharedParams slot 3). */
+	SharedParamsWriteByIndex(3, 0xAA);
 #endif // HAL_USE_WDG
 }
 
@@ -221,6 +229,16 @@ int main(void) {
 
 	// Init openblt shared params
 	SharedParamsInit();
+
+	// Consume a pending baudrate request (rusEFI SET_CAN_BAUDRATE extension):
+	// the switch is a reboot, and CanInit() applies the requested speed.
+	{
+		uint8_t baudRequest = 0;
+		SharedParamsReadByIndex(4, &baudRequest);
+		bootBaudrateRequest = (baudRequest == 1) ? 1 : 0;
+		SharedParamsWriteByIndex(4, 0);
+	}
+
 	rebootLoop = checkIfResetLoop();
 	stayInBootloader = checkIfRebootIntoOpenBltRequested() || rebootLoop;
 
@@ -249,9 +267,18 @@ int main(void) {
 		if (stayInBootloader || wasConnected)
 			continue;
 #if (BOOT_BACKDOOR_ENTRY_TIMEOUT_MS > 0)
-		blt_bool isTimeout = (TIME_I2MS(chVTGetSystemTime()) >= BOOT_BACKDOOR_ENTRY_TIMEOUT_MS);
+			// After a baudrate-switch reboot the host needs extra time to
+			// re-initialize its adapter and reconnect at the new speed:
+			// widen the backdoor window to 6 s for the 1 Mbit boot. The
+			// window MUST stay above the 5 s no-traffic fallback in
+			// OpenBltCanApplyBaudrate(): the fallback reboots the ECU back
+			// to 500k while the bootloader is still running, which is what
+			// guarantees the ECU is never stranded at 1 Mbit when the host
+			// does not follow. A 2 s window would exit to the app before
+			// the fallback ever fired.
+			blt_bool isTimeout = (TIME_I2MS(chVTGetSystemTime()) >= (bootBaudrateRequest == 1 ? 6000 : BOOT_BACKDOOR_ENTRY_TIMEOUT_MS));
 #else
-		blt_bool isTimeout = BLT_TRUE;
+			blt_bool isTimeout = BLT_TRUE;
 #endif // BOOT_BACKDOOR_ENTRY_TIMEOUT_MS
 		if (isTimeout == BLT_TRUE) {
 			waitedLongerThanTimeout = BLT_TRUE;

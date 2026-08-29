@@ -309,6 +309,59 @@ class OpenBltCanFlasherTest {
     }
 
     @Test
+    void oneMbitFallsBackTo500KWhenAdapterCannotSwitch() throws Exception {
+        // MacCAN cannot do 1 Mbit: the adapter refuses the rate, the ECU's
+        // own fallback brings it back to 500k, and the flash completes at
+        // 500k instead of failing.
+        byte[] seg1 = pattern(100, 16);
+        Path srec = writeImage(new ArrayList<>(SrecTestUtil.image(SEG1_BASE, seg1)));
+
+        FakeCanLink link = new FakeCanLink();
+        link.failSetBaudrate(XcpConstants.BAUD_1M);
+        OpenBltCanFlasher flasher = new OpenBltCanFlasher(new OpenBltCanFlasher.Listener() {
+        });
+        OpenBltCanFlasher.Config cfg = config(srec, true, true);
+        cfg.oneMbit = true;
+        cfg.baudReconnectMs = 100;
+        cfg.baudFallbackAfterMs = 150;
+
+        OpenBltCanFlasher.Result result = flasher.flash(link, cfg);
+
+        assertTrue(result.verified);
+        assertArrayEquals(seg1, link.flashAt(SEG1_BASE, 100));
+        // SET_CAN_BAUDRATE went out once (to 1M); no switch-back was needed
+        // because the flash continued at 500k.
+        assertEquals(1, link.setBaudrateCount());
+        assertEquals(XcpConstants.BAUD_500K, link.lastBaudrate());
+        assertEquals(XcpConstants.BAUD_500K, link.ecuBaudrate());
+    }
+
+    @Test
+    void oneMbitFallsBackTo500KWhenEcuDoesNotAnswer() throws Exception {
+        // The adapter switches to 1M but the ECU never answers CONNECT there:
+        // the host waits for the ECU's self-recovery and reconnects at 500k.
+        byte[] seg1 = pattern(100, 17);
+        Path srec = writeImage(new ArrayList<>(SrecTestUtil.image(SEG1_BASE, seg1)));
+
+        FakeCanLink link = new FakeCanLink();
+        link.dropConnectsAt(XcpConstants.BAUD_1M);
+        OpenBltCanFlasher flasher = new OpenBltCanFlasher(new OpenBltCanFlasher.Listener() {
+        });
+        OpenBltCanFlasher.Config cfg = config(srec, true, true);
+        cfg.oneMbit = true;
+        cfg.baudReconnectMs = 50;
+        cfg.baudFallbackAfterMs = 450;
+
+        OpenBltCanFlasher.Result result = flasher.flash(link, cfg);
+
+        assertTrue(result.verified);
+        assertArrayEquals(seg1, link.flashAt(SEG1_BASE, 100));
+        assertEquals(1, link.setBaudrateCount());
+        assertEquals(XcpConstants.BAUD_500K, link.lastBaudrate());
+        assertEquals(XcpConstants.BAUD_500K, link.ecuBaudrate());
+    }
+
+    @Test
     void noPipelineFlagStillFlashes() throws Exception {
         // The single-frame fallback path must keep working (--no-pipeline).
         byte[] seg1 = pattern(40, 15);
