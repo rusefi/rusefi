@@ -668,6 +668,29 @@ VBATT already measured on PA6 (8.02 divider). (2) optional VREFINT
 rescale - cosmetic, VDDA is stable. (3) hardware - move the pull-ups to
 VDDA: fully ratiometric, battery-independent, full cold range.
 
+## m74_9 / CAN dump tool for the stock ECU (can_dump.sh, 2026-08-29)
+
+`java_console/bin/can_dump.sh` -> `:mcp_can:fatJar` -> `com.rusefi.candump.CanDump`:
+PCAN-USB .trc recorder for macOS capture sessions with the STOCK ECU.
+- Listen-only by default (no ACK on the bus - the capture does not
+disturb the ECU). `--active` for normal mode, `--channel N`,
+`--bitrate 500k|250k|1m` (vehicle bus = 500k), `-o file.trc`,
+`--duration <s>`; Ctrl+C flushes and closes.
+- Writes PCAN-View .trc v1.1: standard IDs 4 hex digits, extended IDs
+8 hex digits right-aligned in a 13-char field; time offset with 3
+decimals (ms) from the driver's 1 us timestamps (nanoTime fallback).
+- $STARTTIME serial = LOCAL wall-clock as UTC / 86400000 + 25569
+(PCAN-View does the same - verified against orig_1.trc: 2026-08-12
+18:21:08.298 MSK -> 46246.7647).
+- Status transitions (BUSOFF/BUSHEAVY/BUSLIGHT/QOVERRUN) recorded inline
+via PCAN_ALLOW_STATUS_FRAMES (SetValue may fail on old drivers - non-fatal).
+- Same PCAN exclusivity rule as the console/flasher: close the rusEFI
+console before starting a capture (it holds the adapter).
+- Formatting is unit-tested (CanDumpFormatTest); smoke-tested on the
+bench: captured live m74_9 dash frames (0x0189/0x0186/0x018A at 10 ms).
+- Known limits: error FRAMES are written if the driver delivers them
+(USB adapters usually don't); RTR frames carry DLC but no data bytes.
+
 The periodic "MFS: Writing storage ID 1/2 (17544 bytes)" bursts in console logs are the CONSOLE's own TS-protocol burns, triggered by the Tune tab upload loop - NOT TunerStudio, NOT fuel trim (LTFT = separate ID 3, 2048 bytes).
 
 Chain (all verified in code + logs):
