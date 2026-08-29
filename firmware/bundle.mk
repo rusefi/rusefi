@@ -5,7 +5,7 @@ ifeq (,$(BUNDLE_NAME))
 endif
 
 ifeq (,$(BUNDLE_DATE))
-  BUNDLE_DATE = yymmdd
+  BUNDLE_DATE = $(shell date +%y%m%d)
 endif
 
 ifeq (,$(GITHUB_SHA))

@@ -578,6 +578,7 @@ public class VariableRegistryValues {
 	public static final int ETB2_TRIM_SIZE = 6;
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
 	public static final int ETB_COUNT = 2;
+	public static final int ETB_DASHPOT_CURVE_LENGTH = 5;
 	public static final int ETB_HW_MAX_FREQUENCY = 3000;
 	public static final int ETHERNET_PORT = 29001;
 	public static final int FAN_PWM_CURVE_SIZE = 8;
@@ -1281,8 +1282,8 @@ public class VariableRegistryValues {
 	public static final String INDICATOR_NAME_BRAKE_DOWN = "Brake switch";
 	public static final String INDICATOR_NAME_CLUTCH_DOWN = "Clutch: down";
 	public static final String INDICATOR_NAME_CLUTCH_UP = "Clutch: up";
-	public static final int INJ_PHASE_LOAD_COUNT = 16;
-	public static final int INJ_PHASE_RPM_COUNT = 16;
+	public static final int INJ_PHASE_LOAD_COUNT = 6;
+	public static final int INJ_PHASE_RPM_COUNT = 6;
 	public static final int INJ_STAGING_COUNT = 6;
 	public static final int INJ_STAGING_RPM_SIZE = 6;
 	public static final int injection_mode_e_IM_BATCH = 2;
@@ -1341,13 +1342,13 @@ public class VariableRegistryValues {
 	public static final int lua_gauge_meaning_e_LUA_GAUGE_LOWER_BOUND = 0;
 	public static final int lua_gauge_meaning_e_LUA_GAUGE_UPPER_BOUND = 1;
 	public static final int LUA_PWM_COUNT = 8;
-	public static final int LUA_SCRIPT_SIZE = 48000;
+	public static final int LUA_SCRIPT_SIZE = 8000;
 	public static final int MAF_DECODING_COUNT = 32;
-	public static final String MAIN_HELP_URL = "https://rusefi.com/s/uaefi";
+	public static final String MAIN_HELP_URL = "http://www.rusefi.com/";
 	public static final String MAIN_PAGE_GAUGES_FILE = "tunerstudio/main_page_gauges.ini";
 	public static final int MAP_ANGLE_SIZE = 8;
-	public static final int MAP_EST_LOAD_COUNT = 16;
-	public static final int MAP_EST_RPM_COUNT = 16;
+	public static final int MAP_EST_LOAD_COUNT = 6;
+	public static final int MAP_EST_RPM_COUNT = 6;
 	public static final int MAP_sensor_config_s_size = 140;
 	public static final int MAP_UPPER_LIMIT = 650;
 	public static final int MAP_WINDOW_SIZE = 8;
@@ -1408,12 +1409,12 @@ public class VariableRegistryValues {
 	public static final int PAGE_SIZE_2 = 256;
 	public static final int PAGE_SIZE_3 = 2048;
 	public static final int PAGE_SIZE_4 = 1268;
-	public static final int PAGE_SIZE_5 = 48000;
+	public static final int PAGE_SIZE_5 = 8000;
 	public static final int PEDAL_TO_TPS_RPM_SIZE = 8;
 	public static final int PEDAL_TO_TPS_SIZE = 8;
 	public static final String pedalSensor_NAME = "Accelerator pedal";
 	public static final String pedalToTpsTbl_NAME = "ETB pedal target";
-	public static final int persistent_config_s_size = 16800;
+	public static final int persistent_config_s_size = 15804;
 	public static final int pid_s_size = 20;
 	public static final int pin_input_mode_e_PI_DEFAULT = 0;
 	public static final int pin_input_mode_e_PI_INVERTED_DEFAULT = 4;
@@ -1425,7 +1426,6 @@ public class VariableRegistryValues {
 	public static final int pin_output_mode_e_OM_INVERTED = 1;
 	public static final int pin_output_mode_e_OM_OPENDRAIN = 2;
 	public static final int pin_output_mode_e_OM_OPENDRAIN_INVERTED = 3;
-	public static final String PINOUT_URL = "https://rusefi.com/docs/pinouts/hellen/uaefi/";
 	public static final String PPS_FAIL_INDICATOR = "Pedal error";
 	public static final String PPS_OK_INDICATOR = "Pedal OK";
 	public static final String ppsExpAverageAlpha_NAME = "Accelerator Exp Average";
@@ -1513,7 +1513,7 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 563854386;
+	public static final int SIGNATURE_HASH = 512348743;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1561,7 +1561,6 @@ public class VariableRegistryValues {
 	public static final int thermistor_conf_s_size = 28;
 	public static final int ThermistorConf_size = 32;
 	public static final int THR_EST_SIZE = 12;
-	public static final int TIMING_ADJUSTMENT_SIZE = 4;
 	public static final int timing_mode_e_TM_DYNAMIC = 0;
 	public static final int timing_mode_e_TM_FIXED = 1;
 	public static final int tle8888_mode_e_TL_AUTO = 0;
@@ -1583,7 +1582,7 @@ public class VariableRegistryValues {
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_BUTTON = 0;
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH = 2;
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_UP_SWITCH = 3;
-	public static final int TOTAL_CONFIG_SIZE = 16800;
+	public static final int TOTAL_CONFIG_SIZE = 15804;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int TPS_PPS_TOO_HIGH_THRESHOLD = 110;
 	public static final int TPS_PPS_TOO_LOW_THRESHOLD = -10;
@@ -1839,7 +1838,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2026.08.28.uaefi_pro.563854386";
+	public static final String TS_SIGNATURE = "rusEFI master.2026.08.29.f407-discovery.512348743";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2200;

@@ -22,7 +22,10 @@ static bool noFiringUntilVvtSync() {
 	auto operationMode = getEngineRotationState()->getOperationMode();
 
 	if (engineConfiguration->isPhaseSyncRequiredForIgnition) {
-	  warningTsReport(ObdCode::CUSTOM_NEED_PHASE, "Phase sync required per Setting");
+		float rpm = Sensor::getOrZero(SensorType::Rpm);
+		if (rpm > 200) {
+		  warningTsReport(ObdCode::CUSTOM_NEED_PHASE, "Phase sync required per Setting");
+		}
 		// in rare cases engines do not like random sequential mode
 		return true;
 	}

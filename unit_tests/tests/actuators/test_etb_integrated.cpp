@@ -183,13 +183,12 @@ TEST(etb, dashpotRateLimiter) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	EtbController *etb = initEtbIntegratedTest();
 
-	// No rate limiter by default - opening should be instant
+	// Opening should be instant (rate limiter only affects closing)
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 50, true);
 	etb->update();
 	EXPECT_NEAR(50, etb->m_adjustedTarget, EPS2D);
 
-	// Enable rate limiter: 100%/sec means 1 second to close from 100 to 0
-	engineConfiguration->etbDashpotClosingRate = 100;
+	// Rate limiter is enabled by default at 100%/sec
 
 	// Snap pedal closed - should not reach 0 instantly
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0, true);
@@ -220,6 +219,10 @@ TEST(etb, dashpotDisabled) {
 	EtbController *etb = initEtbIntegratedTest();
 
 	// Rate limiter disabled (0) - closing should be instant
+	for (size_t i = 0; i < ETB_DASHPOT_CURVE_LENGTH; i++) {
+		engineConfiguration->etbDashpotClosingRate[i] = 0;
+	}
+
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 50, true);
 	etb->update();
 	EXPECT_NEAR(50, etb->m_adjustedTarget, EPS2D);
@@ -229,4 +232,40 @@ TEST(etb, dashpotDisabled) {
 	etb->update();
 	// Target clamped to etbMinimumPosition (default 1)
 	EXPECT_NEAR(1, etb->m_adjustedTarget, EPS2D);
+}
+
+TEST(etb, dashpotTpsDependent) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	EtbController *etb = initEtbIntegratedTest();
+
+	// Set TPS-dependent rates: 0%/sec at 0% TPS (disabled), 50%/sec at 100% TPS
+	// Bins: 0, 5, 15, 50, 100
+	engineConfiguration->etbDashpotTpsBins[0] = 0;
+	engineConfiguration->etbDashpotTpsBins[1] = 5;
+	engineConfiguration->etbDashpotTpsBins[2] = 15;
+	engineConfiguration->etbDashpotTpsBins[3] = 50;
+	engineConfiguration->etbDashpotTpsBins[4] = 100;
+
+	engineConfiguration->etbDashpotClosingRate[0] = 0;    // disabled at 0%
+	engineConfiguration->etbDashpotClosingRate[1] = 50;   // 50%/sec at 5%
+	engineConfiguration->etbDashpotClosingRate[2] = 50;   // 50%/sec at 15%
+	engineConfiguration->etbDashpotClosingRate[3] = 50;   // 50%/sec at 50%
+	engineConfiguration->etbDashpotClosingRate[4] = 50;   // 50%/sec at 100%
+
+	// Open to 80% - should be instant
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 80, true);
+	etb->update();
+	EXPECT_NEAR(80, etb->m_adjustedTarget, EPS2D);
+
+	// Snap pedal closed - at 80% TPS, rate is 50%/sec
+	// After 0.1 sec, should only drop by ~5%
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0, true);
+	advanceTimeUs(MS2US(100)); // 0.1 sec
+	etb->update();
+	EXPECT_NEAR(75, etb->m_adjustedTarget, 1.0f);
+
+	// Continue closing - after another 0.1 sec, drop another ~5%
+	advanceTimeUs(MS2US(100)); // 0.1 sec
+	etb->update();
+	EXPECT_NEAR(70, etb->m_adjustedTarget, 1.0f);
 }

@@ -383,7 +383,8 @@ expected<percent_t> EtbController::getSetpointEtb() {
 	targetPosition = clampF(minPosition, targetPosition, maxPosition);
 
 	// Dashpot rate limiter: prevent target from closing faster than configured rate
-	float closingRate = engineConfiguration->etbDashpotClosingRate;
+	// Rate is looked up from a TPS-dependent curve
+	float closingRate = interpolate2d(m_dashpotTarget, engineConfiguration->etbDashpotTpsBins, engineConfiguration->etbDashpotClosingRate);
 	if (closingRate > 0) {
 		float dt = m_dashpotTimer.getElapsedSecondsAndReset(getTimeNowNt());
 		if (targetPosition < m_dashpotTarget) {

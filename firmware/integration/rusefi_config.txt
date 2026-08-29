@@ -158,6 +158,7 @@ struct_no_prefix engine_configuration_s
 #define MAIN_HELP_URL "http://www.rusefi.com/"
 
 #define ETB_BIAS_CURVE_LENGTH 8
+#define ETB_DASHPOT_CURVE_LENGTH 5
 
 #define TOOTH_PACKET_COUNT 1000
 #define TOOTH_PACKET_SIZE 2
@@ -1589,7 +1590,8 @@ float tChargeAirDecrLimit;Maximum allowed rate of decrease allowed for the estim
 
 	float etbIdleThrottleRange;This sets the range of the idle control on the ETB. At 100% idle position, the value specified here sets the base ETB position. Can also be interpreted as the maximum allowed TPS% Opening for Idle Control.;"%", 1, 0, 0, 45, 0
 
-	float etbDashpotClosingRate;Maximum rate at which the ETB target position can decrease, mimicking a mechanical dashpot. 0 disables the rate limiter. 100 means it takes 1 second to close from 100% to 0%.;"%/sec", 1, 0, 0, 10000, 0
+	uint8_t[ETB_DASHPOT_CURVE_LENGTH] etbDashpotTpsBins;TPS breakpoints for dashpot closing rate curve;"%", 1, 0, 0, 100, 0
+	uint16_t[ETB_DASHPOT_CURVE_LENGTH] etbDashpotClosingRate;Maximum rate at which the ETB target position can decrease at each TPS breakpoint, mimicking a mechanical dashpot. 0 disables the rate limiter. 100 means it takes 1 second to close from 100% to 0%.;"%/sec", 1, 0, 0, 10000, 0
 
 	uint8_t[MAX_CYLINDER_COUNT iterate] cylinderBankSelect;Select which fuel correction bank this cylinder belongs to. Group cylinders that share the same O2 sensor;"", 1, 1, 1, 2, 0
 

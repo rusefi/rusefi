@@ -490,6 +490,13 @@ void setDefaultBaseEngine() {
 	engineConfiguration->etbMinimumPosition = 1;
 	engineConfiguration->etbMaximumPosition = 100;
 
+	// Default dashpot: 100%/sec at all TPS positions (1 second to close from any position)
+	// 0 means disabled, so all defaults are 100
+	static const uint8_t defaultDashpotTpsBins[ETB_DASHPOT_CURVE_LENGTH] = {0, 5, 15, 50, 100};
+	static const uint16_t defaultDashpotClosingRate[ETB_DASHPOT_CURVE_LENGTH] = {100, 100, 100, 100, 100};
+	copyArray(engineConfiguration->etbDashpotTpsBins, defaultDashpotTpsBins);
+	copyArray(engineConfiguration->etbDashpotClosingRate, defaultDashpotClosingRate);
+
 	engineConfiguration->tcuInputSpeedSensorTeeth = 1;
 	engineConfiguration->issFilterReciprocal = 2;
 

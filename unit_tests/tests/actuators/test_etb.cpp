@@ -269,6 +269,11 @@ TEST(etb, idlePlumbing) {
 TEST(etb, testSetpointOnlyPedal) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
+	// Disable dashpot rate limiter for this test
+	for (size_t i = 0; i < ETB_DASHPOT_CURVE_LENGTH; i++) {
+		engineConfiguration->etbDashpotClosingRate[i] = 0;
+	}
+
 	EtbController etb;
 
 	// Mock pedal map that's just passthru pedal -> target
@@ -355,6 +360,11 @@ TEST(etb, setpointSecondThrottleTrim) {
 TEST(etb, setpointIdle) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
+	// Disable dashpot rate limiter for this test
+	for (size_t i = 0; i < ETB_DASHPOT_CURVE_LENGTH; i++) {
+		engineConfiguration->etbDashpotClosingRate[i] = 0;
+	}
+
 	// Use ETB for idle, but don't give it any range (yet)
 	engineConfiguration->etbIdleThrottleRange = 0;
 
@@ -410,6 +420,11 @@ TEST(etb, setpointIdle) {
 
 TEST(etb, setpointRevLimit) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	// Disable dashpot rate limiter for this test
+	for (size_t i = 0; i < ETB_DASHPOT_CURVE_LENGTH; i++) {
+		engineConfiguration->etbDashpotClosingRate[i] = 0;
+	}
 
 	// Configure 5000 limit start, with 750 rpm taper
 	engineConfiguration->etbRevLimitStart = 5000;
@@ -504,6 +519,11 @@ TEST(etb, setpointWastegateController) {
 
 TEST(etb, setpointLuaAdder) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	// Disable dashpot rate limiter for this test
+	for (size_t i = 0; i < ETB_DASHPOT_CURVE_LENGTH; i++) {
+		engineConfiguration->etbDashpotClosingRate[i] = 0;
+	}
 
 	// Must have TPS & PPS initialized for ETB setup
 	Sensor::setMockValue(SensorType::Tps1Primary, 0);
