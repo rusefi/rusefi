@@ -8560,3 +8560,25 @@ answered with a bare FF) - almost certainly fallout from the corrupted app
 left on the ECU by the failed 1M run. Re-verify a clean 500k flash after
 this fix; if the garbage recurs on a clean bench, instrument the response
 matching.
+
+## 2026-08-29 (4th) - OpenBLT: 1M program phase DISABLED - MacCAN TX corrupts frames after the switch
+
+The ACK-per-frame 1M run reproduced the EXACT same checksum offset as the
+batch run (+40 ADD11, 0x9C vs 0x74) while every frame was CRC-valid and
+ACKed by the ECU. CAN CRC is end-to-end: a delivered frame's data bytes are
+bit-exact what the transmitter sent - so the wrong bytes were formed
+HOST-side (MacCAN driver or the PCAN-USB dongle after the mid-session
+baudrate re-init). The bootloader is exonerated; nothing firmware-side can
+fix a host-side TX corruption.
+
+Second, even on a perfect adapter 1 Mbit cannot pay for itself on this
+stack: two switch reboots (~7 s) + the ACK-per-frame program mode (~38 s)
+measure SLOWER than the 500k deferred-ACK batch (45.0 s measured today,
+verified). Plan C is therefore retired: --1mbit now flashes at 500 kbit
+with an explanatory message; the whole switch mechanism (bootloader
+reboot-based SET_CAN_BAUDRATE + host switchBaudrate + fallback + tests)
+stays in the tree behind --1mbit-force for a future working driver.
+
+State of the flashing story: 265 s -> 68.5 s (plan A) -> 45.0 s (plan B,
+500k batch, VERIFIED twice today). Open follow-up: none for speed - the
+remaining floor is the MacCAN USB round trip (~1 ms/frame), hardware.
