@@ -8808,3 +8808,77 @@ New/changed facts:
 rusEFI status: rpm (16-bit + tach byte) and temp (degC) encodings are
 correct; the dash temp gauge will come alive once the CLT sensor reads
 right (the VTRK fix from earlier today).
+
+## 2026-08-29 (evening): dash tach + temperature re-derived from scratch
+
+Context: the user reports the stock ECU drives the dash needle correctly
+while rusEFI shows 100-200 on the needle at a console-800 rpm idle. The
+previous day's conclusions (0x0186[5] = 0x06, 066A[3:4] = CLT degC) were
+WRONG - both led to wrong firmware behaviour, so every field was
+re-derived from the raw captures (orig_1/3, today's 19:14/19:27) with a
+full byte-by-byte correlation scan instead of spot checks.
+
+Method that worked: for each (frame id, byte) compute Pearson correlation
+against the rpm16 field of 0x0189 (rpm) and against a time ramp (warmup
+proxy). The dash's OWN frames (present in ignoff.trc where the ECU is
+silent: 0x0350/0x0352/0x05D7/0x04AC/0x0242/0x029A/0x029C/0x0303...) were
+separated from the ECU's frames the same way, which exposed the dash-side
+consumption integrators (0x029A[0:1] = 0x029C[0:1] = a counter that climbs
+~2 units/20 ms at idle, decays to 0 when the dash considers the engine
+stalled, and stays frozen at 0 when the ECU stream is not accepted).
+
+Corrected encodings (all verified across >= 2 captures):
+
+- 0x05DA[0] = CLT x 2 (0.5 degC units) - THE dash coolant temperature.
+  orig_1: 0x40->0x41 = 32->32.5 C, orig_3: 0x43->0x44 = 33.5->34 C,
+  19:14: 0x5C->0x61 = 46->48.5 C, 19:27: 0x75->0x79 = 58.5->60.5 C.
+  The 13-minute gap between the two evening sessions shows up as exactly
+  +26 units (13 C) of residual coolant heat - unambiguous.
+  (rusEFI used to send a frozen 0x41 = 32.5 C there - the dash gauge was
+  reading a fixed 32.5 C. THIS was the dash temp bug.)
+
+- 0x05DA[1] = battery voltage x 10 (0.1 V units): 0x89 = 13.7 V at IGN,
+  0x70 = 11.2 V cranking sag, 0x9D = 15.7 V charging right after start.
+
+- 0x0186[5] = X = throttle position x 10 (0.1 % units) - the stock's
+  "fuel is flowing" signal, NOT a constant 0x06. 0x09..0x0E (0.9..1.4 %)
+  at warm idle, 0x4C (7.6 %) during a rev blip, 0 at closed throttle / DFCO
+  / cranking. Cold-start captures (orig_1/3, CLT ~32 C) show X = 0 even at
+  900 rpm - the stock's idle controller keeps the blade shut until warm.
+  The dash gates its consumption integrators (0x029A/0x029C) on X > 0.
+
+- 0x018A[2:3] = 16-bit BE crank-angle counter, 2 deg/unit (3 x rpm units/s),
+  published in 128-deg (64-unit) bursts, advanced ONLY while the throttle is
+  open (frozen at closed throttle/DFCO - verified: frozen 0x0006 for 5+ s
+  with X = 0, then +1152 units over 489 ms at 785 rpm = exactly 3 x rpm).
+  The old rusEFI sent static 0x0006/0x0007 there. The dash mirrors this
+  accumulator into its own 0x029C/0x029A frames.
+
+- 0x066A[3:4] = fuel-gated 100 ms engine-time counter (NOT temperature!):
+  +1 per 100 ms while fuel flows at up to ~820 rpm, +2 per 100 ms above,
+  paused at closed throttle; keeps its value across key cycles (the stock's
+  cumulative hour-meter). orig_1's 0x35->0x5F over 10 s was this counter,
+  not a 53->95 C warmup ramp - the car was at 32 C per 0x05DA.
+
+- 0x0186[0:1] = fuel flow in 1/16 mL/h units (0x04B0..0x09D4 cranking =
+  75..157 mL/h, ~0x3A4C warm idle = 933 mL/h) - the field is NOT plain
+  mL/h (that mis-scaling is what produced the phantom "10.7 L/h idle").
+
+- 0x0189[5] = 0xBA while running (today's captures; orig showed 0xB8 - the
+  low bit is an accessory/load flag). 0x01F6[3] = 0x1A (was 0x2D).
+
+Applied to rusEFI (m74_9_can.cpp, commit below): CLT x 2 + Vbatt x 10 in
+0x05DA; throttle-X byte in 0x0186[5]; throttle-gated 128-deg-quantized
+angle accumulator in 0x018A[2:3]; fuel flow x 16; 066A engine-time counter;
+0x0189[4] rolling counter now steps by 0x10; 0x0189[5] = 0xBA; 0x01F6[3] =
+0x1A. The tach byte 0x0186[4] = rpm - 768 u8 wrap (mode 4) stays - it was
+re-confirmed with corr = 1.000 vs rpm in orig_1.
+
+Open follow-ups:
+- The exact dash acceptance gate for the needle is still inferred, not
+  proven: the needle plausibility model needs an on-car test of this build.
+  If the needle is still low, the next suspects are 0x0217[3:5] (non-zero
+  while running: 0x01/0x02, 0xA010/0x700E/0x800E - looks like a load-
+  gated accumulator) and the 0x0189[4] counter sequence.
+- 0x05DA[4] and 0x065C[0] vary between sessions (alternator/LRC state?) -
+  left as static values, not needed for the needle/temp.
