@@ -53,9 +53,11 @@ public final class CanDump {
     private final boolean listenOnly;
     private final long durationSeconds;
 
-    private PCANBasic can;
-    private BufferedWriter writer;
-    private long messageCount;
+    	private PCANBasic can;
+    	private BufferedWriter writer;
+    	private final Object writeLock = new Object();
+    	private volatile boolean shuttingDown;
+    	private long messageCount;
     private long errorCount;
     private long overrunCount;
     private long firstFrameNanos;
@@ -256,13 +258,13 @@ public final class CanDump {
         writer.flush();
     }
 
-    private void readLoop(long startNanos) throws IOException {
-        firstFrameNanos = startNanos;
-        lastFlushNanos = startNanos;
-        lastStatsNanos = startNanos;
-        statsWindowStartNanos = startNanos;
+    	private void readLoop(long startNanos) throws IOException {
+        		firstFrameNanos = startNanos;
+        		lastFlushNanos = startNanos;
+        		lastStatsNanos = startNanos;
+        		statsWindowStartNanos = startNanos;
 
-        while (true) {
+        		while (!shuttingDown) {
             if (durationSeconds > 0) {
                 long elapsed = (System.nanoTime() - startNanos) / 1_000_000_000;
                 if (elapsed >= durationSeconds) {
@@ -287,11 +289,15 @@ public final class CanDump {
                 sleepTiny();
             }
 
-            long nowNanos = System.nanoTime();
-            if (nowNanos - lastFlushNanos >= 2_000_000_000L) {
-                writer.flush();
-                lastFlushNanos = nowNanos;
-            }
+            			long nowNanos = System.nanoTime();
+            			if (nowNanos - lastFlushNanos >= 2_000_000_000L) {
+            				synchronized (writeLock) {
+            					if (writer != null) {
+            						writer.flush();
+            					}
+            				}
+            				lastFlushNanos = nowNanos;
+            			}
             if (nowNanos - lastStatsNanos >= 5_000_000_000L) {
                 long windowFrames = messageCount - statsWindowFrames;
                 double windowSec = (nowNanos - statsWindowStartNanos) / 1e9;
@@ -304,34 +310,43 @@ public final class CanDump {
         }
     }
 
-    private void handleMessage(TPCANMsg rx, TPCANTimestamp ts) throws IOException {
-        double offsetMs = offset(rx, ts);
-        long number = ++messageCount;
+    	private void handleMessage(TPCANMsg rx, TPCANTimestamp ts) throws IOException {
+    		double offsetMs = offset(rx, ts);
+    		long number = ++messageCount;
 
-        byte type = rx.getType();
+    		byte type = rx.getType();
 
-        if ((type & MSGTYPE_STATUS) != 0) {
-            // Status frame: the data bytes carry the PCAN status code (LE).
-            int code = statusCode(rx);
-            String name = CanDumpFormat.statusName(code);
-            writer.write(CanDumpFormat.statusRow(number, offsetMs,
-                    name != null ? name : "STATUS", code));
-        } else if ((type & MSGTYPE_ERRFRAME) != 0) {
-            errorCount++;
-            writer.write(CanDumpFormat.statusRow(number, offsetMs, "ERRFRAME " + CanDumpFormat.hex(rx.getData(), rx.getLength()), 0x40));
-        } else {
-            boolean extended = (type & MSGTYPE_EXTENDED) != 0;
-            int dlc = rx.getLength() & 0xFF;
-            String row = CanDumpFormat.messageRow(number, offsetMs, "Rx",
-                    rx.getID(), extended, dlc, rx.getData());
-            writer.write(row);
-        }
-        writer.newLine();
+    		String row;
+    		if ((type & MSGTYPE_STATUS) != 0) {
+    			// Status frame: the data bytes carry the PCAN status code (LE).
+    			int code = statusCode(rx);
+    			String name = CanDumpFormat.statusName(code);
+    			row = CanDumpFormat.statusRow(number, offsetMs,
+    					name != null ? name : "STATUS", code);
+    		} else if ((type & MSGTYPE_ERRFRAME) != 0) {
+    			errorCount++;
+    			row = CanDumpFormat.statusRow(number, offsetMs, "ERRFRAME " + CanDumpFormat.hex(rx.getData(), rx.getLength()), 0x40);
+    		} else {
+    			boolean extended = (type & MSGTYPE_EXTENDED) != 0;
+    			int dlc = rx.getLength() & 0xFF;
+    			row = CanDumpFormat.messageRow(number, offsetMs, "Rx",
+    					rx.getID(), extended, dlc, rx.getData());
+    		}
 
-        if (messageCount % 500 == 0) {
-            writer.flush();
-        }
-    }
+    		// The shutdown hook flushes/closes the writer from another thread
+    		// (SIGINT) while this loop may still be running - serialize on the
+    		// writer so a flush can never interleave with a half-written row.
+    		synchronized (writeLock) {
+    			if (writer == null) {
+    				return;
+    			}
+    			writer.write(row);
+    			writer.newLine();
+    			if (messageCount % 500 == 0) {
+    				writer.flush();
+    			}
+    		}
+    	}
 
     private int statusCode(TPCANMsg rx) {
         byte[] d = rx.getData();
@@ -387,11 +402,16 @@ public final class CanDump {
         return 0;
     }
 
-    private void writeStatusLine(double offsetMs, String text, int code) throws IOException {
-        writer.write(CanDumpFormat.statusRow(++messageCount, offsetMs, text, code));
-        writer.newLine();
-        writer.flush();
-    }
+    	private void writeStatusLine(double offsetMs, String text, int code) throws IOException {
+    		synchronized (writeLock) {
+    			if (writer == null) {
+    				return;
+    			}
+    			writer.write(CanDumpFormat.statusRow(++messageCount, offsetMs, text, code));
+    			writer.newLine();
+    			writer.flush();
+    		}
+    	}
 
     private static void sleepTiny() {
         try {
@@ -401,21 +421,24 @@ public final class CanDump {
         }
     }
 
-    private void closeQuietly() {
-        try {
-            if (writer != null) {
-                writer.flush();
-                writer.close();
-                writer = null;
-            }
-        } catch (IOException ignored) {
-        }
-        try {
-            if (can != null) {
-                can.Uninitialize(channel);
-                can = null;
-            }
-        } catch (Throwable ignored) {
-        }
-    }
+    	private void closeQuietly() {
+    		shuttingDown = true;
+    		synchronized (writeLock) {
+    			try {
+    				if (writer != null) {
+    					writer.flush();
+    					writer.close();
+    					writer = null;
+    				}
+    			} catch (IOException ignored) {
+    			}
+    		}
+    		try {
+    			if (can != null) {
+    				can.Uninitialize(channel);
+    				can = null;
+    			}
+    		} catch (Throwable ignored) {
+    		}
+    	}
 }
