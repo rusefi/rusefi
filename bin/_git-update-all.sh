@@ -15,8 +15,11 @@ for dir in "$root"/*/; do
     [ -d "$dir" ] || continue
     if [ -d "$dir/.git" ] || git -C "$dir" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
         echo "=== $dir ==="
-        git -C "$dir" fetch
-        git -C "$dir" pull
+        # Only update the top-level repository itself: git's default
+        # fetch.recurseSubmodules=on-demand would otherwise also fetch every
+        # submodule referenced by newly fetched commits.
+        git -C "$dir" fetch --no-recurse-submodules
+        git -C "$dir" pull --no-recurse-submodules
     else
         echo "--- $dir (not a git repo, skipping)"
     fi
