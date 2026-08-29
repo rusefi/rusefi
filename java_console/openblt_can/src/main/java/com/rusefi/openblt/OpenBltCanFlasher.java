@@ -206,6 +206,19 @@ public class OpenBltCanFlasher {
                     // recovered to 500 kbit by itself and we reconnected there.
                     // Continue the flash at 500k instead of failing.
                     oneMbitEnabled = false;
+                } else if (batchEnabled) {
+                    // Deferred-ACK batch is UNSAFE at 1 Mbit: the batch mode
+                    // sends ~293 PROGRAM_MAX frames with a single ACK, and
+                    // ONE lost frame silently shifts the whole batch buffer.
+                    // Measured on the bench (2026-08-29): the 1M batch run
+                    // corrupted the image - only the final checksum caught it
+                    // (ADD11 off by 40). At 1 Mbit the wire margin is 4x
+                    // smaller, so dropped frames are a real risk. Use the
+                    // ACK-per-frame pipelined mode instead: any lost frame
+                    // aborts loudly instead of silently corrupting the image.
+                    batchEnabled = false;
+                    listener.log("1 Mbit: using the ACK-per-frame pipelined mode (a lost frame in"
+                            + " deferred-ACK batch mode would silently corrupt the image)");
                 }
             }
             try {
@@ -778,7 +791,8 @@ public class OpenBltCanFlasher {
                                          erase+program phase only (the console/car bus
                                          stays at 500k; back to 500k before verify/reset;
                                          the ECU falls back to 500k by itself if the host
-                                         cannot follow)
+                                         cannot follow; at 1 Mbit the program phase uses the
+                                         ACK-per-frame mode - deferred-ACK batch is unsafe there)
                   --pace-us <n>          pipelined frame-to-frame spacing in microseconds
                                          (default 0: window-only flow control, fastest);
                                          620 = the old spaced-out mode
