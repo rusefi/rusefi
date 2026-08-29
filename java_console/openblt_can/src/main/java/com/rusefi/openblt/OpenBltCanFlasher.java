@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.concurrent.locks.LockSupport;
 
 /**
  * Flashes an rusEFI ECU through the OpenBLT bootloader over CAN.
@@ -24,6 +25,14 @@ import java.util.List;
  */
 public class OpenBltCanFlasher {
 
+    /**
+     * Bus pacing for pipelined PROGRAM_MAX: one 8-byte ext frame takes ~265 us
+     * at 500 kbit/s and the bootloader's ACK another ~265 us, so ~620 us per
+     * slot lets the ACK interleave with the next frame instead of the dongle
+     * transmitting back-to-back and saturating the ECU's 3 ACK mailboxes.
+     */
+    private static final long PIPELINE_PACE_NANOS = 620_000L;
+
     public interface Listener {
         default void log(String line) {
             System.out.println(line);
@@ -40,6 +49,13 @@ public class OpenBltCanFlasher {
         boolean reset = true;
         boolean probeOnly = false;
         boolean verbose = false;
+        boolean pipeline = true;
+        /**
+         * Pipelined PROGRAM_MAX TX spacing in nanoseconds (default 620 us =
+         * one 8-byte ext frame + the bootloader ACK at 500 kbit/s). 0 disables
+         * pacing (unit tests; on the wire the dongle then bursts frames).
+         */
+        long pipelinePaceNanos = PIPELINE_PACE_NANOS;
         Path srecPath;
     }
 
@@ -70,6 +86,10 @@ public class OpenBltCanFlasher {
     }
 
     private final Listener listener;
+    /** Set from Config before programming: enables the pipelined PROGRAM_MAX path. */
+    private boolean pipelineEnabled = true;
+    /** Set from Config before programming: pipelined TX spacing in nanoseconds. */
+    private long pipelinePaceNanos = PIPELINE_PACE_NANOS;
 
     public OpenBltCanFlasher(Listener listener) {
         this.listener = listener;
@@ -77,6 +97,8 @@ public class OpenBltCanFlasher {
 
     public Result flash(CanLink link, Config cfg) throws IOException, FlashException {
         long t0 = System.currentTimeMillis();
+        pipelineEnabled = cfg.pipeline;
+        pipelinePaceNanos = cfg.pipelinePaceNanos;
         listener.log("Opening CAN channel...");
 
         try {
@@ -228,23 +250,117 @@ public class OpenBltCanFlasher {
             throw new FlashException(String.format("SET_MTA(0x%08X) failed: %s", seg.base(), mta));
         }
 
+        if (!pipelineEnabled) {
+            while (off < data.length) {
+                int remaining = data.length - off;
+                XcpResponse res;
+                if (remaining >= XcpConstants.PROGRAM_MAX_PAYLOAD) {
+                    byte[] chunk = new byte[XcpConstants.PROGRAM_MAX_PAYLOAD];
+                    System.arraycopy(data, off, chunk, 0, chunk.length);
+                    res = xcp.programMax(chunk);
+                    off += chunk.length;
+                } else {
+                    byte[] chunk = new byte[remaining];
+                    System.arraycopy(data, off, chunk, 0, chunk.length);
+                    res = xcp.program(chunk);
+                    off += chunk.length;
+                }
+                if (res == null || !res.isOk()) {
+                    int failedAt = seg.base() + off;
+                    throw new FlashException(String.format("PROGRAM at 0x%08X failed: %s", failedAt, res));
+                }
+            }
+            return;
+        }
+
+        // Pipelined transfer: keep at most XcpClient.PIPELINE_WINDOW frames in
+        // flight and pace the TX so the bootloader's ACKs interleave with our
+        // frames on the bus. This amortizes the ~1 ms PCAN-USB dongle latency
+        // over the whole stream instead of paying it once per 7-byte frame.
+        // Safe by construction: the window cap means the ECU's 3 RX + 3 TX
+        // mailboxes can never overflow/block (see XcpClient.PIPELINE_WINDOW).
+        long nextSendAt = 0;
         while (off < data.length) {
             int remaining = data.length - off;
-            XcpResponse res;
-            if (remaining >= XcpConstants.PROGRAM_MAX_PAYLOAD) {
-                byte[] chunk = new byte[XcpConstants.PROGRAM_MAX_PAYLOAD];
-                System.arraycopy(data, off, chunk, 0, chunk.length);
-                res = xcp.programMax(chunk);
-                off += chunk.length;
-            } else {
+
+            if (remaining < XcpConstants.PROGRAM_MAX_PAYLOAD) {
+                // Tail: settle the pipeline, then finish with a single-frame PROGRAM.
+                drainPipeline(xcp);
                 byte[] chunk = new byte[remaining];
                 System.arraycopy(data, off, chunk, 0, chunk.length);
-                res = xcp.program(chunk);
+                XcpResponse res = xcp.program(chunk);
+                if (res == null || !res.isOk()) {
+                    throw new FlashException(String.format(
+                            "PROGRAM at 0x%08X failed: %s", seg.base() + off, res));
+                }
                 off += chunk.length;
+                break;
             }
-            if (res == null || !res.isOk()) {
-                int failedAt = seg.base() + off;
-                throw new FlashException(String.format("PROGRAM at 0x%08X failed: %s", failedAt, res));
+
+            // Full window: collect one ACK first (the bootloader answers in order).
+            if (xcp.getInFlight() >= XcpClient.PIPELINE_WINDOW) {
+                XcpResponse res = xcp.readProgramAck(XcpConstants.PROGRAM_TIMEOUT_MS);
+                if (res == null) {
+                    throw new FlashException(String.format(
+                            "PROGRAM_MAX at 0x%08X: no acknowledgement within %d ms "
+                                    + "(pipelined mode, %d frames in flight)",
+                            seg.base() + off, XcpConstants.PROGRAM_TIMEOUT_MS, xcp.getInFlight()));
+                }
+                if (!res.isOk()) {
+                    throw new FlashException(String.format(
+                            "PROGRAM_MAX at 0x%08X failed: %s", seg.base() + off, res));
+                }
+            }
+
+            // Pace the TX so the ECU's ACK fits between our frames: without
+            // this the dongle transmits back-to-back and the bootloader's
+            // 3 ACK mailboxes saturate (see XcpClient.PIPELINE_WINDOW notes).
+            paceUntil(nextSendAt, xcp);
+
+            byte[] chunk = new byte[XcpConstants.PROGRAM_MAX_PAYLOAD];
+            System.arraycopy(data, off, chunk, 0, chunk.length);
+            xcp.writeProgramMax(chunk);
+            nextSendAt = System.nanoTime() + pipelinePaceNanos;
+            off += chunk.length;
+        }
+        drainPipeline(xcp);
+    }
+
+    /**
+     * Collects all outstanding PROGRAM_MAX acknowledgements. The bootloader
+     * answers in order, so this leaves the link quiet and the MTA at exactly
+     * the next unwritten address.
+     */
+    private void drainPipeline(XcpClient xcp) throws IOException, FlashException {
+        while (xcp.getInFlight() > 0) {
+            XcpResponse res = xcp.readProgramAck(XcpConstants.PROGRAM_TIMEOUT_MS);
+            if (res == null) {
+                throw new FlashException("PROGRAM_MAX: no acknowledgement while draining the pipeline");
+            }
+            if (!res.isOk()) {
+                throw new FlashException("PROGRAM_MAX failed while draining the pipeline: " + res);
+            }
+        }
+    }
+
+    /**
+     * Waits until {@code targetNanos} (bus pacing) while opportunistically
+     * collecting already-arrived acknowledgements, so the in-flight window
+     * stays shallow and the per-frame RTT histogram stays accurate.
+     */
+    private void paceUntil(long targetNanos, XcpClient xcp) throws IOException, FlashException {
+        long wait = targetNanos - System.nanoTime();
+        while (wait > 0) {
+            int slice = (int) Math.min(50, wait / 1_000_000 + 1);
+            if (xcp.getInFlight() > 0) {
+                XcpResponse res = xcp.readProgramAck(slice);
+                if (res != null && !res.isOk()) {
+                    throw new FlashException("PROGRAM_MAX failed during pipelining: " + res);
+                }
+            }
+            wait = targetNanos - System.nanoTime();
+            if (wait > 200_000) {
+                LockSupport.parkNanos(Math.min(wait, 200_000));
             }
         }
     }
@@ -342,6 +458,7 @@ public class OpenBltCanFlasher {
                 case "--no-reset" -> cfg.reset = false;
                 case "--probe" -> cfg.probeOnly = true;
                 case "--verbose" -> cfg.verbose = true;
+                case "--no-pipeline" -> cfg.pipeline = false;
                 default -> {
                     if (args[i].startsWith("-")) {
                         System.err.println("Unknown option: " + args[i]);
@@ -389,6 +506,8 @@ public class OpenBltCanFlasher {
                   --no-verify            skip the post-program checksum verification
                   --no-reset             do not start the new firmware after programming
                   --probe                connect and print bootloader info, do not flash
+                  --no-pipeline          fall back to one-request-one-reply programming
+                                         (slow, useful to isolate link problems)
                   --verbose              log every sent/received CAN frame
 
                 The default firmware path is firmware/build/rusefi.srec.

@@ -1,6 +1,7 @@
 package com.rusefi.openblt;
 
 import java.io.IOException;
+import java.util.ArrayDeque;
 import java.util.Arrays;
 
 /**
@@ -16,6 +17,13 @@ import java.util.Arrays;
  *    and (by design) does not send a response
  */
 public class XcpClient {
+    /**
+     * Max un-acknowledged PROGRAM_MAX frames allowed in flight (pipelining).
+     * bxCAN has 3 RX + 3 TX mailboxes: with at most 3 frames outstanding the
+     * bootloader's ACK transmits never exhaust the TX mailboxes (so its main
+     * loop never blocks in canTransmitTimeout) and its RX never overflows.
+     */
+    public static final int PIPELINE_WINDOW = 3;
     private final CanLink link;
     private final int txId;
     private final boolean extended;
@@ -34,6 +42,17 @@ public class XcpClient {
     private long rttMaxNanos;
     /** buckets: <1, 1-2, 2-3, 3-4, 4-5, 5-7, 7-10, >=10 ms */
     private final long[] rttBuckets = new long[8];
+
+    // ---- pipelined PROGRAM_MAX bookkeeping -----------------------------
+    // Send timestamps of frames that were written but not yet acknowledged.
+    // The bootloader ACKs in order, so the head of the queue belongs to the
+    // next expected reply; the queue depth is the number of frames in flight.
+    private final ArrayDeque<Long> inflightSendTimes = new ArrayDeque<>();
+
+    /** Number of PROGRAM_MAX frames sent but not yet acknowledged. */
+    public int getInFlight() {
+        return inflightSendTimes.size();
+    }
 
     private void recordRtt(long startNanos) {
         long rtt = System.nanoTime() - startNanos;
@@ -131,13 +150,72 @@ public class XcpClient {
 
     /** Programs 7 bytes at the current MTA; the target auto-increments MTA. */
     public XcpResponse programMax(byte[] data7) throws IOException {
+        writeProgramMax(data7);
+        return readProgramAck(XcpConstants.PROGRAM_TIMEOUT_MS);
+    }
+
+    /**
+     * Sends one PROGRAM_MAX frame without waiting for the reply. Combined with
+     * {@link #readProgramAck(int)} this builds a pipelined transfer: the caller
+     * keeps at most {@link #PIPELINE_WINDOW} frames in flight and drains the
+     * in-order acknowledgements.
+     */
+    public void writeProgramMax(byte[] data7) throws IOException {
         if (data7.length != XcpConstants.PROGRAM_MAX_PAYLOAD) {
             throw new IllegalArgumentException("PROGRAM_MAX requires exactly 7 data bytes");
         }
         byte[] cmd = new byte[XcpConstants.CTO_LEN];
         cmd[0] = (byte) XcpConstants.CMD_PROGRAM_MAX;
         System.arraycopy(data7, 0, cmd, 1, data7.length);
-        return request(cmd, XcpConstants.PROGRAM_TIMEOUT_MS);
+        if (frameLog != null) {
+            frameLog.accept("TX " + new CanFrame(txId, extended, cmd));
+        }
+        inflightSendTimes.addLast(System.nanoTime());
+        link.write(new CanFrame(txId, extended, cmd));
+    }
+
+    /**
+     * Waits for the next pipelined reply (bootloader ACKs PROGRAM_MAX frames
+     * in order). Call only while {@link #getInFlight()} is non-zero.
+     *
+     * @return the response, or null when the timeout expired.
+     */
+    public XcpResponse readProgramAck(int timeoutMs) throws IOException {
+        long deadline = System.currentTimeMillis() + timeoutMs;
+        while (System.currentTimeMillis() < deadline) {
+            int remaining = (int) Math.min(50, deadline - System.currentTimeMillis());
+            if (remaining <= 0) {
+                break;
+            }
+            CanFrame frame = link.readFrame(remaining);
+            if (frame == null) {
+                continue;
+            }
+            if (frameLog != null) {
+                frameLog.accept("RX " + frame);
+            }
+            // Skip anything that is not a reply from the bootloader on its TX id
+            // (the still-running app may be broadcasting on other ids).
+            if (frame.id() != rxId || frame.extended() != extended) {
+                continue;
+            }
+            byte[] data = frame.data();
+            if (data.length == 0) {
+                continue;
+            }
+            int pid = data[0] & 0xFF;
+            if (pid == XcpConstants.PID_RES || pid == XcpConstants.PID_ERR) {
+                Long sentAt = inflightSendTimes.pollFirst();
+                if (sentAt != null) {
+                    recordRtt(sentAt);
+                }
+                return pid == XcpConstants.PID_RES
+                        ? XcpResponse.ok(data)
+                        : XcpResponse.error(data);
+            }
+            // Unknown packet id: ignore and keep waiting.
+        }
+        return null;
     }
 
     /** Programs 1..6 bytes at the current MTA; the target auto-increments MTA. */
