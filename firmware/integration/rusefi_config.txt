@@ -221,6 +221,7 @@ struct_no_prefix engine_configuration_s
 #define DWELL_CURVE_SIZE 8
 
 #define EFI_CAN_BUS_COUNT 2
+#define ts_show_canbus3 false
 #define EFI_CAN_CANFD FALSE
 
 #define DEFAULT_RPM_AXIS_HIGH_VALUE 7000
