@@ -56,6 +56,17 @@ public class OpenBltCanFlasher {
         boolean batch = true;
         boolean oneMbit = false;
         /**
+         * Escape hatch to actually attempt the 1 Mbit switch (--1mbit-force).
+         * Disabled by default: the MacCAN/PCAN-USB TX path corrupts frames
+         * after the mid-session switch - measured deterministically 2026-08-29
+         * (the image checksum was off by the SAME +40 in two runs, while every
+         * frame was CRC-valid and ACKed by the ECU - the wrong bytes were
+         * formed host-side, so the firmware cannot fix it). Even on a working
+         * adapter, 1 Mbit costs two reboots plus the ACK-per-frame program
+         * mode, which measures SLOWER than the 500k batch (~57 s vs ~45 s).
+         */
+        boolean oneMbitAllowed = false;
+        /**
          * Bound on the CONNECT retry loop after a baudrate-switch reboot.
          * The bootloader's backdoor window is 6 s at 1 Mbit and 500 ms at
          * 500k, so the reconnect must not sleep between attempts.
@@ -200,6 +211,13 @@ public class OpenBltCanFlasher {
 
             // ---- erase + program ----
             long done = 0;
+            if (oneMbitEnabled && !cfg.oneMbitAllowed) {
+                listener.log("1 Mbit is disabled: the MacCAN/PCAN-USB TX path corrupts frames after the"
+                        + " mid-session switch (measured deterministically 2026-08-29 - the same checksum"
+                        + " offset in two runs, with every frame ACKed). Flashing at 500 kbit (batch, ~45 s)."
+                        + " Use --1mbit-force to override.");
+                oneMbitEnabled = false;
+            }
             if (oneMbitEnabled) {
                 if (!switchBaudrate(xcp, link, XcpConstants.BAUD_1M)) {
                     // 1 Mbit is not usable with this adapter/driver: the ECU
@@ -724,6 +742,10 @@ public class OpenBltCanFlasher {
                 case "--no-pipeline" -> cfg.pipeline = false;
                 case "--no-batch" -> cfg.batch = false;
                 case "--1mbit" -> cfg.oneMbit = true;
+                case "--1mbit-force" -> {
+                    cfg.oneMbit = true;
+                    cfg.oneMbitAllowed = true;
+                }
                 case "--pace-us" -> {
                     if (i + 1 >= args.length) {
                         System.err.println("--pace-us requires a value");
@@ -787,12 +809,15 @@ public class OpenBltCanFlasher {
                                          (slow, useful to isolate link problems)
                   --no-batch             disable deferred-ACK batch programming (plan B),
                                          use the window-pipelined PROGRAM_MAX mode
-                  --1mbit                switch the CAN link to 1 Mbit/s for the
-                                         erase+program phase only (the console/car bus
-                                         stays at 500k; back to 500k before verify/reset;
-                                         the ECU falls back to 500k by itself if the host
-                                         cannot follow; at 1 Mbit the program phase uses the
-                                         ACK-per-frame mode - deferred-ACK batch is unsafe there)
+                  --1mbit                flash at 500 kbit - the 1 Mbit mode is
+                                         disabled on this adapter/driver (MacCAN
+                                         corrupts TX after the mid-session switch,
+                                         measured 2026-08-29); kept for compatibility
+                  --1mbit-force          actually attempt the 1 Mbit switch for the
+                                         erase+program phase (the console/car bus
+                                         stays at 500k; the program phase uses the
+                                         ACK-per-frame mode - deferred-ACK batch is
+                                         unsafe there)
                   --pace-us <n>          pipelined frame-to-frame spacing in microseconds
                                          (default 0: window-only flow control, fastest);
                                          620 = the old spaced-out mode
