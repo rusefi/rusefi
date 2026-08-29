@@ -8343,3 +8343,32 @@ buffer + one NvmWrite + one ACK per batch) -> ~35-45 s @500k; (C) 1
 Mbit only as multiplier with B -> ~20-25 s (bench-only). bxCAN 3 RX
 mailboxes are safe: ECU consumption (~100-200 us) > bus delivery
 (~265 us/frame); erase busy-wait never overlaps host traffic.
+
+## 2026-08-28 - OpenBLT CAN fast flash: plan A implemented (host pipelining)
+
+Implemented the host-only pipelined PROGRAM_MAX path in the Java flasher
+(commit 6d896aacb70), no bootloader change:
+
+- XcpClient: writeProgramMax() (fire) + readProgramAck() (in-order ACK
+  collection) + getInFlight() bookkeeping; per-frame RTT histogram stays
+  accurate for pipelined frames (send timestamps queued).
+- OpenBltCanFlasher.programSegment: pipelined mode keeps at most
+  PIPELINE_WINDOW = 3 frames in flight (bxCAN 3 RX + 3 TX mailboxes, so
+  the ECU can never block on the ACK transmit or overflow RX - verified
+  against openblt_can.cpp / com.c) and paces the TX at 620 us/frame
+  (~265 us frame + ~265 us ACK at 500 kbit/s) so ACKs interleave with
+  frames instead of the dongle bursting back-to-back. Tail settles the
+  pipeline and finishes with single-frame PROGRAM. Lost ACK -> clear
+  "no acknowledgement" FlashException (no resync magic: the AT32 flash
+  rejects reprogramming words, so a resend is not safe anyway).
+- --no-pipeline flag restores the one-request-one-reply path.
+- Config.pipelinePaceNanos (0 in unit tests - the synchronous fake link
+  has no bus, and pacing would add ~7 s to the 80 KB test).
+- Tests: pipelinedFlashProgramsEveryFrame (142 PROGRAM_MAX + tail,
+  byte-exact), lostAckAbortsPipelinedFlash (dropProgramMaxResponses hook
+  in FakeCanLink), noPipelineFlagStillFlashes. 28/28 green, fatJar builds.
+
+Expected on the bench: 182 s -> ~65-90 s (pace 620 us/frame vs measured
+1.90 ms/frame). Next levers if needed: plan B (true batch mode with a
+RAM page buffer + one ACK per batch, ~35-45 s @500k) and plan C (1 Mbit
+only together with B, bench-only).
