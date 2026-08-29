@@ -40,6 +40,10 @@ class OpenBltCanFlasherTest {
         cfg.connectTimeoutSec = 2;
         cfg.verify = verify;
         cfg.reset = reset;
+        // Unit tests run against the synchronous in-memory bootloader: no bus
+        // pacing needed (and pacing would add ~0.6 ms per frame to the big
+        // erase test below).
+        cfg.pipelinePaceNanos = 0;
         return cfg;
     }
 
@@ -215,5 +219,63 @@ class OpenBltCanFlasherTest {
 
         assertEquals(0, link.programResetCount());
         assertTrue(result.bytes > 0);
+    }
+
+    @Test
+    void pipelinedFlashProgramsEveryFrame() throws Exception {
+        // 1000 bytes: 142x PROGRAM_MAX + 6-byte tail. With the window logic
+        // the synchronous fake answers every frame immediately; the flash must
+        // still be byte-exact and the segment fully covered.
+        byte[] seg1 = pattern(1000, 11);
+        Path srec = writeImage(new ArrayList<>(SrecTestUtil.image(SEG1_BASE, seg1)));
+
+        FakeCanLink link = new FakeCanLink();
+        OpenBltCanFlasher flasher = new OpenBltCanFlasher(new OpenBltCanFlasher.Listener() {
+        });
+
+        OpenBltCanFlasher.Result result = flasher.flash(link, config(srec, false, false));
+
+        assertEquals(1000, result.bytes);
+        assertEquals(142, link.programMaxCount());
+        assertArrayEquals(seg1, link.flashAt(SEG1_BASE, 1000));
+        assertTrue(link.sent().stream().anyMatch(f -> (f.data()[0] & 0xFF) == XcpConstants.CMD_PROGRAM
+                && (f.data()[1] & 0xFF) == 6));
+    }
+
+    @Test
+    void lostAckAbortsPipelinedFlash() throws Exception {
+        // Simulate one PROGRAM_MAX frame lost on the wire (processed but never
+        // acknowledged): the pipeline must abort with a clear diagnostic
+        // instead of silently corrupting the MTA state.
+        byte[] seg1 = pattern(64, 12);
+        Path srec = writeImage(new ArrayList<>(SrecTestUtil.image(SEG1_BASE, seg1)));
+
+        FakeCanLink link = new FakeCanLink();
+        link.dropProgramMaxResponses(1);
+        OpenBltCanFlasher flasher = new OpenBltCanFlasher(new OpenBltCanFlasher.Listener() {
+        });
+
+        OpenBltCanFlasher.FlashException e = assertThrows(OpenBltCanFlasher.FlashException.class,
+                () -> flasher.flash(link, config(srec, false, false)));
+        assertTrue(e.getMessage().contains("no acknowledgement"), e.getMessage());
+    }
+
+    @Test
+    void noPipelineFlagStillFlashes() throws Exception {
+        // The single-frame fallback path must keep working (--no-pipeline).
+        byte[] seg1 = pattern(40, 13);
+        Path srec = writeImage(new ArrayList<>(SrecTestUtil.image(SEG1_BASE, seg1)));
+
+        FakeCanLink link = new FakeCanLink();
+        OpenBltCanFlasher flasher = new OpenBltCanFlasher(new OpenBltCanFlasher.Listener() {
+        });
+        OpenBltCanFlasher.Config cfg = config(srec, true, false);
+        cfg.pipeline = false;
+
+        OpenBltCanFlasher.Result result = flasher.flash(link, cfg);
+
+        assertEquals(40, result.bytes);
+        assertTrue(result.verified);
+        assertArrayEquals(seg1, link.flashAt(SEG1_BASE, 40));
     }
 }

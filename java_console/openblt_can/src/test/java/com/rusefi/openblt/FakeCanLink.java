@@ -33,6 +33,8 @@ public class FakeCanLink implements CanLink {
     private int programResetCount;
     private int programClearCount;
     private boolean sawProgramSizeZero;
+    private int dropProgramMaxResponses;
+    private int programMaxCount;
 
     public FakeCanLink() {
         Arrays.fill(flash, (byte) 0xFF);
@@ -46,6 +48,19 @@ public class FakeCanLink implements CanLink {
 
     public void setIgnoredConnects(int n) {
         this.ignoredConnects = n;
+    }
+
+    /**
+     * Simulates lost PROGRAM_MAX frames: the next N PROGRAM_MAX requests are
+     * processed (flash written, MTA advanced) but NOT acknowledged - exactly
+     * what a dropped CAN frame looks like from the host's point of view.
+     */
+    public void dropProgramMaxResponses(int n) {
+        this.dropProgramMaxResponses = n;
+    }
+
+    public int programMaxCount() {
+        return programMaxCount;
     }
 
     public void corrupt(int address, int value) {
@@ -160,6 +175,11 @@ public class FakeCanLink implements CanLink {
                 }
                 System.arraycopy(data, 1, flash, mta - XcpConstants.APP_BASE, len);
                 mta += len;
+                programMaxCount++;
+                if (dropProgramMaxResponses > 0) {
+                    dropProgramMaxResponses--;
+                    return; // frame lost on the wire: no ACK
+                }
                 respond(new byte[]{(byte) XcpConstants.PID_RES});
             }
             case XcpConstants.CMD_PROGRAM -> {
