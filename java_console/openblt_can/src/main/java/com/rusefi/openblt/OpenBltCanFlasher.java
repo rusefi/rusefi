@@ -651,24 +651,33 @@ public class OpenBltCanFlasher {
         for (SrecParser.Segment seg : segments) {
             byte[] data = seg.data();
 
-            XcpResponse mta = xcp.setMta(seg.base());
-            if (mta == null || !mta.isOk()) {
-                throw new FlashException(String.format("SET_MTA(0x%08X) failed: %s", seg.base(), mta));
-            }
-            XcpResponse checksum = xcp.buildChecksum(data.length);
-            if (checksum == null || !checksum.isOk() || checksum.data().length < 8) {
-                throw new FlashException(String.format(
-                        "BUILD_CHECKSUM(0x%08X, %d) failed: %s", seg.base(), data.length, checksum));
-            }
-            int remoteSum = le32(checksum.data(), 4) & 0xFF;
-            int localSum = 0;
-            for (byte b : data) {
-                localSum = (localSum + (b & 0xFF)) & 0xFF;
-            }
-            if (remoteSum != localSum) {
-                throw new FlashException(String.format(
-                        "Checksum mismatch at 0x%08X len %d: ECU says 0x%02X, image has 0x%02X",
-                        seg.base(), data.length, remoteSum, localSum));
+            // Verify in 32 KB chunks: on a mismatch the error names the exact
+            // chunk address and both checksums, which localizes any corruption
+            // (e.g. the 1 Mbit host-side TX corruption) to a precise window
+            // in ONE bench run instead of guessing over the whole image.
+            for (int off = 0; off < data.length; off += XcpConstants.ERASE_CHUNK) {
+                int len = Math.min(XcpConstants.ERASE_CHUNK, data.length - off);
+
+                XcpResponse mta = xcp.setMta(seg.base() + off);
+                if (mta == null || !mta.isOk()) {
+                    throw new FlashException(String.format(
+                            "SET_MTA(0x%08X) failed: %s", seg.base() + off, mta));
+                }
+                XcpResponse checksum = xcp.buildChecksum(len);
+                if (checksum == null || !checksum.isOk() || checksum.data().length < 8) {
+                    throw new FlashException(String.format(
+                            "BUILD_CHECKSUM(0x%08X, %d) failed: %s", seg.base() + off, len, checksum));
+                }
+                int remoteSum = le32(checksum.data(), 4) & 0xFF;
+                int localSum = 0;
+                for (int i = off; i < off + len; i++) {
+                    localSum = (localSum + (data[i] & 0xFF)) & 0xFF;
+                }
+                if (remoteSum != localSum) {
+                    throw new FlashException(String.format(
+                            "Checksum mismatch at 0x%08X len %d: ECU says 0x%02X, image has 0x%02X",
+                            seg.base() + off, len, remoteSum, localSum));
+                }
             }
         }
     }
