@@ -8772,3 +8772,39 @@ correct sub-ms timestamps. Committed 3a0e973cda4.
 Known limits: error frames only if the driver delivers them (USB
 adapters usually don't); RTR frames carry DLC but no data bytes; the
 adapter is exclusive - close the console/flasher before capturing.
+
+## 2026-08-29 (9th) - stock-ECU dash CAN dumps analysis (19:14/19:27 PCBUSB captures)
+
+Two fresh stock-ECU captures from the car (ignition-on + warmup at idle)
+were decoded to re-verify the dash encodings against rusEFI's
+implementation (m74_9_can.cpp):
+
+Verified (rusEFI already matches):
+- 0x0189/0x0186/0x018A [0:1] = rpm x 16 BE; rest baseline 0x3200 = 800
+  (BCM "calibration loaded" gate); real idle today = 0x30B2 = 779 rpm.
+- 0x0186[4] = rpm - 768 u8 wrap: 779 -> 0x0B, 800 -> 0x20 - exact.
+- 0x0189[2:3] = battery LE mV (12.83 rest -> 15.86 with the stock's
+  alternator; the stock charges HIGH on these captures).
+- 0x0189[4] = rolling down-counter while running / 0x00 at rest.
+- 0x066A[3]=[4] = coolant degC duplicated (orig_1: 53 -> 95 plateau at the
+  thermostat = raw degC confirmed).
+
+New/changed facts:
+- 0x0186[5] = 0x00 at IGN-only / 0x06 while running - APPLIED to rusEFI
+  (commit 019c1919163).
+- 0x0186[0:1] fuel flow IS load-dependent: ~0x026C (620 mL/h) unloaded
+  idle but ~0x29D8 (10.7 L/h) with the alternator at 15.9 V - the field
+  is real flow, not a constant.
+- 0x018A[2]/[3] and 0x0189[5] low bits vary between sessions
+  (AC/load-dependent accessory bits: 0x018A[2] 0x00/0x04/0x08, [3]
+  0x06/0x07/0xC6, 0x0189[5] 0xB8/0xB9/0xBA) - not load-bearing for the
+  needle; rusEFI keeps the unloaded-state constants.
+- The 066A temp byte climbs with a first-order filter (tau ~15-20 s,
+  boot default 1). In BOTH today's captures the byte climbed to 255
+  (max) = the stock CLT input was OPEN (rail): the stock's failsafe
+  tripped the fan bit (0x066A[5] 0xC0 -> 0x40 at byte ~215). The user
+  should check the CLT connector on the stock-ECU harness.
+
+rusEFI status: rpm (16-bit + tach byte) and temp (degC) encodings are
+correct; the dash temp gauge will come alive once the CLT sensor reads
+right (the VTRK fix from earlier today).
