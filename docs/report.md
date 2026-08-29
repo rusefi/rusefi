@@ -8436,3 +8436,37 @@ Deployment note: the new flasher REQUIRES the new bootloader on the ECU
 touch the bootloader region. Expected on the bench: batch @500k ~35-40 s
 (host write-bound at ~0.3 ms/frame); --1mbit ~30-35 s (the MacCAN write is
 the floor, the 1M wire helps only marginally on this dongle).
+
+## 2026-08-28 - OpenBLT 1M wedge: IWDG safety net (bootloader + app)
+
+Field result: plan B works (45.2 s, 42 ms per 2 KB batch, write-bound), but
+--1mbit WEDGED the ECU: after "Firmware ... 1 segments" the link died and
+only a power cycle recovered. Root cause chain: the bootloader had NO
+hardware watchdog (HAL_USE_WDG off, CopInitHook empty), and the CAN restart
+path (canStop/canStart in OpenBltCanApplyBaudrate) wedges the main loop on
+the AT32 port (likely the INRQ wait during the error state - the exact hang
+point is still unproven, needs the crash markers / a bench probe). The 5 s
+software fallback never fired because the main loop itself was dead.
+
+Fix (commit 07aad871352):
+- Bootloader: HAL_USE_WDG=TRUE + IWDG started in CopInitHook (500 ms
+  nominal, ~410 ms real at the 40 kHz LSI; > the ~50 ms erase and ~13 ms
+  batch-write busy-waits). Any wedge resets the bootloader back to 500k in
+  <1 s; the reset-loop counter (max 10 WDG resets) keeps a wedged-flash
+  scenario from boot-looping into erased flash.
+- App (m74_9): the IWDG cannot be stopped across the jump, so the app
+  re-configures it to 4 s (nominal; ~3.3 s real, > the 2.3 s MFS GC stall)
+  in m74_9_boardInitHardware and feeds it every 50 ms from the 20 Hz slow
+  callback (SysTick virtual timer - keeps firing through thread stalls, so
+  no spurious resets while the core runs). Board-scoped HAL_USE_WDG=TRUE
+  in m74_9/board.mk; STM32_WDG_USE_IWDG=TRUE in the shared at32 mcuconf
+  (inert for other boards).
+- Host: switchBaudrate retries use 300 ms GET_STATUS timeouts (bounded
+  ~7 s instead of the previous 20 x 5 s = 100 s "hang"); the switch-back
+  in the finally logs a warning instead of masking the original error;
+  the 1M failure message tells the user the ECU self-recovers.
+
+Status: 1M may still not come up on the MacCAN dongle (unproven); the ECU
+is now safe either way. Normal flash (batch @500k) = 45 s. Open follow-up:
+pinpoint the CAN-restart hang (crash markers after a wedge, or a bounded
+INAK wait in the AT32 CAN LLD).
