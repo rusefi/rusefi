@@ -19,11 +19,18 @@ import java.util.Arrays;
 public class XcpClient {
     /**
      * Max un-acknowledged PROGRAM_MAX frames allowed in flight (pipelining).
-     * bxCAN has 3 RX + 3 TX mailboxes: with at most 3 frames outstanding the
-     * bootloader's ACK transmits never exhaust the TX mailboxes (so its main
-     * loop never blocks in canTransmitTimeout) and its RX never overflows.
+     *
+     * Hard limit on this hardware: the ChibiOS CANv1 driver has NO software
+     * RX buffer - frames sit in the bxCAN hardware FIFO0+FIFO1 (3+3 slots).
+     * The bootloader's ACK transmits fill its 3 TX mailboxes and the 4th ACK
+     * blocks the main loop (canTransmitTimeout), so while a burst is on the
+     * wire the ECU stores at most 3 already-processed + 1 in-progress + 6 in
+     * the FIFOs = 10 frames before dropping. 8 leaves 2 slots of margin, and
+     * the host-side pacing (620 us/frame) keeps the real in-flight depth at
+     * 2-4 frames anyway - the window only caps the initial fill and covers
+     * the ~1 ms PCAN-USB latency of the first ACKs.
      */
-    public static final int PIPELINE_WINDOW = 3;
+    public static final int PIPELINE_WINDOW = 8;
     private final CanLink link;
     private final int txId;
     private final boolean extended;
@@ -52,6 +59,11 @@ public class XcpClient {
     /** Number of PROGRAM_MAX frames sent but not yet acknowledged. */
     public int getInFlight() {
         return inflightSendTimes.size();
+    }
+
+    /** Total replies received so far (pipelined + single-frame). */
+    public long rttCount() {
+        return rttCount;
     }
 
     private void recordRtt(long startNanos) {
