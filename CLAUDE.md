@@ -396,6 +396,25 @@ All ECU->BCM 10 ms frames in `m74_9_can.cpp`. The trc files (PCAN-View, repo roo
 - **The stock formula is tach = rpm - 768 with u8 WRAP** (fit slope 1.0 over 702-912 rpm, the full captured range: 775->0x07, 800->0x20, 889->0x79, rest 0x20). At 2500 rpm the byte wraps to 196. Saturating at 255 (the old clamp) FAILS the dash's check above ~1023 rpm. rusEFI now ships mode 4 = `(uint8_t)(int32_t)(rpm - 768.0f)` as the `cantach` default (the float->uint8 direct cast would be UB for negative rpm - go through int). Modes 0-3 are the old A/B candidates, switchable live: `cantach <0..4>`.
 - The 0x0189[4] down-counter (F0->00 sawtooth while running, 0x00 at rest) is a frame-freshness signal - a frozen value makes the cluster treat frames as stale; keep it decrementing per send.
 
+### Dash CAN encodings RE-DERIVED from scratch (2026-08-29 evening) - SUPERSEDES the 066A/0x0186[5] claims above
+
+A full (frame id, byte) Pearson-correlation scan against the rpm16 field (0x0189) and against a time ramp, over orig_1/3 + the 19:14/19:27 captures, proved several earlier conclusions WRONG (commit 9885d726ac9). The scan also separated the DASH's own frames (present in ignoff.trc where the ECU is silent): 0x0350/0x0352/0x05D7/0x04AC/0x0242/0x029A/0x029C/0x0303/0x03B7/0x03FA/0x04DE/0x04F8/0x0500/0x0505/0x055D/0x05CE/0x05DE/0x05DF/0x0646/0x0666/0x0671/0x069F/0x06AF/0x06FB.
+
+Corrected facts (implemented):
+- **0x05DA[0] = CLT x 2 (0.5 degC/unit) - THE dash coolant temperature.** orig_1: 0x40->0x41 = 32->32.5 C; orig_3: 0x43->0x44 = 33.5->34 C; 19:14: 0x5C->0x61 = 46->48.5 C; 19:27: 0x75->0x79 = 58.5->60.5 C (the 13 min between the two evening sessions = exactly +26 units = +13 C of residual heat). The old frozen 0x41 (32.5 C) is why the dash gauge never moved.
+- **0x05DA[1] = battery voltage x 10** (0.1 V/unit): 0x89 = 13.7 V at IGN, 0x70 = 11.2 V cranking sag, 0x9D = 15.7 V charging.
+- **0x0186[5] = X = throttle position x 10** (0.1 %/unit) - NOT the old "0x06 while running". 0x09..0x0E (0.9..1.4 %) at warm idle, 0x4C (7.6 %) at a rev blip, 0 at closed throttle/DFCO/cranking; 0 even at 900 rpm on COLD starts (CLT ~32 C - the stock's idle controller keeps the blade shut until warm). The dash gates its own consumption integrators on X > 0.
+- **0x018A[2:3] = 16-bit BE crank-angle counter, 2 deg/unit (3 x rpm units/s), published in 128-deg (64-unit) steps, advanced ONLY while the throttle is open** (frozen at 0x0006 for 5+ s with X = 0; +1152 units over 489 ms at 785 rpm = exactly 3 x rpm). The dash mirrors this accumulator into its own 0x029C/0x029A frames.
+- **0x066A[3:4] = fuel-gated 100 ms engine-time counter, NOT temperature**: +1/100 ms while fuel flows up to ~820 rpm, +2/100 ms above, paused at closed throttle; persists across key cycles (the stock's cumulative hour-meter). orig_1's 0x35->0x5F over 10 s was this counter, not a 53->95 C ramp - the car sat at 32 C per 0x05DA. The "CLT sensor open, byte = 255" reading of the 19:14/19:27 captures was also this counter wrapping.
+- **0x0186[0:1] = fuel flow in 1/16 mL/h units** (cranking 0x04B0..0x09D4 = 75..157 mL/h, warm idle ~0x3A4C = 933 mL/h). The old plain-mL/h reading is what produced the phantom "10.7 L/h idle".
+- 0x029A[0:1] = 0x029C[0:1] = the DASH's consumption integrator: climbs ~2 units per 20 ms at idle, decays to 0 on its own "stall" detection, stays frozen at 0 when the ECU stream is not accepted.
+
+**OPEN (recorded 2026-08-29, inferred but NOT proven):**
+- The dash needle acceptance criterion is still inferred, not proven - it needs an on-car test of the new build. If the needle is still low, the next suspects:
+  1) **0x0217[3:5]** - non-zero while running at the stock: [3] = 0x01/0x02, [4:5] = 0xA010/0x700E/0x800E (looks like a load-gated accumulator); rusEFI still sends zeros there.
+  2) **the exact 0x0189[4] rolling-counter sequence** - rusEFI now steps 0x10 upward; the stock's pattern is mixed up/down, ~5 changes/s, and correlates 0.64 with the battery-voltage field, so it may be an alternator/load value rather than a pure freshness counter.
+- **0x05DA[4] and 0x065C[0] vary between sessions** (likely alternator/LRC state; NOT needed for needle/temp, left static in rusEFI): 0x05DA[4] = 0xB9/0xBA/0xBB in orig_1/orig_3, 0xC0 -> 0x8B -> 0xC1 in 19:14, 0xC1 in 19:27; 0x065C[0] = 0x7A -> 0x66 over 57 s in 19:14 vs 0x9E -> 0x98 in 19:27 (jumps at engine start to a session-dependent value, then slowly decays).
+
 ## m74_9 / stock LIN alternator protocol (extracted from Read_FULLFLASH_I865LB52_w2404b1, 2026-08-25)
 
 The 21129 alternator (LIN regulator) is controlled by the ECU as LIN master. Extracted from the stock flash dump (Cortex-M Thumb @ 0x08000000, 4 MB; bank1 = app+calibration, bank2 0x08201000 = second image; LIN driver code 0x08016680-0x08017000, module table has "LIN"/"UART" names near 0x0804BF40):
