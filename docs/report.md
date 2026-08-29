@@ -8976,3 +8976,22 @@ is BLOCKED by the board pins on the unmodified m74_9:
   tooth earlier) + its preloading compares ahead, not the hardware edge
   itself. Revisit the DMA scheme only if residual jitter still matters
   after the software fix + tail localization.
+
+CORRECTION (same session): the stock-style scheme IS implementable on
+this board without output-pin AFs - via an angle-clock timer whose OC
+channels work as pure software comparators (CCxE=0, CCxIF fires at
+CNT==CCR), the ISR writes the GPIO edge. The stock dump supports it:
+TMR2 base 0x40000000 appears 68x (vs single digits for other timers) -
+TMR2 (32-bit, 4-ch, free on m74_9) is the right angle clock. Design:
+TMR2 @ 4 MHz ticks (PSC=71, 0.0105 deg/tick @7000); tooth reset in the
+fast EXTI ISR (CNT=0, ARR = smoothed period x 4; hardware reset
+unavailable - PF8 has only TMR13_CH1 and TMR13->TMR2 TRGO/ITR chaining
+does not exist on the F4 layout); events = 4 OC channels programmed ONE
+TOOTH AHEAD from the angle queue (fraction x predicted ARR); TMR2 ISR at
+prio 3 runs the same actions (dwell/spark/injection GPIO writes) and
+re-arms; TIM5 stays as the fallback for current-tooth events, multispark
+and WDA/soft-PWM/TS. Honest limit: doubles the programming slack (full
+tooth = 166 us @6000) but does NOT cure the 1 ms tails - they still miss
+the teeth they span (those events fall back to TIM5). Sequence: lockstats
++ tail localization first, then the angle clock as the target
+architecture with the TIM5 fallback as the safety net.
