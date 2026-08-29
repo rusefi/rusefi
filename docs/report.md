@@ -8891,3 +8891,71 @@ Open follow-ups:
   19:14, 0xC1 in 19:27; 0x065C[0] = 0x7A -> 0x66 over 57 s in 19:14 vs
   0x9E -> 0x98 in 19:27 (jumps at engine start to a session-dependent
   value, then slowly decays).
+
+## 2026-08-29 (night): spark/injection latency vs CKP - scheduler bottleneck analysis
+
+Question: how much do spark and injection lag behind the ДПКВ, and where
+are the scheduler bottlenecks (the user reports the stock ECU pulls
+harder/faster with identical VE/UOZ tables - suspicion of systematic
+retard).
+
+Architecture (verified in code): every engine command (dwell start, spark
+fire, injection start) is converted angle->time at the tooth IMMEDIATELY
+before the event angle (isPhaseInRange = [currentPhase, nextPhase), 60-2
+tooth = 6 deg). Lead = 0..1 tooth = 0..166 us at 6000 rpm, 0..143 us at
+7000. The whole software chain must fit inside that lead:
+  EXTI fast IRQ timestamp (prio 0, ~2-3 us)
+  -> handoff ISR (prio 4): debounce + decodeTriggerEvent (44 us avg,
+     tails to ~1 ms measured on the car 2026-08-23) + post-decode
+     listeners (rpm callback/oneDegreeUs, spark logic, fuel, angle queue
+     processing, ~10-30 us)
+  -> SingleTimerExecutor TIM5 CC1 (prio 3, 1-2 us entry).
+
+Latency budget (fixed in us, so in degrees it grows with rpm):
+- L9779 VRS conditioner: Tfilter = Tn/32 + Td_off ~4% T -> 0.43 deg
+  CONSTANT retard (adaptive, rpm-independent; same for the stock ECU -
+  not a differentiator, tables compensate it).
+- typical chain ~65 us: worst case (event angle just after the tooth)
+  2.3 deg @6000 / 1.2 @3000 / 0.58 @1500; average over random tooth
+  alignment (L^2/2T) ~0.5 deg @6000.
+- tail chain ~1 ms (handoff backed up by a long tooth): the event fires
+  immediately at scheduling time - up to 36 deg late @6000 (6 teeth of
+  queue backlog per 1 ms tail).
+- injection END = start + PW in the time domain, so a late start shifts
+  the whole pulse; the fuel MASS is computed one cycle earlier (720 deg
+  pipeline) - an accel-transient lag that is tuning, not scheduler.
+
+Why the stock is better: ME17 fires ignition/injection edges from
+HARDWARE compare outputs of the angle-clock timers (GTM) - tooth IRQs
+only update the angle clock, the output edges fire with ~1-5 us constant
+latency. rusEFI has no hardware output compare on this port - the
+software chain + short lead is the structural difference.
+
+Bottleneck ranking:
+1. STRUCTURAL: lead <= 1 tooth + the decode/scheduling chain in the same
+   ISR. 65 us eats ~40% of the tooth window at 6000 rpm.
+2. The ~1 ms decode tails (source not yet localized: trgDecode vs
+   trgPostDecode histograms will say - the m74_9 gap-validation code vs
+   the spark/fuel listeners).
+3. Executor preempts the handoff (WDA feed ~100 us every ~105 ms) - adds
+   up to 100 us to the chain of whatever tooth is being decoded then.
+4. Late dwell start -> dwellUnderChargeCounter / dwellActualRatio < 0.8
+   (weak spark at high rpm on top of the retard).
+
+Proposed fixes (not implemented yet):
+1. MEASURE on the car first: 'lockstats' right after a hard pull prints
+   everything needed: 'sched exec ... late>=10us maxLateUs' + per-kind
+   lines (dwell/spark/overdwell/fuel) + triggerIsr/trgPreDecode/
+   trgDecode/trgPostDecode histograms + triggerMaxDuration/
+   maxEventCallbackDuration. spark/fuel late>=10us > 0 and maxLateUs in
+   the hundreds of us = analysis confirmed.
+2. MAIN FIX (cheap): convert queued angle events to time ONE TOOTH
+   EARLIER (lead 2 teeth = 333 us @6000) - the prediction error over
+   12 deg is negligible (oneDegreeUs is a 90-deg moving average;
+   first-order accel lag at 4000 rpm/s over 12 deg ~= 0.003 deg). This
+   absorbs the typical chain with margin and most tails.
+3. Localize and cut the 1 ms tails per the histograms.
+4. ICU option B does NOT fix this: it only removes the 2-3 us EXTI
+   timestamp jitter; the stock's advantage is hardware OUTPUT compares.
+5. Tuning: check the injection phase (EOIT) against the stock - late
+   injection end under acceleration gives the same symptom.
