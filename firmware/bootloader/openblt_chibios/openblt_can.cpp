@@ -6,6 +6,10 @@
 #include "can_hw.h"
 
 extern "C" {
+	#include "shared_params.h"
+}
+
+extern "C" {
 	#include "boot.h"
 }
 
@@ -62,43 +66,52 @@ extern const CANConfig *findCanConfig(can_baudrate_e rate);
 
 // ---------------------------------------------------------------------
 // rusEFI extension: runtime CAN baudrate switch (XCP_CMD_SET_CAN_BAUDRATE).
-// The XCP layer asks for a switch; the bootloader MAIN LOOP applies it via
-// OpenBltCanApplyBaudrate() right after the response frame left the wire.
+//
+// The switch is implemented as a REBOOT, not a runtime canStop/canStart:
+// the runtime restart path wedges the CAN peripheral on the AT32 port
+// (observed on the bench - the link dies at both speeds and only a power
+// cycle recovers). The boot-time CanInit is the only exercised path.
+//
+// Flow: SET_CAN_BAUDRATE is answered at the old speed; the main loop stores
+// the requested rate in SharedParams slot 4 and resets; CanInit applies it
+// on the next boot. A 5 s no-traffic timer at 1 Mbit reboots back to 500k,
+// so the ECU can never be stranded at a speed the host does not follow.
 // ---------------------------------------------------------------------
 static can_baudrate_e currentBaudrate = B500KBPS;
 static can_baudrate_e requestedBaudrate = B500KBPS;
 static systime_t baudSwitchTime;
 static volatile blt_bool canTrafficSinceSwitch = BLT_FALSE;
 
+/** Boot-time baudrate request: set by the bootloader main() from
+ *  SharedParams slot 4 before BootInit(), applied by CanInit(). */
+blt_int8u bootBaudrateRequest = 0;
+
 /**
  * Called from xcp.c when SET_CAN_BAUDRATE arrives. Only records the request;
- * the actual switch happens after the response was transmitted.
+ * the main loop reboots into it after the response left the wire.
  */
 extern "C" void XcpSetCanBaudrateHook(blt_int8u rate) {
 	requestedBaudrate = (rate == 1) ? B1MBPS : B500KBPS;
 }
 
 /**
- * Applies a pending baudrate request and provides the safety fallback: if no
- * traffic arrives for 5 seconds after switching away from 500k (host failed
- * to follow), revert to 500k so the console/app can still connect.
+ * Applies a pending baudrate request by rebooting into it, and provides the
+ * safety fallback: if no valid traffic arrives for 5 s at 1 Mbit, reboot
+ * back to 500k so the console/car bus always recovers by itself.
  */
 extern "C" void OpenBltCanApplyBaudrate(void) {
 	if (requestedBaudrate != currentBaudrate) {
-		/* give the response frame time to leave the wire (~1ms is plenty) */
+		/* the SET_CAN_BAUDRATE response has been transmitted; store the
+		 * request, let the frame leave the wire, and reboot into it */
+		SharedParamsWriteByIndex(4, (requestedBaudrate == B1MBPS) ? 1 : 0);
 		chThdSleepMilliseconds(5);
-		canStop(&OPENBLT_CAND);
-		canStart(&OPENBLT_CAND, findCanConfig(requestedBaudrate));
-		/* canStart resets the filter banks - accept-all again (see CanInit) */
-		canSTM32SetFilters(&OPENBLT_CAND, STM32_CAN_MAX_FILTERS / 2, 0, NULL);
-		currentBaudrate = requestedBaudrate;
-		baudSwitchTime = chVTGetSystemTime();
-		canTrafficSinceSwitch = BLT_FALSE;
+		NVIC_SystemReset();
 	} else if ((currentBaudrate != B500KBPS) &&
 			(canTrafficSinceSwitch == BLT_FALSE) &&
 			(TIME_I2MS(chVTGetSystemTime() - baudSwitchTime) > 5000)) {
-		/* no traffic at the switched speed: fall back to the default */
-		requestedBaudrate = B500KBPS;
+		/* no traffic at the switched speed: reboot back to the default */
+		SharedParamsWriteByIndex(4, 0);
+		NVIC_SystemReset();
 	}
 }
 
@@ -112,7 +125,9 @@ extern "C" void CanInit(void) {
 	palSetPadMode(OPENBLT_CAN_TX_PORT, OPENBLT_CAN_TX_PIN, PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
 	palSetPadMode(OPENBLT_CAN_RX_PORT, OPENBLT_CAN_RX_PIN, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
 
-	auto cfg = findCanConfig(B500KBPS);
+	currentBaudrate = (bootBaudrateRequest == 1) ? B1MBPS : B500KBPS;
+	requestedBaudrate = currentBaudrate;
+	auto cfg = findCanConfig(currentBaudrate);
 
 	/* Program a default accept-all filter BEFORE canStart(). On bxCAN the
 	 * reset state has every filter bank inactive (FA1R=0), so without this
@@ -123,6 +138,9 @@ extern "C" void CanInit(void) {
 	canSTM32SetFilters(&OPENBLT_CAND, STM32_CAN_MAX_FILTERS / 2, 0, NULL);
 
 	canStart(&OPENBLT_CAND, cfg);
+
+	baudSwitchTime = chVTGetSystemTime();
+	canTrafficSinceSwitch = BLT_FALSE;
 }
 
 

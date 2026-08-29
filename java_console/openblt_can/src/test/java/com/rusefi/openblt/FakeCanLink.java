@@ -38,6 +38,17 @@ public class FakeCanLink implements CanLink {
     private int batchCount;
     private int setBaudrateCount;
     private int lastBaudrate = XcpConstants.BAUD_500K;
+    // ECU-side link speed: the bootloader reboots into the requested rate
+    // after answering SET_CAN_BAUDRATE (the switch is a reboot on real
+    // hardware), and falls back to 500k on its own when no valid traffic
+    // arrives - modeled by setBaudrate() below.
+    private int ecuBaudrate = XcpConstants.BAUD_500K;
+    /** Rate for which the adapter's setBaudrate throws (simulates MacCAN's
+     *  lack of 1 Mbit support). */
+    private int failSetBaudrate = -1;
+    /** Rate at which the ECU swallows CONNECTs (simulates an ECU that never
+     *  hears the host at that speed). */
+    private int dropConnectsAt = -1;
 
     // rusEFI batch-programming extension state (mirrors xcp.c)
     private final byte[] batchBuffer = new byte[XcpConstants.BATCH_MAX];
@@ -67,6 +78,20 @@ public class FakeCanLink implements CanLink {
      */
     public void dropProgramMaxResponses(int n) {
         this.dropProgramMaxResponses = n;
+    }
+
+    /** The adapter refuses the given rate (MacCAN cannot do 1 Mbit). */
+    public void failSetBaudrate(int rateCode) {
+        this.failSetBaudrate = rateCode;
+    }
+
+    /** The ECU never answers CONNECT while its link is at the given rate. */
+    public void dropConnectsAt(int rateCode) {
+        this.dropConnectsAt = rateCode;
+    }
+
+    public int ecuBaudrate() {
+        return ecuBaudrate;
     }
 
     public int programMaxCount() {
@@ -122,9 +147,15 @@ public class FakeCanLink implements CanLink {
     @Override
     public void write(CanFrame frame) {
         sent.add(frame);
-        if (!mute) {
-            process(frame);
+        if (mute) {
+            return;
         }
+        // A frame sent at a speed the ECU is not listening on is bus garbage:
+        // record it (tests assert the traffic) but do not process it.
+        if (lastBaudrate != ecuBaudrate) {
+            return;
+        }
+        process(frame);
     }
 
     @Override
@@ -138,8 +169,20 @@ public class FakeCanLink implements CanLink {
     }
 
     @Override
-    public void setBaudrate(int rateCode) {
+    public void setBaudrate(int rateCode) throws IOException {
+        if (rateCode == failSetBaudrate) {
+            throw new IOException("simulated adapter failure: no support for rate code " + rateCode);
+        }
         lastBaudrate = rateCode;
+        // Model the ECU-side self-recovery: a bootloader left at 1 Mbit with
+        // no valid traffic reboots back to 500k by itself after 5 s (or exits
+        // into the app at 500k after its backdoor window). The host always
+        // re-points the adapter at 500k before reconnecting, and by then the
+        // ECU is guaranteed to be back at 500k.
+        if (ecuBaudrate == XcpConstants.BAUD_1M && rateCode == XcpConstants.BAUD_500K) {
+            ecuBaudrate = XcpConstants.BAUD_500K;
+            connected = false;
+        }
     }
 
     @Override
@@ -156,6 +199,9 @@ public class FakeCanLink implements CanLink {
         int cmd = data[0] & 0xFF;
 
         if (cmd == XcpConstants.CMD_CONNECT) {
+            if (ecuBaudrate == dropConnectsAt) {
+                return; // the ECU never hears frames at this speed
+            }
             if (ignoredConnects > 0) {
                 ignoredConnects--;
                 return; // simulate the app still running / not yet in bootloader
@@ -214,6 +260,13 @@ public class FakeCanLink implements CanLink {
             case XcpConstants.CMD_SET_CAN_BAUDRATE -> {
                 setBaudrateCount++;
                 respond(new byte[]{(byte) XcpConstants.PID_RES});
+                // The real bootloader reboots into the requested rate right
+                // after answering: the XCP session dies and the ECU comes up
+                // at the new speed (fresh MTA, no batch state).
+                ecuBaudrate = (data.length > 1) ? (data[1] & 0xFF) : XcpConstants.BAUD_500K;
+                connected = false;
+                mta = 0;
+                batchActive = false;
             }
             case XcpConstants.CMD_PROGRAM_MAX -> {
                 if (data.length < 8) {

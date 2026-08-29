@@ -50,16 +50,20 @@ public class PcanLink implements CanLink {
         TPCANBaudrate rate = rateCode == XcpConstants.BAUD_1M
                 ? TPCANBaudrate.PCAN_BAUD_1M
                 : TPCANBaudrate.PCAN_BAUD_500K;
-        if (rate == currentBaudrate) {
+        if (currentBaudrate != null && rate == currentBaudrate) {
             return;
         }
-        // Re-Initialize reconfigures the controller baudrate; the previous
-        // connection state is dropped (the XCP session survives - the
-        // bootloader keeps the session across its own switch).
+        // Re-Initialize reconfigures the controller baudrate. The baudrate
+        // switch is a REBOOT on the ECU side, so the XCP session is dropped
+        // there anyway - the host re-CONNECTs after this call.
         TPCANStatus status = can.Uninitialize(channel);
         if (status != TPCANStatus.PCAN_ERROR_OK) {
             throw new IOException("PCAN Uninitialize failed: " + status);
         }
+        // currentBaudrate stays null when Initialize fails, so the next
+        // setBaudrate() retries instead of wrongly believing the adapter is
+        // still configured at the previous rate.
+        currentBaudrate = null;
         init(rate);
     }
 
