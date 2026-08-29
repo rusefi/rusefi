@@ -22,6 +22,7 @@ import java.util.concurrent.locks.LockSupport;
 public class PcanLink implements CanLink {
     private final TPCANHandle channel;
     private final PCANBasic can = new PCANBasic();
+    private TPCANBaudrate currentBaudrate;
 
     public PcanLink(TPCANHandle channel) {
         this.channel = channel;
@@ -32,11 +33,34 @@ public class PcanLink implements CanLink {
         if (!can.initializeAPI()) {
             throw new IOException("PCANBasic initializeAPI failed - is libpcanbasic_jni.dylib on java.library.path?");
         }
-        TPCANStatus status = can.Initialize(channel, TPCANBaudrate.PCAN_BAUD_500K,
+        init(TPCANBaudrate.PCAN_BAUD_500K);
+    }
+
+    private void init(TPCANBaudrate rate) throws IOException {
+        TPCANStatus status = can.Initialize(channel, rate,
                 TPCANType.PCAN_TYPE_NONE, 0, (short) 0);
         if (status != TPCANStatus.PCAN_ERROR_OK) {
             throw new IOException("PCAN Initialize(" + channel + ") failed: " + status);
         }
+        currentBaudrate = rate;
+    }
+
+    @Override
+    public void setBaudrate(int rateCode) throws IOException {
+        TPCANBaudrate rate = rateCode == XcpConstants.BAUD_1M
+                ? TPCANBaudrate.PCAN_BAUD_1M
+                : TPCANBaudrate.PCAN_BAUD_500K;
+        if (rate == currentBaudrate) {
+            return;
+        }
+        // Re-Initialize reconfigures the controller baudrate; the previous
+        // connection state is dropped (the XCP session survives - the
+        // bootloader keeps the session across its own switch).
+        TPCANStatus status = can.Uninitialize(channel);
+        if (status != TPCANStatus.PCAN_ERROR_OK) {
+            throw new IOException("PCAN Uninitialize failed: " + status);
+        }
+        init(rate);
     }
 
     @Override

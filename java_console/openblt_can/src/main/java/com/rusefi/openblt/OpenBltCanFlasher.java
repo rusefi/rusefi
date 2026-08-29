@@ -52,6 +52,8 @@ public class OpenBltCanFlasher {
         boolean probeOnly = false;
         boolean verbose = false;
         boolean pipeline = true;
+        boolean batch = true;
+        boolean oneMbit = false;
         /**
          * Pipelined PROGRAM_MAX TX spacing in nanoseconds. 0 (default) = no
          * explicit pacing: the 8-frame window alone throttles the stream, the
@@ -94,6 +96,10 @@ public class OpenBltCanFlasher {
     private final Listener listener;
     /** Set from Config before programming: enables the pipelined PROGRAM_MAX path. */
     private boolean pipelineEnabled = true;
+    /** Set from Config before programming: enables the deferred-ACK batch path. */
+    private boolean batchEnabled = true;
+    /** Set from Config before programming: switch the link to 1 Mbit for the program phase. */
+    private boolean oneMbitEnabled = false;
     /** Set from Config before programming: pipelined TX spacing in nanoseconds. */
     private long pipelinePaceNanos = 0;
     // Per-phase wall-time accounting for the program loop (bench diagnostics:
@@ -110,6 +116,8 @@ public class OpenBltCanFlasher {
     public Result flash(CanLink link, Config cfg) throws IOException, FlashException {
         long t0 = System.currentTimeMillis();
         pipelineEnabled = cfg.pipeline;
+        batchEnabled = cfg.batch;
+        oneMbitEnabled = cfg.oneMbit;
         pipelinePaceNanos = cfg.pipelinePaceNanos;
         listener.log("Opening CAN channel...");
 
@@ -172,11 +180,22 @@ public class OpenBltCanFlasher {
 
             // ---- erase + program ----
             long done = 0;
-            for (SrecParser.Segment seg : segments) {
-                eraseSegment(xcp, seg);
-                programSegment(xcp, seg);
-                done += seg.data().length;
-                listener.progress(done, total);
+            if (oneMbitEnabled) {
+                switchBaudrate(xcp, link, XcpConstants.BAUD_1M);
+            }
+            try {
+                for (SrecParser.Segment seg : segments) {
+                    eraseSegment(xcp, seg);
+                    programSegment(xcp, seg);
+                    done += seg.data().length;
+                    listener.progress(done, total);
+                }
+            } finally {
+                // The car/console bus is 500k: always come back before the
+                // verify/reset phase, even when programming threw.
+                if (oneMbitEnabled) {
+                    switchBaudrate(xcp, link, XcpConstants.BAUD_500K);
+                }
             }
 
             // PROGRAM size=0 finalizes: NvmDone()/FlashDone() flushes the last
@@ -259,6 +278,11 @@ public class OpenBltCanFlasher {
     }
 
     private void programSegment(XcpClient xcp, SrecParser.Segment seg) throws IOException, FlashException {
+        if (batchEnabled) {
+            programSegmentBatched(xcp, seg);
+            return;
+        }
+
         byte[] data = seg.data();
         int off = 0;
 
@@ -352,6 +376,102 @@ public class OpenBltCanFlasher {
             off += chunk.length;
         }
         drainPipeline(xcp);
+    }
+
+    /**
+     * Deferred-ACK batch programming (plan B): the image goes out in 2 KB
+     * batches of PROGRAM_MAX frames with ONE acknowledgement per batch, so
+     * the per-frame ACK traffic disappears from the bus. The bootloader
+     * buffers the batch in RAM and writes it to flash in one NvmWrite, which
+     * also amortizes the AT32 per-word program cost. The host side needs no
+     * flow control: the blocking MacCAN write (~0.3 ms/frame) is slower than
+     * the bus, and the bootloader consumes frames far faster than either.
+     */
+    private void programSegmentBatched(XcpClient xcp, SrecParser.Segment seg) throws IOException, FlashException {
+        byte[] data = seg.data();
+        int off = 0;
+
+        while (off < data.length) {
+            int batchLen = Math.min(XcpConstants.BATCH_MAX, data.length - off);
+
+            // Deterministic address per batch; PROGRAM_MAX auto-increments the
+            // bootloader MTA by 7 per frame, so a non-multiple-of-7 batch end
+            // would drift - SET_MTA fixes the next batch start regardless.
+            XcpResponse mta = xcp.setMta(seg.base() + off);
+            if (mta == null || !mta.isOk()) {
+                throw new FlashException(String.format("SET_MTA(0x%08X) failed: %s", seg.base() + off, mta));
+            }
+
+            long batchStart = System.nanoTime();
+            XcpResponse start = xcp.programBatchStart(batchLen);
+            if (start == null || !start.isOk()) {
+                throw new FlashException(String.format(
+                        "PROGRAM_BATCH(0x%08X, %d) failed: %s - is the ECU running the new "
+                                + "bootloader? (old bootloaders reject the batch command; use --no-batch)",
+                        seg.base() + off, batchLen, start));
+            }
+
+            int sent = 0;
+            while (sent < batchLen) {
+                int chunkLen = Math.min(XcpConstants.PROGRAM_MAX_PAYLOAD, batchLen - sent);
+                byte[] chunk = new byte[XcpConstants.PROGRAM_MAX_PAYLOAD];
+                System.arraycopy(data, off + sent, chunk, 0, chunkLen);
+                xcp.writeProgramMaxBatch(chunk);
+                sent += chunkLen;
+            }
+
+            XcpResponse ack = xcp.readBatchAck(XcpConstants.PROGRAM_TIMEOUT_MS, batchStart);
+            if (ack == null) {
+                throw new FlashException(String.format(
+                        "PROGRAM_BATCH at 0x%08X: no acknowledgement within %d ms",
+                        seg.base() + off, XcpConstants.PROGRAM_TIMEOUT_MS));
+            }
+            if (!ack.isOk()) {
+                throw new FlashException(String.format(
+                        "PROGRAM_BATCH at 0x%08X failed: %s", seg.base() + off, ack));
+            }
+
+            off += batchLen;
+        }
+    }
+
+    /**
+     * Switches both sides of the link to a new baudrate (rusEFI extension):
+     * SET_CAN_BAUDRATE is answered at the old speed, the bootloader switches
+     * ~5 ms later, the host reconfigures the adapter and re-verifies with
+     * GET_STATUS at the new speed. The car/console bus stays at 500k: the
+     * 1 Mbit phase covers only the erase+program window and the caller
+     * switches back before verify/reset.
+     */
+    private void switchBaudrate(XcpClient xcp, CanLink link, int rate) throws IOException, FlashException {
+        XcpResponse res = xcp.setCanBaudrate(rate);
+        if (res == null || !res.isOk()) {
+            throw new FlashException("SET_CAN_BAUDRATE(" + rate + ") failed: " + res);
+        }
+        // The ACK went out at the old speed; let it drain, then re-init the
+        // adapter (the bootloader applies its switch ~5 ms after answering).
+        sleepMs(30);
+        link.setBaudrate(rate);
+        sleepMs(10);
+        String speed = rate == XcpConstants.BAUD_1M ? "1 Mbit" : "500 kbit";
+        for (int attempt = 0; attempt < 20; attempt++) {
+            XcpResponse status = xcp.getStatus();
+            if (status != null && status.isOk()) {
+                listener.log("Link switched to " + speed + ".");
+                return;
+            }
+            sleepMs(50);
+        }
+        throw new FlashException("No XCP response after switching to " + speed
+                + " - the bootloader falls back to 500k on its own after 5 s; power-cycle the ECU and rerun.");
+    }
+
+    private static void sleepMs(long ms) {
+        try {
+            Thread.sleep(ms);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 
     /**
@@ -483,6 +603,8 @@ public class OpenBltCanFlasher {
                 case "--probe" -> cfg.probeOnly = true;
                 case "--verbose" -> cfg.verbose = true;
                 case "--no-pipeline" -> cfg.pipeline = false;
+                case "--no-batch" -> cfg.batch = false;
+                case "--1mbit" -> cfg.oneMbit = true;
                 case "--pace-us" -> {
                     if (i + 1 >= args.length) {
                         System.err.println("--pace-us requires a value");
@@ -544,6 +666,11 @@ public class OpenBltCanFlasher {
                   --probe                connect and print bootloader info, do not flash
                   --no-pipeline          fall back to one-request-one-reply programming
                                          (slow, useful to isolate link problems)
+                  --no-batch             disable deferred-ACK batch programming (plan B),
+                                         use the window-pipelined PROGRAM_MAX mode
+                  --1mbit                switch the CAN link to 1 Mbit/s for the
+                                         erase+program phase only (the console/car bus
+                                         stays at 500k; back to 500k before verify/reset)
                   --pace-us <n>          pipelined frame-to-frame spacing in microseconds
                                          (default 0: window-only flow control, fastest);
                                          620 = the old spaced-out mode

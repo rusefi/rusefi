@@ -35,6 +35,16 @@ public class FakeCanLink implements CanLink {
     private boolean sawProgramSizeZero;
     private int dropProgramMaxResponses;
     private int programMaxCount;
+    private int batchCount;
+    private int setBaudrateCount;
+    private int lastBaudrate = XcpConstants.BAUD_500K;
+
+    // rusEFI batch-programming extension state (mirrors xcp.c)
+    private final byte[] batchBuffer = new byte[XcpConstants.BATCH_MAX];
+    private int batchLen;
+    private int batchOffset;
+    private int batchAddr;
+    private boolean batchActive;
 
     public FakeCanLink() {
         Arrays.fill(flash, (byte) 0xFF);
@@ -61,6 +71,18 @@ public class FakeCanLink implements CanLink {
 
     public int programMaxCount() {
         return programMaxCount;
+    }
+
+    public int batchCount() {
+        return batchCount;
+    }
+
+    public int setBaudrateCount() {
+        return setBaudrateCount;
+    }
+
+    public int lastBaudrate() {
+        return lastBaudrate;
     }
 
     public void corrupt(int address, int value) {
@@ -116,6 +138,11 @@ public class FakeCanLink implements CanLink {
     }
 
     @Override
+    public void setBaudrate(int rateCode) {
+        lastBaudrate = rateCode;
+    }
+
+    @Override
     public void close() {
     }
 
@@ -167,6 +194,27 @@ public class FakeCanLink implements CanLink {
                 programClearCount++;
                 respond(new byte[]{(byte) XcpConstants.PID_RES});
             }
+            case XcpConstants.CMD_PROGRAM_BATCH -> {
+                if (data.length < 8) {
+                    respond(new byte[]{(byte) XcpConstants.PID_ERR, (byte) XcpConstants.ERR_OUT_OF_RANGE});
+                    return;
+                }
+                int len = le32(data, 4);
+                if (len <= 0 || len > XcpConstants.BATCH_MAX) {
+                    respond(new byte[]{(byte) XcpConstants.PID_ERR, (byte) XcpConstants.ERR_OUT_OF_RANGE});
+                    return;
+                }
+                batchLen = len;
+                batchOffset = 0;
+                batchAddr = mta;
+                batchActive = true;
+                batchCount++;
+                respond(new byte[]{(byte) XcpConstants.PID_RES});
+            }
+            case XcpConstants.CMD_SET_CAN_BAUDRATE -> {
+                setBaudrateCount++;
+                respond(new byte[]{(byte) XcpConstants.PID_RES});
+            }
             case XcpConstants.CMD_PROGRAM_MAX -> {
                 if (data.length < 8) {
                     respond(new byte[]{(byte) XcpConstants.PID_ERR, (byte) XcpConstants.ERR_OUT_OF_RANGE});
@@ -178,9 +226,23 @@ public class FakeCanLink implements CanLink {
                     respond(new byte[]{(byte) XcpConstants.PID_ERR, (byte) XcpConstants.ERR_GENERIC});
                     return;
                 }
-                System.arraycopy(data, 1, flash, mta - XcpConstants.APP_BASE, len);
-                mta += len;
                 programMaxCount++;
+                if (batchActive) {
+                    // batch mode: buffer, program the whole batch at the end,
+                    // respond only on the last frame (mirrors xcp.c)
+                    int chunk = Math.min(len, batchLen - batchOffset);
+                    System.arraycopy(data, 1, batchBuffer, batchOffset, chunk);
+                    batchOffset += chunk;
+                    mta += len;
+                    if (batchOffset < batchLen) {
+                        return; // intermediate frame: no response
+                    }
+                    System.arraycopy(batchBuffer, 0, flash, batchAddr - XcpConstants.APP_BASE, batchLen);
+                    batchActive = false;
+                } else {
+                    System.arraycopy(data, 1, flash, mta - XcpConstants.APP_BASE, len);
+                    mta += len;
+                }
                 if (dropProgramMaxResponses > 0) {
                     dropProgramMaxResponses--;
                     return; // frame lost on the wire: no ACK

@@ -60,23 +60,66 @@ extern "C" {
 
 extern const CANConfig *findCanConfig(can_baudrate_e rate);
 
+// ---------------------------------------------------------------------
+// rusEFI extension: runtime CAN baudrate switch (XCP_CMD_SET_CAN_BAUDRATE).
+// The XCP layer asks for a switch; the bootloader MAIN LOOP applies it via
+// OpenBltCanApplyBaudrate() right after the response frame left the wire.
+// ---------------------------------------------------------------------
+static can_baudrate_e currentBaudrate = B500KBPS;
+static can_baudrate_e requestedBaudrate = B500KBPS;
+static systime_t baudSwitchTime;
+static volatile blt_bool canTrafficSinceSwitch = BLT_FALSE;
+
+/**
+ * Called from xcp.c when SET_CAN_BAUDRATE arrives. Only records the request;
+ * the actual switch happens after the response was transmitted.
+ */
+extern "C" void XcpSetCanBaudrateHook(blt_int8u rate) {
+	requestedBaudrate = (rate == 1) ? B1MBPS : B500KBPS;
+}
+
+/**
+ * Applies a pending baudrate request and provides the safety fallback: if no
+ * traffic arrives for 5 seconds after switching away from 500k (host failed
+ * to follow), revert to 500k so the console/app can still connect.
+ */
+extern "C" void OpenBltCanApplyBaudrate(void) {
+	if (requestedBaudrate != currentBaudrate) {
+		/* give the response frame time to leave the wire (~1ms is plenty) */
+		chThdSleepMilliseconds(5);
+		canStop(&OPENBLT_CAND);
+		canStart(&OPENBLT_CAND, findCanConfig(requestedBaudrate));
+		/* canStart resets the filter banks - accept-all again (see CanInit) */
+		canSTM32SetFilters(&OPENBLT_CAND, STM32_CAN_MAX_FILTERS / 2, 0, NULL);
+		currentBaudrate = requestedBaudrate;
+		baudSwitchTime = chVTGetSystemTime();
+		canTrafficSinceSwitch = BLT_FALSE;
+	} else if ((currentBaudrate != B500KBPS) &&
+			(canTrafficSinceSwitch == BLT_FALSE) &&
+			(TIME_I2MS(chVTGetSystemTime() - baudSwitchTime) > 5000)) {
+		/* no traffic at the switched speed: fall back to the default */
+		requestedBaudrate = B500KBPS;
+	}
+}
+
 /************************************************************************************//**
 ** \brief     Initializes the CAN controller and synchronizes it to the CAN bus.
 ** \return    none.
 **
 ****************************************************************************************/
 extern "C" void CanInit(void) {
-	// init pins
+	/* init pins */
 	palSetPadMode(OPENBLT_CAN_TX_PORT, OPENBLT_CAN_TX_PIN, PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
 	palSetPadMode(OPENBLT_CAN_RX_PORT, OPENBLT_CAN_RX_PIN, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
 
 	auto cfg = findCanConfig(B500KBPS);
 
-	// Program a default accept-all filter BEFORE canStart(). On bxCAN the
-	// reset state has every filter bank inactive (FA1R=0), so without this
-	// call the controller receives nothing at all - the bootloader never
-	// sees the host's CONNECT and no CAN update can ever start. The app
-	// does the same in can_hw.cpp; the bootloader just never did.
+	/* Program a default accept-all filter BEFORE canStart(). On bxCAN the
+	 * reset state has every filter bank inactive (FA1R=0), so without this
+	 * call the controller receives nothing at all - the bootloader never
+	 * sees the host's CONNECT and no CAN update can ever start. The app
+	 * does the same in can_hw.cpp; the bootloader just never did.
+	 */
 	canSTM32SetFilters(&OPENBLT_CAND, STM32_CAN_MAX_FILTERS / 2, 0, NULL);
 
 	canStart(&OPENBLT_CAND, cfg);
@@ -137,6 +180,8 @@ extern "C" blt_bool CanReceivePacket(blt_int8u *data, blt_int8u *len)
 		// no message was waiting
 		return BLT_FALSE;
 	}
+
+	canTrafficSinceSwitch = BLT_TRUE;
 
 	// Check that the ID type matches this frame (std vs ext)
 	constexpr bool configuredAsExt = (rxMsgId & 0x80000000) != 0;

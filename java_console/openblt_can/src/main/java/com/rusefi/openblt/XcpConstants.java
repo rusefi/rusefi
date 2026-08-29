@@ -26,6 +26,17 @@ public final class XcpConstants {
     public static final int CMD_PROGRAM = 0xD0;
     public static final int CMD_PROGRAM_RESET = 0xCF;
     public static final int CMD_PROGRAM_MAX = 0xC9;
+    /** rusEFI extension: deferred-ACK batch programming (len in data[4..7] LE). */
+    public static final int CMD_PROGRAM_BATCH = 0xC8;
+    /** rusEFI extension: CAN baudrate switch (data[1]: 0 = 500k, 1 = 1M). */
+    public static final int CMD_SET_CAN_BAUDRATE = 0xC7;
+
+    /** rusEFI bootloader batch buffer size (xcp.c XCP_BATCH_BUFFER_SIZE). */
+    public static final int BATCH_MAX = 2048;
+
+    /** Host adapter baudrate codes for the rusEFI SET_CAN_BAUDRATE command. */
+    public static final int BAUD_500K = 0;
+    public static final int BAUD_1M = 1;
 
     /** Error codes we care about (xcp.h). */
     public static final int ERR_CMD_BUSY = 0x10;
