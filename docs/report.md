@@ -8513,3 +8513,24 @@ the merged image). NOT yet bench-tested: user must full-flash
 deliver/rusefi.bin (openocd), then: --probe, normal flash (~45 s), --1mbit
 (expected: completes ~35 s, OR logs "continuing at 500 kbit" if MacCAN has
 no 1M - either way the ECU must stay responsive without a power cycle).
+
+## 2026-08-29 (2nd) - OpenBLT: 1M erase died on the FIRST PROGRAM_CLEAR - the 32 KB chunk raced the IWDG
+
+The reboot-based 1M switch WORKS ("Link switched to 1 Mbit" - re-CONNECT at
+1M succeeded, MacCAN CAN do 1M). The new failure was the very first erase:
+PROGRAM_CLEAR(0x08008000, 32768) timed out after 15 s and the ECU never
+answered again at 1M - it had reset itself (console finds the app at 500k
+afterwards). Root cause: the AT32 erase is ASYNC (start sector, poll the
+OBF bit every 5 ms), and a 32 KB XCP chunk = 8 x 4 KB sectors busy-waits
+~400-460 ms (measured 461 ms max RTT on the bench) INSIDE NvmErase - the
+bootloader main loop never runs, so BootTask/CopService never feeds the
+IWDG (window ~411 ms at the 40 kHz LSI). Pure phase race per chunk: the
+500k batch run (45.2 s, 22 chunks) survived by feed phase, the 1M run
+tripped on the first one. The old "flash erase ~50 ms" comment was per
+SECTOR, not per chunk - that estimate was wrong.
+
+Fix (commit 35def4be192): wdgResetI between sectors inside intFlashErase
+(HAL_USE_WDG guard). A long healthy multi-sector erase is now safe at any
+window; a HUNG single sector still trips the watchdog (~50 ms un-fed).
+Bootloader rebuild + bundle refresh done. Open follow-up: user full-flashes
+deliver/rusefi.bin and retests --probe / plain flash / --1mbit.
