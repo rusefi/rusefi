@@ -267,6 +267,88 @@ public class XcpClient {
         return request(new byte[]{(byte) XcpConstants.CMD_PROGRAM, 0x00}, XcpConstants.PROGRAM_TIMEOUT_MS);
     }
 
+    // ---- rusEFI batch-programming extension ------------------------------
+
+    /** Declares a deferred-ACK batch of len bytes at the current MTA. */
+    public XcpResponse programBatchStart(int len) throws IOException {
+        if (len <= 0 || len > XcpConstants.BATCH_MAX) {
+            throw new IllegalArgumentException("batch length must be 1.." + XcpConstants.BATCH_MAX);
+        }
+        byte[] cmd = new byte[XcpConstants.CTO_LEN];
+        cmd[0] = (byte) XcpConstants.CMD_PROGRAM_BATCH;
+        putLe32(cmd, 4, len);
+        return request(cmd, XcpConstants.PROGRAM_TIMEOUT_MS);
+    }
+
+    /**
+     * PROGRAM_MAX without per-frame acknowledgement bookkeeping: used inside
+     * a batch, where only ONE response arrives when the whole batch completed.
+     */
+    public void writeProgramMaxBatch(byte[] data7) throws IOException {
+        if (data7.length != XcpConstants.PROGRAM_MAX_PAYLOAD) {
+            throw new IllegalArgumentException("PROGRAM_MAX requires exactly 7 data bytes");
+        }
+        byte[] cmd = new byte[XcpConstants.CTO_LEN];
+        cmd[0] = (byte) XcpConstants.CMD_PROGRAM_MAX;
+        System.arraycopy(data7, 0, cmd, 1, data7.length);
+        if (frameLog != null) {
+            frameLog.accept("TX " + new CanFrame(txId, extended, cmd));
+        }
+        link.write(new CanFrame(txId, extended, cmd));
+    }
+
+    /**
+     * Waits for the single batch acknowledgement (the bootloader responds once
+     * per batch, after programming the whole buffer). RTT is measured from the
+     * batch start.
+     */
+    public XcpResponse readBatchAck(int timeoutMs, long batchStartNanos) throws IOException {
+        long deadline = System.currentTimeMillis() + timeoutMs;
+        while (System.currentTimeMillis() < deadline) {
+            int remaining = (int) Math.min(50, deadline - System.currentTimeMillis());
+            if (remaining <= 0) {
+                break;
+            }
+            CanFrame frame = link.readFrame(remaining);
+            if (frame == null) {
+                continue;
+            }
+            if (frameLog != null) {
+                frameLog.accept("RX " + frame);
+            }
+            if (frame.id() != rxId || frame.extended() != extended) {
+                continue;
+            }
+            byte[] data = frame.data();
+            if (data.length == 0) {
+                continue;
+            }
+            int pid = data[0] & 0xFF;
+            if (pid == XcpConstants.PID_RES || pid == XcpConstants.PID_ERR) {
+                recordRtt(batchStartNanos);
+                return pid == XcpConstants.PID_RES
+                        ? XcpResponse.ok(data)
+                        : XcpResponse.error(data);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * rusEFI extension: requests a CAN baudrate switch. The bootloader answers
+     * at the CURRENT speed and switches ~5 ms later; the caller must then
+     * reconfigure the adapter (see CanLink.setBaudrate).
+     *
+     * @param rate XcpConstants.BAUD_500K or BAUD_1M
+     */
+    public XcpResponse setCanBaudrate(int rate) throws IOException {
+        if (rate != XcpConstants.BAUD_500K && rate != XcpConstants.BAUD_1M) {
+            throw new IllegalArgumentException("baudrate code must be 0 (500k) or 1 (1M)");
+        }
+        return request(new byte[]{(byte) XcpConstants.CMD_SET_CAN_BAUDRATE, (byte) rate},
+                XcpConstants.COMMAND_TIMEOUT_MS);
+    }
+
     /** Resets into the freshly programmed application. No response expected:
      *  the target jumps to the user program before replying. */
     public void programReset() throws IOException {

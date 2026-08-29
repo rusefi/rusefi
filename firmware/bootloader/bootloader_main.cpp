@@ -13,6 +13,12 @@ extern "C" {
 	#include "shared_params.h"
 }
 
+// rusEFI extension: runtime CAN baudrate switch (XCP SET_CAN_BAUDRATE).
+// The XCP handler only records the request; the switch itself must happen
+// after the response frame left the wire, so it is applied here in the main
+// loop. Includes the 5 s no-traffic fallback back to 500k.
+extern "C" void OpenBltCanApplyBaudrate(void);
+
 // used externaly by openblt_usb.cpp
 blt_bool stayInBootloader;
 
@@ -215,6 +221,10 @@ int main(void) {
 
 	while (true) {
 		BootTask();
+
+		// Apply a pending CAN baudrate request (if any) - the response to the
+		// SET_CAN_BAUDRATE command has been transmitted by now.
+		OpenBltCanApplyBaudrate();
 
 		// since BOOT_BACKDOOR_HOOKS_ENABLE==TRUE, BackDoorCheck() is not working
 		// so we have to manually check if we need to jump to the main firmware

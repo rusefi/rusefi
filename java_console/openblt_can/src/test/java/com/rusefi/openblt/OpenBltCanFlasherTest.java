@@ -56,8 +56,8 @@ class OpenBltCanFlasherTest {
 
     @Test
     void flashesSegmentsAndVerifies() throws Exception {
-        byte[] seg1 = pattern(40, 1);   // 40 bytes: 5x PROGRAM_MAX + 5-byte PROGRAM tail
-        byte[] seg2 = pattern(5, 2);    // 5 bytes: single PROGRAM
+        byte[] seg1 = pattern(40, 1);   // 40 bytes: one 40-byte batch = 6x PROGRAM_MAX
+        byte[] seg2 = pattern(5, 2);    // 5 bytes: one 5-byte batch = 1x PROGRAM_MAX
         Path srec = writeImage(buildImage(seg1, seg2));
 
         FakeCanLink link = new FakeCanLink();
@@ -75,12 +75,13 @@ class OpenBltCanFlasherTest {
         assertArrayEquals(seg2, link.flashAt(SEG2_BASE, 5));
         assertEquals(2, link.programClearCount());
         assertEquals(1, link.programResetCount());
+        assertEquals(2, link.batchCount());
+        assertTrue(link.sawProgramSizeZero());
 
         // Wire-level sanity: first frame is CONNECT (the bootloader entry
-        // trigger), and the tail of segment 1 went out as PROGRAM (not MAX).
+        // trigger); the image went out as deferred-ACK batches of PROGRAM_MAX.
         assertEquals(0xFF, link.sent().get(0).data()[0] & 0xFF);
-        assertTrue(link.sent().stream().anyMatch(f -> (f.data()[0] & 0xFF) == XcpConstants.CMD_PROGRAM
-                && (f.data()[1] & 0xFF) == 5));
+        assertTrue(link.sent().stream().anyMatch(f -> (f.data()[0] & 0xFF) == XcpConstants.CMD_PROGRAM_BATCH));
         assertTrue(link.sent().stream().anyMatch(f -> (f.data()[0] & 0xFF) == XcpConstants.CMD_PROGRAM_MAX));
     }
 
@@ -135,11 +136,11 @@ class OpenBltCanFlasherTest {
         @Override
         public void write(CanFrame frame) throws IOException {
             delegate.write(frame);
-            // Corrupt right after the LAST program frame (the PROGRAM tail of
-            // the single segment), so the corruption survives programming and
-            // the checksum verification step must catch it.
+            // Corrupt right after the last program frame: PROGRAM size 0 is
+            // the finalize command, sent after all batches completed and
+            // before the checksum verification.
             if (!corrupted && (frame.data()[0] & 0xFF) == XcpConstants.CMD_PROGRAM
-                    && (frame.data()[1] & 0xFF) > 0) {
+                    && (frame.data()[1] & 0xFF) == 0) {
                 corrupted = true;
                 delegate.corrupt(corruptAt, 0x5A);
             }
@@ -227,10 +228,9 @@ class OpenBltCanFlasherTest {
     }
 
     @Test
-    void pipelinedFlashProgramsEveryFrame() throws Exception {
-        // 1000 bytes: 142x PROGRAM_MAX + 6-byte tail. With the window logic
-        // the synchronous fake answers every frame immediately; the flash must
-        // still be byte-exact and the segment fully covered.
+    void batchedFlashProgramsEveryFrame() throws Exception {
+        // 1000 bytes: one 1000-byte batch = ceil(1000/7) = 143 PROGRAM_MAX
+        // frames, ONE batch acknowledgement, no single-frame PROGRAM tail.
         byte[] seg1 = pattern(1000, 11);
         Path srec = writeImage(new ArrayList<>(SrecTestUtil.image(SEG1_BASE, seg1)));
 
@@ -241,18 +241,40 @@ class OpenBltCanFlasherTest {
         OpenBltCanFlasher.Result result = flasher.flash(link, config(srec, false, false));
 
         assertEquals(1000, result.bytes);
+        assertEquals(143, link.programMaxCount());
+        assertEquals(1, link.batchCount());
+        assertArrayEquals(seg1, link.flashAt(SEG1_BASE, 1000));
+    }
+
+    @Test
+    void noBatchFlagUsesPipelinedMode() throws Exception {
+        // --no-batch: the window-pipelined PROGRAM_MAX mode; the segment tail
+        // goes out as a single-frame PROGRAM.
+        byte[] seg1 = pattern(1000, 12);
+        Path srec = writeImage(new ArrayList<>(SrecTestUtil.image(SEG1_BASE, seg1)));
+
+        FakeCanLink link = new FakeCanLink();
+        OpenBltCanFlasher flasher = new OpenBltCanFlasher(new OpenBltCanFlasher.Listener() {
+        });
+        OpenBltCanFlasher.Config cfg = config(srec, false, false);
+        cfg.batch = false;
+
+        OpenBltCanFlasher.Result result = flasher.flash(link, cfg);
+
+        assertEquals(1000, result.bytes);
         assertEquals(142, link.programMaxCount());
+        assertEquals(0, link.batchCount());
         assertArrayEquals(seg1, link.flashAt(SEG1_BASE, 1000));
         assertTrue(link.sent().stream().anyMatch(f -> (f.data()[0] & 0xFF) == XcpConstants.CMD_PROGRAM
                 && (f.data()[1] & 0xFF) == 6));
     }
 
     @Test
-    void lostAckAbortsPipelinedFlash() throws Exception {
-        // Simulate one PROGRAM_MAX frame lost on the wire (processed but never
-        // acknowledged): the pipeline must abort with a clear diagnostic
-        // instead of silently corrupting the MTA state.
-        byte[] seg1 = pattern(64, 12);
+    void lostBatchAckAbortsFlash() throws Exception {
+        // Simulate the single batch acknowledgement lost on the wire (the
+        // batch was programmed but never acknowledged): the flasher must
+        // abort with a clear diagnostic instead of guessing the MTA state.
+        byte[] seg1 = pattern(64, 13);
         Path srec = writeImage(new ArrayList<>(SrecTestUtil.image(SEG1_BASE, seg1)));
 
         FakeCanLink link = new FakeCanLink();
@@ -266,9 +288,30 @@ class OpenBltCanFlasherTest {
     }
 
     @Test
+    void oneMbitSwitchHappensAroundProgramming() throws Exception {
+        // --1mbit: the link must switch to 1M before programming and back to
+        // 500k before verify/reset, so the console/car bus always ends at 500k.
+        byte[] seg1 = pattern(100, 14);
+        Path srec = writeImage(new ArrayList<>(SrecTestUtil.image(SEG1_BASE, seg1)));
+
+        FakeCanLink link = new FakeCanLink();
+        OpenBltCanFlasher flasher = new OpenBltCanFlasher(new OpenBltCanFlasher.Listener() {
+        });
+        OpenBltCanFlasher.Config cfg = config(srec, true, true);
+        cfg.oneMbit = true;
+
+        OpenBltCanFlasher.Result result = flasher.flash(link, cfg);
+
+        assertTrue(result.verified);
+        assertArrayEquals(seg1, link.flashAt(SEG1_BASE, 100));
+        assertEquals(2, link.setBaudrateCount());
+        assertEquals(XcpConstants.BAUD_500K, link.lastBaudrate());
+    }
+
+    @Test
     void noPipelineFlagStillFlashes() throws Exception {
         // The single-frame fallback path must keep working (--no-pipeline).
-        byte[] seg1 = pattern(40, 13);
+        byte[] seg1 = pattern(40, 15);
         Path srec = writeImage(new ArrayList<>(SrecTestUtil.image(SEG1_BASE, seg1)));
 
         FakeCanLink link = new FakeCanLink();
@@ -276,6 +319,7 @@ class OpenBltCanFlasherTest {
         });
         OpenBltCanFlasher.Config cfg = config(srec, true, false);
         cfg.pipeline = false;
+        cfg.batch = false;
 
         OpenBltCanFlasher.Result result = flasher.flash(link, cfg);
 

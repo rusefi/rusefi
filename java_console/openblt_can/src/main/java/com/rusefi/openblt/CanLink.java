@@ -30,6 +30,14 @@ public interface CanLink extends AutoCloseable {
      */
     CanFrame pollFrame() throws IOException;
 
+    /**
+     * Reconfigures the adapter baudrate (rusEFI SET_CAN_BAUDRATE extension).
+     * rateCode: XcpConstants.BAUD_500K or XcpConstants.BAUD_1M. The default
+     * implementation does nothing (in-memory test links).
+     */
+    default void setBaudrate(int rateCode) throws IOException {
+    }
+
     @Override
     void close();
 }
