@@ -90,6 +90,12 @@ public class OpenBltCanFlasher {
     private boolean pipelineEnabled = true;
     /** Set from Config before programming: pipelined TX spacing in nanoseconds. */
     private long pipelinePaceNanos = PIPELINE_PACE_NANOS;
+    // Per-phase wall-time accounting for the program loop (bench diagnostics:
+    // shows whether the residual ~1.1 ms/frame sits in the CAN write, the
+    // pacing sleep or the ACK wait).
+    private long writeNanos;
+    private long paceNanos;
+    private long ackWaitNanos;
 
     public OpenBltCanFlasher(Listener listener) {
         this.listener = listener;
@@ -196,6 +202,9 @@ public class OpenBltCanFlasher {
             listener.log(String.format("Effective rate: %.2f ms per XCP frame (wall time), %.1f KB/s.",
                     elapsedMs / (double) Math.max(1, xcp.rttCount()),
                     total / (elapsedMs / 1000.0) / 1024.0));
+            long frames = Math.max(1, xcp.rttCount());
+            listener.log(String.format("Program loop timing: write %.1f us/frame, pace %.1f us/frame, ack-wait %.1f us/frame.",
+                    writeNanos / 1000.0 / frames, paceNanos / 1000.0 / frames, ackWaitNanos / 1000.0 / frames));
             // Per-frame XCP round-trip histogram: shows where the time went -
             // host polling vs ECU-side processing vs bus (see XcpClient.rttStats).
             listener.log(xcp.rttStats());
@@ -302,7 +311,9 @@ public class OpenBltCanFlasher {
 
             // Full window: collect one ACK first (the bootloader answers in order).
             if (xcp.getInFlight() >= XcpClient.PIPELINE_WINDOW) {
+                long ackStart = System.nanoTime();
                 XcpResponse res = xcp.readProgramAck(XcpConstants.PROGRAM_TIMEOUT_MS);
+                ackWaitNanos += System.nanoTime() - ackStart;
                 if (res == null) {
                     throw new FlashException(String.format(
                             "PROGRAM_MAX at 0x%08X: no acknowledgement within %d ms "
@@ -318,11 +329,15 @@ public class OpenBltCanFlasher {
             // Pace the TX so the ECU's ACK fits between our frames: without
             // this the dongle transmits back-to-back and the bootloader's
             // 3 ACK mailboxes saturate (see XcpClient.PIPELINE_WINDOW notes).
-            paceUntil(nextSendAt, xcp);
+            // Pure sleep: draining is left to the window check above so the
+            // hot loop makes zero JNI reads.
+            paceUntil(nextSendAt);
 
             byte[] chunk = new byte[XcpConstants.PROGRAM_MAX_PAYLOAD];
             System.arraycopy(data, off, chunk, 0, chunk.length);
+            long writeStart = System.nanoTime();
             xcp.writeProgramMax(chunk);
+            writeNanos += System.nanoTime() - writeStart;
             nextSendAt = System.nanoTime() + pipelinePaceNanos;
             off += chunk.length;
         }
@@ -347,27 +362,21 @@ public class OpenBltCanFlasher {
     }
 
     /**
-     * Waits until {@code targetNanos} (bus pacing) while opportunistically
-     * collecting already-arrived acknowledgements, so the in-flight window
-     * stays shallow and the per-frame RTT histogram stays accurate. Uses
-     * {@link XcpClient#pollProgramAck()} - a single non-blocking queue read -
-     * because the blocking read spins its hot window for a full ~1 ms on an
-     * empty queue, which would cost more than the pace slot itself.
+     * Waits until {@code targetNanos} (bus pacing). Pure sleep - no CAN reads:
+     * the ACK drain happens in the window check before each send, so the hot
+     * loop makes zero JNI calls and the pace is as close to wall clock as
+     * parkNanos allows.
      */
-    private void paceUntil(long targetNanos, XcpClient xcp) throws IOException, FlashException {
+    private void paceUntil(long targetNanos) {
+        long t0 = System.nanoTime();
         while (true) {
             long wait = targetNanos - System.nanoTime();
             if (wait <= 0) {
-                return;
+                break;
             }
-            if (xcp.getInFlight() > 0) {
-                XcpResponse res = xcp.pollProgramAck();
-                if (res != null && !res.isOk()) {
-                    throw new FlashException("PROGRAM_MAX failed during pipelining: " + res);
-                }
-            }
-            LockSupport.parkNanos(Math.min(wait, 100_000L));
+            LockSupport.parkNanos(Math.min(wait, 200_000L));
         }
+        paceNanos += System.nanoTime() - t0;
     }
 
     private void verifySegments(XcpClient xcp, List<SrecParser.Segment> segments)
