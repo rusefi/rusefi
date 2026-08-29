@@ -291,6 +291,9 @@ class OpenBltCanFlasherTest {
     void oneMbitSwitchHappensAroundProgramming() throws Exception {
         // --1mbit: the link must switch to 1M before programming and back to
         // 500k before verify/reset, so the console/car bus always ends at 500k.
+        // At 1 Mbit the program phase must use the ACK-per-frame pipelined
+        // mode: deferred-ACK batch would silently corrupt the image on any
+        // lost frame (measured on the bench 2026-08-29).
         byte[] seg1 = pattern(100, 14);
         Path srec = writeImage(new ArrayList<>(SrecTestUtil.image(SEG1_BASE, seg1)));
 
@@ -306,6 +309,9 @@ class OpenBltCanFlasherTest {
         assertArrayEquals(seg1, link.flashAt(SEG1_BASE, 100));
         assertEquals(2, link.setBaudrateCount());
         assertEquals(XcpConstants.BAUD_500K, link.lastBaudrate());
+        // The 1M phase ran in pipelined mode, not deferred-ACK batch mode.
+        assertEquals(0, link.batchCount());
+        assertTrue(link.programMaxCount() > 0);
     }
 
     @Test
