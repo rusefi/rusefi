@@ -131,18 +131,13 @@ static inline uint16_t encodeRpmOrBaseline(float rpm) {
 }
 
 /**
- * Instantaneous fuel flow for the dash BC (бортовой компьютер), in mL/h.
+ * Instantaneous fuel flow for the dash BC (бортовой компьютер), 16x mL/h
+ * (i.e. 0.0625 mL/h per unit).
  *
- * Reverse-engineered from orig_1/2/3.trc: 0x0186 bytes 0-1 are 0x0000 with the
- * engine stopped, 0x004D..0x00ED (77..237) while cranking, peak ~0x0360 (864)
- * at the catch and settle to ~0x026C (620) at warm idle - and drop to 0x0000
- * during DFCO (fuel cut) even though rpm was still climbing.  That is a fuel
- * FLOW, not rpm and not pulse width (both of those would not zero out in DFCO
- * while rpm rises).  The same field is a static 0x281C in the old rusEFI
- * emulation, which is exactly the "frozen packets" the dash shows.
- *
- * If the BC reads ~25% low vs a known-good flowmeter, the stock field may be
- * g/h instead of mL/h - remove the density division (use gPerHour directly).
+ * 2026-08-29 captures: 0x04B0..0x09D4 while cranking -> /16 = 75..157 mL/h
+ * (realistic cranking flows), ~0x3A4C at warm idle -> /16 = 933 mL/h, 0 during
+ * DFCO. The field is fuel FLOW, not rpm and not pulse width (both would not
+ * zero out in DFCO while rpm rises).
  */
 static inline uint16_t encodeFuelFlowMlPerHour() {
 #ifdef MODULE_ODOMETER
@@ -152,8 +147,7 @@ static inline uint16_t encodeFuelFlowMlPerHour() {
 #endif // MODULE_ODOMETER
 
 	// Fuel cut: zero flow. The original ECU does exactly this - the flow
-	// field drops to 0x0000 during DFCO even while rpm is still climbing
-	// (orig_1/2/3 captures).
+	// field drops to 0x0000 during DFCO even while rpm is still climbing.
 	if (engine->module<DfcoController>()->cutFuel()) {
 		gPerSecond = 0;
 	}
@@ -165,8 +159,9 @@ static inline uint16_t encodeFuelFlowMlPerHour() {
 	static float smoothedGps = 0;
 	smoothedGps += 0.05f * (gPerSecond - smoothedGps);
 
-	// g/s -> mL/h: *3600 (s->h), /0.745 g/mL (gasoline density)
-	float mlPerHour = smoothedGps * 3600.0f / 0.745f;
+	// g/s -> mL/h: *3600 (s->h), /0.745 g/mL (gasoline density), *16 (stock
+	// field scale: mL/h in 1/16 units).
+	float mlPerHour = smoothedGps * 3600.0f / 0.745f * 16.0f;
 	return (uint16_t)clampF(0.0f, mlPerHour, 65535.0f);
 }
 
@@ -244,14 +239,41 @@ static inline uint16_t encodeBatteryMillivoltsLE() {
 }
 
 /**
- * Coolant temperature for the dash gauge - 0x066A bytes 3 and 4, raw degC.
- * orig traces: both bytes track the CLT ramp and saturate at the thermostat
- * (95..98 degC in orig_1/orig_3, frozen after shutdown) - the signature of a
- * coolant-temperature gauge value, duplicated in two byte positions.
+ * Coolant temperature for the dash - 0x05DA byte 0, in 0.5 degC units
+ * (CLT * 2). Confirmed across all captures: orig_1 0x40->0x41 = 32->32.5 C,
+ * orig_3 0x43->0x44 = 33.5->34 C, 2026-08-29 19:14 0x5C->0x61 = 46->48.5 C,
+ * 19:27 0x75->0x79 = 58.5->60.5 C (the car sat 13 min between sessions,
+ * so the second session starts warmer - exactly the observed offset).
+ * The old 0x066A[3:4] = CLT interpretation was wrong: those bytes are a
+ * 100 ms fuel-gated counter (see encodeEngineTimeCounter), not a gauge value.
  */
-static inline uint8_t encodeCltDegC() {
+static inline uint8_t encodeCltHalfDegC() {
     float clt = Sensor::getOrZero(SensorType::Clt);
-    return (uint8_t)clampF(0.0f, clt, 255.0f);
+    return (uint8_t)clampF(0.0f, clt * 2.0f, 255.0f);
+}
+
+/**
+ * Battery voltage in 0.1 V units - 0x05DA byte 1.
+ * orig_1: 0x9D = 15.7 V right after start (charging), 0x90 = 14.4 V settled;
+ * 19:14/19:27: 0x89 = 13.7 V at IGN, sagging to 0x70 = 11.2 V while cranking.
+ */
+static inline uint8_t encodeBatteryTenthsVolt() {
+    float volts = Sensor::getOrZero(SensorType::BatteryVoltage);
+    return (uint8_t)clampF(0.0f, volts * 10.0f, 255.0f);
+}
+
+/**
+ * Throttle-position byte X - 0x0186 byte 5 (also mirrored by the original
+ * ECU's BC machinery). 0.1 % units: 0x09..0x0E (0.9..1.4 %) at warm idle,
+ * 0x4C (7.6 %) during a rev blip, 0 when the throttle is closed (also during
+ * the catch - the stock holds it shut). Cold-start captures (orig_1/3, CLT
+ * ~32 C) show X = 0 even at 900 rpm - the idle controller keeps the blade
+ * closed until warm. The dash uses X as its "fuel is flowing" gate: its own
+ * consumption integrators (0x029A/0x029C) only run while X > 0.
+ */
+static inline uint8_t encodeThrottleXByte() {
+    float tps = Sensor::getOrZero(SensorType::Tps1);
+    return (uint8_t)clampF(0.0f, tps * 10.0f, 255.0f);
 }
 
 /**
@@ -586,7 +608,7 @@ private:
         msg[2] = 0x02
                | (isCranking ? 0x40 : 0x00)
                | (isRunning  ? 0x80 : 0x00);
-        msg[3] = 0x2D;  // approx battery-derived constant
+        msg[3] = 0x1A;  // stock constant while running (was 0x2D in old rusEFI)
         msg[4] = 0x00;
         msg[5] = 0x00;
         msg[6] = 0x00;
@@ -597,8 +619,9 @@ private:
      * 0x0189 - RPM primary (10 ms, 8 bytes)
      *   bytes 0-1: RPM*16 big-endian (or 0x3200 baseline when engine stopped)
      *   bytes 2-3: battery voltage, little-endian millivolts (live)
-     *   byte 4:   0x00 (no RPM) / rolling down-counter (running)
-     *   byte 5:   0xB9 at IGN-only, 0xB8 while running (original captures)
+     *   byte 4:   0x00 (no RPM) / rolling 0x10-step counter (running) -
+     *             the original advances it ~5 steps/s in 0x10 increments
+     *   byte 5:   0xB9 at IGN-only, 0xBA while running (2026-08-29 captures)
      *   bytes 6-7: 0x00
      *
      * NOTE: bytes 0-1 must not be 0x0000 even when stopped — BCM uses the
@@ -614,64 +637,69 @@ private:
         uint16_t vbattMv = encodeBatteryMillivoltsLE();
         msg[2] = (uint8_t)(vbattMv & 0xFF);
         msg[3] = (uint8_t)(vbattMv >> 8);
-        // byte 4: rolling down-counter (original: F0->00 sawtooth while
-        // running, 0x00 at rest) - the dash may use it as a frame-freshness
-        // check; a frozen value makes the cluster treat the frames as stale.
+        // byte 4: rolling counter while running (the cluster treats a frozen
+        // value as stale), 0x00 at rest. The stock steps it by 0x10.
         msg[4] = isRunning ? m_dashCounter : 0x00;
-        m_dashCounter--;
-        // byte 5: 0xB9 at IGN-only, 0xB8 while running (original captures)
-        msg[5] = isRunning ? 0xB8 : 0xB9;
+        m_dashCounter += 0x10;
+        if (m_dashCounter == 0) {
+            m_dashCounter = 0x10;
+        }
+        // byte 5: 0xB9 at IGN-only, 0xBA while running (2026-08-29 captures)
+        msg[5] = isRunning ? 0xBA : 0xB9;
         msg[6] = 0x00;
         msg[7] = 0x00;
     }
 
     	/**
     	 * 0x0186 - RPM aux / fuel flow (10 ms, 7 bytes)
-    	 *   bytes 0-1: instantaneous fuel flow, mL/h big-endian (0 when stopped,
-    	 *             ~0x026C = 620 mL/h at unloaded idle, 0 during DFCO; today's
-    	 *             19:14/19:27 captures show ~0x29D8 = 10.7 L/h with the
-    	 *             alternator at 15.9 V - the field IS load-dependent flow)
+    	 *   bytes 0-1: instantaneous fuel flow, 16x mL/h big-endian (0 when
+    	 *             stopped or in DFCO; ~0x3A4C = 933 mL/h at warm idle with
+    	 *             the alternator loaded)
     	 *   bytes 2-3: RPM*16 big-endian (or 0x3200 baseline when stopped)
-    	 *   byte 4:   rpm - 768 (THE dash tach byte - exact linear fit vs the
-    	 *             original captures: 775 rpm -> 0x07, 800 -> 0x20, 889 -> 0x79)
-    	 *   byte 5:   0x00 at IGN-only / 0x06 while running (2026-08-29 captures)
+    	 *   byte 4:   rpm - 768 (u8 wrap) - exact fit vs the stock captures
+    	 *             (775 -> 0x07, 800 -> 0x20, 889 -> 0x79)
+    	 *   byte 5:   throttle position x10 (0.9..1.4 at idle, 0 when closed
+    	 *             or during DFCO) - the stock's "fuel flowing" signal the
+    	 *             dash gates its consumption integrators on
     	 *   byte 6:   0x20
     	 *
     	 * NOTE: bytes 2-3 carry the same RPM baseline as 0x0189[0:1].
     	 */
-    	void send0x0186(uint16_t rpmEncoded, float rpm, bool isRunning) {
+    	void send0x0186(uint16_t rpmEncoded, float rpm, bool isRunning, uint8_t throttleX) {
     		CanTxMessage msg(CanCategory::NBC, ECU_RPM_AUX_ID, 7, DEFAULT_BUS_INDEX);
     		uint16_t fuelFlowMlPerHour = encodeFuelFlowMlPerHour();
     		msg[0] = (uint8_t)(fuelFlowMlPerHour >> 8);
     		msg[1] = (uint8_t)(fuelFlowMlPerHour & 0xFF);
     		msg[2] = (uint8_t)(rpmEncoded >> 8);
     		msg[3] = (uint8_t)(rpmEncoded & 0xFF);
-    		// dash tach: rpm/16 - 18, 0x20 at rest (see encodeTachByte)
     		msg[4] = encodeTachByte(rpm);
-    		msg[5] = isRunning ? 0x06 : 0x00;
+    		msg[5] = isRunning ? throttleX : 0x00;
     		msg[6] = 0x20;
     	}
 
     /**
      * 0x018A - RPM aux2 (10 ms, 6 bytes)
      *   bytes 0-1: RPM*16 big-endian (or 0x3200 baseline when stopped)
-     *   byte 2:   0x00
-     *   byte 3:   0x07 at IGN-only, 0x06 while running (original captures)
+     *   bytes 2-3: crank-angle counter, big-endian 16-bit, 2 deg/unit
+     *             quantized to 128-deg (64-unit) steps - advances at
+     *             3 x rpm units/s while the throttle is open, frozen
+     *             otherwise (the stock freezes it at closed throttle/DFCO).
+     *             The dash mirrors this accumulator into its own 0x029C/
+     *             0x029A frames (its BC consumption integrator).
      *   byte 4:   ignition advance: 256 - 2*advance while running, 0x02
-     *             cranking, 0x00 at IGN-on (orig: 0xE2 = 15 deg idle,
-     *             0xFA = 3 deg at the catch)
+     *             cranking, 0x00 at IGN-on
      *   byte 5:   0x00
      *
      * NOTE: byte 0 must be 0x32 even when stopped — same baseline rule as
      * 0x0189/0x0186.  Original sends 0x32 0x00 = 0x3200 at rest.
      */
-    void send0x018A(uint16_t rpmEncoded, bool isRunning, bool isCranking, float timingAdvanceDeg) {
+    void send0x018A(uint16_t rpmEncoded, bool isRunning, bool isCranking,
+                    float timingAdvanceDeg, uint16_t angleCounter) {
         CanTxMessage msg(CanCategory::NBC, ECU_RPM_AUX2_ID, 6, DEFAULT_BUS_INDEX);
         msg[0] = (uint8_t)(rpmEncoded >> 8);
         msg[1] = (uint8_t)(rpmEncoded & 0xFF);
-        msg[2] = 0x00;
-        // byte 3: 0x07 at IGN-only, 0x06 while running (original captures)
-        msg[3] = isRunning ? 0x06 : 0x07;
+        msg[2] = (uint8_t)(angleCounter >> 8);
+        msg[3] = (uint8_t)(angleCounter & 0xFF);
         msg[4] = isRunning ? encodeIgnitionAdvanceByte(timingAdvanceDeg)
                            : (isCranking ? 0x02 : 0x00);
         msg[5] = 0x00;
@@ -732,13 +760,14 @@ private:
      * Burst group (100 ms) - ECU identification and status frames.
      * Emulates the original ECU's 100 ms broadcast to keep BCM happy.
      */
-    void sendBurst(bool isRunning) {
-        // 0x05DA - ECU identification primary
-        // byte 1: 0x89 (IGN on) / 0x9D (running)
+    void sendBurst(bool isRunning, float rpm, uint8_t throttleX) {
+        // 0x05DA - ECU identification / dash coolant temperature
+        // byte 0: CLT * 2 (0.5 degC units) - THE dash temp source
+        // byte 1: battery voltage * 10 (0.1 V units)
         {
             CanTxMessage msg(CanCategory::NBC, BURST_ID_05DA, 8, DEFAULT_BUS_INDEX);
-            msg[0] = 0x41;
-            msg[1] = isRunning ? 0x9D : 0x89;
+            msg[0] = encodeCltHalfDegC();
+            msg[1] = encodeBatteryTenthsVolt();
             msg[2] = 0x00;
             msg[3] = 0x00;
             msg[4] = 0xB9;
@@ -813,20 +842,23 @@ private:
             msg[7] = 0x00;
         }
 
-        // 0x066A - ECU operating state + coolant temperature for the dash
-        // bytes 3-4: CLT degC (both bytes carry the same value - orig traces
-        // show the warm-up ramp 53->95 degC saturating at the thermostat,
-        // frozen after shutdown)
-        // IGN on:  {0x08, 0xFF, 0x00, <clt>, <clt>, 0xC0, 0x00, 0x00}
-        // running: {0x00, 0xFF, 0x00, <clt>, <clt>, 0xC0, 0x00, 0x00}
+        // 0x066A - ECU operating state + fuel-gated 100 ms counter
+        // bytes 3-4: engine-time counter - the stock advances it 1 per 100 ms
+        // while fuel is flowing (throttle open) at up to ~820 rpm and 2 per
+        // 100 ms above that; it pauses at closed throttle (DFCO). It keeps its
+        // value across key cycles (the stock's cumulative hour-meter).
+        // IGN on:  {0x08, 0xFF, 0x00, <ctr>, <ctr>, 0xC0, 0x00, 0x00}
+        // running: {0x00, 0xFF, 0x00, <ctr>, <ctr>, 0xC0, 0x00, 0x00}
         {
+            if (throttleX > 0) {
+                m_engineTimeCounter += (rpm > 820.0f) ? 2 : 1;
+            }
             CanTxMessage msg(CanCategory::NBC, BURST_ID_066A, 8, DEFAULT_BUS_INDEX);
             msg[0] = isRunning ? 0x00 : 0x08;
             msg[1] = 0xFF;
             msg[2] = 0x00;
-            uint8_t cltDegC = encodeCltDegC();
-            msg[3] = cltDegC;
-            msg[4] = cltDegC;
+            msg[3] = m_engineTimeCounter;
+            msg[4] = m_engineTimeCounter;
             msg[5] = 0xC0;
             msg[6] = 0x00;
             msg[7] = 0x00;
@@ -899,6 +931,21 @@ private:
         // Snapshot the current spark advance once per call (used by 0x018A[4])
         float timingAdvanceDeg = engine->engineState.timingAdvance[0];
 
+        // Throttle byte X (0.1 % units) - the stock's "fuel is flowing" gate.
+        uint8_t throttleX = encodeThrottleXByte();
+
+        // Crank-angle accumulator (0x018A[2:3]): 2 deg/unit, i.e. 3 x rpm
+        // units/s, advanced only while the throttle is open (the stock freezes
+        // it at closed throttle / DFCO). Published quantized to 64 units
+        // (128 deg) per the stock's burst behaviour.
+        if (throttleX > 0) {
+            m_angleCounter2 += rpm * 0.03f; // rpm * 3 units/s over 10 ms
+            if (m_angleCounter2 >= 65536.0f) {
+                m_angleCounter2 -= 65536.0f;
+            }
+        }
+        uint16_t angleCounter = (uint16_t)(((uint32_t)m_angleCounter2 & 0xFFC0u) + 6u);
+
         // IMMO state machine: tick every 5ms call. Kept outside the serial-session gate
         // below so the one-shot trigger/response handshake still completes even while
         // TS is connected (only 2 frames per ignition-on cycle, negligible traffic).
@@ -932,8 +979,8 @@ private:
         if ((m_counter % 2) == 0) {
     	        send0x01F6(isRunning, isCranking);
     	        send0x0189(rpmEncoded, isRunning);
-    	        send0x0186(rpmEncoded, rpm, isRunning);
-    	        send0x018A(rpmEncoded, isRunning, isCranking, timingAdvanceDeg);
+    	        send0x0186(rpmEncoded, rpm, isRunning, throttleX);
+    	        send0x018A(rpmEncoded, isRunning, isCranking, timingAdvanceDeg, angleCounter);
             send0x0217(isEngineActive);
             send0x02A9();
         }
@@ -945,7 +992,7 @@ private:
 
         // 100 ms burst group: every 20th tick
         if ((m_counter % 20) == 0) {
-            sendBurst(isRunning);
+            sendBurst(isRunning, rpm, throttleX);
         }
 
         // 1000 ms keepalive: every 200th tick
@@ -966,9 +1013,18 @@ private:
     // Counter incremented once per 5 ms call to request(); drives timing logic
     uint32_t m_counter = 0;
 
-    // Rolling down-counter embedded in 0x0189[4] while running (original F0->00
-    // sawtooth) - the cluster may use it as a frame-freshness check.
+    // Rolling 0x10-step counter embedded in 0x0189[4] while running (the
+    // cluster may use it as a frame-freshness check; a frozen value makes it
+    // treat the frames as stale).
     uint8_t m_dashCounter = 0xF0;
+
+    // Crank-angle accumulator for 0x018A[2:3] (2 deg/unit, throttle-gated).
+    // Starts at 6 - the residual the stock ECU also shows at rest/closed throttle.
+    float m_angleCounter2 = 6.0f;
+
+    // Fuel-gated 100 ms counter for 0x066A[3:4] (the stock's hour-meter:
+    // 1 per 100 ms below ~820 rpm, 2 above, paused at closed throttle).
+    uint8_t m_engineTimeCounter = 0;
 
     // -----------------------------------------------------------------------
     // IMMO state
