@@ -302,6 +302,7 @@ class OpenBltCanFlasherTest {
         });
         OpenBltCanFlasher.Config cfg = config(srec, true, true);
         cfg.oneMbit = true;
+        cfg.oneMbitAllowed = true;
 
         OpenBltCanFlasher.Result result = flasher.flash(link, cfg);
 
@@ -312,6 +313,32 @@ class OpenBltCanFlasherTest {
         // The 1M phase ran in pipelined mode, not deferred-ACK batch mode.
         assertEquals(0, link.batchCount());
         assertTrue(link.programMaxCount() > 0);
+    }
+
+    @Test
+    void oneMbitFlagIsDisabledByDefault() throws Exception {
+        // --1mbit must NOT attempt the switch on this adapter/driver: the
+        // MacCAN/PCAN-USB TX path corrupts frames after the mid-session
+        // switch (measured deterministically 2026-08-29). The flag now means
+        // "500 kbit, batch mode", and the flash must complete verified.
+        byte[] seg1 = pattern(100, 18);
+        Path srec = writeImage(new ArrayList<>(SrecTestUtil.image(SEG1_BASE, seg1)));
+
+        FakeCanLink link = new FakeCanLink();
+        OpenBltCanFlasher flasher = new OpenBltCanFlasher(new OpenBltCanFlasher.Listener() {
+        });
+        OpenBltCanFlasher.Config cfg = config(srec, true, true);
+        cfg.oneMbit = true;
+
+        OpenBltCanFlasher.Result result = flasher.flash(link, cfg);
+
+        assertTrue(result.verified);
+        assertArrayEquals(seg1, link.flashAt(SEG1_BASE, 100));
+        // No baudrate switch was attempted: the flash ran entirely at 500k
+        // in the default batch mode.
+        assertEquals(0, link.setBaudrateCount());
+        assertEquals(XcpConstants.BAUD_500K, link.lastBaudrate());
+        assertEquals(1, link.batchCount());
     }
 
     @Test
@@ -328,6 +355,7 @@ class OpenBltCanFlasherTest {
         });
         OpenBltCanFlasher.Config cfg = config(srec, true, true);
         cfg.oneMbit = true;
+        cfg.oneMbitAllowed = true;
         cfg.baudReconnectMs = 100;
         cfg.baudFallbackAfterMs = 150;
 
@@ -355,6 +383,7 @@ class OpenBltCanFlasherTest {
         });
         OpenBltCanFlasher.Config cfg = config(srec, true, true);
         cfg.oneMbit = true;
+        cfg.oneMbitAllowed = true;
         cfg.baudReconnectMs = 50;
         cfg.baudFallbackAfterMs = 450;
 
