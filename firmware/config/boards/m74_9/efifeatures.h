@@ -18,6 +18,13 @@
  * stm32f4ems include - that header defaults the flag to FALSE. */
 #define EFI_USE_OPENBLT TRUE
 
+/* TMR2 hardware angle clock (OC channels as software comparators, events
+ * programmed one tooth ahead, fired by a priority-3 ISR): removes the
+ * trigger-decode/handoff latency from the spark/injection timing chain.
+ * Must be defined BEFORE the stm32f4ems include - that header defaults the
+ * flag to FALSE. See hw_layer/angle_clock/angle_clock.h. */
+#define EFI_ANGLE_CLOCK TRUE
+
 /* Console log buffer (double-buffered, 2x this, static). The stm32f4ems
  * default of 6500 truncates the 'pins' output mid-line: the pin report +
  * L9779 SPI frame history exceed it and LogBuffer::writeInternal writes

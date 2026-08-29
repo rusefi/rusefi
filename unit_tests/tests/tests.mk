@@ -60,6 +60,7 @@ TESTS_SRC_CPP = \
 	tests/trigger/test_override_gaps.cpp \
 	tests/trigger/test_injection_scheduling.cpp \
 	tests/trigger/test_instant_rpm.cpp \
+	tests/trigger/test_angle_clock.cpp \
 	tests/trigger/test_teeth_to_logicdata.cpp \
 	tests/trigger/test_logicdata_to_csv.cpp \
 	tests/sent/test_sent.cpp \

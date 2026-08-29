@@ -268,6 +268,15 @@
 #endif
 
 /**
+ * TMR2 hardware angle clock: one-tooth-ahead firing of engine commands
+ * (spark/injection/aux angle events) via OC-channel software comparators.
+ * Opt-in per board (m74_9) - see hw_layer/angle_clock/angle_clock.h.
+ */
+#ifndef EFI_ANGLE_CLOCK
+#define EFI_ANGLE_CLOCK FALSE
+#endif
+
+/**
  * MCP42010 digital potentiometer support. This could be useful if you are stimulating some
  * stock ECU
  */

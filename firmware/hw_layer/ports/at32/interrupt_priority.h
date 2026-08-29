@@ -23,6 +23,13 @@
 #define EFI_IRQ_SCHEDULING_TIMER_PRIORITY 3
 #define STM32_PWM_TIM5_IRQ_PRIORITY       EFI_IRQ_SCHEDULING_TIMER_PRIORITY
 
+// The TMR2 angle clock (hardware compare firing for one-tooth-ahead engine
+// events) runs at the SAME priority as the TIM5 executor: its ISR executes
+// the spark/injection actions directly, so it needs the same fixed entry
+// latency and must preempt the trigger handoff. Same-priority means the two
+// ISRs never nest into each other, which keeps the channel pool race-free.
+#define EFI_IRQ_ANGLE_CLOCK_PRIORITY      3
+
 // Trigger decode runs BELOW the executor on purpose: tooth timestamps are
 // captured in the raw EXTI ISR (fast IRQ 0) into a queue before the decode
 // starts, so the decode being preempted by due events does not affect tooth

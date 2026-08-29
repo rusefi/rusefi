@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include "event_queue.h"
+#include "angle_clock.h"
 
 bool TriggerScheduler::assertNotInList(AngleBasedEvent *head, AngleBasedEvent *element) {
 	/* this code is just to validate state, no functional load*/
@@ -90,30 +91,25 @@ void TriggerScheduler::schedule(const char *msg, AngleBasedEvent* event, action_
 void TriggerScheduler::cancel(AngleBasedEvent* event) {
 	chibios_rt::CriticalSectionLocker csl;
 
-	// utlist LL_DELETE2 dereferences the head with no null check on its search
-	// branch, and either list may legitimately be empty here. On STM32 the null
-	// walk does not even fault immediately: it reads the flash alias of the
-	// vector table at address 0x1c and chases that junk into a wild-pointer bus
-	// fault, see https://github.com/rusefi/rusefi/issues/9435
-	if (m_angleBasedEventsHead) {
-		LL_DELETE2(m_angleBasedEventsHead, event, nextToothEvent);
-	}
-	// The event may instead be awaiting promotion to the time-based scheduler
-	// inside scheduleEventsUntilNextTriggerTooth() - a canceled event must not
-	// fire, so remove it from there as well
-	if (m_dueEventsHead) {
-		LL_DELETE2(m_dueEventsHead, event, nextToothEvent);
-	}
+	LL_DELETE2(m_angleBasedEventsHead, event, nextToothEvent);
 
-	// LL_DELETE2 does not clear the removed element's link
-	event->nextToothEvent = nullptr;
+#if EFI_ANGLE_CLOCK
+	// The event may already be armed on the hardware angle clock (armed one
+	// tooth ahead and removed from this queue). Kill the armed compare too -
+	// angleClockCancel is a no-op when nothing matching is armed.
+	angleClockCancel(event->action);
+#endif // EFI_ANGLE_CLOCK
 }
 
 void TriggerScheduler::scheduleEventsUntilNextTriggerTooth(float rpm,
-							   efitick_t edgeTimestamp, float currentPhase, float nextPhase) {
+							   efitick_t edgeTimestamp, float currentPhase, float nextPhase,
+							   float nextNextPhase) {
+#if !EFI_ANGLE_CLOCK
+	UNUSED(nextNextPhase);
+#endif // !EFI_ANGLE_CLOCK
 
 	if (rpm == 0) {
-		 // this might happen for instance in case of a single trigger event after a pause
+			 // this might happen for instance in case of a single trigger event after a pause
 		return;
 	}
 
@@ -130,17 +126,69 @@ void TriggerScheduler::scheduleEventsUntilNextTriggerTooth(float rpm,
 		AngleBasedEvent *current, *tmp;
 		AngleBasedEvent **dueTail = &m_dueEventsHead;
 
-		LL_FOREACH_SAFE2(m_angleBasedEventsHead, current, tmp, nextToothEvent)
-		{
-			if (current->shouldSchedule(currentPhase, nextPhase)) {
-				// time to fire an event which was scheduled previously
-				LL_DELETE2(m_angleBasedEventsHead, current, nextToothEvent);
-				current->nextToothEvent = nullptr;
-				*dueTail = current;
-				dueTail = &current->nextToothEvent;
-			}
+	LL_FOREACH_SAFE2(keephead, current, tmp, nextToothEvent)
+	{
+		if (current->shouldSchedule(currentPhase, nextPhase)) {
+			// time to fire a spark which was scheduled previously
+
+			// Yes this looks like O(n^2), but that's only over the entire engine
+			// cycle.  It's really O(mn + nn) where m = # of teeth and n = # events
+			// fired per cycle.  The number of teeth outweigh the number of events, at
+			// least for 60-2....  So odds are we're only firing an event or two per
+			// tooth, which means the outer loop is really only O(n).  And if we are
+			// firing many events per teeth, then it's likely the events before this
+			// one also fired and thus the call to LL_DELETE2 is closer to O(1).
+			LL_DELETE2(keephead, current, nextToothEvent);
+
+			scheduling_s * sDown = &current->eventScheduling;
+
+#if SPARK_EXTREME_LOGGING
+			efiPrintf("time to invoke [%.1f, %.1f) %d %d",
+				  currentPhase, nextPhase, getRevolutionCounter(), time2print(getTimeNowUs()));
+#endif /* SPARK_EXTREME_LOGGING */
+
+			// In case this event was scheduled by overdwell protection, cancel it so
+			// we can re-schedule at the correct time
+			// [tag:overdwell]
+			engine->scheduler.cancel(sDown);
+
+			scheduleByAngle(
+				sDown,
+				edgeTimestamp,
+				current->getAngleFromNow(currentPhase),
+				current->action
+			);
+#if EFI_ANGLE_CLOCK
+	} else if (nextNextPhase != nextPhase && current->shouldSchedule(nextPhase, nextNextPhase)) {
+		// Due during the NEXT tooth: arm it on the hardware angle clock
+		// one full tooth early, so a late handoff (decode tails up to
+		// ~1 ms) cannot shift it. The nextNextPhase != nextPhase guard
+		// rejects single-tooth triggers, where every event angle maps to
+		// the same phase and the range test is meaningless.
+		LL_DELETE2(keephead, current, nextToothEvent);
+
+		scheduling_s * sDown = &current->eventScheduling;
+
+		// Same contract as the due-now branch: a previous time-based arm
+		// (the overdwell protection) is superseded by this scheduling.
+		engine->scheduler.cancel(sDown);
+
+		float angleFromNow = current->getAngleFromNow(currentPhase);
+
+		// Convert the angle offset from THIS edge into an absolute TMR2
+		// tick. If the armed tick is already in the past (this handoff
+		// ran late) or all four channels are busy, angleClockArm returns
+		// false and the event falls back to the time-based executor - the
+		// same scheduleByAngle the due-now branch uses.
+		uint32_t atTick = angleClockTickForNt(edgeTimestamp) + angleClockDelayTicks(angleFromNow, engine->rpmCalculator.oneDegreeUs);
+		if (!angleClockArm(atTick, current->action)) {
+			scheduleByAngle(sDown, edgeTimestamp, angleFromNow, current->action);
 		}
+#endif // EFI_ANGLE_CLOCK
+	} else {
+		keeptail = current; // Used for fast list concatenation
 	}
+}
 
 	// Now promote the due events to the time-based scheduler, taking them one at
 	// a time so that a cancel() arriving mid-loop still finds any event that has
