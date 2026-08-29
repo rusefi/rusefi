@@ -8393,3 +8393,46 @@ artifact in pipelined mode - trust "Program loop timing" / "Effective rate".
 
 Next (needs firmware + host): plan B batch mode - RAM page buffer, one
 NvmWrite + one ACK per batch -> ~35-45 s @500k; plan C 1 Mbit multiplies B.
+
+## 2026-08-28 - OpenBLT fast flash: plans B+C implemented (firmware + host)
+
+Plan B - deferred-ACK batch programming (firmware ext/openblt submodule +
+Java flasher):
+- New XCP command 0xC8 PROGRAM_BATCH [len_le32]: declares a batch of up to
+  2048 bytes at the current MTA; the following PROGRAM_MAX frames fill the
+  static 2 KB RAM buffer WITHOUT per-frame responses; the last frame triggers
+  one NvmWrite of the whole batch + a single response. The AT32 per-word
+  program cost (512 words ~13 ms) is amortized; ctoPending semantics verified
+  (ComTransmitPacket clears it, intermediate frames set ctoLen=0).
+- Erase/program-reset cancel any pending batch. MTA still auto-increments by
+  7/frame; the host SET_MTA's before each batch (1 frame per 2 KB).
+- Host: programSegmentBatched() is the DEFAULT; no flow control needed (the
+  blocking MacCAN write ~0.3 ms/frame is slower than the bus, the bootloader
+  consumes far faster than either). --no-batch falls back to the window-8
+  pipelined mode, --no-pipeline to single-frame. Friendly hint when an OLD
+  bootloader rejects 0xC8.
+
+Plan C - runtime CAN baudrate switch (1 Mbit only for erase+program):
+- New XCP command 0xC7 SET_CAN_BAUDRATE (data[1]: 0=500k, 1=1M). The
+  response is sent at the OLD speed; the bootloader MAIN LOOP applies the
+  switch (canStop+canStart+filter re-program) ~5 ms later via
+  OpenBltCanApplyBaudrate(). Safety: if no traffic arrives within 5 s at the
+  switched speed, the bootloader reverts to 500k on its own, so the
+  console/car bus can never be stranded at 1M.
+- Host: --1mbit flag; switchBaudrate() = SET_CAN_BAUDRATE -> 30 ms settle ->
+  adapter re-init -> GET_STATUS retries at the new speed. The switch back to
+  500k happens in a finally around erase+program, so verify/reset and the
+  console/car bus always end at 500k. PcanLink.setBaudrate() re-initializes
+  the dongle (Uninitialize + Initialize with PCAN_BAUD_1M).
+- Bootloader build passes (openblt_m74_9.elf, +2 KB BSS for the batch
+  buffer). Java: 30/30 tests green (new: batchedFlashProgramsEveryFrame,
+  noBatchFlagUsesPipelinedMode, lostBatchAckAbortsFlash,
+  oneMbitSwitchHappensAroundProgramming; FakeCanLink mirrors the batch +
+  baudrate protocol).
+
+Deployment note: the new flasher REQUIRES the new bootloader on the ECU
+(0xC8/0xC7 are rejected by old ones). Install via a full rusefi.bin flash
+(bundle build merges the rebuilt bootloader); rusefi_update.srec does NOT
+touch the bootloader region. Expected on the bench: batch @500k ~35-40 s
+(host write-bound at ~0.3 ms/frame); --1mbit ~30-35 s (the MacCAN write is
+the floor, the 1M wire helps only marginally on this dongle).
