@@ -8470,3 +8470,46 @@ Status: 1M may still not come up on the MacCAN dongle (unproven); the ECU
 is now safe either way. Normal flash (batch @500k) = 45 s. Open follow-up:
 pinpoint the CAN-restart hang (crash markers after a wedge, or a bounded
 INAK wait in the AT32 CAN LLD).
+
+## 2026-08-29 - OpenBLT 1M switch reworked as a REBOOT (commit 8da0208d689)
+
+The runtime canStop/canStart switch kept wedging the AT32 CAN peripheral
+(user re-test after the IWDG work: "does not answer at 500k either", the
+main app + console link stay healthy - the wedge is specific to the
+bootloader's runtime CAN restart, and the IWDG did not recover it because
+the wedge is not a dead main loop). Decision: the only exercised CAN init
+path is boot-time CanInit, so the baudrate switch is now a REBOOT.
+
+Change inventory:
+| Area     | Change                                                       |
+|----------|--------------------------------------------------------------|
+| boot     | SET_CAN_BAUDRATE answers at the old speed, stores the rate   |
+|          | in SharedParams slot 4 (survives reset - .shared section),   |
+|          | reboots; CanInit applies it on the next boot                 |
+| boot     | 1 Mbit backdoor window 2 s -> 6 s: the 5 s no-traffic        |
+|          | fallback to 500k now fires while the bootloader still runs;  |
+|          | 6 s > 5 s is a load-bearing ordering invariant               |
+| boot     | fix extern "C" on shared_params.h in openblt_can.cpp         |
+|          | (first build failed: C++-mangled SharedParamsWriteByIndex)   |
+| host     | switchBaudrate re-CONNECTs at the new speed (the XCP session |
+|          | dies with the reboot - GET_STATUS could never work); tight   |
+|          | no-sleep retry loop bounded by baudReconnectMs               |
+| host     | 1M failure is no longer fatal: adapter-refuses-1M and        |
+|          | ECU-silent-at-1M both wait for the ECU's self-recovery and   |
+|          | continue the flash at 500k (MacCAN has no 1M support)        |
+| host     | PcanLink: currentBaudrate nulled on failed Initialize, so a  |
+|          | failed 1M switch does not leave the adapter uninitialized    |
+| tests    | FakeCanLink models the ECU-side reboot (session drop, speed  |
+|          | gate) + the 500k self-recovery; 2 new fallback tests         |
+
+Recovery chain (why the ECU can never be stranded): host cannot/does not
+follow to 1M -> no valid traffic -> 5 s fallback reboots to 500k -> 500 ms
+backdoor -> app at 500k; a host CONNECT at 500k triggers the app jump back
+into the bootloader, so every ECU state answers.
+
+Validation: :openblt_can:test 14/14 green (incl. oneMbit switch + 2
+fallbacks), bootloader builds, full m74_9 bundle builds (zip refreshed with
+the merged image). NOT yet bench-tested: user must full-flash
+deliver/rusefi.bin (openocd), then: --probe, normal flash (~45 s), --1mbit
+(expected: completes ~35 s, OR logs "continuing at 500 kbit" if MacCAN has
+no 1M - either way the ECU must stay responsive without a power cycle).
