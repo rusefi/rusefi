@@ -20,7 +20,7 @@ public:
 	bool update();
 
 	// Call this every decoded trigger tooth.  It will schedule any relevant events for this injector.
-	void onTriggerTooth(efitick_t nowNt, float currentPhase, float nextPhase);
+	void onTriggerTooth(efitick_t nowNt, float currentPhase, float nextPhase, float nextNextPhase);
 
 	WallFuel& getWallFuel();
 
@@ -50,6 +50,16 @@ public:
 	InjectorOutputPin *outputs[MAX_WIRES_COUNT]{};
 	InjectorOutputPin *outputsStage2[MAX_WIRES_COUNT]{};
 	float injectionStartAngle = 0;
+
+	// True once this cycle's injection start has been scheduled, together
+	// with the absolute time it was armed for. A window match is suppressed
+	// only while the armed target is still in the future (the one-tooth-ahead
+	// arm covering the following tooth's window); once the target has passed,
+	// a window match is the NEXT cycle's scheduling - at high duty the next
+	// window can arrive before the injection end recomputes the angle, and
+	// the pre-existing behavior schedules with the stale angle.
+	bool injectionStartArmed = false;
+	efitick_t injectionStartArmedAt = 0;
 };
 
 void turnInjectionPinHigh(scheduler_arg_t arg);
@@ -66,7 +76,7 @@ public:
 	void invalidate();
 
 	// Call this every trigger tooth.  It will schedule all required injector events.
-	void onTriggerTooth(efitick_t nowNt, float currentPhase, float nextPhase);
+	void onTriggerTooth(efitick_t nowNt, float currentPhase, float nextPhase, float nextNextPhase);
 
 	/**
 	 * this method schedules all fuel events for an engine cycle

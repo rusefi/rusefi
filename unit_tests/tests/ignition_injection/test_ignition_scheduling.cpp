@@ -373,10 +373,10 @@ TEST(ignition, oddCylinderWastedSpark) {
 	engineConfiguration->minimumIgnitionTiming = -25;
 
 	// expect to schedule the on-phase dwell and spark (not the wasted spark copy)
-	onTriggerEventSparkLogic(1200, nowNt1, 10, 30);
+	onTriggerEventSparkLogic(1200, nowNt1, 10, 30, 50);
 
 	// expect to schedule second events, the out-of-phase dwell and spark (the wasted spark copy)
-	onTriggerEventSparkLogic(1200, nowNt2, 360 + 10, 360 + 30);
+	onTriggerEventSparkLogic(1200, nowNt2, 360 + 10, 360 + 30, 360 + 50);
 }
 
 TEST(ignition, hardwareLatencyCorrection) {

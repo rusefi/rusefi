@@ -68,6 +68,13 @@ public:
 	// Track whether coil charge was canceled due to overcharge
 	bool wasSparkCanceled = false;
 
+	// True once this cycle's dwell start has been scheduled (one tooth ahead
+	// on the angle clock or time-based). Cleared in
+	// prepareCylinderIgnitionSchedule when the next cycle's angles are
+	// computed at spark fire - prevents the current-tooth window of the
+	// following tooth from scheduling the dwell a second time.
+	bool dwellStartArmed = false;
+
 	/**
 	 * Desired timing advance
 	 */

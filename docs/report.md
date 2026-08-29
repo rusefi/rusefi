@@ -9072,3 +9072,54 @@ Open follow-ups:
    CCR layout of the stock (compare values vs predicted ARR fractions) would
    confirm whether the stock uses per-tooth reset (needs the fast-IRQ work
    this design avoided) or absolute ticks.
+
+## 2026-08-29 - m74_9: dwell start and injection start moved to the angle clock (one-tooth-ahead)
+
+Follow-up to the TMR2 angle clock: the queue events (spark fire) were already
+fired one tooth ahead; dwell start (scheduleSparkEvent) and injection start
+(InjectionEvent::onTriggerTooth) were still scheduled edge-based on TIM5 at
+their due tooth with the old 0-1 tooth lead, so a late handoff still shifted
+them.
+
+What changed:
+
+| File | Change |
+| --- | --- |
+| firmware/controllers/engine_cycle/spark_logic.cpp/.h | onTriggerEventSparkLogic gains nextNextPhase; dwell window checked as [nextPhase, nextNextPhase) (one tooth early) with the old [currentPhase, nextPhase) kept for the first cycle after a (re)sync; scheduleSparkEvent arms the dwell on the angle clock first, TIM5 fallback; dwellStartArmed flag set at scheduling, cleared in prepareCylinderIgnitionSchedule |
+| firmware/controllers/engine_cycle/main_trigger_callback.cpp | InjectionEvent::onTriggerTooth gains nextNextPhase; same dual window; start armed on the angle clock first (ends stay time-based); injectionStartArmed + injectionStartArmedAt |
+| firmware/controllers/engine_cycle/fuel_schedule.cpp/.h | FuelSchedule::onTriggerTooth passes nextNextPhase; InjectionEvent::update() clears injectionStartArmed (new cycle = new angle) |
+| firmware/controllers/algo/event_registry.h | IgnitionEvent::dwellStartArmed |
+| unit_tests (test_ignition_scheduling, test_injection_scheduling, test_trigger_decoder, test_fasterEngineSpinningUp) | updated call sites + regression coverage |
+
+Key design decisions:
+- Dual window instead of replacing the old one: an angle that is already
+  inside the current tooth when the schedule is (re)built (first sync) would
+  NEVER be caught by the shifted window - it would fall between the checks.
+  The old [currentPhase, nextPhase) window stays as the fallback.
+- Double-hit guard: an angle scheduled at tooth k-1 via [nextPhase,
+  nextNextPhase) ALSO matches the old window at tooth k. Injection: the guard
+  is injectionStartArmed + the armed target time - a match is suppressed only
+  while the armed target is still in the future; once the target has passed a
+  match is the next cycle's scheduling (at high duty the next window arrives
+  BEFORE the injection end recomputes the angle, and the pre-existing
+  behavior schedules with the stale angle - testFuelSchedulerBug299 keeps it).
+  The flag is additionally cleared in update() (end of injection = new
+  schedule cycle; the fasterEngineSpinningUp mode-transition test covers the
+  queue-wiped-without-firing case). Spark: dwellStartArmed cleared in
+  prepareCylinderIgnitionSchedule at spark fire (the next dwell window is
+  always after the fire, so no overlap hazard).
+- Non-angle-clock builds (all other boards, unit tests) are unchanged: the
+  early window is compiled out under EFI_ANGLE_CLOCK, so the behavior is
+  exactly the old single-window one.
+
+Validation:
+- Full unit-test suite: 1169/1169 pass (bug299 and fasterEngineSpinningUp
+  caught two real flag-lifecycle bugs during development and now pin them).
+- m74_9 firmware builds.
+
+Remaining on the old path: multispark (time-based by design), the injection
+END events (time domain by design), knock windows, MAP averaging windows.
+
+On-car check: lockstats 'angclk fired' should now count dwell + injection
+starts on top of the spark fires; 'sched dwell/fuel' lines should show only
+the fallback cases.

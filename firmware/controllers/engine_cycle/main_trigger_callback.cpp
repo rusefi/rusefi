@@ -40,6 +40,7 @@
 #include "event_queue.h"
 #include "injector_model.h"
 #include "injection_gpio.h"
+#include "angle_clock.h"
 
 #if EFI_LAUNCH_CONTROL
 #include "launch_control.h"
@@ -75,11 +76,36 @@ static void turnInjectionPinLowStage2(InjectionEvent* event) {
 	}
 }
 
-void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float nextPhase) {
+void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float nextPhase, float nextNextPhase) {
+#if !EFI_ANGLE_CLOCK
+	UNUSED(nextNextPhase);
+#endif // !EFI_ANGLE_CLOCK
 	auto eventAngle = injectionStartAngle;
 
-	// Determine whether our angle is going to happen before (or near) the next tooth
-	if (!isPhaseInRange(eventAngle, currentPhase, nextPhase)) {
+	// A previous arm whose target is still in the future covers this window
+	// (the one-tooth-ahead arm of the previous tooth, or the time-based arm
+	// of the same cycle): do not schedule twice. Once the armed target has
+	// passed, the arm has fired (or was lost) and a window match is the NEXT
+	// cycle's scheduling - at high duty the next window can arrive before
+	// the injection end recomputes the angle, and the pre-existing behavior
+	// schedules with the stale angle.
+	if (injectionStartArmed && (injectionStartArmedAt - nowNt) > 0) {
+		return;
+	}
+
+	// The injection start is scheduled one tooth ahead: the early window
+	// [nextPhase, nextNextPhase) gives the handoff a full tooth of slack
+	// instead of the old 0-1 tooth lead. The current-tooth window is kept for
+	// the first cycle after a (re)sync, when the start angle can already be
+	// inside the current tooth.
+#if EFI_ANGLE_CLOCK
+	bool scheduleEarly = isPhaseInRange(eventAngle, nextPhase, nextNextPhase);
+#else
+	bool scheduleEarly = false;
+#endif // EFI_ANGLE_CLOCK
+	bool scheduleNow = isPhaseInRange(eventAngle, currentPhase, nextPhase);
+
+	if (!scheduleEarly && !scheduleNow) {
 		return;
 	}
 
@@ -204,8 +230,25 @@ void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float n
 		angleFromNow += getEngineState()->engineCycle;
 	}
 
-	// Schedule opening (stage 1 + stage 2 open together)
-	efitick_t startTime = scheduleByAngle(nullptr, nowNt, angleFromNow, startAction);
+	// Schedule opening (stage 1 + stage 2 open together). The delay is
+	// computed from THIS edge; with the one-tooth-ahead window it covers
+	// 1-2 teeth. Try the hardware angle clock first (fixed ~1 us firing,
+	// immune to handoff lateness), fall back to the time-based executor.
+	float delayUs = engine->rpmCalculator.oneDegreeUs * angleFromNow;
+	efitick_t startTime = sumTickAndFloat(nowNt, USF2NT(delayUs));
+
+#if EFI_ANGLE_CLOCK
+	if (angleClockArm(angleClockTickForNt(startTime), startAction)) {
+		// armed on the hardware angle clock - the ends below still follow in
+		// the time domain, computed from the intended start moment.
+	} else
+#endif // EFI_ANGLE_CLOCK
+	{
+		getScheduler()->schedule("inj", nullptr, startTime, startAction);
+	}
+
+	injectionStartArmed = true;
+	injectionStartArmedAt = startTime;
 
 	// Schedule closing stage 1
 	efitick_t turnOffTimeStage1 = startTime + US2NT((int)durationUsStage1);
@@ -230,7 +273,7 @@ void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float n
 #endif /* EFI_DETAILED_LOGGING */
 }
 
-static void handleFuel(efitick_t nowNt, float currentPhase, float nextPhase) {
+static void handleFuel(efitick_t nowNt, float currentPhase, float nextPhase, float nextNextPhase) {
 	ScopePerf perf(PE::HandleFuel);
 
 	efiAssertVoid(ObdCode::CUSTOM_STACK_6627, hasLotsOfRemainingStack(), "lowstck#3");
@@ -257,7 +300,7 @@ static void handleFuel(efitick_t nowNt, float currentPhase, float nextPhase) {
 	}
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
-	fs->onTriggerTooth(nowNt, currentPhase, nextPhase);
+	fs->onTriggerTooth(nowNt, currentPhase, nextPhase, nextNextPhase);
 }
 
 /**
@@ -303,7 +346,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_
 	 * For fuel we schedule start of injection based on trigger angle, and then inject for
 	 * specified duration of time
 	 */
-	handleFuel(edgeTimestamp, currentPhase, nextPhase);
+	handleFuel(edgeTimestamp, currentPhase, nextPhase, nextNextPhase);
 
 	engine->module<TriggerScheduler>()->scheduleEventsUntilNextTriggerTooth(
 		rpm, edgeTimestamp, currentPhase, nextPhase, nextNextPhase);
@@ -311,7 +354,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_
 	/**
 	 * For spark we schedule both start of coil charge and actual spark based on trigger angle
 	 */
-	onTriggerEventSparkLogic(rpm, edgeTimestamp, currentPhase, nextPhase);
+	onTriggerEventSparkLogic(rpm, edgeTimestamp, currentPhase, nextPhase, nextNextPhase);
 }
 
 #endif /* EFI_ENGINE_CONTROL */
