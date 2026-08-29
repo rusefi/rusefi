@@ -8749,3 +8749,26 @@ Bench verification (5 min, multimeter): the CLT connector pull-up rail
 at two battery voltages - expect VBATT/2.5 (12.5V -> 5.0, 14.4 -> 5.76).
 P0118/P0113 in the logs are the CORRECT open-circuit detection (open
 input = rail through the 2:1 divider = >4.9V scaled), not a bug.
+
+## 2026-08-29 (8th) - mcp_can: PCAN-USB .trc dump tool (can_dump.sh)
+
+The user needed a way to capture CAN dumps with the STOCK ECU from the
+Mac (previously done on Windows with PCAN-View). Implemented
+com.rusefi.candump.CanDump in the mcp_can module + java_console/bin/can_dump.sh.
+
+Design: PCAN-View .trc v1.1 output (opens in the same tooling and the
+existing parsers), listen-only mode by default (the adapter never ACKs,
+so the capture does not disturb the ECU), all std+ext frames with the
+driver's 1 us timestamps (host nanoTime fallback), inline status rows
+for bus transitions via PCAN_ALLOW_STATUS_FRAMES, header with the
+PCAN-View STARTTIME serial (local-as-UTC / 86400000 + 25569 - verified
+against orig_1.trc), Ctrl+C flush via shutdown hook, --duration option.
+
+Validation: 8/8 unit tests (CanDumpFormatTest - row layout, STARTTIME
+serial, hex, status names); smoke-tested on the bench - captured live
+m74_9 dash frames (0x0189/0x0186/0x018A at the 10 ms cadence) with
+correct sub-ms timestamps. Committed 3a0e973cda4.
+
+Known limits: error frames only if the driver delivers them (USB
+adapters usually don't); RTR frames carry DLC but no data bytes; the
+adapter is exclusive - close the console/flasher before capturing.
