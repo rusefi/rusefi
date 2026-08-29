@@ -472,10 +472,36 @@ public class OpenBltCanFlasher {
             }
             sleepMs(50);
         }
-        throw new FlashException("No XCP response after switching to " + speed
-                + ". The 1 Mbit mode does not work on this adapter/driver (MacCAN usually does not "
-                + "support it). The bootloader watchdog resets the ECU back to 500k on its own "
-                + "(and the 5 s fallback does too) - just rerun WITHOUT --1mbit.");
+
+        if (rate == XcpConstants.BAUD_1M) {
+            // Diagnostic that decides WHERE the switch failed: go back to
+            // 500k and try to connect. The ECU either (a) wedged during its
+            // own switch and the watchdog reset it, (b) fell back on the 5 s
+            // no-traffic timer, or (c) is fine at 1M and the adapter ignored
+            // the rate. (a)+(b) answer here; (c) does not.
+            listener.log("Probing the ECU at 500 kbit to see whether it recovered...");
+            link.setBaudrate(XcpConstants.BAUD_500K);
+            XcpResponse con = null;
+            for (int attempt = 0; attempt < 20; attempt++) {
+                con = xcp.connect(0, 300);
+                if (con != null && con.isOk()) {
+                    break;
+                }
+                sleepMs(50);
+            }
+            if (con != null && con.isOk()) {
+                // The ECU is alive at 500k: its own switch failed and the
+                // watchdog/fallback recovered it - the problem is ECU-side
+                // (or the adapter never really changed the rate).
+                throw new FlashException("1 Mbit switch failed, but the ECU recovered at 500 kbit by itself "
+                        + "(watchdog/fallback) - so the switch fails on the ECU side, not the adapter. "
+                        + "Rerun WITHOUT --1mbit.");
+            }
+            throw new FlashException("1 Mbit switch failed and the ECU does not answer at 500 kbit either. "
+                    + "Power-cycle the ECU and rerun WITHOUT --1mbit.");
+        }
+        throw new FlashException("No XCP response after switching back to " + speed
+                + ". Power-cycle the ECU and rerun WITHOUT --1mbit.");
     }
 
     private static void sleepMs(long ms) {
