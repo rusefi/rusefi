@@ -713,6 +713,29 @@ See also .junie/guidelines.md file
 
 ## Console self-burn loop ("nobody pressed Burn" mystery) - root cause (2026-08-24)
 
+## m74_9 CLT/IAT: bias rail is battery-TRACKING VTRK (VBATT/2.5), NOT regulated 5V (analysis 2026-08-29, corrected)
+
+Chain (all verified from code + logs): NTC -> 2:1 divider (REAL, on the board) -> ADC3 slow (EFI_ADC_32=IAT/EFI_ADC_39=CLT; VDDA = L9779 V3V3, measured stable at 3.37V via internalVref channel across sessions) -> x 2.0 (global analogInputDividerCoefficient - CORRECT for the physical 2:1 divider, do NOT change to 1.0) -> ResistanceFunc (supply HARDCODED 5.0V in init_thermistors.cpp) -> Steinhart-Hart.
+
+The thermistor pull-up rail is the L9779 VTRK tracking supply =
+VBATT/2.5 (battery-proportional BY DESIGN; "5V" only at a 12.5V
+battery), while the firmware assumes fixed 5.0. Model fits ALL
+observations: at VBATT 14.4 (VTRK 5.76): +5C real reads -33C (the
+user's -30), 90C reads 86.4, 100C reads 94.7 - the hot zone "a few
+degrees off" exactly as the user reported; at VBATT 12.5 everything
+reads exact. "Values wander with voltage" is the same mechanism: the
+bias is f(VBATT). The cold-end error explodes because the junction
+voltage approaches the rail where R = 1500/(5/V-1) is steepest. The
+08-25 bench fit proves the chain exact: rawclt 0.702V -> 245 ohm ->
+89.5C. P0118/P0113 are CORRECT open-circuit detection (open input = rail
+through the 2:1 divider = >4.9V scaled).
+
+Fix plan: (1) firmware - use the real bias = measured VBATT x 0.4
+(VTRK = VBATT/2.5, confirm in the L9779 datasheet, board constant);
+VBATT already measured on PA6 (8.02 divider). (2) optional VREFINT
+rescale - cosmetic, VDDA is stable. (3) hardware - move the pull-ups to
+VDDA: fully ratiometric, battery-independent, full cold range.
+
 The periodic "MFS: Writing storage ID 1/2 (17544 bytes)" bursts in console logs are the CONSOLE's own TS-protocol burns, triggered by the Tune tab upload loop - NOT TunerStudio, NOT fuel trim (LTFT = separate ID 3, 2048 bytes).
 
 Chain (all verified in code + logs):
@@ -781,3 +804,13 @@ direction from a late pin read. Two candidate fixes, both recorded here:
 
 On-car validation of A: rawtrg at 4000+ rpm must show clean alternating F/R
 (no same-edge runs) and the high-rpm C9002 events must disappear.
+
+### Option B re-analysis (2026-08-29): ICU = TMR13_CH1 only, VectorF0 is PWM-occupied, latency gain ~2-3 us
+
+Code-verified facts that sharpen the option-B record above:
+- **PF8 has ONLY TMR13_CH1** (getIcuParams in stm32_icu.cpp: F8 -> ICUD13/CH1, GPIO_AF_TIM13=9). TMR13 is a ONE-channel timer -> the stock ME17's atomic direction latch (PWM-input mode, IC1+IC2) is IMPOSSIBLE on this pin. Direction must still be read from the pin in the IRQ (race with the L9779 ~4 us min spacing unchanged); the gain is the HARDWARE-latched timestamp (CCR1 at the edge, jitter 0, 250 ns quantization at PSC=71) plus the CC1OF overcapture flag (coalesced EXTI edges are invisible today).
+- **VectorF0 (TMR8_UP/TMR13) is ALREADY defined by the PWM driver**: STM32_PWM_USE_TIM8=TRUE without STM32_TIM8_SUPPRESS_ISR makes hal_pwm_lld.c emit OSAL_IRQ_HANDLER(STM32_TIM8_UP_HANDLER)=VectorF0. Enabling STM32_ICU_USE_TIM13 double-defines it. Fix: STM32_TIM8_SUPPRESS_ISR TRUE (safe - no m74_9 output uses TIM8; its pins are C6/C7/C8/C9) + STM32_TIM13_SUPPRESS_ISR TRUE + one combined VectorF0 handler calling icu_lld_serve_interrupt(&ICUD13).
+- TMR13 clock = TIMCLK1 = PCLK1 x 2 = 288 MHz (PPRE1=DIV2) -> PSC=71 = exactly the NT domain (4 MHz, 250 ns, 32-bit wrap 1073 s); boot-time offset calibration (TIM5.CNT - TIM13.CNT, drift 0 - one PLL) makes captures directly NT-domain. Do NOT run raw 288 MHz (14.9 s wrap needs overflow accounting).
+- Both-edge capture on the 1-channel TMR13 needs CC1P=0/CC1NP=1 written after icuStart (outside the ChibiOS ICU API - single-edge modes only).
+- Absolute latency gain is small: the current EXTI timestamp error is ~1.5-3 us (IRQ entry + EXTI PR RMW + pin read + TIM5 read) = ~0.1 deg at 7000 rpm and fractions of a percent in the [1.6, 3.75] gap ratio - the C9002 storms were polarity (full tooth), already fixed by option A. ICU is hardening + diagnostics, not a live bug fix.
+- **The de-risking test (do this first)**: run EXTI and TMR13 AF capture on PF8 SIMULTANEOUSLY (AF input and EXTI coexist on one pin - EXTI watches the level regardless of GPIO mode), tag rawtrg entries by source, compare. One bench session proves the AF9 candidate AND measures the real timestamp error before any cutover. Keep the hardware ICxF input filter OFF by default (it would blind rawtrg noise diagnostics); software debounce and the pri-3-executor/pri-4-handoff invariants stay untouched.

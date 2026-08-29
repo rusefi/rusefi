@@ -23,6 +23,12 @@ static CCM_OPTIONAL FunctionalSensor compressorDischargeTemp(SensorType::Compres
 
 static FuncPair fclt, fiat, faux1, faux2, foil, ffuel, fambient, fcdt;
 
+// Weak default: fixed 5.0V thermistor bias (most boards). Boards with a
+// battery-tracking bias rail override this (see the declaration in thermistors.h).
+PUBLIC_API_WEAK float getThermistorBiasTrackingRatio(const char*) {
+	return 0;
+}
+
 static void validateThermistorConfig(const char* msg, thermistor_conf_s& cfg) {
 	if (cfg.tempC_1 >= cfg.tempC_2 || cfg.tempC_2 >= cfg.tempC_3) {
 		firmwareError(
@@ -45,7 +51,12 @@ configureTempSensorFunction(const char* msg, thermistor_conf_s& cfg, FuncPair& p
 	} else /* sensor is thermistor */ {
 		validateThermistorConfig(msg, cfg);
 
-		p.thermistor.get<resist>().configure(5.0f, cfg.bias_resistor, isPulldown);
+		float trackingRatio = getThermistorBiasTrackingRatio(msg);
+		if (trackingRatio > 0) {
+			p.thermistor.get<resist>().configureTrackingBias(trackingRatio, cfg.bias_resistor, isPulldown);
+		} else {
+			p.thermistor.get<resist>().configure(5.0f, cfg.bias_resistor, isPulldown);
+		}
 		p.thermistor.get<therm>().configure(cfg);
 
 		return p.thermistor;

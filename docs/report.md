@@ -8582,3 +8582,170 @@ stays in the tree behind --1mbit-force for a future working driver.
 State of the flashing story: 265 s -> 68.5 s (plan A) -> 45.0 s (plan B,
 500k batch, VERIFIED twice today). Open follow-up: none for speed - the
 remaining floor is the MacCAN USB round trip (~1 ms/frame), hardware.
+
+## 2026-08-29 (5th) - m74_9: ДПКВ через ICU (TMR13) - полный анализ, сравнение задержек с EXTI
+
+Code-verified analysis (no hardware test yet) of moving the crank input
+from the EXTI two-stage capture to the timer ICU, superseding the option-B
+notes of 2026-08-25.
+
+Hardware facts:
+- PF8 has ONLY TMR13_CH1 as its capture timer (already mapped in
+  stm32_icu.cpp getIcuParams: F8 -> ICUD13/CH1/GPIO_AF_TIM13=9). TMR13 is
+  a ONE-channel timer, so the stock-style atomic direction latch
+  (PWM-input mode, IC1+IC2) is IMPOSSIBLE on this pin - the ME17 does it
+  with a 2-channel timer. A 2-channel option exists only if the AT32F435
+  has a second timer AF on PF8 (TIM8_CH3 candidate, unverified - the repo
+  has no AT32 AF table). TIM8 is free on m74_9: its PWM pins are
+  C6/C7/C8/C9 and no board output uses them (C6/C7 are ADC).
+- TMR13 clock = TIMCLK1 = PCLK1 x 2 = 288 MHz (PPRE1=DIV2, hal_lld.h) ->
+  PSC=71 gives exactly the NT domain (4 MHz, 250 ns, 32-bit wrap 1073 s,
+  WrapAround62-compatible). A boot-time offset calibration (TIM5.CNT -
+  TIM13.CNT, drift 0 - one PLL) puts captures in the NT timebase.
+
+Latency comparison (edge -> decode):
+- EXTI today: timestamp read in the fast IRQ ~1.5-3 us after the edge with
+  +-0.5-1.5 us jitter (IRQ entry + EXTI PR RMW + palReadLine + TIM5 read);
+  polarity read 2-3 us after the edge against the L9779 ~4 us min spacing
+  (margin 1-2 us - the tightest point of the chain). Handoff pri 4 start
+  ~5-10 us + up to ~100 us executor preemption; decode 44 us avg.
+- ICU B1 (TMR13_CH1, both edges via CC1P=0/CC1NP=1, pin read for
+  direction): timestamp latched in CCR1 AT the edge, jitter 0, quantization
+  250 ns; ISR ~1-2 us (SR+CCR1+pin, no EXTI PR RMW); direction race
+  UNCHANGED (1 channel). Handoff/decode unchanged.
+- Absolute gain is small: 2-3 us = ~0.1 deg at 7000 rpm (148 us tooth),
+  fractions of a percent in the [1.6, 3.75] gap ratio - the C9002 storms
+  were polarity (a full tooth = 6 deg), already fixed by option A. ICU is
+  hardening, not a fix for a live problem.
+
+Improvements vs the old option-B list:
+1. PARALLEL EXTI+ICU validation mode (the key addition): timer AF input
+   and EXTI coexist on one pin (EXTI watches the level regardless of GPIO
+   mode). Run both, tag rawtrg entries with the source, compare - one test
+   proves the PF8->TMR13 AF9 candidate AND measures the real timestamp
+   error before cutover.
+2. CC1OF overcapture flag -> new lost-edge counter (coalesced EXTI edges
+   are invisible today).
+3. Keep the hardware ICxF input filter OFF by default (it would blind
+   rawtrg noise diagnostics); keep the software debounce untouched.
+4. Reuse the 32-deep queue and the pri-4 handoff; priority invariants
+   (executor 3 > handoff 4) unchanged.
+
+Blocker (NEW, concrete): VectorF0 (TMR8_UP/TMR13) is ALREADY emitted by
+  the PWM driver because STM32_PWM_USE_TIM8=TRUE without
+  STM32_TIM8_SUPPRESS_ISR (hal_pwm_lld.c emits OSAL_IRQ_HANDLER(
+  STM32_TIM8_UP_HANDLER)=VectorF0). Enabling STM32_ICU_USE_TIM13 would
+double-define VectorF0. Fix: STM32_TIM8_SUPPRESS_ISR TRUE (safe on m74_9)
+  + STM32_TIM13_SUPPRESS_ISR TRUE + one combined VectorF0 handler serving
+  icu_lld_serve_interrupt(&ICUD13). Both-edge capture needs CC1P=0/CC1NP=1
+  written after icuStart (outside the ChibiOS ICU API, port-local code).
+
+Open follow-ups: verify the PF8 AF on the bench (parallel mode), then an
+opt-in B1 build; B2 (atomic direction) only if a 2-channel AF on PF8 is
+found in the Artery RM.
+
+## 2026-08-29 (6th) - m74_9: CLT/IAT cold-range failure + voltage wander - root cause is the 5V-bias/3.3V-ADC topology + the 2.0 divider
+
+Analysis of why CLT shows ~-30 at +5C and why the values wander with
+supply voltage (code-verified, no hardware measurement yet).
+
+Chain (all verified): NTC + 1500 ohm pull-up to +5V (L9779 VTRK,
+battery-tracking) -> ADC3 slow sampling (VDDA 3.3V from L9779 V3V3) ->
+adcGetRawVoltage (counts x tune adcVcc 3.3 / 4095, NO VREFINT correction
+on this path - getMcuVrefVoltage() is diagnostics-only) -> x 2.0 (global
+analogInputDividerCoefficient; EFI_ADC_32/39 are not special-cased, only
+MAP/TPS/PPS 1.555 and lambda EFI_ADC_37 1.0 are) -> ResistanceFunc with
+HARDCODED 5.0V supply (init_thermistors.cpp configure(5.0f, ...), no bias
+voltage config field exists) + open-circuit check V>4.9V -> Steinhart-Hart
+-> Sensor::getOrZero.
+
+Root cause math:
+- With a 5V bias and a 3.3V ADC reference the measurable range ends at
+  R = 1500 x 3.3/(5-3.3) = 2912 ohm: CLT ~+24C, IAT ~+19C. Everything
+  colder saturates the ADC at 3.28V - the cold range is INVISIBLE by
+  topology, no firmware can recover it.
+- The 2.0 divider pushes the operating point onto the diverging hyperbola
+  R = 1500/(5/V - 1): at V=4.83V R=42k (-24C), V=4.87V R=58k (-30C),
+  V=4.89V R=82k (-45C). "+5C shows -30C" is exactly this edge - tiny
+  voltage movements there swing the temperature by tens of degrees.
+- The hot range is ALSO wrong with the 2.0 divider: real 90C -> ~66C,
+  real 100C -> ~78C. The fan thresholds 95-97C are UNREACHABLE - the fan
+  can never turn on with the current coefficients.
+
+Voltage dependence (user question) - CONFIRMED structurally: the reading
+depends on TWO independent rails and the firmware assumes both fixed:
+(a) the 5V bias rail VTRK (battery-tracking; VDD5_OV/V3V3_UV transients
+already observed via DIA10) with supply hardcoded 5.0, and (b) the 3.3V
+ADC reference with a nominal adcVcc and no VREFINT rescaling. The
+sensitivity to the rails is MAXIMAL at the cold end (near the saturation
+knee / hyperbola edge) - exactly where the user sees the values wander
+(cold start, cranking).
+
+Fix plan:
+1. Firmware-only, immediate: return 1.0 for EFI_ADC_32/39 in
+   getAnalogInputDividerCoefficient (same as the lambda EFI_ADC_37 fix).
+   The whole measurable range becomes exact (90C -> 90C), the fan becomes
+   reachable, the cold end gives an honest monotonic ~24C clamp instead of
+   phantom/invalid. Tradeoff: the 4.9V open-circuit check can never fire
+   on a 3.3V ADC, so a disconnected sensor shows ~24C.
+2. Optional: rescale raw volts with getMcuVrefVoltage() instead of the
+   nominal adcVcc - removes the VDDA-sag component.
+3. Hardware (the real cold-range + rail-independence fix): move the
+   1500 ohm pull-ups from 5V to VDDA 3.3V - bias and reference become one
+   rail (fully ratiometric, sag cancels), the full -40..+130C range is
+   visible, and the firmware supply must become 3.3 (needs a bias-voltage
+   config field instead of the hardcoded 5.0).
+
+Diagnostics available now: rawClt/rawIat gauges (~6.5V saturated x2
+before the fix, ~3.28V after) and cltResistance/iatResistance output
+channels (0 = invalid before the fix, ~2912 ohm clamp after). Also verify
+the msq curve against the real sensor (measure R at +5C with a
+multimeter; if it reads ~1.4k and not ~8.4k the curve is not this NTC).
+
+## 2026-08-29 (7th) - CORRECTION of the entry above: the thermistor bias rail is battery-TRACKING VTRK (VBATT/2.5), not regulated 5V
+
+The previous entry's core assumption (1500 ohm pull-up to a fixed 5V,
+therefore the 2.0 divider is wrong and the hot zone reads low) is WRONG.
+The user's observation that the hot zone reads correctly (a few degrees
+off at most) is what exposed it; the logs then confirmed:
+
+Hard facts from the MLGs:
+- internalVref (measured VDDA via VREFINT) = 3.37V in 08-24 (car), 08-25
+  and 08-28 (bench) - the L9779 V3V3 stabilizes the ADC reference
+  properly (the user's "L9779 should stabilize power" instinct - correct
+  for the 3.3V rail).
+- 08-25 bench fit: rawclt = 0.702V (scaled x2.0) and coolant = 89.5C are
+  EXACTLY consistent with the resistance math (0.702 -> 245 ohm ->
+  89.5C). The chain is exact for whatever it is fed; there IS a real
+  2:1 divider between the thermistor junction and the ADC pin (otherwise
+the cold readings would saturate into P0118, not show -30).
+- 08-24 car warm idle: rawclt = 0.66V = a ~95C thermostat reading only
+  if the bias rail is ~5.6V (VBATT ~14.0), NOT 5.0V.
+
+Model that fits ALL observations: the thermistor pull-up rail is the
+L9779 VTRK tracking supply = VBATT/2.5 (battery-proportional by design,
+"5V" only at a 12.5V battery), while the firmware hardcodes 5.0V in
+init_thermistors.cpp configure(5.0f, ...). At VBATT 14.4 (VTRK 5.76):
++5C real reads -33C (the user's -30), 90C reads 86.4, 100C reads 94.7 -
+the hot zone is "a few degrees off" exactly as the user said. At VBATT
+12.5 (VTRK 5.0) everything reads exact. This is ALSO the mechanism
+behind "values wander with voltage": the bias is f(VBATT) by
+construction. The cold-end error explodes because the junction voltage
+approaches the rail, where the R = 1500/(5/V-1) hyperbola is steepest.
+
+Corrected fix plan:
+1. Firmware (the fix): use the REAL bias = measured VBATT x 0.4
+   (VTRK = VBATT/2.5 - confirm the ratio in the L9779 datasheet section
+   on VTRK1/2; make it a board constant). VBATT is already measured on
+   PA6 (8.02 divider, verified). The ResistanceFunc supply must be
+   updated from the battery measurement, not fixed at 5.0. DO NOT change
+   the 2.0 divider to 1.0 - that was the wrong fix and would break the
+   hot zone.
+2. Optional: VREFINT rescale of raw volts - cosmetic, VDDA is stable.
+3. Hardware (final): move the 1500 ohm pull-ups to VDDA - fully
+   ratiometric, battery-independent, full cold range visible.
+
+Bench verification (5 min, multimeter): the CLT connector pull-up rail
+at two battery voltages - expect VBATT/2.5 (12.5V -> 5.0, 14.4 -> 5.76).
+P0118/P0113 in the logs are the CORRECT open-circuit detection (open
+input = rail through the 2:1 divider = >4.9V scaled), not a bug.
