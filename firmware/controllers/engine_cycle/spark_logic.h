@@ -7,7 +7,7 @@
 
 #pragma once
 
-void onTriggerEventSparkLogic(float rpm, efitick_t edgeTimestamp, float currentPhase, float nextPhase);
+void onTriggerEventSparkLogic(float rpm, efitick_t edgeTimestamp, float currentPhase, float nextPhase, float nextNextPhase);
 void turnSparkPinHighStartCharging(IgnitionEvent *event);
 void fireSparkAndPrepareNextSchedule(IgnitionEvent *event);
 // Overdwell watchdog: fires when the angle-queued spark did not fire on its

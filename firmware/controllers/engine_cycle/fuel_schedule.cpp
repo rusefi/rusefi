@@ -146,6 +146,13 @@ bool InjectionEvent::update() {
 		return false;
 	}
 
+	// The angles for the next injection are being (re)computed: a new
+	// schedule cycle begins, the previous arm is obsolete. Note this runs at
+	// the END of the current injection - the high-duty overlap (next window
+	// before the end) is handled by the armedAt-in-the-future check in
+	// onTriggerTooth, not by this flag.
+	injectionStartArmed = false;
+
 	injection_mode_e mode = getCurrentInjectionMode();
 	engine->outputChannels.currentInjectionMode = static_cast<uint8_t>(mode);
 
@@ -213,14 +220,14 @@ void FuelSchedule::addFuelEvents() {
 	isReady = true;
 }
 
-void FuelSchedule::onTriggerTooth(efitick_t nowNt, float currentPhase, float nextPhase) {
+void FuelSchedule::onTriggerTooth(efitick_t nowNt, float currentPhase, float nextPhase, float nextNextPhase) {
 	// Wait for schedule to be built - this happens the first time we get RPM
 	if (!isReady) {
 		return;
 	}
 
 	for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
-		elements[i].onTriggerTooth(nowNt, currentPhase, nextPhase);
+		elements[i].onTriggerTooth(nowNt, currentPhase, nextPhase, nextNextPhase);
 	}
 }
 

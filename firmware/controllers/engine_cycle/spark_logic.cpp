@@ -11,6 +11,7 @@
 
 #include "utlist.h"
 #include "event_queue.h"
+#include "angle_clock.h"
 
 #include "knock_logic.h"
 
@@ -90,6 +91,9 @@ TRIGGER_RAM_CODE static void prepareCylinderIgnitionSchedule(angle_t dwellAngleD
 
 	// let's save planned duration so that we can later compare it with reality
 	event->sparkDwell = sparkDwell;
+
+	// New angles for the next cycle: the dwell start is no longer armed.
+	event->dwellStartArmed = false;
 
 	auto ignitionMode = getCurrentIgnitionMode();
 
@@ -425,6 +429,11 @@ TRIGGER_RAM_CODE static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent
 	event->sparkCounter = engine->engineState.globalSparkCounter++;
 	event->wasSparkLimited = limitedSpark;
 
+	// This cycle's dwell is now scheduled: the current-tooth window of the
+	// NEXT tooth must not schedule it a second time. Cleared in
+	// prepareCylinderIgnitionSchedule at spark fire.
+	event->dwellStartArmed = true;
+
 	efitick_t chargeTime = 0;
 
 	/**
@@ -442,7 +451,18 @@ TRIGGER_RAM_CODE static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent
 		 * This way we make sure that coil dwell started while spark was enabled would fire and not burn
 		 * the coil.
 		 */
-		chargeTime = scheduleByAngle(&event->dwellStartTimer, edgeTimestamp, angleOffset, action_s::make<turnSparkPinHighStartCharging>( event ));
+		// One-tooth-ahead arming: with the early window the angleOffset covers
+		// 1-2 teeth. Try the hardware angle clock first (fixed ~1 us firing,
+		// immune to handoff lateness), fall back to the time-based executor.
+		float delayUs = engine->rpmCalculator.oneDegreeUs * angleOffset;
+		chargeTime = sumTickAndFloat(edgeTimestamp, USF2NT(delayUs));
+
+#if EFI_ANGLE_CLOCK
+		if (!angleClockArm(angleClockTickForNt(chargeTime), action_s::make<turnSparkPinHighStartCharging>( event )))
+#endif // EFI_ANGLE_CLOCK
+		{
+			engine->scheduler.schedule("dwell", &event->dwellStartTimer, chargeTime, action_s::make<turnSparkPinHighStartCharging>( event ));
+		}
 
 #if EFI_UNIT_TEST
 		engine->onScheduleTurnSparkPinHighStartCharging(*event, edgeTimestamp, angleOffset, chargeTime);
@@ -575,7 +595,10 @@ static void prepareIgnitionSchedule() {
 	initializeIgnitionActions();
 }
 
-TRIGGER_RAM_CODE void onTriggerEventSparkLogic(float rpm, efitick_t edgeTimestamp, float currentPhase, float nextPhase) {
+TRIGGER_RAM_CODE void onTriggerEventSparkLogic(float rpm, efitick_t edgeTimestamp, float currentPhase, float nextPhase, float nextNextPhase) {
+#if !EFI_ANGLE_CLOCK
+	UNUSED(nextNextPhase);
+#endif // !EFI_ANGLE_CLOCK
 	ScopePerf perf(PE::OnTriggerEventSparkLogic);
 
 	if (!engineConfiguration->isIgnitionEnabled) {
@@ -646,8 +669,23 @@ TRIGGER_RAM_CODE void onTriggerEventSparkLogic(float rpm, efitick_t edgeTimestam
 				}
 			}
 
-			if (!isOddCylWastedEvent && !isPhaseInRange(dwellAngle, currentPhase, nextPhase)) {
-				continue;
+			if (!isOddCylWastedEvent) {
+				// The dwell is scheduled one tooth ahead (EFI_ANGLE_CLOCK): the
+				// early window [nextPhase, nextNextPhase) gives the handoff a
+				// full tooth of slack instead of the old 0-1 tooth lead. The
+				// current-tooth window is kept for the first cycle after a
+				// (re)sync, when the dwell angle can already be inside the
+				// current tooth. dwellStartArmed prevents double scheduling:
+				// the early branch of this tooth covers the current-tooth
+				// window of the NEXT tooth.
+				bool scheduleEarly = false;
+#if EFI_ANGLE_CLOCK
+				scheduleEarly = isPhaseInRange(dwellAngle, nextPhase, nextNextPhase);
+#endif // EFI_ANGLE_CLOCK
+				bool scheduleNow = isPhaseInRange(dwellAngle, currentPhase, nextPhase);
+				if (event->dwellStartArmed || (!scheduleEarly && !scheduleNow)) {
+					continue;
+				}
 			}
 
 			if (i == 0 && engineConfiguration->artificialTestMisfire && (getRevolutionCounter() % ((int)engineConfiguration->scriptSetting[5]) == 0)) {
