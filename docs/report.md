@@ -8875,10 +8875,19 @@ angle accumulator in 0x018A[2:3]; fuel flow x 16; 066A engine-time counter;
 re-confirmed with corr = 1.000 vs rpm in orig_1.
 
 Open follow-ups:
-- The exact dash acceptance gate for the needle is still inferred, not
-  proven: the needle plausibility model needs an on-car test of this build.
-  If the needle is still low, the next suspects are 0x0217[3:5] (non-zero
-  while running: 0x01/0x02, 0xA010/0x700E/0x800E - looks like a load-
-  gated accumulator) and the 0x0189[4] counter sequence.
-- 0x05DA[4] and 0x065C[0] vary between sessions (alternator/LRC state?) -
-  left as static values, not needed for the needle/temp.
+- The exact dash acceptance gate for the needle is still INFERRED, not
+  PROVEN: the needle plausibility model needs an on-car test of this build.
+  If the needle is still low, the next suspects are:
+  1) 0x0217[3:5] - non-zero while running at the stock: [3] = 0x01/0x02,
+     [4:5] = 0xA010/0x700E/0x800E (looks like a load-gated accumulator);
+     rusEFI still sends zeros there.
+  2) the exact 0x0189[4] rolling-counter sequence - rusEFI now steps 0x10
+     upward; the stock's pattern is mixed up/down, ~5 changes/s, and
+     correlates 0.64 with the battery-voltage field, so it may be an
+     alternator/load value rather than a pure freshness counter.
+- 0x05DA[4] and 0x065C[0] vary between sessions (likely alternator/LRC
+  state, not needed for the needle/temp, left static in rusEFI):
+  0x05DA[4] = 0xB9/0xBA/0xBB in orig_1/orig_3, 0xC0 -> 0x8B -> 0xC1 in
+  19:14, 0xC1 in 19:27; 0x065C[0] = 0x7A -> 0x66 over 57 s in 19:14 vs
+  0x9E -> 0x98 in 19:27 (jumps at engine start to a session-dependent
+  value, then slowly decays).
