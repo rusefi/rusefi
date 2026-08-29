@@ -151,6 +151,11 @@ class OpenBltCanFlasherTest {
         }
 
         @Override
+        public CanFrame pollFrame() {
+            return delegate.pollFrame();
+        }
+
+        @Override
         public void close() {
         }
     }

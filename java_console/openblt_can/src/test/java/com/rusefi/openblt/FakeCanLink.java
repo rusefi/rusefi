@@ -111,6 +111,11 @@ public class FakeCanLink implements CanLink {
     }
 
     @Override
+    public CanFrame pollFrame() {
+        return outgoing.poll();
+    }
+
+    @Override
     public void close() {
     }
 
