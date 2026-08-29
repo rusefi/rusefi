@@ -8321,3 +8321,25 @@ p=1.5/i=0.009/d=0.5 +/-6, fan1/2ExtraIdle 5, pidExtraForLowRpm 20,
 useIdleTimingPidControl=no, iacCoasting 6/5/3.5/3/3.5/3, coastingFuelCut
 disabled, cranking_rpm 400, LIN minRpm 300/mapOff 90/hold 2s, lambda
 table 0.898 low-load, fan soft start 10s, disable fans when stopped).
+
+## 2026-08-28 - OpenBLT CAN flash speed: analysis supplemented (code-verified)
+
+Old hypothesis "ECU takes 1-2 ms per PROGRAM_MAX frame" disproven by
+tracing the whole path: bootloader_main.cpp loops BootTask() with zero
+sleeps while connected; BootTask = CopService+TimerUpdate+ComTask+
+BackDoorCheck; ComTask polls one CanReceivePacket(TIME_IMMEDIATE) per
+pass -> XcpCmdProgramMax -> FlashBufferedWrite (4-byte line buffer) ->
+intFlashWrite (1 word flashProgram ~20-40 us). ECU = 50-200 us/frame.
+
+Budget of the measured 1.90 ms/frame: PCAN-USB dongle USB round trip
+~1.0-1.2 ms (host floor - the <1 ms histogram bucket has ZERO frames),
+bus pair 0.55 ms @500k, ECU 0.1-0.2 ms. Single-frame protocol floor at
+500k = ~0.55 ms/frame = ~53 s. The fork's xcp.c advertises no block
+mode (blockSize=0), but both protocol ends are ours.
+
+Plan: (A) host-only pipelining (K=8-16 frames burst, drain K ACKs) ->
+~60-75 s, zero firmware risk, do first; (B) true batch mode (RAM page
+buffer + one NvmWrite + one ACK per batch) -> ~35-45 s @500k; (C) 1
+Mbit only as multiplier with B -> ~20-25 s (bench-only). bxCAN 3 RX
+mailboxes are safe: ECU consumption (~100-200 us) > bus delivery
+(~265 us/frame); erase busy-wait never overlaps host traffic.
