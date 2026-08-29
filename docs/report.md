@@ -9123,3 +9123,45 @@ END events (time domain by design), knock windows, MAP averaging windows.
 On-car check: lockstats 'angclk fired' should now count dwell + injection
 starts on top of the spark fires; 'sched dwell/fuel' lines should show only
 the fallback cases.
+
+## 2026-08-29 - m74_9: WDA feed moved off the executor to a TIM10 one-shot GPT below the handoff
+
+Goal: the L9779 WDA query-answer feed ran as a self-rescheduling event on the
+TIM5 executor at priority 3 - ABOVE the trigger handoff - so its ~100 us
+polled-SPI burst preempted the trigger decode every ~28 ms and added up to
+100 us to the in-flight tooth (one of the decode-tail contributors). The
+priority was a side effect of the 2026-08-24 move thread->executor (which
+fixed the wd_timing_miss/EC>4 kill mode, a THREAD-starvation symptom), not a
+requirement: the answer window is ~12.6 ms wide, so an ISR at any priority
+above the threads lands the answer on time.
+
+What changed:
+
+| File | Change |
+| --- | --- |
+| firmware/hw_layer/drivers/gpio/l9779.cpp | feed runs in a dedicated one-shot GPT (TIM10, 1 MHz, 1 tick = 1 us): self-re-arm via gptStartOneShotI (wdArmIsr), boot kick via gptStartOneShot (wdArmThread), stop via gptStopTimer in chip_power_off; CH_IRQ_HANDLER(STM32_TIM1_UP_TIM10_HANDLER) -> gpt_lld_serve_interrupt(&GPTD10); wd_sched (scheduling_s) replaced by wd_next_moment (efitick_t) for the thread's burst-imminent check |
+| firmware/hw_layer/ports/at32/at32f4/cfg/mcuconf.h | STM32_GPT_USE_TIM10 TRUE + STM32_TIM10_SUPPRESS_ISR TRUE (the vector is shared with TIM1_UP, the GPT LLD does not own the ISR) |
+| firmware/hw_layer/ports/at32/interrupt_priority.h | EFI_IRQ_L9779_WDA_PRIORITY = 5 (below the handoff at 4) |
+
+Why the lower priority is safe:
+- The window is ~12.6 ms: a 1 ms handoff tail preempting the burst delays
+  RESP_BYTE0's end by 1 ms, far inside the window. A single miss costs one EC
+  climb, recovered in 2 correct cycles (EC decrements per correct answer).
+- The feed stays ISR-context (never a thread): thread starvation under
+  cranking load was the original kill mode.
+- The spi_busy serialization vs the diag thread is unchanged and
+  race-free at ANY ISR priority: the flag write is a single atomic store,
+  and the thread only resumes after the feed ISR completes, so the
+  check-then-burst cannot interleave with a thread batch.
+
+Validation:
+- m74_9 firmware builds; VectorA4 (TIM10 GPT ISR) and GPTD10 verified in
+  the ELF.
+- Full unit-test suite: 1169/1169.
+
+On-car/bench check: the WDA warning lines must stay clean (ok climbing,
+miss=0, kills=0, defer~0). The executor's otherCbStats no longer carries
+the feed; the GPT fires it on time by construction.
+
+Open: the feed's own dispatch is no longer telemetry-recorded (no lockstats
+line) - only the chip-side counters (ok/miss/kills/defer) remain observable.
