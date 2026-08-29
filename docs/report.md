@@ -8534,3 +8534,29 @@ Fix (commit 35def4be192): wdgResetI between sectors inside intFlashErase
 window; a HUNG single sector still trips the watchdog (~50 ms un-fed).
 Bootloader rebuild + bundle refresh done. Open follow-up: user full-flashes
 deliver/rusefi.bin and retests --probe / plain flash / --1mbit.
+
+## 2026-08-29 (3rd) - OpenBLT: 1M switch+erase now WORK, but batch-at-1M silently corrupts the image
+
+The reboot-based switch and the IWDG fix held: all 22 erase chunks completed
+at 1 Mbit and the switch back to 500k worked. The new failure: the final
+BUILD_CHECKSUM caught a corrupted image (ADD11 0x9C vs 0x74 - the deferred-
+ACK batch mode had shifted bytes). Root cause: batch mode sends ~293
+PROGRAM_MAX frames per 2 KB batch with ONE ack; a single lost frame silently
+shifts the whole batch buffer. At 1 Mbit the wire margin is 4x smaller, so
+dropped frames are a real risk on this MacCAN/PCAN-USB bench (the ECU cannot
+overrun - batch-mode consumption is a 7-byte memcpy per frame, far faster
+than the host's ~0.2 ms/frame write rate; the loss is on the wire/dongle).
+
+Fix (host-only, commit e60e08f9024): when the 1M switch succeeds, the
+flasher forces the ACK-per-frame pipelined mode for the program phase (the
+500k path keeps the faster batch mode). Any lost frame now aborts loudly
+instead of corrupting the image. No bootloader change - no re-flash needed;
+the script auto-rebuilds the jar. Expected 1M time: ~30-45 s (pipelined),
+500k batch stays ~45 s.
+
+Open follow-up: the SECOND run in the same session showed dirty-session
+artifacts (garbage GET_ID station-id length 16842760 and a BUILD_CHECKSUM
+answered with a bare FF) - almost certainly fallout from the corrupted app
+left on the ECU by the failed 1M run. Re-verify a clean 500k flash after
+this fix; if the garbage recurs on a clean bench, instrument the response
+matching.
