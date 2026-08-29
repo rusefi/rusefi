@@ -13,6 +13,7 @@
 #include "digital_input_exti.h"
 #include "pwm_generator_logic.h"
 #include "ignition_controller.h"
+#include "thermistors.h"
 
 // PB14 is error LED, configured in board.mk
 Gpio getCommsLedPin() {
@@ -321,6 +322,27 @@ float getAnalogInputDividerCoefficient(adc_channel_e hwChannel) {
 		return 1.0f;
 	}
 	return engineConfiguration->analogInputDividerCoefficient;
+}
+
+/* CLT/IAT pull-ups sit on the L9779 VTRK1/2 tracking sensor rail:
+ * VTRK = VBATT/2.5 BY DESIGN (battery-proportional - the "5V" name only
+ * holds at a 12.5 V battery). The resistance math must therefore use the
+ * measured battery voltage as the bias, not a fixed 5.0 V. Proven on the
+ * car: at VBATT 14.4 V (VTRK 5.76 V) the fixed-5.0 assumption read +5C as
+ * -30C and 90C as ~86C; the 0.4 ratio makes all observations exact
+ * (08-24/08-25 MLG fits). Ratio to confirm against the L9779 datasheet
+ * VTRK section.
+ *
+ * Software-only fix, no board changes: the on-board 2:1 divider keeps the
+ * junction inside the 3.3 V ADC range across the full -40..+130C sensor
+ * range (at -40C the junction reaches ~VTRK = 5.76 V -> pin 2.88 V < 3.3),
+ * so the whole curve is measurable once the bias tracks the battery. */
+float getThermistorBiasTrackingRatio(const char* msg) {
+	if (strcmp(msg, "clt") == 0 || strcmp(msg, "iat") == 0) {
+		return 0.4f;
+	}
+
+	return 0;
 }
 
 static struct l9779_config l9779_cfg = {

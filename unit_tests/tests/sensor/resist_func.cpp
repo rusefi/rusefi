@@ -148,3 +148,62 @@ TEST(resistance, PulldownMode)
         EXPECT_FLOAT_EQ(r.Value, 40000);
     }
 }
+
+// No battery sensor registered in the test registry -> the tracking mode
+// must fall back to the fixed 5.0 V supply. NOTE: this test must run before
+// TrackingBiasWithBatterySensor (google test preserves the declaration order).
+TEST(resistance, TrackingBiasFallsBackWithoutBattery)
+{
+    ResistanceFunc f;
+    f.configureTrackingBias(0.4f, 1500, false);
+
+    // 1 V against the fallback 5.0 V supply: 1500 / (5 - 1) = 375 ohm
+    auto r = f.convert(1.0f);
+    EXPECT_TRUE(r.Valid);
+    EXPECT_FLOAT_EQ(r.Value, 375);
+}
+
+TEST(resistance, TrackingBiasWithBatterySensor)
+{
+    MockSensor vbat(SensorType::BatteryVoltage);
+    ASSERT_TRUE(vbat.Register());
+
+    ResistanceFunc f;
+    f.configureTrackingBias(0.4f, 1500, false);
+
+    // 14.4 V battery -> VTRK = 5.76 V
+    vbat.set(14.4f);
+
+    // The m74_9 +5C case that used to read -30C: junction = 5.76 x 8414 / 9914 = 4.888 V
+    {
+        auto r = f.convert(4.888f);
+        ASSERT_TRUE(r.Valid);
+        EXPECT_NEAR(r.Value, 8414, 100);
+    }
+
+    // Warm engine 90C: junction = 5.76 x 230 / 1730 = 0.766 V -> ~230 ohm
+    {
+        auto r = f.convert(0.766f);
+        ASSERT_TRUE(r.Valid);
+        EXPECT_NEAR(r.Value, 230, 10);
+    }
+
+    // 12.5 V battery -> VTRK = 5.0 V, the exact same result as the fixed mode
+    vbat.set(12.5f);
+    {
+        // junction at 25C (2796 ohm): 5.0 x 2796 / 4296 = 3.254 V
+        auto r = f.convert(3.254f);
+        ASSERT_TRUE(r.Valid);
+        EXPECT_NEAR(r.Value, 2796, 20);
+    }
+
+    // Battery sensor invalid (0) -> fall back to 5.0 V
+    vbat.invalidate();
+    {
+        auto r = f.convert(3.254f);
+        ASSERT_TRUE(r.Valid);
+        EXPECT_NEAR(r.Value, 2796, 20);
+    }
+
+    Sensor::resetRegistry();
+}
