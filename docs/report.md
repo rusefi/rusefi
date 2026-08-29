@@ -8959,3 +8959,20 @@ Proposed fixes (not implemented yet):
    timestamp jitter; the stock's advantage is hardware OUTPUT compares.
 5. Tuning: check the injection phase (EOIT) against the stock - late
    injection end under acceleration gives the same symptom.
+
+Follow-up (same session): hardware angle-clock firing like the stock GTM
+is BLOCKED by the board pins on the unmodified m74_9:
+- ignition IGN1..4 = PF12-15 (no timer AF), injectors PE11/PE10/PE9/PE8
+  (only PE9/PE11 have TIM1_CH1/CH2). Classic angle-clock+OC is impossible
+  for ignition and covers 2/4 injectors only.
+- The only full-hardware path for arbitrary pins is a DMA->GPIO_BSRR
+  pattern player on a per-tooth reloaded timer (2 DMA streams, double-
+  buffered, gap = one long tick). But its refill has the SAME one-tooth
+  lead constraint, and it removes only ~5-10 us of dispatch (executor
+  entry + callback + quantization) from the ~65 us typical chain - it
+  does not remove the decode latency and does not relax the lead.
+- Conclusion: ~90% of the stock's advantage is the multi-tooth
+  scheduling lead (reproducible in software by converting events one
+  tooth earlier) + its preloading compares ahead, not the hardware edge
+  itself. Revisit the DMA scheme only if residual jitter still matters
+  after the software fix + tail localization.
