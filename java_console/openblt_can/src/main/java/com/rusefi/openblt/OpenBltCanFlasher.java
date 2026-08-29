@@ -30,6 +30,8 @@ public class OpenBltCanFlasher {
      * at 500 kbit/s and the bootloader's ACK another ~265 us, so ~620 us per
      * slot lets the ACK interleave with the next frame instead of the dongle
      * transmitting back-to-back and saturating the ECU's 3 ACK mailboxes.
+     * Kept as the documented alternative: the DEFAULT is 0 (window-only flow
+     * control), which measured fastest on the bench - see Config.
      */
     private static final long PIPELINE_PACE_NANOS = 620_000L;
 
@@ -51,11 +53,15 @@ public class OpenBltCanFlasher {
         boolean verbose = false;
         boolean pipeline = true;
         /**
-         * Pipelined PROGRAM_MAX TX spacing in nanoseconds (default 620 us =
-         * one 8-byte ext frame + the bootloader ACK at 500 kbit/s). 0 disables
-         * pacing (unit tests; on the wire the dongle then bursts frames).
+         * Pipelined PROGRAM_MAX TX spacing in nanoseconds. 0 (default) = no
+         * explicit pacing: the 8-frame window alone throttles the stream, the
+         * host bursts frames and the ACK stream paces the bus at its ~0.68 ms
+         * frame+ACK cycle - measured 68.5 s for 694 KB (0.69 ms/frame), the
+         * fastest host-only mode. A positive value (e.g. 620000 = 620 us)
+         * spaces frames out; measured slower (90.8 s) because the blocking
+         * MacCAN write overlaps less efficiently.
          */
-        long pipelinePaceNanos = PIPELINE_PACE_NANOS;
+        long pipelinePaceNanos = 0;
         Path srecPath;
     }
 
@@ -89,7 +95,7 @@ public class OpenBltCanFlasher {
     /** Set from Config before programming: enables the pipelined PROGRAM_MAX path. */
     private boolean pipelineEnabled = true;
     /** Set from Config before programming: pipelined TX spacing in nanoseconds. */
-    private long pipelinePaceNanos = PIPELINE_PACE_NANOS;
+    private long pipelinePaceNanos = 0;
     // Per-phase wall-time accounting for the program loop (bench diagnostics:
     // shows whether the residual ~1.1 ms/frame sits in the CAN write, the
     // pacing sleep or the ACK wait).
@@ -539,8 +545,8 @@ public class OpenBltCanFlasher {
                   --no-pipeline          fall back to one-request-one-reply programming
                                          (slow, useful to isolate link problems)
                   --pace-us <n>          pipelined frame-to-frame spacing in microseconds
-                                         (default 620); 0 = no pacing, the 8-frame
-                                         window alone throttles the stream
+                                         (default 0: window-only flow control, fastest);
+                                         620 = the old spaced-out mode
                   --verbose              log every sent/received CAN frame
 
                 The default firmware path is firmware/build/rusefi.srec.

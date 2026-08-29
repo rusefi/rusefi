@@ -8372,3 +8372,24 @@ Expected on the bench: 182 s -> ~65-90 s (pace 620 us/frame vs measured
 1.90 ms/frame). Next levers if needed: plan B (true batch mode with a
 RAM page buffer + one ACK per batch, ~35-45 s @500k) and plan C (1 Mbit
 only together with B, bench-only).
+
+## 2026-08-28 - OpenBLT CAN fast flash: plan A finished, window-only mode default
+
+Bench iterations (694,840 bytes, 99,313 frames, same jar+link):
+- window 3 + 620us pace after write: 125.1 s (ACK wait serialized)
+- window 8 + 620us pace after write: 134.6 s (pace loop spun 1ms/empty read)
+- window 8 + poll-based pace: 111.9 s
+- window 8 + pure-sleep pace measured from frame START: 90.8 s
+  (write 418 us/frame = blocking MacCAN Write, pace 216, ack-wait 171)
+- window 8 + --pace-us 0 (window-only): 68.5 s, 0.69 ms/frame
+  (write 312, pace 0, ack-wait 271) - verification passed, zero frame loss
+
+0.69 ms/frame = the 500 kbit/s bus cycle floor: 265 us host frame + ~150 us
+ECU + 265 us ACK. Plan A (host-only) is done at ~68 s; window 8 is loss-free
+against the hardware bound of 10 (3 processed + 1 in progress + 6 FIFO0/1
+slots). Window-only flow control made the default (pipelinePaceNanos = 0);
+--pace-us 620 restores the spaced-out mode. RTT histogram is a drain-latency
+artifact in pipelined mode - trust "Program loop timing" / "Effective rate".
+
+Next (needs firmware + host): plan B batch mode - RAM page buffer, one
+NvmWrite + one ACK per batch -> ~35-45 s @500k; plan C 1 Mbit multiplies B.
