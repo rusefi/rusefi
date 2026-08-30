@@ -1242,6 +1242,32 @@ static char s_wdaLiveness[WDA_LIVENESS_LINES][WDA_LIVENESS_LEN];
 static int s_wdaLivenessNext;	/* next slot to fill */
 static int s_wdaLivenessCnt;	/* slots filled, saturates at WDA_LIVENESS_LINES */
 
+/* Per-cycle WDA event ring: every feed cycle records what the chip reported
+ * (question, EC, WDA_INT, raw REQUHI) plus the cycle outcome, so the chip's
+ * acceptance/rejection semantics are visible in ONE pins dump. The ec=7
+ * mystery (2026-08-30: EC pinned at 7 while reqhi stays 0xC0 and the
+ * question changes - contradictory with the datasheet's 'EC decrements on
+ * accepted answers') cannot be settled from 1 Hz samples; the ring shows
+ * the per-cycle EC transitions and the exact REQUHI bytes at rejections. */
+#define WDA_EVT_LINES			(64)
+struct wda_evt {
+	uint32_t	ntMs;		/* NT milliseconds at the read batch */
+	uint8_t		req;		/* question as reported by REQULO */
+	uint8_t		ec;		/* error counter as reported by REQULO */
+	uint8_t		intf;		/* WDA_INT */
+	uint8_t		requhi;		/* raw REQUHI byte */
+	uint8_t		delay;		/* wd_delay_ms after this cycle's adaptation */
+	uint8_t		flags;		/* bit0: core was halted since the last fire (wall period > 2x delay), bit1: burst sent cleanly, bit2: SPI-level fail, bit3: deferred */
+};
+static wda_evt s_wdaEvt[WDA_EVT_LINES];
+static int s_wdaEvtNext;		/* next slot to fill */
+static int s_wdaEvtCnt;			/* slots filled, saturates at WDA_EVT_LINES */
+/* EC transition counters across recorded cycles (reset on dump) */
+static int s_wdaEcUp;
+static int s_wdaEcDown;
+static int s_wdaEcSame;
+static int s_wdaReqChg;
+
 /* The same period in TMR11 reference ticks (1 MHz, NEVER frozen on halt):
  * TRUE WALL TIME. The NT-based per/late stretch by the debugger's halt
  * time on the bench (TIM5 is frozen on halt on purpose), which made the
@@ -1749,6 +1775,22 @@ void L9779::wdFeedFromExecutor()
 		wd_delay_ms = WDA_DELAY_MAX_MS;
 
 	wd_last_req = requlo & 0x0f;
+	{
+		/* EC transition counters for the event ring: is this chip's EC
+		 * decrementing on accepted answers (as the datasheet claims) or
+		 * latched at 7? ec=7-pinned-with-clean-reqhi (2026-08-30) vs the
+		 * datasheet model are contradictory - these counters settle it in
+		 * one pins dump. */
+		uint8_t ec_now = (requlo >> 4) & 0x07;
+		if (ec_now > wd_last_ec)
+			s_wdaEcUp++;
+		else if (ec_now < wd_last_ec)
+			s_wdaEcDown++;
+		else
+			s_wdaEcSame++;
+		if ((uint8_t)(requlo & 0x0f) != wd_last_req)
+			s_wdaReqChg++;
+	}
 	wd_last_ec  = (requlo >> 4) & 0x07;
 	wd_int      = !!(requlo & 0x80);
 	/* A rising WDA_INT edge is a watchdog kill pulse: EC crossed 4 and the
@@ -1837,6 +1879,26 @@ void L9779::wdFeedFromExecutor()
 		wd_prev_cycle_clean = true;
 	} else {
 		wd_fail_cnt++;
+	}
+
+	/* Record the cycle in the per-cycle event ring (pins diagnostic).
+	 * bit0 = core was halted since the last fire: the wall period (TMR11,
+	 * never frozen on halt) far exceeds the armed delay, so this cycle's
+	 * verdicts are halt-polluted and must not drive the adaptation. */
+	{
+		wda_evt *e = &s_wdaEvt[s_wdaEvtNext];
+		s_wdaEvtNext = (s_wdaEvtNext + 1) % WDA_EVT_LINES;
+		if (s_wdaEvtCnt < WDA_EVT_LINES)
+			s_wdaEvtCnt++;
+		e->ntMs = (uint32_t)(getTimeNowNt() / (US2NT(1000)));
+		e->req = wd_last_req;
+		e->ec = wd_last_ec;
+		e->intf = wd_int ? 1 : 0;
+		e->requhi = wd_last_requhi;
+		e->delay = (uint8_t)wd_delay_ms;
+		e->flags = (uint8_t)(
+			(s_firePeriodRef > (uint32_t)(2 * wd_delay_ms * 1000 + 5000) ? 0x01 : 0) |
+			(ret == 0 ? 0x02 : 0x00));
 	}
 
 	/* Anchor the next one-shot on the BYTE0 write end (now): the burst's
@@ -1981,6 +2043,23 @@ void L9779::debug() {
 	for (int i = 0; i < s_wdaLivenessCnt; i++) {
 		efiPrintf(DRIVER_NAME " wda[%d]: %s", i,
 			s_wdaLiveness[(lvStart + i + 2 * WDA_LIVENESS_LINES) % WDA_LIVENESS_LINES]);
+	}
+
+	/* Per-cycle EC/question transitions since the last dump: the datasheet
+	 * says EC decrements on accepted answers, but the 2026-08-30 bench
+	 * shows ec=7 pinned with clean reqhi - ecUp/ecDown settles which model
+	 * this chip follows (a healthy feed should show ecDown dominating). */
+	efiPrintf(DRIVER_NAME " WDA transitions: ecUp=%d ecDown=%d ecSame=%d reqChg=%d (since last pins)",
+		s_wdaEcUp, s_wdaEcDown, s_wdaEcSame, s_wdaReqChg);
+	s_wdaEcUp = s_wdaEcDown = s_wdaEcSame = s_wdaReqChg = 0;
+
+	/* The last cycles of the per-cycle event ring (newest LAST):
+	 * t=NTms, req, ec, int, reqhi, delay, flags (1=halted, 2=burst ok). */
+	int evStart = s_wdaEvtNext - s_wdaEvtCnt;
+	for (int i = 0; i < s_wdaEvtCnt; i++) {
+		const wda_evt *e = &s_wdaEvt[(evStart + i + 2 * WDA_EVT_LINES) % WDA_EVT_LINES];
+		efiPrintf(DRIVER_NAME " wda@%u: req=%x ec=%d int=%d reqhi=0x%02x d=%d f=%d",
+			(unsigned)e->ntMs, e->req, e->ec, e->intf, e->requhi, e->delay, e->flags);
 	}
 
 	/* Power-stage status (DIA_REG10, datasheet section 6.14): OUT_DIS must
