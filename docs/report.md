@@ -9256,6 +9256,20 @@ matches); rusEFI needs the 64 kHz base for the RESPTIME=10 / 22 ms design.
 Expected on the bench: per=~21920 us, delay pinned at 22, miss=0, fail=0,
 EC settling <= 4.
 
+**2026-08-30 (bench, third run): flipping CONFIG6 bit1 (0x06 -> 0x04) changed
+NOTHING - the chip still runs 39 kHz (delay walked 22 -> 27 on EARLY again,
+answers at 26.9 ms accepted, at 16.9 ms EARLY + W_RESP), so bit1 is NOT the
+f_clk select (or the write is not latched): both values behave identically.
+The out-of-phase thrash also produced the miss/wrong/cntbad storms
+(miss=5822, wrong=657, fail=3112). FINAL FIX: tune the feed to the MEASURED
+39 kHz base - response 1011/39kHz = 25.9 ms, window 20.7 ms, cycle 46.6 ms,
+center 36.3 ms: WDA_DELAY_INIT_MS 22 -> 36, MIN 17 -> 28, MAX 27 -> 44,
+boot kick +17 -> +26 ms (just inside the first window opening). CONFIG6
+stays 0x04 (bit2=1 VDD5_UV WDA mask; bit1 immaterial). The direct evidence
+for the 39 kHz window: the 2x-slow build's 43.8 ms period was accepted
+cleanly for minutes. Expected on the bench: per=~35920 us, delay pinned
+~36, miss=0, fail=0, EC settling <= 4.
+
 Fork bug to follow up: STM32_TIMCLK2 in the AT32 port (hal_lld.h) doubles
 PCLK2 like STM32F4, but the AT32F435 silicon clocks its APB2 timers
 (TMR1/8/9/10/11) at PCLK2 - any future GPT/PWM/ICU on those timers would
