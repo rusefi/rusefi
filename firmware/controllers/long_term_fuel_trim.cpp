@@ -121,6 +121,15 @@ void LongTermFuelTrim::learn(ClosedLoopFuelResult clResult, float rpm, float fue
 		return;
 	}
 
+#if EFI_LAUNCH_CONTROL
+	// Pause learning during two-step launch activities: STFT output is frozen while lambda
+	// feedback is meaningless, so integrating it here would bake stale correction into trims
+	if (engine->launchController.isLaunchOrPreLaunchCondition()) {
+		ltftLearning = false;
+		return;
+	}
+#endif // EFI_LAUNCH_CONTROL
+
 	// TODO: should we swap x and y here to keep aligned to wierd TS table definition?
 	// x - load, y - rpm
 	auto x = priv::getClosestBin(fuelLoad, config->veLoadBins);

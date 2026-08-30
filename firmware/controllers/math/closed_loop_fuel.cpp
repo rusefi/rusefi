@@ -91,6 +91,14 @@ stft_state_e ShortTermFuelTrim::getLearningState(SensorType sensor) {
 		return stftDisabledAfrOurOfRange;
 	}
 
+#if EFI_LAUNCH_CONTROL
+	// Pause correction during two-step launch activities: spark skip, launch cut and
+	// launch fuel enrichment all make lambda feedback meaningless
+	if (engine->launchController.isLaunchOrPreLaunchCondition()) {
+		return stftDisabledLaunch;
+	}
+#endif // EFI_LAUNCH_CONTROL
+
 	// Pause correction if DFCO was active recently
 	auto timeSinceDfco = engine->module<DfcoController>()->getTimeSinceCut();
 	if (timeSinceDfco < engineConfiguration->noFuelTrimAfterDfcoTime) {

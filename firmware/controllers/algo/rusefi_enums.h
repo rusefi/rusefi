@@ -932,7 +932,8 @@ typedef enum __attribute__ ((__packed__)) {
 	stftDisabledAfrOurOfRange = 6,
 	stftDisabledDFCO = 7,
 	stftDisabledTpsAccel = 8,
-	stftDisabledFuelCut = 9
+	stftDisabledFuelCut = 9,
+	stftDisabledLaunch = 10
 } stft_state_e;
 
 typedef enum __attribute__((__packed__)) {

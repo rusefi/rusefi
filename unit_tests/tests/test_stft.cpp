@@ -79,6 +79,34 @@ TEST(ClosedLoopFuel, CellSelection) {
 	EXPECT_EQ(3u, stft.computeStftBin(10000, 50, cfg));
 }
 
+TEST(ClosedLoopFuel, pausedDuringTwoStepLaunch) {
+	ShortTermFuelTrim stft;
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	engineConfiguration->stft.minAfr = 10;  // 10.0 AFR
+	engineConfiguration->stft.maxAfr = 18;  // 18.0 AFR
+
+	stft.init(&engineConfiguration->stft);
+
+	Sensor::setMockValue(SensorType::Lambda1, 1.0f);
+	EXPECT_EQ(stft.getLearningState(SensorType::Lambda1), stftEnabled);
+
+	engineConfiguration->launchControlEnabled = true;
+
+	// Pre-launch spark skip window pauses learning
+	engine->launchController.isPreLaunchCondition = true;
+	EXPECT_EQ(stft.getLearningState(SensorType::Lambda1), stftDisabledLaunch);
+
+	// Full launch pauses learning
+	engine->launchController.isPreLaunchCondition = false;
+	engine->launchController.isLaunchCondition = true;
+	EXPECT_EQ(stft.getLearningState(SensorType::Lambda1), stftDisabledLaunch);
+
+	// Launch over - learning resumes
+	engine->launchController.isLaunchCondition = false;
+	EXPECT_EQ(stft.getLearningState(SensorType::Lambda1), stftEnabled);
+}
+
 TEST(ClosedLoopFuel, afrLimits) {
 	ShortTermFuelTrim stft;
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
