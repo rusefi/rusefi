@@ -2134,6 +2134,123 @@ brain_pin_diag_e L9779::getDiag(size_t pin)
 		return getInputDiag(pin);
 }
 
+/* Runtime cross-measurement of the APB1 timer clocks against the CORE
+ * SysTick peripheral (STCLK = HCLK/8 = 36 MHz). Why SysTick: the ChibiOS
+ * system tick on this port runs on TIM2 (STM32_ST_USE_TIMER=2,
+ * ST_CLOCK_SRC=STM32_TIMCLK1) - the SAME APB1 timer domain as the timers
+ * under test, so it is NOT an independent reference. HCLK is validated
+ * end-to-end by the working USB (48 MHz PLL output) and CAN timing, so the
+ * core SysTick (clocked from HCLK) is the one trustworthy wall reference.
+ *
+ * Measurement A (masked, ~10 ms): the WDA ISR (priority 5) is masked so
+ * TMR7 free-runs without re-arms, and TIM5 (NT) + TMR7 are compared against
+ * SysTick in one window. Healthy clock tree: NT ~4 MHz, TMR7 tick ~250 kHz
+ * (input 288 MHz). A drifting timer shows up as ~125 kHz (input ~144 MHz) -
+ * the 2x per= signature. The handoff (4) and executor (3) stay unmasked and
+ * do not touch these counters, so the window is car-safe-ish; bench tool.
+ *
+ * Measurement B (unmasked, ~100 ms): the ChibiOS virtual tick (TIM2) vs
+ * SysTick - expect ~100 ms in 100 ms. A drifting TIM2 (the saga's LIN
+ * poll-period drift candidate) shows up as 2x/0.5x.
+ *
+ * One-off, called from the 'pins' diagnostic. The masked window can cost
+ * the chip one WDA window (EC++) - expected on the bench. */
+static void wdaTimerCrossMeasure() {
+	/* ---- register dump first (no timing side effects) ---- */
+	uint32_t cfgr = RCC->CFGR;
+	const char *ppre1 = "?";
+	switch ((cfgr >> 10) & 7) {
+		case 0: ppre1 = "DIV1"; break;
+		case 4: ppre1 = "DIV2"; break;
+		case 5: ppre1 = "DIV4"; break;
+		case 6: ppre1 = "DIV8"; break;
+		case 7: ppre1 = "DIV16"; break;
+	}
+	const char *ppre2 = "?";
+	switch ((cfgr >> 13) & 7) {
+		case 0: ppre2 = "DIV1"; break;
+		case 4: ppre2 = "DIV2"; break;
+		case 5: ppre2 = "DIV4"; break;
+		case 6: ppre2 = "DIV8"; break;
+		case 7: ppre2 = "DIV16"; break;
+	}
+	efiPrintf(DRIVER_NAME " tmr: CFGR=0x%08x (SW=%u SWS=%u HPRE=%u PPRE1=%s PPRE2=%s) PLLCFG=0x%08x MISC1=0x%08x MISC2=0x%08x APB1EN=0x%08x",
+		(unsigned)cfgr, (unsigned)(cfgr & 3), (unsigned)((cfgr >> 2) & 3),
+		(unsigned)((cfgr >> 4) & 0xf), ppre1, ppre2,
+		(unsigned)RCC->PLLCFGR, (unsigned)RCC->MISC1, (unsigned)RCC->MISC2,
+		(unsigned)RCC->APB1ENR);
+	efiPrintf(DRIVER_NAME " tmr: TIM5 PSC=%lu CNT=%lu CR1=0x%lx | TIM2 PSC=%lu CNT=%lu CR1=0x%lx | TMR7 PSC=%lu ARR=%lu CNT=%lu CR1=0x%lx",
+		(unsigned long)TIM5->PSC, (unsigned long)TIM5->CNT, (unsigned long)TIM5->CR1,
+		(unsigned long)TIM2->PSC, (unsigned long)TIM2->CNT, (unsigned long)TIM2->CR1,
+		(unsigned long)WDA_TIMER->PSC, (unsigned long)WDA_TIMER->ARR,
+		(unsigned long)WDA_TIMER->CNT, (unsigned long)WDA_TIMER->CR1);
+
+	/* ---- measurement B: ChibiOS virtual tick (TIM2) vs HCLK SysTick ---- */
+	{
+		uint32_t savedCtrl = SysTick->CTRL;
+		SysTick->CTRL = 0;
+		SysTick->LOAD = 0xFFFFFF;
+		SysTick->VAL = 0;
+		SysTick->CTRL = 1;                    /* ENABLE, CLKSOURCE=0 -> HCLK/8 */
+		uint32_t st0 = SysTick->VAL;
+		systime_t vt0 = chVTGetSystemTimeX();
+		uint32_t st1;
+		do {
+			st1 = SysTick->VAL;
+		} while ((st0 - st1) < 3600000U);     /* 100 ms at 36 MHz */
+		uint32_t stDelta = st0 - st1;
+		systime_t vtDelta = chVTGetSystemTimeX() - vt0;
+		SysTick->CTRL = savedCtrl;
+		efiPrintf(DRIVER_NAME " tmr: ST(TIM2) %u ms per %lu HCLK/8 ticks (want ~100 ms)",
+			(unsigned)vtDelta, (unsigned long)stDelta);
+	}
+
+	/* ---- measurement A: NT (TIM5) + TMR7 vs HCLK SysTick, WDA ISR masked ---- */
+	{
+		uint32_t savedCtrl = SysTick->CTRL;
+		uint32_t basepri = __get_BASEPRI();
+		__set_BASEPRI(5u << (8u - __NVIC_PRIO_BITS));  /* mask prio >= 5: the WDA feed cannot re-arm TMR7 mid-window */
+
+		SysTick->CTRL = 0;
+		SysTick->LOAD = 0xFFFFFF;
+		SysTick->VAL = 0;
+		SysTick->CTRL = 1;
+
+		uint32_t st0 = SysTick->VAL;
+		uint32_t tm0 = WDA_TIMER->CNT;
+		uint32_t nt0 = TIM5->CNT;
+		uint32_t st1;
+		do {
+			st1 = SysTick->VAL;
+		} while ((st0 - st1) < 360000U);      /* 10 ms at 36 MHz */
+		uint32_t tm1 = WDA_TIMER->CNT;
+		uint32_t nt1 = TIM5->CNT;
+
+		SysTick->CTRL = savedCtrl;
+		__set_BASEPRI(basepri);
+
+		uint32_t stDelta = st0 - st1;
+		uint32_t ntDelta = nt1 - nt0;        /* TIM5 free-runs: unsigned wrap is exact */
+		/* TMR7 wraps at ARR; at most one wrap fits in 10 ms (period >= 26.9 ms
+		 * at the fastest plausible rate) - correct it. */
+		uint32_t arr = WDA_TIMER->ARR;
+		uint32_t tmDelta;
+		if (tm1 < tm0)
+			tmDelta = tm1 + arr + 1 - tm0;
+		else
+			tmDelta = tm1 - tm0;
+		if (stDelta == 0)
+			stDelta = 1;
+
+		uint32_t ntMhz = (uint32_t)(((uint64_t)ntDelta * 36) / stDelta);
+		uint32_t wdaKhz = (uint32_t)(((uint64_t)tmDelta * 36000) / stDelta);
+		uint32_t wdaInMhz = (uint32_t)(((uint64_t)wdaKhz * (WDA_TIMER->PSC + 1)) / 1000);
+		efiPrintf(DRIVER_NAME " tmr: NT %lu MHz (want 4) | TMR7 tick %lu kHz input %lu MHz (want 250/288) | tm=%lu nt=%lu st=%lu",
+			(unsigned long)ntMhz, (unsigned long)wdaKhz, (unsigned long)wdaInMhz,
+			(unsigned long)tmDelta, (unsigned long)ntDelta, (unsigned long)stDelta);
+	}
+}
+
 void L9779::debug() {
 	efiPrintf(DRIVER_NAME " spi=%d parity_err=%d frame_err=%d addr_err=%d",
 		spi_cnt, spi_err_parity, spi_err_frame, spi_err);
@@ -2244,6 +2361,10 @@ void L9779::debug() {
 
 	/* dump the last SPI exchanges - protocol debugging */
 	dbg_print_frames();
+
+	/* Runtime cross-measurement of the timer clocks against the HCLK SysTick
+	 * (the open-question tool from the TMR7 drift saga, docs/report.md). */
+	wdaTimerCrossMeasure();
 }
 
 
