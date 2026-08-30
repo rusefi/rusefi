@@ -9370,3 +9370,21 @@ suite: 1169/1169.
 For the WDA: the feed stays on the TIM5 executor - TIM5 is the only
 timer whose rate is hardware-validated. Any future TMR10 reuse must
 apply the same measure-at-init pattern.
+
+## 2026-08-30 (17:05, bench) - the TMR2 clock theory is DISPROVEN; angle clock disabled pending the scheduling investigation
+
+The init-time measurement printed "angle clock: measured rate 40000/40000
+ticks (PSC 71 -> 71)" - TMR2 runs at exactly the NT rate (288 MHz). The
+driver is datasheet-correct (field-by-field CMSIS check) and the clock
+was never the problem. The 15A fuse incident is therefore a BUG IN THE
+ONE-TOOTH-AHEAD SCHEDULING LOGIC: the warning sequence (C9012
+out-of-order coil off + all four coils overcharged within 1 ms of each
+other) shows the fire events got scrambled/lost at the catch and the
+overdwell protection rescued all four coils simultaneously at 1.5x dwell
+- four simultaneous charges = the fuse.
+
+SAFETY ACTION: EFI_ANGLE_CLOCK is now FALSE on m74_9 (efifeatures.h) -
+the early windows compile out and ignition/fuel return to the proven
+time-based paths the car ran for months. The angle clock code stays in
+the tree for the bench investigation (SPARK_EXTREME_LOGGING on the bench
+with the flag TRUE will show the exact event scramble).

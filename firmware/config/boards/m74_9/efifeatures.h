@@ -22,8 +22,16 @@
  * programmed one tooth ahead, fired by a priority-3 ISR): removes the
  * trigger-decode/handoff latency from the spark/injection timing chain.
  * Must be defined BEFORE the stm32f4ems include - that header defaults the
- * flag to FALSE. See hw_layer/angle_clock/angle_clock.h. */
-#define EFI_ANGLE_CLOCK TRUE
+ * flag to FALSE. See hw_layer/angle_clock/angle_clock.h.
+ *
+ * DISABLED 2026-08-30 after the first car start blew the 15A fuse (all
+ * four coils overcharged 4.5-8.2 ms at the catch, C9012 out-of-order coil
+ * off). The TMR2 driver itself is datasheet-correct and the clock measures
+ * right (40000/40000 vs NT), so the defect is in the one-tooth-ahead
+ * scheduling logic - pending the bench investigation. With the flag FALSE
+ * the early windows compile out and ignition/fuel return to the proven
+ * time-based paths. */
+#define EFI_ANGLE_CLOCK FALSE
 
 /* Console log buffer (double-buffered, 2x this, static). The stm32f4ems
  * default of 6500 truncates the 'pins' output mid-line: the pin report +
