@@ -33,7 +33,11 @@ namespace priv
 }
 
 // "normal" logging messages need a header and footer, so put them in
-// the format string at compile time
+// the format string at compile time.
+// Limits (see LogLineBuffer below): one efiPrintf call produces at most
+// sizeof(LogLineBuffer::buffer) - 1 = 255 characters INCLUDING the
+// PROTOCOL_MSG + LOG_DELIMITER framing; anything longer is truncated, not split.
+// With the "msg" proto that leaves 245 characters for the formatted payload.
 #define efiPrintfProto(proto, fmt, ...) priv::efiPrintfInternal(proto LOG_DELIMITER fmt LOG_DELIMITER, ##__VA_ARGS__)
 #define efiPrintf(fmt, ...) efiPrintfProto(PROTOCOL_MSG, fmt, ##__VA_ARGS__)
 
@@ -42,7 +46,18 @@ namespace priv
  */
 void scheduleLogging(Logging *logging);
 
-// Stores the result of one call to efiPrintfInternal in the queue to be copied out to the output buffer
+// Stores the result of one call to efiPrintfInternal in the queue to be copied out to the output buffer.
+//
+// Limits:
+//  - 256 bytes per line: up to 255 visible characters plus the null terminator. A longer
+//    efiPrintf result is TRUNCATED to 255 characters, the last visible one being replaced
+//    by LOG_DELIMITER so the TS text framing survives (priv::terminateLogLine). Nothing is
+//    split over several lines.
+//  - lineBufferCount (24) of these are statically allocated (loggingcentral.cpp). When all
+//    are waiting for the flusher thread, efiPrintf DROPS the line silently - a tight print()
+//    loop (e.g. Lua) loses lines rather than blocking the caller.
+//  - Do not assume buffer is null-terminated when reading it, see
+//    https://github.com/rusefi/rusefi/issues/10159
 struct LogLineBuffer {
 	char buffer[256];
 };

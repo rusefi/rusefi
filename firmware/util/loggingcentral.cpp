@@ -109,6 +109,9 @@ chibios_rt::Mutex logBufferMutex;
 // Two buffers:
 //  - we copy line buffers to writeBuffer in LoggingBufferFlusher
 //  - and read from readBuffer via TunerStudio protocol commands
+// Limit: DL_OUTPUT_BUFFER (6500 bytes on STM32) is the most text that can accumulate
+// between two TS/console reads. Once it is full, LogBuffer::writeInternal keeps only what
+// fits and the rest of that line - and every later line until the next swap - is lost.
 using LB = LogBuffer<DL_OUTPUT_BUFFER>;
 LB buffers[2];
 LB* writeBuffer = &buffers[0];
@@ -146,7 +149,10 @@ const char* swapOutputBuffers(size_t* actualOutputBufferSize) {
 	return readBuffer->get();
 }
 
-// These buffers store lines queued to be written to the writeBuffer
+// These buffers store lines queued to be written to the writeBuffer.
+// Limit: 24 x 256 bytes = 6 KB of RAM. This is the number of efiPrintf lines that can be
+// in flight before the low-priority flusher thread copies them out; when the free queue is
+// empty efiPrintfInternal returns without logging (silent drop, no blocking).
 constexpr size_t lineBufferCount = 24;
 static LogLineBuffer lineBuffers[lineBufferCount];
 
