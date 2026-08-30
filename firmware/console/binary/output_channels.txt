@@ -487,11 +487,13 @@ float mapFast
 
 	uint16_t instantRpmRange;sync: instant RPM range\nMax minus min instant RPM within the last complete engine cycle, 0 when RPM is perfectly steady;"rpm", 1, 0, 0, 65535, 0
 
-! TunerStudio/MLV integration requires channel 'engine' and exact log label 'Engine'.
-! Bits: 0 running, 1 cranking, 2 after-start enrichment, 3 warmup enrichment,
-! 4 TPS acceleration (including MAP Prediction), 5 TPS deceleration or DFCO.
-! Bits 6/7 (MAP-rate acceleration/deceleration) are unused.
-	uint8_t engine;Engine;"", 1, 0, 0, 255, 0
-	! SD_MODE from mmc_card.h: 0 idle, 1 ECU, 2 PC, 3 unmounted, 4 formatting.
-	uint8_t sdCardMode;SD: Mount mode;"code", 1, 0, 0, 4, 0
+	! L9779 WDA watchdog root-cause state (m74_9 / any L9779 board; zeros elsewhere)
+	uint8_t l9779WdaEc;L9779: WDA error counter;"", 1, 0, 0, 7, 0
+	bit l9779WdaInt;L9779: WDA_INT flag
+	bit l9779WdaKill;L9779: Power stage killed (EC>4)
+	bit l9779OutDis;L9779: OUT_DIS latched
+	uint8_t l9779WdaDelayMs;L9779: WDA answer delay;"ms", 1, 0, 0, 100, 0
+	uint16_t l9779WdaOk;L9779: WDA answered bursts;"", 1, 0, 0, 65535, 0
+	uint8_t l9779WdaWrong;L9779: WDA wrong-value rejections;"", 1, 0, 0, 255, 0
+	uint8_t l9779WdaMiss;L9779: WDA timing misses;"", 1, 0, 0, 255, 0
 end_struct

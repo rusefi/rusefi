@@ -58,35 +58,45 @@
 #define DIAG_REFRESH_REGS			(3)
 
 /* WDA response timing. RESPTIME=10 is written at init for a DETERMINISTIC
- * short window: response (1+101*10)/f_clk, window [resp, resp+12.6] =
- * [15.8, 28.4] ms @ 64 kHz or [25.9, 38.5] ms @ 39 kHz. The feed walks the
- * delay to the window in 1-3 steps and the short cycle recovers fast.
+ * short window: response (1+101*10)/f_clk = 15.8 ms @ 64 kHz (25.9 ms @
+ * 39 kHz), window [resp, resp+12.6] = [15.8, 28.4] ms @ 64 kHz / [25.9,
+ * 38.5] ms @ 39 kHz. These are the PROVEN values from the working executor
+ * feed (ce32509e, car-validated 2026-08-24/26: ec=4 wda_int=0): the same
+ * +-5% CLK1 drift that moved the default-RESPTIME window by +-5 ms now
+ * moves this short window by only +-0.8 ms, so a centered feed essentially
+ * cannot miss, and any transient recovers ~5x faster.
  *
- * WHAT THE 21:18 SESSION PROVED (2026-08-30 night, with real loads): the
- * chip keeps its question UNTIL an answer is accepted (datasheet: the
- * question repeats until answered correctly) - after the power cycle reset
- * RESPTIME to 0x3f, the question FROZE at 0x4 for 400+ cycles at delay
- * 105 (the 39 kHz window at 0x3f sits at [163, 184] ms - 105 is early).
- * So the question CHANGE is the chip-independent acceptance signal, and
- * the WDA kill is real: EC > 4 -> WDA_INT -> the L9779 forces OUT1-4/IGN1-4
+ * The feed runs one atomic burst per cycle on the TMR10 one-shot (priority
+ * 5, BELOW the trigger handoff - see EFI_IRQ_L9779_WDA_PRIORITY). The delay
+ * is adapted ONLY by the REQUHI timing verdicts (+-5 ms per miss, the same
+ * policy as the proven executor feed) - there is NO delay walk: the values
+ * stay clamped to the window below.
+ *
+ * The WDA kill is real: EC > 4 -> WDA_INT -> the L9779 forces OUT1-4/IGN1-4
  * off AND pulls WDA low -> Q5B -> TLE9201 DIS -> the blade dies. With no
  * loads the bench never showed it; with the injectors/coils/pump connected
- * everything went dead. A stuck EC=7 therefore kills the power stage - the
- * feed MUST land in the window and keep the question advancing.
- *
- * The bench chip's EC decrement is broken (EC pins at 7 even with accepted
- * answers - its power stage can never recover on the bench); the question
- * signal works on any chip, so the walk uses it. The feed runs one atomic
- * burst per cycle on the TMR10 one-shot (priority 5, BELOW the trigger
- * handoff - see EFI_IRQ_L9779_WDA_PRIORITY). */
+ * everything went dead. SPI stays clean throughout - the kill is a
+ * chip-internal state, not an SPI fault (the output diagnosis 'Ok' also
+ * does not reflect it). */
 #define WDA_RESPTIME				(10)
-/* BYTE0-to-BYTE0 answer period: 22 ms sits inside the 64 kHz window
- * [15.8, 28.4]; the walk steps up to ~27 for a 39 kHz chip. */
-#define WDA_DELAY_INIT_MS			(22)
-/* The walk range covers the RESPTIME=10 windows of both chip rates with
- * CLK1 +-5% drift. */
-#define WDA_DELAY_MIN_MS			(12)
-#define WDA_DELAY_MAX_MS			(55)
+/* BYTE0-to-BYTE0 answer period. 27 ms sits INSIDE the RESPTIME=10 window on
+ * BOTH chip clock rates: [15.8, 28.4] ms @ 64 kHz (the car chip - 22 ms was
+ * the window center there) and [25.9, 38.5] ms @ 39 kHz (the bench chip).
+ * 22 ms was the 64 kHz center but lands BEFORE the 39 kHz window opens - the
+ * 21:46 session proved it: RESPTIME readback 0x0A (the write takes effect),
+ * delay 22, miss=0 wrong=0, yet the question froze for 30+ cycles at a time
+ * (silent early rejection, reqhi=0xC0) and EC stayed pinned at 7 with the
+ * power stage killed. 27 ms is accepted by both rates with +-5% CLK1 drift
+ * margin, so no delay walking is needed. */
+#define WDA_DELAY_INIT_MS			(27)
+/* The answer period must stay inside [response_time, response_time+window].
+ * 27 ms lands in the RESPTIME=10 window on BOTH chip clock rates with the
+ * +-5% CLK1 drift margin; the verdict adaptation walks UP to 38 ms (the
+ * 39 kHz window center is 32.2 ms - the 23:00 bench run flagged TO_EARLY at
+ * 27 ms and EC oscillated 4..7, the 27 ms clamp sat on the window's opening
+ * edge). A 64 kHz chip flagged LATE at 27 ms walks DOWN to its 22 ms center. */
+#define WDA_DELAY_MIN_MS			(17)
+#define WDA_DELAY_MAX_MS			(38)
 /* Duration of the feed ISR from dispatch to the END of its RESP_BYTE0 write
  * (3 pipelined reads + 4 answer frames, ~7 x 10 us, plus any handoff
  * preemption). The next one-shot is armed this much short of the full
@@ -402,8 +412,6 @@ struct L9779 : public GpioChip {
 	bool					wd_prev_int;
 	int					wd_bad_value_cnt; /* consecutive cycles with W_RESP/RESP_Z0/RESP_ERR - diagnostic only, NO reset action (the burst self-realigns) */
 	bool					wd_prev_cycle_clean; /* the previous burst went out as one clean atomic stream - REQUHI verdicts are only trusted when this is true */
-	int					wd_frozen_cnt;	/* consecutive clean, un-halted cycles with an UNCHANGED question - the rejection signal driving the delay walk */
-	int					wd_walk_dir;	/* current delay-walk direction: +1 up, -1 down (reversed at the clamps) */
 	uint16_t					ident_reg;		/* IDENT_REG readback (0x10 | 0x00) */
 
 	/* Cached power-stage diagnosis, DIA_REG1..8 (datasheet 6.14). Refreshed
@@ -1149,21 +1157,32 @@ static void wdaTimerInit() {
 	WDA_TIMER->EGR = STM32_TIM_EGR_UG;	/* latch PSC/ARR (also sets UIF) */
 	WDA_TIMER->SR = 0;				/* clear the UG-generated UIF */
 
-	/* Measure the real counter rate: free-run for 10 ms of NT time and
-	 * divide the two deltas. f_in = acDelta * (PSC+1) / T_window, and the
-	 * target tick is 250 kHz (4 us) -> newPsc = f_in / 250 kHz - 1.
-	 * The 250 kHz tick (not 1 MHz) is what fits the DEFAULT-RESPTIME feed:
-	 * the answer period is now ~105..195 ms and the 16-bit ARR at 1 MHz
-	 * caps at 65.5 ms. */
+	/* Measure the real counter rate against SYSTICK (chVTGetSystemTimeX,
+	 * 1 kHz from HCLK - the one clock validated end-to-end by the CAN
+	 * bit-timing and the console), NOT against the NT domain. The old
+	 * NT-anchored measurement always printed ~288 MHz and the feed ran
+	 * at ~18/s with per=6768 TMR11 ticks per fire (the 22:08/22:35 bench
+	 * sessions): the real tick is ~8.4 us, i.e. the TMR10 input clock is
+	 * PCLK2 = 144 MHz - the APB2 timers do NOT double on this AT32 (the
+	 * fork's STM32_TIMCLK2 = 288 MHz claim is wrong for them, the saga's
+	 * original 144 MHz conclusion was right). The old formula
+	 * newPsc = acDelta*144*16/ntDelta cancels the input rate out of the
+	 * ratio, so the derived "input MHz" print ((newPsc+1)/4) always read
+	 * ~288 no matter what the silicon does. Anchoring the window to
+	 * SysTick gives the TRUE input clock and a REAL 250 kHz (4 us) tick
+	 * on any silicon. */
 	WDA_TIMER->CR1 = STM32_TIM_CR1_CEN;
 	uint32_t ac0 = WDA_TIMER->CNT;
-	efitick_t nt0 = getTimeNowNt();
-	do { } while (getTimeNowNt() - nt0 < MS2NT(10));
+	systime_t st0 = chVTGetSystemTimeX();
+	do { } while (chVTGetSystemTimeX() - st0 < TIME_MS2I(10));
 	uint32_t acDelta = WDA_TIMER->CNT - ac0;
-	uint32_t ntDelta = getTimeNowNt() - nt0;
+	systime_t stDelta = chVTGetSystemTimeX() - st0;
 	WDA_TIMER->CR1 = 0;
 
-	uint32_t newPsc = (uint32_t)(((uint64_t)acDelta * (WDA_TIMER_PSC_PROV + 1) * 16) / ntDelta) - 1;
+	/* input_Hz = acDelta * (PSC_prov + 1) / (stDelta ms); a 250 kHz tick
+	 * needs newPsc = input_Hz / 250000 - 1. */
+	uint32_t inputHz = (uint32_t)(((uint64_t)acDelta * (WDA_TIMER_PSC_PROV + 1) * 1000) / stDelta);
+	uint32_t newPsc = inputHz / 250000 - 1;
 	if (newPsc > 0xFFFF)
 		newPsc = 0xFFFF;
 
@@ -1172,17 +1191,15 @@ static void wdaTimerInit() {
 	WDA_TIMER->EGR = STM32_TIM_EGR_UG;	/* latch the measured PSC */
 	WDA_TIMER->SR = 0;
 
-	/* SECOND measurement at the FINAL PSC: verifies the latch and the
-	 * runtime rate. Must print 2500/40000 (250 kHz = 4 us ticks) - the
-	 * 2026-08-30 bench runs showed per~2x armed in WALL time, which the
-	 * cnlat probe proved is the bench debugger halting the core (and
-	 * freezing the counter via DBGMCU) ~50% of the time, not the timer. */
+	/* SECOND measurement at the FINAL PSC, also SysTick-anchored: verifies
+	 * the latch and the runtime rate. A correct setup prints ~2500 counts
+	 * over ~10 ms (250 kHz = 4 us ticks). */
 	WDA_TIMER->CR1 = STM32_TIM_CR1_CEN;
 	ac0 = WDA_TIMER->CNT;
-	nt0 = getTimeNowNt();
-	do { } while (getTimeNowNt() - nt0 < MS2NT(10));
+	st0 = chVTGetSystemTimeX();
+	do { } while (chVTGetSystemTimeX() - st0 < TIME_MS2I(10));
 	uint32_t acDelta2 = WDA_TIMER->CNT - ac0;
-	uint32_t ntDelta2 = getTimeNowNt() - nt0;
+	systime_t stDelta2 = chVTGetSystemTimeX() - st0;
 	WDA_TIMER->CR1 = 0;
 	WDA_TIMER->CNT = 0;
 	WDA_TIMER->SR = 0;
@@ -1190,14 +1207,9 @@ static void wdaTimerInit() {
 	nvicEnableVector(STM32_TIM1_UP_TIM10_NUMBER, EFI_IRQ_L9779_WDA_PRIORITY);
 
 	/* Wall-clock reference: TMR11 (same APB2 clock domain) free-runs at the
-	 * same 250 kHz (4 us ticks) and is NEVER frozen on core halt (its DBGMCU
-	 * pause bit is cleared and nothing re-sets it). The NT domain (TIM5) IS
-	 * frozen on halt on purpose (microsecond_timer_stm32.cpp sets DBGMCU
-	 * TIM5_STOP), so NT-based per/late measurements stretch by the
-	 * debugger's halt time on the bench - the 2026-08-30 "per=52 ms"
-	 * mystery. The reference makes the fire-to-fire and arm-to-fire
-	 * measurements TRUE WALL TIME. 4 us ticks keep the 16-bit wrap at
-	 * 262 ms - above the 195 ms max answer period. */
+	 * same REAL 250 kHz (4 us ticks) and is NEVER frozen on core halt (its
+	 * DBGMCU pause bit is cleared and nothing re-sets it). 4 us ticks keep
+	 * the 16-bit wrap at 262 ms - above any used answer period. */
 	rccEnableTIM11(false);
 	WDA_REF_TIMER->PSC = newPsc;
 	WDA_REF_TIMER->ARR = 0xFFFF;
@@ -1208,13 +1220,13 @@ static void wdaTimerInit() {
 	DBGMCU->APB2FZ &= ~DBGMCU_APB2_FZ_DBG_TIM11_STOP;
 	WDA_REF_TIMER->CR1 = STM32_TIM_CR1_CEN;
 
-	/* (newPsc + 1) x 250 kHz is the MEASURED TMR10 input clock - the boot
-	 * print settles the 144-vs-288 MHz fork claim on every bench run. */
-	efiPrintf(DRIVER_NAME " wda: TMR10 measured %lu/%lu NT ticks, input %lu MHz (PSC 143 -> %lu)",
-		(unsigned long)acDelta, (unsigned long)ntDelta,
-		(unsigned long)((newPsc + 1) / 4), (unsigned long)newPsc);
-	efiPrintf(DRIVER_NAME " wda: TMR10 final rate %lu/%lu NT ticks (want 2500/40000 = 250 kHz)",
-		(unsigned long)acDelta2, (unsigned long)ntDelta2);
+	/* The boot print settles the 144-vs-288 MHz fork claim with a REAL
+	 * (SysTick-anchored) measurement. */
+	efiPrintf(DRIVER_NAME " wda: TMR10 measured %lu counts / %lu ms (SysTick), input %lu MHz (PSC 143 -> %lu)",
+		(unsigned long)acDelta, (unsigned long)stDelta,
+		(unsigned long)(inputHz / 1000000), (unsigned long)newPsc);
+	efiPrintf(DRIVER_NAME " wda: TMR10 final rate %lu counts / %lu ms (want 2500/10 = 250 kHz)",
+		(unsigned long)acDelta2, (unsigned long)stDelta2);
 }
 
 /* Arm the one-shot: intervalUs microseconds from now. Plain register writes -
@@ -1231,15 +1243,48 @@ static void wdaTimerInit() {
  * became active, the counter kept the init PR=0xFFFF, and every answer
  * landed outside the chip's window. The EGR|UG below latches PR (and
  * re-inits CNT=0, and sets UIF which is cleared before DIER|UIE). */
-static void wdaTimerArm(uint32_t intervalUs) {
-	/* 4 us ticks (250 kHz, see wdaTimerInit): the 16-bit ARR then covers
-	 * up to 262 ms, which the default-RESPTIME feed (~105..195 ms) needs. */
-	if (intervalUs < 10)
-		intervalUs = 10;
-	if (intervalUs > 262000)
-		intervalUs = 262000;
 
-	uint32_t ticks = (intervalUs + 3) / 4;
+/* Fire-to-fire period measured in NT ticks (4 MHz, the validated TIM5
+ * domain) and in TMR11 reference ticks - declared here because
+ * wdaTicksForInterval (below) uses them to scale the armed interval to
+ * REAL time (the TMR10 clock halves after init on this port, so a fixed
+ * tick count misses the chip's window). */
+static efitick_t s_firePeriodNt;
+static uint32_t s_firePeriodRef;
+
+/* The TMR10/TMR11 input clock is NOT constant across the boot on this
+ * port: the SysTick-anchored init measurement reads 283 MHz (4 us ticks),
+ * but at runtime the served fires take ~55 ms of NT for the same ~6730-
+ * tick interval (perNt vs per, the 22:49 bench run) - the APB2 timer clock
+ * halves somewhere after init (RCC quirk, root cause still open; the 22:08
+ * and 22:35 sessions show the same). A fixed tick count therefore cannot
+ * hit the chip's window: the armed "27 ms" was really ~54 ms of real time,
+ * every answer landed after the window close, EC stayed at 7 and the power
+ * stage stayed killed. The arm now scales the interval by the MEASURED real
+ * tick (NT-anchored, TIM5 is physics-validated): whatever the timer clock
+ * does, the fire lands intervalUs of REAL time after the previous fire.
+ * Clamped to 0.5x..2x of the nominal count so a garbage sample cannot run
+ * away; converges on the first fire after boot. */
+static uint32_t wdaTicksForInterval(uint32_t intervalUs) {
+	uint32_t nominal = (intervalUs + 3) / 4;
+	if ((s_firePeriodNt == 0) || (s_firePeriodRef == 0))
+		return nominal;
+	uint32_t perNtUs = (uint32_t)(s_firePeriodNt / US_TO_NT_MULTIPLIER);
+	if (perNtUs == 0)
+		return nominal;
+	uint32_t scaled = (uint32_t)(((uint64_t)intervalUs * s_firePeriodRef) / perNtUs);
+	if (scaled > nominal * 2)
+		scaled = nominal * 2;
+	if (scaled < nominal / 2)
+		scaled = nominal / 2;
+	return scaled;
+}
+
+static void wdaTimerArm(uint32_t ticks) {
+	if (ticks < 2)
+		ticks = 2;
+	if (ticks > 65535)
+		ticks = 65535;
 
 	WDA_TIMER->CR1 = 0;				/* stop any run */
 	WDA_TIMER->CNT = 0;
@@ -1260,7 +1305,6 @@ static void wdaTimerStop() {
  * domain): the 1 Hz liveness print shows it, so the TMR10 armed interval is
  * visible on the console and any clock mistake is caught on the bench. */
 static efitick_t s_lastFireNt;
-static efitick_t s_firePeriodNt;
 
 /* Last N one-second liveness lines. The 1 Hz line is NOT printed to the
  * console any more (user request 2026-08-30 - it flooded the log); it is
@@ -1297,13 +1341,26 @@ static int s_wdaEcDown;
 static int s_wdaEcSame;
 static int s_wdaReqChg;
 
+/* Dispatch-path diagnostics (printed by the 'pins' dump and reset after it):
+ * the 22:08 bench session showed per=27ms (the TMR10 fires every armed
+ * period) while ok climbed at ~18/s (the feed completes only every other
+ * fire) with fail/defer/cntbad all ~0 - the missing half of the cycles
+ * leaves no trace in the existing counters, so count every stage of the
+ * path to pin down where they vanish. */
+static int s_wdaIrrRuns;		/* handler entries (any source - the vector is shared with TIM1_UP) */
+static int s_wdaUifSeen;		/* handler entries with the TMR10 UIF set */
+static int s_wdaForeign;		/* handler entries WITHOUT the TMR10 UIF (the shared vector fired from elsewhere) */
+static int s_wdaDisp;			/* feeds dispatched from the handler */
+static int s_wdaFeedRuns;		/* feeds entered */
+static int s_wdaNotRunning;		/* feeds that fizzled on !wd_running (the only silent early return) */
+static bool s_wdaKillActive;		/* EC>4 kill state for the root-cause console print */
+
 /* The same period in TMR11 reference ticks (250 kHz, 4 us, NEVER frozen on
  * halt): TRUE WALL TIME. The NT-based per/late stretch by the debugger's
  * halt time on the bench (TIM5 is frozen on halt on purpose), which made
  * the 2026-08-30 sessions read per=42-55 ms while the feed actually
  * answered every 21.92 ms of wall time (cnlat proved the prompt entry). */
 static uint32_t s_lastFireRef;
-static uint32_t s_firePeriodRef;	/* in 4 us ticks */
 /* Arm moment in reference ticks: the wall-time analog of wd_next_moment. */
 static uint32_t s_wdArmRefTicks;
 static int s_lateRefUs;
@@ -1329,7 +1386,10 @@ static int s_cnLatUsMax;
 CH_IRQ_HANDLER(STM32_TIM1_UP_TIM10_HANDLER) {
 	OSAL_IRQ_PROLOGUE();
 
+	s_wdaIrrRuns++;
+
 	if (WDA_TIMER->SR & STM32_TIM_SR_UIF) {
+		s_wdaUifSeen++;
 		/* Read CNT BEFORE disarming: the counter wraps to 0 at ARR, so the
 		 * current CNT is the ISR entry latency mod (ARR+1) in 4 us ticks. */
 		int32_t cnLat = (int32_t)WDA_TIMER->CNT;
@@ -1376,24 +1436,34 @@ CH_IRQ_HANDLER(STM32_TIM1_UP_TIM10_HANDLER) {
 				s_lateUsMax = (int)late;
 		}
 		if (s_wda_chip) {
+			s_wdaDisp++;
 			s_wda_chip->wdFeedFromExecutor();
 		}
+	} else {
+		/* The shared TIM1_UP_TIM10 vector fired without the TMR10 UIF - the
+		 * other source pends the same NVIC line (see the 2:1 fire:feed ratio
+		 * investigation). Count it; TIM1 is believed unused on this board. */
+		s_wdaForeign++;
 	}
 
 	OSAL_IRQ_EPILOGUE();
 }
 
 void L9779::wdArmIsr(int delayMs) {
+	uint32_t intervalUs = MS2US(delayMs) - WDA_BURST_LEAD_US;
+	uint32_t ticks = wdaTicksForInterval(intervalUs);
 	wd_next_moment = getTimeNowNt() + MS2NT(delayMs) - US2NT(WDA_BURST_LEAD_US);
-	s_wdArmRefTicks = WDA_REF_TIMER->CNT + (uint32_t)((MS2US(delayMs) - WDA_BURST_LEAD_US) / 4);
-	wdaTimerArm(MS2US(delayMs) - WDA_BURST_LEAD_US);
+	s_wdArmRefTicks = WDA_REF_TIMER->CNT + ticks;
+	wdaTimerArm(ticks);
 }
 
 /* Thread-context arm (boot kick, reset self-heal). */
 static void wdArmThread(L9779 *chip, int delayMs) {
+	uint32_t intervalUs = MS2US(delayMs) - WDA_BURST_LEAD_US;
+	uint32_t ticks = wdaTicksForInterval(intervalUs);
 	chip->wd_next_moment = getTimeNowNt() + MS2NT(delayMs) - US2NT(WDA_BURST_LEAD_US);
-	s_wdArmRefTicks = WDA_REF_TIMER->CNT + (uint32_t)((MS2US(delayMs) - WDA_BURST_LEAD_US) / 4);
-	wdaTimerArm(MS2US(delayMs) - WDA_BURST_LEAD_US);
+	s_wdArmRefTicks = WDA_REF_TIMER->CNT + ticks;
+	wdaTimerArm(ticks);
 }
 
 static THD_FUNCTION(l9779_driver_thread, p) {
@@ -1463,11 +1533,14 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 			}
 
 			/* Kick the TMR10 WDA feed once after the chip is up. The first
-			 * burst lands its RESP_BYTE0 at wd_delay_ms (~22 ms) after the
+			 * burst lands its RESP_BYTE0 at wd_delay_ms (27 ms) after the
 			 * chip_init cycle anchor - the RESPTIME=10 write started a fresh
-			 * cycle, so the first window opens ~15.8 ms after init; the
-			 * one-shot self-reschedules from then on and the question-freeze
-			 * walk trims the exact phase. */
+			 * cycle, so the first window opens ~15.8 ms (64 kHz) or ~25.9 ms
+			 * (39 kHz) after init; 27 ms lands inside BOTH, so the very first
+			 * answer is accepted and the boot-accumulated EC (6 -> 7 while the
+			 * chip was un-fed during MCU boot) decrements 7 -> 6 -> 5 -> 4
+			 * within ~3 cycles (~0.1 s), clearing the WDA kill. The one-shot
+			 * self-reschedules from then on. */
 			if (!chip->wd_running) {
 				chip->wd_running = true;
 				efiPrintf("l9779 wda: TMR10 kick +%d ms (CR1=0x%08lx)", chip->wd_delay_ms, (unsigned long)WDA_TIMER->CR1);
@@ -1496,10 +1569,11 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 				 * printed by the 'pins' diagnostic, not the console (the 1 Hz
 				 * efiPrintf flooded the log; user request 2026-08-30). */
 				chsnprintf(s_wdaLiveness[s_wdaLivenessNext], WDA_LIVENESS_LEN,
-					"ok=%d fail=%d defer=%d pollto=%d delay=%d per=%dus late=%d/%dus cnlat=%d/%dus DBG1=0x%lx DBG2=0x%lx CR1=0x%lx DIER=0x%lx PSC=0x%lx ARR=0x%lx CNT=0x%lx",
+					"ok=%d fail=%d defer=%d pollto=%d delay=%d per=%dus perNt=%dus late=%d/%dus cnlat=%d/%dus DBG1=0x%lx DBG2=0x%lx CR1=0x%lx DIER=0x%lx PSC=0x%lx ARR=0x%lx CNT=0x%lx",
 					chip->wd_ok_cnt, chip->wd_fail_cnt, chip->wd_defer_cnt,
 					chip->wd_poll_timeouts, chip->wd_delay_ms,
-					(int)(s_firePeriodRef * 4), s_lateRefUs, s_lateRefUsMax,
+					(int)(s_firePeriodRef * 4), (int)(s_firePeriodNt / US_TO_NT_MULTIPLIER),
+					s_lateRefUs, s_lateRefUsMax,
 					s_cnLatUs, s_cnLatUsMax,
 					(unsigned long)DBGMCU->APB1FZ, (unsigned long)DBGMCU->APB2FZ,
 					(unsigned long)WDA_TIMER->CR1, (unsigned long)WDA_TIMER->DIER,
@@ -1660,12 +1734,15 @@ int L9779::spi_frame_isr(uint16_t tx, uint16_t *rx_ptr)
  * burst writes follow immediately after. */
 void L9779::wdFeedFromExecutor()
 {
+	s_wdaFeedRuns++;
+
 	/* Ignition gate: the driver thread clears wd_running (and stops the
 	 * one-shot) when the power stages are PSOFF'd. If the timer had already
 	 * fired this callback, fizzle out WITHOUT touching the bus or re-arming -
 	 * a plain stop is racy because the feed re-arms itself at its end (a
 	 * concurrent fire would resurrect the feed after the stop). */
 	if (!wd_running) {
+		s_wdaNotRunning++;
 		return;
 	}
 
@@ -1793,8 +1870,8 @@ void L9779::wdFeedFromExecutor()
 	 *
 	 * The correction step is 5 ms (well under the 12.6 ms window):
 	 * a single miss jumps the phase from just-outside to near center
-	 * without overshooting to the other edge. With the default RESPTIME
-	 * the window drifts by only ~+-5 ms (CLK1 +-5% of ~105 ms), so a lock
+	 * without overshooting to the other edge. With the shortened RESPTIME
+	 * the window drifts by only ~+-0.8 ms (CLK1 +-5% of 15.8 ms), so a lock
 	 * loss should be a rare event. */
 	/* The verdicts below describe the PREVIOUS burst - consume the clean
 	 * flag now; it is re-armed only when the current burst completes cleanly. */
@@ -1832,38 +1909,13 @@ void L9779::wdFeedFromExecutor()
 	if (req_now != wd_last_req)
 		s_wdaReqChg++;
 
-	/* QUESTION-FREEZE WALK (2026-08-30 night, bench-proven with real loads):
-	 * the chip keeps its question UNTIL an answer is accepted (datasheet:
-	 * repeats until answered correctly) - the 21:18 session froze req=0x4
-	 * for 400+ cycles at delay 105 while the chip rejected every answer
-	 * and the WDA kill took the whole power stage down. The question CHANGE
-	 * is therefore the chip-independent acceptance signal (the bench chip's
-	 * EC decrement is broken and cannot be used). The walk: on clean,
-	 * un-halted cycles with an UNCHANGED question for a while, the answers
-	 * are being rejected -> step the delay in the current direction (up
-	 * from 22 - both RESPTIME=10 windows, [15.8,28.4] @64 kHz and
-	 * [25.9,38.5] @39 kHz, are reached within 1-3 steps); a question change
-	 * = accepted -> hold and reset. Halted cycles are skipped (a halt
-	 * freezes the question too - the wall period on the never-frozen TMR11
-	 * reveals the halt). */
-	bool halted = s_firePeriodRef > (uint32_t)(2 * wd_delay_ms * 250 + 1250);
-	if (!halted && prevClean && req_now == wd_last_req) {
-		if (++wd_frozen_cnt >= 6) {
-			wd_frozen_cnt = 0;
-			wd_delay_ms += wd_walk_dir * 5;
-			if (wd_delay_ms >= WDA_DELAY_MAX_MS) {
-				wd_delay_ms = WDA_DELAY_MAX_MS;
-				wd_walk_dir = -1;
-			} else if (wd_delay_ms <= WDA_DELAY_MIN_MS) {
-				wd_delay_ms = WDA_DELAY_MIN_MS;
-				wd_walk_dir = 1;
-			}
-		}
-	} else {
-		wd_frozen_cnt = 0;
-		if (req_now != wd_last_req)
-			wd_walk_dir = 1;	/* accepted - reset the walk direction */
-	}
+	/* QUESTION-FREEZE WALK removed (2026-08-30, user directive): the delay is
+	 * adapted ONLY by the REQUHI timing verdicts above, clamped to
+	 * [WDA_DELAY_MIN_MS, WDA_DELAY_MAX_MS] - the proven ce32509e policy.
+	 * WDA_DELAY_INIT_MS = 27 ms lands inside the RESPTIME=10 window on BOTH
+	 * chip clock rates (64 kHz and the 39 kHz bench chip), so a silently
+	 * rejecting chip (no verdict flags - reqhi=0xC0) is covered without any
+	 * walking. */
 	if (wd_delay_ms < WDA_DELAY_MIN_MS)
 		wd_delay_ms = WDA_DELAY_MIN_MS;
 	if (wd_delay_ms > WDA_DELAY_MAX_MS)
@@ -1877,6 +1929,22 @@ void L9779::wdFeedFromExecutor()
 	if (wd_int && !wd_prev_int)
 		wd_kill_cnt++;
 	wd_prev_int = wd_int;
+
+	/* ROOT-CAUSE console print on the kill-state transition (EC crossing 4):
+	 * one clear line the moment the chip forces the power stage off, and one
+	 * when it re-enables it. This is the state that makes injectors/coils/
+	 * pump/blade look dead while SPI and the output diagnostics stay clean. */
+	{
+		bool killed = (ec_now > 4);
+		if (killed != s_wdaKillActive) {
+			s_wdaKillActive = killed;
+			if (killed) {
+				efiPrintf(DRIVER_NAME " WDA KILL: EC=%d > 4 - power stage FORCED OFF by the chip (blade via WDA->Q5B->DIS too)", (int)ec_now);
+			} else {
+				efiPrintf(DRIVER_NAME " WDA RECOVERED: EC=%d <= 4 - power stage re-enabled", (int)ec_now);
+			}
+		}
+	}
 
 	/* Instrument the REQUHI byte (datasheet DIA_REG15): [7:6] RESP_CNT,
 	 * [5] RESP_ERR, [4] RESP_Z0, [3] CHRT, [2] W_RESP (wrong value),
@@ -1900,11 +1968,11 @@ void L9779::wdFeedFromExecutor()
 		 * kept climbing after each reset). Count only; the consecutive-run
 		 * counter stays as a diagnostic. */
 		wd_bad_value_cnt++;
-		/* NO delay action here: the EC-saturation walk owns the delay. A
-		 * visible value-reject is a rare phase alignment, and recentering
-		 * to 22 on it would undo the walk's progress toward the real
-		 * window (the 20:16 bench run: ec=7 saturated at 22, the window
-		 * sits at [25.9, 38.5]). Count only. */
+		/* Recenter the delay on a value rejection (ce32509e policy): W_RESP
+		 * carries no timing flags, so the +-5 adaptation above cannot move
+		 * the delay back from a thin-edge state - a value-only miss is the
+		 * chip rejecting the answer while the timing verdicts stay quiet. */
+		wd_delay_ms = WDA_DELAY_INIT_MS;
 	} else {
 		wd_bad_value_cnt = 0;
 	}
@@ -1914,11 +1982,12 @@ void L9779::wdFeedFromExecutor()
 	 * a shifted stream would complete a wrong-value response (EC++) AND keep
 	 * the shift for every following cycle. Skip the burst instead: the
 	 * window expires unanswered (one EC via NO_RESP), the sequencer resets
-	 * RESP_CNT to 11 and the next burst re-aligns deterministically. The
-	 * delay stays where the walk left it - the shift is a chip-side stream
-	 * state, not a timing verdict. */
+	 * RESP_CNT to 11 and the next burst re-aligns deterministically.
+	 * Recenter the delay too (ce32509e policy) - the shift implies the
+	 * timing sat at the window edge. */
 	if ((requhi & 0xc0) != 0xc0) {
 		wd_cnt_bad++;
+		wd_delay_ms = WDA_DELAY_INIT_MS;
 		wdArmIsr(wd_delay_ms);
 		return;
 	}
@@ -2132,6 +2201,15 @@ void L9779::debug() {
 	efiPrintf(DRIVER_NAME " WDA transitions: ecUp=%d ecDown=%d ecSame=%d reqChg=%d (since last pins)",
 		s_wdaEcUp, s_wdaEcDown, s_wdaEcSame, s_wdaReqChg);
 	s_wdaEcUp = s_wdaEcDown = s_wdaEcSame = s_wdaReqChg = 0;
+
+	/* Dispatch-path accounting (the 2:1 fire:feed investigation): where do
+	 * the TMR10 fires go? irq=handler entries, uif=entries with TMR10 UIF,
+	 * foreign=entries from the shared vector's OTHER source, disp=feeds
+	 * dispatched, feed=feeds entered, notrunning=silent !wd_running exits.
+	 * A healthy 1:1 feed reads irq==uif==disp==feed==ok and foreign==0. */
+	efiPrintf(DRIVER_NAME " WDA path: irq=%d uif=%d foreign=%d disp=%d feed=%d notrunning=%d (since last pins)",
+		s_wdaIrrRuns, s_wdaUifSeen, s_wdaForeign, s_wdaDisp, s_wdaFeedRuns, s_wdaNotRunning);
+	s_wdaIrrRuns = s_wdaUifSeen = s_wdaForeign = s_wdaDisp = s_wdaFeedRuns = s_wdaNotRunning = 0;
 
 	/* The last cycles of the per-cycle event ring (newest LAST):
 	 * t=NTms, req, ec, int, reqhi, delay, flags (1=halted, 2=burst ok). */
@@ -2469,8 +2547,8 @@ int L9779::init()
 	 * window [15.8, 28.4] @ 64 kHz / [25.9, 38.5] @ 39 kHz). The feed is
 	 * kicked by the driver thread after chip_init and then runs as a
 	 * one-shot TMR10 ISR (priority 5, below the trigger handoff) with a
-	 * single atomic burst per cycle; the delay is walked by the
-	 * question-freeze signal (see wdFeedFromExecutor). The timer rate is
+	 * single atomic burst per cycle; the delay is adapted by the REQUHI
+	 * timing verdicts only (ce32509e policy, no walk). The timer rate is
 	 * measured here against the NT domain (TIM5) and the PSC programmed so
 	 * the counter ticks at exactly 250 kHz (4 us) on any silicon. */
 	wd_delay_ms = WDA_DELAY_INIT_MS;
@@ -2488,8 +2566,6 @@ int L9779::init()
 	wd_prev_int = false;
 	wd_bad_value_cnt = 0;
 	wd_prev_cycle_clean = false;
-	wd_frozen_cnt = 0;
-	wd_walk_dir = 1;
 	s_wda_chip = this;
 	wdaTimerInit();
 

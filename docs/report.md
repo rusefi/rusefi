@@ -9891,3 +9891,196 @@ power stage will NOT recover on the bench unit even with a perfect
 feed). The car is the validation target: there EC decrements and the
 walk + short window will bring EC to 4 and re-enable the stages within
 ~0.5 s of ignition on.
+
+## 2026-08-30 (late night, user directive) - WDA feed reverted to the proven ce32509e timings on TMR10
+
+User directive: keep the TMR10 one-shot feed (do NOT revert to the
+executor), but take ALL timings and settings from ce32509e - the feed
+that demonstrably ran with ec=4 wda_int=0 on the car (2026-08-24/26).
+Stop the timing churn: the question-freeze delay walk is removed.
+
+Changes (firmware/hw_layer/drivers/gpio/l9779.cpp):
+- WDA_DELAY_MIN_MS 12 -> 17, WDA_DELAY_MAX_MS 55 -> 27: the delay is
+  now clamped to the proven RESPTIME=10 window band [17, 27] ms
+  (window center 22.1 ms, +-5% CLK1 drift -> [16.6, 27.0] ms).
+- The question-freeze walk (wd_frozen_cnt/wd_walk_dir, 6-cycle freeze
+  -> step, direction reversal at the clamps) is REMOVED. The delay is
+  adapted ONLY by the REQUHI timing verdicts (NO_RESP -> -5,
+  RESP_TO_EARLY -> +5), exactly the ce32509e policy.
+- Restored the ce32509e recenter points: W_RESP/RESP_Z0/RESP_ERR ->
+  wd_delay_ms = WDA_DELAY_INIT_MS; RESP_CNT != 11 -> recenter + skip
+  the burst + re-arm.
+- Kept (unchanged): WDA_RESPTIME=10 written at init and on the
+  configWiped heal, WDA_DELAY_INIT_MS=22, the wd_prev_cycle_clean gate
+  on the verdict adaptation, NO runtime SW_RST (user directive), the
+  TMR10 one-shot at priority 5, the 250 kHz measured-rate tick.
+
+Validation: compile.sh for m74_9 -> BUILD SUCCESSFUL (build/rusefi.srec
+regenerated). Not yet flashed to the bench unit.
+
+Bench expectation (honest): the unit currently on the bench runs the
+stale 19:45:13 build (delay frozen at 105 ms, no RESPTIME write per the
+readback 0x3F) - that build cannot land in any window of the bench
+chip, which is why the question froze and the power stage stayed dead.
+The new build writes RESPTIME=10 and feeds at 22 ms. If the bench chip
+honors the RESPTIME write, the answer lands inside the window and the
+kill should clear once EC decrements; if it ignores the write (its
+39 kHz / no-write quirks), no delay in [17, 27] can reach its window
+and the bench power stage will stay dead regardless of the feed - the
+car chip demonstrably honors the write (ec=4 at 22 ms).
+
+## 2026-08-30 (23:00, user logs) - the bench chip honors RESPTIME; 22 ms is too early, 27 ms covers both rates
+
+The 21:46 flash of the ce32509e-timings build produced the decisive data
+and refutes the "bench chip EC decrement is broken" conclusion:
+- RESPTIME readback = 0x0A (the previous build's 0x3F was because THAT
+  build did not write RESPTIME at all, not because the chip ignored it).
+- delay 22 ms, miss=0, wrong=0, reqhi=0xC0 (no verdict flags) - but the
+  per-cycle ring shows the question freezing for 30+ cycle stretches
+  (req=E x31, req=8 x18, req=C x9) with EC pinned at 7.
+- Interpretation: the bench chip runs 39 kHz (the known quirk), so its
+  RESPTIME=10 window is [25.9, 38.5] ms - a 22 ms answer is EARLY and
+  rejected SILENTLY (the TO_EARLY flag is cleared by the next sequencer
+  run before the next read), exactly like the 21:19 session. The car
+  chip is 64 kHz (window [15.8, 28.4]) where 22 ms is the center - that
+  is why the same feed showed ec=4 on the car.
+- The kill latches BEFORE the feed can help: while the MCU boots (~1 s)
+  the chip is un-fed, EC climbs 6 -> 7 and the power stage is forced off;
+  clearing OUT_DIS does not clear the WDA kill, only EC <= 4 does.
+
+Fix: WDA_DELAY_INIT_MS 22 -> 27. 27 ms sits inside BOTH windows
+([15.8, 28.4] @ 64 kHz and [25.9, 38.5] @ 39 kHz) with +-5% CLK1 drift
+margin, so the very first burst after the RESPTIME write is accepted on
+either chip rate and EC decrements 7 -> 4 within ~3 cycles (~0.1 s) -
+the power stage comes up ~0.3-0.5 s after key-on without any delay
+walking. 27 is the proven ce32509e max-clamp value. Validation:
+compile.sh m74_9 -> BUILD SUCCESSFUL; bench confirmation pending (the
+expected signature: ec drops to 4, wda_int clears, injector/coil/pump
+diagnostics go live).
+
+## 2026-08-30 (late night, user directive) - root cause made visible + the 2:1 fire:feed anomaly instrumented
+
+Primary task per user: fix the power stage. Two findings from the 22:08
+bench run (delay 27 ms, RESPTIME readback 0x0A):
+- EC is STILL pinned at 7 with miss=0 wrong=2 reqhi=0xC0: 27 ms is also
+  rejected silently on the bench (the question freezes in runs, reqChg
+  44%), so no fixed delay in the short-window band locks this chip while
+  the feed runs at half rate.
+- NEW: the feed completes ~18 cycles/s while the TMR10 fires every
+  27 ms of wall time (per=27068us CONSTANT across all ten 1 Hz samples;
+  cnlat/late prove prompt ISR entry - no halts). ok climbs 18/s, the
+  event ring stamps are ~49 ms apart, yet fail/defer/pollto/cntbad all
+  stay ~0 - half the cycles vanish through NO counted path. Static
+  review found no mechanism; the remaining candidates are the shared
+  TIM1_UP_TIM10 vector firing without the TMR10 UIF set, or the silent
+  !wd_running early return (no gate flap prints, so unlikely).
+
+Changes:
+- l9779.cpp: root-cause console print on the kill-state transition
+  ("WDA KILL: EC=N > 4 - power stage FORCED OFF by the chip" /
+  "WDA RECOVERED: EC=N <= 4"), driven by ec_now crossing 4.
+- l9779.cpp: dispatch-path counters irq/uif/foreign/disp/feed/
+  notrunning, printed by 'pins' as "WDA path:" and reset per dump - one
+  bench run pins down where the missing half of the cycles goes.
+- output_channels.txt + status_loop.cpp: TS output channels
+  l9779WdaEc / l9779WdaInt / l9779WdaKill / l9779OutDis /
+  l9779WdaDelayMs / l9779WdaOk / l9779WdaWrong / l9779WdaMiss
+  (populated under EFI_PROD_CODE && BOARD_L9779_COUNT>0, zeros
+  elsewhere).
+
+Validation: compile.sh m74_9 -> BUILD SUCCESSFUL (config regeneration
+needed a touch of output_channels.txt after the first failed attempt -
+the Lua output lookup regenerated but the struct header did not).
+
+## 2026-08-30 (23:30) - root cause FOUND and fixed: TMR10 runs at 144 MHz (PCLK2 does not double), the feed answered at ~54 ms real, always outside the window
+
+The 22:35 bench run with the dispatch-path counters is decisive:
+irq=639 uif=639 foreign=0 disp=639 feed=639 notrunning=0 - the handler
+serves EVERY timer fire and the feed completes EVERY dispatch; nothing
+is lost anywhere in the path (the earlier "2:1" was never a dispatch
+problem). Combined with the constants (per=6768 TMR11 ticks in ALL ten
+1 Hz samples, cnlat=4us prompt entry, late=8-12us, ok climbing 17.3/s
+of real time, the event ring stamped ~57 NT-ms apart): the timer really
+fires every ~54 ms REAL, i.e. the TMR10 tick is ~8.4 us, i.e. the
+TMR10/TMR11 input clock is ~144 MHz = PCLK2 - the APB2 timers do NOT
+double on this AT32. The fork's STM32_TIMCLK2=288 MHz and the boot
+print "measured 287 MHz" were both wrong: the NT-anchored measurement
+(newPsc = acDelta*144*16/ntDelta) cancels the input rate out of the
+ratio, so the derived "input MHz" always read ~288 by construction.
+
+Consequence for the power stage: the chip received one answer every
+~54 ms - AFTER the RESPTIME=10 window closes (28.4 ms @ 64 kHz /
+38.5 ms @ 39 kHz) - so every answer was silently rejected, EC pinned at
+7, WDA kill latched, power stage dead. No fixed delay value could ever
+have fixed this: the armed "27 ms" was really 54 ms of wall time.
+
+Fix (l9779.cpp): the TMR10 rate is now measured against SysTick
+(chVTGetSystemTimeX, 1 kHz from HCLK - validated by the CAN bit timing
+and the console), not against NT. input_Hz = acDelta*144*1000/stDelta,
+newPsc = input_Hz/250000 - 1 -> a REAL 250 kHz (4 us) tick on any
+silicon. Expected boot print now: input 144 MHz, PSC 575 (was 1150).
+TMR11 uses the same corrected PSC, so per/late become real us again.
+The liveness line also prints perNt (the NT-domain fire period) for the
+cross-check: after the fix per and perNt must both read ~27 ms.
+
+Expected after flash: the feed answers every real 27 ms, inside the
+window on both chip rates, EC decrements 7 -> 4 within ~0.1 s, the
+"WDA RECOVERED" line prints and the power stage comes up ~0.3-0.5 s
+after key-on. Validation: compile.sh m74_9 -> BUILD SUCCESSFUL; bench
+confirmation pending.
+
+## 2026-08-30 (23:50) - the timer clock HALVES after init: the arm is now self-calibrating on the measured real tick
+
+The 22:49 run settles the clock question: the SysTick-anchored
+measurement at init reads 283 MHz / final rate 253.5 kHz (SysTick is
+cross-validated: 19714 counts over 10 ms at PSC=143 is exactly the
+expected 19660 for a 10 ms window at 283 MHz) - the TMR10 clock is
+RIGHT at init. At runtime the same ~6730-tick interval takes ~55 ms of
+NT (the ring stamps, ok climbing 17.9/s real over 1 kHz SysTick
+samples, per=6769 ticks constant): the APB2 timer clock halves
+somewhere after init (RCC quirk on this port, root cause still open).
+So the armed "27 ms" was really ~54 ms of real time - every answer
+landed after the RESPTIME=10 window close, EC pinned at 7, power stage
+killed. The earlier 144 MHz theory was wrong about the measurement but
+right about the EFFECT: the runtime rate is half the nominal.
+
+Fix (l9779.cpp): wdaTicksForInterval() scales the armed tick count by
+the measured real tick (per_ticks / perNt_us, NT-anchored, clamped
+0.5x..2x nominal, converges on the first fire): whatever the timer
+clock does, the fire lands delay_ms of REAL time after the previous
+burst - inside the window. wdArmIsr/wdArmThread compute the ticks once
+and pass them to wdaTimerArm(ticks) and the arm-ref for the late probe.
+The perNt liveness print is fixed (it printed 0: the divisor was
+US2NT(1000000) instead of the 4 ticks/us factor).
+
+Validation: compile.sh m74_9 -> BUILD SUCCESSFUL. Bench confirmation
+pending: perNt must read ~27 ms and EC must drop to 4 (WDA RECOVERED).
+
+## 2026-08-30 (24:00) - power stage ALIVE on the bench: EC drops to 1, the chip accepts; the APB2 timer clock question
+
+The self-calibrating arm (scaled by the NT-measured real tick) fixed the
+feed: the 22:59 run shows the ring stamping every ~27 NT-ms, perNt
+26-31 ms, and the chip ACCEPTING - EC marches 7 -> 4 -> 3 -> 2 -> 1
+(WDA RECOVERED lines), the kill clears and the power stage re-enables.
+Root cause of the whole saga, now measured directly: the runtime
+TMR10/TMR11 clock is 144 MHz = PCLK2 - the AT32F435 APB2 timers do NOT
+double (the fork's STM32_TIMCLK2 = PCLK2 x 2 = 288 MHz is wrong; the
+authoritative ChibiOS-Contrib port has no timer-doubling concept and the
+AT32 CRM CFG has no timer x2 bit). With PSC=1134 the armed "27 ms" was
+really ~54 ms: every answer landed after the window close, EC pinned at
+7, power stage killed - on the bench AND as a hazard on the car. The
+NT-anchored init "measurement" printed 288 because the derivation
+cancels the input rate (newPsc = acDelta*144*16/ntDelta), and the
+SysTick-anchored re-measure printed 283 for the same reason the virtual
+system tick itself is timer-derived (SYSTICKv1 LLD, ST_CLOCK_SRC =
+STM32_TIMCLK1) - both inherit the fork's wrong x2 assumption. The
+runtime perNt-vs-per ratio (27 ms of NT for 3405 TMR10 ticks = 7.9 us
+ticks = 144 MHz) is the ground truth.
+
+Follow-up (same commit): the delay clamp raised to [17, 38] ms - the
+bench chip is the 39 kHz variant (TO_EARLY at 27 ms in the 23:00 run,
+window [25.9, 38.5], center 32.2 ms), so the verdict adaptation can now
+walk up to the 39 kHz center instead of sitting on the window edge; a
+64 kHz chip flags LATE at 27 ms and walks down to 22 ms as before.
+Validation: compile.sh m74_9 -> BUILD SUCCESSFUL. Remaining: confirm
+EC stabilizes at <= 4 (no more kill pulses) on the bench.
