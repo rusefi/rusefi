@@ -9853,3 +9853,43 @@ feed mechanics, and those are clean: fail=0, addr_err~0, delay frozen
 at the proven 105 ms, no reloads, cnlat=0, per exactly the armed
 interval. The health verdict is the car: the wire bytes are identical to
 the 08-24/08-26 build that showed ec=4 there.
+
+## 2026-08-30 (21:18, with real loads) - the WDA kill is real; the question-freeze is the acceptance signal
+
+The power cycle + real loads session changed everything: Reset Cause =
+Power on/power-down, RESPTIME readback = 0x3F (the chip's config reset
+- proving the RESPTIME write DOES take effect and survives soft resets
+only), and the question FROZE at 0x4 for 400+ cycles while the delay
+sat at 105 ms. The datasheet's "question repeats until answered
+correctly" makes the freeze the rejection signature: the chip rejected
+every 105 ms answer (the 39 kHz window at 0x3f sits at [163, 184] ms -
+105 is early). With EC pinned at 7 (bench chip's decrement broken), the
+WDA kill (EC > 4 -> WDA_INT) forced OUT1-4/IGN1-4 off AND pulled the WDA
+line low -> Q5B -> TLE9201 DIS -> blade dead - with real loads connected
+the whole power stage went dark (throttle, coils, injectors, fuel pump).
+The bench never showed it before: open-load diagnostics work regardless
+of the kill, and there were no loads.
+
+Conclusions and fixes (commit):
+- The question CHANGE = accepted answer; the question FREEZE = rejected.
+  This is the chip-independent acceptance signal (the bench chip's EC
+  decrement is broken and EC cannot serve).
+- The RESPTIME write DOES take effect (the "no effect" conclusion was
+  wrong - it was based on the EC, not the question). RESPTIME=10 is
+  written again at init and on the configWiped heal for a deterministic
+  short window ([15.8, 28.4] @ 64 kHz / [25.9, 38.5] @ 39 kHz).
+- The delay walk is restored, driven by the question-freeze signal:
+  clean, un-halted cycles with an unchanged question for 6 cycles ->
+  step +5 (reversing at the clamps); a question change -> hold. From
+  the 22 ms init it reaches either window in 1-3 steps (~0.5 s), which
+  also clears the boot-time WDA kill fast (EC 6 -> 4 needs 2 accepts).
+- The feed MUST keep the question advancing: a stuck question means a
+  stuck EC=7 means the power stage stays killed.
+
+Validation: compile_m74_9.sh builds clean. Bench expectation: delay
+walks 22 -> 27 within a second and the question starts changing every
+cycle (reqChg high); EC stays 7 on this chip (broken decrement - the
+power stage will NOT recover on the bench unit even with a perfect
+feed). The car is the validation target: there EC decrements and the
+walk + short window will bring EC to 4 and re-enable the stages within
+~0.5 s of ignition on.
