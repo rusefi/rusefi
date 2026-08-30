@@ -9776,3 +9776,34 @@ cleared.
 Validation: compile_m74_9.sh builds clean. Bench expectation: delay
 walks 22 -> 27 within ~1 s and EC drops to 4; addr_err/fail stay ~0 even
 after the reply stream shifts; no reloads.
+
+## 2026-08-30 (final) - RESPTIME shortening is DEAD: the chip keeps the default ~[99,112] ms window
+
+The 20:35/20:36/20:39 dumps killed the 39 kHz/[25.9,38.5] model for good:
+the EC-saturation walk swept the delay across the whole 15..55 ms range
+(55->45->40->25->22->37->47->52->50->45->...->15) and EC NEVER dropped
+below 7 at ANY delay (ecUp=0/ecDown=0/ecSame=everything, ~1400 cycles),
+while reqhi=0xC1 showed the chip flagging the answers as too EARLY even
+at 55 ms. Conclusion: the RESPTIME=10 write lands in the register (the
+readback shows 0x0A) but the chip's WDA engine KEEPS the default
+response time - the window opens after 55 ms, i.e. it is the default
+~[99.4, 112] ms @ 64 kHz. The ONLY proven-healthy configuration in the
+whole saga was exactly that: the 2026-08-24 16:21:41 lock at ~115 ms
+(zero misses over 206 answers), which was measured with the DEFAULT
+RESPTIME. The whole "shorten RESPTIME to 10" optimization rested on the
+write taking effect - it does not.
+
+Revert to the stock regime (commit): RESPTIME is no longer written
+(chip_init and chip_heal_out_dis keep the chip's reset default 0x3f -
+the stock never touches it either); the feed period is ~105 ms
+(INIT 105, walk range [85, 195] covering 64 kHz [99,112] and 39 kHz
+[163,184] with CLK1 drift); the boot kick arms at wd_delay_ms. The TMR10/
+TMR11 tick is changed 1 MHz -> 250 kHz (4 us) because the 16-bit ARR at
+1 MHz caps at 65.5 ms and the new answer periods are 105..195 ms (the
+per/late/cnlat prints scale by 4). The EC walk converges slower at the
+long cycle (6 cycles x ~105 ms per 5 ms step, ~8-12 s worst case to walk
+105 -> 165 on a 39 kHz chip) - acceptable for a boot-time search.
+
+Validation: compile_m74_9.sh builds clean. Bench expectation: delay
+walks 105 -> ~115 within a few seconds and EC drops 7 -> 4 (the
+2026-08-24 lock); miss stops climbing; no reloads; addr_err/fail ~0.
