@@ -563,6 +563,11 @@ void TriggerCentral::handlePolledBinaryCamSync(bool isCrankRising, efitick_t now
 	int remainder;
 	if (currentSyncCode==2 && (m_lastBinarySyncCode==0 || !triggerState.hasSynchronizedPhase()) ) {
 		remainder = (engineConfiguration->binarySyncRemainderOffset + m_cachedCrankDivider / 2) % m_cachedCrankDivider; // cam fell between crank rise and fall: 360 degrees out of the 720 cycle
+	} else if (currentSyncCode==3
+			&& (m_lastBinarySyncCode==0 || !triggerState.hasSynchronizedPhase())
+			&& !engine->rpmCalculator.isRunning()) {
+		// inverse path: cam was high for the entire crank tooth, so this crank fall is at the base TDC position
+		remainder = engineConfiguration->binarySyncRemainderOffset;
 	} else {
 		m_lastBinarySyncCode=currentSyncCode;
 		return;
