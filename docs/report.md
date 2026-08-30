@@ -9317,3 +9317,34 @@ What the detour cost and what it proved:
 
 Open: the handoff-decode tails (~1 ms) remain the real scheduling item -
 trgDecode/trgPostDecode localization, as before.
+
+## 2026-08-30 (14:13, CAR) - angle clock ran 2x slow: all four coils overcharged, 15A fuse blown
+
+First car start with the angle-clock build: C9012 out-of-order coil off +
+C9351-4 coil overcharge 4.5-8.2 ms at the catch, then the 15A ECU fuse
+blew. Root cause: TMR2 ticks at HALF the assumed rate - the fork's
+STM32_TIMCLK1 claims PCLK1*2 = 288 MHz for all APB1 timers, but the
+AT32F435 does not double this timer's clock (same silicon behavior the
+TMR10/APB2 measurement showed). With the 2x-slow counter, both the dwell
+start and the spark fire (both armed as absolute TMR2 ticks) fired 2x
+late - the dwell duration doubled: 8.17 ms overcharge = 2x the ~4 ms
+nominal cranking dwell, all four coils simultaneously = the fuse.
+
+Why nothing caught it earlier: the NT domain (TIM5) is a DIFFERENT timer
+and its 4 MHz is load-bearing and validated by tooth physics/rpm
+readings, so the time base was fine; the bench never runs an engine, so
+the angle clock was only ever exercised mechanically (ISR fires, actions
+execute) - the absolute timing error is invisible without combustion.
+
+FIX: initAngleClock() now MEASURES the TMR2 rate against the NT timer at
+init (10 ms busy-wait, divide the counter deltas) and programs the PSC
+from the measured rate, so the counter always ticks at exactly the NT
+4 MHz regardless of the silicon. The boot log prints the measured ratio
+("angle clock: measured rate N/N ticks (PSC 71 -> N)") - the bench run
+confirms the 2x diagnosis in the same flash. The NT<->TMR2 offset is
+re-measured AFTER the PSC re-programming (it is only valid at the final
+rate). Unit tests: AngleClock 4/4.
+
+Follow-ups: verify the AT32F435 timer clock tree against the Artery RM
+before fixing STM32_TIMCLK1/2 in the fork (TMR10 measured 144 MHz on
+APB2, TMR2 now measured on APB1); check the coils after the overcharge.

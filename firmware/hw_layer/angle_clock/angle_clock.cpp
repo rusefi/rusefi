@@ -130,9 +130,9 @@ void initAngleClock() {
 	DBGMCU->APB1FZ |= DBGMCU_APB1_FZ_DBG_TIM2_STOP;
 #endif
 
-	// Free-running 32-bit up-counter at 4 MHz (TIMCLK1 = 288 MHz, PSC = 71),
-	// the same tick rate as the NT domain (TIM5). No auto-reload, no
-	// per-tooth reset - events are armed as absolute counter values.
+	// Free-running 32-bit up-counter, PROVISIONALLY at 4 MHz (PSC = 71 under
+	// the fork's TIMCLK1 = PCLK1 * 2 = 288 MHz assumption). No auto-reload,
+	// no per-tooth reset - events are armed as absolute counter values.
 	ANGLE_CLOCK_TIMER->PSC = 71;
 	ANGLE_CLOCK_TIMER->ARR = 0xFFFFFFFF;
 	ANGLE_CLOCK_TIMER->CR1 = 0;
@@ -144,14 +144,50 @@ void initAngleClock() {
 	ANGLE_CLOCK_TIMER->CCER = 0;
 	ANGLE_CLOCK_TIMER->DIER = 0;
 
-	// Latch PSC/ARR and clear any stale flags.
+	// Latch PSC/ARR and clear any stale flags, then start the counter for
+	// the rate measurement below.
 	ANGLE_CLOCK_TIMER->EGR = STM32_TIM_EGR_UG;
+	ANGLE_CLOCK_TIMER->SR = 0;
+	ANGLE_CLOCK_TIMER->CR1 = STM32_TIM_CR1_CEN;
+
+	// MEASURE the real counter rate against the NT timer (TIM5): the NT
+	// 4 MHz domain is load-bearing and validated by tooth physics on the
+	// car (rpm readings match reality), so it is the reference. The fork's
+	// STM32_TIMCLK1 claims PCLK1 * 2 for all APB1 timers, but the AT32F435
+	// does NOT necessarily double the APB timer clock - TMR10 on APB2
+	// measured 144 MHz against the claimed 288. A 2x-slow angle clock makes
+	// EVERY armed event fire 2x late, which doubles every dwell: the
+	// 2026-08-30 catch overcharged all four coils ~8 ms (2x the nominal
+	// cranking dwell) and blew the 15A fuse. Program the PSC from the
+	// MEASURED rate instead, so the counter always ticks at exactly 4 MHz
+	// == the NT domain, on any silicon.
+	uint32_t ac0 = ANGLE_CLOCK_TIMER->CNT;
+	uint32_t nt0 = getTimeNowLowerNt();
+	do { } while (getTimeNowLowerNt() - nt0 < US2NT(10000));	/* 10 ms */
+	uint32_t acDelta = ANGLE_CLOCK_TIMER->CNT - ac0;
+	uint32_t ntDelta = getTimeNowLowerNt() - nt0;
+
+	// newPsc = (PSC_provisional + 1) * acDelta / ntDelta - 1: scales the
+	// measured tick rate to exactly the NT rate (acDelta == ntDelta).
+	uint32_t newPsc = (72 * acDelta / ntDelta) - 1;
+	if (newPsc > 0xFFFF)
+		newPsc = 0xFFFF;
+
+	ANGLE_CLOCK_TIMER->CR1 = 0;
+	ANGLE_CLOCK_TIMER->PSC = newPsc;
+	ANGLE_CLOCK_TIMER->CNT = 0;
+	ANGLE_CLOCK_TIMER->EGR = STM32_TIM_EGR_UG;	/* latch the new PSC */
+	ANGLE_CLOCK_TIMER->SR = 0;
+	ANGLE_CLOCK_TIMER->CR1 = STM32_TIM_CR1_CEN;
 
 	nvicEnableVector(STM32_TIM2_NUMBER, EFI_IRQ_ANGLE_CLOCK_PRIORITY);
 
+	// The offset is only valid at the FINAL counter rate - measure it after
+	// the PSC re-programming.
 	s_ntOffset = ANGLE_CLOCK_TIMER->CNT - getTimeNowLowerNt();
 
-	ANGLE_CLOCK_TIMER->CR1 = STM32_TIM_CR1_CEN;
+	efiPrintf("angle clock: measured rate %lu/%lu ticks (PSC 71 -> %lu)",
+		(unsigned long)acDelta, (unsigned long)ntDelta, (unsigned long)newPsc);
 }
 
 TRIGGER_RAM_CODE uint32_t angleClockTickForNt(efitick_t nt) {
