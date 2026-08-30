@@ -451,6 +451,9 @@ public class EcuMcpServer {
         o.put("bytesWritten", r.bytesWritten);
         o.put("fieldSize", r.fieldSize);
         o.put("burnSucceeded", r.burnSucceeded);
+        o.put("resetConfirmed", r.resetConfirmed);
+        if (r.success && !r.resetConfirmed)
+            o.put("warning", "luareset not confirmed - old VM may still be running, verify a version marker or call lua_reset");
         return o;
     }
 

@@ -32,9 +32,6 @@ import static com.devexperts.logging.Logging.getLogging;
 public class LuaService {
     private static final Logging log = getLogging(LuaService.class);
 
-    /** Maximum time we wait for {@code luareset} to flush over the wire before returning. */
-    private static final long LUARESET_GRACE_MS = 2000;
-
     public static final String LUASCRIPT_FIELD = "LUASCRIPT";
 
     private LuaService() {
@@ -140,9 +137,13 @@ public class LuaService {
                         + " page " + field.getPageIndex());
                 bp.writeInBlocks(padded, 0, field.getOffset(), padded.length, field.getPageIndex());
                 boolean burned = BurnCommand.execute(bp, field.getPageIndex());
-                linkManager.getCommandQueue().write(Integration.CMD_LUA_RESET);
-                Thread.sleep(LUARESET_GRACE_MS);
-                result.set(LuaApplyResult.success(scriptBytes.length, field.getSize(), burned));
+                // Send luareset synchronously and verify: the old fire-and-forget
+                // write() sent once with a 500 ms confirmation wait and reported
+                // success regardless - in short-lived headless sessions the JVM
+                // could exit with the reset still queued, leaving the OLD VM
+                // silently running (the recurring "stale VM after set_lua").
+                boolean resetConfirmed = sendLuaResetConfirmed(linkManager);
+                result.set(LuaApplyResult.success(scriptBytes.length, field.getSize(), burned, resetConfirmed));
             } catch (Throwable t) {
                 log.error("applyLuaScript failed", t);
                 result.set(LuaApplyResult.failure(t.toString()));
@@ -154,6 +155,28 @@ public class LuaService {
         if (!done.await(timeoutMs, TimeUnit.MILLISECONDS))
             return LuaApplyResult.failure("Timeout after " + timeoutMs + "ms");
         return result.get();
+    }
+
+    private static final int LUARESET_ATTEMPTS = 3;
+    private static final long LUARESET_CONFIRM_WAIT_MS = 2000;
+
+    /**
+     * Send {@code luareset} and wait for its confirmation echo, retrying a few
+     * times. Returns whether a confirmation was ever seen. Note the echo rides
+     * the firmware's small text ring which a chatty Lua script can flood, so
+     * {@code false} means "unverified", not necessarily "not executed" -
+     * callers should re-check the running build (e.g. a version marker print).
+     */
+    private static boolean sendLuaResetConfirmed(LinkManager linkManager) throws InterruptedException {
+        for (int attempt = 1; attempt <= LUARESET_ATTEMPTS; attempt++) {
+            CountDownLatch confirmed = new CountDownLatch(1);
+            linkManager.getCommandQueue().write(Integration.CMD_LUA_RESET,
+                    (int) LUARESET_CONFIRM_WAIT_MS, confirmed::countDown);
+            if (confirmed.await(LUARESET_CONFIRM_WAIT_MS + 500, TimeUnit.MILLISECONDS))
+                return true;
+            log.warn("luareset attempt " + attempt + "/" + LUARESET_ATTEMPTS + " not confirmed, retrying");
+        }
+        return false;
     }
 
     /** Read the current LUASCRIPT field: cached image for page 0, live page read otherwise. */
@@ -223,27 +246,31 @@ public class LuaService {
         public final int bytesWritten;
         public final int fieldSize;
         public final boolean burnSucceeded;
+        /** Whether the post-burn {@code luareset} was confirmed by the ECU; when
+         * false the old VM may still be running and the caller should verify. */
+        public final boolean resetConfirmed;
 
-        private LuaApplyResult(boolean success, String error, int bytesWritten, int fieldSize, boolean burnSucceeded) {
+        private LuaApplyResult(boolean success, String error, int bytesWritten, int fieldSize, boolean burnSucceeded, boolean resetConfirmed) {
             this.success = success;
             this.error = error;
             this.bytesWritten = bytesWritten;
             this.fieldSize = fieldSize;
             this.burnSucceeded = burnSucceeded;
+            this.resetConfirmed = resetConfirmed;
         }
 
-        static LuaApplyResult success(int bytesWritten, int fieldSize, boolean burnSucceeded) {
-            return new LuaApplyResult(true, null, bytesWritten, fieldSize, burnSucceeded);
+        static LuaApplyResult success(int bytesWritten, int fieldSize, boolean burnSucceeded, boolean resetConfirmed) {
+            return new LuaApplyResult(true, null, bytesWritten, fieldSize, burnSucceeded, resetConfirmed);
         }
 
         static LuaApplyResult failure(String error) {
-            return new LuaApplyResult(false, error, 0, 0, false);
+            return new LuaApplyResult(false, error, 0, 0, false, false);
         }
 
         @Override
         public String toString() {
             return success
-                    ? "LuaApplyResult{ok, bytes=" + bytesWritten + "/" + fieldSize + ", burn=" + burnSucceeded + "}"
+                    ? "LuaApplyResult{ok, bytes=" + bytesWritten + "/" + fieldSize + ", burn=" + burnSucceeded + ", resetConfirmed=" + resetConfirmed + "}"
                     : "LuaApplyResult{FAIL: " + error + "}";
         }
     }
