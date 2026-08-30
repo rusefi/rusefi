@@ -88,14 +88,13 @@
  * power stage killed. 27 ms is accepted by both rates with +-5% CLK1 drift
  * margin, so no delay walking is needed. */
 #define WDA_DELAY_INIT_MS			(27)
-/* The answer period must stay inside [response_time, response_time+window].
- * 27 ms lands in the RESPTIME=10 window on BOTH chip clock rates with the
- * +-5% CLK1 drift margin; the verdict adaptation walks UP to 38 ms (the
- * 39 kHz window center is 32.2 ms - the 23:00 bench run flagged TO_EARLY at
- * 27 ms and EC oscillated 4..7, the 27 ms clamp sat on the window's opening
- * edge). A 64 kHz chip flagged LATE at 27 ms walks DOWN to its 22 ms center. */
+/* The sweep range covers the RESPTIME=10 window wherever the chip's f_clk
+ * sits: [15.8, 28.4] ms @ 64 kHz, [25.9, 38.5] ms @ 39 kHz, plus the
+ * temperature drift the bench chip shows between sessions (the 22:59 run
+ * accepted at 27 ms with EC -> 1; the 23:13 run rejected at 37 ms with the
+ * question frozen). The freeze-walk sweeps inside this range. */
 #define WDA_DELAY_MIN_MS			(17)
-#define WDA_DELAY_MAX_MS			(38)
+#define WDA_DELAY_MAX_MS			(55)
 /* Duration of the feed ISR from dispatch to the END of its RESP_BYTE0 write
  * (3 pipelined reads + 4 answer frames, ~7 x 10 us, plus any handoff
  * preemption). The next one-shot is armed this much short of the full
@@ -411,6 +410,8 @@ struct L9779 : public GpioChip {
 	bool					wd_prev_int;
 	int					wd_bad_value_cnt; /* consecutive cycles with W_RESP/RESP_Z0/RESP_ERR - diagnostic only, NO reset action (the burst self-realigns) */
 	bool					wd_prev_cycle_clean; /* the previous burst went out as one clean atomic stream - REQUHI verdicts are only trusted when this is true */
+	int					wd_frozen_cnt;	/* consecutive clean cycles with an UNCHANGED question - the silent-rejection signal driving the freeze walk */
+	int					wd_walk_dir;	/* current freeze-walk direction: +1 up, -1 down (reversed at the clamps) */
 	uint16_t					ident_reg;		/* IDENT_REG readback (0x10 | 0x00) */
 
 	/* Cached power-stage diagnosis, DIA_REG1..8 (datasheet 6.14). Refreshed
@@ -1251,37 +1252,45 @@ static void wdaTimerInit() {
 /* Fire-to-fire period measured in NT ticks (4 MHz, the validated TIM5
  * domain) and in TMR11 reference ticks - declared here because
  * wdaTicksForInterval (below) uses them to scale the armed interval to
- * REAL time (the TMR10 clock halves after init on this port, so a fixed
- * tick count misses the chip's window). */
+ * REAL time (the runtime TMR10 clock is 144 MHz = PCLK2 on this port, not
+ * the fork's claimed 288, so a fixed tick count misses the chip's window). */
 static efitick_t s_firePeriodNt;
 static uint32_t s_firePeriodRef;
 
-/* The TMR10/TMR11 input clock is NOT constant across the boot on this
- * port: the SysTick-anchored init measurement reads 283 MHz (4 us ticks),
- * but at runtime the served fires take ~55 ms of NT for the same ~6730-
- * tick interval (perNt vs per, the 22:49 bench run) - the APB2 timer clock
- * halves somewhere after init (RCC quirk, root cause still open; the 22:08
- * and 22:35 sessions show the same). A fixed tick count therefore cannot
- * hit the chip's window: the armed "27 ms" was really ~54 ms of real time,
- * every answer landed after the window close, EC stayed at 7 and the power
- * stage stayed killed. The arm now scales the interval by the MEASURED real
- * tick (NT-anchored, TIM5 is physics-validated): whatever the timer clock
- * does, the fire lands intervalUs of REAL time after the previous fire.
- * Clamped to 0.5x..2x of the nominal count so a garbage sample cannot run
- * away; converges on the first fire after boot. */
+/* Real-tick estimate (EMA, units of 0.001 us = nano-ms) - starts at the
+ * nominal 4 us and converges on the first fires. */
+static uint32_t s_realTickMilliUs = 4000;	/* 4000 = 4.000 us */
+
+/* The TMR10/TMR11 input clock is NOT what the fork claims: STM32_TIMCLK2 =
+ * PCLK2 x 2 = 288 MHz, but the runtime measurement (perNt vs per: ~27 ms of
+ * NT for ~3400 TMR10 ticks) gives ~7.9 us ticks = 144 MHz = PCLK2 - the
+ * AT32F435 APB2 timers do NOT double (the authoritative ChibiOS-Contrib
+ * port has no timer-doubling concept and the AT32 CRM CFG has no timer x2
+ * bit). With the assumed 288 MHz the armed "27 ms" was really ~54 ms of
+ * real time: every answer landed after the window close, EC stayed at 7 and
+ * the power stage stayed killed. The arm therefore scales the interval by
+ * the MEASURED real tick (NT-anchored, TIM5 is physics-validated), so the
+ * fire lands intervalUs of REAL time after the previous one on any silicon.
+ * Garbage samples (fail/defer re-arms at 1-10 ms, post-reset jumps) are
+ * rejected by the sanity band and the estimate is EMA-smoothed - the 23:13
+ * run chased a 480 us sample and oscillated its ARR 3989..9305, which is
+ * what kept EC bouncing. */
 static uint32_t wdaTicksForInterval(uint32_t intervalUs) {
 	uint32_t nominal = (intervalUs + 3) / 4;
-	if ((s_firePeriodNt == 0) || (s_firePeriodRef == 0))
-		return nominal;
-	uint32_t perNtUs = (uint32_t)(s_firePeriodNt / US_TO_NT_MULTIPLIER);
-	if (perNtUs == 0)
-		return nominal;
-	uint32_t scaled = (uint32_t)(((uint64_t)intervalUs * s_firePeriodRef) / perNtUs);
-	if (scaled > nominal * 2)
-		scaled = nominal * 2;
-	if (scaled < nominal / 2)
-		scaled = nominal / 2;
-	return scaled;
+	if ((s_firePeriodNt != 0) && (s_firePeriodRef != 0)) {
+		uint32_t perNtUs = (uint32_t)(s_firePeriodNt / US_TO_NT_MULTIPLIER);
+		/* Sanity band: accept only periods near the armed interval. */
+		if ((perNtUs >= intervalUs / 2) && (perNtUs <= intervalUs * 2)) {
+			uint32_t tickMilliUs = (uint32_t)(((uint64_t)perNtUs * 1000) / s_firePeriodRef);
+			s_realTickMilliUs = (s_realTickMilliUs * 3 + tickMilliUs) / 4;
+		}
+	}
+	uint32_t ticks = (uint32_t)(((uint64_t)intervalUs * 1000) / s_realTickMilliUs);
+	if (ticks > nominal * 2)
+		ticks = nominal * 2;
+	if (ticks < nominal / 2)
+		ticks = nominal / 2;
+	return ticks;
 }
 
 static void wdaTimerArm(uint32_t ticks) {
@@ -1913,13 +1922,39 @@ void L9779::wdFeedFromExecutor()
 	if (req_now != wd_last_req)
 		s_wdaReqChg++;
 
-	/* QUESTION-FREEZE WALK removed (2026-08-30, user directive): the delay is
-	 * adapted ONLY by the REQUHI timing verdicts above, clamped to
-	 * [WDA_DELAY_MIN_MS, WDA_DELAY_MAX_MS] - the proven ce32509e policy.
-	 * WDA_DELAY_INIT_MS = 27 ms lands inside the RESPTIME=10 window on BOTH
-	 * chip clock rates (64 kHz and the 39 kHz bench chip), so a silently
-	 * rejecting chip (no verdict flags - reqhi=0xC0) is covered without any
-	 * walking. */
+	/* QUESTION-FREEZE WALK (restored 2026-08-31, now proven necessary): the
+	 * chip's f_clk drifts with temperature - the 22:59 run ACCEPTED at 27 ms
+	 * (EC marched to 1) while the 23:13 run REJECTED at 37 ms with the
+	 * question frozen for 500+ cycles. The rejection is SILENT (the verdict
+	 * flags are cleared by the next sequencer run before our read - reqhi
+	 * stays 0xC0), so the only usable rejection signal is the question
+	 * freeze (datasheet: the question repeats until answered correctly). On
+	 * clean, un-halted cycles with an unchanged question for N cycles, step
+	 * the delay in the current direction and reverse at the clamps - the
+	 * delay sweeps until the question unfreezes (accepted) and holds there.
+	 * This is a servo tracking the chip's own drifting window, not a timing
+	 * experiment. */
+#define WDA_FREEZE_STEP_CYCLES		(8)
+	{
+		bool halted = (s_firePeriodNt / US_TO_NT_MULTIPLIER) > (uint32_t)(2 * wd_delay_ms * 1000 + 5000);
+		if (!halted && prevClean && (req_now == wd_last_req)) {
+			if (++wd_frozen_cnt >= WDA_FREEZE_STEP_CYCLES) {
+				wd_frozen_cnt = 0;
+				wd_delay_ms += wd_walk_dir * 5;
+				if (wd_delay_ms >= WDA_DELAY_MAX_MS) {
+					wd_delay_ms = WDA_DELAY_MAX_MS;
+					wd_walk_dir = -1;
+				} else if (wd_delay_ms <= WDA_DELAY_MIN_MS) {
+					wd_delay_ms = WDA_DELAY_MIN_MS;
+					wd_walk_dir = 1;
+				}
+			}
+		} else {
+			wd_frozen_cnt = 0;
+			if (req_now != wd_last_req)
+				wd_walk_dir = 1;	/* accepted - reset the sweep direction */
+		}
+	}
 	if (wd_delay_ms < WDA_DELAY_MIN_MS)
 		wd_delay_ms = WDA_DELAY_MIN_MS;
 	if (wd_delay_ms > WDA_DELAY_MAX_MS)
@@ -2570,6 +2605,8 @@ int L9779::init()
 	wd_prev_int = false;
 	wd_bad_value_cnt = 0;
 	wd_prev_cycle_clean = false;
+	wd_frozen_cnt = 0;
+	wd_walk_dir = 1;
 	s_wda_chip = this;
 	wdaTimerInit();
 

@@ -10086,3 +10086,33 @@ walk up to the 39 kHz center instead of sitting on the window edge; a
 64 kHz chip flags LATE at 27 ms and walks down to 22 ms as before.
 Validation: compile.sh m74_9 -> BUILD SUCCESSFUL. Remaining: confirm
 EC stabilizes at <= 4 (no more kill pulses) on the bench.
+
+## 2026-08-31 (00:30) - the window DRIFTS with temperature: freeze-walk restored as a servo, calibration stabilized
+
+The 23:13 run with the [17, 38] clamp regressed: two TO_EARLY verdicts
+walked the delay 27 -> 32 -> 37 and the chip REJECTED at 37 with the
+question frozen for 500+ cycles (silent again) - while the 22:59 run
+ACCEPTED at 27 with EC down to 1. The chip's f_clk drifts between
+sessions (temperature; the saga measured the question-advance period
+swinging wildly as the chip warms), so NO fixed delay can lock: the
+window moves and the rejection is silent (the verdict flags are cleared
+by the next sequencer run before our read, reqhi=0xC0 forever). The
+only usable rejection signal is the question freeze.
+
+Fixes (l9779.cpp):
+- The question-freeze walk is RESTORED as a servo: on clean un-halted
+  cycles with an unchanged question for 8 cycles, step the delay +-5 ms
+  in the current direction, reversing at the [17, 55] clamps; a
+  question change holds and resets the direction. The delay sweeps
+  until the question unfreezes (accepted) and sits there.
+- The real-tick calibration is stabilized: the perNt sample must pass a
+  sanity band (interval/2 .. interval*2) before it updates the EMA
+  (s_realTickMilliUs, starts at 4 us, 1:3 smoothing). The 23:13 run
+  chased a 480 us garbage sample and oscillated its ARR 3989..9305 -
+  that jitter is what produced the misses.
+- The halt test for the walk uses the NT-domain fire period (correct at
+  any timer tick), not the TMR11 tick count.
+
+Validation: compile.sh m74_9 -> BUILD SUCCESSFUL. Expected on the
+bench: the delay sweeps from 27 until the question advances steadily,
+then holds; EC drops to <= 4 and stays; kill pulses stop.
