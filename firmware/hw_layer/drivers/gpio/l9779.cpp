@@ -1201,18 +1201,15 @@ static void wdaTimerInit() {
 
 	nvicEnableVector(STM32_TIM7_NUMBER, EFI_IRQ_L9779_WDA_PRIORITY);
 
-	/* Halt behavior (bench debugger): on this silicon the DBGMCU APB1 pause
-	 * bits behave INVERTED vs STM32F4 - a SET bit keeps the timer running
-	 * through a core halt, a CLEAR bit pauses it. TIM5 (NT) has its bit set
-	 * (microsecond timer init) and demonstrably keeps counting through the
-	 * bench debugger halts; TMR7's bit is clear, so every halt paused the
-	 * WDA counter mid-count and stretched the answer cycle by the halt
-	 * duration (the 2x per= seen on the bench). Set TMR7's bit too: the
-	 * one-shot then wraps on wall time, the UIF pends through the halt and
-	 * the feed fires the answer as soon as the core resumes - the feed keeps
-	 * its cadence and the chip sees answers at the earliest possible moment.
-	 * The stretched-cycle guard in the feed (prev-period gate) makes the
-	 * delay servo robust to the remaining halts either way. */
+	/* DBGMCU APB1 pause bit: set TMR7's bit to MATCH TIM5's configured state
+	 * (microsecond timer init sets bit 3). Without a debugger these bits are
+	 * inert - they only gate the timer clock when a debugger halts the core.
+	 * Setting the bit makes TMR7 and TIM5 behave identically under a future
+	 * debug session, whichever polarity this silicon implements. NOTE: the
+	 * bench runs WITHOUT a debugger (user-confirmed, the Java console is the
+	 * only runtime tool), so this does NOT explain the observed runtime tick
+	 * drift - see the OPEN QUESTION note by s_firePeriodNt below and
+	 * docs/report.md. */
 	DBGMCU->APB1FZ |= DBGMCU_APB1_FZ_DBG_TIM7_STOP;
 
 	efiPrintf(DRIVER_NAME " wda: TMR7 measured %lu/%lu NT ticks, input %lu MHz (PSC 143 -> %lu)",
@@ -1239,9 +1236,20 @@ static void wdaTimerInit() {
 
 /* Fire-to-fire period measured in NT ticks (4 MHz, the validated TIM5
  * domain): the 1 Hz liveness print shows it, so the TMR7 armed interval is
- * visible on the console. Because TMR7 is slaved to the NT clock by the
- * init ratio measurement, the nominal 4 us tick is exact - the arm uses a
- * plain intervalUs/4 count, no runtime re-calibration. */
+ * visible on the console. At init the ratio measurement slaved TMR7 to
+ * exactly NT/16 (4 us ticks, verified twice), so the arm uses a plain
+ * intervalUs/4 count with no runtime re-calibration.
+ *
+ * OPEN QUESTION (2026-08-31): the RUNTIME logs show the effective tick
+ * drifting from the init-proven 4 us to ~8-10 us (per=53.9..69 ms for a
+ * 27 ms arm, late = per - 27 ms exactly, cnlat=4 us so the ISR is prompt
+ * and the wrap itself is late in NT time). The bench has NO debugger
+ * (user-confirmed - the Java console is the only runtime tool), so the
+ * DBGMCU pause bits are inert and cannot explain it. TIM5/TIM2 (32-bit,
+ * PSC 71) stay coherent while the 16-bit basic timer drifts - the same
+ * ~144->112 MHz signature the TMR10 saga measured. Root cause unknown;
+ * next step is a runtime rate re-measurement (TMR7 vs NT AND vs SysTick)
+ * plus a CRM register dump in the pins diagnostic, see docs/report.md. */
 static efitick_t s_lastFireNt;
 static efitick_t s_firePeriodNt;
 /* Previous cycle's timing: the REQUHI verdicts read in a feed describe the
@@ -1250,8 +1258,9 @@ static efitick_t s_firePeriodNt;
 static efitick_t s_prevFirePeriodNt;
 static int s_prevFireDelayMs;
 /* Fires in the last 1 Hz liveness window whose period was off the armed
- * delay by more than +-50% (bench debugger halts stretching TMR7, timer
- * glitches) - the delay servo must not trust the verdicts of those cycles. */
+ * delay by more than +-50% (whatever stretched them - the runtime tick
+ * drift is still open). The delay servo must not trust the verdicts of
+ * those cycles. */
 static int s_wdaStretched;
 
 static void wdaTimerArm(uint32_t ticks) {
@@ -1299,7 +1308,7 @@ struct wda_evt {
 	uint8_t		intf;		/* WDA_INT */
 	uint8_t		requhi;		/* raw REQUHI byte */
 	uint8_t		delay;		/* wd_delay_ms after this cycle's adaptation */
-	uint8_t		flags;		/* bit0: core was halted since the last fire (wall period > 2x delay), bit1: burst sent cleanly, bit2: SPI-level fail, bit3: deferred */
+	uint8_t		flags;		/* bit0: fire period > 1.5x the armed delay (off-time cycle - cause-agnostic), bit1: burst sent cleanly, bit2: SPI-level fail, bit3: deferred */
 };
 static wda_evt s_wdaEvt[WDA_EVT_LINES];
 static int s_wdaEvtNext;		/* next slot to fill */
@@ -1328,10 +1337,11 @@ static bool s_wdaKillActive;		/* EC>4 kill state for the root-cause console prin
  *  - lateUs: NT domain, ISR entry minus the expected dispatch moment
  *    (wd_next_moment). Wrong when the NT clock is wrong (it is not - it is
  *    physics-validated).
- *  - cnLatUs: the TMR7 counter read at ISR entry. The counter wraps to 0
- *    at ARR (the UEV point), so CNT at entry = the ISR latency mod
- *    (ARR+1) in 4 us ticks: small = prompt entry, anything else = the
- *    entry was delayed (bench debugger halts). */
+	 *  - cnLatUs: the TMR7 counter read at ISR entry. The counter wraps to 0
+	 *    at ARR (the UEV point), so CNT at entry = the ISR latency mod
+	 *    (ARR+1) in 4 us ticks: small = prompt entry, anything else = the
+	 *    entry was delayed (preemption, a long critical section, or a core
+	 *    halt if a debugger is ever attached). */
 static int s_lateUs;
 static int s_lateUsMax;
 static int s_cnLatUs;
@@ -1827,13 +1837,16 @@ void L9779::wdFeedFromExecutor()
 
 	/* ON-TIME GATE: the verdicts describe the previous burst, sent at the
 	 * previous fire. If THAT cycle fired off its armed delay by more than
-	 * +-50% (a bench debugger halt stretched the WDA counter, or a glitch),
-	 * the verdict is real - the answer really missed the chip's window - but
-	 * it is NOT actionable: the delay itself was right, the miss was the
-	 * stretch, and stepping the delay would walk it the wrong way (the
-	 * 19:02/23:13 wrong-way walks chased exactly such verdicts). After a
-	 * halt the chip's window phase is unknown anyway; the verdicts of the
-	 * next on-time cycles re-center the delay correctly. */
+	 * +-50%, the verdict is real - the answer really missed the chip's
+	 * window - but it is NOT actionable: the delay itself was right, the
+	 * miss was the stretch, and stepping the delay would walk it the wrong
+	 * way (the 19:02/23:13 wrong-way walks chased exactly such verdicts).
+	 * The stretch cause is deliberately NOT assumed here - the bench has no
+	 * debugger (user-confirmed), and the runtime TMR7 tick rate is an open
+	 * question (measured 288 MHz at init, ~112-144 MHz effective in
+	 * runtime logs) - the gate is purely evidence-based: off-time cycles
+	 * carry no phase information about the chip window, so their verdicts
+	 * are ignored and the next on-time cycles re-center the delay. */
 	if ((s_prevFirePeriodNt != 0) && (s_prevFireDelayMs > 0)) {
 		uint32_t prevPerUs = (uint32_t)(s_prevFirePeriodNt / US_TO_NT_MULTIPLIER);
 		uint32_t armUs = (uint32_t)s_prevFireDelayMs * 1000;
@@ -1994,8 +2007,8 @@ void L9779::wdFeedFromExecutor()
 	}
 
 	/* Record the cycle in the per-cycle event ring (pins diagnostic).
-	 * bit0 = the fire-to-fire NT period exceeded 1.5x the armed delay (a
-	 * halt-stretched cycle - the same test the delay-servo gate uses, so a
+	 * bit0 = the fire-to-fire NT period exceeded 1.5x the armed delay (an
+	 * off-time cycle - the same test the delay-servo gate uses, so a
 	 * flagged cycle's verdicts are ignored by the adaptation). */
 	{
 		wda_evt *e = &s_wdaEvt[s_wdaEvtNext];
@@ -2176,7 +2189,7 @@ void L9779::debug() {
 	s_wdaIrrRuns = s_wdaUifSeen = s_wdaForeign = s_wdaDisp = s_wdaFeedRuns = s_wdaNotRunning = 0;
 
 	/* The last cycles of the per-cycle event ring (newest LAST):
-	 * t=NTms, req, ec, int, reqhi, delay, flags (1=halted, 2=burst ok). */
+	 * t=NTms, req, ec, int, reqhi, delay, flags (1=off-time, 2=burst ok). */
 	int evStart = s_wdaEvtNext - s_wdaEvtCnt;
 	for (int i = 0; i < s_wdaEvtCnt; i++) {
 		const wda_evt *e = &s_wdaEvt[(evStart + i + 2 * WDA_EVT_LINES) % WDA_EVT_LINES];
