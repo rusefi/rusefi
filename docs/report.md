@@ -9832,3 +9832,22 @@ Validation: compile_m74_9.sh builds clean. Expected on the bench:
 delay stays 105, ec=7/wda_int=1 forever (chip defect, ignore), reqChg
 ~44% or ~11% depending on the chip's RESPTIME state - the acceptance
 proof.
+
+## 2026-08-30 (21:07) - correction: reqChg is NOT an acceptance signal either
+
+The 21:07 event ring disproves the acceptance inference from the
+question-advance rate: the question has several different successors per
+value (0->D and 0->4, 9->C/9->D/9->4) - it is NOT a deterministic
+counter/LFSR - and its rate drifts with the chip's own internal clock
+(49 ms in the 22 ms-feed session, ~1 s in the 20:50 session, 159 ms in
+the 21:06-21:07 session, speeding up over minutes after a power cycle -
+an RC-type internal oscillator warming up). reqChg is chip-internal
+noise, not acceptance.
+
+Final bench state: the bench chip yields NO usable WDA health signal -
+EC decrement broken (pinned at 7), no REQUHI flags ever (miss=0
+wrong=0 cntbad=0), question = noise. The bench can only validate the
+feed mechanics, and those are clean: fail=0, addr_err~0, delay frozen
+at the proven 105 ms, no reloads, cnlat=0, per exactly the armed
+interval. The health verdict is the car: the wire bytes are identical to
+the 08-24/08-26 build that showed ec=4 there.
