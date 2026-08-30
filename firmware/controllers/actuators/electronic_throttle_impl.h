@@ -56,6 +56,13 @@ public:
 
 	dc_function_e getFunction() const { return m_function; }
 
+	// #9799 - configurable per H-bridge duty ceiling
+	size_t getHBridgeIndex() const;
+	float getMaxDutyCycle() const;
+	float percentToDuty(float percent) const;
+	// for the paths which drive the motor directly instead of going through setOutput()
+	float clampToMaxDutyCycle(float duty) const;
+
 	void checkJam(percent_t setpoint, percent_t observation);
 
 	void setOutput(expected<percent_t> outputValue) override;
@@ -213,7 +220,10 @@ public:
 			efiPrintf("ETB bench test: not a throttle");
 			return;
 		}
-		motor->set(0.5f);
+		// #9799 the bench test and the autocal below drive the motor directly rather than through
+		// setOutput(), so they have to respect the configured ceiling themselves - otherwise the
+		// one duty a user lowered the limit to avoid is exactly the one these two command.
+		motor->set(TBase::clampToMaxDutyCycle(0.5f));
 		motor->enable();
 		m_benchTestTimer.reset();
 		m_benchTestActive = true;
@@ -247,8 +257,8 @@ public:
 
 		switch (phase) {
 		case ACPhase::Start:
-			// Open the throttle
-			motor->set(0.5f);
+			// Open the throttle - clamped, see startBenchTest (#9799)
+			motor->set(TBase::clampToMaxDutyCycle(0.5f));
 			motor->enable();
 			return ACPhase::Open;
 		case ACPhase::Open:
@@ -258,7 +268,7 @@ public:
 				m_secondaryMax = Sensor::getRaw(functionToTpsSensorSecondary(myFunction));
 
 				// Next: close the throttle
-				motor->set(-0.5f);
+				motor->set(-TBase::clampToMaxDutyCycle(0.5f));
 				return ACPhase::Close;
 			}
 			break;
