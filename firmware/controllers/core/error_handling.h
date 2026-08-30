@@ -87,12 +87,8 @@ const char* getCriticalErrorMessage();
 #if EFI_PROD_CODE
 /* Prints the crash record (assert/hard fault) saved by the previous run in the
  * RTC backup-domain registers - survives the reboot and the bootloader jump.
- * Called from initHardwareNoConfig() right after initRtc(). */
+ * Called from initHardwareNoConfig() right after initRtc(). Printed once only. */
 void printPreviousCrashIfAny();
-/* Called from the periodic slow callback: re-prints the crash report + reset
- * cause every 5 s for the first minute after boot, so a console that
- * reconnects after the boot banner is gone still catches the report. */
-void reprintPendingBootReport();
 #endif // EFI_PROD_CODE
 
 /**
