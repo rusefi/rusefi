@@ -17,6 +17,13 @@ const char* swapOutputBuffers(size_t *actualOutputBufferSize);
 
 namespace priv
 {
+	// Fixes up a possibly-truncated log line: guarantees the buffer stays
+	// null-terminated and re-adds the trailing LOG_DELIMITER framing lost to
+	// truncation. untruncatedLen is chvsnprintf's return value (the length the
+	// full message would have had); returns the actual in-buffer string length.
+	// See https://github.com/rusefi/rusefi/issues/10159
+	size_t terminateLogLine(char* buffer, size_t bufferSize, size_t untruncatedLen);
+
 	// internal implementation, use efiPrintf below
 	void efiPrintfInternal(const char *fmt, ...)
 		#if EFI_PROD_CODE
@@ -53,7 +60,9 @@ public:
 #if !EFI_UNIT_TEST
 private:
 #endif
-	void writeInternal(const char* buffer);
+	// maxLength caps how far the source buffer may be read: the source is not
+	// trusted to be null-terminated, see https://github.com/rusefi/rusefi/issues/10159
+	void writeInternal(const char* buffer, size_t maxLength);
 
 	char m_buffer[TBufferSize];
 	char* m_writePtr = m_buffer;
