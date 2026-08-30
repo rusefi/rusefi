@@ -9123,3 +9123,83 @@ END events (time domain by design), knock windows, MAP averaging windows.
 On-car check: lockstats 'angclk fired' should now count dwell + injection
 starts on top of the spark fires; 'sched dwell/fuel' lines should show only
 the fallback cases.
+
+## 2026-08-29 - m74_9: WDA feed moved off the executor to a TIM10 one-shot GPT below the handoff
+
+Goal: the L9779 WDA query-answer feed ran as a self-rescheduling event on the
+TIM5 executor at priority 3 - ABOVE the trigger handoff - so its ~100 us
+polled-SPI burst preempted the trigger decode every ~28 ms and added up to
+100 us to the in-flight tooth (one of the decode-tail contributors). The
+priority was a side effect of the 2026-08-24 move thread->executor (which
+fixed the wd_timing_miss/EC>4 kill mode, a THREAD-starvation symptom), not a
+requirement: the answer window is ~12.6 ms wide, so an ISR at any priority
+above the threads lands the answer on time.
+
+What changed:
+
+| File | Change |
+| --- | --- |
+| firmware/hw_layer/drivers/gpio/l9779.cpp | feed runs in a dedicated one-shot GPT (TIM10, 1 MHz, 1 tick = 1 us): self-re-arm via gptStartOneShotI (wdArmIsr), boot kick via gptStartOneShot (wdArmThread), stop via gptStopTimer in chip_power_off; CH_IRQ_HANDLER(STM32_TIM1_UP_TIM10_HANDLER) -> gpt_lld_serve_interrupt(&GPTD10); wd_sched (scheduling_s) replaced by wd_next_moment (efitick_t) for the thread's burst-imminent check |
+| firmware/hw_layer/ports/at32/at32f4/cfg/mcuconf.h | STM32_GPT_USE_TIM10 TRUE + STM32_TIM10_SUPPRESS_ISR TRUE (the vector is shared with TIM1_UP, the GPT LLD does not own the ISR) |
+| firmware/hw_layer/ports/at32/interrupt_priority.h | EFI_IRQ_L9779_WDA_PRIORITY = 5 (below the handoff at 4) |
+
+Why the lower priority is safe:
+- The window is ~12.6 ms: a 1 ms handoff tail preempting the burst delays
+  RESP_BYTE0's end by 1 ms, far inside the window. A single miss costs one EC
+  climb, recovered in 2 correct cycles (EC decrements per correct answer).
+- The feed stays ISR-context (never a thread): thread starvation under
+  cranking load was the original kill mode.
+- The spi_busy serialization vs the diag thread is unchanged and
+  race-free at ANY ISR priority: the flag write is a single atomic store,
+  and the thread only resumes after the feed ISR completes, so the
+  check-then-burst cannot interleave with a thread batch.
+
+Validation:
+- m74_9 firmware builds; VectorA4 (TIM10 GPT ISR) and GPTD10 verified in
+  the ELF.
+- Full unit-test suite: 1169/1169.
+
+**2026-08-30: the first GPT build BRICKED the bench ECU** (flash verified,
+reset into the new app, then no console link ever; recovered by flashing the
+revert). Exhaustive static re-verification of the GPT path found NO defect:
+- VectorA4 <-> IRQ 25 <-> TMR10 (at32_isr.h + CMSIS + the ELF vector table
+  slot at 0x080080A4). The weak-default chain is overridden by the strong
+  handler from l9779.cpp.
+- RCC bits (APB2ENR/APB2RSTR bit 17) and TMR10 base (APB2PERIPH + 0x4400)
+  match the authoritative ChibiOS-Contrib AT32F435 CMSIS.
+- GPT state machine of THIS fork: gptStart() is a function setting GPT_READY
+  (not the old GPT_CONTINUOUS macro), gptStartOneShotI asserts GPT_READY,
+  the one-shot fire sets GPT_READY + stops the timer BEFORE the callback, so
+  the self-re-arm from the callback is legal; osalDbgCheckClassI holds
+  (the ISR prologue bumped isr_cnt).
+- TIMCLK2 = 288 MHz divides 1 MHz exactly (psc=287, the frequency assert
+  passes). TIM1 is unused on m74_9 (no spurious shared-vector IRQs).
+- The handler shape is identical to the proven TIM5/TIM8/ADC handlers
+  (prologue -> serve -> epilogue -> __port_irq_epilogue); serve_interrupt's
+  byte-masked SR clear is the same code path the fast-ADC GPTD6 uses
+  continuously on this exact hardware.
+- Boot ordering: the kick (+17 ms) always follows chip_init() -> spiStart(),
+  and spi_busy defers the feed during any thread batch - the documented
+  RXNE-spin brick mode is guarded in both versions.
+
+So the brick is a runtime subtlety, not a static defect. The GPT build is
+RE-APPLIED with instrumentation that cannot lock up and reports each stage:
+- spi_frame_isr: the polled exchange is BOUNDED (1 ms of NT ticks; DWT CYCCNT
+  is NOT enabled on the AT32 port - baseMCUInit only zeroes it) and times out
+  into a counted frame failure instead of spinning forever; a wedged SPI now
+  degrades to WDA misses, visible on the console.
+- The feed fizzles (defer + re-arm) when !spi_configured - defense in depth
+  for a pre-spiStart fire.
+- Prints: GPT10 CR1/DIER/SR at init, the kick (state before/after arm), and
+  a 1 Hz liveness line (ok/fail/defer/pollto/delay/gpt state) from the
+  driver thread - a wedged feed shows up as frozen counters.
+- wd_poll_timeouts counter for the bounded-poll hits.
+
+Bench checklist: flash, connect the console, watch for the init/kick/1 Hz
+lines. If the console comes up with climbing ok/fail, the GPT mechanism is
+fine and the original brick was the unbounded poll (now neutralized); frozen
+counters = the GPT ISR never fires (timer/vector issue); no console at all =
+the brick is upstream of USB (gptStart/nvicEnableVector in init).
+
+Open: the feed's own dispatch is no longer telemetry-recorded (no lockstats
+line) - only the chip-side counters (ok/miss/kills/defer) remain observable.
