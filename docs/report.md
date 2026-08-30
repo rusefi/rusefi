@@ -10262,3 +10262,34 @@ Code state after the retraction (l9779.cpp, commit after 8f0df3a033c):
   are ignored regardless of what stretched them);
 - comments rewritten to record the open question instead of the
   retracted halt theory.
+
+## 2026-08-31 (05:00) - runtime timer cross-measurement added to pins (SysTick-anchored)
+
+Tool for the open drift question: `pins` now ends with a three-way
+cross-measurement (l9779.cpp wdaTimerCrossMeasure, called from
+L9779::debug):
+- Register dump: RCC->CFGR decoded (SW/SWS/HPRE/PPRE1/PPRE2) + PLLCFG +
+  MISC1 + MISC2 + APB1EN, and TIM5/TIM2/TMR7 PSC/CNT/CR1.
+- Measurement A (masked ~10 ms): NT (TIM5) and TMR7 tick rates against
+  the CORE SysTick (STCLK = HCLK/8 = 36 MHz). The WDA ISR is masked
+  (BASEPRI 5) so TMR7 free-runs without re-arms; the handoff/executor
+  stay unmasked and do not touch these counters. Expect NT 4 MHz, TMR7
+  250 kHz (input 288 MHz); a drifting timer prints ~125 kHz / ~144 MHz.
+- Measurement B (unmasked ~100 ms): the ChibiOS virtual tick vs SysTick.
+  NOTE: on this port the system tick runs on TIM2
+  (STM32_ST_USE_TIMER=2, ST_CLOCK_SRC=STM32_TIMCLK1) - the same APB1
+  domain as the timers under test, so it is NOT an independent
+  reference; the HCLK-derived core SysTick is (HCLK validated by USB
+  48 MHz PLL output + CAN timing).
+
+Why this settles the saga: one pins dump now answers whether the TMR7
+input really changed after init (288 -> ~144 MHz), whether NT stays at
+4 MHz, and whether the TIM2 system tick drifts - each compared against
+the same HCLK wall clock in the same second. Expected on the bench:
+the mystery 2x per= either reproduces as wdaKhz~125 (timer input
+halved -> hunt the CRM field) or as NT~4/tick~250 (the counters are
+fine -> the stretch must come from ISR-level stalls, and cnlat would
+be the next lead).
+
+Validation: compile.sh m74_9 -> BUILD SUCCESSFUL. The masked window
+costs the chip one WDA window (EC++) per pins - bench-only tool.
