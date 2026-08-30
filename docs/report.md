@@ -9807,3 +9807,30 @@ long cycle (6 cycles x ~105 ms per 5 ms step, ~8-12 s worst case to walk
 Validation: compile_m74_9.sh builds clean. Bench expectation: delay
 walks 105 -> ~115 within a few seconds and EC drops 7 -> 4 (the
 2026-08-24 lock); miss stops climbing; no reloads; addr_err/fail ~0.
+
+## 2026-08-30 (final, post-power-cycle) - the bench chip ACCEPTS answers; its EC decrement is broken
+
+The 21:01 post-power-cycle dump settles the chip semantics. reqChg (the
+question-advance rate) matches the in-window hit rate in every session:
+45-47% at 22 ms AND at 105-115 ms sampling (12.6 ms window / 28.4 ms
+chip cycle = 44%), 12-13% in the 20:50 session (12.6 / 112 = 11%). The
+chip's question advances EXACTLY when an answer lands in its window -
+the chip has been accepting answers all along, at any feed delay. What
+is broken on the bench chip is ONLY the EC decrement: EC went 6->7 on
+the first answer (increments work) and never decrements again even with
+thousands of accepted answers - a partially broken chip, exactly the
+user's suspicion. SPI shows no errors because the SPI block is fine;
+the EC counter is a separate chip function.
+
+Conclusion: the delay is irrelevant to acceptance (the free-running
+cycle + uniform phase gives the same hit rate at any period), so the
+EC-saturation walk was hunting a phantom and is REMOVED. The delay is
+fixed at the proven 105 ms (the 2026-08-24 zero-miss regime). The
+acceptance health signal is the question-advance rate (reqChg in pins),
+not EC. On the car's chip the EC decrement works (proven 08-24/08-26,
+ec=4), so the same feed drives EC to the floor there.
+
+Validation: compile_m74_9.sh builds clean. Expected on the bench:
+delay stays 105, ec=7/wda_int=1 forever (chip defect, ignore), reqChg
+~44% or ~11% depending on the chip's RESPTIME state - the acceptance
+proof.

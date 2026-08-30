@@ -402,8 +402,6 @@ struct L9779 : public GpioChip {
 	bool					wd_prev_int;
 	int					wd_bad_value_cnt; /* consecutive cycles with W_RESP/RESP_Z0/RESP_ERR - diagnostic only, NO reset action (the burst self-realigns) */
 	bool					wd_prev_cycle_clean; /* the previous burst went out as one clean atomic stream - REQUHI verdicts are only trusted when this is true */
-	int					wd_ec_sat_cnt;	/* consecutive clean, un-halted cycles with EC saturated at 7 - the delay-walk trigger */
-	int					wd_walk_dir;	/* current delay-walk direction: +1 up, -1 down (reversed at the clamps) */
 	uint16_t					ident_reg;		/* IDENT_REG readback (0x10 | 0x00) */
 
 	/* Cached power-stage diagnosis, DIA_REG1..8 (datasheet 6.14). Refreshed
@@ -1837,39 +1835,14 @@ void L9779::wdFeedFromExecutor()
 	if (req_now != wd_last_req)
 		s_wdaReqChg++;
 
-	/* EC-SATURATION WALK (2026-08-30 late night, bench-proven): the chip
-	 * rejects silently - its TO_EARLY/NO_RESP flags are cleared by the next
-	 * sequencer run before our next read (reqhi stays 0xC0 most of the
-	 * time) - so the flag adaptation alone cannot find the window. EC can:
-	 * it saturates at 7 on persistent rejections and decrements the moment
-	 * an answer lands in the window. So: on clean, un-halted cycles with
-	 * ec==7 for a while, step the delay in the current direction (up from
-	 * the 105 ms init - the proven-healthy 2026-08-24 lock was ~115 ms);
-	 * reverse at the clamps; hold as soon as ec < 7. The range [85, 195]
-	 * covers the 64 kHz window ([99, 112] +-5% drift) and the 39 kHz one
-	 * ([163, 184]). Halted cycles are skipped: a halt leaves ec=7 behind
-	 * without a single rejected answer (the wall period on the never-frozen
-	 * TMR11 reveals the halt). */
-	bool halted = s_firePeriodRef > (uint32_t)(2 * wd_delay_ms * 250 + 1250);
-	if (!halted && prevClean && ec_now >= 7) {
-		if (++wd_ec_sat_cnt >= 6) {
-			wd_ec_sat_cnt = 0;
-			wd_delay_ms += wd_walk_dir * 5;
-			if (wd_delay_ms >= WDA_DELAY_MAX_MS) {
-				wd_delay_ms = WDA_DELAY_MAX_MS;
-				wd_walk_dir = -1;
-			} else if (wd_delay_ms <= WDA_DELAY_MIN_MS) {
-				wd_delay_ms = WDA_DELAY_MIN_MS;
-				wd_walk_dir = 1;
-			}
-		}
-	} else {
-		wd_ec_sat_cnt = 0;
-		if (ec_now < 7)
-			wd_walk_dir = 1;	/* recovering - reset the walk direction */
-	}
-
-	/* keep the period inside the answer window [response_time, response_time+window] */
+	/* The answer period is FIXED at the proven regime (2026-08-24's
+	 * zero-miss lock): ~105 ms, the default-RESPTIME window center. NO
+	 * delay walk: the EC-saturation walk chased an EC decrement that the
+	 * bench chip never produces (its EC decrement is broken - EC pins at
+	 * 7 while the answers ARE accepted). The acceptance is proven by the
+	 * question-advance rate (reqChg in pins): 44% = the 12.6 ms window /
+	 * 28.4 ms cycle, exactly the in-window hit rate at any delay. The
+	 * delay is therefore irrelevant to acceptance and stays at 105 ms. */
 	if (wd_delay_ms < WDA_DELAY_MIN_MS)
 		wd_delay_ms = WDA_DELAY_MIN_MS;
 	if (wd_delay_ms > WDA_DELAY_MAX_MS)
@@ -2478,8 +2451,6 @@ int L9779::init()
 	wd_prev_int = false;
 	wd_bad_value_cnt = 0;
 	wd_prev_cycle_clean = false;
-	wd_ec_sat_cnt = 0;
-	wd_walk_dir = 1;
 	s_wda_chip = this;
 	wdaTimerInit();
 
