@@ -9712,3 +9712,27 @@ reqChg) since the previous dump. One pins run will show per-cycle EC
 movement and the exact REQUHI bytes at rejections - the decision data
 for the delay adaptation (direction, acceptance detector, halt
 handling).
+
+## 2026-08-30 (night, follow-up) - NO runtime reloads: the wrong-value SW_RST escape removed
+
+User directive: no reloads (chip_init/SW_RST triples) at runtime, period.
+The 19:48-19:50 log had two (19:48:39, 19:51:09), both from the
+10-consecutive-wrong-value -> need_init -> SW_RST escape - and both were
+useless: the wrong counter kept climbing after each reset, so the
+rejections were not a scrambled question engine that a reset could fix.
+
+The WDA feed now NEVER resets the chip at runtime: the wrong-value branch
+counts only (wd_wrong_cnt / consecutive wd_bad_value_cnt, both
+diagnostic). Rationale, code-commented:
+- the atomic burst cannot stay desynced: RESP_CNT resets at every
+  sequencer run and the question is re-read fresh every cycle, so the
+  next burst answers the current question in the correct byte order;
+- the old SW_RST escapes (EC=7 latch trigger + wrong-value trigger) are
+  what produced every reload storm and the addr_err/fail floods;
+- the only remaining runtime chip reset is the ignition key-on
+  transition (power-stage gate), which wipes the parked PSOFF state -
+  that is the designed boot path, not a WDA reaction.
+
+Validation: compile_m74_9.sh builds clean. Expected on the bench: zero
+chip_init triples between boots; wrong/miss events still counted, no
+reset action.

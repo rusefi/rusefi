@@ -398,9 +398,8 @@ struct L9779 : public GpioChip {
 	int						wd_kill_cnt;	/* WDA_INT rising edges (watchdog kill pulses) */
 	int						wd_last_miss_dir;	/* last REQUHI miss: 1=early 2=late */
 	bool					wd_prev_int;
-	int					wd_bad_value_cnt; /* consecutive cycles with W_RESP/RESP_Z0/RESP_ERR - the chip's SPI/question state is scrambled, re-sync via SW_RST */
+	int					wd_bad_value_cnt; /* consecutive cycles with W_RESP/RESP_Z0/RESP_ERR - diagnostic only, NO reset action (the burst self-realigns) */
 	bool					wd_prev_cycle_clean; /* the previous burst went out as one clean atomic stream - REQUHI verdicts are only trusted when this is true */
-	efitick_t					wd_last_heal;	/* last self-heal, cooldown */
 	uint16_t					ident_reg;		/* IDENT_REG readback (0x10 | 0x00) */
 
 	/* Cached power-stage diagnosis, DIA_REG1..8 (datasheet 6.14). Refreshed
@@ -1418,13 +1417,15 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 			if (chip->need_init) {
 				/* clear first, as flag can be raised again during init */
 				chip->need_init = false;
-				/* Full chip reset (SW_RST) before re-init: a latched WDA fault
-				 * (EC=7, outputs forced off) does NOT recover on correct answers
-				 * (observed 16:31 - no fuel pump until power cycle). SW_RST
-				 * re-arms the watchdog (EC=6) and the re-init below restores
-				 * START/VRS/OUT. The WDA ISR exchange is kept out of the
-				 * batch by spi_busy (kernel IRQs are NOT masked by critical
-				 * sections), no CS locker is needed for that. */
+				/* Full chip reset (SW_RST) before re-init: the only runtime
+				 * path that resets the chip, and ONLY on the ignition key-on
+				 * transition - it wipes the parked PSOFF state and re-arms the
+				 * watchdog (EC=6). The WDA feed itself NEVER requests this
+				 * (user directive: the L9779 runs without resets; a torn burst
+				 * or a latched EC self-heals on correct answers). The WDA ISR
+				 * exchange is kept out of the batch by spi_busy (kernel IRQs
+				 * are NOT masked by critical sections), no CS locker is needed
+				 * for that. */
 				chip->chip_reset();
 				chip->chip_init();
 				/* sync pins state */
@@ -1670,8 +1671,9 @@ void L9779::wdFeedFromExecutor()
 	 * frame or a paused burst scrambles the chip's question engine (the
 	 * W_RESP/RESP_Z0/addr_err storms). The executor (priority 3) stays
 	 * unmasked: its callbacks are us-scale and it fires the spark. The
-	 * debugger halt is unmaskable - a torn burst there is repaired by the
-	 * SW_RST re-sync below. */
+	 * debugger halt is unmaskable - a torn burst there self-heals: the
+	 * RESP_CNT resets at the next sequencer run and the next atomic burst
+	 * answers the freshly re-read question (no chip reset needed). */
 #define WDA_BURST_BASEPRI		(4u << (8u - __NVIC_PRIO_BITS))
 
 	/* Pipelined status/question reads. FOUR frames, not three: the DO reply
@@ -1808,26 +1810,23 @@ void L9779::wdFeedFromExecutor()
 	wd_last_requhi = requhi;
 	if (requhi & (0x04 | 0x10 | 0x20)) {	/* W_RESP | RESP_Z0 | RESP_ERR */
 		wd_wrong_cnt++;
-		/* A value rejection correlates with a shifted stream / marginal
-		 * timing; recenter the delay so the thin-edge state (delay pegged at
-		 * the clamp) does not persist - a value-only miss does not carry the
-		 * timing flags, so the adaptation alone cannot move the delay back.
-		 *
-		 * RESP_Z0/RESP_ERR on top of W_RESP means the chip's question engine
-		 * itself is scrambled (torn bursts from debugger halts / preemption)
-		 * - byte-level re-alignment cannot fix that. After N consecutive bad
-		 * cycles ask the driver thread for a full SW_RST (5 s cooldown) so
-		 * the chip re-syncs from a clean slate instead of degrading forever
-		 * (the 19:02-19:03 addr_err 16k + miss 2605 spiral). */
+		/* A value rejection means the previous burst was not accepted. Do NOT
+		 * reset the chip for it (user directive 2026-08-30: NO runtime
+		 * reloads - the L9779 runs without resets). The atomic burst cannot
+		 * stay desynced: RESP_CNT resets at every sequencer run and the
+		 * question is re-read fresh every cycle, so the next burst answers
+		 * the current question in the correct byte order - the stream
+		 * re-aligns by itself. The old SW_RST escape turned the chip's own
+		 * rejections into a reset storm (each reset desynced the reply
+		 * pipeline and re-ran chip_init/VRS - the reloads seen at 19:48:39
+		 * and 19:51:09), and it did not even stop the rejections (wrong
+		 * kept climbing after each reset). Count only; the consecutive-run
+		 * counter stays as a diagnostic. */
+		wd_bad_value_cnt++;
+		/* Recenter the delay: a value-only miss does not carry the timing
+		 * flags, and thin-edge states must not persist (the adaptation only
+		 * moves on timing verdicts). */
 		wd_delay_ms = WDA_DELAY_INIT_MS;
-		if (++wd_bad_value_cnt >= 10) {
-			wd_bad_value_cnt = 0;
-			efitick_t nowNt = getTimeNowNt();
-			if (nowNt - wd_last_heal > MS2NT(5000)) {
-				wd_last_heal = nowNt;
-				need_init = true;
-			}
-		}
 	} else {
 		wd_bad_value_cnt = 0;
 	}
@@ -1852,12 +1851,15 @@ void L9779::wdFeedFromExecutor()
 	 * cycles expire unanswered and EC climbs to 7. It is NOT a permanent
 	 * latch: the question keeps repeating and a correct atomic burst is
 	 * accepted at any later cycle, decrementing EC back down - so NO SW_RST
-	 * here. The old latch-triggered need_init turned every bench halt into a
-	 * SW_RST every ~220 ms: each reset desynced the reply pipeline (addr_err
-	 * flood, REQULO-miss fail storm, the 19:26 log) and re-ran the whole
-	 * chip_init/VRS re-init the user saw as the endless reload loop. The
-	 * SW_RST escape is reserved for a genuinely scrambled question engine
-	 * (the wd_bad_value_cnt path above), which has real evidence. */
+	 * here, ever. The feed NEVER resets the chip at runtime (user directive:
+	 * the L9779 runs without resets; only the ignition gate's key-on
+	 * transition re-inits it). The old latch-triggered need_init turned every
+	 * bench halt into a SW_RST every ~220 ms: each reset desynced the reply
+	 * pipeline (addr_err flood, REQULO-miss fail storm, the 19:26 log) and
+	 * re-ran the whole chip_init/VRS re-init the user saw as the endless
+	 * reload loop. The wrong-value burst escape was removed for the same
+	 * reason (2026-08-30 night: the reloads at 19:48:39/19:51:09 did not even
+	 * stop the rejections - wrong kept climbing after each reset). */
 
 	/* The response: all four bytes back-to-back, masked against the handoff
 	 * like the reads. The cycle restarts at the END of the RESP_BYTE0 write,
@@ -2407,7 +2409,6 @@ int L9779::init()
 	wd_prev_int = false;
 	wd_bad_value_cnt = 0;
 	wd_prev_cycle_clean = false;
-	wd_last_heal = 0;
 	s_wda_chip = this;
 	wdaTimerInit();
 
