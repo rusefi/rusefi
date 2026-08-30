@@ -10116,3 +10116,59 @@ Fixes (l9779.cpp):
 Validation: compile.sh m74_9 -> BUILD SUCCESSFUL. Expected on the
 bench: the delay sweeps from 27 until the question advances steadily,
 then holds; EC drops to <= 4 and stays; kill pulses stop.
+
+## 2026-08-31 (02:00) - WDA feed moved to TMR7 (APB1): the drifting-timer root cause is GONE, not patched
+
+User directive: stop patching the timer. The TMR10 one-shot saga
+(measured-rate init -> SysTick re-measure -> runtime re-calibration ->
+freeze-walk servo) was symptom treatment: the APB2 timer clock domain
+on the AT32F435 is simply unreliable for precise timing. TIM5 worked
+perfectly all along because it lives on APB1. The fix is structural:
+the feed now runs on TMR7, an APB1 basic timer that shares TIM5's
+validated clock.
+
+Why every previous patch failed (root cause):
+- The fork's STM32_TIMCLK2 = PCLK2 x 2 = 288 MHz claim is WRONG for
+  the AT32F435 APB2 timers: the runtime TMR10 tick measured 7.9..9.7 us
+  per run (144..117 MHz effective input, wandering run to run). A
+  one-shot whose tick count assumes 288 MHz fires at 2x the armed
+  interval -> every answer misses the chip window -> EC=7 -> kill.
+- The old NT-anchored TMR10 PSC measurement was circular ACROSS clock
+  domains (newPsc = acDelta*144*16/ntDelta) and always "confirmed"
+  288 MHz; the SysTick re-measure inherited the same wrong clock
+  (SYSTICKv1 LLD uses ST_CLOCK_SRC = STM32_TIMCLK1 and was only
+  coincidentally near right). Neither measurement could see the drift.
+- Runtime re-calibration (wdaTicksForInterval) chased garbage samples
+  (480 us) and oscillated the ARR 3989..9305; the freeze-walk chased
+  the chip's question, which is internal noise (NOT an acceptance
+  signal), and walked the delay to 47 ms while the chip kept rejecting.
+
+The fix (l9779.cpp, uncompiled->compiled this session):
+- WDA_TIMER = TIM7 (APB1, basic timer, own vector IRQ 55, free: GPT
+  FALSE). WDA_REF_TIMER (TMR11) and ALL reference-tick machinery
+  removed (s_firePeriodRef/s_lastFireRef/s_wdArmRefTicks/
+  s_lateRefUs/s_lateRefUsMax), the runtime re-calibration and the
+  freeze-walk removed (wd_frozen_cnt/wd_walk_dir).
+- wdaTimerInit() measures TMR7 against the NT domain (TIM5) and
+  programs PSC = acDelta*(143+1)*16/ntDelta - 1 -> exactly 250 kHz
+  (4 us, NT/16) BY CONSTRUCTION: TMR7 and TIM5 share the APB1 clock,
+  so the ratio is exact on any silicon. The old "circular measurement"
+  concern does not apply - it only matters across clock domains.
+- The arm is a plain (intervalUs+3)/4 tick count. No runtime
+  adaptation of the tick.
+- Delay policy (ce32509e-proven): RESPTIME=10, init 27 ms, clamp
+  [17, 38] ms, adaptation ONLY via REQUHI verdicts (NO_RESP checked
+  BEFORE RESP_TO_EARLY, +-5 ms, gated by wd_prev_cycle_clean). 27 ms
+  sits inside BOTH chip windows (64 kHz [15.8, 28.4] car / 39 kHz
+  [25.9, 38.5] bench); verdicts walk the car down toward 22 ms and
+  the bench up toward ~32 ms.
+- Vector wiring VERIFIED: Vector11C is a strong symbol in the linked
+  ELF (08059238 T Vector11C) and the .vectors table at 0x0800811C
+  (IRQ 55) points at it - the weak vectors.S stub is overridden.
+
+Validation: compile.sh m74_9 -> BUILD SUCCESSFUL. Expected on the
+bench: boot prints "TMR7 measured ... NT ticks, input 288 MHz
+(PSC 143 -> 1151)" and "final rate ... (want 2500/40000 = 250 kHz)",
+the 1 Hz pins liveness shows per= ~= delay, EC marches to <= 4 and
+stays, kill pulses stop. The bench can only validate mechanics (per/
+cnlat stable); the health verdict is the car.
