@@ -9226,5 +9226,24 @@ false, and a thread-side arm cannot be preempted into a half-armed state
 STM32_GPT_USE_TIM10 is back to FALSE - the GPT LLD is no longer involved.
 The bounded SPI poll, the !spi_configured fizzle and the prints stay.
 
+**2026-08-30 (bench): the direct TMR10 driver WORKS** - console up, the feed
+runs, fail=0 pollto=0 (the SPI path is healthy), the bounded poll and the
+guards did their job. One defect found in the first run: **TMR10 ticks on
+PCLK2 = 144 MHz, NOT the 288 MHz the fork's STM32_TIMCLK2 (PCLK2 * 2)
+assumes** - with PSC=287 the armed 21.92 ms one-shot fired at 43.8 ms
+(ok climbed ~21.5/s instead of ~45/s), every answer landed outside the
+chip's ~28.4 ms window (miss=3882, NO_RESP+EARLY per reqhi=0xFB, delay
+walked 22 -> 17) and EC oscillated 7 <-> 4. APB1 timers are NOT affected:
+TIM5/TMR2/TMR6 run 288 MHz (the NT 4 MHz clock is validated by tooth
+physics). PSC is now 143; the liveness print shows the fire-to-fire period
+measured in NT ticks (per=...us) to confirm ~21920 us on the next bench.
+
+Fork bug to follow up: STM32_TIMCLK2 in the AT32 port (hal_lld.h) doubles
+PCLK2 like STM32F4, but the AT32F435 silicon clocks its APB2 timers
+(TMR1/8/9/10/11) at PCLK2 - any future GPT/PWM/ICU on those timers would
+be 2x off (TIM8 PWM is declared but unused on m74_9, so it never showed).
+Verify against the Artery RM before fixing the fork header; APB1
+(TIMCLK1 = PCLK1 * 2) matches the STM32 convention on this silicon.
+
 Open: the feed's own dispatch is no longer telemetry-recorded (no lockstats
 line) - only the chip-side counters (ok/miss/kills/defer) remain observable.

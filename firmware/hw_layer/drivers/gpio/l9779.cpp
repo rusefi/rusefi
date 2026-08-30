@@ -1080,12 +1080,17 @@ static L9779 *s_wda_chip;
  * angle clock (TMR2) one: plain register writes, a bare VectorA4 handler,
  * nvicEnableVector at init.
  *
- * TMR10 = APB2 timer, TIMCLK2 = 288 MHz; PSC = 287 -> 1 tick = 1 us, the
- * 16-bit ARR caps the delay at 65.535 ms - the WDA delays (1..27 ms) fit.
- * OPM (one-cycle mode) stops the counter at the update event, so a fired
- * one-shot cannot wrap and re-fire. */
+ * CLOCK (measured on the bench, 2026-08-30): TMR10 ticks on PCLK2 = 144 MHz,
+ * NOT the 288 MHz the fork's STM32_TIMCLK2 (PCLK2 * 2) assumes - with PSC
+ * 287 the armed 21.92 ms one-shot fired at 43.8 ms and every answer landed
+ * outside the chip's ~28.4 ms window (miss=3882, delay walked down on
+ * NO_RESP). PSC = 143 -> 1 tick = 1 us; the 16-bit ARR caps the delay at
+ * 65.535 ms - the WDA delays (1..27 ms) fit. APB1 timers are NOT affected
+ * (TIM5/TMR2/TMR6 run 288 MHz - the NT 4 MHz clock is validated by tooth
+ * physics). OPM (one-cycle mode) stops the counter at the update event, so
+ * a fired one-shot cannot wrap and re-fire. */
 #define WDA_TIMER			TIM10
-#define WDA_TIMER_PSC		(287)
+#define WDA_TIMER_PSC		(143)
 
 static void wdaTimerInit() {
 	rccEnableTIM10(false);
@@ -1118,6 +1123,12 @@ static void wdaTimerStop() {
 	WDA_TIMER->SR = 0;
 }
 
+/* Fire-to-fire period measured in NT ticks (4 MHz, the validated TIM5
+ * domain): the liveness print shows it so the TMR10 clock rate is visible
+ * directly on the console. */
+static efitick_t s_lastFireNt;
+static efitick_t s_firePeriodNt;
+
 /* TIM10's vector is shared with TIM1_UP; TIM1 is unused on m74_9, so this
  * handler owns the vector outright. */
 CH_IRQ_HANDLER(STM32_TIM1_UP_TIM10_HANDLER) {
@@ -1129,6 +1140,11 @@ CH_IRQ_HANDLER(STM32_TIM1_UP_TIM10_HANDLER) {
 		WDA_TIMER->SR = ~STM32_TIM_SR_UIF;
 		WDA_TIMER->CR1 = 0;
 		WDA_TIMER->DIER = 0;
+		efitick_t nowNt = getTimeNowNt();
+		if (s_lastFireNt != 0) {
+			s_firePeriodNt = nowNt - s_lastFireNt;
+		}
+		s_lastFireNt = nowNt;
 		if (s_wda_chip) {
 			s_wda_chip->wdFeedFromExecutor();
 		}
@@ -1228,9 +1244,10 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 			static systime_t last_wda_print = 0;
 			if (chip->wd_running && (now - last_wda_print >= TIME_MS2I(1000))) {
 				last_wda_print = now;
-			efiPrintf("l9779 wda: ok=%d fail=%d defer=%d pollto=%d delay=%d CR1=0x%lx DIER=0x%lx",
+			efiPrintf("l9779 wda: ok=%d fail=%d defer=%d pollto=%d delay=%d per=%dus CR1=0x%lx DIER=0x%lx",
 					chip->wd_ok_cnt, chip->wd_fail_cnt, chip->wd_defer_cnt,
 					chip->wd_poll_timeouts, chip->wd_delay_ms,
+					(int)(s_firePeriodNt / US_TO_NT_MULTIPLIER),
 					(unsigned long)WDA_TIMER->CR1, (unsigned long)WDA_TIMER->DIER);
 			}
 
