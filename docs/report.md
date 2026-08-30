@@ -9687,3 +9687,26 @@ Validation: compile_m74_9.sh builds clean. Bench expectation: no more
 reload triples, fail/addr_err stay ~0, delay adapts only on clean
 verdicts; after each debugger halt EC recovers by itself within a few
 cycles.
+
+## 2026-08-30 (night) - WDA per-cycle event ring: the ec=7 mystery needs raw data
+
+The 19:48-19:50 bench run (new build): fail=0, addr_err ~0 (one +77
+transient right after a reload), the reload triples only ~every 2.5 min
+(via the 10-consecutive-wrong-value SW_RST escape), delay dithering
+22 -> 17. BUT ec=7 wda_int=1 pinned the WHOLE session while reqhi=0xC0
+(clean) and the question changed 0x8 -> 0xB -> 0xC -> 0x9 - three facts
+that contradict the datasheet's "EC decrements on accepted answers"
+model (accepted answers + clean flags + EC pinned at 7 cannot all be
+true). The 1 Hz samples are too sparse to settle it, and every chip
+model (64 kHz / 39 kHz f_clk) fails on some observation.
+
+Added a per-cycle WDA event ring (64 slots, file-static in l9779.cpp):
+every feed cycle records NT-ms, req, ec, wda_int, the raw REQUHI byte,
+the delay and a flags byte (bit0 = core was halted since the last fire,
+detected via the never-frozen TMR11 wall period > 2x the armed delay;
+bit1 = burst sent cleanly). The pins diagnostic now prints the last 64
+cycles plus one-line counters of EC transitions (ecUp/ecDown/ecSame,
+reqChg) since the previous dump. One pins run will show per-cycle EC
+movement and the exact REQUHI bytes at rejections - the decision data
+for the delay adaptation (direction, acceptance detector, halt
+handling).
