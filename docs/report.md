@@ -9388,3 +9388,256 @@ the early windows compile out and ignition/fuel return to the proven
 time-based paths the car ran for months. The angle clock code stays in
 the tree for the bench investigation (SPARK_EXTREME_LOGGING on the bench
 with the flag TRUE will show the exact event scramble).
+
+## 2026-08-30 (19:00) - WDA feed back on TMR10: measured-rate init, priority 5, reset self-heal
+
+User directive: make a working WDA on TMR10 (the earlier TMR10 detour is
+un-abandoned), so the WDA feed no longer runs inside the TIM5 executor
+(priority 3) where its ~100 us polled-SPI burst preempted the trigger
+handoff and delayed spark scheduling ("wda обрабатывал события не
+вовремя"). The TMR10 ISR sits BELOW the handoff (priority 5). From the
+working WDA the spark-control investigation continues.
+
+What was verified against the datasheet before writing code:
+
+| Fact | Source | Value |
+| --- | --- | --- |
+| timer resolution tres(TMR) | at32f.txt Table 53 | 1/fTMRxCLK, fTMRxCLK = 288 MHz max |
+| APB1 bus max | at32f.txt section 2.2/2.6 | 144 MHz (TMR2/3/4/5/6/7/12/13/14) |
+| APB2 bus max | at32f.txt section 2.2/2.6 | 144 MHz (TMR1/8/20, TMR9/10/11) |
+| fork STM32_TIMCLK1/2 model | ChibiOS hal_lld.h | PCLK x 2 when PPRE != DIV1 -> claims 288 MHz on both APBs |
+| TMR2 measured (APB1) | angle clock init print, 17:05 | 288 MHz (PSC 71 -> 71, NT-validated) |
+| TMR10 measured (APB2) | 13:04 bench (PSC 287 armed 21.92 ms fired 43.8 ms) | 144 MHz |
+
+The fork's blanket PCLK x 2 model is therefore WRONG for APB2 timers on
+this silicon (TMR10 = 144 MHz, not 288) while APB1 timers do double
+(TMR2/TIM5 = 288). The datasheet alone does not state the per-bus rule -
+the RM's CRM chapter would - so the driver does not rely on either
+claim: wdaTimerInit() MEASURES the TMR10 rate against the NT domain
+(10 ms busy-wait, divide the deltas) and programs the PSC so the counter
+ticks at exactly 1 MHz on any silicon. The boot log prints the measured
+input rate ("l9779 wda: TMR10 measured N/N NT ticks, input N MHz").
+
+Changes (all in firmware/, m74_9 only):
+
+| File | Change |
+| --- | --- |
+| hw_layer/drivers/gpio/l9779.cpp | direct-register TMR10 one-shot (wdaTimerInit/wdaTimerArm/wdaTimerStop, no GPT driver), measured-rate PSC init, VectorA4 ISR dispatches the feed, feed re-arms via wdArmIsr, bounded SPI poll (1 ms NT timeout, wd_poll_timeouts), spi_configured entry guard, per= fire-to-fire NT print in the 1 Hz liveness line, reset self-heal re-kick when CR1 has no CEN |
+| hw_layer/ports/at32/interrupt_priority.h | EFI_IRQ_L9779_WDA_PRIORITY = 5 (below the handoff at 4) |
+| hw_layer/ports/at32/at32f4/cfg/mcuconf.h | comment only: TMR10 is driven directly by l9779.cpp, GPT LLD stays off |
+
+Kept from the car-proven executor feed: the 64 kHz timing model
+(REG6=0x06, RESPTIME=10, delay init/min/max = 22/17/27 ms, burst lead
+80 us, +-5 ms adaptation), the single atomic 4-byte burst, the
+spi_busy deferral contract, the wd_running fizzle contract for
+chip_power_off, the +17 ms boot kick. NOT re-applied: the failed 39 kHz
+re-tune (CONFIG6 0x04, delays 36/28/44) - that was a misdiagnosis of the
+same saga and the 13:10 bench run proved the 64 kHz model healthy on
+TMR10 for 10+ minutes (ok=3074, fail=0) before the miss storm.
+
+New vs the old TMR10 build: (1) measured-rate PSC instead of hardcoded
+143, (2) reset self-heal - a system reset kills the TMR10 peripheral
+while the RAM flags survive (the bench debug resets do exactly this),
+the old build then fed nothing forever; the 1 Hz block re-arms a dead
+timer, (3) the 13:10-era miss storm is still unexplained - the per=
+printout (NT-domain fire-to-fire) now settles the timer rate on the
+console every second, and a wrong PSC would show up as per != delay.
+
+Validation: compile_m74_9.sh builds clean. Bench checks (user, next
+flash): "TMR10 measured ... input 144 MHz (PSC 143 -> 143)" at boot,
+then the 1 Hz line with per ~= delay (27 ms -> ~27000us), ok climbing
+~35/s, fail=0, defer small, pollto=0. If per != delay the PSC math is
+wrong; if ok stalls but CR1 has no CEN the self-heal is expected to
+re-arm within 1 s.
+
+Follow-ups: re-enable EFI_ANGLE_CLOCK on the bench and catch the exact
+spark-event scramble at the catch (SPARK_EXTREME_LOGGING); the open
+candidate is missing cancelAll of armed TMR2 compares on re-sync.
+
+## 2026-08-30 (18:03 bench run) - TMR10 measured 288 MHz; per != delay needs disambiguation
+
+The measured-rate init printed "TMR10 measured 20002/40004 NT ticks, input
+288 MHz (PSC 143 -> 287)" - TMR10 DOES run at 288 MHz on this silicon. The
+earlier "144 MHz" conclusion (commit 9120288ae49) was inferred from the
+ok-climb rate, not a clean measurement, and was WRONG. The fork's
+STM32_TIMCLK2 (PCLK2 x 2) is correct, consistent with the datasheet
+Table 53 (fTMRxCLK up to 288 MHz). The measure-at-init pattern made the
+driver correct despite the wrong prior belief - this is exactly why the
+frequencies are measured, not assumed.
+
+New anomaly in the same run: the 1 Hz liveness line printed per=~52 ms
+while delay=22 (per must track delay). ok climbed ~19/s (a 52 ms period)
+and miss=70 with ec=4 wda_int=1 - the chip latched a kill pulse because
+every other 28.4 ms chip cycle went unanswered. addr_err=697 (7% of
+frames) appeared, pollto stayed 0, fail climbed to 82 at the end.
+
+Two hypotheses: (1) the ISR entry is delayed ~30 ms per cycle (bench
+debugger halts - TMR10 has no DBGMCU freeze bit, so it fires during a
+halt and the ISR runs on resume; or flash stalls), or (2) the timer
+itself fires 2.4x late. To disambiguate, the ISR now records TWO
+independent latency probes, printed in the 1 Hz line:
+  - lateUs: NT domain, ISR entry minus wd_next_moment (the expected fire)
+  - cnLatUs: TMR10's own counter, CNT-ARR read before disarming (the
+    counter now free-runs past ARR instead of OPM, so the excess is the
+    ISR entry latency in us at 1 MHz)
+Decision table for the next bench run:
+  - late~30 ms AND cnlat~30 ms -> ISR blocked (environment); timer fine
+  - late~30 ms AND cnlat~0 -> timer genuinely slow -> PSC/divider issue
+  - both ~0 but per~52 -> the re-arm chain (feed) is slow
+
+## 2026-08-30 (18:26 bench run) - per tracks delay exactly; the ISR enters late; addr_err storm
+
+The 18:26 run (the cnlat build, before the UG fix) showed the per-late
+identity holding PERFECTLY at both delays: per - late = 22042 us at
+delay=22 and 27042 us at delay=27 (= feed ~122 us + armed interval). The
+arm-to-ISR-entry time is ~51.4 ms at delay=22 and ~64.4 ms at delay=27 -
+the interval tracks the armed delay at a ~2.37x ratio. cnlat stayed
+clamped at 60000 (CNT < ARR at every ISR entry) - the ISR always enters
+after the counter passed/wrapped ARR. addr_err climbed to 64027 (20% of
+309834 frames) and miss=7122 with ec=4 wda_int=1: the chip rejected
+every other cycle.
+
+Working hypothesis: the ARR/PR write in wdaTimerArm never becomes active
+(PR is preload-only on the AT32 and latches only at the update event -
+the PWM LLD does EGR|UG after writing PSC/ARR), so the fire point stays
+at the init PR=0xFFFF (the wrap). wdaTimerArm now generates EGR|UG after
+the ARR write (fix), and the 1 Hz print additionally dumps CNT/ARR/PSC
+so the next run reads the active register state directly.
+
+Open after the fix lands: the ~30-40 ms ISR-entry delay relative to the
+expected fire (bench debugger halts - the console prints bunch in
+multi-second bursts - or a prio<=5 blocker) and the addr_err mechanism
+(the bounded-poll -3 abort desyncs the chip's 16-bit frame counter if
+it ever fires; pollto stayed 0 in all runs, so the addr_err source is
+still open).
+
+## 2026-08-30 (18:35 bench run) - the TMR10 timer is VERIFIED CORRECT; per=52 ms is the bench ISR-entry delay
+
+The 18:35 run (the UG-fix build) dumped CNT in the 1 Hz line and it
+settles the timer question: all 19 thread-side CNT samples are < ARR
+(0x559F=21919) - the counter wraps to 0 AT ARR (probability of 19/19
+below ARR by chance ~1e-9). The between-print CNT deltas (~13-21k per
+second) match 1 MHz mod 21920 (~13.6k). So with the EGR|UG latch fix:
+PSC=286 active (1 MHz ticks), ARR=21919 active, the UEV fires every
+21.92 ms - the timer hardware and the arm sequence are CORRECT.
+
+per stayed ~52 ms while the timer fires every 21.92 ms - the ISR entry
+is delayed ~30 ms on the bench. The same ~17-30 ms entry delay appeared
+in EVERY session across ALL generations of the timer code (13:10 old
+PSC=143+OPM build, 18:03, 18:17, 18:26, 18:35) - it is a property of
+the bench environment (debugger halts; the console prints bunch in
+multi-second bursts, the ~5 s NVIC debug resets), not of the timer.
+
+The cnlat probe was structurally broken: CNT-ARR is ALWAYS negative at
+ISR entry because the counter wraps to 0 AT ARR - it clamped to 60000
+constantly and measured nothing. Fixed: cnlat now prints the raw CNT at
+entry (= ISR latency mod (ARR+1) in us; 0-100 = prompt entry).
+
+Chip-side: miss=0 wrong=0 cntbad=0 over 364 answers at a ~52 ms period -
+the chip accepted EVERY answer, which is only possible if its own WDA
+cycle is >= 52 ms - the chip's f_clk is slower than the datasheet's
+64 kHz claim (consistent with the old "39 kHz" saga readings). The
+bench halts smear any phase measurement, so the chip model must be
+settled ON THE CAR: with no debugger, per must track delay (~22/27 ms)
+and cnlat must read 0-100. ec=7 wda_int=1 is the known latched-fault
+state (heals via the need_init SW_RST path), not a live miss.
+
+## 2026-08-30 (18:47 bench run) - TMR10 final rate 10000/40004 = 1 MHz: the WDA timer is DONE
+
+The final-rate measurement printed "TMR10 final rate 10000/40004 NT ticks
+(want 10000/40000 = 1 MHz)" - the counter runs at exactly 1 MHz with the
+programmed PSC=287 (288 MHz input, datasheet-consistent). With cnlat=2-8us
+(prompt ISR entry), addr_err=0, fail=0, miss=0, wrong=0, cntbad=0 the
+whole TMR10 WDA chain is verified: measured-rate init, UG-latched ARR,
+wrap-at-ARR, ISR at priority 5 below the handoff, single atomic burst,
+bounded poll, reset self-heal.
+
+The per=42-55ms-in-wall-time mystery is RESOLVED: the bench debugger
+halts the core ~50% of the time (console prints bunch in multi-second
+bursts, ~5 s debug resets). The counter freezes during the halts (the
+AT32 DBGMCU pauses APB2 timers), so the 21.92 ms armed interval of
+running time stretches to 42-55 ms of wall time, and late = per - armed
+- feed tracks it exactly. Every session since 13:10 showed the same
+17-32 ms per-cycle delay for the same reason - the timer code was never
+at fault. On the car (no debugger) per must track delay (~22/27 ms).
+
+Remaining chip-side question for the car: miss=0 at 42-54 ms wall period
+means the chip accepted every answer - its own WDA cycle is >= 54 ms in
+wall time, so either the chip's f_clk is slower than the datasheet's
+64 kHz claim or the window is wider. If miss climbs on the car at the
+22-27 ms feed, re-center the delay range to the measured cycle. ec=7
+wda_int=1 is the known latched-EC chip quirk (healed by the need_init
+SW_RST path, harmless on the bench - no TLE9201 kill warnings).
+
+## 2026-08-30 (19:00) - per=42-55 ms is a TIM5-freeze artifact: the WDA answers every 21.92 ms of WALL time
+
+Root cause of the measurement inflation, fully established:
+
+- rusEFI FREEZES TIM5 (the NT clock) on core halt ON PURPOSE:
+  microsecond_timer_stm32.cpp sets DBGMCU APB1FZ TIM5_STOP (so the
+  TMR2/TIM5 offset survives debugger halts - the angle clock contract).
+- TMR10 has NO DBGMCU freeze bit set (nobody writes APB2FZ), so it keeps
+  counting through the halts and fires every 21.92 ms of WALL time; the
+  ISR enters 2-8 us later (cnlat) and the chip accepts EVERY answer
+  (miss=0 at the 64 kHz window model - the chip model is correct).
+- The bench debugger halts the core ~50% of the wall time (its ~5 s
+  events + session halts - the known bench "debug", NOT firmware). NT
+  freezes through the halts, so the NT-based per/late stretched ~2x:
+  per = 21.92 ms of wall time read as 42-55 NT-ms.
+
+FIX (diagnostics, this build): the fire-period and late measurements now
+run on a free-running TMR11 reference (same APB2 clock, same measured
+1 MHz PSC, DBGMCU pause bit explicitly CLEARED - never frozen on halt):
+per/late now read TRUE WALL TIME (~22/27 ms) even on the bench. The
+1 Hz line also dumps DBGMCU APB1FZ/APB2FZ so any debugger-set freeze
+bits are visible directly. The WDA itself needed no fix - it was
+answering on time the whole session.
+
+## 2026-08-30 (19:01 bench run) - WALL-TIME PROOF: per = 22048/17048 us = the armed interval exactly
+
+The TMR11 wall-clock reference (1 MHz, DBGMCU pause cleared) settles the
+whole question with hard numbers: per=22048us at delay=22 and
+per=17048us at delay=17 - the fire-to-fire equals the armed interval to
+within a few us, late=8-9us, cnlat=4-5us. The feed answers ON TIME in
+wall time; the earlier NT-based per=42-55ms was the TIM5 freeze artifact
+(TIM5_STOP is set by rusEFI on purpose; DBG2 reads 0x0 - the debugger
+sets NO timer-freeze bits). Nothing firmware-side halts the core
+(lockstats maxLockedDuration=0, executor hist <50us).
+
+At the end of the run the adaptation walked delay 22 -> 17 on a NO_RESP
+and miss climbed to 134 with reqhi=0xFA (W_RESP + RESP_TO_EARLY): the
+chip's window phase drifted beyond the [17, 27] clamp - either the
+chip's CLK1 oscillator (its own, +-5%) or the bench halt jitter. The
+car settles it: with per tracking delay exactly, a miss climb means the
+chip's cycle is longer than the 64 kHz datasheet model and the delay
+range needs re-centering to the measured cycle.
+
+## 2026-08-30 (19:10) - WDA bench fixes: delay range [12,55], chip SW_RST re-sync, masked burst
+
+The 19:02-19:03 run proved the WDA was failing ON THE BENCH (miss 134 ->
+2605, reqhi=0xFA = RESP_ERR|RESP_Z0|W_RESP, addr_err 16301 = 20% of
+frames, ec=4 wda_int=1, the OUT_DIS heal / VRS re-init loop). Three root
+causes, all fixed:
+
+1. The delay clamp [17, 27] ms cannot reach the chip's real window: the
+   EARLY flag at 17 ms means the window opened AFTER 17 ms - the chip's
+   f_clk is ~39 kHz (window [25.9, 46.6] ms), not the 64 kHz the
+   constants assumed. The adaptation pinned at the clamp and every answer
+   missed. Range widened to [12, 55] ms (covers f_clk 32..64 kHz), init
+   stays 22.
+2. A scrambled chip never re-syncs: torn bursts (debugger halts /
+   preemption) leave the chip's question engine in a bad state
+   (RESP_Z0/RESP_ERR/W_RESP, addr_err storms) and byte-level re-alignment
+   cannot repair it. New: 10 consecutive W_RESP/RESP_Z0/RESP_ERR cycles
+   -> need_init -> full SW_RST + re-init (5 s cooldown) - the chip
+   restarts clean instead of degrading forever.
+3. The 8-frame sequence can be torn mid-flight by a preempting handoff:
+   the SPI sequences (4 reads + 4-byte burst) now run under
+   __set_BASEPRI(4 << 4) - ISRs at priority >= 4 are masked during the
+   frames, the executor (priority 3, spark) stays unmasked. The debugger
+   halt remains unmaskable and is covered by fix 2.
+
+Validation: compile_m74_9.sh builds clean. Bench expectations: delay
+walks to the chip's window (22 -> ~36 if the chip is 39 kHz) and locks;
+miss stops climbing; the heal/VRS loop stops; a W_RESP storm triggers
+one SW_RST per 5 s at most.

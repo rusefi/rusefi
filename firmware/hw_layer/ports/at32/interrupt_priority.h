@@ -37,6 +37,16 @@
 // command dispatch. With the executor at 3, the handoff at 4 still preempts
 // ADC/UART/SysTick/CAN as before.
 #define EFI_IRQ_EXTI_HANDOFF_PRIORITY     4
+
+// The L9779 WDA feed (one-shot TMR10, direct registers): BELOW the trigger
+// handoff on purpose - its ~100 us polled-SPI burst used to run inside the
+// priority-3 executor ISR, which preempted the handoff and added up to
+// 100 us to the decode/scheduling chain (the "WDA processed events at the
+// wrong time" distortion). The answer window is ~12.6 ms wide, so even a
+// 1 ms handoff tail preempting the burst cannot push RESP_BYTE0 out of it.
+// It stays ISR-context (never a thread): a thread wakeup under cranking
+// load was the original wd_timing_miss/EC>4 kill mode.
+#define EFI_IRQ_L9779_WDA_PRIORITY        5
 #define EFI_IRQ_ADC_PRIORITY 5
 #define EFI_IRQ_UART_PRIORITY 6
 #define EFI_IRQ_SYSTICK_PRIORITY 8
