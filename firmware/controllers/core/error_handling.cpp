@@ -481,7 +481,7 @@ void logDeliberateReboot(RebootReason reason) {
 #endif // EFI_BACKUP_SRAM
 }
 
-void logHardFault(uint32_t type, uintptr_t faultAddress, void* sp, port_extctx* ctx, uint32_t csfr) {
+void logHardFault(uint32_t type, uintptr_t faultAddress, void* sp, uint32_t csfr) {
     // todo: reuse hasCriticalFirmwareErrorFlag? something?
     isInHardFaultHandler = true;
 	// Evidence first!
@@ -489,11 +489,18 @@ void logHardFault(uint32_t type, uintptr_t faultAddress, void* sp, port_extctx* 
 	auto bkpram = getBackupSram();
 	auto err = &bkpram->err;
 	if (err->Cookie == ErrorCookie::None) {
+		// Stamp everything that does not require touching memory through 'sp' and set the
+		// cookie BEFORE the first dereference of 'sp': a corrupted PSP, or (F7 guard pages) a
+		// PSP sitting inside a no-access page, faults again right here -> lockup -> watchdog
+		// reset. What was already written is then still reported on the next boot.
 		err->FaultType = type;
 		err->FaultAddress = faultAddress;
 		err->Csfr = csfr;
-		memcpy(&err->FaultCtx, ctx, sizeof(port_extctx));
+		err->sp = (uint32_t)sp;
+		memset(&err->FaultCtx, 0, sizeof(port_extctx));
 		err->Cookie = ErrorCookie::HardFault;
+		// exception frame: main registers including PC and LR
+		memcpy(&err->FaultCtx, sp, sizeof(port_extctx));
 		// copy stack last as it can be corrupted and cause another exeption
 		errorHandlerSaveStack(err, (uint32_t *)sp);
 	}

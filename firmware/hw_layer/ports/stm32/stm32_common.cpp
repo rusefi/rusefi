@@ -223,6 +223,19 @@ void baseMCUInit() {
 	// looks like this holds a random value on start? Let's set a nice clean zero
 	DWT->CYCCNT = 0;
 
+#ifdef STM32H7XX
+	// ChibiOS H7 hal_lld_init() has rccEnableBKPRAM() commented out ("not tested and unfinished"),
+	// so nothing else clocks the 4 KB backup SRAM at 0x38800000 that holds BackupSramData
+	// (boot counter + crash cookie, see error_handling.cpp) - without the clock every H7 boot
+	// looks like a first power-up: "Power cycle count: 0" and no crash evidence ever.
+	// This runs from both main() and bootloader main() before errorHandlerInit().
+	rccEnableBKPRAM(true);
+	// backup regulator keeps the content alive in VBAT/standby; bounded wait, do not hang boot on it
+	PWR->CR2 |= PWR_CR2_BREN;
+	for (int i = 0; i < 100000 && (PWR->CR2 & PWR_CR2_BRRDY) == 0; i++) {
+	}
+#endif // STM32H7XX
+
 
 #ifndef EFI_SKIP_BOR
 	BOR_Set(BOR_Level_1); // one step above default value
