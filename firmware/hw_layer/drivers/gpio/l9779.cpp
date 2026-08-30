@@ -105,20 +105,26 @@
  *       RST (CRK_RST) - safety, keep it
  *   [2] VDD5_UV WDA mask = 1: a VDD5 undervoltage does NOT pull WDA low -
  *       avoids blade kills on cranking rail dips (the stock's choice)
- *   [1] WDA time base = 1 (64 kHz) - REQUIRED: RESPTIME=10 and the 22 ms
- *       feed are tuned for the 15.8 ms response time. At 39 kHz the window
- *       moves to [25.9, 38.5] ms and the clamped 27 ms feed misses.
+ *   [1] WDA time base - MEASURED 2026-08-30 (bench): bit1=1 gives 39 kHz,
+ *       bit1=0 gives 64 kHz (the old "bit1=1 = 64 kHz" mapping was
+ *       INVERTED). With 0x06 the chip's window sat at [25.9, 46.6] ms and
+ *       the 22 ms feed landed EARLY every cycle: delay walked 22 -> 27,
+ *       miss climbed, and at delay=22 the chip NACKed the early answers
+ *       into a fail storm (35 -> 251/s). 0x04 = 64 kHz: window
+ *       [15.8, 28.4] ms, center 22.1 ms - what RESPTIME=10, WDA_DELAY_* and
+ *       the feed are tuned for.
  *   [0] PWL/SEO timeout priority = 0 (default)
- * 0x06 is exactly the stock's steady-state value (the stock steps this
- * register 0x07 -> 0x05 -> 0x06 during its config script - but for rusEFI
- * the time base must never flip; it is applied ONCE and never stepped). */
-#define L9779_CONFIG6_PWR			(0x06)
+ * 0x04 differs from the stock's steady state 0x06 ONLY in bit1: the stock
+ * runs its own feed at 39 kHz (its response timing matches), rusEFI needs
+ * the 64 kHz base for the RESPTIME=10 / 22 ms design. Applied ONCE, never
+ * stepped. */
+#define L9779_CONFIG6_PWR			(0x04)
 /* CONFIG_REG6 with PSOFF (bit 4) set: power stages off, chip logic +
  * regulators + SPI + WDA monitoring + KEY_ON input all stay alive. Written
  * by the ignition gate on key-off; the MCU keeps running and isIgnVoltage()
  * keeps seeing the key via DIA_REG9. The next ignition-on re-init (SW_RST
  * via need_init) wipes it and reapplies L9779_CONFIG6_PWR. */
-#define L9779_CONFIG6_PSOFF			(0x16)
+#define L9779_CONFIG6_PSOFF			(0x14)
 
 /* DIA_REG10 (datasheet 6.14) bits, verified against the register layout:
  * [7] TNL_RST, [6] F1, [5] CRK_RST, [4] F2, [3] VDD5_OV, [2] V3V3_UV,
@@ -1876,7 +1882,7 @@ int L9779::chip_init()
 
 	/* Power management + WDA time base (see L9779_CONFIG6_PWR). MUST be
 	 * written before the RESPTIME anchor below: the response time is scaled
-	 * by f_clk (64 kHz with bit1=1), and the RESPTIME write starts a fresh
+	 * by f_clk (64 kHz with bit1=0), and the RESPTIME write starts a fresh
 	 * sequencer run on whatever time base is active at that moment. */
 	ret = spi_rw(MSG_W(0x06, L9779_CONFIG6_PWR), NULL);
 	if (ret)

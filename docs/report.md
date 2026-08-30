@@ -9238,6 +9238,22 @@ TIM5/TMR2/TMR6 run 288 MHz (the NT 4 MHz clock is validated by tooth
 physics). PSC is now 143; the liveness print shows the fire-to-fire period
 measured in NT ticks (per=...us) to confirm ~21920 us on the next bench.
 
+**2026-08-30 (bench, second run): the 144 MHz PSC is CONFIRMED but the
+verdicts exposed a THIRD defect - the chip's WDA time base is 39 kHz, not
+64 kHz.** With per=~27-35 ms (delay walked 22 -> 27 on EARLY flags, then
+NO_RESP back down, miss=120) and a fail storm at delay=22 (35 -> 251/s,
+per collapsed to 10-13 ms = the failure-path 10 ms re-arms - the chip NACKs
+the early answers), the window behaves like [25.9, 46.6] ms (39 kHz), NOT
+[15.8, 28.4] (64 kHz). The driver's CONFIG6 bit1 mapping was INVERTED:
+bit1=1 (the old 0x06) gives 39 kHz, bit1=0 gives 64 kHz. The first 2x-slow
+build had looked clean ONLY because 43.8 ms happens to sit inside the
+39 kHz window. FIX: L9779_CONFIG6_PWR 0x06 -> 0x04 (bit1=0 -> 64 kHz,
+bit2=1 VDD5_UV WDA mask unchanged), L9779_CONFIG6_PSOFF 0x16 -> 0x14 for
+consistency. The stock runs 0x06 = 39 kHz deliberately (its own feed
+matches); rusEFI needs the 64 kHz base for the RESPTIME=10 / 22 ms design.
+Expected on the bench: per=~21920 us, delay pinned at 22, miss=0, fail=0,
+EC settling <= 4.
+
 Fork bug to follow up: STM32_TIMCLK2 in the AT32 port (hal_lld.h) doubles
 PCLK2 like STM32F4, but the AT32F435 silicon clocks its APB2 timers
 (TMR1/8/9/10/11) at PCLK2 - any future GPT/PWM/ICU on those timers would
