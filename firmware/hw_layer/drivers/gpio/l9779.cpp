@@ -58,29 +58,33 @@
 #define DIAG_REFRESH_REGS			(3)
 
 /* WDA response-time shortening (datasheet 6.15.2). With the default
- * RESPTIME (0x3f) the response time is (1+101*63)/64kHz = 99.4 ms and the
- * answer window sits ~99..112 ms after each cycle start. That whole timing
- * runs on the chip's INTERNAL oscillator CLK1 with a +-5% accuracy, which
- * drifts with temperature and supply: +-5% of ~100 ms is +-5 ms - half the
- * 12.6 ms window - so a fixed feed period can miss when the oscillator
- * drifts (measured: the window center moved from ~115 ms to >120 ms between
- * two boots on 2026-08-24). Each miss fires a WDA kill pulse (EC>4).
+ * RESPTIME (0x3f) the response time is (1+101*63)/f_clk and the answer
+ * window sits at the cycle start + response time. That whole timing runs on
+ * the chip's INTERNAL oscillator CLK1 with a +-5% accuracy, which drifts
+ * with temperature and supply - so a fixed feed period can miss when the
+ * oscillator drifts (measured 2026-08-24: the window center moved from
+ * ~115 ms to >120 ms between two boots). Each miss fires a WDA kill pulse
+ * (EC>4).
  *
- * RESPTIME=10 shortens the response time to (1+101*10)/64kHz = 15.8 ms
- * (cycle = 15.8 + 12.6 = 28.4 ms): the same +-5% drift now moves the
- * window by only +-0.8 ms, so a centered feed essentially cannot miss, and
- * any transient recovers ~5x faster. Cost: the feed runs ~45x/s (well under
- * 1% of the GPT interval), and the one-time RESPTIME write costs one EC
- * increment (EC 6->7, the outputs enable ~3 cycles later - before the fuel
- * pump primes). */
+ * RESPTIME=10 shortens the response time to (1+101*10)/f_clk. f_clk
+ * MEASURED (2026-08-30, bench): the chip runs 39 kHz, NOT the 64 kHz the
+ * datasheet default implies - with 64 kHz assumed, the 22 ms feed landed
+ * EARLY every cycle (the window opens at 25.9 ms, closes at 46.6 ms). The
+ * CONFIG6 bit1 value made no observable difference (0x06 and 0x04 both run
+ * 39 kHz), so the feed is tuned to the MEASURED 39 kHz base:
+ * response = 1011/39kHz = 25.9 ms, window = 8*101/39kHz = 20.7 ms,
+ * cycle = 46.6 ms, window center = 36.3 ms. The +-5% CLK1 drift moves the
+ * window by +-2.3 ms; the [28, 44] clamp keeps the feed inside it.
+ * Directly evidenced by the 2x-slow-timer build: its 43.8 ms period was
+ * accepted cleanly for minutes (43.8 ms sits inside [25.9, 46.6]). */
 #define WDA_RESPTIME				(10)
-/* BYTE0-to-BYTE0 answer period: window center = 15.8 + 12.6/2 = 22.1 ms. */
-#define WDA_DELAY_INIT_MS			(22)
+/* BYTE0-to-BYTE0 answer period: window center = 25.9 + 20.7/2 = 36.3 ms. */
+#define WDA_DELAY_INIT_MS			(36)
 /* The answer period must stay inside [response_time, response_time+window].
- * With CLK1 +-5% the window is always within [16.6, 27.0] ms; clamp with a
+ * With CLK1 +-5% the window is always within [28.2, 44.3] ms; clamp with a
  * little margin. */
-#define WDA_DELAY_MIN_MS			(17)
-#define WDA_DELAY_MAX_MS			(27)
+#define WDA_DELAY_MIN_MS			(28)
+#define WDA_DELAY_MAX_MS			(44)
 /* Duration of the feed callback from dispatch to the END of its
  * RESP_BYTE0 write (3 pipelined reads + 4 answer frames, ~7 x 10 us). The
  * next callback is scheduled this much short of the full answer period so
@@ -105,19 +109,17 @@
  *       RST (CRK_RST) - safety, keep it
  *   [2] VDD5_UV WDA mask = 1: a VDD5 undervoltage does NOT pull WDA low -
  *       avoids blade kills on cranking rail dips (the stock's choice)
- *   [1] WDA time base - MEASURED 2026-08-30 (bench): bit1=1 gives 39 kHz,
- *       bit1=0 gives 64 kHz (the old "bit1=1 = 64 kHz" mapping was
- *       INVERTED). With 0x06 the chip's window sat at [25.9, 46.6] ms and
- *       the 22 ms feed landed EARLY every cycle: delay walked 22 -> 27,
- *       miss climbed, and at delay=22 the chip NACKed the early answers
- *       into a fail storm (35 -> 251/s). 0x04 = 64 kHz: window
- *       [15.8, 28.4] ms, center 22.1 ms - what RESPTIME=10, WDA_DELAY_* and
- *       the feed are tuned for.
+ *   [1] WDA time base - UNRESOLVED (2026-08-30): the datasheet maps this
+ *       bit to f_clk 64/39 kHz, but BOTH values behaved identically on the
+ *       bench (the chip ran 39 kHz with 0x06 AND with 0x04 - the window
+ *       opens at ~25.9 ms, measured via the EARLY flags at 22 ms and the
+ *       clean acceptance at 26.9 ms and at 43.8 ms). Keep 0 (the datasheet
+ *       reset default); the feed is tuned to the MEASURED 39 kHz base
+ *       (WDA_DELAY_*), so the bit is immaterial either way.
  *   [0] PWL/SEO timeout priority = 0 (default)
- * 0x04 differs from the stock's steady state 0x06 ONLY in bit1: the stock
- * runs its own feed at 39 kHz (its response timing matches), rusEFI needs
- * the 64 kHz base for the RESPTIME=10 / 22 ms design. Applied ONCE, never
- * stepped. */
+ * 0x04 differs from the stock's steady state 0x06 ONLY in bit1 - and the
+ * bit made no observable difference, so both run the same 39 kHz base; the
+ * stock's own feed matches it. Applied ONCE, never stepped. */
 #define L9779_CONFIG6_PWR			(0x04)
 /* CONFIG_REG6 with PSOFF (bit 4) set: power stages off, chip logic +
  * regulators + SPI + WDA monitoring + KEY_ON input all stay alive. Written
@@ -1091,7 +1093,7 @@ static L9779 *s_wda_chip;
  * 287 the armed 21.92 ms one-shot fired at 43.8 ms and every answer landed
  * outside the chip's ~28.4 ms window (miss=3882, delay walked down on
  * NO_RESP). PSC = 143 -> 1 tick = 1 us; the 16-bit ARR caps the delay at
- * 65.535 ms - the WDA delays (1..27 ms) fit. APB1 timers are NOT affected
+ * 65.535 ms - the WDA delays (1..44 ms) fit. APB1 timers are NOT affected
  * (TIM5/TMR2/TMR6 run 288 MHz - the NT 4 MHz clock is validated by tooth
  * physics). OPM (one-cycle mode) stops the counter at the update event, so
  * a fired one-shot cannot wrap and re-fire. */
@@ -1233,14 +1235,15 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 				chip->update_output();
 			}
 
-			/* Kick the WDA feed once after the chip is up. The first
-			 * burst lands its RESP_BYTE0 at the RESPTIME anchor + ~17 ms, i.e.
-			 * inside the first answer window ([15.8, 28.4] ms after the RESPTIME
-			 * write); the events self-reschedule from then on. */
+		/* Kick the WDA feed once after the chip is up. The first
+			 * burst lands its RESP_BYTE0 at the RESPTIME anchor + ~26 ms, i.e.
+			 * just inside the first answer window ([25.9, 46.6] ms after the
+			 * RESPTIME write at the measured 39 kHz base); the events
+			 * self-reschedule from then on. */
 			if (!chip->wd_running) {
 				chip->wd_running = true;
-				efiPrintf("l9779 wda: GPT kick +17 ms (CR1=0x%08lx)", (unsigned long)WDA_TIMER->CR1);
-				wdArmThread(chip, 17);
+				efiPrintf("l9779 wda: GPT kick +26 ms (CR1=0x%08lx)", (unsigned long)WDA_TIMER->CR1);
+				wdArmThread(chip, 26);
 				efiPrintf("l9779 wda: GPT armed (CR1=0x%08lx DIER=0x%08lx)", (unsigned long)WDA_TIMER->CR1, (unsigned long)WDA_TIMER->DIER);
 			}
 
@@ -1882,8 +1885,9 @@ int L9779::chip_init()
 
 	/* Power management + WDA time base (see L9779_CONFIG6_PWR). MUST be
 	 * written before the RESPTIME anchor below: the response time is scaled
-	 * by f_clk (64 kHz with bit1=0), and the RESPTIME write starts a fresh
-	 * sequencer run on whatever time base is active at that moment. */
+	 * by f_clk (measured 39 kHz on this silicon), and the RESPTIME write
+	 * starts a fresh sequencer run on whatever time base is active at that
+	 * moment. */
 	ret = spi_rw(MSG_W(0x06, L9779_CONFIG6_PWR), NULL);
 	if (ret)
 		return ret;
