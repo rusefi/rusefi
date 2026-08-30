@@ -507,16 +507,14 @@ static void crashDelayForConsoleFlush() {
 	}
 }
 
-/* The boot banner (where printPreviousCrashIfAny runs) is printed exactly
- * once, right after initRtc(). The console link is usually still DOWN at that
- * moment - it reconnects seconds later, so the banner (and with it the whole
- * crash report) would be lost. Keep a RAM copy and re-print it every few
- * seconds for the first minute of runtime, so a reconnecting console still
- * catches the report. */
-static bool bootReportPending = false;
+/* The crash report is printed exactly ONCE, right after initRtc()
+ * (printPreviousCrashIfAny, from the boot banner). The 5-second re-print
+ * was removed on user request (2026-08-30): it spammed the console with
+ * crash-marker/Reset-Cause lines - on the bench with its ~5 s debug resets
+ * the repeat cadence made every boot look like a crash storm. The report
+ * stays visible in the console log from the boot banner itself. */
 static uint32_t crashMarkerMagic;
 static uint32_t crashMarkerArgs[5]; // BKP1R..BKP5R
-static efitick_t bootReportStart;
 
 static void unpackWordsIntoString(char* out, size_t outSize, uint32_t w0, uint32_t w1, uint32_t w2, uint32_t w3) {
 	uint32_t words[4] = { w0, w1, w2, w3 };
@@ -577,31 +575,6 @@ void printPreviousCrashIfAny() {
 	crashMarkerArgs[3] = RTC->BKP4R;
 	crashMarkerArgs[4] = RTC->BKP5R;
 	RTC->BKP0R = 0; // consumed
-	bootReportPending = true;
-	bootReportStart = getTimeNowNt();
-	printCrashReportLines();
-}
-
-/* Called from doPeriodicSlowCallback (20 Hz, runs even without engine sync).
- * Re-prints the crash report + reset cause every 5 s for the first minute
- * after boot so the report survives the console reconnect. */
-void reprintPendingBootReport() {
-	if (!bootReportPending) {
-		return;
-	}
-
-	efitick_t now = getTimeNowNt();
-	if (now - bootReportStart > MS2NT(60 * 1000)) {
-		bootReportPending = false;
-		return;
-	}
-
-	static efitick_t lastPrint;
-	if (now - lastPrint < MS2NT(5000)) {
-		return;
-	}
-	lastPrint = now;
-
 	printCrashReportLines();
 }
 

@@ -397,10 +397,10 @@ struct L9779 : public GpioChip {
 	int						wd_defer_cnt;	/* feeds deferred by the spi_busy flag */
 	int						wd_kill_cnt;	/* WDA_INT rising edges (watchdog kill pulses) */
 	int						wd_last_miss_dir;	/* last REQUHI miss: 1=early 2=late */
-	bool						wd_prev_int;
-	int					wd_latch_cnt;	/* consecutive feeds with EC=7 + WDA_INT (latched fault) */
+	bool					wd_prev_int;
 	int					wd_bad_value_cnt; /* consecutive cycles with W_RESP/RESP_Z0/RESP_ERR - the chip's SPI/question state is scrambled, re-sync via SW_RST */
-	efitick_t					wd_last_heal;	/* last latch self-heal, cooldown */
+	bool					wd_prev_cycle_clean; /* the previous burst went out as one clean atomic stream - REQUHI verdicts are only trusted when this is true */
+	efitick_t					wd_last_heal;	/* last self-heal, cooldown */
 	uint16_t					ident_reg;		/* IDENT_REG readback (0x10 | 0x00) */
 
 	/* Cached power-stage diagnosis, DIA_REG1..8 (datasheet 6.14). Refreshed
@@ -1067,6 +1067,14 @@ int L9779::chip_reset() {
 	 * returns here is the pre-reset state and must not fail the init */
 	(void)spi_rw(CMD_CLOCK_UNLOCK_SW_RST(BIT(1)), NULL);
 
+	/* The chip's reply pipeline is gone with the reset: drop the outstanding
+	 * read requests too, otherwise the post-reset replies are matched against
+	 * stale queue entries and every frame misattributes for up to the queue
+	 * depth - the addr_err flood + REQULO-miss fail storm that followed every
+	 * SW_RST on the 2026-08-30 19:26 bench session. */
+	rd_pending_cnt = 0;
+	rd_pending_head = 0;
+
 	chThdSleepMilliseconds(3);
 
 	return 0;
@@ -1224,6 +1232,15 @@ static void wdaTimerStop() {
  * visible on the console and any clock mistake is caught on the bench. */
 static efitick_t s_lastFireNt;
 static efitick_t s_firePeriodNt;
+
+/* Last N one-second liveness lines. The 1 Hz line is NOT printed to the
+ * console any more (user request 2026-08-30 - it flooded the log); it is
+ * stored here and dumped by the 'pins' diagnostic (L9779::debug). */
+#define WDA_LIVENESS_LINES		(10)
+#define WDA_LIVENESS_LEN		(160)
+static char s_wdaLiveness[WDA_LIVENESS_LINES][WDA_LIVENESS_LEN];
+static int s_wdaLivenessNext;	/* next slot to fill */
+static int s_wdaLivenessCnt;	/* slots filled, saturates at WDA_LIVENESS_LINES */
 
 /* The same period in TMR11 reference ticks (1 MHz, NEVER frozen on halt):
  * TRUE WALL TIME. The NT-based per/late stretch by the debugger's halt
@@ -1416,7 +1433,11 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 			}
 			if (chip->wd_running && (now - last_wda_print >= TIME_MS2I(1000))) {
 				last_wda_print = now;
-				efiPrintf("l9779 wda: ok=%d fail=%d defer=%d pollto=%d delay=%d per=%dus late=%d/%dus cnlat=%d/%dus DBG1=0x%lx DBG2=0x%lx CR1=0x%lx DIER=0x%lx PSC=0x%lx ARR=0x%lx CNT=0x%lx",
+				/* Store the one-second liveness line in the ring buffer - it is
+				 * printed by the 'pins' diagnostic, not the console (the 1 Hz
+				 * efiPrintf flooded the log; user request 2026-08-30). */
+				chsnprintf(s_wdaLiveness[s_wdaLivenessNext], WDA_LIVENESS_LEN,
+					"ok=%d fail=%d defer=%d pollto=%d delay=%d per=%dus late=%d/%dus cnlat=%d/%dus DBG1=0x%lx DBG2=0x%lx CR1=0x%lx DIER=0x%lx PSC=0x%lx ARR=0x%lx CNT=0x%lx",
 					chip->wd_ok_cnt, chip->wd_fail_cnt, chip->wd_defer_cnt,
 					chip->wd_poll_timeouts, chip->wd_delay_ms,
 					(int)s_firePeriodRef, s_lateRefUs, s_lateRefUsMax,
@@ -1425,7 +1446,10 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 					(unsigned long)WDA_TIMER->CR1, (unsigned long)WDA_TIMER->DIER,
 					(unsigned long)WDA_TIMER->PSC, (unsigned long)WDA_TIMER->ARR,
 					(unsigned long)WDA_TIMER->CNT);
-				/* reset the max-latency probes after printing */
+				s_wdaLivenessNext = (s_wdaLivenessNext + 1) % WDA_LIVENESS_LINES;
+				if (s_wdaLivenessCnt < WDA_LIVENESS_LINES)
+					s_wdaLivenessCnt++;
+				/* reset the max-latency probes after storing */
 				s_lateUsMax = 0;
 				s_lateRefUsMax = 0;
 				s_cnLatUsMax = 0;
@@ -1593,6 +1617,7 @@ void L9779::wdFeedFromExecutor()
 	 * kick is issued after chip_init() in the driver thread. */
 	if (!spi_configured) {
 		wd_defer_cnt++;
+		wd_prev_cycle_clean = false;
 		wdArmIsr(10);
 		return;
 	}
@@ -1603,6 +1628,7 @@ void L9779::wdFeedFromExecutor()
 	 * Deferring a whole cycle costs one miss at worst. */
 	if (spi_busy) {
 		wd_defer_cnt++;
+		wd_prev_cycle_clean = false;
 		wdArmIsr(1);
 		return;
 	}
@@ -1666,44 +1692,56 @@ void L9779::wdFeedFromExecutor()
 
 	if (ret < 0) {
 		/* SPI-level failure: retry soon. No bytes were written, the cycle
-		 * expires unanswered (one miss) and the next burst re-aligns. */
+		 * expires unanswered (one miss) and the next burst re-aligns. The
+		 * chip state is unknown on this path, so consecutive-fault evidence
+		 * must not accumulate (and stale clean-cycle flags must not be
+		 * trusted for the delay adaptation). */
 		wd_fail_cnt++;
+		wd_bad_value_cnt = 0;
+		wd_prev_cycle_clean = false;
 		wdArmIsr(10);
 		return;
 	}
 
 	/* REQUHI flags report the timing of the previous response and are used
-	 * to keep the response delay centered in the answer window. Both flags
-	 * mean the previous answer was NOT accepted (outside the window), so
-	 * the chip's EC incremented - count them separately from wd_fail_cnt,
-	 * which only tracks SPI-level failures.
+	 * to keep the response delay centered in the answer window.
+	 *
+	 * TRUST ONLY A CLEAN PREVIOUS CYCLE: a torn burst (bench debugger halt,
+	 * a chip reset mid-stream) or a desynced reply pipeline makes these
+	 * flags garbage - the 19:02 session walked the delay in the wrong
+	 * direction (22 -> 17 on NO_RESP while the window sat ABOVE) chasing
+	 * verdicts from a scrambled stream. With wd_prev_cycle_clean false the
+	 * verdicts are ignored and the delay stays where it was.
 	 *
 	 * ORDER MATTERS: a too-late response sets BOTH NO_RESP and RESP_TO_EARLY
 	 * (datasheet 6.15: a too-late response is at the same time a too-early
 	 * response of the next cycle, the NO_RESP monitoring is overwritten by
 	 * the RESP_TO_EARLY one). Check NO_RESP FIRST - with the old order the
 	 * both-flags case was classified as EARLY and the delay walked UP (+5)
-	 * until it pegged at the 27 ms clamp, sitting on the window edge and
-	 * never recovering (the 20:12 session: delay=27ms, reqhi=0xDB).
+	 * until it pegged at the clamp, sitting on the window edge and never
+	 * recovering (the 20:12 session: delay=27ms, reqhi=0xDB).
 	 *
 	 * The correction step is 5 ms (just under half of the ~12.6 ms window):
 	 * a single miss jumps the phase from just-outside to near center without
 	 * overshooting to the other edge. With the shortened RESPTIME the
 	 * window drifts by only ~0.8 ms (CLK1 +-5% of 15.8 ms), so a lock loss
-	 * should be a rare event; when it happens it costs 1-2 misses, and each
-	 * miss sets EC > 4 and fires the chip's WDA kill output (the blade
-	 * drop) - converging fast is the whole game. */
-	if (requhi & 0x02) {
-		/* NO_RESP (and NO_RESP+EARLY): response after the window closed */
-		wd_timing_miss_cnt++;
-		wd_last_miss_dir = 2;
-		wd_delay_ms -= 5;
-	} else if (requhi & 0x01) {
-		/* RESP_TO_EARLY alone: response before the window opened */
-		wd_timing_miss_cnt++;
-		wd_last_miss_dir = 1;
-		wd_delay_ms += 5;
+	 * should be a rare event. */
+	if (wd_prev_cycle_clean) {
+		if (requhi & 0x02) {
+			/* NO_RESP (and NO_RESP+EARLY): response after the window closed */
+			wd_timing_miss_cnt++;
+			wd_last_miss_dir = 2;
+			wd_delay_ms -= 5;
+		} else if (requhi & 0x01) {
+			/* RESP_TO_EARLY alone: response before the window opened */
+			wd_timing_miss_cnt++;
+			wd_last_miss_dir = 1;
+			wd_delay_ms += 5;
+		}
 	}
+	/* the verdicts above describe the PREVIOUS burst, which just left the
+	 * clean state; the current cycle re-arms it only on a clean burst */
+	wd_prev_cycle_clean = false;
 	/* keep the period inside the answer window [response_time, response_time+window] */
 	if (wd_delay_ms < WDA_DELAY_MIN_MS)
 		wd_delay_ms = WDA_DELAY_MIN_MS;
@@ -1766,22 +1804,18 @@ void L9779::wdFeedFromExecutor()
 		return;
 	}
 
-	/* EC=7 + WDA_INT is the LATCHED fault state: a chip reset (SW_RST) is
-	 * needed to re-arm. Ask the driver thread to do that via the need_init
-	 * path, with a 5 s cooldown so a persistent fault does not turn into a
-	 * reset/re-init storm. */
-	if (wd_int && wd_last_ec >= 7) {
-		if (++wd_latch_cnt >= 10) {
-			wd_latch_cnt = 0;
-			efitick_t nowNt = getTimeNowNt();
-			if (nowNt - wd_last_heal > MS2NT(5000)) {
-				wd_last_heal = nowNt;
-				need_init = true;
-			}
-		}
-	} else {
-		wd_latch_cnt = 0;
-	}
+	/* EC=7 + WDA_INT: the chip's error counter is at the top and the kill
+	 * flag is set. This is what a core halt (bench debugger) leaves behind:
+	 * the chip's WDA cycle runs on ITS OWN clock, so every halt lets several
+	 * cycles expire unanswered and EC climbs to 7. It is NOT a permanent
+	 * latch: the question keeps repeating and a correct atomic burst is
+	 * accepted at any later cycle, decrementing EC back down - so NO SW_RST
+	 * here. The old latch-triggered need_init turned every bench halt into a
+	 * SW_RST every ~220 ms: each reset desynced the reply pipeline (addr_err
+	 * flood, REQULO-miss fail storm, the 19:26 log) and re-ran the whole
+	 * chip_init/VRS re-init the user saw as the endless reload loop. The
+	 * SW_RST escape is reserved for a genuinely scrambled question engine
+	 * (the wd_bad_value_cnt path above), which has real evidence. */
 
 	/* The response: all four bytes back-to-back, masked against the handoff
 	 * like the reads. The cycle restarts at the END of the RESP_BYTE0 write,
@@ -1795,10 +1829,15 @@ void L9779::wdFeedFromExecutor()
 			break;
 	}
 	__set_BASEPRI(basepri);
-	if (ret == 0)
+	if (ret == 0) {
 		wd_ok_cnt++;
-	else
+		/* The whole cycle (reads + aligned burst) completed cleanly: the
+		 * NEXT cycle's REQUHI verdicts describe this burst and may be
+		 * trusted for the delay adaptation. */
+		wd_prev_cycle_clean = true;
+	} else {
 		wd_fail_cnt++;
+	}
 
 	/* Anchor the next one-shot on the BYTE0 write end (now): the burst's
 	 * BYTE0 lands ~WDA_BURST_LEAD_US after the arm, so arm a burst-lead
@@ -1935,6 +1974,14 @@ void L9779::debug() {
 	}
 	efiPrintf(DRIVER_NAME " WDA: req=0x%x ec=%d wda_int=%d ok=%d fail=%d miss=%d wrong=%d cntbad=%d delay=%dms reqhi=0x%02x",
 		wd_last_req, wd_last_ec, wd_int ? 1 : 0, wd_ok_cnt, wd_fail_cnt, wd_timing_miss_cnt, wd_wrong_cnt, wd_cnt_bad, wd_delay_ms, wd_last_requhi);
+
+	/* WDA feed liveness history: the last ten one-second samples, oldest
+	 * first. This replaces the 1 Hz console print (see the ring buffer). */
+	int lvStart = s_wdaLivenessNext - s_wdaLivenessCnt;
+	for (int i = 0; i < s_wdaLivenessCnt; i++) {
+		efiPrintf(DRIVER_NAME " wda[%d]: %s", i,
+			s_wdaLiveness[(lvStart + i + 2 * WDA_LIVENESS_LINES) % WDA_LIVENESS_LINES]);
+	}
 
 	/* Power-stage status (DIA_REG10, datasheet section 6.14): OUT_DIS must
 	 * be 0 for OUTx/IGNx to switch at all; F1/F2 report output faults,
@@ -2279,8 +2326,8 @@ int L9779::init()
 	wd_last_requhi = 0;
 	wd_last_miss_dir = 0;
 	wd_prev_int = false;
-	wd_latch_cnt = 0;
 	wd_bad_value_cnt = 0;
+	wd_prev_cycle_clean = false;
 	wd_last_heal = 0;
 	s_wda_chip = this;
 	wdaTimerInit();

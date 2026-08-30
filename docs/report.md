@@ -9643,3 +9643,49 @@ Validation: compile_m74_9.sh builds clean. Bench expectations: delay
 walks to the chip's window (22 -> ~36 if the chip is 39 kHz) and locks;
 miss stops climbing; the heal/VRS loop stops; a W_RESP storm triggers
 one SW_RST per 5 s at most.
+
+## 2026-08-30 (evening) - WDA reload storm root cause + console noise cleanup
+
+The 19:26 bench run showed the WDA in a self-sustaining storm: fail=5435,
+addr_err=111670 (30% of frames), miss=852 wrong=860, per=10001us
+(10 ms retry loops), and the chip_init triple (RESPTIME readback / VRS /
+OUT_DIS cleared) repeating endlessly - the "reload" the user saw. Root
+cause chain, all confirmed in code:
+
+1. THE RELOAD LOOP: the feed treated EC=7 + WDA_INT as a permanent latch
+   and asked for a full SW_RST (need_init) every ~220 ms (10 cycles at
+   22 ms + 5 s cooldown). But EC=7 is what every bench debugger halt
+   leaves behind - the chip's WDA cycle runs on ITS OWN oscillator, so a
+   core halt lets cycles expire unanswered and EC climbs. It is NOT a
+   latch: the question keeps repeating and a correct atomic burst is
+   accepted later, decrementing EC (19:14 proved it - the question
+   advanced 0x0 -> 0x4 -> 0x8 -> 0xD for minutes while miss=0 wrong=0).
+   The latch-triggered SW_RST is REMOVED. SW_RST stays only for the
+   scrambled-question-engine evidence (10 consecutive
+   W_RESP/RESP_Z0/RESP_ERR), which has real proof.
+2. THE FAIL/ADDR_ERR FLOOD: every SW_RST wipes the chip's reply pipeline
+   while the MCU-side rd_pending queue kept its stale entries - post-reset
+   replies were matched against dead requests, every frame misattributed,
+   REQULO replies were lost (fail) and the whole loop fed itself.
+   chip_reset() now clears rd_pending_cnt/head after the SW_RST frame.
+3. THE DELAY ADAPTATION chased garbage: the REQUHI verdicts (NO_RESP /
+   RESP_TO_EARLY) are only meaningful for a clean previous burst; a torn
+   stream makes them noise (the 19:02 walk 22 -> 17 in the wrong
+   direction). New wd_prev_cycle_clean flag: verdicts are applied only
+   when the previous cycle went out as one clean atomic burst; fail /
+   defer / cnt_bad / wrong-value cycles clear it and reset the
+   consecutive-fault evidence.
+
+Console noise cleanup (user request, same commit):
+- The crash marker / Reset Cause pair is now printed ONCE per boot - the
+  5 s re-print for the first minute (reprintPendingBootReport) is gone.
+- The 1 Hz "l9779 wda: ok=..." liveness line no longer prints to the
+  console; the last 10 one-second samples are kept in a ring buffer and
+  dumped by the 'pins' diagnostic (L9779::debug).
+- The chip_init reload lines (RESPTIME readback / VRS / OUT_DIS cleared)
+  stay as-is - with the storm gone they only appear on real re-inits.
+
+Validation: compile_m74_9.sh builds clean. Bench expectation: no more
+reload triples, fail/addr_err stay ~0, delay adapts only on clean
+verdicts; after each debugger halt EC recovers by itself within a few
+cycles.
