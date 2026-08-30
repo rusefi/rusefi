@@ -1197,6 +1197,20 @@ static void wdaTimerInit() {
 
 	nvicEnableVector(STM32_TIM7_NUMBER, EFI_IRQ_L9779_WDA_PRIORITY);
 
+	/* Halt behavior (bench debugger): on this silicon the DBGMCU APB1 pause
+	 * bits behave INVERTED vs STM32F4 - a SET bit keeps the timer running
+	 * through a core halt, a CLEAR bit pauses it. TIM5 (NT) has its bit set
+	 * (microsecond timer init) and demonstrably keeps counting through the
+	 * bench debugger halts; TMR7's bit is clear, so every halt paused the
+	 * WDA counter mid-count and stretched the answer cycle by the halt
+	 * duration (the 2x per= seen on the bench). Set TMR7's bit too: the
+	 * one-shot then wraps on wall time, the UIF pends through the halt and
+	 * the feed fires the answer as soon as the core resumes - the feed keeps
+	 * its cadence and the chip sees answers at the earliest possible moment.
+	 * The stretched-cycle guard in the feed (prev-period gate) makes the
+	 * delay servo robust to the remaining halts either way. */
+	DBGMCU->APB1FZ |= DBGMCU_APB1_FZ_DBG_TIM7_STOP;
+
 	efiPrintf(DRIVER_NAME " wda: TMR7 measured %lu/%lu NT ticks, input %lu MHz (PSC 143 -> %lu)",
 		(unsigned long)acDelta, (unsigned long)ntDelta,
 		(unsigned long)((newPsc + 1) / 4), (unsigned long)newPsc);
@@ -1226,6 +1240,15 @@ static void wdaTimerInit() {
  * plain intervalUs/4 count, no runtime re-calibration. */
 static efitick_t s_lastFireNt;
 static efitick_t s_firePeriodNt;
+/* Previous cycle's timing: the REQUHI verdicts read in a feed describe the
+ * burst sent at the PREVIOUS fire, so the verdict gate needs the previous
+ * cycle's fire period and armed delay, not the current ones. */
+static efitick_t s_prevFirePeriodNt;
+static int s_prevFireDelayMs;
+/* Fires in the last 1 Hz liveness window whose period was off the armed
+ * delay by more than +-50% (bench debugger halts stretching TMR7, timer
+ * glitches) - the delay servo must not trust the verdicts of those cycles. */
+static int s_wdaStretched;
 
 static void wdaTimerArm(uint32_t ticks) {
 	if (ticks < 2)
@@ -1252,7 +1275,7 @@ static void wdaTimerStop() {
  * console any more (user request 2026-08-30 - it flooded the log); it is
  * stored here and dumped by the 'pins' diagnostic (L9779::debug). */
 #define WDA_LIVENESS_LINES		(10)
-#define WDA_LIVENESS_LEN		(160)
+#define WDA_LIVENESS_LEN		(192)
 static char s_wdaLiveness[WDA_LIVENESS_LINES][WDA_LIVENESS_LEN];
 static int s_wdaLivenessNext;	/* next slot to fill */
 static int s_wdaLivenessCnt;	/* slots filled, saturates at WDA_LIVENESS_LINES */
@@ -1329,8 +1352,22 @@ CH_IRQ_HANDLER(STM32_TIM7_HANDLER) {
 		WDA_TIMER->CR1 = 0;
 		WDA_TIMER->DIER = 0;
 		efitick_t nowNt = getTimeNowNt();
+		/* Stash the previous cycle's timing BEFORE overwriting it - the feed's
+		 * verdict gate compares the previous fire period against the delay
+		 * that cycle was armed with (still the current wd_delay_ms: nothing
+		 * has touched it since the previous feed's arm). */
+		s_prevFirePeriodNt = s_firePeriodNt;
+		s_prevFireDelayMs = s_wda_chip ? s_wda_chip->wd_delay_ms : 0;
 		if (s_lastFireNt != 0) {
 			s_firePeriodNt = nowNt - s_lastFireNt;
+			/* Count off-time cycles for the liveness line: the period is
+			 * compared against the delay this fire was armed with. */
+			if (s_prevFireDelayMs > 0) {
+				uint32_t perUs = (uint32_t)(s_firePeriodNt / US_TO_NT_MULTIPLIER);
+				uint32_t armUs = (uint32_t)s_prevFireDelayMs * 1000;
+				if ((perUs < armUs / 2) || (perUs > (armUs * 3) / 2))
+					s_wdaStretched++;
+			}
 		}
 		s_lastFireNt = nowNt;
 
@@ -1471,12 +1508,16 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 				 * printed by the 'pins' diagnostic, not the console (the 1 Hz
 				 * efiPrintf flooded the log; user request 2026-08-30). */
 				chsnprintf(s_wdaLiveness[s_wdaLivenessNext], WDA_LIVENESS_LEN,
-					"ok=%d fail=%d defer=%d pollto=%d delay=%d per=%dus late=%d/%dus cnlat=%d/%dus DBG1=0x%lx DBG2=0x%lx CR1=0x%lx DIER=0x%lx PSC=0x%lx ARR=0x%lx CNT=0x%lx",
+					"ok=%d fail=%d defer=%d pollto=%d delay=%d per=%dus late=%d/%dus cnlat=%d/%dus stretch=%d ratio=%d%% DBG1=0x%lx DBG2=0x%lx CR1=0x%lx DIER=0x%lx PSC=0x%lx ARR=0x%lx CNT=0x%lx",
 					chip->wd_ok_cnt, chip->wd_fail_cnt, chip->wd_defer_cnt,
 					chip->wd_poll_timeouts, chip->wd_delay_ms,
 					(int)(s_firePeriodNt / US_TO_NT_MULTIPLIER),
 					s_lateUs, s_lateUsMax,
 					s_cnLatUs, s_cnLatUsMax,
+					s_wdaStretched,
+					(s_firePeriodNt != 0 && chip->wd_delay_ms > 0)
+						? (int)(((uint64_t)s_firePeriodNt * 100) / (US_TO_NT_MULTIPLIER * (uint64_t)chip->wd_delay_ms * 1000))
+						: 0,
 					(unsigned long)DBGMCU->APB1FZ, (unsigned long)DBGMCU->APB2FZ,
 					(unsigned long)WDA_TIMER->CR1, (unsigned long)WDA_TIMER->DIER,
 					(unsigned long)WDA_TIMER->PSC, (unsigned long)WDA_TIMER->ARR,
@@ -1484,6 +1525,7 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 				/* reset the max-latency probes after storing */
 				s_lateUsMax = 0;
 				s_cnLatUsMax = 0;
+				s_wdaStretched = 0;
 				s_wdaLivenessNext = (s_wdaLivenessNext + 1) % WDA_LIVENESS_LINES;
 				if (s_wdaLivenessCnt < WDA_LIVENESS_LINES)
 					s_wdaLivenessCnt++;
@@ -1779,6 +1821,22 @@ void L9779::wdFeedFromExecutor()
 	bool prevClean = wd_prev_cycle_clean;
 	wd_prev_cycle_clean = false;
 
+	/* ON-TIME GATE: the verdicts describe the previous burst, sent at the
+	 * previous fire. If THAT cycle fired off its armed delay by more than
+	 * +-50% (a bench debugger halt stretched the WDA counter, or a glitch),
+	 * the verdict is real - the answer really missed the chip's window - but
+	 * it is NOT actionable: the delay itself was right, the miss was the
+	 * stretch, and stepping the delay would walk it the wrong way (the
+	 * 19:02/23:13 wrong-way walks chased exactly such verdicts). After a
+	 * halt the chip's window phase is unknown anyway; the verdicts of the
+	 * next on-time cycles re-center the delay correctly. */
+	if ((s_prevFirePeriodNt != 0) && (s_prevFireDelayMs > 0)) {
+		uint32_t prevPerUs = (uint32_t)(s_prevFirePeriodNt / US_TO_NT_MULTIPLIER);
+		uint32_t armUs = (uint32_t)s_prevFireDelayMs * 1000;
+		if ((prevPerUs < armUs / 2) || (prevPerUs > (armUs * 3) / 2))
+			prevClean = false;
+	}
+
 	if (prevClean) {
 		if (requhi & 0x02) {
 			/* NO_RESP (and NO_RESP+EARLY): response after the window closed */
@@ -1932,10 +1990,9 @@ void L9779::wdFeedFromExecutor()
 	}
 
 	/* Record the cycle in the per-cycle event ring (pins diagnostic).
-	 * bit0 = the fire-to-fire NT period far exceeds the armed delay - with
-	 * TIM5 frozen on a debugger halt this can only catch halts where the NT
-	 * clock kept running, so it is best-effort evidence, not a verdict gate
-	 * (the delay adaptation trusts wd_prev_cycle_clean, not this bit). */
+	 * bit0 = the fire-to-fire NT period exceeded 1.5x the armed delay (a
+	 * halt-stretched cycle - the same test the delay-servo gate uses, so a
+	 * flagged cycle's verdicts are ignored by the adaptation). */
 	{
 		wda_evt *e = &s_wdaEvt[s_wdaEvtNext];
 		s_wdaEvtNext = (s_wdaEvtNext + 1) % WDA_EVT_LINES;
@@ -1948,7 +2005,7 @@ void L9779::wdFeedFromExecutor()
 		e->requhi = wd_last_requhi;
 		e->delay = (uint8_t)wd_delay_ms;
 		e->flags = (uint8_t)(
-			((s_firePeriodNt / US_TO_NT_MULTIPLIER) > (uint32_t)(2 * wd_delay_ms * 1000 + 5000) ? 0x01 : 0) |
+			((s_firePeriodNt / US_TO_NT_MULTIPLIER) > (uint32_t)((3 * wd_delay_ms * 1000) / 2) ? 0x01 : 0) |
 			(ret == 0 ? 0x02 : 0x00));
 	}
 

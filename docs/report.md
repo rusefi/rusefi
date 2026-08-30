@@ -10170,3 +10170,50 @@ bench: boot prints "TMR7 measured ... NT ticks, input 288 MHz
 the 1 Hz pins liveness shows per= ~= delay, EC marches to <= 4 and
 stays, kill pulses stop. The bench can only validate mechanics (per/
 cnlat stable); the health verdict is the car.
+
+## 2026-08-31 (03:00) - the bench 2x WDA period is DEBUGGER HALTS, not a timer clock problem: TMR7 halt bit + on-time servo gate
+
+The 23:37/23:42 bench sessions with the TMR7 build showed per=53.9..69 ms
+for a 27 ms arm (min = exactly 2x), late = per - 27 ms exactly, cnlat=4 us
+(the ISR always enters right at the wrap), and the init measurement printed
+the TMR7 input at exactly 288 MHz (20002/40004 and 2500/40001 NT-tick
+ratios). The only consistent model: the timer clock is fine; the bench
+debugger halts the core periodically, and the halt pauses TMR7 mid-count
+while NT (TIM5) keeps counting. Every halt stretches the WDA cycle by the
+halt duration; the chip's own RC WDA clock never pauses, so each stretched
+cycle misses the window and EC climbs (the bench kills).
+
+Why TMR7 pauses and TIM5 does not: DBG1=0x8 = APB1_PAUSE bit 3 (TIM5) set,
+bit 5 (TMR7) clear. On this silicon the debug pause bits behave INVERTED
+vs STM32F4 (a SET bit keeps the timer running through a core halt, a CLEAR
+bit pauses it) - consistent with the saga's own observation that TMR11
+with its pause bit CLEARED kept pausing on halts. The fork's microsecond
+timer init sets TIM5's bit (intending "freeze on halt"), so NT runs
+through halts - which is why NT time stayed coherent all along and "TIM5
+worked perfectly".
+
+Fixes (l9779.cpp):
+- wdaTimerInit() now sets DBGMCU APB1FZ bit 5 (TMR7): the one-shot wraps
+  on wall time, the UIF pends through the halt, and the answer fires as
+  soon as the core resumes - the feed keeps its cadence and the answer
+  phase stays locked to wall time like the chip's RC window.
+- ON-TIME GATE on the delay servo: REQUHI verdicts are applied only when
+  the PREVIOUS cycle fired within +-50% of its armed delay. A stretched
+  cycle's verdict is real but not actionable (the delay was right, the
+  miss was the stretch); the saga's 19:02/23:13 wrong-way delay walks
+  chased exactly such verdicts. Tracked via s_prevFirePeriodNt/
+  s_prevFireDelayMs stashed in the handler before the feed runs.
+- Liveness line gains stretch=N (off-time fires in the last second) and
+  ratio=N% (per/delay) so one pins dump separates halts from a genuine
+  clock problem; the event-ring halt flag uses the same 1.5x threshold.
+
+Validation: compile.sh m74_9 -> BUILD SUCCESSFUL. On the bench expect
+per to snap back to ~27 ms and ratio ~100% between halts; stretch counts
+the halted cycles. The car (no debugger) is unaffected by the halt bit;
+its behavior is determined by the init-proven 288 MHz timer clock.
+
+Correction to earlier notes: the saga's APB2 "does not double / drifts
+144..117 MHz" measurements were made under the same bench-halt pollution
+(the TMR10/TMR11 windows were stretched by halts, and the old code had
+the un-latched ARR bug on top). Re-verify APB2 clocking with a clean
+no-debugger measurement before trusting any absolute APB2 rate.
