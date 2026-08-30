@@ -9201,5 +9201,30 @@ fine and the original brick was the unbounded poll (now neutralized); frozen
 counters = the GPT ISR never fires (timer/vector issue); no console at all =
 the brick is upstream of USB (gptStart/nvicEnableVector in init).
 
+**2026-08-30 (bench): the INSTRUMENTED GPT build ALSO bricked** - no console
+link at all. With the bounded poll the feed cannot spin, so the brick is NOT
+the SPI hang: it is the GPT DRIVER itself (the gptStart/gptStartOneShot path
+in L9779::init / the boot kick). Static re-verification of every layer came
+out clean (vector, RCC bits, TMR10 base, state machine, clock, handler shape
+- all identical in kind to the PROVEN fast-ADC GPTD6 and the TIM5/TIM8
+handlers), so the defect is a runtime property of the GPT driver API on this
+port (the fork's chSysLock __dbg_check_lock HALTS when the kernel is already
+locked - gptStart takes the non-reentrant lock, unlike the reentrant
+scheduler.schedule the executor feed used).
+
+**FIX (2026-08-30): the feed now drives TMR10 DIRECTLY, no GPT driver.**
+wdaTimerInit/wdaTimerArm/wdaTimerStop are plain register writes (PSC=287 ->
+1 MHz, ARR=interval-1, OPM one-cycle mode, UIF/UIE update event) cloned from
+the PROVEN angle-clock (TMR2) pattern: no locks, no asserts, no state
+machine. The bare VectorA4 handler clears UIF, disarms and dispatches the
+feed; the feed re-arms via wdaTimerArm (plain registers, ISR-safe). The
+boot kick (thread) and chip_power_off's stop are plain register writes, so
+the wd_running flag + ISR-vs-thread ordering is the only concurrency
+mechanism - verified: the feed fizzles without re-arming when wd_running is
+false, and a thread-side arm cannot be preempted into a half-armed state
+(SR=0 is written before DIER|UIE, so a preempting ISR sees no UIF). mcuconf
+STM32_GPT_USE_TIM10 is back to FALSE - the GPT LLD is no longer involved.
+The bounded SPI poll, the !spi_configured fizzle and the prints stay.
+
 Open: the feed's own dispatch is no longer telemetry-recorded (no lockstats
 line) - only the chip-side counters (ok/miss/kills/defer) remain observable.
