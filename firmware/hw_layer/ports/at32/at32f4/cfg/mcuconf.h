@@ -226,10 +226,6 @@
 #define STM32_GPT_USE_TIM7                  FALSE
 #define STM32_GPT_USE_TIM8                  FALSE
 #define STM32_GPT_USE_TIM9                  FALSE
-/* TMR10 is driven DIRECTLY by l9779.cpp (wdaTimerInit/wdaTimerArm, register
- * level - NOT via the GPT driver; the GPT-driver build bricked the bench
- * ECU at boot). The vector is shared with TIM1_UP and the handler lives in
- * l9779.cpp. */
 #define STM32_GPT_USE_TIM10                 FALSE
 #define STM32_GPT_USE_TIM11                 FALSE
 #define STM32_GPT_USE_TIM12                 FALSE

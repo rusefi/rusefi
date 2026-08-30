@@ -9277,3 +9277,41 @@ Verify against the Artery RM before fixing the fork header; APB1
 
 Open: the feed's own dispatch is no longer telemetry-recorded (no lockstats
 line) - only the chip-side counters (ok/miss/kills/defer) remain observable.
+
+## 2026-08-30 (final) - WDA feed: TMR10 detour ABANDONED, reverted to the TIM5 executor
+
+The whole one-shot-TMR10 saga (GPT driver -> direct register driver ->
+PSC clock corrections -> CONFIG6 bit flips -> delay re-tunes) is REVERTED
+per the user's decision ("с таймерами было все в порядке" - the timers
+were fine). The WDA feed is back on the TIM5 executor exactly as the
+car-drove build (b8d85a87604): l9779.cpp, the at32 mcuconf and
+interrupt_priority.h are restored byte-for-byte from that commit.
+
+Why the original motivation no longer requires the move: the angle clock
+(TMR2, landed 2026-08-29) fires spark/dwell/injection one tooth ahead
+(2-tooth lead ~333 us at 6000 rpm), so the feed's ~100 us preemption of
+the trigger handoff every ~28 ms is absorbed by the lead and does not
+affect command timing. The priority question is thus answered by the
+angle clock, not by moving the feed.
+
+What the detour cost and what it proved:
+- The GPT-driver build bricked the bench ECU twice (the fork's
+  chSysLock/__dbg_check_lock halts when the kernel is already locked;
+  gptStart takes the non-reentrant lock). Static verification of every
+  layer (vector, RCC bits, TMR10 base, state machine, clock, handler)
+  came out clean - the defect is runtime-only.
+- The direct register driver ran, but the chip's WDA window could not be
+  matched to any datasheet model: the verdicts oscillated EARLY/LATE at
+  every delay value, every re-tune made it worse (addr_err storms of
+  ~19k, miss=5822, wrong=2894), and the fire-to-fire period wandered
+  45-59 ms against armed 44 ms. The window behaves free-running and
+  phase-sensitive; the [17, 27] ms delay constants are what the CAR ran
+  with, and the car-validated build is the executor one.
+- Kept learnings: DWT CYCCNT is NOT enabled on the AT32 port
+  (baseMCUInit only zeroes it); the fork's STM32_TIMCLK2 (288 MHz for
+  APB2 timers) is unresolved against the measured 144 MHz TMR10 behavior
+  - do not trust either without a scope; CONFIG6 bit1 did not change the
+  WDA time base (0x06 and 0x04 identical).
+
+Open: the handoff-decode tails (~1 ms) remain the real scheduling item -
+trgDecode/trgPostDecode localization, as before.

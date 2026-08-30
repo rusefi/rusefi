@@ -53,39 +53,35 @@
  * fault bits on the chip, so a faster poll would mask latched faults. */
 #define DIAG_REFRESH_MS				(100)
 /* Registers refreshed per driver-thread pass. The refresh is split into
- * short chunks so the WDA feed is deferred for at most a
+ * short chunks so the executor's WDA exchange is deferred for at most a
  * few frames (see spi_busy). */
 #define DIAG_REFRESH_REGS			(3)
 
 /* WDA response-time shortening (datasheet 6.15.2). With the default
- * RESPTIME (0x3f) the response time is (1+101*63)/f_clk and the answer
- * window sits at the cycle start + response time. That whole timing runs on
- * the chip's INTERNAL oscillator CLK1 with a +-5% accuracy, which drifts
- * with temperature and supply - so a fixed feed period can miss when the
- * oscillator drifts (measured 2026-08-24: the window center moved from
- * ~115 ms to >120 ms between two boots). Each miss fires a WDA kill pulse
- * (EC>4).
+ * RESPTIME (0x3f) the response time is (1+101*63)/64kHz = 99.4 ms and the
+ * answer window sits ~99..112 ms after each cycle start. That whole timing
+ * runs on the chip's INTERNAL oscillator CLK1 with a +-5% accuracy, which
+ * drifts with temperature and supply: +-5% of ~100 ms is +-5 ms - half the
+ * 12.6 ms window - so a fixed feed period can miss when the oscillator
+ * drifts (measured: the window center moved from ~115 ms to >120 ms between
+ * two boots on 2026-08-24). Each miss fires a WDA kill pulse (EC>4).
  *
- * RESPTIME=10 shortens the response time to (1+101*10)/f_clk. f_clk
- * MEASURED (2026-08-30, bench): the chip runs 39 kHz, NOT the 64 kHz the
- * datasheet default implies - with 64 kHz assumed, the 22 ms feed landed
- * EARLY every cycle (the window opens at 25.9 ms, closes at 46.6 ms). The
- * CONFIG6 bit1 value made no observable difference (0x06 and 0x04 both run
- * 39 kHz), so the feed is tuned to the MEASURED 39 kHz base:
- * response = 1011/39kHz = 25.9 ms, window = 8*101/39kHz = 20.7 ms,
- * cycle = 46.6 ms, window center = 36.3 ms. The +-5% CLK1 drift moves the
- * window by +-2.3 ms; the [28, 44] clamp keeps the feed inside it.
- * Directly evidenced by the 2x-slow-timer build: its 43.8 ms period was
- * accepted cleanly for minutes (43.8 ms sits inside [25.9, 46.6]). */
+ * RESPTIME=10 shortens the response time to (1+101*10)/64kHz = 15.8 ms
+ * (cycle = 15.8 + 12.6 = 28.4 ms): the same +-5% drift now moves the
+ * window by only +-0.8 ms, so a centered feed essentially cannot miss, and
+ * any transient recovers ~5x faster. Cost: the feed runs ~45x/s (well under
+ * 1% executor), and the one-time RESPTIME write costs one EC increment
+ * (EC 6->7, the outputs enable ~3 cycles later - before the fuel pump
+ * primes). */
 #define WDA_RESPTIME				(10)
-/* BYTE0-to-BYTE0 answer period: window center = 25.9 + 20.7/2 = 36.3 ms. */
-#define WDA_DELAY_INIT_MS			(36)
+/* BYTE0-to-BYTE0 answer period: window center = 15.8 + 12.6/2 = 22.1 ms. */
+#define WDA_DELAY_INIT_MS			(22)
 /* The answer period must stay inside [response_time, response_time+window].
- * With CLK1 +-5% the window is always within [28.2, 44.3] ms; clamp with a
+ * With CLK1 +-5% the window is always within [16.6, 27.0] ms; clamp with a
  * little margin. */
-#define WDA_DELAY_MIN_MS			(28)
-#define WDA_DELAY_MAX_MS			(44)
-/* Duration of the feed callback from dispatch to the END of its
+#define WDA_DELAY_MIN_MS			(17)
+#define WDA_DELAY_MAX_MS			(27)
+/* Duration of the executor callback from dispatch to the END of its
  * RESP_BYTE0 write (3 pipelined reads + 4 answer frames, ~7 x 10 us). The
  * next callback is scheduled this much short of the full answer period so
  * the BYTE0 lands at the window center; the exact value is irrelevant
@@ -109,24 +105,20 @@
  *       RST (CRK_RST) - safety, keep it
  *   [2] VDD5_UV WDA mask = 1: a VDD5 undervoltage does NOT pull WDA low -
  *       avoids blade kills on cranking rail dips (the stock's choice)
- *   [1] WDA time base - UNRESOLVED (2026-08-30): the datasheet maps this
- *       bit to f_clk 64/39 kHz, but BOTH values behaved identically on the
- *       bench (the chip ran 39 kHz with 0x06 AND with 0x04 - the window
- *       opens at ~25.9 ms, measured via the EARLY flags at 22 ms and the
- *       clean acceptance at 26.9 ms and at 43.8 ms). Keep 0 (the datasheet
- *       reset default); the feed is tuned to the MEASURED 39 kHz base
- *       (WDA_DELAY_*), so the bit is immaterial either way.
+ *   [1] WDA time base = 1 (64 kHz) - REQUIRED: RESPTIME=10 and the 22 ms
+ *       feed are tuned for the 15.8 ms response time. At 39 kHz the window
+ *       moves to [25.9, 38.5] ms and the clamped 27 ms feed misses.
  *   [0] PWL/SEO timeout priority = 0 (default)
- * 0x04 differs from the stock's steady state 0x06 ONLY in bit1 - and the
- * bit made no observable difference, so both run the same 39 kHz base; the
- * stock's own feed matches it. Applied ONCE, never stepped. */
-#define L9779_CONFIG6_PWR			(0x04)
+ * 0x06 is exactly the stock's steady-state value (the stock steps this
+ * register 0x07 -> 0x05 -> 0x06 during its config script - but for rusEFI
+ * the time base must never flip; it is applied ONCE and never stepped). */
+#define L9779_CONFIG6_PWR			(0x06)
 /* CONFIG_REG6 with PSOFF (bit 4) set: power stages off, chip logic +
  * regulators + SPI + WDA monitoring + KEY_ON input all stay alive. Written
  * by the ignition gate on key-off; the MCU keeps running and isIgnVoltage()
  * keeps seeing the key via DIA_REG9. The next ignition-on re-init (SW_RST
  * via need_init) wipes it and reapplies L9779_CONFIG6_PWR. */
-#define L9779_CONFIG6_PSOFF			(0x14)
+#define L9779_CONFIG6_PSOFF			(0x16)
 
 /* DIA_REG10 (datasheet 6.14) bits, verified against the register layout:
  * [7] TNL_RST, [6] F1, [5] CRK_RST, [4] F2, [3] VDD5_OV, [2] V3V3_UV,
@@ -325,14 +317,9 @@ struct L9779 : public GpioChip {
 	int chip_heal_out_dis(bool configWiped);
 	int chip_power_off();
 	int vrs_configure();
-	/* ISR-safe polled SPI (ISR context, no bus mutex) */
+	/* ISR-safe polled SPI (executor context, no bus mutex) */
 	int spi_frame_isr(uint16_t tx, uint16_t *rx_ptr);
 	void wdFeedFromExecutor();
-	/* Re-arm the one-shot WDA GPT: delayMs in milliseconds from NOW (the
-	 * end of the current burst), shortened by the burst lead so RESP_BYTE0
-	 * lands delayMs after the previous BYTE0. I-class (ISR context) - the
-	 * boot kick uses wdArmThread() instead. */
-	void wdArmIsr(int delayMs);
 	void debug() override;
 
 	brain_pin_diag_e getOutputDiag(size_t pin);
@@ -372,26 +359,23 @@ struct L9779 : public GpioChip {
 	uint8_t						wd_last_ec;		/* error counter as reported by the chip */
 	bool						wd_int;			/* WDA_INT flag (EC > 4) */
 	int							wd_delay_ms;	/* response delay, aimed at window center */
-	/* The WDA feed runs in ISR context (a one-shot GPT, TIM10) BELOW the
-	 * trigger handoff: the answer must land inside the chip's ~12.6 ms
-	 * window, and a thread wakeup can be delayed past that by trigger-decode
-	 * ISR load at cranking (the observed wd_timing_miss/EC>4 kills). An ISR
-	 * at any priority above the threads stays on time whenever the CPU
-	 * executes at all; the priority is deliberately BELOW the handoff (4)
-	 * so the ~100 us burst never preempts the decode - the window is ~12.6 ms
-	 * wide, so even a 1 ms handoff tail landing on the burst cannot push
-	 * RESP_BYTE0 out of it.
+	/* The WDA feed runs on the TIM5 executor (ISR context): the answer must
+	 * land inside the chip's ~12.6 ms window, and a thread wakeup can be
+	 * delayed past that by trigger-decode ISR load at cranking (the observed
+	 * wd_timing_miss/EC>4 kills). The executor (priority 3) preempts the
+	 * trigger handoff, so the feed stays on time whenever the CPU executes
+	 * at all.
 	 *
-	 * ONE burst per monitoring cycle: pipelined status/question reads
-	 * (REQUHI/REQULO), answer-period adaptation, then the whole 4-byte
-	 * response (RESP_BYTE3..0) as a single atomic burst positioned so
+	 * ONE executor event per monitoring cycle: pipelined status/question
+	 * reads (REQUHI/REQULO), answer-period adaptation, then the whole
+	 * 4-byte response (RESP_BYTE3..0) as a single atomic burst positioned so
 	 * RESP_BYTE0's END lands at the window center. The burst must NOT be
 	 * split: the chip tracks the response progress in RESP_CNT and compares
 	 * every byte against the expected one for the CURRENT position - a byte
 	 * landing one position late (the old two-phase prepare/BYTE0 scheme)
 	 * desynchronizes the stream permanently and pins EC at 7. The driver
 	 * thread only kicks the first cycle after chip_init. */
-	efitick_t					wd_next_moment;	/* next burst dispatch, for the thread's burst-imminent check */
+	scheduling_s				wd_sched;
 	bool						wd_running;
 	int						wd_ok_cnt;		/* cycles answered correctly */
 	int						wd_fail_cnt;	/* cycles missed (SPI-level failures) */
@@ -400,7 +384,6 @@ struct L9779 : public GpioChip {
 	int						wd_cnt_bad;		/* RESP_CNT != 11 at read time - the answer stream desynced */
 	uint8_t					wd_last_requhi;	/* raw REQUHI byte of the last cycle */
 	int						wd_defer_cnt;	/* feeds deferred by the spi_busy flag */
-	int						wd_poll_timeouts; /* polled-SPI frames that hit the RXNE watchdog (diagnostic) */
 	int						wd_kill_cnt;	/* WDA_INT rising edges (watchdog kill pulses) */
 	int						wd_last_miss_dir;	/* last REQUHI miss: 1=early 2=late */
 	bool						wd_prev_int;
@@ -417,7 +400,7 @@ struct L9779 : public GpioChip {
 	bool						dia_valid[8];
 	sysinterval_t				diag_ts;	/* when to refresh the cache next */
 	/* The refresh is chunked (a few registers per thread pass): each pass
-	 * sets spi_busy around its frames and the WDA feed defers
+	 * sets spi_busy around its frames and the executor's WDA exchange defers
 	 * while it runs. diag_next_reg is the cursor, diag_pending the
 	 * registers left in the current 100 ms refresh cycle. */
 	int							diag_next_reg;
@@ -446,16 +429,15 @@ struct L9779 : public GpioChip {
 	volatile bool				power_stage_on = true;
 	bool						power_stage_applied = true;
 
-	/* Feed/thread SPI serialization. The WDA feed runs in the TIM10 GPT ISR -
-	 * ISR context can preempt the driver thread mid-batch, so spi_busy is set
-	 * for the whole thread-side batch (spi_rw/spi_rw_array); the feed checks
-	 * it and defers. This matters because spiStart() briefly clears SPE
-	 * (spi_lld_start re-programs CR1), and spi_lld_polled_exchange()
-	 * busy-waits on RXNE - with the peripheral disabled it spins forever
-	 * inside the ISR and the board bricks right after boot (no fuel pump, no
-	 * console). The flag write is a single atomic store; the feed cannot
-	 * start mid-batch because the thread only resumes after the feed ISR
-	 * completes. */
+	/* Executor/thread SPI serialization. The WDA feed runs in the TIM5 ISR at
+	 * kernel priority - chSysLock/CriticalSectionLocker do NOT mask kernel
+	 * IRQs, so a critical section does not stop the executor from preempting
+	 * the driver thread mid-batch. spi_busy is set for the whole thread-side
+	 * batch (spi_rw/spi_rw_array); the executor feed checks it and defers.
+	 * This matters because spiStart() briefly clears SPE (spi_lld_start
+	 * re-programs CR1), and spi_lld_polled_exchange() busy-waits on RXNE -
+	 * with the peripheral disabled it spins forever inside the kernel ISR and
+	 * the board bricks right after boot (no fuel pump, no console). */
 	volatile bool				spi_busy;
 	/* CR1/CR2 persist from the first spiStart; re-running it on every batch
 	 * only re-opens the SPE=0 window, so spi_rw/spi_rw_array call it once. */
@@ -512,7 +494,7 @@ static L9779 chips[BOARD_L9779_COUNT];
 bool l9779_getWdaCounters(uint8_t *ec, bool *wda_int, int *ok, int *fail, int *timing_miss, uint8_t *dia10,
 		int *delay_ms, int *defer_cnt, int *kill_cnt, uint8_t *requhi, int *wrong_cnt, int *cnt_bad)
 {
-	/* WDA counters are written by the feed ISR; the reads below
+	/* WDA counters are written by the executor feed (ISR); the reads below
 	 * are single-word atomic accesses, safe from other threads. */
 	L9779 *chip = &chips[0];
 	if (ec)
@@ -722,8 +704,8 @@ int L9779::spi_rw(uint16_t tx, uint16_t *rx_ptr)
 	/* set parity */
 	tx = l9779PrepareSpiWord(tx);
 
-	/* WDA-feed exclusion (see the spi_busy comment in the struct): the WDA
-	 * feed defers while any thread-side batch is in flight, so the feed
+	/* Executor exclusion (see the spi_busy comment in the struct): the WDA
+	 * feed defers while any thread-side batch is in flight, so the executor
 	 * can never land in spiStart()'s SPE=0 window. */
 	spi_busy = true;
 
@@ -732,7 +714,7 @@ int L9779::spi_rw(uint16_t tx, uint16_t *rx_ptr)
 	/* Setup transfer parameters - first call only: the config never changes
 	 * and the bus is dedicated to this chip. Re-running spiStart() on every
 	 * batch re-executes spi_lld_start(), which clears SPE before re-enabling
-	 * it - a window in which spi_lld_polled_exchange() (used by the WDA
+	 * it - a window in which spi_lld_polled_exchange() (used by the executor
 	 * feed) spins on RXNE forever. */
 	if (!spi_configured) {
 		spiStart(spi, &cfg->spi_config);
@@ -786,7 +768,7 @@ int L9779::spi_rw_array(const uint16_t *tx, uint16_t *rx, int n)
 		return -2;
 	}
 
-	/* WDA-feed exclusion, same as spi_rw(). */
+	/* Executor exclusion, same as spi_rw(). */
 	spi_busy = true;
 
 	/* Acquire ownership of the bus. */
@@ -865,9 +847,9 @@ int L9779::read_diag_reg(uint8_t sub, uint16_t *out)
 /* Refresh up to maxRegs registers of the cached power-stage diagnosis
  * (DIA_REG1..8 + REG9 + REG10), advancing the diag_next_reg cursor.
  * Returns how many registers were processed. Must only be called from the
-	 * driver thread: the reads are pipelined through the same
-	 * rd_pending/rx_subaddr state as the WDA traffic, and spi_busy (set by
-	 * spi_rw) keeps the WDA feed out of the batch. A failed
+ * driver thread: the reads are pipelined through the same
+ * rd_pending/rx_subaddr state as the WDA traffic, and spi_busy (set by
+ * spi_rw) keeps the executor's WDA exchange out of the batch. A failed
  * read leaves the previous cache value in place. */
 int L9779::refresh_diag_cache(int maxRegs)
 {
@@ -1077,99 +1059,10 @@ int L9779::chip_reset() {
 /* Driver thread.															*/
 /*==========================================================================*/
 
-/* The WDA feed runs in the TIM10 GPT ISR, see the wd_running/wd_next_moment
- * comment in the struct. Single chip instance on this board. */
-static L9779 *s_wda_chip;
-
-/* Direct register access to TMR10, NOT the ChibiOS GPT driver: the GPT
- * build bricked the bench ECU at boot (flash verified, then no console link)
- * and the driver API adds nothing here - a one-shot update event needs no
- * state machine, no kernel locks and no asserts. The pattern is the proven
- * angle clock (TMR2) one: plain register writes, a bare VectorA4 handler,
- * nvicEnableVector at init.
- *
- * CLOCK (measured on the bench, 2026-08-30): TMR10 ticks on PCLK2 = 144 MHz,
- * NOT the 288 MHz the fork's STM32_TIMCLK2 (PCLK2 * 2) assumes - with PSC
- * 287 the armed 21.92 ms one-shot fired at 43.8 ms and every answer landed
- * outside the chip's ~28.4 ms window (miss=3882, delay walked down on
- * NO_RESP). PSC = 143 -> 1 tick = 1 us; the 16-bit ARR caps the delay at
- * 65.535 ms - the WDA delays (1..44 ms) fit. APB1 timers are NOT affected
- * (TIM5/TMR2/TMR6 run 288 MHz - the NT 4 MHz clock is validated by tooth
- * physics). OPM (one-cycle mode) stops the counter at the update event, so
- * a fired one-shot cannot wrap and re-fire. */
-#define WDA_TIMER			TIM10
-#define WDA_TIMER_PSC		(143)
-
-static void wdaTimerInit() {
-	rccEnableTIM10(false);
-
-	WDA_TIMER->PSC = WDA_TIMER_PSC;
-	WDA_TIMER->ARR = 0xFFFF;
-	WDA_TIMER->CR1 = 0;				/* stopped */
-	WDA_TIMER->DIER = 0;
-	WDA_TIMER->EGR = STM32_TIM_EGR_UG;	/* latch PSC/ARR (also sets UIF) */
-	WDA_TIMER->SR = 0;				/* clear the UG-generated UIF */
-
-	nvicEnableVector(STM32_TIM1_UP_TIM10_NUMBER, EFI_IRQ_L9779_WDA_PRIORITY);
-}
-
-/* Arm the one-shot: intervalUs microseconds from now. Plain register writes -
- * no locks, no asserts - callable from the thread (boot kick) and the ISR
- * (self re-arm). */
-static void wdaTimerArm(uint32_t intervalUs) {
-	WDA_TIMER->CR1 = 0;				/* stop any run */
-	WDA_TIMER->CNT = 0;
-	WDA_TIMER->ARR = intervalUs - 1U;
-	WDA_TIMER->SR = 0;				/* clear a stale UIF */
-	WDA_TIMER->DIER = STM32_TIM_DIER_UIE;
-	WDA_TIMER->CR1 = STM32_TIM_CR1_OPM | STM32_TIM_CR1_CEN;
-}
-
-static void wdaTimerStop() {
-	WDA_TIMER->CR1 = 0;
-	WDA_TIMER->DIER = 0;
-	WDA_TIMER->SR = 0;
-}
-
-/* Fire-to-fire period measured in NT ticks (4 MHz, the validated TIM5
- * domain): the liveness print shows it so the TMR10 clock rate is visible
- * directly on the console. */
-static efitick_t s_lastFireNt;
-static efitick_t s_firePeriodNt;
-
-/* TIM10's vector is shared with TIM1_UP; TIM1 is unused on m74_9, so this
- * handler owns the vector outright. */
-CH_IRQ_HANDLER(STM32_TIM1_UP_TIM10_HANDLER) {
-	OSAL_IRQ_PROLOGUE();
-
-	if (WDA_TIMER->SR & STM32_TIM_SR_UIF) {
-		/* One-cycle mode stopped the counter at the update event; disarm
-		 * and dispatch. The feed re-arms at its end. */
-		WDA_TIMER->SR = ~STM32_TIM_SR_UIF;
-		WDA_TIMER->CR1 = 0;
-		WDA_TIMER->DIER = 0;
-		efitick_t nowNt = getTimeNowNt();
-		if (s_lastFireNt != 0) {
-			s_firePeriodNt = nowNt - s_lastFireNt;
-		}
-		s_lastFireNt = nowNt;
-		if (s_wda_chip) {
-			s_wda_chip->wdFeedFromExecutor();
-		}
-	}
-
-	OSAL_IRQ_EPILOGUE();
-}
-
-void L9779::wdArmIsr(int delayMs) {
-	wd_next_moment = getTimeNowNt() + MS2NT(delayMs) - US2NT(WDA_BURST_LEAD_US);
-	wdaTimerArm(MS2US(delayMs) - WDA_BURST_LEAD_US);
-}
-
-/* Thread-context arm (boot kick). */
-static void wdArmThread(L9779 *chip, int delayMs) {
-	chip->wd_next_moment = getTimeNowNt() + MS2NT(delayMs) - US2NT(WDA_BURST_LEAD_US);
-	wdaTimerArm(MS2US(delayMs) - WDA_BURST_LEAD_US);
+/* Executor trampoline: the WDA feed runs in the TIM5 ISR, see the
+ * wd_running/wd_sched comment in the struct. */
+static void l9779WdaFeedExec(L9779 *chip) {
+	chip->wdFeedFromExecutor();
 }
 
 static THD_FUNCTION(l9779_driver_thread, p) {
@@ -1227,37 +1120,24 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 				 * (EC=7, outputs forced off) does NOT recover on correct answers
 				 * (observed 16:31 - no fuel pump until power cycle). SW_RST
 				 * re-arms the watchdog (EC=6) and the re-init below restores
-				 * START/VRS/OUT. The WDA feed (ISR) is kept out of the
-				 * batch by spi_busy, no CS locker is needed for that. */
+				 * START/VRS/OUT. The executor's WDA exchange is kept out of the
+				 * batch by spi_busy (kernel IRQs are NOT masked by critical
+				 * sections), no CS locker is needed for that. */
 				chip->chip_reset();
 				chip->chip_init();
 				/* sync pins state */
 				chip->update_output();
 			}
 
-		/* Kick the WDA feed once after the chip is up. The first
-			 * burst lands its RESP_BYTE0 at the RESPTIME anchor + ~26 ms, i.e.
-			 * just inside the first answer window ([25.9, 46.6] ms after the
-			 * RESPTIME write at the measured 39 kHz base); the events
-			 * self-reschedule from then on. */
+			/* Kick the executor-side WDA feed once after the chip is up. The first
+			 * burst lands its RESP_BYTE0 at the RESPTIME anchor + ~17 ms, i.e.
+			 * inside the first answer window ([15.8, 28.4] ms after the RESPTIME
+			 * write); the events self-reschedule from then on. */
 			if (!chip->wd_running) {
 				chip->wd_running = true;
-				efiPrintf("l9779 wda: GPT kick +26 ms (CR1=0x%08lx)", (unsigned long)WDA_TIMER->CR1);
-				wdArmThread(chip, 26);
-				efiPrintf("l9779 wda: GPT armed (CR1=0x%08lx DIER=0x%08lx)", (unsigned long)WDA_TIMER->CR1, (unsigned long)WDA_TIMER->DIER);
-			}
-
-			/* WDA feed liveness monitor (diagnostic, 1 Hz): ok/fail/defer/poll-timeout
-			 * counters climb only when the GPT ISR actually fires, so a silent
-			 * wedged feed shows up as frozen counters on the console. */
-			static systime_t last_wda_print = 0;
-			if (chip->wd_running && (now - last_wda_print >= TIME_MS2I(1000))) {
-				last_wda_print = now;
-			efiPrintf("l9779 wda: ok=%d fail=%d defer=%d pollto=%d delay=%d per=%dus CR1=0x%lx DIER=0x%lx",
-					chip->wd_ok_cnt, chip->wd_fail_cnt, chip->wd_defer_cnt,
-					chip->wd_poll_timeouts, chip->wd_delay_ms,
-					(int)(s_firePeriodNt / US_TO_NT_MULTIPLIER),
-					(unsigned long)WDA_TIMER->CR1, (unsigned long)WDA_TIMER->DIER);
+				engine->scheduler.schedule("l9779wda", &chip->wd_sched,
+					getTimeNowNt() + MS2NT(17),
+					action_s::make<l9779WdaFeedExec, L9779*>(chip));
 			}
 
 			/* send the output registers only when the pin state changed: with the
@@ -1280,22 +1160,22 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 		 * clears its fault bits on the chip, so this runs at a low rate;
 		 * getOutputDiag() reads the cache from other threads. The refresh
 		 * is CHUNKED (DIAG_REFRESH_REGS per pass): each pass sets spi_busy
-		 * around its frames, and the WDA feed must not be
+		 * around its frames, and the executor's WDA exchange must not be
 		 * deferred for the whole ~20-frame batch. */
 		if (chip->diag_ts <= now) {
 			chip->diag_pending = 8 + 2;	/* DIA_REG1..8 + REG9 + REG10 */
 			chip->diag_ts = chTimeAddX(chVTGetSystemTimeX(), TIME_MS2I(DIAG_REFRESH_MS));
 		}
 		if (chip->diag_pending > 0) {
-			/* The WDA burst must not be deferred: the feed re-arms +1 ms
-			 * when spi_busy is set, and at delay=27 the window-close margin
-			 * is only ~1.4 ms - a deferred BYTE0 lands late, shifts the answer
-			 * stream and costs EC increments (the 20:28 session:
+			/* The WDA burst must not be deferred: the executor reschedules
+			 * +1 ms when spi_busy is set, and at delay=27 the window-close
+			 * margin is only ~1.4 ms - a deferred BYTE0 lands late, shifts the
+			 * answer stream and costs EC increments (the 20:28 session:
 			 * defer=123 -> late bytes -> cntbad=11 -> kills=8). Skip this
 			 * pass's chunk while the burst is imminent; the refresh is
 			 * 100 ms-cadenced, so a skipped chunk costs ~7 ms. */
 			efitick_t nowNt = getTimeNowNt();
-			efitick_t wdMomentNt = chip->wd_next_moment;
+			efitick_t wdMomentNt = chip->wd_sched.getMomentNt();
 			bool burstImminent = (wdMomentNt != 0) &&
 				(wdMomentNt > nowNt) &&
 				(wdMomentNt < nowNt + MS2NT(2));
@@ -1311,10 +1191,10 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 RUSEFI_STACK_ROOT_EXPLICIT(l9779_driver_thread, 256);
 
 /* ISR-safe polled single-frame exchange: raw LLD calls only - no bus
- * mutex, no blocking. Callable from the WDA feed ISR (TIM10 GPT, which
- * preempts all threads); the thread side calls it only inside
- * spi_rw/spi_rw_array with spi_busy set. Mirrors spi_rw() minus the
- * acquire/start/release wrapper. */
+ * mutex, no blocking. Callable from the TIM5 executor ISR (which preempts
+ * all threads); the thread side calls it only inside spi_rw/spi_rw_array
+ * with spi_busy set. Mirrors spi_rw() minus the acquire/start/release
+ * wrapper. */
 int L9779::spi_frame_isr(uint16_t tx, uint16_t *rx_ptr)
 {
 	SPIDriver *spi = cfg->spi_bus;
@@ -1327,25 +1207,10 @@ int L9779::spi_frame_isr(uint16_t tx, uint16_t *rx_ptr)
 	spiSelectI(spi);
 	/* meet tlead: CS low to first SCK edge */
 	l9779_delay_us(L9779_TLEAD_DELAY_US);
-	/* data transfer - bounded poll: the LLD's spi_lld_polled_exchange()
-	 * busy-waits on RXNE forever when the peripheral is disabled (SPE=0),
-	 * which inside this ISR bricks the board with no console. Bound the
-	 * wait (1 ms of NT ticks) and fail the frame instead, so a wedged SPI
-	 * degrades to WDA misses (visible on the console) rather than a lockup.
-	 * NT-based on purpose: the AT32 port never enables DWT CYCCNT. */
-	efitick_t t0 = getTimeNowNt();
-	spi->spi->DR = tx;
-	while ((spi->spi->SR & SPI_SR_RXNE) == 0) {
-		if (getTimeNowNt() - t0 > US2NT(1000)) {
-			wd_poll_timeouts++;
-			spiUnselectI(spi);
-			return -3;
-		}
-	}
-	rx = spi->spi->DR;
-	/* DWT CYCCNT is disabled on the AT32 port - the per-frame cycle stat
-	 * is meaningless here (kept zero). */
-	recent_frame_cycles = 0;
+	/* data transfer */
+	uint32_t cyc0 = DWT->CYCCNT;
+	rx = spi_lld_polled_exchange(spi, tx);
+	recent_frame_cycles = DWT->CYCCNT - cyc0;
 	/* Slave Select de-assertion. */
 	spiUnselectI(spi);
 	/* meet tcsn: CS high between frames */
@@ -1372,7 +1237,7 @@ int L9779::spi_frame_isr(uint16_t tx, uint16_t *rx_ptr)
 }
 
 /* ISR-context VDA 2.0 level 3 query-answer watchdog feed (datasheet 6.15),
- * ONE GPT callback per monitoring cycle:
+ * ONE executor event per monitoring cycle:
  *
  *  - pipelined reads of REQUHI/REQULO (previous answer verdict + current
  *    question; the DO replies arrive 1-2 frames later, so a filler REQUHI
@@ -1406,33 +1271,25 @@ int L9779::spi_frame_isr(uint16_t tx, uint16_t *rx_ptr)
  * burst writes follow immediately after. */
 void L9779::wdFeedFromExecutor()
 {
-	/* Ignition gate: the driver thread clears wd_running (and stops the GPT)
-	 * when the power stages are PSOFF'd. If the GPT had already fired this
-	 * callback, fizzle out WITHOUT touching the bus or re-arming - a plain
-	 * stop is racy because the feed re-arms itself at its end (a concurrent
-	 * GPT run would resurrect the feed after the stop). */
+	/* Ignition gate: the driver thread clears wd_running (and cancels this
+	 * event) when the power stages are PSOFF'd. If the executor had already
+	 * dispatched this callback, fizzle out WITHOUT touching the bus or
+	 * rescheduling - a plain cancel() is racy because the feed reschedules
+	 * itself at its end (a concurrent executor run would resurrect the feed
+	 * after the cancel). */
 	if (!wd_running) {
-		return;
-	}
-
-	/* Never run before the driver thread's first spiStart(): with the
-	 * peripheral disabled the polled exchange would spin (the bounded poll
-	 * above turns it into a miss, but the SPI never works before the first
-	 * chip_init anyway). Defense in depth, not expected to fire: the boot
-	 * kick is issued after chip_init() in the driver thread. */
-	if (!spi_configured) {
-		wd_defer_cnt++;
-		wdArmIsr(10);
 		return;
 	}
 
 	/* Never run while the thread owns an SPI batch: spiStart() briefly clears
 	 * SPE, and spi_lld_polled_exchange() then spins on RXNE forever inside this
-	 * ISR (board bricked right after boot - no fuel pump, no console).
-	 * Deferring a whole cycle costs one miss at worst. */
+	 * kernel-priority ISR (board bricked right after boot - no fuel pump, no
+	 * console). Deferring a whole cycle costs one miss at worst. */
 	if (spi_busy) {
 		wd_defer_cnt++;
-		wdArmIsr(1);
+		engine->scheduler.schedule("l9779wda", &wd_sched,
+			getTimeNowNt() + MS2NT(1),
+			action_s::make<l9779WdaFeedExec, L9779*>(this));
 		return;
 	}
 
@@ -1484,7 +1341,9 @@ void L9779::wdFeedFromExecutor()
 		/* SPI-level failure: retry soon. No bytes were written, the cycle
 		 * expires unanswered (one miss) and the next burst re-aligns. */
 		wd_fail_cnt++;
-		wdArmIsr(10);
+		engine->scheduler.schedule("l9779wda", &wd_sched,
+			getTimeNowNt() + MS2NT(10),
+			action_s::make<l9779WdaFeedExec, L9779*>(this));
 		return;
 	}
 
@@ -1562,7 +1421,9 @@ void L9779::wdFeedFromExecutor()
 	if ((requhi & 0xc0) != 0xc0) {
 		wd_cnt_bad++;
 		wd_delay_ms = WDA_DELAY_INIT_MS;
-		wdArmIsr(wd_delay_ms);
+		engine->scheduler.schedule("l9779wda", &wd_sched,
+			getTimeNowNt() + MS2NT(wd_delay_ms) - US2NT(WDA_BURST_LEAD_US),
+			action_s::make<l9779WdaFeedExec, L9779*>(this));
 		return;
 	}
 
@@ -1601,7 +1462,9 @@ void L9779::wdFeedFromExecutor()
 	/* Anchor the next burst on the BYTE0 write end (now): the callback's
 	 * BYTE0 lands ~WDA_BURST_LEAD_US after its dispatch, so schedule the
 	 * next dispatch a burst-lead short of the full period. */
-	wdArmIsr(wd_delay_ms);
+	engine->scheduler.schedule("l9779wda", &wd_sched,
+		getTimeNowNt() + MS2NT(wd_delay_ms) - US2NT(WDA_BURST_LEAD_US),
+		action_s::make<l9779WdaFeedExec, L9779*>(this));
 }
 
 /*==========================================================================*/
@@ -1885,9 +1748,8 @@ int L9779::chip_init()
 
 	/* Power management + WDA time base (see L9779_CONFIG6_PWR). MUST be
 	 * written before the RESPTIME anchor below: the response time is scaled
-	 * by f_clk (measured 39 kHz on this silicon), and the RESPTIME write
-	 * starts a fresh sequencer run on whatever time base is active at that
-	 * moment. */
+	 * by f_clk (64 kHz with bit1=1), and the RESPTIME write starts a fresh
+	 * sequencer run on whatever time base is active at that moment. */
 	ret = spi_rw(MSG_W(0x06, L9779_CONFIG6_PWR), NULL);
 	if (ret)
 		return ret;
@@ -1936,10 +1798,10 @@ int L9779::chip_init()
 
 /* Ignition-gated power-stage OFF (driver thread context, called on the
  * key-off edge by the thread's power_stage_on transition):
- *  - stop the WDA feed FIRST (flag, then stop the GPT): the feed checks
+ *  - stop the executor WDA feed FIRST (flag, then cancel): the feed checks
  *    wd_running at its entry, so a feed already in flight when we get here
- *    fizzles out without re-arming (a plain stop alone is racy - the
- *    feed re-arms itself at its end).
+ *    fizzles out without rescheduling (plain cancel alone is racy - the
+ *    feed self-reschedules at its end).
  *  - write CONFIG_REG6 = 0x16 (PSOFF=1): the power stages die but the chip
  *    logic, regulators, SPI, the WDA monitoring and the KEY_ON input all
  *    stay alive, so the MCU keeps running and isIgnVoltage() keeps seeing
@@ -1953,7 +1815,7 @@ int L9779::chip_power_off()
 	int ret;
 
 	wd_running = false;
-	wdaTimerStop();
+	engine->scheduler.cancel(&wd_sched);
 
 	ret = spi_rw(MSG_W(0x06, L9779_CONFIG6_PSOFF), NULL);
 	if (ret) {
@@ -1967,7 +1829,7 @@ int L9779::chip_power_off()
  * until START, and a chip reset (RST asserted by the smart-reset unit -
  * TNL_RST/OV_RST/CRK_RST) additionally wipes the configuration registers:
  * CONFIG_REG6 back to defaults (power latch off, VDD5_UV WDA unmasked),
- * RESPTIME back to 0x3f (the feed then misses the ~112 ms default
+ * RESPTIME back to 0x3f (the executor feed then misses the ~112 ms default
  * window every cycle), the VRS conditioner back to limited-adaptive +
  * filter OFF (noise storms at speed), the CONTR1..4 output enables cleared.
  *
@@ -2060,20 +1922,13 @@ int L9779::init()
 	/* WDA watchdog: the response time is shortened via RESPTIME=10 (see the
 	 * WDA_RESPTIME comment at the top): response time 15.8 ms, fixed answer
 	 * window 12.6 ms, cycle 28.4 ms. The feed is kicked by the driver thread
-	 * after chip_init and then runs on the TIM10 GPT as a single atomic burst
-	 * per cycle; the period is adapted from REQUHI flags. */
+	 * after chip_init and then runs on the TIM5 executor as a single atomic
+	 * burst per cycle; the period is adapted from REQUHI flags. */
 	wd_delay_ms = WDA_DELAY_INIT_MS;
 	wd_running = false;
-	wd_next_moment = 0;
-	s_wda_chip = this;
-	wdaTimerInit();
-	efiPrintf(DRIVER_NAME " wda: TMR10 init done CR1=0x%08lx DIER=0x%08lx SR=0x%08lx PSC=0x%04lx",
-		(unsigned long)WDA_TIMER->CR1, (unsigned long)WDA_TIMER->DIER,
-		(unsigned long)WDA_TIMER->SR, (unsigned long)WDA_TIMER->PSC);
 	spi_busy = false;
 	spi_configured = false;
 	wd_defer_cnt = 0;
-	wd_poll_timeouts = 0;
 	wd_kill_cnt = 0;
 	wd_wrong_cnt = 0;
 	wd_cnt_bad = 0;
