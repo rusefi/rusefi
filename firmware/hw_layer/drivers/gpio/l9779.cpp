@@ -57,37 +57,36 @@
  * few frames (see spi_busy). */
 #define DIAG_REFRESH_REGS			(3)
 
-/* WDA response timing. The chip runs its DEFAULT response time (RESPTIME
- * 0x3f): response time (1+101*63)/f_clk = 99.4 ms @ 64 kHz, window
- * [99.4, 112] ms. This is the stock's regime (the stock never writes
- * RESPTIME) and the ONLY configuration with a proven healthy lock: the
- * 2026-08-24 16:21:41 measurement (window center ~115 ms, zero misses over
- * 206 answers).
+/* WDA response timing. RESPTIME=10 is written at init for a DETERMINISTIC
+ * short window: response (1+101*10)/f_clk, window [resp, resp+12.6] =
+ * [15.8, 28.4] ms @ 64 kHz or [25.9, 38.5] ms @ 39 kHz. The feed walks the
+ * delay to the window in 1-3 steps and the short cycle recovers fast.
  *
- * RESPTIME SHORTENING IS DEAD (2026-08-30 late night, proven by the event
- * ring): the RESPTIME=10 write lands in the register (readback 0x0A) but
- * the chip's WDA engine KEEPS the default timing - the EC-saturation walk
- * swept the delay across the whole 15..55 ms range and EC never dropped
- * below 7 at ANY delay (ecUp=0/ecDown=0 over 1400 cycles), while
- * reqhi=0xC1 showed the chip flagging our answers as too EARLY even at
- * 55 ms: the window opens AFTER 55 ms, i.e. it is the default ~[99, 112]
- * window, not the 15.8 ms one. The whole 19:02-20:39 saga (ec=7 pinned,
- * silent rejects, the walk oscillating 15<->55) was this.
+ * WHAT THE 21:18 SESSION PROVED (2026-08-30 night, with real loads): the
+ * chip keeps its question UNTIL an answer is accepted (datasheet: the
+ * question repeats until answered correctly) - after the power cycle reset
+ * RESPTIME to 0x3f, the question FROZE at 0x4 for 400+ cycles at delay
+ * 105 (the 39 kHz window at 0x3f sits at [163, 184] ms - 105 is early).
+ * So the question CHANGE is the chip-independent acceptance signal, and
+ * the WDA kill is real: EC > 4 -> WDA_INT -> the L9779 forces OUT1-4/IGN1-4
+ * off AND pulls WDA low -> Q5B -> TLE9201 DIS -> the blade dies. With no
+ * loads the bench never showed it; with the injectors/coils/pump connected
+ * everything went dead. A stuck EC=7 therefore kills the power stage - the
+ * feed MUST land in the window and keep the question advancing.
  *
- * The feed runs one atomic burst per cycle on the TMR10 one-shot
- * (priority 5, BELOW the trigger handoff - see EFI_IRQ_L9779_WDA_PRIORITY)
- * at ~105 ms, and the EC-saturation walk finds the window on any chip
- * (64 kHz or 39 kHz - the walk range covers both). */
-/* BYTE0-to-BYTE0 answer period: ~105 ms = the measured window center
- * (115 ms @ 64 kHz minus a few ms of safety). The EC walk owns the exact
- * position. */
-#define WDA_DELAY_INIT_MS			(105)
-/* The answer period must stay inside [response_time, response_time+window].
- * 64 kHz chip: window [99.4, 112]; 39 kHz chip (CONFIG6 bit1 ignored):
- * [163, 184]. CLK1 +-5% moves both by ~+-5 ms; the walk range covers both
- * with margin. */
-#define WDA_DELAY_MIN_MS			(85)
-#define WDA_DELAY_MAX_MS			(195)
+ * The bench chip's EC decrement is broken (EC pins at 7 even with accepted
+ * answers - its power stage can never recover on the bench); the question
+ * signal works on any chip, so the walk uses it. The feed runs one atomic
+ * burst per cycle on the TMR10 one-shot (priority 5, BELOW the trigger
+ * handoff - see EFI_IRQ_L9779_WDA_PRIORITY). */
+#define WDA_RESPTIME				(10)
+/* BYTE0-to-BYTE0 answer period: 22 ms sits inside the 64 kHz window
+ * [15.8, 28.4]; the walk steps up to ~27 for a 39 kHz chip. */
+#define WDA_DELAY_INIT_MS			(22)
+/* The walk range covers the RESPTIME=10 windows of both chip rates with
+ * CLK1 +-5% drift. */
+#define WDA_DELAY_MIN_MS			(12)
+#define WDA_DELAY_MAX_MS			(55)
 /* Duration of the feed ISR from dispatch to the END of its RESP_BYTE0 write
  * (3 pipelined reads + 4 answer frames, ~7 x 10 us, plus any handoff
  * preemption). The next one-shot is armed this much short of the full
@@ -403,6 +402,8 @@ struct L9779 : public GpioChip {
 	bool					wd_prev_int;
 	int					wd_bad_value_cnt; /* consecutive cycles with W_RESP/RESP_Z0/RESP_ERR - diagnostic only, NO reset action (the burst self-realigns) */
 	bool					wd_prev_cycle_clean; /* the previous burst went out as one clean atomic stream - REQUHI verdicts are only trusted when this is true */
+	int					wd_frozen_cnt;	/* consecutive clean, un-halted cycles with an UNCHANGED question - the rejection signal driving the delay walk */
+	int					wd_walk_dir;	/* current delay-walk direction: +1 up, -1 down (reversed at the clamps) */
 	uint16_t					ident_reg;		/* IDENT_REG readback (0x10 | 0x00) */
 
 	/* Cached power-stage diagnosis, DIA_REG1..8 (datasheet 6.14). Refreshed
@@ -1462,11 +1463,11 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 			}
 
 			/* Kick the TMR10 WDA feed once after the chip is up. The first
-			 * burst lands its RESP_BYTE0 at wd_delay_ms (~105 ms) after the
-			 * chip_init cycle anchor - the chip's own monitoring cycle started
-			 * at the chip reset, so the first window opens ~99 ms after init;
-			 * the one-shot self-reschedules from then on and the EC walk
-			 * trims the exact phase. */
+			 * burst lands its RESP_BYTE0 at wd_delay_ms (~22 ms) after the
+			 * chip_init cycle anchor - the RESPTIME=10 write started a fresh
+			 * cycle, so the first window opens ~15.8 ms after init; the
+			 * one-shot self-reschedules from then on and the question-freeze
+			 * walk trims the exact phase. */
 			if (!chip->wd_running) {
 				chip->wd_running = true;
 				efiPrintf("l9779 wda: TMR10 kick +%d ms (CR1=0x%08lx)", chip->wd_delay_ms, (unsigned long)WDA_TIMER->CR1);
@@ -1831,14 +1832,38 @@ void L9779::wdFeedFromExecutor()
 	if (req_now != wd_last_req)
 		s_wdaReqChg++;
 
-	/* The answer period is FIXED at the proven regime (2026-08-24's
-	 * zero-miss lock): ~105 ms, the default-RESPTIME window center. NO
-	 * delay walk: the EC-saturation walk chased an EC decrement that the
-	 * bench chip never produces (its EC decrement is broken - EC pins at
-	 * 7 while the answers ARE accepted). The acceptance is proven by the
-	 * question-advance rate (reqChg in pins): 44% = the 12.6 ms window /
-	 * 28.4 ms cycle, exactly the in-window hit rate at any delay. The
-	 * delay is therefore irrelevant to acceptance and stays at 105 ms. */
+	/* QUESTION-FREEZE WALK (2026-08-30 night, bench-proven with real loads):
+	 * the chip keeps its question UNTIL an answer is accepted (datasheet:
+	 * repeats until answered correctly) - the 21:18 session froze req=0x4
+	 * for 400+ cycles at delay 105 while the chip rejected every answer
+	 * and the WDA kill took the whole power stage down. The question CHANGE
+	 * is therefore the chip-independent acceptance signal (the bench chip's
+	 * EC decrement is broken and cannot be used). The walk: on clean,
+	 * un-halted cycles with an UNCHANGED question for a while, the answers
+	 * are being rejected -> step the delay in the current direction (up
+	 * from 22 - both RESPTIME=10 windows, [15.8,28.4] @64 kHz and
+	 * [25.9,38.5] @39 kHz, are reached within 1-3 steps); a question change
+	 * = accepted -> hold and reset. Halted cycles are skipped (a halt
+	 * freezes the question too - the wall period on the never-frozen TMR11
+	 * reveals the halt). */
+	bool halted = s_firePeriodRef > (uint32_t)(2 * wd_delay_ms * 250 + 1250);
+	if (!halted && prevClean && req_now == wd_last_req) {
+		if (++wd_frozen_cnt >= 6) {
+			wd_frozen_cnt = 0;
+			wd_delay_ms += wd_walk_dir * 5;
+			if (wd_delay_ms >= WDA_DELAY_MAX_MS) {
+				wd_delay_ms = WDA_DELAY_MAX_MS;
+				wd_walk_dir = -1;
+			} else if (wd_delay_ms <= WDA_DELAY_MIN_MS) {
+				wd_delay_ms = WDA_DELAY_MIN_MS;
+				wd_walk_dir = 1;
+			}
+		}
+	} else {
+		wd_frozen_cnt = 0;
+		if (req_now != wd_last_req)
+			wd_walk_dir = 1;	/* accepted - reset the walk direction */
+	}
 	if (wd_delay_ms < WDA_DELAY_MIN_MS)
 		wd_delay_ms = WDA_DELAY_MIN_MS;
 	if (wd_delay_ms > WDA_DELAY_MAX_MS)
@@ -2266,19 +2291,29 @@ int L9779::chip_init()
 	if (ret)
 		return ret;
 
-	/* Power management + WDA time base (see L9779_CONFIG6_PWR). The WDA
-	 * response time is LEFT AT THE CHIP'S DEFAULT (RESPTIME 0x3f): the
-	 * shortening write lands in the register (readback confirms it) but the
-	 * chip's WDA engine keeps the default ~[99, 112] ms window (proven
-	 * 2026-08-30 - see the WDA response-timing comment at the top). The
-	 * feed runs at ~105 ms, exactly the stock's regime. */
+	/* Power management + WDA time base (see L9779_CONFIG6_PWR). MUST be
+	 * written before the RESPTIME anchor below: the response time is scaled
+	 * by f_clk (64 kHz with bit1=1), and the RESPTIME write starts a fresh
+	 * sequencer run on whatever time base is active at that moment. */
 	ret = spi_rw(MSG_W(0x06, L9779_CONFIG6_PWR), NULL);
 	if (ret)
 		return ret;
 
-	/* Verify the chip's active response time. The chip runs its reset
-	 * default 0x3f - 0x0a here would mean a RESPTIME write from an earlier
-	 * code path stuck (write-only register, survives until reset). */
+	/* Set the WDA response time (CONFIG_REG9, address 0x11) to a short,
+	 * DETERMINISTIC value - the chip's reset default is 0x3f and depends on
+	 * the power-cycle history (the 21:18 session: 0x3f after the power
+	 * cycle, window [163, 184] on the 39 kHz chip - the 105 ms feed was
+	 * early every cycle, the question froze and the WDA killed the power
+	 * stage). The write costs one EC increment (EC 6->7, recovered by the
+	 * first accepted answers) and anchors a fresh cycle ~15.8 ms after this
+	 * write on a 64 kHz chip. */
+	ret = spi_rw(MSG_W(L9779_WD_RESPTIME_REG, WDA_RESPTIME), NULL);
+	if (ret)
+		return ret;
+
+	/* Verify the write landed: DIA_REG13 (sub 0x0d) reads back the active
+	 * response time. 0x0a = applied; 0x3f = default (the write went to the
+	 * wrong address - the 0x07/0x11 trap - and the feed will miss). */
 	uint16_t rptime = 0;
 	if (read_diag_reg(L9779_WD_RESPTIME_SUB, &rptime) == 0) {
 		efiPrintf(DRIVER_NAME " WDA RESPTIME readback = 0x%02x", MSG_GET_DATA(rptime) & 0x3f);
@@ -2361,10 +2396,17 @@ int L9779::chip_heal_out_dis(bool configWiped)
 
 	if (configWiped) {
 		/* A chip reset reverts CONFIG_REG6 (power latch off, VDD5_UV WDA
-		 * unmasked, time base default) - restore it. RESPTIME is NOT
-		 * written: the chip runs its reset default 0x3f (the shortening
-		 * never took effect on the engine side, see the timing comment). */
+		 * unmasked, time base default) - restore it BEFORE the RESPTIME write
+		 * so the new cycle is anchored on the 64 kHz time base. */
 		ret = spi_rw(MSG_W(0x06, L9779_CONFIG6_PWR), NULL);
+		if (ret)
+			return ret;
+
+		/* Restore the short response time - a reset reverts it to the 0x3f
+		 * default and the feed would miss the long window. The write costs
+		 * one EC increment and starts a fresh cycle, which anchors the
+		 * window for the feed. */
+		ret = spi_rw(MSG_W(L9779_WD_RESPTIME_REG, WDA_RESPTIME), NULL);
 		if (ret)
 			return ret;
 
@@ -2423,15 +2465,14 @@ int L9779::init()
 		efiPrintf(DRIVER_NAME " IDENT read failed: SPI link problem?");
 	}
 
-	/* WDA watchdog: the chip runs its DEFAULT response time (RESPTIME
-	 * 0x3f): window ~[99, 112] ms @ 64 kHz. The feed is kicked by the
-	 * driver thread after chip_init and then runs as a one-shot TMR10 ISR
-	 * (priority 5, below the trigger handoff) with a single atomic burst
-	 * per cycle at ~105 ms; the period is adapted by the EC-saturation walk
-	 * and the REQUHI flags. The timer rate is measured here against the NT
-	 * domain (TIM5) and the PSC programmed so the counter ticks at exactly
-	 * 250 kHz (4 us) on any silicon - 4 us ticks keep the 16-bit ARR below
-	 * its wrap for the ~105..195 ms answer periods. */
+	/* WDA watchdog: RESPTIME=10 is written at init (short deterministic
+	 * window [15.8, 28.4] @ 64 kHz / [25.9, 38.5] @ 39 kHz). The feed is
+	 * kicked by the driver thread after chip_init and then runs as a
+	 * one-shot TMR10 ISR (priority 5, below the trigger handoff) with a
+	 * single atomic burst per cycle; the delay is walked by the
+	 * question-freeze signal (see wdFeedFromExecutor). The timer rate is
+	 * measured here against the NT domain (TIM5) and the PSC programmed so
+	 * the counter ticks at exactly 250 kHz (4 us) on any silicon. */
 	wd_delay_ms = WDA_DELAY_INIT_MS;
 	wd_running = false;
 	wd_next_moment = 0;
@@ -2447,6 +2488,8 @@ int L9779::init()
 	wd_prev_int = false;
 	wd_bad_value_cnt = 0;
 	wd_prev_cycle_clean = false;
+	wd_frozen_cnt = 0;
+	wd_walk_dir = 1;
 	s_wda_chip = this;
 	wdaTimerInit();
 
