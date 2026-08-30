@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Mon Aug 17 02:56:26 UTC 2026
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sun Aug 30 22:05:20 UTC 2026
 // see also gen_config_and_enums.bat
 
 
@@ -1056,6 +1056,8 @@ const char *getStft_state_e(stft_state_e value) {
 			return "stftDisabledDFCO";
 		case stftDisabledFuelCut:
 			return "stftDisabledFuelCut";
+		case stftDisabledLaunch:
+			return "stftDisabledLaunch";
 		case stftDisabledRPM:
 			return "stftDisabledRPM";
 		case stftDisabledSettings:
