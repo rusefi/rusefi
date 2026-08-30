@@ -9734,3 +9734,43 @@ diagnostic). Rationale, code-commented:
 Validation: compile_m74_9.sh builds clean. Expected on the bench: zero
 chip_init triples between boots; wrong/miss events still counted, no
 reset action.
+
+## 2026-08-30 (late night) - WDA root cause proven by the event ring: 39 kHz chip + early answers + FIFO desync
+
+The 20:16/20:20 pins dumps settle everything:
+
+1. NOTHING halts in this session: uptime tracks wall time 1:1 and ok
+   climbs at the full 22 ms rate (per=22060us wall on the never-frozen
+   TMR11). The earlier "bench halts 50%" claim was true for the
+   18:xx-19:xx sessions only.
+2. The chip's question is RANDOM per cycle (the ring shows a fresh value
+   every cycle) - it is NOT an acceptance detector. Over 2233 clean
+   cycles: ecUp=2, ecDown=1 - EC moves ONLY on reject/accept and sits
+   saturated at 7 while reqhi stays 0xC0: the chip rejects our 22 ms
+   answers silently (its TO_EARLY/NO_RESP flags are cleared by the next
+   sequencer run before our next read). The bench chip runs ~39 kHz
+   (CONFIG6 bit1 ignored), so the RESPTIME=10 window is [25.9, 38.5] ms
+   and 22 ms is EARLY every cycle. This is the whole ec=7 mystery.
+3. The second dump's req=2/0 ec=4 int=1 is an OFF-BY-ONE artifact: with
+   the reply pipeline shifted by one skipped reply, the feed read REQUHI
+   bytes (0xC0/0xC2) at the REQULO position: 0xC2&0xF=2, (0xC2>>4)&7=4,
+   bit7=1. The FIFO-position matching turned ONE skipped reply into a
+   permanent desync (addr_err 23%, fail 1981, miss/wrong thousands) -
+   with no reset involved.
+
+Fixes (commit): (a) EC-saturation walk - on clean, un-halted cycles with
+ec==7 for 6 cycles the delay steps +5 (direction reverses at the clamps),
+hold as soon as ec<7: 22 -> 27 lands inside BOTH candidate windows
+([15.8,28.4] for 64 kHz, [25.9,38.5] for 39 kHz), a 64 kHz chip never
+walks (ec sits at 4). Halt detection via the wall period (TMR11). The
+flag-based steps stay as a secondary hint, the wrong-value/cnt_bad
+recenters are removed (they fought the walk). (b) spi_validate now
+matches replies by CONTENT (the reply's own sub-address field) instead
+of FIFO position: a skipped reply self-heals on the first mismatch, an
+unknown reply is dropped without popping. (c) stale-entry guard: >4
+queued reads at the feed's batch start = accumulated skips -> queue
+cleared.
+
+Validation: compile_m74_9.sh builds clean. Bench expectation: delay
+walks 22 -> 27 within ~1 s and EC drops to 4; addr_err/fail stay ~0 even
+after the reply stream shifts; no reloads.

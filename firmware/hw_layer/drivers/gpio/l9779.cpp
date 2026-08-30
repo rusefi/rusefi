@@ -401,6 +401,8 @@ struct L9779 : public GpioChip {
 	bool					wd_prev_int;
 	int					wd_bad_value_cnt; /* consecutive cycles with W_RESP/RESP_Z0/RESP_ERR - diagnostic only, NO reset action (the burst self-realigns) */
 	bool					wd_prev_cycle_clean; /* the previous burst went out as one clean atomic stream - REQUHI verdicts are only trusted when this is true */
+	int					wd_ec_sat_cnt;	/* consecutive clean, un-halted cycles with EC saturated at 7 - the delay-walk trigger */
+	int					wd_walk_dir;	/* current delay-walk direction: +1 up, -1 down (reversed at the clamps) */
 	uint16_t					ident_reg;		/* IDENT_REG readback (0x10 | 0x00) */
 
 	/* Cached power-stage diagnosis, DIA_REG1..8 (datasheet 6.14). Refreshed
@@ -690,17 +692,39 @@ int L9779::spi_validate(uint16_t rx)
 		return 0;
 	}
 
-	/* The chip answers outstanding reads in order, so the oldest pending
-	 * request is the one this reply belongs to. */
-	rx_subaddr = rd_pending[rd_pending_head];
-	rd_pending_head = (rd_pending_head + 1) % efi::size(rd_pending);
-	rd_pending_cnt--;
+	/* CONTENT-ADDRESSED matching (2026-08-30 night): the chip's reply
+	 * stream can shift by one reply (the chip skips a reply while its SPI
+	 * block is busy - the 20:20 bench session proved it: 23% addr_err, the
+	 * feed reading REQUHI bytes (0xC0/0xC2) as REQULO, fail flood, all
+	 * without any reset). Matching replies to requests BY POSITION (the
+	 * FIFO pop) turns a single skipped reply into a PERMANENT off-by-one:
+	 * every subsequent reply pops the wrong entry. Matching by the reply's
+	 * OWN sub-address field self-heals the shift on the first mismatch:
+	 * the reply finds its request wherever it sits in the queue, and a
+	 * reply for an unknown/consumed request is simply dropped (no pop), so
+	 * the queue can never be misaligned again. */
+	uint8_t reply_sub = MSG_GET_ADDR(rx);
+	for (int i = 0; i < rd_pending_cnt; i++) {
+		int idx = (rd_pending_head + i) % (int)efi::size(rd_pending);
+		if (rd_pending[idx] != reply_sub)
+			continue;
 
-	if (MSG_GET_ADDR(rx) != rx_subaddr) {
-		/* unexpected content, the link is alive though */
-		spi_err++;
+		/* remove the matched entry, shifting the tail down one slot */
+		for (int j = i; j + 1 < rd_pending_cnt; j++) {
+			int a = (rd_pending_head + j) % (int)efi::size(rd_pending);
+			int b = (rd_pending_head + j + 1) % (int)efi::size(rd_pending);
+			rd_pending[a] = rd_pending[b];
+		}
+		rd_pending_cnt--;
+
+		rx_subaddr = reply_sub;
+		return 0;
 	}
 
+	/* no outstanding request carries this sub-address: drop the reply
+	 * without popping anything (a stale reply after a chip reset, or a
+	 * shift already healed) */
+	spi_err++;
 	return 0;
 }
 
@@ -1695,6 +1719,16 @@ void L9779::wdFeedFromExecutor()
 
 	uint32_t basepri = __get_BASEPRI();
 	__set_BASEPRI(WDA_BURST_BASEPRI);
+	/* Stale-entry guard: with content-addressed matching a skipped reply
+	 * leaves its request queued forever (it can no longer be misattributed,
+	 * but it can accumulate). A healthy queue holds <=2 leftovers at batch
+	 * start (the previous batch's last reads); more means replies were
+	 * skipped - drop the stale entries so the queue cannot fill up. The
+	 * thread's diag reads retry on their own. */
+	if (rd_pending_cnt > 4) {
+		rd_pending_cnt = 0;
+		rd_pending_head = 0;
+	}
 	for (size_t i = 0; i < efi::size(req_tx); i++) {
 		ret = spi_frame_isr(req_tx[i], &rx);
 		if (ret < 0)
@@ -1750,7 +1784,12 @@ void L9779::wdFeedFromExecutor()
 	 * overshooting to the other edge. With the shortened RESPTIME the
 	 * window drifts by only ~0.8 ms (CLK1 +-5% of 15.8 ms), so a lock loss
 	 * should be a rare event. */
-	if (wd_prev_cycle_clean) {
+	/* The verdicts below describe the PREVIOUS burst - consume the clean
+	 * flag now; it is re-armed only when the current burst completes cleanly. */
+	bool prevClean = wd_prev_cycle_clean;
+	wd_prev_cycle_clean = false;
+
+	if (prevClean) {
 		if (requhi & 0x02) {
 			/* NO_RESP (and NO_RESP+EARLY): response after the window closed */
 			wd_timing_miss_cnt++;
@@ -1763,33 +1802,65 @@ void L9779::wdFeedFromExecutor()
 			wd_delay_ms += 5;
 		}
 	}
-	/* the verdicts above describe the PREVIOUS burst, which just left the
-	 * clean state; the current cycle re-arms it only on a clean burst */
-	wd_prev_cycle_clean = false;
+
+	uint8_t req_now = requlo & 0x0f;
+	uint8_t ec_now = (requlo >> 4) & 0x07;
+
+	/* EC transition counters for the event ring (pins diagnostic): does
+	 * this chip's EC decrement on accepted answers (as the datasheet
+	 * claims)? The 20:16 bench run answered it: over 2233 clean cycles
+	 * ecUp=2, ecDown=1 - EC moves only on rejections/acceptances and sits
+	 * saturated at 7 while our answers land outside the window. */
+	if (ec_now > wd_last_ec)
+		s_wdaEcUp++;
+	else if (ec_now < wd_last_ec)
+		s_wdaEcDown++;
+	else
+		s_wdaEcSame++;
+	if (req_now != wd_last_req)
+		s_wdaReqChg++;
+
+	/* EC-SATURATION WALK (2026-08-30 night, bench-proven): this chip runs
+	 * ~39 kHz (CONFIG6 bit1 is ignored), so the RESPTIME=10 answer window
+	 * is [25.9, 38.5] ms and the 22 ms feed answers EARLY every cycle. The
+	 * chip rejects silently - its TO_EARLY/NO_RESP flags are cleared by the
+	 * next sequencer run before our next read (reqhi stays 0xC0 forever),
+	 * so the flag adaptation above cannot see the rejects. EC can: it
+	 * saturates at 7 on the persistent rejections and decrements the moment
+	 * an answer lands in the window. So: on clean, un-halted cycles with
+	 * ec==7 for a while, step the delay in the current direction (up from
+	 * 22 - both candidate windows contain 27..32); reverse at the clamps;
+	 * hold as soon as ec < 7. A 64 kHz chip accepts at 22 (ec drops to 4)
+	 * and never walks. Halted cycles are skipped: a halt leaves ec=7
+	 * behind without a single rejected answer (the wall period on the
+	 * never-frozen TMR11 reveals the halt). */
+	bool halted = s_firePeriodRef > (uint32_t)(2 * wd_delay_ms * 1000 + 5000);
+	if (!halted && prevClean && ec_now >= 7) {
+		if (++wd_ec_sat_cnt >= 6) {
+			wd_ec_sat_cnt = 0;
+			wd_delay_ms += wd_walk_dir * 5;
+			if (wd_delay_ms >= WDA_DELAY_MAX_MS) {
+				wd_delay_ms = WDA_DELAY_MAX_MS;
+				wd_walk_dir = -1;
+			} else if (wd_delay_ms <= WDA_DELAY_MIN_MS) {
+				wd_delay_ms = WDA_DELAY_MIN_MS;
+				wd_walk_dir = 1;
+			}
+		}
+	} else {
+		wd_ec_sat_cnt = 0;
+		if (ec_now < 7)
+			wd_walk_dir = 1;	/* recovering - reset the walk direction */
+	}
+
 	/* keep the period inside the answer window [response_time, response_time+window] */
 	if (wd_delay_ms < WDA_DELAY_MIN_MS)
 		wd_delay_ms = WDA_DELAY_MIN_MS;
 	if (wd_delay_ms > WDA_DELAY_MAX_MS)
 		wd_delay_ms = WDA_DELAY_MAX_MS;
 
-	wd_last_req = requlo & 0x0f;
-	{
-		/* EC transition counters for the event ring: is this chip's EC
-		 * decrementing on accepted answers (as the datasheet claims) or
-		 * latched at 7? ec=7-pinned-with-clean-reqhi (2026-08-30) vs the
-		 * datasheet model are contradictory - these counters settle it in
-		 * one pins dump. */
-		uint8_t ec_now = (requlo >> 4) & 0x07;
-		if (ec_now > wd_last_ec)
-			s_wdaEcUp++;
-		else if (ec_now < wd_last_ec)
-			s_wdaEcDown++;
-		else
-			s_wdaEcSame++;
-		if ((uint8_t)(requlo & 0x0f) != wd_last_req)
-			s_wdaReqChg++;
-	}
-	wd_last_ec  = (requlo >> 4) & 0x07;
+	wd_last_req = req_now;
+	wd_last_ec  = ec_now;
 	wd_int      = !!(requlo & 0x80);
 	/* A rising WDA_INT edge is a watchdog kill pulse: EC crossed 4 and the
 	 * chip forced its outputs off until correct answers bring it back. */
@@ -1819,24 +1890,25 @@ void L9779::wdFeedFromExecutor()
 		 * kept climbing after each reset). Count only; the consecutive-run
 		 * counter stays as a diagnostic. */
 		wd_bad_value_cnt++;
-		/* Recenter the delay: a value-only miss does not carry the timing
-		 * flags, and thin-edge states must not persist (the adaptation only
-		 * moves on timing verdicts). */
-		wd_delay_ms = WDA_DELAY_INIT_MS;
+		/* NO delay action here: the EC-saturation walk owns the delay. A
+		 * visible value-reject is a rare phase alignment, and recentering
+		 * to 22 on it would undo the walk's progress toward the real
+		 * window (the 20:16 bench run: ec=7 saturated at 22, the window
+		 * sits at [25.9, 38.5]). Count only. */
 	} else {
 		wd_bad_value_cnt = 0;
 	}
 
-	/* RESP_CNT != 11: the answer stream is SHIFTED by one byte (a stray late
-	 * byte landed in the wrong position). Writing the burst into a shifted
-	 * stream would complete a wrong-value response (EC++) AND keep the shift
-	 * for every following cycle. Skip the burst instead: the window expires
-	 * unanswered (one EC via NO_RESP), the sequencer resets RESP_CNT to 11
-	 * and the next burst re-aligns deterministically. Recenter the delay too -
-	 * the shift implies the timing sat at the window edge. */
+	/* RESP_CNT != 11: the chip's answer stream is SHIFTED by one byte (a
+	 * stray late byte landed in the wrong position). Writing the burst into
+	 * a shifted stream would complete a wrong-value response (EC++) AND keep
+	 * the shift for every following cycle. Skip the burst instead: the
+	 * window expires unanswered (one EC via NO_RESP), the sequencer resets
+	 * RESP_CNT to 11 and the next burst re-aligns deterministically. The
+	 * delay stays where the walk left it - the shift is a chip-side stream
+	 * state, not a timing verdict. */
 	if ((requhi & 0xc0) != 0xc0) {
 		wd_cnt_bad++;
-		wd_delay_ms = WDA_DELAY_INIT_MS;
 		wdArmIsr(wd_delay_ms);
 		return;
 	}
@@ -2405,6 +2477,8 @@ int L9779::init()
 	wd_prev_int = false;
 	wd_bad_value_cnt = 0;
 	wd_prev_cycle_clean = false;
+	wd_ec_sat_cnt = 0;
+	wd_walk_dir = 1;
 	s_wda_chip = this;
 	wdaTimerInit();
 
