@@ -28,6 +28,10 @@
 #include "status_loop.h"
 #include "electronic_throttle.h"
 
+#if EFI_PROD_CODE && (BOARD_L9779_COUNT > 0)
+#include "gpio/l9779.h"
+#endif
+
 #if EFI_LOGIC_ANALYZER
 #include "logic_analyzer.h"
 #endif /* EFI_LOGIC_ANALYZER */
@@ -765,6 +769,27 @@ void updateTunerStudioState() {
 
 #if HAL_USE_PAL && EFI_PROD_CODE
 	tsOutputChannels->extiOverflowCount = getExtiOverflowCounter();
+#endif
+
+	/* L9779 WDA root-cause state (m74_9 and any other L9779 board): the
+	 * EC>4 kill is the state that forces the power stage off while SPI and
+	 * the output diagnostics stay clean - expose it directly so TunerStudio
+	 * shows WHY injectors/coils/pump/blade are dead. */
+#if EFI_PROD_CODE && (BOARD_L9779_COUNT > 0)
+	{
+		uint8_t wdaEc = 0, dia10 = 0, requhi = 0;
+		bool wdaInt = false;
+		int wdaOk = 0, wdaFail = 0, wdaMiss = 0, wdaDelay = 0, wdaDefer = 0, wdaKills = 0, wdaWrong = 0, cntBad = 0;
+		l9779_getWdaCounters(&wdaEc, &wdaInt, &wdaOk, &wdaFail, &wdaMiss, &dia10, &wdaDelay, &wdaDefer, &wdaKills, &requhi, &wdaWrong, &cntBad);
+		tsOutputChannels->l9779WdaEc = wdaEc;
+		tsOutputChannels->l9779WdaInt = wdaInt;
+		tsOutputChannels->l9779WdaKill = (wdaEc > 4);
+		tsOutputChannels->l9779OutDis = (dia10 & 0x02) != 0;
+		tsOutputChannels->l9779WdaDelayMs = wdaDelay;
+		tsOutputChannels->l9779WdaOk = wdaOk;
+		tsOutputChannels->l9779WdaWrong = wdaWrong;
+		tsOutputChannels->l9779WdaMiss = wdaMiss;
+	}
 #endif
 
 	switch (engineConfiguration->debugMode)	{
