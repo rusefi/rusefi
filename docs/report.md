@@ -10217,3 +10217,48 @@ Correction to earlier notes: the saga's APB2 "does not double / drifts
 (the TMR10/TMR11 windows were stretched by halts, and the old code had
 the un-latched ARR bug on top). Re-verify APB2 clocking with a clean
 no-debugger measurement before trusting any absolute APB2 rate.
+
+## 2026-08-31 (04:00) - RETRACTION: the DBGMCU halt theory is wrong - the bench has NO debugger
+
+User fact: the bench has no debugger attached - the Java console is the
+only runtime tool. The DBGMCU APB1/APB2 pause bits only gate peripheral
+clocks when a debugger halts the core (C_DEBUGEN), so they are INERT on
+this bench and cannot explain the 2x WDA period. The previous entry's
+"TMR7 pauses on debugger halt, TIM5 does not" mechanism is retracted.
+(What DBGMCU is and who writes it: debug-support registers at
+0xE0042000 - CTRL/APB1_PAUSE/APB2_PAUSE. Writers: the firmware at init
+(microsecond timer sets TIM5 bit 3, angle clock TIM2 bit 0, l9779 now
+TMR7 bit 5 - all for coherent freeze under a FUTURE debug session) and
+a debugger itself on attach. Without a debugger they do nothing.)
+
+The measurements stand and the mystery is therefore REAL:
+- init: TMR7 input = exactly 288 MHz (20002/40004 and 2500/40001 NT-tick
+  ratios, two independent windows).
+- runtime: ok=4771 over ~276 s PC-wall time = ~58 ms per feed for a 27 ms
+  arm -> effective tick ~8.6 us -> input ~130 MHz. NT stays coherent
+  (per matches wall). per=53.9..69 ms = exactly 2x..2.56x the armed
+  interval, late = per - 27 ms exactly, cnlat=4 us (ISR prompt, the WRAP
+  itself is late in NT time).
+- TIM5/TIM2 (32-bit, PSC 71) are stable; the drifting ones are the
+  16-bit basic timers (TMR7 now, TMR10 in the saga - same ~144->112 MHz
+  signature). The TMR10 saga's "APB2 does not double / drifts" numbers
+  were probably measuring THIS effect, not halt pollution.
+
+Open question (next measurement): a runtime re-measurement of the TMR7
+rate against NT AND against SysTick (HCLK-derived, validated by CAN/USB
+timing), plus a CRM register dump (CFG/APB1DIV, MISC1/MISC2, APB1EN),
+added to the pins diagnostic - one dump then settles whether the timer
+input clock really changed after init, and which CRM field (if any)
+tracks it. Suspects to check against that dump: a runtime APB1DIV or
+PLL re-lock, the auto-step machinery, or a per-timer clock mux on the
+AT32F435 that the fork's headers do not model.
+
+Code state after the retraction (l9779.cpp, commit after 8f0df3a033c):
+- the TMR7 DBGMCU pause bit stays SET (same bit state as TIM5 - whatever
+  the silicon polarity, both timers then behave identically under any
+  future debugger; inert without one);
+- the on-time gate on the delay servo stays and is now cause-agnostic
+  (off-time cycles carry no chip-window phase info, so their verdicts
+  are ignored regardless of what stretched them);
+- comments rewritten to record the open question instead of the
+  retracted halt theory.
