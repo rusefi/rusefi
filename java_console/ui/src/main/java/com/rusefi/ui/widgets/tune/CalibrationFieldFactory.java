@@ -37,6 +37,8 @@ public class CalibrationFieldFactory {
         {"yes", "no"},
         {"enabled", "disabled"}
     };
+    private static final String BLUE_PREFIX = "#";
+    public static final String RED_PREFIX = "!";
 
     public static JPanel createFieldRow(DialogModel.Field field, IniField iniField, ConfigurationImage ci, ConfigurationImage workingImage) {
         return createFieldRow(field, iniField, ci, workingImage, null, null);
@@ -115,12 +117,13 @@ public class CalibrationFieldFactory {
      * Applies background color and link logic based on the field's UI name.
      */
     public static JPanel createLabelRow(DialogModel.Field field) {
-        JLabel label = new JLabel(field.getUiName());
+        String uiName = field.getUiName();
+        JLabel label = new JLabel(stripStylePrefix(uiName));
         applyStyle(label);
         label.setOpaque(true);
         label.setAlignmentX(Component.LEFT_ALIGNMENT);
-        applyBackgroundColor(label, field.getUiName());
-        applyLinkLogic(label, field.getUiName());
+        applyBackgroundColor(label, uiName);
+        applyLinkLogic(label, uiName);
 
         JPanel row = createRowPanel();
         row.add(Box.createHorizontalStrut(10));
@@ -334,11 +337,22 @@ public class CalibrationFieldFactory {
         }
     }
 
+    /**
+     * A leading '!' (red) or '#' (blue) on a TS ini label is styling markup consumed by
+     * {@link #applyBackgroundColor}, not visible text.
+     */
+    static String stripStylePrefix(String uiName) {
+        if (uiName != null && (uiName.startsWith(RED_PREFIX) || uiName.startsWith(BLUE_PREFIX))) {
+            return uiName.substring(1).trim();
+        }
+        return uiName;
+    }
+
     static void applyBackgroundColor(JComponent component, String value) {
-        if (value.startsWith("#")) {
+        if (value.startsWith(BLUE_PREFIX)) {
             component.setBackground(Color.BLUE);
             component.setForeground(Color.WHITE);
-        } else if (value.startsWith("!")) {
+        } else if (value.startsWith(RED_PREFIX)) {
             component.setBackground(Color.RED);
             component.setForeground(Color.WHITE);
         }

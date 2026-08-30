@@ -610,13 +610,14 @@ public class CalibrationDialogWidgetTest {
         assertEquals(3, content.getComponentCount());
 
         JLabel redLabel = getLabelFromRow((JPanel) content.getComponent(0));
-        assertEquals("!Red Label", redLabel.getText());
+        // the '!' style marker is consumed by the styling, not displayed
+        assertEquals("Red Label", redLabel.getText());
         assertEquals(Color.RED, redLabel.getBackground());
         assertEquals(Color.WHITE, redLabel.getForeground());
         assertTrue(redLabel.isOpaque());
 
         JLabel blueLabel = getLabelFromRow((JPanel) content.getComponent(1));
-        assertEquals("#Blue Label", blueLabel.getText());
+        assertEquals("Blue Label", blueLabel.getText());
         assertEquals(Color.BLUE, blueLabel.getBackground());
         assertEquals(Color.WHITE, blueLabel.getForeground());
         assertTrue(blueLabel.isOpaque());
