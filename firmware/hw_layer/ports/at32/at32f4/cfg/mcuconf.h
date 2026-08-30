@@ -226,12 +226,11 @@
 #define STM32_GPT_USE_TIM7                  FALSE
 #define STM32_GPT_USE_TIM8                  FALSE
 #define STM32_GPT_USE_TIM9                  FALSE
-/* TIM10 = the L9779 WDA feed one-shot timer (l9779.cpp): runs BELOW the
- * trigger handoff (EFI_IRQ_L9779_WDA_PRIORITY) so the ~100 us SPI burst
- * never preempts the decode. The vector is shared with TIM1_UP, so the GPT
- * LLD does not own the ISR - l9779.cpp provides it (suppress here). */
-#define STM32_GPT_USE_TIM10                 TRUE
-#define STM32_TIM10_SUPPRESS_ISR            TRUE
+/* TMR10 is driven DIRECTLY by l9779.cpp (wdaTimerInit/wdaTimerArm, register
+ * level - NOT via the GPT driver; the GPT-driver build bricked the bench
+ * ECU at boot). The vector is shared with TIM1_UP and the handler lives in
+ * l9779.cpp. */
+#define STM32_GPT_USE_TIM10                 FALSE
 #define STM32_GPT_USE_TIM11                 FALSE
 #define STM32_GPT_USE_TIM12                 FALSE
 #define STM32_GPT_USE_TIM13                 FALSE

@@ -1077,38 +1077,79 @@ int L9779::chip_reset() {
  * comment in the struct. Single chip instance on this board. */
 static L9779 *s_wda_chip;
 
-static void l9779WdaGptCb(GPTDriver*) {
-	if (s_wda_chip) {
-		s_wda_chip->wdFeedFromExecutor();
-	}
+/* Direct register access to TMR10, NOT the ChibiOS GPT driver: the GPT
+ * build bricked the bench ECU at boot (flash verified, then no console link)
+ * and the driver API adds nothing here - a one-shot update event needs no
+ * state machine, no kernel locks and no asserts. The pattern is the proven
+ * angle clock (TMR2) one: plain register writes, a bare VectorA4 handler,
+ * nvicEnableVector at init.
+ *
+ * TMR10 = APB2 timer, TIMCLK2 = 288 MHz; PSC = 287 -> 1 tick = 1 us, the
+ * 16-bit ARR caps the delay at 65.535 ms - the WDA delays (1..27 ms) fit.
+ * OPM (one-cycle mode) stops the counter at the update event, so a fired
+ * one-shot cannot wrap and re-fire. */
+#define WDA_TIMER			TIM10
+#define WDA_TIMER_PSC		(287)
+
+static void wdaTimerInit() {
+	rccEnableTIM10(false);
+
+	WDA_TIMER->PSC = WDA_TIMER_PSC;
+	WDA_TIMER->ARR = 0xFFFF;
+	WDA_TIMER->CR1 = 0;				/* stopped */
+	WDA_TIMER->DIER = 0;
+	WDA_TIMER->EGR = STM32_TIM_EGR_UG;	/* latch PSC/ARR (also sets UIF) */
+	WDA_TIMER->SR = 0;				/* clear the UG-generated UIF */
+
+	nvicEnableVector(STM32_TIM1_UP_TIM10_NUMBER, EFI_IRQ_L9779_WDA_PRIORITY);
 }
 
-/* 1 MHz: one tick = 1 us, 16-bit counter maxes at 65.535 ms - the WDA
- * delays (1..27 ms) fit comfortably. */
-static const GPTConfig wda_gpt_config = {
-	.frequency = 1'000'000,
-	.callback = l9779WdaGptCb,
-	.cr2 = 0,
-	.dier = 0,
-};
+/* Arm the one-shot: intervalUs microseconds from now. Plain register writes -
+ * no locks, no asserts - callable from the thread (boot kick) and the ISR
+ * (self re-arm). */
+static void wdaTimerArm(uint32_t intervalUs) {
+	WDA_TIMER->CR1 = 0;				/* stop any run */
+	WDA_TIMER->CNT = 0;
+	WDA_TIMER->ARR = intervalUs - 1U;
+	WDA_TIMER->SR = 0;				/* clear a stale UIF */
+	WDA_TIMER->DIER = STM32_TIM_DIER_UIE;
+	WDA_TIMER->CR1 = STM32_TIM_CR1_OPM | STM32_TIM_CR1_CEN;
+}
 
-/* TIM10's vector is shared with TIM1_UP, so the GPT LLD does not own the
- * ISR (STM32_TIM10_SUPPRESS_ISR in the mcuconf) - provide it here. */
+static void wdaTimerStop() {
+	WDA_TIMER->CR1 = 0;
+	WDA_TIMER->DIER = 0;
+	WDA_TIMER->SR = 0;
+}
+
+/* TIM10's vector is shared with TIM1_UP; TIM1 is unused on m74_9, so this
+ * handler owns the vector outright. */
 CH_IRQ_HANDLER(STM32_TIM1_UP_TIM10_HANDLER) {
 	OSAL_IRQ_PROLOGUE();
-	gpt_lld_serve_interrupt(&GPTD10);
+
+	if (WDA_TIMER->SR & STM32_TIM_SR_UIF) {
+		/* One-cycle mode stopped the counter at the update event; disarm
+		 * and dispatch. The feed re-arms at its end. */
+		WDA_TIMER->SR = ~STM32_TIM_SR_UIF;
+		WDA_TIMER->CR1 = 0;
+		WDA_TIMER->DIER = 0;
+		if (s_wda_chip) {
+			s_wda_chip->wdFeedFromExecutor();
+		}
+	}
+
 	OSAL_IRQ_EPILOGUE();
 }
 
 void L9779::wdArmIsr(int delayMs) {
 	wd_next_moment = getTimeNowNt() + MS2NT(delayMs) - US2NT(WDA_BURST_LEAD_US);
-	gptStartOneShotI(&GPTD10, (gptcnt_t)(MS2US(delayMs) - WDA_BURST_LEAD_US));
+	wdaTimerArm(MS2US(delayMs) - WDA_BURST_LEAD_US);
 }
 
-/* Thread-context arm (boot kick): gptStartOneShot takes the kernel lock. */
+/* Thread-context arm (boot kick). */
 static void wdArmThread(L9779 *chip, int delayMs) {
 	chip->wd_next_moment = getTimeNowNt() + MS2NT(delayMs) - US2NT(WDA_BURST_LEAD_US);
-	gptStartOneShot(&GPTD10, (gptcnt_t)(MS2US(delayMs) - WDA_BURST_LEAD_US));
+	wdaTimerArm(MS2US(delayMs) - WDA_BURST_LEAD_US);
 }
 
 static THD_FUNCTION(l9779_driver_thread, p) {
@@ -1180,9 +1221,9 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 			 * write); the events self-reschedule from then on. */
 			if (!chip->wd_running) {
 				chip->wd_running = true;
-				efiPrintf("l9779 wda: GPT kick +17 ms (GPT state %d)", (int)GPTD10.state);
+				efiPrintf("l9779 wda: GPT kick +17 ms (CR1=0x%08lx)", (unsigned long)WDA_TIMER->CR1);
 				wdArmThread(chip, 17);
-				efiPrintf("l9779 wda: GPT armed (state %d)", (int)GPTD10.state);
+				efiPrintf("l9779 wda: GPT armed (CR1=0x%08lx DIER=0x%08lx)", (unsigned long)WDA_TIMER->CR1, (unsigned long)WDA_TIMER->DIER);
 			}
 
 			/* WDA feed liveness monitor (diagnostic, 1 Hz): ok/fail/defer/poll-timeout
@@ -1191,9 +1232,10 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 			static systime_t last_wda_print = 0;
 			if (chip->wd_running && (now - last_wda_print >= TIME_MS2I(1000))) {
 				last_wda_print = now;
-				efiPrintf("l9779 wda: ok=%d fail=%d defer=%d pollto=%d delay=%d gpt=%d",
+			efiPrintf("l9779 wda: ok=%d fail=%d defer=%d pollto=%d delay=%d CR1=0x%lx DIER=0x%lx",
 					chip->wd_ok_cnt, chip->wd_fail_cnt, chip->wd_defer_cnt,
-					chip->wd_poll_timeouts, chip->wd_delay_ms, (int)GPTD10.state);
+					chip->wd_poll_timeouts, chip->wd_delay_ms,
+					(unsigned long)WDA_TIMER->CR1, (unsigned long)WDA_TIMER->DIER);
 			}
 
 			/* send the output registers only when the pin state changed: with the
@@ -1888,7 +1930,7 @@ int L9779::chip_power_off()
 	int ret;
 
 	wd_running = false;
-	gptStopTimer(&GPTD10);
+	wdaTimerStop();
 
 	ret = spi_rw(MSG_W(0x06, L9779_CONFIG6_PSOFF), NULL);
 	if (ret) {
@@ -2001,10 +2043,10 @@ int L9779::init()
 	wd_running = false;
 	wd_next_moment = 0;
 	s_wda_chip = this;
-	gptStart(&GPTD10, &wda_gpt_config);
-	nvicEnableVector(STM32_TIM1_UP_TIM10_NUMBER, EFI_IRQ_L9779_WDA_PRIORITY);
-	efiPrintf(DRIVER_NAME " wda: GPT10 started state=%d CR1=0x%08lx DIER=0x%08lx SR=0x%08lx",
-		(int)GPTD10.state, (unsigned long)GPTD10.tim->CR1, (unsigned long)GPTD10.tim->DIER, (unsigned long)GPTD10.tim->SR);
+	wdaTimerInit();
+	efiPrintf(DRIVER_NAME " wda: TMR10 init done CR1=0x%08lx DIER=0x%08lx SR=0x%08lx PSC=0x%04lx",
+		(unsigned long)WDA_TIMER->CR1, (unsigned long)WDA_TIMER->DIER,
+		(unsigned long)WDA_TIMER->SR, (unsigned long)WDA_TIMER->PSC);
 	spi_busy = false;
 	spi_configured = false;
 	wd_defer_cnt = 0;
