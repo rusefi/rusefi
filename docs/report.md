@@ -9346,3 +9346,27 @@ rate). Unit tests: AngleClock 4/4.
 Follow-ups: verify the AT32F435 timer clock tree against the Artery RM
 before fixing STM32_TIMCLK1/2 in the fork (TMR10 measured 144 MHz on
 APB2, TMR2 now measured on APB1); check the coils after the overcharge.
+
+## 2026-08-30 (follow-up) - TMR2 driver verified against the AT32F435 datasheet layout
+
+Field-by-field check of the angle-clock driver's register usage against
+the authoritative CMSIS TMR_TypeDef (ChibiOS-Contrib AT32F435_437):
+the fork's TIM_TypeDef maps 1:1 to the AT32 TMR layout (CR1=CTRL1@0x00,
+CR2=CTRL2@0x04, SMCR=STCTRL@0x08, DIER=IDEN@0x0C, SR=ISTS@0x10,
+EGR=SWEVT@0x14, CCMR1/2=CM1/2@0x18/0x1C, CCER=CCTRL@0x20, CNT=CVAL@0x24,
+PSC=DIV@0x28, ARR=PR@0x2C, CCR1-4=C1DT..C4DT@0x34..0x40). The DIV (PSC)
+latch via SWEVT-UG matches the mechanism the PWM LLD already uses on
+TMR5/8/12 (which work). The OC-compare-with-CCxE=0 comparator trick and
+the rc_w0 status-flag clears are empirically confirmed (the ISR fires on
+the bench). The DBGMCU TMR2-pause bit (APB1FZ bit 0) matches the CMSIS
+DEBUG_APB1_PAUSE_TMR2_PAUSE. Nothing in the register usage explains the
+2x-slow rate: the defect is the fork's TIMCLK1/TIMCLK2 clock model
+(PCLK*2 for all APB timers), which the AT32F435 does not honor for
+TMR2/TMR10 - while TIM5 IS doubled (the NT 4 MHz is physics-validated).
+The init-time rate measurement (angle_clock.cpp) makes the driver correct
+on any silicon; the boot print reports the measured ratio. Full unit
+suite: 1169/1169.
+
+For the WDA: the feed stays on the TIM5 executor - TIM5 is the only
+timer whose rate is hardware-validated. Any future TMR10 reuse must
+apply the same measure-at-init pattern.
