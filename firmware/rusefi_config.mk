@@ -66,7 +66,12 @@ CONFIG_FILES = \
 #  in the correct state, things can fail to build because Make doesn't know it needs
 #  to build the prerequisites (in this case CONFIG_FILES and RAMDISK) for those files ahead of time.
 $(TCOBJS): $(CONFIG_FILES)
+# ARM rules.mk puts C++ objects in TCPPOBJS/ACPPOBJS, but the SIMIA32 (simulator)
+#  rules.mk uses CPPOBJS - hook all three so the simulator regenerates the ramdisk
+#  image too (same set rusefi_pch.mk hooks onto the PCH).
 $(TCPPOBJS): $(RAMDISK)
+$(ACPPOBJS): $(RAMDISK)
+$(CPPOBJS): $(RAMDISK)
 
 # Codegen recipes below write shared files under the firmware tree (generated headers,
 # .ini fragments, java sources), so concurrent makes (firmware + simulator + unit_tests)
