@@ -38,15 +38,6 @@
 // ADC/UART/SysTick/CAN as before.
 #define EFI_IRQ_EXTI_HANDOFF_PRIORITY     4
 #define EFI_IRQ_ADC_PRIORITY 5
-
-// The L9779 WDA feed (one-shot TIM10 GPT): BELOW the trigger handoff on
-// purpose - its ~100 us polled-SPI burst used to run inside the priority-3
-// executor ISR, which preempted the handoff every ~105 ms and added up to
-// 100 us to the decode chain. The answer window is ~12.6 ms wide, so even a
-// 1 ms handoff tail preempting the burst cannot push RESP_BYTE0 out of it.
-// It stays ISR-context (never a thread): a thread wakeup under cranking load
-// was the original wd_timing_miss/EC>4 kill mode.
-#define EFI_IRQ_L9779_WDA_PRIORITY        5
 #define EFI_IRQ_UART_PRIORITY 6
 #define EFI_IRQ_SYSTICK_PRIORITY 8
 #define EFI_IRQ_SDMMC_PRIORITY 10
