@@ -239,7 +239,7 @@ void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float n
 	efitick_t startTime = sumTickAndFloat(nowNt, USF2NT(delayUs));
 
 #if EFI_ANGLE_CLOCK
-	if (angleClockArm(eventAngle, startAction, AngleClockKind::Start)) {
+	if (angleClockArm(eventAngle, startAction, AngleClockKind::Start, currentPhase)) {
 		// armed on the hardware angle clock - the ends below still follow in
 		// the time domain, computed from the intended start moment.
 	} else

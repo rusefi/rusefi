@@ -534,7 +534,7 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 #endif // EFI_ANGLE_CLOCK
 
 #if EFI_ANGLE_CLOCK
-		if (!angleClockArm(dwellAngle, action_s::make<turnSparkPinHighStartCharging>( event ), AngleClockKind::Start))
+		if (!angleClockArm(dwellAngle, action_s::make<turnSparkPinHighStartCharging>( event ), AngleClockKind::Start, currentPhase))
 #endif // EFI_ANGLE_CLOCK
 		{
 			engine->scheduler.schedule("dwell", &event->dwellStartTimer, chargeTime, action_s::make<turnSparkPinHighStartCharging>( event ));

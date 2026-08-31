@@ -1149,18 +1149,27 @@ void setup_custom_board_overrides() {
 		printPwmStats();
 
 #if EFI_ANGLE_CLOCK
-		// Hardware angle clock (TMR2): fired = compare ISR dispatches,
-		// lateArm = handoff armed past the tick (fell back to TIM5),
-		// noChannel = all 4 channels busy (fell back to TIM5), dropped =
-		// stale charge/injection starts cancelled without executing (the
-		// stale-event policy, see angle_clock.h). maxLateUs is the fixed
-		// ISR entry latency - expect single-digit us.
-		// nvic 28 = TIM2 (want 3).
-		efiPrintf("angclk fired=%u lateArm=%u noChannel=%u dropped=%u maxLateUs=%u nvic=%u (want 3)",
-			(unsigned)angleClockFiredCount(), (unsigned)angleClockProgrammedLateCount(),
-			(unsigned)angleClockArmFailCount(), (unsigned)angleClockDroppedCount(),
+		// Hardware angle clock (TMR2): attempts = arm calls; refuse = target
+		// beyond the 30 deg lookahead (stale phase basis); noCh = all 4
+		// channels busy; lateArm = armed past the tick; dropped = stale
+		// charge/injection starts cancelled. The last-refusal snapshot (target
+		// angle / stored phase / basis) and maxBusyUs (max |ccr - CNT| of a
+		// busy channel, in us) settle which failure dominates and how far out
+		// the stuck ticks are. init rate = the TMR2 rate measurement from
+		// boot. nvic 28 = TIM2 (want 3).
+		efiPrintf("angclk att=%u fire=%u refuse=%u noCh=%u lateArm=%u drop=%u maxLateUs=%u busyUs=%u",
+			(unsigned)angleClockArmAttempts(), (unsigned)angleClockFiredCount(),
+			(unsigned)angleClockRefuseCount(), (unsigned)angleClockNoChannelCount(),
+			(unsigned)angleClockProgrammedLateCount(), (unsigned)angleClockDroppedCount(),
 			(unsigned)(angleClockMaxLateTicks() / (NT_PER_SECOND / 1000000)),
-			(unsigned)((NVIC->IP[28] >> 4) & 0xF));
+			(unsigned)(angleClockMaxBusyDeltaTicks() / (NT_PER_SECOND / 1000000)));
+		efiPrintf("angclk lastRefuse target=%.1f phase=%.1f callerPhase=%.1f rem=%.1f cb=%08x basis=%.1f initRate=%u/%u psc=%u nvic=%u (want 3)",
+			(double)angleClockLastRefuseTarget(), (double)angleClockLastRefusePhase(),
+			(double)angleClockLastRefuseCallerPhase(),
+			(double)angleClockLastRefuseRemaining(), (unsigned)angleClockLastRefuseCallback(),
+			(double)angleClockLastRefuseBasis(),
+			(unsigned)angleClockInitAcDelta(), (unsigned)angleClockInitNtDelta(),
+			(unsigned)angleClockInitPsc(), (unsigned)((NVIC->IP[28] >> 4) & 0xF));
 		angleClockResetStats();
 #endif // EFI_ANGLE_CLOCK
 

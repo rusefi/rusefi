@@ -10785,3 +10785,30 @@ EFI_ANGLE_CLOCK TRUE; nm shows angleClockArm/OnTooth/Refresh/
 TickForNt/VectorB0); unit tests 1169/1169 PASSED. Car verdict pending:
 the first crank must fire on time - no C935x cluster, no C9012, angclk
 noChannel near 0, maxLateUs microseconds.
+
+## 2026-08-31 (evening, BENCH self-stim) - angle clock arms ~100% refused: split telemetry + caller-phase capture (IN PROGRESS)
+
+Self-stim runs (RPM 500/800) showed ~100% arm failures with lateArm=0:
+the combined armFail counter could not say whether the failures were
+stale-phase refusals (remaining > 30 deg) or all-channels-busy. Added
+diagnostics:
+
+- arm failures split: refuse (remaining > MAX_LEAD_DEG) vs noCh (all
+  four channels busy), plus attempts, max |ccr - CNT| of busy channels
+  (stuck-tick distance), the TMR2 init rate (acDelta/ntDelta/psc) and
+  the last refusal's full snapshot (target angle, stored phase, basis,
+  wrapped remaining, callback address).
+- angleClockArm now takes the caller's currentPhase for the snapshot,
+  so a single lockstats proves whether the stored phase diverged from
+  the caller's (feed ordering) or the window test itself passed with
+  the target behind the phase (window computation).
+
+First finding: on self-stim EVERY refusal is the dwell start
+(cb=08072374 = turnSparkPinHighStartCharging trampoline), with the
+target (dwell angle) BEHIND the stored phase by exactly one dwell
+duration (target=483.7 phase=512.0 rem=691.7 at 800 rpm - the arm runs
+at the spark moment). The fallback then schedules the charge one full
+cycle late at the same engine angle, so the bench "runs" on the TIM5
+path with an over-long dwell (28 deg + dwellDuration) - the same class
+of overcharge that blows the car fuse. The callerPhase capture
+(committed here) names the exact divergence next run.

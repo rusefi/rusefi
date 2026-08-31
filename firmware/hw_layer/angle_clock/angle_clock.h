@@ -95,12 +95,13 @@ uint32_t angleClockNow();
 void angleClockOnTooth(efitick_t edgeTimestamp, float currentPhase, float cycleDeg, float ticksPerDegree);
 
 // Arm `action` to fire at the absolute engine angle `targetAngle` (same
-// basis as the currentPhase passed to angleClockOnTooth). The delay is
-// computed from the freshest tooth data. Returns false (without arming) when
-// the target is not a plausible 1-2 tooth lookahead, the tick is not far
-// enough in the future, or all four channels are busy - the caller must fall
-// back to the TIM5 path.
-bool angleClockArm(float targetAngle, action_s action, AngleClockKind kind);
+// basis as the currentPhase passed to angleClockOnTooth). `callerPhase` is
+// the caller's currentPhase (diagnostic: must equal the stored phase in a
+// single handoff). The delay is computed from the freshest tooth data.
+// Returns false (without arming) when the target is not a plausible 1-2 tooth
+// lookahead, the tick is not far enough in the future, or all four channels
+// are busy - the caller must fall back to the TIM5 path.
+bool angleClockArm(float targetAngle, action_s action, AngleClockKind kind, float callerPhase);
 
 // Re-anchor every armed channel from the freshest tooth data: rewrite the
 // compare tick from the current phase and last-tooth duration, so the
@@ -135,6 +136,26 @@ uint32_t angleClockArmFailCount();
 uint32_t angleClockProgrammedLateCount();
 uint32_t angleClockDroppedCount();
 uint32_t angleClockMaxLateTicks();
+
+// Arm-failure breakdown (diagnostic): attempts, refusals (remaining >
+// MAX_LEAD_DEG), all-channels-busy, the last refusal's inputs (target angle,
+// stored phase, basis) and the max |ccr - CNT| of a busy channel at arm time.
+uint32_t angleClockArmAttempts();
+uint32_t angleClockRefuseCount();
+uint32_t angleClockNoChannelCount();
+float angleClockLastRefuseTarget();
+float angleClockLastRefusePhase();
+float angleClockLastRefuseCallerPhase();
+float angleClockLastRefuseBasis();
+float angleClockLastRefuseRemaining();
+uint32_t angleClockLastRefuseCallback();
+uint32_t angleClockMaxBusyDeltaTicks();
+
+// TMR2 rate measurement from initAngleClock.
+uint32_t angleClockInitAcDelta();
+uint32_t angleClockInitNtDelta();
+uint32_t angleClockInitPsc();
+
 void angleClockResetStats();
 
 #endif // EFI_ANGLE_CLOCK
