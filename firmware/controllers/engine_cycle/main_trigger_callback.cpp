@@ -363,16 +363,20 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_
 
 #if EFI_ANGLE_CLOCK
 	{
-		// Fresh angle->time basis for this tooth's arming and the per-tooth
-		// refresh: the last tooth's measured duration in NT ticks per degree
-		// (the 90-degree rpm average lags by revolutions at the catch and
-		// made armed events fire ms-late). Falls back to the rpm average only
-		// before the first decoded tooth pair.
-		float ticksPerDegree = getTriggerCentral()->lastToothTicksPerDegree;
-		if (!(ticksPerDegree > 0)) {
-			ticksPerDegree = US2NT(engine->rpmCalculator.oneDegreeUs);
-		}
-		angleClockOnTooth(edgeTimestamp, currentPhase, engine->engineState.engineCycle, ticksPerDegree);
+		// Angle->time basis for this tooth's arming and the per-tooth
+		// refresh: the 90-degree-window rpm average (oneDegreeUs) - the SAME
+		// basis the proven time-based path converts angles with. During
+		// spin-up oneDegreeUs is the InstantRpmCalculator's ~90-degree tooth
+		// window (calculateInstantRpm hunts the tooth ~90 deg back), when
+		// running it is the full-cycle average - both smooth. The per-tooth
+		// basis (toothDurations[0]) was tried and rejected: at cranking the
+		// compression oscillation makes a single tooth a 2-3x-stretched
+		// predictor, so the armed fire landed ~3-12 deg late, the
+		// charge-anchored rescue discharged first (C935x) and the
+		// first-combustion kick broke the gap ratio (C9002). oneDegreeUs is
+		// valid here: the rpm==0 gate above already returned.
+		angleClockOnTooth(edgeTimestamp, currentPhase, engine->engineState.engineCycle,
+			US2NT(engine->rpmCalculator.oneDegreeUs));
 	}
 #endif // EFI_ANGLE_CLOCK
 

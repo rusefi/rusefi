@@ -10921,3 +10921,37 @@ in the tree behind the flag.
 
 Validation: compile_m74_9.sh BUILD SUCCESSFUL (FALSE); unit tests
 1169/1169 PASSED.
+
+## 2026-08-31 (late evening) - angle clock FINAL v2: re-enabled on the oneDegreeUs basis
+
+Root cause of the whole catch-and-stall chain (car + bench evidence + code):
+the angle clock armed events from the raw last-tooth duration
+(toothDurations[0]). At cranking the compression speed oscillation makes a
+single tooth a 2-3x-stretched predictor, so the catch fires armed ~3-12 deg
+late; the charge-anchored overdwell rescue (1.5x dwell, pure time) then
+discharged first (C935x), and the rescue's wrong-angle spark + cancelled
+fire broke the first-combustion gap ratio -> C9002 -> stall. The working
+time-based build converts angles with oneDegreeUs - during spin-up that is
+the InstantRpmCalculator's ~90-degree tooth window (calculateInstantRpm
+hunts the tooth ~90 deg back), when running the full-cycle average: smooth
+by construction, no EMA needed (user directive).
+
+FIX (this commit, EFI_ANGLE_CLOCK TRUE):
+- main_trigger_callback.cpp: angleClockOnTooth is fed
+  US2NT(engine->rpmCalculator.oneDegreeUs) instead of the per-tooth basis.
+- trigger_scheduler.cpp fire fallback + spark_logic.cpp dwell chargeTime:
+  same oneDegreeUs basis (identical prediction to the FALSE build).
+- trigger_central.cpp: the toothDurations[0] basis computation and the
+  4x-band / 2 ms-per-deg clamp are REMOVED (dead code under the new basis);
+  the lastToothTicksPerDegree field is gone.
+- spark_logic.cpp: the overdwell rescue margin 1.5x -> 2.5x dwell, so a
+  fire that is merely late (<=1.5x dwell, the catch's oneDegreeUs lag)
+  always wins; a genuinely lost/stuck fire is still bounded at 2.5x dwell.
+  The FALSE build is untouched (its rescue is basis-anchored and can never
+  beat the fire - the same invariant restored here).
+- angle_clock.h / test_angle_clock.cpp comments updated; the refresh logic
+  stays (with the smooth basis it only tracks the rpm change).
+
+Validation: compile_m74_9.sh BUILD SUCCESSFUL (TRUE; the ELF has the
+angle-clock symbols); unit tests 1169/1169 PASSED. Car verdict pending:
+first crank must show no C935x cluster, no C9002, angclk refuse~0.

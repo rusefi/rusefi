@@ -978,23 +978,6 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		// Adjust so currentPhase is in engine-space angle, not trigger-space angle
 		currentEngineDecodedPhase = wrapAngleMethod(currentPhaseFromSyncPoint - tdcPosition(), "currentEnginePhase", ObdCode::CUSTOM_ERR_6555);
 
-#if EFI_ANGLE_CLOCK
-		// Fresh angle->time basis for the angle clock: the just-completed
-		// tooth's duration over its REAL span. The span comes from the phase
-		// pair (previous event phase -> this phase), so the gap tooth carries
-		// its true ~18 deg on 60-2 automatically and the wrap covers the sync
-		// tooth (the span crosses the cycle boundary). Garbage until the first
-		// complete tooth pair of a sync - the angle clock is gated off by
-		// requireValidatedSync / rpm==0 until then anyway.
-		{
-			float span = currentPhaseFromSyncPoint - m_lastToothPhaseFromSyncPoint;
-			if (span <= 0) {
-				span += engine->engineState.engineCycle;
-			}
-			lastToothTicksPerDegree = (span > 0) ? triggerState.toothDurations[0] / span : 0;
-		}
-#endif // EFI_ANGLE_CLOCK
-
 		// Record precise time and phase of the engine. This is used for VVT decode, and to check that the
 		// trigger pattern selected matches reality (ie, we check the next tooth is where we think it should be)
 		{
@@ -1011,34 +994,6 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 
 		// Update engine RPM
 		rpmShaftPositionCallback(signal, triggerIndexForListeners, timestamp);
-
-#if EFI_ANGLE_CLOCK
-		// Sanity-clamp the fresh basis against the rpm average once the rpm
-		// value is fresh (this runs AFTER rpmShaftPositionCallback): a garbage
-		// tooth duration arms far-future ticks that stick channels and anchor
-		// the TIM5 fallbacks out. The band is 4x (the legit catch accel
-		// diverges ~2-3x). CRITICAL: the band only applies when the average is
-		// ALIVE (>= ~120 rpm) - at the first teeth after a pause the average is
-		// stale (huge), and clamping a REAL tooth basis up to it turned the
-		// first catch sparks into 3x-late fires (the rescue discharged first,
-		// the first-combustion kick broke the gap ratio -> C9002 -> no catch).
-		// The absolute ceiling stays as the last resort for the 10 s decoder
-		// clamp and bounds the armed delay to ~MAX_LEAD_DEG x the ceiling.
-		{
-			float rpmTicksPerDegree = US2NT(engine->rpmCalculator.oneDegreeUs);
-			if (rpmTicksPerDegree > 0 && rpmTicksPerDegree < US2NT(2000) &&
-					(lastToothTicksPerDegree > rpmTicksPerDegree * 4 ||
-					 lastToothTicksPerDegree < rpmTicksPerDegree / 4)) {
-				lastToothTicksPerDegree = rpmTicksPerDegree;
-			}
-
-			// 2 ms/deg (~120 rpm equivalent) - above the real cranking tooth
-			// (~0.67 ms/deg at 250 rpm), far below the 10 s decoder clamp.
-			if (lastToothTicksPerDegree > US2NT(2000)) {
-				lastToothTicksPerDegree = US2NT(2000);
-			}
-		}
-#endif // EFI_ANGLE_CLOCK
 
 		// Schedule the TDC mark
 		tdcMarkCallback(triggerIndexForListeners, timestamp);

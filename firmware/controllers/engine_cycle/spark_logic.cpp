@@ -423,17 +423,19 @@ void turnSparkPinHighStartCharging(IgnitionEvent *event) {
 	// A new charge begins: re-arm the rescue idempotency for this charge.
 	event->sparkFiredSinceCharge = false;
 
-	// Anchor the overdwell rescue at the ACTUAL charge moment (1.5x the
-	// planned dwell), not at schedule time: the arming prediction can be off
-	// at the catch/self-stim ramp, and a schedule-time anchor stays on the
-	// stale prediction while the refresh re-anchors the TMR2 events to the
-	// correct times (the bench 213/264 ms overcharges). Anchoring here makes
-	// the overcharge bound exact regardless of any prediction error.
-	// Multispark restrikes have no rescue (their fire is time-scheduled) - the
-	// dwellStartTimer struct is also reused by the restrike scheduling, so the
-	// rescue is armed only for the final charge of the cycle.
+	// Anchor the overdwell rescue at the ACTUAL charge moment, at 2.5x the
+	// planned dwell (not 1.5x): a fire that is merely LATE by up to ~1.5x
+	// dwell (the catch's oneDegreeUs 90-degree-window lag) must still WIN -
+	// at 1.5x the rescue discharged first (C935x) and the rescue's
+	// wrong-angle spark + cancelled fire broke the first-combustion sync.
+	// 2.5x never beats a fire that fires within 1.5x dwell of the intended
+	// moment, and still bounds a genuinely lost/stuck fire (desync refusal)
+	// at 2.5x dwell. Multispark restrikes have no rescue (their fire is
+	// time-scheduled) - the dwellStartTimer struct is also reused by the
+	// restrike scheduling, so the rescue is armed only for the final charge
+	// of the cycle.
 	if (event->sparksRemaining == 0) {
-		efitick_t fireTime = sumTickAndFloat(nowNt, MSF2NT(1.5f * event->sparkDwell));
+		efitick_t fireTime = sumTickAndFloat(nowNt, MSF2NT(2.5f * event->sparkDwell));
 		engine->scheduler.schedule("overdwell", &event->dwellStartTimer, fireTime, action_s::make<overFireSparkAndPrepareNextSchedule>( event ));
 	}
 #endif // EFI_ANGLE_CLOCK
@@ -523,11 +525,16 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 		// on the 90-degree average otherwise (bit-identical to the proven
 		// time-based build).
 #if EFI_ANGLE_CLOCK
-		float ticksPerDegree = getTriggerCentral()->lastToothTicksPerDegree;
-		if (!(ticksPerDegree > 0)) {
-			ticksPerDegree = US2NT(engine->rpmCalculator.oneDegreeUs);
-		}
-		chargeTime = sumTickAndFloat(edgeTimestamp, angleOffset * ticksPerDegree);
+		// The dwell start (coil charge) is armed in the ANGLE domain with the
+		// 90-degree-window rpm average (oneDegreeUs) - the SAME basis the
+		// proven time-based path converts angles with (see
+		// mainTriggerCallback's angleClockOnTooth feed). The per-tooth basis
+		// was rejected: at cranking a stretched compression tooth armed the
+		// charge late and the fire late, and the charge-anchored rescue
+		// discharged first (the C935x cluster). chargeTime anchors the TIM5
+		// fallback and is basis-consistent with the FALSE build's
+		// oneDegreeUs-based chargeTime.
+		chargeTime = sumTickAndFloat(edgeTimestamp, angleOffset * US2NT(engine->rpmCalculator.oneDegreeUs));
 #else
 		float delayUs = engine->rpmCalculator.oneDegreeUs * angleOffset;
 		chargeTime = sumTickAndFloat(edgeTimestamp, USF2NT(delayUs));
