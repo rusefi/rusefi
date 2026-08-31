@@ -97,6 +97,16 @@
  * stream from running away. */
 #define WDA_DELAY_MIN_MS			(17)
 #define WDA_DELAY_MAX_MS			(38)
+/* EC-saturation escape: when the chip's error counter stays pinned at the
+ * top for this many consecutive clean on-time cycles, the feed is in a
+ * SILENT-REJECTION zone (the answer period sits outside the window, so the
+ * chip's verdict flags are cleared by its next sequencer run before our
+ * read - reqhi stays 0xC0 and the REQUHI servo can never walk the delay
+ * back). Step the delay toward WDA_DELAY_INIT_MS (27 ms - inside BOTH
+ * candidate windows, proven healthy: the 12:41 bench run held EC=0 there).
+ * The 12:42 state (delay walked 27->32 on one pins-perturbed verdict, EC=7,
+ * reqhi=0xC0 forever) is exactly what this recovers from. */
+#define WDA_EC_SAT_ESCAPE_CYCLES	(8)
 /* Duration of the feed ISR from dispatch to the END of its RESP_BYTE0 write
  * (3 pipelined reads + 4 answer frames, ~7 x 10 us, plus any handoff
  * preemption). The period is set this much short of the full
@@ -414,7 +424,8 @@ struct L9779 : public GpioChip {
 	int						wd_poll_timeouts; /* polled-SPI frames that hit the RXNE watchdog (diagnostic) */
 	int						wd_ok_cnt;		/* cycles answered correctly */
 	int						wd_fail_cnt;	/* cycles missed (SPI-level failures) */
-	int						wd_timing_miss_cnt;	/* responses outside the window (REQUHI flags) - the EC climbs on these too */
+	int					wd_timing_miss_cnt;	/* responses outside the window (REQUHI flags) - the EC climbs on these too */
+	int					wd_ec_sat_cycles;	/* consecutive clean on-time cycles with EC >= 6 (the escape arming counter) */
 	int						wd_wrong_cnt;	/* responses rejected on VALUE (REQUHI W_RESP) */
 	int						wd_cnt_bad;		/* RESP_CNT != 11 at read time - the answer stream desynced */
 	uint8_t					wd_last_requhi;	/* raw REQUHI byte of the last cycle */
@@ -1342,7 +1353,7 @@ struct wda_evt {
 	uint8_t		intf;		/* WDA_INT */
 	uint8_t		requhi;		/* raw REQUHI byte */
 	uint8_t		delay;		/* wd_delay_ms after this cycle's adaptation */
-	uint8_t		flags;		/* bit0: fire period > 1.5x the armed delay (off-time cycle - cause-agnostic), bit1: burst sent cleanly, bit2: SPI-level fail, bit3: deferred */
+	uint8_t		flags;		/* bit0: fire period > +-25% off the armed delay (off-time cycle - cause-agnostic), bit1: burst sent cleanly, bit2: SPI-level fail, bit3: deferred */
 };
 static wda_evt s_wdaEvt[WDA_EVT_LINES];
 static int s_wdaEvtNext;		/* next slot to fill */
@@ -1411,11 +1422,12 @@ CH_IRQ_HANDLER(STM32_TIM7_HANDLER) {
 		if (s_lastFireNt != 0) {
 			s_firePeriodNt = nowNt - s_lastFireNt;
 			/* Count off-time cycles for the liveness line: the period is
-			 * compared against the delay this fire was armed with. */
+			 * compared against the delay this fire was armed with (+-25%,
+			 * the same threshold as the feed's on-time verdict gate). */
 			if (s_prevFireDelayMs > 0) {
 				uint32_t perUs = (uint32_t)(s_firePeriodNt / US_TO_NT_MULTIPLIER);
 				uint32_t armUs = (uint32_t)s_prevFireDelayMs * 1000;
-				if ((perUs < armUs / 2) || (perUs > (armUs * 3) / 2))
+				if ((perUs < (armUs * 3) / 4) || (perUs > (armUs * 5) / 4))
 					s_wdaStretched++;
 			}
 		}
@@ -1875,21 +1887,25 @@ void L9779::wdFeedFromExecutor()
 
 	/* ON-TIME GATE: the verdicts describe the previous burst, sent at the
 	 * previous fire. If THAT cycle fired off its armed delay by more than
-	 * +-50%, the verdict is real - the answer really missed the chip's
+	 * +-25%, the verdict is real - the answer really missed the chip's
 	 * window - but it is NOT actionable: the delay itself was right, the
 	 * miss was the stretch, and stepping the delay would walk it the wrong
-	 * way (the 19:02/23:13 wrong-way walks chased exactly such verdicts).
-	 * The gate is purely evidence-based: off-time cycles carry no phase
-	 * information about the chip window, so their verdicts are ignored and
-	 * the next on-time cycles re-center the delay. With the sleep-mode clock
-	 * gate fixed (rccEnableTIM7(true)) the feed period is exact in sleep too,
-	 * so the gate now only flags the short defer/retry cycles (armed 1/10 ms
-	 * on spi_busy / SPI fail) and any residual preemption - those verdicts
+	 * way (the 19:02/23:13 wrong-way walks chased exactly such verdicts;
+	 * the 12:41 bench run added a NEW case: the pins cross-measurement's
+	 * masked window delayed one answer ~10 ms = 1.37x the 27 ms arm, the
+	 * old +-50% gate passed it, and its verdict walked the delay 27->32
+	 * out of the acceptance zone - +-25% catches it). The gate is purely
+	 * evidence-based: off-time cycles carry no phase information about the
+	 * chip window, so their verdicts are ignored and the next on-time
+	 * cycles re-center the delay. With the sleep-mode clock gate fixed
+	 * (rccEnableTIM7(true)) the feed period is exact in sleep too, so the
+	 * gate now only flags the short defer/retry cycles (armed 1/10 ms on
+	 * spi_busy / SPI fail) and any residual preemption - those verdicts
 	 * are garbage for exactly the same reason. */
 	if ((s_prevFirePeriodNt != 0) && (s_prevFireDelayMs > 0)) {
 		uint32_t prevPerUs = (uint32_t)(s_prevFirePeriodNt / US_TO_NT_MULTIPLIER);
 		uint32_t armUs = (uint32_t)s_prevFireDelayMs * 1000;
-		if ((prevPerUs < armUs / 2) || (prevPerUs > (armUs * 3) / 2))
+		if ((prevPerUs < (armUs * 3) / 4) || (prevPerUs > (armUs * 5) / 4))
 			prevClean = false;
 	}
 
@@ -1935,6 +1951,26 @@ void L9779::wdFeedFromExecutor()
 		wd_delay_ms = WDA_DELAY_MIN_MS;
 	if (wd_delay_ms > WDA_DELAY_MAX_MS)
 		wd_delay_ms = WDA_DELAY_MAX_MS;
+
+	/* EC-SATURATION ESCAPE (see WDA_EC_SAT_ESCAPE_CYCLES): the REQUHI servo
+	 * is blind in a silent-rejection zone (flags cleared between reads), so
+	 * a persistent EC >= 6 on clean on-time cycles is the only evidence left.
+	 * EC starts at 6 on a chip reset and decrements on accepted answers
+	 * (proven 12:41: 7 -> 0), so a HEALTHY feed at 27 ms never arms this; a
+	 * feed parked in a rejection zone pins EC at 7 and steps back toward
+	 * 27 ms, where the chip accepts (the 12:42 state). The step is +-5 ms;
+	 * once EC recovers below 6 (or a verdict fires) the counter resets. */
+	if (prevClean && (ec_now >= 6) && (wd_delay_ms != WDA_DELAY_INIT_MS)) {
+		if (++wd_ec_sat_cycles >= WDA_EC_SAT_ESCAPE_CYCLES) {
+			wd_ec_sat_cycles = 0;
+			if (wd_delay_ms > WDA_DELAY_INIT_MS)
+				wd_delay_ms -= 5;
+			else
+				wd_delay_ms += 5;
+		}
+	} else {
+		wd_ec_sat_cycles = 0;
+	}
 
 	wd_last_req = req_now;
 	wd_last_ec  = ec_now;
@@ -2046,8 +2082,8 @@ void L9779::wdFeedFromExecutor()
 	}
 
 	/* Record the cycle in the per-cycle event ring (pins diagnostic).
-	 * bit0 = the fire-to-fire NT period exceeded 1.5x the armed delay (an
-	 * off-time cycle - the same test the delay-servo gate uses, so a
+	 * bit0 = the fire-to-fire NT period was off the armed delay by > +-25%
+	 * (an off-time cycle - the same test the delay-servo gate uses, so a
 	 * flagged cycle's verdicts are ignored by the adaptation). */
 	{
 		wda_evt *e = &s_wdaEvt[s_wdaEvtNext];
@@ -2061,7 +2097,7 @@ void L9779::wdFeedFromExecutor()
 		e->requhi = wd_last_requhi;
 		e->delay = (uint8_t)wd_delay_ms;
 		e->flags = (uint8_t)(
-			((s_firePeriodNt / US_TO_NT_MULTIPLIER) > (uint32_t)((3 * wd_delay_ms * 1000) / 2) ? 0x01 : 0) |
+			((s_firePeriodNt / US_TO_NT_MULTIPLIER) > (uint32_t)((5 * wd_delay_ms * 1000) / 4) ? 0x01 : 0) |
 			(ret == 0 ? 0x02 : 0x00));
 	}
 
@@ -2202,8 +2238,9 @@ brain_pin_diag_e L9779::getDiag(size_t pin)
  * expect ~100 ms in 100 ms. This validates the kernel tick config; both
  * derive from HCLK, so it cannot detect an HCLK drift (USB/CAN do that).
  *
- * One-off, called from the 'pins' diagnostic. The masked window can cost
- * the chip one WDA window (EC++) - expected on the bench. */
+	 * One-off, called from the 'pins' diagnostic. Non-destructive: the
+	 * measurement no longer masks the WDA ISR (see measurement A), so a
+	 * pins call does not perturb the feed's answer timing. */
 static void wdaTimerCrossMeasure() {
 	/* ---- register dump first (no timing side effects) ---- */
 	uint32_t cfgr = RCC->CFGR;
@@ -2255,11 +2292,18 @@ static void wdaTimerCrossMeasure() {
 			(unsigned)vtDelta, (unsigned long)cycDelta);
 	}
 
-	/* ---- measurement A: NT (TIM5) + TMR7 vs HCLK CYCCNT, WDA ISR masked ---- */
+	/* ---- measurement A: NT (TIM5) + TMR7 vs HCLK CYCCNT, UNMASKED ----
+	 * The old version masked the WDA ISR (BASEPRI 5) for the 10 ms window.
+	 * That mask was DESTRUCTIVE on the bench (12:41 run): the delayed
+	 * answer (~10 ms late) missed the chip's window, the NO_RESP cascade
+	 * knocked EC 0->6 (KILL pulse) and one perturbed cycle's verdict
+	 * walked the delay out of the acceptance zone. The mask is no longer
+	 * needed: the free-run feed does not touch the timer on normal cycles
+	 * (wdaTimerArm no-ops when the period is unchanged), and the ISR's
+	 * UIF clear does not disturb CNT. A rare period change (defer/verdict)
+	 * mid-window would corrupt that one dump's tmDelta - self-evident from
+	 * the ARR line. */
 	{
-		uint32_t basepri = __get_BASEPRI();
-		__set_BASEPRI(5u << (8u - __NVIC_PRIO_BITS));  /* mask prio >= 5: the WDA feed cannot re-arm TMR7 mid-window */
-
 		uint32_t c0 = DWT->CYCCNT;
 		uint32_t tm0 = WDA_TIMER->CNT;
 		uint32_t nt0 = TIM5->CNT;
@@ -2269,8 +2313,6 @@ static void wdaTimerCrossMeasure() {
 		} while ((c1 - c0) < 2880000U);        /* 10 ms at 288 MHz HCLK */
 		uint32_t tm1 = WDA_TIMER->CNT;
 		uint32_t nt1 = TIM5->CNT;
-
-		__set_BASEPRI(basepri);
 
 		uint32_t cycDelta = c1 - c0;
 		uint32_t ntDelta = nt1 - nt0;        /* TIM5 free-runs: unsigned wrap is exact */
@@ -2701,6 +2743,7 @@ int L9779::init()
 	 * programmed so the counter ticks at exactly 250 kHz (4 us) on any
 	 * silicon. */
 	wd_delay_ms = WDA_DELAY_INIT_MS;
+	wd_ec_sat_cycles = 0;
 	wd_running = false;
 	wd_next_moment = 0;
 	spi_busy = false;
