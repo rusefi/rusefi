@@ -12,32 +12,34 @@ TEST(AngleClock, zeroAngleIsZeroTicks) {
 	EXPECT_EQ(0u, angleClockDelayTicks(0.0f, 100.0f));
 }
 
-TEST(AngleClock, delayIsAngleTimesMicrosecondsPerDegree) {
-	// delayTicks = angleFromNow[deg] * oneDegreeUs[us/deg] * US_TO_NT_MULTIPLIER
-	// (the angle clock runs at the NT tick rate, 4 MHz on the target).
-	float oneDegreeUs = 166.6f;
+TEST(AngleClock, delayIsAngleTimesTicksPerDegree) {
+	// The armed delay = remaining angle x the fresh last-tooth basis
+	// (NT ticks per degree), not the 90-degree rpm average - that value
+	// lags by revolutions at the catch and fired events ms-late.
+	float oneDegreeUs = 166.6f;	// ~1000 rpm
+	float ticksPerDegree = oneDegreeUs * US_TO_NT_MULTIPLIER;
 
 	// one full tooth on 60-2 (3 degrees) at ~1000 rpm
-	EXPECT_EQ(static_cast<uint32_t>(3.0f * oneDegreeUs * US_TO_NT_MULTIPLIER),
-		angleClockDelayTicks(3.0f, oneDegreeUs));
+	EXPECT_EQ(static_cast<uint32_t>(3.0f * ticksPerDegree),
+		angleClockDelayTicks(3.0f, ticksPerDegree));
 
 	// two teeth of lead: 6 degrees
-	EXPECT_EQ(static_cast<uint32_t>(6.0f * oneDegreeUs * US_TO_NT_MULTIPLIER),
-		angleClockDelayTicks(6.0f, oneDegreeUs));
+	EXPECT_EQ(static_cast<uint32_t>(6.0f * ticksPerDegree),
+		angleClockDelayTicks(6.0f, ticksPerDegree));
 }
 
 TEST(AngleClock, fractionalTicksTruncate) {
-	// 1.5 us * 100 ticks/us = 150 ticks exactly (no truncation needed)
-	EXPECT_EQ(150u, angleClockDelayTicks(1.0f, 1.5f));
+	// 1 deg x 150 ticks/deg = 150 ticks exactly (no truncation needed)
+	EXPECT_EQ(150u, angleClockDelayTicks(1.0f, 150.0f));
 
-	// 1.0 deg * 2.49 us/deg * 100 = 249.0 -> the float multiply may land at
-	// 248.999... or 249.000..., so check it is within one tick of 249
+	// 1.0 deg x 2.49 ticks/deg = 2.49 -> the float multiply may land at
+	// 2.489999... or 2.490000..., so check it is within one tick of 2
 	uint32_t ticks = angleClockDelayTicks(1.0f, 2.49f);
-	EXPECT_LE(248u, ticks);
-	EXPECT_LE(ticks, 250u);
+	EXPECT_LE(2u, ticks);
+	EXPECT_LE(ticks, 3u);
 }
 
-TEST(AngleClock, oneDegreeUsScalingIsLinear) {
+TEST(AngleClock, ticksPerDegreeScalingIsLinear) {
 	// halving the speed doubles the delay in ticks
 	uint32_t fast = angleClockDelayTicks(6.0f, 80.0f);
 	uint32_t slow = angleClockDelayTicks(6.0f, 160.0f);

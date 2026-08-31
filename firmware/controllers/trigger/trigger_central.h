@@ -100,6 +100,16 @@ public:
 	// validated sync; 0 when the hook is off.
 	float gapAnchorCorrectionDeg = 0;
 
+#if EFI_ANGLE_CLOCK
+	// NT ticks per degree of the LAST completed tooth, measured in
+	// handleShaftSignal from the decoder's toothDurations[0] and the real
+	// tooth span (from the phase pair, so the gap tooth carries its true
+	// ~18 deg on 60-2). The freshest angle->time basis for the angle clock
+	// arming/refresh - unlike the 90-degree rpm average it does not lag the
+	// catch transient. 0 until the first tooth pair of a sync is decoded.
+	float lastToothTicksPerDegree = 0;
+#endif // EFI_ANGLE_CLOCK
+
 	cyclic_buffer<int> triggerErrorDetection;
 
 	/**

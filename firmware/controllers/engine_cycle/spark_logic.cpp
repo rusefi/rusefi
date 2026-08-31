@@ -12,6 +12,7 @@
 #include "utlist.h"
 #include "event_queue.h"
 #include "angle_clock.h"
+#include "trigger_central.h"
 
 #include "knock_logic.h"
 
@@ -191,6 +192,16 @@ static void fireTrailingSpark(IgnitionOutputPin* pin) {
 }
 
 void overFireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
+#if EFI_ANGLE_CLOCK
+	// Redundant-rescue idempotency: the TMR2-armed fire already discharged
+	// this charge. Acting again would double-fire the coil and double-run
+	// prepareCylinderIgnitionSchedule (the single-writer contract of the
+	// next cycle's dwell) - the fire and the rescue are two writers of the
+	// same coil-off and only the first may act.
+	if (event->sparkFiredSinceCharge) {
+		return;
+	}
+#endif // EFI_ANGLE_CLOCK
 #if SPARK_EXTREME_LOGGING
 	efiPrintf("[%s] %d %s",
 		event->getOutputForLoggins()->getName(), event->sparkCounter,
@@ -227,6 +238,12 @@ void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 			fireSparkBySettingPinLow(event, output);
 		}
 	}
+
+#if EFI_ANGLE_CLOCK
+	// The coil is discharged: a later overdwell rescue for this charge must
+	// no-op (see overFireSparkAndPrepareNextSchedule).
+	event->sparkFiredSinceCharge = true;
+#endif // EFI_ANGLE_CLOCK
 
 	efitick_t nowNt = getTimeNowNt();
 
@@ -379,6 +396,11 @@ void turnSparkPinHighStartCharging(IgnitionEvent *event) {
 
   if (!skippedDwellDueToTriggerNoised) {
 
+#if EFI_ANGLE_CLOCK
+	// A new charge begins: re-arm the rescue idempotency for this charge.
+	event->sparkFiredSinceCharge = false;
+#endif // EFI_ANGLE_CLOCK
+
 #if EFI_UNIT_TEST
   	if (engine->onIgnitionEvent) {
   		engine->onIgnitionEvent(event, true);
@@ -451,14 +473,25 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 		 * This way we make sure that coil dwell started while spark was enabled would fire and not burn
 		 * the coil.
 		 */
-		// One-tooth-ahead arming: with the early window the angleOffset covers
-		// 1-2 teeth. Try the hardware angle clock first (fixed ~1 us firing,
-		// immune to handoff lateness), fall back to the time-based executor.
+		// The dwell start (coil charge) is armed in the ANGLE domain with the
+		// freshest tooth data; the per-tooth refresh keeps the tick accurate
+		// until it fires at any rpm. chargeTime anchors the overdwell rescue
+		// and the TIM5 fallback - on the fresh basis in the angle-clock build,
+		// on the 90-degree average otherwise (bit-identical to the proven
+		// time-based build).
+#if EFI_ANGLE_CLOCK
+		float ticksPerDegree = getTriggerCentral()->lastToothTicksPerDegree;
+		if (!(ticksPerDegree > 0)) {
+			ticksPerDegree = US2NT(engine->rpmCalculator.oneDegreeUs);
+		}
+		chargeTime = sumTickAndFloat(edgeTimestamp, angleOffset * ticksPerDegree);
+#else
 		float delayUs = engine->rpmCalculator.oneDegreeUs * angleOffset;
 		chargeTime = sumTickAndFloat(edgeTimestamp, USF2NT(delayUs));
+#endif // EFI_ANGLE_CLOCK
 
 #if EFI_ANGLE_CLOCK
-		if (!angleClockArm(angleClockTickForNt(chargeTime), action_s::make<turnSparkPinHighStartCharging>( event )))
+		if (!angleClockArm(dwellAngle, action_s::make<turnSparkPinHighStartCharging>( event ), AngleClockKind::Start))
 #endif // EFI_ANGLE_CLOCK
 		{
 			engine->scheduler.schedule("dwell", &event->dwellStartTimer, chargeTime, action_s::make<turnSparkPinHighStartCharging>( event ));

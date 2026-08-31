@@ -1151,12 +1151,14 @@ void setup_custom_board_overrides() {
 #if EFI_ANGLE_CLOCK
 		// Hardware angle clock (TMR2): fired = compare ISR dispatches,
 		// lateArm = handoff armed past the tick (fell back to TIM5),
-		// noChannel = all 4 channels busy (fell back to TIM5). maxLateUs
-		// is the fixed ISR entry latency - expect single-digit us.
+		// noChannel = all 4 channels busy (fell back to TIM5), dropped =
+		// stale charge/injection starts cancelled without executing (the
+		// stale-event policy, see angle_clock.h). maxLateUs is the fixed
+		// ISR entry latency - expect single-digit us.
 		// nvic 28 = TIM2 (want 3).
-		efiPrintf("angclk fired=%u lateArm=%u noChannel=%u maxLateUs=%u nvic=%u (want 3)",
+		efiPrintf("angclk fired=%u lateArm=%u noChannel=%u dropped=%u maxLateUs=%u nvic=%u (want 3)",
 			(unsigned)angleClockFiredCount(), (unsigned)angleClockProgrammedLateCount(),
-			(unsigned)angleClockArmFailCount(),
+			(unsigned)angleClockArmFailCount(), (unsigned)angleClockDroppedCount(),
 			(unsigned)(angleClockMaxLateTicks() / (NT_PER_SECOND / 1000000)),
 			(unsigned)((NVIC->IP[28] >> 4) & 0xF));
 		angleClockResetStats();

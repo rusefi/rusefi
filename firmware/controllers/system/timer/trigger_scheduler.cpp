@@ -2,6 +2,7 @@
 
 #include "event_queue.h"
 #include "angle_clock.h"
+#include "trigger_central.h"
 
 bool TriggerScheduler::assertNotInList(AngleBasedEvent *head, AngleBasedEvent *element) {
 	/* this code is just to validate state, no functional load*/
@@ -169,20 +170,31 @@ void TriggerScheduler::scheduleEventsUntilNextTriggerTooth(float rpm,
 
 		scheduling_s * sDown = &current->eventScheduling;
 
-		// Same contract as the due-now branch: a previous time-based arm
-		// (the overdwell protection) is superseded by this scheduling.
-		engine->scheduler.cancel(sDown);
-
+		// The overdwell rescue (armed on sDown by scheduleSparkEvent) is
+		// KEPT on the success path: it stays the coil safety net if this
+		// armed fire is lost (stale target, channels busy, desync refresh
+		// cancels it). If the angle-clock fire executes first, the rescue
+		// later no-ops on IgnitionEvent::sparkFiredSinceCharge; if the arm
+		// is lost, the rescue discharges the coil at 1.5x dwell and cancels
+		// the armed compare via TriggerScheduler::cancel.
 		float angleFromNow = current->getAngleFromNow(currentPhase);
 
-		// Convert the angle offset from THIS edge into an absolute TMR2
-		// tick. If the armed tick is already in the past (this handoff
-		// ran late) or all four channels are busy, angleClockArm returns
-		// false and the event falls back to the time-based executor - the
-		// same scheduleByAngle the due-now branch uses.
-		uint32_t atTick = angleClockTickForNt(edgeTimestamp) + angleClockDelayTicks(angleFromNow, engine->rpmCalculator.oneDegreeUs);
-		if (!angleClockArm(atTick, current->action)) {
-			scheduleByAngle(sDown, edgeTimestamp, angleFromNow, current->action);
+		// Arm in the ANGLE domain with the freshest tooth data - the
+		// per-tooth refresh re-anchors the tick every tooth, so the error
+		// never exceeds one tooth of acceleration at ANY rpm (the 90-degree
+		// rpm average lags by revolutions at the catch and fired events
+		// ms-late - the fuse incident).
+		if (!angleClockArm(current->getAngle(), current->action, AngleClockKind::CoilFire)) {
+			// Arm failed (stale target, tick passed, or all channels busy):
+			// fall back to a time-based fire from the SAME fresh basis. The
+			// rescue is superseded by this direct fire - cancel it first, a
+			// scheduling_s carries one pending event.
+			float ticksPerDegree = getTriggerCentral()->lastToothTicksPerDegree;
+			if (!(ticksPerDegree > 0)) {
+				ticksPerDegree = US2NT(engine->rpmCalculator.oneDegreeUs);
+			}
+			engine->scheduler.cancel(sDown);
+			engine->scheduler.schedule("fire", sDown, sumTickAndFloat(edgeTimestamp, angleFromNow * ticksPerDegree), current->action);
 		}
 #endif // EFI_ANGLE_CLOCK
 	} else {
