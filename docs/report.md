@@ -10736,3 +10736,52 @@ monsters, no fuse. Three remaining issues fixed:
 
 Validation: TRUE build OK (one build, 4 angle-clock symbols). Bench
 re-run pending - expect noChannel ~0, maxLateUs microseconds, no C9012.
+
+## 2026-08-31 (evening, CAR) - the rpm==0 storm-flap cancelAll was the car defect
+
+The 16:00/16:08/16:09 cranking logs are the CAR, not the bench (user
+correction). Every attempt: C9012 once early, then all four coils
+C9351-4 overcharge ~4.5 ms within the same 3-4 ms, then C9002 "expected
+58/0 got 58/0", engine stopped; angclk fired=6..11 dropped=6..11
+noChannel=115..156 maxLateUs~2^32 (wrap). "Events arrive late."
+
+Root cause found in code: mainTriggerCallback's rpm==0 early-return
+called angleClockCancelAll(). On this car the catch trigger storm flaps
+SensorType::Rpm 0/300+ at ~1 kHz (long-documented), so every flap
+cancelled the armed TMR2 events:
+- armed CoilFires -> charged coils discharged by the 4.5 ms overdwell
+  rescues instead of their armed fires (the C935x cluster - the fires
+  did not happen at their scheduled moments);
+- armed dwell Starts -> the coil never charged, dwellStartArmed stays
+  set, and the cycle's fire (armed separately) still fires into an
+  uncharged coil -> C9012 out-of-order coil off;
+- the storm's garbage basis additionally saturated the 4 channels (the
+  noChannel storm), so the rest fell back to TIM5 and drained in
+  bursts.
+
+The FALSE build has none of this: its events are scheduled by time and
+fire on time regardless of the rpm flap - which is why it has been
+proven on this car for months.
+
+Fixes (all EFI_ANGLE_CLOCK-guarded, the FALSE build untouched):
+1. Removed the angleClockCancelAll() calls from the rpm==0 and
+   firmwareError handoff paths. Armed events fire at their bounded
+   ticks exactly like the time-based build (by time, regardless of the
+   rpm flap); the charge-anchored overdwell rescue remains the coil
+   safety net, and the m74_9 ignition gate cuts the power stage at
+   key-off.
+2. angleClockRefresh now LEAVES armed channels alone on a phase-basis
+   jump (desync/re-sync) instead of cancelling them - the armed tick is
+   absolute time and fires within 1-2 teeth, mirroring the time-based
+   build. Cancelling there produced the same lost-fire signature.
+3. The refresh CCR re-anchor is race-proof vs the prio-3 TMR2 ISR: the
+   old ccr is saved, SR is re-read after the write, and the old ccr is
+   restored when the match landed in the few cycles between the SR
+   check and the write - the pending ISR then measures its true
+   dispatch latency instead of the ~2^32 maxLateUs wrap.
+
+Validation: compile_m74_9.sh BUILD SUCCESSFUL (one build,
+EFI_ANGLE_CLOCK TRUE; nm shows angleClockArm/OnTooth/Refresh/
+TickForNt/VectorB0); unit tests 1169/1169 PASSED. Car verdict pending:
+the first crank must fire on time - no C935x cluster, no C9012, angclk
+noChannel near 0, maxLateUs microseconds.

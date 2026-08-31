@@ -365,14 +365,20 @@ void angleClockRefresh() {
 
 		float remaining = remainingAngle(chState.targetAngle);
 
-		// Stale phase basis (desync/re-sync): the stored angle is no longer
-		// meaningful. Drop the event - a lost CoilFire is covered by the
-		// overdwell rescue which is kept armed on TIM5.
+		// Phase basis jumped (desync/re-sync): the stored angle is no longer
+		// meaningful for RE-ANCHORING, but the armed tick is an absolute time
+		// and does not jump - leave the channel alone so it fires at its tick
+		// within 1-2 teeth. Cancelling here turned every desync into a misfire
+		// + overdwell rescue (the bench self-stim desyncs every revolution and
+		// all four coils fired by rescues at 4.5 ms - the "events arrive late"
+		// signature). The time-based build behaves the same way: its events
+		// fire by time regardless of sync. New arms after the re-sync go
+		// through the window logic with the fresh basis.
 		if (remaining > MAX_LEAD_DEG) {
-			cancelChannel(ch);
 			continue;
 		}
 
+		uint32_t oldCcr = *channelCcr(ch);
 		uint32_t newTick = tickForAngle(chState.targetAngle);
 
 		if (static_cast<int32_t>(newTick - ANGLE_CLOCK_TIMER->CNT) < static_cast<int32_t>(ARM_MARGIN_TICKS)) {
@@ -384,7 +390,16 @@ void angleClockRefresh() {
 				// right after this handoff.
 				uint32_t nowTick = ANGLE_CLOCK_TIMER->CNT + ARM_MARGIN_TICKS;
 				*channelCcr(ch) = nowTick;
-				chState.ccr = nowTick;
+				// The old CCR can match between the SR check above and this
+				// write (the flag sets, the prio-3 ISR preempts this handoff a
+				// few cycles later). The pending ISR fires the channel either
+				// way - restore the old CCR so its lateness telemetry is the
+				// true dispatch latency, not a ~2^32 wrap against the new one.
+				if (ANGLE_CLOCK_TIMER->SR & flag) {
+					*channelCcr(ch) = oldCcr;
+				} else {
+					chState.ccr = nowTick;
+				}
 			} else {
 				cancelChannel(ch);
 			}
@@ -393,9 +408,19 @@ void angleClockRefresh() {
 
 		// Re-anchor: only the CCR moves (earlier OR later, both safe - the
 		// compare can only hit a future tick once). Never touches action/IE,
-		// see the file-header concurrency note.
+		// see the file-header concurrency note. The write is not atomic with
+		// the SR check above: the old CCR can match in the few cycles between
+		// them (the flag sets before the prio-3 ISR runs). Writing the new
+		// far-future CCR would make that pending ISR measure
+		// late = CNT - newCcr (the ~2^32 maxLateUs wrap) - so re-read SR after
+		// the write and restore the old CCR when the match happened in the
+		// window. The channel then re-anchors next tooth.
 		*channelCcr(ch) = newTick;
-		chState.ccr = newTick;
+		if (ANGLE_CLOCK_TIMER->SR & flag) {
+			*channelCcr(ch) = oldCcr;
+		} else {
+			chState.ccr = newTick;
+		}
 	}
 }
 

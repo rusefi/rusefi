@@ -314,27 +314,26 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_
 	if (hasFirmwareError()) {
 		/**
 		 * In case on a major error we should not process any more events.
+		 * Armed angle-clock events are deliberately left armed: they fire at
+		 * their bounded ticks exactly like the time-based events of the FALSE
+		 * build, and the charge-anchored overdwell rescue remains the coil
+		 * safety net. Engine safety after a fatal error comes from
+		 * limpManager's cut, not from cancelling already-scheduled events.
 		 */
-#if EFI_ANGLE_CLOCK
-		// Drop any armed angle-clock events too: nothing may fire into an
-		// engine that limpManager has already cut (ignition/injection off).
-		// The armed coil-fire is the only safety discharge and is covered by
-		// the overdwell rescue, so cancelling everything here is safe.
-		angleClockCancelAll();
-#endif // EFI_ANGLE_CLOCK
 		return;
 	}
 
 	float rpm = engine->rpmCalculator.getCachedRpm();
 	if (rpm == 0) {
-		// this happens while we just start cranking
-
-#if EFI_ANGLE_CLOCK
-		// No valid phase: drop any armed angle-clock events so nothing fires
-		// into a stopped/unsynchronized engine. Coil-off safety remains with
-		// the overdwell rescue, which is cancelled by the normal stop path.
-		angleClockCancelAll();
-#endif // EFI_ANGLE_CLOCK
+		// this happens while we just start cranking - and on EVERY flap of the
+		// catch trigger storm, where the rpm sensor flaps 0/nonzero at ~1 kHz.
+		// Armed angle-clock events are NOT cancelled here: cancelling them
+		// turned every storm flap into a lost fire (the C935x rescue cluster
+		// on the car) and a fire on a never-charged coil (C9012). The armed
+		// ticks are bounded (angle-domain arming + per-tooth refresh) and the
+		// charge-anchored overdwell rescue bounds any charge, so they fire
+		// exactly like the time-based events of the FALSE build - which fire
+		// by time regardless of the rpm flap.
 
 		// todo: check for 'trigger->is_synchnonized?'
 		return;
