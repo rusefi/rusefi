@@ -10384,3 +10384,57 @@ delay walking to its window (up toward ~32 ms on the 39 kHz bench chip,
 down toward ~22 ms on a 64 kHz car chip), EC settling <=4 with no KILL
 pulses. The bench validates mechanics only; the health verdict is the
 car. The cross-measurement stays as the ground-truth instrument.
+
+## 2026-08-31 (12:19 bench) - the stop/re-arm theory is WRONG: the 2x period is the SLEEP-MODE CLOCK GATE (APB1LPENR)
+
+The 12:19 bench run of the free-run build is decisive AGAINST the
+stop/re-arm theory: per is STILL 2.1..2.6x (57321..71166 us for a 27 ms
+arm, stretch on every cycle), while the masked cross-measurement prints
+exact clocks in the SAME pins dump (tm=2500 nt=40000 cyc=2880009 ->
+250 kHz). So the free-run conversion changed nothing measurable - the
+stretch was never the CR1=0/CNT=0 stop cycle.
+
+The real root cause, found in the fork's CRM macros
+(firmware/ChibiOS/os/hal/ports/AT32/AT32F4xx/at32_rcc.h):
+
+    rccEnableAPB1(mask, lp): APB1ENR |= mask;  if (lp) APB1LPENR |= mask;
+                                             else  APB1LPENR &= ~mask;
+
+- On this AT32 port, rccEnableTIMx(false) CLEARS the LPEN bit, which
+  gates the peripheral clock OFF in SLEEP mode. ChibiOS idles (WFI)
+  constantly, so a false-enabled timer only advances during CPU-awake
+  windows - the effective rate tracks the console-poll wake duty, which
+  is exactly why it looked like run-to-run drift (TMR10's 144..117 MHz
+  saga) and why the stretch factor varies 2.1..2.6x.
+- The WDA timer was enabled with rccEnableTIM7(false) -> TMR7LPEN=0 ->
+  counter frozen in sleep -> fires stretch. TIM5 is immune because the
+  TIMv1 PWM LLD enables it with rccEnableTIM5(true) (all 53 LLD timer
+  enables in the fork pass lp=true) - that is why the executor feed
+  "worked perfectly" and why NT measures exact.
+- The masked pins cross-measurement always printed the exact rate
+  because its busy-wait (do{}while on CYCCNT) keeps the CPU awake - the
+  instrument was blind to the sleep gating by construction. Its "exact
+  while the live feed is 2x" contrast is what finally localized the
+  bug to sleep.
+- Supporting evidence: the 11:38 triple pins dump shows TMR7 advancing
+  only ~5k ticks over 7-46 s of TIM5 time (counter almost frozen between
+  the busy pins commands), and the 1 Hz liveness CNT samples are random
+  phase, not the steady 1010-tick/sample drift a continuously running
+  250 kHz counter would show.
+
+THE FIX (this commit):
+- l9779.cpp wdaTimerInit: rccEnableTIM7(false) -> rccEnableTIM7(true).
+- angle_clock.cpp initAngleClock: rccEnableTIM2(false) ->
+  rccEnableTIM2(true). THIS ONE MATTERS ON THE CAR: TMR2 (the angle
+  clock) was also sleep-gated while TIM5 (the NT domain) ran - the
+  init-measured NT<->TMR2 offset drifts on every sleep period (key-on
+  engine-off, console idle), so armed absolute ticks would fire at the
+  wrong time after wake. The free-run conversion is KEPT: it is the
+  TIM5 pattern, removes the per-cycle stop and the UG spurious-fire
+  hazard, and the !CEN heal can only fire on a genuinely dead
+  peripheral - but it was not the 2x cause.
+
+Validation: compile.sh m74_9 -> BUILD SUCCESSFUL. Next bench run must
+show per~27 ms / ratio~100% / stretch=0 with the SAME idle bench (no
+console pokes needed) - if it does, the saga is closed and the car
+verdict is the only open question.

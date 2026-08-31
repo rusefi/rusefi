@@ -121,7 +121,16 @@ TRIGGER_RAM_CODE void STM32_TIM2_HANDLER(void) {
 } // extern "C"
 
 void initAngleClock() {
-	rccEnableTIM2(false);
+	/* lp=true is LOAD-BEARING on the AT32 port: rccEnableTIMx(false) CLEARS
+	 * the APB1LPENR bit (the fork's rccEnableAPB1 macro), which gates the
+	 * timer clock OFF in sleep mode. TIM5 (the NT domain, enabled by the
+	 * PWM LLD with lp=true) keeps running in sleep, so a sleep-gated TMR2
+	 * would drift its init-measured NT<->angle-clock offset on every idle
+	 * period (key-on engine-off, console idle) - every armed absolute tick
+	 * would fire at the wrong time after wake. The same bug gated the WDA
+	 * feed timer (see l9779.cpp rccEnableTIM7): the whole 2x-period saga
+	 * was a sleep-gated counter, not a drifting clock. */
+	rccEnableTIM2(true);
 
 	// Freeze TMR2 together with TIM5 when the core halts (debugger): both are
 	// free-running 4 MHz counters and the NT<->angle-clock offset must stay
