@@ -50,10 +50,11 @@ static constexpr uint32_t CC_IF_MASK =
 static constexpr uint32_t ARM_MARGIN_TICKS = US2NT(4);
 
 // Absolute ceiling for the angle->time basis fed by angleClockOnTooth, see
-// the comment there: NT ticks per degree, 5 ms/deg. Bounds the armed delay
-// to MAX_LEAD_DEG x 5 ms = 150 ms so a garbage basis cannot stick a channel
-// for the whole run.
-static constexpr float MAX_TICKS_PER_DEGREE = US2NT(5000);
+// the comment there: NT ticks per degree, 2 ms/deg (~120 rpm floor). Bounds
+// the armed delay to MAX_LEAD_DEG x 2 ms so a garbage basis cannot stick a
+// channel for the whole run - and cannot stretch the armed tick into the
+// catch-storm lateness that made the car fire 4.5-8 ms late.
+static constexpr float MAX_TICKS_PER_DEGREE = US2NT(2000);
 
 // Arming/refresh reject targets farther than this many degrees away. The
 // early windows arm at most 2 teeth ahead (12.4 deg on 60-2); anything beyond
@@ -68,6 +69,13 @@ static constexpr float MAX_LEAD_DEG = 30.0f;
 // charge to 1.5x dwell. There is no late-start drop anymore - dropping turned
 // executor load into a complete misfire (no charge at all) and a wrapped
 // unsigned late misread the refresh race as a drop.
+
+// A desynced channel's armed tick may be stretched by a storm-garbage basis
+// (the phase jump left it armed - see the refresh branch below). Clamp it to
+// this horizon so it cannot fire wildly late: the event fires within the
+// bound, the charge-anchored overdwell rescue stays the backstop.
+static constexpr uint32_t MAX_STALE_TICKS = US2NT(4000);
+
 static constexpr int ANGLE_CLOCK_CHANNELS = 4;
 
 struct AngleClockChannel {
@@ -413,14 +421,27 @@ void angleClockRefresh() {
 
 		// Phase basis jumped (desync/re-sync): the stored angle is no longer
 		// meaningful for RE-ANCHORING, but the armed tick is an absolute time
-		// and does not jump - leave the channel alone so it fires at its tick
-		// within 1-2 teeth. Cancelling here turned every desync into a misfire
-		// + overdwell rescue (the bench self-stim desyncs every revolution and
-		// all four coils fired by rescues at 4.5 ms - the "events arrive late"
-		// signature). The time-based build behaves the same way: its events
-		// fire by time regardless of sync. New arms after the re-sync go
-		// through the window logic with the fresh basis.
+		// and does not jump - leave the channel armed so it fires, exactly
+		// like the time-based build (which fires by time regardless of sync).
+		// The tick may however be stretched by a storm-garbage basis from its
+		// arming tooth - clamp it to a bounded horizon when it is farther out,
+		// so it cannot fire 4-16x late (the car catch instability: the rescue
+		// discharged at 1.5x dwell before the stretched fire arrived).
 		if (remaining > MAX_LEAD_DEG) {
+			uint32_t oldCcr = *channelCcr(ch);
+			if (static_cast<int32_t>(oldCcr - ANGLE_CLOCK_TIMER->CNT) > static_cast<int32_t>(MAX_STALE_TICKS)) {
+				uint32_t boundedTick = ANGLE_CLOCK_TIMER->CNT + MAX_STALE_TICKS;
+				*channelCcr(ch) = boundedTick;
+				// Same match-in-the-window race guard as the re-anchor below:
+				// the old CCR can match between the SR check above and this
+				// write. Restore it when it did - the pending ISR then measures
+				// its true latency and fires the event.
+				if (ANGLE_CLOCK_TIMER->SR & flag) {
+					*channelCcr(ch) = oldCcr;
+				} else {
+					chState.ccr = boundedTick;
+				}
+			}
 			continue;
 		}
 
