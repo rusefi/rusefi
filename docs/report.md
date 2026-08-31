@@ -10330,3 +10330,55 @@ not include the wda[0..9] liveness lines. Next bench run: full pins
 output. If per=2x while the cross-measure says 250 kHz, the stretch is
 a counter-stall mechanism, not the clock; if the cross-measure says
 ~125 kHz, the run-to-run drift reproduced and the CRM hunt begins.
+
+## 2026-08-31 (12:00) - ANSWERED: the 2x period is the STOP/RE-ARM cycle, not the clock - TMR7 converted to a free-running auto-reload timer
+
+The 11:50 bench session settled the open question in one pins dump:
+- the cross-measurement prints EXACT clocks every time while the live
+  feed simultaneously runs at 2x: "ST 100 ms per 28800000 HCLK cycles",
+  "NT 3.9 MHz", "TMR7 tick 250.1 kHz" - the timer clock is NOT drifting.
+- the live lines show per=57953..72534 us for a 27 ms arm (2.1..2.7x),
+  ratio=214-268%, stretch=16/16, late = per - 27 ms exactly, cnlat=4 us
+  (ISR prompt, the wrap itself late in NT time) - the fire-to-fire
+  interval stretched while the counter's rate was provably exact.
+- wda[4] per=1100us: a ~1 ms fire right after the previous one - the
+  signature of a spurious immediate UIF from the arm sequence
+  (EGR|UG sets UIF; the SR=0 clear races with the re-enable), after
+  which the next real fire comes a full period later.
+- minimum per = exactly ~2x with nothing between ~1 ms and ~54 ms.
+
+CONCLUSION: the stretch lives in the stopped/re-armed one-shot cycle
+(CR1=0 -> CNT=0 -> ARR -> EGR|UG -> SR=0 -> CEN per fire), not in the
+clock. The counter ran perfectly when not being re-armed every cycle
+(the masked measurement), so the AT32 16-bit basic timer must not be
+stopped between fires for periodic work.
+
+THE FIX (this commit, l9779.cpp): TMR7 is now a FREE-RUNNING
+auto-reload periodic timer - the TIM5 pattern the whole saga was
+chasing.
+- Started once (boot kick / post-reset self-heal full start:
+  CR1=0 -> CNT=0 -> ARR -> EGR|UG -> SR=0 -> DIER|UIE -> CEN).
+- The ISR clears UIF and dispatches; it NEVER disarms. The auto-reload
+  restarts the count at the wrap and fires every ARR+1 ticks.
+- wdaTimerArm is now "set the period": while running it latches a new
+  ARR via EGR|UG (PR is preload-only on the AT32 - the 18:17 un-latched
+  ARR lesson) ONLY when the period actually changed - an unchanged
+  period is a no-op that preserves phase and avoids the UG spurious-UIF
+  hazard. The UG re-inits CNT, so a changed period keeps the exact
+  from-now semantics of the old one-shot (defer 1 ms / SPI-fail 10 ms
+  retries and the +-5 ms REQUHI adaptation still work unchanged).
+- CEN stays 1 while the feed runs; the thread's liveness heal
+  (!CEN -> re-kick) can now only fire on a genuinely dead peripheral.
+- The on-time verdict gate is KEPT as a cause-agnostic safety net: with
+  the free-run timer it should idle at ratio~100% and only flag the
+  short defer/retry cycles, letting the REQUHI verdicts move the delay
+  again.
+- Print bug fixed: the cross-measurement's TMR7 "input MHz" divided by
+  10000 instead of 1000 ("28.7 MHz" should be "287.8 MHz").
+
+Validation: compile.sh m74_9 -> BUILD SUCCESSFUL. Bench validation
+pending (flash + pins): expect per~27 ms, ratio~100%, stretch=0,
+delay walking to its window (up toward ~32 ms on the 39 kHz bench chip,
+down toward ~22 ms on a 64 kHz car chip), EC settling <=4 with no KILL
+pulses. The bench validates mechanics only; the health verdict is the
+car. The cross-measurement stays as the ground-truth instrument.
