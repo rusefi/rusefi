@@ -10849,3 +10849,21 @@ distinct next-next tooth exists.
 Validation: compile_m74_9.sh BUILD SUCCESSFUL (EFI_ANGLE_CLOCK TRUE); unit
 tests 1169/1169 PASSED. Verdict on the bench/car: angclk refuse must drop to
 ~0 and fired climb; no C9012/C935x/C9002 on the car.
+
+## 2026-08-31 (19:25, BENCH self-stim 800 rpm) - angle clock fully armed on TMR2 (VALIDATED)
+
+After the findNextTriggerToothAngle duplicate-skip + nextNextPhase+2 fix:
+angclk att=1632 fire=1627 refuse=0 noCh=0 lateArm=0 drop=0 maxLateUs=0,
+sched dwell=0 spark=0 - all three event kinds (dwell start, coil fire,
+injection start) are armed one tooth ahead on TMR2 and the TIM5 executor is
+freed of ignition entirely. overdwell n=5 (was 313): four at sync
+establishment (first cycles after sync, one per cylinder, 1.4 s apart) plus
+one during a lockstats dump. All five are bounded at 7.15 ms (1.5x dwell)
+and spread in time - not the simultaneous cluster that blew the fuse. The
+fuse mechanism is dead on the bench.
+
+Remaining known items: the ~1% fire misses (the 5 bounded rescues) at
+sync-establishment/stall moments; busyUs ~46 s is the 32-bit counter-wrap
+telemetry artifact (counter approaching its 1073 s wrap), not a real stuck
+tick. Car verdict is the next step: crank and watch C9351-4 / C9012 /
+angclk counters.
