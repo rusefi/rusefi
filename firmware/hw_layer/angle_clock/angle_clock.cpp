@@ -114,6 +114,7 @@ static uint32_t s_noChannelCount = 0;	// all four channels busy
 static float s_lastRefuseTarget = 0;	// targetAngle of the last refusal
 static float s_lastRefusePhase = 0;		// s_currentPhase of the last refusal
 static float s_lastRefuseCallerPhase = 0;	// the caller's currentPhase at the last refusal
+static float s_lastRefuseCallerNext = 0;	// the caller's nextPhase at the last refusal
 static float s_lastRefuseBasis = 0;		// s_ticksPerDegree of the last refusal
 static float s_lastRefuseRemaining = 0;	// the computed remaining (wrapped) that was refused
 static uint32_t s_lastRefuseCallback = 0;	// callback address of the refused action - names the caller
@@ -324,7 +325,7 @@ static void cancelChannel(int ch) {
 	ANGLE_CLOCK_TIMER->DIER &= ~(STM32_TIM_DIER_CC1IE << ch);
 }
 
-bool angleClockArm(float targetAngle, action_s action, AngleClockKind kind, float callerPhase) {
+bool angleClockArm(float targetAngle, action_s action, AngleClockKind kind, float callerPhase, float callerNextPhase) {
 	s_armAttempts++;
 
 	float remaining = remainingAngle(targetAngle);
@@ -337,6 +338,7 @@ bool angleClockArm(float targetAngle, action_s action, AngleClockKind kind, floa
 		s_lastRefuseTarget = targetAngle;
 		s_lastRefusePhase = s_currentPhase;
 		s_lastRefuseCallerPhase = callerPhase;
+		s_lastRefuseCallerNext = callerNextPhase;
 		s_lastRefuseBasis = s_ticksPerDegree;
 		s_lastRefuseRemaining = remaining;
 		s_lastRefuseCallback = reinterpret_cast<uint32_t>(action.getCallback());
@@ -532,6 +534,10 @@ float angleClockLastRefuseCallerPhase() {
 	return s_lastRefuseCallerPhase;
 }
 
+float angleClockLastRefuseCallerNext() {
+	return s_lastRefuseCallerNext;
+}
+
 float angleClockLastRefuseBasis() {
 	return s_lastRefuseBasis;
 }
@@ -572,6 +578,7 @@ void angleClockResetStats() {
 	s_lastRefuseTarget = 0;
 	s_lastRefusePhase = 0;
 	s_lastRefuseCallerPhase = 0;
+	s_lastRefuseCallerNext = 0;
 	s_lastRefuseBasis = 0;
 	s_lastRefuseRemaining = 0;
 	s_lastRefuseCallback = 0;

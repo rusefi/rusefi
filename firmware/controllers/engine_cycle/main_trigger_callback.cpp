@@ -99,7 +99,12 @@ void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float n
 	// the first cycle after a (re)sync, when the start angle can already be
 	// inside the current tooth.
 #if EFI_ANGLE_CLOCK
-	bool scheduleEarly = isPhaseInRange(eventAngle, nextPhase, nextNextPhase);
+	// The early window is only meaningful with a distinct next-next tooth:
+	// useOnlyRisingEdges wheels store the falling edge at the preceding
+	// rise's angle, so nextNextPhase == nextPhase and isPhaseInRange would
+	// match every angle (the arm would refuse every tooth). Fall back to the
+	// current-tooth window, as the fire arm's guard already does.
+	bool scheduleEarly = nextNextPhase != nextPhase && isPhaseInRange(eventAngle, nextPhase, nextNextPhase);
 #else
 	bool scheduleEarly = false;
 #endif // EFI_ANGLE_CLOCK
@@ -239,7 +244,7 @@ void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float n
 	efitick_t startTime = sumTickAndFloat(nowNt, USF2NT(delayUs));
 
 #if EFI_ANGLE_CLOCK
-	if (angleClockArm(eventAngle, startAction, AngleClockKind::Start, currentPhase)) {
+	if (angleClockArm(eventAngle, startAction, AngleClockKind::Start, currentPhase, nextPhase)) {
 		// armed on the hardware angle clock - the ends below still follow in
 		// the time domain, computed from the intended start moment.
 	} else

@@ -534,7 +534,7 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 #endif // EFI_ANGLE_CLOCK
 
 #if EFI_ANGLE_CLOCK
-		if (!angleClockArm(dwellAngle, action_s::make<turnSparkPinHighStartCharging>( event ), AngleClockKind::Start, currentPhase))
+		if (!angleClockArm(dwellAngle, action_s::make<turnSparkPinHighStartCharging>( event ), AngleClockKind::Start, currentPhase, nextPhase))
 #endif // EFI_ANGLE_CLOCK
 		{
 			engine->scheduler.schedule("dwell", &event->dwellStartTimer, chargeTime, action_s::make<turnSparkPinHighStartCharging>( event ));
@@ -768,7 +768,15 @@ void onTriggerEventSparkLogic(float rpm, efitick_t edgeTimestamp, float currentP
 				// window of the NEXT tooth.
 				bool scheduleEarly = false;
 #if EFI_ANGLE_CLOCK
-				scheduleEarly = isPhaseInRange(dwellAngle, nextPhase, nextNextPhase);
+				// The early window is only meaningful when a distinct next-next
+				// tooth exists: useOnlyRisingEdges wheels store the falling edge at
+				// the preceding rise's angle, so findNextTriggerToothAngle(i+1)
+				// returns the same phase as nextPhase and isPhaseInRange
+				// (next <= current) then matches EVERY angle - the dwell would be
+				// armed every tooth and refused, exactly like the fire arm's guard
+				// below. Fall back to the current-tooth window (FALSE-build
+				// behavior) in that case.
+				scheduleEarly = nextNextPhase != nextPhase && isPhaseInRange(dwellAngle, nextPhase, nextNextPhase);
 #endif // EFI_ANGLE_CLOCK
 				bool scheduleNow = isPhaseInRange(dwellAngle, currentPhase, nextPhase);
 				if (event->dwellStartArmed || (!scheduleEarly && !scheduleNow)) {
