@@ -10509,3 +10509,61 @@ sleep-proof timer period, chip acceptance at 27 ms with EC pinned at 0,
 non-destructive diagnostics, stable servo. The only remaining verdict is
 the CAR (its chip is the same 64 kHz window [15.8, 28.4] ms - 27 ms sits
 inside with +-5% CLK1 drift margin).
+
+## 2026-08-31 (13:04/13:17, CAR) - lockstats scheduler-lateness analysis at idle (~1200) and 2000 rpm
+
+Three lockstats dumps analyzed (13:04:08/13:04:55/13:05:32 at ~1200 rpm,
+13:17:26 at 2000 rpm). Semantics first (from the code): `late` =
+actual-execution instant minus scheduled moment, captured with a fresh
+getTimeNowNt() PER event inside the executor's batch (event_queue.cpp
+`executeOne`, m_lateDelay = 8us: everything due within 8us of the CC1
+fire executes in one batch with spin-waits). So an event behind a slow
+callback in the same tick measures the predecessors' duration as its
+"late" - the metric is batch order + ISR entry, not preemption (the
+executor is prio 3; only the 2-3us fast EXTI preempts it). The 4-16us
+mode of 85% of all events = executor entry + batch overhead, normal.
+
+Resolved othercb addresses (addr2line on the matching ELF):
+- 08058429 = startAveraging (MAP window start), 08058335 = endAveraging
+  (MAP window end), 0804A0F5 = startKnockSampling (knock window start),
+  08049D41 = onTdcCallback (TDC), 0807175D = watchDogBuddyCallback
+  (scheduler watchdog), 0803E53D = timerValidationCallback (one-off),
+  0804B871 = PrimeController::onPrimeStartAdapter, 08072257 =
+  PrimeController::onPrimeEndAdapter (the priming pulse pair).
+
+Idle (~1200): exec late>=10us 69-80%, maxLate 114us. Spark 88-93% late
+but tight (max 20-21us in the clean sessions) - it rides behind the
+fuel-END event that lands 8-15us earlier in the same batch. Fuel 82-97.5%
+late, max 87-91us, fuel callback itself up to 80us. Worst measured
+"victims": startAveraging up to 109us late (85-94% rate) - batched with
+the spark tick; startKnockSampling (n == dwell count) behind dwell; TDC
+behind dwell. Self-duration leaders: dwell cbmax 190us in session 1
+(41-43us later - a rare outlier), fuel 74-80us, spark 49-57us.
+
+2000 rpm: the same mechanism, the tails grow - tooth period 517us, so
+1us = 0.012 deg. exec late>=10us 75.7%, maxLate 161us = 1.9 deg; fuel
+94% late max 136us = 1.6 deg; spark max 161us; dwell late-rate stays low
+(28.8%) but cbmax hits 202us AGAIN (1 in ~23k) and the first overdwell
+event takes 189us. schedulerIsr now spends 64% of entries in 50-100us
+(more events coalesce per tooth at 2k). 430 events in the 64-256us
+bucket = 0.8-3.1 deg. Trigger side: avg 45us, one 764us decode in
+~666k teeth - at 517us tooth period that tail overlaps the next tooth
+and can miss the 1-tooth arming window (the known open item, now
+rpm-relevant).
+
+Conclusions:
+- The idle/2k lateness is batch-order, not ISR load; the engine-timing
+  commands float by the batch penalty. At 2k the tails (1.6-1.9 deg)
+  become knock-relevant.
+- EFI_ANGLE_CLOCK is FALSE in this build (disabled 2026-08-30 after the
+  fuse incident), so ALL dwell/spark/fuel run the classic TIM5 path - the
+  lockstats sched lines prove it (with the angle clock ON those events
+  would be deleted from the angle queue and fired by TMR2, and the
+  per-kind counts would be ~0).
+- Two open items: (1) the dwell 190-202us outlier - the only non-trivial
+  path in turnSparkPinHighStartCharging is the CUSTOM_OBD_SKIPPED_SPARK
+  warning() console print from ISR; confirm by grepping the car log for
+  "looks like skipped spark event"; (2) the 764us trgPostDecode tail.
+- Next lever: re-enable EFI_ANGLE_CLOCK (TMR2 now fixed from the
+  sleep-gate) - dwell/spark/injection-start move to the 2-tooth-lead
+  hardware compare and out of these batch statistics entirely.
