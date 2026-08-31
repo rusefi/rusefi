@@ -10711,3 +10711,28 @@ Root causes found and fixed:
 Validation: TRUE + FALSE firmware builds OK (nm: 4 angle-clock symbols
 vs 0), unit tests 1169/1169. Bench re-run pending - expect
 noChannel~0, no C935x, angclk maxLateUs small.
+
+## 2026-08-31 (16:00, BENCH) - rescue bound works (4.5 ms), three follow-ups fixed
+
+The clamped+charge-anchored build was re-run on the bench: C9351-4
+overcharges are now EXACTLY 4.5 ms (1.5x the 3 ms dwell - the
+charge-anchored rescue bounding the charge precisely), no 213/264 ms
+monsters, no fuse. Three remaining issues fixed:
+
+1. noChannel still ~115: the relative 16x basis clamp cannot see the
+   10 s decoder clamp when the rpm average itself is stale (NaN at the
+   first teeth). Fixed with an ABSOLUTE ceiling on the basis - 5 ms/deg
+   (~32 rpm equivalent) applied in angleClockOnTooth AND on the stored
+   field, bounding any armed delay to 150 ms (MAX_LEAD_DEG x the cap).
+2. maxLateUs ~2^32 telemetry wrap: the refresh re-anchored a channel
+   whose old CCR had already matched while the TMR2 ISR was masked by a
+   chSysLock section of the same handoff - the pending ISR then measured
+   late = CNT - the NEW far-future ccr. Fixed: the refresh skips
+   channels with a pending CCxIF (they re-anchor next tooth).
+3. C9012 out-of-order coil off: a fire arriving after the rescue had
+   already discharged the coil. Fixed: fireSparkAndPrepareNextSchedule
+   no-ops on sparkFiredSinceCharge (the same idempotency flag the
+   rescue uses).
+
+Validation: TRUE build OK (one build, 4 angle-clock symbols). Bench
+re-run pending - expect noChannel ~0, maxLateUs microseconds, no C9012.

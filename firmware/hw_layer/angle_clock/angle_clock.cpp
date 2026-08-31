@@ -49,6 +49,12 @@ static constexpr uint32_t CC_IF_MASK =
 // is racy. 4 us mirrors the TIM5 compare clamp.
 static constexpr uint32_t ARM_MARGIN_TICKS = US2NT(4);
 
+// Absolute ceiling for the angle->time basis fed by angleClockOnTooth, see
+// the comment there: NT ticks per degree, 5 ms/deg. Bounds the armed delay
+// to MAX_LEAD_DEG x 5 ms = 150 ms so a garbage basis cannot stick a channel
+// for the whole run.
+static constexpr float MAX_TICKS_PER_DEGREE = US2NT(5000);
+
 // Arming/refresh reject targets farther than this many degrees away. The
 // early windows arm at most 2 teeth ahead (12.4 deg on 60-2); anything beyond
 // this bound means the phase basis jumped (desync/re-sync) and the stored
@@ -257,7 +263,20 @@ void angleClockOnTooth(efitick_t edgeTimestamp, float currentPhase, float cycleD
 	s_edgeTimestamp = edgeTimestamp;
 	s_currentPhase = currentPhase;
 	s_cycleDeg = cycleDeg;
-	s_ticksPerDegree = ticksPerDegree;
+
+	// Absolute ceiling on the angle->time basis: the decoder clamps the stored
+	// tooth duration to 10 s after a long pause, and the relative rpm-band
+	// clamp cannot see it when the rpm average itself is stale (NaN at the
+	// first teeth). 5 ms/deg (~32 rpm equivalent) is above any real cranking
+	// tooth and far below the garbage - a capped basis bounds the armed delay
+	// (MAX_LEAD_DEG x the cap) so a channel can never be stuck for the run.
+	if (!(ticksPerDegree > 0)) {
+		s_ticksPerDegree = 0;
+	} else if (ticksPerDegree > MAX_TICKS_PER_DEGREE) {
+		s_ticksPerDegree = MAX_TICKS_PER_DEGREE;
+	} else {
+		s_ticksPerDegree = ticksPerDegree;
+	}
 }
 
 // Angle from the current phase to the target, wrapped into [0, cycleDeg).
@@ -329,6 +348,18 @@ void angleClockRefresh() {
 	for (int ch = 0; ch < ANGLE_CLOCK_CHANNELS; ch++) {
 		auto& chState = s_channels[ch];
 		if (!chState.action) {
+			continue;
+		}
+
+		uint32_t flag = STM32_TIM_SR_CC1IF << ch;
+
+		// The old CCR may already have matched while the TMR2 ISR was masked
+		// (a chSysLock section of this handoff): the flag is pending and the
+		// ISR will fire the channel with the OLD ccr as soon as it unmasks.
+		// Skipping keeps the ccr the ISR measures consistent - re-anchoring
+		// here made 'late = CNT - ccr' read the NEW far-future ccr and wrap
+		// (~2^32 in the maxLateUs telemetry). The channel re-anchors next tooth.
+		if (ANGLE_CLOCK_TIMER->SR & flag) {
 			continue;
 		}
 
