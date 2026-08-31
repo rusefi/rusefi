@@ -216,6 +216,13 @@ void overFireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 	// kill pending fire
 	engine->module<TriggerScheduler>()->cancel(&event->sparkEvent);
 
+#if EFI_ANGLE_CLOCK
+	// Also kill a time-based fallback fire (armed when the TMR2 arm failed):
+	// it would fire after this rescue and double-fire an already-low coil
+	// (the bench C9012 out-of-order coil off).
+	engine->scheduler.cancel(&event->sparkEvent.eventScheduling);
+#endif // EFI_ANGLE_CLOCK
+
 	engine->engineState.overDwellCanceledCounter++;
 	event->wasSparkCanceled = true;
 	fireSparkAndPrepareNextSchedule(event);
@@ -240,6 +247,11 @@ void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 	}
 
 #if EFI_ANGLE_CLOCK
+	// Cancel the charge-anchored overdwell rescue: the fire just happened, the
+	// rescue is a redundant writer (also guarded by sparkFiredSinceCharge) and
+	// the multispark branch below reuses dwellStartTimer for the restrike.
+	engine->scheduler.cancel(&event->dwellStartTimer);
+
 	// The coil is discharged: a later overdwell rescue for this charge must
 	// no-op (see overFireSparkAndPrepareNextSchedule).
 	event->sparkFiredSinceCharge = true;
@@ -399,6 +411,20 @@ void turnSparkPinHighStartCharging(IgnitionEvent *event) {
 #if EFI_ANGLE_CLOCK
 	// A new charge begins: re-arm the rescue idempotency for this charge.
 	event->sparkFiredSinceCharge = false;
+
+	// Anchor the overdwell rescue at the ACTUAL charge moment (1.5x the
+	// planned dwell), not at schedule time: the arming prediction can be off
+	// at the catch/self-stim ramp, and a schedule-time anchor stays on the
+	// stale prediction while the refresh re-anchors the TMR2 events to the
+	// correct times (the bench 213/264 ms overcharges). Anchoring here makes
+	// the overcharge bound exact regardless of any prediction error.
+	// Multispark restrikes have no rescue (their fire is time-scheduled) - the
+	// dwellStartTimer struct is also reused by the restrike scheduling, so the
+	// rescue is armed only for the final charge of the cycle.
+	if (event->sparksRemaining == 0) {
+		efitick_t fireTime = sumTickAndFloat(nowNt, MSF2NT(1.5f * event->sparkDwell));
+		engine->scheduler.schedule("overdwell", &event->dwellStartTimer, fireTime, action_s::make<overFireSparkAndPrepareNextSchedule>( event ));
+	}
 #endif // EFI_ANGLE_CLOCK
 
 #if EFI_UNIT_TEST
@@ -427,6 +453,12 @@ void turnSparkPinHighStartCharging(IgnitionEvent *event) {
 static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 		float rpm, float dwellMs, float dwellAngle, float sparkAngle, efitick_t edgeTimestamp, float currentPhase, float nextPhase) {
 	UNUSED(rpm);
+#if EFI_ANGLE_CLOCK
+	// The overdwell rescue is anchored at the actual charge moment in the
+	// angle-clock build, not at schedule time - dwellMs is only used here by
+	// the time-based build's schedule-time rescue anchor.
+	UNUSED(dwellMs);
+#endif // EFI_ANGLE_CLOCK
 
 	float angleOffset = dwellAngle - currentPhase;
 	if (angleOffset < 0) {
@@ -548,6 +580,7 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 	if (isTimeScheduled) {
 		// event was scheduled by time, we expect it to happen reliably
 	} else {
+#if !EFI_ANGLE_CLOCK
 		// event was queued in relation to some expected tooth event in the future which might just never come so we shall protect from over-dwell
 		if (!limitedSpark) {
 			// auto fire spark at 1.5x nominal dwell
@@ -573,6 +606,17 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 		} else {
 		  engine->engineState.overDwellNotScheduledCounter++;
 		}
+#else
+		// The angle-clock build anchors the overdwell rescue at the ACTUAL
+		// charge moment (turnSparkPinHighStartCharging): a schedule-time
+		// anchor uses the arming prediction, which the catch/self-stim ramp
+		// invalidates - the bench 213/264 ms overcharges came from a rescue
+		// left on the stale prediction while the refresh re-anchored the
+		// TMR2 events to the correct times.
+		if (limitedSpark) {
+			engine->engineState.overDwellNotScheduledCounter++;
+		}
+#endif // !EFI_ANGLE_CLOCK
 	}
 
 #if EFI_UNIT_TEST
