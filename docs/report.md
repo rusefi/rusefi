@@ -10485,3 +10485,27 @@ Fixes in this commit (l9779.cpp):
 Validation: compile.sh m74_9 -> BUILD SUCCESSFUL. Next bench run should
 boot to EC=0 at delay=27 and STAY there across repeated pins calls
 (stretch=0, ratio~100%); the KILL-after-pins behavior must be gone.
+
+## 2026-08-31 (12:52 bench) - BENCH VALIDATION COMPLETE: EC=0 held for 1000+ cycles across repeated pins calls, no KILL-after-pins
+
+Two pins dumps 28 s apart, both clean:
+- per=26918..26922 us (armed 26.92 ms) - EXACT, ratio=99%, stretch=0/1
+  (the lone stretch = one 10 us entry delay), cnlat=4 us, late=0/10 us.
+- First dump: ec=0 wda_int=0, ecUp=1 ecDown=7 (the boot walk 7->0).
+  Second dump (28 s later): ecUp=0 ecDown=0 ecSame=1043 - EC held at ZERO
+  for 1043 consecutive cycles. fail=0 wrong=0 cntbad=0 miss=0 addr_err=0.
+- delay stayed at 27 ms - the tightened +-25% gate no longer lets the pins
+  diagnostic walk it, and the EC-saturation escape was never armed (EC=0).
+- NO "WDA KILL" after either confirmation_pins - the unmasked
+  cross-measurement is non-destructive.
+- foreign=12/6 entries: exactly the UG-latch pairs of the defer cycles
+  (the pins dbg batch defers the feed 1 ms; each defer latches ARR 6729->
+  229->6729, and each UG leaves one pending NVIC entry that re-enters with
+  UIF clear). Harmless one-wasted-entry artifact, diagnostic evidence the
+  latch race is understood.
+
+BENCH VALIDATION COMPLETE. The bench now proves the whole chain: exact
+sleep-proof timer period, chip acceptance at 27 ms with EC pinned at 0,
+non-destructive diagnostics, stable servo. The only remaining verdict is
+the CAR (its chip is the same 64 kHz window [15.8, 28.4] ms - 27 ms sits
+inside with +-5% CLK1 drift margin).
