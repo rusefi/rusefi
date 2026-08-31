@@ -1027,13 +1027,21 @@ TRIGGER_RAM_CODE void TriggerCentral::handleShaftSignal(trigger_event_e signal, 
 		// four channels (noChannel storm) and anchor the TIM5 fallbacks
 		// seconds out (the bench 213/264 ms overcharges). A 16x band leaves
 		// the legit catch transient (fresh vs 90-deg average diverges at most
-		// a few x) untouched.
+		// a few x) untouched. The absolute ceiling also catches the case where
+		// the rpm average itself is stale (NaN at the first teeth) and the
+		// relative band cannot see the garbage.
 		{
 			float rpmTicksPerDegree = US2NT(engine->rpmCalculator.oneDegreeUs);
 			if (rpmTicksPerDegree > 0 &&
 					(lastToothTicksPerDegree > rpmTicksPerDegree * 16 ||
 					 lastToothTicksPerDegree < rpmTicksPerDegree / 16)) {
 				lastToothTicksPerDegree = rpmTicksPerDegree;
+			}
+
+			// 5 ms/deg (~32 rpm equivalent) - above any real cranking tooth,
+			// far below the 10 s decoder clamp.
+			if (lastToothTicksPerDegree > US2NT(5000)) {
+				lastToothTicksPerDegree = US2NT(5000);
 			}
 		}
 #endif // EFI_ANGLE_CLOCK

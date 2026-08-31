@@ -232,6 +232,17 @@ TRIGGER_RAM_CODE void overFireSparkAndPrepareNextSchedule(IgnitionEvent *event) 
  * TL,DR: each IgnitionEvent is in charge of it's own scheduling forever, we plant next event while finishing handling of the current one
  */
 TRIGGER_RAM_CODE void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
+#if EFI_ANGLE_CLOCK
+	// The coil was already discharged for this charge (the overdwell rescue
+	// fired first, or a redundant late fire arrived): do nothing - firing
+	// again trips the out-of-order coil-off warning and a second
+	// prepareCylinderIgnitionSchedule would double-arm the next cycle's
+	// dwell (single-writer contract).
+	if (event->sparkFiredSinceCharge) {
+		return;
+	}
+#endif // EFI_ANGLE_CLOCK
+
 #if EFI_UNIT_TEST
 	if (engine->onIgnitionEvent) {
 		engine->onIgnitionEvent(event, false);
