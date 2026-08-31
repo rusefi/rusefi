@@ -62,14 +62,12 @@ static constexpr float MAX_TICKS_PER_DEGREE = US2NT(5000);
 // phase. A lost CoilFire is covered by the overdwell rescue on TIM5.
 static constexpr float MAX_LEAD_DEG = 30.0f;
 
-// A Start event (dwell/injection start) that executes this late in the TMR2
-// ISR is useless and dangerous: it charges a coil after its moment. Normal
-// ISR lateness at priority 3 is microseconds; this threshold only trips on a
-// gross stall (long chSysLock, flash write) during which the compare passed
-// while the ISR could not run. CoilFire ignores it - the discharge must
-// always happen.
-static constexpr uint32_t DROP_LATE_TICKS = US2NT(1000);
-
+// Every armed event executes when its compare fires, whatever the dispatch
+// lateness: the angle-domain arming + per-tooth refresh bound the armed
+// delay (a few ms), and the charge-anchored overdwell rescue bounds any
+// charge to 1.5x dwell. There is no late-start drop anymore - dropping turned
+// executor load into a complete misfire (no charge at all) and a wrapped
+// unsigned late misread the refresh race as a drop.
 static constexpr int ANGLE_CLOCK_CHANNELS = 4;
 
 struct AngleClockChannel {
@@ -164,27 +162,30 @@ void STM32_TIM2_HANDLER(void) {
 
 		auto& chState = s_channels[ch];
 		action_s action = chState.action;
-		AngleClockKind kind = chState.kind;
 		uint32_t ccr = chState.ccr;
 		chState.action = {};
 
 		if (action) {
-			// Dispatch telemetry: the fixed entry latency of this ISR.
-			uint32_t late = ANGLE_CLOCK_TIMER->CNT - ccr;
+			// Dispatch telemetry: SIGNED so a re-anchored ccr in the future
+			// (the refresh race) reads as negative (early), not a ~2^32 wrap
+			// that the old unsigned read misclassified as grossly late and
+			// DROPPED (2026-08-31 800 rpm self-stim: drop=fired=642, which
+			// killed every dwell so sched dwell=0 spark=8).
+			int32_t late = static_cast<int32_t>(ANGLE_CLOCK_TIMER->CNT - ccr);
 			s_firedCount++;
-			if (late > s_maxLateTicks) {
-				s_maxLateTicks = late;
+			if (late > 0 && static_cast<uint32_t>(late) > s_maxLateTicks) {
+				s_maxLateTicks = static_cast<uint32_t>(late);
 			}
 
-			// Stale-event policy, see angle_clock.h: a charge/injection start
-			// that executes this late is dropped - its moment has passed and
-			// firing it anyway is what piles all coils onto one instant.
-			if (kind == AngleClockKind::CoilFire || late <= DROP_LATE_TICKS) {
-				action.execute();
-			} else {
-				s_droppedCount++;
+			// Every armed event executes when its compare fires. The
+			// angle-domain arming + per-tooth refresh bound the delay and
+			// the charge-anchored overdwell rescue bounds any charge, so a
+			// late event cannot pile up (the pre-redesign 14:13 fuse
+			// incident). Dropping a late start instead converted executor
+			// load into a lost spark (no charge at all), and a wrapped late
+			// turned the refresh race into a spurious drop.
+			action.execute();
 			}
-		}
 	}
 
 	assertInterruptPriority(__func__, EFI_IRQ_ANGLE_CLOCK_PRIORITY);
@@ -358,13 +359,12 @@ bool angleClockArm(float targetAngle, action_s action, AngleClockKind kind, floa
 	for (int ch = 0; ch < ANGLE_CLOCK_CHANNELS; ch++) {
 		auto& chState = s_channels[ch];
 		if (chState.action) {
-			// Busy: record how far its tick is from the counter (both
-			// directions - a far-future tick sticks the channel, a passed
-			// tick that never fired means the flag was lost).
+			// Busy: record how far its tick is in the FUTURE (a genuinely stuck
+			// channel). A passed tick (negative) is a stale ccr, not a stuck
+			// channel - the unsigned wrap would report ~2^32.
 			int32_t delta = static_cast<int32_t>(chState.ccr - ANGLE_CLOCK_TIMER->CNT);
-			uint32_t absDelta = delta < 0 ? static_cast<uint32_t>(-delta) : static_cast<uint32_t>(delta);
-			if (absDelta > s_maxBusyDeltaTicks) {
-				s_maxBusyDeltaTicks = absDelta;
+			if (delta > 0 && static_cast<uint32_t>(delta) > s_maxBusyDeltaTicks) {
+				s_maxBusyDeltaTicks = static_cast<uint32_t>(delta);
 			}
 			continue;
 		}
