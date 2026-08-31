@@ -65,8 +65,9 @@
  * moves this short window by only +-0.8 ms, so a centered feed essentially
  * cannot miss, and any transient recovers ~5x faster.
  *
- * The feed runs one atomic burst per cycle on the TMR7 one-shot (priority
- * 5, BELOW the trigger handoff - see EFI_IRQ_L9779_WDA_PRIORITY). The delay
+ * The feed runs one atomic burst per cycle on the free-running TMR7 timer
+ * (priority 5, BELOW the trigger handoff - see EFI_IRQ_L9779_WDA_PRIORITY).
+ * The delay
  * is adapted ONLY by the REQUHI timing verdicts (+-5 ms per miss, the same
  * policy as the proven executor feed) - there is NO delay walk: the values
  * stay clamped to the window below.
@@ -97,7 +98,7 @@
 #define WDA_DELAY_MAX_MS			(38)
 /* Duration of the feed ISR from dispatch to the END of its RESP_BYTE0 write
  * (3 pipelined reads + 4 answer frames, ~7 x 10 us, plus any handoff
- * preemption). The next one-shot is armed this much short of the full
+ * preemption). The period is set this much short of the full
  * answer period so the BYTE0 lands at the window center; the exact value is
  * irrelevant against the 12.6 ms window. */
 #define WDA_BURST_LEAD_US			(80)
@@ -336,7 +337,7 @@ struct L9779 : public GpioChip {
 	/* ISR-safe polled SPI (TMR7 WDA ISR context, no bus mutex) */
 	int spi_frame_isr(uint16_t tx, uint16_t *rx_ptr);
 	void wdFeedFromExecutor();
-	/* Arm the one-shot TMR7 for the next WDA burst (ISR and thread) */
+	/* Set the TMR7 period for the next WDA burst (ISR and thread) */
 	void wdArmIsr(int delayMs);
 	void debug() override;
 
@@ -377,24 +378,32 @@ struct L9779 : public GpioChip {
 	uint8_t						wd_last_ec;		/* error counter as reported by the chip */
 	bool						wd_int;			/* WDA_INT flag (EC > 4) */
 	int							wd_delay_ms;	/* response delay, aimed at window center */
-	/* The WDA feed runs as a one-shot TMR7 ISR (priority 5): the answer
-	 * must land inside the chip's ~12.6 ms window, and a thread wakeup can
-	 * be delayed past that by trigger-decode ISR load at cranking (the
-	 * observed wd_timing_miss/EC>4 kills). TMR7 runs BELOW the trigger
-	 * handoff on purpose: the old executor feed (priority 3) preempted the
-	 * handoff and delayed decode/scheduling by up to ~100 us per cycle.
-	 * The 12.6 ms window absorbs any handoff preemption of the burst.
+	/* The WDA feed runs as a FREE-RUNNING auto-reload TMR7 ISR (priority 5,
+	 * the TIM5 pattern): the answer must land inside the chip's ~12.6 ms
+	 * window, and a thread wakeup can be delayed past that by trigger-decode
+	 * ISR load at cranking (the observed wd_timing_miss/EC>4 kills). TMR7
+	 * runs BELOW the trigger handoff on purpose: the old executor feed
+	 * (priority 3) preempted the handoff and delayed decode/scheduling by up
+	 * to ~100 us per cycle. The 12.6 ms window absorbs any handoff preemption
+	 * of the burst.
 	 *
-	 * ONE one-shot per monitoring cycle: pipelined status/question reads
+	 * ONE burst per monitoring cycle: pipelined status/question reads
 	 * (REQUHI/REQULO), answer-period adaptation, then the whole 4-byte
 	 * response (RESP_BYTE3..0) as a single atomic burst positioned so
 	 * RESP_BYTE0's END lands at the window center. The burst must NOT be
 	 * split: the chip tracks the response progress in RESP_CNT and compares
 	 * every byte against the expected one for the CURRENT position - a byte
 	 * landing one position late (the old two-phase prepare/BYTE0 scheme)
-	 * desynchronizes the stream permanently and pins EC at 7. The driver
-	 * thread only kicks the first cycle after chip_init (and re-arms a
-	 * timer killed by a system reset - see the liveness check). */
+	 * desynchronizes the stream permanently and pins EC at 7.
+	 *
+	 * The timer is started ONCE (driver thread, after chip_init) and never
+	 * stopped between fires: the old stopped/re-armed one-shot stretched
+	 * every fire-to-fire interval to ~2.5x its armed period even though the
+	 * timer clock is exact (DWT CYCCNT cross-measurement, 2026-08-31) - the
+	 * stretch lived in the CR1=0/CNT=0 stop cycle, not the clock. The period
+	 * is changed only when the delay actually changes (wdTimerArm's ARR + UG
+	 * latch); the driver thread re-starts the timer if a system reset killed
+	 * the peripheral while the RAM flags survived (liveness check). */
 	efitick_t					wd_next_moment;	/* next burst dispatch, for the thread's burst-imminent check */
 	bool						wd_running;
 	int						wd_poll_timeouts; /* polled-SPI frames that hit the RXNE watchdog (diagnostic) */
@@ -1115,14 +1124,14 @@ int L9779::chip_reset() {
 /* Driver thread.								   	*/
 /*==========================================================================*/
 
-/* The WDA feed runs in a TMR7 one-shot ISR, see the
+/* The WDA feed runs in a FREE-RUNNING auto-reload TMR7 ISR, see the
  * wd_running/wd_next_moment comment in the struct. Single chip instance on
  * this board. */
 static L9779 *s_wda_chip;
 
 /* Direct register access to TMR7, NOT the ChibiOS GPT driver: the GPT
  * build bricked the bench ECU at boot (flash verified, then no console link)
- * and the driver API adds nothing here - a one-shot update event needs no
+ * and the driver API adds nothing here - a periodic update event needs no
  * state machine, no kernel locks and no asserts. The pattern is the proven
  * angle clock (TMR2) one: plain register writes, a bare Vector handler,
  * nvicEnableVector at init.
@@ -1207,9 +1216,9 @@ static void wdaTimerInit() {
 	 * Setting the bit makes TMR7 and TIM5 behave identically under a future
 	 * debug session, whichever polarity this silicon implements. NOTE: the
 	 * bench runs WITHOUT a debugger (user-confirmed, the Java console is the
-	 * only runtime tool), so this does NOT explain the observed runtime tick
-	 * drift - see the OPEN QUESTION note by s_firePeriodNt below and
-	 * docs/report.md. */
+	 * only runtime tool), so this never explained the old ~2.5x runtime
+	 * stretch - that lived in the stopped/re-armed one-shot cycle and is gone
+	 * with the free-run timer (see wdaTimerArm). */
 	DBGMCU->APB1FZ |= DBGMCU_APB1_FZ_DBG_TIM7_STOP;
 
 	efiPrintf(DRIVER_NAME " wda: TMR7 measured %lu/%lu NT ticks, input %lu MHz (PSC 143 -> %lu)",
@@ -1219,37 +1228,39 @@ static void wdaTimerInit() {
 		(unsigned long)acDelta2, (unsigned long)ntDelta2);
 }
 
-/* Arm the one-shot: intervalUs microseconds from now. Plain register writes -
- * no locks, no asserts - callable from the thread (boot kick / reset self-heal)
- * and the ISR (self re-arm). The clear-then-enable order makes a preempting
- * ISR see no stale UIF mid-arm. Free-running (no OPM): the counter runs past
- * ARR until the ISR disarms it, which is what makes the CNT-based ISR-latency
- * probe work.
+/* FREE-RUNNING auto-reload timer (the TIM5 pattern), started once by the
+ * boot kick and never stopped between fires. Plain register writes - no
+ * locks, no asserts - callable from the thread (boot kick / reset self-heal)
+ * and the ISR (period change). "Arm" = set the period of the NEXT fire:
  *
- * CRITICAL (2026-08-30 18:17 bench): the ARR write is PR-latched by the
- * update event on the AT32 (PR is preload-only, like the PWM LLD's ARPE
- * pattern - pwm_lld_init writes PSC/ARR then EGR|UG). The 18:17 run armed
- * 21919 ticks but fired at the WRAP (~51.9 ms later): the ARR write never
- * became active, the counter kept the init PR=0xFFFF, and every answer
- * landed outside the chip's window. The EGR|UG below latches PR (and
- * re-inits CNT=0, and sets UIF which is cleared before DIER|UIE). */
+ * - Running (CEN=1): ARR is PR-latched by the update event on the AT32 (PR
+ *   is preload-only, like the PWM LLD's ARPE pattern - pwm_lld_init writes
+ *   PSC/ARR then EGR|UG). The UG event activates the new ARR AND re-inits
+ *   CNT=0, so the next fire lands one full period from now - the exact
+ *   from-now semantics the old one-shot had. When the period is UNCHANGED
+ *   the function is a no-op: the counter auto-reloads and keeps its phase,
+ *   and an unneeded UG would both disturb the in-flight phase and set a
+ *   spurious UIF (the immediate-fire hazard the old stop/re-arm sequence
+ *   showed as a ~1 ms per= outlier).
+ * - Stopped (CEN=0, boot kick or a system reset that killed the peripheral
+ *   while the RAM flags survived): full start, DIER|UIE re-armed.
+ *
+ * WHY THE OLD STOPPED/RE-ARMED ONE-SHOT WAS RETIRED (2026-08-31): every
+ * fire-to-fire interval measured ~2.5x its armed period (per=54..69 ms for
+ * 27 ms) while the DWT CYCCNT cross-measurement printed EXACT clocks in the
+ * same second - the TMR7 tick is 250 kHz by construction (NT-domain PSC
+ * measurement) and 288 MHz input. The stretch lived in the CR1=0/CNT=0 stop
+ * cycle between fires, not in the clock; free-running removes that entire
+ * class. CRITICAL (2026-08-30 18:17 bench): the ARR write is PR-latched by
+ * the update event on the AT32 - the 18:17 run armed 21919 ticks but fired
+ * at the WRAP (~51.9 ms later) because the ARR write never became active
+ * (the counter kept the init PR=0xFFFF). The EGR|UG below latches PR. */
 
 /* Fire-to-fire period measured in NT ticks (4 MHz, the validated TIM5
  * domain): the 1 Hz liveness print shows it, so the TMR7 armed interval is
  * visible on the console. At init the ratio measurement slaved TMR7 to
  * exactly NT/16 (4 us ticks, verified twice), so the arm uses a plain
- * intervalUs/4 count with no runtime re-calibration.
- *
- * OPEN QUESTION (2026-08-31): the RUNTIME logs show the effective tick
- * drifting from the init-proven 4 us to ~8-10 us (per=53.9..69 ms for a
- * 27 ms arm, late = per - 27 ms exactly, cnlat=4 us so the ISR is prompt
- * and the wrap itself is late in NT time). The bench has NO debugger
- * (user-confirmed - the Java console is the only runtime tool), so the
- * DBGMCU pause bits are inert and cannot explain it. TIM5/TIM2 (32-bit,
- * PSC 71) stay coherent while the 16-bit basic timer drifts - the same
- * ~144->112 MHz signature the TMR10 saga measured. Root cause unknown;
- * next step is a runtime rate re-measurement (TMR7 vs NT AND vs SysTick)
- * plus a CRM register dump in the pins diagnostic, see docs/report.md. */
+ * intervalUs/4 count with no runtime re-calibration. */
 static efitick_t s_lastFireNt;
 static efitick_t s_firePeriodNt;
 /* Previous cycle's timing: the REQUHI verdicts read in a feed describe the
@@ -1258,8 +1269,8 @@ static efitick_t s_firePeriodNt;
 static efitick_t s_prevFirePeriodNt;
 static int s_prevFireDelayMs;
 /* Fires in the last 1 Hz liveness window whose period was off the armed
- * delay by more than +-50% (whatever stretched them - the runtime tick
- * drift is still open). The delay servo must not trust the verdicts of
+ * delay by more than +-50% (deferred/retry cycles armed with a short period,
+ * or any residual stretch). The delay servo must not trust the verdicts of
  * those cycles. */
 static int s_wdaStretched;
 
@@ -1269,13 +1280,23 @@ static void wdaTimerArm(uint32_t ticks) {
 	if (ticks > 65535)
 		ticks = 65535;
 
-	WDA_TIMER->CR1 = 0;				/* stop any run */
-	WDA_TIMER->CNT = 0;
-	WDA_TIMER->ARR = ticks - 1U;
-	WDA_TIMER->EGR = STM32_TIM_EGR_UG;	/* latch PR + re-init CNT (sets UIF) */
-	WDA_TIMER->SR = 0;				/* clear the UG-generated UIF */
-	WDA_TIMER->DIER = STM32_TIM_DIER_UIE;
-	WDA_TIMER->CR1 = STM32_TIM_CR1_CEN;
+	if (WDA_TIMER->CR1 & STM32_TIM_CR1_CEN) {
+		/* Running: latch a new period only when it actually changed. */
+		if (WDA_TIMER->ARR == (ticks - 1U))
+			return;
+		WDA_TIMER->ARR = ticks - 1U;
+		WDA_TIMER->EGR = STM32_TIM_EGR_UG;	/* activate PR + re-init CNT (sets UIF) */
+		WDA_TIMER->SR = 0;					/* clear the UG-generated UIF */
+	} else {
+		/* Stopped: boot kick or post-reset self-heal - full start. */
+		WDA_TIMER->CR1 = 0;
+		WDA_TIMER->CNT = 0;
+		WDA_TIMER->ARR = ticks - 1U;
+		WDA_TIMER->EGR = STM32_TIM_EGR_UG;	/* latch PR + re-init CNT (sets UIF) */
+		WDA_TIMER->SR = 0;					/* clear the UG-generated UIF */
+		WDA_TIMER->DIER = STM32_TIM_DIER_UIE;
+		WDA_TIMER->CR1 = STM32_TIM_CR1_CEN;
+	}
 }
 
 static void wdaTimerStop() {
@@ -1355,7 +1376,7 @@ CH_IRQ_HANDLER(STM32_TIM7_HANDLER) {
 
 	if (WDA_TIMER->SR & STM32_TIM_SR_UIF) {
 		s_wdaUifSeen++;
-		/* Read CNT BEFORE disarming: the counter wraps to 0 at ARR, so the
+		/* Read CNT first: the counter wraps to 0 at the UEV, so the
 		 * current CNT is the ISR entry latency mod (ARR+1) in 4 us ticks. */
 		int32_t cnLat = (int32_t)WDA_TIMER->CNT;
 		s_cnLatUs = (int)cnLat * 4;
@@ -1363,8 +1384,11 @@ CH_IRQ_HANDLER(STM32_TIM7_HANDLER) {
 			s_cnLatUsMax = (int)cnLat * 4;
 
 		WDA_TIMER->SR = ~STM32_TIM_SR_UIF;
-		WDA_TIMER->CR1 = 0;
-		WDA_TIMER->DIER = 0;
+		/* FREE-RUN: do NOT stop the timer here. The auto-reload restarts the
+		 * count at the wrap and the next fire lands ARR+1 ticks later; the
+		 * old CR1=0/DIER=0 disarm between fires was the stretch source (see
+		 * wdaTimerArm). CNT was read above BEFORE the clear for the latency
+		 * probe - after the clear nothing else disturbs the run. */
 		efitick_t nowNt = getTimeNowNt();
 		/* Stash the previous cycle's timing BEFORE overwriting it - the feed's
 		 * verdict gate compares the previous fire period against the delay
@@ -1492,8 +1516,9 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 			 * (39 kHz) after init; 27 ms lands inside BOTH, so the very first
 			 * answer is accepted and the boot-accumulated EC (6 -> 7 while the
 			 * chip was un-fed during MCU boot) decrements 7 -> 6 -> 5 -> 4
-			 * within ~3 cycles (~0.1 s), clearing the WDA kill. The one-shot
-			 * self-reschedules from then on. */
+			 * within ~3 cycles (~0.1 s), clearing the WDA kill. The timer then
+			 * free-runs: each feed re-arms only a CHANGED period, and the
+			 * auto-reload fires every cycle on its own. */
 			if (!chip->wd_running) {
 				chip->wd_running = true;
 				efiPrintf("l9779 wda: TMR7 kick +%d ms (CR1=0x%08lx)", chip->wd_delay_ms, (unsigned long)WDA_TIMER->CR1);
@@ -1657,7 +1682,7 @@ int L9779::spi_frame_isr(uint16_t tx, uint16_t *rx_ptr)
 }
 
 /* ISR-context VDA 2.0 level 3 query-answer watchdog feed (datasheet 6.15),
- * ONE one-shot per monitoring cycle:
+ * ONE burst per monitoring cycle:
  *
  *  - pipelined reads of REQUHI/REQULO (previous answer verdict + current
  *    question; the DO replies arrive 1-2 frames later, so a filler REQUHI
@@ -1694,10 +1719,11 @@ void L9779::wdFeedFromExecutor()
 	s_wdaFeedRuns++;
 
 	/* Ignition gate: the driver thread clears wd_running (and stops the
-	 * one-shot) when the power stages are PSOFF'd. If the timer had already
-	 * fired this callback, fizzle out WITHOUT touching the bus or re-arming -
-	 * a plain stop is racy because the feed re-arms itself at its end (a
-	 * concurrent fire would resurrect the feed after the stop). */
+	 * free-running timer) when the power stages are PSOFF'd. If the timer had
+	 * already fired this callback, fizzle out WITHOUT touching the bus or
+	 * changing the period - a plain stop is racy because the feed re-arms a
+	 * changed period at its end (a concurrent fire would resurrect the feed
+	 * after the stop). */
 	if (!wd_running) {
 		s_wdaNotRunning++;
 		return;
@@ -1841,12 +1867,13 @@ void L9779::wdFeedFromExecutor()
 	 * window - but it is NOT actionable: the delay itself was right, the
 	 * miss was the stretch, and stepping the delay would walk it the wrong
 	 * way (the 19:02/23:13 wrong-way walks chased exactly such verdicts).
-	 * The stretch cause is deliberately NOT assumed here - the bench has no
-	 * debugger (user-confirmed), and the runtime TMR7 tick rate is an open
-	 * question (measured 288 MHz at init, ~112-144 MHz effective in
-	 * runtime logs) - the gate is purely evidence-based: off-time cycles
-	 * carry no phase information about the chip window, so their verdicts
-	 * are ignored and the next on-time cycles re-center the delay. */
+	 * The gate is purely evidence-based: off-time cycles carry no phase
+	 * information about the chip window, so their verdicts are ignored and
+	 * the next on-time cycles re-center the delay. With the free-run timer
+	 * the 2.5x stop/re-arm stretch is gone (the clock is exact - DWT CYCCNT
+	 * cross-measurement), so the gate now only flags the short defer/retry
+	 * cycles (armed 1/10 ms on spi_busy / SPI fail) and any residual
+	 * preemption - those verdicts are garbage for exactly the same reason. */
 	if ((s_prevFirePeriodNt != 0) && (s_prevFireDelayMs > 0)) {
 		uint32_t prevPerUs = (uint32_t)(s_prevFirePeriodNt / US_TO_NT_MULTIPLIER);
 		uint32_t armUs = (uint32_t)s_prevFireDelayMs * 1000;
@@ -1986,7 +2013,7 @@ void L9779::wdFeedFromExecutor()
 
 	/* The response: all four bytes back-to-back, masked against the handoff
 	 * like the reads. The cycle restarts at the END of the RESP_BYTE0 write,
-	 * and the next one-shot is armed so its BYTE0 lands wd_delay_ms later. */
+	 * and the period is set so the next BYTE0 lands wd_delay_ms later. */
 	const uint8_t *resp = wd_resp_table[wd_last_req];
 	basepri = __get_BASEPRI();
 	__set_BASEPRI(WDA_BURST_BASEPRI);
@@ -2026,9 +2053,10 @@ void L9779::wdFeedFromExecutor()
 			(ret == 0 ? 0x02 : 0x00));
 	}
 
-	/* Anchor the next one-shot on the BYTE0 write end (now): the burst's
-	 * BYTE0 lands ~WDA_BURST_LEAD_US after the arm, so arm a burst-lead
-	 * short of the full period. */
+	/* Set the next period from the BYTE0 write end (now): the burst's
+	 * BYTE0 lands ~WDA_BURST_LEAD_US after the fire, so set the period a
+	 * burst-lead short of the full delay. When the delay is unchanged the
+	 * free-running auto-reload keeps its phase (wdaTimerArm no-op). */
 	wdArmIsr(wd_delay_ms);
 }
 
@@ -2147,11 +2175,14 @@ brain_pin_diag_e L9779::getDiag(size_t pin)
  * output) and CAN timing.
  *
  * Measurement A (masked, ~10 ms): the WDA ISR (priority 5) is masked so
- * TMR7 free-runs without re-arms, and TIM5 (NT) + TMR7 are compared against
- * CYCCNT in one window. Healthy clock tree: NT ~4 MHz, TMR7 tick ~250 kHz
- * (input 288 MHz). A drifting timer shows up as ~125 kHz (input ~144 MHz) -
- * the 2x per= signature. The handoff (4) and executor (3) stay unmasked and
- * do not touch these counters, so the window is car-safe-ish; bench tool.
+ * TMR7 free-runs without period changes, and TIM5 (NT) + TMR7 are compared
+ * against CYCCNT in one window. Healthy clock tree: NT ~4 MHz, TMR7 tick
+ * ~250 kHz (input 288 MHz). This instrument settled the 2026-08-31 saga:
+ * it prints EXACT clocks while the live feed runs at 2x period - the clock
+ * never drifted, the stretch lived in the stopped/re-armed one-shot cycle
+ * (now retired for the free-run timer). The handoff (4) and executor (3)
+ * stay unmasked and do not touch these counters, so the window is
+ * car-safe-ish; bench tool.
  *
  * Measurement B (unmasked, ~100 ms): the ChibiOS virtual tick vs CYCCNT -
  * expect ~100 ms in 100 ms. This validates the kernel tick config; both
@@ -2229,8 +2260,11 @@ static void wdaTimerCrossMeasure() {
 
 		uint32_t cycDelta = c1 - c0;
 		uint32_t ntDelta = nt1 - nt0;        /* TIM5 free-runs: unsigned wrap is exact */
-		/* TMR7 wraps at ARR; at most one wrap fits in 10 ms (period >= 26.9 ms
-		 * at the fastest plausible rate) - correct it. */
+		/* TMR7 wraps at ARR; the free-run period is >= 26.9 ms at every normal
+		 * delay, but a deferred cycle can carry a 1 ms ARR into the window
+		 * start - the single-wrap correction below is then wrong for that one
+		 * dump. Self-evident: the ARR register is printed in the register
+		 * line, and the measurement is a bench tool. */
 		uint32_t arr = WDA_TIMER->ARR;
 		uint32_t tmDelta;
 		if (tm1 < tm0)
@@ -2244,7 +2278,7 @@ static void wdaTimerCrossMeasure() {
 		 * HCLK = 288 MHz is the CYCCNT rate. */
 		uint32_t ntMhz10 = (uint32_t)(((uint64_t)ntDelta * 2880) / cycDelta);   /* x10 */
 		uint32_t wdaKhz10 = (uint32_t)(((uint64_t)tmDelta * 2880000) / cycDelta); /* x10 */
-		uint32_t wdaInMhz10 = (uint32_t)(((uint64_t)wdaKhz10 * (WDA_TIMER->PSC + 1)) / 10000); /* x10 */
+		uint32_t wdaInMhz10 = (uint32_t)(((uint64_t)wdaKhz10 * (WDA_TIMER->PSC + 1)) / 1000); /* x10 */
 		efiPrintf(DRIVER_NAME " tmr: NT %lu.%lu MHz (want 4.0) | TMR7 tick %lu.%lu kHz input %lu.%lu MHz (want 250.0/288.0) | tm=%lu nt=%lu cyc=%lu",
 			(unsigned long)(ntMhz10 / 10), (unsigned long)(ntMhz10 % 10),
 			(unsigned long)(wdaKhz10 / 10), (unsigned long)(wdaKhz10 % 10),
@@ -2646,11 +2680,12 @@ int L9779::init()
 	/* WDA watchdog: RESPTIME=10 is written at init (short deterministic
 	 * window [15.8, 28.4] @ 64 kHz / [25.9, 38.5] @ 39 kHz). The feed is
 	 * kicked by the driver thread after chip_init and then runs as a
-	 * one-shot TMR7 ISR (priority 5, below the trigger handoff) with a
-	 * single atomic burst per cycle; the delay is adapted by the REQUHI
-	 * timing verdicts only (ce32509e policy, no walk). The timer rate is
-	 * measured here against the NT domain (TIM5) and the PSC programmed so
-	 * the counter ticks at exactly 250 kHz (4 us) on any silicon. */
+	 * free-running auto-reload TMR7 ISR (priority 5, below the trigger
+	 * handoff) with a single atomic burst per cycle; the delay is adapted by
+	 * the REQUHI timing verdicts only (ce32509e policy, no walk). The timer
+	 * rate is measured here against the NT domain (TIM5) and the PSC
+	 * programmed so the counter ticks at exactly 250 kHz (4 us) on any
+	 * silicon. */
 	wd_delay_ms = WDA_DELAY_INIT_MS;
 	wd_running = false;
 	wd_next_moment = 0;
