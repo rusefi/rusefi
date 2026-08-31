@@ -12,18 +12,24 @@
  *    here (ARR stays 0xFFFFFFFF, the counter only wraps every ~1073 s).
  *  - SR flags are rc_w0: write ~flag to clear.
  *
- * Concurrency: the handoff ISR (priority 4) arms/cancels channels, the TMR2
- * ISR (priority 3) fires them. The TMR2 ISR can preempt the handoff mid-arm,
- * so the arm sequence is ordered so that no partial state can fire:
+ * Concurrency: the handoff ISR (priority 4) arms/refreshes/cancels channels,
+ * the TMR2 ISR (priority 3) fires them. The TMR2 ISR can preempt the handoff
+ * mid-arm, so the arm sequence is ordered so that no partial state can fire:
  *   1. clear stale CCxIF
  *   2. write CCR (a tick >= arm margin in the future - CNT cannot reach it
  *      within this ISR window)
- *   3. store the action
+ *   3. store the kind and the action
  *   4. enable CCxIE
  * A preempting TMR2 ISR sees no flag for a channel mid-arm (the flag cannot
  * set until CNT reaches the future CCR), and it never executes an action on
  * a channel whose action is empty. The priority-0 EXTI fast IRQ does not
  * touch the angle clock at all.
+ *
+ * The per-tooth refresh (angleClockRefresh, also handoff context) only ever
+ * rewrites CCR of an ACTIVE channel to a FUTURE tick - never action/IE - so
+ * a preempting ISR either fires at the old CCR (earlier than intended, still
+ * a valid discharge) or sees the channel released. A passed CCR cannot be
+ * "reached again", so a refresh can never cause a double fire.
  */
 
 #include "pch.h"
@@ -43,10 +49,30 @@ static constexpr uint32_t CC_IF_MASK =
 // is racy. 4 us mirrors the TIM5 compare clamp.
 static constexpr uint32_t ARM_MARGIN_TICKS = US2NT(4);
 
+// Arming/refresh reject targets farther than this many degrees away. The
+// early windows arm at most 2 teeth ahead (12.4 deg on 60-2); anything beyond
+// this bound means the phase basis jumped (desync/re-sync) and the stored
+// angle is no longer meaningful - drop instead of firing into the wrong
+// phase. A lost CoilFire is covered by the overdwell rescue on TIM5.
+static constexpr float MAX_LEAD_DEG = 30.0f;
+
+// A Start event (dwell/injection start) that executes this late in the TMR2
+// ISR is useless and dangerous: it charges a coil after its moment. Normal
+// ISR lateness at priority 3 is microseconds; this threshold only trips on a
+// gross stall (long chSysLock, flash write) during which the compare passed
+// while the ISR could not run. CoilFire ignores it - the discharge must
+// always happen.
+static constexpr uint32_t DROP_LATE_TICKS = US2NT(1000);
+
 static constexpr int ANGLE_CLOCK_CHANNELS = 4;
 
 struct AngleClockChannel {
 	action_s action;
+	AngleClockKind kind = AngleClockKind::Start;
+	// Absolute engine angle the event is armed for - the per-tooth refresh
+	// re-anchors from it (same basis as the currentPhase fed by
+	// angleClockOnTooth).
+	float targetAngle = 0;
 	uint32_t ccr = 0;
 };
 
@@ -57,9 +83,18 @@ static AngleClockChannel s_channels[ANGLE_CLOCK_CHANNELS];
 // to angle-clock ticks by adding it.
 static uint32_t s_ntOffset = 0;
 
+// Per-tooth state, fed by angleClockOnTooth from the trigger handoff. Only
+// the handoff (single context, priority 4) writes these; the TMR2 ISR never
+// touches them.
+static efitick_t s_edgeTimestamp = 0;
+static float s_currentPhase = 0;
+static float s_cycleDeg = 720;
+static float s_ticksPerDegree = 0;	// NT ticks per degree of the LAST tooth
+
 static uint32_t s_firedCount = 0;
 static uint32_t s_armFailCount = 0;
 static uint32_t s_lateArmCount = 0;
+static uint32_t s_droppedCount = 0;
 static uint32_t s_maxLateTicks = 0;
 
 // CCR1..CCR4 are separate fields in the AT32 TIM_TypeDef (not an array).
@@ -100,6 +135,7 @@ TRIGGER_RAM_CODE void STM32_TIM2_HANDLER(void) {
 
 		auto& chState = s_channels[ch];
 		action_s action = chState.action;
+		AngleClockKind kind = chState.kind;
 		uint32_t ccr = chState.ccr;
 		chState.action = {};
 
@@ -110,7 +146,15 @@ TRIGGER_RAM_CODE void STM32_TIM2_HANDLER(void) {
 			if (late > s_maxLateTicks) {
 				s_maxLateTicks = late;
 			}
-			action.execute();
+
+			// Stale-event policy, see angle_clock.h: a charge/injection start
+			// that executes this late is dropped - its moment has passed and
+			// firing it anyway is what piles all coils onto one instant.
+			if (kind == AngleClockKind::CoilFire || late <= DROP_LATE_TICKS) {
+				action.execute();
+			} else {
+				s_droppedCount++;
+			}
 		}
 	}
 
@@ -209,7 +253,44 @@ uint32_t angleClockNow() {
 	return ANGLE_CLOCK_TIMER->CNT;
 }
 
-TRIGGER_RAM_CODE bool angleClockArm(uint32_t atTick, action_s action) {
+TRIGGER_RAM_CODE void angleClockOnTooth(efitick_t edgeTimestamp, float currentPhase, float cycleDeg, float ticksPerDegree) {
+	s_edgeTimestamp = edgeTimestamp;
+	s_currentPhase = currentPhase;
+	s_cycleDeg = cycleDeg;
+	s_ticksPerDegree = ticksPerDegree;
+}
+
+// Angle from the current phase to the target, wrapped into [0, cycleDeg).
+TRIGGER_RAM_CODE static float remainingAngle(float targetAngle) {
+	float remaining = targetAngle - s_currentPhase;
+	if (remaining < 0) {
+		remaining += s_cycleDeg;
+	}
+	return remaining;
+}
+
+TRIGGER_RAM_CODE static uint32_t tickForAngle(float targetAngle) {
+	return angleClockTickForNt(s_edgeTimestamp) + angleClockDelayTicks(remainingAngle(targetAngle), s_ticksPerDegree);
+}
+
+TRIGGER_RAM_CODE static void cancelChannel(int ch) {
+	auto& chState = s_channels[ch];
+	chState.action = {};
+	ANGLE_CLOCK_TIMER->DIER &= ~(STM32_TIM_DIER_CC1IE << ch);
+}
+
+TRIGGER_RAM_CODE bool angleClockArm(float targetAngle, action_s action, AngleClockKind kind) {
+	float remaining = remainingAngle(targetAngle);
+
+	// Refuse targets beyond the 1-2 tooth lookahead: the phase basis has
+	// jumped (desync/re-sync) and the stored angle is not meaningful.
+	if (remaining > MAX_LEAD_DEG) {
+		s_armFailCount++;
+		return false;
+	}
+
+	uint32_t atTick = tickForAngle(targetAngle);
+
 	// Armed in the past = the compare equality was missed and the ISR will
 	// never fire (until the 2^32 wrap) - a silently lost event. The caller
 	// falls back to the time-based executor instead.
@@ -227,10 +308,13 @@ TRIGGER_RAM_CODE bool angleClockArm(uint32_t atTick, action_s action) {
 		uint32_t flag = STM32_TIM_SR_CC1IF << ch;
 
 		// Order matters, see the file-header concurrency note: stale flag
-		// clear, then the future CCR, then the action, then the interrupt.
+		// clear, then the future CCR, then the kind/action, then the
+		// interrupt.
 		ANGLE_CLOCK_TIMER->SR = ~flag;
 		*channelCcr(ch) = atTick;
 		chState.ccr = atTick;
+		chState.targetAngle = targetAngle;
+		chState.kind = kind;
 		chState.action = action;
 		ANGLE_CLOCK_TIMER->DIER |= STM32_TIM_DIER_CC1IE << ch;
 
@@ -239,6 +323,55 @@ TRIGGER_RAM_CODE bool angleClockArm(uint32_t atTick, action_s action) {
 
 	s_armFailCount++;
 	return false;
+}
+
+TRIGGER_RAM_CODE void angleClockRefresh() {
+	for (int ch = 0; ch < ANGLE_CLOCK_CHANNELS; ch++) {
+		auto& chState = s_channels[ch];
+		if (!chState.action) {
+			continue;
+		}
+
+		float remaining = remainingAngle(chState.targetAngle);
+
+		// Stale phase basis (desync/re-sync): the stored angle is no longer
+		// meaningful. Drop the event - a lost CoilFire is covered by the
+		// overdwell rescue which is kept armed on TIM5.
+		if (remaining > MAX_LEAD_DEG) {
+			cancelChannel(ch);
+			continue;
+		}
+
+		uint32_t newTick = tickForAngle(chState.targetAngle);
+
+		if (static_cast<int32_t>(newTick - ANGLE_CLOCK_TIMER->CNT) < static_cast<int32_t>(ARM_MARGIN_TICKS)) {
+			// The angle has arrived (or the handoff ran late enough to miss
+			// it): fire now if it is a coil discharge, drop useless late
+			// starts.
+			if (chState.kind == AngleClockKind::CoilFire) {
+				// Arm for immediate firing - the ISR (priority 3) executes it
+				// right after this handoff.
+				uint32_t nowTick = ANGLE_CLOCK_TIMER->CNT + ARM_MARGIN_TICKS;
+				*channelCcr(ch) = nowTick;
+				chState.ccr = nowTick;
+			} else {
+				cancelChannel(ch);
+			}
+			continue;
+		}
+
+		// Re-anchor: only the CCR moves (earlier OR later, both safe - the
+		// compare can only hit a future tick once). Never touches action/IE,
+		// see the file-header concurrency note.
+		*channelCcr(ch) = newTick;
+		chState.ccr = newTick;
+	}
+}
+
+void angleClockCancelAll() {
+	for (int ch = 0; ch < ANGLE_CLOCK_CHANNELS; ch++) {
+		cancelChannel(ch);
+	}
 }
 
 void angleClockCancel(action_s action) {
@@ -267,6 +400,10 @@ uint32_t angleClockProgrammedLateCount() {
 	return s_lateArmCount;
 }
 
+uint32_t angleClockDroppedCount() {
+	return s_droppedCount;
+}
+
 uint32_t angleClockMaxLateTicks() {
 	return s_maxLateTicks;
 }
@@ -275,6 +412,7 @@ void angleClockResetStats() {
 	s_firedCount = 0;
 	s_armFailCount = 0;
 	s_lateArmCount = 0;
+	s_droppedCount = 0;
 	s_maxLateTicks = 0;
 }
 

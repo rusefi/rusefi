@@ -10630,3 +10630,56 @@ last protection; note the single-writer contract on
 prepareCylinderIgnitionSchedule - a double prepare would re-arm the
 next dwell twice), (2) bench-validate the catch transient with
 SPARK_EXTREME_LOGGING at simulated cranking rpm before any car test.
+
+## 2026-08-31 (evening) - angle clock redesign: angle-domain arming, per-tooth refresh, kept rescue (IMPLEMENTED, not car-tested)
+
+The 13:32 entry's fix plan assumed a bench that does not exist (no CKP
+emulator) and proposed an rpm gate that is wrong in principle - the
+angle clock must be accurate at ANY rpm. Redesigned instead, driven by
+the log fact that all four coils overcharged in the SAME millisecond:
+
+Root causes (code-verified):
+- The armed tick was computed from oneDegreeUs (90-deg rpm average),
+  which lags by revolutions at the catch: every armed event fired
+  ms-late. The per-tooth refresh bounds the error to one tooth of
+  acceleration instead.
+- The overdwell rescue was cancelled at arm time
+  (trigger_scheduler.cpp), so TMR2-armed fires had no charge cap.
+- Stale events were executed unconditionally by the TMR2 ISR - a late
+  charge start is what piles all coils onto one instant.
+
+Implemented (all under #if EFI_ANGLE_CLOCK - the FALSE build is the
+proven time-based path, verified symbol-clean):
+- angle_clock.h/.cpp: channels now store {action, kind, targetAngle};
+  angleClockOnTooth() feeds the fresh last-tooth basis (NT ticks per
+  degree, from the decoder's toothDurations[0] and the real tooth span -
+  the gap tooth carries its true ~18 deg); angleClockArm() arms in the
+  ANGLE domain; angleClockRefresh() re-anchors every armed channel each
+  tooth and applies the stale policy: CoilFire fires immediately when
+  its angle arrives, a late Start (dwell/injection) is dropped, a stale
+  phase basis (desync) cancels the channel; the ISR also drops Start
+  events that are >1 ms late. angleClockCancelAll() on rpm==0 and
+  firmwareError.
+- trigger_central: lastToothTicksPerDegree measured in handleShaftSignal
+  from the phase pair (span crosses the cycle boundary correctly).
+- trigger_scheduler.cpp: the early branch KEEPS the overdwell rescue
+  and arms fires by angle; the fallback fires by time on the same fresh
+  basis (rescue superseded, cancel first - one event per scheduling_s).
+- spark_logic.cpp: dwell start armed by angle; chargeTime/rescue anchor
+  on the fresh basis; IgnitionEvent::sparkFiredSinceCharge makes the
+  rescue idempotent with a TMR2 fire that already happened (single
+  writer for the coil-off; set at fire, cleared at charge start).
+- main_trigger_callback.cpp: injection start armed by angle; OnTooth +
+  Refresh per tooth.
+- lockstats angclk line gains 'dropped='.
+
+Validation: compile_m74_9.sh BUILD SUCCESSFUL with the flag TRUE (nm
+shows angleClockArm/angleClockOnTooth/angleClockRefresh/VectorB0) and
+FALSE (zero angle-clock symbols); unit tests 1169/1169 PASSED
+(test_angle_clock.cpp updated to the ticksPerDegree basis). NOT
+car-tested - the car verdict is the first crank (watch C9351-4, angclk
+dropped=, dwelloverchargecounter).
+
+Open: the desync-recovery and multispark interaction are reasoned but
+not measured; the per-tooth refresh adds ~4 CCR computations per tooth
+in the handoff (not yet profiled with lockstats).

@@ -232,13 +232,14 @@ TRIGGER_RAM_CODE void InjectionEvent::onTriggerTooth(efitick_t nowNt, float curr
 
 	// Schedule opening (stage 1 + stage 2 open together). The delay is
 	// computed from THIS edge; with the one-tooth-ahead window it covers
-	// 1-2 teeth. Try the hardware angle clock first (fixed ~1 us firing,
-	// immune to handoff lateness), fall back to the time-based executor.
+	// 1-2 teeth. Try the hardware angle clock first (armed in the angle
+	// domain, per-tooth refresh keeps it accurate at any rpm), fall back
+	// to the time-based executor.
 	float delayUs = engine->rpmCalculator.oneDegreeUs * angleFromNow;
 	efitick_t startTime = sumTickAndFloat(nowNt, USF2NT(delayUs));
 
 #if EFI_ANGLE_CLOCK
-	if (angleClockArm(angleClockTickForNt(startTime), startAction)) {
+	if (angleClockArm(eventAngle, startAction, AngleClockKind::Start)) {
 		// armed on the hardware angle clock - the ends below still follow in
 		// the time domain, computed from the intended start moment.
 	} else
@@ -314,12 +315,26 @@ TRIGGER_RAM_CODE void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edge
 		/**
 		 * In case on a major error we should not process any more events.
 		 */
+#if EFI_ANGLE_CLOCK
+		// Drop any armed angle-clock events too: nothing may fire into an
+		// engine that limpManager has already cut (ignition/injection off).
+		// The armed coil-fire is the only safety discharge and is covered by
+		// the overdwell rescue, so cancelling everything here is safe.
+		angleClockCancelAll();
+#endif // EFI_ANGLE_CLOCK
 		return;
 	}
 
 	float rpm = engine->rpmCalculator.getCachedRpm();
 	if (rpm == 0) {
 		// this happens while we just start cranking
+
+#if EFI_ANGLE_CLOCK
+		// No valid phase: drop any armed angle-clock events so nothing fires
+		// into a stopped/unsynchronized engine. Coil-off safety remains with
+		// the overdwell rescue, which is cancelled by the normal stop path.
+		angleClockCancelAll();
+#endif // EFI_ANGLE_CLOCK
 
 		// todo: check for 'trigger->is_synchnonized?'
 		return;
@@ -342,6 +357,21 @@ TRIGGER_RAM_CODE void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edge
 		m.onEnginePhase(rpm, edgeTimestamp, currentPhase, nextPhase);
 	});
 
+#if EFI_ANGLE_CLOCK
+	{
+		// Fresh angle->time basis for this tooth's arming and the per-tooth
+		// refresh: the last tooth's measured duration in NT ticks per degree
+		// (the 90-degree rpm average lags by revolutions at the catch and
+		// made armed events fire ms-late). Falls back to the rpm average only
+		// before the first decoded tooth pair.
+		float ticksPerDegree = getTriggerCentral()->lastToothTicksPerDegree;
+		if (!(ticksPerDegree > 0)) {
+			ticksPerDegree = US2NT(engine->rpmCalculator.oneDegreeUs);
+		}
+		angleClockOnTooth(edgeTimestamp, currentPhase, engine->engineState.engineCycle, ticksPerDegree);
+	}
+#endif // EFI_ANGLE_CLOCK
+
 	/**
 	 * For fuel we schedule start of injection based on trigger angle, and then inject for
 	 * specified duration of time
@@ -355,6 +385,14 @@ TRIGGER_RAM_CODE void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edge
 	 * For spark we schedule both start of coil charge and actual spark based on trigger angle
 	 */
 	onTriggerEventSparkLogic(rpm, edgeTimestamp, currentPhase, nextPhase, nextNextPhase);
+
+#if EFI_ANGLE_CLOCK
+	// Re-anchor every armed channel from this tooth's freshest data and apply
+	// the stale-event policy: a CoilFire whose angle has arrived fires now, a
+	// late Start (charge/injection) is dropped, a stale phase basis (desync)
+	// cancels the channel.
+	angleClockRefresh();
+#endif // EFI_ANGLE_CLOCK
 }
 
 #endif /* EFI_ENGINE_CONTROL */

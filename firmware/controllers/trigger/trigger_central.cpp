@@ -985,6 +985,23 @@ TRIGGER_RAM_CODE void TriggerCentral::handleShaftSignal(trigger_event_e signal, 
 		// Adjust so currentPhase is in engine-space angle, not trigger-space angle
 		currentEngineDecodedPhase = wrapAngleMethod(currentPhaseFromSyncPoint - tdcPosition(), "currentEnginePhase", ObdCode::CUSTOM_ERR_6555);
 
+#if EFI_ANGLE_CLOCK
+		// Fresh angle->time basis for the angle clock: the just-completed
+		// tooth's duration over its REAL span. The span comes from the phase
+		// pair (previous event phase -> this phase), so the gap tooth carries
+		// its true ~18 deg on 60-2 automatically and the wrap covers the sync
+		// tooth (the span crosses the cycle boundary). Garbage until the first
+		// complete tooth pair of a sync - the angle clock is gated off by
+		// requireValidatedSync / rpm==0 until then anyway.
+		{
+			float span = currentPhaseFromSyncPoint - m_lastToothPhaseFromSyncPoint;
+			if (span <= 0) {
+				span += engine->engineState.engineCycle;
+			}
+			lastToothTicksPerDegree = (span > 0) ? triggerState.toothDurations[0] / span : 0;
+		}
+#endif // EFI_ANGLE_CLOCK
+
 		// Record precise time and phase of the engine. This is used for VVT decode, and to check that the
 		// trigger pattern selected matches reality (ie, we check the next tooth is where we think it should be)
 		{
