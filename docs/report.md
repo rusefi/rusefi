@@ -10438,3 +10438,50 @@ Validation: compile.sh m74_9 -> BUILD SUCCESSFUL. Next bench run must
 show per~27 ms / ratio~100% / stretch=0 with the SAME idle bench (no
 console pokes needed) - if it does, the saga is closed and the car
 verdict is the only open question.
+
+## 2026-08-31 (12:41 bench) - the sleep-gate fix is CONFIRMED: per exact, EC=0; the pins diagnostic was destructive; delay-servo escapes added
+
+The 12:41 flash of the lp=true build settled the saga:
+- per=26919..26921 us for a 27 ms arm - EXACT (was 57..71 ms), ratio=99%,
+  stretch=0, late=0, cnlat=4 us, on an IDLE bench with no console pokes.
+  The sleep-mode clock gate (APB1LPENR) was the one and only root cause.
+- **ec=0 wda_int=0 with ecDown=7**: the chip accepted every answer and
+  decremented EC 7->0 for the FIRST TIME EVER on the bench. Two of the
+  saga's chip-side conclusions are thereby REFUTED: (1) the bench chip's
+  EC mechanism is NOT broken; (2) the RESPTIME=10 write DOES take effect
+  (nothing near the default ~112 ms window would be accepted at 27 ms).
+  The bench chip is 64 kHz: window [15.8, 28.4] - accepts 27, silently
+  rejects 32. The "39 kHz bench chip" and "RESPTIME ignored" theories
+  were artifacts of the 2x-stretched feed (answers at 54..69 ms landed
+  past every candidate window; flags cleared between reads; EC saturated).
+- The pins diagnostic itself was DESTRUCTIVE: right after confirmation_pins
+  came "WDA KILL: EC=6". Chain: the cross-measurement's masked 10 ms window
+  delayed one answer ~10 ms -> NO_RESP -> the chip's auto-restart advanced
+  its cycle phase -> a cascade of misses knocked EC 0->6, and one of those
+  perturbed cycles produced a verdict (1.37x off - invisible to the old
+  +-50% on-time gate) that walked the delay 27->32. At 32 ms the chip
+  rejects SILENTLY (reqhi=0xC0 forever - the flags are cleared by the
+  chip's sequencer run before our next read), so the REQUHI servo is blind
+  and EC pinned at 7 (the 12:42 dump: ecUp=5 ecDown=0, delay=32, miss=1).
+
+Fixes in this commit (l9779.cpp):
+- The on-time verdict gate is TIGHTENED from +-50% to +-25% of the armed
+  delay: the pins perturbation (10 ms on 27 ms = 1.37x) now flags the
+  cycle and its verdict is ignored - one perturbed cycle can no longer
+  walk the delay out of the acceptance zone.
+- EC-saturation escape (WDA_EC_SAT_ESCAPE_CYCLES=8): when EC >= 6 on
+  clean on-time cycles while the delay is off-center, step the delay
+  toward WDA_DELAY_INIT_MS (27 - inside BOTH candidate windows, the
+  proven-healthy point). This recovers the silent-rejection zone the
+  REQUHI servo cannot see. EC starts at 6 on reset and decrements on
+  accepted answers, so a healthy 27 ms feed never arms the escape.
+- The cross-measurement no longer masks the WDA ISR: the free-run feed
+  does not touch the timer on normal cycles (the no-op arm), so pins is
+  non-destructive again. A rare mid-window period change would corrupt
+  that one dump's tmDelta (self-evident from the ARR line).
+- The liveness stretch counter and the event-ring flag use the same
+  +-25% threshold as the gate.
+
+Validation: compile.sh m74_9 -> BUILD SUCCESSFUL. Next bench run should
+boot to EC=0 at delay=27 and STAY there across repeated pins calls
+(stretch=0, ratio~100%); the KILL-after-pins behavior must be gone.
