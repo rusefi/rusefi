@@ -1019,6 +1019,25 @@ TRIGGER_RAM_CODE void TriggerCentral::handleShaftSignal(trigger_event_e signal, 
 		// Update engine RPM
 		rpmShaftPositionCallback(signal, triggerIndexForListeners, timestamp);
 
+#if EFI_ANGLE_CLOCK
+		// Sanity-clamp the fresh basis against the rpm average once the rpm
+		// value is fresh (this runs AFTER rpmShaftPositionCallback): the first
+		// tooth pair after a long pause can carry the 10 s decoder clamp or a
+		// spurious span - a garbage basis arms far-future ticks that stick all
+		// four channels (noChannel storm) and anchor the TIM5 fallbacks
+		// seconds out (the bench 213/264 ms overcharges). A 16x band leaves
+		// the legit catch transient (fresh vs 90-deg average diverges at most
+		// a few x) untouched.
+		{
+			float rpmTicksPerDegree = US2NT(engine->rpmCalculator.oneDegreeUs);
+			if (rpmTicksPerDegree > 0 &&
+					(lastToothTicksPerDegree > rpmTicksPerDegree * 16 ||
+					 lastToothTicksPerDegree < rpmTicksPerDegree / 16)) {
+				lastToothTicksPerDegree = rpmTicksPerDegree;
+			}
+		}
+#endif // EFI_ANGLE_CLOCK
+
 		// Schedule the TDC mark
 		tdcMarkCallback(triggerIndexForListeners, timestamp);
 

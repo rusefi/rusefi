@@ -184,13 +184,15 @@ TRIGGER_RAM_CODE void TriggerScheduler::scheduleEventsUntilNextTriggerTooth(floa
 		if (!angleClockArm(current->getAngle(), current->action, AngleClockKind::CoilFire)) {
 			// Arm failed (stale target, tick passed, or all channels busy):
 			// fall back to a time-based fire from the SAME fresh basis. The
-			// rescue is superseded by this direct fire - cancel it first, a
-			// scheduling_s carries one pending event.
+			// eventScheduling struct is free here (the overdwell rescue lives
+			// on the event's dwellStartTimer, armed at the actual charge); the
+			// rescue still bounds the charge at 1.5x dwell if this fire loses
+			// the race against it - the rescue also cancels this fallback fire
+			// (see overFireSparkAndPrepareNextSchedule).
 			float ticksPerDegree = getTriggerCentral()->lastToothTicksPerDegree;
 			if (!(ticksPerDegree > 0)) {
 				ticksPerDegree = US2NT(engine->rpmCalculator.oneDegreeUs);
 			}
-			engine->scheduler.cancel(sDown);
 			engine->scheduler.schedule("fire", sDown, sumTickAndFloat(edgeTimestamp, angleFromNow * ticksPerDegree), current->action);
 		}
 #endif // EFI_ANGLE_CLOCK

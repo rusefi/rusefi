@@ -10683,3 +10683,33 @@ dropped=, dwelloverchargecounter).
 Open: the desync-recovery and multispark interaction are reasoned but
 not measured; the per-tooth refresh adds ~4 CCR computations per tooth
 in the handoff (not yet profiled with lockstats).
+
+## 2026-08-31 (late evening, BENCH self-stim) - redesign caught by the bench: stale rescue anchors, two fixes
+
+The redesigned build was run on the bench with self-stimulation and the
+log reproduced the fuse mechanism: C9351-4 overcharges of 8.1, 213 and
+264 ms + C9012 + C9002, angclk noChannel=126, maxLateUs ~2^32 (wrap).
+Root causes found and fixed:
+
+1. Garbage first-tooth basis: the first tooth pair after a long pause
+   carries the decoder's 10 s clamp (or self-stim's slow ramp), so
+   lastToothTicksPerDegree armed far-future ticks: channels stuck
+   (noChannel=126), fallback fires/rescues anchored seconds out, the
+   wrapped float->uint32 delay produced the wrap-scale maxLateUs.
+   Fix: sanity-clamp the fresh basis to a 16x band around the rpm
+   average in handleShaftSignal (after the rpm update) - the legit
+   catch transient diverges at most a few x.
+2. Stale rescue anchor: the overdwell rescue was anchored to the
+   PREDICTED chargeTime; the per-tooth refresh re-anchored the TMR2
+   dwell/fire to the correct times while the TIM5 rescue stayed on the
+   stale prediction - the coil charged on time and nothing discharged
+   it for 213/264 ms. Fix: the rescue is now anchored at the ACTUAL
+   charge moment (turnSparkPinHighStartCharging, 1.5x planned dwell on
+   the event's dwellStartTimer, armed only when sparksRemaining==0 -
+   multispark reuses that struct); the fire cancels it; the rescue
+   also cancels a pending time-based fallback fire (the C9012 double
+   fire). The schedule-time rescue stays ONLY in the FALSE build.
+
+Validation: TRUE + FALSE firmware builds OK (nm: 4 angle-clock symbols
+vs 0), unit tests 1169/1169. Bench re-run pending - expect
+noChannel~0, no C935x, angclk maxLateUs small.
