@@ -10594,3 +10594,39 @@ tooth ahead and deleted from the angle queue; only multispark/
 injection-ends/windows/TS stay on TIM5). Then the car: the catch is the
 verdict - watch C9012/C9351 at the first start (the overdwell protection
 is the safety net).
+
+## 2026-08-31 (13:32, CAR) - the angle clock blew the fuse AGAIN: DISABLED again, the scheduling defect is real
+
+The re-enabled angle clock reproduced the 14:13 incident at the first
+crank attempt - the 15A fuse blew. So the sleep-gate was NOT the cause
+(or not the only one): the one-tooth-ahead scheduling defect that 17:05
+flagged as a hypothesis is REAL and still unfixed (the bench
+investigation planned at 17:05 - SPARK_EXTREME_LOGGING at simulated
+cranking - was never done; the WDA saga consumed the time).
+
+Code-level defect analysis (trigger_scheduler.cpp + spark_logic.cpp):
+- The overdwell safety net is CANCELLED when the fire is armed on TMR2:
+  trigger_scheduler.cpp's early branch does engine->scheduler.cancel
+  (sDown) - sDown is the same eventScheduling instance the overdwell
+  was scheduled on (spark_logic.cpp [tag:overdwell]). Any fire that goes
+  through the angle clock therefore has NO overcharge protection. The
+  14:13 C9351-4 warnings prove the rescue only ran for the events that
+  fell back to TIM5; the TMR2-armed fires had no rescue at all.
+- At the catch, the fire is armed 1-2 teeth ahead with the LAGGING
+  oneDegreeUs (90-deg moving average) - the prediction error is ~2x the
+  TIM5 path's (which converts at the last tooth). During the 250->1500
+  rpm catch this is ms-scale: overcharge in the 4.5-8.2 ms band of the
+  14:13 signature.
+- The 4-channel limit at the catch (2 dwell starts + 2-4 injection
+  starts + 2 fires all converging in the first cycle after sync) splits
+  the events between TMR2 and the TIM5 fallback - mixed firing paths
+  scramble the dwell/fire ordering (C9012 out-of-order coil off).
+
+SAFETY ACTION: EFI_ANGLE_CLOCK is FALSE again (commit 154e10941f5,
+BUILD SUCCESSFUL - flash firmware/build/rusefi.srec to restore the
+proven time-based path). Re-enabling requires: (1) keep a redundant
+overdwell rescue for TMR2-armed fires (the cancel must not remove the
+last protection; note the single-writer contract on
+prepareCylinderIgnitionSchedule - a double prepare would re-arm the
+next dwell twice), (2) bench-validate the catch transient with
+SPARK_EXTREME_LOGGING at simulated cranking rpm before any car test.
