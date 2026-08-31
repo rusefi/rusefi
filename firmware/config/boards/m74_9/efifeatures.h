@@ -34,11 +34,13 @@
  * (C9012 out-of-order coil off + C9351-4 overcharge 4.5-8.2 ms at the
  * catch). Re-enabled 2026-08-31 on the sleep-gate theory (rccEnableTIM2
  * false->true) - the fuse blew AGAIN at the first crank attempt, so the
- * sleep gate was NOT the cause (or not the only one). DISABLED AGAIN
- * 2026-08-31: the one-tooth-ahead scheduling defect is real and still
- * unfixed. With the flag FALSE the early windows compile out and
- * ignition/fuel return to the proven time-based paths. */
-#define EFI_ANGLE_CLOCK FALSE
+ * sleep gate was NOT the cause (or not the only one). Re-enabled again
+ * 2026-08-31 after the redesign (angle-domain arming + per-tooth refresh,
+ * charge-anchored overdwell rescue) and the car defect fix (no
+ * angleClockCancelAll on the rpm==0 storm flap - see CLAUDE.md "THE CAR
+ * DEFECT (2026-08-31 evening)"). With the flag FALSE the early windows
+ * compile out and ignition/fuel return to the proven time-based paths. */
+#define EFI_ANGLE_CLOCK TRUE
 
 /* Console log buffer (double-buffered, 2x this, static). The stm32f4ems
  * default of 6500 truncates the 'pins' output mid-line: the pin report +

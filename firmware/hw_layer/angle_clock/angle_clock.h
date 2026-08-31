@@ -107,14 +107,22 @@ bool angleClockArm(float targetAngle, action_s action, AngleClockKind kind);
 // prediction error never exceeds one tooth of acceleration. Events whose
 // angle has already passed are handled per their kind: CoilFire is armed for
 // immediate firing, Start is cancelled. Channels whose stored angle is no
-// longer plausible (phase basis jumped, e.g. desync/re-sync) are cancelled -
-// a lost CoilFire is covered by the overdwell rescue on TIM5. Call at the end
-// of the trigger handoff, after all arming of that tooth.
+// longer plausible (phase basis jumped, e.g. desync/re-sync) are LEFT ARMED:
+// their tick is an absolute time and fires the event within 1-2 teeth just
+// like the time-based build - a lost CoilFire would only be covered by the
+// overdwell rescue, which is exactly the late-fire signature cancelling
+// produced on the car. Call at the end of the trigger handoff, after all
+// arming of that tooth.
 void angleClockRefresh();
 
-// Cancel every armed channel. Used when the engine stops / loses sync, so no
-// armed event fires into a dead engine (coil-off safety remains with the
-// overdwell rescue, which is cancelled elsewhere by the normal stop path).
+// Cancel every armed channel. Kept as the driver API, but NO LONGER called
+// from the rpm==0 / firmwareError handoff paths: during the catch trigger
+// storm the rpm sensor flaps 0/nonzero at ~1 kHz and each flap cancelled the
+// armed fires (charged coils discharged by 4.5 ms rescues - the C935x
+// cluster) and armed dwell starts (fires on uncharged coils - C9012). The
+// armed ticks are bounded and the charge-anchored overdwell rescue bounds
+// any charge, so armed events fire like the time-based build - by time,
+// regardless of the rpm flap.
 void angleClockCancelAll();
 
 // Cancel every armed channel whose action matches (callback + argument).
