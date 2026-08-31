@@ -10565,3 +10565,30 @@ Conclusions:
 - Next lever: re-enable EFI_ANGLE_CLOCK (TMR2 now fixed from the
   sleep-gate) - dwell/spark/injection-start move to the 2-tooth-lead
   hardware compare and out of these batch statistics entirely.
+
+## 2026-08-31 (14:30) - EFI_ANGLE_CLOCK RE-ENABLED on m74_9 (TMR2 sleep-gate fix is the fuse-incident explanation)
+
+Per user directive. Safety rationale before the flag flip: the 2026-08-30
+14:13 fuse incident was never root-caused at 17:05 ("one-tooth-ahead
+scheduling logic bug" was a hypothesis, not a finding). The sleep-mode
+clock gate found today (rccEnableTIM2(false) cleared the AT32 APB1LPENR
+bit) is the stronger explanation for the whole 14:13 signature: on the
+car the CPU idles (WFI) between cranking teeth, so TMR2 was gated off
+~80-90% of the time while TIM5 (NT) kept running - armed absolute ticks
+were reached by the frozen counter late/scrambled at the catch -> C9012
+out-of-order coil off + C9351-4 overcharge + overdwell rescue of all
+four coils at once = the fuse. The counter now ticks in sleep like TIM5
+(rccEnableTIM2(true)), so the freeze mechanism is gone.
+
+Changes: efifeatures.h EFI_ANGLE_CLOCK FALSE -> TRUE (comment rewritten
+with the history and the car-catch caveat); pch/pch.h touched (efifeatures
+edits do not trigger a rebuild otherwise). Build: compile.sh m74_9 ->
+BUILD SUCCESSFUL; VectorB0/angleClockArm/angleClockTickForNt linked in.
+
+Validation plan: bench first - lockstats must show the 'angclk fired='
+line with lateArm=0/noChannel=0 in self-stim, and the per-kind
+sched dwell/spark/fuel counts must DROP (events now armed on TMR2 one
+tooth ahead and deleted from the angle queue; only multispark/
+injection-ends/windows/TS stay on TIM5). Then the car: the catch is the
+verdict - watch C9012/C9351 at the first start (the overdwell protection
+is the safety net).
