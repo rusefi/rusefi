@@ -1163,9 +1163,9 @@ void setup_custom_board_overrides() {
 			(unsigned)angleClockProgrammedLateCount(), (unsigned)angleClockDroppedCount(),
 			(unsigned)(angleClockMaxLateTicks() / (NT_PER_SECOND / 1000000)),
 			(unsigned)(angleClockMaxBusyDeltaTicks() / (NT_PER_SECOND / 1000000)));
-		efiPrintf("angclk lastRefuse target=%.1f phase=%.1f callerPhase=%.1f rem=%.1f cb=%08x basis=%.1f initRate=%u/%u psc=%u nvic=%u (want 3)",
+		efiPrintf("angclk lastRefuse target=%.1f phase=%.1f callerPhase=%.1f callerNext=%.1f rem=%.1f cb=%08x basis=%.1f initRate=%u/%u psc=%u nvic=%u (want 3)",
 			(double)angleClockLastRefuseTarget(), (double)angleClockLastRefusePhase(),
-			(double)angleClockLastRefuseCallerPhase(),
+			(double)angleClockLastRefuseCallerPhase(), (double)angleClockLastRefuseCallerNext(),
 			(double)angleClockLastRefuseRemaining(), (unsigned)angleClockLastRefuseCallback(),
 			(double)angleClockLastRefuseBasis(),
 			(unsigned)angleClockInitAcDelta(), (unsigned)angleClockInitNtDelta(),

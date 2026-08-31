@@ -101,7 +101,7 @@ void angleClockOnTooth(efitick_t edgeTimestamp, float currentPhase, float cycleD
 // Returns false (without arming) when the target is not a plausible 1-2 tooth
 // lookahead, the tick is not far enough in the future, or all four channels
 // are busy - the caller must fall back to the TIM5 path.
-bool angleClockArm(float targetAngle, action_s action, AngleClockKind kind, float callerPhase);
+bool angleClockArm(float targetAngle, action_s action, AngleClockKind kind, float callerPhase, float callerNextPhase);
 
 // Re-anchor every armed channel from the freshest tooth data: rewrite the
 // compare tick from the current phase and last-tooth duration, so the
@@ -146,6 +146,7 @@ uint32_t angleClockNoChannelCount();
 float angleClockLastRefuseTarget();
 float angleClockLastRefusePhase();
 float angleClockLastRefuseCallerPhase();
+float angleClockLastRefuseCallerNext();
 float angleClockLastRefuseBasis();
 float angleClockLastRefuseRemaining();
 uint32_t angleClockLastRefuseCallback();

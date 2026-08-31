@@ -10814,3 +10814,38 @@ cycle late at the same engine angle, so the bench "runs" on the TIM5
 path with an over-long dwell (28 deg + dwellDuration) - the same class
 of overcharge that blows the car fuse. The callerPhase capture
 (committed here) names the exact divergence next run.
+
+## 2026-08-31 (evening, BENCH self-stim) - degenerate early window on useOnlyRisingEdges wheels (FIXED)
+
+Split arm-failure telemetry (attempts/refuse/noCh + last-refusal snapshot with
+target, stored phase, caller phase/next, remaining, callback address) pinned
+the root cause in one fit:
+
+- every refusal was the dwell start (turnSparkPinHighStartCharging trampoline),
+  called with the dwell angle BEHIND the current phase by exactly one dwell
+  duration (target=663.5 phase=692.0 at 800 rpm - the arm runs at the spark
+  moment, never at the dwell window);
+
+- callerPhase == stored phase and callerNext == phase + 6 - the feed and the
+  window lower bound are sane, so the window TEST itself was matching every
+  tooth.
+
+Root cause (code-proven): on useOnlyRisingEdges wheels prepareEventAngles
+stores the falling edge at the preceding rise's angle, so eventAngles has
+consecutive duplicates [X, X, X+6, X+6, ...]. findNextTriggerToothAngle(i+1)
+therefore returns the SAME phase as nextPhase -> nextNextPhase == nextPhase.
+isPhaseInRange(dwell, nextPhase, nextNextPhase) then takes the "next <= current"
+branch and matches EVERY angle (afterCurrent || beforeNext degenerates). The
+dwell (and injection) early window armed every tooth, refused every time, and
+the TIM5 fallback scheduled the charge one full cycle late (691 deg) at the
+same engine angle - invisible on the clean-basis bench, but on the car the
+storm-garbage basis extrapolates that 691 deg into nonsense (the fuse class).
+
+The fire arm already carried the `nextNextPhase != nextPhase` guard; the dwell
+and injection arms did not. Fix: add the same guard to both early windows, so
+they fall back to the current-tooth window (the FALSE-build path) when no
+distinct next-next tooth exists.
+
+Validation: compile_m74_9.sh BUILD SUCCESSFUL (EFI_ANGLE_CLOCK TRUE); unit
+tests 1169/1169 PASSED. Verdict on the bench/car: angclk refuse must drop to
+~0 and fired climb; no C9012/C935x/C9002 on the car.
