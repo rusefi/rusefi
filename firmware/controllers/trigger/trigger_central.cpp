@@ -1034,23 +1034,25 @@ TRIGGER_RAM_CODE void TriggerCentral::handleShaftSignal(trigger_event_e signal, 
 		// tooth pair after a long pause can carry the 10 s decoder clamp or a
 		// spurious span - a garbage basis arms far-future ticks that stick all
 		// four channels (noChannel storm) and anchor the TIM5 fallbacks
-		// seconds out (the bench 213/264 ms overcharges). A 16x band leaves
-		// the legit catch transient (fresh vs 90-deg average diverges at most
-		// a few x) untouched. The absolute ceiling also catches the case where
-		// the rpm average itself is stale (NaN at the first teeth) and the
-		// relative band cannot see the garbage.
+		// seconds out. The band is 4x (not 16x): a storm tooth 4-16x off the
+		// average stretched the armed ticks 4-16x and the car fired
+		// 4.5-8 ms late at the catch (the rescue discharging first); the legit
+		// catch accel diverges from the 90-deg average at most ~2-3x, so 4x
+		// leaves it untouched. The absolute ceiling (2 ms/deg ~120 rpm floor)
+		// catches the stale-average case (NaN/huge at the first teeth) and
+		// bounds the armed delay to ~MAX_LEAD_DEG x the ceiling.
 		{
 			float rpmTicksPerDegree = US2NT(engine->rpmCalculator.oneDegreeUs);
 			if (rpmTicksPerDegree > 0 &&
-					(lastToothTicksPerDegree > rpmTicksPerDegree * 16 ||
-					 lastToothTicksPerDegree < rpmTicksPerDegree / 16)) {
+					(lastToothTicksPerDegree > rpmTicksPerDegree * 4 ||
+					 lastToothTicksPerDegree < rpmTicksPerDegree / 4)) {
 				lastToothTicksPerDegree = rpmTicksPerDegree;
 			}
 
-			// 5 ms/deg (~32 rpm equivalent) - above any real cranking tooth,
-			// far below the 10 s decoder clamp.
-			if (lastToothTicksPerDegree > US2NT(5000)) {
-				lastToothTicksPerDegree = US2NT(5000);
+			// 2 ms/deg (~120 rpm equivalent) - above the real cranking tooth
+			// (~0.67 ms/deg at 250 rpm), far below the 10 s decoder clamp.
+			if (lastToothTicksPerDegree > US2NT(2000)) {
+				lastToothTicksPerDegree = US2NT(2000);
 			}
 		}
 #endif // EFI_ANGLE_CLOCK
