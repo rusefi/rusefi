@@ -32,9 +32,15 @@
  * 2026-08-31 after the redesign (angle-domain arming + per-tooth refresh,
  * charge-anchored overdwell rescue) and the car defect fix (no
  * angleClockCancelAll on the rpm==0 storm flap - see CLAUDE.md "THE CAR
- * DEFECT (2026-08-31 evening)"). With the flag FALSE the early windows
- * compile out and ignition/fuel return to the proven time-based paths. */
-#define EFI_ANGLE_CLOCK TRUE
+ * DEFECT (2026-08-31 evening)"). DISABLED again 2026-08-31 (user
+ * decision): the car catches and stalls with the angle clock - the
+ * per-tooth basis at cranking is noisy (compression stretch -> ~5 ms late
+ * fire, C9352 8.5 ms; "never later" refresh -> early fire under
+ * deceleration -> kickback -> C9002), while the time-based build works
+ * ("без angle clock все идеально работает"). With the flag FALSE the
+ * early windows compile out and ignition/fuel return to the proven
+ * time-based paths. */
+#define EFI_ANGLE_CLOCK FALSE
 
 /* Console log buffer (double-buffered, 2x this, static). The stm32f4ems
  * default of 6500 truncates the 'pins' output mid-line: the pin report +

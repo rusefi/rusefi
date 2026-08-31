@@ -10894,3 +10894,30 @@ attempt, no C9002, C935x reduced/absent.
 
 Side observation (not chased): TLE9201 "Overcurrent shutdown!" in one car
 log - the ETB throttle-blade path, a separate WDA/ETB saga.
+
+## 2026-08-31 (evening, CAR) - angle clock DISABLED: catches and stalls, time-based build works
+
+After the first-teeth basis fix (0cf0a7c32a0) the car catches - and then
+stalls: C9012 + one C9352 8.5 ms overcharge + engine stopped after 9 revs
+(20:19), C9002 right after first combustion (20:20), 4-6 revs per attempt.
+The user's verdict: "без angle clock все идеально работает" - the
+time-based build is correct, the angle clock is not.
+
+Root cause (car evidence + code): the angle clock arms by angle from the
+LAST completed tooth's duration. At cranking the per-tooth speed oscillates
+with compression: a stretched tooth right before the fire makes the fire
+~5.5 ms late (C9352 8.53 ms charge = 3 ms dwell + 5.5 ms), and the
+"re-anchor only earlier, never later" refresh turns a MORE stretched next
+tooth into an EARLY fire under deceleration -> kickback -> C9002. The
+time-based build converts angles with the 90-degree rpm average, which
+smooths the oscillation and fires reliably. The bench (clean-basis
+self-stim) could never see this - its emulator has no compression physics.
+
+Decision (user): EFI_ANGLE_CLOCK = FALSE in
+firmware/config/boards/m74_9/efifeatures.h. The FALSE build compiles out
+all early windows and is bit-identical to the proven time-based path
+(nm: zero angle-clock symbols in rusefi.elf). The angle-clock code stays
+in the tree behind the flag.
+
+Validation: compile_m74_9.sh BUILD SUCCESSFUL (FALSE); unit tests
+1169/1169 PASSED.
