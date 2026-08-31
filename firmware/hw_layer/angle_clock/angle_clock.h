@@ -28,15 +28,22 @@
  * priority-0 EXTI fast IRQ and cannot fire spuriously in the current tooth.
  * The 32-bit wrap (~1073 s) is absorbed by unsigned tick arithmetic.
  *
- * TIMING ACCURACY AT ANY RPM (the 2026-08-31 redesign): the armed tick must
- * not be computed from the 90-degree rpm average (InstantRpmCalculator's
- * oneDegreeUs) - that value lags by revolutions at the catch and made every
- * armed event fire ms-late (the fuse incident). Instead the handoff feeds
- * this module the freshly measured per-degree duration of the LAST completed
- * tooth (angleClockOnTooth), and every tooth re-anchors all armed channels
- * from that freshest data (angleClockRefresh). The prediction error is then
- * always bounded by one tooth of acceleration - a few percent even at the
- * 250->1500 rpm catch - instead of the full catch transient.
+ * TIMING ACCURACY AT ANY RPM (2026-08-31, FINAL): the armed tick is
+ * computed from the 90-degree-window rpm average (InstantRpmCalculator's
+ * oneDegreeUs) - the SAME basis the proven time-based path converts angles
+ * with. During spin-up oneDegreeUs is the ~90-degree tooth window
+ * (calculateInstantRpm hunts the tooth ~90 deg back), when running it is the
+ * full-cycle average - both smooth. The handoff feeds it via
+ * angleClockOnTooth and every tooth re-anchors all armed channels from it
+ * (angleClockRefresh), so the tick tracks the rpm change without the
+ * per-tooth compression noise. The raw last-tooth basis (toothDurations[0])
+ * was tried and REJECTED: at cranking the compression oscillation makes a
+ * single tooth a 2-3x-stretched predictor, the armed fire landed ~3-12 deg
+ * late, the charge-anchored rescue discharged first (C935x) and the
+ * first-combustion kick broke the gap ratio (C9002 -> stall). The earlier
+ * "oneDegreeUs fired ms-late" fuse incident predates the charge-anchored
+ * overdwell rescue and the armed-channel fixes - with those in place the
+ * oneDegreeUs basis is what the working time-based build uses.
  *
  * STALE EVENT POLICY: an event whose moment has passed must NOT be executed
  * late. Per kind:
@@ -86,12 +93,11 @@ uint32_t angleClockTickForNt(efitick_t nt);
 uint32_t angleClockNow();
 
 // Called by the trigger handoff ONCE PER TOOTH, before any arming in that
-// tooth: stores the edge timestamp, the scheduling phase and the freshest
-// angle->time basis (NT ticks per degree of the LAST completed tooth,
-// measured from the decoder's toothDurations[0] and the real tooth span).
-// cycleDeg is the engine cycle (720 four-stroke / 360 two-stroke) used for
-// angle wrap. All arming and the refresh use this stored data - never the
-// 90-degree rpm average.
+// tooth: stores the edge timestamp, the scheduling phase and the angle->time
+// basis (NT ticks per degree from the 90-degree-window rpm average, see the
+// file-header rationale). cycleDeg is the engine cycle (720 four-stroke /
+// 360 two-stroke) used for angle wrap. All arming and the refresh use this
+// stored data.
 void angleClockOnTooth(efitick_t edgeTimestamp, float currentPhase, float cycleDeg, float ticksPerDegree);
 
 // Arm `action` to fire at the absolute engine angle `targetAngle` (same
@@ -103,17 +109,17 @@ void angleClockOnTooth(efitick_t edgeTimestamp, float currentPhase, float cycleD
 // are busy - the caller must fall back to the TIM5 path.
 bool angleClockArm(float targetAngle, action_s action, AngleClockKind kind, float callerPhase, float callerNextPhase);
 
-// Re-anchor every armed channel from the freshest tooth data: rewrite the
-// compare tick from the current phase and last-tooth duration, so the
-// prediction error never exceeds one tooth of acceleration. Events whose
-// angle has already passed are handled per their kind: CoilFire is armed for
-// immediate firing, Start is cancelled. Channels whose stored angle is no
-// longer plausible (phase basis jumped, e.g. desync/re-sync) are LEFT ARMED:
-// their tick is an absolute time and fires the event within 1-2 teeth just
-// like the time-based build - a lost CoilFire would only be covered by the
-// overdwell rescue, which is exactly the late-fire signature cancelling
-// produced on the car. Call at the end of the trigger handoff, after all
-// arming of that tooth.
+// Re-anchor every armed channel from the freshest basis: rewrite the
+// compare tick from the current phase and the rpm-average basis, so the
+// prediction tracks the rpm change (an acceleration catch moves the tick
+// earlier). Events whose angle has already passed are handled per their
+// kind: CoilFire is armed for immediate firing, Start is cancelled.
+// Channels whose stored angle is no longer plausible (phase basis jumped,
+// e.g. desync/re-sync) are LEFT ARMED: their tick is an absolute time and
+// fires the event within 1-2 teeth just like the time-based build - a lost
+// CoilFire would only be covered by the overdwell rescue, which is exactly
+// the late-fire signature cancelling produced on the car. Call at the end of
+// the trigger handoff, after all arming of that tooth.
 void angleClockRefresh();
 
 // Cancel every armed channel. Kept as the driver API, but NO LONGER called

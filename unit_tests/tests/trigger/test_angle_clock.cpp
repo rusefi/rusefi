@@ -13,9 +13,10 @@ TEST(AngleClock, zeroAngleIsZeroTicks) {
 }
 
 TEST(AngleClock, delayIsAngleTimesTicksPerDegree) {
-	// The armed delay = remaining angle x the fresh last-tooth basis
-	// (NT ticks per degree), not the 90-degree rpm average - that value
-	// lags by revolutions at the catch and fired events ms-late.
+	// The armed delay = remaining angle x the 90-degree-window rpm average
+	// (oneDegreeUs) - the same basis the proven time-based path converts
+	// angles with (the raw last-tooth basis was rejected: compression noise
+	// at cranking armed fires 3-12 deg late).
 	float oneDegreeUs = 166.6f;	// ~1000 rpm
 	float ticksPerDegree = oneDegreeUs * US_TO_NT_MULTIPLIER;
 
