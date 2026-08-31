@@ -181,7 +181,7 @@ TRIGGER_RAM_CODE void TriggerScheduler::scheduleEventsUntilNextTriggerTooth(floa
 		// never exceeds one tooth of acceleration at ANY rpm (the 90-degree
 		// rpm average lags by revolutions at the catch and fired events
 		// ms-late - the fuse incident).
-		if (!angleClockArm(current->getAngle(), current->action, AngleClockKind::CoilFire)) {
+		if (!angleClockArm(current->getAngle(), current->action, AngleClockKind::CoilFire, currentPhase)) {
 			// Arm failed (stale target, tick passed, or all channels busy):
 			// fall back to a time-based fire from the SAME fresh basis. The
 			// eventScheduling struct is free here (the overdwell rescue lives

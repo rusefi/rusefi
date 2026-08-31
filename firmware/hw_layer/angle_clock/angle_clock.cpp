@@ -103,6 +103,28 @@ static uint32_t s_lateArmCount = 0;
 static uint32_t s_droppedCount = 0;
 static uint32_t s_maxLateTicks = 0;
 
+// Arm-failure breakdown (diagnostic, 2026-08-31): the combined armFail
+// counter cannot tell a stale-phase refusal (remaining > MAX_LEAD_DEG) from
+// all-four-channels-busy - the two have opposite root causes. Split them and
+// snapshot the last refusal's inputs so a single lockstats settles which one
+// dominates without guessing.
+static uint32_t s_armAttempts = 0;
+static uint32_t s_refuseCount = 0;		// remaining > MAX_LEAD_DEG
+static uint32_t s_noChannelCount = 0;	// all four channels busy
+static float s_lastRefuseTarget = 0;	// targetAngle of the last refusal
+static float s_lastRefusePhase = 0;		// s_currentPhase of the last refusal
+static float s_lastRefuseCallerPhase = 0;	// the caller's currentPhase at the last refusal
+static float s_lastRefuseBasis = 0;		// s_ticksPerDegree of the last refusal
+static float s_lastRefuseRemaining = 0;	// the computed remaining (wrapped) that was refused
+static uint32_t s_lastRefuseCallback = 0;	// callback address of the refused action - names the caller
+static uint32_t s_maxBusyDeltaTicks = 0;	// max |ccr - CNT| of a busy channel at arm time
+
+// TMR2 rate measurement result from initAngleClock - printed in lockstats so
+// a wrong PSC (the fuse-incident class) is visible without scrolling to boot.
+static uint32_t s_initAcDelta = 0;
+static uint32_t s_initNtDelta = 0;
+static uint32_t s_initPsc = 0;
+
 // CCR1..CCR4 are separate fields in the AT32 TIM_TypeDef (not an array).
 static volatile uint32_t* channelCcr(int ch) {
 	switch (ch) {
@@ -245,6 +267,10 @@ void initAngleClock() {
 	// the PSC re-programming.
 	s_ntOffset = ANGLE_CLOCK_TIMER->CNT - getTimeNowLowerNt();
 
+	s_initAcDelta = acDelta;
+	s_initNtDelta = ntDelta;
+	s_initPsc = newPsc;
+
 	efiPrintf("angle clock: measured rate %lu/%lu ticks (PSC 71 -> %lu)",
 		(unsigned long)acDelta, (unsigned long)ntDelta, (unsigned long)newPsc);
 }
@@ -298,13 +324,22 @@ TRIGGER_RAM_CODE static void cancelChannel(int ch) {
 	ANGLE_CLOCK_TIMER->DIER &= ~(STM32_TIM_DIER_CC1IE << ch);
 }
 
-TRIGGER_RAM_CODE bool angleClockArm(float targetAngle, action_s action, AngleClockKind kind) {
+TRIGGER_RAM_CODE bool angleClockArm(float targetAngle, action_s action, AngleClockKind kind, float callerPhase) {
+	s_armAttempts++;
+
 	float remaining = remainingAngle(targetAngle);
 
 	// Refuse targets beyond the 1-2 tooth lookahead: the phase basis has
 	// jumped (desync/re-sync) and the stored angle is not meaningful.
 	if (remaining > MAX_LEAD_DEG) {
 		s_armFailCount++;
+		s_refuseCount++;
+		s_lastRefuseTarget = targetAngle;
+		s_lastRefusePhase = s_currentPhase;
+		s_lastRefuseCallerPhase = callerPhase;
+		s_lastRefuseBasis = s_ticksPerDegree;
+		s_lastRefuseRemaining = remaining;
+		s_lastRefuseCallback = reinterpret_cast<uint32_t>(action.getCallback());
 		return false;
 	}
 
@@ -321,6 +356,14 @@ TRIGGER_RAM_CODE bool angleClockArm(float targetAngle, action_s action, AngleClo
 	for (int ch = 0; ch < ANGLE_CLOCK_CHANNELS; ch++) {
 		auto& chState = s_channels[ch];
 		if (chState.action) {
+			// Busy: record how far its tick is from the counter (both
+			// directions - a far-future tick sticks the channel, a passed
+			// tick that never fired means the flag was lost).
+			int32_t delta = static_cast<int32_t>(chState.ccr - ANGLE_CLOCK_TIMER->CNT);
+			uint32_t absDelta = delta < 0 ? static_cast<uint32_t>(-delta) : static_cast<uint32_t>(delta);
+			if (absDelta > s_maxBusyDeltaTicks) {
+				s_maxBusyDeltaTicks = absDelta;
+			}
 			continue;
 		}
 
@@ -341,6 +384,7 @@ TRIGGER_RAM_CODE bool angleClockArm(float targetAngle, action_s action, AngleClo
 	}
 
 	s_armFailCount++;
+	s_noChannelCount++;
 	return false;
 }
 
@@ -464,12 +508,74 @@ uint32_t angleClockMaxLateTicks() {
 	return s_maxLateTicks;
 }
 
+uint32_t angleClockArmAttempts() {
+	return s_armAttempts;
+}
+
+uint32_t angleClockRefuseCount() {
+	return s_refuseCount;
+}
+
+uint32_t angleClockNoChannelCount() {
+	return s_noChannelCount;
+}
+
+float angleClockLastRefuseTarget() {
+	return s_lastRefuseTarget;
+}
+
+float angleClockLastRefusePhase() {
+	return s_lastRefusePhase;
+}
+
+float angleClockLastRefuseCallerPhase() {
+	return s_lastRefuseCallerPhase;
+}
+
+float angleClockLastRefuseBasis() {
+	return s_lastRefuseBasis;
+}
+
+float angleClockLastRefuseRemaining() {
+	return s_lastRefuseRemaining;
+}
+
+uint32_t angleClockLastRefuseCallback() {
+	return s_lastRefuseCallback;
+}
+
+uint32_t angleClockMaxBusyDeltaTicks() {
+	return s_maxBusyDeltaTicks;
+}
+
+uint32_t angleClockInitAcDelta() {
+	return s_initAcDelta;
+}
+
+uint32_t angleClockInitNtDelta() {
+	return s_initNtDelta;
+}
+
+uint32_t angleClockInitPsc() {
+	return s_initPsc;
+}
+
 void angleClockResetStats() {
 	s_firedCount = 0;
 	s_armFailCount = 0;
 	s_lateArmCount = 0;
 	s_droppedCount = 0;
 	s_maxLateTicks = 0;
+	s_armAttempts = 0;
+	s_refuseCount = 0;
+	s_noChannelCount = 0;
+	s_lastRefuseTarget = 0;
+	s_lastRefusePhase = 0;
+	s_lastRefuseCallerPhase = 0;
+	s_lastRefuseBasis = 0;
+	s_lastRefuseRemaining = 0;
+	s_lastRefuseCallback = 0;
+	s_maxBusyDeltaTicks = 0;
 }
 
 #endif // EFI_ANGLE_CLOCK && EFI_PROD_CODE
