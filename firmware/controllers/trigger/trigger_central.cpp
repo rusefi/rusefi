@@ -853,25 +853,34 @@ bool boardAllowTriggerActions() {
 }
 
 angle_t TriggerCentral::findNextTriggerToothAngle(int p_currentToothIndex) {
-  int currentToothIndex = p_currentToothIndex;
-		// TODO: is this logic to compute next trigger tooth angle correct?
-		angle_t nextToothAngle = 0;
+	int currentToothIndex = p_currentToothIndex % engineCycleEventCount;
+	// The angle we are advancing FROM (raw eventAngles value, no tdc/wrap):
+	// useOnlyRisingEdges wheels store the falling edge at the preceding rise's
+	// angle, so eventAngles has consecutive duplicates [X, X, X+6, X+6, ...]
+	// and the skip must move past ALL of them, not only the current tooth's
+	// duplicate (that is why the +1 caller convention collapsed nextNextPhase
+	// onto nextPhase - the 2026-08-31 degenerate-window bug).
+	angle_t startAngle = getTriggerCentral()->triggerFormDetails.eventAngles[currentToothIndex];
+	angle_t nextToothAngle = 0;
 
-		int loopAllowance = 2 * engineCycleEventCount + 1000;
-		do {
-			// I don't love this.
-			currentToothIndex = (currentToothIndex + 1) % engineCycleEventCount;
-			nextToothAngle = getTriggerCentral()->triggerFormDetails.eventAngles[currentToothIndex] - tdcPosition();
-			wrapAngle(nextToothAngle, "nextEnginePhase", ObdCode::CUSTOM_ERR_6555);
-		} while (nextToothAngle == currentEngineDecodedPhase && --loopAllowance > 0); // '==' for float works here since both values come from 'eventAngles' array
-		if (loopAllowance == 0 && nextToothAngle != currentEngineDecodedPhase) {
-		  // HW CI fails here, looks like we sometimes change trigger while still handling it?
-		  // Note: for single-tooth triggers, all eventAngles map to the same engine phase,
-		  // so nextToothAngle == currentEngineDecodedPhase is expected and not an error.
-			// see #9045 for report of this problem
-			firmwareError(ObdCode::CUSTOM_ERR_TRIGGER_ZERO, "handleShaftSignal unexpected loop end %d %d %f %f", p_currentToothIndex, engineCycleEventCount, nextToothAngle, currentEngineDecodedPhase);
-		}
-		return nextToothAngle;
+	int loopAllowance = 2 * engineCycleEventCount + 1000;
+	do {
+		// I don't love this.
+		currentToothIndex = (currentToothIndex + 1) % engineCycleEventCount;
+		nextToothAngle = getTriggerCentral()->triggerFormDetails.eventAngles[currentToothIndex];
+		// '==' for float works here since both values come from 'eventAngles' array
+	} while (nextToothAngle == startAngle && --loopAllowance > 0);
+
+	if (loopAllowance == 0 && nextToothAngle != startAngle) {
+	  // HW CI fails here, looks like we sometimes change trigger while still handling it?
+	  // Note: for single-tooth triggers, all eventAngles map to the same engine phase,
+	  // so nextToothAngle == startAngle is expected and not an error.
+		// see #9045 for report of this problem
+		firmwareError(ObdCode::CUSTOM_ERR_TRIGGER_ZERO, "handleShaftSignal unexpected loop end %d %d %f %f", p_currentToothIndex, engineCycleEventCount, nextToothAngle, startAngle);
+	}
+
+	nextToothAngle = wrapAngleMethod(nextToothAngle - tdcPosition(), "nextEnginePhase", ObdCode::CUSTOM_ERR_6555);
+	return nextToothAngle;
 }
 
 /**
@@ -1080,7 +1089,12 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 				// Phase of the tooth AFTER the next one - the upper bound of the
 				// one-tooth-ahead arming window of the angle clock. Same anchor
 				// correction as the pair above so the window stays consistent.
-				angle_t nextNextPhase = findNextTriggerToothAngle(triggerIndexForListeners + 1);
+				// +2 (not +1): useOnlyRisingEdges wheels store the falling edge
+				// at the preceding rise's angle, so +1 lands on the current
+				// tooth's duplicate and collapses nextNextPhase onto nextPhase.
+				// findNextTriggerToothAngle now skips consecutive duplicates, so
+				// +2 starts at the NEXT tooth and returns the one after it.
+				angle_t nextNextPhase = findNextTriggerToothAngle(triggerIndexForListeners + 2);
 				angle_t correctedNextNextPhase = wrapAngleMethod(nextNextPhase - anchorCorrection, "anchorCorrNextNext", ObdCode::CUSTOM_ERR_6555);
 #else
 				angle_t correctedNextNextPhase = correctedNextPhase;
