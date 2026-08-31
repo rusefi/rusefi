@@ -10865,3 +10865,32 @@ sync-establishment/stall moments; busyUs ~46 s is the 32-bit counter-wrap
 telemetry artifact (counter approaching its 1073 s wrap), not a real stuck
 tick. Car verdict is the next step: crank and watch C9351-4 / C9012 /
 angclk counters.
+
+## 2026-08-31 (evening, CAR) - first-teeth basis clamp kills the catch: band gated on a live rpm average
+
+Car session after the bench-validated build: the engine tries once, then
+stops catching. Each key cycle shows a handful of revs only (vrmodel stored
+4 / 1 revs), C9012 + C935x (4.5-9 ms) on the first charge, then C9002 right
+after first combustion. The angclk telemetry is clean (maxLateUs=1..4,
+refuse=0, noCh=0, drop=0) - the TMR2 path itself is correct.
+
+Root cause: the 4x basis band clamped against `oneDegreeUs` whenever the
+average was > 0. At the first tooth pairs after a pause the average is the
+10 s decoder clamp (huge), so a REAL tooth basis (~0.67 ms/deg at 800 rpm)
+got clamped UP to the stale average / the 2 ms/deg ceiling. The first
+catch's dwell+fire armed ~3x late, the charge-anchored rescue (1.5x dwell)
+discharged first, and the first-combustion kick broke the gap ratio ->
+C9002 -> one attempt per key cycle.
+
+Fix (firmware/controllers/trigger/trigger_central.cpp): apply the 4x band
+only when `rpmTicksPerDegree < US2NT(2000)` (~120 rpm floor = average
+alive); the absolute 2 ms/deg ceiling stays as the last resort for the
+decoder clamp. Never clamp a live tooth measurement toward a stale derived
+value.
+
+Validation: compile_m74_9.sh BUILD SUCCESSFUL; unit tests 1169/1169 PASSED.
+Car verdict pending: the first crank must show the catch on the first
+attempt, no C9002, C935x reduced/absent.
+
+Side observation (not chased): TLE9201 "Overcurrent shutdown!" in one car
+log - the ETB throttle-blade path, a separate WDA/ETB saga.
