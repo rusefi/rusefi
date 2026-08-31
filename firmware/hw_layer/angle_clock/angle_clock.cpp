@@ -70,12 +70,6 @@ static constexpr float MAX_LEAD_DEG = 30.0f;
 // executor load into a complete misfire (no charge at all) and a wrapped
 // unsigned late misread the refresh race as a drop.
 
-// A desynced channel's armed tick may be stretched by a storm-garbage basis
-// (the phase jump left it armed - see the refresh branch below). Clamp it to
-// this horizon so it cannot fire wildly late: the event fires within the
-// bound, the charge-anchored overdwell rescue stays the backstop.
-static constexpr uint32_t MAX_STALE_TICKS = US2NT(4000);
-
 static constexpr int ANGLE_CLOCK_CHANNELS = 4;
 
 struct AngleClockChannel {
@@ -423,30 +417,26 @@ void angleClockRefresh() {
 		// meaningful for RE-ANCHORING, but the armed tick is an absolute time
 		// and does not jump - leave the channel armed so it fires, exactly
 		// like the time-based build (which fires by time regardless of sync).
-		// The tick may however be stretched by a storm-garbage basis from its
-		// arming tooth - clamp it to a bounded horizon when it is farther out,
-		// so it cannot fire 4-16x late (the car catch instability: the rescue
-		// discharged at 1.5x dwell before the stretched fire arrived).
+		// The tick may be stretched by a storm-garbage basis from its arming
+		// tooth, but the band/ceiling clamp in handleShaftSignal bounds that,
+		// and re-anchoring to the desync moment randomized the catch timing
+		// (the user's "events pile up" symptom - reverted 2026-08-31).
 		if (remaining > MAX_LEAD_DEG) {
-			uint32_t oldCcr = *channelCcr(ch);
-			if (static_cast<int32_t>(oldCcr - ANGLE_CLOCK_TIMER->CNT) > static_cast<int32_t>(MAX_STALE_TICKS)) {
-				uint32_t boundedTick = ANGLE_CLOCK_TIMER->CNT + MAX_STALE_TICKS;
-				*channelCcr(ch) = boundedTick;
-				// Same match-in-the-window race guard as the re-anchor below:
-				// the old CCR can match between the SR check above and this
-				// write. Restore it when it did - the pending ISR then measures
-				// its true latency and fires the event.
-				if (ANGLE_CLOCK_TIMER->SR & flag) {
-					*channelCcr(ch) = oldCcr;
-				} else {
-					chState.ccr = boundedTick;
-				}
-			}
 			continue;
 		}
 
 		uint32_t oldCcr = *channelCcr(ch);
+		// Re-anchor only EARLIER, never later: the armed tick is the best
+		// estimate from the arm tooth; a later tooth's garbage (storm) basis
+		// must not push it out - that is what piled events up at the catch
+		// until the basis recovered, delaying the first combustion by seconds.
+		// The legit use of the refresh is the acceleration correction, which
+		// moves the tick earlier as the rpm rises. Firing early on a
+		// deceleration is safe (short dwell / bounded charge via the rescue).
 		uint32_t newTick = tickForAngle(chState.targetAngle);
+		if (static_cast<int32_t>(newTick - oldCcr) > 0) {
+			newTick = oldCcr;
+		}
 
 		if (static_cast<int32_t>(newTick - ANGLE_CLOCK_TIMER->CNT) < static_cast<int32_t>(ARM_MARGIN_TICKS)) {
 			// The angle has arrived (or the handoff ran late enough to miss
@@ -473,15 +463,14 @@ void angleClockRefresh() {
 			continue;
 		}
 
-		// Re-anchor: only the CCR moves (earlier OR later, both safe - the
-		// compare can only hit a future tick once). Never touches action/IE,
-		// see the file-header concurrency note. The write is not atomic with
-		// the SR check above: the old CCR can match in the few cycles between
-		// them (the flag sets before the prio-3 ISR runs). Writing the new
-		// far-future CCR would make that pending ISR measure
-		// late = CNT - newCcr (the ~2^32 maxLateUs wrap) - so re-read SR after
-		// the write and restore the old CCR when the match happened in the
-		// window. The channel then re-anchors next tooth.
+		// Re-anchor: only the CCR moves, and only EARLIER (newTick was clamped
+		// to oldCcr above). Never touches action/IE, see the file-header
+		// concurrency note. The write is not atomic with the SR check above:
+		// the old CCR can match in the few cycles between them (the flag sets
+		// before the prio-3 ISR runs). Writing a far-future CCR would make that
+		// pending ISR measure late = CNT - newCcr (the ~2^32 maxLateUs wrap) -
+		// so re-read SR after the write and restore the old CCR when the match
+		// happened in the window. The channel then re-anchors next tooth.
 		*channelCcr(ch) = newTick;
 		if (ANGLE_CLOCK_TIMER->SR & flag) {
 			*channelCcr(ch) = oldCcr;
