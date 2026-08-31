@@ -1030,20 +1030,19 @@ TRIGGER_RAM_CODE void TriggerCentral::handleShaftSignal(trigger_event_e signal, 
 
 #if EFI_ANGLE_CLOCK
 		// Sanity-clamp the fresh basis against the rpm average once the rpm
-		// value is fresh (this runs AFTER rpmShaftPositionCallback): the first
-		// tooth pair after a long pause can carry the 10 s decoder clamp or a
-		// spurious span - a garbage basis arms far-future ticks that stick all
-		// four channels (noChannel storm) and anchor the TIM5 fallbacks
-		// seconds out. The band is 4x (not 16x): a storm tooth 4-16x off the
-		// average stretched the armed ticks 4-16x and the car fired
-		// 4.5-8 ms late at the catch (the rescue discharging first); the legit
-		// catch accel diverges from the 90-deg average at most ~2-3x, so 4x
-		// leaves it untouched. The absolute ceiling (2 ms/deg ~120 rpm floor)
-		// catches the stale-average case (NaN/huge at the first teeth) and
-		// bounds the armed delay to ~MAX_LEAD_DEG x the ceiling.
+		// value is fresh (this runs AFTER rpmShaftPositionCallback): a garbage
+		// tooth duration arms far-future ticks that stick channels and anchor
+		// the TIM5 fallbacks out. The band is 4x (the legit catch accel
+		// diverges ~2-3x). CRITICAL: the band only applies when the average is
+		// ALIVE (>= ~120 rpm) - at the first teeth after a pause the average is
+		// stale (huge), and clamping a REAL tooth basis up to it turned the
+		// first catch sparks into 3x-late fires (the rescue discharged first,
+		// the first-combustion kick broke the gap ratio -> C9002 -> no catch).
+		// The absolute ceiling stays as the last resort for the 10 s decoder
+		// clamp and bounds the armed delay to ~MAX_LEAD_DEG x the ceiling.
 		{
 			float rpmTicksPerDegree = US2NT(engine->rpmCalculator.oneDegreeUs);
-			if (rpmTicksPerDegree > 0 &&
+			if (rpmTicksPerDegree > 0 && rpmTicksPerDegree < US2NT(2000) &&
 					(lastToothTicksPerDegree > rpmTicksPerDegree * 4 ||
 					 lastToothTicksPerDegree < rpmTicksPerDegree / 4)) {
 				lastToothTicksPerDegree = rpmTicksPerDegree;
