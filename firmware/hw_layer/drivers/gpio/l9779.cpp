@@ -398,13 +398,17 @@ struct L9779 : public GpioChip {
 	 * desynchronizes the stream permanently and pins EC at 7.
 	 *
 	 * The timer is started ONCE (driver thread, after chip_init) and never
-	 * stopped between fires: the old stopped/re-armed one-shot stretched
-	 * every fire-to-fire interval to ~2.5x its armed period even though the
-	 * timer clock is exact (DWT CYCCNT cross-measurement, 2026-08-31) - the
-	 * stretch lived in the CR1=0/CNT=0 stop cycle, not the clock. The period
+	 * stopped between fires (the TIM5 pattern - free-run with auto-reload,
+	 * fire on UIF). The 2026-08-31 2x-period mystery was NOT the one-shot's
+	 * stop/re-arm cycle: it was the SLEEP-MODE CLOCK GATE - rccEnableTIM7
+	 * was called with lp=false, which on the AT32 port clears the APB1LPENR
+	 * bit and gates the timer clock off whenever the CPU sleeps (the pins
+	 * cross-measurement read exact because its busy-wait keeps the CPU
+	 * awake). lp=true is now set; the free-run stays as the principled
+	 * structure (no per-cycle stop, no UG spurious-fire hazard, the thread's
+	 * !CEN heal can only fire on a genuinely dead peripheral). The period
 	 * is changed only when the delay actually changes (wdTimerArm's ARR + UG
-	 * latch); the driver thread re-starts the timer if a system reset killed
-	 * the peripheral while the RAM flags survived (liveness check). */
+	 * latch). */
 	efitick_t					wd_next_moment;	/* next burst dispatch, for the thread's burst-imminent check */
 	bool						wd_running;
 	int						wd_poll_timeouts; /* polled-SPI frames that hit the RXNE watchdog (diagnostic) */
@@ -1132,17 +1136,15 @@ static L9779 *s_wda_chip;
  * angle clock (TMR2) one: plain register writes, a bare Vector handler,
  * nvicEnableVector at init.
  *
- * WHY TMR7 (APB1) AND NOT TMR10 (APB2): the APB2 timer clock domain on the
- * AT32F435 is unreliable - the fork's STM32_TIMCLK2 = PCLK2 x 2 claim is
- * wrong (the runtime tick measured 7.9..9.7 us per run instead of 4, i.e.
- * the effective input wandered 144..117 MHz run to run), so the TMR10 feed
- * answered at an unpredictable real period and the chip rejected everything
- * (EC=7, power stage killed) whenever the drift pushed the answer out of
- * the window. TMR7 shares the APB1 timer clock with TIM5 (the NT domain,
- * physics-validated 4 MHz, rock stable across runs) - the same domain the
- * proven TMR2 angle clock measures clean. TIM7 is free (GPT FALSE, no PWM
- * use), has its own vector (IRQ 55) and its 16-bit ARR covers 262 ms at
- * 250 kHz.
+ * WHY TMR7 (APB1) AND NOT TMR10 (APB2): the TMR10 saga's "APB2 clock
+ * drifts 144..117 MHz run to run" reading was NOT an APB2 clock problem -
+ * it was the SAME sleep-mode clock gate (rccEnableTIM10(false) cleared the
+ * APB2LPENR bit, so the counter only advanced while the CPU was awake; the
+ * effective rate tracked the console-poll wake duty and looked like drift).
+ * TMR7 is kept because it shares the APB1 timer clock with TIM5 (the NT
+ * domain, physics-validated 4 MHz) - the same domain the proven TMR2 angle
+ * clock measures clean - and TIM7 is free (GPT FALSE, no PWM use), has its
+ * own vector (IRQ 55) and its 16-bit ARR covers 262 ms at 250 kHz.
  *
  * CLOCK: the counter rate is MEASURED at init against the NT domain (TIM5):
  * newPsc = acDelta * 144 * 16 / ntDelta - 1 makes TMR7 tick at exactly
@@ -1158,7 +1160,18 @@ static L9779 *s_wda_chip;
 #define WDA_TIMER_PSC_PROV	(143)
 
 static void wdaTimerInit() {
-	rccEnableTIM7(false);
+	/* lp=true is LOAD-BEARING on the AT32 port: rccEnableTIMx(false) CLEARS
+	 * the APB1LPENR bit (the fork's rccEnableAPB1 macro), which gates the
+	 * timer clock OFF in SLEEP mode. ChibiOS idles (WFI) constantly on an
+	 * idle bench, so the counter only advanced during CPU-awake windows -
+	 * the per=2.1..2.6x armed-interval mystery of the whole TMR10/TMR7 saga
+	 * (the effective rate tracked the console-polling wake duty, which is
+	 * why it looked like run-to-run drift). TIM5 keeps running in sleep
+	 * because the PWM LLD enables it with lp=true; the masked pins
+	 * cross-measurement always read the exact 250 kHz because its busy-wait
+	 * keeps the CPU awake. Keep the bit set so the feed period is exact
+	 * while the CPU sleeps. */
+	rccEnableTIM7(true);
 
 	WDA_TIMER->PSC = WDA_TIMER_PSC_PROV;
 	WDA_TIMER->ARR = 0xFFFF;
@@ -1212,9 +1225,9 @@ static void wdaTimerInit() {
 	 * Setting the bit makes TMR7 and TIM5 behave identically under a future
 	 * debug session, whichever polarity this silicon implements. NOTE: the
 	 * bench runs WITHOUT a debugger (user-confirmed, the Java console is the
-	 * only runtime tool), so this never explained the old ~2.5x runtime
-	 * stretch - that lived in the stopped/re-armed one-shot cycle and is gone
-	 * with the free-run timer (see wdaTimerArm). */
+	 * only runtime tool), so this never explained the ~2.5x runtime stretch -
+	 * that was the SLEEP-MODE clock gate (rccEnableTIM7(false) cleared the
+	 * APB1LPENR bit; fixed with lp=true). */
 	DBGMCU->APB1FZ |= DBGMCU_APB1_FZ_DBG_TIM7_STOP;
 
 	efiPrintf(DRIVER_NAME " wda: TMR7 measured %lu/%lu NT ticks, input %lu MHz (PSC 143 -> %lu)",
@@ -1236,21 +1249,25 @@ static void wdaTimerInit() {
  *   from-now semantics the old one-shot had. When the period is UNCHANGED
  *   the function is a no-op: the counter auto-reloads and keeps its phase,
  *   and an unneeded UG would both disturb the in-flight phase and set a
- *   spurious UIF (the immediate-fire hazard the old stop/re-arm sequence
- *   showed as a ~1 ms per= outlier).
+ *   spurious UIF.
  * - Stopped (CEN=0, boot kick or a system reset that killed the peripheral
  *   while the RAM flags survived): full start, DIER|UIE re-armed.
  *
- * WHY THE OLD STOPPED/RE-ARMED ONE-SHOT WAS RETIRED (2026-08-31): every
- * fire-to-fire interval measured ~2.5x its armed period (per=54..69 ms for
- * 27 ms) while the DWT CYCCNT cross-measurement printed EXACT clocks in the
- * same second - the TMR7 tick is 250 kHz by construction (NT-domain PSC
- * measurement) and 288 MHz input. The stretch lived in the CR1=0/CNT=0 stop
- * cycle between fires, not in the clock; free-running removes that entire
- * class. CRITICAL (2026-08-30 18:17 bench): the ARR write is PR-latched by
- * the update event on the AT32 - the 18:17 run armed 21919 ticks but fired
- * at the WRAP (~51.9 ms later) because the ARR write never became active
- * (the counter kept the init PR=0xFFFF). The EGR|UG below latches PR. */
+ * THE REAL 2x ROOT CAUSE (2026-08-31, settled by this build's pins data):
+ * not the one-shot's stop/re-arm and not a clock drift - the timer clock was
+ * gated OFF IN SLEEP MODE. rccEnableTIM7(false) clears the AT32 APB1LPENR
+ * bit (unlike STM32, where the LLDs pass lp=true to keep the bit set), so
+ * the counter only advanced during CPU-awake windows - per=2.1..2.6x of the
+ * armed interval, tracking the console-poll wake duty (the fake "drift").
+ * The pins cross-measurement's busy-wait kept the CPU awake, which is why
+ * it always printed the exact rate. The fix is rccEnableTIM7(true) in
+ * wdaTimerInit; the free-run structure is kept because it is the TIM5
+ * pattern and removes the per-cycle stop (and the CR1=0/CNT=0 window that
+ * let the spurious ~1 ms immediate fire happen). CRITICAL (2026-08-30
+ * 18:17 bench): the ARR write is PR-latched by the update event on the
+ * AT32 - the 18:17 run armed 21919 ticks but fired at the WRAP (~51.9 ms
+ * later) because the ARR write never became active (the counter kept the
+ * init PR=0xFFFF). The EGR|UG below latches PR. */
 
 /* Fire-to-fire period measured in NT ticks (4 MHz, the validated TIM5
  * domain): the 1 Hz liveness print shows it, so the TMR7 armed interval is
@@ -1380,11 +1397,10 @@ CH_IRQ_HANDLER(STM32_TIM7_HANDLER) {
 			s_cnLatUsMax = (int)cnLat * 4;
 
 		WDA_TIMER->SR = ~STM32_TIM_SR_UIF;
-		/* FREE-RUN: do NOT stop the timer here. The auto-reload restarts the
-		 * count at the wrap and the next fire lands ARR+1 ticks later; the
-		 * old CR1=0/DIER=0 disarm between fires was the stretch source (see
-		 * wdaTimerArm). CNT was read above BEFORE the clear for the latency
-		 * probe - after the clear nothing else disturbs the run. */
+		/* FREE-RUN: do NOT stop the timer here (the TIM5 pattern). The
+		 * auto-reload restarts the count at the wrap and the next fire lands
+		 * ARR+1 ticks later. CNT was read above BEFORE the clear for the
+		 * latency probe - after the clear nothing else disturbs the run. */
 		efitick_t nowNt = getTimeNowNt();
 		/* Stash the previous cycle's timing BEFORE overwriting it - the feed's
 		 * verdict gate compares the previous fire period against the delay
@@ -1865,11 +1881,11 @@ void L9779::wdFeedFromExecutor()
 	 * way (the 19:02/23:13 wrong-way walks chased exactly such verdicts).
 	 * The gate is purely evidence-based: off-time cycles carry no phase
 	 * information about the chip window, so their verdicts are ignored and
-	 * the next on-time cycles re-center the delay. With the free-run timer
-	 * the 2.5x stop/re-arm stretch is gone (the clock is exact - DWT CYCCNT
-	 * cross-measurement), so the gate now only flags the short defer/retry
-	 * cycles (armed 1/10 ms on spi_busy / SPI fail) and any residual
-	 * preemption - those verdicts are garbage for exactly the same reason. */
+	 * the next on-time cycles re-center the delay. With the sleep-mode clock
+	 * gate fixed (rccEnableTIM7(true)) the feed period is exact in sleep too,
+	 * so the gate now only flags the short defer/retry cycles (armed 1/10 ms
+	 * on spi_busy / SPI fail) and any residual preemption - those verdicts
+	 * are garbage for exactly the same reason. */
 	if ((s_prevFirePeriodNt != 0) && (s_prevFireDelayMs > 0)) {
 		uint32_t prevPerUs = (uint32_t)(s_prevFirePeriodNt / US_TO_NT_MULTIPLIER);
 		uint32_t armUs = (uint32_t)s_prevFireDelayMs * 1000;
@@ -2173,12 +2189,14 @@ brain_pin_diag_e L9779::getDiag(size_t pin)
  * Measurement A (masked, ~10 ms): the WDA ISR (priority 5) is masked so
  * TMR7 free-runs without period changes, and TIM5 (NT) + TMR7 are compared
  * against CYCCNT in one window. Healthy clock tree: NT ~4 MHz, TMR7 tick
- * ~250 kHz (input 288 MHz). This instrument settled the 2026-08-31 saga:
- * it prints EXACT clocks while the live feed runs at 2x period - the clock
- * never drifted, the stretch lived in the stopped/re-armed one-shot cycle
- * (now retired for the free-run timer). The handoff (4) and executor (3)
- * stay unmasked and do not touch these counters, so the window is
- * car-safe-ish; bench tool.
+ * ~250 kHz (input 288 MHz). NOTE what this instrument CANNOT see: its
+ * busy-wait keeps the CPU awake, so it always samples the awake-phase rate -
+ * it printed EXACT clocks while the live feed ran at 2x period, which is
+ * what finally proved the 2x lived in SLEEP: the timer clock was gated off
+ * in sleep mode (rccEnableTIM7(false) cleared the AT32 APB1LPENR bit) and
+ * only advanced during CPU-awake windows. Fixed with rccEnableTIM7(true).
+ * The handoff (4) and executor (3) stay unmasked and do not touch these
+ * counters, so the window is car-safe-ish; bench tool.
  *
  * Measurement B (unmasked, ~100 ms): the ChibiOS virtual tick vs CYCCNT -
  * expect ~100 ms in 100 ms. This validates the kernel tick config; both
