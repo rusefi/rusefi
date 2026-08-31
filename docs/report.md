@@ -10293,3 +10293,40 @@ be the next lead).
 
 Validation: compile.sh m74_9 -> BUILD SUCCESSFUL. The masked window
 costs the chip one WDA window (EC++) per pins - bench-only tool.
+
+## 2026-08-31 (11:38 bench) - FIRST cross-measurement: timers EXACT at runtime, kernel tick is core SysTick (not TIM2), measurement tool fixed
+
+The 11:38 pins runs printed (three samples):
+- CFGR=0x3808900A: SW/SWS=PLL, HPRE=DIV1, PPRE1=DIV2, PPRE2=DIV2 - the
+  CRM config is exactly as intended. MISC1=0, MISC2=0xB00D (AUTO_STEP
+  off), APB1EN=0x12044078 (TIM5/6/7/12 on, TIM2 OFF).
+- NT 4 MHz (want 4) | TMR7 tick 250 kHz input 288 MHz (want 250/288),
+  tm=2500 nt=40000 per 360000 HCLK ticks - the WDA timer is EXACTLY
+  right AT RUNTIME in this session. The "NT 3 MHz" in the third sample
+  is an integer-truncation artifact of the first tool (399 -> 3), fixed
+  with one-decimal prints.
+- TIM2 PSC=0 CNT=0 CR1=0 and its APB1EN bit cleared: the ChibiOS system
+  tick on this port runs on the CORE SysTick, NOT TIM2 -
+  STM32_ST_USE_TIMER=2 in the mcuconf is not honored by the actual ST
+  driver. Confirmed functionally: the virtual tick froze while the first
+  measurement tool had the core SysTick disabled (ST 0 ms per 3600051
+  ticks). COROLLARY: the saga's claim that the virtual tick is
+  TIMCLK1-derived (and therefore not an independent reference) is WRONG
+  - the old SysTick-anchored TMR10 measurement was actually valid, and
+  its ~283 MHz reading was a real ~1.7% off-288 measurement.
+- Also observed: ARR=7979 -> wd_delay_ms walked 27 -> 32 ms - the chip
+  IS reporting verdicts now (RESP_TO_EARLY, +5 ms), unlike the 23:42
+  session where delay stayed 27 with reqhi=0xC0.
+
+TOOL BUG FIXED (same commit): the first version of the measurement
+hijacked the core SysTick (CTRL off/on with LOAD=0xFFFFFF) and did NOT
+restore LOAD - the kernel tick then ran with a ~466 ms period instead
+of 1 ms until the next reset (the bench's periodic resets masked it).
+wdaTimerCrossMeasure now uses DWT->CYCCNT (the core HCLK cycle counter,
+one-time enable, owned by nobody): zero disturbance, same reference.
+
+STILL OPEN: whether per= is still 2x in THIS build - the 11:38 paste did
+not include the wda[0..9] liveness lines. Next bench run: full pins
+output. If per=2x while the cross-measure says 250 kHz, the stretch is
+a counter-stall mechanism, not the clock; if the cross-measure says
+~125 kHz, the run-to-run drift reproduced and the CRM hunt begins.
