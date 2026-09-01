@@ -11123,6 +11123,34 @@ No code changes. Analysis session only.
 - trgPostDecode scheduling-teeth cost: will be replaced by angle-clock arming once
   EFI_ANGLE_CLOCK is validated on the car
 
+## 2026-09-01 (night 8) - injection close: TIM5 CC2 hardware 32-bit mini-queue (Option B)
+
+NT ticks == TIM5->CNT (1:1, same 4 MHz APB1, same counter). CCR2 = fireAt_NT
+directly. CC2 callback plugged into existing pwm_lld_serve_interrupt dispatch
+(was nullptr). Mini-queue of 4 slots (one per cylinder) with signed comparison
+for past-due events. Same ISR prio as executor (3). No race, no overflow.
+
+  injection_close_hw.h/cpp:
+    s_injClose[4]: {fireAt, action, pending}
+    scheduleInjectionCloseHW(cyl, nowNt, delayNt, action)
+    hwInjectionCloseCallback: disables CC2IE, dispatches due closes, re-arms
+    EGR CC2G forces fire if CCR2 already passed (same as CC1G in executor)
+
+  microsecond_timer_stm32.cpp:
+    timerConfig CH1 callback = hwInjectionCloseCallback
+    CCMR1: OC2M=1 added (software comparator, no pin output)
+    timerConfig: constexpr -> const (cross-TU function pointer)
+
+  onTriggerTooth: stores injectionEndDelayNt, no TIM5 END pre-schedule
+  turnInjectionPinHigh: calls scheduleInjectionCloseHW at actual open
+
+PW accuracy: ~1 us (CC2 ISR latency) vs ~20 us (TIM5 executor batch).
+No PW overflow: 32-bit CCR2, no 8ms 16-bit limit.
+No race: END not pre-scheduled, only armed after injector opens.
+
+Validation: BUILD SUCCESSFUL; unit tests 1169/1169 PASSED.
+Car verdict: inj fired ~ dwell (opens on TMR3, closes on CC2), lateArm~0.
+
 ## 2026-09-01 (night 7) - injection close reverted to TIM5 (angleClockArmInjectionFromNow unusable for long PW)
 
 Engine still broken after night 6 fix. New lockstats: lateArm=135/149=91% for closes.
