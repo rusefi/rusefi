@@ -1,65 +1,31 @@
 /**
  * @file angle_clock.h
  *
- * @author (c) 2026 rusEFI LLC
+ * Hardware angle clock: three APB1 timers as pure software comparators,
+ * one timer per event type, one channel per cylinder.
  *
- * Hardware angle clock (TMR2 on STM32F4/F7 and AT32F435) for one-tooth-ahead
- * firing of engine commands.
+ *   TMR2 (32-bit, VectorB0, prio 3) -> dwell starts   [cylinder 0..3 = ch 0..3]
+ *   TMR4 (16-bit, VectorB8, prio 3) -> spark fires     [cylinder 0..3 = ch 0..3]
+ *   TMR3 (16-bit, VectorB4, prio 3) -> injection starts[cylinder 0..3 = ch 0..3]
  *
- * The problem it solves: every engine command (dwell start, spark fire,
- * injection start) is converted angle->time at the trigger tooth IMMEDIATELY
- * before the event angle, so the software chain (EXTI timestamp -> handoff
- * decode -> scheduling) must complete within that one tooth. The handoff
- * averages ~44 us and tails to ~1 ms, so events due in a tooth whose handoff
- * runs late fire late by the whole tail (up to 36 deg at 6000 rpm on 60-2).
+ * FIXED CHANNEL ASSIGNMENT eliminates the "no channel available" arm failure
+ * of the old single-pool design: each cylinder owns a dedicated channel in
+ * each timer. A channel is always free at arm time because the previous event
+ * on that channel fired within one engine cycle (~150 ms @ 800 rpm) and was
+ * released by the ISR immediately. No search, no conflict possible.
  *
- * The angle clock decouples the firing from the handoff: the handoff of tooth
- * N arms tooth N+1's queued angle events as absolute timer ticks on one of
- * four OC channels used as PURE SOFTWARE COMPARATORS (CCxE=0 - no output pin,
- * CCxIF fires at CNT == CCR). The TMR2 ISR (priority 3, the same level as the
- * TIM5 executor) then just executes the action. A late handoff only misses
- * the arming of the tooth it spans - those events fall back to the time-based
- * TIM5 path.
+ * 16-bit timers (TMR3/TMR4): same APB1 4 MHz clock as TMR2/TIM5.
+ * The CCR is a 16-bit value; the arm check uses signed 16-bit arithmetic so
+ * delays > ~8 ms (half the 16.384 ms counter period) return false and the
+ * caller falls back to TIM5 - this degrades gracefully below ~200 rpm where
+ * the 2-tooth scheduling lead exceeds 8 ms. The angle clock is not needed
+ * below ~200 rpm anyway.
  *
- * TMR2 runs free at 4 MHz (TIMCLK1 = 288 MHz, PSC = 71) - the same tick as
- * the NT domain (TIM5), so NT timestamps convert to angle-clock ticks with a
- * constant offset measured at init. The counter is never reset per tooth:
- * events are armed as ABSOLUTE counter values, which needs no writes from the
- * priority-0 EXTI fast IRQ and cannot fire spuriously in the current tooth.
- * The 32-bit wrap (~1073 s) is absorbed by unsigned tick arithmetic.
- *
- * TIMING ACCURACY AT ANY RPM (2026-08-31, FINAL): the armed tick is
- * computed from the 90-degree-window rpm average (InstantRpmCalculator's
- * oneDegreeUs) - the SAME basis the proven time-based path converts angles
- * with. During spin-up oneDegreeUs is the ~90-degree tooth window
- * (calculateInstantRpm hunts the tooth ~90 deg back), when running it is the
- * full-cycle average - both smooth. The handoff feeds it via
- * angleClockOnTooth and every tooth re-anchors all armed channels from it
- * (angleClockRefresh), so the tick tracks the rpm change without the
- * per-tooth compression noise. The raw last-tooth basis (toothDurations[0])
- * was tried and REJECTED: at cranking the compression oscillation makes a
- * single tooth a 2-3x-stretched predictor, the armed fire landed ~3-12 deg
- * late, the charge-anchored rescue discharged first (C935x) and the
- * first-combustion kick broke the gap ratio (C9002 -> stall). The earlier
- * "oneDegreeUs fired ms-late" fuse incident predates the charge-anchored
- * overdwell rescue and the armed-channel fixes - with those in place the
- * oneDegreeUs basis is what the working time-based build uses.
- *
- * STALE EVENT POLICY: an event whose moment has passed is FIRED, not dropped
- * - both kinds, matching the time-based build (its due-tooth scheduleByAngle
- * fires a due dwell/injection even when the handoff runs late):
- *  - AngleClockKind::CoilFire (coil off) always executes - discharging the
- *    coil is the safety action; the redundant overdwell rescue on TIM5 is the
- *    second writer of the same coil-off.
- *  - AngleClockKind::Start (dwell start / injection start) also executes:
- *    cancelling a due charge/injection starved the first cycle (no charge ->
- *    C9012 at the fire, no fuel -> no combustion). The 2.5x-dwell
- *    charge-anchored rescue bounds any charge regardless of when it started,
- *    so a late charge start is not a fuse risk.
- *
- * The fallback contract: if the armed tick is already in the past (handoff
- * ran late) or all four channels are busy, angleClockArm() returns false and
- * the caller schedules the event on the time-based executor as before.
+ * Timing identity with the FALSE build: at steady-state rpm the tick computed
+ * from oneDegreeUs on tooth T-1 plus the per-tooth refresh on tooth T gives
+ * the same absolute compare moment as TIM5 would schedule on tooth T. The
+ * advantage is that the TMR ISR fires independently of the handoff latency
+ * at tooth T - a 1 ms handoff tail no longer delays the event.
  */
 
 #pragma once
@@ -67,103 +33,71 @@
 #include "scheduler.h"
 #include "efitime.h"
 
-// Pure tick math, host-testable: convert "angleFromNow degrees until the
-// event" and "ticksPerDegree NT ticks per degree" (fresh last-tooth basis,
-// see angleClockOnTooth) into a delay in angle-clock ticks (4 MHz, == NT
-// ticks on the target).
+// Pure tick math, host-testable.
 static inline uint32_t angleClockDelayTicks(float angleFromNow, float ticksPerDegree) {
-	return static_cast<uint32_t>(angleFromNow * ticksPerDegree);
+    return static_cast<uint32_t>(angleFromNow * ticksPerDegree);
 }
 
 #if EFI_ANGLE_CLOCK
 
-// What the armed action does - decides the stale-event policy, see the file
-// header comment.
-enum class AngleClockKind : uint8_t {
-	CoilFire,	// spark fire / coil off: execute even when late (coil safety)
-	Start,		// dwell start / injection start: drop when late
-};
-
-// Configure TMR2 (RCC, PSC, compare channels, NVIC) and measure the
-// NT<->angle-clock offset. Call once at boot, after the TIM5 executor is
-// running (both are free-running 4 MHz counters on the same TIMCLK1).
+// Configure TMR2/TMR3/TMR4, measure rate, enable NVIC. Call once at boot,
+// after the TIM5 executor is running.
 void initAngleClock();
 
-// Convert an NT-domain timestamp into an absolute angle-clock tick.
+// Convert an NT timestamp to an absolute 32-bit angle-clock tick (TMR2 domain).
 uint32_t angleClockTickForNt(efitick_t nt);
 
-// Current free-running angle-clock counter value.
+// Current TMR2 free-running counter value (for diagnostics).
 uint32_t angleClockNow();
 
-// Called by the trigger handoff ONCE PER TOOTH (including the rpm==0 flap
-// teeth of the catch storm - the refresh must track the true speed through
-// the storm), before any arming in that tooth: stores the edge timestamp,
-// the scheduling phase and the angle->time basis (NT ticks per degree from
-// the 90-degree-window rpm average, see the file-header rationale). A
-// not-positive feed (oneDegreeUs = NaN on a flap) keeps the last good
-// basis. cycleDeg is the engine cycle (720 four-stroke / 360 two-stroke)
-// used for angle wrap. All arming and the refresh use this stored data.
-void angleClockOnTooth(efitick_t edgeTimestamp, float currentPhase, float cycleDeg, float ticksPerDegree);
+// Feed the per-tooth state used by all three timers. Call once per tooth
+// (including rpm==0 storm-flap teeth - the refresh must track true speed).
+// A not-positive ticksPerDegree (NaN on rpm==0 flap) keeps the last good
+// basis without touching the phase or timestamp.
+void angleClockOnTooth(efitick_t edgeTimestamp, float currentPhase,
+                        float cycleDeg, float ticksPerDegree);
 
-// Arm `action` to fire at the absolute engine angle `targetAngle` (same
-// basis as the currentPhase passed to angleClockOnTooth). `callerPhase` is
-// the caller's currentPhase (diagnostic: must equal the stored phase in a
-// single handoff). The delay is computed from the freshest tooth data.
-// Returns false (without arming) when the target is not a plausible 1-2 tooth
-// lookahead, the tick is not far enough in the future, or all four channels
-// are busy - the caller must fall back to the TIM5 path.
-bool angleClockArm(float targetAngle, action_s action, AngleClockKind kind, float callerPhase, float callerNextPhase);
+// Arm the dwell-start channel for `cylinderIndex` on TMR2.
+// Returns false when the delay would exceed the scheduler lead window or when
+// the target tick is already in the past - caller falls back to TIM5.
+bool angleClockArmDwell(int cylinderIndex, float targetAngle, action_s action,
+                         float callerPhase, float callerNextPhase);
 
-// Re-anchor every armed channel from the freshest basis: rewrite the
-// compare tick from the current phase and the rpm-average basis, so the
-// prediction tracks the rpm change (an acceleration catch moves the tick
-// earlier). Events whose angle has already passed are armed for IMMEDIATE
-// firing - both kinds (a due dwell/injection fires now, exactly like the
-// time-based build's due-tooth scheduling). Channels whose stored angle is
-// no longer plausible (phase basis jumped, e.g. desync/re-sync) are LEFT
-// ARMED: their tick is an absolute time and fires the event within 1-2
-// teeth just like the time-based build. Call at the end of the trigger
-// handoff, after all arming of that tooth.
+// Arm the spark-fire channel for `cylinderIndex` on TMR4 (16-bit).
+// Falls back at delays > ~8 ms (< ~200 rpm on 60-2, 2-tooth lead).
+bool angleClockArmSpark(int cylinderIndex, float targetAngle, action_s action,
+                         float callerPhase, float callerNextPhase);
+
+// Arm the injection-start channel for `cylinderIndex` on TMR3 (16-bit).
+bool angleClockArmInjection(int cylinderIndex, float targetAngle, action_s action,
+                              float callerPhase, float callerNextPhase);
+
+// Re-anchor all armed channels from the freshest tooth data. Due events
+// (angle already passed) are armed for immediate ISR firing - both dwell
+// and spark/injection, matching the time-based build's due-tooth behavior.
+// Call at the end of every trigger handoff (including rpm==0 flap teeth,
+// before the rpm gate return).
 void angleClockRefresh();
 
-// Cancel every armed channel. Kept as the driver API, but NO LONGER called
-// from the rpm==0 / firmwareError handoff paths: during the catch trigger
-// storm the rpm sensor flaps 0/nonzero at ~1 kHz and each flap cancelled the
-// armed fires (charged coils discharged by 4.5 ms rescues - the C935x
-// cluster) and armed dwell starts (fires on uncharged coils - C9012). The
-// armed ticks are bounded and the charge-anchored overdwell rescue bounds
-// any charge, so armed events fire like the time-based build - by time,
-// regardless of the rpm flap.
+// Cancel one channel by cylinder index. Safe when the channel is free.
+void angleClockCancelDwell(int cylinderIndex);
+void angleClockCancelSpark(int cylinderIndex);
+void angleClockCancelInjection(int cylinderIndex);
+
+// Cancel every channel on every timer. Not called from hot paths.
 void angleClockCancelAll();
 
-// Cancel every armed channel whose action matches (callback + argument).
-// Safe to call when nothing matching is armed.
-void angleClockCancel(action_s action);
-
-// Telemetry for lockstats.
-uint32_t angleClockFiredCount();
-uint32_t angleClockArmFailCount();
-uint32_t angleClockProgrammedLateCount();
-uint32_t angleClockDroppedCount();
-uint32_t angleClockImmediateFireCount();
+// --- Telemetry ---
+uint32_t angleClockFiredDwell();
+uint32_t angleClockFiredSpark();
+uint32_t angleClockFiredInj();
+uint32_t angleClockLateArmDwell();
+uint32_t angleClockLateArmSpark();
+uint32_t angleClockLateArmInj();
 uint32_t angleClockMaxLateTicks();
+uint32_t angleClockImmediateFireCount();
 
-// Arm-failure breakdown (diagnostic): attempts, refusals (remaining >
-// MAX_LEAD_DEG), all-channels-busy, the last refusal's inputs (target angle,
-// stored phase, basis) and the max |ccr - CNT| of a busy channel at arm time.
-uint32_t angleClockArmAttempts();
-uint32_t angleClockRefuseCount();
-uint32_t angleClockNoChannelCount();
-float angleClockLastRefuseTarget();
-float angleClockLastRefusePhase();
-float angleClockLastRefuseCallerPhase();
-float angleClockLastRefuseCallerNext();
-float angleClockLastRefuseBasis();
-float angleClockLastRefuseRemaining();
-uint32_t angleClockLastRefuseCallback();
-uint32_t angleClockMaxBusyDeltaTicks();
-
-// TMR2 rate measurement from initAngleClock.
+// Init-time measurement (printed in lockstats for fuse-incident detection).
 uint32_t angleClockInitAcDelta();
 uint32_t angleClockInitNtDelta();
 uint32_t angleClockInitPsc();
