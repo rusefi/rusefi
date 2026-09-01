@@ -8,13 +8,16 @@
 #pragma once
 
 void onTriggerEventSparkLogic(float rpm, efitick_t edgeTimestamp, float currentPhase, float nextPhase, float nextNextPhase);
+void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
+		float rpm, float dwellMs, float dwellAngle, float sparkAngle,
+		efitick_t edgeTimestamp, float currentPhase, float nextPhase);
 #if EFI_ANGLE_CLOCK
 // Called EARLY in mainTriggerCallback (before handleFuel, ~20-30 µs after the
 // tooth edge) to arm dwell starts on TMR2 while handoff elapsed time is still
 // small. At 7000 rpm the scheduleEarly window (6°=143 µs) easily exceeds the
 // 30 µs elapsed here; by the end of onTriggerEventSparkLogic (~250 µs elapsed)
 // the same window falls below the arm margin and all arms fail.
-void scheduleDwellEarlyIfDue(efitick_t edgeTimestamp, float currentPhase,
+void scheduleDwellEarlyIfDue(float rpm, efitick_t edgeTimestamp, float currentPhase,
                                float nextPhase, float nextNextPhase);
 #endif
 void turnSparkPinHighStartCharging(IgnitionEvent *event);

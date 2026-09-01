@@ -380,7 +380,7 @@ TRIGGER_RAM_CODE void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edge
 	// ~20-30 µs elapsed. This gives TMR2 arm margin even at 7000 rpm where
 	// the same arm attempted at the end of onTriggerEventSparkLogic (~250 µs
 	// elapsed) always fails because the delay for 6° = 143 µs < 250 µs.
-	scheduleDwellEarlyIfDue(edgeTimestamp, currentPhase, nextPhase, nextNextPhase);
+	scheduleDwellEarlyIfDue(rpm, edgeTimestamp, currentPhase, nextPhase, nextNextPhase);
 #endif // EFI_ANGLE_CLOCK
 
 	if (trgEventIndex == 0) {
