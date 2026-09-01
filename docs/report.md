@@ -11121,6 +11121,51 @@ No code changes. Analysis session only.
 - trgPostDecode scheduling-teeth cost: will be replaced by angle-clock arming once
   EFI_ANGLE_CLOCK is validated on the car
 
+## 2026-09-01 (night 6) - CRITICAL: injection double-fire race in angleClockArmInjectionFromNow
+
+Engine ran badly after angleClockArmInjectionFromNow commit: double injection,
+rich mixture, C9002, stall. lockstats showed inj fired ≈ 2x dwell fired and
+lateArm=126 (all injection close arms failed).
+
+### Root cause: TIM5 END fired before TMR3 START (race condition)
+
+onTriggerTooth pre-scheduled TIM5 END at 'startTime + PW' with &injectionEndStage1.
+When injection was past-due (immediate-fire via angleClockRefresh), TMR3 START
+CCR was set to CNT+4us (nearly now). By the time TMR3 ISR fired turnInjectionPinHigh,
+TIM5 had ALREADY fired the END event:
+  1. TIM5 END fires: turnInjectionPinLow -> closes injector, calls update()
+  2. TMR3 START fires: turnInjectionPinHigh -> OPENS injector (2nd time!)
+  3. angleClockArmInjectionFromNow arms 2nd close
+  4. TMR3 fires 2nd CLOSE: closes injector again
+  = double injection, double close, update() called twice
+
+Measured: inj fired=1625 vs dwell=858 (expected 2x=1716, got 1.89x)
+          inj fired=124 vs dwell=122, lateArm=126 (all close arms failed)
+          Engine ran rich, barely idled under load, C9002, stall.
+
+### Fix: remove TIM5 END pre-scheduling for sequential mode under EFI_ANGLE_CLOCK
+
+The END is ONLY armed by turnInjectionPinHigh at the actual open moment via
+angleClockArmInjectionFromNow. No TIM5 pre-schedule = no race.
+
+Simultaneous injection (startSimultaneousInjection, not turnInjectionPinHigh)
+still pre-schedules TIM5 END with nullptr (no race in simultaneous mode).
+
+Removed the now-unnecessary engine->scheduler.cancel() from turnInjectionPinHigh.
+Added delayNt > 0 guard for first-boot edge case.
+
+Key lesson: when re-arming an event from inside the START callback, NEVER
+pre-schedule the END anywhere else. The only safe anchor is the actual open
+moment inside the START ISR. Pre-scheduled TIM5 events can race with TMR ISRs
+of the same priority (prio 3) because TIM5 is a different vector.
+
+### Validation
+
+BUILD SUCCESSFUL; unit tests 1169/1169 PASSED.
+Car validation: inj fired should equal dwell fired (only TMR3 opens counted)
+OR 2x dwell fired (opens + closes on TMR3) depending on whether close arm
+succeeds. No double injection. Engine must run normally.
+
 ## 2026-09-01 (night 5) - trgPostDecode scheduling-tooth analysis + next optimization plan
 
 ### trgPostDecode 50-100 us: breakdown of scheduling tooth overhead
