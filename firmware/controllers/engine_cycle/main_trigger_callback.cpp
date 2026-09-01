@@ -395,10 +395,10 @@ TRIGGER_RAM_CODE void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edge
 	onTriggerEventSparkLogic(rpm, edgeTimestamp, currentPhase, nextPhase, nextNextPhase);
 
 #if EFI_ANGLE_CLOCK
-	// Re-anchor every armed channel from this tooth's freshest data and apply
-	// the stale-event policy: a CoilFire whose angle has arrived fires now, a
-	// late Start (charge/injection) is dropped, a stale phase basis (desync)
-	// cancels the channel.
+	// Re-anchor every armed channel from this tooth's freshest basis and apply
+	// the stale-event policy: an event whose angle has arrived fires NOW (both
+	// kinds - the time-based build fires a due dwell/injection too), a stale
+	// phase basis (desync) leaves the channel armed to fire by time.
 	angleClockRefresh();
 #endif // EFI_ANGLE_CLOCK
 }

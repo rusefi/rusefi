@@ -1151,16 +1151,18 @@ void setup_custom_board_overrides() {
 #if EFI_ANGLE_CLOCK
 		// Hardware angle clock (TMR2): attempts = arm calls; refuse = target
 		// beyond the 30 deg lookahead (stale phase basis); noCh = all 4
-		// channels busy; lateArm = armed past the tick; dropped = stale
-		// charge/injection starts cancelled. The last-refusal snapshot (target
-		// angle / stored phase / basis) and maxBusyUs (max |ccr - CNT| of a
-		// busy channel, in us) settle which failure dominates and how far out
-		// the stuck ticks are. init rate = the TMR2 rate measurement from
-		// boot. nvic 28 = TIM2 (want 3).
-		efiPrintf("angclk att=%u fire=%u refuse=%u noCh=%u lateArm=%u drop=%u maxLateUs=%u busyUs=%u",
+		// channels busy; lateArm = armed past the tick; immediate = due events
+		// fired NOW by the refresh (both kinds - the FALSE build fires a due
+		// dwell/injection too). The last-refusal snapshot (target angle /
+		// stored phase / basis) and maxBusyUs (max |ccr - CNT| of a busy
+		// channel, in us) settle which failure dominates and how far out the
+		// stuck ticks are. init rate = the TMR2 rate measurement from boot.
+		// nvic 28 = TIM2 (want 3).
+		efiPrintf("angclk att=%u fire=%u refuse=%u noCh=%u lateArm=%u drop=%u immediate=%u maxLateUs=%u busyUs=%u",
 			(unsigned)angleClockArmAttempts(), (unsigned)angleClockFiredCount(),
 			(unsigned)angleClockRefuseCount(), (unsigned)angleClockNoChannelCount(),
 			(unsigned)angleClockProgrammedLateCount(), (unsigned)angleClockDroppedCount(),
+			(unsigned)angleClockImmediateFireCount(),
 			(unsigned)(angleClockMaxLateTicks() / (NT_PER_SECOND / 1000000)),
 			(unsigned)(angleClockMaxBusyDeltaTicks() / (NT_PER_SECOND / 1000000)));
 		efiPrintf("angclk lastRefuse target=%.1f phase=%.1f callerPhase=%.1f callerNext=%.1f rem=%.1f cb=%08x basis=%.1f initRate=%u/%u psc=%u nvic=%u (want 3)",
