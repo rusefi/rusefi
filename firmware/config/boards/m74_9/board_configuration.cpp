@@ -10,6 +10,9 @@
 #include "m74_9_vr_model.h"
 #include "m74_9_lin.h"
 #include "runtime_state.h"
+#if EFI_PROD_CODE && HAL_USE_PWM
+#include "injection_close_hw.h"
+#endif
 #include "digital_input_exti.h"
 #include "pwm_generator_logic.h"
 #include "ignition_controller.h"
@@ -1165,6 +1168,12 @@ void setup_custom_board_overrides() {
 			(unsigned)((NVIC->IP[28] >> 4) & 0xF),
 			(unsigned)((NVIC->IP[30] >> 4) & 0xF),
 			(unsigned)((NVIC->IP[29] >> 4) & 0xF));
+		// TIM5 CC2 injection close: cc2fired must track inj_open_TMR3.
+		// cc2fired=0 means injectors never close (CC2 not firing).
+		efiPrintf("injCC2 scheduled=%u fired=%u nvic TIM5=%u (want 3)",
+			(unsigned)getInjectionCC2ScheduledCount(),
+			(unsigned)getInjectionCC2FiredCount(),
+			(unsigned)((NVIC->IP[50] >> 4) & 0xF));
 		angleClockResetStats();
 #endif // EFI_ANGLE_CLOCK
 
