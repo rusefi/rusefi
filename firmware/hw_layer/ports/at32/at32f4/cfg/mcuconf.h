@@ -279,7 +279,13 @@
 #define STM32_ICU_USE_TIM1                  FALSE
 #define STM32_ICU_USE_TIM2                  FALSE
 #define STM32_ICU_USE_TIM3                  FALSE
+/* TMR4 is taken by the hardware angle clock (spark fires, VectorB8, IRQ 30)
+ * as a pure software comparator timer. The ICU driver keeps TIM4 enabled so
+ * the LLD compiles (it needs at least one assigned TIM), but SENT support is
+ * disabled so icuStart(&ICUD4) is never called. STM32_TIM4_SUPPRESS_ISR
+ * prevents the ICU LLD from claiming VectorB8 so the angle clock can own it. */
 #define STM32_ICU_USE_TIM4                  TRUE
+#define STM32_TIM4_SUPPRESS_ISR             TRUE
 #define STM32_ICU_USE_TIM5                  FALSE
 #define STM32_ICU_USE_TIM9                  FALSE
 #define STM32_ICU_USE_TIM10                 FALSE
@@ -304,7 +310,10 @@
  */
 #define STM32_PWM_USE_TIM1                  FALSE
 #define STM32_PWM_USE_TIM2                  FALSE
-#define STM32_PWM_USE_TIM3                  TRUE
+/* TMR3 is taken by the hardware angle clock (injection starts, VectorB4, IRQ 29)
+ * as a pure software comparator timer - do not start the PWM driver on it. */
+#define STM32_PWM_USE_TIM3                  FALSE
+#define STM32_TIM3_SUPPRESS_ISR             TRUE
 #define STM32_PWM_USE_TIM4                  FALSE
 #define STM32_PWM_USE_TIM5                  TRUE
 #define STM32_PWM_USE_TIM8                  TRUE

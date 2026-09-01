@@ -96,9 +96,11 @@ void TriggerScheduler::cancel(AngleBasedEvent* event) {
 
 #if EFI_ANGLE_CLOCK
 	// The event may already be armed on the hardware angle clock (armed one
-	// tooth ahead and removed from this queue). Kill the armed compare too -
-	// angleClockCancel is a no-op when nothing matching is armed.
-	angleClockCancel(event->action);
+	// tooth ahead and removed from this queue). Kill the TMR4 spark channel
+	// directly by cylinder index - O(1) and no action-pointer search needed.
+	if (event->cylinderIndex >= 0) {
+		angleClockCancelSpark(event->cylinderIndex);
+	}
 #endif // EFI_ANGLE_CLOCK
 }
 
@@ -181,7 +183,7 @@ TRIGGER_RAM_CODE void TriggerScheduler::scheduleEventsUntilNextTriggerTooth(floa
 		// never exceeds one tooth of acceleration at ANY rpm (the 90-degree
 		// rpm average lags by revolutions at the catch and fired events
 		// ms-late - the fuse incident).
-		if (!angleClockArm(current->getAngle(), current->action, AngleClockKind::CoilFire, currentPhase, nextPhase)) {
+		if (!angleClockArmSpark(current->cylinderIndex, current->getAngle(), current->action, currentPhase, nextPhase)) {
 			// Arm failed (stale target, tick passed, or all channels busy):
 			// fall back to a time-based fire on the SAME basis the proven
 			// time-based path uses (oneDegreeUs, the 90-degree-window rpm

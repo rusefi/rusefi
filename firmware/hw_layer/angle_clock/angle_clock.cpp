@@ -1,35 +1,32 @@
 /**
  * @file angle_clock.cpp
  *
- * TMR2 hardware angle clock: 4 OC channels as pure software comparators.
- * See angle_clock.h for the design rationale.
+ * Three-timer hardware angle clock.  See angle_clock.h for architecture.
  *
- * Register-level notes (same TIM peripheral on STM32F4/F7 and AT32F435):
- *  - OCxM = 1 ("set channel to active level on match") with CCxE = 0: no pin
- *    is driven, but CCxIF still sets on the CNT == CCR match. This is the
- *    same trick the TIM5 executor uses (microsecond_timer_stm32.cpp).
- *  - ARPE is left 0: ARR writes take effect immediately. Not load-bearing
- *    here (ARR stays 0xFFFFFFFF, the counter only wraps every ~1073 s).
- *  - SR flags are rc_w0: write ~flag to clear.
+ * Register notes (same TIM peripheral on STM32F4 and AT32F435):
+ *  - OCxM = 1 with CCxE = 0: pure software comparator; CCxIF fires on
+ *    CNT == CCR without driving any output pin.
+ *  - CCxIF is rc_w0: write ~flag to clear.
+ *  - All three timers run at 4 MHz (APB1, PSC = 71 @ 288 MHz TIMCLK1).
+ *    The rate is MEASURED at init against TIM5 (NT domain, physics-validated)
+ *    and the PSC is re-programmed from the measurement - prevents the
+ *    2026-08-30 fuse incident (wrong assumed clock rate doubled every dwell).
+ *  - rccEnableTIMx(true): lp=true keeps the timer clocked during WFI sleep.
+ *    lp=false would clear APB1LPENR and stop the counter in idle - the root
+ *    cause of the 2026-08-31 "2x period" saga for TMR7 and the earlier TMR2
+ *    offset drift.
  *
- * Concurrency: the handoff ISR (priority 4) arms/refreshes/cancels channels,
- * the TMR2 ISR (priority 3) fires them. The TMR2 ISR can preempt the handoff
- * mid-arm, so the arm sequence is ordered so that no partial state can fire:
- *   1. clear stale CCxIF
- *   2. write CCR (a tick >= arm margin in the future - CNT cannot reach it
- *      within this ISR window)
- *   3. store the kind and the action
- *   4. enable CCxIE
- * A preempting TMR2 ISR sees no flag for a channel mid-arm (the flag cannot
- * set until CNT reaches the future CCR), and it never executes an action on
- * a channel whose action is empty. The priority-0 EXTI fast IRQ does not
- * touch the angle clock at all.
- *
- * The per-tooth refresh (angleClockRefresh, also handoff context) only ever
- * rewrites CCR of an ACTIVE channel to a FUTURE tick - never action/IE - so
- * a preempting ISR either fires at the old CCR (earlier than intended, still
- * a valid discharge) or sees the channel released. A passed CCR cannot be
- * "reached again", so a refresh can never cause a double fire.
+ * Concurrency (same analysis as the single-timer design):
+ *  - Handoff ISR (prio 4) arms/refreshes/cancels channels.
+ *  - TMR ISRs (prio 3) fire them.
+ *  - A TMR ISR can preempt the handoff mid-arm; the arm sequence is ordered:
+ *    1. clear stale CCxIF
+ *    2. write future CCR  (CNT cannot reach it within this ISR window)
+ *    3. store action
+ *    4. enable CCxIE
+ *    A preempting ISR sees no flag and no action, so it does nothing.
+ *  - Fixed channels: the ISR releases a channel before calling action.execute()
+ *    so a re-arm from inside the action is safe.
  */
 
 #include "pch.h"
@@ -38,579 +35,543 @@
 
 #include "angle_clock.h"
 
-#define ANGLE_CLOCK_TIMER TIM2
+// ── Timer aliases ─────────────────────────────────────────────────────────
+#define DWELL_TIMER  TIM2   // 32-bit APB1, VectorB0, IRQ 28
+#define SPARK_TIMER  TIM4   // 16-bit APB1, VectorB8, IRQ 30
+#define INJ_TIMER    TIM3   // 16-bit APB1, VectorB4, IRQ 29
 
-// CC1..CC4 interrupt flag bits in SR / enable bits in DIER share positions.
-static constexpr uint32_t CC_IF_MASK =
-	STM32_TIM_SR_CC1IF | STM32_TIM_SR_CC2IF | STM32_TIM_SR_CC3IF | STM32_TIM_SR_CC4IF;
-
-// The armed tick must be at least this far in the future: the CCR write plus
-// the IE enable take a few cycles, and a compare exactly at the write moment
-// is racy. 4 us mirrors the TIM5 compare clamp.
+// ── Shared constants ──────────────────────────────────────────────────────
+// Armed tick must be at least ARM_MARGIN_TICKS in the future so the CCR
+// write and CCxIE enable complete before the match.  4 us mirrors TIM5.
 static constexpr uint32_t ARM_MARGIN_TICKS = US2NT(4);
 
-// Absolute ceiling for the angle->time basis fed by angleClockOnTooth, see
-// the comment there: NT ticks per degree, 2 ms/deg (~120 rpm floor). Bounds
-// the armed delay to MAX_LEAD_DEG x 2 ms so a garbage basis cannot stick a
-// channel for the whole run - and cannot stretch the armed tick into the
-// catch-storm lateness that made the car fire 4.5-8 ms late.
-static constexpr float MAX_TICKS_PER_DEGREE = US2NT(2000);
-
-// Arming/refresh reject targets farther than this many degrees away. The
-// early windows arm at most 2 teeth ahead (12.4 deg on 60-2); anything beyond
-// this bound means the phase basis jumped (desync/re-sync) and the stored
-// angle is no longer meaningful - drop instead of firing into the wrong
-// phase. A lost CoilFire is covered by the overdwell rescue on TIM5.
+// Reject targets farther than MAX_LEAD_DEG degrees from s_currentPhase:
+// the early windows arm at most 2 teeth ahead (~12.4 deg on 60-2); anything
+// beyond this means the phase basis jumped (desync/re-sync) and the angle
+// is no longer meaningful.
 static constexpr float MAX_LEAD_DEG = 30.0f;
 
-// Every armed event executes when its compare fires, whatever the dispatch
-// lateness: the angle-domain arming + per-tooth refresh bound the armed
-// delay (a few ms), and the charge-anchored overdwell rescue bounds any
-// charge to 1.5x dwell. There is no late-start drop anymore - dropping turned
-// executor load into a complete misfire (no charge at all) and a wrapped
-// unsigned late misread the refresh race as a drop.
+// Absolute ceiling on the angle->time basis fed by angleClockOnTooth.
+// 2 ms/deg ~ 32 rpm; bounds the armed delay so a garbage basis (e.g., the
+// 10 s decoder clamp at the first teeth) cannot stick a channel for the run.
+static constexpr float MAX_TICKS_PER_DEGREE = US2NT(2000);
 
-static constexpr int ANGLE_CLOCK_CHANNELS = 4;
+static constexpr uint32_t CC_IF_MASK =
+    STM32_TIM_SR_CC1IF | STM32_TIM_SR_CC2IF |
+    STM32_TIM_SR_CC3IF | STM32_TIM_SR_CC4IF;
 
+// ── Per-channel state ─────────────────────────────────────────────────────
 struct AngleClockChannel {
-	action_s action;
-	AngleClockKind kind = AngleClockKind::Start;
-	// Absolute engine angle the event is armed for - the per-tooth refresh
-	// re-anchors from it (same basis as the currentPhase fed by
-	// angleClockOnTooth).
-	float targetAngle = 0;
-	uint32_t ccr = 0;
+    action_s action;
+    float    targetAngle = 0.0f;
+    uint32_t ccr = 0;   // shadow: full 32-bit for TMR2, lower 16 for TMR3/4
 };
 
-static AngleClockChannel s_channels[ANGLE_CLOCK_CHANNELS];
+static AngleClockChannel s_dwell[4];  // TMR2 ch 0..3 = cylinder 0..3
+static AngleClockChannel s_spark[4];  // TMR4 ch 0..3 = cylinder 0..3
+static AngleClockChannel s_inj[4];    // TMR3 ch 0..3 = cylinder 0..3
 
-// TMR2->CNT - TIM5->CNT measured at init. Both counters free-run at 4 MHz
-// from the same TIMCLK1, so the offset is constant and NT timestamps convert
-// to angle-clock ticks by adding it.
-static uint32_t s_ntOffset = 0;
+// ── NT <-> timer tick offsets ─────────────────────────────────────────────
+// All three counters run at the same 4 MHz APB1 clock; the offset is constant.
+// TMR2 (32-bit): s_dwell_off = (uint32_t)(TMR2->CNT - NT_lower32)
+// TMR4 (16-bit): s_spark_off = (uint16_t)(TMR4->CNT - NT_lower16)
+// TMR3 (16-bit): s_inj_off   = (uint16_t)(TMR3->CNT - NT_lower16)
+static uint32_t s_dwell_off;
+static uint16_t s_spark_off;
+static uint16_t s_inj_off;
 
-// Per-tooth state, fed by angleClockOnTooth from the trigger handoff. Only
-// the handoff (single context, priority 4) writes these; the TMR2 ISR never
-// touches them.
-static efitick_t s_edgeTimestamp = 0;
-static float s_currentPhase = 0;
-static float s_cycleDeg = 720;
-static float s_ticksPerDegree = 0;	// NT ticks per degree of the LAST tooth
+// ── Per-tooth state (shared, written only by handoff prio 4) ─────────────
+static efitick_t s_edgeTimestamp  = 0;
+static float     s_currentPhase   = 0.0f;
+static float     s_cycleDeg       = 720.0f;
+static float     s_ticksPerDegree = 0.0f;
 
-static uint32_t s_firedCount = 0;
-static uint32_t s_armFailCount = 0;
-static uint32_t s_lateArmCount = 0;
-static uint32_t s_droppedCount = 0;
-static uint32_t s_immediateFireCount = 0;	// due events fired NOW by the refresh
+// ── Telemetry ─────────────────────────────────────────────────────────────
+static uint32_t s_firedDwell   = 0;
+static uint32_t s_firedSpark   = 0;
+static uint32_t s_firedInj     = 0;
+static uint32_t s_lateArmDwell = 0;
+static uint32_t s_lateArmSpark = 0;
+static uint32_t s_lateArmInj   = 0;
 static uint32_t s_maxLateTicks = 0;
+static uint32_t s_immediate    = 0;
 
-// Arm-failure breakdown (diagnostic, 2026-08-31): the combined armFail
-// counter cannot tell a stale-phase refusal (remaining > MAX_LEAD_DEG) from
-// all-four-channels-busy - the two have opposite root causes. Split them and
-// snapshot the last refusal's inputs so a single lockstats settles which one
-// dominates without guessing.
-static uint32_t s_armAttempts = 0;
-static uint32_t s_refuseCount = 0;		// remaining > MAX_LEAD_DEG
-static uint32_t s_noChannelCount = 0;	// all four channels busy
-static float s_lastRefuseTarget = 0;	// targetAngle of the last refusal
-static float s_lastRefusePhase = 0;		// s_currentPhase of the last refusal
-static float s_lastRefuseCallerPhase = 0;	// the caller's currentPhase at the last refusal
-static float s_lastRefuseCallerNext = 0;	// the caller's nextPhase at the last refusal
-static float s_lastRefuseBasis = 0;		// s_ticksPerDegree of the last refusal
-static float s_lastRefuseRemaining = 0;	// the computed remaining (wrapped) that was refused
-static uint32_t s_lastRefuseCallback = 0;	// callback address of the refused action - names the caller
-static uint32_t s_maxBusyDeltaTicks = 0;	// max |ccr - CNT| of a busy channel at arm time
-
-// TMR2 rate measurement result from initAngleClock - printed in lockstats so
-// a wrong PSC (the fuse-incident class) is visible without scrolling to boot.
 static uint32_t s_initAcDelta = 0;
 static uint32_t s_initNtDelta = 0;
-static uint32_t s_initPsc = 0;
+static uint32_t s_initPsc     = 0;
 
-// CCR1..CCR4 are separate fields in the AT32 TIM_TypeDef (not an array).
-static volatile uint32_t* channelCcr(int ch) {
-	switch (ch) {
-	case 0:
-		return &ANGLE_CLOCK_TIMER->CCR1;
-	case 1:
-		return &ANGLE_CLOCK_TIMER->CCR2;
-	case 2:
-		return &ANGLE_CLOCK_TIMER->CCR3;
-	default:
-		return &ANGLE_CLOCK_TIMER->CCR4;
-	}
+// ── CCR register pointer ──────────────────────────────────────────────────
+static volatile uint32_t* ccrReg(TIM_TypeDef* tmr, int ch) {
+    switch (ch) {
+    case 0:  return &tmr->CCR1;
+    case 1:  return &tmr->CCR2;
+    case 2:  return &tmr->CCR3;
+    default: return &tmr->CCR4;
+    }
 }
 
-// CH_IRQ_HANDLER expands to 'extern "C" void VectorB0(void)' in C++ mode,
-// which cannot be combined with the TRIGGER_RAM_CODE section attribute (GCC
-// rejects attributes before the linkage specification) - spell it out so the
-// dispatch path lives in zero-wait SRAM like the rest of the trigger code.
+// ── Tick conversions ──────────────────────────────────────────────────────
+TRIGGER_RAM_CODE uint32_t angleClockTickForNt(efitick_t nt) {
+    return static_cast<uint32_t>(nt) + s_dwell_off;
+}
+
+TRIGGER_RAM_CODE static uint16_t sparkTickForNt(efitick_t nt, uint32_t delay) {
+    return static_cast<uint16_t>(static_cast<uint32_t>(nt) + s_spark_off + delay);
+}
+
+TRIGGER_RAM_CODE static uint16_t injTickForNt(efitick_t nt, uint32_t delay) {
+    return static_cast<uint16_t>(static_cast<uint32_t>(nt) + s_inj_off + delay);
+}
+
+TRIGGER_RAM_CODE static float remainingAngle(float targetAngle) {
+    float r = targetAngle - s_currentPhase;
+    if (r < 0.0f) r += s_cycleDeg;
+    return r;
+}
+
+TRIGGER_RAM_CODE uint32_t angleClockNow() {
+    return DWELL_TIMER->CNT;
+}
+
+// ── ISR dispatch helpers ──────────────────────────────────────────────────
+// 32-bit version (TMR2, dwell)
+TRIGGER_RAM_CODE static void dispatch32(TIM_TypeDef* tmr,
+                                         AngleClockChannel* chs,
+                                         uint32_t& firedCount) {
+    uint32_t sr = tmr->SR & CC_IF_MASK;
+    for (int ch = 0; ch < 4 && sr; ch++) {
+        const uint32_t flag = STM32_TIM_SR_CC1IF << ch;
+        if (!(sr & flag)) continue;
+        sr &= ~flag;
+
+        tmr->SR    = ~flag;
+        tmr->DIER &= ~(STM32_TIM_DIER_CC1IE << ch);
+
+        auto& c = chs[ch];
+        action_s act = c.action;
+        uint32_t ccr = c.ccr;
+        c.action = {};
+
+        if (act) {
+            const int32_t late =
+                static_cast<int32_t>(static_cast<uint32_t>(tmr->CNT) - ccr);
+            firedCount++;
+            if (late > 0 && static_cast<uint32_t>(late) > s_maxLateTicks)
+                s_maxLateTicks = static_cast<uint32_t>(late);
+            act.execute();
+        }
+    }
+}
+
+// 16-bit version (TMR3/TMR4, spark/injection)
+TRIGGER_RAM_CODE static void dispatch16(TIM_TypeDef* tmr,
+                                         AngleClockChannel* chs,
+                                         uint32_t& firedCount) {
+    uint32_t sr = tmr->SR & CC_IF_MASK;
+    for (int ch = 0; ch < 4 && sr; ch++) {
+        const uint32_t flag = STM32_TIM_SR_CC1IF << ch;
+        if (!(sr & flag)) continue;
+        sr &= ~flag;
+
+        tmr->SR    = ~flag;
+        tmr->DIER &= ~(STM32_TIM_DIER_CC1IE << ch);
+
+        auto& c = chs[ch];
+        action_s act = c.action;
+        const uint16_t ccr = static_cast<uint16_t>(c.ccr);
+        c.action = {};
+
+        if (act) {
+            const int16_t late =
+                static_cast<int16_t>(static_cast<uint16_t>(tmr->CNT) - ccr);
+            firedCount++;
+            if (late > 0 && static_cast<uint32_t>(late) > s_maxLateTicks)
+                s_maxLateTicks = static_cast<uint32_t>(late);
+            act.execute();
+        }
+    }
+    assertInterruptPriority(__func__, EFI_IRQ_ANGLE_CLOCK_PRIORITY);
+}
+
+// ── ISR handlers ─────────────────────────────────────────────────────────
 extern "C" {
-TRIGGER_RAM_CODE void STM32_TIM2_HANDLER(void) {
-	OSAL_IRQ_PROLOGUE();
 
-	uint32_t sr = ANGLE_CLOCK_TIMER->SR & CC_IF_MASK;
-	for (int ch = 0; ch < ANGLE_CLOCK_CHANNELS && sr; ch++) {
-		uint32_t flag = STM32_TIM_SR_CC1IF << ch;
-		if (!(sr & flag)) {
-			continue;
-		}
-		sr &= ~flag;
-
-		// Release the channel first (clear flag, disable IE, take the action
-		// out) so a re-arm from inside the action cannot clobber it, then
-		// execute outside the register-critical section.
-		ANGLE_CLOCK_TIMER->SR = ~flag;
-		ANGLE_CLOCK_TIMER->DIER &= ~(STM32_TIM_DIER_CC1IE << ch);
-
-		auto& chState = s_channels[ch];
-		action_s action = chState.action;
-		uint32_t ccr = chState.ccr;
-		chState.action = {};
-
-		if (action) {
-			// Dispatch telemetry: SIGNED so a re-anchored ccr in the future
-			// (the refresh race) reads as negative (early), not a ~2^32 wrap
-			// that the old unsigned read misclassified as grossly late and
-			// DROPPED (2026-08-31 800 rpm self-stim: drop=fired=642, which
-			// killed every dwell so sched dwell=0 spark=8).
-			int32_t late = static_cast<int32_t>(ANGLE_CLOCK_TIMER->CNT - ccr);
-			s_firedCount++;
-			if (late > 0 && static_cast<uint32_t>(late) > s_maxLateTicks) {
-				s_maxLateTicks = static_cast<uint32_t>(late);
-			}
-
-			// Every armed event executes when its compare fires. The
-			// angle-domain arming + per-tooth refresh bound the delay and
-			// the charge-anchored overdwell rescue bounds any charge, so a
-			// late event cannot pile up (the pre-redesign 14:13 fuse
-			// incident). Dropping a late start instead converted executor
-			// load into a lost spark (no charge at all), and a wrapped late
-			// turned the refresh race into a spurious drop.
-			action.execute();
-			}
-	}
-
-	assertInterruptPriority(__func__, EFI_IRQ_ANGLE_CLOCK_PRIORITY);
-
-	OSAL_IRQ_EPILOGUE();
+TRIGGER_RAM_CODE void STM32_TIM2_HANDLER(void) {   // dwell
+    OSAL_IRQ_PROLOGUE();
+    dispatch32(DWELL_TIMER, s_dwell, s_firedDwell);
+    assertInterruptPriority(__func__, EFI_IRQ_ANGLE_CLOCK_PRIORITY);
+    OSAL_IRQ_EPILOGUE();
 }
+
+TRIGGER_RAM_CODE void STM32_TIM4_HANDLER(void) {   // spark
+    OSAL_IRQ_PROLOGUE();
+    dispatch16(SPARK_TIMER, s_spark, s_firedSpark);
+    OSAL_IRQ_EPILOGUE();
+}
+
+TRIGGER_RAM_CODE void STM32_TIM3_HANDLER(void) {   // injection
+    OSAL_IRQ_PROLOGUE();
+    dispatch16(INJ_TIMER, s_inj, s_firedInj);
+    OSAL_IRQ_EPILOGUE();
+}
+
 } // extern "C"
 
-void initAngleClock() {
-	/* lp=true is LOAD-BEARING on the AT32 port: rccEnableTIMx(false) CLEARS
-	 * the APB1LPENR bit (the fork's rccEnableAPB1 macro), which gates the
-	 * timer clock OFF in sleep mode. TIM5 (the NT domain, enabled by the
-	 * PWM LLD with lp=true) keeps running in sleep, so a sleep-gated TMR2
-	 * would drift its init-measured NT<->angle-clock offset on every idle
-	 * period (key-on engine-off, console idle) - every armed absolute tick
-	 * would fire at the wrong time after wake. The same bug gated the WDA
-	 * feed timer (see l9779.cpp rccEnableTIM7): the whole 2x-period saga
-	 * was a sleep-gated counter, not a drifting clock. */
-	rccEnableTIM2(true);
+// ── Initialization ────────────────────────────────────────────────────────
+static void initTimerRegs(TIM_TypeDef* tmr, uint32_t psc) {
+    tmr->PSC   = psc;
+    tmr->ARR   = 0xFFFFFFFFU;  // 16-bit timers naturally truncate CNT/ARR
+    tmr->CR1   = 0;
+    tmr->CCMR1 = STM32_TIM_CCMR1_OC1M(1) | STM32_TIM_CCMR1_OC2M(1);
+    tmr->CCMR2 = STM32_TIM_CCMR1_OC1M(1) | STM32_TIM_CCMR1_OC2M(1);
+    tmr->CCER  = 0;
+    tmr->DIER  = 0;
+    tmr->EGR   = STM32_TIM_EGR_UG;   // latch PSC/ARR, clear CNT
+    tmr->SR    = 0;
+    tmr->CR1   = STM32_TIM_CR1_CEN;
+}
 
-	// Freeze TMR2 together with TIM5 when the core halts (debugger): both are
-	// free-running 4 MHz counters and the NT<->angle-clock offset must stay
-	// constant across halts.
+void initAngleClock() {
+    // lp=true: keep all three clocked during WFI sleep (APB1LPENR).
+    // lp=false would gate the clock and drift the NT<->timer offset on
+    // every idle period - the 2026-08-31 "2x period" root cause.
+    rccEnableTIM2(true);
+    rccEnableTIM4(true);
+    rccEnableTIM3(true);
+
+    // Freeze alongside TIM5 on debugger halt so the NT<->timer offsets
+    // stay constant across core halts.
 #if defined(STM32F4XX) || defined(STM32F7XX)
-	DBGMCU->APB1FZ |= DBGMCU_APB1_FZ_DBG_TIM2_STOP;
+    DBGMCU->APB1FZ |= DBGMCU_APB1_FZ_DBG_TIM2_STOP |
+                      DBGMCU_APB1_FZ_DBG_TIM3_STOP |
+                      DBGMCU_APB1_FZ_DBG_TIM4_STOP;
 #endif
 
-	// Free-running 32-bit up-counter, PROVISIONALLY at 4 MHz (PSC = 71 under
-	// the fork's TIMCLK1 = PCLK1 * 2 = 288 MHz assumption). No auto-reload,
-	// no per-tooth reset - events are armed as absolute counter values.
-	ANGLE_CLOCK_TIMER->PSC = 71;
-	ANGLE_CLOCK_TIMER->ARR = 0xFFFFFFFF;
-	ANGLE_CLOCK_TIMER->CR1 = 0;
+    // Start all three at the provisional PSC = 71 (assumes TIMCLK1 = 288 MHz
+    // -> 4 MHz).  The measured rate below corrects it.
+    initTimerRegs(DWELL_TIMER, 71);
+    initTimerRegs(SPARK_TIMER, 71);
+    initTimerRegs(INJ_TIMER,   71);
 
-	// Output-compare mode 1 on all four channels, output disabled (CCxE = 0):
-	// pure software comparators, CCxIF fires at CNT == CCR.
-	ANGLE_CLOCK_TIMER->CCMR1 = STM32_TIM_CCMR1_OC1M(1) | STM32_TIM_CCMR1_OC2M(1);
-	ANGLE_CLOCK_TIMER->CCMR2 = STM32_TIM_CCMR1_OC1M(1) | STM32_TIM_CCMR1_OC2M(1);
-	ANGLE_CLOCK_TIMER->CCER = 0;
-	ANGLE_CLOCK_TIMER->DIER = 0;
+    // Measure the real TMR2 rate against NT (TIM5).  All three timers share
+    // the same APB1 clock so one measurement corrects all three PSCs.
+    // This is load-bearing: a 2x-wrong PSC doubled every dwell and blew the
+    // 15A fuse on 2026-08-30.
+    const uint32_t ac0 = DWELL_TIMER->CNT;
+    const uint32_t nt0 = getTimeNowLowerNt();
+    do { } while (getTimeNowLowerNt() - nt0 < US2NT(10000));  // 10 ms
+    const uint32_t acDelta = DWELL_TIMER->CNT - ac0;
+    const uint32_t ntDelta = getTimeNowLowerNt() - nt0;
 
-	// Latch PSC/ARR and clear any stale flags, then start the counter for
-	// the rate measurement below.
-	ANGLE_CLOCK_TIMER->EGR = STM32_TIM_EGR_UG;
-	ANGLE_CLOCK_TIMER->SR = 0;
-	ANGLE_CLOCK_TIMER->CR1 = STM32_TIM_CR1_CEN;
+    uint32_t newPsc = (72U * acDelta / ntDelta) - 1U;
+    if (newPsc > 0xFFFFU) newPsc = 0xFFFFU;
 
-	// MEASURE the real counter rate against the NT timer (TIM5): the NT
-	// 4 MHz domain is load-bearing and validated by tooth physics on the
-	// car (rpm readings match reality), so it is the reference. The fork's
-	// STM32_TIMCLK1 claims PCLK1 * 2 for all APB1 timers, but the AT32F435
-	// does NOT necessarily double the APB timer clock - TMR10 on APB2
-	// measured 144 MHz against the claimed 288. A 2x-slow angle clock makes
-	// EVERY armed event fire 2x late, which doubles every dwell: the
-	// 2026-08-30 catch overcharged all four coils ~8 ms (2x the nominal
-	// cranking dwell) and blew the 15A fuse. Program the PSC from the
-	// MEASURED rate instead, so the counter always ticks at exactly 4 MHz
-	// == the NT domain, on any silicon.
-	uint32_t ac0 = ANGLE_CLOCK_TIMER->CNT;
-	uint32_t nt0 = getTimeNowLowerNt();
-	do { } while (getTimeNowLowerNt() - nt0 < US2NT(10000));	/* 10 ms */
-	uint32_t acDelta = ANGLE_CLOCK_TIMER->CNT - ac0;
-	uint32_t ntDelta = getTimeNowLowerNt() - nt0;
+    // Re-program all three with the measured PSC.
+    DWELL_TIMER->CR1 = 0; DWELL_TIMER->PSC = newPsc;
+    SPARK_TIMER->CR1 = 0; SPARK_TIMER->PSC = newPsc;
+    INJ_TIMER->CR1   = 0; INJ_TIMER->PSC   = newPsc;
+    DWELL_TIMER->CNT = 0;
+    SPARK_TIMER->CNT = 0;
+    INJ_TIMER->CNT   = 0;
+    DWELL_TIMER->EGR = STM32_TIM_EGR_UG;
+    SPARK_TIMER->EGR = STM32_TIM_EGR_UG;
+    INJ_TIMER->EGR   = STM32_TIM_EGR_UG;
+    DWELL_TIMER->SR  = 0; SPARK_TIMER->SR = 0; INJ_TIMER->SR = 0;
+    DWELL_TIMER->CR1 = STM32_TIM_CR1_CEN;
+    SPARK_TIMER->CR1 = STM32_TIM_CR1_CEN;
+    INJ_TIMER->CR1   = STM32_TIM_CR1_CEN;
 
-	// newPsc = (PSC_provisional + 1) * acDelta / ntDelta - 1: scales the
-	// measured tick rate to exactly the NT rate (acDelta == ntDelta).
-	uint32_t newPsc = (72 * acDelta / ntDelta) - 1;
-	if (newPsc > 0xFFFF)
-		newPsc = 0xFFFF;
+    // Measure NT <-> each timer offset AFTER the PSC re-programming.
+    // All three run at exactly 4 MHz (same TIMCLK1), so the offset is constant.
+    {
+        const uint32_t nowNt = getTimeNowLowerNt();
+        s_dwell_off = DWELL_TIMER->CNT - nowNt;
+        s_spark_off = static_cast<uint16_t>(SPARK_TIMER->CNT - nowNt);
+        s_inj_off   = static_cast<uint16_t>(INJ_TIMER->CNT   - nowNt);
+    }
 
-	ANGLE_CLOCK_TIMER->CR1 = 0;
-	ANGLE_CLOCK_TIMER->PSC = newPsc;
-	ANGLE_CLOCK_TIMER->CNT = 0;
-	ANGLE_CLOCK_TIMER->EGR = STM32_TIM_EGR_UG;	/* latch the new PSC */
-	ANGLE_CLOCK_TIMER->SR = 0;
-	ANGLE_CLOCK_TIMER->CR1 = STM32_TIM_CR1_CEN;
+    nvicEnableVector(STM32_TIM2_NUMBER, EFI_IRQ_ANGLE_CLOCK_PRIORITY);
+    nvicEnableVector(STM32_TIM4_NUMBER, EFI_IRQ_ANGLE_CLOCK_PRIORITY);
+    nvicEnableVector(STM32_TIM3_NUMBER, EFI_IRQ_ANGLE_CLOCK_PRIORITY);
 
-	nvicEnableVector(STM32_TIM2_NUMBER, EFI_IRQ_ANGLE_CLOCK_PRIORITY);
+    s_initAcDelta = acDelta;
+    s_initNtDelta = ntDelta;
+    s_initPsc     = newPsc;
 
-	// The offset is only valid at the FINAL counter rate - measure it after
-	// the PSC re-programming.
-	s_ntOffset = ANGLE_CLOCK_TIMER->CNT - getTimeNowLowerNt();
-
-	s_initAcDelta = acDelta;
-	s_initNtDelta = ntDelta;
-	s_initPsc = newPsc;
-
-	efiPrintf("angle clock: measured rate %lu/%lu ticks (PSC 71 -> %lu)",
-		(unsigned long)acDelta, (unsigned long)ntDelta, (unsigned long)newPsc);
+    efiPrintf("angle clock: TMR2/3/4 init PSC 71->%lu (measured %lu/%lu ticks)",
+        static_cast<unsigned long>(newPsc),
+        static_cast<unsigned long>(acDelta),
+        static_cast<unsigned long>(ntDelta));
 }
 
-TRIGGER_RAM_CODE uint32_t angleClockTickForNt(efitick_t nt) {
-	// Truncation to 32 bits is intentional: both counters wrap at 2^32, so
-	// low-32-bit arithmetic is the wrap-correct representation.
-	return static_cast<uint32_t>(nt) + s_ntOffset;
+// ── Per-tooth state update ────────────────────────────────────────────────
+TRIGGER_RAM_CODE void angleClockOnTooth(efitick_t edgeTimestamp,
+                                         float currentPhase,
+                                         float cycleDeg,
+                                         float ticksPerDegree) {
+    s_edgeTimestamp = edgeTimestamp;
+    s_currentPhase  = currentPhase;
+    s_cycleDeg      = cycleDeg;
+
+    // Keep the last good basis when the feed is NaN/zero (rpm==0 storm flap).
+    // Zeroing the basis would collapse every armed tick onto the tooth edge
+    // and fire everything immediately at the worst moment.
+    if (!(ticksPerDegree > 0.0f)) {
+        return;
+    }
+    if (ticksPerDegree > MAX_TICKS_PER_DEGREE) {
+        s_ticksPerDegree = MAX_TICKS_PER_DEGREE;
+    } else {
+        s_ticksPerDegree = ticksPerDegree;
+    }
 }
 
-uint32_t angleClockNow() {
-	return ANGLE_CLOCK_TIMER->CNT;
+// ── Arm functions ─────────────────────────────────────────────────────────
+// Common arm guard: check lead window and return delay in ticks.
+// Returns false when the target is too far ahead (stale phase) or the
+// basis is not yet valid.
+TRIGGER_RAM_CODE static bool armGuard(float targetAngle,
+                                       float& outRemaining,
+                                       uint32_t& outDelay) {
+    if (s_ticksPerDegree <= 0.0f) return false;
+    outRemaining = remainingAngle(targetAngle);
+    if (outRemaining > MAX_LEAD_DEG) return false;
+    outDelay = angleClockDelayTicks(outRemaining, s_ticksPerDegree);
+    return true;
 }
 
-TRIGGER_RAM_CODE void angleClockOnTooth(efitick_t edgeTimestamp, float currentPhase, float cycleDeg, float ticksPerDegree) {
-	s_edgeTimestamp = edgeTimestamp;
-	s_currentPhase = currentPhase;
-	s_cycleDeg = cycleDeg;
+TRIGGER_RAM_CODE bool angleClockArmDwell(int cyl, float targetAngle,
+                                          action_s action,
+                                          float /*callerPhase*/,
+                                          float /*callerNextPhase*/) {
+    float remaining; uint32_t delay;
+    if (!armGuard(targetAngle, remaining, delay)) {
+        s_lateArmDwell++;
+        return false;
+    }
 
-	// Absolute ceiling on the angle->time basis: the decoder clamps the stored
-	// tooth duration to 10 s after a long pause, and the relative rpm-band
-	// clamp cannot see it when the rpm average itself is stale (NaN at the
-	// first teeth). 5 ms/deg (~32 rpm equivalent) is above any real cranking
-	// tooth and far below the garbage - a capped basis bounds the armed delay
-	// (MAX_LEAD_DEG x the cap) so a channel can never be stuck for the run.
-	//
-	// A not-positive feed KEEPS the last good basis: during the catch trigger
-	// storm the rpm sensor flaps 0/nonzero at ~1 kHz and oneDegreeUs goes NaN
-	// on the zero flaps - zeroing the basis would collapse every armed tick
-	// onto the tooth edge (the refresh runs on every tooth, flap or not) and
-	// fire everything immediately at the worst moment. The last good basis is
-	// at most one flap old (ms), so it is the correct prediction for this
-	// tooth.
-	if (!(ticksPerDegree > 0)) {
-		return;
-	} else if (ticksPerDegree > MAX_TICKS_PER_DEGREE) {
-		s_ticksPerDegree = MAX_TICKS_PER_DEGREE;
-	} else {
-		s_ticksPerDegree = ticksPerDegree;
-	}
+    const uint32_t atTick =
+        angleClockTickForNt(s_edgeTimestamp) + delay;
+
+    if (static_cast<int32_t>(atTick - static_cast<uint32_t>(DWELL_TIMER->CNT)) <
+        static_cast<int32_t>(ARM_MARGIN_TICKS)) {
+        s_lateArmDwell++;
+        return false;
+    }
+
+    auto& c = s_dwell[cyl];
+    const uint32_t flag = STM32_TIM_SR_CC1IF << cyl;
+    DWELL_TIMER->SR    = ~flag;
+    *ccrReg(DWELL_TIMER, cyl) = atTick;
+    c.ccr         = atTick;
+    c.targetAngle = targetAngle;
+    c.action      = action;
+    DWELL_TIMER->DIER |= STM32_TIM_DIER_CC1IE << cyl;
+    return true;
 }
 
-// Angle from the current phase to the target, wrapped into [0, cycleDeg).
-TRIGGER_RAM_CODE static float remainingAngle(float targetAngle) {
-	float remaining = targetAngle - s_currentPhase;
-	if (remaining < 0) {
-		remaining += s_cycleDeg;
-	}
-	return remaining;
+TRIGGER_RAM_CODE bool angleClockArmSpark(int cyl, float targetAngle,
+                                          action_s action,
+                                          float /*callerPhase*/,
+                                          float /*callerNextPhase*/) {
+    float remaining; uint32_t delay;
+    if (!armGuard(targetAngle, remaining, delay)) {
+        s_lateArmSpark++;
+        return false;
+    }
+
+    const uint16_t atTick = sparkTickForNt(s_edgeTimestamp, delay);
+    const uint16_t cnt16  = static_cast<uint16_t>(SPARK_TIMER->CNT);
+
+    if (static_cast<int16_t>(atTick - cnt16) <
+        static_cast<int16_t>(ARM_MARGIN_TICKS)) {
+        s_lateArmSpark++;
+        return false;
+    }
+
+    auto& c = s_spark[cyl];
+    const uint32_t flag = STM32_TIM_SR_CC1IF << cyl;
+    SPARK_TIMER->SR    = ~flag;
+    *ccrReg(SPARK_TIMER, cyl) = atTick;
+    c.ccr         = atTick;
+    c.targetAngle = targetAngle;
+    c.action      = action;
+    SPARK_TIMER->DIER |= STM32_TIM_DIER_CC1IE << cyl;
+    return true;
 }
 
-TRIGGER_RAM_CODE static uint32_t tickForAngle(float targetAngle) {
-	return angleClockTickForNt(s_edgeTimestamp) + angleClockDelayTicks(remainingAngle(targetAngle), s_ticksPerDegree);
+TRIGGER_RAM_CODE bool angleClockArmInjection(int cyl, float targetAngle,
+                                              action_s action,
+                                              float /*callerPhase*/,
+                                              float /*callerNextPhase*/) {
+    float remaining; uint32_t delay;
+    if (!armGuard(targetAngle, remaining, delay)) {
+        s_lateArmInj++;
+        return false;
+    }
+
+    const uint16_t atTick = injTickForNt(s_edgeTimestamp, delay);
+    const uint16_t cnt16  = static_cast<uint16_t>(INJ_TIMER->CNT);
+
+    if (static_cast<int16_t>(atTick - cnt16) <
+        static_cast<int16_t>(ARM_MARGIN_TICKS)) {
+        s_lateArmInj++;
+        return false;
+    }
+
+    auto& c = s_inj[cyl];
+    const uint32_t flag = STM32_TIM_SR_CC1IF << cyl;
+    INJ_TIMER->SR    = ~flag;
+    *ccrReg(INJ_TIMER, cyl) = atTick;
+    c.ccr         = atTick;
+    c.targetAngle = targetAngle;
+    c.action      = action;
+    INJ_TIMER->DIER |= STM32_TIM_DIER_CC1IE << cyl;
+    return true;
 }
 
-TRIGGER_RAM_CODE static void cancelChannel(int ch) {
-	auto& chState = s_channels[ch];
-	chState.action = {};
-	ANGLE_CLOCK_TIMER->DIER &= ~(STM32_TIM_DIER_CC1IE << ch);
+// ── Refresh ───────────────────────────────────────────────────────────────
+// Re-anchor one 32-bit timer channel from freshest tooth data.
+TRIGGER_RAM_CODE static void refreshChannel32(TIM_TypeDef* tmr,
+                                               AngleClockChannel& c, int ch) {
+    if (!c.action) return;
+
+    const uint32_t flag = STM32_TIM_SR_CC1IF << ch;
+    // If CCxIF is pending the ISR is about to fire with the current CCR -
+    // don't touch it (re-anchoring would give a ~2^32 late reading).
+    if (tmr->SR & flag) return;
+
+    const float remaining = remainingAngle(c.targetAngle);
+    // Phase basis jumped (desync): leave armed to fire by time, exactly
+    // like the FALSE build which fires time-scheduled events regardless of sync.
+    if (remaining > MAX_LEAD_DEG) return;
+
+    const uint32_t oldCcr = c.ccr;
+    const uint32_t newTick = angleClockTickForNt(s_edgeTimestamp) +
+        angleClockDelayTicks(remaining, s_ticksPerDegree);
+
+    // Only re-anchor EARLIER: the armed tick is the best prediction from the
+    // arm tooth; a later-tooth basis cannot push it out (that was the pile-up
+    // root cause at the catch with the stale ~250 rpm basis).
+    const uint32_t anchor = (static_cast<int32_t>(newTick - oldCcr) > 0)
+                            ? oldCcr : newTick;
+
+    if (static_cast<int32_t>(anchor - static_cast<uint32_t>(tmr->CNT)) <
+        static_cast<int32_t>(ARM_MARGIN_TICKS)) {
+        // Due now: arm for immediate ISR fire.
+        const uint32_t nowTick = static_cast<uint32_t>(tmr->CNT) + ARM_MARGIN_TICKS;
+        *ccrReg(tmr, ch) = nowTick;
+        // Race: old CCR may have matched in the few cycles between the flag
+        // check above and this write.  If so, the pending ISR fires the action
+        // with the old CCR - restore it so the lateness measurement is correct.
+        if (tmr->SR & flag) {
+            *ccrReg(tmr, ch) = oldCcr;
+        } else {
+            c.ccr = nowTick;
+            s_immediate++;
+        }
+        return;
+    }
+
+    // Normal re-anchor.
+    *ccrReg(tmr, ch) = anchor;
+    if (tmr->SR & flag) {
+        *ccrReg(tmr, ch) = oldCcr;
+    } else {
+        c.ccr = anchor;
+    }
 }
 
-TRIGGER_RAM_CODE bool angleClockArm(float targetAngle, action_s action, AngleClockKind kind, float callerPhase, float callerNextPhase) {
-	s_armAttempts++;
+// Re-anchor one 16-bit timer channel from freshest tooth data.
+TRIGGER_RAM_CODE static void refreshChannel16(TIM_TypeDef* tmr,
+                                               AngleClockChannel& c, int ch,
+                                               uint16_t ntOff) {
+    if (!c.action) return;
 
-	float remaining = remainingAngle(targetAngle);
+    const uint32_t flag = STM32_TIM_SR_CC1IF << ch;
+    if (tmr->SR & flag) return;
 
-	// Refuse targets beyond the 1-2 tooth lookahead: the phase basis has
-	// jumped (desync/re-sync) and the stored angle is not meaningful.
-	if (remaining > MAX_LEAD_DEG) {
-		s_armFailCount++;
-		s_refuseCount++;
-		s_lastRefuseTarget = targetAngle;
-		s_lastRefusePhase = s_currentPhase;
-		s_lastRefuseCallerPhase = callerPhase;
-		s_lastRefuseCallerNext = callerNextPhase;
-		s_lastRefuseBasis = s_ticksPerDegree;
-		s_lastRefuseRemaining = remaining;
-		s_lastRefuseCallback = reinterpret_cast<uint32_t>(action.getCallback());
-		return false;
-	}
+    const float remaining = remainingAngle(c.targetAngle);
+    if (remaining > MAX_LEAD_DEG) return;
 
-	uint32_t atTick = tickForAngle(targetAngle);
+    const uint16_t oldCcr = static_cast<uint16_t>(c.ccr);
+    const uint32_t delay  = angleClockDelayTicks(remaining, s_ticksPerDegree);
+    const uint16_t newTick =
+        static_cast<uint16_t>(static_cast<uint32_t>(s_edgeTimestamp) + ntOff + delay);
 
-	// Armed in the past = the compare equality was missed and the ISR will
-	// never fire (until the 2^32 wrap) - a silently lost event. The caller
-	// falls back to the time-based executor instead.
-	if (static_cast<int32_t>(atTick - ANGLE_CLOCK_TIMER->CNT) < static_cast<int32_t>(ARM_MARGIN_TICKS)) {
-		s_lateArmCount++;
-		return false;
-	}
+    const uint16_t anchor = (static_cast<int16_t>(newTick - oldCcr) > 0)
+                            ? oldCcr : newTick;
 
-	for (int ch = 0; ch < ANGLE_CLOCK_CHANNELS; ch++) {
-		auto& chState = s_channels[ch];
-		if (chState.action) {
-			// Busy: record how far its tick is in the FUTURE (a genuinely stuck
-			// channel). A passed tick (negative) is a stale ccr, not a stuck
-			// channel - the unsigned wrap would report ~2^32.
-			int32_t delta = static_cast<int32_t>(chState.ccr - ANGLE_CLOCK_TIMER->CNT);
-			if (delta > 0 && static_cast<uint32_t>(delta) > s_maxBusyDeltaTicks) {
-				s_maxBusyDeltaTicks = static_cast<uint32_t>(delta);
-			}
-			continue;
-		}
+    const uint16_t cnt16 = static_cast<uint16_t>(tmr->CNT);
+    if (static_cast<int16_t>(anchor - cnt16) < static_cast<int16_t>(ARM_MARGIN_TICKS)) {
+        const uint16_t nowTick = cnt16 + static_cast<uint16_t>(ARM_MARGIN_TICKS);
+        *ccrReg(tmr, ch) = nowTick;
+        if (tmr->SR & flag) {
+            *ccrReg(tmr, ch) = oldCcr;
+        } else {
+            c.ccr = nowTick;
+            s_immediate++;
+        }
+        return;
+    }
 
-		uint32_t flag = STM32_TIM_SR_CC1IF << ch;
-
-		// Order matters, see the file-header concurrency note: stale flag
-		// clear, then the future CCR, then the kind/action, then the
-		// interrupt.
-		ANGLE_CLOCK_TIMER->SR = ~flag;
-		*channelCcr(ch) = atTick;
-		chState.ccr = atTick;
-		chState.targetAngle = targetAngle;
-		chState.kind = kind;
-		chState.action = action;
-		ANGLE_CLOCK_TIMER->DIER |= STM32_TIM_DIER_CC1IE << ch;
-
-		return true;
-	}
-
-	s_armFailCount++;
-	s_noChannelCount++;
-	return false;
+    *ccrReg(tmr, ch) = anchor;
+    if (tmr->SR & flag) {
+        *ccrReg(tmr, ch) = oldCcr;
+    } else {
+        c.ccr = anchor;
+    }
 }
 
 TRIGGER_RAM_CODE void angleClockRefresh() {
-	for (int ch = 0; ch < ANGLE_CLOCK_CHANNELS; ch++) {
-		auto& chState = s_channels[ch];
-		if (!chState.action) {
-			continue;
-		}
+    for (int ch = 0; ch < 4; ch++) {
+        refreshChannel32(DWELL_TIMER, s_dwell[ch], ch);
+        refreshChannel16(SPARK_TIMER, s_spark[ch], ch, s_spark_off);
+        refreshChannel16(INJ_TIMER,   s_inj[ch],   ch, s_inj_off);
+    }
+}
 
-		uint32_t flag = STM32_TIM_SR_CC1IF << ch;
+// ── Cancel ────────────────────────────────────────────────────────────────
+TRIGGER_RAM_CODE void angleClockCancelDwell(int cyl) {
+    s_dwell[cyl].action = {};
+    DWELL_TIMER->DIER &= ~(STM32_TIM_DIER_CC1IE << cyl);
+}
 
-		// The old CCR may already have matched while the TMR2 ISR was masked
-		// (a chSysLock section of this handoff): the flag is pending and the
-		// ISR will fire the channel with the OLD ccr as soon as it unmasks.
-		// Skipping keeps the ccr the ISR measures consistent - re-anchoring
-		// here made 'late = CNT - ccr' read the NEW far-future ccr and wrap
-		// (~2^32 in the maxLateUs telemetry). The channel re-anchors next tooth.
-		if (ANGLE_CLOCK_TIMER->SR & flag) {
-			continue;
-		}
+TRIGGER_RAM_CODE void angleClockCancelSpark(int cyl) {
+    s_spark[cyl].action = {};
+    SPARK_TIMER->DIER &= ~(STM32_TIM_DIER_CC1IE << cyl);
+}
 
-		float remaining = remainingAngle(chState.targetAngle);
-
-		// Phase basis jumped (desync/re-sync): the stored angle is no longer
-		// meaningful for RE-ANCHORING, but the armed tick is an absolute time
-		// and does not jump - leave the channel armed so it fires, exactly
-		// like the time-based build (which fires by time regardless of sync).
-		// The tick may be stretched by a storm-garbage basis from its arming
-		// tooth, but the band/ceiling clamp in handleShaftSignal bounds that,
-		// and re-anchoring to the desync moment randomized the catch timing
-		// (the user's "events pile up" symptom - reverted 2026-08-31).
-		if (remaining > MAX_LEAD_DEG) {
-			continue;
-		}
-
-		uint32_t oldCcr = *channelCcr(ch);
-		// Re-anchor only EARLIER, never later: the armed tick is the best
-		// estimate from the arm tooth; a later tooth's garbage (storm) basis
-		// must not push it out - that is what piled events up at the catch
-		// until the basis recovered, delaying the first combustion by seconds.
-		// The legit use of the refresh is the acceleration correction, which
-		// moves the tick earlier as the rpm rises. Firing early on a
-		// deceleration is safe (short dwell / bounded charge via the rescue).
-		uint32_t newTick = tickForAngle(chState.targetAngle);
-		if (static_cast<int32_t>(newTick - oldCcr) > 0) {
-			newTick = oldCcr;
-		}
-
-		if (static_cast<int32_t>(newTick - ANGLE_CLOCK_TIMER->CNT) < static_cast<int32_t>(ARM_MARGIN_TICKS)) {
-			// The angle has arrived (or the handoff ran late enough to miss
-			// it): fire it NOW - BOTH kinds. Dropping a late Start here was
-			// what starved the catch: the time-based build fires a due
-			// dwell/injection via the due-tooth scheduleByAngle even when the
-			// handoff runs late, so a cancelled Start is a charge/injection
-			// the FALSE build would have made - the coil never charged
-			// (C9012 out-of-order coil off at the fire) and the first cycle
-			// got no fuel (no combustion, the engine spins and stops). A late
-			// charge start is NOT dangerous: the 2.5x-dwell charge-anchored
-			// rescue bounds any charge regardless of when it started.
-			// Arm for immediate firing - the ISR (priority 3) executes it
-			// right after this handoff.
-			uint32_t nowTick = ANGLE_CLOCK_TIMER->CNT + ARM_MARGIN_TICKS;
-			*channelCcr(ch) = nowTick;
-			// The old CCR can match between the SR check above and this
-			// write (the flag sets, the prio-3 ISR preempts this handoff a
-			// few cycles later). The pending ISR fires the channel either
-			// way - restore the old CCR so its lateness telemetry is the
-			// true dispatch latency, not a ~2^32 wrap against the new one.
-			if (ANGLE_CLOCK_TIMER->SR & flag) {
-				*channelCcr(ch) = oldCcr;
-			} else {
-				chState.ccr = nowTick;
-				s_immediateFireCount++;
-			}
-			continue;
-		}
-
-		// Re-anchor: only the CCR moves, and only EARLIER (newTick was clamped
-		// to oldCcr above). Never touches action/IE, see the file-header
-		// concurrency note. The write is not atomic with the SR check above:
-		// the old CCR can match in the few cycles between them (the flag sets
-		// before the prio-3 ISR runs). Writing a far-future CCR would make that
-		// pending ISR measure late = CNT - newCcr (the ~2^32 maxLateUs wrap) -
-		// so re-read SR after the write and restore the old CCR when the match
-		// happened in the window. The channel then re-anchors next tooth.
-		*channelCcr(ch) = newTick;
-		if (ANGLE_CLOCK_TIMER->SR & flag) {
-			*channelCcr(ch) = oldCcr;
-		} else {
-			chState.ccr = newTick;
-		}
-	}
+TRIGGER_RAM_CODE void angleClockCancelInjection(int cyl) {
+    s_inj[cyl].action = {};
+    INJ_TIMER->DIER &= ~(STM32_TIM_DIER_CC1IE << cyl);
 }
 
 void angleClockCancelAll() {
-	for (int ch = 0; ch < ANGLE_CLOCK_CHANNELS; ch++) {
-		cancelChannel(ch);
-	}
+    for (int ch = 0; ch < 4; ch++) {
+        angleClockCancelDwell(ch);
+        angleClockCancelSpark(ch);
+        angleClockCancelInjection(ch);
+    }
 }
 
-void angleClockCancel(action_s action) {
-	if (!action) {
-		return;
-	}
-
-	for (int ch = 0; ch < ANGLE_CLOCK_CHANNELS; ch++) {
-		auto& chState = s_channels[ch];
-		if (chState.action == action) {
-			chState.action = {};
-			ANGLE_CLOCK_TIMER->DIER &= ~(STM32_TIM_DIER_CC1IE << ch);
-		}
-	}
-}
-
-uint32_t angleClockFiredCount() {
-	return s_firedCount;
-}
-
-uint32_t angleClockArmFailCount() {
-	return s_armFailCount;
-}
-
-uint32_t angleClockProgrammedLateCount() {
-	return s_lateArmCount;
-}
-
-uint32_t angleClockDroppedCount() {
-	return s_droppedCount;
-}
-
-uint32_t angleClockImmediateFireCount() {
-	return s_immediateFireCount;
-}
-
-uint32_t angleClockMaxLateTicks() {
-	return s_maxLateTicks;
-}
-
-uint32_t angleClockArmAttempts() {
-	return s_armAttempts;
-}
-
-uint32_t angleClockRefuseCount() {
-	return s_refuseCount;
-}
-
-uint32_t angleClockNoChannelCount() {
-	return s_noChannelCount;
-}
-
-float angleClockLastRefuseTarget() {
-	return s_lastRefuseTarget;
-}
-
-float angleClockLastRefusePhase() {
-	return s_lastRefusePhase;
-}
-
-float angleClockLastRefuseCallerPhase() {
-	return s_lastRefuseCallerPhase;
-}
-
-float angleClockLastRefuseCallerNext() {
-	return s_lastRefuseCallerNext;
-}
-
-float angleClockLastRefuseBasis() {
-	return s_lastRefuseBasis;
-}
-
-float angleClockLastRefuseRemaining() {
-	return s_lastRefuseRemaining;
-}
-
-uint32_t angleClockLastRefuseCallback() {
-	return s_lastRefuseCallback;
-}
-
-uint32_t angleClockMaxBusyDeltaTicks() {
-	return s_maxBusyDeltaTicks;
-}
-
-uint32_t angleClockInitAcDelta() {
-	return s_initAcDelta;
-}
-
-uint32_t angleClockInitNtDelta() {
-	return s_initNtDelta;
-}
-
-uint32_t angleClockInitPsc() {
-	return s_initPsc;
-}
+// ── Telemetry accessors ───────────────────────────────────────────────────
+uint32_t angleClockFiredDwell()      { return s_firedDwell; }
+uint32_t angleClockFiredSpark()      { return s_firedSpark; }
+uint32_t angleClockFiredInj()        { return s_firedInj; }
+uint32_t angleClockLateArmDwell()    { return s_lateArmDwell; }
+uint32_t angleClockLateArmSpark()    { return s_lateArmSpark; }
+uint32_t angleClockLateArmInj()      { return s_lateArmInj; }
+uint32_t angleClockMaxLateTicks()    { return s_maxLateTicks; }
+uint32_t angleClockImmediateFireCount() { return s_immediate; }
+uint32_t angleClockInitAcDelta()     { return s_initAcDelta; }
+uint32_t angleClockInitNtDelta()     { return s_initNtDelta; }
+uint32_t angleClockInitPsc()         { return s_initPsc; }
 
 void angleClockResetStats() {
-	s_firedCount = 0;
-	s_armFailCount = 0;
-	s_lateArmCount = 0;
-	s_droppedCount = 0;
-	s_immediateFireCount = 0;
-	s_maxLateTicks = 0;
-	s_armAttempts = 0;
-	s_refuseCount = 0;
-	s_noChannelCount = 0;
-	s_lastRefuseTarget = 0;
-	s_lastRefusePhase = 0;
-	s_lastRefuseCallerPhase = 0;
-	s_lastRefuseCallerNext = 0;
-	s_lastRefuseBasis = 0;
-	s_lastRefuseRemaining = 0;
-	s_lastRefuseCallback = 0;
-	s_maxBusyDeltaTicks = 0;
+    s_firedDwell = s_firedSpark = s_firedInj = 0;
+    s_lateArmDwell = s_lateArmSpark = s_lateArmInj = 0;
+    s_maxLateTicks = s_immediate = 0;
 }
 
 #endif // EFI_ANGLE_CLOCK && EFI_PROD_CODE

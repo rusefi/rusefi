@@ -1149,29 +1149,22 @@ void setup_custom_board_overrides() {
 		printPwmStats();
 
 #if EFI_ANGLE_CLOCK
-		// Hardware angle clock (TMR2): attempts = arm calls; refuse = target
-		// beyond the 30 deg lookahead (stale phase basis); noCh = all 4
-		// channels busy; lateArm = armed past the tick; immediate = due events
-		// fired NOW by the refresh (both kinds - the FALSE build fires a due
-		// dwell/injection too). The last-refusal snapshot (target angle /
-		// stored phase / basis) and maxBusyUs (max |ccr - CNT| of a busy
-		// channel, in us) settle which failure dominates and how far out the
-		// stuck ticks are. init rate = the TMR2 rate measurement from boot.
-		// nvic 28 = TIM2 (want 3).
-		efiPrintf("angclk att=%u fire=%u refuse=%u noCh=%u lateArm=%u drop=%u immediate=%u maxLateUs=%u busyUs=%u",
-			(unsigned)angleClockArmAttempts(), (unsigned)angleClockFiredCount(),
-			(unsigned)angleClockRefuseCount(), (unsigned)angleClockNoChannelCount(),
-			(unsigned)angleClockProgrammedLateCount(), (unsigned)angleClockDroppedCount(),
-			(unsigned)angleClockImmediateFireCount(),
+		// Three-timer angle clock: TMR2=dwell(IRQ28) TMR4=spark(IRQ30) TMR3=inj(IRQ29).
+		// lateArm: target beyond 30 deg lookahead or tick already past (-> TIM5 fallback).
+		// immediate: events found past-due at refresh, fired NOW (matching FALSE build).
+		// All want nvic prio 3.
+		efiPrintf("angclk dwell fired=%u lateArm=%u  spark fired=%u lateArm=%u  inj fired=%u lateArm=%u",
+			(unsigned)angleClockFiredDwell(), (unsigned)angleClockLateArmDwell(),
+			(unsigned)angleClockFiredSpark(), (unsigned)angleClockLateArmSpark(),
+			(unsigned)angleClockFiredInj(),   (unsigned)angleClockLateArmInj());
+		efiPrintf("angclk maxLateUs=%u immediate=%u initRate=%u/%u psc=%u nvic T2=%u T4=%u T3=%u (want 3)",
 			(unsigned)(angleClockMaxLateTicks() / (NT_PER_SECOND / 1000000)),
-			(unsigned)(angleClockMaxBusyDeltaTicks() / (NT_PER_SECOND / 1000000)));
-		efiPrintf("angclk lastRefuse target=%.1f phase=%.1f callerPhase=%.1f callerNext=%.1f rem=%.1f cb=%08x basis=%.1f initRate=%u/%u psc=%u nvic=%u (want 3)",
-			(double)angleClockLastRefuseTarget(), (double)angleClockLastRefusePhase(),
-			(double)angleClockLastRefuseCallerPhase(), (double)angleClockLastRefuseCallerNext(),
-			(double)angleClockLastRefuseRemaining(), (unsigned)angleClockLastRefuseCallback(),
-			(double)angleClockLastRefuseBasis(),
+			(unsigned)angleClockImmediateFireCount(),
 			(unsigned)angleClockInitAcDelta(), (unsigned)angleClockInitNtDelta(),
-			(unsigned)angleClockInitPsc(), (unsigned)((NVIC->IP[28] >> 4) & 0xF));
+			(unsigned)angleClockInitPsc(),
+			(unsigned)((NVIC->IP[28] >> 4) & 0xF),
+			(unsigned)((NVIC->IP[30] >> 4) & 0xF),
+			(unsigned)((NVIC->IP[29] >> 4) & 0xF));
 		angleClockResetStats();
 #endif // EFI_ANGLE_CLOCK
 

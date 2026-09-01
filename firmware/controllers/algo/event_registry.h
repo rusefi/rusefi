@@ -21,6 +21,11 @@ struct AngleBasedEvent {
 	 */
 	AngleBasedEvent *nextToothEvent = nullptr;
 
+	// Cylinder index (0..N-1) for angle-clock spark-fire channel selection.
+	// Set by scheduleSparkEvent before queuing. -1 = not a spark event
+	// (injection events are armed directly in onTriggerTooth, not via the queue).
+	int8_t cylinderIndex = -1;
+
   // angular position of this event
   angle_t getAngle() const {
     return enginePhase;

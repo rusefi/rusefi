@@ -541,7 +541,7 @@ TRIGGER_RAM_CODE static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent
 #endif // EFI_ANGLE_CLOCK
 
 #if EFI_ANGLE_CLOCK
-		if (!angleClockArm(dwellAngle, action_s::make<turnSparkPinHighStartCharging>( event ), AngleClockKind::Start, currentPhase, nextPhase))
+		if (!angleClockArmDwell(event->cylinderIndex, dwellAngle, action_s::make<turnSparkPinHighStartCharging>( event ), currentPhase, nextPhase))
 #endif // EFI_ANGLE_CLOCK
 		{
 			engine->scheduler.schedule("dwell", &event->dwellStartTimer, chargeTime, action_s::make<turnSparkPinHighStartCharging>( event ));
@@ -582,6 +582,9 @@ TRIGGER_RAM_CODE static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent
 		getRevolutionCounter(), sparkAngle);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
+		// Set cylinder index on the angle-based event so the angle-clock cancel
+		// path in TriggerScheduler::cancel() knows which TMR4 channel to release.
+		event->sparkEvent.cylinderIndex = event->cylinderIndex;
 
 	bool isTimeScheduled = engine->module<TriggerScheduler>()->scheduleOrQueue(
 		"spark",
