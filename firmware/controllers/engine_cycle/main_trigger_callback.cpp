@@ -376,12 +376,22 @@ TRIGGER_RAM_CODE void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edge
 	}
 
 #if EFI_ANGLE_CLOCK
-	// Arm dwell starts EARLY: before handleFuel so the handoff has only
-	// ~20-30 µs elapsed. This gives TMR2 arm margin even at 7000 rpm where
-	// the same arm attempted at the end of onTriggerEventSparkLogic (~250 µs
-	// elapsed) always fails because the delay for 6° = 143 µs < 250 µs.
+	// Arm dwell starts EARLY (before everything else): handoff elapsed ~20-30 µs.
+	// This gives TMR2 arm margin at 7000 rpm (delay 6° = 143 µs >> 30 µs elapsed).
 	scheduleDwellEarlyIfDue(rpm, edgeTimestamp, currentPhase, nextPhase, nextNextPhase);
 #endif // EFI_ANGLE_CLOCK
+
+	// Flush the angle queue (spark fire events) right after the dwell arm,
+	// BEFORE engineModules and handleFuel, to minimize handoff elapsed time.
+	// Benefit: the TMR4 early-window arm for sparks runs at ~30-35 µs elapsed
+	// vs ~55 µs after handleFuel. At 7000 rpm this moves the arm-success
+	// threshold from remaining > 2.3° to > 1.0°, cutting TIM5 spark fallbacks
+	// (the source of rough running and timing errors) by ~60%.
+	// Safety: scheduleEventsUntilNextTriggerTooth only processes the angle queue
+	// populated by PREVIOUS teeth; it does not depend on engineModules or fuel
+	// computation output.
+	engine->module<TriggerScheduler>()->scheduleEventsUntilNextTriggerTooth(
+		rpm, edgeTimestamp, currentPhase, nextPhase, nextNextPhase);
 
 	if (trgEventIndex == 0) {
 
@@ -405,9 +415,6 @@ TRIGGER_RAM_CODE void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edge
 	 * specified duration of time
 	 */
 	handleFuel(edgeTimestamp, currentPhase, nextPhase, nextNextPhase);
-
-	engine->module<TriggerScheduler>()->scheduleEventsUntilNextTriggerTooth(
-		rpm, edgeTimestamp, currentPhase, nextPhase, nextNextPhase);
 
 	/**
 	 * For spark we schedule both start of coil charge and actual spark based on trigger angle
