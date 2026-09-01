@@ -10989,3 +10989,31 @@ during the same cranking?).
 
 Validation: compile_m74_9.sh BUILD SUCCESSFUL (TRUE); unit tests
 1169/1169 PASSED.
+
+## 2026-09-01 (12:44, CAR) - refresh runs on every tooth (the storm skip was the stall)
+
+The engine CAUGHT (first time with the angle clock) and stalled after
+~3.3 s (28 revs). Log: four C935x 7.5-13.6 ms in the SAME millisecond
+(the catch's stale-tick fires discharged by the 2.5x rescues), overdwell
+n=50 (~90% of fires stolen - the engine ran on wrong-angle rescue sparks
+until it died), angclk immediate=222 of 447 executions (half the events
+past-due at the refresh).
+
+Root cause: during the catch trigger storm the rpm sensor flaps 0/nonzero
+at ~1 kHz and mainTriggerCallback returns early on the flap teeth - the
+angleClockRefresh call at the end of the callback never ran there. The
+armed events kept their PRE-CATCH ticks (computed at ~250 rpm) while the
+engine accelerated to 800+, so the fires landed ms-late for the whole
+run. The FALSE build re-computes the tick at the due tooth with the fresh
+basis every time - storm-immune by construction. The refresh was supposed
+to provide that, and the storm silently disabled it.
+
+Fix (this commit): angleClockOnTooth + angleClockRefresh now run on EVERY
+tooth (moved before the rpm==0 gate; the gate still skips the arming),
+and a not-positive basis feed (oneDegreeUs = NaN on a flap) keeps the
+last good basis instead of zeroing it. The armed events now track the
+true speed through the storm; the ignition no longer depends on the rpm
+flap.
+
+Validation: compile_m74_9.sh BUILD SUCCESSFUL (TRUE); unit tests
+1169/1169 PASSED.
