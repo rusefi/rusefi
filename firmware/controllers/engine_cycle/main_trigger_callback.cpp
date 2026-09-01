@@ -257,14 +257,24 @@ void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float n
 	injectionStartArmedAt = startTime;
 
 	// Schedule closing stage 1.
-	// EFI_ANGLE_CLOCK: use a trackable slot (&injectionEndStage1) so
-	// turnInjectionPinHigh can cancel and re-arm the close from the actual
-	// opening moment via angleClockArmInjectionFromNow.
 	const uint32_t endDelayNt = US2NT((int)durationUsStage1);
 	efitick_t turnOffTimeStage1 = startTime + endDelayNt;
 #if EFI_ANGLE_CLOCK
-	injectionEndDelayNt = endDelayNt;
-	getScheduler()->schedule("inj", &injectionEndStage1, turnOffTimeStage1, endActionStage1);
+	// Sequential/batch only: the END is NOT pre-scheduled on TIM5 here.
+	// turnInjectionPinHigh (called when TMR3 fires the START) will arm the
+	// close via angleClockArmInjectionFromNow at the ACTUAL open moment.
+	// Pre-scheduling TIM5 END here caused a race: TIM5 could fire the END
+	// before TMR3 fired the START (when START was past-due / immediate-fire),
+	// resulting in double open-close = double injection and engine running badly.
+	//
+	// Simultaneous injection uses startSimultaneousInjection (not
+	// turnInjectionPinHigh), so it still needs TIM5 END here.
+	if (!isSimultaneous) {
+		injectionEndDelayNt = endDelayNt;
+		// END armed by turnInjectionPinHigh. No TIM5 pre-schedule.
+	} else {
+		getScheduler()->schedule("inj", nullptr, turnOffTimeStage1, endActionStage1);
+	}
 #else
 	getScheduler()->schedule("inj", nullptr, turnOffTimeStage1, endActionStage1);
 #endif // EFI_ANGLE_CLOCK

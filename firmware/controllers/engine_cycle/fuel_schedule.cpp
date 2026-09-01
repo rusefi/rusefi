@@ -34,20 +34,19 @@ void turnInjectionPinHigh(scheduler_arg_t const arg) {
 	}
 
 #if EFI_ANGLE_CLOCK
-	// Cancel the pre-scheduled TIM5 injection close (anchored to nominal start
-	// time) and re-arm TMR3 from the ACTUAL opening moment. This ensures the
-	// pulse width is always measured from the real injector open event,
-	// regardless of any START timing offset (TIM5 batch latency on lateArm).
-	engine->scheduler.cancel(&event->injectionEndStage1);
-
-	const action_s closeAction = action_s::make<turnInjectionPinLow>(event);
+	// Arm injection CLOSE from the actual open moment. No TIM5 END was
+	// pre-scheduled (removed to eliminate the race where TIM5 fired the END
+	// before TMR3 fired the START, causing double open-close = double injection).
+	// injectionEndDelayNt was stored by onTriggerTooth when the START was armed.
 	const uint32_t delayNt = event->injectionEndDelayNt;
-	const efitick_t closeTime = sumTickAndFloat(nowNt, static_cast<float>(delayNt));
-
-	if (!angleClockArmInjectionFromNow(event->getCylinderNumber(), nowNt, delayNt, closeAction)) {
-		// TMR3 arm failed (delay < ARM_MARGIN): fall back to TIM5
-		engine->scheduler.schedule("inj_close", &event->injectionEndStage1,
-								   closeTime, closeAction);
+	if (delayNt > 0) {
+		const action_s closeAction = action_s::make<turnInjectionPinLow>(event);
+		const efitick_t closeTime = sumTickAndFloat(nowNt, static_cast<float>(delayNt));
+		if (!angleClockArmInjectionFromNow(event->getCylinderNumber(), nowNt, delayNt, closeAction)) {
+			// TMR3 arm failed (very small PW or timer too close): TIM5 fallback
+			engine->scheduler.schedule("inj_close", &event->injectionEndStage1,
+									   closeTime, closeAction);
+		}
 	}
 #endif // EFI_ANGLE_CLOCK
 }
