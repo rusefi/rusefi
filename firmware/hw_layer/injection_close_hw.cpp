@@ -18,15 +18,18 @@
 #  define STM32_TIM_EGR_CC2G   (1U << 2)
 #endif
 
+// Minimum ticks to arm CCR2 into the future (same margin as CC1 in the executor).
+static constexpr uint32_t INJ_CC2_MARGIN_TICKS = US2NT(4);
+
 struct InjCloseSlot {
-    efitick_t  fireAt;
-    action_s   action;
-    bool       pending = false;
+    efitick_t  fireAt;          // absolute NT time for the LATEST pending close
+    action_s   action;          // turnInjectionPinLow(event)
+    uint8_t    pendingCount = 0; // 0=free, 1=one close pending, 2+=overlap
 };
 
 static InjCloseSlot s_injClose[4];
-static uint32_t s_cc2FiredCount = 0;   // how many times CC2 ISR actually fired
-static uint32_t s_cc2ScheduledCount = 0; // how many closes were scheduled
+static uint32_t s_cc2FiredCount = 0;
+static uint32_t s_cc2ScheduledCount = 0;
 
 uint32_t getInjectionCC2FiredCount()     { return s_cc2FiredCount; }
 uint32_t getInjectionCC2ScheduledCount() { return s_cc2ScheduledCount; }
@@ -38,7 +41,7 @@ static void rearmCC2() {
     uint32_t earliest = 0;
 
     for (const auto& slot : s_injClose) {
-        if (!slot.pending) continue;
+        if (!slot.pendingCount) continue;
         const uint32_t t = static_cast<uint32_t>(slot.fireAt);
         if (!found || static_cast<int32_t>(t - earliest) < 0) {
             earliest = t;
@@ -70,12 +73,24 @@ static void dispatchAndRearm() {
     const uint32_t now = SCHEDULER_TIMER_DEVICE->CNT;
 
     for (auto& slot : s_injClose) {
-        if (!slot.pending) continue;
+        if (!slot.pendingCount) continue;
         // Signed comparison so past-due events (CNT > fireAt) also fire.
         if (static_cast<int32_t>(now - static_cast<uint32_t>(slot.fireAt)) >= 0) {
-            slot.pending = false;
             action_s act = slot.action;
-            slot.action = {};
+            slot.pendingCount--;
+
+            if (slot.pendingCount == 0) {
+                // Last pending close: release slot.
+                slot.action = {};
+            } else {
+                // Overlap: more closes pending (overlappingCounter > 1).
+                // Re-arm CC2 immediately so the next close fires right away.
+                // turnInjectionPinLow decrements overlappingCounter each call;
+                // when it reaches 0 setLow() fires and the injector closes.
+                slot.fireAt = static_cast<efitick_t>(SCHEDULER_TIMER_DEVICE->CNT)
+                              + static_cast<efitick_t>(INJ_CC2_MARGIN_TICKS);
+            }
+
             if (act) {
                 act.execute();
             }
@@ -103,10 +118,27 @@ void scheduleInjectionCloseHW(int cyl, efitick_t nowNt,
         return;
     }
 
-    s_injClose[cyl].fireAt  = sumTickAndFloat(nowNt, static_cast<float>(delayNt));
-    s_injClose[cyl].action  = action;
-    s_injClose[cyl].pending = true;
+    const efitick_t fireAt = sumTickAndFloat(nowNt, static_cast<float>(delayNt));
     s_cc2ScheduledCount++;
+
+    if (s_injClose[cyl].pendingCount == 0) {
+        // Normal path: slot free.
+        s_injClose[cyl].fireAt  = fireAt;
+        s_injClose[cyl].action  = action;
+        s_injClose[cyl].pendingCount = 1;
+    } else {
+        // Overlap: a previous injection hasn't closed yet (overlappingCounter > 1).
+        // Increment the counter so dispatchAndRearm fires turnInjectionPinLow
+        // an extra time (each call decrements overlappingCounter by 1; when it
+        // reaches 0 the pin goes low).
+        // Use the LATER fireAt so both closes fire in sequence.
+        if (static_cast<int32_t>(
+                static_cast<uint32_t>(fireAt) -
+                static_cast<uint32_t>(s_injClose[cyl].fireAt)) > 0) {
+            s_injClose[cyl].fireAt = fireAt;
+        }
+        s_injClose[cyl].pendingCount++;
+    }
 
     rearmCC2();
 }
@@ -115,7 +147,7 @@ void cancelInjectionCloseHW(int cyl) {
     if (cyl < 0 || cyl >= 4) {
         return;
     }
-    s_injClose[cyl].pending = false;
+    s_injClose[cyl].pendingCount = 0;
     s_injClose[cyl].action  = {};
     rearmCC2();
 }
