@@ -10955,3 +10955,35 @@ FIX (this commit, EFI_ANGLE_CLOCK TRUE):
 Validation: compile_m74_9.sh BUILD SUCCESSFUL (TRUE; the ELF has the
 angle-clock symbols); unit tests 1169/1169 PASSED. Car verdict pending:
 first crank must show no C935x cluster, no C9002, angclk refuse~0.
+
+## 2026-09-01 (noon, CAR) - due events fired, not cancelled: the refresh dropped the first-cycle charge/injection
+
+Car log with the oneDegreeUs basis (12:27/12:28): P0113 at cranking start,
+C9012 out-of-order coil off ~1 s later (first fire, no charge), engine
+stopped after 3 revs; second attempt 1 rev + C9002. angclk clean
+(att=28 fire=13 refuse=0 noCh=0 lateArm=0), sched dwell=0 spark=3 fuel=13,
+overdwell=0 - no C935x anymore (the 2.5x rescue no longer steals), but the
+engine does not combust: the fires hit uncharged coils.
+
+Root cause (code): angleClockRefresh cancelled a Start (dwell/injection)
+whose tick had arrived at the refresh ("a late Start is dropped"). The
+time-based build fires a due dwell/injection via its due-tooth
+scheduleByAngle even when the handoff runs late, so every cancelled Start
+was a charge/injection the FALSE build would have made: the coil never
+charged (C9012 at the fire) and the first cycle got no fuel - the engine
+spins and stops. The drop telemetry was dead (s_droppedCount never
+incremented), so drop=0 hid it.
+
+Fix (this commit): the refresh arms a due event for IMMEDIATE firing for
+BOTH kinds (CoilFire and Start) - a late charge start is not a fuse risk
+(the 2.5x-dwell charge-anchored rescue bounds any charge). Added
+angleClockImmediateFireCount telemetry (lockstats angclk ... immediate=N).
+
+Note: P0113 (IAT input too high) at cranking start is unexplained by the
+angle clock (CLT/IAT are ADC3 slow-path, thread-sampled; the TMR2 ISR does
+not touch ADC3). It may be the bench's disconnected sensor or a battery
+transient - to be confirmed on the car (does FALSE really never print it
+during the same cranking?).
+
+Validation: compile_m74_9.sh BUILD SUCCESSFUL (TRUE); unit tests
+1169/1169 PASSED.

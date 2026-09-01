@@ -45,14 +45,17 @@
  * overdwell rescue and the armed-channel fixes - with those in place the
  * oneDegreeUs basis is what the working time-based build uses.
  *
- * STALE EVENT POLICY: an event whose moment has passed must NOT be executed
- * late. Per kind:
+ * STALE EVENT POLICY: an event whose moment has passed is FIRED, not dropped
+ * - both kinds, matching the time-based build (its due-tooth scheduleByAngle
+ * fires a due dwell/injection even when the handoff runs late):
  *  - AngleClockKind::CoilFire (coil off) always executes - discharging the
  *    coil is the safety action; the redundant overdwell rescue on TIM5 is the
  *    second writer of the same coil-off.
- *  - AngleClockKind::Start (dwell start / injection start) is dropped when
- *    late - a late charge start is useless and piles all coils onto one
- *    moment, which is what blows fuses.
+ *  - AngleClockKind::Start (dwell start / injection start) also executes:
+ *    cancelling a due charge/injection starved the first cycle (no charge ->
+ *    C9012 at the fire, no fuel -> no combustion). The 2.5x-dwell
+ *    charge-anchored rescue bounds any charge regardless of when it started,
+ *    so a late charge start is not a fuse risk.
  *
  * The fallback contract: if the armed tick is already in the past (handoff
  * ran late) or all four channels are busy, angleClockArm() returns false and
@@ -112,14 +115,13 @@ bool angleClockArm(float targetAngle, action_s action, AngleClockKind kind, floa
 // Re-anchor every armed channel from the freshest basis: rewrite the
 // compare tick from the current phase and the rpm-average basis, so the
 // prediction tracks the rpm change (an acceleration catch moves the tick
-// earlier). Events whose angle has already passed are handled per their
-// kind: CoilFire is armed for immediate firing, Start is cancelled.
-// Channels whose stored angle is no longer plausible (phase basis jumped,
-// e.g. desync/re-sync) are LEFT ARMED: their tick is an absolute time and
-// fires the event within 1-2 teeth just like the time-based build - a lost
-// CoilFire would only be covered by the overdwell rescue, which is exactly
-// the late-fire signature cancelling produced on the car. Call at the end of
-// the trigger handoff, after all arming of that tooth.
+// earlier). Events whose angle has already passed are armed for IMMEDIATE
+// firing - both kinds (a due dwell/injection fires now, exactly like the
+// time-based build's due-tooth scheduling). Channels whose stored angle is
+// no longer plausible (phase basis jumped, e.g. desync/re-sync) are LEFT
+// ARMED: their tick is an absolute time and fires the event within 1-2
+// teeth just like the time-based build. Call at the end of the trigger
+// handoff, after all arming of that tooth.
 void angleClockRefresh();
 
 // Cancel every armed channel. Kept as the driver API, but NO LONGER called
@@ -141,6 +143,7 @@ uint32_t angleClockFiredCount();
 uint32_t angleClockArmFailCount();
 uint32_t angleClockProgrammedLateCount();
 uint32_t angleClockDroppedCount();
+uint32_t angleClockImmediateFireCount();
 uint32_t angleClockMaxLateTicks();
 
 // Arm-failure breakdown (diagnostic): attempts, refusals (remaining >

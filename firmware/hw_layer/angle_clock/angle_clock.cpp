@@ -101,6 +101,7 @@ static uint32_t s_firedCount = 0;
 static uint32_t s_armFailCount = 0;
 static uint32_t s_lateArmCount = 0;
 static uint32_t s_droppedCount = 0;
+static uint32_t s_immediateFireCount = 0;	// due events fired NOW by the refresh
 static uint32_t s_maxLateTicks = 0;
 
 // Arm-failure breakdown (diagnostic, 2026-08-31): the combined armFail
@@ -440,25 +441,29 @@ void angleClockRefresh() {
 
 		if (static_cast<int32_t>(newTick - ANGLE_CLOCK_TIMER->CNT) < static_cast<int32_t>(ARM_MARGIN_TICKS)) {
 			// The angle has arrived (or the handoff ran late enough to miss
-			// it): fire now if it is a coil discharge, drop useless late
-			// starts.
-			if (chState.kind == AngleClockKind::CoilFire) {
-				// Arm for immediate firing - the ISR (priority 3) executes it
-				// right after this handoff.
-				uint32_t nowTick = ANGLE_CLOCK_TIMER->CNT + ARM_MARGIN_TICKS;
-				*channelCcr(ch) = nowTick;
-				// The old CCR can match between the SR check above and this
-				// write (the flag sets, the prio-3 ISR preempts this handoff a
-				// few cycles later). The pending ISR fires the channel either
-				// way - restore the old CCR so its lateness telemetry is the
-				// true dispatch latency, not a ~2^32 wrap against the new one.
-				if (ANGLE_CLOCK_TIMER->SR & flag) {
-					*channelCcr(ch) = oldCcr;
-				} else {
-					chState.ccr = nowTick;
-				}
+			// it): fire it NOW - BOTH kinds. Dropping a late Start here was
+			// what starved the catch: the time-based build fires a due
+			// dwell/injection via the due-tooth scheduleByAngle even when the
+			// handoff runs late, so a cancelled Start is a charge/injection
+			// the FALSE build would have made - the coil never charged
+			// (C9012 out-of-order coil off at the fire) and the first cycle
+			// got no fuel (no combustion, the engine spins and stops). A late
+			// charge start is NOT dangerous: the 2.5x-dwell charge-anchored
+			// rescue bounds any charge regardless of when it started.
+			// Arm for immediate firing - the ISR (priority 3) executes it
+			// right after this handoff.
+			uint32_t nowTick = ANGLE_CLOCK_TIMER->CNT + ARM_MARGIN_TICKS;
+			*channelCcr(ch) = nowTick;
+			// The old CCR can match between the SR check above and this
+			// write (the flag sets, the prio-3 ISR preempts this handoff a
+			// few cycles later). The pending ISR fires the channel either
+			// way - restore the old CCR so its lateness telemetry is the
+			// true dispatch latency, not a ~2^32 wrap against the new one.
+			if (ANGLE_CLOCK_TIMER->SR & flag) {
+				*channelCcr(ch) = oldCcr;
 			} else {
-				cancelChannel(ch);
+				chState.ccr = nowTick;
+				s_immediateFireCount++;
 			}
 			continue;
 		}
@@ -514,6 +519,10 @@ uint32_t angleClockProgrammedLateCount() {
 
 uint32_t angleClockDroppedCount() {
 	return s_droppedCount;
+}
+
+uint32_t angleClockImmediateFireCount() {
+	return s_immediateFireCount;
 }
 
 uint32_t angleClockMaxLateTicks() {
@@ -581,6 +590,7 @@ void angleClockResetStats() {
 	s_armFailCount = 0;
 	s_lateArmCount = 0;
 	s_droppedCount = 0;
+	s_immediateFireCount = 0;
 	s_maxLateTicks = 0;
 	s_armAttempts = 0;
 	s_refuseCount = 0;
