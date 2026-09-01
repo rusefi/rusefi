@@ -494,13 +494,14 @@ All 4 windows fire every engine cycle; lockstats `startAveraging n ~= 4 x cycles
 
 **`currentMapAverager = 0` (static, never changes - TODO in map_averaging.cpp).** All 4 windows share the same `MapAverager` instance (index 0). Each `startAveraging` call resets `m_counter` and `m_sum`, so the LAST completed window overwrites all earlier ones. `mapPerCylinder[i]` gets overwritten by the most-recent cylinder in the cycle. The `mapAveraged` value (used in the VE table) reflects only the last completed window. For a shared plenum this is harmless - MAP is nearly identical across cylinders at any operating point.
 
-**What cycling `currentMapAverager` through 4 would give.** If the code incremented `currentMapAverager = (currentMapAverager + 1) % cylindersCount` at each `startAveraging`, each cylinder would get its OWN `MapAverager` (index 0..3). Effects:
-- `mapPerCylinder[i]` becomes truly per-cylinder - no overwriting between cylinders. Useful for per-cylinder LTFT, individual-runner MAP sensors, or misfire detection by MAP drop.
-- The running buffer `averagedMapRunningBuffer` (shared static) receives 4 writes per cycle instead of 1. With `mapMinBufferLength = 4` this would give min-of-4-cylinders, tracking the leanest cylinder (lowest MAP = most airflow). Currently with `mapMinBufferLength = 1` the effect is just 4x more-frequent updates.
-- `mapAveraged` (the main speed-density MAP) becomes more stable - updates 4x per cycle from 4 cylinders instead of just the last.
+**`currentMapAverager` per-bank rotation (IMPLEMENTED 2026-09-01).** `currentMapAverager = s->cylinderNumber % SAMPLER_DIMENSION` (SAMPLER_DIMENSION=2). Even cylinders (0, 2) -> averager 0 (fastMapSensor, SensorType::MapFast -> Map -> VE table). Odd cylinders (1, 3) -> averager 1 (fastMapSensor2, SensorType::MapFast2 -> Map2). Effects:
+- `mapPerCylinder[i]` correctly stored for each cylinder (was already correct - separate indices in stop()); no functional change there.
+- `averagedMapRunningBuffer` still receives 4 writes/cycle (2 from each averager's stop()). With `mapMinBufferLength = 4` gives min-of-4-window buffer.
+- `MapFast` (VE table MAP) updated 2x/cycle (from cyl 0 at 115.8 deg and cyl 2 at 295.8 deg). MapFast2 updated 2x/cycle (from cyl 3 at 475.8 deg and cyl 1 at 655.8 deg).
 - The engine sniffer would still show n/a for cylinders in the 2nd revolution (display issue unrelated to averager count).
-- **For 21129 shared plenum: marginal improvement.** All cylinders see essentially the same MAP, so per-cylinder averaging yields the same result. The main gain would be slightly smoother `mapAveraged` at transients.
-- **For ITB or per-runner MAP**: significant - each cylinder gets its own MAP reading, enabling true per-cylinder fueling correction.
+- **For 21129 shared plenum: marginal difference** (Map updated 2x instead of 4x per cycle; same pressure on all cylinders, so no practical fuel impact).
+- **For dual-bank engines**: significant - MapFast and MapFast2 now represent independent bank measurements, enabling per-bank LTFT or diagnostics.
+- **For true per-cylinder (4 separate averagers)**: requires adding MapFast3/MapFast4 SensorType values and 2 more MapAverager instances in init_map.cpp. Not implemented; SAMPLER_DIMENSION=2 is the current ceiling.
 
 ## m74_9 / AT32F435: PB14 has NO plain PWM channel - ETB PWM uses TIM12_CH1
 
