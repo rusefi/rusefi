@@ -10988,6 +10988,139 @@ during the same cranking?).
 Validation: compile_m74_9.sh BUILD SUCCESSFUL (TRUE); unit tests
 1169/1169 PASSED.
 
+## 2026-09-01 (afternoon) - trigger/spark/injection pipeline documented; C9009 false positive root cause
+
+Session: analysis of 12:51-13:01 car logs (EFI_ANGLE_CLOCK=FALSE, stable idle ~800 rpm).
+No code changes - documentation pass.
+
+### Log overview
+
+Two C9009 warnings separated by ~7 minutes of stable idle:
+  12:51:08  revolution=14  [Coil 3] rpm=836 charged=0 bail=no fall=60  counter=64
+  13:01:10  revolution=226 [Coil 2] rpm=806 charged=0 bail=no fall=912 counter=916
+
+counter - fall = 4 in both cases (exactly one 4-cyl cycle, normal). charged=0 (coil
+not charging - correct for a fresh dwell start). bail=no (last fire older than current
+sparkCounter - no out-of-order). No actual spark was skipped.
+
+### C9009 false positive root cause (spark_logic.cpp:349)
+
+The warning condition: prevSparkName == outputName in startDwellByTurningSparkPinHigh.
+prevSparkName tracks the last coil to start a dwell and is updated ONLY inside the
+RPM gate: `if (Sensor::getOrZero(SensorType::Rpm) > 2 * cranking.rpm)`. SensorType::Rpm
+reads the cached value updated by rpmShaftPositionCallback in the trigger handoff (prio 4).
+
+The m74_9 trigger storm flaps SensorType::Rpm between 0 and the real rpm at ~1 kHz.
+If the flap lands at 0 at the moment one intermediate cylinder's dwell callback executes
+in the TIM5 ISR (prio 3), prevSparkName is NOT updated for that coil - it stays on
+the previous coil. The next same-coil dwell (counter - fall = 4, one full cycle later)
+then sees prevSparkName == outputName and fires C9009.
+
+Rarity (~twice in 7 min): at 800 rpm the intermediate-coil dwell ISR fires ~10 Hz,
+and the storm flap window is narrow, so collisions are infrequent.
+
+No fix applied this session. Fix options:
+(A) move `prevSparkName = outputName` outside the rpm gate (always update)
+(B) suppress C9009 when (counter - fall) == cylinderCount (normal cycle)
+
+### Lockstats analysis (FALSE build, stable idle ~800 rpm)
+
+Five measurement windows between 12:51:14 and 12:53:59. Summary (numbers from the
+steady-state windows, excluding the startup burst at 12:51:14):
+
+  dwell:     late 8-37%   maxLateUs 13-15 us   (batch leader)
+  spark:     late 88-93%  maxLateUs 16-22 us   (follows fuel-END in spark batch)
+  fuel:      late ~99%    maxLateUs 71-128 us  (END in foreign batches - normal)
+  overdwell: n=0 in all windows                (no coil overcharge)
+  trgDecode: all <50 us                        (gap decoder fast at idle)
+  trgPostDecode 100-250 us: 2.8% of teeth      (scheduling teeth only - normal)
+
+The first window (12:51:14, right after startup catch) showed triggerMaxDuration=3312
+ticks = 828 us. dwell cbmaxUs=193 us = the C9009 warning() print from ISR context
+(documented: ~190-202 us, the ONLY non-trivial path in startDwellByTurningSparkPinHigh).
+
+### trgPostDecode 100-250 us: scheduling teeth are expected
+
+At 800 rpm, 60-2 trigger: 116 teeth per engine cycle. Scheduling happens on the teeth
+where isPhaseInRange matches a dwell/spark/injection window. With 4 cylinders and one
+window each the fraction is ~3-4 scheduling teeth per 116 = ~3%. The 2.8% in the
+100-250 us bucket is exactly this set - mainTriggerCallback runs handleFuel +
+scheduleEventsUntilNextTriggerTooth + onTriggerEventSparkLogic on those teeth and
+takes 100-250 us. The remaining 97% are <50 us (trivial: no window matches, scheduling
+code short-circuits immediately).
+
+With EFI_ANGLE_CLOCK=TRUE the scheduling moves to the previous tooth (one ahead), so
+the per-tooth scheduling cost is roughly the same but spread differently. The 100-250 us
+bucket should stay at the same fraction.
+
+### othercb address -> function (n= correlation, ELF-free method)
+
+The n= count is the build-independent identity: the role determines how often the callback
+fires relative to the per-kind counts.
+
+  n == dwell count     -> startKnockSampling (scheduled at the same tick as dwell)
+  n == spark count     -> startAveraging (MAP window start, co-scheduled with spark)
+  n == spark count     -> endAveraging (MAP window end, time-scheduled from startAveraging)
+  n == dwell/cylinders -> onTdcCallback (once per engine cycle, trgEventIndex==0)
+  n ~= 1/s             -> watchDogBuddyCallback (~1 Hz)
+  n == 1 at startup    -> timerValidationCallback, PrimeController onPrimeStart/EndAdapter
+
+With EFI_ANGLE_CLOCK=TRUE: dwell/spark/injection-start move to TMR2 and disappear from
+the TIM5 kindStats. The corresponding othercb n= counts drop to near-zero. That drop
+is the bench proof that the early-window arming is active.
+
+### Full pipeline documentation
+
+The complete trigger -> spark and trigger -> injection processing chains were traced to
+GPIO level and documented. Key findings:
+
+Trigger (DПКВ) path:
+  PF8 falling edge -> EXTI prio 0 (timestamp + level, ~2-3 us)
+  -> queue -> handoff prio 4 (avg 44 us, tails to ~1 ms)
+  -> trgPreDecode: debounce, plausibility
+  -> trgDecode: decodeTriggerEvent, gap ratio [1.6,3.75] + [0.85,1.15]
+  -> trgPostDecode: rpmShaftPositionCallback (oneDegreeUs at trgIdx==0),
+     findNextTriggerToothAngle, mainTriggerCallback
+     (handleFuel + scheduleEventsUntilNextTriggerTooth + onTriggerEventSparkLogic)
+
+Ignition path (FALSE build, TIM5 only):
+  prepareCylinderIgnitionSchedule -> dwellAngle, sparkAngle (degrees in [0,720))
+  onTriggerEventSparkLogic per tooth: isPhaseInRange(dwellAngle, current, next)?
+    YES -> scheduleByAngle(chargeTime) -> TIM5 dwell callback
+         + scheduleOrQueue(sparkAngle) -> angle queue or TIM5 fire
+         + overdwell rescue at 1.5x dwell from schedule time
+  TIM5 ISR prio 3: turnSparkPinHighStartCharging -> palSetPort(GPIOF, PF12..15)
+  TIM5 ISR prio 3: fireSparkAndPrepareNextSchedule -> palClearPort(GPIOF)
+                   -> coil discharges -> HV spike -> spark
+
+GPIO chain for ignition: PF12=IGN1, PF13=IGN2, PF14=IGN3, PF15=IGN4 (L9779 direct
+drive, o_oe_mask permanently 1, palSetPort single cycle, no SPI latency in hot path).
+
+Injection path:
+  periodicFastCallback 200 Hz: injectionMass[cyl], injectionDuration, injectionOffset
+  InjectionEvent::update() (called from turnInjectionPinLow ISR): recomputes
+    injectionStartAngle for next cycle
+  onTriggerTooth per tooth: isPhaseInRange(injectionStartAngle, current, next)?
+    YES -> schedule(startTime) -> TIM5 turnInjectionPinHigh
+         + schedule(startTime + PW) -> TIM5 turnInjectionPinLow  (always TIM5, never TMR2)
+  TIM5 ISR: turnInjectionPinHigh -> palSetPort(GPIOE, PE8..PE11) -> L9779 OUT1..4
+  TIM5 ISR: turnInjectionPinLow  -> palClearPort(GPIOE) -> forked closed
+             -> event->update() (recomputes angle for next cycle)
+
+GPIO mapping: PE8=OUT4/cyl1, PE9=OUT3/cyl2, PE10=OUT2/cyl3, PE11=OUT1/cyl4.
+Injection END is always TIM5 time-based (startTime + PW_ns). A late start shifts
+the whole pulse but mass (PW) is unchanged.
+
+### Validation
+
+No code changes. Analysis session only.
+
+### Open follow-ups
+
+- C9009 false positive: fix prevSparkName gate (option A or B above)
+- trgPostDecode scheduling-teeth cost: will be replaced by angle-clock arming once
+  EFI_ANGLE_CLOCK is validated on the car
+
 ## 2026-09-01 (12:44, CAR) - refresh runs on every tooth (the storm skip was the stall)
 
 The engine CAUGHT (first time with the angle clock) and stalled after
@@ -11010,8 +11143,94 @@ Fix (this commit): angleClockOnTooth + angleClockRefresh now run on EVERY
 tooth (moved before the rpm==0 gate; the gate still skips the arming),
 and a not-positive basis feed (oneDegreeUs = NaN on a flap) keeps the
 last good basis instead of zeroing it. The armed events now track the
-true speed through the storm; the ignition no longer depends on the rpm
-flap.
+true speed through the storm; the ignition no longer depends on the
+rpm flap.
 
 Validation: compile_m74_9.sh BUILD SUCCESSFUL (TRUE); unit tests
 1169/1169 PASSED.
+
+## 2026-09-01 - angle clock: architecture analysis + three-timer refactor (TMR2/TMR4/TMR3)
+
+### Analysis: why the single 4-channel pool was failing
+
+The original angle clock used one pool of 4 channels (TMR2 CH0..3) with a
+search-for-free loop. At a scheduling tooth up to 3 events arm simultaneously
+(dwell + spark + injection) while 1-2 channels from the previous tooth are
+still armed -> noChannel failures -> TIM5 fallback with stale oneDegreeUs
+basis (cranking ~250 rpm) -> armed spark fires ms late -> overdwell rescue
+(2.5x dwell = 7.5 ms) beats spark -> C935x, engine dies.
+
+Measured 12:44 car session: overdwell n=50 (~90% of sparks stolen by rescue),
+angclk immediate=222 of 447 (50% events past-due at refresh). The stale
+cranking basis armed spark fires 13 ms out while rescue fires at 7.5 ms.
+
+### Analysis: trigger/spark/injection pipeline (documented)
+
+Full chain traced to GPIO level for both FALSE and TRUE builds:
+
+FALSE build (TIM5 only): EXTI -> handoff -> trgPreDecode/Decode/PostDecode ->
+  mainTriggerCallback -> TIM5 for dwell (chargeTime = now + angle x oneDegreeUs),
+  angle queue -> TIM5 for spark at the due tooth, TIM5 for injection start+end.
+  GPIO: palSetPort(GPIOF) for coils, palSetPort(GPIOE) for injectors. Both are
+  direct-drive (L9779 o_oe_mask=1 permanently, single-cycle GPIO).
+
+TRUE build (TMR2 angle clock + TIM5): dwell/spark/injection arm on dedicated
+  hardware comparators one tooth ahead; per-tooth refresh re-anchors from
+  oneDegreeUs; ISR fires independently of handoff latency at the firing tooth.
+
+C9009 "looks like skipped spark event" documented as FALSE POSITIVE from
+rpm-sensor flap (see CLAUDE.md for the full diagnosis).
+
+### Implementation: three dedicated timers (Option C)
+
+The fix: one timer per event type, one channel per cylinder. Channel = cylinderIndex.
+A channel is always free at arm time (previous event fired 720 deg = ~150 ms ago).
+
+  TMR2 (32-bit, VectorB0, IRQ 28, prio 3): dwell starts    [cyl 0..3 = ch 0..3]
+  TMR4 (16-bit, VectorB8, IRQ 30, prio 3): spark fires     [cyl 0..3 = ch 0..3]
+  TMR3 (16-bit, VectorB4, IRQ 29, prio 3): injection starts [cyl 0..3 = ch 0..3]
+
+All three on APB1 (same TIMCLK1 = 288 MHz as TIM5/TMR2). Rate measured once
+against NT (TIM5) at init, same PSC applied to all three. rccEnableTIMx(true)
+for sleep-gate fix (lp=false clears APB1LPENR, gates clock in WFI).
+
+16-bit timers (TMR3/TMR4) degrade gracefully below ~200 rpm: signed 16-bit
+arm check (int16_t)(atTick - CNT) < ARM_MARGIN fails when delay > 8 ms
+(half the 16.384 ms counter period) -> TIM5 fallback. Above ~200 rpm all
+arm calls succeed. At 7000 rpm (2-tooth lead = ~170 us) well within range.
+
+mcuconf.h: STM32_TIM3_SUPPRESS_ISR + STM32_TIM4_SUPPRESS_ISR so the PWM/ICU
+LLDs don't claim VectorB4/VectorB8. ICU TIM4 kept TRUE so the LLD compiles
+(needs one assigned TIM; SENT is off, icuStart never called).
+
+AngleBasedEvent gets int8_t cylinderIndex = -1 for O(1) cancel in
+TriggerScheduler::cancel() -> angleClockCancelSpark(cylinderIndex).
+
+New lockstats line:
+  angclk dwell fired=N lateArm=N  spark fired=N lateArm=N  inj fired=N lateArm=N
+  angclk maxLateUs=N immediate=N initRate=N/N psc=N nvic T2=N T4=N T3=N (want 3)
+
+### Change inventory
+
+- angle_clock.h/cpp: rewritten (3 timers, fixed channels, new API)
+- event_registry.h:  AngleBasedEvent.cylinderIndex added
+- spark_logic.cpp:   angleClockArmDwell(event->cylinderIndex, ...)
+- trigger_scheduler.cpp: angleClockArmSpark(current->cylinderIndex, ...)
+                         angleClockCancelSpark(event->cylinderIndex)
+- main_trigger_callback.cpp: angleClockArmInjection(this->cylinderNumber, ...)
+- mcuconf.h:         STM32_TIM3/4_SUPPRESS_ISR TRUE, ICU TIM4 kept TRUE
+- interrupt_priority.h: comment updated for 3 timers
+- board_configuration.cpp: lockstats print updated
+
+### Validation
+
+compile_m74_9.sh BUILD SUCCESSFUL; unit tests 1169/1169 PASSED.
+nm confirms VectorB0 (dwell), VectorB4 (injection), VectorB8 (spark) all present.
+
+### Open follow-ups
+
+- Car validation: first catch with the three-timer design (C935x should be
+  gone, immediate=~0, all fires on TMR2/TMR4/TMR3)
+- C9009 false positive: prevSparkName gate fix (rpm flap causes ~2/7 min)
+- s_currentPhase storm pollution in refresh: confirmed L9779 gives clean signal,
+  issue is timing/decoding not sensor noise (per user)
