@@ -256,28 +256,18 @@ void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float n
 	injectionStartArmed = true;
 	injectionStartArmedAt = startTime;
 
-	// Schedule closing stage 1.
-	const uint32_t endDelayNt = US2NT((int)durationUsStage1);
-	efitick_t turnOffTimeStage1 = startTime + endDelayNt;
-#if EFI_ANGLE_CLOCK
-	// Sequential/batch only: the END is NOT pre-scheduled on TIM5 here.
-	// turnInjectionPinHigh (called when TMR3 fires the START) will arm the
-	// close via angleClockArmInjectionFromNow at the ACTUAL open moment.
-	// Pre-scheduling TIM5 END here caused a race: TIM5 could fire the END
-	// before TMR3 fired the START (when START was past-due / immediate-fire),
-	// resulting in double open-close = double injection and engine running badly.
-	//
-	// Simultaneous injection uses startSimultaneousInjection (not
-	// turnInjectionPinHigh), so it still needs TIM5 END here.
-	if (!isSimultaneous) {
-		injectionEndDelayNt = endDelayNt;
-		// END armed by turnInjectionPinHigh. No TIM5 pre-schedule.
-	} else {
-		getScheduler()->schedule("inj", nullptr, turnOffTimeStage1, endActionStage1);
-	}
-#else
+	// Schedule closing stage 1 on TIM5 (always, for all modes).
+	// Injection close is always time-based: the timing error (~20 us TIM5
+	// batch latency) is negligible (0.4 deg at 7000 rpm, no effect on PW).
+	// Attempting to anchor the close to the actual open moment via
+	// angleClockArmInjectionFromNow caused two bugs:
+	// 1. 16-bit TMR3 arm fails for PW > 8 ms (half counter period) - arm
+	//    check (int16_t)(PW_ticks) goes negative -> lateArm=90%+, injectors
+	//    barely work.
+	// 2. race: TIM5 END fires before TMR3 START (past-due / immediate-fire
+	//    path) -> double open-close = double injection = engine runs badly.
+	efitick_t turnOffTimeStage1 = startTime + US2NT((int)durationUsStage1);
 	getScheduler()->schedule("inj", nullptr, turnOffTimeStage1, endActionStage1);
-#endif // EFI_ANGLE_CLOCK
 
 	// Schedule closing stage 2 (if applicable)
 	if (hasStage2Injection && endActionStage2) {

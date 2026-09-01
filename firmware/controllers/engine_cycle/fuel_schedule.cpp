@@ -33,22 +33,11 @@ void turnInjectionPinHigh(scheduler_arg_t const arg) {
 		}
 	}
 
-#if EFI_ANGLE_CLOCK
-	// Arm injection CLOSE from the actual open moment. No TIM5 END was
-	// pre-scheduled (removed to eliminate the race where TIM5 fired the END
-	// before TMR3 fired the START, causing double open-close = double injection).
-	// injectionEndDelayNt was stored by onTriggerTooth when the START was armed.
-	const uint32_t delayNt = event->injectionEndDelayNt;
-	if (delayNt > 0) {
-		const action_s closeAction = action_s::make<turnInjectionPinLow>(event);
-		const efitick_t closeTime = sumTickAndFloat(nowNt, static_cast<float>(delayNt));
-		if (!angleClockArmInjectionFromNow(event->getCylinderNumber(), nowNt, delayNt, closeAction)) {
-			// TMR3 arm failed (very small PW or timer too close): TIM5 fallback
-			engine->scheduler.schedule("inj_close", &event->injectionEndStage1,
-									   closeTime, closeAction);
-		}
-	}
-#endif // EFI_ANGLE_CLOCK
+	// Injection close is handled by the pre-scheduled TIM5 END in onTriggerTooth.
+	// angleClockArmInjectionFromNow was tried here but caused two bugs:
+	// 1. 16-bit arm fails for PW > 8 ms (int16_t overflow)
+	// 2. Race with pre-scheduled TIM5 END causing double injection
+	// See report.md 2026-09-01 night 6 for details.
 }
 
 FuelSchedule::FuelSchedule() {
