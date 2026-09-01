@@ -11123,6 +11123,60 @@ No code changes. Analysis session only.
 - trgPostDecode scheduling-teeth cost: will be replaced by angle-clock arming once
   EFI_ANGLE_CLOCK is validated on the car
 
+## 2026-09-01 (evening) - angle clock: high-rpm dwell arm fail + C9353 ordering bug fixed
+
+Two bugs found from on-car lockstats at 3000-7000 rpm:
+
+### Bug 1: dwell arm always fails above ~4000 rpm
+
+angclk dwell fired=0 lateArm=8582 (all 8582 dwell arms failed) while
+angclk spark fired=8581 lateArm=0 (all sparks succeeded). Root cause:
+
+The arm check `(int32_t)(atTick - CNT) < ARM_MARGIN` uses
+  atTick = edgeTimestamp_ticks + remaining_deg * tpd.
+At 7000 rpm tpd=95 ticks/deg. For remaining=6 deg (scheduleEarly window):
+  delay = 571 ticks = 143 us.
+By the time angleClockArmDwell is called (at the END of
+onTriggerEventSparkLogic, after handleFuel + scheduleEventsUntilNextTriggerTooth
+for 4 cylinders), elapsed = ~250 us = 1000 ticks.
+  margin = 571 - 1000 = -429 ticks -> FAILS.
+
+Spark arm (from scheduleEventsUntilNextTriggerTooth at the BEGINNING of
+mainTriggerCallback) has only ~20-30 us elapsed -> margin = 551 ticks -> OK.
+
+Fix: scheduleDwellEarlyIfDue() called early in mainTriggerCallback, before
+handleFuel. Elapsed ~30 us = 120 ticks at call time:
+  margin = 571 - 120 = 451 ticks >> ARM_MARGIN. Always passes at 7000 rpm.
+
+### Bug 2: C9353 overcharge when dwell on TIM5 and spark on TMR4
+
+When dwell falls back to TIM5 (Bug 1), TIM5 schedules dwell for
+chargeTime ~ edgeTimestamp (small offset). TMR4 spark CCR was set one tooth
+earlier at the correct absolute angle. If TMR4 fires before TIM5 dwell:
+  sparkFiredSinceCharge=true (from PREVIOUS cycle) -> fireSparkAndPrepareNextSchedule
+  returns NO-OP. TIM5 dwell fires -> sparkFiredSinceCharge=false -> rescue
+  armed at 2.5x dwell. No TMR4 event remains -> rescue fires -> C9353.
+
+Fix: fireSparkAndPrepareNextSchedule records no-op as
+sparkFiredNoOpBeforeDwell=true. turnSparkPinHighStartCharging detects this
+and reschedules the spark on TIM5 at nowNt + sparkDwell (time-based from
+actual charge start). The TIM5 spark fires -> cancels rescue. C9353 gone.
+
+### Change inventory
+
+- event_registry.h: IgnitionEvent.sparkFiredNoOpBeforeDwell (bool) added
+- spark_logic.h: scheduleDwellEarlyIfDue() declared
+- spark_logic.cpp: scheduleDwellEarlyIfDue() implemented;
+                   fireSparkAndPrepareNextSchedule: sets sparkFiredNoOpBeforeDwell;
+                   turnSparkPinHighStartCharging: checks flag, re-arms on TIM5
+- main_trigger_callback.cpp: calls scheduleDwellEarlyIfDue() after rpm==0 gate
+
+### Validation
+
+compile_m74_9.sh BUILD SUCCESSFUL; unit tests 1169/1169 PASSED.
+Car verdict: first run at 7000 rpm must show angclk dwell fired=N lateArm~0,
+no C9353, sched overdwell=0.
+
 ## 2026-09-01 (12:44, CAR) - refresh runs on every tooth (the storm skip was the stall)
 
 The engine CAUGHT (first time with the angle clock) and stalled after
