@@ -601,63 +601,39 @@ TRIGGER_RAM_CODE void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event
 		getRevolutionCounter(), sparkAngle);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
-		// Set cylinder index on the angle-based event so the angle-clock cancel
-		// path in TriggerScheduler::cancel() knows which TMR4 channel to release.
+	#if !EFI_ANGLE_CLOCK
+		// FALSE build: the spark is queued in the angle queue and fired when the
+		// tooth arrives. An overdwell rescue protects the coil if the tooth never
+		// comes.
 		event->sparkEvent.cylinderIndex = event->cylinderIndex;
 
-	bool isTimeScheduled = engine->module<TriggerScheduler>()->scheduleOrQueue(
-		"spark",
-		&event->sparkEvent, edgeTimestamp, sparkAngle,
-		action_s::make<fireSparkAndPrepareNextSchedule>( event ),
-		currentPhase, nextPhase);
+		bool isTimeScheduled = engine->module<TriggerScheduler>()->scheduleOrQueue(
+			"spark",
+			&event->sparkEvent, edgeTimestamp, sparkAngle,
+			action_s::make<fireSparkAndPrepareNextSchedule>( event ),
+			currentPhase, nextPhase);
 
-#if SPARK_EXTREME_LOGGING
-	efiPrintf("[%s] %d sparkDown scheduled %s",
-		event->getOutputForLoggins()->getName(), event->sparkCounter,
-		isTimeScheduled ? "later" : "to queue");
-#endif /* FUEL_MATH_EXTREME_LOGGING */
-
-	if (isTimeScheduled) {
-		// event was scheduled by time, we expect it to happen reliably
-	} else {
-#if !EFI_ANGLE_CLOCK
-		// event was queued in relation to some expected tooth event in the future which might just never come so we shall protect from over-dwell
-		if (!limitedSpark) {
-			// auto fire spark at 1.5x nominal dwell
-			efitick_t fireTime = sumTickAndFloat(chargeTime, MSF2NT(1.5f * dwellMs));
-
-#if SPARK_EXTREME_LOGGING
-			efitimeus_t fireTimeUs = NT2US(fireTime);
-			efiPrintf("[%s] %d overdwell scheduling at %d ticks (%d.%06d)",
-				event->getOutputForLoggins()->getName(), event->sparkCounter,
-				time2print(fireTime), time2print(fireTimeUs / (1000 * 1000)), time2print(fireTimeUs % (1000 * 1000)));
-#endif /* SPARK_EXTREME_LOGGING */
-
-			/**
-			* todo: can we please comprehend/document how this even works? we seem to be reusing 'sparkEvent.scheduling' instance
-			* and it looks like current (smart?) re-queuing is effectively cancelling out the overdwell? is that the way this was intended to work?
-			* [tag:overdwell]
-			*/
-			engine->scheduler.schedule("overdwell", &event->sparkEvent.eventScheduling, fireTime, action_s::make<overFireSparkAndPrepareNextSchedule>( event ));
-
-#if EFI_UNIT_TEST
-			engine->onScheduleOverFireSparkAndPrepareNextSchedule(*event, fireTime);
-#endif
-		} else {
-		  engine->engineState.overDwellNotScheduledCounter++;
+		if (!isTimeScheduled) {
+			if (!limitedSpark) {
+				efitick_t fireTime = sumTickAndFloat(chargeTime, MSF2NT(1.5f * dwellMs));
+				// [tag:overdwell]
+				engine->scheduler.schedule("overdwell", &event->sparkEvent.eventScheduling, fireTime, action_s::make<overFireSparkAndPrepareNextSchedule>( event ));
+	#if EFI_UNIT_TEST
+				engine->onScheduleOverFireSparkAndPrepareNextSchedule(*event, fireTime);
+	#endif
+			} else {
+				engine->engineState.overDwellNotScheduledCounter++;
+			}
 		}
-#else
-		// The angle-clock build anchors the overdwell rescue at the ACTUAL
-		// charge moment (turnSparkPinHighStartCharging): a schedule-time
-		// anchor uses the arming prediction, which the catch/self-stim ramp
-		// invalidates - the bench 213/264 ms overcharges came from a rescue
-		// left on the stale prediction while the refresh re-anchored the
-		// TMR2 events to the correct times.
+	#else
+		// Angle-clock build: spark is armed from turnSparkPinHighStartCharging
+		// (angleClockArmSparkFromNow) AFTER the coil is charged. The angle queue
+		// is NOT used for spark - no scheduleOrQueue, no overdwell pre-schedule.
+		// The overdwell rescue is anchored at the actual charge moment at 2.5x dwell.
 		if (limitedSpark) {
 			engine->engineState.overDwellNotScheduledCounter++;
 		}
-#endif // !EFI_ANGLE_CLOCK
-	}
+	#endif // !EFI_ANGLE_CLOCK
 
 #if EFI_UNIT_TEST
 	if (verboseMode) {

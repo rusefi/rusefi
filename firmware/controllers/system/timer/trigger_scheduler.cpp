@@ -107,9 +107,7 @@ void TriggerScheduler::cancel(AngleBasedEvent* event) {
 TRIGGER_RAM_CODE void TriggerScheduler::scheduleEventsUntilNextTriggerTooth(float rpm,
 							   efitick_t edgeTimestamp, float currentPhase, float nextPhase,
 							   float nextNextPhase) {
-#if !EFI_ANGLE_CLOCK
-	UNUSED(nextNextPhase);
-#endif // !EFI_ANGLE_CLOCK
+	UNUSED(nextNextPhase);  // EFI_ANGLE_CLOCK: spark not in angle queue, VVT/AuxActor use current-window only
 
 	if (rpm == 0) {
 			 // this might happen for instance in case of a single trigger event after a pause
@@ -152,60 +150,15 @@ TRIGGER_RAM_CODE void TriggerScheduler::scheduleEventsUntilNextTriggerTooth(floa
 			// [tag:overdwell]
 			engine->scheduler.cancel(sDown);
 
-#if EFI_ANGLE_CLOCK
-			// Current-tooth spark: try TMR4 first. With scheduleEventsUntilNextTriggerTooth
-			// now running at ~8 µs elapsed (before scheduleDwellEarlyIfDue), the arm
-			// succeeds for remaining > 0.5° at 7000 rpm. Only sparks right at the
-			// tooth edge (remaining < 0.5°) still fall back to TIM5.
-			if (!angleClockArmSpark(current->cylinderIndex, current->getAngle(),
-								current->action, currentPhase, nextPhase)) {
-				scheduleByAngle(sDown, edgeTimestamp,
-							  current->getAngleFromNow(currentPhase), current->action);
-			}
-#else
+			// Under EFI_ANGLE_CLOCK: spark events no longer enter the angle queue
+			// (spark is armed from turnSparkPinHighStartCharging via
+			// angleClockArmSparkFromNow). Only VVT/AuxActor events reach here.
 			scheduleByAngle(
 				sDown,
 				edgeTimestamp,
 				current->getAngleFromNow(currentPhase),
 				current->action
 			);
-#endif // EFI_ANGLE_CLOCK
-#if EFI_ANGLE_CLOCK
-	} else if (nextNextPhase != nextPhase && current->shouldSchedule(nextPhase, nextNextPhase)) {
-		// Due during the NEXT tooth: arm it on the hardware angle clock
-		// one full tooth early, so a late handoff (decode tails up to
-		// ~1 ms) cannot shift it. The nextNextPhase != nextPhase guard
-		// rejects single-tooth triggers, where every event angle maps to
-		// the same phase and the range test is meaningless.
-		LL_DELETE2(keephead, current, nextToothEvent);
-
-		scheduling_s * sDown = &current->eventScheduling;
-
-		// The overdwell rescue (armed on sDown by scheduleSparkEvent) is
-		// KEPT on the success path: it stays the coil safety net if this
-		// armed fire is lost (stale target, channels busy, desync refresh
-		// cancels it). If the angle-clock fire executes first, the rescue
-		// later no-ops on IgnitionEvent::sparkFiredSinceCharge; if the arm
-		// is lost, the rescue discharges the coil at 1.5x dwell and cancels
-		// the armed compare via TriggerScheduler::cancel.
-		float angleFromNow = current->getAngleFromNow(currentPhase);
-
-		// Arm in the ANGLE domain with the freshest tooth data - the
-		// per-tooth refresh re-anchors the tick every tooth, so the error
-		// never exceeds one tooth of acceleration at ANY rpm (the 90-degree
-		// rpm average lags by revolutions at the catch and fired events
-		// ms-late - the fuse incident).
-		if (!angleClockArmSpark(current->cylinderIndex, current->getAngle(), current->action, currentPhase, nextPhase)) {
-			// Arm failed (stale target, tick passed, or all channels busy):
-			// fall back to a time-based fire on the SAME basis the proven
-			// time-based path uses (oneDegreeUs, the 90-degree-window rpm
-			// average). The eventScheduling struct is free here (the overdwell
-			// rescue lives on the event's dwellStartTimer, armed at the actual
-			// charge); the rescue still bounds the charge if this fire loses
-			// the race against it (see overFireSparkAndPrepareNextSchedule).
-			engine->scheduler.schedule("fire", sDown, sumTickAndFloat(edgeTimestamp, angleFromNow * US2NT(engine->rpmCalculator.oneDegreeUs)), current->action);
-		}
-#endif // EFI_ANGLE_CLOCK
 	} else {
 		keeptail = current; // Used for fast list concatenation
 	}
