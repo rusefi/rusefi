@@ -14,6 +14,7 @@ HW_LAYER_CPP = \
 	$(PROJECT_DIR)/hw_layer/pin_repository.cpp \
 	$(PROJECT_DIR)/hw_layer/microsecond_timer/microsecond_timer.cpp \
 	$(PROJECT_DIR)/hw_layer/angle_clock/angle_clock.cpp \
+	$(PROJECT_DIR)/hw_layer/injection_close_hw.cpp \
 	$(PROJECT_DIR)/hw_layer/digital_input/digital_input_exti.cpp \
 	$(PROJECT_DIR)/hw_layer/digital_input/trigger/trigger_input.cpp \
 	$(PROJECT_DIR)/hw_layer/digital_input/trigger/trigger_input_exti.cpp \

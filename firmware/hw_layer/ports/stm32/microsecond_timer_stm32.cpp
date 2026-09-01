@@ -18,6 +18,7 @@
 #if EFI_PROD_CODE && HAL_USE_PWM
 
 #include "port_microsecond_timer.h"
+#include "injection_close_hw.h"
 
 void portSetHardwareSchedulerTimer(efitick_t nowNt, efitick_t setTimeNt) {
 	// This implementation doesn't need the current time, only the target time
@@ -73,7 +74,7 @@ static void hwTimerCallback(PWMDriver*) {
 	assertInterruptPriority(__func__, EFI_IRQ_SCHEDULING_TIMER_PRIORITY);
 }
 
-static constexpr PWMConfig timerConfig = {
+static const PWMConfig timerConfig = {
 	.frequency = SCHEDULER_TIMER_FREQ,
 	/* wanted timer period = 2^32 counts,
 	 * but driver set (period - 1) value to register
@@ -82,8 +83,8 @@ static constexpr PWMConfig timerConfig = {
 	.period = 0,
 	.callback = nullptr,		// No update callback
 	.channels = {
-		{PWM_OUTPUT_DISABLED, hwTimerCallback},	// Channel 0 = timer callback, others unused
-		{PWM_OUTPUT_DISABLED, nullptr},
+		{PWM_OUTPUT_DISABLED, hwTimerCallback},		   // CC1: NT executor
+		{PWM_OUTPUT_DISABLED, hwInjectionCloseCallback},  // CC2: injection close mini-queue
 		{PWM_OUTPUT_DISABLED, nullptr},
 		{PWM_OUTPUT_DISABLED, nullptr}
 	},
@@ -99,7 +100,10 @@ void portInitMicrosecondTimer() {
 	// We want to be able to set the compare register without waiting for an update event
 	// (which would take 358 seconds at 12mhz timer speed), so we have to use normal upcounting
 	// output compare mode instead.
-	SCHEDULER_TIMER_DEVICE->CCMR1 = STM32_TIM_CCMR1_OC1M(1);
+	// CC1: executor (OC1M=1 = set-on-match, software comparator, CCxE=0 no pin output)
+	// CC2: injection close mini-queue (OC2M=1, same mode)
+	SCHEDULER_TIMER_DEVICE->CCMR1 = STM32_TIM_CCMR1_OC1M(1)
+	                               | STM32_TIM_CCMR1_OC2M(1);
 
 	/* TODO: implement for all possible TIMs */
 	if (SCHEDULER_TIMER_DEVICE == TIM5) {

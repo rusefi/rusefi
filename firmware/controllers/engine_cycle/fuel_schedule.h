@@ -64,7 +64,16 @@ public:
 	bool injectionStartArmed = false;
 	efitick_t injectionStartArmedAt = 0;
 
+	// Injection close delay in NT ticks (= US2NT(durationUsStage1)), stored
+	// by onTriggerTooth for use in turnInjectionPinHigh which arms the close
+	// on TIM5 CC2 (hardware 32-bit compare) at the ACTUAL open moment.
+	uint32_t injectionEndDelayNt = 0;
 };
+
+// Schedule injection close on TIM5 CC2 mini-queue.
+// Called from turnInjectionPinHigh after output->open(). cyl = cylinder 0..3.
+void scheduleInjectionCloseHW(int cyl, efitick_t nowNt, uint32_t delayNt, action_s action);
+void cancelInjectionCloseHW(int cyl);
 
 void turnInjectionPinHigh(scheduler_arg_t arg);
 void turnInjectionPinLow(InjectionEvent *event);
