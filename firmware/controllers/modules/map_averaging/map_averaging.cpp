@@ -66,7 +66,7 @@ void startAveraging(mapSampler* s) {
     }
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6649, hasLotsOfRemainingStack(), "lowstck#9");
 
-	// TODO: set currentMapAverager based on cylinder bank
+	currentMapAverager = s->cylinderNumber % SAMPLER_DIMENSION;
 	auto& averager = getMapAvg(currentMapAverager);
 	averager.start(s->cylinderNumber);
 
