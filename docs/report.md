@@ -11659,3 +11659,132 @@ nm confirms VectorB0 (dwell), VectorB4 (injection), VectorB8 (spark) all present
 - C9009 false positive: prevSparkName gate fix (rpm flap causes ~2/7 min)
 - s_currentPhase storm pollution in refresh: confirmed L9779 gives clean signal,
   issue is timing/decoding not sensor noise (per user)
+
+## 2026-09-01 (night 10) - sparkFiredNoOpBeforeDwell regression + injection CC2 stabilization (car sessions 18:42-22:54)
+
+This entry covers the full set of car sessions on 2026-09-01 evening, the
+regression caused by premature removal of sparkFiredNoOpBeforeDwell, the
+"dwell fired=0" old-build failure, and the final stabilization with TIM5 CC2.
+
+### Session 18:42-19:31 (baseline, three-timer build, working)
+
+Car data confirms the three-timer build healthy:
+- angclk dwell fired=7592 lateArm=0, spark fired=7606 lateArm=0, inj lateArm=29
+- sched dwell/spark/overdwell=0 (all on hardware timers, none on TIM5)
+- C9009 at rpm=6051: false positive per CLAUDE.md (charged=0 bail=no,
+  counter-fall==cylinderCount -> normal cycle, no real skip)
+- trgPostDecode histogram: ~6-8% of teeth in 50-100 us bucket = scheduling teeth
+  (4 windows per 58-tooth revolution on 60-2 = expected)
+
+Conclusion: build is correct; C9009 is cosmetic noise from the rpm-sensor flap.
+
+### Session 21:46-21:55: sparkFiredNoOpBeforeDwell removed prematurely -> stall
+
+User removed sparkFiredNoOpBeforeDwell from event_registry.h and
+fireSparkAndPrepareNextSchedule (night 3 code claimed it was no longer needed),
+and moved handleFuel before scheduleDwellEarlyIfDue in mainTriggerCallback.
+
+Results (21:46 session): inj fired=1762 = 2x dwell fired=885. This anomalous
+2:1 ratio revealed that the injection close path still used
+angleClockArmInjectionFromNow (TMR3, 16-bit). At idle PW~3ms these succeed;
+under throttle PW > 8ms -> (int16_t) overflow -> arm fails -> injector not
+closed -> flooding.
+
+Results (21:55 session): inj lateArm grew from 108 to 135 (46% failure). Engine
+stutter. Root cause: without sparkFiredNoOpBeforeDwell, on rapid deceleration
+the angle-queue TMR4 fires at the predicted spark time BEFORE TMR2 dwell
+(prediction was too-short due to rpm drop; the angle queue arm at ~8 us
+elapsed takes the current tooth speed, which was higher than actual dwell
+speed). TMR4 fires on uncharged coil (no-op). Dwell fires later. No spark
+pending. Rescue fires at 2.5x dwell = ~8ms. Coil overcharge. C9353.
+Engine misfires and stalls.
+
+Key lesson: sparkFiredNoOpBeforeDwell must not be removed until scheduleOrQueue
+no longer arms TMR4 from the angle queue. The "cancel stale TMR4 arm" in
+angleClockArmSparkFromNow only works if the cancel happens BEFORE TMR4 fires;
+on rapid decel the predicted tick already passed at arm time, so TMR4 fires in
+the same handoff cycle before the cancel can run.
+
+### Session 22:22 ("old build" flashed by accident): dwell fired=0 lateArm=100%
+
+  angclk dwell fired=0 lateArm=3632, spark fired=3632 lateArm=0
+
+All dwell arms fail; all spark arms succeed. Engine barely runs.
+
+Root cause: this was an older build that had scheduleDwellEarlyIfDue placed at
+the END of onTriggerEventSparkLogic (~250 us elapsed) - the high-rpm-dwell-fail
+bug documented in CLAUDE.md. At any RPM, the early window check
+isPhaseInRange(dwellAngle, nextPhase, nextNextPhase) returned true for EVERY
+tooth due to the nextNextPhase==nextPhase degenerate case (missing guard
+that was added later). The arm target for every tooth was in the past
+(dwell angle already behind current phase) -> all lateArm -> TIM5 fallback
+with ~99.8% late -> coils barely charged. Engine ran poorly due to missing
+or very late dwell, not because of injection (injectors showed inj fired=3632
+lateArm=0 on TMR3).
+
+Note: the "injectors don't work" symptom the user saw was from the engine
+barely running (no charge -> no combustion -> rough RPM). The injectors
+themselves fired correctly; there was nothing to combust.
+
+### Session 22:32+ (new build, TIM5 CC2 injection close, injCC2 diagnostic)
+
+  angclk dwell fired=28 lateArm=0, spark=28 lateArm=0, inj=29 lateArm=7
+  injCC2 scheduled=397 fired=364 (gap=33 at startup)
+
+New build with:
+- sparkFiredNoOpBeforeDwell restored in event_registry.h
+- nextNextPhase!=nextPhase guard in scheduleDwellEarlyIfDue early window
+- TIM5 CC2 mini-queue for injection close (32-bit, no 8ms limit)
+- pendingCount fix (slot overwrite bug replaced bool with uint8_t pendingCount)
+
+The injCC2 gap=33 at startup is NORMAL (explained in CLAUDE.md): at cranking
+multiple cylinders open before CC2 drains them. By the 22:51 session:
+  injCC2 scheduled=1914 fired=1914 (gap=0)
+  angclk dwell/spark/inj lateArm=0 at idle 800 rpm
+
+The gap converged because all 1914 scheduled closes fired; none were lost.
+The 22:43 session showed a growing gap (33->47 over 4 seconds) which was a
+transient at cranking-to-idle transition, not a permanent loss.
+
+### Validated final state (22:51-22:54 sessions)
+
+  angclk dwell fired=1460 lateArm=0, spark fired=1461 lateArm=0,
+         inj fired=1460 lateArm=0
+  injCC2 scheduled=3374 fired=3374 (gap=0)
+  trgPostDecode <50us=42360 50-100=2941 (6.2% scheduling teeth, expected)
+  angclk maxLateUs=18 us, immediate=0
+
+All events hardware-armed, no TIM5 fallback, injection closes all fire.
+Engine runs stably at 800-2000 rpm (stable idle after C9002 resolved by the
+VR model calibration saving at 22:51).
+
+### Key findings for documentation
+
+1. sparkFiredNoOpBeforeDwell: must stay until angle queue spark path eliminated
+   (precondition for the "next optimization" in CLAUDE.md).
+
+2. injCC2 startup gap: normal transient, NOT a bug. scheduled==fired in steady
+   state is the health signal. Growing gap would indicate the pendingCount bug.
+
+3. MAP does not bottleneck fuel scheduling: PW is computed at 200 Hz in
+   periodicFastCallback, one engine cycle ahead. No MAP read in any tooth ISR.
+
+4. trgPostDecode scheduling teeth: 6-7% of total teeth take 50-100 us; the
+   remaining 93-94% take <50 us. This is irreducible with the current code;
+   the "next optimization" (eliminating angle queue spark) would save ~18 us,
+   moving some scheduling teeth from 50-100 us to <50 us bucket.
+
+### Validation
+
+All sessions on actual car hardware (21129 Lada engine, m74_9 ECU, AT32F435).
+Final build: BUILD SUCCESSFUL, unit tests 1169/1169 PASSED.
+
+### Open follow-ups
+
+- Eliminate angle queue spark path under EFI_ANGLE_CLOCK (then sparkFiredNoOpBeforeDwell
+  can also be removed) - saves ~18 us on scheduling teeth.
+- C9009 false positive: move prevSparkName update outside the rpm gate.
+- Confirm injCC2 startup gap max value and decide if a startup-tolerance
+  allowance should be printed in lockstats (e.g. injCC2 max_startup_gap=47).
+- trgPostDecode 100-250 us: rare (~0.3% at 6000 rpm) but present; cause is
+  the trigger decode tail, not scheduling logic.
