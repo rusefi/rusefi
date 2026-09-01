@@ -11121,6 +11121,42 @@ No code changes. Analysis session only.
 - trgPostDecode scheduling-teeth cost: will be replaced by angle-clock arming once
   EFI_ANGLE_CLOCK is validated on the car
 
+## 2026-09-01 (night 7) - injection close reverted to TIM5 (angleClockArmInjectionFromNow unusable for long PW)
+
+Engine still broken after night 6 fix. New lockstats: lateArm=135/149=91% for closes.
+Engine barely idles, injectors barely fire.
+
+### Bug: 16-bit arm fails for PW > 8ms
+
+TMR3 is 16-bit (wraps at 16.384ms). The arm check:
+  (int16_t)(atTick16 - cnt16) >= ARM_MARGIN
+For PW > 8ms = 32768 ticks: (int16_t)(PW_ticks > 32767) = NEGATIVE -> arm fails.
+At idle with high deadtime or at medium load, PW > 8ms is normal. Result: 91%
+of injection close arms fail, injectors barely work.
+
+### Fix: injection close always on TIM5 (reverted)
+
+- onTriggerTooth: always schedule END on TIM5 with nullptr
+- turnInjectionPinHigh: no close re-arm
+- Remove injectionEndStage1 and injectionEndDelayNt from InjectionEvent
+- Keep angleClockArmInjectionFromNow function for possible future use
+  (would need 32-bit timer for PWs up to 65ms)
+
+### Lesson: angleClockArmInjectionFromNow requires 32-bit timer
+
+For TMR2 (32-bit, dwell): spark dwell always < 8ms -> arm always succeeds.
+For TMR4 (16-bit, spark): spark delay from charge = sparkDwell < 8ms -> OK.
+For TMR3 (16-bit, injection close): injection PW can be 2-15ms -> fails for PW > 8ms.
+Future implementation of injection close on hardware timer requires a 32-bit APB1
+timer. Available 32-bit APB1 timers: only TIM5 (executor) and TMR2 (dwell).
+TMR3 cannot be used for long delays.
+
+### Validation
+
+BUILD SUCCESSFUL; unit tests 1169/1169 PASSED.
+Car validation: inj fired ≈ dwell (only TMR3 opens), lateArm=0 for injection
+(only opens attempted on TMR3, closes on TIM5).
+
 ## 2026-09-01 (night 6) - CRITICAL: injection double-fire race in angleClockArmInjectionFromNow
 
 Engine ran badly after angleClockArmInjectionFromNow commit: double injection,
