@@ -256,9 +256,18 @@ TRIGGER_RAM_CODE void InjectionEvent::onTriggerTooth(efitick_t nowNt, float curr
 	injectionStartArmed = true;
 	injectionStartArmedAt = startTime;
 
-	// Schedule closing stage 1
-	efitick_t turnOffTimeStage1 = startTime + US2NT((int)durationUsStage1);
+	// Schedule closing stage 1.
+	// EFI_ANGLE_CLOCK: use a trackable slot (&injectionEndStage1) so
+	// turnInjectionPinHigh can cancel and re-arm the close from the actual
+	// opening moment via angleClockArmInjectionFromNow.
+	const uint32_t endDelayNt = US2NT((int)durationUsStage1);
+	efitick_t turnOffTimeStage1 = startTime + endDelayNt;
+#if EFI_ANGLE_CLOCK
+	injectionEndDelayNt = endDelayNt;
+	getScheduler()->schedule("inj", &injectionEndStage1, turnOffTimeStage1, endActionStage1);
+#else
 	getScheduler()->schedule("inj", nullptr, turnOffTimeStage1, endActionStage1);
+#endif // EFI_ANGLE_CLOCK
 
 	// Schedule closing stage 2 (if applicable)
 	if (hasStage2Injection && endActionStage2) {

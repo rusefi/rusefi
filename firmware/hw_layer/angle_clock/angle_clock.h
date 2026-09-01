@@ -81,6 +81,15 @@ bool angleClockArmSparkFromNow(int cylinderIndex, efitick_t nowNt,
 bool angleClockArmInjection(int cylinderIndex, float targetAngle, action_s action,
                               float callerPhase, float callerNextPhase);
 
+// Arm the injection-END channel for `cylinderIndex` on TMR3 directly from an
+// NT timestamp + delay. Called from turnInjectionPinHigh (the actual injector-
+// open callback) to anchor the closing pulse to the REAL opening moment,
+// regardless of any TMR3/TIM5 START timing uncertainty. Analogue of
+// angleClockArmSparkFromNow for injection close. targetAngle sentinel 780 deg
+// prevents the per-tooth refresh from touching this channel.
+bool angleClockArmInjectionFromNow(int cylinderIndex, efitick_t nowNt,
+                                    uint32_t delayNt, action_s action);
+
 // Re-anchor all armed channels from the freshest tooth data. Due events
 // (angle already passed) are armed for immediate ISR firing - both dwell
 // and spark/injection, matching the time-based build's due-tooth behavior.

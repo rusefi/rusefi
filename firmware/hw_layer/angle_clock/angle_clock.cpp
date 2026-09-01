@@ -583,6 +583,29 @@ TRIGGER_RAM_CODE void angleClockCancelInjection(int cyl) {
     INJ_TIMER->DIER &= ~(STM32_TIM_DIER_CC1IE << cyl);
 }
 
+TRIGGER_RAM_CODE bool angleClockArmInjectionFromNow(int cyl, efitick_t nowNt,
+                                                      uint32_t delayNt, action_s action) {
+    const uint16_t atTick = injTickForNt(nowNt, delayNt);
+    const uint16_t cnt16  = static_cast<uint16_t>(INJ_TIMER->CNT);
+
+    if (static_cast<int16_t>(atTick - cnt16) < static_cast<int16_t>(ARM_MARGIN_TICKS)) {
+        s_lateArmInj++;
+        return false;
+    }
+
+    auto& c = s_inj[cyl];
+    const uint32_t flag = STM32_TIM_SR_CC1IF << cyl;
+    INJ_TIMER->SR   = ~flag;
+    *ccrReg(INJ_TIMER, cyl) = atTick;
+    c.ccr         = atTick;
+    // Sentinel: 780 deg > cycleDeg(720) + MAX_LEAD_DEG(30) = 750 for any
+    // currentPhase in [0, 720) -> refresh always skips this channel.
+    c.targetAngle = 780.0f;
+    c.action      = action;
+    INJ_TIMER->DIER |= STM32_TIM_DIER_CC1IE << cyl;
+    return true;
+}
+
 void angleClockCancelAll() {
     for (int ch = 0; ch < 4; ch++) {
         angleClockCancelDwell(ch);
