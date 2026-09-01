@@ -11123,6 +11123,30 @@ No code changes. Analysis session only.
 - trgPostDecode scheduling-teeth cost: will be replaced by angle-clock arming once
   EFI_ANGLE_CLOCK is validated on the car
 
+## 2026-09-01 (night 9) - injection close CC2: slot overwrite bug (injector stuck open)
+
+Engine sniffer showed only one injector firing. lockstats: injCC2 scheduled=397
+fired=364 (gap=33 from startup) and growing (+14 per 2 seconds of running).
+
+Root cause: when injection duty > 100% (cycle N+1 starts before N closes),
+scheduleInjectionCloseHW for the same cylinder OVERWROTE slot[cyl] with the
+new close time. CC2 fired once at N+1 time. turnInjectionPinLow called once:
+  overlappingCounter: 2->1 (NOT 0) -> setLow() not called -> injector stuck open
+  update() never called -> injectionStartAngle stale -> cylinder stops injecting.
+
+Fix: replaced bool pending with uint8_t pendingCount.
+  Normal (pendingCount=1): dispatch fires action, clears slot.
+  Overlap (pendingCount>=2): dispatch fires action, pendingCount--, re-arms CC2
+  at CNT+4us for the next close. turnInjectionPinLow fires pendingCount times:
+  overlappingCounter goes N->N-1->...->0 -> setLow().
+
+Key lesson: hardware close timing slot per cylinder requires COUNTING not BOOLEAN.
+overlapCounter model in InjectorOutputPin requires exactly N closes for N opens.
+Losing even one close causes injector stuck open and cylinder stops working.
+
+Validation: BUILD SUCCESSFUL; unit tests 1169/1169 PASSED.
+Car verdict: injCC2 scheduled=fired (gap=0 in stable running), all 4 cylinders fire.
+
 ## 2026-09-01 (night 8) - injection close: TIM5 CC2 hardware 32-bit mini-queue (Option B)
 
 NT ticks == TIM5->CNT (1:1, same 4 MHz APB1, same counter). CCR2 = fireAt_NT
