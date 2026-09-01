@@ -256,18 +256,20 @@ TRIGGER_RAM_CODE void InjectionEvent::onTriggerTooth(efitick_t nowNt, float curr
 	injectionStartArmed = true;
 	injectionStartArmedAt = startTime;
 
-	// Schedule closing stage 1 on TIM5 (always, for all modes).
-	// Injection close is always time-based: the timing error (~20 us TIM5
-	// batch latency) is negligible (0.4 deg at 7000 rpm, no effect on PW).
-	// Attempting to anchor the close to the actual open moment via
-	// angleClockArmInjectionFromNow caused two bugs:
-	// 1. 16-bit TMR3 arm fails for PW > 8 ms (half counter period) - arm
-	//    check (int16_t)(PW_ticks) goes negative -> lateArm=90%+, injectors
-	//    barely work.
-	// 2. race: TIM5 END fires before TMR3 START (past-due / immediate-fire
-	//    path) -> double open-close = double injection = engine runs badly.
-	efitick_t turnOffTimeStage1 = startTime + US2NT((int)durationUsStage1);
-	getScheduler()->schedule("inj", nullptr, turnOffTimeStage1, endActionStage1);
+	// Store PW for turnInjectionPinHigh which arms the close on TIM5 CC2
+	// at the ACTUAL open moment (not the nominal startTime).
+	// Simultaneous mode (startSimultaneousInjection) never calls
+	// turnInjectionPinHigh, so it still uses the TIM5 fallback below.
+	const uint32_t endDelayNt = US2NT((int)durationUsStage1);
+	efitick_t turnOffTimeStage1 = startTime + endDelayNt;
+	if (!isSimultaneous) {
+		injectionEndDelayNt = endDelayNt;
+		// CC2 close is armed by turnInjectionPinHigh at the actual open moment.
+		// No TIM5 pre-schedule here: avoids the race where TIM5 END fires before
+		// TMR3 START on past-due injections (double open-close = double injection).
+	} else {
+		getScheduler()->schedule("inj", nullptr, turnOffTimeStage1, endActionStage1);
+	}
 
 	// Schedule closing stage 2 (if applicable)
 	if (hasStage2Injection && endActionStage2) {

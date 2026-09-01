@@ -12,6 +12,10 @@
 #include "angle_clock.h"
 #endif
 
+#if EFI_PROD_CODE && HAL_USE_PWM
+#include "injection_close_hw.h"
+#endif
+
 void turnInjectionPinHigh(scheduler_arg_t const arg) {
 	auto const nowNt{ getTimeNowNt() };
 
@@ -33,11 +37,17 @@ void turnInjectionPinHigh(scheduler_arg_t const arg) {
 		}
 	}
 
-	// Injection close is handled by the pre-scheduled TIM5 END in onTriggerTooth.
-	// angleClockArmInjectionFromNow was tried here but caused two bugs:
-	// 1. 16-bit arm fails for PW > 8 ms (int16_t overflow)
-	// 2. Race with pre-scheduled TIM5 END causing double injection
-	// See report.md 2026-09-01 night 6 for details.
+#if EFI_PROD_CODE && HAL_USE_PWM
+	// Arm injection close on TIM5 CC2 (32-bit hardware compare) at nowNt + PW.
+	// This is anchored to the ACTUAL open moment, not the nominal startTime,
+	// so PW is always measured from real physical injector opening.
+	// Uses the 32-bit TIM5 counter: no 8-ms overflow, no race condition.
+	if (event->injectionEndDelayNt > 0) {
+		scheduleInjectionCloseHW(
+			event->getCylinderNumber(), nowNt, event->injectionEndDelayNt,
+			action_s::make<turnInjectionPinLow>(event));
+	}
+#endif // EFI_PROD_CODE && HAL_USE_PWM
 }
 
 FuelSchedule::FuelSchedule() {
