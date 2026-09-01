@@ -11788,3 +11788,63 @@ Final build: BUILD SUCCESSFUL, unit tests 1169/1169 PASSED.
   allowance should be printed in lockstats (e.g. injCC2 max_startup_gap=47).
 - trgPostDecode 100-250 us: rare (~0.3% at 6000 rpm) but present; cause is
   the trigger decode tail, not scheduling logic.
+
+## 2026-09-01 (night 11) - MAP averaging architecture analysis + sniffer n/a root cause
+
+### Problem observed
+
+Engine sniffer shows 4 injection events, but MAP events display:
+  8.96ms  n/a   n/a
+  8.93ms  n/a   n/a
+  8.91ms  115.8  165.8
+  8.91ms  295.4  345.5
+Two cylinders always show n/a for MAP averaging.
+
+### Root cause: second-revolution display gap in TunerStudio sniffer
+
+All 4 MAP windows DO fire (confirmed: lockstats startAveraging n=1461 at 800 rpm
+matches 4 windows/cycle * 6.67 cycles/s * ~55 s). The n/a is a display artifact.
+
+Map window angles (samplingAngle=115.8 deg at 800 rpm, 50 deg window):
+  cylinder 1 (i=0): 115.8-165.8 deg   <- 1st crank revolution (0-360 deg)
+  cylinder 3 (i=2): 295.8-345.8 deg   <- 1st crank revolution
+  cylinder 4 (i=3): 475.8-525.8 deg   <- 2nd crank revolution (360-720 deg)
+  cylinder 2 (i=1): 655.8-705.8 deg   <- 2nd crank revolution
+
+The sniffer associates MAP events with injection events by proximity in the
+current sniffer frame. Windows at 475.8 and 655.8 deg fall in the second
+crank revolution; the per-injection display does not span far enough forward
+from those cylinders' injection events to capture the MAP pulse, so it shows
+n/a. No firmware action needed for shared-plenum engines.
+
+### currentMapAverager = 0 (static, never incremented - TODO in code)
+
+All 4 windows write to the same MapAverager[0]. Each startAveraging() resets
+m_counter/m_sum. Only the last completed window contributes to mapAveraged.
+mapPerCylinder[i] is overwritten by each successive window.
+
+For 21129 shared plenum: harmless. MAP is nearly identical across all
+cylinders at any steady-state operating point.
+
+### What cycling currentMapAverager through 4 would give
+
+Increment: currentMapAverager = (currentMapAverager + 1) % cylindersCount.
+
+Benefits:
+- mapPerCylinder[i] = truly per-cylinder, no cross-cylinder overwrite
+- averagedMapRunningBuffer receives 4 writes per cycle instead of 1;
+  with mapMinBufferLength=4 gives min-of-4 (leanest cylinder, most airflow)
+- mapAveraged smoother: updated 4x per cycle vs once
+- Enables per-cylinder LTFT, misfire detection by MAP drop
+
+For 21129 shared plenum: marginal improvement (same MAP on all cylinders).
+For ITB or per-runner MAP sensor: significant - true per-cylinder fueling.
+
+Engine sniffer n/a: NOT fixed by 4 averagers (display issue is independent
+of averager count - same mapAveragingPin transitions, same association gap).
+
+### Validation
+
+Analysis only, no code changes. All facts verified from map_averaging.cpp
+(MapAveragingModule::onFastCallback, onEnginePhase, startAveraging, endAveraging)
+and engine_cylinder.cpp (getAngleOffset) and 21129.msq config values.

@@ -463,6 +463,45 @@ Key differences vs FALSE build:
 - lockstats: sched dwell=0, spark=0 (on TMR2/TMR4); sched fuel=~0 (closes on CC2);
   injCC2 scheduled==fired in stable running (gap=0)
 
+### MAP averaging architecture and sniffer n/a (analysed 2026-09-01)
+
+**How MAP windows are scheduled.** `MapAveragingModule::onEnginePhase` is called on EVERY valid trigger tooth via `engineModules.apply_all`. For each tooth it iterates `samplingCount = cylindersCount = 4` slots and schedules `startAveraging` for any slot whose angle falls in `[currentPhase, nextPhase)`. The slot angles are precomputed in `onFastCallback` (200 Hz):
+
+```cpp
+for (size_t i = 0; i < cylindersCount; i++) {
+    mapAveragingStart[i] = samplingAngle_rpm + engine->cylinders[i].getAngleOffset();
+}
+```
+
+`engine->cylinders[i]` is indexed by CYLINDER NUMBER (not firing order index). For 21129 firing order 1-3-4-2 (0-indexed: 0-2-3-1) on a 720-deg cycle, the angle offsets are:
+- cylinders[0] (cyl 1, fires 1st): offset 0 deg
+- cylinders[1] (cyl 2, fires 4th): offset 540 deg
+- cylinders[2] (cyl 3, fires 2nd): offset 180 deg
+- cylinders[3] (cyl 4, fires 3rd): offset 360 deg
+
+With `samplingAngle ~115.8 deg` at 800 rpm (from `map_samplingAngle` table, linearly interpolated):
+
+| slot i | cylinder | window start | window end (50 deg) | crank revolution |
+| --- | --- | --- | --- | --- |
+| 0 | 1 | 115.8 deg | 165.8 deg | 1st (0-360 deg) |
+| 2 | 3 | 295.8 deg | 345.8 deg | 1st (0-360 deg) |
+| 3 | 4 | 475.8 deg | 525.8 deg | **2nd (360-720 deg)** |
+| 1 | 2 | 655.8 deg | 705.8 deg | **2nd (360-720 deg)** |
+
+All 4 windows fire every engine cycle; lockstats `startAveraging n ~= 4 x cycles/sec` confirms this (e.g. n=1461 in ~55 s at 800 rpm matches 6.67 cycles/s x 4 windows/cycle).
+
+**Engine sniffer n/a for 2 of 4 cylinders.** `mapAveragingPin` is a single virtual NamedOutputPin; it goes HIGH at each `startAveraging` and LOW at each `endAveraging`. The sniffer records 4 distinct HIGH pulses per cycle. TunerStudio associates each MAP pulse with the injection event that precedes it in the sniffer's per-injection timeline. Windows at 475.8 deg and 655.8 deg fall in the **second crank revolution** (360-720 deg); the sniffer display does not reach that far forward from the corresponding injection events for cylinders 4 and 2, so those rows show n/a. This is a **display artifact only** - both windows fire correctly. No action required for a shared-plenum engine like 21129.
+
+**`currentMapAverager = 0` (static, never changes - TODO in map_averaging.cpp).** All 4 windows share the same `MapAverager` instance (index 0). Each `startAveraging` call resets `m_counter` and `m_sum`, so the LAST completed window overwrites all earlier ones. `mapPerCylinder[i]` gets overwritten by the most-recent cylinder in the cycle. The `mapAveraged` value (used in the VE table) reflects only the last completed window. For a shared plenum this is harmless - MAP is nearly identical across cylinders at any operating point.
+
+**What cycling `currentMapAverager` through 4 would give.** If the code incremented `currentMapAverager = (currentMapAverager + 1) % cylindersCount` at each `startAveraging`, each cylinder would get its OWN `MapAverager` (index 0..3). Effects:
+- `mapPerCylinder[i]` becomes truly per-cylinder - no overwriting between cylinders. Useful for per-cylinder LTFT, individual-runner MAP sensors, or misfire detection by MAP drop.
+- The running buffer `averagedMapRunningBuffer` (shared static) receives 4 writes per cycle instead of 1. With `mapMinBufferLength = 4` this would give min-of-4-cylinders, tracking the leanest cylinder (lowest MAP = most airflow). Currently with `mapMinBufferLength = 1` the effect is just 4x more-frequent updates.
+- `mapAveraged` (the main speed-density MAP) becomes more stable - updates 4x per cycle from 4 cylinders instead of just the last.
+- The engine sniffer would still show n/a for cylinders in the 2nd revolution (display issue unrelated to averager count).
+- **For 21129 shared plenum: marginal improvement.** All cylinders see essentially the same MAP, so per-cylinder averaging yields the same result. The main gain would be slightly smoother `mapAveraged` at transients.
+- **For ITB or per-runner MAP**: significant - each cylinder gets its own MAP reading, enabling true per-cylinder fueling correction.
+
 ## m74_9 / AT32F435: PB14 has NO plain PWM channel - ETB PWM uses TIM12_CH1
 
 PB14's timer options on AT32F435 are only the *complementary* outputs TIM1_CH2N /
