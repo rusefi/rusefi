@@ -458,7 +458,13 @@ void turnSparkPinHighStartCharging(IgnitionEvent *event) {
 	// Without this the rescue fires at 2.5x dwell with no spark to cancel it
 	// (the C9353 overcharge). sparkEvent.eventScheduling is free: the TMR4
 	// channel was released when it no-op'd and no TIM5 fallback was pending.
-	if (wasNoOp && event->sparksRemaining == 0) {
+	// The sparksRemaining check is intentionally ABSENT: with multispark enabled
+	// sparksRemaining > 0 is normal, and skipping the re-arm meant the rescue
+	// always won (C9353 + stall confirmed on the car 2026-09-01). The re-arm
+	// fires the main spark, prepareCylinderIgnitionSchedule runs normally, and
+	// multispark restrikes that were already on TIM5 via dwellStartTimer proceed
+	// unaffected.
+	if (wasNoOp) {
 		efitick_t sparkTime = sumTickAndFloat(nowNt, MSF2NT(event->sparkDwell));
 		engine->scheduler.schedule("spark_rearm", &event->sparkEvent.eventScheduling,
 								 sparkTime, action_s::make<fireSparkAndPrepareNextSchedule>( event ));
