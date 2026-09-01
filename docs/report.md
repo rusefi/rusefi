@@ -11123,6 +11123,83 @@ No code changes. Analysis session only.
 - trgPostDecode scheduling-teeth cost: will be replaced by angle-clock arming once
   EFI_ANGLE_CLOCK is validated on the car
 
+## 2026-09-01 (night 5) - trgPostDecode scheduling-tooth analysis + next optimization plan
+
+### trgPostDecode 50-100 us: breakdown of scheduling tooth overhead
+
+On scheduling teeth (2.8% of all teeth), trgPostDecode takes 50-100 us instead
+of the normal <50 us. These are the teeth where a dwell, spark or injection
+start event falls in the scheduling window.
+
+Breakdown (~87 us total on a scheduling tooth):
+  rpmShaftPositionCallback:              ~5 us (rpm + oneDegreeUs update)
+  angleClockOnTooth:                     ~2 us
+  scheduleEventsUntilNextTriggerTooth:  ~15 us (lock + list + angleClockArmSpark)
+  handleFuel (4 cylinders):             ~20 us (inj model + arm)
+  scheduleDwellEarlyIfDue:              ~20 us
+    -> scheduleSparkEvent:
+       globalSparkCounter++              1 us
+       angleClockArmDwell               5 us
+       scheduleOrQueue (LOCK+LIST)      8 us  <- main cost
+  onTriggerEventSparkLogic:             ~10 us (4-cylinder skip-loop)
+  angleClockRefresh (12 channels):      ~15 us
+  -----------------------------------------------
+  Total:                                ~87 us -> 50-100 us bucket
+
+### Key finding: arms happen in first 8-33 us, not in the 50-100 us window
+
+All physical event arms complete well before the 50-100 us overhead:
+  8 us:  spark arm on TMR4   <- arm done, TMR4 fires independently
+  13 us: injection arm on TMR3 <- arm done
+  33 us: dwell arm on TMR2  <- arm done
+
+The remaining 50-87 us is post-processing that does NOT affect physical timing.
+At 7000 rpm (tooth period 147 us), the handoff exceeds the tooth period on
+scheduling teeth, but TMR2/3/4 have already fired their events correctly.
+
+Symptom: immediate=200-364 in lockstats - the refresh finds events past-due
+because it runs 87 us into the tooth when some CCRs have already matched.
+
+### Root cause: angle queue spark is now REDUNDANT
+
+With the new architecture (spark armed from turnSparkPinHighStartCharging via
+angleClockArmSparkFromNow), the angle queue spark path is unnecessary:
+
+  OLD path (necessary for FALSE build):
+    scheduleDwellEarlyIfDue -> scheduleSparkEvent -> scheduleOrQueue (8 us LOCK)
+    scheduleEventsUntilNextTriggerTooth -> dequeue -> angleClockArmSpark (no-op pre-fire)
+    turnSparkPinHighStartCharging -> angleClockArmSparkFromNow <- REAL arm
+
+  NEW optimal path:
+    scheduleDwellEarlyIfDue -> only arm TMR2 dwell (no scheduleOrQueue)
+    scheduleEventsUntilNextTriggerTooth -> queue empty -> fast return
+    turnSparkPinHighStartCharging -> angleClockArmSparkFromNow <- only arm
+
+Evidence: angclk spark fired > dwell fired by 2-14 = no-op angle-queue
+pre-fires during rapid acceleration (TMR4 fires as no-op before TMR2 dwell).
+
+### Potential savings from eliminating angle queue spark
+
+  Remove scheduleOrQueue from scheduleDwellEarlyIfDue: ~8 us
+  Remove spark dequeue from scheduleEventsUntilNextTriggerTooth: ~8 us
+  Remove TriggerScheduler::cancel in overFireSparkAndPrepareNextSchedule: ~2 us
+  Remaining irreducible work (handleFuel, rpmCallback, refresh): ~50 us
+  Result: 87 -> 69 us -> some teeth exit 50-100 bucket
+
+  Additional: onTriggerEventSparkLogic loop becomes pure fallback,
+  can be skipped on all teeth where dwellStartArmed=true.
+
+### What cannot be reduced (physics)
+
+  handleFuel ~20 us: 4 cylinders x injection model = necessary for fuel accuracy
+  rpmShaftPositionCallback ~5 us: RPM + oneDegreeUs update = necessary
+  angleClockRefresh ~15 us: with 780-sentinel on spark/inj channels,
+    only 4 TMR2 dwell channels need actual refresh computation
+
+### Status
+
+Not yet implemented. Plan documented for next session.
+
 ## 2026-09-01 (night 4) - angle clock: angleClockArmInjectionFromNow (injection close from actual open)
 
 Variant B for injection: arm the injection close (turnInjectionPinLow) from the
