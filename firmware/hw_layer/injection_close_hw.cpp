@@ -25,6 +25,11 @@ struct InjCloseSlot {
 };
 
 static InjCloseSlot s_injClose[4];
+static uint32_t s_cc2FiredCount = 0;   // how many times CC2 ISR actually fired
+static uint32_t s_cc2ScheduledCount = 0; // how many closes were scheduled
+
+uint32_t getInjectionCC2FiredCount()     { return s_cc2FiredCount; }
+uint32_t getInjectionCC2ScheduledCount() { return s_cc2ScheduledCount; }
 
 // Re-arm CC2 to the earliest pending slot.
 // Must be called from prio-3 ISR context (no lock needed: all callers are prio 3).
@@ -85,6 +90,7 @@ void hwInjectionCloseCallback(PWMDriver* /*pwmp*/) {
     // manages manually).  Disable it first to prevent re-fires on the same CCR.
     pwmDisableChannelNotificationI(&SCHEDULER_PWM_DEVICE, 1);
     SCHEDULER_TIMER_DEVICE->SR = ~STM32_TIM_SR_CC2IF;
+    s_cc2FiredCount++;
 
     dispatchAndRearm();
 
@@ -100,6 +106,7 @@ void scheduleInjectionCloseHW(int cyl, efitick_t nowNt,
     s_injClose[cyl].fireAt  = sumTickAndFloat(nowNt, static_cast<float>(delayNt));
     s_injClose[cyl].action  = action;
     s_injClose[cyl].pending = true;
+    s_cc2ScheduledCount++;
 
     rearmCC2();
 }

@@ -32,12 +32,11 @@
 // `action` is typically action_s::make<turnInjectionPinLow>(event).
 void scheduleInjectionCloseHW(int cyl, efitick_t nowNt, uint32_t delayNt,
                                 action_s action);
-
-// Cancel a pending close for `cyl` (e.g. on limp / fuel cut path).
 void cancelInjectionCloseHW(int cyl);
-
-// TIM5 CC2 callback - called from pwm_lld_serve_interrupt when CC2IF fires.
-// Must be referenced from timerConfig in microsecond_timer_stm32.cpp.
 void hwInjectionCloseCallback(PWMDriver *pwmp);
+
+// Telemetry: total CC2 ISR fires and scheduled closes.
+uint32_t getInjectionCC2FiredCount();
+uint32_t getInjectionCC2ScheduledCount();
 
 #endif // EFI_PROD_CODE && HAL_USE_PWM
