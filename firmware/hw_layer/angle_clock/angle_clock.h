@@ -95,12 +95,14 @@ uint32_t angleClockTickForNt(efitick_t nt);
 // Current free-running angle-clock counter value.
 uint32_t angleClockNow();
 
-// Called by the trigger handoff ONCE PER TOOTH, before any arming in that
-// tooth: stores the edge timestamp, the scheduling phase and the angle->time
-// basis (NT ticks per degree from the 90-degree-window rpm average, see the
-// file-header rationale). cycleDeg is the engine cycle (720 four-stroke /
-// 360 two-stroke) used for angle wrap. All arming and the refresh use this
-// stored data.
+// Called by the trigger handoff ONCE PER TOOTH (including the rpm==0 flap
+// teeth of the catch storm - the refresh must track the true speed through
+// the storm), before any arming in that tooth: stores the edge timestamp,
+// the scheduling phase and the angle->time basis (NT ticks per degree from
+// the 90-degree-window rpm average, see the file-header rationale). A
+// not-positive feed (oneDegreeUs = NaN on a flap) keeps the last good
+// basis. cycleDeg is the engine cycle (720 four-stroke / 360 two-stroke)
+// used for angle wrap. All arming and the refresh use this stored data.
 void angleClockOnTooth(efitick_t edgeTimestamp, float currentPhase, float cycleDeg, float ticksPerDegree);
 
 // Arm `action` to fire at the absolute engine angle `targetAngle` (same

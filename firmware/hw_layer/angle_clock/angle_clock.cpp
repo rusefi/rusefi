@@ -301,8 +301,16 @@ void angleClockOnTooth(efitick_t edgeTimestamp, float currentPhase, float cycleD
 	// first teeth). 5 ms/deg (~32 rpm equivalent) is above any real cranking
 	// tooth and far below the garbage - a capped basis bounds the armed delay
 	// (MAX_LEAD_DEG x the cap) so a channel can never be stuck for the run.
+	//
+	// A not-positive feed KEEPS the last good basis: during the catch trigger
+	// storm the rpm sensor flaps 0/nonzero at ~1 kHz and oneDegreeUs goes NaN
+	// on the zero flaps - zeroing the basis would collapse every armed tick
+	// onto the tooth edge (the refresh runs on every tooth, flap or not) and
+	// fire everything immediately at the worst moment. The last good basis is
+	// at most one flap old (ms), so it is the correct prediction for this
+	// tooth.
 	if (!(ticksPerDegree > 0)) {
-		s_ticksPerDegree = 0;
+		return;
 	} else if (ticksPerDegree > MAX_TICKS_PER_DEGREE) {
 		s_ticksPerDegree = MAX_TICKS_PER_DEGREE;
 	} else {

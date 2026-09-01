@@ -328,6 +328,32 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_
 		return;
 	}
 
+#if EFI_ANGLE_CLOCK
+	{
+		// Angle->time basis for this tooth's arming and the per-tooth
+		// refresh: the 90-degree-window rpm average (oneDegreeUs) - the SAME
+		// basis the proven time-based path converts angles with. During
+		// spin-up oneDegreeUs is the InstantRpmCalculator's ~90-degree tooth
+		// window (calculateInstantRpm hunts the tooth ~90 deg back), when
+		// running it is the full-cycle average - both smooth. The per-tooth
+		// basis (toothDurations[0]) was tried and rejected: at cranking the
+		// compression oscillation makes a single tooth a 2-3x-stretched
+		// predictor (see angle_clock.h).
+		//
+		// THIS RUNS BEFORE THE rpm==0 GATE: during the catch trigger storm
+		// the rpm sensor flaps 0/nonzero at ~1 kHz and the gate returns
+		// early, so a refresh gated behind it never runs on the flap teeth -
+		// the armed events kept their PRE-CATCH ticks (computed at ~250 rpm)
+		// while the engine accelerated to ~800+, the fires landed ms-late,
+		// the rescues discharged (overdwell n~50, C935x) and the engine ran
+		// on wrong-angle sparks until it stalled. The refresh must track the
+		// true speed on EVERY tooth; angleClockOnTooth keeps the last good
+		// basis when the flap makes oneDegreeUs NaN.
+		angleClockOnTooth(edgeTimestamp, currentPhase, engine->engineState.engineCycle,
+			US2NT(engine->rpmCalculator.oneDegreeUs));
+	}
+#endif // EFI_ANGLE_CLOCK
+
 	float rpm = engine->rpmCalculator.getCachedRpm();
 	if (rpm == 0) {
 		// this happens while we just start cranking - and on EVERY flap of the
@@ -338,7 +364,12 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_
 		// ticks are bounded (angle-domain arming + per-tooth refresh) and the
 		// charge-anchored overdwell rescue bounds any charge, so they fire
 		// exactly like the time-based events of the FALSE build - which fire
-		// by time regardless of the rpm flap.
+		// by time regardless of the rpm flap. The refresh still runs on this
+		// tooth (below) so the armed events keep tracking the true speed
+		// through the storm.
+#if EFI_ANGLE_CLOCK
+		angleClockRefresh();
+#endif // EFI_ANGLE_CLOCK
 
 		// todo: check for 'trigger->is_synchnonized?'
 		return;
@@ -360,25 +391,6 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_
 	engine->engineModules.apply_all([=](auto & m) {
 		m.onEnginePhase(rpm, edgeTimestamp, currentPhase, nextPhase);
 	});
-
-#if EFI_ANGLE_CLOCK
-	{
-		// Angle->time basis for this tooth's arming and the per-tooth
-		// refresh: the 90-degree-window rpm average (oneDegreeUs) - the SAME
-		// basis the proven time-based path converts angles with. During
-		// spin-up oneDegreeUs is the InstantRpmCalculator's ~90-degree tooth
-		// window (calculateInstantRpm hunts the tooth ~90 deg back), when
-		// running it is the full-cycle average - both smooth. The per-tooth
-		// basis (toothDurations[0]) was tried and rejected: at cranking the
-		// compression oscillation makes a single tooth a 2-3x-stretched
-		// predictor, so the armed fire landed ~3-12 deg late, the
-		// charge-anchored rescue discharged first (C935x) and the
-		// first-combustion kick broke the gap ratio (C9002). oneDegreeUs is
-		// valid here: the rpm==0 gate above already returned.
-		angleClockOnTooth(edgeTimestamp, currentPhase, engine->engineState.engineCycle,
-			US2NT(engine->rpmCalculator.oneDegreeUs));
-	}
-#endif // EFI_ANGLE_CLOCK
 
 	/**
 	 * For fuel we schedule start of injection based on trigger angle, and then inject for
