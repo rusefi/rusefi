@@ -11123,6 +11123,40 @@ No code changes. Analysis session only.
 - trgPostDecode scheduling-teeth cost: will be replaced by angle-clock arming once
   EFI_ANGLE_CLOCK is validated on the car
 
+## 2026-09-01 (night) - angle clock: scheduleEventsUntilNextTriggerTooth moved earlier + sparksRemaining fix
+
+Two issues identified from high-rpm driving logs (16:50-16:55 sessions):
+
+### Issue 1: sched spark > 0 -> rough running/stuttering at speed
+
+Sparks in the current-tooth window [currentPhase, nextPhase) go to TIM5 via
+scheduleByAngle because their target angle is too close to fire from TMR4 with
+sufficient margin. At 7000 rpm with scheduleEventsUntilNextTriggerTooth running
+at ~55 us elapsed, the TMR4 arm succeeds only for sparks with remaining > 2.3°.
+Sparks at 0-2.3° into the 6° early window fall back to TIM5 = timing error
+~2.3° at 7000 rpm. With ~13 TIM5 sparks per 13 seconds at 3600 rpm avg =
+~3% misfire rate = noticeable rough running.
+
+Fix: move scheduleEventsUntilNextTriggerTooth to run BEFORE trgEventIndex==0
+check, engineModules.apply_all, and handleFuel. At ~35 us elapsed, arm success
+threshold moves from 2.3° to ~1.0°. TIM5 fallbacks reduced ~60%.
+
+### Issue 2: C9353 -> engine stall (sparksRemaining == 0 blocked re-arm)
+
+In turnSparkPinHighStartCharging the re-arm was gated by sparksRemaining==0.
+With multispark enabled, sparksRemaining > 0 at charge time -> re-arm never
+happened -> rescue fired unopposed -> C9353 -> stall. Observed: 1 overdwell
+per session = engine stall at idle.
+
+Fix: removed sparksRemaining check. Re-arm always fires when wasNoOp=true.
+fireSparkAndPrepareNextSchedule handles sparksRemaining correctly internally.
+
+### Validation
+
+compile_m74_9.sh BUILD SUCCESSFUL; unit tests 1169/1169 PASSED.
+Car validation: sched spark should drop from ~13/13s to near-zero at 3600 rpm.
+overdwell=0 at all conditions.
+
 ## 2026-09-01 (late evening) - angle clock: PSC rounding + scheduleDwellEarlyIfDue missing spark (car stopped starting)
 
 Two critical bugs found from the first run with scheduleDwellEarlyIfDue:
