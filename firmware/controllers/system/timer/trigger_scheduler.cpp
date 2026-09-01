@@ -155,12 +155,24 @@ void TriggerScheduler::scheduleEventsUntilNextTriggerTooth(float rpm,
 			// [tag:overdwell]
 			engine->scheduler.cancel(sDown);
 
+#if EFI_ANGLE_CLOCK
+			// Current-tooth spark: try TMR4 first. With scheduleEventsUntilNextTriggerTooth
+			// now running at ~8 µs elapsed (before scheduleDwellEarlyIfDue), the arm
+			// succeeds for remaining > 0.5° at 7000 rpm. Only sparks right at the
+			// tooth edge (remaining < 0.5°) still fall back to TIM5.
+			if (!angleClockArmSpark(current->cylinderIndex, current->getAngle(),
+								current->action, currentPhase, nextPhase)) {
+				scheduleByAngle(sDown, edgeTimestamp,
+							  current->getAngleFromNow(currentPhase), current->action);
+			}
+#else
 			scheduleByAngle(
 				sDown,
 				edgeTimestamp,
 				current->getAngleFromNow(currentPhase),
 				current->action
 			);
+#endif // EFI_ANGLE_CLOCK
 #if EFI_ANGLE_CLOCK
 	} else if (nextNextPhase != nextPhase && current->shouldSchedule(nextPhase, nextNextPhase)) {
 		// Due during the NEXT tooth: arm it on the hardware angle clock
