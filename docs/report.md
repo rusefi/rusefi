@@ -11123,6 +11123,29 @@ No code changes. Analysis session only.
 - trgPostDecode scheduling-teeth cost: will be replaced by angle-clock arming once
   EFI_ANGLE_CLOCK is validated on the car
 
+## 2026-09-01 (night 2) - angle clock: minimize spark arm elapsed + TMR4 for current-tooth
+
+From 18:32-18:33 driving logs: sched spark=22-40 per 65 seconds causing stuttering.
+Analysis:
+- Block 3 (3290 rpm, 1 second): sched spark=0, maxLateUs=23 us, immediate=3 -> perfect.
+- Blocks 1-2 (mixed rpm, 65-80 seconds): sched spark=22-40, immediate=172-236.
+
+Root cause: spark arm elapsed was ~35 us (after scheduleDwellEarlyIfDue). At 7000 rpm
+this gives threshold remaining > 1.0 deg from the 6 deg early window. PLUS: current-tooth
+sparks (in [currentPhase, nextPhase)) always went to TIM5 unconditionally.
+
+Fix 1: move scheduleEventsUntilNextTriggerTooth BEFORE scheduleDwellEarlyIfDue.
+Elapsed at spark arm: ~8 us. Threshold: remaining > 0.5 deg at 7000 rpm.
+
+Fix 2: in current-tooth window path, try angleClockArmSpark first, TIM5 only if
+arm fails. At 8 us elapsed: ~92% of current-tooth sparks arm on TMR4.
+Only sparks within 0.5 deg of the tooth edge remain on TIM5.
+
+Expected: sched spark drops from 22-40/65s to near-zero at all rpm.
+overdwell=0 (sparksRemaining fix from prior commit).
+
+Validation: BUILD SUCCESSFUL; unit tests 1169/1169 PASSED.
+
 ## 2026-09-01 (night) - angle clock: scheduleEventsUntilNextTriggerTooth moved earlier + sparksRemaining fix
 
 Two issues identified from high-rpm driving logs (16:50-16:55 sessions):
