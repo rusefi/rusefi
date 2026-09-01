@@ -238,7 +238,13 @@ void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 	// again trips the out-of-order coil-off warning and a second
 	// prepareCylinderIgnitionSchedule would double-arm the next cycle's
 	// dwell (single-writer contract).
+	// Also handles the ordering-bug no-op: at high rpm the TIM5 dwell fires
+	// AFTER the TMR4 spark CCR, so sparkFiredSinceCharge=true (from the
+	// previous cycle) makes this call a no-op on an uncharged coil. We record
+	// that the no-op happened so turnSparkPinHighStartCharging can re-arm the
+	// spark when the dwell finally starts (C9353 fix).
 	if (event->sparkFiredSinceCharge) {
+		event->sparkFiredNoOpBeforeDwell = true;
 		return;
 	}
 #endif // EFI_ANGLE_CLOCK
@@ -421,6 +427,10 @@ void turnSparkPinHighStartCharging(IgnitionEvent *event) {
 
 #if EFI_ANGLE_CLOCK
 	// A new charge begins: re-arm the rescue idempotency for this charge.
+	// Capture and clear the no-op flag BEFORE resetting sparkFiredSinceCharge
+	// so we can detect the ordering-bug case (see below).
+	const bool wasNoOp = event->sparkFiredNoOpBeforeDwell;
+	event->sparkFiredNoOpBeforeDwell = false;
 	event->sparkFiredSinceCharge = false;
 
 	// Anchor the overdwell rescue at the ACTUAL charge moment, at 2.5x the
@@ -437,6 +447,21 @@ void turnSparkPinHighStartCharging(IgnitionEvent *event) {
 	if (event->sparksRemaining == 0) {
 		efitick_t fireTime = sumTickAndFloat(nowNt, MSF2NT(2.5f * event->sparkDwell));
 		engine->scheduler.schedule("overdwell", &event->dwellStartTimer, fireTime, action_s::make<overFireSparkAndPrepareNextSchedule>( event ));
+	}
+
+	// Ordering-bug fix (high-rpm TIM5-dwell path): at >4000 rpm the TMR2 dwell
+	// arm fails and falls back to TIM5. TIM5 fires dwell AFTER the TMR4 spark
+	// CCR, so fireSparkAndPrepareNextSchedule no-ops (sparkFiredSinceCharge=true
+	// from the previous cycle) and sets sparkFiredNoOpBeforeDwell. Now that the
+	// dwell has actually started we have no pending TMR4 event for this cycle's
+	// spark - re-arm it on TIM5 at sparkDwell from the actual charge start.
+	// Without this the rescue fires at 2.5x dwell with no spark to cancel it
+	// (the C9353 overcharge). sparkEvent.eventScheduling is free: the TMR4
+	// channel was released when it no-op'd and no TIM5 fallback was pending.
+	if (wasNoOp && event->sparksRemaining == 0) {
+		efitick_t sparkTime = sumTickAndFloat(nowNt, MSF2NT(event->sparkDwell));
+		engine->scheduler.schedule("spark_rearm", &event->sparkEvent.eventScheduling,
+								 sparkTime, action_s::make<fireSparkAndPrepareNextSchedule>( event ));
 	}
 #endif // EFI_ANGLE_CLOCK
 
@@ -839,6 +864,70 @@ void onTriggerEventSparkLogic(float rpm, efitick_t edgeTimestamp, float currentP
 		}
 	}
 }
+
+#if EFI_ANGLE_CLOCK
+/**
+ * Arms dwell starts on TMR2 for cylinders whose dwellAngle falls in the
+ * [nextPhase, nextNextPhase) early window. Called at the BEGINNING of
+ * mainTriggerCallback (before handleFuel), when only ~20-30 µs has elapsed
+ * since the tooth edge. This gives the arm check enough future margin even
+ * at 7000 rpm (6° = 143 µs >> 30 µs elapsed here, vs the arm always failing
+ * at the end of onTriggerEventSparkLogic where elapsed reaches ~250 µs).
+ *
+ * If the arm fails here (very unlikely at normal rpm), dwellStartArmed stays
+ * false and onTriggerEventSparkLogic retries via the scheduleNow TIM5 path.
+ */
+void scheduleDwellEarlyIfDue(efitick_t edgeTimestamp,
+                                               float currentPhase,
+                                               float nextPhase,
+                                               float nextNextPhase) {
+    UNUSED(edgeTimestamp);
+    if (!engine->ignitionEvents.isReady) {
+        return;
+    }
+    // Duplicate-angle guard (same as in onTriggerEventSparkLogic): on
+    // useOnlyRisingEdges wheels the early window is meaningful only when
+    // nextNextPhase != nextPhase.
+    if (nextNextPhase == nextPhase) {
+        return;
+    }
+
+    const floatms_t dwellMs = engine->ignitionState.getDwell();
+    if (std::isnan(dwellMs) || dwellMs <= 0) {
+        return;
+    }
+
+    LimpState limitedSparkState = getLimpManager()->allowIgnition();
+    const bool limitedSpark = !limitedSparkState.value;
+    if (limitedSpark) {
+        return;  // spark cut: no dwell needed
+    }
+
+    for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
+        IgnitionEvent* event = &engine->ignitionEvents.elements[i];
+        if (event->dwellStartArmed) {
+            continue;  // already armed this cycle
+        }
+        const angle_t dwellAngle = event->dwellAngle;
+        if (std::isnan(dwellAngle)) {
+            continue;
+        }
+        if (!isPhaseInRange(dwellAngle, nextPhase, nextNextPhase)) {
+            continue;  // not in the early window
+        }
+        // Arm on TMR2 while handoff elapsed is only ~20-30 µs.
+        // The arm margin at 7000 rpm: delay(6°) = 571 ticks = 143 µs,
+        // elapsed = 120 ticks = 30 µs -> margin = 451 ticks >> ARM_MARGIN.
+        if (angleClockArmDwell(event->cylinderIndex, dwellAngle,
+                               action_s::make<turnSparkPinHighStartCharging>(event),
+                               currentPhase, nextPhase)) {
+            event->dwellStartArmed = true;
+        }
+        // Arm failure: leave dwellStartArmed=false; onTriggerEventSparkLogic
+        // will schedule the dwell on TIM5 via the scheduleNow path.
+    }
+}
+#endif // EFI_ANGLE_CLOCK
 
 /**
  * Number of sparks per physical coil

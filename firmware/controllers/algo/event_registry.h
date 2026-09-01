@@ -88,6 +88,12 @@ public:
 	// of the same coil-off, and only the first may act (a double fire would
 	// double-run prepareCylinderIgnitionSchedule).
 	bool sparkFiredSinceCharge = false;
+
+	// Set when fireSparkAndPrepareNextSchedule is called as a no-op (coil was
+	// not charged yet - ordering issue: TMR4 fire arrived before TIM5 dwell).
+	// Cleared at the start of the next charge. When set, turnSparkPinHighStartCharging
+	// re-arms the spark on TIM5 so the rescue does not win (C9353 fix).
+	bool sparkFiredNoOpBeforeDwell = false;
 #endif // EFI_ANGLE_CLOCK
 
 	/**
