@@ -11123,6 +11123,43 @@ No code changes. Analysis session only.
 - trgPostDecode scheduling-teeth cost: will be replaced by angle-clock arming once
   EFI_ANGLE_CLOCK is validated on the car
 
+## 2026-09-01 (night 3) - angle clock: arm spark from actual charge time + inj arm earlier
+
+### Fix 1: wasNoOp root cause found + eliminated
+
+Root cause of 64 wasNoOp cycles per session (TMR4 firing before TMR2 dwell):
+During rapid acceleration (e.g., 800->5000 rpm), the angle-queue spark was armed
+on TMR4 at tooth T+k with a HIGH-RPM basis (small delay = fires soon), while the
+TMR2 dwell CCR was set at tooth T-1 with a LOW-RPM basis (large delay = fires late).
+Because the "only earlier" refresh rule skips channels with remaining > MAX_LEAD_DEG
+(the dwell angle appears "far away" after a rapid rpm jump), the dwell CCR was never
+re-anchored to match the current speed. TMR4 fired before TMR2.
+
+Fix: new function angleClockArmSparkFromNow(cyl, nowNt, delayNt, action). Called from
+turnSparkPinHighStartCharging AFTER the coil starts charging. Steps:
+1. angleClockCancelSpark(cyl) - cancel stale angle-queue TMR4 arm
+2. engine->scheduler.cancel(sparkEvent.eventScheduling) - cancel TIM5 fallback
+3. angleClockArmSparkFromNow at nowNt + sparkDwell_ns (or TIM5 fallback)
+Sentinel targetAngle=780.0f prevents refresh from re-anchoring time-domain arms
+(780 > cycleDeg(720) + MAX_LEAD_DEG(30) = 750, so refresh always skips).
+
+Removed sparkFiredNoOpBeforeDwell mechanism (no longer needed).
+
+Results (19:07-19:31 sessions): sched spark=0 at ALL rpm incl 6000+.
+dwell==spark (±14 from residual no-op pre-fires at very rapid accel, harmless).
+overdwell=0, no C9353.
+
+### Fix 2: injection arm earlier (handleFuel before scheduleDwellEarlyIfDue)
+
+Moved handleFuel BEFORE scheduleDwellEarlyIfDue in mainTriggerCallback.
+Injection arm elapsed: ~13 µs (was ~35 µs). Threshold at 7000 rpm:
+remaining > 0.72° (was 1.64°). inj lateArm reduced ~30% (0.33-0.38% vs 0.47%).
+
+### Validation
+
+BUILD SUCCESSFUL; unit tests 1169/1169 PASSED.
+Car session 19:07-19:31 (6000+ rpm, long drive): sched spark=0, overdwell=0.
+
 ## 2026-09-01 (night 2) - angle clock: minimize spark arm elapsed + TMR4 for current-tooth
 
 From 18:32-18:33 driving logs: sched spark=22-40 per 65 seconds causing stuttering.
