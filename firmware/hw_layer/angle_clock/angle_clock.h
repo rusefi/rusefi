@@ -68,6 +68,15 @@ bool angleClockArmDwell(int cylinderIndex, float targetAngle, action_s action,
 bool angleClockArmSpark(int cylinderIndex, float targetAngle, action_s action,
                          float callerPhase, float callerNextPhase);
 
+// Arm the spark-fire channel for `cylinderIndex` on TMR4 directly from an
+// NT timestamp + delay. Used by turnSparkPinHighStartCharging to guarantee
+// the spark fires AFTER the coil is charged, regardless of the rpm basis
+// used when the dwell was armed. The targetAngle sentinel (780 deg) makes
+// the per-tooth refresh skip this channel (780 > cycleDeg + MAX_LEAD_DEG).
+// Returns false (caller falls back to TIM5) when the delay is too small.
+bool angleClockArmSparkFromNow(int cylinderIndex, efitick_t nowNt,
+                                uint32_t delayNt, action_s action);
+
 // Arm the injection-start channel for `cylinderIndex` on TMR3 (16-bit).
 bool angleClockArmInjection(int cylinderIndex, float targetAngle, action_s action,
                               float callerPhase, float callerNextPhase);

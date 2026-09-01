@@ -244,7 +244,9 @@ TRIGGER_RAM_CODE void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 	// that the no-op happened so turnSparkPinHighStartCharging can re-arm the
 	// spark when the dwell finally starts (C9353 fix).
 	if (event->sparkFiredSinceCharge) {
-		event->sparkFiredNoOpBeforeDwell = true;
+		// Coil not charged yet (angle-queue TMR4 arm fired before TMR2 dwell
+		// during rapid acceleration). The dwell ISR will arm the spark via
+		// angleClockArmSparkFromNow when the coil is actually charged.
 		return;
 	}
 #endif // EFI_ANGLE_CLOCK
@@ -426,48 +428,34 @@ TRIGGER_RAM_CODE void turnSparkPinHighStartCharging(IgnitionEvent *event) {
   if (!skippedDwellDueToTriggerNoised) {
 
 #if EFI_ANGLE_CLOCK
-	// A new charge begins: re-arm the rescue idempotency for this charge.
-	// Capture and clear the no-op flag BEFORE resetting sparkFiredSinceCharge
-	// so we can detect the ordering-bug case (see below).
-	const bool wasNoOp = event->sparkFiredNoOpBeforeDwell;
-	event->sparkFiredNoOpBeforeDwell = false;
+	// New charge: clear the spark-fired-since-charge flag.
 	event->sparkFiredSinceCharge = false;
 
-	// Anchor the overdwell rescue at the ACTUAL charge moment, at 2.5x the
-	// planned dwell (not 1.5x): a fire that is merely LATE by up to ~1.5x
-	// dwell (the catch's oneDegreeUs 90-degree-window lag) must still WIN -
-	// at 1.5x the rescue discharged first (C935x) and the rescue's
-	// wrong-angle spark + cancelled fire broke the first-combustion sync.
-	// 2.5x never beats a fire that fires within 1.5x dwell of the intended
-	// moment, and still bounds a genuinely lost/stuck fire (desync refusal)
-	// at 2.5x dwell. Multispark restrikes have no rescue (their fire is
-	// time-scheduled) - the dwellStartTimer struct is also reused by the
-	// restrike scheduling, so the rescue is armed only for the final charge
-	// of the cycle.
+	// Anchor overdwell rescue at ACTUAL charge moment (2.5x planned dwell).
 	if (event->sparksRemaining == 0) {
 		efitick_t fireTime = sumTickAndFloat(nowNt, MSF2NT(2.5f * event->sparkDwell));
 		engine->scheduler.schedule("overdwell", &event->dwellStartTimer, fireTime, action_s::make<overFireSparkAndPrepareNextSchedule>( event ));
 	}
 
-	// Ordering-bug fix (high-rpm TIM5-dwell path): at >4000 rpm the TMR2 dwell
-	// arm fails and falls back to TIM5. TIM5 fires dwell AFTER the TMR4 spark
-	// CCR, so fireSparkAndPrepareNextSchedule no-ops (sparkFiredSinceCharge=true
-	// from the previous cycle) and sets sparkFiredNoOpBeforeDwell. Now that the
-	// dwell has actually started we have no pending TMR4 event for this cycle's
-	// spark - re-arm it on TIM5 at sparkDwell from the actual charge start.
-	// Without this the rescue fires at 2.5x dwell with no spark to cancel it
-	// (the C9353 overcharge). sparkEvent.eventScheduling is free: the TMR4
-	// channel was released when it no-op'd and no TIM5 fallback was pending.
-	// The sparksRemaining check is intentionally ABSENT: with multispark enabled
-	// sparksRemaining > 0 is normal, and skipping the re-arm meant the rescue
-	// always won (C9353 + stall confirmed on the car 2026-09-01). The re-arm
-	// fires the main spark, prepareCylinderIgnitionSchedule runs normally, and
-	// multispark restrikes that were already on TIM5 via dwellStartTimer proceed
-	// unaffected.
-	if (wasNoOp) {
-		efitick_t sparkTime = sumTickAndFloat(nowNt, MSF2NT(event->sparkDwell));
-		engine->scheduler.schedule("spark_rearm", &event->sparkEvent.eventScheduling,
-								 sparkTime, action_s::make<fireSparkAndPrepareNextSchedule>( event ));
+	// Arm the spark from the ACTUAL charge moment on TMR4 (or TIM5 fallback).
+	// Root cause of wasNoOp cycles: during rapid acceleration the spark was
+	// armed at tooth T+k with a high-rpm basis while the dwell CCR was set at
+	// tooth T-1 with a low-rpm basis. TMR4 fired first (coil uncharged) ->
+	// no-op -> dwell fired -> TIM5 re-arm. The fix: always arm the spark HERE
+	// (after TMR2 has fired the dwell), with delay = sparkDwell from nowNt.
+	// This guarantees the coil is always charged before the spark fires.
+	// Cancel any stale angle-queue TMR4 arm first (it may carry the wrong basis);
+	// if it already fired as a no-op the channel is already free.
+	angleClockCancelSpark(event->cylinderIndex);
+	engine->scheduler.cancel(&event->sparkEvent.eventScheduling);
+	{
+		const uint32_t delayNt = static_cast<uint32_t>(MSF2NT(event->sparkDwell));
+		const efitick_t sparkTime = sumTickAndFloat(nowNt, static_cast<float>(delayNt));
+		if (!angleClockArmSparkFromNow(event->cylinderIndex, nowNt, delayNt,
+									  action_s::make<fireSparkAndPrepareNextSchedule>(event))) {
+			engine->scheduler.schedule("spark", &event->sparkEvent.eventScheduling,
+									   sparkTime, action_s::make<fireSparkAndPrepareNextSchedule>(event));
+		}
 	}
 #endif // EFI_ANGLE_CLOCK
 

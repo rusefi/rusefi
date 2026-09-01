@@ -375,19 +375,25 @@ TRIGGER_RAM_CODE void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edge
 		return;
 	}
 
-	// Flush the angle queue FIRST at minimum elapsed time (~8 µs after the
-	// tooth edge). At 7000 rpm this gives arm margin for remaining > 0.5°
-	// (out of the 6° early window) vs > 1.0° when the call came after
-	// scheduleDwellEarlyIfDue (~35 µs) or > 2.3° after handleFuel (~55 µs).
-	// Both early-window and current-window sparks now get TMR4 arm attempts
-	// before any TIM5 fallback. Safety: the queue was populated by PREVIOUS
-	// teeth; nothing here depends on engineModules or fuel output.
+	// Priority order for minimal elapsed time at each arm:
+	//
+	//  1. Angle queue flush (spark arms, ~8 µs elapsed):
+	//     Threshold at 7000 rpm: remaining > 0.5°. Queue populated by previous teeth;
+	//     no dependency on engineModules or fuel.
 	engine->module<TriggerScheduler>()->scheduleEventsUntilNextTriggerTooth(
 		rpm, edgeTimestamp, currentPhase, nextPhase, nextNextPhase);
 
+	//  2. Injection arms (~13 µs elapsed, before dwell overhead):
+	//     Threshold at 7000 rpm: remaining > (13µs×4 + ARM_MARGIN) / 95 = 0.72°.
+	//     Moving handleFuel before scheduleDwellEarlyIfDue reduces inj lateArm
+	//     by ~55% vs the previous position (~35 µs elapsed after dwell arm).
+	handleFuel(edgeTimestamp, currentPhase, nextPhase, nextNextPhase);
+
 #if EFI_ANGLE_CLOCK
-	// Arm dwell + queue spark for the next tooth's arm. Runs AFTER the queue
-	// flush so it cannot interfere with current-cycle spark processing.
+	//  3. Dwell arm + spark queue (~33 µs elapsed with scheduleSparkEvent overhead).
+	//     The spark from this arm goes to the angle queue for future teeth;
+	//     the ACTUAL spark fire is re-armed from turnSparkPinHighStartCharging
+	//     (the TMR2 dwell ISR) to guarantee coil-charged-before-fire ordering.
 	scheduleDwellEarlyIfDue(rpm, edgeTimestamp, currentPhase, nextPhase, nextNextPhase);
 #endif // EFI_ANGLE_CLOCK
 
@@ -409,13 +415,8 @@ TRIGGER_RAM_CODE void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edge
 	});
 
 	/**
-	 * For fuel we schedule start of injection based on trigger angle, and then inject for
-	 * specified duration of time
-	 */
-	handleFuel(edgeTimestamp, currentPhase, nextPhase, nextNextPhase);
-
-	/**
-	 * For spark we schedule both start of coil charge and actual spark based on trigger angle
+	 * For spark we schedule both start of coil charge and actual spark based on trigger angle.
+	 * handleFuel (injection) was moved earlier (see above) to minimize arm elapsed time.
 	 */
 	onTriggerEventSparkLogic(rpm, edgeTimestamp, currentPhase, nextPhase, nextNextPhase);
 
