@@ -8,6 +8,10 @@
 
 #if EFI_ENGINE_CONTROL
 
+#if EFI_ANGLE_CLOCK
+#include "angle_clock.h"
+#endif
+
 void turnInjectionPinHigh(scheduler_arg_t const arg) {
 	auto const nowNt{ getTimeNowNt() };
 
@@ -28,6 +32,24 @@ void turnInjectionPinHigh(scheduler_arg_t const arg) {
 			}
 		}
 	}
+
+#if EFI_ANGLE_CLOCK
+	// Cancel the pre-scheduled TIM5 injection close (anchored to nominal start
+	// time) and re-arm TMR3 from the ACTUAL opening moment. This ensures the
+	// pulse width is always measured from the real injector open event,
+	// regardless of any START timing offset (TIM5 batch latency on lateArm).
+	engine->scheduler.cancel(&event->injectionEndStage1);
+
+	const action_s closeAction = action_s::make<turnInjectionPinLow>(event);
+	const uint32_t delayNt = event->injectionEndDelayNt;
+	const efitick_t closeTime = sumTickAndFloat(nowNt, static_cast<float>(delayNt));
+
+	if (!angleClockArmInjectionFromNow(event->getCylinderNumber(), nowNt, delayNt, closeAction)) {
+		// TMR3 arm failed (delay < ARM_MARGIN): fall back to TIM5
+		engine->scheduler.schedule("inj_close", &event->injectionEndStage1,
+								   closeTime, closeAction);
+	}
+#endif // EFI_ANGLE_CLOCK
 }
 
 FuelSchedule::FuelSchedule() {

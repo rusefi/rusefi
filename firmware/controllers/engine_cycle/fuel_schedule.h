@@ -42,6 +42,9 @@ private:
 	bool isSimultaneous = false;
 	uint8_t ownIndex = 0;
 	uint8_t cylinderNumber = 0;
+public:
+	uint8_t getCylinderNumber() const { return cylinderNumber; }
+private:
 
 	WallFuel wallFuel{};
 
@@ -60,9 +63,23 @@ public:
 	// the pre-existing behavior schedules with the stale angle.
 	bool injectionStartArmed = false;
 	efitick_t injectionStartArmedAt = 0;
+
+#if EFI_ANGLE_CLOCK
+	// Cancellable TIM5 slot for the injection END (stage 1 closing pulse).
+	// Populated with a real slot (not nullptr) so turnInjectionPinHigh can
+	// cancel the pre-scheduled TIM5 close and re-arm via
+	// angleClockArmInjectionFromNow at the actual opening moment.
+	scheduling_s injectionEndStage1;
+
+	// Injection close delay in NT ticks (= US2NT(durationUsStage1)), stored
+	// by onTriggerTooth so turnInjectionPinHigh can re-arm TMR3 without
+	// recomputing the duration from sensor data in ISR context.
+	uint32_t injectionEndDelayNt = 0;
+#endif // EFI_ANGLE_CLOCK
 };
 
 void turnInjectionPinHigh(scheduler_arg_t arg);
+void turnInjectionPinLow(InjectionEvent *event);
 
 
 /**
