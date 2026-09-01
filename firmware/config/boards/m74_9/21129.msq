@@ -721,7 +721,7 @@
         <constant cols="8" digits="2" name="cltIdleCorrTable" rows="16" units="%">
          38.0 34.0 28.0 23.0 21.0 21.0 22.0 22.0
          29.9 25.9 19.9 15.0 15.0 14.0 14.0 14.0
-         28.8 24.8 18.8 14.0 14.0 13.0 13.0 13.0
+         28.8 24.8 18.8 15.0 15.0 14.0 14.0 14.0
          34.7 30.7 24.7 19.7 17.7 17.7 19.7 19.7
          32.6 28.6 22.6 17.6 15.6 15.6 17.6 17.6
          33.5 29.5 23.5 18.5 16.5 16.5 18.5 18.5
@@ -1082,7 +1082,7 @@
         <constant name="etbIo2_disablePin">"NONE"</constant>
         <constant digits="0" name="etbJamDetectThreshold" units="%">10</constant>
         <constant digits="2" name="etbJamTimeout" units="sec">0.0</constant>
-        <constant digits="0" name="etbMaximumPosition" units="%">100</constant>
+        <constant digits="0" name="etbMaximumPosition" units="%">90</constant>
         <constant digits="1" name="etbMinimumPosition" units="%">1.0</constant>
         <constant digits="0" name="etbNeutralPosition" units="%">0</constant>
         <constant digits="0" name="etbRevLimitRange" units="rpm">250</constant>
@@ -1098,7 +1098,7 @@
         <constant digits="4" name="etbWastegatePid_pFactor" units="">1.0</constant>
         <constant name="externalRusEfiGdiModule">"no"</constant>
         <constant digits="0" name="fan1AcAdder" units="%">10</constant>
-        <constant digits="0" name="fan1ExtraIdle" units="%">5</constant>
+        <constant digits="0" name="fan1ExtraIdle" units="%">1</constant>
         <constant digits="0" name="fan1MaxPwm" units="%">100</constant>
         <constant digits="0" name="fan1MinPwm" units="%">3</constant>
         <constant name="fan1PwmEnabled">"no"</constant>
@@ -1125,11 +1125,11 @@
          110
 </constant>
         <constant digits="0" name="fan2AcAdder" units="%">10</constant>
-        <constant digits="0" name="fan2ExtraIdle" units="%">5</constant>
+        <constant digits="0" name="fan2ExtraIdle" units="%">1</constant>
         <constant digits="0" name="fan2MaxPwm" units="%">100</constant>
         <constant digits="0" name="fan2MinPwm" units="%">5</constant>
-        <constant digits="0" name="fan2OffTemperature" units="C">94</constant>
-        <constant digits="0" name="fan2OnTemperature" units="C">96</constant>
+        <constant digits="0" name="fan2OffTemperature" units="C">96</constant>
+        <constant digits="0" name="fan2OnTemperature" units="C">98</constant>
         <constant name="fan2Pin">"FAN 2 relay"</constant>
         <constant name="fan2PinMode">"default"</constant>
         <constant name="fan2PwmEnabled">"no"</constant>
@@ -1155,8 +1155,8 @@
          110
          115
 </constant>
-        <constant digits="0" name="fanOffTemperature" units="C">95</constant>
-        <constant digits="0" name="fanOnTemperature" units="C">97</constant>
+        <constant digits="0" name="fanOffTemperature" units="C">97</constant>
+        <constant digits="0" name="fanOnTemperature" units="C">99</constant>
         <constant name="fanPin">"FAN 1 relay"</constant>
         <constant name="fanPinMode">"default"</constant>
         <constant digits="2" name="finalGearRatio" units="ratio">1.0</constant>
@@ -1867,13 +1867,13 @@
         <constant name="idle_stepperDirectionPin">"NONE"</constant>
         <constant name="idle_stepperStepPin">"NONE"</constant>
         <constant cols="1" digits="1" name="idleAdvance" rows="8" units="deg">
-         21.0
-         34.0
-         32.0
-         30.0
+         40.0
          28.0
          26.0
+         24.0
+         22.0
          20.0
+         19.0
          18.0
 </constant>
         <constant cols="1" digits="0" name="idleAdvanceBins" rows="8" units="RPM">
@@ -2185,7 +2185,7 @@
          40
          60
 </constant>
-        <constant digits="1" name="ignitionDwellForCrankingMs" units="ms">5.5</constant>
+        <constant digits="1" name="ignitionDwellForCrankingMs" units="ms">3.0</constant>
         <constant cols="1" digits="0" name="ignitionIatCorrLoadBins" rows="8" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">
          0
          20
@@ -2269,22 +2269,22 @@
          7000
 </constant>
         <constant cols="16" digits="1" name="ignitionTable" rows="16" units="deg">
-         32.4 33.5 37.0 39.8 40.8 41.6 42.5 42.4 42.2 42.0 42.1 42.1 42.6 42.8 42.9 43.3
-         30.6 29.2 31.9 35.1 35.4 36.3 37.5 36.9 36.1 35.2 34.9 34.7 34.9 35.7 36.8 41.2
-         27.0 25.7 27.8 30.6 32.2 33.4 34.8 34.6 33.7 32.9 32.9 32.7 32.9 33.6 34.6 39.5
-         23.4 22.5 24.5 27.3 29.6 30.8 32.4 32.3 31.4 31.4 31.8 31.7 31.8 32.4 32.9 37.5
-         20.3 20.2 22.1 24.6 27.6 29.2 30.4 30.7 30.4 30.6 31.1 31.1 31.3 31.7 32.2 35.9
-         19.0 19.0 20.3 23.0 26.0 28.0 29.3 29.7 29.6 30.0 30.4 30.6 31.0 31.4 31.8 35.3
-         18.5 18.5 19.3 21.9 24.9 26.8 28.6 28.9 29.2 29.5 29.8 30.2 30.7 31.2 31.6 34.7
-         18.0 18.0 18.6 21.2 24.2 26.2 28.0 28.6 28.7 28.9 29.5 29.9 30.4 30.9 31.3 34.1
-         17.5 17.5 18.0 20.0 23.7 25.6 27.4 28.3 28.4 28.8 29.2 29.7 30.2 30.8 31.3 33.7
-         17.0 17.0 18.0 20.0 23.1 24.9 27.2 28.0 28.4 28.8 29.2 29.7 30.2 30.7 31.2 33.4
-         16.0 16.5 18.0 20.0 22.6 24.5 27.0 27.9 28.4 28.8 29.2 29.6 30.0 30.5 31.1 33.1
-         15.0 16.0 18.0 20.0 22.1 24.2 26.8 27.9 28.4 28.5 28.9 29.3 29.7 30.1 30.8 33.0
-         15.0 16.0 18.0 20.0 21.6 23.7 26.5 27.7 28.0 28.2 28.6 28.9 29.2 29.7 30.6 33.0
-         15.0 16.0 18.0 20.0 20.7 22.9 25.9 27.3 27.6 27.7 28.0 28.1 28.5 29.2 30.1 33.0
-         15.0 16.0 18.0 20.0 19.7 22.1 25.2 26.7 26.9 27.0 27.2 27.4 27.8 28.4 29.4 33.0
-         15.0 16.0 18.0 20.0 18.7 20.5 24.0 25.8 26.3 26.2 26.5 26.8 27.1 27.8 28.8 33.0
+         30.4 31.5 35.0 37.8 38.8 39.6 40.5 40.4 40.2 40.0 40.1 40.1 40.6 40.8 40.9 41.3
+         28.6 27.2 29.9 33.1 33.4 34.3 35.5 34.9 34.1 33.2 32.9 32.7 32.9 33.7 34.8 39.2
+         25.0 23.7 25.8 28.6 30.2 31.4 32.8 32.6 31.7 30.9 30.9 30.7 30.9 31.6 32.6 37.5
+         21.4 20.5 22.5 25.3 27.6 28.8 30.4 30.3 29.4 29.4 29.8 29.7 29.8 30.4 30.9 35.5
+         18.3 18.2 20.1 22.6 25.6 27.2 28.4 28.7 28.4 28.6 29.1 29.1 29.3 29.7 30.2 33.9
+         17.0 17.0 18.3 21.0 24.0 26.0 27.3 27.7 27.6 28.0 28.4 28.6 29.0 29.4 29.8 33.3
+         16.5 16.5 17.3 19.9 22.9 24.8 26.6 26.9 27.2 27.5 27.8 28.2 28.7 29.2 29.6 32.7
+         16.0 16.0 16.6 19.2 22.2 24.2 26.0 26.6 26.7 26.9 27.5 27.9 28.4 28.9 29.3 32.1
+         15.5 15.5 16.0 18.0 21.7 23.6 25.4 26.3 26.4 26.8 27.2 27.7 28.2 28.8 29.3 31.7
+         15.0 15.0 16.0 18.0 21.1 22.9 25.2 26.0 26.4 26.8 27.2 27.7 28.2 28.7 29.2 31.4
+         14.0 14.5 16.0 18.0 20.6 22.5 25.0 25.9 26.4 26.8 27.2 27.6 28.0 28.5 29.1 31.1
+         13.0 14.0 16.0 18.0 20.1 22.2 24.8 25.9 26.4 26.5 26.9 27.3 27.7 28.1 28.8 31.0
+         13.0 14.0 16.0 18.0 19.6 21.7 24.5 25.7 26.0 26.2 26.6 26.9 27.2 27.7 28.6 31.0
+         13.0 14.0 16.0 18.0 18.7 20.9 23.9 25.3 25.6 25.7 26.0 26.1 26.5 27.2 28.1 31.0
+         13.0 14.0 16.0 18.0 17.7 20.1 23.2 24.7 24.9 25.0 25.2 25.4 25.8 26.4 27.4 31.0
+         13.0 14.0 16.0 18.0 16.7 18.5 22.0 23.8 24.3 24.2 24.5 24.8 25.1 25.8 26.8 31.0
 </constant>
         <constant name="ignKeyAdcChannel">"NONE"</constant>
         <constant digits="0" name="ignKeyAdcDivider" units="">0</constant>
@@ -2770,12 +2770,12 @@
          7000
 </constant>
         <constant cols="16" digits="{useLambdaOnInterface ? 2 : 1}" name="lambdaTable" rows="16" units="{useLambdaOnInterface ? &quot;lambda&quot; : &quot;afr&quot;}">
-         0.898 0.898 0.898 1.0 1.0 1.0 1.0 1.0 1.0 0.952 0.952 0.884 0.837 0.837 0.837 0.837
-         0.898 0.898 0.898 1.0 1.0 1.0 1.0 1.0 1.0 0.952 0.952 0.884 0.837 0.837 0.837 0.837
-         0.898 0.898 0.898 1.0 1.0 1.0 1.0 1.0 1.0 0.952 0.952 0.884 0.837 0.837 0.837 0.837
-         0.898 0.898 0.898 1.0 1.0 1.0 1.0 1.0 1.0 0.925 0.912 0.871 0.837 0.837 0.837 0.837
-         0.898 0.898 0.898 1.0 1.0 1.0 1.0 1.0 1.0 0.878 0.864 0.85 0.837 0.837 0.837 0.837
-         0.898 0.898 0.898 1.0 1.0 1.0 1.0 1.0 1.0 0.837 0.837 0.837 0.837 0.837 0.837 0.837
+         0.952 0.952 0.952 1.0 1.0 1.0 1.0 1.0 1.0 0.952 0.952 0.884 0.837 0.837 0.837 0.837
+         0.952 0.952 0.952 1.0 1.0 1.0 1.0 1.0 1.0 0.952 0.952 0.884 0.837 0.837 0.837 0.837
+         0.952 0.952 0.952 1.0 1.0 1.0 1.0 1.0 1.0 0.952 0.952 0.884 0.837 0.837 0.837 0.837
+         0.952 0.952 0.952 1.0 1.0 1.0 1.0 1.0 1.0 0.925 0.912 0.871 0.837 0.837 0.837 0.837
+         0.952 0.952 0.952 1.0 1.0 1.0 1.0 1.0 1.0 0.878 0.864 0.85 0.837 0.837 0.837 0.837
+         0.952 0.952 0.952 1.0 1.0 1.0 1.0 1.0 1.0 0.837 0.837 0.837 0.837 0.837 0.837 0.837
          1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 0.837 0.837 0.837 0.837 0.837 0.837 0.837
          0.98 0.98 0.98 0.98 0.98 0.98 0.966 0.966 0.966 0.837 0.837 0.837 0.837 0.837 0.837 0.837
          0.959 0.959 0.959 0.959 0.959 0.959 0.939 0.939 0.939 0.837 0.837 0.837 0.837 0.837 0.837 0.837
@@ -3324,9 +3324,9 @@
          0 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50
          0 60 60 60 60 60 60 60 60 60 60 60 60 60 60 60 60 60 60
          0 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70
-         0 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80
-         0 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90
-         0 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100
+         80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80
+         90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90
+         100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100
 </constant>
         <constant digits="0" name="pidExtraForLowRpm" units="%">20</constant>
         <constant cols="1" digits="0" name="postCrankingCLTBins" rows="6" units="{bitStringValue(unitsLabels, useMetricOnInterface)}">
@@ -3768,14 +3768,14 @@
          7000
 </constant>
         <constant cols="1" digits="2" name="sparkDwellValues" rows="8" units="ms">
-         4.0
-         4.0
-         4.0
-         4.0
-         4.0
-         4.0
-         4.0
-         4.0
+         3.0
+         3.0
+         2.0
+         2.0
+         2.0
+         2.0
+         2.0
+         2.0
 </constant>
         <constant digits="0" name="sparkHardwareLatencyCorrection" units="uS">0</constant>
         <constant name="speedometerOutputPin">"NONE"</constant>
@@ -5304,8 +5304,8 @@
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260829" nPages="1" signature="rusEFI maccan-tx-fix.2026.08.29.m74_9.169342258" version="5.0"/>
-    <bibliography author="rusEFI 20260829" writeDate="date"/>
+    <versionInfo firmwareInfo="20260821" nPages="1" signature="rusEFI maccan-tx-fix.2026.09.01.m74_9.943590548" version="5.0"/>
+    <bibliography author="rusEFI 20260821" writeDate="date"/>
     <settings/>
     <userComments/>
 </msq>
