@@ -568,7 +568,28 @@ All 4 windows fire every engine cycle; lockstats `startAveraging n ~= 4 x cycles
 - The engine sniffer would still show n/a for cylinders in the 2nd revolution (display issue unrelated to averager count).
 - **For 21129 shared plenum: marginal difference** (Map updated 2x instead of 4x per cycle; same pressure on all cylinders, so no practical fuel impact).
 - **For dual-bank engines**: significant - MapFast and MapFast2 now represent independent bank measurements, enabling per-bank LTFT or diagnostics.
-- **For true per-cylinder (4 separate averagers)**: requires adding MapFast3/MapFast4 SensorType values and 2 more MapAverager instances in init_map.cpp. Not implemented; SAMPLER_DIMENSION=2 is the current ceiling.
+- **For true per-cylinder (4 separate averagers)**: requires adding MapFast3/MapFast4 SensorType values and 2 more MapAverager instances in init_map.cpp. Not implemented; SAMPLER_DIMENSION=2 is the current ceiling. To implement: (1) add `MapFast3, MapFast4` to `firmware/controllers/sensors/sensor_type.h` after `MapFast2`; (2) add `static MapAverager fastMapSensor3(SensorType::MapFast3, ...)` and `fastMapSensor4(SensorType::MapFast4, ...)` to `firmware/init/sensor/init_map.cpp`; (3) update `getMapAvg()` to a 4-branch switch; (4) register both new sensors in `initMap()`; (5) update `SAMPLER_DIMENSION` from 2 to 4 in `map_averaging.h` - the `% SAMPLER_DIMENSION` in `startAveraging` then routes each cylinder to its own averager automatically.
+
+## Unit tests: 12 pre-existing failures to fix (as of 2026-09-01)
+
+These tests were failing before the MAP averaging change and are unrelated to it. All 12 are in the injection/trigger scheduling area - the EFI_ANGLE_CLOCK rework changed scheduler behavior that the tests don't yet account for:
+
+```
+miscRpmCalculator              - scheduler.size() expected 4, got 3
+engine.testPlainCrankingWithoutAdvancedFeatures
+big.testFuelSchedulerBug299smallAndMedium
+big.testFuelSchedulerBug299smallAndLarge
+cranking.testFasterEngineSpinningUp
+injectionScheduling.InjectionIsScheduled         - EXPECT_CALL schedule() never called
+injectionScheduling.InjectionIsScheduledDualStage
+injectionScheduling.InjectionIsScheduledBeforeWraparound
+injectionScheduling.InjectionIsScheduledAfterWraparound
+fuelControl.transitionIssue1592
+OddFireRunningMode.hd
+test_utils.assertEventExistsAtEnginePhase        - scheduler.size() expected 4, got 0
+```
+
+Root pattern: tests expect injection/spark events on TIM5 scheduler (`engine->scheduler.size()`) but under `EFI_ANGLE_CLOCK=TRUE` those events moved to TMR2/TMR3/TMR4 hardware comparators and no longer appear in the TIM5 queue. Fix: either run the tests with `EFI_ANGLE_CLOCK=FALSE` (guard the failing assertions) or update expected event counts and locations to account for the three-timer architecture. Do NOT disable these tests - fix the assertions.
 
 ## m74_9 / AT32F435: PB14 has NO plain PWM channel - ETB PWM uses TIM12_CH1
 
