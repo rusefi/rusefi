@@ -263,7 +263,16 @@ void initAngleClock() {
     const uint32_t acDelta = DWELL_TIMER->CNT - ac0;
     const uint32_t ntDelta = getTimeNowLowerNt() - nt0;
 
-    uint32_t newPsc = (72U * acDelta / ntDelta) - 1U;
+    // Round-half-up to nearest integer: (72*ac + nt/2) / nt - 1.
+    // Plain truncating division (72*ac/nt - 1) rounds DOWN, which when
+    // acDelta < ntDelta by even 1 tick (measurement noise) gives PSC=70
+    // instead of 71. With PSC=70, TMR2 runs 1.4% faster than NT (TIM5),
+    // the NT<->TMR2 offset drifts ~56 k ticks/s, and all arm checks fail
+    // after ~10 ms -> the car stops starting (angclk psc=70 was observed
+    // in the field, 2026-09-01). TMR2/3/4 share the same APB1 TIMCLK1 as
+    // TIM5, so with the same PSC the rates are identical; the measurement
+    // is only a safety net and must never overshoot by rounding error.
+    uint32_t newPsc = (72U * acDelta + ntDelta / 2U) / ntDelta - 1U;
     if (newPsc > 0xFFFFU) newPsc = 0xFFFFU;
 
     // Re-program all three with the measured PSC.

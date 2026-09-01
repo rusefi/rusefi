@@ -488,7 +488,7 @@ void turnSparkPinHighStartCharging(IgnitionEvent *event) {
 }
 
 
-static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
+void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 		float rpm, float dwellMs, float dwellAngle, float sparkAngle, efitick_t edgeTimestamp, float currentPhase, float nextPhase) {
 	UNUSED(rpm);
 #if EFI_ANGLE_CLOCK
@@ -867,29 +867,31 @@ void onTriggerEventSparkLogic(float rpm, efitick_t edgeTimestamp, float currentP
 
 #if EFI_ANGLE_CLOCK
 /**
- * Arms dwell starts on TMR2 for cylinders whose dwellAngle falls in the
- * [nextPhase, nextNextPhase) early window. Called at the BEGINNING of
- * mainTriggerCallback (before handleFuel), when only ~20-30 µs has elapsed
- * since the tooth edge. This gives the arm check enough future margin even
- * at 7000 rpm (6° = 143 µs >> 30 µs elapsed here, vs the arm always failing
- * at the end of onTriggerEventSparkLogic where elapsed reaches ~250 µs).
+ * Schedules the FULL spark event (dwell arm on TMR2 + spark queued for TMR4)
+ * for cylinders whose dwellAngle falls in [nextPhase, nextNextPhase). Called
+ * at the BEGINNING of mainTriggerCallback (~30 µs elapsed), BEFORE handleFuel
+ * and onTriggerEventSparkLogic.
  *
- * If the arm fails here (very unlikely at normal rpm), dwellStartArmed stays
- * false and onTriggerEventSparkLogic retries via the scheduleNow TIM5 path.
+ * WHY full scheduleSparkEvent, not just angleClockArmDwell:
+ * Setting dwellStartArmed=true without queueing the spark makes
+ * onTriggerEventSparkLogic skip the cylinder entirely - the spark never
+ * enters the angle queue, TMR4 is never armed, rescue fires -> C9352/C9353
+ * and the engine stops starting (field bug 2026-09-01, psc=70 session).
+ * Calling scheduleSparkEvent does both: arms dwell on TMR2 AND queues the
+ * spark so scheduleEventsUntilNextTriggerTooth can arm it on TMR4 later.
+ *
+ * dwellStartArmed=true is set inside scheduleSparkEvent, causing
+ * onTriggerEventSparkLogic to correctly skip the cylinder on this tooth.
  */
-void scheduleDwellEarlyIfDue(efitick_t edgeTimestamp,
+void scheduleDwellEarlyIfDue(float rpm, efitick_t edgeTimestamp,
                                                float currentPhase,
                                                float nextPhase,
                                                float nextNextPhase) {
-    UNUSED(edgeTimestamp);
     if (!engine->ignitionEvents.isReady) {
         return;
     }
-    // Duplicate-angle guard (same as in onTriggerEventSparkLogic): on
-    // useOnlyRisingEdges wheels the early window is meaningful only when
-    // nextNextPhase != nextPhase.
     if (nextNextPhase == nextPhase) {
-        return;
+        return;  // useOnlyRisingEdges guard (same as onTriggerEventSparkLogic)
     }
 
     const floatms_t dwellMs = engine->ignitionState.getDwell();
@@ -897,34 +899,30 @@ void scheduleDwellEarlyIfDue(efitick_t edgeTimestamp,
         return;
     }
 
-    LimpState limitedSparkState = getLimpManager()->allowIgnition();
-    const bool limitedSpark = !limitedSparkState.value;
-    if (limitedSpark) {
-        return;  // spark cut: no dwell needed
-    }
+    // Mirror the limiter check from onTriggerEventSparkLogic.
+    const bool limitedSpark = !getLimpManager()->allowIgnition().value;
 
     for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
         IgnitionEvent* event = &engine->ignitionEvents.elements[i];
         if (event->dwellStartArmed) {
-            continue;  // already armed this cycle
+            continue;  // already scheduled this cycle
         }
         const angle_t dwellAngle = event->dwellAngle;
-        if (std::isnan(dwellAngle)) {
+        const angle_t sparkAngle = event->sparkAngle;
+        if (std::isnan(dwellAngle) || std::isnan(sparkAngle)) {
             continue;
         }
         if (!isPhaseInRange(dwellAngle, nextPhase, nextNextPhase)) {
-            continue;  // not in the early window
+            continue;  // dwell not in the early window this tooth
         }
-        // Arm on TMR2 while handoff elapsed is only ~20-30 µs.
-        // The arm margin at 7000 rpm: delay(6°) = 571 ticks = 143 µs,
-        // elapsed = 120 ticks = 30 µs -> margin = 451 ticks >> ARM_MARGIN.
-        if (angleClockArmDwell(event->cylinderIndex, dwellAngle,
-                               action_s::make<turnSparkPinHighStartCharging>(event),
-                               currentPhase, nextPhase)) {
-            event->dwellStartArmed = true;
-        }
-        // Arm failure: leave dwellStartArmed=false; onTriggerEventSparkLogic
-        // will schedule the dwell on TIM5 via the scheduleNow path.
+        // Schedule the full event: arms TMR2 for dwell AND queues spark for
+        // TMR4 arming at the next tooth via scheduleEventsUntilNextTriggerTooth.
+        // scheduleSparkEvent sets dwellStartArmed=true so onTriggerEventSparkLogic
+        // skips this cylinder. The TMR2 arm margin at ~30 µs elapsed:
+        //   7000 rpm: delay(6°)=571 ticks=143 µs >> 120 ticks elapsed. OK.
+        scheduleSparkEvent(limitedSpark, event, rpm, dwellMs,
+                           dwellAngle, sparkAngle, edgeTimestamp,
+                           currentPhase, nextPhase);
     }
 }
 #endif // EFI_ANGLE_CLOCK
