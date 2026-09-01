@@ -11123,6 +11123,46 @@ No code changes. Analysis session only.
 - trgPostDecode scheduling-teeth cost: will be replaced by angle-clock arming once
   EFI_ANGLE_CLOCK is validated on the car
 
+## 2026-09-01 (late evening) - angle clock: PSC rounding + scheduleDwellEarlyIfDue missing spark (car stopped starting)
+
+Two critical bugs found from the first run with scheduleDwellEarlyIfDue:
+  psc=70 in initRate (40000/40003), spark fired=0, overdwell n=2, engine not starting.
+
+### Bug 1: PSC=70 instead of 71 (integer truncation in measurement formula)
+
+Formula was: newPsc = (72 * acDelta / ntDelta) - 1.
+With acDelta=40000, ntDelta=40003 (3 ticks of measurement noise):
+  72 * 40000 / 40003 = 71.997 -> integer truncation -> 71.
+  71 - 1 = 70. WRONG. Should be 71.
+
+Effect of PSC=70: TMR2 runs at TIMCLK1/71 instead of TIMCLK1/72 =
+1.4% faster than NT (TIM5). The NT<->TMR2 offset drifts ~56000 ticks/s.
+After ~10 ms: atTick already 560 ticks behind TMR2->CNT. All arm checks
+(atTick - CNT < ARM_MARGIN) fail. All events fall to TIM5 stale-basis.
+Engine either doesn't start or runs poorly.
+
+Fix: round-half-up: newPsc = (72*acDelta + ntDelta/2) / ntDelta - 1.
+  40000/40003: (2880000+20001)/40003 - 1 = 72 - 1 = 71. Correct.
+  40000/40000: same = 71. Correct.
+
+### Bug 2: scheduleDwellEarlyIfDue set dwellStartArmed=true WITHOUT queuing spark
+
+Old code armed TMR2 for dwell and set dwellStartArmed=true. Then
+onTriggerEventSparkLogic sees dwellStartArmed=true -> continue (skip).
+The spark was NEVER added to the angle queue. scheduleEventsUntilNextTriggerTooth
+had nothing to arm on TMR4. Result: dwell fired, spark=0, rescue fired,
+C9352/C9353. Observed: angclk dwell=6 lateArm=0, spark=0, overdwell=2.
+
+Fix: scheduleDwellEarlyIfDue now calls full scheduleSparkEvent() instead
+of just angleClockArmDwell(). scheduleSparkEvent arms TMR2 AND queues the
+spark for TMR4 arming. scheduleSparkEvent made non-static + declared in h.
+
+### Validation
+
+compile_m74_9.sh BUILD SUCCESSFUL; unit tests 1169/1169 PASSED.
+Car validation: angclk psc=71, dwell fired=N lateArm~0, spark fired=N,
+overdwell=0 at all rpm.
+
 ## 2026-09-01 (evening) - angle clock: high-rpm dwell arm fail + C9353 ordering bug fixed
 
 Two bugs found from on-car lockstats at 3000-7000 rpm:
