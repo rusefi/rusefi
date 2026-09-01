@@ -551,6 +551,33 @@ void angleClockCancelSpark(int cyl) {
     SPARK_TIMER->DIER &= ~(STM32_TIM_DIER_CC1IE << cyl);
 }
 
+bool angleClockArmSparkFromNow(int cyl, efitick_t nowNt,
+                                                  uint32_t delayNt, action_s action) {
+    // Compute CCR in TMR4 16-bit domain directly from NT time + delay.
+    // Uses the same conversion as sparkTickForNt but without the angle-domain
+    // guard (targetAngle is set to 780 deg so the refresh always skips it).
+    const uint16_t atTick = sparkTickForNt(nowNt, delayNt);
+    const uint16_t cnt16  = static_cast<uint16_t>(SPARK_TIMER->CNT);
+
+    if (static_cast<int16_t>(atTick - cnt16) < static_cast<int16_t>(ARM_MARGIN_TICKS)) {
+        s_lateArmSpark++;
+        return false;
+    }
+
+    auto& c = s_spark[cyl];
+    const uint32_t flag = STM32_TIM_SR_CC1IF << cyl;
+    SPARK_TIMER->SR   = ~flag;
+    *ccrReg(SPARK_TIMER, cyl) = atTick;
+    c.ccr         = atTick;
+    // Sentinel: 780 deg > cycleDeg(720) + MAX_LEAD_DEG(30) = 750.
+    // remainingAngle(780) = 780 - currentPhase > 60 > MAX_LEAD_DEG for ANY
+    // currentPhase in [0, 720) -> refresh always skips this channel.
+    c.targetAngle = 780.0f;
+    c.action      = action;
+    SPARK_TIMER->DIER |= STM32_TIM_DIER_CC1IE << cyl;
+    return true;
+}
+
 void angleClockCancelInjection(int cyl) {
     s_inj[cyl].action = {};
     INJ_TIMER->DIER &= ~(STM32_TIM_DIER_CC1IE << cyl);
