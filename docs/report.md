@@ -11123,6 +11123,31 @@ No code changes. Analysis session only.
 - trgPostDecode scheduling-teeth cost: will be replaced by angle-clock arming once
   EFI_ANGLE_CLOCK is validated on the car
 
+## 2026-09-01 (night 4) - angle clock: angleClockArmInjectionFromNow (injection close from actual open)
+
+Variant B for injection: arm the injection close (turnInjectionPinLow) from the
+actual injector-open callback (turnInjectionPinHigh) on TMR3.
+
+Motivation: when injection START fires via TIM5 (lateArm path, 0.33% of cases),
+the END was pre-scheduled at nominal_start + PW rather than actual_open + PW.
+With the new approach END is anchored to the actual injector opening.
+
+Analysis: inj lateArm=29-34 (0.33%) in driving sessions. The lateArm events are
+caused by scheduleNow injections with remaining < 0.72 deg at 7000 rpm (12% of
+the 6 deg early window fails, but most injections go through scheduleEarly).
+Practical impact of the old code: near-zero (TIM5 batch latency ~20 us = 0.4 deg
+at 7000 rpm = negligible PW error). Implemented for completeness.
+
+New fields in InjectionEvent (EFI_ANGLE_CLOCK only):
+  injectionEndStage1: scheduling_s for cancellable TIM5 slot
+  injectionEndDelayNt: PW in NT ticks, stored by onTriggerTooth for ISR use
+
+New function: angleClockArmInjectionFromNow (same pattern as spark version).
+In turnInjectionPinHigh: cancel pre-scheduled TIM5 end, re-arm TMR3 at nowNt.
+
+Validation: BUILD SUCCESSFUL; unit tests 1169/1169 PASSED.
+Car verdict: angclk inj lateArm should drop to near-zero.
+
 ## 2026-09-01 (night 3) - angle clock: arm spark from actual charge time + inj arm earlier
 
 ### Fix 1: wasNoOp root cause found + eliminated
