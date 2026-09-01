@@ -2,6 +2,7 @@ package com.rusefi.core.ui;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.*;
 import javax.swing.*;
 
 public class ErrorMessageHelper {
@@ -17,14 +18,28 @@ public class ErrorMessageHelper {
         return frame;
     }
 
-    public static void showErrorDialog(String message, String title) {
-        JFrame parent = createOnTopParent();
-        JOptionPane.showMessageDialog(parent,
+	public static void showErrorDialog(String message, String title) {
+        boolean createdNewFrame = false;
+        Component parent = null;
+        for (Window w : Window.getWindows()) {
+            if (w.isShowing() && w instanceof JFrame) {
+                parent = w;
+                break;
+            }
+        }
+        if (parent == null) {
+            parent = createOnTopParent();
+            createdNewFrame = true;
+        }
+        JOptionPane.showMessageDialog(
+            parent,
             message,
             title,
             JOptionPane.ERROR_MESSAGE
         );
-        parent.setVisible(false);
-        parent.dispose();
+        if (createdNewFrame && parent instanceof JFrame) {
+            ((JFrame) parent).setVisible(false);
+            ((JFrame) parent).dispose();
+        }
     }
 }
