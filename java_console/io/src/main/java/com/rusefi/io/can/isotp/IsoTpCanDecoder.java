@@ -59,6 +59,7 @@ public abstract class IsoTpCanDecoder {
                 break;
             case IsoTpConstants.ISO_TP_FRAME_FIRST:
                 this.waitingForNumBytes = ((data[isoHeaderByteIndex] & 0xf) << 8) | data[isoHeaderByteIndex + 1];
+                setComplete(false);
                 if (log.debugEnabled())
                     log.debug("Total expected: " + waitingForNumBytes);
                 this.waitingForFrameIndex = 1;
@@ -69,8 +70,17 @@ public abstract class IsoTpCanDecoder {
                 break;
             case IsoTpConstants.ISO_TP_FRAME_CONSECUTIVE:
                 frameIdx = data[isoHeaderByteIndex] & 0xf;
-                if (this.waitingForNumBytes < 0 || this.waitingForFrameIndex != frameIdx) {
-                    throw new IllegalStateException("ISO_TP_FRAME_CONSECUTIVE: That's an abnormal situation, and we probably should react? waitingForNumBytes=" + waitingForNumBytes + " waitingForFrameIndex=" + waitingForFrameIndex + " frameIdx=" + frameIdx);
+                if (this.waitingForNumBytes <= 0) {
+                    if (log.debugEnabled())
+                        log.debug("Ignoring ISO-TP consecutive frame while no message is active: frameIdx=" + frameIdx);
+                    reset();
+                    return new byte[0];
+                }
+                if (this.waitingForFrameIndex != frameIdx) {
+                    log.warn("Aborting out-of-sequence ISO-TP message: waitingForNumBytes="
+                        + waitingForNumBytes + " waitingForFrameIndex=" + waitingForFrameIndex + " frameIdx=" + frameIdx);
+                    reset();
+                    return new byte[0];
                 }
                 this.waitingForFrameIndex = (this.waitingForFrameIndex + 1) & 0xf;
                 numBytesAvailable = Math.min(this.waitingForNumBytes, dataSize - 1 - isoHeaderByteIndex);
@@ -104,5 +114,11 @@ public abstract class IsoTpCanDecoder {
 
     public boolean isComplete() {
         return isComplete;
+    }
+
+    private void reset() {
+        waitingForNumBytes = 0;
+        waitingForFrameIndex = 0;
+        setComplete(false);
     }
 }
