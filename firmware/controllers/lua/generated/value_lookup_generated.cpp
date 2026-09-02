@@ -1933,6 +1933,12 @@ float getConfigValueByHash(const int hash) {
 // engineShutDownPeriod
 		case -1846425734:
 			return engineConfiguration->engineShutDownPeriod;
+// can3ListenMode
+		case 358354462:
+			return engineConfiguration->can3ListenMode;
+// verboseCan3
+		case -1056203296:
+			return engineConfiguration->verboseCan3;
 // knockSuppressMinTps
 		case 893776859:
 			return engineConfiguration->knockSuppressMinTps;
@@ -5444,6 +5450,16 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1846425734:
 	{
 		engineConfiguration->engineShutDownPeriod = value;
+		return 1;
+	}
+		case 358354462:
+	{
+		engineConfiguration->can3ListenMode = (int)value;
+		return 1;
+	}
+		case -1056203296:
+	{
+		engineConfiguration->verboseCan3 = (int)value;
 		return 1;
 	}
 		case 893776859:
