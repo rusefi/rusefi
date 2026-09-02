@@ -30,7 +30,7 @@ void mapAveragingAdcCallback(float instantVoltage);
 #define MAX_MAP_BUFFER_LENGTH (MAX_CYLINDER_COUNT)
 #endif /* EFI_MAP_AVERAGING */
 
-#define SAMPLER_DIMENSION 2
+#define SAMPLER_DIMENSION 4
 
 class MapAverager : public StoredValueSensor {
 public:

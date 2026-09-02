@@ -1,6 +1,6 @@
 #include "global.h"
 #include "sensor_type.h"
-// was generated automatically by rusEFI tool  from sensor_type.h // by enum_to_string.jar tool on Sat Apr 04 11:57:47 UTC 2026
+// was generated automatically by rusEFI tool  from sensor_type.h // by enum_to_string.jar tool on Wed Sep 02 16:44:39 GMT+05:00 2026
 // see also gen_config_and_enums.bat
 
 
@@ -143,6 +143,10 @@ const char *getSensorType(SensorType value) {
 			return "MapFast";
 		case SensorType::MapFast2:
 			return "MapFast2";
+		case SensorType::MapFast3:
+			return "MapFast3";
+		case SensorType::MapFast4:
+			return "MapFast4";
 		case SensorType::MapSlow:
 			return "MapSlow";
 		case SensorType::MapSlow2:

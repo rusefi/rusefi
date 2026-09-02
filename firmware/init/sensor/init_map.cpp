@@ -23,11 +23,17 @@ static FunctionalSensor throttleInletPress(SensorType::ThrottleInletPressure, MS
 // 'fast' means averaged? why is that fast again?!
 static MapAverager fastMapSensor(SensorType::MapFast, MS2NT(200));
 static MapAverager fastMapSensor2(SensorType::MapFast2, MS2NT(200));
+static MapAverager fastMapSensor3(SensorType::MapFast3, MS2NT(200));
+static MapAverager fastMapSensor4(SensorType::MapFast4, MS2NT(200));
 
 // instant map values are injected here
 MapAverager& getMapAvg(size_t cylinderBankIndex) {
-	// May 2025: cylinderBankIndex is always zero, second MAP sensor feature is not finished
-	return cylinderBankIndex == 0 ? fastMapSensor : fastMapSensor2;
+	switch (cylinderBankIndex) {
+		case 0:  return fastMapSensor;
+		case 1:  return fastMapSensor2;
+		case 2:  return fastMapSensor3;
+		default: return fastMapSensor4;
+	}
 }
 
 // Combine MAP sensors: prefer fast sensor, but use slow if fast is unavailable.
@@ -111,6 +117,8 @@ void initMap() {
 	// unfinished/dead?	slowMapSensor2.setFunction(mapConverter);
 	fastMapSensor.setFunction(mapConverter);
 	fastMapSensor2.setFunction(mapConverter);
+	fastMapSensor3.setFunction(mapConverter);
+	fastMapSensor4.setFunction(mapConverter);
 	compressorDischargePress.setFunction(mapConverter);
 	throttleInletPress.setFunction(mapConverter);
 
@@ -120,6 +128,8 @@ void initMap() {
 		// unfinished/dead?		slowMapSensor2.Register();
 		fastMapSensor.Register();
 		fastMapSensor2.Register();
+		fastMapSensor3.Register();
+		fastMapSensor4.Register();
 		mapCombiner.Register();
 		mapCombiner2.Register();
 

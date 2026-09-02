@@ -59,6 +59,8 @@ public enum SensorType {
 	Map2,
 	MapSlow2,
 	MapFast2,
+	MapFast3,
+	MapFast4,
 	CompressorDischargePressure,
 	CompressorDischargeTemperature,
 	ThrottleInletPressure,
