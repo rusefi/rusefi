@@ -1,4 +1,5 @@
+bit boardUseCanTerminator,"yes","no"
 uint8_t hondaKcltGaugeAdder
 
-#define BOTTOM_PADDING 36
+#define BOTTOM_PADDING 32
 uint8_t[BOTTOM_PADDING] unusedConfigPadding

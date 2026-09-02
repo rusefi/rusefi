@@ -213,13 +213,15 @@ void hellenMegaAccelerometerPreInitCS2Pin() {
 #endif // EFI_ONBOARD_MEMS
 }
 
-void configureHellenCanTerminator() {
+// 'enableTerminator' comes from the board-specific 'boardUseCanTerminator' bit declared in the
+// board_config.txt of each board which wires a switchable terminator (hellen-honda-k, hellen-112-17)
+void configureHellenCanTerminator(bool enableTerminator) {
     static bool initialized = false;
     static OutputPin terminatorControlPin;
     if (!initialized) {
         initialized = true;
 	    terminatorControlPin.initPin("CAN-term", H_SPI3_CS); // todo: make this pin configurable
-	    terminatorControlPin.setValue(engineConfiguration->boardUseCanTerminator);
+	    terminatorControlPin.setValue(enableTerminator);
 	}
 }
 

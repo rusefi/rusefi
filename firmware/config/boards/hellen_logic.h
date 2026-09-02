@@ -19,7 +19,7 @@ void hellenBoardStandBy();
 void hellenMegaSdWithAccelerometer();
 void hellenMegaModule();
 void hellenMegaAccelerometerPreInitCS2Pin();
-void configureHellenCanTerminator();
+void configureHellenCanTerminator(bool enableTerminator);
 
 void setHellenCan();
 void setHellenCan2();

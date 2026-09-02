@@ -46,7 +46,7 @@ static void hellen_honda_k_boardConfigOverrides() {
 	setHellenMegaEnPin();
 
 	hellenMegaModule();
-	configureHellenCanTerminator();
+	configureHellenCanTerminator(config->boardUseCanTerminator);
 
 
 	engineConfiguration->triggerInputPins[0] = Gpio::H144_IN_RES1;
@@ -90,6 +90,7 @@ static void hellen_honda_k_boardDefaultConfiguration() {
 	engineConfiguration->enableSoftwareKnock = true;
 
 	setHellenCan();
+	config->boardUseCanTerminator = true;
 
     engineConfiguration->vvtPins[0] = Gpio::H144_OUT_PWM5; // B23 VTC VVT
 
