@@ -1,0 +1,71 @@
+# Reusable workflow: advance one submodule to the tip of the branch configured
+# for it in .gitmodules (or the remote default branch when none is configured)
+# and push the resulting commit back to the calling branch.
+#
+# Callers: update-chibios-reference.yaml, update-libfirmware-reference.yaml,
+# update-wideband-reference.yaml
+
+name: Update Submodule Reference
+
+on:
+  workflow_call:
+    inputs:
+      submodule:
+        description: 'Submodule path as listed in .gitmodules, e.g. firmware/ChibiOS'
+        required: true
+        type: string
+
+jobs:
+  update-git:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Git Checkout Submodule
+        run: |
+          git submodule update --init --depth=1 "${{ inputs.submodule }}"
+
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+
+      - name: Git Update Submodule
+        run: |
+          # A --depth=1 init only fetches the pinned commit plus the remote default
+          # branch. When .gitmodules pins a different branch, fetch it explicitly so
+          # that '--remote' can find refs/remotes/origin/<branch>.
+          BRANCH=$(git config -f .gitmodules "submodule.${{ inputs.submodule }}.branch" || true)
+          if [ -n "$BRANCH" ]; then
+            echo "tracking branch $BRANCH"
+            git -C "${{ inputs.submodule }}" fetch --depth=1 origin "$BRANCH:refs/remotes/origin/$BRANCH"
+          else
+            echo "no branch configured, tracking remote default branch"
+          fi
+          git submodule update --remote "${{ inputs.submodule }}"
+
+      - name: Commit fresh submodule
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub ${{ inputs.submodule }} update Action"
+          git add "${{ inputs.submodule }}"
+          OUT=$(git commit -am "GHA says update ${{ inputs.submodule }} submodule" 2>&1) || echo "commit failed, finding out why"
+          if echo "$OUT" | grep 'nothing to commit'; then
+            echo "submodule: looks like nothing to commit"
+            echo "NOCOMMIT=true" >> $GITHUB_ENV
+            exit 0
+          elif echo "$OUT" | grep 'changed'; then
+            echo "submodule: looks like something has changed"
+          else
+            echo "submodule: looks like something unexpected"
+            exit 1
+          fi
+          git status
+
+      - name: Push
+        if: ${{ env.NOCOMMIT != 'true'}}
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ github.token }}
+          branch: ${{ github.ref }}

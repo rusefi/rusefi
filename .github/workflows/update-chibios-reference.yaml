@@ -1,0 +1,10 @@
+name: Update ChibiOS Reference
+
+on:
+  workflow_dispatch:
+
+jobs:
+  update-git:
+    uses: ./.github/workflows/update-submodule-reference.yaml
+    with:
+      submodule: firmware/ChibiOS
