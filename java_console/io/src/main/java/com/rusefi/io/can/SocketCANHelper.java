@@ -19,18 +19,38 @@ public class SocketCANHelper {
 
     @NotNull
     public static RawCanChannel createSocket() {
-        final RawCanChannel socket;
         try {
             NetworkDevice canInterface = NetworkDevice.lookup(System.getProperty("CAN_DEVICE_NAME", "can0"));
-            socket = CanChannels.newRawChannel();
+            return createSocket(canInterface, CanChannels::newRawChannel);
+        } catch (IOException e) {
+            throw new IllegalStateException("Error looking up", e);
+        }
+    }
+
+    static RawCanChannel createSocket(NetworkDevice canInterface, ChannelFactory channelFactory) {
+        RawCanChannel socket = null;
+        try {
+            socket = channelFactory.create();
             socket.bind(canInterface);
 
             socket.configureBlocking(true); // we want reader thread to wait for messages
             socket.setOption(RECV_OWN_MSGS, false);
+            return socket;
         } catch (IOException e) {
+            if (socket != null) {
+                try {
+                    socket.close();
+                } catch (IOException closeException) {
+                    e.addSuppressed(closeException);
+                }
+            }
             throw new IllegalStateException("Error looking up", e);
         }
-        return socket;
+    }
+
+    @FunctionalInterface
+    interface ChannelFactory {
+        RawCanChannel create() throws IOException;
     }
 
     public static void send(int id, byte[] payload, RawCanChannel channel) {

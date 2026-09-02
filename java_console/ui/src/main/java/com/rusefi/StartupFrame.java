@@ -84,6 +84,7 @@ public class StartupFrame {
     public static final String CHECK_TS_RUNNING = "check_ts_running";
     private static final String STARTUP_TAB_INDEX = "startup_tab_index";
     private static final String NO_PORTS_FOUND = "<html>No ports found!<br>Confirm blue LED is blinking</html>";
+    private static final String SOCKET_CAN_WITHOUT_ECU = "CAN connected, but no ECU replied";
     public static final String SCANNING_PORTS = "Scanning ports";
     private static final String CARD_SCANNING = "scanning";
     private static final String CARD_STARTUP = "startup";
@@ -636,8 +637,9 @@ public class StartupFrame {
             .orElse(null);
         boolean hasOpenBlt = openBltPort != null;
         if (ports.isEmpty()) {
-            noPortsMessage.setForeground(Color.red);
-            noPortsMessage.setText(NO_PORTS_FOUND);
+            String message = emptyHardwareMessage(currentHardware);
+            noPortsMessage.setForeground(SOCKET_CAN_WITHOUT_ECU.equals(message) ? Color.darkGray : Color.red);
+            noPortsMessage.setText(message);
         } else if (hasOpenBlt) {
             // A board sitting in the OpenBLT bootloader has no running firmware to auto-connect to —
             // mirror the auto-connect status line and point the user at the firmware-update flow.
@@ -666,6 +668,15 @@ public class StartupFrame {
             log.info("Single ECU detected, auto-connecting in background: " + target);
             autoConnect(target);
         }
+    }
+
+    static String emptyHardwareMessage(AvailableHardware hardware) {
+        boolean onlySocketCanDetected = hardware.isSocketCanAvailable()
+            && hardware.getKnownPorts().isEmpty()
+            && !hardware.isDfuFound()
+            && !hardware.isStLinkConnected()
+            && !hardware.isPCANConnected();
+        return onlySocketCanDetected ? SOCKET_CAN_WITHOUT_ECU : NO_PORTS_FOUND;
     }
 
     public static void setFrameIcon(Frame frame) {

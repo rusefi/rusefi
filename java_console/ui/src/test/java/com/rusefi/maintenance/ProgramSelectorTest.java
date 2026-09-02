@@ -2,6 +2,7 @@ package com.rusefi.maintenance;
 
 import com.rusefi.PortResult;
 import com.rusefi.SerialPortType;
+import com.rusefi.io.LinkManager;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
@@ -103,6 +104,14 @@ public class ProgramSelectorTest {
         assertNull(resolveFlashPort(unsupported, false, NO_PORTS, NO_PORTS));
         assertNull(resolveFlashPort(unsupported, true, NO_PORTS, NO_PORTS));
         assertNull(resolveFlashPort(port(SerialPortType.EcuUnknown), true, NO_PORTS, NO_PORTS));
+    }
+
+    @Test
+    public void socketCanEcuCannotBeSelectedForSerialFlashing() {
+        PortResult socketCan = new PortResult(LinkManager.SOCKET_CAN, SerialPortType.Ecu);
+
+        assertNull(resolveFlashPort(socketCan, true, NO_PORTS, NO_PORTS));
+        assertFalse(ProgramSelector.hasRealSerialPort(Collections.singletonList(socketCan)));
     }
 
     // ---- combined: resolved port feeds the button mode ----
