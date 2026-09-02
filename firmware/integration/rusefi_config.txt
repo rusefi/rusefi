@@ -2921,7 +2921,7 @@ end_struct
 #define ts_show_sd_pins true
 #define ts_show_injectionPinMode false
 #define ts_show_ignition true
-#define ts_show_ignitionPinMode true
+#define ts_show_ignitionPinMode false
 #define ts_show_vr_threshold_pins true
 
 
