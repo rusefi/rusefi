@@ -720,8 +720,8 @@
 </constant>
         <constant cols="8" digits="2" name="cltIdleCorrTable" rows="16" units="%">
          38.0 34.0 28.0 23.0 21.0 21.0 22.0 22.0
-         29.9 25.9 19.9 15.0 15.0 14.0 14.0 14.0
-         28.8 24.8 18.8 15.0 15.0 14.0 14.0 14.0
+         29.9 25.9 19.9 15.0 15.0 13.0 13.0 13.0
+         28.8 24.8 18.8 15.0 15.0 13.0 13.0 13.0
          34.7 30.7 24.7 19.7 17.7 17.7 19.7 19.7
          32.6 28.6 22.6 17.6 15.6 15.6 17.6 17.6
          33.5 29.5 23.5 18.5 16.5 16.5 18.5 18.5
@@ -901,8 +901,8 @@
          1.3
          1.0
          0.5
-         0.0
-         0.0
+         0.5
+         0.5
 </constant>
         <constant digits="0" name="customSentTpsMax" units="">0</constant>
         <constant digits="0" name="customSentTpsMin" units="">0</constant>
@@ -1867,12 +1867,12 @@
         <constant name="idle_stepperDirectionPin">"NONE"</constant>
         <constant name="idle_stepperStepPin">"NONE"</constant>
         <constant cols="1" digits="1" name="idleAdvance" rows="8" units="deg">
+         45.0
          40.0
-         28.0
-         26.0
-         24.0
-         22.0
-         20.0
+         38.0
+         36.0
+         34.0
+         32.0
          19.0
          18.0
 </constant>
@@ -1920,13 +1920,13 @@
         <constant digits="1" name="idleReturnTargetRampDuration" units="seconds">5.0</constant>
         <constant digits="4" name="idleRpmPid_dFactor" units="">0.0</constant>
         <constant digits="4" name="idleRpmPid_iFactor" units="">0.0</constant>
-        <constant digits="0" name="idlerpmpid_iTermMax" units="">0</constant>
+        <constant digits="0" name="idlerpmpid_iTermMax" units="">5</constant>
         <constant digits="0" name="idlerpmpid_iTermMin" units="">0</constant>
-        <constant digits="0" name="idleRpmPid_maxValue" units="">0</constant>
+        <constant digits="0" name="idleRpmPid_maxValue" units="">5</constant>
         <constant digits="0" name="idleRpmPid_minValue" units="">0</constant>
         <constant digits="0" name="idleRpmPid_offset" units="">0</constant>
         <constant digits="0" name="idleRpmPid_periodMs" units="ms">0</constant>
-        <constant digits="4" name="idleRpmPid_pFactor" units="">0.0</constant>
+        <constant digits="4" name="idleRpmPid_pFactor" units="">0.005</constant>
         <constant digits="0" name="idleStepperReactionTime" units="ms">3</constant>
         <constant digits="0" name="idleStepperTotalSteps" units="count">200</constant>
         <constant digits="4" name="idleTimingPid_dFactor" units="">0.0</constant>
@@ -2422,10 +2422,10 @@
          413.7
 </constant>
         <constant cols="8" digits="2" name="injector_battLagCorrTable" rows="2" units="ms">
-         4.24 2.48 1.74 1.5 1.31 1.15 0.96 0.91
-         3.08 1.64 1.15 1.19 0.99 0.76 0.64 0.6
+         3.65 1.84 1.23 1.0 0.81 0.7 0.55 0.5
+         3.65 1.84 1.23 1.0 0.81 0.7 0.55 0.5
 </constant>
-        <constant digits="2" name="injector_flow" units="">168.8</constant>
+        <constant digits="2" name="injector_flow" units="">156.0</constant>
         <constant name="injectorCompensationMode">"Fixed rail pressure"</constant>
         <constant digits="4" name="injectorCorrectionPolynomial1" units="">0.0</constant>
         <constant digits="4" name="injectorCorrectionPolynomial2" units="">0.0</constant>
@@ -4803,7 +4803,7 @@
         <constant name="useIacPidMultTable">"no"</constant>
         <constant name="useIacTableForCoasting">"disabled"</constant>
         <constant name="useIdleAdvanceWhileCoasting">"yes"</constant>
-        <constant name="useIdleTimingPidControl">"no"</constant>
+        <constant name="useIdleTimingPidControl">"yes"</constant>
         <constant name="useInjectorFlowLinearizationTable">"no"</constant>
         <constant name="useLambdaOnInterface">"AFR"</constant>
         <constant name="useLinearCltSensor">"no"</constant>
