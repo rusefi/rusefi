@@ -19,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.Closeable;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
@@ -444,8 +445,10 @@ public class LinkManager implements Closeable {
         log.info("restart: closing current connection");
         close(); // Explicitly kill the connection (call connectors destructor??????)
 
-        final Set<String> ports = getCommPorts();
-        final boolean isPortAvailableAgain = ports.contains(lastTriedPort);
+        // SocketCAN is a named transport rather than an OS serial port. Avoid serial enumeration and
+        // let its stream factory decide whether the configured CAN interface is available again.
+        final Set<String> ports = isSocketCan(lastTriedPort) ? Collections.emptySet() : getCommPorts();
+        final boolean isPortAvailableAgain = isPortAvailableForReconnect(lastTriedPort, ports);
         log.info("restart isPortAvailableAgain=" + isPortAvailableAgain + " port=" + lastTriedPort);
         if (isPortAvailableAgain) {
             // Use isScanningForEcu=true to prevent ExitUtil.exit() on failure —
@@ -455,6 +458,10 @@ public class LinkManager implements Closeable {
         } else {
             log.info("restart: port not available, skipping connect");
         }
+    }
+
+    static boolean isPortAvailableForReconnect(String port, Set<String> serialPorts) {
+        return isSocketCan(port) || serialPorts.contains(port);
     }
 
     @Override

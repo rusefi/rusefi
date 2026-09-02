@@ -1,7 +1,5 @@
 package com.rusefi;
 
-import com.rusefi.core.OsUtil;
-
 import com.devexperts.logging.Logging;
 import com.rusefi.io.LinkManager;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +28,6 @@ import java.util.stream.Collectors;
 public class SerialPortScanner implements PortScanner {
     private final static Logging log = Logging.getLogging(SerialPortScanner.class);
 
-    private static final boolean SHOW_SOCKETCAN = OsUtil.isLinux();
     private static final long DETECTED_ECU_CACHE_MS = 3000;
 
     /**
@@ -49,6 +46,13 @@ public class SerialPortScanner implements PortScanner {
         Collection<String> listTcpPorts();
 
         PortResult inspectTcpPort(String tcpPort);
+
+        /**
+         * @return null when SocketCAN is unavailable, CAN when the interface opens without an ECU reply,
+         * or an ECU classification when rusEFI replies
+         */
+        @Nullable
+        PortResult inspectSocketCan();
 
         boolean isLiveEcuConnected();
 
@@ -80,7 +84,8 @@ public class SerialPortScanner implements PortScanner {
 
     private final Object lock = new Object();
     @NotNull
-    private AvailableHardware knownHardware = new AvailableHardware(Collections.emptyList(), false, false, false);
+    private AvailableHardware knownHardware = new AvailableHardware(
+        Collections.emptyList(), false, false, false, false);
 
     private final List<PortScanner.Listener> listeners = new CopyOnWriteArrayList<>();
 
@@ -209,6 +214,9 @@ public class SerialPortScanner implements PortScanner {
     private boolean lastDfuConnected = false;
     private boolean lastStLinkConnected = false;
     private boolean lastPcanConnected = false;
+    private boolean lastSocketCanAvailable = false;
+    @Nullable
+    private PortResult lastSocketCanPort;
 
     /**
      * Find all available serial ports and checks if simulator local TCP port is available.
@@ -219,6 +227,7 @@ public class SerialPortScanner implements PortScanner {
         boolean dfuConnected;
         boolean stLinkConnected;
         boolean PCANConnected;
+        boolean socketCanAvailable;
 
         // ttyS* are legacy motherboard UARTs on Linux — never a rusEFI ECU and they stall
         // the binary protocol handshake for seconds.  Drop them before the scan pipeline.
@@ -257,9 +266,6 @@ public class SerialPortScanner implements PortScanner {
         livePortNames.addAll(tcpPorts);
         portCache.retainAll(livePortNames);
 
-        // Sort ports by their type to put your ECU at the top
-        ports.sort(Comparator.comparingInt(a -> a.type.sortOrder));
-
         if (includeSlowLookup) {
             for (String tcpPort : tcpPorts) {
                 final Optional<PortResult> cachedPort = portCache.get(tcpPort, probes.now());
@@ -284,32 +290,43 @@ public class SerialPortScanner implements PortScanner {
                 lastDfuConnected = probes.isDfuDeviceConnected();
                 lastStLinkConnected = probes.isStLinkConnected();
                 lastPcanConnected = probes.isPcanConnected();
+                PortResult socketCanResult = probes.inspectSocketCan();
+                lastSocketCanAvailable = socketCanResult != null;
+                lastSocketCanPort = socketCanResult != null
+                    && socketCanResult.type != SerialPortType.CAN
+                    && socketCanResult.type != SerialPortType.Unknown
+                    ? socketCanResult
+                    : null;
                 lastDeviceProbeMs = now;
             }
             dfuConnected = lastDfuConnected;
             stLinkConnected = lastStLinkConnected;
             PCANConnected = lastPcanConnected;
+            socketCanAvailable = lastSocketCanAvailable;
         } else {
             dfuConnected = false;
             stLinkConnected = false;
             PCANConnected = false;
+            socketCanAvailable = lastSocketCanAvailable;
         }
 /*
         if (PCANConnected)
             ports.add(new PortResult(LinkManager.PCAN, SerialPortType.CAN));
  */
-/*
-        if (SHOW_SOCKETCAN)
-            ports.add(new PortResult(LinkManager.SOCKET_CAN, SerialPortType.CAN));
-*/
+        if (lastSocketCanPort != null) {
+            ports.add(lastSocketCanPort);
+        }
         // Surface a DFU device (STM32 built-in bootloader) as a synthetic, non-connectable port so a
         // running console can offer DFU flashing in-session [tag:better_ux_for_flashing]. dfuConnected stays exposed via
         // AvailableHardware.isDfuFound() for the existing ProgramSelector menu logic.
         if (dfuConnected) {
             ports.add(new PortResult(LinkManager.DFU, SerialPortType.Dfu));
         }
+        // Sort after every transport and synthetic device has been added.
+        ports.sort(Comparator.comparingInt(a -> a.type.sortOrder));
         boolean isListUpdated;
-        AvailableHardware currentHardware = new AvailableHardware(ports, dfuConnected, stLinkConnected, PCANConnected);
+        AvailableHardware currentHardware = new AvailableHardware(
+            ports, dfuConnected, stLinkConnected, PCANConnected, socketCanAvailable);
         synchronized (lock) {
             isListUpdated = !knownHardware.equals(currentHardware);
             knownHardware = currentHardware;

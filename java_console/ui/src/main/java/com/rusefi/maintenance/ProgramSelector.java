@@ -762,7 +762,9 @@ public class ProgramSelector {
     }
 
     private static boolean isUnflashableEcu(@Nullable PortResult port) {
-        return port != null && (port.isUnsupportedEcu() || port.type == SerialPortType.EcuUnknown);
+        return port != null && (port.isUnsupportedEcu()
+            || port.type == SerialPortType.EcuUnknown
+            || LinkManager.SOCKET_CAN.equals(port.port));
     }
 
 }

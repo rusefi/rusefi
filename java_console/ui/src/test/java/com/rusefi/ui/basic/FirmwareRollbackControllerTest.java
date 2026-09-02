@@ -1,6 +1,9 @@
 package com.rusefi.ui.basic;
 
 import com.rusefi.core.io.BundleInfo;
+import com.rusefi.PortResult;
+import com.rusefi.SerialPortType;
+import com.rusefi.io.LinkManager;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -11,6 +14,16 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FirmwareRollbackControllerTest {
+    @Test
+    void serialFirmwareUpdateRejectsSocketCanEcu() {
+        assertFalse(FirmwareRollbackController.isSerialFirmwareUpdateSupported(
+            new PortResult(LinkManager.SOCKET_CAN, SerialPortType.Ecu)));
+        assertTrue(FirmwareRollbackController.isSerialFirmwareUpdateSupported(
+            new PortResult("COM7", SerialPortType.Ecu)));
+        assertFalse(FirmwareRollbackController.isSerialFirmwareUpdateSupported(
+            new PortResult("COM7", SerialPortType.OpenBlt)));
+    }
+
     @Test
     void enablesHistoryOnlyForLtsBundles() {
         BundleInfo lts = new BundleInfo("lts-26-test", null, "uaefi");
