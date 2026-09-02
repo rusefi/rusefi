@@ -137,20 +137,6 @@ public class AutoupdateUtil {
         component.repaint();
     }
 
-    private static Window getSelectedWindow(Window[] windows) {
-        for (Window window : windows) {
-            if (window.isActive()) {
-                return window;
-            } else {
-                Window[] ownedWindows = window.getOwnedWindows();
-                if (ownedWindows != null) {
-                    return getSelectedWindow(ownedWindows);
-                }
-            }
-        }
-        return null;
-    }
-
     public static void assertNotAwtThread() {
         if (SwingUtilities.isEventDispatchThread()) {
             showError("Non AWT thread expected");
@@ -169,11 +155,7 @@ public class AutoupdateUtil {
         StringBuilder trace = new StringBuilder(e + "\n");
         for(StackTraceElement element : e.getStackTrace())
             trace.append(element.toString()).append("\n");
-        SwingUtilities.invokeLater(() -> {
-            // todo: reuse ErrorMessageHelper?
-            Window w = getSelectedWindow(Window.getWindows());
-            JOptionPane.showMessageDialog(w, trace, "Error", JOptionPane.ERROR_MESSAGE);
-        });
+        SwingUtilities.invokeLater(() -> ErrorMessageHelper.showErrorDialog(trace.toString(), "Error"));
     }
 
     public static boolean hasExistingFile(String zipFileName, long completeFileSize, long lastModified) {
