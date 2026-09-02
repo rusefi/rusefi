@@ -4443,89 +4443,89 @@ struct engine_configuration_s {
 	bool injectorFlowAsMassFlow : 1 {};
 	/**
 	offset 1672 bit 4 */
-	bool boardUseCanTerminator : 1 {};
-	/**
-	offset 1672 bit 5 */
 	bool kLineDoHondaSend : 1 {};
 	/**
 	 * ListenMode is about acknowledging CAN traffic on the protocol level. Different from canWriteEnabled
-	offset 1672 bit 6 */
+	offset 1672 bit 5 */
 	bool can1ListenMode : 1 {};
 	/**
-	offset 1672 bit 7 */
+	offset 1672 bit 6 */
 	bool can2ListenMode : 1 {};
 	/**
+	offset 1672 bit 7 */
+	bool unusedBit_662_7 : 1 {};
+	/**
 	offset 1672 bit 8 */
-	bool unusedBit_663_8 : 1 {};
+	bool unusedBit_662_8 : 1 {};
 	/**
 	offset 1672 bit 9 */
-	bool unusedBit_663_9 : 1 {};
+	bool unusedBit_662_9 : 1 {};
 	/**
 	offset 1672 bit 10 */
-	bool unusedBit_663_10 : 1 {};
+	bool unusedBit_662_10 : 1 {};
 	/**
 	offset 1672 bit 11 */
-	bool unusedBit_663_11 : 1 {};
+	bool unusedBit_662_11 : 1 {};
 	/**
 	offset 1672 bit 12 */
-	bool unusedBit_663_12 : 1 {};
+	bool unusedBit_662_12 : 1 {};
 	/**
 	offset 1672 bit 13 */
-	bool unusedBit_663_13 : 1 {};
+	bool unusedBit_662_13 : 1 {};
 	/**
 	offset 1672 bit 14 */
-	bool unusedBit_663_14 : 1 {};
+	bool unusedBit_662_14 : 1 {};
 	/**
 	offset 1672 bit 15 */
-	bool unusedBit_663_15 : 1 {};
+	bool unusedBit_662_15 : 1 {};
 	/**
 	offset 1672 bit 16 */
-	bool unusedBit_663_16 : 1 {};
+	bool unusedBit_662_16 : 1 {};
 	/**
 	offset 1672 bit 17 */
-	bool unusedBit_663_17 : 1 {};
+	bool unusedBit_662_17 : 1 {};
 	/**
 	offset 1672 bit 18 */
-	bool unusedBit_663_18 : 1 {};
+	bool unusedBit_662_18 : 1 {};
 	/**
 	offset 1672 bit 19 */
-	bool unusedBit_663_19 : 1 {};
+	bool unusedBit_662_19 : 1 {};
 	/**
 	offset 1672 bit 20 */
-	bool unusedBit_663_20 : 1 {};
+	bool unusedBit_662_20 : 1 {};
 	/**
 	offset 1672 bit 21 */
-	bool unusedBit_663_21 : 1 {};
+	bool unusedBit_662_21 : 1 {};
 	/**
 	offset 1672 bit 22 */
-	bool unusedBit_663_22 : 1 {};
+	bool unusedBit_662_22 : 1 {};
 	/**
 	offset 1672 bit 23 */
-	bool unusedBit_663_23 : 1 {};
+	bool unusedBit_662_23 : 1 {};
 	/**
 	offset 1672 bit 24 */
-	bool unusedBit_663_24 : 1 {};
+	bool unusedBit_662_24 : 1 {};
 	/**
 	offset 1672 bit 25 */
-	bool unusedBit_663_25 : 1 {};
+	bool unusedBit_662_25 : 1 {};
 	/**
 	offset 1672 bit 26 */
-	bool unusedBit_663_26 : 1 {};
+	bool unusedBit_662_26 : 1 {};
 	/**
 	offset 1672 bit 27 */
-	bool unusedBit_663_27 : 1 {};
+	bool unusedBit_662_27 : 1 {};
 	/**
 	offset 1672 bit 28 */
-	bool unusedBit_663_28 : 1 {};
+	bool unusedBit_662_28 : 1 {};
 	/**
 	offset 1672 bit 29 */
-	bool unusedBit_663_29 : 1 {};
+	bool unusedBit_662_29 : 1 {};
 	/**
 	offset 1672 bit 30 */
-	bool unusedBit_663_30 : 1 {};
+	bool unusedBit_662_30 : 1 {};
 	/**
 	offset 1672 bit 31 */
-	bool unusedBit_663_31 : 1 {};
+	bool unusedBit_662_31 : 1 {};
 	/**
 	 * Angle of tooth detection within engine phase cycle
 	 * units: angle

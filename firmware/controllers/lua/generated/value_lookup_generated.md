@@ -1279,9 +1279,6 @@ Allow OpenBLT on Secondary CAN
 ### injectorFlowAsMassFlow
 Select whether to configure injector flow in volumetric flow (default, cc/min) or mass flow (g/s).
 
-### boardUseCanTerminator
-
-
 ### kLineDoHondaSend
 
 
@@ -1925,6 +1922,12 @@ Delay before cutting fuel due to low oil pressure. Use this to ignore short pres
 
 
 ### engineShutDownPeriod
+
+
+### can3ListenMode
+
+
+### verboseCan3
 
 
 ### knockSuppressMinTps
