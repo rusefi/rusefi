@@ -78,10 +78,10 @@ static CANRxFrame makeOpenBltConnectFrame() {
 	return frame;
 }
 
-TEST(OpenBltCanFrame, ExtendedConnectIssue9733) {
+TEST(OpenBltCanFrame, MatchesExtendedConnect) {
 	auto frame = makeOpenBltConnectFrame();
 
-	EXPECT_FALSE(isOpenBltCanFrame(frame));
+	EXPECT_TRUE(isOpenBltCanFrame(frame));
 }
 
 TEST(OpenBltCanFrame, RejectsStandardFrame) {
@@ -109,6 +109,18 @@ TEST(OpenBltCanFrame, RejectsWrongLength) {
 TEST(OpenBltCanFrame, RejectsWrongPayload) {
 	auto frame = makeOpenBltConnectFrame();
 	frame.data8[0] = 0xFE;
+
+	EXPECT_FALSE(isOpenBltCanFrame(frame));
+
+	frame = makeOpenBltConnectFrame();
+	frame.data8[1] = 0x01;
+
+	EXPECT_FALSE(isOpenBltCanFrame(frame));
+}
+
+TEST(OpenBltCanFrame, RejectsWrongId) {
+	auto frame = makeOpenBltConnectFrame();
+	frame.EID++;
 
 	EXPECT_FALSE(isOpenBltCanFrame(frame));
 }
