@@ -1,10 +1,13 @@
 package com.rusefi.maintenance;
 
 import com.devexperts.logging.Logging;
+import com.rusefi.io.can.CanAddress;
+import com.rusefi.io.can.RawCanPort;
 import com.rusefi.libopenblt.XcpLoader;
 import com.rusefi.libopenblt.XcpSettings;
 import com.rusefi.libopenblt.file.SrecParser;
 import com.rusefi.libopenblt.transport.IXcpTransport;
+import com.rusefi.libopenblt.transport.XcpCan;
 import com.rusefi.libopenblt.transport.XcpNet;
 import com.rusefi.libopenblt.transport.XcpSerial;
 
@@ -16,6 +19,10 @@ import java.util.List;
 import static com.devexperts.logging.Logging.getLogging;
 
 public class OpenBltFlasher {
+    // Defaults from firmware/hw_layer/openblt/efi_blt_ids.h, represented without OS-specific EFF bits.
+    private static final CanAddress RUSEFI_OPENBLT_REQUEST = new CanAddress(0x10667, true);
+    private static final CanAddress RUSEFI_OPENBLT_RESPONSE = new CanAddress(0x107E1, true);
+
     // 16 full PROGRAM_MAX packets with a 240-byte CTO, while still updating progress often.
     private static final int PROGRAM_CHUNK_SIZE = 16 * 239;
 
@@ -43,8 +50,18 @@ public class OpenBltFlasher {
         return new OpenBltFlasher(transport, settings, callbacks);
     }
 
+    public static OpenBltFlasher makeCan(RawCanPort port, XcpSettings settings, OpenbltJni.OpenbltCallbacks callbacks) {
+        IXcpTransport transport = new XcpCan(port, RUSEFI_OPENBLT_REQUEST, RUSEFI_OPENBLT_RESPONSE);
+        return new OpenBltFlasher(transport, settings, callbacks);
+    }
+
     public static void flashSerial(String fileName, String port, OpenbltJni.OpenbltCallbacks callbacks) throws IOException {
         OpenBltFlasher f = OpenBltFlasher.makeSerial(port, new XcpSettings(), callbacks);
+        f.flash(fileName);
+    }
+
+    public static void flashCan(String fileName, RawCanPort port, OpenbltJni.OpenbltCallbacks callbacks) throws IOException {
+        OpenBltFlasher f = OpenBltFlasher.makeCan(port, new XcpSettings(), callbacks);
         f.flash(fileName);
     }
 
