@@ -125,33 +125,7 @@ static const wspi_command_t w25q_cmd_read_id = {
   .dummy            = 0
 };
 
-/* Initial W25Q_CMD_WRITE_ENHANCED_V_CONF_REGISTER command.*/
-static const wspi_command_t w25q_cmd_write_evconf = {
-  .cmd              = W25Q_CMD_WRITE_ENHANCED_V_CONF_REGISTER,
-  .cfg              = 0U |
-#if W25Q_SWITCH_WIDTH == TRUE
-                      WSPI_CFG_CMD_MODE_ONE_LINE |
-                      WSPI_CFG_DATA_MODE_ONE_LINE,
-#else
-#if W25Q_BUS_MODE == W25Q_BUS_MODE_WSPI1L
-                      WSPI_CFG_CMD_MODE_ONE_LINE |
-                      WSPI_CFG_DATA_MODE_ONE_LINE,
-#elif W25Q_BUS_MODE == W25Q_BUS_MODE_WSPI2L
-                      WSPI_CFG_CMD_MODE_TWO_LINES |
-                      WSPI_CFG_DATA_MODE_TWO_LINES,
-#elif W25Q_BUS_MODE == W25Q_BUS_MODE_WSPI4L
-                      WSPI_CFG_CMD_MODE_FOUR_LINES |
-                      WSPI_CFG_DATA_MODE_FOUR_LINES,
-#else
-                      WSPI_CFG_CMD_MODE_EIGHT_LINES |
-                      WSPI_CFG_DATA_MODE_EIGHT_LINES,
-#endif
-#endif
-  .addr             = 0,
-  .alt              = 0,
-  .dummy            = 0
-};
-
+#if 0
 /* Initial W25Q_CMD_WRITE_ENABLE command.*/
 static const wspi_command_t w25q_cmd_write_enable = {
   .cmd              = W25Q_CMD_WRITE_ENABLE,
@@ -173,6 +147,7 @@ static const wspi_command_t w25q_cmd_write_enable = {
   .alt              = 0,
   .dummy            = 0
 };
+#endif
 
 #endif /* SNOR_BUS_DRIVER == SNOR_BUS_DRIVER_WSPI */
 
@@ -262,8 +237,8 @@ static void w25q_reset_memory(SNORDriver *devp) {
     .dummy            = 0
   };
 
-  wspiCommand(devp, &cmd_reset_enable_4);
-  wspiCommand(devp, &cmd_reset_4);
+  wspiCommand(devp->config->busp, &cmd_reset_enable_4);
+  wspiCommand(devp->config->busp, &cmd_reset_4);
 #else
   /* 2x W25Q_CMD_RESET_ENABLE command.*/
   static const wspi_command_t cmd_reset_enable_2 = {
@@ -283,14 +258,14 @@ static void w25q_reset_memory(SNORDriver *devp) {
     .dummy            = 0
   };
 
-  wspiCommand(devp, &cmd_reset_enable_2);
-  wspiCommand(devp, &cmd_reset_2);
+  wspiCommand(devp->config->busp, &cmd_reset_enable_2);
+  wspiCommand(devp->config->busp, &cmd_reset_2);
 #endif
 
   /* Now the device should be in one bit mode for sure and we perform a
      device reset.*/
-  wspiCommand(devp, &cmd_reset_enable_1);
-  wspiCommand(devp, &cmd_reset_1);
+  wspiCommand(devp->config->busp, &cmd_reset_enable_1);
+  wspiCommand(devp->config->busp, &cmd_reset_1);
 }
 #endif /* SNOR_BUS_DRIVER == SNOR_BUS_DRIVER_WSPI */
 
@@ -363,7 +338,7 @@ void snor_device_init(SNORDriver *devp) {
   w25q_reset_memory(devp);
 
   /* Reading device ID and unique ID.*/
-  wspiReceive(devp, &w25q_cmd_read_id,
+  wspiReceive(devp->config->busp, &w25q_cmd_read_id,
               3U, id);
 #endif /* SNOR_BUS_DRIVER == SNOR_BUS_DRIVER_WSPI */
 
@@ -561,7 +536,7 @@ void snor_reset_xip(SNORDriver *devp) {
 #endif
               WSPI_CFG_ALT_MODE_FOUR_LINES |  /* Always 4 lines, note.*/
               WSPI_CFG_ALT_SIZE_8;
-  wspiReceive(devp, &cmd, 1, buf);
+  wspiReceive(devp->config->busp, &cmd, 1, buf);
 
   /* Enabling write operation.*/
   bus_cmd(devp, W25Q_CMD_WRITE_ENABLE);
