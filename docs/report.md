@@ -11848,3 +11848,106 @@ of averager count - same mapAveragingPin transitions, same association gap).
 Analysis only, no code changes. All facts verified from map_averaging.cpp
 (MapAveragingModule::onFastCallback, onEnginePhase, startAveraging, endAveraging)
 and engine_cylinder.cpp (getAngleOffset) and 21129.msq config values.
+
+## 2026-09-03 (evening) - dwell lateArm=59% analysis: why dwell falls back to TIM5 (code + 19:14 session data)
+
+### Observed
+
+19:14:07 lockstats (period 18:54:22 -> 19:14:07, 20 min, avg ~1550 rpm, peak
+3452 rpm per the 19:07 C9009):
+
+  angclk dwell fired=25412 lateArm=36299  spark fired=61711 lateArm=0  inj fired=49353 lateArm=284
+  sched dwell: n=36299 late>=10us=24490 maxLateUs=118 cbmaxUs=186
+  sched fuel:  n=284   late>=10us=284   maxLateUs=134
+
+Earlier snapshot 18:54:22 (3 h since boot, mostly idle/cranking): dwell
+fired=29379 lateArm=8016 (21%). So the fail rate rose 21% -> 59% when the
+session turned into sustained driving - rpm-dependent.
+
+Engine was healthy throughout: zero C9002/C9003/C935x/C9012, one C9009
+false positive (charged=0 bail=no, the known rpm-flap artifact).
+
+### Verified 1:1 cross-checks (from the log, not from code)
+
+- sched dwell n=36299 == angclk dwell lateArm=36299 EXACTLY: every failed
+  TMR2 arm produces exactly one TIM5 "dwell" fallback event.
+- sched fuel n=284 == inj lateArm=284: same 1:1 for injection.
+- dwell attempts = fired + lateArm = 61711 == spark fired: exactly one dwell
+  arm per spark, none skipped, none duplicated.
+
+### Why dwell goes to TIM5 (code paths)
+
+angleClockArmDwell (firmware/hw_layer/angle_clock/angle_clock.cpp L352-380)
+returns false in exactly two places:
+
+1. armGuard (L342-350): s_ticksPerDegree <= 0 (no valid angle->time basis -
+   first teeth after start) OR remainingAngle(target) > MAX_LEAD_DEG=30
+   (stale phase basis after desync). Both hit injection equally, so they
+   cannot explain the dwell-vs-inj gap (inj lateArm=284).
+2. Tick-past check (L365-369): (int32_t)(atTick - TMR2->CNT) < 4 us, i.e.
+   the remaining lead TIME is smaller than the handoff elapsed time at the
+   arm moment. This is the only dwell-specific, rpm-dependent mechanism.
+
+Why dwell is exposed and injection is not (main_trigger_callback.cpp order):
+
+| event | early window [next,nextNext) | current window [current,next) |
+| --- | --- | --- |
+| injection | armed in handleFuel ~13 us elapsed (both windows in ONE call) | same ~13 us - tick-past essentially never fails |
+| dwell | scheduleDwellEarlyIfDue ~30-60 us elapsed, remaining 6-12 deg | onTriggerEventSparkLogic ~100-250 us elapsed, remaining 0-6 deg |
+
+The early-window dwell arm (6-12 deg = 645-1290 us at 1550 rpm) cannot fail
+the tick-past check below ~7000 rpm. The current-window arm fails with
+probability ~= elapsed / 6 deg: ~0-10% at 800 rpm, 25-60% at 2500,
+35-85% at 3450 (elapsed 100-250 us per the trgPostDecode 50-100us=76778 /
+100-250us=9433 buckets). This matches the 21% (idle-heavy) -> 59% (drive)
+trend exactly.
+
+### Why the current window is reached at all
+
+In steady state the early window at tooth T-1 covers exactly
+[currentPhase(T), nextPhase(T)), so the current-window arm at T runs only
+when the early arm was skipped:
+
+- rpm==0 storm-flap teeth: the rpm==0 early return in mainTriggerCallback
+  (L368-387) sits BEFORE scheduleDwellEarlyIfDue (L408). The flap storm is
+  proven to exist at idle AND at 3452 rpm (that is exactly the C9009
+  false-positive mechanism - the rpm sensor cache reads 0 during a dwell
+  callback).
+- First cycle after (re)sync (fresh prepareIgnitionSchedule).
+- nextNextPhase==nextPhase guard: does NOT fire on m74_9 - verified
+  findNextTriggerToothAngle skips RiseOnly duplicate angles and the caller
+  passes +2 (trigger_central.cpp L1069).
+
+### Consequences (why the car drives fine)
+
+Each lateArm is NOT a lost event: scheduleSparkEvent falls back to
+engine->scheduler.schedule("dwell", ..., chargeTime) with chargeTime =
+edgeTs + angleOffset x oneDegreeUs (L562-567). The charge fires 0-6 deg
+after the arm tooth by time, the spark is always re-armed from the actual
+charge moment on TMR4 (angleClockArmSparkFromNow -> spark lateArm=0), and
+the charge-anchored 2.5x-dwell rescue stays as the coil safety net. The
+cost is precision: those events run with the old FALSE-build behavior
+(0-1 tooth lead + executor lateness - 67% of the TIM5 dwells fired >=10 us
+late, max 118 us) instead of the 2-tooth hardware lead.
+
+### Fix candidates (not implemented, recorded)
+
+(a) Run scheduleDwellEarlyIfDue on flap teeth too: it uses neither rpm nor
+    dwellMs in the EFI_ANGLE_CLOCK build (both UNUSED), so it can move
+    before/into the rpm==0 branch; the flap then stops skipping the early
+    arm. Smallest change.
+(b) Merge both windows into scheduleDwellEarlyIfDue (the injection pattern)
+    and drop the late current-window arm from onTriggerEventSparkLogic.
+(c) Telemetry to prove the split on the next drive: split s_lateArmDwell
+    into basis/lead30/past buckets + caller (early/current) + a
+    last-failure snapshot (target angle, s_currentPhase, remaining, delay,
+    CNT) - the pattern used for the 2026-08-31 arm-refusal diagnosis.
+
+### Validation
+
+Analysis only, no code changes. Every claim cross-checked against the
+console log artifacts/logs/efi_log_2026-09-03_15_48_22_078.log.0 (the two
+lockstats dumps, the sched per-kind lines, trgPostDecode histograms, the
+19:07:04 C9009 rpm=3452) and the firmware sources listed above. No unit
+tests touched (the arm path is register-level TMR2 code, not host-testable
+beyond the pure tick math already covered in test_angle_clock.cpp).
