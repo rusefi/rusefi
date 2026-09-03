@@ -1,5 +1,10 @@
 BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 
+# SPI4 is used for accelerometer
+# Currently DMA channels conflict with ADC and SDMMC2
+# ONBOARD_MEMS_TYPE=LIS2DH12
+# DDEFS += -DSTM32_SPI_USE_SPI4=TRUE
+
 # Hellen platform common bits: HW_HELLEN=1, hellen_common.cpp, board-id
 # (inert here - the premium module has no board-id pads/pins defined), and
 # LED_PIN_MODE=OM_INVERTED which matches this module's LED wiring
