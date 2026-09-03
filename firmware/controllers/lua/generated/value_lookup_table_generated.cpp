@@ -214,6 +214,9 @@ const ConfigParameter allParameters[] = {
 	{ 0x1535AD96, // compressionRatio
 		[]() -> float { return engineConfiguration->compressionRatio; },
 		[](float value) { engineConfiguration->compressionRatio = value; } },
+	{ 0x155C0E1E, // can3ListenMode
+		[]() -> float { return engineConfiguration->can3ListenMode; },
+		[](float value) { engineConfiguration->can3ListenMode = value; } },
 	{ 0x169D3BC9, // mc33_i_hold
 		[]() -> float { return engineConfiguration->mc33_i_hold; },
 		[](float value) { engineConfiguration->mc33_i_hold = value; } },
@@ -1630,6 +1633,9 @@ const ConfigParameter allParameters[] = {
 	{ 0xC10B9DDF, // verboseCan2
 		[]() -> float { return engineConfiguration->verboseCan2; },
 		[](float value) { engineConfiguration->verboseCan2 = value; } },
+	{ 0xC10B9DE0, // verboseCan3
+		[]() -> float { return engineConfiguration->verboseCan3; },
+		[](float value) { engineConfiguration->verboseCan3 = value; } },
 	{ 0xC10E9AC3, // turboSpeedSensorMultiplier
 		[]() -> float { return engineConfiguration->turboSpeedSensorMultiplier; },
 		[](float value) { engineConfiguration->turboSpeedSensorMultiplier = value; } },
