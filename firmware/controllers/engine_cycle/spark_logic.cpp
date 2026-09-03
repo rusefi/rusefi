@@ -882,14 +882,26 @@ void scheduleDwellEarlyIfDue(float rpm, efitick_t edgeTimestamp,
         if (std::isnan(dwellAngle) || std::isnan(sparkAngle)) {
             continue;
         }
-        if (!isPhaseInRange(dwellAngle, nextPhase, nextNextPhase)) {
-            continue;  // dwell not in the early window this tooth
+        // Check the early window [nextPhase, nextNextPhase) (1-tooth lead, ~6-12 deg
+        // remaining) first.  Also check the current window [currentPhase, nextPhase)
+        // (0-6 deg remaining) as a fallback for the first cycle after (re)sync or
+        // any case where the early arm at tooth T-1 was missed.  Both windows are
+        // tried at ~5 µs elapsed (before the rpm==0 gate), mirroring the dual-window
+        // approach of InjectionEvent::onTriggerTooth.  At ~5 µs elapsed even 0.5 deg
+        // remaining (= 54 µs at 1550 rpm) leaves 49 µs before the arm tick -> the
+        // tick-past check always passes at normal operating rpm; sub-margin events
+        // (remaining < ARM_MARGIN/ticksPerDeg) fall through to TIM5 and are caught
+        // by angleClockRefresh as immediate fires.
+        const bool inEarlyWindow = isPhaseInRange(dwellAngle, nextPhase, nextNextPhase);
+        const bool inCurrentWindow = isPhaseInRange(dwellAngle, currentPhase, nextPhase);
+        if (!inEarlyWindow && !inCurrentWindow) {
+            continue;  // dwell not due this tooth
         }
         // Schedule the full event: arms TMR2 for dwell AND queues spark for
         // TMR4 arming at the next tooth via scheduleEventsUntilNextTriggerTooth.
         // scheduleSparkEvent sets dwellStartArmed=true so onTriggerEventSparkLogic
-        // skips this cylinder. The TMR2 arm margin at ~30 µs elapsed:
-        //   7000 rpm: delay(6°)=571 ticks=143 µs >> 120 ticks elapsed. OK.
+        // skips this cylinder. The TMR2 arm margin at ~5 µs elapsed:
+        //   7000 rpm: delay(6°)=571 ticks=143 µs >> 20 ticks elapsed. OK.
         scheduleSparkEvent(limitedSpark, event, rpm, dwellMs,
                            dwellAngle, sparkAngle, edgeTimestamp,
                            currentPhase, nextPhase);
