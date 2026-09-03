@@ -10,6 +10,7 @@ import com.opensr5.ini.IndicatorModel;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.core.SensorSubscription;
 import com.rusefi.maintenance.OfflineEditMigration;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.core.preferences.storage.Node;
@@ -28,7 +29,9 @@ import javax.swing.*;
 import javax.swing.Action;
 import java.awt.*;
 import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
@@ -60,6 +63,11 @@ public class TuningPane {
     /** Fired when the user opens Wiring/Pinout from a pin-enum field. Wired from ConsoleUI after construction. */
     private Consumer<String> navigateToPinout;
     private Runnable showTuningTab = () -> { };
+    private SensorCentral.ResponseListenerToken eventTriggerToken;
+    private IndicatorPanel frontPageIndicatorPanel;
+    private ConnectionStatusLogic.Listener connectionStatusListener;
+    private boolean active;
+    private boolean destroyed;
 
     public TuningPane(UIContext uiContext) {
         this(uiContext, null, null);
@@ -214,7 +222,8 @@ public class TuningPane {
                 }
             }
         };
-        SensorCentral.getInstance().addListener(eventTriggerListener);
+        eventTriggerToken = SensorCentral.getInstance().addListener(eventTriggerListener, new SensorSubscription());
+        eventTriggerToken.setActive(false);
 
         // When the ECU disconnects (e.g. after a firmware flash or board swap), drop stale
         // undo/redo state so the next connection starts fresh, but preserve sessionImage
@@ -222,7 +231,7 @@ public class TuningPane {
         // Without clearing sessionImage, the old board's image would be used as the diff
         // baseline in uploadChangesWithoutBurn — but that's fine because on reconnect
         // we re-seed from the ECU below.
-        ConnectionStatusLogic.INSTANCE.addListener(isConnected -> {
+        connectionStatusListener = isConnected -> {
             if (!isConnected) {
                 SwingUtilities.invokeLater(() -> {
                     toolbar.onDisconnect();
@@ -232,6 +241,7 @@ public class TuningPane {
                 });
             } else {
                 SwingUtilities.invokeLater(() -> {
+                    updateEventTriggerDemand();
                     triggerPrevValues.clear();
                     BinaryProtocol bp = uiContext.getBinaryProtocol();
                     if (bp == null || bp.getControllerConfiguration() == null) {
@@ -261,14 +271,15 @@ public class TuningPane {
                     uiContext.fireConfigImageChanged(sessionImage.get());
                 });
             }
-        });
+        };
+        ConnectionStatusLogic.INSTANCE.addListener(connectionStatusListener);
 
         JPanel northPanel = new JPanel();
         northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
         northPanel.add(toolbar.getPanel());
-        JPanel indicatorPanel = buildFrontendIndicatorPanel(uiContext);
-        if (indicatorPanel != null) {
-            northPanel.add(indicatorPanel);
+        frontPageIndicatorPanel = buildFrontendIndicatorPanel(uiContext);
+        if (frontPageIndicatorPanel != null) {
+            northPanel.add(frontPageIndicatorPanel.getPanel());
         }
         if (gaugeStrip != null) {
             northPanel.add(gaugeStrip.getContent());
@@ -282,7 +293,7 @@ public class TuningPane {
     }
 
 
-    private static JPanel buildFrontendIndicatorPanel(UIContext uiContext) {
+    private static IndicatorPanel buildFrontendIndicatorPanel(UIContext uiContext) {
         IniFileModel ini = uiContext.iniFileState.getIniFileModel();
         if (ini == null) {
             return null;
@@ -295,11 +306,55 @@ public class TuningPane {
         if (indicators.isEmpty()) {
             return null;
         }
-        return new IndicatorPanel(indicators, ini, 0).getPanel();
+        return new IndicatorPanel(indicators, ini, 0);
     }
 
     public JPanel getContent() {
         return content;
+    }
+
+    public void setActive(boolean active) {
+        if (destroyed) {
+            return;
+        }
+        this.active = active;
+        if (gaugeStrip != null) {
+            gaugeStrip.setActive(active);
+        }
+        right.setActive(active);
+        if (frontPageIndicatorPanel != null) {
+            frontPageIndicatorPanel.setActive(active);
+        }
+        updateEventTriggerDemand();
+    }
+
+    public void destroy() {
+        if (destroyed) {
+            return;
+        }
+        destroyed = true;
+        active = false;
+        if (gaugeStrip != null) {
+            gaugeStrip.destroy();
+        }
+        right.destroy();
+        if (frontPageIndicatorPanel != null) {
+            frontPageIndicatorPanel.destroy();
+        }
+        eventTriggerToken.remove();
+        ConnectionStatusLogic.INSTANCE.removeListener(connectionStatusListener);
+    }
+
+    private void updateEventTriggerDemand() {
+        Set<String> channels = new HashSet<>();
+        IniFileModel ini = uiContext.iniFileState.getIniFileModel();
+        if (ini != null) {
+            for (EventTriggerModel trigger : ini.getEventTriggers()) {
+                channels.addAll(ExpressionEvaluator.extractVariables(trigger.getExpression()));
+            }
+        }
+        eventTriggerToken.setSubscription(new SensorSubscription(channels.toArray(new String[0])));
+        eventTriggerToken.setActive(active && !channels.isEmpty());
     }
 
     public void setNavigateToPinout(Consumer<String> navigateToPinout) {

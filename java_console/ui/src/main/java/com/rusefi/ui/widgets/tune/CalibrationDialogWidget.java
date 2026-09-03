@@ -62,6 +62,9 @@ public class CalibrationDialogWidget {
     private final List<IndicatorPanel> indicatorPanels = new ArrayList<>();
     private final List<ReadoutLabelEntry> readoutEntries = new ArrayList<>();
     private final List<GaugeReadoutEntry> gaugeReadoutEntries = new ArrayList<>();
+    private final SensorCentral.ResponseListenerToken readoutListenerToken;
+    private boolean active;
+    private boolean hasReadoutDemand;
     private static final int READOUT_GAUGE_SIZE = 150;
     /** Called after each user edit with the current working image, so listeners can re-evaluate their own expressions. */
     private Consumer<ConfigurationImage> onConfigChange;
@@ -133,29 +136,12 @@ public class CalibrationDialogWidget {
         contentPane.setAlignmentX(Component.LEFT_ALIGNMENT);
         // Refresh readouts whenever the ECU sends new output-channel data.
         // Indicator panels register their own SensorCentral listeners independently.
-        SensorCentral.getInstance().addListener(() -> {
+        readoutListenerToken = SensorCentral.getInstance().addListener(() -> {
             if (!readoutEntries.isEmpty() || !gaugeReadoutEntries.isEmpty()) {
                 SwingUtilities.invokeLater(this::refreshReadouts);
             }
-        }, new SensorSubscription() {
-            @Override
-            public boolean isInterestedInAny(Set<String> updatedSensors) {
-                if (readoutEntries.isEmpty() && gaugeReadoutEntries.isEmpty()) {
-                    return false;
-                }
-                for (ReadoutLabelEntry entry : readoutEntries) {
-                    if (updatedSensors.contains(entry.channel.toLowerCase())) return true;
-                }
-                for (GaugeReadoutEntry entry : gaugeReadoutEntries) {
-                    if (updatedSensors.contains(entry.channel.toLowerCase())) return true;
-                    // Also interested if ANY sensor updated if we have expression labels,
-                    // because we don't know which sensors are in the expression without parsing it again.
-                    // But we could parse it once. For now, let's be safe.
-                    if (entry.hasExpressionLabels) return true;
-                }
-                return false;
-            }
-        });
+        }, new SensorSubscription());
+        readoutListenerToken.setActive(false);
     }
 
     private static void applyLayout(JPanel panel, String layoutHint) {
@@ -178,6 +164,7 @@ public class CalibrationDialogWidget {
      */
     public void reset() {
         workingImage = null;
+        clearLiveComponents();
         contentPane.removeAll();
         contentPane.revalidate();
         contentPane.repaint();
@@ -189,10 +176,8 @@ public class CalibrationDialogWidget {
         currentViewRestorer = () -> update(capturedDm, capturedIni, workingImage);
         workingImage = ci != null ? ci.clone() : null;
         currentIniFileModel = iniFileModel;
+        clearLiveComponents();
         expressionRows.clear();
-        indicatorPanels.clear();
-        readoutEntries.clear();
-        gaugeReadoutEntries.clear();
         triggerImageUpdaters.clear();
         contentPane.removeAll();
         if (dialogModel != null) {
@@ -211,6 +196,7 @@ public class CalibrationDialogWidget {
                 addTriggerImage(contentPane, dialogModel.getKey(), uiName);
             }
         }
+        updateLiveDemand();
         contentPane.revalidate();
         contentPane.repaint();
         // After the initial layout gives children their actual widths,
@@ -235,6 +221,7 @@ public class CalibrationDialogWidget {
         final String capturedKey = key;
         final IniFileModel capturedIniForRestore = iniFileModel;
         currentViewRestorer = () -> update(capturedKey, capturedIniForRestore, workingImage);
+        clearLiveComponents();
         contentPane.removeAll();
         if (key != null) {
             DialogModel dialog = iniFileModel.getDialogs().get(key);
@@ -272,6 +259,7 @@ public class CalibrationDialogWidget {
                 }
             }
         }
+        updateLiveDemand();
         contentPane.revalidate();
         contentPane.repaint();
     }
@@ -401,6 +389,7 @@ public class CalibrationDialogWidget {
     private void renderIndicatorGroup(JPanel container, List<IndicatorModel> indicators, IniFileModel iniFileModel, ConfigurationImage ci, int cols) {
         IndicatorPanel ip = new IndicatorPanel(indicators, iniFileModel, Math.max(1, cols));
         ip.refresh(workingImage != null ? workingImage : ci);
+        ip.setActive(active);
         indicatorPanels.add(ip);
         container.add(ip.getPanel());
     }
@@ -415,6 +404,55 @@ public class CalibrationDialogWidget {
             }
         }
         container.add(gaugePanel);
+    }
+
+    private void clearLiveComponents() {
+        for (IndicatorPanel indicatorPanel : indicatorPanels) {
+            indicatorPanel.destroy();
+        }
+        indicatorPanels.clear();
+        readoutEntries.clear();
+        gaugeReadoutEntries.clear();
+        hasReadoutDemand = false;
+        readoutListenerToken.setActive(false);
+    }
+
+    private void updateLiveDemand() {
+        Set<String> channels = new LinkedHashSet<>();
+        for (ReadoutLabelEntry entry : readoutEntries) {
+            channels.add(entry.channel);
+        }
+        for (GaugeReadoutEntry entry : gaugeReadoutEntries) {
+            channels.add(entry.channel);
+            if (entry.hasExpressionLabels && currentIniFileModel != null) {
+                GaugeModel gauge = currentIniFileModel.getGauge(entry.gaugeName);
+                if (gauge != null) {
+                    if (gauge.getTitleValue().isExpression()) {
+                        channels.addAll(ExpressionEvaluator.extractVariables(gauge.getTitle()));
+                    }
+                    if (gauge.getUnitsValue().isExpression()) {
+                        channels.addAll(ExpressionEvaluator.extractVariables(gauge.getUnits()));
+                    }
+                }
+            }
+        }
+        hasReadoutDemand = !channels.isEmpty();
+        readoutListenerToken.setSubscription(new SensorSubscription(channels.toArray(new String[0])));
+        readoutListenerToken.setActive(active && hasReadoutDemand);
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+        readoutListenerToken.setActive(active && hasReadoutDemand);
+        for (IndicatorPanel indicatorPanel : indicatorPanels) {
+            indicatorPanel.setActive(active);
+        }
+    }
+
+    public void destroy() {
+        active = false;
+        clearLiveComponents();
+        readoutListenerToken.remove();
     }
 
     private static String toBorderConstraint(String placement) {

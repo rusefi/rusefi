@@ -5,10 +5,12 @@ import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.IndicatorModel;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.PanelModel;
+import com.opensr5.ini.ReadoutModel;
 import com.opensr5.ini.TableModel;
 import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.EnumIniField;
 import com.rusefi.config.FieldType;
+import com.rusefi.core.SensorCentral;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.laf.GradientTitleBorder;
 import org.junit.jupiter.api.Test;
@@ -26,6 +28,35 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class CalibrationDialogWidgetTest {
+
+    @Test
+    public void activeReadoutControlsOutputDemand() {
+        String channel = "issue10170TuningReadout";
+        IniFileModel ini = mock(IniFileModel.class);
+        DialogModel dialog = new DialogModel(
+            "readouts", "Readouts",
+            Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), Collections.emptyList(),
+            Collections.singletonList(ReadoutModel.ofRef(channel)), 1, Collections.emptyList(), null, null);
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+
+        try {
+            widget.update(dialog, ini, null);
+            assertFalse(hasDemand(channel));
+            widget.setActive(true);
+            assertTrue(hasDemand(channel));
+            widget.setActive(false);
+            assertFalse(hasDemand(channel));
+        } finally {
+            widget.destroy();
+        }
+        widget.setActive(true);
+        assertFalse(hasDemand(channel));
+    }
+
+    private static boolean hasDemand(String channel) {
+        return SensorCentral.getInstance().getOutputChannelDemand().getChannels()
+            .contains(channel.toLowerCase());
+    }
 
     @Test
     public void testLayout() {
