@@ -36,8 +36,14 @@ public class GaugesGridElement {
 
         JMenuItem switchToGauge = getJMenuItem("Switch to Gauge Mode", false);
 
-        wrapper.add(new SensorLiveGraph(uiContext, config.getChild("top"), gaugeName, switchToGauge));
-        wrapper.add(new SensorLiveGraph(uiContext, config.getChild("bottom"), Sensor.RPMGauge.name(), switchToGauge));
+        addLiveGraph(new SensorLiveGraph(uiContext, config.getChild("top"), gaugeName, switchToGauge));
+        addLiveGraph(new SensorLiveGraph(uiContext, config.getChild("bottom"), Sensor.RPMGauge.name(), switchToGauge));
+    }
+
+    private void addLiveGraph(SensorLiveGraph graph) {
+        wrapper.addCleanupAction(graph::destroy);
+        wrapper.addActiveStateAction(graph::setActive);
+        wrapper.add(graph);
     }
 
     private void rebuild() {
@@ -78,6 +84,10 @@ public class GaugesGridElement {
 
     public JPanelWithListener getContent() {
         return wrapper;
+    }
+
+    public void setActive(boolean active) {
+        wrapper.setActive(active);
     }
 
     /**
