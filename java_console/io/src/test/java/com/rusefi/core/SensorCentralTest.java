@@ -3,16 +3,23 @@ package com.rusefi.core;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.ImmutableIniFileModel;
 import com.opensr5.ini.IniFileModelMocks;
+import com.opensr5.ini.field.IniField;
+import com.opensr5.ini.field.ScalarIniField;
+import com.rusefi.config.FieldType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.BitSet;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class SensorCentralTest {
     private SensorCentral sensorCentral;
@@ -101,6 +108,94 @@ public class SensorCentralTest {
     }
 
     @Test
+    void listenerTokenControlsOutputDemand() {
+        ISensorCentral.ListenerToken token = sensorCentral.addListener("DemandedChannel", value -> { });
+        try {
+            assertTrue(sensorCentral.getOutputChannelDemand().getChannels().contains("demandedchannel"));
+
+            token.setActive(false);
+            assertFalse(sensorCentral.getOutputChannelDemand().getChannels().contains("demandedchannel"));
+
+            token.setActive(true);
+            assertTrue(sensorCentral.getOutputChannelDemand().getChannels().contains("demandedchannel"));
+        } finally {
+            token.remove();
+        }
+        assertFalse(sensorCentral.getOutputChannelDemand().getChannels().contains("demandedchannel"));
+    }
+
+    @Test
+    void passiveListenerReceivesValuesWithoutDemandingTheChannel() {
+        AtomicReference<Double> received = new AtomicReference<>();
+        ISensorCentral.ListenerToken token = sensorCentral.addPassiveListener("PassiveChannel", received::set);
+        try {
+            assertFalse(sensorCentral.getOutputChannelDemand().getChannels().contains("passivechannel"));
+            sensorCentral.setValue(12.5, "PassiveChannel");
+            assertEquals(12.5, received.get());
+        } finally {
+            token.remove();
+        }
+    }
+
+    @Test
+    void waitsForGenerationMatchedFullSnapshot() throws Exception {
+        SensorCentral.FullOutputLease lease = sensorCentral.acquireFullOutput();
+        AtomicReference<OutputChannelSnapshot> received = new AtomicReference<>();
+        Thread waiter = new Thread(() -> {
+            try {
+                received.set(sensorCentral.awaitFullSnapshot(lease.getGeneration(), 1000));
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        });
+
+        try {
+            waiter.start();
+            BitSet valid = new BitSet();
+            OutputChannelSnapshot stale = new OutputChannelSnapshot(
+                new byte[]{0}, valid, Collections.emptySet(), lease.getGeneration() - 1, true);
+            sensorCentral.grabSensorValues(stale, IniFileModelMocks.empty(), null);
+            OutputChannelSnapshot matching = new OutputChannelSnapshot(
+                new byte[]{0}, valid, Collections.emptySet(), lease.getGeneration(), true);
+            sensorCentral.grabSensorValues(matching, IniFileModelMocks.empty(), null);
+            waiter.join(1000);
+
+            assertFalse(waiter.isAlive());
+            assertSame(matching, received.get());
+        } finally {
+            waiter.interrupt();
+            lease.close();
+        }
+    }
+
+    @Test
+    void outputSnapshotOwnsItsResponseBytes() {
+        byte[] response = {0, 42};
+        BitSet valid = new BitSet();
+        valid.set(0);
+        OutputChannelSnapshot snapshot = new OutputChannelSnapshot(
+            response, valid, Collections.singleton("rpm"), 1, false);
+
+        response[1] = 7;
+        assertEquals(42, snapshot.getResponse()[1]);
+        byte[] copy = snapshot.getResponse();
+        copy[1] = 9;
+        assertEquals(42, snapshot.getResponse()[1]);
+    }
+
+    @Test
+    void fullOutputLeaseOverridesNamedDemandAndIsIdempotent() {
+        SensorCentral.FullOutputLease lease = sensorCentral.acquireFullOutput();
+        assertTrue(sensorCentral.getOutputChannelDemand().isFull());
+        long generation = lease.getGeneration();
+        assertEquals(generation, sensorCentral.getOutputChannelDemand().getGeneration());
+
+        lease.close();
+        lease.close();
+        assertTrue(sensorCentral.getOutputChannelDemand().getGeneration() > generation);
+    }
+
+    @Test
     void multipleListenersForSameSensor() {
         AtomicInteger callCount1 = new AtomicInteger(0);
         AtomicInteger callCount2 = new AtomicInteger(0);
@@ -145,6 +240,51 @@ public class SensorCentralTest {
         sensorCentral.grabSensorValues(new byte[10], ini, null);
         // todo: adjust once holder.subscription.isInterestedInAny
         assertEquals(2, callCount.get(), "Should notify for RPM");
+    }
+
+    @Test
+    void partialSnapshotNotifiesOnlyInterestedResponseListeners() {
+        AtomicInteger rpmCalls = new AtomicInteger();
+        AtomicInteger tpsCalls = new AtomicInteger();
+        SensorCentral.ResponseListenerToken rpm = sensorCentral.addListener(
+            rpmCalls::incrementAndGet, new SensorSubscription("RPM"));
+        SensorCentral.ResponseListenerToken tps = sensorCentral.addListener(
+            tpsCalls::incrementAndGet, new SensorSubscription("TPS"));
+
+        try {
+            OutputChannelSnapshot snapshot = new OutputChannelSnapshot(
+                new byte[2], new BitSet(), Set.of("TPS"), 10, false);
+            sensorCentral.grabSensorValues(snapshot, IniFileModelMocks.empty(), null);
+            assertEquals(0, rpmCalls.get());
+            assertEquals(1, tpsCalls.get());
+        } finally {
+            rpm.remove();
+            tps.remove();
+        }
+    }
+
+    @Test
+    void partialSnapshotDecodesOnlyValidFields() throws Exception {
+        ScalarIniField rpm = new ScalarIniField("rpm", 0, "RPM", FieldType.UINT16, 1, "0", 0);
+        ScalarIniField tps = new ScalarIniField("tps", 2, "%", FieldType.UINT8, 1, "0", 0);
+        Map<String, IniField> fields = new LinkedHashMap<>();
+        fields.put("rpm", rpm);
+        fields.put("tps", tps);
+        IniFileModel ini = IniFileModelMocks.empty();
+        when(ini.getAllOutputChannels()).thenReturn(fields);
+        when(ini.getOutputChannel("rpm")).thenReturn(rpm);
+        when(ini.getOutputChannel("tps")).thenReturn(tps);
+
+        BitSet valid = new BitSet();
+        valid.set(0, 2);
+        OutputChannelSnapshot snapshot = new OutputChannelSnapshot(
+            new byte[]{0, 42, 0, 99}, valid, Set.of("rpm"), 11, false);
+        sensorCentral.grabSensorValues(snapshot, ini, null);
+
+        assertEquals(42, sensorCentral.getValue("rpm"));
+        assertNotEquals(99, sensorCentral.getValue("tps"));
+        assertNull(sensorCentral.getResponse(), "Legacy raw response must not expose invalid bytes");
+        assertSame(snapshot, sensorCentral.getCurrentSnapshot());
     }
 
     @Test

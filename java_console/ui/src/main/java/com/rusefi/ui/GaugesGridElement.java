@@ -24,6 +24,7 @@ public class GaugesGridElement {
     private final UIContext uiContext;
     private final Node config;
     private final String gaugeName;
+    private volatile boolean destroyed;
 
     private GaugesGridElement(UIContext uiContext, Node config, String gaugeName) {
         this.uiContext = uiContext;
@@ -36,11 +37,20 @@ public class GaugesGridElement {
 
         JMenuItem switchToGauge = getJMenuItem("Switch to Gauge Mode", false);
 
-        wrapper.add(new SensorLiveGraph(uiContext, config.getChild("top"), gaugeName, switchToGauge));
-        wrapper.add(new SensorLiveGraph(uiContext, config.getChild("bottom"), Sensor.RPMGauge.name(), switchToGauge));
+        addLiveGraph(new SensorLiveGraph(uiContext, config.getChild("top"), gaugeName, switchToGauge));
+        addLiveGraph(new SensorLiveGraph(uiContext, config.getChild("bottom"), Sensor.RPMGauge.name(), switchToGauge));
+    }
+
+    private void addLiveGraph(SensorLiveGraph graph) {
+        wrapper.addCleanupAction(graph::destroy);
+        wrapper.addActiveStateAction(graph::setActive);
+        wrapper.add(graph);
     }
 
     private void rebuild() {
+        if (destroyed) {
+            return;
+        }
         // Clear existing components before rebuilding to prevent duplication on reconnect
         wrapper.removeAllChildrenAndListeners();
         if (config.getBoolProperty(IS_LIVE_GRAPH)) {
@@ -80,12 +90,17 @@ public class GaugesGridElement {
         return wrapper;
     }
 
+    public void setActive(boolean active) {
+        wrapper.setActive(active);
+    }
+
     /**
      * Remove this element's {@link ConnectionStatusLogic} listener and tear down its inner components.
      * Must be called before discarding a {@code GaugesGridElement} (e.g. on grid resize)
      * to prevent stale listeners from accumulating and keeping Radial gauge images alive.
      */
     public void destroy() {
+        destroyed = true;
         if (connectionStatusListener != null) {
             ConnectionStatusLogic.INSTANCE.removeListener(connectionStatusListener);
             connectionStatusListener = null;
@@ -97,8 +112,13 @@ public class GaugesGridElement {
 
     public static GaugesGridElement create(UIContext uiContext, final Node config, String gaugeName) {
         GaugesGridElement gaugesGridElement = new GaugesGridElement(uiContext, config, gaugeName);
-        gaugesGridElement.connectionStatusListener = isConnected ->
-            SwingUtilities.invokeLater(gaugesGridElement::rebuild);
+        gaugesGridElement.connectionStatusListener = isConnected -> {
+            if (SwingUtilities.isEventDispatchThread()) {
+                gaugesGridElement.rebuild();
+            } else {
+                SwingUtilities.invokeLater(gaugesGridElement::rebuild);
+            }
+        };
         ConnectionStatusLogic.INSTANCE.addAndFireListener(gaugesGridElement.connectionStatusListener);
         return gaugesGridElement;
     }

@@ -14,6 +14,8 @@ import com.rusefi.config.generated.Integration;
 import com.rusefi.Timeouts;
 import com.rusefi.binaryprotocol.test.Bug3923;
 import com.rusefi.core.Pair;
+import com.rusefi.core.OutputChannelDemand;
+import com.rusefi.core.OutputChannelSnapshot;
 import com.rusefi.core.RusEfiSignature;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.core.SignatureHelper;
@@ -33,6 +35,7 @@ import jakarta.xml.bind.JAXBException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.BitSet;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.*;
@@ -62,6 +65,9 @@ public class BinaryProtocol {
     private final IoStream stream;
     private final Integer blockingFactorOverride;
     private boolean isBurnPending;
+    private long lastOutputFallbackGeneration = Long.MIN_VALUE;
+    private volatile boolean lastOutputPollWasFull = true;
+    private long nextTextPullNanos;
     public String signature;
     public boolean isGoodOutputChannels;
     // NotNull once connected
@@ -295,9 +301,11 @@ public class BinaryProtocol {
         Runnable textPull = new Runnable() {
             @Override
             public void run() {
+                Future<?> pendingPoll = null;
                 while (!stream.isClosed()) {
-                    if (linkManager.COMMUNICATION_QUEUE.isEmpty() && linkManager.getNeedPullData()) {
-                        linkManager.submit(new Runnable() {
+                    if ((pendingPoll == null || pendingPoll.isDone())
+                            && linkManager.COMMUNICATION_QUEUE.isEmpty() && linkManager.getNeedPullData()) {
+                        pendingPoll = linkManager.submit(new Runnable() {
                             @Override
                             public void run() {
                                 isGoodOutputChannels = requestOutputChannels();
@@ -305,7 +313,9 @@ public class BinaryProtocol {
                                 if (isGoodOutputChannels)
                                     HeartBeatListeners.onDataArrived();
                                 binaryProtocolLogger.compositeLogic(BinaryProtocol.this);
-                                if (linkManager.isNeedPullText()) {
+                                long now = System.nanoTime();
+                                if (linkManager.isNeedPullText() && now >= nextTextPullNanos) {
+                                    nextTextPullNanos = now + TimeUnit.MILLISECONDS.toNanos(Timeouts.TEXT_PULL_PERIOD);
                                     String text = requestPendingTextMessages();
                                     if (text != null) {
                                         textListener.onDataArrived((text + "\r\n").getBytes());
@@ -320,7 +330,9 @@ public class BinaryProtocol {
                             }
                         });
                     }
-                    sleep(Timeouts.TEXT_PULL_PERIOD);
+                    sleep(lastOutputPollWasFull
+                        ? Timeouts.FULL_OUTPUT_CHANNEL_PULL_PERIOD
+                        : Timeouts.OUTPUT_CHANNEL_PULL_PERIOD);
                 }
                 log.info("Port shutdown: Stopping text pull");
             }
@@ -836,21 +848,12 @@ public class BinaryProtocol {
     public String requestPendingTextMessages() {
         if (stream.isClosed())
             return null;
-        try {
-            byte[] response = executeCommand(Integration.TS_GET_TEXT, "text");
-            if (response == null) {
-                log.error("ERROR: TS_GET_TEXT failed");
-                return null;
-            }
-            if (response != null && response.length == 1) {
-                // todo: what is this sleep doing exactly?
-                Thread.sleep(100);
-            }
-            return new String(response, 1, response.length - 1);
-        } catch (InterruptedException e) {
-            log.error(e.toString());
+        byte[] response = executeCommand(Integration.TS_GET_TEXT, "text");
+        if (response == null) {
+            log.error("ERROR: TS_GET_TEXT failed");
             return null;
         }
+        return new String(response, 1, response.length - 1);
     }
 
     /**
@@ -859,41 +862,62 @@ public class BinaryProtocol {
      * @return true if successful
      */
     public boolean requestOutputChannels() {
+        OutputChannelDemand demand = SensorCentral.getInstance().getOutputChannelDemand();
+        if (linkManager.isNeedPullLiveData() && LiveDocsRegistry.INSTANCE.hasVisible()) {
+            demand = OutputChannelDemand.full(demand.getGeneration());
+        }
+        return requestOutputChannels(demand);
+    }
+
+    boolean requestOutputChannels(OutputChannelDemand demand) {
         if (stream.isClosed())
             return false;
 
+        OutputChannelPollPlan plan = OutputChannelPollPlan.create(iniFile, demand);
+        lastOutputPollWasFull = plan.isFull();
+        if (plan.isFull() && !demand.isFull() && !demand.getChannels().isEmpty()
+                && demand.getGeneration() != lastOutputFallbackGeneration) {
+            lastOutputFallbackGeneration = demand.getGeneration();
+            log.warn("Falling back to full output polling for unresolved demand " + demand.getChannels());
+        }
         // TODO: Get rid of the +1.  This adds a byte at the front to tack a fake TS response code on the front
         //  of the reassembled packet.
         int ochBlockSize = iniFile.getMetaInfo().getOchBlockSize();
         byte[] reassemblyBuffer = new byte[ochBlockSize + 1];
         reassemblyBuffer[0] = Integration.TS_RESPONSE_OK;
+        BitSet validBytes = new BitSet(ochBlockSize);
 
-        int reassemblyIdx = 0;
-        int remaining = ochBlockSize;
+        for (OutputChannelPollPlan.Range range : plan.getRanges()) {
+            int reassemblyIdx = range.getOffset();
+            int remaining = range.getSize();
 
-        while (remaining > 0) {
-            // If less than one full chunk left, do a smaller read
-            int chunkSize = Math.min(remaining, getBlockingFactor());
+            while (remaining > 0) {
+                // If less than one full chunk left, do a smaller read
+                int chunkSize = Math.min(remaining, getBlockingFactor());
 
-            byte[] response = executeCommand(
-                Integration.TS_OUTPUT_COMMAND,
-                GetOutputsCommand.createRequest(reassemblyIdx, chunkSize),
-                "output channels"
-            );
+                byte[] response = executeCommand(
+                    Integration.TS_OUTPUT_COMMAND,
+                    GetOutputsCommand.createRequest(reassemblyIdx, chunkSize),
+                    "output channels"
+                );
 
-            if (response == null || response.length != (chunkSize + 1) || response[0] != Integration.TS_RESPONSE_OK) {
-                return false;
+                if (response == null || response.length != (chunkSize + 1) || response[0] != Integration.TS_RESPONSE_OK) {
+                    return false;
+                }
+
+                // Copy this chunk in to the reassembly buffer
+                System.arraycopy(response, 1, reassemblyBuffer, reassemblyIdx + 1, chunkSize);
+                validBytes.set(reassemblyIdx, reassemblyIdx + chunkSize);
+                reassemblyIdx += chunkSize;
+                remaining -= chunkSize;
             }
-
-            // Copy this chunk in to the reassembly buffer
-            System.arraycopy(response, 1, reassemblyBuffer, reassemblyIdx + 1, chunkSize);
-            reassemblyIdx += chunkSize;
-            remaining -= chunkSize;
         }
 
-        state.setCurrentOutputs(reassemblyBuffer);
+        state.setCurrentOutputs(plan.isFull() ? reassemblyBuffer : null);
 
-        SensorCentral.getInstance().grabSensorValues(reassemblyBuffer, getIniFile(), getControllerConfiguration());
+        OutputChannelSnapshot snapshot = new OutputChannelSnapshot(
+            reassemblyBuffer, validBytes, demand.getChannels(), plan.getGeneration(), plan.isFull());
+        SensorCentral.getInstance().grabSensorValues(snapshot, getIniFile(), getControllerConfiguration());
         return true;
     }
 

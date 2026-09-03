@@ -8,7 +8,11 @@ import org.jetbrains.annotations.Nullable;
 import com.opensr5.ini.LowercaseHashMap;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This class keeps track of {@link Sensor} current values and {@link SensorCentral.SensorListener}.
@@ -75,12 +79,30 @@ public class SensorCentral implements ISensorCentral {
 
     // Keys normalized to lower-case (Locale.US) for O(1) HashMap lookup.
     // "coolant", "COOLANT", "Coolant" all resolve to the same listener list.
-    private final Map<String, List<SensorListener>> sensorListeners = new HashMap<>();
+    private final Map<String, List<SensorListenerHolder>> sensorListeners = new HashMap<>();
     private final List<ResponseListenerHolder> listeners = new CopyOnWriteArrayList<>();
+    private final List<SnapshotListener> snapshotListeners = new CopyOnWriteArrayList<>();
+    private final AtomicInteger fullOutputLeases = new AtomicInteger();
+    private final AtomicLong outputDemandGeneration = new AtomicLong();
+    private final Object snapshotMonitor = new Object();
+
+    private static class SensorListenerHolder {
+        private final String sensorName;
+        private final SensorListener listener;
+        private final boolean contributesDemand;
+        private volatile boolean active = true;
+
+        private SensorListenerHolder(String sensorName, SensorListener listener, boolean contributesDemand) {
+            this.sensorName = sensorName;
+            this.listener = listener;
+            this.contributesDemand = contributesDemand;
+        }
+    }
 
     private static class ResponseListenerHolder {
         private final ResponseListener listener;
-        private final SensorSubscription subscription;
+        private volatile SensorSubscription subscription;
+        private volatile boolean active = true;
 
         public ResponseListenerHolder(ResponseListener listener, SensorSubscription subscription) {
             this.listener = listener;
@@ -89,6 +111,7 @@ public class SensorCentral implements ISensorCentral {
     }
     private volatile Map<String, ResolvedGaugeLabels> resolvedGaugeLabels = Collections.emptyMap();
     private volatile byte[] response;
+    private volatile OutputChannelSnapshot currentSnapshot;
 
     // Sliding window of recent frame arrival timestamps (System.nanoTime), used to compute
     // the synthetic 'runtimeDataRateGauge' value (frames-per-second) once per ECU frame.
@@ -110,15 +133,29 @@ public class SensorCentral implements ISensorCentral {
 
     @Override
     public void grabSensorValues(byte[] response, @NotNull IniFileModel ini, @Nullable ConfigurationImage configImage) {
+        grabSensorValues(OutputChannelSnapshot.full(response), ini, configImage);
+        // Preserve the legacy full-frame API's identity contract for existing direct callers.
         this.response = response;
-        ISensorCentral.super.grabSensorValues(response, ini, configImage);
+    }
+
+    public void grabSensorValues(OutputChannelSnapshot snapshot, @NotNull IniFileModel ini,
+                                 @Nullable ConfigurationImage configImage) {
+        synchronized (snapshotMonitor) {
+            currentSnapshot = snapshot;
+            snapshotMonitor.notifyAll();
+        }
+        response = snapshot.isFull() ? snapshot.getResponse() : null;
+        ISensorCentral.super.grabSensorValues(snapshot, ini, configImage);
         updateRuntimeDataRate();
-        Set<String> updatedSensors = sensorsHolder.getSensorNames();
         for (ResponseListenerHolder holder : listeners) {
-            // todo: once we trust this! if (holder.subscription.isInterestedInAny(updatedSensors))
-            {
+            if (holder.active && (snapshot.isFull()
+                    || holder.subscription == null
+                    || holder.subscription.isInterestedInAny(snapshot.getRequestedChannels()))) {
                 holder.listener.onSensorUpdate();
             }
+        }
+        for (SnapshotListener listener : snapshotListeners) {
+            listener.onSnapshot(snapshot);
         }
     }
 
@@ -192,24 +229,30 @@ public class SensorCentral implements ISensorCentral {
         boolean isUpdated = sensorsHolder.setValue(value, sensorName);
         if (!isUpdated)
             return false;
-        List<SensorListener> listeners;
+        List<SensorListenerHolder> listeners;
         synchronized (sensorListeners) {
             listeners = sensorListeners.get(sensorName.toLowerCase(Locale.US));
         }
 
         if (listeners == null)
             return true;
-        for (SensorListener listener : listeners)
-            listener.onSensorUpdate(value);
+        for (SensorListenerHolder holder : listeners) {
+            if (holder.active) {
+                holder.listener.onSensorUpdate(value);
+            }
+        }
         return true;
     }
 
-    public void addListener(ResponseListener listener) {
-        addListener(listener, new SensorSubscription());
+    public ResponseListenerToken addListener(ResponseListener listener) {
+        return addListener(listener, new SensorSubscription());
     }
 
-    public void addListener(ResponseListener listener, SensorSubscription subscription) {
-        listeners.add(new ResponseListenerHolder(listener, subscription));
+    public ResponseListenerToken addListener(ResponseListener listener, SensorSubscription subscription) {
+        ResponseListenerHolder holder = new ResponseListenerHolder(listener, subscription);
+        listeners.add(holder);
+        outputDemandGeneration.incrementAndGet();
+        return new ResponseListenerToken(this, holder);
     }
 
     public SensorSubscription getSubscription(ResponseListener listener) {
@@ -222,32 +265,147 @@ public class SensorCentral implements ISensorCentral {
     }
 
     public void removeListener(ResponseListener listener) {
-        listeners.removeIf(holder -> holder.listener == listener);
+        boolean removed = listeners.removeIf(holder -> holder.listener == listener);
+        if (removed) {
+            outputDemandGeneration.incrementAndGet();
+        }
     }
 
     @Override
     public ListenerToken addListener(String sensorName, SensorListener listener) {
+        return addListener(sensorName, listener, true);
+    }
+
+    public ListenerToken addPassiveListener(String sensorName, SensorListener listener) {
+        return addListener(sensorName, listener, false);
+    }
+
+    private ListenerToken addListener(String sensorName, SensorListener listener, boolean contributesDemand) {
         String key = sensorName.toLowerCase(Locale.US);
-        List<SensorListener> listeners;
+        SensorListenerHolder holder = new SensorListenerHolder(key, listener, contributesDemand);
+        List<SensorListenerHolder> listeners;
         synchronized (sensorListeners) {
             listeners = sensorListeners.get(key);
             if (listeners == null)
                 listeners = new CopyOnWriteArrayList<>();
             sensorListeners.put(key, listeners);
         }
-        listeners.add(listener);
+        listeners.add(holder);
+        if (contributesDemand) {
+            outputDemandGeneration.incrementAndGet();
+        }
 
-        return new SensorCentral.ListenerToken(this, sensorName, listener);
+        return new SensorCentral.ListenerToken(
+            () -> removeListener(holder),
+            active -> setListenerActive(holder, active));
     }
 
     @Override
     public void removeListener(String sensorName, SensorListener listener) {
-        List<SensorListener> listeners;
+        List<SensorListenerHolder> listeners;
         synchronized (sensorListeners) {
             listeners = sensorListeners.get(sensorName.toLowerCase(Locale.US));
         }
-        if (listeners != null)
-            listeners.remove(listener);
+        if (listeners != null) {
+            for (SensorListenerHolder holder : listeners) {
+                if (holder.listener == listener) {
+                    removeListener(holder);
+                    return;
+                }
+            }
+        }
+    }
+
+    private void removeListener(SensorListenerHolder holder) {
+        synchronized (sensorListeners) {
+            List<SensorListenerHolder> holders = sensorListeners.get(holder.sensorName);
+            if (holders != null && holders.remove(holder)) {
+                if (holders.isEmpty()) {
+                    sensorListeners.remove(holder.sensorName);
+                }
+                if (holder.contributesDemand) {
+                    outputDemandGeneration.incrementAndGet();
+                }
+            }
+        }
+    }
+
+    private void setListenerActive(SensorListenerHolder holder, boolean active) {
+        if (holder.active != active) {
+            holder.active = active;
+            if (holder.contributesDemand) {
+                outputDemandGeneration.incrementAndGet();
+            }
+        }
+    }
+
+    public OutputChannelDemand getOutputChannelDemand() {
+        Set<String> channels = new LinkedHashSet<>();
+        synchronized (sensorListeners) {
+            for (List<SensorListenerHolder> holders : sensorListeners.values()) {
+                for (SensorListenerHolder holder : holders) {
+                    if (holder.active && holder.contributesDemand) {
+                        channels.add(holder.sensorName);
+                        break;
+                    }
+                }
+            }
+        }
+
+        boolean full = fullOutputLeases.get() > 0;
+        for (ResponseListenerHolder holder : listeners) {
+            if (!holder.active) {
+                continue;
+            }
+            SensorSubscription subscription = holder.subscription;
+            if (subscription == null || subscription.getSensorNames().isEmpty()) {
+                full = true;
+            } else {
+                channels.addAll(subscription.getSensorNames());
+            }
+        }
+        return new OutputChannelDemand(channels, full, outputDemandGeneration.get());
+    }
+
+    public FullOutputLease acquireFullOutput() {
+        fullOutputLeases.incrementAndGet();
+        long generation = outputDemandGeneration.incrementAndGet();
+        return new FullOutputLease(this, generation);
+    }
+
+    private void releaseFullOutput() {
+        int remaining = fullOutputLeases.decrementAndGet();
+        if (remaining < 0) {
+            fullOutputLeases.incrementAndGet();
+            throw new IllegalStateException("Unbalanced full-output lease release");
+        }
+        outputDemandGeneration.incrementAndGet();
+    }
+
+    public SnapshotListenerToken addSnapshotListener(SnapshotListener listener) {
+        snapshotListeners.add(listener);
+        return new SnapshotListenerToken(snapshotListeners, listener);
+    }
+
+    public OutputChannelSnapshot getCurrentSnapshot() {
+        return currentSnapshot;
+    }
+
+    @Nullable
+    public OutputChannelSnapshot awaitFullSnapshot(long generation, long timeoutMillis) throws InterruptedException {
+        long remainingNanos = TimeUnit.MILLISECONDS.toNanos(timeoutMillis);
+        long deadline = System.nanoTime() + remainingNanos;
+        synchronized (snapshotMonitor) {
+            while (currentSnapshot == null || !currentSnapshot.isFull()
+                    || currentSnapshot.getGeneration() < generation) {
+                if (remainingNanos <= 0) {
+                    return null;
+                }
+                TimeUnit.NANOSECONDS.timedWait(snapshotMonitor, remainingNanos);
+                remainingNanos = deadline - System.nanoTime();
+            }
+            return currentSnapshot;
+        }
     }
 
     /**
@@ -266,6 +424,10 @@ public class SensorCentral implements ISensorCentral {
     public void reset() {
         sensorsHolder.reset();
         response = null;
+        synchronized (snapshotMonitor) {
+            currentSnapshot = null;
+            snapshotMonitor.notifyAll();
+        }
         resolvedGaugeLabels = Collections.emptyMap();
         synchronized (frameTimestampsNanos) {
             frameTimestampsNanos.clear();
@@ -288,5 +450,79 @@ public class SensorCentral implements ISensorCentral {
 
     public interface ResponseListener {
         void onSensorUpdate();
+    }
+
+    public interface SnapshotListener {
+        void onSnapshot(OutputChannelSnapshot snapshot);
+    }
+
+    public static final class ResponseListenerToken {
+        private final SensorCentral central;
+        private final ResponseListenerHolder holder;
+        private final AtomicBoolean removed = new AtomicBoolean();
+
+        private ResponseListenerToken(SensorCentral central, ResponseListenerHolder holder) {
+            this.central = central;
+            this.holder = holder;
+        }
+
+        public void setActive(boolean active) {
+            if (!removed.get() && holder.active != active) {
+                holder.active = active;
+                central.outputDemandGeneration.incrementAndGet();
+            }
+        }
+
+        public void setSubscription(SensorSubscription subscription) {
+            if (!removed.get()) {
+                holder.subscription = subscription;
+                central.outputDemandGeneration.incrementAndGet();
+            }
+        }
+
+        public void remove() {
+            if (removed.compareAndSet(false, true) && central.listeners.remove(holder)) {
+                central.outputDemandGeneration.incrementAndGet();
+            }
+        }
+    }
+
+    public static final class SnapshotListenerToken {
+        private final List<SnapshotListener> listeners;
+        private final SnapshotListener listener;
+        private final AtomicBoolean removed = new AtomicBoolean();
+
+        private SnapshotListenerToken(List<SnapshotListener> listeners, SnapshotListener listener) {
+            this.listeners = listeners;
+            this.listener = listener;
+        }
+
+        public void remove() {
+            if (removed.compareAndSet(false, true)) {
+                listeners.remove(listener);
+            }
+        }
+    }
+
+    public static final class FullOutputLease implements AutoCloseable {
+        private final SensorCentral central;
+        private final long generation;
+        private final AtomicBoolean closed = new AtomicBoolean();
+
+        private FullOutputLease(SensorCentral central, long generation) {
+            this.central = central;
+            this.generation = generation;
+        }
+
+        public long getGeneration() {
+            return generation;
+        }
+
+        @Override
+        public void close() {
+            if (closed.compareAndSet(false, true)) {
+                central.releaseFullOutput();
+            }
+        }
     }
 }

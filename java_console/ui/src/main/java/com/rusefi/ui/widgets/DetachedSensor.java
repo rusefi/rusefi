@@ -54,6 +54,7 @@ public class DetachedSensor {
     private static final int _5_VOLTS_WITH_DECIMAL = 50;
 
     private final JPanel content = new JPanel(new BorderLayout());
+    private final JPanelWithListener gaugeWrapper = new JPanelWithListener(new BorderLayout());
     private final JFrame frame;
     private final JPanel mockControlPanel = new JPanel(new BorderLayout());
     private String gaugeName;
@@ -77,16 +78,20 @@ public class DetachedSensor {
                 uiContext.DetachedRepositoryINSTANCE.remove(DetachedSensor.this);
                 frame.dispose();
             }
+
+            @Override
+            public void windowClosed(WindowEvent e) {
+                gaugeWrapper.removeAllChildrenAndListeners();
+            }
         });
         create();
 //        showMockControl();
     }
 
     private void create() {
-        JPanelWithListener wrapper = new JPanelWithListener(new BorderLayout());
         SensorGauge.GaugeChangeListener listener = this::onChange;
-        SensorGauge.createGaugeBody(uiContext, gaugeName, wrapper, listener, null);
-        content.add(wrapper, BorderLayout.CENTER);
+        SensorGauge.createGaugeBody(uiContext, gaugeName, gaugeWrapper, listener, null);
+        content.add(gaugeWrapper, BorderLayout.CENTER);
         content.add(mockControlPanel, BorderLayout.SOUTH);
 
         frame.add(content);

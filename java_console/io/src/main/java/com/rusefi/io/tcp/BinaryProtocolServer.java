@@ -11,6 +11,8 @@ import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.binaryprotocol.IoHelper;
 import com.rusefi.config.generated.Integration;
+import com.rusefi.core.OutputChannelSnapshot;
+import com.rusefi.core.SensorCentral;
 import com.rusefi.util.HexBinary;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.commands.ByteRange;
@@ -148,51 +150,71 @@ public class BinaryProtocolServer {
 
         IncomingDataBuffer in = stream.getDataBuffer();
 
-        while (true) {
-            Integer length = getPendingPacketLengthOrHandleProtocolCommand(clientSocket, context, in);
-            if (length == null)
-                continue;
+        try (SensorCentral.FullOutputLease fullOutputLease = linkManager.getBinaryProtocol() == null
+            ? null
+            : SensorCentral.getInstance().acquireFullOutput()) {
+            while (true) {
+                Integer length = getPendingPacketLengthOrHandleProtocolCommand(clientSocket, context, in);
+                if (length == null)
+                    continue;
 
-            byte[] payload = getPacketContent(in, length);
+                byte[] payload = getPacketContent(in, length);
 
-            byte command = payload[0];
+                byte command = payload[0];
 
-            log.info("Got command " + BinaryProtocol.findCommand(command));
+                log.info("Got command " + BinaryProtocol.findCommand(command));
 
-            if (command == Integration.TS_HELLO_COMMAND) {
-                new HelloCommand(TS_SIGNATURE).handle(stream);
-            } else if (command == Integration.TS_GET_PROTOCOL_VERSION_COMMAND_F) {
-                stream.sendPacket((TS_OK + TS_PROTOCOL).getBytes());
-            } else if (command == Integration.TS_GET_FIRMWARE_VERSION) {
-                stream.sendPacket((TS_OK + "rusEFI proxy").getBytes());
-            } else if (command == Integration.TS_CRC_CHECK_COMMAND) {
-                handleCrc(linkManager, stream);
-            } else if (command == Integration.TS_READ_COMMAND) {
-                ByteRange byteRange = ByteRange.valueOf2(payload);
-                handleRead(linkManager, byteRange, stream);
-            } else if (command == Integration.TS_CHUNK_WRITE_COMMAND) {
-                ByteRange byteRange = ByteRange.valueOf(payload);
-                handleWrite(linkManager, payload, byteRange, stream);
-            } else if (command == Integration.TS_BURN_COMMAND) {
-                stream.sendPacket(new byte[]{TS_RESPONSE_BURN_OK});
-            } else if (command == Integration.TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY) {
-                System.err.println("NOT IMPLEMENTED TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY relay");
-                // todo: relay command
-                stream.sendPacket(TS_OK.getBytes());
-            } else if (command == Integration.TS_OUTPUT_COMMAND) {
-                BinaryProtocolState binaryProtocolState = linkManager.getBinaryProtocolState();
-                byte[] currentOutputs = binaryProtocolState.getCurrentOutputs();
+                if (command == Integration.TS_HELLO_COMMAND) {
+                    new HelloCommand(TS_SIGNATURE).handle(stream);
+                } else if (command == Integration.TS_GET_PROTOCOL_VERSION_COMMAND_F) {
+                    stream.sendPacket((TS_OK + TS_PROTOCOL).getBytes());
+                } else if (command == Integration.TS_GET_FIRMWARE_VERSION) {
+                    stream.sendPacket((TS_OK + "rusEFI proxy").getBytes());
+                } else if (command == Integration.TS_CRC_CHECK_COMMAND) {
+                    handleCrc(linkManager, stream);
+                } else if (command == Integration.TS_READ_COMMAND) {
+                    ByteRange byteRange = ByteRange.valueOf2(payload);
+                    handleRead(linkManager, byteRange, stream);
+                } else if (command == Integration.TS_CHUNK_WRITE_COMMAND) {
+                    ByteRange byteRange = ByteRange.valueOf(payload);
+                    handleWrite(linkManager, payload, byteRange, stream);
+                } else if (command == Integration.TS_BURN_COMMAND) {
+                    stream.sendPacket(new byte[]{TS_RESPONSE_BURN_OK});
+                } else if (command == Integration.TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY) {
+                    System.err.println("NOT IMPLEMENTED TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY relay");
+                    // todo: relay command
+                    stream.sendPacket(TS_OK.getBytes());
+                } else if (command == Integration.TS_OUTPUT_COMMAND) {
+                    byte[] currentOutputs;
+                    if (fullOutputLease == null) {
+                        currentOutputs = linkManager.getBinaryProtocolState().getCurrentOutputs();
+                    } else {
+                        OutputChannelSnapshot snapshot;
+                        try {
+                            snapshot = SensorCentral.getInstance().awaitFullSnapshot(
+                                fullOutputLease.getGeneration(), Timeouts.BINARY_IO_TIMEOUT);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                            throw new IOException("Interrupted waiting for full output snapshot", e);
+                        }
+                        if (snapshot == null) {
+                            stream.sendPacket(new byte[]{(byte) Integration.TS_RESPONSE_UNDERRUN});
+                            continue;
+                        }
+                        currentOutputs = snapshot.getResponse();
+                    }
 
-                byte[] response = getOutputCommandResponse(payload, currentOutputs);
-                stream.sendPacket(response);
-            } else if (command == Integration.TS_GET_TEXT) {
-                // todo: relay command
-                System.err.println("NOT IMPLEMENTED TS_GET_TEXT relay");
-                stream.sendPacket(TS_OK.getBytes());
-            } else {
-                unknownCommands.incrementAndGet();
-                new IllegalStateException().printStackTrace();
-                log.info("Error: unexpected " + BinaryProtocol.findCommand(command));
+                    byte[] response = getOutputCommandResponse(payload, currentOutputs);
+                    stream.sendPacket(response);
+                } else if (command == Integration.TS_GET_TEXT) {
+                    // todo: relay command
+                    System.err.println("NOT IMPLEMENTED TS_GET_TEXT relay");
+                    stream.sendPacket(TS_OK.getBytes());
+                } else {
+                    unknownCommands.incrementAndGet();
+                    new IllegalStateException().printStackTrace();
+                    log.info("Error: unexpected " + BinaryProtocol.findCommand(command));
+                }
             }
         }
     }

@@ -67,6 +67,12 @@ public class TextGaugeStrip {
         return content;
     }
 
+    public void setActive(boolean active) {
+        for (TextGauge gauge : gauges) {
+            gauge.setActive(active);
+        }
+    }
+
     public void destroy() {
         for (TextGauge gauge : gauges) {
             gauge.destroy();

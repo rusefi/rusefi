@@ -6,6 +6,7 @@ import com.opensr5.ini.field.IniField;
 import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.FieldType;
+import com.rusefi.core.OutputChannelSnapshot;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.ui.UIContext;
 
@@ -50,8 +51,10 @@ public class SensorLogger {
     }
 
     private final UIContext uiContext;
-    private final SensorCentral.ResponseListener responseListener = this::writeSensorLogLine;
     private BinarySensorLog<CustomBinaryLogEntry> sensorLog;
+    private SensorCentral.FullOutputLease fullOutputLease;
+    private SensorCentral.SnapshotListenerToken snapshotListenerToken;
+    private byte[] currentResponse;
 
     public SensorLogger(UIContext uiContext) {
         this.uiContext = uiContext;
@@ -68,24 +71,35 @@ public class SensorLogger {
         }
 
         sensorLog = new BinarySensorLog<>(sensor -> {
-            byte[] response = SensorCentral.getInstance().getResponse();
-            return response == null ? 0.0 : sensor.getValue(response);
+            return currentResponse == null ? 0.0 : sensor.getValue(currentResponse);
         }, outputChannels, System::currentTimeMillis, file.getAbsolutePath());
-        SensorCentral.getInstance().addListener(responseListener);
+        SensorCentral sensorCentral = SensorCentral.getInstance();
+        fullOutputLease = sensorCentral.acquireFullOutput();
+        snapshotListenerToken = sensorCentral.addSnapshotListener(this::writeSensorLogLine);
         return true;
     }
 
-    private synchronized void writeSensorLogLine() {
-        if (sensorLog != null) {
+    private synchronized void writeSensorLogLine(OutputChannelSnapshot snapshot) {
+        if (sensorLog != null && fullOutputLease != null && snapshot.isFull()
+                && snapshot.getGeneration() >= fullOutputLease.getGeneration()) {
+            currentResponse = snapshot.getResponse();
             sensorLog.writeSensorLogLine();
         }
     }
 
     public synchronized void stop() {
-        SensorCentral.getInstance().removeListener(responseListener);
+        if (snapshotListenerToken != null) {
+            snapshotListenerToken.remove();
+            snapshotListenerToken = null;
+        }
         if (sensorLog != null) {
             sensorLog.close();
             sensorLog = null;
+        }
+        currentResponse = null;
+        if (fullOutputLease != null) {
+            fullOutputLease.close();
+            fullOutputLease = null;
         }
     }
 
