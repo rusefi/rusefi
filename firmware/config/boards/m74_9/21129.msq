@@ -1253,7 +1253,7 @@
         <constant name="fuelPressureSensorMode">"Absolute"</constant>
         <constant name="fuelPumpPin">"Fuel pump relay"</constant>
         <constant name="fuelPumpPinMode">"default"</constant>
-        <constant digits="0" name="fuelReferencePressure" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">340</constant>
+        <constant digits="0" name="fuelReferencePressure" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">380</constant>
         <constant name="fuelTempSensor_adcChannel">"NONE"</constant>
         <constant digits="1" name="fuelTempSensor_bias_resistor" units="Ohm">0.0</constant>
         <constant digits="1" name="fuelTempSensor_resistance_1" units="Ohm">0.0</constant>
@@ -2422,10 +2422,10 @@
          413.7
 </constant>
         <constant cols="8" digits="2" name="injector_battLagCorrTable" rows="2" units="ms">
-         3.65 1.84 1.23 1.0 0.81 0.7 0.55 0.5
-         3.65 1.84 1.23 1.0 0.81 0.7 0.55 0.5
+         3.49 1.66 0.7 0.41 0.22 0.06 -0.04 -0.06
+         3.49 1.66 0.7 0.41 0.22 0.06 -0.04 -0.06
 </constant>
-        <constant digits="2" name="injector_flow" units="">156.0</constant>
+        <constant digits="2" name="injector_flow" units="">184.0</constant>
         <constant name="injectorCompensationMode">"Fixed rail pressure"</constant>
         <constant digits="4" name="injectorCorrectionPolynomial1" units="">0.0</constant>
         <constant digits="4" name="injectorCorrectionPolynomial2" units="">0.0</constant>
