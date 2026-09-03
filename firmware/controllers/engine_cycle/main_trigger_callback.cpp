@@ -351,18 +351,28 @@ TRIGGER_RAM_CODE void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edge
 		// compression oscillation makes a single tooth a 2-3x-stretched
 		// predictor (see angle_clock.h).
 		//
-		// THIS RUNS BEFORE THE rpm==0 GATE: during the catch trigger storm
-		// the rpm sensor flaps 0/nonzero at ~1 kHz and the gate returns
-		// early, so a refresh gated behind it never runs on the flap teeth -
-		// the armed events kept their PRE-CATCH ticks (computed at ~250 rpm)
-		// while the engine accelerated to ~800+, the fires landed ms-late,
-		// the rescues discharged (overdwell n~50, C935x) and the engine ran
-		// on wrong-angle sparks until it stalled. The refresh must track the
-		// true speed on EVERY tooth; angleClockOnTooth keeps the last good
-		// basis when the flap makes oneDegreeUs NaN.
+		// BOTH angleClockOnTooth AND scheduleDwellEarlyIfDue (below) run
+		// BEFORE THE rpm==0 GATE: during the catch trigger storm the rpm
+		// sensor flaps 0/nonzero at ~1 kHz and the gate returns early, so
+		// anything gated behind it never runs on the flap teeth.
+		//   - angleClockOnTooth: the armed events kept their PRE-CATCH ticks
+		//     while the engine accelerated, fires landed ms-late, rescues
+		//     discharged (overdwell n~50, C935x). The basis must update on
+		//     EVERY tooth; angleClockOnTooth keeps the last good basis when
+		//     the flap makes oneDegreeUs NaN.
+		//   - scheduleDwellEarlyIfDue: on storm-flap teeth (rpm==0) the early
+		//     arm at tooth T-1 was skipped, so the next tooth saw the dwell in
+		//     [currentPhase, nextPhase) = 0-6 deg remaining. onTriggerEvent-
+		//     SparkLogic ran at ~150-250 µs elapsed and the tick had already
+		//     passed -> lateArm -> TIM5 fallback. This caused 59% dwell lateArm
+		//     on the 2026-09-03 drive. Under EFI_ANGLE_CLOCK, scheduleSparkEvent
+		//     has UNUSED(rpm) and UNUSED(dwellMs), so passing rpm==0 is safe.
 		angleClockOnTooth(edgeTimestamp, currentPhase, engine->engineState.engineCycle,
 			US2NT(engine->rpmCalculator.oneDegreeUs));
 	}
+	// Dwell arm runs on ALL teeth including rpm==0 storm-flap teeth (see above).
+	scheduleDwellEarlyIfDue(engine->rpmCalculator.getCachedRpm(),
+		edgeTimestamp, currentPhase, nextPhase, nextNextPhase);
 #endif // EFI_ANGLE_CLOCK
 
 	float rpm = engine->rpmCalculator.getCachedRpm();
@@ -394,19 +404,9 @@ TRIGGER_RAM_CODE void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edge
 	engine->module<TriggerScheduler>()->scheduleEventsUntilNextTriggerTooth(
 		rpm, edgeTimestamp, currentPhase, nextPhase, nextNextPhase);
 
-	//  2. Injection arms (~13 µs elapsed, before dwell overhead):
-	//     Threshold at 7000 rpm: remaining > (13µs×4 + ARM_MARGIN) / 95 = 0.72°.
-	//     Moving handleFuel before scheduleDwellEarlyIfDue reduces inj lateArm
-	//     by ~55% vs the previous position (~35 µs elapsed after dwell arm).
+	//  2. Injection arms (~13 µs elapsed).
 	handleFuel(edgeTimestamp, currentPhase, nextPhase, nextNextPhase);
-
-#if EFI_ANGLE_CLOCK
-	//  3. Dwell arm + spark queue (~33 µs elapsed with scheduleSparkEvent overhead).
-	//     The spark from this arm goes to the angle queue for future teeth;
-	//     the ACTUAL spark fire is re-armed from turnSparkPinHighStartCharging
-	//     (the TMR2 dwell ISR) to guarantee coil-charged-before-fire ordering.
-	scheduleDwellEarlyIfDue(rpm, edgeTimestamp, currentPhase, nextPhase, nextNextPhase);
-#endif // EFI_ANGLE_CLOCK
+	//  Dwell arm ran before the rpm==0 gate above (~5 µs elapsed, EFI_ANGLE_CLOCK).
 
 	if (trgEventIndex == 0) {
 
