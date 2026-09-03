@@ -280,7 +280,6 @@
         <constant digits="2" name="benchTestOnTime" units="ms">4.0</constant>
         <constant name="binarySerialRxPin">"PC11"</constant>
         <constant name="binarySerialTxPin">"PC10"</constant>
-        <constant name="boardUseCanTerminator">"yes"</constant>
         <constant cols="1" digits="1" name="boostClosedLoopBlends1_blendBins" rows="8" units="">
          0.0
          0.0
@@ -561,7 +560,7 @@
         <constant name="brakePedalPin">"NONE"</constant>
         <constant name="brakePedalPinMode">"PULLUP"</constant>
         <constant digits="0" name="byFirmwareVersion" units="index">0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">20260902</constant>
+        <constant digits="0" name="calibrationBirthday" units="">20260903</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="angle">95</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -5177,8 +5176,8 @@
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260901" nPages="1" signature="rusEFI master.2026.09.02.f407-discovery.3583948525" version="5.0"/>
-    <bibliography author="rusEFI 20260901" writeDate="date"/>
+    <versionInfo firmwareInfo="20260902" nPages="1" signature="rusEFI master.2026.09.03.f407-discovery.241950329" version="5.0"/>
+    <bibliography author="rusEFI 20260902" writeDate="date"/>
     <settings/>
     <userComments/>
 </msq>
