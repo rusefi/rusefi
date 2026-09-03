@@ -1,22 +1,35 @@
 package com.rusefi.binaryprotocol;
 
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.IniFileMetaInfo;
+import com.opensr5.ini.IniFileModelMocks;
+import com.opensr5.ini.field.IniField;
 import com.opensr5.io.DataListener;
 import com.rusefi.config.generated.Integration;
+import com.rusefi.core.OutputChannelDemand;
+import com.rusefi.core.OutputChannelSnapshot;
+import com.rusefi.core.SensorCentral;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.AbstractIoStream;
 import com.rusefi.io.tcp.TcpIoStream;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -144,6 +157,119 @@ public class BinaryProtocolTest {
         }
     }
 
+    @Test
+    public void issue10170EmptyDemandStillReadsTheWholeBlock() throws ReflectiveOperationException {
+        TestStream stream = new TestStream();
+        BinaryProtocol protocol = createProtocol(stream);
+        IniFileModel iniFile = IniFileModelMocks.empty();
+        IniFileMetaInfo metaInfo = mock(IniFileMetaInfo.class);
+        doReturn(TARGET_BLOCKING_FACTOR).when(iniFile).getBlockingFactor();
+        doReturn(metaInfo).when(iniFile).getMetaInfo();
+        doReturn(2500).when(metaInfo).getOchBlockSize();
+        doReturn(iniFile).when(protocol).getIniFile();
+        setIniFile(protocol, iniFile);
+
+        List<byte[]> requests = new ArrayList<>();
+        doAnswer(invocation -> {
+            byte[] request = invocation.getArgument(1);
+            requests.add(request.clone());
+            return new byte[unsignedShort(request, 2) + 1];
+        }).when(protocol).executeCommand(eq(Integration.TS_OUTPUT_COMMAND), any(byte[].class), anyString());
+
+        try {
+            // Empty demand is deliberately conservative because there is no explicitly
+            // classified consumer proving that a partial frame is sufficient.
+            assertTrue(protocol.requestOutputChannels());
+            assertEquals(3, requests.size());
+            assertOutputRequest(requests.get(0), 0, 1024);
+            assertOutputRequest(requests.get(1), 1024, 1024);
+            assertOutputRequest(requests.get(2), 2048, 452);
+        } finally {
+            stream.close();
+        }
+    }
+
+    @Test
+    public void issue10170OutputPollingReadsOnlyDemandedRanges() throws ReflectiveOperationException {
+        TestStream stream = new TestStream();
+        BinaryProtocol protocol = createProtocol(stream);
+        IniFileModel iniFile = IniFileModelMocks.empty();
+        IniFileMetaInfo metaInfo = mock(IniFileMetaInfo.class);
+        IniField rpm = mock(IniField.class);
+        doReturn(TARGET_BLOCKING_FACTOR).when(iniFile).getBlockingFactor();
+        doReturn(metaInfo).when(iniFile).getMetaInfo();
+        doReturn(3000).when(metaInfo).getOchBlockSize();
+        doReturn("rpm").when(rpm).getName();
+        doReturn(100).when(rpm).getOffset();
+        doReturn(2500).when(rpm).getSize();
+        doReturn(Collections.singletonMap("rpm", rpm)).when(iniFile).getAllOutputChannels();
+        doReturn(iniFile).when(protocol).getIniFile();
+        setIniFile(protocol, iniFile);
+
+        List<byte[]> requests = new ArrayList<>();
+        doAnswer(invocation -> {
+            byte[] request = invocation.getArgument(1);
+            requests.add(request.clone());
+            return new byte[unsignedShort(request, 2) + 1];
+        }).when(protocol).executeCommand(eq(Integration.TS_OUTPUT_COMMAND), any(byte[].class), anyString());
+
+        try {
+            assertTrue(protocol.requestOutputChannels(
+                OutputChannelDemand.selective(Collections.singleton("RPM"), 17)));
+            assertEquals(3, requests.size());
+            assertOutputRequest(requests.get(0), 100, 1024);
+            assertOutputRequest(requests.get(1), 1124, 1024);
+            assertOutputRequest(requests.get(2), 2148, 452);
+
+            OutputChannelSnapshot snapshot = SensorCentral.getInstance().getCurrentSnapshot();
+            assertNotNull(snapshot);
+            assertFalse(snapshot.isFull());
+            assertEquals(17, snapshot.getGeneration());
+            assertEquals(Collections.singleton("rpm"), snapshot.getRequestedChannels());
+            assertTrue(snapshot.isRangeValid(100, 2500));
+            assertFalse(snapshot.isRangeValid(0, 1));
+            assertNull(protocol.getBinaryProtocolState().getCurrentOutputs());
+        } finally {
+            stream.close();
+        }
+    }
+
+    @Test
+    public void issue10170FailedRangeDoesNotPublishPartialSnapshot() throws ReflectiveOperationException {
+        TestStream stream = new TestStream();
+        BinaryProtocol protocol = createProtocol(stream);
+        IniFileModel iniFile = IniFileModelMocks.empty();
+        IniFileMetaInfo metaInfo = mock(IniFileMetaInfo.class);
+        IniField rpm = mock(IniField.class);
+        doReturn(TARGET_BLOCKING_FACTOR).when(iniFile).getBlockingFactor();
+        doReturn(metaInfo).when(iniFile).getMetaInfo();
+        doReturn(2000).when(metaInfo).getOchBlockSize();
+        doReturn("rpm").when(rpm).getName();
+        doReturn(100).when(rpm).getOffset();
+        doReturn(1500).when(rpm).getSize();
+        doReturn(Collections.singletonMap("rpm", rpm)).when(iniFile).getAllOutputChannels();
+        doReturn(iniFile).when(protocol).getIniFile();
+        setIniFile(protocol, iniFile);
+
+        AtomicInteger commands = new AtomicInteger();
+        doAnswer(invocation -> {
+            byte[] request = invocation.getArgument(1);
+            return commands.incrementAndGet() == 1
+                ? new byte[unsignedShort(request, 2) + 1]
+                : null;
+        }).when(protocol).executeCommand(eq(Integration.TS_OUTPUT_COMMAND), any(byte[].class), anyString());
+
+        OutputChannelSnapshot before = SensorCentral.getInstance().getCurrentSnapshot();
+        try {
+            assertFalse(protocol.requestOutputChannels(
+                OutputChannelDemand.selective(Collections.singleton("rpm"), 18)));
+            assertEquals(2, commands.get());
+            assertSame(before, SensorCentral.getInstance().getCurrentSnapshot());
+        } finally {
+            stream.close();
+        }
+    }
+
     private static BinaryProtocol createProtocol(TestStream stream) {
         return createProtocol(stream, OVERRIDDEN_BLOCKING_FACTOR);
     }
@@ -201,5 +327,16 @@ public class BinaryProtocolTest {
         return ByteBuffer.wrap(bytes, offset, Short.BYTES)
             .order(ByteOrder.LITTLE_ENDIAN)
             .getShort() & 0xffff;
+    }
+
+    private static void assertOutputRequest(byte[] request, int offset, int size) {
+        assertEquals(offset, unsignedShort(request, 0));
+        assertEquals(size, unsignedShort(request, 2));
+    }
+
+    private static void setIniFile(BinaryProtocol protocol, IniFileModel iniFile) throws ReflectiveOperationException {
+        Field field = BinaryProtocol.class.getDeclaredField("iniFile");
+        field.setAccessible(true);
+        field.set(protocol, iniFile);
     }
 }
