@@ -1,5 +1,62 @@
 # Work Report
 
+## 2026-09-03 - angle_clock: fix 59% dwell lateArm (scheduleDwellEarlyIfDue moved before rpm==0 gate)
+
+Goal: eliminate the 59% `angclk dwell lateArm` rate observed in the 2026-09-03
+19:14 car session (20 min, avg ~1550 rpm, peaks 3452+).
+
+Stats that triggered the investigation:
+
+```
+angclk dwell fired=25412 lateArm=36299  spark fired=61711 lateArm=0  inj fired=49353 lateArm=284
+sched dwell: n=36299 (== lateArm, 1:1 TIM5 fallback per failed TMR2 arm)
+```
+
+25412 + 36299 = 61711 = spark fired -> every coil charge went through TMR2 or TIM5.
+59% went to TIM5, precision loss: 2-tooth lead -> 0-1 tooth lead + executor lateness.
+
+Root causes (two independent problems):
+
+1. **rpm==0 storm-flap teeth skipped scheduleDwellEarlyIfDue.** The m74_9 catch
+   trigger storm flaps rpm 0/nonzero at ~1 kHz. `scheduleDwellEarlyIfDue` was
+   called AFTER the `rpm==0` early return in `mainTriggerCallback`. Every flap
+   tooth skipped it -> next tooth saw the dwell in the CURRENT window [current-
+   Phase, nextPhase) = 0-6 deg remaining -> `onTriggerEventSparkLogic` ran at
+   ~150-250 us elapsed (after `engineModules.apply_all`) -> tick already past
+   -> lateArm. At 3452 rpm, 6 deg = 290 us; 150 us elapsed -> 52% failure rate.
+
+2. **scheduleDwellEarlyIfDue only checked the early window.** The current window
+   was handled exclusively in `onTriggerEventSparkLogic` at ~150-250 us elapsed.
+   Injection (`InjectionEvent::onTriggerTooth`) checks BOTH windows in one call
+   at ~13 us elapsed, which is why `inj lateArm=284` (<<1%) vs `dwell lateArm=59%`.
+
+Key insight: under EFI_ANGLE_CLOCK, `scheduleSparkEvent` has `UNUSED(rpm)` and
+`UNUSED(dwellMs)`, so calling `scheduleDwellEarlyIfDue` with rpm==0 is safe.
+Same reason `angleClockOnTooth` already runs before the rpm==0 gate.
+
+Fix (commit 51637606bd4 on branch maccan-tx-fix):
+
+- **main_trigger_callback.cpp**: moved `scheduleDwellEarlyIfDue` from position 3
+  (after `handleFuel`, ~33 us elapsed) to BEFORE the `rpm==0` gate (right after
+  `angleClockOnTooth`, ~5 us elapsed). Now runs on ALL teeth including storm-flap
+  teeth.
+- **spark_logic.cpp**: added current-window check `[currentPhase, nextPhase)` in
+  `scheduleDwellEarlyIfDue` alongside the existing early-window check, mirroring
+  `InjectionEvent::onTriggerTooth`. At ~5 us elapsed even 0.5 deg remaining
+  (~54 us at 1550 rpm) leaves 49 us before the arm tick -> tick-past always passes.
+
+Expected result: dwell lateArm drops from 59% to ~0%. Remaining lateArms: only
+sub-margin events caught as `immediate` by `angleClockRefresh`, and the first 4
+teeth after engine sync while `ignitionEvents.isReady` is still false.
+
+Validation performed: unit tests 1169/1169 pass (12 pre-existing EFI_ANGLE_CLOCK
+test failures unchanged), m74_9 firmware BUILD SUCCESSFUL. Car validation pending.
+
+Open follow-up: on-car `lockstats` after a drive should show `angclk dwell
+lateArm ~= 0` and `immediate` count should stay low (< 5 per engine cycle).
+
+---
+
 ## 2026-08-24 - m74_9: test-log error analysis (car sessions 10:04 and 10:52)
 
 Goal: inventory the errors in the 2026-08-24 test logs, find the FIRST error, and
