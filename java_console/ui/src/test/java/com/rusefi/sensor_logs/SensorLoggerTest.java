@@ -6,6 +6,7 @@ import com.opensr5.ini.field.IniField;
 import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.FieldType;
+import com.rusefi.core.OutputChannelSnapshot;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.ui.UIContext;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,7 @@ import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.BitSet;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -62,11 +64,24 @@ class SensorLoggerTest {
             assertTrue(logger.start(file.toFile()));
             assertTrue(logger.isLogging());
             assertTrue(logger.start(file.toFile()));
-            SensorCentral.getInstance().grabSensorValues(new byte[]{0, 42, 0, 7, 2, -46, 4}, ini, null);
+            SensorCentral sensorCentral = SensorCentral.getInstance();
+            long generation = sensorCentral.getOutputChannelDemand().getGeneration();
+            assertTrue(sensorCentral.getOutputChannelDemand().isFull());
+
+            byte[] response = {0, 42, 0, 7, 2, -46, 4};
+            BitSet valid = new BitSet(response.length - 1);
+            valid.set(0, response.length - 1);
+            sensorCentral.grabSensorValues(new OutputChannelSnapshot(
+                response, valid, Collections.emptySet(), generation - 1, true), ini, null);
+            sensorCentral.grabSensorValues(new OutputChannelSnapshot(
+                response, valid, Collections.singleton("rpm"), generation, false), ini, null);
+            sensorCentral.grabSensorValues(new OutputChannelSnapshot(
+                response, valid, Collections.emptySet(), generation, true), ini, null);
         } finally {
             logger.stop();
         }
         assertFalse(logger.isLogging());
+        assertFalse(SensorCentral.getInstance().getOutputChannelDemand().isFull());
         assertTrue(Files.exists(file));
 
         ByteBuffer data = ByteBuffer.wrap(Files.readAllBytes(file)).order(ByteOrder.BIG_ENDIAN);
@@ -78,6 +93,9 @@ class SensorLoggerTest {
         assertEquals(1, data.get());
         assertEquals(1234, data.getShort());
         assertEquals(1234, data.getShort());
+        assertEquals(1, data.remaining(), "One checksum byte should follow the only log row");
+        data.get();
+        assertFalse(data.hasRemaining(), "Only the generation-matched full snapshot should be logged");
     }
 
     private static String readFieldName(ByteBuffer data, int index) {
