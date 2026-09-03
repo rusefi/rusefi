@@ -39,20 +39,22 @@ class GaugesPanelOutputDemandTest {
         SwingUtilities.invokeAndWait(() -> { });
         GaugesPanel panel = holder[0];
 
-        assertFalse(hasChannelDemand());
-        assertFalse(hasDemand(WellKnownGauges.RPMGauge.getOutputChannelName()));
-        SwingUtilities.invokeAndWait(() -> panel.setActive(true));
-        assertTrue(hasChannelDemand());
-        assertTrue(hasDemand(WellKnownGauges.RPMGauge.getOutputChannelName()));
-        assertTrue(hasDemand("useMetricOnInterface"));
-        assertFalse(hasDemand("engine"));
-        assertFalse(hasDemand("rpm"));
-        assertFalse(hasDemand("speed"));
-        SwingUtilities.invokeAndWait(() -> panel.setActive(false));
-        assertFalse(hasChannelDemand());
-        assertFalse(hasDemand(WellKnownGauges.RPMGauge.getOutputChannelName()));
-
-        SwingUtilities.invokeAndWait(panel::destroy);
+        try {
+            assertFalse(hasChannelDemand());
+            assertFalse(hasDemand(WellKnownGauges.RPMGauge.getOutputChannelName()));
+            SwingUtilities.invokeAndWait(() -> panel.setActive(true));
+            assertTrue(hasChannelDemand());
+            assertTrue(hasDemand(WellKnownGauges.RPMGauge.getOutputChannelName()));
+            assertTrue(hasDemand("useMetricOnInterface"));
+            assertFalse(hasDemand("engine"));
+            assertFalse(hasDemand("rpm"));
+            assertFalse(hasDemand("speed"));
+            SwingUtilities.invokeAndWait(() -> panel.setActive(false));
+            assertFalse(hasChannelDemand());
+            assertFalse(hasDemand(WellKnownGauges.RPMGauge.getOutputChannelName()));
+        } finally {
+            SwingUtilities.invokeAndWait(panel::destroy);
+        }
         assertFalse(hasChannelDemand());
     }
 
