@@ -12,6 +12,9 @@ DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE -DSTM32_ADC_USE_ADC3=TRUE
 # EGT chip
 DDEFS += -DEFI_MAX_31855=TRUE
 
+# Format stays the F7 default (compressed MSD).
+DEFS += -DEFI_EMBED_INI_MSD=TRUE
+
 DDEFS += -DHELLEN_BOARD_ID_DEBUG
 
 # on the one hand we do not use boardID YET and it takes 350ms, on the other hand who knows what the future would bring
