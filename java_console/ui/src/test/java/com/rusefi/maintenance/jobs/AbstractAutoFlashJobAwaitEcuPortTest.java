@@ -215,6 +215,21 @@ public class AbstractAutoFlashJobAwaitEcuPortTest {
     }
 
     @Test
+    public void pcanRecoveryDoesNotFallBackToASerialEcu() {
+        AbstractAutoFlashJob pcanJob = new AbstractAutoFlashJob(
+            "test", ecu(LinkManager.PCAN), null,
+            new ConnectivityContext(scanner), null) {
+            @Override
+            protected boolean flash(LinkManager lm, BinaryProtocol bp, UpdateOperationCallbacks cb) {
+                throw new UnsupportedOperationException("not exercised");
+            }
+        };
+        scanner.fireHardwareChange(hw(ecu("COM5")));
+
+        assertNull(pcanJob.awaitEcuPort(1_000, clock));
+    }
+
+    @Test
     public void completionRunsAfterReconnectRecovery() {
         LinkManager linkManager = mock(LinkManager.class);
         BinaryProtocol binaryProtocol = mock(BinaryProtocol.class);

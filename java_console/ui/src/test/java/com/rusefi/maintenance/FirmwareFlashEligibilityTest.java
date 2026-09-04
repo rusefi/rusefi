@@ -91,7 +91,7 @@ public class FirmwareFlashEligibilityTest {
     @Test
     public void directAutomaticApisRejectBeforeHardwareAccess() throws IOException {
         withProviders(RejectingPolicy.class.getName(), () -> {
-            for (String port : new String[]{"TEST_SERIAL_PORT", LinkManager.SOCKET_CAN}) {
+            for (String port : new String[]{"TEST_SERIAL_PORT", LinkManager.SOCKET_CAN, LinkManager.PCAN}) {
                 LinkManager lm = mock(LinkManager.class);
                 BinaryProtocol bp = mock(BinaryProtocol.class);
                 bp.signature = "running signature";
@@ -101,8 +101,8 @@ public class FirmwareFlashEligibilityTest {
                 PortResult ecu = new PortResult(port, SerialPortType.EcuWithOpenblt);
                 String file = "rusefi_lts-test_2026-09-09_test_board_123_hash_update.srec";
 
-                if (LinkManager.SOCKET_CAN.equals(port)) {
-                    assertFalse(ProgramSelector.flashOpenbltSocketCanAutomatic(null, ecu, bp, lm,
+                if (LinkManager.isCanPort(port)) {
+                    assertFalse(ProgramSelector.flashOpenbltCanAutomatic(null, ecu, bp, lm,
                         callbacks, connectivity, file, CalibrationsHelper.FirmwareUpdatePolicy.FORWARD_MIGRATION));
                     verify(lm).getLastTriedPort();
                 } else {

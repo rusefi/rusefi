@@ -77,6 +77,8 @@ public class CalibrationsHelperContextTest {
 
         assertTrue(CalibrationsHelper.isPortPresent(
             new PortResult(LinkManager.SOCKET_CAN, SerialPortType.Ecu), noSerialPorts));
+        assertTrue(CalibrationsHelper.isPortPresent(
+            new PortResult(LinkManager.PCAN, SerialPortType.Ecu), noSerialPorts));
         assertFalse(CalibrationsHelper.isPortPresent(
             new PortResult("COM5", SerialPortType.Ecu), noSerialPorts));
         assertTrue(CalibrationsHelper.isPortPresent(

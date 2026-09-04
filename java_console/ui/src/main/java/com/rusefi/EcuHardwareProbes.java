@@ -7,6 +7,7 @@ import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
+import com.rusefi.io.can.PCanIoStream;
 import com.rusefi.io.can.SocketCANIoStream;
 import com.rusefi.io.can.PCanIoStream;
 import com.rusefi.io.can.SLCANConnector;
@@ -116,6 +117,11 @@ public class EcuHardwareProbes implements SerialPortScanner.HardwareProbes {
     }
 
     @Override
+    public PortResult inspectPcan() {
+        return inspectPcan(REAL_PCAN_PROBE);
+    }
+
+    @Override
     public boolean isLiveEcuConnected() {
         return ConnectionStatusLogic.INSTANCE.isConnected();
     }
@@ -131,21 +137,22 @@ public class EcuHardwareProbes implements SerialPortScanner.HardwareProbes {
     }
 
     @Override
-    public boolean isPcanConnected() {
-        return MaintenanceUtil.detectPcan(UpdateOperationCallbacks.DUMMY);
-    }
-
-    @Override
     public long now() {
         return System.currentTimeMillis();
     }
 
-    interface SocketCanProbe {
+    interface CanProbe {
         boolean isSupported();
 
         IoStream open();
 
         String readSignature(IoStream stream);
+    }
+
+    interface SocketCanProbe extends CanProbe {
+    }
+
+    interface PCanProbe extends CanProbe {
     }
 
     static final SocketCanProbe REAL_SOCKET_CAN_PROBE = new SocketCanProbe() {
@@ -165,11 +172,33 @@ public class EcuHardwareProbes implements SerialPortScanner.HardwareProbes {
         }
     };
 
-    /**
-     * SocketCAN discovery has three outcomes: null means the configured interface is unavailable,
-     * CAN means it opened but no rusEFI ECU replied, and ECU means it returned a valid signature.
-     */
+    static final PCanProbe REAL_PCAN_PROBE = new PCanProbe() {
+        @Override
+        public boolean isSupported() {
+            return OsUtil.isWindows() && MaintenanceUtil.detectPcan(UpdateOperationCallbacks.DUMMY);
+        }
+
+        @Override
+        public IoStream open() {
+            return PCanIoStream.createStream();
+        }
+
+        @Override
+        public String readSignature(IoStream stream) {
+            return SerialAutoChecker.checkResponse(stream, null);
+        }
+    };
+
+    /** CAN discovery reports unavailable, an adapter without a reply, or a live rusEFI ECU. */
     static PortResult inspectSocketCan(SocketCanProbe probe) {
+        return inspectCan(LinkManager.SOCKET_CAN, "SocketCAN", probe);
+    }
+
+    static PortResult inspectPcan(PCanProbe probe) {
+        return inspectCan(LinkManager.PCAN, "PCAN", probe);
+    }
+
+    private static PortResult inspectCan(String portName, String displayName, CanProbe probe) {
         if (!probe.isSupported()) {
             return null;
         }
@@ -178,10 +207,10 @@ public class EcuHardwareProbes implements SerialPortScanner.HardwareProbes {
                 return null;
             }
             String signature = probe.readSignature(stream);
-            return new PortResult(LinkManager.SOCKET_CAN,
+            return new PortResult(portName,
                 signature == null ? SerialPortType.CAN : SerialPortType.Ecu);
         } catch (RuntimeException | LinkageError e) {
-            log.info("SocketCAN is unavailable: " + e.getMessage());
+            log.info(displayName + " is unavailable: " + e.getMessage());
             return null;
         }
     }

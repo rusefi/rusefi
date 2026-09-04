@@ -147,6 +147,21 @@ public class ProgramSelectorTest {
             false, false, mainButtonModeFor(resolved, true), false));
     }
 
+    @Test
+    public void pcanAutoUpdateRequiresOptInAndMatchingLiveConnection() {
+        PortResult pcan = new PortResult(LinkManager.PCAN, SerialPortType.Ecu);
+
+        assertNull(resolveFlashPort(pcan, true, NO_PORTS, NO_PORTS, false));
+        assertNull(resolveFlashPort(pcan, false, NO_PORTS, NO_PORTS, true));
+        PortResult resolved = resolveFlashPort(pcan, true, NO_PORTS, NO_PORTS, true);
+        assertSame(pcan, resolved);
+        assertEquals(OPENBLT_AUTO, mainButtonModeFor(resolved, true));
+        assertFalse(ProgramSelector.hasRealSerialPort(Collections.singletonList(pcan)));
+        assertTrue(ProgramSelector.hasFirmwareTarget(false, resolved));
+        assertFalse(ProgramSelector.hasMatchingLiveConnection(pcan, true, LinkManager.SOCKET_CAN));
+        assertTrue(ProgramSelector.hasMatchingLiveConnection(pcan, true, LinkManager.PCAN));
+    }
+
     // ---- combined: resolved port feeds the button mode ----
 
     @Test

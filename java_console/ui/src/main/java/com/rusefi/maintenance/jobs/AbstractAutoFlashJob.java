@@ -140,7 +140,7 @@ abstract class AbstractAutoFlashJob extends AsyncJobWithContext<SerialPortWithPa
                     }
                 }
             }
-            if (fallbackPort != null && !LinkManager.SOCKET_CAN.equals(context.getPort().port)) {
+            if (fallbackPort != null && !LinkManager.isCanPort(context.getPort().port)) {
                 return fallbackPort;
             }
             final boolean inBootloader = !hw.getKnownPorts(SerialPortType.OpenBlt).isEmpty() || hw.isDfuFound();
