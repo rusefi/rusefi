@@ -880,20 +880,26 @@ TRIGGER_RAM_CODE void scheduleDwellEarlyIfDue(float rpm, efitick_t edgeTimestamp
         if (std::isnan(dwellAngle) || std::isnan(sparkAngle)) {
             continue;
         }
-        // Check the early window [nextPhase, nextNextPhase) (1-tooth lead, ~6-12 deg
-        // remaining) first.  Also check the current window [currentPhase, nextPhase)
-        // (0-6 deg remaining) as a fallback for the first cycle after (re)sync or
-        // any case where the early arm at tooth T-1 was missed.  Both windows are
-        // tried at ~5 µs elapsed (before the rpm==0 gate), mirroring the dual-window
-        // approach of InjectionEvent::onTriggerTooth.  At ~5 µs elapsed even 0.5 deg
-        // remaining (= 54 µs at 1550 rpm) leaves 49 µs before the arm tick -> the
-        // tick-past check always passes at normal operating rpm; sub-margin events
-        // (remaining < ARM_MARGIN/ticksPerDeg) fall through to TIM5 and are caught
-        // by angleClockRefresh as immediate fires.
-        const bool inEarlyWindow = isPhaseInRange(dwellAngle, nextPhase, nextNextPhase);
-        const bool inCurrentWindow = isPhaseInRange(dwellAngle, currentPhase, nextPhase);
-        if (!inEarlyWindow && !inCurrentWindow) {
-            continue;  // dwell not due this tooth
+        // Only the EARLY window [nextPhase, nextNextPhase) is checked here.
+        // The current window [currentPhase, nextPhase) is intentionally left to
+        // onTriggerEventSparkLogic (called after the rpm==0 gate on real teeth only).
+        //
+        // WHY: scheduleDwellEarlyIfDue runs on ALL teeth, including spurious noise
+        // teeth during the catch storm (8400+ events/sec vs 2300/sec normal). At 3.3%
+        // probability a noise tooth's currentPhase accidentally matches the current
+        // window for some cylinder -> false arm -> TMR2 fires early -> spark fires ->
+        // prepareCylinderIgnitionSchedule clears dwellStartArmed=false -> the REAL
+        // scheduling tooth re-arms -> double scheduling -> 2x lateArm rate.
+        // Measured on 2026-09-04: fired+lateArm = 17956 / 233s = 77/s, expected 38.3/s
+        // = exactly 2x -> storm double-scheduling confirmed.
+        //
+        // With fix A (this function before rpm==0 gate), the early arm at tooth T-1
+        // runs even on rpm==0 flap teeth -> dwellStartArmed=true at tooth T -> the
+        // current-window fallback in onTriggerEventSparkLogic is blocked -> no double.
+        // The current window in onTriggerEventSparkLogic is the rare fallback for
+        // first-cycle-after-sync or isReady=false cases.
+        if (!isPhaseInRange(dwellAngle, nextPhase, nextNextPhase)) {
+            continue;  // dwell not in the early window this tooth
         }
         // Schedule the full event: arms TMR2 for dwell AND queues spark for
         // TMR4 arming at the next tooth via scheduleEventsUntilNextTriggerTooth.
