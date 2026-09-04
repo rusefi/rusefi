@@ -107,7 +107,7 @@
 ! This is the version of the data stored in flash configuration
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date!
-#define FLASH_DATA_VERSION 260805
+#define FLASH_DATA_VERSION 260902
 
 ! Remove next line when Java toolset gets adjusted to load those from json config into VariablesRegistry
 ! Also remove file integration/generated/rusefi_config_generated_enums.txt
@@ -1403,8 +1403,6 @@ tps_limit_t tps2Max;Fully opened voltage for primary throttle position sensor
 	uint8_t mc33_hpfp_max_hold;Maximum amount of time the solenoid can be active before assuming a programming error;"ms", 1, 0, 0, 255, 0
 
 	bit stepperDcInvertedPins,"yes","no";Enable if DC-motor driver (H-bridge) inverts the signals (eg. RZ7899 on Hellen boards)
-	bit canOpenBLT,"yes","no"; Allow OpenBLT on Primary CAN
-	bit can2OpenBLT,"yes","no"; Allow OpenBLT on Secondary CAN
 	bit injectorFlowAsMassFlow,"grams per second","cc/min";Select whether to configure injector flow in volumetric flow (default, cc/min) or mass flow (g/s).
 	bit kLineDoHondaSend,"yes","no"
 	bit can1ListenMode,"yes","no";ListenMode is about acknowledging CAN traffic on the protocol level. Different from canWriteEnabled
