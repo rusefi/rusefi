@@ -283,6 +283,19 @@ public class SerialPortScannerTest {
     }
 
     @Test
+    public void invalidatingSocketCanDropsStaleEcuAndForcesAProbe() {
+        probes.socketCanResult = new PortResult(LinkManager.SOCKET_CAN, SerialPortType.Ecu);
+        scan(true);
+
+        scanner.invalidatePort(LinkManager.SOCKET_CAN);
+
+        assertTrue(knownPorts().isEmpty());
+        scan(true);
+        assertEquals(2, probes.socketCanInspectionCalls,
+            "SocketCAN must be reprobed immediately after a firmware handoff");
+    }
+
+    @Test
     public void unavailableSocketCanIsNotReported() {
         scan(true);
 

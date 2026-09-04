@@ -13,6 +13,7 @@ import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.IoStream;
+import com.rusefi.io.can.SocketCanRawPort;
 import com.rusefi.io.serial.BufferedSerialIoStream;
 import com.rusefi.maintenance.jobs.*;
 import com.rusefi.ui.basic.SingleAsyncJobExecutor;
@@ -33,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.io.EOFException;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
@@ -46,6 +48,10 @@ import static com.rusefi.maintenance.CallbacksWaitingUtil.waitForPredicate;
 import static com.rusefi.maintenance.UpdateMode.*;
 
 public class ProgramSelector {
+    interface SocketCanFlashAction {
+        void flash(String fileName, OpenbltJni.OpenbltCallbacks callbacks) throws IOException;
+    }
+
     private static final Logging log = getLogging(ProgramSelector.class);
     private final JPanel content = new JPanel(new BorderLayout());
     private final JLabel noHardware = new JLabel("Nothing detected");
@@ -161,9 +167,13 @@ public class ProgramSelector {
         final PortResult selected = (PortResult) comboPorts.getSelectedItem();
         return resolveFlashPort(
             selected,
-            isLiveConnection(),
+            hasMatchingLiveConnection(
+                selected,
+                isLiveConnection(),
+                linkManager == null ? null : linkManager.getLastTriedPort()),
             connectivityContext.getCurrentHardware().getKnownPorts(SerialPortType.Dfu),
-            connectivityContext.getCurrentHardware().getKnownPorts(OpenBlt)
+            connectivityContext.getCurrentHardware().getKnownPorts(OpenBlt),
+            UiProperties.isCanOpenBltEnabled()
         );
     }
 
@@ -175,8 +185,12 @@ public class ProgramSelector {
         @Nullable final PortResult selected,
         final boolean liveConnection,
         final List<PortResult> dfuPorts,
-        final List<PortResult> bltPorts
+        final List<PortResult> bltPorts,
+        final boolean socketCanOpenBltEnabled
     ) {
+        if (isSocketCanEcu(selected)) {
+            return socketCanOpenBltEnabled && liveConnection ? selected : null;
+        }
         if (selected != null && (selected.type == OpenBlt || selected.type == SerialPortType.Dfu)) {
             return selected;
         }
@@ -192,6 +206,15 @@ public class ProgramSelector {
             }
         }
         return isUnflashableEcu(selected) ? null : selected;
+    }
+
+    static boolean hasMatchingLiveConnection(
+        @Nullable PortResult selected,
+        boolean liveConnection,
+        @Nullable String connectedPort
+    ) {
+        return liveConnection
+            && (!isSocketCanEcu(selected) || LinkManager.SOCKET_CAN.equals(connectedPort));
     }
 
     private void executeJob(JComponent parent, UpdateMode selectedMode, PortResult selectedPort) {
@@ -442,6 +465,130 @@ public class ProgramSelector {
             connectivityContext, policy);
     }
 
+    public static boolean flashOpenbltSocketCanAutomatic(
+        JComponent parent,
+        PortResult ecuPort,
+        BinaryProtocol bp,
+        LinkManager lm,
+        UpdateOperationCallbacks callbacks,
+        ConnectivityContext connectivityContext,
+        @Nullable String firmwareSrecFile,
+        CalibrationsHelper.FirmwareUpdatePolicy policy
+    ) {
+        if (!LinkManager.SOCKET_CAN.equals(ecuPort.port)
+            || lm == null
+            || bp == null
+            || !LinkManager.SOCKET_CAN.equals(lm.getLastTriedPort())) {
+            callbacks.logLine("SocketCAN firmware update requires a live SocketCAN ECU connection.");
+            return false;
+        }
+
+        if (!MaintenanceUtil.ensureFirmwareForConnectedTarget(
+            callbacks, connectivityContext.getConnectedEcuTarget())) {
+            return false;
+        }
+
+        final String fileName = firmwareSrecFile != null
+            ? firmwareSrecFile
+            : FindFileHelper.findSrecFileForConnectedBoard(connectivityContext.getConnectedEcuTarget());
+        if (fileName == null) {
+            callbacks.logLine(".srec image file not found");
+            return false;
+        }
+        if (!MaintenanceUtil.confirmFirmwareMatchesBoard(
+            fileName, callbacks, connectivityContext.getConnectedEcuTarget())) {
+            callbacks.logLine("Firmware update aborted - firmware/board mismatch.");
+            return false;
+        }
+
+        final OpenBltFlasher.PreparedFirmware preparedFirmware;
+        try {
+            preparedFirmware = OpenBltFlasher.prepareFirmware(fileName, makeOpenbltCallbacks(callbacks));
+        } catch (IOException e) {
+            callbacks.logLine("Unable to load firmware file: " + e.getMessage());
+            return false;
+        }
+
+        return updateFirmwareAndRestorePreviousCalibrations(
+            parent, ecuPort, bp, lm, callbacks,
+            () -> prepareSocketCanHandoff(lm, callbacks,
+                () -> OpenbltRebooter.rebootToOpenblt(parent, bp, callbacks)),
+            () -> socketCanUpdateFirmware(callbacks, connectivityContext, fileName, preparedFirmware),
+            connectivityContext, policy);
+    }
+
+    static boolean prepareSocketCanHandoff(
+        LinkManager lm,
+        UpdateOperationCallbacks callbacks,
+        BooleanSupplier rebootToOpenBlt
+    ) {
+        final boolean[] commandSent = {false};
+        try {
+            lm.submit(() -> commandSent[0] = rebootToOpenBlt.getAsBoolean()).get();
+            if (!commandSent[0]) {
+                callbacks.logLine("SocketCAN OpenBLT reboot command was not sent.");
+            }
+            return commandSent[0];
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            callbacks.logLine("Interrupted while sending the SocketCAN OpenBLT reboot command.");
+        } catch (ExecutionException e) {
+            callbacks.logLine("Failed to send the SocketCAN OpenBLT reboot command: " + e.getCause());
+        }
+        return false;
+    }
+
+    private static boolean socketCanUpdateFirmware(
+        UpdateOperationCallbacks callbacks,
+        ConnectivityContext connectivityContext,
+        String fileName,
+        OpenBltFlasher.PreparedFirmware preparedFirmware
+    ) {
+        return flashSocketCanWithSuspendedScanner(
+            fileName,
+            callbacks,
+            connectivityContext.getPortScanner(),
+            (firmware, openbltCallbacks) -> OpenBltFlasher.flashCan(
+                preparedFirmware, new SocketCanRawPort(), openbltCallbacks));
+    }
+
+    static boolean flashSocketCanWithSuspendedScanner(
+        String fileName,
+        UpdateOperationCallbacks callbacks,
+        PortScanner scanner,
+        SocketCanFlashAction flashAction
+    ) {
+        try {
+            try {
+                if (!scanner.suspend().await(30, TimeUnit.SECONDS)) {
+                    callbacks.logLine("Timed out waiting for SocketCAN discovery to stop.");
+                    return false;
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                callbacks.logLine("Interrupted while waiting for SocketCAN discovery to stop.");
+                return false;
+            }
+
+            final OpenbltJni.OpenbltCallbacks openbltCallbacks = makeOpenbltCallbacks(callbacks);
+            callbacks.logLine("flashSocketCan " + fileName);
+            flashAction.flash(fileName, openbltCallbacks);
+            callbacks.logLine("Update completed successfully!");
+            return true;
+        } catch (Throwable e) {
+            callbacks.logLine("flashOpenBltSocketCan Error: " + e);
+            log.error("flashOpenBltSocketCan " + e, e);
+            return false;
+        } finally {
+            // Remove the pre-flash ECU result so calibration restore waits for a fresh firmware reply.
+            try {
+                scanner.invalidatePort(LinkManager.SOCKET_CAN);
+            } finally {
+                scanner.resume();
+            }
+        }
+    }
+
     private static boolean bltUpdateFirmware(JComponent parent, PortResult ecuPort, UpdateOperationCallbacks callbacks,
                                              ConnectivityContext connectivityContext, @Nullable String firmwareSrecFile) {
         // Suspend the scanner for the entire reboot → detect → flash sequence so it
@@ -666,10 +813,12 @@ public class ProgramSelector {
         }
 
         int menuItemCount = popupMenu.getComponentCount();
+        PortResult flashPort = resolveFlashPort();
+        boolean hasFirmwareTarget = hasFirmwareTarget(hasSerialPorts, flashPort);
 
         splitButton.setPopupMenu(menuItemCount > 0 ? popupMenu : null);
         splitButton.setMainButtonEnabled(shouldEnableMainButton(
-            hasSerialPorts, hasDfuDevice, isJobRunning, mainButtonModeFor(resolveFlashPort()), canUseDfu));
+            hasFirmwareTarget, hasDfuDevice, isJobRunning, mainButtonModeFor(flashPort), canUseDfu));
         splitButton.setArrowButtonEnabled(menuItemCount > 0 && !isJobRunning);
 
         // Keep the main-button mode/label in sync with the connection state too (not just combo changes):
@@ -684,18 +833,22 @@ public class ProgramSelector {
         return ports.stream().anyMatch(port -> port.type != SerialPortType.Dfu && !isUnflashableEcu(port));
     }
 
+    static boolean hasFirmwareTarget(boolean hasSerialPorts, @Nullable PortResult flashPort) {
+        return hasSerialPorts || isSocketCanEcu(flashPort);
+    }
+
     static boolean isEmergencyWipeAvailable(@Nullable PortResult port) {
         return OpenBltWipeArtifact.isAvailableFor(port);
     }
 
     static boolean shouldEnableMainButton(
-        boolean hasSerialPorts,
+        boolean hasFirmwareTarget,
         boolean hasDfuDevice,
         boolean jobRunning,
         UpdateMode mode,
         boolean supportsDfu
     ) {
-        boolean targetAvailable = mode == DFU_MANUAL ? hasDfuDevice : hasSerialPorts;
+        boolean targetAvailable = mode == DFU_MANUAL ? hasDfuDevice : hasFirmwareTarget;
         boolean modeSupported = mode != DFU_MANUAL || supportsDfu;
         return targetAvailable && modeSupported && !jobRunning;
     }
@@ -765,6 +918,10 @@ public class ProgramSelector {
         return port != null && (port.isUnsupportedEcu()
             || port.type == SerialPortType.EcuUnknown
             || LinkManager.SOCKET_CAN.equals(port.port));
+    }
+
+    private static boolean isSocketCanEcu(@Nullable PortResult port) {
+        return port != null && LinkManager.SOCKET_CAN.equals(port.port) && port.isEcu();
     }
 
 }

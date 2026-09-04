@@ -5,6 +5,7 @@ import com.rusefi.core.net.PropertiesHolder;
 
 public class UiProperties {
     public static final String SKIP_ECU_TYPE_DETECTION = "skip_ecu_type_detection";
+    public static final String SHOW_CAN_OPENBLT = "show_can_openblt";
 
     public static boolean usePCAN() {
         return ConnectionAndMeta.getBoolean("show_pcan", PropertiesHolder.INSTANCE.getProperties());
@@ -12,6 +13,13 @@ public class UiProperties {
 
     public static boolean useSimulator() {
         return ConnectionAndMeta.getBoolean("show_simulator", PropertiesHolder.INSTANCE.getProperties());
+    }
+
+    public static boolean isCanOpenBltEnabled() {
+        String override = System.getProperty(SHOW_CAN_OPENBLT);
+        return override != null
+            ? Boolean.parseBoolean(override)
+            : ConnectionAndMeta.getBoolean(SHOW_CAN_OPENBLT, PropertiesHolder.INSTANCE.getProperties());
     }
 
     public static String getWhiteLabel() {

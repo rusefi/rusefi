@@ -45,6 +45,28 @@ class XcpCanTest {
     }
 
     @Test
+    void programStartResponseInPaddedClassicCanFrame() throws IOException {
+        FakeRawCanPort port = new FakeRawCanPort();
+        port.frames.add(new ClassicCanFrame(RESPONSE,
+            new byte[]{(byte) 0xFF, 0, 0, 8, 0, 0, 0, 0}));
+        XcpCan transport = connected(port);
+
+        assertArrayEquals(new byte[]{(byte) 0xFF, 0, 0, 8, 0, 0, 0},
+            transport.sendPacket(new byte[]{(byte) 0xD2}, 100, 7));
+    }
+
+    @Test
+    void positiveAcknowledgementInPaddedClassicCanFrame() throws IOException {
+        FakeRawCanPort port = new FakeRawCanPort();
+        port.frames.add(new ClassicCanFrame(RESPONSE,
+            new byte[]{(byte) 0xFF, 0, 0, 0, 0, 0, 0, 0}));
+        XcpCan transport = connected(port);
+
+        assertArrayEquals(new byte[]{(byte) 0xFF},
+            transport.sendPacket(new byte[]{(byte) 0xD1}, 100, 1));
+    }
+
+    @Test
     void timeoutDoesNotWaitAgainAfterPortReportsNoFrame() throws IOException {
         FakeRawCanPort port = new FakeRawCanPort();
         XcpCan transport = connected(port);

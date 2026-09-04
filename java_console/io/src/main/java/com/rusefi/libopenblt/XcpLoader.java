@@ -72,12 +72,38 @@ public class XcpLoader {
         try {
             mTransport.connect();
             connected = true;
-            connect();
+            connectForProgramming();
         } catch (IOException | RuntimeException | Error e) {
             if (connected) {
                 disconnectAfterFailure(e);
             }
             throw e;
+        }
+    }
+
+    /** Confirm that an XCP target is available without entering programming mode. */
+    public void probeAvailability() throws IOException {
+        boolean connected = false;
+        Throwable failure = null;
+        try {
+            mTransport.connect();
+            connected = true;
+            requestConnect();
+        } catch (IOException | RuntimeException | Error e) {
+            failure = e;
+            throw e;
+        } finally {
+            if (connected) {
+                try {
+                    mTransport.disconnect();
+                } catch (IOException | RuntimeException e) {
+                    if (failure != null) {
+                        failure.addSuppressed(e);
+                    } else {
+                        throw e;
+                    }
+                }
+            }
         }
     }
 
@@ -112,7 +138,20 @@ public class XcpLoader {
         }
     }
 
-    private void connect() throws IOException {
+    private void connectForProgramming() throws IOException {
+        TargetInfo ti = requestConnect();
+
+        if (mVerifyStationId) {
+            verifyStationId();
+        }
+
+        // Place the target in programming mode
+        ti.maxProgCto = programStart();
+
+        mTargetInfo = ti;
+    }
+
+    private TargetInfo requestConnect() throws IOException {
         byte[] request =
             ByteBuffer.allocate(2)
                 .put(XCPLOADER_CMD_CONNECT)
@@ -149,14 +188,7 @@ public class XcpLoader {
             throw new IllegalStateException("Controller returned invalid max DTO configuration: " + ti.maxDto);
         }
 
-        if (mVerifyStationId) {
-            verifyStationId();
-        }
-
-        // Place the target in programming mode
-        ti.maxProgCto = programStart();
-
-        mTargetInfo = ti;
+        return ti;
     }
 
     private void verifyStationId() throws IOException {

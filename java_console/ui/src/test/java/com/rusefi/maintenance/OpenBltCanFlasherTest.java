@@ -18,6 +18,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class OpenBltCanFlasherTest {
@@ -37,12 +38,97 @@ class OpenBltCanFlasherTest {
         OpenBltFlasher.flashCan(firmware.toString(), port, callbacks());
 
         assertEquals(RESPONSE, port.openAddress);
-        assertEquals(1, port.closeCount);
+        assertEquals(2, port.openCount);
+        assertEquals(2, port.closeCount);
         assertTrue(port.sent.stream().allMatch(frame -> REQUEST.equals(frame.getAddress())));
-        assertEquals(Arrays.asList(0xFF, 0xD2, 0xF6, 0xD1, 0xF6, 0xC9, 0xD0, 0xD0, 0xCF),
+        assertEquals(Arrays.asList(0xFF, 0xFF, 0xD2, 0xF6, 0xD1, 0xF6, 0xC9, 0xD0, 0xD0, 0xCF),
             port.sent.stream()
                 .map(frame -> frame.getPayload()[0] & 0xFF)
                 .collect(Collectors.toList()));
+    }
+
+    @Test
+    void rejectsInvalidFirmwareBeforeOpeningCan() throws IOException {
+        Path firmware = tempDir.resolve("invalid.srec");
+        Files.write(firmware, "not an S-record".getBytes(StandardCharsets.US_ASCII));
+        ScriptedCanPort port = new ScriptedCanPort();
+
+        assertThrows(IOException.class,
+            () -> OpenBltFlasher.flashCan(firmware.toString(), port, callbacks(), 3, () -> { }));
+
+        assertEquals(0, port.openCount);
+        assertTrue(port.sent.isEmpty());
+    }
+
+    @Test
+    void preparedFirmwareIsNotReadAgainAfterHandoffStarts() throws IOException {
+        Path firmware = firmwareFile();
+        OpenbltJni.OpenbltCallbacks callbacks = callbacks();
+        OpenBltFlasher.PreparedFirmware prepared =
+            OpenBltFlasher.prepareFirmware(firmware.toString(), callbacks);
+        Files.delete(firmware);
+        ScriptedCanPort port = new ScriptedCanPort();
+
+        OpenBltFlasher.flashCan(prepared, port, callbacks, 3, () -> { });
+
+        assertEquals(2, port.openCount);
+        assertTrue(commands(port).contains(0xD1));
+    }
+
+    @Test
+    void retriesOnlyConnectWhileLiveFirmwareReboots() throws IOException {
+        Path firmware = firmwareFile();
+        ScriptedCanPort port = new ScriptedCanPort();
+        port.connectResponsesToSkip = 1;
+
+        OpenBltFlasher.flashCan(firmware.toString(), port, callbacks(), 3, () -> { });
+
+        assertEquals(Arrays.asList(0xFF, 0xFF, 0xFF, 0xD2),
+            commands(port).subList(0, 4));
+        assertEquals(3, port.openCount);
+        assertEquals(3, port.closeCount);
+    }
+
+    @Test
+    void givesUpBeforeProgrammingWhenBootloaderDoesNotReply() throws IOException {
+        Path firmware = firmwareFile();
+        ScriptedCanPort port = new ScriptedCanPort();
+        port.connectResponsesToSkip = Integer.MAX_VALUE;
+
+        assertThrows(IOException.class,
+            () -> OpenBltFlasher.flashCan(firmware.toString(), port, callbacks(), 3, () -> { }));
+
+        assertEquals(Arrays.asList(0xFF, 0xFF, 0xFF), commands(port));
+        assertEquals(3, port.openCount);
+        assertEquals(3, port.closeCount);
+    }
+
+    @Test
+    void doesNotRetryAfterEraseBegins() throws IOException {
+        Path firmware = firmwareFile();
+        ScriptedCanPort port = new ScriptedCanPort();
+        port.failProgramClear = true;
+
+        assertThrows(IOException.class,
+            () -> OpenBltFlasher.flashCan(firmware.toString(), port, callbacks(), 3, () -> { }));
+
+        assertEquals(2, commands(port).stream().filter(command -> command == 0xFF).count());
+        assertEquals(1, commands(port).stream().filter(command -> command == 0xD1).count());
+        assertEquals(2, port.openCount);
+        assertEquals(2, port.closeCount);
+    }
+
+    private Path firmwareFile() throws IOException {
+        Path firmware = tempDir.resolve("test.srec");
+        Files.write(firmware, record(0x08008000L, new byte[]{1, 2, 3, 4, 5, 6, 7, 8})
+            .getBytes(StandardCharsets.US_ASCII));
+        return firmware;
+    }
+
+    private static List<Integer> commands(ScriptedCanPort port) {
+        return port.sent.stream()
+            .map(frame -> frame.getPayload()[0] & 0xFF)
+            .collect(Collectors.toList());
     }
 
     private static String record(long address, byte[] data) {
@@ -86,11 +172,15 @@ class OpenBltCanFlasherTest {
         final List<ClassicCanFrame> sent = new ArrayList<>();
         final ArrayDeque<ClassicCanFrame> responses = new ArrayDeque<>();
         CanAddress openAddress;
+        int openCount;
         int closeCount;
+        int connectResponsesToSkip;
+        boolean failProgramClear;
 
         @Override
         public void open(CanAddress receiveAddress) {
             openAddress = receiveAddress;
+            openCount++;
         }
 
         @Override
@@ -98,13 +188,20 @@ class OpenBltCanFlasherTest {
             sent.add(frame);
             int command = frame.getPayload()[0] & 0xFF;
             if (command == 0xFF) {
+                if (connectResponsesToSkip > 0) {
+                    connectResponsesToSkip--;
+                    return;
+                }
                 responses.add(new ClassicCanFrame(RESPONSE,
                     new byte[]{(byte) 0xFF, 0, 0, 8, 8, 0, 0, 0}));
             } else if (command == 0xD2) {
                 responses.add(new ClassicCanFrame(RESPONSE,
-                    new byte[]{(byte) 0xFF, 0, 0, 8, 0, 0, 0}));
+                    new byte[]{(byte) 0xFF, 0, 0, 8, 0, 0, 0, 0}));
+            } else if (command == 0xD1 && failProgramClear) {
+                return;
             } else {
-                responses.add(new ClassicCanFrame(RESPONSE, new byte[]{(byte) 0xFF}));
+                responses.add(new ClassicCanFrame(RESPONSE,
+                    new byte[]{(byte) 0xFF, 0, 0, 0, 0, 0, 0, 0}));
             }
         }
 
