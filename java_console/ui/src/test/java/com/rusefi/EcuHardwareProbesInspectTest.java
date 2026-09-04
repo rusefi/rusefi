@@ -125,6 +125,9 @@ public class EcuHardwareProbesInspectTest {
         }
     }
 
+    private static class FakePcanProbe extends FakeSocketCanProbe implements EcuHardwareProbes.PCanProbe {
+    }
+
     @AfterEach
     public void clearInterruptFlag() {
         // the interrupt-during-backoff path re-interrupts the thread; never leak that into other tests
@@ -218,6 +221,36 @@ public class EcuHardwareProbesInspectTest {
         PortResult result = EcuHardwareProbes.inspectSocketCan(probe);
 
         assertEquals(new PortResult(LinkManager.SOCKET_CAN, SerialPortType.Ecu), result);
+        verify(probe.stream).close();
+    }
+
+    @Test
+    public void unsupportedPlatformDoesNotOpenPcan() {
+        FakePcanProbe probe = new FakePcanProbe();
+        probe.supported = false;
+
+        assertNull(EcuHardwareProbes.inspectPcan(probe));
+        assertEquals(0, probe.openCalls);
+    }
+
+    @Test
+    public void pcanWithoutEcuReplyReportsTheAdapterOnly() {
+        FakePcanProbe probe = new FakePcanProbe();
+
+        PortResult result = EcuHardwareProbes.inspectPcan(probe);
+
+        assertEquals(new PortResult(LinkManager.PCAN, SerialPortType.CAN), result);
+        verify(probe.stream).close();
+    }
+
+    @Test
+    public void pcanWithValidSignatureReportsAnEcu() {
+        FakePcanProbe probe = new FakePcanProbe();
+        probe.signature = "rusEFI master.2026.09.04.test.123456";
+
+        PortResult result = EcuHardwareProbes.inspectPcan(probe);
+
+        assertEquals(new PortResult(LinkManager.PCAN, SerialPortType.Ecu), result);
         verify(probe.stream).close();
     }
 
