@@ -560,7 +560,7 @@
         <constant name="brakePedalPin">"NONE"</constant>
         <constant name="brakePedalPinMode">"PULLUP"</constant>
         <constant digits="0" name="byFirmwareVersion" units="index">0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">20260903</constant>
+        <constant digits="0" name="calibrationBirthday" units="">20260904</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="angle">95</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -573,7 +573,6 @@
         <constant name="can1ListenMode">"no"</constant>
         <constant name="can2BaudRate">"500kbps"</constant>
         <constant name="can2ListenMode">"no"</constant>
-        <constant name="can2OpenBLT">"no"</constant>
         <constant name="can2RxPin">"NONE"</constant>
         <constant name="can2TxPin">"NONE"</constant>
         <constant name="canBaudRate">"500kbps"</constant>
@@ -581,7 +580,6 @@
         <constant name="canGpioType">"None"</constant>
         <constant name="canInputBCM">"disabled"</constant>
         <constant name="canNbcType">"None"</constant>
-        <constant name="canOpenBLT">"no"</constant>
         <constant name="canReadEnabled">"enable"</constant>
         <constant name="canRxPin">"NONE"</constant>
         <constant digits="2" name="canSleepPeriodMs" units="ms">50.0</constant>
@@ -5176,7 +5174,7 @@
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260902" nPages="1" signature="rusEFI master.2026.09.03.f407-discovery.241950329" version="5.0"/>
+    <versionInfo firmwareInfo="20260902" nPages="1" signature="rusEFI master.2026.09.04.f407-discovery.1675493217" version="5.0"/>
     <bibliography author="rusEFI 20260902" writeDate="date"/>
     <settings/>
     <userComments/>
