@@ -115,7 +115,7 @@ struct tsCanConsoleAnnounceMsg {
 void announceCanConsole(CanCycle cycle) {
 	// every 250mS?
 	if (cycle.isInterval(CI::_250ms)) {
-		CanTxTyped<tsCanConsoleAnnounceMsg> msg(CanCategory::SERIAL, (int)bench_test_packet_ids_e::ECU_ISO_TP_SETTINGS, true, /* channel */ 0);
+		CanTxTyped<tsCanConsoleAnnounceMsg> msg(CanCategory::SERIAL, (int)bench_test_packet_ids_e::ECU_ISO_TP_SETTINGS, true, /* channel/bus index */ EFI_SERIAL_CAN_BUS - 1);
 		// TODO: add flag(s) if extended IDs are used!
 		msg->txId = CAN_ECU_SERIAL_TX_ID;
 		msg->rxId = CAN_ECU_SERIAL_RX_ID;
