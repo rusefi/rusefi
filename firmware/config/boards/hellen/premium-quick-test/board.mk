@@ -1,5 +1,10 @@
 BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 
+# SPI4 is used for accelerometer
+# Currently DMA channels conflict with ADC and SDMMC2
+# ONBOARD_MEMS_TYPE=LIS2DH12
+# DDEFS += -DSTM32_SPI_USE_SPI4=TRUE
+
 # Hellen platform common bits: HW_HELLEN=1, hellen_common.cpp, board-id
 # (inert here - the premium module has no board-id pads/pins defined), and
 # LED_PIN_MODE=OM_INVERTED which matches this module's LED wiring
@@ -42,3 +47,23 @@ DDEFS += -DEFI_USB_SERIAL_DP=Gpio::A12
 
 DDEFS += -DHW_HELLEN_SKIP_BOARD_TYPE=TRUE
 DDEFS += -DSTATIC_BOARD_ID=STATIC_BOARD_ID_PREMIUM_Q_TEST
+
+ifeq (,$(findstring EFI_BOOTLOADER,$(DDEFS)))
+	# this board has external QSPI NOR flash
+	DDEFS += -DSTM32_WSPI_USE_QUADSPI1=TRUE
+	DDEFS += -DSTM32_WSPI_QUADSPI1_DMA_STREAM="STM32_DMA_STREAM_ID(2, 7)"
+	DDEFS += -DSTM32_WSPI_QUADSPI1_PRESCALER_VALUE=3
+	DDEFS += -DHAL_USE_WSPI=TRUE
+	DDEFS += -DSNOR_SHARED_BUS=FALSE
+
+	# This board uses ChibiOS MFS driver on internal flash
+	include $(PROJECT_DIR)/hw_layer/ports/stm32/use_higher_level_flash_api.mk
+	include $(PROJECT_DIR)/hw_layer/drivers/flash/w25q/w25q_quad_spi.mk
+	DDEFS += -DEFI_STORAGE_SD=FALSE
+	# Use same method to workaround DMA access to CCM memory where persistentState can be located
+	DDEFS += -DSNOR_SPI_WORKAROUND_CACHE=TRUE
+	# We want big intermediate buffer
+	DDEFS += -DSNOR_BUFFER_SIZE=512
+
+	BOARDCPPSRC += $(BOARD_DIR)/board_storage.cpp
+endif

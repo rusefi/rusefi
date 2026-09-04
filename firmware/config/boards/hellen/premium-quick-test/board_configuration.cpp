@@ -29,6 +29,30 @@ static void premiumQuickTestDefaultConfiguration() {
 	engineConfiguration->lps25BaroSensorScl = Gpio::MMP176_I2C_SCL;
 	engineConfiguration->lps25BaroSensorSda = Gpio::MMP176_I2C_SDA;
 
+	// SPI2
+	engineConfiguration->is_enabled_spi_2 = true;
+	engineConfiguration->spi2mosiPin = H_SPI2_MOSI;
+	engineConfiguration->spi2misoPin = H_SPI2_MISO;
+	engineConfiguration->spi2sckPin = H_SPI2_SCK;
+
+	// SPI3
+	engineConfiguration->is_enabled_spi_3 = true;
+	engineConfiguration->spi3sckPin = Gpio::C10;
+	engineConfiguration->spi3misoPin = Gpio::C11;
+	engineConfiguration->spi3mosiPin = Gpio::C12;
+
+	// SPI4 - accel
+#if (STM32_SPI_USE_SPI4 == TRUE)
+	engineConfiguration->is_enabled_spi_4 = true;
+	engineConfiguration->spi4sckPin = Gpio::E12;
+	engineConfiguration->spi4misoPin = Gpio::E5;
+	engineConfiguration->spi4mosiPin = Gpio::E6;
+#endif
+
+	// Accel bus and CS
+	engineConfiguration->accelerometerSpiDevice = SPI_DEVICE_4;
+	engineConfiguration->accelerometerCsPin = Gpio::E4;
+
 	// Redundant TPS and pedal on the muxed analog inputs (ADC_MUX_PIN=PH15
 	// in board.mk). Each mux pair shares one MCU ADC pin, so primary and
 	// secondary tracks stay on the same physical channel:
