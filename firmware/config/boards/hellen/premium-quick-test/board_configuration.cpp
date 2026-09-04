@@ -90,7 +90,7 @@ static void premiumQuickTestInitHardware() {
 // TX_EN=PG11 TXD0=PG13 TXD1=PG14, PHY nRST=PE11.
 // AF must be set before the MAC driver probes the PHY, hence preHalInit
 // (see nucleo_h743 for the same pattern).
-static void premiumQuickTestPreHalInit() {
+static void premiumQuickTestPreHalInitEthernet() {
 	efiSetPadMode("Ethernet",  Gpio::A1, PAL_MODE_ALTERNATE(0xb));
 	efiSetPadMode("Ethernet",  Gpio::A2, PAL_MODE_ALTERNATE(0xb));
 	efiSetPadMode("Ethernet",  Gpio::A7, PAL_MODE_ALTERNATE(0xb));
@@ -106,6 +106,10 @@ static void premiumQuickTestPreHalInit() {
 	// release PHY reset (no pull resistor on the net - must be driven)
 	efiSetPadMode("Ethernet PHY nRST", Gpio::E11, PAL_MODE_OUTPUT_PUSHPULL);
 	palSetPad(GPIOE, 11);
+}
+
+static void premiumQuickTestPreHalInit() {
+	premiumQuickTestPreHalInitEthernet();
 
 	// On-module eMMC on 8-bit SDMMC2, AF11 for CK/CMD/D0/D1/D3 and AF10
 	// for the PB/PC data lines (see hellen_premium176_meta.h for the map)
@@ -130,4 +134,12 @@ void setup_custom_board_overrides() {
 	custom_board_preHalInit = premiumQuickTestPreHalInit;
 	custom_board_InitHardware = premiumQuickTestInitHardware;
 	custom_board_DefaultConfiguration = premiumQuickTestDefaultConfiguration;
+}
+
+extern "C" {
+
+void OpenBLT__early_init() {
+	premiumQuickTestPreHalInitEthernet();
+}
+
 }

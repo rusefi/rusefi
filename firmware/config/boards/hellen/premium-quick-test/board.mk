@@ -27,6 +27,8 @@ DDEFS += -DADC_MUX_PIN=Gpio::H15
 # RMII pin AF and PHY nRST release happen in board preHalInit
 EFI_ETHERNET = yes
 DDEFS += -DBOARD_PHY_ID=MII_LAN8720_ID
+# We need early init for ethernet in OpenBLT
+DDEFS += -DOPENBLT_BOARD_EARLY_INIT=TRUE
 
 # on-module KLMAG1JETD 16GB eMMC on 8-bit SDMMC2 (pin map in
 # hellen_premium176_meta.h). It rides the standard SD-card stack:
