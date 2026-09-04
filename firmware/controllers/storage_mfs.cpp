@@ -124,6 +124,7 @@ extern const MFSConfig *boardGetMfsConfig(void);
 
 bool initStorageMfs() {
 	if (boardInitMfs() == false) {
+		efiPrintf("MFS: board init failed");
 		return false;
 	}
 
