@@ -19,6 +19,8 @@ ifeq ($(PROJECT_CPU),ARCH_STM32F7)
 	include $(PROJECT_DIR)/hw_layer/ports/stm32/2mb_flash.mk
 	DDEFS += -DCH_DBG_ENABLE_ASSERTS=FALSE
 	DDEFS += -DENABLE_PERF_TRACE=FALSE
+	# Format stays the F7 default (compressed MSD).
+	DDEFS += -DEFI_EMBED_INI_MSD=TRUE
 else ifeq ($(PROJECT_CPU),ARCH_STM32F4)
     # This board has trigger scope hardware!
     DDEFS += -DTRIGGER_SCOPE
