@@ -60,14 +60,14 @@ public class ProgramSelectorTest {
     @Test
     public void selectedDfuPortIsUsedDirectly() {
         PortResult dfu = port(SerialPortType.Dfu);
-        assertSame(dfu, resolveFlashPort(dfu, false, NO_PORTS, NO_PORTS));
-        assertSame(dfu, resolveFlashPort(dfu, true, NO_PORTS, NO_PORTS));
+        assertSame(dfu, resolveFlashPort(dfu, false, NO_PORTS, NO_PORTS, false));
+        assertSame(dfu, resolveFlashPort(dfu, true, NO_PORTS, NO_PORTS, false));
     }
 
     @Test
     public void selectedOpenBltPortIsUsedDirectly() {
         PortResult blt = port(SerialPortType.OpenBlt);
-        assertSame(blt, resolveFlashPort(blt, false, NO_PORTS, NO_PORTS));
+        assertSame(blt, resolveFlashPort(blt, false, NO_PORTS, NO_PORTS, false));
     }
 
     @Test
@@ -76,13 +76,14 @@ public class ProgramSelectorTest {
         // button becomes "Manual DFU Update" rather than a dead OpenBLT action.
         PortResult dfu = port(SerialPortType.Dfu);
         PortResult blt = port(SerialPortType.OpenBlt);
-        assertSame(dfu, resolveFlashPort(null, false, Collections.singletonList(dfu), Collections.singletonList(blt)));
+        assertSame(dfu, resolveFlashPort(
+            null, false, Collections.singletonList(dfu), Collections.singletonList(blt), false));
     }
 
     @Test
     public void offlineWithNullSelectionFallsBackToDetectedOpenBlt() {
         PortResult blt = port(SerialPortType.OpenBlt);
-        assertSame(blt, resolveFlashPort(null, false, NO_PORTS, Collections.singletonList(blt)));
+        assertSame(blt, resolveFlashPort(null, false, NO_PORTS, Collections.singletonList(blt), false));
     }
 
     @Test
@@ -90,28 +91,38 @@ public class ProgramSelectorTest {
         PortResult ecu = port(SerialPortType.Ecu);
         PortResult dfu = port(SerialPortType.Dfu);
         // With a live ECU connection we do not override with detected bootloader ports.
-        assertSame(ecu, resolveFlashPort(ecu, true, Collections.singletonList(dfu), NO_PORTS));
+        assertSame(ecu, resolveFlashPort(ecu, true, Collections.singletonList(dfu), NO_PORTS, false));
     }
 
     @Test
     public void nothingDetectedResolvesToNull() {
-        assertNull(resolveFlashPort(null, false, NO_PORTS, NO_PORTS));
+        assertNull(resolveFlashPort(null, false, NO_PORTS, NO_PORTS, false));
     }
 
     @Test
     public void unsupportedEcuCannotBeSelectedForFlashing() {
         PortResult unsupported = port(SerialPortType.UnsupportedEcu);
-        assertNull(resolveFlashPort(unsupported, false, NO_PORTS, NO_PORTS));
-        assertNull(resolveFlashPort(unsupported, true, NO_PORTS, NO_PORTS));
-        assertNull(resolveFlashPort(port(SerialPortType.EcuUnknown), true, NO_PORTS, NO_PORTS));
+        assertNull(resolveFlashPort(unsupported, false, NO_PORTS, NO_PORTS, false));
+        assertNull(resolveFlashPort(unsupported, true, NO_PORTS, NO_PORTS, false));
+        assertNull(resolveFlashPort(port(SerialPortType.EcuUnknown), true, NO_PORTS, NO_PORTS, false));
     }
 
     @Test
-    public void socketCanEcuCannotBeSelectedForSerialFlashing() {
+    public void socketCanAutoUpdateRequiresOptInAndLiveConnection() {
         PortResult socketCan = new PortResult(LinkManager.SOCKET_CAN, SerialPortType.Ecu);
 
-        assertNull(resolveFlashPort(socketCan, true, NO_PORTS, NO_PORTS));
+        assertNull(resolveFlashPort(socketCan, true, NO_PORTS, NO_PORTS, false));
+        assertNull(resolveFlashPort(socketCan, false, NO_PORTS, NO_PORTS, true));
+        PortResult resolved = resolveFlashPort(socketCan, true, NO_PORTS, NO_PORTS, true);
+        assertSame(socketCan, resolved);
+        assertEquals(OPENBLT_AUTO, mainButtonModeFor(resolved, true));
         assertFalse(ProgramSelector.hasRealSerialPort(Collections.singletonList(socketCan)));
+        assertTrue(ProgramSelector.hasFirmwareTarget(false, resolved));
+        assertFalse(ProgramSelector.hasMatchingLiveConnection(socketCan, true, "COM5"));
+        assertTrue(ProgramSelector.hasMatchingLiveConnection(socketCan, true, LinkManager.SOCKET_CAN));
+        assertTrue(ProgramSelector.shouldEnableMainButton(
+            ProgramSelector.hasFirmwareTarget(false, resolved),
+            false, false, mainButtonModeFor(resolved, true), false));
     }
 
     // ---- combined: resolved port feeds the button mode ----
@@ -119,7 +130,7 @@ public class ProgramSelectorTest {
     @Test
     public void offlineDfuHotPlugResultsInManualDfuMode() {
         PortResult dfu = port(SerialPortType.Dfu);
-        PortResult resolved = resolveFlashPort(null, false, Collections.singletonList(dfu), NO_PORTS);
+        PortResult resolved = resolveFlashPort(null, false, Collections.singletonList(dfu), NO_PORTS, false);
         assertEquals(DFU_MANUAL, mainButtonModeFor(resolved, false));
     }
 
@@ -130,7 +141,8 @@ public class ProgramSelectorTest {
         // bootloader, not the stale selection, so recovery flashes the right port.
         PortResult staleEcu = new PortResult("COM_OLD", SerialPortType.Ecu);
         PortResult renumberedBlt = new PortResult("COM_NEW", SerialPortType.OpenBlt);
-        PortResult resolved = resolveFlashPort(staleEcu, false, NO_PORTS, Collections.singletonList(renumberedBlt));
+        PortResult resolved = resolveFlashPort(
+            staleEcu, false, NO_PORTS, Collections.singletonList(renumberedBlt), false);
         assertSame(renumberedBlt, resolved);
         assertEquals(OPENBLT_MANUAL, mainButtonModeFor(resolved, false));
     }
@@ -143,7 +155,7 @@ public class ProgramSelectorTest {
         PortResult dfu = port(SerialPortType.Dfu);
         PortResult blt = port(SerialPortType.OpenBlt);
         PortResult resolved = resolveFlashPort(staleEcu, false,
-            Collections.singletonList(dfu), Collections.singletonList(blt));
+            Collections.singletonList(dfu), Collections.singletonList(blt), false);
         assertSame(dfu, resolved);
         assertEquals(DFU_MANUAL, mainButtonModeFor(resolved, false));
     }
@@ -153,7 +165,7 @@ public class ProgramSelectorTest {
         // A second board sitting in a bootloader while another ECU is live-connected: the explicit
         // bootloader selection must be flashed manually, not rerouted through the live AUTO path.
         PortResult blt = port(SerialPortType.OpenBlt);
-        PortResult resolved = resolveFlashPort(blt, true, NO_PORTS, NO_PORTS);
+        PortResult resolved = resolveFlashPort(blt, true, NO_PORTS, NO_PORTS, false);
         assertSame(blt, resolved);
         assertEquals(OPENBLT_MANUAL, mainButtonModeFor(resolved, true));
     }

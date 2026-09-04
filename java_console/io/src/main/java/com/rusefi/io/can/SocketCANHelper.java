@@ -7,6 +7,7 @@ import tel.schich.javacan.CanChannels;
 import tel.schich.javacan.CanFrame;
 import tel.schich.javacan.NetworkDevice;
 import tel.schich.javacan.RawCanChannel;
+import tel.schich.javacan.platform.linux.LinuxNativeOperationException;
 
 import java.io.IOException;
 
@@ -15,6 +16,10 @@ import static tel.schich.javacan.CanFrame.FD_NO_FLAGS;
 import static tel.schich.javacan.CanSocketOptions.RECV_OWN_MSGS;
 
 public class SocketCANHelper {
+    // javaCAN does not expose Linux ENOBUFS. A rejected write was not queued, so it is safe to retry after backpressure.
+    static final int LINUX_ENOBUFS = 105;
+    static final int ENOBUFS_RETRY_COUNT = 20;
+    private static final long ENOBUFS_RETRY_DELAY_MS = 1;
     private static Logging log = getLogging(SocketCANIoStream.class);
 
     @NotNull
@@ -55,10 +60,28 @@ public class SocketCANHelper {
 
     public static void send(int id, byte[] payload, RawCanChannel channel) {
         CanFrame packet = CanFrame.create(id, FD_NO_FLAGS, payload);
+        int retriesRemaining = ENOBUFS_RETRY_COUNT;
+        while (true) {
+            try {
+                channel.write(packet);
+                return;
+            } catch (LinuxNativeOperationException e) {
+                if (e.getErrorNumber() != LINUX_ENOBUFS || retriesRemaining-- == 0) {
+                    throw new IllegalStateException(e);
+                }
+                waitForTransmitQueue();
+            } catch (IOException e) {
+                throw new IllegalStateException(e);
+            }
+        }
+    }
+
+    private static void waitForTransmitQueue() {
         try {
-            channel.write(packet);
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
+            Thread.sleep(ENOBUFS_RETRY_DELAY_MS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IllegalStateException("Interrupted while waiting for the SocketCAN transmit queue", e);
         }
     }
 

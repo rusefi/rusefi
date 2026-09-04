@@ -168,13 +168,13 @@ public class CalibrationsHelper {
                 // to re-probe on the next cycle and prevents returning stale results (e.g. a
                 // port that vanished after an ECU reboot and re-enumeration).
                 for (PortResult p : knownPorts) {
-                    if (!osPorts.contains(p.port)) {
+                    if (!isPortPresent(p, osPorts)) {
                         connectivityContext.getPortScanner().invalidatePort(p.port);
                     }
                 }
                 final List<PortResult> matching = knownPorts.stream()
                     .filter(p -> portTypeMatches.test(p.type))
-                    .filter(p -> osPorts.contains(p.port))
+                    .filter(p -> isPortPresent(p, osPorts))
                     .collect(Collectors.toList());
                 foundPorts.addAll(matching);
                 if (!foundPorts.isEmpty()) {
@@ -197,6 +197,10 @@ public class CalibrationsHelper {
         return foundPorts;
     }
 
+    static boolean isPortPresent(final PortResult port, final Set<String> osPorts) {
+        return LinkManager.isSpecialNotSerial(port.port) || osPorts.contains(port.port);
+    }
+
     public static boolean updateFirmwareAndRestorePreviousCalibrations(
         final JComponent parent,
         final PortResult originalEcuPort,
@@ -217,6 +221,21 @@ public class CalibrationsHelper {
         @Nullable final BinaryProtocol bp,
         @Nullable final LinkManager lm,
         final UpdateOperationCallbacks callbacks,
+        final Supplier<Boolean> updateFirmware,
+        final ConnectivityContext connectivityContext,
+        final FirmwareUpdatePolicy policy
+    ) {
+        return updateFirmwareAndRestorePreviousCalibrations(
+            parent, originalEcuPort, bp, lm, callbacks, () -> true, updateFirmware, connectivityContext, policy);
+    }
+
+    static boolean updateFirmwareAndRestorePreviousCalibrations(
+        final JComponent parent,
+        final PortResult originalEcuPort,
+        @Nullable final BinaryProtocol bp,
+        @Nullable final LinkManager lm,
+        final UpdateOperationCallbacks callbacks,
+        final Supplier<Boolean> beforeDisconnect,
         final Supplier<Boolean> updateFirmware,
         final ConnectivityContext connectivityContext,
         final FirmwareUpdatePolicy policy
@@ -288,9 +307,8 @@ public class CalibrationsHelper {
 
         prevCalibrations = calibrations;
 
-        // Always disconnect before flashing - the port must be free for ECU reboot to OpenBLT
-        if (bp != null && lm != null) {
-            lm.disconnect();
+        if (!prepareFirmwareHandoff(bp, lm, beforeDisconnect)) {
+            return false;
         }
 
         if (!skipCalibrationRestore && !prevCalibrations.isPresent()) {
@@ -747,6 +765,22 @@ public class CalibrationsHelper {
                 callbacks.logLine("Failed to back up merged tune from ECU...");
                 return false;
             }
+        }
+        return true;
+    }
+
+    static boolean prepareFirmwareHandoff(
+        @Nullable BinaryProtocol bp,
+        @Nullable LinkManager lm,
+        Supplier<Boolean> beforeDisconnect
+    ) {
+        if (!beforeDisconnect.get()) {
+            return false;
+        }
+
+        // Always disconnect before flashing - the port must be free for ECU reboot to OpenBLT.
+        if (bp != null && lm != null) {
+            lm.disconnect();
         }
         return true;
     }

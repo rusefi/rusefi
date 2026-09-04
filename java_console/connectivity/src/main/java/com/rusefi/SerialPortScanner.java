@@ -209,14 +209,14 @@ public class SerialPortScanner implements PortScanner {
     // last-known results are reused between probes so the ProgramSelector menu stays stable.
     // [tag:better_ux_for_flashing]
     private static final long DEVICE_PROBE_INTERVAL_MS = 3000;
-    // Accessed only from the single "Ports Scanner" thread.
-    private long lastDeviceProbeMs = 0;
+    // SocketCAN invalidation is also requested by the firmware-update thread while scanning is suspended.
+    private volatile long lastDeviceProbeMs = 0;
     private boolean lastDfuConnected = false;
     private boolean lastStLinkConnected = false;
     private boolean lastPcanConnected = false;
     private boolean lastSocketCanAvailable = false;
     @Nullable
-    private PortResult lastSocketCanPort;
+    private volatile PortResult lastSocketCanPort;
 
     /**
      * Find all available serial ports and checks if simulator local TCP port is available.
@@ -425,5 +425,20 @@ public class SerialPortScanner implements PortScanner {
     @Override
     public void invalidatePort(String portName) {
         portCache.invalidate(portName);
+        if (LinkManager.SOCKET_CAN.equals(portName)) {
+            lastSocketCanPort = null;
+            lastDeviceProbeMs = probes.now() - DEVICE_PROBE_INTERVAL_MS;
+            synchronized (lock) {
+                final List<PortResult> ports = knownHardware.getKnownPorts().stream()
+                    .filter(port -> !LinkManager.SOCKET_CAN.equals(port.port))
+                    .collect(Collectors.toList());
+                knownHardware = new AvailableHardware(
+                    ports,
+                    knownHardware.isDfuFound(),
+                    knownHardware.isStLinkConnected(),
+                    knownHardware.isPCANConnected(),
+                    knownHardware.isSocketCanAvailable());
+            }
+        }
     }
 }

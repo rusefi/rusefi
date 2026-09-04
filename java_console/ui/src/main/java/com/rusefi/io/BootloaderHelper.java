@@ -58,7 +58,6 @@ public class BootloaderHelper {
             }
         }
 
-        BootloaderCommsHelper.sendBootloaderRebootCommand(stream, callbacks, command);
-        return true;
+        return BootloaderCommsHelper.sendBootloaderRebootCommand(stream, callbacks, command);
     }
 }

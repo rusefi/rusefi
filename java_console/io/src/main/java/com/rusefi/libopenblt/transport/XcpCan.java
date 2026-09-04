@@ -5,6 +5,7 @@ import com.rusefi.io.can.ClassicCanFrame;
 import com.rusefi.io.can.RawCanPort;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -82,12 +83,15 @@ public class XcpCan implements IXcpTransport {
                 }
 
                 byte[] response = frame.get().getPayload();
-                if (response.length != expectResponseBytes) {
+                // Some deployed OpenBLT targets pad logical responses to a classic-CAN DLC of eight.
+                if (response.length < expectResponseBytes) {
                     throw new IOException("Unexpected XCP CAN response length for " + command(request)
-                        + ": expected " + expectResponseBytes
+                        + ": expected at least " + expectResponseBytes
                         + " but got " + response.length);
                 }
-                return response;
+                return response.length == expectResponseBytes
+                    ? response
+                    : Arrays.copyOf(response, expectResponseBytes);
             }
         }
     }

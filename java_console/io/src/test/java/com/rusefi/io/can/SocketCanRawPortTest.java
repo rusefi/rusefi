@@ -14,12 +14,15 @@ import java.time.Duration;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static tel.schich.javacan.CanFrame.FD_NO_FLAGS;
@@ -61,6 +64,43 @@ class SocketCanRawPortTest {
         assertEquals(0x1abcde, frames.getAllValues().get(0).getId());
         assertFalse(frames.getAllValues().get(1).isExtended());
         assertEquals(0x123, frames.getAllValues().get(1).getId());
+    }
+
+    @Test
+    void socketCanSendOnLinuxTransmitQueueBackpressure() throws IOException {
+        LinuxNativeOperationException queueFull =
+            new LinuxNativeOperationException("write", 105, "No buffer space available");
+        when(channel.write(any(CanFrame.class))).thenThrow(queueFull).thenReturn(channel);
+
+        assertDoesNotThrow(() -> SocketCANHelper.send(0x710, new byte[]{1, 2}, channel));
+
+        verify(channel, times(2)).write(any(CanFrame.class));
+    }
+
+    @Test
+    void socketCanSendBoundsLinuxTransmitQueueBackpressure() throws IOException {
+        LinuxNativeOperationException queueFull =
+            new LinuxNativeOperationException("write", 105, "No buffer space available");
+        when(channel.write(any(CanFrame.class))).thenThrow(queueFull);
+
+        IllegalStateException exception = assertThrows(IllegalStateException.class,
+            () -> SocketCANHelper.send(0x710, new byte[]{1, 2}, channel));
+
+        assertEquals(queueFull, exception.getCause());
+        verify(channel, times(SocketCANHelper.ENOBUFS_RETRY_COUNT + 1)).write(any(CanFrame.class));
+    }
+
+    @Test
+    void socketCanSendDoesNotRetryOtherLinuxWriteFailures() throws IOException {
+        LinuxNativeOperationException tryAgain = new LinuxNativeOperationException(
+            "write", LinuxNativeOperationException.EAGAIN, "Try again");
+        when(channel.write(any(CanFrame.class))).thenThrow(tryAgain);
+
+        IllegalStateException exception = assertThrows(IllegalStateException.class,
+            () -> SocketCANHelper.send(0x710, new byte[]{1, 2}, channel));
+
+        assertEquals(tryAgain, exception.getCause());
+        verify(channel).write(any(CanFrame.class));
     }
 
     @Test

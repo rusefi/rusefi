@@ -114,10 +114,19 @@ abstract class AbstractAutoFlashJob extends AsyncJobWithContext<SerialPortWithPa
         final long bootloaderGraceMs = 5_000;
         while (clock.millis() < deadline) {
             final AvailableHardware hw = connectivityContext.getCurrentHardware();
+            String fallbackPort = null;
             for (final PortResult p : hw.getKnownPorts()) {
                 if (p.isEcu()) {
-                    return p.port;
+                    if (p.port.equals(context.getPort().port)) {
+                        return p.port;
+                    }
+                    if (fallbackPort == null) {
+                        fallbackPort = p.port;
+                    }
                 }
+            }
+            if (fallbackPort != null && !LinkManager.SOCKET_CAN.equals(context.getPort().port)) {
+                return fallbackPort;
             }
             final boolean inBootloader = !hw.getKnownPorts(SerialPortType.OpenBlt).isEmpty() || hw.isDfuFound();
             if (inBootloader && (clock.millis() - start) > bootloaderGraceMs) {

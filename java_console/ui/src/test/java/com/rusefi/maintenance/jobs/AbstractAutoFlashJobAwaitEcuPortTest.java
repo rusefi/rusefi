@@ -177,6 +177,44 @@ public class AbstractAutoFlashJobAwaitEcuPortTest {
     }
 
     @Test
+    public void socketCanEcuCountsAsConnectable() {
+        scanner.fireHardwareChange(hw(ecu(LinkManager.SOCKET_CAN)));
+
+        assertEquals(LinkManager.SOCKET_CAN, job.awaitEcuPort(60_000, clock));
+        assertEquals(0, clock.sleepCalls);
+    }
+
+    @Test
+    public void originalSocketCanTransportIsPreferredOverAnotherEcu() {
+        AbstractAutoFlashJob socketCanJob = new AbstractAutoFlashJob(
+            "test", ecu(LinkManager.SOCKET_CAN), null,
+            new ConnectivityContext(scanner), null) {
+            @Override
+            protected boolean flash(LinkManager lm, BinaryProtocol bp, UpdateOperationCallbacks cb) {
+                throw new UnsupportedOperationException("not exercised");
+            }
+        };
+        scanner.fireHardwareChange(hw(ecu("COM5"), ecu(LinkManager.SOCKET_CAN)));
+
+        assertEquals(LinkManager.SOCKET_CAN, socketCanJob.awaitEcuPort(60_000, clock));
+    }
+
+    @Test
+    public void socketCanRecoveryDoesNotFallBackToASerialEcu() {
+        AbstractAutoFlashJob socketCanJob = new AbstractAutoFlashJob(
+            "test", ecu(LinkManager.SOCKET_CAN), null,
+            new ConnectivityContext(scanner), null) {
+            @Override
+            protected boolean flash(LinkManager lm, BinaryProtocol bp, UpdateOperationCallbacks cb) {
+                throw new UnsupportedOperationException("not exercised");
+            }
+        };
+        scanner.fireHardwareChange(hw(ecu("COM5")));
+
+        assertNull(socketCanJob.awaitEcuPort(1_000, clock));
+    }
+
+    @Test
     public void completionRunsAfterReconnectRecovery() {
         LinkManager linkManager = mock(LinkManager.class);
         BinaryProtocol binaryProtocol = mock(BinaryProtocol.class);
