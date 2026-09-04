@@ -444,7 +444,7 @@ public class VariableRegistryValues {
 	public static final String DYNO_SAE_RELATIVE_HUMIDITY_UNITS = "%";
 	public static final String DYNO_SAE_TEMPERATURE_C_TOOLTIP = "Air temperature";
 	public static final String DYNO_SAE_TEMPERATURE_C_UNITS = "C";
-	public static final int EFI_CAN_BUS_COUNT = 2;
+	public static final int EFI_CAN_BUS_COUNT = 3;
 	public static final int ego_sensor_e_ES_14Point7_Free = 2;
 	public static final int ego_sensor_e_ES_AEM = 6;
 	public static final int ego_sensor_e_ES_BPSX_D1 = 0;
@@ -453,7 +453,7 @@ public class VariableRegistryValues {
 	public static final int ego_sensor_e_ES_PLX = 4;
 	public static final String egoSettings_NAME = "CAN O2 sensors";
 	public static final int EGT_CHANNEL_COUNT = 8;
-	public static final int engine_configuration_s_size = 4268;
+	public static final int engine_configuration_s_size = 4284;
 	public static final int engine_load_mode_e_LM_ALPHA_N = 2;
 	public static final int engine_load_mode_e_LM_LUA = 3;
 	public static final int engine_load_mode_e_LM_REAL_MAF = 1;
@@ -587,7 +587,7 @@ public class VariableRegistryValues {
 	public static final int ETB_HW_MAX_FREQUENCY = 3000;
 	public static final int ETHERNET_PORT = 29001;
 	public static final int FAN_PWM_CURVE_SIZE = 8;
-	public static final int FLASH_DATA_VERSION = 260805;
+	public static final int FLASH_DATA_VERSION = 260902;
 	public static final int FLEX_TRANSIENT_CLT_SIZE = 8;
 	public static final int FLEX_TRANSIENT_ETH_SIZE = 8;
 	public static final int FLOW_LINEARIZATION_MASS_SIZE = 2;
@@ -1312,7 +1312,6 @@ public class VariableRegistryValues {
 	public static final int InjectorNonlinearMode_INJ_FordModel = 2;
 	public static final int InjectorNonlinearMode_INJ_None = 0;
 	public static final int InjectorNonlinearMode_INJ_PolynomialAdder = 1;
-	public static final int JUMP_BLT_COMMAND = 0xBC;
 	public static final int JUMP_DFU_COMMAND = 0xBA;
 	public static final String KNOCK_RPM_TABLE_NAME = "Engine Knock Threshold RPM Based";
 	public static final int KNOCK_TABLE_RPM_SIZE = 6;
@@ -1421,7 +1420,7 @@ public class VariableRegistryValues {
 	public static final int PEDAL_TO_TPS_SIZE = 8;
 	public static final String pedalSensor_NAME = "Accelerator pedal";
 	public static final String pedalToTpsTbl_NAME = "ETB pedal target";
-	public static final int persistent_config_s_size = 16760;
+	public static final int persistent_config_s_size = 16776;
 	public static final int pid_s_size = 20;
 	public static final int pin_input_mode_e_PI_DEFAULT = 0;
 	public static final int pin_input_mode_e_PI_INVERTED_DEFAULT = 4;
@@ -1524,7 +1523,6 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 1023473921;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1595,7 +1593,7 @@ public class VariableRegistryValues {
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_BUTTON = 0;
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH = 2;
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_UP_SWITCH = 3;
-	public static final int TOTAL_CONFIG_SIZE = 16760;
+	public static final int TOTAL_CONFIG_SIZE = 16776;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int TPS_PPS_TOO_HIGH_THRESHOLD = 110;
 	public static final int TPS_PPS_TOO_LOW_THRESHOLD = -10;
@@ -1852,7 +1850,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2026.09.04.stm32f429_nucleo.1023473921";
+	public static final String TS_SIGNATURE = "rusEFI master.2026.09.04.premium-quick-test.3459830721";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2200;

@@ -1270,12 +1270,6 @@ Maximum amount of time the solenoid can be active before assuming a programming 
 ### stepperDcInvertedPins
 Enable if DC-motor driver (H-bridge) inverts the signals (eg. RZ7899 on Hellen boards)
 
-### canOpenBLT
-Allow OpenBLT on Primary CAN
-
-### can2OpenBLT
-Allow OpenBLT on Secondary CAN
-
 ### injectorFlowAsMassFlow
 Select whether to configure injector flow in volumetric flow (default, cc/min) or mass flow (g/s).
 
@@ -1922,6 +1916,12 @@ Delay before cutting fuel due to low oil pressure. Use this to ignore short pres
 
 
 ### engineShutDownPeriod
+
+
+### can3ListenMode
+
+
+### verboseCan3
 
 
 ### knockSuppressMinTps
