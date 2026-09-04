@@ -60,13 +60,15 @@
 #define W25Q_CMD_WRITE_STATUS_REGISTER              0x01
 #define W25Q_CMD_PAGE_PROGRAM                       0x02
 #define W25Q_CMD_SECTOR_ERASE                       0x20
-#define W25Q_CMD_32K_BLOCK_ERASE                    0x53
+#define W25Q_CMD_32K_BLOCK_ERASE                    0x52
 #define W25Q_CMD_64K_BLOCK_ERASE                    0xD8
 #define W25Q_CMD_BULK_ERASE                         0xC7
 #define W25Q_CMD_PROGRAM_ERASE_RESUME               0x7A
 #define W25Q_CMD_PROGRAM_ERASE_SUSPEND              0x75
 #define W25Q_CMD_READ_UID_ARRAY                     0x4B
 #define W25Q_CMD_PROGRAM_SECURITY_REGS              0x42
+#define W25Q_CMD_ENTER_QPI                          0x38
+#define W25Q_CMD_EXIT_QPI                           0xFF
 /** @} */
 
 /**
@@ -132,11 +134,11 @@
 
 /**
  * @brief   Number of dummy cycles for fast read (1..15).
- * @details This is the number of dummy cycles to be used for fast read
+ * @details This is the number of dummy cycles to be used for fast read in QPI mode
  *          operations.
  */
 #if !defined(W25Q_READ_DUMMY_CYCLES) || defined(__DOXYGEN__)
-#define W25Q_READ_DUMMY_CYCLES              1
+#define W25Q_READ_DUMMY_CYCLES              2
 #endif
 
 /*===========================================================================*/

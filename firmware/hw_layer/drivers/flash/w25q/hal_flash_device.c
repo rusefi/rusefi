@@ -267,6 +267,29 @@ static void w25q_reset_memory(SNORDriver *devp) {
   wspiCommand(devp->config->busp, &cmd_reset_enable_1);
   wspiCommand(devp->config->busp, &cmd_reset_1);
 }
+
+static void w25q_enter_qpi(SNORDriver *devp) {
+  static const wspi_command_t cmd_enter_qpi = {
+    .cmd              = W25Q_CMD_ENTER_QPI,
+    .cfg              = WSPI_CFG_CMD_MODE_ONE_LINE,
+    .addr             = 0,
+    .alt              = 0,
+    .dummy            = 0
+  };
+  wspiCommand(devp->config->busp, &cmd_enter_qpi);
+}
+
+static void w25q_exit_qpi(SNORDriver *devp) {
+  static const wspi_command_t cmd_exit_qpi = {
+    .cmd              = W25Q_CMD_EXIT_QPI,
+    .cfg              = WSPI_CFG_CMD_MODE_FOUR_LINES,
+    .addr             = 0,
+    .alt              = 0,
+    .dummy            = 0
+  };
+  wspiCommand(devp->config->busp, &cmd_exit_qpi);
+}
+
 #endif /* SNOR_BUS_DRIVER == SNOR_BUS_DRIVER_WSPI */
 
 static const uint8_t w25q_manufacturer_ids[] = W25Q_SUPPORTED_MANUFACTURE_IDS;
@@ -333,6 +356,10 @@ void snor_device_init(SNORDriver *devp) {
      because a CPU reset does not reset the memory too.*/
   snor_reset_xip(devp);
 
+  /* Attempting to exit QPI mode, it could be in an unexpected state
+     because a CPU reset does not reset the memory too.*/
+  w25q_exit_qpi(devp);
+
   /* Attempting a reset of the device, it could be in an unexpected state
      because a CPU reset does not reset the memory too.*/
   w25q_reset_memory(devp);
@@ -356,6 +383,12 @@ void snor_device_init(SNORDriver *devp) {
   snor_descriptor.sectors_count = (1U << (size_t)id[2]) /
                                   SECTOR_SIZE;
   snor_descriptor.size = (size_t)snor_descriptor.sectors_count * SECTOR_SIZE;
+
+#if SNOR_BUS_DRIVER == SNOR_BUS_DRIVER_WSPI
+#if W25Q_BUS_MODE == W25Q_BUS_MODE_WSPI4L
+  w25q_enter_qpi(devp);
+#endif
+#endif
 }
 
 flash_error_t snor_device_read(SNORDriver *devp, flash_offset_t offset,
