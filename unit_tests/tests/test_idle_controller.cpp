@@ -282,6 +282,8 @@ TEST(idle_v2, testOpenLoopCranking) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	StrictMock<MockOpenLoopIdler> dut;
 
+	engineConfiguration->crankingAirAmountEnabled = true;
+
 	EXPECT_CALL(dut, getCrankingOpenLoop(30)).WillOnce(Return(44));
 
 	// Should return the value from getCrankingOpenLoop, and ignore running numbers
@@ -291,6 +293,8 @@ TEST(idle_v2, testOpenLoopCranking) {
 TEST(idle_v2, openLoopRunningTaper) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	StrictMock<MockOpenLoopIdler> dut;
+
+	engineConfiguration->crankingAirAmountEnabled = true;
 
 	EXPECT_CALL(dut, getRunningOpenLoop(ICP::CrankToIdleTaper, 0, 30, SensorResult(0))).WillRepeatedly(Return(25));
 	EXPECT_CALL(dut, getRunningOpenLoop(ICP::Running, 0, 30, SensorResult(0))).WillRepeatedly(Return(25));
@@ -340,6 +344,80 @@ TEST(idle_v2, getCrankingTaperFraction) {
 		engine->rpmCalculator.onNewEngineCycle();
 	}
 	EXPECT_FLOAT_EQ(2, dut.getCrankingTaperFraction(mockedTemperature));
+}
+
+TEST(idle_v2, crankingRpmFlare_openLoopBypassesCrankingDuty) {
+	// RPM flare enabled without air amount: getOpenLoop() during Cranking must fall through
+	// to running open-loop so m_lastTargetRpm drives the 3D table lookup.
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	StrictMock<MockOpenLoopIdler> dut;
+
+	engineConfiguration->crankingIdleRpmFlareEnabled = true;
+
+	// Running open-loop returns 30%; cranking duty would be 75% but must be ignored.
+	EXPECT_CALL(dut, getRunningOpenLoop(ICP::Cranking, 0, 30, SensorResult(0))).WillOnce(Return(30));
+
+	EXPECT_FLOAT_EQ(30, dut.getOpenLoop(ICP::Cranking, 0, 30, 0, 0));
+}
+
+TEST(idle_v2, crankingRpmFlare_openLoopNoTaperBlend) {
+	// RPM flare enabled without air amount: no cranking-duty blend during crank-to-idle taper.
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	StrictMock<MockOpenLoopIdler> dut;
+
+	engineConfiguration->crankingIdleRpmFlareEnabled = true;
+
+	EXPECT_CALL(dut, getRunningOpenLoop(ICP::CrankToIdleTaper, 0, 30, SensorResult(0))).WillRepeatedly(Return(25));
+
+	// At any taper fraction, running open-loop is used directly (no cranking duty blend).
+	EXPECT_FLOAT_EQ(25, dut.getOpenLoop(ICP::CrankToIdleTaper, 0, 30, 0, 0));
+	EXPECT_FLOAT_EQ(25, dut.getOpenLoop(ICP::CrankToIdleTaper, 0, 30, 0, 0.5f));
+	EXPECT_FLOAT_EQ(25, dut.getOpenLoop(ICP::CrankToIdleTaper, 0, 30, 0, 1.0f));
+}
+
+TEST(idle_v2, crankingRpmFlare_targetRpmTaper) {
+	// RPM flare: m_lastTargetRpm = (base idle RPM + adder) at crank, tapering to base idle RPM.
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	IdleController dut;
+
+	engineConfiguration->crankingIdleRpmFlareEnabled = true;
+
+	const float crankingRpmAdder = 700;  // +700 RPM during cranking
+	const float normalIdleRpm = 800;     // base idle RPM from CLT table
+	const float crankingRpmTarget = normalIdleRpm + crankingRpmAdder;  // 1500
+
+	// Flat RPM adder: all CLT bins → +700 RPM
+	setArrayValues(config->cltCrankingRpmAdder, crankingRpmAdder);
+	// Normal idle RPM target: flat at 800 RPM
+	setArrayValues(config->cltIdleRpm, (uint8_t)(normalIdleRpm / 20)); // cltIdleRpm is scaled x20
+
+	// At taper = 0: base + adder = 1500
+	float blended0 = interpolateClamped(0, crankingRpmTarget, 1, normalIdleRpm, 0.0f);
+	EXPECT_FLOAT_EQ(1500, blended0);
+
+	// At taper = 0.5: midpoint between 1500 and 800 = 1150
+	float blended05 = interpolateClamped(0, crankingRpmTarget, 1, normalIdleRpm, 0.5f);
+	EXPECT_FLOAT_EQ(1150, blended05);
+
+	// At taper = 1.0: back to normal idle RPM
+	float blended1 = interpolateClamped(0, crankingRpmTarget, 1, normalIdleRpm, 1.0f);
+	EXPECT_FLOAT_EQ(normalIdleRpm, blended1);
+}
+
+TEST(idle_v2, crankingRpmFlare_closedLoopStillOffDuringCranking) {
+	// Closed-loop must remain disabled during Cranking phase even when RPM flare is enabled.
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	IdleController dut;
+	dut.init();
+
+	engineConfiguration->crankingIdleRpmFlareEnabled = true;
+	engineConfiguration->idleRpmPid.pFactor = 0.5f;
+	engineConfiguration->idleRpmPid.iFactor = 0;
+	engineConfiguration->idleRpmPid.dFactor = 0;
+
+	// Closed-loop returns 0 for any non-Idling phase
+	EXPECT_FLOAT_EQ(0, dut.getClosedLoop(ICP::Cranking, 0, 1000, 900));
+	EXPECT_FLOAT_EQ(0, dut.getClosedLoop(ICP::CrankToIdleTaper, 0, 1000, 900));
 }
 
 TEST(idle_v2, openLoopCoastingTable) {
