@@ -76,6 +76,7 @@ public class PinoutPane {
 
     private Map<String, Map<String, Object>> boardsData;
     private final UIContext uiContext;
+    private final Set<String> pinoutDownloads = Collections.synchronizedSet(new HashSet<>());
     /** All image panels currently displayed — updated when a board's tabs are built. */
     private final List<ConnectorImagePanel> activeImagePanels = new ArrayList<>();
     /** All table models currently displayed — updated alongside activeImagePanels. */
@@ -480,20 +481,30 @@ public class PinoutPane {
         List<String> connectorFiles = (List<String>) boardEntry.get("files");
         String zipName = boardEntry.get("zip_file") instanceof String
                 ? (String) boardEntry.get("zip_file") : "connectors.zip";
-        buildConnectorTabs(connectorFiles, zipName);
+        String expectedSha = YamlUtil.toStr(boardEntry.get("sha"));
+        File zipFile = findPinoutZip(zipName);
+        if (!PinoutCache.isCurrent(zipFile, expectedSha, connectorFiles)) {
+            boolean canUseCachedPinout = PinoutCache.containsEntries(zipFile, connectorFiles);
+            statusLabel.setText("Board: " + boardKey + (canUseCachedPinout
+                ? "  [updating pinout data]" : "  [downloading pinout data]"));
+            if (!canUseCachedPinout) {
+                activeImagePanels.clear();
+                activeTableModels.clear();
+                activeTables.clear();
+                connectorTabs = null;
+                setCenterPanel(new JLabel("Downloading " + zipName + "...", SwingConstants.CENTER));
+            }
+            requestPinoutZip(boardKey, zipName, expectedSha, connectorFiles);
+            if (!canUseCachedPinout) return;
+        }
+        buildConnectorTabs(connectorFiles, zipFile);
     }
 
-    private void buildConnectorTabs(List<String> connectorPaths, String zipName) {
+    private void buildConnectorTabs(List<String> connectorPaths, File zipFile) {
         activeImagePanels.clear();
         activeTableModels.clear();
         activeTables.clear();
         connectorTabs = null;
-
-        File zipFile = findFile(PINOUTS_DIR + "/" + zipName);
-        if (zipFile == null) {
-            setCenterPanel(new JLabel(zipName + " not found", SwingConstants.CENTER));
-            return;
-        }
 
         List<ConnectorData> connectors = new ArrayList<>();
         try (ZipFile zip = new ZipFile(zipFile)) {
@@ -864,7 +875,11 @@ public class PinoutPane {
 
     @SuppressWarnings("unchecked")
     private Map<String, Map<String, Object>> loadBoardsMeta() {
-        File metaFile = findFile(boardsMetaRelativePath());
+        return loadBoardsMeta(findFile(boardsMetaRelativePath()));
+    }
+
+    @SuppressWarnings("unchecked")
+    private Map<String, Map<String, Object>> loadBoardsMeta(File metaFile) {
         log.info("loadBoardsMeta: metaFile=" + (metaFile != null ? metaFile.getAbsolutePath() : "not found"));
         if (metaFile == null) return null;
         try (InputStream is = Files.newInputStream(metaFile.toPath())) {
@@ -874,6 +889,18 @@ public class PinoutPane {
             log.warn("loadBoardsMeta failed: " + e);
             return null;
         }
+    }
+
+    private static File findPinoutZip(String zipName) {
+        File cached = cachedPinoutFile(zipName);
+        if (cached == null) return null;
+        if (cached.exists()) return cached;
+        return findFile(PINOUTS_DIR + "/" + zipName);
+    }
+
+    private static File cachedPinoutFile(String zipName) {
+        if (zipName == null || zipName.isEmpty() || !new File(zipName).getName().equals(zipName)) return null;
+        return new File(PINOUT_CACHE_DIR, zipName);
     }
 
     private static File findFile(String relativePath) {
@@ -888,6 +915,54 @@ public class PinoutPane {
     }
 
     // ---- Remote update ----
+
+    private void requestPinoutZip(String boardKey, String zipName, String expectedSha, List<String> connectorFiles) {
+        File cachedZip = cachedPinoutFile(zipName);
+        if (cachedZip == null) {
+            statusLabel.setText("Board: " + boardKey + "  [invalid pinout archive name]");
+            setCenterPanel(new JLabel("Invalid pinout archive name", SwingConstants.CENTER));
+            return;
+        }
+
+        String downloadKey = zipName + "@" + expectedSha;
+        if (!pinoutDownloads.add(downloadKey)) return;
+
+        Thread downloader = new Thread(() -> {
+            try {
+                log.info("Downloading pinout zip " + zipName + " for " + boardKey + " to " + cachedZip.getAbsolutePath());
+                ConnectionAndMeta meta = new ConnectionAndMeta("pinouts_raw/" + zipName).invoke(pinoutBaseUrl());
+                log.info("Zip " + zipName + " remote size=" + meta.getCompleteFileSize());
+                PinoutCache.downloadAndReplace(cachedZip, expectedSha, connectorFiles,
+                    destination -> AutoupdateUtil.downloadAutoupdateFile(
+                        destination.getAbsolutePath(), meta, "Updating " + boardKey + " pinout"));
+                log.info("Pinout zip " + zipName + " downloaded and verified successfully");
+                pinoutDownloads.remove(downloadKey);
+                SwingUtilities.invokeLater(this::reloadAndRefresh);
+            } catch (IOException e) {
+                log.warn("Could not download pinout zip " + zipName + " for " + boardKey + ": " + e, e);
+                SwingUtilities.invokeLater(() -> {
+                    if (isBoardStatus(boardKey)) {
+                        if (PinoutCache.containsEntries(findPinoutZip(zipName), connectorFiles)) {
+                            statusLabel.setText("Board: " + boardKey + "  [pinout update failed—using cached data]");
+                        } else {
+                            statusLabel.setText("Board: " + boardKey + "  [pinout download failed]");
+                            setCenterPanel(new JLabel("Could not download " + zipName, SwingConstants.CENTER));
+                        }
+                    }
+                });
+            } finally {
+                pinoutDownloads.remove(downloadKey);
+            }
+        }, "pinout-zip-" + boardKey);
+        downloader.setDaemon(true);
+        downloader.start();
+    }
+
+    private boolean isBoardStatus(String boardKey) {
+        String boardStatus = "Board: " + boardKey;
+        String currentStatus = statusLabel.getText();
+        return currentStatus.equals(boardStatus) || currentStatus.startsWith(boardStatus + "  ");
+    }
 
     private void checkAndUpdatePinoutData() {
         File cacheDir = new File(PINOUT_CACHE_DIR);
@@ -906,7 +981,8 @@ public class PinoutPane {
             return;
         }
 
-        // zip_file -> sha from the remote yaml
+        // Validate the metadata before replacing the cached copy. The archive named by the
+        // selected board is downloaded on demand after its actual SHA-256 has been checked.
         Map<String, String> remoteZipShas = extractZipShas(remoteYaml);
         log.info("Remote zip/sha entries: " + remoteZipShas);
         if (remoteZipShas.isEmpty()) {
@@ -914,57 +990,25 @@ public class PinoutPane {
             return;
         }
 
-        // zip_file -> sha from the local cached yaml (if present)
-        Map<String, String> localZipShas = new HashMap<>();
-        if (cachedYaml.exists()) {
-            try {
-                String localYaml = new String(Files.readAllBytes(cachedYaml.toPath()), StandardCharsets.UTF_8);
-                localZipShas = extractZipShas(localYaml);
-                log.info("Local cached zip/sha entries: " + localZipShas);
-            } catch (IOException e) {
-                log.warn("Could not read local pinout yaml: " + e);
-            }
-        } else {
-            log.info("No local cached yaml found at " + cachedYaml.getAbsolutePath());
-        }
-
-        // Save the updated yaml first so that on the next run we don't re-download zips
-        // that were already fetched (presence check handles partially-failed downloads)
         try {
-            Files.write(cachedYaml.toPath(), remoteYaml.getBytes(StandardCharsets.UTF_8));
+            PinoutCache.writeAndReplace(cachedYaml, remoteYaml);
             log.info("Saved pinout yaml to " + cachedYaml.getAbsolutePath());
         } catch (IOException e) {
             log.warn("Could not save pinout yaml: " + e, e);
             return;
         }
 
-        for (Map.Entry<String, String> entry : remoteZipShas.entrySet()) {
-            String zipName = entry.getKey();
-            String remoteSha = entry.getValue();
-            File cachedZip = new File(cacheDir, zipName);
-            String localSha = localZipShas.get(zipName);
-            log.info("Zip " + zipName + ": remoteSha=" + remoteSha + " localSha=" + localSha + " cachedZipExists=" + cachedZip.exists());
-            if (remoteSha.equals(localSha) && cachedZip.exists()) {
-                log.info("Pinout zip " + zipName + " is up to date");
-                continue;
-            }
-            log.info("Downloading pinout zip " + zipName + " to " + cachedZip.getAbsolutePath());
-            try {
-                ConnectionAndMeta meta = new ConnectionAndMeta("pinouts_raw/" + zipName).invoke(pinoutBaseUrl());
-                log.info("Zip " + zipName + " remote size=" + meta.getCompleteFileSize());
-                AutoupdateUtil.downloadAutoupdateFile(cachedZip.getAbsolutePath(), meta, "Updating pinout data: " + zipName);
-                log.info("Pinout zip " + zipName + " downloaded successfully");
-            } catch (IOException e) {
-                log.warn("Could not download pinout zip " + zipName + ": " + e, e);
-            }
-        }
-
-        log.info("Pinout update complete, scheduling UI refresh");
-        SwingUtilities.invokeLater(this::reloadAndRefresh);
+        log.info("Pinout metadata update complete, scheduling UI refresh");
+        SwingUtilities.invokeLater(() -> reloadAndRefresh(cachedYaml));
     }
 
     private void reloadAndRefresh() {
-        boardsData = loadBoardsMeta();
+        File cachedYaml = new File(PINOUT_CACHE_DIR, pinoutMetaName());
+        reloadAndRefresh(cachedYaml.exists() ? cachedYaml : null);
+    }
+
+    private void reloadAndRefresh(File preferredMetaFile) {
+        boardsData = preferredMetaFile != null ? loadBoardsMeta(preferredMetaFile) : loadBoardsMeta();
         log.info("reloadAndRefresh: boardsData=" + (boardsData != null ? boardsData.size() + " boards" : "null")
             + " connected=" + ConnectionStatusLogic.INSTANCE.isConnected());
         if (ConnectionStatusLogic.INSTANCE.isConnected()) {
