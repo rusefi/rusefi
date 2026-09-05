@@ -1,3 +1,33 @@
+#
+# Firmware stack usage report - see java_tools/gcc_map_reader/README.md
+#
+# Inputs, per matrix board:
+#   - firmware + bootloader ELF/map built with -fstack-usage -fcallgraph-info=su:
+#     per-function frame sizes (.su) and the post-LTO callgraph (.ci)
+#   - RUSEFI_STACK_ROOT* metadata (controllers/core/common_headers.h): which
+#     thread entry owns which working area and its byte budget; linked into
+#     non-allocated ELF sections, not flashed
+#   - board meta-info.env: STACK_USAGE_PROFILE (optional STACK_USAGE_PROFILE_FILE)
+#   - hand-maintained profile table
+#     java_tools/gcc_map_reader/src/main/resources/stack_usage/<profile>.md:
+#     display names, hardware-measured "Reviewed" bytes, proxy snapshot, scenario
+#
+# Outputs:
+#   - firmware/build/firmware_stack_usage_<profile>.md per job
+#   - pull requests: appended to the job step summary
+#   - master (schedule / manual): uploaded as artifact, then update-reference
+#     assembles docs/firmware_stack_usage.md and commits it to master
+#
+# What fails and what does not:
+#   - FAILS: a linked stack root missing from / extra in the profile table,
+#     a reviewed measurement larger than its budget (--check-reviewed),
+#     a single function frame over 1 KB (-Wstack-usage=1024 under -Werror)
+#   - DOES NOT FAIL: a small budget, "Current proxy" above nominal, or proxy
+#     growth since the snapshot ("REVIEW PROXY +N"). Those are report-only;
+#     a human reads the summary. The proxy is a direct-call estimate that
+#     ignores indirect calls, unknown frames, recursion, interrupts and
+#     context switching, so it is not a proof either way.
+#
 name: Firmware Stack Usage
 
 on:
