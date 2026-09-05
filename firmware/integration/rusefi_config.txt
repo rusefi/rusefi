@@ -2036,6 +2036,13 @@ end_struct
 	bit dwellDutyModeEnabled,"enabled","disabled";Dwell Duty Mode: when enabled, ignores the RPM/voltage dwell tables and computes dwell as a fixed percentage of the time between consecutive ignition pulses. Required for Ford TFI modules that expect a 50% duty cycle square wave.
 	uint8_t dwellDutyPercent;Dwell Duty Mode: percentage of the inter-spark interval used as coil dwell time. 50 = half the interval between pulses (standard TFI target).;"%", 1, 0, 1, 90, 0
 
+
+	! #10023 - the second VE table can use a different load axis from the primary one, for example
+	! TPS on a cammed/ITB engine where MAP collapses into a narrow noisy band at small throttle,
+	! or as a MAP-failure fallback where a MAP-indexed second table would be no help at all.
+	! "None" inherits whatever the primary resolved to, which is what every existing tune gets.
+	ve_override_e secondVeOverrideMode;Load axis for the second VE table. "None" means use the same axis as the primary table.
+
 ! end of engine_configuration_s
 end_struct
 
