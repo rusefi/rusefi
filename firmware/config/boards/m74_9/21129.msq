@@ -720,8 +720,8 @@
 </constant>
         <constant cols="8" digits="2" name="cltIdleCorrTable" rows="16" units="%">
          38.0 34.0 28.0 23.0 21.0 21.0 22.0 22.0
-         29.9 25.9 19.9 15.0 15.0 13.0 13.0 13.0
-         28.8 24.8 18.8 15.0 15.0 13.0 13.0 13.0
+         31.9 27.9 21.9 17.0 17.0 15.0 15.0 15.0
+         30.8 26.8 20.8 17.0 17.0 15.0 15.0 15.0
          34.7 30.7 24.7 19.7 17.7 17.7 19.7 19.7
          32.6 28.6 22.6 17.6 15.6 15.6 17.6 17.6
          33.5 29.5 23.5 18.5 16.5 16.5 18.5 18.5
@@ -898,10 +898,10 @@
          1.0
          1.12
          1.25
-         1.3
-         1.0
-         0.5
-         0.5
+         3.0
+         3.0
+         3.0
+         3.0
          0.5
 </constant>
         <constant digits="0" name="customSentTpsMax" units="">0</constant>
@@ -960,7 +960,7 @@
         <constant digits="0" name="device_uid2" units="">0</constant>
         <constant digits="0" name="device_uid3" units="">0</constant>
         <constant digits="1" name="dfcoDelay" units="sec">1.0</constant>
-        <constant digits="0" name="dfcoRetardDeg" units="deg">0</constant>
+        <constant digits="0" name="dfcoRetardDeg" units="deg">5</constant>
         <constant digits="1" name="dfcoRetardRampInTime" units="s">1.0</constant>
         <constant name="digitalPotentiometerChipSelect1">"NONE"</constant>
         <constant name="digitalPotentiometerChipSelect2">"NONE"</constant>
@@ -1908,9 +1908,9 @@
 </constant>
         <constant name="idleIncrementalPidCic">"no"</constant>
         <constant digits="1" name="idleMaximumAirmass" units="mg">190.0</constant>
-        <constant name="idleMode">"Open Loop + Closed Loop"</constant>
+        <constant name="idleMode">"Open Loop"</constant>
         <constant digits="1" name="idlePidActivationTime" units="seconds">2.0</constant>
-        <constant digits="0" name="idlePidDeactivationTpsThreshold" units="%">10</constant>
+        <constant digits="0" name="idlePidDeactivationTpsThreshold" units="%">2</constant>
         <constant digits="0" name="idlePidRpmDeadZone" units="RPM">10</constant>
         <constant digits="0" name="idlePidRpmUpperLimit" units="RPM">500</constant>
         <constant name="idlePositionChannel">"NONE"</constant>
@@ -1932,7 +1932,7 @@
         <constant digits="4" name="idleTimingPid_dFactor" units="">0.0</constant>
         <constant digits="4" name="idleTimingPid_iFactor" units="">0.005</constant>
         <constant digits="0" name="idleTimingPid_maxValue" units="">20</constant>
-        <constant digits="0" name="idleTimingPid_minValue" units="">-5</constant>
+        <constant digits="0" name="idleTimingPid_minValue" units="">-1</constant>
         <constant digits="0" name="idleTimingPid_offset" units="">0</constant>
         <constant digits="0" name="idleTimingPid_periodMs" units="ms">0</constant>
         <constant digits="4" name="idleTimingPid_pFactor" units="">0.03</constant>
@@ -2269,22 +2269,22 @@
          7000
 </constant>
         <constant cols="16" digits="1" name="ignitionTable" rows="16" units="deg">
-         30.4 31.5 35.0 37.8 38.8 39.6 40.5 40.4 40.2 40.0 40.1 40.1 40.6 40.8 40.9 41.3
-         28.6 27.2 29.9 33.1 33.4 34.3 35.5 34.9 34.1 33.2 32.9 32.7 32.9 33.7 34.8 39.2
-         25.0 23.7 25.8 28.6 30.2 31.4 32.8 32.6 31.7 30.9 30.9 30.7 30.9 31.6 32.6 37.5
-         21.4 20.5 22.5 25.3 27.6 28.8 30.4 30.3 29.4 29.4 29.8 29.7 29.8 30.4 30.9 35.5
-         18.3 18.2 20.1 22.6 25.6 27.2 28.4 28.7 28.4 28.6 29.1 29.1 29.3 29.7 30.2 33.9
-         17.0 17.0 18.3 21.0 24.0 26.0 27.3 27.7 27.6 28.0 28.4 28.6 29.0 29.4 29.8 33.3
-         16.5 16.5 17.3 19.9 22.9 24.8 26.6 26.9 27.2 27.5 27.8 28.2 28.7 29.2 29.6 32.7
-         16.0 16.0 16.6 19.2 22.2 24.2 26.0 26.6 26.7 26.9 27.5 27.9 28.4 28.9 29.3 32.1
-         15.5 15.5 16.0 18.0 21.7 23.6 25.4 26.3 26.4 26.8 27.2 27.7 28.2 28.8 29.3 31.7
-         15.0 15.0 16.0 18.0 21.1 22.9 25.2 26.0 26.4 26.8 27.2 27.7 28.2 28.7 29.2 31.4
-         14.0 14.5 16.0 18.0 20.6 22.5 25.0 25.9 26.4 26.8 27.2 27.6 28.0 28.5 29.1 31.1
-         13.0 14.0 16.0 18.0 20.1 22.2 24.8 25.9 26.4 26.5 26.9 27.3 27.7 28.1 28.8 31.0
-         13.0 14.0 16.0 18.0 19.6 21.7 24.5 25.7 26.0 26.2 26.6 26.9 27.2 27.7 28.6 31.0
-         13.0 14.0 16.0 18.0 18.7 20.9 23.9 25.3 25.6 25.7 26.0 26.1 26.5 27.2 28.1 31.0
-         13.0 14.0 16.0 18.0 17.7 20.1 23.2 24.7 24.9 25.0 25.2 25.4 25.8 26.4 27.4 31.0
-         13.0 14.0 16.0 18.0 16.7 18.5 22.0 23.8 24.3 24.2 24.5 24.8 25.1 25.8 26.8 31.0
+         32.4 33.5 37.0 39.8 40.8 41.6 42.5 42.4 42.2 40.0 40.1 40.1 40.6 40.8 40.9 41.3
+         30.6 29.2 31.9 35.1 35.4 36.3 37.5 36.9 36.1 33.2 32.9 32.7 32.9 33.7 34.8 39.2
+         27.0 25.7 27.8 30.6 32.2 33.4 34.8 34.6 33.7 30.9 30.9 30.7 30.9 31.6 32.6 37.5
+         23.4 22.5 24.5 27.3 29.6 30.8 32.4 32.3 31.4 29.4 29.8 29.7 29.8 30.4 30.9 35.5
+         20.3 20.2 22.1 24.6 27.6 29.2 30.4 30.7 30.4 28.6 29.1 29.1 29.3 29.7 30.2 33.9
+         19.0 19.0 20.3 23.0 26.0 28.0 29.3 29.7 29.6 28.0 28.4 28.6 29.0 29.4 29.8 33.3
+         18.5 18.5 19.3 21.9 24.9 26.8 28.6 28.9 29.2 27.5 27.8 28.2 28.7 29.2 29.6 32.7
+         18.0 18.0 18.6 21.2 24.2 26.2 28.0 28.6 28.7 26.9 27.5 27.9 28.4 28.9 29.3 32.1
+         17.5 17.5 18.0 20.0 23.7 25.6 27.4 28.3 28.4 26.8 27.2 27.7 28.2 28.8 29.3 31.7
+         17.0 17.0 18.0 20.0 23.1 24.9 27.2 28.0 28.4 26.8 27.2 27.7 28.2 28.7 29.2 31.4
+         16.0 16.5 18.0 20.0 22.6 24.5 27.0 27.9 28.4 26.8 27.2 27.6 28.0 28.5 29.1 31.1
+         15.0 16.0 18.0 20.0 22.1 24.2 26.8 27.9 28.4 26.5 26.9 27.3 27.7 28.1 28.8 31.0
+         15.0 16.0 18.0 20.0 21.6 23.7 26.5 27.7 28.0 26.2 26.6 26.9 27.2 27.7 28.6 31.0
+         15.0 16.0 18.0 20.0 20.7 22.9 25.9 27.3 27.6 25.7 26.0 26.1 26.5 27.2 28.1 31.0
+         15.0 16.0 18.0 20.0 19.7 22.1 25.2 26.7 26.9 25.0 25.2 25.4 25.8 26.4 27.4 31.0
+         15.0 16.0 18.0 20.0 18.7 20.5 24.0 25.8 26.3 24.2 24.5 24.8 25.1 25.8 26.8 31.0
 </constant>
         <constant name="ignKeyAdcChannel">"NONE"</constant>
         <constant digits="0" name="ignKeyAdcDivider" units="">0</constant>
@@ -2425,8 +2425,8 @@
          3.49 1.66 0.7 0.41 0.22 0.06 -0.04 -0.06
          3.49 1.66 0.7 0.41 0.22 0.06 -0.04 -0.06
 </constant>
-        <constant digits="2" name="injector_flow" units="">184.0</constant>
-        <constant name="injectorCompensationMode">"Fixed rail pressure"</constant>
+        <constant digits="2" name="injector_flow" units="">174.0</constant>
+        <constant name="injectorCompensationMode">"None"</constant>
         <constant digits="4" name="injectorCorrectionPolynomial1" units="">0.0</constant>
         <constant digits="4" name="injectorCorrectionPolynomial2" units="">0.0</constant>
         <constant digits="4" name="injectorCorrectionPolynomial3" units="">0.0</constant>
@@ -2770,12 +2770,12 @@
          7000
 </constant>
         <constant cols="16" digits="{useLambdaOnInterface ? 2 : 1}" name="lambdaTable" rows="16" units="{useLambdaOnInterface ? &quot;lambda&quot; : &quot;afr&quot;}">
-         0.952 0.952 0.952 1.0 1.0 1.0 1.0 1.0 1.0 0.952 0.952 0.884 0.837 0.837 0.837 0.837
-         0.952 0.952 0.952 1.0 1.0 1.0 1.0 1.0 1.0 0.952 0.952 0.884 0.837 0.837 0.837 0.837
-         0.952 0.952 0.952 1.0 1.0 1.0 1.0 1.0 1.0 0.952 0.952 0.884 0.837 0.837 0.837 0.837
-         0.952 0.952 0.952 1.0 1.0 1.0 1.0 1.0 1.0 0.925 0.912 0.871 0.837 0.837 0.837 0.837
-         0.952 0.952 0.952 1.0 1.0 1.0 1.0 1.0 1.0 0.878 0.864 0.85 0.837 0.837 0.837 0.837
-         0.952 0.952 0.952 1.0 1.0 1.0 1.0 1.0 1.0 0.837 0.837 0.837 0.837 0.837 0.837 0.837
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 0.952 0.952 0.884 0.837 0.837 0.837 0.837
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 0.952 0.952 0.884 0.837 0.837 0.837 0.837
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 0.952 0.952 0.884 0.837 0.837 0.837 0.837
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 0.925 0.912 0.871 0.837 0.837 0.837 0.837
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 0.878 0.864 0.85 0.837 0.837 0.837 0.837
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 0.837 0.837 0.837 0.837 0.837 0.837 0.837
          1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 0.837 0.837 0.837 0.837 0.837 0.837 0.837
          0.98 0.98 0.98 0.98 0.98 0.98 0.966 0.966 0.966 0.837 0.837 0.837 0.837 0.837 0.837 0.837
          0.959 0.959 0.959 0.959 0.959 0.959 0.939 0.939 0.939 0.837 0.837 0.837 0.837 0.837 0.837 0.837
@@ -3112,12 +3112,12 @@
          7000
 </constant>
         <constant cols="6" digits="2" name="maxKnockRetardTable" rows="6" units="deg">
-         2.0 2.0 2.0 2.0 2.0 2.0
-         2.0 2.0 2.0 2.0 2.0 2.0
-         2.0 2.0 2.0 2.0 2.0 2.0
-         2.0 2.0 2.0 2.0 2.0 2.0
-         2.0 2.0 2.0 2.0 2.0 2.0
-         2.0 2.0 2.0 2.0 2.0 2.0
+         20.0 20.0 20.0 20.0 20.0 20.0
+         20.0 20.0 20.0 20.0 20.0 20.0
+         20.0 20.0 20.0 20.0 20.0 20.0
+         20.0 20.0 20.0 20.0 20.0 20.0
+         20.0 20.0 20.0 20.0 20.0 20.0
+         20.0 20.0 20.0 20.0 20.0 20.0
 </constant>
         <constant digits="1" name="maxOilPressureTimeout" units="sec">0.0</constant>
         <constant name="mc33810_cs1">"NONE"</constant>
@@ -4802,8 +4802,8 @@
         <constant name="useHbridgesToDriveIdleStepper">"no"</constant>
         <constant name="useIacPidMultTable">"no"</constant>
         <constant name="useIacTableForCoasting">"disabled"</constant>
-        <constant name="useIdleAdvanceWhileCoasting">"yes"</constant>
-        <constant name="useIdleTimingPidControl">"yes"</constant>
+        <constant name="useIdleAdvanceWhileCoasting">"no"</constant>
+        <constant name="useIdleTimingPidControl">"no"</constant>
         <constant name="useInjectorFlowLinearizationTable">"no"</constant>
         <constant name="useLambdaOnInterface">"AFR"</constant>
         <constant name="useLinearCltSensor">"no"</constant>
@@ -4816,7 +4816,7 @@
         <constant name="useSeparateAdvanceForCranking">"Table"</constant>
         <constant name="useSeparateAdvanceForIdle">"enabled"</constant>
         <constant name="useSeparateIdleTablesForCrankingTaper">"enabled"</constant>
-        <constant name="useSeparateVeForIdle">"enabled"</constant>
+        <constant name="useSeparateVeForIdle">"disabled"</constant>
         <constant name="useSpiImu">"no"</constant>
         <constant name="useStepperIdle">"no"</constant>
         <constant name="useTLE8888_cranking_hack">"yes"</constant>
@@ -5080,22 +5080,22 @@
          7000
 </constant>
         <constant cols="16" digits="1" name="veTable" rows="16" units="%">
-         38.0 40.0 42.0 44.0 63.0 65.0 61.0 66.0 72.0 80.0 82.0 82.0 79.0 77.0 72.0 58.0
-         42.0 44.0 46.0 48.0 71.0 72.0 70.0 73.0 78.0 84.0 85.0 86.0 86.0 84.0 80.0 65.0
-         45.0 47.0 48.0 50.0 73.0 74.0 71.0 75.0 79.0 84.0 86.0 87.0 87.0 85.0 82.0 67.0
-         48.0 50.0 51.0 52.0 74.0 75.0 72.0 75.0 80.0 85.0 87.0 89.0 89.0 87.0 84.0 70.0
-         50.0 52.0 53.0 54.0 75.0 76.0 74.0 76.0 81.0 86.0 89.0 90.0 90.0 89.0 86.0 72.0
-         65.0 69.0 73.0 73.0 76.0 77.0 75.0 78.0 82.0 86.0 89.0 91.0 91.0 90.0 87.0 73.0
-         66.0 70.0 73.0 74.0 77.0 79.0 76.0 79.0 83.0 87.0 90.0 92.0 92.0 91.0 88.0 74.0
-         67.0 71.0 73.0 75.0 78.0 80.0 77.0 79.0 84.0 88.0 91.0 92.0 92.0 91.0 89.0 75.0
-         68.0 72.0 74.0 76.0 79.0 80.0 78.0 80.0 84.0 88.0 91.0 92.0 92.0 92.0 89.0 75.0
-         69.0 72.0 75.0 76.0 79.0 81.0 79.0 81.0 84.0 89.0 91.0 92.0 93.0 93.0 90.0 75.0
-         70.0 73.0 75.0 77.0 80.0 81.0 80.0 81.0 85.0 90.0 91.0 93.0 93.0 93.0 91.0 75.0
-         71.0 73.0 76.0 78.0 80.0 82.0 80.0 82.0 85.0 90.0 92.0 93.0 94.0 94.0 92.0 76.0
-         72.0 75.0 76.0 78.0 81.0 82.0 81.0 82.0 86.0 90.0 92.0 93.0 94.0 95.0 92.0 76.0
-         73.0 75.0 77.0 79.0 81.0 83.0 82.0 83.0 86.0 90.0 92.0 94.0 95.0 95.0 93.0 76.0
-         74.0 76.0 77.0 80.0 82.0 83.0 82.0 84.0 87.0 91.0 93.0 95.0 95.0 96.0 93.0 76.0
-         75.0 76.0 78.0 80.0 83.0 87.0 86.0 86.0 88.0 91.0 93.0 94.0 95.0 96.0 93.0 77.0
+         45.5 45.5 48.2 50.9 53.6 56.2 58.2 59.6 61.1 62.6 63.4 62.1 60.9 59.6 58.4 52.0
+         48.0 48.5 50.4 53.1 55.9 58.4 60.5 62.2 63.8 65.0 65.4 64.7 63.5 62.0 59.1 54.8
+         49.2 50.2 52.2 54.9 57.8 60.4 62.6 64.4 66.0 67.2 67.6 66.9 65.7 64.0 61.0 56.2
+         50.4 51.7 53.8 56.6 59.5 62.2 64.4 66.3 67.9 69.2 69.6 68.9 67.7 66.0 62.8 57.6
+         52.2 53.3 55.5 58.3 61.4 64.1 66.5 68.4 70.1 71.4 71.8 71.1 69.8 68.0 64.7 59.6
+         53.9 55.1 57.3 60.3 63.4 66.2 68.6 70.6 72.4 73.7 74.1 73.4 72.1 70.3 66.9 61.6
+         55.6 56.9 59.1 62.2 65.4 68.4 70.9 72.9 74.7 76.1 76.5 75.8 74.5 72.5 69.1 63.6
+         57.4 58.7 61.0 64.2 67.5 70.5 73.1 75.2 77.1 78.5 78.9 78.2 76.8 74.8 71.2 65.6
+         59.2 60.5 62.9 66.1 69.6 72.7 75.3 77.5 79.4 80.9 81.3 80.6 79.1 77.1 73.4 67.6
+         60.9 62.2 64.7 68.1 71.6 74.8 77.6 79.8 81.8 83.3 83.7 83.0 81.5 79.4 75.6 69.6
+         62.7 64.0 66.6 70.0 73.6 77.0 79.8 82.1 84.1 85.6 86.1 85.3 83.8 81.6 77.7 71.6
+         64.4 65.7 68.3 71.8 75.6 79.0 81.8 84.2 86.3 87.9 88.4 87.6 86.0 83.8 79.8 73.6
+         65.8 67.2 69.9 73.5 77.3 80.8 83.8 86.2 88.3 89.9 90.5 89.6 88.0 85.8 81.6 75.2
+         67.2 68.7 71.4 75.1 79.0 82.6 85.6 88.1 90.2 91.9 92.4 91.6 89.9 87.6 83.4 76.8
+         68.6 70.0 72.8 76.7 80.7 84.4 87.4 89.9 92.1 93.9 94.4 93.5 91.8 89.6 85.4 78.4
+         70.0 70.0 74.1 78.3 82.4 86.5 89.5 91.8 94.1 96.3 97.5 95.6 93.7 91.8 89.8 80.0
 </constant>
         <constant name="vRefAdcChannel">"NONE"</constant>
         <constant name="vrThreshold1_pin">"NONE"</constant>
@@ -5304,7 +5304,7 @@
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260821" nPages="1" signature="rusEFI maccan-tx-fix.2026.09.01.m74_9.943590548" version="5.0"/>
+    <versionInfo firmwareInfo="20260821" nPages="1" signature="rusEFI maccan-tx-fix.2026.09.04.m74_9.943590548" version="5.0"/>
     <bibliography author="rusEFI 20260821" writeDate="date"/>
     <settings/>
     <userComments/>
