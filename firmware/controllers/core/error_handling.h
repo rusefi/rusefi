@@ -212,6 +212,10 @@ typedef struct {
 void errorHandlerInit();
 // true if we just started from some crash
 bool errorHandlerIsStartFromError();
+// raises the critical error for a watchdog reset found by errorHandlerInit(); call after initHardware(), before initMmcCard()
+void errorHandlerRaiseWatchdogResetError();
+// true if the latched critical error is the watchdog-reset one raised at boot (hardware was fully initialized before it)
+bool errorHandlerIsWatchdogResetError();
 // If there was an error on the last boot, print out information about it now and reset state.
 void errorHandlerShowBootReasonAndErrors();
 
