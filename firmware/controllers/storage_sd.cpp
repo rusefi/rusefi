@@ -96,12 +96,18 @@ StorageStatus SettingStorageSD::store(size_t id, const uint8_t *ptr, size_t size
 		status = StorageStatus::Failed;
 	}
 
-	f_close(m_fd);
+	// f_close() also does f_sync(): that is where the directory entry and FAT of a freshly
+	// created file reach the card, so a failure here means the data is NOT persisted
+	err = f_close(m_fd);
+	if (err != FR_OK) {
+		printFatFsError("SD: failed to close file", err);
+		status = StorageStatus::Failed;
+	}
 
 	efitick_t endNt = getTimeNowNt();
 	int elapsed_Ms = US2MS(NT2US(endNt - startNt));
 
-	efiPrintf("SD: Write done after %d mS", elapsed_Ms);
+	efiPrintf("SD: Write %s after %d mS", (status == StorageStatus::Ok) ? "done" : "FAILED", elapsed_Ms);
 
 	return status;
 }
