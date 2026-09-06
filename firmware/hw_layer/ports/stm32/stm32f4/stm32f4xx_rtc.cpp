@@ -8,7 +8,8 @@
 #if HAL_USE_RTC
 
 // Changing the RTC clock source requires a backup-domain reset. Preserve the
-// current time across that reset; BKPSRAM is not affected.
+// current time and the RTC backup registers used by backup_ram.cpp across that
+// reset. The separate BKPSRAM is not affected.
 void hal_lld_rtc_fixup(void) {
 #if (STM32_RTCSEL == STM32_RTCSEL_LSE)
 	if ((RCC->BDCR & STM32_RTCSEL_MASK) == STM32_RTCSEL) {
@@ -23,6 +24,10 @@ void hal_lld_rtc_fixup(void) {
 
 	RTCDateTime timespec;
 	rtcGetTime(&RTCD1, &timespec);
+	const uint32_t backup0 = RTC->BKP0R;
+	const uint32_t backup1 = RTC->BKP1R;
+	const uint32_t backup2 = RTC->BKP2R;
+	const uint32_t backup3 = RTC->BKP3R;
 
 	// This also stops LSE, so it must be restarted before selecting the clock.
 	RCC->BDCR |= RCC_BDCR_BDRST;
@@ -34,11 +39,21 @@ void hal_lld_rtc_fixup(void) {
 	RCC->BDCR |= RCC_BDCR_LSEON;
 #endif
 
-	// Allow more startup time than RUSEFI_STM32_LSE_WAIT_MAX, as on F7.
-	// LSE was confirmed running before resetting the backup domain.
-	int timeout = 1000000000;
-	while (((RCC->BDCR & RCC_BDCR_LSERDY) == 0) && (timeout--)) {
+	// initRtc() runs with the RTOS and watchdog active, before periodic watchdog
+	// servicing and USB startup. Give LSE at most one second to restart, then
+	// fall back to LSI so a bad crystal cannot prevent the ECU from booting.
+	const systime_t start = chVTGetSystemTimeX();
+	while (((RCC->BDCR & RCC_BDCR_LSERDY) == 0) && (chTimeDiffX(start, chVTGetSystemTimeX()) < TIME_MS2I(1000))) {
+#if HAL_USE_WDG
+		wdgReset(&WDGD1);
+#endif
+		chThdSleepMilliseconds(10);
 	}
+
+#if HAL_USE_WDG
+	// Leave the remaining startup code a fresh watchdog interval.
+	wdgReset(&WDGD1);
+#endif
 
 	if (RCC->BDCR & RCC_BDCR_LSERDY) {
 		RCC->BDCR |= STM32_RTCSEL;
@@ -50,6 +65,10 @@ void hal_lld_rtc_fixup(void) {
 	RCC->BDCR |= RCC_BDCR_RTCEN;
 	rtcInit();
 	rtcSetTime(&RTCD1, &timespec);
+	RTC->BKP0R = backup0;
+	RTC->BKP1R = backup1;
+	RTC->BKP2R = backup2;
+	RTC->BKP3R = backup3;
 #endif
 }
 
