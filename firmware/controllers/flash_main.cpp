@@ -211,7 +211,16 @@ static void doRewriteConfig() {
 }
 
 static void doWriteLTFT() {
-	settingsLtftRequestWriteToFlash();
+	if (!settingsLtftRequestWriteToFlash()) {
+		efiPrintf("LTFT: failed to queue write request, storage manager mailbox is full");
+		return;
+	}
+	if (storageIsIdAvailableForId(EFI_LTFT_RECORD_ID)) {
+		efiPrintf("LTFT: write requested");
+	} else {
+		// storage manager keeps the request pending until a storage that supports LTFT becomes ready
+		efiPrintf("LTFT: no storage ready for LTFT (SD card not mounted / in PC mode?), request stays pending until one is");
+	}
 }
 
 void initFlash() {

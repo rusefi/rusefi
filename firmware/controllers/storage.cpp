@@ -163,7 +163,7 @@ static const char *storageTypeToName(StorageType type) {
 	for (size_t i = 0; i < storagesCount; i++) \
 		if ((storage = storages[i]) != nullptr)
 
-static bool storageIsIdAvailableForId(StorageItemId id) {
+bool storageIsIdAvailableForId(StorageItemId id) {
 	for_all_storages {
 		if ((storage->isReady()) && (storage->isIdSupported(id))) {
 			return true;
