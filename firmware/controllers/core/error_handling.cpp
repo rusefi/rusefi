@@ -76,6 +76,12 @@ static backupErrorState lastBootError;
 static uint32_t bootCount = 0;
 #endif // EFI_BACKUP_SRAM
 
+// Set by errorHandlerInit() when the previous reset was caused by a watchdog.
+// The critical error itself is raised later, see errorHandlerRaiseWatchdogResetError()
+static bool watchdogResetDetected = false;
+// true once errorHandlerRaiseWatchdogResetError() actually latched the critical error
+static bool watchdogResetErrorRaised = false;
+
 #if EFI_USE_OPENBLT
 static void setOpenBltSwCounter(int counter) {
 	if (counter < 0 || counter > 254) {
@@ -130,11 +136,10 @@ void errorHandlerInit() {
 	}
 
 	Reset_Cause_t cause = getMCUResetCause();
-	// if reset by watchdog, signal a fatal error
-	if ((cause == Reset_Cause_IWatchdog) || (cause == Reset_Cause_WWatchdog)) {
-		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Watchdog Reset detected! Check SD card for report file.");
-	}
-#endif // EFI_PROD_CODE
+	// if reset by watchdog, remember it: the fatal error is raised by errorHandlerRaiseWatchdogResetError()
+	// once hardware is initialized, so that the SD card report can still be written
+	watchdogResetDetected = (cause == Reset_Cause_IWatchdog) || (cause == Reset_Cause_WWatchdog);
+#endif // EFI_BACKUP_SRAM
 
 	// see https://wiki.rusefi.com/Resilience
 	addConsoleAction("chibi_fault", [](){ chDbgCheck(0); } );
@@ -151,6 +156,37 @@ bool errorHandlerIsStartFromError() {
 #else
 	return 0;
 #endif
+}
+
+/**
+ * Raises the critical error for a watchdog reset detected by errorHandlerInit().
+ *
+ * This is deliberately NOT done inside errorHandlerInit(): that runs before any hardware is
+ * initialized, and a critical error latched that early makes initHardware() return without
+ * setting up SPI/pins and makes initMmc() refuse the SD card - so the report file this very
+ * error message promises was never written (#10174). The MCU has just been reset, so the
+ * hardware is in a known-good state; the purpose of this error is only to keep the engine
+ * from running until a human has looked at the ECU. Raising it right after initHardware()
+ * keeps that policy (nothing engine-related has started yet) while letting the SD thread
+ * initialize the card and write the report - see initMmc().
+ *
+ * Must be called after initHardware() and before initMmcCard().
+ */
+void errorHandlerRaiseWatchdogResetError() {
+	if (!watchdogResetDetected) {
+		return;
+	}
+	if (hasFirmwareError()) {
+		// some other critical error was already latched during hardware init: that one wins,
+		// and hardware really may be in an unexpected state, so keep the SD card guard active
+		return;
+	}
+	firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Watchdog Reset detected! Check SD card for report file.");
+	watchdogResetErrorRaised = true;
+}
+
+bool errorHandlerIsWatchdogResetError() {
+	return watchdogResetErrorRaised;
 }
 
 const char *errorCookieToName(ErrorCookie cookie)
@@ -326,6 +362,17 @@ static const char *errorHandlerGetErrorName(ErrorCookie cookie)
 	return "unknown";
 }
 
+// report name for a watchdog reset that left no cookie in backup RAM (CPU died without running any of our fault paths)
+#define WATCHDOG_REPORT_NAME "Watchdog"
+
+static const char *errorHandlerGetReportName(ErrorCookie cookie, Reset_Cause_t cause) {
+	if ((cookie == ErrorCookie::None) &&
+		((cause == Reset_Cause_IWatchdog) || (cause == Reset_Cause_WWatchdog))) {
+		return WATCHDOG_REPORT_NAME;
+	}
+	return errorHandlerGetErrorName(cookie);
+}
+
 bool needErrorReportFile = false;
 
 void errorHandlerWriteReportFile(FIL *fd) {
@@ -354,10 +401,10 @@ void errorHandlerWriteReportFile(FIL *fd) {
 		//TODO: use date + time for file name?
 #if EFI_BACKUP_SRAM
 		sprintf(fileName, "%05ld_%s_%s.txt",
-			bootCount, FAIL_REPORT_PREFIX, errorHandlerGetErrorName(cookie));
+			bootCount, FAIL_REPORT_PREFIX, errorHandlerGetReportName(cookie, cause));
 #else
 		sprintf(fileName, "last_%s_%s.txt",
-			FAIL_REPORT_PREFIX, errorHandlerGetErrorName(cookie));
+			FAIL_REPORT_PREFIX, errorHandlerGetReportName(cookie, cause));
 #endif
 
 		FRESULT ret = f_open(fd, fileName, FA_CREATE_ALWAYS | FA_WRITE);
@@ -382,14 +429,14 @@ void errorHandlerWriteReportFile(FIL *fd) {
 	}
 }
 
-static int errorHandlerIsReportExist(ErrorCookie cookie) {
+static int errorHandlerIsReportExist(const char *reportName) {
 	bool exist = false;
 	FRESULT fr;     /* Return value */
 	DIR dj;         /* Directory object */
 	FILINFO fno;    /* File information */
 	TCHAR pattern[32];
 
-	sprintf(pattern, "*%s*", errorHandlerGetErrorName(cookie));
+	sprintf(pattern, "*%s*", reportName);
 
 	fr = f_findfirst(&dj, &fno, "", pattern);
 	exist = ((fr == FR_OK) && (fno.fname[0]));
@@ -400,21 +447,22 @@ static int errorHandlerIsReportExist(ErrorCookie cookie) {
 
 int errorHandlerCheckReportFiles() {
 	hasReportFile =
-		(errorHandlerIsReportExist(ErrorCookie::FirmwareError) > 0) ||
-		(errorHandlerIsReportExist(ErrorCookie::HardFault) > 0) ||
-		(errorHandlerIsReportExist(ErrorCookie::ChibiOsPanic) > 0);
+		(errorHandlerIsReportExist(errorHandlerGetErrorName(ErrorCookie::FirmwareError)) > 0) ||
+		(errorHandlerIsReportExist(errorHandlerGetErrorName(ErrorCookie::HardFault)) > 0) ||
+		(errorHandlerIsReportExist(errorHandlerGetErrorName(ErrorCookie::ChibiOsPanic)) > 0) ||
+		(errorHandlerIsReportExist(WATCHDOG_REPORT_NAME) > 0);
 
 	return hasReportFile;
 }
 
-static void errorHandlerDeleteTypedReport(ErrorCookie cookie) {
+static void errorHandlerDeleteTypedReport(const char *reportName) {
 	bool failed = false;
 	FRESULT fr;     /* Return value */
 	DIR dj;         /* Directory object */
 	FILINFO fno;    /* File information */
 	TCHAR pattern[32];
 
-	sprintf(pattern, "*%s*", errorHandlerGetErrorName(cookie));
+	sprintf(pattern, "*%s*", reportName);
 
 	do {
 		fr = f_findfirst(&dj, &fno, "", pattern);
@@ -434,9 +482,10 @@ static void errorHandlerDeleteTypedReport(ErrorCookie cookie) {
 }
 
 void errorHandlerDeleteReports() {
-	errorHandlerDeleteTypedReport(ErrorCookie::FirmwareError);
-	errorHandlerDeleteTypedReport(ErrorCookie::HardFault);
-	errorHandlerDeleteTypedReport(ErrorCookie::ChibiOsPanic);
+	errorHandlerDeleteTypedReport(errorHandlerGetErrorName(ErrorCookie::FirmwareError));
+	errorHandlerDeleteTypedReport(errorHandlerGetErrorName(ErrorCookie::HardFault));
+	errorHandlerDeleteTypedReport(errorHandlerGetErrorName(ErrorCookie::ChibiOsPanic));
+	errorHandlerDeleteTypedReport(WATCHDOG_REPORT_NAME);
 
 	// update
 	errorHandlerCheckReportFiles();
