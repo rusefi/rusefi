@@ -28,10 +28,15 @@ static LtftState ltftState;
 // LTFT to VE table custom apply algo
 std::optional<setup_custom_board_overrides_type> custom_board_LtftTrimToVeApply;
 
-void LtftState::save() {
+bool LtftState::save() {
 #if EFI_PROD_CODE
-	storageWrite(EFI_LTFT_RECORD_ID, (const uint8_t *)trims, sizeof(trims));
+	StorageStatus status = storageWrite(EFI_LTFT_RECORD_ID, (const uint8_t *)trims, sizeof(trims));
+	if (status != StorageStatus::Ok) {
+		efiPrintf("LTFT: save failed, storage status %d", (int)status);
+		return false;
+	}
 #endif //EFI_PROD_CODE
+	return true;
 }
 
 void LtftState::load() {
@@ -186,8 +191,15 @@ void LongTermFuelTrim::learn(ClosedLoopFuelResult clResult, float rpm, float fue
 		showUpdateToUser = true;
 		if ((ltftCntHit % SAVE_AFTER_HITS) == 0) {
 			// request save
+			saveRequestNeeded = true;
+		}
+		if (saveRequestNeeded) {
 #if EFI_PROD_CODE
-			settingsLtftRequestWriteToFlash();
+			// the storage manager mailbox can be full: keep asking on every learning callback
+			// until the request is actually queued, instead of waiting for the next SAVE_AFTER_HITS
+			saveRequestNeeded = !settingsLtftRequestWriteToFlash();
+#else
+			saveRequestNeeded = false;
 #endif
 		}
 	} else {
@@ -247,16 +259,19 @@ void LongTermFuelTrim::load() {
 	ltftLoadPending = false;
 }
 
-void LongTermFuelTrim::store() {
+bool LongTermFuelTrim::store() {
 	// TODO: lock to avoid modification while writing
 	ltftSavePending = true;
 
+	// nothing to persist counts as success, otherwise the request would be retried forever
+	bool saved = true;
 	if (m_state) {
-		m_state->save();
+		saved = m_state->save();
 	}
 
 	// TODO: unlock
 	ltftSavePending = false;
+	return saved;
 }
 
 void LongTermFuelTrim::reset() {
