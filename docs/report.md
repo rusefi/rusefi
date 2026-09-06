@@ -1,5 +1,162 @@
 # Work Report
 
+## 2026-09-06 - 30-column VE/ignition tables + stock ME17 data in 21129.msq
+
+Implemented the plan from the analysis above: all four tables are now 30 columns
+and filled from the stock ME17 .clb maps.
+
+### Firmware
+
+- `firmware/config/boards/m74_9/prepend.txt`: `VE_RPM_COUNT 30` + `IGN_RPM_COUNT 30`
+  (per-board override of the 16/16 defaults in rusefi_config_shared.txt). Load
+  axes stay 16 rows (MAP kPa 20..100). RPM axis = 600, 800, ..., 6200, 6250.
+- Regenerated sizes (rusefi_generated_m74_9.h): TOTAL_CONFIG_SIZE 17548 -> 18500,
+  PAGE_SIZE_3 (LTFT) 2048 -> 3840, PAGE_SIZE_4 (second tables) 1268 -> 2220.
+- No board code for the second tables (per user): the console Load Tune applies
+  the msq page-4 block (DefaultTuneMigrator copies secondary ini fields,
+  CalibrationsUpdater burns only changed pages).
+
+### Data conversion (stock .clb -> rusEFI)
+
+| table | source | conversion |
+| --- | --- | --- |
+| veTable | fill IM=0 (long intake) | VE% = mg x 21.037 / MAP[kPa] |
+| secondVeTable | fill IM=1 (short intake) | same |
+| ignitionTable | УОЗ ЧН (partial load) | mg = fill IM=0(rpm,kPa); advance = ЧН(rpm,mg), mg clamped [50,525] |
+| secondIgnitionTable | УОЗ ПМ (full power) | same via fill IM=1 |
+
+- Fill clb: X=rpm (24 bins), Z=pressure hPa (100..1500), output mg/cylinder/cycle;
+  the exported data block is missing the first 2 cells of the 100 hPa row
+  (382 of 384 values) - detected via strict per-column monotonicity in Z, the
+  missing cells are irrelevant (used >= 200 hPa).
+- Ignition clb: X=rpm (17 bins 500..6250), Z=load mg/cycle (50..525), row-major.
+- rusEFI 100%% VE reference = idealGasLaw(0.4 L, 101.325 kPa, 20 C) = 481.65 mg
+  (fuel_math.cpp getStandardAirCharge), so VE% = mg x 21.037 / MAP[kPa].
+- Regridded to the 30-bin rpm axis, light gaussian smoothing (sigma 0.6),
+  rounded to 0.1 (msq digits=1). VE IM=0 45..95%%, peak ~95%% at 4400-4600 rpm;
+  VE IM=1 52..91%%, peak ~91%% at ~5400 rpm. ЧН 5.8..43 deg, ПМ 7.6..44.6 deg.
+  WOT 100 kPa advance rises 5.8@600 -> ~33@6250 rpm (MBT follows rpm) -
+  sane for a 1.6L 16V; idle advance is NOT affected (useSeparateAdvanceForIdle
+  is enabled in the tune).
+- Idle VE changes: the tune uses the main VE table at idle
+  (useSeparateVeForIdle=disabled); at 30 kPa the new values (53-63%) are higher
+  than the old hand-tuned row (48-50%) - expect a rich idle until STFT/retune.
+
+### 21129.msq
+
+- ignitionRpmBins/veRpmBins: 16 -> 30 rows (600..6250).
+- ignitionTable/veTable: cols=16 -> cols=30 with the converted data.
+- New `<page number="3" size="2220">` block: secondVeTable + bins,
+  secondIgnitionTable + bins (TS + rusEFI console apply it).
+- versionInfo nPages 1 -> 2, page sizes 18500/2220 match the generated ini;
+  signature/firmwareInfo/bibliography re-stamped by gen_config_board.sh.
+
+### Validation
+
+- Bundle build `compile.sh -b config/boards/m74_9/meta-info.env` BUILD SUCCESSFUL
+  (twice - the first zip packed the msq before it was stamped; the second run
+  packs the stamped tune, verified byte-identical to the repo copy).
+- Generated ini checked: [30x16] for all four tables, pageSize list
+  18500, 256, 3840, 2220, 8000.
+- Programmatic msq-vs-ini cross-check: every array constant (110 arrays) has
+  matching dims and value counts incl. the four new tables (480 values each).
+- Not car-tested: first start must be checked with the wideband (idle richer
+  per the VE change above).
+
+## 2026-09-06 - Table column limits analysis (VE / ignition / second tables)
+
+Question: what is the maximum column count for `ignitionTable`,
+`secondIgnitionTable`, `veTable` and `secondVeTable` (all 16 columns today),
+and can the RPM axis be split 600..6250 rpm at 200 rpm steps? Analysis only,
+no code changes.
+
+### Where the sizes come from
+
+All four tables share TWO pairs of compile-time defines:
+
+| tables | defines | default | page |
+| --- | --- | --- | --- |
+| veTable | VE_LOAD_COUNT x VE_RPM_COUNT | 16x16 | 0 (settings) |
+| ignitionTable | IGN_LOAD_COUNT x IGN_RPM_COUNT | 16x16 | 0 (settings) |
+| secondVeTable | VE_LOAD_COUNT x VE_RPM_COUNT | 16x16 | 4 (second tables) |
+| secondIgnitionTable | IGN_LOAD_COUNT x IGN_RPM_COUNT | 16x16 | 4 (second tables) |
+| ltft_table_bank1/2 | VE_LOAD_COUNT x VE_RPM_COUNT (float) | 16x16 | 3 (LTFT) |
+
+Defaults are `#define ... 16` in `firmware/integration/rusefi_config_shared.txt`;
+m74_9 does not override them (prepend.txt only sets INJ_PHASE_* and PEDAL_TO_TPS_*).
+Proteus H7 is the in-tree precedent for larger tables: `VE_RPM_COUNT 24`,
+`IGN_RPM_COUNT 24`, `FUEL_RPM_COUNT 24` in prepend_proteus_h7.txt. A board override
+in `prepend.txt` wins over the shared defaults.
+
+### Current m74_9 page sizes (generated rusefi_generated_m74_9.h)
+
+- TOTAL_CONFIG_SIZE (page 0) = 17548 B (already above the legacy 16 KB TS limit -
+  the fork's page-table protocol reads chunks with uint16 offset/count, so the
+  real ceiling is 65536; firmware enforces `static_assert(sizeof(*config) <= 65536)`
+  in tunerstudio.cpp L117).
+- PAGE_SIZE_4 (second tables) = 1268 B.
+- PAGE_SIZE_3 (LTFT) = 2048 B (2 banks of 16x16 float).
+- MFS storage: 128 KB bank on internal flash (at_start_f435/board_storage.cpp),
+  records: settings ID 1 + backup ID 2 + page 4 + LTFT + Lua page (8 KB).
+
+### Growth per added column (load axis stays 16, 2-byte cells)
+
+| page | per-column growth | 16 -> 30 columns | new size |
+| --- | --- | --- | --- |
+| 0: veTable+ignitionTable+2 rpm bin arrays | 68 B | +952 B | 18500 B |
+| 4: secondVe+secondIgnition+2 rpm bin arrays | 68 B | +952 B | 2220 B |
+| 3: LTFT 2 banks float | 128 B | +1792 B | 3840 B |
+| total MFS growth | 264 B/col | +3696 B | ~55 KB of 128 KB bank |
+
+### Theoretical maxima (columns, load=16)
+
+- Page 0: 16 + (65536 - 17548) / 68 = ~721 columns (uint16 TS protocol +
+  static_assert ceiling).
+- Page 4: 16 + (65536 - 1268) / 68 = ~961 columns (same uint16 chunk protocol).
+- Page 3 LTFT: 16 + (65536 - 2048) / 128 = ~512 columns.
+- MFS bank becomes the ceiling before the TS protocol at large N (two settings
+  copies + pages must share 128 KB), ~150-270 columns depending on GC reserve -
+  still far beyond any practical use.
+- RAM is a non-issue: +3.7 KB of static config on the 384 KB AT32F435.
+
+So the practical ceiling is TunerStudio usability, not the firmware: 24 columns
+are already proven in-tree (Proteus), 32x16 = 512 cells is the classic MS table
+size TS renders comfortably. 30 columns is trivially safe.
+
+### 600..6250 rpm at 200 rpm steps
+
+(6250 - 600) / 200 = 28.25 - not integer. Options, both legal because bins are
+free-form arrays (no uniform-step requirement):
+- 29 columns: 600..6200 at even 200 rpm steps.
+- 30 columns: 600, 800, ..., 6200, then 6250 as the last bin (last step 50 rpm).
+
+`setRpmTableBin` fills any column count with sensible defaults, so a
+non-16x16 config still gets usable axes; canned engine tables guarded by
+`#if (... == 16)` are simply skipped for other sizes (m74_9 = MINIMAL_PINS uses
+`buildTimingMap` for ignition and the flat-80% fallback for VE).
+
+### How to do it (not done - analysis only)
+
+1. Add to `firmware/config/boards/m74_9/prepend.txt`:
+   `#define VE_RPM_COUNT 30` + `#define IGN_RPM_COUNT 30` (one pair covers all
+   four tables plus LTFT automatically).
+2. `touch firmware/integration/rusefi_config.txt` to force config regeneration
+   (board prepend edits do not always retrigger it), rebuild the board bundle
+   (regen also stamps the ini and the default msq signature).
+3. Migration cost: the existing 21129.msq is NOT load-compatible - the 16-column
+   tables/bins do not match the new 30-column layout (TS fills what fits or
+   rejects the fields), so the tune must be re-saved/imported with the new ini;
+   LTFT page 3 changes shape too. Plan a fresh table fill after flashing.
+
+### Validation
+
+Read-only investigation: no firmware changes, no builds, no tests. All numbers
+cross-checked against `rusefi_config_shared.txt`, `rusefi_config.txt`,
+`config_page_3.txt`, `config_page_4.txt`, the generated
+`rusefi_generated_m74_9.h` / `engine_configuration_generated_structures_m74_9.h`,
+`tunerstudio.cpp` (TS_PAGE_SETTINGS static_assert L117, uint16 chunk requests
+in tunerstudio.h), `storage_mfs.cpp` and `at_start_f435/board_storage.cpp`.
+
 ## 2026-09-03 - angle_clock: fix 59% dwell lateArm (scheduleDwellEarlyIfDue moved before rpm==0 gate)
 
 Goal: eliminate the 59% `angclk dwell lateArm` rate observed in the 2026-09-03

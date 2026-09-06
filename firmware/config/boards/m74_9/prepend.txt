@@ -17,3 +17,8 @@
 // Dense ETB pedal->TPS map: 32 pedal bins + 19 rpm bins (m74_9 custom)
 #define PEDAL_TO_TPS_SIZE 32
 #define PEDAL_TO_TPS_RPM_SIZE 19
+
+// 30-column RPM axes for the VE/ignition tables (stock ME17 grid regridded to
+// 600..6200 step 200 + 6250). Load axes stay 16 rows (MAP kPa).
+#define VE_RPM_COUNT 30
+#define IGN_RPM_COUNT 30

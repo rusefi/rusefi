@@ -892,6 +892,50 @@ See also .junie/guidelines.md file
 - Empirical airflow anchor for the 1.6 L (MAP from logs): kg/h = 0.000557 x MAP(kPa) x rpm. Healthy 21129 warm idle: MAP 25-28 kPa at ~840 rpm -> ~11-13 kg/h. Criterion for idle calibration: warm idle holds target RPM at MAP 25-28 kPa.
 - Stock "position %" diagnostics are the stock's own learned/linearized range; rusEFI % is autozero-based. Measured systematic offset on m74_9: rusEFI reads ~0.4% higher than stock (real closed stop = -0.4% in rusEFI).
 
+## m74_9 ME17 .clb table format and mg/cycle -> VE conversion (2026-09-06, 30-column tune)
+
+Durable facts for converting stock ME17 .clb tables into rusEFI tables (m74_9
+`21129.msq`, all four tables now 30 columns via `VE_RPM_COUNT 30` /
+`IGN_RPM_COUNT 30` in the board prepend.txt):
+
+- **clb layout**: `MEproCalibFormat` header, then numeric lines (2 header
+  numbers for plain maps, 4 for the fill maps - the extra two are metadata),
+  then the data block, then `X1..Xn=` and `Z1..Zn=` axis lines. Data is
+  ROW-MAJOR with X (rpm) varying fastest: each Z row is a contiguous block of
+  nX values. Verified by the physical monotonicity of the ignition maps
+  (advance must fall with load).
+- **Fill maps (`Базовое_модельное_цикловое_наполнение`)**: X = rpm
+  (600..6250, 24 bins), Z = manifold pressure in hPa (100..1500) - NOT load.
+  Output = model air charge in mg per CYLINDER per cycle. The export files
+  are missing the first 2 cells of the 100 hPa row (a 22-value row) - ignore
+  them, the tables are consumed only above 200 hPa anyway. IM=0 = long
+  intake (low-rpm VE peak ~95%), IM=1 = short intake (high-rpm VE peak ~91%).
+- **Ignition maps (`Базовый УОЗ режим ЧН/ПМ`)**: X = rpm (500..6250, 17 bins),
+  Z = load in mg/cycle (50..525, 17 bins), output = advance deg. ЧН = partial
+  load, ПМ = full power. rusEFI has no mg/cycle ignition-load source (options:
+  None/MAP/TPS/Acc Pedal/Cyl Filling %), so the advance tables were converted
+  to the MAP axis via the fill model: mg = fill(rpm, kPa*10 hPa), then
+  advance = interp at that mg (clamped flat outside 50..525 mg).
+- **mg/cycle -> VE% reference (matches rusEFI exactly)**: rusEFI's 100% VE =
+  idealGasLaw(V_cyl, 101.325 kPa, 20 C) with V_cyl = displacement/cylinders
+  = 0.4 L and R = 0.28705 (`getStandardAirCharge` in fuel_math.cpp) =
+  481.65 mg. So VE% = mg x 21.037 / MAP[kPa]. The SD air-mass math then
+  applies the ACTUAL tCharge temperature (`getAirmassImpl`), i.e. the
+  conversion normalizes to 20 C and the tune's tCharge blending absorbs the
+  temperature effects - same as any imported VE table.
+- **Second tables in the msq**: page 4 fields (secondVeTable etc.) live in a
+  separate `<page number="3" size="...">` XML block after the page-0 block;
+  the rusEFI console Load Tune DOES apply them (mergeCalibrationsWithPartial-
+  Failure reads all ECU secondary pages, DefaultTuneMigrator copies secondary
+  ini fields, CalibrationsUpdater burns only changed pages) - NO board-code
+  defaults are needed or wanted. Page number = 0-based index into the ini
+  page table (0x0300 second tables = 3); nPages in versionInfo must match.
+- **30-column rpm axis**: 600, 800, ..., 6200, then 6250 (last step 50 rpm -
+  bins are free-form). Load axes stay 16 rows of MAP kPa (20..100). With
+  IGN/VE_RPM_COUNT=30 the page sizes are: page 0 = 18500 B, page 3 (LTFT) =
+  3840 B, page 4 (second tables) = 2220 B - all far below the 65536 B TS
+  protocol ceiling.
+
 ## Building in a git worktree (merge validation)
 
 - Gradle fails if the worktree directory name starts or ends with '.' ("project name must not start or end with a '.'") - name the worktree dir without dots (e.g. `wt-master`).
