@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="15804">
+    <page number="0" size="15808">
         <constant name="accelEnrichmentMode">"MS Adder"</constant>
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
@@ -1890,6 +1890,7 @@
         <constant name="idleIncrementalPidCic">"no"</constant>
         <constant digits="1" name="idleMaximumAirmass" units="mg">0.0</constant>
         <constant name="idleMode">"Open Loop"</constant>
+        <constant digits="1" name="idleParkNeutralOffset" units="%">0.0</constant>
         <constant digits="1" name="idlePidActivationTime" units="seconds">0.0</constant>
         <constant digits="0" name="idlePidDeactivationTpsThreshold" units="%">5</constant>
         <constant digits="0" name="idlePidRpmDeadZone" units="RPM">50</constant>
@@ -5173,8 +5174,8 @@
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260906" nPages="1" signature="rusEFI master.2026.09.07.f407-discovery.1675493217" version="5.0"/>
-    <bibliography author="rusEFI 20260906" writeDate="date"/>
+    <versionInfo firmwareInfo="20260907" nPages="1" signature="rusEFI master.2026.09.07.f407-discovery.2784222959" version="5.0"/>
+    <bibliography author="rusEFI 20260907" writeDate="date"/>
     <settings/>
     <userComments/>
 </msq>
