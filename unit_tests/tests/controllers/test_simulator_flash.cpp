@@ -4,7 +4,6 @@
 #include <array>
 #include <filesystem>
 #include <fstream>
-#include <limits>
 
 class SimulatorFlash : public testing::Test {
 protected:
@@ -20,7 +19,7 @@ protected:
     }
 };
 
-TEST_F(SimulatorFlash, IdenticalHighBitBytesFailVerificationOnSignedCharHosts) {
+TEST_F(SimulatorFlash, IdenticalBytesPassVerification) {
     // Exercise the actual simulator verifier with every byte value, including
     // binary config/CRC bytes that can occur even with an ASCII-only Lua script.
     std::array<char, 256> buffer;
@@ -48,12 +47,8 @@ TEST_F(SimulatorFlash, IdenticalHighBitBytesFailVerificationOnSignedCharHosts) {
     EXPECT_FALSE(intFlashCompare(address, buffer.data(), 128));
     buffer[0] = 0;
 
-    // TDB coverage of https://github.com/rusefi/rusefi/pull/10190:
-    // BUG: adding identical 0x80..0xff bytes fails on signed-char hosts.
-    // Keep this green assertion of bad behavior until the separate fix changes
-    // these expectations to unconditional success. Unsigned-char hosts are unaffected.
-    EXPECT_EQ(!std::numeric_limits<char>::is_signed,
-        intFlashCompare(address, buffer.data(), 129));
-    EXPECT_EQ(!std::numeric_limits<char>::is_signed,
-        intFlashCompare(address, buffer.data(), buffer.size()));
+    // Regression coverage for https://github.com/rusefi/rusefi/pull/10190:
+    // identical high-bit bytes must verify regardless of plain-char signedness.
+    EXPECT_TRUE(intFlashCompare(address, buffer.data(), 129));
+    EXPECT_TRUE(intFlashCompare(address, buffer.data(), buffer.size()));
 }

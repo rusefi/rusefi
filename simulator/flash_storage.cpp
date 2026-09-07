@@ -28,7 +28,7 @@ bool intFlashCompare(flashaddr_t address, const char* buffer, size_t size) {
 	bool same = true;
 	size_t checked = 0;
 	while (same && checked < size && flash.get(ch)) {
-		if (static_cast<unsigned char>(ch) != buffer[checked]) {
+		if (ch != buffer[checked]) {
 			same = false;
 		}
 		checked++;
@@ -38,4 +38,3 @@ bool intFlashCompare(flashaddr_t address, const char* buffer, size_t size) {
 
 	return same;
 }
-
