@@ -22,6 +22,7 @@ import java.awt.event.KeyEvent;
 import java.io.*;
 import java.net.URI;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -130,7 +131,7 @@ import static com.rusefi.core.FindFileHelper.findFirmwareFile;
  */
 public class Autoupdate {
     private static final Logging log = getLogging(Autoupdate.class);
-    private static final int AUTOUPDATE_VERSION = 20260901; // separate from rusEFIVersion#CONSOLE_VERSION
+    private static final int AUTOUPDATE_VERSION = 20260907; // separate from rusEFIVersion#CONSOLE_VERSION
     private static final String userHomeSubDirectory = FileUtil.RUSEFI_SETTINGS_FOLDER + "updates" + File.separator;
 
     /**
@@ -1000,9 +1001,20 @@ public class Autoupdate {
             // todo: open frame prior to network connection and keep frame opened while uncompressing?
             log.error("Error downloading bundle: " + e);
             if (!AutoupdateUtil.runHeadless) {
-                ErrorMessageHelper.showErrorDialog("Error downloading " + e, "Error");
+                ErrorMessageHelper.showErrorDialog(downloadErrorMessage(e), "Error");
             }
         }
         return DownloadResult.of(UpdateOutcome.FAILED);
+    }
+
+    /**
+     * Text of the modal shown when the bundle download fails before any UI frame exists.
+     */
+    static String downloadErrorMessage(IOException e) {
+        if (e instanceof UnknownHostException) {
+            // DNS failure: rusefi.com is blocked in some regions, a Java exception is not actionable for the user #10191
+            return AutoupdateUtil.CHECK_INTERNET_CONNECTION;
+        }
+        return "Error downloading " + e;
     }
 }

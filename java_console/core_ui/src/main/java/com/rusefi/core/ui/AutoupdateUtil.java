@@ -20,6 +20,11 @@ import java.util.concurrent.atomic.AtomicReference;
 import static com.devexperts.logging.Logging.getLogging;
 
 public class AutoupdateUtil {
+    /**
+     * Shown instead of a raw {@link java.net.UnknownHostException} when rusefi.com does not resolve, see #10191.
+     * Compile-time constant on purpose: it gets inlined, so a newer autoupdate jar still runs against an older core_ui jar.
+     */
+    public static final String CHECK_INTERNET_CONNECTION = "Check your internet connection";
     private static final Logging log = getLogging(AutoupdateUtil.class);
     public static final boolean runHeadless = Boolean.getBoolean("run_headless") || GraphicsEnvironment.isHeadless();
 
@@ -65,7 +70,7 @@ public class AutoupdateUtil {
                         throw e;
                     }
                     String message = (e instanceof UnknownHostException)
-                        ? "Please fix your internet connection"
+                        ? CHECK_INTERNET_CONNECTION
                         : "Error downloading: " + e;
                     boolean retry = view.showErrorAndWaitForRetry(message);
                     if (!retry) {
