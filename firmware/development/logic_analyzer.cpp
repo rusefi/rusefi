@@ -279,10 +279,10 @@ static void getChannelFreqAndDuty(int index, float& duty, TFreq& freq) {
 
 void reportLogicAnalyzerToTS() {
 #if EFI_TUNER_STUDIO
-	getChannelFreqAndDuty(0, engine->outputChannels.debugFloatField1, engine->outputChannels.debugIntField1);
-	getChannelFreqAndDuty(1, engine->outputChannels.debugFloatField2, engine->outputChannels.debugIntField2);
-	getChannelFreqAndDuty(2, engine->outputChannels.debugFloatField3, engine->outputChannels.debugIntField3);
-	getChannelFreqAndDuty(3, engine->outputChannels.debugFloatField4, engine->outputChannels.debugIntField4);
+//	getChannelFreqAndDuty(0, engine->outputChannels.debugFloatField1, engine->outputChannels.debugIntField1);
+//	getChannelFreqAndDuty(1, engine->outputChannels.debugFloatField2, engine->outputChannels.debugIntField2);
+//	getChannelFreqAndDuty(2, engine->outputChannels.debugFloatField3, engine->outputChannels.debugIntField3);
+//	getChannelFreqAndDuty(3, engine->outputChannels.debugFloatField4, engine->outputChannels.debugIntField4);
 #endif	
 }
 
