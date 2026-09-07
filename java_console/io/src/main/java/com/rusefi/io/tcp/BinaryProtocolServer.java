@@ -71,7 +71,11 @@ public class BinaryProtocolServer {
         }
     }
 
-    public void start(LinkManager linkManager, int port, Listener serverSocketCreationCallback, Context context) throws IOException {
+    /**
+     * @return handle to the listening socket so a caller (a test hosting a fake ECU on an ephemeral port) can learn the
+     * bound port and shut the server down
+     */
+    public ServerSocketReference start(LinkManager linkManager, int port, Listener serverSocketCreationCallback, Context context) throws IOException {
         log.info("BinaryProtocolServer on " + port);
 
         CompatibleFunction<Socket, Runnable> clientSocketRunnableFactory = clientSocket -> () -> {
@@ -82,7 +86,7 @@ public class BinaryProtocolServer {
             }
         };
 
-        tcpServerSocket(port, "BinaryProtocolServer", clientSocketRunnableFactory, serverSocketCreationCallback, StatusConsumer.ANONYMOUS);
+        return tcpServerSocket(port, "BinaryProtocolServer", clientSocketRunnableFactory, serverSocketCreationCallback, StatusConsumer.ANONYMOUS);
     }
 
     /**

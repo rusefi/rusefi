@@ -22,4 +22,11 @@ public class ServerSocketReference implements Closeable {
     public boolean isClosed() {
         return isClosed;
     }
+
+    /**
+     * @return the port actually bound, useful when the server was started on port 0 (ephemeral)
+     */
+    public int getLocalPort() {
+        return serverSocket.getLocalPort();
+    }
 }

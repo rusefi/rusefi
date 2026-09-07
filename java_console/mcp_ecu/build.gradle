@@ -9,6 +9,9 @@ dependencies {
     implementation global_libs.json
 
     testImplementation global_libs.junit5api
+    testImplementation global_libs.mockito
+    // MockIniFileProvider & friends: lets a test host a fake TCP ECU for end-to-end MCP tool coverage
+    testImplementation testFixtures(project(':ecu_io'))
     testRuntimeOnly global_libs.junit5engine
 }
 
