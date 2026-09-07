@@ -3,6 +3,7 @@ apply from: dependenciesPath
 dependencies {
     api project(':ecu_io')
     implementation global_libs.junit4
+    testImplementation global_libs.mockito
 }
 
 task simulatorFunctionalTestLauncherWithSimulator(type: Exec) {
