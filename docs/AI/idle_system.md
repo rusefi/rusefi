@@ -14,7 +14,7 @@ nudge ignition timing for fast-response trim.
 2.  **Phase Classification**: Engine state is classified as `Cranking`, `CrankToIdleTaper`,
     `Idling`, `Coasting`, or `Running` based on RPM, TPS, VSS, and the cranking taper.
 3.  **Open-Loop Position**: A base IAC position is computed from a CLT/RPM correction
-    table, with additive bumps for A/C, cooling fans, antilag, Lua scripts, and TPS/RPM
+    table, with additive bumps for A/C, cooling fans, Park/Neutral, antilag, Lua scripts, and TPS/RPM
     tapers. While cranking, a dedicated CLT-only curve is used.
 4.  **Closed-Loop PID**: When in `Idling` phase with valid TPS in automatic mode, an RPM
     PID adds a correction on top of the open-loop value, with anti-windup, dead-zone, and
@@ -39,6 +39,12 @@ nudge ignition timing for fast-response trim.
   drivers.
 
 ## Implementation Notes
+
+- **Park/Neutral**: `idleParkNeutralOffset` is a signed percentage-point addition to
+  running open-loop position, separate from `luaAdd`. Lua reports the state with
+  `setParkNeutral(boolean)`; it defaults to false and clears on Lua reset. Zero
+  calibration preserves existing tunes. Like `luaAdd`, it does not affect the
+  cranking curve or the optional dedicated coasting table.
 
 - **Hysteresis**: Re-enter idle when RPM drops below `target + idlePidRpmUpperLimit`, but
   declare coasting only above `target + 1.5 * idlePidRpmUpperLimit` to avoid flapping.

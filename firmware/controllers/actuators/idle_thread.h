@@ -60,6 +60,10 @@ public:
 
 	void init();
 
+	void setParkNeutral(bool active) {
+		m_isParkNeutral = active;
+	}
+
 	float getIdlePosition(float rpm);
 
 	// TARGET DETERMINATION
@@ -117,6 +121,7 @@ public:
   void onIgnitionStateChanged(bool ignitionOn) override;
 
 private:
+	bool m_isParkNeutral = false;
 
 	// These are stored by getIdlePosition() and used by getIdleTimingAdjustment()
 	Phase m_lastPhase = Phase::Cranking;

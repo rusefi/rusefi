@@ -192,6 +192,41 @@ TEST(idle_v2, runningFanAcBump) {
 	EXPECT_FLOAT_EQ(50 + 9 + 7 + 3, dut.getRunningOpenLoop(IIdleController::Phase::Idling, 0, 10, 0));
 }
 
+TEST(idle_v2, parkNeutralOffset) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	auto& dut = engine->module<IdleController>().unmock();
+	setTable(config->cltIdleCorrTable, 50.0f);
+	setArrayValues(config->cltCrankingCorr, 30.0f);
+
+	// Older tunes and scripts that don't report P/N retain their idle position.
+	dut.setParkNeutral(true);
+	EXPECT_FLOAT_EQ(50, dut.getOpenLoop(ICP::Idling, 800, 80, 0, 1));
+	engineConfiguration->idleParkNeutralOffset = -12.5f;
+	dut.setParkNeutral(false);
+	EXPECT_FLOAT_EQ(50, dut.getOpenLoop(ICP::Idling, 800, 80, 0, 1));
+
+	dut.setParkNeutral(true);
+	EXPECT_FLOAT_EQ(37.5f, dut.getOpenLoop(ICP::Idling, 800, 80, 0, 1));
+	// The modifier leaves cranking alone and blends in during the cranking taper.
+	EXPECT_FLOAT_EQ(30, dut.getOpenLoop(ICP::Cranking, 200, 80, 0, 0));
+	EXPECT_FLOAT_EQ(33.75f, dut.getOpenLoop(ICP::CrankToIdleTaper, 800, 80, 0, 0.5f));
+
+	// Calibration edits take effect even without a gear transition.
+	engineConfiguration->idleParkNeutralOffset = 7.5f;
+	dut.luaAdd = 2;
+	EXPECT_FLOAT_EQ(59.5f, dut.getOpenLoop(ICP::Idling, 800, 80, 0, 1));
+	engineConfiguration->idleParkNeutralOffset = -100;
+	EXPECT_FLOAT_EQ(0, dut.getOpenLoop(ICP::Idling, 800, 80, 0, 1));
+	engineConfiguration->idleParkNeutralOffset = 100;
+	EXPECT_FLOAT_EQ(100, dut.getOpenLoop(ICP::Idling, 800, 80, 0, 1));
+
+	dut.setParkNeutral(false);
+	EXPECT_FLOAT_EQ(52, dut.getOpenLoop(ICP::Idling, 800, 80, 0, 1));
+	dut.setParkNeutral(true);
+	engine->resetLua();
+	EXPECT_FLOAT_EQ(50, dut.getOpenLoop(ICP::Idling, 800, 80, 0, 1));
+}
+
 // This can be seen as a kind of some close-loop logic, please read:
 // https://github.com/rusefi/rusefi/issues/6977
 TEST(idle_v2, idleAdderShouldNotAffectNonIdleAreas) {

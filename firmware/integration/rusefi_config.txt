@@ -2037,6 +2037,7 @@ end_struct
 	uint8_t dwellDutyPercent;Dwell Duty Mode: percentage of the inter-spark interval used as coil dwell time. 50 = half the interval between pulses (standard TFI target).;"%", 1, 0, 1, 90, 0
 
 ! end of engine_configuration_s
+	float idleParkNeutralOffset;Signed idle position offset when Lua reports Park or Neutral via setParkNeutral(boolean). Negative values reduce opening, positive values increase it. Added to running open-loop idle, not target RPM. Zero disables the correction.;"%", 1, 0, -100, 100, 1
 end_struct
 
 ! note that this magic field name is used by LiveDataParserPanel

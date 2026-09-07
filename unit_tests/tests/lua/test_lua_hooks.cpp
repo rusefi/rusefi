@@ -1,5 +1,35 @@
 #include "pch.h"
 #include "rusefi_lua.h"
+#include "idle_thread.h"
+
+TEST(LuaHooks, ParkNeutral) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	auto& idle = engine->module<IdleController>().unmock();
+	setTable(config->cltIdleCorrTable, 50.0f);
+	engineConfiguration->idleParkNeutralOffset = -10;
+
+	// Exercise the BMW/CANTCU encoding: P=-1, N=-3, R=-2, forward=1..8.
+	for (int gear : {-1, -3, -2, 1, 8}) {
+		Sensor::setMockValue(SensorType::DetectedGear, gear);
+		EXPECT_EQ(1, testLuaReturnsNumber(R"(
+			function testFunc()
+				local gear = getSensor("DetectedGear")
+				setParkNeutral(gear == -1 or gear == -3)
+				return 1
+			end
+		)"));
+		EXPECT_FLOAT_EQ(gear == -1 || gear == -3 ? 40 : 50,
+			idle.getRunningOpenLoop(IIdleController::Phase::Idling, 800, 80, 0));
+	}
+
+	// Lua treats numeric zero as truthy: require an actual boolean.
+	EXPECT_THROW(testLuaReturnsNumber(R"(
+		function testFunc()
+			setParkNeutral(0)
+			return 1
+		end
+	)"), std::logic_error);
+}
 
 
 TEST(LuaHooks, TestCrc8) {
