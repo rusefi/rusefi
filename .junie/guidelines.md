@@ -114,7 +114,5 @@ GaugesGrid: Manages the visual container by wrapping a JPanel with a GridLayout 
 GaugesGridElement: Acts as a factory wrapper for individual slots, toggling between gauge and graph modes based on persistent `Node` configuration.
 
 ### Bug Fix Process
-- **Mandatory separation**: When fixing a bug, first create a reproduction test case and verify that it fails without the fix.
-- Only after the reproduction test case is verified to fail, you may proceed with implementing the fix.
-- Verification of the fix must be done using the same reproduction test case.
-- Stage the new reproduction test with `git add`; leave commits and pushes for the human (see "Source Control Hygiene" in `CLAUDE.md`).
+
+Follow the shared "Test-driven bugfixing: coverage first, fix second" guidance in [CLAUDE.md](../CLAUDE.md).

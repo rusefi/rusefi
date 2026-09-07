@@ -46,6 +46,15 @@ cd unit_tests
 
 `test.sh` is the recommended way to run tests as it automatically handles both the build (`make`) and execution.
 
+#### Test-driven bugfixing: coverage first, fix second
+
+Follow [TDB Test Driven Bugfixing](https://github.com/rusefi/rusefi/wiki/TDB-Test-Driven-Bugfixing):
+
+1. First deliver a passing reproduction test that explicitly asserts the current bad behavior. Keep this coverage change separate from the fix.
+2. In a subsequent change, fix the bug and update the same test to expect correct behavior. Changing the expectations demonstrates that the coverage exercises the fix.
+
+Do not deliver the fix before coverage, combine the initial coverage and fix, or fix a bug without new coverage or adjusted expectations. Commits and merges remain human actions under Source Control Hygiene.
+
 #### Code Coverage
 Coverage reports are generated using `gcovr` (requires Python 3).
 
