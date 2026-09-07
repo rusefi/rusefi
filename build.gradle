@@ -9,6 +9,11 @@ allprojects {
         mavenCentral()
     }
 
+    apply plugin: 'checkstyle'
+    checkstyle {
+        toolVersion = '10.12.4'
+    }
+
     plugins.withType(JavaPlugin) {
         java {
           // TS still comes with 1.8 and we have a plugin, lets build compatible
