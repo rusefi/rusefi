@@ -46,7 +46,7 @@ public:
 	void checkFrame(const T & frame, const std::string & bytes, int frameIndex) {
 		EXPECT_EQ(bytes.size(), frame.DLC);
 		for (size_t i = 0; i < bytes.size(); i++) {
-  			EXPECT_EQ(bytes[i], frame.data8[i]) << "Frame byte #" << i << " differs! Frame " << frameIndex;
+			EXPECT_EQ(static_cast<uint8_t>(bytes[i]), frame.data8[i]) << "Frame byte #" << i << " differs! Frame " << frameIndex;
 		}
 	}
 
@@ -54,6 +54,52 @@ public:
 	std::list<CANTxFrame> ctfList;
 	std::list<CANRxFrame> crfList;
 };
+
+// TDB coverage first: preserve the observed failure until a separate fix changes
+// these expectations. This is the 10-byte Dodge RAM-read request from the mule.
+TEST(IsoTpWrite, DodgeReadRejectsBlockSizeEight) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	TestCanTransport transport;
+	IsoTpRxTx isoTp(0, 0x7E9, 0x7E1);
+	isoTp.txTransport = &transport;
+	isoTp.paddingByte = 0;
+
+	CANRxFrame flowControl{};
+	flowControl.SID = 0x7E9;
+	flowControl.DLC = 8;
+	flowControl.data8[0] = 0x30; // Continue to send
+	flowControl.data8[1] = 8;    // Observed TCU block size
+	isoTp.decodeFrame(flowControl, 0);
+
+	const uint8_t request[] = {0x23, 0x44, 0xFF, 0xF8, 0x9B, 0xCD, 0, 0, 0, 2};
+	// BUG: should send all 10 bytes, but rejects even though only one CF is needed.
+	EXPECT_EQ(-7, isoTp.writeTimeout(request, sizeof(request), 0));
+	EXPECT_TRUE(isoTp.isRxEmpty()); // The actual FC handling path consumed it.
+	ASSERT_EQ(1u, transport.ctfList.size()); // BUG: no consecutive frame sent.
+	EXPECT_EQ(0x7E1u, transport.ctfList.front().SID);
+	transport.checkFrame(transport.ctfList.front(), "\x10\x0A\x23\x44\xFF\xF8\x9B\xCD"s, 0);
+}
+
+TEST(IsoTpWrite, DodgeReadAcceptsUnlimitedBlockSize) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	TestCanTransport transport;
+	IsoTpRxTx isoTp(0, 0x7E9, 0x7E1);
+	isoTp.txTransport = &transport;
+	isoTp.paddingByte = 0;
+
+	CANRxFrame flowControl{};
+	flowControl.SID = 0x7E9;
+	flowControl.DLC = 8;
+	flowControl.data8[0] = 0x30; // Continue to send, unlimited block size, no delay
+	isoTp.decodeFrame(flowControl, 0);
+
+	const uint8_t request[] = {0x23, 0x44, 0xFF, 0xF8, 0x9B, 0xCD, 0, 0, 0, 2};
+	EXPECT_EQ(10, isoTp.writeTimeout(request, sizeof(request), 0));
+	EXPECT_TRUE(isoTp.isRxEmpty());
+	ASSERT_EQ(2u, transport.ctfList.size());
+	transport.checkFrame(transport.ctfList.front(), "\x10\x0A\x23\x44\xFF\xF8\x9B\xCD"s, 0);
+	transport.checkFrame(transport.ctfList.back(), "\x21\x00\x00\x00\x02\x00\x00\x00"s, 1);
+}
 
 class TestCanStreamerState : public CanStreamerState {
 public:

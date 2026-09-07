@@ -527,11 +527,10 @@ int IsoTpRxTx::writeTimeout(const uint8_t *txbuf, size_t size, sysinterval_t tim
 	offset += numSent;
 	size -= numSent;
 
-	// get a flow control (FC) frame
-#if !EFI_UNIT_TEST // todo: add FC to unit-tests?
+	// Get a flow control (FC) frame, including in unit tests via decodeFrame().
 	CANRxFrame rxmsg;
 	size_t numFcReceived = 0;
-	int separationTimeUs = 0;
+	[[maybe_unused]] int separationTimeUs = 0; // Unit tests do not sleep.
 	while (numFcReceived < 3) {
 		// TODO: adjust timeout!
 		if (!rxFifoBuf.get(rxmsg, timeout)) {
@@ -591,7 +590,6 @@ int IsoTpRxTx::writeTimeout(const uint8_t *txbuf, size_t size, sysinterval_t tim
 
 		break;
 	}
-#endif /* EFI_UNIT_TEST */
 
 	// send the rest of the data
 	uint8_t idx = 1;
