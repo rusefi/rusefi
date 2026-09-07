@@ -112,14 +112,13 @@ messages — read it back with `read_messages` / `wait_for_message`.
 | Argument | Type | Required | Default | Description |
 |---|---|---|---|---|
 | `name` | string | yes | — | Output-channel (gauge) name, case-insensitive, e.g. `RPMValue`. |
-| `timeoutMs` | integer | no | 5000 | How long to wait for a fresh full poll of the output channels. |
 
-Returns `found`, `fresh` and `value` when found. The console's output-channel polling is
-subscription based (it fetches only the byte ranges of channels somebody subscribed to,
-and a headless MCP process subscribes to nothing but the implicit `seconds`/`RPMValue`),
-so this tool takes a temporary full-frame lease and waits for one complete poll before
-reading. `found: false` means the channel name is unknown; `fresh: false` means no full
-poll completed within `timeoutMs` (link stalled) and any returned value may be stale.
+Returns `found` plus `value` when found; `found: false` means the channel does not
+exist **or** no data has arrived yet — retry after a moment before concluding the name
+is wrong. The console's output-channel polling is subscription based (it fetches only
+the byte ranges of channels somebody subscribed to), so the server holds a full-frame
+lease for the lifetime of the ECU connection: every channel of the `.ini` is polled,
+like before that change.
 
 ### `read_messages`
 

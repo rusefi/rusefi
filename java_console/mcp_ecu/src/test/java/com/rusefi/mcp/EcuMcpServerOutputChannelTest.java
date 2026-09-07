@@ -25,15 +25,19 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -50,6 +54,10 @@ import static org.mockito.Mockito.when;
  * subscriptions - {@code seconds} (link health, {@link ConnectionStatusLogic}) and {@code RPMValue}
  * ({@code BinaryProtocolLogger}) - so without an explicit full-frame demand every other channel is never read
  * from the ECU and {@code read_output_channel} answered {@code found: false} forever.
+ *
+ * <p>The fix is a {@link SensorCentral.FullOutputLease} held for the lifetime of the ECU connection, i.e. the
+ * pre-#10171 "always poll everything" behaviour: the demand must be full from the very first poll until the
+ * server shuts down, and not full before or after.
  */
 class EcuMcpServerOutputChannelTest {
     private static final int OCH_BLOCK_SIZE = 512;
@@ -70,14 +78,26 @@ class EcuMcpServerOutputChannelTest {
         SensorCentral sensorCentral = SensorCentral.getInstance();
         sensorCentral.reset();
 
+        assertFalse(sensorCentral.getOutputChannelDemand().isFull(), "another test leaked a full-output lease");
+
         // Passive: snapshot listeners do not contribute output-channel demand, so they do not mask the issue.
         CountDownLatch polls = new CountDownLatch(3);
-        SensorCentral.SnapshotListenerToken snapshotToken = sensorCentral.addSnapshotListener(snapshot -> polls.countDown());
+        List<Boolean> pollWasFull = new CopyOnWriteArrayList<>();
+        SensorCentral.SnapshotListenerToken snapshotToken = sensorCentral.addSnapshotListener(snapshot -> {
+            pollWasFull.add(snapshot.isFull());
+            polls.countDown();
+        });
         ServerSocketReference fakeEcu = startFakeEcu(ini);
         try (McpStdioHarness mcp = new McpStdioHarness()) {
             JSONObject connected = mcp.call("connect", "{\"port\":\"localhost:" + fakeEcu.getLocalPort() + "\"}", 60_000);
             assertEquals(Boolean.TRUE, connected.get("connected"), connected.toJSONString());
             assertTrue(polls.await(20, TimeUnit.SECONDS), "output channels were never polled");
+
+            // auto-subscribed to everything, like before #10171: the lease is taken before connecting, so even
+            // the pull thread's first poll is a full frame - no partial snapshot ever reaches SensorCentral
+            assertTrue(sensorCentral.getOutputChannelDemand().isFull(), "MCP server must demand the full output frame while connected");
+            List<Boolean> observed = new ArrayList<>(pollWasFull);
+            assertFalse(observed.contains(Boolean.FALSE), "every poll must be a full frame, got " + observed);
 
             // implicitly subscribed by BinaryProtocolLogger: worked before and after #10171
             JSONObject rpm = mcp.call("read_output_channel", "{\"name\":\"RPMValue\"}", 20_000);
@@ -93,6 +113,8 @@ class EcuMcpServerOutputChannelTest {
             fakeEcu.close();
             BinaryProtocol.iniFileProvider = previousProvider;
         }
+        // stdin EOF -> shutdown released the lease: the demand is back to the implicit subscriptions only
+        assertFalse(sensorCentral.getOutputChannelDemand().isFull(), "full-output lease leaked after MCP shutdown");
     }
 
     /**

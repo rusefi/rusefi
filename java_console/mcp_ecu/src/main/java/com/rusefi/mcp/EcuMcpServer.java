@@ -81,6 +81,13 @@ public class EcuMcpServer {
     /** Lazy-initialized link manager — created on first ECU-touching tool call. */
     private volatile LinkManager linkManager;
     private final Object connectLock = new Object();
+    /**
+     * Console output-channel polling is subscription based (#10171): the pull thread fetches only the byte ranges
+     * of channels somebody subscribed to, and this headless process has no gauges. Holding a full-frame lease for
+     * the lifetime of the connection restores the pre-#10171 behaviour - every channel of the .ini is polled, so
+     * read_output_channel simply returns the latest value.
+     */
+    private SensorCentral.FullOutputLease fullOutputLease;
 
     /** CLI: optional fixed serial port; null => autodetect on first connect. */
     private final String forcedPort;
@@ -148,6 +155,12 @@ public class EcuMcpServer {
         LinkManager lm = linkManager;
         if (lm != null) {
             try { lm.close(); } catch (Throwable ignored) {}
+        }
+        synchronized (connectLock) {
+            if (fullOutputLease != null) {
+                fullOutputLease.close();
+                fullOutputLease = null;
+            }
         }
     }
 
@@ -295,14 +308,11 @@ public class EcuMcpServer {
                         {"command", "string", "Command text."}
                 }, new String[]{"command"}, false)));
         tools.add(tool("read_output_channel",
-                "Read an output-channel value by channel name. Waits for one fresh full poll of the ECU's " +
-                        "output channels (the console otherwise polls only channels somebody subscribed to), " +
-                        "then returns 'value'. 'found: false' means the channel name is unknown; " +
-                        "'fresh: false' means no full poll completed within timeoutMs and the value (if any) " +
-                        "may be stale.",
+                "Read latest output-channel value by channel name from SensorCentral (this server keeps all " +
+                        "output channels polled while connected). 'found: false' means unknown channel OR no " +
+                        "data received yet — retry before concluding the name is wrong.",
                 schemaObject(new String[][]{
-                        {"name", "string", "Output-channel (gauge) name, case-insensitive, e.g. 'RPMValue'."},
-                        {"timeoutMs", "integer", "How long to wait for a fresh full output-channel poll. Default 5000."}
+                        {"name", "string", "Output-channel (gauge) name, case-insensitive, e.g. 'RPMValue'."}
                 }, new String[]{"name"}, false)));
         tools.add(tool("read_messages",
                 "Return ECU messages from the in-memory ring buffer captured via MessagesCentral " +
@@ -389,6 +399,10 @@ public class EcuMcpServer {
         synchronized (connectLock) {
             if (linkManager != null && linkManager.isActive()) return linkManager;
             String port = portOrNull != null ? portOrNull : forcedPort;
+            // subscribe to all output channels before the pull thread makes its first poll
+            if (fullOutputLease == null) {
+                fullOutputLease = SensorCentral.getInstance().acquireFullOutput();
+            }
             linkManager = LuaService.connect(port, 60_000);
             return linkManager;
         }
@@ -538,34 +552,18 @@ public class EcuMcpServer {
         if (name == null || name.isEmpty()) {
             return errorBody("'name' is required");
         }
-        long timeout = asLong(args.get("timeoutMs"), 5_000L);
 
+        // ensureConnected() holds a full-output lease, so every channel of the .ini is being polled
         ensureConnected(null);
-        SensorCentral sensorCentral = SensorCentral.getInstance();
-        // Output-channel polling is subscription based (#10171): the pull thread fetches only the byte ranges of
-        // channels somebody subscribed to, and this headless process subscribes to nothing but the implicit
-        // link-health 'seconds' and logger 'RPMValue'. Hold a full-frame lease for the duration of one poll so
-        // that any channel of the .ini gets a fresh value; the lease is released right after, so an idle MCP
-        // server does not keep the link busy with full frames.
-        boolean fresh;
-        try (SensorCentral.FullOutputLease lease = sensorCentral.acquireFullOutput()) {
-            fresh = sensorCentral.awaitFullSnapshot(lease.getGeneration(), timeout) != null;
-        }
-        double value = sensorCentral.getValue(name);
+        double value = SensorCentral.getInstance().getValue(name);
 
         JSONObject o = new JSONObject();
         o.put("name", name);
         o.put("found", !Double.isNaN(value));
-        o.put("fresh", fresh);
         if (!Double.isNaN(value)) {
             o.put("value", value);
         } else {
-            o.put("error", fresh
-                    ? "Output channel not found"
-                    : "No full output-channel poll within " + timeout + " ms, and no earlier value for this channel");
-        }
-        if (!fresh) {
-            o.put("warning", "no full output-channel poll within " + timeout + " ms - value may be stale");
+            o.put("error", "Output channel not found or no data yet");
         }
         return o;
     }
