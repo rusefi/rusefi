@@ -190,11 +190,15 @@ public:
 	  // initialization too soon
 	  // todo: https://github.com/rusefi/rusefi/issues/8938
 		rxFifoBuf.clear();
+#if EFI_CAN_SUPPORT
 		registerCanListener(*this);
+#endif
 	}
 
 	~IsoTpRx() {
+#if EFI_CAN_SUPPORT
 		unregisterCanListener(*this);
+#endif
 	}
 
 	void reset() {
