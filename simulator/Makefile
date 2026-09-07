@@ -233,6 +233,7 @@ CPPSRC = $(ALLCPPSRC) \
   $(TEST_SRC_CPP) \
   $(MODULES_CPPSRC) \
   $(RUSEFI_LIB_CPP) \
+  flash_storage.cpp \
   main.cpp
 
 # Remove mass_storage_device.cpp from ALLCPPSRC since it requires USB MSD HAL

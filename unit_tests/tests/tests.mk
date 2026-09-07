@@ -1,4 +1,6 @@
 TESTS_SRC_CPP = \
+	../simulator/flash_storage.cpp \
+	tests/controllers/test_simulator_flash.cpp \
 	tests/test_scoped_logs.cpp \
 	tests/ltft_sandbox.cpp \
 	tests/log_replay_sandbox.cpp \

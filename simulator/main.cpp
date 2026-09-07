@@ -18,11 +18,11 @@
 #include "chprintf.h"
 #include "rusEfiFunctionalTest.h"
 #include "flash_int.h"
+#include "flash_storage.h"
 
 #include <iostream>
 #include <filesystem>
 #include <fstream>
-#include <sstream>
 #include <csignal>
 
 #include "fw_configuration.h"
@@ -229,14 +229,6 @@ uintptr_t getFlashAddrSecondCopy() {
 
 #include "flash_int.h"
 
-static std::string makeFileName(flashaddr_t addr) {
-	std::stringstream ss;
-
-	ss << "flash" << addr << ".bin";
-
-	return ss.str();
-}
-
 bool intFlashIsErased(flashaddr_t address, size_t size) {
 	const auto fileName = makeFileName(address);
 
@@ -259,33 +251,6 @@ bool intFlashIsErased(flashaddr_t address, size_t size) {
 
 	// If file is shorter than size, the rest is implicitly 0xFF.
 	return true;
-}
-
-bool intFlashCompare(flashaddr_t address, const char* buffer, size_t size) {
-	auto fileName = makeFileName(address);
-
-	printf("Simulator: comparing with config from %s\n", fileName.c_str());
-
-	std::ifstream flash;
-	flash.open(fileName, std::ios::binary);
-
-	if (!flash.is_open()) {
-		return false;
-	}
-
-	char ch;
-	bool same = true;
-	size_t checked = 0;
-	while (same && checked < size && flash.get(ch)) {
-		if (static_cast<unsigned char>(ch) != buffer[checked]) {
-			same = false;
-		}
-		checked++;
-	}
-
-	flash.close();
-
-	return same;
 }
 
 int intFlashErase(flashaddr_t address, size_t) {
