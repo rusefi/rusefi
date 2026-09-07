@@ -2110,6 +2110,9 @@ Dwell Duty Mode: when enabled, ignores the RPM/voltage dwell tables and computes
 ### dwellDutyPercent
 Dwell Duty Mode: percentage of the inter-spark interval used as coil dwell time. 50 = half the interval between pulses (standard TFI target).
 
+### idleParkNeutralOffset
+Signed idle position offset when Lua reports Park or Neutral via setParkNeutral(boolean). Negative values reduce opening, positive values increase it. Added to running open-loop idle, not target RPM. Zero disables the correction.
+
 ### tcu_shiftTime
 
 

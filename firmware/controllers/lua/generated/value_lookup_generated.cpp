@@ -2116,6 +2116,9 @@ float getConfigValueByHash(const int hash) {
 // dwellDutyPercent
 		case -238882060:
 			return engineConfiguration->dwellDutyPercent;
+// idleParkNeutralOffset
+		case 1550171219:
+			return engineConfiguration->idleParkNeutralOffset;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -5746,6 +5749,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -238882060:
 	{
 		engineConfiguration->dwellDutyPercent = (int)value;
+		return 1;
+	}
+		case 1550171219:
+	{
+		engineConfiguration->idleParkNeutralOffset = value;
 		return 1;
 	}
 		case -1658957891:

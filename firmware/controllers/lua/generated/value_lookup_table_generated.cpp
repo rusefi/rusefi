@@ -769,6 +769,9 @@ const ConfigParameter allParameters[] = {
 	{ 0x5C336230, // externalRusEfiGdiModule
 		[]() -> float { return engineConfiguration->externalRusEfiGdiModule; },
 		[](float value) { engineConfiguration->externalRusEfiGdiModule = value; } },
+	{ 0x5C65BC53, // idleParkNeutralOffset
+		[]() -> float { return engineConfiguration->idleParkNeutralOffset; },
+		[](float value) { engineConfiguration->idleParkNeutralOffset = value; } },
 	{ 0x5D192839, // knockSpectrumSensitivity
 		[]() -> float { return engineConfiguration->knockSpectrumSensitivity; },
 		[](float value) { engineConfiguration->knockSpectrumSensitivity = value; } },
