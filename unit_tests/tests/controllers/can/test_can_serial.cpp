@@ -13,6 +13,7 @@
 #include "serial_can.h"
 
 #include <array>
+#include <iterator>
 #include <list>
 #include <string>
 
@@ -55,9 +56,8 @@ public:
 	std::list<CANRxFrame> crfList;
 };
 
-// TDB coverage first: preserve the observed failure until a separate fix changes
-// these expectations. This is the 10-byte Dodge RAM-read request from the mule.
-TEST(IsoTpWrite, DodgeReadRejectsBlockSizeEight) {
+// Regression: the 10-byte Dodge RAM-read request was rejected for a nonzero BS.
+TEST(IsoTpWrite, DodgeReadAcceptsBlockSizeEight) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	TestCanTransport transport;
 	IsoTpRxTx isoTp(0, 0x7E9, 0x7E1);
@@ -72,12 +72,12 @@ TEST(IsoTpWrite, DodgeReadRejectsBlockSizeEight) {
 	isoTp.decodeFrame(flowControl, 0);
 
 	const uint8_t request[] = {0x23, 0x44, 0xFF, 0xF8, 0x9B, 0xCD, 0, 0, 0, 2};
-	// BUG: should send all 10 bytes, but rejects even though only one CF is needed.
-	EXPECT_EQ(-7, isoTp.writeTimeout(request, sizeof(request), 0));
+	EXPECT_EQ(10, isoTp.writeTimeout(request, sizeof(request), 0));
 	EXPECT_TRUE(isoTp.isRxEmpty()); // The actual FC handling path consumed it.
-	ASSERT_EQ(1u, transport.ctfList.size()); // BUG: no consecutive frame sent.
+	ASSERT_EQ(2u, transport.ctfList.size());
 	EXPECT_EQ(0x7E1u, transport.ctfList.front().SID);
 	transport.checkFrame(transport.ctfList.front(), "\x10\x0A\x23\x44\xFF\xF8\x9B\xCD"s, 0);
+	transport.checkFrame(transport.ctfList.back(), "\x21\x00\x00\x00\x02\x00\x00\x00"s, 1);
 }
 
 TEST(IsoTpWrite, DodgeReadAcceptsUnlimitedBlockSize) {
@@ -99,6 +99,80 @@ TEST(IsoTpWrite, DodgeReadAcceptsUnlimitedBlockSize) {
 	ASSERT_EQ(2u, transport.ctfList.size());
 	transport.checkFrame(transport.ctfList.front(), "\x10\x0A\x23\x44\xFF\xF8\x9B\xCD"s, 0);
 	transport.checkFrame(transport.ctfList.back(), "\x21\x00\x00\x00\x02\x00\x00\x00"s, 1);
+}
+
+TEST(IsoTpWrite, MultipleFlowControlBlocks) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	TestCanTransport transport;
+	IsoTpRxTx isoTp(0, 0x7E9, 0x7E1);
+	isoTp.txTransport = &transport;
+	isoTp.paddingByte = 0;
+
+	CANRxFrame flowControl{};
+	flowControl.DLC = 8;
+	flowControl.data8[0] = 0x30;
+	for (uint8_t blockSize : {2, 1, 0}) {
+		flowControl.data8[1] = blockSize;
+		isoTp.decodeFrame(flowControl, 0);
+	}
+
+	// 17 consecutive frames exercise sequence-number rollover across blocks.
+	std::array<uint8_t, 125> request{};
+	for (size_t i = 0; i < request.size(); i++) {
+		request[i] = static_cast<uint8_t>(i);
+	}
+	EXPECT_EQ(125, isoTp.writeTimeout(request.data(), request.size(), 0));
+	ASSERT_EQ(18u, transport.ctfList.size());
+	EXPECT_TRUE(isoTp.isRxEmpty());
+	transport.checkFrame(transport.ctfList.front(), "\x10\x7D\x00\x01\x02\x03\x04\x05"s, 0);
+	auto frame = std::next(transport.ctfList.begin());
+	size_t offset = 6;
+	for (size_t index = 1; index <= 17; index++, frame++) {
+		EXPECT_EQ(0x20u | (index & 0x0f), frame->data8[0]);
+		for (size_t byte = 1; byte < 8; byte++) {
+			EXPECT_EQ(request[offset++], frame->data8[byte]);
+		}
+	}
+}
+
+TEST(IsoTpWrite, ExactBlockDoesNotConsumeAnotherFlowControl) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	TestCanTransport transport;
+	IsoTpRxTx isoTp(0, 0x7E9, 0x7E1);
+	isoTp.txTransport = &transport;
+
+	CANRxFrame flowControl{};
+	flowControl.DLC = 8;
+	flowControl.data8[0] = 0x30;
+	flowControl.data8[1] = 2;
+	isoTp.decodeFrame(flowControl, 0);
+	flowControl.data8[0] = 0x32; // Must remain queued when the payload is complete.
+	isoTp.decodeFrame(flowControl, 0);
+
+	const uint8_t request[20]{}; // First frame plus exactly two consecutive frames.
+	EXPECT_EQ(20, isoTp.writeTimeout(request, sizeof(request), 0));
+	ASSERT_EQ(3u, transport.ctfList.size());
+	EXPECT_FALSE(isoTp.isRxEmpty());
+}
+
+TEST(IsoTpWrite, AbortAtBlockBoundary) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	TestCanTransport transport;
+	IsoTpRxTx isoTp(0, 0x7E9, 0x7E1);
+	isoTp.txTransport = &transport;
+
+	CANRxFrame flowControl{};
+	flowControl.DLC = 8;
+	flowControl.data8[0] = 0x30;
+	flowControl.data8[1] = 2;
+	isoTp.decodeFrame(flowControl, 0);
+	flowControl.data8[0] = 0x32;
+	isoTp.decodeFrame(flowControl, 0);
+
+	const uint8_t request[21]{}; // One byte still pending at the block boundary.
+	EXPECT_EQ(-4, isoTp.writeTimeout(request, sizeof(request), 0));
+	ASSERT_EQ(3u, transport.ctfList.size());
+	EXPECT_TRUE(isoTp.isRxEmpty());
 }
 
 class TestCanStreamerState : public CanStreamerState {
@@ -370,4 +444,3 @@ TEST(testCanSerial, test3_64_4Message) {
 
 	}, 71, { 64 + 7 });
 }
-

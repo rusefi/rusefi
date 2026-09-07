@@ -527,89 +527,90 @@ int IsoTpRxTx::writeTimeout(const uint8_t *txbuf, size_t size, sysinterval_t tim
 	offset += numSent;
 	size -= numSent;
 
-	// Get a flow control (FC) frame, including in unit tests via decodeFrame().
-	CANRxFrame rxmsg;
-	size_t numFcReceived = 0;
-	[[maybe_unused]] int separationTimeUs = 0; // Unit tests do not sleep.
-	while (numFcReceived < 3) {
-		// TODO: adjust timeout!
-		if (!rxFifoBuf.get(rxmsg, timeout)) {
-			efiPrintf("IsoTp: Flow Control frame not received");
-			//warning(ObdCode::CUSTOM_ERR_CAN_COMMUNICATION, "CAN Flow Control frame not received");
-			return 0;
-		}
-		uint8_t frameType = (rxmsg.data8[isoHeaderByteIndex] >> 4) & 0xf;
-
-		// if something is not ok
-		if (frameType != ISO_TP_FRAME_FLOW_CONTROL) {
-			// should we expect only FC here?
-			continue;
-		}
-
-		// Ok, frame is FC
-		numFcReceived++;
-		uint8_t flowStatus = rxmsg.data8[isoHeaderByteIndex] & 0xf;
-
-		if (flowStatus == CAN_FLOW_STATUS_ABORT) {
-			efiPrintf("IsoTp: Flow Control ABORT");
-			// TODO: error codes
-			return -4;
-		}
-
-		if (flowStatus == CAN_FLOW_STATUS_WAIT_MORE) {
-			// if the receiver is not ready yet and asks to wait for the next FC frame (give it 3 attempts)
-			if (numFcReceived < 3) {
-				continue;
-			}
-			// TODO: error codes
-			return -5;
-		}
-
-		if (flowStatus != CAN_FLOW_STATUS_OK) {
-			efiPrintf("IsoTp: Flow Control unknown Status %d", flowStatus);
-			// TODO: error codes
-			return -6;
-		}
-
-		uint8_t blockSize = rxmsg.data8[isoHeaderByteIndex + 1];
-		uint8_t minSeparationTime = rxmsg.data8[isoHeaderByteIndex + 2];
-		if (blockSize != 0) {
-			// todo: process other Flow Control fields (see ISO 15765-2)
-			efiPrintf("IsoTp: Flow Control blockSize is not supported %d", blockSize);
-			// TODO: error codes
-			return -7;
-		}
-
-		if (minSeparationTime <= 0x7f) {
-			// mS units
-			separationTimeUs = minSeparationTime * 1000;
-		} else if ((minSeparationTime >= 0xf1) && (minSeparationTime <= 0xf9)) {
-			// 100 uS units
-			separationTimeUs = (minSeparationTime - 0xf0) * 100;
-		}
-
-		break;
-	}
-
-	// send the rest of the data
+	// Keep the sequence number continuous when waiting for the next block.
 	uint8_t idx = 1;
 	while (size > 0) {
-		int len = minI(size, 7 - isoHeaderByteIndex);
-		// send the consecutive frames
-		header.frameType = ISO_TP_FRAME_CONSECUTIVE;
-		header.index = ((idx++) & 0x0f);
-		header.numBytes = len;
-		numSent = IsoTpBase::sendFrame(header, txbuf + offset, len, timeout);
-		if (numSent < 1)
+		// Get a flow control (FC) frame, including in unit tests via decodeFrame().
+		CANRxFrame rxmsg;
+		uint8_t blockSize = 0;
+		size_t numFcReceived = 0;
+		[[maybe_unused]] int separationTimeUs = 0; // Unit tests do not sleep.
+		while (numFcReceived < 3) {
+			// TODO: adjust timeout!
+			if (!rxFifoBuf.get(rxmsg, timeout)) {
+				efiPrintf("IsoTp: Flow Control frame not received");
+				//warning(ObdCode::CUSTOM_ERR_CAN_COMMUNICATION, "CAN Flow Control frame not received");
+				return 0;
+			}
+			uint8_t frameType = (rxmsg.data8[isoHeaderByteIndex] >> 4) & 0xf;
+
+			// if something is not ok
+			if (frameType != ISO_TP_FRAME_FLOW_CONTROL) {
+				// should we expect only FC here?
+				continue;
+			}
+
+			// Ok, frame is FC
+			numFcReceived++;
+			uint8_t flowStatus = rxmsg.data8[isoHeaderByteIndex] & 0xf;
+
+			if (flowStatus == CAN_FLOW_STATUS_ABORT) {
+				efiPrintf("IsoTp: Flow Control ABORT");
+				// TODO: error codes
+				return -4;
+			}
+
+			if (flowStatus == CAN_FLOW_STATUS_WAIT_MORE) {
+				// if the receiver is not ready yet and asks to wait for the next FC frame (give it 3 attempts)
+				if (numFcReceived < 3) {
+					continue;
+				}
+				// TODO: error codes
+				return -5;
+			}
+
+			if (flowStatus != CAN_FLOW_STATUS_OK) {
+				efiPrintf("IsoTp: Flow Control unknown Status %d", flowStatus);
+				// TODO: error codes
+				return -6;
+			}
+
+			blockSize = rxmsg.data8[isoHeaderByteIndex + 1];
+			uint8_t minSeparationTime = rxmsg.data8[isoHeaderByteIndex + 2];
+
+			if (minSeparationTime <= 0x7f) {
+				// mS units
+				separationTimeUs = minSeparationTime * 1000;
+			} else if ((minSeparationTime >= 0xf1) && (minSeparationTime <= 0xf9)) {
+				// 100 uS units
+				separationTimeUs = (minSeparationTime - 0xf0) * 100;
+			}
+
 			break;
-		offset += numSent;
-		size -= numSent;
+		}
+
+		// A zero block size permits the entire remaining payload.
+		size_t framesSent = 0;
+		while (size > 0 && (blockSize == 0 || framesSent < blockSize)) {
+			int len = minI(size, 7 - isoHeaderByteIndex);
+			// send the consecutive frames
+			header.frameType = ISO_TP_FRAME_CONSECUTIVE;
+			header.index = ((idx++) & 0x0f);
+			header.numBytes = len;
+			numSent = IsoTpBase::sendFrame(header, txbuf + offset, len, timeout);
+			if (numSent < 1) {
+				return offset;
+			}
+			offset += numSent;
+			size -= numSent;
+			framesSent++;
 
 #if ! EFI_UNIT_TEST
-		if (separationTimeUs) {
-			chThdSleepMicroseconds(separationTimeUs);
-		}
+			if (separationTimeUs) {
+				chThdSleepMicroseconds(separationTimeUs);
+			}
 #endif // EFI_UNIT_TEST
+		}
 	}
 	return offset;
 }
