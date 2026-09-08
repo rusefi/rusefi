@@ -242,61 +242,67 @@ public class WizardContainer extends JPanel {
         stepContentPanel.add(firingOrderPlaceholder, "step1");
         steps.add(null); // placeholder slot
 
-        // Step 2: Base VE Table (wizardDisplacement — silently skipped on older firmware)
+        // Step 2: Optional Base VE Table (wizardVeTable — silently skipped on older firmware)
         VeTableWizardStep veStep = new VeTableWizardStep(uiContext);
         wireStep(veStep, 2);
         steps.add(veStep);
         stepContentPanel.add(veStep.getPanel(), "step2");
 
-        // Step 3: MAP Sensor Type
+        // Step 3: Required engine displacement, independent of VE Apply/Skip
+        DisplacementPanel displacementPanel = new DisplacementPanel(uiContext);
+        wireStep(displacementPanel, 3);
+        steps.add(displacementPanel);
+        stepContentPanel.add(displacementPanel.getPanel(), "step3");
+
+        // Step 4: MAP Sensor Type
         MapSensorTypePanel mapPanel = new MapSensorTypePanel(uiContext);
-        wireStep(mapPanel, 3);
+        wireStep(mapPanel, 4);
         steps.add(mapPanel);
-        stepContentPanel.add(mapPanel.getPanel(), "step3");
+        stepContentPanel.add(mapPanel.getPanel(), "step4");
 
-        // Step 4: TPS
+        // Step 5: TPS
         TpsPanel tpsPanel = new TpsPanel(uiContext);
-        wireStep(tpsPanel, 4);
+        wireStep(tpsPanel, 5);
         steps.add(tpsPanel);
-        stepContentPanel.add(tpsPanel.getPanel(), "step4");
+        stepContentPanel.add(tpsPanel.getPanel(), "step5");
 
-        // Step 5: CLT Sensor
+        // Step 6: CLT Sensor
         CltSensorPanel cltPanel = new CltSensorPanel(uiContext);
-        wireStep(cltPanel, 5);
+        wireStep(cltPanel, 6);
         steps.add(cltPanel);
-        stepContentPanel.add(cltPanel.getPanel(), "step5");
+        stepContentPanel.add(cltPanel.getPanel(), "step6");
 
-        // Step 6: Crank Trigger
+        // Step 7: Crank Trigger
         CrankTriggerPanel crankPanel = new CrankTriggerPanel(uiContext);
-        wireStep(crankPanel, 6);
+        wireStep(crankPanel, 7);
         steps.add(crankPanel);
-        stepContentPanel.add(crankPanel.getPanel(), "step6");
+        stepContentPanel.add(crankPanel.getPanel(), "step7");
 
-        // Step 7: Cam Trigger
+        // Step 8: Cam Trigger
         CamTriggerPanel camPanel = new CamTriggerPanel(uiContext);
-        wireStep(camPanel, 7);
+        wireStep(camPanel, 8);
         steps.add(camPanel);
-        stepContentPanel.add(camPanel.getPanel(), "step7");
+        stepContentPanel.add(camPanel.getPanel(), "step8");
 
-        // Step 8: Ignition Outputs
+        // Step 9: Ignition Outputs
         OutputAssignmentPanel ignitionOutputs = new OutputAssignmentPanel(
             uiContext, OutputAssignmentPanel.OutputType.IGNITION);
-        wireStep(ignitionOutputs, 8);
+        wireStep(ignitionOutputs, 9);
         steps.add(ignitionOutputs);
-        stepContentPanel.add(ignitionOutputs.getPanel(), "step8");
+        stepContentPanel.add(ignitionOutputs.getPanel(), "step9");
 
-        // Step 9: Injector Outputs
+        // Step 10: Injector Outputs
         OutputAssignmentPanel injectorOutputs = new OutputAssignmentPanel(
             uiContext, OutputAssignmentPanel.OutputType.INJECTOR);
-        wireStep(injectorOutputs, 9);
+        wireStep(injectorOutputs, 10);
         steps.add(injectorOutputs);
-        stepContentPanel.add(injectorOutputs.getPanel(), "step9");
+        stepContentPanel.add(injectorOutputs.getPanel(), "step10");
 
-        // Step 10: Injector Flow
+        // Step 11: Injector Flow
         InjectorFlowPanel injPanel = new InjectorFlowPanel(uiContext);
-        wireStep(injPanel, 10);
+        wireStep(injPanel, 11);
         steps.add(injPanel);
-        stepContentPanel.add(injPanel.getPanel(), "step10");
+        stepContentPanel.add(injPanel.getPanel(), "step11");
 
         // Completion card
         JPanel completionPanel = new JPanel(new GridBagLayout());
@@ -556,6 +562,15 @@ public class WizardContainer extends JPanel {
     }
 
     static void clearDependentWizardFlags(String completedFlag, IniFileModel ini, ConfigurationImage image) {
+        if ("wizardVeTable".equals(completedFlag)) {
+            // Older consoles used wizardDisplacement for VE completion. Always require
+            // a separate displacement confirmation after applying or skipping VE.
+            IniField displacementFlag = ini.findIniField("wizardDisplacement").orElse(null);
+            if (displacementFlag instanceof EnumIniField) {
+                image.setBitValue((EnumIniField) displacementFlag, 0);
+            }
+            return;
+        }
         if (!"wizardNumberOfCylinders".equals(completedFlag)) return;
 
         for (String flagName : new String[]{
