@@ -5,6 +5,8 @@ import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.IniField;
+import com.opensr5.ini.field.EnumIniField;
+import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.tune.ve.ArchetypeBaseVeV1;
 import com.rusefi.tune.ve.ArchetypeBaseVeV1Supercharged;
 import com.rusefi.tune.ve.ArchetypeBaseVeV1Turbo;
@@ -17,6 +19,8 @@ import java.awt.*;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -47,6 +51,8 @@ public class VeTableGeneratorPanel extends JPanel {
     private JButton applyButton;
 
     private double[][] proposedVe;
+    private final Map<ScalarIniField, JTextField> engineFields = new LinkedHashMap<>();
+    private JComboBox<String> flowUnits;
 
     public VeTableGeneratorPanel(IniFileModel ini, ConfigurationImage sourceImage,
                                  Consumer<ConfigurationImage> onApply, Runnable onClose) {
@@ -72,7 +78,9 @@ public class VeTableGeneratorPanel extends JPanel {
 
         setBorder(BorderFactory.createEmptyBorder(8, 8, 4, 8));
 
-        add(buildQuestionnairePanel(), BorderLayout.WEST);
+        JScrollPane questionnaire = new JScrollPane(buildQuestionnairePanel());
+        questionnaire.setBorder(BorderFactory.createEmptyBorder());
+        add(questionnaire, BorderLayout.WEST);
         add(buildPreviewPanel(),       BorderLayout.CENTER);
         add(buildSouthPanel(),         BorderLayout.SOUTH);
 
@@ -112,6 +120,24 @@ public class VeTableGeneratorPanel extends JPanel {
         maxRpmSpinner  = new JSpinner(new SpinnerNumberModel(maxDefault,  1500.0, 20000.0, 100.0));
 
         int row = 0;
+        row = addEngineField(p, c, row, "Displacement (L):", "displacement");
+        row = addEngineField(p, c, row, "Injector flow:", "injector_flow");
+        IniField units = ini.findIniField("injectorFlowAsMassFlow").orElse(null);
+        if (units instanceof EnumIniField) {
+            flowUnits = new JComboBox<>(((EnumIniField) units).getEnums().values().stream()
+                .filter(value -> value != null && !value.contains("INVALID"))
+                .toArray(String[]::new));
+            flowUnits.setName("injectorFlowAsMassFlow");
+            flowUnits.setSelectedItem(ConfigurationImageGetterSetter.getStringValue(units, sourceImage).replace("\"", ""));
+            addRow(p, c, row++, "Injector flow units:", flowUnits);
+        }
+        row = addEngineField(p, c, row, "Injector reference pressure (kPa):", "fuelReferencePressure");
+        row = addEngineField(p, c, row, "Fuel stoichiometric ratio (:1):", "stoichRatioPrimary");
+        JLabel fuelNote = new JLabel("<html>Engine/fuel settings scale fueling, not generated VE.<br>" +
+            "Primary fuel ratio: E0 14.7, E10 14.1, E85 9.9, E100 9.0.</html>");
+        c.gridx = 0; c.gridy = row++; c.gridwidth = 2;
+        p.add(fuelNote, c);
+        c.gridwidth = 1;
         addRow(p, c, row++, "Head archetype:", headCombo);
         addRow(p, c, row++, "Cam profile:",    camCombo);
         addRow(p, c, row++, "Aspiration:",     aspirationCombo);
@@ -148,6 +174,54 @@ public class VeTableGeneratorPanel extends JPanel {
         p.add(Box.createVerticalGlue(), c);
 
         return p;
+    }
+
+    private int addEngineField(JPanel panel, GridBagConstraints constraints, int row, String label, String name) {
+        IniField field = ini.findIniField(name).orElse(null);
+        if (!(field instanceof ScalarIniField)) {
+            return row;
+        }
+        ScalarIniField scalar = (ScalarIniField) field;
+        // Reference pressure is stored in kPa; the INI display expression may select psi.
+        if (name.equals("fuelReferencePressure")) {
+            scalar = new ScalarIniField(name, scalar.getOffset(), "kPa", scalar.getType(), 1, scalar.getDigits(), 0);
+        }
+        JTextField editor = new JTextField(ConfigurationImageGetterSetter.getStringValue(scalar, sourceImage), 8);
+        editor.setName(name);
+        engineFields.put(scalar, editor);
+        addRow(panel, constraints, row, label, editor);
+        return row + 1;
+    }
+
+    private void applyEngineSettings(ConfigurationImage image) {
+        for (Map.Entry<ScalarIniField, JTextField> entry : engineFields.entrySet()) {
+            ScalarIniField field = entry.getKey();
+            String text = entry.getValue().getText().trim();
+            // Preserve untouched values byte-for-byte, including their stored precision.
+            if (text.equals(ConfigurationImageGetterSetter.getStringValue(field, sourceImage))) {
+                continue;
+            }
+            double value;
+            try {
+                value = Double.parseDouble(text);
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException(field.getName() + " must be a number");
+            }
+            if (!Double.isFinite(value) || value <= 0 ||
+                (field.getName().equals("displacement") && value > 65) ||
+                (field.getName().equals("stoichRatioPrimary") && (value < 5 || value > 25))) {
+                throw new IllegalArgumentException("Invalid " + field.getName());
+            }
+            ConfigurationImageGetterSetter.setValue2(field, image, field.getName(), text);
+            double stored = Double.parseDouble(ConfigurationImageGetterSetter.getStringValue(field, image));
+            if (!Double.isFinite(stored) || stored <= 0 || Math.abs(stored - value) > Math.max(0.1, value * 0.001)) {
+                throw new IllegalArgumentException(field.getName() + " is outside its storage range");
+            }
+        }
+        if (flowUnits != null && flowUnits.getSelectedItem() != null) {
+            IniField field = ini.findIniField("injectorFlowAsMassFlow").get();
+            ConfigurationImageGetterSetter.setValue2(field, image, field.getName(), flowUnits.getSelectedItem().toString());
+        }
     }
 
     private static double prefillMaxRpm(IniFileModel ini, ConfigurationImage image) {
@@ -302,8 +376,11 @@ public class VeTableGeneratorPanel extends JPanel {
         if (proposedVe == null || boundTable == null) return;
         try {
             ConfigurationImage patched = VeTableBinding.applyToClone(sourceImage, boundTable, proposedVe);
+            applyEngineSettings(patched);
             onApply.accept(patched);
             onClose.run();
+        } catch (IllegalArgumentException e) {
+            statusLabel.setText("Invalid engine/fuel settings: " + e.getMessage());
         } catch (VeTableBinding.BindingError e) {
             JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this),
                 "Apply failed: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -312,7 +389,7 @@ public class VeTableGeneratorPanel extends JPanel {
 
     // ---- table builders ----
 
-    private static JComponent buildVeTable(double[][] data, double[] rpmAxis, double[] mapAxis, boolean isDelta) {
+    static JComponent buildVeTable(double[][] data, double[] rpmAxis, double[] mapAxis, boolean isDelta) {
         double lo = Double.MAX_VALUE, hi = -Double.MAX_VALUE;
         if (!isDelta) {
             for (double[] row : data) for (double v : row) { lo = Math.min(lo, v); hi = Math.max(hi, v); }
@@ -320,6 +397,18 @@ public class VeTableGeneratorPanel extends JPanel {
         final double min = lo, max = hi;
 
         JTable table = new JTable(new VePreviewModel(data, rpmAxis, mapAxis)) {
+            @Override
+            public boolean getScrollableTracksViewportWidth() {
+                if (!(getParent() instanceof JViewport)) {
+                    return super.getScrollableTracksViewportWidth();
+                }
+                int minimumWidth = 0;
+                for (int i = 0; i < getColumnCount(); i++) {
+                    minimumWidth += getColumnModel().getColumn(i).getMinWidth();
+                }
+                return getParent().getWidth() >= minimumWidth;
+            }
+
             @Override
             public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
                 Component c = super.prepareRenderer(renderer, row, column);
@@ -347,13 +436,28 @@ public class VeTableGeneratorPanel extends JPanel {
         centeredRenderer.setHorizontalAlignment(SwingConstants.CENTER);
         table.setDefaultRenderer(Object.class, centeredRenderer);
         table.getTableHeader().setReorderingAllowed(false);
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        table.setRowHeight(20);
-        table.getColumnModel().getColumn(0).setPreferredWidth(62);
-        for (int i = 1; i < table.getColumnCount(); i++) {
-            table.getColumnModel().getColumn(i).setPreferredWidth(50);
-        }
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        sizePreviewTable(table);
+        table.addPropertyChangeListener("font", event -> sizePreviewTable(table));
+        table.getTableHeader().addPropertyChangeListener("font", event -> sizePreviewTable(table));
         return new JScrollPane(table);
+    }
+
+    private static void sizePreviewTable(JTable table) {
+        FontMetrics metrics = table.getFontMetrics(table.getFont());
+        int padding = Math.max(8, metrics.charWidth('0'));
+        table.setRowHeight(metrics.getHeight() + Math.max(4, metrics.getDescent()));
+        FontMetrics headerMetrics = table.getTableHeader().getFontMetrics(table.getTableHeader().getFont());
+        for (int col = 0; col < table.getColumnCount(); col++) {
+            int width = headerMetrics.stringWidth(table.getColumnName(col));
+            for (int row = 0; row < table.getRowCount(); row++) {
+                width = Math.max(width, metrics.stringWidth(String.valueOf(table.getValueAt(row, col))));
+            }
+            TableColumn column = table.getColumnModel().getColumn(col);
+            column.setMinWidth(width + padding);
+            column.setPreferredWidth(width + padding);
+        }
+        table.revalidate();
     }
 
     private static JLabel placeholder(String text) {
