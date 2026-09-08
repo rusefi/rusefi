@@ -13,9 +13,6 @@ DDEFS += -DCH_CFG_USE_MEMCORE=FALSE -DCH_CFG_USE_HEAP=FALSE
 # disable some modules to shrink bootloader binary
 DDEFS += -DEFI_BOOTLOADER
 DDEFS += -DHAL_USE_EXT=FALSE -DHAL_USE_ICU=FALSE -DHAL_USE_PWM=FALSE -DHAL_USE_RTC=FALSE
-# Hardware watchdog: recovers the bootloader from any wedge (failed baudrate
-# switch etc.) by resetting back to 500k instead of requiring a power cycle.
-DDEFS += -DHAL_USE_WDG=TRUE
 DDEFS += $(TS_PAGE_GUARD_DEFS)
 #disable ChibiOS flash driver and prevent header from include
 DDEFS += -DHAL_USE_FLASH=FALSE
@@ -129,6 +126,22 @@ endif
 
 BOARDINC = $(BOARD_DIR)
 include $(BOARD_DIR)/board.mk
+
+# Hardware watchdog: recovers the bootloader from any wedge (failed baudrate
+# switch etc.) by resetting back to 500k instead of requiring a power cycle.
+#
+# EXCEPTION - AT32: the app arms and feeds the IWDG itself (m74_9 boardInit +
+# 20 Hz slow callback), and it only re-configures the ~500 ms bootloader window
+# once it reaches boardInit - which is later than the real ~410 ms window (AT32
+# LSI = 40 kHz, not 32.768 kHz). A bootloader-armed IWDG therefore fires during
+# every app start: reset loop, wd_counter climbs past 10, and the reset-loop
+# latch parks the ECU in the bootloader forever. So the bootloader must NOT arm
+# the watchdog on AT32; the app's own watchdog is unaffected.
+ifeq ($(IS_AT32F435),yes)
+  DDEFS += -DHAL_USE_WDG=FALSE
+else
+  DDEFS += -DHAL_USE_WDG=TRUE
+endif
 
 ifeq ($(PROJECT_BOARD),)
 ifneq ($(SHORT_BOARD_NAME),)

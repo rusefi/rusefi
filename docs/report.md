@@ -1,5 +1,83 @@
 # Work Report
 
+## 2026-09-08 (part 2) - AT32 bootloader IWDG arm race: the REAL root cause of the latch (fixed)
+
+Part 1 documented the latch mechanics. SWD on the bench proved the actual
+latch trigger on m74_9 was wd_counter = 13 (not sw_counter): the
+bootloader's IWDG arm (commit 07aad871352, CopInitHook wdgStart 500 ms)
+races the app boot.
+
+Chain: the app (m74_9 board.mk) also arms and feeds the IWDG, but only
+from boardInit + the 20 Hz slow callback. The bootloader arms its own
+500 ms window and jumps to the app at BOOT_BACKDOOR_ENTRY_TIMEOUT_MS = 1 s;
+with the AT32 LSI at 40 kHz the real window is ~410 ms. boardInit is reached
+LATER than that, so the bootloader's watchdog fires on every app start:
+reset loop (period ~1 s), wd_counter climbs past 10, latch parks the ECU in
+the bootloader forever. Timing captured on SWD: jump ~1000 ms, app in
+SysTick at +1200 ms, IWDG reset ~+1410 ms, bootloader again at +1900 ms;
+wd_counter climbed 0->2 in ~3 s of observation.
+
+Why it did not break before 09-08: the bootloader is only updated by a FULL
+rusefi.bin flash (openocd); CAN flashes write the app region only
+(rusefi_update.srec). The ECU carried a pre-07aad871352 bootloader (no IWDG
+arm) through the 08-31/09-01 sessions, while the app-side watchdog (4 s +
+20 Hz feed) worked fine. Today's full flash installed the IWDG-arming
+bootloader and the race started.
+
+Fix (this change):
+- firmware/config/boards/m74_9/board.mk: HAL_USE_WDG=TRUE now guarded by
+  `ifneq ($(IS_RE_BOOTLOADER),yes)` (app build only).
+- firmware/bootloader/Makefile: HAL_USE_WDG is now FALSE for AT32
+  (IS_AT32F435) bootloader builds, TRUE otherwise (single -D per build -
+  avoids the "HAL_USE_WDG redefined" -Werror). The bootloader must NOT arm
+  the IWDG on AT32; the app's own watchdog is unaffected.
+- BL marker bumped BL09 -> BL10 (set_bl_bin_version.sh + mpu_util.h).
+
+Recovery: re-flashed deliver/rusefi.bin via openocd, then cleared the
+SharedParams buffer (write 0 to 0x20000000, invalidates the buffer so
+SharedParamsInit zeroes both counters on next boot) and reset. Verified on
+SWD: app stable in idle (PC 0x0806c034 identical 2 s apart), counters 0/0
+(app's errorHandlerResetCounters cleared them after 3 s).
+
+Validation: bundle build (compile.sh -b m74_9) BUILD SUCCESSFUL; new
+bootloader ELF has zero IWDG symbols (nm: no wdgStart/WDGD1); merged bin
+stamped BL10 at 0x24. Console reconnect + tune re-burn is the remaining
+user step (config size changed 17548 -> 18500, so the app resets to
+defaults on first boot).
+
+## 2026-09-08 - "ECU dead after flash, bootloader answers" - bootloader reset-loop latch (NOT the config changes)
+
+Symptom: after a CAN flash the app never comes up (console gets 0 bytes on
+CAN), the OpenBLT bootloader answers; re-flashing OLD known-good firmware
+does not help.
+
+Root cause (bootloader_main.cpp):
+- checkIfResetLoop() classifies each bootloader boot's reset cause. Soft
+  resets (NVIC_SystemReset: the canOpenBLT jump into the bootloader, the
+  flasher's PROGRAM_RESET, probes) increment sw_counter (SharedParams slot 2,
+  RAM that survives resets); watchdog resets increment wd_counter (slot 1).
+  Only POR/NRST (real power loss / reset pin) clears them.
+- rebootLoop = (wd_counter > 10) || (sw_counter > 15); then
+  stayInBootloader = true and the main loop NEVER calls CpuStartUserProgram
+  ("if (stayInBootloader || wasConnected) continue;").
+- Today's many CAN-flash sessions each add >=2 soft resets, so the counter
+  crossed 15 and the ECU locked itself in the bootloader - by design (anti-
+  brick loop detection). The flasher (XCP) keeps working, the console
+  (ISO-TP) hears nothing. Every re-flash only adds MORE soft resets.
+- The firmware changes were NOT the cause: the stored-config size mismatch
+  (18500 vs 17548) takes the IncompatibleVersion path -> RAM reset to
+  defaults, no write, no crash; defaults have canWriteEnabled=true and the
+  board ConfigOverrides force canRx/canTx = PG0/PG1 + canOpenBLT=true.
+
+Fix: FULL power removal for >=5-10 s (on m74_9 the L9779 SBC holds VCC
+through quick key flicks - a key cycle does NOT clear the counters; only
+VCC collapse or NRST does). After power-up the bootloader jumps to the app
+within ~1 s and the console connects. With the new firmware the old-size
+stored tune will reset to defaults on every boot until a tune is burned.
+
+Prevention: power-cycle (or NRST) after long CAN-flash sessions - do not
+accumulate >15 soft resets between power cycles.
+
 ## 2026-09-08 - Heater pin correction: AC4 -> L9779 OUT5 (user-buzzed fact)
 
 User fact: AC4 (connector) goes to L9779 OUT5, and that is the first

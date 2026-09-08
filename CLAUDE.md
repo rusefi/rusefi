@@ -848,6 +848,39 @@ OpenBLT/firmware-side levers if the speed ever matters again (NOT done): 1 Mbit/
    ```
    Options: `--channel <n>` (default 1), `--connect-timeout <s>` (default 8), `--no-verify`, `--no-reset`, `--verbose`, `--no-batch`, `--no-pipeline`, `--1mbit`. No response within the timeout = old firmware without the canOpenBLT trigger: power-cycle the ECU WHILE the tool is running (the bootloader listens ~1 s after reset); the tool retries CONNECT for the whole timeout. Expected duration with the batch flasher: **~45 s** for the ~695 KB app; `--1mbit` either completes (~35 s) or logs "continuing at 500 kbit" when the adapter has no 1 Mbit support (non-fatal).
 
+### Bootloader "ECU dead, bootloader answers" = reset-loop latch (2026-09-08)
+
+The bootloader counts resets in SharedParams slots 1/2 (RAM that survives
+resets): every soft reset (canOpenBLT jump into the bootloader, the flasher's
+PROGRAM_RESET, probes) increments sw_counter, every watchdog reset wd_counter;
+only POR/NRST clears them. rebootLoop = wd_counter > 10 || sw_counter > 15 ->
+stayInBootloader = true -> CpuStartUserProgram is NEVER called (bootloader_main.cpp).
+Symptoms: flasher/XCP works, console ISO-TP gets 0 bytes, re-flashing (incl. old
+known-good builds) makes it WORSE (each flash adds >=2 soft resets). Recovery:
+FULL power removal >=5-10 s (m74_9: the L9779 SBC holds VCC through quick key
+flicks, so a key cycle does NOT clear the counters) or NRST. Do not diagnose
+firmware/config when the app never runs - check this latch first. Also
+`wasConnected` holds the bootloader after any XCP session until the next
+reboot (the flasher's end-of-flash PROGRAM_RESET reboots, returning the ECU
+to the app).
+
+**AT32 root cause (fixed 2026-09-08): the latch was triggered by the
+bootloader's own IWDG arm racing the app boot, not by soft-reset
+accumulation.** Commit 07aad871352 made the bootloader arm a 500 ms IWDG in
+CopInitHook AND made the app re-arm it to ~4 s in boardInit + feed from the
+20 Hz slow callback. On AT32 the bootloader window is really ~410 ms (LSI =
+40 kHz, not 32.768 kHz) and `BOOT_BACKDOOR_ENTRY_TIMEOUT_MS=1000`, so the
+bootloader arms, waits 1 s, jumps to the app - but boardInit (where the app
+re-configures the WDG) is reached LATER than the remaining ~410 ms, so the
+bootloader's watchdog fires on EVERY app start: ~1 s reset loop, wd_counter
+climbs past 10, permanent latch. The bootloader must NOT arm the IWDG on
+AT32 (`IS_AT32F435` -> `HAL_USE_WDG=FALSE` in bootloader/Makefile; m74_9
+board.mk guards its `HAL_USE_WDG=TRUE` with `ifneq
+($(IS_RE_BOOTLOADER),yes)`); the app's own watchdog is unaffected. SWD
+recovery of a latched ECU: invalidate the SharedParams buffer (`mww
+0x20000000 0` at 0x20000000) so SharedParamsInit zeroes both counters on
+next boot, then `reset run` - no need for a perfect power collapse.
+
 ## EFI_USE_OPENBLT: USE_OPENBLT=yes does NOT enable the app-side OpenBLT code
 
 `USE_OPENBLT=yes` in `meta-info.env` only adds `hw_layer/openblt/shared_params.c` to the build. The C++ side (`can_rx.cpp` CAN trigger, `jump_to_openblt()` body in the port's `*_common.cpp`, `reboot_openblt` console action, `show_blt_version`) is guarded by `EFI_USE_OPENBLT`, which is defined ONLY in `config/stm32f4ems/efifeatures.h` with default **FALSE** - and no board overrides it. A board that runs on top of the OpenBLT bootloader MUST `#define EFI_USE_OPENBLT TRUE` in its own `efifeatures.h` **before** including the stm32f4ems header (that header uses `#ifndef`).

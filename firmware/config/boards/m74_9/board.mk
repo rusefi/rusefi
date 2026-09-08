@@ -64,10 +64,15 @@ DDEFS += -DHAL_USE_EFL=TRUE
 DDEFS += -DEFI_STORAGE_INT_FLASH=FALSE
 include $(PROJECT_DIR)/hw_layer/ports/stm32/use_higher_level_flash_api.mk
 
-# Hardware watchdog: the bootloader starts the IWDG (500 ms, recover its own
-# wedges); the IWDG cannot be stopped, so the app re-configures it to ~4 s in
-# m74_9_boardInitHardware and feeds it from the 20 Hz slow callback.
-DDEFS += -DHAL_USE_WDG=TRUE
+# Hardware watchdog: the app re-configures the IWDG to ~4 s in
+# m74_9_boardInitHardware and feeds it from the 20 Hz slow callback. The
+# BOOTLOADER must NOT arm the IWDG on this board (its ~410 ms real window
+# expires before the app reaches boardInit -> reset loop), so this define
+# applies to the app build only; the bootloader build (IS_RE_BOOTLOADER)
+# gets its own HAL_USE_WDG value from firmware/bootloader/Makefile.
+ifneq ($(IS_RE_BOOTLOADER),yes)
+  DDEFS += -DHAL_USE_WDG=TRUE
+endif
 
 DDEFS += -DFIRMWARE_ID=\"m74_9\"
 DDEFS += -DDEFAULT_ENGINE_TYPE=engine_type_e::MINIMAL_PINS
