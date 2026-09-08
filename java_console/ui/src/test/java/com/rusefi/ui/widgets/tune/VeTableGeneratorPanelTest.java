@@ -50,21 +50,21 @@ class VeTableGeneratorPanelTest {
             byte[] original = f.source.getContent().clone();
             VeTableGeneratorPanel panel = f.panel();
             editor(panel, "displacement").setText("3.2");
-            editor(panel, "injector_flow").setText("650");
-            editor(panel, "fuelReferencePressure").setText("350");
+            assertNull(editor(panel, "injector_flow"));
+            assertNull(editor(panel, "fuelReferencePressure"));
             editor(panel, "stoichRatioPrimary").setText("9.9");
-            ((JComboBox<?>) find(panel, component -> "injectorFlowAsMassFlow".equals(component.getName()))).setSelectedIndex(1);
+            assertNull(find(panel, component -> "injectorFlowAsMassFlow".equals(component.getName())));
             button(panel, "Generate Preview").doClick();
             button(panel, "Apply to working tune").doClick();
             assertNotNull(f.applied.get());
             assertEquals(3.2, f.value("displacement"), 0.001);
-            assertEquals(650, f.value("injector_flow"), 0.001);
-            assertEquals(350, f.value("fuelReferencePressure"), 0.001);
+            assertEquals(400, f.value("injector_flow"), 0.001);
+            assertEquals(300, f.value("fuelReferencePressure"), 0.001);
             assertEquals(9.9, f.value("stoichRatioPrimary"), 0.001);
-            assertEquals("\"g/s\"", ConfigurationImageGetterSetter.getStringValue(f.fields.get("injectorFlowAsMassFlow"), f.applied.get()));
+            assertEquals("\"cc/min\"", ConfigurationImageGetterSetter.getStringValue(f.fields.get("injectorFlowAsMassFlow"), f.applied.get()));
             assertArrayEquals(original, f.source.getContent());
             for (int i = 0; i < original.length; i++) {
-                if (i < 16 || (i >= 20 && i < 32) || (i >= 48 && i != 56)) {
+                if (i < 16 || (i >= 20 && i < 32) || (i >= 36 && i < 44) || i >= 48) {
                     assertEquals(original[i], f.applied.get().getContent()[i], "byte " + i);
                 }
             }

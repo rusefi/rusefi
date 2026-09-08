@@ -5,7 +5,6 @@ import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.IniField;
-import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.tune.ve.ArchetypeBaseVeV1;
 import com.rusefi.tune.ve.ArchetypeBaseVeV1Supercharged;
@@ -52,7 +51,6 @@ public class VeTableGeneratorPanel extends JPanel {
 
     private double[][] proposedVe;
     private final Map<ScalarIniField, JTextField> engineFields = new LinkedHashMap<>();
-    private JComboBox<String> flowUnits;
 
     public VeTableGeneratorPanel(IniFileModel ini, ConfigurationImage sourceImage,
                                  Consumer<ConfigurationImage> onApply, Runnable onClose) {
@@ -121,17 +119,6 @@ public class VeTableGeneratorPanel extends JPanel {
 
         int row = 0;
         row = addEngineField(p, c, row, "Displacement (L):", "displacement");
-        row = addEngineField(p, c, row, "Injector flow:", "injector_flow");
-        IniField units = ini.findIniField("injectorFlowAsMassFlow").orElse(null);
-        if (units instanceof EnumIniField) {
-            flowUnits = new JComboBox<>(((EnumIniField) units).getEnums().values().stream()
-                .filter(value -> value != null && !value.contains("INVALID"))
-                .toArray(String[]::new));
-            flowUnits.setName("injectorFlowAsMassFlow");
-            flowUnits.setSelectedItem(ConfigurationImageGetterSetter.getStringValue(units, sourceImage).replace("\"", ""));
-            addRow(p, c, row++, "Injector flow units:", flowUnits);
-        }
-        row = addEngineField(p, c, row, "Injector reference pressure (kPa):", "fuelReferencePressure");
         row = addEngineField(p, c, row, "Fuel stoichiometric ratio (:1):", "stoichRatioPrimary");
         JLabel fuelNote = new JLabel("<html>Engine/fuel settings scale fueling, not generated VE.<br>" +
             "Primary fuel ratio: E0 14.7, E10 14.1, E85 9.9, E100 9.0.</html>");
@@ -182,10 +169,6 @@ public class VeTableGeneratorPanel extends JPanel {
             return row;
         }
         ScalarIniField scalar = (ScalarIniField) field;
-        // Reference pressure is stored in kPa; the INI display expression may select psi.
-        if (name.equals("fuelReferencePressure")) {
-            scalar = new ScalarIniField(name, scalar.getOffset(), "kPa", scalar.getType(), 1, scalar.getDigits(), 0);
-        }
         JTextField editor = new JTextField(ConfigurationImageGetterSetter.getStringValue(scalar, sourceImage), 8);
         editor.setName(name);
         engineFields.put(scalar, editor);
@@ -217,10 +200,6 @@ public class VeTableGeneratorPanel extends JPanel {
             if (!Double.isFinite(stored) || stored <= 0 || Math.abs(stored - value) > Math.max(0.1, value * 0.001)) {
                 throw new IllegalArgumentException(field.getName() + " is outside its storage range");
             }
-        }
-        if (flowUnits != null && flowUnits.getSelectedItem() != null) {
-            IniField field = ini.findIniField("injectorFlowAsMassFlow").get();
-            ConfigurationImageGetterSetter.setValue2(field, image, field.getName(), flowUnits.getSelectedItem().toString());
         }
     }
 
