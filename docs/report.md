@@ -1,6 +1,155 @@
 # Work Report
 
-## 2026-09-06 - 30-column VE/ignition tables + stock ME17 data in 21129.msq
+## 2026-09-08 - Heater pin correction: AC4 -> L9779 OUT5 (user-buzzed fact)
+
+User fact: AC4 (connector) goes to L9779 OUT5, and that is the first
+narrowband lambda heater. The yaml had AC4 = L9779_OUT_6 (heater) and
+AE4 = L9779_OUT_5 (EVAP) - the physical board has them swapped.
+
+Changes:
+- m74_9.yaml: AC4 id L9779_OUT_6 -> L9779_OUT_5 (function "Oxygen sensor 1
+  heater" stays - the tune's o2heaterPin is name-based, so it now drives
+  OUT5/IN5/PG5 automatically after regen); AE4 id L9779_OUT_5 ->
+  L9779_OUT_6 (EVAP) - the EVAP-on-OUT6 half is an inference by symmetry,
+  still to be buzzed out.
+- Consequences of the old mapping: the heater never heated (PG6->IN6->OUT6,
+  nothing on OUT6 or the EVAP valve if it is there), AND the heater logic
+  (ON whenever the engine runs) was switching OUT6 the whole run time - if
+  EVAP is physically on OUT6, the canister purge solenoid was held OPEN the
+  whole time the engine ran: fuel vapors into the intake = rich/unstable
+  idle, one candidate contributor to the idle fueling observations.
+- To verify on the car: heater now heats at engine run (isO2HeaterOn + a
+  current probe on AC4); buzz AE4->OUT6 and PG5/6->IN5/6 to close the two
+  remaining schematic assumptions.
+
+Validation: bundle rebuild SUCCESSFUL; generated_ts_name_by_pin.cpp now maps
+L9779_OUT_5 -> "Oxygen sensor 1 heater" and OUT_6 -> "EVAP solenoid
+control"; PIN_AC4 = L9779_OUT_5 / PIN_AE4 = L9779_OUT_6; the ini output_pin_e
+labels swapped accordingly. The tune's o2heaterPin is name-based, so
+"Oxygen sensor 1 heater" now drives OUT5/IN5/PG5 with no msq edit.
+
+CAVEAT (same session, 13:04): a TunerStudio/console re-save rewrote the repo
+21129.msq over the working copy: veTable was replaced with the OLD 16-column
+hand tune resampled to 30 columns (the stock ME17 VE data was lost in the
+file - recoverable from the previous commit a5c1c84bbea), the page-4 block
+was dropped (nPages back to 1, second tables lost from the msq),
+o2heaterPin = "NONE", forceO2Heating = "yes" (bench heater test). The bundle
+zip of the next run must be re-done after the msq settles.
+
+### Final L9779 parallel-input mapping (user-buzzed 2026-09-08)
+
+| net | buzzed | direct_gpio |
+| --- | --- | --- |
+| IN5 -> OUT5 (AC4, lambda 1 heater) | PG7 | [8] = PG7 |
+| IN6 -> OUT6 (AE4, EVAP) | PG5 | [9] = PG5 |
+| IN7 -> OUT7 (AK4, lambda 2 heater) | PG6 | [10] = PG6 |
+| IN1..4 -> OUT1..4 (injectors) | PE11/PE10/PE9/PE8 | unchanged |
+
+Applied in board_configuration.cpp l9779_cfg.direct_gpio; bundle rebuilt
+(260908_1654173061). msq NOT touched per user.
+
+RESOLVED: the earlier "AK4 -> OUT4" reading was a mis-trace - AK4 -> OUT7
+(IN7 = PG6) confirms the yaml, so injectors stay on OUT1..4 and both
+heaters + EVAP are now correctly wired. The old IN5/6/7 assignment was a
+cyclic rotation (PG5/PG6/PG7 -> actually PG7/PG5/PG6).
+
+## 2026-09-07 - Narrowband O2 heater on m74_9: on/off only, NO PWM
+
+Question: how does the analog (narrowband) lambda heater work, is there PWM?
+
+Verified chain:
+- Control: Engine::periodicSlowCallback (engine.cpp L167-168):
+  heaterControlEnabled = forceO2Heating || rpmCalculator.isRunning();
+  enginePins.o2heater.setValue(on). forceO2Heating = "no" in 21129.msq ->
+  the heater is ON only while the engine runs; OFF on the bench.
+- Pin: enginePins.o2heater.initPin("O2 heater", o2heaterPin) with OM_DEFAULT
+  (efi_gpio.cpp L704) - plain push-pull GPIO, no PWM generator.
+- o2heaterPin = "Oxygen sensor 1 heater" = Gpio::L9779_OUT_6. On m74_9
+  direct_gpio[9] = PG6 -> L9779 IN6; the driver's setPad does palSetPort/
+  palClearPort(GPIOG, 6) (l9779.cpp L1086-1094).
+- L9779 OUT6 = protected LOW-SIDE driver, max 5 A (O2 heaters), driven by
+  logical-AND of the SPI CONTR bit and parallel input IN6 (l9779.cpp header).
+  o_oe_mask latches the CONTR enable ON at boot, so the GPIO alone gates the
+  heater; heater high side sits on battery +12 V. OUT5..7 are NOT in the WDA
+  forced-off set (only OUT1..4 + IGN1..4).
+- PWM: NONE anywhere. Firmware = on/off at the 20 Hz slow loop; hardware: the
+  L9779 IN6 parallel input is a digital AND (only IN8-PWM has a PWM input,
+  used for stepper), and m74_9's l9779_cfg.pwm_gpio is NULL. PG6 is a plain
+  GPIO in this design. So the heater runs at full battery voltage whenever
+  active - correct for a 4-wire narrowband, but no condensation-shock/
+  duty-cycle management exists.
+- Diagnostics: isO2HeaterOn output channel (status_loop.cpp L622 reads the pin
+  logic), CAN verbose o2Heater bit. Caveat: the IN5-7 -> PG5/6/7 mapping comes
+  from the schematic (only IN1-4 buzzed) - verify PG6->IN6 if no heat.
+- forceO2Heating = yes: the heater pin is driven high on every 20 Hz slow
+  loop pass REGARDLESS of engine state - engine off (key on) included, no
+  timeout, no duty cycle: the heater runs for as long as the MCU is powered
+  (~1-1.5 A drain on the battery). BUT the ignition gate still caps it: on
+  the KEY-off edge m74_9IgnitionGatePeriodic calls l9779_setPowerStage(false)
+  -> the driver thread writes CONFIG_REG6=0x16 (PSOFF) which kills ALL L9779
+  power stages including OUT6 - so with the ignition key OFF the heater draws
+  nothing, forceO2Heating or not. At boot with the key off m74_9 starts with
+  power_stage_on=false, so the heater stays dead until the first key-on
+  re-init. On the bench the KEY_ON line must be high (power stage gate open)
+  for the heater to actually heat with forceO2Heating.
+
+## 2026-09-06 - Fueling analysis: VE vs target AFR, how to add fuel at a given load
+
+Question: target AFR 12.5 but measured 13.5 - which way to turn VE, and what
+is the role of the target AFR table? Analysis only.
+
+### Verified math chain (this fork)
+
+- Air estimate (speed-density): m_air = VE%/100 x V_cyl x MAP[kPa] / (0.28705 x T_charge)
+  (SpeedDensityBase::getAirmassImpl; V_cyl = displacement/cylinders).
+- Fuel mass (FuelComputerBase::getCycleFuel): m_fuel = m_air / (lambda_target x stoich),
+  stoich = stoichRatioPrimary (14.7 for gasoline) unless a flex sensor blends.
+- Injector model (InjectorModelBase::getInjectionDuration): PW = f(m_fuel / injectorFlow)
+  + battLag (additive dead time) - the only non-proportional term.
+- Wall fuel (wall_fuel.cpp): transient-only - at steady state the correction
+  converges to 0 (film = beta*M_cmd/(1-alpha) -> M_cmd = desired), so it does
+  not participate in a steady-state AFR fix.
+- Therefore in open loop: measured_AFR = 14.7 x lambda_target x true_VE / tuned_VE.
+  Universal correction rule: VE_new = VE_old x measured_AFR / target_AFR.
+  For 13.5 measured vs 12.5 target: VE UP by x1.08 = +8% at the operating cells.
+
+### Target AFR table role
+
+- Open loop (STFT inactive): the table scales fuel directly, inverse-proportional:
+  changing target 14.7 -> 12.5 adds +17.6% fuel.
+- Closed loop: the table IS the STFT target. STFT gates in this tune (21129.msq):
+  load 35..85 only (stft_maxOverrunLoad 35 / stft_minPowerLoad 85), target AFR in
+  [12.0, 17.0] (stft_minAfr/maxAfr), CLT >= 60, cells maxAdd/maxRemove = 5%,
+  timeConstant 30 s. An 8% base error exceeds the 5% authority - closed loop
+  alone cannot reach 12.5; VE must be fixed.
+- The power zone (load > 85, i.e. MAP 85-100 kPa) is OUTSIDE the STFT window:
+  WOT fueling is pure open loop - VE (and the target table) are the only levers.
+- Current lambdaTable (msq, lambda-scaled text): cruise zone lambda 1.0 (AFR 14.7),
+  power rows 0.823..0.837 (AFR 12.1..12.3). If the goal is exactly 12.5 at power,
+  set the target cell to 12.5 first (this LEANS vs the current 12.1-12.3), then
+  VE_new = VE_old x measured/12.5.
+
+### Recipe for more fuel at one operating point
+
+1. Identify the cell: axes are MAP 20..100 kPa (16 rows) x RPM 600..6250 (30 cols).
+2. Open-loop zones: raise the VE cells at (MAP, rpm) by +measured/target; if the
+   target cell differs from the goal, set it first, then fix VE.
+3. Closed-loop zone (35..85 load): same VE fix; STFT then sits near 0 trim.
+4. Do NOT touch stoichRatioPrimary (scales ALL fueling + AFR math), injector
+   flow/dead-time (real injector data), or the wall-fuel model for this.
+5. VE also feeds air-flow-based tCharge interpolation and the Cyl Filling %
+   channels, but NOT the ignition load here (ignOverrideMode = MAP) and not
+   the VE/ignition table axes (veOverrideMode/ignOverrideMode = MAP).
+
+### Narrowband caveat (m74_9)
+
+The O2 input (AK3/PF3) is a NARROWBAND sensor. At 12.5-13.5 AFR it saturates
+(~0.85-0.9 V) and the custom curve tops out at 0.9 V -> 14.0 AFR, so any
+reading in the rich zone is curve extrapolation - the "13.5" has large
+uncertainty. A wideband is required to tune a real 12.5; with a narrowband,
+STFT at a 12.5 target is also blind (deadband 0.5% meaningless in saturation).
+
+## 2026-09-06 - 30-column VE/ignition tables filled from stock ME17 maps
 
 Implemented the plan from the analysis above: all four tables are now 30 columns
 and filled from the stock ME17 .clb maps.
