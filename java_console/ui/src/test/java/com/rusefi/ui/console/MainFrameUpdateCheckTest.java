@@ -8,8 +8,11 @@ import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import javax.swing.Icon;
+import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -159,6 +162,38 @@ public class MainFrameUpdateCheckTest {
             assertNotNull(icon, name + " should load");
             assertEquals(18, icon.getIconWidth(), name + " icon width");
             assertEquals(18, icon.getIconHeight(), name + " icon height");
+        }
+    }
+
+    @Test
+    public void firmwareCheckMessageUsesAvailableWidth() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            MainFrame.FrameOverlay overlay = new MainFrame.FrameOverlay("Checking ECU firmware...", Color.DARK_GRAY,
+                new MainFrame.OverlayAction("Update ECU Firmware", 'U', () -> {}),
+                new MainFrame.OverlayAction("Close", 'C', () -> {}));
+            overlay.setActionVisible(0, false);
+            overlay.setMessage("Unable to check ECU firmware", Color.RED);
+            Container content = (Container) overlay.getComponent(0);
+            JTextArea message = (JTextArea) content.getComponent(0);
+            for (int width : new int[]{800, 1280, 1916}) {
+                overlay.setSize(width, 600);
+                layoutRecursively(overlay);
+                assertTrue(message.getWidth() >= width - 100, "Message should use the available window width");
+                assertTrue(message.getWidth() >= message.getFontMetrics(message.getFont()).stringWidth(message.getText()),
+                    "The firmware check error should fit on one line");
+                assertTrue(message.getHeight() >= message.getFontMetrics(message.getFont()).getHeight());
+                assertTrue(content.getY() >= 0);
+                assertTrue(content.getY() + content.getHeight() <= overlay.getHeight(), "Actions should remain on screen");
+            }
+        });
+    }
+
+    private static void layoutRecursively(Container container) {
+        container.doLayout();
+        for (Component component : container.getComponents()) {
+            if (component instanceof Container) {
+                layoutRecursively((Container) component);
+            }
         }
     }
 

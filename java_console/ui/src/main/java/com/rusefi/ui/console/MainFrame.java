@@ -101,7 +101,11 @@ public class MainFrame {
             content.setBorder(BorderFactory.createEmptyBorder(32, 32, 32, 32));
             content.add(message, BorderLayout.CENTER);
             content.add(actionPanel, BorderLayout.SOUTH);
-            add(content);
+            GridBagConstraints constraints = new GridBagConstraints();
+            // Let wrapped text use the window width instead of collapsing to its minimum width.
+            constraints.weightx = 1;
+            constraints.fill = GridBagConstraints.HORIZONTAL;
+            add(content, constraints);
         }
 
         void setMessage(String text, Color color) {
