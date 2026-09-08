@@ -27,7 +27,7 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | stepper | 400 | 280 | dual H-bridge stepping | 676 | 708 | REVIEW PROXY +32; partial proxy: 25 unknown, 6 indirect, recursion |
 | firmware | storage manager | 1200 | 1032 | SD extra-page burn | 660 | 692 | REVIEW PROXY +32, PROXY BELOW REVIEWED; partial proxy: 28 unknown, 5 indirect, recursion |
 | firmware | timer watchdog | 256 | 104 | normal watchdog sleep | 552 | 584 | REVIEW PROXY +32; partial proxy: 20 unknown, 2 indirect, recursion |
-| firmware | TunerStudio | 1200 | 824 | normal communication | 1324 | 1348 | REVIEW PROXY +24; partial proxy: 66 unknown, 33 indirect, recursion |
+| firmware | TunerStudio | 1200 | 824 | normal communication | 1324 | 1356 | REVIEW PROXY +32; partial proxy: 66 unknown, 33 indirect, recursion |
 | firmware | USB mass storage | 256 | 240 | SD block read | 756 | 788 | REVIEW PROXY +32; partial proxy: 27 unknown, 5 indirect, recursion |
 | bootloader | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | bootloader | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
@@ -40,8 +40,8 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 |---|---:|---|---|
 | firmware | 688 | updateWidebandFirmwareFromFile(unsigned char) | controllers/can/rusefi_wideband.cpp:336:6 |
 | firmware | 520 | f_unlink | ext/FatFS/ff.c:5087:9 |
-| firmware | 424 | errorHandlerDeleteTypedReport(ErrorCookie) | controllers/core/error_handling.cpp:410:13 |
-| firmware | 416 | errorHandlerIsReportExist(ErrorCookie) | controllers/core/error_handling.cpp:385:12 |
+| firmware | 424 | errorHandlerDeleteTypedReport(char const*) | controllers/core/error_handling.cpp:458:13 |
+| firmware | 416 | errorHandlerIsReportExist(char const*) | controllers/core/error_handling.cpp:432:12 |
 | firmware | 408 | f_mkdir | ext/FatFS/ff.c:5176:9 |
 | firmware | 368 | ToothLoggerWriteCsvLine(Writer&, long long, composite_logger_s, composite_sensor_snapshot_s const&, void const*) | console/binary/tooth_logger.cpp:530:12 |
 | firmware | 352 | f_open | ext/FatFS/ff.c:3799:9 |
@@ -84,7 +84,7 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | stepper | 400 | 220 | normal startup positioning | 652 | 652 | PROXY +0; partial proxy: 16 unknown, 6 indirect, recursion |
 | firmware | storage manager | 400 | 308 | internal-flash tune burn | 628 | 628 | PROXY +0; partial proxy: 18 unknown, 5 indirect, recursion |
 | firmware | timer watchdog | 256 | 112 | normal watchdog sleep | 528 | 528 | PROXY +0; partial proxy: 12 unknown, 2 indirect, recursion |
-| firmware | TunerStudio | 1200 | 804 | normal tune burn | 1244 | 1260 | REVIEW PROXY +16; partial proxy: 53 unknown, 31 indirect, recursion |
+| firmware | TunerStudio | 1200 | 804 | normal tune burn | 1244 | 1244 | PROXY +0; partial proxy: 53 unknown, 31 indirect, recursion |
 | bootloader | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | bootloader | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
 | bootloader | LED | 256 | - | - | - | 80 | NOT REVIEWED: 3 unknown |
@@ -95,7 +95,7 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | Image | Frame bytes | Function | Source |
 |---|---:|---|---|
 | firmware | 328 | canDashboardHondaK(CanCycle) | controllers/can/can_dash_honda.cpp:46:6 |
-| firmware | 264 | Engine::periodicFastCallback() | controllers/algo/engine.cpp:600:6 |
+| firmware | 264 | Engine::periodicFastCallback() | controllers/algo/engine.cpp:601:6 |
 | firmware | 248 | luaO_pushvfstring | ext/lua/lobject.c:480:13 |
 | firmware | 240 | luaO_str2num | ext/lua/lobject.c:308:8 |
 | firmware | 200 | luaD_rawrunprotected | ext/lua/ldo.c:135:5 |
@@ -141,7 +141,7 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | stepper | 400 | 280 | startup redundant pedal check | 652 | 708 | REVIEW PROXY +56; partial proxy: 15 unknown, 6 indirect, recursion |
 | firmware | storage manager | 400 | 292 | internal-flash tune burn | 644 | 700 | REVIEW PROXY +56; partial proxy: 17 unknown, 5 indirect, recursion |
 | firmware | timer watchdog | 256 | 112 | normal watchdog sleep | 528 | 584 | REVIEW PROXY +56; partial proxy: 11 unknown, 2 indirect, recursion |
-| firmware | TunerStudio | 1200 | 744 | Ethernet TS with ARP | 1316 | 1388 | REVIEW PROXY +72; partial proxy: 55 unknown, 31 indirect, recursion |
+| firmware | TunerStudio | 1200 | 744 | Ethernet TS with ARP | 1316 | 1372 | REVIEW PROXY +56; partial proxy: 55 unknown, 31 indirect, recursion |
 | firmware | USB mass storage | 2048 | 300 | SD READ/WRITE(10) | 732 | 788 | REVIEW PROXY +56; partial proxy: 18 unknown, 5 indirect, recursion |
 | bootloader | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | bootloader | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
@@ -155,8 +155,8 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | 824 | canDashboardHondaK(CanCycle) | controllers/can/can_dash_honda.cpp:46:6 |
 | firmware | 744 | updateWidebandFirmwareFromFile(unsigned char) | controllers/can/rusefi_wideband.cpp:336:6 |
 | firmware | 520 | f_unlink | ext/FatFS/ff.c:5087:9 |
-| firmware | 424 | errorHandlerDeleteTypedReport(ErrorCookie) | controllers/core/error_handling.cpp:410:13 |
-| firmware | 416 | errorHandlerIsReportExist(ErrorCookie) | controllers/core/error_handling.cpp:385:12 |
+| firmware | 424 | errorHandlerDeleteTypedReport(char const*) | controllers/core/error_handling.cpp:458:13 |
+| firmware | 416 | errorHandlerIsReportExist(char const*) | controllers/core/error_handling.cpp:432:12 |
 | firmware | 408 | f_mkdir | ext/FatFS/ff.c:5176:9 |
 | firmware | 352 | ToothLoggerWriteCsvLine(Writer&, long long, composite_logger_s, composite_sensor_snapshot_s const&, void const*) | console/binary/tooth_logger.cpp:530:12 |
 | firmware | 352 | f_open | ext/FatFS/ff.c:3799:9 |
@@ -200,7 +200,7 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | stepper | 400 | - | - | - | 724 | NOT REVIEWED: 25 unknown, 6 indirect, recursion |
 | firmware | storage manager | 1200 | - | - | - | 708 | NOT REVIEWED: 28 unknown, 5 indirect, recursion |
 | firmware | timer watchdog | 256 | - | - | - | 600 | NOT REVIEWED: 20 unknown, 2 indirect, recursion |
-| firmware | TunerStudio | 1200 | - | - | - | 1372 | NOT REVIEWED: 66 unknown, 35 indirect, recursion |
+| firmware | TunerStudio | 1200 | - | - | - | 1356 | NOT REVIEWED: 66 unknown, 35 indirect, recursion |
 | firmware | USB mass storage | 256 | - | - | - | 804 | NOT REVIEWED: 27 unknown, 5 indirect, recursion |
 | bootloader | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | bootloader | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
@@ -213,8 +213,8 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 |---|---:|---|---|
 | firmware | 688 | updateWidebandFirmwareFromFile(unsigned char) | controllers/can/rusefi_wideband.cpp:336:6 |
 | firmware | 520 | f_unlink | ext/FatFS/ff.c:5087:9 |
-| firmware | 424 | errorHandlerDeleteTypedReport(ErrorCookie) | controllers/core/error_handling.cpp:410:13 |
-| firmware | 416 | errorHandlerIsReportExist(ErrorCookie) | controllers/core/error_handling.cpp:385:12 |
+| firmware | 424 | errorHandlerDeleteTypedReport(char const*) | controllers/core/error_handling.cpp:458:13 |
+| firmware | 416 | errorHandlerIsReportExist(char const*) | controllers/core/error_handling.cpp:432:12 |
 | firmware | 408 | f_mkdir | ext/FatFS/ff.c:5176:9 |
 | firmware | 368 | ToothLoggerWriteCsvLine(Writer&, long long, composite_logger_s, composite_sensor_snapshot_s const&, void const*) | console/binary/tooth_logger.cpp:530:12 |
 | firmware | 352 | f_open | ext/FatFS/ff.c:3799:9 |
@@ -254,12 +254,12 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | main loop | 1024 | - | - | - | 700 | NOT REVIEWED: 14 unknown, 4 indirect, recursion |
 | firmware | main/process | 1536 | - | - | - | 1244 | NOT REVIEWED: 59 unknown, 27 indirect, recursion |
 | firmware | MAX3185x | 400 | - | - | - | 788 | NOT REVIEWED: 19 unknown, 2 indirect, recursion |
-| firmware | SD/MMC | 1600 | - | - | - | 1852 | NOT REVIEWED: 44 unknown, 20 indirect, recursion |
+| firmware | SD/MMC | 1600 | - | - | - | 1852 | NOT REVIEWED: 45 unknown, 20 indirect, recursion |
 | firmware | software knock | 400 | - | - | - | 668 | NOT REVIEWED: 17 unknown, 2 indirect, recursion |
 | firmware | stepper | 400 | - | - | - | 708 | NOT REVIEWED: 16 unknown, 6 indirect, recursion |
 | firmware | storage manager | 1200 | - | - | - | 684 | NOT REVIEWED: 19 unknown, 5 indirect, recursion |
 | firmware | timer watchdog | 256 | - | - | - | 584 | NOT REVIEWED: 12 unknown, 2 indirect, recursion |
-| firmware | TunerStudio | 1200 | - | - | - | 1364 | NOT REVIEWED: 56 unknown, 35 indirect, recursion |
+| firmware | TunerStudio | 1200 | - | - | - | 1348 | NOT REVIEWED: 57 unknown, 35 indirect, recursion |
 | firmware | USB mass storage | 2048 | - | - | - | 788 | NOT REVIEWED: 19 unknown, 5 indirect, recursion |
 | bootloader | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | bootloader | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
@@ -272,8 +272,8 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 |---|---:|---|---|
 | firmware | 688 | updateWidebandFirmwareFromFile(unsigned char) | controllers/can/rusefi_wideband.cpp:336:6 |
 | firmware | 520 | f_unlink | ext/FatFS/ff.c:5087:9 |
-| firmware | 424 | errorHandlerDeleteTypedReport(ErrorCookie) | controllers/core/error_handling.cpp:410:13 |
-| firmware | 416 | errorHandlerIsReportExist(ErrorCookie) | controllers/core/error_handling.cpp:385:12 |
+| firmware | 424 | errorHandlerDeleteTypedReport(char const*) | controllers/core/error_handling.cpp:458:13 |
+| firmware | 416 | errorHandlerIsReportExist(char const*) | controllers/core/error_handling.cpp:432:12 |
 | firmware | 408 | f_mkdir | ext/FatFS/ff.c:5176:9 |
 | firmware | 368 | tinf_decode_trees | ext/uzlib/src/tinflate.c:307:12 |
 | firmware | 352 | ToothLoggerWriteCsvLine(Writer&, long long, composite_logger_s, composite_sensor_snapshot_s const&, void const*) | console/binary/tooth_logger.cpp:530:12 |
