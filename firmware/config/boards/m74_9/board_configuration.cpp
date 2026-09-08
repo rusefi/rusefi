@@ -397,9 +397,9 @@ static struct l9779_config l9779_cfg = {
 		[5] = {.port = GPIOE, .pad = 10}, /* IN2 -> OUT2 */
 		[6] = {.port = GPIOE, .pad = 9},  /* IN3 -> OUT3 */
 		[7] = {.port = GPIOE, .pad = 8},  /* IN4 -> OUT4 */
-		[8] = {.port = GPIOG, .pad = 5},
-		[9] = {.port = GPIOG, .pad = 6},
-		[10] = {.port = GPIOG, .pad = 7},
+		[8] = {.port = GPIOG, .pad = 7},  /* IN5 -> OUT5 (lambda 1 heater) - BUZZED 2026-09-08: PG7 -> IN5 */
+		[9] = {.port = GPIOG, .pad = 5},  /* IN6 -> OUT6 (EVAP) - BUZZED 2026-09-08: PG5 -> IN6 */
+		[10] = {.port = GPIOG, .pad = 6}, /* IN7 -> OUT7 (lambda 2 heater) - BUZZED 2026-09-08: PG6 -> IN7 */
 	},
 	/* PWM signal */
 	.pwm_gpio = {.port = NULL, .pad = 0}

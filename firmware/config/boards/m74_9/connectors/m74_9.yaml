@@ -42,7 +42,7 @@ pins:
     type:
 
   - pin: AC4
-    id: L9779_OUT_6
+    id: L9779_OUT_5
     class: outputs
     function: Oxygen sensor 1 heater
     type: gp_low
@@ -80,7 +80,7 @@ pins:
     type: can
 
   - pin: AE4
-    id: L9779_OUT_5
+    id: L9779_OUT_6
     class: outputs
     function: EVAP solenoid control
     type: gp_low
