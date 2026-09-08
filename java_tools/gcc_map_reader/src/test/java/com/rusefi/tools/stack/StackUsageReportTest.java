@@ -60,6 +60,148 @@ public class StackUsageReportTest {
         assertEquals(Collections.singleton("b"), result.dynamic);
     }
 
+    /**
+     * The main blind spot of the direct-call proxy: a virtual or function-pointer call shows up in
+     * the GCC callgraph only as an edge to "__indirect_call". The callee's whole subtree (here a
+     * 900-byte file-system path) contributes nothing to the estimate, the root is merely marked
+     * "indirect". This is how storageWrite() -> SettingStorageBase::store() hides FatFS from the
+     * storage manager proxy.
+     */
+    @Test
+    void indirectCalleeSubtreeContributesNothing() throws Exception {
+        Map<String, StackUsageReport.Node> nodes = parse(
+            "node: { title: \"root\" label: \"root\\nroot.cpp:1:1\\n16 bytes (static)\" }\n"
+                + "node: { title: \"virtualImpl\" label: \"virtualImpl\\nimpl.cpp:1:1\\n500 bytes (static)\" }\n"
+                + "node: { title: \"f_open\" label: \"f_open\\nff.c:1:1\\n400 bytes (static)\" }\n"
+                + "node: { title: \"__indirect_call\" label: \"Indirect Call Placeholder\" shape : ellipse }\n"
+                + "edge: { sourcename: \"root\" targetname: \"__indirect_call\" }\n"
+                + "edge: { sourcename: \"virtualImpl\" targetname: \"f_open\" }\n");
+
+        StackUsageReport.Analysis result = StackUsageReport.analyze(nodes, "root");
+        assertEquals(16, result.stack);
+        assertEquals(Collections.singleton("root"), result.indirect);
+        assertTrue(result.unknown.isEmpty());
+        // the implementation itself is a perfectly analyzable 900-byte path
+        assertEquals(900, StackUsageReport.analyze(nodes, "virtualImpl").stack);
+    }
+
+    /** A callee with no .su data (libc, builtins, foreign objects) is counted as zero bytes, not as an error. */
+    @Test
+    void unknownFrameCountsAsZeroEvenWhenItIsTheDeepestCall() throws Exception {
+        Map<String, StackUsageReport.Node> nodes = parse(
+            "node: { title: \"root\" label: \"root\\nroot.cpp:1:1\\n24 bytes (static)\" }\n"
+                + "node: { title: \"sprintf\" label: \"sprintf\" shape : ellipse }\n"
+                + "edge: { sourcename: \"root\" targetname: \"sprintf\" }\n");
+
+        StackUsageReport.Analysis result = StackUsageReport.analyze(nodes, "root");
+        assertEquals(24, result.stack);
+        assertEquals(Collections.singleton("sprintf"), result.unknown);
+        assertFalse(result.recursion);
+    }
+
+    /**
+     * A current proxy above the nominal budget is not an error and gets no dedicated status: an
+     * unreviewed root renders as plain NOT REVIEWED, a reviewed one only compares the proxy with
+     * its own snapshot. Documents that the report never fails on the proxy alone.
+     */
+    @Test
+    void proxyAboveNominalIsReportOnly() throws Exception {
+        Map<String, StackUsageReport.Node> nodes = new TreeMap<>();
+        StackUsageReport.Node root = new StackUsageReport.Node("root");
+        root.function = "root";
+        root.source = "root.cpp:1";
+        root.stack = 1500;
+        nodes.put("root", root);
+
+        StackUsageReport.Root unreviewed = new StackUsageReport.Root("firmware", "worker", "root", 1024, null);
+        StackUsageReport.Graph graph = new StackUsageReport.Graph("firmware", nodes,
+            Collections.singletonList(unreviewed), Collections.<String, Integer>emptyMap());
+        String report = StackUsageReport.render("test", Collections.singletonList(graph));
+        assertTrue(report.contains("| firmware | worker | 1024 | - | - | - | 1500 | NOT REVIEWED: direct graph resolved |"));
+
+        StackUsageReport.Root reviewed = new StackUsageReport.Root("firmware", "worker", "root", 1024,
+            new StackUsageReport.ReviewedBaseline(600, 1500, "measured on bench"));
+        graph = new StackUsageReport.Graph("firmware", nodes,
+            Collections.singletonList(reviewed), Collections.<String, Integer>emptyMap());
+        report = StackUsageReport.render("test", Collections.singletonList(graph));
+        assertTrue(report.contains("| firmware | worker | 1024 | 600 | measured on bench | 1500 | 1500 | PROXY +0 |"));
+        // and the reviewed-budget gate is silent as long as the hand-entered measurement fits
+        StackUsageReport.checkReviewedBudgets(Collections.singletonList(graph));
+    }
+
+    /** Process and exception budgets come from the linker map and must resolve inside the reviewed-budget gate. */
+    @Test
+    void reviewedBudgetGateResolvesLinkerStackSizes() throws Exception {
+        Path map = write("sizes.map",
+            "  0x00000400 __process_stack_size__ = 0x400\n"
+                + "  0x00001000 __main_stack_size__ = 0x1000\n");
+        Map<String, Integer> sizes = StackUsageReport.parseMapStackSizes(map);
+
+        StackUsageReport.Root exactFit = new StackUsageReport.Root("firmware", "main/process", "main", "process",
+            new StackUsageReport.ReviewedBaseline(1024, 0, "boundary"));
+        StackUsageReport.checkReviewedBudgets(Collections.singletonList(
+            new StackUsageReport.Graph("firmware", Collections.<String, StackUsageReport.Node>emptyMap(),
+                Collections.singletonList(exactFit), sizes)));
+
+        StackUsageReport.Root overflow = new StackUsageReport.Root("firmware", "exception/ISR", null, "exception",
+            new StackUsageReport.ReviewedBaseline(4097, 0, "nested interrupts"));
+        IllegalArgumentException error = assertThrows(IllegalArgumentException.class,
+            () -> StackUsageReport.checkReviewedBudgets(Collections.singletonList(
+                new StackUsageReport.Graph("firmware", Collections.<String, StackUsageReport.Node>emptyMap(),
+                    Collections.singletonList(overflow), sizes))));
+        assertTrue(error.getMessage().contains("firmware:exception/ISR uses 4097 bytes"));
+
+        StackUsageReport.Root unlinked = new StackUsageReport.Root("firmware", "main/process", "main", "process",
+            new StackUsageReport.ReviewedBaseline(1, 0, "no map"));
+        assertThrows(IllegalArgumentException.class,
+            () -> StackUsageReport.checkReviewedBudgets(Collections.singletonList(
+                new StackUsageReport.Graph("firmware", Collections.<String, StackUsageReport.Node>emptyMap(),
+                    Collections.singletonList(unlinked), Collections.<String, Integer>emptyMap()))));
+    }
+
+    /**
+     * Whole pipeline minus the readelf/c++filt subprocesses: callgraph + ELF roots + map sizes +
+     * profile + render. The thread's real deep path sits behind a virtual call, so the rendered
+     * proxy is the entry frame alone while the hand-measured value is far larger.
+     */
+    @Test
+    void endToEndReportHidesVirtualPathBehindIndirectMarker() throws Exception {
+        Map<String, StackUsageReport.Node> nodes = parse(
+            "node: { title: \"_ZL20storageManagerThreadPv\" label: \"storageManagerThread\\nstorage.cpp:290:13\\n16 bytes (static)\" }\n"
+                + "node: { title: \"_ZN16SettingStorageSD5storeEjPKhj\" label: \"SettingStorageSD::store\\nstorage_sd.cpp:60:15\\n40 bytes (static)\" }\n"
+                + "node: { title: \"f_open\" label: \"f_open\\nff.c:3799:9\\n352 bytes (static)\" }\n"
+                + "node: { title: \"__indirect_call\" label: \"Indirect Call Placeholder\" shape : ellipse }\n"
+                + "edge: { sourcename: \"_ZL20storageManagerThreadPv\" targetname: \"__indirect_call\" }\n"
+                + "edge: { sourcename: \"_ZN16SettingStorageSD5storeEjPKhj\" targetname: \"f_open\" }\n");
+        // c++filt output is consumed in sorted-symbol order: _ZL.. < _ZN.. < __indirect_call < f_open
+        StackUsageReport.applyDemangledSymbols(nodes,
+            "storageManagerThread(void*)\nSettingStorageSD::store(unsigned int, unsigned char const*, unsigned int)\n"
+                + "Indirect Call Placeholder\nf_open\n");
+
+        Path map = write("e2e.map",
+            "Linker script and memory map\n"
+                + "  0x00000600 __process_stack_size__ = 0x600\n"
+                + "  0x00001000 __main_stack_size__ = 0x1000\n");
+        String readelf = "   12: 00000001     1 OBJECT  LOCAL  DEFAULT   11 "
+            + "_ZN11stack_usage12explicitRootIXadL_ZL20storageManagerThreadPvEELi1200EEE\n";
+        List<StackUsageReport.Root> roots = StackUsageReport.parseElfRoots(map, "firmware", readelf,
+            "stack_usage::explicitRoot<&(storageManagerThread(void*)), 1200>\n");
+        StackUsageReport.Graph graph = new StackUsageReport.Graph("firmware", nodes, roots,
+            StackUsageReport.parseMapStackSizes(map));
+        StackUsageReport.applyProfile(Collections.singletonList(graph), StackUsageReport.parseProfile(
+            "| Image | Entry | Name | Retained | Proxy | Scenario |\n"
+                + "|---|---|---|---:|---:|---|\n"
+                + "| firmware | exception/ISR | exception/ISR | - | - | - |\n"
+                + "| firmware | storageManagerThread(void*) | storage manager | 1032 | 16 | SD extra-page burn |\n"));
+
+        String report = StackUsageReport.render("e2e", Collections.singletonList(graph));
+        assertTrue(report.contains("| firmware | storage manager | 1200 | 1032 | SD extra-page burn | 16 | 16 | "
+            + "PROXY +0, PROXY BELOW REVIEWED; partial proxy: 1 indirect |"));
+        assertTrue(report.contains("| firmware | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |"));
+        assertTrue(report.contains("| firmware | 352 | f_open | ff.c:3799:9 |"));
+        StackUsageReport.checkReviewedBudgets(Collections.singletonList(graph));
+    }
+
     @Test
     void mapSizesAndSummaryRendering() throws Exception {
         Path map = write("sizes.map",

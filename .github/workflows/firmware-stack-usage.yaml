@@ -28,6 +28,32 @@
 #     ignores indirect calls, unknown frames, recursion, interrupts and
 #     context switching, so it is not a proof either way.
 #
+# Known blind spots
+#   - Virtual and function-pointer calls appear in the callgraph only as
+#     "__indirect_call"; the callee subtree contributes 0 bytes. Every
+#     EngineModule / Sensor / storage-backend dispatch is such a call, e.g.
+#     storageWrite() -> SettingStorageBase::store(): the storage manager proxy
+#     contains none of FatFS. Roots with many indirect edges are the least
+#     trustworthy rows, not the safest.
+#   - exception/ISR (main stack, hosts the fast/slow periodic callbacks and
+#     nested interrupts) has no entry function and is never analyzed.
+#   - Functions without .su data (newlib, builtins, foreign objects) count as
+#     0 bytes; recursive components are summed once; alloca/VLA frames are
+#     flagged "dynamic" but not sized.
+#   - Only threads tagged RUSEFI_STACK_ROOT* are seen. Any untagged
+#     ThreadController / THD_WORKING_AREA is invisible (at the time of writing:
+#     DtcManager, waSentDecoderThread). Profile membership is exact, so a new
+#     tagged thread fails the job until its profile row exists - tag threads
+#     when you add them.
+#   - Nominal is the working-area N. The physical area is N + thread_t (188)
+#     + FPU context (204) + PORT_INT_REQUIRED_STACK (128); an overflow leaves
+#     the area at the bottom into the neighbouring .bss object, and the
+#     ChibiOS check only fires at a context switch of the overflowing thread.
+#   - "Reviewed" values are hand-typed hardware measurements of ONE scenario
+#     on ONE board (currently f407-discovery only); nothing re-measures them.
+#     The runtime counterpart (`threadsinfo` after each HW CI test) runs on
+#     boards without an SD card, so SD/FatFS paths are never measured by CI.
+#
 name: Firmware Stack Usage
 
 on:
