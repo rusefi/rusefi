@@ -2215,3 +2215,6 @@ Signed idle position offset when Lua reports Park or Neutral via setParkNeutral(
 ### wizardInjectorOutputs
 
 
+### wizardVeTable
+
+

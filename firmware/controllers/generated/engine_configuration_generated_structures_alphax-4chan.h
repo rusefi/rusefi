@@ -8422,67 +8422,67 @@ struct persistent_config_s {
 	bool wizardInjectorOutputs : 1 {};
 	/**
 	offset 16448 bit 11 */
-	bool boardUseTachPullUp : 1 {};
+	bool wizardVeTable : 1 {};
 	/**
 	offset 16448 bit 12 */
-	bool boardUseCrankPullUp : 1 {};
+	bool boardUseTachPullUp : 1 {};
 	/**
 	offset 16448 bit 13 */
-	bool boardUseTempPullUp : 1 {};
+	bool boardUseCrankPullUp : 1 {};
 	/**
 	offset 16448 bit 14 */
-	bool boardUse2stepPullDown : 1 {};
+	bool boardUseTempPullUp : 1 {};
 	/**
 	offset 16448 bit 15 */
-	bool boardUseCamPullDown : 1 {};
+	bool boardUse2stepPullDown : 1 {};
 	/**
 	offset 16448 bit 16 */
-	bool boardUseD4PullDown : 1 {};
+	bool boardUseCamPullDown : 1 {};
 	/**
 	offset 16448 bit 17 */
-	bool boardUseD5PullDown : 1 {};
+	bool boardUseD4PullDown : 1 {};
 	/**
 	offset 16448 bit 18 */
-	bool boardUseCamVrPullUp : 1 {};
+	bool boardUseD5PullDown : 1 {};
 	/**
 	offset 16448 bit 19 */
-	bool boardUseD2PullDown : 1 {};
+	bool boardUseCamVrPullUp : 1 {};
 	/**
 	offset 16448 bit 20 */
-	bool boardUseD3PullDown : 1 {};
+	bool boardUseD2PullDown : 1 {};
 	/**
 	offset 16448 bit 21 */
-	bool unusedBit_307_21 : 1 {};
+	bool boardUseD3PullDown : 1 {};
 	/**
 	offset 16448 bit 22 */
-	bool unusedBit_307_22 : 1 {};
+	bool unusedBit_308_22 : 1 {};
 	/**
 	offset 16448 bit 23 */
-	bool unusedBit_307_23 : 1 {};
+	bool unusedBit_308_23 : 1 {};
 	/**
 	offset 16448 bit 24 */
-	bool unusedBit_307_24 : 1 {};
+	bool unusedBit_308_24 : 1 {};
 	/**
 	offset 16448 bit 25 */
-	bool unusedBit_307_25 : 1 {};
+	bool unusedBit_308_25 : 1 {};
 	/**
 	offset 16448 bit 26 */
-	bool unusedBit_307_26 : 1 {};
+	bool unusedBit_308_26 : 1 {};
 	/**
 	offset 16448 bit 27 */
-	bool unusedBit_307_27 : 1 {};
+	bool unusedBit_308_27 : 1 {};
 	/**
 	offset 16448 bit 28 */
-	bool unusedBit_307_28 : 1 {};
+	bool unusedBit_308_28 : 1 {};
 	/**
 	offset 16448 bit 29 */
-	bool unusedBit_307_29 : 1 {};
+	bool unusedBit_308_29 : 1 {};
 	/**
 	offset 16448 bit 30 */
-	bool unusedBit_307_30 : 1 {};
+	bool unusedBit_308_30 : 1 {};
 	/**
 	offset 16448 bit 31 */
-	bool unusedBit_307_31 : 1 {};
+	bool unusedBit_308_31 : 1 {};
 	/**
 	 * offset 16452
 	 */

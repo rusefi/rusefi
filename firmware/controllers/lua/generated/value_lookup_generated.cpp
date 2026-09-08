@@ -2221,6 +2221,9 @@ float getConfigValueByHash(const int hash) {
 // wizardInjectorOutputs
 		case -1528635464:
 			return config->wizardInjectorOutputs;
+// wizardVeTable
+		case 346417305:
+			return config->wizardVeTable;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -5924,6 +5927,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1528635464:
 	{
 		config->wizardInjectorOutputs = (int)value;
+		return 1;
+	}
+		case 346417305:
+	{
+		config->wizardVeTable = (int)value;
 		return 1;
 	}
 	}

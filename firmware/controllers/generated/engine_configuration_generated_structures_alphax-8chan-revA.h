@@ -8422,67 +8422,67 @@ struct persistent_config_s {
 	bool wizardInjectorOutputs : 1 {};
 	/**
 	offset 16316 bit 11 */
-	bool boardUseTempPullUp : 1 {};
+	bool wizardVeTable : 1 {};
 	/**
 	offset 16316 bit 12 */
-	bool boardUse2stepPullDown : 1 {};
+	bool boardUseTempPullUp : 1 {};
 	/**
 	offset 16316 bit 13 */
-	bool boardUseD2PullDown : 1 {};
+	bool boardUse2stepPullDown : 1 {};
 	/**
 	offset 16316 bit 14 */
-	bool boardUseD3PullDown : 1 {};
+	bool boardUseD2PullDown : 1 {};
 	/**
 	offset 16316 bit 15 */
-	bool boardUseTachPullUp : 1 {};
+	bool boardUseD3PullDown : 1 {};
 	/**
 	offset 16316 bit 16 */
-	bool unusedBit_302_16 : 1 {};
+	bool boardUseTachPullUp : 1 {};
 	/**
 	offset 16316 bit 17 */
-	bool unusedBit_302_17 : 1 {};
+	bool unusedBit_303_17 : 1 {};
 	/**
 	offset 16316 bit 18 */
-	bool unusedBit_302_18 : 1 {};
+	bool unusedBit_303_18 : 1 {};
 	/**
 	offset 16316 bit 19 */
-	bool unusedBit_302_19 : 1 {};
+	bool unusedBit_303_19 : 1 {};
 	/**
 	offset 16316 bit 20 */
-	bool unusedBit_302_20 : 1 {};
+	bool unusedBit_303_20 : 1 {};
 	/**
 	offset 16316 bit 21 */
-	bool unusedBit_302_21 : 1 {};
+	bool unusedBit_303_21 : 1 {};
 	/**
 	offset 16316 bit 22 */
-	bool unusedBit_302_22 : 1 {};
+	bool unusedBit_303_22 : 1 {};
 	/**
 	offset 16316 bit 23 */
-	bool unusedBit_302_23 : 1 {};
+	bool unusedBit_303_23 : 1 {};
 	/**
 	offset 16316 bit 24 */
-	bool unusedBit_302_24 : 1 {};
+	bool unusedBit_303_24 : 1 {};
 	/**
 	offset 16316 bit 25 */
-	bool unusedBit_302_25 : 1 {};
+	bool unusedBit_303_25 : 1 {};
 	/**
 	offset 16316 bit 26 */
-	bool unusedBit_302_26 : 1 {};
+	bool unusedBit_303_26 : 1 {};
 	/**
 	offset 16316 bit 27 */
-	bool unusedBit_302_27 : 1 {};
+	bool unusedBit_303_27 : 1 {};
 	/**
 	offset 16316 bit 28 */
-	bool unusedBit_302_28 : 1 {};
+	bool unusedBit_303_28 : 1 {};
 	/**
 	offset 16316 bit 29 */
-	bool unusedBit_302_29 : 1 {};
+	bool unusedBit_303_29 : 1 {};
 	/**
 	offset 16316 bit 30 */
-	bool unusedBit_302_30 : 1 {};
+	bool unusedBit_303_30 : 1 {};
 	/**
 	offset 16316 bit 31 */
-	bool unusedBit_302_31 : 1 {};
+	bool unusedBit_303_31 : 1 {};
 	/**
 	 * offset 16320
 	 */

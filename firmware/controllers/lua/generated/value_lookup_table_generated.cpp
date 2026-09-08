@@ -211,6 +211,9 @@ const ConfigParameter allParameters[] = {
 	{ 0x14A57F91, // wizardFiringOrder
 		[]() -> float { return config->wizardFiringOrder; },
 		[](float value) { config->wizardFiringOrder = value; } },
+	{ 0x14A5E899, // wizardVeTable
+		[]() -> float { return config->wizardVeTable; },
+		[](float value) { config->wizardVeTable = value; } },
 	{ 0x1535AD96, // compressionRatio
 		[]() -> float { return engineConfiguration->compressionRatio; },
 		[](float value) { engineConfiguration->compressionRatio = value; } },
