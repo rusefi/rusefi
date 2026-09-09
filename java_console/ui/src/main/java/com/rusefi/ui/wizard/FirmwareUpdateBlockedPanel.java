@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /** Acknowledges a firmware eligibility error before returning to the previous screen. */
 public final class FirmwareUpdateBlockedPanel extends JPanel {
-    private static final int CARD_WIDTH = 760;
+    private static final int CARD_WIDTH = 1100;
 
     private final JButton backButton = new JButton("Back");
     private final JTextArea messageDetails;
@@ -21,45 +21,43 @@ public final class FirmwareUpdateBlockedPanel extends JPanel {
         setBorder(BorderFactory.createEmptyBorder(
             WizardStyle.LARGE_GAP, WizardStyle.LARGE_GAP, WizardStyle.LARGE_GAP, WizardStyle.LARGE_GAP));
 
-        JLabel heading = new JLabel("Firmware update blocked");
-        AbstractWizardStep.styleTitle(heading);
-        add(heading, BorderLayout.NORTH);
-
-        JPanel card = new JPanel();
+        JPanel card = new JPanel(new BorderLayout(0, WizardStyle.LARGE_GAP));
         card.setBackground(WizardStyle.surface());
-        card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
         card.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(WizardStyle.border()),
             BorderFactory.createEmptyBorder(26, 30, 26, 30)));
-        card.setPreferredSize(new Dimension(CARD_WIDTH, 460));
-        card.setMaximumSize(new Dimension(CARD_WIDTH, 460));
+        card.setPreferredSize(new Dimension(CARD_WIDTH, 580));
+
+        JPanel headings = new JPanel();
+        headings.setOpaque(false);
+        headings.setLayout(new BoxLayout(headings, BoxLayout.Y_AXIS));
+        JLabel heading = new JLabel("Firmware update blocked");
+        AbstractWizardStep.styleTitle(heading);
+        heading.setAlignmentX(Component.LEFT_ALIGNMENT);
+        headings.add(heading);
+        headings.add(Box.createVerticalStrut(WizardStyle.LARGE_GAP));
 
         JLabel warning = new JLabel("Firmware update cannot continue", UIManager.getIcon("OptionPane.errorIcon"),
             SwingConstants.LEFT);
         warning.setFont(warning.getFont().deriveFont(Font.BOLD, warning.getFont().getSize() * 1.3f));
         warning.setAlignmentX(Component.LEFT_ALIGNMENT);
         warning.getAccessibleContext().setAccessibleName("Firmware update error");
-        card.add(warning);
-        card.add(Box.createVerticalStrut(WizardStyle.LARGE_GAP));
+        headings.add(warning);
+        card.add(headings, BorderLayout.NORTH);
 
         messageDetails = new JTextArea(message);
         messageDetails.setEditable(false);
         messageDetails.setLineWrap(true);
         messageDetails.setWrapStyleWord(true);
-        messageDetails.setRows(8);
         messageDetails.setFont(UIManager.getFont("Label.font").deriveFont(
             UIManager.getFont("Label.font").getSize() * 1.1f));
         messageDetails.setBackground(WizardStyle.surface());
         messageDetails.getAccessibleContext().setAccessibleName("Firmware update eligibility details");
 
         JScrollPane messageScrollPane = new JScrollPane(messageDetails);
-        messageScrollPane.setAlignmentX(Component.LEFT_ALIGNMENT);
         messageScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         messageScrollPane.getVerticalScrollBar().setUnitIncrement(16);
-        messageScrollPane.setMaximumSize(new Dimension(Integer.MAX_VALUE, 260));
-        card.add(messageScrollPane);
-        card.add(Box.createVerticalGlue());
-        card.add(Box.createVerticalStrut(WizardStyle.LARGE_GAP));
+        card.add(messageScrollPane, BorderLayout.CENTER);
 
         AtomicBoolean closed = new AtomicBoolean();
         Runnable closeOnce = () -> {
@@ -73,10 +71,8 @@ public final class FirmwareUpdateBlockedPanel extends JPanel {
 
         JPanel actions = new JPanel(new BorderLayout());
         actions.setOpaque(false);
-        actions.setAlignmentX(Component.LEFT_ALIGNMENT);
-        actions.setMaximumSize(new Dimension(Integer.MAX_VALUE, backButton.getPreferredSize().height));
         actions.add(backButton, BorderLayout.WEST);
-        card.add(actions);
+        card.add(actions, BorderLayout.SOUTH);
 
         JPanel center = new JPanel(new GridBagLayout());
         center.setOpaque(false);
