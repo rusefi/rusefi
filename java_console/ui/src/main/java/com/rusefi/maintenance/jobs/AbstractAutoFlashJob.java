@@ -68,6 +68,13 @@ abstract class AbstractAutoFlashJob extends AsyncJobWithContext<SerialPortWithPa
                 callbacks.error();
                 return;
             }
+            try {
+                callbacks.firmwareHandoffStarted();
+            } catch (RuntimeException e) {
+                callbacks.logLine("Unable to prepare firmware handoff: " + e.getMessage());
+                callbacks.error();
+                return;
+            }
             firmwareHandoffStarted = true;
             if (flash(lm, bp, callbacks)) {
                 callbacks.done();

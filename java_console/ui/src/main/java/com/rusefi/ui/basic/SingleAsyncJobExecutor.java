@@ -71,6 +71,11 @@ public class SingleAsyncJobExecutor implements com.rusefi.DeviceSessionManager.J
             }
 
             @Override
+            public void firmwareHandoffStarted() {
+                delegate.firmwareHandoffStarted();
+            }
+
+            @Override
             public void warning() {
                 delegate.warning();
             }

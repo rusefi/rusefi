@@ -22,6 +22,10 @@ public interface UpdateOperationCallbacks extends StatusConsumer {
         logLine(reason);
     }
 
+    /** Runs after eligibility passes and before an automatic firmware job takes over the connection. */
+    default void firmwareHandoffStarted() {
+    }
+
     void clear();
 
     UpdateOperationCallbacks DUMMY = new UpdateOperationCallbacks() {

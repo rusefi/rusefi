@@ -390,7 +390,17 @@ console live data tab is broken #8402
             }
             DeviceSessionManager deviceSessionManager = new DeviceSessionManager(connectivityContext, initialPort);
             unsupportedEcuHost.addCompatiblePortListener(deviceSessionManager::setSessionPort);
-            StatusPanelWithProgressBar deviceStatusPanel = new StatusPanelWithProgressBar();
+            java.util.function.Consumer<JComponent> showFullScreenPanel = panel -> {
+                rollbackPicker.removeAll();
+                rollbackPicker.add(panel, BorderLayout.CENTER);
+                rootCardLayout.show(rootPanel, "rollback");
+            };
+            Runnable closeFullScreenPanel = () -> {
+                rootCardLayout.show(rootPanel, "console");
+            };
+            StatusPanelWithProgressBar deviceStatusPanel = new StatusPanelWithProgressBar(
+                reason -> showFullScreenPanel.accept(new com.rusefi.ui.wizard.FirmwareUpdateBlockedPanel(
+                    reason, closeFullScreenPanel)));
             StatusPanel tuneStatusPanel = new StatusPanel(250);
             SingleAsyncJobExecutor consoleJobExecutor = new SingleAsyncJobExecutor(job ->
                 job instanceof ImportTuneJob ? tuneStatusPanel : deviceStatusPanel,
@@ -472,12 +482,7 @@ console live data tab is broken #8402
             DevicePane devicePane = new DevicePane(
                 uiContext, connectivityContext, deviceSessionManager, tabbedPane.tabbedPane,
                 consoleJobExecutor, deviceStatusPanel,
-                picker -> {
-                    rollbackPicker.removeAll();
-                    rollbackPicker.add(picker, BorderLayout.CENTER);
-                    rootCardLayout.show(rootPanel, "rollback");
-                },
-                () -> rootCardLayout.show(rootPanel, "console"));
+                showFullScreenPanel, closeFullScreenPanel);
             tabbedPane.addTab("Device", devicePane.getContent());
             mainFrame.setUpdateEcuAction(() -> {
                 tabbedPane.selectTab("Device");

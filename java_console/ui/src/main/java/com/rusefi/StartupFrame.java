@@ -125,7 +125,7 @@ public class StartupFrame {
 
     private final StatusPanelWithProgressBar firmwareStatusPanel = new StatusPanelWithProgressBar(
         reason -> showFullScreenPanel(new com.rusefi.ui.wizard.FirmwareUpdateBlockedPanel(
-            reason, this::closeFullScreenPanel)));
+            reason, this::closeFullScreenPanel)), this::releaseSplashConnection);
     private final StatusPanel tuneStatusPanel = new StatusPanel(250);
     private final SingleAsyncJobExecutor asyncJobExecutor = new SingleAsyncJobExecutor(
         job -> job instanceof ImportTuneJob ? tuneStatusPanel : firmwareStatusPanel);
@@ -168,7 +168,8 @@ public class StartupFrame {
         // is free for the exclusive operation.
         asyncJobExecutor.addOnJobAboutToStartListener(() -> SwingUtilities.invokeLater(() ->
             setStartupFirmwareUpdateInProgress(isFirmwareOperationInProgress())));
-        asyncJobExecutor.addOnJobAboutToStartListener(this::releaseSplashConnection);
+        asyncJobExecutor.addOnJobAboutToStartListener(() -> asyncJobExecutor.getJobInProgress()
+            .ifPresent(job -> prepareSplashForJob(job, this::releaseSplashConnection)));
         asyncJobExecutor.addOnJobInProgressFinishedListener(this::onLiveConnectionJobFinished);
         asyncJobExecutor.addOnJobInProgressFinishedListener(() -> SwingUtilities.invokeLater(() ->
             setStartupFirmwareUpdateInProgress(false)));
@@ -898,6 +899,16 @@ public class StartupFrame {
      * Flip the root {@link CardLayout}. The frame stays fixed-maximized (#9715), so we relayout
      * the content in place rather than packing/resizing the window.
      */
+    private void showFullScreenPanel(JComponent panel) {
+        rollbackPicker.removeAll();
+        rollbackPicker.add(panel, BorderLayout.CENTER);
+        showCard(CARD_ROLLBACK);
+    }
+
+    private void closeFullScreenPanel() {
+        showCard(CARD_STARTUP);
+    }
+
     private void showCard(String name) {
         CardLayout cl = (CardLayout) rootContent.getLayout();
         cl.show(rootContent, name);
@@ -1023,6 +1034,14 @@ public class StartupFrame {
      *   <li>Any other job: close the LM so the port is released for the job's own connection.</li>
      * </ul>
      */
+    static void prepareSplashForJob(AsyncJob job, Runnable releaseConnection) {
+        // Automatic firmware jobs must pass eligibility before replacing the live splash listeners.
+        if (job instanceof DfuAutoJob || job instanceof OpenBltAutoJob) {
+            return;
+        }
+        releaseConnection.run();
+    }
+
     private void releaseSplashConnection() {
         if (autoConnectedPort == null) return;
         log.info("Releasing splash auto-connection before async job");
