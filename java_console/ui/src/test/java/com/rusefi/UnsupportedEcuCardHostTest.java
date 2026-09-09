@@ -1,21 +1,77 @@
 package com.rusefi;
 
+import com.opensr5.ConfigurationImageMeta;
+import com.opensr5.ConfigurationImageWithMeta;
+import com.opensr5.ini.IniFileModel;
+import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.binaryprotocol.IncomingDataBuffer;
+import com.rusefi.binaryprotocol.IniFileProvider;
+import com.rusefi.core.SignatureHelper;
 import com.rusefi.core.io.UnsupportedEcuInfo;
 import com.rusefi.core.RusEfiSignature;
+import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
+import com.rusefi.io.UpdateOperationCallbacks;
+import com.rusefi.maintenance.CalibrationsHelper;
+import com.rusefi.maintenance.CalibrationsInfo;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
 import java.awt.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
 public class UnsupportedEcuCardHostTest {
     private static final String PORT = "COM7";
+
+    @Test
+    public void cachedIniDateMustNotChangeLiveBootloaderIdentity() throws Exception {
+        String liveSignature = "rusEFI lts-25kansas.2026.06.27.proteus_f7.12345";
+        String cachedSignature = "rusEFI lts-25kansas.2026.06.24.proteus_f7.12345";
+        IniFileModel ini = mock(IniFileModel.class, RETURNS_DEEP_STUBS);
+        when(ini.getSignature()).thenReturn(cachedSignature);
+        when(ini.getMetaInfo().getSignature()).thenReturn(cachedSignature);
+        when(ini.getMetaInfo().getPageSize(0)).thenReturn(16);
+        when(ini.getMetaInfo().getnPages()).thenReturn(2);
+        when(ini.getMetaInfo().getPageIdentifier(1)).thenReturn(0x0400);
+        when(ini.getMetaInfo().getPageSize(1)).thenReturn(8);
+        BinaryProtocol bp = mock(BinaryProtocol.class);
+        IoStream stream = mock(IoStream.class);
+        IncomingDataBuffer buffer = mock(IncomingDataBuffer.class);
+        when(bp.getStream()).thenReturn(stream);
+        when(stream.getDataBuffer()).thenReturn(buffer);
+        when(buffer.getPacket("[hello]")).thenReturn(("\u0000" + liveSignature + "\u0000").getBytes(StandardCharsets.US_ASCII));
+        when(bp.readFullImageFromController(any(ConfigurationImageMeta.class))).thenAnswer(call ->
+            new ConfigurationImageWithMeta(call.getArgument(0), new byte[16]));
+        when(bp.readFromPage(0x0400, 0, 8)).thenReturn(new byte[8]);
+        IniFileProvider previousProvider = BinaryProtocol.iniFileProvider;
+        CalibrationsInfo calibrations;
+        try {
+            BinaryProtocol.iniFileProvider = signature -> ini;
+            calibrations = CalibrationsHelper.readCurrentCalibrations(bp, UpdateOperationCallbacks.DUMMY).orElseThrow();
+        } finally {
+            BinaryProtocol.iniFileProvider = previousProvider;
+        }
+        FakePortScanner scanner = new FakePortScanner();
+        UnsupportedEcuCardHost host = createHost(scanner, new LinkManager());
+        PortResult detected = new PortResult(PORT, SerialPortType.EcuWithOpenblt, calibrations);
+        scanner.fireHardwareChange(hardware(detected));
+        host.onCompatibleEcu(PORT, SignatureHelper.parse(liveSignature));
+        flushEdt();
+
+        // A delayed wizard exit must not lose BL detection just because the cached INI is older.
+        assertEquals(liveSignature + "\u0000", calibrations.getImage().getMeta().getEcuSignature());
+        assertEquals(liveSignature + "\u0000", calibrations.getPage(0x0400).getMeta().getEcuSignature());
+        assertEquals(0, scanner.cachedPorts.size());
+        assertEquals(SerialPortType.EcuWithOpenblt, scanner.getCurrentHardware().getKnownPorts().get(0).type);
+    }
 
     @Test
     public void unsupportedAlwaysBlocksUntilThatPortIsResolved() throws Exception {
