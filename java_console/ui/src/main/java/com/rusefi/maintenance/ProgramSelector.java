@@ -398,6 +398,10 @@ public class ProgramSelector {
         @Nullable String firmwareSrecFile,
         CalibrationsHelper.FirmwareUpdatePolicy policy
     ) {
+        // Also protect callers that invoke this API without an OpenBltAutoJob.
+        if (!FirmwareFlashEligibility.isAllowed(bp == null ? null : bp.signature, firmwareSrecFile, callbacks)) {
+            return false;
+        }
         return updateFirmwareAndRestorePreviousCalibrations(
             parent, ecuPort, bp, lm, callbacks,
             () -> bltUpdateFirmware(parent, ecuPort, callbacks, connectivityContext, firmwareSrecFile),
