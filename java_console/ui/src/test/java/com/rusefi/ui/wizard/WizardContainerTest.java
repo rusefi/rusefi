@@ -11,6 +11,8 @@ import com.rusefi.ui.UIContext;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -155,6 +157,28 @@ public class WizardContainerTest {
                 container.startSingleStep(new StubStep());
                 assertFalse(container.isProgressVisibleForTests());
             }
+        });
+    }
+
+    @Test
+    public void singleStepExitActionLayout() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            WizardContainer container = new WizardContainer(new UIContext());
+            container.startSingleStep(new StubStep());
+
+            assertEquals(FlowLayout.CENTER, container.getExitPanelAlignmentForTests());
+            assertEquals(BorderLayout.CENTER, container.getExitPanelConstraintForTests());
+        });
+    }
+
+    @Test
+    public void fullWizardRestoresExitActionLayoutAfterSingleStep() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            WizardContainer container = new WizardContainer(new UIContext());
+            container.startSingleStep(new StubStep());
+            container.startWizard(true);
+            assertEquals(FlowLayout.RIGHT, container.getExitPanelAlignmentForTests());
+            assertEquals(BorderLayout.EAST, container.getExitPanelConstraintForTests());
         });
     }
 

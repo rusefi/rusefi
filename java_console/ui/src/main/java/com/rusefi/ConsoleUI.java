@@ -276,12 +276,9 @@ public class ConsoleUI {
                 // Don't stomp on an already-visible wizard
                 if (wizardContainer.isShowing()) return;
 
-                for (WizardStepDescriptor d : WizardCatalog.standaloneAutoLaunch()) {
-                    if (!d.applicable.test(uiContext)) continue;
-                    if (d.needsAttention == null || !d.needsAttention.test(uiContext)) continue;
-                    WizardStep step = d.factory.apply(uiContext);
-                    wizardContainer.startSingleStep(step);
+                if (showStandaloneWizard(uiContext, wizardContainer, () -> {
                     rootCardLayout.show(rootPanel, "wizard");
+                })) {
                     return;
                 }
 
@@ -566,6 +563,25 @@ console live data tab is broken #8402
 
         unsupportedEcuHost.setNormalContent(rootPanel);
         mainFrame.getFrame().showFrame(unsupportedEcuHost.getContent());
+    }
+
+    static boolean showStandaloneWizard(UIContext uiContext, WizardContainer wizardContainer, Runnable showWizard) {
+        for (WizardStepDescriptor d : WizardCatalog.standaloneAutoLaunch()) {
+            if (!d.applicable.test(uiContext)) {
+                continue;
+            }
+            if (d.needsAttention == null || !d.needsAttention.test(uiContext)) {
+                continue;
+            }
+            if (uiContext.shouldSkipStandaloneWizard(d)) {
+                continue;
+            }
+            WizardStep step = d.factory.apply(uiContext);
+            wizardContainer.startSingleStep(step);
+            showWizard.run();
+            return true;
+        }
+        return false;
     }
 
     private @NotNull JButton getLaunchWizardButton(JPanel rootPanel, WizardContainer wizardContainer, CardLayout rootCardLayout) {
