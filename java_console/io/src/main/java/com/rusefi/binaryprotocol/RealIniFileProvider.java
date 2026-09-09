@@ -8,9 +8,11 @@ import com.rusefi.ui.StatusConsumer;
 import com.rusefi.ini.reader.IniFileReaderUtil;
 import com.rusefi.ini.reader.IniParsingException;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -56,6 +58,27 @@ public class RealIniFileProvider implements IniFileProvider {
         this.statusConsumer = statusConsumer;
     }
 
+    /**
+     * @return .ini copied from TunerStudio's cache into ours (so the next connect is a plain cache
+     * hit), the TunerStudio file itself if the copy failed, or null if TunerStudio does not have it
+     */
+    @Nullable
+    private static String importFromTunerStudioCache(String signature) {
+        String tsIniFile = PrimeTunerStudioCache.findInTunerStudioCache(signature);
+        if (tsIniFile == null) {
+            return null;
+        }
+        try {
+            String imported = SignatureHelper.importIntoCache(signature, new File(tsIniFile));
+            if (imported != null) {
+                return imported;
+            }
+        } catch (IOException e) {
+            log.warn("Failed to import " + tsIniFile + " into local cache: " + e);
+        }
+        return tsIniFile;
+    }
+
     @Override
     @NotNull
     public IniFileModel provide(String signature) throws IniNotFoundException {
@@ -68,6 +91,11 @@ public class RealIniFileProvider implements IniFileProvider {
         if (localIniFile == null) {
             // 3. Cache or download from server
             localIniFile = SignatureHelper.downloadIfNotAvailable(SignatureHelper.getUrl(signature));
+        }
+        if (localIniFile == null) {
+            // 4. TunerStudio's own ecuDef cache: the server may not have this build (custom board,
+            // local compile) while TunerStudio has already loaded its .ini
+            localIniFile = importFromTunerStudioCache(signature);
         }
         ManualIniPicker picker = manualPicker;
         if (localIniFile == null) {
