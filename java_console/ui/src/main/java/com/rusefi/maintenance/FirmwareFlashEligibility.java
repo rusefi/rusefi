@@ -27,11 +27,11 @@ public final class FirmwareFlashEligibility {
             BundleInfo destination = resolveDestination(firmwareSrecFile, BundleUtil.readBundleFullNameNotNull());
             rejection = Objects.requireNonNull(policy.get().getRejectionReason(currentSignature, destination));
         } catch (RuntimeException e) {
-            callbacks.logLine("Unable to verify firmware flashing eligibility: " + e.getMessage());
+            callbacks.firmwareUpdateBlocked("Unable to verify firmware flashing eligibility: " + e.getMessage());
             return false;
         }
         if (rejection.isPresent()) {
-            callbacks.logLine(rejection.get());
+            callbacks.firmwareUpdateBlocked(rejection.get());
             return false;
         }
         return true;

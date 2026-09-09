@@ -66,6 +66,11 @@ public class SingleAsyncJobExecutor implements com.rusefi.DeviceSessionManager.J
             }
 
             @Override
+            public void firmwareUpdateBlocked(String reason) {
+                delegate.firmwareUpdateBlocked(reason);
+            }
+
+            @Override
             public void warning() {
                 delegate.warning();
             }

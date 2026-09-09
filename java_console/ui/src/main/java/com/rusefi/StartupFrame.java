@@ -123,7 +123,9 @@ public class StartupFrame {
     private ProgramSelector selector;
     private boolean firstTimeAutoConnect = true;
 
-    private final StatusPanelWithProgressBar firmwareStatusPanel = new StatusPanelWithProgressBar();
+    private final StatusPanelWithProgressBar firmwareStatusPanel = new StatusPanelWithProgressBar(
+        reason -> showFullScreenPanel(new com.rusefi.ui.wizard.FirmwareUpdateBlockedPanel(
+            reason, this::closeFullScreenPanel)));
     private final StatusPanel tuneStatusPanel = new StatusPanel(250);
     private final SingleAsyncJobExecutor asyncJobExecutor = new SingleAsyncJobExecutor(
         job -> job instanceof ImportTuneJob ? tuneStatusPanel : firmwareStatusPanel);
