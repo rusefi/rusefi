@@ -7,6 +7,7 @@ import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.ProgramSelector;
 import com.rusefi.maintenance.CalibrationsHelper;
+import com.rusefi.maintenance.FirmwareFlashEligibility;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -34,6 +35,11 @@ public class OpenBltAutoJob extends AbstractAutoFlashJob {
             port, parent, connectivityContext, linkManager);
         this.firmwareSrecFile = firmwareSrecFile;
         this.policy = policy;
+    }
+
+    @Override
+    protected boolean isFlashAllowed(final BinaryProtocol bp, final UpdateOperationCallbacks callbacks) {
+        return FirmwareFlashEligibility.isAllowed(bp.signature, firmwareSrecFile, callbacks);
     }
 
     @Override
