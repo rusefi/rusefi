@@ -315,6 +315,33 @@ public class AbstractAutoFlashJobAwaitEcuPortTest {
     }
 
     @Test
+    public void failedHandoffPreparationReportsErrorAndCompletesWithoutFlashing() {
+        LinkManager lm = mock(LinkManager.class);
+        when(lm.getBinaryProtocol()).thenReturn(mock(BinaryProtocol.class));
+        UpdateOperationCallbacks callbacks = mock(UpdateOperationCallbacks.class);
+        org.mockito.Mockito.doThrow(new IllegalStateException("UI preparation failed"))
+            .when(callbacks).firmwareHandoffStarted();
+        Runnable completion = mock(Runnable.class);
+        AbstractAutoFlashJob job = new AbstractAutoFlashJob("test", ecu("COM_OLD"), null,
+            new ConnectivityContext(scanner), lm) {
+            @Override
+            protected boolean flash(LinkManager link, BinaryProtocol bp, UpdateOperationCallbacks cb) {
+                throw new AssertionError("Must not flash after failed handoff preparation");
+            }
+        };
+
+        job.doJob(callbacks, completion);
+
+        verify(callbacks).logLine("Unable to prepare firmware handoff: UI preparation failed");
+        verify(callbacks).error();
+        verify(callbacks, never()).done();
+        verify(completion).run();
+        verify(lm, never()).disconnect();
+        verify(lm, never()).reconnect(anyString());
+        verify(lm, never()).allowAutomaticReconnect();
+    }
+
+    @Test
     public void failedRecoveryReenablesAutomaticReconnectBeforeCompletion() {
         LinkManager linkManager = new LinkManager().setNotifyGlobalStatusOnClose(false);
         linkManager.setBinaryProtocolForTests(mock(BinaryProtocol.class));
