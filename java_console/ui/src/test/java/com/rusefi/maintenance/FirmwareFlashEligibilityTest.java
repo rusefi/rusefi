@@ -69,7 +69,7 @@ public class FirmwareFlashEligibilityTest {
             UpdateOperationCallbacks callbacks = mock(UpdateOperationCallbacks.class);
             assertFalse(FirmwareFlashEligibility.isAllowed("running signature",
                 "rusefi_lts-test_2026-09-09_test_board_123_hash_update.srec", callbacks));
-            verify(callbacks).logLine("running signature -> lts-test");
+            verify(callbacks).firmwareUpdateBlocked("running signature -> lts-test");
         });
     }
 
@@ -107,7 +107,7 @@ public class FirmwareFlashEligibilityTest {
 
                 verifyNoMoreInteractions(lm);
                 verifyNoInteractions(bp, connectivity);
-                verify(callbacks).logLine("running signature -> lts-test");
+                verify(callbacks).firmwareUpdateBlocked("running signature -> lts-test");
             }
         });
     }
@@ -116,7 +116,7 @@ public class FirmwareFlashEligibilityTest {
         withProviders(providers, () -> {
             UpdateOperationCallbacks callbacks = mock(UpdateOperationCallbacks.class);
             assertFalse(FirmwareFlashEligibility.isAllowed(null, null, callbacks));
-            verify(callbacks).logLine(startsWith("Unable to verify firmware flashing eligibility:"));
+            verify(callbacks).firmwareUpdateBlocked(startsWith("Unable to verify firmware flashing eligibility:"));
         });
     }
 
