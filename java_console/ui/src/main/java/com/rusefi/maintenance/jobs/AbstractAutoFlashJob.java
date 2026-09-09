@@ -44,6 +44,10 @@ abstract class AbstractAutoFlashJob extends AsyncJobWithContext<SerialPortWithPa
 
     protected abstract boolean flash(LinkManager lm, BinaryProtocol bp, UpdateOperationCallbacks callbacks);
 
+    protected boolean isFlashAllowed(BinaryProtocol bp, UpdateOperationCallbacks callbacks) {
+        return true;
+    }
+
     @Override
     public void doJob(final UpdateOperationCallbacks callbacks, final Runnable onJobFinished) {
         final LinkManager lm = linkManager;
@@ -57,6 +61,10 @@ abstract class AbstractAutoFlashJob extends AsyncJobWithContext<SerialPortWithPa
             final BinaryProtocol bp = JobHelper.awaitBinaryProtocol(lm, callbacks);
             if (bp == null) {
                 callbacks.logLine("Timed out waiting for connection.");
+                callbacks.error();
+                return;
+            }
+            if (!isFlashAllowed(bp, callbacks)) {
                 callbacks.error();
                 return;
             }
