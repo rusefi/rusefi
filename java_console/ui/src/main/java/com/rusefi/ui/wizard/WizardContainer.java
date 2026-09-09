@@ -33,6 +33,8 @@ public class WizardContainer extends JPanel {
     private final JPanel stepContentPanel = new JPanel(new CardLayout());
     private final JButton cancelButton = new JButton("Exit Wizard");
     private final JButton dontShowAgainButton = new JButton("Don't Show Again");
+    private final JPanel exitPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, WizardStyle.GAP, 0));
+    private final JPanel footerPanel = new JPanel(new BorderLayout());
     private final List<WizardStep> steps = new ArrayList<>();
     private final List<Integer> visibleCatalogIndices = new ArrayList<>();
 
@@ -87,7 +89,6 @@ public class WizardContainer extends JPanel {
             }
             exitWizard();
         });
-        JPanel exitPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, WizardStyle.GAP, 0));
         exitPanel.setBorder(BorderFactory.createEmptyBorder(
             WizardStyle.GAP, WizardStyle.LARGE_GAP, WizardStyle.LARGE_GAP, WizardStyle.LARGE_GAP));
         exitPanel.add(cancelButton);
@@ -102,7 +103,6 @@ public class WizardContainer extends JPanel {
         // Debug panel at the bottom showing wizard flag states
         buildDebugPanel();
         debugPanel.setVisible(false);
-        JPanel footerPanel = new JPanel(new BorderLayout());
         footerPanel.add(debugPanel, BorderLayout.CENTER);
         footerPanel.add(exitPanel, BorderLayout.EAST);
         add(footerPanel, BorderLayout.SOUTH);
@@ -211,6 +211,7 @@ public class WizardContainer extends JPanel {
     }
 
     public void startWizard(boolean autoLaunch) {
+        configureExitLayout(false);
         configureExitButtons(autoLaunch);
         hideCurrentStep();
         currentStepIndex = 0;
@@ -344,6 +345,7 @@ public class WizardContainer extends JPanel {
      * satisfied), the wizard auto-exits. Used for targeted prompts like an empty-VIN auto-launch.
      */
     public void startSingleStep(WizardStep step) {
+        configureExitLayout(true);
         configureExitButtons(false);
         hideCurrentStep();
         currentStepIndex = 0;
@@ -401,6 +403,13 @@ public class WizardContainer extends JPanel {
         List<Integer> visibleIndices = findVisibleCatalogIndices(
             uiContext, uiContext.iniFileState.getIniFileModel());
         return findFirstIncomplete(visibleIndices, this::isStepSatisfied) >= 0;
+    }
+
+    private void configureExitLayout(boolean singleStep) {
+        footerPanel.removeAll();
+        ((FlowLayout) exitPanel.getLayout()).setAlignment(singleStep ? FlowLayout.CENTER : FlowLayout.RIGHT);
+        footerPanel.add(debugPanel, singleStep ? BorderLayout.NORTH : BorderLayout.CENTER);
+        footerPanel.add(exitPanel, singleStep ? BorderLayout.CENTER : BorderLayout.EAST);
     }
 
     private void configureExitButtons(boolean autoLaunch) {
@@ -687,6 +696,14 @@ public class WizardContainer extends JPanel {
 
     boolean isDontShowAgainVisibleForTests() {
         return dontShowAgainButton.isVisible();
+    }
+
+    int getExitPanelAlignmentForTests() {
+        return ((FlowLayout) exitPanel.getLayout()).getAlignment();
+    }
+
+    Object getExitPanelConstraintForTests() {
+        return ((BorderLayout) footerPanel.getLayout()).getConstraints(exitPanel);
     }
 
     void clickDontShowAgainForTests() {

@@ -489,9 +489,6 @@ public class StartupFrame {
         tuneManagementTab.onHardwareUpdated(connectivityContext.getCurrentHardware());
 
         wizardContainer = new WizardContainer(uiContext, /*compact=*/true);
-        wizardContainer.setOnWizardExit(() -> {
-            showCard(CARD_STARTUP);
-        });
         rootContent.add(outerTabs, CARD_STARTUP);
         rootContent.add(wizardContainer, CARD_WIZARD);
         rootContent.add(rollbackPicker, CARD_ROLLBACK);
@@ -923,6 +920,9 @@ public class StartupFrame {
     }
 
     private void onSplashConnected(PortResult target) {
+        if (isProceeding && !offlineConsoleOpen) {
+            return;
+        }
         if (autoConnectedPort == null || !autoConnectedPort.port.equals(target.port)) {
             // User cancelled or moved on — ignore the late event.
             return;
@@ -963,16 +963,50 @@ public class StartupFrame {
 
         maybeAutoCreateTsProject(target);
 
-        // Check standalone wizard catalog for any step that needs attention on this ECU.
+        continueAfterSplashConnection(uiContext, wizardContainer,
+            () -> showCard(CARD_WIZARD), () -> showCard(CARD_STARTUP),
+            () -> {
+                if (isProceeding) {
+                    return;
+                }
+                if (isAutoConnected(target)) {
+                    connect(target);
+                } else {
+                    showCard(CARD_STARTUP);
+                }
+            });
+    }
+
+    // Kept independent of the frame so the startup wizard handoff can be tested headlessly.
+    static void continueAfterSplashConnection(UIContext uiContext, WizardContainer wizardContainer,
+                                              Runnable showWizard, Runnable showStartup, Runnable connect) {
+        BinaryProtocol connectedProtocol = uiContext.getBinaryProtocol();
+        wizardContainer.setOnWizardExit(() -> {
+            // Skip and successful save both resume the interrupted handoff, without
+            // rechecking the catalog (a skipped field is deliberately still empty).
+            // An exit followed by a queued save completion must not hand off twice.
+            wizardContainer.setOnWizardExit(null);
+            if (ConnectionStatusLogic.INSTANCE.isConnected()
+                && connectedProtocol != null
+                && uiContext.getBinaryProtocol() == connectedProtocol
+                && connectedProtocol.getControllerConfiguration() != null) {
+                connect.run();
+            } else {
+                showStartup.run();
+            }
+        });
         for (WizardStepDescriptor d : WizardCatalog.standaloneAutoLaunch()) {
             if (!d.applicable.test(uiContext)) continue;
             if (d.needsAttention == null || !d.needsAttention.test(uiContext)) continue;
+            if (uiContext.shouldSkipStandaloneWizard(d)) {
+                continue;
+            }
             WizardStep step = d.factory.apply(uiContext);
             wizardContainer.startSingleStep(step);
-            showCard(CARD_WIZARD);
+            showWizard.run();
             return;
         }
-        connect(target);
+        connect.run();
     }
 
     private void maybeAutoCreateTsProject(PortResult target) {
@@ -1118,6 +1152,10 @@ public class StartupFrame {
      * on the next scanner tick and the user can manually pick a port or wait for ECU B.
      */
     private void onSplashDisconnected() {
+        // A status event may already be queued when the wizard hands off the frame.
+        if (isProceeding && !offlineConsoleOpen) {
+            return;
+        }
         if (splashListener != null) {
             ConnectionStatusLogic.INSTANCE.removeListener(splashListener);
             splashListener = null;
