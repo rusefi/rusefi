@@ -822,7 +822,9 @@ public class CalibrationsHelper {
             Objects.requireNonNull(iniFile);
             final int pageSize = iniFile.getMetaInfo().getPageSize(0);
             callbacks.logLine(String.format("Page size is %d", pageSize));
-            final ConfigurationImageMetaVersion0_0 meta = ConfigurationImageMetaVersion0_0.getMeta(iniFile);
+            // A cached INI can describe this layout while carrying an older firmware date.
+            // Preserve the live identity, also used by port compatibility/bootloader tracking.
+            final ConfigurationImageMetaVersion0_0 meta = new ConfigurationImageMetaVersion0_0(pageSize, signature);
             callbacks.logLine("Reading current calibrations...");
             final ConfigurationImageWithMeta image = binaryProtocol.readFullImageFromController(meta);
             final Map<Integer, ConfigurationImageWithMeta> pages = new TreeMap<>();
@@ -843,7 +845,7 @@ public class CalibrationsHelper {
                 pages.put(
                     pageIdentifier,
                     new ConfigurationImageWithMeta(
-                        new ConfigurationImageMetaVersion0_0(secondaryPageSize, iniFile.getSignature()),
+                        new ConfigurationImageMetaVersion0_0(secondaryPageSize, signature),
                         content
                     )
                 );
