@@ -17,6 +17,11 @@ public interface UpdateOperationCallbacks extends StatusConsumer {
     void warning();
     void error();
 
+    /** Reports a pre-handoff rejection. UI clients may prominently display the reason. */
+    default void firmwareUpdateBlocked(String reason) {
+        logLine(reason);
+    }
+
     void clear();
 
     UpdateOperationCallbacks DUMMY = new UpdateOperationCallbacks() {
