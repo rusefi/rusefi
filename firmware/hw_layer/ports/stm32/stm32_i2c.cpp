@@ -50,6 +50,47 @@ static int getI2cAf(I2CDriver *driver) {
 }
 
 // Defaults
+#if defined(STM32F7)
+/* TODO: calculate real values! */
+static const I2CConfig i2cfgs[] =
+{
+	[i2c_speed_e::I2C_SPEED_100K] = {
+		.timingr	 = STM32_TIMINGR_PRESC(15U) | STM32_TIMINGR_SCLDEL(4U) |
+					   STM32_TIMINGR_SDADEL(2U) | STM32_TIMINGR_SCLH(15U) |
+					   STM32_TIMINGR_SCLL(21U),
+		.cr1		 = 0,
+		.cr2		 = 0
+	},
+	[i2c_speed_e::I2C_SPEED_400K] = {
+		.timingr	 = STM32_TIMINGR_PRESC(15U) | STM32_TIMINGR_SCLDEL(4U) |
+					   STM32_TIMINGR_SDADEL(2U) | STM32_TIMINGR_SCLH(15U) |
+					   STM32_TIMINGR_SCLL(21U),
+		.cr1		 = 0,
+		.cr2		 = 0
+	},
+	[i2c_speed_e::I2C_SPEED_1M] = {
+		.timingr	 = STM32_TIMINGR_PRESC(15U) | STM32_TIMINGR_SCLDEL(4U) |
+					   STM32_TIMINGR_SDADEL(2U) | STM32_TIMINGR_SCLH(15U) |
+					   STM32_TIMINGR_SCLL(21U),
+		.cr1		 = 0,
+		.cr2		 = 0
+	},
+	[i2c_speed_e::I2C_SPEED_3p4M] = {
+		.timingr	 = STM32_TIMINGR_PRESC(15U) | STM32_TIMINGR_SCLDEL(4U) |
+					   STM32_TIMINGR_SDADEL(2U) | STM32_TIMINGR_SCLH(15U) |
+					   STM32_TIMINGR_SCLL(21U),
+		.cr1		 = 0,
+		.cr2		 = 0
+	},
+	[i2c_speed_e::I2C_SPEED_5M] = {
+		.timingr	 = STM32_TIMINGR_PRESC(15U) | STM32_TIMINGR_SCLDEL(4U) |
+					   STM32_TIMINGR_SDADEL(2U) | STM32_TIMINGR_SCLH(15U) |
+					   STM32_TIMINGR_SCLL(21U),
+		.cr1		 = 0,
+		.cr2		 = 0
+	}
+};
+#else
 static const I2CConfig i2cfgs[] =
 {
 	[i2c_speed_e::I2C_SPEED_100K] = {
@@ -78,6 +119,7 @@ static const I2CConfig i2cfgs[] =
 		.duty_cycle  = FAST_DUTY_CYCLE_2,
 	}
 };
+#endif
 
 bool initI2cModule(I2CDriver *driver, brain_pin_e scl, brain_pin_e sda, i2c_speed_e speed) {
 	if (!isBrainPinValid(scl) || !isBrainPinValid(sda)) {
