@@ -493,7 +493,7 @@ pins:
   - pin: 81a
     class: analog_inputs
     ts_name: KNOCK
-    function: KNOCK sensor (other sensor pin goes to analog ground)
+    function: KNOCK sensor (other sensor pin goes to sensor/analog ground)
 
   - pin: 82a
     function: CAN bus High
