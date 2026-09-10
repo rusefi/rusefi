@@ -749,6 +749,14 @@ void setBoardConfigOverrides() {
   // time to force migration to custom_board_ConfigOverrides
 }
 
+i2c_config_s *getI2cCfg(i2c_bus_e device) {
+	if ((device == I2C_NONE) || (device > I2C_BUS_TOTAL_COUNT)) {
+		return nullptr;
+	}
+
+	return &engineConfiguration->i2c[device - 1];
+}
+
 #include "board_overrides.h"
 
 std::optional<setup_custom_hack_hellen_board_id_type> custom_board_hackHellenBoardId;

@@ -38,14 +38,6 @@ constexpr I2CDriver * getI2cDevice(i2c_bus_e device) {
 	}
 }
 
-i2c_config_s *getI2cCfg(i2c_bus_e device) {
-	if ((device == I2C_NONE) || (device > I2C_BUS_TOTAL_COUNT)) {
-		return nullptr;
-	}
-
-	return &engineConfiguration->i2c[device - 1];
-}
-
 brain_pin_e getSclPin(i2c_bus_e device) {
 	const i2c_config_s *cfg = getI2cCfg(device);
 	if (cfg != nullptr) {

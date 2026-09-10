@@ -14,7 +14,6 @@
 constexpr I2CDriver * getI2cDevice(i2c_bus_e i2cDevice);
 void turnOnI2c(i2c_bus_e device);
 
-i2c_config_s *getI2cCfg(i2c_bus_e device);
 brain_pin_e getSclPin(i2c_bus_e device);
 brain_pin_e getSdaPin(i2c_bus_e device);
 
