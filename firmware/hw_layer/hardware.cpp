@@ -368,11 +368,15 @@ void startHardware() {
 PUBLIC_API_WEAK void setPinConfigurationOverrides() { }
 
 #if HAL_USE_I2C
+#if defined(STM32F7)
+/* TODO: do we have F7 with eeprom? */
+#else
 const I2CConfig i2cfg = {
-    OPMODE_I2C,
-    400000,
-    FAST_DUTY_CYCLE_2,
+    .op_mode = OPMODE_I2C,
+    .clock_speed = 400000,
+    .duty_cycle = FAST_DUTY_CYCLE_2,
 };
+#endif
 #endif
 
 void initHardware() {
