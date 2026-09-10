@@ -24,6 +24,11 @@ Gpio getWarningLedPin() {
 	return Gpio::MMP176_LED4_YELLOW;
 }
 
+static void premiumQuickTestConfigOverrides() {
+	setHellenEnPin(Gpio::G6); // OUT_PWR_EN
+	setHellenVbatt();
+}
+
 static void premiumQuickTestDefaultConfiguration() {
 
 	// SPI2
@@ -145,6 +150,7 @@ void setup_custom_board_overrides() {
 	custom_board_preHalInit = premiumQuickTestPreHalInit;
 	custom_board_InitHardware = premiumQuickTestInitHardware;
 	custom_board_DefaultConfiguration = premiumQuickTestDefaultConfiguration;
+	custom_board_ConfigOverrides = premiumQuickTestConfigOverrides;
 }
 
 extern "C" {
