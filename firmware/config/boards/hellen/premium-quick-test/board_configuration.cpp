@@ -108,8 +108,14 @@ static void premiumQuickTestPreHalInitEthernet() {
 	palSetPad(GPIOE, 11);
 }
 
+static void premiumQuickTestPreHalInitCAN() {
+	efiSetPadMode("CAN STB", Gpio::H11, PAL_MODE_OUTPUT_PUSHPULL);
+	palClearPad(GPIOH, 11);
+}
+
 static void premiumQuickTestPreHalInit() {
 	premiumQuickTestPreHalInitEthernet();
+	premiumQuickTestPreHalInitCAN();
 
 	// On-module eMMC on 8-bit SDMMC2, AF11 for CK/CMD/D0/D1/D3 and AF10
 	// for the PB/PC data lines (see hellen_premium176_meta.h for the map)
@@ -140,6 +146,7 @@ extern "C" {
 
 void OpenBLT__early_init() {
 	premiumQuickTestPreHalInitEthernet();
+	premiumQuickTestPreHalInitCAN();
 }
 
 }
