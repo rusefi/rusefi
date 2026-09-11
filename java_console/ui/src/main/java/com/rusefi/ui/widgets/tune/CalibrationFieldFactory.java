@@ -29,8 +29,29 @@ import java.util.regex.Pattern;
  * @see CalibrationDialogWidget
  */
 public class CalibrationFieldFactory {
-    static final int MAX_COMBO_WIDTH = 360;
-    static final int MAX_LABEL_WIDTH = 300;
+    static final int MAX_FIELD_EDITOR_WIDTH = 360;
+    static final int MAX_LABEL_WIDTH = 360;
+
+    private static class CalibrationTextField extends JTextField {
+        private int fieldEditorWidth;
+
+        CalibrationTextField(String text, int columns) {
+            super(text, columns);
+        }
+
+        void setFieldEditorWidth(int fieldEditorWidth) {
+            this.fieldEditorWidth = fieldEditorWidth;
+        }
+
+        @Override
+        public Dimension getPreferredSize() {
+            Dimension size = super.getPreferredSize();
+            if (fieldEditorWidth > 0) {
+                size.width = fieldEditorWidth;
+            }
+            return size;
+        }
+    }
 
     // we need to maintain this in sync with the ones used on tunerstudio.template
     private static final String[][] CheckboxPairs = {
@@ -60,7 +81,7 @@ public class CalibrationFieldFactory {
 
     static JPanel createFieldRow(DialogModel.Field field, IniField iniField, ConfigurationImage ci,
                                  ConfigurationImage workingImage, Runnable onChange,
-                                 Consumer<String> onShowInPinout, int labelWidth, int comboWidth) {
+                                 Consumer<String> onShowInPinout, int labelWidth, int fieldEditorWidth) {
         JPanel row = createRowPanel();
         row.add(Box.createHorizontalStrut(10));
 
@@ -94,7 +115,7 @@ public class CalibrationFieldFactory {
                 value = () -> checkBox.isSelected() ? "enabled" : "disabled";
             } else {
                 JComboBox<String> comboBox = createComboBox(
-                    enumField, iniField, currentValue, workingImage, onChange, comboWidth);
+                    enumField, iniField, currentValue, workingImage, onChange, fieldEditorWidth);
                 row.add(comboBox);
                 value = () -> String.valueOf(comboBox.getSelectedItem());
                 JButton pinoutButton = createPinoutButton(comboBox, field.getKey(), onShowInPinout);
@@ -105,7 +126,8 @@ public class CalibrationFieldFactory {
             }
         } else {
             String currentValue = ci == null ? "" : ConfigurationImageGetterSetter.getStringValue(iniField, ci);
-            JTextField textField = createTextField(iniField, currentValue, workingImage, onChange);
+            JTextField textField = createTextField(
+                iniField, currentValue, workingImage, onChange, fieldEditorWidth);
             row.add(textField);
             value = textField::getText;
         }
@@ -181,7 +203,8 @@ public class CalibrationFieldFactory {
     }
 
     private static JComboBox<String> createComboBox(EnumIniField enumField, IniField iniField, String currentValue,
-                                                     ConfigurationImage workingImage, Runnable onChange, int comboWidth) {
+                                                     ConfigurationImage workingImage, Runnable onChange,
+                                                     int fieldEditorWidth) {
         String cleanValue = currentValue.replace("\"", "");
         String[] comboValues = getComboValues(enumField);
         JComboBox<String> comboBox = new JComboBox<>(comboValues);
@@ -190,9 +213,9 @@ public class CalibrationFieldFactory {
         comboBox.setToolTipText(cleanValue);
         applyBackgroundColor(comboBox, cleanValue);
         Dimension size = comboBox.getPreferredSize();
-        size.width = comboWidth > 0
-            ? Math.min(comboWidth, MAX_COMBO_WIDTH)
-            : Math.min(size.width, MAX_COMBO_WIDTH);
+        size.width = fieldEditorWidth > 0
+            ? Math.min(fieldEditorWidth, MAX_FIELD_EDITOR_WIDTH)
+            : Math.min(size.width, MAX_FIELD_EDITOR_WIDTH);
         comboBox.setMinimumSize(new Dimension(0, size.height));
         comboBox.setPreferredSize(size);
         comboBox.setMaximumSize(size);
@@ -208,10 +231,20 @@ public class CalibrationFieldFactory {
         return comboBox;
     }
 
-    static int getComboBoxPreferredWidth(EnumIniField enumField) {
-        JComboBox<String> comboBox = new JComboBox<>(getComboValues(enumField));
-        applyStyle(comboBox);
-        return Math.min(comboBox.getPreferredSize().width, MAX_COMBO_WIDTH);
+    static int getFieldEditorPreferredWidth(IniField iniField, String currentValue) {
+        JComponent editor;
+        if (iniField instanceof EnumIniField) {
+            EnumIniField enumField = (EnumIniField) iniField;
+            if (isCheckboxEnum(enumField)) {
+                return 0;
+            }
+            JComboBox<String> comboBox = new JComboBox<>(getComboValues(enumField));
+            applyStyle(comboBox);
+            editor = comboBox;
+        } else {
+            editor = createTextFieldComponent(iniField, currentValue);
+        }
+        return Math.min(editor.getPreferredSize().width, MAX_FIELD_EDITOR_WIDTH);
     }
 
     private static String[] getComboValues(EnumIniField enumField) {
@@ -263,12 +296,15 @@ public class CalibrationFieldFactory {
             ? null : value;
     }
 
-    private static JTextField createTextField(IniField iniField, String currentValue, ConfigurationImage workingImage, Runnable onChange) {
-        int columns = iniField instanceof StringIniField
-            ? Math.min(((StringIniField) iniField).getSize(), 32) : 0;
-        JTextField textField = new JTextField(currentValue, columns);
-        applyStyle(textField);
-        applyBackgroundColor(textField, currentValue);
+    private static JTextField createTextField(IniField iniField, String currentValue,
+                                              ConfigurationImage workingImage, Runnable onChange,
+                                              int fieldEditorWidth) {
+        CalibrationTextField textField = createTextFieldComponent(iniField, currentValue);
+        if (fieldEditorWidth > 0) {
+            textField.setFieldEditorWidth(Math.min(fieldEditorWidth, MAX_FIELD_EDITOR_WIDTH));
+            Dimension size = textField.getPreferredSize();
+            textField.setMinimumSize(new Dimension(0, size.height));
+        }
         textField.setMaximumSize(textField.getPreferredSize());
         textField.getDocument().addDocumentListener(new DocumentListener() {
             private void sync() {
@@ -296,6 +332,15 @@ public class CalibrationFieldFactory {
                 sync();
             }
         });
+        return textField;
+    }
+
+    private static CalibrationTextField createTextFieldComponent(IniField iniField, String currentValue) {
+        int columns = iniField instanceof StringIniField
+            ? Math.min(((StringIniField) iniField).getSize(), 32) : 0;
+        CalibrationTextField textField = new CalibrationTextField(currentValue, columns);
+        applyStyle(textField);
+        applyBackgroundColor(textField, currentValue);
         return textField;
     }
 
