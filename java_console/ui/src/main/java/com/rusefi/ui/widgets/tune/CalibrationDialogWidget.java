@@ -12,6 +12,7 @@ import com.opensr5.ini.TsStringFunction;
 import com.opensr5.ini.ReadoutModel;
 import com.opensr5.ini.PanelModel;
 import com.opensr5.ini.TableModel;
+import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
 import com.opensr5.ini.field.OrdinalOutOfRangeException;
 import com.rusefi.core.ISensorHolder;
@@ -190,7 +191,8 @@ public class CalibrationDialogWidget {
             applyLayout(contentPane, dialogModel.getLayoutHint());
             contentPane.setAlignmentX(Component.LEFT_ALIGNMENT);
             fillPanel(contentPane, dialogModel, iniFileModel, ci,
-                getFieldLabelWidth(dialogModel, iniFileModel, new HashSet<>()));
+                getFieldLabelWidth(dialogModel, iniFileModel, new HashSet<>()),
+                getFieldComboWidth(dialogModel, iniFileModel, new HashSet<>()));
 
             if (TriggerImageHelper.isTriggerPanel(dialogModel.getKey(), uiName)) {
                 addTriggerImage(contentPane, dialogModel.getKey(), uiName);
@@ -265,7 +267,7 @@ public class CalibrationDialogWidget {
     }
 
     private void fillPanel(JPanel container, DialogModel dialogModel, IniFileModel iniFileModel,
-                           ConfigurationImage ci, int fieldLabelWidth) {
+                           ConfigurationImage ci, int fieldLabelWidth, int fieldComboWidth) {
         Runnable notifyEdit = () -> { if (onConfigChange != null) onConfigChange.accept(workingImage); };
 
         List<DialogModel.DialogEntry> entries = dialogModel.getOrderedEntries();
@@ -300,7 +302,8 @@ public class CalibrationDialogWidget {
 
             switch (entry.kind) {
                 case FIELD:
-                    renderField(container, entry.getAs(DialogModel.Field.class), iniFileModel, ci, fieldLabelWidth);
+                    renderField(container, entry.getAs(DialogModel.Field.class), iniFileModel, ci,
+                        fieldLabelWidth, fieldComboWidth);
                     break;
                 case COMMAND:
                     container.add(CalibrationFieldFactory.createCommandRow(
@@ -315,7 +318,7 @@ public class CalibrationDialogWidget {
                     break;
                 case PANEL:
                     renderPanelEntry(container, entry.getAs(PanelModel.class), iniFileModel, ci,
-                            isBorderLayout, horizontalPanelRef, notifyEdit, fieldLabelWidth);
+                            isBorderLayout, horizontalPanelRef, notifyEdit, fieldLabelWidth, fieldComboWidth);
                     break;
             }
         }
@@ -348,8 +351,28 @@ public class CalibrationDialogWidget {
         return Math.min(width, CalibrationFieldFactory.MAX_LABEL_WIDTH);
     }
 
+    private static int getFieldComboWidth(DialogModel dialog, IniFileModel iniFileModel, Set<String> visited) {
+        if (dialog == null || !visited.add(dialog.getKey())) {
+            return 0;
+        }
+        int width = 0;
+        for (DialogModel.Field field : dialog.getFields()) {
+            Optional<IniField> iniField = iniFileModel.findIniField(field.getKey());
+            if (iniField.isPresent() && iniField.get() instanceof EnumIniField) {
+                EnumIniField enumField = (EnumIniField) iniField.get();
+                if (!CalibrationFieldFactory.isCheckboxEnum(enumField)) {
+                    width = Math.max(width, CalibrationFieldFactory.getComboBoxPreferredWidth(enumField));
+                }
+            }
+        }
+        for (PanelModel panel : dialog.getPanels()) {
+            width = Math.max(width, getFieldComboWidth(panel.resolveDialog(iniFileModel), iniFileModel, visited));
+        }
+        return width;
+    }
+
     private void renderField(JPanel container, DialogModel.Field field, IniFileModel iniFileModel,
-                             ConfigurationImage ci, int fieldLabelWidth) {
+                              ConfigurationImage ci, int fieldLabelWidth, int fieldComboWidth) {
         Runnable onChange = () -> {
             refreshExpressions();
             if ("trigger_type".equalsIgnoreCase(field.getKey()) ||
@@ -362,7 +385,8 @@ public class CalibrationDialogWidget {
         JPanel row = iniField.map(value -> {
             try {
                 return CalibrationFieldFactory.createFieldRow(
-                    field, value, ci, workingImage, onChange, onShowInPinout, fieldLabelWidth);
+                    field, value, ci, workingImage, onChange, onShowInPinout,
+                    fieldLabelWidth, fieldComboWidth);
             } catch (OrdinalOutOfRangeException e) {
                 log.warn("Skipping field " + field.getKey() + " with out-of-range ordinal: " + e.getMessage());
                 return CalibrationFieldFactory.createLabelRow(field);
@@ -482,8 +506,8 @@ public class CalibrationDialogWidget {
     }
 
     private void renderPanelEntry(JPanel container, PanelModel panel, IniFileModel iniFileModel, ConfigurationImage ci,
-                                  boolean isBorderLayout, JPanel[] horizontalPanelRef, Runnable notifyEdit,
-                                  int fieldLabelWidth) {
+                                   boolean isBorderLayout, JPanel[] horizontalPanelRef, Runnable notifyEdit,
+                                   int fieldLabelWidth, int fieldComboWidth) {
         String placement = panel.getPlacement();
 
         JPanel targetContainer;
@@ -554,7 +578,7 @@ public class CalibrationDialogWidget {
             panelWidget.setName(uiName);
             GradientTitleBorder.installBorder(uiName, panelWidget);
             fillPanel(panelWidget, subDialog, iniFileModel, ci,
-                Math.max(0, fieldLabelWidth - panelWidget.getInsets().left));
+                Math.max(0, fieldLabelWidth - panelWidget.getInsets().left), fieldComboWidth);
 
             if (TriggerImageHelper.isTriggerPanel(subDialog.getKey(), uiName) || "Sub Panel".equals(uiName)) {
                 addTriggerImage(panelWidget, subDialog.getKey(), uiName);

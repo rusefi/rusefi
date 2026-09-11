@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -479,6 +480,42 @@ public class CalibrationDialogWidgetTest {
         assertEquals(CalibrationFieldFactory.MAX_COMBO_WIDTH, combo.getPreferredSize().width);
         assertEquals(0, combo.getMinimumSize().width);
         assertEquals(longOption, combo.getToolTipText());
+    }
+
+    @Test
+    public void testComboEditorsShareWidth() {
+        IniFileModel iniFileModel = mock(IniFileModel.class);
+        when(iniFileModel.getCurves()).thenReturn(Collections.emptyMap());
+
+        Map<Integer, String> shortValues = new HashMap<>();
+        shortValues.put(0, "Off");
+        shortValues.put(1, "On");
+        EnumIniField shortField = new EnumIniField("short", 0, FieldType.INT8,
+            new EnumIniField.EnumKeyValueMap(shortValues), 0, 0);
+
+        Map<Integer, String> longValues = new HashMap<>();
+        longValues.put(0, "NONE");
+        longValues.put(1, "B18 VVT2 or Idle or Low Side output 2");
+        EnumIniField longField = new EnumIniField("long", 1, FieldType.INT8,
+            new EnumIniField.EnumKeyValueMap(longValues), 0, 0);
+
+        when(iniFileModel.findIniField("short")).thenReturn(java.util.Optional.of(shortField));
+        when(iniFileModel.findIniField("long")).thenReturn(java.util.Optional.of(longField));
+
+        DialogModel dialog = new DialogModel("main", "Main", Arrays.asList(
+            new DialogModel.Field("short", "Short"),
+            new DialogModel.Field("long", "Long")), Collections.emptyList());
+
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+        widget.update(dialog, iniFileModel, new ConfigurationImage(new byte[2]));
+
+        JComboBox<?> shortCombo = getComboBoxFromRow((JPanel) widget.getContentPane().getComponent(0));
+        JComboBox<?> longCombo = getComboBoxFromRow((JPanel) widget.getContentPane().getComponent(1));
+        assertNotNull(shortCombo);
+        assertNotNull(longCombo);
+        int expectedWidth = CalibrationFieldFactory.getComboBoxPreferredWidth(longField);
+        assertEquals(expectedWidth, shortCombo.getPreferredSize().width);
+        assertEquals(expectedWidth, longCombo.getPreferredSize().width);
     }
 
     @Test
