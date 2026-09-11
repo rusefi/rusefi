@@ -121,6 +121,25 @@ static const I2CConfig i2cfgs[] =
 };
 #endif
 
+I2CDriver *getI2cHwDriverOnPins(brain_pin_e scl, brain_pin_e sda)
+{
+	// TODO: fill this
+#if STM32_I2C_USE_I2C1
+#endif
+#if STM32_I2C_USE_I2C2
+	if (((scl == Gpio::B10) || (scl == Gpio::F1) || (scl == Gpio::H4)) &&
+		((sda == Gpio::B11) || (sda == Gpio::F0) || (sda == Gpio::H5))) {
+		return &I2CD2;
+	}
+#endif
+#if STM32_I2C_USE_I2C3
+#endif
+#if STM32_I2C_USE_I2C4
+#endif
+
+	return nullptr;
+}
+
 bool initI2cModule(I2CDriver *driver, brain_pin_e scl, brain_pin_e sda, i2c_speed_e speed) {
 	if (!isBrainPinValid(scl) || !isBrainPinValid(sda)) {
 		criticalError("I2C pins not valid");
