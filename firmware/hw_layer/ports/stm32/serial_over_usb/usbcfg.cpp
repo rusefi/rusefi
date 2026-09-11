@@ -698,7 +698,7 @@ static void usb_event(USBDriver *usbp, usbevent_t event) {
 
     for (size_t i = 0; i < NUM_CDC_INSTANCES; i++) {
       usbInitEndpointI(usbp, serusbcfg[i].bulk_in, &cdcDataEpConfig[i]);
-      if (serusbcfg[i].int_in != serusbcfg[0].int_in) {
+      if (i == 0 || serusbcfg[i].int_in != serusbcfg[0].int_in) {
         // See USB_CDC_INT_EP_HACK
         usbInitEndpointI(usbp, serusbcfg[i].int_in, &cdcInterruptEpConfig[i]);
       }
