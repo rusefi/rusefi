@@ -8,12 +8,44 @@
 #include "pch.h"
 #include "i2c.h"
 
+#include "i2c_bb.h"
+
+/* zero index is I2C_NONE */
+static i2cBus *i2cbuses[I2C_BUS_TOTAL_COUNT + 1];
+
 #if HAL_USE_I2C
 
 #include "stm32_i2c.h"
 
-/* zero index is I2C_NONE */
-bool isI2cInitialized[I2C_BUS_TOTAL_COUNT + 1] = { true, false, false, false, false };
+bool HardwareI2c::init(brain_pin_e scl, brain_pin_e sda, i2c_speed_e speed) {
+	m_driver = getI2cHwDriverOnPins(scl, sda);
+	if (m_driver == nullptr) {
+		return false;
+	}
+	m_sda = sda;
+	m_scl = scl;
+
+	return initI2cModule(m_driver, scl, sda, speed);
+}
+
+void HardwareI2c::deinit() {
+	deinitI2cModule(m_driver);
+
+	efiSetPadUnused(m_sda);
+	efiSetPadUnused(m_scl);
+}
+
+msg_t HardwareI2c::write(uint8_t addr, const uint8_t* data, size_t size) {
+	return i2cMasterTransmitTimeout(m_driver, addr, data, size, nullptr, 0, TIME_MS2I(10));
+}
+
+msg_t HardwareI2c::read(uint8_t addr, uint8_t* data, size_t size) {
+	return i2cMasterReceiveTimeout(m_driver, addr, data, size, TIME_MS2I(10));
+}
+
+msg_t HardwareI2c::writeRead(uint8_t addr, const uint8_t* writeData, size_t writeSize, uint8_t* readData, size_t readSize) {
+	return i2cMasterTransmitTimeout(m_driver, addr, writeData, writeSize, readData, readSize, TIME_MS2I(10));
+}
 
 constexpr I2CDriver * getI2cDevice(i2c_bus_e device) {
 	switch(device) {
@@ -38,6 +70,27 @@ constexpr I2CDriver * getI2cDevice(i2c_bus_e device) {
 	}
 }
 
+static HardwareI2c hardwareI2c[I2C_BUS_TOTAL_COUNT];
+
+/* try to start harware i2c on given pins */
+static i2cBus *initI2cHwBus(brain_pin_e scl, brain_pin_e sda, i2c_speed_e speed)
+{
+	for (size_t i = 0; i < efi::size(hardwareI2c); i++) {
+		HardwareI2c *i2c = &hardwareI2c[i];
+		if (!i2c->isInitialized()) {
+			if (i2c->init(scl, sda, speed)) {
+				return i2c;
+			}
+		}
+	}
+
+	return nullptr;
+}
+
+#endif // HAL_USE_I2C
+
+static BitbangI2c bbI2c[I2C_BUS_TOTAL_COUNT];
+
 brain_pin_e getSclPin(i2c_bus_e device) {
 	const i2c_config_s *cfg = getI2cCfg(device);
 	if (cfg != nullptr) {
@@ -56,12 +109,13 @@ brain_pin_e getSdaPin(i2c_bus_e device) {
 	return Gpio::Unassigned;
 }
 
-void turnOnI2c(i2c_bus_e device) {
-	if (isI2cInitialized[device]) {
+void turnOnI2c(i2c_bus_e n) {
+	/* already inited */
+	if (i2cbuses[n]) {
 		return;
 	}
 
-	const i2c_config_s *cfg = getI2cCfg(device);
+	const i2c_config_s *cfg = getI2cCfg(n);
 	if (cfg == nullptr) {
 		return;
 	}
@@ -71,9 +125,21 @@ void turnOnI2c(i2c_bus_e device) {
 		return;
 	}
 
-	I2CDriver *driver = getI2cDevice(device);
-	if (driver) {
-		isI2cInitialized[device] = initI2cModule(driver, cfg->sclPin, cfg->sdaPin, cfg->speed);
+	i2cBus *bus = nullptr;
+
+#if HAL_USE_I2C
+	/* try hardware first */
+	bus = initI2cHwBus(cfg->sclPin, cfg->sdaPin, cfg->speed);
+	if (bus) {
+		i2cbuses[n] = bus;
+	}
+#endif
+	if (bus == nullptr) {
+		/* fallback to bitbang */
+		bus = &bbI2c[n - I2C_BUS_1];
+		if (bus->init(cfg->sclPin, cfg->sdaPin, cfg->speed)) {
+			i2cbuses[n] = bus;
+		}
 	}
 }
 
@@ -85,19 +151,38 @@ void unlockI2c(i2c_bus_e device) {
 	i2cReleaseBus(getI2cDevice(device));
 }
 
-void stopI2c(i2c_bus_e device) {
-	if (!isI2cInitialized[device]) {
+void stopI2c(i2c_bus_e n) {
+	if (!i2cbuses[n]) {
 		return; // not turned on
 	}
 
-	I2CDriver *driver = getI2cDevice(device);
-	if (driver) {
-		deinitI2cModule(driver);
+	i2cbuses[n]->deinit();
+	i2cbuses[n] = nullptr;
+}
+
+i2cBus *getI2cBus(i2c_bus_e n) {
+	if ((n == I2C_NONE) || (n > I2C_BUS_TOTAL_COUNT)) {
+		return nullptr;
 	}
 
-	isI2cInitialized[device] = false;
-	efiSetPadUnused(getSclPin(device));
-	efiSetPadUnused(getSdaPin(device));
+	return i2cbuses[n];
+}
+
+// Legacy
+i2cBus *getI2cBus(brain_pin_e scl, brain_pin_e sda) {
+	if (!isBrainPinValid(scl) || !isBrainPinValid(sda)) {
+		return nullptr;
+	}
+
+	for (size_t n = I2C_BUS_1; n < I2C_BUS_TOTAL_COUNT; n++) {
+		i2cBus *bus = i2cbuses[n];
+
+		if ((bus) && (bus->m_scl == scl) && (bus->m_sda == sda)) {
+			return bus;
+		}
+	}
+
+	return nullptr;
 }
 
 static void i2cInfo() {
@@ -106,10 +191,10 @@ static void i2cInfo() {
 	}
 }
 
-static void i2cScan(int bus) {
-	I2CDriver *driver = getI2cDevice(static_cast<i2c_bus_e>(bus));
-	if ((driver == NULL) || !isI2cInitialized[bus]) {
-		efiPrintf("Bus %d is not configured/exist", bus);
+static void i2cScan(int n) {
+	i2cBus *bus = getI2cBus(static_cast<i2c_bus_e>(n));
+	if (bus == nullptr) {
+		efiPrintf("Bus %d is not configured/exist", n);
 	}
 
 	msg_t status;
@@ -132,17 +217,9 @@ static void i2cScan(int bus) {
 		if (addr < 0x08 || addr > 0x77) {
 			ptr += sprintf(ptr, "   ");
 		} else {
-		#if 0
-			uint8_t dummy_tx = 0;
-			// ChibiOS I2C call using 0 bytes for tx and rx (Zero-byte Write)
-			// We use a small timeout (e.g., 10ms) so a missing device doesn't hang the thread
-			status = i2cMasterTransmitTimeout(driver, addr, &dummy_tx, 0, NULL, 0, TIME_MS2I(10));
-		#else
 			uint8_t dummy_rx = 0;
 			// ChibiOS I2C call using 0 bytes for tx and rx (Zero-byte Write)
-			// We use a small timeout (e.g., 10ms) so a missing device doesn't hang the thread
-			status = i2cMasterReceiveTimeout(driver, addr, &dummy_rx, 1, TIME_MS2I(10));
-		#endif
+			status = bus->read(addr, &dummy_rx, 1);
 
 			if (status == MSG_OK) {
 				ptr += sprintf(ptr, "%02X ", addr);
@@ -200,5 +277,3 @@ void printI2cConfig(const char *msg, i2c_bus_e device) {
 	efiPrintf("%s %s SDA=%s", msg, getI2c_bus_e(device), hwPortname(cfg->sdaPin));
 	efiPrintf("%s %s speed=%s", msg, getI2c_bus_e(device), getI2c_speed_e(cfg->speed));
 }
-
-#endif

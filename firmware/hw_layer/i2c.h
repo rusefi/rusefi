@@ -29,6 +29,22 @@ public:
 
 #if HAL_USE_I2C
 
+class HardwareI2c : public i2cBus {
+public:
+	bool init(brain_pin_e scl, brain_pin_e sda, i2c_speed_e speed) override;
+	void deinit() override;
+
+	msg_t write(uint8_t addr, const uint8_t* data, size_t size) override;
+	msg_t read(uint8_t addr, uint8_t* data, size_t size) override;
+	msg_t writeRead(uint8_t addr, const uint8_t* writeData, size_t writeSize, uint8_t* readData, size_t readSize) override;
+
+	bool isInitialized() {
+		return m_driver != nullptr;
+	}
+private:
+	I2CDriver* m_driver;
+};
+
 constexpr I2CDriver * getI2cDevice(i2c_bus_e i2cDevice);
 void turnOnI2c(i2c_bus_e device);
 
@@ -41,6 +57,9 @@ void unlockI2c(i2c_bus_e device);
 void initEarlyI2c();
 void initI2cModules();
 void stopI2cModules();
+
+i2cBus *getI2cBus(i2c_bus_e n);
+i2cBus *getI2cBus(brain_pin_e scl, brain_pin_e sda);
 
 void printI2cConfig(const char *msg, i2c_bus_e device);
 
