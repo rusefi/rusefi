@@ -45,10 +45,20 @@ import static com.rusefi.ui.util.PinColors.FALLBACK_NORMAL;
 
 /**
  * Displays ECU connector pinouts for the currently connected board.
- * Board is identified from the ECU signature (bundleTarget field).
- * Data is loaded from pinouts_raw/boards_meta.yaml and pinouts_raw/connectors.zip. if not custom metaname/path are loaded
- * Each connector is shown as a tab with an interactive image (pin markers) above a table.
- * Pin marker color can be switched between type-based and pigtail wire color.
+ *
+ * <p>Board connector YAML is the source of pin names and capabilities, colors, and images. For
+ * example, uaEFI uses {@code firmware/config/boards/hellen/uaefi/connectors}. The metadata from
+ * those files is processed by {@code .github/workflows/upload-pinouts-raw.yaml}.</p>
+ *
+ * <p>Published metadata lives at
+ * {@code https://rusefi.com/docs/pinouts_raw/boards_meta.yaml}. Each metadata entry maps an ECU
+ * bundle target to its YAML files, {@code zip_file}, and SHA-256; archives live at
+ * {@code /pinouts_raw/<zip_file>}.</p>
+ *
+ * <p>The Console selects the target from the ECU or offline-tune signature, verifies the archive,
+ * then renders the pinouts and tune assignments. Each connector is shown as a tab with an
+ * interactive image (pin markers) above a table. Pin marker color can be switched between
+ * type-based and pigtail wire color.</p>
  */
 public class PinoutPane {
     private static final Logging log = getLogging(PinoutPane.class);
