@@ -8,24 +8,21 @@
 
 #pragma once
 
-class BitbangI2c {
+#include "i2c.h"
+
+class BitbangI2c : public i2cBus {
 public:
 	// Initialize the I2C driver
-	bool init(brain_pin_e scl, brain_pin_e sda);
+	bool init(brain_pin_e scl, brain_pin_e sda, i2c_speed_e speed) override;
 	// Release resources
-	void deinit();
+	void deinit() override;
 
 	// Write a sequence of bytes to the specified device
-	void write(uint8_t addr, const uint8_t* data, size_t size);
+	msg_t write(uint8_t addr, const uint8_t* data, size_t size) override;
 	// Read a sequence of bytes from the device
-	void read(uint8_t addr, uint8_t* data, size_t size);
+	msg_t read(uint8_t addr, uint8_t* data, size_t size) override;
 	// Write some bytes then read some bytes back after a repeated start bit
-	void writeRead(uint8_t addr, const uint8_t* writeData, size_t writeSize, uint8_t* readData, size_t readSize);
-
-	// Read a register at the specified address and register index
-	uint8_t readRegister(uint8_t addr, uint8_t reg);
-	// Write a register at the specified address and register index
-	void writeRegister(uint8_t addr, uint8_t reg, uint8_t val);
+	msg_t writeRead(uint8_t addr, const uint8_t* writeData, size_t writeSize, uint8_t* readData, size_t readSize) override;
 
 private:
 	// Returns true if the remote device acknowledged the transmission
