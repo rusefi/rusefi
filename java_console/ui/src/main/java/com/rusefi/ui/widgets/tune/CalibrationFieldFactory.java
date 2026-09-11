@@ -55,6 +55,12 @@ public class CalibrationFieldFactory {
     static JPanel createFieldRow(DialogModel.Field field, IniField iniField, ConfigurationImage ci,
                                  ConfigurationImage workingImage, Runnable onChange,
                                  Consumer<String> onShowInPinout, int labelWidth) {
+        return createFieldRow(field, iniField, ci, workingImage, onChange, onShowInPinout, labelWidth, 0);
+    }
+
+    static JPanel createFieldRow(DialogModel.Field field, IniField iniField, ConfigurationImage ci,
+                                 ConfigurationImage workingImage, Runnable onChange,
+                                 Consumer<String> onShowInPinout, int labelWidth, int comboWidth) {
         JPanel row = createRowPanel();
         row.add(Box.createHorizontalStrut(10));
 
@@ -87,7 +93,8 @@ public class CalibrationFieldFactory {
                 row.add(checkBox);
                 value = () -> checkBox.isSelected() ? "enabled" : "disabled";
             } else {
-                JComboBox<String> comboBox = createComboBox(enumField, iniField, currentValue, workingImage, onChange);
+                JComboBox<String> comboBox = createComboBox(
+                    enumField, iniField, currentValue, workingImage, onChange, comboWidth);
                 row.add(comboBox);
                 value = () -> String.valueOf(comboBox.getSelectedItem());
                 JButton pinoutButton = createPinoutButton(comboBox, field.getKey(), onShowInPinout);
@@ -173,16 +180,19 @@ public class CalibrationFieldFactory {
         return checkBox;
     }
 
-    private static JComboBox<String> createComboBox(EnumIniField enumField, IniField iniField, String currentValue, ConfigurationImage workingImage, Runnable onChange) {
+    private static JComboBox<String> createComboBox(EnumIniField enumField, IniField iniField, String currentValue,
+                                                     ConfigurationImage workingImage, Runnable onChange, int comboWidth) {
         String cleanValue = currentValue.replace("\"", "");
-        String[] comboValues = enumField.getEnums().values().stream().filter(v -> !v.contains("INVALID")).toArray(String[]::new);
+        String[] comboValues = getComboValues(enumField);
         JComboBox<String> comboBox = new JComboBox<>(comboValues);
         applyStyle(comboBox);
         comboBox.setSelectedItem(cleanValue);
         comboBox.setToolTipText(cleanValue);
         applyBackgroundColor(comboBox, cleanValue);
         Dimension size = comboBox.getPreferredSize();
-        size.width = Math.min(size.width, MAX_COMBO_WIDTH);
+        size.width = comboWidth > 0
+            ? Math.min(comboWidth, MAX_COMBO_WIDTH)
+            : Math.min(size.width, MAX_COMBO_WIDTH);
         comboBox.setMinimumSize(new Dimension(0, size.height));
         comboBox.setPreferredSize(size);
         comboBox.setMaximumSize(size);
@@ -196,6 +206,18 @@ public class CalibrationFieldFactory {
             }
         });
         return comboBox;
+    }
+
+    static int getComboBoxPreferredWidth(EnumIniField enumField) {
+        JComboBox<String> comboBox = new JComboBox<>(getComboValues(enumField));
+        applyStyle(comboBox);
+        return Math.min(comboBox.getPreferredSize().width, MAX_COMBO_WIDTH);
+    }
+
+    private static String[] getComboValues(EnumIniField enumField) {
+        return enumField.getEnums().values().stream()
+            .filter(value -> !value.contains("INVALID"))
+            .toArray(String[]::new);
     }
 
     /**
