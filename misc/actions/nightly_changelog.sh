@@ -11,6 +11,42 @@
 # No local checkout is needed: tags are read with 'git ls-remote' and commits via the GitHub API ('gh api'),
 # so this works from a job which has not checked out the (large) repository.
 #
+# Why a custom script instead of an off-the-shelf solution?
+#
+# Alternatives considered:
+#   1. GitHub built-in release notes: 'generate_release_notes: true' on the create-release API, exposed as
+#      'generateReleaseNotes: true' by ncipollo/release-action (which we already use). This is what
+#      lvgl-linux-dash does in bin/create-combo10-release.py.
+#   2. Third-party actions: mikepenz/release-changelog-builder-action (mode: COMMIT), metcalfc/changelog-generator,
+#      orhun/git-cliff-action (needs conventional-commit prefixes).
+#
+# Pros of this script:
+#   - Lists commits, not pull requests. Most rusEFI work lands as direct commits to master; GitHub's built-in
+#     notes only list merged PRs (plus "New Contributors" and a compare link), so a typical nightly would be
+#     nearly empty. Same problem in lvgl-linux-dash, where commits are also direct.
+#   - Filters repo-specific bot noise (Auto-generated configs/tune/stack usage, 'Update date', branch merges),
+#     which would otherwise be half of every list. The generic actions can do this too but only via regex
+#     configuration that lives in the workflow YAML.
+#   - Previous-tag detection is explicit and deterministic (latest YYYY-MM-DD tag older than today). GitHub's
+#     built-in notes pick "the previous release" by their own rules (which for date tags happen to match, but
+#     nothing pins that down).
+#   - No clone: ~60 lines of bash + jq over 'gh api', runs in seconds in a job that has no checkout.
+#   - Fully testable from a laptop: same command, same output, no workflow run needed.
+#   - Zero new third-party action dependencies (supply chain, version pinning, deprecation).
+#
+# Cons of this script:
+#   - It is one more piece of home-grown CI to maintain; the generic actions come with templates,
+#     categories by label, contributor lists and are maintained by someone else.
+#   - No PR-level grouping: a squash-merged PR shows as one commit, a rebase-merged PR shows as N commits
+#     with no link to the PR. The built-in notes would give the PR title + author in both cases.
+#   - No "New Contributors" section and no automatic categorization by label.
+#   - Commit subjects are shown verbatim, so quality of the changelog is exactly the quality of commit messages.
+#   - The compare API pages commits 250 at a time; 'gh api --paginate' follows the pages, but a gap of many
+#     weeks between nightlies would make the list very long, with no summarization.
+#
+# The two are not exclusive: ncipollo/release-action prepends 'bodyFile' to the generated notes when
+# 'generateReleaseNotes: true' is also set, so PR-based notes can be added on top of this list later.
+#
 # Environment: GH_TOKEN is required by 'gh api' (GITHUB_TOKEN of the workflow is enough for reads).
 #
 set -euo pipefail
