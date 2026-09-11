@@ -4,6 +4,7 @@ import com.devexperts.logging.Logging;
 import com.opensr5.ini.*;
 import com.rusefi.ini.reader.IniFileReader;
 import com.rusefi.core.SignatureHelper;
+import com.rusefi.core.Pair;
 import com.rusefi.ui.StatusConsumer;
 import com.rusefi.ini.reader.IniFileReaderUtil;
 import com.rusefi.ini.reader.IniParsingException;
@@ -31,6 +32,20 @@ public class RealIniFileProvider implements IniFileProvider {
     }
 
     public static ManualIniPicker manualPicker = null;
+
+    interface IniDownloader {
+        String findOrDownload(Pair<String, String> location, boolean allowDownload);
+    }
+
+    private final IniDownloader iniDownloader;
+
+    public RealIniFileProvider() {
+        this(SignatureHelper::downloadIfNotAvailable);
+    }
+
+    RealIniFileProvider(IniDownloader iniDownloader) {
+        this.iniDownloader = iniDownloader;
+    }
 
     /**
      * Signatures for which a picker has already been opened. The port scanner calls {@link #provide}
@@ -90,7 +105,10 @@ public class RealIniFileProvider implements IniFileProvider {
         }
         if (localIniFile == null) {
             // 3. Cache or download from server
-            localIniFile = SignatureHelper.downloadIfNotAvailable(SignatureHelper.getUrl(signature));
+            // Once the manual picker has been requested, keep checking its cache but do not make every
+            // later scanner probe repeat the same unavailable remote lookup (#10158).
+            localIniFile = iniDownloader.findOrDownload(
+                SignatureHelper.getUrl(signature), !promptedSignatures.contains(signature));
         }
         if (localIniFile == null) {
             // 4. TunerStudio's own ecuDef cache: the server may not have this build (custom board,
