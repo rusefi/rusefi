@@ -477,7 +477,7 @@ public class CalibrationDialogWidgetTest {
             }
         }
         assertNotNull(combo);
-        assertEquals(CalibrationFieldFactory.MAX_COMBO_WIDTH, combo.getPreferredSize().width);
+        assertEquals(CalibrationFieldFactory.MAX_FIELD_EDITOR_WIDTH, combo.getPreferredSize().width);
         assertEquals(0, combo.getMinimumSize().width);
         assertEquals(longOption, combo.getToolTipText());
     }
@@ -513,9 +513,39 @@ public class CalibrationDialogWidgetTest {
         JComboBox<?> longCombo = getComboBoxFromRow((JPanel) widget.getContentPane().getComponent(1));
         assertNotNull(shortCombo);
         assertNotNull(longCombo);
-        int expectedWidth = CalibrationFieldFactory.getComboBoxPreferredWidth(longField);
+        int expectedWidth = CalibrationFieldFactory.getFieldEditorPreferredWidth(longField, "");
         assertEquals(expectedWidth, shortCombo.getPreferredSize().width);
         assertEquals(expectedWidth, longCombo.getPreferredSize().width);
+    }
+
+    @Test
+    public void testTextAndComboEditorsShareWidth() {
+        IniFileModel iniFileModel = mock(IniFileModel.class);
+        when(iniFileModel.getCurves()).thenReturn(Collections.emptyMap());
+
+        Map<Integer, String> enumValues = new HashMap<>();
+        enumValues.put(0, "NONE");
+        enumValues.put(1, "B18 VVT2 or Idle or Low Side output 2");
+        EnumIniField enumField = new EnumIniField("mode", 0, FieldType.INT8,
+            new EnumIniField.EnumKeyValueMap(enumValues), 0, 0);
+        com.opensr5.ini.field.StringIniField textField =
+            new com.opensr5.ini.field.StringIniField("value", 1, 4);
+
+        when(iniFileModel.findIniField("mode")).thenReturn(java.util.Optional.of(enumField));
+        when(iniFileModel.findIniField("value")).thenReturn(java.util.Optional.of(textField));
+
+        DialogModel dialog = new DialogModel("main", "Main", Arrays.asList(
+            new DialogModel.Field("mode", "Mode"),
+            new DialogModel.Field("value", "Value")), Collections.emptyList());
+
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+        widget.update(dialog, iniFileModel, new ConfigurationImage(new byte[5]));
+
+        JComboBox<?> combo = getComboBoxFromRow((JPanel) widget.getContentPane().getComponent(0));
+        JTextField text = getTextFieldFromRow((JPanel) widget.getContentPane().getComponent(1));
+        assertNotNull(combo);
+        assertNotNull(text);
+        assertEquals(combo.getPreferredSize().width, text.getPreferredSize().width);
     }
 
     @Test
