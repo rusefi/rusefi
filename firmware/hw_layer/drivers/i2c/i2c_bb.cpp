@@ -34,7 +34,9 @@ void BitbangI2c::scl_low() {
 #endif
 }
 
-bool BitbangI2c::init(brain_pin_e scl, brain_pin_e sda) {
+bool BitbangI2c::init(brain_pin_e scl, brain_pin_e sda, i2c_speed_e speed) {
+	// TODO:
+	(void)speed;
 #if EFI_PROD_CODE
 	if (m_sdaPort) {
 	    return false;
@@ -189,7 +191,7 @@ void BitbangI2c::waitQuarterBit() {
 	}
 }
 
-void BitbangI2c::write(uint8_t addr, const uint8_t* writeData, size_t writeSize) {
+msg_t BitbangI2c::write(uint8_t addr, const uint8_t* writeData, size_t writeSize) {
 	start();
 
 	// Address + write
@@ -201,15 +203,19 @@ void BitbangI2c::write(uint8_t addr, const uint8_t* writeData, size_t writeSize)
 	}
 
 	stop();
+
+	return MSG_OK;
 }
 
-void BitbangI2c::writeRead(uint8_t addr, const uint8_t* writeData, size_t writeSize, uint8_t* readData, size_t readSize) {
+msg_t BitbangI2c::writeRead(uint8_t addr, const uint8_t* writeData, size_t writeSize, uint8_t* readData, size_t readSize) {
 	write(addr, writeData, writeSize);
 
 	read(addr, readData, readSize);
+
+	return MSG_OK;
 }
 
-void BitbangI2c::read(uint8_t addr, uint8_t* readData, size_t readSize) {
+msg_t BitbangI2c::read(uint8_t addr, uint8_t* readData, size_t readSize) {
 	start();
 
 	// Address + read
@@ -224,20 +230,6 @@ void BitbangI2c::read(uint8_t addr, uint8_t* readData, size_t readSize) {
 	readData[readSize - 1] = readByte(false);
 
 	stop();
-}
 
-uint8_t BitbangI2c::readRegister(uint8_t addr, uint8_t reg) {
-	uint8_t retval;
-
-	writeRead(addr, &reg, 1, &retval, 1);
-
-	return retval;
-}
-
-void BitbangI2c::writeRegister(uint8_t addr, uint8_t reg, uint8_t val) {
-	uint8_t buf[2];
-	buf[0] = reg;
-	buf[1] = val;
-
-	write(addr, buf, 2);
+	return MSG_OK;
 }
