@@ -144,11 +144,23 @@ void turnOnI2c(i2c_bus_e n) {
 }
 
 void lockI2c(i2c_bus_e device) {
-	i2cAcquireBus(getI2cDevice(device));
+#if HAL_USE_I2C
+	I2CDriver *drv = getI2cDevice(device);
+	if (drv) {
+		i2cAcquireBus(drv);
+	}
+#endif
+	/* TODO: lock BB i2c device too */
 }
 
 void unlockI2c(i2c_bus_e device) {
-	i2cReleaseBus(getI2cDevice(device));
+#if HAL_USE_I2C
+	I2CDriver *drv = getI2cDevice(device);
+	if (drv) {
+		i2cReleaseBus(drv);
+	}
+#endif
+	/* TODO: unlock BB i2c device too */
 }
 
 void stopI2c(i2c_bus_e n) {
@@ -207,7 +219,7 @@ static void i2cScan(int n) {
 	efiPrintf("     0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F");
 
 	// Scan standard 7-bit user addresses from 0x00 to 0x7F
-	for (i2caddr_t addr = 0x00; addr <= 0x7F; addr++) {
+	for (uint8_t addr = 0x00; addr <= 0x7F; addr++) {
 		// Print row headers for a clean matrix look
 		if ((addr % 16) == 0) {
 			ptr += sprintf(ptr, "%02X: ", addr);
@@ -240,10 +252,8 @@ static void i2cScan(int n) {
 }
 
 void initEarlyI2c() {
-#if EFI_PROD_CODE
 	addConsoleAction("i2cinfo", i2cInfo);
 	addConsoleActionI("i2cscan", i2cScan);
-#endif
 }
 
 void initI2cModules() {

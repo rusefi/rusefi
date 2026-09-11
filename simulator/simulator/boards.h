@@ -33,3 +33,7 @@ typedef uint16_t adcsample_t;
 #define spiAcquireBus(x) {}
 #define spiReleaseBus(x) {}
 // end of mock SPI
+
+// mock i2c
+#define i2cAcquireBus(x) {}
+#define i2cReleaseBus(x) {}

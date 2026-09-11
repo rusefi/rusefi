@@ -30,6 +30,9 @@ public:
 	brain_pin_e m_sda;
 };
 
+i2cBus *getI2cBus(i2c_bus_e n);
+i2cBus *getI2cBus(brain_pin_e scl, brain_pin_e sda);
+
 #if HAL_USE_I2C
 
 class HardwareI2c : public i2cBus {
@@ -49,6 +52,9 @@ private:
 };
 
 constexpr I2CDriver * getI2cDevice(i2c_bus_e i2cDevice);
+
+#endif /* HAL_USE_I2C */
+
 void turnOnI2c(i2c_bus_e device);
 
 brain_pin_e getSclPin(i2c_bus_e device);
@@ -61,9 +67,4 @@ void initEarlyI2c();
 void initI2cModules();
 void stopI2cModules();
 
-i2cBus *getI2cBus(i2c_bus_e n);
-i2cBus *getI2cBus(brain_pin_e scl, brain_pin_e sda);
-
 void printI2cConfig(const char *msg, i2c_bus_e device);
-
-#endif /* HAL_USE_I2C */
