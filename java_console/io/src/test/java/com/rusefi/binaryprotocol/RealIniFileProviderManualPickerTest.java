@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class RealIniFileProviderManualPickerTest {
     private static final String UNPARSEABLE_SIGNATURE = "not a real signature";
+    private static final String MISSING_SIGNATURE = "rusEFI master.2026.08.30.test-board.1234567890";
 
     @AfterEach
     public void resetPicker() {
@@ -75,6 +76,25 @@ public class RealIniFileProviderManualPickerTest {
         }
 
         assertEquals(1, reportCount.get());
+    }
+
+    @Test
+    public void repeatedProbesDoNotRepeatRemoteLookupAfterManualPickerWasRequested() {
+        AtomicInteger downloadCount = new AtomicInteger();
+        RealIniFileProvider.manualPicker = ignored -> { };
+        RealIniFileProvider provider = new RealIniFileProvider((ignored, allowDownload) -> {
+            if (allowDownload) {
+                downloadCount.incrementAndGet();
+            }
+            return null;
+        });
+
+        for (int i = 0; i < 5; i++) {
+            assertThrows(IniNotFoundException.class, () -> provider.provide(MISSING_SIGNATURE));
+        }
+
+        assertEquals(1, downloadCount.get(),
+            "later scanner probes must check the cache without retrying the unavailable remote INI");
     }
 
     @Test

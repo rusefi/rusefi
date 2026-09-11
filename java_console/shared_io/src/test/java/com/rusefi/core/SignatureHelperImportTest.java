@@ -39,6 +39,22 @@ public class SignatureHelperImportTest {
         assertEquals(0, cacheDir.toFile().list().length);
     }
 
+    @Test
+    public void cacheOnlyLookupStillFindsManuallyImportedIni(@TempDir Path cacheDir) throws IOException {
+        Path cachedIni = cacheDir.resolve("2367417284.ini");
+        Files.write(cachedIni, new byte[11_000]);
+
+        Pair<String, String> location = SignatureHelper.getUrl(SIGNATURE);
+        assertEquals(cachedIni.toString(),
+            SignatureHelper.downloadIfNotAvailable(location, false, cacheDir.toString()));
+    }
+
+    @Test
+    public void cacheOnlyLookupDoesNotContactRemoteArchive(@TempDir Path cacheDir) {
+        Pair<String, String> location = SignatureHelper.getUrl(SIGNATURE);
+        assertNull(SignatureHelper.downloadIfNotAvailable(location, false, cacheDir.toString()));
+    }
+
     /** A partial download must not leave a .tmp file behind (#10030). */
     @Test
     public void noTempFileLeftOnDownloadFailure(@TempDir Path cacheDir) throws Exception {
