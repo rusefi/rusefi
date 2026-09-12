@@ -152,3 +152,81 @@ TEST(DcHardwarePool, HbridgeGpioPwmDrivesMotorDuty) {
 	// slot without DC_Gpio function
 	EXPECT_EQ(-1, gpio.setPadPWM(1, 100, 0.5f));
 }
+
+namespace {
+// Stands in for the STM32 timer channel behind the bridge's PWM pin
+struct FakeHardwarePwm : public hardware_pwm {
+	float duty = -1;
+	float frequency = 0;
+	int frequencyCalls = 0;
+	bool acceptFrequency = true;
+
+	void setDuty(float d) override {
+		duty = d;
+	}
+
+	bool setFrequency(float hz) override {
+		frequencyCalls++;
+		if (!acceptFrequency) {
+			return false;
+		}
+		frequency = hz;
+		return true;
+	}
+};
+}
+
+// The consumer's PWM frequency is programmed into the bridge's timer on the first PWM request;
+// repeats with the same frequency (external_hardware_pwm::setDuty()) do not touch the timer.
+TEST(DcHardwarePool, HbridgeGpioPwmAppliesRequestedFrequency) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	engineConfiguration->etbFunctions[0] = DC_Gpio;
+	engineConfiguration->etbFunctions[1] = DC_None;
+	resetDcHardwareForUnitTest();
+
+	FakeHardwarePwm timer;
+	setDcHardwarePwmForUnitTest(0, &timer);
+
+	auto& gpio = getHbridgeGpioForUnitTest();
+	ASSERT_EQ(0, gpio.init());
+	ASSERT_EQ(0, gpio.setPadMode(0, PAL_MODE_OUTPUT_PUSHPULL));
+
+	// boost-solenoid style consumer: 300 Hz
+	EXPECT_EQ(0, gpio.setPadPWM(0, 300, 0.5f));
+	EXPECT_FLOAT_EQ(0.5f, timer.duty);
+	EXPECT_EQ(1, timer.frequencyCalls);
+	EXPECT_FLOAT_EQ(300, timer.frequency);
+
+	EXPECT_EQ(0, gpio.setPadPWM(0, 300, 0.75f));
+	EXPECT_FLOAT_EQ(0.75f, timer.duty);
+	EXPECT_EQ(1, timer.frequencyCalls);
+}
+
+// A frequency the timer cannot do makes setPadPWM() fail, so gpiochip_tryInitPwm() falls back to
+// software PWM through writePad(); the bridge must be left as it was.
+TEST(DcHardwarePool, HbridgeGpioPwmRefusedFrequencyLeavesBridgeAlone) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	engineConfiguration->etbFunctions[0] = DC_Gpio;
+	engineConfiguration->etbFunctions[1] = DC_None;
+	resetDcHardwareForUnitTest();
+
+	FakeHardwarePwm timer;
+	timer.acceptFrequency = false;
+	setDcHardwarePwmForUnitTest(0, &timer);
+
+	auto& gpio = getHbridgeGpioForUnitTest();
+	ASSERT_EQ(0, gpio.init());
+	ASSERT_EQ(0, gpio.setPadMode(0, PAL_MODE_OUTPUT_PUSHPULL));
+	ASSERT_FLOAT_EQ(0, timer.duty);
+
+	EXPECT_EQ(-1, gpio.setPadPWM(0, 10, 0.5f));
+	EXPECT_EQ(1, timer.frequencyCalls);
+	EXPECT_FLOAT_EQ(0, timer.duty);
+	EXPECT_FLOAT_EQ(0, getDcMotorForUnitTest(0)->get());
+
+	// the on/off path is still available for the software PWM fallback
+	EXPECT_EQ(0, gpio.writePad(0, 1));
+	EXPECT_FLOAT_EQ(1, timer.duty);
+}

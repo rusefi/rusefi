@@ -124,8 +124,8 @@ DcMotor* initDcMotor(brain_pin_e coil_p, brain_pin_e coil_m, size_t index) {
 	return &hw.dcMotor;
 }
 
-void setDcMotorFrequency(size_t index, int hz) {
-	dcHardware[index].setFrequency(hz);
+bool setDcMotorFrequency(size_t index, int hz) {
+	return dcHardware[index].setFrequency(hz);
 }
 
 void setDcMotorDuty(size_t index, float duty) {
@@ -137,6 +137,10 @@ void setDcMotorDuty(size_t index, float duty) {
 
 DcMotor* getDcMotorForUnitTest(size_t index) {
 	return &dcHardware[index].dcMotor;
+}
+
+void setDcHardwarePwmForUnitTest(size_t index, hardware_pwm* pwm) {
+	dcHardware[index].setHardwarePwmForUnitTest(pwm);
 }
 
 void resetDcHardwareForUnitTest() {
