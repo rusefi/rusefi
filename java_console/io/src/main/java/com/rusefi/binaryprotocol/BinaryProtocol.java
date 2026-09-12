@@ -14,6 +14,7 @@ import com.rusefi.config.generated.Integration;
 import com.rusefi.Timeouts;
 import com.rusefi.binaryprotocol.test.Bug3923;
 import com.rusefi.core.Pair;
+import com.rusefi.core.ISensorHolder;
 import com.rusefi.core.OutputChannelDemand;
 import com.rusefi.core.OutputChannelSnapshot;
 import com.rusefi.core.RusEfiSignature;
@@ -35,6 +36,7 @@ import jakarta.xml.bind.JAXBException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
 import java.util.BitSet;
 import java.util.Arrays;
 import java.util.Objects;
@@ -56,6 +58,7 @@ import static com.rusefi.util.TuneBackupUtil.saveConfigurationImageToFiles;
  * 3/6/2015
  */
 public class BinaryProtocol {
+    public static final String CONFIG_ERROR_CHANNEL = "hasCriticalError";
     private static final Logging log = getLogging(BinaryProtocol.class);
     private static final ThreadFactory THREAD_FACTORY = new NamedThreadFactory("ECU text pull", true);
     // Intended for high-latency TCP links to firmware built with CUSTOM_TS_BUFFER_SIZE.
@@ -68,6 +71,9 @@ public class BinaryProtocol {
     private long lastOutputFallbackGeneration = Long.MIN_VALUE;
     private volatile boolean lastOutputPollWasFull = true;
     private long nextTextPullNanos;
+    private long nextConfigErrorReadNanos;
+    private boolean configErrorReadScheduled;
+    private volatile String configErrorMessage;
     public String signature;
     public boolean isGoodOutputChannels;
     // NotNull once connected
@@ -112,6 +118,8 @@ public class BinaryProtocol {
                 return "READ";
             case Integration.TS_GET_TEXT:
                 return "TS_GET_TEXT";
+            case Integration.TS_GET_CONFIG_ERROR:
+                return "TS_GET_CONFIG_ERROR";
             case Integration.TS_GET_FIRMWARE_VERSION:
                 return "GET_FW_VERSION";
             case Integration.TS_CHUNK_WRITE_COMMAND:
@@ -921,8 +929,47 @@ public class BinaryProtocol {
 
         OutputChannelSnapshot snapshot = new OutputChannelSnapshot(
             reassemblyBuffer, validBytes, demand.getChannels(), plan.getGeneration(), plan.isFull());
+        updateConfigError(snapshot, System.nanoTime());
         SensorCentral.getInstance().grabSensorValues(snapshot, getIniFile(), getControllerConfiguration());
         return true;
+    }
+
+    /** Read on the communication thread, before publishing the output snapshot to UI listeners. */
+    void updateConfigError(OutputChannelSnapshot snapshot, long nowNanos) {
+        Double active = ISensorHolder.tryReadOutputChannel(snapshot, snapshot.getResponse(),
+                CONFIG_ERROR_CHANNEL, getIniFile(), CONFIG_ERROR_CHANNEL);
+        if (active == null) {
+            return; // This selective poll did not include the indicator, or the INI lacks it.
+        }
+        if (active == 0) {
+            configErrorMessage = null;
+            configErrorReadScheduled = false;
+            return;
+        }
+        if (configErrorReadScheduled && nowNanos - nextConfigErrorReadNanos < 0) {
+            return;
+        }
+        // Retry unavailable text, and detect a changed error even if the indicator stays set.
+        // Limit traffic to one request per second instead of one per gauge refresh.
+        configErrorReadScheduled = true;
+        nextConfigErrorReadNanos = nowNanos + TimeUnit.SECONDS.toNanos(1);
+        byte[] response = executeCommand(Integration.TS_GET_CONFIG_ERROR, "configuration error");
+        if (response == null || response.length == 0 || response[0] != Integration.TS_RESPONSE_OK) {
+            return;
+        }
+        int end = 1;
+        while (end < response.length && response[end] != 0) {
+            end++;
+        }
+        String message = new String(response, 1, end - 1, StandardCharsets.US_ASCII).trim();
+        if (!message.isEmpty()) {
+            configErrorMessage = message;
+        }
+    }
+
+    @Nullable
+    public String getConfigErrorMessage() {
+        return configErrorMessage;
     }
 
     public BinaryProtocolState getBinaryProtocolState() {

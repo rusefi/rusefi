@@ -9,6 +9,8 @@ import com.rusefi.autoupdate.ConsoleExeFileLocator;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.EngineState;
+import com.rusefi.core.SensorCentral;
+import com.rusefi.core.SensorSubscription;
 import com.rusefi.core.OsUtil;
 import com.rusefi.core.io.BoardCompatibility;
 import com.rusefi.core.io.ConnectedEcuTarget;
@@ -185,6 +187,15 @@ public class MainFrame {
     private boolean installerAnnouncementShown;
     private final JPanel installerBannerHost = new JPanel(new BorderLayout());
     private FrameOverlay activeOverlay;
+    private FrameOverlay configErrorOverlay;
+    private final ConfigErrorOverlayController configErrorController = new ConfigErrorOverlayController(
+        this::showConfigErrorOverlay, this::closeConfigErrorOverlay);
+    private SensorCentral.ResponseListenerToken configErrorSubscription;
+    private final ConnectionStatusLogic.Listener configErrorConnectionListener = connected -> {
+        if (!connected) {
+            SwingUtilities.invokeLater(() -> configErrorController.update(null, null, false));
+        }
+    };
     private Component previousGlassPane;
     private boolean previousGlassPaneVisible;
     private Component previousFocusOwner;
@@ -231,6 +242,11 @@ public class MainFrame {
         installerBannerHost.setVisible(false);
         installerBannerHost.setOpaque(false);
         createMenuBar();
+        // Keep the error bit in selective output polling on every tab, including after splash hand-off.
+        configErrorSubscription = SensorCentral.getInstance().addListener(
+            () -> SwingUtilities.invokeLater(this::refreshConfigErrorOverlay),
+            new SensorSubscription(BinaryProtocol.CONFIG_ERROR_CHANNEL));
+        ConnectionStatusLogic.INSTANCE.addListener(configErrorConnectionListener);
         if (unsupportedEcuHost != null) {
             unsupportedEcuHost.addBlockingListener(blocking -> {
                 unsupportedEcuBlocking = blocking;
@@ -581,6 +597,27 @@ public class MainFrame {
         showOverlay(overlay);
     }
 
+    private void refreshConfigErrorOverlay() {
+        BinaryProtocol protocol = consoleUI.uiContext.getBinaryProtocol();
+        if (!ConnectionStatusLogic.INSTANCE.isConnected() || protocol == null || protocol.isClosed()) {
+            configErrorController.update(null, null, false);
+            return;
+        }
+        configErrorController.update(protocol, protocol.getConfigErrorMessage(),
+            activeOverlay == null || activeOverlay == configErrorOverlay);
+    }
+
+    private void showConfigErrorOverlay(String message) {
+        configErrorOverlay = new FrameOverlay("Config Error\n\n" + message, Color.RED.darker(),
+            new OverlayAction("Close", KeyEvent.VK_C, this::closeConfigErrorOverlay));
+        showOverlay(configErrorOverlay);
+    }
+
+    private void closeConfigErrorOverlay() {
+        closeOverlay(configErrorOverlay);
+        configErrorOverlay = null;
+    }
+
     private void closeUnsavedTuneChangesOverlay() {
         closeOverlay(unsavedTuneChangesOverlay);
         unsavedTuneChangesOverlay = null;
@@ -679,6 +716,9 @@ public class MainFrame {
     }
 
     private void showOverlay(FrameOverlay overlay) {
+        if (overlay != configErrorOverlay) {
+            closeConfigErrorOverlay();
+        }
         activeOverlay = overlay;
         previousGlassPane = frame.getFrame().getGlassPane();
         previousGlassPaneVisible = previousGlassPane.isVisible();
@@ -943,6 +983,8 @@ public class MainFrame {
     }
 
     private void windowClosedHandler() {
+        configErrorSubscription.remove();
+        ConnectionStatusLogic.INSTANCE.removeListener(configErrorConnectionListener);
         /**
          * looks like reconnectTimer in {@link com.rusefi.ui.RpmPanel} keeps AWT alive. Simplest solution would be to 'exit'
          */
