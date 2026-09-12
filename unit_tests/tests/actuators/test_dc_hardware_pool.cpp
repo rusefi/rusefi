@@ -122,36 +122,33 @@ TEST(DcHardwarePool, HbridgeGpioDrivesSelectedDcSlot) {
 	EXPECT_EQ(-1, gpio.writePad(ETB_COUNT, 1));
 }
 
-// pickEtbOrStepper(): H-bridge idle stepper and DC functions compete for the same
-// hardware pool, so selecting both at once is a critical configuration error.
-// PR #9466 gives the stepper its own pool - once that lands, this guard (and these
-// tests) are expected to be consciously removed.
-
-TEST(DcHardwarePool, PickEtbOrStepperAllowsDcFunctionsWithoutHbridgeStepper) {
+// PWM on an H-bridge GPIO pin: setPadPWM() hands the duty straight to the bridge's
+// own hardware PWM, so startSimplePwm() picks it up through gpiochip_tryInitPwm()
+// instead of bit-banging the motor from the software PWM scheduler.
+TEST(DcHardwarePool, HbridgeGpioPwmDrivesMotorDuty) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
-	engineConfiguration->useHbridgesToDriveIdleStepper = false;
-	engineConfiguration->etbFunctions[0] = DC_Throttle1;
-
-	EXPECT_NO_FATAL_ERROR(pickEtbOrStepper());
-}
-
-TEST(DcHardwarePool, PickEtbOrStepperAllowsHbridgeStepperAlone) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-
-	engineConfiguration->useHbridgesToDriveIdleStepper = true;
-	engineConfiguration->etbFunctions[0] = DC_None;
+	engineConfiguration->etbFunctions[0] = DC_Gpio;
 	engineConfiguration->etbFunctions[1] = DC_None;
+	resetDcHardwareForUnitTest();
 
-	EXPECT_NO_FATAL_ERROR(pickEtbOrStepper());
-}
+	auto& gpio = getHbridgeGpioForUnitTest();
+	ASSERT_EQ(0, gpio.init());
+	ASSERT_EQ(0, gpio.setPadMode(0, PAL_MODE_OUTPUT_PUSHPULL));
 
-TEST(DcHardwarePool, PickEtbOrStepperRejectsConflict) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	auto motor = getDcMotorForUnitTest(0);
 
-	engineConfiguration->useHbridgesToDriveIdleStepper = true;
-	engineConfiguration->etbFunctions[0] = DC_None;
-	engineConfiguration->etbFunctions[1] = DC_Wastegate;
+	EXPECT_EQ(0, gpio.setPadPWM(0, 100, 0.5f));
+	EXPECT_FLOAT_EQ(0.5f, motor->get());
 
-	EXPECT_FATAL_ERROR(pickEtbOrStepper());
+	// external_hardware_pwm::setDuty() re-calls setPadPWM() with the original frequency
+	EXPECT_EQ(0, gpio.setPadPWM(0, 100, 0.25f));
+	EXPECT_FLOAT_EQ(0.25f, motor->get());
+
+	EXPECT_EQ(0, gpio.setPadPWM(0, 100, 0));
+	EXPECT_FLOAT_EQ(0, motor->get());
+	EXPECT_EQ(0, gpio.readPad(0));
+
+	// slot without DC_Gpio function
+	EXPECT_EQ(-1, gpio.setPadPWM(1, 100, 0.5f));
 }

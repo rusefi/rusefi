@@ -56,6 +56,24 @@ public:
 		return motor ? motor->get() > 0.5f : -1;
 	}
 
+	/**
+	 * PWM output: the requested duty goes straight to the bridge, which already runs
+	 * its own hardware PWM on the direction/enable pins (see initDcMotor()). The
+	 * requested frequency is therefore ignored - the bridge keeps the frequency it was
+	 * configured with. This is what makes startSimplePwm() on an H-bridge GPIO pin use
+	 * hardware duty (via gpiochip_tryInitPwm()) instead of bit-banging the motor from
+	 * the software PWM scheduler.
+	 */
+	int setPadPWM(size_t pin, float /*frequency*/, float duty) override {
+		auto motor = getMotor(pin);
+		if (!motor) {
+			return -1;
+		}
+
+		motor->set(duty);
+		return 0;
+	}
+
 private:
 	DcMotor* getMotor(size_t pin) const {
 		return pin < ETB_COUNT ? m_motors[pin] : nullptr;
