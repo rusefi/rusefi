@@ -94,6 +94,10 @@ public class BinaryProtocol {
         return iniFile;
     }
 
+    void setIniFileForUnitTest(IniFileModel iniFile) {
+        this.iniFile = iniFile;
+    }
+
     public static String findCommand(byte command) {
         switch (command) {
             case Integration.TS_COMMAND_F:
