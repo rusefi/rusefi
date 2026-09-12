@@ -106,8 +106,10 @@ runs:
             lines.append(f"- Delta: `{sign}{delta:.2f}%` ({trend})")
 
         with open(output_path, "w", encoding="utf-8") as f:
-            if base_summary:
-                f.write(base_summary + "\n")
+            # Temporarily omit the large per-file coverage table from PR comments.
+            # TODO: Revisit how to present the detailed summary without overwhelming the comment.
+            # if base_summary:
+            #     f.write(base_summary + "\n")
             f.write("\n".join(lines) + "\n")
         PY
 
