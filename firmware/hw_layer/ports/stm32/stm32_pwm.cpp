@@ -78,6 +78,24 @@ public:
 		pwm_lld_enable_channel(m_driver, m_channel, getHighTime(duty));
 	}
 
+	// Same period limits as start(), but a refused frequency is reported to the caller instead of
+	// being a firmware error: the caller decides what to fall back to. Note the timer period is
+	// shared by all channels of m_driver. The caller re-applies its duty afterwards.
+	bool setFrequency(float frequency) override {
+		if (!m_driver || !(frequency > 0)) {
+			return false;
+		}
+
+		uint32_t period = c_timerFrequency / frequency;
+		if (period > 0xFFF0 || period < 200) {
+			return false;
+		}
+
+		m_period = period;
+		pwmChangePeriod(m_driver, m_period);
+		return true;
+	}
+
 private:
 	PWMDriver* m_driver = nullptr;
 	uint8_t m_channel = 0;

@@ -11,6 +11,7 @@ public:
 	int init() override {
 		for (size_t i = 0; i < ETB_COUNT; i++) {
 			m_motors[i] = nullptr;
+			m_frequency[i] = 0;
 
 			if (engineConfiguration->etbFunctions[i] == DC_Gpio) {
 				m_motors[i] = initDcMotor("H-bridge GPIO inactive", engineConfiguration->etbIo[i], i,
@@ -57,17 +58,30 @@ public:
 	}
 
 	/**
-	 * PWM output: the requested duty goes straight to the bridge, which already runs
-	 * its own hardware PWM on the direction/enable pins (see initDcMotor()). The
-	 * requested frequency is therefore ignored - the bridge keeps the frequency it was
-	 * configured with. This is what makes startSimplePwm() on an H-bridge GPIO pin use
-	 * hardware duty (via gpiochip_tryInitPwm()) instead of bit-banging the motor from
-	 * the software PWM scheduler.
+	 * PWM output: the requested duty goes straight to the bridge, which already runs its own
+	 * hardware PWM on the direction/enable pins (see initDcMotor()). This is what makes
+	 * startSimplePwm() on an H-bridge GPIO pin use hardware duty (via gpiochip_tryInitPwm())
+	 * instead of bit-banging the motor from the software PWM scheduler.
+	 *
+	 * The slot is started at etbFreq; the consumer's frequency is programmed into the bridge's
+	 * timer on the first call (external_hardware_pwm::setDuty() repeats the same frequency, which
+	 * is a no-op here). If the timer cannot do that frequency we report failure: gpiochip_tryInitPwm()
+	 * then falls back to software PWM through writePad(), i.e. the bridge stays at full duty and the
+	 * scheduler chops it at the requested rate - the right result for frequencies below the timer's
+	 * range. Timer frequency is shared by every channel of that timer.
 	 */
-	int setPadPWM(size_t pin, float /*frequency*/, float duty) override {
+	int setPadPWM(size_t pin, float frequency, float duty) override {
 		auto motor = getMotor(pin);
 		if (!motor) {
 			return -1;
+		}
+
+		if (frequency != m_frequency[pin]) {
+			if (!setDcMotorFrequency(pin, frequency)) {
+				return -1;
+			}
+
+			m_frequency[pin] = frequency;
 		}
 
 		motor->set(duty);
@@ -80,6 +94,8 @@ private:
 	}
 
 	DcMotor* m_motors[ETB_COUNT] = {};
+	// frequency currently programmed for the PWM consumer, 0 = none yet (slot runs at etbFreq)
+	float m_frequency[ETB_COUNT] = {};
 };
 
 static HbridgeGpio hbridgeGpio;
