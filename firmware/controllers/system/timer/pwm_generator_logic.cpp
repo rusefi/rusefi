@@ -48,6 +48,15 @@ PwmConfig::PwmConfig() {
  * @param dutyCycle value between 0 and 1
  * See also setFrequency
  */
+bool SimplePwm::setFrequency(float frequency) {
+	if (hardPwm) {
+		return hardPwm->setFrequency(frequency);
+	}
+
+	PwmConfig::setFrequency(frequency);
+	return true;
+}
+
 void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
 	if (isStopRequested) {
 		// we are here in order to not change pin once PWM stop was requested
@@ -64,12 +73,10 @@ void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
 		dutyCycle = 1;
 	}
 
-#if EFI_PROD_CODE
 	if (hardPwm) {
 		hardPwm->setDuty(dutyCycle);
 		return;
 	}
-#endif
 
 	// Handle near-zero and near-full duty cycle.  This will cause the PWM output to behave like a plain digital output:
 	// in PM_ZERO/PM_FULL mode togglePwmState() ignores the switch-time table and re-asserts the constant pin state
@@ -337,13 +344,6 @@ void startSimplePwm(SimplePwm *state, const char *msg,
 		warning(ObdCode::CUSTOM_OBD_LOW_FREQUENCY, "low frequency %.2f %s", frequency, msg);
 		return;
 	}
-	#if EFI_UNIT_TEST || (defined(BOARD_HBRIDGE_GPIO_COUNT) && BOARD_HBRIDGE_GPIO_COUNT > 0)
-	if (output->brainPin == Gpio::HBRIDGE_1_OUT || output->brainPin == Gpio::HBRIDGE_2_OUT) {
-		configError("H-bridge GPIO supports on/off output only");
-		return;
-	}
-	#endif
-
 #if EFI_PROD_CODE
 #if (BOARD_EXT_GPIOCHIPS > 0)
 	if (!callback) {
