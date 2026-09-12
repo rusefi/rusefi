@@ -189,7 +189,7 @@ public class MainFrame {
     private FrameOverlay activeOverlay;
     private FrameOverlay configErrorOverlay;
     private final ConfigErrorOverlayController configErrorController = new ConfigErrorOverlayController(
-        this::showConfigErrorOverlay, this::closeConfigErrorOverlay);
+        this::showConfigErrorOverlay, this::closeConfigErrorOverlay, this::isConfigErrorOverlayDisplaced);
     private SensorCentral.ResponseListenerToken configErrorSubscription;
     private final ConnectionStatusLogic.Listener configErrorConnectionListener = connected -> {
         if (!connected) {
@@ -605,6 +605,18 @@ public class MainFrame {
         }
         configErrorController.update(protocol, protocol.getConfigErrorMessage(),
             activeOverlay == null || activeOverlay == configErrorOverlay);
+    }
+
+    /**
+     * True when we believe the config-error overlay is up but the frame glass pane is now owned by
+     * someone else (see {@link TabbedPanel#installGlassPane()}), so the overlay is no longer on
+     * screen and must be re-asserted. Tolerates {@code frame == null} in start-up/teardown windows.
+     */
+    private boolean isConfigErrorOverlayDisplaced() {
+        return configErrorOverlay != null
+            && frame != null
+            && frame.getFrame() != null
+            && frame.getFrame().getGlassPane() != configErrorOverlay;
     }
 
     private void showConfigErrorOverlay(String message) {
