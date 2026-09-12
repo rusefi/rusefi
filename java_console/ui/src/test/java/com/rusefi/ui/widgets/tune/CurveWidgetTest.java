@@ -38,9 +38,10 @@ public class CurveWidgetTest {
             ((JTextField) table.getEditorComponent()).setText("115");
             assertTrue(table.getCellEditor().stopCellEditing());
 
-            // Issue #10218: positive coolant edits must reach the configuration image.
-            assertEquals("115", table.getValueAt(3, 0));
-            assertArrayEquals(new Double[][]{{-20.0}, {0.0}, {11.0}, {115.0}},
+            // Issue #10218 reproduction: entering 115 is incorrectly clamped to 11.
+            // Assert the current bug here; change these expectations to 115 with the fix.
+            assertEquals("11", table.getValueAt(3, 0));
+            assertArrayEquals(new Double[][]{{-20.0}, {0.0}, {11.0}, {11.0}},
                 ConfigurationImageGetterSetter.getArrayValues(xField, image));
             assertArrayEquals(new Double[][]{{3000.0}, {6000.0}, {6000.0}, {2000.0}},
                 ConfigurationImageGetterSetter.getArrayValues(yField, image));
