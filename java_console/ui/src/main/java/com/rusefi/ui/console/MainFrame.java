@@ -191,6 +191,10 @@ public class MainFrame {
     private final ConfigErrorOverlayController configErrorController = new ConfigErrorOverlayController(
         this::showConfigErrorOverlay, this::closeConfigErrorOverlay, this::isConfigErrorOverlayDisplaced);
     private SensorCentral.ResponseListenerToken configErrorSubscription;
+    // Output-channel polling (which drives the config-error listener) can go quiet while an ECU
+    // sits in a config-error state, and TabbedPanel can steal the glass pane at any time. This
+    // low-rate EDT timer re-checks the overlay so it heals regardless of the poll cadence.
+    private final Timer configErrorHealTimer = new Timer(750, e -> refreshConfigErrorOverlay());
     private final ConnectionStatusLogic.Listener configErrorConnectionListener = connected -> {
         if (!connected) {
             SwingUtilities.invokeLater(() -> configErrorController.update(null, null, false));
@@ -247,6 +251,8 @@ public class MainFrame {
             () -> SwingUtilities.invokeLater(this::refreshConfigErrorOverlay),
             new SensorSubscription(BinaryProtocol.CONFIG_ERROR_CHANNEL));
         ConnectionStatusLogic.INSTANCE.addListener(configErrorConnectionListener);
+        configErrorHealTimer.setRepeats(true);
+        configErrorHealTimer.start();
         if (unsupportedEcuHost != null) {
             unsupportedEcuHost.addBlockingListener(blocking -> {
                 unsupportedEcuBlocking = blocking;
@@ -608,15 +614,18 @@ public class MainFrame {
     }
 
     /**
-     * True when we believe the config-error overlay is up but the frame glass pane is now owned by
-     * someone else (see {@link TabbedPanel#installGlassPane()}), so the overlay is no longer on
-     * screen and must be re-asserted. Tolerates {@code frame == null} in start-up/teardown windows.
+     * True when we believe the config-error overlay is up but it is not actually on screen: either
+     * the frame glass pane is now owned by someone else (see {@link TabbedPanel#installGlassPane()})
+     * or it is still our overlay but has been made invisible. Either way it must be re-asserted.
+     * {@link javax.swing.JRootPane#setGlassPane} copies the outgoing pane's visibility onto the
+     * incoming one, so a swap by TabbedPanel can leave our overlay both displaced and hidden.
+     * Tolerates {@code frame == null} in start-up/teardown windows.
      */
     private boolean isConfigErrorOverlayDisplaced() {
-        return configErrorOverlay != null
-            && frame != null
-            && frame.getFrame() != null
-            && frame.getFrame().getGlassPane() != configErrorOverlay;
+        if (configErrorOverlay == null || frame == null || frame.getFrame() == null) {
+            return false;
+        }
+        return frame.getFrame().getGlassPane() != configErrorOverlay || !configErrorOverlay.isVisible();
     }
 
     private void showConfigErrorOverlay(String message) {
@@ -996,6 +1005,7 @@ public class MainFrame {
 
     private void windowClosedHandler() {
         configErrorSubscription.remove();
+        configErrorHealTimer.stop();
         ConnectionStatusLogic.INSTANCE.removeListener(configErrorConnectionListener);
         /**
          * looks like reconnectTimer in {@link com.rusefi.ui.RpmPanel} keeps AWT alive. Simplest solution would be to 'exit'
