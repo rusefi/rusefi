@@ -43,6 +43,8 @@ public class CurveWidget {
     private final JTable table = new JTable();
 
     private CurveModel curveModel;
+    private AxisModel xAxis;
+    private AxisModel yAxis;
     private Double[] xValues;
     private Double[] yValues;
     private String xUnits;
@@ -108,6 +110,8 @@ public class CurveWidget {
     private void update(CurveModel curveModel, IniFileModel iniFile, ConfigurationImage ci) {
         this.curveModel = Objects.requireNonNull(curveModel);
         this.imageTarget = ci;
+        this.xAxis = curveModel.getxAxis().resolve(iniFile, ci);
+        this.yAxis = curveModel.getyAxis().resolve(iniFile, ci);
 
         IniField xField = iniFile.findIniField(curveModel.getxBins()).get();
         this.xUnits = resolveUnits(xField.getUnits(), iniFile, ci);
@@ -272,11 +276,11 @@ public class CurveWidget {
         private void updatePoint(int index, Point p) {
             Point2D world = canvasToWorld(p);
             // enforce X-coordinate to stay in order
-            double minX = (index == 0) ? curve.getxAxis().getMin() : x[index - 1];
-            double maxX = (index == x.length - 1) ? curve.getxAxis().getMax() : x[index + 1];
+            double minX = (index == 0) ? xAxis.getMin() : x[index - 1];
+            double maxX = (index == x.length - 1) ? xAxis.getMax() : x[index + 1];
 
             x[index] = Math.max(minX, Math.min(maxX, world.x));
-            y[index] = Math.max(curve.getyAxis().getMin(), Math.min(curve.getyAxis().getMax(), world.y));
+            y[index] = Math.max(yAxis.getMin(), Math.min(yAxis.getMax(), world.y));
         }
 
         @Override
@@ -312,8 +316,6 @@ public class CurveWidget {
         public void drawGrid(Graphics2D g2) {
             Color gridColor = new Color(200, 200, 200, 100); // light grey, semi-transparent
             g2.setStroke(new BasicStroke(0.5f));
-            AxisModel xAxis = curve.getxAxis();
-            AxisModel yAxis = curve.getyAxis();
 
             FontMetrics fm = g2.getFontMetrics();
 
@@ -381,10 +383,10 @@ public class CurveWidget {
         }
 
         private Point worldToCanvas(double wx, double wy) {
-            double xMin = curve.getxAxis().getMin();
-            double xMax = curve.getxAxis().getMax();
-            double yMin = curve.getyAxis().getMin();
-            double yMax = curve.getyAxis().getMax();
+            double xMin = xAxis.getMin();
+            double xMax = xAxis.getMax();
+            double yMin = yAxis.getMin();
+            double yMax = yAxis.getMax();
 
             int leftPadding = 50;
             int rightPadding = 20;
@@ -402,10 +404,10 @@ public class CurveWidget {
         }
 
         private Point2D canvasToWorld(Point p) {
-            double xMin = curve.getxAxis().getMin();
-            double xMax = curve.getxAxis().getMax();
-            double yMin = curve.getyAxis().getMin();
-            double yMax = curve.getyAxis().getMax();
+            double xMin = xAxis.getMin();
+            double xMax = xAxis.getMax();
+            double yMin = yAxis.getMin();
+            double yMax = yAxis.getMax();
 
             int leftPadding = 50;
             int rightPadding = 20;
@@ -475,11 +477,11 @@ public class CurveWidget {
         private void setValue(int row, int column, double value) {
             if (column == 0) {
                 // Keep adjacent X values in their required order.
-                double min = (row == 0) ? curveModel.getxAxis().getMin() : xValues[row - 1];
-                double max = (row == xValues.length - 1) ? curveModel.getxAxis().getMax() : xValues[row + 1];
+                double min = (row == 0) ? xAxis.getMin() : xValues[row - 1];
+                double max = (row == xValues.length - 1) ? xAxis.getMax() : xValues[row + 1];
                 xValues[row] = Math.max(min, Math.min(max, value));
             } else {
-                yValues[row] = Math.max(curveModel.getyAxis().getMin(), Math.min(curveModel.getyAxis().getMax(), value));
+                yValues[row] = Math.max(yAxis.getMin(), Math.min(yAxis.getMax(), value));
             }
         }
     }
@@ -503,11 +505,11 @@ public class CurveWidget {
 
             double min, max;
             if (column == 0) {
-                min = curveModel.getxAxis().getMin();
-                max = curveModel.getxAxis().getMax();
+                min = xAxis.getMin();
+                max = xAxis.getMax();
             } else {
-                min = curveModel.getyAxis().getMin();
-                max = curveModel.getyAxis().getMax();
+                min = yAxis.getMin();
+                max = yAxis.getMax();
             }
             applyGradient(c, doubleValue, min, max);
             return c;
