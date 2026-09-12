@@ -92,17 +92,17 @@ public class CurveBuilder {
             return true;
         } else if (first.equalsIgnoreCase("xAxis")) {
             list.removeFirst();
-            double min = com.opensr5.ini.field.IniField.parseDouble(list.removeFirst());
-            double max = com.opensr5.ini.field.IniField.parseDouble(list.removeFirst());
+            String min = list.removeFirst();
+            String max = list.removeFirst();
             int step = list.isEmpty() ? DEFAULT_AXIS_STEP : (int) com.opensr5.ini.field.IniField.parseDouble(list.removeFirst());
-            setXAxis(min, max, step);
+            xAxis = new AxisModel(min, max, step);
             return true;
         } else if (first.equalsIgnoreCase("yAxis")) {
             list.removeFirst();
-            double min = com.opensr5.ini.field.IniField.parseDouble(list.removeFirst());
-            double max = com.opensr5.ini.field.IniField.parseDouble(list.removeFirst());
+            String min = list.removeFirst();
+            String max = list.removeFirst();
             int step = list.isEmpty() ? DEFAULT_AXIS_STEP : (int) com.opensr5.ini.field.IniField.parseDouble(list.removeFirst());
-            setYAxis(min, max, step);
+            yAxis = new AxisModel(min, max, step);
             return true;
         } else if (first.equalsIgnoreCase("xBins")) {
             list.removeFirst();
