@@ -105,9 +105,7 @@ public class SerialPortScannerTest {
     }
 
     /**
-     * Run one scan cycle. inspectPorts signals scan completion by interrupting the calling
-     * (= this test) thread out of its timeout sleep; clear any stray flag so it cannot leak
-     * into later waits inside the test framework.
+     * Run one scan cycle without the background scanner.
      */
     private void scan(boolean includeSlowLookup) {
         scanner.findAllAvailablePorts(includeSlowLookup);

@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -104,99 +105,105 @@ public class SerialPortScanner implements PortScanner {
             startTimer();
     }
 
-    // Track in-flight probe threads so suspend() can interrupt them and wait
-    // for them to release the port before a flash job proceeds.
+    // Keep timed-out threads keyed by port until they exit: native serial opens may ignore
+    // interruption. This also lets suspend() wait for probes to release their port handles.
     // [tag:better_ux_for_flashing]
-    private final List<Thread> probeThreads = Collections.synchronizedList(new ArrayList<>());
+    private final Map<String, Thread> probeThreads = new HashMap<>();
 
     /**
-     * Probe every port concurrently (one thread each, bounded by a shared timeout) and collect the
-     * results. Dead ports (null from the inspector) are dropped; ports that time out are reported
-     * as Unknown.
+     * Probe ports concurrently with a shared timeout. A port with an earlier probe still alive
+     * is reported as Unknown without starting another thread. Dead ports (null) are dropped.
      */
-    static List<PortResult> inspectPorts(final List<String> ports, final List<Thread> probeThreadsRef,
+    static List<PortResult> inspectPorts(final List<String> ports, final Map<String, Thread> probeThreadsRef,
                                          final Function<String, PortResult> inspector) {
+        synchronized (probeThreadsRef) {
+            probeThreadsRef.values().removeIf(t -> !t.isAlive());
+        }
         if (ports.isEmpty()) {
             return new ArrayList<>();
         }
 
         final Object resultsLock = new Object();
         final Map<String, PortResult> results = new HashMap<>();
+        final AtomicBoolean acceptingResults = new AtomicBoolean(true);
+        final CountDownLatch completed = new CountDownLatch(ports.size());
+        final List<Thread> threads = new ArrayList<>();
 
-        // When the last port is found, we need to cancel the timeout
-        final Thread callingThread = Thread.currentThread();
-
-        // One thread per port to check
-        final List<Thread> threads = ports.stream().map(p -> {
-            final String threadName = "SerialPortScanner inspectPort " + p;
-
-            Thread t = new Thread(() -> {
-                log.trace(String.format("Thread `%s` is starting...", threadName));
-                PortResult r;
-                try {
-                    r = inspector.apply(p);
-                } catch (Throwable e) {
-                    // Never let a probe exception kill the inspect thread.
-                    // If inspectPort already returned null (dead port), keep it null.
-                    // Otherwise treat as Unknown. [tag:better_ux_for_flashing]
-                    log.warn("inspectPort crashed for " + p + ", treating as Unknown: " + e);
-                    r = new PortResult(p, SerialPortType.Unknown);
+        for (String port : ports) {
+            // Checking, registering and starting must be atomic with respect to other scans
+            // and suspend(). Do not remove an entry just because its port disappeared.
+            synchronized (probeThreadsRef) {
+                Thread previous = probeThreadsRef.get(port);
+                if (previous != null && previous.isAlive()) {
+                    synchronized (resultsLock) {
+                        results.put(port, new PortResult(port, SerialPortType.Unknown));
+                    }
+                    completed.countDown();
+                    continue;
                 }
 
-                // Record the result under lock
-                synchronized (resultsLock) {
-                    if (Thread.currentThread().isInterrupted()) {
-                        log.trace(String.format("Thread `%s` is interrupted.", threadName));
-                        return;
+                final String threadName = "SerialPortScanner inspectPort " + port;
+                Thread thread = new Thread(() -> {
+                    log.trace(String.format("Thread `%s` is starting...", threadName));
+                    try {
+                        PortResult result;
+                        try {
+                            result = inspector.apply(port);
+                        } catch (Throwable e) {
+                            // A failed probe must not kill the scan. [tag:better_ux_for_flashing]
+                            log.warn("inspectPort crashed for " + port + ", treating as Unknown: " + e);
+                            result = new PortResult(port, SerialPortType.Unknown);
+                        }
+
+                        synchronized (resultsLock) {
+                            // A native call may consume the interrupt before returning. Explicitly
+                            // reject late results as well as results from an interrupted probe.
+                            if (acceptingResults.get() && !Thread.currentThread().isInterrupted()) {
+                                results.put(port, result);
+                            }
+                        }
+                        log.trace(String.format("Thread `%s` has finished.", threadName));
+                    } finally {
+                        // The inspector (including any port-handle cleanup) has returned, so
+                        // the next scan may retry even if this thread is still unwinding.
+                        synchronized (probeThreadsRef) {
+                            probeThreadsRef.remove(port, Thread.currentThread());
+                        }
+                        completed.countDown();
                     }
-
-                    results.put(p, r);
-
-                    if (results.size() == ports.size()) {
-                        callingThread.interrupt();
-                    }
-                }
-                log.trace(String.format("Thread `%s` has finished.", threadName));
-            });
-
-            t.setName(threadName);
-            t.setDaemon(true);
-            t.start();
-
-            if (probeThreadsRef != null) {
-                probeThreadsRef.add(t);
+                }, threadName);
+                thread.setDaemon(true);
+                probeThreadsRef.put(port, thread);
+                thread.start();
+                threads.add(thread);
             }
-
-            return t;
-        }).collect(Collectors.toList());
+        }
 
         try {
-            Thread.sleep(5000);
+            completed.await(5, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
-            // We got interrupted because the last port got found, nothing to do
+            // The scanner was interrupted (for example, to suspend for flashing).
         }
 
+        List<PortResult> scanResults;
         synchronized (resultsLock) {
+            acceptingResults.set(false);
             ScannerHelper.interruptThreads(threads);
-        }
-
-        // Timed-out ports that don't have a result yet get Unknown;
-        // null results (dead ports) are left as-is so they get filtered out.
-        for (String port : ports) {
-            if (!results.containsKey(port)) {
-                log.info("Port " + port + " timed out, adding as Unknown.");
-                results.put(port, new PortResult(port, SerialPortType.Unknown));
+            for (String port : ports) {
+                if (!results.containsKey(port)) {
+                    log.info("Port " + port + " timed out, adding as Unknown.");
+                    results.put(port, new PortResult(port, SerialPortType.Unknown));
+                }
             }
+            scanResults = results.values().stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
         }
 
-        // Clean up finished threads from the tracking list
-        if (probeThreadsRef != null) {
-            probeThreadsRef.removeIf(t -> !t.isAlive());
+        synchronized (probeThreadsRef) {
+            probeThreadsRef.values().removeIf(t -> !t.isAlive());
         }
-
-        return results.values().stream()
-            .filter(Objects::nonNull)
-            .collect(Collectors.toList());
+        return scanResults;
     }
 
     private final SerialPortCache portCache = new SerialPortCache();
@@ -373,7 +380,7 @@ public class SerialPortScanner implements PortScanner {
         CountDownLatch latch = portsScanner.suspend();
         // Interrupt all in-flight probe threads so they close their port handles
         synchronized (probeThreads) {
-            for (Thread t : probeThreads) {
+            for (Thread t : probeThreads.values()) {
                 if (t.isAlive()) {
                     t.interrupt();
                 }
@@ -384,7 +391,7 @@ public class SerialPortScanner implements PortScanner {
         while (System.currentTimeMillis() < deadline) {
             boolean allDone = true;
             synchronized (probeThreads) {
-                for (Thread t : probeThreads) {
+                for (Thread t : probeThreads.values()) {
                     if (t.isAlive()) {
                         allDone = false;
                         break;

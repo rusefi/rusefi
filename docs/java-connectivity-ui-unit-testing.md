@@ -167,10 +167,12 @@ Connectivity module value types and policy helpers (new tests can create
    comparator relies on: OpenBlt(10) < Dfu(15) < Ecu/EcuWithOpenblt(20) <
    CAN(30) < Unknown(100).
 5. **`SerialPortScanner.inspectPorts(...)` (static)** — inject a
-   `Function<String, PortResult>` inspector, pass `null` probe-threads ref:
+   `Function<String, PortResult>` inspector and a `Map<String, Thread>` shared across scans:
    null-returning inspector drops the port; throwing inspector yields
-   `Unknown`; normal results collected. (Skip the deliberate-timeout case — it
-   costs the hardwired 5 s sleep; that path needs the Tier 3 clock seam.)
+   `Unknown`; normal results collected. The #10221 regression test uses the real
+   5 s timeout and an interruption-resistant inspector to verify that subsequent
+   scans skip the stuck port, still detect healthy ports, and retry after the
+   inspector exits. Disappearance/reappearance must not bypass the guard.
 6. **`RecurringStep.suspend()` latch state machine** (without `start()`):
    after `stop()` the returned latch is already at 0; before stop it is at 1
    and repeated `suspend()` returns the same latch until `resume()`.
