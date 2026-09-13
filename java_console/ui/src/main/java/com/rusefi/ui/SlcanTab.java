@@ -50,7 +50,7 @@ import static com.devexperts.logging.Logging.getLogging;
  * scanning); a 250 ms Swing timer ({@link #refresh()}) renders it as the status text
  * ("Scanning for SLCAN port..." vs "Connected to ...") and the indicator color.
  * <p>
- * Shown in ConsoleUI behind the 'show_slcan_sniffer' flag; construct lazily (the reader
+ * Shown when the connected INI advertises CAN sniffing, or forced by 'show_slcan_sniffer'; construct lazily (the reader
  * thread starts scanning serial ports as soon as the tab is instantiated).
  *
  * @see com.rusefi.UiProperties#isSlcanSnifferEnabled()
@@ -70,6 +70,9 @@ public class SlcanTab {
     private final List<FrameRecord> buffer = new ArrayList<>(); // unlimited recording buffer
     private final ArrayDeque<FrameRecord> lastFrames = new ArrayDeque<>(); // newest first
 
+    private volatile boolean closed;
+    private final Timer refreshTimer;
+    private final Thread reader;
     private volatile boolean recording;
     private volatile long recordStartMs;
     private volatile String connectedPort; // null while disconnected
@@ -141,9 +144,10 @@ public class SlcanTab {
             saveBuffer();
         });
 
-        new Timer(250, e -> refresh()).start();
+        refreshTimer = new Timer(250, e -> refresh());
+        refreshTimer.start();
 
-        Thread reader = new Thread(this::readerLoop, "SLCAN tab reader");
+        reader = new Thread(this::readerLoop, "SLCAN tab reader");
         reader.setDaemon(true);
         reader.start();
     }
@@ -152,8 +156,16 @@ public class SlcanTab {
         return content;
     }
 
+    /** Called on the EDT when this board's tab is removed. The reader closes its port in finally. */
+    public void close() {
+        closed = true;
+        recording = false;
+        refreshTimer.stop();
+        reader.interrupt();
+    }
+
     private void readerLoop() {
-        while (true) {
+        while (!closed) {
             SlcanClient client = SlcanClient.findAndConnect(log::info);
             if (client == null) {
                 try {
@@ -166,7 +178,7 @@ public class SlcanTab {
             connectedPort = client.getPort();
             try {
                 long lastActivity = System.currentTimeMillis();
-                while (true) {
+                while (!closed) {
                     String line = client.readLine(READ_TIMEOUT_MS);
                     if (line == null) {
                         if (System.currentTimeMillis() - lastActivity > LIVENESS_POLL_PERIOD_MS) {

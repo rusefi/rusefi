@@ -65,6 +65,9 @@ public class SlcanClient implements Closeable {
     @Nullable
     public static SlcanClient findAndConnect(Consumer<String> logger) {
         for (String port : LinkManager.getCommPorts()) {
+            if (Thread.currentThread().isInterrupted()) {
+                return null;
+            }
             IoStream stream = BufferedSerialIoStream.openPort(port);
             if (stream == null) {
                 logger.accept(port + ": failed to open, skipping");

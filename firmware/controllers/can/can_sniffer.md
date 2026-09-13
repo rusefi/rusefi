@@ -9,7 +9,17 @@ On rusEFI boards built with a second USB CDC channel (`HAL_USE_USB_CDC_2`, e.g. 
 - **Primary VCP**: rusEFI Console / TunerStudio.
 - **Secondary VCP**: CAN Sniffer.
 
-Both CDC interfaces belong to one composite USB device and carry the same product string and serial number, so the host cannot tell them apart from USB descriptors alone (on Linux they typically enumerate as `/dev/ttyACM0` = console, `/dev/ttyACM1` = sniffer, but ordering is not guaranteed). Identify by probing: the console port answers the TunerStudio HELLO with the rusEFI signature, the sniffer port answers the SLCAN `V` command. That is exactly what the console's `SlcanTab` (behind the `show_slcan_sniffer` flag) does when "Scanning for SLCAN port".
+Both CDC interfaces belong to one composite USB device and carry the same product string and serial number, so the host cannot tell them apart from USB descriptors alone (on Linux they typically enumerate as `/dev/ttyACM0` = console, `/dev/ttyACM1` = sniffer, but ordering is not guaranteed). Identify by probing: the console port answers the TunerStudio HELLO with the rusEFI signature, the sniffer port answers the SLCAN `V` command. That is exactly what the console's `SlcanTab` (shown automatically when the connected board's INI includes the CAN sniffer menu) does when "Scanning for SLCAN port".
+
+## Console tab visibility
+
+The universal updater shows **SLCAN Sniffer** when the connected ECU's INI contains the
+`canBusSniffer` menu entry. Enable it with `#define ts_show_canbus_sniffer true` in the
+board's prepend, alongside firmware support for the second USB CDC channel. Rebuild
+firmware so the corresponding INI includes the entry; no board-specific console JAR is needed.
+The tab updates on connection changes and starts scanning only when opened.
+`show_slcan_sniffer=true` remains a force-show override for standalone use; the default
+`false` allows automatic detection. Older INIs without the menu need the override.
 
 ## Configuration
 

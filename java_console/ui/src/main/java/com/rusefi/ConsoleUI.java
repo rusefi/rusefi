@@ -6,6 +6,7 @@ import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autoupdate.Autoupdate;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolLogger;
 import com.rusefi.binaryprotocol.ShortcutsHelper;
 import com.rusefi.core.MessagesCentral;
@@ -482,16 +483,19 @@ console live data tab is broken #8402
             if (UiProperties.isKnockAnalyzerEnabled()) {
                 tabbedPane.addTab("Knock Analyzer", new KnockPane(uiContext).getContent());
             }
-            if (UiProperties.isSlcanSnifferEnabled()) {
-                // Lazy: SlcanTab starts a serial-port-scanning reader thread on construction,
-                // only do that once the user actually opens the tab.
-                tabbedPane.addTab("SLCAN Sniffer", new InitOnFirstPaintPanel() {
-                    @Override
-                    protected JPanel createContent() {
-                        return new SlcanTab(uiContext, mainFrame::showMessageOverlay).getContent();
-                    }
-                }.getContent());
-            }
+            SlcanTabController slcanTabs = new SlcanTabController(tabbedPane.tabbedPane,
+                () -> new SlcanTab(uiContext, mainFrame::showMessageOverlay));
+            Runnable refreshSlcanTab = () -> {
+                // Use only the current connection, never IniFileState's cached/offline fallback.
+                BinaryProtocol bp = uiContext.getBinaryProtocol();
+                IniFileModel connectedIni = !uiContext.isOfflineMode()
+                    && ConnectionStatusLogic.INSTANCE.getValue() == ConnectionStatusValue.CONNECTED
+                    && bp != null ? bp.getIniFileNullable() : null;
+                slcanTabs.update(connectedIni, UiProperties.isSlcanSnifferEnabled());
+            };
+            ConnectionStatusLogic.INSTANCE.addAndFireListener(connected ->
+                SwingUtilities.invokeLater(refreshSlcanTab));
+            uiContext.addOfflineModeListener(offline -> SwingUtilities.invokeLater(refreshSlcanTab));
             if (UiProperties.isPinoutEnabled()) {
                 tabbedPane.addTab("Pinout", pinoutPane.getContent());
             }
