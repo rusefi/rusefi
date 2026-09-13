@@ -225,7 +225,7 @@ info:
   title: AlphaX Platinum
   cid: c
   # directory see D.yaml
-  name: AlphaX Platinum
+  name: connector C
   image:
     file: 34pins-4k.jpg
   pins:
