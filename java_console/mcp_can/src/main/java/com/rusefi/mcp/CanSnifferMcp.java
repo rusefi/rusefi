@@ -2,6 +2,7 @@ package com.rusefi.mcp;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.io.can.PCanHelper;
+import com.rusefi.io.can.slcan.SlcanClient;
 import com.rusefi.util.HexBinary;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -15,21 +16,23 @@ import peak.can.basic.TPCANType;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 import static com.devexperts.logging.Logging.getLogging;
 
 /**
- * MCP (Model Context Protocol) server exposing read-only CAN bus sniffing via PCAN hardware.
+ * MCP (Model Context Protocol) server exposing read-only CAN bus sniffing via PCAN hardware or built-in SLCAN.
  *
  * <p>Tools provided:
  * <ul>
- *     <li><code>connect</code> — initialize the PCAN adapter and start the listener thread</li>
+ *     <li><code>connect</code> — open the selected adapter and start the listener thread</li>
  *     <li><code>read_packets</code> — return buffered CAN packets since a given sequence number</li>
  *     <li><code>wait_for_packet</code> — block until a packet matching criteria arrives</li>
  *     <li><code>status</code> — report connection state and buffer statistics</li>
@@ -63,6 +66,37 @@ public class CanSnifferMcp {
     /** Which PCAN channel this server sniffs. Defaults to USBBUS1; override with --channel. */
     private volatile TPCANHandle channel = PCanHelper.CHANNEL;
 
+    private String backend = "pcan";
+    private String port;
+    private volatile String connectedPort;
+    private volatile String lastError;
+    private final SlcanFactory slcanFactory;
+
+    interface SlcanConnection extends AutoCloseable {
+        String getPort();
+        String readLine(int timeoutMs) throws IOException;
+        void pollStatus() throws IOException;
+        void close();
+    }
+
+    interface SlcanFactory {
+        SlcanConnection open(String port) throws IOException;
+    }
+
+    private static SlcanConnection openSlcan(String port) throws IOException {
+        SlcanClient client = port == null ? SlcanClient.findAndConnect(System.err::println)
+                : SlcanClient.connect(port, System.err::println);
+        if (client == null) {
+            throw new IOException(port == null ? "No SLCAN port found" : "Cannot connect to SLCAN port " + port);
+        }
+        return new SlcanConnection() {
+            public String getPort() { return client.getPort(); }
+            public String readLine(int timeoutMs) throws IOException { return client.readLine(timeoutMs); }
+            public void pollStatus() throws IOException { client.pollStatus(); }
+            public void close() { client.close(); }
+        };
+    }
+
     public CanSnifferMcp() {
         this(new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8)),
                 new PrintStream(System.out, true, StandardCharsets.UTF_8));
@@ -70,8 +104,13 @@ public class CanSnifferMcp {
 
     /** Test-friendly constructor. */
     public CanSnifferMcp(BufferedReader in, PrintStream out) {
+        this(in, out, CanSnifferMcp::openSlcan);
+    }
+
+    CanSnifferMcp(BufferedReader in, PrintStream out, SlcanFactory slcanFactory) {
         this.in = in;
         this.out = out;
+        this.slcanFactory = slcanFactory;
     }
 
     /**
@@ -91,22 +130,45 @@ public class CanSnifferMcp {
         }
     }
 
-    public static void main(String[] args) {
-        TPCANHandle chosen = PCanHelper.CHANNEL;
+    void configure(String... args) {
+        boolean channelSpecified = false;
         for (int i = 0; i < args.length; i++) {
-            if ("--help".equals(args[i]) || "-h".equals(args[i])) {
-                System.err.println("Usage: CanSnifferMcp [--channel <n|PCAN_USBBUSn>]");
-                System.err.println("Speaks MCP (JSON-RPC 2.0) over stdio. Read-only CAN sniffer via PCAN.");
-                System.err.println("--channel selects the PCAN USB bus (default 1). Run one server per bus.");
-                return;
+            String option = args[i];
+            if (i + 1 == args.length) {
+                throw new IllegalArgumentException("Missing value for " + option);
             }
-            if ("--channel".equals(args[i]) && i + 1 < args.length) {
-                chosen = resolveChannel(args[++i]);
+            String value = args[++i];
+            switch (option) {
+                case "--backend": backend = value.toLowerCase(Locale.ROOT); break;
+                case "--port": port = value; break;
+                case "--channel": channel = resolveChannel(value); channelSpecified = true; break;
+                default: throw new IllegalArgumentException("Unknown option " + option);
             }
+        }
+        if (!backend.equals("pcan") && !backend.equals("slcan")) {
+            throw new IllegalArgumentException("Backend must be pcan or slcan");
+        }
+        if (port != null && (!backend.equals("slcan") || port.trim().isEmpty())) {
+            throw new IllegalArgumentException("--port requires --backend slcan and a non-empty serial port");
+        }
+        if (channelSpecified && backend.equals("slcan")) {
+            throw new IllegalArgumentException("--channel is for PCAN; SLCAN bus selection is configured in the ECU tune");
+        }
+    }
+
+    public static void main(String[] args) {
+        if (Arrays.asList(args).contains("--help") || Arrays.asList(args).contains("-h")) {
+            System.err.println("Usage: CanSnifferMcp [--backend pcan|slcan] [--channel <n|PCAN_USBBUSn>] [--port <serialPort>]");
+            System.err.println("Read-only CAN sniffing over stdio MCP. Default: PCAN USB bus 1 at 500 kbit/s.");
+            System.err.println("SLCAN: optional --port (otherwise autodetect); bus and bitrate are set in the ECU tune.");
+            return;
         }
         try {
             CanSnifferMcp server = new CanSnifferMcp();
-            server.channel = chosen;
+            server.configure(args);
+            // Serial discovery and shared IO may print diagnostics directly to System.out.
+            // The server already holds the original stdout for JSON-RPC responses.
+            System.setOut(System.err);
             server.run();
         } catch (Throwable t) {
             log.error("MCP server fatal", t);
@@ -123,6 +185,14 @@ public class CanSnifferMcp {
     private void run() throws Exception {
         log.info("rusEFI CAN Sniffer MCP server starting");
 
+        try {
+            readRequests();
+        } finally {
+            shutdown();
+        }
+    }
+
+    private void readRequests() throws IOException {
         String line;
         while ((line = in.readLine()) != null) {
             line = line.trim();
@@ -137,7 +207,6 @@ public class CanSnifferMcp {
             }
         }
         log.info("stdin closed, exiting");
-        shutdown();
     }
 
     private void shutdown() {
@@ -145,6 +214,11 @@ public class CanSnifferMcp {
         Thread t = listenerThread;
         if (t != null) {
             t.interrupt();
+            try {
+                t.join(3000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
         PCANBasic c = can;
         if (c != null) {
@@ -194,6 +268,46 @@ public class CanSnifferMcp {
         listenerThread.start();
     }
 
+    private void startSlcanListener(SlcanConnection connection) {
+        running = true;
+        listenerThread = new Thread(() -> {
+            try (SlcanConnection owned = connection) {
+                long nextPoll = System.nanoTime();
+                while (running && !Thread.currentThread().isInterrupted()) {
+                    SlcanClient.Frame frame = SlcanClient.Frame.parse(owned.readLine(200));
+                    if (frame != null) {
+                        synchronized (messageLock) {
+                            CanMessage message = new CanMessage(++messageSeq, System.currentTimeMillis(),
+                                    frame.id, frame.dlc, frame.data);
+                            message.extended = frame.extended;
+                            message.rtr = frame.rtr;
+                            message.slcanTimestamp = frame.timestamp;
+                            messageBuffer.addLast(message);
+                            while (messageBuffer.size() > messageBufferCapacity) {
+                                messageBuffer.removeFirst();
+                            }
+                            messageLock.notifyAll();
+                        }
+                    }
+                    if (System.nanoTime() >= nextPoll) {
+                        owned.pollStatus();
+                        nextPoll = System.nanoTime() + 1_000_000_000L;
+                    }
+                }
+            } catch (Exception e) {
+                lastError = "SLCAN listener failed: " + e.getMessage();
+                log.error(lastError, e);
+            } finally {
+                running = false;
+                synchronized (messageLock) {
+                    messageLock.notifyAll();
+                }
+            }
+        }, "SLCAN-sniffer-listener");
+        listenerThread.setDaemon(true);
+        listenerThread.start();
+    }
+
     // -----------------------------------------------------------------------------------
     // CAN message record
     // -----------------------------------------------------------------------------------
@@ -204,6 +318,9 @@ public class CanSnifferMcp {
         final int id;
         final int length;
         final byte[] data;
+        Boolean extended;
+        Boolean rtr;
+        String slcanTimestamp;
 
         CanMessage(long seq, long timestamp, int id, int length, byte[] data) {
             this.seq = seq;
@@ -222,6 +339,13 @@ public class CanSnifferMcp {
             o.put("idDec", id);
             o.put("length", length);
             o.put("data", HexBinary.printByteArray(data));
+            if (extended != null) {
+                o.put("extended", extended);
+                o.put("rtr", rtr);
+            }
+            if (slcanTimestamp != null) {
+                o.put("slcanTimestamp", slcanTimestamp);
+            }
             return o;
         }
     }
@@ -287,7 +411,7 @@ public class CanSnifferMcp {
     private JSONObject toolsList() {
         JSONArray tools = new JSONArray();
         tools.add(tool("connect",
-                "Initialize the PCAN adapter and start listening for CAN packets.",
+                "Open the adapter selected by --backend (pcan or slcan) and start listening for CAN packets.",
                 emptyObjectSchema()));
         tools.add(tool("read_packets",
                 "Return CAN packets from the in-memory ring buffer.",
@@ -337,11 +461,26 @@ public class CanSnifferMcp {
     @SuppressWarnings("unchecked")
     private JSONObject doConnect() {
         synchronized (connectLock) {
-            if (can != null && running) {
-                JSONObject r = new JSONObject();
-                r.put("connected", true);
+            if (running) {
+                JSONObject r = doStatus();
                 r.put("message", "Already connected");
                 return r;
+            }
+            if (backend.equals("slcan")) {
+                // A failed reader closes its port before publishing running=false.
+                if (listenerThread != null && listenerThread.isAlive()) {
+                    throw new IllegalStateException("Previous SLCAN reader is still stopping; retry connect");
+                }
+                lastError = null;
+                connectedPort = null;
+                try {
+                    SlcanConnection connection = slcanFactory.open(port);
+                    connectedPort = connection.getPort();
+                    startSlcanListener(connection);
+                } catch (IOException e) {
+                    lastError = e.getMessage();
+                }
+                return doStatus();
             }
             can = PCanHelper.create();
             TPCANStatus status = can.Initialize(channel, TPCANBaudrate.PCAN_BAUD_500K,
@@ -409,6 +548,9 @@ public class CanSnifferMcp {
                     o.put("match", m.toJson());
                     return o;
                 }
+                if (backend.equals("slcan") && !running) {
+                    throw new IllegalStateException(lastError != null ? lastError : "SLCAN is disconnected");
+                }
                 long remaining = deadline - System.currentTimeMillis();
                 if (remaining <= 0) {
                     JSONObject o = new JSONObject();
@@ -425,8 +567,17 @@ public class CanSnifferMcp {
     @SuppressWarnings("unchecked")
     private JSONObject doStatus() {
         JSONObject o = new JSONObject();
-        o.put("connected", can != null && running);
-        o.put("channel", channel.name());
+        o.put("connected", running);
+        o.put("backend", backend);
+        if (backend.equals("slcan")) {
+            o.put("port", connectedPort != null ? connectedPort : port);
+            if (lastError != null) {
+                o.put("success", false);
+                o.put("error", lastError);
+            }
+        } else {
+            o.put("channel", channel.name());
+        }
         synchronized (messageLock) {
             o.put("bufferedPackets", messageBuffer.size());
             o.put("totalReceived", messageSeq);
@@ -435,8 +586,11 @@ public class CanSnifferMcp {
     }
 
     private void ensureConnected() {
-        if (can == null || !running) {
+        if (!running) {
             doConnect();
+        }
+        if (backend.equals("slcan") && !running) {
+            throw new IllegalStateException(lastError != null ? lastError : "SLCAN is disconnected");
         }
     }
 

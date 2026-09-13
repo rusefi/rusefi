@@ -9,7 +9,7 @@ See also: `java_console/mcp_ecu/README.md`, `java_console/mcp_can/README.md`.
 | Module | Transport | Purpose |
 |--------|-----------|---------|
 | `:mcp_ecu` | stdio JSON-RPC | Upload/get Lua scripts, reset Lua, read ECU messages |
-| `:mcp_can` | stdio JSON-RPC | Read-only CAN bus sniffing via PCAN hardware |
+| `:mcp_can` | stdio JSON-RPC | Read-only CAN bus sniffing via PCAN or built-in SLCAN |
 
 #### .ini file resolution
 

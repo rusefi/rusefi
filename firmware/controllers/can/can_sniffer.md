@@ -117,3 +117,10 @@ The implementation is located in:
 Host-side counterparts in the Java console:
 - `java_console/ui/src/main/java/com/rusefi/ui/SlcanTab.java` — sniffer tab (port auto-scan, record to file)
 - `com.rusefi.io.can.slcan.SlcanClient` — the SLCAN client the tab is built on
+
+## MCP capture
+
+The CAN MCP server supports the built-in sniffer with `--backend slcan` and an optional
+`--port` naming the secondary USB serial port. It exposes the same read-only packet and
+wait tools as the PCAN backend. See [CAN MCP usage](../../../java_console/mcp_can/README.md)
+for build instructions, launch examples, and packet fields.

@@ -251,7 +251,7 @@ Any code reachable from a unit-test build (`unit_tests/` itself, plus firmware s
 rusEFI provides two MCP (Model Context Protocol) servers for LLM-driven tooling over stdio JSON-RPC:
 
 - **`:mcp_ecu`** (`java_console/mcp_ecu`) — `EcuMcpServer`: connect to an ECU, upload/download Lua scripts, send commands, and capture ECU messages. Entry point: `com.rusefi.mcp.EcuMcpServer`.
-- **`:mcp_can`** (`java_console/mcp_can`) — `CanSnifferMcp`: read-only CAN bus sniffing via PCAN hardware (connect, read packets, wait for packet, status). Entry point: `com.rusefi.mcp.CanSnifferMcp`.
+- **`:mcp_can`** (`java_console/mcp_can`) — `CanSnifferMcp`: read-only CAN bus sniffing via PCAN (default) or built-in SLCAN (`--backend slcan`, optional `--port`), with connect, read packets, wait for packet, and status tools. Entry point: `com.rusefi.mcp.CanSnifferMcp`.
 
 ## Serial Connectivity
 

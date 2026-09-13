@@ -64,7 +64,18 @@ public class SlcanClient implements Closeable {
      */
     @Nullable
     public static SlcanClient findAndConnect(Consumer<String> logger) {
-        for (String port : LinkManager.getCommPorts()) {
+        return findAndConnect(LinkManager.getCommPorts(), logger);
+    }
+
+    /** Probe only the requested port, without falling back to another ECU. */
+    @Nullable
+    public static SlcanClient connect(String port, Consumer<String> logger) {
+        return findAndConnect(java.util.Collections.singletonList(port), logger);
+    }
+
+    @Nullable
+    private static SlcanClient findAndConnect(Iterable<String> ports, Consumer<String> logger) {
+        for (String port : ports) {
             if (Thread.currentThread().isInterrupted()) {
                 return null;
             }
@@ -73,39 +84,40 @@ public class SlcanClient implements Closeable {
                 logger.accept(port + ": failed to open, skipping");
                 continue;
             }
-            boolean keepOpen = false;
             try {
-                String signature = SerialAutoChecker.checkResponse(stream, null);
-                if (signature != null) {
-                    logger.accept(port + ": rusEFI TS console [" + signature + "], skipping");
-                    continue;
-                }
-                // the TS HELLO probe above may have confused the SLCAN parser, drain leftovers
-                stream.getDataBuffer().dropPending();
-
-                String version = command(stream, "V");
-                if (version == null || version.isEmpty()) {
-                    logger.accept(port + ": no response to SLCAN V command, skipping");
-                    continue;
-                }
-                if (version.charAt(0) != 'V' && Frame.parse(version) == null) {
-                    logger.accept(port + ": not SLCAN (V response: " + printable(version) + ")");
-                    continue;
-                }
-                logger.accept(port + ": SLCAN detected, version response " + version);
-                SlcanClient client = new SlcanClient(stream, port, version);
-                client.openChannel();
-                keepOpen = true;
-                return client;
+                return connect(stream, port, logger);
             } catch (IOException e) {
                 logger.accept(port + ": IO error: " + e);
-            } finally {
-                if (!keepOpen) {
-                    stream.close();
-                }
             }
         }
         return null;
+    }
+
+    /** Owns the supplied stream, including closing it when probing or initialization fails. */
+    static SlcanClient connect(IoStream stream, String port, Consumer<String> logger) throws IOException {
+        boolean keepOpen = false;
+        try {
+            String signature = SerialAutoChecker.checkResponse(stream, null);
+            if (signature != null) {
+                throw new IOException("Port is the rusEFI TS console [" + signature + "]");
+            }
+            // the TS HELLO probe above may have confused the SLCAN parser, drain leftovers
+            stream.getDataBuffer().dropPending();
+            String version = command(stream, "V");
+            if (version == null || version.isEmpty()
+                    || (version.charAt(0) != 'V' && Frame.parse(version) == null)) {
+                throw new IOException("Not SLCAN (V response: " + printable(version) + ")");
+            }
+            logger.accept(port + ": SLCAN detected, version response " + version);
+            SlcanClient client = new SlcanClient(stream, port, version);
+            client.openChannel();
+            keepOpen = true;
+            return client;
+        } finally {
+            if (!keepOpen) {
+                stream.close();
+            }
+        }
     }
 
     private void openChannel() throws IOException {
