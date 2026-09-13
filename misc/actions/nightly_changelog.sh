@@ -7,6 +7,9 @@
 # The changelog lists commits between the previous nightly tag (the latest YYYY-MM-DD tag strictly
 # older than <today-tag>) and <head-sha>. Commits produced by automation (auto-generated configs, date
 # bumps, plain branch merges) are filtered out since they carry no information for release consumers.
+# Commits referencing the same #ticket in their subject are listed together, newest first within each
+# group. Groups follow their newest commit; subjects without tickets remain individual entries.
+# If a subject references multiple tickets, the first ticket determines its group.
 #
 # No local checkout is needed: tags are read with 'git ls-remote' and commits via the GitHub API ('gh api'),
 # so this works from a job which has not checked out the (large) repository.
@@ -99,12 +102,24 @@ echo "Commits since ${PREV_TAG}: ${TOTAL}, listed: ${KEPT}"
   if [ "${KEPT}" -eq 0 ]; then
     echo "No source changes, only automated commits."
   else
-    # Newest first, so the most recent work is at the top of the release page.
+    # Group by the first ticket in the subject, preserving newest-first order within each group.
     printf '%s\n' "${FILTERED}" | tac | awk -F'\t' -v repo="${REPO_URL}" '{
       sha = $1; author = $2; subject = $3
+      key = "commit:" sha
+      if (match(subject, /#[0-9]+/)) {
+        key = "ticket:" substr(subject, RSTART, RLENGTH)
+      }
+      if (!(key in entries)) {
+        order[++groups] = key
+      }
       # Escape markdown characters which would otherwise change formatting of the bullet.
       gsub(/[\\`*_<>\[\]]/, "\\\\&", subject)
-      printf "- [%s](%s/commit/%s) %s (%s)\n", substr(sha, 1, 10), repo, sha, subject, author
+      entries[key] = entries[key] sprintf("- [%s](%s/commit/%s) %s (%s)\n", substr(sha, 1, 10), repo, sha, subject, author)
+    }
+    END {
+      for (i = 1; i <= groups; i++) {
+        printf "%s", entries[order[i]]
+      }
     }'
   fi
   echo
