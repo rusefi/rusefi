@@ -48,6 +48,10 @@ enum class CanInterval : uint16_t {
 
 void resetCanWriteCycle();
 
+#if EFI_CAN_SUPPORT || EFI_UNIT_TEST
+void sendCanVerbose();
+#endif
+
 // 11 bit (CAN 2.0A)
 #define IS_EXT_RANGE_ID(id) ((id) >= 2048)
 
