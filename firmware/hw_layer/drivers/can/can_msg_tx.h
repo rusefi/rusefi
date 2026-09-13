@@ -58,7 +58,7 @@ public:
 
     CanCategory category;
 
-#if EFI_CAN_SUPPORT
+#if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 	/**
 	 * Configures the device for all messages to transmit from.
 	 */
@@ -69,7 +69,7 @@ public:
 	static void removeDevice(size_t idx) {
 		setDevice(idx, nullptr);
 	}
-#endif // EFI_CAN_SUPPORT
+#endif // EFI_CAN_SUPPORT || EFI_UNIT_TEST
 
 	size_t busIndex = 0;
 
@@ -127,9 +127,9 @@ protected:
 #endif // HAL_USE_CAN || EFI_UNIT_TEST
 
 private:
-#if EFI_CAN_SUPPORT
+#if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 	static CANDriver* s_devices[EFI_CAN_BUS_COUNT];
-#endif // EFI_CAN_SUPPORT
+#endif // EFI_CAN_SUPPORT || EFI_UNIT_TEST
 };
 
 /**

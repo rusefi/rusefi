@@ -1,6 +1,58 @@
 #include "pch.h"
 #include "can_msg_tx.h"
 
+namespace {
+
+CANDriver primaryCan;
+CANDriver unacknowledgedSecondaryCan;
+uint32_t simulatedTimeMs;
+uint32_t primaryTransmitTimeMs;
+uint32_t primaryTransmitCount;
+uint32_t secondaryTransmitCount;
+CANTxFrame lastPrimaryFrame;
+
+msg_t simulatedCanTransmit(CANDriver* device, canmbx_t, CANTxFrame* frame, can_sysinterval_t timeout) {
+	if (device == &unacknowledgedSecondaryCan) {
+		secondaryTransmitCount++;
+		simulatedTimeMs += timeout;
+		return MSG_TIMEOUT;
+	}
+
+	if (device == &primaryCan) {
+		primaryTransmitCount++;
+		primaryTransmitTimeMs = simulatedTimeMs;
+		lastPrimaryFrame = *frame;
+	}
+
+	return MSG_OK;
+}
+
+void sendSyntheticPrimaryCanFrame() {
+	CanTxMessage announcement(CanCategory::SERIAL, 0x770017, 8, /* bus */ 0, /* extended */ true);
+}
+
+class DualCanWithDisconnectedSecondaryTest : public ::testing::Test {
+protected:
+	void SetUp() override {
+		canTransmitMock = simulatedCanTransmit;
+		CanTxMessage::setDevice(0, &primaryCan);
+		CanTxMessage::setDevice(1, &unacknowledgedSecondaryCan);
+		simulatedTimeMs = 0;
+		primaryTransmitTimeMs = 0;
+		primaryTransmitCount = 0;
+		secondaryTransmitCount = 0;
+		lastPrimaryFrame = {};
+	}
+
+	void TearDown() override {
+		CanTxMessage::removeDevice(0);
+		CanTxMessage::removeDevice(1);
+		canTransmitMock = nullptr;
+	}
+};
+
+} // namespace
+
 TEST(CanTxMessage, SetIntValueLsb) {
     // We need some setup because CanTxMessage destructor tries to send the message.
     // In unit tests, txCanBuffer is used.
@@ -23,4 +75,28 @@ TEST(CanTxMessage, SetIntValueLsb) {
     EXPECT_EQ(msg[5], 0xCC);
     EXPECT_EQ(msg[6], 0xBB);
     EXPECT_EQ(msg[7], 0xAA);
+}
+
+TEST_F(DualCanWithDisconnectedSecondaryTest, DisconnectedSecondaryDelaysHealthyPrimaryTransmission) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	// Healthy baseline: a CAN1 frame sends immediately when no secondary frames precede it.
+	sendSyntheticPrimaryCanFrame();
+	EXPECT_EQ(0u, primaryTransmitTimeMs);
+	EXPECT_EQ(1u, primaryTransmitCount);
+	EXPECT_EQ(0x770017u, CAN_ID(lastPrimaryFrame));
+	EXPECT_EQ(CAN_IDE_EXT, lastPrimaryFrame.IDE);
+
+	// sender emits 12 frames on configured CAN2.  Each
+	// unacknowledged transmit blocks for 100 ms of timeout before
+	// the subsequent CAN1 transmission can run.
+	simulatedTimeMs = 0;
+	engineConfiguration->canBroadcastUseChannel = static_cast<can_broadcast_channel_e>(1);
+	sendCanVerbose();
+	sendSyntheticPrimaryCanFrame();
+
+	EXPECT_EQ(12u, secondaryTransmitCount);
+	EXPECT_EQ(2u, primaryTransmitCount);
+	EXPECT_EQ(1200u, primaryTransmitTimeMs);
+	EXPECT_GE(primaryTransmitTimeMs, 1000u);
 }

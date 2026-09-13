@@ -26,7 +26,11 @@ extern CanSniffer canSniffer;
 
 bool verboseCanTxError = false;
 
-#if EFI_CAN_SUPPORT
+#if EFI_UNIT_TEST && !EFI_CAN_SUPPORT
+int txErrorCount[EFI_CAN_BUS_COUNT] = {};
+#endif
+
+#if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 /*static*/ CANDriver* CanTxMessage::s_devices[EFI_CAN_BUS_COUNT] = {
 	nullptr,
 	nullptr,
@@ -42,7 +46,7 @@ bool verboseCanTxError = false;
 	}
 	s_devices[idx] = device;
 }
-#endif // EFI_CAN_SUPPORT
+#endif // EFI_CAN_SUPPORT || EFI_UNIT_TEST
 
 CanTxMessage::CanTxMessage(CanCategory p_category, uint32_t eid, uint8_t dlc, size_t bus, bool isExtended) {
     category = p_category;
@@ -92,7 +96,15 @@ CanTxMessage::~CanTxMessage() {
 #endif
 #endif // EFI_SIMULATOR
 
-#if EFI_CAN_SUPPORT
+#if EFI_CAN_SUPPORT || EFI_UNIT_TEST
+	// Preserve the previous host-test behavior unless a test explicitly opts in
+	// to simulated hardware transmission.
+#if EFI_UNIT_TEST
+	if (!canTransmitMock) {
+		return;
+	}
+#endif
+
 	ScopePerf pc(PE::CanDriverTx);
 
 	if (!engine->allowCanTx) {
@@ -158,7 +170,7 @@ extern int txErrorCount[EFI_CAN_BUS_COUNT];
 		}
 	}
 #endif // EFI_TUNER_STUDIO
-#endif /* EFI_CAN_SUPPORT */
+#endif /* EFI_CAN_SUPPORT || EFI_UNIT_TEST */
 }
 
 #if HAS_CAN_FRAME
@@ -208,4 +220,3 @@ uint8_t& CanTxMessage::operator[](size_t index) {
 	return m_frame.data8[index];
 }
 #endif // HAS_CAN_FRAME
-
