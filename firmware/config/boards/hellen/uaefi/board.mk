@@ -9,6 +9,8 @@ ifeq ($(PROJECT_CPU),ARCH_STM32F7)
 	DDEFS += -DLUA_RX_MAX_FILTER_COUNT=96
 	# Format stays the F7 default (compressed MSD).
 	DDEFS += -DEFI_EMBED_INI_MSD=TRUE
+	# OTG2 has enough endpoints for MSD plus a second CDC ACM for the CAN sniffer.
+	DDEFS += -DHAL_USE_USB_CDC_2=TRUE
 endif
 
 # 1mb is not enough for everything we have

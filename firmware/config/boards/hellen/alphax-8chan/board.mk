@@ -21,6 +21,8 @@ ifeq ($(PROJECT_CPU),ARCH_STM32F7)
 	DDEFS += -DENABLE_PERF_TRACE=FALSE
 	# Format stays the F7 default (compressed MSD).
 	DDEFS += -DEFI_EMBED_INI_MSD=TRUE
+	# OTG2 has enough endpoints for MSD plus a second CDC ACM for the CAN sniffer.
+	DDEFS += -DHAL_USE_USB_CDC_2=TRUE
 else ifeq ($(PROJECT_CPU),ARCH_STM32F4)
     # This board has trigger scope hardware!
     DDEFS += -DTRIGGER_SCOPE
