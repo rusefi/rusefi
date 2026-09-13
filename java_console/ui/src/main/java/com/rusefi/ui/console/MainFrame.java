@@ -76,6 +76,11 @@ public class MainFrame {
         private static final Color GREEN = new Color(0, 128, 0);
         private final JTextArea message = new JTextArea();
         private final JButton[] buttons;
+        private final JPanel content;
+        private final GridBagConstraints contentConstraints;
+        // When true the overlay dims the window and floats a compact card, leaving the UI visible
+        // behind it (the app's status-overlay look) instead of an opaque full-window takeover.
+        private boolean dimmed;
 
         FrameOverlay(String text, Color color, OverlayAction... actions) {
             super(new GridBagLayout());
@@ -90,6 +95,7 @@ public class MainFrame {
 
             buttons = new JButton[actions.length];
             JPanel actionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 8));
+            actionPanel.setOpaque(false);
             for (int i = 0; i < actions.length; i++) {
                 OverlayAction action = actions[i];
                 JButton button = createLargeButton(action.text);
@@ -99,15 +105,52 @@ public class MainFrame {
                 actionPanel.add(button);
             }
 
-            JPanel content = new JPanel(new BorderLayout(0, 24));
+            content = new JPanel(new BorderLayout(0, 24));
             content.setBorder(BorderFactory.createEmptyBorder(32, 32, 32, 32));
             content.add(message, BorderLayout.CENTER);
             content.add(actionPanel, BorderLayout.SOUTH);
-            GridBagConstraints constraints = new GridBagConstraints();
+            contentConstraints = new GridBagConstraints();
             // Let wrapped text use the window width instead of collapsing to its minimum width.
-            constraints.weightx = 1;
-            constraints.fill = GridBagConstraints.HORIZONTAL;
-            add(content, constraints);
+            contentConstraints.weightx = 1;
+            contentConstraints.fill = GridBagConstraints.HORIZONTAL;
+            add(content, contentConstraints);
+        }
+
+        /**
+         * Switch to a translucent presentation: dim the whole window and float a compact rounded
+         * card so the console stays visible (dimmed) behind the message. The overlay still captures
+         * input, so the Close button dismisses it; this matches the mock-up chosen for issue #10219.
+         */
+        FrameOverlay asDimmedOverlay() {
+            dimmed = true;
+            setOpaque(false);
+            content.setOpaque(false);
+            // Compact centered card instead of a full-width band.
+            contentConstraints.weightx = 0;
+            contentConstraints.fill = GridBagConstraints.NONE;
+            remove(content);
+            add(content, contentConstraints);
+            revalidate();
+            repaint();
+            return this;
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            if (dimmed) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                // Dim the whole window so the UI shows through, then a darker rounded card behind
+                // the message for contrast.
+                g2.setColor(new Color(0, 0, 0, 140));
+                g2.fillRect(0, 0, getWidth(), getHeight());
+                Rectangle b = content.getBounds();
+                int pad = 28;
+                g2.setColor(new Color(0, 0, 0, 210));
+                g2.fillRoundRect(b.x - pad, b.y - pad, b.width + 2 * pad, b.height + 2 * pad, 28, 28);
+                g2.dispose();
+            }
+            super.paintComponent(g);
         }
 
         void setMessage(String text, Color color) {
@@ -629,8 +672,9 @@ public class MainFrame {
     }
 
     private void showConfigErrorOverlay(String message) {
-        configErrorOverlay = new FrameOverlay("Config Error\n\n" + message, Color.RED.darker(),
-            new OverlayAction("Close", KeyEvent.VK_C, this::closeConfigErrorOverlay));
+        // Bright red so it stays readable on the dark translucent card.
+        configErrorOverlay = new FrameOverlay("Config Error\n\n" + message, new Color(255, 96, 96),
+            new OverlayAction("Close", KeyEvent.VK_C, this::closeConfigErrorOverlay)).asDimmedOverlay();
         showOverlay(configErrorOverlay);
     }
 
