@@ -529,10 +529,6 @@ static bool validateConfig(const engine_configuration_s* previousConfiguration) 
   if (!get_board_override_result(custom_board_validateConfig, true, previousConfiguration)) {
     return false;
   }
-#if defined(HW_HELLEN_UAEFI)
-  // todo: make this board-specific validation callback!
-  pickEtbOrStepper();
-#endif
   if (!validateGdi()) {
     return false;
   }

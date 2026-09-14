@@ -81,7 +81,8 @@
 		}
 	}
 
-static DcHardware dcHardware[ETB_COUNT + DC_PER_STEPPER];
+static DcHardware dcHardware[ETB_COUNT];
+static DcHardware stepperDcHardware[DC_PER_STEPPER];
 
 DcHardware *getPrimaryDCHardwareForLogging() {
 	return &dcHardware[0];
@@ -119,6 +120,42 @@ DcMotor* initDcMotor(brain_pin_e coil_p, brain_pin_e coil_m, size_t index) {
 		engineConfiguration->stepperDcInvertedPins,
 		&engine->scheduler,
 		engineConfiguration->etbFreq /* same in case of stepper? */
+	);
+
+	return &hw.dcMotor;
+}
+
+DcMotor* initStepperDcMotor(const char *disPinMsg, const dc_io& io, size_t index, bool useTwoWires) {
+	auto& hw = stepperDcHardware[index];
+
+	hw.start(
+		useTwoWires,
+		io.controlPin,
+		io.directionPin1,
+		io.directionPin2,
+		disPinMsg,
+		io.disablePin,
+		engineConfiguration->stepperDcInvertedPins,
+		&engine->scheduler,
+		engineConfiguration->etbFreq
+	);
+
+	return &hw.dcMotor;
+}
+
+DcMotor* initStepperDcMotor(brain_pin_e coil_p, brain_pin_e coil_m, size_t index) {
+	auto& hw = stepperDcHardware[index];
+
+	hw.start(
+		true, /* useTwoWires */
+		Gpio::Unassigned, /* pinEnable */
+		coil_p,
+		coil_m,
+		nullptr,
+		Gpio::Unassigned, /* pinDisable */
+		engineConfiguration->stepperDcInvertedPins,
+		&engine->scheduler,
+		engineConfiguration->etbFreq
 	);
 
 	return &hw.dcMotor;

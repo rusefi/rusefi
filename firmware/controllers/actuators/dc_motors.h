@@ -14,6 +14,10 @@
 DcMotor* initDcMotor(const char *disPinMsg, const dc_io& io, size_t index, bool useTwoWires);
 DcMotor* initDcMotor(brain_pin_e coil_p, brain_pin_e coil_m, size_t index);
 
+// Stepper coil motor initialization - uses a separate hardware pool from the ETB/DC-actuator pool
+DcMotor* initStepperDcMotor(const char *disPinMsg, const dc_io& io, size_t index, bool useTwoWires);
+DcMotor* initStepperDcMotor(brain_pin_e coil_p, brain_pin_e coil_m, size_t index);
+
 // Manual control of motors for use by console commands
 void setDcMotorFrequency(size_t index, int hz);
 void setDcMotorDuty(size_t index, float duty);
