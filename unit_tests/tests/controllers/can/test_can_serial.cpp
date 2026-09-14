@@ -56,6 +56,110 @@ public:
 	std::list<CANRxFrame> crfList;
 };
 
+class FailingCanTransport : public TestCanTransport {
+public:
+	can_msg_t transmit(CanTxMessage &, can_sysinterval_t) override {
+		return CAN_MSG_TIMEOUT;
+	}
+};
+
+class FailAfterFirstCanTransport : public TestCanTransport {
+public:
+	can_msg_t transmit(CanTxMessage &ctfp, can_sysinterval_t timeout) override {
+		if (successfulTransmits++ != 0) {
+			return CAN_MSG_TIMEOUT;
+		}
+		return TestCanTransport::transmit(ctfp, timeout);
+	}
+
+	int successfulTransmits = 0;
+};
+
+class FailFirstCanTransport : public TestCanTransport {
+public:
+	can_msg_t transmit(CanTxMessage &message, can_sysinterval_t timeout) override {
+		if (++attempts == 1) {
+			return CAN_MSG_TIMEOUT;
+		}
+		return TestCanTransport::transmit(message, timeout);
+	}
+
+	int attempts = 0;
+};
+
+// if the first frame fails, stop sending the packet even if the
+// remaining frames could be sent successfully.
+TEST(IsoTpStream, FailedFirstFrameAbortsFlush) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	FailFirstCanTransport transport;
+	CanStreamerState state(&transport, &transport, 0, 0x7e9, 0x7e1);
+	uint8_t payload[10] = {};
+	size_t size = sizeof(payload);
+	ASSERT_EQ(CAN_MSG_OK, state.streamAddToTxTimeout(&size, payload, 0));
+	EXPECT_EQ(CAN_MSG_TIMEOUT, state.streamFlushTx(0));
+	EXPECT_EQ(1, transport.attempts);
+	EXPECT_EQ(0u, transport.ctfList.size());
+	EXPECT_EQ(0, state.txFifoBuf.getCount());
+}
+
+TEST(IsoTpWrite, FailedFirstFrameDoesNotConsumeStaleFlowControl) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	FailFirstCanTransport transport;
+	IsoTpRxTx endpoint(0, 0x7e9, 0x7e1);
+	endpoint.txTransport = &transport;
+	CANRxFrame flowControl{};
+	flowControl.DLC = 8;
+	flowControl.data8[0] = 0x30;
+	endpoint.decodeFrame(flowControl, 0);
+	const uint8_t payload[10] = {};
+	EXPECT_EQ(0, endpoint.writeTimeout(payload, sizeof(payload), 0));
+	EXPECT_EQ(1, transport.attempts);
+	EXPECT_EQ(0u, transport.ctfList.size());
+	EXPECT_FALSE(endpoint.isRxEmpty());
+}
+
+TEST(IsoTpStream, PropagatesFailedFullAndPartialFlush) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	FailingCanTransport transport;
+	CanStreamerState state(&transport, &transport, 0, 0x7e9, 0x7e1);
+
+	std::vector<uint8_t> full(state.txFifoBuf.getSize(), 0);
+	size_t fullSize = full.size();
+	EXPECT_EQ(CAN_MSG_TIMEOUT, state.streamAddToTxTimeout(&fullSize, full.data(), 0));
+	EXPECT_EQ(0, state.txFifoBuf.getCount());
+
+	uint8_t partial[7] = {};
+	size_t partialSize = sizeof(partial);
+	ASSERT_EQ(CAN_MSG_OK, state.streamAddToTxTimeout(&partialSize, partial, 0));
+	EXPECT_EQ(CAN_MSG_TIMEOUT, state.streamFlushTx(0));
+	EXPECT_EQ(0, state.txFifoBuf.getCount());
+}
+
+TEST(IsoTpStream, DiscardsPartialPrefixFromBothStreamLayers) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	uint8_t multiFrame[10] = {};
+
+	// Only the first frame succeeds. Flushing must report failure and clear
+	// the buffer so a later flush cannot send that first frame again.
+	FailAfterFirstCanTransport flushTransport;
+	CanStreamerState flushState(&flushTransport, &flushTransport, 0, 0x7e9, 0x7e1);
+	size_t flushSize = sizeof(multiFrame);
+	ASSERT_EQ(CAN_MSG_OK, flushState.streamAddToTxTimeout(&flushSize, multiFrame, 0));
+	EXPECT_EQ(CAN_MSG_TIMEOUT, flushState.streamFlushTx(0));
+	EXPECT_EQ(1u, flushTransport.ctfList.size());
+	EXPECT_EQ(0, flushState.txFifoBuf.getCount());
+
+	// Filling the buffer also triggers a send. Check that it handles the same
+	// failure by reporting a timeout and clearing the buffer.
+	FailAfterFirstCanTransport addTransport;
+	CanStreamerState addState(&addTransport, &addTransport, 0, 0x7e9, 0x7e1);
+	std::vector<uint8_t> full(addState.txFifoBuf.getSize(), 0);
+	size_t fullSize = full.size();
+	EXPECT_EQ(CAN_MSG_TIMEOUT, addState.streamAddToTxTimeout(&fullSize, full.data(), 0));
+	EXPECT_EQ(1u, addTransport.ctfList.size());
+	EXPECT_EQ(0, addState.txFifoBuf.getCount());
+}
+
 // Regression: the 10-byte Dodge RAM-read request was rejected for a nonzero BS.
 TEST(IsoTpWrite, DodgeReadAcceptsBlockSizeEight) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
