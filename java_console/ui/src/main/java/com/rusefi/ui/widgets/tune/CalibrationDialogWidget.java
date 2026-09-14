@@ -23,6 +23,7 @@ import com.rusefi.ui.widgets.SensorGauge;
 import eu.hansolo.steelseries.gauges.Radial;
 import eu.hansolo.steelseries.tools.BackgroundColor;
 import com.rusefi.ui.laf.GradientTitleBorder;
+import com.rusefi.ui.util.ConstrainedBorderLayout;
 import com.rusefi.ui.util.ScrollablePanel;
 import com.rusefi.ui.util.SwingUtil;
 import com.rusefi.ui.util.WrapLayout;
@@ -146,7 +147,7 @@ public class CalibrationDialogWidget {
 
     private static void applyLayout(JPanel panel, String layoutHint) {
         if ("border".equalsIgnoreCase(layoutHint)) {
-            panel.setLayout(new BorderLayout(4, 4));
+            panel.setLayout(new ConstrainedBorderLayout(4, 4));
         } else if ("xAxis".equalsIgnoreCase(layoutHint)) {
             panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
         } else {

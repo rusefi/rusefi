@@ -127,6 +127,51 @@ public class CalibrationDialogWidgetTest {
         assertEquals("h5", hPanel3.getComponent(0).getName());
     }
 
+    /** issue #10207. */
+    @Test
+    public void narrowBorderDialogPanelBounds() {
+        IniFileModel iniFileModel = mock(IniFileModel.class);
+        when(iniFileModel.getCurves()).thenReturn(Collections.emptyMap());
+
+        String longOption = "B18 VVT2 or Idle or Low Side output 2 or injector 8 with flyback protection";
+        EnumIniField leftField = createEnumField("leftField", 0, longOption, "NONE");
+        EnumIniField rightField = createEnumField("rightField", 1, longOption, "NONE");
+        when(iniFileModel.findIniField("leftField")).thenReturn(java.util.Optional.of(leftField));
+        when(iniFileModel.findIniField("rightField")).thenReturn(java.util.Optional.of(rightField));
+
+        DialogModel leftDialog = new DialogModel("left", "Left",
+            Collections.singletonList(new DialogModel.Field("leftField", "Output")),
+            Collections.emptyList());
+        DialogModel rightDialog = new DialogModel("right", "Right",
+            Collections.singletonList(new DialogModel.Field("rightField", "Output")),
+            Collections.emptyList());
+        Map<String, DialogModel> dialogs = new HashMap<>();
+        dialogs.put("left", leftDialog);
+        dialogs.put("right", rightDialog);
+        when(iniFileModel.getDialogs()).thenReturn(dialogs);
+
+        List<PanelModel> panels = new ArrayList<>();
+        panels.add(new PanelModel("left", "West", null, null));
+        panels.add(new PanelModel("right", "East", null, null));
+        DialogModel mainDialog = new DialogModel("main", "Main", Collections.emptyList(),
+            Collections.emptyList(), panels, (String) null, "border");
+
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+        widget.update(mainDialog, iniFileModel, new ConfigurationImage(new byte[2]));
+
+        JPanel content = widget.getContentPane();
+        content.setSize(600, 200);
+        content.doLayout();
+        BorderLayout layout = (BorderLayout) content.getLayout();
+        Component west = layout.getLayoutComponent(BorderLayout.WEST);
+        Component east = layout.getLayoutComponent(BorderLayout.EAST);
+
+        assertFalse(west.getBounds().intersects(east.getBounds()),
+            "Issue #10207: constrained edge panels must not overlap");
+        assertTrue(west.getWidth() >= west.getMinimumSize().width);
+        assertTrue(east.getWidth() >= east.getMinimumSize().width);
+    }
+
     @Test
     public void testXAxisLayoutHint() {
         IniFileModel iniFileModel = mock(IniFileModel.class);
@@ -343,12 +388,16 @@ public class CalibrationDialogWidgetTest {
     }
 
     private EnumIniField createEnumField(String... values) {
+        return createEnumField("test", 0, values);
+    }
+
+    private EnumIniField createEnumField(String name, int offset, String... values) {
         Map<Integer, String> map = new HashMap<>();
         for (int i = 0; i < values.length; i++) {
             map.put(i, values[i]);
         }
         EnumIniField.EnumKeyValueMap enumMap = new EnumIniField.EnumKeyValueMap(map);
-        return new EnumIniField("test", 0, FieldType.INT8, enumMap, 0, 0);
+        return new EnumIniField(name, offset, FieldType.INT8, enumMap, 0, 0);
     }
 
     @Test
