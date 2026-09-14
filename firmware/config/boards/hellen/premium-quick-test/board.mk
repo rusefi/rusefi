@@ -70,5 +70,5 @@ ifeq (,$(findstring EFI_BOOTLOADER,$(DDEFS)))
 	BOARDCPPSRC += $(BOARD_DIR)/board_storage.cpp
 
 	# this board have i2c2 bus with ADC chip on it
-	DDEFS += -DHAL_USE_I2C=TRUE -DSTM32_I2C_USE_I2C2=TRUE
+	DDEFS += -DHAL_USE_I2C=TRUE -DSTM32_I2C_USE_I2C2=TRUE -DBOARD_ADS7128_COUNT=1
 endif
