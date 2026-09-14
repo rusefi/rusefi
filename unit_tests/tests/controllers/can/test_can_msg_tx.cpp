@@ -4,6 +4,7 @@
 #include "gmock/gmock.h"
 #include "isotp.h"
 #include "rusefi_lua.h"
+#include <vector>
 
 namespace {
 
@@ -15,6 +16,7 @@ uint32_t primaryTransmitCount;
 uint32_t secondaryTransmitCount;
 CANTxFrame lastPrimaryFrame;
 CANTxFrame lastSecondaryFrame;
+std::vector<uint32_t> primaryFrameIds;
 bool secondaryMailboxAvailable;
 bool drainWaitHook;
 bool resetWaitHook;
@@ -43,6 +45,7 @@ msg_t simulatedCanTransmit(CANDriver* device, canmbx_t, CANTxFrame* frame, can_s
 		primaryTransmitCount++;
 		primaryTransmitTimeMs = simulatedTimeMs;
 		lastPrimaryFrame = *frame;
+		primaryFrameIds.push_back(CAN_ID(*frame));
 	}
 
 	return MSG_OK;
@@ -96,6 +99,7 @@ protected:
 		secondaryMailboxAvailable = false;
 		lastPrimaryFrame = {};
 		lastSecondaryFrame = {};
+		primaryFrameIds.clear();
 		drainWaitHook = false;
 		resetWaitHook = false;
 		reenterWaitHook = false;
@@ -341,6 +345,62 @@ TEST_F(DualCanWithDisconnectedSecondaryTest, FullQueueDropsNewestAndResetDiscard
 	CanTxMessage::stopBus(1);
 	EXPECT_FALSE(CanTxMessage::serviceOne(1));
 	EXPECT_EQ(0u, secondaryTransmitCount);
+}
+
+TEST_F(DualCanWithDisconnectedSecondaryTest, PeriodicBurstWithLuaAndIsoTpKeepsAnnouncement) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->verboseCanBaseAddress = 0x200;
+	engineConfiguration->canBroadcastUseChannel = static_cast<can_broadcast_channel_e>(0);
+	engineConfiguration->rusefiVerbose29b = false;
+	engine->allowCanTx = true;
+
+	// A disconnected secondary bus must not stop the primary burst being sent.
+	{
+		CanTxMessage secondary(CanCategory::SERIAL, 0x123, 8, 1);
+	}
+	EXPECT_FALSE(CanTxMessage::serviceOne(1));
+
+	void sendCanVerbose();
+	sendCanVerbose();
+	const uint32_t qcIds[] = {
+		0x770000, 0x770001, 0x770006, 0x770013,
+		0x770003, 0x770005, 0x770004, 0x770008
+	};
+	for (auto id : qcIds) {
+		CanTxMessage qc(CanCategory::BENCH_TEST, id, 8, 0, true);
+	}
+	{
+		CanTxMessage announcement(CanCategory::SERIAL, 0x770017, 8, 0, true);
+		announcement.setIntValueLsb(0x720, 0);
+		announcement.setIntValueLsb(0x710, 4);
+	}
+	{
+		CanTxMessage wideband(CanCategory::WBO_SERVICE, 0xef50000, 8, 0, true);
+	}
+	EXPECT_EQ(1, testLuaReturnsInteger(R"(
+		function testFunc()
+			txCan(1, 0x6ab, 0, {0xa5, 0x55})
+			return 1
+		end
+	)"));
+	EXPECT_EQ(0u, primaryTransmitCount);
+
+	// ISO-TP queues its reply after the burst. Only now let the worker run.
+	drainWaitHook = true;
+	IsoTpRxTx isoTp(0, 0x7e0, 0x720);
+	const uint8_t reply[] = {0x62, 0xf1, 0x90};
+	EXPECT_EQ(3, isoTp.writeTimeout(reply, sizeof(reply), TIME_MS2I(10)));
+
+	// Keep every frame, including the late announcement and concurrent senders.
+	EXPECT_EQ(0, CanTxMessage::getQueueDropCount(0));
+	EXPECT_THAT(primaryFrameIds, testing::ElementsAre(
+		0x200, 0x201, 0x202, 0x203, 0x204, 0x205,
+		0x206, 0x207, 0x208, 0x209, 0x20a, 0x20b,
+		0x770000, 0x770001, 0x770006, 0x770013,
+		0x770003, 0x770005, 0x770004, 0x770008,
+		0x770017, 0xef50000, 0x6ab, 0x720));
+	EXPECT_EQ(0u, primaryTransmitTimeMs);
+	EXPECT_EQ(1u, secondaryTransmitCount);
 }
 
 TEST_F(DualCanWithDisconnectedSecondaryTest, SubmitAndWaitUsesQueuedWorkerAndCanCompleteRepeatedly) {
