@@ -13,7 +13,7 @@
 class BitbangI2c : public i2cBus {
 public:
 	// Initialize the I2C driver
-	bool init(brain_pin_e scl, brain_pin_e sda, i2c_speed_e speed) override;
+	bool init(brain_pin_e scl, brain_pin_e sda, i2c_speed_e speed = I2C_SPEED_400K) override;
 	// Release resources
 	void deinit() override;
 
