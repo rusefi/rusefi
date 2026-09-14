@@ -99,6 +99,17 @@ static OutputPin canStb;
 static void premiumQuickTestInitHardware() {
 	canStb.initPin("CAN_STB", Gpio::MMP176_CAN_STB);
 	canStb.setValue(0);
+
+#if EFI_PROD_CODE && !EFI_BOOTLOADER && (BOARD_ADS7128_COUNT > 0)
+	static ads7128_config ads7128_cfg = {
+		.i2c_bus = I2C_BUS_2,
+		.i2c_addr = 0x10,
+		.vref = 5.0, // is not true when powered from USB due to voltage drop on reverse protection diode
+	};
+
+	int ret = ads7128_add(Gpio::MSIOBOX_0_OUT_1, 0, &ads7128_cfg);
+	efiPrintf("*****************+ ads7128_add %d +*******************", ret);
+#endif
 }
 
 // On-module LAN8720A RMII PHY, same MCU pins as Nucleo-F767:
