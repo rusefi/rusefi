@@ -244,8 +244,8 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 |---|---|---:|---:|---|---:|---:|---|
 | firmware | accelerometer | 400 | - | - | - | 24 | NOT REVIEWED: 1 indirect |
 | firmware | bench test | 1600 | - | - | - | 1828 | NOT REVIEWED: 25 unknown, 6 indirect, recursion |
-| firmware | CAN RX | 768 | - | - | - | 1276 | NOT REVIEWED: 51 unknown, 25 indirect, recursion |
-| firmware | CAN TX | 1536 | - | - | - | 892 | NOT REVIEWED: 25 unknown, 8 indirect, recursion |
+| firmware | CAN RX | 768 | - | - | - | 1284 | NOT REVIEWED: 51 unknown, 26 indirect, recursion |
+| firmware | CAN TX | 1536 | - | - | - | 932 | NOT REVIEWED: 25 unknown, 9 indirect, recursion |
 | firmware | electronic throttle | 512 | - | - | - | 588 | NOT REVIEWED: 12 unknown, 3 indirect, recursion |
 | firmware | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | firmware | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
@@ -259,7 +259,7 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | stepper | 400 | - | - | - | 708 | NOT REVIEWED: 16 unknown, 6 indirect, recursion |
 | firmware | storage manager | 1200 | - | - | - | 684 | NOT REVIEWED: 19 unknown, 5 indirect, recursion |
 | firmware | timer watchdog | 256 | - | - | - | 584 | NOT REVIEWED: 12 unknown, 2 indirect, recursion |
-| firmware | TunerStudio | 1200 | - | - | - | 1348 | NOT REVIEWED: 57 unknown, 35 indirect, recursion |
+| firmware | TunerStudio | 1200 | - | - | - | 1364 | NOT REVIEWED: 57 unknown, 35 indirect, recursion |
 | firmware | USB mass storage | 2048 | - | - | - | 788 | NOT REVIEWED: 19 unknown, 5 indirect, recursion |
 | bootloader | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | bootloader | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
