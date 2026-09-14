@@ -17,7 +17,10 @@
 
 // A CAN frame is only eight payload bytes, but the HAL frame layout differs
 // between bxCAN and FDCAN.  Keep the complete native frame in each queue slot.
-#define CAN_TX_QUEUE_CAPACITY 16
+// The shared worker queues a whole periodic burst before it can send it:
+// verbose (12) + QC (8) + console announcement (1) + wideband (1) = 22.
+// Leave room for Lua/ISO-TP too. A 16-frame queue drops the announcement.
+#define CAN_TX_QUEUE_CAPACITY 32
 
 #if EFI_SIMULATOR || EFI_UNIT_TEST
 #include "fifo_buffer.h"
