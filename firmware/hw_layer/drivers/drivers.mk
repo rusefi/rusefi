@@ -26,6 +26,7 @@ HW_LAYER_DRIVERS =
 
 HW_LAYER_DRIVERS_CPP = \
 	$(DRIVERS_DIR)/adc/ads1015.cpp \
+	$(DRIVERS_DIR)/adc/ads7128.cpp \
 	$(DRIVERS_DIR)/adc/mcp3208.cpp \
 	$(DRIVERS_DIR)/can/can_hw.cpp \
 	$(PROJECT_DIR)/hw_layer/smart_gpio.cpp \

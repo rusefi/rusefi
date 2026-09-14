@@ -266,6 +266,15 @@ Usages:
     isPtr: true
     conditional_compilation: "EFI_PROD_CODE && (BOARD_MC33810_COUNT > 0)"
 
+  - name: ads7128_state
+    cppFileName: ads7128
+    java: Ads7128State.java
+    folder: hw_layer/drivers/adc/
+    prepend: integration/rusefi_config_shared.txt
+    constexpr: "ads7128getLiveData(0)"
+    isPtr: true
+    conditional_compilation: "EFI_PROD_CODE && (BOARD_ADS7128_COUNT > 0)"
+
   - name: long_term_fuel_trim_state
     cppFileName: long_term_fuel_trim
     java: LongTermFuelTrim.java
