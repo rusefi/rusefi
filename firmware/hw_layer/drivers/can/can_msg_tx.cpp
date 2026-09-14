@@ -55,21 +55,55 @@ struct CanTxCompletionSlot {
 
 struct CanTxBusState {
 	fifo_buffer<CanTxQueuedFrame, CAN_TX_QUEUE_CAPACITY> queue;
+	CanTxQueuedFrame inFlight;
+	bool hasInFlight = false;
+	uint32_t inFlightStartMs = 0;
+	bool inFlightLogged = false;
 	int dropCount = 0;
 	uint32_t generation = 0;
 	CanTxCompletionSlot slots[2];
 #if !EFI_UNIT_TEST
-	threads_queue_t workerWaiters;
 	threads_queue_t producerWaiters;
+	mutex_t serviceMutex;
 
 	CanTxBusState() {
-		osalThreadQueueObjectInit(&workerWaiters);
 		osalThreadQueueObjectInit(&producerWaiters);
+		chMtxObjectInit(&serviceMutex);
 	}
 #endif
 };
 
 static CanTxBusState txBuses[EFI_CAN_BUS_COUNT];
+
+// Queue/slot changes are protected by chSysLock. This separate per-bus lock
+// spans serviceOne's HAL call, so reset/remove quiesces a bus before canStop.
+class CanTxBusServiceLock {
+public:
+	explicit CanTxBusServiceLock(CanTxBusState& bus) : m_bus(bus) {
+#if !EFI_UNIT_TEST
+		chMtxLock(&m_bus.serviceMutex);
+#endif
+	}
+
+	~CanTxBusServiceLock() {
+#if !EFI_UNIT_TEST
+		chMtxUnlock(&m_bus.serviceMutex);
+#endif
+	}
+
+private:
+	CanTxBusState& m_bus;
+};
+
+#if !EFI_UNIT_TEST
+static threads_queue_t workWaiters;
+static bool workNotified;
+struct CanTxWorkWaitersInit {
+	CanTxWorkWaitersInit() {
+		osalThreadQueueObjectInit(&workWaiters);
+	}
+} canTxWorkWaitersInit;
+#endif
 
 #if EFI_UNIT_TEST
 static void (*unitTestWaitHook)(size_t) = nullptr;
@@ -105,6 +139,13 @@ static void wakeProducerWaitersI(CanTxBusState& bus) {
 #endif
 }
 
+static void notifyWorkI() {
+#if !EFI_UNIT_TEST
+	workNotified = true;
+	osalThreadDequeueAllI(&workWaiters, MSG_OK);
+#endif
+}
+
 static void releaseSlotI(CanTxBusState& bus, CanTxCompletionSlot& slot) {
 	slot.state = CompletionState::Free;
 	wakeProducerWaitersI(bus);
@@ -113,6 +154,7 @@ static void releaseSlotI(CanTxBusState& bus, CanTxCompletionSlot& slot) {
 static void resetBusI(size_t idx) {
 	auto& bus = txBuses[idx];
 	bus.queue.clear();
+	bus.hasInFlight = false;
 	bus.generation++;
 	for (auto& slot : bus.slots) {
 		if (slot.state == CompletionState::Pending) {
@@ -126,9 +168,7 @@ static void resetBusI(size_t idx) {
 		}
 	}
 	wakeProducerWaitersI(bus);
-#if !EFI_UNIT_TEST
-	osalThreadDequeueAllI(&bus.workerWaiters, MSG_RESET);
-#endif
+	notifyWorkI();
 }
 
 /*static*/ void CanTxMessage::setDevice(size_t idx, CANDriver* device) {
@@ -136,13 +176,17 @@ static void resetBusI(size_t idx) {
 		criticalError("Cannot install CAN%d bus!", idx + 1);
 		return;
 	}
+	CanTxBusServiceLock serviceLock(txBuses[idx]);
 	chSysLock();
 	s_devices[idx] = device;
+	notifyWorkI();
+	rescheduleAfterWakeS();
 	chSysUnlock();
 }
 
 /*static*/ void CanTxMessage::stopBus(size_t idx) {
 	if (idx < EFI_CAN_BUS_COUNT) {
+		CanTxBusServiceLock serviceLock(txBuses[idx]);
 		chSysLock();
 		resetBusI(idx);
 		rescheduleAfterWakeS();
@@ -154,6 +198,9 @@ static void resetBusI(size_t idx) {
 	if (idx >= EFI_CAN_BUS_COUNT) {
 		return;
 	}
+	// This serializes reset/remove with serviceOne. Call canStop only after
+	// removeDevice returns, so no HAL transmit can overlap the controller stop.
+	CanTxBusServiceLock serviceLock(txBuses[idx]);
 	// Block new sends and clear this bus's queue under the same lock.
 	// Changing the generation tells waiting senders that their bus was reset.
 	chSysLock();
@@ -212,26 +259,29 @@ static void recordCanTransmitResult(size_t busIndex, CanCategory category, const
 		return false;
 	}
 
+	CanTxBusServiceLock serviceLock(txBuses[busIndex]);
 	CanTxQueuedFrame item;
 	CANDriver* device;
 	chSysLock();
 	auto& bus = txBuses[busIndex];
-	if (bus.queue.isEmpty()) {
-#if !EFI_UNIT_TEST
-		// A newly queued frame wakes the worker immediately. Wake at least every
-		// 10 ms while idle so the worker can also check whether it should stop.
-		osalThreadEnqueueTimeoutS(&bus.workerWaiters, TIME_MS2I(10));
-#endif
+	if (!bus.hasInFlight && bus.queue.isEmpty()) {
 		chSysUnlock();
 		return false;
 	}
-	item = bus.queue.get();
+	if (!bus.hasInFlight) {
+		bus.inFlight = bus.queue.get();
+		bus.hasInFlight = true;
+		bus.inFlightStartMs = getTimeNowMs();
+		bus.inFlightLogged = false;
+		wakeProducerWaitersI(bus);
+	}
+	item = bus.inFlight;
 	device = s_devices[busIndex];
-	wakeProducerWaitersI(bus);
 	// If the sender timed out while this frame was queued, discard the frame
 	// instead of sending it late, and free its result slot.
 	const bool cancelled = item.completionSlot >= 0 && bus.slots[item.completionSlot].state == CompletionState::Cancelled;
 	if (cancelled) {
+		bus.hasInFlight = false;
 		releaseSlotI(bus, bus.slots[item.completionSlot]);
 	}
 	rescheduleAfterWakeS();
@@ -240,28 +290,40 @@ static void recordCanTransmitResult(size_t busIndex, CanCategory category, const
 		return true;
 	}
 
-	// Lua or the console may disable CAN transmission after a frame was queued.
-	// Check again before sending, and return MSG_RESET if sending is disabled.
-	msg_t result = MSG_RESET;
-	if (device && engine->allowCanTx) {
-		ScopePerf pc(PE::CanDriverTx);
+	ScopePerf pc(PE::CanDriverTx);
+	// Unsigned subtraction deliberately handles the millisecond clock wrapping.
+	const bool expired = static_cast<uint32_t>(getTimeNowMs() - bus.inFlightStartMs) >= 100;
+	msg_t result = expired ? MSG_TIMEOUT : MSG_RESET;
+	const bool shouldRecord = device && engine->allowCanTx;
+	if (!expired && shouldRecord) {
 		bool verboseCan = engineConfiguration->verboseCan && busIndex == 0;
 		verboseCan |= engineConfiguration->verboseCan2 && busIndex == 1;
 #if (EFI_CAN_BUS_COUNT >= 3)
 		verboseCan |= engineConfiguration->verboseCan3 && busIndex == 2;
 #endif
-		if (verboseCan) {
+		if (verboseCan && !bus.inFlightLogged) {
 			efiPrintf("%s Sending CAN%d message: ID=%x/l=%x %x %x %x %x %x %x %x %x",
 				getCanCategory(item.category), busIndex + 1,
 				(unsigned int)CAN_ID(item.frame), item.frame.DLC,
 				item.frame.data8[0], item.frame.data8[1], item.frame.data8[2], item.frame.data8[3],
 				item.frame.data8[4], item.frame.data8[5], item.frame.data8[6], item.frame.data8[7]);
 		}
-		result = canTransmit(device, CAN_ANY_MAILBOX, &item.frame, TIME_MS2I(100));
+		bus.inFlightLogged = true;
+		result = canTransmit(device, CAN_ANY_MAILBOX, &item.frame, TIME_IMMEDIATE);
+	}
+	if (result == MSG_TIMEOUT) {
+		if (!expired) {
+			return false;
+		}
+	}
+	if (shouldRecord) {
 		recordCanTransmitResult(busIndex, item.category, item.frame, result);
 	}
+
+	chSysLock();
+	// Release the head before notifying a waiter or unit-test reschedule hook.
+	bus.hasInFlight = false;
 	if (item.completionSlot >= 0) {
-		chSysLock();
 		auto& slot = bus.slots[item.completionSlot];
 		if (slot.state == CompletionState::Pending) {
 			slot.result = result;
@@ -274,15 +336,32 @@ static void recordCanTransmitResult(size_t busIndex, CanCategory category, const
 			// has now finished with it, so its result slot can be reused.
 			releaseSlotI(bus, slot);
 		}
-		rescheduleAfterWakeS();
-		chSysUnlock();
 	}
+	rescheduleAfterWakeS();
+	chSysUnlock();
 	return true;
 }
 
 /*static*/ void CanTxMessage::service(size_t busIndex) {
 	while (serviceOne(busIndex)) {
 	}
+}
+
+/*static*/ msg_t CanTxMessage::waitForWork(sysinterval_t timeout) {
+#if !EFI_UNIT_TEST
+	chSysLock();
+	if (workNotified) {
+		workNotified = false;
+		chSysUnlock();
+		return MSG_OK;
+	}
+	auto result = osalThreadEnqueueTimeoutS(&workWaiters, timeout);
+	chSysUnlock();
+	return result;
+#else
+	UNUSED(timeout);
+	return MSG_TIMEOUT;
+#endif
 }
 #endif // EFI_CAN_SUPPORT || EFI_UNIT_TEST
 
@@ -368,9 +447,7 @@ bool CanTxMessage::submit() {
 		return false;
 	}
 	bus.queue.put({ m_frame, category, -1 });
-#if !EFI_UNIT_TEST
-	osalThreadDequeueNextI(&bus.workerWaiters, MSG_OK);
-#endif
+	notifyWorkI();
 	rescheduleAfterWakeS();
 	chSysUnlock();
 	return true;
@@ -414,9 +491,7 @@ msg_t CanTxMessage::submitAndWait(sysinterval_t timeout) {
 					slotIndex = i;
 					bus.slots[i].state = CompletionState::Pending;
 					bus.queue.put({ m_frame, category, static_cast<int8_t>(slotIndex) });
-#if !EFI_UNIT_TEST
-					osalThreadDequeueNextI(&bus.workerWaiters, MSG_OK);
-#endif
+					notifyWorkI();
 					break;
 				}
 			}

@@ -26,8 +26,41 @@ extern CanListener* canListeners_head;
 
 
 CanWrite::CanWrite()
-	: PeriodicController("CAN TX", PRIO_CAN_TX, CAN_CYCLE_FREQ)
+	: ThreadController("CAN TX", PRIO_CAN_TX)
 {
+}
+
+RUSEFI_STACK_ROOT(CanWrite, ThreadTask);
+void CanWrite::ThreadTask() {
+	constexpr auto period = static_cast<sysinterval_t>(CAN_CYCLE_PERIOD);
+	auto previous = chVTGetSystemTimeX();
+	bool first = true;
+	while (!chThdShouldTerminateX()) {
+		const auto now = chVTGetSystemTimeX();
+		if (first || chTimeDiffX(previous, now) >= period) {
+			previous = first ? now : chTimeAddX(previous, period);
+			first = false;
+			// Skip missed periods rather than emitting a burst after a long pause.
+			if (chTimeDiffX(previous, now) >= period) {
+				previous = now;
+			}
+			if (engineConfiguration->canWriteEnabled) {
+				PeriodicTask(getTimeNowNt());
+			}
+		}
+
+		// Each bus gets one nonblocking attempt per round. A full mailbox on
+		// one bus must never hold up another bus or the periodic broadcasts.
+		bool progressed = false;
+		for (size_t bus = 0; bus < EFI_CAN_BUS_COUNT; bus++) {
+			progressed |= CanTxMessage::serviceOne(bus);
+		}
+		if (!progressed) {
+			// New submissions wake us immediately; retry full mailboxes within
+			// 1 ms without allocating a separate thread stack for every bus.
+			CanTxMessage::waitForWork(TIME_MS2I(1));
+		}
+	}
 }
 
 static CI roundTxPeriodToCycle(uint16_t period) {
@@ -51,7 +84,6 @@ static uint16_t m_cycleCount = 0;
 }
 
 // this is invoked at CAN_CYCLE_FREQ frequency
-RUSEFI_STACK_ROOT(CanWrite, PeriodicTask);
 void CanWrite::PeriodicTask(efitick_t) {
 	ScopePerf pc(PE::CanThreadTx);
 	CanCycle cycle(m_cycleCount);
@@ -68,10 +100,23 @@ void CanWrite::PeriodicTask(efitick_t) {
 		}
 	}
 
-	CanListener* current = canListeners_head;
-
-	while (current) {
-		current = current->request();
+	const auto requestTime = getTimeNowMs();
+	if (requestTime - m_lastRequestTime >= m_requestDelay) {
+		CanListener* current = m_pendingRequest ? m_pendingRequest : canListeners_head;
+		m_pendingRequest = nullptr;
+		m_requestDelay = 0;
+		while (current) {
+			const auto delay = current->requestDelayMs();
+			current = current->request();
+			if (delay) {
+				// Leave the response window open without sleeping in the TX
+				// worker: other buses and broadcasts can continue meanwhile.
+				m_pendingRequest = current;
+				m_lastRequestTime = requestTime;
+				m_requestDelay = delay;
+				break;
+			}
+		}
 	}
 
 	if (cycle.isInterval(CI::_MAX_Cycle)) {

@@ -87,10 +87,12 @@ public:
 			msg[1] = OBD_CURRENT_DATA;
 			msg[2] = PID;
 		}
-		// let's sleep on write update after each OBD request, this would give read thread a chance to read response
-		// todo: smarter logic of all this with with semaphore not just sleep
-		chThdSleepMilliseconds(300);
 		return CanListener::request();
+	}
+
+	// CanWrite enforces this without blocking the shared CAN worker.
+	uint32_t requestDelayMs() const override {
+		return 300;
 	}
 
 	int PID;

@@ -12,10 +12,13 @@ uint32_t primaryTransmitTimeMs;
 uint32_t primaryTransmitCount;
 uint32_t secondaryTransmitCount;
 CANTxFrame lastPrimaryFrame;
+CANTxFrame lastSecondaryFrame;
+bool secondaryMailboxAvailable;
 bool drainWaitHook;
 bool resetWaitHook;
 bool reenterWaitHook;
 bool disableWaitHook;
+bool cancelAfterFailedWaitHook;
 msg_t reenterResult;
 bool servicingFromReschedule;
 
@@ -27,11 +30,11 @@ void serviceWorkerFromReschedule() {
 	}
 }
 
-msg_t simulatedCanTransmit(CANDriver* device, canmbx_t, CANTxFrame* frame, can_sysinterval_t timeout) {
+msg_t simulatedCanTransmit(CANDriver* device, canmbx_t, CANTxFrame* frame, can_sysinterval_t) {
 	if (device == &unacknowledgedSecondaryCan) {
 		secondaryTransmitCount++;
-		simulatedTimeMs += timeout;
-		return MSG_TIMEOUT;
+		lastSecondaryFrame = *frame;
+		return secondaryMailboxAvailable ? MSG_OK : MSG_TIMEOUT;
 	}
 
 	if (device == &primaryCan) {
@@ -61,6 +64,11 @@ void serviceWaitHook(size_t bus) {
 		CanTxMessage::stopBus(bus);
 		return;
 	}
+	if (cancelAfterFailedWaitHook) {
+		CanTxMessage::serviceOne(bus);
+		CanTxMessage::setWaitHookForUnitTest(nullptr);
+		return;
+	}
 	if (drainWaitHook) {
 		CanTxMessage::serviceOne(bus);
 	}
@@ -83,11 +91,14 @@ protected:
 		primaryTransmitTimeMs = 0;
 		primaryTransmitCount = 0;
 		secondaryTransmitCount = 0;
+		secondaryMailboxAvailable = false;
 		lastPrimaryFrame = {};
+		lastSecondaryFrame = {};
 		drainWaitHook = false;
 		resetWaitHook = false;
 		reenterWaitHook = false;
 		disableWaitHook = false;
+		cancelAfterFailedWaitHook = false;
 		reenterResult = MSG_OK;
 		servicingFromReschedule = false;
 		CanTxMessage::setWaitHookForUnitTest(serviceWaitHook);
@@ -150,6 +161,9 @@ TEST_F(DualCanWithDisconnectedSecondaryTest, DisconnectedSecondaryDelaysHealthyP
 	EXPECT_EQ(0u, primaryTransmitTimeMs);
 	EXPECT_EQ(0u, secondaryTransmitCount);
 	for (int i = 0; i < 12; i++) {
+		EXPECT_FALSE(CanTxMessage::serviceOne(1));
+		advanceTimeUs(MS2US(100));
+		simulatedTimeMs += 100;
 		ASSERT_TRUE(CanTxMessage::serviceOne(1));
 	}
 	EXPECT_EQ(12u, secondaryTransmitCount);
@@ -169,6 +183,69 @@ TEST_F(DualCanWithDisconnectedSecondaryTest, QueueCopiesFrameAndExplicitSubmissi
 	EXPECT_EQ(1u, primaryTransmitCount);
 	EXPECT_EQ(0x5au, lastPrimaryFrame.data8[0]);
 	EXPECT_FALSE(CanTxMessage::serviceOne(0));
+}
+
+// PR #10225: blocking mailbox waits require extra worker stacks on F407,
+// leaving too little memory for Lua. Sharing a worker requires nonblocking
+// service of each bus. Nonblocking service leaves CAN2's failed head pending,
+// so a healthy CAN1 frame can still be sent by the shared worker.
+TEST_F(DualCanWithDisconnectedSecondaryTest, MailboxWaitPreventsSharingTransmitWorker) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	{
+		CanTxMessage message(CanCategory::SERIAL, 0x123, 8, 1);
+		ASSERT_TRUE(message.submit());
+	}
+	CanTxMessage::serviceOne(1);
+	sendSyntheticPrimaryCanFrame();
+	EXPECT_EQ(1u, secondaryTransmitCount);
+	EXPECT_EQ(1u, primaryTransmitCount);
+	EXPECT_EQ(0u, primaryTransmitTimeMs);
+}
+
+TEST_F(DualCanWithDisconnectedSecondaryTest, MailboxRetriesKeepFifoHeadUntilSuccessOrDeadline) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	{
+		CanTxMessage first(CanCategory::SERIAL, 0x123, 8, 1);
+		CanTxMessage second(CanCategory::SERIAL, 0x124, 8, 1);
+		ASSERT_TRUE(first.submit());
+		ASSERT_TRUE(second.submit());
+	}
+	EXPECT_FALSE(CanTxMessage::serviceOne(1));
+	advanceTimeUs(MS2US(99));
+	EXPECT_FALSE(CanTxMessage::serviceOne(1));
+	EXPECT_EQ(0x123u, CAN_ID(lastSecondaryFrame));
+	secondaryMailboxAvailable = true;
+	EXPECT_TRUE(CanTxMessage::serviceOne(1));
+	EXPECT_EQ(0x123u, CAN_ID(lastSecondaryFrame));
+	EXPECT_TRUE(CanTxMessage::serviceOne(1));
+	EXPECT_EQ(0x124u, CAN_ID(lastSecondaryFrame));
+	EXPECT_EQ(4u, secondaryTransmitCount);
+
+	secondaryMailboxAvailable = false;
+	{
+		CanTxMessage expired(CanCategory::SERIAL, 0x125, 8, 1);
+		ASSERT_TRUE(expired.submit());
+	}
+	EXPECT_FALSE(CanTxMessage::serviceOne(1));
+	advanceTimeUs(MS2US(100));
+	EXPECT_TRUE(CanTxMessage::serviceOne(1));
+	EXPECT_EQ(5u, secondaryTransmitCount); // Deadline discards without another transmit.
+}
+
+TEST_F(DualCanWithDisconnectedSecondaryTest, MailboxDeadlineHandlesMillisecondClockWrap) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	// The microsecond setter takes int; use the wide native-tick setter here.
+	setTimeNowNt(USF2NT(static_cast<efitick_t>(UINT32_MAX - 50) * 1000));
+	{
+		CanTxMessage message(CanCategory::SERIAL, 0x126, 8, 1);
+		ASSERT_TRUE(message.submit());
+	}
+	EXPECT_FALSE(CanTxMessage::serviceOne(1));
+	advanceTimeUs(MS2US(99));
+	EXPECT_FALSE(CanTxMessage::serviceOne(1));
+	advanceTimeUs(MS2US(1));
+	EXPECT_TRUE(CanTxMessage::serviceOne(1));
+	EXPECT_EQ(2u, secondaryTransmitCount);
 }
 
 TEST_F(DualCanWithDisconnectedSecondaryTest, FullQueueDropsNewestAndResetDiscardsTraffic) {
@@ -235,6 +312,32 @@ TEST_F(DualCanWithDisconnectedSecondaryTest, TimedOutQueuedFrameIsCancelledBefor
 	CanTxMessage::setWaitHookForUnitTest(serviceWaitHook);
 	CanTxMessage retry(CanCategory::SERIAL, 0x503, 8, 0);
 	EXPECT_EQ(MSG_OK, retry.submitAndWait(TIME_MS2I(10)));
+}
+
+TEST_F(DualCanWithDisconnectedSecondaryTest, TimedOutInFlightFrameIsDiscardedBeforeLaterMailboxRecovery) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	cancelAfterFailedWaitHook = true;
+	CanTxMessage message(CanCategory::SERIAL, 0x502, 8, 1);
+	EXPECT_EQ(MSG_TIMEOUT, message.submitAndWait(TIME_MS2I(10)));
+	EXPECT_EQ(1u, secondaryTransmitCount);
+
+	secondaryMailboxAvailable = true;
+	EXPECT_TRUE(CanTxMessage::serviceOne(1));
+	EXPECT_EQ(1u, secondaryTransmitCount);
+}
+
+TEST_F(DualCanWithDisconnectedSecondaryTest, ResetDiscardsInFlightMailboxWaitWithoutADeadlineFailure) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	{
+		CanTxMessage message(CanCategory::SERIAL, 0x503, 8, 1);
+		ASSERT_TRUE(message.submit());
+	}
+	EXPECT_FALSE(CanTxMessage::serviceOne(1));
+	CanTxMessage::stopBus(1);
+	advanceTimeUs(MS2US(100));
+	secondaryMailboxAvailable = true;
+	EXPECT_FALSE(CanTxMessage::serviceOne(1));
+	EXPECT_EQ(1u, secondaryTransmitCount);
 }
 
 TEST_F(DualCanWithDisconnectedSecondaryTest, ResetReleasesSynchronousWaiterAndFullQueueCanProgress) {
