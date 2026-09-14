@@ -110,6 +110,33 @@ CCM_OPTIONAL static CanRead canRead[EFI_CAN_BUS_COUNT] = { CanRead(0), CanRead(1
 	};
 static CanWrite canWrite CCM_OPTIONAL;
 
+// Each CAN bus has its own transmit worker, so waiting to send on one bus
+// does not delay the other buses or the code that queues periodic messages.
+class CanTxWorker final : protected ThreadController<512> {
+public:
+	CanTxWorker(size_t index) : ThreadController("CAN TX", PRIO_CAN_TX), m_index(index) {}
+
+	using ThreadController::start;
+	using ThreadController::stop;
+
+	void ThreadTask() override {
+		while (!chThdShouldTerminateX()) {
+			// Handle the next frame, or wait briefly if the queue is empty.
+			CanTxMessage::serviceOne(m_index);
+		}
+	}
+
+private:
+	const size_t m_index;
+};
+
+RUSEFI_STACK_ROOT(CanTxWorker, ThreadTask);
+static CanTxWorker canTxWorker[EFI_CAN_BUS_COUNT] = { CanTxWorker(0), CanTxWorker(1)
+#if (EFI_CAN_BUS_COUNT >= 3)
+	, CanTxWorker(2)
+#endif
+};
+
 #if EFI_PROD_CODE
 static CANDriver* getCanDevice(size_t index)
 {
@@ -180,16 +207,16 @@ static void canInfo() {
 		return;
 	}
 
-	efiPrintf("CAN1 TX %s %s err=%d listenOnly=%s", hwPortname(engineConfiguration->canTxPin), getCan_baudrate_e(engineConfiguration->canBaudRate), txErrorCount[0], boolToString(getCanListenOnly(0)));
+	efiPrintf("CAN1 TX %s %s err=%d qdrop=%d listenOnly=%s", hwPortname(engineConfiguration->canTxPin), getCan_baudrate_e(engineConfiguration->canBaudRate), txErrorCount[0], CanTxMessage::getQueueDropCount(0), boolToString(getCanListenOnly(0)));
 	efiPrintf("CAN1 RX %s", hwPortname(engineConfiguration->canRxPin));
 	canHwInfo(getCanDevice(0));
 
-	efiPrintf("CAN2 TX %s %s err=%d listenOnly=%s", hwPortname(engineConfiguration->can2TxPin), getCan_baudrate_e(engineConfiguration->can2BaudRate), txErrorCount[1], boolToString(getCanListenOnly(1)));
+	efiPrintf("CAN2 TX %s %s err=%d qdrop=%d listenOnly=%s", hwPortname(engineConfiguration->can2TxPin), getCan_baudrate_e(engineConfiguration->can2BaudRate), txErrorCount[1], CanTxMessage::getQueueDropCount(1), boolToString(getCanListenOnly(1)));
 	efiPrintf("CAN2 RX %s", hwPortname(engineConfiguration->can2RxPin));
 	canHwInfo(getCanDevice(1));
 
 #if (EFI_CAN_BUS_COUNT >= 3)
-	efiPrintf("CAN3 TX %s %s err=%d listenOnly=%s", hwPortname(engineConfiguration->can3TxPin), getCan_baudrate_e(engineConfiguration->can3BaudRate), txErrorCount[2], boolToString(getCanListenOnly(2)));
+	efiPrintf("CAN3 TX %s %s err=%d qdrop=%d listenOnly=%s", hwPortname(engineConfiguration->can3TxPin), getCan_baudrate_e(engineConfiguration->can3BaudRate), txErrorCount[2], CanTxMessage::getQueueDropCount(2), boolToString(getCanListenOnly(2)));
 	efiPrintf("CAN3 RX %s", hwPortname(engineConfiguration->can3RxPin));
 	canHwInfo(getCanDevice(2));
 #endif
@@ -330,6 +357,12 @@ void initCan() {
 	if (engineConfiguration->canWriteEnabled) {
 		canWrite.start();
 	}
+	// ISO-TP/Lua may transmit even when the periodic CAN writer is disabled.
+	for (size_t index = 0; index < EFI_CAN_BUS_COUNT; index++) {
+		if (device[index]) {
+			canTxWorker[index].start();
+		}
+	}
 
 	if (engineConfiguration->canReadEnabled) {
 		for (size_t index = 0; index < EFI_CAN_BUS_COUNT; index++) {
@@ -357,7 +390,9 @@ static int restartCanBus(size_t index, can_baudrate_e rate) {
 	// Stop listener
 	canRead[index].stop();
 
-	// Remove CAN device from tx system
+	// Wait for this bus's transmit worker to stop before changing the controller.
+	canTxWorker[index].stop();
+	// Discard queued frames and reject new sends while the bus is restarting.
 	CanTxMessage::removeDevice(index);
 
 	// Actually stop HW
@@ -376,6 +411,7 @@ static int restartCanBus(size_t index, can_baudrate_e rate) {
 
 	// Plumb CAN devices to tx system
 	CanTxMessage::setDevice(index, device);
+	canTxWorker[index].start();
 
 	// Start listener
 	if (engineConfiguration->canReadEnabled) {

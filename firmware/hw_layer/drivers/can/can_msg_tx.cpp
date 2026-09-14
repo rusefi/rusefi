@@ -14,8 +14,8 @@
 
 #include "can.h"
 
-#if EFI_SIMULATOR || EFI_UNIT_TEST
 #include "fifo_buffer.h"
+#if EFI_SIMULATOR || EFI_UNIT_TEST
 fifo_buffer<CANTxFrame, TEST_CAN_BUFFER_SIZE> txCanBuffer;
 #endif // EFI_SIMULATOR
 
@@ -31,6 +31,51 @@ int txErrorCount[EFI_CAN_BUS_COUNT] = {};
 #endif
 
 #if EFI_CAN_SUPPORT || EFI_UNIT_TEST
+struct CanTxQueuedFrame {
+	CANTxFrame frame;
+	CanCategory category;
+	int8_t completionSlot;
+};
+
+// A waiting sender reserves a slot until it reads the result. If it times out,
+// the worker must finish handling the frame before that slot can be reused.
+enum class CompletionState : uint8_t { Free, Pending, Done, Cancelled };
+
+struct CanTxCompletionSlot {
+	CompletionState state = CompletionState::Free;
+	msg_t result = MSG_TIMEOUT;
+#if !EFI_UNIT_TEST
+	threads_queue_t waiters;
+
+	CanTxCompletionSlot() {
+		osalThreadQueueObjectInit(&waiters);
+	}
+#endif
+};
+
+struct CanTxBusState {
+	fifo_buffer<CanTxQueuedFrame, CAN_TX_QUEUE_CAPACITY> queue;
+	int dropCount = 0;
+	uint32_t generation = 0;
+	CanTxCompletionSlot slots[2];
+#if !EFI_UNIT_TEST
+	threads_queue_t workerWaiters;
+	threads_queue_t producerWaiters;
+
+	CanTxBusState() {
+		osalThreadQueueObjectInit(&workerWaiters);
+		osalThreadQueueObjectInit(&producerWaiters);
+	}
+#endif
+};
+
+static CanTxBusState txBuses[EFI_CAN_BUS_COUNT];
+
+#if EFI_UNIT_TEST
+static void (*unitTestWaitHook)(size_t) = nullptr;
+static void (*unitTestRescheduleHook)() = nullptr;
+#endif
+
 /*static*/ CANDriver* CanTxMessage::s_devices[EFI_CAN_BUS_COUNT] = {
 	nullptr,
 	nullptr,
@@ -39,12 +84,205 @@ int txErrorCount[EFI_CAN_BUS_COUNT] = {};
 #endif
 };
 
+// Waking a thread does not immediately run it. After updating the queue and
+// result slots, let higher-priority threads run before unlocking. ChibiOS
+// reports a "priority order violation" if we skip this step.
+static void rescheduleAfterWakeS() {
+#if !EFI_UNIT_TEST
+	osalOsRescheduleS();
+#else
+	if (unitTestRescheduleHook) {
+		unitTestRescheduleHook();
+	}
+#endif
+}
+
+static void wakeProducerWaitersI(CanTxBusState& bus) {
+#if !EFI_UNIT_TEST
+	osalThreadDequeueAllI(&bus.producerWaiters, MSG_OK);
+#else
+	UNUSED(bus);
+#endif
+}
+
+static void releaseSlotI(CanTxBusState& bus, CanTxCompletionSlot& slot) {
+	slot.state = CompletionState::Free;
+	wakeProducerWaitersI(bus);
+}
+
+static void resetBusI(size_t idx) {
+	auto& bus = txBuses[idx];
+	bus.queue.clear();
+	bus.generation++;
+	for (auto& slot : bus.slots) {
+		if (slot.state == CompletionState::Pending) {
+			slot.result = MSG_RESET;
+			slot.state = CompletionState::Done;
+#if !EFI_UNIT_TEST
+			osalThreadDequeueAllI(&slot.waiters, MSG_RESET);
+#endif
+		} else if (slot.state == CompletionState::Cancelled) {
+			releaseSlotI(bus, slot);
+		}
+	}
+	wakeProducerWaitersI(bus);
+#if !EFI_UNIT_TEST
+	osalThreadDequeueAllI(&bus.workerWaiters, MSG_RESET);
+#endif
+}
+
 /*static*/ void CanTxMessage::setDevice(size_t idx, CANDriver* device) {
 	if (idx >= efi::size(s_devices)) {
 		criticalError("Cannot install CAN%d bus!", idx + 1);
 		return;
 	}
+	chSysLock();
 	s_devices[idx] = device;
+	chSysUnlock();
+}
+
+/*static*/ void CanTxMessage::stopBus(size_t idx) {
+	if (idx < EFI_CAN_BUS_COUNT) {
+		chSysLock();
+		resetBusI(idx);
+		rescheduleAfterWakeS();
+		chSysUnlock();
+	}
+}
+
+/*static*/ void CanTxMessage::removeDevice(size_t idx) {
+	if (idx >= EFI_CAN_BUS_COUNT) {
+		return;
+	}
+	// Block new sends and clear this bus's queue under the same lock.
+	// Changing the generation tells waiting senders that their bus was reset.
+	chSysLock();
+	s_devices[idx] = nullptr;
+	resetBusI(idx);
+	rescheduleAfterWakeS();
+	chSysUnlock();
+}
+
+/*static*/ int CanTxMessage::getQueueDropCount(size_t idx) {
+	if (idx >= EFI_CAN_BUS_COUNT) {
+		return 0;
+	}
+	chSysLock();
+	auto result = txBuses[idx].dropCount;
+	chSysUnlock();
+	return result;
+}
+
+#if EFI_UNIT_TEST
+/*static*/ void CanTxMessage::setWaitHookForUnitTest(void (*hook)(size_t)) {
+	unitTestWaitHook = hook;
+}
+
+/*static*/ void CanTxMessage::setRescheduleHookForUnitTest(void (*hook)()) {
+	unitTestRescheduleHook = hook;
+}
+#endif
+
+static void recordCanTransmitResult(size_t busIndex, CanCategory category, const CANTxFrame& frame, msg_t msg) {
+#if EFI_PROD_CODE && HAL_USE_USB_CDC_2
+	if ((msg == MSG_OK) && (engineConfiguration->canSniffer[busIndex].listenOurs)) {
+		canSniffer.handle_can_message(busIndex, frame, getTimeNowNt());
+	}
+#endif
+#if EFI_TUNER_STUDIO
+	chSysLock();
+	if (msg == MSG_OK) {
+		engine->outputChannels.canWriteOk++;
+	} else {
+		extern int txErrorCount[EFI_CAN_BUS_COUNT];
+		engine->outputChannels.canWriteNotOk++;
+		txErrorCount[busIndex]++;
+	}
+	chSysUnlock();
+
+	if (msg != MSG_OK && verboseCanTxError) {
+		efiPrintf("%s TX ERR CAN%d message: ID=%x/l=%x", getCanCategory(category), busIndex + 1,
+			(unsigned int)CAN_ID(frame), frame.DLC);
+	}
+#endif
+}
+
+/*static*/ bool CanTxMessage::serviceOne(size_t busIndex) {
+	if (busIndex >= EFI_CAN_BUS_COUNT) {
+		return false;
+	}
+
+	CanTxQueuedFrame item;
+	CANDriver* device;
+	chSysLock();
+	auto& bus = txBuses[busIndex];
+	if (bus.queue.isEmpty()) {
+#if !EFI_UNIT_TEST
+		// A newly queued frame wakes the worker immediately. Wake at least every
+		// 10 ms while idle so the worker can also check whether it should stop.
+		osalThreadEnqueueTimeoutS(&bus.workerWaiters, TIME_MS2I(10));
+#endif
+		chSysUnlock();
+		return false;
+	}
+	item = bus.queue.get();
+	device = s_devices[busIndex];
+	wakeProducerWaitersI(bus);
+	// If the sender timed out while this frame was queued, discard the frame
+	// instead of sending it late, and free its result slot.
+	const bool cancelled = item.completionSlot >= 0 && bus.slots[item.completionSlot].state == CompletionState::Cancelled;
+	if (cancelled) {
+		releaseSlotI(bus, bus.slots[item.completionSlot]);
+	}
+	rescheduleAfterWakeS();
+	chSysUnlock();
+	if (cancelled) {
+		return true;
+	}
+
+	// Lua or the console may disable CAN transmission after a frame was queued.
+	// Check again before sending, and return MSG_RESET if sending is disabled.
+	msg_t result = MSG_RESET;
+	if (device && engine->allowCanTx) {
+		ScopePerf pc(PE::CanDriverTx);
+		bool verboseCan = engineConfiguration->verboseCan && busIndex == 0;
+		verboseCan |= engineConfiguration->verboseCan2 && busIndex == 1;
+#if (EFI_CAN_BUS_COUNT >= 3)
+		verboseCan |= engineConfiguration->verboseCan3 && busIndex == 2;
+#endif
+		if (verboseCan) {
+			efiPrintf("%s Sending CAN%d message: ID=%x/l=%x %x %x %x %x %x %x %x %x",
+				getCanCategory(item.category), busIndex + 1,
+				(unsigned int)CAN_ID(item.frame), item.frame.DLC,
+				item.frame.data8[0], item.frame.data8[1], item.frame.data8[2], item.frame.data8[3],
+				item.frame.data8[4], item.frame.data8[5], item.frame.data8[6], item.frame.data8[7]);
+		}
+		result = canTransmit(device, CAN_ANY_MAILBOX, &item.frame, TIME_MS2I(100));
+		recordCanTransmitResult(busIndex, item.category, item.frame, result);
+	}
+	if (item.completionSlot >= 0) {
+		chSysLock();
+		auto& slot = bus.slots[item.completionSlot];
+		if (slot.state == CompletionState::Pending) {
+			slot.result = result;
+			slot.state = CompletionState::Done;
+#if !EFI_UNIT_TEST
+			osalThreadDequeueAllI(&slot.waiters, MSG_OK);
+#endif
+		} else if (slot.state == CompletionState::Cancelled) {
+			// The sender timed out after the worker took the frame. The worker
+			// has now finished with it, so its result slot can be reused.
+			releaseSlotI(bus, slot);
+		}
+		rescheduleAfterWakeS();
+		chSysUnlock();
+	}
+	return true;
+}
+
+/*static*/ void CanTxMessage::service(size_t busIndex) {
+	while (serviceOne(busIndex)) {
+	}
 }
 #endif // EFI_CAN_SUPPORT || EFI_UNIT_TEST
 
@@ -96,83 +334,164 @@ CanTxMessage::~CanTxMessage() {
 #endif
 #endif // EFI_SIMULATOR
 
-#if EFI_CAN_SUPPORT || EFI_UNIT_TEST
-	// Preserve the previous host-test behavior unless a test explicitly opts in
-	// to simulated hardware transmission.
-#if EFI_UNIT_TEST
-	if (!canTransmitMock) {
-		return;
-	}
-#endif
-
-	ScopePerf pc(PE::CanDriverTx);
-
-	if (!engine->allowCanTx) {
-		return;
-	}
-
-	if (busIndex >= EFI_CAN_BUS_COUNT) {
-		// Error already throuwn from CanTxMessage::setBus
-		// just do not access out of bounds
-		return;
-	}
-
-	auto device = s_devices[busIndex];
-	if (!device) {
-		criticalError("Send: CAN%d device not configured %s %x", busIndex + 1, getCanCategory(category),
-		   (unsigned int)CAN_ID(m_frame));
-		return;
-	}
-
-	bool verboseCan = engineConfiguration->verboseCan && busIndex == 0;
-	verboseCan |= engineConfiguration->verboseCan2 && busIndex == 1;
-#if (EFI_CAN_BUS_COUNT >= 3)
-	verboseCan |= engineConfiguration->verboseCan3 && busIndex == 2;
-#endif
-
-	if (verboseCan) {
-		efiPrintf("%s Sending CAN%d message: ID=%x/l=%x %x %x %x %x %x %x %x %x",
-				getCanCategory(category),
-				busIndex + 1,
-				(unsigned int)CAN_ID(m_frame),
-				m_frame.DLC,
-				m_frame.data8[0], m_frame.data8[1],
-				m_frame.data8[2], m_frame.data8[3],
-				m_frame.data8[4], m_frame.data8[5],
-				m_frame.data8[6], m_frame.data8[7]);
-	}
-
-	// 100 ms timeout
-	msg_t msg = canTransmit(device, CAN_ANY_MAILBOX, &m_frame, TIME_MS2I(100));
-#if EFI_PROD_CODE && HAL_USE_USB_CDC_2
-	if ((msg == MSG_OK) && (engineConfiguration->canSniffer[busIndex].listenOurs)) {
-		canSniffer.handle_can_message(busIndex, m_frame, getTimeNowNt());
-	}
-#endif
-#if EFI_TUNER_STUDIO
-	if (msg == MSG_OK) {
-		engine->outputChannels.canWriteOk++;
-	} else {
-extern int txErrorCount[EFI_CAN_BUS_COUNT];
-		engine->outputChannels.canWriteNotOk++;
-		txErrorCount[busIndex]++;
-
-		if (verboseCanTxError) {
-		  efiPrintf("%s TX ERR CAN%d message: ID=%x/l=%x %x %x %x %x %x %x %x %x",
-				getCanCategory(category),
-				busIndex + 1,
-				(unsigned int)CAN_ID(m_frame),
-				m_frame.DLC,
-				m_frame.data8[0], m_frame.data8[1],
-				m_frame.data8[2], m_frame.data8[3],
-				m_frame.data8[4], m_frame.data8[5],
-				m_frame.data8[6], m_frame.data8[7]);
-		}
-	}
-#endif // EFI_TUNER_STUDIO
-#endif /* EFI_CAN_SUPPORT || EFI_UNIT_TEST */
+	submit();
 }
 
+bool CanTxMessage::submit() {
+	if (m_submitted) {
+		return false;
+	}
+	m_submitted = true;
+
+#if EFI_CAN_SUPPORT || EFI_UNIT_TEST
+	// Tests without a CAN driver mock only collect frames in txCanBuffer.
+#if EFI_UNIT_TEST
+	if (!canTransmitMock) {
+		return true;
+	}
+#endif
+	if (!engine->allowCanTx || busIndex >= EFI_CAN_BUS_COUNT) {
+		return false;
+	}
+
+	chSysLock();
+	auto& bus = txBuses[busIndex];
+	if (!s_devices[busIndex]) {
+		chSysUnlock();
+		criticalError("Send: CAN%d device not configured %s %x", busIndex + 1, getCanCategory(category),
+			(unsigned int)CAN_ID(m_frame));
+		return false;
+	}
+	if (bus.queue.isFull()) {
+		bus.dropCount++;
+		chSysUnlock();
+		return false;
+	}
+	bus.queue.put({ m_frame, category, -1 });
+#if !EFI_UNIT_TEST
+	osalThreadDequeueNextI(&bus.workerWaiters, MSG_OK);
+#endif
+	rescheduleAfterWakeS();
+	chSysUnlock();
+	return true;
+#endif /* EFI_CAN_SUPPORT || EFI_UNIT_TEST */
+	return true;
+}
+
+msg_t CanTxMessage::submitAndWait(sysinterval_t timeout) {
+	// Mark this message as submitted even if sending fails, so its destructor
+	// does not queue another attempt.
+	if (m_submitted) {
+		return MSG_TIMEOUT;
+	}
+	m_submitted = true;
+
+#if EFI_CAN_SUPPORT || EFI_UNIT_TEST
+	if (!engine->allowCanTx || busIndex >= EFI_CAN_BUS_COUNT) {
+		return MSG_RESET;
+	}
+
+#if !EFI_UNIT_TEST
+	const auto start = chVTGetSystemTimeX();
+#endif
+	int slotIndex = -1;
+	uint32_t generation = 0;
+	bool generationCaptured = false;
+	for (;;) {
+		chSysLock();
+		auto& bus = txBuses[busIndex];
+		if (!generationCaptured) {
+			generation = bus.generation;
+			generationCaptured = true;
+		}
+		if (!s_devices[busIndex] || bus.generation != generation) {
+			chSysUnlock();
+			return MSG_RESET;
+		}
+		if (!bus.queue.isFull()) {
+			for (size_t i = 0; i < efi::size(bus.slots); i++) {
+				if (bus.slots[i].state == CompletionState::Free) {
+					slotIndex = i;
+					bus.slots[i].state = CompletionState::Pending;
+					bus.queue.put({ m_frame, category, static_cast<int8_t>(slotIndex) });
+#if !EFI_UNIT_TEST
+					osalThreadDequeueNextI(&bus.workerWaiters, MSG_OK);
+#endif
+					break;
+				}
+			}
+		}
+		if (slotIndex >= 0) {
+			rescheduleAfterWakeS();
+			chSysUnlock();
+			break;
+		}
+#if EFI_UNIT_TEST
+		chSysUnlock();
+		if (timeout == TIME_IMMEDIATE || !unitTestWaitHook) {
+			chSysLock();
+			txBuses[busIndex].dropCount++;
+			chSysUnlock();
+			return MSG_TIMEOUT;
+		}
+		unitTestWaitHook(busIndex);
+#else
+		if (chVTTimeElapsedSinceX(start) >= timeout) {
+			bus.dropCount++;
+			chSysUnlock();
+			return MSG_TIMEOUT;
+		}
+		auto remaining = timeout - chVTTimeElapsedSinceX(start);
+		osalThreadEnqueueTimeoutS(&bus.producerWaiters, remaining);
+		chSysUnlock();
+#endif
+	}
+
+	for (;;) {
+		chSysLock();
+		auto& bus = txBuses[busIndex];
+		auto& slot = bus.slots[slotIndex];
+		if (slot.state == CompletionState::Done) {
+			auto result = slot.result;
+			releaseSlotI(bus, slot);
+			rescheduleAfterWakeS();
+			chSysUnlock();
+			return result;
+		}
+		if (slot.state == CompletionState::Cancelled) {
+			chSysUnlock();
+			return MSG_TIMEOUT;
+		}
+#if EFI_UNIT_TEST
+		chSysUnlock();
+		if (timeout == TIME_IMMEDIATE || !unitTestWaitHook) {
+			chSysLock();
+			if (slot.state == CompletionState::Pending) {
+				slot.state = CompletionState::Cancelled;
+			}
+			chSysUnlock();
+			return MSG_TIMEOUT;
+		}
+		unitTestWaitHook(busIndex);
+		// The test hook runs the worker or resets the bus so this wait can finish.
+		// Tests leave the hook unset to simulate a timeout.
+		continue;
+#else
+		if (chVTTimeElapsedSinceX(start) >= timeout) {
+			slot.state = CompletionState::Cancelled;
+			chSysUnlock();
+			return MSG_TIMEOUT;
+		}
+		auto remaining = timeout - chVTTimeElapsedSinceX(start);
+		osalThreadEnqueueTimeoutS(&slot.waiters, remaining);
+		chSysUnlock();
+#endif
+	}
+#else
+	UNUSED(timeout);
+	return MSG_TIMEOUT;
+#endif
+}
 #if HAS_CAN_FRAME
 void CanTxMessage::setDlc(uint8_t dlc) {
 	// TODO: CAN vs CANFD

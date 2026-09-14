@@ -220,6 +220,9 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 	header.frameType = ISO_TP_FRAME_FIRST;
 	header.numBytes = numBytes;
 	int numSent = IsoTpBase::sendFrame(header, txbuf + offset, numBytes, timeout);
+	if (numSent < 1) {
+		return 0;
+	}
 	offset += numSent;
 	numBytes -= numSent;
 
@@ -310,8 +313,12 @@ can_msg_t CanStreamerState::streamAddToTxTimeout(size_t *np, const uint8_t *txbu
 			PRINT("*** INFO: streamAddToTxTimeout numBytesToAdd %d / numSent %d / numBytes %d" PRINT_EOL, numBytesToAdd, numSent, numBytes);
 		}
 
-		if (numSent < 1)
-			break;
+		if (numSent != txFifoBuf.getCount()) {
+			// Some frames may already have been sent. Clear the buffer and report
+			// failure so a later call does not send the same packet again.
+			txFifoBuf.clear();
+			return CAN_MSG_TIMEOUT;
+		}
 		txFifoBuf.clear();
 		offset += numBytesToAdd;
 		numBytes -= numBytesToAdd;
@@ -333,9 +340,15 @@ can_msg_t CanStreamerState::streamAddToTxTimeout(size_t *np, const uint8_t *txbu
 }
 
 can_msg_t CanStreamerState::streamFlushTx(can_sysinterval_t timeout) {
+	if (txFifoBuf.isEmpty()) {
+		return CAN_MSG_OK;
+	}
+
 	int numSent = sendDataTimeout((const uint8_t *)txFifoBuf.getElements(), txFifoBuf.getCount(), timeout);
 	if (numSent != txFifoBuf.getCount()) {
-		//warning(ObdCode::CUSTOM_ERR_CAN_COMMUNICATION, "CAN sendDataTimeout() problems");
+		// Clear the failed packet so a later flush does not resend its first frames.
+		txFifoBuf.clear();
+		return CAN_MSG_TIMEOUT;
 	}
 	txFifoBuf.clear();
 
@@ -524,6 +537,9 @@ int IsoTpRxTx::writeTimeout(const uint8_t *txbuf, size_t size, sysinterval_t tim
 	header.frameType = ISO_TP_FRAME_FIRST;
 	header.numBytes = size;
 	int numSent = IsoTpBase::sendFrame(header, txbuf + offset, size, timeout);
+	if (numSent < 1) {
+		return 0;
+	}
 	offset += numSent;
 	size -= numSent;
 

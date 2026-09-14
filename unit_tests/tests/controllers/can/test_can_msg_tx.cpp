@@ -12,6 +12,20 @@ uint32_t primaryTransmitTimeMs;
 uint32_t primaryTransmitCount;
 uint32_t secondaryTransmitCount;
 CANTxFrame lastPrimaryFrame;
+bool drainWaitHook;
+bool resetWaitHook;
+bool reenterWaitHook;
+bool disableWaitHook;
+msg_t reenterResult;
+bool servicingFromReschedule;
+
+void serviceWorkerFromReschedule() {
+	if (!servicingFromReschedule) {
+		servicingFromReschedule = true;
+		CanTxMessage::serviceOne(0);
+		servicingFromReschedule = false;
+	}
+}
 
 msg_t simulatedCanTransmit(CANDriver* device, canmbx_t, CANTxFrame* frame, can_sysinterval_t timeout) {
 	if (device == &unacknowledgedSecondaryCan) {
@@ -30,7 +44,31 @@ msg_t simulatedCanTransmit(CANDriver* device, canmbx_t, CANTxFrame* frame, can_s
 }
 
 void sendSyntheticPrimaryCanFrame() {
-	CanTxMessage announcement(CanCategory::SERIAL, 0x770017, 8, /* bus */ 0, /* extended */ true);
+	{
+		CanTxMessage announcement(CanCategory::SERIAL, 0x770017, 8, /* bus */ 0, /* extended */ true);
+	}
+	// Run the CAN1 worker here because host tests do not start real worker threads.
+	CanTxMessage::serviceOne(0);
+}
+
+// Simulate what happens while a sender waits: run the worker, reset the bus,
+// disable transmission, or start another send, depending on the test.
+void serviceWaitHook(size_t bus) {
+	if (disableWaitHook) {
+		engine->allowCanTx = false;
+	}
+	if (resetWaitHook) {
+		CanTxMessage::stopBus(bus);
+		return;
+	}
+	if (drainWaitHook) {
+		CanTxMessage::serviceOne(bus);
+	}
+	if (reenterWaitHook) {
+		reenterWaitHook = false;
+		CanTxMessage nested(CanCategory::SERIAL, 0x456, 8, bus);
+		reenterResult = nested.submitAndWait(TIME_IMMEDIATE);
+	}
 }
 
 class DualCanWithDisconnectedSecondaryTest : public ::testing::Test {
@@ -39,17 +77,29 @@ protected:
 		canTransmitMock = simulatedCanTransmit;
 		CanTxMessage::setDevice(0, &primaryCan);
 		CanTxMessage::setDevice(1, &unacknowledgedSecondaryCan);
+		CanTxMessage::stopBus(0);
+		CanTxMessage::stopBus(1);
 		simulatedTimeMs = 0;
 		primaryTransmitTimeMs = 0;
 		primaryTransmitCount = 0;
 		secondaryTransmitCount = 0;
 		lastPrimaryFrame = {};
+		drainWaitHook = false;
+		resetWaitHook = false;
+		reenterWaitHook = false;
+		disableWaitHook = false;
+		reenterResult = MSG_OK;
+		servicingFromReschedule = false;
+		CanTxMessage::setWaitHookForUnitTest(serviceWaitHook);
+		CanTxMessage::setRescheduleHookForUnitTest(nullptr);
 	}
 
 	void TearDown() override {
 		CanTxMessage::removeDevice(0);
 		CanTxMessage::removeDevice(1);
 		canTransmitMock = nullptr;
+		CanTxMessage::setWaitHookForUnitTest(nullptr);
+		CanTxMessage::setRescheduleHookForUnitTest(nullptr);
 	}
 };
 
@@ -89,18 +139,152 @@ TEST_F(DualCanWithDisconnectedSecondaryTest, DisconnectedSecondaryDelaysHealthyP
 	EXPECT_EQ(0x770017u, CAN_ID(lastPrimaryFrame));
 	EXPECT_EQ(CAN_IDE_EXT, lastPrimaryFrame.IDE);
 
-	// sender emits 12 frames on configured CAN2.  Each
-	// unacknowledged transmit blocks for 100 ms of timeout before
-	// the subsequent CAN1 transmission can run.
+	// Queue 12 frames on disconnected CAN2. CAN1 must send immediately,
+	// without waiting for CAN2's 100 ms timeout on each frame.
 	simulatedTimeMs = 0;
 	engineConfiguration->canBroadcastUseChannel = static_cast<can_broadcast_channel_e>(1);
 	sendCanVerbose();
 	sendSyntheticPrimaryCanFrame();
 
-	EXPECT_EQ(12u, secondaryTransmitCount);
 	EXPECT_EQ(2u, primaryTransmitCount);
-	EXPECT_EQ(1200u, primaryTransmitTimeMs);
-	EXPECT_GE(primaryTransmitTimeMs, 1000u);
+	EXPECT_EQ(0u, primaryTransmitTimeMs);
+	EXPECT_EQ(0u, secondaryTransmitCount);
+	for (int i = 0; i < 12; i++) {
+		ASSERT_TRUE(CanTxMessage::serviceOne(1));
+	}
+	EXPECT_EQ(12u, secondaryTransmitCount);
+	EXPECT_EQ(1200u, simulatedTimeMs);
+}
+
+TEST_F(DualCanWithDisconnectedSecondaryTest, QueueCopiesFrameAndExplicitSubmissionDoesNotDoubleSend) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	{
+		CanTxMessage message(CanCategory::SERIAL, 0x123, 8, 0);
+		message[0] = 0x5a;
+		ASSERT_TRUE(message.submit());
+		message[0] = 0;
+	}
+
+	ASSERT_TRUE(CanTxMessage::serviceOne(0));
+	EXPECT_EQ(1u, primaryTransmitCount);
+	EXPECT_EQ(0x5au, lastPrimaryFrame.data8[0]);
+	EXPECT_FALSE(CanTxMessage::serviceOne(0));
+}
+
+TEST_F(DualCanWithDisconnectedSecondaryTest, FullQueueDropsNewestAndResetDiscardsTraffic) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	for (int i = 0; i < CAN_TX_QUEUE_CAPACITY; i++) {
+		CanTxMessage message(CanCategory::SERIAL, i, 8, 1);
+		ASSERT_TRUE(message.submit());
+	}
+	{
+		CanTxMessage newest(CanCategory::SERIAL, 0x7ff, 8, 1);
+		EXPECT_FALSE(newest.submit());
+	}
+	EXPECT_EQ(1, CanTxMessage::getQueueDropCount(1));
+
+	CanTxMessage::stopBus(1);
+	EXPECT_FALSE(CanTxMessage::serviceOne(1));
+	EXPECT_EQ(0u, secondaryTransmitCount);
+}
+
+TEST_F(DualCanWithDisconnectedSecondaryTest, SubmitAndWaitUsesQueuedWorkerAndCanCompleteRepeatedly) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	drainWaitHook = true;
+
+	for (int i = 0; i < 4; i++) {
+		CanTxMessage message(CanCategory::SERIAL, 0x500 + i, 8, 0);
+		EXPECT_EQ(MSG_OK, message.submitAndWait(TIME_MS2I(10)));
+	}
+	EXPECT_EQ(4u, primaryTransmitCount);
+}
+
+// let the higher-priority worker finish the send as soon as it is
+// woken, before submitAndWait starts waiting for the result.
+TEST_F(DualCanWithDisconnectedSecondaryTest, SubmitAndWaitRunsWorkerFromSchedulerHandoff) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	CanTxMessage::setWaitHookForUnitTest(nullptr);
+	CanTxMessage::setRescheduleHookForUnitTest(serviceWorkerFromReschedule);
+	CanTxMessage message(CanCategory::SERIAL, 0x510, 8, 0);
+	EXPECT_EQ(MSG_OK, message.submitAndWait(TIME_MS2I(10)));
+	EXPECT_EQ(1u, primaryTransmitCount);
+}
+
+TEST_F(DualCanWithDisconnectedSecondaryTest, DoneSlotIsNotReusedBeforeItsOwnerConsumesIt) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	drainWaitHook = true;
+	// Finish the first send, then start a second send before the first caller
+	// reads its result. The second send times out, but must not overwrite the
+	// first send's successful result.
+	reenterWaitHook = true;
+	CanTxMessage message(CanCategory::SERIAL, 0x501, 8, 0);
+	EXPECT_EQ(MSG_OK, message.submitAndWait(TIME_MS2I(10)));
+	EXPECT_EQ(MSG_TIMEOUT, reenterResult);
+}
+
+TEST_F(DualCanWithDisconnectedSecondaryTest, TimedOutQueuedFrameIsCancelledBeforeTransmit) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	CanTxMessage::setWaitHookForUnitTest(nullptr);
+	CanTxMessage message(CanCategory::SERIAL, 0x502, 8, 0);
+	EXPECT_EQ(MSG_TIMEOUT, message.submitAndWait(TIME_MS2I(10)));
+	EXPECT_TRUE(CanTxMessage::serviceOne(0));
+	EXPECT_EQ(0u, primaryTransmitCount);
+
+	// The worker discarded the timed-out frame and freed its slot for a new send.
+	drainWaitHook = true;
+	CanTxMessage::setWaitHookForUnitTest(serviceWaitHook);
+	CanTxMessage retry(CanCategory::SERIAL, 0x503, 8, 0);
+	EXPECT_EQ(MSG_OK, retry.submitAndWait(TIME_MS2I(10)));
+}
+
+TEST_F(DualCanWithDisconnectedSecondaryTest, ResetReleasesSynchronousWaiterAndFullQueueCanProgress) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	resetWaitHook = true;
+	CanTxMessage resetMessage(CanCategory::SERIAL, 0x504, 8, 0);
+	EXPECT_EQ(MSG_RESET, resetMessage.submitAndWait(TIME_MS2I(10)));
+
+	CanTxMessage::setDevice(0, &primaryCan);
+	for (int i = 0; i < CAN_TX_QUEUE_CAPACITY; i++) {
+		CanTxMessage message(CanCategory::SERIAL, i, 8, 0);
+		ASSERT_TRUE(message.submit());
+	}
+	resetWaitHook = false;
+	drainWaitHook = true;
+	CanTxMessage waiting(CanCategory::SERIAL, 0x505, 8, 0);
+	EXPECT_EQ(MSG_OK, waiting.submitAndWait(TIME_MS2I(10)));
+}
+
+TEST_F(DualCanWithDisconnectedSecondaryTest, ImmediateBadBusAndDisabledTxDoNotQueueOrDoubleSubmit) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	CanTxMessage immediate(CanCategory::SERIAL, 0x506, 8, 0);
+	EXPECT_EQ(MSG_TIMEOUT, immediate.submitAndWait(TIME_IMMEDIATE));
+	EXPECT_TRUE(CanTxMessage::serviceOne(0));
+	EXPECT_EQ(0u, primaryTransmitCount);
+
+	CanTxMessage badBus(CanCategory::SERIAL, 0x507, 8, 0);
+	badBus.busIndex = EFI_CAN_BUS_COUNT;
+	EXPECT_EQ(MSG_RESET, badBus.submitAndWait(TIME_MS2I(1)));
+
+	engine->allowCanTx = false;
+	CanTxMessage disabled(CanCategory::SERIAL, 0x508, 8, 0);
+	EXPECT_EQ(MSG_RESET, disabled.submitAndWait(TIME_MS2I(1)));
+	EXPECT_EQ(0u, primaryTransmitCount);
+}
+
+// disabling CAN transmission must also stop frames already queued,
+// including periodic messages and messages whose callers are waiting for a result.
+TEST_F(DualCanWithDisconnectedSecondaryTest, DisableTxAfterAdmissionResetsQueuedTraffic) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	{
+		CanTxMessage periodic(CanCategory::VERBOSE, 0x200, 8, 0);
+		ASSERT_TRUE(periodic.submit());
+	}
+	drainWaitHook = true;
+	disableWaitHook = true;
+	CanTxMessage synchronous(CanCategory::SERIAL, 0x710, 8, 0);
+	EXPECT_EQ(MSG_RESET, synchronous.submitAndWait(TIME_MS2I(10)));
+	EXPECT_EQ(0u, primaryTransmitCount);
+	EXPECT_FALSE(CanTxMessage::serviceOne(0));
 }
 
 TEST_F(DualCanWithDisconnectedSecondaryTest, LuaTransmitsWithPeriodicWriterDisabled) {

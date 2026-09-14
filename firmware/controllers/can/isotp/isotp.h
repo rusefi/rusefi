@@ -243,12 +243,15 @@ protected:
 	fifo_buffer_sync<CANRxFrame, ISOTP_RX_QUEUE_LEN> rxFifoBuf;
 };
 
-class IsoTpRxTx : public IsoTpRx {
+class IsoTpRxTx : public IsoTpRx, public ICanTransmitter {
 public:
 	IsoTpRxTx(size_t p_busIndex, uint32_t p_rxFrameId, uint32_t p_txFrameId)
 	:
 		IsoTpRx(p_busIndex, p_rxFrameId, p_txFrameId)
-		{}
+		{ txTransport = this; }
 
 	int writeTimeout(const uint8_t *txbuf, size_t size, sysinterval_t timeout);
+	can_msg_t transmit(CanTxMessage &ctfp, can_sysinterval_t timeout) override {
+		return ctfp.submitAndWait(timeout);
+	}
 };

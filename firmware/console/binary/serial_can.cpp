@@ -58,9 +58,10 @@ void CanTransport::init() {
 	registerCanListener(g_listener);
 }
 
-can_msg_t CanTransport::transmit(CanTxMessage &/*ctfp*/, can_sysinterval_t /*timeout*/) {
-	// we do nothing here - see CanTxMessage::~CanTxMessage()
-	return CAN_MSG_OK;
+can_msg_t CanTransport::transmit(CanTxMessage &ctfp, can_sysinterval_t timeout) {
+	// ISO-TP needs the worker's send result before continuing with the next frame.
+	// The queue stores a copy, so it does not depend on this message staying alive.
+	return ctfp.submitAndWait(timeout);
 }
 
 void CanTransport::onTpFirstFrame() {
