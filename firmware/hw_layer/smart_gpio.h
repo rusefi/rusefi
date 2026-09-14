@@ -19,6 +19,7 @@
 #include "drivers/gpio/tle9201.h"
 #include "drivers/gpio/drv8860.h"
 #include "drivers/gpio/can_gpio_msiobox.h"
+#include "drivers/adc/ads7128.h"
 // we seem OK without L9779 here do we need those includes at all?
 #endif /* EFI_PROD_CODE */
 
@@ -37,6 +38,7 @@ BOARD_L9779_COUNT + \
 BOARD_CAN_GPIO_COUNT + \
 BOARD_TLE9104_COUNT + \
 BOARD_HBRIDGE_GPIO_COUNT + \
+BOARD_ADS7128_COUNT + \
 0)
 #endif
 
