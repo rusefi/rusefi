@@ -36,24 +36,24 @@ public:
 		m_driver = pwmConfig.Driver;
 		m_channel = pwmConfig.Channel;
 
-		m_period = c_timerFrequency / frequency;
+		uint32_t period = c_timerFrequency / frequency;
 
 		// These timers are only 16 bit - don't risk overflow
-		if (m_period > 0xFFF0) {
+		if (period > 0xFFF0) {
 			firmwareError(ObdCode::CUSTOM_OBD_LOW_FREQUENCY, "PWM Frequency too low %.1f hz on pin \"%s\"", frequency, msg);
 			return;
 		}
 
 		// If we have too few usable bits, we run out of resolution, so don't allow that either.
 		// 200 counts = 0.5% resolution
-		if (m_period < 200) {
+		if (period < 200) {
 			firmwareError(ObdCode::CUSTOM_OBD_HIGH_FREQUENCY, "PWM Frequency too high %.1f hz on pin \"%s\"", frequency, msg);
 			return;
 		}
 
 		const PWMConfig pwmcfg = {
 			.frequency = c_timerFrequency,
-			.period = m_period,
+			.period = period,
 			.callback = nullptr,
 			.channels = {
 				{PWM_OUTPUT_ACTIVE_HIGH, nullptr},
@@ -79,34 +79,21 @@ public:
 			return;
 		}
 
-		pwm_lld_enable_channel(m_driver, m_channel, getHighTime(duty));
+		chibios_rt::CriticalSectionLocker csl;
+		m_duty = duty;
+		applyDuty();
 	}
 
-	// Same period limits as start(), but a refused frequency is reported to the caller instead of
-	// being a firmware error: the caller decides what to fall back to. Note the timer period is
-	// shared by all channels of m_driver. The caller re-applies its duty afterwards.
-	bool setFrequency(float frequency) override {
-		if (!m_driver || !(frequency > 0)) {
-			return false;
-		}
-
-		uint32_t period = c_timerFrequency / frequency;
-		if (period > 0xFFF0 || period < 200) {
-			return false;
-		}
-
-		m_period = period;
-		pwmChangePeriod(m_driver, m_period);
-		return true;
-	}
+	// The timer period is shared. Retiming preserves every attached channel's duty.
+	bool setFrequency(float frequency) override;
 
 private:
 	PWMDriver* m_driver = nullptr;
 	uint8_t m_channel = 0;
-	uint32_t m_period = 0;
+	float m_duty = 0;
 
-	pwmcnt_t getHighTime(float duty) const {
-		return m_period * duty;
+	void applyDuty() {
+		pwm_lld_enable_channel(m_driver, m_channel, m_driver->period * m_duty);
 	}
 };
 }
@@ -185,6 +172,30 @@ static expected<stm32_pwm_config> getConfigForPin(brain_pin_e pin) {
 #endif
 
 static stm32_hardware_pwm hardPwms[5];
+
+bool stm32_hardware_pwm::setFrequency(float frequency) {
+	if (!m_driver || !(frequency > 0)) {
+		return false;
+	}
+
+	// Check before converting to an integer: very small frequencies can overflow
+	// the integer conversion, and non-finite periods must be rejected too.
+	float period = c_timerFrequency / frequency;
+	if (!(period >= 200 && period <= 0xFFF0)) {
+		return false;
+	}
+
+	chibios_rt::CriticalSectionLocker csl;
+	pwmChangePeriodI(m_driver, static_cast<pwmcnt_t>(period));
+	// Period changes leave compare registers untouched. Recompute them from the
+	// retained duties, using the shared driver period for subsequent duty writes.
+	for (auto& pwm : hardPwms) {
+		if (pwm.m_driver == m_driver) {
+			pwm.applyDuty();
+		}
+	}
+	return true;
+}
 
 stm32_hardware_pwm* getNextPwmDevice() {
 	for (size_t i = 0; i < efi::size(hardPwms); i++) {
