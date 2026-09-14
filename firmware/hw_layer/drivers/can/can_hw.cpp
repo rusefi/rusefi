@@ -326,8 +326,10 @@ void initCan() {
 		}
 	}
 
-	// ISO-TP/Lua may transmit even when the periodic CAN writer is disabled.
-	canWrite.start();
+	// fire up threads, as necessary
+	if (engineConfiguration->canWriteEnabled) {
+		canWrite.start();
+	}
 
 	if (engineConfiguration->canReadEnabled) {
 		for (size_t index = 0; index < EFI_CAN_BUS_COUNT; index++) {
