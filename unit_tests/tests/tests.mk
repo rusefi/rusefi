@@ -1,4 +1,5 @@
 TESTS_SRC_CPP = \
+	tests/test_hardware_pwm.cpp \
 	../simulator/flash_storage.cpp \
 	tests/controllers/test_simulator_flash.cpp \
 	tests/test_scoped_logs.cpp \

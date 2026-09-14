@@ -40,7 +40,7 @@ struct gpiochip {
 
 static gpiochip chips[BOARD_EXT_GPIOCHIPS];
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || EFI_UNIT_TEST
 
 /* TODO: move inside gpio chip driver? */
 class external_hardware_pwm : public hardware_pwm {
@@ -84,6 +84,17 @@ private:
 /* TODO: is 5 enought? */
 static external_hardware_pwm extPwms[5];
 
+#if EFI_UNIT_TEST
+void resetGpioPwmForUnitTest() {
+	for (auto& pwm : extPwms) {
+		pwm = external_hardware_pwm{};
+	}
+	for (auto& chip : chips) {
+		chip = gpiochip{};
+	}
+}
+#endif
+
 #endif
 
 /*==========================================================================*/
@@ -105,7 +116,7 @@ static gpiochip *gpiochip_find(brain_pin_e pin)
 	return nullptr;
 }
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || EFI_UNIT_TEST
 
 static external_hardware_pwm* gpiochip_getNextPwmDevice() {
 	for (size_t i = 0; i < efi::size(extPwms); i++) {
@@ -425,7 +436,7 @@ void gpiochips_debug(void)
 	}
 }
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || EFI_UNIT_TEST
 
 /**
  * @brief Try to init PWM on given pin
