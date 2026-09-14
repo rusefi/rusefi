@@ -72,6 +72,7 @@ CPPSRC += $(ALLCPPSRC) \
 	$(CONSOLE_COMMON_SRC_CPP) \
 	$(PROJECT_DIR)/config/boards/hellen/hellen_board_id.cpp \
 	$(PROJECT_DIR)/hw_layer/drivers/can/can_hw.cpp \
+	$(PROJECT_DIR)/hw_layer/ports/stm32/stm32_pwm.cpp \
 	$(PROJECT_DIR)/../unit_tests/logicdata.cpp \
 	$(PROJECT_DIR)/../unit_tests/logicdata_reader.cpp \
 	$(PROJECT_DIR)/../unit_tests/test-framework/unit_test_logger.cpp \

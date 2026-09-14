@@ -8,9 +8,13 @@
 
 #include "pch.h"
 
+#if EFI_UNIT_TEST
+#include "mock-pwm.h"
+#endif
+
 #define _2_MHZ 2'000'000
 
-#if HAL_USE_PWM
+#if HAL_USE_PWM || EFI_UNIT_TEST
 
 namespace {
 struct stm32_pwm_config {
@@ -28,9 +32,9 @@ public:
 	// 2MHz, 16-bit timer gets us a usable frequency range of 31hz to 10khz
 	static constexpr uint32_t c_timerFrequency = _2_MHZ;
 
-	void start(const char* msg, const stm32_pwm_config& config, float frequency, float duty) {
-		m_driver = config.Driver;
-		m_channel = config.Channel;
+	void start(const char* msg, const stm32_pwm_config& pwmConfig, float frequency, float duty) {
+		m_driver = pwmConfig.Driver;
+		m_channel = pwmConfig.Channel;
 
 		m_period = c_timerFrequency / frequency;
 
@@ -107,6 +111,7 @@ private:
 };
 }
 
+#if !EFI_UNIT_TEST
 /**
   * Could this be unified with getIcuParams() method?
   */
@@ -177,6 +182,7 @@ static expected<stm32_pwm_config> getConfigForPin(brain_pin_e pin) {
 	default: return unexpected;
 	}
 };
+#endif
 
 static stm32_hardware_pwm hardPwms[5];
 
@@ -191,6 +197,21 @@ stm32_hardware_pwm* getNextPwmDevice() {
 	return nullptr;
 }
 
+#if EFI_UNIT_TEST
+hardware_pwm* initStm32PwmForUnitTest(PWMDriver& driver, uint8_t channel, float frequency, float duty) {
+	auto device = getNextPwmDevice();
+	if (device) {
+		device->start("unit test", {&driver, channel, 0}, frequency, duty);
+	}
+	return device;
+}
+
+void resetStm32PwmForUnitTest() {
+	for (auto& pwm : hardPwms) {
+		pwm = stm32_hardware_pwm{};
+	}
+}
+#else
 /*static*/ hardware_pwm* hardware_pwm::tryInitPin(const char* msg, brain_pin_e pin, float frequencyHz, float duty) {
 	// Hardware PWM can't do very slow PWM - the timer counter is only 16 bits, so at 2MHz counting, that's a minimum of 31hz.
 	if (frequencyHz < 50) {
@@ -215,4 +236,5 @@ stm32_hardware_pwm* getNextPwmDevice() {
 
 	return nullptr;
 }
+#endif
 #endif /* HAL_USE_PWM */
