@@ -18,6 +18,7 @@
 
 #include "can.h"
 #include "can_hw.h"
+#include "can_startup.h"
 #include "can_msg_tx.h"
 #include "string.h"
 #include "mpu_util.h"
@@ -278,70 +279,48 @@ static void applyListenOnly(CANConfig* canConfig, bool isListenOnly) {
 #endif
 }
 
-void initCan() {
-	addConsoleAction("caninfo", canInfo);
-
-	isCanEnabled = false;
-
-	// No CAN features enabled, nothing more to do.
-	if (!engineConfiguration->canWriteEnabled && !engineConfiguration->canReadEnabled) {
-		return;
+struct CanStartupOperations {
+	CANDriver* getDevice(size_t index) {
+		return getCanDevice(index);
 	}
 
-	// Determine physical CAN peripherals based on selected pins
-	CANDriver *device[EFI_CAN_BUS_COUNT];
-	bool anyCan = false;
-	for (size_t index = 0; index < EFI_CAN_BUS_COUNT; index++) {
-		device[index] = getCanDevice(index);
-
-		// Check for same devie select
-		for (size_t j = 0; j < index; j++) {
-			if ((device[index] != nullptr) && (device[index] == device[j])) {
-				criticalError("CAN%d and CAN%d pins must be set to different devices", index + 1, j + 1);
-				return;
-			}
-		}
-		anyCan |= (device[index] != nullptr);
+	void duplicateDevice(size_t index, size_t other) {
+		criticalError("CAN%d and CAN%d pins must be set to different devices", index + 1, other + 1);
 	}
 
-	// If all devices are null, a firmware error was already thrown by detectCanDevice, but we shouldn't continue
-	if (!anyCan) {
-		return;
+	void configureDevice(size_t index, CANDriver* device) {
+		// The CAN driver saves a pointer to this local config, but only reads
+		// it during canStart().
+		CANConfig canConfig;
+		currentBaudRate[index] = getDefaultCanBaudRate(index);
+		memcpy(&canConfig, findCanConfig(currentBaudRate[index]), sizeof(canConfig));
+		applyListenOnly(&canConfig, getCanListenOnly(index));
+		canStart(device, &canConfig);
+		CanTxMessage::setDevice(index, device);
 	}
 
-	// Initialize peripherals
-	for (size_t index = 0; index < EFI_CAN_BUS_COUNT; index++) {
-		if (device[index]) {
-			// Config based on baud rate
-			// Pointer to this local canConfig is stored inside CANDriver
-			// even it is used only during canStart this is wierd
-			CANConfig canConfig;
-			currentBaudRate[index] = getDefaultCanBaudRate(index);
-			memcpy(&canConfig, findCanConfig(currentBaudRate[index]), sizeof(canConfig));
-			applyListenOnly(&canConfig, getCanListenOnly(index));
-			canStart(device[index], &canConfig);
-
-			// Plumb CAN devices to tx system
-			CanTxMessage::setDevice(index, device[index]);
-		}
-	}
-
-	// fire up threads, as necessary
-	if (engineConfiguration->canWriteEnabled) {
+	void startWriter() {
 		canWrite.start();
 	}
 
-	if (engineConfiguration->canReadEnabled) {
-		for (size_t index = 0; index < EFI_CAN_BUS_COUNT; index++) {
-			canRead[index].setDevice(device[index]);
-			canRead[index].start();
-		}
+	void startReader(size_t index, CANDriver* device) {
+		canRead[index].setDevice(device);
+		canRead[index].start();
+	}
+
+	void startSniffer() {
 #if EFI_PROD_CODE && HAL_USE_USB_CDC_2
 		canSniffer.start();
 #endif
 	}
+};
 
-	isCanEnabled = true;
+void initCan() {
+	addConsoleAction("caninfo", canInfo);
+	isCanEnabled = false;
+	CanStartupOperations ops;
+	isCanEnabled = startCan<EFI_CAN_BUS_COUNT>(engineConfiguration->canReadEnabled,
+		engineConfiguration->canWriteEnabled, ops);
 }
 
 bool getIsCanEnabled(void) {
