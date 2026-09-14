@@ -12,6 +12,7 @@
 | firmware | LoggingBufferFlusher::ThreadTask | log flush | - | - | - |
 | firmware | MicrosecondTimerWatchdogController::PeriodicTask | timer watchdog | - | - | - |
 | firmware | CanWrite::PeriodicTask | CAN TX | - | - | - |
+| firmware | CanTxWorker::ThreadTask | CAN TX worker | - | - | - |
 | firmware | DcThread::PeriodicTask | electronic throttle | - | - | - |
 | firmware | storageManagerThread(void*) | storage manager | - | - | - |
 | firmware | MMCmonThread(void*) | SD/MMC | - | - | - |
