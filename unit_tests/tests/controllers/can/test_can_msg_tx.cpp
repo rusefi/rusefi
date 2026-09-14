@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "can_msg_tx.h"
+#include "isotp.h"
+#include "rusefi_lua.h"
 
 namespace {
 
@@ -99,4 +101,49 @@ TEST_F(DualCanWithDisconnectedSecondaryTest, DisconnectedSecondaryDelaysHealthyP
 	EXPECT_EQ(2u, primaryTransmitCount);
 	EXPECT_EQ(1200u, primaryTransmitTimeMs);
 	EXPECT_GE(primaryTransmitTimeMs, 1000u);
+}
+
+TEST_F(DualCanWithDisconnectedSecondaryTest, LuaTransmitsWithPeriodicWriterDisabled) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->canReadEnabled = true;
+	engineConfiguration->canWriteEnabled = false;
+	engine->allowCanTx = true;
+
+	EXPECT_EQ(1, testLuaReturnsInteger(R"(
+		function testFunc()
+			txCan(1, 0x123, 0, {0x12, 0x34, 0x56})
+			return 1
+		end
+	)"));
+
+	// Check the HAL call
+	ASSERT_EQ(1u, primaryTransmitCount);
+	EXPECT_EQ(0u, secondaryTransmitCount);
+	EXPECT_EQ(0x123u, CAN_ID(lastPrimaryFrame));
+	EXPECT_EQ(CAN_IDE_STD, lastPrimaryFrame.IDE);
+	EXPECT_EQ(3u, lastPrimaryFrame.DLC);
+	EXPECT_EQ(0x12u, lastPrimaryFrame.data8[0]);
+	EXPECT_EQ(0x34u, lastPrimaryFrame.data8[1]);
+	EXPECT_EQ(0x56u, lastPrimaryFrame.data8[2]);
+}
+
+TEST_F(DualCanWithDisconnectedSecondaryTest, IsoTpTransmitsWithPeriodicWriterDisabled) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->canReadEnabled = true;
+	engineConfiguration->canWriteEnabled = false;
+	engine->allowCanTx = true;
+
+	IsoTpRxTx isoTp(0, 0x7e0, 0x7e8);
+	const uint8_t reply[] = {0x62, 0xf1, 0x90};
+	EXPECT_EQ(3, isoTp.writeTimeout(reply, sizeof(reply), TIME_MS2I(10)));
+
+	ASSERT_EQ(1u, primaryTransmitCount);
+	EXPECT_EQ(0u, secondaryTransmitCount);
+	EXPECT_EQ(0x7e8u, CAN_ID(lastPrimaryFrame));
+	EXPECT_EQ(CAN_IDE_STD, lastPrimaryFrame.IDE);
+	EXPECT_EQ(8u, lastPrimaryFrame.DLC);
+	EXPECT_EQ(3u, lastPrimaryFrame.data8[0]); // Single-frame payload length.
+	EXPECT_EQ(0x62u, lastPrimaryFrame.data8[1]);
+	EXPECT_EQ(0xf1u, lastPrimaryFrame.data8[2]);
+	EXPECT_EQ(0x90u, lastPrimaryFrame.data8[3]);
 }
