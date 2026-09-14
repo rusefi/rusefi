@@ -11,8 +11,7 @@
 | firmware | TunerstudioThread::ThreadTask | TunerStudio | 824 | 1324 | normal communication |
 | firmware | LoggingBufferFlusher::ThreadTask | log flush | 124 | 660 | mailbox wait/flush |
 | firmware | MicrosecondTimerWatchdogController::PeriodicTask | timer watchdog | 104 | 552 | normal watchdog sleep |
-| firmware | CanWrite::PeriodicTask | CAN TX | 600 | 860 | Honda-K dashboard output |
-| firmware | CanTxWorker::ThreadTask | CAN TX worker | - | - | - |
+| firmware | CanWrite::ThreadTask | CAN TX | - | - | - |
 | firmware | DcThread::PeriodicTask | electronic throttle | 304 | 556 | normal ETB update |
 | firmware | storageManagerThread(void*) | storage manager | 1032 | 660 | SD extra-page burn |
 | firmware | MMCmonThread(void*) | SD/MMC | 1432 | 2052 | exFAT log creation |

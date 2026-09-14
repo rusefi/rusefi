@@ -33,8 +33,13 @@ public:
 	}
 
 	virtual CanListener* request() {
-		// NOP and return next in list
+		// NOP and return next in list. Implementations must not block.
 		return getNext();
+	}
+
+	// Delay required after this listener's request before the next listener is requested.
+	virtual uint32_t requestDelayMs() const {
+		return 0;
 	}
 
 	CanListener* getNext() const {

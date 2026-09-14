@@ -11,8 +11,7 @@
 | firmware | TunerstudioThread::ThreadTask | TunerStudio | - | - | - |
 | firmware | LoggingBufferFlusher::ThreadTask | log flush | - | - | - |
 | firmware | MicrosecondTimerWatchdogController::PeriodicTask | timer watchdog | - | - | - |
-| firmware | CanWrite::PeriodicTask | CAN TX | - | - | - |
-| firmware | CanTxWorker::ThreadTask | CAN TX worker | - | - | - |
+| firmware | CanWrite::ThreadTask | CAN TX | - | - | - |
 | firmware | DcThread::PeriodicTask | electronic throttle | - | - | - |
 | firmware | storageManagerThread(void*) | storage manager | - | - | - |
 | firmware | MMCmonThread(void*) | SD/MMC | - | - | - |

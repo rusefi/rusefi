@@ -17,7 +17,7 @@
 
 // A CAN frame is only eight payload bytes, but the HAL frame layout differs
 // between bxCAN and FDCAN.  Keep the complete native frame in each queue slot.
-#define CAN_TX_QUEUE_CAPACITY 32
+#define CAN_TX_QUEUE_CAPACITY 16
 
 #if EFI_SIMULATOR || EFI_UNIT_TEST
 #include "fifo_buffer.h"
@@ -80,12 +80,14 @@ public:
 	 * Stop accepting new frames on this bus and discard its queued frames.
 	 */
 	static void removeDevice(size_t idx);
-	// Handle one queued frame, including discarding it if cancelled.
-	// Return false when there is no frame to handle or the bus index is invalid.
-	// An idle worker waits briefly for new work before returning false.
+	// Handle one bus without waiting for a hardware mailbox. False means no
+	// completed/discarded frame, including a retryable full mailbox.
 	static bool serviceOne(size_t idx);
 	// Keep handling frames until serviceOne reports no more work.
 	static void service(size_t idx);
+	// Shared TX workers wait here after a no-progress round. New work wakes
+	// them immediately; a short timeout lets them revisit retry deadlines.
+	static msg_t waitForWork(sysinterval_t timeout);
 	static int getQueueDropCount(size_t idx);
 #if EFI_UNIT_TEST
 	// Let host tests run the worker while a sender waits. Firmware uses the
