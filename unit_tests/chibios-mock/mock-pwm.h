@@ -35,7 +35,7 @@ inline void pwm_lld_enable_channel(PWMDriver* driver, uint8_t channel, pwmcnt_t 
 	driver->compare[channel] = width;
 }
 
-inline void pwmChangePeriod(PWMDriver* driver, pwmcnt_t period) {
+inline void pwmChangePeriodI(PWMDriver* driver, pwmcnt_t period) {
 	// ChibiOS pwmChangePeriodI updates the shared period, while the STM32
 	// TIMv1 pwm_lld_change_period writes ARR only, leaving CCRx untouched.
 	driver->period = period;
