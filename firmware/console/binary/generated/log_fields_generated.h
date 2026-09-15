@@ -701,6 +701,16 @@ static LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE MLG::Entries::Field fields[] = {
 	{engine->shiftTorqueReductionController.trqRedTimeXaxisValue, "trqRedTimeXaxisValue", "", 0},
 	{engine->shiftTorqueReductionController.trqRedIgnRetXaxisValue, "trqRedIgnRetXaxisValue", "", 0},
 #endif
+#if EFI_PROD_CODE && (BOARD_ADS7128_COUNT > 0)
+	{ads7128getLiveData(0)->adcRaw[0], "ADS7128 1", "", 0},
+	{ads7128getLiveData(0)->adcRaw[1], "ADS7128 2", "", 0},
+	{ads7128getLiveData(0)->adcRaw[2], "ADS7128 3", "", 0},
+	{ads7128getLiveData(0)->adcRaw[3], "ADS7128 4", "", 0},
+	{ads7128getLiveData(0)->adcRaw[4], "ADS7128 5", "", 0},
+	{ads7128getLiveData(0)->adcRaw[5], "ADS7128 6", "", 0},
+	{ads7128getLiveData(0)->adcRaw[6], "ADS7128 7", "", 0},
+	{ads7128getLiveData(0)->adcRaw[7], "ADS7128 8", "", 0},
+#endif
 #if EFI_PROD_CODE && (BOARD_MC33810_COUNT > 0)
 	{mc33810getLiveData(0)->sparkDuration[0], "Spark duration 1", "ms", 3, "Timing"},
 	{mc33810getLiveData(0)->sparkDuration[1], "Spark duration 2", "ms", 3, "Timing"},
