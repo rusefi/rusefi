@@ -51,10 +51,10 @@ private:
 	// Wait for 1/4 of a bit time
 	void waitQuarterBit();
 
+#if EFI_PROD_CODE
 	//Mutex protecting the bus.
 	mutex_t mutex;
 
-#if EFI_PROD_CODE
 	ioportid_t m_sclPort = 0;
 	ioportmask_t m_sclPin = 0;
 	ioportid_t m_sdaPort = 0;
