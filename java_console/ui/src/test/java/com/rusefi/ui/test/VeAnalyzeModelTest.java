@@ -126,4 +126,15 @@ public class VeAnalyzeModelTest {
         Assert.assertEquals(20.0, VeAnalyzeModel.interpolate(10, 10, x, y, z), 0.0001);
         Assert.assertEquals(10.0, VeAnalyzeModel.interpolate(5, 5, x, y, z), 0.0001);
     }
+
+    @Test
+    public void testDeltaPercent() {
+        VeAnalyzeModel m = sampleModel();
+        // actual 1.1 / target 1.0 -> cell 50.0 -> 52.5 -> +5%
+        m.addSample(1000, 30, 1.1, 1.0, true);
+        double[][] delta = m.getDeltaPercent();
+        Assert.assertEquals(5.0, delta[0][0], 0.0001);
+        // untouched cell -> 0
+        Assert.assertEquals(0.0, delta[1][2], 0.0001);
+    }
 }
