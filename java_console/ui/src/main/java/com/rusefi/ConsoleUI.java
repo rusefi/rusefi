@@ -483,19 +483,17 @@ console live data tab is broken #8402
             if (UiProperties.isKnockAnalyzerEnabled()) {
                 tabbedPane.addTab("Knock Analyzer", new KnockPane(uiContext).getContent());
             }
-            SlcanTabController slcanTabs = new SlcanTabController(tabbedPane.tabbedPane,
-                () -> new SlcanTab(uiContext, mainFrame::showMessageOverlay));
-            Runnable refreshSlcanTab = () -> {
-                // Use only the current connection, never IniFileState's cached/offline fallback.
-                BinaryProtocol bp = uiContext.getBinaryProtocol();
-                IniFileModel connectedIni = !uiContext.isOfflineMode()
-                    && ConnectionStatusLogic.INSTANCE.getValue() == ConnectionStatusValue.CONNECTED
-                    && bp != null ? bp.getIniFileNullable() : null;
-                slcanTabs.update(connectedIni, UiProperties.isSlcanSnifferEnabled());
-            };
-            ConnectionStatusLogic.INSTANCE.addAndFireListener(connected ->
-                SwingUtilities.invokeLater(refreshSlcanTab));
-            uiContext.addOfflineModeListener(offline -> SwingUtilities.invokeLater(refreshSlcanTab));
+            tabbedPane.addTab("VE Analyze", new VeAnalyzePane(uiContext).getContent());
+            if (UiProperties.isSlcanSnifferEnabled()) {
+                // Lazy: SlcanTab starts a serial-port-scanning reader thread on construction,
+                // only do that once the user actually opens the tab.
+                tabbedPane.addTab("SLCAN Sniffer", new InitOnFirstPaintPanel() {
+                    @Override
+                    protected JPanel createContent() {
+                        return new SlcanTab().getContent();
+                    }
+                }.getContent());
+            }
             if (UiProperties.isPinoutEnabled()) {
                 tabbedPane.addTab("Pinout", pinoutPane.getContent());
             }

@@ -1,5 +1,57 @@
 # Work Report
 
+## 2026-09-16 - VE-table autotune in the Java console (VeAnalyzePane, no firmware changes)
+
+Added a lambda-driven VE autotune tab to the rusEFI console, analogous to
+TunerStudio's VE Analyze Live but running inside the console and writing
+back through the existing tune-burn path.
+
+Files:
+- java_console/ui/src/main/java/com/rusefi/ui/VeAnalyzeModel.java (new)
+- java_console/ui/src/main/java/com/rusefi/ui/VeAnalyzePane.java (new)
+- java_console/ui/src/test/java/com/rusefi/ui/test/VeAnalyzeModelTest.java (new)
+- java_console/ui/src/main/java/com/rusefi/ConsoleUI.java (tab "VE Analyze"
+  added next to Knock Analyzer)
+
+Decisions:
+- No firmware changes. Only existing output channels are used: RPMValue,
+  MAPValue/TPSValue, lambdaValue/AFRValue, Gego. The VE load axis is
+  resolved from config: veOverrideMode (VE_MAP -> MAPValue, VE_TPS ->
+  TPSValue) and, for VE_None, fuelAlgorithm (Speed-Density -> MAPValue,
+  Alpha-N -> TPSValue; MAF/Lua -> unsupported). Lambda source and target
+  table follow useLambdaOnInterface (lambdaValue + lambdaTableTbl vs
+  AFRValue + afrTableTbl; both target tables share zBins = lambdaTable).
+- Correction is the classic VE-Analyze formula:
+  newVe = ve * (1 + damping * (actual/target - 1)), damping 0.5. The target
+  lambda is interpolated from the target table at (rpm, load) via bilinear
+  interpolation in VeAnalyzeModel.interpolate().
+- Per-cell confidence (NONE/LOW/MEDIUM/HIGH) from accumulated sample counts -
+  the MapDelta idea ported from the MxT optimizer; cells without data are
+  left unchanged and grayed out.
+- Sampling is one row per output-channels frame via a SensorCentral
+  ResponseListener; the pane reads getValue() for RPM/load/lambda/Gego.
+- Write-back is ONLY on the explicit "Apply Corrections" button, via
+  image.clone() + veZField.writeRawValue + bp.uploadChanges(). No auto-burn -
+  consistent with the console's removal of the live-edit upload loop.
+
+Validation:
+- ./gradlew :ui:compileTestJava -> BUILD SUCCESSFUL (only pre-existing
+  deprecation warnings).
+- ./gradlew :ui:test --tests com.rusefi.ui.test.VeAnalyzeModelTest ->
+  10/10 passed (tests=10 failures=0 errors=0).
+
+Open follow-ups:
+- The lambda-valid gate is a heuristic because lambdaCurrentlyGood /
+  fuelingLoad / veTableYAxis are LiveData-only (not output channels):
+  RPM >= 500, lambda in a sane band (0.5..1.5 lambda or 7..25 AFR), and
+  |Gego - 100| <= 20 (not a big transient). A cleaner gate would need one
+  or two extra output channels added to firmware/console/binary/
+  output_channels.txt.
+- The target lambda table is interpolated on the SAME load axis as the VE
+  table (MAP/TPS). If afrLoadSrc selects a different axis this is a first
+  approximation.
+- Display currently shows suggested VE; a "delta %" mode is the next step.
+
 ## 2026-09-08 (part 2) - AT32 bootloader IWDG arm race: the REAL root cause of the latch (fixed)
 
 Part 1 documented the latch mechanics. SWD on the bench proved the actual
