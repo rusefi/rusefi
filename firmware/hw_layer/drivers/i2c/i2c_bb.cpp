@@ -66,6 +66,9 @@ bool BitbangI2c::init(brain_pin_e scl, brain_pin_e sda, i2c_speed_e speed) {
   UNUSED(scl);UNUSED(sda);
 #endif
 
+	m_sda = sda;
+	m_scl = scl;
+
 	// Both lines idle high
 	scl_high();
 	sda_high();
