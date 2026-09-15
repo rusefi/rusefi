@@ -1,21 +1,41 @@
 /**
  * @file stm32f4xx_rtc.cpp
- * @brief Restore the STM32F4 RTC to LSE after an earlier fallback to LSI.
+ * @brief Switch the RTC from the internal clock (LSI) to the external clock (LSE).
  */
 
 #include "pch.h"
 
 #if HAL_USE_RTC
 
-// Changing the RTC clock source requires a backup-domain reset. Preserve the
-// current time and the RTC backup registers used by backup_ram.cpp across that
-// reset. The separate BKPSRAM is not affected.
+#if (STM32_RTCSEL == STM32_RTCSEL_LSE)
+// Wait up to one second for LSE. The normal watchdog task has not started yet,
+// so feed the watchdog here while waiting.
+static bool waitForLseReady() {
+	const systime_t start = chVTGetSystemTimeX();
+	while (((RCC->BDCR & RCC_BDCR_LSERDY) == 0) && (chTimeDiffX(start, chVTGetSystemTimeX()) < TIME_MS2I(1000))) {
+#if HAL_USE_WDG
+		wdgReset(&WDGD1);
+#endif
+		chThdSleepMilliseconds(10);
+	}
+
+#if HAL_USE_WDG
+	// Give the rest of startup a full watchdog timeout.
+	wdgReset(&WDGD1);
+#endif
+	return (RCC->BDCR & RCC_BDCR_LSERDY) != 0;
+}
+#endif
+
+// Changing clocks needs a reset, which clears the time and backup registers.
+// Save and restore them. The separate backup SRAM is not reset.
 void hal_lld_rtc_fixup(void) {
 #if (STM32_RTCSEL == STM32_RTCSEL_LSE)
 	if ((RCC->BDCR & STM32_RTCSEL_MASK) == STM32_RTCSEL) {
 		return;
 	}
-	if ((RCC->BDCR & RCC_BDCR_LSERDY) == 0) {
+	// LSE can take longer to start. Wait before resetting the RTC.
+	if (!waitForLseReady()) {
 		efiPrintf("LSE is not ready");
 		return;
 	}
@@ -29,7 +49,7 @@ void hal_lld_rtc_fixup(void) {
 	const uint32_t backup2 = RTC->BKP2R;
 	const uint32_t backup3 = RTC->BKP3R;
 
-	// This also stops LSE, so it must be restarted before selecting the clock.
+	// Reset the RTC and backup registers. This also stops LSE.
 	RCC->BDCR |= RCC_BDCR_BDRST;
 	RCC->BDCR &= ~RCC_BDCR_BDRST;
 
@@ -39,23 +59,8 @@ void hal_lld_rtc_fixup(void) {
 	RCC->BDCR |= RCC_BDCR_LSEON;
 #endif
 
-	// initRtc() runs with the RTOS and watchdog active, before periodic watchdog
-	// servicing and USB startup. Give LSE at most one second to restart, then
-	// fall back to LSI so a bad crystal cannot prevent the ECU from booting.
-	const systime_t start = chVTGetSystemTimeX();
-	while (((RCC->BDCR & RCC_BDCR_LSERDY) == 0) && (chTimeDiffX(start, chVTGetSystemTimeX()) < TIME_MS2I(1000))) {
-#if HAL_USE_WDG
-		wdgReset(&WDGD1);
-#endif
-		chThdSleepMilliseconds(10);
-	}
-
-#if HAL_USE_WDG
-	// Leave the remaining startup code a fresh watchdog interval.
-	wdgReset(&WDGD1);
-#endif
-
-	if (RCC->BDCR & RCC_BDCR_LSERDY) {
+	// Wait for LSE to restart, or use LSI if it fails.
+	if (waitForLseReady()) {
 		RCC->BDCR |= STM32_RTCSEL;
 	} else {
 		efiPrintf("LSE is not ready after restart attempt");
