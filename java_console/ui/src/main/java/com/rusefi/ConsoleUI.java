@@ -452,6 +452,7 @@ console live data tab is broken #8402
             if (UiProperties.isKnockAnalyzerEnabled()) {
                 tabbedPane.addTab("Knock Analyzer", new KnockPane(uiContext).getContent());
             }
+            tabbedPane.addTab("VE Analyze", new VeAnalyzePane(uiContext).getContent());
             if (UiProperties.isSlcanSnifferEnabled()) {
                 // Lazy: SlcanTab starts a serial-port-scanning reader thread on construction,
                 // only do that once the user actually opens the tab.
