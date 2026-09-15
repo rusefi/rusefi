@@ -35,16 +35,32 @@ void HardwareI2c::deinit() {
 	efiSetPadUnused(m_scl);
 }
 
-msg_t HardwareI2c::write(uint8_t addr, const uint8_t* data, size_t size) {
+msg_t HardwareI2c::__write(uint8_t addr, const uint8_t* data, size_t size) {
 	return i2cMasterTransmitTimeout(m_driver, addr, data, size, nullptr, 0, TIME_MS2I(10));
 }
 
-msg_t HardwareI2c::read(uint8_t addr, uint8_t* data, size_t size) {
+msg_t HardwareI2c::__read(uint8_t addr, uint8_t* data, size_t size) {
 	return i2cMasterReceiveTimeout(m_driver, addr, data, size, TIME_MS2I(10));
 }
 
-msg_t HardwareI2c::writeRead(uint8_t addr, const uint8_t* writeData, size_t writeSize, uint8_t* readData, size_t readSize) {
+msg_t HardwareI2c::__writeRead(uint8_t addr, const uint8_t* writeData, size_t writeSize, uint8_t* readData, size_t readSize) {
 	return i2cMasterTransmitTimeout(m_driver, addr, writeData, writeSize, readData, readSize, TIME_MS2I(10));
+}
+
+msg_t HardwareI2c::lock() {
+	if (m_driver) {
+		i2cAcquireBus(m_driver);
+		return MSG_OK;
+	}
+	return MSG_RESET;
+}
+
+msg_t HardwareI2c::unlock() {
+	if (m_driver) {
+		i2cReleaseBus(m_driver);
+		return MSG_OK;
+	}
+	return MSG_RESET;
 }
 
 constexpr I2CDriver * getI2cDevice(i2c_bus_e device) {
@@ -141,26 +157,6 @@ void turnOnI2c(i2c_bus_e n) {
 			i2cbuses[n] = bus;
 		}
 	}
-}
-
-void lockI2c(i2c_bus_e device) {
-#if HAL_USE_I2C
-	I2CDriver *drv = getI2cDevice(device);
-	if (drv) {
-		i2cAcquireBus(drv);
-	}
-#endif
-	/* TODO: lock BB i2c device too */
-}
-
-void unlockI2c(i2c_bus_e device) {
-#if HAL_USE_I2C
-	I2CDriver *drv = getI2cDevice(device);
-	if (drv) {
-		i2cReleaseBus(drv);
-	}
-#endif
-	/* TODO: unlock BB i2c device too */
 }
 
 void stopI2c(i2c_bus_e n) {
