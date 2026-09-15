@@ -51,7 +51,6 @@ static void premiumQuickTestDefaultConfiguration() {
 	engineConfiguration->spi4mosiPin = Gpio::E6;
 #endif
 
-#if STM32_I2C_USE_I2C2
 	i2c_config_s *cfg = getI2cCfg(I2C_BUS_2);
 	if (cfg != nullptr) {
 		cfg->sclPin = Gpio::MMP176_I2C_SCL;
@@ -59,11 +58,10 @@ static void premiumQuickTestDefaultConfiguration() {
 		cfg->speed = I2C_SPEED_400K;
 		cfg->enabled = true;
 	}
-#else
-	// else bitbang
+
+	// legacy config...
 	engineConfiguration->lps25BaroSensorScl = Gpio::MMP176_I2C_SCL;
 	engineConfiguration->lps25BaroSensorSda = Gpio::MMP176_I2C_SDA;
-#endif
 
 	// Accel bus and CS
 	engineConfiguration->accelerometerSpiDevice = SPI_DEVICE_4;
