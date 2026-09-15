@@ -110,6 +110,22 @@ public class VeAnalyzeModel {
         return suggested;
     }
 
+    /**
+     * Per-cell correction as a percentage: {@code (suggested - current) / current * 100}.
+     * Zero where the current VE is ~0 or the cell has no data.
+     */
+    public double[][] getDeltaPercent() {
+        double[][] suggested = getSuggestedVe();
+        double[][] delta = new double[loadAxis.length][rpmAxis.length];
+        for (int c = 0; c < loadAxis.length; c++) {
+            for (int r = 0; r < rpmAxis.length; r++) {
+                double cur = currentVe[c][r];
+                delta[c][r] = Math.abs(cur) > 1e-9 ? (suggested[c][r] - cur) / cur * 100.0 : 0.0;
+            }
+        }
+        return delta;
+    }
+
     public double[][] getCurrentVe() {
         double[][] copy = new double[loadAxis.length][rpmAxis.length];
         for (int c = 0; c < loadAxis.length; c++) {

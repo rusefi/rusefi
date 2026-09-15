@@ -309,7 +309,7 @@ public class VeAnalyzePane {
             summaryLabel.setText(" ");
             return;
         }
-        summaryLabel.setText(String.format("Cells with data: %d / %d (%.0f%%)",
+        summaryLabel.setText(String.format("Cells with data: %d / %d (%.0f%%) - cells show correction (delta %%)",
             model.getCellsWithData(), model.getTotalCells(), model.getCoverage() * 100.0));
     }
 
@@ -349,7 +349,7 @@ public class VeAnalyzePane {
 
         @Override
         public Object getValueAt(int rowIndex, int columnIndex) {
-            return model.getSuggestedVe()[rowIndex][columnIndex];
+            return model.getDeltaPercent()[rowIndex][columnIndex];
         }
     }
 
@@ -359,7 +359,7 @@ public class VeAnalyzePane {
                                                        boolean hasFocus, int row, int column) {
             Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             VeTableModel m = (VeTableModel) table.getModel();
-            setText(String.format("%.1f", (Double) value));
+            setText(String.format("%+.1f%%", (Double) value));
             setHorizontalAlignment(SwingConstants.RIGHT);
             if (!isSelected) {
                 switch (m.model.getConfidence(row, column)) {
