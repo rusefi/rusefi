@@ -82,6 +82,9 @@ public:
 	}
 private:
 	I2CDriver* m_driver;
+
+	uint8_t txnocache[32];
+	uint8_t rxnocache[32];
 };
 
 constexpr I2CDriver * getI2cDevice(i2c_bus_e i2cDevice);
