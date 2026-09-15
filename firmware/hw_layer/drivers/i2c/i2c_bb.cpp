@@ -62,6 +62,8 @@ bool BitbangI2c::init(brain_pin_e scl, brain_pin_e sda, i2c_speed_e speed) {
 
 	m_sdaPort = getHwPort("i2c", sda);
 	m_sdaPin = getHwPin("i2c", sda);
+
+	osalMutexObjectInit(&mutex);
 #else
   UNUSED(scl);UNUSED(sda);
 #endif
@@ -72,8 +74,6 @@ bool BitbangI2c::init(brain_pin_e scl, brain_pin_e sda, i2c_speed_e speed) {
 	// Both lines idle high
 	scl_high();
 	sda_high();
-
-	osalMutexObjectInit(&mutex);
 
 	return true;
 }
@@ -254,11 +254,15 @@ msg_t BitbangI2c::__read(uint8_t addr, uint8_t* readData, size_t readSize) {
 }
 
 msg_t BitbangI2c::lock() {
+#if EFI_PROD_CODE
 	osalMutexLock(&mutex);
+#endif
 	return MSG_OK;
 }
 
 msg_t BitbangI2c::unlock() {
+#if EFI_PROD_CODE
 	osalMutexUnlock(&mutex);
+#endif
 	return MSG_OK;
 }
