@@ -18,11 +18,14 @@ public:
 	void deinit() override;
 
 	// Write a sequence of bytes to the specified device
-	msg_t write(uint8_t addr, const uint8_t* data, size_t size) override;
+	msg_t __write(uint8_t addr, const uint8_t* data, size_t size) override;
 	// Read a sequence of bytes from the device
-	msg_t read(uint8_t addr, uint8_t* data, size_t size) override;
+	msg_t __read(uint8_t addr, uint8_t* data, size_t size) override;
 	// Write some bytes then read some bytes back after a repeated start bit
-	msg_t writeRead(uint8_t addr, const uint8_t* writeData, size_t writeSize, uint8_t* readData, size_t readSize) override;
+	msg_t __writeRead(uint8_t addr, const uint8_t* writeData, size_t writeSize, uint8_t* readData, size_t readSize) override;
+
+	msg_t lock() override;
+	msg_t unlock() override;
 
 private:
 	// Returns true if the remote device acknowledged the transmission
@@ -47,6 +50,9 @@ private:
 
 	// Wait for 1/4 of a bit time
 	void waitQuarterBit();
+
+	//Mutex protecting the bus.
+	mutex_t mutex;
 
 #if EFI_PROD_CODE
 	ioportid_t m_sclPort = 0;

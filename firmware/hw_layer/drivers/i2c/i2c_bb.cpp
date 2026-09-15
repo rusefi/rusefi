@@ -70,6 +70,8 @@ bool BitbangI2c::init(brain_pin_e scl, brain_pin_e sda, i2c_speed_e speed) {
 	scl_high();
 	sda_high();
 
+	osalMutexObjectInit(&mutex);
+
 	return true;
 }
 
@@ -195,7 +197,7 @@ void BitbangI2c::waitQuarterBit() {
 	}
 }
 
-msg_t BitbangI2c::write(uint8_t addr, const uint8_t* writeData, size_t writeSize) {
+msg_t BitbangI2c::__write(uint8_t addr, const uint8_t* writeData, size_t writeSize) {
 	start();
 
 	// Address + write
@@ -217,7 +219,7 @@ msg_t BitbangI2c::write(uint8_t addr, const uint8_t* writeData, size_t writeSize
 	return MSG_OK;
 }
 
-msg_t BitbangI2c::writeRead(uint8_t addr, const uint8_t* writeData, size_t writeSize, uint8_t* readData, size_t readSize) {
+msg_t BitbangI2c::__writeRead(uint8_t addr, const uint8_t* writeData, size_t writeSize, uint8_t* readData, size_t readSize) {
 	msg_t res = write(addr, writeData, writeSize);
 	if (res != MSG_OK) {
 		return res;
@@ -226,7 +228,7 @@ msg_t BitbangI2c::writeRead(uint8_t addr, const uint8_t* writeData, size_t write
 	return read(addr, readData, readSize);
 }
 
-msg_t BitbangI2c::read(uint8_t addr, uint8_t* readData, size_t readSize) {
+msg_t BitbangI2c::__read(uint8_t addr, uint8_t* readData, size_t readSize) {
 	start();
 
 	// Address + read
@@ -245,5 +247,15 @@ msg_t BitbangI2c::read(uint8_t addr, uint8_t* readData, size_t readSize) {
 
 	stop();
 
+	return MSG_OK;
+}
+
+msg_t BitbangI2c::lock() {
+	osalMutexLock(&mutex);
+	return MSG_OK;
+}
+
+msg_t BitbangI2c::unlock() {
+	osalMutexUnlock(&mutex);
 	return MSG_OK;
 }

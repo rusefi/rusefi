@@ -19,12 +19,42 @@ public:
 	// Release resources
 	virtual void deinit() = 0;
 
+	msg_t write(uint8_t addr, const uint8_t* data, size_t size) {
+		msg_t ret = lock();
+		if (ret == MSG_OK) {
+			ret = __write(addr, data, size);
+			unlock();
+		}
+		return ret;
+	}
+
+	msg_t read(uint8_t addr, uint8_t* data, size_t size) {
+		msg_t ret = lock();
+		if (ret == MSG_OK) {
+			ret = __read(addr, data, size);
+			unlock();
+		}
+		return ret;
+	}
+
+	msg_t writeRead(uint8_t addr, const uint8_t* writeData, size_t writeSize, uint8_t* readData, size_t readSize) {
+		msg_t ret = lock();
+		if (ret == MSG_OK) {
+			ret = __writeRead(addr, writeData, writeSize, readData, readSize);
+			unlock();
+		}
+		return ret;
+	}
+
 	// Write a sequence of bytes to the specified device
-	virtual msg_t write(uint8_t addr, const uint8_t* data, size_t size) = 0;
+	virtual msg_t __write(uint8_t addr, const uint8_t* data, size_t size) = 0;
 	// Read a sequence of bytes from the device
-	virtual msg_t read(uint8_t addr, uint8_t* data, size_t size) = 0;
+	virtual msg_t __read(uint8_t addr, uint8_t* data, size_t size) = 0;
 	// Write some bytes then read some bytes back after a repeated start bit
-	virtual msg_t writeRead(uint8_t addr, const uint8_t* writeData, size_t writeSize, uint8_t* readData, size_t readSize) = 0;
+	virtual msg_t __writeRead(uint8_t addr, const uint8_t* writeData, size_t writeSize, uint8_t* readData, size_t readSize) = 0;
+
+	virtual msg_t lock() = 0;
+	virtual msg_t unlock() = 0;
 
 	brain_pin_e m_scl;
 	brain_pin_e m_sda;
@@ -40,9 +70,12 @@ public:
 	bool init(brain_pin_e scl, brain_pin_e sda, i2c_speed_e speed) override;
 	void deinit() override;
 
-	msg_t write(uint8_t addr, const uint8_t* data, size_t size) override;
-	msg_t read(uint8_t addr, uint8_t* data, size_t size) override;
-	msg_t writeRead(uint8_t addr, const uint8_t* writeData, size_t writeSize, uint8_t* readData, size_t readSize) override;
+	msg_t __write(uint8_t addr, const uint8_t* data, size_t size) override;
+	msg_t __read(uint8_t addr, uint8_t* data, size_t size) override;
+	msg_t __writeRead(uint8_t addr, const uint8_t* writeData, size_t writeSize, uint8_t* readData, size_t readSize) override;
+
+	msg_t lock() override;
+	msg_t unlock() override;
 
 	bool isInitialized() {
 		return m_driver != nullptr;
@@ -59,9 +92,6 @@ void turnOnI2c(i2c_bus_e device);
 
 brain_pin_e getSclPin(i2c_bus_e device);
 brain_pin_e getSdaPin(i2c_bus_e device);
-
-void lockI2c(i2c_bus_e device);
-void unlockI2c(i2c_bus_e device);
 
 void initEarlyI2c();
 void initI2cModules();
