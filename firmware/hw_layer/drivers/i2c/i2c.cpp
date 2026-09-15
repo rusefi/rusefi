@@ -36,15 +36,39 @@ void HardwareI2c::deinit() {
 }
 
 msg_t HardwareI2c::__write(uint8_t addr, const uint8_t* data, size_t size) {
-	return i2cMasterTransmitTimeout(m_driver, addr, data, size, nullptr, 0, TIME_MS2I(10));
+	if (size > sizeof(txnocache)) {
+		// huh?
+		return MSG_RESET;
+	}
+	memcpy(txnocache, data, size);
+	return i2cMasterTransmitTimeout(m_driver, addr, txnocache, size, nullptr, 0, TIME_MS2I(10));
 }
 
 msg_t HardwareI2c::__read(uint8_t addr, uint8_t* data, size_t size) {
-	return i2cMasterReceiveTimeout(m_driver, addr, data, size, TIME_MS2I(10));
+	if (size > sizeof(rxnocache)) {
+		// huh?
+		return MSG_RESET;
+	}
+	msg_t msg = i2cMasterReceiveTimeout(m_driver, addr, rxnocache, size, TIME_MS2I(10));
+	if (msg != MSG_OK) {
+		return msg;
+	}
+	memcpy(data, rxnocache, size);
+	return MSG_OK;
 }
 
 msg_t HardwareI2c::__writeRead(uint8_t addr, const uint8_t* writeData, size_t writeSize, uint8_t* readData, size_t readSize) {
-	return i2cMasterTransmitTimeout(m_driver, addr, writeData, writeSize, readData, readSize, TIME_MS2I(10));
+	if ((writeSize > sizeof(txnocache)) || (readSize > sizeof(rxnocache))) {
+		// huh?
+		return MSG_RESET;
+	}
+	memcpy(txnocache, writeData, writeSize);
+	msg_t msg = i2cMasterTransmitTimeout(m_driver, addr, txnocache, writeSize, rxnocache, readSize, TIME_MS2I(10));
+	if (msg != MSG_OK) {
+		return msg;
+	}
+	memcpy(readData, rxnocache, readSize);
+	return MSG_OK;
 }
 
 msg_t HardwareI2c::lock() {
@@ -86,7 +110,7 @@ constexpr I2CDriver * getI2cDevice(i2c_bus_e device) {
 	}
 }
 
-static HardwareI2c hardwareI2c[I2C_BUS_TOTAL_COUNT];
+static NO_CACHE HardwareI2c hardwareI2c[I2C_BUS_TOTAL_COUNT];
 
 /* try to start harware i2c on given pins */
 static i2cBus *initI2cHwBus(brain_pin_e scl, brain_pin_e sda, i2c_speed_e speed)
