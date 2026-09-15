@@ -56,8 +56,8 @@ public:
 	virtual msg_t lock() = 0;
 	virtual msg_t unlock() = 0;
 
-	brain_pin_e m_scl;
-	brain_pin_e m_sda;
+	brain_pin_e m_scl = Gpio::Unassigned;
+	brain_pin_e m_sda = Gpio::Unassigned;
 };
 
 i2cBus *getI2cBus(i2c_bus_e n);
@@ -81,7 +81,7 @@ public:
 		return m_driver != nullptr;
 	}
 private:
-	I2CDriver* m_driver;
+	I2CDriver* m_driver = nullptr;
 
 	uint8_t txnocache[32];
 	uint8_t rxnocache[32];
