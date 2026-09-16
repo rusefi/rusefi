@@ -8,7 +8,7 @@
 | `1` / `AE_MODE_PERCENT_ADDER` | Percent Adder | TPS-based extra fuel proportional to the calculated injection mass. |
 | `2` / `AE_MODE_PREDICTIVE_MAP` | MAP Prediction | Temporarily raises the MAP used by the speed-density air-mass calculation, then blends back to measured MAP. |
 
-**Wall wetting is independent of this selector** and can operate with any of these modes. Its simple/complex model selector (`complexWallModel`) is a separate choice. The historical header in `accel_enrichment.cpp` listing MAP rate-of-change, TPS rate-of-change and wall wetting does not describe the current mode selector: MAP Prediction is triggered by TPS movement, not a MAP derivative.
+**Wall wetting is independent of this selector** and can operate with any of these modes. Its simple/complex model selector (`complexWallModel`) is a separate choice. MAP Prediction is triggered by TPS movement, not a MAP derivative.
 
 ## Where the corrections enter the pipeline
 
@@ -105,7 +105,7 @@ All three flex multiplier tables share `flexTransientCltBins` and `flexTransient
 
 ## Closed-loop interaction and diagnostics
 
-`ShortTermFuelTrim` inhibits correction while `getTimeSinceAcell() < noFuelTrimAfterAccelTime`. The adders reset that timer on acceleration or deceleration; MAP Prediction resets it when prediction starts. The firmware check applies in MAP Prediction too, although its TunerStudio field is disabled in that mode.
+`ShortTermFuelTrim` inhibits correction while `getTimeSinceAcell() < noFuelTrimAfterAccelTime`. The adders reset that timer on acceleration or deceleration; MAP Prediction resets it when prediction starts. The "Inhibit closed loop fuel after accel" setting is available in TunerStudio for all three modes.
 
 | Inspect | Meaning / limitation |
 |---|---|
