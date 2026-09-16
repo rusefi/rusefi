@@ -1,6 +1,11 @@
-package com.rusefi.mcp;
+package com.rusefi.util;
 
+import com.opensr5.ConfigurationImage;
+import com.opensr5.ini.IniFileModel;
+import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.io.LinkManager;
 import com.rusefi.tune.xml.Msq;
+import com.rusefi.tune.xml.MsqFactory;
 import com.rusefi.tune.xml.Page;
 import jakarta.xml.bind.JAXBException;
 
@@ -9,14 +14,44 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.util.Map;
 import java.util.Objects;
+import java.util.TreeMap;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
 
 /** Daily tune backups: reuse matching calibration content, never overwrite an existing file. */
-final class TuneSnapshot {
+public final class TuneSnapshot {
     private TuneSnapshot() {
     }
 
-    static Path save(Path directory, Msq tune, LocalDate date) throws IOException {
+    /** Read fresh configuration pages on the link thread. Call from a background thread. */
+    public static Msq read(LinkManager lm, BinaryProtocol bp, IniFileModel ini) throws Exception {
+        FutureTask<Msq> read = new FutureTask<>(() -> {
+            Map<Integer, ConfigurationImage> pages = new TreeMap<>();
+            for (int index = 0; index < ini.getMetaInfo().getnPages(); index++) {
+                int id = ini.getMetaInfo().getPageIdentifier(index);
+                byte[] bytes = bp.readFromPage(id, 0, ini.getMetaInfo().getPageSize(index));
+                if (bytes == null) {
+                    throw new IOException("Failed to read tune page " + id);
+                }
+                pages.put(id, new ConfigurationImage(bytes));
+            }
+            if (!pages.containsKey(0)) {
+                throw new IOException("Main tune page is missing from the ECU .ini");
+            }
+            return MsqFactory.valueOf(pages, ini);
+        });
+        lm.submit(read);
+        try {
+            return read.get(60, TimeUnit.SECONDS);
+        } finally {
+            // Prevent a timed-out queued read from starting later; never interrupt a wire transaction.
+            read.cancel(false);
+        }
+    }
+
+    public static Path save(Path directory, Msq tune, LocalDate date) throws IOException {
         Path temporary = Files.createTempFile(directory, ".rusefi_tune_", ".tmp");
         try {
             tune.writeXmlFile(temporary.toString());

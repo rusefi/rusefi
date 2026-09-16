@@ -7,6 +7,7 @@ import com.rusefi.sensor_logs.BinarySensorLog;
 import com.rusefi.sensor_logs.CustomBinaryLogEntry;
 import com.rusefi.sensor_logs.SensorLogger;
 import com.rusefi.tune.xml.Msq;
+import com.rusefi.util.TuneSnapshot;
 import org.json.simple.JSONObject;
 
 import java.io.IOException;

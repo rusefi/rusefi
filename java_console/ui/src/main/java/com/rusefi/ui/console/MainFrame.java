@@ -7,6 +7,8 @@ import com.rusefi.*;
 import com.rusefi.autoupdate.Autoupdate;
 import com.rusefi.autoupdate.ConsoleExeFileLocator;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.util.TuneSnapshot;
+import com.rusefi.tune.xml.Msq;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.EngineState;
 import com.rusefi.core.SensorCentral;
@@ -37,8 +39,10 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.ZoneOffset;
@@ -215,6 +219,8 @@ public class MainFrame {
     private JMenuItem updateEcuItem;
     private JMenuItem startBinaryLoggingItem;
     private JMenuItem stopBinaryLoggingItem;
+    private JCheckBoxMenuItem saveTuneWithBinaryLoggingItem;
+    private SwingWorker<Void, Void> binaryLoggingStartWorker;
     private Runnable updateEcuAction;
     private Runnable exitRequestHandler;
     private boolean firmwareUpdateInProgress;
@@ -369,10 +375,14 @@ public class MainFrame {
         stopBinaryLoggingItem = new JMenuItem("Stop");
         stopBinaryLoggingItem.setIcon(loadMenuIcon("player-stop"));
         stopBinaryLoggingItem.addActionListener(e -> {
-            consoleUI.uiContext.sensorLogger.stop();
+            stopBinaryLogging();
             refreshBinaryLoggingActions();
         });
         binaryLoggingMenu.add(stopBinaryLoggingItem);
+        binaryLoggingMenu.addSeparator();
+        saveTuneWithBinaryLoggingItem = new JCheckBoxMenuItem("Save tune", true);
+        saveTuneWithBinaryLoggingItem.setToolTipText("Save a dated tune snapshot beside each data log");
+        binaryLoggingMenu.add(saveTuneWithBinaryLoggingItem);
 
         menuBar.add(binaryLoggingMenu);
         refreshBinaryLoggingActions();
@@ -383,8 +393,11 @@ public class MainFrame {
     private void refreshBinaryLoggingActions() {
         boolean isLogging = consoleUI.uiContext.sensorLogger.isLogging();
         boolean isConnected = ConnectionStatusLogic.INSTANCE.getValue() == ConnectionStatusValue.CONNECTED;
-        startBinaryLoggingItem.setEnabled(isConnected && !isLogging);
-        stopBinaryLoggingItem.setEnabled(isLogging);
+        boolean isStarting = binaryLoggingStartWorker != null;
+        startBinaryLoggingItem.setText(isStarting ? "Starting..." : "Start");
+        startBinaryLoggingItem.setEnabled(isConnected && !isLogging && !isStarting);
+        stopBinaryLoggingItem.setEnabled(isLogging || isStarting);
+        saveTuneWithBinaryLoggingItem.setEnabled(!isLogging && !isStarting);
     }
 
     private void chooseAndStartBinaryLogging() {
@@ -408,6 +421,63 @@ public class MainFrame {
             return;
         }
 
+        if (!saveTuneWithBinaryLoggingItem.isSelected()) {
+            startBinaryLogging(file);
+            return;
+        }
+
+        BinaryProtocol protocol = consoleUI.uiContext.getBinaryProtocol();
+        binaryLoggingStartWorker = new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                IniFileModel ini = protocol == null ? null : protocol.getIniFileNullable();
+                if (ini == null) {
+                    throw new IllegalStateException("No ECU tune is available");
+                }
+                Msq tune = TuneSnapshot.read(consoleUI.uiContext.getLinkManager(), protocol, ini);
+                if (!isCancelled()) {
+                    TuneSnapshot.save(file.getAbsoluteFile().getParentFile().toPath(), tune, LocalDate.now());
+                }
+                return null;
+            }
+
+            @Override
+            protected void done() {
+                if (binaryLoggingStartWorker != this) {
+                    return;
+                }
+                binaryLoggingStartWorker = null;
+                try {
+                    get();
+                    if (consoleUI.uiContext.getBinaryProtocol() == protocol
+                            && ConnectionStatusLogic.INSTANCE.getValue() == ConnectionStatusValue.CONNECTED) {
+                        startBinaryLogging(file);
+                    }
+                } catch (InterruptedException failure) {
+                    Thread.currentThread().interrupt();
+                } catch (ExecutionException failure) {
+                    JOptionPane.showMessageDialog(frame.getFrame(),
+                            "Could not save the tune. Data logging was not started.\n" + failure.getCause().getMessage(),
+                            "Binary Logging", JOptionPane.ERROR_MESSAGE);
+                } finally {
+                    refreshBinaryLoggingActions();
+                }
+            }
+        };
+        binaryLoggingStartWorker.execute();
+        refreshBinaryLoggingActions();
+    }
+
+    private void stopBinaryLogging() {
+        SwingWorker<Void, Void> pending = binaryLoggingStartWorker;
+        binaryLoggingStartWorker = null;
+        if (pending != null) {
+            pending.cancel(false);
+        }
+        consoleUI.uiContext.sensorLogger.stop();
+    }
+
+    private void startBinaryLogging(File file) {
         if (!consoleUI.uiContext.sensorLogger.start(file)) {
             JOptionPane.showMessageDialog(frame.getFrame(),
                     "No supported output channels are available for binary logging.",
@@ -881,7 +951,7 @@ public class MainFrame {
                     firmwareUpdateCheckGeneration++;
                     firmwareUpdateCheckInProgress = false;
                     closeFirmwareUpdateCheckOverlay();
-                    consoleUI.uiContext.sensorLogger.stop();
+                    stopBinaryLogging();
                 updateEcuItem.setText("No updates available");
                 setUpdateEcuAvailable(false);
             }
@@ -1060,7 +1130,7 @@ public class MainFrame {
         root.setProperty(ConsoleUI.TAB_INDEX, tabbedPane.tabbedPane.getSelectedIndex());
         consoleUI.uiContext.DetachedRepositoryINSTANCE.saveConfig();
         getConfig().save();
-        consoleUI.uiContext.sensorLogger.stop();
+        stopBinaryLogging();
         BinaryProtocol bp = consoleUI.uiContext.getBinaryProtocol();
         if (bp != null && !bp.isClosed())
             bp.close(); // it could be that serial driver wants to be closed explicitly

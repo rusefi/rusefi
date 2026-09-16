@@ -11,6 +11,7 @@ import com.rusefi.tune.xml.Msq;
 import com.rusefi.tune.xml.MsqFactory;
 import com.rusefi.ui.lua.LuaIncludeSyntax;
 import com.rusefi.io.LinkManager;
+import com.rusefi.util.TuneSnapshot;
 import com.rusefi.io.lua.LuaService;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -29,10 +30,6 @@ import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
 import java.util.regex.Pattern;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.concurrent.FutureTask;
-import java.util.concurrent.TimeUnit;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -559,33 +556,8 @@ public class EcuMcpServer {
         if (ini == null) {
             return errorBody("No .ini model for this connection");
         }
-        Msq tune = (Boolean) saveTune ? readLoggingTune(lm, bp, ini) : null;
+        Msq tune = (Boolean) saveTune ? TuneSnapshot.read(lm, bp, ini) : null;
         return dataLogger.start(ini, requestedPath == null ? null : Paths.get((String) requestedPath), tune);
-    }
-
-    private static Msq readLoggingTune(LinkManager lm, BinaryProtocol bp, IniFileModel ini) throws Exception {
-        FutureTask<Msq> read = new FutureTask<>(() -> {
-            Map<Integer, ConfigurationImage> pages = new TreeMap<>();
-            for (int index = 0; index < ini.getMetaInfo().getnPages(); index++) {
-                int id = ini.getMetaInfo().getPageIdentifier(index);
-                byte[] bytes = bp.readFromPage(id, 0, ini.getMetaInfo().getPageSize(index));
-                if (bytes == null) {
-                    throw new IOException("Failed to read tune page " + id);
-                }
-                pages.put(id, new ConfigurationImage(bytes));
-            }
-            if (!pages.containsKey(0)) {
-                throw new IOException("Main tune page is missing from the ECU .ini");
-            }
-            return MsqFactory.valueOf(pages, ini);
-        });
-        lm.submit(read);
-        try {
-            return read.get(60, TimeUnit.SECONDS);
-        } finally {
-            // Prevent a timed-out queued read from starting later; never interrupt a wire transaction.
-            read.cancel(false);
-        }
     }
 
     @SuppressWarnings("unchecked")

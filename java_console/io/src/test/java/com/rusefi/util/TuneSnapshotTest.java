@@ -1,4 +1,4 @@
-package com.rusefi.mcp;
+package com.rusefi.util;
 
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
