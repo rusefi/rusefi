@@ -10,19 +10,26 @@ pins:
     function: Injector 4
     type: inj
   - pin: B4
-    function: VVT12 Solenoid
+    function: "VVT Solenoid 2"
+    type: ls
   - pin: B5
-    function: VVT11 Solenoid
+    function: "VVT Solenoid 1"
+    type: ls
   - pin: B6
-    function: VVT22 Solenoid
+    function: "VVT Solenoid 4"
+    type: ls
   - pin: B7
-    function: VVT21 Solenoid
+    function: "VVT Solenoid 3"
+    type: ls
   - pin: B8
-    function: 5V for TPS
+    function: "5V Sensor Supply (TPS)"
+    type: 5v
   - pin: B9
-    function: TPS1
+    function: "Universal analog input. Suggested TPS 2 sensor input"
+    type: av
   - pin: B10
-    function: TPS2
+    function: "Universal analog input. Suggested TPS 1 sensor input"
+    type: av
 
   - pin: B11
     function: Exhaust cutout Muffler Control Solenoid
@@ -36,13 +43,16 @@ pins:
     function: Injector 8
     type: inj
   - pin: B17
-    function: Cam Sensors Power (share and pass for TCU molex)
+    function: "Buffered Sensor Power Supply (VPWR_cam; share and pass for TCU molex)"
   - pin: B18
-    function: VPWR F
+    function: "Fused Power Supply (VPWR F)"
+    type: 12v
   - pin: B22
-    function:  Ground for Output Shaft Speed
+    function: "GNDA Analog/Sensor Ground (transmission signal return)"
+    type: agnd
   - pin: B23
-    function: Sensor Ground for TPS
+    function: "GNDA Analog/Sensor Ground (TPS)"
+    type: agnd
   - pin: B24
     function: Trans Fluid Temp TCU (bypass for TCU molex)
   - pin: B25
@@ -55,64 +65,75 @@ pins:
   - pin: B30
     function: Oil Level Switch
   - pin: B31
-    function: Injector 6
+    function: "Injector 6 (5.0L; 5.2L assignment differs)"
     type: inj
   - pin: B34
-    function: Cam Sensor Power
+    function: "5V Sensor Supply (engine sensors)"
+    type: 5v
   - pin: B37
     function: TR-P TRANSMISSION RANGE PWM TCU (bypass for TCU molex)
   - pin: B39
     function: Crank Shield
   - pin: B40
-    function: Cam22 VR Ground
+    function: "Camshaft Position Sensor Bank 2 VR Negative"
+    type: vr
   - pin: B41
-    function: Cam22 VR Signal
+    function: "Camshaft Position Sensor Bank 2 VR Positive"
+    type: vr
   - pin: B42
-    function: Cam21 Signal
+    function: "Camshaft Position Sensor Bank 2 Exhaust Signal"
   - pin: B44
-    function: IMRC Sensor
+    function: "Intake Manifold Monitor"
+    type: av
   - pin: B45
-    function: IMRC Sensor 2
+    function: "Intake Port Deactivation Valve Position"
+    type: av
   - pin: B46
-    function: Injector 3
+    function: "Injector 3 (5.0L; 5.2L assignment differs)"
     type: inj
   - pin: B47
-    function: Cylinder Head Temperature
+    function: "Cylinder Head Temperature Sensor Input (CHT)"
+    type: at
   - pin: B48
     function: UNUSED Oil Pressure Switch
   - pin: B49
-    function: GNDA Analog/Sensor Ground
+    function: "GNDA Analog/Sensor Ground (engine signal return)"
     type: agnd
   - pin: B52
     function: Knock1 Neg
   - pin: B53
     function: Knock1 Pos
   - pin: B54
-    function: Cam12 VR Ground
+    function: "Camshaft Position Sensor Bank 1 VR Negative"
+    type: vr
   - pin: B55
-    function: Cam12 VR Signal
+    function: "Camshaft Position Sensor Bank 1 VR Positive"
+    type: vr
   - pin: B56
-    function: Cam11 Hall Signal
+    function: "Camshaft Position Sensor Bank 1 Exhaust Signal (Cam11 Hall)"
+    type: hall
   - pin: B57
     function: Engine Oil Pressure Signal
   - pin: B59
-    function: IMRC2 Control Solenoid
+    function: "IMRC2 Control Solenoid (Intake Manifold Runner Control; alternate reference: Manifold Heater)"
   - pin: B60
-    function: Intake Manifold Runner Control Solenoid
+    function: "Intake Manifold Tuning Valve (5.0L RHD); Valve Monitor (alternate reference assignment)"
   - pin: B61
-    function: Injector 7
+    function: "Injector 7 (5.0L; 5.2L assignment differs)"
     type: inj
   - pin: B62
-    function: Injector 2
+    function: "Injector 2 (5.0L; 5.2L assignment differs)"
     type: inj
   - pin: B67
     function: Knock2 Neg
   - pin: B68
     function: Knock2 Pos
   - pin: B69
-    function: Crank VR Negative
+    function: "Crankshaft Position Sensor Negative"
+    type: vr
   - pin: B70
-    function: Crank VR Positive
+    function: "Crankshaft Position Sensor Positive"
+    type: vr
   - pin: B71
     function: Canister Purge
   - pin: B72
@@ -126,35 +147,45 @@ pins:
   - pin: B77
     function: SSE TCU (bypass for TCU molex)
   - pin: B81
-    function: Throttle Actuator Neg
+    function: "Electronic Throttle Motor Negative"
+    type: etb
   - pin: B82
-    function: Throttle Actuator Pos
+    function: "Electronic Throttle Motor Positive"
+    type: etb
   - pin: B87
-    function: Coil 7
+    function: "Ignition Coil 7 (5.0L, power output to coil primary)"
     type: ign
   - pin: B88
-    function: Coil 6
+    function: "Ignition Coil 6 (5.0L, power output to coil primary)"
     type: ign
   - pin: B89
-    function: Coil 5
+    function: "Ignition Coil 5 (5.0L, power output to coil primary)"
     type: ign
   - pin: B90
-    function: Coil 8
+    function: "Ignition Coil 8 (5.0L, power output to coil primary)"
     type: ign
   - pin: B91
     function: TSPC TRANSAXLE SOLENOID POWER CONTROL TCU (bypass for TCU molex)
   - pin: B92
-    function: Coil 4
+    function: "Ignition Coil 4 (5.0L, power output to coil primary)"
     type: ign
   - pin: B93
-    function: Coil 1
+    function: "Ignition Coil 1 (5.0L, power output to coil primary)"
     type: ign
   - pin: B94
-    function: Coil 3
+    function: "Ignition Coil 3 (5.0L, power output to coil primary)"
     type: ign
   - pin: B95
-    function: Coil 2
+    function: "Ignition Coil 2 (5.0L, power output to coil primary)"
     type: ign
+
+  - pin: B78
+    function: "Post-catalyst Oxygen Sensor 1 Heater"
+    type: ls
+
+  - pin: B79
+    function: "Pre-catalyst Oxygen Sensor 1 Heater"
+    type: ls
 
 info:
   title: coyote
@@ -435,4 +466,28 @@ info:
       y: 825
     - pin: B95
       x: 1758
+      y: 825
+
+    - pin: B77
+      x: 1470
+      y: 345
+
+    - pin: B78
+      x: 1568
+      y: 345
+
+    - pin: B79
+      x: 1664
+      y: 345
+
+    - pin: B81
+      x: 1372
+      y: 497
+
+    - pin: B82
+      x: 1470
+      y: 497
+
+    - pin: B91
+      x: 1372
       y: 825
