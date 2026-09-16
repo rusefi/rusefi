@@ -170,7 +170,7 @@ static const uint8_t vcom_device_descriptor_data[18] = {
                          0x40,          /* bMaxPacketSize.                  */
                          0x0483,        /* idVendor (ST).                   */
                          0x5740,        /* idProduct.                       */
-                         0x0200,        /* bcdDevice.                       */
+                         0x0201,        /* bcdDevice.                       */
                          1,             /* iManufacturer.                   */
                          2,             /* iProduct.                        */
                          3,             /* iSerialNumber.                   */
