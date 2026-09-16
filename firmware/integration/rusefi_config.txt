@@ -1830,8 +1830,8 @@ int anotherCiTest
 	uint8_t mc33810Maxi;Maximum coil charge current, 1A step;"A", 1, 0, 6, 21, 0
 
     linear_sensor_s acPressure
-    uint16_t minAcPressure;value of A/C pressure in kPa/psi before that compressor is disengaged;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? 500 : 72.5}, 0
-    uint16_t maxAcPressure;value of A/C pressure in kPa/psi after that compressor is disengaged;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? 500 : 72.5}, 0
+    uint16_t minAcPressure;value of A/C pressure in kPa/psi before that compressor is disengaged;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? 3000 : 435.1}, 0
+    uint16_t maxAcPressure;value of A/C pressure in kPa/psi after that compressor is disengaged;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? 3000 : 435.1}, 0
 
 	uint8_t autoscale minimumOilPressureTimeout;Delay before cutting fuel due to low oil pressure. Use this to ignore short pressure blips and sensor noise.;"sec", 0.1, 0, 0, 5, 1
 
