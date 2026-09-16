@@ -67,6 +67,7 @@ jobs:
           "mr":"firebrick",
           "pgnd":"coral",
           "sgnd":"olive",
+          "agnd":"olive",
           "usb":"lightseagreen",
           "vr":"sienna"
           }
