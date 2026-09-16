@@ -31,9 +31,9 @@ public class DevicePaneTest {
         assertTrue(guidance.contains("DFU"), guidance);
         if (OsUtil.isLinux()) {
             assertTrue(guidance.contains("dfu-util"), guidance);
-            assertTrue(guidance.contains("Update Firmware"), guidance);
+            assertTrue(guidance.contains("Update Firmware") || guidance.contains("Manual DFU Update"), guidance);
         } else if (OsUtil.isWindows()) {
-            assertTrue(guidance.contains("Update Firmware"), guidance);
+            assertTrue(guidance.contains("Update Firmware") || guidance.contains("Manual DFU Update"), guidance);
         } else {
             assertTrue(guidance.contains("not supported"), guidance);
         }

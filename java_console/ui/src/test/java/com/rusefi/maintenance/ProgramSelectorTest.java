@@ -32,6 +32,28 @@ public class ProgramSelectorTest {
     // ---- mainButtonModeFor ----
 
     @Test
+    public void universalDfuRecoveryWithRememberedBoard() {
+        PortResult dfu = port(SerialPortType.Dfu);
+        PortResult resolved = resolveFlashPort(null, false, Collections.singletonList(dfu), NO_PORTS, false);
+        boolean manualAvailable = ProgramSelector.canUseManualDfu(true, false, "universal", "proteus_f7");
+        assertEquals(DFU_MANUAL, mainButtonModeFor(resolved, false));
+        assertTrue(manualAvailable, "manual DFU must offer board selection");
+        assertTrue(ProgramSelector.shouldEnableMainButton(false, true, false,
+            mainButtonModeFor(resolved, false), manualAvailable), "main action must offer board selection");
+    }
+
+    @Test
+    public void universalManualDfuIgnoresPreviousArtifactsButRespectsPlatformAndBusyState() {
+        assertTrue(ProgramSelector.canUseManualDfu(true, true, "universal", "uaefi"));
+        assertTrue(ProgramSelector.canUseManualDfu(true, false, "universal", "universal"));
+        assertFalse(ProgramSelector.canUseManualDfu(false, false, "universal", "uaefi"));
+        assertFalse(ProgramSelector.shouldEnableMainButton(false, true, true, DFU_MANUAL,
+            ProgramSelector.canUseManualDfu(true, true, "universal", "uaefi")));
+        assertTrue(ProgramSelector.canUseManualDfu(true, false, "uaefi", "uaefi"));
+        assertFalse(ProgramSelector.canUseManualDfu(true, true, "uaefi", "uaefi"));
+    }
+
+    @Test
     public void dfuDeviceMapsToManualDfu() {
         // A connected DFU device must flash via DFU_MANUAL, not be mislabeled as an OpenBLT action.
         assertEquals(DFU_MANUAL, mainButtonModeFor(port(SerialPortType.Dfu), false));
