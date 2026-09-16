@@ -24,14 +24,14 @@ The rusEFI fueling system is a mass-based model that translates configuration an
 
 ## Cranking Fuel
 
-While the engine is below `cranking.rpm` the pipeline above is bypassed and `getCrankingFuel3()` (in `fuel_math.cpp`) computes the per-cylinder injected mass as:
+While `RpmCalculator::isCranking()` is true, `getCrankingFuel3()` (in `fuel_math.cpp`) supplies the cycle fuel mass instead of `getRunningFuel()`. Reaching `cranking.rpm` enters running mode; a subsequent RPM dip below that threshold does not re-enter cranking until the engine stops. Injection-mode splitting, downstream adjustments/cuts and injector conversion still apply. See [Cold-start logic](cold_start.md) for the full sequence, ASE/WUE interaction and sensor fallbacks.
 
 ```
 crankingFuel = baseCrankingFuel * coolantTemperatureCoefficient * tpsCoefficient
 ```
 
-- **`baseCrankingFuel`** comes either from the 3D `crankingCycleBaseFuel` table (coolant x engine-revolutions, `useRunningMathForCranking = false`) or directly from the running math (`useRunningMathForCranking = true`).
-- **`tpsCoefficient`** is the `crankingTpsCoef` curve (flood-clear / throttle compensation).
+- **`baseCrankingFuel`** comes either from the `crankingCycleBaseFuel` table (coolant x engine-cycle count, mg converted to grams, `useRunningMathForCranking = false`) or from the running **base** fuel math (`useRunningMathForCranking = true`). The latter does not include the WUE, IAT and ASE multipliers applied by `getRunningFuel()`.
+- **`tpsCoefficient`** is the `crankingTpsCoef` throttle-compensation curve. The flood-clear fuel cut is a separate gate.
 - **`coolantTemperatureCoefficient`** is the coolant enrichment, resolved in one of two ways, selected by a single `flexCranking` toggle:
   1. **`flexCranking` off (or no flex sensor)** — a single coolant curve, `crankingFuelCoef`.
   2. **`flexCranking` on, flex sensor present** — `crankingFuelFlexTable`, a coolant (X, shared `crankingFuelBins`) by ethanol-% (Y, `crankingFuelFlexBins`, 4 rows to keep RAM small) `interpolate3d` lookup. The dedicated ethanol axis lets the whole E0..E100 range be calibrated directly.
@@ -40,7 +40,7 @@ The legacy 1D `crankingFuelCoefE100` curve (and its E0→E100 blend) is gone fro
 
 ## Priming Pulse
 
-The priming pulse (`PrimeController::getPrimeDuration()`) mirrors the cranking design and is driven by the **same** `flexCranking` toggle:
+The priming pulse (`PrimeController::getPrimeDuration()`) uses a fuel-mass table in **mg**, converted through the injector model to milliseconds. It is scheduled on ignition-on after `primingDelay` plus 100 ms, subject to rotation, flood-clear and repeated-key-cycle gates. Invalid coolant skips the pulse. Its table selection is driven by the **same** `flexCranking` toggle:
 - **off / no flex sensor** — 1D `primeValues` curve vs coolant (`primeBins`).
 - **on, flex sensor present** — `primeFlexTable`, a coolant by ethanol-% `interpolate3d` lookup (shares `primeBins` for the coolant axis; 4-row ethanol axis `primeFlexBins`).
 
@@ -70,8 +70,8 @@ Consumers: TunerStudio output channels `totalFuelConsumption` (grams) and `fuelF
 ## Key Files
 - `firmware/controllers/algo/fuel_math.cpp`: Core mass calculations.
 - `firmware/controllers/algo/wall_fuel.cpp`: Transient fueling logic.
-- `firmware/controllers/engine_cycle/fuel_computer.cpp`: Orchestration of the fueling pipeline.
-- `firmware/controllers/engine_cycle/injection_scheduling.cpp`: Crank-angle event timing.
+- `firmware/controllers/algo/fuel/fuel_computer.cpp`: Fuel-computer helpers.
+- `firmware/controllers/engine_cycle/main_trigger_callback.cpp`: Injection preparation and crank-angle event timing.
 - `firmware/controllers/modules/trip_odometer/trip_odometer.cpp`: Consumed-fuel and fuel-rate accounting.
 
 ## Implementation Notes

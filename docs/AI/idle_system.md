@@ -49,7 +49,8 @@ nudge ignition timing for fast-response trim.
 - **Hysteresis**: Re-enter idle when RPM drops below `target + idlePidRpmUpperLimit`, but
   declare coasting only above `target + 1.5 * idlePidRpmUpperLimit` to avoid flapping.
 - **Cranking Taper**: Open-loop position is linearly blended from cranking value to running
-  value across a CLT-dependent revolution count.
+  value across a CLT-dependent engine-cycle count. This counter already advances during
+  cranking; see [Cold-start logic](cold_start.md#states-and-time-bases).
 - **A/C Pre-Bump**: We respond to the A/C *button* rather than the relay, because the relay
   is intentionally delayed so airflow bump arrives before the compressor load.
 - **Dashpot**: After a throttle release, TPS used for the taper is held and then decayed
