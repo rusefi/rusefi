@@ -21,6 +21,10 @@ import com.rusefi.io.tcp.ServerSocketReference;
 import com.rusefi.proxy.MockIniFileProvider;
 import org.json.simple.JSONObject;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import java.nio.file.Path;
+import java.nio.file.Files;
+import java.nio.charset.StandardCharsets;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -60,6 +64,9 @@ import static org.mockito.Mockito.when;
  * server shuts down, and not full before or after.
  */
 class EcuMcpServerOutputChannelTest {
+    @TempDir
+    Path tempDir;
+
     private static final int OCH_BLOCK_SIZE = 512;
     private static final int SECONDS_OFFSET = 0;
     /** Adjacent to 'seconds' so the two implicit subscriptions merge into one small range at the block start. */
@@ -88,7 +95,10 @@ class EcuMcpServerOutputChannelTest {
             polls.countDown();
         });
         ServerSocketReference fakeEcu = startFakeEcu(ini);
+        Path shutdownFile = tempDir.resolve("shutdown.mlg");
         try (McpStdioHarness mcp = new McpStdioHarness()) {
+            assertEquals(Boolean.FALSE, mcp.call("data_logging_status", "{}", 5_000).get("logging"));
+            assertEquals(Boolean.TRUE, mcp.call("stop_data_logging", "{}", 5_000).get("success"));
             JSONObject connected = mcp.call("connect", "{\"port\":\"localhost:" + fakeEcu.getLocalPort() + "\"}", 60_000);
             assertEquals(Boolean.TRUE, connected.get("connected"), connected.toJSONString());
             assertTrue(polls.await(20, TimeUnit.SECONDS), "output channels were never polled");
@@ -108,6 +118,27 @@ class EcuMcpServerOutputChannelTest {
             JSONObject clt = mcp.call("read_output_channel", "{\"name\":\"CLTValue\"}", 20_000);
             assertEquals(Boolean.TRUE, clt.get("found"), "channel outside the implicit subscriptions: " + clt.toJSONString());
             assertEquals(CLT_RAW * 0.01, ((Number) clt.get("value")).doubleValue(), 0.001);
+
+            Path recording = tempDir.resolve("operating-data.mlg");
+            JSONObject started = mcp.call("start_data_logging", pathArgument(recording), 5_000);
+            assertEquals(Boolean.TRUE, started.get("logging"), started.toJSONString());
+            assertEquals(3L, ((Number) started.get("channelCount")).longValue());
+            assertEquals(recording.toString(), started.get("path"));
+            assertEquals(Boolean.FALSE, mcp.call("start_data_logging", pathArgument(shutdownFile), 5_000).get("success"));
+            assertFalse(Files.exists(shutdownFile), "duplicate start must not create a file");
+            awaitSamples(mcp);
+            JSONObject stopped = mcp.call("stop_data_logging", "{}", 5_000);
+            assertEquals(Boolean.TRUE, stopped.get("success"), stopped.toJSONString());
+            assertEquals(Boolean.FALSE, stopped.get("logging"));
+            assertEquals(stopped, mcp.call("stop_data_logging", "{}", 5_000));
+            verifyRecording(recording, ((Number) stopped.get("sampleCount")).intValue());
+            byte[] before = Files.readAllBytes(recording);
+            assertEquals(Boolean.FALSE, mcp.call("start_data_logging", pathArgument(recording), 5_000).get("success"));
+            org.junit.jupiter.api.Assertions.assertArrayEquals(before, Files.readAllBytes(recording));
+
+            // Leave a recording active: EOF must close it and release both output leases.
+            assertEquals(Boolean.TRUE, mcp.call("start_data_logging", pathArgument(shutdownFile), 5_000).get("logging"));
+            awaitSamples(mcp);
         } finally {
             snapshotToken.remove();
             fakeEcu.close();
@@ -115,6 +146,46 @@ class EcuMcpServerOutputChannelTest {
         }
         // stdin EOF -> shutdown released the lease: the demand is back to the implicit subscriptions only
         assertFalse(sensorCentral.getOutputChannelDemand().isFull(), "full-output lease leaked after MCP shutdown");
+        assertTrue(Files.size(shutdownFile) > 24);
+        // This also proves the file handle was closed on Windows.
+        Files.delete(shutdownFile);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static String pathArgument(Path path) {
+        JSONObject args = new JSONObject();
+        args.put("path", path.toString());
+        return args.toJSONString();
+    }
+
+    private static void awaitSamples(McpStdioHarness mcp) throws Exception {
+        long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(10);
+        while (System.nanoTime() < deadline) {
+            JSONObject status = mcp.call("data_logging_status", "{}", 5_000);
+            assertEquals(Boolean.TRUE, status.get("success"), status.toJSONString());
+            if (((Number) status.get("sampleCount")).longValue() >= 2) {
+                return;
+            }
+            Thread.sleep(10);
+        }
+        throw new AssertionError("No ECU samples recorded");
+    }
+
+    private static void verifyRecording(Path file, int samples) throws IOException {
+        byte[] bytes = Files.readAllBytes(file);
+        assertEquals("MLVLG\0", new String(bytes, 0, 6, StandardCharsets.US_ASCII));
+        ByteBuffer data = ByteBuffer.wrap(bytes).order(ByteOrder.BIG_ENDIAN);
+        assertEquals(3, data.getShort(22));
+        int dataStart = data.getInt(16);
+        int rowSize = data.getShort(20) + 5;
+        assertEquals(dataStart + samples * rowSize, bytes.length);
+        assertTrue(samples >= 2);
+        for (int i = 0; i < samples; i++) {
+            data.position(dataStart + i * rowSize + 4);
+            assertEquals(7, data.getInt());
+            assertEquals(RPM, data.getShort());
+            assertEquals(CLT_RAW, data.getShort());
+        }
     }
 
     /**

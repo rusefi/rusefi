@@ -42,7 +42,7 @@ import static com.devexperts.logging.Logging.getLogging;
  *     <li><code>tools/list</code></li>
  *     <li><code>tools/call</code> for: connect, ecu_info, set_lua, get_lua, lua_reset,
  *         send_command (alias: command), read_output_channel, read_messages,
- *         wait_for_message, read_tune, reboot, reboot_to_blt — see
+ *         wait_for_message, read_tune, start_data_logging, stop_data_logging, data_logging_status, reboot, reboot_to_blt — see
  *         java_console/mcp_ecu/README.md for the tool reference</li>
  *     <li><code>notifications/initialized</code></li>
  * </ul>
@@ -81,6 +81,7 @@ public class EcuMcpServer {
     /** Lazy-initialized link manager — created on first ECU-touching tool call. */
     private volatile LinkManager linkManager;
     private final Object connectLock = new Object();
+    private final EcuDataLogger dataLogger = new EcuDataLogger();
     /**
      * Console output-channel polling is subscription based (#10171): the pull thread fetches only the byte ranges
      * of channels somebody subscribed to, and this headless process has no gauges. Holding a full-frame lease for
@@ -134,24 +135,30 @@ public class EcuMcpServer {
         log.info("rusEFI ECU MCP server starting. forcedPort=" + forcedPort);
         installMessagesListener();
 
-        String line;
-        while ((line = in.readLine()) != null) {
-            line = line.trim();
-            if (line.isEmpty()) continue;
-            try {
-                Object parsed = parser.parse(line);
-                if (parsed instanceof JSONObject) {
-                    handleMessage((JSONObject) parsed);
+        try {
+            String line;
+            while ((line = in.readLine()) != null) {
+                line = line.trim();
+                if (line.isEmpty()) {
+                    continue;
                 }
-            } catch (Throwable t) {
-                log.error("Failed to handle line: " + line, t);
+                try {
+                    Object parsed = parser.parse(line);
+                    if (parsed instanceof JSONObject) {
+                        handleMessage((JSONObject) parsed);
+                    }
+                } catch (Throwable t) {
+                    log.error("Failed to handle line: " + line, t);
+                }
             }
+        } finally {
+            shutdown();
         }
         log.info("stdin closed, exiting");
-        shutdown();
     }
 
     private void shutdown() {
+        dataLogger.stop();
         LinkManager lm = linkManager;
         if (lm != null) {
             try { lm.close(); } catch (Throwable ignored) {}
@@ -314,6 +321,22 @@ public class EcuMcpServer {
                 schemaObject(new String[][]{
                         {"name", "string", "Output-channel (gauge) name, case-insensitive, e.g. 'RPMValue'."}
                 }, new String[]{"name"}, false)));
+        tools.add(tool("start_data_logging",
+                "Start recording ECU operating data to an MLG file on the MCP server host. " +
+                        "Records all numeric/enum output channels at the connection polling rate. " +
+                        "Fails if already recording or the file exists. Returns logging, path, format, " +
+                        "sampleCount and channelCount. Poll data_logging_status for progress or write errors.",
+                schemaObject(new String[][]{
+                        {"path", "string", "New output .mlg file path; parent directory must exist. " +
+                                "Omit to create a temporary rusefi_data_*.mlg file."}
+                }, new String[]{}, false)));
+        tools.add(tool("stop_data_logging",
+                "Stop recording and close the MLG file. Safe to repeat; returns final recording status. " +
+                        "Does not require an ECU connection.", emptyObjectSchema()));
+        tools.add(tool("data_logging_status",
+                "Return logging, path, format, sampleCount, channelCount and any recording error. " +
+                        "Does not connect to the ECU. No samples arrive while disconnected; reconnecting " +
+                        "stops the old recording. Server shutdown also closes the file.", emptyObjectSchema()));
         tools.add(tool("read_messages",
                 "Return ECU messages from the in-memory ring buffer captured via MessagesCentral " +
                         "(this is the same stream the Swing MessagesView shows, including Lua print() output). " +
@@ -378,6 +401,9 @@ public class EcuMcpServer {
                 case "send_command":toolResult = doSendCommand(args); break;
                 case "command":    toolResult = doSendCommand(args); break;
                 case "read_output_channel": toolResult = doReadOutputChannel(args); break;
+                case "start_data_logging": toolResult = doStartDataLogging(args); break;
+                case "stop_data_logging": toolResult = dataLogger.stop(); break;
+                case "data_logging_status": toolResult = dataLogger.status(); break;
                 case "read_messages": toolResult = doReadMessages(args); break;
                 case "wait_for_message": toolResult = doWaitForMessage(args); break;
                 case "read_tune":   toolResult = doReadTune(args); break;
@@ -398,6 +424,8 @@ public class EcuMcpServer {
         if (lm != null && lm.isActive()) return lm;
         synchronized (connectLock) {
             if (linkManager != null && linkManager.isActive()) return linkManager;
+            // Never append a new connection's potentially different channel layout to an old file.
+            dataLogger.stop();
             String port = portOrNull != null ? portOrNull : forcedPort;
             // subscribe to all output channels before the pull thread makes its first poll
             if (fullOutputLease == null) {
@@ -505,6 +533,21 @@ public class EcuMcpServer {
         o.put("queued", true);
         o.put("command", cmd);
         return o;
+    }
+
+    private JSONObject doStartDataLogging(JSONObject args) throws Exception {
+        Object requestedPath = args.get("path");
+        if (args.containsKey("path") && (!(requestedPath instanceof String)
+                || ((String) requestedPath).trim().isEmpty())) {
+            return errorBody("'path' must be a non-empty string");
+        }
+        LinkManager lm = ensureConnected(null);
+        BinaryProtocol bp = lm.getBinaryProtocol();
+        IniFileModel ini = bp == null ? null : bp.getIniFileNullable();
+        if (ini == null) {
+            return errorBody("No .ini model for this connection");
+        }
+        return dataLogger.start(ini, requestedPath == null ? null : Paths.get((String) requestedPath));
     }
 
     @SuppressWarnings("unchecked")

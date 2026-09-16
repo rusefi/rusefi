@@ -33,7 +33,7 @@ public class SensorLogger {
         return iniFileModel == null ? Collections.emptyList() : getOutputChannels(iniFileModel);
     }
 
-    private static List<CustomBinaryLogEntry> getOutputChannels(IniFileModel iniFileModel) {
+    public static List<CustomBinaryLogEntry> getOutputChannels(IniFileModel iniFileModel) {
         List<CustomBinaryLogEntry> outputChannels = new ArrayList<>();
         for (Map.Entry<String, IniField> entry : iniFileModel.getAllOutputChannels().entrySet()) {
             IniField field = entry.getValue();

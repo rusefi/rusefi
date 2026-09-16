@@ -55,6 +55,9 @@ class EcuMcpServerTest {
         assertTrue(names.contains("send_command"));
         assertTrue(names.contains("command"));
         assertTrue(names.contains("read_output_channel"));
+        assertTrue(names.contains("start_data_logging"));
+        assertTrue(names.contains("stop_data_logging"));
+        assertTrue(names.contains("data_logging_status"));
         assertTrue(names.contains("read_messages"));
         assertTrue(names.contains("wait_for_message"));
         assertTrue(names.contains("read_tune"));
