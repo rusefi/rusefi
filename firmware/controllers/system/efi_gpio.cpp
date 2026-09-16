@@ -388,7 +388,7 @@ OutputPin *EnginePins::getOutputPinForBenchMode(bench_mode_e index) {
 	case BENCH_IDLE_VALVE:
 		return &idleSolenoidPin;
 	case BENCH_FAN_RELAY_2:
-		return &fanRelay;
+		return &fanRelay2;
 	default:
 		criticalError("Unexpected bench pin %d", index);
 	}
