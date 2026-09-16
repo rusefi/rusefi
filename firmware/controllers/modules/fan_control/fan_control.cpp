@@ -75,7 +75,7 @@ void FanController::initPwm() {
 	if (m_pwmInitialized) {
 		return;
 	}
-#ifndef EFI_UNIT_TEST
+#if !EFI_UNIT_TEST
 	if (!isBrainPinValid(getConfigPin())) {
 		return;
 	}
@@ -97,7 +97,7 @@ void FanController::onSlowCallbackPwm(bool acActive) {
 		m_currentPwm = safeDuty;
 		pwmAppliedPwm = safeDuty;
 		m_state = (safeDuty > 0);
-#ifndef EFI_UNIT_TEST
+#if !EFI_UNIT_TEST
 		if (m_pwmInitialized) {
 			m_pwm.setSimplePwmDutyCycle(safeDuty / 100.0f);
 		}
@@ -125,7 +125,7 @@ void FanController::onSlowCallbackPwm(bool acActive) {
 	pwmAppliedPwm = m_currentPwm;
 	m_state = (m_currentPwm > 0);
 
-#ifndef EFI_UNIT_TEST
+#if !EFI_UNIT_TEST
 	if (m_pwmInitialized) {
 		m_pwm.setSimplePwmDutyCycle(m_currentPwm / 100.0f);
 	}
