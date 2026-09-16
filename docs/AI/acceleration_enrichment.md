@@ -109,6 +109,7 @@ All three flex multiplier tables share `flexTransientCltBins` and `flexTransient
 
 | Inspect | Meaning / limitation |
 |---|---|
+| `engine` (log label `Engine`) | TunerStudio/MLV state byte: bits 0/1 running/cranking, 2/3 after-start/warmup, 4 TPS acceleration (including active MAP Prediction), 5 TPS deceleration or DFCO; bits 6/7 unused. Adder threshold flags and the signed applied adder cover detection and decay. Wall wetting is not represented. |
 | `tpsFrom`, `tpsTo`, `deltaTps`, `isAboveAccelThreshold` | Selected historical TPS step and event threshold, not necessarily the latest step. |
 | `valueFromTable`, `extraFuel`, `accumulatedValue`, `cycleCnt` | Adder internals. Early-return paths can leave these diagnostic fields unchanged. |
 | `tpsAccelFuel` | Adder result; zero in MAP Prediction does not mean transient correction is inactive. |

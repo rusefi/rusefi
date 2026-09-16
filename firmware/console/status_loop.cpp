@@ -343,6 +343,36 @@ static int packEngineMode() {
 			engineConfiguration->ignitionMode;
 }
 
+// Standard TunerStudio/MLV state bits, distinct from rusEFI's configuration engineMode.
+static uint8_t packTSEngineState() {
+	uint8_t state = 0;
+#if EFI_SHAFT_POSITION_INPUT
+	state |= engine->rpmCalculator.isRunning() << 0;
+	state |= engine->rpmCalculator.isCranking() << 1;
+#endif
+#if EFI_ENGINE_CONTROL
+	state |= (engine->fuelComputer.running.postCrankingFuelCorrection != 1) << 2;
+	state |= (engine->fuelComputer.running.coolantTemperatureCoefficient != 1) << 3;
+
+	bool accelerating;
+	bool decelerating = false;
+	if (engineConfiguration->accelEnrichmentMode == AE_MODE_PREDICTIVE_MAP) {
+		// Prediction is TPS-triggered and can outlast the TPS threshold flag.
+		// Adder diagnostics may be stale in this mode, so ignore them.
+		accelerating = engine->outputChannels.isMapPredictionActive;
+	} else {
+		const auto& ae = engine->module<TpsAccelEnrichment>();
+		// The applied adder also covers fractional-pump decay after the TPS step.
+		accelerating = ae->isAboveAccelThreshold || engine->engineState.tpsAccelEnrich > 0;
+		decelerating = ae->isBelowDecelThreshold || engine->engineState.tpsAccelEnrich < 0;
+	}
+	state |= accelerating << 4;
+	state |= (decelerating || engine->module<DfcoController>()->cutFuel()) << 5;
+	// Bits 6/7 describe MAP-rate AE/DE, which rusEFI does not implement.
+#endif
+	return state;
+}
+
 static void updateTempSensors() {
 	SensorResult clt = Sensor::get(SensorType::Clt);
 	engine->outputChannels.coolant = clt.value_or(0);
@@ -706,6 +736,7 @@ void updateTunerStudioState() {
 	tsOutputChannels->seconds = getTimeNowS();
 
 	tsOutputChannels->engineMode = packEngineMode();
+	tsOutputChannels->engine = packTSEngineState();
 	tsOutputChannels->firmwareVersion = getRusEfiVersion();
 
 	tsOutputChannels->accelerationLat = engine->sensors.accelerometer.lat;
