@@ -375,7 +375,7 @@ struct output_channels_s {
 	uint16_t canReadCounter = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_TPS_EXTRA@@
-	 * units: ms
+	 * units: ms/frac
 	 * offset 78
 	 */
 	scaled_channel<int16_t, 300, 1> tpsAccelFuel = (int16_t)0;
@@ -1649,11 +1649,16 @@ struct output_channels_s {
 	 */
 	uint16_t instantRpmRange = (uint16_t)0;
 	/**
-	 * need 4 byte alignment
-	 * units: units
+	 * Engine
 	 * offset 930
 	 */
-	uint8_t alignmentFill_at_930[2] = {};
+	uint8_t engine = (uint8_t)0;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 931
+	 */
+	uint8_t alignmentFill_at_931[1] = {};
 };
 static_assert(sizeof(output_channels_s) == 932);
 
