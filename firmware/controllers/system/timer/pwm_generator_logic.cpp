@@ -352,7 +352,7 @@ void startSimplePwm(SimplePwm *state, const char *msg,
 			/* this pin is driven by external gpio chip, let's see if it can PWM */
 			state->hardPwm = gpiochip_tryInitPwm(msg, output->brainPin, frequency, dutyCycle);
 		}
-		/* TODO: sohuld we try to init MCU PWM on on-chip brainPin?
+		/* TODO: should we try to init MCU PWM on on-chip brainPin?
 		 * Or this should be done only on startSimplePwmHard() call? */
 	}
 
