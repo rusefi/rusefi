@@ -6,6 +6,7 @@ import com.rusefi.core.SensorCentral;
 import com.rusefi.sensor_logs.BinarySensorLog;
 import com.rusefi.sensor_logs.CustomBinaryLogEntry;
 import com.rusefi.sensor_logs.SensorLogger;
+import com.rusefi.tune.xml.Msq;
 import org.json.simple.JSONObject;
 
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.time.LocalDate;
 import java.util.List;
 
 /** One host-side recording, fed by complete ECU polls using the frontend's MLG encoder. */
@@ -23,11 +25,12 @@ final class EcuDataLogger {
     private SensorCentral.FullOutputLease lease;
     private byte[] response;
     private Path path;
+    private Path tunePath;
     private long samples;
     private int channelCount;
     private String error;
 
-    synchronized JSONObject start(IniFileModel ini, Path requestedPath) throws IOException {
+    synchronized JSONObject start(IniFileModel ini, Path requestedPath, Msq tune) throws IOException {
         if (writer != null) {
             throw new IllegalStateException("Data logging is already active; stop it before starting another file");
         }
@@ -39,16 +42,26 @@ final class EcuDataLogger {
                 : requestedPath.toAbsolutePath().normalize();
         OutputStream opened = requestedPath == null ? Files.newOutputStream(target)
                 : Files.newOutputStream(target, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
+        BinarySensorLog<CustomBinaryLogEntry> newWriter;
+        Path savedTune;
         try {
-            writer = new BinarySensorLog<>(entry -> entry.getValue(response), entries, opened);
+            newWriter = new BinarySensorLog<>(entry -> entry.getValue(response), entries, opened);
+            savedTune = tune == null ? null : TuneSnapshot.save(target.getParent(), tune, LocalDate.now());
         } catch (IOException | RuntimeException failure) {
             try {
                 opened.close();
             } catch (IOException closeFailure) {
                 failure.addSuppressed(closeFailure);
             }
+            try {
+                Files.deleteIfExists(target);
+            } catch (IOException deleteFailure) {
+                failure.addSuppressed(deleteFailure);
+            }
             throw failure;
         }
+        writer = newWriter;
+        tunePath = savedTune;
         output = opened;
         path = target;
         samples = 0;
@@ -103,6 +116,7 @@ final class EcuDataLogger {
         result.put("logging", writer != null);
         result.put("path", path == null ? null : path.toString());
         result.put("format", "mlg");
+        result.put("tunePath", tunePath == null ? null : tunePath.toString());
         result.put("sampleCount", samples);
         result.put("channelCount", channelCount);
         if (error != null) {

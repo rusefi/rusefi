@@ -25,6 +25,8 @@ import org.junit.jupiter.api.io.TempDir;
 import java.nio.file.Path;
 import java.nio.file.Files;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import com.rusefi.tune.xml.Msq;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -77,6 +79,7 @@ class EcuMcpServerOutputChannelTest {
     private static final short CLT_RAW = 8765; // x0.01 -> 87.65
 
     @Test
+    @SuppressWarnings("unchecked")
     void readOutputChannelReturnsChannelsNobodySubscribedTo() throws Throwable {
         IniFileModel ini = createIni();
         IniFileProvider previousProvider = BinaryProtocol.iniFileProvider;
@@ -94,7 +97,9 @@ class EcuMcpServerOutputChannelTest {
             pollWasFull.add(snapshot.isFull());
             polls.countDown();
         });
-        ServerSocketReference fakeEcu = startFakeEcu(ini);
+        BinaryProtocolState ecuState = new BinaryProtocolState();
+        ecuState.setConfigurationImage(new ConfigurationImage(ini.getMetaInfo().getPageSize(0)));
+        ServerSocketReference fakeEcu = startFakeEcu(ini, ecuState);
         Path shutdownFile = tempDir.resolve("shutdown.mlg");
         try (McpStdioHarness mcp = new McpStdioHarness()) {
             assertEquals(Boolean.FALSE, mcp.call("data_logging_status", "{}", 5_000).get("logging"));
@@ -124,6 +129,10 @@ class EcuMcpServerOutputChannelTest {
             assertEquals(Boolean.TRUE, started.get("logging"), started.toJSONString());
             assertEquals(3L, ((Number) started.get("channelCount")).longValue());
             assertEquals(recording.toString(), started.get("path"));
+            Path initialTune = tempDir.resolve(LocalDate.now() + ".msq");
+            assertEquals(initialTune.toString(), started.get("tunePath"));
+            assertEquals("0", Msq.readTune(initialTune.toString()).getConstantsAsMap()
+                    .get("mockScalarIniField").getValue());
             assertEquals(Boolean.FALSE, mcp.call("start_data_logging", pathArgument(shutdownFile), 5_000).get("success"));
             assertFalse(Files.exists(shutdownFile), "duplicate start must not create a file");
             awaitSamples(mcp);
@@ -136,8 +145,31 @@ class EcuMcpServerOutputChannelTest {
             assertEquals(Boolean.FALSE, mcp.call("start_data_logging", pathArgument(recording), 5_000).get("success"));
             org.junit.jupiter.api.Assertions.assertArrayEquals(before, Files.readAllBytes(recording));
 
+            // Change the live ECU image after connection: a stale connection cache would miss this.
+            ecuState.setRange(new byte[]{1}, 0, 13, 1);
+            JSONObject changed = mcp.call("start_data_logging", pathArgument(tempDir.resolve("changed.mlg")), 5_000);
+            Path changedTune = tempDir.resolve(LocalDate.now() + "_1.msq");
+            assertEquals(changedTune.toString(), changed.get("tunePath"), changed.toJSONString());
+            assertEquals("1", Msq.readTune(changedTune.toString()).getConstantsAsMap()
+                    .get("mockScalarIniField").getValue());
+            mcp.call("stop_data_logging", "{}", 5_000);
+
+            Path noTuneFolder = Files.createDirectory(tempDir.resolve("disabled"));
+            JSONObject disabledArgs = new JSONObject();
+            disabledArgs.put("path", noTuneFolder.resolve("only-data.mlg").toString());
+            disabledArgs.put("saveTune", false);
+            JSONObject disabled = mcp.call("start_data_logging", disabledArgs.toJSONString(), 5_000);
+            assertEquals(Boolean.TRUE, disabled.get("logging"), disabled.toJSONString());
+            org.junit.jupiter.api.Assertions.assertNull(disabled.get("tunePath"));
+            mcp.call("stop_data_logging", "{}", 5_000);
+            try (java.util.stream.Stream<Path> files = Files.list(noTuneFolder)) {
+                assertEquals(1, files.count(), "saveTune=false creates only the data log");
+            }
+
             // Leave a recording active: EOF must close it and release both output leases.
-            assertEquals(Boolean.TRUE, mcp.call("start_data_logging", pathArgument(shutdownFile), 5_000).get("logging"));
+            JSONObject restarted = mcp.call("start_data_logging", pathArgument(shutdownFile), 5_000);
+            assertEquals(Boolean.TRUE, restarted.get("logging"));
+            assertEquals(changedTune.toString(), restarted.get("tunePath"));
             awaitSamples(mcp);
         } finally {
             snapshotToken.remove();
@@ -192,9 +224,7 @@ class EcuMcpServerOutputChannelTest {
      * Fake ECU: the proxy server in detached mode serves reads/CRC from a configuration image and
      * TS_OUTPUT_COMMAND from a fixed output-channel frame. Port 0 = ephemeral.
      */
-    private static ServerSocketReference startFakeEcu(IniFileModel ini) throws IOException {
-        BinaryProtocolState state = new BinaryProtocolState();
-        state.setConfigurationImage(new ConfigurationImage(ini.getMetaInfo().getPageSize(0)));
+    private static ServerSocketReference startFakeEcu(IniFileModel ini, BinaryProtocolState state) throws IOException {
         byte[] outputs = new byte[OCH_BLOCK_SIZE];
         ByteBuffer frame = ByteBuffer.wrap(outputs).order(ByteOrder.LITTLE_ENDIAN);
         frame.putInt(SECONDS_OFFSET, 7);
@@ -233,6 +263,7 @@ class EcuMcpServerOutputChannelTest {
     private static IniFileModel createIni() throws Throwable {
         IniFileModel ini = MockIniFileProvider.create().provide(null);
         when(ini.getMetaInfo().getOchBlockSize()).thenReturn(OCH_BLOCK_SIZE);
+        when(ini.getMetaInfo().getnPages()).thenReturn(1);
 
         Map<String, IniField> channels = new LinkedHashMap<>();
         channels.put(WellKnownGauges.SECONDS.getOutputChannelName(),

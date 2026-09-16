@@ -3,7 +3,8 @@
 An [MCP (Model Context Protocol)](https://modelcontextprotocol.io/) server that lets an
 LLM client (Claude Desktop, JetBrains AI, Cursor, etc.) iterate on rusEFI Lua scripts:
 write a candidate script, upload it to the ECU, reset Lua, and observe the resulting
-`print(...)` / `efiPrintf` output.
+`print(...)` / `efiPrintf` output. It also reads live ECU values and records operating
+data to host-side `.mlg` files using the Java frontend's binary log format.
 
 ## Architecture
 
@@ -54,6 +55,9 @@ Behavior common to all tools:
 | `lua_reset` | Restart the Lua VM. |
 | `send_command`, `command` | Queue any text command. |
 | `read_output_channel` | Latest gauge value by name. |
+| `start_data_logging` | Record ECU operating data to a new `.mlg` file. |
+| `stop_data_logging` | Stop recording and close the file. |
+| `data_logging_status` | Recording state, file path, sample count, and errors. |
 | `read_messages` | Pull recent ECU messages (Lua `print` included). |
 | `wait_for_message` | Block until a message matches a regex. |
 | `read_tune` | Save the complete ECU tune as a `.msq` file. |
@@ -119,6 +123,69 @@ is wrong. The console's output-channel polling is subscription based (it fetches
 the byte ranges of channels somebody subscribed to), so the server holds a full-frame
 lease for the lifetime of the ECU connection: every channel of the `.ini` is polled,
 like before that change.
+
+### `start_data_logging`
+
+| Argument | Type | Required | Default | Description |
+|---|---|---|---|---|
+| `path` | string | no | Temporary `rusefi_data_*.mlg` file | New file on the MCP server host; parent directory must exist. Relative paths resolve against the server's working directory. |
+| `saveTune` | boolean | no | `true` | Save a tune snapshot in the same folder as the data log. |
+
+Connects if necessary, creates the file and writes its header before returning.
+Existing files are never overwritten. Starting while already recording fails and
+leaves the active recording intact. Records all supported numeric and enum output
+channels from the connected ECU's `.ini`, using the same field selection and binary
+MLG format as the frontend. Computed expression channels are not included.
+
+By default, start reads the ECU's configuration pages afresh on the communication
+thread and saves a TunerStudio `.msq` tune beside the data log before recording
+begins. The filename uses the server's local date: `YYYY-MM-DD.msq`. An identical
+existing tune is reused; a changed tune uses `YYYY-MM-DD_1.msq`, then `_2`, etc.
+Existing files are preserved, including invalid MSQ files. Comparison includes
+firmware signature and calibration constants on each page, ignoring comments and
+writer metadata. Unchanged numbered snapshots are reused too.
+
+Set `"saveTune": false` to record only data. If the required tune read/save fails,
+start fails without activating recording; any newly created data log is removed.
+The snapshot describes the tune at logging start; edits during a recording do not
+create further tune snapshots.
+
+Each complete poll supplies one row; the sampling rate is the connection's polling
+rate, not a separate high-speed ECU or SD-card logger. Recording continues between
+MCP requests. Partial polls and snapshots predating the recording's full-output
+subscription are excluded. Zero samples means no qualifying poll has arrived yet.
+
+### `stop_data_logging` and `data_logging_status`
+
+Neither takes arguments or requires an ECU connection. Stop closes the file and
+releases recording resources; repeated stops are safe. Both return the same status
+fields as start:
+
+| Field | Meaning |
+|---|---|
+| `success` | False if recording encountered an encoding, write, or close error. |
+| `logging` | Whether the recorder is active. |
+| `path` | Absolute file path, or null before the first successful start. |
+| `format` | `mlg`. |
+| `tunePath` | Absolute path of the saved/reused tune, or null when tune saving is disabled or no recording has started. |
+| `sampleCount` | Rows successfully written in this recording. |
+| `channelCount` | Fields in the log, including the frontend's MAP compatibility alias. |
+| `error` | Failure description, when present. |
+
+After stopping, status retains the last recording's details. A write/encoding error
+stops recording and remains visible until another recording starts successfully;
+a partially written file may remain. A disconnected ECU supplies no new samples.
+Reconnecting through an ECU tool stops the old recording to avoid mixing channel
+layouts; start a new recording afterwards. Normal server shutdown or stdin failure
+also closes the file. An abrupt process kill may leave an incomplete file.
+
+Example tool calls:
+
+```json
+{"name":"start_data_logging","arguments":{"path":"/tmp/engine-run.mlg"}}
+{"name":"data_logging_status","arguments":{}}
+{"name":"stop_data_logging","arguments":{}}
+```
 
 ### `read_messages`
 

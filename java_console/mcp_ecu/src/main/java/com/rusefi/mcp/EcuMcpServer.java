@@ -29,6 +29,10 @@ import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
 import java.util.regex.Pattern;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -325,16 +329,20 @@ public class EcuMcpServer {
                 "Start recording ECU operating data to an MLG file on the MCP server host. " +
                         "Records all numeric/enum output channels at the connection polling rate. " +
                         "Fails if already recording or the file exists. Returns logging, path, format, " +
-                        "sampleCount and channelCount. Poll data_logging_status for progress or write errors.",
+                        "sampleCount, channelCount and tunePath. Saves a daily tune snapshot by default. " +
+                        "Poll data_logging_status for progress or write errors.",
                 schemaObject(new String[][]{
                         {"path", "string", "New output .mlg file path; parent directory must exist. " +
-                                "Omit to create a temporary rusefi_data_*.mlg file."}
+                                "Omit to create a temporary rusefi_data_*.mlg file."},
+                        {"saveTune", "boolean", "Default true: save a fresh ECU tune beside the log as YYYY-MM-DD.msq " +
+                                "(server local date). Reuse identical tunes; changed tunes get _1, _2, etc. " +
+                                "False disables the tune snapshot."}
                 }, new String[]{}, false)));
         tools.add(tool("stop_data_logging",
                 "Stop recording and close the MLG file. Safe to repeat; returns final recording status. " +
                         "Does not require an ECU connection.", emptyObjectSchema()));
         tools.add(tool("data_logging_status",
-                "Return logging, path, format, sampleCount, channelCount and any recording error. " +
+                "Return logging, path, tunePath, format, sampleCount, channelCount and any recording error. " +
                         "Does not connect to the ECU. No samples arrive while disconnected; reconnecting " +
                         "stops the old recording. Server shutdown also closes the file.", emptyObjectSchema()));
         tools.add(tool("read_messages",
@@ -541,13 +549,43 @@ public class EcuMcpServer {
                 || ((String) requestedPath).trim().isEmpty())) {
             return errorBody("'path' must be a non-empty string");
         }
+        Object saveTune = args.containsKey("saveTune") ? args.get("saveTune") : Boolean.TRUE;
+        if (!(saveTune instanceof Boolean)) {
+            return errorBody("'saveTune' must be a boolean");
+        }
         LinkManager lm = ensureConnected(null);
         BinaryProtocol bp = lm.getBinaryProtocol();
         IniFileModel ini = bp == null ? null : bp.getIniFileNullable();
         if (ini == null) {
             return errorBody("No .ini model for this connection");
         }
-        return dataLogger.start(ini, requestedPath == null ? null : Paths.get((String) requestedPath));
+        Msq tune = (Boolean) saveTune ? readLoggingTune(lm, bp, ini) : null;
+        return dataLogger.start(ini, requestedPath == null ? null : Paths.get((String) requestedPath), tune);
+    }
+
+    private static Msq readLoggingTune(LinkManager lm, BinaryProtocol bp, IniFileModel ini) throws Exception {
+        FutureTask<Msq> read = new FutureTask<>(() -> {
+            Map<Integer, ConfigurationImage> pages = new TreeMap<>();
+            for (int index = 0; index < ini.getMetaInfo().getnPages(); index++) {
+                int id = ini.getMetaInfo().getPageIdentifier(index);
+                byte[] bytes = bp.readFromPage(id, 0, ini.getMetaInfo().getPageSize(index));
+                if (bytes == null) {
+                    throw new IOException("Failed to read tune page " + id);
+                }
+                pages.put(id, new ConfigurationImage(bytes));
+            }
+            if (!pages.containsKey(0)) {
+                throw new IOException("Main tune page is missing from the ECU .ini");
+            }
+            return MsqFactory.valueOf(pages, ini);
+        });
+        lm.submit(read);
+        try {
+            return read.get(60, TimeUnit.SECONDS);
+        } finally {
+            // Prevent a timed-out queued read from starting later; never interrupt a wire transaction.
+            read.cancel(false);
+        }
     }
 
     @SuppressWarnings("unchecked")
