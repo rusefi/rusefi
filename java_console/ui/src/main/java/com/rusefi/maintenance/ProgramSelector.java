@@ -226,7 +226,8 @@ public class ProgramSelector {
                 job = new DfuAutoJob(selectedPort, parent, connectivityContext, linkManager);
                 break;
             case DFU_MANUAL:
-                job = new DfuManualJob(connectivityContext.getConnectedEcuTarget());
+                job = new DfuManualJob(connectivityContext.getConnectedEcuTarget(), null,
+                    suggested -> DfuBoardPicker.pick(suggested, showFullScreenPanel, closeFullScreenPanel));
                 break;
             case INSTALL_OPENBLT:
                 job = new InstallOpenBltJob(connectivityContext.getConnectedEcuTarget());
@@ -770,6 +771,14 @@ public class ProgramSelector {
     }
 
     public void apply(AvailableHardware currentHardware) {
+        apply(currentHardware, DfuFlasher.isDfuProgrammingSupported(), FindFileHelper.isObfuscated(),
+            com.rusefi.core.io.BundleUtil.getBundleTarget(),
+            connectivityContext.getConnectedEcuTarget().effectiveTarget());
+    }
+
+    /** Snapshot inputs permit hardware-free testing of the actual buttons and menu. */
+    JPopupMenu apply(AvailableHardware currentHardware, boolean supportsDfu, boolean obfuscated,
+                     String bundleTarget, String effectiveTarget) {
         boolean isJobRunning = (jobExecutor != null && !jobExecutor.isNotInProgress()) || externalBusy.getAsBoolean();
         boolean additionalControlVisible = additionalFirmwareControls.stream().anyMatch(Component::isVisible);
         noHardware.setVisible(currentHardware.isEmpty());
@@ -779,21 +788,24 @@ public class ProgramSelector {
         final List<PortResult> knownPorts = currentHardware.getKnownPorts();
         boolean hasSerialPorts = hasRealSerialPort(knownPorts);
         boolean hasDfuDevice = currentHardware.isDfuFound();
-        boolean supportsDfu = DfuFlasher.isDfuProgrammingSupported();
 
         JPopupMenu popupMenu = new JPopupMenu();
 
-        boolean requireBlt = FindFileHelper.isObfuscated()
-            || isForeignBoardOnUniversalBundle(connectivityContext.getConnectedEcuTarget());
+        boolean requireBlt = obfuscated || isForeignBoardOnUniversalBundle(bundleTarget, effectiveTarget);
         boolean canUseDfu = supportsDfu && !requireBlt;
+        boolean canUseManualDfu = canUseManualDfu(supportsDfu, obfuscated, bundleTarget, effectiveTarget);
 
         if (canUseDfu) {
             if (hasSerialPorts) {
                 addMenuItem(popupMenu, DFU_AUTO);
                 addMenuItem(popupMenu, DFU_SWITCH);
             }
+        }
+        if (hasDfuDevice && canUseManualDfu) {
+            addMenuItem(popupMenu, DFU_MANUAL);
+        }
+        if (canUseDfu) {
             if (hasDfuDevice) {
-                addMenuItem(popupMenu, DFU_MANUAL);
                 addCustomFirmwareMenuItem(popupMenu);
                 addMenuItem(popupMenu, DFU_ERASE);
                 if (DfuFlasher.haveBootloaderBinFile()) {
@@ -826,7 +838,7 @@ public class ProgramSelector {
 
         splitButton.setPopupMenu(menuItemCount > 0 ? popupMenu : null);
         splitButton.setMainButtonEnabled(shouldEnableMainButton(
-            hasFirmwareTarget, hasDfuDevice, isJobRunning, mainButtonModeFor(flashPort), canUseDfu));
+            hasFirmwareTarget, hasDfuDevice, isJobRunning, mainButtonModeFor(flashPort), canUseManualDfu));
         splitButton.setArrowButtonEnabled(menuItemCount > 0 && !isJobRunning);
 
         // Keep the main-button mode/label in sync with the connection state too (not just combo changes):
@@ -835,10 +847,21 @@ public class ProgramSelector {
 
         AutoupdateUtil.trueLayoutAndRepaint(splitButton);
         AutoupdateUtil.trueLayoutAndRepaint(content);
+        return popupMenu;
     }
 
     static boolean hasRealSerialPort(List<PortResult> ports) {
         return ports.stream().anyMatch(port -> port.type != SerialPortType.Dfu && !isUnflashableEcu(port));
+    }
+
+    static boolean canUseManualDfu(boolean platformSupported, boolean obfuscated,
+                                   String bundleTarget, String effectiveTarget) {
+        if (ManualDfuRecovery.isUniversalBundle(bundleTarget)) {
+            return platformSupported;
+        }
+        boolean foreignBoard = bundleTarget != null && effectiveTarget != null
+            && !bundleTarget.equalsIgnoreCase(effectiveTarget);
+        return platformSupported && !obfuscated && !foreignBoard;
     }
 
     static boolean hasFirmwareTarget(boolean hasSerialPorts, @Nullable PortResult flashPort) {
@@ -877,9 +900,7 @@ public class ProgramSelector {
      * bundle target if none) — so a board sitting in a bootloader after a restart is still treated as its
      * real (foreign) board here; the flash guard confirms that unverified target before programming.
      */
-    private static boolean isForeignBoardOnUniversalBundle(com.rusefi.core.io.ConnectedEcuTarget connectedEcuTarget) {
-        String bundleTarget = com.rusefi.core.io.BundleUtil.getBundleTarget();
-        String connected = connectedEcuTarget.effectiveTarget();
+    private static boolean isForeignBoardOnUniversalBundle(String bundleTarget, String connected) {
         return bundleTarget != null && connected != null && !bundleTarget.equalsIgnoreCase(connected);
     }
 
