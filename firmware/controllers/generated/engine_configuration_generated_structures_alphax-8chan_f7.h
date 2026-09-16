@@ -3490,8 +3490,8 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint8_t, 20, 1> tpsAccelLookback;
 	/**
-	 * For decel we simply multiply delta of TPS and tFor decel we do not use table?!
-	 * units: roc
+	 * Deceleration is detected when the largest signed TPS change between adjacent samples in the history is below the negative of this threshold. Units are TPS percentage points per sample (50 ms). A zero or positive change elsewhere in the history can mask a throttle-closing step.
+	 * units: %/sample
 	 * offset 1148
 	 */
 	float tpsDecelEnleanmentThreshold;
@@ -4337,8 +4337,8 @@ struct engine_configuration_s {
 	 */
 	uint8_t alignmentFill_at_1734[2] = {};
 	/**
-	 * Maximum change delta of TPS percentage over the 'length'. Actual TPS change has to be above this value in order for TPS/TPS acceleration to kick in.
-	 * units: roc
+	 * Acceleration is detected when the largest signed TPS change between adjacent samples in the history exceeds this threshold. Units are TPS percentage points per sample (50 ms), not percent per second or total change over the lookback window. A change from 10% to 20% is 10 percentage points.
+	 * units: %/sample
 	 * offset 1736
 	 */
 	float tpsAccelEnrichmentThreshold;

@@ -740,7 +740,7 @@ Output Max Duty Cycle
 How long to look back for TPS-based acceleration enrichment. Increasing this time will trigger enrichment for longer when a throttle position change occurs.
 
 ### tpsDecelEnleanmentThreshold
-For decel we simply multiply delta of TPS and tFor decel we do not use table?!
+Deceleration is detected when the largest signed TPS change between adjacent samples in the history is below the negative of this threshold. Units are TPS percentage points per sample (50 ms). A zero or positive change elsewhere in the history can mask a throttle-closing step.
 
 ### tpsDecelEnleanmentMultiplier
 Magic multiplier, we multiply delta of TPS and get fuel squirt duration
@@ -1238,7 +1238,7 @@ Below this speed, disable DFCO. Use this to prevent jerkiness from fuel enable/d
 Above this speed, allow DFCO. Use this to prevent jerkiness from fuel enable/disable in low gears.
 
 ### tpsAccelEnrichmentThreshold
-Maximum change delta of TPS percentage over the 'length'. Actual TPS change has to be above this value in order for TPS/TPS acceleration to kick in.
+Acceleration is detected when the largest signed TPS change between adjacent samples in the history exceeds this threshold. Units are TPS percentage points per sample (50 ms), not percent per second or total change over the lookback window. A change from 10% to 20% is 10 percentage points.
 
 ### totalGearsCount
 
