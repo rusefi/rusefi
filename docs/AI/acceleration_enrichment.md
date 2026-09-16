@@ -58,7 +58,7 @@ Both modes share `TpsAccelEnrichment::getTpsEnrichment()`:
 
 There is **no division by 100** in Percent Adder. With sequential injection (`D = 1`), `E = 0.20` adds 20%; `E = 20` adds 2000%. The table has scale 1, so this is also its stored value when the other corrections are neutral. For other injection modes, the additional `D` matters: ordinary multi-cylinder batch uses `D = 0.5`, simultaneous uses `1 / cylindersCount`, and single-point or single-cylinder batch uses `1`.
 
-The MS Adder conversion uses injector flow without adding deadtime; final injector characterization happens downstream. Changing adder modes reinterprets the same table values. The TunerStudio table title still says "Extra Fuel(ms)" and `tpsAccelFuel` is still labelled ms, so those labels do not establish the units in Percent Adder mode.
+The MS Adder conversion uses injector flow without adding deadtime; final injector characterization happens downstream. Changing adder modes reinterprets the same table values. The TunerStudio table title and TPS AE log name say "ms or fraction"; table, output and gauge units use `ms/frac`. These mean milliseconds in MS Adder and a fraction in Percent Adder. `tpsAccelFuel` reports `E`, before injection-mode scaling; its binary packing scale is unchanged.
 
 ## MAP Prediction
 

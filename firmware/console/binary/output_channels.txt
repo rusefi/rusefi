@@ -104,7 +104,8 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 	uint16_t revolutionCounterSinceStart;;"",1, 0, 0, 0, 0
 
 	uint16_t canReadCounter;@@GAUGE_NAME_CAN_READ_OK@@;"",1, 0, 0, 64000, 0
-	int16_t autoscale tpsAccelFuel;@@GAUGE_NAME_FUEL_TPS_EXTRA@@;"ms",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 3
+! MS Adder: milliseconds. Percent Adder: fraction before injection-mode scaling. MAP Prediction: zero.
+	int16_t autoscale tpsAccelFuel;@@GAUGE_NAME_FUEL_TPS_EXTRA@@;@@TPS_ACCEL_UNITS@@,{1/@@PACK_MULT_MS@@}, 0, 0, 0, 3
 ! Ignition
 	uint8_t currentIgnitionMode;@@GAUGE_NAME_IGNITION_MODE@@
 	uint8_t currentInjectionMode;@@GAUGE_NAME_INJECTION_MODE@@
