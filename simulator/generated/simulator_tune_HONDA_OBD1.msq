@@ -4453,12 +4453,12 @@
         <constant digits="2" name="tps2Min" units="V">0.0</constant>
         <constant digits="2" name="tps2SecondaryMax" units="V">0.0</constant>
         <constant digits="2" name="tps2SecondaryMin" units="V">5.0</constant>
-        <constant digits="1" name="tpsAccelEnrichmentThreshold" units="roc">40.0</constant>
+        <constant digits="1" name="tpsAccelEnrichmentThreshold" units="%/sample">40.0</constant>
         <constant digits="2" name="tpsAccelFractionDivisor" units="coef">1.0</constant>
         <constant digits="0" name="tpsAccelFractionPeriod" units="cycles">0</constant>
         <constant digits="2" name="tpsAccelLookback" units="sec">0.0</constant>
         <constant digits="2" name="tpsDecelEnleanmentMultiplier" units="coeff">0.0</constant>
-        <constant digits="1" name="tpsDecelEnleanmentThreshold" units="roc">0.0</constant>
+        <constant digits="1" name="tpsDecelEnleanmentThreshold" units="%/sample">0.0</constant>
         <constant digits="0" name="tpsErrorDetectionTooHigh" units="%">110</constant>
         <constant digits="0" name="tpsErrorDetectionTooLow" units="%">-10</constant>
         <constant digits="2" name="tpsMax" units="V">4.6</constant>
@@ -5175,7 +5175,7 @@
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260916" nPages="1" signature="rusEFI master.2026.09.16.f407-discovery.3640414502" version="5.0"/>
+    <versionInfo firmwareInfo="20260916" nPages="1" signature="rusEFI master.2026.09.16.f407-discovery.3276760849" version="5.0"/>
     <bibliography author="rusEFI 20260916" writeDate="date"/>
     <settings/>
     <userComments/>
