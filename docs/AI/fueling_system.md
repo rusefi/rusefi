@@ -13,7 +13,7 @@ The rusEFI fueling system is a mass-based model that translates configuration an
 7.  **Charge Temperature**: Blending IAT and CLT to estimate actual intake valve temperature.
 8.  **Air Density Correction**: Ideal gas law adjustments based on charge temperature.
 9.  **Barometric Correction**: Compensation for altitude changes.
-10. **Wall Wetting (Transient)**: `WallFuel` model (tau/beta) accounts for fuel sticking to intake walls.
+10. **Transient Fueling**: Three selectable acceleration strategies (MS Adder, Percent Adder, MAP Prediction), plus independent `WallFuel` compensation (tau/beta). See [Acceleration Enrichment](acceleration_enrichment.md) for their actual execution order, units, settings and interactions.
 11. **Short-Term Fuel Trim (STFT)**: Closed-loop Lambda correction.
 12. **Long-Term Fuel Trim (LTFT)**: Learned corrections from persistent memory (`page3_s`).
 13. **Engine Protection (Cuts)**: `LimpManager` applies cuts (Hard/Soft/Boost/Oil).
