@@ -473,6 +473,7 @@ static LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE MLG::Entries::Field fields[] = {
 	{engine->outputChannels.auxTemp2Resistance, "Aux temp 2: measured resistance", "Ohm", 0},
 	{engine->outputChannels.instantRpmRange, "sync: instant RPM range", "rpm", 0},
 	{engine->outputChannels.engine, "Engine", "", 0},
+	{engine->outputChannels.sdCardMode, "SD: Mount mode", "code", 0},
 	{engine->ignitionState.baseDwell, "Ignition: base dwell", "ms", 1, "Timing"},
 	{engine->ignitionState.sparkDwell, "Ignition: coil charge time", "ms", 1, "Timing"},
 	{engine->ignitionState.dwellDurationAngle, "Ignition: dwell duration", "deg", 1, "Timing"},

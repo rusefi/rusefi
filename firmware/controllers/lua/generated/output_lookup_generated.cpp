@@ -952,6 +952,9 @@ float getOutputValueByHash(const int hash) {
 // engine
 		case -75965445:
 			return engine->outputChannels.engine;
+// sdCardMode
+		case 545972859:
+			return engine->outputChannels.sdCardMode;
 // baseDwell
 		case -1777838088:
 			return engine->ignitionState.baseDwell;
