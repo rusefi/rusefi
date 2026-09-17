@@ -75,7 +75,7 @@ void FanController::initPwm() {
 	if (m_pwmInitialized) {
 		return;
 	}
-#if !EFI_UNIT_TEST
+#ifndef EFI_UNIT_TEST
 	if (!isBrainPinValid(getConfigPin())) {
 		return;
 	}
@@ -97,7 +97,7 @@ void FanController::onSlowCallbackPwm(bool acActive) {
 		m_currentPwm = safeDuty;
 		pwmAppliedPwm = safeDuty;
 		m_state = (safeDuty > 0);
-#if !EFI_UNIT_TEST
+#ifndef EFI_UNIT_TEST
 		if (m_pwmInitialized) {
 			m_pwm.setSimplePwmDutyCycle(safeDuty / 100.0f);
 		}
@@ -111,7 +111,13 @@ void FanController::onSlowCallbackPwm(bool acActive) {
 	if (acActive) {
 		target += getPwmAcAdder();
 	}
+	
 	target = clampF(getMinPwm(), target, getMaxPwm());
+
+	if (config.disableWhenEngineStopped && !engine->rpmCalculator.isRunning()) {
+        target = 0;
+    }
+
 	pwmTargetPwm = target;
 
 	// Soft-start: limit upward slew rate so ramp from 0-100 takes softStartSec seconds
@@ -125,7 +131,7 @@ void FanController::onSlowCallbackPwm(bool acActive) {
 	pwmAppliedPwm = m_currentPwm;
 	m_state = (m_currentPwm > 0);
 
-#if !EFI_UNIT_TEST
+#ifndef EFI_UNIT_TEST
 	if (m_pwmInitialized) {
 		m_pwm.setSimplePwmDutyCycle(m_currentPwm / 100.0f);
 	}
