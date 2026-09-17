@@ -273,3 +273,32 @@ TEST(Actuators, FanPwm_RelayModeUnchanged) {
 	updateFans();
 	EXPECT_EQ(false, enginePins.fanRelay.getLogicValue());
 }
+
+TEST(Actuators, FanPwm_DisableWhenStopped) {
+    EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+    MockAcOff mockAc;
+    engine->module<AcController>().set(&mockAc);
+    setupFan1Pwm(eth);
+
+    // Enable safety flag to inhibit fan when the engine is stopped
+    engineConfiguration->disableFan1WhenStopped = true;
+
+    // Engine stopped (0 RPM) and high coolant temperature (105°C)
+    engine->rpmCalculator.setRpmValue(0);
+    Sensor::setMockValue(SensorType::Clt, 105);
+
+    updateFans();
+
+    // Engine is stopped -> PWM output MUST be forced to 0%
+    EXPECT_EQ(0.0f, engine->module<FanControl1>()->pwmAppliedPwm);
+
+    // Simulate running engine (1000 RPM)
+    engine->rpmCalculator.setRpmValue(1000);
+
+    // Advance mock time by 1 second to allow soft-start ramp-up
+    eth.moveTimeForwardSec(1);
+    updateFans();
+
+    // With engine running and time advanced, PWM output must be active (> 0%)
+    EXPECT_GT(engine->module<FanControl1>()->pwmAppliedPwm, 0.0f);
+}
