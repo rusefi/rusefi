@@ -6232,8 +6232,9 @@ struct engine_configuration_s {
 	offset 3968 bit 2 */
 	bool keepIdleSolenoidWhenStopped : 1 {};
 	/**
+	 * Include CAN bus in trace using Elmue SLCAN prefixes (CAN1: none, CAN2: &, CAN3: $). Disable for standard SLCAN clients such as SavvyCAN or slcand. Reconnect the sniffer after changing this setting.
 	offset 3968 bit 3 */
-	bool unusedBit_Fancy4 : 1 {};
+	bool canSnifferIncludeBus : 1 {};
 	/**
 	offset 3968 bit 4 */
 	bool unusedBit_Fancy5 : 1 {};
