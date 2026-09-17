@@ -273,3 +273,126 @@ TEST(Actuators, FanPwm_RelayModeUnchanged) {
 	updateFans();
 	EXPECT_EQ(false, enginePins.fanRelay.getLogicValue());
 }
+
+// TDB coverage for https://github.com/rusefi/rusefi/issues/10248.
+// These passing tests deliberately assert stale indicators in PWM mode. Update
+// those expectations with the fix: PWM callbacks should refresh the indicators.
+template <typename TFan>
+static void checkFanPwmStaleIndicators() {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	MockAcOff mockAcOff;
+	MockAcOn mockAcOn;
+	engine->module<AcController>().set(&mockAcOff);
+	auto& fan = engine->module<TFan>().unmock();
+
+	setupFan1Pwm(eth);
+	setLinearCurve(engineConfiguration->fan2TempBins, 80, 110);
+	setLinearCurve(engineConfiguration->fan2PwmValues, 0, 100);
+	engineConfiguration->fan2MinPwm = 0;
+	engineConfiguration->fan2MaxPwm = 100;
+	engineConfiguration->fan2AcAdder = 0;
+	engineConfiguration->fan2SoftStartSec = 0;
+	engineConfiguration->fanOnTemperature = engineConfiguration->fan2OnTemperature = 90;
+	engineConfiguration->fanOffTemperature = engineConfiguration->fan2OffTemperature = 80;
+	engineConfiguration->enableFan1WithAc = engineConfiguration->enableFan2WithAc = true;
+	engineConfiguration->disableFan1WhenStopped = engineConfiguration->disableFan2WhenStopped = true;
+	engineConfiguration->disableFan1AtSpeed = engineConfiguration->disableFan2AtSpeed = 50;
+	engineConfiguration->cranking.rpm = 400;
+
+	// Seed real indicators through relay mode: cold, stopped engine, AC off.
+	engineConfiguration->fan1PwmEnabled = engineConfiguration->fan2PwmEnabled = false;
+	Sensor::setMockValue(SensorType::Clt, 75);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 0);
+	engine->rpmCalculator.setRpmValue(0);
+	fan.onSlowCallback();
+	EXPECT_FALSE(fan.pwmActive);
+	EXPECT_FALSE(fan.cranking);
+	EXPECT_TRUE(fan.notRunning);
+	EXPECT_TRUE(fan.disabledWhileEngineStopped);
+	EXPECT_FALSE(fan.brokenClt);
+	EXPECT_FALSE(fan.enabledForAc);
+	EXPECT_FALSE(fan.hot);
+	EXPECT_TRUE(fan.cold);
+	EXPECT_FALSE(fan.disabledBySpeed);
+	EXPECT_EQ(static_cast<int>(RadiatorFanState::EngineStopped), fan.radiatorFanStatus);
+
+	// Hot, running engine, AC on, above the speed limit. PWM updates its output,
+	// but the indicators incorrectly retain the cold/stopped/AC-off state.
+	engineConfiguration->fan1PwmEnabled = engineConfiguration->fan2PwmEnabled = true;
+	Sensor::setMockValue(SensorType::Clt, 95);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 100);
+	engine->rpmCalculator.setRpmValue(1000);
+	engine->module<AcController>().set(&mockAcOn);
+	fan.onSlowCallback();
+	EXPECT_TRUE(fan.pwmActive);
+	EXPECT_NEAR(50.0f, fan.pwmAppliedPwm, 2.0f);
+	EXPECT_TRUE(fan.m_state);
+	EXPECT_FALSE(fan.cranking);
+	EXPECT_TRUE(fan.notRunning); // BUG: engine is running
+	EXPECT_TRUE(fan.disabledWhileEngineStopped); // BUG
+	EXPECT_FALSE(fan.brokenClt);
+	EXPECT_FALSE(fan.enabledForAc); // BUG: AC is on
+	EXPECT_FALSE(fan.hot); // BUG: CLT is above the hot threshold
+	EXPECT_TRUE(fan.cold); // BUG
+	EXPECT_FALSE(fan.disabledBySpeed); // BUG: VSS exceeds the limit
+	EXPECT_EQ(static_cast<int>(RadiatorFanState::EngineStopped), fan.radiatorFanStatus); // BUG
+
+	// Relay-mode control: the same inputs refresh all indicators.
+	engineConfiguration->fan1PwmEnabled = engineConfiguration->fan2PwmEnabled = false;
+	fan.onSlowCallback();
+	EXPECT_FALSE(fan.pwmActive);
+	EXPECT_FALSE(fan.cranking);
+	EXPECT_FALSE(fan.notRunning);
+	EXPECT_FALSE(fan.disabledWhileEngineStopped);
+	EXPECT_FALSE(fan.brokenClt);
+	EXPECT_TRUE(fan.enabledForAc);
+	EXPECT_TRUE(fan.hot);
+	EXPECT_FALSE(fan.cold);
+	EXPECT_TRUE(fan.disabledBySpeed);
+	EXPECT_EQ(static_cast<int>(RadiatorFanState::VehicleIsTooFast), fan.radiatorFanStatus);
+
+	// The invalid-CLT PWM path also skips the indicators: it runs at maximum duty
+	// while still reporting a healthy sensor and the preceding operating state.
+	engineConfiguration->fan1PwmEnabled = engineConfiguration->fan2PwmEnabled = true;
+	Sensor::setInvalidMockValue(SensorType::Clt);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 0);
+	// Stop first to leave the running-state RPM hysteresis before cranking again.
+	engine->rpmCalculator.setRpmValue(0);
+	engine->rpmCalculator.setRpmValue(100);
+	engine->module<AcController>().set(&mockAcOff);
+	fan.onSlowCallback();
+	EXPECT_TRUE(fan.pwmActive);
+	EXPECT_FLOAT_EQ(100.0f, fan.pwmAppliedPwm);
+	EXPECT_TRUE(fan.m_state);
+	EXPECT_FALSE(fan.cranking); // BUG: engine is cranking
+	EXPECT_FALSE(fan.notRunning); // BUG
+	EXPECT_FALSE(fan.disabledWhileEngineStopped); // BUG
+	EXPECT_FALSE(fan.brokenClt); // BUG: CLT is invalid
+	EXPECT_TRUE(fan.enabledForAc); // BUG: AC is off
+	EXPECT_TRUE(fan.hot); // BUG
+	EXPECT_FALSE(fan.cold); // BUG
+	EXPECT_TRUE(fan.disabledBySpeed); // BUG: vehicle is stationary
+	EXPECT_EQ(static_cast<int>(RadiatorFanState::VehicleIsTooFast), fan.radiatorFanStatus); // BUG
+
+	// Relay-mode control for the cranking and broken-CLT flags.
+	engineConfiguration->fan1PwmEnabled = engineConfiguration->fan2PwmEnabled = false;
+	fan.onSlowCallback();
+	EXPECT_FALSE(fan.pwmActive);
+	EXPECT_TRUE(fan.cranking);
+	EXPECT_TRUE(fan.notRunning);
+	EXPECT_TRUE(fan.disabledWhileEngineStopped);
+	EXPECT_TRUE(fan.brokenClt);
+	EXPECT_FALSE(fan.enabledForAc);
+	EXPECT_FALSE(fan.hot);
+	EXPECT_TRUE(fan.cold);
+	EXPECT_FALSE(fan.disabledBySpeed);
+	EXPECT_EQ(static_cast<int>(RadiatorFanState::Cranking), fan.radiatorFanStatus);
+}
+
+TEST(Actuators, Fan1Pwm_StaleIndicators_Issue10248) {
+	checkFanPwmStaleIndicators<FanControl1>();
+}
+
+TEST(Actuators, Fan2Pwm_StaleIndicators_Issue10248) {
+	checkFanPwmStaleIndicators<FanControl2>();
+}
