@@ -13,7 +13,7 @@ using ::testing::_;
 using ::testing::InSequence;
 using ::testing::StrictMock;
 
-static void checkColdStartDwellTransition(bool reduceDwell) {
+static void checkColdStartDwellTransition(bool reduceDwell, bool missingTeeth = false) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->cylindersCount = 1;
 	engineConfiguration->firingOrder = FO_1;
@@ -22,6 +22,7 @@ static void checkColdStartDwellTransition(bool reduceDwell) {
 	engineConfiguration->isIgnitionEnabled = true;
 	engineConfiguration->timingMode = TM_FIXED;
 	engineConfiguration->fixedTiming = -30;
+	engineConfiguration->cranking.rpm = 400;
 	engineConfiguration->ignitionDwellForCrankingMs = 6;
 	engineConfiguration->sparkHardwareLatencyCorrection = 0;
 	setArrayValues(config->dwellVoltageCorrValues, 1.0f);
@@ -30,6 +31,7 @@ static void checkColdStartDwellTransition(bool reduceDwell) {
 	// At 400 RPM, consecutive 6-degree crank teeth are exactly 2500 us apart.
 	constexpr float rpm = 400;
 	engine->rpmCalculator.setRpmValue(rpm);
+	ASSERT_EQ(RUNNING, engine->rpmCalculator.getState());
 	engine->ignitionState.updateDwell(rpm, true);
 	setArrayValues(engine->engineState.timingAdvance, -30.0f);
 	initializeIgnitionActions();
@@ -75,27 +77,67 @@ static void checkColdStartDwellTransition(bool reduceDwell) {
 	ASSERT_EQ(0, fireCount);
 	ASSERT_EQ(0, eth.getWarningCounter());
 
-	// Dwell started at +1500 us. The shortened watchdog fires at about +6377 us,
-	// before the normal spark at +7500 us, despite uninterrupted crank teeth.
+	// Dwell started at +1500 us. Previously, reducing global dwell fired the
+	// watchdog at about +6377 us, before the normal spark at +7500 us.
 	eth.setTimeAndInvokeEventsUs(startUs + 6400);
-	EXPECT_EQ(reduceDwell ? 1 : 0, fireCount);
-	EXPECT_EQ(!reduceDwell, enginePins.coils[0].getLogicValue());
-	EXPECT_EQ(reduceDwell ? 1 : 0, engine->engineState.overDwellCanceledCounter);
-	EXPECT_EQ(reduceDwell, hasRecentWarningCode(ObdCode::CUSTOM_Ignition_Coil_Overcharge_1));
+	EXPECT_EQ(0, fireCount);
+	EXPECT_TRUE(enginePins.coils[0].getLogicValue());
+	EXPECT_EQ(0, engine->engineState.overDwellCanceledCounter);
+	EXPECT_FALSE(hasRecentWarningCode(ObdCode::CUSTOM_Ignition_Coil_Overcharge_1));
 
-	eth.setTimeAndInvokeEventsUs(startUs + 7500);
-	engine->module<TriggerScheduler>()->scheduleEventsUntilNextTriggerTooth(rpm, getTimeNowNt(), 30, 36);
-	eth.executeActions();
+	if (missingTeeth) {
+		// No further trigger edges: protection must still discharge the coil
+		// after 1.5 * the pending 6 ms dwell, i.e. at +10500 us.
+		eth.setTimeAndInvokeEventsUs(startUs + 10490);
+		EXPECT_EQ(0, fireCount);
+		EXPECT_TRUE(enginePins.coils[0].getLogicValue());
+		eth.setTimeAndInvokeEventsUs(startUs + 10510);
+		EXPECT_EQ(1, fireCount);
+		EXPECT_FALSE(enginePins.coils[0].getLogicValue());
+		EXPECT_EQ(1, engine->engineState.overDwellCanceledCounter);
+		EXPECT_TRUE(hasRecentWarningCode(ObdCode::CUSTOM_Ignition_Coil_Overcharge_1));
+	} else {
+		eth.setTimeAndInvokeEventsUs(startUs + 7500);
+		engine->module<TriggerScheduler>()->scheduleEventsUntilNextTriggerTooth(rpm, getTimeNowNt(), 30, 36);
+		eth.executeActions();
+	}
+
 	eth.setTimeAndInvokeEventsUs(startUs + 12000);
+	if (missingTeeth) {
+		// Even a late arrival of the missing tooth must not fire the canceled spark.
+		engine->module<TriggerScheduler>()->scheduleEventsUntilNextTriggerTooth(rpm, getTimeNowNt(), 30, 36);
+		eth.executeActions();
+	}
 	EXPECT_EQ(1, chargeCount);
 	EXPECT_EQ(1, fireCount) << "Canceled normal spark must not fire a second time";
 	EXPECT_FALSE(enginePins.coils[0].getLogicValue());
 	const float actualDwellMs = NT2US(fireTime - chargeTime) / 1000.0f;
-	EXPECT_NEAR(reduceDwell ? 4.877424f : 6.0f, actualDwellMs, 0.01f);
+	EXPECT_NEAR(missingTeeth ? 9.0f : 6.0f, actualDwellMs, 0.01f);
 	EXPECT_NEAR(actualDwellMs / 6, engine->engineState.dwellActualRatio, 0.002f);
-	EXPECT_EQ(0, engine->engineState.dwellOverChargeCounter);
+	EXPECT_EQ(missingTeeth ? 1 : 0, engine->engineState.dwellOverChargeCounter);
 	EXPECT_EQ(0, engine->engineState.dwellUnderChargeCounter);
-	EXPECT_EQ(reduceDwell ? 1 : 0, eth.getWarningCounter());
+	EXPECT_EQ(missingTeeth ? 1 : 0, engine->engineState.overDwellCanceledCounter);
+	EXPECT_EQ(missingTeeth ? 1 : 0, eth.getWarningCounter());
+
+	// The completed event prepares the next cycle with the new global dwell.
+	ASSERT_FLOAT_EQ(runningDwell, event.sparkDwell);
+	// One 720-degree cycle later at 400 RPM: +300000 us. Keep six-degree
+	// trigger steps and verify the next physical pulse uses the new request.
+	for (int tooth = 0; tooth <= 3; tooth++) {
+		eth.setTimeAndInvokeEventsUs(startUs + 300000 + tooth * 2500);
+		const float phase = 12 + tooth * 6;
+		engine->module<TriggerScheduler>()->scheduleEventsUntilNextTriggerTooth(rpm, getTimeNowNt(), phase, phase + 6);
+		onTriggerEventSparkLogic(rpm, getTimeNowNt(), phase, phase + 6);
+		eth.executeActions();
+	}
+	eth.setTimeAndInvokeEventsUs(startUs + 312000);
+	EXPECT_EQ(2, chargeCount);
+	EXPECT_EQ(2, fireCount);
+	EXPECT_FALSE(enginePins.coils[0].getLogicValue());
+	EXPECT_NEAR(runningDwell, NT2US(fireTime - chargeTime) / 1000.0f, 0.01f);
+	EXPECT_NEAR(1.0f, engine->engineState.dwellActualRatio, 0.002f);
+	EXPECT_EQ(missingTeeth ? 1 : 0, engine->engineState.overDwellCanceledCounter);
+	EXPECT_EQ(missingTeeth ? 1 : 0, eth.getWarningCounter());
 	engine->onIgnitionEvent = nullptr;
 }
 
@@ -103,8 +145,12 @@ TEST(ignition, ColdStartUnchangedDwellFiresNormally) {
 	checkColdStartDwellTransition(false);
 }
 
-TEST(ignition, ColdStartDwellReductionWarns9351WithPendingSixMsPlan) {
+TEST(ignition, ColdStartDwellReductionPreservesPendingSixMsPlan) {
 	checkColdStartDwellTransition(true);
+}
+
+TEST(ignition, ColdStartDwellReductionStillProtectsAgainstMissingTeeth) {
+	checkColdStartDwellTransition(true, true);
 }
 
 TEST(ignition, twoCoils) {
