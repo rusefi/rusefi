@@ -340,6 +340,7 @@ static void setDefaultCanSettings() {
 	engineConfiguration->canReadEnabled = true;
 	engineConfiguration->canWriteEnabled = true;
 	engineConfiguration->canVssScaling = 1.0f;
+	engineConfiguration->canSnifferIncludeBus = true;
 
 	for (size_t i = 0; i < efi::size(engineConfiguration->canSniffer); i++) {
 		engineConfiguration->canSniffer[i].listenOurs = true;

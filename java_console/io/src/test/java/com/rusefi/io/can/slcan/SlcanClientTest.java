@@ -39,11 +39,12 @@ public class SlcanClientTest {
         try (SlcanClient client = SlcanClient.connect(stream, "COM42", line -> {})) {
             assertEquals("COM42", client.getPort());
             assertEquals("V1220", client.getVersion());
-            assertEquals(Arrays.asList("V", "C", "S6", "O"), stream.commands);
+            assertEquals(Arrays.asList("V", "C", "S6", "I", "O"), stream.commands);
+            assertTrue(client.includesBus());
             client.pollStatus();
             assertEquals("F00", client.readLine(10));
         }
-        assertEquals(Arrays.asList("V", "C", "S6", "O", "F", "C"), stream.commands);
+        assertEquals(Arrays.asList("V", "C", "S6", "I", "O", "F", "C"), stream.commands);
         assertTrue(stream.isClosed());
     }
 
@@ -52,7 +53,7 @@ public class SlcanClientTest {
         FakeStream stream = new FakeStream();
         stream.rejectOpen = true;
         assertThrows(IOException.class, () -> SlcanClient.connect(stream, "COM42", line -> {}));
-        assertEquals(Arrays.asList("V", "C", "S6", "O"), stream.commands);
+        assertEquals(Arrays.asList("V", "C", "S6", "I", "O"), stream.commands);
         assertTrue(stream.isClosed());
     }
 
@@ -65,11 +66,48 @@ public class SlcanClientTest {
         assertTrue(stream.isClosed());
     }
 
+    @Test
+    public void busIdentityAndLegacyAmbiguity() {
+        for (int bus = 0; bus < 3; bus++) {
+            String prefix = new String[]{"", "&", "$"}[bus];
+            for (String frame : new String[]{"t1232AABB", "T000001232AABB", "r1238", "R000001238"}) {
+                SlcanClient.Frame parsed = SlcanClient.Frame.parse(prefix + frame + "ABCD", true);
+                assertNotNull(parsed);
+                assertEquals(Integer.valueOf(bus), parsed.busIndex);
+                assertEquals(prefix + frame + "ABCD", parsed.raw);
+                assertEquals("ABCD", parsed.timestamp);
+                assertEquals(0x123, parsed.id);
+                assertTrue(parsed.decode().startsWith("CAN" + (bus + 1) + " "));
+            }
+        }
+        SlcanClient.Frame legacy = SlcanClient.Frame.parse("t1232AABB");
+        assertNull(legacy.busIndex);
+        assertTrue(legacy.decode().startsWith("Bus unknown "));
+        assertEquals(Integer.valueOf(1), SlcanClient.Frame.parse("&t1230").busIndex);
+        assertEquals(Integer.valueOf(2), SlcanClient.Frame.parse("$t1230").busIndex);
+        for (String bad : new String[]{"&", "$", "&&t1230", "$&t1230", "&V1220", "$t1232AA"}) {
+            assertNull(SlcanClient.Frame.parse(bad), bad);
+        }
+    }
+
+    @Test
+    public void legacyAndOldFirmwareKeepUnknownBus() throws Exception {
+        for (String reply : new String[]{"I0\r", "\u0007", null}) {
+            FakeStream stream = new FakeStream();
+            stream.formatReply = reply;
+            try (SlcanClient client = SlcanClient.connect(stream, "COM42", line -> {})) {
+                assertFalse(client.includesBus());
+                assertNull(SlcanClient.Frame.parse("t1230", client.includesBus()).busIndex);
+            }
+        }
+    }
+
     private static class FakeStream extends AbstractIoStream {
         final IncomingDataBuffer buffer = new IncomingDataBuffer("slcan-test", getStreamStats());
         final List<String> commands = new ArrayList<>();
         boolean console;
         boolean rejectOpen;
+        String formatReply = "I1\r";
 
         @Override
         public IncomingDataBuffer getDataBuffer() { return buffer; }
@@ -89,6 +127,12 @@ public class SlcanClientTest {
             }
             String command = new String(bytes, StandardCharsets.US_ASCII).trim();
             commands.add(command);
+            if ("I".equals(command)) {
+                if (formatReply != null) {
+                    buffer.addData(formatReply.getBytes(StandardCharsets.US_ASCII));
+                }
+                return;
+            }
             String reply = "V".equals(command) ? "V1220\r"
                     : "F".equals(command) ? "F00\r"
                     : rejectOpen && "O".equals(command) ? "\u0007" : "\r";
