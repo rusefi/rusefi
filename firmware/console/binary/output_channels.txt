@@ -492,4 +492,6 @@ float mapFast
 ! 4 TPS acceleration (including MAP Prediction), 5 TPS deceleration or DFCO.
 ! Bits 6/7 (MAP-rate acceleration/deceleration) are unused.
 	uint8_t engine;Engine;"", 1, 0, 0, 255, 0
+	! SD_MODE from mmc_card.h: 0 idle, 1 ECU, 2 PC, 3 unmounted, 4 formatting.
+	uint8_t sdCardMode;SD: Mount mode;"code", 1, 0, 0, 4, 0
 end_struct

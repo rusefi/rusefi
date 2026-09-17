@@ -55,6 +55,7 @@ Behavior common to all tools:
 | `lua_reset` | Restart the Lua VM. |
 | `send_command`, `command` | Queue any text command. |
 | `read_output_channel` | Latest gauge value by name. |
+| `mount_to_ecu`, `mount_to_pc` | Switch SD-card ownership and confirm the reported mount mode. |
 | `start_data_logging` | Record ECU operating data to a new `.mlg` file. |
 | `stop_data_logging` | Stop recording and close the file. |
 | `data_logging_status` | Recording state, file path, sample count, and errors. |
@@ -123,6 +124,35 @@ is wrong. The console's output-channel polling is subscription based (it fetches
 the byte ranges of channels somebody subscribed to), so the server holds a full-frame
 lease for the lifetime of the ECU connection: every channel of the `.ini` is polled,
 like before that change.
+
+### `mount_to_ecu` and `mount_to_pc`
+
+Switch the SD card to ECU ownership (logging and ECU-side file access) or PC
+ownership (USB mass storage). The request uses the same binary command as the
+TunerStudio SD Card dialog. The selection lasts until power-off or `sdmode auto`.
+
+Optional `timeoutMs` defaults to 20000 and must be 1..120000. It covers command
+acknowledgement and mount confirmation; implicit connection has its separate timeout.
+These tools require firmware and a matching `.ini` exposing `sdCardMode` and
+`sd_present`. Older firmware returns an error before sending a mount command.
+
+Success requires a fresh output poll after acknowledgement reporting a present card
+in the requested mode. Logging may be paused or suppressed in ECU mode; its activity
+bit is not used to determine ownership. Results include `success`, `mounted`,
+`requestedMode`, and, when a fresh status arrived, `sdCardMode`, `mode`, `sd_present`.
+Timeouts and disconnects return an error with completion unconfirmed.
+
+Safely eject the PC drive before calling `mount_to_ecu`. Switching ownership can
+drop the shared USB console connection. Reconnect and use `read_output_channel`
+with `name: "sdCardMode"` to check the result before retrying. Mode values are
+0 idle, 1 ECU, 2 PC, 3 unmounted, 4 formatting. `sd_present` must also be set for
+the card to be usable. A PC-mode report confirms firmware ownership, not that
+the host OS has mounted a drive letter.
+
+```json
+{"name":"mount_to_ecu","arguments":{"timeoutMs":20000}}
+{"name":"mount_to_pc","arguments":{}}
+```
 
 ### `start_data_logging`
 

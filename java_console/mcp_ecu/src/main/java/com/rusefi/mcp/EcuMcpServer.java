@@ -335,6 +335,17 @@ public class EcuMcpServer {
                                 "(server local date). Reuse identical tunes; changed tunes get _1, _2, etc. " +
                                 "False disables the tune snapshot."}
                 }, new String[]{}, false)));
+        for (String target : new String[]{"ecu", "pc"}) {
+            tools.add(tool("mount_to_" + target,
+                    "Mount the SD card to the " + target.toUpperCase(java.util.Locale.ROOT) +
+                            " and wait for a fresh sdCardMode report. Requires firmware with sdCardMode. " +
+                            "ECU mode permits logging/file access; PC mode exposes USB mass storage. " +
+                            "Safely eject the PC drive before switching to ECU. A USB disconnect leaves " +
+                            "completion unconfirmed; reconnect and read sdCardMode before retrying.",
+                    schemaObject(new String[][]{
+                            {"timeoutMs", "integer", "Command and mount confirmation timeout in ms, 1..120000. Default 20000."}
+                    }, new String[]{}, false)));
+        }
         tools.add(tool("stop_data_logging",
                 "Stop recording and close the MLG file. Safe to repeat; returns final recording status. " +
                         "Does not require an ECU connection.", emptyObjectSchema()));
@@ -406,6 +417,8 @@ public class EcuMcpServer {
                 case "send_command":toolResult = doSendCommand(args); break;
                 case "command":    toolResult = doSendCommand(args); break;
                 case "read_output_channel": toolResult = doReadOutputChannel(args); break;
+                case "mount_to_ecu": toolResult = doMount(args, true); break;
+                case "mount_to_pc": toolResult = doMount(args, false); break;
                 case "start_data_logging": toolResult = doStartDataLogging(args); break;
                 case "stop_data_logging": toolResult = dataLogger.stop(); break;
                 case "data_logging_status": toolResult = dataLogger.status(); break;
@@ -558,6 +571,14 @@ public class EcuMcpServer {
         }
         Msq tune = (Boolean) saveTune ? TuneSnapshot.read(lm, bp, ini) : null;
         return dataLogger.start(ini, requestedPath == null ? null : Paths.get((String) requestedPath), tune);
+    }
+
+    private JSONObject doMount(JSONObject args, boolean toEcu) throws Exception {
+        long timeoutMs = asLong(args.get("timeoutMs"), 20_000);
+        if (timeoutMs < 1 || timeoutMs > 120_000) {
+            return errorBody("'timeoutMs' must be between 1 and 120000");
+        }
+        return SdCardMount.mount(ensureConnected(null), SensorCentral.getInstance(), toEcu, timeoutMs);
     }
 
     @SuppressWarnings("unchecked")

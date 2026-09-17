@@ -55,6 +55,8 @@ class EcuMcpServerTest {
         assertTrue(names.contains("send_command"));
         assertTrue(names.contains("command"));
         assertTrue(names.contains("read_output_channel"));
+        assertTrue(names.contains("mount_to_ecu"));
+        assertTrue(names.contains("mount_to_pc"));
         assertTrue(names.contains("start_data_logging"));
         assertTrue(names.contains("stop_data_logging"));
         assertTrue(names.contains("data_logging_status"));
@@ -89,6 +91,20 @@ class EcuMcpServerTest {
         JSONArray messages = (JSONArray) structured.get("messages");
         assertNotNull(messages);
         assertEquals(0, messages.size());
+    }
+
+    @Test
+    void mountToolsValidateTimeoutBeforeConnecting() throws Exception {
+        for (String name : new String[]{"mount_to_ecu", "mount_to_pc"}) {
+            for (long timeout : new long[]{0, -1, 120001}) {
+                String[] responses = drive(jsonRpc(1, "tools/call",
+                        "{\"name\":\"" + name + "\",\"arguments\":{\"timeoutMs\":" + timeout + "}}") + "\n");
+                JSONObject result = (JSONObject) parse(responses[0]).get("result");
+                JSONObject body = (JSONObject) result.get("structuredContent");
+                assertEquals(false, body.get("success"));
+                assertTrue(body.get("error").toString().contains("timeoutMs"));
+            }
+        }
     }
 
     @Test
