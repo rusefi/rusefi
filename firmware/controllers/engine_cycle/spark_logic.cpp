@@ -675,7 +675,9 @@ void onTriggerEventSparkLogic(float rpm, efitick_t edgeTimestamp, float currentP
 */
 #endif // EFI_ANTILAG_SYSTEM
 
-			scheduleSparkEvent(limitedSpark, event, rpm, dwellMs, dwellAngle, sparkAngle, edgeTimestamp, currentPhase, nextPhase);
+			// The watchdog must use the dwell saved with these angles. Global dwell
+			// may have changed since this cylinder's pending plan was prepared.
+			scheduleSparkEvent(limitedSpark, event, rpm, event->sparkDwell, dwellAngle, sparkAngle, edgeTimestamp, currentPhase, nextPhase);
 		}
 	}
 }

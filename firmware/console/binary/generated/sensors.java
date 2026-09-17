@@ -393,7 +393,7 @@ auxTemp1Resistance("Aux temp 1: measured resistance", SensorCategory.SENSOR_INPU
 auxTemp2Resistance("Aux temp 2: measured resistance", SensorCategory.SENSOR_INPUTS, FieldType.INT, 924, 1.0, 0.0, 1000000.0, "Ohm"),
 instantRpmRange("sync: instant RPM range\nMax minus min instant RPM within the last complete engine cycle, 0 when RPM is perfectly steady", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 928, 1.0, 0.0, 65535.0, "rpm"),
 engine("Engine", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 930, 1.0, 0.0, 255.0, ""),
-alignmentFill_at_931("need 4 byte alignment", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 931, 1.0, 0.0, 100.0, "units"),
+sdCardMode("SD: Mount mode", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 931, 1.0, 0.0, 4.0, "code"),
 totalFuelCorrection("Fuel: Total correction", SensorCategory.SENSOR_INPUTS, FieldType.INT, 932, 1.0, 0.0, 3.0, "mult"),
 running("running", SensorCategory.SENSOR_INPUTS, FieldType.INT, 936, 1.0, -1.0, -1.0, ""),
 afrTableYAxis("afrTableYAxis", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 956, 0.01, 0.0, 0.0, "%"),
