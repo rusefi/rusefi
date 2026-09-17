@@ -13,6 +13,100 @@ using ::testing::_;
 using ::testing::InSequence;
 using ::testing::StrictMock;
 
+static void checkColdStartDwellTransition(bool reduceDwell) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->cylindersCount = 1;
+	engineConfiguration->firingOrder = FO_1;
+	engineConfiguration->ignitionMode = IM_ONE_COIL;
+	engineConfiguration->isInjectionEnabled = false;
+	engineConfiguration->isIgnitionEnabled = true;
+	engineConfiguration->timingMode = TM_FIXED;
+	engineConfiguration->fixedTiming = -30;
+	engineConfiguration->ignitionDwellForCrankingMs = 6;
+	engineConfiguration->sparkHardwareLatencyCorrection = 0;
+	setArrayValues(config->dwellVoltageCorrValues, 1.0f);
+
+	// Isolate the scheduling transition from changes in speed or synchronization.
+	// At 400 RPM, consecutive 6-degree crank teeth are exactly 2500 us apart.
+	constexpr float rpm = 400;
+	engine->rpmCalculator.setRpmValue(rpm);
+	engine->ignitionState.updateDwell(rpm, true);
+	setArrayValues(engine->engineState.timingAdvance, -30.0f);
+	initializeIgnitionActions();
+	auto& event = engine->ignitionEvents.elements[0];
+	ASSERT_FLOAT_EQ(6, event.sparkDwell);
+	ASSERT_NEAR(15.6f, event.dwellAngle, 1e-4);
+	ASSERT_FLOAT_EQ(30, event.sparkAngle);
+
+	// The N52 log drops 6 -> 3.251616 ms while this cylinder's old plan is pending.
+	// The unchanged-dwell case is a control: identical teeth must fire normally.
+	const float runningDwell = reduceDwell ? 3.251616f : 6.0f;
+	setArrayValues(config->sparkDwellValues, runningDwell);
+	engine->ignitionState.updateDwell(rpm, false);
+	ASSERT_FLOAT_EQ(6, event.sparkDwell);
+
+	int chargeCount = 0;
+	int fireCount = 0;
+	efitick_t chargeTime = 0;
+	efitick_t fireTime = 0;
+	engine->onIgnitionEvent = [&](IgnitionEvent* firedEvent, bool charging) {
+		EXPECT_EQ(&event, firedEvent);
+		if (charging) {
+			chargeCount++;
+			chargeTime = getTimeNowNt();
+		} else {
+			fireCount++;
+			fireTime = getTimeNowNt();
+		}
+	};
+
+	const int startUs = getTimeNowUs();
+	onTriggerEventSparkLogic(rpm, getTimeNowNt(), 12, 18);
+	eth.setTimeAndInvokeEventsUs(startUs + 1600);
+	ASSERT_EQ(1, chargeCount);
+	ASSERT_TRUE(enginePins.coils[0].getLogicValue());
+
+	for (int tooth = 1; tooth <= 2; tooth++) {
+		eth.setTimeAndInvokeEventsUs(startUs + tooth * 2500);
+		const float phase = 12 + tooth * 6;
+		engine->module<TriggerScheduler>()->scheduleEventsUntilNextTriggerTooth(rpm, getTimeNowNt(), phase, phase + 6);
+		onTriggerEventSparkLogic(rpm, getTimeNowNt(), phase, phase + 6);
+	}
+	ASSERT_EQ(0, fireCount);
+	ASSERT_EQ(0, eth.getWarningCounter());
+
+	// Dwell started at +1500 us. The shortened watchdog fires at about +6377 us,
+	// before the normal spark at +7500 us, despite uninterrupted crank teeth.
+	eth.setTimeAndInvokeEventsUs(startUs + 6400);
+	EXPECT_EQ(reduceDwell ? 1 : 0, fireCount);
+	EXPECT_EQ(!reduceDwell, enginePins.coils[0].getLogicValue());
+	EXPECT_EQ(reduceDwell ? 1 : 0, engine->engineState.overDwellCanceledCounter);
+	EXPECT_EQ(reduceDwell, hasRecentWarningCode(ObdCode::CUSTOM_Ignition_Coil_Overcharge_1));
+
+	eth.setTimeAndInvokeEventsUs(startUs + 7500);
+	engine->module<TriggerScheduler>()->scheduleEventsUntilNextTriggerTooth(rpm, getTimeNowNt(), 30, 36);
+	eth.executeActions();
+	eth.setTimeAndInvokeEventsUs(startUs + 12000);
+	EXPECT_EQ(1, chargeCount);
+	EXPECT_EQ(1, fireCount) << "Canceled normal spark must not fire a second time";
+	EXPECT_FALSE(enginePins.coils[0].getLogicValue());
+	const float actualDwellMs = NT2US(fireTime - chargeTime) / 1000.0f;
+	EXPECT_NEAR(reduceDwell ? 4.877424f : 6.0f, actualDwellMs, 0.01f);
+	EXPECT_NEAR(actualDwellMs / 6, engine->engineState.dwellActualRatio, 0.002f);
+	EXPECT_EQ(0, engine->engineState.dwellOverChargeCounter);
+	EXPECT_EQ(0, engine->engineState.dwellUnderChargeCounter);
+	EXPECT_EQ(reduceDwell ? 1 : 0, eth.getWarningCounter());
+	engine->onIgnitionEvent = nullptr;
+}
+
+TEST(ignition, ColdStartUnchangedDwellFiresNormally) {
+	checkColdStartDwellTransition(false);
+}
+
+TEST(ignition, ColdStartDwellReductionWarns9351WithPendingSixMsPlan) {
+	checkColdStartDwellTransition(true);
+}
+
 TEST(ignition, twoCoils) {
 	EngineTestHelper eth(engine_type_e::FRANKENSO_BMW_M73_F);
 

@@ -84,6 +84,11 @@ To inspect what a test actually scheduled/executed (events, timings, sniffer/log
 
 See also unit_tests/test_results/readme.md for unit tests output.
 
+`EngineTestHelper` uses Google Test suite/test names directly in artifact paths.
+Parameterized names contain `/`; with test logging enabled, the missing parent
+directories make the logic-data writer dereference a null `FILE*` on teardown.
+Use explicitly named `TEST` cases sharing a helper when their traces are needed.
+
 #### Replaying `.teeth` (rusEFI tooth logger) captures in trigger tests
 
 `.teeth` files under `unit_tests/tests/trigger/resources/` are rusEFI's own tooth-logger exports, not logic-analyzer traces, and they carry two traps: (1) the logger records in bursts, so long captures contain periodic ~0.6 s holes with no edges at all - each hole costs one resync error that no gap window can remove, so assert error counts per clean section rather than a global zero; (2) the `Sync`/`TDC` columns are the recording ECU's own decoder state and serve as ground truth - if the unit-test error counter increments at the same timestamps the `Sync` column drops, the test reproduces the field behaviour and the remaining errors are in the signal, not the decoder. Captures longer than a few seconds overflow the 16 MB per-test log cap - wrap the test in `ScopedUnitTestCreateLogs logDisabler(false)` (see `test_real_genmax_24_2.cpp`, `test_real_bmw_e90_cam.cpp`).
