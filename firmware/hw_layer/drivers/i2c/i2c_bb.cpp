@@ -223,12 +223,12 @@ msg_t BitbangI2c::__write(uint8_t addr, const uint8_t* writeData, size_t writeSi
 }
 
 msg_t BitbangI2c::__writeRead(uint8_t addr, const uint8_t* writeData, size_t writeSize, uint8_t* readData, size_t readSize) {
-	msg_t res = write(addr, writeData, writeSize);
+	msg_t res = __write(addr, writeData, writeSize);
 	if (res != MSG_OK) {
 		return res;
 	}
 
-	return read(addr, readData, readSize);
+	return __read(addr, readData, readSize);
 }
 
 msg_t BitbangI2c::__read(uint8_t addr, uint8_t* readData, size_t readSize) {
