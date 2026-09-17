@@ -42,9 +42,11 @@ static void checkColdStartDwellTransition(bool reduceDwell, bool missingTeeth = 
 
 	// The N52 log drops 6 -> 3.251616 ms while this cylinder's old plan is pending.
 	// The unchanged-dwell case is a control: identical teeth must fire normally.
-	const float runningDwell = reduceDwell ? 3.251616f : 6.0f;
-	setArrayValues(config->sparkDwellValues, runningDwell);
+	setArrayValues(config->sparkDwellValues, reduceDwell ? 3.251616f : 6.0f);
+	// The tune stores dwell in 0.01 ms steps, so the next plan uses 3.25 ms.
+	const float runningDwell = config->sparkDwellValues[0];
 	engine->ignitionState.updateDwell(rpm, false);
+	ASSERT_FLOAT_EQ(runningDwell, engine->ignitionState.getDwell());
 	ASSERT_FLOAT_EQ(6, event.sparkDwell);
 
 	int chargeCount = 0;
