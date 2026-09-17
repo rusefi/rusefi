@@ -111,12 +111,12 @@ void FanController::onSlowCallbackPwm(bool acActive) {
 	if (acActive) {
 		target += getPwmAcAdder();
 	}
-	
 	target = clampF(getMinPwm(), target, getMaxPwm());
 
-	if (config.disableWhenEngineStopped && !engine->rpmCalculator.isRunning()) {
-        target = 0;
-    }
+	if (disableWhenStopped() && !engine->rpmCalculator.isRunning()) {
+		target = 0;
+		m_currentPwm = 0;
+	}
 
 	pwmTargetPwm = target;
 
