@@ -51,5 +51,9 @@ float vrBoundaryProximityForRpm(float rpm);
 void m74_9VrModel();
 void m74_9VrModelSetK(const char* arg);
 
+// console command: reset the learned model back to seed (shift 0.63 pitch,
+// k=0, rev counters cleared) and persist the reset so it survives a reboot.
+void m74_9VrModelReset();
+
 // periodic slow callback: one boot read request + save-on-stop.
 void m74_9VrModelPeriodic();

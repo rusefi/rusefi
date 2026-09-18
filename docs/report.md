@@ -1,5 +1,34 @@
 # Work Report
 
+## 2026-09-18 - m74_9: 'vrmodelreset' console command to clear the VR model training
+
+Added a console command to reset the L9779 VR amplitude model back to its
+seed, for when the learned per-level gap-shift table (or the k scalar) has
+been poisoned by a bad drive and the operator wants to start learning fresh.
+
+Files:
+- firmware/config/boards/m74_9/m74_9_vr_model.h/.cpp - new
+  m74_9VrModelReset(): resets shiftTablePitch[] to 0.63 pitch, clears
+  vrTableRevolutions[], sets vrAmplitudePerRpm=0, marks vrDirty, then
+  persists the reset.
+- firmware/config/boards/m74_9/board_configuration.cpp - registered as
+  addConsoleAction("vrmodelreset", m74_9VrModelReset).
+
+Decisions:
+- Persistence: when the engine is stopped the command queues a NON-forced
+  write (storageRequestWriteID(EFI_VR_MODEL_RECORD_ID, false)) so the
+  storage manager's own storageAllowWriteID -> custom_board_allowFlashNow
+  gate (incl. its 10-poll debounce) still decides, instead of bypassing it
+  like the periodic saver's forced write. When the engine runs it only
+  resets RAM and defers to m74_9VrModelPeriodic(), which saves on the next
+  stop - same contract as 'vrk'.
+- The reset must reach MFS or the next boot reloads the stale stored
+  record; marking vrDirty + the queued write guarantees the seed (k=0,
+  0.63 pitch) overwrites the old 'VRML' record.
+
+Validation:
+- firmware/config/boards/m74_9/compile_m74_9.sh -> BUILD SUCCESSFUL.
+
 ## 2026-09-16 - VE-table autotune in the Java console (VeAnalyzePane, no firmware changes)
 
 Added a lambda-driven VE autotune tab to the rusEFI console, analogous to

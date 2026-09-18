@@ -187,6 +187,31 @@ void m74_9VrModelSetK(const char* arg) {
 	}
 }
 
+void m74_9VrModelReset() {
+	for (int l = 0; l < 5; l++) {
+		vrShiftTablePitch[l] = 0.63f;
+		vrTableRevolutions[l] = 0;
+	}
+	vrAmplitudePerRpm = 0.0f;
+	vrDirty = true;
+
+	efiPrintf("vrmodel: reset to seed (k=0, shift=0.63 pitch, revs=0)");
+
+	// The reset must reach MFS or the next boot reloads the old stored record.
+	// A write while running is a flash stall, so: stopped -> queue the write
+	// now (storageAllowWriteID admits it, custom_board_allowFlashNow is true
+	// when stopped/self-stim); running -> defer to m74_9VrModelPeriodic(),
+	// which saves on the next stop. Use a NON-forced write so the storage
+	// manager's own custom_board_allowFlashNow gate (incl. its debounce) still
+	// decides, instead of bypassing it like the periodic saver's forced write.
+	if (engine->rpmCalculator.isStopped()) {
+		storageRequestWriteID(EFI_VR_MODEL_RECORD_ID, false);
+		efiPrintf("vrmodel: reset save requested (engine stopped)");
+	} else {
+		efiPrintf("vrmodel: engine running - reset will persist when the engine stops");
+	}
+}
+
 // ---- persistence handlers ----
 
 bool vrModelStorageWrite() {

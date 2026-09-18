@@ -1225,6 +1225,7 @@ void setup_custom_board_overrides() {
 	// VR amplitude model (L9779 auto-hysteresis): 'vrk <mV/rpm>' sets the
 	// calibration scalar (0 = off), 'vrmodel' prints the level/shift/risk.
 	addConsoleAction("vrmodel", m74_9VrModel);
+	addConsoleAction("vrmodelreset", m74_9VrModelReset);
 	addConsoleActionS("vrk", [](const char* arg) {
 		m74_9VrModelSetK(arg);
 	});
