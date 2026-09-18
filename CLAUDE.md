@@ -1093,6 +1093,15 @@ VBATT already measured on PA6 (8.02 divider). (2) optional VREFINT
 rescale - cosmetic, VDDA is stable. (3) hardware - move the pull-ups to
 VDDA: fully ratiometric, battery-independent, full cold range.
 
+UPDATE 2026-09-18: the firmware tracking fix (1) was IMPLEMENTED and then
+REMOVED. It made CLT/IAT JUMP with battery voltage instead of holding steady:
+the resistance math read the live BatteryVoltage sensor (20 Hz low-pass) as
+the bias supply, while the thermistor raw voltage is 2 Hz low-passed - so on
+any battery transient the supply stepped fast and the raw lagged, producing a
+spurious temperature spike. Reverted to the fixed 5.0 V supply. The static
+bias error at a non-12.5 V battery is back; the durable fix is option (3),
+move the pull-ups to VDDA (regulated, ratiometric).
+
 ## m74_9 / CAN dump tool for the stock ECU (can_dump.sh, 2026-08-29)
 
 `java_console/bin/can_dump.sh` -> `:mcp_can:fatJar` -> `com.rusefi.candump.CanDump`:

@@ -24,15 +24,3 @@ void setCommonNTCSensorParameters(ThermistorConf *thermistorConf);
 void setCommonNTCSensor(ThermistorConf *thermistorConf, float pullup);
 void setGmCltSensor(ThermistorConf *thermistorConf);
 void setDodgeSensor(ThermistorConf *thermistorConf, float pullup);
-
-/**
- * Boards whose thermistor pull-up rail is a battery-TRACKING supply (m74_9
- * VTRK1/2 = VBATT/2.5) return the tracking ratio (0.4) for the sensors wired
- * to it; the resistance math then uses the measured battery voltage instead
- * of a fixed 5.0 V. Return 0 for a fixed 5.0 V supply (the default).
- *
- * Overridden by boards; declared here because both init_thermistors.cpp and
- * the board configuration include this header.
- */
-float getThermistorBiasTrackingRatio(const char* msg);
-

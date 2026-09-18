@@ -1,5 +1,44 @@
 # Work Report
 
+## 2026-09-18 - m74_9: removed the CLT/IAT battery-tracking bias logic (revert to fixed 5.0V)
+
+Reverted the VTRK battery-tracking bias for CLT/IAT back to the fixed 5.0V
+supply. The tracking made the coolant/intake readings JUMP with battery
+voltage instead of holding steady, so it was removed at the user's request.
+
+Root cause of the jumping: the resistance math read the live BatteryVoltage
+sensor (20 Hz low-pass) as the divider supply, while the thermistor raw
+voltage is low-passed at 2 Hz. On any battery transient the supply stepped
+fast and the raw lagged, so the temperature spiked. The tracking was
+mathematically correct in steady state (the VBATT/adcVcc factors cancel),
+but the filter mismatch made it dynamically noisy.
+
+Files:
+- firmware/config/boards/m74_9/board_configuration.cpp - removed
+  getThermistorBiasTrackingRatio().
+- firmware/init/sensor/init_thermistors.cpp - removed the weak
+  getThermistorBiasTrackingRatio() default and the tracking branch in
+  configureTempSensorFunction(); always configure(5.0f, ...).
+- firmware/controllers/sensors/thermistors.h - removed the declaration.
+- firmware/controllers/sensors/converters/resistance_func.h/.cpp - removed
+  configureTrackingBias() and m_trackingRatio.
+- unit_tests/tests/sensor/resist_func.cpp - removed the two tracking tests.
+
+Decisions:
+- Full removal, not just the m74_9 override: the tracking feature was used
+  only by m74_9, so the shared machinery was dead code once the override
+  was gone.
+- Tradeoff: the static bias error at a battery voltage other than 12.5V is
+  back (the original VTRK analysis still holds). The durable hardware fix
+  is to move the thermistor pull-ups to the regulated VDDA rail.
+
+Validation:
+- unit_tests: make -j12 -> BUILD SUCCESSFUL; resistance.* -> 4/4 passed.
+
+Open follow-ups:
+- If stable AND battery-independent CLT/IAT is required, move the pull-ups
+  to VDDA (hardware) rather than re-adding live-battery tracking.
+
 ## 2026-09-18 - m74_9: 'vrmodelreset' console command to clear the VR model training
 
 Added a console command to reset the L9779 VR amplitude model back to its
