@@ -112,6 +112,12 @@ void FanController::onSlowCallbackPwm(bool acActive) {
 		target += getPwmAcAdder();
 	}
 	target = clampF(getMinPwm(), target, getMaxPwm());
+
+	if (disableWhenStopped() && Sensor::getOrZero(SensorType::Rpm) == 0) {
+		target = 0;
+		m_currentPwm = 0;
+	}
+
 	pwmTargetPwm = target;
 
 	// Soft-start: limit upward slew rate so ramp from 0-100 takes softStartSec seconds
