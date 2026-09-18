@@ -1960,6 +1960,9 @@ float getConfigValueByHash(const int hash) {
 // keepIdleSolenoidWhenStopped
 		case -414331274:
 			return engineConfiguration->keepIdleSolenoidWhenStopped;
+// canSnifferIncludeBus
+		case -1408814862:
+			return engineConfiguration->canSnifferIncludeBus;
 // nitrousLuaGaugeArmingValue
 		case -1760115393:
 			return engineConfiguration->nitrousLuaGaugeArmingValue;
@@ -5492,6 +5495,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -414331274:
 	{
 		engineConfiguration->keepIdleSolenoidWhenStopped = (int)value;
+		return 1;
+	}
+		case -1408814862:
+	{
+		engineConfiguration->canSnifferIncludeBus = (int)value;
 		return 1;
 	}
 		case -1760115393:

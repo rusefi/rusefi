@@ -56,6 +56,10 @@ Closing MCP stdin shuts down the reader and closes the logical SLCAN channel.
 
 Packet fields remain `seq`, `timestamp` (host Unix time in milliseconds), `id`, `idDec`,
 `length`, and `data` (hex). SLCAN packets additionally include `extended` and `rtr`.
+They also include `busIndex`: 0 for CAN1, 1 for CAN2, 2 for CAN3, or JSON `null`
+when legacy output does not identify the bus. Enable **Include CAN bus in trace**
+in the ECU's CAN sniffer settings and reconnect to preserve bus identity. The
+client queries the format before opening; older firmware remains supported.
 RTR packets retain their requested DLC in `length` and have empty `data`. When supplied
 by the device, `slcanTimestamp` contains its four hexadecimal timestamp characters;
 it does not replace the host timestamp. Non-frame acknowledgments and status replies

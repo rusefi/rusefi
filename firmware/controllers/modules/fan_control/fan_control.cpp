@@ -148,15 +148,15 @@ void FanController::onSlowCallback() {
 
 	bool acActive = engine->module<AcController>()->isAcEnabled();
 
+	auto& pin = getPin();
+	// Refresh status and condition flags for both control modes.
+	bool result = getState(acActive, pin.getLogicValue());
+
 	pwmActive = isPwmEnabled();
 	if (isPwmEnabled()) {
 		onSlowCallbackPwm(acActive);
 		return;
 	}
-
-	auto& pin = getPin();
-
-	bool result = getState(acActive, pin.getLogicValue());
 
 	m_state = result;
 

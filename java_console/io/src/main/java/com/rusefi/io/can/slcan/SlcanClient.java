@@ -36,6 +36,7 @@ public class SlcanClient implements Closeable {
     private final IoStream stream;
     private final String port;
     private final String version;
+    private boolean includesBus;
 
     private SlcanClient(IoStream stream, String port, String version) {
         this.stream = stream;
@@ -47,9 +48,12 @@ public class SlcanClient implements Closeable {
         return port;
     }
 
-    /**
-     * @return response to the 'V' probe, e.g. "V1220"
-     */
+    /** True only when the adapter explicitly advertises the channel-prefix format. */
+    public boolean includesBus() {
+        return includesBus;
+    }
+
+    /** @return response to the 'V' probe, e.g. "V1220" */
     public String getVersion() {
         return version;
     }
@@ -132,6 +136,9 @@ public class SlcanClient implements Closeable {
         stream.getDataBuffer().dropPending();
 
         expectOk("S6");
+        // Closed channel: no frames can race the reply. Old firmware ignores I;
+        // timeout/BELL means untagged frames have unknown bus identity.
+        includesBus = "I1".equals(command(stream, "I"));
         expectOk("O");
         log.info(port + ": SLCAN channel open");
     }
@@ -224,6 +231,9 @@ public class SlcanClient implements Closeable {
         public final String raw;
         public final boolean extended;
         public final boolean rtr;
+        /** Zero-based CAN bus index, or null for untagged legacy traffic. */
+        @Nullable
+        public final Integer busIndex;
         public final int id;
         public final int dlc;
         public final byte[] data;
@@ -233,8 +243,9 @@ public class SlcanClient implements Closeable {
         @Nullable
         public final String timestamp;
 
-        private Frame(String raw, boolean extended, boolean rtr, int id, int dlc, byte[] data, @Nullable String timestamp) {
+        private Frame(String raw, Integer busIndex, boolean extended, boolean rtr, int id, int dlc, byte[] data, @Nullable String timestamp) {
             this.raw = raw;
+            this.busIndex = busIndex;
             this.extended = extended;
             this.rtr = rtr;
             this.id = id;
@@ -248,8 +259,23 @@ public class SlcanClient implements Closeable {
          */
         @Nullable
         public static Frame parse(String line) {
+            return parse(line, false);
+        }
+
+        /** includesBus must come from the adapter's I1 reply, not from a guess. */
+        @Nullable
+        public static Frame parse(String line, boolean includesBus) {
             if (line == null || line.isEmpty()) {
                 return null;
+            }
+            String raw = line;
+            Integer busIndex = includesBus ? Integer.valueOf(0) : null;
+            if (line.charAt(0) == '&' || line.charAt(0) == '$') {
+                busIndex = line.charAt(0) == '&' ? 1 : 2;
+                line = line.substring(1);
+                if (line.isEmpty()) {
+                    return null;
+                }
             }
             char type = line.charAt(0);
             if (type != 't' && type != 'T' && type != 'r' && type != 'R') {
@@ -277,7 +303,7 @@ public class SlcanClient implements Closeable {
                 }
                 int leftover = line.length() - (dataStart + 2 * data.length);
                 String timestamp = leftover == 4 ? line.substring(line.length() - 4) : null;
-                return new Frame(line, extended, rtr, id, dlc, data, timestamp);
+                return new Frame(raw, busIndex, extended, rtr, id, dlc, data, timestamp);
             } catch (NumberFormatException e) {
                 return null;
             }
@@ -287,7 +313,8 @@ public class SlcanClient implements Closeable {
          * @return human-readable form, e.g. "ID=0x300 DLC=6 DATA=[02 AF 4E 41 70 45]"
          */
         public String decode() {
-            StringBuilder result = new StringBuilder(String.format("ID=0x%X DLC=%d", id, dlc));
+            StringBuilder result = new StringBuilder(busIndex == null ? "Bus unknown " : "CAN" + (busIndex + 1) + " ");
+            result.append(String.format("ID=0x%X DLC=%d", id, dlc));
             if (rtr) {
                 result.append(" RTR");
             } else {

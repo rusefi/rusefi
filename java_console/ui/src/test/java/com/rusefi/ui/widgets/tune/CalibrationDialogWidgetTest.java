@@ -658,6 +658,97 @@ public class CalibrationDialogWidgetTest {
     }
 
     @Test
+    public void testSettingHelpIsShownBesideField() {
+        IniFileModel iniFileModel = mock(IniFileModel.class);
+        when(iniFileModel.getCurves()).thenReturn(Collections.emptyMap());
+        when(iniFileModel.getTooltips()).thenReturn(Collections.singletonMap(
+            "helpedField", "First line\\nSecond line https://rusefi.com/docs"));
+
+        com.opensr5.ini.field.StringIniField iniField =
+            new com.opensr5.ini.field.StringIniField("helpedField", 0, 10);
+        when(iniFileModel.findIniField("helpedField")).thenReturn(java.util.Optional.of(iniField));
+
+        DialogModel dialog = new DialogModel("main", "Main",
+            Collections.singletonList(new DialogModel.Field("helpedField", "Helped field")),
+            Collections.emptyList());
+
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+        widget.update(dialog, iniFileModel, new ConfigurationImage(new byte[10]));
+
+        JButton helpButton = findButtonByName(widget.getContentPane(), "settingHelpButton");
+        assertNotNull(helpButton);
+        assertNotNull(helpButton.getIcon());
+        assertTrue(helpButton.getToolTipText().contains("First line<br>Second line"));
+        assertEquals(1, helpButton.getActionListeners().length);
+    }
+
+    @Test
+    public void testSettingHelpHtmlEscapesTextAndLinksUrls() {
+        String html = CalibrationFieldFactory.formatHelpHtml(
+            "Use <unsafe> & value\\nSee https://rusefi.com/docs");
+
+        assertTrue(html.contains("Use &lt;unsafe&gt; &amp; value<br>See "));
+        assertTrue(html.contains(
+            "<a href='https://rusefi.com/docs'>https://rusefi.com/docs</a>"));
+    }
+
+    @Test
+    public void testSettingHelpFitsShortTextAndScrollsWideText() {
+        JScrollPane shortHelp = CalibrationFieldFactory.createHelpScrollPane(
+            "Cylinder diameter in mm");
+        JComponent shortEditor = (JComponent) shortHelp.getViewport().getView();
+        assertEquals(new Insets(8, 8, 8, 8), shortEditor.getBorder().getBorderInsets(shortEditor));
+        assertTrue(shortHelp.getPreferredSize().width < 516);
+        assertEquals(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER,
+            shortHelp.getHorizontalScrollBarPolicy());
+        assertEquals(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
+            shortHelp.getVerticalScrollBarPolicy());
+
+        JScrollPane wideHelp = CalibrationFieldFactory.createHelpScrollPane(
+            String.join("", Collections.nCopies(100, "wide-content")));
+        assertEquals(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED,
+            wideHelp.getHorizontalScrollBarPolicy());
+        assertTrue(wideHelp.getPreferredSize().width <= 516);
+        assertTrue(wideHelp.getHorizontalScrollBar().getPreferredSize().height > 0);
+
+        JScrollPane tallHelp = CalibrationFieldFactory.createHelpScrollPane(
+            String.join("\\n", Collections.nCopies(100, "tall content")));
+        assertEquals(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+            tallHelp.getVerticalScrollBarPolicy());
+        assertEquals(0, ((JEditorPane) tallHelp.getViewport().getView()).getCaretPosition());
+    }
+
+    @Test
+    public void testSettingHelpColumnIsReservedForUnhelpedFields() {
+        IniFileModel iniFileModel = mock(IniFileModel.class);
+        when(iniFileModel.getCurves()).thenReturn(Collections.emptyMap());
+        when(iniFileModel.getTooltips()).thenReturn(Collections.singletonMap("helped", "Help text"));
+
+        com.opensr5.ini.field.StringIniField helped =
+            new com.opensr5.ini.field.StringIniField("helped", 0, 4);
+        com.opensr5.ini.field.StringIniField unhelped =
+            new com.opensr5.ini.field.StringIniField("unhelped", 4, 4);
+        when(iniFileModel.findIniField("helped")).thenReturn(java.util.Optional.of(helped));
+        when(iniFileModel.findIniField("unhelped")).thenReturn(java.util.Optional.of(unhelped));
+
+        DialogModel dialog = new DialogModel("main", "Main", Arrays.asList(
+            new DialogModel.Field("helped", "Same width"),
+            new DialogModel.Field("unhelped", "Same width")), Collections.emptyList());
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+        widget.update(dialog, iniFileModel, new ConfigurationImage(new byte[8]));
+
+        JPanel helpedRow = (JPanel) widget.getContentPane().getComponent(0);
+        JPanel unhelpedRow = (JPanel) widget.getContentPane().getComponent(1);
+        JComponent helpedSlot = findComponentByName(helpedRow, "settingHelpSlot");
+        JComponent unhelpedSlot = findComponentByName(unhelpedRow, "settingHelpSlot");
+        assertNotNull(helpedSlot);
+        assertNotNull(unhelpedSlot);
+        assertEquals(helpedSlot.getPreferredSize(), unhelpedSlot.getPreferredSize());
+        assertNotNull(findButtonByName(helpedSlot, "settingHelpButton"));
+        assertNull(findButtonByName(unhelpedSlot, "settingHelpButton"));
+    }
+
+    @Test
     public void testFieldEditorsShareColumn() {
         IniFileModel iniFileModel = mock(IniFileModel.class);
         when(iniFileModel.getCurves()).thenReturn(Collections.emptyMap());
@@ -733,6 +824,36 @@ public class CalibrationDialogWidgetTest {
         for (Component component : row.getComponents()) {
             if (component instanceof JButton) {
                 return (JButton) component;
+            }
+        }
+        return null;
+    }
+
+    private static JButton findButtonByName(Container container, String name) {
+        for (Component component : container.getComponents()) {
+            if (component instanceof JButton && name.equals(component.getName())) {
+                return (JButton) component;
+            }
+            if (component instanceof Container) {
+                JButton nested = findButtonByName((Container) component, name);
+                if (nested != null) {
+                    return nested;
+                }
+            }
+        }
+        return null;
+    }
+
+    private static JComponent findComponentByName(Container container, String name) {
+        for (Component component : container.getComponents()) {
+            if (component instanceof JComponent && name.equals(component.getName())) {
+                return (JComponent) component;
+            }
+            if (component instanceof Container) {
+                JComponent nested = findComponentByName((Container) component, name);
+                if (nested != null) {
+                    return nested;
+                }
             }
         }
         return null;

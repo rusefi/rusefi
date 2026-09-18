@@ -18,8 +18,10 @@
 /* H743 has all sectors 128K size */
 bootloader_size = 128k;
 flash_start = 0x08000000 + (DEFINED(HAS_BOOTLOADER) ? bootloader_size : 0);
-flash_size = DEFINED(IS_BOOTLOADER) ? bootloader_size : 1M;
+/* Keep the settings boundary in sync with getFlashAddrFirstCopy(). */
+flash_size = DEFINED(IS_BOOTLOADER) ? bootloader_size : (DEFINED(EFI_FLASH_SIZE) ? EFI_FLASH_SIZE : 1M);
 image_size = DEFINED(HAS_BOOTLOADER) ? (flash_size - bootloader_size) : flash_size;
+config_start = 0x08000000 + (DEFINED(EFI_FLASH_SIZE) ? EFI_FLASH_SIZE : 1M);
 
 /* OpenBLT <-> main FW shared area */
 /* 32 bytes so that the stacks that follow stay aligned to the 32-byte MPU guard page granularity */
@@ -39,9 +41,9 @@ _OpenBLT_Shared_Params_Size = DEFINED(HAS_BOOTLOADER) || DEFINED(IS_BOOTLOADER) 
 MEMORY
 {
     bl          : org = 0x08000000, len = bootloader_size
-    flash0 (rx) : org = flash_start, len = image_size    /* Flash bank1+bank2 */
-    flash1 (rx) : org = flash_start, len = image_size    /* Flash bank 1 (code) */
-    flash2 (rx) : org = 0x08100000, len = 1M             /* Flash bank 2 (engine config) */
+    flash0 (rx) : org = flash_start, len = image_size    /* Firmware, including bank 2 in the larger layout */
+    flash1 (rx) : org = flash_start, len = image_size    /* Firmware alias */
+    flash2 (rx) : org = config_start, len = 0x08200000 - config_start /* Remaining flash (engine config) */
     flash3 (rx) : org = 0x00000000, len = 0
     flash4 (rx) : org = 0x00000000, len = 0
     flash5 (rx) : org = 0x00000000, len = 0

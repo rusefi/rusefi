@@ -6,8 +6,12 @@ TEST(arctic, realStartFromFile) {
 	RealTriggerHelper helper;
 	helper.runTest("tests/trigger/resources/arctic-cat.csv", trigger_type_e::TT_ARCTIC_CAT);
 
-	// C9354 and C9351
-	// C9007 and C9008
-	ASSERT_EQ(4u, helper.eth.recentWarnings()->getCount()) << "warningCounter#arcticRealCranking";
+	// Tooth timing warnings remain, but the pending dwell plan no longer
+	// produces spurious coil-overcharge warnings as the global dwell changes.
+	ASSERT_EQ(2u, helper.eth.recentWarnings()->getCount()) << "warningCounter#arcticRealCranking";
+	EXPECT_TRUE(hasRecentWarningCode(ObdCode::CUSTOM_PRIMARY_BAD_TOOTH_TIMING_EARLY));
+	EXPECT_TRUE(hasRecentWarningCode(ObdCode::CUSTOM_PRIMARY_BAD_TOOTH_TIMING_LATE));
+	EXPECT_FALSE(hasRecentWarningCode(ObdCode::CUSTOM_Ignition_Coil_Overcharge_1));
+	EXPECT_FALSE(hasRecentWarningCode(ObdCode::CUSTOM_Ignition_Coil_Overcharge_4));
 	ASSERT_EQ(2165, round(Sensor::getOrZero(SensorType::Rpm)));
 }

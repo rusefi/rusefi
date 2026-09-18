@@ -74,6 +74,7 @@ public class CanSnifferMcp {
 
     interface SlcanConnection extends AutoCloseable {
         String getPort();
+        default boolean includesBus() { return false; }
         String readLine(int timeoutMs) throws IOException;
         void pollStatus() throws IOException;
         void close();
@@ -91,6 +92,7 @@ public class CanSnifferMcp {
         }
         return new SlcanConnection() {
             public String getPort() { return client.getPort(); }
+            public boolean includesBus() { return client.includesBus(); }
             public String readLine(int timeoutMs) throws IOException { return client.readLine(timeoutMs); }
             public void pollStatus() throws IOException { client.pollStatus(); }
             public void close() { client.close(); }
@@ -274,11 +276,12 @@ public class CanSnifferMcp {
             try (SlcanConnection owned = connection) {
                 long nextPoll = System.nanoTime();
                 while (running && !Thread.currentThread().isInterrupted()) {
-                    SlcanClient.Frame frame = SlcanClient.Frame.parse(owned.readLine(200));
+                    SlcanClient.Frame frame = SlcanClient.Frame.parse(owned.readLine(200), owned.includesBus());
                     if (frame != null) {
                         synchronized (messageLock) {
                             CanMessage message = new CanMessage(++messageSeq, System.currentTimeMillis(),
                                     frame.id, frame.dlc, frame.data);
+                            message.busIndex = frame.busIndex;
                             message.extended = frame.extended;
                             message.rtr = frame.rtr;
                             message.slcanTimestamp = frame.timestamp;
@@ -318,6 +321,7 @@ public class CanSnifferMcp {
         final int id;
         final int length;
         final byte[] data;
+        Integer busIndex;
         Boolean extended;
         Boolean rtr;
         String slcanTimestamp;
@@ -340,6 +344,7 @@ public class CanSnifferMcp {
             o.put("length", length);
             o.put("data", HexBinary.printByteArray(data));
             if (extended != null) {
+                o.put("busIndex", busIndex);
                 o.put("extended", extended);
                 o.put("rtr", rtr);
             }

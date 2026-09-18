@@ -1435,6 +1435,9 @@ const ConfigParameter allParameters[] = {
 	{ 0xAC041CDA, // enableTrailingSparks
 		[]() -> float { return engineConfiguration->enableTrailingSparks; },
 		[](float value) { engineConfiguration->enableTrailingSparks = value; } },
+	{ 0xAC0730F2, // canSnifferIncludeBus
+		[]() -> float { return engineConfiguration->canSnifferIncludeBus; },
+		[](float value) { engineConfiguration->canSnifferIncludeBus = value; } },
 	{ 0xAC21DF18, // ltft.enabled
 		[]() -> float { return engineConfiguration->ltft.enabled; },
 		[](float value) { engineConfiguration->ltft.enabled = value; } },

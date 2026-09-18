@@ -1861,7 +1861,7 @@ uint8_t autoscale knockFuelTrim;Maximum Amount of Fuel trim when knock;"%", 1, 0
 	bit nitrousControlEnabled,"enabled","disabled"
 	bit vvlControlEnabled,"enabled","disabled"
 	bit keepIdleSolenoidWhenStopped,"enabled","disabled";By default the idle solenoid is switched off whenever the engine is not turning, to be quieter and save power. Enable this to keep driving it to the position the idle controller asks for, which at zero RPM is the cranking curve for the current coolant temperature - for valves which need to rest somewhere other than de-energized. The valve is only driven for a minute after the engine stops turning, then switched off anyway to protect the coil and the battery.
-	bit unusedBit_Fancy4
+	bit canSnifferIncludeBus,"Yes","No";Include CAN bus in trace using Elmue SLCAN prefixes (CAN1: none, CAN2: &, CAN3: $). Disable for standard SLCAN clients such as SavvyCAN or slcand. Reconnect the sniffer after changing this setting.
 	bit unusedBit_Fancy5
 	bit unusedBit_Fancy6
 	bit unusedBit_Fancy7

@@ -84,6 +84,11 @@ To inspect what a test actually scheduled/executed (events, timings, sniffer/log
 
 See also unit_tests/test_results/readme.md for unit tests output.
 
+`EngineTestHelper` uses Google Test suite/test names directly in artifact paths.
+Parameterized names contain `/`; with test logging enabled, the missing parent
+directories make the logic-data writer dereference a null `FILE*` on teardown.
+Use explicitly named `TEST` cases sharing a helper when their traces are needed.
+
 #### Replaying `.teeth` (rusEFI tooth logger) captures in trigger tests
 
 `.teeth` files under `unit_tests/tests/trigger/resources/` are rusEFI's own tooth-logger exports, not logic-analyzer traces, and they carry two traps: (1) the logger records in bursts, so long captures contain periodic ~0.6 s holes with no edges at all - each hole costs one resync error that no gap window can remove, so assert error counts per clean section rather than a global zero; (2) the `Sync`/`TDC` columns are the recording ECU's own decoder state and serve as ground truth - if the unit-test error counter increments at the same timestamps the `Sync` column drops, the test reproduces the field behaviour and the remaining errors are in the signal, not the decoder. Captures longer than a few seconds overflow the 16 MB per-test log cap - wrap the test in `ScopedUnitTestCreateLogs logDisabler(false)` (see `test_real_genmax_24_2.cpp`, `test_real_bmw_e90_cam.cpp`).
@@ -233,6 +238,10 @@ Any code reachable from a unit-test build (`unit_tests/` itself, plus firmware s
 - Reflection is prohibited in Java unit tests — add an explicit `...ForUnitTest`/`...ForTests` seam on the production class or widen a member to package-private instead (see [Java Connectivity & UI Unit Testing](docs/java-connectivity-ui-unit-testing.md)).
 
 ## Embedded Code Practices
+
+For H7 ADC mux work, verify DMA placement against the linked ELF and MPU settings,
+not just the `NO_CACHE` name: H743 and H723 use different non-cacheable regions.
+Build commands, host callback tests, and hardware checks: [H7 ADC mux](docs/h7-adc-mux.md).
 
 - **Static allocation only**: Embedded firmware uses only static memory allocation. No heap usage (`new`, `malloc`, `std::vector`, `std::string`, `std::map`, etc.) is permitted in production firmware code. Use fixed-size containers like `cyclic_buffer` from `rusefi/containers/cyclic_buffer.h` instead. Memory is limited and fragmentation must be avoided.
 - **Performance matters**: This is a hard real-time application. Fuel and ignition events must fire at precise crank angles. Avoid unnecessary computation in hot paths. Use lower priority threads for expensive computation.

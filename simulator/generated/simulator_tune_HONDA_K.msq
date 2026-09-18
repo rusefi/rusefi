@@ -560,7 +560,7 @@
         <constant name="brakePedalPin">"NONE"</constant>
         <constant name="brakePedalPinMode">"PULLUP"</constant>
         <constant digits="0" name="byFirmwareVersion" units="index">0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">20260917</constant>
+        <constant digits="0" name="calibrationBirthday" units="">20260918</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="angle">95</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -589,6 +589,7 @@
         <constant name="canSniffer2_handleInjected">"No"</constant>
         <constant name="canSniffer2_listenOurs">"Yes"</constant>
         <constant name="canSniffer2_read">"No"</constant>
+        <constant name="canSnifferIncludeBus">"Yes"</constant>
         <constant name="canSnifferTxBus">"None"</constant>
         <constant name="canTxPin">"NONE"</constant>
         <constant name="canVssNbcType">"BMW_e46"</constant>
@@ -5176,8 +5177,8 @@
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260916" nPages="1" signature="rusEFI master.2026.09.17.f407-discovery.421737195" version="5.0"/>
-    <bibliography author="rusEFI 20260916" writeDate="date"/>
+    <versionInfo firmwareInfo="20260917" nPages="1" signature="rusEFI master.2026.09.18.f407-discovery.736493604" version="5.0"/>
+    <bibliography author="rusEFI 20260917" writeDate="date"/>
     <settings/>
     <userComments/>
 </msq>

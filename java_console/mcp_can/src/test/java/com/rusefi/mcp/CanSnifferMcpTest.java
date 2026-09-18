@@ -62,6 +62,8 @@ class CanSnifferMcpTest {
         assertEquals(true, rtr.get("rtr"));
         assertEquals(8L, rtr.get("length"));
         assertEquals("", rtr.get("data"));
+        assertTrue(rtr.containsKey("busIndex"));
+        assertNull(rtr.get("busIndex"));
         JSONArray packets = (JSONArray) body(results.get(2)).get("packets");
         assertEquals(1, packets.size());
         JSONObject extended = (JSONObject) packets.get(0);
@@ -79,6 +81,22 @@ class CanSnifferMcpTest {
         assertEquals(3L, body(results.get(7)).get("totalReceived"));
         assertEquals(1, serial.closes.get());
         assertTrue(serial.polls.get() > 0);
+    }
+
+    @Test
+    void channelPrefixesSurvivePacketSerialization() throws Exception {
+        FakeSlcan serial = new FakeSlcan("t1231AA", "&t1231BB", "$t1231CC");
+        serial.includesBus = true;
+        List<JSONObject> results = run(call("connect", "{}")
+                + call("wait_for_packet", "{\"dataRegex\":\"CC\",\"timeoutMs\":2000}")
+                + call("read_packets", "{}"), port -> serial, "--backend", "slcan");
+        JSONArray packets = (JSONArray) body(results.get(2)).get("packets");
+        assertEquals(3, packets.size());
+        for (int bus = 0; bus < 3; bus++) {
+            JSONObject packet = (JSONObject) packets.get(bus);
+            assertEquals((long) bus, packet.get("busIndex"));
+            assertEquals("0x123", packet.get("id"));
+        }
     }
 
     @Test
@@ -140,12 +158,14 @@ class CanSnifferMcpTest {
         final AtomicInteger closes = new AtomicInteger();
         final AtomicInteger polls = new AtomicInteger();
         boolean failPoll;
+        boolean includesBus;
 
         FakeSlcan(String... lines) {
             this.lines.addAll(Arrays.asList(lines));
         }
 
         public String getPort() { return "COM42"; }
+        public boolean includesBus() { return includesBus; }
 
         public String readLine(int timeoutMs) {
             try {

@@ -1391,6 +1391,7 @@ public class VariableRegistryValues {
 	public static final int operation_mode_e_FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR = 6;
 	public static final int operation_mode_e_OM_NONE = 0;
 	public static final int operation_mode_e_TWO_STROKE = 3;
+	public static final String OUTPUT_CHANNEL_SD_CARD_MODE = "sdCardMode";
 	public static final String OUTPUT_CHANNEL_SD_LOGGING_INTERNAL = "sd_logging_internal";
 	public static final String OUTPUT_CHANNEL_SD_MSD = "sd_msd";
 	public static final String OUTPUT_CHANNEL_SD_PRESENT = "sd_present";
@@ -1523,7 +1524,7 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 995791434;
+	public static final int SIGNATURE_HASH = 1527843918;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1852,7 +1853,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2026.09.17.premium-quick-test.995791434";
+	public static final String TS_SIGNATURE = "rusEFI master.2026.09.18.premium-quick-test.1527843918";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2216;

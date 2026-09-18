@@ -165,6 +165,7 @@ public class CalibrationDialogWidget {
      */
     public void reset() {
         workingImage = null;
+        CalibrationFieldFactory.closeHelpPopup();
         clearLiveComponents();
         contentPane.removeAll();
         contentPane.revalidate();
@@ -172,6 +173,7 @@ public class CalibrationDialogWidget {
     }
 
     public void update(DialogModel dialogModel, IniFileModel iniFileModel, ConfigurationImage ci) {
+        CalibrationFieldFactory.closeHelpPopup();
         final DialogModel capturedDm = dialogModel;
         final IniFileModel capturedIni = iniFileModel;
         currentViewRestorer = () -> update(capturedDm, capturedIni, workingImage);
@@ -220,6 +222,7 @@ public class CalibrationDialogWidget {
     }
 
     public void update(String key, IniFileModel iniFileModel, ConfigurationImage ci) {
+        CalibrationFieldFactory.closeHelpPopup();
         final String capturedKey = key;
         final IniFileModel capturedIniForRestore = iniFileModel;
         currentViewRestorer = () -> update(capturedKey, capturedIniForRestore, workingImage);
@@ -388,11 +391,13 @@ public class CalibrationDialogWidget {
             }
         };
         Optional<IniField> iniField = iniFileModel.findIniField(field.getKey());
+        Map<String, String> tooltips = iniFileModel.getTooltips();
+        String helpText = tooltips == null ? null : tooltips.get(field.getKey());
         JPanel row = iniField.map(value -> {
             try {
                 return CalibrationFieldFactory.createFieldRow(
                     field, value, ci, workingImage, onChange, onShowInPinout,
-                    fieldLabelWidth, fieldEditorWidth);
+                    fieldLabelWidth, fieldEditorWidth, helpText);
             } catch (OrdinalOutOfRangeException e) {
                 log.warn("Skipping field " + field.getKey() + " with out-of-range ordinal: " + e.getMessage());
                 return CalibrationFieldFactory.createLabelRow(field);
@@ -481,6 +486,7 @@ public class CalibrationDialogWidget {
 
     public void destroy() {
         active = false;
+        CalibrationFieldFactory.closeHelpPopup();
         clearLiveComponents();
         readoutListenerToken.remove();
     }

@@ -28,6 +28,10 @@ The sniffer must be enabled in TunerStudio:
 1. Go to **Connectivity -> CAN Bus**.
 2. Enable **CAN Sniffer** for the desired bus (CAN1, CAN2, etc.).
 3. (Optional) Set **Sniffer Tx CAN bus** if you intend to transmit messages via the sniffer.
+4. **Include CAN bus in trace** is checked for new/default tunes. Uncheck it for
+   standard SLCAN clients such as SavvyCAN or `slcand`. Reconnect the sniffer after
+   changing this setting; the format stays fixed until the channel is closed.
+   Existing tunes keep legacy output until explicitly enabled.
 
 ## Protocol Support
 
@@ -47,6 +51,7 @@ The sniffer supports the standard Lawicel ASCII protocol. Commands are terminate
 | `N` | Get serial number. | `N` |
 | `Z0` / `Z1` | Disable/Enable timestamps. | `Z1` |
 | `F` | Read status flags. | `F` |
+| `I` | rusEFI read-only trace format query: `I1` means channel prefixes, `I0` means legacy. While closed, reports the configured format for the next open; while open, reports the active format. | `I` |
 
 ### Bit Rate Codes (`Sx`)
 
@@ -90,6 +95,28 @@ Where:
 - `D`: Data bytes (Hex).
 - `TTTT`: Optional 16-bit timestamp (if enabled with `Z1`).
 
+With **Include CAN bus in trace** enabled, frames use the
+[Elmue CANable 2.5 channel-prefix convention](https://netcult.ch/elmue/CANable%20Firmware%20Update/):
+
+| Bus | Example (ID 0x123, data AA BB) |
+| --- | --- |
+| CAN1 (index 0) | `t1232AABB\r` |
+| CAN2 (index 1) | `&t1232AABB\r` |
+| CAN3 (index 2) | `$t1232AABB\r` |
+
+Prefixes also apply to `T`, `r`, and `R` frames and ECU transmit echoes. The CAN
+identifier, payload, and optional timestamp retain their existing encoding.
+This adopts only the channel-prefix frame format, not Elmue's full command set.
+PC transmit commands still use **Sniffer Tx CAN bus**; prefixed transmit commands
+are not supported.
+
+The console and CAN MCP query `I` before opening. An old adapter that does not
+answer, or an `I0` reply, leaves unprefixed frames' bus unknown. Prefixed frames
+always identify their bus. The console shows `CAN1`/`CAN2`/`CAN3` or `Bus unknown`;
+candump export uses `can0`/`can1`/`can2` or `canUnknown`. Legacy captures cannot
+recover the bus identity discarded by the firmware. Standard SLCAN clients do
+not understand the prefixes: uncheck the option when using them.
+
 ## Implementation Details
 
 ### Configuration Fields
@@ -100,6 +127,10 @@ The sniffer behavior is controlled by the following fields in `engineConfigurati
 - `canSniffer[index].listenOurs`: If enabled, the sniffer will also report messages transmitted by the ECU itself on this bus. **Default: on for every bus** (`engine_configuration.cpp`, gates the TX echo in `can_msg_tx.cpp`).
 - `canSniffer[index].handleInjected`: If enabled, messages transmitted from the PC via the sniffer will be treated by the ECU as if they were received from the CAN bus (useful for simulation/testing).
 - `canSnifferTxBus`: Specifies which CAN bus to use for transmitting messages sent from the PC. **Default: None**, in which case `t`/`T` transmit commands are refused with BELL.
+- `canSnifferIncludeBus`: Global trace format bit. **Default: on in new/default
+  tunes**. Reuses a spare bit, so existing configuration offsets are unchanged
+  and older tunes with that bit clear retain legacy output. There is no migration
+  that overrides a user's choice to turn it off.
 
 Consequence of the defaults (a common surprise, verified on hardware 2026-08-23): **out of the box the sniffer streams only the ECU's own transmitted frames** — the bus can be fully alive with other nodes and the SLCAN stream will not show a single frame from them until `canSnifferN_read` is enabled for that bus in the tune. If the ID inventory you see is suspiciously identical to what the ECU sends, check the `read` flags before suspecting wiring.
 

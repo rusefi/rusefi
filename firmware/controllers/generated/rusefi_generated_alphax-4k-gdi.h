@@ -1489,6 +1489,7 @@
 #define operation_mode_e_FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR 6
 #define operation_mode_e_OM_NONE 0
 #define operation_mode_e_TWO_STROKE 3
+#define OUTPUT_CHANNEL_SD_CARD_MODE "sdCardMode"
 #define OUTPUT_CHANNEL_SD_LOGGING_INTERNAL "sd_logging_internal"
 #define OUTPUT_CHANNEL_SD_MSD "sd_msd"
 #define OUTPUT_CHANNEL_SD_PRESENT "sd_present"
@@ -1642,7 +1643,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 3251319988
+#define SIGNATURE_HASH 2709564080
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2287,7 +2288,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.09.17.alphax-4k-gdi.3251319988"
+#define TS_SIGNATURE "rusEFI master.2026.09.18.alphax-4k-gdi.2709564080"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'

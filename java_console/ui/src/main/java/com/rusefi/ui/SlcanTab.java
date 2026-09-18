@@ -191,7 +191,7 @@ public class SlcanTab {
                         continue;
                     }
                     lastActivity = System.currentTimeMillis();
-                    SlcanClient.Frame frame = SlcanClient.Frame.parse(line);
+                    SlcanClient.Frame frame = SlcanClient.Frame.parse(line, client.includesBus());
                     if (frame == null) {
                         continue;
                     }
@@ -364,14 +364,21 @@ public class SlcanTab {
         File file = chooser.getSelectedFile();
         try (PrintWriter writer = new PrintWriter(Files.newBufferedWriter(file.toPath(), StandardCharsets.US_ASCII))) {
             for (FrameRecord record : snapshot) {
-                String hexData = record.frame.rtr ? "" : HexUtil.asString(record.frame.data);
-                writer.printf("(%d.%06d) can0 %X#%s%n", record.wallClockMs / 1000, (record.wallClockMs % 1000) * 1000, record.frame.id, hexData);
+                writer.println(formatCandump(record.wallClockMs, record.frame));
             }
         } catch (IOException e) {
             messageHandler.accept("Failed to save: " + e);
             return;
         }
         messageHandler.accept("Saved " + snapshot.size() + " frame(s) to " + file.getAbsolutePath());
+    }
+
+    static String formatCandump(long wallClockMs, SlcanClient.Frame frame) {
+        String bus = frame.busIndex == null ? "canUnknown" : "can" + frame.busIndex;
+        String payload = frame.rtr ? "R" + frame.dlc : HexUtil.asString(frame.data);
+        String id = String.format(frame.extended ? "%08X" : "%03X", frame.id);
+        return String.format(java.util.Locale.ROOT, "(%d.%06d) %s %s#%s",
+                wallClockMs / 1000, (wallClockMs % 1000) * 1000, bus, id, payload);
     }
 
     private static class FrameRecord {

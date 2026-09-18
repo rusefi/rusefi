@@ -1654,11 +1654,11 @@ struct output_channels_s {
 	 */
 	uint8_t engine = (uint8_t)0;
 	/**
-	 * need 4 byte alignment
-	 * units: units
+	 * SD: Mount mode
+	 * units: code
 	 * offset 931
 	 */
-	uint8_t alignmentFill_at_931[1] = {};
+	uint8_t sdCardMode = (uint8_t)0;
 };
 static_assert(sizeof(output_channels_s) == 932);
 

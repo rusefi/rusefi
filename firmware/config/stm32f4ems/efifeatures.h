@@ -311,6 +311,10 @@
 #define BOARD_ADS7128_COUNT 0
 #endif
 
+#ifndef BOARD_PCA9685_COUNT
+#define BOARD_PCA9685_COUNT 0
+#endif
+
 #define EFI_ANALOG_SENSORS TRUE
 
 #ifndef EFI_MAX_31855

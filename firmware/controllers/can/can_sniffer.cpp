@@ -13,6 +13,7 @@
 #if EFI_PROD_CODE && EFI_CAN_SUPPORT
 
 #include "can_sniffer.h"
+#include "slcan_frame.h"
 
 #if CAN_SNIFFER
 
@@ -87,51 +88,15 @@ uint32_t CanSniffer::read_hex_number(const char * str, uint8_t len)
 template<typename T>
 void CanSniffer::handle_can_message(const size_t busIndex, const T &cmsg, efitick_t nowNt)
 {
-	// handled at caller level
-	// current implementation have one sniffer CAN channel
-	(void)busIndex;
-
 	if (!terminal_open) {
 		return;
 	}
 
-	//       cmd  id  dlc data   \r  0
-	char buf[ 1  + 8 + 1 + 8*2 + 2*2 + 1 + 1];
-	char * str = buf;
-
-	uint32_t id = CAN_ID(cmsg);
-
-	if (!CAN_ISX(cmsg)) { // standard identifier
-		*str++ = CAN_ISRTR(cmsg) ? 'r':'t';
-		str = put_hex_digit(str, id >> 8);
-		str = put_hex_byte(str, id & 0xff);
+	char buf[slcan::FrameBufferSize];
+	if (slcan::formatFrame(buf, busIndex, includeBus, CAN_ID(cmsg), CAN_ISX(cmsg),
+		CAN_ISRTR(cmsg), cmsg.DLC, cmsg.data8, ts, static_cast<uint16_t>(NT2US(nowNt)))) {
+		putstr(buf);
 	}
-	else{ // extended identifier
-		*str++ = CAN_ISRTR(cmsg) ? 'R':'T';
-		str = put_hex_byte(str, (id >> 24) & 0xff);
-		str = put_hex_byte(str, (id >> 16) & 0xff);
-		str = put_hex_byte(str, (id >>  8) & 0xff);
-		str = put_hex_byte(str, (id >>  0) & 0xff);
-	}
-
-	str = put_hex_digit(str, cmsg.DLC);
-
-	if (!CAN_ISRTR(cmsg)){ // no data on RTR
-		for(uint8_t i = 0; i < cmsg.DLC; i++){
-			str = put_hex_byte(str, cmsg.data8[i]);
-		}
-	}
-
-	if (ts) {
-		uint16_t nowUs = NT2US(nowNt);
-		str = put_hex_byte(str, (nowUs >> 8) & 0xff);
-		str = put_hex_byte(str, (nowUs >> 0) & 0xff);
-	}
-
-	*str++ = '\r';
-	*str++ = 0;
-
-	putstr(buf);
 }
 
 bool CanSniffer::can_init(slcan_can_mode_e mode) {
@@ -287,6 +252,7 @@ void CanSniffer::executeCommand() {
 			// Bit rate and interface state are controlled by the ECU.
 			// The sniffer just opens its logical terminal.
 			if (baudrate_configured && !terminal_open && can_init(can_mode_normal)) {
+				includeBus = engineConfiguration->canSnifferIncludeBus;
 				terminal_open = 1;
 				transmit_enabled = 1;
 				putstr("\r");
@@ -298,6 +264,7 @@ void CanSniffer::executeCommand() {
 
 		case 'L': // open terminal listen only
 			if (baudrate_configured && !terminal_open && can_init(can_mode_listen)) {
+				includeBus = engineConfiguration->canSnifferIncludeBus;
 				terminal_open = 1;
 				transmit_enabled = 0;
 				putstr("\r");
@@ -309,6 +276,7 @@ void CanSniffer::executeCommand() {
 
 		case 'l': // (lower case L) open terminal in loopback mode (non standard feature)
 			if (baudrate_configured && !terminal_open && can_init(can_mode_loopback)) {
+				includeBus = engineConfiguration->canSnifferIncludeBus;
 				terminal_open = 1;
 				transmit_enabled = 1;
 				putstr("\r");
@@ -332,6 +300,10 @@ void CanSniffer::executeCommand() {
 			else {
 				putstr("\a"); // bell
 			}
+			break;
+
+		case 'I': // rusEFI trace format query (read-only): I0 legacy, I1 bus prefixes
+			putstr((terminal_open ? includeBus : engineConfiguration->canSnifferIncludeBus) ? "I1\r" : "I0\r");
 			break;
 
 		case 'F': // request status
