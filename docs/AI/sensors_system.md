@@ -37,6 +37,45 @@ The sensor framework decouples sensor *producers* (ADC, CAN, frequency inputs, L
 - **CAN/OBD**: `consumeObdSensors` reroutes CLT/IAT/TPS/RPM to OBD PID polling and skips analog init.
 - **Lua**: `LuaSensor` lets scripts publish any `SensorType`; `AuxAnalog1..8` expose raw voltages to Lua.
 
+## MAP Sensor Presets: INI Metadata and C++ Calibration
+
+MAP preset names/IDs are represented in both the generated INI and C++, but the
+built-in voltage-to-pressure calibration values live only in C++. Selecting a
+"Sensor model" writes `map_sensor_type`; it does not copy preset calibration
+points into the tune's custom calibration fields.
+
+| Source | Responsibility |
+|---|---|
+| [`firmware/integration/rusefi_config.txt`](../../firmware/integration/rusefi_config.txt), `custom air_pressure_sensor_type_e` | Ordered display labels used to generate the INI choices for `map_sensor_type` and `baroSensor_type`. Each label's zero-based position is its stored numeric ID. |
+| [`firmware/controllers/algo/rusefi_enums.h`](../../firmware/controllers/algo/rusefi_enums.h), `air_pressure_sensor_type_e` | Explicit C++ IDs (`MT_CUSTOM = 0` through `MT_BOSCH_3_BAR = 16`). These must match the label positions above. |
+| [`firmware/init/sensor/init_map.cpp`](../../firmware/init/sensor/init_map.cpp), `getMapCfg()` | Built-in calibration lookup: `{voltage1, pressure1_kPa, voltage2, pressure2_kPa}`. `configureMapFunction()` uses these points to configure a `LinearFunc`. |
+| [`firmware/tunerstudio/tunerstudio.template.ini`](../../firmware/tunerstudio/tunerstudio.template.ini), `mapSensorAnalog` / `mapCustomCal` | Dialog layout: displays the model selector and shows custom calibration fields only for ID 0. It does not define a second table of MAP calibration values. |
+| `firmware/tunerstudio/generated/rusefi_*.ini` | Generated per-board copies of the labels and dialog layout; edit the inputs above, not these outputs. |
+
+For example, selecting "Bosch 3 Bar" stores ID 16, which maps to
+`MT_BOSCH_3_BAR`. Firmware uses 11 kPa at 0.39 V and 310 kPa at 4.65 V.
+The conversion is linear between the two points; the separate
+`mapErrorDetectionTooLow` / `mapErrorDetectionTooHigh` settings determine
+accepted pressure limits.
+
+For `MT_CUSTOM`, firmware instead reads `mapLowValueVoltage`,
+`map.sensor.lowValue`, `mapHighValueVoltage`, and `map.sensor.highValue` from
+the tune. Named presets ignore those four values. Fast and slow MAP share
+the same converter, as do throttle-inlet and compressor-discharge pressure.
+Analog baro selects its own model through `baroSensor.type` using the same
+lookup. One current caveat: the custom branch always reads the MAP calibration
+fields, even for baro; it does not read `baroSensor.lowValue/highValue`.
+
+When adding a preset, append a stable numeric ID to the C++ enum, add the
+matching label at that ID's position in `rusefi_config.txt`, and implement its
+calibration in `getMapCfg()`. Preserve existing IDs/order for saved-tune
+compatibility. The current INI field uses bits `[0:4]`; adding IDs beyond 31
+also requires reviewing that encoding. Normal builds regenerate the INI.
+When correcting an existing preset's calibration, edit the C++ lookup and
+check any descriptive enum comments. In particular, `MT_MPX4250` and
+`MT_MPX4250A` currently share the same C++ calibration despite the older
+comment describing a distinct MPX4250A curve.
+
 ## Implementation Notes
 - **Redundancy is not fallback**: `RedundantSensor` returns the *average* of two agreeing channels; disagreement beyond `maxDifference` yields `UnexpectedCode::Inconsistent`, not a switch to one channel.
 - **MAP min-buffer**: per-cycle averages go through a circular buffer and the *minimum* is used, rejecting intake pulsation spikes.
