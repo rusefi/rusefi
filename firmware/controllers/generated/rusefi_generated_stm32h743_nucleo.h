@@ -2293,7 +2293,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.09.19.stm32h743_nucleo.3399097113"
+#define TS_SIGNATURE "rusEFI master.2026.09.20.stm32h743_nucleo.3399097113"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
