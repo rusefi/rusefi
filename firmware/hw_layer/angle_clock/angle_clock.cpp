@@ -93,8 +93,13 @@ static uint32_t s_firedInj     = 0;
 static uint32_t s_lateArmDwell = 0;
 static uint32_t s_lateArmSpark = 0;
 static uint32_t s_lateArmInj   = 0;
+static uint32_t s_lateArmDwellGuard    = 0;  // armGuard refusal (no basis / stale phase)
+static uint32_t s_lateArmDwellTickPast = 0;  // target tick already in the past
 static uint32_t s_maxLateTicks = 0;
 static uint32_t s_immediate    = 0;
+
+// Most recent failed dwell arm (diagnostic snapshot, read by lockstats).
+static DwellArmRefusal s_dwellRefusal;
 
 static uint32_t s_initAcDelta = 0;
 static uint32_t s_initNtDelta = 0;
@@ -349,22 +354,60 @@ TRIGGER_RAM_CODE static bool armGuard(float targetAngle,
     return true;
 }
 
+// Record the most recent dwell arm refusal for lockstats diagnostics. Runs
+// only on the failure path, so the flash-resident body is not a hot-path cost.
+static void recordDwellRefusal(uint8_t branch, uint8_t cyl, bool earlyWindow,
+                               float targetAngle, float callerPhase, float callerNextPhase,
+                               float remaining, uint32_t atTick, uint32_t ccrCnt) {
+    s_dwellRefusal.branch = branch;
+    s_dwellRefusal.window = earlyWindow ? 0 : 1;
+    s_dwellRefusal.cyl = cyl;
+    s_dwellRefusal.targetAngle = targetAngle;
+    s_dwellRefusal.callerPhase = callerPhase;
+    s_dwellRefusal.callerNextPhase = callerNextPhase;
+    s_dwellRefusal.currentPhase = s_currentPhase;
+    s_dwellRefusal.cycleDeg = s_cycleDeg;
+    s_dwellRefusal.ticksPerDegree = s_ticksPerDegree;
+    s_dwellRefusal.remaining = remaining;
+    s_dwellRefusal.atTick = atTick;
+    s_dwellRefusal.ccrCnt = ccrCnt;
+    s_dwellRefusal.lateArmTotal = s_lateArmDwell;
+}
+
 TRIGGER_RAM_CODE bool angleClockArmDwell(int cyl, float targetAngle,
                                           action_s action,
-                                          float /*callerPhase*/,
-                                          float /*callerNextPhase*/) {
-    float remaining; uint32_t delay;
-    if (!armGuard(targetAngle, remaining, delay)) {
+                                          float callerPhase,
+                                          float callerNextPhase,
+                                          bool earlyWindow) {
+    const float remaining = remainingAngle(targetAngle);
+
+    // armGuard, inlined so each refusal is attributed to its exact branch in
+    // the snapshot (the shared armGuard() is kept for spark/injection).
+    if (s_ticksPerDegree <= 0.0f) {
         s_lateArmDwell++;
+        s_lateArmDwellGuard++;
+        recordDwellRefusal(0, static_cast<uint8_t>(cyl), earlyWindow, targetAngle,
+                           callerPhase, callerNextPhase, remaining, 0, DWELL_TIMER->CNT);
+        return false;
+    }
+    if (remaining > MAX_LEAD_DEG) {
+        s_lateArmDwell++;
+        s_lateArmDwellGuard++;
+        recordDwellRefusal(1, static_cast<uint8_t>(cyl), earlyWindow, targetAngle,
+                           callerPhase, callerNextPhase, remaining, 0, DWELL_TIMER->CNT);
         return false;
     }
 
-    const uint32_t atTick =
-        angleClockTickForNt(s_edgeTimestamp) + delay;
+    const uint32_t delay  = angleClockDelayTicks(remaining, s_ticksPerDegree);
+    const uint32_t atTick = angleClockTickForNt(s_edgeTimestamp) + delay;
+    const uint32_t cnt    = DWELL_TIMER->CNT;
 
-    if (static_cast<int32_t>(atTick - static_cast<uint32_t>(DWELL_TIMER->CNT)) <
+    if (static_cast<int32_t>(atTick - cnt) <
         static_cast<int32_t>(ARM_MARGIN_TICKS)) {
         s_lateArmDwell++;
+        s_lateArmDwellTickPast++;
+        recordDwellRefusal(2, static_cast<uint8_t>(cyl), earlyWindow, targetAngle,
+                           callerPhase, callerNextPhase, remaining, atTick, cnt);
         return false;
     }
 
@@ -621,6 +664,9 @@ uint32_t angleClockFiredInj()        { return s_firedInj; }
 uint32_t angleClockLateArmDwell()    { return s_lateArmDwell; }
 uint32_t angleClockLateArmSpark()    { return s_lateArmSpark; }
 uint32_t angleClockLateArmInj()      { return s_lateArmInj; }
+uint32_t angleClockLateArmDwellGuard()    { return s_lateArmDwellGuard; }
+uint32_t angleClockLateArmDwellTickPast() { return s_lateArmDwellTickPast; }
+const DwellArmRefusal& angleClockDwellRefusal() { return s_dwellRefusal; }
 uint32_t angleClockMaxLateTicks()    { return s_maxLateTicks; }
 uint32_t angleClockImmediateFireCount() { return s_immediate; }
 uint32_t angleClockInitAcDelta()     { return s_initAcDelta; }
@@ -630,7 +676,9 @@ uint32_t angleClockInitPsc()         { return s_initPsc; }
 void angleClockResetStats() {
     s_firedDwell = s_firedSpark = s_firedInj = 0;
     s_lateArmDwell = s_lateArmSpark = s_lateArmInj = 0;
+    s_lateArmDwellGuard = s_lateArmDwellTickPast = 0;
     s_maxLateTicks = s_immediate = 0;
+    s_dwellRefusal.branch = 0xFF;  // sentinel: no refusal since last reset
 }
 
 #endif // EFI_ANGLE_CLOCK && EFI_PROD_CODE

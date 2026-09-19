@@ -10,7 +10,8 @@
 void onTriggerEventSparkLogic(float rpm, efitick_t edgeTimestamp, float currentPhase, float nextPhase, float nextNextPhase);
 void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 		float rpm, float dwellMs, float dwellAngle, float sparkAngle,
-		efitick_t edgeTimestamp, float currentPhase, float nextPhase);
+		efitick_t edgeTimestamp, float currentPhase, float nextPhase,
+		bool earlyWindow);
 #if EFI_ANGLE_CLOCK
 // Called EARLY in mainTriggerCallback (before handleFuel, ~20-30 µs after the
 // tooth edge) to arm dwell starts on TMR2 while handoff elapsed time is still
