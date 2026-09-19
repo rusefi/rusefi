@@ -13,5 +13,5 @@ Gpio getWarningLedPin() {
 	return Gpio::Unassigned;
 }
 
-void setBoardConfigOverrides() {
+void setup_custom_board_overrides() {
 }
