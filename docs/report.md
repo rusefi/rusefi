@@ -1,5 +1,51 @@
 # Work Report
 
+## 2026-09-19 - m74_9: dwell lateArm 0->54->100% analysis + failure-split telemetry
+
+Investigated why angclk dwell falls back to TIM5 while spark/inj stay on the
+hardware angle clock. Log (efi_log_2026-09-19_13_16_33_241) showed the
+progression across three lockstats snapshots:
+
+  angclk dwell fired=20380 lateArm=0     (13:22:28)
+  angclk dwell fired=13594 lateArm=16198 (13:26:47)
+  angclk dwell fired=0     lateArm=24364 (13:30:11)
+
+Invariant confirmed: spark fired == dwell fired + dwell lateArm (every dwell,
+TMR2 or TIM5, produces exactly one spark via angleClockArmSparkFromNow). The
+engine runs; only the dwell arming degrades. A 6424 rpm excursion at 13:24:08
+sits between snapshots 1 and 2; ignition gate went OFF at 13:30:59.
+
+Hardware ruled OUT by the full lockstats second line (identical across all
+three snapshots): psc=71 (correct), nvic T2/T4/T3=3 (correct),
+maxLateUs=71/69/79 us (not ~2^32 -> no race/wrap), initRate=40001/40006
+(0.0125% measurement skew; real drift would show as maxLateUs growth, which
+is absent). So this is a LOGIC bug in dwell arming, not a timer/priority/
+clock issue.
+
+angleClockArmDwell fails in exactly two places (armGuard: no basis OR
+remaining > 30 deg; tick-past: atTick already behind TMR2->CNT), but both
+incremented the single s_lateArmDwell counter, so the branch was
+indistinguishable. Since spark/inj share s_ticksPerDegree/s_currentPhase and
+stay healthy, the failure must be dwell-specific: the dwell is armed in the
+wrong window/phase (early window stops matching -> current window -> tick-past
+at ~150-250 us elapsed), or a caller-vs-angle-clock phase divergence.
+
+Change inventory:
+| File | Change |
+| --- | --- |
+| firmware/hw_layer/angle_clock/angle_clock.h/.cpp | split s_lateArmDwell into s_lateArmDwellGuard + s_lateArmDwellTickPast; added DwellArmRefusal snapshot (branch/window/cyl/target/caller/current phase/cycleDeg/ticksPerDegree/remaining/atTick/CNT); angleClockArmDwell inlines the armGuard checks, records the snapshot on each refusal, gains a bool earlyWindow caller marker |
+| firmware/controllers/engine_cycle/spark_logic.h/.cpp | scheduleSparkEvent threads earlyWindow through (true from scheduleDwellEarlyIfDue, false from onTriggerEventSparkLogic) |
+| firmware/config/boards/m74_9/board_configuration.cpp | lockstats prints 'angclk dwell lateArm split: guard=%u tickPast=%u' and the last-refusal snapshot line |
+
+Validation:
+- compile_m74_9.sh -> BUILD SUCCESSFUL.
+- unit_tests make -j12 -> compiled + linked (rusefi_test) successfully.
+
+Open follow-ups:
+- Next car session: run lockstats; the split (guard vs tickPast) plus the
+  refusal snapshot (target/callerPh/curPh/rem) will name the exact branch and
+  the phase divergence, enabling a targeted fix instead of guessing.
+
 ## 2026-09-18 - m74_9: removed the CLT/IAT battery-tracking bias logic (revert to fixed 5.0V)
 
 Reverted the VTRK battery-tracking bias for CLT/IAT back to the fixed 5.0V
