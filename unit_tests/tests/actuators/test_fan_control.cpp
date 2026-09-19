@@ -396,7 +396,7 @@ TEST(Actuators, Fan2Pwm_IndicatorsUpdate_Issue10248) {
 	checkFanPwmIndicatorsUpdate<FanControl2>();
 }
 
-TEST(Actuators, FanPwm_DisableWhenStopped) {
+TEST(Actuators, Fan_Pwm_DisableWhenStopped) {
     EngineTestHelper eth(engine_type_e::TEST_ENGINE);
     MockAcOff mockAc;
     engine->module<AcController>().set(&mockAc);
@@ -405,12 +405,21 @@ TEST(Actuators, FanPwm_DisableWhenStopped) {
     // Enable safety flag to inhibit fan when the engine is stopped
     engineConfiguration->disableFan1WhenStopped = true;
 
-    // Engine stopped (0 RPM) and high coolant temperature (105°C)
-    engine->rpmCalculator.setRpmValue(0);
-    Sensor::setMockValue(SensorType::Clt, 105);
+    // Set coolant temperature above threshold to trigger fan activation (e.g. 100 °C)
+    Sensor::setMockValue(SensorType::Clt, 100.0f);
 
+    // 1. Simulate stopped engine (0 RPM)
+    Sensor::setMockValue(SensorType::Rpm, 0);
+    updateFans();
+    EXPECT_EQ(0.0f, engine->module<FanControl1>()->pwmAppliedPwm);
+
+    // 2. Simulate running engine (1000 RPM)
+    Sensor::setMockValue(SensorType::Rpm, 1000);
+
+    // Advance mock time by 1 second to allow soft-start ramp-up
+    eth.moveTimeForwardSec(1);
     updateFans();
 
-    // TDB Coverage: Assert current buggy behavior on master (PWM stays active even when engine is stopped)
+    // With engine running, temperature hot, and time advanced, PWM output must be active (> 0%)
     EXPECT_GT(engine->module<FanControl1>()->pwmAppliedPwm, 0.0f);
 }
