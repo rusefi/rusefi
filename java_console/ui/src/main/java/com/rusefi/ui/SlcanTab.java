@@ -10,6 +10,7 @@ import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
 import com.opensr5.ini.field.ScalarIniField;
+import com.rusefi.ui.widgets.TriStateCheckBox;
 
 import javax.swing.*;
 import javax.swing.Timer;
@@ -283,7 +284,7 @@ public class SlcanTab {
                 continue;
             }
 
-            JCheckBox cb = new JCheckBox(busName);
+            TriStateCheckBox cb = new TriStateCheckBox(busName);
 
             uiContext.addConfigImageListener(image -> {
                 updateCheckbox(cb, fieldName1, fieldName2, ini, image);
@@ -304,7 +305,7 @@ public class SlcanTab {
                 ConfigurationImage image = bp2.getBinaryProtocolState().getConfigurationImage();
                 if (image == null) return;
 
-                int newValue = cb.isSelected() ? 1 : 0;
+                int newValue = cb.getState() == TriStateCheckBox.State.CHECKED ? 1 : 0;
                 applyValue(image, ini.getIniField(fieldName1), newValue);
                 applyValue(image, ini.getIniField(fieldName2), newValue);
 
@@ -319,7 +320,7 @@ public class SlcanTab {
         return busPanel;
     }
 
-    private void updateCheckbox(JCheckBox cb, String field1, String field2, IniFileModel ini, ConfigurationImage image) {
+    private void updateCheckbox(TriStateCheckBox cb, String field1, String field2, IniFileModel ini, ConfigurationImage image) {
         Double v1 = image.readNumericValue(ini.getIniField(field1));
         Double v2 = image.readNumericValue(ini.getIniField(field2));
         if (v1 == null || v2 == null) return;
@@ -328,11 +329,9 @@ public class SlcanTab {
         boolean b2 = v2 != 0;
 
         if (b1 == b2) {
-            cb.setSelected(b1);
-            cb.setBackground(null);
+            cb.setState(b1 ? TriStateCheckBox.State.CHECKED : TriStateCheckBox.State.UNCHECKED);
         } else {
-            cb.setSelected(true); // show as checked but grayed
-            cb.setBackground(java.awt.Color.LIGHT_GRAY);
+            cb.setState(TriStateCheckBox.State.INDETERMINATE);
         }
     }
 
