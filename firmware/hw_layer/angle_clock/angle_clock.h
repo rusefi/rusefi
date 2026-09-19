@@ -57,11 +57,34 @@ uint32_t angleClockNow();
 void angleClockOnTooth(efitick_t edgeTimestamp, float currentPhase,
                         float cycleDeg, float ticksPerDegree);
 
+// Diagnostic snapshot of the most recent failed dwell arm.
+//   branch: 0 = no angle->time basis (s_ticksPerDegree <= 0)
+//           1 = stale phase (remaining > MAX_LEAD_DEG)
+//           2 = target tick already in the past (tick-past)
+//   window: 0 = early (scheduleDwellEarlyIfDue), 1 = current (onTriggerEventSparkLogic)
+struct DwellArmRefusal {
+    uint8_t  branch;
+    uint8_t  window;
+    uint8_t  cyl;
+    float    targetAngle;      // dwellAngle passed by the caller
+    float    callerPhase;      // currentPhase at the call site
+    float    callerNextPhase;  // nextPhase at the call site
+    float    currentPhase;     // angle clock s_currentPhase
+    float    cycleDeg;         // angle clock s_cycleDeg (720 for 4-stroke)
+    float    ticksPerDegree;   // angle clock s_ticksPerDegree
+    float    remaining;        // remainingAngle(targetAngle) in angle-clock phase frame
+    uint32_t atTick;           // computed target tick (tick-past branch only)
+    uint32_t ccrCnt;           // DWELL_TIMER->CNT at refusal
+    uint32_t lateArmTotal;     // s_lateArmDwell at refusal
+};
+
 // Arm the dwell-start channel for `cylinderIndex` on TMR2.
+// `earlyWindow` records which caller armed it (true = early window, false =
+// current window) - diagnostic only, the arm logic is identical either way.
 // Returns false when the delay would exceed the scheduler lead window or when
 // the target tick is already in the past - caller falls back to TIM5.
 bool angleClockArmDwell(int cylinderIndex, float targetAngle, action_s action,
-                         float callerPhase, float callerNextPhase);
+                         float callerPhase, float callerNextPhase, bool earlyWindow);
 
 // Arm the spark-fire channel for `cylinderIndex` on TMR4 (16-bit).
 // Falls back at delays > ~8 ms (< ~200 rpm on 60-2, 2-tooth lead).
@@ -112,6 +135,14 @@ uint32_t angleClockFiredInj();
 uint32_t angleClockLateArmDwell();
 uint32_t angleClockLateArmSpark();
 uint32_t angleClockLateArmInj();
+
+// Split of angleClockLateArmDwell() by failure reason - tells which of the two
+// arm-failure branches fires when dwell falls back to TIM5.
+uint32_t angleClockLateArmDwellGuard();     // armGuard: no basis OR stale phase
+uint32_t angleClockLateArmDwellTickPast();  // target tick already in the past
+
+// Snapshot of the most recent failed dwell arm (see DwellArmRefusal).
+const DwellArmRefusal& angleClockDwellRefusal();
 uint32_t angleClockMaxLateTicks();
 uint32_t angleClockImmediateFireCount();
 

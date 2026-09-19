@@ -483,13 +483,15 @@ void turnSparkPinHighStartCharging(IgnitionEvent *event) {
 
 
 void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
-		float rpm, float dwellMs, float dwellAngle, float sparkAngle, efitick_t edgeTimestamp, float currentPhase, float nextPhase) {
+		float rpm, float dwellMs, float dwellAngle, float sparkAngle, efitick_t edgeTimestamp, float currentPhase, float nextPhase, bool earlyWindow) {
 	UNUSED(rpm);
 #if EFI_ANGLE_CLOCK
 	// The overdwell rescue is anchored at the actual charge moment in the
 	// angle-clock build, not at schedule time - dwellMs is only used here by
 	// the time-based build's schedule-time rescue anchor.
 	UNUSED(dwellMs);
+#else
+	UNUSED(earlyWindow);
 #endif // EFI_ANGLE_CLOCK
 
 	float angleOffset = dwellAngle - currentPhase;
@@ -560,7 +562,7 @@ void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 #endif // EFI_ANGLE_CLOCK
 
 #if EFI_ANGLE_CLOCK
-		if (!angleClockArmDwell(event->cylinderIndex, dwellAngle, action_s::make<turnSparkPinHighStartCharging>( event ), currentPhase, nextPhase))
+		if (!angleClockArmDwell(event->cylinderIndex, dwellAngle, action_s::make<turnSparkPinHighStartCharging>( event ), currentPhase, nextPhase, earlyWindow))
 #endif // EFI_ANGLE_CLOCK
 		{
 			engine->scheduler.schedule("dwell", &event->dwellStartTimer, chargeTime, action_s::make<turnSparkPinHighStartCharging>( event ));
@@ -828,9 +830,7 @@ void onTriggerEventSparkLogic(float rpm, efitick_t edgeTimestamp, float currentP
 */
 #endif // EFI_ANTILAG_SYSTEM
 
-			// The watchdog must use the dwell saved with these angles. Global dwell
-			// may have changed since this cylinder's pending plan was prepared.
-			scheduleSparkEvent(limitedSpark, event, rpm, event->sparkDwell, dwellAngle, sparkAngle, edgeTimestamp, currentPhase, nextPhase);
+			scheduleSparkEvent(limitedSpark, event, rpm, dwellMs, dwellAngle, sparkAngle, edgeTimestamp, currentPhase, nextPhase, false);
 		}
 	}
 }
@@ -910,7 +910,7 @@ void scheduleDwellEarlyIfDue(float rpm, efitick_t edgeTimestamp,
         //   7000 rpm: delay(6°)=571 ticks=143 µs >> 20 ticks elapsed. OK.
         scheduleSparkEvent(limitedSpark, event, rpm, dwellMs,
                            dwellAngle, sparkAngle, edgeTimestamp,
-                           currentPhase, nextPhase);
+                           currentPhase, nextPhase, true);
     }
 }
 #endif // EFI_ANGLE_CLOCK

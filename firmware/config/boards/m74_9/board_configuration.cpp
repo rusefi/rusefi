@@ -1147,6 +1147,24 @@ void setup_custom_board_overrides() {
 			(unsigned)((NVIC->IP[28] >> 4) & 0xF),
 			(unsigned)((NVIC->IP[30] >> 4) & 0xF),
 			(unsigned)((NVIC->IP[29] >> 4) & 0xF));
+		// Dwell refusal split: which arm-failure branch fires, plus the
+		// last-refusal phase snapshot to measure the caller-vs-angle-clock
+		// phase divergence directly.
+		efiPrintf("angclk dwell lateArm split: guard=%u tickPast=%u",
+			(unsigned)angleClockLateArmDwellGuard(),
+			(unsigned)angleClockLateArmDwellTickPast());
+		{
+			const DwellArmRefusal& r = angleClockDwellRefusal();
+			if (r.branch != 0xFF) {
+				efiPrintf("angclk dwell refusal branch=%u win=%u cyl=%u target=%.1f callerPh=%.1f/%.1f curPh=%.1f cycle=%.1f tpd=%.1f rem=%.1f atTick=%u cnt=%u tot=%u",
+					(unsigned)r.branch, (unsigned)r.window, (unsigned)r.cyl,
+					r.targetAngle, r.callerPhase, r.callerNextPhase,
+					r.currentPhase, r.cycleDeg, r.ticksPerDegree, r.remaining,
+					(unsigned)r.atTick, (unsigned)r.ccrCnt, (unsigned)r.lateArmTotal);
+			} else {
+				efiPrintf("angclk dwell refusal: none this window");
+			}
+		}
 		// TIM5 CC2 injection close: cc2fired must track inj_open_TMR3.
 		// cc2fired=0 means injectors never close (CC2 not firing).
 		efiPrintf("injCC2 scheduled=%u fired=%u nvic TIM5=%u (want 3)",
