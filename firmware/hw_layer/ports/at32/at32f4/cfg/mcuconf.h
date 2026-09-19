@@ -17,6 +17,8 @@
 #ifndef MCUCONF_H
 #define MCUCONF_H
 
+#include "../../interrupt_priority.h"
+
 /*
  * STM32F4xx drivers configuration.
  * The following settings override the default settings present in
