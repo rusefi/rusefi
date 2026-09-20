@@ -39,6 +39,8 @@ static float measureDcGain(float samplingFrequency, float cutoffFrequency) {
 }
 
 TEST(Biquad, LowpassDcGain) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE); // Biquad::filter reads verboseQuad.
+
 	// ADC subscription rates, from the fastest sensor bandwidth down to the slowest we allow
 	EXPECT_NEAR(measureDcGain(500, 200), 1.0f, 1e-3);
 	EXPECT_NEAR(measureDcGain(500, 10), 1.0f, 1e-3);
@@ -55,6 +57,8 @@ TEST(Biquad, LowpassDcGain) {
 }
 
 TEST(Biquad, LowpassSettles) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE); // Biquad::filter reads verboseQuad.
+
 	// The slowest filter we allow is the one most likely to walk off on its own
 	Biquad bq;
 	bq.configureLowpass(1000, 1);
