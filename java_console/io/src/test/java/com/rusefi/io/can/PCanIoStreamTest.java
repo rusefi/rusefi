@@ -6,6 +6,10 @@ import peak.can.basic.TPCANStatus;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.rusefi.config.generated.VariableRegistryValues.CAN_ECU_SERIAL_TX_ID;
 import static org.junit.jupiter.api.Assertions.*;
@@ -154,5 +158,62 @@ class PCanIoStreamTest {
         harness.readers.get(0).run();
         assertEquals(0, driver.reads);
         assertTrue(harness.waits.isEmpty());
+    }
+
+    @Test
+    void isClosedDuringDriverRelease() throws Exception {
+        CountDownLatch uninitializeStarted = new CountDownLatch(1);
+        CountDownLatch releaseUninitialize = new CountDownLatch(1);
+        FakeDriver driver = new FakeDriver() {
+            @Override
+            public TPCANStatus uninitialize() {
+                uninitializeStarted.countDown();
+                try {
+                    assertTrue(releaseUninitialize.await(15, TimeUnit.SECONDS));
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    fail("Interrupted while holding the close monitor", e);
+                }
+                return super.uninitialize();
+            }
+        };
+        Harness harness = new Harness(driver);
+        CountDownLatch observerStarted = new CountDownLatch(1);
+        CountDownLatch observerReturned = new CountDownLatch(1);
+        AtomicBoolean observerClosed = new AtomicBoolean();
+        FutureTask<Void> closeResult = new FutureTask<>(() -> {
+            harness.stream.close();
+            return null;
+        });
+        Thread closer = new Thread(closeResult);
+        Thread observer = new Thread(() -> {
+            observerStarted.countDown();
+            observerClosed.set(harness.stream.isClosed());
+            observerReturned.countDown();
+        });
+
+        closer.start();
+        try {
+            assertTrue(uninitializeStarted.await(5, TimeUnit.SECONDS));
+            observer.start();
+            assertTrue(observerStarted.await(5, TimeUnit.SECONDS));
+            // PR #10287: checking whether the stream is closed must not wait
+            // for close() to finish, or the two threads can get stuck.
+            assertTrue(observerReturned.await(5, TimeUnit.SECONDS),
+                "isClosed must not acquire the monitor held by close()");
+            assertFalse(observerClosed.get(), "The closed flag is set after driver release");
+        } finally {
+            releaseUninitialize.countDown();
+            closer.join(5_000);
+            observer.join(5_000);
+        }
+
+        assertFalse(closer.isAlive(), "close() did not finish after driver release");
+        assertFalse(observer.isAlive(), "isClosed() did not finish after close completed");
+        closeResult.get(5, TimeUnit.SECONDS);
+        assertEquals(1, driver.releases);
+        assertEquals(0, observerReturned.getCount());
+        assertFalse(observerClosed.get());
+        assertTrue(harness.stream.isClosed());
     }
 }
