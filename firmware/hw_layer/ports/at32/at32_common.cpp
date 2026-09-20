@@ -204,12 +204,39 @@ int getRemainingStack(thread_t *otp) {
 __attribute__((weak)) void boardPrepareForStandby() {
 }
 
-Reset_Cause_t getMCUResetCause() {
-	return decodeAt32ResetCause(0);
+static Reset_Cause_t readMCUResetCause() {
+	uint32_t flags = RCC->CSR;
+#ifndef EFI_BOOTLOADER
+	// Preserve the flags for the application when running in the bootloader.
+	RCC->CSR |= RCC_CSR_RMVF;
+#endif
+	return decodeAt32ResetCause(flags);
 }
 
-const char *getMCUResetCause(Reset_Cause_t) {
-	return "Unknown";
+// Capture before startup can change the flags; subsequent reports use the cache.
+static const volatile Reset_Cause_t resetCause = readMCUResetCause();
+
+Reset_Cause_t getMCUResetCause() {
+	return resetCause;
+}
+
+const char *getMCUResetCause(Reset_Cause_t cause) {
+	switch (cause) {
+	case Reset_Cause_IWatchdog:
+		return "Independent hardware watchdog";
+	case Reset_Cause_WWatchdog:
+		return "Window watchdog";
+	case Reset_Cause_Soft_Reset:
+		return "NVIC_SystemReset or by debugger";
+	case Reset_Cause_NRST_Pin:
+		return "Reset from NRST pin";
+	case Reset_Cause_POR:
+		return "Power on/power-down reset";
+	case Reset_Cause_Illegal_Mode:
+		return "Low-power reset";
+	default:
+		return "Unknown";
+	}
 }
 
 #endif /* EFI_PROD_CODE */

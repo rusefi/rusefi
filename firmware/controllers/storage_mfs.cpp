@@ -57,6 +57,11 @@ StorageStatus SettingStorageMFS::store(size_t id, const uint8_t *ptr, size_t siz
 	efiPrintf("MFS: Writing storage ID %d ... %d bytes", id, size);
 	efitick_t startNt = getTimeNowNt();
 
+#if defined(AT32F4XX)
+	// A deferred bank-2 garbage collection can still stall the AT32 CPU.
+	suspendLinearTimeWatcher();
+#endif
+
 	// TODO: add watchdog disable and enable in case MFS is on internal flash and one bank
 	mfs_error_t err = mfsWriteRecord(m_drv, id, size, ptr);
 

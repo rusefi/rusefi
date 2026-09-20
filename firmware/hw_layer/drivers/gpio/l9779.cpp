@@ -194,12 +194,7 @@ static const char* l9779_pin_names[L9779_SIGNALS] = {
 /* true if parity of input x is odd */
 bool L9779::spi_parity_odd(uint16_t x)
 {
-	x ^= x >> 8;
-	x ^= x >> 4;
-	x ^= x >> 2;
-	x ^= x >> 1;
-
-	return (x & 1);
+	return l9779HasOddParity(x);
 }
 
 int L9779::spi_validate(uint16_t rx)
@@ -254,7 +249,7 @@ int L9779::spi_rw(uint16_t tx, uint16_t *rx_ptr)
 	SPIDriver *spi = cfg->spi_bus;
 
 	/* set parity */
-	tx |= !spi_parity_odd(tx);
+	tx = l9779PrepareSpiWord(tx);
 
 	/* Acquire ownership of the bus. */
 	spiAcquireBus(spi);

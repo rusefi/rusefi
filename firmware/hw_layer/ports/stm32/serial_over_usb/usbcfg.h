@@ -33,8 +33,10 @@
                             (HAL_USE_USB_CDC_3 ? 1 : 0) + \
                             (HAL_USE_USB_CDC_4 ? 1 : 0) )
 
+#if HAL_USE_USB
 extern const USBConfig usbcfg;
 extern const SerialUSBConfig serusbcfg[NUM_CDC_INSTANCES];
 extern SerialUSBDriver SDU[NUM_CDC_INSTANCES];
 
 void usbPopulateSerialNumber(const uint8_t* serialNumber, size_t bytes);
+#endif
