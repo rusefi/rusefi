@@ -411,8 +411,9 @@ TEST(Actuators, FanPwm_DisableWhenStopped) {
 
     updateFans();
 
-    // TDB Coverage: Assert current buggy behavior on master (PWM stays active even when engine is stopped)
-    EXPECT_GT(engine->module<FanControl1>()->pwmAppliedPwm, 0.0f);
+    // Engine stopped with the safety flag set: PWM output must be fully inhibited (#10251)
+    EXPECT_EQ(0.0f, engine->module<FanControl1>()->pwmTargetPwm);
+    EXPECT_EQ(0.0f, engine->module<FanControl1>()->pwmAppliedPwm);
 }
 
 // Companion to FanPwm_DisableWhenStopped: with the same safety flag set, a running
