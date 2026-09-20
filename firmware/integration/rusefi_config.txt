@@ -226,6 +226,11 @@ struct_no_prefix engine_configuration_s
 
 #define DEFAULT_RPM_AXIS_HIGH_VALUE 7000
 
+! Default CLT curve display range in Celsius, separate from allowed temperature-bin limits.
+! -40 is also -40 Fahrenheit; unit-aware curves convert the upper bound via cltHighXaxis.
+#define DEFAULT_CLT_AXIS_LOW_VALUE -40
+#define DEFAULT_CLT_AXIS_HIGH_VALUE 120
+
 #define CRANKING_CURVE_SIZE 8
 
 
