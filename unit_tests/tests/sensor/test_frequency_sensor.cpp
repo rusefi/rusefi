@@ -30,8 +30,7 @@ public:
 	 *  and fire callback on every falling edge.
 	 *  (as Sensor works by falling edge)
 	 */
-	void generatePwm(EngineTestHelper &eth, float freqHz) {
-		constexpr auto periods = 1000;
+	void generatePwm(EngineTestHelper &eth, float freqHz, int periods = 1000) {
 		auto period = (1 / freqHz);
 
 		std::cout << "PERIOD: " << period << std::endl;
@@ -66,4 +65,16 @@ TEST_F(FrequencySensorTest, testValidWithPwm) {
 		EXPECT_TRUE(s.Valid);
 		EXPECT_NEAR(s.Value, 10, 1e-3);
 	}
+}
+
+TEST_F(FrequencySensorTest, testZeroFilterParameter) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	dut.initIfValid(Gpio::A0, identityFunc, 0);
+
+	generatePwm(eth, 10, 10000);
+
+	const auto result = Sensor::get(SensorType::FuelEthanolPercent);
+	ASSERT_TRUE(result.Valid);
+	// An unconfigured cutoff is clamped so incoming edges still produce a frequency.
+	EXPECT_NEAR(result.Value, 10, 0.01f);
 }

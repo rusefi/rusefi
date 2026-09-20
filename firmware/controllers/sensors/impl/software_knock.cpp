@@ -117,6 +117,12 @@ void initSoftwareKnock() {
 
 		if (engineConfiguration->knockFrequency > 0.01) {
 			frequencyHz = engineConfiguration->knockFrequency;
+
+			// A center frequency this far below the sample rate can't be represented by the filter.
+			if (frequencyHz < KNOCK_SAMPLE_RATE / 1000.0f) {
+				criticalError("Invalid knock band frequency: %.2f Hz", frequencyHz);
+				return;
+			}
 		} else {
 		  frequencyHz = 1000 * bore2frequency(engineConfiguration->cylinderBore);
       frequencyHz = engineConfiguration->knockDetectionUseDoubleFrequency ? 2 * frequencyHz : frequencyHz;
