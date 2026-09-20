@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "lua_biquad.h"
+#include "unit_test_framework.h"
 
 
 TEST(util, luaBiQuad100_1) {
@@ -32,7 +33,6 @@ TEST(util, luaBiQuad1000_01) {
   EngineTestHelper eth(engine_type_e::TEST_ENGINE); // LOL engineConfiguration->verboseQuad
   LuaBiQuad b;
 
-  b.configureLowpass(1000, 0.1);
-
-  ASSERT_NEAR(b.filter(25), 23.64, EPS2D);
+  // This cutoff cannot be represented reliably by the float filter.
+  EXPECT_FATAL_ERROR(b.configureLowpass(1000, 0.1));
 }
