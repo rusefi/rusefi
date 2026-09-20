@@ -118,7 +118,7 @@ class TabbedPanelConnectionStatusTest {
     }
 
     @Test
-    void issue10282LateOutputResponseCurrentlyShowsLoadingAndConnectedForClosedStream() throws Exception {
+    void issue10282LateOutputResponseKeepsClosedStreamDisconnected() throws Exception {
         TestStream stream = new TestStream();
         BinaryProtocol protocol = spy(new BinaryProtocol(new LinkManager(), stream));
         try {
@@ -144,17 +144,14 @@ class TabbedPanelConnectionStatusTest {
             }).when(protocol).executeCommand(eq(Integration.TS_OUTPUT_COMMAND), any(byte[].class), anyString());
 
             setStatus(ConnectionStatusValue.CONNECTED);
-            // Current bad behavior, per coverage-first workflow for #10282. A fix should
-            // reject the stale response, keep the overlay hidden and indicator disconnected.
-            assertTrue(protocol.requestOutputChannels());
+            assertFalse(protocol.requestOutputChannels());
             flushEdt();
 
             assertTrue(protocol.isClosed());
             SwingUtilities.invokeAndWait(() -> {
-                assertTrue(overlay.isVisible());
-                assertTrue(paintsColor(overlay, Color.WHITE));
-                assertEquals(Color.GREEN, indicatorColor());
-                assertTrue(icon.getToolTipText().startsWith("Connected."));
+                assertFalse(overlay.isVisible());
+                assertEquals(Color.RED, indicatorColor());
+                assertTrue(icon.getToolTipText().startsWith("Disconnected."));
             });
             verify(protocol).executeCommand(eq(Integration.TS_OUTPUT_COMMAND), any(byte[].class), anyString());
         } finally {
