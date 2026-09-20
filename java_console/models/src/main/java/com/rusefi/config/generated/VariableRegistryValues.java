@@ -401,6 +401,8 @@ public class VariableRegistryValues {
 	public static final int debug_mode_e_DBG_UNUSED41 = 41;
 	public static final int debug_mode_e_DBG_UNUSED_42 = 42;
 	public static final int debug_mode_e_UNUSED23 = 23;
+	public static final int DEFAULT_CLT_AXIS_HIGH_VALUE = 120;
+	public static final int DEFAULT_CLT_AXIS_LOW_VALUE = -40;
 	public static final int DEFAULT_RPM_AXIS_HIGH_VALUE = 7000;
 	public static final int DEFAULT_SELT_STIM_RPM = 1200;
 	public static final int DEFAULT_SELT_STIM_VVT0 = 23;
@@ -1524,7 +1526,6 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 1527843918;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1853,7 +1854,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2026.09.20.premium-quick-test.1527843918";
+	public static final String TS_SIGNATURE = "rusEFI master.2026.09.20.premium-quick-test.3029718351";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2216;
