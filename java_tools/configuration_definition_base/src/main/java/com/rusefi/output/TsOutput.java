@@ -33,7 +33,7 @@ public class TsOutput {
     private boolean directiveSeen = false; // pretty lame hack but acceptable since we are moving away from directive anyway
 
     public TsOutput(boolean longForm) {
-        this(longForm, new TreeSet<>(String.CASE_INSENSITIVE_ORDER));
+        this(longForm, new TreeSet<>(String.CASE_INSENSITIVE_ORDER), 1);
     }
 
     public TsOutput(boolean longForm, TreeSet<String> usedNames) {
@@ -197,6 +197,7 @@ public class TsOutput {
                     return writeFields(cs.getTsFields(), prefix + extraPrefix, tsPosition);
                 }
 
+                // [tag:wue_analyzer] Also supplies the offsets used by the WUE analyzer aliases.
                 if (isConstantsSection && !configField.isDirective() && !configField.isUnusedField()
                         && (!configField.isArray() || configField.getSize(next) != 0)) {
                     // Template-only byte offsets: aliases can share storage without hard-coded addresses.

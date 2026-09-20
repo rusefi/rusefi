@@ -18,6 +18,7 @@ class PlainConfigHandler {
     }
 
     public PlainConfigHandler(String definitionInputFile, int pageIndex, List<String> softPrepends, TreeSet<String> usedNames) {
+        // [tag:wue_analyzer] Pass the page number through for alias offset names.
         tsProjectConsumer = new PlainTsProjectConsumer(readerState, usedNames, pageIndex);
         readerState.setDefinitionInputFile(definitionInputFile);
         for (String soft : softPrepends)

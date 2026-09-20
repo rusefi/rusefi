@@ -24,6 +24,7 @@ public class PlainTsProjectConsumer implements ConfigurationConsumer {
     public PlainTsProjectConsumer(ReaderStateImpl readerState, TreeSet<String> usedNames, int pageIndex) {
         this.readerState = readerState;
         this.pageIndex = pageIndex;
+        // [tag:wue_analyzer] Keep alias offsets tied to the page being generated.
         consumerState = new TSProjectConsumer.TSProjectConsumerState(readerState, new TsOutput(true, usedNames, pageIndex));
     }
 

@@ -15,7 +15,11 @@ import com.rusefi.output.TsOutput;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.io.ByteArrayInputStream;
 import java.io.StringBufferInputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.TreeSet;
 
 import static com.rusefi.AssertCompatibility.assertEquals;
@@ -200,6 +204,71 @@ public class TSProjectConsumerTest {
         TSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
         // This should NOT throw exception because we allow re-definitions if there is a directive in between
         state.readBufferedReader(test, tsProjectConsumer);
+    }
+
+    @Test
+    public void wueAliasOffsetsArePublishedForPageOne() {
+        String test = "struct config\n" +
+                "    float[2] cltFuelCorr;warmup correction;\"ratio\", 1, 0, 0, 5, 2\n" +
+                "    uint8_t[2] lambdaTable;target;\"afr\", 1, 0, 0, 25, 1\n" +
+                "end_struct\n";
+
+        ReaderStateImpl state = new ReaderStateImpl();
+        TSProjectConsumer consumer = new TestTSProjectConsumer(state);
+        state.readBufferedReader(test, consumer);
+
+        assertEquals("0", state.getVariableRegistry().get("TS_PAGE_1_OFFSET_cltFuelCorr"));
+        assertEquals("8", state.getVariableRegistry().get("TS_PAGE_1_OFFSET_lambdaTable"));
+    }
+
+    @Test
+    public void wueAliasesStayInConstantsPageOneBeforeGeneratedSettingContextHelp() throws IOException {
+        ReaderStateImpl state = new ReaderStateImpl();
+        state.setDefinitionInputFile("wue-alias-fixture.txt");
+        VariableRegistry registry = state.getVariableRegistry();
+        registry.put("TS_PAGE_FIELD_BLOCKS", "page = 2\npage2Field = scalar, U08, 0, \"\", 1, 0, 0, 1, 0\n"
+                + "page = 5\npage5Field = scalar, U08, 0, \"\", 1, 0, 0, 1, 0\n");
+
+        String definition = "#define FUEL_RPM_COUNT 4\n"
+                + "#define FUEL_LOAD_COUNT 3\n"
+                + "#define PACK_MULT_AFR_CFG 10\n"
+                + "#define CLT_FUEL_CURVE_SIZE 2\n"
+                + "struct config\n"
+                + "    uint32_t precedingField;nonzero offset;\"\", 1, 0, 0, 1, 0\n"
+                + "    float[CLT_FUEL_CURVE_SIZE] cltFuelCorr;canonical ratio;\"ratio\", 1, 0, 0, 5, 2\n"
+                + "    uint8_t[FUEL_LOAD_COUNT x FUEL_RPM_COUNT] lambdaTable;canonical target;\"ratio\", 1, 0, 0, 25, 1\n"
+                + "end_struct\n";
+
+        TestTSProjectConsumer consumer = new TestTSProjectConsumer(state);
+        state.readBufferedReader(definition, consumer);
+
+        TsFileContent content = consumer.getTsFileContent(new ByteArrayInputStream(
+                wueAliasTemplateRegion().getBytes(StandardCharsets.UTF_8)));
+        String generated = consumer.writeContentForTest(consumer.getContent(), content);
+
+        assertTrue(generated.startsWith("[Constants]\npage = 2\n"));
+        assertTrue(generated.contains("page = 5\npage5Field"));
+        assertTrue(generated.contains("page = 1\nwueAnalyzeTargetTable = array, U08, 12, [4x3], \"afr\", {1/10}, 0, 0, 25, 1, noMsqSave"));
+        assertTrue(generated.contains("wueAnalyzeCltFuelCorr = array, F32, 4, [2], \"%\", 100, 0, 0, 500, 0, noMsqSave"));
+        assertTrue(generated.contains("cltFuelCorr = array, F32, 4, [2], \"ratio\", 1, 0, 0, 5, 2"));
+        assertTrue(generated.contains("lambdaTable = array, U08, 12, [4x3], \"ratio\", 1, 0, 0, 25, 1"));
+
+        int aliasIndex = generated.indexOf("wueAnalyzeTargetTable =");
+        int generatedConfigStartIndex = generated.indexOf("; CONFIG_DEFINITION_START");
+        int settingContextHelpIndex = generated.indexOf("[SettingContextHelp]");
+        assertTrue(aliasIndex > generated.indexOf("page = 5"));
+        assertTrue(aliasIndex < generatedConfigStartIndex,
+                "WUE aliases must select page 1 before the generated constants block");
+        assertTrue(settingContextHelpIndex > aliasIndex,
+                "WUE aliases must remain in [Constants], before generated [SettingContextHelp]");
+    }
+
+    private static String wueAliasTemplateRegion() throws IOException {
+        String template = Files.readString(Path.of(ConfigDefinitionTest.FIRMWARE, "tunerstudio", "tunerstudio.template.ini"));
+        int begin = template.indexOf("@@TS_PAGE_FIELD_BLOCKS@@");
+        int end = template.indexOf("; Continue SettingContextHelp");
+        assertTrue(begin >= 0 && end > begin, "Missing WUE alias template region");
+        return "[Constants]\n" + template.substring(begin, end);
     }
 
     // --- [tag:ts_page_table] generator page-table emission + @@if_block (issue #9699) ---
