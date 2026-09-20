@@ -134,6 +134,7 @@ firmware/gen_enum_to_string.sh
 - `firmware/hw_layer/` - Hardware abstraction layer
   - `ports/at32/` (Artery AT32F435) is not used at the moment: both AT32 boards (`at_start_f435`, `m74_9`) are disabled (`meta-info.disabled_env`), so no CI build exercises this port
   - AT32 uses STM32-named compatibility headers, but those names do not establish register semantics. For example, Artery CRM_CTRLSTS bit 25 is reserved even though the compatibility header defines RCC_CSR_BORRSTF there. Check the official Artery register layout before porting STM32 low-level code.
+  - The AT32 ChibiOS port uses the older SPI API (`end_cb`) even with newer ChibiOS RT configuration versions: its hal_lld.h does not select HAL_LLD_SELECT_SPI_V2. Do not infer SPIConfig fields solely from the RT version.
 - `firmware/libfirmware/` - Reusable library code
 - `firmware/util/` - Self-contained utilities (no external dependencies)
 - `unit_tests/` - Google Test suite
