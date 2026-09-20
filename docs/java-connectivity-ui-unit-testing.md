@@ -1,6 +1,7 @@
 # Java Console: Unit Test Approach for Connectivity Management & UI
 
-Status as of 2026-07-08. Scope: `java_console` connectivity/flashing/session path
+Initial review: 2026-07-08; connection/loading coverage reviewed again 2026-09-20
+for #10282 (see below). Scope: `java_console` connectivity/flashing/session path
 (`connectivity`, `io`, `shared_io`, `ui` modules) and the Swing UI around it.
 
 ## Why this document
@@ -118,8 +119,7 @@ rather than invent new machinery.
 | OpenBLT job choreography | `ui` `OpenBltManualJobTest`, `OpenBltSwitchJobTest` | manual flash: suspend-before-flash / invalidate+resume-after (also on failure and flasher crash), restore-only-after-resume, ensure-firmware abort before touching the scanner; switch: reboot-then-`close()` ordering, never `disconnect()` (renumber-follow invariant), port released even with no `BinaryProtocol`; Tier 3 item 4, added 2026-07-10 |
 | ECU-follow-across-reboot rule | `ui` `ConsoleUiEcuPortToFollowTest` | `ConsoleUI.ecuPortToFollow`: follows the single new ECU (incl. `EcuWithOpenblt`) once the old port vanished; stays put when disconnected-by-user, current port still present, never-connected, zero/multiple candidates, or candidate == current; Tier 3 item 6, added 2026-07-10 |
 
-Not covered anywhere: `EcuHardwareProbes.inspect()`
-classification/retry, `MainFrame` title composition, `StartupFrame` port-list
+Not covered by the July inventory: `MainFrame` title composition, `StartupFrame` port-list
 presentation and splash connection state machine.
 
 The offline-tune UI glue added with #9730 (2026-07-10) is only unit-tested at
@@ -132,6 +132,56 @@ already excludes as splash-machine territory). If any of these regress, the
 cheap seam is the same pattern used above — lift the decision (which board
 signature, whether to show the import pair) out of the Swing wiring into a pure
 helper and test that.
+
+## Connection/loading coverage review (2026-09-20, #10282)
+
+This is a source-level inventory, not a measured line-coverage report. The
+reported symptoms are a stuck Loading overlay and a connected indication after
+unplug. The older suites cover the components separately; the local
+`BinaryProtocolConnectionStatusTest` and `TabbedPanelConnectionStatusTest`
+add the missing close -> decoder -> status -> UI path.
+
+| Area | Existing coverage reviewed | Boundary relevant to #10282 |
+| --- | --- | --- |
+| Protocol transfers | `BinaryProtocolTest`, `OutputChannelRangeSelectionTest` | Command layout, chunk limits, full/selective polling and failed-range snapshot rejection; no stream-close interleaving |
+| Sensor publication | `SensorCentralTest`, `SensorSubscriptionTest`, `SensorsHolderTest` | Listener delivery/removal, unchanged values, snapshot validity and demand; no transport lifecycle |
+| Configuration-error polling | `ConfigErrorPollingTest` | Full/selective error fetch, throttling, clear, retry and unavailable text; no disconnect during publication |
+| Stream/status lifecycle (local additions) | `BinaryProtocolConnectionStatusTest` (9) | Successful image load, failed image read after close, sensor cleanup, already-closed polling, failed response, probe status isolation, late output and late final image responses |
+| Loading UI (local additions) | `TabbedPanelConnectionStatusTest` (5) | Loading/connected/disconnected visibility, update precedence/dismissal, late output response through real protocol/status/UI listeners |
+| Other status UI | `ConnectionStatusIconTest`, `TabbedPanelTest`, `ConfigErrorOverlayControllerTest` | Icon colors/tooltips and bootloader/offline precedence; tab icons; config-error dismissal, recurrence and modeled glass-pane displacement. These do not exercise a real frame's competing glass panes |
+| Discovery | `SerialPortScannerTest`, `SerialPortScannerInspectPortsTest`, `SerialPortCacheTest`, `EcuHardwareProbesInspectTest` | Unplug/replug eviction, identity expiration, probe retries/failures, live-port suppression and stuck-probe isolation. Scanner discovery is separate from protocol liveness |
+| Session state | `DeviceSessionManagerTest` | Manually supplied LOADING/CONNECTED, hardware disappearance, flashing precedence and watchdog pause/resume hooks; no actual watchdog timer/restart execution |
+| Reconnect | `ConsoleUiEcuPortToFollowTest`, `LinkManagerCompatibilityListenerTest` | Port-renumber selection, user-disconnect gate in selection, serial/SocketCAN availability predicate and compatibility notifications; no complete restart lifecycle |
+| Flash recovery | `AbstractAutoFlashJobAwaitEcuPortTest`, `OpenBltManualJobTest`, `OpenBltSwitchJobTest` | Reconnect wait/grace/timeout, completion and scanner handoff, reboot-before-close; fake clocks/probes/actions rather than physical unplug |
+| Startup/integration | `StartupWizardHandoffTest`, `TcpCommunicationIntegrationTest` | Wizard handoff and disconnect decisions; active TCP test covers connection failure only (successful transfer/proxy tests are commented out). Reconnect sandboxes are manual harnesses |
+
+### Passing characterizations, no fix
+
+The output reproduction scripts a valid response arriving before unplug, then
+runs the real stream-close callback before returning that response to the real
+decoder. Close clears status and sensors. Decoding the late `seconds` value
+calls `ConnectionStatusLogic.markConnected()`, restoring LOADING. This also
+happens with the same seconds value as the preceding poll because close reset
+the stored value. The UI reproduction asserts a visible white Loading label,
+a green icon and Connected tooltip while the protocol is closed. Another poll
+returns false; another stream close is idempotent and leaves LOADING intact.
+
+The final-image-chunk characterization identifies a related boundary: a valid
+last chunk returned after close is accepted, stores the image and sets CONNECTED.
+The failed-chunk control instead returns false and stays NOT_CONNECTED.
+All three issue-named tests deliberately assert current bad behavior under
+[TDB](https://github.com/rusefi/rusefi/wiki/TDB-Test-Driven-Bugfixing).
+A later fix must change their expectations. Only test-access visibility changes
+are needed in the production classes.
+
+These deterministic tests establish possible interleavings, not their frequency
+on hardware or the reporter's exact cause. They stub command execution, so they
+do not verify serial-driver close delivery or wire framing. Still uncovered:
+watchdog recovery with queued/stuck communication work, old-session responses
+arriving after a new session connects, close during cached-image acceptance,
+and the complete splash/frame/transport lifecycle. `LinkManager.restart()` calls
+`close()` and can clear stale status if it runs; these tests therefore do not
+establish an indefinitely stuck console or explain why restarting was necessary.
 
 ## Test backlog
 

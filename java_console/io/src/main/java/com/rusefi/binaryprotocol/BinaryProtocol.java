@@ -100,7 +100,7 @@ public class BinaryProtocol {
         return iniFile;
     }
 
-    void setIniFileForUnitTest(IniFileModel iniFile) {
+    public void setIniFileForUnitTest(IniFileModel iniFile) {
         this.iniFile = iniFile;
     }
 

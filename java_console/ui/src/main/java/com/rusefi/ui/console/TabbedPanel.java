@@ -71,7 +71,7 @@ public class TabbedPanel {
 
     public final JTabbedPane tabbedPane = new JTabbedPane();
 
-    private void installGlassPane() {
+    void installGlassPane() {
         JRootPane rootPane = tabbedPane.getRootPane();
         if (rootPane == null)
             return;
