@@ -8,6 +8,7 @@
 
 #include "pch.h"
 #include "os_util.h"
+#include "at32_reset_cause.h"
 
 int at32GetMcuType(uint32_t id, const char **pn, const char **package, uint32_t *flashSize)
 {
@@ -204,7 +205,7 @@ __attribute__((weak)) void boardPrepareForStandby() {
 }
 
 Reset_Cause_t getMCUResetCause() {
-	return Reset_Cause_Unknown;
+	return decodeAt32ResetCause(0);
 }
 
 const char *getMCUResetCause(Reset_Cause_t) {

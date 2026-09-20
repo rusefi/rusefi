@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "hw_layer/ports/at32/at32_reset_cause.h"
+#include "../../../firmware/hw_layer/ports/at32/at32_reset_cause.h"
 #include "gpio/l9779_spi.h"
 
 TEST(At32ResetCause, ResetFlags) {
