@@ -62,6 +62,21 @@ struct LogLineBuffer {
 	char buffer[256];
 };
 
+#if EFI_UNIT_TEST
+namespace priv {
+	// Substitute only the RTOS queue boundary, keeping efiPrintf's formatting
+	// and submission path available to host tests. No sink means no queued logs.
+	class LoggingTestSink {
+	public:
+		virtual ~LoggingTestSink() = default;
+		virtual LogLineBuffer* acquire() = 0;
+		virtual void publish(LogLineBuffer* line) = 0;
+	};
+
+	LoggingTestSink* setLoggingTestSink(LoggingTestSink* sink);
+}
+#endif
+
 template <size_t TBufferSize>
 class LogBuffer {
 public:
