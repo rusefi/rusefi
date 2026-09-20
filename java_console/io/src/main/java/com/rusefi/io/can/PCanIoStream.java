@@ -168,10 +168,11 @@ public class PCanIoStream extends AbstractIoStream {
 //                   log.info("Receive " + status);
             if (status == TPCANStatus.PCAN_ERROR_QRCVEMPTY) {
                 try {
-                    // Preserve today's no-backoff behavior for reproduction coverage.
-                    sleeper.sleep(0);
+                    // An empty receive queue returns immediately; avoid busy-spinning.
+                    sleeper.sleep(1);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
+                    close();
                 }
             }
         }
@@ -180,6 +181,28 @@ public class PCanIoStream extends AbstractIoStream {
     @Override
     public IncomingDataBuffer getDataBuffer() {
         return dataBuffer;
+    }
+
+    @Override
+    public synchronized boolean isClosed() {
+        // Publish close() to the reader thread as well as serializing repeated closes.
+        return super.isClosed();
+    }
+
+    @Override
+    public synchronized void close() {
+        if (isClosed()) {
+            return;
+        }
+        try {
+            // MacCAN requires releasing the old channel before reconnect can claim it.
+            TPCANStatus status = can.uninitialize();
+            if (status != TPCANStatus.PCAN_ERROR_OK) {
+                statusListener.logLine("Unable to uninitialize PCAN: " + status);
+            }
+        } finally {
+            super.close();
+        }
     }
 
     @Override
