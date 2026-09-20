@@ -211,6 +211,16 @@ extern bool verboseMode;
 
 namespace priv
 {
+#if EFI_UNIT_TEST
+static LoggingTestSink* loggingTestSink = nullptr;
+
+LoggingTestSink* setLoggingTestSink(LoggingTestSink* sink) {
+	auto previous = loggingTestSink;
+	loggingTestSink = sink;
+	return previous;
+}
+#endif
+
 void efiPrintfInternal(const char *format, ...) {
 #if EFI_UNIT_TEST || EFI_SIMULATOR
 	/*
@@ -234,7 +244,17 @@ void efiPrintfInternal(const char *format, ...) {
 		printf("\r\n");
 	}
 #endif
-#if (EFI_PROD_CODE || EFI_SIMULATOR) && EFI_TEXT_LOGGING
+#if (EFI_PROD_CODE || EFI_SIMULATOR || EFI_UNIT_TEST) && EFI_TEXT_LOGGING
+#if EFI_UNIT_TEST
+	if (!loggingTestSink) {
+		return;
+	}
+
+	LogLineBuffer* lineBuffer = loggingTestSink->acquire();
+	if (!lineBuffer) {
+		return;
+	}
+#else
 	LogLineBuffer* lineBuffer;
 	msg_t msg;
 
@@ -262,6 +282,7 @@ void efiPrintfInternal(const char *format, ...) {
 	if (msg != MSG_OK) {
 		return;
 	}
+#endif
 
 	// Write the formatted string to the output buffer
 	va_list ap;
@@ -279,6 +300,9 @@ void efiPrintfInternal(const char *format, ...) {
 			lineBuffer->buffer[i] = ' ';
 	}
 
+#if EFI_UNIT_TEST
+	loggingTestSink->publish(lineBuffer);
+#else
 #if EFI_SIMULATOR
 	if (isIsr) {
 		chSysLockFromISR();
@@ -291,6 +315,7 @@ void efiPrintfInternal(const char *format, ...) {
 		chibios_rt::CriticalSectionLocker csl;
 		filledBuffers.postI(lineBuffer);
 	}
+#endif
 #endif
 }
 } // namespace priv

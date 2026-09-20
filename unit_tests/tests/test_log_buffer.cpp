@@ -1,6 +1,85 @@
 #include "pch.h"
 
+extern bool isInHardFaultHandler;
+extern bool verboseMode;
+
 using ::testing::ElementsAre;
+
+namespace {
+class FaultLogging : public ::testing::Test, public priv::LoggingTestSink {
+protected:
+	void SetUp() override {
+		previousFault = isInHardFaultHandler;
+		previousVerbose = verboseMode;
+		isInHardFaultHandler = false;
+		verboseMode = false;
+		previousSink = priv::setLoggingTestSink(this);
+	}
+
+	void TearDown() override {
+		priv::setLoggingTestSink(previousSink);
+		isInHardFaultHandler = previousFault;
+		verboseMode = previousVerbose;
+	}
+
+	LogLineBuffer* acquire() override {
+		acquireCalls++;
+		return bufferAvailable ? &line : nullptr;
+	}
+
+	void publish(LogLineBuffer* submitted) override {
+		publishCalls++;
+		EXPECT_EQ(&line, submitted);
+		output.writeLine(submitted);
+	}
+
+	bool bufferAvailable = true;
+	int acquireCalls = 0;
+	int publishCalls = 0;
+	LogBuffer<300> output;
+
+private:
+	LogLineBuffer line{};
+	bool previousFault = false;
+	bool previousVerbose = false;
+	priv::LoggingTestSink* previousSink = nullptr;
+};
+
+TEST_F(FaultLogging, NormalLoggingFormatsAndQueuesMessage) {
+	efiPrintf("value=%d\nnext", 42);
+
+	EXPECT_EQ(1, acquireCalls);
+	EXPECT_EQ(1, publishCalls);
+	EXPECT_STREQ(PROTOCOL_MSG LOG_DELIMITER "value=42 next" LOG_DELIMITER, output.get());
+}
+
+// TDB: reproduce current bad behavior. The fix should return before acquiring
+// a buffer (the firmware backend takes a ChibiOS lock there), with no output.
+TEST_F(FaultLogging, CurrentlyQueuesNormalMessageDuringHardFault) {
+	isInHardFaultHandler = true;
+
+	efiPrintf("fault context %d", 7);
+
+	EXPECT_EQ(1, acquireCalls);
+	EXPECT_EQ(1, publishCalls);
+	EXPECT_STREQ(PROTOCOL_MSG LOG_DELIMITER "fault context 7" LOG_DELIMITER, output.get());
+	EXPECT_TRUE(isInHardFaultHandler);
+}
+
+// An empty queue drops the message, but still enters the unsafe queue path.
+// TDB: after suppression is added, acquireCalls must also be zero.
+TEST_F(FaultLogging, CurrentlyAttemptsBufferAcquisitionDuringHardFaultWithEmptyQueue) {
+	isInHardFaultHandler = true;
+	bufferAvailable = false;
+
+	efiPrintf("fault context");
+
+	EXPECT_EQ(1, acquireCalls);
+	EXPECT_EQ(0, publishCalls);
+	EXPECT_EQ(0u, output.length());
+	EXPECT_TRUE(isInHardFaultHandler);
+}
+} // namespace
 
 TEST(logBuffer, writeSmall) {
 	LogBuffer<10> dut;
