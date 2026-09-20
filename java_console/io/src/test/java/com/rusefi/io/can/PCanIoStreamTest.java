@@ -57,25 +57,30 @@ class PCanIoStreamTest {
     }
 
     @Test
-    void closeLeavesChannelClaimedAndReconnectFails() {
+    void closeReleasesChannelOnceAndReconnectSucceeds() {
         FakeDriver driver = new FakeDriver();
         Harness harness = new Harness(driver);
         List<String> notifications = new ArrayList<>();
-        harness.stream.addCloseListener(() -> notifications.add("closed"));
+        harness.stream.addCloseListener(() -> {
+            assertFalse(driver.claimed, "Release the channel before notifying reconnect listeners");
+            notifications.add("closed");
+        });
 
         harness.stream.close();
         harness.stream.close();
 
         assertTrue(harness.stream.isClosed());
         assertEquals(List.of("closed"), notifications);
-        // TDB: change these expectations when close starts releasing the driver.
-        assertEquals(0, driver.releases);
-        assertTrue(driver.claimed);
-        assertFalse(driver.tryClaim(), "Reconnect cannot claim a channel still owned by the old stream");
+        assertEquals(1, driver.releases);
+        assertFalse(driver.claimed);
+        assertTrue(driver.tryClaim(), "Reconnect can claim the released channel");
+        harness.stream.close();
+        assertEquals(1, driver.releases);
+        assertTrue(driver.claimed, "Closing the old stream must not release the new connection");
     }
 
     @Test
-    void emptyQueuePollingRequestsNoBackoff() {
+    void emptyQueuePollingRequestsOneMillisecondBackoff() {
         FakeDriver driver = new FakeDriver();
         Harness harness = new Harness(driver);
         driver.onRead = () -> {
@@ -89,8 +94,31 @@ class PCanIoStreamTest {
 
         assertEquals(4, driver.reads);
         assertTrue(harness.stream.isClosed());
-        // TDB: empty polls currently request zero delay, so a live loop busy-spins.
-        assertEquals(List.of(0L, 0L, 0L, 0L), harness.waits);
+        assertEquals(List.of(1L, 1L, 1L, 1L), harness.waits);
+    }
+
+    @Test
+    void interruptedEmptyQueuePollingClosesStream() {
+        FakeDriver driver = new FakeDriver();
+        List<Runnable> readers = new ArrayList<>();
+        PCanIoStream stream = new PCanIoStream(driver, message -> {}, () -> readers::add,
+            milliseconds -> { throw new InterruptedException(); });
+        driver.onRead = () -> {
+            if (driver.reads == 3) {
+                stream.close();
+            }
+        };
+
+        try {
+            readers.get(0).run();
+
+            assertTrue(Thread.currentThread().isInterrupted());
+            assertTrue(stream.isClosed());
+            assertEquals(1, driver.reads);
+            assertEquals(1, driver.releases);
+        } finally {
+            Thread.interrupted();
+        }
     }
 
     @Test
