@@ -137,7 +137,7 @@ helper and test that.
 
 This is a source-level inventory, not a measured line-coverage report. The
 reported symptoms are a stuck Loading overlay and a connected indication after
-unplug. The older suites cover the components separately; the local
+unplug. The older suites cover the components separately;
 `BinaryProtocolConnectionStatusTest` and `TabbedPanelConnectionStatusTest`
 add the missing close -> decoder -> status -> UI path.
 
@@ -146,8 +146,8 @@ add the missing close -> decoder -> status -> UI path.
 | Protocol transfers | `BinaryProtocolTest`, `OutputChannelRangeSelectionTest` | Command layout, chunk limits, full/selective polling and failed-range snapshot rejection; no stream-close interleaving |
 | Sensor publication | `SensorCentralTest`, `SensorSubscriptionTest`, `SensorsHolderTest` | Listener delivery/removal, unchanged values, snapshot validity and demand; no transport lifecycle |
 | Configuration-error polling | `ConfigErrorPollingTest` | Full/selective error fetch, throttling, clear, retry and unavailable text; no disconnect during publication |
-| Stream/status lifecycle (local additions) | `BinaryProtocolConnectionStatusTest` (9) | Successful image load, failed image read after close, sensor cleanup, already-closed polling, failed response, probe status isolation, late output and late final image responses |
-| Loading UI (local additions) | `TabbedPanelConnectionStatusTest` (5) | Loading/connected/disconnected visibility, update precedence/dismissal, late output response through real protocol/status/UI listeners |
+| Stream/status lifecycle | `BinaryProtocolConnectionStatusTest` (14) | Successful image load, failed image read after close, sensor cleanup, already-closed polling, failed response, probe status isolation, late output/final image responses, close before image completion or during error-text I/O, an old failed read unwinding after replacement connects, and cross-thread close while a command is blocked |
+| Loading UI | `TabbedPanelConnectionStatusTest` (5) | Loading/connected/disconnected visibility, update precedence/dismissal, late output response through real protocol/status/UI listeners |
 | Other status UI | `ConnectionStatusIconTest`, `TabbedPanelTest`, `ConfigErrorOverlayControllerTest` | Icon colors/tooltips and bootloader/offline precedence; tab icons; config-error dismissal, recurrence and modeled glass-pane displacement. These do not exercise a real frame's competing glass panes |
 | Discovery | `SerialPortScannerTest`, `SerialPortScannerInspectPortsTest`, `SerialPortCacheTest`, `EcuHardwareProbesInspectTest` | Unplug/replug eviction, identity expiration, probe retries/failures, live-port suppression and stuck-probe isolation. Scanner discovery is separate from protocol liveness |
 | Session state | `DeviceSessionManagerTest` | Manually supplied LOADING/CONNECTED, hardware disappearance, flashing precedence and watchdog pause/resume hooks; no actual watchdog timer/restart execution |
@@ -155,31 +155,38 @@ add the missing close -> decoder -> status -> UI path.
 | Flash recovery | `AbstractAutoFlashJobAwaitEcuPortTest`, `OpenBltManualJobTest`, `OpenBltSwitchJobTest` | Reconnect wait/grace/timeout, completion and scanner handoff, reboot-before-close; fake clocks/probes/actions rather than physical unplug |
 | Startup/integration | `StartupWizardHandoffTest`, `TcpCommunicationIntegrationTest` | Wizard handoff and disconnect decisions; active TCP test covers connection failure only (successful transfer/proxy tests are commented out). Reconnect sandboxes are manual harnesses |
 
-### Passing characterizations, no fix
+### Coverage-first reproduction and subsequent fix
 
 The output reproduction scripts a valid response arriving before unplug, then
 runs the real stream-close callback before returning that response to the real
-decoder. Close clears status and sensors. Decoding the late `seconds` value
-calls `ConnectionStatusLogic.markConnected()`, restoring LOADING. This also
-happens with the same seconds value as the preceding poll because close reset
-the stored value. The UI reproduction asserts a visible white Loading label,
-a green icon and Connected tooltip while the protocol is closed. Another poll
-returns false; another stream close is idempotent and leaves LOADING intact.
+decoder. Before the fix, close cleared status and sensors, but decoding the late
+`seconds` value called `ConnectionStatusLogic.markConnected()`, restoring
+LOADING. This also happened with unchanged seconds because close reset the
+stored value. The first coverage change asserted a visible white Loading label,
+a green icon and Connected tooltip for the closed protocol. Another poll
+returned false; another stream close was idempotent and left LOADING intact.
 
 The final-image-chunk characterization identifies a related boundary: a valid
-last chunk returned after close is accepted, stores the image and sets CONNECTED.
-The failed-chunk control instead returns false and stays NOT_CONNECTED.
-All three issue-named tests deliberately assert current bad behavior under
+last chunk returned after close was accepted, stored the image and set CONNECTED.
+The failed-chunk control instead returned false and stayed NOT_CONNECTED.
+All three issue-named tests initially asserted bad behavior under
 [TDB](https://github.com/rusefi/rusefi/wiki/TDB-Test-Driven-Bugfixing).
-A later fix must change their expectations. Only test-access visibility changes
-are needed in the production classes.
+The subsequent fix changes those same expectations: reject the late response,
+leave sensors/image unpublished, keep the overlay hidden and indicator red.
+The corrected expectations failed on the unfixed code.
+
+Response publication and close cleanup now share a per-protocol lock. Device
+I/O remains outside it, with closure checked again before publication; this
+includes the extra configuration-error text request after output acquisition.
+The transport's closed flag is volatile for cross-thread visibility. Failed
+image reads from closed sessions no longer overwrite a replacement's status.
 
 These deterministic tests establish possible interleavings, not their frequency
 on hardware or the reporter's exact cause. They stub command execution, so they
 do not verify serial-driver close delivery or wire framing. Still uncovered:
-watchdog recovery with queued/stuck communication work, old-session responses
-arriving after a new session connects, close during cached-image acceptance,
-and the complete splash/frame/transport lifecycle. `LinkManager.restart()` calls
+watchdog recovery with queued/stuck communication work, overlapping live-session
+publication, the on-disk cached-image validation path, and the complete
+splash/frame/transport lifecycle. `LinkManager.restart()` calls
 `close()` and can clear stale status if it runs; these tests therefore do not
 establish an indefinitely stuck console or explain why restarting was necessary.
 

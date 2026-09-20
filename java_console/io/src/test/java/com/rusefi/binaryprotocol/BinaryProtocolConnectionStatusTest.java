@@ -1,9 +1,12 @@
 package com.rusefi.binaryprotocol;
 
 import com.opensr5.ConfigurationImageMetaVersion0_0;
+import com.opensr5.ConfigurationImageMeta;
+import com.opensr5.ConfigurationImageWithMeta;
 import com.opensr5.ini.IniFileMetaInfo;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniFileModelMocks;
+import com.opensr5.ini.field.IniField;
 import com.opensr5.ini.field.ScalarIniField;
 import com.opensr5.io.DataListener;
 import com.rusefi.config.FieldType;
@@ -23,6 +26,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -98,7 +108,7 @@ class BinaryProtocolConnectionStatusTest {
     }
 
     @Test
-    void issue10282LateFinalImageResponseCurrentlyMarksClosedStreamConnected() {
+    void issue10282LateFinalImageResponseDoesNotMarkClosedStreamConnected() {
         doReturn(new byte[]{Integration.TS_RESPONSE_OK, 1, 2}).doAnswer(invocation -> {
             assertEquals(ConnectionStatusValue.LOADING, status.getValue());
             stream.close();
@@ -106,15 +116,50 @@ class BinaryProtocolConnectionStatusTest {
             return new byte[]{Integration.TS_RESPONSE_OK, 3, 4};
         }).when(protocol).executeCommand(eq(Integration.TS_READ_COMMAND), any(byte[].class), anyString());
 
-        // Related coverage-first characterization: unlike a failed middle chunk,
-        // a valid final response bypasses the next loop's closed-stream check.
-        // A fix should reject completion and leave the status NOT_CONNECTED.
-        assertTrue(readImage());
+        // Even a valid final chunk must not complete a connection that has closed.
+        assertFalse(readImage());
         assertTrue(stream.isClosed());
-        assertArrayEquals(new byte[]{1, 2, 3, 4}, protocol.getControllerConfiguration().getContent());
-        assertEquals(Arrays.asList(ConnectionStatusValue.LOADING, ConnectionStatusValue.NOT_CONNECTED,
-            ConnectionStatusValue.LOADING, ConnectionStatusValue.CONNECTED), transitions);
+        assertNull(protocol.getControllerConfiguration());
+        assertNull(protocol.getBinaryProtocolState().getCachedImage());
+        assertEquals(Arrays.asList(ConnectionStatusValue.LOADING, ConnectionStatusValue.NOT_CONNECTED), transitions);
         stream.close();
+        assertEquals(ConnectionStatusValue.NOT_CONNECTED, status.getValue());
+    }
+
+    @Test
+    void closeBetweenImageReadAndCompletionRejectsImage() {
+        doAnswer(invocation -> {
+            ConfigurationImageWithMeta image = new ConfigurationImageWithMeta(invocation.getArgument(0));
+            stream.close();
+            return image;
+        }).when(protocol).readFullImageFromController(any(ConfigurationImageMeta.class));
+
+        assertFalse(readImage());
+        assertNull(protocol.getControllerConfiguration());
+        assertNull(protocol.getBinaryProtocolState().getCachedImage());
+        assertEquals(ConnectionStatusValue.NOT_CONNECTED, status.getValue());
+    }
+
+    @Test
+    void closedStreamCannotCompleteConnectionWithoutImage() {
+        stream.close();
+
+        assertFalse(protocol.readImage(new BinaryProtocol.Arguments(false, false),
+            new ConfigurationImageMetaVersion0_0(4, "test")));
+        assertEquals(ConnectionStatusValue.NOT_CONNECTED, status.getValue());
+    }
+
+    @Test
+    void failedOldImageReadDoesNotDisconnectReplacementSession() {
+        doAnswer(invocation -> {
+            stream.close();
+            // Model a replacement session connecting while the old read unwinds.
+            status.setValue(ConnectionStatusValue.CONNECTED);
+            return null;
+        }).when(protocol).executeCommand(eq(Integration.TS_READ_COMMAND), any(byte[].class), anyString());
+
+        assertFalse(readImage());
+        assertNull(protocol.getControllerConfiguration());
         assertEquals(ConnectionStatusValue.CONNECTED, status.getValue());
     }
 
@@ -157,7 +202,7 @@ class BinaryProtocolConnectionStatusTest {
     }
 
     @Test
-    void issue10282LateOutputResponseCurrentlyResurrectsLoadingAfterUnplug() {
+    void issue10282LateOutputResponseDoesNotResurrectLoadingAfterUnplug() {
         status.setValue(ConnectionStatusValue.CONNECTED);
         assertTrue(poll());
         assertEquals(42, SensorCentral.getInstance().getValue(SECONDS));
@@ -171,18 +216,71 @@ class BinaryProtocolConnectionStatusTest {
             return OUTPUTS;
         }).when(protocol).executeCommand(eq(Integration.TS_OUTPUT_COMMAND), any(byte[].class), anyString());
 
-        // Coverage-first characterization of #10282, NOT desired behavior. A fix should
-        // reject this stale response and keep NOT_CONNECTED with no sensor snapshot.
-        assertTrue(poll());
-        assertTrue(stream.isClosed());
-        assertEquals(Arrays.asList(ConnectionStatusValue.NOT_CONNECTED, ConnectionStatusValue.LOADING), transitions);
-        assertTrue(status.isConnected(), "LOADING also drives the green connected indicator");
-        assertNotNull(SensorCentral.getInstance().getCurrentSnapshot());
-        assertEquals(42, SensorCentral.getInstance().getValue(SECONDS),
-            "Even unchanged seconds are republished because close reset the sensor values");
         assertFalse(poll());
-        stream.close(); // Close is idempotent; it cannot clear the resurrected status again.
-        assertEquals(ConnectionStatusValue.LOADING, status.getValue());
+        assertTrue(stream.isClosed());
+        assertEquals(Collections.singletonList(ConnectionStatusValue.NOT_CONNECTED), transitions);
+        assertFalse(status.isConnected());
+        assertNull(SensorCentral.getInstance().getCurrentSnapshot());
+        assertTrue(Double.isNaN(SensorCentral.getInstance().getValue(SECONDS)));
+        assertFalse(poll());
+        stream.close();
+        assertEquals(ConnectionStatusValue.NOT_CONNECTED, status.getValue());
+    }
+
+    @Test
+    void closeDuringConfigErrorRequestDoesNotPublishEarlierOutputs() throws Exception {
+        IniFileModel ini = protocol.getIniFile();
+        when(ini.getMetaInfo().getOchBlockSize()).thenReturn(4);
+        when(ini.getBlockingFactor()).thenReturn(4);
+        ScalarIniField error = new ScalarIniField(BinaryProtocol.CONFIG_ERROR_CHANNEL,
+            2, "", FieldType.UINT16, 1, "0", 0);
+        Map<String, IniField> channels = new LinkedHashMap<>();
+        channels.put(SECONDS, ini.getOutputChannel(SECONDS));
+        channels.put(BinaryProtocol.CONFIG_ERROR_CHANNEL, error);
+        when(ini.getAllOutputChannels()).thenReturn(channels);
+        when(ini.getOutputChannel(BinaryProtocol.CONFIG_ERROR_CHANNEL)).thenReturn(error);
+        doReturn(new byte[]{Integration.TS_RESPONSE_OK, 42, 0, 1, 0}).when(protocol)
+            .executeCommand(eq(Integration.TS_OUTPUT_COMMAND), any(byte[].class), anyString());
+        doAnswer(invocation -> {
+            stream.close();
+            return new byte[]{Integration.TS_RESPONSE_OK, 'E'};
+        }).when(protocol).executeCommand(eq(Integration.TS_GET_CONFIG_ERROR), anyString());
+        status.setValue(ConnectionStatusValue.CONNECTED);
+
+        assertFalse(poll());
+        verify(protocol).executeCommand(eq(Integration.TS_GET_CONFIG_ERROR), anyString());
+        assertEquals(ConnectionStatusValue.NOT_CONNECTED, status.getValue());
+        assertNull(SensorCentral.getInstance().getCurrentSnapshot());
+        assertNull(protocol.getBinaryProtocolState().getCurrentOutputs());
+    }
+
+    @Test
+    void closeCompletesWhileOutputCommandIsWaitingOnAnotherThread() throws Exception {
+        CountDownLatch commandStarted = new CountDownLatch(1);
+        CountDownLatch releaseResponse = new CountDownLatch(1);
+        ExecutorService workers = Executors.newFixedThreadPool(2);
+        doAnswer(invocation -> {
+            commandStarted.countDown();
+            assertTrue(releaseResponse.await(5, TimeUnit.SECONDS));
+            return OUTPUTS;
+        }).when(protocol).executeCommand(eq(Integration.TS_OUTPUT_COMMAND), any(byte[].class), anyString());
+        status.setValue(ConnectionStatusValue.CONNECTED);
+
+        try {
+            Future<Boolean> pollResult = workers.submit(this::poll);
+            assertTrue(commandStarted.await(5, TimeUnit.SECONDS));
+            // The bounds detect deadlock; latches, not timing, order the interleaving.
+            workers.submit(stream::close).get(5, TimeUnit.SECONDS);
+            assertEquals(ConnectionStatusValue.NOT_CONNECTED, status.getValue());
+            releaseResponse.countDown();
+            assertFalse(pollResult.get(5, TimeUnit.SECONDS));
+            assertEquals(ConnectionStatusValue.NOT_CONNECTED, status.getValue());
+            assertNull(SensorCentral.getInstance().getCurrentSnapshot());
+        } finally {
+            releaseResponse.countDown();
+            workers.shutdownNow();
+            assertTrue(workers.awaitTermination(5, TimeUnit.SECONDS));
+        }
     }
 
     @Test

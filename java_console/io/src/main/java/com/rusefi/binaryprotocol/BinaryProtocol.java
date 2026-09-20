@@ -66,6 +66,9 @@ public class BinaryProtocol {
 
     private final LinkManager linkManager;
     private final IoStream stream;
+    // Serialize response publication with disconnect cleanup. Never hold this during device I/O:
+    // close must be able to clear the UI while a command is waiting for a response.
+    private final Object publicationLock = new Object();
     private final Integer blockingFactorOverride;
     private boolean isBurnPending;
     private long lastOutputFallbackGeneration = Long.MIN_VALUE;
@@ -159,10 +162,12 @@ public class BinaryProtocol {
         // Skip the global status change for short-lived scanner probes (notifyGlobalStatusOnClose=false)
         // so they don't disrupt the main console connection.
         stream.addCloseListener(() -> {
-            if (linkManager.getNotifyGlobalStatusOnClose()) {
-                ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED);
+            synchronized (publicationLock) {
+                if (linkManager.getNotifyGlobalStatusOnClose()) {
+                    ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED);
+                }
+                SensorCentral.getInstance().reset();
             }
-            SensorCentral.getInstance().reset();
         });
     }
 
@@ -414,6 +419,10 @@ public class BinaryProtocol {
      * @return true if image was successfully read (or not needed), false if read failed
      */
     public boolean readImage(final Arguments arguments, final ConfigurationImageMeta meta) {
+        if (stream.isClosed()) {
+            return false;
+        }
+        ConfigurationImage loadedImage = null;
         if (arguments.needImage) {
             ConfigurationImageWithMeta image = BinaryProtocolLocalCache.getAndValidateLocallyCached(this);
 
@@ -425,20 +434,34 @@ public class BinaryProtocol {
                 if (image.isEmpty()) {
                     // Image read failed — revert to NOT_CONNECTED so the watchdog can retry.
                     // Without this, the status stays LOADING indefinitely.
-                    ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED);
+                    synchronized (publicationLock) {
+                        // A closed session has already reported disconnect. It must not
+                        // overwrite the status of a replacement connection.
+                        if (!stream.isClosed() && linkManager.getNotifyGlobalStatusOnClose()) {
+                            ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED);
+                        }
+                    }
                     return false;
                 }
             }
-            ConfigurationImage loadedImage = image.getConfigurationImage();
-            setConfigurationImage(loadedImage);
-            state.setCachedImage(loadedImage);
-            log.info(stream + ": Got configuration from controller " + meta.getImageSize() + " byte(s)");
+            loadedImage = image.getConfigurationImage();
         }
-        // Only update global connection status for persistent connections (not scanner probes)
-        if (linkManager.getNotifyGlobalStatusOnClose()) {
-            ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.CONNECTED);
+        synchronized (publicationLock) {
+            // Also covers a cached image validated just before the stream closed.
+            if (stream.isClosed()) {
+                return false;
+            }
+            if (loadedImage != null) {
+                setConfigurationImage(loadedImage);
+                state.setCachedImage(loadedImage);
+                log.info(stream + ": Got configuration from controller " + meta.getImageSize() + " byte(s)");
+            }
+            // Only update global connection status for persistent connections (not scanner probes)
+            if (linkManager.getNotifyGlobalStatusOnClose()) {
+                ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.CONNECTED);
+            }
+            return true;
         }
-        return true;
     }
 
     public static class Arguments {
@@ -506,8 +529,13 @@ public class BinaryProtocol {
                 continue;
             }
 
-            HeartBeatListeners.onDataArrived();
-            ConnectionStatusLogic.INSTANCE.markConnected();
+            synchronized (publicationLock) {
+                if (stream.isClosed()) {
+                    return ConfigurationImageWithMeta.VOID;
+                }
+                HeartBeatListeners.onDataArrived();
+                ConnectionStatusLogic.INSTANCE.markConnected();
+            }
             System.arraycopy(response, 1, image.getContent(), offset, requestSize);
 
             offset += requestSize;
@@ -913,7 +941,8 @@ public class BinaryProtocol {
                     "output channels"
                 );
 
-                if (response == null || response.length != (chunkSize + 1) || response[0] != Integration.TS_RESPONSE_OK) {
+                if (stream.isClosed() || response == null || response.length != (chunkSize + 1)
+                        || response[0] != Integration.TS_RESPONSE_OK) {
                     return false;
                 }
 
@@ -925,13 +954,18 @@ public class BinaryProtocol {
             }
         }
 
-        state.setCurrentOutputs(plan.isFull() ? reassemblyBuffer : null);
-
         OutputChannelSnapshot snapshot = new OutputChannelSnapshot(
             reassemblyBuffer, validBytes, demand.getChannels(), plan.getGeneration(), plan.isFull());
+        // May issue another command. Keep it outside the publication lock, then recheck closure.
         updateConfigError(snapshot, System.nanoTime());
-        SensorCentral.getInstance().grabSensorValues(snapshot, getIniFile(), getControllerConfiguration());
-        return true;
+        synchronized (publicationLock) {
+            if (stream.isClosed()) {
+                return false;
+            }
+            state.setCurrentOutputs(plan.isFull() ? reassemblyBuffer : null);
+            SensorCentral.getInstance().grabSensorValues(snapshot, getIniFile(), getControllerConfiguration());
+            return true;
+        }
     }
 
     /** Read on the communication thread, before publishing the output snapshot to UI listeners. */
