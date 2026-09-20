@@ -73,9 +73,9 @@ TEST_F(StorageBoardGate, DefersAllRecordsWhileRunning) {
 	engine->rpmCalculator.setRpmValue(1000);
 	EXPECT_FALSE(storageAllowWriteID(EFI_SETTINGS_RECORD_ID));
 	EXPECT_FALSE(storageAllowWriteID(EFI_SETTINGS_BACKUP_RECORD_ID));
-	// Reproduce non-settings records bypassing the board's flash gate.
-	EXPECT_TRUE(storageAllowWriteID(EFI_LTFT_RECORD_ID));
-	EXPECT_TRUE(storageAllowWriteID(static_cast<StorageItemId>(123)));
+	// Every MFS record must honor the board's flash gate.
+	EXPECT_FALSE(storageAllowWriteID(EFI_LTFT_RECORD_ID));
+	EXPECT_FALSE(storageAllowWriteID(static_cast<StorageItemId>(123)));
 
 	engine->rpmCalculator.setStopSpinning();
 	EXPECT_TRUE(storageAllowWriteID(EFI_LTFT_RECORD_ID));

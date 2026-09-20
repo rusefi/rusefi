@@ -56,7 +56,15 @@ bool storageAllowWriteID(StorageItemId id)
 	}
 #endif // EFI_STORAGE_INT_FLASH
 
-	// TODO: we expect every other ID to be stored in external flash...
+#if EFI_SHAFT_POSITION_INPUT
+	// MFS can also live on internal flash: the board gate applies to all IDs,
+	// including periodic LTFT writes that may trigger a garbage collection.
+	if (!get_board_override_result(custom_board_allowFlashNow, true)) {
+		return false;
+	}
+#endif
+
+	// Other boards retain their existing external-storage behavior.
 	return true;
 }
 #endif // EFI_CONFIGURATION_STORAGE || defined(EFI_UNIT_TEST)

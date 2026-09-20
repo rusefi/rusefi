@@ -1,12 +1,21 @@
-#include "pch.h"
+#include <gtest/gtest.h>
 #include "../../../firmware/hw_layer/ports/at32/at32_reset_cause.h"
 #include "gpio/l9779_spi.h"
 
 TEST(At32ResetCause, ResetFlags) {
-	// Reproduce the port reporting Unknown for every documented reset source.
-	for (unsigned bit = 26; bit <= 31; bit++) {
-		EXPECT_EQ(Reset_Cause_Unknown, decodeAt32ResetCause(1U << bit));
-	}
+	EXPECT_EQ(Reset_Cause_NRST_Pin, decodeAt32ResetCause(1U << 26));
+	EXPECT_EQ(Reset_Cause_POR, decodeAt32ResetCause(1U << 27));
+	EXPECT_EQ(Reset_Cause_Soft_Reset, decodeAt32ResetCause(1U << 28));
+	EXPECT_EQ(Reset_Cause_IWatchdog, decodeAt32ResetCause(1U << 29));
+	EXPECT_EQ(Reset_Cause_WWatchdog, decodeAt32ResetCause(1U << 30));
+	EXPECT_EQ(Reset_Cause_Illegal_Mode, decodeAt32ResetCause(1U << 31));
+}
+
+TEST(At32ResetCause, InternalResetTakesPrecedenceOverPinFlag) {
+	EXPECT_EQ(Reset_Cause_IWatchdog, decodeAt32ResetCause((1U << 26) | (1U << 29)));
+	EXPECT_EQ(Reset_Cause_Soft_Reset, decodeAt32ResetCause((1U << 26) | (1U << 28)));
+	EXPECT_EQ(Reset_Cause_POR, decodeAt32ResetCause((1U << 27) | (1U << 29)));
+	EXPECT_EQ(Reset_Cause_IWatchdog, decodeAt32ResetCause((1U << 25) | (1U << 29)));
 }
 
 TEST(At32ResetCause, ReservedBits) {
@@ -16,8 +25,21 @@ TEST(At32ResetCause, ReservedBits) {
 }
 
 TEST(L9779Spi, ArrayWriteParity) {
-	// Reproduce the array path sending an even-parity frame unchanged.
-	EXPECT_EQ(0x0000, l9779PrepareSpiWord(0x0000));
-	EXPECT_EQ(0x0600, l9779PrepareSpiWord(0x0600));
+	// Both single and array writes use the same parity encoder.
+	EXPECT_EQ(0x0001, l9779PrepareSpiWord(0x0000));
+	EXPECT_EQ(0x0601, l9779PrepareSpiWord(0x0600));
 	EXPECT_EQ(0x0200, l9779PrepareSpiWord(0x0200));
+}
+
+TEST(L9779Spi, AllPayloadsPreserveDataAndHaveOddParity) {
+	for (uint32_t payload = 0; payload <= 0xffff; payload++) {
+		const uint16_t wire = l9779PrepareSpiWord(static_cast<uint16_t>(payload));
+		EXPECT_EQ(payload & 0xfffeU, wire & 0xfffeU);
+		unsigned ones = 0;
+		for (unsigned bit = 0; bit < 16; bit++) {
+			ones += (wire >> bit) & 1U;
+		}
+		EXPECT_EQ(1U, ones % 2U);
+		EXPECT_EQ(wire, l9779PrepareSpiWord(wire));
+	}
 }
