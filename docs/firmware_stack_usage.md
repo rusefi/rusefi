@@ -139,7 +139,7 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | main/process | 1536 | 704 | startup fast callback | 1196 | 1212 | REVIEW PROXY +16; partial proxy: 65 unknown, 25 indirect, recursion |
 | firmware | SD/MMC | 1600 | 1436 | exFAT log creation | 2036 | 1852 | PROXY -184; partial proxy: 46 unknown, 19 indirect, recursion |
 | firmware | stepper | 400 | 280 | startup redundant pedal check | 652 | 708 | REVIEW PROXY +56; partial proxy: 15 unknown, 6 indirect, recursion |
-| firmware | storage manager | 400 | 292 | internal-flash tune burn | 644 | 700 | REVIEW PROXY +56; partial proxy: 17 unknown, 5 indirect, recursion |
+| firmware | storage manager | 400 | 292 | internal-flash tune burn | 644 | 700 | REVIEW PROXY +56; partial proxy: 18 unknown, 5 indirect, recursion |
 | firmware | timer watchdog | 256 | 112 | normal watchdog sleep | 528 | 584 | REVIEW PROXY +56; partial proxy: 11 unknown, 2 indirect, recursion |
 | firmware | TunerStudio | 1200 | 744 | Ethernet TS with ARP | 1316 | 1396 | REVIEW PROXY +80; partial proxy: 56 unknown, 32 indirect, recursion |
 | firmware | USB mass storage | 2048 | 300 | SD READ/WRITE(10) | 732 | 788 | REVIEW PROXY +56; partial proxy: 18 unknown, 5 indirect, recursion |
