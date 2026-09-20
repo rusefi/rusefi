@@ -414,3 +414,29 @@ TEST(Actuators, FanPwm_DisableWhenStopped) {
     // TDB Coverage: Assert current buggy behavior on master (PWM stays active even when engine is stopped)
     EXPECT_GT(engine->module<FanControl1>()->pwmAppliedPwm, 0.0f);
 }
+
+// Companion to FanPwm_DisableWhenStopped: with the same safety flag set, a running
+// engine must never be inhibited - the fan follows the CLT curve as usual. This holds
+// on master today and must keep holding once the stopped-engine inhibit is fixed.
+TEST(Actuators, FanPwm_DisableWhenStopped_RunningEngineStaysActive) {
+    EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+    MockAcOff mockAc;
+    engine->module<AcController>().set(&mockAc);
+    setupFan1Pwm(eth);
+
+    engineConfiguration->disableFan1WhenStopped = true;
+
+    // Coolant above the curve start so the curve requests a non-zero duty
+    Sensor::setMockValue(SensorType::Clt, 100.0f);
+
+    // Engine running (1000 RPM). The RpmCalculator is itself the RPM sensor, so setRpmValue()
+    // drives both isRunning() (relay-path flag) and Sensor::get(SensorType::Rpm).
+    engine->rpmCalculator.setRpmValue(1000);
+
+    // Advance mock time so any soft-start ramp has a chance to step up
+    eth.moveTimeForwardSec(1);
+    updateFans();
+
+    EXPECT_FALSE(engine->module<FanControl1>()->disabledWhileEngineStopped);
+    EXPECT_GT(engine->module<FanControl1>()->pwmAppliedPwm, 0.0f);
+}
