@@ -16,9 +16,12 @@ import java.util.regex.Pattern;
  * 10/16/13
  */
 public class GccMapReader {
-    private static final Pattern MULTI_LINE_PATTERN = Pattern.compile(".*0x(\\S*)(.*)");
+    // Match the columns before the object path, which may itself contain spaces or "0x".
+    private static final Pattern COLUMNS_PATTERN = Pattern.compile(
+            "^\\s*0x[0-9a-fA-F]+\\s+0x([0-9a-fA-F]+)(?:\\s+(.*))?$");
     private static final String[] REGIONS = {"bss", "ram4", "text", "data", "rodata"};
-    private static final Pattern SINGLE_LINE_PATTERN = Pattern.compile(".*\\.(bss|ram4|text|data|rodata)\\.(\\S*).*0x.*0x(\\S*)(.*)");
+    private static final Pattern SECTION_PATTERN = Pattern.compile(
+            "^\\s*\\.(bss|ram4|text|data|rodata)\\.(\\S+)(?:\\s+(.*))?$");
     static final String START_OF_DATA_TAG = "Linker script and memory map";
 
     public static void main(String[] args) throws IOException {
@@ -64,84 +67,43 @@ public class GccMapReader {
             if (line.contains(START_OF_DATA_TAG)) {
                 isUsefulData = true;
             }
-            if (!isUsefulData)
+            if (!isUsefulData) {
                 continue;
-            if (!line.contains("." + region + "."))
-                continue;
-            debug("Got: " + line);
-
-            Matcher m1 = SINGLE_LINE_PATTERN.matcher(line);
-
-            if (m1.matches()) {
-                parseSingleLine(result, line, m1, i);
-            } else {
-                i = parseMultiLine(lines, result, i, line, region);
             }
+
+            Matcher section = SECTION_PATTERN.matcher(line);
+            // Ignore linker-script wildcards, assignments, and symbol-address rows.
+            if (!section.matches() || !region.equals(section.group(1))) {
+                continue;
+            }
+
+            String suffix = section.group(2);
+            String columns = section.group(3);
+            if (columns == null || columns.trim().isEmpty()) {
+                if (i + 1 == lines.size()) {
+                    throw new IllegalStateException("Missing address and size after line " + (i + 1) + ": " + line);
+                }
+                suffix = line;
+                line = lines.get(++i);
+                columns = line;
+            }
+
+            Matcher values = COLUMNS_PATTERN.matcher(columns);
+            if (!values.matches()) {
+                throw new IllegalStateException("Invalid address or size at line " + (i + 1) + ": " + line);
+            }
+
+            int size;
+            try {
+                size = Integer.parseInt(values.group(1), 16);
+            } catch (NumberFormatException e) {
+                throw new IllegalStateException("Invalid size at line " + (i + 1) + ": " + line, e);
+            }
+
+            String path = values.group(2) == null ? "" : values.group(2);
+            result.add(new Record(size, path + "@" + suffix, region));
         }
         return result;
-    }
-
-    private static int parseMultiLine(List<String> lines, List<Record> result, int lineIndex, String line, String region) {
-        debug("Multi-line " + line);
-        String suffix = line;
-        line = lines.get(++lineIndex);
-
-        Matcher m2 = MULTI_LINE_PATTERN.matcher(line);
-
-        if (!m2.matches()) {
-            debug("Returning into consideration: " + line);
-            return lineIndex - 1;
-        }
-
-        String sizeString = m2.group(1);
-        String prefix = m2.group(2);
-
-        debug("Next line " + line);
-
-        String name = prefix + "@" + suffix;
-
-        if (line.contains("ALIGN")) {
-            System.out.println("TODO: better handle " + line);
-            return lineIndex;
-        }
-
-        int size;
-        try {
-            size = Integer.parseInt(sizeString, 16);
-        } catch (NumberFormatException e) {
-            throw new IllegalStateException("While parsing @ " + lineIndex);
-        }
-
-        debug("Name " + name);
-        debug("size " + size);
-
-        result.add(new Record(size, name, region));
-        return lineIndex;
-    }
-
-    private static void parseSingleLine(List<Record> result, String line, Matcher m1, int lineIndex) {
-        debug("Single-line " + line);
-
-        int i = 1;
-        String region = m1.group(i++);
-        String suffix = m1.group(i++);
-        String sizeString = m1.group(i++);
-        //noinspection UnusedAssignment
-        String prefix = m1.group(i++);
-
-        String name = prefix + "@" + suffix;
-
-        int size;
-        try {
-            size = Integer.parseInt(sizeString, 16);
-        } catch (NumberFormatException e) {
-            throw new IllegalStateException("While parsing @ " + lineIndex);
-        }
-
-        debug("Name " + name);
-        debug("size " + size);
-
-        result.add(new Record(size, name, region));
     }
 
     @SuppressWarnings("unused")

@@ -10,6 +10,109 @@ import static org.junit.jupiter.api.Assertions.*;
 public class GccMapReaderTest {
     private static final String BSS = "bss";
 
+    private static List<String> mapRecord(String columns, boolean multiline) {
+        return multiline
+                ? Arrays.asList(GccMapReader.START_OF_DATA_TAG, " .bss.ch_idle_thread_wa", columns)
+                : Arrays.asList(GccMapReader.START_OF_DATA_TAG, " .bss.ch_idle_thread_wa " + columns);
+    }
+
+    @Test
+    public void testHexPrefixInObjectPath() {
+        for (boolean multiline : new boolean[]{false, true}) {
+            for (String path : new String[]{
+                    "/tmp/ccAB0xCD.ltrans0.ltrans.o",
+                    "C:/Users/Runner Admin/AppData/Local/Temp/ccAB0xCD.ltrans0.ltrans.o",
+                    "C:\\Users\\Runner Admin\\AppData\\Local\\Temp\\ccAB0xCD.ltrans0.ltrans.o"}) {
+                List<String> lines = mapRecord("  0x20000000   0x610 " + path, multiline);
+                List<GccMapReader.Record> records = GccMapReader.process(lines, BSS);
+                assertEquals(1, records.size());
+                assertEquals(0x610, records.get(0).getSize());
+                assertTrue(records.get(0).toString().contains(path));
+            }
+        }
+    }
+
+    @Test
+    public void testHexadecimalFilenameSuffix() {
+        for (boolean multiline : new boolean[]{false, true}) {
+            List<GccMapReader.Record> records = GccMapReader.process(
+                    mapRecord("0x20000000 0x610 /tmp/object0x20", multiline), BSS);
+            assertEquals(1, records.size());
+            assertEquals(0x610, records.get(0).getSize());
+        }
+    }
+
+    @Test
+    public void testOversizedSectionDiagnostic() {
+        for (boolean multiline : new boolean[]{false, true}) {
+            List<String> lines = mapRecord("0x20000000 0x80000000 build/obj/large.o", multiline);
+            IllegalStateException error = assertThrows(IllegalStateException.class,
+                    () -> GccMapReader.process(lines, BSS));
+            assertEquals("Invalid size at line " + lines.size() + ": " + lines.get(lines.size() - 1),
+                    error.getMessage());
+            assertInstanceOf(NumberFormatException.class, error.getCause());
+        }
+    }
+
+    @Test
+    public void testTruncatedMultilineRecord() {
+        List<String> lines = Arrays.asList(GccMapReader.START_OF_DATA_TAG, " .bss.truncated");
+        IllegalStateException error = assertThrows(IllegalStateException.class,
+                () -> GccMapReader.process(lines, BSS));
+        assertEquals("Missing address and size after line 2:  .bss.truncated", error.getMessage());
+    }
+
+    @Test
+    public void testMalformedColumns() {
+        for (boolean multiline : new boolean[]{false, true}) {
+            for (String columns : new String[]{
+                    "0x20000000 0xNOPE file.o", "0xWRONG 0x610 file.o", "0x20000000 file.o"}) {
+                List<String> lines = mapRecord(columns, multiline);
+                IllegalStateException error = assertThrows(IllegalStateException.class,
+                        () -> GccMapReader.process(lines, BSS));
+                assertEquals("Invalid address or size at line " + lines.size() + ": " + lines.get(lines.size() - 1),
+                        error.getMessage());
+            }
+        }
+    }
+
+    @Test
+    public void testIgnoresScriptAndSymbolRows() {
+        List<GccMapReader.Record> records = GccMapReader.process(Arrays.asList(
+                GccMapReader.START_OF_DATA_TAG,
+                " *(.bss.*)",
+                "                0x20000000 . = ALIGN (0x4)",
+                "                0x20000000 .bss.symbol",
+                " .text.other 0x08000000 0x20 build/other.o",
+                " .bss.real 0x20000000 0x18 build/ALIGN.o"), BSS);
+        assertEquals(1, records.size());
+        assertEquals(0x18, records.get(0).getSize());
+    }
+
+    @Test
+    public void testColumnsWithoutObjectPath() {
+        for (boolean multiline : new boolean[]{false, true}) {
+            List<GccMapReader.Record> records = GccMapReader.process(
+                    mapRecord("\t0x200000AB\t0xAB\t", multiline), BSS);
+            assertEquals(1, records.size());
+            assertEquals(0xAB, records.get(0).getSize());
+        }
+    }
+
+    @Test
+    public void testTextTotalsExcludeUnwindAndFill() {
+        List<GccMapReader.Record> records = GccMapReader.process(Arrays.asList(
+                GccMapReader.START_OF_DATA_TAG,
+                " *(SORT_BY_ALIGNMENT(.text.*))",
+                " *fill*         0x08000000 0x6",
+                " .ARM.exidx.text.handler",
+                "                0x08000006 0x8 build/unwind.o",
+                " .ARM.extab.text.handler 0x0800000e 0xc build/unwind.o",
+                " .text.handler 0x0800001a 0x20 build/handler.o"), "text");
+        assertEquals(1, records.size());
+        assertEquals(0x20, records.get(0).getSize());
+    }
+
     @Test
     public void testSimpleLinesWithTagInTheMiddle() {
         List<GccMapReader.Record> r = GccMapReader.process(Arrays.asList(
