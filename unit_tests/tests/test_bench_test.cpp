@@ -17,6 +17,7 @@
 #include "pch.h"
 
 #include "bench_test.h"
+#include "vvt.h"
 
 static BenchRequestForUnitTest dispatch(bench_mode_e command) {
 	// nothing left over from a previous command
@@ -117,7 +118,7 @@ TEST(BenchTest, noBenchFunctionRebootsEcu) {
 	EXPECT_EQ(nullptr, dispatch(BENCH_GPPWM1_VALVE).pin);
 	EXPECT_TRUE(engine->engineState.warnings.isWarningNow(ObdCode::CUSTOM_ERR_BENCH_PARAM));
 
-	// every value of bench_mode_e, including the ones compiled out of this build (VVT, HD ACR):
+	// every value of bench_mode_e, including the ones compiled out of this build (HD ACR):
 	// the worst outcome is that warning, never a criticalError()
 	for (int index = 0; index <= BENCH_BOOST_VALVE; index++) {
 		EXPECT_NO_THROW(handleBenchCategory(index)) << "bench function " << index;
@@ -177,4 +178,115 @@ TEST(BenchTest, secondIdleSolenoidIgnoresPwmWritesDuringBench) {
 	request.pin->setValue(1);
 	EXPECT_TRUE(request.pin->getLogicValue());
 	request.pin->setValue(0);
+}
+
+class VvtBenchTest : public ::testing::Test {
+protected:
+	EngineTestHelper eth{engine_type_e::TEST_ENGINE};
+
+	// Bank 1 intake/exhaust, then bank 2 intake/exhaust, as wired by the TS buttons.
+	static constexpr bench_mode_e commands[] = {
+		BENCH_VVT0_VALVE, BENCH_VVT1_VALVE, BENCH_VVT2_VALVE, BENCH_VVT3_VALVE
+	};
+	static constexpr brain_pin_e pins[] = {Gpio::D0, Gpio::D1, Gpio::D2, Gpio::D3};
+	static constexpr int pwmPeriodUs = 10000;
+
+	void SetUp() override {
+		setOutputOnTheBenchTestForUnitTest(nullptr);
+		takePendingBenchRequestForUnitTest();
+		engine->scheduler.clear();
+		setTimeNowUs(0);
+		stopVvtControlPins();
+		for (size_t i = 0; i < efi::size(pins); i++) {
+			engineConfiguration->vvtPins[i] = pins[i];
+		}
+		engineConfiguration->vvtOutputFrequency = 100;
+		startVvtControlPins();
+	}
+
+	void TearDown() override {
+		// The VVT outputs/PWMs are file-scope statics. Never leave bench ownership,
+		// scheduled callbacks, or registered pins behind, even after an ASSERT failure.
+		setOutputOnTheBenchTestForUnitTest(nullptr);
+		takePendingBenchRequestForUnitTest();
+		engine->scheduler.clear();
+		stopVvtControlPins();
+	}
+};
+
+TEST_F(VvtBenchTest, allFourTsButtonsQueueTheCorrectPinAndFixedPulse) {
+	// VVT deliberately ignores the general-purpose pulse train settings.
+	engineConfiguration->benchTestOnTime = 5;
+	engineConfiguration->benchTestOffTime = 10;
+	engineConfiguration->benchTestCount = 4000;
+
+	for (size_t i = 0; i < efi::size(commands); i++) {
+		SCOPED_TRACE(i);
+		auto request = dispatch(commands[i]);
+		ASSERT_NE(nullptr, request.pin);
+		EXPECT_EQ(pins[i], request.pin->brainPin);
+		EXPECT_EQ(getVvtOutputPin(i), request.pin);
+		// The simulator/CAN QC lookup must agree with TS dispatch.
+		EXPECT_EQ(request.pin, enginePins.getOutputPinForBenchMode(commands[i]));
+		EXPECT_FLOAT_EQ(300, request.onTimeMs);
+		EXPECT_FLOAT_EQ(100, request.offTimeMs);
+		EXPECT_EQ(1, request.count);
+		EXPECT_FALSE(request.swapOnOff);
+	}
+	EXPECT_EQ(0, eth.getWarningCounter());
+}
+
+TEST_F(VvtBenchTest, eachBenchPulseOwnsOnlyItsPinAndPwmResumesAfterRelease) {
+	// Prove all four real PWM callbacks are active before taking ownership.
+	for (size_t i = 0; i < efi::size(pins); i++) {
+		EXPECT_TRUE(getVvtOutputPin(i)->getLogicValue());
+	}
+	eth.moveTimeForwardAndInvokeEventsUs(1000); // initial duty = 10% at 100 Hz
+	for (size_t i = 0; i < efi::size(pins); i++) {
+		EXPECT_FALSE(getVvtOutputPin(i)->getLogicValue());
+	}
+	eth.moveTimeForwardAndInvokeEventsUs(9000);
+	for (size_t i = 0; i < efi::size(pins); i++) {
+		EXPECT_TRUE(getVvtOutputPin(i)->getLogicValue());
+	}
+
+	for (size_t selected = 0; selected < efi::size(commands); selected++) {
+		SCOPED_TRACE(selected);
+		auto request = dispatch(commands[selected]);
+		ASSERT_NE(nullptr, request.pin);
+		auto* output = request.pin;
+		int before[4];
+		for (size_t i = 0; i < efi::size(pins); i++) {
+			before[i] = getVvtOutputPin(i)->pinToggleCounter;
+		}
+
+		// Model the bench worker's ownership and forced edges. PWM events themselves
+		// run through the production scheduler callbacks, not direct setValue substitutes.
+		setOutputOnTheBenchTestForUnitTest(output);
+		output->setValue(1, /*isForce*/ true);
+		const int highCount = output->pinToggleCounter;
+		eth.moveTimeForwardAndInvokeEventsUs(300000);
+		EXPECT_TRUE(output->getLogicValue());
+		EXPECT_EQ(highCount, output->pinToggleCounter); // no intervening PWM glitches
+
+		output->setValue(0, /*isForce*/ true);
+		const int lowCount = output->pinToggleCounter;
+		eth.moveTimeForwardAndInvokeEventsUs(100000);
+		EXPECT_FALSE(output->getLogicValue());
+		EXPECT_EQ(lowCount, output->pinToggleCounter);
+
+		for (size_t i = 0; i < efi::size(pins); i++) {
+			if (i != selected) {
+				EXPECT_EQ(80, getVvtOutputPin(i)->pinToggleCounter - before[i]) << "output " << i;
+			}
+		}
+
+		setOutputOnTheBenchTestForUnitTest(nullptr);
+		eth.moveTimeForwardAndInvokeEventsUs(pwmPeriodUs);
+		EXPECT_TRUE(output->getLogicValue());
+		const int resumedCount = output->pinToggleCounter;
+		eth.moveTimeForwardAndInvokeEventsUs(pwmPeriodUs);
+		EXPECT_EQ(resumedCount + 2, output->pinToggleCounter);
+	}
+	EXPECT_EQ(0, eth.getWarningCounter());
 }

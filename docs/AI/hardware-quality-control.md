@@ -79,6 +79,15 @@ A unit test observes a routed command through
 thread to execute it. Output ownership coverage also verifies that normal PWM-style writes
 cannot overwrite the second-solenoid bench pulses and resume after bench ownership ends.
 
+VVT output storage, pin initialization, PWM callbacks, and bench dispatch also build under
+`EFI_UNIT_TEST`, without enabling the automatic VVT controller modules. `VvtBenchTest` verifies
+all four TS commands against distinct configured pins and the simulator/CAN QC pin lookup,
+including their fixed 300 ms ON / 100 ms OFF / one-pulse requests. It drives real VVT PWM
+callbacks on the simulated clock while modeling the bench worker's ownership and forced
+edges: the selected output stays steady, the other three keep toggling, and PWM resumes
+after release. This covers the pin handoff, not the excluded bench thread's scheduling
+or physical smart-driver behavior.
+
 ### Console commands (registered in `initBenchTest()`)
 
 `fuelpumpbench`, `fuelpumpbench2 <ms>`, `fuelbench <on> <off> <count>`,
