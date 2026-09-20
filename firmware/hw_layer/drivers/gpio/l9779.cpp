@@ -30,6 +30,7 @@
 #include "pch.h"
 
 #include "gpio/l9779.h"
+#include "gpio/l9779_spi.h"
 
 #if EFI_PROD_CODE && (BOARD_L9779_COUNT > 0)
 
@@ -308,7 +309,8 @@ int L9779::spi_rw_array(const uint16_t *tx, uint16_t *rx, int n)
 		/* Slave Select assertion. */
 		spiSelect(spi);
 		/* data transfer */
-		uint16_t rxdata = spiPolledExchange(spi, tx[i]);
+		uint16_t txdata = l9779PrepareSpiWord(tx[i]);
+		uint16_t rxdata = spiPolledExchange(spi, txdata);
 
 		if (rx)
 			rx[i] = rxdata;
@@ -316,7 +318,7 @@ int L9779::spi_rw_array(const uint16_t *tx, uint16_t *rx, int n)
 		spiUnselect(spi);
 
 		/* statistic and debug */
-		recentTx = tx[i];
+		recentTx = txdata;
 		recentRx = rxdata;
 		this->spi_cnt++;
 
