@@ -51,10 +51,33 @@ Key behaviors:
 ### What can be pulsed
 
 Injectors and coils (per-cylinder), TCU solenoids, Lua output pins, fuel pump relay, main
-relay, starter relay, AC relay, fan 1/2, check-engine light (MIL), HPFP valve, boost valve,
-VVT valves 0-3 (`EFI_VVT_PID`), Harley ACR 1/2 (`EFI_HD_ACR`), idle valve
-(`startIdleBench()`, `EFI_IDLE_CONTROL`). `bench_mode_e` in
-`firmware/controllers/algo/engine_types.h` is the wire enum used to select these over CAN.
+relay, starter relay, starter *disable* relay, AC relay, fan 1/2, check-engine light (MIL),
+HPFP valve, boost valve, VVT valves 0-3 (`EFI_VVT_PID`), Harley ACR 1/2 (`EFI_HD_ACR`),
+second idle solenoid (`secondIdleValveBench()`, plain pulse on `secondIdleSolenoidPin`), idle
+valve (`startIdleBench()`, `EFI_IDLE_CONTROL` - *not* a pin pulse: it lets the idle controller
+drive the valve for 3 s, both coils in double-solenoid mode). `bench_mode_e` in
+`firmware/controllers/algo/engine_types.h` is the wire enum used to select these over CAN and
+from TunerStudio (`cmd_test_*` in `tunerstudio.template.ini` -> `TS_BENCH_CATEGORY` ->
+`handleBenchCategory()`).
+
+### Dispatch invariant and unit coverage
+
+Every `bench_mode_e` value that `tunerstudio.template.ini` binds to a `commandButton` must have a
+`case` in `handleBenchCategory()`. Issue #10285 was the "Idle Second Air Valve" button sending
+`BENCH_SECOND_IDLE_VALVE` (14) into the `default:` branch, which was a `criticalError` - i.e. a
+reboot on click; "Test Starter Disable" and Lua buttons 5-10 had the same hole. The default is
+now a `warning(CUSTOM_ERR_BENCH_PARAM)`, as are unknown subsystem and X14 indices. Invalid
+commands leave no bench output request pending or firmware error latched, and subsequent
+valid commands still work. `unit_tests/tests/test_bench_test.cpp` covers these defaults,
+sweeps the bench enum, and verifies all ten Lua counters through the TS entry point.
+The request and dispatch layers (`pinbench()`, the named `*Bench()` helpers,
+`handleBenchCategory()`, `handleCommandX14()`, `executeTSCommand()`) build under
+`EFI_UNIT_TEST`; the bench thread, pulse execution, console wrappers, CAN packet handlers,
+and calls to host-excluded trigger generation stay outside that build.
+A unit test observes a routed command through
+`takePendingBenchRequestForUnitTest()` (pin, on/off time, count, swap flag) since there is no
+thread to execute it. Output ownership coverage also verifies that normal PWM-style writes
+cannot overwrite the second-solenoid bench pulses and resume after bench ownership ends.
 
 ### Console commands (registered in `initBenchTest()`)
 
@@ -73,7 +96,7 @@ reachable over CAN (see section 3). Subsystems (`ts_command_e`):
   `TS_LUA_OUTPUT_CATEGORY` - per-index bench pulse, **only if RPM is stopped**.
 - `TS_BENCH_CATEGORY` -> `handleBenchCategory(index)` - the `bench_mode_e` list above, plus
   LTFT actions (`LTFT_RESET`, `LTFT_APPLY_TO_VE`, `LTFT_DEV_POKE`) and TS Lua buttons
-  `LUA_COMMAND_1..4` which just increment `luaCommandCounters[]` (a Lua script polls them via
+  `LUA_COMMAND_1..10` which just increment `luaCommandCounters[]` (a Lua script polls them via
   `getTsButtonCount(n)`).
 - `TS_X14` -> `handleCommandX14(index)` - grab-bag: TPS/pedal calibration grabs, ETB
   autocal/bench/autotune (section 7), `TS_RESET_TLE8888` / `TS_RESET_MC33810` smart-driver
