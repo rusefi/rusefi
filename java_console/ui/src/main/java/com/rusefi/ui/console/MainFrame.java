@@ -211,6 +211,7 @@ public class MainFrame {
     private JMenuItem checkEcuUpdateItem;
     private JMenuItem updateEcuItem;
     private BinaryLoggingMenu binaryLoggingMenu;
+    private ShortcutsDialog shortcutsDialog;
     private Runnable updateEcuAction;
     private Runnable exitRequestHandler;
     private boolean firmwareUpdateInProgress;
@@ -357,6 +358,19 @@ public class MainFrame {
         binaryLoggingMenu = new BinaryLoggingMenu(consoleUI.uiContext, frame.getFrame(),
                 loadMenuIcon("player-play"), loadMenuIcon("player-stop"));
         menuBar.add(binaryLoggingMenu.getMenu());
+
+        JMenuItem shortcutsItem = new JMenuItem("Shortcuts");
+        shortcutsItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
+        shortcutsItem.setToolTipText("Show keyboard shortcuts in a separate window (F1)");
+        shortcutsItem.setMaximumSize(shortcutsItem.getPreferredSize());
+        shortcutsItem.addActionListener(e -> {
+            if (shortcutsDialog == null || !shortcutsDialog.isDisplayable()) {
+                shortcutsDialog = new ShortcutsDialog(frame.getFrame());
+            }
+            shortcutsDialog.setVisible(true);
+            shortcutsDialog.toFront();
+        });
+        menuBar.add(shortcutsItem);
 
         frame.getFrame().setJMenuBar(menuBar);
     }

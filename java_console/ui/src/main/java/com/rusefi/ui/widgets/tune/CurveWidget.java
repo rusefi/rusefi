@@ -86,6 +86,7 @@ public class CurveWidget {
         });
         table.setCellSelectionEnabled(true);
         table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        table.setToolTipText("Type to replace a value; Enter to accept; Esc to cancel; Shift+arrows to select");
         table.getSelectionModel().addListSelectionListener(e -> canvas.repaint());
         table.getColumnModel().getSelectionModel().addListSelectionListener(e -> canvas.repaint());
         // JTable defaults to a 450x400 preferredScrollableViewportSize; left unchanged the table would
