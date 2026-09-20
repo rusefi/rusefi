@@ -183,12 +183,9 @@ public class PCanIoStream extends AbstractIoStream {
         return dataBuffer;
     }
 
-    @Override
-    public synchronized boolean isClosed() {
-        // Publish close() to the reader thread as well as serializing repeated closes.
-        return super.isClosed();
-    }
-
+    // Use AbstractIoStream's thread-safe isClosed() without taking this lock.
+    // Otherwise, reading a response and closing the stream can each hold a lock
+    // the other needs, leaving both threads stuck.
     @Override
     public synchronized void close() {
         if (isClosed()) {
