@@ -45,6 +45,7 @@ public class TuningTableView {
         table.setDefaultRenderer(Object.class, new GradientRenderer());
         table.setCellSelectionEnabled(true);
         table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        table.setToolTipText("Arrow keys to move; Shift+arrows to select; Ctrl+A to select all; see Shortcuts for more");
 
         table.addMouseListener(new MouseAdapter() {
             @Override
@@ -76,10 +77,14 @@ public class TuningTableView {
         });
 
         JTextField deltaField = new JTextField("0.5", 5);
+        deltaField.setToolTipText("Amount added or subtracted by the Up and Down buttons");
         deltaField.setMaximumSize(new Dimension(100, 30));
         JButton upButton = new JButton("Up");
         JButton downButton = new JButton("Down");
         JButton equalsButton = new JButton("=");
+        upButton.setToolTipText("Increase selected values by delta");
+        downButton.setToolTipText("Decrease selected values by delta");
+        equalsButton.setToolTipText("Set selected cells to a value");
         Action horizontalAction = new AbstractAction("H") {
             @Override
             public void actionPerformed(ActionEvent e) {

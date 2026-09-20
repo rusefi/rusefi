@@ -12,6 +12,7 @@ import com.rusefi.util.TuneSnapshot;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.Component;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.time.LocalDate;
@@ -20,6 +21,7 @@ import java.util.concurrent.ExecutionException;
 
 /** Owns the logging menu and recorder lifecycle. Menu/lifecycle methods run on the Swing event thread. */
 final class BinaryLoggingMenu {
+    private static final KeyStroke TOGGLE_LOGGING = KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK);
     private final UIContext uiContext;
     private final Component parent;
     private final JMenu menu;
@@ -36,11 +38,13 @@ final class BinaryLoggingMenu {
 
         startItem = new JMenuItem("Start");
         startItem.setIcon(startIcon);
+        startItem.setToolTipText("Start a binary data log (Ctrl+S)");
         startItem.addActionListener(e -> chooseAndStart());
         menu.add(startItem);
 
         stopItem = new JMenuItem("Stop");
         stopItem.setIcon(stopIcon);
+        stopItem.setToolTipText("Stop logging or cancel a pending start (Ctrl+S)");
         stopItem.addActionListener(e -> {
             stop();
             refresh();
@@ -65,6 +69,9 @@ final class BinaryLoggingMenu {
         startItem.setText(isStarting ? "Starting..." : "Start");
         startItem.setEnabled(isConnected && !isLogging && !isStarting);
         stopItem.setEnabled(isLogging || isStarting);
+        // Only one item owns the accelerator at a time, including while saving the tune.
+        startItem.setAccelerator(isLogging || isStarting ? null : TOGGLE_LOGGING);
+        stopItem.setAccelerator(isLogging || isStarting ? TOGGLE_LOGGING : null);
         saveTuneItem.setEnabled(!isLogging && !isStarting);
     }
 

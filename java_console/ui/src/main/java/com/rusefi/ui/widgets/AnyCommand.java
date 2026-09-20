@@ -50,6 +50,7 @@ public class AnyCommand {
         }
         content.add(text);
         JButton go = new JButton("Go");
+        go.setToolTipText("Send command text (Ctrl+Enter)");
         go.setContentAreaFilled(false);
         go.addActionListener(e -> send());
         content.add(go);
@@ -211,6 +212,7 @@ public class AnyCommand {
         final JTextField text = new JTextFieldWithWidth(200);
 
         final AnyCommand command = new AnyCommand(uiContext, text, config, defaultCommand, listenToCommands, withCommandCaption);
+        text.setToolTipText("Enter or Ctrl+Enter to send; Up/Down for command history");
         text.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
