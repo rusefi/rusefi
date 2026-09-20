@@ -163,6 +163,11 @@ public:
 
 	bool isComplete{};
 
+#if EFI_UNIT_TEST
+	// Existing tests omit FC frames. Opt in to the unchanged firmware wait path.
+	bool enableFlowControlForTest = false;
+#endif
+
 	void reset();
 
 	int sendFrame(const IsoTpFrameHeader & header, const uint8_t *data, int num, can_sysinterval_t timeout);

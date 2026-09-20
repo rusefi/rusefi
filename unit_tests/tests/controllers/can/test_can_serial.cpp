@@ -13,6 +13,7 @@
 #include "serial_can.h"
 
 #include <array>
+#include <functional>
 #include <iterator>
 #include <list>
 #include <string>
@@ -86,6 +87,155 @@ public:
 
 	int attempts = 0;
 };
+
+class FlowControlTestTransport : public TestCanTransport {
+public:
+	std::function<void()> duringFirstTransmit;
+	std::function<void()> beforeReceive;
+	int receiveCalls = 0;
+
+	can_msg_t transmit(CanTxMessage &message, can_sysinterval_t timeout) override {
+		auto result = TestCanTransport::transmit(message, timeout);
+		if ((message.getFrame()->data8[0] >> 4) == ISO_TP_FRAME_FIRST && duringFirstTransmit) {
+			duringFirstTransmit();
+		}
+		return result;
+	}
+
+	can_msg_t receive(CANRxFrame *frame, can_sysinterval_t timeout) override {
+		receiveCalls++;
+		if (beforeReceive) {
+			beforeReceive();
+		}
+		return TestCanTransport::receive(frame, timeout);
+	}
+};
+
+class IsoTpFlowControl : public testing::Test {
+protected:
+	EngineTestHelper eth{engine_type_e::TEST_ENGINE};
+	FlowControlTestTransport transport;
+	CanStreamerState state{&transport, &transport, 0, 0x7e9, 0x7e1};
+	const std::array<uint8_t, 10> payload{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+	IsoTpFlowControl() {
+		state.enableFlowControlForTest = true;
+	}
+
+	static CANRxFrame frame(std::initializer_list<uint8_t> bytes) {
+		CANRxFrame result{};
+		result.SID = 0x7e9;
+		result.DLC = 8;
+		std::copy(bytes.begin(), bytes.end(), result.data8);
+		return result;
+	}
+
+	int send() {
+		return state.sendDataTimeout(payload.data(), payload.size(), 0);
+	}
+};
+
+TEST_F(IsoTpFlowControl, WaitConsumesIncomingCommandAndAbortsResponse) {
+	transport.crfList.push_back(frame({0x02, 0x55, 0x66}));
+	transport.duringFirstTransmit = [&] {
+		transport.crfList.push_back(frame({0x30, 0, 0}));
+	};
+
+	// TDB: the pending command is consumed as though it were an acknowledgement.
+	EXPECT_EQ(0, send());
+	EXPECT_EQ(1, transport.receiveCalls);
+	ASSERT_EQ(1u, transport.ctfList.size()); // Response stops after its first frame.
+	EXPECT_EQ(0x10, transport.ctfList.front().data8[0]);
+	ASSERT_EQ(1u, transport.crfList.size());
+	EXPECT_EQ(0x30, transport.crfList.front().data8[0]); // Actual CTS is left behind.
+	EXPECT_TRUE(state.isComplete);
+	EXPECT_EQ(2, state.rxFifoBuf.getCount());
+	EXPECT_EQ(0x55, state.rxFifoBuf.get());
+	EXPECT_EQ(0x66, state.rxFifoBuf.get());
+}
+
+TEST_F(IsoTpFlowControl, WaitAdvancesPartiallyReceivedCommandAndAbortsResponse) {
+	auto first = frame({0x10, 10, 1, 2, 3, 4, 5, 6});
+	state.receiveFrame(first, nullptr, 0, 0);
+	ASSERT_EQ(4, state.waitingForNumBytes);
+	ASSERT_EQ(1, state.waitingForFrameIndex);
+	transport.ctfList.clear(); // Ignore our CTS acknowledging the inbound command.
+	transport.crfList.push_back(frame({0x21, 7, 8, 9, 10}));
+	transport.duringFirstTransmit = [&] {
+		transport.crfList.push_back(frame({0x30, 0, 0}));
+	};
+
+	// TDB: waiting for outbound CTS also mutates the inbound assembly state.
+	EXPECT_EQ(0, send());
+	EXPECT_EQ(0, state.waitingForNumBytes);
+	EXPECT_EQ(2, state.waitingForFrameIndex);
+	EXPECT_TRUE(state.isComplete);
+	ASSERT_EQ(10, state.rxFifoBuf.getCount());
+	for (auto byte : payload) {
+		EXPECT_EQ(byte, state.rxFifoBuf.get());
+	}
+	ASSERT_EQ(1u, transport.ctfList.size());
+	ASSERT_EQ(1u, transport.crfList.size());
+	EXPECT_EQ(0x30, transport.crfList.front().data8[0]);
+}
+
+TEST_F(IsoTpFlowControl, AcknowledgementDuringFirstTransmitIsNotMissed) {
+	transport.duringFirstTransmit = [&] {
+		transport.crfList.push_back(frame({0x30, 0, 0}));
+	};
+
+	// This already works on master. Preserve it when introducing a separate FC counter:
+	// an acknowledgement may arrive before transmit() returns to the sending thread.
+	EXPECT_EQ(10, send());
+	EXPECT_EQ(1, transport.receiveCalls);
+	EXPECT_TRUE(transport.crfList.empty());
+	ASSERT_EQ(2u, transport.ctfList.size());
+	transport.checkFrame(transport.ctfList.front(), "\x10\x0a\x01\x02\x03\x04\x05\x06"s, 0);
+	transport.checkFrame(transport.ctfList.back(), "\x21\x07\x08\x09\x0a\x0a\x0a\x0a"s, 1);
+}
+
+TEST_F(IsoTpFlowControl, AcknowledgementAfterFirstTransmitCompletesResponse) {
+	transport.beforeReceive = [&] {
+		ASSERT_EQ(1u, transport.ctfList.size());
+		transport.crfList.push_back(frame({0x30, 0, 0}));
+	};
+	EXPECT_EQ(10, send());
+	EXPECT_EQ(1, transport.receiveCalls);
+	EXPECT_EQ(2u, transport.ctfList.size());
+}
+
+TEST_F(IsoTpFlowControl, MissingAcknowledgementStopsAfterFirstFrame) {
+	EXPECT_EQ(0, send());
+	EXPECT_EQ(1, transport.receiveCalls);
+	EXPECT_EQ(1u, transport.ctfList.size());
+}
+
+TEST_F(IsoTpFlowControl, ReceiverAbortStopsAfterFirstFrame) {
+	transport.duringFirstTransmit = [&] {
+		transport.crfList.push_back(frame({0x32, 0, 0}));
+	};
+	EXPECT_EQ(0, send());
+	EXPECT_EQ(1, transport.receiveCalls);
+	EXPECT_EQ(1u, transport.ctfList.size());
+}
+
+TEST_F(IsoTpFlowControl, ReceiverWaitThenContinueCompletesResponse) {
+	transport.duringFirstTransmit = [&] {
+		transport.crfList.push_back(frame({0x31, 0, 0}));
+		transport.crfList.push_back(frame({0x30, 0, 0}));
+	};
+	EXPECT_EQ(10, send());
+	EXPECT_EQ(2, transport.receiveCalls);
+	EXPECT_EQ(2u, transport.ctfList.size());
+}
+
+TEST_F(IsoTpFlowControl, SingleFrameResponseDoesNotReadCommandQueue) {
+	transport.crfList.push_back(frame({0x02, 0x55, 0x66}));
+	EXPECT_EQ(3, state.sendDataTimeout(payload.data(), 3, 0));
+	EXPECT_EQ(0, transport.receiveCalls);
+	EXPECT_EQ(1u, transport.crfList.size());
+	EXPECT_EQ(0, state.rxFifoBuf.getCount());
+}
 
 // if the first frame fails, stop sending the packet even if the
 // remaining frames could be sent successfully.
