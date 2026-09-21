@@ -69,19 +69,17 @@ class StorageSdTest(unittest.TestCase):
             harness = harness.replace("@" + name + "@", value)
         (path / "test.cpp").write_text(harness, encoding="utf-8")
         cls.executable = path / ("test.exe" if os.name == "nt" else "test")
-        if Path(CXX).name.lower() in ("cl", "cl.exe"):
-            command = [CXX, "/nologo", "/std:c++17", "/EHsc", "/W4", "/WX",
-                       "/I" + str(controllers), str(path / "test.cpp"),
-                       "/Fe:" + str(cls.executable), "/Fo:" + str(path / "test.obj")]
-        else:
-            command = [CXX, "-std=c++17", "-Wall", "-Wextra", "-Werror",
-                       "-I", str(controllers), str(path / "test.cpp"), "-o", str(cls.executable)]
-        subprocess.run(command, check=True, cwd=path)
         cls.without_msd = path / ("test_no_msd.exe" if os.name == "nt" else "test_no_msd")
-        no_msd_command = [arg.replace(str(cls.executable), str(cls.without_msd)) for arg in command]
-        no_msd_command.insert(1, "/DHAL_USE_USB_MSD=0" if Path(CXX).name.lower() in ("cl", "cl.exe")
-                              else "-DHAL_USE_USB_MSD=0")
-        subprocess.run(no_msd_command, check=True, cwd=path)
+        for executable, msd in ((cls.executable, 1), (cls.without_msd, 0)):
+            if Path(CXX).name.lower() in ("cl", "cl.exe"):
+                command = [CXX, "/nologo", "/std:c++17", "/EHsc", "/W4", "/WX",
+                           f"/DHAL_USE_USB_MSD={msd}", "/I" + str(controllers), str(path / "test.cpp"),
+                           "/Fe:" + str(executable), "/Fo:" + str(path / "test.obj")]
+            else:
+                command = [CXX, "-std=c++17", "-Wall", "-Wextra", "-Werror",
+                           f"-DHAL_USE_USB_MSD={msd}", "-I", str(controllers),
+                           str(path / "test.cpp"), "-o", str(executable)]
+            subprocess.run(command, check=True, cwd=path)
 
     def run_case(self, scenario, record="ltft", without_msd=False):
         executable = self.without_msd if without_msd else self.executable

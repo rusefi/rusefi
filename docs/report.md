@@ -790,3 +790,9 @@ Open follow-ups:
 - Removed the duplicate private LTFT retry flag; the existing load-error state now controls both late-read deferral and retry on engine stop. Initialization clears it and a successful load clears it again.
 - Replaced four pending-read helpers with one locked snapshot helper. The request and completion sites update the bitmap in short critical sections; no filesystem call or mailbox post runs under that lock.
 - Re-ran all 19 native GCC host tests successfully with both USB mass-storage build variants. The coverage-first commit remains separate from the correction. No public branch update was made before this simplification review.
+
+## 2026-09-21 - Correct cross-platform startup test compilation
+
+- The first CI run passed Windows GCC but exposed two build issues. On Unix, replacing the executable path also changed the source filename because the executable has no suffix. Generate both compiler commands from their explicit output paths instead.
+- MSVC rejected an existing unreachable return at the end of storageReadID; every branch already returns. Removed that redundant statement without changing dispatch behavior or suppressing warnings.
+- The correction leaves firmware behavior and test expectations unchanged. The five-toolchain workflow must pass before considering the portable host checks complete.

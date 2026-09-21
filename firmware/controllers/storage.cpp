@@ -155,7 +155,6 @@ static bool storageReadID(uint32_t id) {
 		// to clear pending bit
 		return true;
 	}
-	return true;
 }
 
 static const char *storageTypeToName(StorageType type) {
