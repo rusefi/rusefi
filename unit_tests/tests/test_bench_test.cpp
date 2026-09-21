@@ -78,14 +78,19 @@ TEST(BenchTest, luaButtonsCountPresses) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	memset(luaCommandCounters, 0, sizeof(luaCommandCounters));
 
+	// Boards may provide extra counters, but the bench protocol only defines commands 1..10.
+	constexpr int benchButtonCount = LUA_COMMAND_10 - LUA_COMMAND_1 + 1;
+	static_assert(LUA_BUTTON_COUNT >= benchButtonCount);
+
 	// Distinct counts check every button's routing and catch accidental updates of adjacent slots.
-	for (int button = 0; button < LUA_BUTTON_COUNT; button++) {
+	for (int button = 0; button < benchButtonCount; button++) {
 		for (int press = 0; press <= button; press++) {
 			executeTSCommand(TS_BENCH_CATEGORY, LUA_COMMAND_1 + button);
 		}
 	}
 	for (int button = 0; button < LUA_BUTTON_COUNT; button++) {
-		EXPECT_EQ(button + 1, luaCommandCounters[button]) << "Lua button " << button + 1;
+		const int expectedPresses = button < benchButtonCount ? button + 1 : 0;
+		EXPECT_EQ(expectedPresses, luaCommandCounters[button]) << "Lua button " << button + 1;
 	}
 	EXPECT_EQ(0, eth.getWarningCounter());
 	EXPECT_EQ(nullptr, takePendingBenchRequestForUnitTest().pin);
