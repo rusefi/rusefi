@@ -43,6 +43,11 @@ extern "C" {
 #endif
 
 void rebootNow() {
+	// Last-resort evidence so no deliberate reboot ever leaves without a cookie (issue #9931).
+	// First-writer-wins in logDeliberateReboot preserves any crash cookie, and any more
+	// specific RebootReason a caller stamped just before getting here. No-op in the bootloader.
+	logDeliberateReboot(RebootReason::Unknown);
+
 	#ifdef STM32H7XX
 		// H7 needs a forcible reset of the USB peripheral(s) in order for the bootloader to work properly.
 		// If you don't do this, the bootloader will execute, but USB doesn't work (nobody knows why)
@@ -57,7 +62,7 @@ void rebootNow() {
 	NVIC_SystemReset();
 }
 
-static bool reset_and_jump(void) {
+static bool reset_and_jump(RebootReason reason) {
 #if !ALLOW_JUMP_WITH_IGNITION_VOLTAGE
   if (isIgnVoltage()) {
     configError("Not allowed with ignition power");
@@ -83,7 +88,8 @@ static bool reset_and_jump(void) {
 	#endif
 	#endif
 
-	// and now reboot
+	// record why we are resetting (past the point of no return) and reboot
+	logDeliberateReboot(reason);
 	rebootNow();
 
 	return true;
@@ -94,7 +100,7 @@ void jump_to_bootloader() {
 	// leave DFU breadcrumb which assembly startup code would check, see [rusefi][DFU] section in assembly code
 	*((unsigned long *)0x2001FFF0) = 0xDEADBEEF; // End of RAM
 
-	if (!reset_and_jump()) {
+	if (!reset_and_jump(RebootReason::DfuJump)) {
 		// we have failed to reboot, clear breadcrumb
 		*((unsigned long *)0x2001FFF0) = 0x0; // End of RAM
 	}
@@ -108,7 +114,7 @@ void jump_to_openblt() {
 	/* Store sing to stay in OpenBLT */
 	SharedParamsWriteByIndex(0, 0x01);
 
-	if (!reset_and_jump()) {
+	if (!reset_and_jump(RebootReason::OpenBltJump)) {
 		SharedParamsWriteByIndex(0, 0x0);
 	}
 #endif
@@ -216,6 +222,19 @@ uint32_t getMcuSerial() {
 void baseMCUInit() {
 	// looks like this holds a random value on start? Let's set a nice clean zero
 	DWT->CYCCNT = 0;
+
+#ifdef STM32H7XX
+	// ChibiOS H7 hal_lld_init() has rccEnableBKPRAM() commented out ("not tested and unfinished"),
+	// so nothing else clocks the 4 KB backup SRAM at 0x38800000 that holds BackupSramData
+	// (boot counter + crash cookie, see error_handling.cpp) - without the clock every H7 boot
+	// looks like a first power-up: "Power cycle count: 0" and no crash evidence ever.
+	// This runs from both main() and bootloader main() before errorHandlerInit().
+	rccEnableBKPRAM(true);
+	// backup regulator keeps the content alive in VBAT/standby; bounded wait, do not hang boot on it
+	PWR->CR2 |= PWR_CR2_BREN;
+	for (int i = 0; i < 100000 && (PWR->CR2 & PWR_CR2_BRRDY) == 0; i++) {
+	}
+#endif // STM32H7XX
 
 
 #ifndef EFI_SKIP_BOR

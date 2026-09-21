@@ -3,7 +3,9 @@
 An [MCP (Model Context Protocol)](https://modelcontextprotocol.io/) server that lets an
 LLM client (Claude Desktop, JetBrains AI, Cursor, etc.) iterate on rusEFI Lua scripts:
 write a candidate script, upload it to the ECU, reset Lua, and observe the resulting
-`print(...)` / `efiPrintf` output.
+`print(...)` / `efiPrintf` output. It also reads live ECU values and records operating
+data to host-side `.mlg` files using the Java frontend's binary log format. It can
+also convert existing binary MLG and text TunerStudio MSL logs to CSV offline.
 
 ## Architecture
 
@@ -54,11 +56,54 @@ Behavior common to all tools:
 | `lua_reset` | Restart the Lua VM. |
 | `send_command`, `command` | Queue any text command. |
 | `read_output_channel` | Latest gauge value by name. |
+| `mount_to_ecu`, `mount_to_pc` | Switch SD-card ownership and confirm the reported mount mode. |
+| `start_data_logging` | Record ECU operating data to a new `.mlg` file. |
+| `stop_data_logging` | Stop recording and close the file. |
+| `data_logging_status` | Recording state, file path, sample count, and errors. |
+| `convert_log_to_csv` | Convert a host-side MLG/MSL log to CSV without connecting to an ECU. |
 | `read_messages` | Pull recent ECU messages (Lua `print` included). |
 | `wait_for_message` | Block until a message matches a regex. |
 | `read_tune` | Save the complete ECU tune as a `.msq` file. |
 | `reboot` | Reboot the ECU. |
 | `reboot_to_blt` | Reboot the ECU into the OpenBLT bootloader. |
+
+### `convert_log_to_csv`
+
+| Argument | Type | Required | Description |
+|---|---|---|---|
+| `inputPath` | string | yes | Existing binary MLVLG v2 or text TunerStudio MSL file on the MCP server host. |
+| `outputPath` | string | no | New CSV file; defaults to the input path with its extension replaced by `.csv`. Parent directory must exist. |
+
+Relative paths resolve against the server's working directory. No ECU connection
+or INI file is needed. Stop recording before converting the log. Existing output
+files are never overwritten. Conversion errors do not publish a partial CSV.
+
+Returns `success`, absolute `path`, `inputFormat` (`mlg` or `msl`), `recordCount`,
+and `fieldCount`. Example tool call:
+
+```json
+{"name":"convert_log_to_csv","arguments":{"inputPath":"/tmp/engine-run.mlg"}}
+```
+
+CSV columns follow the C++ `msl2csv` helper: one column per logged field, with
+units appended to the column name. Binary values use `(raw + transform) * scale`
+and the field's declared decimal precision (clamped to 0..12); NaN becomes an
+empty cell. No timestamp column is synthesized from the wrapping record header;
+a logged `Time` field is exported like any other field. Text MSL input must have
+a tab-separated field-name row, units row, and data rows with matching widths.
+Binary checksum mismatches, truncated records, unsupported scalar/block types,
+and inconsistent headers fail conversion. Marker blocks are not supported.
+
+The converter lives in `:mcp_ecu` as `com.rusefi.mcp.MslToCsv`, adapted from
+`misc/mlg2csv/MlgToCsv.java` on `at32-vovansss`. It streams records and can also run
+as a CLI after building `./gradlew :mcp_ecu:fatJar` (substitute the built jar path):
+
+```bash
+java -cp /path/to/mcp_ecu-all.jar com.rusefi.mcp.MslToCsv input.mlg output.csv
+```
+
+The output argument is optional. The existing C++ converter remains available
+for unit-test tooling.
 
 ### `connect`
 
@@ -115,7 +160,102 @@ messages — read it back with `read_messages` / `wait_for_message`.
 
 Returns `found` plus `value` when found; `found: false` means the channel does not
 exist **or** no data has arrived yet — retry after a moment before concluding the name
-is wrong.
+is wrong. The console's output-channel polling is subscription based (it fetches only
+the byte ranges of channels somebody subscribed to), so the server holds a full-frame
+lease for the lifetime of the ECU connection: every channel of the `.ini` is polled,
+like before that change.
+
+### `mount_to_ecu` and `mount_to_pc`
+
+Switch the SD card to ECU ownership (logging and ECU-side file access) or PC
+ownership (USB mass storage). The request uses the same binary command as the
+TunerStudio SD Card dialog. The selection lasts until power-off or `sdmode auto`.
+
+Optional `timeoutMs` defaults to 20000 and must be 1..120000. It covers command
+acknowledgement and mount confirmation; implicit connection has its separate timeout.
+These tools require firmware and a matching `.ini` exposing `sdCardMode` and
+`sd_present`. Older firmware returns an error before sending a mount command.
+
+Success requires a fresh output poll after acknowledgement reporting a present card
+in the requested mode. Logging may be paused or suppressed in ECU mode; its activity
+bit is not used to determine ownership. Results include `success`, `mounted`,
+`requestedMode`, and, when a fresh status arrived, `sdCardMode`, `mode`, `sd_present`.
+Timeouts and disconnects return an error with completion unconfirmed.
+
+Safely eject the PC drive before calling `mount_to_ecu`. Switching ownership can
+drop the shared USB console connection. Reconnect and use `read_output_channel`
+with `name: "sdCardMode"` to check the result before retrying. Mode values are
+0 idle, 1 ECU, 2 PC, 3 unmounted, 4 formatting. `sd_present` must also be set for
+the card to be usable. A PC-mode report confirms firmware ownership, not that
+the host OS has mounted a drive letter.
+
+```json
+{"name":"mount_to_ecu","arguments":{"timeoutMs":20000}}
+{"name":"mount_to_pc","arguments":{}}
+```
+
+### `start_data_logging`
+
+| Argument | Type | Required | Default | Description |
+|---|---|---|---|---|
+| `path` | string | no | Temporary `rusefi_data_*.mlg` file | New file on the MCP server host; parent directory must exist. Relative paths resolve against the server's working directory. |
+| `saveTune` | boolean | no | `true` | Save a tune snapshot in the same folder as the data log. |
+
+Connects if necessary, creates the file and writes its header before returning.
+Existing files are never overwritten. Starting while already recording fails and
+leaves the active recording intact. Records all supported numeric and enum output
+channels from the connected ECU's `.ini`, using the same field selection and binary
+MLG format as the frontend. Computed expression channels are not included.
+
+By default, start reads the ECU's configuration pages afresh on the communication
+thread and saves a TunerStudio `.msq` tune beside the data log before recording
+begins. The filename uses the server's local date: `YYYY-MM-DD.msq`. An identical
+existing tune is reused; a changed tune uses `YYYY-MM-DD_1.msq`, then `_2`, etc.
+Existing files are preserved, including invalid MSQ files. Comparison includes
+firmware signature and calibration constants on each page, ignoring comments and
+writer metadata. Unchanged numbered snapshots are reused too.
+
+Set `"saveTune": false` to record only data. If the required tune read/save fails,
+start fails without activating recording; any newly created data log is removed.
+The snapshot describes the tune at logging start; edits during a recording do not
+create further tune snapshots.
+
+Each complete poll supplies one row; the sampling rate is the connection's polling
+rate, not a separate high-speed ECU or SD-card logger. Recording continues between
+MCP requests. Partial polls and snapshots predating the recording's full-output
+subscription are excluded. Zero samples means no qualifying poll has arrived yet.
+
+### `stop_data_logging` and `data_logging_status`
+
+Neither takes arguments or requires an ECU connection. Stop closes the file and
+releases recording resources; repeated stops are safe. Both return the same status
+fields as start:
+
+| Field | Meaning |
+|---|---|
+| `success` | False if recording encountered an encoding, write, or close error. |
+| `logging` | Whether the recorder is active. |
+| `path` | Absolute file path, or null before the first successful start. |
+| `format` | `mlg`. |
+| `tunePath` | Absolute path of the saved/reused tune, or null when tune saving is disabled or no recording has started. |
+| `sampleCount` | Rows successfully written in this recording. |
+| `channelCount` | Fields in the log, including the frontend's MAP compatibility alias. |
+| `error` | Failure description, when present. |
+
+After stopping, status retains the last recording's details. A write/encoding error
+stops recording and remains visible until another recording starts successfully;
+a partially written file may remain. A disconnected ECU supplies no new samples.
+Reconnecting through an ECU tool stops the old recording to avoid mixing channel
+layouts; start a new recording afterwards. Normal server shutdown or stdin failure
+also closes the file. An abrupt process kill may leave an incomplete file.
+
+Example tool calls:
+
+```json
+{"name":"start_data_logging","arguments":{"path":"/tmp/engine-run.mlg"}}
+{"name":"data_logging_status","arguments":{}}
+{"name":"stop_data_logging","arguments":{}}
+```
 
 ### `read_messages`
 

@@ -19,6 +19,7 @@ public interface Timeouts {
 
     int CMD_TIMEOUT = 20 * SECOND;
     int SET_ENGINE_TIMEOUT = 60 * SECOND;
-    int TEXT_PULL_PERIOD = 100;
+    int OUTPUT_CHANNEL_PULL_PERIOD = Integer.getInteger("OUTPUT_CHANNEL_PULL_PERIOD", 50);
+    int FULL_OUTPUT_CHANNEL_PULL_PERIOD = Integer.getInteger("FULL_OUTPUT_CHANNEL_PULL_PERIOD", 100);
+    int TEXT_PULL_PERIOD = Integer.getInteger("TEXT_PULL_PERIOD", 100);
 }
-

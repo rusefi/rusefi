@@ -9,9 +9,106 @@ import org.junit.jupiter.api.Test;
 import java.util.TreeMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ConfigurationImageGetterSetterTest {
+    private static EnumIniField sparsePinField(FieldType type, int bitPosition, int bitSize0) {
+        TreeMap<Integer, String> labels = new TreeMap<>();
+        labels.put(0, "NONE");
+        labels.put(5, "Injector 1");
+        labels.put(47, "Coil 1");
+        return new EnumIniField("injectionPins1", 1, type,
+                new EnumIniField.EnumKeyValueMap(labels), bitPosition, bitSize0, true);
+    }
+
+    @Test
+    public void unknownByteOrdinalCannotBeSaved() {
+        EnumIniField field = sparsePinField(FieldType.UINT8, 0, 7);
+        for (int ordinal : new int[]{48, 255}) {
+            byte[] bytes = {(byte) 0xA5, (byte) ordinal, (byte) 0x5A};
+            ConfigurationImage image = new ConfigurationImage(bytes.clone());
+            // TDB: saving a representable pin absent from this INI currently throws.
+            OrdinalOutOfRangeException error = assertThrows(OrdinalOutOfRangeException.class,
+                    () -> ConfigurationImageGetterSetter.getStringValue(field, image));
+            assertTrue(error.getMessage().contains("Ordinal out of range " + ordinal));
+            assertArrayEquals(bytes, image.getContent());
+        }
+    }
+
+    @Test
+    public void unknownWideOrdinalCannotBeSavedFromPackedField() {
+        EnumIniField field = sparsePinField(FieldType.UINT16, 3, 8);
+        // Ordinal 300 in bits 3..11, with unrelated bits and neighboring bytes set.
+        byte[] bytes = {(byte) 0x5A, (byte) 0x65, (byte) 0xA9, (byte) 0x6B};
+        ConfigurationImage image = new ConfigurationImage(bytes.clone());
+        OrdinalOutOfRangeException error = assertThrows(OrdinalOutOfRangeException.class,
+                () -> ConfigurationImageGetterSetter.getStringValue(field, image));
+        assertTrue(error.getMessage().contains("Ordinal out of range 300"));
+        assertArrayEquals(bytes, image.getContent());
+    }
+
+    @Test
+    public void unknownNumericOrdinalCannotBeLoaded() {
+        EnumIniField field = sparsePinField(FieldType.UINT16, 3, 8);
+        for (String value : new String[]{"\"300\"", "300"}) {
+            byte[] bytes = {(byte) 0x5A, (byte) 0x2D, (byte) 0xA0, (byte) 0x6B};
+            ConfigurationImage image = new ConfigurationImage(bytes.clone());
+            // TDB: both numeric representations fail before modifying the original tune.
+            assertThrows(IllegalArgumentException.class,
+                    () -> ConfigurationImageGetterSetter.setValue2(field, image, field.getName(), value));
+            assertArrayEquals(bytes, image.getContent());
+        }
+    }
+
+    @Test
+    public void sparseGapLosesItsOrdinalAndCannotRoundTrip() {
+        EnumIniField field = sparsePinField(FieldType.UINT8, 0, 7);
+        ConfigurationImage source = new ConfigurationImage(new byte[]{0, 33, 0});
+        String saved = ConfigurationImageGetterSetter.getStringValue(field, source);
+        // TDB: below-max unknown ordinals lose their identity rather than throwing on save.
+        assertEquals("\"INVALID\"", saved);
+        ConfigurationImage target = new ConfigurationImage(new byte[]{0, 5, 0});
+        assertThrows(IllegalArgumentException.class,
+                () -> ConfigurationImageGetterSetter.setValue2(field, target, field.getName(), saved));
+        assertArrayEquals(new byte[]{0, 5, 0}, target.getContent());
+    }
+
+    @Test
+    public void knownEnumRoundTripPreservesUnrelatedBitsAndBytes() {
+        EnumIniField field = sparsePinField(FieldType.UINT16, 3, 8);
+        byte[] sourceBytes = {(byte) 0x5A, (byte) 0x7D, (byte) 0xA1, (byte) 0x6B};
+        String saved = ConfigurationImageGetterSetter.getStringValue(field, new ConfigurationImage(sourceBytes));
+        assertEquals("\"Coil 1\"", saved); // Ordinal 47 in bits 3..11.
+        ConfigurationImage target = new ConfigurationImage(new byte[]{(byte) 0x5A, 5, (byte) 0xA0, (byte) 0x6B});
+        ConfigurationImageGetterSetter.setValue2(field, target, field.getName(), saved);
+        assertArrayEquals(sourceBytes, target.getContent());
+    }
+
+    @Test
+    public void numericEnumLabelKeepsPrecedenceOverNumericOrdinal() {
+        TreeMap<Integer, String> labels = new TreeMap<>();
+        labels.put(5, "48");
+        EnumIniField field = new EnumIniField("mode", 0, FieldType.UINT8,
+                new EnumIniField.EnumKeyValueMap(labels), 0, 7);
+        ConfigurationImage image = new ConfigurationImage(new byte[]{0, 0});
+        ConfigurationImageGetterSetter.setValue2(field, image, "mode", "\"48\"");
+        assertArrayEquals(new byte[]{5, 0}, image.getContent());
+    }
+
+    @Test
+    public void malformedOrOutOfRangeNumericOrdinalDoesNotModifyImage() {
+        EnumIniField field = sparsePinField(FieldType.UINT8, 0, 7);
+        for (String value : new String[]{"\"-1\"", "\"256\"", "\"4294967296\"", "\"not a pin\""}) {
+            byte[] bytes = {(byte) 0xA5, 5, (byte) 0x5A};
+            ConfigurationImage image = new ConfigurationImage(bytes.clone());
+            assertThrows(IllegalArgumentException.class,
+                    () -> ConfigurationImageGetterSetter.setValue2(field, image, field.getName(), value));
+            assertArrayEquals(bytes, image.getContent());
+        }
+    }
+
     /**
      * Reproduces the issue where a 1-byte enum field at the very end of the configuration image
      * causes an ArrayOutOfBoundsException because getByteBuffer() always reads 4 bytes.

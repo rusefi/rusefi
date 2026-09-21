@@ -74,7 +74,7 @@ static LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE MLG::Entries::Field fields[] = {
 	{engine->outputChannels.flexWwBetaMultiplier, "Flex: WW beta multiplier", "mult", 3},
 	{engine->outputChannels.revolutionCounterSinceStart, "revolutionCounterSinceStart", "", 0},
 	{engine->outputChannels.canReadCounter, "CAN: Rx", "", 0},
-	{engine->outputChannels.tpsAccelFuel, "Fuel: TPS acceleration add fuel ms", "ms", 3},
+	{engine->outputChannels.tpsAccelFuel, "Fuel: TPS AE (ms or fraction)", "ms/frac", 3},
 	{engine->outputChannels.currentIgnitionMode, "Ignition: Mode", "", 0},
 	{engine->outputChannels.currentInjectionMode, "Fuel: Injection mode", "", 0},
 	{engine->outputChannels.coilDutyCycle, "Ignition: coil duty cycle", "%", 0},
@@ -472,6 +472,8 @@ static LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE MLG::Entries::Field fields[] = {
 	{engine->outputChannels.auxTemp1Resistance, "Aux temp 1: measured resistance", "Ohm", 0},
 	{engine->outputChannels.auxTemp2Resistance, "Aux temp 2: measured resistance", "Ohm", 0},
 	{engine->outputChannels.instantRpmRange, "sync: instant RPM range", "rpm", 0},
+	{engine->outputChannels.engine, "Engine", "", 0},
+	{engine->outputChannels.sdCardMode, "SD: Mount mode", "code", 0},
 	{engine->ignitionState.baseDwell, "Ignition: base dwell", "ms", 1, "Timing"},
 	{engine->ignitionState.sparkDwell, "Ignition: coil charge time", "ms", 1, "Timing"},
 	{engine->ignitionState.dwellDurationAngle, "Ignition: dwell duration", "deg", 1, "Timing"},
@@ -700,6 +702,16 @@ static LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE MLG::Entries::Field fields[] = {
 	{engine->shiftTorqueReductionController.trqRedCutXaxisValue, "trqRedCutXaxisValue", "", 0},
 	{engine->shiftTorqueReductionController.trqRedTimeXaxisValue, "trqRedTimeXaxisValue", "", 0},
 	{engine->shiftTorqueReductionController.trqRedIgnRetXaxisValue, "trqRedIgnRetXaxisValue", "", 0},
+#endif
+#if EFI_PROD_CODE && (BOARD_ADS7128_COUNT > 0)
+	{ads7128getLiveData(0)->adcRaw[0], "ADS7128 1", "", 0},
+	{ads7128getLiveData(0)->adcRaw[1], "ADS7128 2", "", 0},
+	{ads7128getLiveData(0)->adcRaw[2], "ADS7128 3", "", 0},
+	{ads7128getLiveData(0)->adcRaw[3], "ADS7128 4", "", 0},
+	{ads7128getLiveData(0)->adcRaw[4], "ADS7128 5", "", 0},
+	{ads7128getLiveData(0)->adcRaw[5], "ADS7128 6", "", 0},
+	{ads7128getLiveData(0)->adcRaw[6], "ADS7128 7", "", 0},
+	{ads7128getLiveData(0)->adcRaw[7], "ADS7128 8", "", 0},
 #endif
 #if EFI_PROD_CODE && (BOARD_MC33810_COUNT > 0)
 	{mc33810getLiveData(0)->sparkDuration[0], "Spark duration 1", "ms", 3, "Timing"},

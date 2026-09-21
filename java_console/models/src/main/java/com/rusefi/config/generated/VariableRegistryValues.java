@@ -401,6 +401,8 @@ public class VariableRegistryValues {
 	public static final int debug_mode_e_DBG_UNUSED41 = 41;
 	public static final int debug_mode_e_DBG_UNUSED_42 = 42;
 	public static final int debug_mode_e_UNUSED23 = 23;
+	public static final int DEFAULT_CLT_AXIS_HIGH_VALUE = 120;
+	public static final int DEFAULT_CLT_AXIS_LOW_VALUE = -40;
 	public static final int DEFAULT_RPM_AXIS_HIGH_VALUE = 7000;
 	public static final int DEFAULT_SELT_STIM_RPM = 1200;
 	public static final int DEFAULT_SELT_STIM_VVT0 = 23;
@@ -444,7 +446,7 @@ public class VariableRegistryValues {
 	public static final String DYNO_SAE_RELATIVE_HUMIDITY_UNITS = "%";
 	public static final String DYNO_SAE_TEMPERATURE_C_TOOLTIP = "Air temperature";
 	public static final String DYNO_SAE_TEMPERATURE_C_UNITS = "C";
-	public static final int EFI_CAN_BUS_COUNT = 2;
+	public static final int EFI_CAN_BUS_COUNT = 3;
 	public static final int ego_sensor_e_ES_14Point7_Free = 2;
 	public static final int ego_sensor_e_ES_AEM = 6;
 	public static final int ego_sensor_e_ES_BPSX_D1 = 0;
@@ -453,7 +455,7 @@ public class VariableRegistryValues {
 	public static final int ego_sensor_e_ES_PLX = 4;
 	public static final String egoSettings_NAME = "CAN O2 sensors";
 	public static final int EGT_CHANNEL_COUNT = 8;
-	public static final int engine_configuration_s_size = 4268;
+	public static final int engine_configuration_s_size = 4288;
 	public static final int engine_load_mode_e_LM_ALPHA_N = 2;
 	public static final int engine_load_mode_e_LM_LUA = 3;
 	public static final int engine_load_mode_e_LM_REAL_MAF = 1;
@@ -587,7 +589,7 @@ public class VariableRegistryValues {
 	public static final int ETB_HW_MAX_FREQUENCY = 3000;
 	public static final int ETHERNET_PORT = 29001;
 	public static final int FAN_PWM_CURVE_SIZE = 8;
-	public static final int FLASH_DATA_VERSION = 260805;
+	public static final int FLASH_DATA_VERSION = 260908;
 	public static final int FLEX_TRANSIENT_CLT_SIZE = 8;
 	public static final int FLEX_TRANSIENT_ETH_SIZE = 8;
 	public static final int FLOW_LINEARIZATION_MASS_SIZE = 2;
@@ -719,7 +721,7 @@ public class VariableRegistryValues {
 	public static final String GAUGE_NAME_FUEL_STFT_INPUT_1 = "STFT input lambda error: Bank 1";
 	public static final String GAUGE_NAME_FUEL_STFT_INPUT_2 = "STFT input lambda error: Bank 2";
 	public static final String GAUGE_NAME_FUEL_TEMPERATURE = "Fuel Temperature";
-	public static final String GAUGE_NAME_FUEL_TPS_EXTRA = "Fuel: TPS acceleration add fuel ms";
+	public static final String GAUGE_NAME_FUEL_TPS_EXTRA = "Fuel: TPS AE (ms or fraction)";
 	public static final String GAUGE_NAME_FUEL_VE = "Fuel: VE";
 	public static final String GAUGE_NAME_FUEL_WALL_AMOUNT = "Fuel: wall amount";
 	public static final String GAUGE_NAME_FUEL_WALL_CORRECTION = "Fuel: wall correction";
@@ -1312,7 +1314,6 @@ public class VariableRegistryValues {
 	public static final int InjectorNonlinearMode_INJ_FordModel = 2;
 	public static final int InjectorNonlinearMode_INJ_None = 0;
 	public static final int InjectorNonlinearMode_INJ_PolynomialAdder = 1;
-	public static final int JUMP_BLT_COMMAND = 0xBC;
 	public static final int JUMP_DFU_COMMAND = 0xBA;
 	public static final String KNOCK_RPM_TABLE_NAME = "Engine Knock Threshold RPM Based";
 	public static final int KNOCK_TABLE_RPM_SIZE = 6;
@@ -1392,6 +1393,7 @@ public class VariableRegistryValues {
 	public static final int operation_mode_e_FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR = 6;
 	public static final int operation_mode_e_OM_NONE = 0;
 	public static final int operation_mode_e_TWO_STROKE = 3;
+	public static final String OUTPUT_CHANNEL_SD_CARD_MODE = "sdCardMode";
 	public static final String OUTPUT_CHANNEL_SD_LOGGING_INTERNAL = "sd_logging_internal";
 	public static final String OUTPUT_CHANNEL_SD_MSD = "sd_msd";
 	public static final String OUTPUT_CHANNEL_SD_PRESENT = "sd_present";
@@ -1421,7 +1423,7 @@ public class VariableRegistryValues {
 	public static final int PEDAL_TO_TPS_SIZE = 8;
 	public static final String pedalSensor_NAME = "Accelerator pedal";
 	public static final String pedalToTpsTbl_NAME = "ETB pedal target";
-	public static final int persistent_config_s_size = 16760;
+	public static final int persistent_config_s_size = 16780;
 	public static final int pid_s_size = 20;
 	public static final int pin_input_mode_e_PI_DEFAULT = 0;
 	public static final int pin_input_mode_e_PI_INVERTED_DEFAULT = 4;
@@ -1549,6 +1551,7 @@ public class VariableRegistryValues {
 	public static final int stft_state_e_stftDisabledCrankingDelay = 4;
 	public static final int stft_state_e_stftDisabledDFCO = 7;
 	public static final int stft_state_e_stftDisabledFuelCut = 9;
+	public static final int stft_state_e_stftDisabledLaunch = 10;
 	public static final int stft_state_e_stftDisabledRPM = 3;
 	public static final int stft_state_e_stftDisabledSettings = 1;
 	public static final int stft_state_e_stftDisabledTpsAccel = 8;
@@ -1593,8 +1596,9 @@ public class VariableRegistryValues {
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_BUTTON = 0;
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH = 2;
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_UP_SWITCH = 3;
-	public static final int TOTAL_CONFIG_SIZE = 16760;
+	public static final int TOTAL_CONFIG_SIZE = 16780;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
+	public static final String TPS_ACCEL_UNITS = "ms/frac";
 	public static final int TPS_PPS_TOO_HIGH_THRESHOLD = 110;
 	public static final int TPS_PPS_TOO_LOW_THRESHOLD = -10;
 	public static final int TPS_TPS_ACCEL_CLT_CORR_TABLE = 4;
@@ -1850,10 +1854,10 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2026.08.26.stm32f429_nucleo.3504637297";
+	public static final String TS_SIGNATURE = "rusEFI master.2026.09.21.premium-quick-test.3498586700";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
-	public static final int TS_TOTAL_OUTPUT_SIZE = 2200;
+	public static final int TS_TOTAL_OUTPUT_SIZE = 2216;
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_1_NAME = "Channel 1";
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_2_NAME = "Channel 2";
 	public static final int TS_TRIGGER_SCOPE_DISABLE = 5;

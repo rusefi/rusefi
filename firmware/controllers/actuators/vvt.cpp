@@ -149,7 +149,8 @@ void VvtController::setOutput(expected<percent_t> outputValue) {
 #endif // EFI_SHAFT_POSITION_INPUT
 }
 
-#if EFI_VVT_PID
+// Exercise the real output/PWM path in unit tests without enabling the automatic VVT modules.
+#if EFI_VVT_PID || EFI_UNIT_TEST
 
 static const char *vvtOutputNames[CAM_INPUTS_COUNT] = {
 "Vvt Output#1",
@@ -204,6 +205,9 @@ void stopVvtControlPins() {
 	}
 }
 
+#endif // EFI_VVT_PID || EFI_UNIT_TEST
+
+#if EFI_VVT_PID
 void initVvtActuators() {
 
 	vvtTable1.initTable(config->vvtTable1, config->vvtTable1RpmBins, config->vvtTable1LoadBins);

@@ -3,6 +3,9 @@ package com.rusefi.ui;
 import com.devexperts.logging.FileLogger;
 import com.devexperts.logging.Logging;
 import com.rusefi.core.Sensor;
+import com.rusefi.core.ISensorCentral;
+import com.rusefi.core.SensorCentral;
+import com.rusefi.core.WellKnownGauges;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.AnyCommand;
@@ -53,11 +56,17 @@ public class GaugesPanel {
     private final UIContext uiContext;
     /** Tracked so we can call destroy() before replacing on grid resize. */
     private final List<GaugesGridElement> gaugeElements = new ArrayList<>();
+    private final ISensorCentral.ListenerToken rpmDemandToken;
+    private RpmLabel rpmLabel;
+    private boolean active;
 
     public GaugesPanel(UIContext uiContext, final Node config) {
         this.uiContext = uiContext;
         gauges = new GaugesGrid(DEFAULT_ROWS, DEFAULT_COLUMNS);
         this.config = config;
+        rpmDemandToken = SensorCentral.getInstance().addListener(
+            WellKnownGauges.RPMGauge.getOutputChannelName(), value -> { });
+        rpmDemandToken.setActive(false);
 
         int rows = config.getIntProperty(GAUGES_ROWS, DEFAULT_ROWS);
         int columns = config.getIntProperty(GAUGES_COLUMNS, DEFAULT_COLUMNS);
@@ -113,7 +122,8 @@ public class GaugesPanel {
         JPanel leftUpperPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
         leftUpperPanel.add(createPauseButton());
         leftUpperPanel.add(createSaveImageButton());
-        leftUpperPanel.add(new RpmLabel(uiContext, 2).getContent());
+        rpmLabel = new RpmLabel(uiContext, 2);
+        leftUpperPanel.add(rpmLabel.getContent());
         AnyCommand command = AnyCommand.createField(uiContext, config, false, false);
         leftUpperPanel.add(command.getContent());
         return leftUpperPanel;
@@ -155,6 +165,7 @@ public class GaugesPanel {
             // sometimes grid is quite large so we shall be careful with default sensor index
             String defaultGaugeName = defaultLayout.get(Math.min(i, defaultLayout.size() - 1));
             GaugesGridElement element = GaugesGridElement.create(uiContext, config.getChild("element_" + i), defaultGaugeName);
+            element.setActive(active);
             gaugeElements.add(element);
             gauges.panel.add(element.getContent());
         }
@@ -173,6 +184,23 @@ public class GaugesPanel {
 
     public JComponent getContent() {
         return content;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+        rpmDemandToken.setActive(active);
+        for (GaugesGridElement element : gaugeElements) {
+            element.setActive(active);
+        }
+    }
+
+    public void destroy() {
+        for (GaugesGridElement element : gaugeElements) {
+            element.destroy();
+        }
+        gaugeElements.clear();
+        rpmDemandToken.remove();
+        rpmLabel.destroy();
     }
 
     public static class DetachedRepository {

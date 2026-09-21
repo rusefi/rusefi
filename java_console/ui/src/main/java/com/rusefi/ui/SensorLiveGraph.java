@@ -2,16 +2,14 @@ package com.rusefi.ui;
 
 import com.opensr5.ini.GaugeModel;
 import com.opensr5.ini.IniFileModel;
-import com.opensr5.ini.field.IniField;
-import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.core.ISensorCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCategory;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.core.ui.AutoupdateUtil;
-import com.rusefi.sensor_logs.CustomBinaryLogEntry;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -44,6 +42,10 @@ public class SensorLiveGraph extends JPanel {
     private boolean autoScale;
     private double customUpper;
     private double customLower;
+    private final Thread thread;
+    private volatile boolean active = true;
+    private volatile boolean running = true;
+    private ISensorCentral.ListenerToken demandToken;
 
     public SensorLiveGraph(UIContext uiContext, Node config, final String defaultGaugeName, JMenuItem extraItem) {
         this.uiContext = uiContext;
@@ -51,8 +53,6 @@ public class SensorLiveGraph extends JPanel {
         this.extraItem = extraItem;
         this.gaugeName = config.getProperty(SENSOR_TYPE, defaultGaugeName);
 
-        Thread thread = THREAD_FACTORY.newThread(createRunnable());
-        thread.start();
         period = ChangePeriod.lookup(config.getProperty(PERIOD));
         if (period == null) {
             period = ChangePeriod._200;
@@ -60,6 +60,9 @@ public class SensorLiveGraph extends JPanel {
         autoScale = config.getBoolProperty(USE_AUTO_SCALE);
         customUpper = config.getDoubleProperty(UPPER, Double.NaN);
         customLower = config.getDoubleProperty(LOWER, Double.NaN);
+        updateDemandToken();
+        thread = THREAD_FACTORY.newThread(createRunnable());
+        thread.start();
 
         MouseListener mouseListener = new MouseAdapter() {
             @Override
@@ -82,13 +85,15 @@ public class SensorLiveGraph extends JPanel {
         return new Runnable() {
             @Override
             public void run() {
-                while (true) {
+                while (running) {
                     try {
                         Thread.sleep(period.getMs());
                     } catch (InterruptedException e) {
-                        throw new IllegalStateException(e);
+                        if (!running) {
+                            return;
+                        }
                     }
-                    if (!GaugesPanel.IS_PAUSED)
+                    if (active && !GaugesPanel.IS_PAUSED)
                         grabNewValue();
                 }
             }
@@ -96,34 +101,19 @@ public class SensorLiveGraph extends JPanel {
     }
 
     private void grabNewValue() {
-        double value = Double.NaN;
-        String channelName = null;
+        String channelName = gaugeName;
         BinaryProtocol bp = uiContext.getLinkManager().getBinaryProtocol();
-        byte[] response = SensorCentral.getInstance().getResponse();
-        if (bp != null && response != null) {
+        if (bp != null) {
             IniFileModel iniFile = bp.getIniFileNullable();
             if (iniFile != null) {
-                try {
-                    GaugeModel gaugeModel = iniFile.getGauge(gaugeName);
-                    if (gaugeModel != null) {
-                        channelName = gaugeModel.getChannel();
-                        IniField field = iniFile.getOutputChannel(channelName);
-                        if (field instanceof ScalarIniField) {
-                            CustomBinaryLogEntry entry = new CustomBinaryLogEntry(channelName, field);
-                            value = entry.getValue(response) * entry.getScale();
-                        }
-                    }
-                } catch (Exception e) {
-                    // fall back to sensor central
+                GaugeModel gaugeModel = iniFile.getGauge(gaugeName);
+                if (gaugeModel != null) {
+                    channelName = gaugeModel.getChannel();
                 }
             }
         }
 
-        if (Double.isNaN(value) && channelName != null) {
-            value = SensorCentral.getInstance().getValue(channelName);
-        }
-
-        addValue(value);
+        addValue(SensorCentral.getInstance().getValue(channelName));
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -283,6 +273,31 @@ public class SensorLiveGraph extends JPanel {
         this.gaugeName = gaugeName;
         values.clear();
         config.setProperty(SENSOR_TYPE, gaugeName);
+        updateDemandToken();
+    }
+
+    private void updateDemandToken() {
+        if (demandToken != null) {
+            demandToken.remove();
+        }
+        demandToken = SensorCentral.getInstance().addListener(gaugeName, value -> { });
+        demandToken.setActive(active);
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+        if (demandToken != null) {
+            demandToken.setActive(active);
+        }
+    }
+
+    public void destroy() {
+        running = false;
+        thread.interrupt();
+        if (demandToken != null) {
+            demandToken.remove();
+            demandToken = null;
+        }
     }
 
     private synchronized void addValue(double value) {

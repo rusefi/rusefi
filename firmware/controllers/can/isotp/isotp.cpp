@@ -220,47 +220,53 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 	header.frameType = ISO_TP_FRAME_FIRST;
 	header.numBytes = numBytes;
 	int numSent = IsoTpBase::sendFrame(header, txbuf + offset, numBytes, timeout);
+	if (numSent < 1) {
+		return 0;
+	}
 	offset += numSent;
 	numBytes -= numSent;
 
 	// get a flow control (FC) frame
-#if !EFI_UNIT_TEST // todo: add FC to unit-tests?
-	CANRxFrame rxmsg;
-	for (size_t numFcReceived = 0; ; numFcReceived++) {
-		if (rxTransport->receive(&rxmsg, timeout) != CAN_MSG_OK) {
+#if EFI_UNIT_TEST
+	if (enableFlowControlForTest)
+#endif
+	{
+		CANRxFrame rxmsg;
+		for (size_t numFcReceived = 0; ; numFcReceived++) {
+			if (rxTransport->receive(&rxmsg, timeout) != CAN_MSG_OK) {
 #ifdef SERIAL_CAN_DEBUG
-			PRINT("*** ERROR: CAN Flow Control frame not received" PRINT_EOL);
+				PRINT("*** ERROR: CAN Flow Control frame not received" PRINT_EOL);
 #endif /* SERIAL_CAN_DEBUG */
-			//warning(ObdCode::CUSTOM_ERR_CAN_COMMUNICATION, "CAN Flow Control frame not received");
-			return 0;
-		}
-		receiveFrame(rxmsg, nullptr, 0, timeout);
-		uint8_t frameType = (rxmsg.data8[isoHeaderByteIndex] >> 4) & 0xf;
-		uint8_t flowStatus = rxmsg.data8[isoHeaderByteIndex] & 0xf;
-		// if something is not ok
-		if ((frameType != ISO_TP_FRAME_FLOW_CONTROL) || (flowStatus != CAN_FLOW_STATUS_OK)) {
-			// if the receiver is not ready yet and asks to wait for the next FC frame (give it 3 attempts)
-			if ((frameType == ISO_TP_FRAME_FLOW_CONTROL) && (flowStatus == CAN_FLOW_STATUS_WAIT_MORE) && (numFcReceived < 3)) {
-				continue;
+				//warning(ObdCode::CUSTOM_ERR_CAN_COMMUNICATION, "CAN Flow Control frame not received");
+				return 0;
 			}
+			receiveFrame(rxmsg, nullptr, 0, timeout);
+			uint8_t frameType = (rxmsg.data8[isoHeaderByteIndex] >> 4) & 0xf;
+			uint8_t flowStatus = rxmsg.data8[isoHeaderByteIndex] & 0xf;
+			// if something is not ok
+			if ((frameType != ISO_TP_FRAME_FLOW_CONTROL) || (flowStatus != CAN_FLOW_STATUS_OK)) {
+				// if the receiver is not ready yet and asks to wait for the next FC frame (give it 3 attempts)
+				if ((frameType == ISO_TP_FRAME_FLOW_CONTROL) && (flowStatus == CAN_FLOW_STATUS_WAIT_MORE) && (numFcReceived < 3)) {
+					continue;
+				}
 #ifdef SERIAL_CAN_DEBUG
-			efiPrintf("*** ERROR: CAN Flow Control mode not supported");
+				efiPrintf("*** ERROR: CAN Flow Control mode not supported");
 #endif /* SERIAL_CAN_DEBUG */
-			//warning(ObdCode::CUSTOM_ERR_CAN_COMMUNICATION, "CAN Flow Control mode not supported");
-			return 0;
-		}
-		uint8_t blockSize = rxmsg.data8[isoHeaderByteIndex + 1];
-		uint8_t minSeparationTime = rxmsg.data8[isoHeaderByteIndex + 2];
-		if (blockSize != 0 || minSeparationTime != 0) {
-			// todo: process other Flow Control fields (see ISO 15765-2)
+				//warning(ObdCode::CUSTOM_ERR_CAN_COMMUNICATION, "CAN Flow Control mode not supported");
+				return 0;
+			}
+			uint8_t blockSize = rxmsg.data8[isoHeaderByteIndex + 1];
+			uint8_t minSeparationTime = rxmsg.data8[isoHeaderByteIndex + 2];
+			if (blockSize != 0 || minSeparationTime != 0) {
+				// todo: process other Flow Control fields (see ISO 15765-2)
 #ifdef SERIAL_CAN_DEBUG
-			efiPrintf("*** ERROR: CAN Flow Control fields not supported");
+				efiPrintf("*** ERROR: CAN Flow Control fields not supported");
 #endif /* SERIAL_CAN_DEBUG */
-			//warning(ObdCode::CUSTOM_ERR_CAN_COMMUNICATION, "CAN Flow Control fields not supported");
+				//warning(ObdCode::CUSTOM_ERR_CAN_COMMUNICATION, "CAN Flow Control fields not supported");
+			}
+			break;
 		}
-		break;
 	}
-#endif /* EFI_UNIT_TEST */
 
 	// send the rest of the data
 	int idx = 1;
@@ -310,8 +316,12 @@ can_msg_t CanStreamerState::streamAddToTxTimeout(size_t *np, const uint8_t *txbu
 			PRINT("*** INFO: streamAddToTxTimeout numBytesToAdd %d / numSent %d / numBytes %d" PRINT_EOL, numBytesToAdd, numSent, numBytes);
 		}
 
-		if (numSent < 1)
-			break;
+		if (numSent != txFifoBuf.getCount()) {
+			// Some frames may already have been sent. Clear the buffer and report
+			// failure so a later call does not send the same packet again.
+			txFifoBuf.clear();
+			return CAN_MSG_TIMEOUT;
+		}
 		txFifoBuf.clear();
 		offset += numBytesToAdd;
 		numBytes -= numBytesToAdd;
@@ -333,9 +343,15 @@ can_msg_t CanStreamerState::streamAddToTxTimeout(size_t *np, const uint8_t *txbu
 }
 
 can_msg_t CanStreamerState::streamFlushTx(can_sysinterval_t timeout) {
+	if (txFifoBuf.isEmpty()) {
+		return CAN_MSG_OK;
+	}
+
 	int numSent = sendDataTimeout((const uint8_t *)txFifoBuf.getElements(), txFifoBuf.getCount(), timeout);
 	if (numSent != txFifoBuf.getCount()) {
-		//warning(ObdCode::CUSTOM_ERR_CAN_COMMUNICATION, "CAN sendDataTimeout() problems");
+		// Clear the failed packet so a later flush does not resend its first frames.
+		txFifoBuf.clear();
+		return CAN_MSG_TIMEOUT;
 	}
 	txFifoBuf.clear();
 
@@ -524,94 +540,96 @@ int IsoTpRxTx::writeTimeout(const uint8_t *txbuf, size_t size, sysinterval_t tim
 	header.frameType = ISO_TP_FRAME_FIRST;
 	header.numBytes = size;
 	int numSent = IsoTpBase::sendFrame(header, txbuf + offset, size, timeout);
+	if (numSent < 1) {
+		return 0;
+	}
 	offset += numSent;
 	size -= numSent;
 
-	// get a flow control (FC) frame
-#if !EFI_UNIT_TEST // todo: add FC to unit-tests?
-	CANRxFrame rxmsg;
-	size_t numFcReceived = 0;
-	int separationTimeUs = 0;
-	while (numFcReceived < 3) {
-		// TODO: adjust timeout!
-		if (!rxFifoBuf.get(rxmsg, timeout)) {
-			efiPrintf("IsoTp: Flow Control frame not received");
-			//warning(ObdCode::CUSTOM_ERR_CAN_COMMUNICATION, "CAN Flow Control frame not received");
-			return 0;
-		}
-		uint8_t frameType = (rxmsg.data8[isoHeaderByteIndex] >> 4) & 0xf;
-
-		// if something is not ok
-		if (frameType != ISO_TP_FRAME_FLOW_CONTROL) {
-			// should we expect only FC here?
-			continue;
-		}
-
-		// Ok, frame is FC
-		numFcReceived++;
-		uint8_t flowStatus = rxmsg.data8[isoHeaderByteIndex] & 0xf;
-
-		if (flowStatus == CAN_FLOW_STATUS_ABORT) {
-			efiPrintf("IsoTp: Flow Control ABORT");
-			// TODO: error codes
-			return -4;
-		}
-
-		if (flowStatus == CAN_FLOW_STATUS_WAIT_MORE) {
-			// if the receiver is not ready yet and asks to wait for the next FC frame (give it 3 attempts)
-			if (numFcReceived < 3) {
-				continue;
-			}
-			// TODO: error codes
-			return -5;
-		}
-
-		if (flowStatus != CAN_FLOW_STATUS_OK) {
-			efiPrintf("IsoTp: Flow Control unknown Status %d", flowStatus);
-			// TODO: error codes
-			return -6;
-		}
-
-		uint8_t blockSize = rxmsg.data8[isoHeaderByteIndex + 1];
-		uint8_t minSeparationTime = rxmsg.data8[isoHeaderByteIndex + 2];
-		if (blockSize != 0) {
-			// todo: process other Flow Control fields (see ISO 15765-2)
-			efiPrintf("IsoTp: Flow Control blockSize is not supported %d", blockSize);
-			// TODO: error codes
-			return -7;
-		}
-
-		if (minSeparationTime <= 0x7f) {
-			// mS units
-			separationTimeUs = minSeparationTime * 1000;
-		} else if ((minSeparationTime >= 0xf1) && (minSeparationTime <= 0xf9)) {
-			// 100 uS units
-			separationTimeUs = (minSeparationTime - 0xf0) * 100;
-		}
-
-		break;
-	}
-#endif /* EFI_UNIT_TEST */
-
-	// send the rest of the data
+	// Keep the sequence number continuous when waiting for the next block.
 	uint8_t idx = 1;
 	while (size > 0) {
-		int len = minI(size, 7 - isoHeaderByteIndex);
-		// send the consecutive frames
-		header.frameType = ISO_TP_FRAME_CONSECUTIVE;
-		header.index = ((idx++) & 0x0f);
-		header.numBytes = len;
-		numSent = IsoTpBase::sendFrame(header, txbuf + offset, len, timeout);
-		if (numSent < 1)
+		// Get a flow control (FC) frame, including in unit tests via decodeFrame().
+		CANRxFrame rxmsg;
+		uint8_t blockSize = 0;
+		size_t numFcReceived = 0;
+		[[maybe_unused]] int separationTimeUs = 0; // Unit tests do not sleep.
+		while (numFcReceived < 3) {
+			// TODO: adjust timeout!
+			if (!rxFifoBuf.get(rxmsg, timeout)) {
+				efiPrintf("IsoTp: Flow Control frame not received");
+				//warning(ObdCode::CUSTOM_ERR_CAN_COMMUNICATION, "CAN Flow Control frame not received");
+				return 0;
+			}
+			uint8_t frameType = (rxmsg.data8[isoHeaderByteIndex] >> 4) & 0xf;
+
+			// if something is not ok
+			if (frameType != ISO_TP_FRAME_FLOW_CONTROL) {
+				// should we expect only FC here?
+				continue;
+			}
+
+			// Ok, frame is FC
+			numFcReceived++;
+			uint8_t flowStatus = rxmsg.data8[isoHeaderByteIndex] & 0xf;
+
+			if (flowStatus == CAN_FLOW_STATUS_ABORT) {
+				efiPrintf("IsoTp: Flow Control ABORT");
+				// TODO: error codes
+				return -4;
+			}
+
+			if (flowStatus == CAN_FLOW_STATUS_WAIT_MORE) {
+				// if the receiver is not ready yet and asks to wait for the next FC frame (give it 3 attempts)
+				if (numFcReceived < 3) {
+					continue;
+				}
+				// TODO: error codes
+				return -5;
+			}
+
+			if (flowStatus != CAN_FLOW_STATUS_OK) {
+				efiPrintf("IsoTp: Flow Control unknown Status %d", flowStatus);
+				// TODO: error codes
+				return -6;
+			}
+
+			blockSize = rxmsg.data8[isoHeaderByteIndex + 1];
+			uint8_t minSeparationTime = rxmsg.data8[isoHeaderByteIndex + 2];
+
+			if (minSeparationTime <= 0x7f) {
+				// mS units
+				separationTimeUs = minSeparationTime * 1000;
+			} else if ((minSeparationTime >= 0xf1) && (minSeparationTime <= 0xf9)) {
+				// 100 uS units
+				separationTimeUs = (minSeparationTime - 0xf0) * 100;
+			}
+
 			break;
-		offset += numSent;
-		size -= numSent;
+		}
+
+		// A zero block size permits the entire remaining payload.
+		size_t framesSent = 0;
+		while (size > 0 && (blockSize == 0 || framesSent < blockSize)) {
+			int len = minI(size, 7 - isoHeaderByteIndex);
+			// send the consecutive frames
+			header.frameType = ISO_TP_FRAME_CONSECUTIVE;
+			header.index = ((idx++) & 0x0f);
+			header.numBytes = len;
+			numSent = IsoTpBase::sendFrame(header, txbuf + offset, len, timeout);
+			if (numSent < 1) {
+				return offset;
+			}
+			offset += numSent;
+			size -= numSent;
+			framesSent++;
 
 #if ! EFI_UNIT_TEST
-		if (separationTimeUs) {
-			chThdSleepMicroseconds(separationTimeUs);
-		}
+			if (separationTimeUs) {
+				chThdSleepMicroseconds(separationTimeUs);
+			}
 #endif // EFI_UNIT_TEST
+		}
 	}
 	return offset;
 }

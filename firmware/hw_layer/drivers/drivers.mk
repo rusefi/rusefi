@@ -17,6 +17,7 @@ HW_LAYER_DRIVERS_CORE_CPP = \
 	$(DRIVERS_DIR)/gpio/core.cpp \
 	$(DRIVERS_DIR)/gpio/hbridge_gpio.cpp \
 	$(DRIVERS_DIR)/sent/sent.cpp \
+	$(DRIVERS_DIR)/i2c/i2c.cpp \
 	$(DRIVERS_DIR)/i2c/i2c_bb.cpp \
 	$(DRIVERS_DIR)/can/auto_generated_can_category.cpp \
 	$(DRIVERS_DIR)/can/can_msg_tx.cpp
@@ -25,6 +26,7 @@ HW_LAYER_DRIVERS =
 
 HW_LAYER_DRIVERS_CPP = \
 	$(DRIVERS_DIR)/adc/ads1015.cpp \
+	$(DRIVERS_DIR)/adc/ads7128.cpp \
 	$(DRIVERS_DIR)/adc/mcp3208.cpp \
 	$(DRIVERS_DIR)/can/can_hw.cpp \
 	$(PROJECT_DIR)/hw_layer/smart_gpio.cpp \
@@ -35,6 +37,7 @@ HW_LAYER_DRIVERS_CPP = \
 	$(DRIVERS_DIR)/gpio/mc33810.cpp \
 	$(DRIVERS_DIR)/gpio/drv8860.cpp \
 	$(DRIVERS_DIR)/gpio/tle9104.cpp \
+	$(DRIVERS_DIR)/gpio/pca9685.cpp \
 	$(DRIVERS_DIR)/gpio/tle9201.cpp \
 	$(DRIVERS_DIR)/gpio/l9779.cpp \
 	$(DRIVERS_DIR)/gpio/protected_gpio.cpp \

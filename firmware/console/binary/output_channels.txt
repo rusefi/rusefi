@@ -104,7 +104,8 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 	uint16_t revolutionCounterSinceStart;;"",1, 0, 0, 0, 0
 
 	uint16_t canReadCounter;@@GAUGE_NAME_CAN_READ_OK@@;"",1, 0, 0, 64000, 0
-	int16_t autoscale tpsAccelFuel;@@GAUGE_NAME_FUEL_TPS_EXTRA@@;"ms",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 3
+! MS Adder: milliseconds. Percent Adder: fraction before injection-mode scaling. MAP Prediction: zero.
+	int16_t autoscale tpsAccelFuel;@@GAUGE_NAME_FUEL_TPS_EXTRA@@;@@TPS_ACCEL_UNITS@@,{1/@@PACK_MULT_MS@@}, 0, 0, 0, 3
 ! Ignition
 	uint8_t currentIgnitionMode;@@GAUGE_NAME_IGNITION_MODE@@
 	uint8_t currentInjectionMode;@@GAUGE_NAME_INJECTION_MODE@@
@@ -485,4 +486,12 @@ float mapFast
 	float auxTemp2Resistance;Aux temp 2: measured resistance;"Ohm", 1, 0, 0, 1000000, 0
 
 	uint16_t instantRpmRange;sync: instant RPM range\nMax minus min instant RPM within the last complete engine cycle, 0 when RPM is perfectly steady;"rpm", 1, 0, 0, 65535, 0
+
+! TunerStudio/MLV integration requires channel 'engine' and exact log label 'Engine'.
+! Bits: 0 running, 1 cranking, 2 after-start enrichment, 3 warmup enrichment,
+! 4 TPS acceleration (including MAP Prediction), 5 TPS deceleration or DFCO.
+! Bits 6/7 (MAP-rate acceleration/deceleration) are unused.
+	uint8_t engine;Engine;"", 1, 0, 0, 255, 0
+	! SD_MODE from mmc_card.h: 0 idle, 1 ECU, 2 PC, 3 unmounted, 4 formatting.
+	uint8_t sdCardMode;SD: Mount mode;"code", 1, 0, 0, 4, 0
 end_struct

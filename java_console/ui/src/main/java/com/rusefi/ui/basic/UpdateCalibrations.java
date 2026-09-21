@@ -41,8 +41,8 @@ public class UpdateCalibrations {
                 final Map<Integer, ConfigurationImageWithMeta> pages =
                     ConfigurationImageFile.readPagesFromFile(selectedFile.getAbsolutePath());
                 final String archiveSignature = pages.get(0).getMeta().getEcuSignature();
-                final String ecuSignature = port.getCalibrations().getIniFile().getSignature();
-                if (!Objects.equals(archiveSignature, ecuSignature)) {
+                final String ecuSignature = port.getCalibrations().getImage().getMeta().getEcuSignature();
+                if (!matchesCalibrationSignature(archiveSignature, port.getCalibrations())) {
                     throw new IOException(String.format(
                         "Calibration signature `%s` does not match ECU signature `%s`",
                         archiveSignature,
@@ -69,6 +69,18 @@ public class UpdateCalibrations {
                 );
             }
         }
+    }
+
+    static boolean matchesCalibrationSignature(String archiveSignature, CalibrationsInfo current) {
+        if (archiveSignature == null || archiveSignature.trim().isEmpty()) {
+            return false;
+        }
+        String signature = archiveSignature.trim();
+        // Older backups used the compatible INI's signature; live snapshots use the ECU's.
+        String liveSignature = current.getImage().getMeta().getEcuSignature();
+        String iniSignature = current.getIniFile().getSignature();
+        return Objects.equals(signature, liveSignature == null ? null : liveSignature.trim())
+            || Objects.equals(signature, iniSignature == null ? null : iniSignature.trim());
     }
 
     private static JFileChooser createConfigurationImageFileChooser() {

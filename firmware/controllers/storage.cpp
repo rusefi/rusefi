@@ -57,7 +57,15 @@ bool storageAllowWriteID(StorageItemId id)
 	}
 #endif // EFI_STORAGE_INT_FLASH
 
-	// TODO: we expect every other ID to be stored in external flash...
+#if EFI_SHAFT_POSITION_INPUT
+	// MFS can also live on internal flash: the board gate applies to all IDs,
+	// including periodic LTFT writes that may trigger a garbage collection.
+	if (!get_board_override_result(custom_board_allowFlashNow, true)) {
+		return false;
+	}
+#endif
+
+	// Other boards retain their existing external-storage behavior.
 	return true;
 }
 #endif // EFI_CONFIGURATION_STORAGE || defined(EFI_UNIT_TEST)
@@ -101,8 +109,8 @@ static bool storageWriteID(uint32_t id) {
 		return writeToFlashNowImpl();
 #if EFI_LTFT_CONTROL
 	} else if (id == EFI_LTFT_RECORD_ID) {
-		engine->module<LongTermFuelTrim>()->store();
-		return true;
+		// false keeps the request pending so it is retried, see storageTryWriteID()
+		return engine->module<LongTermFuelTrim>()->store();
 #endif
 	} else if (id == EFI_SECOND_TABLES_RECORD_ID) {
 		burnExtraFlashPage(EFI_SECOND_TABLES_RECORD_ID);
@@ -164,7 +172,7 @@ static const char *storageTypeToName(StorageType type) {
 	for (size_t i = 0; i < storagesCount; i++) \
 		if ((storage = storages[i]) != nullptr)
 
-static bool storageIsIdAvailableForId(StorageItemId id) {
+bool storageIsIdAvailableForId(StorageItemId id) {
 	for_all_storages {
 		if ((storage->isReady()) && (storage->isIdSupported(id))) {
 			return true;
@@ -273,6 +281,46 @@ bool storagRequestUnregisterStorage(StorageType id)
 static uint32_t pendingWrites = 0;
 static uint32_t pendingReads = 0;
 
+// A failed LTFT write stays pending and is retried, but not on every poll: a card or flash that
+// keeps failing would otherwise be hammered every STORAGE_MANAGER_POLL_INTERVAL_MS and flood the log.
+// After STORAGE_WRITE_MAX_ATTEMPTS the LTFT request is dropped with a message, so a dead medium
+// cannot keep storageIsBusy() / storageWaitIdle() stuck on that request forever.
+#define STORAGE_WRITE_RETRY_MS		5000
+#define STORAGE_WRITE_MAX_ATTEMPTS	5
+static uint8_t writeFailCount[EFI_STORAGE_TOTAL_ITEMS] = {};
+static Timer writeRetryTimer[EFI_STORAGE_TOTAL_ITEMS];
+
+// returns true when the request is finished (written, or given up on) and its pending bit can be cleared
+static bool storageTryWriteID(StorageItemId id) {
+	// Preserve the existing settings retry behavior: retry without backoff and keep failures pending.
+	// In HW CI, self-stimulation permits F407 settings burns even while RPM is nonzero. A 5 s
+	// backoff moved retries past HighRevTest's settling period into its assertion window, where
+	// flash erase stalls execution and drops RPM to zero (#10186). Validation failures also occur
+	// on master; delaying settings retries exposed this timing issue. Limit the new policy to LTFT.
+	if (id != EFI_LTFT_RECORD_ID) {
+		return storageWriteID(id);
+	}
+
+	if (storageWriteID(id)) {
+		writeFailCount[id] = 0;
+		return true;
+	}
+
+	writeFailCount[id]++;
+	writeRetryTimer[id].reset();
+	if (writeFailCount[id] >= STORAGE_WRITE_MAX_ATTEMPTS) {
+		efiPrintf("Storage: giving up on record id %d after %d failed write attempts", (int)id, (int)writeFailCount[id]);
+		writeFailCount[id] = 0;
+		return true;
+	}
+	efiPrintf("Storage: write of record id %d failed (attempt %d), retry in %d ms", (int)id, (int)writeFailCount[id], STORAGE_WRITE_RETRY_MS);
+	return false;
+}
+
+static bool storageWriteBackoffActive(StorageItemId id) {
+	return (id == EFI_LTFT_RECORD_ID) && (writeFailCount[id] != 0) && (!writeRetryTimer[id].hasElapsedMs(STORAGE_WRITE_RETRY_MS));
+}
+
 /* in case of MFS or SD card we need more stack */
 static constexpr int storageManagerThreadStackSize = STORAGE_MANAGER_THREAD_STACK_SIZE;
 static THD_WORKING_AREA(storageManagerThreadStack, storageManagerThreadStackSize);
@@ -300,7 +348,7 @@ static void storageManagerThread(void*) {
 			case MSG_CMD_WRITE_NOW:
 				pendingWrites |= BIT(id);
 				// skip storageAllowWriteID() check
-				if (storageWriteID(id)) {
+				if (storageTryWriteID((StorageItemId)id)) {
 					pendingWrites &= ~BIT(id);
 				}
 				break;
@@ -365,7 +413,12 @@ static void storageManagerThread(void*) {
 				continue;
 			}
 
-			if (storageWriteID(id)) {
+			if (storageWriteBackoffActive(id)) {
+				// previous attempt failed, wait before hitting the medium again
+				continue;
+			}
+
+			if (storageTryWriteID(id)) {
 				pendingWrites &= ~BIT(id);
 			}
 		}

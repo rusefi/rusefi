@@ -18,11 +18,14 @@ static constexpr uint8_t expectedWhoAmILps25 = 0xBD;
 
 // Control register 1
 #define LPS_CR1_PD (1 << 7)
+#define LPS_CR1_ODR_7hz (2 << 4)
 #define LPS_CR1_ODR_25hz (4 << 4)
 #define LPS_CR1_BDU (1 << 2)
+#define LPS_CR1_RESET_AZ (1 << 1)
 
 // Status register flags
 #define LPS_SR_P_DA (1 << 1)	// Pressure data available
+#define LPS_SR_T_DA (1 << 0)	// Temperature data available
 
 #define REG_WhoAmI 0x0F
 
@@ -35,12 +38,13 @@ static constexpr uint8_t expectedWhoAmILps25 = 0xBD;
 #define REG_PressureOutH 0x2A
 
 bool Lps25::init(brain_pin_e scl, brain_pin_e sda) {
-	if (!m_i2c.init(scl, sda)) {
+	m_i2c = getI2cBus(scl, sda);
+	if (m_i2c == nullptr) {
 		return false;
 	}
 
 	// Read ident register
-	auto whoAmI = m_i2c.readRegister(addr, REG_WhoAmI);
+	auto whoAmI = readRegister(REG_WhoAmI);
 
 	switch (whoAmI)
 	{
@@ -56,9 +60,10 @@ bool Lps25::init(brain_pin_e scl, brain_pin_e sda) {
 	}
 
 	uint8_t cr1 = 
-		LPS_CR1_ODR_25hz |	// 25hz update rate
+		LPS_CR1_ODR_7hz |	// 7hz update rate, why faster for ambient pressure?
 		// TODO: should bdu be set?
-		LPS_CR1_BDU;		// Output registers update only when read
+		LPS_CR1_BDU |		// Output registers update only when read
+		LPS_CR1_RESET_AZ;
 
 	if (m_type == Type::Lps25) {
 		// Set to active mode
@@ -67,9 +72,13 @@ bool Lps25::init(brain_pin_e scl, brain_pin_e sda) {
 	}
 
 	// Set the control registers
-	m_i2c.writeRegister(addr, regCr1(), cr1);
+	writeRegister(regCr1(), cr1);
 
 	m_hasInit = true;
+
+	// StoredValueSensor
+	Register();
+
 	return true;
 }
 
@@ -78,21 +87,34 @@ expected<float> Lps25::readPressureKpa() {
 		return unexpected;
 	}
 
-	uint8_t buffer[4];
+	uint8_t buffer[6];
 	// Sequential multi-byte reads need to set the high bit of the
 	// register address to enable multi-byte read
 	constexpr uint8_t readAddr = REG_Status | 0x80;
-	m_i2c.writeRead(addr, &readAddr, 1, buffer, 4);
+	if (m_i2c->writeRead(addr, &readAddr, 1, buffer, sizeof(buffer)) != MSG_OK) {
+		return unexpected;
+	}
 
 	// First check the status reg to check if there are data available
 	bool hasPressure = buffer[0] & LPS_SR_P_DA;
+	bool hasTemp = buffer[0] & LPS_SR_T_DA;
+
+	if (hasTemp) {
+		int16_t raw_temp = (int16_t)((buffer[5] << 8) | buffer[4]);
+
+		temperature = 42.5f + ((float)raw_temp / 480.0f);
+	}
 
 	if (!hasPressure) {
+		invalidate();
 		return unexpected;
 	}
 
 	// Glue the 3 bytes back in to a 24 bit integer
-	uint32_t counts = buffer[3] << 16 | buffer[2] << 8 | buffer[1];
+	uint32_t counts = 
+		((uint32_t)buffer[3] << 16) |
+		((uint32_t)buffer[2] << 8) |
+		buffer[1];
 
 	// 4096 counts per hectopascal
 	// = 40960 counts per kilopascal
@@ -107,8 +129,11 @@ expected<float> Lps25::readPressureKpa() {
 	// Anything outside that range is not a place we expect your engine to run, so we assume
 	// some sensing problem (sealed ECU case and high temperature?)
 	if (kilopascal > 120 || kilopascal < 50) {
+		invalidate();
 		return unexpected;
 	}
+
+	setValidValue(kilopascal, getTimeNowNt());
 
 	return kilopascal;
 }
@@ -123,3 +148,33 @@ uint8_t Lps25::regCr1() const {
 		return REG_Cr1_Lps25;
 	}
 }
+
+
+uint8_t Lps25::readRegister(uint8_t reg) {
+	uint8_t retval;
+
+	m_i2c->writeRead(addr, &reg, 1, &retval, 1);
+
+	return retval;
+}
+
+void Lps25::writeRegister(uint8_t reg, uint8_t val) {
+	uint8_t buf[2];
+	buf[0] = reg;
+	buf[1] = val;
+
+	m_i2c->write(addr, buf, 2);
+}
+
+#if EFI_PROD_CODE
+void Lps25Thread::PeriodicTask(efitick_t nowNt) {
+	m_driver.readPressureKpa();
+}
+
+bool Lps25Thread::init() {
+	setPeriod(250 /*ms*/);	// sensor is configured for 25Hz refresh
+	start();
+	return true;
+}
+
+#endif /* EFI_PROD_CODE */

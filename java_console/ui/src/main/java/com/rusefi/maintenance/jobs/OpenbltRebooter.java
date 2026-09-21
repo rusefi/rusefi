@@ -28,12 +28,13 @@ public class OpenbltRebooter {
      * Send reboot-to-OpenBLT via an already-open BinaryProtocol connection.
      * Use this from ConsoleUI context where the port is held by LinkManager.
      */
-    public static void rebootToOpenblt(JComponent parent, BinaryProtocol binaryProtocol, UpdateOperationCallbacks callbacks) {
+    public static boolean rebootToOpenblt(JComponent parent, BinaryProtocol binaryProtocol, UpdateOperationCallbacks callbacks) {
         if (binaryProtocol == null) {
             callbacks.logLine("Not connected?");
             callbacks.error();
-            return;
+            return false;
         }
-        BootloaderHelper.sendBootloaderRebootCommand(parent, binaryProtocol.signature, binaryProtocol.getStream(), callbacks, Integration.CMD_REBOOT_OPENBLT);
+        return BootloaderHelper.sendBootloaderRebootCommand(
+            parent, binaryProtocol.signature, binaryProtocol.getStream(), callbacks, Integration.CMD_REBOOT_OPENBLT);
     }
 }

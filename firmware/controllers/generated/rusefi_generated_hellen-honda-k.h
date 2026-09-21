@@ -153,9 +153,8 @@
 #define BLOCKING_FACTOR 1024
 #define BOARD_ACTION_INJECTOR_PRESET 0x302
 #define BOARD_CAM_SETTINGS_FILE
-#define BOARD_CAN_BUS_FROM_FILE
-#define BOARD_CONSTANTS_EXTENSIONS_FROM_FILE
 #define BOARD_CONTROLLER_MENU_PREFIX_FROM_FILE
+#define BOARD_CONTROLLER_MENU_SUFFIX_FROM_FILE
 #define BOARD_CURVES_FROM_FILE
 #define BOARD_DIAG_PANEL1_FROM_FILE
 #define BOARD_DIAG_PANEL2_FROM_FILE
@@ -183,7 +182,7 @@
 #define boostType_e_auto_enum 0="OPEN_LOOP",1="CLOSED_LOOP"
 #define boostType_e_CLOSED_LOOP 1
 #define boostType_e_OPEN_LOOP 0
-#define BOTTOM_PADDING 36
+#define BOTTOM_PADDING 32
 #define brain_input_pin_e_enum 0="NONE",93="A18 - VSS",90="A25 VTT CAM",92="A26 Cam Sync",91="A7 Crankshaft Sensor",87="C18 Aux Digital 3",86="C19 Aux Digital 2",85="C21 Aux Digital 1"
 #define brain_input_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","C21 Aux Digital 1","C19 Aux Digital 2","C18 Aux Digital 3","INVALID","INVALID","A25 VTT CAM","A7 Crankshaft Sensor","A26 Cam Sync","A18 - VSS","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID"
 #define brain_pin_diag_e_PIN_DRIVER_OFF 0x20
@@ -455,6 +454,8 @@
 #define debug_mode_e_DBG_UNUSED_42 42
 #define debug_mode_e_enum "INVALID", "TPS acceleration enrichment", "INVALID", "Stepper Idle Control", "Engine Load accl enrich", "Trigger Counters", "Soft Spark Cut", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "SD card", "sr5", "Knock", "INVALID", "Electronic Throttle", "Executor", "Bench Test / TS commands", "INVALID", "Analog inputs #1", "INSTANT_RPM", "INVALID", "Status", "INVALID", "INVALID", "MAP", "Metrics", "INVALID", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "INVALID", "Boost Control", "INVALID", "INVALID", "ETB Autotune", "Composite Log", "INVALID", "INVALID", "INVALID", "Dyno_View", "Logic_Analyzer", "INVALID", "TCU", "Lua"
 #define debug_mode_e_UNUSED23 23
+#define DEFAULT_CLT_AXIS_HIGH_VALUE 120
+#define DEFAULT_CLT_AXIS_LOW_VALUE -40
 #define DEFAULT_RPM_AXIS_HIGH_VALUE 7000
 #define DEFAULT_SELT_STIM_RPM 1200
 #define DEFAULT_SELT_STIM_VVT0 23
@@ -510,7 +511,7 @@
 #define ego_sensor_e_ES_PLX 4
 #define egoSettings_NAME "CAN O2 sensors"
 #define EGT_CHANNEL_COUNT 8
-#define engine_configuration_s_size 4268
+#define engine_configuration_s_size 4272
 #define engine_load_mode_e_auto_enum 0="LM_SPEED_DENSITY",2="LM_ALPHA_N",3="LM_LUA",1="LM_REAL_MAF",4="UNSUPPORTED_ENUM_VALUE"
 #define engine_load_mode_e_LM_ALPHA_N 2
 #define engine_load_mode_e_LM_LUA 3
@@ -650,7 +651,7 @@
 #define FIELD_DISPLACEMENT displacement
 #define FIELD_INJECTOR_FLOW injector.flow
 #define firing_order_e_enum "One Cylinder", "1-3-4-2", "1-2-4-3", "1-3-2-4", "1-5-3-6-2-4", "1-8-4-3-6-5-7-2", "1-2-4-5-3", "1-4-2-5-3-6", "1-2", "1-2-3-4-5-6", "1-2-3", "1-8-7-2-6-5-4-3", "1-5-4-2-6-3-7-8 Mustang", "1-6-3-2-5-4", "1-10-9-4-3-6-5-8-7_2", "1-7-5-11-3-9-6-12-2-8-4-10", "1-7-4-10-2-8-6-12-3-9-5-11", "1-4-3-2", "1-12-5-8-3-10-6-7-2-11-4-9", "1-2-7-8-4-5-6-3", "1-3-7-2-6-5-4-8 HO", "1-2-3-4-5-6-7-8-9", "INVALID", "1-2-3-4-5-6-7-8-9-10-11-12", "1-3-2", "1-2-3-4-5-6-7-8", "1-5-4-8-6-3-7-2", "1-4-3-6-2-5", "1-8-7-3-6-5-4-2", "1-6-2-4-3-5", "1-6-5-4-3-2", "1-4-5-2-3-6", "1-5-4-8-3-7-2-6 Voodoo", "1-6-5-10-2-7-3-8-4-9", "1-8-6-2-7-3-4-5 F136", "1-2-3-4", "1-6-2-5-3-4"
-#define FLASH_DATA_VERSION 260805
+#define FLASH_DATA_VERSION 260908
 #define FLEX_TRANSIENT_CLT_SIZE 8
 #define FLEX_TRANSIENT_ETH_SIZE 8
 #define FLOW_LINEARIZATION_MASS_SIZE 2
@@ -784,7 +785,7 @@
 #define GAUGE_NAME_FUEL_STFT_INPUT_1 "STFT input lambda error: Bank 1"
 #define GAUGE_NAME_FUEL_STFT_INPUT_2 "STFT input lambda error: Bank 2"
 #define GAUGE_NAME_FUEL_TEMPERATURE "Fuel Temperature"
-#define GAUGE_NAME_FUEL_TPS_EXTRA "Fuel: TPS acceleration add fuel ms"
+#define GAUGE_NAME_FUEL_TPS_EXTRA "Fuel: TPS AE (ms or fraction)"
 #define GAUGE_NAME_FUEL_VE "Fuel: VE"
 #define GAUGE_NAME_FUEL_WALL_AMOUNT "Fuel: wall amount"
 #define GAUGE_NAME_FUEL_WALL_CORRECTION "Fuel: wall correction"
@@ -1395,7 +1396,6 @@
 #define InjectorNonlinearMode_INJ_None 0
 #define InjectorNonlinearMode_INJ_PolynomialAdder 1
 #define INSTANCE_INJECTOR injector
-#define JUMP_BLT_COMMAND 0xBC
 #define JUMP_DFU_COMMAND 0xBA
 #define KNOCK_RPM_TABLE_NAME "Engine Knock Threshold RPM Based"
 #define KNOCK_TABLE_RPM_SIZE 6
@@ -1492,6 +1492,7 @@
 #define operation_mode_e_FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR 6
 #define operation_mode_e_OM_NONE 0
 #define operation_mode_e_TWO_STROKE 3
+#define OUTPUT_CHANNEL_SD_CARD_MODE "sdCardMode"
 #define OUTPUT_CHANNEL_SD_LOGGING_INTERNAL "sd_logging_internal"
 #define OUTPUT_CHANNEL_SD_MSD "sd_msd"
 #define OUTPUT_CHANNEL_SD_PRESENT "sd_present"
@@ -1645,7 +1646,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 2052008269
+#define SIGNATURE_HASH 1741316110
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1674,6 +1675,7 @@
 #define stft_state_e_stftDisabledCrankingDelay 4
 #define stft_state_e_stftDisabledDFCO 7
 #define stft_state_e_stftDisabledFuelCut 9
+#define stft_state_e_stftDisabledLaunch 10
 #define stft_state_e_stftDisabledRPM 3
 #define stft_state_e_stftDisabledSettings 1
 #define stft_state_e_stftDisabledTpsAccel 8
@@ -1730,6 +1732,7 @@
 #define torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_UP_SWITCH 3
 #define TOTAL_CONFIG_SIZE 16960
 #define TPS_2_BYTE_PACKING_MULT 100
+#define TPS_ACCEL_UNITS "ms/frac"
 #define TPS_PPS_TOO_HIGH_THRESHOLD 110
 #define TPS_PPS_TOO_LOW_THRESHOLD -10
 #define TPS_TPS_ACCEL_CLT_CORR_TABLE 4
@@ -2054,11 +2057,11 @@
 #define ts_show_can2 false
 #define ts_show_can_bitrate true
 #define ts_show_can_pins false
-#define ts_show_can_terminator true
 #define ts_show_can_verbose true
 #define ts_show_can_wbo true
 #define ts_show_can_wbo_type true
 #define ts_show_can_weird true
+#define ts_show_canbus3 false
 #define ts_show_canbus_sniffer false
 #define ts_show_charge_estimation true
 #define ts_show_check_engine true
@@ -2160,13 +2163,13 @@
 #define ts_show_hd false
 #define ts_show_hip9011 false
 #define ts_show_i2c false
-#define ts_show_i2c1_enable true
-#define ts_show_i2c1_pins true
-#define ts_show_i2c2_enable true
-#define ts_show_i2c2_pins true
-#define ts_show_i2c3_enable true
-#define ts_show_i2c3_pins true
-#define ts_show_i2c4_enable true
+#define ts_show_i2c1_enable false
+#define ts_show_i2c1_pins false
+#define ts_show_i2c2_enable false
+#define ts_show_i2c2_pins false
+#define ts_show_i2c3_enable false
+#define ts_show_i2c3_pins false
+#define ts_show_i2c4_enable false
 #define ts_show_i2c4_pins false
 #define ts_show_iat true
 #define ts_show_idle_hardware true
@@ -2290,12 +2293,12 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.08.26.hellen-honda-k.2052008269"
+#define TS_SIGNATURE "rusEFI master.2026.09.21.hellen-honda-k.1741316110"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
 #define TS_TEST_COMMAND_char t
-#define TS_TOTAL_OUTPUT_SIZE 2200
+#define TS_TOTAL_OUTPUT_SIZE 2216
 #define TS_TRIGGER_SCOPE_CHANNEL_1_NAME "Channel 1"
 #define TS_TRIGGER_SCOPE_CHANNEL_2_NAME "Channel 2"
 #define TS_TRIGGER_SCOPE_DISABLE 5

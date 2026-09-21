@@ -67,6 +67,11 @@ public class AvailableHardwareTest {
         assertFalse(new AvailableHardware(Collections.emptyList(), true, false, false).isEmpty(), "DFU counts as hardware");
         assertFalse(new AvailableHardware(Collections.emptyList(), false, true, false).isEmpty(), "ST-Link counts as hardware");
         assertFalse(new AvailableHardware(Collections.emptyList(), false, false, true).isEmpty(), "PCAN counts as hardware");
+
+        AvailableHardware socketCanOnly = new AvailableHardware(
+            Collections.emptyList(), false, false, false, true);
+        assertTrue(socketCanOnly.isSocketCanAvailable());
+        assertTrue(socketCanOnly.isEmpty(), "a CAN interface without an ECU is not actionable hardware");
     }
 
     @Test
@@ -78,5 +83,6 @@ public class AvailableHardwareTest {
         assertNotEquals(base, new AvailableHardware(Collections.singletonList(ECU), true, false, false));
         assertNotEquals(base, new AvailableHardware(Collections.singletonList(ECU), false, true, false));
         assertNotEquals(base, new AvailableHardware(Collections.singletonList(ECU), false, false, true));
+        assertNotEquals(base, new AvailableHardware(Collections.singletonList(ECU), false, false, false, true));
     }
 }

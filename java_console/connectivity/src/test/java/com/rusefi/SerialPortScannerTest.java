@@ -32,6 +32,8 @@ public class SerialPortScannerTest {
         Collection<String> tcpPorts = new ArrayList<>();
         int tcpInspectionCalls;
         PortResult tcpResult;
+        int socketCanInspectionCalls;
+        PortResult socketCanResult;
         boolean liveEcuConnected;
         boolean dfuConnected;
         int deviceProbeCalls;
@@ -57,6 +59,12 @@ public class SerialPortScannerTest {
         public PortResult inspectTcpPort(String tcpPort) {
             tcpInspectionCalls++;
             return tcpResult != null ? tcpResult : new PortResult(tcpPort, SerialPortType.Unknown);
+        }
+
+        @Override
+        public PortResult inspectSocketCan() {
+            socketCanInspectionCalls++;
+            return socketCanResult;
         }
 
         @Override
@@ -97,9 +105,7 @@ public class SerialPortScannerTest {
     }
 
     /**
-     * Run one scan cycle. inspectPorts signals scan completion by interrupting the calling
-     * (= this test) thread out of its timeout sleep; clear any stray flag so it cannot leak
-     * into later waits inside the test framework.
+     * Run one scan cycle without the background scanner.
      */
     private void scan(boolean includeSlowLookup) {
         scanner.findAllAvailablePorts(includeSlowLookup);
@@ -237,24 +243,85 @@ public class SerialPortScannerTest {
         scan(false);
 
         assertEquals(0, probes.deviceProbeCalls);
+        assertEquals(0, probes.socketCanInspectionCalls);
         assertFalse(scanner.getCurrentHardware().isDfuFound());
+    }
+
+    @Test
+    public void availableSocketCanWithoutEcuIsNotASelectablePort() {
+        probes.socketCanResult = new PortResult(LinkManager.SOCKET_CAN, SerialPortType.CAN);
+
+        scan(true);
+
+        assertEquals(1, probes.socketCanInspectionCalls);
+        assertTrue(scanner.getCurrentHardware().isSocketCanAvailable());
+        assertTrue(knownPorts().isEmpty(), "a CAN interface without an ECU is status, not a connect target");
+    }
+
+    @Test
+    public void socketCanEcuIsPublishedAsAConnectableEcu() {
+        probes.socketCanResult = new PortResult(LinkManager.SOCKET_CAN, SerialPortType.Ecu);
+
+        scan(true);
+
+        assertTrue(scanner.getCurrentHardware().isSocketCanAvailable());
+        assertEquals(java.util.Collections.singletonList(probes.socketCanResult), knownPorts());
+    }
+
+    @Test
+    public void fastScanPreservesPreviouslyDetectedSocketCanState() {
+        probes.socketCanResult = new PortResult(LinkManager.SOCKET_CAN, SerialPortType.Ecu);
+        scan(true);
+
+        scan(false);
+
+        assertEquals(1, probes.socketCanInspectionCalls);
+        assertTrue(scanner.getCurrentHardware().isSocketCanAvailable());
+        assertEquals(java.util.Collections.singletonList(probes.socketCanResult), knownPorts());
+    }
+
+    @Test
+    public void invalidatingSocketCanDropsStaleEcuAndForcesAProbe() {
+        probes.socketCanResult = new PortResult(LinkManager.SOCKET_CAN, SerialPortType.Ecu);
+        scan(true);
+
+        scanner.invalidatePort(LinkManager.SOCKET_CAN);
+
+        assertTrue(knownPorts().isEmpty());
+        scan(true);
+        assertEquals(2, probes.socketCanInspectionCalls,
+            "SocketCAN must be reprobed immediately after a firmware handoff");
+    }
+
+    @Test
+    public void unavailableSocketCanIsNotReported() {
+        scan(true);
+
+        assertEquals(1, probes.socketCanInspectionCalls);
+        assertFalse(scanner.getCurrentHardware().isSocketCanAvailable());
+        assertTrue(knownPorts().isEmpty());
     }
 
     @Test
     public void deviceProbesAreThrottledAndLastKnownValuesReusedBetweenProbes() {
         probes.dfuConnected = true;
+        probes.socketCanResult = new PortResult(LinkManager.SOCKET_CAN, SerialPortType.CAN);
 
         scan(true);
         assertEquals(1, probes.deviceProbeCalls);
+        assertEquals(1, probes.socketCanInspectionCalls);
 
         probes.time += 1000; // within the throttle interval
         scan(true);
         assertEquals(1, probes.deviceProbeCalls, "device probes must not run every scan cycle");
+        assertEquals(1, probes.socketCanInspectionCalls);
         assertTrue(scanner.getCurrentHardware().isDfuFound(), "last-known result must be reused, not dropped");
+        assertTrue(scanner.getCurrentHardware().isSocketCanAvailable());
 
         probes.time += 3000; // past the throttle interval
         scan(true);
         assertEquals(2, probes.deviceProbeCalls);
+        assertEquals(2, probes.socketCanInspectionCalls);
     }
 
     @Test
@@ -266,6 +333,22 @@ public class SerialPortScannerTest {
 
         assertEquals(0, probes.deviceProbeCalls,
             "a connected board cannot also be a DFU device; the scan thread must stay responsive");
+        assertEquals(0, probes.socketCanInspectionCalls);
+    }
+
+    @Test
+    public void connectedSocketCanEcuIsNotReprobed() {
+        probes.socketCanResult = new PortResult(LinkManager.SOCKET_CAN, SerialPortType.Ecu);
+        scan(true);
+
+        probes.liveEcuConnected = true;
+        probes.socketCanResult = new PortResult(LinkManager.SOCKET_CAN, SerialPortType.CAN);
+        probes.time += 3001;
+        scan(true);
+
+        assertEquals(1, probes.socketCanInspectionCalls);
+        assertEquals(java.util.Collections.singletonList(
+            new PortResult(LinkManager.SOCKET_CAN, SerialPortType.Ecu)), knownPorts());
     }
 
     @Test

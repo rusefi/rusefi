@@ -31,12 +31,12 @@
 
 template <size_t TBufferSize>
 void LogBuffer<TBufferSize>::writeLine(LogLineBuffer* line) {
-	writeInternal(line->buffer);
+	writeInternal(line->buffer, sizeof(line->buffer));
 }
 
 template <size_t TBufferSize>
 void LogBuffer<TBufferSize>:: writeLogger(Logging* logging) {
-	writeInternal(logging->buffer);
+	writeInternal(logging->buffer, logging->bufferSize);
 }
 
 template <size_t TBufferSize>
@@ -56,8 +56,12 @@ const char* LogBuffer<TBufferSize>::get() const {
 }
 
 template <size_t TBufferSize>
-void LogBuffer<TBufferSize>::writeInternal(const char* buffer) {
-	size_t len = std::strlen(buffer);
+void LogBuffer<TBufferSize>::writeInternal(const char* buffer, size_t maxLength) {
+	// never read past maxLength - an unterminated source buffer must not walk
+	// adjacent memory (on F7 with MPU guard pages that walk ends in a MemManage
+	// fault and a reboot), see https://github.com/rusefi/rusefi/issues/10159
+	const char* terminator = static_cast<const char*>(std::memchr(buffer, '\0', maxLength));
+	size_t len = terminator ? static_cast<size_t>(terminator - buffer) : maxLength;
 	// leave one byte extra at the end to guarantee room for a null terminator
 	size_t available = TBufferSize - length() - 1;
 
@@ -71,6 +75,31 @@ void LogBuffer<TBufferSize>::writeInternal(const char* buffer) {
 
 // for unit tests
 template class LogBuffer<10>;
+#if EFI_UNIT_TEST
+// large enough to accept a whole unterminated LogLineBuffer
+template class LogBuffer<300>;
+#endif
+
+namespace priv
+{
+size_t terminateLogLine(char* buffer, size_t bufferSize, size_t untruncatedLen) {
+	if (untruncatedLen > bufferSize - 1) {
+		// The message was truncated, losing its trailing LOG_DELIMITER framing -
+		// re-add the delimiter as the last visible character. The null terminator at
+		// buffer[bufferSize - 1] MUST survive: a longer message used to overwrite it
+		// with the delimiter here, leaving the buffer unterminated and sending the
+		// flusher's strlen off the end of the buffer - on massive Lua print() traffic
+		// that walk reads into adjacent memory and can end in a fault and a reboot,
+		// see https://github.com/rusefi/rusefi/issues/10159
+		untruncatedLen = bufferSize - 1;
+		buffer[untruncatedLen - 1] = LOG_DELIMITER[0];
+		// chvsnprintf already null-terminates here, but do not rely on it
+		buffer[untruncatedLen] = '\0';
+	}
+
+	return untruncatedLen;
+}
+} // namespace priv
 
 #if (EFI_PROD_CODE || EFI_SIMULATOR) && EFI_TEXT_LOGGING
 
@@ -80,6 +109,9 @@ chibios_rt::Mutex logBufferMutex;
 // Two buffers:
 //  - we copy line buffers to writeBuffer in LoggingBufferFlusher
 //  - and read from readBuffer via TunerStudio protocol commands
+// Limit: DL_OUTPUT_BUFFER (6500 bytes on STM32) is the most text that can accumulate
+// between two TS/console reads. Once it is full, LogBuffer::writeInternal keeps only what
+// fits and the rest of that line - and every later line until the next swap - is lost.
 using LB = LogBuffer<DL_OUTPUT_BUFFER>;
 LB buffers[2];
 LB* writeBuffer = &buffers[0];
@@ -117,7 +149,10 @@ const char* swapOutputBuffers(size_t* actualOutputBufferSize) {
 	return readBuffer->get();
 }
 
-// These buffers store lines queued to be written to the writeBuffer
+// These buffers store lines queued to be written to the writeBuffer.
+// Limit: 24 x 256 bytes = 6 KB of RAM. This is the number of efiPrintf lines that can be
+// in flight before the low-priority flusher thread copies them out; when the free queue is
+// empty efiPrintfInternal returns without logging (silent drop, no blocking).
 constexpr size_t lineBufferCount = 24;
 static LogLineBuffer lineBuffers[lineBufferCount];
 
@@ -176,6 +211,16 @@ extern bool verboseMode;
 
 namespace priv
 {
+#if EFI_UNIT_TEST
+static LoggingTestSink* loggingTestSink = nullptr;
+
+LoggingTestSink* setLoggingTestSink(LoggingTestSink* sink) {
+	auto previous = loggingTestSink;
+	loggingTestSink = sink;
+	return previous;
+}
+#endif
+
 void efiPrintfInternal(const char *format, ...) {
 #if EFI_UNIT_TEST || EFI_SIMULATOR
 	/*
@@ -199,7 +244,17 @@ void efiPrintfInternal(const char *format, ...) {
 		printf("\r\n");
 	}
 #endif
-#if (EFI_PROD_CODE || EFI_SIMULATOR) && EFI_TEXT_LOGGING
+#if (EFI_PROD_CODE || EFI_SIMULATOR || EFI_UNIT_TEST) && EFI_TEXT_LOGGING
+#if EFI_UNIT_TEST
+	if (!loggingTestSink) {
+		return;
+	}
+
+	LogLineBuffer* lineBuffer = loggingTestSink->acquire();
+	if (!lineBuffer) {
+		return;
+	}
+#else
 	LogLineBuffer* lineBuffer;
 	msg_t msg;
 
@@ -227,18 +282,17 @@ void efiPrintfInternal(const char *format, ...) {
 	if (msg != MSG_OK) {
 		return;
 	}
+#endif
 
 	// Write the formatted string to the output buffer
 	va_list ap;
 	va_start(ap, format);
+	// chvsnprintf always null-terminates (at most at buffer[size - 1]) and returns
+	// the untruncated length
 	size_t len = chvsnprintf(lineBuffer->buffer, sizeof(lineBuffer->buffer), format, ap);
 	va_end(ap);
 
-	// Ensure that the string is comma-terminated in case it overflowed
-	lineBuffer->buffer[sizeof(lineBuffer->buffer) - 1] = LOG_DELIMITER[0];
-
-	if (len > sizeof(lineBuffer->buffer) - 1)
-		len = sizeof(lineBuffer->buffer) - 1;
+	len = priv::terminateLogLine(lineBuffer->buffer, sizeof(lineBuffer->buffer), len);
 	for (size_t i = 0; i < len; i++) {
 		/* just replace all non-printable chars with space
 		 * TODO: is there any other "prohibited" chars? */
@@ -246,6 +300,9 @@ void efiPrintfInternal(const char *format, ...) {
 			lineBuffer->buffer[i] = ' ';
 	}
 
+#if EFI_UNIT_TEST
+	loggingTestSink->publish(lineBuffer);
+#else
 #if EFI_SIMULATOR
 	if (isIsr) {
 		chSysLockFromISR();
@@ -258,6 +315,7 @@ void efiPrintfInternal(const char *format, ...) {
 		chibios_rt::CriticalSectionLocker csl;
 		filledBuffers.postI(lineBuffer);
 	}
+#endif
 #endif
 }
 } // namespace priv

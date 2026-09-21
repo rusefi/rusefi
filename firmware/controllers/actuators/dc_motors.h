@@ -15,12 +15,13 @@ DcMotor* initDcMotor(const char *disPinMsg, const dc_io& io, size_t index, bool 
 DcMotor* initDcMotor(brain_pin_e coil_p, brain_pin_e coil_m, size_t index);
 
 // Manual control of motors for use by console commands
-void setDcMotorFrequency(size_t index, int hz);
+bool setDcMotorFrequency(size_t index, int hz);
 void setDcMotorDuty(size_t index, float duty);
 
 #if EFI_UNIT_TEST
 DcMotor* getDcMotorForUnitTest(size_t index);
 void resetDcHardwareForUnitTest();
+void setDcHardwarePwmForUnitTest(size_t index, hardware_pwm* pwm);
 #endif // EFI_UNIT_TEST
 
 void showDcMotorInfo(int i);
@@ -67,9 +68,12 @@ public:
 
 	TwoPinDcMotor dcMotor;
 
-	void setFrequency(int frequency) {
-		m_pwm1.setFrequency(frequency);
-		m_pwm2.setFrequency(frequency);
+	// Reprograms the running bridge PWM; bypasses the ETB clamps applied by start().
+	// @return false if the hardware refused the frequency (both channels share the limits).
+	bool setFrequency(int frequency) {
+		bool ok = m_pwm1.setFrequency(frequency);
+		ok = m_pwm2.setFrequency(frequency) && ok;
+		return ok;
 	}
 
 	const char *msg() {
@@ -79,6 +83,14 @@ public:
 	void stop() {
 		// todo: replace 'isStarted' with 'stop'
 	}
+
+#if EFI_UNIT_TEST
+	// Unit tests never start hardware PWM (see start()); this stands in for the timer channel
+	// that startSimplePwmHard() attaches on real hardware.
+	void setHardwarePwmForUnitTest(hardware_pwm* pwm) {
+		m_pwm1.hardPwm = pwm;
+	}
+#endif // EFI_UNIT_TEST
 };
 
 DcHardware *getPrimaryDCHardwareForLogging();

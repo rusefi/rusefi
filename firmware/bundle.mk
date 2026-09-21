@@ -232,7 +232,14 @@ $(BIN_TARGET): $(DBIN) | $(FOLDER)
 	ln -rfs $< $@
 
 HEX_BASE_ADDRESS = $(shell $(OD) -h -j .vectors $(BUILDDIR)/$(PROJECT).elf | awk '/.vectors/ {print $$5 }')
-CHECKSUM_ADDRESS = 0x$(shell echo "ibase=16; obase=10; ${HEX_BASE_ADDRESS} + 1C" | bc)
+# Fail during recipe expansion before hex2dfu runs if objdump returned no usable
+# 32-bit address. Shell arithmetic avoids a bc dependency on Windows/Cygwin.
+CHECKSUM_ADDRESS = $(or $(shell \
+    base='$(HEX_BASE_ADDRESS)'; \
+    printf '%s\n' "$$base" | LC_ALL=C grep -Eq '^[0-9a-fA-F]{1,8}$$' || exit 1; \
+    checksum=$$((0x$$base + 0x1C)); \
+    [ "$$checksum" -le 4294967295 ] || exit 1; \
+    printf '0x%X' "$$checksum"),$(error Invalid .vectors base address '$(HEX_BASE_ADDRESS)' for checksum))
 
 $(BUILDDIR)/rusefi.srec: $(BUILDDIR)/$(PROJECT).hex
 	# make sure we create the srec from a binary with crc

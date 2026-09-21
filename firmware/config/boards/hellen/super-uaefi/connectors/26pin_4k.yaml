@@ -50,7 +50,7 @@ pins:
   - pin: 9D
     class: analog_inputs
     ts_name: KNOCK
-    function: KNOCK sensor (other sensor pin goes to analog ground)
+    function: KNOCK sensor (other sensor pin goes to sensor/analog ground)
 
   - pin: 10D
     ts_name: VR_9924-
@@ -147,7 +147,7 @@ pins:
 info:
   cid: 26-4
   title: super-uaefi
-  name: super-uaefi
+  name: connector D
   image:
     file: 26pins-4k.jpg
   pins:

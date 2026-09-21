@@ -157,6 +157,7 @@ float IdleController::getCrankingOpenLoop(float clt) const {
  *   - A/C compressor request
  *   - Cooling fans on
  *   - Lua scripting adder
+ *   - Park/Neutral position offset
  *   - Antilag system
  *   - TPS 'dashpot' decay when releasing throttle (helps avoid stalls)
  *   - Extra airflow as RPM climbs (airByRpmTaper)
@@ -178,6 +179,7 @@ percent_t IdleController::getRunningOpenLoop(IIdleController::Phase phase, float
 	running += enginePins.fanRelay2.getLogicValue() ? engineConfiguration->fan2ExtraIdle : 0;
 
 	running += luaAdd;
+	running += m_isParkNeutral ? engineConfiguration->idleParkNeutralOffset : 0;
 
 #if EFI_ANTILAG_SYSTEM
 if (engine->antilagController.isAntilagCondition) {

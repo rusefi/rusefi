@@ -410,7 +410,7 @@ pins:
 info:
   title: AlphaX Platinum
   cid: ab
-  name: AlphaX Platinum
+  name: connector A/B
   # directory see D.yaml
   board_url: https://rusefi.com/s/8chan
   image:

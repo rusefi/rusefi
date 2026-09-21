@@ -29,6 +29,8 @@ public class IndicatorPanel {
     private final JPanel panel;
     private final List<IndicatorModel> indicators;
     private final IniFileModel ini;
+    private final SensorCentral.ResponseListenerToken listenerToken;
+    private final boolean hasDemand;
     private ConfigurationImage currentImage;
 
     /**
@@ -58,18 +60,28 @@ public class IndicatorPanel {
         Set<String> allSensors = new HashSet<>();
         for (IndicatorModel model : this.indicators) {
             allSensors.addAll(ExpressionEvaluator.extractVariables(model.getExpression()));
-            allSensors.addAll(ExpressionEvaluator.extractVariables(model.getOnLabel()));
-            allSensors.addAll(ExpressionEvaluator.extractVariables(model.getOffLabel()));
+            addLabelVariables(allSensors, model.getOnLabel());
+            addLabelVariables(allSensors, model.getOffLabel());
         }
+        hasDemand = !allSensors.isEmpty();
 
-        SensorCentral.getInstance().addListener(() -> {
+        listenerToken = SensorCentral.getInstance().addListener(() -> {
             final ConfigurationImage snap = currentImage;
             SwingUtilities.invokeLater(() -> applyAll(snap));
         }, new SensorSubscription(allSensors.toArray(new String[0])));
+        listenerToken.setActive(false);
     }
 
     public JPanel getPanel() {
         return panel;
+    }
+
+    public void setActive(boolean active) {
+        listenerToken.setActive(active && hasDemand);
+    }
+
+    public void destroy() {
+        listenerToken.remove();
     }
 
     /**
@@ -130,8 +142,8 @@ public class IndicatorPanel {
     static void applyState(JLabel label, IndicatorModel indicator, IniFileModel ini, ConfigurationImage ci) {
         Set<String> vars = new HashSet<>();
         vars.addAll(ExpressionEvaluator.extractVariables(indicator.getExpression()));
-        vars.addAll(ExpressionEvaluator.extractVariables(indicator.getOnLabel()));
-        vars.addAll(ExpressionEvaluator.extractVariables(indicator.getOffLabel()));
+        addLabelVariables(vars, indicator.getOnLabel());
+        addLabelVariables(vars, indicator.getOffLabel());
         Map<String, Double> context = new HashMap<>();
         for (String var : vars) {
             Optional<IniField> field = ini.findIniField(var);
@@ -159,6 +171,12 @@ public class IndicatorPanel {
         label.setToolTipText(text);
         label.setBackground(bg);
         label.setForeground(fg);
+    }
+
+    private static void addLabelVariables(Set<String> variables, String label) {
+        if (TsStringFunction.containsStringFunction(label)) {
+            variables.addAll(ExpressionEvaluator.extractVariables(label));
+        }
     }
 
     static String resolveLabel(String raw, IniFileModel ini, Map<String, Double> context) {

@@ -69,11 +69,12 @@ pins:
     id: B9
     class: outputs
     ts_name: Lowside 13
+    function: Lowside 13 (with flyback)
     type: ls
 
   - pin: 11
     id: E0
-    function: Lowside output
+    function: Lowside 14 (with flyback)
     class: outputs
     ts_name: Lowside 14 or starter
     color: yellow
@@ -82,6 +83,7 @@ pins:
   - pin: 12
     id: E1
     class: outputs
+    function: Lowside 15 (with flyback)
     ts_name: Lowside 15
     color: white
     type: ls
@@ -160,6 +162,7 @@ pins:
     id: E2
     class: outputs
     ts_name: Lowside 16
+    function: Lowside 16 (with flyback)
     type: ls
     color: yellow
 

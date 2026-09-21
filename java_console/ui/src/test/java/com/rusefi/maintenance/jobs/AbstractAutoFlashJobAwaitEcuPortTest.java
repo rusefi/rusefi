@@ -177,6 +177,44 @@ public class AbstractAutoFlashJobAwaitEcuPortTest {
     }
 
     @Test
+    public void socketCanEcuCountsAsConnectable() {
+        scanner.fireHardwareChange(hw(ecu(LinkManager.SOCKET_CAN)));
+
+        assertEquals(LinkManager.SOCKET_CAN, job.awaitEcuPort(60_000, clock));
+        assertEquals(0, clock.sleepCalls);
+    }
+
+    @Test
+    public void originalSocketCanTransportIsPreferredOverAnotherEcu() {
+        AbstractAutoFlashJob socketCanJob = new AbstractAutoFlashJob(
+            "test", ecu(LinkManager.SOCKET_CAN), null,
+            new ConnectivityContext(scanner), null) {
+            @Override
+            protected boolean flash(LinkManager lm, BinaryProtocol bp, UpdateOperationCallbacks cb) {
+                throw new UnsupportedOperationException("not exercised");
+            }
+        };
+        scanner.fireHardwareChange(hw(ecu("COM5"), ecu(LinkManager.SOCKET_CAN)));
+
+        assertEquals(LinkManager.SOCKET_CAN, socketCanJob.awaitEcuPort(60_000, clock));
+    }
+
+    @Test
+    public void socketCanRecoveryDoesNotFallBackToASerialEcu() {
+        AbstractAutoFlashJob socketCanJob = new AbstractAutoFlashJob(
+            "test", ecu(LinkManager.SOCKET_CAN), null,
+            new ConnectivityContext(scanner), null) {
+            @Override
+            protected boolean flash(LinkManager lm, BinaryProtocol bp, UpdateOperationCallbacks cb) {
+                throw new UnsupportedOperationException("not exercised");
+            }
+        };
+        scanner.fireHardwareChange(hw(ecu("COM5")));
+
+        assertNull(socketCanJob.awaitEcuPort(1_000, clock));
+    }
+
+    @Test
     public void completionRunsAfterReconnectRecovery() {
         LinkManager linkManager = mock(LinkManager.class);
         BinaryProtocol binaryProtocol = mock(BinaryProtocol.class);
@@ -207,6 +245,53 @@ public class AbstractAutoFlashJobAwaitEcuPortTest {
         order.verify(completion).run();
     }
 
+    /** An eligibility rejection must prevent handoff and recovery. */
+    @Test
+    public void flashingEligibilityRejectionStopsBeforeHandoff() {
+        LinkManager linkManager = mock(LinkManager.class);
+        BinaryProtocol binaryProtocol = mock(BinaryProtocol.class);
+        CommandQueue commandQueue = mock(CommandQueue.class);
+        UpdateOperationCallbacks callbacks = mock(UpdateOperationCallbacks.class);
+        Runnable completion = mock(Runnable.class);
+        Runnable programming = mock(Runnable.class);
+        when(linkManager.getBinaryProtocol()).thenReturn(binaryProtocol);
+        when(linkManager.getCommandQueue()).thenReturn(commandQueue);
+
+        AbstractAutoFlashJob rejectedJob = new AbstractAutoFlashJob(
+            "test", new PortResult("COM_OLD", SerialPortType.Ecu), null,
+            new ConnectivityContext(scanner), linkManager) {
+            // Before the fix the job has no eligibility hook and ignores this decision.
+            protected boolean isFlashAllowed(BinaryProtocol bp, UpdateOperationCallbacks cb) {
+                cb.logLine("This update requires an intermediate firmware version");
+                return false;
+            }
+
+            @Override
+            protected boolean flash(LinkManager lm, BinaryProtocol bp, UpdateOperationCallbacks cb) {
+                lm.disconnect();
+                programming.run();
+                return true;
+            }
+
+            @Override
+            String awaitEcuPort(long timeoutMs, Clock clock) {
+                return "COM_NEW";
+            }
+        };
+
+        rejectedJob.doJob(callbacks, completion);
+
+        verify(programming, never()).run();
+        verify(linkManager, never()).disconnect();
+        verify(linkManager, never()).reconnect(anyString());
+        verify(linkManager, never()).allowAutomaticReconnect();
+        verify(commandQueue, never()).clearPendingCommands();
+        verify(callbacks, never()).done();
+        verify(callbacks).error();
+        verify(callbacks).logLine("This update requires an intermediate firmware version");
+        verify(completion).run();
+    }
+
     @Test
     public void completionRunsOnceWhenFlashThrows() {
         LinkManager linkManager = mock(LinkManager.class);
@@ -227,6 +312,33 @@ public class AbstractAutoFlashJobAwaitEcuPortTest {
         assertThrows(IllegalStateException.class, () -> failingJob.doJob(callbacks, completion));
         verify(completion).run();
         verify(linkManager, never()).reconnect(anyString());
+    }
+
+    @Test
+    public void failedHandoffPreparationReportsErrorAndCompletesWithoutFlashing() {
+        LinkManager lm = mock(LinkManager.class);
+        when(lm.getBinaryProtocol()).thenReturn(mock(BinaryProtocol.class));
+        UpdateOperationCallbacks callbacks = mock(UpdateOperationCallbacks.class);
+        org.mockito.Mockito.doThrow(new IllegalStateException("UI preparation failed"))
+            .when(callbacks).firmwareHandoffStarted();
+        Runnable completion = mock(Runnable.class);
+        AbstractAutoFlashJob job = new AbstractAutoFlashJob("test", ecu("COM_OLD"), null,
+            new ConnectivityContext(scanner), lm) {
+            @Override
+            protected boolean flash(LinkManager link, BinaryProtocol bp, UpdateOperationCallbacks cb) {
+                throw new AssertionError("Must not flash after failed handoff preparation");
+            }
+        };
+
+        job.doJob(callbacks, completion);
+
+        verify(callbacks).logLine("Unable to prepare firmware handoff: UI preparation failed");
+        verify(callbacks).error();
+        verify(callbacks, never()).done();
+        verify(completion).run();
+        verify(lm, never()).disconnect();
+        verify(lm, never()).reconnect(anyString());
+        verify(lm, never()).allowAutomaticReconnect();
     }
 
     @Test

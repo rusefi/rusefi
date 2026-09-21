@@ -1276,18 +1276,9 @@ float getConfigValueByHash(const int hash) {
 // stepperDcInvertedPins
 		case 337194154:
 			return engineConfiguration->stepperDcInvertedPins;
-// canOpenBLT
-		case -631762165:
-			return engineConfiguration->canOpenBLT;
-// can2OpenBLT
-		case -1514354211:
-			return engineConfiguration->can2OpenBLT;
 // injectorFlowAsMassFlow
 		case 444648859:
 			return engineConfiguration->injectorFlowAsMassFlow;
-// boardUseCanTerminator
-		case -312962799:
-			return engineConfiguration->boardUseCanTerminator;
 // kLineDoHondaSend
 		case 304164959:
 			return engineConfiguration->kLineDoHondaSend;
@@ -1933,6 +1924,12 @@ float getConfigValueByHash(const int hash) {
 // engineShutDownPeriod
 		case -1846425734:
 			return engineConfiguration->engineShutDownPeriod;
+// can3ListenMode
+		case 358354462:
+			return engineConfiguration->can3ListenMode;
+// verboseCan3
+		case -1056203296:
+			return engineConfiguration->verboseCan3;
 // knockSuppressMinTps
 		case 893776859:
 			return engineConfiguration->knockSuppressMinTps;
@@ -1963,6 +1960,9 @@ float getConfigValueByHash(const int hash) {
 // keepIdleSolenoidWhenStopped
 		case -414331274:
 			return engineConfiguration->keepIdleSolenoidWhenStopped;
+// canSnifferIncludeBus
+		case -1408814862:
+			return engineConfiguration->canSnifferIncludeBus;
 // nitrousLuaGaugeArmingValue
 		case -1760115393:
 			return engineConfiguration->nitrousLuaGaugeArmingValue;
@@ -2119,6 +2119,9 @@ float getConfigValueByHash(const int hash) {
 // dwellDutyPercent
 		case -238882060:
 			return engineConfiguration->dwellDutyPercent;
+// idleParkNeutralOffset
+		case 1550171219:
+			return engineConfiguration->idleParkNeutralOffset;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -2221,6 +2224,9 @@ float getConfigValueByHash(const int hash) {
 // wizardInjectorOutputs
 		case -1528635464:
 			return config->wizardInjectorOutputs;
+// wizardVeTable
+		case 346417305:
+			return config->wizardVeTable;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -4351,24 +4357,9 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->stepperDcInvertedPins = (int)value;
 		return 1;
 	}
-		case -631762165:
-	{
-		engineConfiguration->canOpenBLT = (int)value;
-		return 1;
-	}
-		case -1514354211:
-	{
-		engineConfiguration->can2OpenBLT = (int)value;
-		return 1;
-	}
 		case 444648859:
 	{
 		engineConfiguration->injectorFlowAsMassFlow = (int)value;
-		return 1;
-	}
-		case -312962799:
-	{
-		engineConfiguration->boardUseCanTerminator = (int)value;
 		return 1;
 	}
 		case 304164959:
@@ -5446,6 +5437,16 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->engineShutDownPeriod = value;
 		return 1;
 	}
+		case 358354462:
+	{
+		engineConfiguration->can3ListenMode = (int)value;
+		return 1;
+	}
+		case -1056203296:
+	{
+		engineConfiguration->verboseCan3 = (int)value;
+		return 1;
+	}
 		case 893776859:
 	{
 		engineConfiguration->knockSuppressMinTps = (int)value;
@@ -5494,6 +5495,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -414331274:
 	{
 		engineConfiguration->keepIdleSolenoidWhenStopped = (int)value;
+		return 1;
+	}
+		case -1408814862:
+	{
+		engineConfiguration->canSnifferIncludeBus = (int)value;
 		return 1;
 	}
 		case -1760115393:
@@ -5756,6 +5762,11 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->dwellDutyPercent = (int)value;
 		return 1;
 	}
+		case 1550171219:
+	{
+		engineConfiguration->idleParkNeutralOffset = value;
+		return 1;
+	}
 		case -1658957891:
 	{
 		config->tcu_shiftTime = value;
@@ -5924,6 +5935,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1528635464:
 	{
 		config->wizardInjectorOutputs = (int)value;
+		return 1;
+	}
+		case 346417305:
+	{
+		config->wizardVeTable = (int)value;
 		return 1;
 	}
 	}

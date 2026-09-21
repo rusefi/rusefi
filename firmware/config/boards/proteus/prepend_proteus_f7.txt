@@ -1,3 +1,5 @@
+#define ts_show_canbus_sniffer true
+
 #define LUA_SCRIPT_SIZE 48000
 
 ! huge buffer for happier remote TCP/IP connector - see also 'blockingFactorOverride' in console source code

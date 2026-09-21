@@ -62,5 +62,7 @@ private:
 	uint8_t transmit_enabled:1;
 	uint8_t baudrate_configured:1;
 	uint8_t ts:1;
+	// Fixed for each open session so a capture never changes format mid-stream.
+	bool includeBus = false;
 	uint8_t baud;
 };

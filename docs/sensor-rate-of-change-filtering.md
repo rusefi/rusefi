@@ -19,6 +19,12 @@ subscription layer (`firmware/hw_layer/adc/adc_subscription.cpp`). Sampling rate
 `AdcSubscription::SubscribeSensor()`. On the first sample the filter is preloaded via
 `cookSteadyState()` so there is no startup ramp.
 
+Biquad cutoff/center frequencies must be between the sampling rate / 1000 and
+the sampling rate / 2.5, inclusive. Slower filters lose too much coefficient
+precision in float; use a lower sampling rate when slower filtering is needed.
+The low-pass numerator is normalized against the stored feedback coefficients
+to preserve DC gain at low cutoffs.
+
 | sensor(s)                                        | cutoff (-3 dB) | call site                        |
 |--------------------------------------------------|---------------:|----------------------------------|
 | TPS1/TPS2 primary+secondary (also wastegate pos, idle pos) | 200 Hz | `init_tps.cpp`                    |
@@ -62,7 +68,7 @@ stage:
   layer whose *time constant* adapts to engine state.
 - **VSS** (`frequency_sensor.cpp` + `init_vehicle_speed_sensor.cpp`): per-tooth Biquad
   in event domain; tunable via `vssFilterReciprocal` (filter parameter =
-  1/vssFilterReciprocal, hard-clamped to 0.35 for stability; default averages over
+  1/vssFilterReciprocal, hard-clamped to 0.001-0.35 for numerical stability; default averages over
   ~20 teeth).
 - **Flex/ethanol** (`sensors/flex_sensor.h`): fixed Biquad `configureLowpass(100, 1)`
   on ethanol % (~0.5-1.5 Hz effective, comment in code) and a much slower

@@ -51,3 +51,14 @@ jobs:
       - name: Compile Firmware
         working-directory: firmware
         run: make -j4
+
+      - name: Upload failed build diagnostics
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: windows-firmware-diagnostics
+          path: |
+            firmware/build/rusefi.map
+            firmware/build/rusefi.elf
+          if-no-files-found: warn
+          retention-days: 14

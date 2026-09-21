@@ -2,17 +2,14 @@
  * @file    accel_enrichment.cpp
  * @brief   Acceleration enrichment calculator
  *
- * In this file we have three strategies for acceleration/deceleration fuel correction
+ * accelEnrichmentMode selects one of three acceleration enrichment strategies:
  *
- * 1) MAP rate-of-change correction
- * 2) TPS rate-of-change correction
- * 3) fuel film/wal wetting correction
- *   AWC Added to Wall Coefficient, %
- *   AWA Added to Wall Amount
- *   SOC Sucked Off wall Coefficient, %
- *   SOA Sucked Off wall amount
- *   WF  current on-Wall Fuel amount
+ * 1) MS Adder: TPS-based extra injection duration, converted to fuel mass.
+ * 2) Percent Adder: TPS-based extra fuel proportional to injection mass.
+ * 3) MAP Prediction: TPS-triggered MAP prediction in speed_density_airmass.cpp.
  *
+ * This file implements the shared TPS detector and the two adders.
+ * Wall wetting in wall_fuel.cpp is independent and can operate with any mode.
  *
  * http://rusefi.com/wiki/index.php?title=Manual:Software:Fuel_Control
  * @date Apr 21, 2014

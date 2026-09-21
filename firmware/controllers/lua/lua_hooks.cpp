@@ -976,6 +976,11 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 	});
 #endif // EFI_BOOST_CONTROL
 #if EFI_IDLE_CONTROL
+	lua_register(lState, "setParkNeutral", [](lua_State* l) {
+		luaL_checktype(l, 1, LUA_TBOOLEAN);
+		engine->module<IdleController>().unmock().setParkNeutral(lua_toboolean(l, 1));
+		return 0;
+	});
 	lua_register(lState, "setIdleAdd", [](lua_State* l) {
 		engine->module<IdleController>().unmock().luaAdd = luaL_checknumber(l, 1);
 		return 0;

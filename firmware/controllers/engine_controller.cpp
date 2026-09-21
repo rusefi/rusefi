@@ -762,6 +762,13 @@ void commonEarlyInit() {
 	 */
 	initHardware();
 
+#if EFI_PROD_CODE
+	// Hardware is initialized: now latch the critical error for a watchdog reset, if there was one.
+	// Doing it before initHardware() would leave SPI/pins unconfigured and initMmc() would refuse
+	// the card, so the SD report file could never be written.
+	errorHandlerRaiseWatchdogResetError();
+#endif // EFI_PROD_CODE
+
 	initQcBenchControls();
 
 #if EFI_FILE_LOGGING

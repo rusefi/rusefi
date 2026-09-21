@@ -47,6 +47,24 @@ public class ConnectedEcuTargetTest {
     }
 
     @Test
+    void manualRecoveryChoiceDoesNotReplacePersistedOrLiveIdentity() {
+        target.set("proteus_f7");
+        ConnectedEcuTarget recovery = ConnectedEcuTarget.forManualRecovery("proteus_h7");
+        assertEquals("proteus_h7", recovery.effectiveTarget());
+        assertFalse(recovery.isLiveTargetKnown());
+        assertEquals("proteus_f7", target.effectiveTarget());
+        assertTrue(target.isLiveTargetKnown());
+        assertEquals("proteus_f7", ConnectedEcuTarget.readPersisted());
+    }
+
+    @Test
+    void manualRecoveryRequiresConcreteTarget() {
+        assertThrows(IllegalArgumentException.class, () -> ConnectedEcuTarget.forManualRecovery("universal"));
+        assertThrows(IllegalArgumentException.class, () -> ConnectedEcuTarget.forManualRecovery("../board"));
+        assertThrows(IllegalArgumentException.class, () -> ConnectedEcuTarget.forManualRecovery(null));
+    }
+
+    @Test
     void isLiveTargetKnown_trueAfterSet() {
         target.set("proteus_f7");
         assertTrue(target.isLiveTargetKnown());

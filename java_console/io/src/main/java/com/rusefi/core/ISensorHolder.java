@@ -15,9 +15,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.ByteBuffer;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.core.ByteBufferUtil.littleEndianWrap;
@@ -42,56 +47,116 @@ public interface ISensorHolder {
     }
 
     default void grabSensorValues(byte[] response, @NotNull IniFileModel ini, @Nullable ConfigurationImage configImage) {
+        grabSensorValues(OutputChannelSnapshot.full(response), ini, configImage);
+    }
+
+    default void grabSensorValues(OutputChannelSnapshot snapshot, @NotNull IniFileModel ini,
+                                  @Nullable ConfigurationImage configImage) {
+        byte[] response = snapshot.getResponse();
         // Use case-insensitive map so that gauge channel names like "CLTValue" match
         // output channel keys regardless of capitalisation differences.
         Map<String, Double> outputChannelValues = getOutputChannelMap();
         outputChannelValues.clear();
 
-        // Pass 1: read every direct output channel defined in the ini.
-        // This single pass covers what was previously spread across gauge, indicator,
-        // gauge-label, and datalog-only channels.
+        // Decode every complete direct field covered by the fetched ranges. A merged range
+        // may intentionally contain nearby fields not named by a consumer.
         for (String name : ini.getAllOutputChannels().keySet()) {
-            Double value = tryReadOutputChannel(response, name, ini, name);
+            Double value = tryReadOutputChannel(snapshot, response, name, ini, name);
             if (value != null) {
                 setValue(value, name);
                 outputChannelValues.put(name, value);
             }
         }
 
-        // Pass 2: evaluate expression-based gauge channels (e.g. "{ coolant * 1.8 + 32 }").
-        // These are not in allOutputChannels, so they were not handled by pass 1.
-        for (Map.Entry<String, GaugeModel> e : ini.getGauges().entrySet()) {
-            String channel = e.getValue().getChannel();
-            if (outputChannelValues.containsKey(channel))
-                continue;
-
-            // Skip the synthetic runtimeDataRateGauge — its value is published directly
-            // by SensorCentral, added around 1634284766aeee57bf1315e61238371ae8137758, not evaluated as an expression here.
-            // since this gauge is not real, we can't find it on the ini, but we find it inside the gauges, so we fail under the check of resolveExpression
-            // ending up with "Member not found for gauge" logs of around 30/second, not nice
-            if (com.opensr5.ini.ImmutableIniFileModel.RUNTIME_DATA_RATE_GAUGE.equalsIgnoreCase(e.getKey())) {
-                continue;
+        Set<String> expressionRoots = new LinkedHashSet<>();
+        if (snapshot.isFull()) {
+            expressionRoots.addAll(ini.getExpressionOutputChannels().keySet());
+            for (GaugeModel gauge : ini.getGauges().values()) {
+                expressionRoots.add(gauge.getChannel());
             }
-
-            String expression = resolveExpression(ini, channel);
-            if (expression == null) {
-                log.warn("Member not found for gauge " + e.getKey() + ": " + channel);
-                continue;
-            }
-
-            resolveExpressionVariables(response, ini, configImage, expression, outputChannelValues, outputChannelValues);
-
-            Double result = ExpressionEvaluator.tryEvaluateWithContext(expression, outputChannelValues);
-            if (result != null) {
-                setValue(result, channel);
-                outputChannelValues.put(channel, result);
-            } else {
-                log.warn("Could not evaluate expression for gauge " + e.getKey() + ": " + expression);
+        } else {
+            for (String requested : snapshot.getRequestedChannels()) {
+                GaugeModel gauge = ini.getGauge(requested);
+                expressionRoots.add(gauge == null ? requested : gauge.getChannel());
             }
         }
 
-        // Pass 3: resolve string-valued gauge labels (bitStringValue, stringValue).
+        for (String channel : expressionRoots) {
+            if (!com.opensr5.ini.ImmutableIniFileModel.RUNTIME_DATA_RATE_GAUGE.equalsIgnoreCase(channel)) {
+                resolveOutputValue(snapshot, response, ini, configImage, channel,
+                    outputChannelValues, new HashSet<>());
+            }
+        }
+
+        // Resolve string-valued gauge labels (bitStringValue, stringValue) from this
+        // snapshot's context. Missing variables leave their labels unresolved.
         onGaugeLabelsResolved(resolveGaugeLabels(ini, configImage, outputChannelValues));
+    }
+
+    @Nullable
+    default Double resolveOutputValue(OutputChannelSnapshot snapshot, byte[] response, IniFileModel ini,
+                                      @Nullable ConfigurationImage configImage, String requested,
+                                      Map<String, Double> context, Set<String> visiting) {
+        if (requested == null || requested.isEmpty()) {
+            return null;
+        }
+        if (context.containsKey(requested)) {
+            return context.get(requested);
+        }
+
+        GaugeModel gauge = ini.getGauge(requested);
+        String channel = gauge == null ? requested : gauge.getChannel();
+        if (!channel.equals(requested) && context.containsKey(channel)) {
+            return context.get(channel);
+        }
+
+        IniField field = getOutputChannel(ini, channel);
+        if (field != null) {
+            if (!snapshot.isRangeValid(field.getOffset(), field.getSize())) {
+                return null;
+            }
+            Double value = readFieldValue(response, channel, field);
+            if (value != null) {
+                context.put(channel, value);
+                setValue(value, channel);
+            }
+            return value;
+        }
+
+        String expression = resolveExpression(ini, channel);
+        if (expression == null || !visiting.add(channel.toLowerCase(Locale.US))) {
+            return null;
+        }
+
+        Map<String, Double> expressionContext = new LowercaseHashMap<>();
+        for (String variable : ExpressionEvaluator.extractVariables(expression)) {
+            Double value = resolveOutputValue(snapshot, response, ini, configImage, variable, context, visiting);
+            if (value == null && configImage != null) {
+                value = getConfigValue(variable, ini, configImage);
+            }
+            if (value == null) {
+                visiting.remove(channel.toLowerCase(Locale.US));
+                return null;
+            }
+            expressionContext.put(variable, value);
+        }
+
+        visiting.remove(channel.toLowerCase(Locale.US));
+        Double result = ExpressionEvaluator.tryEvaluateWithContext(expression, expressionContext);
+        if (result != null) {
+            context.put(channel, result);
+            setValue(result, channel);
+        }
+        return result;
+    }
+
+    @Nullable
+    static IniField getOutputChannel(IniFileModel ini, String channelName) {
+        try {
+            return ini.getOutputChannel(channelName);
+        } catch (IniMemberNotFound e) {
+            return null;
+        }
     }
 
     /**
@@ -115,6 +180,16 @@ public interface ISensorHolder {
             log.warn("Out of bounds reading output channel " + channelName + ": " + e.getMessage());
             return null;
         }
+    }
+
+    @Nullable
+    static Double tryReadOutputChannel(OutputChannelSnapshot snapshot, byte[] response, String label,
+                                       IniFileModel ini, String channelName) {
+        IniField field = getOutputChannel(ini, channelName);
+        if (field == null || !snapshot.isRangeValid(field.getOffset(), field.getSize())) {
+            return null;
+        }
+        return readFieldValue(response, label, field);
     }
 
     /**

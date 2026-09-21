@@ -928,6 +928,32 @@ public class ConfigFieldParserTest {
     }
 
     @Test
+    public void testStructTemplateMacroNameScaleResolvesThroughRegistry() {
+        // Production rusefi_config.txt instantiates blend_table_s<BLEND_PRECISION> - a macro
+        // NAME, not a numeric literal like the tests above. Template arguments must resolve
+        // through the variable registry before substitution; a verbatim name used to reach
+        // tsInfo, where the TS emitter degraded the multiplier to 0 and the C header to
+        // scale 1 (see the Kansas->Lima customer data loss).
+        String test = "#define BLEND_PRECISION 0.1\n" +
+                "struct blend_table_s<TABLE_SCALE>\n" +
+                "\tint16_t[2 x 2] autoscale table;;\"\", @@TABLE_SCALE@@, 0, -100, 100, 1\n" +
+                "end_struct\n" +
+                "struct_no_prefix engine_configuration_s\n" +
+                "blend_table_s<BLEND_PRECISION> ignBlends\n" +
+                "end_struct\n";
+
+        ReaderStateImpl state = new ReaderStateImpl();
+        BaseCHeaderConsumer cConsumer = new BaseCHeaderConsumer();
+        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
+        state.readBufferedReader(test, cConsumer, tsProjectConsumer);
+
+        assertTrue(cConsumer.getContent().contains("scaled_channel<int16_t, 10, 1>"),
+            "macro-name scale must resolve to the #define value 0.1 -> scaled_channel<int16_t, 10, 1>");
+        assertTrue(tsProjectConsumer.getContent().contains("ignBlends_table = array, S16, 0, [2x2], \"\", 0.1, 0, -100, 100, 1"),
+            "macro-name scale must resolve to ts multiplier 0.1");
+    }
+
+    @Test
     public void testStructTemplateWrongArgCount() {
         String test = "struct blend_table_s<TABLE_SCALE, OTHER_SCALE>\n" +
                 "\tint16_t[2 x 2] autoscale table;;\"\", @@TABLE_SCALE@@, 0, -100, 100, 1\n" +

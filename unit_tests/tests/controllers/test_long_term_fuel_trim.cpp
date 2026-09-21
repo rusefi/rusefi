@@ -88,6 +88,52 @@ TEST(LTFT, testLearning)
 #endif
 }
 
+TEST(LTFT, pausedDuringTwoStepLaunch)
+{
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	LtftState ltftState;
+	LongTermFuelTrim ltft;
+
+	// reset to zero
+	ltftState.load();
+	ltft.init(&ltftState);
+
+	engineConfiguration->ltft.enabled = true;
+	engineConfiguration->ltft.correctionEnabled = true;
+	engineConfiguration->ltft.deadband = 0.5; // %
+	engineConfiguration->ltft.maxAdd = 15.0; // %
+	engineConfiguration->ltft.maxRemove = 5; // %
+	engineConfiguration->ltft.timeConstant[ftRegionIdle] = 30; // seconds
+
+	float rpm = config->veRpmBins[0];
+	float load = config->veLoadBins[0];
+	ClosedLoopFuelResult clInput;
+
+	clInput.region = ftRegionIdle;
+	clInput.banks[0] = clInput.banks[1] = 1.5;
+
+	// Two-step launch activity in progress: learning is paused
+	engineConfiguration->launchControlEnabled = true;
+	engine->launchController.isLaunchCondition = true;
+	ITERATE_TIME(100, ltft.learn(clInput, rpm, load))
+	EXPECT_FALSE(ltft.ltftLearning);
+	ASSERT_LTFT_RESULT(ltft.getTrims(rpm, load), 1.0, 1.0);
+
+	// Same for the pre-launch window
+	engine->launchController.isLaunchCondition = false;
+	engine->launchController.isPreLaunchCondition = true;
+	ITERATE_TIME(100, ltft.learn(clInput, rpm, load))
+	EXPECT_FALSE(ltft.ltftLearning);
+	ASSERT_LTFT_RESULT(ltft.getTrims(rpm, load), 1.0, 1.0);
+
+	// Launch over - learning resumes
+	engine->launchController.isPreLaunchCondition = false;
+	ITERATE_TIME(100, ltft.learn(clInput, rpm, load))
+	EXPECT_TRUE(ltft.ltftLearning);
+	ASSERT_LTFT_RESULT(ltft.getTrims(rpm, load), 1.15, 1.15);
+}
+
 TEST(LTFT, testSlowCallbackLoadError) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 

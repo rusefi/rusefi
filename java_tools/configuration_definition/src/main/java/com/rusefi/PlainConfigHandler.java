@@ -18,7 +18,7 @@ class PlainConfigHandler {
     }
 
     public PlainConfigHandler(String definitionInputFile, int pageIndex, List<String> softPrepends, TreeSet<String> usedNames) {
-        tsProjectConsumer = new PlainTsProjectConsumer(readerState, usedNames);
+        tsProjectConsumer = new PlainTsProjectConsumer(readerState, usedNames, pageIndex);
         readerState.setDefinitionInputFile(definitionInputFile);
         for (String soft : softPrepends)
             readerState.addSoftPrepend(soft);

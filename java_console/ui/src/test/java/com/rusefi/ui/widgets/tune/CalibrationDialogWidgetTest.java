@@ -5,10 +5,12 @@ import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.IndicatorModel;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.PanelModel;
+import com.opensr5.ini.ReadoutModel;
 import com.opensr5.ini.TableModel;
 import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.EnumIniField;
 import com.rusefi.config.FieldType;
+import com.rusefi.core.SensorCentral;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.laf.GradientTitleBorder;
 import org.junit.jupiter.api.Test;
@@ -16,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +29,35 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class CalibrationDialogWidgetTest {
+
+    @Test
+    public void activeReadoutControlsOutputDemand() {
+        String channel = "issue10170TuningReadout";
+        IniFileModel ini = mock(IniFileModel.class);
+        DialogModel dialog = new DialogModel(
+            "readouts", "Readouts",
+            Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), Collections.emptyList(),
+            Collections.singletonList(ReadoutModel.ofRef(channel)), 1, Collections.emptyList(), null, null);
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+
+        try {
+            widget.update(dialog, ini, null);
+            assertFalse(hasDemand(channel));
+            widget.setActive(true);
+            assertTrue(hasDemand(channel));
+            widget.setActive(false);
+            assertFalse(hasDemand(channel));
+        } finally {
+            widget.destroy();
+        }
+        widget.setActive(true);
+        assertFalse(hasDemand(channel));
+    }
+
+    private static boolean hasDemand(String channel) {
+        return SensorCentral.getInstance().getOutputChannelDemand().getChannels()
+            .contains(channel.toLowerCase());
+    }
 
     @Test
     public void testLayout() {
@@ -93,6 +125,51 @@ public class CalibrationDialogWidgetTest {
         JPanel hPanel3 = (JPanel) components[5];
         assertEquals(1, hPanel3.getComponentCount(), "Third horizontal panel should have 1 sub-panel");
         assertEquals("h5", hPanel3.getComponent(0).getName());
+    }
+
+    /** issue #10207. */
+    @Test
+    public void narrowBorderDialogPanelBounds() {
+        IniFileModel iniFileModel = mock(IniFileModel.class);
+        when(iniFileModel.getCurves()).thenReturn(Collections.emptyMap());
+
+        String longOption = "B18 VVT2 or Idle or Low Side output 2 or injector 8 with flyback protection";
+        EnumIniField leftField = createEnumField("leftField", 0, longOption, "NONE");
+        EnumIniField rightField = createEnumField("rightField", 1, longOption, "NONE");
+        when(iniFileModel.findIniField("leftField")).thenReturn(java.util.Optional.of(leftField));
+        when(iniFileModel.findIniField("rightField")).thenReturn(java.util.Optional.of(rightField));
+
+        DialogModel leftDialog = new DialogModel("left", "Left",
+            Collections.singletonList(new DialogModel.Field("leftField", "Output")),
+            Collections.emptyList());
+        DialogModel rightDialog = new DialogModel("right", "Right",
+            Collections.singletonList(new DialogModel.Field("rightField", "Output")),
+            Collections.emptyList());
+        Map<String, DialogModel> dialogs = new HashMap<>();
+        dialogs.put("left", leftDialog);
+        dialogs.put("right", rightDialog);
+        when(iniFileModel.getDialogs()).thenReturn(dialogs);
+
+        List<PanelModel> panels = new ArrayList<>();
+        panels.add(new PanelModel("left", "West", null, null));
+        panels.add(new PanelModel("right", "East", null, null));
+        DialogModel mainDialog = new DialogModel("main", "Main", Collections.emptyList(),
+            Collections.emptyList(), panels, (String) null, "border");
+
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+        widget.update(mainDialog, iniFileModel, new ConfigurationImage(new byte[2]));
+
+        JPanel content = widget.getContentPane();
+        content.setSize(600, 200);
+        content.doLayout();
+        BorderLayout layout = (BorderLayout) content.getLayout();
+        Component west = layout.getLayoutComponent(BorderLayout.WEST);
+        Component east = layout.getLayoutComponent(BorderLayout.EAST);
+
+        assertFalse(west.getBounds().intersects(east.getBounds()),
+            "Issue #10207: constrained edge panels must not overlap");
+        assertTrue(west.getWidth() >= west.getMinimumSize().width);
+        assertTrue(east.getWidth() >= east.getMinimumSize().width);
     }
 
     @Test
@@ -311,12 +388,16 @@ public class CalibrationDialogWidgetTest {
     }
 
     private EnumIniField createEnumField(String... values) {
+        return createEnumField("test", 0, values);
+    }
+
+    private EnumIniField createEnumField(String name, int offset, String... values) {
         Map<Integer, String> map = new HashMap<>();
         for (int i = 0; i < values.length; i++) {
             map.put(i, values[i]);
         }
         EnumIniField.EnumKeyValueMap enumMap = new EnumIniField.EnumKeyValueMap(map);
-        return new EnumIniField("test", 0, FieldType.INT8, enumMap, 0, 0);
+        return new EnumIniField(name, offset, FieldType.INT8, enumMap, 0, 0);
     }
 
     @Test
@@ -445,9 +526,75 @@ public class CalibrationDialogWidgetTest {
             }
         }
         assertNotNull(combo);
-        assertEquals(CalibrationFieldFactory.MAX_COMBO_WIDTH, combo.getPreferredSize().width);
+        assertEquals(CalibrationFieldFactory.MAX_FIELD_EDITOR_WIDTH, combo.getPreferredSize().width);
         assertEquals(0, combo.getMinimumSize().width);
         assertEquals(longOption, combo.getToolTipText());
+    }
+
+    @Test
+    public void testComboEditorsShareWidth() {
+        IniFileModel iniFileModel = mock(IniFileModel.class);
+        when(iniFileModel.getCurves()).thenReturn(Collections.emptyMap());
+
+        Map<Integer, String> shortValues = new HashMap<>();
+        shortValues.put(0, "Off");
+        shortValues.put(1, "On");
+        EnumIniField shortField = new EnumIniField("short", 0, FieldType.INT8,
+            new EnumIniField.EnumKeyValueMap(shortValues), 0, 0);
+
+        Map<Integer, String> longValues = new HashMap<>();
+        longValues.put(0, "NONE");
+        longValues.put(1, "B18 VVT2 or Idle or Low Side output 2");
+        EnumIniField longField = new EnumIniField("long", 1, FieldType.INT8,
+            new EnumIniField.EnumKeyValueMap(longValues), 0, 0);
+
+        when(iniFileModel.findIniField("short")).thenReturn(java.util.Optional.of(shortField));
+        when(iniFileModel.findIniField("long")).thenReturn(java.util.Optional.of(longField));
+
+        DialogModel dialog = new DialogModel("main", "Main", Arrays.asList(
+            new DialogModel.Field("short", "Short"),
+            new DialogModel.Field("long", "Long")), Collections.emptyList());
+
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+        widget.update(dialog, iniFileModel, new ConfigurationImage(new byte[2]));
+
+        JComboBox<?> shortCombo = getComboBoxFromRow((JPanel) widget.getContentPane().getComponent(0));
+        JComboBox<?> longCombo = getComboBoxFromRow((JPanel) widget.getContentPane().getComponent(1));
+        assertNotNull(shortCombo);
+        assertNotNull(longCombo);
+        int expectedWidth = CalibrationFieldFactory.getFieldEditorPreferredWidth(longField, "");
+        assertEquals(expectedWidth, shortCombo.getPreferredSize().width);
+        assertEquals(expectedWidth, longCombo.getPreferredSize().width);
+    }
+
+    @Test
+    public void testTextAndComboEditorsShareWidth() {
+        IniFileModel iniFileModel = mock(IniFileModel.class);
+        when(iniFileModel.getCurves()).thenReturn(Collections.emptyMap());
+
+        Map<Integer, String> enumValues = new HashMap<>();
+        enumValues.put(0, "NONE");
+        enumValues.put(1, "B18 VVT2 or Idle or Low Side output 2");
+        EnumIniField enumField = new EnumIniField("mode", 0, FieldType.INT8,
+            new EnumIniField.EnumKeyValueMap(enumValues), 0, 0);
+        com.opensr5.ini.field.StringIniField textField =
+            new com.opensr5.ini.field.StringIniField("value", 1, 4);
+
+        when(iniFileModel.findIniField("mode")).thenReturn(java.util.Optional.of(enumField));
+        when(iniFileModel.findIniField("value")).thenReturn(java.util.Optional.of(textField));
+
+        DialogModel dialog = new DialogModel("main", "Main", Arrays.asList(
+            new DialogModel.Field("mode", "Mode"),
+            new DialogModel.Field("value", "Value")), Collections.emptyList());
+
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+        widget.update(dialog, iniFileModel, new ConfigurationImage(new byte[5]));
+
+        JComboBox<?> combo = getComboBoxFromRow((JPanel) widget.getContentPane().getComponent(0));
+        JTextField text = getTextFieldFromRow((JPanel) widget.getContentPane().getComponent(1));
+        assertNotNull(combo);
+        assertNotNull(text);
+        assertEquals(combo.getPreferredSize().width, text.getPreferredSize().width);
     }
 
     @Test
@@ -508,6 +655,97 @@ public class CalibrationDialogWidgetTest {
         int lineHeight = label.getFontMetrics(label.getFont()).getHeight();
         assertTrue(label.getPreferredSize().height > lineHeight);
         assertTrue(label.getPreferredSize().height <= lineHeight * 2);
+    }
+
+    @Test
+    public void testSettingHelpIsShownBesideField() {
+        IniFileModel iniFileModel = mock(IniFileModel.class);
+        when(iniFileModel.getCurves()).thenReturn(Collections.emptyMap());
+        when(iniFileModel.getTooltips()).thenReturn(Collections.singletonMap(
+            "helpedField", "First line\\nSecond line https://rusefi.com/docs"));
+
+        com.opensr5.ini.field.StringIniField iniField =
+            new com.opensr5.ini.field.StringIniField("helpedField", 0, 10);
+        when(iniFileModel.findIniField("helpedField")).thenReturn(java.util.Optional.of(iniField));
+
+        DialogModel dialog = new DialogModel("main", "Main",
+            Collections.singletonList(new DialogModel.Field("helpedField", "Helped field")),
+            Collections.emptyList());
+
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+        widget.update(dialog, iniFileModel, new ConfigurationImage(new byte[10]));
+
+        JButton helpButton = findButtonByName(widget.getContentPane(), "settingHelpButton");
+        assertNotNull(helpButton);
+        assertNotNull(helpButton.getIcon());
+        assertTrue(helpButton.getToolTipText().contains("First line<br>Second line"));
+        assertEquals(1, helpButton.getActionListeners().length);
+    }
+
+    @Test
+    public void testSettingHelpHtmlEscapesTextAndLinksUrls() {
+        String html = CalibrationFieldFactory.formatHelpHtml(
+            "Use <unsafe> & value\\nSee https://rusefi.com/docs");
+
+        assertTrue(html.contains("Use &lt;unsafe&gt; &amp; value<br>See "));
+        assertTrue(html.contains(
+            "<a href='https://rusefi.com/docs'>https://rusefi.com/docs</a>"));
+    }
+
+    @Test
+    public void testSettingHelpFitsShortTextAndScrollsWideText() {
+        JScrollPane shortHelp = CalibrationFieldFactory.createHelpScrollPane(
+            "Cylinder diameter in mm");
+        JComponent shortEditor = (JComponent) shortHelp.getViewport().getView();
+        assertEquals(new Insets(8, 8, 8, 8), shortEditor.getBorder().getBorderInsets(shortEditor));
+        assertTrue(shortHelp.getPreferredSize().width < 516);
+        assertEquals(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER,
+            shortHelp.getHorizontalScrollBarPolicy());
+        assertEquals(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
+            shortHelp.getVerticalScrollBarPolicy());
+
+        JScrollPane wideHelp = CalibrationFieldFactory.createHelpScrollPane(
+            String.join("", Collections.nCopies(100, "wide-content")));
+        assertEquals(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED,
+            wideHelp.getHorizontalScrollBarPolicy());
+        assertTrue(wideHelp.getPreferredSize().width <= 516);
+        assertTrue(wideHelp.getHorizontalScrollBar().getPreferredSize().height > 0);
+
+        JScrollPane tallHelp = CalibrationFieldFactory.createHelpScrollPane(
+            String.join("\\n", Collections.nCopies(100, "tall content")));
+        assertEquals(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+            tallHelp.getVerticalScrollBarPolicy());
+        assertEquals(0, ((JEditorPane) tallHelp.getViewport().getView()).getCaretPosition());
+    }
+
+    @Test
+    public void testSettingHelpColumnIsReservedForUnhelpedFields() {
+        IniFileModel iniFileModel = mock(IniFileModel.class);
+        when(iniFileModel.getCurves()).thenReturn(Collections.emptyMap());
+        when(iniFileModel.getTooltips()).thenReturn(Collections.singletonMap("helped", "Help text"));
+
+        com.opensr5.ini.field.StringIniField helped =
+            new com.opensr5.ini.field.StringIniField("helped", 0, 4);
+        com.opensr5.ini.field.StringIniField unhelped =
+            new com.opensr5.ini.field.StringIniField("unhelped", 4, 4);
+        when(iniFileModel.findIniField("helped")).thenReturn(java.util.Optional.of(helped));
+        when(iniFileModel.findIniField("unhelped")).thenReturn(java.util.Optional.of(unhelped));
+
+        DialogModel dialog = new DialogModel("main", "Main", Arrays.asList(
+            new DialogModel.Field("helped", "Same width"),
+            new DialogModel.Field("unhelped", "Same width")), Collections.emptyList());
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+        widget.update(dialog, iniFileModel, new ConfigurationImage(new byte[8]));
+
+        JPanel helpedRow = (JPanel) widget.getContentPane().getComponent(0);
+        JPanel unhelpedRow = (JPanel) widget.getContentPane().getComponent(1);
+        JComponent helpedSlot = findComponentByName(helpedRow, "settingHelpSlot");
+        JComponent unhelpedSlot = findComponentByName(unhelpedRow, "settingHelpSlot");
+        assertNotNull(helpedSlot);
+        assertNotNull(unhelpedSlot);
+        assertEquals(helpedSlot.getPreferredSize(), unhelpedSlot.getPreferredSize());
+        assertNotNull(findButtonByName(helpedSlot, "settingHelpButton"));
+        assertNull(findButtonByName(unhelpedSlot, "settingHelpButton"));
     }
 
     @Test
@@ -591,6 +829,36 @@ public class CalibrationDialogWidgetTest {
         return null;
     }
 
+    private static JButton findButtonByName(Container container, String name) {
+        for (Component component : container.getComponents()) {
+            if (component instanceof JButton && name.equals(component.getName())) {
+                return (JButton) component;
+            }
+            if (component instanceof Container) {
+                JButton nested = findButtonByName((Container) component, name);
+                if (nested != null) {
+                    return nested;
+                }
+            }
+        }
+        return null;
+    }
+
+    private static JComponent findComponentByName(Container container, String name) {
+        for (Component component : container.getComponents()) {
+            if (component instanceof JComponent && name.equals(component.getName())) {
+                return (JComponent) component;
+            }
+            if (component instanceof Container) {
+                JComponent nested = findComponentByName((Container) component, name);
+                if (nested != null) {
+                    return nested;
+                }
+            }
+        }
+        return null;
+    }
+
     @Test
     public void testTextOnlyFieldBackgroundColor() {
         IniFileModel iniFileModel = mock(IniFileModel.class);
@@ -610,13 +878,14 @@ public class CalibrationDialogWidgetTest {
         assertEquals(3, content.getComponentCount());
 
         JLabel redLabel = getLabelFromRow((JPanel) content.getComponent(0));
-        assertEquals("!Red Label", redLabel.getText());
+        // the '!' style marker is consumed by the styling, not displayed
+        assertEquals("Red Label", redLabel.getText());
         assertEquals(Color.RED, redLabel.getBackground());
         assertEquals(Color.WHITE, redLabel.getForeground());
         assertTrue(redLabel.isOpaque());
 
         JLabel blueLabel = getLabelFromRow((JPanel) content.getComponent(1));
-        assertEquals("#Blue Label", blueLabel.getText());
+        assertEquals("Blue Label", blueLabel.getText());
         assertEquals(Color.BLUE, blueLabel.getBackground());
         assertEquals(Color.WHITE, blueLabel.getForeground());
         assertTrue(blueLabel.isOpaque());

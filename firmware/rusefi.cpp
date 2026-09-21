@@ -155,10 +155,18 @@ static virtual_timer_t resetTimer;
  * Some configuration changes require full firmware reset.
  * Once day we will write graceful shutdown, but that would be one day.
  */
+static void rebootTimerCallback(virtual_timer_t*, void*) {
+	// Stamp at fire time rather than when scheduled: if a real crash happens during the
+	// 3s window its fault cookie is written first and wins, instead of being hidden as a
+	// deliberate reboot (issue #9931).
+	logDeliberateReboot(RebootReason::Command);
+	rebootNow();
+}
+
 void scheduleReboot() {
 	efiPrintf("Rebooting in 3 seconds...");
 	chibios_rt::CriticalSectionLocker csl;
-	chVTSetI(&resetTimer, TIME_MS2I(3000), (vtfunc_t) rebootNow, NULL);
+	chVTSetI(&resetTimer, TIME_MS2I(3000), rebootTimerCallback, NULL);
 }
 
 static jmp_buf jmpEnv;

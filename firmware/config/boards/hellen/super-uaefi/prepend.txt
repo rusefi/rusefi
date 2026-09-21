@@ -1,3 +1,5 @@
+#define ts_show_canbus_sniffer true
+
 #define MAIN_HELP_URL "https://rusefi.com/s/super-uaefi"
 
 

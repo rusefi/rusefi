@@ -1,6 +1,8 @@
 #include "pch.h"
 
+#include "can_rx.h"
 #include "can_listener.h"
+#include "openblt/efi_blt_ids.h"
 
 using ::testing::StrictMock;
 using ::testing::_;
@@ -64,4 +66,61 @@ TEST(CanListener, FrameNotAcceptedChecksId) {
 	frame.IDE = false;
 
 	EXPECT_FALSE(dut.acceptFrame(0, frame));
+}
+
+static CANRxFrame makeOpenBltConnectFrame() {
+	CANRxFrame frame = {};
+	frame.IDE = CAN_IDE_EXT;
+	frame.EID = BOOT_COM_CAN_RX_MSG_ID & 0x1FFFFFFFU;
+	frame.DLC = 2;
+	frame.data8[0] = 0xFF;
+	frame.data8[1] = 0x00;
+	return frame;
+}
+
+TEST(OpenBltCanFrame, MatchesExtendedConnect) {
+	auto frame = makeOpenBltConnectFrame();
+
+	EXPECT_TRUE(isOpenBltCanFrame(frame));
+}
+
+TEST(OpenBltCanFrame, RejectsStandardFrame) {
+	auto frame = makeOpenBltConnectFrame();
+	frame.IDE = CAN_IDE_STD;
+	frame.SID = BOOT_COM_CAN_RX_MSG_ID & 0x7FFU;
+
+	EXPECT_FALSE(isOpenBltCanFrame(frame));
+}
+
+TEST(OpenBltCanFrame, RejectsRemoteFrame) {
+	auto frame = makeOpenBltConnectFrame();
+	frame.RTR = CAN_RTR_REMOTE;
+
+	EXPECT_FALSE(isOpenBltCanFrame(frame));
+}
+
+TEST(OpenBltCanFrame, RejectsWrongLength) {
+	auto frame = makeOpenBltConnectFrame();
+	frame.DLC = 1;
+
+	EXPECT_FALSE(isOpenBltCanFrame(frame));
+}
+
+TEST(OpenBltCanFrame, RejectsWrongPayload) {
+	auto frame = makeOpenBltConnectFrame();
+	frame.data8[0] = 0xFE;
+
+	EXPECT_FALSE(isOpenBltCanFrame(frame));
+
+	frame = makeOpenBltConnectFrame();
+	frame.data8[1] = 0x01;
+
+	EXPECT_FALSE(isOpenBltCanFrame(frame));
+}
+
+TEST(OpenBltCanFrame, RejectsWrongId) {
+	auto frame = makeOpenBltConnectFrame();
+	frame.EID++;
+
+	EXPECT_FALSE(isOpenBltCanFrame(frame));
 }

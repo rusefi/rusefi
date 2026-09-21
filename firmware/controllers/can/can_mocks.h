@@ -5,6 +5,18 @@
 typedef uint32_t canmbx_t;
 typedef int32_t can_msg_t;
 typedef int32_t can_sysinterval_t;
+typedef int32_t msg_t;
+
+#ifndef MSG_OK
+#define MSG_OK ((msg_t)0)
+#endif
+
+#ifndef MSG_TIMEOUT
+#define MSG_TIMEOUT ((msg_t)-1)
+#endif
+
+struct CANDriver {
+};
 
 #define CAN_MSG_OK (can_msg_t)0
 #define CAN_MSG_TIMEOUT (can_msg_t)-1
@@ -66,3 +78,12 @@ typedef struct {
 #define CAN_RTR_REMOTE              1           /**< @brief Remote frame.   */
 
 #define CAN_ANY_MAILBOX             0U
+
+// Unit tests install this to model the result and elapsed time of a real CAN
+// transmit without requiring ChibiOS's CAN driver.
+using can_transmit_mock_t = msg_t (*)(CANDriver* canp, canmbx_t mailbox, CANTxFrame* ctfp, can_sysinterval_t timeout);
+inline can_transmit_mock_t canTransmitMock = nullptr;
+
+inline msg_t canTransmit(CANDriver* canp, canmbx_t mailbox, CANTxFrame* ctfp, can_sysinterval_t timeout) {
+	return canTransmitMock ? canTransmitMock(canp, mailbox, ctfp, timeout) : MSG_OK;
+}

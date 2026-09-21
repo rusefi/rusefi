@@ -1,6 +1,7 @@
 
 #include "pch.h"
 #include "defaults.h"
+#include "board_overrides.h"
 #include "smart_gpio.h"
 #include "drivers/gpio/l9779.h"
 
@@ -110,7 +111,7 @@ static struct l9779_config l9779_cfg = {
 	.spi_bus = &SPID1,
 	.spi_config = {
 		.circular = false,
-#ifdef _CHIBIOS_RT_CONF_VER_6_1_
+#if defined(_CHIBIOS_RT_CONF_VER_6_1_) || defined(AT32F4XX)
 		.end_cb = nullptr,
 #else
 		.slave = false,
@@ -123,9 +124,10 @@ static struct l9779_config l9779_cfg = {
 			SPI_CR1_16BIT_MODE |
 			SPI_CR1_SSM |
 			SPI_CR1_SSI |
-			SPI_CR1_LSBFIRST |	//LSB first
-			((3 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |	// div = 16
+			// L9779WD-SPI uses MSB-first, mode 3, at no more than 8 MHz.
+			((4 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |	// 144 MHz / 32 = 4.5 MHz
 			SPI_CR1_MSTR |
+			SPI_CR1_CPOL |
 			SPI_CR1_CPHA |
 			0,
 		.cr2 = SPI_CR2_16BIT_MODE
@@ -191,6 +193,10 @@ int getBoardMetaDcOutputsCount() {
     return 1;
 }
 void setup_custom_board_overrides() {
+	// MFS uses internal flash; even a bank-2 erase stalls the CPU.
+	custom_board_allowFlashNow = []() {
+		return engine->triggerCentral.directSelfStimulation || engine->rpmCalculator.isStopped();
+	};
 	custom_board_DefaultConfiguration = m74_9_boardDefaultConfiguration;
 	custom_board_ConfigOverrides = m74_9_boardConfigOverrides;
 }

@@ -10,7 +10,7 @@
  */
 
 #include "pch.h"
-#if EFI_CAN_SUPPORT
+#if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 
 #include "efi_scaled_channel.h"
 #include "can_msg_tx.h"
@@ -277,4 +277,4 @@ void sendCanVerbose() {
 	transmitStruct<Status11>	(CanCategory::VERBOSE, base + 11, isExt, canChannel);
 }
 
-#endif // EFI_CAN_SUPPORT
+#endif // EFI_CAN_SUPPORT || EFI_UNIT_TEST

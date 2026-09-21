@@ -2,6 +2,7 @@ package com.rusefi.core;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 /**
@@ -12,7 +13,7 @@ public class SensorSubscription {
 
     public SensorSubscription(String... sensorNames) {
         for (String name : sensorNames) {
-            this.sensorNames.add(name.toLowerCase());
+            this.sensorNames.add(name.toLowerCase(Locale.US));
         }
     }
 
@@ -21,7 +22,7 @@ public class SensorSubscription {
     }
 
     public boolean isInterestedIn(String sensorName) {
-        return sensorNames.isEmpty() || sensorNames.contains(sensorName.toLowerCase());
+        return sensorNames.isEmpty() || sensorNames.contains(sensorName.toLowerCase(Locale.US));
     }
 
     public boolean isInterestedInAny(Set<String> updatedSensors) {
@@ -29,7 +30,7 @@ public class SensorSubscription {
             return true;
         }
         for (String updated : updatedSensors) {
-            if (sensorNames.contains(updated.toLowerCase())) {
+            if (sensorNames.contains(updated.toLowerCase(Locale.US))) {
                 return true;
             }
         }

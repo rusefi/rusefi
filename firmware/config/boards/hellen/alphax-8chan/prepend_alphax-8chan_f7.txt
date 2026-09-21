@@ -1,4 +1,6 @@
-#define LUA_SCRIPT_SIZE 40000
+#define ts_show_canbus_sniffer true
+
+#define LUA_SCRIPT_SIZE 49000
 
 #define FLOW_LINEARIZATION_MASS_SIZE 16
 #define FLOW_LINEARIZATION_PRESSURE_SIZE 16

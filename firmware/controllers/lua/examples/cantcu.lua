@@ -1,5 +1,7 @@
 -- CanTCU integration example
 --
+-- https://wiki.canformance.net/CANTCU/software/config/candefaultout
+--
 -- A CanTCU transmission controller broadcasts shift-assist requests in CAN
 -- frame 0x301. This script translates those requests into engine actions:
 --  - a torque cut during shifts, implemented as ignition timing retard

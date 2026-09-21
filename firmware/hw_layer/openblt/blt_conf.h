@@ -92,11 +92,6 @@
 
 /** \brief Configure number of bytes in the host->target CAN message. */
 #define BOOT_COM_CAN_RX_MAX_DATA        (8)
-/** \brief Select the desired CAN peripheral as a zero based index. */
-#ifndef BOOT_COM_CAN_CHANNEL_INDEX
-#define BOOT_COM_CAN_CHANNEL_INDEX      (0)
-#endif /* BOOT_COM_CAN_CHANNEL_INDEX */
-
 /* The RS232 communication interface is selected by setting the BOOT_COM_RS232_ENABLE
  * configurable to 1. Configurable BOOT_COM_RS232_BAUDRATE selects the communication speed
  * in bits/second. The maximum amount of data bytes in a message for data transmission

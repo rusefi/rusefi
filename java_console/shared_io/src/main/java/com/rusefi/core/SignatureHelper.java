@@ -5,7 +5,6 @@ import com.devexperts.logging.Logging;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.core.FileUtil.RUSEFI_SETTINGS_FOLDER;
@@ -13,6 +12,7 @@ import static com.rusefi.core.FileUtil.RUSEFI_SETTINGS_FOLDER;
 public class SignatureHelper {
     private static final Logging log = getLogging(SignatureHelper.class);
     private final static String LOCAL_INI_CACHE_FOLDER = RUSEFI_SETTINGS_FOLDER + "ini_database";
+    private static final int HTTP_TIMEOUT_MILLIS = 10_000;
 
     // todo: find a way to reference Fields.PROTOCOL_SIGNATURE_PREFIX
     private static final String PREFIX = "rusEFI ";
@@ -36,27 +36,38 @@ public class SignatureHelper {
     }
 
     /**
-     * @return local .ini file name
+     * Checks the local cache before optionally contacting the remote INI archive.
      */
-    public static String downloadIfNotAvailable(Pair<String, String> p) {
-        if (p == null)
+    public static String downloadIfNotAvailable(Pair<String, String> p, boolean allowDownload) {
+        return downloadIfNotAvailable(p, allowDownload, LOCAL_INI_CACHE_FOLDER);
+    }
+
+    static String downloadIfNotAvailable(Pair<String, String> p, boolean allowDownload, String cacheFolder) {
+        if (p == null) {
             return null;
-        new File(LOCAL_INI_CACHE_FOLDER).mkdirs();
-        String localIniFile = LOCAL_INI_CACHE_FOLDER + File.separator + p.second;
+        }
+        new File(cacheFolder).mkdirs();
+        String localIniFile = cacheFolder + File.separator + p.second;
         File file = new File(localIniFile);
         if (file.exists() && file.length() > 10000) {
-            log.info("Found cached at " + LOCAL_INI_CACHE_FOLDER);
+            log.info("Found cached at " + cacheFolder);
             return localIniFile;
         }
         if (EXTRA_INI_SOURCE != null) {
             return EXTRA_INI_SOURCE;
         }
-        log.info(".ini not found in " + LOCAL_INI_CACHE_FOLDER + "(" + localIniFile + "), trying to download " + p.first);
+        if (!allowDownload) {
+            return null;
+        }
+        log.info(".ini not found in " + cacheFolder + "(" + localIniFile + "), trying to download " + p.first);
 
         // atomic download via .tmp + rename — prevents corrupted partial files from becoming the cache (#10030)
         File tempFile = new File(localIniFile + ".tmp");
+        HttpURLConnection httpURLConnection = null;
         try {
-            HttpURLConnection httpURLConnection = (HttpURLConnection) new URL(p.first).openConnection();
+            httpURLConnection = (HttpURLConnection) new URL(p.first).openConnection();
+            httpURLConnection.setConnectTimeout(HTTP_TIMEOUT_MILLIS);
+            httpURLConnection.setReadTimeout(HTTP_TIMEOUT_MILLIS);
             int statusCode = httpURLConnection.getResponseCode();
             if (statusCode >= 300) {
                 log.info("Unexpected code " + statusCode);
@@ -77,6 +88,10 @@ public class SignatureHelper {
             System.err.println(e.getMessage());
             tempFile.delete();
             return null;
+        } finally {
+            if (httpURLConnection != null) {
+                httpURLConnection.disconnect();
+            }
         }
     }
 

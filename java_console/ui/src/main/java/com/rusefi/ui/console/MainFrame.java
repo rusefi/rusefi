@@ -1,6 +1,5 @@
 package com.rusefi.ui.console;
 
-import com.devexperts.logging.FileLogger;
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.*;
@@ -9,6 +8,8 @@ import com.rusefi.autoupdate.ConsoleExeFileLocator;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.EngineState;
+import com.rusefi.core.SensorCentral;
+import com.rusefi.core.SensorSubscription;
 import com.rusefi.core.OsUtil;
 import com.rusefi.core.io.BoardCompatibility;
 import com.rusefi.core.io.ConnectedEcuTarget;
@@ -30,11 +31,9 @@ import javax.swing.Action;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.time.LocalDateTime;
@@ -74,6 +73,11 @@ public class MainFrame {
         private static final Color GREEN = new Color(0, 128, 0);
         private final JTextArea message = new JTextArea();
         private final JButton[] buttons;
+        private final JPanel content;
+        private final GridBagConstraints contentConstraints;
+        // When true the overlay dims the window and floats a compact card, leaving the UI visible
+        // behind it (the app's status-overlay look) instead of an opaque full-window takeover.
+        private boolean dimmed;
 
         FrameOverlay(String text, Color color, OverlayAction... actions) {
             super(new GridBagLayout());
@@ -88,6 +92,7 @@ public class MainFrame {
 
             buttons = new JButton[actions.length];
             JPanel actionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 8));
+            actionPanel.setOpaque(false);
             for (int i = 0; i < actions.length; i++) {
                 OverlayAction action = actions[i];
                 JButton button = createLargeButton(action.text);
@@ -97,11 +102,52 @@ public class MainFrame {
                 actionPanel.add(button);
             }
 
-            JPanel content = new JPanel(new BorderLayout(0, 24));
+            content = new JPanel(new BorderLayout(0, 24));
             content.setBorder(BorderFactory.createEmptyBorder(32, 32, 32, 32));
             content.add(message, BorderLayout.CENTER);
             content.add(actionPanel, BorderLayout.SOUTH);
-            add(content);
+            contentConstraints = new GridBagConstraints();
+            // Let wrapped text use the window width instead of collapsing to its minimum width.
+            contentConstraints.weightx = 1;
+            contentConstraints.fill = GridBagConstraints.HORIZONTAL;
+            add(content, contentConstraints);
+        }
+
+        /**
+         * Switch to a translucent presentation: dim the whole window and float a compact rounded
+         * card so the console stays visible (dimmed) behind the message. The overlay still captures
+         * input, so the Close button dismisses it; this matches the mock-up chosen for issue #10219.
+         */
+        FrameOverlay asDimmedOverlay() {
+            dimmed = true;
+            setOpaque(false);
+            content.setOpaque(false);
+            // Compact centered card instead of a full-width band.
+            contentConstraints.weightx = 0;
+            contentConstraints.fill = GridBagConstraints.NONE;
+            remove(content);
+            add(content, contentConstraints);
+            revalidate();
+            repaint();
+            return this;
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            if (dimmed) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                // Dim the whole window so the UI shows through, then a darker rounded card behind
+                // the message for contrast.
+                g2.setColor(new Color(0, 0, 0, 140));
+                g2.fillRect(0, 0, getWidth(), getHeight());
+                Rectangle b = content.getBounds();
+                int pad = 28;
+                g2.setColor(new Color(0, 0, 0, 210));
+                g2.fillRoundRect(b.x - pad, b.y - pad, b.width + 2 * pad, b.height + 2 * pad, 28, 28);
+                g2.dispose();
+            }
+            super.paintComponent(g);
         }
 
         void setMessage(String text, Color color) {
@@ -164,8 +210,8 @@ public class MainFrame {
     private JMenuItem updateSoftwareItem;
     private JMenuItem checkEcuUpdateItem;
     private JMenuItem updateEcuItem;
-    private JMenuItem startBinaryLoggingItem;
-    private JMenuItem stopBinaryLoggingItem;
+    private BinaryLoggingMenu binaryLoggingMenu;
+    private ShortcutsDialog shortcutsDialog;
     private Runnable updateEcuAction;
     private Runnable exitRequestHandler;
     private boolean firmwareUpdateInProgress;
@@ -181,6 +227,19 @@ public class MainFrame {
     private boolean installerAnnouncementShown;
     private final JPanel installerBannerHost = new JPanel(new BorderLayout());
     private FrameOverlay activeOverlay;
+    private FrameOverlay configErrorOverlay;
+    private final ConfigErrorOverlayController configErrorController = new ConfigErrorOverlayController(
+        this::showConfigErrorOverlay, this::closeConfigErrorOverlay, this::isConfigErrorOverlayDisplaced);
+    private SensorCentral.ResponseListenerToken configErrorSubscription;
+    // Output-channel polling (which drives the config-error listener) can go quiet while an ECU
+    // sits in a config-error state, and TabbedPanel can steal the glass pane at any time. This
+    // low-rate EDT timer re-checks the overlay so it heals regardless of the poll cadence.
+    private final Timer configErrorHealTimer = new Timer(750, e -> refreshConfigErrorOverlay());
+    private final ConnectionStatusLogic.Listener configErrorConnectionListener = connected -> {
+        if (!connected) {
+            SwingUtilities.invokeLater(() -> configErrorController.update(null, null, false));
+        }
+    };
     private Component previousGlassPane;
     private boolean previousGlassPaneVisible;
     private Component previousFocusOwner;
@@ -227,6 +286,13 @@ public class MainFrame {
         installerBannerHost.setVisible(false);
         installerBannerHost.setOpaque(false);
         createMenuBar();
+        // Keep the error bit in selective output polling on every tab, including after splash hand-off.
+        configErrorSubscription = SensorCentral.getInstance().addListener(
+            () -> SwingUtilities.invokeLater(this::refreshConfigErrorOverlay),
+            new SensorSubscription(BinaryProtocol.CONFIG_ERROR_CHANNEL));
+        ConnectionStatusLogic.INSTANCE.addListener(configErrorConnectionListener);
+        configErrorHealTimer.setRepeats(true);
+        configErrorHealTimer.start();
         if (unsupportedEcuHost != null) {
             unsupportedEcuHost.addBlockingListener(blocking -> {
                 unsupportedEcuBlocking = blocking;
@@ -289,69 +355,24 @@ public class MainFrame {
 
         menuBar.add(actionsMenu);
 
-        JMenu binaryLoggingMenu = new JMenu("Binary Logging");
-        binaryLoggingMenu.setMnemonic(KeyEvent.VK_B);
+        binaryLoggingMenu = new BinaryLoggingMenu(consoleUI.uiContext, frame.getFrame(),
+                loadMenuIcon("player-play"), loadMenuIcon("player-stop"));
+        menuBar.add(binaryLoggingMenu.getMenu());
 
-        startBinaryLoggingItem = new JMenuItem("Start");
-        startBinaryLoggingItem.setIcon(loadMenuIcon("player-play"));
-        startBinaryLoggingItem.addActionListener(e -> chooseAndStartBinaryLogging());
-        binaryLoggingMenu.add(startBinaryLoggingItem);
-
-        stopBinaryLoggingItem = new JMenuItem("Stop");
-        stopBinaryLoggingItem.setIcon(loadMenuIcon("player-stop"));
-        stopBinaryLoggingItem.addActionListener(e -> {
-            consoleUI.uiContext.sensorLogger.stop();
-            refreshBinaryLoggingActions();
+        JMenuItem shortcutsItem = new JMenuItem("Shortcuts");
+        shortcutsItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
+        shortcutsItem.setToolTipText("Show keyboard shortcuts in a separate window (F1)");
+        shortcutsItem.setMaximumSize(shortcutsItem.getPreferredSize());
+        shortcutsItem.addActionListener(e -> {
+            if (shortcutsDialog == null || !shortcutsDialog.isDisplayable()) {
+                shortcutsDialog = new ShortcutsDialog(frame.getFrame());
+            }
+            shortcutsDialog.setVisible(true);
+            shortcutsDialog.toFront();
         });
-        binaryLoggingMenu.add(stopBinaryLoggingItem);
-
-        menuBar.add(binaryLoggingMenu);
-        refreshBinaryLoggingActions();
+        menuBar.add(shortcutsItem);
 
         frame.getFrame().setJMenuBar(menuBar);
-    }
-
-    private void refreshBinaryLoggingActions() {
-        boolean isLogging = consoleUI.uiContext.sensorLogger.isLogging();
-        boolean isConnected = ConnectionStatusLogic.INSTANCE.getValue() == ConnectionStatusValue.CONNECTED;
-        startBinaryLoggingItem.setEnabled(isConnected && !isLogging);
-        stopBinaryLoggingItem.setEnabled(isLogging);
-    }
-
-    private void chooseAndStartBinaryLogging() {
-        FileLogger.createFolderIfNeeded();
-        JFileChooser chooser = new JFileChooser(new File(FileLogger.DIR));
-        chooser.setDialogTitle("Save data Log");
-        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        chooser.setFileFilter(new FileNameExtensionFilter("Binary log files (.mlg)", "mlg"));
-        chooser.setSelectedFile(new File(FileLogger.DIR,
-                "rusEFI_outputChannels_" + FileLogger.getDate() + ".mlg").getAbsoluteFile());
-        if (chooser.showSaveDialog(frame.getFrame()) != JFileChooser.APPROVE_OPTION) {
-            return;
-        }
-
-        File file = ensureMlgExtension(chooser.getSelectedFile());
-        if (file.exists() && JOptionPane.showConfirmDialog(frame.getFrame(),
-                file.getName() + " already exists. Replace it?",
-                "Replace Binary Log",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
-            return;
-        }
-
-        if (!consoleUI.uiContext.sensorLogger.start(file)) {
-            JOptionPane.showMessageDialog(frame.getFrame(),
-                    "No supported output channels are available for binary logging.",
-                    "Binary Logging",
-                    JOptionPane.WARNING_MESSAGE);
-        }
-        refreshBinaryLoggingActions();
-    }
-
-    static File ensureMlgExtension(File file) {
-        return file.getName().toLowerCase(Locale.ROOT).endsWith(".mlg")
-                ? file
-                : new File(file.getPath() + ".mlg");
     }
 
     public void setUpdateEcuAction(Runnable action) {
@@ -577,6 +598,43 @@ public class MainFrame {
         showOverlay(overlay);
     }
 
+    private void refreshConfigErrorOverlay() {
+        BinaryProtocol protocol = consoleUI.uiContext.getBinaryProtocol();
+        if (!ConnectionStatusLogic.INSTANCE.isConnected() || protocol == null || protocol.isClosed()) {
+            configErrorController.update(null, null, false);
+            return;
+        }
+        configErrorController.update(protocol, protocol.getConfigErrorMessage(),
+            activeOverlay == null || activeOverlay == configErrorOverlay);
+    }
+
+    /**
+     * True when we believe the config-error overlay is up but it is not actually on screen: either
+     * the frame glass pane is now owned by someone else (see {@link TabbedPanel#installGlassPane()})
+     * or it is still our overlay but has been made invisible. Either way it must be re-asserted.
+     * {@link javax.swing.JRootPane#setGlassPane} copies the outgoing pane's visibility onto the
+     * incoming one, so a swap by TabbedPanel can leave our overlay both displaced and hidden.
+     * Tolerates {@code frame == null} in start-up/teardown windows.
+     */
+    private boolean isConfigErrorOverlayDisplaced() {
+        if (configErrorOverlay == null || frame == null || frame.getFrame() == null) {
+            return false;
+        }
+        return frame.getFrame().getGlassPane() != configErrorOverlay || !configErrorOverlay.isVisible();
+    }
+
+    private void showConfigErrorOverlay(String message) {
+        // Bright red so it stays readable on the dark translucent card.
+        configErrorOverlay = new FrameOverlay("Config Error\n\n" + message, new Color(255, 96, 96),
+            new OverlayAction("Close", KeyEvent.VK_C, this::closeConfigErrorOverlay)).asDimmedOverlay();
+        showOverlay(configErrorOverlay);
+    }
+
+    private void closeConfigErrorOverlay() {
+        closeOverlay(configErrorOverlay);
+        configErrorOverlay = null;
+    }
+
     private void closeUnsavedTuneChangesOverlay() {
         closeOverlay(unsavedTuneChangesOverlay);
         unsavedTuneChangesOverlay = null;
@@ -675,6 +733,9 @@ public class MainFrame {
     }
 
     private void showOverlay(FrameOverlay overlay) {
+        if (overlay != configErrorOverlay) {
+            closeConfigErrorOverlay();
+        }
         activeOverlay = overlay;
         previousGlassPane = frame.getFrame().getGlassPane();
         previousGlassPaneVisible = previousGlassPane.isVisible();
@@ -772,11 +833,11 @@ public class MainFrame {
                     firmwareUpdateCheckGeneration++;
                     firmwareUpdateCheckInProgress = false;
                     closeFirmwareUpdateCheckOverlay();
-                    consoleUI.uiContext.sensorLogger.stop();
+                    binaryLoggingMenu.stop();
                 updateEcuItem.setText("No updates available");
                 setUpdateEcuAvailable(false);
             }
-            refreshBinaryLoggingActions();
+            binaryLoggingMenu.refresh();
         });
         });
 
@@ -836,7 +897,7 @@ public class MainFrame {
                 VersionChecker.getInstance().onFirmwareVersion(firmwareVersion);
             }
         });
-        refreshBinaryLoggingActions();
+        binaryLoggingMenu.refresh();
     }
 
     public void setTuneActions(Action loadAction, Action saveAction) {
@@ -939,6 +1000,9 @@ public class MainFrame {
     }
 
     private void windowClosedHandler() {
+        configErrorSubscription.remove();
+        configErrorHealTimer.stop();
+        ConnectionStatusLogic.INSTANCE.removeListener(configErrorConnectionListener);
         /**
          * looks like reconnectTimer in {@link com.rusefi.ui.RpmPanel} keeps AWT alive. Simplest solution would be to 'exit'
          */
@@ -948,7 +1012,7 @@ public class MainFrame {
         root.setProperty(ConsoleUI.TAB_INDEX, tabbedPane.tabbedPane.getSelectedIndex());
         consoleUI.uiContext.DetachedRepositoryINSTANCE.saveConfig();
         getConfig().save();
-        consoleUI.uiContext.sensorLogger.stop();
+        binaryLoggingMenu.stop();
         BinaryProtocol bp = consoleUI.uiContext.getBinaryProtocol();
         if (bp != null && !bp.isClosed())
             bp.close(); // it could be that serial driver wants to be closed explicitly

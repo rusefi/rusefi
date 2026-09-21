@@ -171,7 +171,7 @@ StorageStatus SettingStorageSD::store(size_t id, const uint8_t *ptr, size_t size
 	efitick_t endNt = getTimeNowNt();
 	int elapsed_Ms = US2MS(NT2US(endNt - startNt));
 
-	efiPrintf("SD: Write done after %d mS", elapsed_Ms);
+	efiPrintf("SD: Write %s after %d mS", (status == StorageStatus::Ok) ? "done" : "FAILED", elapsed_Ms);
 
 	return status;
 }

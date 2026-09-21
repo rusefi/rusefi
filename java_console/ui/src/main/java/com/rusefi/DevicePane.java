@@ -185,6 +185,12 @@ public class DevicePane {
 
     static String bootloaderGuidance(final SessionState state) {
         if (state == SessionState.DEVICE_IN_DFU) {
+            if (DfuFlasher.isDfuProgrammingSupported()
+                && com.rusefi.maintenance.ManualDfuRecovery.isUniversalBundle(
+                    com.rusefi.core.io.BundleUtil.getBundleTarget())) {
+                return "Board is in the DFU bootloader - click Manual DFU Update to pick the board and firmware."
+                    + (OsUtil.isLinux() ? " Flashing uses dfu-util." : "");
+            }
             if (OsUtil.isLinux()) {
                 return "Board is in the DFU bootloader - click Update Firmware to flash with dfu-util.";
             }

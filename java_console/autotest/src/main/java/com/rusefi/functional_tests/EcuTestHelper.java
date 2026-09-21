@@ -8,6 +8,7 @@ import com.rusefi.config.generated.Integration;
 import com.rusefi.core.ISensorCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.core.SensorSubscription;
 import com.rusefi.core.WellKnownGauges;
 import com.rusefi.enums.engine_type_e;
 import com.rusefi.io.CommandQueue;
@@ -15,6 +16,8 @@ import com.rusefi.io.LinkManager;
 import com.rusefi.waves.EngineReport;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
@@ -78,6 +81,31 @@ public class EcuTestHelper {
     public static void assertSomewhatClose(String msg, double expected, double actual, double ratio) {
         if (!isCloseEnough(expected, actual, ratio))
             throw new IllegalStateException(msg + " Expected " + expected + " but got " + actual);
+    }
+
+    /** Wait for a newly received sample, including when its value has not changed. */
+    public static void assertSensorEventually(String msg, String sensorName, double expected, int timeoutMs) {
+        SensorCentral sensors = SensorCentral.getInstance();
+        CountDownLatch matched = new CountDownLatch(1);
+        AtomicReference<Double> latest = new AtomicReference<>(Double.NaN);
+        SensorCentral.ResponseListenerToken listener = sensors.addListener(() -> {
+            double actual = sensors.getValue(sensorName);
+            latest.set(actual);
+            if (isCloseEnough(expected, actual)) {
+                matched.countDown();
+            }
+        }, new SensorSubscription(sensorName));
+        try {
+            if (!matched.await(timeoutMs, TimeUnit.MILLISECONDS)) {
+                throw new IllegalStateException(msg + " Expected " + expected + " but last fresh value was "
+                        + latest.get() + " after " + timeoutMs + " ms (NaN means no valid sample)");
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IllegalStateException("Interrupted while waiting for " + sensorName, e);
+        } finally {
+            listener.remove();
+        }
     }
 
     @NotNull

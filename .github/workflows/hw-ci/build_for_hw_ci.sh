@@ -24,6 +24,11 @@ make clean
 export EXTRA_2_PARAMS=-DHARDWARE_CI
 
 echo "[build_for_hw_ci.sh] Building Firmware"
-make -j$(nproc) -r deliver/rusefi.bin
+extra_make_args=()
+if [[ "$HW_TARGET" == "f407-discovery" ]]; then
+    # Leave more RAM for Lua in the F407 hardware-test image.
+    extra_make_args+=(MODULE_DTC_MANAGER=no)
+fi
+make -j$(nproc) -r deliver/rusefi.bin "${extra_make_args[@]}"
 
 echo "[build_for_hw_ci.sh] Done!"

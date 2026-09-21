@@ -9,6 +9,18 @@
 #include "lua_hooks_util.h"
 #include "script_impl.h"
 
+/**
+ * Lua print(msg) -> one efiPrintf line.
+ *
+ * Limits, see LogLineBuffer in loggingcentral.h:
+ *  - a line holds 255 characters including the "msg`LUA: " prefix and trailing delimiter,
+ *    so at most 245 characters of msg make it to the log; longer strings are truncated,
+ *    NOT split across lines (https://github.com/rusefi/rusefi/issues/10159)
+ *  - only 24 lines can be queued; a print() loop that outruns the flusher thread and the
+ *    TS/console reader silently drops lines
+ *  - the whole output buffer is DL_OUTPUT_BUFFER (6500) bytes per console read
+ * Use print() for occasional diagnostics, not as a data channel.
+ */
 static int lua_efi_print(lua_State* l) {
 	auto msg = luaL_checkstring(l, 1);
 

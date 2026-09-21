@@ -82,7 +82,7 @@ SerialUSBDriver SDU[NUM_CDC_INSTANCES];
   #define USB_CDC_DATA_REQUEST_EP_2      (USB_CDC_DATA_REQUEST_EP + USB_CDC_DATA_EP_STEP)
   #define USB_CDC_DATA_AVAILABLE_EP_2    (USB_CDC_DATA_AVAILABLE_EP + USB_CDC_DATA_EP_STEP)
   #define USB_CDC_INTERRUPT_REQUEST_EP_2 (USB_CDC_INTERRUPT_REQUEST_EP + USB_CDC_DATA_INT_STEP)
-  #if (USB_CDC_DATA_REQUEST_EP_2 >= STM32_OTG_ENDPOINTS) || (USB_CDC_INTERRUPT_REQUEST_EP_2 >= STM32_OTG_ENDPOINTS)
+  #if (USB_CDC_DATA_REQUEST_EP_2 > STM32_OTG_ENDPOINTS) || (USB_CDC_INTERRUPT_REQUEST_EP_2 > STM32_OTG_ENDPOINTS)
     #error "No enough endpoints"
   #endif
 #endif
@@ -93,7 +93,7 @@ SerialUSBDriver SDU[NUM_CDC_INSTANCES];
   #define USB_CDC_DATA_REQUEST_EP_3      (USB_CDC_DATA_REQUEST_EP_2 + USB_CDC_DATA_EP_STEP)
   #define USB_CDC_DATA_AVAILABLE_EP_3    (USB_CDC_DATA_AVAILABLE_EP_2 + USB_CDC_DATA_EP_STEP)
   #define USB_CDC_INTERRUPT_REQUEST_EP_3 (USB_CDC_INTERRUPT_REQUEST_EP_2 + USB_CDC_DATA_INT_STEP)
-  #if (USB_CDC_DATA_REQUEST_EP_3 >= STM32_OTG_ENDPOINTS) || (USB_CDC_INTERRUPT_REQUEST_EP_3 >= STM32_OTG_ENDPOINTS)
+  #if (USB_CDC_DATA_REQUEST_EP_3 > STM32_OTG_ENDPOINTS) || (USB_CDC_INTERRUPT_REQUEST_EP_3 > STM32_OTG_ENDPOINTS)
     #error "No enough endpoints"
   #endif
 #endif
@@ -104,7 +104,7 @@ SerialUSBDriver SDU[NUM_CDC_INSTANCES];
   #define USB_CDC_DATA_REQUEST_EP_4      (USB_CDC_DATA_REQUEST_EP_3 + USB_CDC_DATA_EP_STEP)
   #define USB_CDC_DATA_AVAILABLE_EP_4    (USB_CDC_DATA_AVAILABLE_EP_3 + USB_CDC_DATA_EP_STEP)
   #define USB_CDC_INTERRUPT_REQUEST_EP_4 (USB_CDC_INTERRUPT_REQUEST_EP_3 + USB_CDC_DATA_INT_STEP)
-  #if (USB_CDC_DATA_REQUEST_EP_4 >= STM32_OTG_ENDPOINTS) || (USB_CDC_INTERRUPT_REQUEST_EP_4 >= STM32_OTG_ENDPOINTS)
+  #if (USB_CDC_DATA_REQUEST_EP_4 > STM32_OTG_ENDPOINTS) || (USB_CDC_INTERRUPT_REQUEST_EP_4 > STM32_OTG_ENDPOINTS)
     #error "No enough endpoints"
   #endif
 #endif
@@ -170,7 +170,7 @@ static const uint8_t vcom_device_descriptor_data[18] = {
                          0x40,          /* bMaxPacketSize.                  */
                          0x0483,        /* idVendor (ST).                   */
                          0x5740,        /* idProduct.                       */
-                         0x0200,        /* bcdDevice.                       */
+                         0x0201,        /* bcdDevice.                       */
                          1,             /* iManufacturer.                   */
                          2,             /* iProduct.                        */
                          3,             /* iSerialNumber.                   */
@@ -698,7 +698,7 @@ static void usb_event(USBDriver *usbp, usbevent_t event) {
 
     for (size_t i = 0; i < NUM_CDC_INSTANCES; i++) {
       usbInitEndpointI(usbp, serusbcfg[i].bulk_in, &cdcDataEpConfig[i]);
-      if (serusbcfg[i].int_in != serusbcfg[0].int_in) {
+      if (i == 0 || serusbcfg[i].int_in != serusbcfg[0].int_in) {
         // See USB_CDC_INT_EP_HACK
         usbInitEndpointI(usbp, serusbcfg[i].int_in, &cdcInterruptEpConfig[i]);
       }

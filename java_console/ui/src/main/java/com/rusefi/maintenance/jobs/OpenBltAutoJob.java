@@ -7,6 +7,7 @@ import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.ProgramSelector;
 import com.rusefi.maintenance.CalibrationsHelper;
+import com.rusefi.maintenance.FirmwareFlashEligibility;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -30,13 +31,24 @@ public class OpenBltAutoJob extends AbstractAutoFlashJob {
     public OpenBltAutoJob(final PortResult port, final JComponent parent, final ConnectivityContext connectivityContext,
                           final @Nullable LinkManager linkManager, final @Nullable String firmwareSrecFile,
                           final CalibrationsHelper.FirmwareUpdatePolicy policy) {
-        super("OpenBLT via Serial", port, parent, connectivityContext, linkManager);
+        super(LinkManager.SOCKET_CAN.equals(port.port) ? "OpenBLT via SocketCAN" : "OpenBLT via Serial",
+            port, parent, connectivityContext, linkManager);
         this.firmwareSrecFile = firmwareSrecFile;
         this.policy = policy;
     }
 
     @Override
+    protected boolean isFlashAllowed(final BinaryProtocol bp, final UpdateOperationCallbacks callbacks) {
+        return FirmwareFlashEligibility.isAllowed(bp.signature, firmwareSrecFile, callbacks);
+    }
+
+    @Override
     protected boolean flash(final LinkManager lm, final BinaryProtocol bp, final UpdateOperationCallbacks callbacks) {
+        if (LinkManager.SOCKET_CAN.equals(context.getPort().port)) {
+            return ProgramSelector.flashOpenbltSocketCanAutomatic(
+                context.getParent(), context.getPort(), bp, lm, callbacks, connectivityContext,
+                firmwareSrecFile, policy);
+        }
         return ProgramSelector.flashOpenbltSerialAutomatic(
             context.getParent(), context.getPort(), bp, lm, callbacks, connectivityContext, firmwareSrecFile, policy);
     }

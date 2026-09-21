@@ -9,6 +9,8 @@ ifeq ($(PROJECT_CPU),ARCH_STM32F7)
 	DDEFS += -DLUA_RX_MAX_FILTER_COUNT=96
 	# Format stays the F7 default (compressed MSD).
 	DDEFS += -DEFI_EMBED_INI_MSD=TRUE
+	# OTG2 has enough endpoints for MSD plus a second CDC ACM for the CAN sniffer.
+	DDEFS += -DHAL_USE_USB_CDC_2=TRUE
 endif
 
 # 1mb is not enough for everything we have
@@ -34,7 +36,8 @@ ifeq ($(PROJECT_CPU),ARCH_STM32H7)
 	# We have enough USB endpoints for one more CDC ACM, lets use it for CAN sniffer
 	DDEFS += -DHAL_USE_USB_CDC_2=TRUE
 else
-	#Knock is available on F4 and F7 only
+	# Knock is available on F4, F7 and H74x/H75x while this board is populated with H723
+	# H723 has ADC3 of other type and there is no ChibiOS driver
 	DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE -DSTM32_ADC_USE_ADC3=TRUE
 endif
 

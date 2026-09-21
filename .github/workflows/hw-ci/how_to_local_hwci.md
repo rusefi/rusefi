@@ -28,9 +28,11 @@ F767-Nucleo:
 ## erase & flash, all targets:
 
 ```bash
-st-flash --area=main erase
-st-flash --format=binary --reset --connect-under-reset write firmware/deliver/rusefi.bin 0x08000000
+.github/workflows/hw-ci/st_flash_wipe_and_flash.sh firmware/deliver/rusefi.bin
 ```
+
+This is the same script CI uses: full erase, then write, both with `--connect-under-reset`
+and a few retries. Set `HARDWARE_CI_STLINK_SERIAL` to pick one ST-LINK if several are attached.
 
 ## run CI:
 ```bash

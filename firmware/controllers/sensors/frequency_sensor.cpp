@@ -26,6 +26,12 @@ void FrequencySensor::initIfValid(brain_pin_e pin, SensorConverter &converter, f
 		filterParameter = 0.35f;
 	}
 
+	// Below 0.001 the biquad coefficients lose too much precision to float32 rounding, and an
+	// unconfigured (zero) parameter would otherwise wedge the filter's output at zero.
+	if (filterParameter < 0.001f) {
+		filterParameter = 0.001f;
+	}
+
 	m_filter.configureLowpass(1, filterParameter);
 
 	setFunction(converter);

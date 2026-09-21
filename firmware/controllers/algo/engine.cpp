@@ -171,6 +171,7 @@ void Engine::periodicSlowCallback() {
 
 	efiWatchdog();
 	updateSlowSensors();
+	updateFixedBaroFromMap();
 	checkShutdown();
 
 	module<TpsAccelEnrichment>()->onNewValue(Sensor::getOrZero(SensorType::Tps1));
@@ -201,10 +202,6 @@ void Engine::periodicSlowCallback() {
 
 	slowCallBackWasInvoked = true;
 
-#if EFI_PROD_CODE
-	void baroLps25Update();
-	baroLps25Update();
-#endif // EFI_PROD_CODE
   call_board_override(custom_board_periodicSlowCallback);
 
 	// after modules and board code so checks see the freshest state
@@ -365,6 +362,7 @@ void Engine::resetLua() {
 	ignitionState.luaTimingMult = 1;
 #if EFI_IDLE_CONTROL
 	module<IdleController>().unmock().luaAdd = 0;
+	module<IdleController>().unmock().setParkNeutral(false);
 #endif // EFI_IDLE_CONTROL
 }
 

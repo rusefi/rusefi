@@ -10,6 +10,7 @@ import com.rusefi.config.generated.Integration;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.LinkManager;
+import com.rusefi.ui.MessagesPaneBackgroundColor;
 import com.rusefi.ui.MessagesPanel;
 import com.rusefi.ui.UIContext;
 import com.rusefi.core.preferences.storage.Node;
@@ -355,6 +356,8 @@ public class LuaScriptPanel {
         });
         // resume messages on 'write new script to ECU'
         mp.setPaused(false);
+        // the new script may no longer send 'set_bg_color=', drop back to default
+        MessagesPaneBackgroundColor.reset();
     }
 
     private static byte @NotNull [] getScriptBytes(StringIniField luaScript, String script) {

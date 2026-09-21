@@ -120,7 +120,7 @@ public final class FirmwareRollbackController {
             return false;
         }
         final Optional<PortResult> port = portProvider.get();
-        if (!hasLiveConnection() || !port.isPresent() || !port.get().isEcu()) {
+        if (!hasLiveConnection() || !port.isPresent() || !isSerialFirmwareUpdateSupported(port.get())) {
             return false;
         }
         if (isBusy()) {
@@ -137,7 +137,7 @@ public final class FirmwareRollbackController {
     }
 
     public void refresh(@Nullable PortResult port) {
-        if (port == null) {
+        if (!isSerialFirmwareUpdateSupported(port)) {
             reset();
             return;
         }
@@ -166,10 +166,11 @@ public final class FirmwareRollbackController {
 
     public void refreshButton() {
         final Optional<PortResult> port = portProvider.get();
-        final boolean visible = isRollbackButtonVisible(enabled, BundleUtil.readBundleFullNameNotNull());
+        final boolean visible = isRollbackButtonVisible(enabled, BundleUtil.readBundleFullNameNotNull())
+            && (!port.isPresent() || !LinkManager.SOCKET_CAN.equals(port.get().port));
         final boolean available = visible
             && port.isPresent()
-            && port.get().isEcu()
+            && isSerialFirmwareUpdateSupported(port.get())
             && hasLiveConnection()
             && !resolver.rollbackCandidates(builds, currentFirmwareSha(port.get())).isEmpty();
         rollbackButton.setVisible(visible);
@@ -179,7 +180,8 @@ public final class FirmwareRollbackController {
 
     private void showRollbackPicker() {
         final Optional<PortResult> port = portProvider.get();
-        if (!externallyIdle.getAsBoolean() || !hasLiveConnection() || !port.isPresent() || !port.get().isEcu()) {
+        if (!externallyIdle.getAsBoolean() || !hasLiveConnection() || !port.isPresent()
+            || !isSerialFirmwareUpdateSupported(port.get())) {
             return;
         }
         final String currentSha = currentFirmwareSha(port.get());
@@ -209,7 +211,7 @@ public final class FirmwareRollbackController {
             builds = Collections.emptyList();
             return;
         }
-        if (!port.isEcu()) {
+        if (!isSerialFirmwareUpdateSupported(port)) {
             return;
         }
 
@@ -317,7 +319,7 @@ public final class FirmwareRollbackController {
         if (!currentPort.isPresent()
             || !currentPort.get().port.equals(requestedPort.port)
             || currentPort.get().type != requestedPort.type
-            || !currentPort.get().isEcu()
+            || !isSerialFirmwareUpdateSupported(currentPort.get())
             || !externallyIdle.getAsBoolean()
             || !hasLiveConnection()
             || requestedGeneration != discoveryGeneration
@@ -357,6 +359,9 @@ public final class FirmwareRollbackController {
         CalibrationsHelper.FirmwareUpdatePolicy policy,
         JComponent source
     ) {
+        if (!isSerialFirmwareUpdateSupported(port)) {
+            return null;
+        }
         if (port.type == SerialPortType.Ecu) {
             return artifacts.getBinPath()
                 .map(path -> (AsyncJob) new DfuAutoJob(
@@ -370,6 +375,10 @@ public final class FirmwareRollbackController {
                 .orElse(null);
         }
         return null;
+    }
+
+    static boolean isSerialFirmwareUpdateSupported(@Nullable PortResult port) {
+        return port != null && port.isEcu() && !LinkManager.SOCKET_CAN.equals(port.port);
     }
 
     private String currentFirmwareSha(final PortResult port) {

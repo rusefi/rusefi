@@ -88,6 +88,7 @@ Numeric trims applied on top of the normal control algorithms. These are the pri
 | `setSparkSkipRatio(r)` / `setSparkHardSkipRatio(r)` | Soft/hard spark-skip (traction/launch style torque cut) |
 | `setBoostTargetAdd(v)` / `setBoostTargetMult(v)` / `setBoostDutyAdd(v)` | BoostController closed/open loop (EFI_BOOST_CONTROL) |
 | `setIdleAdd(v)` | IdleController offset (EFI_IDLE_CONTROL) |
+| `setParkNeutral(boolean)` | Reports P/N state for the signed `idleParkNeutralOffset` running idle correction; false initially and after Lua reset (EFI_IDLE_CONTROL) |
 | `setIdleRpm(rpm)` | Flattens the whole `cltIdleRpm` curve to a fixed target |
 | `setEtbAdd(pct)` / `setEwgAdd(pct)` | Electronic throttle / wastegate position adjustment |
 | `setEngineTorque(nm)` | Publishes torque estimate to `engineState.lua.engineTorque` (not on F4) |

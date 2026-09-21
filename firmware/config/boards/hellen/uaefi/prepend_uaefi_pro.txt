@@ -1,1 +1,3 @@
+#define ts_show_canbus_sniffer true
+
 #define LUA_SCRIPT_SIZE 48000

@@ -122,6 +122,7 @@ public class UiUtils {
     public static JButton createSaveImageButton() {
         JButton imageButton = new JButton(SAVE_IMAGE);
         imageButton.setMnemonic('s');
+        imageButton.setToolTipText("Save an image (Alt+S)");
         return imageButton;
     }
 
@@ -138,6 +139,7 @@ public class UiUtils {
     public static JButton createPauseButton(String suffix) {
         final JButton pauseButton = new JButton(PAUSE.getMessage() + suffix);
         pauseButton.setMnemonic('p');
+        pauseButton.setToolTipText("Pause (Alt+P)");
         return pauseButton;
     }
 
@@ -145,6 +147,7 @@ public class UiUtils {
     public static JButton createClearButton() {
         JButton clearButton = new JButton(CLEAR.getMessage());
         clearButton.setMnemonic('c');
+        clearButton.setToolTipText("Clear (Alt+C)");
         return clearButton;
     }
 

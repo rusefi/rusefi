@@ -76,7 +76,11 @@ public class CommandQueue {
             if (command.equals(confirmStr)) {
                 cl.countDown();
             } else {
-                throw new IllegalStateException("Was waiting for confirmation of " + command + " but got confirmation for " + confirmStr);
+                // A late echo from a previous command can arrive while we wait
+                // (the ECU's text ring drops/reorders under load). That is not
+                // OUR confirmation but it is not fatal either - throwing here
+                // used to abort the current command and cascade into restarts.
+                log.warn("Was waiting for confirmation of " + command + " but got confirmation for " + confirmStr);
             }
         };
 

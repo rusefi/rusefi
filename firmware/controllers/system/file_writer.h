@@ -76,7 +76,12 @@ struct FileBufferedWriter final : public BufferedWriter<512> {
 			return;
 		}
 
-		f_sync(m_fd);
+		FRESULT err = f_sync(m_fd);
+		if (err != FR_OK) {
+			// buffered data did not reach the card: same handling as a failed write
+			printFatFsError("file_writer sync", err);
+			failed = true;
+		}
 	}
 
 private:
