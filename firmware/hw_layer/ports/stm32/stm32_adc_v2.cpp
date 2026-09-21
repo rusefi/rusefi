@@ -266,43 +266,41 @@ static slowAdcState_t slowAdcGetNextState(slowAdcState_t state)
 
 static slowAdcState_t slowAdcState = convertPrimary;
 
-static void slowAdcEndCB(ADCDriver *adcp) {
-	if (adcIsBufferComplete(adcp)) {
-		chSysLockFromISR();
-		// Switch state to ready to allow starting new conversion from here
-		adcp->state = ADC_READY;
-		// get next state
-		slowAdcState = slowAdcGetNextState(slowAdcState);
-		// A scan is complete only after the final auxiliary conversion has
-		// completed and the state machine wraps back to the primary group.
-		if (slowAdcState == convertPrimary) {
-			engine->outputChannels.slowAdcScanCount++;
-		}
-		switch (slowAdcState) {
-		case convertPrimary:
-			#ifdef ADC_MUX_PIN
-			muxControl.setValue(0, /*force*/true);
-			#endif
-			adcStartConversionI(&EFI_SLOW_ADC, &convGroupSlow, (adcsample_t *)slowSampleBuffer, SLOW_ADC_OVERSAMPLE);
-			break;
-		#ifdef ADC_MUX_PIN
-		case convertMuxed:
-			muxControl.setValue(1, /*force*/true);
-			// convert second half
-			adcStartConversionI(&EFI_SLOW_ADC, &convGroupSlow, (adcsample_t *)slowSampleBufferMuxed, SLOW_ADC_OVERSAMPLE);
-			break;
-		#endif
-		case convertAux:
-			adcSTM32DisableVBATE();
-			adcStartConversionI(&EFI_SLOW_ADC, &aux1ConvGroup, (adcsample_t *)aux1SensorSamples, auxSensorOversample);
-			break;
-		case convertAux2:
-			adcSTM32EnableVBATE();
-			adcStartConversionI(&EFI_SLOW_ADC, &aux2ConvGroup, (adcsample_t *)aux2SensorSamples, auxSensorOversample);
-			break;
-		}
-		chSysUnlockFromISR();
+static void slowAdcEndCB(ADCDriver *) {
+	// All slow ADC groups are linear, so this callback only runs after a full
+	// conversion. ChibiOS has already returned the driver to ADC_READY here.
+	chSysLockFromISR();
+	// get next state
+	slowAdcState = slowAdcGetNextState(slowAdcState);
+	// A scan is complete only after the final auxiliary conversion has
+	// completed and the state machine wraps back to the primary group.
+	if (slowAdcState == convertPrimary) {
+		engine->outputChannels.slowAdcScanCount++;
 	}
+	switch (slowAdcState) {
+	case convertPrimary:
+		#ifdef ADC_MUX_PIN
+		muxControl.setValue(0, /*force*/true);
+		#endif
+		adcStartConversionI(&EFI_SLOW_ADC, &convGroupSlow, (adcsample_t *)slowSampleBuffer, SLOW_ADC_OVERSAMPLE);
+		break;
+	#ifdef ADC_MUX_PIN
+	case convertMuxed:
+		muxControl.setValue(1, /*force*/true);
+		// convert second half
+		adcStartConversionI(&EFI_SLOW_ADC, &convGroupSlow, (adcsample_t *)slowSampleBufferMuxed, SLOW_ADC_OVERSAMPLE);
+		break;
+	#endif
+	case convertAux:
+		adcSTM32DisableVBATE();
+		adcStartConversionI(&EFI_SLOW_ADC, &aux1ConvGroup, (adcsample_t *)aux1SensorSamples, auxSensorOversample);
+		break;
+	case convertAux2:
+		adcSTM32EnableVBATE();
+		adcStartConversionI(&EFI_SLOW_ADC, &aux2ConvGroup, (adcsample_t *)aux2SensorSamples, auxSensorOversample);
+		break;
+	}
+	chSysUnlockFromISR();
 }
 #endif
 
