@@ -1,0 +1,57 @@
+name: SDIO HAL regression tests
+
+on:
+  push:
+    paths:
+      - '.gitmodules'
+      - 'firmware/ChibiOS'
+      - '.github/workflows/test-sdio-hal.yaml'
+  pull_request:
+    paths:
+      - '.gitmodules'
+      - 'firmware/ChibiOS'
+      - '.github/workflows/test-sdio-hal.yaml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            cc: gcc
+          - os: ubuntu-latest
+            cc: clang
+          - os: macos-latest
+            cc: clang
+          - os: windows-latest
+            cc: gcc
+          - os: windows-latest
+            cc: cl
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Checkout SDIO HAL
+        run: git submodule update --init --depth 1 firmware/ChibiOS
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Configure MSVC
+        if: matrix.cc == 'cl'
+        shell: pwsh
+        run: |
+          $vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio/Installer/vswhere.exe'
+          $installation = & $vswhere -latest -products '*' -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+          if (!$installation) { throw 'MSVC installation not found' }
+          & (Join-Path $installation 'Common7/Tools/Launch-VsDevShell.ps1') -Arch amd64 -HostArch amd64 -SkipAutomaticLocation
+          foreach ($name in @('PATH', 'INCLUDE', 'LIB', 'LIBPATH')) {
+            "$name=$([Environment]::GetEnvironmentVariable($name))" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          }
+      - name: Run host tests
+        env:
+          CC: ${{ matrix.cc }}
+        run: python -m unittest discover -s firmware/ChibiOS/testhal/host/sdio -p "test_*.py" -v

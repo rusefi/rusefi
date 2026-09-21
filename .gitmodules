@@ -1,6 +1,6 @@
 [submodule "firmware/ChibiOS"]
 	path = firmware/ChibiOS
-	url = https://github.com/rusefi/ChibiOS.git
+	url = https://github.com/Matheusschmitz/ChibiOS.git
 	branch = stable_21.11.x.rusefi_clean_history
 [submodule "firmware/ChibiOS-Contrib"]
 	path = firmware/ChibiOS-Contrib

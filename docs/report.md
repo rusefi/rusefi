@@ -688,3 +688,10 @@ Validation:
 Open follow-ups:
 - `unit_tests/mocks.cpp:38` still trips GCC 16's `-Wmaybe-uninitialized`; only
   a local concern until CI moves to that compiler (see previous entry).
+
+## 2026-09-21 - Prepare SDIO HAL reliability integration
+
+- Isolated the firmware integration on current upstream master and prepared two dependent HAL branches: CCM sector staging, then bounded SDIO waits and error cleanup. Each HAL correction has a separate passing bad-behavior reproduction commit followed by the fix and updated expectations.
+- Selected the public fork's HAL revision and URL so a fresh checkout can fetch the complete implementation. The upstream submission must restore the official URL and select the accepted HAL commit after both HAL changes merge. No official pull request was opened.
+- Added a dedicated workflow for Linux GCC/Clang, macOS Clang and Windows GCC/MSVC. These actual-driver host tests are outside the existing firmware unit-test job, which skips ChibiOS. Documented test commands, compatibility, attribution and the dependency order in docs/sdio-reliability.md.
+- Local validation: all 17 HAL host tests pass with native GCC; the generic STM32F4 SDC example compiles and links using ARM GCC 12.3.1 with -j12. The usual LTO assembler-listing warning is non-fatal. Cross-platform CI and hardware fault-injection validation are separate from these local checks. No calibration, protocol, storage-manager or application-specific defaults are changed by this integration.
