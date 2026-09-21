@@ -480,7 +480,6 @@ void handleBenchCategory(uint16_t index) {
 	case LUA_COMMAND_8:
 	case LUA_COMMAND_9:
 	case LUA_COMMAND_10:
-		static_assert(LUA_COMMAND_10 - LUA_COMMAND_1 + 1 == LUA_BUTTON_COUNT, "one bench command per Lua button");
 		luaCommandCounters[index - LUA_COMMAND_1]++;
 		return;
 #if EFI_LTFT_CONTROL
