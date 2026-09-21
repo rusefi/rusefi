@@ -29,6 +29,9 @@ struct FIL { std::string name; bool writing = false; };
 static std::map<std::string, std::vector<uint8_t>> files;
 static std::string fault;
 static bool locked = true;
+static void (*duringWrite)() = nullptr;
+static const void* activeSource = nullptr;
+static bool wroteActiveSource = false;
 static int getTimeNowNt() { return 0; }
 static int sdCardGetCurrentMode() { return SD_MODE_ECU; }
 static void efiPrintf(const char*, ...) {}
@@ -60,6 +63,10 @@ static FRESULT f_open(FIL* fd, const char* name, int flags) {
 }
 
 static FRESULT f_write(FIL* fd, const void* ptr, size_t count, UINT* written) {
+    wroteActiveSource = ptr == activeSource;
+    if (duringWrite) {
+        duringWrite();
+    }
     *written = (fault == "write" || fault == "short_write") ? count / 2 : count;
     const auto* bytes = static_cast<const uint8_t*>(ptr);
     files[fd->name].assign(bytes, bytes + *written);
@@ -114,11 +121,16 @@ static FRESULT f_rename(const char* from, const char* to) {
 static constexpr size_t storagesCount = 2;
 static SettingStorageBase* storages[storagesCount];
 @READ_SOURCE@
+#define for_all_storages SettingStorageBase* storage = nullptr; \
+    for (size_t i = 0; i < storagesCount; i++) if ((storage = storages[i]) != nullptr)
+@WRITE_SOURCE@
 
 @LTFT_DIMENSIONS@
 @LTFT_DECLARATION@
 static LtftState ltftLoadState;
 @LTFT_LOAD@
+@LTFT_SAVE@
+static LtftState* changingState = nullptr;
 
 struct FakeStorage : SettingStorageBase {
     StorageStatus status;
@@ -135,6 +147,36 @@ int main(int argc, char** argv) {
     assert(argc == 3);
     const std::string scenario = argv[1];
     const std::string record = argv[2];
+    if (scenario.rfind("save_", 0) == 0) {
+        storages[1] = &storageSD;
+        LtftState active{};
+        active.trims[0][0][0] = 0.125f;
+        active.trims[FT_BANK_COUNT - 1][VE_LOAD_COUNT - 1][VE_RPM_COUNT - 1] = 0.25f;
+        const auto* bytes = reinterpret_cast<const uint8_t*>(active.trims);
+        const std::vector<uint8_t> snapshot(bytes, bytes + sizeof(active.trims));
+        const std::vector<uint8_t> old(sizeof(active.trims), 17);
+        files["ltft.bin"] = old;
+        activeSource = active.trims;
+        changingState = &active;
+        if (scenario == "save_mutation") {
+            duringWrite = [] {
+                changingState->trims[0][0][0] = 0.5f;
+                changingState->trims[FT_BANK_COUNT - 1][VE_LOAD_COUNT - 1][VE_RPM_COUNT - 1] = 0.75f;
+            };
+        } else {
+            fault = scenario.substr(5);
+        }
+        const bool saved = active.save();
+        if (scenario == "save_mutation") {
+            std::printf("{\"saved\":%s,\"snapshot\":%s,\"active_source\":%s,\"changed\":%s}\n",
+                        saved ? "true" : "false", files["ltft.bin"] == snapshot ? "true" : "false",
+                        wroteActiveSource ? "true" : "false", active.trims[0][0][0] == 0.5f ? "true" : "false");
+        } else {
+            std::printf("{\"saved\":%s,\"old\":%s}\n", saved ? "true" : "false",
+                        files["ltft.bin"] == old ? "true" : "false");
+        }
+        return 0;
+    }
     if (scenario == "priority") {
         FakeStorage lower(StorageStatus::Ok, 17), higher(StorageStatus::Failed, 99);
         storages[0] = &lower;

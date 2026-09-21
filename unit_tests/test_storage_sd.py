@@ -47,8 +47,10 @@ class StorageSdTest(unittest.TestCase):
         substitutions = {
             "SD_SOURCE": source,
             "READ_SOURCE": extract_block(storage, "StorageStatus storageRead("),
+            "WRITE_SOURCE": extract_block(storage, "StorageStatus storageWrite("),
             "LTFT_DECLARATION": extract_block(declaration, "struct LtftState") + ";",
             "LTFT_LOAD": extract_block(ltft, "void LtftState::load("),
+            "LTFT_SAVE": extract_block(ltft, "bool LtftState::save("),
             "LTFT_DIMENSIONS": dimensions,
         }
         for name, value in substitutions.items():
@@ -135,6 +137,16 @@ class StorageSdTest(unittest.TestCase):
         for scenario in ("ltft_success", "ltft_backup"):
             with self.subTest(scenario=scenario):
                 self.assertEqual(self.run_case(scenario), {"intact": True, "bytes": 2048})
+
+    def test_production_ltft_save_exposes_active_table_to_storage(self):
+        # Reproduce the direct-storage dependency before moving active trims to CCM.
+        self.assertEqual(self.run_case("save_mutation"), {"saved": True, "snapshot": False,
+                                                        "active_source": True, "changed": True})
+
+    def test_production_ltft_save_reports_failure_without_losing_previous_record(self):
+        for scenario in ("save_write", "save_sync", "save_close"):
+            with self.subTest(scenario=scenario):
+                self.assertEqual(self.run_case(scenario), {"saved": False, "old": True})
 
 
 if __name__ == "__main__":

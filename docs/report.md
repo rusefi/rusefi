@@ -733,3 +733,9 @@ Open follow-ups:
 - Inspect the primary's size before rotating files. A primary with the wrong size is removed without replacing the existing backup; promotion failures then leave that backup readable. Valid primaries retain the existing temporary-file, sync, close, rotation and restoration sequence. No calibration format, storage priority, timeout or USB ownership changes.
 - Updated the passing reproduction to require successful recovery and added successful replacement controls. All ten native GCC host tests pass, including full production LTFT staging and failures on the LTFT, second-tables and Lua record paths. The original unit-test stub's comment now correctly points to this production-path coverage.
 - Documented the 2048-byte static LTFT staging allocation and the limits of API-boundary fault injection. No additional full-record buffer was added. The shared unit-test, firmware and five-toolchain persistence workflows provide the remaining integration checks; no physical card or ECU validation was performed here.
+
+## 2026-09-21 - Cover LTFT storage writes before SRAM placement correction
+
+- Merged the upstream revision used by the failed Nucleo F429 CI job, retaining published history. Building that tree with the matching ARM GCC 14.2.1 toolchain to inspect the main-SRAM overflow and memory placement.
+- Extended the existing portable harness to execute production LtftState::save and storageWrite. A passing reproduction confirms that the backend receives the active table directly and that a mutation during the write changes the persisted data. This dependency must be removed before placing the active table in CPU-only CCM memory.
+- Added write/sync/close failure controls that require a failed save result and preservation of the old record. All 12 native GCC host tests pass before the production correction. The following change will require a separate stable transfer snapshot while retaining the load-failure tests.
