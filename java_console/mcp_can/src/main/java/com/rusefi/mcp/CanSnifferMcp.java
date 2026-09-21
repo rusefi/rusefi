@@ -92,7 +92,6 @@ public class CanSnifferMcp {
         }
         return new SlcanConnection() {
             public String getPort() { return client.getPort(); }
-            public boolean includesBus() { return client.includesBus(); }
             public String readLine(int timeoutMs) throws IOException { return client.readLine(timeoutMs); }
             public void pollStatus() throws IOException { client.pollStatus(); }
             public void close() { client.close(); }
@@ -276,7 +275,7 @@ public class CanSnifferMcp {
             try (SlcanConnection owned = connection) {
                 long nextPoll = System.nanoTime();
                 while (running && !Thread.currentThread().isInterrupted()) {
-                    SlcanClient.Frame frame = SlcanClient.Frame.parse(owned.readLine(200), owned.includesBus());
+                    SlcanClient.Frame frame = SlcanClient.Frame.parse(owned.readLine(200));
                     if (frame != null) {
                         synchronized (messageLock) {
                             CanMessage message = new CanMessage(++messageSeq, System.currentTimeMillis(),

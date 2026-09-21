@@ -36,7 +36,6 @@ public class SlcanClient implements Closeable {
     private final IoStream stream;
     private final String port;
     private final String version;
-    private boolean includesBus;
 
     private SlcanClient(IoStream stream, String port, String version) {
         this.stream = stream;
@@ -46,11 +45,6 @@ public class SlcanClient implements Closeable {
 
     public String getPort() {
         return port;
-    }
-
-    /** True only when the adapter explicitly advertises the channel-prefix format. */
-    public boolean includesBus() {
-        return includesBus;
     }
 
     /** @return response to the 'V' probe, e.g. "V1220" */
@@ -135,10 +129,8 @@ public class SlcanClient implements Closeable {
         }
         stream.getDataBuffer().dropPending();
 
+        // it's a dummy commands, sniffer configured via common settings; and it is opened always
         expectOk("S6");
-        // Closed channel: no frames can race the reply. Old firmware ignores I;
-        // timeout/BELL means untagged frames have unknown bus identity.
-        includesBus = "I1".equals(command(stream, "I"));
         expectOk("O");
         log.info(port + ": SLCAN channel open");
     }
@@ -259,17 +251,11 @@ public class SlcanClient implements Closeable {
          */
         @Nullable
         public static Frame parse(String line) {
-            return parse(line, false);
-        }
-
-        /** includesBus must come from the adapter's I1 reply, not from a guess. */
-        @Nullable
-        public static Frame parse(String line, boolean includesBus) {
             if (line == null || line.isEmpty()) {
                 return null;
             }
             String raw = line;
-            Integer busIndex = includesBus ? Integer.valueOf(0) : null;
+            Integer busIndex = 0;
             if (line.charAt(0) == '&' || line.charAt(0) == '$') {
                 busIndex = line.charAt(0) == '&' ? 1 : 2;
                 line = line.substring(1);

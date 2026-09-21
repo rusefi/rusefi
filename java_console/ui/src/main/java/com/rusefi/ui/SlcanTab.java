@@ -191,7 +191,7 @@ public class SlcanTab {
                         continue;
                     }
                     lastActivity = System.currentTimeMillis();
-                    SlcanClient.Frame frame = SlcanClient.Frame.parse(line, client.includesBus());
+                    SlcanClient.Frame frame = SlcanClient.Frame.parse(line);
                     if (frame == null) {
                         continue;
                     }
