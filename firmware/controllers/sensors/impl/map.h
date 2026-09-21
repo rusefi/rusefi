@@ -10,6 +10,8 @@
 struct air_pressure_sensor_config_s;
 
 void initMapDecoder();
+// see 'useFixedBaroCorrFromMap': latches the start-up MAP reading as barometric pressure
+void updateFixedBaroFromMap();
 
 #define KPA_PER_PSI 6.89475728f
 

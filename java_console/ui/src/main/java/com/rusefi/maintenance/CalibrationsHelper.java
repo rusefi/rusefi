@@ -168,13 +168,13 @@ public class CalibrationsHelper {
                 // to re-probe on the next cycle and prevents returning stale results (e.g. a
                 // port that vanished after an ECU reboot and re-enumeration).
                 for (PortResult p : knownPorts) {
-                    if (!osPorts.contains(p.port)) {
+                    if (!isPortPresent(p, osPorts)) {
                         connectivityContext.getPortScanner().invalidatePort(p.port);
                     }
                 }
                 final List<PortResult> matching = knownPorts.stream()
                     .filter(p -> portTypeMatches.test(p.type))
-                    .filter(p -> osPorts.contains(p.port))
+                    .filter(p -> isPortPresent(p, osPorts))
                     .collect(Collectors.toList());
                 foundPorts.addAll(matching);
                 if (!foundPorts.isEmpty()) {
@@ -197,6 +197,10 @@ public class CalibrationsHelper {
         return foundPorts;
     }
 
+    static boolean isPortPresent(final PortResult port, final Set<String> osPorts) {
+        return LinkManager.isSpecialNotSerial(port.port) || osPorts.contains(port.port);
+    }
+
     public static boolean updateFirmwareAndRestorePreviousCalibrations(
         final JComponent parent,
         final PortResult originalEcuPort,
@@ -217,6 +221,21 @@ public class CalibrationsHelper {
         @Nullable final BinaryProtocol bp,
         @Nullable final LinkManager lm,
         final UpdateOperationCallbacks callbacks,
+        final Supplier<Boolean> updateFirmware,
+        final ConnectivityContext connectivityContext,
+        final FirmwareUpdatePolicy policy
+    ) {
+        return updateFirmwareAndRestorePreviousCalibrations(
+            parent, originalEcuPort, bp, lm, callbacks, () -> true, updateFirmware, connectivityContext, policy);
+    }
+
+    static boolean updateFirmwareAndRestorePreviousCalibrations(
+        final JComponent parent,
+        final PortResult originalEcuPort,
+        @Nullable final BinaryProtocol bp,
+        @Nullable final LinkManager lm,
+        final UpdateOperationCallbacks callbacks,
+        final Supplier<Boolean> beforeDisconnect,
         final Supplier<Boolean> updateFirmware,
         final ConnectivityContext connectivityContext,
         final FirmwareUpdatePolicy policy
@@ -288,9 +307,8 @@ public class CalibrationsHelper {
 
         prevCalibrations = calibrations;
 
-        // Always disconnect before flashing - the port must be free for ECU reboot to OpenBLT
-        if (bp != null && lm != null) {
-            lm.disconnect();
+        if (!prepareFirmwareHandoff(bp, lm, beforeDisconnect)) {
+            return false;
         }
 
         if (!skipCalibrationRestore && !prevCalibrations.isPresent()) {
@@ -751,6 +769,22 @@ public class CalibrationsHelper {
         return true;
     }
 
+    static boolean prepareFirmwareHandoff(
+        @Nullable BinaryProtocol bp,
+        @Nullable LinkManager lm,
+        Supplier<Boolean> beforeDisconnect
+    ) {
+        if (!beforeDisconnect.get()) {
+            return false;
+        }
+
+        // Always disconnect before flashing - the port must be free for ECU reboot to OpenBLT.
+        if (bp != null && lm != null) {
+            lm.disconnect();
+        }
+        return true;
+    }
+
     static String getFileNameWithoutExtension(
         final String timestampNameComponent,
         final String fileNameComponent
@@ -788,7 +822,9 @@ public class CalibrationsHelper {
             Objects.requireNonNull(iniFile);
             final int pageSize = iniFile.getMetaInfo().getPageSize(0);
             callbacks.logLine(String.format("Page size is %d", pageSize));
-            final ConfigurationImageMetaVersion0_0 meta = ConfigurationImageMetaVersion0_0.getMeta(iniFile);
+            // A cached INI can describe this layout while carrying an older firmware date.
+            // Preserve the live identity, also used by port compatibility/bootloader tracking.
+            final ConfigurationImageMetaVersion0_0 meta = new ConfigurationImageMetaVersion0_0(pageSize, signature);
             callbacks.logLine("Reading current calibrations...");
             final ConfigurationImageWithMeta image = binaryProtocol.readFullImageFromController(meta);
             final Map<Integer, ConfigurationImageWithMeta> pages = new TreeMap<>();
@@ -809,7 +845,7 @@ public class CalibrationsHelper {
                 pages.put(
                     pageIdentifier,
                     new ConfigurationImageWithMeta(
-                        new ConfigurationImageMetaVersion0_0(secondaryPageSize, iniFile.getSignature()),
+                        new ConfigurationImageMetaVersion0_0(secondaryPageSize, signature),
                         content
                     )
                 );

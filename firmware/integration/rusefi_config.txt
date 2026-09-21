@@ -107,7 +107,7 @@
 ! This is the version of the data stored in flash configuration
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date!
-#define FLASH_DATA_VERSION 260805
+#define FLASH_DATA_VERSION 260908
 
 ! Remove next line when Java toolset gets adjusted to load those from json config into VariablesRegistry
 ! Also remove file integration/generated/rusefi_config_generated_enums.txt
@@ -221,9 +221,15 @@ struct_no_prefix engine_configuration_s
 #define DWELL_CURVE_SIZE 8
 
 #define EFI_CAN_BUS_COUNT 2
+#define ts_show_canbus3 false
 #define EFI_CAN_CANFD FALSE
 
 #define DEFAULT_RPM_AXIS_HIGH_VALUE 7000
+
+! Default CLT curve display range in Celsius, separate from allowed temperature-bin limits.
+! -40 is also -40 Fahrenheit; unit-aware curves convert the upper bound via cltHighXaxis.
+#define DEFAULT_CLT_AXIS_LOW_VALUE -40
+#define DEFAULT_CLT_AXIS_HIGH_VALUE 120
 
 #define CRANKING_CURVE_SIZE 8
 
@@ -1072,7 +1078,7 @@ custom uart_device_e 1 bits, U08, @OFFSET@, [0:1], "Off", "UART1", "UART2", "UAR
 	uint8_t autoscale lambdaProtectionTimeout;Only respond once lambda is out of range for this period of time. Use to avoid transients triggering lambda protection when not needed;"s", 0.1, 0, 0, 10, 1
 
 
-custom script_setting_t 4 scalar, F32, @OFFSET@, 		"",	   1,	   0, 0, 18000,	  2
+custom script_setting_t 4 scalar, F32, @OFFSET@, 		"",	   1,	   0, -18000, 18000,	  2
 	script_setting_t[SCRIPT_SETTING_COUNT iterate] scriptSetting;
 
 	Gpio spi1mosiPin;
@@ -1366,7 +1372,7 @@ tps_limit_t tps2Max;Fully opened voltage for primary throttle position sensor
 	uint8_t coastingFuelCutVssLow;Below this speed, disable DFCO. Use this to prevent jerkiness from fuel enable/disable in low gears.;{bitStringValue(velocityUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KMH_TO_MPH@@}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? 255 : 158}, 0
 	uint8_t coastingFuelCutVssHigh;Above this speed, allow DFCO. Use this to prevent jerkiness from fuel enable/disable in low gears.;{bitStringValue(velocityUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KMH_TO_MPH@@}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? 255 : 158}, 0
 
-	float tpsAccelEnrichmentThreshold;Maximum change delta of TPS percentage over the 'length'. Actual TPS change has to be above this value in order for TPS/TPS acceleration to kick in.;"roc", 1, 0, 0, 200, 1
+	float tpsAccelEnrichmentThreshold;Acceleration is detected when the largest signed TPS change between adjacent samples in the history exceeds this threshold. Units are TPS percentage points per sample (50 ms), not percent per second or total change over the lookback window. A change from 10% to 20% is 10 percentage points.;"%/sample", 1, 0, 0, 200, 1
 
 #define AUX_SPEED_SENSOR_COUNT 2
     brain_input_pin_e[AUX_SPEED_SENSOR_COUNT iterate] auxSpeedSensorInputPin;
@@ -1402,10 +1408,7 @@ tps_limit_t tps2Max;Fully opened voltage for primary throttle position sensor
 	uint8_t mc33_hpfp_max_hold;Maximum amount of time the solenoid can be active before assuming a programming error;"ms", 1, 0, 0, 255, 0
 
 	bit stepperDcInvertedPins,"yes","no";Enable if DC-motor driver (H-bridge) inverts the signals (eg. RZ7899 on Hellen boards)
-	bit canOpenBLT,"yes","no"; Allow OpenBLT on Primary CAN
-	bit can2OpenBLT,"yes","no"; Allow OpenBLT on Secondary CAN
 	bit injectorFlowAsMassFlow,"grams per second","cc/min";Select whether to configure injector flow in volumetric flow (default, cc/min) or mass flow (g/s).
-	bit boardUseCanTerminator,"yes","no"
 	bit kLineDoHondaSend,"yes","no"
 	bit can1ListenMode,"yes","no";ListenMode is about acknowledging CAN traffic on the protocol level. Different from canWriteEnabled
 	bit can2ListenMode,"yes","no"
@@ -1832,8 +1835,8 @@ int anotherCiTest
 	uint8_t mc33810Maxi;Maximum coil charge current, 1A step;"A", 1, 0, 6, 21, 0
 
     linear_sensor_s acPressure
-    uint16_t minAcPressure;value of A/C pressure in kPa/psi before that compressor is disengaged;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? 500 : 72.5}, 0
-    uint16_t maxAcPressure;value of A/C pressure in kPa/psi after that compressor is disengaged;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? 500 : 72.5}, 0
+    uint16_t minAcPressure;value of A/C pressure in kPa/psi before that compressor is disengaged;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? 3000 : 435.1}, 0
+    uint16_t maxAcPressure;value of A/C pressure in kPa/psi after that compressor is disengaged;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? 3000 : 435.1}, 0
 
 	uint8_t autoscale minimumOilPressureTimeout;Delay before cutting fuel due to low oil pressure. Use this to ignore short pressure blips and sensor noise.;"sec", 0.1, 0, 0, 5, 1
 
@@ -1863,7 +1866,7 @@ uint8_t autoscale knockFuelTrim;Maximum Amount of Fuel trim when knock;"%", 1, 0
 	bit nitrousControlEnabled,"enabled","disabled"
 	bit vvlControlEnabled,"enabled","disabled"
 	bit keepIdleSolenoidWhenStopped,"enabled","disabled";By default the idle solenoid is switched off whenever the engine is not turning, to be quieter and save power. Enable this to keep driving it to the position the idle controller asks for, which at zero RPM is the cranking curve for the current coolant temperature - for valves which need to rest somewhere other than de-energized. The valve is only driven for a minute after the engine stops turning, then switched off anyway to protect the coil and the battery.
-	bit unusedBit_Fancy4
+	bit canSnifferIncludeBus,"Yes","No";Include CAN bus in trace using Elmue SLCAN prefixes (CAN1: none, CAN2: &, CAN3: $). Disable for standard SLCAN clients such as SavvyCAN or slcand. Reconnect the sniffer after changing this setting.
 	bit unusedBit_Fancy5
 	bit unusedBit_Fancy6
 	bit unusedBit_Fancy7
@@ -2039,6 +2042,7 @@ end_struct
 	uint8_t dwellDutyPercent;Dwell Duty Mode: percentage of the inter-spark interval used as coil dwell time. 50 = half the interval between pulses (standard TFI target).;"%", 1, 0, 1, 90, 0
 
 ! end of engine_configuration_s
+	float idleParkNeutralOffset;Signed idle position offset when Lua reports Park or Neutral via setParkNeutral(boolean). Negative values reduce opening, positive values increase it. Added to running open-loop idle, not target RPM. Zero disables the correction.;"%", 1, 0, -100, 100, 1
 end_struct
 
 ! note that this magic field name is used by LiveDataParserPanel
@@ -2212,7 +2216,7 @@ uint8_t[FUEL_LOAD_COUNT x FUEL_RPM_COUNT] autoscale lambdaTable;;{useLambdaOnInt
 uint16_t[FUEL_LOAD_COUNT] lambdaLoadBins;;{bitStringValue(afrLoadUnitLabels, afrLoadUnitIdx)}, {!(afrOverrideMode == 1 || (afrOverrideMode == 0 && fuelAlgorithm == 0)) || useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, 0, {afrOverrideMode == 1 || (afrOverrideMode == 0 && fuelAlgorithm == 0) ? (useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@) : @@MAP_UPPER_LIMIT@@}, 0
 uint16_t[FUEL_RPM_COUNT] lambdaRpmBins;;"RPM",	  1, 0, 0, 18000, 0
 
-float[TPS_TPS_ACCEL_TABLE x TPS_TPS_ACCEL_TABLE] tpsTpsAccelTable;;"value", 1, 0, 0, 30000, 2
+float[TPS_TPS_ACCEL_TABLE x TPS_TPS_ACCEL_TABLE] tpsTpsAccelTable;MS Adder uses milliseconds. Percent Adder uses a fraction: 0.20 adds 20% with sequential injection and other corrections neutral. Injection-mode scaling also applies. MAP Prediction does not use this table. Changing modes reinterprets the same values.;@@TPS_ACCEL_UNITS@@, 1, 0, 0, 30000, 2
 float[TPS_TPS_ACCEL_TABLE] tpsTpsAccelFromRpmBins;;"%",	  1, 0, 0, 30000, 2
 float[TPS_TPS_ACCEL_TABLE] tpsTpsAccelToRpmBins;;"%",	  1, 0, 0, 25500, 2
 
@@ -2562,6 +2566,7 @@ bit wizardCltSensor,"yes","no"
 bit wizardTps,"yes","no"
 bit wizardIgnitionOutputs,"yes","no"
 bit wizardInjectorOutputs,"yes","no"
+bit wizardVeTable,"yes","no"
 
 split_lines@@BOARD_CONFIG_FROM_FILE@@
 
@@ -2806,13 +2811,13 @@ end_struct
 #define ts_cic_idle false
 #define ts_show_egt true
 #define ts_show_k_line false
-#define ts_show_i2c1_enable true
-#define ts_show_i2c1_pins true
-#define ts_show_i2c2_enable true
-#define ts_show_i2c2_pins true
-#define ts_show_i2c3_enable true
-#define ts_show_i2c3_pins true
-#define ts_show_i2c4_enable true
+#define ts_show_i2c1_enable false
+#define ts_show_i2c1_pins false
+#define ts_show_i2c2_enable false
+#define ts_show_i2c2_pins false
+#define ts_show_i2c3_enable false
+#define ts_show_i2c3_pins false
+#define ts_show_i2c4_enable false
 #define ts_show_i2c4_pins false
 #define ts_show_spi1_enable true
 #define ts_show_spi1_pins true
@@ -2920,7 +2925,7 @@ end_struct
 #define ts_show_sd_pins true
 #define ts_show_injectionPinMode false
 #define ts_show_ignition true
-#define ts_show_ignitionPinMode true
+#define ts_show_ignitionPinMode false
 #define ts_show_vr_threshold_pins true
 
 

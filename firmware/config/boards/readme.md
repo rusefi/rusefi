@@ -5,8 +5,9 @@ TL,DR: for community edition see f407-discovery.
 rusEFI supports quite a wide array of hardware:
  * most supported platforms are stm32f4 and stm32f7
  * alpha version support stm32h7
- * experimental support [kinetis](https://www.nxp.com/products/processors-and-microcontrollers/arm-microcontrollers/general-purpose-mcus/k-series-cortex-m4:KINETIS_K_SERIES)
- * experimental support cypress MCUs.
+ * experimental/abandoned support [kinetis](https://www.nxp.com/products/processors-and-microcontrollers/arm-microcontrollers/general-purpose-mcus/k-series-cortex-m4:KINETIS_K_SERIES)
+ * experimental/abandoned support cypress MCUs.
+ * experimental/abandoned support AT32 MCUs.
 
 Looking for most default firmware for your own hardware? See f407-discovery
 

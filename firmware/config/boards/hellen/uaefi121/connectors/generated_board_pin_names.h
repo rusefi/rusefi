@@ -39,8 +39,12 @@
 #define PIN_51a MM100_MEGA_UAEFI_SPI2_SCK
 #define PIN_63a MM100_IN_IAT_ANALOG
 #define PIN_65a MM100_IN_CLT_ANALOG
-#define PIN_84a MM100_IN_CRANK
-#define PIN_85a MM100_IN_CAM
+#define PIN_84a_analog_inputs MM100_IN_CRANK_ANALOG
+#define PIN_84a_switch_inputs MM100_IN_CRANK
+#define PIN_84a_event_inputs MM100_IN_CRANK
+#define PIN_85a_analog_inputs MM100_IN_CAM_ANALOG
+#define PIN_85a_switch_inputs MM100_IN_CAM
+#define PIN_85a_event_inputs MM100_IN_CAM
 #define PIN_86a MM100_IGN7
 #define PIN_87a MM100_IGN8
 #define PIN_88a MM100_OUT_PWM2

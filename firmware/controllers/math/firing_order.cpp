@@ -205,7 +205,7 @@ static const uint8_t* getFiringOrderTable() {
 	case FO_1_5_4_8_3_7_2_6:
 		return order_1_5_4_8_3_7_2_6;
 	case FO_1_8_6_2_7_3_4_5:
-		return order_1_5_4_8_3_7_2_6;
+		return order_1_8_6_2_7_3_4_5;
 
 // 9 cylinder
 	case FO_1_2_3_4_5_6_7_8_9:

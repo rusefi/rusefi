@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import tel.schich.javacan.RawCanChannel;
 
 import java.io.IOException;
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -24,6 +24,7 @@ public class SocketCANIoStream extends AbstractIoStream {
     static Logging log = getLogging(SocketCANIoStream.class);
     private final IncomingDataBuffer dataBuffer;
     private final RawCanChannel socket;
+    private final ExecutorService readerExecutor;
 
     private final IsoTpCanDecoder canDecoder = new IsoTpCanDecoder() {
         @Override
@@ -40,17 +41,24 @@ public class SocketCANIoStream extends AbstractIoStream {
     };
 
     private void sendCanPacket(byte[] total) {
-        if (log.debugEnabled())
+        if (log.debugEnabled()){
             log.debug("-------sendIsoTp " + total.length + " byte(s):");
+        }
 
-        if (log.debugEnabled())
+        if (log.debugEnabled()){
             log.debug("Sending " + HexBinary.printHexBinary(total));
+        }
 
         SocketCANHelper.send(isoTpConnector.canId(), total, socket);
     }
 
     public SocketCANIoStream() {
-        socket = SocketCANHelper.createSocket();
+        this(SocketCANHelper.createSocket(), Executors.newSingleThreadExecutor(BinaryProtocolServer.getThreadFactory("SocketCAN reader")));
+    }
+
+    SocketCANIoStream(RawCanChannel socket, ExecutorService readerExecutor) {
+        this.socket = socket;
+        this.readerExecutor = readerExecutor;
         // buffer could only be created once socket variable is not null due to callback
         dataBuffer = createDataBuffer();
     }
@@ -67,15 +75,14 @@ public class SocketCANIoStream extends AbstractIoStream {
 
     @Override
     public void setInputListener(DataListener listener) {
-        Executor threadExecutor = Executors.newSingleThreadExecutor(BinaryProtocolServer.getThreadFactory("SocketCAN reader"));
-        threadExecutor.execute(() -> {
+        readerExecutor.execute(() -> {
             while (!isClosed()) {
                 readOnePacket(listener);
             }
         });
     }
 
-    private void readOnePacket(DataListener listener) {
+    void readOnePacket(DataListener listener) {
         try {
             CanConnector.CanPacket rx = SocketCANHelper.read(socket);
             if (rx.id() != CAN_ECU_SERIAL_TX_ID) {
@@ -86,8 +93,25 @@ public class SocketCANIoStream extends AbstractIoStream {
             byte[] decode = canDecoder.decodePacket(rx.payload());
             listener.onDataArrived(decode);
         } catch (IOException e) {
-            throw new IllegalStateException(e);
+            if (isClosed())
+                return;
+            log.warn("SocketCAN read failed, closing stream: " + e.getMessage());
+            close();
         }
+    }
+
+    @Override
+    public void close() {
+        if (isClosed())
+            return;
+
+        super.close();
+        try {
+            socket.close();
+        } catch (IOException e) {
+            log.warn("Error closing SocketCAN channel", e);
+        }
+        readerExecutor.shutdownNow();
     }
 
     @Override

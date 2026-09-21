@@ -20,6 +20,11 @@ import java.util.concurrent.atomic.AtomicReference;
 import static com.devexperts.logging.Logging.getLogging;
 
 public class AutoupdateUtil {
+    /**
+     * Shown instead of a raw {@link java.net.UnknownHostException} when rusefi.com does not resolve, see #10191.
+     * Compile-time constant on purpose: it gets inlined, so a newer autoupdate jar still runs against an older core_ui jar.
+     */
+    public static final String CHECK_INTERNET_CONNECTION = "Check your internet connection";
     private static final Logging log = getLogging(AutoupdateUtil.class);
     public static final boolean runHeadless = Boolean.getBoolean("run_headless") || GraphicsEnvironment.isHeadless();
 
@@ -65,7 +70,7 @@ public class AutoupdateUtil {
                         throw e;
                     }
                     String message = (e instanceof UnknownHostException)
-                        ? "Please fix your internet connection"
+                        ? CHECK_INTERNET_CONNECTION
                         : "Error downloading: " + e;
                     boolean retry = view.showErrorAndWaitForRetry(message);
                     if (!retry) {
@@ -137,20 +142,6 @@ public class AutoupdateUtil {
         component.repaint();
     }
 
-    private static Window getSelectedWindow(Window[] windows) {
-        for (Window window : windows) {
-            if (window.isActive()) {
-                return window;
-            } else {
-                Window[] ownedWindows = window.getOwnedWindows();
-                if (ownedWindows != null) {
-                    return getSelectedWindow(ownedWindows);
-                }
-            }
-        }
-        return null;
-    }
-
     public static void assertNotAwtThread() {
         if (SwingUtilities.isEventDispatchThread()) {
             showError("Non AWT thread expected");
@@ -169,11 +160,7 @@ public class AutoupdateUtil {
         StringBuilder trace = new StringBuilder(e + "\n");
         for(StackTraceElement element : e.getStackTrace())
             trace.append(element.toString()).append("\n");
-        SwingUtilities.invokeLater(() -> {
-            // todo: reuse ErrorMessageHelper?
-            Window w = getSelectedWindow(Window.getWindows());
-            JOptionPane.showMessageDialog(w, trace, "Error", JOptionPane.ERROR_MESSAGE);
-        });
+        SwingUtilities.invokeLater(() -> ErrorMessageHelper.showErrorDialog(trace.toString(), "Error"));
     }
 
     public static boolean hasExistingFile(String zipFileName, long completeFileSize, long lastModified) {

@@ -5,54 +5,70 @@ pins:
     type: hs
 
   - pin: A5
-    function: Case Ground
+    function: "Power/Chassis GND ground"
+    type: gnd
   - pin: A8
-    function: Clutch Deactivation Top of Travel
+    function: "Clutch Deactivation Top of Travel"
+    type: din
   - pin: A9
-    function: Clutch Switch Bottom of Travel
+    function: "Clutch Switch Bottom of Travel"
+    type: din
   - pin: A10
-    function: High Cooling Fans
+    function: "High Cooling Fans"
+    type: ls
   - pin: A13
-    function: Alternator RC Control
+    function: "Generator Regulator Control"
   - pin: A14
     function: Fuel Pump Command
   - pin: A15
-    function: A/C Control Relay
+    function: "A/C Control Relay"
+    type: ls
   - pin: A17
-    function: Low Cooling Fans
+    function: "Low Cooling Fans"
+    type: ls
   - pin: A20
-    function: Main Relay Control
+    function: "Main Relay Control"
+    type: ls
   - pin: A22
-    function: TCU Shift Down (bypass to molex)
+    function: "TCU Shift Down (bypass to molex)"
+    type: din
   - pin: A23
-    function: TCU Shift Up (bypass to molex)
+    function: "TCU Shift Up (bypass to molex)"
+    type: din
   - pin: A26
     function: Alternator Load Input
   - pin: A27
     function: Fuel Pump Monitor
   - pin: A29
-    function: 5V Sensor Power
+    function: "5V Sensor Supply (fuel tank pressure)"
+    type: 5v
   - pin: A30
-    function: GNDA Analog/Sensor Ground
+    function: "GNDA Analog/Sensor Ground (cowl signal return)"
     type: agnd
   - pin: A31
     function: UNUSED Fuel Pump Monitor 2 5.2
   - pin: A32
-    function: Reserve Switch
+    function: "Reverse Switch"
+    type: din
   - pin: A33
-    function: Air Conditioner Pressure Sensor
+    function: "Air Conditioner Pressure Sensor"
+    type: av
   - pin: A34
     function: Fuel Rail Pressure
   - pin: A35
-    function: Pedal Position Ground 1
+    function: "GNDA Analog/Sensor Ground (PPS 1)"
+    type: agnd
   - pin: A36
-    function: Pedal Position Power 1
+    function: "5V Sensor Supply (PPS 1)"
+    type: 5v
   - pin: A39
     function: Canister Ventilation Solenoid
   - pin: A40
-    function: Pedal Position Power 2
+    function: "5V Sensor Supply (PPS 2)"
+    type: 5v
   - pin: A42
-    function: Start Stop Switch
+    function: "Start Stop Switch"
+    type: din
 
   - pin: A44
     function: Fuel Temperature Sensor
@@ -70,15 +86,18 @@ pins:
     type: at
 
   - pin: A49
-    function: UNUSED Fuel Pump On
+    function: "UNUSED Motor Electronics Cooling Pump Relay (5.0L); Fuel Pump On (5.2L)"
   - pin: A51
-    function: Generator Current Sensor
+    function: "GNDA Analog/Sensor Ground (transmission signal return)"
+    type: agnd
   - pin: A52
-    function: Sensor Power
+    function: "5V Sensor Supply (engine sensors)"
+    type: 5v
   - pin: A53
     function: Battery Monitor Sensor
   - pin: A54
-    function: MAF Return
+    function: "GNDA Analog/Sensor Ground (MAF)"
+    type: agnd
   - pin: A55
     function: UNUSED Diff Sensor
 
@@ -87,17 +106,20 @@ pins:
     type: ls
 
   - pin: A59
-    function: Pedal Position Ground 2
+    function: "GNDA Analog/Sensor Ground (PPS 2)"
+    type: agnd
   - pin: A60
-    function: Pedal Position Signal 2
+    function: "Universal analog input. Suggested PPS input 2"
+    type: av
   - pin: A61
-    function: Pedal Position Signal 1
+    function: "Universal analog input. Suggested PPS input 1"
+    type: av
   - pin: A63
     function: Differential Pump
   - pin: A64
     function: Ignition Power Input
   - pin: A65
-    function: UNUSED Fuel Pump Control
+    function: "UNUSED Fuel Pump On (5.0L); PCM Wake-up (5.2L)"
   - pin: A66
     function: Brake Pedal Sensor
   - pin: A67
@@ -105,21 +127,26 @@ pins:
   - pin: A69
     function: UNUSED Aux Trans Pump
   - pin: A73
-    function: MAF
+    function: "MAF"
+    type: av
   - pin: A75
-    function: HS1 CAN High
+    function: "CAN bus High"
+    type: can
   - pin: A76
-    function: HS1 CAN Low
+    function: "CAN bus Low"
+    type: can
 
   - pin: A90
-    function: Heated Oxygen Sensor
+    function: "Post-catalyst Oxygen Sensor 2 Return (SIGRTN)"
   - pin: A91
-    function: Heated Oxygen Sensor
+    function: "Post-catalyst Oxygen Sensor 2 Signal"
 
   - pin: A97
-    function: +12 from Main Relay
+    function: "12V_FROM_MAIN_RELAY Switched Power"
+    type: 12v
   - pin: A99
-    function: +12 from Main Relay
+    function: "12V_FROM_MAIN_RELAY Switched Power"
+    type: 12v
 
   - pin: A100
     function: Power/Chassis GND ground
@@ -469,3 +496,15 @@ info:
       x: 1607
       y: 780
 
+
+    - pin: A97
+      x: 1607
+      y: 319
+
+    - pin: A99
+      x: 1607
+      y: 463
+
+    - pin: A100
+      x: 1523
+      y: 634

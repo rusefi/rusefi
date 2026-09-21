@@ -9,6 +9,7 @@
 #include "pch.h"
 #include "gpio/gpio_ext.h"
 #include "smart_gpio.h"
+#include <cmath>
 
 #define STRING2(x) #x
 #define STRING(x) STRING2(x)
@@ -40,7 +41,7 @@ struct gpiochip {
 
 static gpiochip chips[BOARD_EXT_GPIOCHIPS];
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || EFI_UNIT_TEST
 
 /* TODO: move inside gpio chip driver? */
 class external_hardware_pwm : public hardware_pwm {
@@ -57,6 +58,7 @@ public:
 			m_chip = chip;
 			m_pin = pin;
 			m_frequency = frequency;
+			m_duty = duty;
 		} else {
 			/* This is not an error, will fallback to SW PWM */
 			//firmwareError(ObdCode::CUSTOM_GPIO_CHIP_FAILED_PWM, "Faield to enable PWM mode for chip %s on pin \"%s\"", msg, chip->name, pin);
@@ -72,17 +74,45 @@ public:
 			return;
 		}
 
-		m_chip->chip->setPadPWM(m_pin, m_frequency, duty);
+		if (m_chip->chip->setPadPWM(m_pin, m_frequency, duty) >= 0) {
+			m_duty = duty;
+		}
+	}
+
+	bool setFrequency(float frequency) override {
+		if (!m_chip || !std::isfinite(frequency) || frequency <= 0) {
+			return false;
+		}
+
+		// setPadPWM programs both values, so preserve the latest accepted duty.
+		// A refused frequency must not replace the value reused by setDuty().
+		if (m_chip->chip->setPadPWM(m_pin, frequency, m_duty) < 0) {
+			return false;
+		}
+		m_frequency = frequency;
+		return true;
 	}
 
 private:
 	gpiochip* m_chip = nullptr;
 	size_t m_pin = 0;
 	float m_frequency = 0;
+	float m_duty = 0;
 };
 
 /* TODO: is 5 enought? */
 static external_hardware_pwm extPwms[5];
+
+#if EFI_UNIT_TEST
+void resetGpioPwmForUnitTest() {
+	for (auto& pwm : extPwms) {
+		pwm = external_hardware_pwm{};
+	}
+	for (auto& chip : chips) {
+		chip = gpiochip{};
+	}
+}
+#endif
 
 #endif
 
@@ -105,7 +135,7 @@ static gpiochip *gpiochip_find(brain_pin_e pin)
 	return nullptr;
 }
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || EFI_UNIT_TEST
 
 static external_hardware_pwm* gpiochip_getNextPwmDevice() {
 	for (size_t i = 0; i < efi::size(extPwms); i++) {
@@ -425,7 +455,7 @@ void gpiochips_debug(void)
 	}
 }
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || EFI_UNIT_TEST
 
 /**
  * @brief Try to init PWM on given pin

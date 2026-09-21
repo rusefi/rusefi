@@ -30,6 +30,7 @@
 #include "pch.h"
 
 #include "gpio/l9779.h"
+#include "gpio/l9779_spi.h"
 
 #if EFI_PROD_CODE && (BOARD_L9779_COUNT > 0)
 
@@ -193,12 +194,7 @@ static const char* l9779_pin_names[L9779_SIGNALS] = {
 /* true if parity of input x is odd */
 bool L9779::spi_parity_odd(uint16_t x)
 {
-	x ^= x >> 8;
-	x ^= x >> 4;
-	x ^= x >> 2;
-	x ^= x >> 1;
-
-	return (x & 1);
+	return l9779HasOddParity(x);
 }
 
 int L9779::spi_validate(uint16_t rx)
@@ -253,7 +249,7 @@ int L9779::spi_rw(uint16_t tx, uint16_t *rx_ptr)
 	SPIDriver *spi = cfg->spi_bus;
 
 	/* set parity */
-	tx |= !spi_parity_odd(tx);
+	tx = l9779PrepareSpiWord(tx);
 
 	/* Acquire ownership of the bus. */
 	spiAcquireBus(spi);
@@ -308,7 +304,8 @@ int L9779::spi_rw_array(const uint16_t *tx, uint16_t *rx, int n)
 		/* Slave Select assertion. */
 		spiSelect(spi);
 		/* data transfer */
-		uint16_t rxdata = spiPolledExchange(spi, tx[i]);
+		uint16_t txdata = l9779PrepareSpiWord(tx[i]);
+		uint16_t rxdata = spiPolledExchange(spi, txdata);
 
 		if (rx)
 			rx[i] = rxdata;
@@ -316,7 +313,7 @@ int L9779::spi_rw_array(const uint16_t *tx, uint16_t *rx, int n)
 		spiUnselect(spi);
 
 		/* statistic and debug */
-		recentTx = tx[i];
+		recentTx = txdata;
 		recentRx = rxdata;
 		this->spi_cnt++;
 

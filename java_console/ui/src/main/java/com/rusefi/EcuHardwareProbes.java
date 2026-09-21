@@ -1,10 +1,13 @@
 package com.rusefi;
 
 import com.devexperts.logging.Logging;
+import com.rusefi.autodetect.SerialAutoChecker;
+import com.rusefi.core.OsUtil;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
+import com.rusefi.io.can.SocketCANIoStream;
 import com.rusefi.io.serial.BufferedSerialIoStream;
 import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.maintenance.CalibrationsHelper;
@@ -64,6 +67,11 @@ public class EcuHardwareProbes implements SerialPortScanner.HardwareProbes {
     }
 
     @Override
+    public PortResult inspectSocketCan() {
+        return inspectSocketCan(REAL_SOCKET_CAN_PROBE);
+    }
+
+    @Override
     public boolean isLiveEcuConnected() {
         return ConnectionStatusLogic.INSTANCE.isConnected();
     }
@@ -86,6 +94,52 @@ public class EcuHardwareProbes implements SerialPortScanner.HardwareProbes {
     @Override
     public long now() {
         return System.currentTimeMillis();
+    }
+
+    interface SocketCanProbe {
+        boolean isSupported();
+
+        IoStream open();
+
+        String readSignature(IoStream stream);
+    }
+
+    static final SocketCanProbe REAL_SOCKET_CAN_PROBE = new SocketCanProbe() {
+        @Override
+        public boolean isSupported() {
+            return OsUtil.isLinux();
+        }
+
+        @Override
+        public IoStream open() {
+            return SocketCANIoStream.create();
+        }
+
+        @Override
+        public String readSignature(IoStream stream) {
+            return SerialAutoChecker.checkResponse(stream, null);
+        }
+    };
+
+    /**
+     * SocketCAN discovery has three outcomes: null means the configured interface is unavailable,
+     * CAN means it opened but no rusEFI ECU replied, and ECU means it returned a valid signature.
+     */
+    static PortResult inspectSocketCan(SocketCanProbe probe) {
+        if (!probe.isSupported()) {
+            return null;
+        }
+        try (IoStream stream = probe.open()) {
+            if (stream == null) {
+                return null;
+            }
+            String signature = probe.readSignature(stream);
+            return new PortResult(LinkManager.SOCKET_CAN,
+                signature == null ? SerialPortType.CAN : SerialPortType.Ecu);
+        } catch (RuntimeException | LinkageError e) {
+            log.info("SocketCAN is unavailable: " + e.getMessage());
+            return null;
+        }
     }
 
     /**

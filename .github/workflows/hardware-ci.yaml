@@ -127,10 +127,9 @@ jobs:
 
 # (cat .github/workflows/openocd_ci_f4_discovery.cfg ) | .github/workflows/hw-ci/openocd_wipe_and_flash.sh
 # (cat .github/workflows/openocd_ci_proteus_f7.cfg ) | .github/workflows/hw-ci/openocd_wipe_and_flash.sh
+    # connect-under-reset + retries, see script header for why
     - name: st-flash wipe & flash STM32
-      run: |
-        st-flash $([ -n "$HARDWARE_CI_STLINK_SERIAL" ] && echo "--serial") $HARDWARE_CI_STLINK_SERIAL --area=main erase
-        st-flash $([ -n "$HARDWARE_CI_STLINK_SERIAL" ] && echo "--serial") $HARDWARE_CI_STLINK_SERIAL --format=binary --reset --connect-under-reset write firmware/deliver/rusefi.bin 0x08000000
+      run: .github/workflows/hw-ci/st_flash_wipe_and_flash.sh firmware/deliver/rusefi.bin
 
     - name: Upload build bin artifact
       uses: actions/upload-artifact@v7

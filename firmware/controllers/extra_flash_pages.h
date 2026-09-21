@@ -85,8 +85,9 @@ void burnExtraFlashPages();
  * (TunerStudio burn handler, storage thread) don't need to know about
  * storage backend details.
  *
- * On INT_FLASH boards: triggers a full config burn (writeToFlashNow), which
- * erases the shared sector and piggybacks all extra pages via burnExtraFlashPages().
+ * On INT_FLASH boards: requests a deferred full config burn, which respects
+ * the engine-running flash-write interlock, erases the shared sector, and
+ * piggybacks all extra pages via burnExtraFlashPages().
  * On MFS/SD boards: prepares and writes the page directly to all backends.
  */
 void burnExtraFlashPage(StorageItemId id);

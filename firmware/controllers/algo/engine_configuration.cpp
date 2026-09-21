@@ -340,6 +340,7 @@ static void setDefaultCanSettings() {
 	engineConfiguration->canReadEnabled = true;
 	engineConfiguration->canWriteEnabled = true;
 	engineConfiguration->canVssScaling = 1.0f;
+	engineConfiguration->canSnifferIncludeBus = true;
 
 	for (size_t i = 0; i < efi::size(engineConfiguration->canSniffer); i++) {
 		engineConfiguration->canSniffer[i].listenOurs = true;
@@ -747,6 +748,14 @@ void setBoardDefaultConfiguration() {
 }
 void setBoardConfigOverrides() {
   // time to force migration to custom_board_ConfigOverrides
+}
+
+i2c_config_s *getI2cCfg(i2c_bus_e device) {
+	if ((device == I2C_NONE) || (device > I2C_BUS_TOTAL_COUNT)) {
+		return nullptr;
+	}
+
+	return &engineConfiguration->i2c[device - 1];
 }
 
 #include "board_overrides.h"

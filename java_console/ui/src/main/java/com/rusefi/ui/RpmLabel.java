@@ -1,8 +1,5 @@
 package com.rusefi.ui;
 
-import com.rusefi.core.Sensor;
-import com.rusefi.core.SensorCentral;
-import com.rusefi.core.WellKnownGauges;
 import com.rusefi.io.ConnectionStatusLogic;
 
 import javax.swing.*;
@@ -20,6 +17,8 @@ public class RpmLabel {
 
     private final JLabel rpmValue = new JLabel();
     private final JLabel rpmCaption = new JLabel("RPM:");
+    private final RpmModel.RpmListener rpmListener;
+    private final ConnectionStatusLogic.Listener connectionStatusListener;
 
     public RpmLabel(UIContext uiContext) {
         this(uiContext, 1);
@@ -40,16 +39,15 @@ public class RpmLabel {
         }
         content.add(rpmValue, "grow, wrap");
 
-        RpmModel.getInstance().addListener(new RpmModel.RpmListener() {
-            public void onRpmChange(RpmModel rpm) {
-                if (ConnectionStatusLogic.INSTANCE.isConnected()) {
-                    updateRpmValue(rpm.getSmoothedValue());
-                    rpmValue.setForeground(Color.green);
-                }
+        rpmListener = rpm -> {
+            if (ConnectionStatusLogic.INSTANCE.isConnected()) {
+                updateRpmValue(rpm.getSmoothedValue());
+                rpmValue.setForeground(Color.green);
             }
-        });
+        };
+        RpmModel.getInstance().addListener(rpmListener);
 
-        ConnectionStatusLogic.INSTANCE.addAndFireListener(new ConnectionStatusLogic.Listener() {
+        connectionStatusListener = new ConnectionStatusLogic.Listener() {
             @Override
             public void onConnectionStatus(boolean isConnected) {
                 if (isConnected) {
@@ -60,7 +58,8 @@ public class RpmLabel {
                     rpmValue.setForeground(Color.red);
                 }
             }
-        });
+        };
+        ConnectionStatusLogic.INSTANCE.addAndFireListener(connectionStatusListener);
         setSize(size);
     }
 
@@ -82,6 +81,11 @@ public class RpmLabel {
         Font font = new Font(f.getName(), f.getStyle(), fontSize);
         setFont(font);
         return this;
+    }
+
+    public void destroy() {
+        RpmModel.getInstance().removeListener(rpmListener);
+        ConnectionStatusLogic.INSTANCE.removeListener(connectionStatusListener);
     }
 
     private void setFont(Font font) {

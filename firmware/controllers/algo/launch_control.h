@@ -32,6 +32,8 @@ public:
 
 	bool isLaunchSparkRpmRetardCondition() const;
 	bool isLaunchFuelRpmRetardCondition() const;
+	// True while any two-step activity is in progress: pre-launch spark skip window or full launch
+	bool isLaunchOrPreLaunchCondition() const;
 	bool ownsSharedTrigger() const;
 
 	float getSparkSkipRatio() const { return sparkSkipRatio; }

@@ -48,6 +48,10 @@ enum class CanInterval : uint16_t {
 
 void resetCanWriteCycle();
 
+#if EFI_CAN_SUPPORT || EFI_UNIT_TEST
+void sendCanVerbose();
+#endif
+
 // 11 bit (CAN 2.0A)
 #define IS_EXT_RANGE_ID(id) ((id) >= 2048)
 
@@ -66,10 +70,16 @@ void registerCanSensor(CanSensorBase& sensor);
 
 #define CAN_WRITE_THREAD_STACK_SIZE 1536
 
-class CanWrite final : public PeriodicController<CAN_WRITE_THREAD_STACK_SIZE> {
+class CanWrite final : public ThreadController<CAN_WRITE_THREAD_STACK_SIZE> {
 public:
 	CanWrite();
-	void PeriodicTask(efitick_t nowNt) override;
+	void PeriodicTask(efitick_t nowNt);
+	void ThreadTask() override;
+
+private:
+	CanListener* m_pendingRequest = nullptr;
+	efitimems_t m_lastRequestTime = 0;
+	efitimems_t m_requestDelay = 0;
 };
 
 // allow using shorthand CI

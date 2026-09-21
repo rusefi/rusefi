@@ -66,7 +66,6 @@ public class Integration {
 	public static final int DEFAULT_SELT_STIM_VVT0 = 23;
 	public static final int ENGINE_SNIFFER_UNIT_US = 10;
 	public static final String FRONTEND_TITLE_BAR_NAME = "rusEFI";
-	public static final int JUMP_BLT_COMMAND = 0xBC;
 	public static final int JUMP_DFU_COMMAND = 0xBA;
 	public static final String LOG_DELIMITER = "`";
 	public static final int MLQ_FIELD_HEADER_SIZE = 89;

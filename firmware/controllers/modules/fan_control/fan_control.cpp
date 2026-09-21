@@ -75,7 +75,7 @@ void FanController::initPwm() {
 	if (m_pwmInitialized) {
 		return;
 	}
-#ifndef EFI_UNIT_TEST
+#if !EFI_UNIT_TEST
 	if (!isBrainPinValid(getConfigPin())) {
 		return;
 	}
@@ -97,7 +97,7 @@ void FanController::onSlowCallbackPwm(bool acActive) {
 		m_currentPwm = safeDuty;
 		pwmAppliedPwm = safeDuty;
 		m_state = (safeDuty > 0);
-#ifndef EFI_UNIT_TEST
+#if !EFI_UNIT_TEST
 		if (m_pwmInitialized) {
 			m_pwm.setSimplePwmDutyCycle(safeDuty / 100.0f);
 		}
@@ -112,6 +112,14 @@ void FanController::onSlowCallbackPwm(bool acActive) {
 		target += getPwmAcAdder();
 	}
 	target = clampF(getMinPwm(), target, getMaxPwm());
+
+	if (disableWhenStopped() && Sensor::getOrZero(SensorType::Rpm) == 0) {
+		// Engine stopped and the safety flag is set: inhibit the fan entirely and
+		// reset the soft-start ramp so the next start ramps up from zero again.
+		target = 0;
+		m_currentPwm = 0;
+	}
+
 	pwmTargetPwm = target;
 
 	// Soft-start: limit upward slew rate so ramp from 0-100 takes softStartSec seconds
@@ -125,7 +133,7 @@ void FanController::onSlowCallbackPwm(bool acActive) {
 	pwmAppliedPwm = m_currentPwm;
 	m_state = (m_currentPwm > 0);
 
-#ifndef EFI_UNIT_TEST
+#if !EFI_UNIT_TEST
 	if (m_pwmInitialized) {
 		m_pwm.setSimplePwmDutyCycle(m_currentPwm / 100.0f);
 	}
@@ -142,15 +150,15 @@ void FanController::onSlowCallback() {
 
 	bool acActive = engine->module<AcController>()->isAcEnabled();
 
+	auto& pin = getPin();
+	// Refresh status and condition flags for both control modes.
+	bool result = getState(acActive, pin.getLogicValue());
+
 	pwmActive = isPwmEnabled();
 	if (isPwmEnabled()) {
 		onSlowCallbackPwm(acActive);
 		return;
 	}
-
-	auto& pin = getPin();
-
-	bool result = getState(acActive, pin.getLogicValue());
 
 	m_state = result;
 

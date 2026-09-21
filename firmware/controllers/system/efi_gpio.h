@@ -136,7 +136,7 @@ public:
 	OutputPin tcuPcSolenoid;
 	OutputPin tcu32Solenoid;
 
-#ifdef EFI_UNIT_TEST
+#if EFI_UNIT_TEST
 	void resetForUnitTest();
 #endif
 

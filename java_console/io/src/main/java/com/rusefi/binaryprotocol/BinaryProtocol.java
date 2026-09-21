@@ -14,6 +14,9 @@ import com.rusefi.config.generated.Integration;
 import com.rusefi.Timeouts;
 import com.rusefi.binaryprotocol.test.Bug3923;
 import com.rusefi.core.Pair;
+import com.rusefi.core.ISensorHolder;
+import com.rusefi.core.OutputChannelDemand;
+import com.rusefi.core.OutputChannelSnapshot;
 import com.rusefi.core.RusEfiSignature;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.core.SignatureHelper;
@@ -33,6 +36,8 @@ import jakarta.xml.bind.JAXBException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
+import java.util.BitSet;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.*;
@@ -53,6 +58,7 @@ import static com.rusefi.util.TuneBackupUtil.saveConfigurationImageToFiles;
  * 3/6/2015
  */
 public class BinaryProtocol {
+    public static final String CONFIG_ERROR_CHANNEL = "hasCriticalError";
     private static final Logging log = getLogging(BinaryProtocol.class);
     private static final ThreadFactory THREAD_FACTORY = new NamedThreadFactory("ECU text pull", true);
     // Intended for high-latency TCP links to firmware built with CUSTOM_TS_BUFFER_SIZE.
@@ -60,8 +66,17 @@ public class BinaryProtocol {
 
     private final LinkManager linkManager;
     private final IoStream stream;
+    // Serialize response publication with disconnect cleanup. Never hold this during device I/O:
+    // close must be able to clear the UI while a command is waiting for a response.
+    private final Object publicationLock = new Object();
     private final Integer blockingFactorOverride;
     private boolean isBurnPending;
+    private long lastOutputFallbackGeneration = Long.MIN_VALUE;
+    private volatile boolean lastOutputPollWasFull = true;
+    private long nextTextPullNanos;
+    private long nextConfigErrorReadNanos;
+    private boolean configErrorReadScheduled;
+    private volatile String configErrorMessage;
     public String signature;
     public boolean isGoodOutputChannels;
     // NotNull once connected
@@ -88,6 +103,10 @@ public class BinaryProtocol {
         return iniFile;
     }
 
+    public void setIniFileForUnitTest(IniFileModel iniFile) {
+        this.iniFile = iniFile;
+    }
+
     public static String findCommand(byte command) {
         switch (command) {
             case Integration.TS_COMMAND_F:
@@ -102,6 +121,8 @@ public class BinaryProtocol {
                 return "READ";
             case Integration.TS_GET_TEXT:
                 return "TS_GET_TEXT";
+            case Integration.TS_GET_CONFIG_ERROR:
+                return "TS_GET_CONFIG_ERROR";
             case Integration.TS_GET_FIRMWARE_VERSION:
                 return "GET_FW_VERSION";
             case Integration.TS_CHUNK_WRITE_COMMAND:
@@ -141,10 +162,12 @@ public class BinaryProtocol {
         // Skip the global status change for short-lived scanner probes (notifyGlobalStatusOnClose=false)
         // so they don't disrupt the main console connection.
         stream.addCloseListener(() -> {
-            if (linkManager.getNotifyGlobalStatusOnClose()) {
-                ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED);
+            synchronized (publicationLock) {
+                if (linkManager.getNotifyGlobalStatusOnClose()) {
+                    ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED);
+                }
+                SensorCentral.getInstance().reset();
             }
-            SensorCentral.getInstance().reset();
         });
     }
 
@@ -295,9 +318,11 @@ public class BinaryProtocol {
         Runnable textPull = new Runnable() {
             @Override
             public void run() {
+                Future<?> pendingPoll = null;
                 while (!stream.isClosed()) {
-                    if (linkManager.COMMUNICATION_QUEUE.isEmpty() && linkManager.getNeedPullData()) {
-                        linkManager.submit(new Runnable() {
+                    if ((pendingPoll == null || pendingPoll.isDone())
+                            && linkManager.COMMUNICATION_QUEUE.isEmpty() && linkManager.getNeedPullData()) {
+                        pendingPoll = linkManager.submit(new Runnable() {
                             @Override
                             public void run() {
                                 isGoodOutputChannels = requestOutputChannels();
@@ -305,7 +330,9 @@ public class BinaryProtocol {
                                 if (isGoodOutputChannels)
                                     HeartBeatListeners.onDataArrived();
                                 binaryProtocolLogger.compositeLogic(BinaryProtocol.this);
-                                if (linkManager.isNeedPullText()) {
+                                long now = System.nanoTime();
+                                if (linkManager.isNeedPullText() && now >= nextTextPullNanos) {
+                                    nextTextPullNanos = now + TimeUnit.MILLISECONDS.toNanos(Timeouts.TEXT_PULL_PERIOD);
                                     String text = requestPendingTextMessages();
                                     if (text != null) {
                                         textListener.onDataArrived((text + "\r\n").getBytes());
@@ -320,7 +347,9 @@ public class BinaryProtocol {
                             }
                         });
                     }
-                    sleep(Timeouts.TEXT_PULL_PERIOD);
+                    sleep(lastOutputPollWasFull
+                        ? Timeouts.FULL_OUTPUT_CHANNEL_PULL_PERIOD
+                        : Timeouts.OUTPUT_CHANNEL_PULL_PERIOD);
                 }
                 log.info("Port shutdown: Stopping text pull");
             }
@@ -390,6 +419,10 @@ public class BinaryProtocol {
      * @return true if image was successfully read (or not needed), false if read failed
      */
     public boolean readImage(final Arguments arguments, final ConfigurationImageMeta meta) {
+        if (stream.isClosed()) {
+            return false;
+        }
+        ConfigurationImage loadedImage = null;
         if (arguments.needImage) {
             ConfigurationImageWithMeta image = BinaryProtocolLocalCache.getAndValidateLocallyCached(this);
 
@@ -401,20 +434,34 @@ public class BinaryProtocol {
                 if (image.isEmpty()) {
                     // Image read failed — revert to NOT_CONNECTED so the watchdog can retry.
                     // Without this, the status stays LOADING indefinitely.
-                    ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED);
+                    synchronized (publicationLock) {
+                        // A closed session has already reported disconnect. It must not
+                        // overwrite the status of a replacement connection.
+                        if (!stream.isClosed() && linkManager.getNotifyGlobalStatusOnClose()) {
+                            ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED);
+                        }
+                    }
                     return false;
                 }
             }
-            ConfigurationImage loadedImage = image.getConfigurationImage();
-            setConfigurationImage(loadedImage);
-            state.setCachedImage(loadedImage);
-            log.info(stream + ": Got configuration from controller " + meta.getImageSize() + " byte(s)");
+            loadedImage = image.getConfigurationImage();
         }
-        // Only update global connection status for persistent connections (not scanner probes)
-        if (linkManager.getNotifyGlobalStatusOnClose()) {
-            ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.CONNECTED);
+        synchronized (publicationLock) {
+            // Also covers a cached image validated just before the stream closed.
+            if (stream.isClosed()) {
+                return false;
+            }
+            if (loadedImage != null) {
+                setConfigurationImage(loadedImage);
+                state.setCachedImage(loadedImage);
+                log.info(stream + ": Got configuration from controller " + meta.getImageSize() + " byte(s)");
+            }
+            // Only update global connection status for persistent connections (not scanner probes)
+            if (linkManager.getNotifyGlobalStatusOnClose()) {
+                ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.CONNECTED);
+            }
+            return true;
         }
-        return true;
     }
 
     public static class Arguments {
@@ -482,8 +529,13 @@ public class BinaryProtocol {
                 continue;
             }
 
-            HeartBeatListeners.onDataArrived();
-            ConnectionStatusLogic.INSTANCE.markConnected();
+            synchronized (publicationLock) {
+                if (stream.isClosed()) {
+                    return ConfigurationImageWithMeta.VOID;
+                }
+                HeartBeatListeners.onDataArrived();
+                ConnectionStatusLogic.INSTANCE.markConnected();
+            }
             System.arraycopy(response, 1, image.getContent(), offset, requestSize);
 
             offset += requestSize;
@@ -836,21 +888,12 @@ public class BinaryProtocol {
     public String requestPendingTextMessages() {
         if (stream.isClosed())
             return null;
-        try {
-            byte[] response = executeCommand(Integration.TS_GET_TEXT, "text");
-            if (response == null) {
-                log.error("ERROR: TS_GET_TEXT failed");
-                return null;
-            }
-            if (response != null && response.length == 1) {
-                // todo: what is this sleep doing exactly?
-                Thread.sleep(100);
-            }
-            return new String(response, 1, response.length - 1);
-        } catch (InterruptedException e) {
-            log.error(e.toString());
+        byte[] response = executeCommand(Integration.TS_GET_TEXT, "text");
+        if (response == null) {
+            log.error("ERROR: TS_GET_TEXT failed");
             return null;
         }
+        return new String(response, 1, response.length - 1);
     }
 
     /**
@@ -859,42 +902,108 @@ public class BinaryProtocol {
      * @return true if successful
      */
     public boolean requestOutputChannels() {
+        OutputChannelDemand demand = SensorCentral.getInstance().getOutputChannelDemand();
+        if (linkManager.isNeedPullLiveData() && LiveDocsRegistry.INSTANCE.hasVisible()) {
+            demand = OutputChannelDemand.full(demand.getGeneration());
+        }
+        return requestOutputChannels(demand);
+    }
+
+    boolean requestOutputChannels(OutputChannelDemand demand) {
         if (stream.isClosed())
             return false;
 
+        OutputChannelPollPlan plan = OutputChannelPollPlan.create(iniFile, demand);
+        lastOutputPollWasFull = plan.isFull();
+        if (plan.isFull() && !demand.isFull() && !demand.getChannels().isEmpty()
+                && demand.getGeneration() != lastOutputFallbackGeneration) {
+            lastOutputFallbackGeneration = demand.getGeneration();
+            log.warn("Falling back to full output polling for unresolved demand " + demand.getChannels());
+        }
         // TODO: Get rid of the +1.  This adds a byte at the front to tack a fake TS response code on the front
         //  of the reassembled packet.
         int ochBlockSize = iniFile.getMetaInfo().getOchBlockSize();
         byte[] reassemblyBuffer = new byte[ochBlockSize + 1];
         reassemblyBuffer[0] = Integration.TS_RESPONSE_OK;
+        BitSet validBytes = new BitSet(ochBlockSize);
 
-        int reassemblyIdx = 0;
-        int remaining = ochBlockSize;
+        for (OutputChannelPollPlan.Range range : plan.getRanges()) {
+            int reassemblyIdx = range.getOffset();
+            int remaining = range.getSize();
 
-        while (remaining > 0) {
-            // If less than one full chunk left, do a smaller read
-            int chunkSize = Math.min(remaining, getBlockingFactor());
+            while (remaining > 0) {
+                // If less than one full chunk left, do a smaller read
+                int chunkSize = Math.min(remaining, getBlockingFactor());
 
-            byte[] response = executeCommand(
-                Integration.TS_OUTPUT_COMMAND,
-                GetOutputsCommand.createRequest(reassemblyIdx, chunkSize),
-                "output channels"
-            );
+                byte[] response = executeCommand(
+                    Integration.TS_OUTPUT_COMMAND,
+                    GetOutputsCommand.createRequest(reassemblyIdx, chunkSize),
+                    "output channels"
+                );
 
-            if (response == null || response.length != (chunkSize + 1) || response[0] != Integration.TS_RESPONSE_OK) {
-                return false;
+                if (stream.isClosed() || response == null || response.length != (chunkSize + 1)
+                        || response[0] != Integration.TS_RESPONSE_OK) {
+                    return false;
+                }
+
+                // Copy this chunk in to the reassembly buffer
+                System.arraycopy(response, 1, reassemblyBuffer, reassemblyIdx + 1, chunkSize);
+                validBytes.set(reassemblyIdx, reassemblyIdx + chunkSize);
+                reassemblyIdx += chunkSize;
+                remaining -= chunkSize;
             }
-
-            // Copy this chunk in to the reassembly buffer
-            System.arraycopy(response, 1, reassemblyBuffer, reassemblyIdx + 1, chunkSize);
-            reassemblyIdx += chunkSize;
-            remaining -= chunkSize;
         }
 
-        state.setCurrentOutputs(reassemblyBuffer);
+        OutputChannelSnapshot snapshot = new OutputChannelSnapshot(
+            reassemblyBuffer, validBytes, demand.getChannels(), plan.getGeneration(), plan.isFull());
+        // May issue another command. Keep it outside the publication lock, then recheck closure.
+        updateConfigError(snapshot, System.nanoTime());
+        synchronized (publicationLock) {
+            if (stream.isClosed()) {
+                return false;
+            }
+            state.setCurrentOutputs(plan.isFull() ? reassemblyBuffer : null);
+            SensorCentral.getInstance().grabSensorValues(snapshot, getIniFile(), getControllerConfiguration());
+            return true;
+        }
+    }
 
-        SensorCentral.getInstance().grabSensorValues(reassemblyBuffer, getIniFile(), getControllerConfiguration());
-        return true;
+    /** Read on the communication thread, before publishing the output snapshot to UI listeners. */
+    void updateConfigError(OutputChannelSnapshot snapshot, long nowNanos) {
+        Double active = ISensorHolder.tryReadOutputChannel(snapshot, snapshot.getResponse(),
+                CONFIG_ERROR_CHANNEL, getIniFile(), CONFIG_ERROR_CHANNEL);
+        if (active == null) {
+            return; // This selective poll did not include the indicator, or the INI lacks it.
+        }
+        if (active == 0) {
+            configErrorMessage = null;
+            configErrorReadScheduled = false;
+            return;
+        }
+        if (configErrorReadScheduled && nowNanos - nextConfigErrorReadNanos < 0) {
+            return;
+        }
+        // Retry unavailable text, and detect a changed error even if the indicator stays set.
+        // Limit traffic to one request per second instead of one per gauge refresh.
+        configErrorReadScheduled = true;
+        nextConfigErrorReadNanos = nowNanos + TimeUnit.SECONDS.toNanos(1);
+        byte[] response = executeCommand(Integration.TS_GET_CONFIG_ERROR, "configuration error");
+        if (response == null || response.length == 0 || response[0] != Integration.TS_RESPONSE_OK) {
+            return;
+        }
+        int end = 1;
+        while (end < response.length && response[end] != 0) {
+            end++;
+        }
+        String message = new String(response, 1, end - 1, StandardCharsets.US_ASCII).trim();
+        if (!message.isEmpty()) {
+            configErrorMessage = message;
+        }
+    }
+
+    @Nullable
+    public String getConfigErrorMessage() {
+        return configErrorMessage;
     }
 
     public BinaryProtocolState getBinaryProtocolState() {

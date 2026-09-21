@@ -7,7 +7,7 @@
 #include "redundant_ford_tps.h"
 #include "fallback_sensor.h"
 #include "frequency_sensor.h"
-#include "Lps25Sensor.h"
+#include "lps25.h"
 #include "linear_func.h"
 #include "resistance_func.h"
 #include "thermistor_func.h"
@@ -75,8 +75,8 @@ void RpmCalculator::showInfo(const char* /*sensorName*/) const {
 #endif // EFI_SHAFT_POSITION_INPUT
 }
 
-void Lps25Sensor::showInfo(const char* sensorName) const {
-	efiPrintf("%s: LPS25 baro %.2f kPa", sensorName, get().Value);
+void Lps25::showInfo(const char* sensorName) const {
+	efiPrintf("%s: LPS25 baro %.2f kPa, temperature %.1f", sensorName, get().Value, temperature);
 }
 
 void MapAverager::showInfo(const char* sensorName) const {

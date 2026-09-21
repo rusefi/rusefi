@@ -87,6 +87,8 @@ public class TuningToolbarWidget {
         this.baselineImage = baselineImage;
         undoButton.setEnabled(false);
         redoButton.setEnabled(false);
+        undoButton.setToolTipText("Undo the last tune change");
+        redoButton.setToolTipText("Redo the last undone tune change");
 
         Runnable updateButtons = () -> {
             undoButton.setEnabled(!undoStack.isEmpty());
@@ -206,6 +208,7 @@ public class TuningToolbarWidget {
                                                 CalibrationDialogWidget right,
                                                 AtomicReference<ConfigurationImage> sessionImage) {
         JButton burnButton = new JButton("Burn to ECU");
+        burnButton.setToolTipText("Save the current tune to persistent ECU memory");
         burnButton.addActionListener(e -> burnToEcuAndThen(right, null));
         return burnButton;
     }
@@ -254,6 +257,7 @@ public class TuningToolbarWidget {
                                               AtomicReference<String> currentKey,
                                               Runnable updateButtons) {
         JButton discardButton = new JButton("Discard changes");
+        discardButton.setToolTipText("Restore the tune from the last load or burn");
 
         discardButton.addActionListener(e -> {
             if (baselineImage == null) {

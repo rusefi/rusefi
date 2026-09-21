@@ -740,7 +740,7 @@ Output Max Duty Cycle
 How long to look back for TPS-based acceleration enrichment. Increasing this time will trigger enrichment for longer when a throttle position change occurs.
 
 ### tpsDecelEnleanmentThreshold
-For decel we simply multiply delta of TPS and tFor decel we do not use table?!
+Deceleration is detected when the largest signed TPS change between adjacent samples in the history is below the negative of this threshold. Units are TPS percentage points per sample (50 ms). A zero or positive change elsewhere in the history can mask a throttle-closing step.
 
 ### tpsDecelEnleanmentMultiplier
 Magic multiplier, we multiply delta of TPS and get fuel squirt duration
@@ -1238,7 +1238,7 @@ Below this speed, disable DFCO. Use this to prevent jerkiness from fuel enable/d
 Above this speed, allow DFCO. Use this to prevent jerkiness from fuel enable/disable in low gears.
 
 ### tpsAccelEnrichmentThreshold
-Maximum change delta of TPS percentage over the 'length'. Actual TPS change has to be above this value in order for TPS/TPS acceleration to kick in.
+Acceleration is detected when the largest signed TPS change between adjacent samples in the history exceeds this threshold. Units are TPS percentage points per sample (50 ms), not percent per second or total change over the lookback window. A change from 10% to 20% is 10 percentage points.
 
 ### totalGearsCount
 
@@ -1270,17 +1270,8 @@ Maximum amount of time the solenoid can be active before assuming a programming 
 ### stepperDcInvertedPins
 Enable if DC-motor driver (H-bridge) inverts the signals (eg. RZ7899 on Hellen boards)
 
-### canOpenBLT
-Allow OpenBLT on Primary CAN
-
-### can2OpenBLT
-Allow OpenBLT on Secondary CAN
-
 ### injectorFlowAsMassFlow
 Select whether to configure injector flow in volumetric flow (default, cc/min) or mass flow (g/s).
-
-### boardUseCanTerminator
-
 
 ### kLineDoHondaSend
 
@@ -1927,6 +1918,12 @@ Delay before cutting fuel due to low oil pressure. Use this to ignore short pres
 ### engineShutDownPeriod
 
 
+### can3ListenMode
+
+
+### verboseCan3
+
+
 ### knockSuppressMinTps
 Below TPS value all knock suppression will be disabled.
 
@@ -1956,6 +1953,9 @@ This is the pressure at which your injector flow is known.\nFor example if your 
 
 ### keepIdleSolenoidWhenStopped
 By default the idle solenoid is switched off whenever the engine is not turning, to be quieter and save power. Enable this to keep driving it to the position the idle controller asks for, which at zero RPM is the cranking curve for the current coolant temperature - for valves which need to rest somewhere other than de-energized. The valve is only driven for a minute after the engine stops turning, then switched off anyway to protect the coil and the battery.
+
+### canSnifferIncludeBus
+Include CAN bus in trace using Elmue SLCAN prefixes (CAN1: none, CAN2: &, CAN3: $). Disable for standard SLCAN clients such as SavvyCAN or slcand. Reconnect the sniffer after changing this setting.
 
 ### nitrousLuaGaugeArmingValue
 
@@ -2113,6 +2113,9 @@ Dwell Duty Mode: when enabled, ignores the RPM/voltage dwell tables and computes
 ### dwellDutyPercent
 Dwell Duty Mode: percentage of the inter-spark interval used as coil dwell time. 50 = half the interval between pulses (standard TFI target).
 
+### idleParkNeutralOffset
+Signed idle position offset when Lua reports Park or Neutral via setParkNeutral(boolean). Negative values reduce opening, positive values increase it. Added to running open-loop idle, not target RPM. Zero disables the correction.
+
 ### tcu_shiftTime
 
 
@@ -2213,5 +2216,8 @@ Dwell Duty Mode: percentage of the inter-spark interval used as coil dwell time.
 
 
 ### wizardInjectorOutputs
+
+
+### wizardVeTable
 
 

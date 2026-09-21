@@ -101,12 +101,26 @@ jobs:
         custom_tag: ${{ env.date }}
         tag_prefix: ''
 
+    - uses: actions/checkout@v7
+      if: ${{ env.upload == 'release' }}
+      with:
+        sparse-checkout: misc/actions
+        sparse-checkout-cone-mode: false
+
+    - name: Generate Changelog
+      # commits since the previous nightly tag, see misc/actions/nightly_changelog.sh
+      if: ${{ env.upload == 'release' }}
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: bash misc/actions/nightly_changelog.sh "${{ github.repository }}" "${{ env.date }}" "${{ github.sha }}" changelog.md
+
     - name: Create Release
       if: ${{ env.upload == 'release' }}
       uses: ncipollo/release-action@v1.21.0
       with:
         tag: ${{ env.date }}
         name: "Nightly ${{ env.date }}"
+        bodyFile: changelog.md
         artifacts: "artifacts/rusefi_bundle_*.zip"
         replacesArtifacts: false
         token: ${{ secrets.NIGHTLY_RELEASE_ACCESS_TOKEN }}
@@ -299,6 +313,8 @@ jobs:
         replacesArtifacts: false
         token: ${{ secrets.NIGHTLY_RELEASE_ACCESS_TOKEN }}
         allowUpdates: true
+        # keep the changelog written by the 'release' job, this step only attaches bundles
+        omitBodyDuringUpdate: true
         prerelease: true
 
     - name: Upload .ini files to rusEFI Online server

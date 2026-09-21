@@ -17,7 +17,7 @@
 
 
 class TpsAccelEnrichment : public tps_accel_state_s, public EngineModule {
-#ifdef EFI_UNIT_TEST
+#if EFI_UNIT_TEST
 public:
 #endif
 	// This flag is set by onNewValue() when an accel event is detected

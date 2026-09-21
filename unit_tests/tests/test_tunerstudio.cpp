@@ -2,6 +2,128 @@
 #include "tunerstudio.h"
 #include "tunerstudio_io.h"
 #include "tunerstudio_impl.h"
+#include "binary_mlg_logging.h"
+#include "mlg_field.h"
+
+TEST(TunerStudioState, EngineStateLogField) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engine->outputChannels.engine = 0x3f;
+	int matches = 0;
+	MLG::forEachField([&](const MLG::Entries::Field& field) {
+		if (strcmp(field.getName(), "Engine") == 0) {
+			matches++;
+			EXPECT_EQ(1u, field.getSize());
+			EXPECT_STREQ("", field.getUnits());
+			EXPECT_DOUBLE_EQ(0x3f, field.readValueAsDouble(MLG::getUnitTestFieldOffset(field)));
+		}
+	});
+	EXPECT_EQ(1, matches);
+}
+
+class TunerStudioEngineState : public ::testing::Test {
+protected:
+	EngineTestHelper eth{engine_type_e::TEST_ENGINE};
+
+	void SetUp() override {
+		engineConfiguration->cranking.rpm = 400;
+		engine->rpmCalculator.setRpmValue(1000);
+		engine->fuelComputer.running.postCrankingFuelCorrection = 1;
+		engine->fuelComputer.running.coolantTemperatureCoefficient = 1;
+		engine->engineState.tpsAccelEnrich = 0;
+		engineConfiguration->accelEnrichmentMode = AE_MODE_MS_ADDER;
+		engineConfiguration->coastingFuelCutEnabled = false;
+		engine->module<TpsAccelEnrichment>()->isAboveAccelThreshold = false;
+		engine->module<TpsAccelEnrichment>()->isBelowDecelThreshold = false;
+	}
+
+	uint8_t readState() {
+		updateTunerStudioState();
+		return engine->outputChannels.engine;
+	}
+};
+
+TEST_F(TunerStudioEngineState, RunningCrankingAndStopped) {
+	EXPECT_EQ(0x01, readState());
+	engine->rpmCalculator.setRpmValue(0);
+	EXPECT_EQ(0x00, readState());
+	engine->rpmCalculator.setRpmValue(200);
+	EXPECT_EQ(0x02, readState() & 0x03);
+	engine->rpmCalculator.setRpmValue(1000);
+	EXPECT_EQ(0x01, readState() & 0x03);
+}
+
+TEST_F(TunerStudioEngineState, AfterStartAndWarmup) {
+	engine->fuelComputer.running.postCrankingFuelCorrection = 1.2f;
+	EXPECT_EQ(0x05, readState());
+	engine->fuelComputer.running.coolantTemperatureCoefficient = 1.3f;
+	EXPECT_EQ(0x0d, readState());
+	engine->fuelComputer.running.postCrankingFuelCorrection = 1;
+	EXPECT_EQ(0x09, readState());
+	engine->fuelComputer.running.coolantTemperatureCoefficient = 1;
+	EXPECT_EQ(0x01, readState());
+}
+
+TEST_F(TunerStudioEngineState, TpsThresholdsAndAdderDecay) {
+	auto& ae = engine->module<TpsAccelEnrichment>();
+	for (auto mode : {AE_MODE_MS_ADDER, AE_MODE_PERCENT_ADDER}) {
+		engineConfiguration->accelEnrichmentMode = mode;
+		ae->isAboveAccelThreshold = true;
+		EXPECT_EQ(0x11, readState());
+		ae->isAboveAccelThreshold = false;
+		engine->engineState.tpsAccelEnrich = 0.2f;
+		EXPECT_EQ(0x11, readState());
+		engine->engineState.tpsAccelEnrich = -0.2f;
+		EXPECT_EQ(0x21, readState());
+		engine->engineState.tpsAccelEnrich = 0;
+		ae->isBelowDecelThreshold = true;
+		EXPECT_EQ(0x21, readState());
+		ae->isBelowDecelThreshold = false;
+		// Internal diagnostics alone do not mean the adder was applied.
+		ae->extraFuel = 10;
+		EXPECT_EQ(0x01, readState());
+	}
+}
+
+TEST_F(TunerStudioEngineState, PredictiveMapIgnoresStaleAdderState) {
+	engineConfiguration->accelEnrichmentMode = AE_MODE_PREDICTIVE_MAP;
+	auto& ae = engine->module<TpsAccelEnrichment>();
+	ae->extraFuel = 10;
+	ae->isAboveAccelThreshold = true;
+	ae->isBelowDecelThreshold = true;
+	engine->engineState.tpsAccelEnrich = 10;
+	EXPECT_EQ(0x01, readState());
+	ae->isAboveAccelThreshold = false;
+	engine->outputChannels.isMapPredictionActive = true;
+	EXPECT_EQ(0x11, readState());
+	engine->outputChannels.isMapPredictionActive = false;
+	EXPECT_EQ(0x01, readState());
+}
+
+TEST_F(TunerStudioEngineState, DfcoSetsDecelerationInEveryMode) {
+	engineConfiguration->coastingFuelCutEnabled = true;
+	engineConfiguration->coastingFuelCutRpmHigh = 1500;
+	engineConfiguration->coastingFuelCutRpmLow = 1300;
+	engineConfiguration->coastingFuelCutTps = 2;
+	engineConfiguration->coastingFuelCutClt = 30;
+	engineConfiguration->coastingFuelCutMap = 100;
+	engineConfiguration->coastingFuelCutVssHigh = 0;
+	engineConfiguration->coastingFuelCutVssLow = 0;
+	engineConfiguration->dfcoDelay = 0;
+	Sensor::setMockValue(SensorType::Rpm, 2000);
+	Sensor::setMockValue(SensorType::Clt, 90);
+	Sensor::setMockValue(SensorType::Map, 20);
+	for (auto mode : {AE_MODE_MS_ADDER, AE_MODE_PERCENT_ADDER, AE_MODE_PREDICTIVE_MAP}) {
+		engineConfiguration->accelEnrichmentMode = mode;
+		Sensor::setMockValue(SensorType::DriverThrottleIntent, 0);
+		engine->module<DfcoController>()->update();
+		ASSERT_TRUE(engine->module<DfcoController>()->cutFuel());
+		EXPECT_EQ(0x21, readState());
+		Sensor::setMockValue(SensorType::DriverThrottleIntent, 10);
+		engine->module<DfcoController>()->update();
+		ASSERT_FALSE(engine->module<DfcoController>()->cutFuel());
+		EXPECT_EQ(0x01, readState());
+	}
+}
 
 static uint8_t st5TestBuffer[16000];
 
@@ -208,6 +330,58 @@ TEST(TunerstudioCommands, outOfRangeWriteChunkSendsExactlyOneError) {
 
 	EXPECT_EQ(tsState.errorOutOfRange - prevErrors, 1);
 }
+
+#if EFI_TS_SCATTER
+// Page 2 entries pack a 3-bit type in bits 15..13 (0 = unused, 1..4 = 1/2/4/8 bytes)
+// and a 13-bit live-data offset in the low bits.
+static constexpr uint16_t packScatterEntry(uint16_t type, uint16_t offset) {
+	return static_cast<uint16_t>((type << 13) | (offset & 0x1FFF));
+}
+
+// #10155: a host-writable type 5..7 entry used to decode to 16/32/64 bytes and
+// overflow the 8-byte stack buffer in handleScatteredReadCommand()
+TEST(TunerstudioCommands, scatteredReadRejectsOversizedEntryType) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	BufferTsChannel channel;
+	int prevErrors = tsState.errorOutOfRange;
+
+	channel.page2 = page2_s{};
+	channel.page2.highSpeedOffsets[0] = packScatterEntry(4, 0);
+	// entry in the middle of the list, so the loop must not stop early on the first valid one
+	channel.page2.highSpeedOffsets[5] = packScatterEntry(7, 0);
+
+	TunerStudio ts;
+	ts.handleScatteredReadCommand(&channel);
+
+	EXPECT_EQ(channel.writeIdx, TS_ERROR_PACKET_SIZE);
+	EXPECT_EQ(st5TestBuffer[2], TS_RESPONSE_OUT_OF_RANGE);
+	EXPECT_EQ(tsState.errorOutOfRange - prevErrors, 1);
+}
+
+TEST(TunerstudioCommands, scatteredReadAcceptsAllValidEntryTypes) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	BufferTsChannel channel;
+	int prevErrors = tsState.errorOutOfRange;
+
+	channel.page2 = page2_s{};
+	// one entry of each valid size: 1 + 2 + 4 + 8 bytes
+	channel.page2.highSpeedOffsets[0] = packScatterEntry(1, 0);
+	channel.page2.highSpeedOffsets[1] = packScatterEntry(2, 0);
+	channel.page2.highSpeedOffsets[2] = packScatterEntry(3, 0);
+	channel.page2.highSpeedOffsets[3] = packScatterEntry(4, 0);
+	static constexpr size_t expectedPayload = 1 + 2 + 4 + 8;
+
+	TunerStudio ts;
+	ts.handleScatteredReadCommand(&channel);
+
+	// 2-byte length + 1-byte response code + payload + 4-byte CRC
+	EXPECT_EQ(channel.writeIdx, 2 + 1 + expectedPayload + 4);
+	EXPECT_EQ(st5TestBuffer[0], 0);
+	EXPECT_EQ(st5TestBuffer[1], 1 + expectedPayload);
+	EXPECT_EQ(st5TestBuffer[2], TS_RESPONSE_OK);
+	EXPECT_EQ(tsState.errorOutOfRange - prevErrors, 0);
+}
+#endif // EFI_TS_SCATTER
 
 // ---------------------------------------------------------------------------
 // isTuningVeNow — detect tuning and suspend STFT/LTFT

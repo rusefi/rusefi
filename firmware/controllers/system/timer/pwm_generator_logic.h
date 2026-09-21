@@ -111,7 +111,7 @@ private:
 	bool forceCycleStart = true;
 };
 
-struct hardware_pwm;
+#include "hardware_pwm.h"
 
 struct IPwm {
 	virtual void setSimplePwmDutyCycle(float dutyCycle) = 0;
@@ -122,6 +122,12 @@ public:
 	SimplePwm();
 	SimplePwm(const char *name);
 	void setSimplePwmDutyCycle(float dutyCycle) override;
+	/**
+	 * Hides PwmConfig::setFrequency(): a SimplePwm backed by hardware PWM (see startSimplePwmHard() and the
+	 * gpio-chip path in startSimplePwm()) reprograms the timer instead of the software period.
+	 * @return false only when hardware PWM is attached and cannot do that frequency; the old frequency stays.
+	 */
+	bool setFrequency(float frequency);
 	MultiChannelStateSequenceWithData<2> seq;
 	hardware_pwm* hardPwm = nullptr;
 };

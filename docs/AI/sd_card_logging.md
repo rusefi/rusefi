@@ -142,6 +142,13 @@ Output channels: `sd_present`, `sd_error` (last FRESULT), `sd_formating`,
 `sdLoggingState` (SdLogTrigger state), `sd_logging_internal` (logger active),
 `sd_active_wr`/`sd_active_rd` (block device busy).
 
+`sdCardMode` is the one-byte `SD_MODE` value: 0 IDLE, 1 ECU, 2 PC,
+3 UNMOUNT, 4 FORMAT. It reports ownership independently of logging activity;
+ECU mode remains valid while logging is suppressed or waiting for a trigger.
+Check `sd_present` too. The ECU MCP tools `mount_to_ecu` and `mount_to_pc`
+send the TS SD mount command and wait for a fresh mode/presence report;
+see `java_console/mcp_ecu/README.md` for timeout and USB-disconnect behavior.
+
 Console: `sdinfo` (status, pinout, SPI clocks, current file), `sdmode
 <pc|ecu|off|unmount|auto|format>`, `sdsuppresslogging`, `sd_test_write1mb`
 (throughput test), `del <file>`, `delreports`.

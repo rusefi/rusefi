@@ -32,13 +32,22 @@ typedef enum  {
 	UsageFault = 6,
 } FaultType;
 
-void logHardFault(uint32_t type, uintptr_t faultAddress, void* sp, struct port_extctx* ctx, uint32_t csfr);
+void logHardFault(uint32_t type, uintptr_t faultAddress, void* sp, uint32_t csfr);
+
+/*
+ * Evidence-first rules shared by all three handlers below:
+ *  - mpuDisable() before anything else. With PORT_ENABLE_GUARD_PAGES (F7) the first 32 bytes
+ *    of every thread working area are no-access, and a stack overflow into that guard page
+ *    can arrive here as a HardFault (escalated MemManage: PRIMASK set, or a fault inside
+ *    another fault handler), not only as MemManage. Dereferencing 'sp' while that region is
+ *    still no-access faults again inside the handler -> lockup -> watchdog reset with NO
+ *    cookie written, i.e. a reboot with no info.
+ *  - logHardFault() stamps the backup-SRAM cookie before it copies anything from 'sp', so a
+ *    garbage stack pointer can at worst lose the register/stack snapshot, not the whole report.
+ */
 
 void HardFault_Handler_C(void* sp) {
-	//Copy to local variables (not pointers) to allow GDB "i loc" to directly show the info
-	//Get thread context. Contains main registers including PC and LR
-	struct port_extctx ctx;
-	memcpy(&ctx, sp, sizeof(struct port_extctx));
+	mpuDisable();
 
 	//Interrupt status register: Which interrupt have we encountered, e.g. HardFault?
 	volatile FaultType faultType = (FaultType)__get_IPSR();
@@ -59,21 +68,23 @@ void HardFault_Handler_C(void* sp) {
 	(void)isFaultOnStacking;
 	(void)isFaultAddressValid;
 
-	logHardFault(faultType, faultAddress, sp, &ctx, SCB->CFSR >> SCB_CFSR_BUSFAULTSR_Pos);
+	logHardFault(faultType, faultAddress, sp, SCB->CFSR >> SCB_CFSR_BUSFAULTSR_Pos);
 
 	// check if debugger is connected
 	if (CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk)
 	{
+		//Copy to local variables (not pointers) to allow GDB "i loc" to directly show the info
+		//Get thread context. Contains main registers including PC and LR
+		struct port_extctx ctx;
+		memcpy(&ctx, sp, sizeof(struct port_extctx));
+		(void)ctx;
 		bkpt();
 	}
 	rebootNow();
 }
 
 void UsageFault_Handler_C(void* sp) {
-	//Copy to local variables (not pointers) to allow GDB "i loc" to directly show the info
-	//Get thread context. Contains main registers including PC and LR
-	struct port_extctx ctx;
-	memcpy(&ctx, sp, sizeof(struct port_extctx));
+	mpuDisable();
 
 	//Interrupt status register: Which interrupt have we encountered, e.g. HardFault?
 	volatile FaultType faultType = (FaultType)__get_IPSR();
@@ -93,11 +104,14 @@ void UsageFault_Handler_C(void* sp) {
 	(void)isUnalignedAccessFault;
 	(void)isDivideByZeroFault;
 
-	logHardFault(faultType, 0, sp, &ctx, SCB->CFSR);
+	logHardFault(faultType, 0, sp, SCB->CFSR);
 
 	// check if debugger is connected
 	if (CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk)
 	{
+		struct port_extctx ctx;
+		memcpy(&ctx, sp, sizeof(struct port_extctx));
+		(void)ctx;
 		bkpt();
 	}
 	rebootNow();
@@ -106,11 +120,6 @@ void UsageFault_Handler_C(void* sp) {
 void MemManage_Handler_C(void* sp) {
 	// Disable the MPU so we don't get smacked with a double fault while trying to save state
 	mpuDisable();
-
-	//Copy to local variables (not pointers) to allow GDB "i loc" to directly show the info
-	//Get thread context. Contains main registers including PC and LR
-	struct port_extctx ctx;
-	memcpy(&ctx, sp, sizeof(struct port_extctx));
 
 	//Interrupt status register: Which interrupt have we encountered, e.g. HardFault?
 	FaultType faultType = (FaultType)__get_IPSR();
@@ -131,11 +140,14 @@ void MemManage_Handler_C(void* sp) {
 	(void)isExceptionStackingFault;
 	(void)isFaultAddressValid;
 
-	logHardFault(faultType, faultAddress, sp, &ctx, SCB->CFSR);
+	logHardFault(faultType, faultAddress, sp, SCB->CFSR);
 
 	// check if debugger is connected
 	if (CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk)
 	{
+		struct port_extctx ctx;
+		memcpy(&ctx, sp, sizeof(struct port_extctx));
+		(void)ctx;
 		bkpt();
 	}
 	rebootNow();

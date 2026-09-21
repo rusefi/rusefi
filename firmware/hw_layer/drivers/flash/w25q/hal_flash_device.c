@@ -125,33 +125,7 @@ static const wspi_command_t w25q_cmd_read_id = {
   .dummy            = 0
 };
 
-/* Initial W25Q_CMD_WRITE_ENHANCED_V_CONF_REGISTER command.*/
-static const wspi_command_t w25q_cmd_write_evconf = {
-  .cmd              = W25Q_CMD_WRITE_ENHANCED_V_CONF_REGISTER,
-  .cfg              = 0U |
-#if W25Q_SWITCH_WIDTH == TRUE
-                      WSPI_CFG_CMD_MODE_ONE_LINE |
-                      WSPI_CFG_DATA_MODE_ONE_LINE,
-#else
-#if W25Q_BUS_MODE == W25Q_BUS_MODE_WSPI1L
-                      WSPI_CFG_CMD_MODE_ONE_LINE |
-                      WSPI_CFG_DATA_MODE_ONE_LINE,
-#elif W25Q_BUS_MODE == W25Q_BUS_MODE_WSPI2L
-                      WSPI_CFG_CMD_MODE_TWO_LINES |
-                      WSPI_CFG_DATA_MODE_TWO_LINES,
-#elif W25Q_BUS_MODE == W25Q_BUS_MODE_WSPI4L
-                      WSPI_CFG_CMD_MODE_FOUR_LINES |
-                      WSPI_CFG_DATA_MODE_FOUR_LINES,
-#else
-                      WSPI_CFG_CMD_MODE_EIGHT_LINES |
-                      WSPI_CFG_DATA_MODE_EIGHT_LINES,
-#endif
-#endif
-  .addr             = 0,
-  .alt              = 0,
-  .dummy            = 0
-};
-
+#if 0
 /* Initial W25Q_CMD_WRITE_ENABLE command.*/
 static const wspi_command_t w25q_cmd_write_enable = {
   .cmd              = W25Q_CMD_WRITE_ENABLE,
@@ -173,6 +147,7 @@ static const wspi_command_t w25q_cmd_write_enable = {
   .alt              = 0,
   .dummy            = 0
 };
+#endif
 
 #endif /* SNOR_BUS_DRIVER == SNOR_BUS_DRIVER_WSPI */
 
@@ -193,13 +168,13 @@ static bool w25q_find_id(const uint8_t *set, size_t size, uint8_t element) {
 
 static flash_error_t w25q_poll_status(SNORDriver *devp) {
   int timeout = 100;
+  uint8_t *sts = devp->nocache->buf;
 
   do {
-    uint8_t sts;
     /* Read status command.*/
     bus_cmd_receive(devp, W25Q_CMD_READ_STATUS_REGISTER,
-                    1, &sts);
-    if ((sts & W25Q_FLAGS_BUSY) == 0U) {
+                    1, sts);
+    if ((*sts & W25Q_FLAGS_BUSY) == 0U) {
       break;
     }
 #if W25Q_NICE_WAITING == TRUE
@@ -262,8 +237,8 @@ static void w25q_reset_memory(SNORDriver *devp) {
     .dummy            = 0
   };
 
-  wspiCommand(devp, &cmd_reset_enable_4);
-  wspiCommand(devp, &cmd_reset_4);
+  wspiCommand(devp->config->busp, &cmd_reset_enable_4);
+  wspiCommand(devp->config->busp, &cmd_reset_4);
 #else
   /* 2x W25Q_CMD_RESET_ENABLE command.*/
   static const wspi_command_t cmd_reset_enable_2 = {
@@ -283,15 +258,38 @@ static void w25q_reset_memory(SNORDriver *devp) {
     .dummy            = 0
   };
 
-  wspiCommand(devp, &cmd_reset_enable_2);
-  wspiCommand(devp, &cmd_reset_2);
+  wspiCommand(devp->config->busp, &cmd_reset_enable_2);
+  wspiCommand(devp->config->busp, &cmd_reset_2);
 #endif
 
   /* Now the device should be in one bit mode for sure and we perform a
      device reset.*/
-  wspiCommand(devp, &cmd_reset_enable_1);
-  wspiCommand(devp, &cmd_reset_1);
+  wspiCommand(devp->config->busp, &cmd_reset_enable_1);
+  wspiCommand(devp->config->busp, &cmd_reset_1);
 }
+
+static void w25q_enter_qpi(SNORDriver *devp) {
+  static const wspi_command_t cmd_enter_qpi = {
+    .cmd              = W25Q_CMD_ENTER_QPI,
+    .cfg              = WSPI_CFG_CMD_MODE_ONE_LINE,
+    .addr             = 0,
+    .alt              = 0,
+    .dummy            = 0
+  };
+  wspiCommand(devp->config->busp, &cmd_enter_qpi);
+}
+
+static void w25q_exit_qpi(SNORDriver *devp) {
+  static const wspi_command_t cmd_exit_qpi = {
+    .cmd              = W25Q_CMD_EXIT_QPI,
+    .cfg              = WSPI_CFG_CMD_MODE_FOUR_LINES,
+    .addr             = 0,
+    .alt              = 0,
+    .dummy            = 0
+  };
+  wspiCommand(devp->config->busp, &cmd_exit_qpi);
+}
+
 #endif /* SNOR_BUS_DRIVER == SNOR_BUS_DRIVER_WSPI */
 
 static const uint8_t w25q_manufacturer_ids[] = W25Q_SUPPORTED_MANUFACTURE_IDS;
@@ -315,7 +313,7 @@ static bool w25q_id_valid(const uint8_t id[3]) {
 /*===========================================================================*/
 
 void snor_device_init(SNORDriver *devp) {
-  uint8_t id[3] = {0U, 0U, 0U};
+  uint8_t *id = devp->nocache->buf;
 
 #if SNOR_BUS_DRIVER == SNOR_BUS_DRIVER_SPI
   /* An MCU reset does not reset the flash chip. If the previous session was
@@ -358,12 +356,16 @@ void snor_device_init(SNORDriver *devp) {
      because a CPU reset does not reset the memory too.*/
   snor_reset_xip(devp);
 
+  /* Attempting to exit QPI mode, it could be in an unexpected state
+     because a CPU reset does not reset the memory too.*/
+  w25q_exit_qpi(devp);
+
   /* Attempting a reset of the device, it could be in an unexpected state
      because a CPU reset does not reset the memory too.*/
   w25q_reset_memory(devp);
 
   /* Reading device ID and unique ID.*/
-  wspiReceive(devp, &w25q_cmd_read_id,
+  wspiReceive(devp->config->busp, &w25q_cmd_read_id,
               3U, id);
 #endif /* SNOR_BUS_DRIVER == SNOR_BUS_DRIVER_WSPI */
 
@@ -381,6 +383,12 @@ void snor_device_init(SNORDriver *devp) {
   snor_descriptor.sectors_count = (1U << (size_t)id[2]) /
                                   SECTOR_SIZE;
   snor_descriptor.size = (size_t)snor_descriptor.sectors_count * SECTOR_SIZE;
+
+#if SNOR_BUS_DRIVER == SNOR_BUS_DRIVER_WSPI
+#if W25Q_BUS_MODE == W25Q_BUS_MODE_WSPI4L
+  w25q_enter_qpi(devp);
+#endif
+#endif
 }
 
 flash_error_t snor_device_read(SNORDriver *devp, flash_offset_t offset,
@@ -461,7 +469,7 @@ flash_error_t snor_device_start_erase_sector(SNORDriver *devp,
 
 flash_error_t snor_device_verify_erase(SNORDriver *devp,
                                        flash_sector_t sector) {
-  uint8_t cmpbuf[W25Q_COMPARE_BUFFER_SIZE];
+  uint8_t *cmpbuf = devp->nocache->buf;
   flash_offset_t offset;
   size_t n;
 
@@ -472,15 +480,15 @@ flash_error_t snor_device_verify_erase(SNORDriver *devp,
 #if SNOR_BUS_DRIVER == SNOR_BUS_DRIVER_WSPI
     bus_cmd_addr_dummy_receive(devp, W25Q_CMD_FAST_READ,
                                offset, W25Q_READ_DUMMY_CYCLES,
-                               W25Q_COMPARE_BUFFER_SIZE, cmpbuf);
+                               SNOR_BUFFER_SIZE, cmpbuf);
 #else
     /* Normal read command in SPI mode.*/
     bus_cmd_addr_receive(devp, W25Q_CMD_READ,
-                         offset, W25Q_COMPARE_BUFFER_SIZE, cmpbuf);
+                         offset, SNOR_BUFFER_SIZE, cmpbuf);
 #endif
 
     /* Checking for erased state of current buffer.*/
-    for (size_t i = 0; i < W25Q_COMPARE_BUFFER_SIZE; i++) {
+    for (size_t i = 0; i < SNOR_BUFFER_SIZE; i++) {
       if (cmpbuf[i] != 0xFFU) {
         /* Ready state again.*/
         devp->state = FLASH_READY;
@@ -489,21 +497,21 @@ flash_error_t snor_device_verify_erase(SNORDriver *devp,
       }
     }
 
-    offset += W25Q_COMPARE_BUFFER_SIZE;
-    n -= W25Q_COMPARE_BUFFER_SIZE;
+    offset += SNOR_BUFFER_SIZE;
+    n -= SNOR_BUFFER_SIZE;
   }
 
   return FLASH_NO_ERROR;
 }
 
 flash_error_t snor_device_query_erase(SNORDriver *devp, uint32_t *msec) {
-  uint8_t sts;
+  uint8_t *sts = devp->nocache->buf;
   /* Read status command.*/
   bus_cmd_receive(devp, W25Q_CMD_READ_STATUS_REGISTER,
-                  1, &sts);
+                  1, sts);
 
   /* If the P/E bit is 1 (busy) report that the operation is still in progress.*/
-  if ((sts & W25Q_FLAGS_BUSY) != 0U) {
+  if ((*sts & W25Q_FLAGS_BUSY) != 0U) {
 
     /* Recommended time before polling again, this is a simplified
        implementation.*/
@@ -533,11 +541,12 @@ flash_error_t snor_device_read_sfdp(SNORDriver *devp, flash_offset_t offset,
 
 #if (SNOR_BUS_DRIVER == SNOR_BUS_DRIVER_WSPI) || defined(__DOXYGEN__)
 void snor_activate_xip(SNORDriver *devp) {
+  (void)devp;
 }
 
 void snor_reset_xip(SNORDriver *devp) {
   wspi_command_t cmd;
-  uint8_t buf[1];
+  uint8_t *buf = devp->nocache->buf;
 
   /* Resetting XIP mode by reading one byte without XIP confirmation bit.*/
   cmd.cmd   = 0U;
@@ -561,7 +570,7 @@ void snor_reset_xip(SNORDriver *devp) {
 #endif
               WSPI_CFG_ALT_MODE_FOUR_LINES |  /* Always 4 lines, note.*/
               WSPI_CFG_ALT_SIZE_8;
-  wspiReceive(devp, &cmd, 1, buf);
+  wspiReceive(devp->config->busp, &cmd, 1, buf);
 
   /* Enabling write operation.*/
   bus_cmd(devp, W25Q_CMD_WRITE_ENABLE);

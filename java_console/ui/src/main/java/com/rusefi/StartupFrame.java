@@ -84,6 +84,7 @@ public class StartupFrame {
     public static final String CHECK_TS_RUNNING = "check_ts_running";
     private static final String STARTUP_TAB_INDEX = "startup_tab_index";
     private static final String NO_PORTS_FOUND = "<html>No ports found!<br>Confirm blue LED is blinking</html>";
+    private static final String SOCKET_CAN_WITHOUT_ECU = "CAN connected, but no ECU replied";
     public static final String SCANNING_PORTS = "Scanning ports";
     private static final String CARD_SCANNING = "scanning";
     private static final String CARD_STARTUP = "startup";
@@ -125,7 +126,9 @@ public class StartupFrame {
     private ProgramSelector selector;
     private boolean firstTimeAutoConnect = true;
 
-    private final StatusPanelWithProgressBar firmwareStatusPanel = new StatusPanelWithProgressBar();
+    private final StatusPanelWithProgressBar firmwareStatusPanel = new StatusPanelWithProgressBar(
+        reason -> showFullScreenPanel(new com.rusefi.ui.wizard.FirmwareUpdateBlockedPanel(
+            reason, this::closeFullScreenPanel)), this::releaseSplashConnection);
     private final StatusPanel tuneStatusPanel = new StatusPanel(250);
     private final SingleAsyncJobExecutor asyncJobExecutor = new SingleAsyncJobExecutor(
         job -> job instanceof ImportTuneJob ? tuneStatusPanel : firmwareStatusPanel);
@@ -168,7 +171,8 @@ public class StartupFrame {
         // is free for the exclusive operation.
         asyncJobExecutor.addOnJobAboutToStartListener(() -> SwingUtilities.invokeLater(() ->
             setStartupFirmwareUpdateInProgress(isFirmwareOperationInProgress())));
-        asyncJobExecutor.addOnJobAboutToStartListener(this::releaseSplashConnection);
+        asyncJobExecutor.addOnJobAboutToStartListener(() -> asyncJobExecutor.getJobInProgress()
+            .ifPresent(job -> prepareSplashForJob(job, this::releaseSplashConnection)));
         asyncJobExecutor.addOnJobInProgressFinishedListener(this::onLiveConnectionJobFinished);
         asyncJobExecutor.addOnJobInProgressFinishedListener(() -> SwingUtilities.invokeLater(() ->
             setStartupFirmwareUpdateInProgress(false)));
@@ -488,9 +492,6 @@ public class StartupFrame {
         tuneManagementTab.onHardwareUpdated(connectivityContext.getCurrentHardware());
 
         wizardContainer = new WizardContainer(uiContext, /*compact=*/true);
-        wizardContainer.setOnWizardExit(() -> {
-            showCard(CARD_STARTUP);
-        });
         rootContent.add(outerTabs, CARD_STARTUP);
         rootContent.add(wizardContainer, CARD_WIZARD);
         rootContent.add(rollbackPicker, CARD_ROLLBACK);
@@ -636,8 +637,9 @@ public class StartupFrame {
             .orElse(null);
         boolean hasOpenBlt = openBltPort != null;
         if (ports.isEmpty()) {
-            noPortsMessage.setForeground(Color.red);
-            noPortsMessage.setText(NO_PORTS_FOUND);
+            String message = emptyHardwareMessage(currentHardware);
+            noPortsMessage.setForeground(SOCKET_CAN_WITHOUT_ECU.equals(message) ? Color.darkGray : Color.red);
+            noPortsMessage.setText(message);
         } else if (hasOpenBlt) {
             // A board sitting in the OpenBLT bootloader has no running firmware to auto-connect to —
             // mirror the auto-connect status line and point the user at the firmware-update flow.
@@ -666,6 +668,15 @@ public class StartupFrame {
             log.info("Single ECU detected, auto-connecting in background: " + target);
             autoConnect(target);
         }
+    }
+
+    static String emptyHardwareMessage(AvailableHardware hardware) {
+        boolean onlySocketCanDetected = hardware.isSocketCanAvailable()
+            && hardware.getKnownPorts().isEmpty()
+            && !hardware.isDfuFound()
+            && !hardware.isStLinkConnected()
+            && !hardware.isPCANConnected();
+        return onlySocketCanDetected ? SOCKET_CAN_WITHOUT_ECU : NO_PORTS_FOUND;
     }
 
     public static void setFrameIcon(Frame frame) {
@@ -912,6 +923,9 @@ public class StartupFrame {
     }
 
     private void onSplashConnected(PortResult target) {
+        if (isProceeding && !offlineConsoleOpen) {
+            return;
+        }
         if (autoConnectedPort == null || !autoConnectedPort.port.equals(target.port)) {
             // User cancelled or moved on — ignore the late event.
             return;
@@ -952,16 +966,50 @@ public class StartupFrame {
 
         maybeAutoCreateTsProject(target);
 
-        // Check standalone wizard catalog for any step that needs attention on this ECU.
+        continueAfterSplashConnection(uiContext, wizardContainer,
+            () -> showCard(CARD_WIZARD), () -> showCard(CARD_STARTUP),
+            () -> {
+                if (isProceeding) {
+                    return;
+                }
+                if (isAutoConnected(target)) {
+                    connect(target);
+                } else {
+                    showCard(CARD_STARTUP);
+                }
+            });
+    }
+
+    // Kept independent of the frame so the startup wizard handoff can be tested headlessly.
+    static void continueAfterSplashConnection(UIContext uiContext, WizardContainer wizardContainer,
+                                              Runnable showWizard, Runnable showStartup, Runnable connect) {
+        BinaryProtocol connectedProtocol = uiContext.getBinaryProtocol();
+        wizardContainer.setOnWizardExit(() -> {
+            // Skip and successful save both resume the interrupted handoff, without
+            // rechecking the catalog (a skipped field is deliberately still empty).
+            // An exit followed by a queued save completion must not hand off twice.
+            wizardContainer.setOnWizardExit(null);
+            if (ConnectionStatusLogic.INSTANCE.isConnected()
+                && connectedProtocol != null
+                && uiContext.getBinaryProtocol() == connectedProtocol
+                && connectedProtocol.getControllerConfiguration() != null) {
+                connect.run();
+            } else {
+                showStartup.run();
+            }
+        });
         for (WizardStepDescriptor d : WizardCatalog.standaloneAutoLaunch()) {
             if (!d.applicable.test(uiContext)) continue;
             if (d.needsAttention == null || !d.needsAttention.test(uiContext)) continue;
+            if (uiContext.shouldSkipStandaloneWizard(d)) {
+                continue;
+            }
             WizardStep step = d.factory.apply(uiContext);
             wizardContainer.startSingleStep(step);
-            showCard(CARD_WIZARD);
+            showWizard.run();
             return;
         }
-        connect(target);
+        connect.run();
     }
 
     private void maybeAutoCreateTsProject(PortResult target) {
@@ -993,6 +1041,14 @@ public class StartupFrame {
      *   <li>Any other job: close the LM so the port is released for the job's own connection.</li>
      * </ul>
      */
+    static void prepareSplashForJob(AsyncJob job, Runnable releaseConnection) {
+        // Automatic firmware jobs must pass eligibility before replacing the live splash listeners.
+        if (job instanceof DfuAutoJob || job instanceof OpenBltAutoJob) {
+            return;
+        }
+        releaseConnection.run();
+    }
+
     private void releaseSplashConnection() {
         if (autoConnectedPort == null) return;
         log.info("Releasing splash auto-connection before async job");
@@ -1107,6 +1163,10 @@ public class StartupFrame {
      * on the next scanner tick and the user can manually pick a port or wait for ECU B.
      */
     private void onSplashDisconnected() {
+        // A status event may already be queued when the wizard hands off the frame.
+        if (isProceeding && !offlineConsoleOpen) {
+            return;
+        }
         if (splashListener != null) {
             ConnectionStatusLogic.INSTANCE.removeListener(splashListener);
             splashListener = null;

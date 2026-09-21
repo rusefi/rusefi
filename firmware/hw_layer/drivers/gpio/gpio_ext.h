@@ -60,8 +60,12 @@ brain_pin_diag_e gpiochips_getDiag(brain_pin_e pin);
 
 void gpiochips_debug();
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || EFI_UNIT_TEST
 hardware_pwm* gpiochip_tryInitPwm(const char* msg, brain_pin_e pin, float frequency, float duty);
+#endif
+
+#if EFI_UNIT_TEST
+void resetGpioPwmForUnitTest();
 #endif
 
 /* return total number of external gpios */

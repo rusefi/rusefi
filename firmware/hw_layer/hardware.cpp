@@ -167,6 +167,10 @@ void applyNewHardwareSettings() {
 
 	stopHardware();
 
+#if HAL_USE_I2C
+	stopI2cModules();
+#endif
+
 #if HAL_USE_SPI
 	stopSpiModules();
 #endif /* HAL_USE_SPI */
@@ -295,6 +299,10 @@ void initHardwareNoConfig() {
 	initEarlyMmcCard();
 #endif // EFI_FILE_LOGGING
 
+#if HAL_USE_I2C
+	initEarlyI2c();
+#endif
+
 #if HAL_USE_PAL && EFI_PROD_CODE
 	// this should be initialized before detectBoardType()
 	efiExtiInit();
@@ -360,11 +368,15 @@ void startHardware() {
 PUBLIC_API_WEAK void setPinConfigurationOverrides() { }
 
 #if HAL_USE_I2C
+#if defined(STM32F7)
+/* TODO: do we have F7 with eeprom? */
+#else
 const I2CConfig i2cfg = {
-    OPMODE_I2C,
-    400000,
-    FAST_DUTY_CYCLE_2,
+    .op_mode = OPMODE_I2C,
+    .clock_speed = 400000,
+    .duty_cycle = FAST_DUTY_CYCLE_2,
 };
+#endif
 #endif
 
 void initHardware() {
@@ -397,6 +409,10 @@ void initHardware() {
 #ifdef TRIGGER_SCOPE
 	initTriggerScope();
 #endif // TRIGGER_SCOPE
+
+#if HAL_USE_I2C
+	initI2cModules();
+#endif
 
 #if HAL_USE_SPI
 	initSpiModules();

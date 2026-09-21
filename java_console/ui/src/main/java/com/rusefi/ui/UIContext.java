@@ -7,10 +7,13 @@ import com.rusefi.ini.IniFileState;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
 import com.rusefi.sensor_logs.SensorLogger;
+import com.rusefi.ui.wizard.WizardStepDescriptor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -18,6 +21,25 @@ import java.util.function.Consumer;
  */
 public class UIContext {
     private final LinkManager linkManager;
+    private BinaryProtocol standaloneWizardProtocol;
+    private final Set<WizardStepDescriptor> shownStandaloneWizards = new HashSet<>();
+
+    /**
+     * On the EDT: skip a prompt already offered on this connection, otherwise record it as offered.
+     * Shares prompt state across the splash-to-console handoff. A new protocol connection may
+     * offer the prompts again; this never persists a dismissal.
+     */
+    public boolean shouldSkipStandaloneWizard(WizardStepDescriptor step) {
+        BinaryProtocol protocol = getBinaryProtocol();
+        if (protocol == null) {
+            return true;
+        }
+        if (standaloneWizardProtocol != protocol) {
+            standaloneWizardProtocol = protocol;
+            shownStandaloneWizards.clear();
+        }
+        return !shownStandaloneWizards.add(step);
+    }
 
     /** Tests and offline tools: the LinkManager records the board identity into its own private instance. */
     public UIContext() {

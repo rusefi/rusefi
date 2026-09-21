@@ -29,8 +29,15 @@ static float getNorm(float K, float Q) {
 	return 1 / (1 + K / Q + K * K);
 }
 
+// At very low cutoffs b1 approaches -2 and b2 approaches 1, so float rounding
+// dominates their sum and can destabilize the filter. For slower filtering,
+// run the filter at a lower sampling rate instead.
+static bool checkFrequencies(float samplingFrequency, float frequency) {
+	return samplingFrequency >= 2.5f * frequency && samplingFrequency <= 1000 * frequency;
+}
+
 void Biquad::configureBandpass(float samplingFrequency, float centerFrequency, float Q) {
-  if (samplingFrequency < 2.5f * centerFrequency) {
+  if (!checkFrequencies(samplingFrequency, centerFrequency)) {
     criticalError("Invalid biquad parameters samplingFrequency=%f centerFrequency=%f", samplingFrequency, centerFrequency);
     return;
   }
@@ -46,20 +53,23 @@ void Biquad::configureBandpass(float samplingFrequency, float centerFrequency, f
 }
 
 void Biquad::configureLowpass(float samplingFrequency, float cutoffFrequency, float Q) {
-	criticalAssertVoid(samplingFrequency >= 2.5f * cutoffFrequency, "Invalid biquad parameters");
+	criticalAssertVoid(checkFrequencies(samplingFrequency, cutoffFrequency), "Invalid biquad parameters");
 
 	float K = getK(samplingFrequency, cutoffFrequency);
 	float norm = getNorm(K, Q);
 
-	a0 = K * K * norm;
-	a1 = 2 * a0;
-	a2 = a0;
 	b1 = 2 * (K * K - 1) * norm;
 	b2 = (1 - K / Q + K * K) * norm;
+
+	// Normalize DC gain using the feedback coefficients we actually stored.
+	// Computing K * K * norm independently loses gain as 1 + b1 + b2 approaches zero.
+	a0 = (1 + b1 + b2) / 4;
+	a1 = 2 * a0;
+	a2 = a0;
 }
 
 void Biquad::configureHighpass(float samplingFrequency, float cutoffFrequency, float Q) {
-	criticalAssertVoid(samplingFrequency >= 2.5f * cutoffFrequency, "Invalid biquad parameters");
+	criticalAssertVoid(checkFrequencies(samplingFrequency, cutoffFrequency), "Invalid biquad parameters");
 
 	float K = getK(samplingFrequency, cutoffFrequency);
 	float norm = getNorm(K, Q);

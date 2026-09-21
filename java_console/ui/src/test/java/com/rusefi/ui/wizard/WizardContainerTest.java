@@ -11,6 +11,8 @@ import com.rusefi.ui.UIContext;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -42,14 +44,14 @@ public class WizardContainerTest {
             return field instanceof EnumIniField ? Optional.of(field) : Optional.empty();
         });
 
-        assertEquals(Arrays.asList(0, 1, 2, 3, 4, 5, 8, 9, 10),
+        assertEquals(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 9, 10, 11),
             WizardContainer.findVisibleCatalogIndices(context, ini));
     }
 
     @Test
     public void persistentFlagsDetermineStateEvenAfterAnIncompleteStep() {
         List<WizardProgressPanel.Item> items = WizardContainer.buildProgressItems(
-            Arrays.asList(0, 1, 3), 0, flag -> flag.equals("wizardMapSensorType"));
+            Arrays.asList(0, 1, 4), 0, flag -> flag.equals("wizardMapSensorType"));
 
         assertEquals(WizardProgressPanel.State.CURRENT, items.get(0).state);
         assertEquals(WizardProgressPanel.State.UPCOMING, items.get(1).state);
@@ -80,6 +82,30 @@ public class WizardContainerTest {
         verify(image).setBitValue(firingOrderFlag, 0);
         verify(image).setBitValue(ignitionOutputsFlag, 0);
         verify(image).setBitValue(injectorOutputsFlag, 0);
+    }
+
+    @Test
+    public void olderIniStillOffersDisplacementWithoutOptionalVeStep() {
+        IniFileModel ini = mock(IniFileModel.class);
+        when(ini.findIniField(anyString())).thenReturn(Optional.empty());
+        when(ini.findIniField("wizardDisplacement")).thenReturn(Optional.of(mock(EnumIniField.class)));
+        assertEquals(Arrays.asList(3), WizardContainer.findVisibleCatalogIndices(new UIContext(), ini));
+    }
+
+    @Test
+    public void completingOrSkippingVeRequiresDisplacementConfirmation() {
+        Map<Integer, String> values = new TreeMap<>();
+        values.put(0, "no");
+        values.put(1, "yes");
+        EnumIniField displacementFlag = new EnumIniField("wizardDisplacement", 0, FieldType.INT,
+            new EnumKeyValueMap(values), 6, 0);
+        IniFileModel ini = mock(IniFileModel.class);
+        when(ini.findIniField("wizardDisplacement")).thenReturn(Optional.of(displacementFlag));
+        ConfigurationImage image = new ConfigurationImage(new byte[]{-1, -1, -1, -1});
+        WizardContainer.clearDependentWizardFlags("wizardVeTable", ini, image);
+        assertEquals("\"no\"", ConfigurationImageGetterSetter.getStringValue(displacementFlag, image));
+        assertArrayEquals(new byte[]{-65, -1, -1, -1}, image.getContent());
+        assertEquals(3, WizardContainer.findFirstIncomplete(Arrays.asList(2, 3, 4), index -> index == 2));
     }
 
     @Test
@@ -156,6 +182,28 @@ public class WizardContainerTest {
                 assertFalse(container.isProgressVisibleForTests());
                 assertEquals("rusEFI Setup Wizard", container.getWizardTitleForTests());
             }
+        });
+    }
+
+    @Test
+    public void singleStepExitActionLayout() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            WizardContainer container = new WizardContainer(new UIContext());
+            container.startSingleStep(new StubStep());
+
+            assertEquals(FlowLayout.CENTER, container.getExitPanelAlignmentForTests());
+            assertEquals(BorderLayout.CENTER, container.getExitPanelConstraintForTests());
+        });
+    }
+
+    @Test
+    public void fullWizardRestoresExitActionLayoutAfterSingleStep() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            WizardContainer container = new WizardContainer(new UIContext());
+            container.startSingleStep(new StubStep());
+            container.startWizard(true);
+            assertEquals(FlowLayout.RIGHT, container.getExitPanelAlignmentForTests());
+            assertEquals(BorderLayout.EAST, container.getExitPanelConstraintForTests());
         });
     }
 

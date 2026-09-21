@@ -1,2 +1,7 @@
 ! mega-mcu-premium has three on-module CAN transceivers
 #define EFI_CAN_BUS_COUNT 3
+
+! i2c2 used for external ADC
+#define ts_show_i2c true
+#define ts_show_i2c2_pins true
+#define ts_show_i2c2_enable true

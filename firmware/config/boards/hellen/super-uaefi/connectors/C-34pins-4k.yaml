@@ -142,7 +142,7 @@ pins:
 info:
   cid: 34-4
   title: super-uaefi
-  name: super-uaefi
+  name: connector C
   image:
     file: 34pins-4k.jpg
   pins:

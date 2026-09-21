@@ -228,9 +228,22 @@ public class DfuFlasher {
     public static void runDfuProgramming(UpdateOperationCallbacks callbacks, final Runnable onJobFinished,
                                          final ConnectedEcuTarget connectedEcuTarget,
                                          final @Nullable String firmwareBinFile) {
+        runDfuProgramming(callbacks, onJobFinished, connectedEcuTarget, firmwareBinFile, null);
+    }
+
+    public static void runDfuProgramming(UpdateOperationCallbacks callbacks, final Runnable onJobFinished,
+                                         final ConnectedEcuTarget connectedEcuTarget,
+                                         final @Nullable String firmwareBinFile,
+                                         final @Nullable ManualDfuRecovery.BoardPicker boardPicker) {
         submitAction(() -> {
             JobHelper.doJob(
                 () -> {
+                    if (firmwareBinFile == null
+                        && ManualDfuRecovery.isUniversalBundle(com.rusefi.core.io.BundleUtil.getBundleTarget())) {
+                        ManualDfuRecovery.run(connectedEcuTarget, callbacks, boardPicker,
+                            (file, target) -> executeDfuAndPaintStatusPanel(callbacks, file, target));
+                        return;
+                    }
                     // A board sitting in DFU has no live signature, so fetch the right firmware for the
                     // persisted last-connected board first; fail closed rather than flash the bundle
                     // default onto a different board on a universal bundle. [tag:better_ux_for_flashing] / #9714

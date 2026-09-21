@@ -17,10 +17,6 @@
 #include "mpu_util.h"
 #include "map_averaging.h"
 
-#ifdef ADC_MUX_PIN
-#error "ADC mux not yet supported on STM32H7"
-#endif
-
 #ifndef H7_ADC_SPEED
 #define H7_ADC_SPEED (10000)
 #endif
@@ -29,7 +25,44 @@
 #define H7_ADC_OVERSAMPLE (4)
 #endif
 
-static_assert((H7_ADC_OVERSAMPLE & (H7_ADC_OVERSAMPLE - 1)) == 0, "H7_ADC_OVERSAMPLE must be a power of 2");
+static_assert(H7_ADC_SPEED > 0, "H7_ADC_SPEED must be positive");
+static_assert(H7_ADC_OVERSAMPLE > 0 && (H7_ADC_OVERSAMPLE & (H7_ADC_OVERSAMPLE - 1)) == 0, "H7_ADC_OVERSAMPLE must be a power of 2");
+
+// Each scan contains the 16 physical inputs, in F4/F7 channel order.
+constexpr size_t slowChannelCount = 16;
+#ifdef ADC_MUX_PIN
+constexpr size_t slowSampleCount = 2 * slowChannelCount;
+
+// Board-specific analog settling time, including the mux and input RC network.
+// Late interrupts skip a timer tick rather than sampling an unsettled bank.
+#ifndef H7_ADC_MUX_SETTLE_US
+#define H7_ADC_MUX_SETTLE_US 10
+#endif
+static_assert(H7_ADC_MUX_SETTLE_US > 0, "ADC mux settling time must be positive");
+
+static OutputPin muxControl;
+static size_t muxBank = 0;
+static efitick_t muxChangedAtNt;
+// H7 NO_CACHE currently selects .ram0, which is cached on H743. The linker
+// maps .nocache into the MPU non-cacheable region on both H743 and H723.
+// Both banks are overwritten before use; this NOLOAD buffer needs no startup clear.
+static volatile adcsample_t muxSampleBuffer[slowSampleCount] __attribute__((section(".nocache"), aligned(4)));
+
+static void selectMuxBank(size_t bank) {
+	muxBank = bank;
+	muxControl.setValue(bank, /*force*/true);
+	muxChangedAtNt = getTimeNowNt();
+}
+
+static void muxTimerCallback(GPTDriver*);
+static void muxAdcErrorCallback(ADCDriver*, adcerror_t);
+#else
+constexpr size_t slowSampleCount = slowChannelCount;
+#endif
+
+#ifdef SLOW_ADC_CHANNEL_COUNT
+static_assert(SLOW_ADC_CHANNEL_COUNT >= slowSampleCount, "Slow ADC output buffer is too small");
+#endif
 
 static constexpr size_t log2_int(size_t x) {
 	size_t result = 0;
@@ -45,6 +78,11 @@ static_assert(log2_int(16) == 4);
 static constexpr int H7_ADC_SHIFT_BITS = log2_int(H7_ADC_OVERSAMPLE);
 
 void portInitAdc() {
+#ifdef ADC_MUX_PIN
+	muxControl.initPin("ADC Mux", ADC_MUX_PIN);
+	selectMuxBank(0);
+#endif
+
 	// Init slow ADC
 	adcStart(&EFI_SLOW_ADC, NULL);
 
@@ -78,8 +116,21 @@ adcsample_t* fastSampleBuffer;
 static void adc_callback(ADCDriver *adcp) {
 	// State may not be complete if we get a callback for "half done"
 	if (adcIsBufferComplete(adcp)) {
+#ifdef ADC_MUX_PIN
+		// Non-circular DMA has stopped before ChibiOS calls us. Publish only
+		// complete pairs: fast consumers must never count an old bank twice.
+		const bool pairComplete = muxBank == 1;
+		selectMuxBank(muxBank ^ 1);
+		if (pairComplete) {
+			for (size_t i = 0; i < slowSampleCount; i++) {
+				fastSampleBuffer[i] = muxSampleBuffer[i];
+			}
+			onFastAdcComplete(fastSampleBuffer);
+		}
+#else
 	  // here we invoke 'fast' from slow ADC due to https://github.com/rusefi/rusefi/issues/3301
 		onFastAdcComplete(adcp->samples);
+#endif
 	}
 
 	assertInterruptPriority(__func__, EFI_IRQ_ADC_PRIORITY);
@@ -91,19 +142,25 @@ static void adc_callback(ADCDriver *adcp) {
 // (25 * 64) / 25MHz -> 64 microseconds to sample all channels
 #define ADC_SAMPLING_SLOW ADC_SMPR_SMP_16P5
 
-// Sample the 16 channels that line up with the STM32F4/F7
-constexpr size_t slowChannelCount = 16;
-
 // Conversion group for slow channels
 // This simply samples every channel in sequence
 static constexpr ADCConversionGroup convGroupSlow = {
+#ifdef ADC_MUX_PIN
+	.circular = false,
+#else
 	.circular			= true,		// Continuous mode means we will auto re-trigger on every timer event
+#endif
 	.num_channels		= slowChannelCount,
 	.end_cb				= adc_callback,
+#ifdef ADC_MUX_PIN
+	.error_cb = muxAdcErrorCallback,
+	.cfgr = ADC_CFGR_OVRMOD, // One software-started scan per eligible TIM3 tick
+#else
 	.error_cb			= nullptr,
 	// OVRMOD=1 is required by H7 errata "ADC slave data may be shifted in Dual regular simultaneous mode" -
 	// without it, a single-DMA-channel read of CDR can leave the slave's samples offset from the master's.
 	.cfgr = ADC_CFGR_EXTEN_0 | (4 << ADC_CFGR_EXTSEL_Pos) | ADC_CFGR_OVRMOD, // External trigger ch4, rising edge: TIM3 TRGO
+#endif
 	.cfgr2				= 	(H7_ADC_OVERSAMPLE - 1) << ADC_CFGR2_OVSR_Pos |	// Oversample by Nx (register contains N-1)
 							H7_ADC_SHIFT_BITS << ADC_CFGR2_OVSS_Pos |		// shift the result right log2(N) bits to make a 16 bit result out of the internal oversample sum
 							ADC_CFGR2_ROVSE,			// Enable oversampling
@@ -158,21 +215,47 @@ static constexpr ADCConversionGroup convGroupSlow = {
 	},
 };
 
+#ifdef ADC_MUX_PIN
+static void muxTimerCallback(GPTDriver*) {
+	chSysLockFromISR();
+	// ADC_COMPLETE/ADC_ERROR also exclude a preempted completion/error callback.
+	// Never re-arm a live conversion, including when sampling takes > one tick.
+	if (EFI_SLOW_ADC.state == ADC_READY && getTimeNowNt() - muxChangedAtNt >= US2NT(H7_ADC_MUX_SETTLE_US)) {
+		auto* bankSamples = const_cast<adcsample_t*>(&muxSampleBuffer[muxBank * slowChannelCount]);
+		adcStartConversionI(&EFI_SLOW_ADC, &convGroupSlow, bankSamples, 1);
+	}
+	chSysUnlockFromISR();
+}
+
+static void muxAdcErrorCallback(ADCDriver*, adcerror_t err) {
+	engine->outputChannels.slowAdcErrorCount++;
+	if (err & ADC_ERR_OVERFLOW) {
+		engine->outputChannels.slowAdcOverrunCount++;
+	}
+	// ChibiOS stopped DMA and will return to ADC_READY after this callback.
+	// Discard the partial pair; the next timer tick retries from bank zero.
+	selectMuxBank(0);
+}
+#endif
+
 static bool didStart = false;
 
 bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 	// This only needs to happen once, as the timer will continue firing the ADC and writing to the buffer without our help
+
 	if (didStart) {
 		return true;
 	}
-	didStart = true;
-
-	fastSampleBuffer = convertedSamples;
-
 	{
 		chibios_rt::CriticalSectionLocker csl;
+		if (EFI_SLOW_ADC.state != ADC_READY) {
+			return false;
+		}
+		fastSampleBuffer = convertedSamples;
+#ifndef ADC_MUX_PIN
 		// Oversampling and right-shift happen in hardware, so we can sample directly to the output buffer
 		adcStartConversionI(&EFI_SLOW_ADC, &convGroupSlow, convertedSamples, 1);
+#endif
 	}
 
 	constexpr uint32_t samplingRate = H7_ADC_SPEED;
@@ -181,21 +264,27 @@ bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 
 	static constexpr GPTConfig gptCfg = {
 		timerCountFrequency,
+#ifdef ADC_MUX_PIN
+		muxTimerCallback,
+		0,	// No TRGO: only the callback may start a scan after checking settling
+#else
 		nullptr,
 		TIM_CR2_MMS_1,	// TRGO on update event
+#endif
 		0
 	};
 
 	// Start timer
 	gptStart(&GPTD3, &gptCfg);
 	gptStartContinuous(&GPTD3, timerPeriod);
+	didStart = true;
 
 	// Return true if OK
 	return true;
 }
 
 AdcToken enableFastAdcChannel(const char*, adc_channel_e channel) {
-	if (!isAdcChannelValid(channel)) {
+	if (channel < EFI_ADC_0 || channel >= EFI_ADC_0 + slowSampleCount) {
 		return invalidAdcToken;
 	}
 
@@ -204,7 +293,7 @@ AdcToken enableFastAdcChannel(const char*, adc_channel_e channel) {
 }
 
 adcsample_t getFastAdc(AdcToken token) {
-	if (token == invalidAdcToken) {
+	if (!fastSampleBuffer || token >= slowSampleCount) {
 		return 0;
 	}
 

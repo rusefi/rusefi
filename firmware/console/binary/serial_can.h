@@ -11,6 +11,13 @@
 #include "isotp.h"
 #include "can_listener.h"
 
+// 1-based number of the CAN bus used to transmit the TunerStudio-over-CAN (ISO-TP) stream:
+// 1 = CAN1, 2 = CAN2, ... Incoming frames are accepted from every bus regardless of this value.
+// Custom boards override in board.mk: DDEFS += -DEFI_SERIAL_CAN_BUS=2
+#ifndef EFI_SERIAL_CAN_BUS
+#define EFI_SERIAL_CAN_BUS 1
+#endif
+
 class CanTsListener : public CanListener, public CanRxMessageSource {
 public:
 	CanTsListener()

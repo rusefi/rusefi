@@ -6,9 +6,11 @@ import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autoupdate.Autoupdate;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolLogger;
 import com.rusefi.binaryprotocol.ShortcutsHelper;
 import com.rusefi.core.MessagesCentral;
+import com.rusefi.core.SensorCentral;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
@@ -48,6 +50,8 @@ import com.rusefi.ui.basic.LoadTuneHelper;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
@@ -90,6 +94,12 @@ public class ConsoleUI {
      * We can listen to tab activation event if we so desire
      */
     private final Map<Component, ActionListener> tabSelectedListeners = new HashMap<>();
+    private GaugesPanel gaugesPanel;
+    private TuningPane tuningPane;
+    private Component gaugesTab;
+    private Component tuningTab;
+    private SensorCentral.FullOutputLease unclassifiedTabLease;
+    private boolean nonTabContentActive;
 
     public ConsoleUI(String port, SerialPortType serialPortType, ConnectivityContext connectivityContext) {
         this(new UIContext(connectivityContext.getConnectedEcuTarget()), port, serialPortType, false,
@@ -260,7 +270,10 @@ public class ConsoleUI {
 
         JButton launchWizardButton = getLaunchWizardButton(mainFrame, rootPanel, wizardContainer, rootCardLayout);
 
-        wizardContainer.setOnWizardExit(() -> rootCardLayout.show(rootPanel, "console"));
+        wizardContainer.setOnWizardExit(() -> {
+            rootCardLayout.show(rootPanel, "console");
+            setNonTabContentActive(false);
+        });
         wizardContainer.setMessageHandler(mainFrame::showMessageOverlay);
         wizardContainer.setOnDontShowAgain(() -> {
             getConfig().getRoot().setBoolProperty(AUTO_LAUNCH_WIZARD, false);
@@ -278,18 +291,17 @@ public class ConsoleUI {
                 // Don't stomp on an already-visible wizard
                 if (wizardContainer.isShowing()) return;
 
-                for (WizardStepDescriptor d : WizardCatalog.standaloneAutoLaunch()) {
-                    if (!d.applicable.test(uiContext)) continue;
-                    if (d.needsAttention == null || !d.needsAttention.test(uiContext)) continue;
-                    WizardStep step = d.factory.apply(uiContext);
-                    wizardContainer.startSingleStep(step);
+                if (showStandaloneWizard(uiContext, wizardContainer, () -> {
+                    setNonTabContentActive(true);
                     rootCardLayout.show(rootPanel, "wizard");
+                })) {
                     return;
                 }
 
                 if (UiProperties.isWizardAutoLaunchEnabled()
                     && getConfig().getRoot().getBoolProperty(AUTO_LAUNCH_WIZARD, true)
                     && wizardContainer.hasIncompleteSteps()) {
+                    setNonTabContentActive(true);
                     wizardContainer.startWizard(true);
                     rootCardLayout.show(rootPanel, "wizard");
                 }
@@ -334,7 +346,9 @@ public class ConsoleUI {
         // will be shown immediately on startup — in that case build eagerly (#9715).
         int savedTabIndex = getConfig().getRoot().getIntProperty(TAB_INDEX, DEFAULT_TAB_INDEX);
         if (isOffline || !linkManager.isLogViewer()) {
-            tabbedPane.addTab("Gauges", new GaugesPanel(uiContext, getConfig().getRoot().getChild("gauges")).getContent());
+            gaugesPanel = new GaugesPanel(uiContext, getConfig().getRoot().getChild("gauges"));
+            gaugesTab = gaugesPanel.getContent();
+            tabbedPane.addTab("Gauges", gaugesTab);
 
             MessagesPane messagesPane = new MessagesPane(uiContext, getConfig().getRoot().getChild("messages"));
             tabbedPaneAdd("Messages", messagesPane.getContent(), messagesPane.getTabSelectedListener());
@@ -394,7 +408,19 @@ console live data tab is broken #8402
             }
             DeviceSessionManager deviceSessionManager = new DeviceSessionManager(connectivityContext, initialPort);
             unsupportedEcuHost.addCompatiblePortListener(deviceSessionManager::setSessionPort);
-            StatusPanelWithProgressBar deviceStatusPanel = new StatusPanelWithProgressBar();
+            java.util.function.Consumer<JComponent> showFullScreenPanel = panel -> {
+                rollbackPicker.removeAll();
+                rollbackPicker.add(panel, BorderLayout.CENTER);
+                setNonTabContentActive(true);
+                rootCardLayout.show(rootPanel, "rollback");
+            };
+            Runnable closeFullScreenPanel = () -> {
+                rootCardLayout.show(rootPanel, "console");
+                setNonTabContentActive(false);
+            };
+            StatusPanelWithProgressBar deviceStatusPanel = new StatusPanelWithProgressBar(
+                reason -> showFullScreenPanel.accept(new com.rusefi.ui.wizard.FirmwareUpdateBlockedPanel(
+                    reason, closeFullScreenPanel)));
             StatusPanel tuneStatusPanel = new StatusPanel(250);
             SingleAsyncJobExecutor consoleJobExecutor = new SingleAsyncJobExecutor(job ->
                 job instanceof ImportTuneJob ? tuneStatusPanel : deviceStatusPanel,
@@ -416,6 +442,7 @@ console live data tab is broken #8402
                 }
                 TuningPane tp = new TuningPane(uiContext, offlineImage, getConfig().getRoot().getChild("tuning"));
                 tuningHolder[0] = tp;
+                tuningPane = tp;
                 tp.setErrorHandler(mainFrame::showMessageOverlay);
                 tp.setFirmwareUpdateInProgress(deviceSessionManager.getState() == SessionState.FLASHING);
                 tp.setShowTuningTab(() -> tabbedPane.selectTab("Tuning"));
@@ -433,10 +460,11 @@ console live data tab is broken #8402
                         pinoutPane.highlightByEnumValue(enumValue);
                     });
                 }
+                updateOutputPollingForSelectedTab();
             };
 
             int tuningIndex = tabbedPane.tabbedPane.getTabCount();
-            tabbedPane.addTab("Tuning", new InitOnFirstPaintPanel() {
+            tuningTab = new InitOnFirstPaintPanel() {
                 @Override
                 protected JPanel createContent() {
                     buildTuning.run();
@@ -444,7 +472,8 @@ console live data tab is broken #8402
                     wrapper.add(tuningHolder[0].getContent(), BorderLayout.CENTER);
                     return wrapper;
                 }
-            }.getContent());
+            }.getContent();
+            tabbedPane.addTab("Tuning", tuningTab);
             // Until Tuning is built, the menu actions build it on first click then delegate; once
             // built, buildTuning re-points the menu at the real actions.
             mainFrame.setTuneActions(
@@ -454,16 +483,19 @@ console live data tab is broken #8402
             if (UiProperties.isKnockAnalyzerEnabled()) {
                 tabbedPane.addTab("Knock Analyzer", new KnockPane(uiContext).getContent());
             }
-            if (UiProperties.isSlcanSnifferEnabled()) {
-                // Lazy: SlcanTab starts a serial-port-scanning reader thread on construction,
-                // only do that once the user actually opens the tab.
-                tabbedPane.addTab("SLCAN Sniffer", new InitOnFirstPaintPanel() {
-                    @Override
-                    protected JPanel createContent() {
-                        return new SlcanTab(uiContext, mainFrame::showMessageOverlay).getContent();
-                    }
-                }.getContent());
-            }
+            SlcanTabController slcanTabs = new SlcanTabController(tabbedPane.tabbedPane,
+                () -> new SlcanTab(uiContext, mainFrame::showMessageOverlay));
+            Runnable refreshSlcanTab = () -> {
+                // Use only the current connection, never IniFileState's cached/offline fallback.
+                BinaryProtocol bp = uiContext.getBinaryProtocol();
+                IniFileModel connectedIni = !uiContext.isOfflineMode()
+                    && ConnectionStatusLogic.INSTANCE.getValue() == ConnectionStatusValue.CONNECTED
+                    && bp != null ? bp.getIniFileNullable() : null;
+                slcanTabs.update(connectedIni, UiProperties.isSlcanSnifferEnabled());
+            };
+            ConnectionStatusLogic.INSTANCE.addAndFireListener(connected ->
+                SwingUtilities.invokeLater(refreshSlcanTab));
+            uiContext.addOfflineModeListener(offline -> SwingUtilities.invokeLater(refreshSlcanTab));
             if (UiProperties.isPinoutEnabled()) {
                 tabbedPane.addTab("Pinout", pinoutPane.getContent());
             }
@@ -487,12 +519,7 @@ console live data tab is broken #8402
             DevicePane devicePane = new DevicePane(
                 uiContext, connectivityContext, deviceSessionManager, tabbedPane.tabbedPane,
                 consoleJobExecutor, deviceStatusPanel,
-                picker -> {
-                    rollbackPicker.removeAll();
-                    rollbackPicker.add(picker, BorderLayout.CENTER);
-                    rootCardLayout.show(rootPanel, "rollback");
-                },
-                () -> rootCardLayout.show(rootPanel, "console"));
+                showFullScreenPanel, closeFullScreenPanel);
             tabbedPane.addTab("Device", devicePane.getContent());
             mainFrame.setUpdateEcuAction(() -> {
                 tabbedPane.selectTab("Device");
@@ -558,12 +585,14 @@ console live data tab is broken #8402
                     JTabbedPane pane = (JTabbedPane) e.getSource();
                     int selectedIndex = pane.getSelectedIndex();
                     System.out.println("Selected paneNo: " + selectedIndex);
+                    updateOutputPollingForSelectedTab();
                     ActionListener actionListener = tabSelectedListeners.get(pane.getComponentAt(selectedIndex));
                     if (actionListener != null)
                         actionListener.actionPerformed(null);
                 }
             }
         });
+        updateOutputPollingForSelectedTab();
 
         ShortcutsHelper.installConnectAndDisconnect(uiContext, tabbedPane.tabbedPane,
             () -> !Boolean.TRUE.equals(tabbedPane.tabbedPane.getClientProperty("isUpdating"))
@@ -571,7 +600,32 @@ console live data tab is broken #8402
         AutoupdateUtil.setAppIcon(mainFrame.getFrame().getFrame());
 
         unsupportedEcuHost.setNormalContent(mainFrame.wrapContentWithInstallerBanner(rootPanel));
+        mainFrame.getFrame().getFrame().addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                releaseOutputPolling();
+            }
+        });
         mainFrame.getFrame().showFrame(unsupportedEcuHost.getContent());
+    }
+
+    static boolean showStandaloneWizard(UIContext uiContext, WizardContainer wizardContainer, Runnable showWizard) {
+        for (WizardStepDescriptor d : WizardCatalog.standaloneAutoLaunch()) {
+            if (!d.applicable.test(uiContext)) {
+                continue;
+            }
+            if (d.needsAttention == null || !d.needsAttention.test(uiContext)) {
+                continue;
+            }
+            if (uiContext.shouldSkipStandaloneWizard(d)) {
+                continue;
+            }
+            WizardStep step = d.factory.apply(uiContext);
+            wizardContainer.startSingleStep(step);
+            showWizard.run();
+            return true;
+        }
+        return false;
     }
 
     private @NotNull JButton getLaunchWizardButton(MainFrame mainFrame, JPanel rootPanel,
@@ -582,6 +636,7 @@ console live data tab is broken #8402
                 mainFrame.showMessageOverlay("Please connect to an ECU before launching the wizard.");
                 return;
             }
+            setNonTabContentActive(true);
             wizardContainer.startWizard();
             rootCardLayout.show(rootPanel, "wizard");
         });
@@ -677,6 +732,46 @@ console live data tab is broken #8402
     private void tabbedPaneAdd(String title, JComponent component, ActionListener tabSelectedListener) {
         tabSelectedListeners.put(component, tabSelectedListener);
         tabbedPane.addTab(title, component);
+    }
+
+    private void updateOutputPollingForSelectedTab() {
+        Component selected = tabbedPane.tabbedPane.getSelectedComponent();
+        boolean gaugesActive = !nonTabContentActive && selected != null && selected == gaugesTab;
+        boolean tuningActive = !nonTabContentActive && selected != null && selected == tuningTab;
+
+        if (gaugesPanel != null) {
+            gaugesPanel.setActive(gaugesActive);
+        }
+        if (tuningPane != null) {
+            tuningPane.setActive(tuningActive);
+        }
+
+        if (gaugesActive || tuningActive) {
+            if (unclassifiedTabLease != null) {
+                unclassifiedTabLease.close();
+                unclassifiedTabLease = null;
+            }
+        } else if (unclassifiedTabLease == null) {
+            unclassifiedTabLease = SensorCentral.getInstance().acquireFullOutput();
+        }
+    }
+
+    private void setNonTabContentActive(boolean active) {
+        nonTabContentActive = active;
+        updateOutputPollingForSelectedTab();
+    }
+
+    private void releaseOutputPolling() {
+        if (gaugesPanel != null) {
+            gaugesPanel.destroy();
+        }
+        if (tuningPane != null) {
+            tuningPane.destroy();
+        }
+        if (unclassifiedTabLease != null) {
+            unclassifiedTabLease.close();
+            unclassifiedTabLease = null;
+        }
     }
 
     private static void awtCode(String[] args, CompletableFuture<Autoupdate.UpdateOutcome> updateOutcome) {

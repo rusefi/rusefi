@@ -10,6 +10,25 @@
 
 #include "pch.h"
 
+#include "can_rx.h"
+
+#if EFI_USE_OPENBLT || EFI_UNIT_TEST
+#include "openblt/efi_blt_ids.h"
+
+bool isOpenBltCanFrame(const CANRxFrame& frame) {
+	static constexpr uint32_t ExtendedIdFlag = 0x80000000U;
+	static constexpr uint32_t OpenBltCanId = BOOT_COM_CAN_RX_MSG_ID & ~ExtendedIdFlag;
+	static constexpr bool IsExtendedId = (BOOT_COM_CAN_RX_MSG_ID & ExtendedIdFlag) != 0;
+
+	return !CAN_ISRTR(frame)
+		&& (CAN_ISX(frame) == IsExtendedId)
+		&& (CAN_ID(frame) == OpenBltCanId)
+		&& (frame.DLC == 2)
+		&& (frame.data8[0] == 0xFF)
+		&& (frame.data8[1] == 0x00);
+}
+#endif
+
 #if EFI_CAN_SUPPORT
 
 #include "rusefi_lua.h"
@@ -17,7 +36,6 @@
 #include "bench_test.h"
 #include "can_common.h"
 
-#include "can_rx.h"
 #include "obd2.h"
 #include "can_sensor.h"
 #include "can_vss.h"
@@ -279,14 +297,9 @@ static Timer dashAliveTimer;
 
 	handleWidebandCan(busIndex, frame);
 #if EFI_USE_OPENBLT
-#include "openblt/efi_blt_ids.h"
-	if ((CAN_SID(frame) == BOOT_COM_CAN_RX_MSG_ID) && (frame.DLC == 2)) {
+	if ((busIndex == BOOT_COM_CAN_CHANNEL_INDEX) && isOpenBltCanFrame(frame)) {
 		/* TODO: graceful shutdown? */
-		// todo: kill the unused (?) openblt option #9733?
-		if (((busIndex == 0) && (engineConfiguration->canOpenBLT)) ||
-			((busIndex == 1) && (engineConfiguration->can2OpenBLT))) {
-			jump_to_openblt();
-		}
+		jump_to_openblt();
 	}
 #endif
 }

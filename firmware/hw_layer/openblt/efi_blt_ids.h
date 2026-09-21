@@ -2,6 +2,10 @@
 
 // Note that an extended 29-bit CAN identifier is configured by OR-ing with mask 0x80000000.
 
+#ifndef BOOT_COM_CAN_CHANNEL_INDEX
+#define BOOT_COM_CAN_CHANNEL_INDEX      (0)
+#endif
+
 #ifndef BOOT_COM_CAN_BAUDRATE
 /** \brief Configure the desired CAN baudrate. */
 #define BOOT_COM_CAN_BAUDRATE           (500000)

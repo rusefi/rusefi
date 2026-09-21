@@ -24,10 +24,48 @@ Gpio getWarningLedPin() {
 	return Gpio::MMP176_LED4_YELLOW;
 }
 
+static void premiumQuickTestConfigOverrides() {
+	setHellenEnPin(Gpio::G6); // OUT_PWR_EN
+	setHellenVbatt();
+}
+
 static void premiumQuickTestDefaultConfiguration() {
-	// on-module LPS22HB barometer, bit-banged I2C on the module SCL/SDA pads
+
+	// SPI2
+	engineConfiguration->is_enabled_spi_2 = true;
+	engineConfiguration->spi2mosiPin = H_SPI2_MOSI;
+	engineConfiguration->spi2misoPin = H_SPI2_MISO;
+	engineConfiguration->spi2sckPin = H_SPI2_SCK;
+
+	// SPI3
+	engineConfiguration->is_enabled_spi_3 = true;
+	engineConfiguration->spi3sckPin = Gpio::C10;
+	engineConfiguration->spi3misoPin = Gpio::C11;
+	engineConfiguration->spi3mosiPin = Gpio::C12;
+
+	// SPI4 - accel
+#if (STM32_SPI_USE_SPI4 == TRUE)
+	engineConfiguration->is_enabled_spi_4 = true;
+	engineConfiguration->spi4sckPin = Gpio::E12;
+	engineConfiguration->spi4misoPin = Gpio::E5;
+	engineConfiguration->spi4mosiPin = Gpio::E6;
+#endif
+
+	i2c_config_s *cfg = getI2cCfg(I2C_BUS_2);
+	if (cfg != nullptr) {
+		cfg->sclPin = Gpio::MMP176_I2C_SCL;
+		cfg->sdaPin = Gpio::MMP176_I2C_SDA;
+		cfg->speed = I2C_SPEED_400K;
+		cfg->enabled = true;
+	}
+
+	// legacy config...
 	engineConfiguration->lps25BaroSensorScl = Gpio::MMP176_I2C_SCL;
 	engineConfiguration->lps25BaroSensorSda = Gpio::MMP176_I2C_SDA;
+
+	// Accel bus and CS
+	engineConfiguration->accelerometerSpiDevice = SPI_DEVICE_4;
+	engineConfiguration->accelerometerCsPin = Gpio::E4;
 
 	// Redundant TPS and pedal on the muxed analog inputs (ADC_MUX_PIN=PH15
 	// in board.mk). Each mux pair shares one MCU ADC pin, so primary and
@@ -59,6 +97,17 @@ static OutputPin canStb;
 static void premiumQuickTestInitHardware() {
 	canStb.initPin("CAN_STB", Gpio::MMP176_CAN_STB);
 	canStb.setValue(0);
+
+#if EFI_PROD_CODE && !EFI_BOOTLOADER && (BOARD_ADS7128_COUNT > 0)
+	static ads7128_config ads7128_cfg = {
+		.i2c_bus = I2C_BUS_2,
+		.i2c_addr = 0x10,
+		.vref = 5.0, // is not true when powered from USB due to voltage drop on reverse protection diode
+	};
+
+	int ret = ads7128_add(Gpio::MSIOBOX_0_OUT_1, 0, &ads7128_cfg);
+	efiPrintf("*****************+ ads7128_add %d +*******************", ret);
+#endif
 }
 
 // On-module LAN8720A RMII PHY, same MCU pins as Nucleo-F767:
@@ -66,7 +115,7 @@ static void premiumQuickTestInitHardware() {
 // TX_EN=PG11 TXD0=PG13 TXD1=PG14, PHY nRST=PE11.
 // AF must be set before the MAC driver probes the PHY, hence preHalInit
 // (see nucleo_h743 for the same pattern).
-static void premiumQuickTestPreHalInit() {
+static void premiumQuickTestPreHalInitEthernet() {
 	efiSetPadMode("Ethernet",  Gpio::A1, PAL_MODE_ALTERNATE(0xb));
 	efiSetPadMode("Ethernet",  Gpio::A2, PAL_MODE_ALTERNATE(0xb));
 	efiSetPadMode("Ethernet",  Gpio::A7, PAL_MODE_ALTERNATE(0xb));
@@ -82,6 +131,16 @@ static void premiumQuickTestPreHalInit() {
 	// release PHY reset (no pull resistor on the net - must be driven)
 	efiSetPadMode("Ethernet PHY nRST", Gpio::E11, PAL_MODE_OUTPUT_PUSHPULL);
 	palSetPad(GPIOE, 11);
+}
+
+static void premiumQuickTestPreHalInitCAN() {
+	efiSetPadMode("CAN STB", Gpio::H11, PAL_MODE_OUTPUT_PUSHPULL);
+	palClearPad(GPIOH, 11);
+}
+
+static void premiumQuickTestPreHalInit() {
+	premiumQuickTestPreHalInitEthernet();
+	premiumQuickTestPreHalInitCAN();
 
 	// On-module eMMC on 8-bit SDMMC2, AF11 for CK/CMD/D0/D1/D3 and AF10
 	// for the PB/PC data lines (see hellen_premium176_meta.h for the map)
@@ -106,4 +165,14 @@ void setup_custom_board_overrides() {
 	custom_board_preHalInit = premiumQuickTestPreHalInit;
 	custom_board_InitHardware = premiumQuickTestInitHardware;
 	custom_board_DefaultConfiguration = premiumQuickTestDefaultConfiguration;
+	custom_board_ConfigOverrides = premiumQuickTestConfigOverrides;
+}
+
+extern "C" {
+
+void OpenBLT__early_init() {
+	premiumQuickTestPreHalInitEthernet();
+	premiumQuickTestPreHalInitCAN();
+}
+
 }

@@ -58,8 +58,8 @@
 #define adc_channel_e_EFI_ADC_ERROR 50
 #define adc_channel_e_EFI_ADC_NONE 0
 #define adc_channel_e_EFI_ADC_TOTAL_CHANNELS 49
-#define adc_channel_e_enum 0="NONE",6="108a Voltage From Key",5="38a TPS1",9="39a TPS2",14="63a IAT",13="65a CLT Coolant",4="90a PPS1",15="91a PPS2",1="AIN 1",2="AIN 2",11="MAP",12="On-board MAP"
-#define adc_channel_e_fullenum "NONE","AIN 1","AIN 2","INVALID","90a PPS1","38a TPS1","108a Voltage From Key","INVALID","INVALID","39a TPS2","INVALID","MAP","On-board MAP","65a CLT Coolant","63a IAT","91a PPS2"
+#define adc_channel_e_enum 0="NONE",6="108a Voltage From Key",5="38a TPS1",9="39a TPS2",14="63a IAT",13="65a CLT Coolant",4="90a PPS1",15="91a PPS2",1="AIN 1",2="AIN 2",10="BUTTON1",7="BUTTON2",11="MAP",12="On-board MAP"
+#define adc_channel_e_fullenum "NONE","AIN 1","AIN 2","INVALID","90a PPS1","38a TPS1","108a Voltage From Key","BUTTON2","INVALID","39a TPS2","BUTTON1","MAP","On-board MAP","65a CLT Coolant","63a IAT","91a PPS2"
 #define ADC_CHANNEL_NONE 0
 #define afr_sensor_s_size 20
 #define air_pressure_sensor_config_s_size 12
@@ -157,6 +157,7 @@
 #define BOARD_CONFIG_FROM_FILE
 #define BOARD_CONSTANTS_EXTENSIONS_FROM_FILE
 #define BOARD_CONTROLLER_MENU_PREFIX_FROM_FILE
+#define BOARD_CONTROLLER_MENU_SUFFIX_FROM_FILE
 #define BOARD_CURVES_FROM_FILE
 #define BOARD_DIAG_PANEL1_FROM_FILE
 #define BOARD_DIAG_PANEL2_FROM_FILE
@@ -185,8 +186,8 @@
 #define boostType_e_auto_enum 0="OPEN_LOOP",1="CLOSED_LOOP"
 #define boostType_e_CLOSED_LOOP 1
 #define boostType_e_OPEN_LOOP 0
-#define brain_input_pin_e_enum 0="NONE",80="34a HALL3",79="35a HALL2",78="36a HALL1 / VSS",77="FLEX",67="VR_9924+",66="VR_DISCRETE+"
-#define brain_input_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","VR_DISCRETE+","VR_9924+","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","FLEX","36a HALL1 / VSS","35a HALL2","34a HALL3","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID"
+#define brain_input_pin_e_enum 0="NONE",80="34a HALL3",79="35a HALL2",78="36a HALL1 / VSS",19="BUTTON1",8="BUTTON2",77="FLEX",67="VR_9924+",66="VR_DISCRETE+"
+#define brain_input_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","BUTTON2","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","BUTTON1","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","VR_DISCRETE+","VR_9924+","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","FLEX","36a HALL1 / VSS","35a HALL2","34a HALL3","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID"
 #define brain_pin_diag_e_PIN_DRIVER_OFF 0x20
 #define brain_pin_diag_e_PIN_DRIVER_OVERTEMP 0x10
 #define brain_pin_diag_e_PIN_OK 0
@@ -455,6 +456,8 @@
 #define debug_mode_e_DBG_UNUSED_42 42
 #define debug_mode_e_enum "INVALID", "TPS acceleration enrichment", "INVALID", "Stepper Idle Control", "Engine Load accl enrich", "Trigger Counters", "Soft Spark Cut", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "SD card", "sr5", "Knock", "INVALID", "Electronic Throttle", "Executor", "Bench Test / TS commands", "INVALID", "Analog inputs #1", "INSTANT_RPM", "INVALID", "Status", "INVALID", "INVALID", "MAP", "Metrics", "INVALID", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "INVALID", "Boost Control", "INVALID", "INVALID", "ETB Autotune", "Composite Log", "INVALID", "INVALID", "INVALID", "Dyno_View", "Logic_Analyzer", "INVALID", "TCU", "Lua"
 #define debug_mode_e_UNUSED23 23
+#define DEFAULT_CLT_AXIS_HIGH_VALUE 120
+#define DEFAULT_CLT_AXIS_LOW_VALUE -40
 #define DEFAULT_RPM_AXIS_HIGH_VALUE 7000
 #define DEFAULT_SELT_STIM_RPM 1200
 #define DEFAULT_SELT_STIM_VVT0 23
@@ -510,7 +513,7 @@
 #define ego_sensor_e_ES_PLX 4
 #define egoSettings_NAME "CAN O2 sensors"
 #define EGT_CHANNEL_COUNT 8
-#define engine_configuration_s_size 4268
+#define engine_configuration_s_size 4272
 #define engine_load_mode_e_auto_enum 0="LM_SPEED_DENSITY",2="LM_ALPHA_N",3="LM_LUA",1="LM_REAL_MAF",4="UNSUPPORTED_ENUM_VALUE"
 #define engine_load_mode_e_LM_ALPHA_N 2
 #define engine_load_mode_e_LM_LUA 3
@@ -650,7 +653,7 @@
 #define FIELD_DISPLACEMENT displacement
 #define FIELD_INJECTOR_FLOW injector.flow
 #define firing_order_e_enum "One Cylinder", "1-3-4-2", "1-2-4-3", "1-3-2-4", "1-5-3-6-2-4", "1-8-4-3-6-5-7-2", "1-2-4-5-3", "1-4-2-5-3-6", "1-2", "1-2-3-4-5-6", "1-2-3", "1-8-7-2-6-5-4-3", "1-5-4-2-6-3-7-8 Mustang", "1-6-3-2-5-4", "1-10-9-4-3-6-5-8-7_2", "1-7-5-11-3-9-6-12-2-8-4-10", "1-7-4-10-2-8-6-12-3-9-5-11", "1-4-3-2", "1-12-5-8-3-10-6-7-2-11-4-9", "1-2-7-8-4-5-6-3", "1-3-7-2-6-5-4-8 HO", "1-2-3-4-5-6-7-8-9", "INVALID", "1-2-3-4-5-6-7-8-9-10-11-12", "1-3-2", "1-2-3-4-5-6-7-8", "1-5-4-8-6-3-7-2", "1-4-3-6-2-5", "1-8-7-3-6-5-4-2", "1-6-2-4-3-5", "1-6-5-4-3-2", "1-4-5-2-3-6", "1-5-4-8-3-7-2-6 Voodoo", "1-6-5-10-2-7-3-8-4-9", "1-8-6-2-7-3-4-5 F136", "1-2-3-4", "1-6-2-5-3-4"
-#define FLASH_DATA_VERSION 260805
+#define FLASH_DATA_VERSION 260908
 #define FLEX_TRANSIENT_CLT_SIZE 8
 #define FLEX_TRANSIENT_ETH_SIZE 8
 #define FLOW_LINEARIZATION_MASS_SIZE 2
@@ -784,7 +787,7 @@
 #define GAUGE_NAME_FUEL_STFT_INPUT_1 "STFT input lambda error: Bank 1"
 #define GAUGE_NAME_FUEL_STFT_INPUT_2 "STFT input lambda error: Bank 2"
 #define GAUGE_NAME_FUEL_TEMPERATURE "Fuel Temperature"
-#define GAUGE_NAME_FUEL_TPS_EXTRA "Fuel: TPS acceleration add fuel ms"
+#define GAUGE_NAME_FUEL_TPS_EXTRA "Fuel: TPS AE (ms or fraction)"
 #define GAUGE_NAME_FUEL_VE "Fuel: VE"
 #define GAUGE_NAME_FUEL_WALL_AMOUNT "Fuel: wall amount"
 #define GAUGE_NAME_FUEL_WALL_CORRECTION "Fuel: wall correction"
@@ -1395,7 +1398,6 @@
 #define InjectorNonlinearMode_INJ_None 0
 #define InjectorNonlinearMode_INJ_PolynomialAdder 1
 #define INSTANCE_INJECTOR injector
-#define JUMP_BLT_COMMAND 0xBC
 #define JUMP_DFU_COMMAND 0xBA
 #define KNOCK_RPM_TABLE_NAME "Engine Knock Threshold RPM Based"
 #define KNOCK_TABLE_RPM_SIZE 6
@@ -1492,6 +1494,7 @@
 #define operation_mode_e_FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR 6
 #define operation_mode_e_OM_NONE 0
 #define operation_mode_e_TWO_STROKE 3
+#define OUTPUT_CHANNEL_SD_CARD_MODE "sdCardMode"
 #define OUTPUT_CHANNEL_SD_LOGGING_INTERNAL "sd_logging_internal"
 #define OUTPUT_CHANNEL_SD_MSD "sd_msd"
 #define OUTPUT_CHANNEL_SD_PRESENT "sd_present"
@@ -1526,7 +1529,7 @@
 #define pedalSensor_NAME "Accelerator pedal"
 #define pedalToTpsTbl_NAME "ETB pedal target"
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
-#define persistent_config_s_size 16760
+#define persistent_config_s_size 16764
 #define pid_s_size 20
 #define pin_input_mode_e_auto_enum 0="PI_DEFAULT",4="PI_INVERTED_DEFAULT",6="PI_INVERTED_PULLDOWN",5="PI_INVERTED_PULLUP",2="PI_PULLDOWN",1="PI_PULLUP"
 #define pin_input_mode_e_PI_DEFAULT 0
@@ -1646,7 +1649,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 1239857076
+#define SIGNATURE_HASH 3380879762
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1675,6 +1678,7 @@
 #define stft_state_e_stftDisabledCrankingDelay 4
 #define stft_state_e_stftDisabledDFCO 7
 #define stft_state_e_stftDisabledFuelCut 9
+#define stft_state_e_stftDisabledLaunch 10
 #define stft_state_e_stftDisabledRPM 3
 #define stft_state_e_stftDisabledSettings 1
 #define stft_state_e_stftDisabledTpsAccel 8
@@ -1729,8 +1733,9 @@
 #define torqueReductionActivationMode_e_TORQUE_REDUCTION_BUTTON 0
 #define torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH 2
 #define torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_UP_SWITCH 3
-#define TOTAL_CONFIG_SIZE 16760
+#define TOTAL_CONFIG_SIZE 16764
 #define TPS_2_BYTE_PACKING_MULT 100
+#define TPS_ACCEL_UNITS "ms/frac"
 #define TPS_PPS_TOO_HIGH_THRESHOLD 110
 #define TPS_PPS_TOO_LOW_THRESHOLD -10
 #define TPS_TPS_ACCEL_CLT_CORR_TABLE 4
@@ -2001,7 +2006,7 @@
 #define TS_PAGE_CRC_CHECK "k%2i%2o%2c", "k%2i%2o%2c", "k%2i%2o%2c", "k%2i%2o%2c", "k%2i%2o%2c"
 #define TS_PAGE_IDENTIFIERS "\x00\x00", "\x00\x01", "\x00\x02", "\x00\x03", "\x00\x04"
 #define TS_PAGE_READ_COMMANDS "R%2i%2o%2c", "R%2i%2o%2c", "R%2i%2o%2c", "R%2i%2o%2c", "R%2i%2o%2c"
-#define TS_PAGE_SIZES 16760, 256, 2048, 1268, 8000
+#define TS_PAGE_SIZES 16764, 256, 2048, 1268, 8000
 #define TS_PAGE_VALUE_WRITE "C%2i%2o%2c%v", "C%2i%2o%2c%v", "C%2i%2o%2c%v", "C%2i%2o%2c%v", "C%2i%2o%2c%v"
 #define TS_PERF_TRACE_BEGIN '_'
 #define TS_PERF_TRACE_BEGIN_char _
@@ -2058,6 +2063,7 @@
 #define ts_show_can_wbo true
 #define ts_show_can_wbo_type true
 #define ts_show_can_weird true
+#define ts_show_canbus3 false
 #define ts_show_canbus_sniffer false
 #define ts_show_charge_estimation true
 #define ts_show_check_engine false
@@ -2158,13 +2164,13 @@
 #define ts_show_hbridge_function true
 #define ts_show_hd true
 #define ts_show_i2c false
-#define ts_show_i2c1_enable true
-#define ts_show_i2c1_pins true
-#define ts_show_i2c2_enable true
-#define ts_show_i2c2_pins true
-#define ts_show_i2c3_enable true
-#define ts_show_i2c3_pins true
-#define ts_show_i2c4_enable true
+#define ts_show_i2c1_enable false
+#define ts_show_i2c1_pins false
+#define ts_show_i2c2_enable false
+#define ts_show_i2c2_pins false
+#define ts_show_i2c3_enable false
+#define ts_show_i2c3_pins false
+#define ts_show_i2c4_enable false
 #define ts_show_i2c4_pins false
 #define ts_show_iat true
 #define ts_show_idle_hardware true
@@ -2174,7 +2180,7 @@
 #define ts_show_ignition true
 #define ts_show_ignitionMode true
 #define ts_show_ignitionOutputs true
-#define ts_show_ignitionPinMode true
+#define ts_show_ignitionPinMode false
 #define ts_show_inj_diag false
 #define ts_show_injection true
 #define ts_show_injection_hardware true
@@ -2288,12 +2294,12 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.08.26.uaefi121.1239857076"
+#define TS_SIGNATURE "rusEFI master.2026.09.21.uaefi121.3380879762"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
 #define TS_TEST_COMMAND_char t
-#define TS_TOTAL_OUTPUT_SIZE 2200
+#define TS_TOTAL_OUTPUT_SIZE 2216
 #define TS_TRIGGER_SCOPE_CHANNEL_1_NAME "Channel 1"
 #define TS_TRIGGER_SCOPE_CHANNEL_2_NAME "Channel 2"
 #define TS_TRIGGER_SCOPE_DISABLE 5

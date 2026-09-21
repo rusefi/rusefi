@@ -9,8 +9,35 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
 
 class SingleAsyncJobExecutorTest {
+    /** Preserve the specialized event so the UI can prominently display the rejection. */
+    @Test
+    void blockedUpdateReasonReachesUiCallback() throws Exception {
+        UpdateOperationCallbacks ui = mock(UpdateOperationCallbacks.class);
+        SingleAsyncJobExecutor executor = new SingleAsyncJobExecutor(ui);
+        CountDownLatch finished = new CountDownLatch(1);
+        executor.addOnJobInProgressFinishedListener(finished::countDown);
+        String reason = "Please install an intermediate firmware version";
+
+        assertTrue(executor.startJob(new AsyncJob("blocked firmware") {
+            @Override
+            public void doJob(UpdateOperationCallbacks callbacks, Runnable onJobFinished) {
+                callbacks.firmwareUpdateBlocked(reason);
+                callbacks.error();
+                onJobFinished.run();
+            }
+        }, null));
+        assertTrue(finished.await(5, TimeUnit.SECONDS));
+
+        verify(ui).firmwareUpdateBlocked(reason);
+        verify(ui, never()).log(reason, true, true);
+        verify(ui).error();
+        assertEquals(UpdateFirmwareResult.FAILURE, executor.getLastResult());
+        assertTrue(executor.isNotInProgress());
+    }
+
     @Test
     void unrecordedJobDoesNotOverwriteRecordedResult() throws Exception {
         final SingleAsyncJobExecutor executor = new SingleAsyncJobExecutor(

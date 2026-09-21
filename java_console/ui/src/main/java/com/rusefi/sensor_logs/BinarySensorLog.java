@@ -39,6 +39,14 @@ public class BinarySensorLog<T extends BinaryLogEntry> {
         this.requestedFileName = fileName;
     }
 
+    /** Eager writer for callers that own the stream and need to report I/O failures. */
+    public BinarySensorLog(Function<T, Double> valueProvider, Collection<T> sensors, OutputStream output)
+            throws IOException {
+        this(valueProvider, sensors, System::currentTimeMillis, null);
+        stream = new DataOutputStream(Objects.requireNonNull(output, "output"));
+        writeHeader();
+    }
+
     interface TimeProvider {
         long currentTimestamp();
     }
@@ -61,36 +69,44 @@ public class BinarySensorLog<T extends BinaryLogEntry> {
 
         if (stream != null) {
             try {
-                stream.write(0);
-                stream.write(counter++);
-                stream.writeShort((int) (timeProvider.currentTimestamp() * 100));
-
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                DataOutputStream dos = new DataOutputStream(baos);
-
-                for (T sensor : entries) {
-                    Double value = valueProvider.apply(sensor);
-                    if (value == null)
-                        throw new NullPointerException("No value for " + sensor);
-                    sensor.writeToLog(dos, value);
-                }
-
-                byte[] byteArray = baos.toByteArray();
-                byte checkSum = 0;
-                for (byte b : byteArray) {
-                    checkSum += b;
-                }
-                stream.write(byteArray);
-                stream.write(checkSum);
-
-                if (counter % 20 == 0) {
-                    // for not flush on each block of data but still flush
-                    stream.flush();
-                }
-
+                writeSensorLogLineChecked();
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    /** Write one row to an already opened stream, propagating failures to the caller. */
+    public void writeSensorLogLineChecked() throws IOException {
+        if (stream == null) {
+            throw new IOException("Data log is not open");
+        }
+        stream.write(0);
+        stream.write(counter++);
+        stream.writeShort((int) (timeProvider.currentTimestamp() * 100));
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        DataOutputStream dos = new DataOutputStream(baos);
+
+        for (T sensor : entries) {
+            Double value = valueProvider.apply(sensor);
+            if (value == null) {
+                throw new NullPointerException("No value for " + sensor);
+            }
+            sensor.writeToLog(dos, value);
+        }
+
+        byte[] byteArray = baos.toByteArray();
+        byte checkSum = 0;
+        for (byte b : byteArray) {
+            checkSum += b;
+        }
+        stream.write(byteArray);
+        stream.write(checkSum);
+
+        if (counter % 20 == 0) {
+            // for not flush on each block of data but still flush
+            stream.flush();
         }
     }
 

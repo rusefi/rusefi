@@ -64,6 +64,9 @@ bool storageAllowWriteID(StorageItemId id);
 StorageStatus storageWrite(StorageItemId id, const uint8_t *ptr, size_t size);
 StorageStatus storageRead(StorageItemId id, uint8_t *ptr, size_t size);
 
+// true if at least one registered storage is ready (e.g. SD card mounted) and supports given ID
+bool storageIsIdAvailableForId(StorageItemId id);
+
 // request storage manager to read or write given ID from its own context when storage is ready
 bool storageRequestWriteID(StorageItemId id, bool forced);
 bool storageReqestReadID(StorageItemId id);

@@ -671,8 +671,11 @@ static BaseBlockDevice* cardBlockDevice = nullptr;
 
 // Initialize SD card.
 static bool initMmc() {
-	// Don't try to mount SD card in case of fatal error - hardware may be in an unexpected state
-	if (hasFirmwareError()) {
+	// Don't try to mount SD card in case of fatal error - hardware may be in an unexpected state.
+	// Exception: the watchdog-reset error raised at boot. Hardware was fully initialized before
+	// that one was latched, and the report file we are about to write is the whole point of it.
+	if (hasFirmwareError() && !errorHandlerIsWatchdogResetError()) {
+		efiPrintf("SD: not initializing card, critical error is set");
 		return false;
 	}
 
@@ -1383,6 +1386,7 @@ static int mlgLogger() {
 
 void updateSdCardLiveFlags() {
 #if EFI_PROD_CODE
+	engine->outputChannels.sdCardMode = static_cast<uint8_t>(sdCardGetCurrentMode());
 	if (cardBlockDevice) {
 		engine->outputChannels.sd_active_wr = (blkGetDriverState(cardBlockDevice) == BLK_WRITING);
 		engine->outputChannels.sd_active_rd = (blkGetDriverState(cardBlockDevice) == BLK_READING);

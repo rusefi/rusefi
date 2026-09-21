@@ -1,4 +1,9 @@
 TESTS_SRC_CPP = \
+	tests/controllers/test_at32_port.cpp \
+	tests/test_slcan.cpp \
+	tests/test_hardware_pwm.cpp \
+	../simulator/flash_storage.cpp \
+	tests/controllers/test_simulator_flash.cpp \
 	tests/test_scoped_logs.cpp \
 	tests/ltft_sandbox.cpp \
 	tests/log_replay_sandbox.cpp \
@@ -9,6 +14,7 @@ TESTS_SRC_CPP = \
 	tests/trigger/test_trigger_decoder.cpp \
 	tests/trigger/test_trigger_decoder_2.cpp \
 	tests/trigger/test_coil.cpp \
+	tests/trigger/test_trigger_scheduler.cpp \
 	tests/trigger/test_trigger_noiseless.cpp \
 	tests/trigger/test_trigger_input_adc.cpp \
 	tests/trigger/test_miata_na_tdc.cpp \
@@ -112,6 +118,7 @@ TESTS_SRC_CPP = \
 	tests/lua/test_lua_dbc.cpp \
 	tests/lua/test_motorola_dbc.cpp \
 	tests/lua/test_lua_bit_range_msb.cpp \
+	tests/test_i2c_bb.cpp \
 	tests/lua/test_lookup.cpp \
 	tests/lua/test_lua_e38.cpp \
 	tests/lua/test_lua_canam.cpp \
@@ -166,6 +173,7 @@ TESTS_SRC_CPP = \
 	tests/test_misfire_detection.cpp \
 	tests/test_config_error_refresh.cpp \
 	tests/test_check_engine_light.cpp \
+	tests/test_bench_test.cpp \
 	tests/test_lambda_monitor.cpp \
 	tests/test_flex_sensor.cpp \
 	tests/sensor/basic_sensor.cpp \
@@ -179,6 +187,7 @@ TESTS_SRC_CPP = \
 	tests/sensor/func_chain.cpp \
 	tests/sensor/redundant.cpp \
 	tests/sensor/test_sensor_init.cpp \
+	tests/sensor/test_baro_from_map.cpp \
 	tests/sensor/table_func.cpp \
 	tests/sensor/test_fuel_level_func.cpp \
 	tests/test_stft.cpp \

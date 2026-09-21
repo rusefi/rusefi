@@ -404,7 +404,7 @@ pins:
 info:
   cid: main
   title: super-uaefi
-  name: super-uaefi
+  name: connector A/B
   board_url: https://wiki.rusefi.com/super-uaEFI
   image:
     file: 60pins.jpg

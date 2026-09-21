@@ -8,6 +8,7 @@
 #pragma once
 
 #include "spi.h"
+#include "i2c.h"
 
 // 'startHardware' is invoked both on boot and configuration change
 void startHardware();

@@ -22,6 +22,14 @@ void BitbangI2c::sda_low() {
 #endif
 }
 
+bool BitbangI2c::sda_get() {
+#if EFI_PROD_CODE
+	return palReadPad(m_sdaPort, m_sdaPin);
+#else
+	return false;
+#endif
+}
+
 void BitbangI2c::scl_high() {
 #if EFI_PROD_CODE
 	palSetPad(m_sclPort, m_sclPin);
@@ -34,7 +42,9 @@ void BitbangI2c::scl_low() {
 #endif
 }
 
-bool BitbangI2c::init(brain_pin_e scl, brain_pin_e sda) {
+bool BitbangI2c::init(brain_pin_e scl, brain_pin_e sda, i2c_speed_e speed) {
+	// TODO:
+	(void)speed;
 #if EFI_PROD_CODE
 	if (m_sdaPort) {
 	    return false;
@@ -52,9 +62,14 @@ bool BitbangI2c::init(brain_pin_e scl, brain_pin_e sda) {
 
 	m_sdaPort = getHwPort("i2c", sda);
 	m_sdaPin = getHwPin("i2c", sda);
+
+	osalMutexObjectInit(&mutex);
 #else
   UNUSED(scl);UNUSED(sda);
 #endif
+
+	m_sda = sda;
+	m_scl = scl;
 
 	// Both lines idle high
 	scl_high();
@@ -129,12 +144,8 @@ bool BitbangI2c::readBit() {
 	waitQuarterBit();
 	waitQuarterBit();
 
-#if EFI_PROD_CODE
 	// Read just before we set the clock low (ie, as late as possible)
-	bool val = palReadPad(m_sdaPort, m_sdaPin);
-#else
-	bool val = false;
-#endif
+	bool val = sda_get();
 
 	scl_low();
 	waitQuarterBit();
@@ -189,31 +200,45 @@ void BitbangI2c::waitQuarterBit() {
 	}
 }
 
-void BitbangI2c::write(uint8_t addr, const uint8_t* writeData, size_t writeSize) {
+msg_t BitbangI2c::__write(uint8_t addr, const uint8_t* writeData, size_t writeSize) {
 	start();
 
 	// Address + write
-	writeByte(addr << 1 | 0);
+	if (!writeByte(addr << 1 | 0)) {
+		stop();
+		return MSG_RESET;
+	}
 
 	// Write outbound bytes
 	for (size_t i = 0; i < writeSize; i++) {
-		writeByte(writeData[i]);
+		if (!writeByte(writeData[i])) {
+			stop();
+			return MSG_RESET;
+		}
 	}
 
 	stop();
+
+	return MSG_OK;
 }
 
-void BitbangI2c::writeRead(uint8_t addr, const uint8_t* writeData, size_t writeSize, uint8_t* readData, size_t readSize) {
-	write(addr, writeData, writeSize);
+msg_t BitbangI2c::__writeRead(uint8_t addr, const uint8_t* writeData, size_t writeSize, uint8_t* readData, size_t readSize) {
+	msg_t res = __write(addr, writeData, writeSize);
+	if (res != MSG_OK) {
+		return res;
+	}
 
-	read(addr, readData, readSize);
+	return __read(addr, readData, readSize);
 }
 
-void BitbangI2c::read(uint8_t addr, uint8_t* readData, size_t readSize) {
+msg_t BitbangI2c::__read(uint8_t addr, uint8_t* readData, size_t readSize) {
 	start();
 
 	// Address + read
-	writeByte(addr << 1 | 1);
+	if (!writeByte(addr << 1 | 1)) {
+		stop();
+		return MSG_RESET;
+	}
 
 	for (size_t i = 0; i < readSize - 1; i++) {
 		// All but the last byte send ACK to indicate we're still reading
@@ -224,20 +249,20 @@ void BitbangI2c::read(uint8_t addr, uint8_t* readData, size_t readSize) {
 	readData[readSize - 1] = readByte(false);
 
 	stop();
+
+	return MSG_OK;
 }
 
-uint8_t BitbangI2c::readRegister(uint8_t addr, uint8_t reg) {
-	uint8_t retval;
-
-	writeRead(addr, &reg, 1, &retval, 1);
-
-	return retval;
+msg_t BitbangI2c::lock() {
+#if EFI_PROD_CODE
+	osalMutexLock(&mutex);
+#endif
+	return MSG_OK;
 }
 
-void BitbangI2c::writeRegister(uint8_t addr, uint8_t reg, uint8_t val) {
-	uint8_t buf[2];
-	buf[0] = reg;
-	buf[1] = val;
-
-	write(addr, buf, 2);
+msg_t BitbangI2c::unlock() {
+#if EFI_PROD_CODE
+	osalMutexUnlock(&mutex);
+#endif
+	return MSG_OK;
 }

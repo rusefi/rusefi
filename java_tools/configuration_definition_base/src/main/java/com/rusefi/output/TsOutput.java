@@ -29,6 +29,7 @@ public class TsOutput {
     private final boolean isConstantsSection;
     private final StringBuilder tsHeader = new StringBuilder();
     private final TreeSet<String> usedNames;
+    private final int tsPage;
     private boolean directiveSeen = false; // pretty lame hack but acceptable since we are moving away from directive anyway
 
     public TsOutput(boolean longForm) {
@@ -36,8 +37,17 @@ public class TsOutput {
     }
 
     public TsOutput(boolean longForm, TreeSet<String> usedNames) {
+        this(longForm, usedNames, 1);
+    }
+
+    public TsOutput(boolean longForm, TreeSet<String> usedNames, int tsPage) {
         this.isConstantsSection = longForm;
         this.usedNames = usedNames;
+        this.tsPage = tsPage;
+    }
+
+    public static String pageOffsetPrefix(int page) {
+        return "TS_PAGE_" + page + "_OFFSET_";
     }
 
 //    private final String metricUnitsConditionalStart = "#if USE_METRIC_UNITS" + EOL;
@@ -185,6 +195,13 @@ public class TsOutput {
                     // even if the struct is struct_no_prefix, to avoid duplicate field names across iterations.
                     String extraPrefix = (cs.isWithPrefix() || configField.isFromIterate()) ? configField.getName() + "_" : "";
                     return writeFields(cs.getTsFields(), prefix + extraPrefix, tsPosition);
+                }
+
+                if (isConstantsSection && !configField.isDirective() && !configField.isUnusedField()
+                        && (!configField.isArray() || configField.getSize(next) != 0)) {
+                    // Template-only byte offsets: aliases can share storage without hard-coded addresses.
+                    // put(), rather than register(), avoids exporting these as C/Java constants.
+                    state.getVariableRegistry().put(pageOffsetPrefix(tsPage) + nameWithPrefix, Integer.toString(tsPosition));
                 }
 
                 if (configField.isBit()) {

@@ -4,6 +4,7 @@ import com.devexperts.logging.Logging;
 import com.opensr5.ini.ExpressionEvaluator;
 import com.opensr5.ini.GaugeModel;
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.TsStringFunction;
 import com.rusefi.core.ISensorCentral;
 import com.rusefi.core.ISensorHolder;
 import com.rusefi.core.SensorCentral;
@@ -37,7 +38,9 @@ public class TextGauge {
     private final JLabel unitsLabel = new JLabel();
 
     private ISensorCentral.ListenerToken valueToken;
-    private SensorCentral.ResponseListener responseListener;
+    private SensorCentral.ResponseListenerToken responseToken;
+    private final ConnectionStatusLogic.Listener connectionStatusListener;
+    private boolean active;
 
     public TextGauge(UIContext uiContext, String channelName, Consumer<String> onChannelChange) {
         content.setBorder(BorderFactory.createCompoundBorder(
@@ -75,14 +78,15 @@ public class TextGauge {
 
         setChannel(uiContext, channelName);
 
-        ConnectionStatusLogic.INSTANCE.addAndFireListener(isConnected -> {
+        connectionStatusListener = isConnected -> {
             if (!isConnected) {
                 SwingUtilities.invokeLater(() -> {
                     valueLabel.setText(NO_CONNECTION);
                     valueLabel.setForeground(Color.RED);
                 });
             }
-        });
+        };
+        ConnectionStatusLogic.INSTANCE.addAndFireListener(connectionStatusListener);
     }
 
     private void setChannel(UIContext uiContext, String gaugeName) {
@@ -93,14 +97,18 @@ public class TextGauge {
 
         final String channel = (gaugeModel != null) ? gaugeModel.getChannel() : gaugeName;
 
-        // Handle expression-based labels the same way SensorGauge does
-        if (gaugeModel != null && (gaugeModel.getTitleValue().isExpression() || gaugeModel.getUnitsValue().isExpression())) {
-            if (gaugeModel.getTitleValue().isExpression()) {
+        // Handle dynamic string labels the same way SensorGauge does.
+        boolean dynamicTitle = gaugeModel != null && gaugeModel.getTitleValue().isExpression()
+            && TsStringFunction.containsStringFunction(gaugeModel.getTitle());
+        boolean dynamicUnits = gaugeModel != null && gaugeModel.getUnitsValue().isExpression()
+            && TsStringFunction.containsStringFunction(gaugeModel.getUnits());
+        if (dynamicTitle || dynamicUnits) {
+            if (dynamicTitle) {
                 titleLabel.setText("");
             } else {
                 titleLabel.setText(gaugeModel.getTitle());
             }
-            if (gaugeModel.getUnitsValue().isExpression()) {
+            if (dynamicUnits) {
                 unitsLabel.setText("");
             } else {
                 unitsLabel.setText(gaugeModel.getUnits());
@@ -108,10 +116,14 @@ public class TextGauge {
 
             final String[] lastLabels = {null, null};
             Set<String> labelsSensors = new HashSet<>();
-            labelsSensors.addAll(ExpressionEvaluator.extractVariables(gaugeModel.getTitle()));
-            labelsSensors.addAll(ExpressionEvaluator.extractVariables(gaugeModel.getUnits()));
+            if (dynamicTitle) {
+                labelsSensors.addAll(ExpressionEvaluator.extractVariables(gaugeModel.getTitle()));
+            }
+            if (dynamicUnits) {
+                labelsSensors.addAll(ExpressionEvaluator.extractVariables(gaugeModel.getUnits()));
+            }
 
-            responseListener = () ->
+            SensorCentral.ResponseListener responseListener = () ->
                 SwingUtilities.invokeLater(() -> {
                     ISensorHolder.ResolvedGaugeLabels labels = SensorCentral.getInstance().getResolvedLabels(gaugeName);
                     if (labels != null) {
@@ -131,13 +143,14 @@ public class TextGauge {
                         }
                     }
                 });
-            SensorCentral.getInstance().addListener(responseListener, new SensorSubscription(labelsSensors.toArray(new String[0])));
+            responseToken = SensorCentral.getInstance().addListener(
+                responseListener, new SensorSubscription(labelsSensors.toArray(new String[0])));
         } else {
             final String title = (gaugeModel != null) ? gaugeModel.getTitle() : gaugeName;
             final String units = (gaugeModel != null) ? gaugeModel.getUnits() : "";
             titleLabel.setText(title);
             unitsLabel.setText(units);
-            responseListener = null;
+            responseToken = null;
         }
 
         valueToken = SensorCentral.getInstance().addListener(channel, value ->
@@ -148,6 +161,7 @@ public class TextGauge {
                 }
             })
         );
+        setActive(active);
 
         Double currentValue = SensorCentral.getInstance().getValue(channel);
         if (currentValue != null && ConnectionStatusLogic.INSTANCE.isConnected()) {
@@ -191,14 +205,25 @@ public class TextGauge {
             valueToken.remove();
             valueToken = null;
         }
-        if (responseListener != null) {
-            SensorCentral.getInstance().removeListener(responseListener);
-            responseListener = null;
+        if (responseToken != null) {
+            responseToken.remove();
+            responseToken = null;
+        }
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+        if (valueToken != null) {
+            valueToken.setActive(active);
+        }
+        if (responseToken != null) {
+            responseToken.setActive(active);
         }
     }
 
     public void destroy() {
         cleanup();
+        ConnectionStatusLogic.INSTANCE.removeListener(connectionStatusListener);
     }
 
     public JPanel getContent() {

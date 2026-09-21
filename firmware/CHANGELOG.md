@@ -32,6 +32,10 @@ Release template (copy/paste this for new release):
 ### Added
  - h-bridge as one GPIO #9673
 
+### Fixed
+ - overdwell protection causes Null-pointer deref and crash #9435
+ - huge print in Lua walks into memory #10159
+
 ## August 2026 "Day 1631"
 
 ### Added

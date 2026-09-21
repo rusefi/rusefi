@@ -6,6 +6,8 @@ import org.junit.jupiter.api.io.TempDir;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
@@ -16,10 +18,32 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class BinarySensorLogTest {
     @TempDir
     Path tempDir;
+
+    @Test
+    void checkedWriterPropagatesOpenAndRowFailures() throws IOException {
+        AtomicBoolean fail = new AtomicBoolean(true);
+        OutputStream output = new OutputStream() {
+            @Override
+            public void write(int value) throws IOException {
+                if (fail.get()) {
+                    throw new IOException("disk full");
+                }
+            }
+        };
+        assertThrows(IOException.class, () -> new BinarySensorLog<>(entry -> 0.0,
+                Collections.<BinaryLogEntry>emptyList(), output));
+        fail.set(false);
+        BinarySensorLog<BinaryLogEntry> writer = new BinarySensorLog<>(entry -> 0.0,
+                Collections.emptyList(), output);
+        fail.set(true);
+        assertEquals("disk full", assertThrows(IOException.class, writer::writeSensorLogLineChecked).getMessage());
+        writer.close();
+    }
 
     @Test
     void writesValidHeaderAndCurrentValues() throws IOException {

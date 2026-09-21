@@ -1,8 +1,11 @@
 #include "pch.h"
-#include "Lps25Sensor.h"
+#include "lps25.h"
 
 static Lps25 device;
-static Lps25Sensor sensor(device);
+
+#if EFI_PROD_CODE
+static Lps25Thread driver(device);
+#endif
 
 void initBaro() {
 	// If there's already an external (analog) baro sensor configured,
@@ -12,14 +15,9 @@ void initBaro() {
 	}
 
 	if (device.init(engineConfiguration->lps25BaroSensorScl, engineConfiguration->lps25BaroSensorSda)) {
-		sensor.Register();
-	}
-}
-
-void baroLps25Update() {
 #if EFI_PROD_CODE
-	if (device.hasInit()) {
-		sensor.update();
+		driver.init();
+#endif
+		return;
 	}
-#endif // EFI_PROD_CODE
 }

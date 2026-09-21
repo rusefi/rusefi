@@ -26,7 +26,11 @@ static CanTsListener g_listener;
 // for RX, this one delegates to above FIFO via global field
 static CanTransport transport(&g_listener);
 
-static CanStreamerState state(&transport, &transport, /*bus*/0, CAN_ECU_SERIAL_RX_ID, CAN_ECU_SERIAL_TX_ID);
+static_assert(EFI_SERIAL_CAN_BUS >= 1 && EFI_SERIAL_CAN_BUS <= EFI_CAN_BUS_COUNT,
+	"EFI_SERIAL_CAN_BUS is 1-based and must not exceed EFI_CAN_BUS_COUNT");
+
+// ISO-TP layer takes a 0-based bus index
+static CanStreamerState state(&transport, &transport, /*busIndex*/EFI_SERIAL_CAN_BUS - 1, CAN_ECU_SERIAL_RX_ID, CAN_ECU_SERIAL_TX_ID);
 #endif // HAL_USE_CAN
 
 #if HAL_USE_CAN || EFI_UNIT_TEST
@@ -54,9 +58,10 @@ void CanTransport::init() {
 	registerCanListener(g_listener);
 }
 
-can_msg_t CanTransport::transmit(CanTxMessage &/*ctfp*/, can_sysinterval_t /*timeout*/) {
-	// we do nothing here - see CanTxMessage::~CanTxMessage()
-	return CAN_MSG_OK;
+can_msg_t CanTransport::transmit(CanTxMessage &ctfp, can_sysinterval_t timeout) {
+	// ISO-TP needs the worker's send result before continuing with the next frame.
+	// The queue stores a copy, so it does not depend on this message staying alive.
+	return ctfp.submitAndWait(timeout);
 }
 
 void CanTransport::onTpFirstFrame() {

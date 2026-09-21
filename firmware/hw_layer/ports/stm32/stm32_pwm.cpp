@@ -8,9 +8,13 @@
 
 #include "pch.h"
 
+#if EFI_UNIT_TEST
+#include "mock-pwm.h"
+#endif
+
 #define _2_MHZ 2'000'000
 
-#if HAL_USE_PWM
+#if HAL_USE_PWM || EFI_UNIT_TEST
 
 namespace {
 struct stm32_pwm_config {
@@ -28,28 +32,28 @@ public:
 	// 2MHz, 16-bit timer gets us a usable frequency range of 31hz to 10khz
 	static constexpr uint32_t c_timerFrequency = _2_MHZ;
 
-	void start(const char* msg, const stm32_pwm_config& config, float frequency, float duty) {
-		m_driver = config.Driver;
-		m_channel = config.Channel;
+	void start(const char* msg, const stm32_pwm_config& pwmConfig, float frequency, float duty) {
+		m_driver = pwmConfig.Driver;
+		m_channel = pwmConfig.Channel;
 
-		m_period = c_timerFrequency / frequency;
+		uint32_t period = c_timerFrequency / frequency;
 
 		// These timers are only 16 bit - don't risk overflow
-		if (m_period > 0xFFF0) {
+		if (period > 0xFFF0) {
 			firmwareError(ObdCode::CUSTOM_OBD_LOW_FREQUENCY, "PWM Frequency too low %.1f hz on pin \"%s\"", frequency, msg);
 			return;
 		}
 
 		// If we have too few usable bits, we run out of resolution, so don't allow that either.
 		// 200 counts = 0.5% resolution
-		if (m_period < 200) {
+		if (period < 200) {
 			firmwareError(ObdCode::CUSTOM_OBD_HIGH_FREQUENCY, "PWM Frequency too high %.1f hz on pin \"%s\"", frequency, msg);
 			return;
 		}
 
 		const PWMConfig pwmcfg = {
 			.frequency = c_timerFrequency,
-			.period = m_period,
+			.period = period,
 			.callback = nullptr,
 			.channels = {
 				{PWM_OUTPUT_ACTIVE_HIGH, nullptr},
@@ -75,20 +79,26 @@ public:
 			return;
 		}
 
-		pwm_lld_enable_channel(m_driver, m_channel, getHighTime(duty));
+		chibios_rt::CriticalSectionLocker csl;
+		m_duty = duty;
+		applyDuty();
 	}
+
+	// The timer period is shared. Retiming preserves every attached channel's duty.
+	bool setFrequency(float frequency) override;
 
 private:
 	PWMDriver* m_driver = nullptr;
 	uint8_t m_channel = 0;
-	uint32_t m_period = 0;
+	float m_duty = 0;
 
-	pwmcnt_t getHighTime(float duty) const {
-		return m_period * duty;
+	void applyDuty() {
+		pwm_lld_enable_channel(m_driver, m_channel, m_driver->period * m_duty);
 	}
 };
 }
 
+#if !EFI_UNIT_TEST
 /**
   * Could this be unified with getIcuParams() method?
   */
@@ -159,8 +169,33 @@ static expected<stm32_pwm_config> getConfigForPin(brain_pin_e pin) {
 	default: return unexpected;
 	}
 };
+#endif
 
 static stm32_hardware_pwm hardPwms[5];
+
+bool stm32_hardware_pwm::setFrequency(float frequency) {
+	if (!m_driver || !(frequency > 0)) {
+		return false;
+	}
+
+	// Check before converting to an integer: very small frequencies can overflow
+	// the integer conversion, and non-finite periods must be rejected too.
+	float period = c_timerFrequency / frequency;
+	if (!(period >= 200 && period <= 0xFFF0)) {
+		return false;
+	}
+
+	chibios_rt::CriticalSectionLocker csl;
+	pwmChangePeriodI(m_driver, static_cast<pwmcnt_t>(period));
+	// Period changes leave compare registers untouched. Recompute them from the
+	// retained duties, using the shared driver period for subsequent duty writes.
+	for (auto& pwm : hardPwms) {
+		if (pwm.m_driver == m_driver) {
+			pwm.applyDuty();
+		}
+	}
+	return true;
+}
 
 stm32_hardware_pwm* getNextPwmDevice() {
 	for (size_t i = 0; i < efi::size(hardPwms); i++) {
@@ -173,6 +208,21 @@ stm32_hardware_pwm* getNextPwmDevice() {
 	return nullptr;
 }
 
+#if EFI_UNIT_TEST
+hardware_pwm* initStm32PwmForUnitTest(PWMDriver& driver, uint8_t channel, float frequency, float duty) {
+	auto device = getNextPwmDevice();
+	if (device) {
+		device->start("unit test", {&driver, channel, 0}, frequency, duty);
+	}
+	return device;
+}
+
+void resetStm32PwmForUnitTest() {
+	for (auto& pwm : hardPwms) {
+		pwm = stm32_hardware_pwm{};
+	}
+}
+#else
 /*static*/ hardware_pwm* hardware_pwm::tryInitPin(const char* msg, brain_pin_e pin, float frequencyHz, float duty) {
 	// Hardware PWM can't do very slow PWM - the timer counter is only 16 bits, so at 2MHz counting, that's a minimum of 31hz.
 	if (frequencyHz < 50) {
@@ -197,4 +247,5 @@ stm32_hardware_pwm* getNextPwmDevice() {
 
 	return nullptr;
 }
+#endif
 #endif /* HAL_USE_PWM */

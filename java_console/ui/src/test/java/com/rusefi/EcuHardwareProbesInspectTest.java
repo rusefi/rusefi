@@ -3,6 +3,8 @@ package com.rusefi;
 import com.fazecast.jSerialComm.SerialPortInvalidPortException;
 import com.opensr5.ConfigurationImageWithMeta;
 import com.rusefi.core.io.UnsupportedEcuInfo;
+import com.rusefi.io.IoStream;
+import com.rusefi.io.LinkManager;
 import com.rusefi.maintenance.CalibrationsInfo;
 import com.rusefi.updater.OpenbltDetectorStrategy.OpenbltInfo;
 import org.junit.jupiter.api.AfterEach;
@@ -17,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -88,10 +91,76 @@ public class EcuHardwareProbesInspectTest {
         return calibrations;
     }
 
+    private static class FakeSocketCanProbe implements EcuHardwareProbes.SocketCanProbe {
+        boolean supported = true;
+        RuntimeException openFailure;
+        String signature;
+        final IoStream stream = mock(IoStream.class);
+        int openCalls;
+
+        @Override
+        public boolean isSupported() {
+            return supported;
+        }
+
+        @Override
+        public IoStream open() {
+            openCalls++;
+            if (openFailure != null) {
+                throw openFailure;
+            }
+            return stream;
+        }
+
+        @Override
+        public String readSignature(IoStream stream) {
+            return signature;
+        }
+    }
+
     @AfterEach
     public void clearInterruptFlag() {
         // the interrupt-during-backoff path re-interrupts the thread; never leak that into other tests
         Thread.interrupted();
+    }
+
+    @Test
+    public void unsupportedPlatformDoesNotOpenSocketCan() {
+        FakeSocketCanProbe probe = new FakeSocketCanProbe();
+        probe.supported = false;
+
+        assertNull(EcuHardwareProbes.inspectSocketCan(probe));
+        assertEquals(0, probe.openCalls);
+    }
+
+    @Test
+    public void missingSocketCanInterfaceIsUnavailable() {
+        FakeSocketCanProbe probe = new FakeSocketCanProbe();
+        probe.openFailure = new IllegalStateException("no can0");
+
+        assertNull(EcuHardwareProbes.inspectSocketCan(probe));
+        assertEquals(1, probe.openCalls);
+    }
+
+    @Test
+    public void socketCanWithoutEcuReplyReportsTheInterfaceOnly() {
+        FakeSocketCanProbe probe = new FakeSocketCanProbe();
+
+        PortResult result = EcuHardwareProbes.inspectSocketCan(probe);
+
+        assertEquals(new PortResult(LinkManager.SOCKET_CAN, SerialPortType.CAN), result);
+        verify(probe.stream).close();
+    }
+
+    @Test
+    public void socketCanWithValidSignatureReportsAnEcu() {
+        FakeSocketCanProbe probe = new FakeSocketCanProbe();
+        probe.signature = "rusEFI master.2026.09.02.test.123456";
+
+        PortResult result = EcuHardwareProbes.inspectSocketCan(probe);
+
+        assertEquals(new PortResult(LinkManager.SOCKET_CAN, SerialPortType.Ecu), result);
+        verify(probe.stream).close();
     }
 
     @Test

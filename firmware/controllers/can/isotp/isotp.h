@@ -163,6 +163,11 @@ public:
 
 	bool isComplete{};
 
+#if EFI_UNIT_TEST
+	// Existing tests omit FC frames. Opt in to the unchanged firmware wait path.
+	bool enableFlowControlForTest = false;
+#endif
+
 	void reset();
 
 	int sendFrame(const IsoTpFrameHeader & header, const uint8_t *data, int num, can_sysinterval_t timeout);
@@ -190,11 +195,15 @@ public:
 	  // initialization too soon
 	  // todo: https://github.com/rusefi/rusefi/issues/8938
 		rxFifoBuf.clear();
+#if EFI_CAN_SUPPORT
 		registerCanListener(*this);
+#endif
 	}
 
 	~IsoTpRx() {
+#if EFI_CAN_SUPPORT
 		unregisterCanListener(*this);
+#endif
 	}
 
 	void reset() {
@@ -239,12 +248,15 @@ protected:
 	fifo_buffer_sync<CANRxFrame, ISOTP_RX_QUEUE_LEN> rxFifoBuf;
 };
 
-class IsoTpRxTx : public IsoTpRx {
+class IsoTpRxTx : public IsoTpRx, public ICanTransmitter {
 public:
 	IsoTpRxTx(size_t p_busIndex, uint32_t p_rxFrameId, uint32_t p_txFrameId)
 	:
 		IsoTpRx(p_busIndex, p_rxFrameId, p_txFrameId)
-		{}
+		{ txTransport = this; }
 
 	int writeTimeout(const uint8_t *txbuf, size_t size, sysinterval_t timeout);
+	can_msg_t transmit(CanTxMessage &ctfp, can_sysinterval_t timeout) override {
+		return ctfp.submitAndWait(timeout);
+	}
 };
