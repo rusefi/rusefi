@@ -16,6 +16,7 @@
 #define CAN_SNIFFER TRUE
 #endif
 
+#if EFI_USB_SERIAL
 class CanSniffer final : protected ThreadController<UTILITY_THREAD_STACK_SIZE> {
 public:
 	CanSniffer(SerialUSBDriver& driver)
@@ -66,3 +67,4 @@ private:
 	bool includeBus = false;
 	uint8_t baud;
 };
+#endif // EFI_USB_SERIAL
