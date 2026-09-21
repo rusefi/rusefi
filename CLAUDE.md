@@ -107,6 +107,16 @@ Hardware CI's F407 `HighRevTest` is sensitive to asynchronous settings burns: `s
 
 With st-flash 1.8.0, `Mass erase completed successfully` followed by `Failed to reset device` can still return exit 0: the erase result remains in `err` when reset failure jumps to cleanup (upstream `src/st-flash/flash.c`). An exit-code-only wrapper therefore cannot establish successful reset. Repeated `0 KiB flash` plus reset timeouts indicates invalid target discovery, even if the probe serial and chip ID are readable; check target power, NRST and SWD connections before blaming the firmware image. The zero size also makes the normal flash base fail st-flash's write-region bounds check (`Unknown memory region`).
 
+### ChibiOS ADC linear-callback state
+
+Current ChibiOS invokes a non-circular ADC conversion's completion callback
+after returning the driver to `ADC_READY`. `adcIsBufferComplete()` is meaningful
+only for circular conversions, where it distinguishes full- from half-buffer
+callbacks. A linear callback that chains another conversion must not guard on
+`adcIsBufferComplete()` or manually assign the driver state; call the I-class
+start API directly from the callback (see `slowAdcEndCB()` in
+`firmware/hw_layer/ports/stm32/stm32_adc_v2.cpp`).
+
 ### Simulator Functional Test (local WSL quirks)
 
 `./gradlew simulatorFunctionalTestLauncherWithSimulator` (repo root; also CI `build-simulator.yaml`, Linux-only) launches `simulator/build/rusefi_simulator` and talks TS protocol over TCP :29001. Two local traps, both hit 2026-08-25:
