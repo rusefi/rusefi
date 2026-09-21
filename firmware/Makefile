@@ -280,7 +280,10 @@ ifeq ($(EFI_ETHERNET),yes)
 endif
 
 ifeq ($(LWIP),yes)
+  # lwip.mk already includes evtimer.c in ALLCSRC.
   include $(CHIBIOS)/os/various/lwip_bindings/lwip.mk
+else
+  ALLCSRC += $(CHIBIOS)/os/various/evtimer.c
 endif
 
 include $(PROJECT_DIR)/hw_layer/mass_storage/mass_storage.mk
@@ -308,7 +311,6 @@ CSRC =  gcc_version_check.c \
   $(ALLCSRC) \
   $(BOARDSRC) \
   $(CHIBIOS_CONTRIB)/os/various/ramdisk.c \
-  $(CHIBIOS)/os/various/evtimer.c \
   $(DEV_SRC) \
   $(BOOTLOADERSRC) \
   ${HW_MASS_STORAGE_SRC_C} \
