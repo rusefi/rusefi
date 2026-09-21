@@ -399,6 +399,10 @@ public class LinkManager implements Closeable {
         return PCAN.equals(port);
     }
 
+    public static boolean isCanPort(String port) {
+        return PCAN.equals(port) || SOCKET_CAN.equals(port);
+    }
+
     public void setConnector(LinkConnector connector) {
         if (isStarted) {
             throw new IllegalStateException("Already started");
@@ -461,7 +465,7 @@ public class LinkManager implements Closeable {
     }
 
     static boolean isPortAvailableForReconnect(String port, Set<String> serialPorts) {
-        return isSocketCan(port) || serialPorts.contains(port);
+        return isCanPort(port) || serialPorts.contains(port);
     }
 
     @Override

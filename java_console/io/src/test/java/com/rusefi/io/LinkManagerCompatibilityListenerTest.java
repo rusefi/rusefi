@@ -17,9 +17,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LinkManagerCompatibilityListenerTest {
     @Test
-    public void socketCanCanReconnectWithoutAppearingAsASerialPort() {
+    public void canTransportsCanReconnectWithoutAppearingAsSerialPorts() {
         assertTrue(LinkManager.isPortAvailableForReconnect(
             LinkManager.SOCKET_CAN, Collections.emptySet()));
+        assertTrue(LinkManager.isPortAvailableForReconnect(
+            LinkManager.PCAN, Collections.emptySet()));
         assertFalse(LinkManager.isPortAvailableForReconnect(
             "COM7", Collections.emptySet()));
         assertTrue(LinkManager.isPortAvailableForReconnect(
