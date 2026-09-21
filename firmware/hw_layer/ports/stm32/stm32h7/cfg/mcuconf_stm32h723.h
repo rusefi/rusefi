@@ -144,6 +144,10 @@
 #define STM32_I2C4SEL                       STM32_I2C4SEL_PCLK4
 #define STM32_LPUART1SEL                    STM32_LPUART1SEL_PCLK4
 
+/* HCLK/4 is 65MHz, above the ADC's 50MHz limit. Use PLL2-P at 20MHz. */
+#define STM32_ADC_ADC12_CLOCK_MODE          ADC_CCR_CKMODE_ADCCK
+#define STM32_ADC_ADC3_CLOCK_MODE           ADC_CCR_CKMODE_ADCCK
+
 /*
  * CAN driver system settings.
  */
