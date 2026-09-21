@@ -1,0 +1,61 @@
+[submodule "firmware/ChibiOS"]
+	path = firmware/ChibiOS
+	url = https://github.com/rusefi/ChibiOS.git
+	branch = stable_21.11.x.rusefi_clean_history
+[submodule "firmware/ChibiOS-Contrib"]
+	path = firmware/ChibiOS-Contrib
+	url = https://github.com/rusefi/ChibiOS-Contrib.git
+	branch = rusefi-21.11.x
+[submodule "unit_tests/googletest"]
+	path = unit_tests/googletest
+	url = https://github.com/google/googletest.git
+	branch = main
+[submodule "hardware/rusefi_lib"]
+	path = hardware/rusefi_lib
+	url = https://github.com/rusefi/kicad-libraries
+[submodule "hardware/InteractiveHtmlBom"]
+	path = hardware/InteractiveHtmlBom
+	url = https://github.com/openscopeproject/InteractiveHtmlBom.git
+[submodule "firmware/controllers/can/wideband_firmware"]
+	path = firmware/controllers/can/wideband_firmware
+	url = https://github.com/rusefi/wideband
+	branch = prod-2026-01
+[submodule "firmware/ext/uzlib"]
+	path = firmware/ext/uzlib
+	url = https://github.com/pfalcon/uzlib
+[submodule "firmware/ext/lua"]
+	path = firmware/ext/lua
+	url = https://github.com/rusefi/lua
+	branch = rusefi-5.4.8
+[submodule "firmware/controllers/lua/luaaa"]
+	path = firmware/controllers/lua/luaaa
+	url = https://github.com/rusefi/luaaa
+	branch = rusefi_prod_2021_11_12
+[submodule "firmware/ext/openblt"]
+	path = firmware/ext/openblt
+	url = https://github.com/rusefi/openblt
+	branch = rusefi_prod
+[submodule "misc/hex2dfu"]
+	path = misc/hex2dfu
+	url = https://github.com/rusefi/hex2dfu
+	branch = rusefi_prod
+[submodule "java_console/luaformatter"]
+	path = java_console/luaformatter
+	url = https://github.com/rusefi/luaformatter
+	branch = prod
+[submodule "firmware/libfirmware"]
+	path = firmware/libfirmware
+	url = https://github.com/rusefi/libfirmware.git
+[submodule "java_console/peak-can-basic"]
+	path = java_console/peak-can-basic
+	url = https://github.com/rusefi/peak-can-basic
+[submodule ".github/workflows/hw-ci/gethla"]
+	path = .github/workflows/hw-ci/gethla
+	url = https://github.com/rusefi/gethla/
+	branch = prod
+[submodule "firmware/ext/rusefi-gha"]
+	path = firmware/ext/rusefi-gha
+	url = https://github.com/rusefi/rusefi-gha
+[submodule "firmware/ext/magic_enum"]
+	path = firmware/ext/magic_enum
+	url = https://github.com/Neargye/magic_enum

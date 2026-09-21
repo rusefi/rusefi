@@ -700,3 +700,9 @@ Open follow-ups:
 
 - The integration workflow passed Linux and Windows GCC, but exposed test-only warnings on Clang and MSVC: an obsolete unbounded-suspend mock was unused, and artificial 16-byte structure-member alignment inserted unnecessary padding. Removed the unused mock and used the driver's natural four-byte alignment, with an explicit runtime assertion. Warnings remain errors; production HAL behavior is unchanged.
 - Published the test adjustments to the two HAL branches without rewriting existing commits and selected the updated revision. The local 17-test suite still passes. The updated cross-platform workflow provides the remaining compiler validation.
+
+## 2026-09-21 - Restore official ChibiOS submodule URL
+
+- Restored the complete .gitmodules file from the integration's upstream base after its deletion. All submodule entries are preserved, including https://github.com/rusefi/ChibiOS.git; the file now has no diff against the base.
+- Kept the tested HAL revision and documented its dependencies on ChibiOS pull requests 75 and 76. Both are still pending; this integration must select the accepted upstream revision after those changes merge.
+- Validation: initialized the pinned ChibiOS revision in a new independent repository using the restored .gitmodules and the workflow's shallow submodule update command. The fetch used only the official URL, and all 17 SDIO host tests passed with native GCC. No production code changed in this correction.

@@ -15,20 +15,20 @@ and corrected expectations. The firmware integration branch is
 
 ## Reviewing and upstreaming
 
-The two HAL branches are in
-[Matheusschmitz/ChibiOS](https://github.com/Matheusschmitz/ChibiOS).
-Review the first against `rusefi/ChibiOS:stable_21.11.x.rusefi_clean_history`,
-and the second against the first branch until its prerequisite is merged.
-The second branch contains the first branch's commits.
+The HAL changes target `rusefi/ChibiOS:stable_21.11.x.rusefi_clean_history`:
 
-This integration temporarily selects the fork's URL in `.gitmodules`, so a
-fresh checkout can fetch the exact tested revision without relying on GitHub
-serving an unmerged fork commit through the upstream repository.
+1. [ChibiOS #75](https://github.com/rusefi/ChibiOS/pull/75): CCM-safe transfers.
+2. [ChibiOS #76](https://github.com/rusefi/ChibiOS/pull/76): bounded waits and
+   recovery. This branch also contains the first branch's commits.
 
-Before submitting the firmware integration upstream, merge the HAL changes,
-restore `https://github.com/rusefi/ChibiOS.git` in `.gitmodules`, and select the
-accepted upstream commit. Repeat the host tests and firmware CI against that
-commit. No pull requests are created by these branches or their workflows.
+The submodule URL remains `https://github.com/rusefi/ChibiOS.git`, as on the
+firmware's master branch. The integration currently selects the tested head
+of ChibiOS #76, `cc07ec71fa237c3db7c0950a22931f2606b53b9b`. Both HAL pull
+requests are still pending as of 2026-09-21. Fetching this commit through the
+official URL does not mean the HAL changes have been accepted upstream.
+
+Before merging this integration, merge the HAL changes and select the accepted
+upstream commit. Repeat the host tests and firmware CI against that revision.
 
 ## Validation
 
