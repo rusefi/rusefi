@@ -720,3 +720,10 @@ Validation:
 Open follow-ups:
 - `unit_tests/mocks.cpp:38` still trips GCC 16's `-Wmaybe-uninitialized`; only
   a local concern until CI moves to that compiler (see previous entry).
+
+## 2026-09-21 - Extend SD persistence coverage before correction
+
+- Merged current upstream master into the persistence proposal without rewriting the published history. Kept the existing write-result propagation, LTFT retry policy and board flash-gate tests while resolving the three conflicting files.
+- Added a standalone host harness compiling the actual SD backend, backend-selection function and production LTFT load function. Covers all three record names, partial writes/reads, sync/close/rename failures, failed restoration, backup recovery and the complete 2048-byte LTFT state. Added a five-toolchain CI matrix; no submodules are needed for this harness.
+- All nine tests pass with native GCC. The new invalid-primary test intentionally reproduces the current defect: a truncated or oversized primary replaces a readable backup, then failed promotion leaves no readable copy. The next change must fix this path and invert those expectations. Other cases assert existing correct behavior.
+- This models failures at FatFS API boundaries, not physical filesystem durability, DMA timing or actual power interruption. No firmware or hardware execution was performed at this step.
