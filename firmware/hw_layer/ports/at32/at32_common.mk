@@ -23,6 +23,7 @@ HW_LAYER_PORT_CPP += \
 	$(HW_STM32_PORT_DIR)/stm32_pwm.cpp \
 	$(HW_STM32_PORT_DIR)/stm32_serial.cpp \
 	$(HW_STM32_PORT_DIR)/stm32_icu.cpp \
+	$(HW_STM32_PORT_DIR)/backup_ram.cpp \
 	$(HW_STM32_PORT_DIR)/microsecond_timer_stm32.cpp
 
 #RUSEFIASM = \
