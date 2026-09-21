@@ -71,8 +71,10 @@ build (e.g. microrusefi with external W25Q flash). In hybrids the split is:
 `storages[STORAGE_TOTAL]` is a registry indexed by `StorageType`
 (`STORAGE_INT_FLASH`, `STORAGE_MFS_INT_FLASH`, `STORAGE_MFS_EXT_FLASH`,
 `STORAGE_SD_CARD`). Backends self-register via `storageRegisterStorage()`;
-the SD backend registers/unregisters at runtime as the card comes and goes
-(`sdCardGetCurrentMode() == SD_MODE_ECU` gates `isReady()`).
+the SD backend registers/unregisters at runtime as the card comes and goes.
+Its readiness follows the mounted filesystem lifetime (`FsGuard`), including
+the initial mount while the mode is still `SD_MODE_IDLE`. A closing or unmounted
+filesystem rejects new access even if the mode has not yet changed.
 
 `storageWrite(id, ...)` iterates **all** registered, ready backends that claim
 the id (`isIdSupported`). Writes go to every such backend (mirroring); the
@@ -93,8 +95,15 @@ ready (e.g. SD not yet mounted) completes later without the caller caring.
 `storageWaitReadDone(id, timeoutMs)` is a targeted, bounded completion gate.
 It observes only the requested read; unrelated reads and all writes are
 excluded. The SD startup mount uses it for the LTFT record before handing the
-card to another owner. A missing or slow record can therefore delay the
-handoff only up to the explicit deadline, never indefinitely.
+card to another owner. The wait bounds polling for that request; it does not
+cancel an in-flight I/O operation or bound the subsequent unmount, which still
+waits for active filesystem users. Completion means the request is no longer
+pending, not that the record was valid; LTFT retains a separate load-error flag.
+
+Failed LTFT reads preserve the active trims, finish the current attempt with
+`ltftLoadError` set and permit a new request on engine stop. A startup read
+remains pending while the engine is stopped; after the running-engine timeout,
+late load attempts are deferred until the engine stops.
 
 Write deferral: `storageAllowWriteID()` blocks settings writes while the
 engine is spinning **if** the MCU stalls on internal flash writes.
@@ -205,9 +214,10 @@ external flash chip is missing or dead.
 ## SD backend specifics
 
 `SettingStorageSD` stores only non-settings records, as files in the SD root:
-`ltft.bin`, `second_tables.bin`, `lua_script.bin`. It requires the card in
-`SD_MODE_ECU` (not handed to the PC as USB mass storage) and takes the
-FatFS `FsGuard` lock around each operation, coexisting with SD logging. It is
+`ltft.bin`, `second_tables.bin`, `lua_script.bin`. Each operation acquires the
+filesystem lifetime guard (`FsGuard`), including during the initial mount.
+This prevents unmounting during that access; it does not serialize all filesystem
+users. The filesystem is closed before the card is handed to USB mass storage. It is
 registered/unregistered dynamically as the card mounts/unmounts. Writes first
 create and sync a `.tmp` file, rotate the previous primary to `.bak`, then
 promote the complete temporary file. Reads require an exact-size primary and
@@ -219,8 +229,9 @@ An exact-size file is not necessarily free of corruption: this does not add a
 checksum to the raw LTFT format or validate the extra-page payload CRCs here.
 
 `unit_tests/test_storage_sd.py` compiles the actual SD backend, backend-selection
-function and production LTFT load function against an in-memory FatFS with
-injected failures. The dedicated `test-sd-persistence.yaml` workflow runs GCC,
+function, read-request dispatch, LTFT callbacks and logger executor against an
+in-memory FatFS and deterministic platform mocks. Both USB mass-storage enabled
+and disabled variants compile. The dedicated `test-sd-persistence.yaml` workflow runs GCC,
 Clang and MSVC. It checks recovery at API boundaries, not physical FAT durability
 or SDIO/DMA timing. LTFT staging retains one additional `LtftState` in static RAM
 (2048 bytes for two 16x16 float tables), with no full-record stack allocation.

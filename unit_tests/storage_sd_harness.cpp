@@ -137,6 +137,7 @@ namespace chibios_rt {
 struct CriticalSectionLocker { CriticalSectionLocker() {} };
 }
 @REQUEST_HELPERS@
+static bool isReadPending(StorageItemId id) { return (getPendingReads() & BIT(id)) != 0; }
 static bool pendingBeforeWakeup = false;
 static bool storageManagerSendCmd(uint32_t, uint32_t) {
     pendingBeforeWakeup = isReadPending(EFI_LTFT_RECORD_ID);
@@ -151,13 +152,16 @@ static void chThdSleepMilliseconds(unsigned ms) {
     slept += ms;
     timeNowMs += static_cast<int>(ms);
     if (completeAfter && slept >= completeAfter) {
-        clearPendingRead(EFI_LTFT_RECORD_ID);
+        pendingReads &= ~BIT(EFI_LTFT_RECORD_ID);
     }
     if (pollWhileSleeping) {
         pollReads();
     }
 }
 @WAIT_READ@
+namespace withoutStorage {
+@WAIT_STUB@
+}
 #define for_all_storages SettingStorageBase* storage = nullptr; \
     for (size_t i = 0; i < storagesCount; i++) if ((storage = storages[i]) != nullptr)
 @AVAILABLE@
@@ -174,7 +178,6 @@ public:
     void onEngineStop();
 private:
     LtftState* m_state = nullptr;
-    bool m_loadTimedOut = false;
 };
 struct SdLogTrigger {
     int getState() { return 1; }
@@ -261,15 +264,17 @@ int main(int argc, char** argv) {
         if (scenario == "wait_invalid") {
             const bool zero = storageWaitReadDone(static_cast<StorageItemId>(0), 0);
             const bool limit = storageWaitReadDone(EFI_STORAGE_TOTAL_ITEMS, 0);
-            std::printf("{\"zero\":%s,\"limit\":%s}\n", zero ? "true" : "false", limit ? "true" : "false");
+            std::printf("{\"zero\":%s,\"limit\":%s,\"stub_invalid\":%s,\"stub_valid\":%s}\n",
+                        zero ? "true" : "false", limit ? "true" : "false",
+                        withoutStorage::storageWaitReadDone(EFI_STORAGE_TOTAL_ITEMS, 0) ? "true" : "false",
+                        withoutStorage::storageWaitReadDone(EFI_LTFT_RECORD_ID, 0) ? "true" : "false");
             return 0;
         }
-        setPendingRead(EFI_LTFT_RECORD_ID);
-        setPendingRead(EFI_SECOND_TABLES_RECORD_ID);
+        pendingReads = BIT(EFI_LTFT_RECORD_ID) | BIT(EFI_SECOND_TABLES_RECORD_ID);
         if (scenario == "wait_complete") {
             completeAfter = 20;
         } else if (scenario == "wait_unrelated") {
-            clearPendingRead(EFI_LTFT_RECORD_ID);
+            pendingReads &= ~BIT(EFI_LTFT_RECORD_ID);
         }
         const bool done = storageWaitReadDone(EFI_LTFT_RECORD_ID, 25);
         std::printf("{\"done\":%s,\"slept\":%u,\"unrelated\":%s}\n", done ? "true" : "false", slept,

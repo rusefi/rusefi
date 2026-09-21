@@ -16,7 +16,8 @@ struct LtftState {
 
 	// returns true if the trims were persisted, false on storage failure
 	bool save();
-	void load();
+	// Returns true only when a complete storage record replaces the active trims.
+	bool load();
 	void reset();
 	void applyToVe();
 	// Development only, to be removed
@@ -33,6 +34,7 @@ public:
 	void init(LtftState *state);
 	void learn(ClosedLoopFuelResult clResult, float rpm, float fuelLoad);
 	ClosedLoopFuelResult getTrims(float rpm, float fuelLoad);
+	// False defers the request; true finishes an attempt, with ltftLoadError as its result.
 	bool load();
 	// returns true if the trims were persisted; false lets the storage manager keep the request pending and retry
 	bool store();
@@ -50,7 +52,6 @@ private:
 	// TODO: move to livedata and kill isVeUpdated() ?
 	bool veNeedRefresh = false;
 	bool showUpdateToUser = false;
-	bool m_loadTimedOut = false;
 	// a save request that could not be queued yet (storage manager mailbox full); retried on every learn() call
 	bool saveRequestNeeded = false;
 

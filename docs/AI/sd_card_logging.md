@@ -40,9 +40,11 @@ Boot sequence: wait for `boardSdCardEnable()`, check backup RAM state from the
 previous boot (counts "unsafe unmount" power-offs while mounted), init the card
 (give up until next reboot on failure), then briefly mount once to drop/scan crash
 report files (`errorHandlerWriteReportFile`). When SD-backed LTFT is enabled,
-that startup mount waits up to one second for that specific pending read. The
-deadline excludes writes and unrelated storage work, so USB mass-storage
-ownership cannot be held indefinitely. After that it loops forever:
+that startup mount polls for up to one second for that specific pending read,
+excluding writes and unrelated storage work. Storage readiness follows the
+mounted filesystem even while the mode is still `IDLE`. This polling timeout
+does not cancel I/O already in progress: unmount still waits for active filesystem
+users before handing ownership to USB. After that it loops forever:
 
 1. `sdModeSelector()` picks the desired mode: a user request (`sdmode` console
    command or TS) always wins and sticks until power-off; otherwise USB connected

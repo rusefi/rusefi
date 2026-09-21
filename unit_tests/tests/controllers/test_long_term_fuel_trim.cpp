@@ -179,7 +179,35 @@ TEST(LTFT, FailedLoadPreservesExistingTrims) {
 
 	// The unit-test stub must preserve the active state. Production storage
 	// failures are exercised separately by test_storage_sd.py with EFI_PROD_CODE=1.
-	state.load();
+	EXPECT_FALSE(state.load());
 
 	EXPECT_FLOAT_EQ(expected, state.trims[0][1][1]);
+}
+
+TEST(LTFT, FailedLoadReportsErrorAndRetriesOnStop) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	LtftState state;
+	LongTermFuelTrim ltft;
+	ltft.init(&state);
+	state.trims[0][0][0] = 0.125f;
+	ltft.ltftLoadPending = true;
+	EXPECT_TRUE(ltft.load());
+	EXPECT_FALSE(ltft.ltftLoadPending);
+	EXPECT_TRUE(ltft.ltftLoadError);
+	EXPECT_FLOAT_EQ(0.125f, state.trims[0][0][0]);
+	ltft.onEngineStop();
+	EXPECT_TRUE(ltft.ltftLoadPending);
+}
+
+TEST(LTFT, StoppedEngineKeepsStartupReadPending) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	LtftState state;
+	LongTermFuelTrim ltft;
+	ltft.init(&state);
+	ltft.ltftLoadPending = true;
+	engine->rpmCalculator.setStopSpinning();
+	advanceTimeUs(8'000'000);
+	ltft.onSlowCallback();
+	EXPECT_TRUE(ltft.ltftLoadPending);
+	EXPECT_FALSE(ltft.ltftLoadError);
 }

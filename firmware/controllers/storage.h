@@ -74,7 +74,8 @@ bool storageReqestReadID(StorageItemId id);
 /**
  * Wait for one queued storage read to complete, up to timeoutMs.
  * This does not wait for unrelated reads or any pending writes.
- * @return true if this read is no longer pending, false on timeout
+ * Completion is not read success; the consumer retains its load-error status.
+ * @return true if this read is no longer pending, false on timeout or invalid ID
  */
 bool storageWaitReadDone(StorageItemId id, unsigned int timeoutMs);
 

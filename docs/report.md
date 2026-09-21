@@ -777,3 +777,16 @@ Open follow-ups:
 - Extended the host harness to compile the actual read-request helpers, storage read-dispatch loop, LTFT controller callbacks and SD logger executor. Both USB mass-storage enabled and disabled variants compile; controls cover full-mailbox wakeup loss, unrelated reads, bounded polling, late-read deferral and USB arrival before logger execution.
 - All 19 native GCC tests pass before changing production behavior. New assertions deliberately reproduce mounted-IDLE storage being unavailable, closing ECU-mode storage being reported ready, failed LTFT reads clearing the error/retry state, a stopped engine timing out its startup read, and invalid read IDs being reported complete. These expectations will be inverted by the correction commit.
 - The harness uses deterministic platform mocks; it does not emulate real RTOS scheduling, physical SD timing or USB hardware ownership transitions.
+
+## 2026-09-21 - Correct mounted-SD readiness and LTFT read outcomes
+
+- Backend readiness now follows FsGuard availability, allowing the initial IDLE-mode mount while rejecting closing/unmounted filesystems. Reads still acquire their own lifetime guard. No new storage buffer, calibration layout or ChibiOS pin change.
+- LtftState::load reports whether a complete record was applied. The LTFT controller preserves a failed attempt's error/retry state while completing the request, avoiding continuous retries of missing files. Running-engine timeout behavior remains; a stopped engine no longer prematurely abandons the startup read. Added matching Google Test cases.
+- Invalid read IDs are rejected by both the storage-enabled wait and its no-storage stub. Updated documentation to distinguish request completion from successful loading and polling timeout from unmount/I/O completion.
+- Inverted the prior bad-behavior assertions. The 19-test native GCC suite passes with USB mass-storage enabled and disabled harness variants, including the persistence prerequisite's tests. The five-toolchain workflow now also runs for SD mode-executor changes. General firmware/unit-test CI and physical-card/USB validation remain separate from these host checks.
+
+## 2026-09-21 - Simplify startup handoff before publication
+
+- Removed the duplicate private LTFT retry flag; the existing load-error state now controls both late-read deferral and retry on engine stop. Initialization clears it and a successful load clears it again.
+- Replaced four pending-read helpers with one locked snapshot helper. The request and completion sites update the bitmap in short critical sections; no filesystem call or mailbox post runs under that lock.
+- Re-ran all 19 native GCC host tests successfully with both USB mass-storage build variants. The coverage-first commit remains separate from the correction. No public branch update was made before this simplification review.

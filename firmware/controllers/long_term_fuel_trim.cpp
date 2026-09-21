@@ -44,12 +44,14 @@ bool LtftState::save() {
 	return true;
 }
 
-void LtftState::load() {
+bool LtftState::load() {
 #if EFI_PROD_CODE
 	if (storageRead(EFI_LTFT_RECORD_ID, (uint8_t *)ltftLoadState.trims, sizeof(ltftLoadState.trims)) == StorageStatus::Ok) {
 		memcpy(trims, ltftLoadState.trims, sizeof(trims));
+		return true;
 	}
 #endif
+	return false;
 }
 
 void LtftState::reset() {
@@ -91,7 +93,7 @@ void LtftState::applyToVe() {
 
 void LongTermFuelTrim::init(LtftState *state) {
 	m_state = state;
-	m_loadTimedOut = false;
+	ltftLoadError = false;
 
 #if EFI_PROD_CODE
 	ltftLoadPending = storageReqestReadID(EFI_LTFT_RECORD_ID);
@@ -261,16 +263,17 @@ bool LongTermFuelTrim::load() {
 	// A startup read that arrives after the timeout must not overwrite trims
 	// learned while the engine is running. Keep the manager request pending and
 	// consume it after onEngineStop() asks for the retry.
-	if (m_loadTimedOut && !engine->rpmCalculator.isStopped()) {
+	if (ltftLoadError && !engine->rpmCalculator.isStopped()) {
 		return false;
 	}
 #endif
 
-	m_state->load();
+	const bool loaded = m_state && m_state->load();
 
 	ltftLoadPending = false;
-	ltftLoadError = false;
-	m_loadTimedOut = false;
+	ltftLoadError = !loaded;
+	// The attempt finished, even if the file was missing or unreadable. Avoid
+	// retrying that file on every storage poll; onEngineStop requests the retry.
 	return true;
 }
 
@@ -336,13 +339,13 @@ void LongTermFuelTrim::onSlowCallback() {
 	// we can wait some time for LTFT to be loaded from storage...
 	if ((ltftLoadPending) &&
 #if EFI_SHAFT_POSITION_INPUT
+		(!engine->rpmCalculator.isStopped()) &&
 		(engine->rpmCalculator.getSecondsSinceEngineStart(getTimeNowNt()) > 5.0) &&
 #endif
 		(1)) {
 		efiPrintf("LTFT: failed to load calibrations");
 		ltftLoadPending = false;
 		ltftLoadError = true;
-		m_loadTimedOut = true;
 	}
 	// Do some magic math here?
 
@@ -350,7 +353,7 @@ void LongTermFuelTrim::onSlowCallback() {
 }
 
 void LongTermFuelTrim::onEngineStop() {
-	if (!m_loadTimedOut) {
+	if (!ltftLoadError) {
 		return;
 	}
 

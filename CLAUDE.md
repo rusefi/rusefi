@@ -24,6 +24,12 @@ backend. Its FatFS model tests API-level recovery, not physical filesystem
 durability or SDIO timing. Keep its five-toolchain workflow enabled when
 changing persistence code.
 
+The SD startup mount precedes the mode loop, so `SD_MODE_IDLE` can coexist with
+a mounted filesystem. Gate backend availability through `FsGuard`, not ECU mode.
+`storageWaitReadDone` observes request completion, not successful deserialization;
+retain the consumer's load-error state. Its polling timeout does not cancel an
+active FatFS call or bypass the filesystem lifetime guard during USB handoff.
+
 Default to building with 12 threads unless otherwise specified (-j12 etc).
 
 ### Building Firmware

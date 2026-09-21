@@ -1278,8 +1278,8 @@ static THD_FUNCTION(MMCmonThread, arg) {
 
 #if (EFI_STORAGE_SD == TRUE) && EFI_LTFT_CONTROL
 		// Wait only for the startup record that needs this short-lived mount.
-		// Never include writes or unrelated work: USB ownership must remain
-		// bounded even if the record cannot be loaded.
+		// Exclude writes and unrelated work from this polling wait. Unmounting
+		// still waits for any active filesystem users to finish their I/O.
 		if (!storageWaitReadDone(EFI_LTFT_RECORD_ID, 1000)) {
 			efiPrintf("SD: LTFT startup read timed out");
 		}

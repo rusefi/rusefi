@@ -65,7 +65,10 @@ const SettingStorageSD::FileNames *SettingStorageSD::getIdFileNames(size_t id) {
 }
 
 bool SettingStorageSD::isReady() {
-	return (sdCardGetCurrentMode() == SD_MODE_ECU);
+	// Startup mounts the filesystem before the mode loop enters ECU mode.
+	// The lifetime guard also rejects a closing or unmounted filesystem.
+	FsGuard guard;
+	return guard.isLocked();
 }
 
 bool SettingStorageSD::isIdSupported(size_t id) {

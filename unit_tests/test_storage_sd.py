@@ -48,13 +48,13 @@ class StorageSdTest(unittest.TestCase):
             "SD_SOURCE": source,
             "READ_SOURCE": extract_block(storage, "StorageStatus storageRead("),
             "LTFT_DECLARATION": extract_block(declaration, "struct LtftState") + ";",
-            "LTFT_LOAD": extract_block(ltft, "void LtftState::load("),
+            "LTFT_LOAD": extract_block(ltft, "bool LtftState::load("),
             "LTFT_DIMENSIONS": dimensions,
-            "REQUEST_HELPERS": "\n".join(extract_block(storage, signature) for signature in (
-                "static void setPendingRead(", "static bool isReadPending(",
-                "static uint32_t getPendingReads(", "static void clearPendingRead(")),
+            "REQUEST_HELPERS": extract_block(storage, "static uint32_t getPendingReads("),
             "REQUEST_READ": extract_block(storage, "bool storageReqestReadID("),
             "WAIT_READ": extract_block(storage, "bool storageWaitReadDone("),
+            "WAIT_STUB": extract_block(storage[storage.index("#else // !EFI_CONFIGURATION_STORAGE"):],
+                                       "bool storageWaitReadDone("),
             "AVAILABLE": extract_block(storage, "bool storageIsIdAvailableForId("),
             "READ_ID": extract_block(storage, "static bool storageReadID("),
             "POLL_READS": storage[storage.index("\t\tuint32_t reads = getPendingReads();"):
@@ -156,12 +156,11 @@ class StorageSdTest(unittest.TestCase):
             with self.subTest(scenario=scenario):
                 self.assertEqual(self.run_case(scenario), {"intact": True, "bytes": 2048})
 
-    def test_startup_mount_is_rejected_before_ecu_mode(self):
-        # Passing reproduction: the mounted filesystem is incorrectly unavailable.
-        self.assertEqual(self.run_case("startup"), {"done": False, "slept": 25, "pending": True})
+    def test_startup_mount_completes_read_before_ecu_mode(self):
+        self.assertEqual(self.run_case("startup"), {"done": True, "slept": 10, "pending": False})
 
-    def test_closing_filesystem_is_incorrectly_reported_ready_in_ecu_mode(self):
-        self.assertEqual(self.run_case("ready_closed"), {"ready": True})
+    def test_closing_filesystem_is_not_ready_even_in_ecu_mode(self):
+        self.assertEqual(self.run_case("ready_closed"), {"ready": False})
 
     def test_full_mailbox_keeps_read_pending_before_wakeup(self):
         self.assertEqual(self.run_case("queue_full"), {"accepted": True, "before_wakeup": True,
@@ -172,17 +171,18 @@ class StorageSdTest(unittest.TestCase):
         self.assertEqual(self.run_case("wait_unrelated"), {"done": True, "slept": 0, "unrelated": True})
         self.assertEqual(self.run_case("wait_complete"), {"done": True, "slept": 20, "unrelated": True})
 
-    def test_invalid_wait_id_is_incorrectly_reported_complete(self):
-        self.assertEqual(self.run_case("wait_invalid"), {"zero": True, "limit": True})
+    def test_invalid_wait_id_is_rejected(self):
+        self.assertEqual(self.run_case("wait_invalid"), {"zero": False, "limit": False,
+                                                        "stub_invalid": False, "stub_valid": True})
 
-    def test_failed_ltft_read_is_incorrectly_reported_without_error(self):
+    def test_failed_ltft_read_finishes_attempt_with_error_and_retry_on_stop(self):
         for scenario in ("module_missing", "module_partial"):
             with self.subTest(scenario=scenario):
-                self.assertEqual(self.run_case(scenario), {"done": True, "error": False,
-                                                          "retry": False, "intact": True})
+                self.assertEqual(self.run_case(scenario), {"done": True, "error": True,
+                                                          "retry": True, "intact": True})
 
-    def test_stopped_engine_incorrectly_times_out_initial_read(self):
-        self.assertEqual(self.run_case("module_stopped"), {"pending": False, "error": True})
+    def test_stopped_engine_keeps_initial_read_pending(self):
+        self.assertEqual(self.run_case("module_stopped"), {"pending": True, "error": False})
 
     def test_late_read_defers_until_engine_stops(self):
         self.assertEqual(self.run_case("module_late"), {"deferred": True, "intact": True,

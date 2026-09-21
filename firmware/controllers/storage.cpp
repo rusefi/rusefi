@@ -97,24 +97,9 @@ chibios_rt::Mailbox<msg_t, 16> storageManagerMb;
 // short-lived storage mount cannot miss a request still queued in the mailbox.
 static uint32_t pendingReads = 0;
 
-static void setPendingRead(StorageItemId id) {
-	chibios_rt::CriticalSectionLocker csl;
-	pendingReads |= BIT(id);
-}
-
-static bool isReadPending(StorageItemId id) {
-	chibios_rt::CriticalSectionLocker csl;
-	return (pendingReads & BIT(id)) != 0;
-}
-
 static uint32_t getPendingReads() {
 	chibios_rt::CriticalSectionLocker csl;
 	return pendingReads;
-}
-
-static void clearPendingRead(StorageItemId id) {
-	chibios_rt::CriticalSectionLocker csl;
-	pendingReads &= ~BIT(id);
 }
 
 #define MSG_CMD_WRITE		(0)
@@ -246,7 +231,10 @@ bool storageReqestReadID(StorageItemId id) {
 		return false;
 	}
 
-	setPendingRead(id);
+	{
+		chibios_rt::CriticalSectionLocker csl;
+		pendingReads |= BIT(id);
+	}
 	// The manager also polls, so a full mailbox only delays the request; it does
 	// not lose it. The ping normally wakes the manager immediately.
 	(void)storageManagerSendCmd(MSG_CMD_PING, 0);
@@ -421,7 +409,8 @@ static void storageManagerThread(void*) {
 			}
 
 			if (storageReadID(id)) {
-				clearPendingRead(id);
+				chibios_rt::CriticalSectionLocker csl;
+				pendingReads &= ~BIT(id);
 			}
 		}
 
@@ -486,7 +475,10 @@ bool storageWaitIdle(unsigned int timeoutMs) {
 }
 
 bool storageWaitReadDone(StorageItemId id, unsigned int timeoutMs) {
-	while (isReadPending(id)) {
+	if ((id <= 0) || (id >= EFI_STORAGE_TOTAL_ITEMS)) {
+		return false;
+	}
+	while (getPendingReads() & BIT(id)) {
 		if (timeoutMs == 0) {
 			return false;
 		}
@@ -539,8 +531,8 @@ bool storageWaitIdle(unsigned int /*timeoutMs*/) {
 	return true;
 }
 
-bool storageWaitReadDone(StorageItemId /*id*/, unsigned int /*timeoutMs*/) {
-	return true;
+bool storageWaitReadDone(StorageItemId id, unsigned int /*timeoutMs*/) {
+	return (id > 0) && (id < EFI_STORAGE_TOTAL_ITEMS);
 }
 
 #endif // EFI_CONFIGURATION_STORAGE
