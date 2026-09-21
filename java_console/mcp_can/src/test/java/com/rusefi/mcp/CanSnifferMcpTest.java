@@ -63,7 +63,7 @@ class CanSnifferMcpTest {
         assertEquals(8L, rtr.get("length"));
         assertEquals("", rtr.get("data"));
         assertTrue(rtr.containsKey("busIndex"));
-        assertNull(rtr.get("busIndex"));
+        assertEquals(0L, rtr.get("busIndex"));
         JSONArray packets = (JSONArray) body(results.get(2)).get("packets");
         assertEquals(1, packets.size());
         JSONObject extended = (JSONObject) packets.get(0);
