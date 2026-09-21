@@ -16,6 +16,14 @@ After each completed unit of work (a landed feature, a fixed bug, or a finished 
 
 ## Build Commands
 
+The SD persistence regression harness is `python unit_tests/test_storage_sd.py`
+(`--cxx g++`, `clang++` or `cl`). The normal firmware unit tests compile out
+the production `LtftState::load` read; this separate harness compiles that
+function with `EFI_PROD_CODE=1` and injects failures through the actual SD
+backend. Its FatFS model tests API-level recovery, not physical filesystem
+durability or SDIO timing. Keep its five-toolchain workflow enabled when
+changing persistence code.
+
 Default to building with 12 threads unless otherwise specified (-j12 etc).
 
 ### Building Firmware

@@ -171,8 +171,8 @@ TEST(LTFT, FailedLoadPreservesExistingTrims) {
 	const float expected = state.trims[0][1][1];
 	ASSERT_NE(0.0f, expected);
 
-	// EFI_UNIT_TEST exercises the same failure path as an unavailable or
-	// incomplete storage record.
+	// The unit-test stub must preserve the active state. Production storage
+	// failures are exercised separately by test_storage_sd.py with EFI_PROD_CODE=1.
 	state.load();
 
 	EXPECT_FLOAT_EQ(expected, state.trims[0][1][1]);

@@ -106,15 +106,22 @@ class StorageSdTest(unittest.TestCase):
         self.assertTrue(result["old"])
         self.assertTrue(result["backup"])
 
-    def test_invalid_primary_replaces_good_backup_before_failed_promotion(self):
-        # Passing reproduction: a truncated/oversized primary destroys the good backup.
+    def test_invalid_primary_keeps_good_backup_after_failed_promotion(self):
         for scenario in ("truncated_promote", "oversized_promote"):
             with self.subTest(scenario=scenario):
                 result = self.run_case(scenario)
                 self.assertEqual(result["status"], 6)
-                self.assertNotEqual(result["read_status"], 0)
-                self.assertFalse(result["old"])
-                self.assertFalse(result["backup"])
+                self.assertEqual(result["read_status"], 0)
+                self.assertTrue(result["old"])
+                self.assertTrue(result["backup"])
+
+    def test_invalid_primary_replacement_keeps_recovery_backup(self):
+        for scenario in ("truncated_replace", "oversized_replace"):
+            with self.subTest(scenario=scenario):
+                result = self.run_case(scenario)
+                self.assertEqual(result["status"], 0)
+                self.assertTrue(result["new"])
+                self.assertTrue(result["backup"])
 
     def test_backend_failure_cannot_overwrite_successful_read(self):
         self.assertEqual(self.run_case("priority"), {"status": 0, "value": 17})

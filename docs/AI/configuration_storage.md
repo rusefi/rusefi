@@ -205,7 +205,18 @@ registered/unregistered dynamically as the card mounts/unmounts. Writes first
 create and sync a `.tmp` file, rotate the previous primary to `.bak`, then
 promote the complete temporary file. Reads require an exact-size primary and
 fall back to the backup. This is a recoverable rotation scheme; it does not
-claim stronger atomicity than the underlying FatFS rename operation.
+claim stronger atomicity than the underlying FatFS rename operation. A primary
+with an unexpected size is discarded rather than rotated over the backup;
+the existing backup remains available if the replacement cannot be promoted.
+An exact-size file is not necessarily free of corruption: this does not add a
+checksum to the raw LTFT format or validate the extra-page payload CRCs here.
+
+`unit_tests/test_storage_sd.py` compiles the actual SD backend, backend-selection
+function and production LTFT load function against an in-memory FatFS with
+injected failures. The dedicated `test-sd-persistence.yaml` workflow runs GCC,
+Clang and MSVC. It checks recovery at API boundaries, not physical FAT durability
+or SDIO/DMA timing. LTFT staging retains one additional `LtftState` in static RAM
+(2048 bytes for two 16x16 float tables), with no full-record stack allocation.
 
 ## History: PR #9949 (July 2026)
 

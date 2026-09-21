@@ -42,7 +42,7 @@ private:
 
 	const FileNames *getIdFileNames(size_t id);
 	StorageStatus readExactFile(const char *fileName, uint8_t *ptr, size_t size);
-	bool fileExists(const char *fileName, bool& exists);
+	bool inspectFile(const char *fileName, size_t expectedSize, bool& exists, bool& sizeMatches);
 	void reportWriteFailure(size_t id);
 	FIL *m_fd;
 };
@@ -132,13 +132,14 @@ StorageStatus SettingStorageSD::store(size_t id, const uint8_t *ptr, size_t size
 	}
 
 	bool primaryExists = false;
-	if (!fileExists(fileNames->primary, primaryExists)) {
+	bool primaryComplete = false;
+	if (!inspectFile(fileNames->primary, size, primaryExists, primaryComplete)) {
 		reportWriteFailure(id);
 		return StorageStatus::Failed;
 	}
 
 	bool primaryMoved = false;
-	if (primaryExists) {
+	if (primaryExists && primaryComplete) {
 		err = f_unlink(fileNames->backup);
 		if ((err != FR_OK) && (err != FR_NO_FILE)) {
 			printFatFsError("SD: failed to remove old storage backup", err);
@@ -153,6 +154,15 @@ StorageStatus SettingStorageSD::store(size_t id, const uint8_t *ptr, size_t size
 			return StorageStatus::Failed;
 		}
 		primaryMoved = true;
+	} else if (primaryExists) {
+		// A size-invalid primary may already have required recovery from .bak.
+		// Keep that backup intact if promotion fails or power is lost here.
+		err = f_unlink(fileNames->primary);
+		if (err != FR_OK) {
+			printFatFsError("SD: failed to remove invalid storage primary", err);
+			reportWriteFailure(id);
+			return StorageStatus::Failed;
+		}
 	}
 
 	err = f_rename(fileNames->temporary, fileNames->primary);
@@ -176,7 +186,8 @@ StorageStatus SettingStorageSD::store(size_t id, const uint8_t *ptr, size_t size
 	return status;
 }
 
-bool SettingStorageSD::fileExists(const char *fileName, bool& exists) {
+bool SettingStorageSD::inspectFile(const char *fileName, size_t expectedSize, bool& exists, bool& sizeMatches) {
+	sizeMatches = false;
 	FRESULT err = f_open(m_fd, fileName, FA_READ);
 	if (err == FR_NO_FILE) {
 		exists = false;
@@ -189,6 +200,7 @@ bool SettingStorageSD::fileExists(const char *fileName, bool& exists) {
 	}
 
 	exists = true;
+	sizeMatches = f_size(m_fd) == expectedSize;
 	err = f_close(m_fd);
 	if (err != FR_OK) {
 		printFatFsError("SD: failed to close inspected storage file", err);
