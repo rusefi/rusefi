@@ -322,6 +322,15 @@ public class EcuMcpServer {
                 schemaObject(new String[][]{
                         {"name", "string", "Output-channel (gauge) name, case-insensitive, e.g. 'RPMValue'."}
                 }, new String[]{"name"}, false)));
+        tools.add(tool("convert_log_to_csv",
+                "Convert a host-side binary MLVLG v2 or text TunerStudio MSL log to CSV. " +
+                        "No ECU connection required. Stop recording before converting. " +
+                        "Never overwrites an existing file. Returns success, path, inputFormat, recordCount and fieldCount.",
+                schemaObject(new String[][]{
+                        {"inputPath", "string", "Existing log file on the MCP server host."},
+                        {"outputPath", "string", "New CSV path on the server host; parent must exist. " +
+                                "Defaults to inputPath with its extension replaced by .csv."}
+                }, new String[]{"inputPath"}, false)));
         tools.add(tool("start_data_logging",
                 "Start recording ECU operating data to an MLG file on the MCP server host. " +
                         "Records all numeric/enum output channels at the connection polling rate. " +
@@ -419,6 +428,7 @@ public class EcuMcpServer {
                 case "read_output_channel": toolResult = doReadOutputChannel(args); break;
                 case "mount_to_ecu": toolResult = doMount(args, true); break;
                 case "mount_to_pc": toolResult = doMount(args, false); break;
+                case "convert_log_to_csv": toolResult = doConvertLogToCsv(args); break;
                 case "start_data_logging": toolResult = doStartDataLogging(args); break;
                 case "stop_data_logging": toolResult = dataLogger.stop(); break;
                 case "data_logging_status": toolResult = dataLogger.status(); break;
@@ -435,6 +445,28 @@ public class EcuMcpServer {
             return toolError(t.toString());
         }
         return wrapToolResult(toolResult);
+    }
+
+    @SuppressWarnings("unchecked")
+    private JSONObject doConvertLogToCsv(JSONObject args) throws IOException {
+        Object input = args.get("inputPath");
+        Object output = args.get("outputPath");
+        if (!(input instanceof String) || ((String) input).trim().isEmpty()) {
+            throw new IllegalArgumentException("inputPath must be a non-empty string");
+        }
+        if (args.containsKey("outputPath") && (!(output instanceof String) || ((String) output).trim().isEmpty())) {
+            throw new IllegalArgumentException("outputPath must be a non-empty string");
+        }
+        Path source = Paths.get((String) input);
+        MslToCsv.Result conversion = MslToCsv.convert(source,
+                output == null ? MslToCsv.defaultOutput(source) : Paths.get((String) output));
+        JSONObject result = new JSONObject();
+        result.put("success", true);
+        result.put("path", conversion.path.toString());
+        result.put("inputFormat", conversion.inputFormat);
+        result.put("recordCount", conversion.recordCount);
+        result.put("fieldCount", conversion.fieldCount);
+        return result;
     }
 
     private LinkManager ensureConnected(String portOrNull) throws Exception {

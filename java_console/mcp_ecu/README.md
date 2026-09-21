@@ -4,7 +4,8 @@ An [MCP (Model Context Protocol)](https://modelcontextprotocol.io/) server that 
 LLM client (Claude Desktop, JetBrains AI, Cursor, etc.) iterate on rusEFI Lua scripts:
 write a candidate script, upload it to the ECU, reset Lua, and observe the resulting
 `print(...)` / `efiPrintf` output. It also reads live ECU values and records operating
-data to host-side `.mlg` files using the Java frontend's binary log format.
+data to host-side `.mlg` files using the Java frontend's binary log format. It can
+also convert existing binary MLG and text TunerStudio MSL logs to CSV offline.
 
 ## Architecture
 
@@ -59,11 +60,50 @@ Behavior common to all tools:
 | `start_data_logging` | Record ECU operating data to a new `.mlg` file. |
 | `stop_data_logging` | Stop recording and close the file. |
 | `data_logging_status` | Recording state, file path, sample count, and errors. |
+| `convert_log_to_csv` | Convert a host-side MLG/MSL log to CSV without connecting to an ECU. |
 | `read_messages` | Pull recent ECU messages (Lua `print` included). |
 | `wait_for_message` | Block until a message matches a regex. |
 | `read_tune` | Save the complete ECU tune as a `.msq` file. |
 | `reboot` | Reboot the ECU. |
 | `reboot_to_blt` | Reboot the ECU into the OpenBLT bootloader. |
+
+### `convert_log_to_csv`
+
+| Argument | Type | Required | Description |
+|---|---|---|---|
+| `inputPath` | string | yes | Existing binary MLVLG v2 or text TunerStudio MSL file on the MCP server host. |
+| `outputPath` | string | no | New CSV file; defaults to the input path with its extension replaced by `.csv`. Parent directory must exist. |
+
+Relative paths resolve against the server's working directory. No ECU connection
+or INI file is needed. Stop recording before converting the log. Existing output
+files are never overwritten. Conversion errors do not publish a partial CSV.
+
+Returns `success`, absolute `path`, `inputFormat` (`mlg` or `msl`), `recordCount`,
+and `fieldCount`. Example tool call:
+
+```json
+{"name":"convert_log_to_csv","arguments":{"inputPath":"/tmp/engine-run.mlg"}}
+```
+
+CSV columns follow the C++ `msl2csv` helper: one column per logged field, with
+units appended to the column name. Binary values use `(raw + transform) * scale`
+and the field's declared decimal precision (clamped to 0..12); NaN becomes an
+empty cell. No timestamp column is synthesized from the wrapping record header;
+a logged `Time` field is exported like any other field. Text MSL input must have
+a tab-separated field-name row, units row, and data rows with matching widths.
+Binary checksum mismatches, truncated records, unsupported scalar/block types,
+and inconsistent headers fail conversion. Marker blocks are not supported.
+
+The converter lives in `:mcp_ecu` as `com.rusefi.mcp.MslToCsv`, adapted from
+`misc/mlg2csv/MlgToCsv.java` on `at32-vovansss`. It streams records and can also run
+as a CLI after building `./gradlew :mcp_ecu:fatJar` (substitute the built jar path):
+
+```bash
+java -cp /path/to/mcp_ecu-all.jar com.rusefi.mcp.MslToCsv input.mlg output.csv
+```
+
+The output argument is optional. The existing C++ converter remains available
+for unit-test tooling.
 
 ### `connect`
 
