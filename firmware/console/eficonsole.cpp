@@ -257,7 +257,8 @@ void initializeConsole() {
 	addConsoleAction("uid", printUid);
 #endif
 
-#if defined(STM32F4) || defined(STM32F7) || defined(STM32H7)
+#if (defined(STM32F4) || defined(STM32F7) || defined(STM32H7)) && !defined(AT32F4XX)
+	// AT32 also defines STM32F4, but does not use the STM32 option-byte helpers.
 	addConsoleAction("print_wrp", [](){ printWRPBits();});
 	addConsoleAction("print_opt", [](){ printOptBytes();});
 	addConsoleAction("remove_wrp", [](){ removeWRP();});
