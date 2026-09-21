@@ -65,8 +65,9 @@ CONFIG_FILES = \
 #  the deps for that .o file in the same GCC call, so if the .deps aren't already
 #  in the correct state, things can fail to build because Make doesn't know it needs
 #  to build the prerequisites (in this case CONFIG_FILES and RAMDISK) for those files ahead of time.
-$(TCOBJS): $(CONFIG_FILES)
-$(TCPPOBJS): $(RAMDISK)
+# Support both legacy split ARM/THUMB lists and current ChibiOS object lists.
+$(TCOBJS) $(ACOBJS) $(COBJS): $(CONFIG_FILES)
+$(TCPPOBJS) $(ACPPOBJS) $(CPPOBJS) $(CCOBJS): $(RAMDISK)
 
 # Codegen recipes below write shared files under the firmware tree (generated headers,
 # .ini fragments, java sources), so concurrent makes (firmware + simulator + unit_tests)
