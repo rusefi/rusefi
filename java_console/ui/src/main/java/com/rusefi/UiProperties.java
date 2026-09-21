@@ -7,10 +7,6 @@ public class UiProperties {
     public static final String SKIP_ECU_TYPE_DETECTION = "skip_ecu_type_detection";
     public static final String SHOW_CAN_OPENBLT = "show_can_openblt";
 
-    public static boolean usePCAN() {
-        return ConnectionAndMeta.getBoolean("show_pcan", PropertiesHolder.INSTANCE.getProperties());
-    }
-
     public static boolean useCanbusConnector() {
         return ConnectionAndMeta.getBoolean("use_canbus_connector", PropertiesHolder.INSTANCE.getProperties());
     }
