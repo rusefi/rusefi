@@ -695,3 +695,8 @@ Open follow-ups:
 - Selected the public fork's HAL revision and URL so a fresh checkout can fetch the complete implementation. The upstream submission must restore the official URL and select the accepted HAL commit after both HAL changes merge. No official pull request was opened.
 - Added a dedicated workflow for Linux GCC/Clang, macOS Clang and Windows GCC/MSVC. These actual-driver host tests are outside the existing firmware unit-test job, which skips ChibiOS. Documented test commands, compatibility, attribution and the dependency order in docs/sdio-reliability.md.
 - Local validation: all 17 HAL host tests pass with native GCC; the generic STM32F4 SDC example compiles and links using ARM GCC 12.3.1 with -j12. The usual LTO assembler-listing warning is non-fatal. Cross-platform CI and hardware fault-injection validation are separate from these local checks. No calibration, protocol, storage-manager or application-specific defaults are changed by this integration.
+
+## 2026-09-21 - Address SDIO host-test portability findings
+
+- The integration workflow passed Linux and Windows GCC, but exposed test-only warnings on Clang and MSVC: an obsolete unbounded-suspend mock was unused, and artificial 16-byte structure-member alignment inserted unnecessary padding. Removed the unused mock and used the driver's natural four-byte alignment, with an explicit runtime assertion. Warnings remain errors; production HAL behavior is unchanged.
+- Published the test adjustments to the two HAL branches without rewriting existing commits and selected the updated revision. The local 17-test suite still passes. The updated cross-platform workflow provides the remaining compiler validation.
