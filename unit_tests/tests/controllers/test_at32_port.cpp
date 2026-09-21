@@ -1,6 +1,20 @@
 #include <gtest/gtest.h>
 #include "../../../firmware/hw_layer/ports/at32/at32_reset_cause.h"
 #include "gpio/l9779_spi.h"
+#include "../../../firmware/hw_layer/ports/at32/at32f4/cfg/mcuconf.h"
+
+// Coverage-first reproduction: ADC callbacks call assertInterruptPriority with
+// EFI_IRQ_ADC_PRIORITY, but AT32 currently configures different IRQ priorities.
+// Change these expectations to EXPECT_EQ when correcting the configuration.
+TEST(At32IrqPriority, AdcCurrentlyDiffersFromCallbackExpectation) {
+	EXPECT_NE(EFI_IRQ_ADC_PRIORITY, STM32_ADC_IRQ_PRIORITY);
+}
+
+TEST(At32IrqPriority, AdcDmaCurrentlyDiffersFromCallbackExpectation) {
+	EXPECT_NE(EFI_IRQ_ADC_PRIORITY, STM32_ADC_ADC1_DMA_IRQ_PRIORITY);
+	EXPECT_NE(EFI_IRQ_ADC_PRIORITY, STM32_ADC_ADC2_DMA_IRQ_PRIORITY);
+	EXPECT_NE(EFI_IRQ_ADC_PRIORITY, STM32_ADC_ADC3_DMA_IRQ_PRIORITY);
+}
 
 TEST(At32ResetCause, ResetFlags) {
 	EXPECT_EQ(Reset_Cause_NRST_Pin, decodeAt32ResetCause(1U << 26));
