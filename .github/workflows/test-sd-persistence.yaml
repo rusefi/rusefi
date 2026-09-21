@@ -5,6 +5,7 @@ on:
     paths:
       - 'firmware/controllers/storage*'
       - 'firmware/controllers/long_term_fuel_trim.*'
+      - 'firmware/hw_layer/mmc_card.cpp'
       - 'firmware/controllers/generated/rusefi_generated_f407-discovery.h'
       - 'unit_tests/test_storage_sd.py'
       - 'unit_tests/storage_sd_harness.cpp'
@@ -13,6 +14,7 @@ on:
     paths:
       - 'firmware/controllers/storage*'
       - 'firmware/controllers/long_term_fuel_trim.*'
+      - 'firmware/hw_layer/mmc_card.cpp'
       - 'firmware/controllers/generated/rusefi_generated_f407-discovery.h'
       - 'unit_tests/test_storage_sd.py'
       - 'unit_tests/storage_sd_harness.cpp'

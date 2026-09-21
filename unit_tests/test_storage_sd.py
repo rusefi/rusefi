@@ -50,6 +50,20 @@ class StorageSdTest(unittest.TestCase):
             "LTFT_DECLARATION": extract_block(declaration, "struct LtftState") + ";",
             "LTFT_LOAD": extract_block(ltft, "void LtftState::load("),
             "LTFT_DIMENSIONS": dimensions,
+            "REQUEST_HELPERS": "\n".join(extract_block(storage, signature) for signature in (
+                "static void setPendingRead(", "static bool isReadPending(",
+                "static uint32_t getPendingReads(", "static void clearPendingRead(")),
+            "REQUEST_READ": extract_block(storage, "bool storageReqestReadID("),
+            "WAIT_READ": extract_block(storage, "bool storageWaitReadDone("),
+            "AVAILABLE": extract_block(storage, "bool storageIsIdAvailableForId("),
+            "READ_ID": extract_block(storage, "static bool storageReadID("),
+            "POLL_READS": storage[storage.index("\t\tuint32_t reads = getPendingReads();"):
+                                  storage.index("\t\t// check if we can write some of pending IDs")],
+            "LTFT_MODULE": "\n".join(extract_block(ltft, signature) for signature in (
+                "void LongTermFuelTrim::init(", "bool LongTermFuelTrim::load(",
+                "void LongTermFuelTrim::onSlowCallback(", "void LongTermFuelTrim::onEngineStop(")),
+            "SD_EXECUTOR": extract_block((ROOT / "firmware/hw_layer/mmc_card.cpp").read_text(encoding="utf-8"),
+                                         "static int sdModeExecuter("),
         }
         for name, value in substitutions.items():
             harness = harness.replace("@" + name + "@", value)
@@ -63,9 +77,15 @@ class StorageSdTest(unittest.TestCase):
             command = [CXX, "-std=c++17", "-Wall", "-Wextra", "-Werror",
                        "-I", str(controllers), str(path / "test.cpp"), "-o", str(cls.executable)]
         subprocess.run(command, check=True, cwd=path)
+        cls.without_msd = path / ("test_no_msd.exe" if os.name == "nt" else "test_no_msd")
+        no_msd_command = [arg.replace(str(cls.executable), str(cls.without_msd)) for arg in command]
+        no_msd_command.insert(1, "/DHAL_USE_USB_MSD=0" if Path(CXX).name.lower() in ("cl", "cl.exe")
+                              else "-DHAL_USE_USB_MSD=0")
+        subprocess.run(no_msd_command, check=True, cwd=path)
 
-    def run_case(self, scenario, record="ltft"):
-        result = subprocess.run([str(self.executable), scenario, record], check=True,
+    def run_case(self, scenario, record="ltft", without_msd=False):
+        executable = self.without_msd if without_msd else self.executable
+        result = subprocess.run([str(executable), scenario, record], check=True,
                                 capture_output=True, text=True, timeout=5)
         return json.loads(result.stdout)
 
@@ -135,6 +155,46 @@ class StorageSdTest(unittest.TestCase):
         for scenario in ("ltft_success", "ltft_backup"):
             with self.subTest(scenario=scenario):
                 self.assertEqual(self.run_case(scenario), {"intact": True, "bytes": 2048})
+
+    def test_startup_mount_is_rejected_before_ecu_mode(self):
+        # Passing reproduction: the mounted filesystem is incorrectly unavailable.
+        self.assertEqual(self.run_case("startup"), {"done": False, "slept": 25, "pending": True})
+
+    def test_closing_filesystem_is_incorrectly_reported_ready_in_ecu_mode(self):
+        self.assertEqual(self.run_case("ready_closed"), {"ready": True})
+
+    def test_full_mailbox_keeps_read_pending_before_wakeup(self):
+        self.assertEqual(self.run_case("queue_full"), {"accepted": True, "before_wakeup": True,
+                                                     "done": True, "pending": False})
+
+    def test_wait_observes_only_requested_read_and_times_out(self):
+        self.assertEqual(self.run_case("wait_timeout"), {"done": False, "slept": 25, "unrelated": True})
+        self.assertEqual(self.run_case("wait_unrelated"), {"done": True, "slept": 0, "unrelated": True})
+        self.assertEqual(self.run_case("wait_complete"), {"done": True, "slept": 20, "unrelated": True})
+
+    def test_invalid_wait_id_is_incorrectly_reported_complete(self):
+        self.assertEqual(self.run_case("wait_invalid"), {"zero": True, "limit": True})
+
+    def test_failed_ltft_read_is_incorrectly_reported_without_error(self):
+        for scenario in ("module_missing", "module_partial"):
+            with self.subTest(scenario=scenario):
+                self.assertEqual(self.run_case(scenario), {"done": True, "error": False,
+                                                          "retry": False, "intact": True})
+
+    def test_stopped_engine_incorrectly_times_out_initial_read(self):
+        self.assertEqual(self.run_case("module_stopped"), {"pending": False, "error": True})
+
+    def test_late_read_defers_until_engine_stops(self):
+        self.assertEqual(self.run_case("module_late"), {"deferred": True, "intact": True,
+                                                      "retried": True, "loaded": True, "error": False})
+
+    def test_usb_handoff_suppresses_logging_without_overriding_explicit_ownership(self):
+        self.assertEqual(self.run_case("usb_handoff"), {"started": 0, "written": 0, "logging": False})
+        for scenario in ("usb_always", "usb_requested"):
+            with self.subTest(scenario=scenario):
+                self.assertEqual(self.run_case(scenario), {"started": 1, "written": 1, "logging": True})
+        self.assertEqual(self.run_case("usb_handoff", without_msd=True),
+                         {"started": 1, "written": 1, "logging": True})
 
 
 if __name__ == "__main__":
