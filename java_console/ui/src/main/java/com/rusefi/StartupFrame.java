@@ -311,9 +311,6 @@ public class StartupFrame {
             topButtons.add(ToolButtons.createShowDeviceManagerButton());
             if (DriverInstall.isFolderExist())
                 topButtons.add(DriverInstall.createButton());
-            if (UiProperties.usePCAN()) {
-                topButtons.add(ToolButtons.createPcanConnectorButton());
-            }
             realHardwarePanel.add(topButtons, "right, wrap");
         }
         realHardwarePanel.add(connectPanel, "right, wrap");

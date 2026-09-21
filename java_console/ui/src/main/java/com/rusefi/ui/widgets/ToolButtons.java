@@ -2,7 +2,6 @@ package com.rusefi.ui.widgets;
 
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.maintenance.ExecHelper;
-import com.rusefi.ui.PcanConnectorUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,12 +24,5 @@ public class ToolButtons {
         } catch (IOException ex) {
             System.err.println("Could not open Device Manager (Windows-only): " + ex.getMessage());
         }
-    }
-
-    public static Component createPcanConnectorButton() {
-        JButton button = new JButton("PCAN");
-        button.setToolTipText("PCAN connector for TS");
-        button.addActionListener(e -> PcanConnectorUI.show());
-        return button;
     }
 }

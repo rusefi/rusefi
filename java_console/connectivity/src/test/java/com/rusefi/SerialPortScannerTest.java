@@ -40,6 +40,8 @@ public class SerialPortScannerTest {
         CountDownLatch releaseSocketCanProbe;
         int pcanInspectionCalls;
         PortResult pcanResult;
+        CountDownLatch pcanProbeEntered;
+        CountDownLatch releasePcanProbe;
         boolean liveEcuConnected;
         boolean dfuConnected;
         int deviceProbeCalls;
@@ -89,6 +91,7 @@ public class SerialPortScannerTest {
         @Override
         public PortResult inspectPcan() {
             pcanInspectionCalls++;
+            awaitBlockedProbe(pcanProbeEntered, releasePcanProbe);
             return pcanResult;
         }
 
@@ -158,6 +161,12 @@ public class SerialPortScannerTest {
         releaseProbe.countDown();
         scanThread.join(2_000);
         assertFalse(scanThread.isAlive(), "blocked scan did not finish");
+    }
+
+    private Thread startBlockedScan(CountDownLatch probeEntered) throws InterruptedException {
+        CountDownLatch releaseProbe = probeEntered == probes.pcanProbeEntered
+            ? probes.releasePcanProbe : probes.releaseSocketCanProbe;
+        return startBlockedScan(probeEntered, releaseProbe);
     }
 
     @Test
@@ -367,6 +376,94 @@ public class SerialPortScannerTest {
         scan(true);
         assertEquals(2, probes.pcanInspectionCalls,
             "PCAN must be reprobed immediately after a firmware handoff");
+    }
+
+    /**
+     * Issue #10138: cachePort() must win over a probe that was already in flight.
+     */
+    @Test
+    public void pcanProbeCompletionAfterCachePortPreservesPinnedResult() throws Exception {
+        PortResult live = new PortResult(LinkManager.PCAN, SerialPortType.Ecu);
+        probes.pcanResult = new PortResult(LinkManager.PCAN, SerialPortType.CAN);
+        probes.pcanProbeEntered = new CountDownLatch(1);
+        probes.releasePcanProbe = new CountDownLatch(1);
+
+        Thread scanThread = startBlockedScan(probes.pcanProbeEntered);
+        try {
+            scanner.cachePort(live);
+        } finally {
+            releaseAndJoin(scanThread, probes.releasePcanProbe);
+        }
+
+        assertTrue(scanner.getCurrentHardware().isPCANConnected());
+        assertEquals(java.util.Collections.singletonList(live), knownPorts());
+
+        probes.pcanResult = live;
+        probes.time += 3001;
+        scan(true);
+        assertEquals(1, probes.pcanInspectionCalls, "the pinned live port must not be reprobed");
+        assertEquals(java.util.Collections.singletonList(live), knownPorts());
+    }
+
+    /** Issue #10138, SocketCAN equivalent of the PCAN pin race. */
+    @Test
+    public void socketCanProbeCompletionAfterCachePortPreservesPinnedResult() throws Exception {
+        PortResult live = new PortResult(LinkManager.SOCKET_CAN, SerialPortType.Ecu);
+        probes.socketCanResult = new PortResult(LinkManager.SOCKET_CAN, SerialPortType.CAN);
+        probes.socketCanProbeEntered = new CountDownLatch(1);
+        probes.releaseSocketCanProbe = new CountDownLatch(1);
+
+        Thread scanThread = startBlockedScan(probes.socketCanProbeEntered);
+        try {
+            scanner.cachePort(live);
+        } finally {
+            releaseAndJoin(scanThread, probes.releaseSocketCanProbe);
+        }
+
+        assertTrue(scanner.getCurrentHardware().isSocketCanAvailable());
+        assertEquals(java.util.Collections.singletonList(live), knownPorts());
+
+        probes.socketCanResult = live;
+        probes.time += 3001;
+        scan(true);
+        assertEquals(1, probes.socketCanInspectionCalls, "the pinned live port must not be reprobed");
+        assertEquals(java.util.Collections.singletonList(live), knownPorts());
+    }
+
+    /** Issue #10138: invalidation during a probe must reject its stale result. */
+    @Test
+    public void pcanProbeCompletionAfterInvalidateDiscardsStaleResult() throws Exception {
+        PortResult stale = new PortResult(LinkManager.PCAN, SerialPortType.Ecu);
+        probes.pcanResult = stale;
+        probes.pcanProbeEntered = new CountDownLatch(1);
+        probes.releasePcanProbe = new CountDownLatch(1);
+
+        Thread scanThread = startBlockedScan(probes.pcanProbeEntered);
+        try {
+            scanner.invalidatePort(LinkManager.PCAN);
+        } finally {
+            releaseAndJoin(scanThread, probes.releasePcanProbe);
+        }
+
+        assertTrue(knownPorts().isEmpty(), "in-flight result must not restore an invalidated port");
+    }
+
+    /** Issue #10138, SocketCAN equivalent of the invalidation race. */
+    @Test
+    public void socketCanProbeCompletionAfterInvalidateDiscardsStaleResult() throws Exception {
+        PortResult stale = new PortResult(LinkManager.SOCKET_CAN, SerialPortType.Ecu);
+        probes.socketCanResult = stale;
+        probes.socketCanProbeEntered = new CountDownLatch(1);
+        probes.releaseSocketCanProbe = new CountDownLatch(1);
+
+        Thread scanThread = startBlockedScan(probes.socketCanProbeEntered);
+        try {
+            scanner.invalidatePort(LinkManager.SOCKET_CAN);
+        } finally {
+            releaseAndJoin(scanThread, probes.releaseSocketCanProbe);
+        }
+
+        assertTrue(knownPorts().isEmpty(), "in-flight result must not restore an invalidated port");
     }
 
     @Test

@@ -8,6 +8,15 @@ rusEFI frontend applications is historically known as rusEFI console.
 
 Here we have source code for rusEFI console: while [TunerStudio](http://www.tunerstudio.com/index.php/products/tuner-studio) is the primary calibration frontend application we need secondary app for firmware update and some advanced troubleshooting. One day we shall combine but not yet :(
 
+## Windows PCAN
+
+The console automatically probes a PCAN-USB adapter for a rusEFI ECU on Windows.
+Install the PEAK driver and connect the ECU
+
+Windows universal bundles include `PCANBasic_JNI.dll` and `PCANBasic.dll` beside
+the console JAR. If no ECU appears, check the driver, channel, bitrate, ECU power,
+wiring, and bus termination.
+
 ## Linux SocketCAN
 
 The console automatically probes a Linux SocketCAN interface for a rusEFI ECU.

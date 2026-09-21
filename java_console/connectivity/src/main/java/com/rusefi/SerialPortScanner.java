@@ -234,6 +234,7 @@ public class SerialPortScanner implements PortScanner {
     private volatile PortResult lastPcanPort;
     @Nullable
     private volatile PortResult lastSocketCanPort;
+    private long pcanPortGeneration;
     private long socketCanPortGeneration;
     private long deviceProbeInvalidationGeneration;
 
@@ -312,10 +313,16 @@ public class SerialPortScanner implements PortScanner {
                 }
                 lastDfuConnected = probes.isDfuDeviceConnected();
                 lastStLinkConnected = probes.isStLinkConnected();
-                if (!pcanPortPinned) {
+                final long pcanGeneration;
+                final boolean pcanPinned;
+                synchronized (lock) {
+                    pcanGeneration = pcanPortGeneration;
+                    pcanPinned = pcanPortPinned;
+                }
+                if (!pcanPinned) {
                     PortResult pcanResult = probes.inspectPcan();
                     synchronized (lock) {
-                        if (!pcanPortPinned) {
+                        if (pcanGeneration == pcanPortGeneration && !pcanPortPinned) {
                             lastPcanConnected = pcanResult != null;
                             lastPcanPort = pcanResult != null
                                 && pcanResult.type != SerialPortType.CAN
@@ -469,6 +476,7 @@ public class SerialPortScanner implements PortScanner {
                 lastPcanConnected = true;
                 lastPcanPort = port;
                 pcanPortPinned = true;
+                pcanPortGeneration++;
                 return;
             }
             if (LinkManager.SOCKET_CAN.equals(port.port)) {
@@ -492,17 +500,18 @@ public class SerialPortScanner implements PortScanner {
     public void invalidatePort(String portName) {
         portCache.invalidate(portName);
         if (LinkManager.SOCKET_CAN.equals(portName) || LinkManager.PCAN.equals(portName)) {
-            if (LinkManager.SOCKET_CAN.equals(portName)) {
-                socketCanPortPinned = false;
-                lastSocketCanPort = null;
-                socketCanPortGeneration++;
-            } else {
-                pcanPortPinned = false;
-                lastPcanPort = null;
-            }
-            lastDeviceProbeMs = probes.now() - DEVICE_PROBE_INTERVAL_MS;
             synchronized (lock) {
+                if (LinkManager.SOCKET_CAN.equals(portName)) {
+                    socketCanPortPinned = false;
+                    lastSocketCanPort = null;
+                    socketCanPortGeneration++;
+                } else {
+                    pcanPortPinned = false;
+                    lastPcanPort = null;
+                    pcanPortGeneration++;
+                }
                 deviceProbeInvalidationGeneration++;
+                lastDeviceProbeMs = probes.now() - DEVICE_PROBE_INTERVAL_MS;
                 final List<PortResult> ports = knownHardware.getKnownPorts().stream()
                     .filter(port -> !portName.equals(port.port))
                     .collect(Collectors.toList());
