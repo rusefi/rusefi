@@ -136,6 +136,7 @@ firmware/gen_enum_to_string.sh
 - `firmware/hw_layer/` - Hardware abstraction layer
   - `ports/at32/` (Artery AT32F435) is not used at the moment: both AT32 boards (`at_start_f435`, `m74_9`) are disabled (`meta-info.disabled_env`), so no CI build exercises this port
   - AT32 uses STM32-named compatibility headers, but those names do not establish register semantics. For example, Artery CRM_CTRLSTS bit 25 is reserved even though the compatibility header defines RCC_CSR_BORRSTF there. Check the official Artery register layout before porting STM32 low-level code.
+  - AT32 RTC backup registers are separate from backup SRAM: `EFI_BACKUP_SRAM=FALSE` does not mean the chip lacks RTC backup registers. Artery's AT32F435/437 SDK places ERTC at 0x40002800 and its twenty 32-bit data registers at offsets 0x50..0x9C, matching the compatibility header's RTC/BKP registers. This permits reuse of the STM32 `backupRamLoad`/`backupRamSave` implementation; the STM32 backup-SRAM object remains excluded on AT32. Persistence across actual power loss still depends on board backup power and clock configuration.
   - The AT32 ChibiOS port uses the older SPI API (`end_cb`) even with newer ChibiOS RT configuration versions: its hal_lld.h does not select HAL_LLD_SELECT_SPI_V2. Do not infer SPIConfig fields solely from the RT version.
 - `firmware/libfirmware/` - Reusable library code
 - `firmware/util/` - Self-contained utilities (no external dependencies)
