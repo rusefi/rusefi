@@ -26,6 +26,9 @@ void initStartStopButton() {
 void doStartCranking() {
 		bool wasStarterEngaged = enginePins.starterControl.getAndSet(1);
 		if (!wasStarterEngaged) {
+#if EFI_ENGINE_CONTROL
+		    getLimpManager()->shutdownController.cancelStop();
+#endif // EFI_ENGINE_CONTROL
 		    engine->startStopState.startStopStateLastPush.reset();
 		    efiPrintf("Let's crank this engine for up to %d seconds via %s!",
 		    		engineConfiguration->startCrankingDuration,
