@@ -233,8 +233,6 @@ public class ConfigDefinition {
     private static void handlePage(ReaderStateImpl parentState, int pageIndex, List<String> softPrepends, TreeSet<String> usedNames) throws IOException {
         PlainConfigHandler page = new PlainConfigHandler("integration/config_page_" + pageIndex + ".txt", pageIndex, softPrepends, usedNames);
         page.doJob();
-        // PAGE_CONTENT_N is handled here!
-        parentState.getVariableRegistry().put("PAGE_CONTENT_" + pageIndex, page.tsProjectConsumer.getContent());
-        parentState.getVariableRegistry().register("PAGE_SIZE_" + pageIndex, Integer.toString(page.tsProjectConsumer.getTotalSize()));
+        page.tsProjectConsumer.registerPage(parentState.getVariableRegistry());
     }
 }
