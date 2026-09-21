@@ -10,7 +10,7 @@
 
 #include "pch.h"
 
-#if EFI_PROD_CODE && EFI_CAN_SUPPORT
+#if EFI_PROD_CODE && EFI_CAN_SUPPORT && EFI_USB_SERIAL
 
 #include "can_sniffer.h"
 #include "slcan_frame.h"
@@ -377,4 +377,4 @@ template void CanSniffer::handle_can_message<CANTxFrame>(unsigned int, const CAN
 template void CanSniffer::handle_can_message<CANRxFrame>(unsigned int, const CANRxFrame&, long long);
 
 #endif // CAN_SNIFFER
-#endif // EFI_PROD_CODE && EFI_CAN_SUPPORT
+#endif // EFI_PROD_CODE && EFI_CAN_SUPPORT && EFI_USB_SERIAL
