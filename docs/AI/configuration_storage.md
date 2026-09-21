@@ -215,7 +215,9 @@ checksum to the raw LTFT format or validate the extra-page payload CRCs here.
 functions and production LTFT load/save functions against an in-memory FatFS with
 injected failures. The dedicated `test-sd-persistence.yaml` workflow runs GCC,
 Clang and MSVC. It checks recovery at API boundaries, not physical FAT durability
-or SDIO/DMA timing. The active LTFT state uses `CCM_OPTIONAL`; the single staging
+or SDIO/DMA timing. The active LTFT state defaults to SRAM; a board can set
+`LTFT_STATE_LOCATION=CCM_OPTIONAL` when its CCM budget permits (Nucleo F429 uses
+this to leave main SRAM for Ethernet). The single staging
 state stays in DMA-accessible SRAM and is shared by storage-worker reads and
 writes. A load updates the active trims only after a complete successful read.
 A save copies the trims to staging before passing them to a backend, so storage
@@ -225,6 +227,12 @@ is required for this shared buffer; it does not make the CPU copy an atomic
 snapshot against other trim writers.
 CCM is not cleared at startup, so LTFT initialization resets the trims before
 requesting the asynchronous load. A missing or failed record leaves neutral trims.
+
+`bash firmware/bin/test_ltft_memory.sh` checks the full application link for
+microRusEFI F4, legacy microRusEFI F4, AlphaX 8chan F4 and Nucleo F429, then
+verifies the transfer buffer's SRAM address. Both regions must fit: globally
+moving active trims to CCM fixes Nucleo's SRAM overflow but overflows CCM on
+the other three layouts. Run these builds serially with the ARM build tools.
 
 ## History: PR #9949 (July 2026)
 

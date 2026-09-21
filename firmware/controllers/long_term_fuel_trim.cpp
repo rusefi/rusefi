@@ -23,7 +23,10 @@
 constexpr float integrator_dt = FAST_CALLBACK_PERIOD_MS * 0.001f;
 
 // TODO: store in backup ram and validate on start
-static LtftState ltftState CCM_OPTIONAL;
+#ifndef LTFT_STATE_LOCATION
+#define LTFT_STATE_LOCATION
+#endif
+static LtftState ltftState LTFT_STATE_LOCATION;
 // SD DMA cannot access CCM. The storage worker serializes loads and saves,
 // which share this SRAM buffer and keep failed reads away from active trims.
 #if EFI_PROD_CODE

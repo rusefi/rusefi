@@ -24,12 +24,20 @@ backend. Its FatFS model tests API-level recovery, not physical filesystem
 durability or SDIO timing. Keep its five-toolchain workflow enabled when
 changing persistence code.
 
-LTFT's active state can live in CCM, but its shared storage transfer buffer must
-remain DMA-accessible. The storage worker serializes LTFT loads and saves, so
-both reuse that buffer. Do not pass the active trims directly to storage or
+LTFT's active state defaults to SRAM. Boards may override `LTFT_STATE_LOCATION`
+with `CCM_OPTIONAL` after checking their memory budget, but its shared storage
+transfer buffer must remain DMA-accessible. The storage worker serializes LTFT
+loads and saves, so both reuse that buffer. Do not pass the active trims directly to storage or
 place the transfer buffer in CCM: SDIO DMA cannot access CCM on STM32F4.
 `CCM_OPTIONAL` uses a no-init section, so initialize the active trims explicitly
 before queuing the asynchronous load, including when no saved record exists.
+
+`bash firmware/bin/test_ltft_memory.sh` builds the four F4 layouts that exposed
+opposite SRAM/CCM limits and checks transfer-buffer placement in each ELF. Run
+these builds serially because generated files are shared. With native ARM ELF
+GCC under MSYS, use `OS=Linux` to match CI: `OS=Windows_NT` otherwise disables a
+weak fallback intended for MinGW host builds and causes duplicate definitions
+on boards that override it. Use fresh objects when changing this flag.
 
 Default to building with 12 threads unless otherwise specified (-j12 etc).
 

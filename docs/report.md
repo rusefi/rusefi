@@ -753,3 +753,18 @@ Open follow-ups:
 - Official CI exposed CCM overflows after globally placing active LTFT in CCM: mre_f4 and mre-legacy_f4 reach 0x10010510 (1296 bytes over), and alphax-8chan reaches 0x100103e0 (992 bytes over). Nucleo F429 passes with that placement.
 - Added a serial firmware-build regression runner for these four layouts. Its initial expectations reproduce the three CCM overflows and require Nucleo F429 to link. The local mre_f4 run reproduced the exact CCM endpoint; the existing official firmware jobs establish the other two failures. Coverage is committed separately before changing the memory-placement policy.
 - The native Windows ARM toolchain also encountered a duplicate weak fallback: OS=Windows_NT sets IS_WINDOWS_COMPILER=1 even for the ELF cross-compiler. Subsequent local validation will use OS=Linux and fresh objects to match CI's weak-symbol flags. This is a local build-environment adjustment, not a firmware-source change.
+
+## 2026-09-21 - Make active LTFT placement a board memory-budget choice
+
+- Default LTFT_STATE_LOCATION to normal SRAM and opt Nucleo F429 into CCM_OPTIONAL in its board.mk. This follows the existing configurable-placement pattern and avoids consuming CCM on layouts already full of configuration data. The single transfer buffer remains in SRAM; initialization, staged reads and write snapshots are unchanged.
+- Inverted the firmware regression runner to require all four layouts to link and check the LTFT transfer symbol in DMA-accessible SRAM. All four application ELFs pass with ARM GCC 14.2.1 and CI-equivalent OS flags. The Nucleo output path is shortened to avoid the native Windows linker command-line length limit; its already-compiled objects linked successfully from the shorter directory.
+- All 13 native GCC persistence tests pass. Linked heap bounds below are static margins, not runtime heap-use measurements; AlphaX 8chan has little main-SRAM margin. No table sizes, Lua capacity, storage formats, USB ownership, submodules or feature flags were changed.
+
+| Configuration | Main SRAM margin (bytes) | CCM margin (bytes) | Active LTFT | Transfer buffer |
+| --- | --- | --- | --- | --- |
+| mre_f4 | 10592 | 752 | 0x20012b24 | 0x2001a0b4 |
+| mre-legacy_f4 | 29608 | 752 | 0x20013654 | 0x200155cc |
+| alphax-8chan | 488 | 1056 | 0x20013150 | 0x2001c820 |
+| stm32f429_nucleo | 1920 | 1080 | 0x10000000 | 0x200150cc |
+
+- The public PR will rerun its cross-platform and full firmware checks on this correction. Build-generated files remain uncommitted. No ECU flashing, physical SD-card or power-loss tests were performed.
