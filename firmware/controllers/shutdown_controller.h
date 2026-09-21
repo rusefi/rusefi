@@ -26,6 +26,11 @@ class ShutdownController {
 public:
 	void stopEngine(StopRequestedReason reason);
 
+	// A new start supersedes the previous stop request.
+	void cancelStop() {
+		m_engineStopTimer.init();
+	}
+
 	/**
 	 * Engine-stop window: returns true while we are within the post-stop "cool-down" period.
 	 *
@@ -38,7 +43,8 @@ public:
 	 *    the rest of the code treat trigger events as if the engine is fully stopped and reset
 	 *    trigger-related state (e.g. noise filter accumulators, sync state) cleanly.
 	 *
-	 * The timer is (re)started by ShutdownController::stopEngine().
+	 * The timer is (re)started by ShutdownController::stopEngine(). A new starter
+	 * engagement cancels the window via cancelStop().
 	 */
 	bool isEngineStop(efitick_t nowNt) const {
 		float timeSinceStopRequested = m_engineStopTimer.getElapsedSeconds(nowNt);
