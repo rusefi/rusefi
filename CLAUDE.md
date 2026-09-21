@@ -18,11 +18,18 @@ After each completed unit of work (a landed feature, a fixed bug, or a finished 
 
 The SD persistence regression harness is `python unit_tests/test_storage_sd.py`
 (`--cxx g++`, `clang++` or `cl`). The normal firmware unit tests compile out
-the production `LtftState::load` read; this separate harness compiles that
-function with `EFI_PROD_CODE=1` and injects failures through the actual SD
+the production `LtftState::load` read; this separate harness compiles the load
+and save paths with `EFI_PROD_CODE=1` and injects failures through the actual SD
 backend. Its FatFS model tests API-level recovery, not physical filesystem
 durability or SDIO timing. Keep its five-toolchain workflow enabled when
 changing persistence code.
+
+LTFT's active state can live in CCM, but its shared storage transfer buffer must
+remain DMA-accessible. The storage worker serializes LTFT loads and saves, so
+both reuse that buffer. Do not pass the active trims directly to storage or
+place the transfer buffer in CCM: SDIO DMA cannot access CCM on STM32F4.
+`CCM_OPTIONAL` uses a no-init section, so initialize the active trims explicitly
+before queuing the asynchronous load, including when no saved record exists.
 
 Default to building with 12 threads unless otherwise specified (-j12 etc).
 

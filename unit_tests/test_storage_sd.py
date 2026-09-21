@@ -1,6 +1,6 @@
 """Compile production SD persistence code against an in-memory, fault-injecting FatFS.
 
-This exercises file operations and the production LTFT load path, not SDIO/DMA
+This exercises file operations and the production LTFT load/save paths, not SDIO/DMA
 timing or physical FAT durability. Run with --cxx g++, clang++, or cl.
 """
 import argparse
@@ -51,6 +51,8 @@ class StorageSdTest(unittest.TestCase):
             "LTFT_DECLARATION": extract_block(declaration, "struct LtftState") + ";",
             "LTFT_LOAD": extract_block(ltft, "void LtftState::load("),
             "LTFT_SAVE": extract_block(ltft, "bool LtftState::save("),
+            "LTFT_RESET": extract_block(ltft, "void LtftState::reset("),
+            "LTFT_INIT": extract_block(ltft, "void LongTermFuelTrim::init("),
             "LTFT_DIMENSIONS": dimensions,
         }
         for name, value in substitutions.items():
@@ -138,15 +140,17 @@ class StorageSdTest(unittest.TestCase):
             with self.subTest(scenario=scenario):
                 self.assertEqual(self.run_case(scenario), {"intact": True, "bytes": 2048})
 
-    def test_production_ltft_save_exposes_active_table_to_storage(self):
-        # Reproduce the direct-storage dependency before moving active trims to CCM.
-        self.assertEqual(self.run_case("save_mutation"), {"saved": True, "snapshot": False,
-                                                        "active_source": True, "changed": True})
+    def test_production_ltft_save_uses_separate_transfer_snapshot(self):
+        self.assertEqual(self.run_case("save_mutation"), {"saved": True, "snapshot": True,
+                                                        "active_source": False, "changed": True})
 
     def test_production_ltft_save_reports_failure_without_losing_previous_record(self):
         for scenario in ("save_write", "save_sync", "save_close"):
             with self.subTest(scenario=scenario):
                 self.assertEqual(self.run_case(scenario), {"saved": False, "old": True})
+
+    def test_production_ltft_init_clears_uninitialized_ram_before_requesting_load(self):
+        self.assertEqual(self.run_case("init"), {"clean": True, "pending": True})
 
 
 if __name__ == "__main__":

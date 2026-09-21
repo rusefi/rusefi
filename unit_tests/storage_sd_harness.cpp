@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <cstdio>
 #include <cstring>
+#include <iterator>
 #include <map>
 #include <string>
 #include <vector>
@@ -127,10 +128,31 @@ static SettingStorageBase* storages[storagesCount];
 
 @LTFT_DIMENSIONS@
 @LTFT_DECLARATION@
-static LtftState ltftLoadState;
+static LtftState ltftIoState;
 @LTFT_LOAD@
 @LTFT_SAVE@
 static LtftState* changingState = nullptr;
+
+template <size_t Rows, size_t Cols>
+void setTable(float (&table)[Rows][Cols], float value) {
+    for (auto& row : table) {
+        std::fill(std::begin(row), std::end(row), value);
+    }
+}
+@LTFT_RESET@
+struct LongTermFuelTrim {
+    LtftState* m_state = nullptr;
+    bool ltftLoadPending = false;
+    void init(LtftState* state);
+    void reset() { m_state->reset(); }
+};
+static bool cleanAtLoadRequest = false;
+bool storageReqestReadID(StorageItemId) {
+    LtftState empty{};
+    cleanAtLoadRequest = std::memcmp(changingState->trims, empty.trims, sizeof(empty.trims)) == 0;
+    return true;
+}
+@LTFT_INIT@
 
 struct FakeStorage : SettingStorageBase {
     StorageStatus status;
@@ -147,6 +169,16 @@ int main(int argc, char** argv) {
     assert(argc == 3);
     const std::string scenario = argv[1];
     const std::string record = argv[2];
+    if (scenario == "init") {
+        LtftState active;
+        std::memset(active.trims, 0xa5, sizeof(active.trims));
+        changingState = &active;
+        LongTermFuelTrim module;
+        module.init(&active);
+        std::printf("{\"clean\":%s,\"pending\":%s}\n", cleanAtLoadRequest ? "true" : "false",
+                    module.ltftLoadPending ? "true" : "false");
+        return 0;
+    }
     if (scenario.rfind("save_", 0) == 0) {
         storages[1] = &storageSD;
         LtftState active{};

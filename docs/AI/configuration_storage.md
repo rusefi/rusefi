@@ -212,11 +212,19 @@ An exact-size file is not necessarily free of corruption: this does not add a
 checksum to the raw LTFT format or validate the extra-page payload CRCs here.
 
 `unit_tests/test_storage_sd.py` compiles the actual SD backend, backend-selection
-function and production LTFT load function against an in-memory FatFS with
+functions and production LTFT load/save functions against an in-memory FatFS with
 injected failures. The dedicated `test-sd-persistence.yaml` workflow runs GCC,
 Clang and MSVC. It checks recovery at API boundaries, not physical FAT durability
-or SDIO/DMA timing. LTFT staging retains one additional `LtftState` in static RAM
-(2048 bytes for two 16x16 float tables), with no full-record stack allocation.
+or SDIO/DMA timing. The active LTFT state uses `CCM_OPTIONAL`; the single staging
+state stays in DMA-accessible SRAM and is shared by storage-worker reads and
+writes. A load updates the active trims only after a complete successful read.
+A save copies the trims to staging before passing them to a backend, so storage
+never receives the CCM address. Each state occupies 2048 bytes for two 16x16
+float tables, with no full-record stack allocation. Storage-worker serialization
+is required for this shared buffer; it does not make the CPU copy an atomic
+snapshot against other trim writers.
+CCM is not cleared at startup, so LTFT initialization resets the trims before
+requesting the asynchronous load. A missing or failed record leaves neutral trims.
 
 ## History: PR #9949 (July 2026)
 
