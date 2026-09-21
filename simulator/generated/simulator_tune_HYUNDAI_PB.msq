@@ -1016,7 +1016,7 @@
         <constant digits="0" name="engineChartSize" units="count">400</constant>
         <constant name="engineCode">Gamma</constant>
         <constant name="engineMake">Hyundai</constant>
-        <constant digits="3" name="engineShutDownPeriod" units="">5.0</constant>
+        <constant digits="3" name="engineShutDownPeriod" units="">3.0</constant>
         <constant name="engineSnifferFocusOnInputs">"no"</constant>
         <constant digits="0" name="engineSnifferRpmThreshold" units="RPM">2500</constant>
         <constant name="engineSyncCam">"Intake First Bank"</constant>
@@ -5177,8 +5177,8 @@
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260920" nPages="1" signature="rusEFI master.2026.09.21.f407-discovery.2692693542" version="5.0"/>
-    <bibliography author="rusEFI 20260920" writeDate="date"/>
+    <versionInfo firmwareInfo="20260921" nPages="1" signature="rusEFI master.2026.09.21.f407-discovery.2692693542" version="5.0"/>
+    <bibliography author="rusEFI 20260921" writeDate="date"/>
     <settings/>
     <userComments/>
 </msq>
