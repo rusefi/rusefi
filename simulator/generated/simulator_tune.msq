@@ -5111,6 +5111,42 @@
         <constant digits="0" name="wizardPanelToShow" units="">0</constant>
         <constant name="wizardTps">"no"</constant>
         <constant name="wizardVeTable">"no"</constant>
+        <constant cols="1" digits="0" name="wueAnalyzeCltFuelCorr" rows="16" units="%">
+         150
+         150
+         142
+         136
+         128
+         119
+         112
+         110
+         106
+         106
+         103
+         101
+         100
+         100
+         100
+         100
+</constant>
+        <constant cols="16" digits="1" name="wueAnalyzeTargetTable" rows="16" units="afr">
+         14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7
+         14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7
+         14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7
+         14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7
+         14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7 14.7
+         14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0
+         13.5 13.5 13.5 13.5 13.5 13.5 13.5 13.5 13.5 13.5 13.5 13.5 13.5 13.5 13.5 13.5
+         13.2 13.2 13.2 13.2 13.2 13.2 13.2 13.2 13.2 13.2 13.2 13.2 13.2 13.2 13.2 13.2
+         13.1 13.1 13.1 13.1 13.1 13.1 13.1 13.1 13.1 13.1 13.1 13.1 13.1 13.1 13.1 13.1
+         12.9 12.9 12.9 12.9 12.9 12.9 12.9 12.9 12.9 12.9 12.9 12.9 12.9 12.9 12.9 12.9
+         12.6 12.6 12.6 12.6 12.6 12.6 12.6 12.6 12.6 12.6 12.6 12.6 12.6 12.6 12.6 12.6
+         12.3 12.3 12.3 12.3 12.3 12.3 12.3 12.3 12.3 12.3 12.3 12.3 12.3 12.3 12.3 12.3
+         11.8 11.8 11.8 11.8 11.8 11.8 11.8 11.8 11.8 11.8 11.8 11.8 11.8 11.8 11.8 11.8
+         11.3 11.3 11.3 11.3 11.3 11.3 11.3 11.3 11.3 11.3 11.3 11.3 11.3 11.3 11.3 11.3
+         11.0 11.0 11.0 11.0 11.0 11.0 11.0 11.0 11.0 11.0 11.0 11.0 11.0 11.0 11.0 11.0
+         10.7 10.7 10.7 10.7 10.7 10.7 10.7 10.7 10.7 10.7 10.7 10.7 10.7 10.7 10.7 10.7
+</constant>
         <constant digits="2" name="wwaeBeta" units="Fraction">0.3</constant>
         <constant digits="2" name="wwaeTau" units="Seconds">0.3</constant>
         <constant cols="1" digits="2" name="wwBetaCltValues" rows="8" units="">
@@ -5175,7 +5211,7 @@
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260921" nPages="1" signature="rusEFI master.2026.09.21.f407-discovery.2692693542" version="5.0"/>
+    <versionInfo firmwareInfo="20260921" nPages="1" signature="rusEFI master.2026.09.21.f407-discovery.302787770" version="5.0"/>
     <bibliography author="rusEFI 20260921" writeDate="date"/>
     <settings/>
     <userComments/>
