@@ -39,12 +39,12 @@ public class SlcanClientTest {
         try (SlcanClient client = SlcanClient.connect(stream, "COM42", line -> {})) {
             assertEquals("COM42", client.getPort());
             assertEquals("V1220", client.getVersion());
-            assertEquals(Arrays.asList("V", "C", "S6", "I", "O"), stream.commands);
-            assertTrue(client.includesBus());
+            // get version, close channel, set speed, open channel
+            assertEquals(Arrays.asList("V", "C", "S6", "O"), stream.commands);
             client.pollStatus();
             assertEquals("F00", client.readLine(10));
         }
-        assertEquals(Arrays.asList("V", "C", "S6", "I", "O", "F", "C"), stream.commands);
+        assertEquals(Arrays.asList("V", "C", "S6", "O", "F", "C"), stream.commands);
         assertTrue(stream.isClosed());
     }
 
@@ -53,7 +53,7 @@ public class SlcanClientTest {
         FakeStream stream = new FakeStream();
         stream.rejectOpen = true;
         assertThrows(IOException.class, () -> SlcanClient.connect(stream, "COM42", line -> {}));
-        assertEquals(Arrays.asList("V", "C", "S6", "I", "O"), stream.commands);
+        assertEquals(Arrays.asList("V", "C", "S6", "O"), stream.commands);
         assertTrue(stream.isClosed());
     }
 
@@ -71,7 +71,7 @@ public class SlcanClientTest {
         for (int bus = 0; bus < 3; bus++) {
             String prefix = new String[]{"", "&", "$"}[bus];
             for (String frame : new String[]{"t1232AABB", "T000001232AABB", "r1238", "R000001238"}) {
-                SlcanClient.Frame parsed = SlcanClient.Frame.parse(prefix + frame + "ABCD", true);
+                SlcanClient.Frame parsed = SlcanClient.Frame.parse(prefix + frame + "ABCD");
                 assertNotNull(parsed);
                 assertEquals(Integer.valueOf(bus), parsed.busIndex);
                 assertEquals(prefix + frame + "ABCD", parsed.raw);
@@ -81,24 +81,11 @@ public class SlcanClientTest {
             }
         }
         SlcanClient.Frame legacy = SlcanClient.Frame.parse("t1232AABB");
-        assertNull(legacy.busIndex);
-        assertTrue(legacy.decode().startsWith("Bus unknown "));
+        assertEquals(Integer.valueOf(0), legacy.busIndex);
         assertEquals(Integer.valueOf(1), SlcanClient.Frame.parse("&t1230").busIndex);
         assertEquals(Integer.valueOf(2), SlcanClient.Frame.parse("$t1230").busIndex);
         for (String bad : new String[]{"&", "$", "&&t1230", "$&t1230", "&V1220", "$t1232AA"}) {
             assertNull(SlcanClient.Frame.parse(bad), bad);
-        }
-    }
-
-    @Test
-    public void legacyAndOldFirmwareKeepUnknownBus() throws Exception {
-        for (String reply : new String[]{"I0\r", "\u0007", null}) {
-            FakeStream stream = new FakeStream();
-            stream.formatReply = reply;
-            try (SlcanClient client = SlcanClient.connect(stream, "COM42", line -> {})) {
-                assertFalse(client.includesBus());
-                assertNull(SlcanClient.Frame.parse("t1230", client.includesBus()).busIndex);
-            }
         }
     }
 
