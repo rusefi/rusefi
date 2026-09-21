@@ -221,9 +221,12 @@ public class SerialPortScanner implements PortScanner {
     private boolean lastDfuConnected = false;
     private boolean lastStLinkConnected = false;
     private boolean lastPcanConnected = false;
-    private boolean lastSocketCanAvailable = false;
+    private volatile boolean lastSocketCanAvailable = false;
+    private volatile boolean socketCanPortPinned = false;
     @Nullable
     private volatile PortResult lastSocketCanPort;
+    private long socketCanPortGeneration;
+    private long deviceProbeInvalidationGeneration;
 
     /**
      * Find all available serial ports and checks if simulator local TCP port is available.
@@ -294,35 +297,48 @@ public class SerialPortScanner implements PortScanner {
             final boolean liveEcuConnected = probes.isLiveEcuConnected();
             final long now = probes.now();
             if (!liveEcuConnected && (now - lastDeviceProbeMs) >= DEVICE_PROBE_INTERVAL_MS) {
+                final long invalidationGeneration;
+                synchronized (lock) {
+                    invalidationGeneration = deviceProbeInvalidationGeneration;
+                }
                 lastDfuConnected = probes.isDfuDeviceConnected();
                 lastStLinkConnected = probes.isStLinkConnected();
                 lastPcanConnected = probes.isPcanConnected();
-                PortResult socketCanResult = probes.inspectSocketCan();
-                lastSocketCanAvailable = socketCanResult != null;
-                lastSocketCanPort = socketCanResult != null
-                    && socketCanResult.type != SerialPortType.CAN
-                    && socketCanResult.type != SerialPortType.Unknown
-                    ? socketCanResult
-                    : null;
-                lastDeviceProbeMs = now;
+                final long socketCanGeneration;
+                final boolean socketCanPinned;
+                synchronized (lock) {
+                    socketCanGeneration = socketCanPortGeneration;
+                    socketCanPinned = socketCanPortPinned;
+                }
+                if (!socketCanPinned) {
+                    PortResult socketCanResult = probes.inspectSocketCan();
+                    synchronized (lock) {
+                        if (socketCanGeneration == socketCanPortGeneration && !socketCanPortPinned) {
+                            lastSocketCanAvailable = socketCanResult != null;
+                            lastSocketCanPort = socketCanResult != null
+                                && socketCanResult.type != SerialPortType.CAN
+                                && socketCanResult.type != SerialPortType.Unknown
+                                ? socketCanResult
+                                : null;
+                        }
+                    }
+                }
+                synchronized (lock) {
+                    if (invalidationGeneration == deviceProbeInvalidationGeneration) {
+                        lastDeviceProbeMs = now;
+                    }
+                }
             }
             dfuConnected = lastDfuConnected;
             stLinkConnected = lastStLinkConnected;
-            PCANConnected = lastPcanConnected;
-            socketCanAvailable = lastSocketCanAvailable;
         } else {
             dfuConnected = false;
             stLinkConnected = false;
-            PCANConnected = false;
-            socketCanAvailable = lastSocketCanAvailable;
         }
 /*
         if (PCANConnected)
             ports.add(new PortResult(LinkManager.PCAN, SerialPortType.CAN));
  */
-        if (lastSocketCanPort != null) {
-            ports.add(lastSocketCanPort);
-        }
         // Surface a DFU device (STM32 built-in bootloader) as a synthetic, non-connectable port so a
         // running console can offer DFU flashing in-session [tag:better_ux_for_flashing]. dfuConnected stays exposed via
         // AvailableHardware.isDfuFound() for the existing ProgramSelector menu logic.
@@ -330,11 +346,17 @@ public class SerialPortScanner implements PortScanner {
             ports.add(new PortResult(LinkManager.DFU, SerialPortType.Dfu));
         }
         // Sort after every transport and synthetic device has been added.
-        ports.sort(Comparator.comparingInt(a -> a.type.sortOrder));
         boolean isListUpdated;
-        AvailableHardware currentHardware = new AvailableHardware(
-            ports, dfuConnected, stLinkConnected, PCANConnected, socketCanAvailable);
+        AvailableHardware currentHardware;
         synchronized (lock) {
+            PCANConnected = includeSlowLookup && lastPcanConnected;
+            socketCanAvailable = lastSocketCanAvailable;
+            if (lastSocketCanPort != null) {
+                ports.add(lastSocketCanPort);
+            }
+            ports.sort(Comparator.comparingInt(a -> a.type.sortOrder));
+            currentHardware = new AvailableHardware(
+                ports, dfuConnected, stLinkConnected, PCANConnected, socketCanAvailable);
             isListUpdated = !knownHardware.equals(currentHardware);
             knownHardware = currentHardware;
         }
@@ -420,6 +442,15 @@ public class SerialPortScanner implements PortScanner {
      */
     @Override
     public void cachePort(PortResult port) {
+        synchronized (lock) {
+            if (LinkManager.SOCKET_CAN.equals(port.port)) {
+                lastSocketCanAvailable = true;
+                lastSocketCanPort = port;
+                socketCanPortPinned = true;
+                socketCanPortGeneration++;
+                return;
+            }
+        }
         portCache.put(port);
     }
 
@@ -433,9 +464,12 @@ public class SerialPortScanner implements PortScanner {
     public void invalidatePort(String portName) {
         portCache.invalidate(portName);
         if (LinkManager.SOCKET_CAN.equals(portName)) {
-            lastSocketCanPort = null;
-            lastDeviceProbeMs = probes.now() - DEVICE_PROBE_INTERVAL_MS;
             synchronized (lock) {
+                socketCanPortPinned = false;
+                lastSocketCanPort = null;
+                socketCanPortGeneration++;
+                deviceProbeInvalidationGeneration++;
+                lastDeviceProbeMs = probes.now() - DEVICE_PROBE_INTERVAL_MS;
                 final List<PortResult> ports = knownHardware.getKnownPorts().stream()
                     .filter(port -> !LinkManager.SOCKET_CAN.equals(port.port))
                     .collect(Collectors.toList());

@@ -38,6 +38,17 @@ cp "$CONSOLE_JAR" "$folder/console/"
 TS_LAUNCHER="$REPO_ROOT/java_tools/ts_plugin_launcher/build/jar/rusefi_ts_plugin_launcher.jar"
 [ -f "$TS_LAUNCHER" ] && cp "$TS_LAUNCHER" "$folder/console/"
 
+# PCAN-Basic Java needs both the JNI bridge and the vendor API DLL. The Windows
+# launcher sets its working directory to console/, so keep the DLLs beside the jar.
+for dll in PCANBasic_JNI.dll PCANBasic.dll; do
+  source="$REPO_ROOT/java_console/$dll"
+  if [ ! -f "$source" ]; then
+    echo "::error::$source not found - Windows PCAN support would be unusable" >&2
+    exit 1
+  fi
+  cp "$source" "$folder/console/"
+done
+
 # release.txt lives in console/ - that is where BundleUtil reads it (console CWD).
 printf 'platform=%s\nrelease=%s\n' "$PLATFORM" "$RELEASE" > "$folder/console/release.txt"
 
@@ -71,6 +82,7 @@ au="$work/au"
 mkdir -p "$au/console"
 cp "$folder/console/rusefi_console.jar" "$au/console/"
 [ -f "$folder/console/rusefi_ts_plugin_launcher.jar" ] && cp "$folder/console/rusefi_ts_plugin_launcher.jar" "$au/console/"
+cp "$folder/console/PCANBasic_JNI.dll" "$folder/console/PCANBasic.dll" "$au/console/"
 cp "$folder/console/release.txt" "$au/console/"
 [ -f "$folder/readme.html" ] && cp "$folder/readme.html" "$au/"
 ( cd "$au" && zip -qr "$OUT_ABS/${WHITE_LABEL}_bundle_${PLATFORM}_autoupdate.zip" . )
