@@ -1,6 +1,18 @@
 #include <gtest/gtest.h>
 #include "../../../firmware/hw_layer/ports/at32/at32_reset_cause.h"
 #include "gpio/l9779_spi.h"
+#include "../../../firmware/hw_layer/ports/at32/at32f4/cfg/mcuconf.h"
+
+// ADC callbacks validate their NVIC priority against EFI_IRQ_ADC_PRIORITY.
+TEST(At32IrqPriority, AdcMatchesCallbackExpectation) {
+	EXPECT_EQ(EFI_IRQ_ADC_PRIORITY, STM32_ADC_IRQ_PRIORITY);
+}
+
+TEST(At32IrqPriority, AdcDmaMatchesCallbackExpectation) {
+	EXPECT_EQ(EFI_IRQ_ADC_PRIORITY, STM32_ADC_ADC1_DMA_IRQ_PRIORITY);
+	EXPECT_EQ(EFI_IRQ_ADC_PRIORITY, STM32_ADC_ADC2_DMA_IRQ_PRIORITY);
+	EXPECT_EQ(EFI_IRQ_ADC_PRIORITY, STM32_ADC_ADC3_DMA_IRQ_PRIORITY);
+}
 
 TEST(At32ResetCause, ResetFlags) {
 	EXPECT_EQ(Reset_Cause_NRST_Pin, decodeAt32ResetCause(1U << 26));
