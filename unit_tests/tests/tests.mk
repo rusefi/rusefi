@@ -1,4 +1,5 @@
 TESTS_SRC_CPP = \
+	tests/test_adc_callbacks.cpp \
 	tests/controllers/test_at32_port.cpp \
 	tests/test_slcan.cpp \
 	tests/test_hardware_pwm.cpp \
