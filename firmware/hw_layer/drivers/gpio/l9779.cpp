@@ -5,14 +5,6 @@
  *
  * Andrey Gusakov, (c) 2022
  *
- * TODO(at32-wip picking order - keep each item an atomic commit):
- * [x] SPI framing: CS timing and content-addressed delayed reply matching.
- * [x] SPI observability: bounded IDENT reads, timing, and recent-frame diagnostics.
- * [x] Output mapping: correct register packing and permanent direct-drive enables.
- * [x] Power-stage diagnostics: DIA cache, per-pin status, and OUT_DIS recovery.
- * [x] VRS configuration: datasheet full-adaptive setup and reset reconfiguration.
- * [x] VDA 2.0 watchdog: challenge/response feed, timer, counters, and recovery.
- * [ ] Ignition-gated power-stage lifecycle: PSOFF, wake, and board integration.
  *
  * Masks/inputs bits:
  * 0..3   - IGN1 .. 4 - Ignition pre-drivers
@@ -69,6 +61,7 @@
 #define WDA_EC_SAT_ESCAPE_CYCLES	(8)
 #define WDA_BURST_LEAD_US			(80)
 #define L9779_CONFIG6_PWR			(0x06)
+#define L9779_CONFIG6_PSOFF			(0x16)
 #define L9779_WD_RESPTIME_REG		(0x11)
 
 /* L9779WD-SPI timing requirements (datasheet table 53):
@@ -137,6 +130,7 @@ typedef enum {
  * MOSI data field; the reply carries the sub-address in its address field). */
 #define L9779_IDENT_SUB				(0x00)
 #define L9779_DIA_REG1_SUB			(0x01)
+#define L9779_DIA_REG9_SUB			(0x09)
 #define L9779_DIA_REG10_SUB			(0x0a)
 #define L9779_WD_RESPTIME_SUB		(0x0d)
 #define L9779_WD_REQULO_SUB			(0x0e)
@@ -183,6 +177,7 @@ struct L9779 : public GpioChip {
 	int chip_init_data();
 	int chip_init();
 	int chip_heal_out_dis(bool configurationLost);
+	int chip_power_off();
 	int vrs_configure();
 
 	brain_pin_diag_e getOutputDiag(size_t pin);
@@ -249,11 +244,17 @@ struct L9779 : public GpioChip {
 	bool						dia_valid[8];
 	uint8_t						dia10_cache;
 	bool						dia10_valid;
+	volatile bool				key_on_status;
+	volatile bool				key_on_valid;
 	sysinterval_t				diag_ts;
 	int							diag_next_reg;
 	int							diag_pending;
 	bool						out_dis_latched;
 	systime_t					out_dis_heal_ts;
+	/* Written by the board callback and applied by the driver thread. Keep
+	 * the defaults on so boards without an ignition gate retain old behavior. */
+	volatile bool				power_stage_on = true;
+	bool						power_stage_applied = true;
 	L9779SpiFrameLog				frame_log;
 };
 
@@ -283,6 +284,20 @@ bool l9779_getWdaCounters(uint8_t *ec, bool *wdaInt, int *ok, int *fail,
 	if (countBad != nullptr) { *countBad = chip->wd_cnt_bad; }
 
 	return true;
+}
+
+void l9779_setPowerStage(bool on)
+{
+	L9779 *chip = &chips[0];
+
+	if (chip->cfg == nullptr) {
+		return;
+	}
+
+	chip->power_stage_on = on;
+	if (chip->thread != nullptr) {
+		chip->wake_driver();
+	}
 }
 
 static const char* l9779_pin_names[L9779_SIGNALS] = {
@@ -542,12 +557,12 @@ int L9779::read_diag_reg(uint8_t subaddress, uint16_t *value)
 	return -1;
 }
 
-/* Refresh a bounded chunk of DIA_REG1..8 and DIA_REG10. Diagnosis reads
- * clear their fault bits, so only the driver thread accesses the hardware;
- * getOutputDiag() consumes this cache from other contexts. */
+/* Refresh a bounded chunk of DIA_REG1..8, KEY_ON in REG9, and DIA_REG10.
+ * Diagnosis reads clear their fault bits, so only the driver thread accesses
+ * the hardware; other contexts consume the cache. */
 int L9779::refresh_diag_cache(int maxRegisters)
 {
-	constexpr int RegisterCount = 9;
+	constexpr int RegisterCount = 10;
 	int processed = 0;
 
 	for (; processed < maxRegisters && diag_next_reg < RegisterCount;
@@ -557,6 +572,15 @@ int L9779::refresh_diag_cache(int maxRegisters)
 			if (read_diag_reg(L9779_DIA_REG1_SUB + diag_next_reg, &value) == 0) {
 				dia_cache[diag_next_reg] = value;
 				dia_valid[diag_next_reg] = true;
+			}
+			continue;
+		}
+
+		if (diag_next_reg == 8) {
+			uint16_t value = 0;
+			if (read_diag_reg(L9779_DIA_REG9_SUB, &value) == 0) {
+				key_on_status = (MSG_GET_DATA(value) & 0x80U) != 0;
+				key_on_valid = true;
 			}
 			continue;
 		}
@@ -577,7 +601,7 @@ int L9779::refresh_diag_cache(int maxRegisters)
 			efiPrintf(DRIVER_NAME " OUT_DIS cleared: DIA10=0x%02x", dia10);
 		}
 
-		if (outDis) {
+		if (outDis && power_stage_on) {
 			const systime_t now = chVTGetSystemTimeX();
 			if (now - out_dis_heal_ts >= TIME_MS2I(OUT_DIS_HEAL_MS)) {
 				out_dis_heal_ts = now;
@@ -749,6 +773,13 @@ static void wdaTimerArm(uint32_t ticks)
 	WDA_TIMER->SR = 0;
 	WDA_TIMER->DIER = STM32_TIM_DIER_UIE;
 	WDA_TIMER->CR1 = STM32_TIM_CR1_CEN;
+}
+
+static void wdaTimerStop()
+{
+	WDA_TIMER->CR1 = 0;
+	WDA_TIMER->DIER = 0;
+	WDA_TIMER->SR = 0;
 }
 
 void L9779::wd_arm(int delayMs)
@@ -936,35 +967,45 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 			continue;
 		}
 
-		if (chip->need_init) {
-			/* clear first, as flag can be raised again during init */
-			chip->need_init = false;
-			/* re-init chip! */
-			chip->chip_init();
-			/* sync pins state */
-			chip->update_output();
+		if (chip->power_stage_on != chip->power_stage_applied) {
+			chip->power_stage_applied = chip->power_stage_on;
+			if (chip->power_stage_on) {
+				chip->need_init = true;
+			} else {
+				chip->chip_power_off();
+			}
 		}
 
-		if (!chip->wd_running) {
-			chip->wd_running = true;
-			chip->wd_arm(chip->wd_delay_ms);
-		}
+		if (chip->power_stage_on) {
+			if (chip->need_init) {
+				/* A key-on reset clears the parked PSOFF state and watchdog EC. */
+				chip->need_init = false;
+				chip->chip_reset();
+				chip->chip_init();
+				chip->update_output();
+			}
 
-		/* Recover if a system reset stopped the timer while driver RAM survived. */
-		if ((WDA_TIMER->CR1 & STM32_TIM_CR1_CEN) == 0) {
-			chip->wd_arm(chip->wd_delay_ms);
-		}
+			if (!chip->wd_running) {
+				chip->wd_running = true;
+				chip->wd_arm(chip->wd_delay_ms);
+			}
 
-		if (chip->o_dirty) {
-			ret = chip->update_output();
-			if (ret != 0) {
-				/* set state to L9779_FAILED? */
+			/* Recover if a system reset stopped the timer while driver RAM survived. */
+			if ((WDA_TIMER->CR1 & STM32_TIM_CR1_CEN) == 0) {
+				chip->wd_arm(chip->wd_delay_ms);
+			}
+
+			if (chip->o_dirty) {
+				ret = chip->update_output();
+				if (ret != 0) {
+					/* set state to L9779_FAILED? */
+				}
 			}
 		}
 
 		if (chip->diag_pending == 0 && chip->diag_ts <= now) {
 			chip->diag_next_reg = 0;
-			chip->diag_pending = 9;
+			chip->diag_pending = 10;
 			chip->diag_ts = chTimeAddX(now, TIME_MS2I(DIAG_REFRESH_MS));
 		}
 
@@ -1055,6 +1096,11 @@ brain_pin_diag_e L9779::getInputDiag(unsigned int pin)
 int L9779::readPad(size_t pin) {
 	if (pin >= L9779_SIGNALS)
 		return -1;
+
+	/* The only L9779 input exposed as a GPIO is KEY_ON from DIA_REG9. */
+	if (pin == L9779_OUTPUTS) {
+		return key_on_valid ? (key_on_status ? 1 : 0) : -1;
+	}
 
 	/* unknown pin */
 	return -1;
@@ -1203,6 +1249,21 @@ int L9779::chip_init()
 	return ret;
 }
 
+/* Stop watchdog traffic before parking the power stages. CONFIG_REG6 PSOFF
+ * leaves chip logic, SPI, and KEY_ON monitoring alive for the wake edge. */
+int L9779::chip_power_off()
+{
+	wd_running = false;
+	wdaTimerStop();
+
+	const int ret = spi_rw(MSG_W(0x06, L9779_CONFIG6_PSOFF), NULL);
+	if (ret != 0) {
+		efiPrintf(DRIVER_NAME " PSOFF write failed (%d)", ret);
+	}
+
+	return ret;
+}
+
 int L9779::chip_heal_out_dis(bool configurationLost)
 {
 	if (configurationLost) {
@@ -1266,6 +1327,7 @@ int L9779::init()
 		dia_valid[i] = false;
 	}
 	dia10_valid = false;
+	key_on_valid = false;
 	diag_ts = 0;
 	diag_next_reg = 0;
 	diag_pending = 0;
@@ -1291,9 +1353,7 @@ int L9779::init()
 int L9779::deinit()
 {
 	wd_running = false;
-	WDA_TIMER->CR1 = 0;
-	WDA_TIMER->DIER = 0;
-	WDA_TIMER->SR = 0;
+	wdaTimerStop();
 	return 0;
 }
 
