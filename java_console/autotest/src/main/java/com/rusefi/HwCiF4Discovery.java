@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.rusefi.common.MiscTest;
+import com.rusefi.common.AdcHardwareTest;
 import com.rusefi.f4discovery.*;
 import com.rusefi.io.CommandQueue;
 
@@ -26,6 +27,7 @@ public class HwCiF4Discovery {
             CompositeLoggerTest.class,
             BurnCommandTest.class,
             MiscTest.class,
+            AdcHardwareTest.class,
             CommonFunctionalTest.class,
             DiscoveryPwmHardwareTest.class,
             VssHardwareLoopTest.class,
