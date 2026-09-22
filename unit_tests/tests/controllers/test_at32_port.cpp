@@ -146,3 +146,41 @@ TEST(L9779Spi, Output13And14PackIntoTheirOwnControlBits) {
 	EXPECT_EQ(0x40, out14.control[1]);
 	EXPECT_EQ(0x00, out14.control[2]);
 }
+
+TEST(L9779Spi, MapsOutputsToDatasheetDiagnosisFields) {
+	const auto expectLocation = [](size_t pin, int reg, unsigned int shift) {
+		const L9779DiagLocation location = l9779GetDiagLocation(pin);
+		EXPECT_EQ(reg, location.registerIndex);
+		EXPECT_EQ(shift, location.shift);
+	};
+
+	expectLocation(0, 7, 0);   // IGN1
+	expectLocation(3, 7, 6);   // IGN4
+	expectLocation(4, 0, 0);   // OUT1
+	expectLocation(10, 1, 4);  // OUT7
+	expectLocation(16, 2, 4);  // OUT13
+	expectLocation(17, 2, 6);  // OUT14
+	expectLocation(18, 3, 0);  // OUT15
+	expectLocation(21, 3, 6);  // OUT18
+	expectLocation(23, 4, 2);  // OUT20
+	expectLocation(24, 5, 0);  // OUT21
+	expectLocation(31, 6, 6);  // OUT28
+
+	EXPECT_FALSE(l9779GetDiagLocation(11).supported()); // OUT8 does not exist
+	EXPECT_FALSE(l9779GetDiagLocation(22).supported()); // OUT19 does not exist
+	EXPECT_FALSE(l9779GetDiagLocation(32).supported()); // MRD has no diagnosis
+}
+
+TEST(L9779Spi, DecodesDiagnosisAndResetCause) {
+	EXPECT_EQ(L9779DiagResult::ShortToGround, l9779DecodeDiagField(0));
+	EXPECT_EQ(L9779DiagResult::OpenLoad, l9779DecodeDiagField(1));
+	EXPECT_EQ(L9779DiagResult::ShortToBattery, l9779DecodeDiagField(2));
+	EXPECT_EQ(L9779DiagResult::Ok, l9779DecodeDiagField(3));
+
+	EXPECT_TRUE(l9779Dia10HasOutDis(L9779_DIA10_OUT_DIS));
+	EXPECT_TRUE(l9779Dia10LostConfiguration(L9779_DIA10_TNL_RST));
+	EXPECT_TRUE(l9779Dia10LostConfiguration(L9779_DIA10_CRK_RST));
+	EXPECT_TRUE(l9779Dia10LostConfiguration(L9779_DIA10_OV_RST));
+	EXPECT_FALSE(l9779Dia10LostConfiguration(L9779_DIA10_F1 | L9779_DIA10_F2));
+	EXPECT_FALSE(l9779Dia10LostConfiguration(L9779_DIA10_VDD5_OV | L9779_DIA10_V3V3_UV));
+}

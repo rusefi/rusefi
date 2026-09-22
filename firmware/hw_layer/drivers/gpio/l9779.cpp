@@ -9,7 +9,7 @@
  * [x] SPI framing: CS timing and content-addressed delayed reply matching.
  * [x] SPI observability: bounded IDENT reads, timing, and recent-frame diagnostics.
  * [x] Output mapping: correct register packing and permanent direct-drive enables.
- * [ ] Power-stage diagnostics: DIA cache, per-pin status, and OUT_DIS recovery.
+ * [x] Power-stage diagnostics: DIA cache, per-pin status, and OUT_DIS recovery.
  * [ ] VRS configuration: stock full-adaptive setup and reset reconfiguration.
  * [ ] VDA 2.0 watchdog: challenge/response feed, timer, counters, and recovery.
  * [ ] Ignition-gated power-stage lifecycle: PSOFF, wake, and board integration.
@@ -56,6 +56,9 @@
 #define DRIVER_NAME					"l9779"
 
 #define DIAG_PERIOD_MS				(7)
+#define DIAG_REFRESH_MS			(125)
+#define DIAG_REFRESH_REGS			(3)
+#define OUT_DIS_HEAL_MS				(200)
 
 /* L9779WD-SPI timing requirements (datasheet table 53):
  *  - tlead >= 525 ns: CS low to first SCK edge
@@ -118,6 +121,8 @@ typedef enum {
 /* Read only registers (common address 0x10 plus a 5-bit sub-address in the
  * MOSI data field; the reply carries the sub-address in its address field). */
 #define L9779_IDENT_SUB				(0x00)
+#define L9779_DIA_REG1_SUB			(0x01)
+#define L9779_DIA_REG10_SUB			(0x0a)
 #define L9779_IDENT					(MSG_SET_ADDR(MSG_READ_ADDR) | MSG_SET_SUBADDR(L9779_IDENT_SUB))
 
 /*==========================================================================*/
@@ -143,6 +148,8 @@ struct L9779 : public GpioChip {
 	int spi_validate(uint16_t rx);
 	int spi_rw(uint16_t tx, uint16_t *rx_ptr);
 	int spi_rw_array(const uint16_t *tx, uint16_t *rx, int n);
+	int read_diag_reg(uint8_t subaddress, uint16_t *value);
+	int refresh_diag_cache(int maxRegisters);
 
 	int update_output();
 	int update_direct_output(size_t pin, int value);
@@ -152,6 +159,7 @@ struct L9779 : public GpioChip {
 	int chip_reset();
 	int chip_init_data();
 	int chip_init();
+	int chip_heal_out_dis(bool configurationLost);
 
 	brain_pin_diag_e getOutputDiag(size_t pin);
 	brain_pin_diag_e getInputDiag(size_t pin);
@@ -192,6 +200,15 @@ struct L9779 : public GpioChip {
 	uint16_t					recentRx;
 	uint32_t					recent_frame_ticks;
 	uint16_t					ident_reg;
+	uint16_t					dia_cache[8];
+	bool						dia_valid[8];
+	uint8_t						dia10_cache;
+	bool						dia10_valid;
+	sysinterval_t				diag_ts;
+	int							diag_next_reg;
+	int							diag_pending;
+	bool						out_dis_latched;
+	systime_t					out_dis_heal_ts;
 	L9779SpiFrameLog				frame_log;
 };
 
@@ -216,6 +233,21 @@ static const char* l9779_pin_names[L9779_SIGNALS] = {
 static void l9779DelayUs(uint32_t microseconds)
 {
 	chSysPolledDelayX(US2RTC(SystemCoreClock, microseconds));
+}
+
+static brain_pin_diag_e l9779DecodeOutputDiag(uint8_t field)
+{
+	switch (l9779DecodeDiagField(field)) {
+	case L9779DiagResult::ShortToGround:
+		return PIN_SHORT_TO_GND;
+	case L9779DiagResult::OpenLoad:
+		return PIN_OPEN;
+	case L9779DiagResult::ShortToBattery:
+		return PIN_SHORT_TO_BAT;
+	case L9779DiagResult::Ok:
+	default:
+		return PIN_OK;
+	}
 }
 
 /* true if parity of input x is odd */
@@ -371,6 +403,83 @@ int L9779::spi_rw_array(const uint16_t *tx, uint16_t *rx, int n)
 	return ret;
 }
 
+/* L9779 read replies can arrive after intervening frames. Keep issuing the
+ * same request until its content-addressed reply arrives, with a hard bound
+ * so a missing chip cannot stall the driver thread. */
+int L9779::read_diag_reg(uint8_t subaddress, uint16_t *value)
+{
+	for (int attempt = 0; attempt < 3; attempt++) {
+		uint16_t rx = 0;
+		const int ret = spi_rw(
+			MSG_SET_ADDR(MSG_READ_ADDR) | MSG_SET_SUBADDR(subaddress), &rx);
+		if (ret == 0 && rx_subaddress == subaddress) {
+			*value = rx;
+			return 0;
+		}
+	}
+
+	return -1;
+}
+
+/* Refresh a bounded chunk of DIA_REG1..8 and DIA_REG10. Diagnosis reads
+ * clear their fault bits, so only the driver thread accesses the hardware;
+ * getOutputDiag() consumes this cache from other contexts. */
+int L9779::refresh_diag_cache(int maxRegisters)
+{
+	constexpr int RegisterCount = 9;
+	int processed = 0;
+
+	for (; processed < maxRegisters && diag_next_reg < RegisterCount;
+		 processed++, diag_next_reg++) {
+		if (diag_next_reg < 8) {
+			uint16_t value = 0;
+			if (read_diag_reg(L9779_DIA_REG1_SUB + diag_next_reg, &value) == 0) {
+				dia_cache[diag_next_reg] = value;
+				dia_valid[diag_next_reg] = true;
+			}
+			continue;
+		}
+
+		uint16_t value = 0;
+		if (read_diag_reg(L9779_DIA_REG10_SUB, &value) != 0) {
+			continue;
+		}
+
+		const uint8_t dia10 = MSG_GET_DATA(value);
+		dia10_cache = dia10;
+		dia10_valid = true;
+		const bool outDis = l9779Dia10HasOutDis(dia10);
+
+		if (outDis && !out_dis_latched) {
+			efiPrintf(DRIVER_NAME " OUT_DIS set: DIA10=0x%02x", dia10);
+		} else if (!outDis && out_dis_latched) {
+			efiPrintf(DRIVER_NAME " OUT_DIS cleared: DIA10=0x%02x", dia10);
+		}
+
+		if (outDis) {
+			const systime_t now = chVTGetSystemTimeX();
+			if (now - out_dis_heal_ts >= TIME_MS2I(OUT_DIS_HEAL_MS)) {
+				out_dis_heal_ts = now;
+				const bool configurationLost = l9779Dia10LostConfiguration(dia10);
+				if (chip_heal_out_dis(configurationLost) == 0) {
+					efiPrintf(DRIVER_NAME " OUT_DIS recovery: %s (DIA10=0x%02x)",
+						configurationLost ? "reinitialized" : "START restored", dia10);
+				}
+			}
+		} else {
+			out_dis_heal_ts = 0;
+		}
+
+		out_dis_latched = outDis;
+	}
+
+	if (diag_next_reg >= RegisterCount) {
+		diag_next_reg = 0;
+	}
+
+	return processed;
+}
+
 int L9779::update_output()
 {
 	const L9779OutputRegisters packed = l9779PackOutputRegisters(o_state, o_oe_mask);
@@ -459,6 +568,7 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 
 		/* should we care about msg == MSG_TIMEOUT? */
 		(void)msg;
+		const systime_t now = chVTGetSystemTimeX();
 
 		/* default polling interval */
 		poll_interval = TIME_MS2I(DIAG_PERIOD_MS);
@@ -506,6 +616,16 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 			if (ret) {
 				/* set state to L9779_FAILED? */
 			}
+		}
+
+		if (chip->diag_pending == 0 && chip->diag_ts <= now) {
+			chip->diag_next_reg = 0;
+			chip->diag_pending = 9;
+			chip->diag_ts = chTimeAddX(now, TIME_MS2I(DIAG_REFRESH_MS));
+		}
+
+		if (chip->diag_pending > 0) {
+			chip->diag_pending -= chip->refresh_diag_cache(DIAG_REFRESH_REGS);
 		}
 #if 0
 		if (chip->diag_ts <= chVTGetSystemTimeX()) {
@@ -577,9 +697,21 @@ int L9779::writePad(size_t pin, int value) {
 
 brain_pin_diag_e L9779::getOutputDiag(size_t pin)
 {
-	(void)pin;
+	if (pin >= L9779_OUTPUTS) {
+		return PIN_UNKNOWN;
+	}
 
-	return PIN_OK;
+	const L9779DiagLocation location = l9779GetDiagLocation(pin);
+	if (!location.supported()) {
+		return PIN_UNKNOWN;
+	}
+
+	if (!dia_valid[location.registerIndex]) {
+		return PIN_UNKNOWN;
+	}
+
+	const uint8_t diagnosis = MSG_GET_DATA(dia_cache[location.registerIndex]);
+	return l9779DecodeOutputDiag((diagnosis >> location.shift) & 0x03U);
 }
 
 brain_pin_diag_e L9779::getInputDiag(unsigned int pin)
@@ -689,6 +821,23 @@ int L9779::chip_init()
 	return ret;
 }
 
+int L9779::chip_heal_out_dis(bool configurationLost)
+{
+	if (configurationLost) {
+		const int ret = chip_init();
+		if (ret != 0) {
+			return ret;
+		}
+	} else {
+		const int ret = spi_rw(CMD_START_REACT(BIT(1)), NULL);
+		if (ret != 0) {
+			return ret;
+		}
+	}
+
+	return update_output();
+}
+
 int L9779::init()
 {
 	int ret;
@@ -704,6 +853,16 @@ int L9779::init()
 	ret = chip_init_data();
 	if (ret)
 		return ret;
+
+	for (size_t i = 0; i < efi::size(dia_valid); i++) {
+		dia_valid[i] = false;
+	}
+	dia10_valid = false;
+	diag_ts = 0;
+	diag_next_reg = 0;
+	diag_pending = 0;
+	out_dis_latched = false;
+	out_dis_heal_ts = 0;
 
 	/* force chip init from driver thread */
 	need_init = true;
@@ -732,6 +891,12 @@ void L9779::debug()
 		spi_cnt, spi_err_parity, spi_err_frame, spi_err);
 	efiPrintf(DRIVER_NAME " lastTx=0x%04x lastRx=0x%04x ident=0x%04x",
 		recentTx, recentRx, ident_reg);
+	if (dia10_valid) {
+		efiPrintf(DRIVER_NAME " DIA10=0x%02x OUT_DIS=%d config_lost=%d",
+			dia10_cache,
+			l9779Dia10HasOutDis(dia10_cache),
+			l9779Dia10LostConfiguration(dia10_cache));
+	}
 
 	const uint32_t frame_us = recent_frame_ticks == 0
 		? 0
