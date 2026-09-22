@@ -87,3 +87,31 @@ TEST(L9779Spi, ReadTrackerBoundsOutstandingRequests) {
 	tracker.clear();
 	EXPECT_EQ(static_cast<size_t>(0), tracker.size());
 }
+
+TEST(L9779Spi, FrameLogRetainsNewestFramesInChronologicalOrder) {
+	L9779SpiFrameLog log;
+
+	for (size_t i = 0; i < L9779SpiFrameLog::Capacity + 2; i++) {
+		log.record(
+			static_cast<uint16_t>(0x1000 + i),
+			static_cast<uint16_t>(0x2000 + i),
+			static_cast<uint8_t>(i),
+			-static_cast<int>(i));
+	}
+
+	ASSERT_EQ(L9779SpiFrameLog::Capacity, log.size());
+	const L9779SpiFrame* oldest = log.get(0);
+	ASSERT_NE(nullptr, oldest);
+	EXPECT_EQ(0x1002, oldest->tx);
+	EXPECT_EQ(0x2002, oldest->rx);
+	EXPECT_EQ(2, oldest->subaddress);
+	EXPECT_EQ(-2, oldest->result);
+
+	const L9779SpiFrame* newest = log.get(log.size() - 1);
+	ASSERT_NE(nullptr, newest);
+	EXPECT_EQ(0x1000 + L9779SpiFrameLog::Capacity + 1, newest->tx);
+	EXPECT_EQ(0x2000 + L9779SpiFrameLog::Capacity + 1, newest->rx);
+	EXPECT_EQ(L9779SpiFrameLog::Capacity + 1, newest->subaddress);
+	EXPECT_EQ(-static_cast<int>(L9779SpiFrameLog::Capacity + 1), newest->result);
+	EXPECT_EQ(nullptr, log.get(log.size()));
+}

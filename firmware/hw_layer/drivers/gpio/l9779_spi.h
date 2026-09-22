@@ -59,3 +59,41 @@ private:
 	uint8_t m_pending[Capacity] = {};
 	size_t m_count = 0;
 };
+
+struct L9779SpiFrame {
+	uint16_t tx;
+	uint16_t rx;
+	uint8_t subaddress;
+	int8_t result;
+};
+
+class L9779SpiFrameLog {
+public:
+	static constexpr size_t Capacity = 32;
+
+	void record(uint16_t tx, uint16_t rx, uint8_t subaddress, int result) {
+		m_frames[m_next] = { tx, rx, subaddress, static_cast<int8_t>(result) };
+		m_next = (m_next + 1) % Capacity;
+		if (m_count < Capacity) {
+			m_count++;
+		}
+	}
+
+	const L9779SpiFrame* get(size_t chronologicalIndex) const {
+		if (chronologicalIndex >= m_count) {
+			return nullptr;
+		}
+
+		const size_t oldest = (m_next + Capacity - m_count) % Capacity;
+		return &m_frames[(oldest + chronologicalIndex) % Capacity];
+	}
+
+	size_t size() const {
+		return m_count;
+	}
+
+private:
+	L9779SpiFrame m_frames[Capacity] = {};
+	size_t m_count = 0;
+	size_t m_next = 0;
+};
