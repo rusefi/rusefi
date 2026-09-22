@@ -195,3 +195,37 @@ TEST(L9779Spi, FullAdaptiveVrsConfigurationEnablesAdaptiveFilter) {
 	EXPECT_EQ(0x00, config.config5 & 0x07); // 17 uA hysteresis floor.
 	EXPECT_EQ(0x00, config.config5 & 0x20); // VRS diagnosis remains disabled.
 }
+
+TEST(L9779Spi, WatchdogResponsesMatchDatasheetVectors) {
+	const uint8_t expected[16][4] = {
+		{0xff, 0x0f, 0xf0, 0x00}, {0xb0, 0x40, 0xbf, 0x4f},
+		{0xe9, 0x19, 0xe6, 0x16}, {0xa6, 0x56, 0xa9, 0x59},
+		{0x75, 0x85, 0x7a, 0x8a}, {0x3a, 0xca, 0x35, 0xc5},
+		{0x63, 0x93, 0x6c, 0x9c}, {0x2c, 0xdc, 0x23, 0xd3},
+		{0xd2, 0x22, 0xdd, 0x2d}, {0x9d, 0x6d, 0x92, 0x62},
+		{0xc4, 0x34, 0xcb, 0x3b}, {0x8b, 0x7b, 0x84, 0x74},
+		{0x58, 0xa8, 0x57, 0xa7}, {0x17, 0xe7, 0x18, 0xe8},
+		{0x4e, 0xbe, 0x41, 0xb1}, {0x01, 0xf1, 0x0e, 0xfe},
+	};
+
+	for (size_t question = 0; question < 16; question++) {
+		for (size_t byte = 0; byte < 4; byte++) {
+			EXPECT_EQ(expected[question][byte], L9779_WDA_RESPONSES[question][byte]);
+		}
+	}
+}
+
+TEST(L9779Spi, WatchdogStatusAndTimingPolicy) {
+	constexpr L9779WdaStatus status = l9779DecodeWdaStatus(0xd9);
+	EXPECT_EQ(9, status.question);
+	EXPECT_EQ(5, status.errorCount);
+	EXPECT_TRUE(status.interrupt);
+
+	EXPECT_TRUE(l9779WdaResponseCounterAligned(0xc0));
+	EXPECT_FALSE(l9779WdaResponseCounterAligned(0x80));
+	EXPECT_EQ(22, l9779AdjustWdaDelay(27, 0x02)); // Late.
+	EXPECT_EQ(32, l9779AdjustWdaDelay(27, 0x01)); // Early.
+	EXPECT_EQ(22, l9779AdjustWdaDelay(27, 0x03)); // Late wins.
+	EXPECT_EQ(17, l9779AdjustWdaDelay(17, 0x02));
+	EXPECT_EQ(38, l9779AdjustWdaDelay(38, 0x01));
+}

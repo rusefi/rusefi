@@ -39,3 +39,8 @@ struct l9779_config {
 };
 
 int l9779_add(brain_pin_e base, unsigned int index, const l9779_config *cfg);
+
+/* Snapshot the VDA 2.0 watchdog state for diagnostics. */
+bool l9779_getWdaCounters(uint8_t *ec, bool *wdaInt, int *ok, int *fail,
+	int *timingMiss, uint8_t *dia10, int *delayMs, int *deferCount,
+	int *killCount, uint8_t *requhi, int *wrongCount, int *countBad);
