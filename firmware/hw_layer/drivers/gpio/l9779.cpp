@@ -10,7 +10,7 @@
  * [x] SPI observability: bounded IDENT reads, timing, and recent-frame diagnostics.
  * [x] Output mapping: correct register packing and permanent direct-drive enables.
  * [x] Power-stage diagnostics: DIA cache, per-pin status, and OUT_DIS recovery.
- * [ ] VRS configuration: stock full-adaptive setup and reset reconfiguration.
+ * [x] VRS configuration: datasheet full-adaptive setup and reset reconfiguration.
  * [ ] VDA 2.0 watchdog: challenge/response feed, timer, counters, and recovery.
  * [ ] Ignition-gated power-stage lifecycle: PSOFF, wake, and board integration.
  *
@@ -118,6 +118,9 @@ typedef enum {
 #define CMD_START_REACT(d)			MSG_W(0x0d, (d))
 #define CMD_CONTR_REG(n, d)			MSG_W(0x08 + (n), (d))
 
+#define L9779_CONFIG_REG1			(0x01)
+#define L9779_CONFIG_REG5			(0x05)
+
 /* Read only registers (common address 0x10 plus a 5-bit sub-address in the
  * MOSI data field; the reply carries the sub-address in its address field). */
 #define L9779_IDENT_SUB				(0x00)
@@ -160,6 +163,7 @@ struct L9779 : public GpioChip {
 	int chip_init_data();
 	int chip_init();
 	int chip_heal_out_dis(bool configurationLost);
+	int vrs_configure();
 
 	brain_pin_diag_e getOutputDiag(size_t pin);
 	brain_pin_diag_e getInputDiag(size_t pin);
@@ -781,6 +785,31 @@ err_gpios:
 	return ret;
 }
 
+/* Configure the crank VR conditioner for the L9779's fully adaptive mode
+ * (datasheet section 6.14). CONFIG_REG1 enables full adaptation, while
+ * CONFIG_REG5 enables both amplitude-based hysteresis and the adaptive time
+ * filter (Tfilter = 1/32 of the tooth period) with a 17 uA floor. The chip
+ * performs both adaptations internally, so no RPM-driven software ramp is
+ * needed. These registers are write-only and reset with the chip. */
+int L9779::vrs_configure()
+{
+	constexpr L9779VrsConfiguration vrsConfig = l9779FullAdaptiveVrsConfiguration();
+
+	int ret = spi_rw(MSG_W(L9779_CONFIG_REG1, vrsConfig.config1), NULL);
+	if (ret != 0) {
+		return ret;
+	}
+
+	ret = spi_rw(MSG_W(L9779_CONFIG_REG5, vrsConfig.config5), NULL);
+	if (ret != 0) {
+		return ret;
+	}
+
+	efiPrintf(DRIVER_NAME " VRS full adaptive: REG1=0x%02x REG5=0x%02x",
+		vrsConfig.config1, vrsConfig.config5);
+	return 0;
+}
+
 int L9779::chip_init()
 {
 	int ret;
@@ -797,6 +826,14 @@ int L9779::chip_init()
 	ret = spi_rw(CMD_START_REACT(BIT(1)), NULL);
 	if (ret)
 		return ret;
+
+	/* A power-on or smart-reset event restores the write-only VRS registers
+	 * to their defaults. chip_init() serves both initial setup and the
+	 * configuration-lost OUT_DIS recovery path, so reapply them here. */
+	ret = vrs_configure();
+	if (ret != 0) {
+		return ret;
+	}
 
 	/* Verify the link without assuming an exact reply-frame delay. Each
 	 * attempt is bounded to one frame; stop only when IDENT's sub-address is
@@ -824,6 +861,7 @@ int L9779::chip_init()
 int L9779::chip_heal_out_dis(bool configurationLost)
 {
 	if (configurationLost) {
+		/* Reapply all write-only configuration, including the VRS setup. */
 		const int ret = chip_init();
 		if (ret != 0) {
 			return ret;

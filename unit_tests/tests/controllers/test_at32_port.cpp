@@ -184,3 +184,14 @@ TEST(L9779Spi, DecodesDiagnosisAndResetCause) {
 	EXPECT_FALSE(l9779Dia10LostConfiguration(L9779_DIA10_F1 | L9779_DIA10_F2));
 	EXPECT_FALSE(l9779Dia10LostConfiguration(L9779_DIA10_VDD5_OV | L9779_DIA10_V3V3_UV));
 }
+
+TEST(L9779Spi, FullAdaptiveVrsConfigurationEnablesAdaptiveFilter) {
+	constexpr L9779VrsConfiguration config = l9779FullAdaptiveVrsConfiguration();
+
+	EXPECT_EQ(0x02, config.config1);
+	EXPECT_EQ(0xd8, config.config5);
+	EXPECT_NE(0, config.config1 & 0x02); // Full-adaptive mode.
+	EXPECT_EQ(0x18, config.config5 & 0x18); // Adaptive hysteresis and filter.
+	EXPECT_EQ(0x00, config.config5 & 0x07); // 17 uA hysteresis floor.
+	EXPECT_EQ(0x00, config.config5 & 0x20); // VRS diagnosis remains disabled.
+}

@@ -24,6 +24,18 @@ struct L9779OutputRegisters {
 	uint8_t control[4];
 };
 
+struct L9779VrsConfiguration {
+	uint8_t config1;
+	uint8_t config5;
+};
+
+inline constexpr L9779VrsConfiguration l9779FullAdaptiveVrsConfiguration() {
+	return {
+		0x02, // Full-adaptive VRS mode.
+		0xd8, // Adaptive hysteresis and time filter, 17 uA floor.
+	};
+}
+
 inline L9779OutputRegisters l9779PackOutputRegisters(uint32_t outputState, uint32_t outputEnableMask) {
 	/* IGN1..4 and OUT1..7 are enabled through SPI, then switched by their
 	 * dedicated parallel inputs. Keep those enables independent of the live
