@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.rusefi.common.MiscTest;
+import com.rusefi.common.AdcHardwareTest;
 import com.rusefi.f4discovery.*;
 import com.rusefi.nucleo.NucleoPwmHardwareTest;
 import com.rusefi.nucleo.NucleoVssHardwareTest;
@@ -15,6 +16,7 @@ public class HwCiNucleoF7 {
 			NucleoVssHardwareTest.class,
 //            MiscTest.class,
             BurnCommandTest.class,
+            AdcHardwareTest.class,
 //            CommonFunctionalTest.class,
         });
     }

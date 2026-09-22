@@ -479,6 +479,9 @@ float mapFast
 
   uint8_t[MAX_CYLINDER_COUNT iterate] mapPerCylinder;;"kPa", 1, 0, 0, 0, 0
 
+	! Counts complete primary/optional-mux/auxiliary cycles on F4/F7 background ADC.
+	uint16_t slowAdcScanCount;ECU: Slow ADC complete scans;"N", 1, 0, 0, 65535, 0
+
 	! Live measured thermistor resistance, exact value computed by ResistanceFunc, see issue #9788
 	float cltResistance;CLT: measured resistance;"Ohm", 1, 0, 0, 1000000, 0
 	float iatResistance;IAT: measured resistance;"Ohm", 1, 0, 0, 1000000, 0

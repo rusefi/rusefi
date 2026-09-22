@@ -273,6 +273,11 @@ static void slowAdcEndCB(ADCDriver *adcp) {
 		adcp->state = ADC_READY;
 		// get next state
 		slowAdcState = slowAdcGetNextState(slowAdcState);
+		// A scan is complete only after the final auxiliary conversion has
+		// completed and the state machine wraps back to the primary group.
+		if (slowAdcState == convertPrimary) {
+			engine->outputChannels.slowAdcScanCount++;
+		}
 		switch (slowAdcState) {
 		case convertPrimary:
 			#ifdef ADC_MUX_PIN
