@@ -5,7 +5,8 @@ LLM client (Claude Desktop, JetBrains AI, Cursor, etc.) iterate on rusEFI Lua sc
 write a candidate script, upload it to the ECU, reset Lua, and observe the resulting
 `print(...)` / `efiPrintf` output. It also reads live ECU values and records operating
 data to host-side `.mlg` files using the Java frontend's binary log format. It can
-also convert existing binary MLG and text TunerStudio MSL logs to CSV offline.
+also read and write complete TunerStudio-compatible tunes, and convert existing
+binary MLG and text TunerStudio MSL logs to CSV offline.
 
 ## Architecture
 
@@ -17,6 +18,10 @@ LLM client  <-- stdio JSON-RPC (MCP) -->  EcuMcpServer
                                               |       +-- LinkManager / BinaryProtocol
                                               |       +-- BurnCommand
                                               |       +-- StringIniField (LUASCRIPT)
+                                              |
+                                              +-- CalibrationsHelper / CalibrationsUpdater
+                                              |       +-- MSQ compatibility migration
+                                              |       +-- page-aware write, burn, readback
                                               |
                                               +-- MessagesCentral listener
                                                       (same hook as Swing MessagesView,
@@ -64,6 +69,7 @@ Behavior common to all tools:
 | `read_messages` | Pull recent ECU messages (Lua `print` included). |
 | `wait_for_message` | Block until a message matches a regex. |
 | `read_tune` | Save the complete ECU tune as a `.msq` file. |
+| `write_tune` | Merge, burn, and verify a host-side `.msq` tune on the ECU. |
 | `reboot` | Reboot the ECU. |
 | `reboot_to_blt` | Reboot the ECU into the OpenBLT bootloader. |
 
@@ -292,13 +298,36 @@ wait — pass `sinceSeq` captured before triggering the action you're waiting on
 
 Reads the complete tune (every calibration constant defined by the matching `.ini`) and
 writes it as a TunerStudio-compatible `.msq` XML file — the same format the rusEFI
-console and TunerStudio use for tune save/load. The tune is built from the controller
-configuration image fetched over this connection (read in full at connect and kept in
-sync by writes made through this connection).
+console and TunerStudio use for tune save/load. Every page declared by the matching
+`.ini` is freshly read from the ECU when the tool is called, including secondary
+calibration pages such as the dedicated Lua page on newer firmware.
 
 Returns `path` (absolute), `constantCount`, `fileSize` (bytes) and `signature`. The XML
 can easily run to hundreds of kilobytes — read the file with your own file tools
 (ideally selectively) instead of trying to pull it through an MCP response.
+
+### `write_tune`
+
+| Argument | Type | Required | Description |
+|---|---|---|---|
+| `path` | string | yes | Existing input `.msq` path **on the MCP-server host** (not the client). |
+
+Loads the MSQ and resolves the `.ini` named by its firmware signature. It freshly reads
+all tune pages from the connected ECU, compatibility-migrates fields from the input tune
+onto that current image, writes and burns only changed pages, then freshly reads all
+pages again and requires an exact byte-for-byte match with the intended merged result.
+The ECU's `vinNumber` is deliberately preserved, matching the console tune-import path.
+Fields incompatible with the connected firmware are skipped and reported rather than
+causing compatible fields to be discarded.
+
+Returns `success`, absolute `path`, `constantCount`, `fileSize`, `sourceSignature`,
+`ecuSignature`, `changed`, `verified`, `failedFields`, and `warnings`. `changed: false`
+is a successful no-op when the ECU already contains the requested calibration. A write,
+burn, or readback mismatch returns `success: false` and `verified: false`.
+
+```json
+{"name":"write_tune","arguments":{"path":"/tmp/edited-tune.msq"}}
+```
 
 ### `reboot`
 

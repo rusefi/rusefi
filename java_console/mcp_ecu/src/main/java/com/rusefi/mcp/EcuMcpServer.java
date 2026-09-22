@@ -1,18 +1,21 @@
 package com.rusefi.mcp;
 
 import com.devexperts.logging.Logging;
-import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.binaryprotocol.IniNotFoundException;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.tune.xml.Msq;
-import com.rusefi.tune.xml.MsqFactory;
 import com.rusefi.ui.lua.LuaIncludeSyntax;
 import com.rusefi.io.LinkManager;
+import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.util.TuneSnapshot;
 import com.rusefi.io.lua.LuaService;
+import com.rusefi.maintenance.CalibrationsHelper;
+import com.rusefi.maintenance.CalibrationsInfo;
+import com.rusefi.maintenance.CalibrationsUpdater;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -28,7 +31,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Deque;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -43,7 +53,7 @@ import static com.devexperts.logging.Logging.getLogging;
  *     <li><code>tools/list</code></li>
  *     <li><code>tools/call</code> for: connect, ecu_info, set_lua, get_lua, lua_reset,
  *         send_command (alias: command), read_output_channel, read_messages,
- *         wait_for_message, read_tune, start_data_logging, stop_data_logging, data_logging_status, reboot, reboot_to_blt — see
+ *         wait_for_message, read_tune, write_tune, start_data_logging, stop_data_logging, data_logging_status, reboot, reboot_to_blt — see
  *         java_console/mcp_ecu/README.md for the tool reference</li>
  *     <li><code>notifications/initialized</code></li>
  * </ul>
@@ -395,6 +405,15 @@ public class EcuMcpServer {
                         {"path", "string", "Output .msq file path on the MCP server host (not the client). " +
                                 "Default: a temp file named rusefi_tune_*.msq."}
                 }, new String[]{}, false)));
+        tools.add(tool("write_tune",
+                "Load a TunerStudio-compatible .msq file from the MCP server host, merge its compatible " +
+                        "calibration fields into the connected ECU tune, write and burn changed pages, then " +
+                        "read the ECU back and verify every resulting page. ECU-specific identity fields such " +
+                        "as VIN are preserved. Returns 'changed', 'verified', 'failedFields', source/ECU " +
+                        "signatures and file metadata.",
+                schemaObject(new String[][]{
+                        {"path", "string", "Existing input .msq file path on the MCP server host (not the client)."}
+                }, new String[]{"path"}, false)));
         tools.add(tool("reboot",
                 "Reboot the ECU (send '" + Integration.CMD_REBOOT + "'). The serial link drops while the ECU " +
                         "restarts — reconnect (any ECU-touching tool reconnects implicitly) after a few seconds.",
@@ -435,6 +454,7 @@ public class EcuMcpServer {
                 case "read_messages": toolResult = doReadMessages(args); break;
                 case "wait_for_message": toolResult = doWaitForMessage(args); break;
                 case "read_tune":   toolResult = doReadTune(args); break;
+                case "write_tune":  toolResult = doWriteTune(args); break;
                 case "reboot":      toolResult = doReboot(Integration.CMD_REBOOT); break;
                 case "reboot_to_blt": toolResult = doReboot(Integration.CMD_REBOOT_OPENBLT); break;
                 default:
@@ -621,24 +641,178 @@ public class EcuMcpServer {
         BinaryProtocol bp = lm.getBinaryProtocol();
         if (bp == null)
             return errorBody("Binary protocol not established yet");
-        ConfigurationImage image = bp.getControllerConfiguration();
-        if (image == null)
-            return errorBody("Controller configuration image not available yet");
         IniFileModel ini = bp.getIniFileNullable();
         if (ini == null)
             return errorBody("No .ini model for this connection");
 
-        Msq tune = MsqFactory.valueOf(image, ini);
+        Msq tune = TuneSnapshot.read(lm, bp, ini);
         File outputFile = path != null ? new File(path) : File.createTempFile("rusefi_tune_", ".msq");
         tune.writeXmlFile(outputFile.getAbsolutePath());
 
         JSONObject o = new JSONObject();
         o.put("success", true);
         o.put("path", outputFile.getAbsolutePath());
-        o.put("constantCount", (long) tune.findPage().constant.size());
+        o.put("constantCount", (long) tune.getConstantsAsMap().size());
         o.put("fileSize", outputFile.length());
         o.put("signature", String.valueOf(bp.signature));
         return o;
+    }
+
+    @SuppressWarnings("unchecked")
+    private JSONObject doWriteTune(JSONObject args) throws Exception {
+        Object requestedPath = args.get("path");
+        if (!(requestedPath instanceof String) || ((String) requestedPath).trim().isEmpty()) {
+            return errorBody("'path' must be a non-empty string");
+        }
+
+        Path input = Paths.get((String) requestedPath).toAbsolutePath();
+        if (!Files.isRegularFile(input)) {
+            return errorBody("Tune path is not an existing regular file: " + input);
+        }
+
+        Msq sourceTune = Msq.readTune(input.toString());
+        String sourceSignature = sourceTune.getVersionInfo() == null
+                ? null : sourceTune.getVersionInfo().getSignature();
+        if (sourceSignature == null || sourceSignature.trim().isEmpty()) {
+            return errorBody("Tune does not contain a firmware signature: " + input);
+        }
+
+        LinkManager lm = ensureConnected(null);
+        BinaryProtocol bp = lm.getBinaryProtocol();
+        if (bp == null) {
+            return errorBody("Binary protocol not established yet");
+        }
+        IniFileModel targetIni = bp.getIniFileNullable();
+        if (targetIni == null) {
+            return errorBody("No .ini model for this connection");
+        }
+        IniFileModel sourceIni;
+        if (sourceSignature.equals(targetIni.getSignature())) {
+            sourceIni = targetIni;
+        } else {
+            try {
+                sourceIni = BinaryProtocol.iniFileProvider.provide(sourceSignature);
+            } catch (IniNotFoundException e) {
+                return errorBody("No .ini available for tune signature '" + sourceSignature + "': " + e.getMessage());
+            }
+        }
+
+        TuneWriteCallbacks callbacks = new TuneWriteCallbacks();
+        Optional<CalibrationsInfo> current = readCalibrations(lm, bp, callbacks);
+        if (!current.isPresent()) {
+            return tuneWriteFailure("Failed to read the current ECU tune", input, sourceTune,
+                    sourceSignature, bp, callbacks, Collections.emptyList(), false);
+        }
+
+        CalibrationsHelper.MergeResult merge = CalibrationsHelper.mergeCalibrationsWithPartialFailure(
+                sourceIni, sourceTune, current.get(), callbacks,
+                Collections.singleton("vinNumber"));
+        boolean changed = merge.mergedCalibrations.isPresent();
+        CalibrationsInfo expected = merge.mergedCalibrations.orElse(current.get());
+
+        if (changed && !CalibrationsUpdater.INSTANCE.updateCalibrations(
+                bp, lm, expected, callbacks)) {
+            return tuneWriteFailure("Failed to write or burn the merged tune", input, sourceTune,
+                    sourceSignature, bp, callbacks, merge.failedFields, true);
+        }
+
+        Optional<CalibrationsInfo> reread = readCalibrations(lm, bp, callbacks);
+        boolean verified = reread.isPresent() && sameCalibrationPages(expected, reread.get());
+        if (!verified) {
+            return tuneWriteFailure("ECU tune readback did not match the requested result", input, sourceTune,
+                    sourceSignature, bp, callbacks, merge.failedFields, changed);
+        }
+
+        JSONObject result = tuneWriteBase(input, sourceTune, sourceSignature, bp, callbacks, merge.failedFields);
+        result.put("success", true);
+        result.put("changed", changed);
+        result.put("verified", true);
+        return result;
+    }
+
+    private static Optional<CalibrationsInfo> readCalibrations(
+            LinkManager lm, BinaryProtocol bp, UpdateOperationCallbacks callbacks) throws Exception {
+        FutureTask<Optional<CalibrationsInfo>> read = new FutureTask<>(
+                () -> CalibrationsHelper.readCurrentCalibrations(bp, callbacks));
+        lm.submit(read);
+        try {
+            return read.get(60, TimeUnit.SECONDS);
+        } finally {
+            // Do not interrupt an in-flight wire transaction if the caller is cancelled/times out.
+            read.cancel(false);
+        }
+    }
+
+    private static boolean sameCalibrationPages(CalibrationsInfo expected, CalibrationsInfo actual) {
+        if (!expected.getPages().keySet().equals(actual.getPages().keySet())) {
+            return false;
+        }
+        for (Map.Entry<Integer, com.opensr5.ConfigurationImageWithMeta> page : expected.getPages().entrySet()) {
+            com.opensr5.ConfigurationImageWithMeta actualPage = actual.getPage(page.getKey());
+            if (actualPage == null || !Arrays.equals(
+                    page.getValue().getConfigurationImage().getContent(),
+                    actualPage.getConfigurationImage().getContent())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static JSONObject tuneWriteFailure(String error, Path input, Msq tune, String sourceSignature,
+                                               BinaryProtocol bp, TuneWriteCallbacks callbacks,
+                                               List<String> failedFields, boolean changed) {
+        JSONObject result = tuneWriteBase(input, tune, sourceSignature, bp, callbacks, failedFields);
+        result.put("success", false);
+        result.put("changed", changed);
+        result.put("verified", false);
+        result.put("error", callbacks.lastError == null ? error : error + ": " + callbacks.lastError);
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static JSONObject tuneWriteBase(Path input, Msq tune, String sourceSignature,
+                                            BinaryProtocol bp, TuneWriteCallbacks callbacks,
+                                            List<String> failedFields) {
+        JSONObject result = new JSONObject();
+        result.put("path", input.toString());
+        result.put("constantCount", (long) tune.getConstantsAsMap().size());
+        try {
+            result.put("fileSize", Files.size(input));
+        } catch (IOException ignored) {
+            // The input was already parsed successfully; metadata failure must not hide the write result.
+        }
+        result.put("sourceSignature", sourceSignature);
+        result.put("ecuSignature", String.valueOf(bp.signature));
+        JSONArray failed = new JSONArray();
+        failed.addAll(failedFields);
+        result.put("failedFields", failed);
+        JSONArray warnings = new JSONArray();
+        warnings.addAll(callbacks.warnings);
+        result.put("warnings", warnings);
+        return result;
+    }
+
+    private static final class TuneWriteCallbacks implements UpdateOperationCallbacks {
+        private final java.util.ArrayList<String> warnings = new java.util.ArrayList<>();
+        private String lastError;
+
+        @Override
+        public void log(String message, boolean breakLineOnTextArea, boolean sendToLogger) {
+            log.info("write_tune: " + message);
+            String upper = message.toUpperCase(Locale.ROOT);
+            if (upper.contains("WARNING")) {
+                warnings.add(message);
+            }
+            if (upper.contains("ERROR") || upper.contains("FAILED")) {
+                lastError = message;
+            }
+        }
+
+        @Override public void done() { }
+        @Override public void warning() { }
+        @Override public void error() { }
+        @Override public void clear() { }
     }
 
     @SuppressWarnings("unchecked")

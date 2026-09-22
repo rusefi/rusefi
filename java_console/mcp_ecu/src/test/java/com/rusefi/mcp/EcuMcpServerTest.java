@@ -67,6 +67,7 @@ class EcuMcpServerTest {
         assertTrue(names.contains("read_messages"));
         assertTrue(names.contains("wait_for_message"));
         assertTrue(names.contains("read_tune"));
+        assertTrue(names.contains("write_tune"));
         assertTrue(names.contains("ecu_info"));
         assertTrue(names.contains("connect"));
         assertTrue(names.contains("reboot"));
@@ -126,6 +127,19 @@ class EcuMcpServerTest {
         assertEquals("timeout", structured.get("error"));
         // Should return promptly after the 50ms timeout (give generous slack for CI).
         assertTrue(elapsed < 5_000, "wait_for_message blocked too long: " + elapsed + "ms");
+    }
+
+    @Test
+    void writeTuneRequiresAHostPathBeforeConnecting() throws Exception {
+        for (String arguments : new String[]{"{}", "{\"path\":\"\"}", "{\"path\":42}"}) {
+            String input = jsonRpc(1, "tools/call",
+                    "{\"name\":\"write_tune\",\"arguments\":" + arguments + "}") + "\n";
+            JSONObject envelope = (JSONObject) parse(drive(input)[0]).get("result");
+            JSONObject body = (JSONObject) envelope.get("structuredContent");
+            assertEquals(Boolean.TRUE, envelope.get("isError"));
+            assertEquals(Boolean.FALSE, body.get("success"));
+            assertTrue(body.get("error").toString().contains("path"));
+        }
     }
 
     @Test

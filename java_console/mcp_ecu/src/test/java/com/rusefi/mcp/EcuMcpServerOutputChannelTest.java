@@ -27,6 +27,7 @@ import java.nio.file.Files;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import com.rusefi.tune.xml.Msq;
+import com.rusefi.tune.xml.Constant;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -144,6 +145,33 @@ class EcuMcpServerOutputChannelTest {
             byte[] before = Files.readAllBytes(recording);
             assertEquals(Boolean.FALSE, mcp.call("start_data_logging", pathArgument(recording), 5_000).get("success"));
             org.junit.jupiter.api.Assertions.assertArrayEquals(before, Files.readAllBytes(recording));
+
+            // Full tune access is symmetric: edit an MSQ exported by read_tune, write it back,
+            // and confirm both the physical fake ECU image and a subsequent export changed.
+            Path tuneToWrite = tempDir.resolve("round-trip.msq");
+            JSONObject readTune = mcp.call("read_tune", pathArgument(tuneToWrite), 20_000);
+            assertEquals(Boolean.TRUE, readTune.get("success"), readTune.toJSONString());
+            Msq edited = Msq.readTune(tuneToWrite.toString());
+            Constant scalar = edited.getConstantsAsMap().get("mockScalarIniField");
+            scalar.setValue("42");
+            edited.writeXmlFile(tuneToWrite.toString());
+
+            JSONObject writeTune = mcp.call("write_tune", pathArgument(tuneToWrite), 60_000);
+            assertEquals(Boolean.TRUE, writeTune.get("success"), writeTune.toJSONString());
+            assertEquals(Boolean.TRUE, writeTune.get("changed"));
+            assertEquals(Boolean.TRUE, writeTune.get("verified"));
+            assertEquals(42, ByteBuffer.wrap(ecuState.getConfigurationImage().getRange(13, 2))
+                    .order(ByteOrder.LITTLE_ENDIAN).getShort());
+
+            JSONObject unchangedTune = mcp.call("write_tune", pathArgument(tuneToWrite), 60_000);
+            assertEquals(Boolean.TRUE, unchangedTune.get("success"), unchangedTune.toJSONString());
+            assertEquals(Boolean.FALSE, unchangedTune.get("changed"));
+            assertEquals(Boolean.TRUE, unchangedTune.get("verified"));
+
+            Path writtenTune = tempDir.resolve("written.msq");
+            mcp.call("read_tune", pathArgument(writtenTune), 20_000);
+            assertEquals("42", Msq.readTune(writtenTune.toString()).getConstantsAsMap()
+                    .get("mockScalarIniField").getValue());
 
             // Change the live ECU image after connection: a stale connection cache would miss this.
             ecuState.setRange(new byte[]{1}, 0, 13, 1);
@@ -284,7 +312,9 @@ class EcuMcpServerOutputChannelTest {
         });
         when(ini.getExpressionOutputChannels()).thenReturn(Collections.emptyMap());
         when(ini.getGauges()).thenReturn(Collections.emptyMap());
-        when(ini.findIniField(anyString())).thenReturn(Optional.empty());
+        when(ini.getSecondaryIniFields()).thenReturn(Collections.emptyMap());
+        when(ini.findIniField(anyString())).thenAnswer(invocation ->
+                Optional.ofNullable(ini.getAllIniFields().get(invocation.<String>getArgument(0))));
         return ini;
     }
 }

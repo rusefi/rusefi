@@ -17,7 +17,6 @@ import com.rusefi.util.HexBinary;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.commands.ByteRange;
 import com.rusefi.io.commands.HelloCommand;
-import com.rusefi.io.commands.WriteChunkCommand;
 import com.rusefi.server.rusEFISSLContext;
 import com.rusefi.ui.StatusConsumer;
 import org.jetbrains.annotations.NotNull;
@@ -180,8 +179,7 @@ public class BinaryProtocolServer {
                     ByteRange byteRange = ByteRange.valueOf2(payload);
                     handleRead(linkManager, byteRange, stream);
                 } else if (command == Integration.TS_CHUNK_WRITE_COMMAND) {
-                    ByteRange byteRange = ByteRange.valueOf(payload);
-                    handleWrite(linkManager, payload, byteRange, stream);
+                    handleWrite(linkManager, payload, stream);
                 } else if (command == Integration.TS_BURN_COMMAND) {
                     stream.sendPacket(new byte[]{TS_RESPONSE_BURN_OK});
                 } else if (command == Integration.TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY) {
@@ -321,12 +319,25 @@ public class BinaryProtocolServer {
         outputStream.flush();
     }
 
-    private void handleWrite(LinkManager linkManager, byte[] packet, ByteRange byteRange, TcpIoStream stream) throws IOException {
+    private void handleWrite(LinkManager linkManager, byte[] packet, TcpIoStream stream) throws IOException {
+        // Current firmware uses page + offset + count (6-byte header); legacy single-page firmware
+        // uses offset + count (4-byte header). This detached proxy has no live BinaryProtocol/INI
+        // from which to ask which form the client selected, so recognize the form by its exact
+        // payload length. The packet here no longer includes the transport's two-byte size prefix.
+        ByteRange byteRange = packet.length >= 7 ? ByteRange.valueOf2(packet) : null;
+        int dataOffset = 1 + 6;
+        if (byteRange == null || dataOffset + byteRange.getCount() != packet.length) {
+            byteRange = ByteRange.valueOf(packet);
+            dataOffset = 1 + 4;
+        }
+        if (dataOffset + byteRange.getCount() != packet.length) {
+            throw new IOException("Malformed write packet: " + byteRange + ", payload length=" + packet.length);
+        }
         int offset = byteRange.getOffset();
         int count = byteRange.getCount();
         log.info("TS_CHUNK_WRITE_COMMAND: offset=" + byteRange);
         BinaryProtocolState bp = linkManager.getBinaryProtocolState();
-        bp.setRange(packet, WriteChunkCommand.SCR_POS_WITH_SIZE_PREFIX, offset, count);
+        bp.setRange(packet, dataOffset, offset, count);
         stream.sendPacket(TS_OK.getBytes());
     }
 
