@@ -28,6 +28,7 @@
 #include "mpu_util.h"
 #include "periodic_thread_controller.h"
 #include "protected_gpio.h"
+#include "adc_callback_utils.h"
 
 #ifndef ADC_MAX_CHANNELS_COUNT
 #define ADC_MAX_CHANNELS_COUNT 16
@@ -132,8 +133,9 @@ AdcDevice fastAdc(&ADC_FAST_DEVICE, &adcgrpcfgFast, fastAdcSampleBuf, ADC_BUF_DE
 static efitick_t lastTick = 0;
 
 static void fastAdcDoneCB(ADCDriver *adcp) {
-	// State may not be complete if we get a callback for "half done"
-	if (adcIsBufferComplete(adcp)) {
+	if (adcCallbackShouldProcess(adcgrpcfgFast.circular, [adcp] {
+		return adcIsBufferComplete(adcp);
+	})) {
 		efitick_t nowTick = getTimeNowNt();
 		efitick_t diff = nowTick - lastTick;
 		lastTick = nowTick;

@@ -114,9 +114,10 @@ float getMcuVbatVoltage() {
 adcsample_t* fastSampleBuffer;
 
 static void adc_callback(ADCDriver *adcp) {
-	// State may not be complete if we get a callback for "half done"
-	if (adcIsBufferComplete(adcp)) {
 #ifdef ADC_MUX_PIN
+	(void)adcp;
+	// This group is linear.  ChibiOS calls us once after returning to READY.
+	{
 		// Non-circular DMA has stopped before ChibiOS calls us. Publish only
 		// complete pairs: fast consumers must never count an old bank twice.
 		const bool pairComplete = muxBank == 1;
@@ -127,11 +128,14 @@ static void adc_callback(ADCDriver *adcp) {
 			}
 			onFastAdcComplete(fastSampleBuffer);
 		}
-#else
-	  // here we invoke 'fast' from slow ADC due to https://github.com/rusefi/rusefi/issues/3301
-		onFastAdcComplete(adcp->samples);
-#endif
 	}
+#else
+	// State may not be complete if we get a callback for "half done"
+	if (adcIsBufferComplete(adcp)) {
+		// here we invoke 'fast' from slow ADC due to https://github.com/rusefi/rusefi/issues/3301
+		onFastAdcComplete(adcp->samples);
+	}
+#endif
 
 	assertInterruptPriority(__func__, EFI_IRQ_ADC_PRIORITY);
 }
@@ -306,10 +310,9 @@ adcsample_t getFastAdc(AdcToken token) {
 static_assert((H7_KNOCK_OVERSAMPLE & (H7_KNOCK_OVERSAMPLE - 1)) == 0, "H7_ADC_OVERSAMPLE must be a power of 2");
 static constexpr int H7_KNOCK_ADC_SHIFT_BITS = log2_int(H7_KNOCK_OVERSAMPLE);
 
-static void knockCompletionCallback(ADCDriver* adcp) {
-	if (adcIsBufferComplete(adcp)) {
-		onKnockSamplingComplete();
-	}
+static void knockCompletionCallback(ADCDriver*) {
+	// Knock conversions are linear, so the callback is the completion event.
+	onKnockSamplingComplete();
 
 	assertInterruptPriority(__func__, EFI_IRQ_ADC_PRIORITY);
 }
