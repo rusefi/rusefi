@@ -1,4 +1,4 @@
-See https://wiki.rusefi.com/Dev-Quality-Control
+See https://wiki.rusefi.com/Dev-Quick-Start#unit-tests
 
 TL, DR: just follow [tests](tests) folder as examples. [tests/nitrous_control](tests/nitrous_control) is a great starting point!
 
