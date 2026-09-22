@@ -48,6 +48,13 @@
 
 #define DIAG_PERIOD_MS				(7)
 
+/* L9779WD-SPI timing requirements (datasheet table 53):
+ *  - tlead >= 525 ns: CS low to first SCK edge
+ *  - tcsn  >= 640 ns: CS high between frames
+ * Two microseconds provides margin without materially affecting throughput. */
+#define L9779_TLEAD_DELAY_US		(2)
+#define L9779_TCSN_DELAY_US			(2)
+
 typedef enum {
 	L9779_DISABLED = 0,
 	L9779_WAIT_INIT,
@@ -154,10 +161,9 @@ struct L9779 : public GpioChip {
 
 	l9779_drv_state				drv_state;
 
-	/* last accesed register */
-	uint8_t						last_addr;
-	/* last requested subaddr in case of read */
-	uint8_t						last_subaddr;
+	/* Read replies are delayed and can arrive after intervening frames.
+	 * Match them by the sub-address returned by the chip, not by position. */
+	L9779ReadTracker				read_requests;
 
 
 	/* statistic */
@@ -191,6 +197,11 @@ static const char* l9779_pin_names[L9779_SIGNALS] = {
 /* Driver local functions.													*/
 /*==========================================================================*/
 
+static void l9779DelayUs(uint32_t microseconds)
+{
+	chSysPolledDelayX(US2RTC(SystemCoreClock, microseconds));
+}
+
 /* true if parity of input x is odd */
 bool L9779::spi_parity_odd(uint16_t x)
 {
@@ -210,30 +221,16 @@ int L9779::spi_validate(uint16_t rx)
 		return -1;
 	}
 
-	/* check that correct register is returned */
-	if (last_subaddr != REG_INVALID) {
-		/* MISO DO returns 1 at D9 bit and 5bit sub address in
-		 * ADD[4:0] field */
-		if (!MSG_GET_WR(rx)) {
-			return -2;
-		}
-		if (MSG_GET_ADDR(rx) != last_subaddr) {
-			/* unexpected SPI answer */
-			spi_err++;
-
-			/* should ve restart? */
-			//need_init = true;
-
-			return -1;
-		}
+	/* A write/status frame does not answer an outstanding read. */
+	if (!MSG_GET_WR(rx)) {
+		return 0;
 	}
 
-	/* LOCK_UNLOCK_SW_RST */
-	if (last_addr == 0x0c) {
-		/* BIT(0) = LOCK flag */
-	/* START_REACT */
-	} else if (last_addr == 0x0d) {
-		/* BIT(0) = OUT_DIS */
+	/* Read replies carry their own sub-address. Content-addressed matching
+	 * lets the stream recover after a delayed or skipped response instead of
+	 * permanently shifting every subsequent reply by one request. */
+	if (!read_requests.consume(MSG_GET_ADDR(rx))) {
+		spi_err++;
 	}
 
 	return 0;
@@ -257,10 +254,14 @@ int L9779::spi_rw(uint16_t tx, uint16_t *rx_ptr)
 	spiStart(spi, &cfg->spi_config);
 	/* Slave Select assertion. */
 	spiSelect(spi);
+	/* Meet tlead: CS low to first SCK edge. */
+	l9779DelayUs(L9779_TLEAD_DELAY_US);
 	/* Atomic transfer operations. */
 	rx = spiPolledExchange(spi, tx);
 	/* Slave Select de-assertion. */
 	spiUnselect(spi);
+	/* Meet tcsn before another frame can assert CS. */
+	l9779DelayUs(L9779_TCSN_DELAY_US);
 	/* Ownership release. */
 	spiReleaseBus(spi);
 
@@ -274,12 +275,12 @@ int L9779::spi_rw(uint16_t tx, uint16_t *rx_ptr)
 
 	/* validate reply */
 	ret = spi_validate(rx);
-	/* save last accessed register */
-	last_addr = MSG_GET_ADDR(recentTx);
-	if (last_addr == MSG_READ_ADDR)
-		last_subaddr = MSG_GET_SUBADDR(recentTx);
-	else
-		last_subaddr = REG_INVALID;
+
+	/* This request can only be answered by a later frame, so record it after
+	 * validating the reply received in the current frame. */
+	if (MSG_GET_ADDR(tx) == MSG_READ_ADDR && !read_requests.push(MSG_GET_SUBADDR(tx))) {
+		spi_err++;
+	}
 
 	return ret;
 }
@@ -303,6 +304,8 @@ int L9779::spi_rw_array(const uint16_t *tx, uint16_t *rx, int n)
 	for (int i = 0; i < n; i++) {
 		/* Slave Select assertion. */
 		spiSelect(spi);
+		/* Meet tlead: CS low to first SCK edge. */
+		l9779DelayUs(L9779_TLEAD_DELAY_US);
 		/* data transfer */
 		uint16_t txdata = l9779PrepareSpiWord(tx[i]);
 		uint16_t rxdata = spiPolledExchange(spi, txdata);
@@ -311,6 +314,8 @@ int L9779::spi_rw_array(const uint16_t *tx, uint16_t *rx, int n)
 			rx[i] = rxdata;
 		/* Slave Select de-assertion. */
 		spiUnselect(spi);
+		/* Meet tcsn before the next frame. */
+		l9779DelayUs(L9779_TCSN_DELAY_US);
 
 		/* statistic and debug */
 		recentTx = txdata;
@@ -319,12 +324,10 @@ int L9779::spi_rw_array(const uint16_t *tx, uint16_t *rx, int n)
 
 		/* validate reply  */
 		ret = spi_validate(rxdata);
-		/* save last accessed register */
-		last_addr = MSG_GET_ADDR(recentTx);
-		if (last_addr == MSG_READ_ADDR)
-			last_subaddr = MSG_GET_SUBADDR(recentTx);
-		else
-			last_subaddr = REG_INVALID;
+
+		if (MSG_GET_ADDR(txdata) == MSG_READ_ADDR && !read_requests.push(MSG_GET_SUBADDR(txdata))) {
+			spi_err++;
+		}
 
 		if (ret < 0)
 			break;
@@ -443,8 +446,7 @@ int L9779::wake_driver()
 int L9779::chip_reset() {
 	int ret;
 
-	last_addr = REG_INVALID;
-	last_subaddr = REG_INVALID;
+	read_requests.clear();
 
 	ret = spi_rw(CMD_CLOCK_UNLOCK_SW_RST(BIT(1)), NULL);
 	/**
@@ -452,8 +454,7 @@ int L9779::chip_reset() {
 	 */
 	chThdSleepMilliseconds(3);
 
-	last_addr = REG_INVALID;
-	last_subaddr = REG_INVALID;
+	read_requests.clear();
 
 	return ret;
 }

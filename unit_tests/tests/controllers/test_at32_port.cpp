@@ -55,3 +55,35 @@ TEST(L9779Spi, AllPayloadsPreserveDataAndHaveOddParity) {
 		EXPECT_EQ(wire, l9779PrepareSpiWord(wire));
 	}
 }
+
+TEST(L9779Spi, ReadRepliesMatchBySubaddress) {
+	L9779ReadTracker tracker;
+
+	EXPECT_TRUE(tracker.push(0x0e));
+	EXPECT_TRUE(tracker.push(0x0f));
+	EXPECT_EQ(static_cast<size_t>(2), tracker.size());
+
+	// A later request may be answered first without losing the older one.
+	EXPECT_TRUE(tracker.consume(0x0f));
+	EXPECT_EQ(static_cast<size_t>(1), tracker.size());
+
+	// An unrelated/stale reply does not shift the outstanding request stream.
+	EXPECT_FALSE(tracker.consume(0x01));
+	EXPECT_EQ(static_cast<size_t>(1), tracker.size());
+	EXPECT_TRUE(tracker.consume(0x0e));
+	EXPECT_EQ(static_cast<size_t>(0), tracker.size());
+}
+
+TEST(L9779Spi, ReadTrackerBoundsOutstandingRequests) {
+	L9779ReadTracker tracker;
+
+	for (size_t i = 0; i < L9779ReadTracker::Capacity; i++) {
+		EXPECT_TRUE(tracker.push(static_cast<uint8_t>(i)));
+	}
+
+	EXPECT_FALSE(tracker.push(0xff));
+	EXPECT_EQ(L9779ReadTracker::Capacity, tracker.size());
+
+	tracker.clear();
+	EXPECT_EQ(static_cast<size_t>(0), tracker.size());
+}
