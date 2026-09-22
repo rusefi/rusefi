@@ -149,6 +149,20 @@ else
   BINSRC = $(BUILDDIR)/$(PROJECT).bin
 endif
 
+ifneq ($(BOARD_IMAGE_SCRIPT),)
+  BIN_TARGET =
+  BINSRC =
+  SREC_TARGET = $(FOLDER)/$(PROJECT)_update.srec
+  # Generic updater launchers and flash scripts do not implement this contract.
+  ROOT_FOLDER_SOURCES =
+  UPDATE_FOLDER_SOURCES += $(BOARD_IMAGE_README)
+  # Reject even when a stale binary/DFU from an earlier build still exists.
+.PHONY: reject-unaddressed-image
+$(DBIN) $(DFU) $(BUILDDIR)/$(PROJECT).bin: reject-unaddressed-image
+reject-unaddressed-image:
+	$(error This board requires addressed HEX/SREC images; raw binary and generic DFU flashing are disabled)
+endif
+
 # we need these files for crash investigations
 ifeq ($(INCLUDE_ELF),yes)
   FIRMWARE_OUTPUTS += $(FOLDER)/$(PROJECT).elf $(FOLDER)/$(PROJECT).map $(FOLDER)/$(PROJECT).list
@@ -183,6 +197,10 @@ FULL_BUNDLE_CONTENT = \
   $(ROOT_FOLDER_TARGETS) \
   $(CONSOLE_FOLDER_TARGETS)
 
+ifneq ($(BOARD_IMAGE_SCRIPT),)
+FULL_BUNDLE_CONTENT = $(CONSOLE_FOLDER_TARGETS)
+endif
+
 BUNDLE_FILES = \
   $(UPDATE_BUNDLE_FILES) \
   $(FULL_BUNDLE_CONTENT)
@@ -204,12 +222,16 @@ $(BOOTLOADER_HEX) $(BOOTLOADER_BIN): .bootloader-sentinel ;
 # We pass SUBMAKE=yes to the bootloader Make instance so it knows not to try to build configs,
 #  as that would result in two simultaneous config generations, which causes issues.
 .bootloader-sentinel: $(CONFIG_FILES) .FORCE
+ifneq ($(BOARD_IMAGE_SCRIPT),)
+	$(error This board preserves its resident bootloader; building a replacement is disabled)
+else
 	BOARD_DIR=../$(BOARD_DIR) BOARD_META_PATH=../$(BOARD_META_PATH) SHORT_BOARD_NAME=$(SHORT_BOARD_NAME) TGT_SENTINEL=../$(TGT_SENTINEL) WHITE_LABEL=$(WHITE_LABEL) $(MAKE) -C bootloader -r SUBMAKE=yes TS_PAGE_GUARD_DEFS="$(TS_PAGE_GUARD_DEFS)"
 	@touch $@
+endif
 
 $(BUILDDIR)/$(PROJECT).map: $(BUILDDIR)/$(PROJECT).elf
 
-$(SREC_TARGET): $(BUILDDIR)/rusefi.srec
+$(SREC_TARGET): $(BUILDDIR)/rusefi.srec | $(FOLDER)
 	ln -rfs $< $@
 
 $(FIRMWARE_OUTPUTS): $(FOLDER)/%: $(BUILDDIR)/% | $(FOLDER)
@@ -228,8 +250,10 @@ $(FOLDER)/$(PROJECT).dfu: $(FOLDER)/%: $(DELIVER)/% | $(FOLDER)
 
 # The bundled .bin gets a unique name (BIN_TARGET) so it can't be mismatched to the
 # wrong board; it still links to the plain deliver/ .bin ($(DBIN)).
+ifneq ($(BIN_TARGET),)
 $(BIN_TARGET): $(DBIN) | $(FOLDER)
 	ln -rfs $< $@
+endif
 
 HEX_BASE_ADDRESS = $(shell $(OD) -h -j .vectors $(BUILDDIR)/$(PROJECT).elf | awk '/.vectors/ {print $$5 }')
 # Fail during recipe expansion before hex2dfu runs if objdump returned no usable
@@ -241,10 +265,15 @@ CHECKSUM_ADDRESS = $(or $(shell \
     [ "$$checksum" -le 4294967295 ] || exit 1; \
     printf '0x%X' "$$checksum"),$(error Invalid .vectors base address '$(HEX_BASE_ADDRESS)' for checksum))
 
+ifneq ($(BOARD_IMAGE_SCRIPT),)
+$(BUILDDIR)/rusefi.srec: $(BUILDDIR)/$(PROJECT).elf
+	python3 $(BOARD_IMAGE_SCRIPT) --format srec $< $@
+else
 $(BUILDDIR)/rusefi.srec: $(BUILDDIR)/$(PROJECT).hex
 	# make sure we create the srec from a binary with crc
 	$(H2D) -i $< -c $(CHECKSUM_ADDRESS) -b $(DBIN_CRC)
 	$(CP) -I binary -O srec --change-addresses=0x$(HEX_BASE_ADDRESS) $(DBIN_CRC) $@
+endif
 
 ifneq (,$(OPENBLT_WIPE_OUTPUTS))
 $(OPENBLT_WIPE_OUTPUTS): $(OPENBLT_WIPE_SENTINEL) ;
@@ -266,6 +295,9 @@ endif
 $(DFU) $(DBIN): .h2d-sentinel ;
 
 .h2d-sentinel: $(BUILDDIR)/$(PROJECT).hex $(BOOTLOADER_HEX_OUT) $(BINSRC) | $(DELIVER)
+ifneq ($(BOARD_IMAGE_SCRIPT),)
+	$(error This board requires addressed HEX/SREC images; raw binary and generic DFU flashing are disabled)
+else
 ifeq ($(USE_OPENBLT),yes)
 	$(H2D) -i $(BOOTLOADER_HEX) -i $(BUILDDIR)/$(PROJECT).hex -c $(CHECKSUM_ADDRESS) -o $(DFU) -b $(DBIN)
 	# TODO: handle .dfu file which is only used by Linux consumers!
@@ -275,6 +307,7 @@ else
 	cp $(BUILDDIR)/$(PROJECT).bin $(DBIN)
 endif
 	@touch $@
+endif
 
 OBFUSCATED_SREC = $(FOLDER)/rusefi-$(BRANCH_REF_FOR_BUNDLE)_$(BUNDLE_DATE)_$(BUNDLE_NAME)_$(SIGNATURE_HASH)_$(GITHUB_SHA)_obfuscated.srec
 
@@ -324,6 +357,7 @@ $(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME)_obfuscated_public.zip:  $(OBFUSCATED_OUT
 
 # The autoupdate zip doesn't have a folder with the bundle contents
 $(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME)_autoupdate.zip: $(UPDATE_BUNDLE_FILES) | $(ARTIFACTS)
+	rm -f $@
 	cd $(FOLDER) &&	zip -r ../$@ $(subst $(FOLDER)/,,$(UPDATE_BUNDLE_FILES))
 
 $(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME)_obfuscated_public_autoupdate.zip:  $(OBFUSCATED_OUT) $(BUNDLE_FILES) | $(ARTIFACTS)

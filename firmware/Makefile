@@ -405,6 +405,13 @@ OD   = $(TRGT)objdump
 SZ   = $(TRGT)size
 HEX  = $(CP) -O ihex
 BIN  = $(CP) -O binary
+ifneq ($(BOARD_IMAGE_SCRIPT),)
+# Addressed images only: a raw binary cannot preserve holes between CRC domains.
+HEX = python3 $(BOARD_IMAGE_SCRIPT) --format hex
+BIN = python3 $(BOARD_IMAGE_SCRIPT) --format bin
+override OUTFILES = $(BUILDDIR)/$(PROJECT).elf $(BUILDDIR)/$(PROJECT).hex \
+  $(BUILDDIR)/$(PROJECT).srec $(BUILDDIR)/$(PROJECT).dmp $(BUILDDIR)/$(PROJECT).list
+endif
 # for srec files see bundle.mk
 
 # ARM-specific options here
@@ -449,6 +456,9 @@ ULIBS = -lm --specs=nano.specs -Wl,--sort-section=alignment
 include $(RULESFILE)
 
 $(BUILDDIR)/$(PROJECT).elf: $(LDSCRIPT_DEPS)
+ifneq ($(BOARD_IMAGE_SCRIPT),)
+$(BUILDDIR)/$(PROJECT).hex $(BUILDDIR)/$(PROJECT).srec: $(BOARD_IMAGE_SCRIPT)
+endif
 
 include target_sentinel.mk
 
