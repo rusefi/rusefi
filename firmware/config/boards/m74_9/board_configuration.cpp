@@ -4,6 +4,7 @@
 #include "board_overrides.h"
 #include "smart_gpio.h"
 #include "drivers/gpio/l9779.h"
+#include "ignition_controller.h"
 
 // PB14 is error LED, configured in board.mk
 Gpio getCommsLedPin() {
@@ -101,6 +102,10 @@ static void m74_9_boardDefaultConfiguration() {
 }
 
 static void m74_9_boardConfigOverrides() {
+	/* IGN_KEY is connected to the L9779 KEY_ON input, exposed through the
+	 * driver's cached DIA_REG9 status. Keep this override active for old tunes. */
+	engineConfiguration->ignitionKeyDigitalPin = Gpio::L9779_PIN_KEY;
+
 	//CAN 1 bus overwrites
 	engineConfiguration->canRxPin = Gpio::G0;
 	engineConfiguration->canTxPin = Gpio::G1;
@@ -168,6 +173,29 @@ void boardInit() {
 	board_init_ext_gpios();
 }
 
+static void m74_9BoardInitHardware() {
+	/* PB13 drives the inverted TLE9201 DIS circuit: high enables the bridge.
+	 * Start safely disabled until the cached ignition-key status is valid. */
+	gpio_pin_markUsed(GPIOB, 13, "ETC_EN");
+	palSetPadMode(GPIOB, 13, PAL_MODE_OUTPUT_PUSHPULL);
+	palClearPad(GPIOB, 13);
+	l9779_setPowerStage(false);
+}
+
+static bool m74_9_ignitionOn;
+
+static void m74_9IgnitionGatePeriodic() {
+	const bool ignitionOn = isIgnVoltage();
+	if (ignitionOn == m74_9_ignitionOn) {
+		return;
+	}
+
+	m74_9_ignitionOn = ignitionOn;
+	/* Disable ETB immediately on key-off; L9779 SPI work stays in its thread. */
+	palWritePad(GPIOB, 13, ignitionOn ? 1 : 0);
+	l9779_setPowerStage(ignitionOn);
+}
+
 static Gpio OUTPUTS[] = {
 	Gpio::L9779_OUT_4, // Injector 1
 	Gpio::L9779_OUT_3, // Injector 2
@@ -197,7 +225,8 @@ void setup_custom_board_overrides() {
 	custom_board_allowFlashNow = []() {
 		return engine->triggerCentral.directSelfStimulation || engine->rpmCalculator.isStopped();
 	};
+	custom_board_InitHardware = m74_9BoardInitHardware;
 	custom_board_DefaultConfiguration = m74_9_boardDefaultConfiguration;
 	custom_board_ConfigOverrides = m74_9_boardConfigOverrides;
+	custom_board_periodicSlowCallback = m74_9IgnitionGatePeriodic;
 }
-
