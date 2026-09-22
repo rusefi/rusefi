@@ -5,6 +5,15 @@
  *
  * Andrey Gusakov, (c) 2022
  *
+ * TODO(at32-wip picking order - keep each item an atomic commit):
+ * [x] SPI framing: CS timing and content-addressed delayed reply matching.
+ * [ ] SPI observability: bounded transfers, IDENT readback, and recent-frame diagnostics.
+ * [ ] Output mapping: correct register packing and permanent direct-drive enables.
+ * [ ] Power-stage diagnostics: DIA cache, per-pin status, and OUT_DIS recovery.
+ * [ ] VRS configuration: stock full-adaptive setup and reset reconfiguration.
+ * [ ] VDA 2.0 watchdog: challenge/response feed, timer, counters, and recovery.
+ * [ ] Ignition-gated power-stage lifecycle: PSOFF, wake, and board integration.
+ *
  * Masks/inputs bits:
  * 0..3   - IGN1 .. 4 - Ignition pre-drivers
  * 						Driven by logical-AND of SPI control bit and dedicated parallel input IGNI1...IGNI4
