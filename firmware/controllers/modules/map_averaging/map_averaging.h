@@ -43,6 +43,7 @@ public:
 	void stop();
 
 	SensorResult submit(float sensorVolts);
+	void onAdcSample(float instantVoltage);
 
 	void setFunction(SensorConverter& func) {
 		m_function = &func;

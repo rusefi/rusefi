@@ -130,17 +130,15 @@ void MapAverager::stop() {
 	}
 }
 
-#if HAL_USE_ADC
-
 /**
  * This method is invoked from ADC callback.
  * @note This method is invoked OFTEN, this method is a potential bottleneck - the implementation should be
  * as fast as possible
  */
-void mapAveragingAdcCallback(float instantVoltage) {
+void MapAverager::onAdcSample(float instantVoltage) {
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6650, hasLotsOfRemainingStack(), "lowstck#9a");
 
-	SensorResult mapResult = getMapAvg(currentMapAverager).submit(instantVoltage);
+	SensorResult mapResult = submit(instantVoltage);
 
 	if (!mapResult) {
 		// hopefully this warning is not too much CPU consumption for fast ADC callback
@@ -154,6 +152,11 @@ void mapAveragingAdcCallback(float instantVoltage) {
 	float instantMap = mapResult.value_or(0);
 	engine->outputChannels.instantMAPValue = instantMap;
 #endif // EFI_TUNER_STUDIO
+}
+
+#if HAL_USE_ADC
+void mapAveragingAdcCallback(float instantVoltage) {
+	getMapAvg(currentMapAverager).onAdcSample(instantVoltage);
 }
 #endif
 
