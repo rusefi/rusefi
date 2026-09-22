@@ -934,6 +934,9 @@ float getOutputValueByHash(const int hash) {
 // transitionEventsCounter
 		case 1163075685:
 			return engine->outputChannels.transitionEventsCounter;
+// slowAdcScanCount
+		case -900042688:
+			return engine->outputChannels.slowAdcScanCount;
 // cltResistance
 		case -1105741991:
 			return engine->outputChannels.cltResistance;

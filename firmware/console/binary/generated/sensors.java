@@ -386,7 +386,7 @@ mapPerCylinder9("mapPerCylinder 9", SensorCategory.SENSOR_INPUTS, FieldType.INT8
 mapPerCylinder10("mapPerCylinder 10", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 907, 1.0, 0.0, 0.0, "kPa"),
 mapPerCylinder11("mapPerCylinder 11", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 908, 1.0, 0.0, 0.0, "kPa"),
 mapPerCylinder12("mapPerCylinder 12", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 909, 1.0, 0.0, 0.0, "kPa"),
-alignmentFill_at_910("need 4 byte alignment", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 910, 1.0, 0.0, 100.0, "units"),
+slowAdcScanCount("ECU: Slow ADC complete scans", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 910, 1.0, 0.0, 65535.0, "N"),
 cltResistance("CLT: measured resistance", SensorCategory.SENSOR_INPUTS, FieldType.INT, 912, 1.0, 0.0, 1000000.0, "Ohm"),
 iatResistance("IAT: measured resistance", SensorCategory.SENSOR_INPUTS, FieldType.INT, 916, 1.0, 0.0, 1000000.0, "Ohm"),
 auxTemp1Resistance("Aux temp 1: measured resistance", SensorCategory.SENSOR_INPUTS, FieldType.INT, 920, 1.0, 0.0, 1000000.0, "Ohm"),

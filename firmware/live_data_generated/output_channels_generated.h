@@ -1612,11 +1612,11 @@ struct output_channels_s {
 	 */
 	uint8_t mapPerCylinder[MAX_CYLINDER_COUNT] = {};
 	/**
-	 * need 4 byte alignment
-	 * units: units
+	 * ECU: Slow ADC complete scans
+	 * units: N
 	 * offset 910
 	 */
-	uint8_t alignmentFill_at_910[2] = {};
+	uint16_t slowAdcScanCount = (uint16_t)0;
 	/**
 	 * CLT: measured resistance
 	 * units: Ohm

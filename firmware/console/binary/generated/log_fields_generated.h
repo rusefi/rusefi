@@ -467,6 +467,7 @@ static LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE MLG::Entries::Field fields[] = {
 	{engine->outputChannels.mapPerCylinder[9], "mapPerCylinder 10", "kPa", 0},
 	{engine->outputChannels.mapPerCylinder[10], "mapPerCylinder 11", "kPa", 0},
 	{engine->outputChannels.mapPerCylinder[11], "mapPerCylinder 12", "kPa", 0},
+	{engine->outputChannels.slowAdcScanCount, "ECU: Slow ADC complete scans", "N", 0},
 	{engine->outputChannels.cltResistance, "CLT: measured resistance", "Ohm", 0},
 	{engine->outputChannels.iatResistance, "IAT: measured resistance", "Ohm", 0},
 	{engine->outputChannels.auxTemp1Resistance, "Aux temp 1: measured resistance", "Ohm", 0},
