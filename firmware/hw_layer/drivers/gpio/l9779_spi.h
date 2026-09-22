@@ -36,6 +36,54 @@ inline constexpr L9779VrsConfiguration l9779FullAdaptiveVrsConfiguration() {
 	};
 }
 
+inline constexpr uint8_t L9779_WDA_RESPONSES[16][4] = {
+	{0xff, 0x0f, 0xf0, 0x00},
+	{0xb0, 0x40, 0xbf, 0x4f},
+	{0xe9, 0x19, 0xe6, 0x16},
+	{0xa6, 0x56, 0xa9, 0x59},
+	{0x75, 0x85, 0x7a, 0x8a},
+	{0x3a, 0xca, 0x35, 0xc5},
+	{0x63, 0x93, 0x6c, 0x9c},
+	{0x2c, 0xdc, 0x23, 0xd3},
+	{0xd2, 0x22, 0xdd, 0x2d},
+	{0x9d, 0x6d, 0x92, 0x62},
+	{0xc4, 0x34, 0xcb, 0x3b},
+	{0x8b, 0x7b, 0x84, 0x74},
+	{0x58, 0xa8, 0x57, 0xa7},
+	{0x17, 0xe7, 0x18, 0xe8},
+	{0x4e, 0xbe, 0x41, 0xb1},
+	{0x01, 0xf1, 0x0e, 0xfe},
+};
+
+struct L9779WdaStatus {
+	uint8_t question;
+	uint8_t errorCount;
+	bool interrupt;
+};
+
+inline constexpr L9779WdaStatus l9779DecodeWdaStatus(uint8_t requlo) {
+	return {
+		static_cast<uint8_t>(requlo & 0x0fU),
+		static_cast<uint8_t>((requlo >> 4) & 0x07U),
+		(requlo & 0x80U) != 0,
+	};
+}
+
+inline constexpr bool l9779WdaResponseCounterAligned(uint8_t requhi) {
+	return (requhi & 0xc0U) == 0xc0U;
+}
+
+inline constexpr int l9779AdjustWdaDelay(int delayMs, uint8_t requhi) {
+	// NO_RESP takes precedence when late also appears early to the next cycle.
+	if ((requhi & 0x02U) != 0) {
+		delayMs -= 5;
+	} else if ((requhi & 0x01U) != 0) {
+		delayMs += 5;
+	}
+
+	return delayMs < 17 ? 17 : (delayMs > 38 ? 38 : delayMs);
+}
+
 inline L9779OutputRegisters l9779PackOutputRegisters(uint32_t outputState, uint32_t outputEnableMask) {
 	/* IGN1..4 and OUT1..7 are enabled through SPI, then switched by their
 	 * dedicated parallel inputs. Keep those enables independent of the live
