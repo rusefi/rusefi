@@ -7,7 +7,7 @@
  *
  * TODO(at32-wip picking order - keep each item an atomic commit):
  * [x] SPI framing: CS timing and content-addressed delayed reply matching.
- * [ ] SPI observability: bounded transfers, IDENT readback, and recent-frame diagnostics.
+ * [x] SPI observability: bounded IDENT reads, timing, and recent-frame diagnostics.
  * [ ] Output mapping: correct register packing and permanent direct-drive enables.
  * [ ] Power-stage diagnostics: DIA cache, per-pin status, and OUT_DIS recovery.
  * [ ] VRS configuration: stock full-adaptive setup and reset reconfiguration.
@@ -115,7 +115,10 @@ typedef enum {
 #define CMD_START_REACT(d)			MSG_W(0x0d, (d))
 #define CMD_CONTR_REG(n, d)			MSG_W(0x08 + (n), (d))
 
-/* Read only registers */
+/* Read only registers (common address 0x10 plus a 5-bit sub-address in the
+ * MOSI data field; the reply carries the sub-address in its address field). */
+#define L9779_IDENT_SUB				(0x00)
+#define L9779_IDENT					(MSG_SET_ADDR(MSG_READ_ADDR) | MSG_SET_SUBADDR(L9779_IDENT_SUB))
 
 /* IGN1..4 + OUT1..7 */
 #define OUT_DIRECT_DRIVE_MASK		0x7ff
@@ -137,6 +140,7 @@ struct L9779 : public GpioChip {
 	int writePad(size_t pin, int value) override;
 	int readPad(size_t pin) override;
 	brain_pin_diag_e getDiag(size_t pin) override;
+	void debug() override;
 
 	bool spi_parity_odd(uint16_t x);
 	int spi_validate(uint16_t rx);
@@ -146,6 +150,7 @@ struct L9779 : public GpioChip {
 	int update_output();
 	int update_direct_output(size_t pin, int value);
 	int wake_driver();
+	void logSpiFrame(uint16_t tx, uint16_t rx, int result);
 
 	int chip_reset();
 	int chip_init_data();
@@ -173,6 +178,8 @@ struct L9779 : public GpioChip {
 	/* Read replies are delayed and can arrive after intervening frames.
 	 * Match them by the sub-address returned by the chip, not by position. */
 	L9779ReadTracker				read_requests;
+	/* Sub-address answered by the most recently validated frame. */
+	uint8_t						rx_subaddress = REG_INVALID;
 
 
 	/* statistic */
@@ -186,6 +193,9 @@ struct L9779 : public GpioChip {
 	int							spi_err;			/* rx messages with incorrect ADDR or WR fields */
 	uint16_t					recentTx;
 	uint16_t					recentRx;
+	uint32_t					recent_frame_ticks;
+	uint16_t					ident_reg;
+	L9779SpiFrameLog				frame_log;
 };
 
 static L9779 chips[BOARD_L9779_COUNT];
@@ -217,8 +227,15 @@ bool L9779::spi_parity_odd(uint16_t x)
 	return l9779HasOddParity(x);
 }
 
+void L9779::logSpiFrame(uint16_t tx, uint16_t rx, int result)
+{
+	frame_log.record(tx, rx, rx_subaddress, result);
+}
+
 int L9779::spi_validate(uint16_t rx)
 {
+	rx_subaddress = REG_INVALID;
+
 	if (!spi_parity_odd(rx)) {
 		spi_err_parity++;
 		return -1;
@@ -238,8 +255,11 @@ int L9779::spi_validate(uint16_t rx)
 	/* Read replies carry their own sub-address. Content-addressed matching
 	 * lets the stream recover after a delayed or skipped response instead of
 	 * permanently shifting every subsequent reply by one request. */
-	if (!read_requests.consume(MSG_GET_ADDR(rx))) {
+	const uint8_t reply_subaddress = MSG_GET_ADDR(rx);
+	if (!read_requests.consume(reply_subaddress)) {
 		spi_err++;
+	} else {
+		rx_subaddress = reply_subaddress;
 	}
 
 	return 0;
@@ -266,7 +286,9 @@ int L9779::spi_rw(uint16_t tx, uint16_t *rx_ptr)
 	/* Meet tlead: CS low to first SCK edge. */
 	l9779DelayUs(L9779_TLEAD_DELAY_US);
 	/* Atomic transfer operations. */
+	const rtcnt_t frame_start = chSysGetRealtimeCounterX();
 	rx = spiPolledExchange(spi, tx);
+	recent_frame_ticks = chSysGetRealtimeCounterX() - frame_start;
 	/* Slave Select de-assertion. */
 	spiUnselect(spi);
 	/* Meet tcsn before another frame can assert CS. */
@@ -290,6 +312,7 @@ int L9779::spi_rw(uint16_t tx, uint16_t *rx_ptr)
 	if (MSG_GET_ADDR(tx) == MSG_READ_ADDR && !read_requests.push(MSG_GET_SUBADDR(tx))) {
 		spi_err++;
 	}
+	logSpiFrame(recentTx, rx, ret);
 
 	return ret;
 }
@@ -317,7 +340,9 @@ int L9779::spi_rw_array(const uint16_t *tx, uint16_t *rx, int n)
 		l9779DelayUs(L9779_TLEAD_DELAY_US);
 		/* data transfer */
 		uint16_t txdata = l9779PrepareSpiWord(tx[i]);
+		const rtcnt_t frame_start = chSysGetRealtimeCounterX();
 		uint16_t rxdata = spiPolledExchange(spi, txdata);
+		recent_frame_ticks = chSysGetRealtimeCounterX() - frame_start;
 
 		if (rx)
 			rx[i] = rxdata;
@@ -337,6 +362,7 @@ int L9779::spi_rw_array(const uint16_t *tx, uint16_t *rx, int n)
 		if (MSG_GET_ADDR(txdata) == MSG_READ_ADDR && !read_requests.push(MSG_GET_SUBADDR(txdata))) {
 			spi_err++;
 		}
+		logSpiFrame(recentTx, rxdata, ret);
 
 		if (ret < 0)
 			break;
@@ -691,7 +717,25 @@ int L9779::chip_init()
 	if (ret)
 		return ret;
 
-	/* TODO: add spi communication test: read IDENT_REG */
+	/* Verify the link without assuming an exact reply-frame delay. Each
+	 * attempt is bounded to one frame; stop only when IDENT's sub-address is
+	 * matched by spi_validate(). A failed probe is diagnostic, not fatal. */
+	bool ident_received = false;
+	for (int attempt = 0; attempt < 3; attempt++) {
+		uint16_t rx = 0;
+		int ident_ret = spi_rw(L9779_IDENT, &rx);
+		if (ident_ret == 0 && rx_subaddress == L9779_IDENT_SUB) {
+			ident_reg = rx;
+			ident_received = true;
+			break;
+		}
+	}
+
+	if (ident_received) {
+		efiPrintf(DRIVER_NAME " IDENT_REG = 0x%02x", MSG_GET_DATA(ident_reg));
+	} else {
+		efiPrintf(DRIVER_NAME " IDENT read failed: SPI link problem?");
+	}
 
 	return ret;
 }
@@ -731,6 +775,43 @@ int L9779::init()
 int L9779::deinit()
 {
 	return 0;
+}
+
+void L9779::debug()
+{
+	efiPrintf(DRIVER_NAME " spi=%d parity_err=%d frame_err=%d addr_err=%d",
+		spi_cnt, spi_err_parity, spi_err_frame, spi_err);
+	efiPrintf(DRIVER_NAME " lastTx=0x%04x lastRx=0x%04x ident=0x%04x",
+		recentTx, recentRx, ident_reg);
+
+	const uint32_t frame_us = recent_frame_ticks == 0
+		? 0
+		: RTC2US(SystemCoreClock, recent_frame_ticks);
+	efiPrintf(DRIVER_NAME " frame=%luus SPI1: CR1=0x%08x CR2=0x%08x SR=0x%08x",
+		(unsigned long)frame_us,
+		(unsigned)cfg->spi_bus->spi->CR1,
+		(unsigned)cfg->spi_bus->spi->CR2,
+		(unsigned)cfg->spi_bus->spi->SR);
+	efiPrintf(DRIVER_NAME " SPI1: DFF=%d BR=%d CPOL=%d CPHA=%d LSBFIRST=%d SPE=%d",
+		(cfg->spi_bus->spi->CR1 & SPI_CR1_DFF) ? 1 : 0,
+		(int)((cfg->spi_bus->spi->CR1 & SPI_CR1_BR) >> SPI_CR1_BR_Pos),
+		(cfg->spi_bus->spi->CR1 & SPI_CR1_CPOL) ? 1 : 0,
+		(cfg->spi_bus->spi->CR1 & SPI_CR1_CPHA) ? 1 : 0,
+		(cfg->spi_bus->spi->CR1 & SPI_CR1_LSBFIRST) ? 1 : 0,
+		(cfg->spi_bus->spi->CR1 & SPI_CR1_SPE) ? 1 : 0);
+
+	if (cfg->spi_config.ssport != nullptr) {
+		efiPrintf(DRIVER_NAME " CS: moder=%d odr=%d idr=%d",
+			(int)((cfg->spi_config.ssport->MODER >> (cfg->spi_config.sspad * 2)) & 0x3),
+			(int)((cfg->spi_config.ssport->ODR >> cfg->spi_config.sspad) & 1),
+			(int)((cfg->spi_config.ssport->IDR >> cfg->spi_config.sspad) & 1));
+	}
+
+	for (size_t i = 0; i < frame_log.size(); i++) {
+		const L9779SpiFrame* frame = frame_log.get(i);
+		efiPrintf(DRIVER_NAME " dbg: tx=0x%04x rx=0x%04x sub=%02x ret=%d",
+			frame->tx, frame->rx, frame->subaddress, (int)frame->result);
+	}
 }
 
 /**
