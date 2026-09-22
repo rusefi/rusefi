@@ -17,6 +17,63 @@ inline uint16_t l9779PrepareSpiWord(uint16_t word) {
 	return word | !l9779HasOddParity(word);
 }
 
+constexpr uint32_t L9779_DIRECT_DRIVE_MASK = 0x7ffU;
+
+struct L9779OutputRegisters {
+	uint32_t enabledState;
+	uint8_t control[4];
+};
+
+inline L9779OutputRegisters l9779PackOutputRegisters(uint32_t outputState, uint32_t outputEnableMask) {
+	/* IGN1..4 and OUT1..7 are enabled through SPI, then switched by their
+	 * dedicated parallel inputs. Keep those enables independent of the live
+	 * output state; all other channels are controlled directly over SPI. */
+	const uint32_t enabledState =
+		(outputState & ~L9779_DIRECT_DRIVE_MASK) |
+		(outputEnableMask & L9779_DIRECT_DRIVE_MASK);
+
+	const auto outputBit = [enabledState](unsigned int output, unsigned int bit) -> uint8_t {
+		return static_cast<uint8_t>(((enabledState >> (output + 3U)) & 1U) << bit);
+	};
+	const auto ignitionBit = [enabledState](unsigned int ignition, unsigned int bit) -> uint8_t {
+		return static_cast<uint8_t>(((enabledState >> (ignition - 1U)) & 1U) << bit);
+	};
+
+	L9779OutputRegisters result = { enabledState, {} };
+	result.control[0] =
+		outputBit( 1, 7) |
+		outputBit( 2, 6) |
+		outputBit( 3, 5) |
+		outputBit( 4, 4) |
+		outputBit( 5, 3) |
+		outputBit(20, 2);
+	result.control[1] =
+		outputBit(15, 7) |
+		outputBit(14, 6) |
+		ignitionBit(1, 3) |
+		ignitionBit(2, 2) |
+		ignitionBit(3, 1) |
+		ignitionBit(4, 0);
+	result.control[2] =
+		outputBit(22, 7) |
+		outputBit(21, 6) |
+		outputBit(16, 5) |
+		outputBit(13, 4) |
+		outputBit(17, 3) |
+		outputBit(18, 2) |
+		outputBit( 7, 1) |
+		outputBit( 6, 0);
+	result.control[3] =
+		outputBit(28, 5) |
+		outputBit(27, 4) |
+		outputBit(26, 3) |
+		outputBit(25, 2) |
+		outputBit(24, 1) |
+		outputBit(23, 0);
+
+	return result;
+}
+
 class L9779ReadTracker {
 public:
 	static constexpr size_t Capacity = 8;

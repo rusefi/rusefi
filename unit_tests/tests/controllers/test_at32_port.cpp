@@ -115,3 +115,34 @@ TEST(L9779Spi, FrameLogRetainsNewestFramesInChronologicalOrder) {
 	EXPECT_EQ(-static_cast<int>(L9779SpiFrameLog::Capacity + 1), newest->result);
 	EXPECT_EQ(nullptr, log.get(log.size()));
 }
+
+TEST(L9779Spi, DirectDriveChannelsUsePermanentEnableMask) {
+	const L9779OutputRegisters packed = l9779PackOutputRegisters(
+		0,
+		L9779_DIRECT_DRIVE_MASK);
+
+	EXPECT_EQ(L9779_DIRECT_DRIVE_MASK, packed.enabledState);
+	EXPECT_EQ(0xf8, packed.control[0]); // OUT1..5
+	EXPECT_EQ(0x0f, packed.control[1]); // IGN1..4
+	EXPECT_EQ(0x03, packed.control[2]); // OUT6..7
+	EXPECT_EQ(0x00, packed.control[3]);
+
+	// A logical high cannot enable a direct channel with no physical input.
+	const L9779OutputRegisters unavailable = l9779PackOutputRegisters(
+		L9779_DIRECT_DRIVE_MASK,
+		0);
+	EXPECT_EQ(0U, unavailable.enabledState);
+}
+
+TEST(L9779Spi, Output13And14PackIntoTheirOwnControlBits) {
+	constexpr uint32_t Out13 = uint32_t{1} << 16;
+	constexpr uint32_t Out14 = uint32_t{1} << 17;
+
+	const L9779OutputRegisters out13 = l9779PackOutputRegisters(Out13, 0);
+	EXPECT_EQ(0x00, out13.control[1]);
+	EXPECT_EQ(0x10, out13.control[2]);
+
+	const L9779OutputRegisters out14 = l9779PackOutputRegisters(Out14, 0);
+	EXPECT_EQ(0x40, out14.control[1]);
+	EXPECT_EQ(0x00, out14.control[2]);
+}

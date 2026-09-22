@@ -8,7 +8,7 @@
  * TODO(at32-wip picking order - keep each item an atomic commit):
  * [x] SPI framing: CS timing and content-addressed delayed reply matching.
  * [x] SPI observability: bounded IDENT reads, timing, and recent-frame diagnostics.
- * [ ] Output mapping: correct register packing and permanent direct-drive enables.
+ * [x] Output mapping: correct register packing and permanent direct-drive enables.
  * [ ] Power-stage diagnostics: DIA cache, per-pin status, and OUT_DIS recovery.
  * [ ] VRS configuration: stock full-adaptive setup and reset reconfiguration.
  * [ ] VDA 2.0 watchdog: challenge/response feed, timer, counters, and recovery.
@@ -119,9 +119,6 @@ typedef enum {
  * MOSI data field; the reply carries the sub-address in its address field). */
 #define L9779_IDENT_SUB				(0x00)
 #define L9779_IDENT					(MSG_SET_ADDR(MSG_READ_ADDR) | MSG_SET_SUBADDR(L9779_IDENT_SUB))
-
-/* IGN1..4 + OUT1..7 */
-#define OUT_DIRECT_DRIVE_MASK		0x7ff
 
 /*==========================================================================*/
 /* Driver exported variables.												*/
@@ -374,69 +371,21 @@ int L9779::spi_rw_array(const uint16_t *tx, uint16_t *rx, int n)
 	return ret;
 }
 
-/* use datasheet numbering, starting from 1, skip 4 ignition channels */
-#define OUT_ENABLED(n)			(!!(o_state & BIT((n) + L9779_OUTPUTS_IGN - 1)))
-#define SHIFT_N_OUT_TO_M(n, m)	(OUT_ENABLED(n) << (m))
-
-/* use datasheet numbering, starting from 1 */
-#define IGN_ENABLED(n)			(!!(o_state & BIT((n) - 1)))
-#define SHIFT_N_IGN_TO_M(n, m)	(IGN_ENABLED(n) << (m))
-
 int L9779::update_output()
 {
-	int ret;
-	uint8_t regs[4];
-
-	/* set value only for non-direct driven pins */
-	uint32_t o_data = o_state & ~OUT_DIRECT_DRIVE_MASK;
-	/* direct driven outputs are logicaly-AND spi bit and dedicated input
-	 * set bits to all enabled direct driven outputs */
-	o_data = o_state | (o_oe_mask & OUT_DIRECT_DRIVE_MASK);
-
-	/* nightmare... briliant mapping */
-	regs[0] =
-		SHIFT_N_OUT_TO_M( 1, 7) |	/* bit 7 - OUT1 */
-		SHIFT_N_OUT_TO_M( 2, 6) |	/* and so on, refer to datasheet */
-		SHIFT_N_OUT_TO_M( 3, 5) |
-		SHIFT_N_OUT_TO_M( 4, 4) |
-		SHIFT_N_OUT_TO_M( 5, 3) |
-		SHIFT_N_OUT_TO_M(20, 2);
-	regs[1] =
-		SHIFT_N_OUT_TO_M(15, 7) |
-		SHIFT_N_OUT_TO_M(14, 6) |
-		/* reserved + don't care */
-		SHIFT_N_IGN_TO_M( 1, 3) |
-		SHIFT_N_IGN_TO_M( 2, 2) |
-		SHIFT_N_IGN_TO_M( 3, 1) |
-		SHIFT_N_IGN_TO_M( 4, 0);
-	regs[2] =
-		SHIFT_N_OUT_TO_M(22, 7) |	/* TODO: stepper DIR */
-		SHIFT_N_OUT_TO_M(21, 6) |	/* TODO: stepper enable */
-		SHIFT_N_OUT_TO_M(16, 5) |
-		SHIFT_N_OUT_TO_M(14, 4) |
-		SHIFT_N_OUT_TO_M(17, 3) |
-		SHIFT_N_OUT_TO_M(18, 2) |
-		SHIFT_N_OUT_TO_M( 7, 1) |
-		SHIFT_N_OUT_TO_M( 6, 0);
-	regs[3] =
-		SHIFT_N_OUT_TO_M(28, 5) |
-		SHIFT_N_OUT_TO_M(27, 4) |
-		SHIFT_N_OUT_TO_M(26, 3) |
-		SHIFT_N_OUT_TO_M(25, 2) |
-		SHIFT_N_OUT_TO_M(24, 1) |
-		SHIFT_N_OUT_TO_M(23, 0);	/* TODO: stepper PWM */
+	const L9779OutputRegisters packed = l9779PackOutputRegisters(o_state, o_oe_mask);
 	uint16_t tx[] = {
 		/* output enables */
-		CMD_CONTR_REG(0, regs[0]),
-		CMD_CONTR_REG(1, regs[1]),
-		CMD_CONTR_REG(2, regs[2]),
-		CMD_CONTR_REG(3, regs[3])
+		CMD_CONTR_REG(0, packed.control[0]),
+		CMD_CONTR_REG(1, packed.control[1]),
+		CMD_CONTR_REG(2, packed.control[2]),
+		CMD_CONTR_REG(3, packed.control[3])
 	};
-	ret = spi_rw_array(tx, NULL, efi::size(tx));
+	const int ret = spi_rw_array(tx, NULL, efi::size(tx));
 
 	if (ret == 0) {
 		/* atomic */
-		o_data_cached = o_data;
+		o_data_cached = packed.enabledState;
 	}
 
 	return ret;
@@ -617,7 +566,7 @@ int L9779::writePad(size_t pin, int value) {
 	}
 
 	/* direct driven? */
-	if (OUT_DIRECT_DRIVE_MASK & BIT(pin)) {
+	if (L9779_DIRECT_DRIVE_MASK & BIT(pin)) {
 		return update_direct_output(pin, value);
 	} else {
 		return wake_driver();
@@ -685,7 +634,7 @@ int L9779::chip_init_data(void)
 
 	/* enable all spi-driven ouputs
 	 * TODO: add API to enable/disable? */
-	o_oe_mask |= ~OUT_DIRECT_DRIVE_MASK;
+	o_oe_mask |= ~L9779_DIRECT_DRIVE_MASK;
 
 	return 0;
 
