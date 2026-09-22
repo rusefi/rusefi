@@ -2,6 +2,7 @@ package com.rusefi;
 
 import com.rusefi.common.MiscTest;
 import com.rusefi.common.AdcHardwareTest;
+import com.rusefi.common.MapAnalogHardwareTest;
 import com.rusefi.f4discovery.*;
 import com.rusefi.io.CommandQueue;
 
@@ -12,7 +13,7 @@ import com.rusefi.io.CommandQueue;
  * PD1 (output) <=> PC6 (PAL/ICU input)
  * PD2 (output) <=> PA5 (PAL/ICU input)
  *
- * Proteus has more advanced jumpers allowing for some analog domain coverage see ProteusAnalogTest
+ * Analog MAP fixture: 3V3 - 10 kOhm - PA4 - 10 kOhm - GND (see AdcHardwareTest).
  *
  * <p>
  * <p>
@@ -28,6 +29,7 @@ public class HwCiF4Discovery {
             BurnCommandTest.class,
             MiscTest.class,
             AdcHardwareTest.class,
+            MapAnalogHardwareTest.class,
             CommonFunctionalTest.class,
             DiscoveryPwmHardwareTest.class,
             VssHardwareLoopTest.class,
