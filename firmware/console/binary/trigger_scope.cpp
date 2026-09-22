@@ -13,8 +13,10 @@ static BigBufferHandle buffer;
 
 static bool isRunning = false;
 
-static void completionCallback(ADCDriver* adcp) {
-	if (isRunning && adcp->state == ADC_COMPLETE) {
+static void completionCallback(ADCDriver*) {
+	// The trigger-scope conversion is linear.  ChibiOS invokes this callback
+	// after returning the driver to ADC_READY.
+	if (isRunning) {
 		engine->outputChannels.triggerScopeReady = true;
 	}
 }

@@ -404,10 +404,9 @@ adcsample_t getFastAdc(AdcToken token) {
 
 #ifdef EFI_SOFTWARE_KNOCK
 
-static void knockCompletionCallback(ADCDriver* adcp) {
-	if (adcIsBufferComplete(adcp)) {
-		onKnockSamplingComplete();
-	}
+static void knockCompletionCallback(ADCDriver*) {
+	// Knock conversions are linear, so the callback is the completion event.
+	onKnockSamplingComplete();
 
 	assertInterruptPriority(__func__, EFI_IRQ_ADC_PRIORITY);
 }
