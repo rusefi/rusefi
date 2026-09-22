@@ -15,6 +15,8 @@ public:
 	int enableChannel(adc_channel_e hwChannel);
 	/* Should be called from ISR context */
 	void startConversionI(void);
+	// Report captured interrupt diagnostics from thread context.
+	void reportErrors();
 	adc_channel_e getAdcChannelByInternalIndex(int index) const;
 	adcsample_t getAvgAdcValue(adc_channel_e hwChannel);
 	adcsample_t getAdcValueByToken(AdcToken token)
@@ -41,4 +43,3 @@ private:
 };
 
 #endif /* HAL_USE_ADC */
-

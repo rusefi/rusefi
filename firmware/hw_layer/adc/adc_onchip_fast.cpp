@@ -28,6 +28,7 @@
 #include "mpu_util.h"
 #include "periodic_thread_controller.h"
 #include "protected_gpio.h"
+#include "fast_adc_diagnostics.h"
 
 #ifndef ADC_MAX_CHANNELS_COUNT
 #define ADC_MAX_CHANNELS_COUNT 16
@@ -130,6 +131,49 @@ static volatile NO_CACHE adcsample_t fastAdcSampleBuf[ADC_BUF_DEPTH_FAST * ADC_M
 AdcDevice fastAdc(&ADC_FAST_DEVICE, &adcgrpcfgFast, fastAdcSampleBuf, ADC_BUF_DEPTH_FAST);
 
 static efitick_t lastTick = 0;
+
+#if defined(STM32F4XX) || defined(STM32F7XX)
+static FastAdcDiagnostics fastAdcDiagnostics;
+
+// Read-only snapshot: never acknowledge DMA flags here, the HAL owns them.
+static void captureFastAdcNotReady(ADCDriver* adcp) {
+	if (adcp->state != ADC_ACTIVE || adcp->dmastp == nullptr) {
+		fastAdcDiagnostics.record(false, 0, false, false, false);
+		return;
+	}
+	const auto* stream = adcp->dmastp;
+	const auto remaining = dmaStreamGetTransactionSize(stream);
+	const bool enabled = (stream->stream->CR & STM32_DMA_CR_EN) != 0;
+	const auto* dma = stream->selfindex < 8 ? DMA1 : DMA2;
+	const uint32_t status = (stream->selfindex & 4) ? dma->HISR : dma->LISR;
+	const uint32_t flags = (status >> stream->shift) & STM32_DMA_ISR_MASK;
+	const bool hardwareError = (flags & (STM32_DMA_ISR_TEIF | STM32_DMA_ISR_DMEIF | STM32_DMA_ISR_FEIF))
+		|| (adcp->adc->SR & (ADC_SR_OVR | ADC_SR_AWD));
+	fastAdcDiagnostics.record(adcp->state == ADC_ACTIVE, remaining,
+		(flags & STM32_DMA_ISR_TCIF) != 0, enabled, hardwareError);
+}
+#endif
+
+void AdcDevice::reportErrors() {
+#if defined(STM32F4XX) || defined(STM32F7XX)
+	uint8_t pending;
+	{
+		chibios_rt::CriticalSectionLocker csl;
+		pending = fastAdcDiagnostics.takePending();
+	}
+
+	// Keep warning formatting and publication out of the 10 kHz interrupt.
+	if (pending & FastAdcDiagnostics::CompletionPending) {
+		warning(ObdCode::CUSTOM_FAST_ADC_DMA_COMPLETION_PENDING, "Fast ADC DMA complete, callback pending");
+	}
+	if (pending & FastAdcDiagnostics::ConversionBusy) {
+		warning(ObdCode::CUSTOM_FAST_ADC_CONVERSION_BUSY, "Fast ADC conversion still busy at next start");
+	}
+	if (pending & FastAdcDiagnostics::Other) {
+		warning(ObdCode::CUSTOM_INVALID_ADC, "Fast ADC not ready: unexpected state or hardware fault");
+	}
+#endif
+}
 
 static void fastAdcDoneCB(ADCDriver *adcp) {
 	// State may not be complete if we get a callback for "half done"
@@ -263,8 +307,10 @@ void AdcDevice::startConversionI()
 		adcStartConversionI(adcp, hwConfig, (adcsample_t *)samples, depth);
 	} else {
 		engine->outputChannels.fastAdcErrorCount++;
-		// todo: when? why? criticalError("ADC fast not ready?");
-		// see notes at https://github.com/rusefi/rusefi/issues/6399
+#if defined(STM32F4XX) || defined(STM32F7XX)
+		// Distinguish the two timing paths in https://github.com/rusefi/rusefi/issues/6399.
+		captureFastAdcNotReady(adcp);
+#endif
 	}
 	chSysUnlockFromISR();
 }
