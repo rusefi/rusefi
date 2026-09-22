@@ -40,28 +40,11 @@ struct l9779_config {
 
 int l9779_add(brain_pin_e base, unsigned int index, const l9779_config *cfg);
 
-/* WDA (VDA 2.0) watchdog counters of the first registered L9779: the last
- * error counter value, the WDA_INT flag (EC > 4 -> WDA output pin low), and
- * the totals of answered/missed response cycles. Cross-driver diagnostics -
- * e.g. the TLE9201 drop warning on boards where the L9779 WDA output kills
- * the ETB bridge (m74_9 ETC_WD chain). timing_miss counts responses that
- * landed outside the answer window (REQUHI NO_RESP/RESP_TO_EARLY flags),
- * wrong counts responses rejected on VALUE (REQUHI W_RESP), cnt_bad counts
- * cycles where RESP_CNT != 11 at read time (answer-stream desync) - all
- * three increment the EC, so they must be read together. fail only counts
- * SPI-level errors. requhi returns the raw last REQUHI byte. dia10 returns
- * the cached DIA_REG10 byte (CRK_RST=0x20, V3V3_UV=0x04, OV_RST=0x01,
- * OUT_DIS=0x02, ...) - the chip's own power-event flags.
- * Returns false when no L9779 chip is registered on this board. */
-bool l9779_getWdaCounters(uint8_t *ec, bool *wda_int, int *ok, int *fail, int *timing_miss, uint8_t *dia10,
-		int *delay_ms, int *defer_cnt, int *kill_cnt, uint8_t *requhi, int *wrong_cnt, int *cnt_bad);
+/* Snapshot the VDA 2.0 watchdog state for diagnostics. */
+bool l9779_getWdaCounters(uint8_t *ec, bool *wdaInt, int *ok, int *fail,
+	int *timingMiss, uint8_t *dia10, int *delayMs, int *deferCount,
+	int *killCount, uint8_t *requhi, int *wrongCount, int *countBad);
 
-/* Ignition-gated power stage (m74_9): call from the board's periodic
- * callback (ISR/thread context - this only sets a flag and wakes the
- * driver thread; all SPI work happens in the driver thread). ON = full
- * re-init (SW_RST + START + CONFIG_REG6 + RESPTIME + VRS + outputs + WDA
- * kick) via the need_init path; OFF = CONFIG_REG6 PSOFF (0x16, power
- * stages dead, chip logic + regulators + SPI + WDA + KEY_ON stay alive)
- * and the WDA feed stops. Default ON - boards that do not call this behave
- * exactly as before. No-op when no L9779 is registered. */
+/* Request an ignition-gated power-stage transition. The flag may be changed
+ * from an interrupt; all SPI work is deferred to the L9779 driver thread. */
 void l9779_setPowerStage(bool on);

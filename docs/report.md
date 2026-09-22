@@ -12556,3 +12556,82 @@ lockstats dumps, the sched per-kind lines, trgPostDecode histograms, the
 19:07:04 C9009 rpm=3452) and the firmware sources listed above. No unit
 tests touched (the arm path is register-level TMR2 code, not host-testable
 beyond the pure tick math already covered in test_angle_clock.cpp).
+
+## 2026-09-21 - Rebase at32-wip onto current master
+
+What: Finished the already-started rebase of at32-wip onto origin/master
+1ea061b5d5c. The rebased branch tip is 89f3d1b9f4e; the original tip
+3e7fd52dcee remains in backup/at32-wip-before-rebase-20260921.
+
+Decisions:
+- Preserved the branch's m74_9 board setup, interrupt priorities, L9779
+  watchdog behavior and hardware diagnostics when resolving overlapping
+  implementations. Retained master's new SPI helpers/tests and unrelated
+  SLCAN/MCP changes.
+- Carried master's SPI parity normalization, reply-before-request ordering,
+  thread/ISR exclusion through reply bookkeeping, matched IDENT readback,
+  and watchdog stop on deinit into the branch driver. These final integration
+  edits and this report remain uncommitted under Source Control Hygiene.
+
+| Change | File |
+| --- | --- |
+| Retain master SPI and shutdown fixes alongside branch diagnostics | firmware/hw_layer/drivers/gpio/l9779.cpp |
+| Record rebase decisions and validation limits | docs/report.md |
+
+Validation:
+- origin/master fetched successfully and is an ancestor of rebased HEAD.
+- All 17 existing AT32/L9779 header-level Google Tests passed in a focused
+  native build of test_at32_port.cpp. This does not exercise the hardware
+  driver's thread/ISR paths.
+- No unresolved index entries remain; checked final integration diff for
+  whitespace errors.
+- Updated hex2dfu and googletest checkouts to the branch's recorded commits.
+
+Open follow-ups:
+- Full firmware validation is blocked by unavailable branch submodule commits:
+  ChibiOS 33f0f243a1461d93c1049dedb3b2f8b2611035a6,
+  OpenBLT dd3dd7ef3ff849c04b91195b6cbbded02bcbc2d0, and
+  libfirmware a7ccb41e500d5ded7282bff30d54b2e7334604cd. Configured
+  remotes reject each with "not our ref"; the recorded pointers are preserved
+  and those three local submodule checkouts remain at their prior revisions.
+- Human review/commit of the integration edits; no push performed.
+
+## 2026-09-22 - Review L9779 rebase gaps as a combined branch change
+
+What: At the user's direction, reviewed the overlapping implementations for
+correctness instead of prioritizing either branch's commit history. This
+supersedes the earlier provisional choice to retain the branch driver.
+
+Decision: Use master's L9779 implementation, retaining the branch's explicit
+chip-select setup and tolerance of the initial stale reset reply. Explicitly
+enable the realtime counter for AT32 compatibility without resetting it.
+The board configuration and extended interrupt priorities stay from at32-wip.
+
+| Change | File |
+| --- | --- |
+| Select master driver core plus AT32 startup requirements | firmware/hw_layer/drivers/gpio/l9779.cpp |
+| Align public declarations with the selected implementation | firmware/hw_layer/drivers/gpio/l9779.h |
+| Record comparison, retained behavior, shared gaps and validation limits | docs/l9779-rebase-review.md |
+
+Why: Master keeps SPI exclusion through reply bookkeeping, handles parity
+consistently, avoids waking the SPI thread on direct output edges, and uses
+cached diagnostics without clear-on-read SPI traffic or shared-clock resets.
+The branch's chip-select setup is still necessary for its hardware startup.
+TIM7 feeding, VRS values, ignition gating and the TLE9201 counter API remain.
+
+Validation:
+- All 17 existing AT32/L9779 header-level tests pass with GCC/C++17 and
+  -Wall -Wextra -Werror, using the branch's recorded Google Test revision.
+- Checked board hooks, TIM7 ownership, IRQ priorities and TLE9201 API use.
+- ARM syntax checking stops at missing rusefi_generated_m74_9.h before
+  validating the driver. Full build remains blocked by the unavailable
+  ChibiOS/OpenBLT/libfirmware commits listed in the previous entry.
+- git diff --check passes. No hardware validation or push performed.
+
+Open follow-ups:
+- Both source versions mark power-off transitions applied before checking
+  SPI success and ignore initialization errors before starting the feed.
+  These need separate fault-injection coverage and recovery-policy work.
+- Restore the missing dependency revisions, build m74_9 and validate key
+  cycling, watchdog recovery and diagnostics on hardware.
+- Final integration changes remain uncommitted under repository rules.
