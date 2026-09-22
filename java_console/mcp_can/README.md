@@ -28,9 +28,10 @@ PCAN hardware and its native driver are not required for SLCAN.
 
 The ECU tune controls CAN bus selection and bitrate. Enable `canSnifferN_read` for each
 bus whose received traffic you want to capture. With default settings, only the ECU's
-own transmitted frames may appear. The server sends the required `C` / `S6` / `O`
-initialization sequence; `S6` does not change the ECU's bitrate. `--channel` applies only
-to PCAN. No CAN transmit tool is exposed.
+own transmitted frames may appear. Explicit-port setup sends a self-synchronizing
+`C` / `V` / `S6` / `O` initialization sequence that tolerates stale and delayed USB
+replies; `S6` does not change the ECU's bitrate. `--channel` applies only to PCAN. No CAN
+transmit tool is exposed.
 
 ## PCAN
 

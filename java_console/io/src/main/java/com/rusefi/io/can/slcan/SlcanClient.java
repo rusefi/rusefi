@@ -30,6 +30,7 @@ public class SlcanClient implements Closeable {
     private static final Logging log = Logging.getLogging(SlcanClient.class);
 
     private static final int RESPONSE_TIMEOUT_MS = 700;
+    private static final int EXPLICIT_INIT_FLUSH_PROBES = 12;
     private static final char CR = '\r';
     private static final char BELL = 7;
 
@@ -141,13 +142,10 @@ public class SlcanClient implements Closeable {
             // frames, and the TunerStudio binary probe can itself confuse its command parser.
             closeAndDrain(stream);
 
-            String version = command(stream, "V");
-            if (version == null || version.isEmpty() || version.charAt(0) != 'V') {
-                throw new IOException("Not SLCAN (V response: " + printable(version) + ")");
-            }
+            String version = initializeExplicit(stream, port);
             logger.accept(port + ": SLCAN detected, version response " + version);
             SlcanClient client = new SlcanClient(stream, port, version);
-            client.openClosedChannel();
+            log.info(port + ": SLCAN channel open");
             keepOpen = true;
             return client;
         } finally {
@@ -173,6 +171,50 @@ public class SlcanClient implements Closeable {
             throw new IOException(e);
         }
         stream.getDataBuffer().dropPending();
+    }
+
+    private static String initializeExplicit(IoStream stream, String port) throws IOException {
+        // Some firmware versions do not flush a partially filled USB packet on the secondary
+        // CDC interface. Pipeline the initialization and add enough harmless V responses to force
+        // at least one complete packet out. The ordered V, OK, OK responses synchronize past any
+        // stale reply from the recovery C without relying on USB timing.
+        send(stream, "V");
+        send(stream, "S6");
+        send(stream, "O");
+        for (int i = 0; i < EXPLICIT_INIT_FLUSH_PROBES; i++) {
+            send(stream, "V");
+        }
+
+        long deadline = System.currentTimeMillis() + RESPONSE_TIMEOUT_MS;
+        String version = null;
+        boolean speedAccepted = false;
+        while (true) {
+            int remaining = (int) (deadline - System.currentTimeMillis());
+            if (remaining <= 0) {
+                break;
+            }
+            String response = readLine(stream, remaining);
+            if (response == null) {
+                break;
+            }
+            if (!response.isEmpty() && response.charAt(0) == 'V') {
+                version = response;
+                speedAccepted = false;
+            } else if (Frame.parse(response) != null) {
+                // Frames can start immediately after O and interleave with command responses.
+                continue;
+            } else if (version != null && response.isEmpty()) {
+                if (speedAccepted) {
+                    return version;
+                }
+                speedAccepted = true;
+            } else {
+                version = null;
+                speedAccepted = false;
+            }
+        }
+        throw new IOException("SLCAN initialization failed on " + port
+                + ": did not receive ordered V/S6/O acknowledgments");
     }
 
     private void openClosedChannel() throws IOException {
@@ -219,6 +261,10 @@ public class SlcanClient implements Closeable {
     }
 
     private void send(String cmd) throws IOException {
+        send(stream, cmd);
+    }
+
+    private static void send(IoStream stream, String cmd) throws IOException {
         stream.write((cmd + CR).getBytes(StandardCharsets.US_ASCII));
         stream.flush();
     }
@@ -228,8 +274,7 @@ public class SlcanClient implements Closeable {
      */
     @Nullable
     private static String command(IoStream stream, String cmd) throws IOException {
-        stream.write((cmd + CR).getBytes(StandardCharsets.US_ASCII));
-        stream.flush();
+        send(stream, cmd);
         return readLine(stream, RESPONSE_TIMEOUT_MS);
     }
 
