@@ -65,10 +65,24 @@ public class SlcanClient implements Closeable {
         return findAndConnect(LinkManager.getCommPorts(), logger);
     }
 
-    /** Probe only the requested port, without falling back to another ECU. */
+    /**
+     * Connect only to the requested SLCAN port, without falling back to another ECU.
+     * Unlike automatic discovery, an explicitly selected port skips the TunerStudio binary
+     * probe and first closes/drains a possibly stale streaming SLCAN session.
+     */
     @Nullable
     public static SlcanClient connect(String port, Consumer<String> logger) {
-        return findAndConnect(java.util.Collections.singletonList(port), logger);
+        IoStream stream = BufferedSerialIoStream.openPort(port);
+        if (stream == null) {
+            logger.accept(port + ": failed to open");
+            return null;
+        }
+        try {
+            return connectExplicit(stream, port, logger);
+        } catch (IOException e) {
+            logger.accept(port + ": IO error: " + e);
+            return null;
+        }
     }
 
     @Nullable
@@ -118,8 +132,39 @@ public class SlcanClient implements Closeable {
         }
     }
 
+    /** Owns an explicitly selected stream, including closing it when initialization fails. */
+    static SlcanClient connectExplicit(IoStream stream, String port, Consumer<String> logger) throws IOException {
+        boolean keepOpen = false;
+        try {
+            // Explicit selection already identifies this as the SLCAN VCP. Recover the limited
+            // rusEFI terminal before probing: a stale open channel can be continuously emitting
+            // frames, and the TunerStudio binary probe can itself confuse its command parser.
+            closeAndDrain(stream);
+
+            String version = command(stream, "V");
+            if (version == null || version.isEmpty() || version.charAt(0) != 'V') {
+                throw new IOException("Not SLCAN (V response: " + printable(version) + ")");
+            }
+            logger.accept(port + ": SLCAN detected, version response " + version);
+            SlcanClient client = new SlcanClient(stream, port, version);
+            client.openClosedChannel();
+            keepOpen = true;
+            return client;
+        } finally {
+            if (!keepOpen) {
+                stream.close();
+            }
+        }
+    }
+
     private void openChannel() throws IOException {
-        // close first in case a previous session left the terminal open; error ack is fine here
+        closeAndDrain(stream);
+        openClosedChannel();
+    }
+
+    private static void closeAndDrain(IoStream stream) throws IOException {
+        // Close first in case a previous session left the terminal open. The response is ignored:
+        // it may be an error ack when already closed or a queued CAN frame from the stale stream.
         command(stream, "C");
         try {
             Thread.sleep(100);
@@ -128,7 +173,9 @@ public class SlcanClient implements Closeable {
             throw new IOException(e);
         }
         stream.getDataBuffer().dropPending();
+    }
 
+    private void openClosedChannel() throws IOException {
         // it's a dummy commands, sniffer configured via common settings; and it is opened always
         expectOk("S6");
         expectOk("O");

@@ -17,8 +17,10 @@ java -jar java_console/mcp_can/build/libs/mcp_can-all.jar --backend slcan --port
 
 On Windows, use a port such as `COM5`. Without `--port`, the server probes serial ports,
 rejects the primary TunerStudio console, and opens the first SLCAN port found. With
-`--port`, only that port is probed. Use an explicit port when several ECUs are attached;
-USB port numbering does not reliably identify the sniffer interface.
+`--port`, the server treats that port as the SLCAN interface: it skips console autodetection,
+closes and drains any stale streaming session, then verifies the SLCAN version. Use an
+explicit port when several ECUs are attached; USB port numbering does not reliably identify
+the sniffer interface. Supplying the primary console port explicitly will not work.
 
 Close the console's SLCAN tab or other applications holding the sniffer port before
 connecting. The primary ECU console and the secondary SLCAN port can be used separately.

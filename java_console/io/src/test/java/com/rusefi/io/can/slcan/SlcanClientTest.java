@@ -34,26 +34,37 @@ public class SlcanClientTest {
     }
 
     @Test
-    public void explicitStreamInitializesAndClosesLogicalChannel() throws Exception {
+    public void requestedPortRecoversBeforeVersionProbeWithoutBinaryProbe() throws Exception {
         FakeStream stream = new FakeStream();
-        try (SlcanClient client = SlcanClient.connect(stream, "COM42", line -> {})) {
+        // If a TunerStudio binary probe were attempted, this stream would identify as a console.
+        stream.console = true;
+        try (SlcanClient client = SlcanClient.connectExplicit(stream, "COM42", line -> {})) {
             assertEquals("COM42", client.getPort());
             assertEquals("V1220", client.getVersion());
-            // get version, close channel, set speed, open channel
-            assertEquals(Arrays.asList("V", "C", "S6", "O"), stream.commands);
+            assertEquals(0, stream.binaryProbeAttempts);
+            assertEquals(Arrays.asList("C", "V", "S6", "O"), stream.commands);
             client.pollStatus();
             assertEquals("F00", client.readLine(10));
         }
-        assertEquals(Arrays.asList("V", "C", "S6", "O", "F", "C"), stream.commands);
+        assertEquals(Arrays.asList("C", "V", "S6", "O", "F", "C"), stream.commands);
         assertTrue(stream.isClosed());
+    }
+
+    @Test
+    public void autoDiscoveryStillProbesForConsole() throws Exception {
+        FakeStream stream = new FakeStream();
+        try (SlcanClient client = SlcanClient.connect(stream, "COM42", line -> {})) {
+            assertEquals(1, stream.binaryProbeAttempts);
+            assertEquals(Arrays.asList("V", "C", "S6", "O"), stream.commands);
+        }
     }
 
     @Test
     public void initializationFailureClosesPort() {
         FakeStream stream = new FakeStream();
         stream.rejectOpen = true;
-        assertThrows(IOException.class, () -> SlcanClient.connect(stream, "COM42", line -> {}));
-        assertEquals(Arrays.asList("V", "C", "S6", "O"), stream.commands);
+        assertThrows(IOException.class, () -> SlcanClient.connectExplicit(stream, "COM42", line -> {}));
+        assertEquals(Arrays.asList("C", "V", "S6", "O"), stream.commands);
         assertTrue(stream.isClosed());
     }
 
@@ -94,6 +105,7 @@ public class SlcanClientTest {
         final List<String> commands = new ArrayList<>();
         boolean console;
         boolean rejectOpen;
+        int binaryProbeAttempts;
         String formatReply = "I1\r";
 
         @Override
@@ -105,6 +117,7 @@ public class SlcanClientTest {
         @Override
         public void write(byte[] bytes) throws IOException {
             if (bytes[0] == 0) {
+                binaryProbeAttempts++;
                 if (console) {
                     buffer.addData(IoHelper.makeCrc32Packet(
                             "\u0000rusEFI test".getBytes(StandardCharsets.US_ASCII)));
