@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
 
 inline bool l9779HasOddParity(uint16_t word) {
@@ -15,3 +16,46 @@ inline uint16_t l9779PrepareSpiWord(uint16_t word) {
 	word &= static_cast<uint16_t>(~1U);
 	return word | !l9779HasOddParity(word);
 }
+
+class L9779ReadTracker {
+public:
+	static constexpr size_t Capacity = 8;
+
+	bool push(uint8_t subaddress) {
+		if (m_count == Capacity) {
+			return false;
+		}
+
+		m_pending[m_count++] = subaddress;
+		return true;
+	}
+
+	bool consume(uint8_t subaddress) {
+		for (size_t i = 0; i < m_count; i++) {
+			if (m_pending[i] != subaddress) {
+				continue;
+			}
+
+			for (size_t j = i + 1; j < m_count; j++) {
+				m_pending[j - 1] = m_pending[j];
+			}
+
+			m_count--;
+			return true;
+		}
+
+		return false;
+	}
+
+	void clear() {
+		m_count = 0;
+	}
+
+	size_t size() const {
+		return m_count;
+	}
+
+private:
+	uint8_t m_pending[Capacity] = {};
+	size_t m_count = 0;
+};
