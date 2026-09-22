@@ -74,6 +74,80 @@ inline L9779OutputRegisters l9779PackOutputRegisters(uint32_t outputState, uint3
 	return result;
 }
 
+enum class L9779DiagResult : uint8_t {
+	ShortToGround = 0,
+	OpenLoad = 1,
+	ShortToBattery = 2,
+	Ok = 3,
+};
+
+struct L9779DiagLocation {
+	int8_t registerIndex;
+	uint8_t shift;
+
+	bool supported() const {
+		return registerIndex >= 0;
+	}
+};
+
+inline L9779DiagLocation l9779GetDiagLocation(size_t pin) {
+	if (pin < 4) {
+		return { 7, static_cast<uint8_t>(pin * 2) };
+	}
+
+	if (pin < 11) {
+		const size_t output = pin - 4;
+		return {
+			static_cast<int8_t>(output / 4),
+			static_cast<uint8_t>((output % 4) * 2),
+		};
+	}
+
+	if (pin >= 16 && pin < 18) {
+		return { 2, static_cast<uint8_t>(4 + (pin - 16) * 2) };
+	}
+
+	if (pin >= 18 && pin < 22) {
+		return { 3, static_cast<uint8_t>((pin - 18) * 2) };
+	}
+
+	if (pin == 23) {
+		return { 4, 2 };
+	}
+
+	if (pin >= 24 && pin < 32) {
+		return {
+			static_cast<int8_t>(5 + (pin - 24) / 4),
+			static_cast<uint8_t>(((pin - 24) % 4) * 2),
+		};
+	}
+
+	return { -1, 0 };
+}
+
+inline L9779DiagResult l9779DecodeDiagField(uint8_t field) {
+	return static_cast<L9779DiagResult>(field & 0x03U);
+}
+
+constexpr uint8_t L9779_DIA10_OV_RST = 0x01;
+constexpr uint8_t L9779_DIA10_OUT_DIS = 0x02;
+constexpr uint8_t L9779_DIA10_V3V3_UV = 0x04;
+constexpr uint8_t L9779_DIA10_VDD5_OV = 0x08;
+constexpr uint8_t L9779_DIA10_F2 = 0x10;
+constexpr uint8_t L9779_DIA10_CRK_RST = 0x20;
+constexpr uint8_t L9779_DIA10_F1 = 0x40;
+constexpr uint8_t L9779_DIA10_TNL_RST = 0x80;
+
+inline bool l9779Dia10HasOutDis(uint8_t value) {
+	return (value & L9779_DIA10_OUT_DIS) != 0;
+}
+
+inline bool l9779Dia10LostConfiguration(uint8_t value) {
+	constexpr uint8_t ResetEvents =
+		L9779_DIA10_TNL_RST | L9779_DIA10_CRK_RST | L9779_DIA10_OV_RST;
+	return (value & ResetEvents) != 0;
+}
+
 class L9779ReadTracker {
 public:
 	static constexpr size_t Capacity = 8;
