@@ -135,8 +135,18 @@ void MapAverager::stop() {
  * @note This method is invoked OFTEN, this method is a potential bottleneck - the implementation should be
  * as fast as possible
  */
-void MapAverager::onAdcSample(float instantVoltage) {
+void MapAverager::onAdcSample(float instantVoltage, bool channelReady) {
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6650, hasLotsOfRemainingStack(), "lowstck#9a");
+
+	// Hardware starts ADC callbacks before the channel token and initMap's
+	// converter are ready. Missing initialization is not a sensor fault.
+	if (!channelReady || !m_function) {
+		engine->outputChannels.isMapValid = false;
+#if EFI_TUNER_STUDIO
+		engine->outputChannels.instantMAPValue = 0;
+#endif
+		return;
+	}
 
 	SensorResult mapResult = submit(instantVoltage);
 
@@ -155,8 +165,8 @@ void MapAverager::onAdcSample(float instantVoltage) {
 }
 
 #if HAL_USE_ADC
-void mapAveragingAdcCallback(float instantVoltage) {
-	getMapAvg(currentMapAverager).onAdcSample(instantVoltage);
+void mapAveragingAdcCallback(float instantVoltage, bool channelReady) {
+	getMapAvg(currentMapAverager).onAdcSample(instantVoltage, channelReady);
 }
 #endif
 

@@ -90,7 +90,8 @@ std::optional<setup_custom_board_engine_type_type> custom_board_applyUnknownType
 
 #if HAL_USE_ADC
 
-static AdcToken fastMapSampleIndex;
+// ADC interrupts can run before calcFastAdcIndexes() selects the MAP input.
+static AdcToken fastMapSampleIndex = invalidAdcToken;
 
 #if HAL_TRIGGER_USE_ADC
 static AdcToken triggerSampleIndex;
@@ -115,7 +116,7 @@ void onFastAdcComplete(adcsample_t*) {
 	auto mapRaw = adcRawValueToScaledVoltage(getFastAdc(fastMapSampleIndex), engineConfiguration->map.sensor.hwChannel);
 	engine->outputChannels.rawMapFast = mapRaw;
 #if EFI_MAP_AVERAGING && defined (MODULE_MAP_AVERAGING)
-	mapAveragingAdcCallback(mapRaw);
+	mapAveragingAdcCallback(mapRaw, fastMapSampleIndex != invalidAdcToken);
 #endif /* EFI_MAP_AVERAGING */
 }
 #endif /* HAL_USE_ADC */
