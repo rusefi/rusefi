@@ -37,6 +37,7 @@ bool isOpenBltCanFrame(const CANRxFrame& frame) {
 #include "can_common.h"
 
 #include "obd2.h"
+#include "uds.h"
 #include "can_sensor.h"
 #include "can_vss.h"
 #include "rusefi_wideband.h"
@@ -287,6 +288,10 @@ static Timer dashAliveTimer;
 	{
 		obdOnCanPacketRx(frame, busIndex);
 	}
+
+#if EFI_UDS
+	udsOnCanPacketRx(frame, busIndex);
+#endif
 
 #if EFI_ENGINE_CONTROL
 	if (CAN_EID(frame) == GDI4_BASE_ADDRESS && frame.data8[7] == GDI4_MAGIC) {

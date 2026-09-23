@@ -337,6 +337,10 @@
 #define EFI_CAN_SUPPORT TRUE
 #endif
 
+#ifndef EFI_UDS
+#define EFI_UDS FALSE
+#endif
+
 #if !defined(EFI_CAN_SERIAL) && EFI_CAN_SUPPORT
 #define EFI_CAN_SERIAL TRUE
 #endif

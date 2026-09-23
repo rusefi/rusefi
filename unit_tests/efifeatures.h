@@ -7,6 +7,10 @@
 
 #pragma once
 
+#ifndef EFI_UDS
+#define EFI_UDS TRUE
+#endif
+
 #define EFI_ENABLE_ASSERTS TRUE
 
 #define EFI_ANTILAG_SYSTEM TRUE

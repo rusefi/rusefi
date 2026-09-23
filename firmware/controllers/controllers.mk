@@ -45,6 +45,7 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/storage_sd.cpp \
 	$(CONTROLLERS_DIR)/bench_test.cpp \
 	$(CONTROLLERS_DIR)/can/obd2.cpp \
+	$(CONTROLLERS_DIR)/can/uds.cpp \
 	$(CONTROLLERS_DIR)/can/can_verbose.cpp \
 	$(CONTROLLERS_DIR)/can/can_rx.cpp \
 	$(CONTROLLERS_DIR)/can/can_bench_test.cpp \
