@@ -16,6 +16,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Collections;
 import java.util.Locale;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -71,13 +72,19 @@ class VssHardwareTestLogicTest {
         IniFileModel ini = createIni();
         sensors.setValue(0, SensorNames.VEHICLESPEEDKPH);
         AtomicBoolean sawDemand = new AtomicBoolean();
+        CountDownLatch firstDemandCheck = new CountDownLatch(1);
         polling.scheduleAtFixedRate(() -> {
             if (sensors.getOutputChannelDemand().getChannels().contains(SensorNames.VEHICLESPEEDKPH.toLowerCase(Locale.US))) {
                 sawDemand.set(true);
+                // A sample can complete the wait and remove its subscription immediately.
+                // Only publish after recording demand, otherwise that observation can be missed.
+                publish(ini, 0);
             }
-            publish(ini, 0);
+            firstDemandCheck.countDown();
         }, 0, 10, TimeUnit.MILLISECONDS);
 
+        // Exercise polling before registration as well as after it.
+        assertTrue(firstDemandCheck.await(5, TimeUnit.SECONDS));
         EcuTestHelper.assertSensorEventually("VSS", SensorNames.VEHICLESPEEDKPH, 0, 1000);
         assertTrue(sawDemand.get());
         assertVssDemandReleased();
