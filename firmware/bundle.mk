@@ -153,8 +153,8 @@ ifneq ($(BOARD_IMAGE_SCRIPT),)
   BIN_TARGET =
   BINSRC =
   SREC_TARGET = $(FOLDER)/$(PROJECT)_update.srec
-  # Generic updater launchers and flash scripts do not implement this contract.
-  ROOT_FOLDER_SOURCES =
+  # Keep the console launchers: they start the JAR, including board-specific UI.
+  # Generic flashing tools are excluded from FULL_BUNDLE_CONTENT below.
   UPDATE_FOLDER_SOURCES += $(BOARD_IMAGE_README)
   # Reject even when a stale binary/DFU from an earlier build still exists.
 .PHONY: reject-unaddressed-image
@@ -198,7 +198,7 @@ FULL_BUNDLE_CONTENT = \
   $(CONSOLE_FOLDER_TARGETS)
 
 ifneq ($(BOARD_IMAGE_SCRIPT),)
-FULL_BUNDLE_CONTENT = $(CONSOLE_FOLDER_TARGETS)
+FULL_BUNDLE_CONTENT = $(ROOT_FOLDER_TARGETS) $(CONSOLE_FOLDER_TARGETS)
 endif
 
 BUNDLE_FILES = \
