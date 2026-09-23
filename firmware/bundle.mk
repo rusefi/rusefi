@@ -98,6 +98,13 @@ UPDATE_CONSOLE_FOLDER_SOURCES = \
   $(BRANCH_REF_FILE) \
   $(TS_PLUGIN_LAUNCHER_JAR)
 
+# PCAN support is optional and excluded by default.
+ifeq ($(BUNDLE_PCAN),yes)
+  UPDATE_CONSOLE_FOLDER_SOURCES += \
+    ../java_console/PCANBasic.dll \
+    ../java_console/PCANBasic_JNI.dll
+endif
+
 # Launchers live at the bundle root; they delegate to console/rusefi_console.jar
 ROOT_FOLDER_SOURCES = \
   ../misc/console_launcher/rusefi_updater.exe \
