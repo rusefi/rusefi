@@ -92,7 +92,12 @@ void setFrankensoConfiguration() {
 	 */
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_2; // PA2
 
+#ifdef HARDWARE_CI
+	// Match the Discovery PA4 fixture and the fast ADC channel selected at boot.
+	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
+#else
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_0;
+#endif
 
 	engineConfiguration->clt.adcChannel = EFI_ADC_12;
 	engineConfiguration->iat.adcChannel = EFI_ADC_11;
@@ -684,4 +689,3 @@ void testEngine6451() {
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 	engineConfiguration->triggerSimulatorRpm = 4800;
 }
-
