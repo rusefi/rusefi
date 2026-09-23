@@ -9,10 +9,12 @@ import com.rusefi.config.FieldType;
 import com.rusefi.core.OutputChannelSnapshot;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.ui.UIContext;
+import com.rusefi.ini.reader.IniFileReaderUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.nio.ByteBuffer;
+import java.io.ByteArrayOutputStream;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -31,6 +33,28 @@ import static org.mockito.Mockito.when;
 class SensorLoggerTest {
     @TempDir
     Path tempDir;
+
+    @Test
+    void datalogLabelInBinaryHeader() throws Exception {
+        String text = "[MegaTune]\nsignature = test\n[Constants]\npageSize = 0\n"
+                + "pageReadCommand = R\nochBlockSize = 2\n"
+                + "[OutputChannels]\nRPMValue = scalar, U16, 0, \"RPM\", 1, 0\n"
+                + "[Datalog]\nentry = RPMValue, \"RPM\", int, \"%d\"\n";
+        Path iniPath = tempDir.resolve("logging.ini");
+        Files.writeString(iniPath, text);
+        IniFileModel ini = IniFileReaderUtil.readIniFile(iniPath.toString());
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        BinarySensorLog<CustomBinaryLogEntry> log = new BinarySensorLog<>(
+                entry -> entry.getValue(new byte[]{0, (byte) 0xd2, 4}),
+                SensorLogger.getOutputChannels(ini), output);
+        log.writeSensorLogLineChecked();
+        log.close();
+        ByteBuffer data = ByteBuffer.wrap(output.toByteArray()).order(ByteOrder.BIG_ENDIAN);
+        assertEquals(1, data.getShort(22));
+        // Reproduction: the declared "RPM" label is ignored in favor of the lowercase map key.
+        assertEquals("rpmvalue", readFieldName(data, 0));
+        assertEquals(1234, data.getShort(data.getInt(16) + 4));
+    }
 
     @Test
     void startsAndStopsExplicitly() throws Exception {
