@@ -6,7 +6,8 @@ write a candidate script, upload it to the ECU, reset Lua, and observe the resul
 `print(...)` / `efiPrintf` output. It also reads live ECU values and records operating
 data to host-side `.mlg` files using the Java frontend's binary log format. It can
 also read and write complete TunerStudio-compatible tunes, and convert existing
-binary MLG and text TunerStudio MSL logs to CSV offline.
+binary MLG and text TunerStudio MSL logs to CSV offline. The `update_firmware` tool
+updates firmware via OpenBLT while backing up and migrating the ECU configuration.
 
 ## Architecture
 
@@ -70,6 +71,7 @@ Behavior common to all tools:
 | `wait_for_message` | Block until a message matches a regex. |
 | `read_tune` | Save the complete ECU tune as a `.msq` file. |
 | `write_tune` | Merge, burn, and verify a host-side `.msq` tune on the ECU. |
+| `update_firmware` | Update via OpenBLT, back up and migrate the configuration, then reconnect. |
 | `reboot` | Reboot the ECU. |
 | `reboot_to_blt` | Reboot the ECU into the OpenBLT bootloader. |
 
@@ -328,6 +330,35 @@ burn, or readback mismatch returns `success: false` and `verified: false`.
 ```json
 {"name":"write_tune","arguments":{"path":"/tmp/edited-tune.msq"}}
 ```
+
+### `update_firmware`
+
+Runs the Console's automatic OpenBLT update with configuration migration. Start with a
+live ECU connection over serial or SocketCAN; do not call `reboot_to_blt` first, since
+running firmware is needed to back up the tune. TCP/simulator connections are unsupported.
+
+| Argument | Type | Required | Description |
+|---|---|---|---|
+| `firmwarePath` | string | no | Existing S-record firmware file on the MCP server host. Omit to select the bundle firmware for the connected board (including its normal download behavior). |
+
+```json
+{"name":"update_firmware","arguments":{"firmwarePath":"/path/to/rusefi_update.srec"}}
+```
+
+The call blocks for several minutes while it backs up the current tune and INI,
+flashes firmware, reads the new configuration, migrates compatible settings, writes
+and burns the migrated tune, and reconnects. Allow a sufficiently long MCP client
+request timeout. Data logging stops when the update job takes over the connection.
+Explicit firmware files are parsed before connecting; known board mismatches and
+firmware eligibility failures are rejected without dialogs.
+
+The result includes `success`, `handoffStarted`, `connected`, `port`, firmware
+`previousSignature`/`signature`, `warnings`, and `messages` (including backup paths).
+Fields that cannot be migrated remain at firmware defaults and are reported in the
+warnings/messages. A backup failure aborts before flashing. A later failure can leave
+new firmware installed without the restored tune: inspect `messages` and the saved
+backup before retrying. `connected` reports the connection separately from update
+success; reconnect manually if the ECU did not reappear.
 
 ### `reboot`
 

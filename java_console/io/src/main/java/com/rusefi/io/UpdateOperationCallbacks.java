@@ -13,6 +13,11 @@ public interface UpdateOperationCallbacks extends StatusConsumer {
         log(message, true, true);
     }
 
+    /** Whether maintenance may ask the user through Swing dialogs. */
+    default boolean isInteractive() {
+        return this != DUMMY && this != LOGGER;
+    }
+
     void done();
     void warning();
     void error();

@@ -84,6 +84,19 @@ public class MaintenanceUtilTest {
     }
 
     @Test
+    public void headlessFirmwareMismatchIsRejectedWithoutDialog() {
+        assertFalse(confirmFirmwareMatchesBoard(
+            "rusefi_release_2026-07-01_uaefi_pro_1234567890_deadbeef.srec",
+            UpdateOperationCallbacks.LOGGER, boardTarget("proteus_h7")));
+    }
+
+    @Test
+    public void headlessUnverifiedTargetIsRejectedWithoutDialog() {
+        assertFalse(MaintenanceUtil.ensureFirmwareForConnectedTarget(
+            UpdateOperationCallbacks.LOGGER, new ConnectedEcuTarget()));
+    }
+
+    @Test
     public void mismatchedFirmwareDeclinedByUserBlocksTheFlash() {
         RecordingConfirm confirm = new RecordingConfirm(false);
         assertFalse(confirmFirmwareMatchesBoard(

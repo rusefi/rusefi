@@ -70,6 +70,7 @@ class EcuMcpServerTest {
         assertTrue(names.contains("write_tune"));
         assertTrue(names.contains("ecu_info"));
         assertTrue(names.contains("connect"));
+        assertTrue(names.contains("update_firmware"));
         assertTrue(names.contains("reboot"));
         assertTrue(names.contains("reboot_to_blt"));
 
@@ -170,6 +171,21 @@ class EcuMcpServerTest {
             args.put("inputPath", invalid);
             envelope = (JSONObject) parse(drive(jsonRpc(2, "tools/call", params.toJSONString()) + "\n")[0]).get("result");
             assertEquals(true, envelope.get("isError"));
+        }
+    }
+
+    @Test
+    void updateFirmwareRejectsInvalidImagesBeforeConnecting(@TempDir Path directory) throws Exception {
+        Path invalid = directory.resolve("invalid.srec");
+        Files.writeString(invalid, "not firmware");
+        for (String arguments : new String[]{
+                "{\"firmwarePath\":\"\"}", "{\"firmwarePath\":null}", "{\"firmwarePath\":42}",
+                "{\"firmwarePath\":\"" + JSONObject.escape(invalid.toString()) + "\"}",
+                "{\"firmwarePath\":\"" + JSONObject.escape(directory.resolve("missing.srec").toString()) + "\"}"}) {
+            JSONObject envelope = (JSONObject) parse(drive(jsonRpc(1, "tools/call",
+                    "{\"name\":\"update_firmware\",\"arguments\":" + arguments + "}") + "\n")[0]).get("result");
+            assertEquals(true, envelope.get("isError"));
+            assertEquals(false, ((JSONObject) envelope.get("structuredContent")).get("success"));
         }
     }
 

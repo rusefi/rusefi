@@ -53,7 +53,7 @@ import static com.devexperts.logging.Logging.getLogging;
  *     <li><code>tools/list</code></li>
  *     <li><code>tools/call</code> for: connect, ecu_info, set_lua, get_lua, lua_reset,
  *         send_command (alias: command), read_output_channel, read_messages,
- *         wait_for_message, read_tune, write_tune, start_data_logging, stop_data_logging, data_logging_status, reboot, reboot_to_blt — see
+ *         wait_for_message, read_tune, write_tune, start_data_logging, stop_data_logging, data_logging_status, update_firmware, reboot, reboot_to_blt — see
  *         java_console/mcp_ecu/README.md for the tool reference</li>
  *     <li><code>notifications/initialized</code></li>
  * </ul>
@@ -414,6 +414,16 @@ public class EcuMcpServer {
                 schemaObject(new String[][]{
                         {"path", "string", "Existing input .msq file path on the MCP server host (not the client)."}
                 }, new String[]{"path"}, false)));
+        tools.add(tool("update_firmware",
+                "Update the connected ECU via OpenBLT and migrate its configuration using the console's " +
+                        "backup/flash/restore flow. Requires running firmware over serial or SocketCAN. " +
+                        "Stops data logging. Backs up the tune before flashing; incompatible fields remain at " +
+                        "firmware defaults and are reported in warnings/messages. Reconnects after the update. " +
+                        "This synchronous operation may take several minutes.",
+                schemaObject(new String[][]{
+                        {"firmwarePath", "string", "Optional existing .srec firmware file on the MCP server host. " +
+                                "Omit to use the bundle's firmware for the connected board."}
+                }, new String[]{}, false)));
         tools.add(tool("reboot",
                 "Reboot the ECU (send '" + Integration.CMD_REBOOT + "'). The serial link drops while the ECU " +
                         "restarts — reconnect (any ECU-touching tool reconnects implicitly) after a few seconds.",
@@ -455,6 +465,7 @@ public class EcuMcpServer {
                 case "wait_for_message": toolResult = doWaitForMessage(args); break;
                 case "read_tune":   toolResult = doReadTune(args); break;
                 case "write_tune":  toolResult = doWriteTune(args); break;
+                case "update_firmware": toolResult = doUpdateFirmware(args); break;
                 case "reboot":      toolResult = doReboot(Integration.CMD_REBOOT); break;
                 case "reboot_to_blt": toolResult = doReboot(Integration.CMD_REBOOT_OPENBLT); break;
                 default:
@@ -487,6 +498,13 @@ public class EcuMcpServer {
         result.put("recordCount", conversion.recordCount);
         result.put("fieldCount", conversion.fieldCount);
         return result;
+    }
+
+    private JSONObject doUpdateFirmware(JSONObject args) throws Exception {
+        Path firmware = args.containsKey("firmwarePath")
+                ? EcuFirmwareUpdater.validateFirmwarePath(args.get("firmwarePath")) : null;
+        LinkManager lm = ensureConnected(null);
+        return new EcuFirmwareUpdater().update(lm, firmware, () -> dataLogger.stop());
     }
 
     private LinkManager ensureConnected(String portOrNull) throws Exception {

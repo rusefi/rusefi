@@ -73,7 +73,8 @@ public class MaintenanceUtil {
      */
     public static boolean ensureFirmwareForConnectedTarget(final UpdateOperationCallbacks callbacks,
                                                            final ConnectedEcuTarget connectedEcuTarget) {
-        return ensureFirmwareForConnectedTarget(callbacks, connectedEcuTarget, MaintenanceUtil::confirmOnEdt);
+        return ensureFirmwareForConnectedTarget(callbacks, connectedEcuTarget,
+            (message, title, messageType) -> callbacks.isInteractive() && confirmOnEdt(message, title, messageType));
     }
 
     // package-private overload with an injected confirm so the user-decision branches are unit-testable
@@ -138,7 +139,8 @@ public class MaintenanceUtil {
      */
     public static boolean confirmFirmwareMatchesBoard(final String firmwareFile, final UpdateOperationCallbacks callbacks,
                                                       final ConnectedEcuTarget connectedEcuTarget) {
-        return confirmFirmwareMatchesBoard(firmwareFile, callbacks, connectedEcuTarget, MaintenanceUtil::confirmOnEdt);
+        return confirmFirmwareMatchesBoard(firmwareFile, callbacks, connectedEcuTarget,
+            (message, title, messageType) -> callbacks.isInteractive() && confirmOnEdt(message, title, messageType));
     }
 
     // package-private overload with an injected confirm, see ensureFirmwareForConnectedTarget above

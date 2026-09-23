@@ -32,13 +32,19 @@ public class BootloaderHelper {
                     // #9714:  fetch the matching firmware on demand before rebooting to bootloader.
                     callbacks.logLine("[universal_bundle]: downloading firmware for \"" + ecuTarget + "\"...");
                     if (!Autoupdate.ensureFirmwareForTarget(ecuTarget, callbacks::updateProgress, callbacks::logLine)) {
-                        SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(parent, String.format(
-                            "Universal bundle could not download firmware for \"%s\".\nPlease check your internet connection and retry.", ecuTarget)));
+                        callbacks.logLine("Failed to download firmware for " + ecuTarget);
+                        if (callbacks.isInteractive()) {
+                            SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(parent, String.format(
+                                "Universal bundle could not download firmware for \"%s\".\nPlease check your internet connection and retry.", ecuTarget)));
+                        }
                         return false;
                     }
                 } else {
                     String message = String.format("You have \"%s\" controller does not look right to program it with \"%s\"", ecuTarget, fileSystemBundleTarget);
-                    log.info(message);
+                    callbacks.logLine(message);
+                    if (!callbacks.isInteractive()) {
+                        return false;
+                    }
 
                     SwingUtilities.invokeLater(() -> {
                         JOptionPane.showMessageDialog(parent, message);

@@ -488,7 +488,9 @@ public class CalibrationsHelper {
                     break;
                 }
 
-                if (mergeResult.mergedCalibrations.isPresent() && MigrateSettingsCheckboxState.isMigrationNeeded) {
+                // Headless callers have no checkbox to enable migration (its static default is false).
+                if (mergeResult.mergedCalibrations.isPresent() &&
+                    (!callbacks.isInteractive() || MigrateSettingsCheckboxState.isMigrationNeeded)) {
                     if (!backUpCalibrationsInfo(
                         mergeResult.mergedCalibrations.get(),
                         getFileNameWithoutExtension(timestampFileNameComponent, "merged_to_write"),
@@ -1226,8 +1228,7 @@ public class CalibrationsHelper {
 
     // package-private for CalibrationsHelperContextTest — reflection in unit tests is prohibited
     static boolean isUiContext(final UpdateOperationCallbacks callbacks) {
-        return callbacks != UpdateOperationCallbacks.DUMMY &&
-               callbacks != UpdateOperationCallbacks.LOGGER;
+        return callbacks.isInteractive();
     }
 
     private static CalibrationBackupFailureAction showCalibrationFailureDialog(

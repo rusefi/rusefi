@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 
 public class CalibrationsHelperContextTest {
 
@@ -61,6 +62,13 @@ public class CalibrationsHelperContextTest {
         };
 
         assertTrue(isUiContext(customCallbacks), "Custom callbacks should be considered UI context");
+    }
+
+    @Test
+    public void customHeadlessCallbacksDoNotOpenMigrationDialogs() {
+        UpdateOperationCallbacks callbacks = mock(UpdateOperationCallbacks.class);
+        when(callbacks.isInteractive()).thenReturn(false);
+        assertFalse(isUiContext(callbacks));
     }
 
     @Test
