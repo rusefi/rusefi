@@ -30,6 +30,7 @@ sandbox class also carries a brief comment on top describing what it does.
 | Sandbox | Purpose |
 | --- | --- |
 | `PCanSandbox` | Reads an ECU signature over a PCAN (Peak CAN) adapter. |
+| `SlcanPortScanner` | Continuously scans serial ports and classifies each as SLCAN sniffer VCP / TS console VCP / other. |
 | `SocketCANSandbox` | Reads an ECU signature over Linux SocketCAN. |
 | `PCanIoProxySandbox` | Bridges a PCAN stream through the CAN connector startup. |
 | `M74_9_UdsSandbox` | Exercises UDS communication (incl. security access) with a BMW M74.9 ECU. |
