@@ -34,6 +34,19 @@ F767-Nucleo:
 This is the same script CI uses: full erase, then write, both with `--connect-under-reset`
 and a few retries. Set `HARDWARE_CI_STLINK_SERIAL` to pick one ST-LINK if several are attached.
 
+Failures include the actual `st-flash` exit code and a probe listing, including
+after the final attempt. The listing covers all attached probes; match its serial
+to the selected programmer. A zero flash size, reset failure, or unknown memory
+region in the command output also triggers a retry even if `st-flash` exits 0.
+For zero flash size or reset failures, check target power, NRST and SWD
+wiring/jumpers before rerunning CI.
+
+To check the wrapper using mocked tools without accessing hardware:
+
+```bash
+python3 .github/workflows/hw-ci/test_st_flash_wipe_and_flash.py
+```
+
 ## run CI:
 ```bash
 .github/workflows/hw-ci/run_hw_ci.sh com.rusefi.HwCiNucleoF7 ../firmware/tunerstudio/generated/rusefi_stm32f767_nucleo.ini

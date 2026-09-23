@@ -33,23 +33,55 @@ if [ -n "${HARDWARE_CI_STLINK_SERIAL:-}" ]; then
 	SERIAL_ARGS=(--serial "$HARDWARE_CI_STLINK_SERIAL")
 fi
 
+ATTEMPT_LOG=$(mktemp) || exit 1
+trap 'rm -f "$ATTEMPT_LOG"' EXIT
+
 # Run an st-flash command until it succeeds or we run out of attempts.
-# Between attempts we re-probe the ST-LINK so the log shows whether the probe
+# After failures, list all probes so the log shows whether the selected probe
 # itself disappeared or only the target refused to attach.
 run_with_retry() {
 	local label=$1
 	shift
-	local attempt
+	local attempt status output reported_failure
+	local -a pipeline_status
 	for attempt in $(seq 1 "$ATTEMPTS"); do
 		echo "[st_flash_wipe_and_flash.sh] $label: attempt $attempt of $ATTEMPTS"
-		if st-flash "${SERIAL_ARGS[@]}" "$@"; then
+		LC_ALL=C st-flash "${SERIAL_ARGS[@]}" "$@" 2>&1 | tee "$ATTEMPT_LOG"
+		pipeline_status=("${PIPESTATUS[@]}")
+		status=${pipeline_status[0]}
+		if [ "${pipeline_status[1]}" -ne 0 ]; then
+			echo "[st_flash_wipe_and_flash.sh] $label: cannot capture diagnostics (st-flash exit $status, tee exit ${pipeline_status[1]})"
+			return 1
+		fi
+		output=$(cat "$ATTEMPT_LOG")
+		reported_failure=false
+		if [[ "$output" =~ (^|[[:space:]])0[[:space:]]+KiB[[:space:]]+flash ]]; then
+			echo "[st_flash_wipe_and_flash.sh] $label: target reports zero flash size; chip/probe identification alone does not confirm usable flash access. Check target power, NRST and SWD wiring/jumpers."
+			reported_failure=true
+		fi
+		if [[ "$output" == *"Soft reset failed"* || "$output" == *"Failed to reset device"* ]]; then
+			echo "[st_flash_wipe_and_flash.sh] $label: target reset failed despite connect-under-reset. Check NRST and target power; st-flash 1.8.0 can return exit 0 after a reset failure."
+			reported_failure=true
+		fi
+		if [[ "$output" == *"Unknown memory region"* ]]; then
+			echo "[st_flash_wipe_and_flash.sh] $label: st-flash rejected the address; check the detected flash size above (zero size also causes this error)."
+			reported_failure=true
+		fi
+		if [ "$status" -eq 0 ] && [ "$reported_failure" = false ]; then
 			echo "[st_flash_wipe_and_flash.sh] $label: OK"
 			return 0
 		fi
-		echo "[st_flash_wipe_and_flash.sh] $label: failed (exit $?)"
+		echo "[st_flash_wipe_and_flash.sh] $label: failed (st-flash exit $status, reported failure: $reported_failure)"
+		echo "[st_flash_wipe_and_flash.sh] Probe diagnostics: all attached probes; selected serial=[${HARDWARE_CI_STLINK_SERIAL:-any}]"
+		if st-info --probe; then
+			:
+		else
+			status=$?
+			echo "[st_flash_wipe_and_flash.sh] st-info --probe failed (exit $status)"
+		fi
 		if [ "$attempt" -lt "$ATTEMPTS" ]; then
+			echo "[st_flash_wipe_and_flash.sh] Retrying $label in $RETRY_DELAY seconds"
 			sleep "$RETRY_DELAY"
-			st-info --probe || true
 		fi
 	done
 	echo "[st_flash_wipe_and_flash.sh] $label: giving up after $ATTEMPTS attempts"

@@ -103,6 +103,10 @@ Use explicitly named `TEST` cases sharing a helper when their traces are needed.
 
 Hardware CI's F407 `HighRevTest` is sensitive to asynchronous settings burns: `setEngineType()` queues a forced save, while the Java helper resumes configuration changes after a fixed sleep. Passing master runs can already contain `Flash: validation failed`; do not treat that message alone as a new regression. In PR #10186, adding a 5 s settings retry backoff moved the next erase from the RPM settling period into the 40 s assertion window, producing `engine stopped`, ~1200 ms coil-overcharge warnings, and 6000 -> 0 RPM failures. Self-stimulation explicitly permits settings writes even on F4, where flash erase stalls execution. Check flash-write timing against the assertion window before investigating trigger decoding. The cause of the original validation mismatches was not established by those logs (concurrent mutation of the live configuration is a candidate).
 
+### Hardware CI ST-LINK diagnostics
+
+With st-flash 1.8.0, `Mass erase completed successfully` followed by `Failed to reset device` can still return exit 0: the erase result remains in `err` when reset failure jumps to cleanup (upstream `src/st-flash/flash.c`). An exit-code-only wrapper therefore cannot establish successful reset. Repeated `0 KiB flash` plus reset timeouts indicates invalid target discovery, even if the probe serial and chip ID are readable; check target power, NRST and SWD connections before blaming the firmware image. The zero size also makes the normal flash base fail st-flash's write-region bounds check (`Unknown memory region`).
+
 ### Simulator Functional Test (local WSL quirks)
 
 `./gradlew simulatorFunctionalTestLauncherWithSimulator` (repo root; also CI `build-simulator.yaml`, Linux-only) launches `simulator/build/rusefi_simulator` and talks TS protocol over TCP :29001. Two local traps, both hit 2026-08-25:
