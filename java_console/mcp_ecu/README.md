@@ -8,6 +8,8 @@ data to host-side `.mlg` files using the Java frontend's binary log format. It c
 also read and write complete TunerStudio-compatible tunes, and convert existing
 binary MLG and text TunerStudio MSL logs to CSV offline. The `update_firmware` tool
 updates firmware via OpenBLT while backing up and migrating the ECU configuration.
+`download_bundle` fetches fresh board or universal autoupdate bundles and returns
+the extracted firmware paths.
 
 ## Architecture
 
@@ -71,6 +73,7 @@ Behavior common to all tools:
 | `wait_for_message` | Block until a message matches a regex. |
 | `read_tune` | Save the complete ECU tune as a `.msq` file. |
 | `write_tune` | Merge, burn, and verify a host-side `.msq` tune on the ECU. |
+| `download_bundle` | Download a fresh board or universal autoupdate bundle, optionally combining the universal console with board firmware. |
 | `update_firmware` | Update via OpenBLT, back up and migrate the configuration, then reconnect. |
 | `reboot` | Reboot the ECU. |
 | `reboot_to_blt` | Reboot the ECU into the OpenBLT bootloader. |
@@ -330,6 +333,54 @@ burn, or readback mismatch returns `success: false` and `verified: false`.
 ```json
 {"name":"write_tune","arguments":{"path":"/tmp/edited-tune.msq"}}
 ```
+
+### `download_bundle`
+
+Downloads a fresh autoupdate ZIP and extracts it into a new directory on the MCP
+server host. No ECU connection is required. This downloads files; flashing is a
+separate `update_firmware` call.
+
+| Argument | Type | Required | Description |
+|---|---|---|---|
+| `board` | string | unless `universal` is true | Board target such as `proteus_f7` or `uaefi`. |
+| `universal` | boolean | no | Default `false`. Download the universal updater bundle. Also supply `board` to add that board's SREC files to the extracted universal bundle. |
+| `branch` | string | no | `development` (default), `master` (alias for development), or an LTS release name such as `lts-26`. |
+| `destination` | string | no | New host directory; must not exist and its parent must exist. Defaults to a new temporary directory. |
+
+Board-specific bundle:
+
+```json
+{"name":"download_bundle","arguments":{"board":"proteus_f7"}}
+```
+
+Universal updater with a board's firmware:
+
+```json
+{"name":"download_bundle","arguments":{"universal":true,"board":"uaefi","branch":"lts-26"}}
+```
+
+Universal updater alone:
+
+```json
+{"name":"download_bundle","arguments":{"universal":true}}
+```
+
+The universal archive ships no firmware. When `board` is also supplied, its
+S-records are added to the extracted bundle while the universal console and
+`release.txt` remain intact. The original ZIP archives are retained separately.
+These are autoupdate archives, not the full installer/driver distribution.
+
+The result contains `directory`, `bundleDirectory`, `archives` (target, source URL,
+local ZIP path, and size), `srecPaths`, and `firmwareIncluded`. When exactly one SREC
+is present, `firmwarePath` is returned for direct use with `update_firmware`.
+Universal-only downloads normally return an empty `srecPaths` list. Board downloads
+fail if no SREC is present or its contents are invalid.
+
+Each call fetches fresh content using the updater's configured download server
+(`RE_UPDATE_URL` override supported), with the public-to-obfuscated archive fallback
+when a board's public ZIP is absent. Existing directories are never overwritten;
+failed downloads/extractions remove their newly created destination. The current
+MCP installation is not replaced or restarted. Allow several minutes for large bundles.
 
 ### `update_firmware`
 

@@ -53,7 +53,7 @@ import static com.devexperts.logging.Logging.getLogging;
  *     <li><code>tools/list</code></li>
  *     <li><code>tools/call</code> for: connect, ecu_info, set_lua, get_lua, lua_reset,
  *         send_command (alias: command), read_output_channel, read_messages,
- *         wait_for_message, read_tune, write_tune, start_data_logging, stop_data_logging, data_logging_status, update_firmware, reboot, reboot_to_blt — see
+ *         wait_for_message, read_tune, write_tune, start_data_logging, stop_data_logging, data_logging_status, download_bundle, update_firmware, reboot, reboot_to_blt — see
  *         java_console/mcp_ecu/README.md for the tool reference</li>
  *     <li><code>notifications/initialized</code></li>
  * </ul>
@@ -414,6 +414,18 @@ public class EcuMcpServer {
                 schemaObject(new String[][]{
                         {"path", "string", "Existing input .msq file path on the MCP server host (not the client)."}
                 }, new String[]{"path"}, false)));
+        tools.add(tool("download_bundle",
+                "Download and extract a fresh autoupdate bundle on the MCP server host, without connecting " +
+                        "to or flashing an ECU. Select a board, the universal updater, or both. The universal " +
+                        "archive alone has no firmware; also specify board to add its SREC to the extracted " +
+                        "universal bundle. Returns archive paths, bundleDirectory, srecPaths, and firmwarePath " +
+                        "when there is one SREC (pass it to update_firmware). May take several minutes.",
+                schemaObject(new String[][]{
+                        {"board", "string", "Board target, e.g. proteus_f7 or uaefi. Required unless universal is true."},
+                        {"universal", "boolean", "Download the universal updater bundle. Default false."},
+                        {"branch", "string", "development (default), master (alias), or an LTS release such as lts-26."},
+                        {"destination", "string", "New directory on the MCP server host; must not exist. Default: a temp directory."}
+                }, new String[]{}, false)));
         tools.add(tool("update_firmware",
                 "Update the connected ECU via OpenBLT and migrate its configuration using the console's " +
                         "backup/flash/restore flow. Requires running firmware over serial or SocketCAN. " +
@@ -465,6 +477,7 @@ public class EcuMcpServer {
                 case "wait_for_message": toolResult = doWaitForMessage(args); break;
                 case "read_tune":   toolResult = doReadTune(args); break;
                 case "write_tune":  toolResult = doWriteTune(args); break;
+                case "download_bundle": toolResult = new BundleDownloader().download(args); break;
                 case "update_firmware": toolResult = doUpdateFirmware(args); break;
                 case "reboot":      toolResult = doReboot(Integration.CMD_REBOOT); break;
                 case "reboot_to_blt": toolResult = doReboot(Integration.CMD_REBOOT_OPENBLT); break;

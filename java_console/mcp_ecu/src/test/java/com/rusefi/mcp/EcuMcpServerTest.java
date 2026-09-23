@@ -70,6 +70,7 @@ class EcuMcpServerTest {
         assertTrue(names.contains("write_tune"));
         assertTrue(names.contains("ecu_info"));
         assertTrue(names.contains("connect"));
+        assertTrue(names.contains("download_bundle"));
         assertTrue(names.contains("update_firmware"));
         assertTrue(names.contains("reboot"));
         assertTrue(names.contains("reboot_to_blt"));
@@ -184,6 +185,16 @@ class EcuMcpServerTest {
                 "{\"firmwarePath\":\"" + JSONObject.escape(directory.resolve("missing.srec").toString()) + "\"}"}) {
             JSONObject envelope = (JSONObject) parse(drive(jsonRpc(1, "tools/call",
                     "{\"name\":\"update_firmware\",\"arguments\":" + arguments + "}") + "\n")[0]).get("result");
+            assertEquals(true, envelope.get("isError"));
+            assertEquals(false, ((JSONObject) envelope.get("structuredContent")).get("success"));
+        }
+    }
+
+    @Test
+    void downloadBundleRejectsInvalidArgumentsThroughMcp() throws Exception {
+        for (String arguments : new String[]{"{}", "{\"board\":\"../uaefi\"}", "{\"universal\":\"true\"}"}) {
+            JSONObject envelope = (JSONObject) parse(drive(jsonRpc(1, "tools/call",
+                    "{\"name\":\"download_bundle\",\"arguments\":" + arguments + "}") + "\n")[0]).get("result");
             assertEquals(true, envelope.get("isError"));
             assertEquals(false, ((JSONObject) envelope.get("structuredContent")).get("success"));
         }
