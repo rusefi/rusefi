@@ -344,10 +344,8 @@ public class CalibrationDialogWidgetTest {
         assertEquals(1, content.getComponentCount());
         JPanel panelWidget = (JPanel) content.getComponent(0);
 
-        // Check title - it should fall back to key "testSpark"
-        assertTrue(panelWidget.getBorder() instanceof GradientTitleBorder);
-        String title = ((GradientTitleBorder) panelWidget.getBorder()).getTitle();
-        assertEquals("testSpark", title, "Title should fall back to key if UI name is empty");
+        assertEquals("testSpark", panelWidget.getName());
+        assertNull(panelWidget.getBorder(), "An explicitly empty UI title must not display the internal key");
 
         // Check command button
         boolean foundButton = false;

@@ -584,11 +584,12 @@ public class CalibrationDialogWidget {
 
         if (subDialog != null) {
             String uiName = subDialog.getUiName();
-            if (uiName == null || uiName.isEmpty()) {
-                uiName = subDialog.getKey();
+            panelWidget.setName(uiName == null || uiName.isEmpty() ? subDialog.getKey() : uiName);
+            // Empty INI titles intentionally group controls without a visible heading/frame.
+            // Indicator and readout panels use this too; their keys are only internal IDs.
+            if (uiName != null && !uiName.trim().isEmpty()) {
+                GradientTitleBorder.installBorder(uiName, panelWidget);
             }
-            panelWidget.setName(uiName);
-            GradientTitleBorder.installBorder(uiName, panelWidget);
             fillPanel(panelWidget, subDialog, iniFileModel, ci,
                 Math.max(0, fieldLabelWidth - panelWidget.getInsets().left), fieldEditorWidth);
 
