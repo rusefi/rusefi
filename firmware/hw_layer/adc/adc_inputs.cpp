@@ -189,6 +189,10 @@ extern void adcOnchipSlowUpdate(efitick_t nowNt);
 void adcInputsUpdateSubscribers(efitick_t nowNt) {
 	adcOnchipSlowUpdate(nowNt);
 
+#if EFI_USE_FAST_ADC
+	fastAdc.reportErrors();
+#endif
+
 	{
 		ScopePerf perf(PE::AdcProcessSlow);
 
