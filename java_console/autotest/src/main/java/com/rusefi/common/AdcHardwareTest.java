@@ -19,12 +19,13 @@ import static org.junit.Assert.assertTrue;
  *
  * Wiring for {@link MapAnalogHardwareTest} (not needed for the counter tests):
  * <ul>
- *   <li>STM32F407 Discovery: 3V3 - 10 kOhm - PA4 (MAP / ADC4) - 10 kOhm - GND.</li>
+ *   <li>STM32F407 Discovery: 3V - 10 kOhm - PA4 (MAP / ADC4) - 10 kOhm - GND.</li>
  *   <li>NUCLEO-F767ZI: 3V3 - 10 kOhm - PC3 (MAP / ADC13) - 10 kOhm - GND.</li>
  *   <li>UAEFI Rev E: jumper D15 (IAT) to D9 (MAP / PC0 / ADC10), with both sensors
  *       disconnected. Uses the onboard IAT 4.7 kOhm pull-up; no extra resistor needed.</li>
  * </ul>
- * Discovery/Nucleo: 1.65 V at the MCU, reported as 3.3 V with default 2x scaling.
+ * The divider gives about 1.5 V on Discovery and 1.65 V on Nucleo.
+ * Set HARDWARE_CI_MAP_VOLTAGE=3.0 for Discovery or 3.3 for Nucleo.
  * UAEFI: about 5 V at the connector, divided to 2.5 V by the onboard frontend.
  * Set HARDWARE_CI_MAP_VOLTAGE=5.0 for UAEFI. Never wire its 5 V supply directly
  * to a Discovery/Nucleo ADC pin.

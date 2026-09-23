@@ -9,7 +9,8 @@ import static org.junit.Assert.assertTrue;
 /**
  * Checks slow and fast MAP voltage. See {@link AdcHardwareTest} for wiring.
  *
- * F407/F767: expect 3.3 V (1.65 V at the MCU with the default 2x scaling).
+ * Set HARDWARE_CI_MAP_VOLTAGE to the fixture's expected scaled voltage:
+ * F407 Discovery: 3.0 V. F767 Nucleo: 3.3 V (the default).
  * UAEFI Rev E: set HARDWARE_CI_MAP_VOLTAGE=5.0 for the IAT-to-MAP jumper.
  * Allows 10% voltage tolerance, like the Proteus supply test.
  */

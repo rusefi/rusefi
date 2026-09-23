@@ -13,7 +13,7 @@ import com.rusefi.io.CommandQueue;
  * PD1 (output) <=> PC6 (PAL/ICU input)
  * PD2 (output) <=> PA5 (PAL/ICU input)
  *
- * Analog MAP fixture: 3V3 - 10 kOhm - PA4 - 10 kOhm - GND (see AdcHardwareTest).
+ * Analog MAP fixture: 3V - 10 kOhm - PA4 - 10 kOhm - GND (see AdcHardwareTest).
  *
  * <p>
  * <p>

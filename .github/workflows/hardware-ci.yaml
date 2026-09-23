@@ -33,12 +33,14 @@ jobs:
             test-suite-ini: firmware/tunerstudio/generated/rusefi_f407-discovery.ini
             folder: config/boards/f407-discovery
             vbatt_supply: 12
+            map-voltage: '3.0'
 
           - build-target: nucleo_f767
             runs-on: hw-ci-nucleo-f7
             test-suite: com.rusefi.HwCiNucleoF7
             test-suite-ini: firmware/tunerstudio/generated/rusefi_stm32f767_nucleo.ini
             folder: config/boards/nucleo_f767
+            map-voltage: '3.3'
 
 
 #          - build-target: proteus_f4
@@ -150,5 +152,6 @@ jobs:
     # This both compiles and runs HW CI tests
     # .github/workflows/hw-ci/run_hw_ci.sh com.rusefi.HwCiF4Discovery
     - name: Run Hardware CI
+      env:
+        HARDWARE_CI_MAP_VOLTAGE: ${{matrix.map-voltage}}
       run: .github/workflows/hw-ci/run_hw_ci.sh ${{matrix.test-suite}} ${{matrix.test-suite-ini}}
-
