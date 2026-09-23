@@ -8,13 +8,13 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.FieldType;
 import com.rusefi.core.OutputChannelSnapshot;
 import com.rusefi.core.SensorCentral;
-import com.rusefi.ui.UIContext;
 import com.rusefi.ini.reader.IniFileReaderUtil;
+import com.rusefi.ui.UIContext;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import java.nio.ByteBuffer;
 import java.io.ByteArrayOutputStream;
+import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -51,9 +51,47 @@ class SensorLoggerTest {
         log.close();
         ByteBuffer data = ByteBuffer.wrap(output.toByteArray()).order(ByteOrder.BIG_ENDIAN);
         assertEquals(1, data.getShort(22));
-        // Reproduction: the declared "RPM" label is ignored in favor of the lowercase map key.
-        assertEquals("rpmvalue", readFieldName(data, 0));
+        assertEquals("RPM", readFieldName(data, 0));
         assertEquals(1234, data.getShort(data.getInt(16) + 4));
+    }
+
+    @Test
+    void datalogOrderKeepsLabelsAttachedToValuesAndUnlistedChannels() throws Exception {
+        String text = "[MegaTune]\nsignature = test\n[Constants]\npageSize = 0\n"
+                + "pageReadCommand = R\nochBlockSize = 6\n"
+                + "[OutputChannels]\nMAPValue = scalar, U16, 0, \"kPa\", 0.1, 0\n"
+                + "coolant = scalar, S16, 2, \"deg C\", 0.01, 0\n"
+                + "isCltError = bits, U08, 4, [2:2]\n"
+                + "rawClt = scalar, U08, 5, \"V\", 0.1, 0\n"
+                + "computed = { coolant * 2 }\n"
+                + "[Datalog]\nentry = time, \"Time\", float, \"%.3f\"\n"
+                + "entry = COOLANT, \"CLT\", float, \"%.2f\"\n"
+                + "entry = isCltError, \"Error: CLT\", int, \"%d\"\n"
+                + "entry = computed, \"Computed\", float, \"%.2f\"\n"
+                + "entry = mapvalue, \"MAP\", float, \"%.1f\"\n";
+        Path iniPath = tempDir.resolve("ordered.ini");
+        Files.writeString(iniPath, text);
+        IniFileModel ini = IniFileReaderUtil.readIniFile(iniPath.toString());
+        byte[] response = {0, (byte) 0xe8, 3, (byte) 0x85, (byte) 0xff, 4, 25};
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        BinarySensorLog<CustomBinaryLogEntry> log = new BinarySensorLog<>(
+                entry -> entry.getValue(response), SensorLogger.getOutputChannels(ini), output);
+        log.writeSensorLogLineChecked();
+        log.close();
+        ByteBuffer data = ByteBuffer.wrap(output.toByteArray()).order(ByteOrder.BIG_ENDIAN);
+        assertEquals(4, data.getShort(22), "No duplicate MAP alias or unsupported computed channels");
+        assertEquals("CLT", readFieldName(data, 0));
+        assertEquals("Error: CLT", readFieldName(data, 1));
+        assertEquals("MAP", readFieldName(data, 2));
+        assertEquals("rawClt", readFieldName(data, 3), "Unlisted channels retain their original case");
+        assertEquals(0.01f, data.getFloat(24 + 46));
+        assertEquals(0.1f, data.getFloat(24 + 2 * 89 + 46));
+        data.position(data.getInt(16) + 4);
+        assertEquals(-123, data.getShort());
+        assertEquals(1, data.get());
+        assertEquals(1000, data.getShort());
+        assertEquals(25, data.get());
+        assertEquals(1, data.remaining());
     }
 
     @Test

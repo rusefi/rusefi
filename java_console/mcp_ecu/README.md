@@ -217,6 +217,9 @@ Existing files are never overwritten. Starting while already recording fails and
 leaves the active recording intact. Records all supported numeric and enum output
 channels from the connected ECU's `.ini`, using the same field selection and binary
 MLG format as the frontend. Computed expression channels are not included.
+Fields use the INI's `[Datalog]` display labels and declaration order, matching
+TunerStudio names such as `RPM`, `CLT`, and `Ign: Timing Cyl 1`. Recordable channels
+without a datalog entry are appended using their original INI identifiers.
 
 By default, start reads the ECU's configuration pages afresh on the communication
 thread and saves a TunerStudio `.msq` tune beside the data log before recording

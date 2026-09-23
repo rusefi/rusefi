@@ -12,6 +12,7 @@ public class ImmutableIniFileModel implements IniFileModel {
     private final Map<String, IniField> allIniFields;
     private final Map<String, IniField> secondaryIniFields;
     private final Map<String, IniField> allOutputChannels;
+    private final List<DatalogEntry> datalogEntries;
     private final Map<String, String> expressionOutputChannels;
     private final Map<String, String> protocolMeta;
     private final IniFileMetaInfo metaInfo;
@@ -56,6 +57,7 @@ public class ImmutableIniFileModel implements IniFileModel {
                                  Map<String, IniField> allIniFields,
                                  Map<String, IniField> secondaryIniFields,
                                  Map<String, IniField> allOutputChannels,
+                                 List<DatalogEntry> datalogEntries,
                                  Map<String, String> expressionOutputChannels,
                                  Map<String, String> protocolMeta,
                                  IniFileMetaInfo metaInfo,
@@ -85,6 +87,7 @@ public class ImmutableIniFileModel implements IniFileModel {
         this.allIniFields = copyWithCaseInsensitiveOrderedKeys(allIniFields);
         this.secondaryIniFields = copyWithCaseInsensitiveOrderedKeys(secondaryIniFields);
         this.allOutputChannels = copyWithCaseInsensitiveKeys(allOutputChannels);
+        this.datalogEntries = Collections.unmodifiableList(new ArrayList<>(datalogEntries));
         this.expressionOutputChannels = copyWithCaseInsensitiveKeys(expressionOutputChannels);
         this.protocolMeta = Collections.unmodifiableMap(new TreeMap<>(protocolMeta));
         this.metaInfo = metaInfo;
@@ -207,6 +210,11 @@ public class ImmutableIniFileModel implements IniFileModel {
     @Override
     public Map<String, IniField> getAllOutputChannels() {
         return allOutputChannels;
+    }
+
+    @Override
+    public List<DatalogEntry> getDatalogEntries() {
+        return datalogEntries;
     }
 
     @Override

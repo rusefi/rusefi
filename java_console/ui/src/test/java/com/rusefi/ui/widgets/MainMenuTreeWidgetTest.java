@@ -563,6 +563,7 @@ todo: spllit into smaller tests?
             }
             @Override public com.opensr5.ini.field.IniField getIniField(com.rusefi.config.Field field) { return null; }
             @Override public com.opensr5.ini.field.IniField getIniField(String key) { return null; }
+            @Override public java.util.List<com.opensr5.ini.DatalogEntry> getDatalogEntries() { return java.util.Collections.emptyList(); }
             @Override public com.opensr5.ini.field.IniField getOutputChannel(String key) { return null; }
             @Override public Map<String, com.opensr5.ini.field.IniField> getAllOutputChannels() { return java.util.Collections.emptyMap(); }
             @Override public String getExpressionOutputChannel(String key) { return null; }

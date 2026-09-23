@@ -17,6 +17,24 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ImmutableIniFileModelTest {
 
     @Test
+    public void datalogPreservesDeclarationOrderLabelsAndSectionBoundaries() {
+        String text = "[datalog]\n"
+                + "entry = RPMValue, \"RPM\", int, \"%d\"\n"
+                + "entry = ignitionAdvanceCyl1, \"Ign: Timing Cyl 1\", float, \"%.3f\"\n"
+                + "entry = RPMValue, \"Engine, speed\", int, \"%d\"\n"
+                + "[Other]\nentry = ignored, \"Ignored\", int, \"%d\"\n";
+        IniFileModel model = IniFileReaderTest.readLines(IniFileReaderUtil.read(
+                new ByteArrayInputStream(text.getBytes(java.nio.charset.StandardCharsets.US_ASCII))));
+        assertEquals(3, model.getDatalogEntries().size());
+        assertEquals("RPMValue", model.getDatalogEntries().get(0).getChannel());
+        assertEquals("RPM", model.getDatalogEntries().get(0).getLabel());
+        assertEquals("ignitionAdvanceCyl1", model.getDatalogEntries().get(1).getChannel());
+        assertEquals("Ign: Timing Cyl 1", model.getDatalogEntries().get(1).getLabel());
+        assertEquals("Engine, speed", model.getDatalogEntries().get(2).getLabel());
+        assertThrows(UnsupportedOperationException.class, () -> model.getDatalogEntries().clear());
+    }
+
+    @Test
     public void testFindIniFieldInPrimaryFields() {
         String string =
             "[Constants]\n" +

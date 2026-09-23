@@ -1,6 +1,7 @@
 package com.rusefi.mcp;
 
 import com.opensr5.ConfigurationImage;
+import com.opensr5.ini.DatalogEntry;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniMemberNotFound;
 import com.opensr5.ini.field.IniField;
@@ -33,6 +34,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -236,6 +238,9 @@ class EcuMcpServerOutputChannelTest {
         assertEquals("MLVLG\0", new String(bytes, 0, 6, StandardCharsets.US_ASCII));
         ByteBuffer data = ByteBuffer.wrap(bytes).order(ByteOrder.BIG_ENDIAN);
         assertEquals(3, data.getShort(22));
+        assertEquals("Seconds", readFieldName(bytes, 0));
+        assertEquals("RPM", readFieldName(bytes, 1));
+        assertEquals("CLT", readFieldName(bytes, 2));
         int dataStart = data.getInt(16);
         int rowSize = data.getShort(20) + 5;
         assertEquals(dataStart + samples * rowSize, bytes.length);
@@ -246,6 +251,10 @@ class EcuMcpServerOutputChannelTest {
             assertEquals(RPM, data.getShort());
             assertEquals(CLT_RAW, data.getShort());
         }
+    }
+
+    private static String readFieldName(byte[] bytes, int index) {
+        return new String(bytes, 24 + index * 89 + 1, 34, StandardCharsets.US_ASCII).trim();
     }
 
     /**
@@ -303,6 +312,10 @@ class EcuMcpServerOutputChannelTest {
         byName.putAll(channels);
 
         when(ini.getAllOutputChannels()).thenReturn(channels);
+        when(ini.getDatalogEntries()).thenReturn(Arrays.asList(
+                new DatalogEntry("seconds", "Seconds"),
+                new DatalogEntry("RPMValue", "RPM"),
+                new DatalogEntry("CLTValue", "CLT")));
         when(ini.getOutputChannel(anyString())).thenAnswer(invocation -> {
             IniField field = byName.get(invocation.<String>getArgument(0));
             if (field == null) {

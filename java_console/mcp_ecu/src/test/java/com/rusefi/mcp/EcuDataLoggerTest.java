@@ -88,6 +88,7 @@ class EcuDataLoggerTest {
         IniFileModel ini = ini();
         // Force a row-encoding failure after the header has been written successfully.
         ScalarIniField broken = mock(ScalarIniField.class);
+        when(broken.getName()).thenReturn("rpm");
         when(broken.getType()).thenReturn(FieldType.UINT16);
         when(broken.getUnits()).thenReturn("RPM");
         when(broken.getOffset()).thenThrow(new IllegalStateException("encoding failed"));

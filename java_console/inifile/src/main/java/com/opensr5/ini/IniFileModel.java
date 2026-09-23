@@ -33,6 +33,9 @@ public interface IniFileModel {
 
     Map<String, IniField> getAllOutputChannels();
 
+    /** Display labels in INI [Datalog] declaration order. */
+    List<DatalogEntry> getDatalogEntries();
+
     /**
      * Get an expression-based output channel by name.
      * These are calculated channels like: coolantTemperature = { useMetricOnInterface ? coolant : (coolant * 1.8 + 32) }

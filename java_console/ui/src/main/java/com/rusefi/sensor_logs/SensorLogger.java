@@ -1,5 +1,6 @@
 package com.rusefi.sensor_logs;
 
+import com.opensr5.ini.DatalogEntry;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
@@ -13,8 +14,11 @@ import com.rusefi.ui.UIContext;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 import static com.rusefi.config.generated.VariableRegistryValues.GAUGE_NAME_MAP;
 import static com.rusefi.core.SensorNames.MAPGauge;
@@ -35,19 +39,34 @@ public class SensorLogger {
 
     public static List<CustomBinaryLogEntry> getOutputChannels(IniFileModel iniFileModel) {
         List<CustomBinaryLogEntry> outputChannels = new ArrayList<>();
-        for (Map.Entry<String, IniField> entry : iniFileModel.getAllOutputChannels().entrySet()) {
-            IniField field = entry.getValue();
-            if (field instanceof EnumIniField
-                    || (field instanceof ScalarIniField
-                    && ((ScalarIniField) field).getType() != FieldType.BIT
-                    && ((ScalarIniField) field).getType() != FieldType.STRING)) {
-                outputChannels.add(new CustomBinaryLogEntry(entry.getKey(), field));
-                if (MAPGauge.equals(entry.getKey())) {
+        Map<String, IniField> fieldsByName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        fieldsByName.putAll(iniFileModel.getAllOutputChannels());
+        Set<IniField> labeledFields = new HashSet<>();
+        for (DatalogEntry entry : iniFileModel.getDatalogEntries()) {
+            IniField field = fieldsByName.get(entry.getChannel());
+            // Computed and host-only channels (including TS 'time') have no raw field.
+            if (isRecordable(field)) {
+                outputChannels.add(new CustomBinaryLogEntry(entry.getLabel(), field));
+                labeledFields.add(field);
+            }
+        }
+        // Preserve coverage for INIs with missing or incomplete [Datalog] sections.
+        for (IniField field : iniFileModel.getAllOutputChannels().values()) {
+            if (isRecordable(field) && !labeledFields.contains(field)) {
+                outputChannels.add(new CustomBinaryLogEntry(field.getName(), field));
+                if (MAPGauge.equalsIgnoreCase(field.getName())) {
                     outputChannels.add(new CustomBinaryLogEntry(GAUGE_NAME_MAP, field));
                 }
             }
         }
         return outputChannels;
+    }
+
+    private static boolean isRecordable(IniField field) {
+        return field instanceof EnumIniField
+                || (field instanceof ScalarIniField
+                && ((ScalarIniField) field).getType() != FieldType.BIT
+                && ((ScalarIniField) field).getType() != FieldType.STRING);
     }
 
     private final UIContext uiContext;

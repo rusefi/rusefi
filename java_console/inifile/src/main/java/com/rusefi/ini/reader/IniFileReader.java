@@ -25,6 +25,7 @@ public class IniFileReader {
                 allIniFields,
                 secondaryIniFields,
                 allOutputChannels,
+                datalogEntries,
                 expressionOutputChannels,
                 protocolMeta,
                 getMetaInfo(),
@@ -77,6 +78,7 @@ public class IniFileReader {
     private final Map<String, IniField> allIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<String, IniField> secondaryIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<String, IniField> allOutputChannels = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    private final List<DatalogEntry> datalogEntries = new ArrayList<>();
     // Expression-based output channels like: coolantTemperature = { useMetricOnInterface ? coolant : (coolant * 1.8 + 32) }
     private final Map<String, String> expressionOutputChannels = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public final Map<String, DialogModel.Field> fieldsInUiOrder = new LinkedHashMap<>();
@@ -85,6 +87,7 @@ public class IniFileReader {
     private final Map<String, String> protocolMeta = new TreeMap<>();
     private boolean isConstantsSection;
     private boolean isOutputChannelsSection;
+    private boolean isDatalogSection;
     private boolean isPcVariablesSection;
     private final IniFileMetaInfo metaInfo;
     private final String iniFilePath;
@@ -236,6 +239,7 @@ public class IniFileReader {
                 }
                 isConstantsSection = first.equals("[Constants]");
                 isOutputChannelsSection = first.equals("[OutputChannels]");
+                isDatalogSection = first.equalsIgnoreCase("[Datalog]");
                 isPcVariablesSection = first.equalsIgnoreCase("[PcVariables]");
                 isGaugeConfigurationsSection = first.equalsIgnoreCase("[GaugeConfigurations]");
                 isTableEditorSection = first.equalsIgnoreCase("[TableEditor]");
@@ -269,6 +273,11 @@ public class IniFileReader {
                 }
             } else if (isOutputChannelsSection) {
                 handleOutputChannelDefinition(list);
+                return;
+            } else if (isDatalogSection) {
+                if (first.equalsIgnoreCase("entry") && list.size() >= 3) {
+                    datalogEntries.add(new DatalogEntry(list.get(1), list.get(2)));
+                }
                 return;
             } else if (isPcVariablesSection) {
                 handlePcVariableDefinition(list, line);
