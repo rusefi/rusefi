@@ -4,6 +4,8 @@ This document covers the MCP (Model Context Protocol) servers shipped with the r
 
 See also: `java_console/mcp_ecu/README.md`, `java_console/mcp_can/README.md`.
 
+For crank/cam and ignition/injection diagnostics, see [Engine Sniffer](docs/AI/engine_sniffer.md), including relevant ECU MCP tools and current waveform-capture limitations.
+
 #### Available MCP servers
 
 | Module | Transport | Purpose |
