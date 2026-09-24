@@ -26,6 +26,7 @@ import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.io.UnsupportedEcuInfo;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.io.*;
+import com.rusefi.io.can.PCanIoStream;
 import com.rusefi.io.commands.*;
 import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.ui.livedocs.LiveDocsRegistry;
@@ -41,6 +42,7 @@ import java.util.BitSet;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.*;
+import java.util.function.LongSupplier;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.binaryprotocol.IoHelper.*;
@@ -70,6 +72,7 @@ public class BinaryProtocol {
     // close must be able to clear the UI while a command is waiting for a response.
     private final Object publicationLock = new Object();
     private final Integer blockingFactorOverride;
+    private final LongSupplier currentTimeMillis;
     private boolean isBurnPending;
     private long lastOutputFallbackGeneration = Long.MIN_VALUE;
     private volatile boolean lastOutputPollWasFull = true;
@@ -143,13 +146,19 @@ public class BinaryProtocol {
     public final CommunicationLoggingListener communicationLoggingListener;
 
     public BinaryProtocol(LinkManager linkManager, IoStream stream) {
-        this(linkManager, stream, BLOCKING_FACTOR_OVERRIDE);
+        this(linkManager, stream, BLOCKING_FACTOR_OVERRIDE, System::currentTimeMillis);
     }
 
     BinaryProtocol(LinkManager linkManager, IoStream stream, Integer blockingFactorOverride) {
+        this(linkManager, stream, blockingFactorOverride, System::currentTimeMillis);
+    }
+
+    BinaryProtocol(LinkManager linkManager, IoStream stream, Integer blockingFactorOverride,
+                   LongSupplier currentTimeMillis) {
         this.linkManager = linkManager;
         this.stream = Objects.requireNonNull(stream);
         this.blockingFactorOverride = blockingFactorOverride;
+        this.currentTimeMillis = Objects.requireNonNull(currentTimeMillis);
 
         communicationLoggingListener = linkManager.messageListener::postMessage;
 
@@ -487,9 +496,9 @@ public class BinaryProtocol {
 
         int offset = 0;
 
-        long start = System.currentTimeMillis();
+        long start = currentTimeMillis.getAsLong();
 
-        while (offset < image.getSize() && (System.currentTimeMillis() - start < Timeouts.READ_IMAGE_TIMEOUT)) {
+        while (offset < image.getSize() && (currentTimeMillis.getAsLong() - start < Timeouts.READ_IMAGE_TIMEOUT)) {
             if (stream.isClosed())
                 return ConfigurationImageWithMeta.VOID;
 
@@ -524,8 +533,13 @@ public class BinaryProtocol {
                 }
                 String code = (response == null || response.length == 0) ? "empty" : "ERROR_CODE=" + getCode(response);
                 String info = response == null ? "NO RESPONSE" : (code + " length=" + response.length);
-                log.info(stream + ": readImage: ERROR UNEXPECTED Something is wrong, retrying... " + info);
-                // todo: looks like forever retry? that's weird
+                if (stream instanceof PCanIoStream) {
+                    // Reconnect to discard any partial ISO-TP response.
+                    log.error(stream + ": image read failed at offset " + offset + ": " + info);
+                    stream.close();
+                    return ConfigurationImageWithMeta.VOID;
+                }
+                log.info(stream + ": image read failed at offset " + offset + "; retrying: " + info);
                 continue;
             }
 
@@ -534,12 +548,35 @@ public class BinaryProtocol {
                     return ConfigurationImageWithMeta.VOID;
                 }
                 HeartBeatListeners.onDataArrived();
+                // Stay LOADING until the complete image passes CRC validation.
                 ConnectionStatusLogic.INSTANCE.markConnected();
             }
             System.arraycopy(response, 1, image.getContent(), offset, requestSize);
 
             offset += requestSize;
         }
+
+        // Never save or publish a partial image.
+        if (offset != image.getSize()) {
+            log.error(stream + ": image read timeout: " + offset + "/" + image.getSize() + " bytes");
+            return ConfigurationImageWithMeta.VOID;
+        }
+
+        Integer controllerCrc = getValidatedCrcFromController(image.getSize());
+        if (stream.isClosed()) {
+            return ConfigurationImageWithMeta.VOID;
+        }
+        if (controllerCrc == null) {
+            log.error(stream + ": missing or invalid ECU image CRC");
+            return ConfigurationImageWithMeta.VOID;
+        }
+        int imageCrc = IoHelper.getCrc32(image.getContent());
+        if (imageCrc != controllerCrc) {
+            log.error(String.format("%s: calibration CRC mismatch: image=0x%x controller=0x%x",
+                stream, imageCrc, controllerCrc));
+            return ConfigurationImageWithMeta.VOID;
+        }
+
         return imageWithMeta;
     }
 
@@ -609,14 +646,9 @@ public class BinaryProtocol {
     ) {
         Objects.requireNonNull(arguments);
         final ConfigurationImageWithMeta imageWithMeta = readFullImageFromController(meta);
-        if (arguments.saveFile) {
+        if (arguments.saveFile && !imageWithMeta.isEmpty()) {
             try {
-                saveConfigurationImageToFiles(
-                    imageWithMeta,
-                    iniFile,
-                    (ConnectionAndMeta.saveSettingsToFile() ? BinaryProtocolLocalCache.CONFIGURATION_RUSEFI_BINARY : null),
-                    BinaryProtocolLocalCache.CONFIGURATION_RUSEFI_XML
-                );
+                saveConfigurationImage(imageWithMeta, iniFile);
             } catch (JAXBException e) {
                 log.error("JAXBException", e);
             } catch (final IOException | OrdinalOutOfRangeException e) {
@@ -627,6 +659,15 @@ public class BinaryProtocol {
             }
         }
         return imageWithMeta;
+    }
+
+    void saveConfigurationImage(ConfigurationImageWithMeta image, IniFileModel iniFile) throws JAXBException, IOException {
+        saveConfigurationImageToFiles(
+            image,
+            iniFile,
+            (ConnectionAndMeta.saveSettingsToFile() ? BinaryProtocolLocalCache.CONFIGURATION_RUSEFI_BINARY : null),
+            BinaryProtocolLocalCache.CONFIGURATION_RUSEFI_XML
+        );
     }
 
     private static String getCode(byte[] response) {
@@ -653,6 +694,12 @@ public class BinaryProtocol {
     }
 
     public int getCrcFromController(int configSize) {
+        Integer crc = getValidatedCrcFromController(configSize);
+        return crc == null ? -1 : crc;
+    }
+
+    @Nullable
+    Integer getValidatedCrcFromController(int configSize) {
         byte[] packet = createRequestCrcPayload(configSize);
         byte[] response = executeCommand(Integration.TS_CRC_CHECK_COMMAND, packet, "get CRC32");
 
@@ -667,7 +714,7 @@ public class BinaryProtocol {
             log.info(String.format("rusEFI says tune CRC16 0x%x %d\n", crc16FromController, crc16FromController));
             return crc32FromController;
         } else {
-            return  -1;
+            return null;
         }
     }
 

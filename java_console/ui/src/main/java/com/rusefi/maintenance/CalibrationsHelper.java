@@ -829,6 +829,10 @@ public class CalibrationsHelper {
             final ConfigurationImageMetaVersion0_0 meta = new ConfigurationImageMetaVersion0_0(pageSize, signature);
             callbacks.logLine("Reading current calibrations...");
             final ConfigurationImageWithMeta image = binaryProtocol.readFullImageFromController(meta);
+            if (image.isEmpty()) {
+                callbacks.logLine("Main calibration image is missing or invalid");
+                return Optional.empty();
+            }
             final Map<Integer, ConfigurationImageWithMeta> pages = new TreeMap<>();
             pages.put(0, image);
             for (int pageIndex = 1; pageIndex < iniFile.getMetaInfo().getnPages(); pageIndex++) {

@@ -27,6 +27,7 @@ import static com.rusefi.config.generated.VariableRegistryValues.CAN_ECU_SERIAL_
 
 public class PCanIoStream extends AbstractIoStream {
     private static final int INFO_SKIP_RATE = 3 - 00;
+    private static final int FLOW_CONTROL_TIMEOUT_MS = 200;
     static Logging log = getLogging(PCanIoStream.class);
 
     private final IncomingDataBuffer dataBuffer;
@@ -34,6 +35,11 @@ public class PCanIoStream extends AbstractIoStream {
     private final StatusConsumer statusListener;
     private final Supplier<Executor> readerExecutorFactory;
     private final Sleeper sleeper;
+    private final Object flowControlMonitor = new Object();
+    private boolean waitingForFlowControl;
+    private boolean flowControlTerminal;
+    private FlowControl flowControl;
+    private volatile DataListener inputListener;
 
     private final RateCounter totalCounter = new RateCounter();
     private final RateCounter isoTpCounter = new RateCounter();
@@ -42,12 +48,22 @@ public class PCanIoStream extends AbstractIoStream {
         protected void onTpFirstFrame() {
             sendCanPacket(DefaultFlowControl.FLOW_CONTROL);
         }
+
+        @Override
+        protected void onTpDecodeError(String message) {
+            throw new IllegalStateException(message);
+        }
     };
 
     private final IsoTpConnector isoTpConnector = new IsoTpConnector(VariableRegistryValues.CAN_ECU_SERIAL_RX_ID) {
         @Override
         public void sendCanData(byte[] total) {
             sendCanPacket(total);
+        }
+
+        @Override
+        public void receiveData() {
+            awaitFlowControl();
         }
     };
     private int logSkipRate;
@@ -107,27 +123,146 @@ public class PCanIoStream extends AbstractIoStream {
         this.statusListener = statusListener;
         this.readerExecutorFactory = readerExecutorFactory;
         this.sleeper = sleeper;
-        dataBuffer = createDataBuffer();
+        // One reader feeds both the buffer and the optional listener.
+        dataBuffer = new IncomingDataBuffer(getClass().getSimpleName(), getStreamStats());
+        startReader();
     }
 
     @Override
     public void write(byte[] bytes) throws IOException {
+        boolean multiFrame = bytes.length > 7;
+        if (multiFrame) {
+            prepareForFlowControl();
+        }
         try {
             IsoTpConnector.sendStrategy(bytes, isoTpConnector);
         } catch (UncheckedIOException e) {
+            close();
             throw e.getCause();
+        } catch (RuntimeException e) {
+            close();
+            throw e;
+        } finally {
+            if (multiFrame) {
+                cancelFlowControlWait();
+            }
         }
     }
 
-    @Override
-    public void setInputListener(DataListener listener) {
+    private void prepareForFlowControl() {
+        synchronized (flowControlMonitor) {
+            waitingForFlowControl = true;
+            flowControlTerminal = false;
+            flowControl = null;
+        }
+    }
+
+    private void cancelFlowControlWait() {
+        synchronized (flowControlMonitor) {
+            waitingForFlowControl = false;
+            flowControlTerminal = false;
+            flowControl = null;
+            flowControlMonitor.notifyAll();
+        }
+    }
+
+    private void awaitFlowControl() {
+        final long deadline = System.nanoTime() + FLOW_CONTROL_TIMEOUT_MS * 1_000_000L;
+        while (true) {
+            FlowControl received;
+            synchronized (flowControlMonitor) {
+                while (waitingForFlowControl && flowControl == null && !isClosed()) {
+                    long remainingNanos = deadline - System.nanoTime();
+                    if (remainingNanos <= 0) {
+                        throw flowControlFailure("ISO-TP Flow Control timeout");
+                    }
+                    try {
+                        flowControlMonitor.wait(Math.max(1, (remainingNanos + 999_999L) / 1_000_000L));
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        throw flowControlFailure("ISO-TP Flow Control wait interrupted", e);
+                    }
+                }
+                if (!waitingForFlowControl || isClosed()) {
+                    throw flowControlFailure("PCAN closed during Flow Control wait");
+                }
+                received = flowControl;
+                flowControl = null;
+            }
+
+            if (received.failure != null) {
+                throw flowControlFailure(received.failure);
+            }
+            if (received.status == 1) {
+                // Keep waiting for CTS.
+                continue;
+            }
+            return;
+        }
+    }
+
+    private boolean publishFlowControl(byte[] payload) {
+        synchronized (flowControlMonitor) {
+            if (!waitingForFlowControl) {
+                return true;
+            }
+            if (flowControlTerminal) {
+                return true;
+            }
+            if (payload.length < 3) {
+                flowControl = FlowControl.failure("Malformed ISO-TP Flow Control");
+            } else {
+                int status = payload[0] & 0x0f;
+                int blockSize = payload[1] & 0xff;
+                int separationTime = payload[2] & 0xff;
+                String failure = null;
+                if (status == 0 && blockSize != 0) {
+                    failure = "Unsupported ISO-TP block size: " + blockSize;
+                } else if (status == 0 && separationTime != 0) {
+                    failure = "Unsupported ISO-TP STmin: " + separationTime;
+                } else if (status == 2) {
+                    failure = "ECU aborted ISO-TP transfer";
+                } else if (status != 0 && status != 1) {
+                    failure = "Unknown ISO-TP Flow Control status: " + status;
+                }
+                flowControl = new FlowControl(status, failure);
+            }
+            flowControlTerminal = flowControl.status != 1;
+            flowControlMonitor.notifyAll();
+            return true;
+        }
+    }
+
+    private static final class FlowControl {
+        final int status;
+        final String failure;
+
+        FlowControl(int status, String failure) {
+            this.status = status;
+            this.failure = failure;
+        }
+
+        static FlowControl failure(String message) {
+            return new FlowControl(-1, message);
+        }
+    }
+
+    private UncheckedIOException flowControlFailure(String message) {
+        return new UncheckedIOException(new IOException(message));
+    }
+
+    private UncheckedIOException flowControlFailure(String message, Throwable cause) {
+        return new UncheckedIOException(new IOException(message, cause));
+    }
+
+    private void startReader() {
         Executor threadExecutor = readerExecutorFactory.get();
         try {
             threadExecutor.execute(() -> {
                 try {
                     while (!isClosed()) {
                         try {
-                            readOnePacket(listener);
+                            readOnePacket();
                         } catch (IOException e) {
                             if (!isClosed()) {
                                 statusListener.logLine("Unable to read the CAN message: " + e.getMessage());
@@ -146,6 +281,11 @@ public class PCanIoStream extends AbstractIoStream {
         }
     }
 
+    @Override
+    public void setInputListener(DataListener listener) {
+        inputListener = listener;
+    }
+
     private void closeStreamAndReaderExecutor(Executor executor) {
         try {
             // A failed decoder/listener or rejected task must not retain the native channel.
@@ -157,7 +297,7 @@ public class PCanIoStream extends AbstractIoStream {
         }
     }
 
-    private void readOnePacket(DataListener listener) throws IOException {
+    private void readOnePacket() throws IOException {
         Optional<ClassicCanFrame> received = can.receive(100);
         if (received.isPresent()) {
             ClassicCanFrame frame = received.get();
@@ -172,13 +312,27 @@ public class PCanIoStream extends AbstractIoStream {
                 return;
             }
             isoTpCounter.add();
+            byte[] payload = frame.getPayload();
+            if (payload.length > 0 && (payload[0] & 0xf0) == 0x30) {
+                publishFlowControl(payload);
+                return;
+            }
             final byte[] decode;
             try {
-                decode = canDecoder.decodePacket(frame.getPayload());
+                decode = canDecoder.decodePacket(payload);
             } catch (UncheckedIOException e) {
                 throw e.getCause();
+            } catch (RuntimeException e) {
+                statusListener.logLine("PCAN decode failed: " + e.getMessage());
+                log.error("PCAN ISO-TP decode failed", e);
+                close();
+                throw e;
             }
-            listener.onDataArrived(decode);
+            dataBuffer.addData(decode);
+            DataListener listener = inputListener;
+            if (listener != null) {
+                listener.onDataArrived(decode);
+            }
         } else {
             try {
                 // An empty receive queue returns immediately; avoid busy-spinning.
@@ -202,6 +356,11 @@ public class PCanIoStream extends AbstractIoStream {
     public synchronized void close() {
         if (isClosed()) {
             return;
+        }
+        synchronized (flowControlMonitor) {
+            waitingForFlowControl = false;
+            flowControl = null;
+            flowControlMonitor.notifyAll();
         }
         try {
             // RawCanPort releases the native channel before close() returns. Do this

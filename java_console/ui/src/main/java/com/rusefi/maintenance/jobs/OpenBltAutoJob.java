@@ -39,17 +39,25 @@ public class OpenBltAutoJob extends AbstractAutoFlashJob {
 
     @Override
     protected boolean isFlashAllowed(final BinaryProtocol bp, final UpdateOperationCallbacks callbacks) {
+        if (LinkManager.isSlcanPort(context.getPort().port)) {
+            callbacks.logLine("Automatic OpenBLT flashing over SLCAN is not supported.");
+            return false;
+        }
         return FirmwareFlashEligibility.isAllowed(bp.signature, firmwareSrecFile, callbacks);
     }
 
     @Override
     protected boolean flash(final LinkManager lm, final BinaryProtocol bp, final UpdateOperationCallbacks callbacks) {
-        if (LinkManager.isCanPort(context.getPort().port)) {
+        if (isAutomaticCanPort(context.getPort().port)) {
             return ProgramSelector.flashOpenbltCanAutomatic(
                 context.getParent(), context.getPort(), bp, lm, callbacks, connectivityContext,
                 firmwareSrecFile, policy);
         }
         return ProgramSelector.flashOpenbltSerialAutomatic(
             context.getParent(), context.getPort(), bp, lm, callbacks, connectivityContext, firmwareSrecFile, policy);
+    }
+
+    private static boolean isAutomaticCanPort(String port) {
+        return LinkManager.PCAN.equals(port) || LinkManager.SOCKET_CAN.equals(port);
     }
 }

@@ -1,5 +1,7 @@
 package com.rusefi.maintenance;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import com.rusefi.ConnectivityContext;
 import com.rusefi.FakePortScanner;
 import com.rusefi.PortResult;
@@ -8,6 +10,7 @@ import com.rusefi.SerialPortType;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
+import com.rusefi.maintenance.jobs.OpenBltAutoJob;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -150,6 +153,25 @@ class ProgramSelectorSocketCanTest {
         assertFalse(result);
         verify(callbacks).logLine("CAN firmware update requires a matching live CAN ECU connection.");
         assertEquals(0, scannerOperations(scanner));
+    }
+
+    /** Keep SLCAN connectable without routing it to a PCAN or serial flasher. */
+    @Test
+    void slcanIsExcludedFromAutomaticCanFlashUntilRawTransportExists() {
+        PortResult slcan = new PortResult("SLCAN:COM7", SerialPortType.Ecu);
+
+        assertTrue(LinkManager.isSlcanPort(slcan.port));
+        assertTrue(LinkManager.isCanPort(slcan.port));
+        assertNull(ProgramSelector.resolveFlashPort(
+            slcan,
+            true,
+            Collections.emptyList(),
+            Collections.emptyList(),
+            true));
+
+        OpenBltAutoJob job = new OpenBltAutoJob(
+            slcan, null, new ConnectivityContext(new FakePortScanner()), null);
+        assertEquals("OpenBLT via SLCAN:COM7", job.getName());
     }
 
     @Test

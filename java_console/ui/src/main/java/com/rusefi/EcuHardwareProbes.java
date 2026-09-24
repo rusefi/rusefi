@@ -64,9 +64,7 @@ public class EcuHardwareProbes implements SerialPortScanner.HardwareProbes {
         for (String port : serialPorts) {
             ports.add(LinkManager.SLCAN_PREFIX + port);
         }
-        // Opening the driver tests availability on every supported OS, without relying on a
-        // Windows device-name lookup. An unavailable adapter is retried on subsequent scans.
-        ports.add(LinkManager.PCAN);
+        // PCAN uses a separate probe. Each SLCAN serial port is a separate endpoint.
         return ports;
     }
 

@@ -253,6 +253,8 @@ public class SerialPortScanner implements PortScanner {
         // the binary protocol handshake for seconds.  Drop them before the scan pipeline.
         final Set<String> serialPorts = probes.listSerialPorts().stream()
             .filter(name -> !name.startsWith("ttyS"))
+            // PCAN uses its own probe; SLCAN stays in this list.
+            .filter(name -> !LinkManager.PCAN.equals(name))
             .collect(Collectors.toCollection(TreeSet::new));
         log.info("getCommPorts (filtered): " + serialPorts);
 
@@ -362,8 +364,6 @@ public class SerialPortScanner implements PortScanner {
         } else {
             dfuConnected = false;
             stLinkConnected = false;
-            PCANConnected = lastPcanConnected;
-            socketCanAvailable = lastSocketCanAvailable;
         }
         // Surface a DFU device (STM32 built-in bootloader) as a synthetic, non-connectable port so a
         // running console can offer DFU flashing in-session [tag:better_ux_for_flashing]. dfuConnected stays exposed via
@@ -375,7 +375,7 @@ public class SerialPortScanner implements PortScanner {
         boolean isListUpdated;
         AvailableHardware currentHardware;
         synchronized (lock) {
-            PCANConnected = includeSlowLookup && lastPcanConnected;
+            PCANConnected = lastPcanConnected;
             socketCanAvailable = lastSocketCanAvailable;
             if (lastPcanPort != null) {
                 ports.add(lastPcanPort);
