@@ -69,6 +69,8 @@ m2-coreutils = "*"
 m2-findutils = "*"
 m2-diffutils = "*"
 m2-util-linux = "*"  # provides flock, used by java_tools.mk to serialize gradle
+m2-zip = ">=3.0.4,<4"
+m2-p7zip = ">=17.5.2,<18"
 
 # Convenience wrappers - run as `pixi run build-fw` / `pixi run test`, or from
 # inside `pixi shell`. See the HOWTO block at the top of this file.

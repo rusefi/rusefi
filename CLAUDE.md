@@ -351,15 +351,4 @@ Gotchas:
 
 See also .junie/guidelines.md file
 
-### Standalone CANable2 SLCAN adapter interoperability
-
-Verified with real hardware (2026-09-23), firmware banner
-`16e7497-dirty github.com/normaldotcom/canable2.git`: the V command returns
-that free-form banner, not Lawicel's Vhhss. This firmware does not emit the
-empty-CR setup acknowledgements expected by the rusEFI sniffer client.
-The SLCANConnectorSandbox helper uses an ordered V response after each
-CANable setup command as a processing barrier; actual ECU signature/config
-reads establish end-to-end success. Do not identify this adapter using the
-rusEFI SlcanClient version-prefix assumption. Explicitly select the standalone
-adapter port: the ECU's secondary SLCAN interface is a sniffer and is not a
-substitute for an external adapter connected to the ECU CAN wiring.
+Pixi's Windows m2-bash can report OSTYPE=cygwin while uname -s reports MSYS_NT. Platform checks based on uname must include MSYS as well as CYGWIN and MINGW.

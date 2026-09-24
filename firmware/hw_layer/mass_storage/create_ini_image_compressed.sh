@@ -6,10 +6,12 @@
 # fail on error
 set -e
 
-if [ "$(expr substr $(uname -s) 1 6)" == "CYGWIN" ] || [ "$(expr substr $(uname -s) 1 5)" == "MINGW" ]; then
-  echo No image on $(uname -s)
-  exit 0
-fi
+case "$(uname -s)" in
+  CYGWIN*|MINGW*|MSYS*)
+    echo "No image on $(uname -s)"
+    exit 0
+    ;;
+esac
 
 FULL_INI=$1
 H_OUTPUT=$2
