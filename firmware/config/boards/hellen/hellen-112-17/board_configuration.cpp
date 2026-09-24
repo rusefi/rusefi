@@ -143,19 +143,22 @@ static Gpio OUTPUTS[] = {
 	Gpio::MM100_INJ8, // 246 low side 1.5A output
 };
 
-int getBoardMetaOutputsCount() {
+static int boardGetMetaOutputsCount() {
     return efi::size(OUTPUTS);
 }
 
-Gpio* getBoardMetaOutputs() {
+static Gpio* boardGetMetaOutputs() {
     return OUTPUTS;
 }
 
-int getBoardMetaDcOutputsCount() {
+static int boardGetMetaDcOutputsCount() {
     return 1;
 }
 
 void setup_custom_board_overrides() {
+	custom_board_getMetaOutputsCount = boardGetMetaOutputsCount;
+	custom_board_getMetaOutputs = boardGetMetaOutputs;
+	custom_board_getMetaDcOutputsCount = boardGetMetaDcOutputsCount;
 	custom_board_DefaultConfiguration = hellen112_17_boardDefaultConfiguration;
 	custom_board_ConfigOverrides = hellen112_17_boardConfigOverrides;
 }

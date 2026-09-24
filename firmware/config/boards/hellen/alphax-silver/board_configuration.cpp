@@ -237,19 +237,22 @@ static Gpio OUTPUTS[] = {
 	Gpio::MM100_IGN3,
 };
 
-int getBoardMetaOutputsCount() {
+static int boardGetMetaOutputsCount() {
 	return efi::size(OUTPUTS);
 }
 
-int getBoardMetaLowSideOutputsCount() {
+static int boardGetMetaLowSideOutputsCount() {
 	return getBoardMetaOutputsCount() - 4;
 }
 
-Gpio* getBoardMetaOutputs() {
+static Gpio* boardGetMetaOutputs() {
 	return OUTPUTS;
 }
 
 void setup_custom_board_overrides() {
+	custom_board_getMetaOutputsCount = boardGetMetaOutputsCount;
+	custom_board_getMetaLowSideOutputsCount = boardGetMetaLowSideOutputsCount;
+	custom_board_getMetaOutputs = boardGetMetaOutputs;
 	custom_board_InitHardware = alphax_silver_boardInitHardware;
 	custom_board_DefaultConfiguration = alphax_silver_boardDefaultConfiguration;
 	custom_board_ConfigOverrides = alphax_silver_boardConfigOverrides;

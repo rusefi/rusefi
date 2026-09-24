@@ -149,19 +149,22 @@ static Gpio OUTPUTS[] = {
 	Gpio::F14, // 11 - VTC Right
 };
 
-int getBoardMetaOutputsCount() {
+static int boardGetMetaOutputsCount() {
     return efi::size(OUTPUTS);
 }
 
-Gpio* getBoardMetaOutputs() {
+static Gpio* boardGetMetaOutputs() {
     return OUTPUTS;
 }
 
-int getBoardMetaDcOutputsCount() {
+static int boardGetMetaDcOutputsCount() {
     return 1;
 }
 
 void setup_custom_board_overrides() {
+	custom_board_getMetaOutputsCount = boardGetMetaOutputsCount;
+	custom_board_getMetaOutputs = boardGetMetaOutputs;
+	custom_board_getMetaDcOutputsCount = boardGetMetaDcOutputsCount;
 	custom_board_DefaultConfiguration = hellen121_nissan_boardDefaultConfiguration;
 	custom_board_ConfigOverrides = hellen121_nissan_boardConfigOverrides;
 }

@@ -776,8 +776,36 @@ void onBoardStandBy() {
 	}
 }
 
-PUBLIC_API_WEAK_SOMETHING_WEIRD int getBoardMetaOutputsCount() { return 0; }
-// default implementation: treat all outputs as low side
-PUBLIC_API_WEAK int getBoardMetaLowSideOutputsCount() { return getBoardMetaOutputsCount(); }
-PUBLIC_API_WEAK Gpio* getBoardMetaOutputs() { return nullptr; }
-PUBLIC_API_WEAK int getBoardMetaDcOutputsCount() { return 0; }
+std::optional<setup_custom_board_output_type> custom_board_getMetaOutputsCount;
+std::optional<setup_custom_board_output_type> custom_board_getMetaLowSideOutputsCount;
+std::optional<setup_custom_board_outputs_type> custom_board_getMetaOutputs;
+std::optional<setup_custom_board_output_type> custom_board_getMetaDcOutputsCount;
+
+int getBoardMetaOutputsCount() {
+	if (custom_board_getMetaOutputsCount.has_value()) {
+		return custom_board_getMetaOutputsCount.value()();
+	}
+	return 0;
+}
+
+int getBoardMetaLowSideOutputsCount() {
+	if (custom_board_getMetaLowSideOutputsCount.has_value()) {
+		return custom_board_getMetaLowSideOutputsCount.value()();
+	}
+	// default implementation: treat all outputs as low side
+	return getBoardMetaOutputsCount();
+}
+
+Gpio* getBoardMetaOutputs() {
+	if (custom_board_getMetaOutputs.has_value()) {
+		return custom_board_getMetaOutputs.value()();
+	}
+	return nullptr;
+}
+
+int getBoardMetaDcOutputsCount() {
+	if (custom_board_getMetaDcOutputsCount.has_value()) {
+		return custom_board_getMetaDcOutputsCount.value()();
+	}
+	return 0;
+}

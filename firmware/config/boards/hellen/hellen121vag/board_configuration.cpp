@@ -134,11 +134,12 @@ static void hellen121_vag_boardDefaultConfiguration() {
 	engineConfiguration->vrThreshold[0].pin = Gpio::H144_OUT_PWM6;
 }
 
-int getBoardMetaDcOutputsCount() {
+static int boardGetMetaDcOutputsCount() {
     return 1;
 }
 
 void setup_custom_board_overrides() {
+	custom_board_getMetaDcOutputsCount = boardGetMetaDcOutputsCount;
 	custom_board_InitHardware = hellen121_vag_boardInitHardware;
 	custom_board_DefaultConfiguration = hellen121_vag_boardDefaultConfiguration;
 	custom_board_ConfigOverrides = hellen121_vag_boardConfigOverrides;

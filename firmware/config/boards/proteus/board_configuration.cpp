@@ -252,7 +252,7 @@ static Gpio PROTEUS_HARLEY_OUTPUTS[] = {
 	Gpio::PROTEUS_IGN_9, // ACR2
 };
 
-int getBoardMetaLowSideOutputsCount() {
+static int boardGetMetaLowSideOutputsCount() {
     if (engineConfiguration->engineType == engine_type_e::SUBARU_2011) {
         return getBoardMetaOutputsCount();
     }
@@ -306,7 +306,7 @@ Gpio::PROTEUS_LS_16,
 	Gpio::PROTEUS_HS_4
 };
 
-int getBoardMetaOutputsCount() {
+static int boardGetMetaOutputsCount() {
     if (engineConfiguration->engineType == engine_type_e::SUBARU_2011) {
         return efi::size(PROTEUS_SUBARU_OUTPUTS);
     }
@@ -328,7 +328,7 @@ int getBoardMetaOutputsCount() {
     return efi::size(PROTEUS_OUTPUTS);
 }
 
-int getBoardMetaDcOutputsCount() {
+static int boardGetMetaDcOutputsCount() {
     if (engineConfiguration->engineType == engine_type_e::PROTEUS_BMW_M73) {
         return 2;
     }
@@ -343,7 +343,7 @@ int getBoardMetaDcOutputsCount() {
 /*    return 2; proteus has two h-b ridges but stim board is short on channels to test :( */
 }
 
-Gpio* getBoardMetaOutputs() {
+static Gpio* boardGetMetaOutputs() {
     if (engineConfiguration->engineType == engine_type_e::SUBARU_2011) {
         return PROTEUS_SUBARU_OUTPUTS;
     }
@@ -367,6 +367,12 @@ Gpio* getBoardMetaOutputs() {
 #endif // HW_PROTEUS
 
 void setup_custom_board_overrides() {
+#if HW_PROTEUS
+	custom_board_getMetaOutputsCount = boardGetMetaOutputsCount;
+	custom_board_getMetaLowSideOutputsCount = boardGetMetaLowSideOutputsCount;
+	custom_board_getMetaOutputs = boardGetMetaOutputs;
+	custom_board_getMetaDcOutputsCount = boardGetMetaDcOutputsCount;
+#endif // HW_PROTEUS
 	custom_board_DefaultConfiguration = proteus_boardDefaultConfiguration;
 	custom_board_ConfigOverrides = proteus_boardConfigOverrides;
 	custom_board_applyBasicConfiguration = applyProteusBasicConfiguration;

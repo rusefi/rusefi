@@ -225,28 +225,28 @@ static Gpio OUTPUTS[] = {
 
 };
 
-int getBoardMetaOutputsCount() {
+static int boardGetMetaOutputsCount() {
     if (engineConfiguration->engineType == engine_type_e::GM_SBC_GEN4) {
         return efi::size(OUTPUTS_GM_GEN4);
     }
     return efi::size(OUTPUTS);
 }
 
-int getBoardMetaLowSideOutputsCount() {
+static int boardGetMetaLowSideOutputsCount() {
     if (engineConfiguration->engineType == engine_type_e::GM_SBC_GEN4) {
       return getBoardMetaOutputsCount();
     }
     return getBoardMetaOutputsCount() - 6;
 }
 
-Gpio* getBoardMetaOutputs() {
+static Gpio* boardGetMetaOutputs() {
     if (engineConfiguration->engineType == engine_type_e::GM_SBC_GEN4) {
       return OUTPUTS_GM_GEN4;
     }
     return OUTPUTS;
 }
 
-int getBoardMetaDcOutputsCount() {
+static int boardGetMetaDcOutputsCount() {
     if (engineConfiguration->engineType == engine_type_e::GM_SBC_GEN4) {
       // STATIC_BOARD_ID_PLATINUM_GM_GEN4
         return 1;
@@ -264,6 +264,10 @@ static bool applyAlphaxBasicConfiguration(BasicConfigurationAction action) {
 }
 
 void setup_custom_board_overrides() {
+	custom_board_getMetaOutputsCount = boardGetMetaOutputsCount;
+	custom_board_getMetaLowSideOutputsCount = boardGetMetaLowSideOutputsCount;
+	custom_board_getMetaOutputs = boardGetMetaOutputs;
+	custom_board_getMetaDcOutputsCount = boardGetMetaDcOutputsCount;
 	custom_board_InitHardware = alphax_8chan_boardInitHardware;
 	custom_board_DefaultConfiguration = alphax_8chan_defaultConfiguration;
 	custom_board_ConfigOverrides = alphax_8chan_boardConfigOverrides;

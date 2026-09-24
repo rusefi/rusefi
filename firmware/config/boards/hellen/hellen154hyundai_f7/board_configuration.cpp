@@ -216,23 +216,27 @@ static void hellen154hyundai_f7_boardInitHardware() {
     #endif
 }
 
-int getBoardMetaOutputsCount() {
+static int boardGetMetaOutputsCount() {
     return efi::size(OUTPUTS);
 }
 
-int getBoardMetaLowSideOutputsCount() {
+static int boardGetMetaLowSideOutputsCount() {
     return getBoardMetaOutputsCount();
 }
 
-int getBoardMetaDcOutputsCount() {
+static int boardGetMetaDcOutputsCount() {
     return 2;
 }
 
-Gpio* getBoardMetaOutputs() {
+static Gpio* boardGetMetaOutputs() {
     return OUTPUTS;
 }
 
 void setup_custom_board_overrides() {
+	custom_board_getMetaOutputsCount = boardGetMetaOutputsCount;
+	custom_board_getMetaLowSideOutputsCount = boardGetMetaLowSideOutputsCount;
+	custom_board_getMetaOutputs = boardGetMetaOutputs;
+	custom_board_getMetaDcOutputsCount = boardGetMetaDcOutputsCount;
 	custom_board_InitHardware = hellen154hyundai_f7_boardInitHardware;
 	custom_board_DefaultConfiguration = hellen154hyundai_f7_boardDefaultConfiguration;
 	custom_board_ConfigOverrides = hellen154hyundai_f7_boardConfigOverrides;

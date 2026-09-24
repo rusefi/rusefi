@@ -156,15 +156,17 @@ static Gpio OUTPUTS[] = {
 		Gpio::H144_LS_4,
 };
 
-int getBoardMetaOutputsCount() {
+static int boardGetMetaOutputsCount() {
     return efi::size(OUTPUTS);
 }
 
-Gpio* getBoardMetaOutputs() {
+static Gpio* boardGetMetaOutputs() {
     return OUTPUTS;
 }
 
 void setup_custom_board_overrides() {
+	custom_board_getMetaOutputsCount = boardGetMetaOutputsCount;
+	custom_board_getMetaOutputs = boardGetMetaOutputs;
 	custom_board_InitHardware = alphax_8chan_reva_boardInitHardware;
 	custom_board_DefaultConfiguration = alphax_8chan_reva_boardDefaultConfiguration;
 	custom_board_ConfigOverrides = alphax_8chan_reva_boardConfigOverrides;

@@ -211,25 +211,28 @@ MRE_LS_2, // SC clutch
 #endif // HW_MICRO_RUSEFI
 };
 
-int getBoardMetaOutputsCount() {
+static int boardGetMetaOutputsCount() {
     if (engineConfiguration->engineType == engine_type_e::MERCEDES_M111) {
         return efi::size(M111_OUTPUTS);
     }
     return efi::size(MRE_OUTPUTS);
 }
 
-Gpio* getBoardMetaOutputs() {
+static Gpio* boardGetMetaOutputs() {
     if (engineConfiguration->engineType == engine_type_e::MERCEDES_M111) {
         return M111_OUTPUTS;
     }
     return MRE_OUTPUTS;
 }
 
-int getBoardMetaDcOutputsCount() {
+static int boardGetMetaDcOutputsCount() {
     return 1;
 }
 
 void setup_custom_board_overrides() {
+	custom_board_getMetaOutputsCount = boardGetMetaOutputsCount;
+	custom_board_getMetaOutputs = boardGetMetaOutputs;
+	custom_board_getMetaDcOutputsCount = boardGetMetaDcOutputsCount;
 	custom_board_DefaultConfiguration = microrusefi_boardDefaultConfiguration;
 	custom_board_ConfigOverrides = microrusefi_boardConfigOverrides;
 }

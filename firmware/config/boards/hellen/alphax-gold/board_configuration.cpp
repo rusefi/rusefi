@@ -383,19 +383,19 @@ static Gpio OUTPUTS[] = {
 	Gpio::H144_IGN_8, // 10A Coil 8
 };
 
-int getBoardMetaOutputsCount() {
+static int boardGetMetaOutputsCount() {
     return efi::size(OUTPUTS);
 }
 
-int getBoardMetaLowSideOutputsCount() {
+static int boardGetMetaLowSideOutputsCount() {
     return getBoardMetaOutputsCount() - 8;
 }
 
-Gpio* getBoardMetaOutputs() {
+static Gpio* boardGetMetaOutputs() {
     return OUTPUTS;
 }
 
-int getBoardMetaDcOutputsCount() {
+static int boardGetMetaDcOutputsCount() {
     return 2;
 }
 
@@ -409,6 +409,10 @@ static bool applyAlphaxGoldBasicConfiguration(BasicConfigurationAction action) {
 }
 
 void setup_custom_board_overrides() {
+	custom_board_getMetaOutputsCount = boardGetMetaOutputsCount;
+	custom_board_getMetaLowSideOutputsCount = boardGetMetaLowSideOutputsCount;
+	custom_board_getMetaOutputs = boardGetMetaOutputs;
+	custom_board_getMetaDcOutputsCount = boardGetMetaDcOutputsCount;
 	custom_board_InitHardware = alphax_gold_boardInitHardware;
 	custom_board_DefaultConfiguration = alphax_gold_boardDefaultConfiguration;
 	custom_board_ConfigOverrides = alphax_gold_boardConfigOverrides;

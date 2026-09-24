@@ -192,11 +192,12 @@ wrapper of the full TS protocol over CAN (see `can_common.h` `ECU_ISO_TP_SETTING
 
 ### Board metadata (`getBoardMetaOutputs` and friends)
 
-Declared in `engine_configuration.h`, weak defaults in `engine_configuration.cpp` (0 outputs,
-all-low-side). Each QC-supported board (`proteus`, `microrusefi`, most `hellen/*` boards)
-provides an ordered `Gpio` array of its physical outputs plus `getBoardMetaOutputsCount()`,
-`getBoardMetaLowSideOutputsCount()`, `getBoardMetaDcOutputsCount()` in its
-`board_configuration.cpp`. The rig addresses outputs by ordinal, so it needs no per-board pin
+Declared in `engine_configuration.h`, with dispatch and defaults in `engine_configuration.cpp`
+(0 outputs, null output array, all outputs treated as low-side). Each QC-supported board
+(`proteus`, `microrusefi`, most `hellen/*` boards) registers its `custom_board_getMeta*`
+callbacks from `board_overrides.h` in `setup_custom_board_overrides()`. These provide the
+ordered `Gpio` array and output, low-side, and DC counts. An omitted low-side callback uses
+the board's output-count callback. The rig addresses outputs by ordinal, so it needs no per-board pin
 knowledge - it reads the counts from `IO_META_INFO`.
 
 ### QC engine presets

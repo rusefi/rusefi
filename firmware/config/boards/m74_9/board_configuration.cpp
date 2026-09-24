@@ -213,14 +213,16 @@ static Gpio OUTPUTS[] = {
 //	Gpio::L9779_OUT_13, // Fuel pump relay
 };
 
-int getBoardMetaOutputsCount() {
+static int boardGetMetaOutputsCount() {
     return efi::size(OUTPUTS);
 }
 
-int getBoardMetaDcOutputsCount() {
+static int boardGetMetaDcOutputsCount() {
     return 1;
 }
 void setup_custom_board_overrides() {
+	custom_board_getMetaOutputsCount = boardGetMetaOutputsCount;
+	custom_board_getMetaDcOutputsCount = boardGetMetaDcOutputsCount;
 	// MFS uses internal flash; even a bank-2 erase stalls the CPU.
 	custom_board_allowFlashNow = []() {
 		return engine->triggerCentral.directSelfStimulation || engine->rpmCalculator.isStopped();

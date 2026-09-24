@@ -200,19 +200,22 @@ static Gpio OUTPUTS[] = {
 	Gpio::H144_OUT_PWM1, // C8 - Idle
 };
 
-int getBoardMetaOutputsCount() {
+static int boardGetMetaOutputsCount() {
     return efi::size(OUTPUTS);
 }
 
-Gpio* getBoardMetaOutputs() {
+static Gpio* boardGetMetaOutputs() {
     return OUTPUTS;
 }
 
-int getBoardMetaDcOutputsCount() {
+static int boardGetMetaDcOutputsCount() {
     return 1;
 }
 
 void setup_custom_board_overrides() {
+	custom_board_getMetaOutputsCount = boardGetMetaOutputsCount;
+	custom_board_getMetaOutputs = boardGetMetaOutputs;
+	custom_board_getMetaDcOutputsCount = boardGetMetaDcOutputsCount;
 	custom_board_InitHardware = alphax_4chan_boardInitHardware;
 	custom_board_DefaultConfiguration = alphax_4chan_defaultConfiguration;
 	custom_board_ConfigOverrides = alphax_4chan_ConfigOverrides;

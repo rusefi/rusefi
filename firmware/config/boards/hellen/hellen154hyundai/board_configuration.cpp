@@ -181,23 +181,27 @@ static Gpio OUTPUTS[] = {
 //	Gpio::H_SPI1_SCK, // X8 AuxLS1
 };
 
-int getBoardMetaOutputsCount() {
+static int boardGetMetaOutputsCount() {
     return efi::size(OUTPUTS);
 }
 
-int getBoardMetaLowSideOutputsCount() {
+static int boardGetMetaLowSideOutputsCount() {
     return getBoardMetaOutputsCount();
 }
 
-int getBoardMetaDcOutputsCount() {
+static int boardGetMetaDcOutputsCount() {
     return 2;
 }
 
-Gpio* getBoardMetaOutputs() {
+static Gpio* boardGetMetaOutputs() {
     return OUTPUTS;
 }
 
 void setup_custom_board_overrides() {
+	custom_board_getMetaOutputsCount = boardGetMetaOutputsCount;
+	custom_board_getMetaLowSideOutputsCount = boardGetMetaLowSideOutputsCount;
+	custom_board_getMetaOutputs = boardGetMetaOutputs;
+	custom_board_getMetaDcOutputsCount = boardGetMetaDcOutputsCount;
 	custom_board_DefaultConfiguration = hellen154_hyundai_boardDefaultConfiguration;
 	custom_board_ConfigOverrides = hellen154_hyundai_boardConfigOverrides;
 	custom_board_hackHellenBoardId = hyundaiHellenBoardId;

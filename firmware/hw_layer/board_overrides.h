@@ -32,6 +32,7 @@
 using setup_custom_board_overrides_type = void (*)();
 using setup_custom_board_config_type = void (*)(const engine_configuration_s * /*previousConfiguration*/);
 using setup_custom_board_output_type = int (*)();
+using setup_custom_board_outputs_type = Gpio* (*)();
 using setup_custom_board_engine_type_type = void (*)(engine_type_e);
 using setup_custom_get_float_type = float (*)();
 using setup_custom_board_adjust_voltage_type = float (*)(float /*voltage*/, adc_channel_e /*hwChannel*/);
@@ -168,7 +169,9 @@ extern std::optional<setup_custom_board_overrides_type> custom_board_onEngineSto
 
 // Board hardware related:
 extern std::optional<setup_custom_board_output_type> custom_board_getMetaOutputsCount;
-extern std::optional<setup_custom_board_output_type> custom_board_getMetaLowSideOutputs;
+extern std::optional<setup_custom_board_output_type> custom_board_getMetaLowSideOutputsCount;
+extern std::optional<setup_custom_board_outputs_type> custom_board_getMetaOutputs;
+extern std::optional<setup_custom_board_output_type> custom_board_getMetaDcOutputsCount;
 
 // LTFT to VE table custom apply algo
 extern std::optional<setup_custom_board_overrides_type> custom_board_LtftTrimToVeApply;
