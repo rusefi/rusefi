@@ -58,6 +58,7 @@ class EcuMcpServerTest {
         assertTrue(names.contains("send_command"));
         assertTrue(names.contains("command"));
         assertTrue(names.contains("read_output_channel"));
+        assertTrue(names.contains("capture_engine_sniffer"));
         assertTrue(names.contains("mount_to_ecu"));
         assertTrue(names.contains("mount_to_pc"));
         assertTrue(names.contains("start_data_logging"));
@@ -101,8 +102,8 @@ class EcuMcpServerTest {
     }
 
     @Test
-    void mountToolsValidateTimeoutBeforeConnecting() throws Exception {
-        for (String name : new String[]{"mount_to_ecu", "mount_to_pc"}) {
+    void captureAndMountToolsValidateTimeoutBeforeConnecting() throws Exception {
+        for (String name : new String[]{"mount_to_ecu", "mount_to_pc", "capture_engine_sniffer"}) {
             for (long timeout : new long[]{0, -1, 120001}) {
                 String[] responses = drive(jsonRpc(1, "tools/call",
                         "{\"name\":\"" + name + "\",\"arguments\":{\"timeoutMs\":" + timeout + "}}") + "\n");

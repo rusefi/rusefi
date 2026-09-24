@@ -4,7 +4,8 @@ An [MCP (Model Context Protocol)](https://modelcontextprotocol.io/) server that 
 LLM client (Claude Desktop, JetBrains AI, Cursor, etc.) iterate on rusEFI Lua scripts:
 write a candidate script, upload it to the ECU, reset Lua, and observe the resulting
 `print(...)` / `efiPrintf` output. It also reads live ECU values and records operating
-data to host-side `.mlg` files using the Java frontend's binary log format. It can
+data to host-side `.mlg` files using the Java frontend's binary log format. It captures
+Console Digital Sniffer charts as structured crank/cam and output events. It can
 also read and write complete TunerStudio-compatible tunes, and convert existing
 binary MLG and text TunerStudio MSL logs to CSV offline. The `update_firmware` tool
 updates firmware via OpenBLT while backing up and migrating the ECU configuration.
@@ -64,6 +65,7 @@ Behavior common to all tools:
 | `lua_reset` | Restart the Lua VM. |
 | `send_command`, `command` | Queue any text command. |
 | `read_output_channel` | Latest gauge value by name. |
+| `capture_engine_sniffer` | Next Digital Sniffer chart as parsed events, channel summaries, and raw text. |
 | `mount_to_ecu`, `mount_to_pc` | Switch SD-card ownership and confirm the reported mount mode. |
 | `start_data_logging` | Record ECU operating data to a new `.mlg` file. |
 | `stop_data_logging` | Stop recording and close the file. |
@@ -175,6 +177,45 @@ is wrong. The console's output-channel polling is subscription based (it fetches
 the byte ranges of channels somebody subscribed to), so the server holds a full-frame
 lease for the lifetime of the ECU connection: every channel of the `.ini` is polled,
 like before that change.
+
+### `capture_engine_sniffer`
+
+Waits for the next nonempty Console Digital Sniffer (`wave_chart`) packet received
+after subscribing. Connects if necessary. Optional `timeoutMs` defaults to 10000
+and must be 1..120000; connection has its own timeout.
+
+```json
+{"name":"capture_engine_sniffer","arguments":{"timeoutMs":20000}}
+```
+
+Returns `success`, firmware `signature`, `source: "wave_chart"`, `receivedAt`
+(host Unix milliseconds), `resolutionUs` (10), `eventCount`, `durationUs`
+(maximum minus minimum event time), `events`, `channels`, and `raw`.
+
+- Each event has `channel`, original `signal`, and `timeUs` relative to the
+  chart's origin. Digital transitions also have `edge` (`rising`/`falling`);
+  indexed crank transitions have `triggerIndex`. TDC (`r`) events have `rpm`.
+- Channel summaries contain `channel`, `eventCount`, `risingEdges`,
+  `fallingEdges`, `firstTimeUs`, and `lastTimeUs`. Names are the firmware's logical
+  channel names, not physical pin mappings. Events remain in producer order.
+- `raw` preserves the chart triplets for independent analysis. Unknown signal
+  tokens are retained. Malformed or oversized charts fail instead of returning
+  partial data.
+
+This is one bounded snapshot, not continuous logging or the binary composite
+logger. No previous MCP capture is replayed, but a newly received chart can contain
+events collected before the call. The tool does not reset the chart, change the
+tune, or start/stop firmware acquisition. It uses the current `engineChartSize`,
+`engineSnifferRpmThreshold`, input focus, and logic-level settings. Use
+`send_command` separately for intentional changes such as `chartsize 180` or
+`reset_engine_chart` (the latter skips three revolutions).
+
+Timeout or disconnect returns `success: false` and an explanation. An empty
+capture can mean no engine activity, RPM above the sniffer threshold, a chart not
+yet ready to publish, or firmware without sniffer/text support. Listener ownership
+is released after every call, including failures. Output edges describe firmware
+commands and do not measure electrical current or mechanical timing. See
+[Engine Sniffer](../../docs/AI/engine_sniffer.md) for capture semantics.
 
 ### `mount_to_ecu` and `mount_to_pc`
 

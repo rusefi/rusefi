@@ -341,6 +341,14 @@ public class EcuMcpServer {
                         {"outputPath", "string", "New CSV path on the server host; parent must exist. " +
                                 "Defaults to inputPath with its extension replaced by .csv."}
                 }, new String[]{"inputPath"}, false)));
+        tools.add(tool("capture_engine_sniffer",
+                "Wait for the next Console Digital Sniffer chart and return parsed crank/cam, output and TDC events, " +
+                        "microsecond timestamps, channel summaries and the raw chart. Uses current sniffer settings; " +
+                        "does not change the tune or reset acquisition. A newly received chart may contain events " +
+                        "collected before this call. This is a bounded snapshot, not continuous composite logging.",
+                schemaObject(new String[][]{
+                        {"timeoutMs", "integer", "Wait for a chart in ms, 1..120000. Default 10000; connection has a separate timeout."}
+                }, new String[]{}, false)));
         tools.add(tool("start_data_logging",
                 "Start recording ECU operating data to an MLG file on the MCP server host. " +
                         "Records all numeric/enum output channels at the connection polling rate. " +
@@ -470,6 +478,7 @@ public class EcuMcpServer {
                 case "mount_to_ecu": toolResult = doMount(args, true); break;
                 case "mount_to_pc": toolResult = doMount(args, false); break;
                 case "convert_log_to_csv": toolResult = doConvertLogToCsv(args); break;
+                case "capture_engine_sniffer": toolResult = doCaptureEngineSniffer(args); break;
                 case "start_data_logging": toolResult = doStartDataLogging(args); break;
                 case "stop_data_logging": toolResult = dataLogger.stop(); break;
                 case "data_logging_status": toolResult = dataLogger.status(); break;
@@ -654,6 +663,19 @@ public class EcuMcpServer {
         }
         Msq tune = (Boolean) saveTune ? TuneSnapshot.read(lm, bp, ini) : null;
         return dataLogger.start(ini, requestedPath == null ? null : Paths.get((String) requestedPath), tune);
+    }
+
+    @SuppressWarnings("unchecked")
+    private JSONObject doCaptureEngineSniffer(JSONObject args) throws Exception {
+        long timeoutMs = asLong(args.get("timeoutMs"), 10_000);
+        if (timeoutMs < 1 || timeoutMs > 120_000) {
+            return errorBody("'timeoutMs' must be between 1 and 120000");
+        }
+        LinkManager lm = ensureConnected(null);
+        String signature = String.valueOf(lm.getBinaryProtocol().signature);
+        JSONObject result = EngineSnifferCapture.capture(lm, timeoutMs);
+        result.put("signature", signature);
+        return result;
     }
 
     private JSONObject doMount(JSONObject args, boolean toEcu) throws Exception {

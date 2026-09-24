@@ -4,13 +4,13 @@ This document covers the MCP (Model Context Protocol) servers shipped with the r
 
 See also: `java_console/mcp_ecu/README.md`, `java_console/mcp_can/README.md`.
 
-For crank/cam and ignition/injection diagnostics, see [Engine Sniffer](docs/AI/engine_sniffer.md), including relevant ECU MCP tools and current waveform-capture limitations.
+Use `capture_engine_sniffer` for a Digital Sniffer snapshot with parsed crank/cam and ignition/injection events. See [Engine Sniffer](docs/AI/engine_sniffer.md) for capture semantics and related tools.
 
 #### Available MCP servers
 
 | Module | Transport | Purpose |
 |--------|-----------|---------|
-| `:mcp_ecu` | stdio JSON-RPC | Lua scripts, ECU messages/live data, host data logging, SD mount control (`mount_to_ecu`, `mount_to_pc`), fresh board/universal bundle downloads (`download_bundle`), OpenBLT updates with configuration migration (`update_firmware`) |
+| `:mcp_ecu` | stdio JSON-RPC | Lua scripts, ECU messages/live data, engine sniffer (`capture_engine_sniffer`), host data logging, SD mount control (`mount_to_ecu`, `mount_to_pc`), fresh board/universal bundle downloads (`download_bundle`), OpenBLT updates with configuration migration (`update_firmware`) |
 | `:mcp_can` | stdio JSON-RPC | Read-only CAN bus sniffing via PCAN or built-in SLCAN |
 
 #### .ini file resolution
