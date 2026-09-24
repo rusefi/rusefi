@@ -315,24 +315,37 @@ public class SlcanPortScanner {
             // dead/busy OS node — same policy as SerialPortScanner: drop it entirely
             return null;
         }
+        return inspectStream(port, stream);
+    }
+
+    static Result inspectStream(String port, IoStream stream) {
         try {
-            String signature = SerialAutoChecker.checkResponse(stream, null);
+            String signature = SerialAutoChecker.checkResponse(stream, null, SLCAN_RESPONSE_TIMEOUT_MS);
             if (signature != null) {
                 return new Result(port, Type.TS_CONSOLE, signature);
             }
             // the TS HELLO probe above may have confused the SLCAN parser, drain leftovers
             stream.getDataBuffer().dropPending();
-            stream.write(("V" + CR).getBytes(StandardCharsets.US_ASCII));
+            // Terminate binary HELLO residue in line-oriented adapter parsers.
+            stream.write(("" + CR + "V" + CR).getBytes(StandardCharsets.US_ASCII));
             stream.flush();
-            String response = readLine(stream, SLCAN_RESPONSE_TIMEOUT_MS);
-            if (response == null) {
-                return new Result(port, Type.UNKNOWN, "no response to V probe");
+            long deadline = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(SLCAN_RESPONSE_TIMEOUT_MS);
+            String unexpected = null;
+            while (System.nanoTime() < deadline) {
+                int remaining = (int) Math.max(1, TimeUnit.NANOSECONDS.toMillis(deadline - System.nanoTime()));
+                String response = readLine(stream, remaining);
+                if (response == null) { break; }
+                if (response.isEmpty() || response.equals(String.valueOf(BELL))) { continue; }
+                // CANable 2 reports a git revision and repository instead of Vhhhh.
+                if (response.matches("V[0-9a-fA-F]{4}") ||
+                    response.matches("[0-9a-fA-F]{7,40}(-dirty)? github\\.com/[A-Za-z0-9_-]+/canable2\\.git") ||
+                    SlcanClient.Frame.parse(response) != null) {
+                    return new Result(port, Type.SLCAN, response);
+                }
+                unexpected = response;
             }
-            // A stale open session may stream frame lines instead of the V response — still SLCAN.
-            if ((!response.isEmpty() && response.charAt(0) == 'V') || SlcanClient.Frame.parse(response) != null) {
-                return new Result(port, Type.SLCAN, response);
-            }
-            return new Result(port, Type.NOT_SLCAN, SlcanClient.printable(response));
+            return unexpected == null ? new Result(port, Type.UNKNOWN, "no response to V probe") :
+                new Result(port, Type.NOT_SLCAN, SlcanClient.printable(unexpected));
         } catch (IOException e) {
             return new Result(port, Type.UNKNOWN, "IO error: " + e);
         } finally {
@@ -342,10 +355,11 @@ public class SlcanPortScanner {
 
     private static String readLine(IoStream stream, int timeoutMs) throws IOException {
         StringBuilder line = new StringBuilder();
-        while (true) {
+        long deadline = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(timeoutMs);
+        while (System.nanoTime() < deadline && line.length() < 256) {
             byte b;
             try {
-                b = stream.getDataBuffer().readByte(timeoutMs);
+                b = stream.getDataBuffer().readByte((int) Math.max(1, TimeUnit.NANOSECONDS.toMillis(deadline - System.nanoTime())));
             } catch (EOFException timeout) {
                 return null;
             }
@@ -357,6 +371,7 @@ public class SlcanPortScanner {
             }
             line.append((char) (b & 0xFF));
         }
+        return null;
     }
 
     public static void main(String[] args) throws InterruptedException {

@@ -22,6 +22,73 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class SlcanPortScannerTest {
 
+    private static class AdapterStream extends com.rusefi.io.serial.AbstractIoStream {
+        final com.rusefi.binaryprotocol.IncomingDataBuffer buffer =
+            new com.rusefi.binaryprotocol.IncomingDataBuffer("adapter-test", getStreamStats());
+        boolean failHello;
+        boolean console;
+        String version = "V1220";
+        public com.rusefi.binaryprotocol.IncomingDataBuffer getDataBuffer() { return buffer; }
+        public void setInputListener(com.opensr5.io.DataListener listener) { }
+        public void write(byte[] bytes) throws java.io.IOException {
+            if (bytes[0] == 0) {
+                if (console) {
+                    buffer.addData(com.rusefi.binaryprotocol.IoHelper.makeCrc32Packet(
+                        "\u0000rusEFI test".getBytes(java.nio.charset.StandardCharsets.US_ASCII)));
+                }
+                if (failHello) { throw new java.io.IOException("No TS console"); }
+                return;
+            }
+            String command = new String(bytes, java.nio.charset.StandardCharsets.US_ASCII);
+            if (command.endsWith("V\r")) {
+                buffer.addData(("\u0007\r" + version + "\r").getBytes(java.nio.charset.StandardCharsets.US_ASCII));
+            }
+        }
+    }
+
+    @Test
+    public void silentHelloLeavesTimeForSlcanProbe() {
+        AdapterStream stream = new AdapterStream();
+        List<SlcanPortScanner.Result> results = SlcanPortScanner.inspectPorts(
+            singletonList("COM116"), new HashMap<>(),
+            port -> SlcanPortScanner.inspectStream(port, stream));
+        assertEquals(SlcanPortScanner.Type.SLCAN, results.get(0).type);
+        assertEquals("V1220", results.get(0).detail);
+    }
+
+    @Test
+    public void canableVersionRecognized() {
+        AdapterStream stream = new AdapterStream();
+        stream.failHello = true;
+        stream.version = "16e7497-dirty github.com/normaldotcom/canable2.git";
+        assertEquals(SlcanPortScanner.Type.SLCAN,
+            SlcanPortScanner.inspectStream("COM116", stream).type);
+    }
+
+    @Test
+    public void tunerStudioConsoleIsNotProbedAsSlcan() {
+        AdapterStream stream = new AdapterStream() {
+            public void write(byte[] bytes) throws java.io.IOException {
+                assertEquals(0, bytes[0]);
+                super.write(bytes);
+            }
+        };
+        stream.console = true;
+        assertEquals(SlcanPortScanner.Type.TS_CONSOLE,
+            SlcanPortScanner.inspectStream("console", stream).type);
+        assertTrue(stream.isClosed());
+    }
+
+    @Test
+    public void unrelatedVersionTextIsRejected() {
+        AdapterStream stream = new AdapterStream();
+        stream.failHello = true;
+        stream.version = "Version of an unrelated serial device";
+        assertEquals(SlcanPortScanner.Type.NOT_SLCAN,
+            SlcanPortScanner.inspectStream("other", stream).type);
+        assertTrue(stream.isClosed());
+    }
+
     private static class FakeProbes implements SlcanPortScanner.Probes {
         final Set<String> ports = new TreeSet<>();
         final Map<String, SlcanPortScanner.Result> results = new HashMap<>();

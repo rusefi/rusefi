@@ -32,7 +32,12 @@ public class HelloCommand implements Command {
 
     @Nullable
     public static String getStringResponse(String msg, IncomingDataBuffer incomingData) throws EOFException {
-        byte[] response = incomingData.getPacket(msg);
+        return getStringResponse(msg, incomingData, com.rusefi.Timeouts.BINARY_IO_TIMEOUT);
+    }
+
+    @Nullable
+    public static String getStringResponse(String msg, IncomingDataBuffer incomingData, int timeoutMs) throws EOFException {
+        byte[] response = incomingData.getPacket(timeoutMs, msg);
         return decodeStringResponse(response);
     }
 
