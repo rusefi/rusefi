@@ -406,9 +406,10 @@ SZ   = $(TRGT)size
 HEX  = $(CP) -O ihex
 BIN  = $(CP) -O binary
 ifneq ($(BOARD_IMAGE_SCRIPT),)
+PYTHON ?= python3
 # Addressed images only: a raw binary cannot preserve holes between CRC domains.
-HEX = python3 $(BOARD_IMAGE_SCRIPT) --format hex
-BIN = python3 $(BOARD_IMAGE_SCRIPT) --format bin
+HEX = $(PYTHON) $(BOARD_IMAGE_SCRIPT) --format hex
+BIN = $(PYTHON) $(BOARD_IMAGE_SCRIPT) --format bin
 override OUTFILES = $(BUILDDIR)/$(PROJECT).elf $(BUILDDIR)/$(PROJECT).hex \
   $(BUILDDIR)/$(PROJECT).srec $(BUILDDIR)/$(PROJECT).dmp $(BUILDDIR)/$(PROJECT).list
 endif

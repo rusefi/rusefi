@@ -54,6 +54,11 @@ arm-gnu-toolchain = ">=14,<15"
 # "Code generation is integrated into the Makefile"). CI supplies this via the
 # setup-java action in .github/workflows/build-firmware-windows.yaml.
 openjdk = "17.*"
+python = "3.12.*"
+
+[activation.env]
+# Conda's Windows Python executable is python.exe, not python3.exe.
+PYTHON = "python"
 
 # The rusEFI Makefiles shell out to a Unix userland (bash, sed, awk, grep,
 # coreutils). On Linux/macOS these come from the OS. On native Windows the CI job
@@ -69,6 +74,7 @@ m2-coreutils = "*"
 m2-findutils = "*"
 m2-diffutils = "*"
 m2-util-linux = "*"  # provides flock, used by java_tools.mk to serialize gradle
+# INI archive generation invokes both zip and 7z.
 m2-zip = ">=3.0.4,<4"
 m2-p7zip = ">=17.5.2,<18"
 
@@ -77,4 +83,3 @@ m2-p7zip = ">=17.5.2,<18"
 [tasks]
 build-fw = { cmd = "make -j12", cwd = "firmware" }
 test = { cmd = "./test.sh", cwd = "unit_tests" }
-

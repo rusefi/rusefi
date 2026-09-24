@@ -274,7 +274,7 @@ CHECKSUM_ADDRESS = $(or $(shell \
 
 ifneq ($(BOARD_IMAGE_SCRIPT),)
 $(BUILDDIR)/rusefi.srec: $(BUILDDIR)/$(PROJECT).elf
-	python3 $(BOARD_IMAGE_SCRIPT) --format srec $< $@
+	$(PYTHON) $(BOARD_IMAGE_SCRIPT) --format srec $< $@
 else
 $(BUILDDIR)/rusefi.srec: $(BUILDDIR)/$(PROJECT).hex
 	# make sure we create the srec from a binary with crc
