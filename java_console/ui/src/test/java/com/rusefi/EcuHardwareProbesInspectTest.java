@@ -156,7 +156,7 @@ public class EcuHardwareProbesInspectTest {
             IoStream stream = mock(IoStream.class);
             IncomingDataBuffer buffer = mock(IncomingDataBuffer.class);
             when(stream.getDataBuffer()).thenReturn(buffer);
-            when(buffer.getPacket("auto detect")).thenReturn(
+            when(buffer.getPacket(Timeouts.BINARY_IO_TIMEOUT, "auto detect")).thenReturn(
                 (BinaryProtocolServer.TS_OK + "rusEFI master.2026.09.23.test.123456").getBytes(StandardCharsets.US_ASCII));
 
             PortResult result = EcuHardwareProbes.inspectCanPort(port, () -> stream);
@@ -164,6 +164,7 @@ public class EcuHardwareProbesInspectTest {
             assertEquals(new PortResult(port, SerialPortType.Ecu), result);
             assertTrue(result.isEcu());
             verify(stream).sendPacket(HelloCommand.HELLO_COMMAND);
+            verify(buffer).getPacket(Timeouts.BINARY_IO_TIMEOUT, "auto detect");
             verify(stream).close();
         }
     }
@@ -174,10 +175,11 @@ public class EcuHardwareProbesInspectTest {
             IoStream stream = mock(IoStream.class);
             IncomingDataBuffer buffer = mock(IncomingDataBuffer.class);
             when(stream.getDataBuffer()).thenReturn(buffer);
-            when(buffer.getPacket("auto detect")).thenReturn(reply == null ? null :
+            when(buffer.getPacket(Timeouts.BINARY_IO_TIMEOUT, "auto detect")).thenReturn(reply == null ? null :
                 (BinaryProtocolServer.TS_OK + reply).getBytes(StandardCharsets.US_ASCII));
             assertEquals(new PortResult("PCAN", SerialPortType.Unknown),
                 EcuHardwareProbes.inspectCanPort("PCAN", () -> stream));
+            verify(buffer).getPacket(Timeouts.BINARY_IO_TIMEOUT, "auto detect");
             verify(stream).close();
         }
     }

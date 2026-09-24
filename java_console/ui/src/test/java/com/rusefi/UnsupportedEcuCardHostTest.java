@@ -47,7 +47,7 @@ public class UnsupportedEcuCardHostTest {
         IncomingDataBuffer buffer = mock(IncomingDataBuffer.class);
         when(bp.getStream()).thenReturn(stream);
         when(stream.getDataBuffer()).thenReturn(buffer);
-        when(buffer.getPacket("[hello]")).thenReturn(("\u0000" + liveSignature + "\u0000").getBytes(StandardCharsets.US_ASCII));
+        when(buffer.getPacket(Timeouts.BINARY_IO_TIMEOUT, "[hello]")).thenReturn(("\u0000" + liveSignature + "\u0000").getBytes(StandardCharsets.US_ASCII));
         when(bp.readFullImageFromController(any(ConfigurationImageMeta.class))).thenAnswer(call ->
             new ConfigurationImageWithMeta(call.getArgument(0), new byte[16]));
         when(bp.readFromPage(0x0400, 0, 8)).thenReturn(new byte[8]);
@@ -59,6 +59,7 @@ public class UnsupportedEcuCardHostTest {
         } finally {
             BinaryProtocol.iniFileProvider = previousProvider;
         }
+        verify(buffer).getPacket(Timeouts.BINARY_IO_TIMEOUT, "[hello]");
         FakePortScanner scanner = new FakePortScanner();
         UnsupportedEcuCardHost host = createHost(scanner, new LinkManager());
         PortResult detected = new PortResult(PORT, SerialPortType.EcuWithOpenblt, calibrations);
