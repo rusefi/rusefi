@@ -123,6 +123,7 @@ port with a matching INI. Keep multi-step commands in one server session.
 | `connect`, `ecu_info` | Identify the connected firmware and establish the connection. |
 | `read_tune` | Save the configuration alongside the capture; inspect trigger type, edge settings, and sniffer threshold. |
 | `read_output_channel` | Read context such as `RPMValue`; names must exist in the connected INI. |
+| `capture_engine_sniffer` | Wait for the next text chart; return ordered events, microsecond timestamps, channel summaries, and raw triplets. |
 | `send_command` / `command` | Queue `triggerinfo`, `chartsize 180`, or `reset_engine_chart`; optionally adjust the threshold for the investigation. |
 | `read_messages`, `wait_for_message` | Collect command responses and trigger diagnostics. Use `sinceSeq` to exclude stale messages. |
 | `start_data_logging`, `data_logging_status`, `stop_data_logging` | Record host `.mlg` operating data alongside edge captures. These tools do not start or return a sniffer waveform. |
@@ -135,19 +136,30 @@ Example MCP tool calls (each object is a `tools/call` params object):
 {"name":"send_command","arguments":{"command":"triggerinfo"}}
 {"name":"read_messages","arguments":{"maxLines":100}}
 {"name":"send_command","arguments":{"command":"chartsize 180"}}
+{"name":"capture_engine_sniffer","arguments":{"timeoutMs":20000}}
 ```
 
 `send_command` returning `queued: true` confirms queueing, not execution.
 For a fresh response, obtain the message sequence before sending the command
 and pass it as `sinceSeq` to subsequent reads/waits.
 
-There is currently no dedicated MCP tool to start/stop/export an engine-sniffer
-capture or return parsed composite events. `read_messages` listens to
-`MessagesCentral` (`msg` protocol entries); `wave_chart` is routed separately
-through `EngineState` and is not exposed by that tool. The shared Java
-connection may create automatic composite files, but MCP does not expose their
-paths or lifecycle as a capture API. Use the Console/TS or SD capture path for
-waveforms. `convert_log_to_csv` supports MLG/MSL operating logs, not `.teeth`,
+`capture_engine_sniffer` subscribes to `EngineState` for one nonempty `wave_chart`
+received after the call, with a default 10-second timeout (maximum 120 seconds).
+It returns edge direction, crank trigger indices, TDC RPM, channel event counts,
+and the raw chart. Times are relative to the chart's origin in microseconds;
+`receivedAt` is the host receipt time in Unix milliseconds. Names are logical
+channels, without physical pin mappings. The result includes the firmware
+signature. No prior MCP chart is replayed, but firmware may have begun collecting
+the newly received chart before the call. Existing settings control publication;
+the tool does not reset acquisition or change the tune. Timeout/disconnect returns
+an error and releases the listener. See the ECU MCP README for the full schema.
+
+`read_messages` listens to `MessagesCentral` (`msg` protocol entries);
+`wave_chart` is routed separately and is exposed by `capture_engine_sniffer`.
+There is still no MCP lifecycle API for binary composite files or parsed composite
+events. The shared Java connection may create automatic composite files; use the
+Console/TS or SD path for those captures. `convert_log_to_csv` supports MLG/MSL
+operating logs, not `.teeth`,
 `.logicdata`, or text `wave_chart` packets. `:mcp_can` captures CAN frames and
 does not substitute for crank/cam capture.
 
