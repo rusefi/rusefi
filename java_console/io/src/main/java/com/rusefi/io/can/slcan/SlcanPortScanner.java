@@ -146,6 +146,13 @@ public class SlcanPortScanner {
         }
     }
 
+    /** One bounded scan for CLI callers; does not start the background scan loop. */
+    public static List<Result> scanOnce(Probes probes) {
+        SlcanPortScanner scanner = new SlcanPortScanner(probes, ports -> {});
+        scanner.scanCycle();
+        return scanner.getKnownPorts();
+    }
+
     /** Starts the background scan loop; tests drive {@link #scanCycle()} directly instead. */
     public void start() {
         Thread thread = new Thread(() -> {
