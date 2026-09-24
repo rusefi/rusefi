@@ -12,8 +12,8 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 |---|---|---:|---:|---|---:|---:|---|
 | firmware | accelerometer | 400 | 184 | normal SPI sensor read | 24 | 24 | PROXY +0, PROXY BELOW REVIEWED; partial proxy: 1 indirect |
 | firmware | bench test | 1600 | 148 | idle production worker | 1932 | 1876 | PROXY -56; partial proxy: 34 unknown, 6 indirect, recursion |
-| firmware | CAN RX | 768 | 440 | CAN serial receive | 1244 | 1308 | REVIEW PROXY +64; partial proxy: 59 unknown, 25 indirect, recursion |
-| firmware | CAN TX | 1536 | - | - | - | 1308 | NOT REVIEWED: 37 unknown, 7 indirect, recursion |
+| firmware | CAN RX | 768 | 440 | CAN serial receive | 1244 | 1308 | REVIEW PROXY +64; partial proxy: 59 unknown, 28 indirect, recursion |
+| firmware | CAN TX | 1536 | - | - | - | 1308 | NOT REVIEWED: 37 unknown, 9 indirect, recursion |
 | firmware | electronic throttle | 512 | 304 | normal ETB update | 556 | 596 | REVIEW PROXY +40; partial proxy: 20 unknown, 3 indirect, recursion |
 | firmware | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | firmware | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
@@ -70,8 +70,8 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | Image | Stack / entry | Nominal | Reviewed | Scenario | Proxy snapshot | Current proxy | Result |
 |---|---|---:|---:|---|---:|---:|---|
 | firmware | bench test | 1600 | - | - | - | 700 | NOT REVIEWED: 21 unknown, 3 indirect, recursion |
-| firmware | CAN RX | 768 | 296 | normal IOBox receive | 1212 | 1228 | REVIEW PROXY +16; partial proxy: 50 unknown, 24 indirect, recursion |
-| firmware | CAN TX | 1536 | - | - | - | 1244 | NOT REVIEWED: 27 unknown, 7 indirect, recursion |
+| firmware | CAN RX | 768 | 296 | normal IOBox receive | 1212 | 1228 | REVIEW PROXY +16; partial proxy: 50 unknown, 27 indirect, recursion |
+| firmware | CAN TX | 1536 | - | - | - | 1244 | NOT REVIEWED: 27 unknown, 9 indirect, recursion |
 | firmware | electronic throttle | 512 | 256 | normal ETB update | 8 | 8 | PROXY +0, PROXY BELOW REVIEWED; partial proxy: 1 indirect |
 | firmware | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | firmware | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
@@ -126,8 +126,8 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | Image | Stack / entry | Nominal | Reviewed | Scenario | Proxy snapshot | Current proxy | Result |
 |---|---|---:|---:|---|---:|---:|---|
 | firmware | bench test | 1600 | 204 | idle production worker | 2028 | 1948 | PROXY -80; partial proxy: 25 unknown, 6 indirect, recursion |
-| firmware | CAN RX | 768 | 496 | CAN serial receive | 1340 | 1412 | REVIEW PROXY +72; partial proxy: 51 unknown, 24 indirect, recursion |
-| firmware | CAN TX | 1536 | - | - | - | 1964 | NOT REVIEWED: 29 unknown, 8 indirect, recursion |
+| firmware | CAN RX | 768 | 496 | CAN serial receive | 1340 | 1412 | REVIEW PROXY +72; partial proxy: 51 unknown, 27 indirect, recursion |
+| firmware | CAN TX | 1536 | - | - | - | 1964 | NOT REVIEWED: 29 unknown, 10 indirect, recursion |
 | firmware | electronic throttle | 512 | 312 | normal ETB update | 532 | 588 | REVIEW PROXY +56; partial proxy: 11 unknown, 3 indirect, recursion |
 | firmware | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | firmware | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
@@ -185,8 +185,8 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 |---|---|---:|---:|---|---:|---:|---|
 | firmware | accelerometer | 400 | - | - | - | 24 | NOT REVIEWED: 1 indirect |
 | firmware | bench test | 1600 | - | - | - | 1884 | NOT REVIEWED: 34 unknown, 6 indirect, recursion |
-| firmware | CAN RX | 768 | - | - | - | 1308 | NOT REVIEWED: 62 unknown, 27 indirect, recursion |
-| firmware | CAN TX | 1536 | - | - | - | 1316 | NOT REVIEWED: 38 unknown, 8 indirect, recursion |
+| firmware | CAN RX | 768 | - | - | - | 1308 | NOT REVIEWED: 62 unknown, 30 indirect, recursion |
+| firmware | CAN TX | 1536 | - | - | - | 1316 | NOT REVIEWED: 38 unknown, 10 indirect, recursion |
 | firmware | electronic throttle | 512 | - | - | - | 604 | NOT REVIEWED: 20 unknown, 3 indirect, recursion |
 | firmware | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | firmware | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
@@ -244,8 +244,8 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 |---|---|---:|---:|---|---:|---:|---|
 | firmware | accelerometer | 400 | - | - | - | 24 | NOT REVIEWED: 1 indirect |
 | firmware | bench test | 1600 | - | - | - | 1844 | NOT REVIEWED: 26 unknown, 6 indirect, recursion |
-| firmware | CAN RX | 768 | - | - | - | 1324 | NOT REVIEWED: 52 unknown, 27 indirect, recursion |
-| firmware | CAN TX | 1536 | - | - | - | 1308 | NOT REVIEWED: 29 unknown, 9 indirect, recursion |
+| firmware | CAN RX | 768 | - | - | - | 1324 | NOT REVIEWED: 52 unknown, 30 indirect, recursion |
+| firmware | CAN TX | 1536 | - | - | - | 1308 | NOT REVIEWED: 29 unknown, 11 indirect, recursion |
 | firmware | electronic throttle | 512 | - | - | - | 588 | NOT REVIEWED: 12 unknown, 3 indirect, recursion |
 | firmware | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | firmware | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
