@@ -8,6 +8,8 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.io.can.SocketCANIoStream;
+import com.rusefi.io.can.PCanIoStream;
+import com.rusefi.io.can.SLCANConnector;
 import com.rusefi.io.serial.BufferedSerialIoStream;
 import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.maintenance.CalibrationsHelper;
@@ -23,6 +25,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeSet;
+import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -47,12 +51,52 @@ public class EcuHardwareProbes implements SerialPortScanner.HardwareProbes {
 
     @Override
     public Set<String> listSerialPorts() {
-        return LinkManager.getCommPorts();
+        return discoveryPorts(LinkManager.getCommPorts(), UiProperties.useCanbusConnector());
+    }
+
+    // Use transport-qualified names throughout the existing scanner cache and auto-connect path.
+    static Set<String> discoveryPorts(Set<String> serialPorts, boolean useCanbusConnector) {
+        if (!useCanbusConnector) {
+            return serialPorts;
+        }
+        Set<String> ports = new TreeSet<>();
+        for (String port : serialPorts) {
+            ports.add(LinkManager.SLCAN_PREFIX + port);
+        }
+        // Opening the driver tests availability on every supported OS, without relying on a
+        // Windows device-name lookup. An unavailable adapter is retried on subsequent scans.
+        ports.add(LinkManager.PCAN);
+        return ports;
     }
 
     @Override
     public PortResult inspectPort(String serialPort) {
+        if (LinkManager.PCAN.equals(serialPort)) {
+            return inspectCanPort(serialPort, PCanIoStream::createStream);
+        }
+        if (LinkManager.isSlcanPort(serialPort)) {
+            return inspectCanPort(serialPort, () -> SLCANConnector.createStream(
+                serialPort.substring(LinkManager.SLCAN_PREFIX.length()), 6));
+        }
         return EcuHardwareProbes.inspect(serialPort);
+    }
+
+    static PortResult inspectCanPort(String port, Callable<IoStream> opener) {
+        try (IoStream stream = opener.call()) {
+            if (stream == null) {
+                return null;
+            }
+            // The adapter alone is insufficient: require a rusEFI HELLO over ISO-TP.
+            // Unknown must remain retryable when an ECU is powered up later on the same bus.
+            String signature = SerialAutoChecker.checkResponse(stream, null);
+            return new PortResult(port, signature == null ? SerialPortType.Unknown : SerialPortType.Ecu);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return null;
+        } catch (Exception | LinkageError e) {
+            log.info("CAN probe unavailable on " + port + ": " + e.getMessage());
+            return null;
+        }
     }
 
     @Override

@@ -171,6 +171,34 @@ public class SerialPortScannerTest {
     }
 
     @Test
+    public void canEndpointsRetryThenNotifyAndStayPinnedUntilInvalidated() {
+        for (String port : java.util.Arrays.asList("SLCAN:COM7", LinkManager.PCAN)) {
+            createScanner();
+            List<AvailableHardware> notifications = new ArrayList<>();
+            scanner.addListener(notifications::add);
+            addPort(port, SerialPortType.Unknown);
+            scan(false);
+            addPort(port, SerialPortType.Ecu);
+            scan(false);
+            assertEquals(2, notifications.size());
+            PortResult ecu = knownPorts().get(0);
+            assertTrue(ecu.isEcu());
+            assertEquals(port, ecu.port);
+
+            scanner.cachePort(ecu);
+            probes.time += 10_000;
+            scan(false);
+            assertEquals(2, (int) probes.inspectCalls.get(port));
+
+            scanner.invalidatePort(port);
+            addPort(port, SerialPortType.Unknown);
+            scan(false);
+            assertEquals(3, (int) probes.inspectCalls.get(port));
+            assertFalse(knownPorts().get(0).isEcu());
+        }
+    }
+
+    @Test
     public void detectedEcuIsCachedAndNotReinspectedNextCycle() {
         addPort("COM5", SerialPortType.Ecu);
 

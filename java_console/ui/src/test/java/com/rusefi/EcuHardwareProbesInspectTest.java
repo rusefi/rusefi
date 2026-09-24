@@ -13,6 +13,13 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Optional;
+import java.util.Set;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.nio.charset.StandardCharsets;
+import com.rusefi.binaryprotocol.IncomingDataBuffer;
+import com.rusefi.io.commands.HelloCommand;
+import com.rusefi.io.tcp.BinaryProtocolServer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -131,6 +138,55 @@ public class EcuHardwareProbesInspectTest {
 
         assertNull(EcuHardwareProbes.inspectSocketCan(probe));
         assertEquals(0, probe.openCalls);
+    }
+
+    @Test
+    public void canModeReplacesSerialCandidatesAndAddsPcanEvenWithoutSerialPorts() {
+        Set<String> serial = new HashSet<>(Arrays.asList("COM7", "COM8", "ttyS0"));
+        assertEquals(serial, EcuHardwareProbes.discoveryPorts(serial, false));
+        assertEquals(new HashSet<>(Arrays.asList("SLCAN:COM7", "SLCAN:COM8", "SLCAN:ttyS0", "PCAN")),
+            EcuHardwareProbes.discoveryPorts(serial, true));
+        assertEquals(java.util.Collections.singleton("PCAN"),
+            EcuHardwareProbes.discoveryPorts(java.util.Collections.emptySet(), true));
+    }
+
+    @Test
+    public void canDiscoveryRequiresEcuReplyAndReleasesStreamBeforeAutoConnect() throws Exception {
+        for (String port : Arrays.asList("PCAN", "SLCAN:COM7")) {
+            IoStream stream = mock(IoStream.class);
+            IncomingDataBuffer buffer = mock(IncomingDataBuffer.class);
+            when(stream.getDataBuffer()).thenReturn(buffer);
+            when(buffer.getPacket("auto detect")).thenReturn(
+                (BinaryProtocolServer.TS_OK + "rusEFI master.2026.09.23.test.123456").getBytes(StandardCharsets.US_ASCII));
+
+            PortResult result = EcuHardwareProbes.inspectCanPort(port, () -> stream);
+
+            assertEquals(new PortResult(port, SerialPortType.Ecu), result);
+            assertTrue(result.isEcu());
+            verify(stream).sendPacket(HelloCommand.HELLO_COMMAND);
+            verify(stream).close();
+        }
+    }
+
+    @Test
+    public void silentOrUnrelatedCanDeviceRemainsRetryable() throws Exception {
+        for (String reply : Arrays.asList(null, "another device")) {
+            IoStream stream = mock(IoStream.class);
+            IncomingDataBuffer buffer = mock(IncomingDataBuffer.class);
+            when(stream.getDataBuffer()).thenReturn(buffer);
+            when(buffer.getPacket("auto detect")).thenReturn(reply == null ? null :
+                (BinaryProtocolServer.TS_OK + reply).getBytes(StandardCharsets.US_ASCII));
+            assertEquals(new PortResult("PCAN", SerialPortType.Unknown),
+                EcuHardwareProbes.inspectCanPort("PCAN", () -> stream));
+            verify(stream).close();
+        }
+    }
+
+    @Test
+    public void unavailableCanAdaptersDoNotBecomeEcus() {
+        assertNull(EcuHardwareProbes.inspectCanPort("PCAN", () -> null));
+        assertNull(EcuHardwareProbes.inspectCanPort("PCAN", () -> { throw new UnsatisfiedLinkError("no driver"); }));
+        assertNull(EcuHardwareProbes.inspectCanPort("SLCAN:COM7", () -> { throw new java.io.IOException("not SLCAN"); }));
     }
 
     @Test

@@ -11,6 +11,10 @@ public class UiProperties {
         return ConnectionAndMeta.getBoolean("show_pcan", PropertiesHolder.INSTANCE.getProperties());
     }
 
+    public static boolean useCanbusConnector() {
+        return ConnectionAndMeta.getBoolean("use_canbus_connector", PropertiesHolder.INSTANCE.getProperties());
+    }
+
     public static boolean useSimulator() {
         return ConnectionAndMeta.getBoolean("show_simulator", PropertiesHolder.INSTANCE.getProperties());
     }

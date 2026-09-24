@@ -11,6 +11,7 @@ import com.rusefi.core.io.UnsupportedEcuInfo;
 import com.rusefi.io.serial.BufferedSerialIoStream;
 import com.rusefi.io.serial.StreamConnector;
 import com.rusefi.io.can.PCanIoStream;
+import com.rusefi.io.can.SLCANConnector;
 import com.rusefi.io.can.SocketCANIoStream;
 import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.io.tcp.TcpIoStream;
@@ -37,6 +38,7 @@ import static com.devexperts.logging.Logging.getLogging;
 public class LinkManager implements Closeable {
     private static final Logging log = getLogging(LinkManager.class);
     public static final String PCAN = "PCAN";
+    public static final String SLCAN_PREFIX = "SLCAN:";
     public static final String SOCKET_CAN = "SocketCAN";
     // Synthetic marker for a board in the STM32 built-in bootloader (DFU). Not a real serial port —
     // never opened as a stream; used only to surface DFU in the ports list [tag:better_ux_for_flashing].
@@ -354,6 +356,15 @@ public class LinkManager implements Closeable {
         } else if (isPcanPort(port)) {
             Callable<IoStream> streamFactory = PCanIoStream::createStream;
             setConnector(new StreamConnector(this, streamFactory));
+        } else if (isSlcanPort(port)) {
+            setConnector(new StreamConnector(this, () -> {
+                try {
+                    return SLCANConnector.createStream(port.substring(SLCAN_PREFIX.length()), 6);
+                } catch (java.io.IOException e) {
+                    log.info("Unable to open " + port + ": " + e.getMessage());
+                    return null;
+                }
+            }));
         } else if (isSocketCan(port)) {
             Callable<IoStream> streamFactory = SocketCANIoStream::createStream;
             setConnector(new StreamConnector(this, streamFactory));
@@ -400,7 +411,11 @@ public class LinkManager implements Closeable {
     }
 
     public static boolean isCanPort(String port) {
-        return PCAN.equals(port) || SOCKET_CAN.equals(port);
+        return PCAN.equals(port) || SOCKET_CAN.equals(port) || isSlcanPort(port);
+    }
+
+    public static boolean isSlcanPort(String port) {
+        return port != null && port.startsWith(SLCAN_PREFIX);
     }
 
     public void setConnector(LinkConnector connector) {
@@ -417,7 +432,7 @@ public class LinkManager implements Closeable {
 
     public static boolean isSpecialNotSerial(String port) {
         // DFU is a synthetic, non-serial marker [tag:better_ux_for_flashing] — never open it as a stream.
-        return isLogViewerMode(port) || isPcanPort(port) || isSocketCan(port) || TcpConnector.isTcpPort(port) || isDfu(port);
+        return isLogViewerMode(port) || isCanPort(port) || TcpConnector.isTcpPort(port) || isDfu(port);
     }
 
     public static boolean isLogViewerMode(String port) {

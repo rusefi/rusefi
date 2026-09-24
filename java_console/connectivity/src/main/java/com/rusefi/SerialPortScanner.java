@@ -38,6 +38,7 @@ public class SerialPortScanner implements PortScanner {
      * implementation. See docs/java-connectivity-context-review.md.
      */
     public interface HardwareProbes {
+        /** Serial discovery candidates, or transport-qualified SLCAN/PCAN endpoints in CAN mode. */
         Set<String> listSerialPorts();
 
         /** @return detected port type, or null for a dead/stale OS node that must be dropped entirely */

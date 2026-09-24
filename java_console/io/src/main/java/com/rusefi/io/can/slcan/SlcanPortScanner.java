@@ -49,7 +49,7 @@ import java.util.stream.Collectors;
  * frames from a stale session is recognized as SLCAN by its frame lines.
  *
  * @see SlcanClient
- * @see com.rusefi.binaryprotocol.test.SlcanSandbox
+ * see com.rusefi.binaryprotocol.test.SlcanSandbox
  */
 public class SlcanPortScanner {
     private static final Logging log = Logging.getLogging(SlcanPortScanner.class);

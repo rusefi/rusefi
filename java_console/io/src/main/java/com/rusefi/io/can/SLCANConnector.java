@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
-/** Manual-harness SLCAN transport, sharing the PCAN stream's ISO-TP implementation. */
+/** SLCAN transport, sharing the PCAN stream's ISO-TP implementation. */
 public final class SLCANConnector implements RawCanPort {
     private final String port;
     private final int bitrate;
