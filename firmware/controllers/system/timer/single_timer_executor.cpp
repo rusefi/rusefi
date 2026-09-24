@@ -1,7 +1,7 @@
 /**
  * @file SingleTimerExecutor.cpp
  *
- * This class combines the powers of a 1MHz hardware timer from microsecond_timer.cpp
+ * This class combines the powers of a hardware timer from microsecond_timer.cpp
  * and pending events queue event_queue.cpp
  *
  * As of version 2.6.x, ChibiOS tick-based kernel is not capable of scheduling events
