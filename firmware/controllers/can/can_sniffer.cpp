@@ -4,6 +4,10 @@
  * Implementation of slcan protocol
  * Inspired by https://github.com/smartgauges/ucds
  *
+ * we use standard SLCAN protocol with a bus prefixes extension for 't'/'T' commands:
+ * for received messages: CAN1 has no prefix, CAN2 '&', CAN3 '$'.
+ * for transmitted messages: no prefix - `canSnifferTxBus` setting used, CAN1 '*', CAN2 '&', CAN3 '$'.
+ *
  * @date Jul 24, 2026
  * @author Andrey Gusakov
  */
@@ -53,22 +57,6 @@ char * CanSniffer::put_hex_byte(char * str, uint8_t val)
 	return str;
 }
 
-uint8_t CanSniffer::read_hex_number_8(const char * str, uint8_t len)
-{
-	uint8_t d = 0;
-	while(len--){
-		d <<= 4;
-		uint8_t v = 0;
-		if((*str >= '0') && (*str <= '9')) v = *str - '0';
-		else if((*str >= 'A') && (*str <= 'F')) v = *str - 'A' + 10;
-		else if((*str >= 'a') && (*str <= 'f')) v = *str - 'a' + 10;
-
-		d |= v;
-		str++;
-	}
-	return d;
-}
-
 uint32_t CanSniffer::read_hex_number(const char * str, uint8_t len)
 {
 	uint32_t d = 0;
@@ -108,7 +96,7 @@ bool CanSniffer::can_init(slcan_can_mode_e mode) {
 		efiPrintf("sniffer wants to close CAN");
 		break;
 	case can_mode_normal:
-		// TODO: return error if baud is not equal to what ECU alrady set?
+		// TODO: return error if baud is not equal to what ECU already set?
 		efiPrintf("sniffer wants to open CAN with baud %d", baud);
 		break;
 	case can_mode_listen:
@@ -143,11 +131,14 @@ void CanSniffer::execute_status_command() {
 	putstr(buf);
 }
 
-bool CanSniffer::send_can_message_from_string(const char *str) {
-	if (engineConfiguration->canSnifferTxBus == CAN_BUS_NONE) {
+bool CanSniffer::send_can_message_from_string(const char *str, can_bus_channel_e channel) {
+
+	if (channel == CAN_BUS_NONE) {
+		channel = can_bus_channel_e(engineConfiguration->canSnifferTxBus);
+	}
+	if (channel == CAN_BUS_NONE || int(channel) > EFI_CAN_BUS_COUNT + 1) {
 		return false;
 	}
-
 	char cmd = *str++; // command char
 	bool IDE = cmd == 'T' || cmd == 'R'; // upercase means EID
 	bool RTR = cmd == 'r' || cmd == 'R'; // the upper or lowercase r means RTR
@@ -169,16 +160,16 @@ bool CanSniffer::send_can_message_from_string(const char *str) {
 		if(id > 0x1fffffff) return false;
 	}
 
-	dlc = read_hex_number_8(str, 1);
+	dlc = read_hex_number(str, 1);
 	str += 1;
 	if(dlc > 8)
 		return false;
 
-	CanTxMessage cmsg(CanCategory::SNIFFER, id, dlc, engineConfiguration->canSnifferTxBus - CAN_BUS_CAN1, /*isExtended*/IDE);
+	CanTxMessage cmsg(CanCategory::SNIFFER, id, dlc, (channel - CAN_BUS_CAN1), /*isExtended*/IDE);
 
 	if (!RTR) {
 		for (uint8_t i = 0; i < dlc; i++) {
-			cmsg[i] = read_hex_number_8(str, 2);
+			cmsg[i] = read_hex_number(str, 2);
 			str += 2;
 		}
 	}
@@ -224,13 +215,29 @@ size_t CanSniffer::readLine() {
 void CanSniffer::executeCommand() {
 	char *str = line;
 
+	// custom bus prefix for 't'/'T' commands
+	can_bus_channel_e channel = CAN_BUS_NONE;
+	switch (*str) {
+		case '*':
+			channel = CAN_BUS_CAN1;
+			str++;
+			break;
+		case '&':
+			channel = CAN_BUS_CAN2;
+			str++;
+			break;
+		case '$':
+			channel = CAN_BUS_CAN3;
+			str++;
+			break;
+	}
+
 	switch(str[0]) {
 		case 't': // transmit standard ID messages
 		case 'r':
-			if (transmit_enabled && send_can_message_from_string(str)) {
+			if (transmit_enabled && send_can_message_from_string(str, channel)) {
 				// Ack instantly
 				putstr("z\r");
-				//putstr(loopback, str);
 			}
 			else {
 				putstr("\a"); // bell
@@ -239,7 +246,7 @@ void CanSniffer::executeCommand() {
 
 		case 'T': // transmit extended ID messages
 		case 'R':
-			if (transmit_enabled && send_can_message_from_string(str)) {
+			if (transmit_enabled && send_can_message_from_string(str, channel)) {
 				// Ack instantly
 				putstr("Z\r");
 			}
