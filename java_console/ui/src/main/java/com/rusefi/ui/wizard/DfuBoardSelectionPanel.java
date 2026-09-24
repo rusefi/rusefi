@@ -4,6 +4,8 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -80,6 +82,17 @@ public final class DfuBoardSelectionPanel extends JPanel {
             }
         });
         boards.addListSelectionListener(e -> confirm.setEnabled(!completed && boards.getSelectedValue() != null));
+        boards.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2) {
+                    int index = boards.locationToIndex(e.getPoint());
+                    if (index >= 0 && boards.getCellBounds(index, index).contains(e.getPoint())) {
+                        confirm.doClick();
+                    }
+                }
+            }
+        });
         search.getDocument().addDocumentListener(new DocumentListener() {
             public void insertUpdate(DocumentEvent e) { filter(); }
             public void removeUpdate(DocumentEvent e) { filter(); }
