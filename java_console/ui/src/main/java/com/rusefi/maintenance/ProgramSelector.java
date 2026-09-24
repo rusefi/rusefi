@@ -489,7 +489,7 @@ public class ProgramSelector {
         @Nullable String firmwareSrecFile,
         CalibrationsHelper.FirmwareUpdatePolicy policy
     ) {
-        if (!LinkManager.isCanPort(ecuPort.port)
+        if (!isAutomaticCanPort(ecuPort.port)
             || lm == null
             || bp == null
             || !ecuPort.port.equals(lm.getLastTriedPort())) {
@@ -966,7 +966,12 @@ public class ProgramSelector {
     }
 
     private static boolean isCanEcu(@Nullable PortResult port) {
-        return port != null && LinkManager.isCanPort(port.port) && port.isEcu();
+        return port != null && isAutomaticCanPort(port.port) && port.isEcu();
+    }
+
+    /** CAN transports supported by the OpenBLT flasher. */
+    private static boolean isAutomaticCanPort(String port) {
+        return LinkManager.PCAN.equals(port) || LinkManager.SOCKET_CAN.equals(port);
     }
 
 }

@@ -144,12 +144,12 @@ public class EcuHardwareProbesInspectTest {
     }
 
     @Test
-    public void canModeReplacesSerialCandidatesAndAddsPcanEvenWithoutSerialPorts() {
+    public void canModeReplacesSerialCandidatesAndLeavesPcanToDedicatedProbe() {
         Set<String> serial = new HashSet<>(Arrays.asList("COM7", "COM8", "ttyS0"));
         assertEquals(serial, EcuHardwareProbes.discoveryPorts(serial, false));
-        assertEquals(new HashSet<>(Arrays.asList("SLCAN:COM7", "SLCAN:COM8", "SLCAN:ttyS0", "PCAN")),
+        assertEquals(new HashSet<>(Arrays.asList("SLCAN:COM7", "SLCAN:COM8", "SLCAN:ttyS0")),
             EcuHardwareProbes.discoveryPorts(serial, true));
-        assertEquals(java.util.Collections.singleton("PCAN"),
+        assertEquals(java.util.Collections.emptySet(),
             EcuHardwareProbes.discoveryPorts(java.util.Collections.emptySet(), true));
     }
 

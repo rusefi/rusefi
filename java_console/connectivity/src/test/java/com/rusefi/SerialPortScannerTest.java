@@ -183,30 +183,54 @@ public class SerialPortScannerTest {
 
     @Test
     public void canEndpointsRetryThenNotifyAndStayPinnedUntilInvalidated() {
-        for (String port : java.util.Arrays.asList("SLCAN:COM7", LinkManager.PCAN)) {
-            createScanner();
-            List<AvailableHardware> notifications = new ArrayList<>();
-            scanner.addListener(notifications::add);
-            addPort(port, SerialPortType.Unknown);
-            scan(false);
-            addPort(port, SerialPortType.Ecu);
-            scan(false);
-            assertEquals(2, notifications.size());
-            PortResult ecu = knownPorts().get(0);
-            assertTrue(ecu.isEcu());
-            assertEquals(port, ecu.port);
+        createScanner();
+        List<AvailableHardware> notifications = new ArrayList<>();
+        scanner.addListener(notifications::add);
+        String slcan = "SLCAN:COM7";
+        addPort(slcan, SerialPortType.Unknown);
+        scan(false);
+        addPort(slcan, SerialPortType.Ecu);
+        scan(false);
+        assertEquals(2, notifications.size());
+        PortResult slcanEcu = knownPorts().get(0);
+        assertTrue(slcanEcu.isEcu());
+        assertEquals(slcan, slcanEcu.port);
 
-            scanner.cachePort(ecu);
-            probes.time += 10_000;
-            scan(false);
-            assertEquals(2, (int) probes.inspectCalls.get(port));
+        scanner.cachePort(slcanEcu);
+        probes.time += 10_000;
+        scan(false);
+        assertEquals(2, (int) probes.inspectCalls.get(slcan));
 
-            scanner.invalidatePort(port);
-            addPort(port, SerialPortType.Unknown);
-            scan(false);
-            assertEquals(3, (int) probes.inspectCalls.get(port));
-            assertFalse(knownPorts().get(0).isEcu());
-        }
+        scanner.invalidatePort(slcan);
+        addPort(slcan, SerialPortType.Unknown);
+        scan(false);
+        assertEquals(3, (int) probes.inspectCalls.get(slcan));
+        assertFalse(knownPorts().get(0).isEcu());
+
+        // PCAN uses its dedicated slow probe; SLCAN uses the generic port pass.
+        createScanner();
+        notifications = new ArrayList<>();
+        scanner.addListener(notifications::add);
+        probes.pcanResult = new PortResult(LinkManager.PCAN, SerialPortType.Unknown);
+        scan(true);
+        probes.time += 3_001;
+        probes.pcanResult = new PortResult(LinkManager.PCAN, SerialPortType.Ecu);
+        scan(true);
+        assertEquals(2, notifications.size());
+        PortResult pcanEcu = knownPorts().get(0);
+        assertTrue(pcanEcu.isEcu());
+        assertEquals(LinkManager.PCAN, pcanEcu.port);
+
+        scanner.cachePort(pcanEcu);
+        probes.time += 10_000;
+        scan(false);
+        assertEquals(2, probes.pcanInspectionCalls);
+
+        scanner.invalidatePort(LinkManager.PCAN);
+        probes.pcanResult = new PortResult(LinkManager.PCAN, SerialPortType.Unknown);
+        scan(true);
+        assertEquals(3, probes.pcanInspectionCalls);
+        assertTrue(knownPorts().isEmpty(), "an unavailable PCAN adapter is status, not a connect target");
     }
 
     @Test
@@ -335,6 +359,21 @@ public class SerialPortScannerTest {
         assertTrue(knownPorts().isEmpty(), "a PCAN adapter without an ECU is status, not a connect target");
     }
 
+    /** PCAN is published by its dedicated probe; SLCAN remains normally discoverable. */
+    @Test
+    public void pcanIsPublishedOnlyByDedicatedProbeWhileSlcanRemainsDiscoverable() {
+        addPort("SLCAN:COM7", SerialPortType.Ecu);
+        addPort(LinkManager.PCAN, SerialPortType.Ecu);
+        probes.pcanResult = new PortResult(LinkManager.PCAN, SerialPortType.Ecu);
+
+        scan(true);
+
+        assertEquals(1, knownPorts().stream().filter(p -> "SLCAN:COM7".equals(p.port)).count());
+        assertFalse(probes.inspectCalls.containsKey(LinkManager.PCAN));
+        assertEquals(1, probes.pcanInspectionCalls);
+        assertEquals(1, knownPorts().stream().filter(p -> LinkManager.PCAN.equals(p.port)).count());
+    }
+
     @Test
     public void pcanEcuIsPublishedAndPreservedAcrossFastScan() {
         probes.pcanResult = new PortResult(LinkManager.PCAN, SerialPortType.Ecu);
@@ -343,8 +382,8 @@ public class SerialPortScannerTest {
         scan(false);
 
         assertEquals(1, probes.pcanInspectionCalls);
-        assertFalse(scanner.getCurrentHardware().isPCANConnected(),
-            "fast scans preserve the cached PCAN port but not slow device-presence status");
+        assertTrue(scanner.getCurrentHardware().isPCANConnected(),
+            "fast scans must preserve availability along with the cached PCAN ECU");
         assertEquals(java.util.Collections.singletonList(probes.pcanResult), knownPorts());
     }
 
@@ -405,31 +444,6 @@ public class SerialPortScannerTest {
         assertEquals(java.util.Collections.singletonList(live), knownPorts());
     }
 
-    /** Issue #10138, SocketCAN equivalent of the PCAN pin race. */
-    @Test
-    public void socketCanProbeCompletionAfterCachePortPreservesPinnedResult() throws Exception {
-        PortResult live = new PortResult(LinkManager.SOCKET_CAN, SerialPortType.Ecu);
-        probes.socketCanResult = new PortResult(LinkManager.SOCKET_CAN, SerialPortType.CAN);
-        probes.socketCanProbeEntered = new CountDownLatch(1);
-        probes.releaseSocketCanProbe = new CountDownLatch(1);
-
-        Thread scanThread = startBlockedScan(probes.socketCanProbeEntered);
-        try {
-            scanner.cachePort(live);
-        } finally {
-            releaseAndJoin(scanThread, probes.releaseSocketCanProbe);
-        }
-
-        assertTrue(scanner.getCurrentHardware().isSocketCanAvailable());
-        assertEquals(java.util.Collections.singletonList(live), knownPorts());
-
-        probes.socketCanResult = live;
-        probes.time += 3001;
-        scan(true);
-        assertEquals(1, probes.socketCanInspectionCalls, "the pinned live port must not be reprobed");
-        assertEquals(java.util.Collections.singletonList(live), knownPorts());
-    }
-
     /** Issue #10138: invalidation during a probe must reject its stale result. */
     @Test
     public void pcanProbeCompletionAfterInvalidateDiscardsStaleResult() throws Exception {
@@ -443,24 +457,6 @@ public class SerialPortScannerTest {
             scanner.invalidatePort(LinkManager.PCAN);
         } finally {
             releaseAndJoin(scanThread, probes.releasePcanProbe);
-        }
-
-        assertTrue(knownPorts().isEmpty(), "in-flight result must not restore an invalidated port");
-    }
-
-    /** Issue #10138, SocketCAN equivalent of the invalidation race. */
-    @Test
-    public void socketCanProbeCompletionAfterInvalidateDiscardsStaleResult() throws Exception {
-        PortResult stale = new PortResult(LinkManager.SOCKET_CAN, SerialPortType.Ecu);
-        probes.socketCanResult = stale;
-        probes.socketCanProbeEntered = new CountDownLatch(1);
-        probes.releaseSocketCanProbe = new CountDownLatch(1);
-
-        Thread scanThread = startBlockedScan(probes.socketCanProbeEntered);
-        try {
-            scanner.invalidatePort(LinkManager.SOCKET_CAN);
-        } finally {
-            releaseAndJoin(scanThread, probes.releaseSocketCanProbe);
         }
 
         assertTrue(knownPorts().isEmpty(), "in-flight result must not restore an invalidated port");

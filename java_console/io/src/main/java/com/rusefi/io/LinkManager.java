@@ -411,7 +411,11 @@ public class LinkManager implements Closeable {
     }
 
     public static boolean isCanPort(String port) {
-        return PCAN.equals(port) || SOCKET_CAN.equals(port);
+        return PCAN.equals(port) || SOCKET_CAN.equals(port) || isSlcanPort(port);
+    }
+
+    public static boolean isSlcanPort(String port) {
+        return port != null && port.startsWith(SLCAN_PREFIX);
     }
 
     public void setConnector(LinkConnector connector) {

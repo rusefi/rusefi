@@ -3,6 +3,7 @@ package com.rusefi.io.can.isotp;
 import com.rusefi.io.can.IsoTpConnectorTest;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -12,6 +13,21 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see IsoTpConnectorTest for opposite
  */
 public class IsoTpCanDecoderTest {
+    @Test
+    public void firstFrameLengthLowByteIsUnsigned() {
+        // #10138: treat 128 as an unsigned ISO-TP length.
+        IsoTpCanDecoder decoder = new TestIsoTpCanDecoder();
+        assertArrayEquals(new byte[]{1, 2, 3, 4, 5, 6},
+            decoder.decodePacket(new byte[]{0x10, (byte) 0x80, 1, 2, 3, 4, 5, 6}));
+    }
+
+    @Test
+    public void shortSingleFrameDoesNotInventMissingPayloadBytes() {
+        // #10138: reject malformed lengths instead of padding them.
+        IsoTpCanDecoder decoder = new TestIsoTpCanDecoder();
+        assertArrayEquals(new byte[0], decoder.decodePacket(new byte[]{0x02, 0x12}));
+    }
+
     @Test
     public void consecutiveFrameWithoutFirstFrameIsIgnoredAndDecoderRecovers() {
         IsoTpCanDecoder decoder = new TestIsoTpCanDecoder();
@@ -65,6 +81,33 @@ public class IsoTpCanDecoderTest {
 
         byte[] result2 = decoder.decodePacket(new byte[]{0x21, 0x08, (byte) 0xA1, 0x46, 0x00, 0x08, 0x00, 0x00});
         assertArrayEquals(new byte[]{0x08, (byte) 0xA1, 0x46, 0x00, 0x08}, result2);
+    }
+
+    @Test
+    public void decode1031ByteResponseAcrossSixAndSevenByteFrames() {
+        IsoTpCanDecoder decoder = new TestIsoTpCanDecoder();
+        byte[] expected = new byte[1031];
+        for (int i = 0; i < expected.length; i++) {
+            expected[i] = (byte) i;
+        }
+
+        ByteArrayOutputStream decoded = new ByteArrayOutputStream();
+        decoded.writeBytes(decoder.decodePacket(new byte[]{0x14, 0x07,
+            expected[0], expected[1], expected[2], expected[3], expected[4], expected[5]}));
+        int offset = 6;
+        int sequence = 1;
+        while (offset < expected.length) {
+            int length = Math.min(7, expected.length - offset);
+            byte[] frame = new byte[length + 1];
+            frame[0] = (byte) (0x20 | (sequence & 0x0f));
+            System.arraycopy(expected, offset, frame, 1, length);
+            decoded.writeBytes(decoder.decodePacket(frame));
+            offset += length;
+            sequence++;
+        }
+
+        // #10138: verify a 1031-byte response split into 6/7-byte chunks.
+        assertArrayEquals(expected, decoded.toByteArray());
     }
 
     @Test
