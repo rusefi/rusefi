@@ -683,14 +683,20 @@ int L9779::wake_driver()
 }
 
 int L9779::chip_reset() {
-	int ret;
-
 	read_requests.clear();
 
+	/* Replies describe an earlier SPI frame (datasheet section 6.16.2).
+	 * The first cold-start reply can have SPI_ERR set before we have sent
+	 * any request. Synchronize with a bounded, validated IDENT read instead
+	 * of treating that stale reply as a failure of our reset command.
+	 * A missing chip or persistent link error must still fail initialization. */
+	int ret = read_diag_reg(L9779_IDENT_SUB, &ident_reg);
+	if (ret != 0) {
+		return ret;
+	}
+
 	ret = spi_rw(CMD_CLOCK_UNLOCK_SW_RST(BIT(1)), NULL);
-	/**
-	 * ???
-	 */
+	/* Allow the chip reset to complete before the next transaction. */
 	chThdSleepMilliseconds(3);
 
 	read_requests.clear();
