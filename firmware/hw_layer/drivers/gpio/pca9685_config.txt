@@ -1,0 +1,12 @@
+#define PCA9685_COUNT 1
+
+struct_no_prefix pca9685_config_s
+bit inverted,"Inverted","Normal";Inverted outputs, if set active level will be 0
+bit od,"Open Drain","Push-Pull";Open Drain outputs
+i2c_bus_e i2c_bus
+! 0x08 - 0x77
+uint8_t i2c_addr;I2C address of chip (dec);"", 1, 0, 8, 119, 0
+uint16_t pwm_freq;PWM frequency (one for all outputs);"Hz", 1, 0, 24, 1526, 0
+end_struct
+
+pca9685_config_s[PCA9685_COUNT iterate] pca9685
