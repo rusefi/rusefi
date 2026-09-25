@@ -1,10 +1,24 @@
 # List of all the board related files.
+ifeq ($(IS_RE_BOOTLOADER),yes)
+BOARDCPPSRC = $(BOARD_DIR)/board_bootloader.cpp
+else
 BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp \
   $(BOARD_DIR)/../at_start_f435/board_storage.cpp
+endif
 
 DDEFS += -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::Unassigned
 
 IS_AT32F435 = yes
+
+# OpenBLT replacement-loader profile: CAN1 on PG0/PG1, no USB transport.
+ifeq ($(USE_OPENBLT),yes)
+DDEFS += -DEFI_USE_OPENBLT=TRUE
+DDEFS += -DBOOT_COM_RS232_ENABLE=0
+DDEFS += -DBOOT_COM_CAN_CHANNEL_INDEX=0
+DDEFS += -DOPENBLT_CAN_RX_PORT=GPIOG -DOPENBLT_CAN_RX_PIN=0
+DDEFS += -DOPENBLT_CAN_TX_PORT=GPIOG -DOPENBLT_CAN_TX_PIN=1
+DDEFS += -DBOOT_BACKDOOR_ENTRY_TIMEOUT_MS=1000
+endif
 
 # board.c from this directory
 BOARD_C = $(BOARD_DIR)/board.c

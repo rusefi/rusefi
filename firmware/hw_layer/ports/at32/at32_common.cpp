@@ -8,6 +8,11 @@
 
 #include "pch.h"
 #include "os_util.h"
+#if EFI_USE_OPENBLT
+extern "C" {
+#include "openblt/shared_params.h"
+}
+#endif
 #include "at32_reset_cause.h"
 
 int at32GetMcuType(uint32_t id, const char **pn, const char **package, uint32_t *flashSize)

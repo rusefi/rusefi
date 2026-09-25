@@ -150,7 +150,7 @@ firmware/gen_enum_to_string.sh
   - `can/` - CAN bus communication
   - `lua/` - Runtime scripting
 - `firmware/hw_layer/` - Hardware abstraction layer
-  - `ports/at32/` (Artery AT32F435) is not used at the moment: both AT32 boards (`at_start_f435`, `m74_9`) are disabled (`meta-info.disabled_env`), so no CI build exercises this port
+  - `ports/at32/` (Artery AT32F435) has an explicit M74.9 OpenBLT replacement-loader profile (`meta-info-openblt.env`). The original M74.9 and AT-START profiles remain disabled. This layout must not be used for an OEM resident-loader target.
   - AT32 uses STM32-named compatibility headers, but those names do not establish register semantics. For example, Artery CRM_CTRLSTS bit 25 is reserved even though the compatibility header defines RCC_CSR_BORRSTF there. Check the official Artery register layout before porting STM32 low-level code.
   - AT32 RTC backup registers are separate from backup SRAM: `EFI_BACKUP_SRAM=FALSE` does not mean the chip lacks RTC backup registers. Artery's AT32F435/437 SDK places ERTC at 0x40002800 and its twenty 32-bit data registers at offsets 0x50..0x9C, matching the compatibility header's RTC/BKP registers. This permits reuse of the STM32 `backupRamLoad`/`backupRamSave` implementation; the STM32 backup-SRAM object remains excluded on AT32. Persistence across actual power loss still depends on board backup power and clock configuration.
   - The AT32 ChibiOS port uses the older SPI API (`end_cb`) even with newer ChibiOS RT configuration versions: its hal_lld.h does not select HAL_LLD_SELECT_SPI_V2. Do not infer SPIConfig fields solely from the RT version.
@@ -362,3 +362,18 @@ Gotchas:
 See also .junie/guidelines.md file
 
 Pixi's Windows m2-bash can report OSTYPE=cygwin while uname -s reports MSYS_NT. Platform checks based on uname must include MSYS as well as CYGWIN and MINGW.
+
+
+### AT32 OpenBLT integration build notes
+
+- Pass board settings to top-level make through the environment (as compile.sh
+  does), rather than command-line make variable assignments. Command-line
+  BOARD_DIR propagates through MAKEFLAGS and overrides the bootloader recipe's
+  rebased ../config/boards/... path. Direct bootloader make also assumes config
+  generation prerequisites; use top-level make bootloader for a fresh checkout.
+- ChibiOS sorts INCDIR. A board feature-header override needs precedence in
+  IINCDIR after rules.mk, not merely earlier placement in the INCDIR list.
+- CAN baud-rate changes reboot this loader. Flush buffered application writes
+  before switching, and allow the 5 s inactivity fallback to run even on boards
+  whose ordinary bootloader entry timeout is zero. A one-shot "traffic seen"
+  flag does not recover a connection lost after its first valid packet.

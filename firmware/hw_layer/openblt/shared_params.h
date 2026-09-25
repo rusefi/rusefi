@@ -54,6 +54,7 @@
 // Byte 0 is "boot to OpenBLT" flag
 // Byte 1 is WatchDog reset counter, automaticly reseted by FW 3 seconds after start
 // Byte 2 is Software counter (ie counts reset with NVIC_SystemReset())
+// Byte 4 is a one-shot bootloader CAN rate request: 0 = 500 kbit/s, 1 = 1 Mbit/s.
 
 /****************************************************************************************
 * Function prototypes

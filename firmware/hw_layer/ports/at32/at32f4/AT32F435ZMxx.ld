@@ -17,10 +17,22 @@
 /*
  * AT32F435ZMxx with default settings memory setup.
  * Note: Use of ram1 and ram2 is mutually exclusive with use of ram0.
+ * bl section is where we link the rusefi bootloader.
  */
+
+/* change address & length if bootloader */
+bootloader_size = 32k;
+flash_start = 0x08000000 + (DEFINED(HAS_BOOTLOADER) ? bootloader_size : 0);
+flash_size = DEFINED(IS_BOOTLOADER) ? bootloader_size : 2048k;
+image_size = DEFINED(HAS_BOOTLOADER) ? (flash_size - bootloader_size) : flash_size;
+
+/* OpenBLT <-> main FW shared area */
+_OpenBLT_Shared_Params_Size = DEFINED(HAS_BOOTLOADER) || DEFINED(IS_BOOTLOADER) ? 16 : 0;
+
 MEMORY
 {
-    flash0 (rx) : org = 0x08000000, len = 4032k
+    bl      : org = 0x08000000, len = bootloader_size     /* bootloader section */
+    flash0 (rx) : org = flash_start, len = image_size
     flash1 (rx) : org = 0x00000000, len = 0
     flash2 (rx) : org = 0x00000000, len = 0
     flash3 (rx) : org = 0x00000000, len = 0
@@ -28,8 +40,9 @@ MEMORY
     flash5 (rx) : org = 0x00000000, len = 0
     flash6 (rx) : org = 0x00000000, len = 0
     flash7 (rx) : org = 0x00000000, len = 0
-    ram0   (wx) : org = 0x20000000, len = 64k + 320k    /* SRAM1 + SRAM2 */
-    ram1   (wx) : org = 0x20000000, len = 64k     /* SRAM1 */
+    shared  : org = 0x20000000, len = _OpenBLT_Shared_Params_Size
+    ram0   (wx) : org = 0x20000000 + _OpenBLT_Shared_Params_Size, len = 64k + 320k - _OpenBLT_Shared_Params_Size    /* SRAM1 + SRAM2 */
+    ram1   (wx) : org = 0x20000000 + _OpenBLT_Shared_Params_Size, len = 64k - _OpenBLT_Shared_Params_Size     /* SRAM1 */
     ram2   (wx) : org = 0x20010000, len = 320k    /* SRAM2 */
     ram3   (wx) : org = 0x20020000, len = 0
     ram4   (wx) : org = 0x10000000, len = 0
@@ -81,6 +94,32 @@ REGION_ALIAS("BSS_RAM", ram0);
 
 /* RAM region to be used for the default heap.*/
 REGION_ALIAS("HEAP_RAM", ram0);
+
+SECTIONS
+{
+  /* Bootloader section */
+  .bl : ALIGN(4)
+    {
+        . = ALIGN(4);
+        *(.bl)
+        *(.bl.*)
+        . = ALIGN(4);
+    } > bl AT > bl
+
+  /* shared between main FW and OpenBLT */
+  .shared (NOLOAD) :
+  {
+    . = ALIGN(4);
+    _sshared = .;
+    __shared_start__ = _sshared;
+    *(.shared)
+    *(.shared.*)
+    KEEP(*(.shared))
+    . = ALIGN(4);
+    _eshared = .;
+    __shared_end__ = _eshared;
+  } > shared
+}
 
 /* Generic rules inclusion.*/
 INCLUDE rules.ld

@@ -13,8 +13,19 @@ extern "C" {
 	#include "shared_params.h"
 }
 
+// rusEFI extension: runtime CAN baudrate switch (XCP SET_CAN_BAUDRATE).
+// The XCP handler only records the request; the switch itself must happen
+// after the response frame left the wire, so it is applied here in the main
+// loop. Includes the 5 s no-traffic fallback back to 500k.
+extern "C" void OpenBltCanApplyBaudrate(void);
+
 // used externaly by openblt_usb.cpp
 blt_bool stayInBootloader;
+
+// rusEFI extension: runtime CAN baudrate switch. The SET_CAN_BAUDRATE handler
+// stores the request in SharedParams slot 4 and the main loop reboots;
+// main() reads it here and CanInit() applies it on the next boot. 1 = 1 Mbit.
+extern blt_int8u bootBaudrateRequest;
 
 static blt_bool waitedLongerThanTimeout = BLT_FALSE;
 static blt_bool rebootLoop;
@@ -202,6 +213,16 @@ int main(void) {
 
 	// Init openblt shared params
 	SharedParamsInit();
+
+	// Consume a pending baudrate request (rusEFI SET_CAN_BAUDRATE extension):
+	// the switch is a reboot, and CanInit() applies the requested speed.
+	{
+		uint8_t baudRequest = 0;
+		SharedParamsReadByIndex(4, &baudRequest);
+		bootBaudrateRequest = (baudRequest == 1) ? 1 : 0;
+		SharedParamsWriteByIndex(4, 0);
+	}
+
 	rebootLoop = checkIfResetLoop();
 	stayInBootloader = checkIfRebootIntoOpenBltRequested() || rebootLoop;
 
@@ -216,6 +237,10 @@ int main(void) {
 	while (true) {
 		BootTask();
 
+		// Apply a pending CAN baudrate request (if any) - the response to the
+		// SET_CAN_BAUDRATE command has been transmitted by now.
+		OpenBltCanApplyBaudrate();
+
 		// since BOOT_BACKDOOR_HOOKS_ENABLE==TRUE, BackDoorCheck() is not working
 		// so we have to manually check if we need to jump to the main firmware
 		if (ComIsConnected() == BLT_TRUE) {
@@ -225,11 +250,11 @@ int main(void) {
 		}
 		if (stayInBootloader || wasConnected)
 			continue;
-#if (BOOT_BACKDOOR_ENTRY_TIMEOUT_MS > 0)
-		blt_bool isTimeout = (TIME_I2MS(chVTGetSystemTime()) >= BOOT_BACKDOOR_ENTRY_TIMEOUT_MS);
-#else
-		blt_bool isTimeout = BLT_TRUE;
-#endif // BOOT_BACKDOOR_ENTRY_TIMEOUT_MS
+		// Keep the switched-speed bootloader alive beyond the 5 s fallback,
+		// including boards whose ordinary entry timeout is zero.
+		const uint32_t entryTimeout = bootBaudrateRequest == 1 ? 6000 : BOOT_BACKDOOR_ENTRY_TIMEOUT_MS;
+		blt_bool isTimeout = TIME_I2MS(chVTGetSystemTime()) >= entryTimeout;
+
 		if (isTimeout == BLT_TRUE) {
 			waitedLongerThanTimeout = BLT_TRUE;
 			CpuStartUserProgram();

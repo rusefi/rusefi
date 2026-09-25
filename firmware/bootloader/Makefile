@@ -254,11 +254,11 @@ ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM) \
 	$(RUSEFIASM) \
 	$(PROJECT_DIR)/hw_layer/main_hardfault_asm.S
 
-INCDIR += $(ALLINC) \
+INCDIR += $(BOARDINC) \
+	$(ALLINC) \
 	$(PCH_DIR) \
 	.. \
 	$(MODULES_INC) \
-	$(BOARDINC) \
 	$(CHIBIOS)/os/various \
 	$(CHIBIOS)/os/ex/ST \
 	$(CONFIG)/engines \
@@ -396,6 +396,9 @@ ULIBS = -lm --specs=nano.specs
 ##############################################################################
 
 include $(RULESFILE)
+
+# ChibiOS sorts INCDIR; restore the board feature header's precedence.
+IINCDIR := -I$(BOARD_DIR) $(filter-out -I$(BOARD_DIR),$(IINCDIR))
 
 $(BUILDDIR)/$(PROJECT).elf: $(LDSCRIPT_DEPS)
 
