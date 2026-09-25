@@ -44,11 +44,15 @@ struct Pca9685 : public GpioChip {
 	int setPadPWM(size_t pin, float frequency, float duty) override;
 	void debug() override;
 
+	i2cBus		*i2c;
+
 	const pca9685_config* cfg;
 
 private:
 	int writeReg(uint8_t reg, uint8_t value);
+	int writeRegs(uint8_t reg, const uint8_t *regs, size_t n);
 	int readReg(uint8_t reg, uint8_t *value);
+
 	int setPwm(uint8_t pin, uint16_t on, uint16_t off);
 };
 
@@ -56,6 +60,12 @@ private:
 static Pca9685 chips[BOARD_PCA9685_COUNT];
 
 int Pca9685::init() {
+	/* Get pointer to actual bus instance, should be ready now */
+	i2c = getI2cBus(cfg->i2c_bus);
+	if (i2c == nullptr) {
+		return -2;
+	}
+
 	// 1. Reset chip: set MODE1 to SLEEP=0
 	if (writeReg(PCA9685_MODE1, MODE1_AI) != 0) {
 		return -1;
@@ -97,33 +107,33 @@ void Pca9685::debug() {
 
 int Pca9685::writeReg(uint8_t reg, uint8_t value) {
 	uint8_t tx[] = { reg, value };
-	i2cAcquireBus(cfg->i2c_bus);
-	msg_t msg = i2cMasterTransmitTimeout(cfg->i2c_bus, cfg->i2c_addr, tx, sizeof(tx), nullptr, 0, TIME_MS2I(10));
-	i2cReleaseBus(cfg->i2c_bus);
+	msg_t msg = i2c->write(cfg->i2c_addr, tx, sizeof(tx));
+	return (msg == MSG_OK) ? 0 : -1;
+}
+
+int Pca9685::writeRegs(uint8_t reg, const uint8_t *vals, size_t n)
+{
+	uint8_t cmd[1 + n] = { reg };
+	memcpy(cmd + 1, vals, n);
+	msg_t msg = i2c->write(cfg->i2c_addr, cmd, n + 1);
 	return (msg == MSG_OK) ? 0 : -1;
 }
 
 int Pca9685::readReg(uint8_t reg, uint8_t *value) {
-	i2cAcquireBus(cfg->i2c_bus);
-	msg_t msg = i2cMasterTransmitTimeout(cfg->i2c_bus, cfg->i2c_addr, &reg, 1, value, 1, TIME_MS2I(10));
-	i2cReleaseBus(cfg->i2c_bus);
+	msg_t msg = i2c->writeRead(cfg->i2c_addr, &reg, 1, value, 1);
 	return (msg == MSG_OK) ? 0 : -1;
 }
 
 int Pca9685::setPwm(uint8_t pin, uint16_t on, uint16_t off) {
 	uint8_t reg = PCA9685_LED0_ON_L + (4 * pin);
 	uint8_t tx[] = {
-		reg,
 		(uint8_t)(on & 0xFF),
 		(uint8_t)((on >> 8) & 0xFF),
 		(uint8_t)(off & 0xFF),
 		(uint8_t)((off >> 8) & 0xFF)
 	};
 
-	i2cAcquireBus(cfg->i2c_bus);
-	msg_t msg = i2cMasterTransmitTimeout(cfg->i2c_bus, cfg->i2c_addr, tx, sizeof(tx), nullptr, 0, TIME_MS2I(10));
-	i2cReleaseBus(cfg->i2c_bus);
-	return (msg == MSG_OK) ? 0 : -1;
+	return writeRegs(reg, tx, sizeof(tx));
 }
 
 int pca9685_add(brain_pin_e base, unsigned int index, const struct pca9685_config *cfg) {
