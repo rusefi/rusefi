@@ -758,6 +758,14 @@ i2c_config_s *getI2cCfg(i2c_bus_e device) {
 	return &engineConfiguration->i2c[device - 1];
 }
 
+pca9685_config_s *getPca9685Cfg(size_t n) {
+	if (n >= PCA9685_COUNT) {
+		return nullptr;
+	}
+
+	return &engineConfiguration->pca9685[n];
+}
+
 #include "board_overrides.h"
 
 std::optional<setup_custom_hack_hellen_board_id_type> custom_board_hackHellenBoardId;

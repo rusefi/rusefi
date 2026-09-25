@@ -105,3 +105,4 @@ int getBoardMetaDcOutputsCount();
 
 // TODO: find better place?
 i2c_config_s *getI2cCfg(i2c_bus_e device);
+pca9685_config_s *getPca9685Cfg(size_t n);
