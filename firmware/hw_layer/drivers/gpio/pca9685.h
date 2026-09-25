@@ -20,8 +20,8 @@
 
 struct pca9685_config {
 #if HAL_USE_I2C
-	I2CDriver *i2c_bus;
-	i2caddr_t i2c_addr;
+	i2c_bus_e	i2c_bus;
+	i2caddr_t	i2c_addr;
 #endif
 };
 
