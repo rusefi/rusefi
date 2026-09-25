@@ -82,7 +82,7 @@ struct Pca9685 : public GpioChip {
 
 	i2cBus		*i2c;
 
-	const pca9685_config* cfg;
+	const pca9685_config_s* cfg;
 
 	void wake_driver();
 	int updateOutputs();
@@ -359,7 +359,7 @@ int Pca9685::init() {
  * @details Checks for valid config
  */
 
-int pca9685_add(brain_pin_e base, unsigned int index, const struct pca9685_config *cfg) {
+int pca9685_add(brain_pin_e base, unsigned int index, const struct pca9685_config_s *cfg) {
 	if  ((!cfg) || (cfg->i2c_bus == I2C_NONE) || (cfg->i2c_addr == 0x00) || (index >= BOARD_PCA9685_COUNT)) {
 		return -1;
 	}
@@ -385,7 +385,7 @@ int pca9685_add(brain_pin_e base, unsigned int index, const struct pca9685_confi
 
 #else
 
-int pca9685_add(brain_pin_e base, unsigned int index, const struct pca9685_config *cfg) {
+int pca9685_add(brain_pin_e base, unsigned int index, const struct pca9685_config_s *cfg) {
 	(void)base; (void)index; (void)cfg;
 
 	return -1;
