@@ -35,6 +35,37 @@ class SocketCanRawPortTest {
     private final RawCanChannel channel = mock(RawCanChannel.class);
 
     @Test
+    void openSelectsNamedInterfaceAndFiltersMultipleReceiveAddresses() throws IOException {
+        SocketCanRawPort port = new SocketCanRawPort("can7", name -> {
+            assertEquals("can7", name);
+            return device;
+        }, () -> channel);
+        port.open(new CanAddress[]{new CanAddress(0x7e8, false),
+            new CanAddress(0x713, false), new CanAddress(0x714, false)});
+
+        ArgumentCaptor<CanFilter[]> filters = ArgumentCaptor.forClass(CanFilter[].class);
+        verify(channel).setOption(org.mockito.ArgumentMatchers.eq(FILTER), filters.capture());
+        CanFilter[] actual = filters.getValue();
+        assertEquals(3, actual.length);
+        int[] ids = {0x7e8, 0x713, 0x714};
+        for (int i = 0; i < ids.length; i++) {
+            assertEquals(ids[i], actual[i].getId());
+            assertEquals(CanFilter.EXACT & ~CanId.ERR_FLAG, actual[i].getMask());
+        }
+        verify(channel).setOption(RECV_OWN_MSGS, false);
+        port.close();
+        verify(channel).close();
+    }
+
+    @Test
+    void emptyReceiveAddressesFailBeforeOpeningChannel() {
+        SocketCanRawPort port = new SocketCanRawPort("unused", name -> {
+            throw new AssertionError("Unexpected interface lookup");
+        }, () -> channel);
+        assertThrows(IllegalArgumentException.class, () -> port.open(new CanAddress[0]));
+    }
+
+    @Test
     void openConfiguresBlockingSocketWithoutEchoAndFiltersExactExtendedId() throws IOException {
         SocketCanRawPort port = port();
 

@@ -26,7 +26,11 @@ public class SocketCanRawPort implements RawCanPort {
     private RawCanChannel channel;
 
     public SocketCanRawPort() {
-        this(System.getProperty("CAN_DEVICE_NAME", "can0"), NetworkDevice::lookup, CanChannels::newRawChannel);
+        this(System.getProperty("CAN_DEVICE_NAME", "can0"));
+    }
+
+    public SocketCanRawPort(String deviceName) {
+        this(deviceName, NetworkDevice::lookup, CanChannels::newRawChannel);
     }
 
     SocketCanRawPort(String deviceName, NetworkDeviceLookup networkDeviceLookup, RawCanChannelFactory channelFactory) {
@@ -37,6 +41,18 @@ public class SocketCanRawPort implements RawCanPort {
 
     @Override
     public void open(CanAddress address) throws IOException {
+        open(new CanAddress[]{address});
+    }
+
+    /** Receive any of the specified addresses on one owned socket. */
+    public void open(CanAddress[] addresses) throws IOException {
+        if (addresses.length == 0) {
+            throw new IllegalArgumentException("At least one receive address is required");
+        }
+        CanFilter[] filters = new CanFilter[addresses.length];
+        for (int i = 0; i < addresses.length; i++) {
+            filters[i] = new CanFilter(rawId(addresses[i]));
+        }
         synchronized (lifecycleLock) {
             if (channel != null) {
                 throw new IOException("SocketCAN port is already open");
@@ -49,7 +65,7 @@ public class SocketCanRawPort implements RawCanPort {
                 newChannel.bind(device);
                 newChannel.configureBlocking(true);
                 newChannel.setOption(RECV_OWN_MSGS, false);
-                newChannel.setOption(FILTER, new CanFilter[]{new CanFilter(rawId(address))});
+                newChannel.setOption(FILTER, filters);
                 channel = newChannel;
             } catch (IOException e) {
                 closeAfterFailedOpen(newChannel, e);
