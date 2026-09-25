@@ -89,6 +89,26 @@ public class SlcanPortScannerTest {
         assertTrue(stream.isClosed());
     }
 
+    @Test
+    public void oneShotReturnsClassificationsWithoutStartingContinuousScanning() {
+        java.util.concurrent.atomic.AtomicInteger enumerations = new java.util.concurrent.atomic.AtomicInteger();
+        SlcanPortScanner.Probes probes = new SlcanPortScanner.Probes() {
+            public Set<String> listSerialPorts() {
+                enumerations.incrementAndGet();
+                return Set.of("COM1", "COM2");
+            }
+            public SlcanPortScanner.Result inspectPort(String port) {
+                return new SlcanPortScanner.Result(port, port.equals("COM1")
+                    ? SlcanPortScanner.Type.TS_CONSOLE : SlcanPortScanner.Type.SLCAN, "test");
+            }
+        };
+        List<SlcanPortScanner.Result> result = SlcanPortScanner.scanOnce(probes);
+        assertEquals(1, enumerations.get());
+        assertEquals(2, result.size());
+        assertEquals(SlcanPortScanner.Type.TS_CONSOLE, result.get(0).type);
+        assertEquals(SlcanPortScanner.Type.SLCAN, result.get(1).type);
+    }
+
     private static class FakeProbes implements SlcanPortScanner.Probes {
         final Set<String> ports = new TreeSet<>();
         final Map<String, SlcanPortScanner.Result> results = new HashMap<>();
