@@ -451,6 +451,7 @@ void gpiochips_debug(void)
 			continue;
 
 		efiPrintf("%s (base %d, size %d):\n", chip->name, (int)chip->base, chip->size);
+		efiPrintf("need_init %d init_cnt %d alive_cnt %d", chip->chip->need_init, chip->chip->init_cnt, chip->chip->alive_cnt);
 		chip->chip->debug();
 	}
 }
