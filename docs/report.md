@@ -577,6 +577,38 @@ Open follow-ups:
 - Optional future hardening: same-evaluated-unit check for expressions
   once an expression evaluator with ini context is available.
 
+## 2026-08-26 - Recover persistent calibration data after interrupted SD writes
+
+What was done:
+- SD-backed calibration records are now written to a synchronized temporary
+  file, with the previous primary rotated to a backup before promotion. Reads
+  validate the exact record size and fall back to that backup.
+- Storage reads now try higher-priority backends first and stop after the first
+  success, so a failed lower-priority read cannot partially overwrite valid
+  data already returned by another backend.
+- LTFT reads stage data in static BSS and copy it into the active table only
+  after a complete storage read succeeds. A failed read preserves the current
+  RAM state instead of clearing learned values.
+- Extra pages that share the internal settings sector now request the normal
+  deferred configuration write, retaining the engine-running flash interlock.
+
+Key decisions and why:
+- The SD update is described as recoverable rotation rather than strictly
+  atomic because power loss semantics ultimately depend on FatFS and the
+  underlying media's rename implementation.
+- The LTFT staging object consumes one fixed table-sized block in BSS. It does
+  not use the storage thread stack or heap, and it prevents partially read data
+  from becoming live.
+- The direct-storage write policy was left unchanged; only shared-sector
+  internal-flash writes are routed through the guarded settings path.
+
+Validation:
+- Added `LTFT.FailedLoadPreservesExistingTrims`; before the fix it failed with
+  the retained cell changing from `0.011` to `0`, proving the regression.
+- The focused LTFT/storage set passed 5/5 and the full unit suite passed
+  1196/1196.
+- The uaEFI firmware build completed with GCC 12.2.1; flash0 used 741496 bytes
+  (98.39%) and the final image was generated successfully.
 ## 2026-08-27 - Fix: "Grab baro value from MAP" latched 101.325 kPa (#9744)
 
 What was done:
@@ -688,3 +720,51 @@ Validation:
 Open follow-ups:
 - `unit_tests/mocks.cpp:38` still trips GCC 16's `-Wmaybe-uninitialized`; only
   a local concern until CI moves to that compiler (see previous entry).
+
+## 2026-09-21 - Extend SD persistence coverage before correction
+
+- Merged current upstream master into the persistence proposal without rewriting the published history. Kept the existing write-result propagation, LTFT retry policy and board flash-gate tests while resolving the three conflicting files.
+- Added a standalone host harness compiling the actual SD backend, backend-selection function and production LTFT load function. Covers all three record names, partial writes/reads, sync/close/rename failures, failed restoration, backup recovery and the complete 2048-byte LTFT state. Added a five-toolchain CI matrix; no submodules are needed for this harness.
+- All nine tests pass with native GCC. The new invalid-primary test intentionally reproduces the current defect: a truncated or oversized primary replaces a readable backup, then failed promotion leaves no readable copy. The next change must fix this path and invert those expectations. Other cases assert existing correct behavior.
+- This models failures at FatFS API boundaries, not physical filesystem durability, DMA timing or actual power interruption. No firmware or hardware execution was performed at this step.
+
+## 2026-09-21 - Preserve recovery backup when replacing an invalid primary
+
+- Inspect the primary's size before rotating files. A primary with the wrong size is removed without replacing the existing backup; promotion failures then leave that backup readable. Valid primaries retain the existing temporary-file, sync, close, rotation and restoration sequence. No calibration format, storage priority, timeout or USB ownership changes.
+- Updated the passing reproduction to require successful recovery and added successful replacement controls. All ten native GCC host tests pass, including full production LTFT staging and failures on the LTFT, second-tables and Lua record paths. The original unit-test stub's comment now correctly points to this production-path coverage.
+- Documented the 2048-byte static LTFT staging allocation and the limits of API-boundary fault injection. No additional full-record buffer was added. The shared unit-test, firmware and five-toolchain persistence workflows provide the remaining integration checks; no physical card or ECU validation was performed here.
+
+## 2026-09-21 - Cover LTFT storage writes before SRAM placement correction
+
+- Merged the upstream revision used by the failed Nucleo F429 CI job, retaining published history. Building that tree with the matching ARM GCC 14.2.1 toolchain to inspect the main-SRAM overflow and memory placement.
+- Extended the existing portable harness to execute production LtftState::save and storageWrite. A passing reproduction confirms that the backend receives the active table directly and that a mutation during the write changes the persisted data. This dependency must be removed before placing the active table in CPU-only CCM memory.
+- Added write/sync/close failure controls that require a failed save result and preservation of the old record. All 12 native GCC host tests pass before the production correction. The following change will require a separate stable transfer snapshot while retaining the load-failure tests.
+
+## 2026-09-21 - Fix Nucleo F429 SRAM overflow in SD persistence
+
+- Reproduced the failed CI link with ARM GCC 14.2.1 and the same upstream base: the main-SRAM location counter reached 0x20030080 against the 0x20030000 limit, an overflow of 128 bytes.
+- Moved the active LTFT state into CCM_OPTIONAL and reused the existing SRAM staging state for both loads and saves. Storage receives the SRAM copy, never the CCM address. Total static buffer allocation is unchanged; 2048 bytes move from main SRAM to CCM. No table dimensions, storage formats, features, submodule pins or USB ownership paths changed.
+- Explicitly reset LTFT before queuing its startup read because CCM_OPTIONAL uses a no-init section. A production-init test confirmed the previous dependency on zeroed RAM, then passed after initialization was made explicit. The write-buffer reproduction now expects a separate snapshot; write/sync/close failures still preserve the previous record and report failure.
+- All 13 native GCC persistence tests pass. The final Nucleo F429 application ELF links successfully: ltftState is 2048 bytes at 0x10000000, ltftIoState is 2048 bytes at 0x200150cc. Linked heap bounds leave 1920 bytes of main SRAM and 1080 aligned bytes of CCM. These are linker margins, not measurements of runtime heap consumption.
+- The local MSYS build required mtools and xxd on PATH; regenerated headers and INI files remain unstaged. The cross-platform persistence and general integration workflows will run on the updated PR. No physical SD-card, ECU or power-loss test was performed.
+
+## 2026-09-21 - Reproduce CCM overflow across LTFT board layouts
+
+- Official CI exposed CCM overflows after globally placing active LTFT in CCM: mre_f4 and mre-legacy_f4 reach 0x10010510 (1296 bytes over), and alphax-8chan reaches 0x100103e0 (992 bytes over). Nucleo F429 passes with that placement.
+- Added a serial firmware-build regression runner for these four layouts. Its initial expectations reproduce the three CCM overflows and require Nucleo F429 to link. The local mre_f4 run reproduced the exact CCM endpoint; the existing official firmware jobs establish the other two failures. Coverage is committed separately before changing the memory-placement policy.
+- The native Windows ARM toolchain also encountered a duplicate weak fallback: OS=Windows_NT sets IS_WINDOWS_COMPILER=1 even for the ELF cross-compiler. Subsequent local validation will use OS=Linux and fresh objects to match CI's weak-symbol flags. This is a local build-environment adjustment, not a firmware-source change.
+
+## 2026-09-21 - Make active LTFT placement a board memory-budget choice
+
+- Default LTFT_STATE_LOCATION to normal SRAM and opt Nucleo F429 into CCM_OPTIONAL in its board.mk. This follows the existing configurable-placement pattern and avoids consuming CCM on layouts already full of configuration data. The single transfer buffer remains in SRAM; initialization, staged reads and write snapshots are unchanged.
+- Inverted the firmware regression runner to require all four layouts to link and check the LTFT transfer symbol in DMA-accessible SRAM. All four application ELFs pass with ARM GCC 14.2.1 and CI-equivalent OS flags. The Nucleo output path is shortened to avoid the native Windows linker command-line length limit; its already-compiled objects linked successfully from the shorter directory.
+- All 13 native GCC persistence tests pass. Linked heap bounds below are static margins, not runtime heap-use measurements; AlphaX 8chan has little main-SRAM margin. No table sizes, Lua capacity, storage formats, USB ownership, submodules or feature flags were changed.
+
+| Configuration | Main SRAM margin (bytes) | CCM margin (bytes) | Active LTFT | Transfer buffer |
+| --- | --- | --- | --- | --- |
+| mre_f4 | 10592 | 752 | 0x20012b24 | 0x2001a0b4 |
+| mre-legacy_f4 | 29608 | 752 | 0x20013654 | 0x200155cc |
+| alphax-8chan | 488 | 1056 | 0x20013150 | 0x2001c820 |
+| stm32f429_nucleo | 1920 | 1080 | 0x10000000 | 0x200150cc |
+
+- The public PR will rerun its cross-platform and full firmware checks on this correction. Build-generated files remain uncommitted. No ECU flashing, physical SD-card or power-loss tests were performed.
