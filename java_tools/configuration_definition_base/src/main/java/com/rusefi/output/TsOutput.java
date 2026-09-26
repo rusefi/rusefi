@@ -12,7 +12,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 import static com.rusefi.TokenUtils.tokenizeWithBraces;
 import static com.rusefi.TokenUtils.tokensToString;
@@ -111,9 +110,12 @@ public class TsOutput {
                     tsHeader.append(" " + tsPosition + ",");
                     tsHeader.append(" [");
                     boolean first = true;
-                    List<Integer> list = Arrays.stream(configField.getArraySizes()).boxed().collect(Collectors.toList());
+                    if (configField.hasDynamicTsDimensions() && !isConstantsSection) {
+                        throw new IllegalArgumentException("Dynamic dimensions are only supported in Constants: " + nameWithPrefix);
+                    }
+                    List<String> list = Arrays.asList(configField.getTsArrayDimensions());
                     Collections.reverse(list);
-                    for (int size : list) {
+                    for (String size : list) {
                         if (first) {
                             first = false;
                         } else {
