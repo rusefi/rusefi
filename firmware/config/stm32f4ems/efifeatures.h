@@ -312,7 +312,7 @@
 #endif
 
 #ifndef BOARD_PCA9685_COUNT
-#define BOARD_PCA9685_COUNT 0
+#define BOARD_PCA9685_COUNT 1
 #endif
 
 #define EFI_ANALOG_SENSORS TRUE
@@ -335,6 +335,10 @@
 
 #ifndef EFI_CAN_SUPPORT
 #define EFI_CAN_SUPPORT TRUE
+#endif
+
+#ifndef EFI_I2C_SUPPORT
+#define EFI_I2C_SUPPORT TRUE
 #endif
 
 #ifndef EFI_UDS

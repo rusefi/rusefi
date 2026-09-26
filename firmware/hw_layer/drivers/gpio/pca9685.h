@@ -11,23 +11,13 @@
 
 #include "global.h"
 
-#if HAL_USE_I2C || defined(__DOXYGEN__)
-
-#include <hal.h>
 #include "efifeatures.h"
 
 #define PCA9685_OUTPUTS 16
 
-struct pca9685_config {
-#if HAL_USE_I2C
-	I2CDriver *i2c_bus;
-	i2caddr_t i2c_addr;
-#endif
-};
-
 /**
  * @return return gpio chip base
  */
-int pca9685_add(brain_pin_e base, unsigned int index, const struct pca9685_config *cfg);
+int pca9685_add(brain_pin_e base, unsigned int index, const struct pca9685_config_s *cfg);
 
-#endif /* HAL_USE_I2C */
+int initPca9685Gpios();

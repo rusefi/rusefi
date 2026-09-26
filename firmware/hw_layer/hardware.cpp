@@ -168,7 +168,7 @@ void applyNewHardwareSettings() {
 
 	stopHardware();
 
-#if HAL_USE_I2C
+#if EFI_I2C_SUPPORT
 	stopI2cModules();
 #endif
 
@@ -300,7 +300,7 @@ void initHardwareNoConfig() {
 	initEarlyMmcCard();
 #endif // EFI_FILE_LOGGING
 
-#if HAL_USE_I2C
+#if EFI_I2C_SUPPORT
 	initEarlyI2c();
 #endif
 
@@ -411,7 +411,7 @@ void initHardware() {
 	initTriggerScope();
 #endif // TRIGGER_SCOPE
 
-#if HAL_USE_I2C
+#if EFI_I2C_SUPPORT
 	initI2cModules();
 #endif
 

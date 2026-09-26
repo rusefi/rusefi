@@ -350,6 +350,7 @@ struct_no_prefix engine_configuration_s
 #define TERTIARY_CAN_NAME "Third CAN"
 
 #define I2C_BUS_TOTAL_COUNT 4
+#define I2C_BUS_NONE 0
 
 struct stft_cell_cfg_s
 	uint8_t autoscale maxAdd;Maximum % that the short term fuel trim can add;"%", 0.1, 0, 0, 25, 1
@@ -2027,6 +2028,9 @@ end_struct
 	end_struct
 
 	i2c_config_s[I2C_BUS_TOTAL_COUNT iterate] i2c;
+
+	! --- I2C devices configurations ---
+	include_file hw_layer/drivers/gpio/pca9685_config.txt
 
 	include_file controllers/can/can_sniffer.txt
 
