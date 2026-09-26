@@ -76,8 +76,10 @@
 
 struct Pca9685 : public GpioChip {
 	int init() override;
+	int setPadMode(size_t pin, iomode_t mode) override;
 	int writePad(size_t pin, int value) override;
 	int setPadPWM(size_t pin, float frequency, float duty) override;
+	brain_pin_diag_e getDiag(size_t pin) override;
 	void debug() override;
 
 	int chip_init();
@@ -320,6 +322,27 @@ RUSEFI_STACK_ROOT_EXPLICIT(pca9685_driver_thread, sizeof(pca9685_thread_wa));
 /*==========================================================================*/
 /* Driver exported functions.												*/
 /*==========================================================================*/
+int Pca9685::setPadMode(unsigned int pin, iomode_t mode) {
+	if (pin >= PCA9685_OUTPUTS) {
+		return -1;
+	}
+
+	switch (mode) {
+	case PAL_MODE_INPUT:
+	case PAL_MODE_INPUT_PULLUP:
+	case PAL_MODE_INPUT_PULLDOWN:
+	case PAL_MODE_INPUT_ANALOG:
+	default:
+		return -1;
+	case PAL_MODE_OUTPUT_PUSHPULL:
+		return cfg->od ? -1 : 0;
+	case PAL_MODE_OUTPUT_OPENDRAIN:
+		return cfg->od ? 0 : -1;
+	}
+
+	return 0;
+}
+
 int Pca9685::writePad(size_t pin, int value) {
 	if (pin >= PCA9685_OUTPUTS) {
 		return -1;
@@ -350,6 +373,10 @@ int Pca9685::setPadPWM(size_t pin, float /* frequency */, float duty) {
 	}
 
 	return 0;
+}
+
+brain_pin_diag_e Pca9685::getDiag(size_t /* pin */) {
+	return need_init ? PIN_DRIVER_OFF : PIN_OK;
 }
 
 void Pca9685::debug() {
