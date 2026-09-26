@@ -2855,6 +2855,8 @@ end_struct
 #define ts_show_gdi false
 #define ts_show_fuel_level_sensor true
 #define ts_show_popular_vehicles true
+#define show_default_engine_type false
+#define ts_show_vvt_frequency false
 #define ts_show_basic_configurations false
 #define ts_show_reset_calibrations true
 #define ts_show_air_conditioning true
