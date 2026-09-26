@@ -337,6 +337,10 @@
 #define EFI_CAN_SUPPORT TRUE
 #endif
 
+#ifndef EFI_I2C_SUPPORT
+#define EFI_I2C_SUPPORT TRUE
+#endif
+
 #ifndef EFI_UDS
 #define EFI_UDS FALSE
 #endif
