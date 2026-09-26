@@ -43,10 +43,21 @@ public class TSProjectConsumerTest {
     }
 
     @Test
-    public void oddFireMenuConditionPreservesZeroPlaceholderWhenEnabled() throws IOException {
+    public void oddFireMenuConditionEmitsMenuWhenEnabled() throws IOException {
         String generated = oddFireMenuResult("true", oddFireMenuTemplateLine());
-        assertEquals("before\nsubMenu = ignitionCylExtra, \"Cylinder offsets\", 0\nafter\n",
+        assertEquals("before\nsubMenu = ignitionCylExtra, \"Cylinder offsets\"\nafter\n",
                 generated.replaceAll("[\\t ]+", " ").replace("\n ", "\n"));
+    }
+
+    @Test
+    public void oddFireMenuConditionWorksWithAndWithoutZeroPlaceholder() throws IOException {
+        for (String placeholder : new String[]{"", ", 0"}) {
+            String menu = "subMenu = ignitionCylExtra, \"Cylinder offsets\"" + placeholder;
+            String template = menu + "@@if_ts_show_odd_fire";
+            // The generator preserves the optional placeholder; the flag gates either form.
+            assertEquals("before\n" + menu + "\nafter\n", oddFireMenuResult("true", template));
+            assertEquals("before\nafter\n", oddFireMenuResult("false", template));
+        }
     }
 
     @Test
@@ -68,7 +79,7 @@ public class TSProjectConsumerTest {
         // This proves the current generator also accepts that input, not how those old files arose.
         // Change these expectations to rejection when malformed-marker validation is added.
         String line = oddFireMenuTemplateLine().replace("@@if_", "@if_");
-        assertTrue(line.contains("0@if_ts_show_odd_fire"));
+        assertTrue(line.contains("@if_ts_show_odd_fire"));
         assertEquals("before\n" + line + "\nafter\n", oddFireMenuResult("true", line));
         assertEquals("before\n" + line + "\nafter\n", oddFireMenuResult("false", line));
     }
