@@ -47,3 +47,6 @@
 
 #define canReWidebandHwIndex_enum "INVALID", "Idx 1", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"
 
+#define ts_show_i2c true
+#define ts_show_i2c1_enable true
+#define ts_show_i2c1_pins true
