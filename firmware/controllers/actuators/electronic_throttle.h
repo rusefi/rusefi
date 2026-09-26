@@ -11,6 +11,15 @@
 #include "rusefi_types.h"
 #include "engine_configuration.h"
 
+/**
+ * #9799 - the duty ceiling used to be a hard-coded 90%, it is now configurable per H-bridge via
+ * engineConfiguration->etbMaxDutyCycle. This value stays the default and the upper bound: raising
+ * the ceiling past what the hardware was always limited to is a separate decision.
+ */
+constexpr uint8_t ETB_DEFAULT_MAX_DUTY_CYCLE = 90;
+// below this a throttle could no longer be opened at all, so treat it as a misconfiguration
+constexpr uint8_t ETB_MIN_MAX_DUTY_CYCLE = 10;
+
 void initElectronicThrottle();
 void doInitElectronicThrottle(bool isStartupInit);
 
