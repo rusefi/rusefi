@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import jakarta.xml.bind.JAXBException;
 import java.io.*;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
@@ -34,11 +35,11 @@ public class TSProjectConsumer implements ConfigurationConsumer {
     private static final String TS_CONDITION = "@@if_";
     // multi-line variant of @@if_<token>: drops every line between the markers when the token's
     // registry boolean is false, so guarding a whole block does not need a directive per line.
-    // Like the per-line @@if_, an unregistered/typo'd token parses as false (block dropped); no
-    // nesting support.
+    // Conditions require explicitly declared booleans. No nesting support.
     private static final String TS_IF_BLOCK_START = "@@if_block";
     private static final String TS_IF_BLOCK_END = "@@endif_block";
     private static final java.util.regex.Pattern TS_CONDITION_TOKEN = java.util.regex.Pattern.compile("\\w+");
+    private static final java.util.regex.Pattern CONDITION_MARKER = java.util.regex.Pattern.compile("(@+)(?:if_|endif_block)");
     private static final String TEMPLATE_TAG = "@@";
     public static final String SETTING_CONTEXT_HELP_END = "SettingContextHelpEnd";
     public static final String SETTING_CONTEXT_HELP = "SettingContextHelp";
@@ -252,6 +253,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
 
     private void testFreshlyProducedIniFile(String fileName) {
         try {
+            GeneratedIniValidator.validate(Path.of(fileName));
             IniFileModel ini = IniFileReaderUtil.readIniFile(fileName);
             ConfigurationImage ci = new ConfigurationImage(ini.getMetaInfo().getPageSize(0));
             Msq msq = MsqFactory.valueOf(ci, ini);
@@ -286,13 +288,16 @@ public class TSProjectConsumer implements ConfigurationConsumer {
     private TsFileContent readTsTemplateInputFile(String tsPath) throws IOException {
         String fileName = getTsFileInputName(tsPath);
         FileInputStream in = new FileInputStream(fileName);
-        return getTsFileContent(in);
+        return getTsFileContent(in, fileName);
     }
 
     @NotNull
     public TsFileContent getTsFileContent(InputStream in) throws IOException {
-        BufferedReader r = new BufferedReader(new InputStreamReader(in, CHARSET));
+        return getTsFileContent(in, TS_FILE_INPUT_NAME);
+    }
 
+    @NotNull
+    public TsFileContent getTsFileContent(InputStream in, String source) throws IOException {
         StringBuilder prefix = new StringBuilder();
         StringBuilder postfix = new StringBuilder();
 
@@ -301,55 +306,99 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         boolean isBeforeStartTag = true;
         boolean isAfterEndTag = false;
         skippingBlock = false;
+        blockStart = null;
+        String location = source;
         String line;
-        while ((line = r.readLine()) != null) {
-            if (isConditionalBlockSkip(line))
-                continue;
-            if (line.startsWith(INCLUDE_FILE)) {
-                String fileName = line.substring(INCLUDE_FILE.length()).trim();
-                fileName = unquote(state.getVariableRegistry().applyVariables(fileName));
-                log.info("Including " + fileName);
-                List<String> lines = FileLinesHelper.readAllLinesWithRoot(fileName);
-                for (String includedLine : lines) {
-                    if (isConditionalBlockSkip(includedLine))
-                        continue;
-                    processAndUse(includedLine, isBeforeStartTag, prefix, isAfterEndTag, postfix);
+        try (BufferedReader r = new BufferedReader(new InputStreamReader(in, CHARSET))) {
+            int lineNumber = 0;
+            while ((line = r.readLine()) != null) {
+                location = source + ":" + ++lineNumber;
+                if (isConditionalBlockSkip(line, location))
+                    continue;
+                if (line.startsWith(INCLUDE_FILE)) {
+                    String fileName = line.substring(INCLUDE_FILE.length()).trim();
+                    fileName = unquote(state.getVariableRegistry().applyVariables(fileName));
+                    log.info("Including " + fileName);
+                    List<String> lines = FileLinesHelper.readAllLinesWithRoot(fileName);
+                    int includedLineNumber = 0;
+                    for (String includedLine : lines) {
+                        location = RootHolder.ROOT + fileName + ":" + ++includedLineNumber;
+                        if (isConditionalBlockSkip(includedLine, location))
+                            continue;
+                        processAndUse(includedLine, isBeforeStartTag, prefix, isAfterEndTag, postfix);
+                    }
+                    continue;
                 }
-                continue;
+                if (line.contains(CONFIG_DEFINITION_START)) {
+                    isBeforeStartTag = false;
+                    continue;
+                }
+                if (line.contains(CONFIG_DEFINITION_END)) {
+                    isAfterEndTag = true;
+                    continue;
+                }
+                processAndUse(line, isBeforeStartTag, prefix, isAfterEndTag, postfix);
             }
-            if (line.contains(CONFIG_DEFINITION_START)) {
-                isBeforeStartTag = false;
-                continue;
-            }
-            if (line.contains(CONFIG_DEFINITION_END)) {
-                isAfterEndTag = true;
-                continue;
-            }
-            processAndUse(line, isBeforeStartTag, prefix, isAfterEndTag, postfix);
+            if (blockStart != null)
+                throw new IllegalStateException("Unterminated conditional block opened at " + blockStart);
+        } catch (IllegalStateException e) {
+            throw new IllegalStateException(location + ": " + e.getMessage(), e);
         }
-        r.close();
         return new TsFileContent(prefix.toString(), postfix.toString());
     }
 
     private boolean skippingBlock;
+    private String blockStart;
+
+    private boolean conditionValue(String token) {
+        if (!TS_CONDITION_TOKEN.matcher(token).matches())
+            throw new IllegalStateException("Malformed condition name [" + token + "]");
+        String value = state.getVariableRegistry().get(token);
+        if (value == null)
+            throw new IllegalStateException("Unknown condition [" + token + "]; declare an explicit true/false default");
+        if (!value.equalsIgnoreCase("true") && !value.equalsIgnoreCase("false"))
+            throw new IllegalStateException("Condition [" + token + "] must be true or false, got [" + value + "]");
+        return Boolean.parseBoolean(value);
+    }
 
     /**
      * Handles the multi-line conditional: @@if_block &lt;token&gt; ... @@endif_block. Returns true
      * when the line is a block marker (consume it) or falls inside a region whose token is false
      * (skip it). Works for both template and included-file lines. No nesting.
      */
-    private boolean isConditionalBlockSkip(String line) {
-        String trimmed = line.trim();
-        if (trimmed.startsWith(TS_IF_BLOCK_START)) {
+    private boolean isConditionalBlockSkip(String line, String location) {
+        String active = GeneratedIniValidator.withoutComment(line);
+        java.util.regex.Matcher markers = CONDITION_MARKER.matcher(active);
+        while (markers.find()) {
+            // A substitution immediately before a condition ends in @@ too:
+            // @@LABEL@@@@if_FLAG is valid, while an odd number of @ characters is not.
+            if (markers.group(1).length() % TEMPLATE_TAG.length() != 0)
+                throw new IllegalStateException("Malformed condition marker [" + markers.group() + "]; expected @@");
+        }
+        String trimmed = active.trim();
+        if (trimmed.equals(TS_IF_BLOCK_START) || trimmed.startsWith(TS_IF_BLOCK_START + " ")
+                || trimmed.startsWith(TS_IF_BLOCK_START + "\t")) {
+            if (blockStart != null)
+                throw new IllegalStateException("Nested conditional block; previous block opened at " + blockStart);
             String token = trimmed.substring(TS_IF_BLOCK_START.length()).trim();
             if (token.endsWith(TEMPLATE_TAG))
                 token = token.substring(0, token.length() - TEMPLATE_TAG.length()).trim();
-            skippingBlock = !Boolean.parseBoolean(state.getVariableRegistry().get(token));
+            skippingBlock = !conditionValue(token);
+            blockStart = location;
             return true;
         }
         if (trimmed.startsWith(TS_IF_BLOCK_END)) {
+            if (!trimmed.equals(TS_IF_BLOCK_END) || blockStart == null)
+                throw new IllegalStateException("Unexpected or malformed " + TS_IF_BLOCK_END);
             skippingBlock = false;
+            blockStart = null;
             return true;
+        }
+        // Validate names even inside a disabled block, without expanding its variables.
+        if (active.contains(TS_CONDITION)) {
+            if (active.indexOf(TS_CONDITION) != active.lastIndexOf(TS_CONDITION))
+                throw new IllegalStateException("Only one inline condition is supported per line");
+            conditionValue(getToken(active));
         }
         return skippingBlock;
     }
@@ -359,16 +408,20 @@ public class TSProjectConsumer implements ConfigurationConsumer {
             return;
         }
 
-        if (line.contains(TS_CONDITION)) {
-            String token = getToken(line);
-            String strValue = state.getVariableRegistry().get(token);
-            boolean value = Boolean.parseBoolean(strValue);
+        String active = GeneratedIniValidator.withoutComment(line);
+        if (active.contains(TS_CONDITION)) {
+            String token = getToken(active);
+            boolean value = conditionValue(token);
             if (!value)
                 return; // skipping this line
-            line = removeToken(line);
+            line = removeToken(active) + line.substring(active.length());
         }
 
         line = state.getVariableRegistry().applyVariables(line);
+
+        // Substitutions can insert multiple lines, including board-provided fragments.
+        for (String expandedLine : line.split("\\R"))
+            GeneratedIniValidator.validateLine(expandedLine);
 
         line = ignoreList.filterGauges(line);
         if (line == null)
