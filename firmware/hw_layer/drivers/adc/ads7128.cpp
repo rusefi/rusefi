@@ -123,6 +123,9 @@ int Ads7128::chip_reset()
 
 int Ads7128::chip_init()
 {
+	/* count attempts */
+	init_cnt++;
+
 	/* ping */
 	if (regs_read(REG_SYSTEM_STATUS, &status, 1) != 1) {
 		return -7;
