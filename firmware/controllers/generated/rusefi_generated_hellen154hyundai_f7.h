@@ -1647,9 +1647,10 @@
 #define SentInput_INPUT6 6
 #define SentInput_INPUT7 7
 #define SentInput_NONE 0
+#define show_default_engine_type false
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 3300602198
+#define SIGNATURE_HASH 1970075136
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2286,6 +2287,7 @@
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
 #define ts_show_vvl_control true
+#define ts_show_vvt_frequency false
 #define ts_show_vvt_output true
 #define ts_show_vvt_output_pin true
 #define ts_show_wall_wetting true
@@ -2294,7 +2296,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.09.26.hellen154hyundai_f7.3300602198"
+#define TS_SIGNATURE "rusEFI master.2026.09.26.hellen154hyundai_f7.1970075136"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
