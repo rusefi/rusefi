@@ -3,6 +3,7 @@
 #include "gppwm.h"
 
 #include "rusefi_types.h"
+#include <rusefi/timer.h>
 
 struct gppwm_channel;
 class OutputPin;
@@ -27,6 +28,10 @@ public:
 private:
 	// Store the current state so we can apply hysteresis
 	bool m_state = false;
+
+	// #9386 - how long the output has been in its current state, for minimumStateTime.
+	// A default constructed Timer reads as "a very long time ago", so the first switch is free.
+	Timer m_stateChangeTimer;
 
 	// Configuration fields
 	const gppwm_channel* m_config = nullptr;
