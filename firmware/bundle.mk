@@ -352,22 +352,28 @@ $(BRANCH_REF_FILE):
 	cp $(PROJECT_DIR)/../release.txt $(BRANCH_REF_FILE)
 	echo "platform=$(BUNDLE_NAME)" >> $(BRANCH_REF_FILE) ; echo "release=$(BRANCH_REF_FOR_BUNDLE)" >> $(BRANCH_REF_FILE)
 
-$(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME).zip: $(BUNDLE_FILES) $(OPENBLT_WIPE_OUTPUTS) | $(ARTIFACTS)
+# Check even an existing INI before packaging it. The generator also runs this
+# validator, but custom generators and cached files must pass the same gate.
+.PHONY: validate-bundle-ini
+validate-bundle-ini: $(INI_FILE) $(CONFIG_DEFINITION_JAR)
+	java -cp "$(CONFIG_DEFINITION_JAR)" com.rusefi.output.GeneratedIniValidator "$(INI_FILE)"
+
+$(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME).zip: $(BUNDLE_FILES) $(OPENBLT_WIPE_OUTPUTS) | $(ARTIFACTS) validate-bundle-ini
 	rm -f $@
 	zip -r $@ $(BUNDLE_FILES)
 	[ -z "$(POST_ZIP_SCRIPT)" ] || bash $(POST_ZIP_SCRIPT)
 
-$(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME)_obfuscated_public.zip:  $(OBFUSCATED_OUT) $(BUNDLE_FILES) $(OPENBLT_WIPE_OUTPUTS) | $(ARTIFACTS)
+$(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME)_obfuscated_public.zip:  $(OBFUSCATED_OUT) $(BUNDLE_FILES) $(OPENBLT_WIPE_OUTPUTS) | $(ARTIFACTS) validate-bundle-ini
 	rm -f $@
 	zip -r $@ $(FULL_BUNDLE_CONTENT) $(MOST_COMMON_BUNDLE_FILES) $(OBFUSCATED_SREC)
 	[ -z "$(POST_O_ZIP_SCRIPT)" ] || bash $(POST_O_ZIP_SCRIPT)
 
 # The autoupdate zip doesn't have a folder with the bundle contents
-$(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME)_autoupdate.zip: $(UPDATE_BUNDLE_FILES) | $(ARTIFACTS)
+$(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME)_autoupdate.zip: $(UPDATE_BUNDLE_FILES) | $(ARTIFACTS) validate-bundle-ini
 	rm -f $@
 	cd $(FOLDER) &&	zip -r ../$@ $(subst $(FOLDER)/,,$(UPDATE_BUNDLE_FILES))
 
-$(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME)_obfuscated_public_autoupdate.zip:  $(OBFUSCATED_OUT) $(BUNDLE_FILES) | $(ARTIFACTS)
+$(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME)_obfuscated_public_autoupdate.zip:  $(OBFUSCATED_OUT) $(BUNDLE_FILES) | $(ARTIFACTS) validate-bundle-ini
 	cd $(FOLDER) &&	zip -r ../$@ $(subst $(FOLDER)/,,$(MOST_COMMON_BUNDLE_FILES)) $(subst $(FOLDER)/,,$(OBFUSCATED_SREC))
 
 .PHONY: bundle build_both_bundles autoupdate obfuscated bin hex dfu map elf list srec bootloader
