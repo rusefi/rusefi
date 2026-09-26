@@ -81,6 +81,7 @@ struct Pca9685 : public GpioChip {
 	void debug() override;
 
 	int chip_init();
+	int ping();
 
 	i2cBus		*i2c;
 
@@ -158,6 +159,21 @@ int Pca9685::chip_init() {
 	}
 
 	gpio_need_update = PCA9685_GPIO_MASK_ALL;
+
+	return 0;
+}
+
+int Pca9685::ping() {
+	uint8_t reg = 0;
+	if (readReg(PCA9685_MODE1, &reg) != 0) {
+		return -1;
+	}
+
+	// AI should be 1, sleep should be 0
+	if ((reg & (MODE1_AI | MODE1_SLEEP)) != MODE1_AI) {
+		// chips was reset?
+		return -2;
+	}
 
 	return 0;
 }
@@ -278,23 +294,22 @@ static THD_FUNCTION(pca9685_driver_thread, p) {
 
 			if (chip->need_init) {
 				ret = chip->chip_init();
-				if (ret == 0) {
-					chip->need_init = false;
-				} else {
-					chip->errors++;
-				}
+			} else {
+				// Check if chip is still here
+				ret = chip->ping();
 			}
 
-			// Skip output update if chip has failed to init
+			// Skip output update if chip has failed to init/ping
 			if (ret == 0) {
 				// TODO: handle ret = 1, repeat update
 				ret = chip->updateOutputs();
-				if (ret < 0) {
-					chip->need_init = true;
-					chip->errors++;
-				} else {
-					chip->alive_cnt++;
-				}
+			}
+
+			chip->need_init = !(ret >= 0);
+			if (ret < 0) {
+				chip->errors++;
+			} else {
+				chip->alive_cnt++;
 			}
 		}
 	}
