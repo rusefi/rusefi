@@ -577,6 +577,75 @@ Open follow-ups:
 - Optional future hardening: same-evaluated-unit check for expressions
   once an expression evaluator with ini context is available.
 
+## 2026-08-26 - Bound SD startup reads and retry delayed LTFT loads safely
+
+What was done:
+- Read requests now set their pending bitmap synchronously before waking the
+  storage manager. A short-lived SD mount therefore cannot miss a request that
+  is still waiting in the manager mailbox.
+- Added a read-ID-specific wait with an explicit deadline. The SD startup mount
+  waits only for the LTFT record, never for unrelated reads or writes, and
+  proceeds with USB handoff when the deadline expires.
+- An LTFT startup timeout now preserves the live RAM table. A delayed read is
+  retained by the storage manager while the engine is running and is requested
+  again when the engine stops, preventing late data from replacing values
+  learned during that run.
+- If USB connects between SD mode selection and the ECU logging iteration,
+  report cleanup still runs but logging is suppressed until the normal
+  unmount-and-handoff transition completes.
+
+Key decisions and why:
+- The wait is deliberately scoped to one read ID. A global storage-idle gate
+  can include deferred flash writes or unavailable backends and therefore
+  cannot provide a reliable USB handoff deadline.
+- The existing pending bit remains set when the LTFT consumer defers a late
+  read. This reuses the manager's normal retry mechanism without heap memory,
+  another worker, or an unbounded wait.
+- Timeout changes only state flags; it no longer clears the active trim table.
+  The error remains visible until a later successful load clears it.
+
+Validation:
+- The regression test first failed on the old implementation: a retained cell
+  changed from `0.123` to `0`, and engine stop left the read non-pending.
+- After the fix, the focused regression test passes and also confirms that a
+  late load is deferred while the engine is active.
+- The complete unit-test suite passes: 1193/1193 tests from 235 suites.
+- The uaEFI production firmware builds with GCC 12.2.1. Its SD-enabled image
+  uses 740252 of 753664 flash bytes (98.22%).
+- The STM32H743 Nucleo production firmware also builds with GCC 12.2.1 and
+  `EFI_STORAGE_SD=FALSE`, validating the no-SD compile guards.
+## 2026-08-26 - Recover persistent calibration data after interrupted SD writes
+
+What was done:
+- SD-backed calibration records are now written to a synchronized temporary
+  file, with the previous primary rotated to a backup before promotion. Reads
+  validate the exact record size and fall back to that backup.
+- Storage reads now try higher-priority backends first and stop after the first
+  success, so a failed lower-priority read cannot partially overwrite valid
+  data already returned by another backend.
+- LTFT reads stage data in static BSS and copy it into the active table only
+  after a complete storage read succeeds. A failed read preserves the current
+  RAM state instead of clearing learned values.
+- Extra pages that share the internal settings sector now request the normal
+  deferred configuration write, retaining the engine-running flash interlock.
+
+Key decisions and why:
+- The SD update is described as recoverable rotation rather than strictly
+  atomic because power loss semantics ultimately depend on FatFS and the
+  underlying media's rename implementation.
+- The LTFT staging object consumes one fixed table-sized block in BSS. It does
+  not use the storage thread stack or heap, and it prevents partially read data
+  from becoming live.
+- The direct-storage write policy was left unchanged; only shared-sector
+  internal-flash writes are routed through the guarded settings path.
+
+Validation:
+- Added `LTFT.FailedLoadPreservesExistingTrims`; before the fix it failed with
+  the retained cell changing from `0.011` to `0`, proving the regression.
+- The focused LTFT/storage set passed 5/5 and the full unit suite passed
+  1196/1196.
+- The uaEFI firmware build completed with GCC 12.2.1; flash0 used 741496 bytes
+  (98.39%) and the final image was generated successfully.
 ## 2026-08-27 - Fix: "Grab baro value from MAP" latched 101.325 kPa (#9744)
 
 What was done:
@@ -688,3 +757,42 @@ Validation:
 Open follow-ups:
 - `unit_tests/mocks.cpp:38` still trips GCC 16's `-Wmaybe-uninitialized`; only
   a local concern until CI moves to that compiler (see previous entry).
+
+## 2026-09-21 - Extend SD persistence coverage before correction
+
+- Merged current upstream master into the persistence proposal without rewriting the published history. Kept the existing write-result propagation, LTFT retry policy and board flash-gate tests while resolving the three conflicting files.
+- Added a standalone host harness compiling the actual SD backend, backend-selection function and production LTFT load function. Covers all three record names, partial writes/reads, sync/close/rename failures, failed restoration, backup recovery and the complete 2048-byte LTFT state. Added a five-toolchain CI matrix; no submodules are needed for this harness.
+- All nine tests pass with native GCC. The new invalid-primary test intentionally reproduces the current defect: a truncated or oversized primary replaces a readable backup, then failed promotion leaves no readable copy. The next change must fix this path and invert those expectations. Other cases assert existing correct behavior.
+- This models failures at FatFS API boundaries, not physical filesystem durability, DMA timing or actual power interruption. No firmware or hardware execution was performed at this step.
+
+## 2026-09-21 - Preserve recovery backup when replacing an invalid primary
+
+- Inspect the primary's size before rotating files. A primary with the wrong size is removed without replacing the existing backup; promotion failures then leave that backup readable. Valid primaries retain the existing temporary-file, sync, close, rotation and restoration sequence. No calibration format, storage priority, timeout or USB ownership changes.
+- Updated the passing reproduction to require successful recovery and added successful replacement controls. All ten native GCC host tests pass, including full production LTFT staging and failures on the LTFT, second-tables and Lua record paths. The original unit-test stub's comment now correctly points to this production-path coverage.
+- Documented the 2048-byte static LTFT staging allocation and the limits of API-boundary fault injection. No additional full-record buffer was added. The shared unit-test, firmware and five-toolchain persistence workflows provide the remaining integration checks; no physical card or ECU validation was performed here.
+
+## 2026-09-21 - Reproduce SD startup and LTFT completion defects
+
+- Updated the startup handoff branch with the persistence prerequisite and current upstream master without rewriting either published history. Preserved upstream write-result propagation, retry limits and unrelated changes. The official PR still targets master and must follow the persistence prerequisite.
+- Extended the host harness to compile the actual read-request helpers, storage read-dispatch loop, LTFT controller callbacks and SD logger executor. Both USB mass-storage enabled and disabled variants compile; controls cover full-mailbox wakeup loss, unrelated reads, bounded polling, late-read deferral and USB arrival before logger execution.
+- All 19 native GCC tests pass before changing production behavior. New assertions deliberately reproduce mounted-IDLE storage being unavailable, closing ECU-mode storage being reported ready, failed LTFT reads clearing the error/retry state, a stopped engine timing out its startup read, and invalid read IDs being reported complete. These expectations will be inverted by the correction commit.
+- The harness uses deterministic platform mocks; it does not emulate real RTOS scheduling, physical SD timing or USB hardware ownership transitions.
+
+## 2026-09-21 - Correct mounted-SD readiness and LTFT read outcomes
+
+- Backend readiness now follows FsGuard availability, allowing the initial IDLE-mode mount while rejecting closing/unmounted filesystems. Reads still acquire their own lifetime guard. No new storage buffer, calibration layout or ChibiOS pin change.
+- LtftState::load reports whether a complete record was applied. The LTFT controller preserves a failed attempt's error/retry state while completing the request, avoiding continuous retries of missing files. Running-engine timeout behavior remains; a stopped engine no longer prematurely abandons the startup read. Added matching Google Test cases.
+- Invalid read IDs are rejected by both the storage-enabled wait and its no-storage stub. Updated documentation to distinguish request completion from successful loading and polling timeout from unmount/I/O completion.
+- Inverted the prior bad-behavior assertions. The 19-test native GCC suite passes with USB mass-storage enabled and disabled harness variants, including the persistence prerequisite's tests. The five-toolchain workflow now also runs for SD mode-executor changes. General firmware/unit-test CI and physical-card/USB validation remain separate from these host checks.
+
+## 2026-09-21 - Simplify startup handoff before publication
+
+- Removed the duplicate private LTFT retry flag; the existing load-error state now controls both late-read deferral and retry on engine stop. Initialization clears it and a successful load clears it again.
+- Replaced four pending-read helpers with one locked snapshot helper. The request and completion sites update the bitmap in short critical sections; no filesystem call or mailbox post runs under that lock.
+- Re-ran all 19 native GCC host tests successfully with both USB mass-storage build variants. The coverage-first commit remains separate from the correction. No public branch update was made before this simplification review.
+
+## 2026-09-21 - Correct cross-platform startup test compilation
+
+- The first CI run passed Windows GCC but exposed two build issues. On Unix, replacing the executable path also changed the source filename because the executable has no suffix. Generate both compiler commands from their explicit output paths instead.
+- MSVC rejected an existing unreachable return at the end of storageReadID; every branch already returns. Removed that redundant statement without changing dispatch behavior or suppressing warnings.
+- The correction leaves firmware behavior and test expectations unchanged. The five-toolchain workflow must pass before considering the portable host checks complete.

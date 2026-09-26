@@ -16,7 +16,8 @@ struct LtftState {
 
 	// returns true if the trims were persisted, false on storage failure
 	bool save();
-	void load();
+	// Returns true only when a complete storage record replaces the active trims.
+	bool load();
 	void reset();
 	void applyToVe();
 	// Development only, to be removed
@@ -27,12 +28,14 @@ class LongTermFuelTrim : public EngineModule, public long_term_fuel_trim_state_s
 public:
 	// EngineModule implementation
 	void onSlowCallback() override;
+	void onEngineStop() override;
 	bool needsDelayedShutoff() override;
 
 	void init(LtftState *state);
 	void learn(ClosedLoopFuelResult clResult, float rpm, float fuelLoad);
 	ClosedLoopFuelResult getTrims(float rpm, float fuelLoad);
-	void load();
+	// False defers the request; true finishes an attempt, with ltftLoadError as its result.
+	bool load();
 	// returns true if the trims were persisted; false lets the storage manager keep the request pending and retry
 	bool store();
 	void reset();

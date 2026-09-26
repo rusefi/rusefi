@@ -9,6 +9,7 @@
 #include "pch.h"
 
 #include "storage.h"
+#include "storage_detail.h"
 #include "extra_flash_pages.h"
 #include "board_overrides.h"
 
@@ -92,10 +93,18 @@ static SettingStorageBase *storages[storagesCount];
 
 chibios_rt::Mailbox<msg_t, 16> storageManagerMb;
 
+// Bitmap of read requests. Set by the caller before waking the manager so a
+// short-lived storage mount cannot miss a request still queued in the mailbox.
+static uint32_t pendingReads = 0;
+
+static uint32_t getPendingReads() {
+	chibios_rt::CriticalSectionLocker csl;
+	return pendingReads;
+}
+
 #define MSG_CMD_WRITE		(0)
 // force settings save independently of mcuCanFlashWhileRunning()
 #define MSG_CMD_WRITE_NOW	(1)
-#define MSG_CMD_READ		(2)
 #define MSG_CMD_PING		(3)
 #define MSG_CMD_REG			(4)
 #define MSG_CMD_UNREG		(5)
@@ -133,8 +142,7 @@ static bool storageReadID(uint32_t id) {
 		return true;
 #if EFI_LTFT_CONTROL
 	} else if (id == EFI_LTFT_RECORD_ID) {
-		engine->module<LongTermFuelTrim>()->load();
-		return true;
+		return engine->module<LongTermFuelTrim>()->load();
 #endif
 	} else if (id == EFI_SECOND_TABLES_RECORD_ID) {
 		loadExtraPage(EFI_SECOND_TABLES_RECORD_ID);
@@ -147,7 +155,6 @@ static bool storageReadID(uint32_t id) {
 		// to clear pending bit
 		return true;
 	}
-	return true;
 }
 
 static const char *storageTypeToName(StorageType type) {
@@ -200,21 +207,10 @@ StorageStatus storageWrite(StorageItemId id, const uint8_t *ptr, size_t size) {
 }
 
 StorageStatus storageRead(StorageItemId id, uint8_t *ptr, size_t size) {
-	bool success = false;
-	StorageStatus status = StorageStatus::NotSupported;
-
-	for_all_storages {
-		if ((!storage->isReady()) || (!storage->isIdSupported(id))) {
-			continue;
-		}
-
-		status = storage->read(id, ptr, size);
-		if (status == StorageStatus::Ok) {
-			success = true;
-		}
-	}
-
-	return (success ? StorageStatus::Ok : status);
+	// Read in reverse registration priority. This selects the same successful
+	// backend that the old forward scan selected last, but a later failed read
+	// can no longer partially overwrite data from an earlier successful read.
+	return storage_detail::readFirstSuccessful(storages, storagesCount, id, ptr, size);
 }
 
 static bool storageManagerSendCmd(uint32_t cmd, uint32_t arg)
@@ -230,7 +226,18 @@ bool storageRequestWriteID(StorageItemId id, bool forced) {
 }
 
 bool storageReqestReadID(StorageItemId id) {
-	return storageManagerSendCmd(MSG_CMD_READ, (uint32_t)id);
+	if ((id <= 0) || (id >= EFI_STORAGE_TOTAL_ITEMS)) {
+		return false;
+	}
+
+	{
+		chibios_rt::CriticalSectionLocker csl;
+		pendingReads |= BIT(id);
+	}
+	// The manager also polls, so a full mailbox only delays the request; it does
+	// not lose it. The ping normally wakes the manager immediately.
+	(void)storageManagerSendCmd(MSG_CMD_PING, 0);
+	return true;
 }
 
 bool storageRegisterStorage(StorageType type, SettingStorageBase *storage) {
@@ -289,7 +296,6 @@ bool storagRequestUnregisterStorage(StorageType id)
 
 // bitmap of flags per pageId. Reminder that page numbers start from 1, see StorageItemId
 static uint32_t pendingWrites = 0;
-static uint32_t pendingReads = 0;
 
 // A failed LTFT write stays pending and is retried, but not on every poll: a card or flash that
 // keeps failing would otherwise be hammered every STORAGE_MANAGER_POLL_INTERVAL_MS and flood the log.
@@ -349,9 +355,6 @@ static void storageManagerThread(void*) {
 			uint32_t id = msg & MSG_ID_MASK;
 
 			switch (cmd) {
-			case MSG_CMD_READ:
-				pendingReads |= BIT(id);
-				break;
 			case MSG_CMD_WRITE:
 				pendingWrites |= BIT(id);
 				break;
@@ -391,9 +394,11 @@ static void storageManagerThread(void*) {
 			}
 		}
 
-		// check if we can read some of pending IDs...
-		for (size_t i = 0; (i < EFI_STORAGE_TOTAL_ITEMS) && pendingReads; i++) {
-			if ((pendingReads & BIT(i)) == 0) {
+		// Check if we can read some of the pending IDs. Snapshot under the
+		// system lock because requests can arrive from another thread.
+		uint32_t reads = getPendingReads();
+		for (size_t i = 0; (i < EFI_STORAGE_TOTAL_ITEMS) && reads; i++) {
+			if ((reads & BIT(i)) == 0) {
 				continue;
 			}
 
@@ -403,6 +408,7 @@ static void storageManagerThread(void*) {
 			}
 
 			if (storageReadID(id)) {
+				chibios_rt::CriticalSectionLocker csl;
 				pendingReads &= ~BIT(id);
 			}
 		}
@@ -467,6 +473,23 @@ bool storageWaitIdle(unsigned int timeoutMs) {
 	return true;
 }
 
+bool storageWaitReadDone(StorageItemId id, unsigned int timeoutMs) {
+	if ((id <= 0) || (id >= EFI_STORAGE_TOTAL_ITEMS)) {
+		return false;
+	}
+	while (getPendingReads() & BIT(id)) {
+		if (timeoutMs == 0) {
+			return false;
+		}
+
+		unsigned int sleepMs = timeoutMs < 10 ? timeoutMs : 10;
+		chThdSleepMilliseconds(sleepMs);
+		timeoutMs -= sleepMs;
+	}
+
+	return true;
+}
+
 void initStorage() {
 	bool settingsStorageReady = false;
 	// may be unused
@@ -505,6 +528,10 @@ bool storageIsBusy() {
 
 bool storageWaitIdle(unsigned int /*timeoutMs*/) {
 	return true;
+}
+
+bool storageWaitReadDone(StorageItemId id, unsigned int /*timeoutMs*/) {
+	return (id > 0) && (id < EFI_STORAGE_TOTAL_ITEMS);
 }
 
 #endif // EFI_CONFIGURATION_STORAGE

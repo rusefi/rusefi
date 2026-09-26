@@ -71,23 +71,39 @@ build (e.g. microrusefi with external W25Q flash). In hybrids the split is:
 `storages[STORAGE_TOTAL]` is a registry indexed by `StorageType`
 (`STORAGE_INT_FLASH`, `STORAGE_MFS_INT_FLASH`, `STORAGE_MFS_EXT_FLASH`,
 `STORAGE_SD_CARD`). Backends self-register via `storageRegisterStorage()`;
-the SD backend registers/unregisters at runtime as the card comes and goes
-(`sdCardGetCurrentMode() == SD_MODE_ECU` gates `isReady()`).
+the SD backend registers/unregisters at runtime as the card comes and goes.
+Its readiness follows the mounted filesystem lifetime (`FsGuard`), including
+the initial mount while the mode is still `SD_MODE_IDLE`. A closing or unmounted
+filesystem rejects new access even if the mode has not yet changed.
 
-`storageWrite(id, ...)` / `storageRead(id, ...)` iterate **all** registered,
-ready backends that claim the id (`isIdSupported`). Writes go to every such
-backend (mirroring); the call reports `Ok` if at least one backend succeeded.
-Reads also iterate all backends - a later backend's successful read overwrites
-the buffer, so with both INT_FLASH and MFS holding a copy the MFS copy
-(higher `StorageType` index) effectively wins.
+`storageWrite(id, ...)` iterates **all** registered, ready backends that claim
+the id (`isIdSupported`). Writes go to every such backend (mirroring); the
+call reports `Ok` if at least one backend succeeded. `storageRead(id, ...)`
+tries backends in descending `StorageType` order and returns on the first
+successful read. This preserves the higher-index backend priority without
+allowing a failed fallback read to partially overwrite valid data.
 
 Asynchronous operation goes through a dedicated low-priority thread
 ("storage manger", `PRIO_STORAGE_MANAGER`, larger stack when MFS/SD is in)
-fed by a 16-entry mailbox. Commands: `WRITE`, `WRITE_NOW`, `READ`, `PING`,
-`REG`, `UNREG`. Requests set bits in `pendingWrites`/`pendingReads` bitmaps
-(bit index = record id); every 100 ms poll the thread retries any pending id
-whose backend is available, so a write requested before a backend is ready
-(e.g. SD not yet mounted) completes later without the caller caring.
+fed by a 16-entry mailbox. Commands include `WRITE`, `WRITE_NOW`, `PING`,
+`REG`, and `UNREG`. A read request sets its `pendingReads` bit synchronously
+before pinging the manager, so a short-lived backend mount cannot miss a
+request that is still waiting in the mailbox. Every 100 ms poll retries any
+pending id whose backend is available, so work requested before a backend is
+ready (e.g. SD not yet mounted) completes later without the caller caring.
+
+`storageWaitReadDone(id, timeoutMs)` is a targeted, bounded completion gate.
+It observes only the requested read; unrelated reads and all writes are
+excluded. The SD startup mount uses it for the LTFT record before handing the
+card to another owner. The wait bounds polling for that request; it does not
+cancel an in-flight I/O operation or bound the subsequent unmount, which still
+waits for active filesystem users. Completion means the request is no longer
+pending, not that the record was valid; LTFT retains a separate load-error flag.
+
+Failed LTFT reads preserve the active trims, finish the current attempt with
+`ltftLoadError` set and permit a new request on engine stop. A startup read
+remains pending while the engine is stopped; after the running-engine timeout,
+late load attempts are deferred until the engine stops.
 
 Write deferral: `storageAllowWriteID()` blocks settings writes while the
 engine is spinning **if** the MCU stalls on internal flash writes.
@@ -156,8 +172,10 @@ Consequences of sharing the sector:
 - An extra page can only be written **immediately after a main-config burn
   has erased the sector** (`SettingStorageFlash::store()` skips erase for
   extra-page ids and fails if the area is not blank). Hence
-  `burnExtraFlashPage(id)` on INT_FLASH-only boards simply triggers a full
-  `writeToFlashNow()`, which piggybacks all extra pages via
+  `burnExtraFlashPage(id)` on INT_FLASH-only boards requests a normal deferred
+  settings write with `setNeedToWriteConfiguration()`. The storage manager
+  waits when the target MCU cannot safely write internal flash while the
+  engine is spinning; the eventual full burn piggybacks all extra pages via
   `burnExtraFlashPages()`.
 - Reading a blank extra-page area returns `NotFound` -> defaults are used.
 - Exception: the usual STM32F7 build without `EFI_FLASH_USE_1500_OF_2MB` is a
@@ -196,10 +214,27 @@ external flash chip is missing or dead.
 ## SD backend specifics
 
 `SettingStorageSD` stores only non-settings records, as files in the SD root:
-`ltft.bin`, `second_tables.bin`, `lua_script.bin`. It requires the card in
-`SD_MODE_ECU` (not handed to the PC as USB mass storage) and takes the
-FatFS `FsGuard` lock around each operation, coexisting with SD logging. It is
-registered/unregistered dynamically as the card mounts/unmounts.
+`ltft.bin`, `second_tables.bin`, `lua_script.bin`. Each operation acquires the
+filesystem lifetime guard (`FsGuard`), including during the initial mount.
+This prevents unmounting during that access; it does not serialize all filesystem
+users. The filesystem is closed before the card is handed to USB mass storage. It is
+registered/unregistered dynamically as the card mounts/unmounts. Writes first
+create and sync a `.tmp` file, rotate the previous primary to `.bak`, then
+promote the complete temporary file. Reads require an exact-size primary and
+fall back to the backup. This is a recoverable rotation scheme; it does not
+claim stronger atomicity than the underlying FatFS rename operation. A primary
+with an unexpected size is discarded rather than rotated over the backup;
+the existing backup remains available if the replacement cannot be promoted.
+An exact-size file is not necessarily free of corruption: this does not add a
+checksum to the raw LTFT format or validate the extra-page payload CRCs here.
+
+`unit_tests/test_storage_sd.py` compiles the actual SD backend, backend-selection
+function, read-request dispatch, LTFT callbacks and logger executor against an
+in-memory FatFS and deterministic platform mocks. Both USB mass-storage enabled
+and disabled variants compile. The dedicated `test-sd-persistence.yaml` workflow runs GCC,
+Clang and MSVC. It checks recovery at API boundaries, not physical FAT durability
+or SDIO/DMA timing. LTFT staging retains one additional `LtftState` in static RAM
+(2048 bytes for two 16x16 float tables), with no full-record stack allocation.
 
 ## History: PR #9949 (July 2026)
 
