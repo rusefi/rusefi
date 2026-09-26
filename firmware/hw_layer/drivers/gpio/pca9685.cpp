@@ -411,3 +411,31 @@ int pca9685_add(brain_pin_e base, unsigned int index, const struct pca9685_confi
 }
 
 #endif /* EFI_PROD_CODE && (BOARD_PCA9685_COUNT > 0) */
+
+/* TODO: support more than one? */
+static brain_pin_e pca9685GetIoBase(size_t index) {
+	if (index == 0) {
+		return Gpio::EXTIOCHIP_0_IO_1;
+	}
+
+	return Gpio::Unassigned;
+}
+
+/* this helper will add PCA9685 chips configured through engineConfig (i.e. up to PCA9685_COUNT)
+ * but board can have up to BOARD_PCA9685_COUNT and some of them can be added through board code */
+int initPca9685Gpios() {
+	for (size_t index = 0; index < PCA9685_COUNT; index++) {
+		auto cfg = getPca9685Cfg(index);
+		brain_pin_e base = pca9685GetIoBase(index);
+
+		if ((cfg != nullptr) && (base != Gpio::Unassigned)) {
+			int ret = pca9685_add(base, index, cfg);
+			if (ret < 0) {
+				efiPrintf("Failed to add PCA9685 chip index %d %d", index, ret);
+				// continue;
+			}
+		}
+	}
+
+	return 0;
+}

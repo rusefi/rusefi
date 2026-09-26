@@ -19,3 +19,5 @@
  * @return return gpio chip base
  */
 int pca9685_add(brain_pin_e base, unsigned int index, const struct pca9685_config_s *cfg);
+
+int initPca9685Gpios();
