@@ -51,6 +51,8 @@
 #define PCA9685_DUTY_OFF		0		// constant off
 #define PCA9685_DUTY_ON			PCA9685_DUTY_MAX	// constant on
 
+#define PCA9685_INT_CLOCK		25000000	// internal 25MHz oscilator
+
 #define MODE1_RESTART 0x80
 #define MODE1_SLEEP   0x10
 #define MODE1_AI      0x20
@@ -115,7 +117,6 @@ static const char* pca9685_pin_names[PCA9685_OUTPUTS] = {
 /* Driver local functions.													*/
 /*==========================================================================*/
 
-#if BOARD_PCA9685_COUNT > 0
 static Pca9685 chips[BOARD_PCA9685_COUNT];
 
 int Pca9685::chip_init() {
@@ -133,9 +134,27 @@ int Pca9685::chip_init() {
 		return -1;
 	}
 
+	// 2. Set outpus mode
 	uint8_t mode2 = MODE2_OUTNE_HIZ;
+	if (cfg->inverted) {
+		mode2 |= MODE2_INVRT;
+	}
+	if (!cfg->od) {
+		mode2 |= MODE2_OUTDRV_PP;
+	}
 	if (writeReg(PCA9685_MODE2, mode2) != 0) {
 		return -1;
+	}
+
+	// 3. Calculate PWM frequency
+	if (cfg->pwm_freq) {
+		float prescaler = PCA9685_INT_CLOCK / PCA9685_DUTY_MAX / cfg->pwm_freq;
+		prescaler = clampF(1.0, prescaler, 256.0);
+		if (writeReg(PCA9685_PRE_SCALE, (uint8_t)prescaler - 1) != 0) {
+			return -1;
+		}
+	} else {
+		// use default
 	}
 
 	gpio_need_update = PCA9685_GPIO_MASK_ALL;
@@ -391,6 +410,4 @@ int pca9685_add(brain_pin_e base, unsigned int index, const struct pca9685_confi
 	return -1;
 }
 
-#endif // PCA9685_COUNT
-
-#endif /* HAL_USE_I2C */
+#endif /* EFI_PROD_CODE && (BOARD_PCA9685_COUNT > 0) */
