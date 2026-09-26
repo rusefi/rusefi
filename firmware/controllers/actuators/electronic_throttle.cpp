@@ -168,6 +168,7 @@ PUBLIC_API_WEAK bool isBoardAllowingLackOfPps() {
 }
 
 bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalProvider) {
+	*static_cast<electronic_throttle_s*>(this) = {}; // complete initialization of all fields
 	state = (uint8_t)EtbState::InInit;
 	if (function == DC_None) {
 		// if not configured, don't init.
