@@ -44,12 +44,11 @@ private:
 	bool can_init(slcan_can_mode_e mode);
 	uint8_t slcan_get_status();
 	void execute_status_command();
-	bool send_can_message_from_string(const char * str);
+	bool send_can_message_from_string(const char * str, can_bus_channel_e channel);
 
-	char *put_hex_digit(char * str, uint8_t val);
-	char *put_hex_byte(char * str, uint8_t val);
-	uint8_t read_hex_number_8(const char * str, uint8_t len);
-	uint32_t read_hex_number(const char * str, uint8_t len);
+	static char *put_hex_digit(char * str, uint8_t val);
+	static char *put_hex_byte(char * str, uint8_t val);
+	static uint32_t read_hex_number(const char * str, uint8_t len);
 
 	size_t readLine();
 	void putstr(const char * s);
