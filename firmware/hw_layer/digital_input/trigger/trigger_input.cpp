@@ -57,7 +57,7 @@ static triggerType camTriggerType[CAM_INPUTS_COUNT];
 
 static int turnOnTriggerInputPin(const char *msg, int index, bool isTriggerShaft) {
 	brain_pin_e brainPin = isTriggerShaft ?
-		engineConfiguration->triggerInputPins[index] : engineConfiguration->camInputs[index];
+		engineConfiguration->triggerInputPins[index] : getBoardCamInput(index);
 
 	if (isTriggerShaft) {
 		shaftTriggerType[index] = TRIGGER_NONE;
