@@ -16,7 +16,7 @@ jobs:
 
       - uses: carlosperate/arm-none-eabi-gcc-action@v1.13.0
         with:
-          release: '14.2.Rel1'
+          release: '15.2.Rel1'
 
       - name: Checkout Submodules
         # todo: some funny way to reuse common_submodule_init_without_chibios.sh on Windows?
