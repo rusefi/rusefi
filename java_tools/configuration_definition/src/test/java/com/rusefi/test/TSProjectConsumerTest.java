@@ -13,6 +13,7 @@ import com.rusefi.output.PlainTsProjectConsumer;
 import com.rusefi.output.TSProjectConsumer;
 import com.rusefi.output.TsOutput;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.io.IOException;
 import java.io.ByteArrayInputStream;
@@ -66,22 +67,82 @@ public class TSProjectConsumerTest {
     }
 
     @Test
-    public void misspelledOddFireConditionCurrentlySilentlyDropsMenu() throws IOException {
-        // Passing bug reproduction: an unknown flag should be diagnosed instead of hiding the menu.
-        // Change this expectation when condition lookup becomes strict.
+    public void misspelledOddFireConditionIsRejected() throws IOException {
         String line = oddFireMenuTemplateLine().replace("ts_show_odd_fire", "ts_show_odd_fier");
-        assertEquals("before\nafter\n", oddFireMenuResult("true", line));
+        IllegalStateException e = assertThrows(IllegalStateException.class, () -> oddFireMenuResult("true", line));
+        assertTrue(e.getMessage().contains("tunerstudio.template.ini:2:"), e.getMessage());
+        assertTrue(e.getMessage().contains("Unknown condition [ts_show_odd_fier]"), e.getMessage());
     }
 
     @Test
-    public void singleAtOddFireConditionCurrentlyLeaksIntoOutput() throws IOException {
-        // Passing bug reproduction of the malformed marker present in the old Kinetis/Cypress INIs.
-        // This proves the current generator also accepts that input, not how those old files arose.
-        // Change these expectations to rejection when malformed-marker validation is added.
+    public void singleAtOddFireConditionIsRejected() throws IOException {
         String line = oddFireMenuTemplateLine().replace("@@if_", "@if_");
         assertTrue(line.contains("@if_ts_show_odd_fire"));
-        assertEquals("before\n" + line + "\nafter\n", oddFireMenuResult("true", line));
-        assertEquals("before\n" + line + "\nafter\n", oddFireMenuResult("false", line));
+        for (String value : new String[]{"true", "false"}) {
+            IllegalStateException e = assertThrows(IllegalStateException.class, () -> oddFireMenuResult(value, line));
+            assertTrue(e.getMessage().contains("tunerstudio.template.ini:2:"), e.getMessage());
+            assertTrue(e.getMessage().contains("Malformed condition marker"), e.getMessage());
+        }
+    }
+
+    @Test
+    public void conditionValuesMustBeBoolean() throws IOException {
+        String line = oddFireMenuTemplateLine();
+        IllegalStateException e = assertThrows(IllegalStateException.class, () -> oddFireMenuResult("fasle", line));
+        assertTrue(e.getMessage().contains("must be true or false, got [fasle]"), e.getMessage());
+        assertEquals("before\nafter\n", oddFireMenuResult("FALSE", line));
+        assertEquals(oddFireMenuResult("true", line), oddFireMenuResult("TRUE", line));
+    }
+
+    @Test
+    public void malformedConditionsAreRejectedEvenWhenDisabled() {
+        for (String marker : new String[]{"@@@if_ts_show_odd_fire", "@@if_", "@@if_ts_show_odd_fire,",
+                "@@if_ts_show_odd_fire@@", "@@if_ts_show_odd_fire @@if_typo"}) {
+            assertThrows(IllegalStateException.class, () -> oddFireMenuResult("false", "menu" + marker));
+        }
+    }
+
+    @Test
+    public void includedConditionErrorReportsIncludedFileAndLine(@TempDir Path directory) throws IOException {
+        Path included = directory.resolve("board_menu.ini");
+        Files.write(included, ("; comment\n" + oddFireMenuTemplateLine().replace("@@if_", "@if_")).getBytes(StandardCharsets.UTF_8));
+        TSProjectConsumer consumer = new TestTSProjectConsumer(new ReaderStateImpl());
+        String template = "include_file \"" + included + "\"\n";
+        IllegalStateException e = assertThrows(IllegalStateException.class, () -> consumer.getTsFileContent(
+                new ByteArrayInputStream(template.getBytes(StandardCharsets.UTF_8))));
+        assertTrue(e.getMessage().contains(included + ":2:"), e.getMessage());
+    }
+
+    @Test
+    public void substitutedFragmentCannotLeakTemplateMarkers() {
+        ReaderStateImpl state = new ReaderStateImpl();
+        state.getVariableRegistry().put("BOARD_MENU", "; comment\nsubMenu = offsets, \"Offsets\", 0@if_typo\n");
+        TSProjectConsumer consumer = new TestTSProjectConsumer(state);
+        IllegalStateException e = assertThrows(IllegalStateException.class, () -> consumer.getTsFileContent(
+                new ByteArrayInputStream("@@BOARD_MENU@@\n".getBytes(StandardCharsets.UTF_8))));
+        assertTrue(e.getMessage().contains("Unresolved or malformed template marker"), e.getMessage());
+    }
+
+    @Test
+    public void conditionMayImmediatelyFollowSubstitution() throws IOException {
+        ReaderStateImpl state = new ReaderStateImpl();
+        state.getVariableRegistry().put("LABEL", "\"Offsets\"");
+        state.getVariableRegistry().put("FLAG", "true");
+        TSProjectConsumer consumer = new TestTSProjectConsumer(state);
+        String template = "subMenu = offsets, @@LABEL@@@@if_FLAG\n";
+        assertEquals("subMenu = offsets, \"Offsets\"\n", consumer.getTsFileContent(
+                new ByteArrayInputStream(template.getBytes(StandardCharsets.UTF_8))).getPrefix());
+    }
+
+    @Test
+    public void optionalConditionDefaultsPreserveBoardOverrides() {
+        VariableRegistry defaults = ConfigDefinitionTest.readRealConfig();
+        assertEquals("false", defaults.get("show_default_engine_type"));
+        assertEquals("false", defaults.get("ts_show_vvt_frequency"));
+        VariableRegistry proteus = new VariableRegistry();
+        proteus.readPrependValues(ConfigDefinitionTest.FIRMWARE + "/config/boards/proteus/prepend.txt", true);
+        proteus.readPrependValues(ConfigDefinitionTest.FIRMWARE + "/integration/rusefi_config.txt", true);
+        assertEquals("true", proteus.get("ts_show_vvt_frequency"));
     }
 
     private static String oddFireMenuTemplateLine() throws IOException {
@@ -438,10 +499,23 @@ public class TSProjectConsumerTest {
     }
 
     @Test
-    public void ifBlockDroppedWhenTokenMissing() throws IOException {
-        // an unregistered token parses as false and drops the block (matches per-line @@if_)
+    public void ifBlockRejectedWhenTokenMissing() {
         String content = "before\n@@if_block MISSING@@\ninside\n@@endif_block\nafter\n";
-        assertEquals("before\nafter\n", ifBlockResult(null, content));
+        IllegalStateException e = assertThrows(IllegalStateException.class, () -> ifBlockResult(null, content));
+        assertTrue(e.getMessage().contains("Unknown condition [MISSING]"), e.getMessage());
+        assertTrue(e.getMessage().contains("tunerstudio.template.ini:2:"), e.getMessage());
+    }
+
+    @Test
+    public void malformedBlocksAreRejectedEvenWhenDisabled() {
+        for (String content : new String[]{
+                "@@if_block MY_FLAG@@\ninside\n",
+                "@@endif_block\n",
+                "@@if_block MY_FLAG@@\n@@if_block MY_FLAG@@\n@@endif_block\n",
+                "@@if_block MY_FLAG@@\n@if_typo\n@@endif_block\n",
+                "@@if_block MY_FLAG@@\ninside@@if_UNKNOWN\n@@endif_block\n"}) {
+            assertThrows(IllegalStateException.class, () -> ifBlockResult("false", content));
+        }
     }
 
     @Test
