@@ -318,6 +318,8 @@ void initSmartGpio() {
 	}
 #endif /* (BOARD_DRV8860_COUNT > 0) */
 
+	initPca9685Gpios();
+
 #if EFI_CAN_GPIO
     initCanGpioMsiobox();
 #endif // EFI_CAN_GPIO
