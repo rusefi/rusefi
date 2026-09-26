@@ -43,6 +43,55 @@ public class TSProjectConsumerTest {
     }
 
     @Test
+    public void oddFireMenuConditionPreservesZeroPlaceholderWhenEnabled() throws IOException {
+        String generated = oddFireMenuResult("true", oddFireMenuTemplateLine());
+        assertEquals("before\nsubMenu = ignitionCylExtra, \"Cylinder offsets\", 0\nafter\n",
+                generated.replaceAll("[\\t ]+", " ").replace("\n ", "\n"));
+    }
+
+    @Test
+    public void oddFireMenuConditionDropsOnlyMenuWhenDisabled() throws IOException {
+        assertEquals("before\nafter\n", oddFireMenuResult("false", oddFireMenuTemplateLine()));
+    }
+
+    @Test
+    public void misspelledOddFireConditionCurrentlySilentlyDropsMenu() throws IOException {
+        // Passing bug reproduction: an unknown flag should be diagnosed instead of hiding the menu.
+        // Change this expectation when condition lookup becomes strict.
+        String line = oddFireMenuTemplateLine().replace("ts_show_odd_fire", "ts_show_odd_fier");
+        assertEquals("before\nafter\n", oddFireMenuResult("true", line));
+    }
+
+    @Test
+    public void singleAtOddFireConditionCurrentlyLeaksIntoOutput() throws IOException {
+        // Passing bug reproduction of the malformed marker present in the old Kinetis/Cypress INIs.
+        // This proves the current generator also accepts that input, not how those old files arose.
+        // Change these expectations to rejection when malformed-marker validation is added.
+        String line = oddFireMenuTemplateLine().replace("@@if_", "@if_");
+        assertTrue(line.contains("0@if_ts_show_odd_fire"));
+        assertEquals("before\n" + line + "\nafter\n", oddFireMenuResult("true", line));
+        assertEquals("before\n" + line + "\nafter\n", oddFireMenuResult("false", line));
+    }
+
+    private static String oddFireMenuTemplateLine() throws IOException {
+        return Files.readAllLines(Path.of(ConfigDefinitionTest.FIRMWARE, "tunerstudio", "top_level_menu.ini"))
+                .stream()
+                .filter(line -> line.trim().startsWith("subMenu = ignitionCylExtra,"))
+                .findFirst()
+                .orElseThrow(() -> new AssertionError("Missing Cylinder offsets menu in real template"));
+    }
+
+    private static String oddFireMenuResult(String flagValue, String line) throws IOException {
+        ReaderStateImpl state = new ReaderStateImpl();
+        state.getVariableRegistry().put("ts_show_odd_fire", flagValue);
+        TSProjectConsumer consumer = new TestTSProjectConsumer(state);
+        String template = "before\n" + line + "\nafter\n";
+        TsFileContent result = consumer.getTsFileContent(new ByteArrayInputStream(template.getBytes(StandardCharsets.UTF_8)));
+        assertEquals("", result.getPostfix());
+        return result.getPrefix();
+    }
+
+    @Test
     public void malformedTsConditionTokenIsParseError() {
         // real-world bug shape: a comma glued to the @@if_ token made the registry lookup miss,
         // so the condition was silently false and the whole line vanished from the .ini
