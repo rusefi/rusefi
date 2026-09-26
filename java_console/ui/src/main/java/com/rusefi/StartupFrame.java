@@ -22,6 +22,7 @@ import com.rusefi.tools.TunerStudioHelper;
 import com.rusefi.ui.BasicLogoHelper;
 import com.rusefi.ui.LogoHelper;
 import com.rusefi.ui.UIContext;
+import com.rusefi.ui.plugins.StartupTabProvider;
 import com.rusefi.ui.wizard.WizardCatalog;
 import com.rusefi.ui.wizard.WizardContainer;
 import com.rusefi.ui.wizard.WizardStep;
@@ -52,8 +53,11 @@ import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.*;
 import java.util.Date;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.ServiceLoader;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
@@ -472,6 +476,7 @@ public class StartupFrame {
         );
         outerTabs.addTab("Manage Tunes", tuneManagementTab.getContent());
         outerTabs.addTab("Connect", connectTabWrapper);
+        addCustomTabs(outerTabs, uiContext);
 
         int savedTabIndex = getConfig().getRoot().getIntProperty(STARTUP_TAB_INDEX, 0);
         outerTabs.setSelectedIndex(Math.min(savedTabIndex, outerTabs.getTabCount() - 1));
@@ -520,6 +525,49 @@ public class StartupFrame {
         for (Component component : getAllComponents(frame)) {
             component.addKeyListener(hwTestEasterEgg);
         }
+    }
+
+    // Package-private so service discovery can be tested without creating a frame or scanning hardware.
+    static void addCustomTabs(JTabbedPane tabs, UIContext uiContext) {
+        String serviceResource = "META-INF/services/" + StartupTabProvider.class.getName();
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        if (classLoader == null) {
+            classLoader = StartupFrame.class.getClassLoader();
+        }
+        try {
+            List<java.net.URL> serviceFiles = Collections.list(classLoader.getResources(serviceResource));
+            log.info("addCustomTabs: found " + serviceFiles.size() + " '" + serviceResource + "' file(s) on classpath: " + serviceFiles);
+        } catch (Throwable e) {
+            log.error("addCustomTabs: failed to enumerate '" + serviceResource + "' on classpath", e);
+        }
+
+        int providerCount = 0;
+        try {
+            Iterator<StartupTabProvider> iterator = ServiceLoader.load(StartupTabProvider.class, classLoader).iterator();
+            while (true) {
+                StartupTabProvider provider;
+                try {
+                    if (!iterator.hasNext()) {
+                        break;
+                    }
+                    provider = iterator.next();
+                } catch (Throwable e) {
+                    log.error("addCustomTabs: ServiceLoader failed to instantiate a StartupTabProvider", e);
+                    break;
+                }
+                providerCount++;
+                try {
+                    String title = provider.getTitle();
+                    log.info("addCustomTabs: adding custom startup tab '" + title + "' from " + provider.getClass().getName());
+                    tabs.addTab(title, provider.createTab(uiContext));
+                } catch (Throwable e) {
+                    log.error("addCustomTabs: failed to add custom startup tab from " + provider.getClass().getName(), e);
+                }
+            }
+        } catch (Throwable e) {
+            log.error("addCustomTabs: failed to load custom startup tabs", e);
+        }
+        log.info("addCustomTabs: " + providerCount + " StartupTabProvider(s) discovered via ServiceLoader");
     }
 
     public static @NotNull Optional<JPanel> newReleaseAnnounce(
@@ -778,8 +826,9 @@ public class StartupFrame {
             outerTabs.setSelectedIndex(0);
         }
         outerTabs.setEnabledAt(0, true);
-        outerTabs.setEnabledAt(1, !inProgress);
-        outerTabs.setEnabledAt(2, !inProgress);
+        for (int i = 1; i < outerTabs.getTabCount(); i++) {
+            outerTabs.setEnabledAt(i, !inProgress);
+        }
         startupUpdateActions.getMigrateSettings().setEnabled(!inProgress);
         portsComboBox.getComboPorts().setEnabled(!inProgress);
         if (inProgress) {

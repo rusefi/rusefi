@@ -4,6 +4,24 @@ The rusEFI console is a Java/Swing application. End users run a native `.exe` la
 (created with [launch4j](http://launch4j.sourceforge.net/), see the `misc/console_launcher`
 folder), which is just a thin wrapper that locates a JRE and starts the bundled JAR.
 
+## Optional startup tabs
+
+Implement `com.rusefi.ui.plugins.StartupTabProvider` to add tabs to the startup screen.
+It has the same `getTitle()` and `createTab(UIContext)` methods as `ConsoleTabProvider`.
+The two interfaces are discovered separately: startup providers add tabs after
+Update Firmware, Manage Tunes and Connect; console providers add tabs to the main console.
+
+Place the fully qualified implementation class name (one per line) in
+`META-INF/services/com.rusefi.ui.plugins.StartupTabProvider` in the plugin JAR's resources.
+The class must be public with a public no-argument constructor, and the JAR must be on
+the console's runtime classpath (or its classes and resources included in the console JAR).
+
+`createTab` runs on the Swing event dispatch thread once per startup frame and receives
+the shared `UIContext`. It must work before an ECU connection or INI is available.
+Tabs are appended before restoring the saved tab selection and, like Manage Tunes and
+Connect, are disabled while a firmware operation is in progress. Provider failures are
+logged; a failure while creating a tab does not prevent later providers from adding theirs.
+
 ## Launcher chain
 
 - `rusefi_updater.exe` (configured by `misc/console_launcher/rusefi_updater.xml`) is a launch4j
