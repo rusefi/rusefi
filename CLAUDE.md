@@ -78,6 +78,8 @@ The build system does not track compiler-flag changes, so run `make clean` in `u
 
 Unit tests use Google Test and run on PC, not on the ECU.
 
+If a fresh unit-test build fails with `can't create build/obj/*.o: No such file or directory`, create `build/obj`, `build/lst`, and `.dep` under `unit_tests/`, then rerun `make -j12`. A partially created `build/` directory can satisfy the current directory prerequisite without its object subdirectory existing (observed during the MCP4728 work, 2026-09-27).
+
 When testing actuator init paths, remember that `EngineTestHelper` construction already runs `commonInitEngineController()` -> `initElectronicThrottle()`: with `TEST_ENGINE` (which defaults `etbFunctions[0]=DC_Wastegate`) DC hardware pool slot 0 is started *before* the test body runs, and the `DcHardware::isStarted` latch silently ignores any re-init with different settings. Call `resetDcHardwareForUnitTest()` / `resetIdleHardwareForUnitTest()` (both `EFI_UNIT_TEST` seams; also invoked by the `EngineTestHelper` constructor for cross-test isolation) before re-initializing with test-specific config. The idle stepper stack (`initIdleHardware()`, `StepDirectionStepper`, `DualHBridgeStepper`) compiles in unit tests; in that build `StepperMotor` is an alias of `StepperMotorBase` with no thread — tests drive it by calling `doIteration()` manually (see `test_idle_hardware.cpp`).
 
 #### Troubleshooting test output
@@ -232,6 +234,17 @@ Key preprocessor flags that control compilation. These three are **mutually excl
 - `EFI_PROD_CODE=1` - Production firmware build (cross-compiled for STM32, ChibiOS available, real HAL).
 - `EFI_SIMULATOR=1` - Desktop simulator build (`simulator/`), ChibiOS available via the simulator port.
 - `EFI_UNIT_TEST=1` - Host-side Google Test build under `unit_tests/`. No ChibiOS, no real HAL — runs as a plain native binary on Linux (GCC/Clang), macOS (Clang) and Windows (MSVC and MinGW).
+
+#### Adding feature flags used by shared code
+
+The firmware, simulator, and unit tests have independent feature definitions.
+Adding a default to `firmware/config/stm32f4ems/efifeatures.h` covers its F7/H7
+inheritors, but does **not** cover `simulator/simulator/efifeatures.h` or
+`unit_tests/efifeatures.h`. When adding a flag used in shared `#if` expressions,
+give it an explicit value in each applicable feature header, including `FALSE`
+for unsupported hardware. Check other standalone port headers when applicable.
+Do not suppress `-Wundef` or replace the guards with `#ifdef` to hide a missing
+definition.
 
 #### Using `EFI_UNIT_TEST` in code
 

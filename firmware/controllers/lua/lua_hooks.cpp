@@ -33,6 +33,11 @@
 #include "dac.h"
 #endif // EFI_DAC
 
+#if LUA_I2C_DAC
+#include "mcp4728.h"
+#include <cmath>
+#endif
+
 #if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 #include "can_msg_tx.h"
 #include "can_hw.h"
@@ -1250,6 +1255,54 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 		return 0;
 	});
 #endif // EFI_DAC
+
+#if LUA_I2C_DAC
+	lua_register(lState, "initI2cDac", [](lua_State* l) {
+		const char* sclName = luaL_checkstring(l, 1);
+		const char* sdaName = luaL_checkstring(l, 2);
+		const char* ldacName = luaL_checkstring(l, 3);
+#if EFI_PROD_CODE
+		auto scl = parseBrainPin(sclName);
+		auto sda = parseBrainPin(sdaName);
+		auto ldac = parseBrainPin(ldacName);
+		lua_pushboolean(l, getLuaI2cDac().initPins(scl, sda, ldac));
+#else
+		UNUSED(sclName); UNUSED(sdaName); UNUSED(ldacName);
+		lua_pushboolean(l, false);
+#endif
+		return 1;
+	});
+	lua_register(lState, "setI2cDac", [](lua_State* l) {
+		auto channel = luaL_checkinteger(l, 1);
+		auto value = luaL_checkinteger(l, 2);
+		luaL_argcheck(l, channel >= 1 && channel <= Mcp4728::ChannelCount, 1, "channel must be 1..20");
+		luaL_argcheck(l, value >= 0 && value <= Mcp4728::MaxValue, 2, "value must be 0..4095");
+		lua_pushboolean(l, getLuaI2cDac().setValue(channel, value));
+		return 1;
+	});
+	lua_register(lState, "setI2cDacVoltage", [](lua_State* l) {
+		auto channel = luaL_checkinteger(l, 1);
+		auto voltage = luaL_checknumber(l, 2);
+		auto vcc = luaL_optnumber(l, 3, 5.0f);
+		luaL_argcheck(l, channel >= 1 && channel <= Mcp4728::ChannelCount, 1, "channel must be 1..20");
+		luaL_argcheck(l, std::isfinite(vcc) && vcc > 0, 3, "VDD must be finite and positive");
+		luaL_argcheck(l, std::isfinite(voltage) && voltage >= 0 && voltage <= vcc, 2, "voltage must be 0..VDD");
+		lua_pushboolean(l, getLuaI2cDac().setVoltage(channel, voltage, vcc));
+		return 1;
+	});
+	lua_register(lState, "setI2cDacChannels", [](lua_State* l) {
+		auto address = luaL_checkinteger(l, 1);
+		luaL_argcheck(l, address >= 0 && address < Mcp4728::ChipCount, 1, "chip address must be 0..4");
+		uint16_t values[4];
+		for (int i = 0; i < 4; i++) {
+			auto value = luaL_checkinteger(l, i + 2);
+			luaL_argcheck(l, value >= 0 && value <= Mcp4728::MaxValue, i + 2, "value must be 0..4095");
+			values[i] = value;
+		}
+		lua_pushboolean(l, getLuaI2cDac().setChipValues(address, values));
+		return 1;
+	});
+#endif // LUA_I2C_DAC
 
     LuaClass<SignalDebounce> luaDebounce(lState, "SignalDebounce");
     luaDebounce

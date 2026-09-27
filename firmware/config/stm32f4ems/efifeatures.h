@@ -438,6 +438,10 @@
 #define EFI_LUA TRUE
 #endif
 
+#ifndef LUA_I2C_DAC
+#define LUA_I2C_DAC FALSE
+#endif
+
 #ifndef FULL_SD_LOGS
 // reduce RAM usage? todo: optimize RAM consumption so that all builds have full logs?
 #define FULL_SD_LOGS FALSE

@@ -14,6 +14,7 @@ HW_LAYER_DRIVERS_CORE = \
 
 HW_LAYER_DRIVERS_CORE_CPP = \
 	$(DRIVERS_DIR)/dac.cpp \
+	$(DRIVERS_DIR)/mcp4728.cpp \
 	$(DRIVERS_DIR)/gpio/core.cpp \
 	$(DRIVERS_DIR)/gpio/hbridge_gpio.cpp \
 	$(DRIVERS_DIR)/sent/sent.cpp \

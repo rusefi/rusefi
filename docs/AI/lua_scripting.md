@@ -117,6 +117,9 @@ controllers (see [protection_system.md](protection_system.md)).
 | `startPwm(idx, freqHz, duty)` | 0-based channel into `luaOutputPins[LUA_PWM_COUNT]` (8); freq clamped 1..1000 Hz, duty 0..1; Lua error on bad duty |
 | `setPwmDuty(idx, duty)` / `setPwmFreq(idx, freqHz)` | Update a running channel (same clamps) |
 | `setDacVoltage(ch, volts)` | EFI_DAC only |
+| `initI2cDac(scl, sda, ldac)` | LUA_I2C_DAC; reserve software I2C and address-programming pins |
+| `setI2cDac(ch, code)` / `setI2cDacVoltage(ch, volts[, vdd])` | LUA_I2C_DAC; external MCP4728 channels **1..20**, boolean write result |
+| `setI2cDacChannels(address, a, b, c, d)` | LUA_I2C_DAC; chip address bits **0..4**, four raw 12-bit codes |
 | `hellenEnablePower()` / `hellenDisablePower()` | Hellen board EN (megasquirt-style main relay) control (HW_HELLEN) |
 | `getFan()` / `getFan2()` / `getAcRelay()` | Read back logic state of firmware-driven relay outputs |
 | `getGpPwm(idx)` | Read GPPWM output duty (refreshed by periodicSlowCallback; not on F4 unless `WITH_LUA_GET_GPPWM_STATE`) |

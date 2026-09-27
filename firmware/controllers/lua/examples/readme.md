@@ -48,6 +48,7 @@ Related (full engine configs, not just snippets):
   handler. Reference for any UI-triggered action.
 - `etb-test-script.lua` — one-liner to drive the electronic throttle manually.
 - `dac.txt` — write an analog voltage via the on-board DAC.
+- `i2c-dac.lua` — drive 20 external MCP4728 outputs (`LUA_I2C_DAC`).
 - `analog-gear-input.txt` — decode a gear position from a single analog input
   (voltage windows → gear number).
 - `linear-oil-sensor.lua` — convert a linear oil-pressure sensor voltage to a
