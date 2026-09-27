@@ -8,6 +8,7 @@
 
 #include "pch.h"
 #include "efilib.h"
+#include "adc_offchip.h"
 
 #if HAL_USE_ADC
 
@@ -45,6 +46,10 @@ static const struct {
 
 brain_pin_e getAdcChannelBrainPin(const char *msg, adc_channel_e hwChannel) {
     static_assert(EFI_ADC_NONE == ADC_CHANNEL_NONE);
+
+    if (isAdcChannelOffChip(hwChannel)) {
+        return adcOffchipGetPin(hwChannel);
+    }
 
     /* Muxed adc inputs */
     hwChannel = adcMuxedGetParent(hwChannel);

@@ -382,7 +382,7 @@ static void slowAdcEnableDisableChannel(adc_channel_e hwChannel, bool en)
 }
 
 AdcToken enableFastAdcChannel(const char*, adc_channel_e hwChannel) {
-	if (!isAdcChannelValid(hwChannel)) {
+	if (!isAdcChannelOnChip(hwChannel)) {
 		return invalidAdcToken;
 	}
 

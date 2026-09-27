@@ -25,6 +25,7 @@ struct ads7128_config {
 #if EFI_PROD_CODE && !EFI_BOOTLOADER && (BOARD_ADS7128_COUNT > 0)
 
 #include "gpio_ext.h"
+#include "adc_offchip.h"
 #include "ads7128_state_generated.h"
 
 typedef enum {
@@ -35,7 +36,7 @@ typedef enum {
 } ads7128_drv_state;
 
 /* Driver */
-struct Ads7128 : public GpioChip, public ads7128_state_s {
+struct Ads7128 : public GpioChip, public AdcChip, public ads7128_state_s {
 	int init() override;
 
 	int setPadMode(size_t pin, iomode_t mode) override;
@@ -44,6 +45,7 @@ struct Ads7128 : public GpioChip, public ads7128_state_s {
 
 	/* ADC part */
 	float readAnalog(size_t pin);
+	expected<AdcSample> readAdc(size_t pin) override;
 
 	void debug() override;
 
@@ -74,6 +76,7 @@ struct Ads7128 : public GpioChip, public ads7128_state_s {
 
 	ads7128_drv_state		drv_state;
 	int			errors = 0;
+	bool hasAdcSamples = false;
 
 private:
 	int regs_read(uint8_t reg, uint8_t *regs, size_t n);
@@ -87,4 +90,6 @@ constexpr ads7128_state_s* ads7128getLiveData(size_t idx) {
 
 #endif // EFI_PROD_CODE && !EFI_BOOTLOADER && (BOARD_ADS7128_COUNT > 0)
 
-int ads7128_add(brain_pin_e base, unsigned int index, const ads7128_config *cfg);
+// Pass an ADC base to expose the eight analog inputs through the sensor ADC API.
+// EFI_ADC_NONE keeps the device available only as a GPIO extender.
+int ads7128_add(brain_pin_e base, unsigned int index, const ads7128_config *cfg, adc_channel_e adcBase = EFI_ADC_NONE);
