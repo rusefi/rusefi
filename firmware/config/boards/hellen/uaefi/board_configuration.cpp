@@ -83,6 +83,7 @@ static void uaefi_boardDefaultConfiguration() {
 	engineConfiguration->canRxPin = Gpio::MM100_CAN_RX;
 
 	setHellenCan2();
+	setHellenUart2();
 
 #if (EFI_CAN_BUS_COUNT >= 3)
 	engineConfiguration->can3TxPin = Gpio::MM100_CAN3_TX;

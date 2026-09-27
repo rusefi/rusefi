@@ -23,6 +23,7 @@ void configureHellenCanTerminator(bool enableTerminator);
 
 void setHellenCan();
 void setHellenCan2();
+void setHellenUart2();
 void setHellen64Can();
 
 void setHellenAnalogDividers();
