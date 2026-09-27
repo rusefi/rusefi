@@ -37,11 +37,17 @@ float AirmassVeModelBase::getVe(float rpm, float load, bool postState) const {
 	const bool pinActive = isBrainPinValid(secondTablesGetState()->secondVeTableInput) &&
 		efiReadPin(secondTablesGetState()->secondVeTableInput, secondTablesGetState()->secondVeTableInputMode);
 
+	// #10023 the second table may be indexed by a different load axis from the primary one - useful
+	// where MAP has no resolution at small throttle, or as a fallback for MAP failure, where a
+	// MAP-indexed second table would be no help. VE_None inherits the primary's already-overridden
+	// load, exactly like idleVeOverrideMode below, so existing tunes are unaffected.
+	float secondVeLoad = getVeLoadAxis(engineConfiguration->secondVeOverrideMode, load);
+
 	if (pinActive) {
 		// Hard switch: pin overrides everything, replace VE entirely
 		ve = interpolate3d(
 			secondTablesGetState()->secondVeTable,
-			secondTablesGetState()->secondVeLoadBins, load,
+			secondTablesGetState()->secondVeLoadBins, secondVeLoad,
 			secondTablesGetState()->secondVeRpmBins, rpm
 		);
 		switchTableActive = true;
@@ -50,7 +56,7 @@ float AirmassVeModelBase::getVe(float rpm, float load, bool postState) const {
 			secondTablesGetState()->secondVeBlendParameter,
 			secondTablesGetState()->secondVeBlendBins, secondTablesGetState()->secondVeBlendValues,
 			secondTablesGetState()->secondVeTable,
-			secondTablesGetState()->secondVeLoadBins, load,
+			secondTablesGetState()->secondVeLoadBins, secondVeLoad,
 			secondTablesGetState()->secondVeRpmBins, rpm
 		);
 		if (result.Bias > 0) {
@@ -115,6 +121,9 @@ float AirmassVeModelBase::getVe(float rpm, float load, bool postState) const {
 		engine->engineState.veTableIdleYAxis = idleVeLoad;
 #if EFI_PROD_CODE || EFI_UNIT_TEST
 		engine->engineState.isSecondVeTableActive = switchTableActive;
+		// #10023 the second table has its own load axis, so the primary's veTableYAxis does not
+		// say what this table was actually indexed with - publish it separately
+		engine->engineState.veTableSecondYAxis = secondVeLoad;
 #endif
 	}
 

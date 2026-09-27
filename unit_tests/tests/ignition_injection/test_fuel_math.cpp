@@ -684,3 +684,89 @@ TEST(AirmassModes, PredictiveMapBlendTowardRisingSensor) {
 	Sensor::setMockValue(SensorType::Map, 90.0f);
 	EXPECT_FLOAT_EQ(dut.getMap(1500, false), 90.0f);
 }
+
+// #10023: the second VE table can be indexed by its own load axis. Fill it so that the value it
+// returns is whatever load it was looked up with, which makes the axis directly observable.
+static void makeSecondVeTableReportItsLoadAxis() {
+	page4_s* state = secondTablesGetState();
+	setLinearCurve(state->secondVeLoadBins, 0, 100, 1);
+	setLinearCurve(state->secondVeRpmBins, 0, 8000, 1);
+	for (size_t loadIdx = 0; loadIdx < efi::size(state->secondVeTable); loadIdx++) {
+		for (size_t rpmIdx = 0; rpmIdx < efi::size(state->secondVeTable[0]); rpmIdx++) {
+			state->secondVeTable[loadIdx][rpmIdx] = state->secondVeLoadBins[loadIdx];
+		}
+	}
+	state->secondVeTableInput = Gpio::A0;
+	setMockState(Gpio::A0, true);
+}
+
+TEST(FuelMath, SecondVeTableLoadAxisInheritsPrimaryByDefault) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	MockAirmass dut;
+	EXPECT_CALL(dut.veTable, getValue(_, _)).WillRepeatedly(Return(50));
+	makeSecondVeTableReportItsLoadAxis();
+
+	Sensor::setMockValue(SensorType::Tps1, 20);
+	Sensor::setMockValue(SensorType::Map, 35);
+
+	// nothing overridden anywhere: the second table sees the load it was passed
+	engineConfiguration->veOverrideMode = VE_None;
+	engineConfiguration->secondVeOverrideMode = VE_None;
+	EXPECT_NEAR(0.70f, dut.getVe(1000, 70, false), EPS4D);
+
+	// primary overridden to MAP, second left at None: it inherits MAP, exactly as before #10023
+	engineConfiguration->veOverrideMode = VE_MAP;
+	EXPECT_NEAR(0.35f, dut.getVe(1000, 70, false), EPS4D);
+
+	// same for TPS
+	engineConfiguration->veOverrideMode = VE_TPS;
+	EXPECT_NEAR(0.20f, dut.getVe(1000, 70, false), EPS4D);
+}
+
+TEST(FuelMath, SecondVeTableLoadAxisCanDifferFromPrimary) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	MockAirmass dut;
+	EXPECT_CALL(dut.veTable, getValue(_, _)).WillRepeatedly(Return(50));
+	makeSecondVeTableReportItsLoadAxis();
+
+	Sensor::setMockValue(SensorType::Tps1, 20);
+	Sensor::setMockValue(SensorType::Map, 35);
+
+	// the motivating case: speed density on MAP, second table on TPS for the small-throttle
+	// region where MAP has no resolution
+	engineConfiguration->veOverrideMode = VE_MAP;
+	engineConfiguration->secondVeOverrideMode = VE_TPS;
+	EXPECT_NEAR(0.20f, dut.getVe(1000, 70, false), EPS4D);
+
+	// the two axes are separately observable: the primary channel still reports the primary's
+	// load, and the second table's own load is published rather than inferred
+	dut.getVe(1000, 70, true);
+	EXPECT_FLOAT_EQ(engine->engineState.veTableYAxis, 35.0f);
+	EXPECT_FLOAT_EQ(engine->engineState.veTableSecondYAxis, 20.0f);
+
+	// and the reverse
+	engineConfiguration->veOverrideMode = VE_TPS;
+	engineConfiguration->secondVeOverrideMode = VE_MAP;
+	EXPECT_NEAR(0.35f, dut.getVe(1000, 70, false), EPS4D);
+}
+
+TEST(FuelMath, SecondVeTableLoadAxisAppliesToBlendToo) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	MockAirmass dut;
+	EXPECT_CALL(dut.veTable, getValue(_, _)).WillRepeatedly(Return(50));
+	makeSecondVeTableReportItsLoadAxis();
+
+	// blend rather than hard switch, fully blended onto the second table
+	page4_s* state = secondTablesGetState();
+	state->secondVeTableInput = Gpio::Unassigned;
+	state->secondVeBlendParameter = GPPWM_Tps;
+	setLinearCurve(state->secondVeBlendBins, 0, 100, 1);
+	setLinearCurve(state->secondVeBlendValues, 100, 100, 1);
+
+	Sensor::setMockValue(SensorType::Tps1, 20);
+	Sensor::setMockValue(SensorType::Map, 35);
+
+	engineConfiguration->veOverrideMode = VE_MAP;
+	engineConfiguration->secondVeOverrideMode = VE_TPS;
+	EXPECT_NEAR(0.20f, dut.getVe(1000, 70, false), EPS4D);
+}

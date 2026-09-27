@@ -77,6 +77,7 @@ struct_no_prefix engine_state_s
 
 	uint16_t autoscale veTableYAxis;;"%",{1/100}, 0, 0, 0, 0
 	int16_t autoscale veTableIdleYAxis;;"", 0.1, 0, -1000, 1000, 1
+	uint16_t autoscale veTableSecondYAxis;VE: Second table load axis;"%",{1/100}, 0, 0, 0, 0
 	uint8_t overDwellCanceledCounter;"Ignition: overcharge canceled";"", 1, 0, 0, 255, 0
 	uint8_t overDwellNotScheduledCounter;"Ignition: overDwellNotScheduled";"", 1, 0, 0, 255, 0
 	uint8_t sparkOutOfOrderCounter;"Ignition: sparkOutOfOrder";"", 1, 0, 0, 255, 0
