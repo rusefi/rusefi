@@ -508,7 +508,7 @@
 #define ego_sensor_e_ES_PLX 4
 #define egoSettings_NAME "CAN O2 sensors"
 #define EGT_CHANNEL_COUNT 8
-#define engine_configuration_s_size 4284
+#define engine_configuration_s_size 4292
 #define engine_load_mode_e_auto_enum 0="LM_SPEED_DENSITY",2="LM_ALPHA_N",3="LM_LUA",1="LM_REAL_MAF",4="UNSUPPORTED_ENUM_VALUE"
 #define engine_load_mode_e_LM_ALPHA_N 2
 #define engine_load_mode_e_LM_LUA 3
@@ -1312,6 +1312,7 @@
 #define i2c_bus_e_I2C_BUS_3 3
 #define i2c_bus_e_I2C_BUS_4 4
 #define i2c_bus_e_I2C_NONE 0
+#define I2C_BUS_NONE 0
 #define I2C_BUS_TOTAL_COUNT 4
 #define i2c_config_s_size 12
 #define i2c_speed_e_auto_enum 0="I2C_SPEED_100K",2="I2C_SPEED_1M",3="I2C_SPEED_3p4M",1="I2C_SPEED_400K",4="I2C_SPEED_5M"
@@ -1520,12 +1521,14 @@
 #define PAGE_SIZE_3 2048
 #define PAGE_SIZE_4 1268
 #define PAGE_SIZE_5 8000
+#define pca9685_config_s_size 8
+#define PCA9685_COUNT 1
 #define PEDAL_TO_TPS_RPM_SIZE 8
 #define PEDAL_TO_TPS_SIZE 8
 #define pedalSensor_NAME "Accelerator pedal"
 #define pedalToTpsTbl_NAME "ETB pedal target"
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
-#define persistent_config_s_size 16816
+#define persistent_config_s_size 16824
 #define pid_s_size 20
 #define pin_input_mode_e_auto_enum 0="PI_DEFAULT",4="PI_INVERTED_DEFAULT",6="PI_INVERTED_PULLDOWN",5="PI_INVERTED_PULLUP",2="PI_PULLDOWN",1="PI_PULLUP"
 #define pin_input_mode_e_PI_DEFAULT 0
@@ -1647,7 +1650,7 @@
 #define show_default_engine_type false
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 419867801
+#define SIGNATURE_HASH 4122116425
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1732,7 +1735,7 @@
 #define torqueReductionActivationMode_e_TORQUE_REDUCTION_BUTTON 0
 #define torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH 2
 #define torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_UP_SWITCH 3
-#define TOTAL_CONFIG_SIZE 16816
+#define TOTAL_CONFIG_SIZE 16824
 #define TPS_2_BYTE_PACKING_MULT 100
 #define TPS_ACCEL_UNITS "ms/frac"
 #define TPS_PPS_TOO_HIGH_THRESHOLD 110
@@ -2005,7 +2008,7 @@
 #define TS_PAGE_CRC_CHECK "k%2i%2o%2c", "k%2i%2o%2c", "k%2i%2o%2c", "k%2i%2o%2c", "k%2i%2o%2c"
 #define TS_PAGE_IDENTIFIERS "\x00\x00", "\x00\x01", "\x00\x02", "\x00\x03", "\x00\x04"
 #define TS_PAGE_READ_COMMANDS "R%2i%2o%2c", "R%2i%2o%2c", "R%2i%2o%2c", "R%2i%2o%2c", "R%2i%2o%2c"
-#define TS_PAGE_SIZES 16816, 256, 2048, 1268, 8000
+#define TS_PAGE_SIZES 16824, 256, 2048, 1268, 8000
 #define TS_PAGE_VALUE_WRITE "C%2i%2o%2c%v", "C%2i%2o%2c%v", "C%2i%2o%2c%v", "C%2i%2o%2c%v", "C%2i%2o%2c%v"
 #define TS_PERF_TRACE_BEGIN '_'
 #define TS_PERF_TRACE_BEGIN_char _
@@ -2294,7 +2297,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.09.27.uaefi.419867801"
+#define TS_SIGNATURE "rusEFI master.2026.09.27.uaefi.4122116425"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
