@@ -381,9 +381,13 @@ brain_pin_diag_e Pca9685::getDiag(size_t /* pin */) {
 
 void Pca9685::debug() {
 	efiPrintf("@0x%02x", cfg->i2c_addr);
-	efiPrintf("errors %d", errors);
 	if (!cfg) {
 		efiPrintf("no config");
+		return;
+	}
+	efiPrintf("errors %d", errors);
+	if (need_init) {
+		efiPrintf("chip is not detected");
 		return;
 	}
 	for (size_t pin = 0; pin < PCA9685_OUTPUTS; pin++) {
