@@ -3,4 +3,6 @@ bit boardUse2stepPullDown,"With Pull Down","With Pull Up"
 bit boardUseD2PullDown,"With Pull Down","With Pull Up"
 bit boardUseD3PullDown,"With Pull Down","With Pull Up"
 bit boardUseTachPullUp,"12v","5v"
-
+bit boardUseCrankPullUp,"Hall","VR"
+bit boardUseCamPullDown,"With Pull Down","With Pull Up"
+bit boardUseD4PullDown,"With Pull Down","With Pull Up"
