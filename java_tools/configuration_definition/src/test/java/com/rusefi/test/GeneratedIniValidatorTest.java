@@ -73,6 +73,46 @@ public class GeneratedIniValidatorTest {
     }
 
     @Test
+    public void featureGaugeReferencesRespectVisibility(@TempDir Path directory) throws IOException {
+        String[][] gauges = {
+                {"knockLevelGauge", "ts_show_software_knock"},
+                {"IATGauge", "ts_show_iat"},
+                {"idleAirValvePositionGauge", "ts_show_idle_hardware"},
+                {"tChargeGauge", "ts_show_charge_estimation"},
+                {"OilPressGauge", "ts_show_oil_pressure_sensor"},
+        };
+        String templates = "";
+        for (String file : new String[]{"tunerstudio/tunerstudio.template.ini",
+                "controllers/actuators/boost_control.curves.ini", "tunerstudio/secondary_panels.ini"}) {
+            templates += Files.readString(Path.of(ConfigDefinitionTest.FIRMWARE, file)) + "\n";
+        }
+        for (String[] gauge : gauges) {
+            String references = templates.lines()
+                    .filter(line -> line.trim().matches("gauge\\s*=\\s*" + gauge[0] + "(?:@@.*)?"))
+                    .collect(Collectors.joining("\n"));
+            assertFalse(references.isEmpty(), gauge[0]);
+            ReaderStateImpl state = new ReaderStateImpl();
+            state.getVariableRegistry().put(gauge[1], "false");
+            String generated = new TestTSProjectConsumer(state).getTsFileContent(
+                    new ByteArrayInputStream(references.getBytes(StandardCharsets.UTF_8))).getPrefix();
+            String ini = DEFINITIONS + "[CurveEditor]\ncurve = test, \"Test\"\n" + generated;
+            assertEquals("", generated.trim(), gauge[0]);
+            validate(directory, ini);
+
+            state = new ReaderStateImpl();
+            state.getVariableRegistry().put(gauge[1], "true");
+            generated = new TestTSProjectConsumer(state).getTsFileContent(
+                    new ByteArrayInputStream(references.getBytes(StandardCharsets.UTF_8))).getPrefix();
+            assertTrue(generated.contains(gauge[0]), gauge[0]);
+            String enabledIni = DEFINITIONS + "[CurveEditor]\ncurve = test, \"Test\"\n" + generated;
+            IllegalStateException error = assertThrows(IllegalStateException.class, () -> validate(directory, enabledIni));
+            assertTrue(error.getMessage().contains("Undefined gauge [" + gauge[0] + "]"));
+            validate(directory, enabledIni + "[GaugeConfigurations]\n" + gauge[0]
+                    + " = rpm, \"Test\", \"rpm\", 0, 8000, 0, 0, 7000, 7500, 0, 0\n");
+        }
+    }
+
+    @Test
     public void undefinedConstantReferencesAreRejected(@TempDir Path directory) {
         for (String usage : new String[]{
                 "[UserDefined]\ndialog = test\nfield = \"Setting\", missing\n",

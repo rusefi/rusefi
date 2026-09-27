@@ -2,6 +2,20 @@ All .ini generation starts with tunerstudio.template.ini
 
 Most controllers then include top_level_menu.ini and secondary_panels.ini per rusefi_config.txt defines
 
+## Custom board gauges
+
+Boards overriding `GAUGES_DECLARATIONS_FILE` must also account for references
+in inherited tuning pages, curve editors and secondary panels. Hiding a menu
+does not remove the referenced page from the generated INI.
+
+Use `TUNING_SECTION_FILE` to provide a board-specific `[Tuning]` layout.
+Optional gauge references in shared templates must respect the corresponding
+`ts_show_*` feature flag, including references in included files. Boards that
+omit those gauges should disable the feature flag in their prepend. Check
+`ignore_gauges.txt` too: it removes declarations, not their references.
+Keep validation enabled so misspelled or accidentally missing gauges fail
+generation.
+
 ## Template validation
 
 Conditions (`@@if_FLAG` and `@@if_block FLAG@@` / `@@endif_block`) require
