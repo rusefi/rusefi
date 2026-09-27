@@ -21,6 +21,11 @@ void setHellenCan2() {
 	engineConfiguration->can2TxPin = Gpio::B13;
 }
 
+void setHellenUart2() {
+	engineConfiguration->binarySerialRxPin = Gpio::D5;
+	engineConfiguration->binarySerialTxPin = Gpio::D6;
+}
+
 static void init5vpDiag() {
 #ifdef DIAG_5VP_PIN
 static bool is5vpInit = false;
