@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="15808">
+    <page number="0" size="15816">
         <constant name="accelEnrichmentMode">"MS Adder"</constant>
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
@@ -560,7 +560,7 @@
         <constant name="brakePedalPin">"NONE"</constant>
         <constant name="brakePedalPinMode">"PULLUP"</constant>
         <constant digits="0" name="byFirmwareVersion" units="index">0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">20260926</constant>
+        <constant digits="0" name="calibrationBirthday" units="">20260927</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="angle">95</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -3191,6 +3191,11 @@
         <constant name="overrideTriggerGaps">"no"</constant>
         <constant name="overrideVvtTriggerGaps">"no"</constant>
         <constant name="pauseEtbControl">"no"</constant>
+        <constant digits="0" name="pca96851_i2c_addr" units="">0</constant>
+        <constant name="pca96851_i2c_bus">"None"</constant>
+        <constant name="pca96851_inverted">"Normal"</constant>
+        <constant name="pca96851_od">"Push-Pull"</constant>
+        <constant digits="0" name="pca96851_pwm_freq" units="Hz">0</constant>
         <constant cols="1" digits="0" name="pedalToTpsPedalBins" rows="8" units="%">
          0
          14
@@ -5212,7 +5217,7 @@
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260926" nPages="1" signature="rusEFI master.2026.09.26.f407-discovery.4244127537" version="5.0"/>
+    <versionInfo firmwareInfo="20260926" nPages="1" signature="rusEFI master.2026.09.27.f407-discovery.1898465378" version="5.0"/>
     <bibliography author="rusEFI 20260926" writeDate="date"/>
     <settings/>
     <userComments/>
