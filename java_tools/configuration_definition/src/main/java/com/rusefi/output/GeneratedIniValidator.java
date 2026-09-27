@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import static com.rusefi.util.LazyFile.CHARSET;
@@ -23,11 +25,13 @@ public final class GeneratedIniValidator {
     }
 
     public static void validate(Path file) throws IOException {
+        List<String> lines = new ArrayList<>();
         try (BufferedReader reader = Files.newBufferedReader(file, CHARSET)) {
             String line;
             int lineNumber = 0;
             while ((line = reader.readLine()) != null) {
                 lineNumber++;
+                lines.add(line);
                 try {
                     validateLine(line);
                 } catch (IllegalStateException e) {
@@ -35,6 +39,7 @@ public final class GeneratedIniValidator {
                 }
             }
         }
+        new IniReferenceValidator(file, lines).validate();
     }
 
     public static void validateLine(String line) {
