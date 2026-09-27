@@ -217,6 +217,8 @@ char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *bu
 #if HAL_USE_ADC
 	if (!isAdcChannelValid(hwChannel)) {
 		snprintf(buffer, bufferSize, "NONE");
+	} else if (isAdcChannelOffChip(hwChannel)) {
+		snprintf(buffer, bufferSize, "External ADC%d", hwChannel - EFI_ADC_0);
 	} else {
 		const char *name = portname(getAdcChannelPort(msg, hwChannel));
 		snprintf(buffer, bufferSize, "%s%d", name ? name : "null", getAdcChannelPin(hwChannel));

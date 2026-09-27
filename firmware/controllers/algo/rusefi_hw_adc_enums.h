@@ -60,4 +60,5 @@ typedef enum __attribute__ ((__packed__)) {
 } adc_channel_e;
 
 /* Please keep updating these define(s) */
-#define EFI_ADC_ONCHIP_LAST	EFI_ADC_31
+#define EFI_ADC_ONCHIP_LAST	EFI_ADC_39
+#define EFI_ADC_OFFCHIP_FIRST	EFI_ADC_40

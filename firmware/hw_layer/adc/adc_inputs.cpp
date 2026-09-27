@@ -8,6 +8,7 @@
 
 #include "pch.h"
 #include "board_overrides.h"
+#include "adc_offchip.h"
 
 std::optional<setup_custom_board_adjust_voltage_type> custom_board_boardAdjustVoltage;
 
@@ -84,7 +85,20 @@ ObdCode analogGetDiagnostic()
 
 // voltage in MCU universe, from zero to Vref
 expected<float> adcGetRawVoltage(const char *msg, adc_channel_e hwChannel) {
-	float rawVoltage = adcRawValueToRawVoltage(adcGetRawValue(msg, hwChannel));
+	float rawVoltage;
+	if (isAdcChannelOffChip(hwChannel)) {
+		auto sample = adcOffchipRead(hwChannel);
+		if (!sample) {
+			return unexpected;
+		}
+		rawVoltage = sample.Value.voltage;
+	} else {
+		int raw = adcGetRawValue(msg, hwChannel);
+		if (raw < 0) {
+			return unexpected;
+		}
+		rawVoltage = adcRawValueToRawVoltage(raw);
+	}
 	int inputStatus = boardGetAnalogInputDiagnostic(hwChannel, rawVoltage);
 
 	if (inputStatus == 0) {
@@ -116,6 +130,9 @@ static AdcChannelMode adcHwChannelMode[EFI_ADC_TOTAL_CHANNELS];
 static int adcDebugReporting = false;
 
 AdcChannelMode getAdcMode(adc_channel_e hwChannel) {
+	if (isAdcChannelOffChip(hwChannel)) {
+		return adcOffchipGetPin(hwChannel) != Gpio::Invalid ? AdcChannelMode::Slow : AdcChannelMode::Off;
+	}
 	return adcHwChannelMode[hwChannel];
 }
 
@@ -125,6 +142,11 @@ int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 	if (!isAdcChannelValid(hwChannel)) {
 		warning(ObdCode::CUSTOM_OBD_ANALOG_INPUT_NOT_CONFIGURED, "ADC: %s input is not configured", msg);
 		return -1;
+	}
+
+	if (isAdcChannelOffChip(hwChannel)) {
+		auto sample = adcOffchipRead(hwChannel);
+		return sample ? sample.Value.raw : -1;
 	}
 
 #if EFI_USE_FAST_ADC
@@ -142,13 +164,20 @@ static void printAdcValue(int channel) {
 		efiPrintf("Invalid ADC channel %d", channel);
 		return;
 	}
-	int adcValue = adcGetRawValue("print", (adc_channel_e)channel);
-	float voltsInput = adcRawValueToScaledVoltage(adcValue, (adc_channel_e)channel);
-	efiPrintf("adc %d input %.3fV", channel, voltsInput);
+	auto voltsInput = adcGetScaledVoltage("print", (adc_channel_e)channel);
+	efiPrintf("adc %d input %.3fV %s", channel, voltsInput.value_or(0), voltsInput ? "valid" : "INVALID");
 }
 
 void adcPrintChannelReport(const char *prefix, int internalIndex, adc_channel_e hwChannel)
 {
+	if (isAdcChannelOffChip(hwChannel)) {
+		auto volts = adcGetRawVoltage("print", hwChannel);
+		auto voltsInput = adcGetScaledVoltage("print", hwChannel);
+		efiPrintf(" %s ch[%2d] external ADC%d raw=%d %.3fV input %.3fV %s",
+			prefix, internalIndex, hwChannel - EFI_ADC_0,
+			adcGetRawValue("print", hwChannel), volts.value_or(0), voltsInput.value_or(0), volts ? "valid" : "INVALID");
+		return;
+	}
 	if (isAdcChannelValid(hwChannel)) {
 		ioportid_t port = getAdcChannelPort("print", hwChannel);
 		int pin = getAdcChannelPin(hwChannel);
@@ -177,6 +206,12 @@ void printFullAdcReport(void) {
 #endif // EFI_USE_FAST_ADC
 
 	adcOnchipSlowShowReport();
+	for (int channel = EFI_ADC_OFFCHIP_FIRST; channel < EFI_ADC_TOTAL_CHANNELS; channel++) {
+		auto hwChannel = static_cast<adc_channel_e>(channel);
+		if (adcOffchipGetPin(hwChannel) != Gpio::Invalid) {
+			adcPrintChannelReport("E", channel - EFI_ADC_OFFCHIP_FIRST, hwChannel);
+		}
+	}
 }
 
 static void setAdcDebugReporting(int value) {
@@ -200,6 +235,10 @@ void adcInputsUpdateSubscribers(efitick_t nowNt) {
 
 void addFastAdcChannel(const char*, adc_channel_e hwChannel) {
 	if (!isAdcChannelValid(hwChannel)) {
+		return;
+	}
+	if (isAdcChannelOffChip(hwChannel)) {
+		adcHwChannelMode[hwChannel] = AdcChannelMode::Slow;
 		return;
 	}
 

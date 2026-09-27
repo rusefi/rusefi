@@ -1,4 +1,5 @@
 TESTS_SRC_CPP = \
+	tests/test_adc_offchip.cpp \
 	tests/test_mcp4728.cpp \
 	tests/test_adc_callbacks.cpp \
 	tests/controllers/test_at32_port.cpp \

@@ -172,12 +172,16 @@ int Ads7128::read_inputs()
 	uint8_t raw[2 * ADS7128_IOS];
 
 	if (regs_read(REG_RECENT_LSB_CH(0), raw, 2 * ADS7128_IOS) != 2 * ADS7128_IOS) {
+		chibios_rt::CriticalSectionLocker csl;
+		hasAdcSamples = false;
 		return -1;
 	}
 
+	chibios_rt::CriticalSectionLocker csl;
 	for (size_t i = 0; i < ADS7128_IOS; i++) {
 		adcRaw[i] = raw[2 * i] | (raw[2 * i + 1] << 8);
 	}
+	hasAdcSamples = true;
 
 	return 0;
 }
@@ -316,6 +320,7 @@ int Ads7128::setPadMode(unsigned int pin, iomode_t mode) {
 
 	}
 
+	hasAdcSamples = false;
 	wake_driver();
 
 	return 0;
@@ -350,11 +355,17 @@ int Ads7128::readPad(size_t pin) {
 }
 
 float Ads7128::readAnalog(size_t pin) {
-	if (pin >= ADS7128_IOS)
-		return -1;
+	auto sample = readAdc(pin);
+	return sample ? sample.Value.voltage : -1;
+}
 
-	/* TODO: oversampling? */
-	return (adcRaw[pin] * cfg->vref / ADS7128_MAX_ADC_VALUE);
+expected<AdcSample> Ads7128::readAdc(size_t pin) {
+	chibios_rt::CriticalSectionLocker csl;
+	if (pin >= ADS7128_IOS || !cfg || drv_state != ADS7128_READY || need_init ||
+		!hasAdcSamples || (gpio_mask & BIT(pin))) {
+		return unexpected;
+	}
+	return AdcSample{adcRaw[pin], adcRaw[pin] * cfg->vref / ADS7128_MAX_ADC_VALUE};
 }
 
 void Ads7128::debug() {
@@ -394,7 +405,7 @@ int Ads7128::init() {
  * @details Checks for valid config
  */
 
-int ads7128_add(brain_pin_e base, unsigned int index, const ads7128_config *cfg) {
+int ads7128_add(brain_pin_e base, unsigned int index, const ads7128_config *cfg, adc_channel_e adcBase) {
 
 	/* no config or no such chip */
 	if ((!cfg) || (cfg->i2c_bus == I2C_NONE) || (cfg->i2c_addr == 0x00) || (index >= BOARD_ADS7128_COUNT))
@@ -405,6 +416,10 @@ int ads7128_add(brain_pin_e base, unsigned int index, const ads7128_config *cfg)
 	/* already initted? */
 	if (chip.cfg != NULL)
 		return -13;
+
+	if (adcBase != EFI_ADC_NONE && !adcchipCanRegister(adcBase, ADS7128_IOS)) {
+		return -14;
+	}
 
 	chip.cfg = cfg;
 	chip.gpio_mask = 0;
@@ -419,6 +434,10 @@ int ads7128_add(brain_pin_e base, unsigned int index, const ads7128_config *cfg)
 	/* set default pin names, board init code can rewrite */
 	gpiochips_setPinNames(static_cast<brain_pin_e>(ret), ads7128_pin_names);
 
+	if (adcBase != EFI_ADC_NONE) {
+		adcchipRegister(adcBase, chip, static_cast<brain_pin_e>(ret), ADS7128_IOS);
+	}
+
 	chip.drv_state = ADS7128_WAIT_INIT;
 
 	return ret;
@@ -426,9 +445,9 @@ int ads7128_add(brain_pin_e base, unsigned int index, const ads7128_config *cfg)
 
 #else /* BOARD_ADS7128_COUNT > 0 */
 
-int ads7128_add(brain_pin_e base, unsigned int index, const ads7128_config *cfg)
+int ads7128_add(brain_pin_e base, unsigned int index, const ads7128_config *cfg, adc_channel_e adcBase)
 {
-	(void)base; (void)index; (void)cfg;
+	(void)base; (void)index; (void)cfg; (void)adcBase;
 
 	return -5;
 }
