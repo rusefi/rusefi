@@ -19,6 +19,7 @@
 | firmware | Max3185xRead::ThreadTask | MAX3185x | 192 | 756 | normal sensor read |
 | firmware | KnockThread::ThreadTask | software knock | 144 | 628 | normal RMS processing |
 | firmware | AccelController::PeriodicTask | accelerometer | 184 | 24 | normal SPI sensor read |
+| firmware | pca9685_driver_thread(void*) | PCA9685 | - | - | - |
 | bootloader | main | main/process | - | - | - |
 | bootloader | exception/ISR | exception/ISR | - | - | - |
 | bootloader | __idle_thread | idle | - | - | - |

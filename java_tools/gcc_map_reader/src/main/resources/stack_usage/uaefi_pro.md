@@ -19,6 +19,7 @@
 | firmware | Max3185xRead::ThreadTask | MAX3185x | - | - | - |
 | firmware | KnockThread::ThreadTask | software knock | - | - | - |
 | firmware | AccelController::PeriodicTask | accelerometer | - | - | - |
+| firmware | pca9685_driver_thread(void*) | PCA9685 | - | - | - |
 | bootloader | main | main/process | - | - | - |
 | bootloader | exception/ISR | exception/ISR | - | - | - |
 | bootloader | __idle_thread | idle | - | - | - |

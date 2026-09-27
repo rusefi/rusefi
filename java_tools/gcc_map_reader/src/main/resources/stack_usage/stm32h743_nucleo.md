@@ -18,6 +18,7 @@
 | firmware | MassStorageController::ThreadTask | USB mass storage | 300 | 732 | SD READ/WRITE(10) |
 | firmware | lwip_thread | lwIP driver | 192 | 812 | normal Ethernet delivery |
 | firmware | tcpip_thread | lwIP TCP/IP | 584 | 660 | TCP write with ARP |
+| firmware | pca9685_driver_thread(void*) | PCA9685 | - | - | - |
 | bootloader | main | main/process | - | - | - |
 | bootloader | exception/ISR | exception/ISR | - | - | - |
 | bootloader | __idle_thread | idle | - | - | - |
