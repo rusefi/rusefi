@@ -1,0 +1,33 @@
+name: Auto-Close Large PRs
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  check-pr-size:
+    runs-on: ubuntu-latest
+    steps:
+      # Keep this privileged workflow free of PR code checkouts or execution.
+      - name: Check changed file count and close
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          CHANGED_FILES: ${{ github.event.pull_request.changed_files }}
+        shell: bash
+        run: |
+          if [[ ! "$CHANGED_FILES" =~ ^[0-9]+$ ]]; then
+            echo "::error::Missing or invalid changed file count."
+            exit 1
+          fi
+
+          if [ "$CHANGED_FILES" -gt 35 ]; then
+            echo "PR modifies $CHANGED_FILES files (limit is 35)."
+            gh pr comment "$PR_URL" --body "This PR modifies $CHANGED_FILES files, which exceeds our limit of 35. Please break your changes into smaller, more focused pull requests. See https://wiki.rusefi.com/Dev-Quick-Start/"
+            gh pr close "$PR_URL"
+          else
+            echo "PR modifies $CHANGED_FILES files. Allowed."
+          fi
