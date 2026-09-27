@@ -71,18 +71,42 @@ const char* getBoardSpecificPinName(brain_pin_e brainPin) {
 			return "B14 Coil 2";
 		case Gpio::E6:
 			return "B8 Fan Relay Weak Low Side output 2 (no flyback here)";
+		case Gpio::EXTIOCHIP_0_IO_1:
+			return "Ext Chip 0 IO 1";
+		case Gpio::EXTIOCHIP_0_IO_10:
+			return "Ext Chip 0 IO 10";
+		case Gpio::EXTIOCHIP_0_IO_11:
+			return "Ext Chip 0 IO 11";
+		case Gpio::EXTIOCHIP_0_IO_12:
+			return "Ext Chip 0 IO 12";
+		case Gpio::EXTIOCHIP_0_IO_13:
+			return "Ext Chip 0 IO 13";
+		case Gpio::EXTIOCHIP_0_IO_14:
+			return "Ext Chip 0 IO 14";
+		case Gpio::EXTIOCHIP_0_IO_15:
+			return "Ext Chip 0 IO 15";
+		case Gpio::EXTIOCHIP_0_IO_16:
+			return "Ext Chip 0 IO 16";
+		case Gpio::EXTIOCHIP_0_IO_2:
+			return "Ext Chip 0 IO 2";
+		case Gpio::EXTIOCHIP_0_IO_3:
+			return "Ext Chip 0 IO 3";
+		case Gpio::EXTIOCHIP_0_IO_4:
+			return "Ext Chip 0 IO 4";
+		case Gpio::EXTIOCHIP_0_IO_5:
+			return "Ext Chip 0 IO 5";
+		case Gpio::EXTIOCHIP_0_IO_6:
+			return "Ext Chip 0 IO 6";
+		case Gpio::EXTIOCHIP_0_IO_7:
+			return "Ext Chip 0 IO 7";
+		case Gpio::EXTIOCHIP_0_IO_8:
+			return "Ext Chip 0 IO 8";
+		case Gpio::EXTIOCHIP_0_IO_9:
+			return "Ext Chip 0 IO 9";
 		case Gpio::HBRIDGE_1_OUT:
 			return "A5 - DC1+ H-Bridge Output";
 		case Gpio::HBRIDGE_2_OUT:
 			return "A6 - DC2+ H-Bridge Output";
-		case Gpio::MSIOBOX_0_OUT_1:
-			return "MS IO-Box 0 OUT 1";
-		case Gpio::MSIOBOX_0_OUT_2:
-			return "MS IO-Box 0 OUT 2";
-		case Gpio::MSIOBOX_0_OUT_3:
-			return "MS IO-Box 0 OUT 3";
-		case Gpio::MSIOBOX_0_OUT_4:
-			return "MS IO-Box 0 OUT 4";
 		default:
 			return nullptr;
 	}

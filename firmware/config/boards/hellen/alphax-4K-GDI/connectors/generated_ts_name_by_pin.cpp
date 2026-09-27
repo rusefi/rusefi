@@ -28,6 +28,14 @@ const char* getBoardSpecificPinName(brain_pin_e brainPin) {
 			return "13B Ignition 2";
 		case Gpio::E9:
 			return "22A Input 2";
+		case Gpio::EXTIOCHIP_0_IO_1:
+			return "MS IO-Box 0 OUT 1";
+		case Gpio::EXTIOCHIP_0_IO_2:
+			return "MS IO-Box 0 OUT 2";
+		case Gpio::EXTIOCHIP_0_IO_3:
+			return "MS IO-Box 0 OUT 3";
+		case Gpio::EXTIOCHIP_0_IO_4:
+			return "MS IO-Box 0 OUT 4";
 		case Gpio::F11:
 			return "14A VR Negative";
 		case Gpio::F12:
@@ -44,14 +52,6 @@ const char* getBoardSpecificPinName(brain_pin_e brainPin) {
 			return "9B GDI Injector 1";
 		case Gpio::G8:
 			return "7B GDI Injector 2";
-		case Gpio::MSIOBOX_0_OUT_1:
-			return "MS IO-Box 0 OUT 1";
-		case Gpio::MSIOBOX_0_OUT_2:
-			return "MS IO-Box 0 OUT 2";
-		case Gpio::MSIOBOX_0_OUT_3:
-			return "MS IO-Box 0 OUT 3";
-		case Gpio::MSIOBOX_0_OUT_4:
-			return "MS IO-Box 0 OUT 4";
 		case Gpio::TLE9104_0_OUT_0:
 			return "4A Port injector 1";
 		case Gpio::TLE9104_0_OUT_1:

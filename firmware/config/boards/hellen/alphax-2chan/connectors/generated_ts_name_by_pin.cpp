@@ -38,6 +38,14 @@ const char* getBoardSpecificPinName(brain_pin_e brainPin) {
 			return "Aux8 - Ign 3";
 		case Gpio::E5:
 			return "A7 - Ignition B";
+		case Gpio::EXTIOCHIP_0_IO_1:
+			return "MS IO-Box 0 OUT 1";
+		case Gpio::EXTIOCHIP_0_IO_2:
+			return "MS IO-Box 0 OUT 2";
+		case Gpio::EXTIOCHIP_0_IO_3:
+			return "MS IO-Box 0 OUT 3";
+		case Gpio::EXTIOCHIP_0_IO_4:
+			return "MS IO-Box 0 OUT 4";
 		case Gpio::F11:
 			return "C4 - 2Step/Digital";
 		case Gpio::F12:
@@ -46,14 +54,6 @@ const char* getBoardSpecificPinName(brain_pin_e brainPin) {
 			return "A8 - Injector A";
 		case Gpio::G8:
 			return "B8 - Injector B";
-		case Gpio::MSIOBOX_0_OUT_1:
-			return "MS IO-Box 0 OUT 1";
-		case Gpio::MSIOBOX_0_OUT_2:
-			return "MS IO-Box 0 OUT 2";
-		case Gpio::MSIOBOX_0_OUT_3:
-			return "MS IO-Box 0 OUT 3";
-		case Gpio::MSIOBOX_0_OUT_4:
-			return "MS IO-Box 0 OUT 4";
 		default:
 			return nullptr;
 	}

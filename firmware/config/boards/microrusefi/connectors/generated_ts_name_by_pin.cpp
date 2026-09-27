@@ -73,30 +73,30 @@ const char* getBoardSpecificPinName(brain_pin_e brainPin) {
 			return "AUX J11 PE5";
 		case Gpio::E6:
 			return "AUX J10 PE6";
-		case Gpio::MSIOBOX_0_OUT_1:
+		case Gpio::EXTIOCHIP_0_IO_1:
 			return "MS IO-Box 0 OUT 1";
-		case Gpio::MSIOBOX_0_OUT_2:
-			return "MS IO-Box 0 OUT 2";
-		case Gpio::MSIOBOX_0_OUT_3:
-			return "MS IO-Box 0 OUT 3";
-		case Gpio::MSIOBOX_0_OUT_4:
-			return "MS IO-Box 0 OUT 4";
-		case Gpio::MSIOBOX_0_OUT_5:
-			return "MS IO-Box 0 OUT 5";
-		case Gpio::MSIOBOX_0_OUT_6:
-			return "MS IO-Box 0 OUT 6";
-		case Gpio::MSIOBOX_0_OUT_7:
-			return "MS IO-Box 0 OUT 7";
-		case Gpio::MSIOBOX_0_SW_1:
-			return "MS IO-Box 0 SW1";
-		case Gpio::MSIOBOX_0_VSS_1:
-			return "MS IO-Box 0 VSS1 (VR)";
-		case Gpio::MSIOBOX_0_VSS_2:
+		case Gpio::EXTIOCHIP_0_IO_10:
 			return "MS IO-Box 0 VSS2 (VR)";
-		case Gpio::MSIOBOX_0_VSS_3:
+		case Gpio::EXTIOCHIP_0_IO_11:
 			return "MS IO-Box 0 VSS2 (Hall)";
-		case Gpio::MSIOBOX_0_VSS_4:
+		case Gpio::EXTIOCHIP_0_IO_12:
 			return "MS IO-Box 0 VSS3 (Hall)";
+		case Gpio::EXTIOCHIP_0_IO_13:
+			return "MS IO-Box 0 SW1";
+		case Gpio::EXTIOCHIP_0_IO_2:
+			return "MS IO-Box 0 OUT 2";
+		case Gpio::EXTIOCHIP_0_IO_3:
+			return "MS IO-Box 0 OUT 3";
+		case Gpio::EXTIOCHIP_0_IO_4:
+			return "MS IO-Box 0 OUT 4";
+		case Gpio::EXTIOCHIP_0_IO_5:
+			return "MS IO-Box 0 OUT 5";
+		case Gpio::EXTIOCHIP_0_IO_6:
+			return "MS IO-Box 0 OUT 6";
+		case Gpio::EXTIOCHIP_0_IO_7:
+			return "MS IO-Box 0 OUT 7";
+		case Gpio::EXTIOCHIP_0_IO_9:
+			return "MS IO-Box 0 VSS1 (VR)";
 		case Gpio::TLE8888_PIN_1:
 			return "37 - Injector 1";
 		case Gpio::TLE8888_PIN_2:

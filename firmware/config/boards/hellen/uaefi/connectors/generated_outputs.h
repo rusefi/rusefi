@@ -27,10 +27,22 @@ Gpio GENERATED_OUTPUTS[] = {
 	Gpio::MM100_IGN5, // B13 Coil 5
 	Gpio::MM100_IGN2, // B14 Coil 2
 	Gpio::MM100_IGN1, // B15 Coil 1
-	Gpio::MSIOBOX_0_OUT_1, // MS IO-Box 0 OUT 1
-	Gpio::MSIOBOX_0_OUT_2, // MS IO-Box 0 OUT 2
-	Gpio::MSIOBOX_0_OUT_3, // MS IO-Box 0 OUT 3
-	Gpio::MSIOBOX_0_OUT_4, // MS IO-Box 0 OUT 4
+	Gpio::EXTIOCHIP_0_IO_1, // Ext Chip 0 IO 1
+	Gpio::EXTIOCHIP_0_IO_2, // Ext Chip 0 IO 2
+	Gpio::EXTIOCHIP_0_IO_3, // Ext Chip 0 IO 3
+	Gpio::EXTIOCHIP_0_IO_4, // Ext Chip 0 IO 4
+	Gpio::EXTIOCHIP_0_IO_5, // Ext Chip 0 IO 5
+	Gpio::EXTIOCHIP_0_IO_6, // Ext Chip 0 IO 6
+	Gpio::EXTIOCHIP_0_IO_7, // Ext Chip 0 IO 7
+	Gpio::EXTIOCHIP_0_IO_8, // Ext Chip 0 IO 8
+	Gpio::EXTIOCHIP_0_IO_9, // Ext Chip 0 IO 9
+	Gpio::EXTIOCHIP_0_IO_10, // Ext Chip 0 IO 10
+	Gpio::EXTIOCHIP_0_IO_11, // Ext Chip 0 IO 11
+	Gpio::EXTIOCHIP_0_IO_12, // Ext Chip 0 IO 12
+	Gpio::EXTIOCHIP_0_IO_13, // Ext Chip 0 IO 13
+	Gpio::EXTIOCHIP_0_IO_14, // Ext Chip 0 IO 14
+	Gpio::EXTIOCHIP_0_IO_15, // Ext Chip 0 IO 15
+	Gpio::EXTIOCHIP_0_IO_16, // Ext Chip 0 IO 16
 	Gpio::HBRIDGE_1_OUT, // A5 - DC1+ H-Bridge Output
 	Gpio::HBRIDGE_2_OUT, // A6 - DC2+ H-Bridge Output
 // "B1 injector output 6",
@@ -51,10 +63,22 @@ Gpio GENERATED_OUTPUTS[] = {
 // "B13 Coil 5",
 // "B14 Coil 2",
 // "B15 Coil 1",
-// "MS IO-Box 0 OUT 1",
-// "MS IO-Box 0 OUT 2",
-// "MS IO-Box 0 OUT 3",
-// "MS IO-Box 0 OUT 4",
+// "Ext Chip 0 IO 1",
+// "Ext Chip 0 IO 2",
+// "Ext Chip 0 IO 3",
+// "Ext Chip 0 IO 4",
+// "Ext Chip 0 IO 5",
+// "Ext Chip 0 IO 6",
+// "Ext Chip 0 IO 7",
+// "Ext Chip 0 IO 8",
+// "Ext Chip 0 IO 9",
+// "Ext Chip 0 IO 10",
+// "Ext Chip 0 IO 11",
+// "Ext Chip 0 IO 12",
+// "Ext Chip 0 IO 13",
+// "Ext Chip 0 IO 14",
+// "Ext Chip 0 IO 15",
+// "Ext Chip 0 IO 16",
 // "A5 - DC1+ H-Bridge Output",
 // "A6 - DC2+ H-Bridge Output",
 }

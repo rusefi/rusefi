@@ -29,10 +29,10 @@ Gpio GENERATED_OUTPUTS[] = {
 	Gpio::H144_IGN_3, // 12B Ignition 3
 	Gpio::H144_IGN_2, // 13B Ignition 2
 	Gpio::H144_IGN_1, // 14B Ignition 1
-	Gpio::MSIOBOX_0_OUT_1, // MS IO-Box 0 OUT 1
-	Gpio::MSIOBOX_0_OUT_2, // MS IO-Box 0 OUT 2
-	Gpio::MSIOBOX_0_OUT_3, // MS IO-Box 0 OUT 3
-	Gpio::MSIOBOX_0_OUT_4, // MS IO-Box 0 OUT 4
+	Gpio::EXTIOCHIP_0_IO_1, // MS IO-Box 0 OUT 1
+	Gpio::EXTIOCHIP_0_IO_2, // MS IO-Box 0 OUT 2
+	Gpio::EXTIOCHIP_0_IO_3, // MS IO-Box 0 OUT 3
+	Gpio::EXTIOCHIP_0_IO_4, // MS IO-Box 0 OUT 4
 // "1A Port injector 4",
 // "2A Port injector 3",
 // "3A Port injector 2",

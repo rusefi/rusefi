@@ -15,10 +15,10 @@
 #define PIN_X8 H144_IGN_6
 #define PIN_X9 H144_OUT_PWM7
 #define PIN_X10 H144_OUT_PWM8
-#define PIN_canbus_1 MSIOBOX_0_OUT_1
-#define PIN_canbus_2 MSIOBOX_0_OUT_2
-#define PIN_canbus_3 MSIOBOX_0_OUT_3
-#define PIN_canbus_4 MSIOBOX_0_OUT_4
+#define PIN_canbus_1 EXTIOCHIP_0_IO_1
+#define PIN_canbus_2 EXTIOCHIP_0_IO_2
+#define PIN_canbus_3 EXTIOCHIP_0_IO_3
+#define PIN_canbus_4 EXTIOCHIP_0_IO_4
 #define PIN_A3 H144_OUT_IO12
 #define PIN_A4old H144_OUT_IO13
 #define PIN_A4 H144_GP_IO3

@@ -54,7 +54,7 @@
 #define PIN_23B H144_IN_MAP1
 #define PIN_28B_switch_inputs H144_IN_O2S2_DIGITAL
 #define PIN_28B_analog_inputs H144_IN_O2S2
-#define PIN_9 MSIOBOX_0_OUT_1
-#define PIN_10 MSIOBOX_0_OUT_2
-#define PIN_7 MSIOBOX_0_OUT_3
-#define PIN_8 MSIOBOX_0_OUT_4
+#define PIN_9 EXTIOCHIP_0_IO_1
+#define PIN_10 EXTIOCHIP_0_IO_2
+#define PIN_7 EXTIOCHIP_0_IO_3
+#define PIN_8 EXTIOCHIP_0_IO_4

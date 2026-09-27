@@ -17,10 +17,10 @@ Gpio GENERATED_OUTPUTS[] = {
 	Gpio::H144_IGN_3, // Aux8 - Ign 3
 	Gpio::H144_LS_5, // Aux9 - HS1
 	Gpio::H144_LS_6, // Aux10 - HS2
-	Gpio::MSIOBOX_0_OUT_1, // MS IO-Box 0 OUT 1
-	Gpio::MSIOBOX_0_OUT_2, // MS IO-Box 0 OUT 2
-	Gpio::MSIOBOX_0_OUT_3, // MS IO-Box 0 OUT 3
-	Gpio::MSIOBOX_0_OUT_4, // MS IO-Box 0 OUT 4
+	Gpio::EXTIOCHIP_0_IO_1, // MS IO-Box 0 OUT 1
+	Gpio::EXTIOCHIP_0_IO_2, // MS IO-Box 0 OUT 2
+	Gpio::EXTIOCHIP_0_IO_3, // MS IO-Box 0 OUT 3
+	Gpio::EXTIOCHIP_0_IO_4, // MS IO-Box 0 OUT 4
 	Gpio::H144_OUT_PWM3, // A4 - Tachometer
 	Gpio::H144_IGN_1, // A6 - Ignition A
 	Gpio::H144_IGN_2, // A7 - Ignition B

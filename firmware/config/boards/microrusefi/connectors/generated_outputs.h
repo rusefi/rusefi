@@ -17,13 +17,13 @@ Gpio GENERATED_OUTPUTS[] = {
 	Gpio::B9, // AUX J2 PB9
 	Gpio::C12, // AUX J2 PC12
 	Gpio::A15, // AUX J2 PA15
-	Gpio::MSIOBOX_0_OUT_1, // MS IO-Box 0 OUT 1
-	Gpio::MSIOBOX_0_OUT_2, // MS IO-Box 0 OUT 2
-	Gpio::MSIOBOX_0_OUT_3, // MS IO-Box 0 OUT 3
-	Gpio::MSIOBOX_0_OUT_4, // MS IO-Box 0 OUT 4
-	Gpio::MSIOBOX_0_OUT_5, // MS IO-Box 0 OUT 5
-	Gpio::MSIOBOX_0_OUT_6, // MS IO-Box 0 OUT 6
-	Gpio::MSIOBOX_0_OUT_7, // MS IO-Box 0 OUT 7
+	Gpio::EXTIOCHIP_0_IO_1, // MS IO-Box 0 OUT 1
+	Gpio::EXTIOCHIP_0_IO_2, // MS IO-Box 0 OUT 2
+	Gpio::EXTIOCHIP_0_IO_3, // MS IO-Box 0 OUT 3
+	Gpio::EXTIOCHIP_0_IO_4, // MS IO-Box 0 OUT 4
+	Gpio::EXTIOCHIP_0_IO_5, // MS IO-Box 0 OUT 5
+	Gpio::EXTIOCHIP_0_IO_6, // MS IO-Box 0 OUT 6
+	Gpio::EXTIOCHIP_0_IO_7, // MS IO-Box 0 OUT 7
 	Gpio::D4, // 9 - Ignition 1
 	Gpio::D3, // 10 - Ignition 2
 	Gpio::D2, // 11 - Ignition 3
