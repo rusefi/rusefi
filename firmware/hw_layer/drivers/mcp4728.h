@@ -6,6 +6,7 @@
 
 #include <atomic>
 
+// todo: migrate to i2cBus *getI2cBus(brain_pin_e scl, brain_pin_e sda) for extra flexibility?
 // Five MCP4728s at 7-bit addresses 0x60..0x64, four outputs per chip.
 class Mcp4728 : public BitbangI2c {
 public:
