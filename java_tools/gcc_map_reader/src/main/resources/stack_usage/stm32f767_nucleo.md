@@ -16,6 +16,7 @@
 | firmware | storageManagerThread(void*) | storage manager | 308 | 628 | internal-flash tune burn |
 | firmware | lwip_thread | lwIP driver | 240 | 804 | normal Ethernet delivery |
 | firmware | tcpip_thread | lwIP TCP/IP | - | - | - |
+| firmware | pca9685_driver_thread(void*) | PCA9685 | - | - | - |
 | bootloader | main | main/process | - | - | - |
 | bootloader | exception/ISR | exception/ISR | - | - | - |
 | bootloader | __idle_thread | idle | - | - | - |
