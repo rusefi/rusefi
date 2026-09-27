@@ -27,7 +27,8 @@ public:
 	msg_t lock() override;
 	msg_t unlock() override;
 
-private:
+protected:
+	// Device-specific protocols may need a GPIO transition between data and ACK.
 	// Returns true if the remote device acknowledged the transmission
 	bool writeByte(uint8_t data);
 	uint8_t readByte(bool ack);
@@ -44,13 +45,14 @@ private:
 	void stop();
 
 	// Send a single bit
-	void sendBit(bool val);
+	virtual void sendBit(bool val);
 	// Read a single bit
 	bool readBit();
 
 	// Wait for 1/4 of a bit time
-	void waitQuarterBit();
+	virtual void waitQuarterBit();
 
+private:
 #if EFI_PROD_CODE
 	//Mutex protecting the bus.
 	mutex_t mutex;

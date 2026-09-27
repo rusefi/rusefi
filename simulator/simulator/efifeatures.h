@@ -199,6 +199,7 @@
 #ifndef EFI_LUA
 #define EFI_LUA TRUE
 #endif
+#define LUA_I2C_DAC FALSE
 #define LUA_USER_HEAP 100000
 
 #ifndef TRUE
