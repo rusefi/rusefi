@@ -44,9 +44,9 @@ public class TSProjectConsumerTest {
     }
 
     @Test
-    public void oddFireMenuConditionEmitsMenuWhenEnabled() throws IOException {
+    public void oddFireMenuConditionPreservesZeroPlaceholderWhenEnabled() throws IOException {
         String generated = oddFireMenuResult("true", oddFireMenuTemplateLine());
-        assertEquals("before\nsubMenu = ignitionCylExtra, \"Cylinder offsets\"\nafter\n",
+        assertEquals("before\nsubMenu = ignitionCylExtra, \"Cylinder offsets\", 0\nafter\n",
                 generated.replaceAll("[\\t ]+", " ").replace("\n ", "\n"));
     }
 
@@ -135,14 +135,16 @@ public class TSProjectConsumerTest {
     }
 
     @Test
-    public void optionalConditionDefaultsPreserveBoardOverrides() {
+    public void optionalConditionDefaultsPreserveBoardOverrides(@TempDir Path directory) throws IOException {
         VariableRegistry defaults = ConfigDefinitionTest.readRealConfig();
         assertEquals("false", defaults.get("show_default_engine_type"));
         assertEquals("false", defaults.get("ts_show_vvt_frequency"));
-        VariableRegistry proteus = new VariableRegistry();
-        proteus.readPrependValues(ConfigDefinitionTest.FIRMWARE + "/config/boards/proteus/prepend.txt", true);
-        proteus.readPrependValues(ConfigDefinitionTest.FIRMWARE + "/integration/rusefi_config.txt", true);
-        assertEquals("true", proteus.get("ts_show_vvt_frequency"));
+        Path prepend = directory.resolve("prepend.txt");
+        Files.writeString(prepend, "#define ts_show_vvt_frequency true\n");
+        VariableRegistry board = new VariableRegistry();
+        board.readPrependValues(prepend.toString(), true);
+        board.readPrependValues(ConfigDefinitionTest.FIRMWARE + "/integration/rusefi_config.txt", true);
+        assertEquals("true", board.get("ts_show_vvt_frequency"));
     }
 
     private static String oddFireMenuTemplateLine() throws IOException {
