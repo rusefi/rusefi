@@ -225,6 +225,7 @@ struct_no_prefix engine_configuration_s
 #define EFI_CAN_CANFD FALSE
 
 #define DEFAULT_RPM_AXIS_HIGH_VALUE 7000
+#define ts_show_can_terminator false
 
 #define CRANKING_CURVE_SIZE 8
 
