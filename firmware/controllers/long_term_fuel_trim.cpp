@@ -23,14 +23,23 @@
 constexpr float integrator_dt = FAST_CALLBACK_PERIOD_MS * 0.001f;
 
 // TODO: store in backup ram and validate on start
-static LtftState ltftState;
+#ifndef LTFT_STATE_LOCATION
+#define LTFT_STATE_LOCATION
+#endif
+static LtftState ltftState LTFT_STATE_LOCATION;
+// SD DMA cannot access CCM. The storage worker serializes loads and saves,
+// which share this SRAM buffer and keep failed reads away from active trims.
+#if EFI_PROD_CODE
+static LtftState ltftIoState;
+#endif
 
 // LTFT to VE table custom apply algo
 std::optional<setup_custom_board_overrides_type> custom_board_LtftTrimToVeApply;
 
 bool LtftState::save() {
 #if EFI_PROD_CODE
-	StorageStatus status = storageWrite(EFI_LTFT_RECORD_ID, (const uint8_t *)trims, sizeof(trims));
+	memcpy(ltftIoState.trims, trims, sizeof(trims));
+	StorageStatus status = storageWrite(EFI_LTFT_RECORD_ID, (const uint8_t *)ltftIoState.trims, sizeof(trims));
 	if (status != StorageStatus::Ok) {
 		efiPrintf("LTFT: save failed, storage status %d", (int)status);
 		return false;
@@ -41,13 +50,10 @@ bool LtftState::save() {
 
 void LtftState::load() {
 #if EFI_PROD_CODE
-	if (storageRead(EFI_LTFT_RECORD_ID, (uint8_t *)trims, sizeof(trims)) != StorageStatus::Ok) {
-#else
-	if (1) {
-#endif
-		//Reset to some defaules
-		reset();
+	if (storageRead(EFI_LTFT_RECORD_ID, (uint8_t *)ltftIoState.trims, sizeof(ltftIoState.trims)) == StorageStatus::Ok) {
+		memcpy(trims, ltftIoState.trims, sizeof(trims));
 	}
+#endif
 }
 
 void LtftState::reset() {
@@ -89,12 +95,13 @@ void LtftState::applyToVe() {
 
 void LongTermFuelTrim::init(LtftState *state) {
 	m_state = state;
+	// CCM_OPTIONAL is not cleared by startup. Initialize before queuing the load.
+	reset();
 
 #if EFI_PROD_CODE
 	ltftLoadPending = storageReqestReadID(EFI_LTFT_RECORD_ID);
 #else
 	ltftLoadPending = false;
-	reset();
 #endif
 }
 

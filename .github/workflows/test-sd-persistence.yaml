@@ -1,0 +1,61 @@
+name: SD persistence regression tests
+
+on:
+  push:
+    paths:
+      - 'firmware/controllers/storage*'
+      - 'firmware/controllers/long_term_fuel_trim.*'
+      - 'firmware/controllers/generated/rusefi_generated_f407-discovery.h'
+      - 'unit_tests/test_storage_sd.py'
+      - 'unit_tests/storage_sd_harness.cpp'
+      - '.github/workflows/test-sd-persistence.yaml'
+  pull_request:
+    paths:
+      - 'firmware/controllers/storage*'
+      - 'firmware/controllers/long_term_fuel_trim.*'
+      - 'firmware/controllers/generated/rusefi_generated_f407-discovery.h'
+      - 'unit_tests/test_storage_sd.py'
+      - 'unit_tests/storage_sd_harness.cpp'
+      - '.github/workflows/test-sd-persistence.yaml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            cxx: g++
+          - os: ubuntu-latest
+            cxx: clang++
+          - os: macos-latest
+            cxx: clang++
+          - os: windows-latest
+            cxx: g++
+          - os: windows-latest
+            cxx: cl
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Configure MSVC
+        if: matrix.cxx == 'cl'
+        shell: pwsh
+        run: |
+          $vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio/Installer/vswhere.exe'
+          $installation = & $vswhere -latest -products '*' -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+          if (!$installation) { throw 'MSVC installation not found' }
+          & (Join-Path $installation 'Common7/Tools/Launch-VsDevShell.ps1') -Arch amd64 -HostArch amd64 -SkipAutomaticLocation
+          foreach ($name in @('PATH', 'INCLUDE', 'LIB', 'LIBPATH')) {
+            "$name=$([Environment]::GetEnvironmentVariable($name))" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          }
+      - name: Run persistence tests
+        env:
+          CXX: ${{ matrix.cxx }}
+        run: python unit_tests/test_storage_sd.py -v
