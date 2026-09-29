@@ -66,6 +66,10 @@ Unit tests use Google Test and run on PC, not on the ECU.
 
 #### Troubleshooting test output
 
+`EngineTestHelper::applyTriggerWaveform()` also increments the global configuration version and notifies hardware controllers. Static ETB controllers can retain PID pointers into an earlier test's destroyed configuration when the next test skips throttle initialization (for example, without TPS sensors). A later configuration notification then reads the stale pointer in `Pid::isSame()`, detectable under Valgrind. For tests that only need trigger/cylinder geometry refreshed, use `engine->updateTriggerConfiguration()` directly; tests of global configuration changes still require ETB lifetime isolation. See the MAP sampling tests and the 2026-09-29 report.
+
+Starter tests must explicitly clear `enginePins.starterControl` in setup and cleanup. `EngineTestHelper` resets injector/coil outputs and pin registrations, but an unassigned starter retains its logical output across tests; the next `doStartCranking()` then sees an already-engaged starter and skips new-engagement behavior.
+
 To inspect what a test actually scheduled/executed (events, timings, sniffer/logic traces) call `setUnitTestCreateLogs(true)` (declared in `unit_tests/test-framework/engine_test_helper.h`) before constructing `EngineTestHelper` — typically from `main.cpp` or at the top of an individual test. When enabled, each test writes per-test artifacts (e.g. `unittest_<Suite>_<Name>_trace.json`, logic-data, and engine-sniffer files) into the `unit_tests/test_results/` directory (`TEST_RESULTS_DIR` in `unit_test_logger.h`); the absolute path is printed at process exit by `sayByeBye()`. This is the recommended way to diagnose unexpected scheduler/RPM/injection behavior instead of adding ad-hoc `printf`s.
 
 See also unit_tests/test_results/readme.md for unit tests output.

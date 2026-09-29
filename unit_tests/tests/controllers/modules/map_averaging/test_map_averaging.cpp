@@ -93,7 +93,8 @@ TEST(EngineModules, MapAveragingModule_onFastCallbackOddFire) {
 	setHarley();
 	// Apply the new cylinder count, firing order, and trigger before calculating
 	// offsets. Otherwise cylinder 2 retains the four-cylinder setup's 540 degrees.
-	eth.applyTriggerWaveform();
+	// Update geometry without notifying unrelated global hardware controllers.
+	engine->updateTriggerConfiguration();
 	setArrayValues(engineConfiguration->map.samplingAngle, 75);
 	engine->rpmCalculator.setRpmValue(150);
 
@@ -219,14 +220,17 @@ TEST_F(MapSamplingAngle, ClampsWindowToTenDegreesAndCylinderPeriodMinusTen) {
 	}
 
 	setHarley();
-	eth.applyTriggerWaveform();
+	// applyTriggerWaveform also broadcasts a configuration change to static ETB
+	// controllers, whose PID pointers may outlive a previous EngineTestHelper.
+	// Only trigger/cylinder geometry is relevant to these MAP tests.
+	engine->updateTriggerConfiguration();
 	setWindow(100, 720);
 	EXPECT_FLOAT_EQ(350, engine->engineState.mapAveragingDuration);
 }
 
 TEST_F(MapSamplingAngle, UsesTwoStrokeCycleForWrappingAndWindowLimit) {
 	engineConfiguration->twoStroke = true;
-	eth.applyTriggerWaveform();
+	engine->updateTriggerConfiguration();
 	ASSERT_FLOAT_EQ(360, engine->engineState.engineCycle);
 	setWindow(-20, 200);
 	const float expected[] = {340, 250, 70, 160};
@@ -309,7 +313,7 @@ TEST_F(MapSamplingAngle, ZeroDurationDoesNotStartAveraging) {
 TEST_F(MapSamplingAngle, TriggerEdgesStartAndStopWindowAtConfiguredAngles) {
 	setWindow(75, 30);
 	engineConfiguration->globalTriggerAngleOffset = 0;
-	eth.applyTriggerWaveform();
+	engine->updateTriggerConfiguration();
 	// The test engine's half-moon crank wheel has an edge every 180 degrees.
 	// Feed real edges through the decoder to establish 150 RPM and engine phase.
 	eth.smartFireTriggerEvents2(10, 200);
