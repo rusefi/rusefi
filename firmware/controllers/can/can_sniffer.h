@@ -10,15 +10,26 @@
 #pragma once
 
 #include "can_rx.h"
+#if !EFI_UNIT_TEST
 #include "thread_controller.h"
+#endif
 
 #ifndef CAN_SNIFFER
 #define CAN_SNIFFER TRUE
 #endif
 
-#if EFI_USB_SERIAL
-class CanSniffer final : protected ThreadController<UTILITY_THREAD_STACK_SIZE> {
+#if EFI_USB_SERIAL || EFI_UNIT_TEST
+class CanSniffer final
+#if !EFI_UNIT_TEST
+	: protected ThreadController<UTILITY_THREAD_STACK_SIZE>
+#endif
+{
 public:
+#if EFI_UNIT_TEST
+	CanSniffer() : terminal_open(0), transmit_enabled(0), baudrate_configured(0), ts(0), baud(0) {}
+	// Exercise the real command handler without a USB channel or RTOS thread.
+	const char* executeCommandForUnitTest(const char* command);
+#else
 	CanSniffer(SerialUSBDriver& driver)
 		: ThreadController("CAN Sniffer", PRIO_CAN_SNIFFER), m_channel(reinterpret_cast<BaseChannel*>(&driver))
 	{
@@ -28,6 +39,7 @@ public:
 	using ThreadController::stop;
 
 	void ThreadTask() override;
+#endif
 
 	template<typename T>
 	void handle_can_message(const size_t busIndex, const T &cmsg, efitick_t nowNt);
@@ -55,7 +67,11 @@ private:
 
 	void executeCommand();
 
+#if EFI_UNIT_TEST
+	char response[64] = {};
+#else
 	BaseChannel* const m_channel;
+#endif
 	char line[64];
 
 	uint8_t terminal_open:1;
@@ -66,4 +82,4 @@ private:
 	bool includeBus = false;
 	uint8_t baud;
 };
-#endif // EFI_USB_SERIAL
+#endif // EFI_USB_SERIAL || EFI_UNIT_TEST

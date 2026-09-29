@@ -14,7 +14,7 @@
 
 #include "pch.h"
 
-#if EFI_PROD_CODE && EFI_CAN_SUPPORT && EFI_USB_SERIAL
+#if (EFI_PROD_CODE && EFI_CAN_SUPPORT && EFI_USB_SERIAL) || EFI_UNIT_TEST
 
 #include "can_sniffer.h"
 #include "slcan_frame.h"
@@ -23,6 +23,7 @@
 
 #include "can_msg_tx.h"
 
+#if !EFI_UNIT_TEST
 void CanSniffer::ThreadTask() {
 	while (!chThdShouldTerminateX()) {
 		size_t len = readLine();
@@ -33,6 +34,7 @@ void CanSniffer::ThreadTask() {
 
 	chThdExit((msg_t)0x0);
 }
+#endif
 
 // puts one ascii hex digit (0-9, A-F) to a string for val in range
 // 0-15, returns a pointer to the next position in the string
@@ -177,6 +179,7 @@ bool CanSniffer::send_can_message_from_string(const char *str, can_bus_channel_e
 	return true;
 }
 
+#if !EFI_UNIT_TEST
 size_t CanSniffer::readLine() {
 	size_t offset = 0;
 
@@ -211,6 +214,16 @@ size_t CanSniffer::readLine() {
 
 	return 0;
 }
+#endif
+
+#if EFI_UNIT_TEST
+const char* CanSniffer::executeCommandForUnitTest(const char* command) {
+	snprintf(line, sizeof(line), "%s", command);
+	response[0] = '\0';
+	executeCommand();
+	return response;
+}
+#endif
 
 void CanSniffer::executeCommand() {
 	char *str = line;
@@ -374,14 +387,20 @@ void CanSniffer::executeCommand() {
 
 void CanSniffer::putstr(const char * s)
 {
+#if EFI_UNIT_TEST
+	snprintf(response, sizeof(response), "%s", s);
+#else
 	size_t l = strlen(s);
 
 	chnWriteTimeout(m_channel, (uint8_t *)s, l, TIME_MS2I(100));
+#endif
 }
 
+#if !EFI_UNIT_TEST
 // Explicitly instantiate the template for the required frame types
 template void CanSniffer::handle_can_message<CANTxFrame>(unsigned int, const CANTxFrame&, long long);
 template void CanSniffer::handle_can_message<CANRxFrame>(unsigned int, const CANRxFrame&, long long);
+#endif
 
 #endif // CAN_SNIFFER
-#endif // EFI_PROD_CODE && EFI_CAN_SUPPORT && EFI_USB_SERIAL
+#endif // (EFI_PROD_CODE && EFI_CAN_SUPPORT && EFI_USB_SERIAL) || EFI_UNIT_TEST
