@@ -24,6 +24,11 @@ constexpr float integrator_dt = FAST_CALLBACK_PERIOD_MS * 0.001f;
 
 // TODO: store in backup ram and validate on start
 static LtftState ltftState;
+// Storage reads can fail after modifying their destination. Keep the active
+// trims untouched until a complete record has been read successfully.
+#if EFI_PROD_CODE
+static LtftState ltftLoadState;
+#endif
 
 // LTFT to VE table custom apply algo
 std::optional<setup_custom_board_overrides_type> custom_board_LtftTrimToVeApply;
@@ -39,15 +44,14 @@ bool LtftState::save() {
 	return true;
 }
 
-void LtftState::load() {
+bool LtftState::load() {
 #if EFI_PROD_CODE
-	if (storageRead(EFI_LTFT_RECORD_ID, (uint8_t *)trims, sizeof(trims)) != StorageStatus::Ok) {
-#else
-	if (1) {
-#endif
-		//Reset to some defaules
-		reset();
+	if (storageRead(EFI_LTFT_RECORD_ID, (uint8_t *)ltftLoadState.trims, sizeof(ltftLoadState.trims)) == StorageStatus::Ok) {
+		memcpy(trims, ltftLoadState.trims, sizeof(trims));
+		return true;
 	}
+#endif
+	return false;
 }
 
 void LtftState::reset() {
@@ -89,6 +93,7 @@ void LtftState::applyToVe() {
 
 void LongTermFuelTrim::init(LtftState *state) {
 	m_state = state;
+	ltftLoadError = false;
 
 #if EFI_PROD_CODE
 	ltftLoadPending = storageReqestReadID(EFI_LTFT_RECORD_ID);
@@ -253,10 +258,23 @@ ClosedLoopFuelResult LongTermFuelTrim::getTrims(float rpm, float fuelLoad) {
 }
 
 // Called from storage manager thread when requested ID is ready
-void LongTermFuelTrim::load() {
-	m_state->load();
+bool LongTermFuelTrim::load() {
+#if EFI_SHAFT_POSITION_INPUT
+	// A startup read that arrives after the timeout must not overwrite trims
+	// learned while the engine is running. Keep the manager request pending and
+	// consume it after onEngineStop() asks for the retry.
+	if (ltftLoadError && !engine->rpmCalculator.isStopped()) {
+		return false;
+	}
+#endif
+
+	const bool loaded = m_state && m_state->load();
 
 	ltftLoadPending = false;
+	ltftLoadError = !loaded;
+	// The attempt finished, even if the file was missing or unreadable. Avoid
+	// retrying that file on every storage poll; onEngineStop requests the retry.
+	return true;
 }
 
 bool LongTermFuelTrim::store() {
@@ -321,17 +339,30 @@ void LongTermFuelTrim::onSlowCallback() {
 	// we can wait some time for LTFT to be loaded from storage...
 	if ((ltftLoadPending) &&
 #if EFI_SHAFT_POSITION_INPUT
+		(!engine->rpmCalculator.isStopped()) &&
 		(engine->rpmCalculator.getSecondsSinceEngineStart(getTimeNowNt()) > 5.0) &&
 #endif
 		(1)) {
 		efiPrintf("LTFT: failed to load calibrations");
-		m_state->reset();
 		ltftLoadPending = false;
 		ltftLoadError = true;
 	}
 	// Do some magic math here?
 
 	/* ... */
+}
+
+void LongTermFuelTrim::onEngineStop() {
+	if (!ltftLoadError) {
+		return;
+	}
+
+#if EFI_PROD_CODE
+	ltftLoadPending = storageReqestReadID(EFI_LTFT_RECORD_ID);
+#else
+	// Unit tests have no storage manager thread, but still exercise retry state.
+	ltftLoadPending = true;
+#endif
 }
 
 bool LongTermFuelTrim::needsDelayedShutoff() {

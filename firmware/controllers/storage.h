@@ -71,6 +71,14 @@ bool storageIsIdAvailableForId(StorageItemId id);
 bool storageRequestWriteID(StorageItemId id, bool forced);
 bool storageReqestReadID(StorageItemId id);
 
+/**
+ * Wait for one queued storage read to complete, up to timeoutMs.
+ * This does not wait for unrelated reads or any pending writes.
+ * Completion is not read success; the consumer retains its load-error status.
+ * @return true if this read is no longer pending, false on timeout or invalid ID
+ */
+bool storageWaitReadDone(StorageItemId id, unsigned int timeoutMs);
+
 bool storageRegisterStorage(StorageType type, SettingStorageBase *storage);
 bool storageUnregisterStorage(StorageType type);
 
