@@ -68,6 +68,7 @@ public:
 	void moveTimeForwardAndInvokeEventsUs(int deltaTimeUs);
 	void setTimeNtAndInvokeCallBacks(efitick_t nt);
 	void setTimeAndInvokeEventsUs(int timeNowUs);
+	void setTimeAndInvokeEventsNt(efitick_t timeNowNt);
 	void moveTimeForwardAndInvokeEventsSec(int deltaTimeSeconds);
 	/**
 	 * both Rise and Fall
