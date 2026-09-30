@@ -24,6 +24,19 @@ class SLCANConnectorTest {
     }
 
     @Test
+    void weActSetupUsesCanableVersionBarriers() throws Exception {
+        FakeSerial serial = new FakeSerial(true);
+        serial.banner = "WeAct Studio V1.0.0.3_bb264e71";
+        try (SLCANConnector connector = new SLCANConnector("fake", 6, () -> serial)) {
+            connector.open(new CanAddress(0x720, false));
+            assertEquals(Arrays.asList("C", "V", "S6", "V", "O", "V"), serial.commands);
+            serial.reply("t7202AABB\r");
+            assertEquals(new ClassicCanFrame(new CanAddress(0x720, false), new byte[]{(byte) 0xaa, (byte) 0xbb}),
+                connector.receive(100).get());
+        }
+    }
+
+    @Test
     void lawicelSetupAndReceivePreservePartialLinesAndFilterBusTraffic() throws Exception {
         FakeSerial serial = new FakeSerial(false);
         try (SLCANConnector connector = new SLCANConnector("fake", 6, () -> serial)) {
@@ -52,6 +65,7 @@ class SLCANConnectorTest {
         final IncomingDataBuffer buffer = new IncomingDataBuffer("SLCAN test", getStreamStats());
         final List<String> commands = new ArrayList<>();
         final boolean canable;
+        String banner = "16e7497-dirty github.com/normaldotcom/canable2.git";
         boolean rejectOpen;
 
         FakeSerial(boolean canable) {
@@ -76,7 +90,7 @@ class SLCANConnectorTest {
             String command = new String(bytes, StandardCharsets.US_ASCII).trim();
             commands.add(command);
             if (command.equals("V")) {
-                reply(canable ? "16e7497-dirty github.com/normaldotcom/canable2.git\r" : "V1220\r");
+                reply(canable ? banner + "\r" : "V1220\r");
             } else if (rejectOpen && command.equals("O")) {
                 reply("\u0007");
             } else if (!canable) {
@@ -113,6 +127,7 @@ class SLCANConnectorTest {
     void recognizesLawicelAndActualCanableBanner() {
         assertTrue(SLCANConnector.isVersion("V1220"));
         assertTrue(SLCANConnector.isVersion("16e7497-dirty github.com/normaldotcom/canable2.git"));
+        assertTrue(SLCANConnector.isVersion("WeAct Studio V1.0.0.3_bb264e71"));
         assertFalse(SLCANConnector.isVersion("V"));
         assertFalse(SLCANConnector.isVersion("rusEFI master"));
     }

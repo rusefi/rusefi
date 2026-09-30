@@ -66,6 +66,18 @@ public class SlcanPortScannerTest {
     }
 
     @Test
+    public void weActVersionRecognized() {
+        // Live 2026-09-30 discovery log: WeAct USB2CANFDV1 answers V with a product banner.
+        AdapterStream stream = new AdapterStream();
+        stream.failHello = true;
+        stream.version = "WeAct Studio V1.0.0.3_bb264e71";
+        SlcanPortScanner.Result result = SlcanPortScanner.inspectStream("COM4", stream);
+        assertEquals(SlcanPortScanner.Type.SLCAN, result.type);
+        assertEquals("WeAct Studio V1.0.0.3_bb264e71", result.detail);
+        assertTrue(stream.isClosed());
+    }
+
+    @Test
     public void tunerStudioConsoleIsNotProbedAsSlcan() {
         AdapterStream stream = new AdapterStream() {
             public void write(byte[] bytes) throws java.io.IOException {

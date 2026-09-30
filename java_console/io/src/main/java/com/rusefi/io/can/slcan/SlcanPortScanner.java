@@ -336,10 +336,8 @@ public class SlcanPortScanner {
                 String response = readLine(stream, remaining);
                 if (response == null) { break; }
                 if (response.isEmpty() || response.equals(String.valueOf(BELL))) { continue; }
-                // CANable 2 reports a git revision and repository instead of Vhhhh.
-                if (response.matches("V[0-9a-fA-F]{4}") ||
-                    response.matches("[0-9a-fA-F]{7,40}(-dirty)? github\\.com/[A-Za-z0-9_-]+/canable2\\.git") ||
-                    SlcanClient.Frame.parse(response) != null) {
+                // Lawicel Vhhhh, CANable 2 git revision or WeAct banner, see SlcanVersion.
+                if (SlcanVersion.isVersionReply(response) || SlcanClient.Frame.parse(response) != null) {
                     return new Result(port, Type.SLCAN, response);
                 }
                 unexpected = response;

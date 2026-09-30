@@ -1,6 +1,7 @@
 package com.rusefi.io.can;
 
 import com.rusefi.io.IoStream;
+import com.rusefi.io.can.slcan.SlcanVersion;
 import com.rusefi.io.serial.BufferedSerialIoStream;
 
 import java.io.EOFException;
@@ -68,7 +69,7 @@ public final class SLCANConnector implements RawCanPort {
             if (version == null) {
                 throw new IOException("No recognized SLCAN version on " + port);
             }
-            canable = version.contains("github.com/normaldotcom/canable2");
+            canable = SlcanVersion.isCanableFamily(version);
             System.out.println(port + " SLCAN version: " + version);
             drain(100); // Discard any trailing version acknowledgement before setup.
             expectOk("S" + bitrate);
@@ -80,7 +81,7 @@ public final class SLCANConnector implements RawCanPort {
     }
 
     static boolean isVersion(String value) {
-        return value.matches("V[0-9A-Fa-f]{4}") || value.contains("github.com/normaldotcom/canable2");
+        return SlcanVersion.isVersionReply(value);
     }
 
     private void drain(int timeoutMs) throws IOException {

@@ -118,7 +118,8 @@ public class SlcanClient implements Closeable {
             stream.getDataBuffer().dropPending();
             String version = command(stream, "V");
             if (version == null || version.isEmpty()
-                    || (version.charAt(0) != 'V' && Frame.parse(version) == null)) {
+                    || (version.charAt(0) != 'V' && !SlcanVersion.isVersionReply(version)
+                        && Frame.parse(version) == null)) {
                 throw new IOException("Not SLCAN (V response: " + printable(version) + ")");
             }
             logger.accept(port + ": SLCAN detected, version response " + version);
