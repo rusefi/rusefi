@@ -952,6 +952,21 @@ float getOutputValueByHash(const int hash) {
 // instantRpmRange
 		case -748456478:
 			return engine->outputChannels.instantRpmRange;
+// dashLeftTurn
+		case 604222649:
+			return engine->outputChannels.dashLeftTurn;
+// dashRightTurn
+		case 1097341932:
+			return engine->outputChannels.dashRightTurn;
+// dashCheckEngine
+		case 148196857:
+			return engine->outputChannels.dashCheckEngine;
+// dashHighBeams
+		case -1287820947:
+			return engine->outputChannels.dashHighBeams;
+// dashParkingBrake
+		case -1638049706:
+			return engine->outputChannels.dashParkingBrake;
 // engine
 		case -75965445:
 			return engine->outputChannels.engine;
