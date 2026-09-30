@@ -60,6 +60,7 @@ Lets a script *be* a sensor - e.g. CAN-sourced coolant temp or pedal position.
 |------------------------------|-------|
 | `Sensor` class (`LuaSensor`) | `Sensor.new("Clt")`: registers a `StoredValueSensor` under the named `SensorType`; methods `set(value)`, `invalidate()`, `setTimeout(ms)` (default 100ms staleness), `setRedundant(bool)`; Lua error if the type is already registered; auto-unregisters on GC |
 | `setLuaGauge(idx, value)` | 1-based, writes one of `luaGauges[LUA_GAUGE_COUNT]` (8) - purely for display/logging, header comment notes LuaSensor could do the same |
+| `setDashLight(idx, bool)` | 0-based magic index (0 left turn, 1 right turn, 2 check engine, 3 high beams, 4 parking brake) writes the matching `dash*` bit directly into `engine->outputChannels`; Lua error on any other index. Firmware never touches these bits, so the script owns them; read back via `getOutput("dashLeftTurn")` etc. `dashCheckEngine` is independent of the firmware-derived `checkEngine` bit |
 | `setAirmass(airmass, engineLoadPercent)` | Feeds the `LuaAirmass` model (clamped 0..10 g, 0..1000 %) - used when fuel algorithm is set to Lua; pairs with `getAirmass` below |
 
 ### 3. Virtual switch inputs (overriding driver controls)

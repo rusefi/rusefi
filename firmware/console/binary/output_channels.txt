@@ -490,6 +490,15 @@ float mapFast
 
 	uint16_t instantRpmRange;sync: instant RPM range\nMax minus min instant RPM within the last complete engine cycle, 0 when RPM is perfectly steady;"rpm", 1, 0, 0, 65535, 0
 
+! Dash light indicators, set from Lua via setDashLight(index, state) - see lua_hooks.cpp.
+! Only the fixed-size bit word is reserved here; the firmware itself never sets these.
+! Index order matches the setDashLight() argument: 0 left turn, 1 right turn, 2 check engine, 3 high beams, 4 parking brake.
+	bit dashLeftTurn;Dash: Left turn
+	bit dashRightTurn;Dash: Right turn
+	bit dashCheckEngine;Dash: Check engine
+	bit dashHighBeams;Dash: High beams
+	bit dashParkingBrake;Dash: Parking brake
+
 ! TunerStudio/MLV integration requires channel 'engine' and exact log label 'Engine'.
 ! Bits: 0 running, 1 cranking, 2 after-start enrichment, 3 warmup enrichment,
 ! 4 TPS acceleration (including MAP Prediction), 5 TPS deceleration or DFCO.

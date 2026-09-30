@@ -32,6 +32,63 @@ TEST(LuaHooks, ParkNeutral) {
 }
 
 
+TEST(LuaHooks, SetDashLight) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	auto& out = engine->outputChannels;
+
+	// each index maps to exactly one bit, the others are left alone
+	EXPECT_EQ(1, testLuaReturnsNumber(R"(
+		function testFunc()
+			setDashLight(0, true)
+			setDashLight(3, true)
+			return 1
+		end
+	)"));
+	EXPECT_TRUE(out.dashLeftTurn);
+	EXPECT_FALSE(out.dashRightTurn);
+	EXPECT_FALSE(out.dashCheckEngine);
+	EXPECT_TRUE(out.dashHighBeams);
+	EXPECT_FALSE(out.dashParkingBrake);
+
+	EXPECT_EQ(1, testLuaReturnsNumber(R"(
+		function testFunc()
+			setDashLight(0, false)
+			setDashLight(1, true)
+			setDashLight(2, true)
+			setDashLight(4, true)
+			return 1
+		end
+	)"));
+	EXPECT_FALSE(out.dashLeftTurn);
+	EXPECT_TRUE(out.dashRightTurn);
+	EXPECT_TRUE(out.dashCheckEngine);
+	EXPECT_TRUE(out.dashHighBeams);
+	EXPECT_TRUE(out.dashParkingBrake);
+
+	// nothing in the firmware clears the bits behind the script's back
+	EXPECT_EQ(1, testLuaReturnsNumber(R"(
+		function testFunc()
+			return 1
+		end
+	)"));
+	EXPECT_TRUE(out.dashRightTurn);
+	EXPECT_TRUE(out.dashParkingBrake);
+
+	// out-of-range index is a Lua error rather than a silent no-op
+	EXPECT_THROW(testLuaReturnsNumber(R"(
+		function testFunc()
+			setDashLight(5, true)
+			return 1
+		end
+	)"), std::logic_error);
+	EXPECT_THROW(testLuaReturnsNumber(R"(
+		function testFunc()
+			setDashLight(-1, true)
+			return 1
+		end
+	)"), std::logic_error);
+}
+
 TEST(LuaHooks, TestCrc8) {
 	const char* realHDdata = R"(
 

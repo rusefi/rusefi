@@ -1071,6 +1071,26 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 		return 0;
 	});
 
+	// setDashLight(index, state): drives the dash* indicator bits in output channels.
+	// Index order is fixed and mirrors output_channels.txt: 0 left turn, 1 right turn,
+	// 2 check engine, 3 high beams, 4 parking brake. Nothing in the firmware clears these,
+	// so a script owns the whole state of each indicator.
+	lua_register(lState, "setDashLight", [](lua_State* l) {
+		auto index = luaL_checkinteger(l, 1);
+		bool state = lua_toboolean(l, 2);
+		auto& out = engine->outputChannels;
+		switch (index) {
+			case 0: out.dashLeftTurn = state; break;
+			case 1: out.dashRightTurn = state; break;
+			case 2: out.dashCheckEngine = state; break;
+			case 3: out.dashHighBeams = state; break;
+			case 4: out.dashParkingBrake = state; break;
+			default:
+				luaL_error(l, "setDashLight invalid index %d, expected 0..4", (int)index);
+		}
+		return 0;
+	});
+
 #if !defined(STM32F4)
 	lua_register(lState, "getTorque", [](lua_State* l) {
 		auto rpm = Sensor::getOrZero(SensorType::Rpm);
