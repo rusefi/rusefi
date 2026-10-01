@@ -30,6 +30,7 @@ public class GaugesGridElement {
         this.uiContext = uiContext;
         this.config = config;
         this.gaugeName = gaugeName;
+        config.setProperty(GAUGE_TYPE, config.getProperty(GAUGE_TYPE, gaugeName));
     }
 
     private void rebuildAsLiveBarElement() {
@@ -37,7 +38,7 @@ public class GaugesGridElement {
 
         JMenuItem switchToGauge = getJMenuItem("Switch to Gauge Mode", false);
 
-        addLiveGraph(new SensorLiveGraph(uiContext, config.getChild("top"), gaugeName, switchToGauge));
+        addLiveGraph(new SensorLiveGraph(uiContext, config.getChild("top"), config.getProperty(GAUGE_TYPE), switchToGauge));
         addLiveGraph(new SensorLiveGraph(uiContext, config.getChild("bottom"), Sensor.RPMGauge.name(), switchToGauge));
     }
 
@@ -71,7 +72,7 @@ public class GaugesGridElement {
         JMenuItem switchToLiveGraph = getJMenuItem("Switch to Live Graph", true);
 
         wrapper.setLayout(new BorderLayout());
-        SensorGauge.createGaugeBody(uiContext, gaugeName, wrapper, gaugeChangeListener, switchToLiveGraph);
+        SensorGauge.createGaugeBody(uiContext, config.getProperty(GAUGE_TYPE), wrapper, gaugeChangeListener, switchToLiveGraph);
 
     }
 

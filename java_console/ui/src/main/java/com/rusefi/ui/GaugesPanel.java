@@ -1,28 +1,26 @@
 package com.rusefi.ui;
 
 import com.devexperts.logging.FileLogger;
-import com.devexperts.logging.Logging;
-import com.rusefi.core.Sensor;
 import com.rusefi.core.ISensorCentral;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.core.WellKnownGauges;
 import com.rusefi.core.preferences.storage.Node;
+import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.AnyCommand;
 import com.rusefi.ui.widgets.DetachedSensor;
-import com.rusefi.ui.widgets.PopupMenuButton;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static com.devexperts.logging.Logging.getLogging;
+import java.util.Locale;
 
 
 /**
@@ -43,8 +41,6 @@ public class GaugesPanel {
         "VBattGauge",
         "VSSGauge",
     };
-    private static final String GAUGES_ROWS = "gauges_rows";
-    private static final String GAUGES_COLUMNS = "gauges_cols";
     public static final String DISABLE_LOGS = "DISABLE_LOGS";
     private static final int DEFAULT_ROWS = 3;
     private static final int DEFAULT_COLUMNS = 3;
@@ -68,13 +64,13 @@ public class GaugesPanel {
             WellKnownGauges.RPMGauge.getOutputChannelName(), value -> { });
         rpmDemandToken.setActive(false);
 
-        int rows = config.getIntProperty(GAUGES_ROWS, DEFAULT_ROWS);
-        int columns = config.getIntProperty(GAUGES_COLUMNS, DEFAULT_COLUMNS);
+        int rows = config.getIntProperty(GaugeLayout.ROWS, DEFAULT_ROWS);
+        int columns = config.getIntProperty(GaugeLayout.COLUMNS, DEFAULT_COLUMNS);
 
         setSensorGridDimensions(rows, columns);
 
 
-        content.add(createTopPanel(config), BorderLayout.NORTH);
+        content.add(createTopPanel(), BorderLayout.NORTH);
 
         content.add(createMiddleLeftPanel(), BorderLayout.CENTER);
 
@@ -89,16 +85,26 @@ public class GaugesPanel {
     }
 
     @NotNull
-    private JPanel createTopPanel(Node config) {
+    private JPanel createTopPanel() {
         JPanel upperPanel = new JPanel(new BorderLayout());
         upperPanel.add(createLeftTopPanel(), BorderLayout.CENTER);
-        upperPanel.add(createRightTopPanel(config), BorderLayout.EAST);
+        upperPanel.add(createRightTopPanel(), BorderLayout.EAST);
         return upperPanel;
     }
 
     @NotNull
-    private JPanel createRightTopPanel(Node config) {
+    private JPanel createRightTopPanel() {
         JPanel rightUpperPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
+
+        JButton saveLayout = new JButton("Save Layout...");
+        saveLayout.setToolTipText("Save the gauge grid and graph settings to a file");
+        saveLayout.addActionListener(e -> chooseLayoutFile(true));
+        rightUpperPanel.add(saveLayout);
+
+        JButton loadLayout = new JButton("Load Layout...");
+        loadLayout.setToolTipText("Replace the gauge grid with a saved layout");
+        loadLayout.addActionListener(e -> chooseLayoutFile(false));
+        rightUpperPanel.add(loadLayout);
 
         final JPopupMenu selectorMenu = new JPopupMenu();
         selectorMenu.add(new SizeSelectorPanel((row, column) -> {
@@ -106,7 +112,8 @@ public class GaugesPanel {
             setSensorGridDimensions(row, column);
         }));
 
-        JButton selector = new JButton("O");
+        JButton selector = new JButton("Grid Size");
+        selector.setToolTipText("Choose the number of gauge rows and columns");
         selector.addActionListener(e -> {
             Component c = (Component) e.getSource();
             selectorMenu.show(c, -1, c.getHeight());
@@ -115,6 +122,53 @@ public class GaugesPanel {
 
 
         return rightUpperPanel;
+    }
+
+    private void chooseLayoutFile(boolean save) {
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle(save ? "Save Gauge Layout" : "Load Gauge Layout");
+        chooser.setFileFilter(new FileNameExtensionFilter("Gauge layouts (*.gauges)", "gauges"));
+        if (save) {
+            chooser.setSelectedFile(new File("dashboard.gauges"));
+        }
+        int result = save ? chooser.showSaveDialog(content) : chooser.showOpenDialog(content);
+        if (result != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+        File file = chooser.getSelectedFile();
+        if (save && !file.getName().toLowerCase(Locale.ROOT).endsWith(".gauges")) {
+            file = new File(file.getPath() + ".gauges");
+        }
+        if (save && file.exists() && JOptionPane.showConfirmDialog(content,
+            "Replace " + file.getName() + "?", "Save Gauge Layout",
+            JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
+            return;
+        }
+        try {
+            if (save) {
+                saveLayout(file.toPath());
+            } else {
+                loadLayout(file.toPath());
+                PersistentConfiguration.getConfig().save();
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(content, "Could not " + (save ? "save" : "load")
+                + " gauge layout: " + e.getMessage(), "Gauge Layout", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // Package-private so tests exercise the same file operations as the chooser.
+    void saveLayout(Path file) throws IOException {
+        GaugeLayout.save(file, config);
+    }
+
+    void loadLayout(Path file) throws IOException {
+        Node layout = GaugeLayout.load(file);
+        // Leave warning and command preferences intact; discard old, including hidden, slots.
+        config.getConfig().keySet().removeIf(key -> key.matches("element_\\d+"));
+        config.getConfig().putAll(layout.getConfig());
+        setSensorGridDimensions(layout.getIntProperty(GaugeLayout.ROWS, DEFAULT_ROWS),
+            layout.getIntProperty(GaugeLayout.COLUMNS, DEFAULT_COLUMNS));
     }
 
     @NotNull
@@ -171,6 +225,8 @@ public class GaugesPanel {
         }
 
         saveConfig(rows, columns);
+        gauges.panel.revalidate();
+        gauges.panel.repaint();
     }
 
     private List<String> getDefaultLayout() {
@@ -178,8 +234,8 @@ public class GaugesPanel {
     }
 
     private void saveConfig(int rows, int columns) {
-        config.setProperty(GAUGES_ROWS, rows);
-        config.setProperty(GAUGES_COLUMNS, columns);
+        config.setProperty(GaugeLayout.ROWS, rows);
+        config.setProperty(GaugeLayout.COLUMNS, columns);
     }
 
     public JComponent getContent() {
