@@ -327,7 +327,12 @@ public class SlcanPortScanner {
             // the TS HELLO probe above may have confused the SLCAN parser, drain leftovers
             stream.getDataBuffer().dropPending();
             // Terminate binary HELLO residue in line-oriented adapter parsers.
-            stream.write(("" + CR + "V" + CR).getBytes(StandardCharsets.US_ASCII));
+            // WeAct processes only the first command in a USB receive chunk.
+            // Let it consume the HELLO separator before sending the version query.
+            stream.write(new byte[]{(byte) CR});
+            stream.flush();
+            readLine(stream, 50);
+            stream.write(("V" + CR).getBytes(StandardCharsets.US_ASCII));
             stream.flush();
             long deadline = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(SLCAN_RESPONSE_TIMEOUT_MS);
             String unexpected = null;

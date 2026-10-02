@@ -379,3 +379,10 @@ Gotchas:
 See also .junie/guidelines.md file
 
 Pixi's Windows m2-bash can report OSTYPE=cygwin while uname -s reports MSYS_NT. Platform checks based on uname must include MSYS as well as CYGWIN and MINGW.
+
+### WeAct SLCAN discovery after binary HELLO
+
+Live WeAct V1.0.0.6_4fa52575 can discard the V query when CR/V/CR follows
+binary TS HELLO in a single write, returning only BELL. Separate the CR
+and V writes with a bounded separator-response read; this restored live
+detection in 8/8 scans versus 0/8 for the combined write.

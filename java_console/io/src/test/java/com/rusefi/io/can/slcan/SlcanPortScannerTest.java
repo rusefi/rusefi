@@ -47,6 +47,24 @@ public class SlcanPortScannerTest {
     }
 
     @Test
+    public void adapterDropsVersionBundledWithHelloSeparator() {
+        AdapterStream stream = new AdapterStream() {
+            public void write(byte[] bytes) throws java.io.IOException {
+                if (bytes[0] == '\r' && bytes.length > 1) {
+                    buffer.addData(new byte[]{7});
+                    return;
+                }
+                super.write(bytes);
+            }
+        };
+        stream.failHello = true;
+        stream.version = "WeAct Studio V1.0.0.6_4fa52575";
+        SlcanPortScanner.Result result = SlcanPortScanner.inspectStream("COM120", stream);
+        assertEquals(SlcanPortScanner.Type.SLCAN, result.type);
+        assertEquals(stream.version, result.detail);
+    }
+
+    @Test
     public void silentHelloLeavesTimeForSlcanProbe() {
         AdapterStream stream = new AdapterStream();
         List<SlcanPortScanner.Result> results = SlcanPortScanner.inspectPorts(
