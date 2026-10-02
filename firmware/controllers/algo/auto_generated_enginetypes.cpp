@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Thu Aug 13 15:24:45 UTC 2026
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Fri Oct 02 18:34:20 UTC 2026
 // see also gen_config_and_enums.bat
 
 
@@ -296,6 +296,8 @@ const char *getTrigger_type_e(trigger_type_e value) {
 			return "TT_GM_60_2_2_2";
 		case trigger_type_e::TT_GM_7X:
 			return "TT_GM_7X";
+		case trigger_type_e::TT_GM_LT1_OPTISPARK_8:
+			return "TT_GM_LT1_OPTISPARK_8";
 		case trigger_type_e::TT_HALF_MOON:
 			return "TT_HALF_MOON";
 		case trigger_type_e::TT_HONDA_CBR_600:

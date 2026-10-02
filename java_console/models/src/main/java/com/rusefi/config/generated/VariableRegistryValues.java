@@ -1664,6 +1664,7 @@ public class VariableRegistryValues {
 	public static final int trigger_type_e_TT_GM_24x_5 = 27;
 	public static final int trigger_type_e_TT_GM_60_2_2_2 = 54;
 	public static final int trigger_type_e_TT_GM_7X = 5;
+	public static final int trigger_type_e_TT_GM_LT1_OPTISPARK_8 = 99;
 	public static final int trigger_type_e_TT_HALF_MOON = 18;
 	public static final int trigger_type_e_TT_HONDA_CBR_600 = 28;
 	public static final int trigger_type_e_TT_HONDA_J30A2_24_1_1 = 87;
@@ -1713,7 +1714,7 @@ public class VariableRegistryValues {
 	public static final int trigger_type_e_TT_TOOTHED_WHEEL_60_2 = 8;
 	public static final int trigger_type_e_TT_TOYOTA_3_TOOTH_UZ = 91;
 	public static final int trigger_type_e_TT_TRI_TACH = 53;
-	public static final int trigger_type_e_TT_UNUSED = 99;
+	public static final int trigger_type_e_TT_UNUSED = 100;
 	public static final int trigger_type_e_TT_VIPER_V10_CRANK = 96;
 	public static final int trigger_type_e_TT_VVT_BARRA_3_PLUS_1 = 56;
 	public static final int trigger_type_e_TT_VVT_BOSCH_QUICK_START = 47;
@@ -1857,7 +1858,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2026.10.02.t-b-g.4217402202";
+	public static final String TS_SIGNATURE = "rusEFI master.2026.10.02.t-b-g.4122566909";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2224;
