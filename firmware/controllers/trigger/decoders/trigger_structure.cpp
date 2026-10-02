@@ -599,6 +599,10 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		configureGm60_2_2_2(this);
 		break;
 
+	case trigger_type_e::TT_GM_LT1_OPTISPARK_8:
+		initializeGmLt1Optispark8(this);
+		break;
+
 	case trigger_type_e::TT_GM_7X:
 		configureGmTriggerWaveform(this);
 		break;

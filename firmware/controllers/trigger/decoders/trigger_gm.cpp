@@ -151,3 +151,30 @@ void initGmLS24_3deg(TriggerWaveform *s) {
 
 	s->tdcPosition = 48;
 }
+
+/**
+ * GM Gen II LT1 Optispark low-resolution track only. The 360-slot track is unused.
+ * Geometry: speeduino/Ardu-Stim, wheel_defs.h, optispark_lt1 (720 samples/cycle).
+ * https://github.com/speeduino/Ardu-Stim/blob/51f624a9ae369035211952862befe099c2b93a58/ardustim/ardustim/wheel_defs.h
+ * The eight rising edges are 90 crank degrees apart. Pulse widths alternate
+ * 14, 4, 24, 4, 34, 4, 44, 4 crank degrees, identifying a complete 720-degree cycle.
+ * This reference waveform does not establish cylinder #1 TDC: calibrate the
+ * trigger offset on the engine. See docs/triggers/gm-lt1-optispark-8.md.
+ */
+void initializeGmLt1Optispark8(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Both);
+
+	static constexpr angle_t widths[] = {14, 4, 24, 4, 34, 4, 44, 4};
+	for (size_t i = 0; i < efi::size(widths); i++) {
+		const angle_t rise = 86 + 90 * i;
+		s->addEvent720(rise, TriggerValue::RISE);
+		s->addEvent720(rise + widths[i], TriggerValue::FALL);
+	}
+
+	// Sync at the end of the 14-degree pulse (100 degrees in this waveform).
+	// Also check 86/4 and 4/46. The third ratio rejects reverse rotation,
+	// whose 14/76 and 76/4 ratios would otherwise fit the first two windows.
+	s->setTriggerSynchronizationGap2(0.12f, 0.21f);
+	s->setSecondTriggerSynchronizationGap2(16.0f, 27.0f);
+	s->setTriggerSynchronizationGap3(2, 0.065f, 0.11f);
+}
