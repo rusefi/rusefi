@@ -688,3 +688,41 @@ Validation:
 Open follow-ups:
 - `unit_tests/mocks.cpp:38` still trips GCC 16's `-Wmaybe-uninitialized`; only
   a local concern until CI moves to that compiler (see previous entry).
+
+
+## 2026-10-02 - GM Gen II LT1 Optispark low-resolution trigger
+
+What was done:
+- Updated the local checkout to upstream 47fca3d51be49e8ec2d7a63318342d2c64234aae,
+  disabled sparse checkout and initialized all submodules recursively.
+- Added trigger ID 99, its TunerStudio label and a one-input, cam-speed waveform
+  using both edges of the eight-slot track. The 360-slot track is unused.
+- Added independent edge-stream tests and configuration/validation notes in
+  `docs/triggers/gm-lt1-optispark-8.md`.
+
+Decisions:
+- Used the published Ardu-Stim waveform at pinned revision 51f624a9, not an
+  inferred waveform from a photograph. No actual engine recording is available.
+- Retained the generic decoder, tuning layout and all board pin maps.
+- A reverse-rotation regression exposed false synchronization with two gap
+  ratios. A third consecutive ratio rejects the reversed reference waveform.
+- Left the angular reference explicitly uncalibrated: actual cylinder #1
+  compression TDC and trigger offset require engine validation.
+
+Validation:
+- Native WinLibs GCC 14.2 build succeeded. Full suite: 1381 tests across 265
+  suites passed, including all nine Optispark tests.
+- Startup coverage includes all 16 edges at 80, 200, 1000 and 6500 RPM. Other
+  cases cover acceleration/jitter, reverse rotation, invalid equal-width pulses,
+  missing/extra pulses, stop/restart and RPM/phase through the primary input.
+- Standard F407 Discovery application compiled/linked with ARM GCC 14.2.1:
+  text 608272, data 1220, bss 196140 bytes (section totals across memory regions).
+- Windows packaging uses a local native hex2dfu from its rusefi_prod source
+  (2459150129), since the bundled executable requires Cygwin. The local helper
+  initializes Intel HEX holes to 0xff rather than leaving heap bytes undefined.
+  This build-environment workaround is not part of the firmware changes.
+
+Remaining:
+- Validate real cranking/running captures, compression-induced speed changes,
+  compression phase, trigger offset and timing accuracy on the engine.
+- No ECU was flashed; no custom Levin board build was made.
