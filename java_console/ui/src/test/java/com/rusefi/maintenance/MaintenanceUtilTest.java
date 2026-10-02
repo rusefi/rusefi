@@ -137,6 +137,15 @@ public class MaintenanceUtilTest {
     }
 
     @Test
+    public void trustedUnverifiedTargetSkipsConfirmation() {
+        // MassUpdater flashes unattended: an unverified target must not stop to ask
+        RecordingConfirm confirm = new RecordingConfirm(false);
+        assertTrue(MaintenanceUtil.ensureFirmwareForConnectedTarget(UpdateOperationCallbacks.DUMMY,
+            new ConnectedEcuTarget().setUnverifiedTargetTrusted(true), confirm));
+        assertEquals(0, confirm.calls);
+    }
+
+    @Test
     public void liveVerifiedTargetSkipsUnverifiedConfirmation() {
         // a live-verified board matching the bundle needs no confirmation and no download
         String bundleTarget = com.rusefi.core.io.BundleUtil.getBundleTarget();

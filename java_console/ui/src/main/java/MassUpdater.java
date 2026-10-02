@@ -39,6 +39,8 @@ public class MassUpdater {
 
     public MassUpdater(ConnectivityContext connectivityContext, SerialPortType target) {
         this.connectivityContext = connectivityContext;
+        // program automatically: no "No live ECU is connected to verify the board" prompt per board
+        connectivityContext.getConnectedEcuTarget().setUnverifiedTargetTrusted(true);
         mainStatus.showFrame("Mass Updater " + UiVersion.CONSOLE_VERSION);
 
         final AtomicBoolean previousDfuState = new AtomicBoolean();

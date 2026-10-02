@@ -88,8 +88,9 @@ public class MaintenanceUtil {
         // target is only a guess (persisted last board, or the bundle default) — confirm before flashing
         // so we never program a possibly-swapped board silently. Independent of foreign-vs-matching: even
         // flashing the bundle's own firmware onto an unverified board deserves a check. Live-verified
-        // flashes skip this. [tag:better_ux_for_flashing]
-        if (!connectedEcuTarget.isLiveTargetKnown() && !confirmUnverifiedTarget(ecuTarget, confirm)) {
+        // flashes skip this, as does unattended MassUpdater flashing. [tag:better_ux_for_flashing]
+        if (!connectedEcuTarget.isLiveTargetKnown() && !connectedEcuTarget.isUnverifiedTargetTrusted()
+            && !confirmUnverifiedTarget(ecuTarget, confirm)) {
             callbacks.logLine("Firmware update cancelled — unverified board target \"" + ecuTarget + "\".");
             return false;
         }

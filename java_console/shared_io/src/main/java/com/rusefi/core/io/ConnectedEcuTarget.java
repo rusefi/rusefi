@@ -34,6 +34,7 @@ public class ConnectedEcuTarget {
 
     private volatile String connectedTarget;
     private final String recoveryTarget;
+    private volatile boolean unverifiedTargetTrusted;
 
     public ConnectedEcuTarget() {
         this(null);
@@ -109,6 +110,19 @@ public class ConnectedEcuTarget {
      */
     public boolean isLiveTargetKnown() {
         return connectedTarget != null;
+    }
+
+    /**
+     * Unattended production flashing (MassUpdater) programs a known board type over and over; the
+     * operator vouches for the target up front, so flashers must not stop to ask about an unverified one.
+     */
+    public ConnectedEcuTarget setUnverifiedTargetTrusted(boolean unverifiedTargetTrusted) {
+        this.unverifiedTargetTrusted = unverifiedTargetTrusted;
+        return this;
+    }
+
+    public boolean isUnverifiedTargetTrusted() {
+        return unverifiedTargetTrusted;
     }
 
     private static void persist(String ecuTarget) {
