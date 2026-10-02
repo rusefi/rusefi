@@ -27,7 +27,9 @@ import java.net.URL;
 import static com.rusefi.ui.basic.UiHelper.commonUiStartup;
 
 /**
- * Visual sandbox for the top-level calibration menu tree.
+ * Visual sandbox for {@link MainMenuTreeWidget}, the curve UI control
+ * {@link com.rusefi.ui.widgets.tune.CurveWidget}, and the table UI control
+ * {@link com.rusefi.ui.widgets.tune.TuningTableView}.
  */
 public class TopLevelMenuSandbox {
     private static final String INI_RESOURCE = "/january.ini";
@@ -111,4 +113,3 @@ public class TopLevelMenuSandbox {
         left.selectSubMenu("dwellSettings");
     }
 }
-

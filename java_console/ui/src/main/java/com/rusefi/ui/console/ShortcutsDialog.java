@@ -25,7 +25,7 @@ final class ShortcutsDialog extends JDialog {
             "        This shortcut controls logging; use File > Save Tune to save a tune.",
             "",
             "TUNING TABLES",
-            "Click a table cell first. Editing shortcuts operate on the selected data cells "
+            "Focus the table with Tab or click a cell. Editing shortcuts operate on the selected data cells "
                     + "in an editable table, not on the axis column or a read-only comparison.",
             "H  Interpolate horizontally between the selected endpoints in each row.",
             "V  Interpolate vertically between the selected endpoints in each column.",
@@ -39,7 +39,13 @@ final class ShortcutsDialog extends JDialog {
             "Shift+arrows  Extend the selection.",
             "Ctrl+A        Select all cells.",
             "Ctrl+Space    Toggle the current cell's selection.",
-            "Tab / Shift+Tab  Move to the next / previous cell.",
+            "Enter / F2    Start editing the active value cell in a tuning table.",
+            "While editing: Enter accepts, Esc cancels; left/right arrows move the text cursor.",
+            "Tab / Shift+Tab  Accept an edit and move to the next / previous value cell,",
+            "                 wrapping between rows and skipping the axis column.",
+            "Invalid numbers stay in the editor until corrected or cancelled.",
+            "Ctrl+Tab / Ctrl+Shift+Tab  Move focus out of the table when not editing.",
+            "The active value cell's X and Y scale labels are softly highlighted.",
             "Shift+click extends a selection; Ctrl+click toggles a cell.",
             "",
             "Up and Down toolbar buttons change selected values by the delta field "

@@ -12,16 +12,19 @@ import com.rusefi.maintenance.CalibrationsInfo;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public class TuningTableView {
     private static final int TOOLBAR_GAP = 6;
     private static final double SMOOTHING_FACTOR = 0.25;
+    private final boolean viewMode;
     private final JTable table = new JTable();
     private final Surface3DView surface3DView = new Surface3DView();
     private final CardLayout cardLayout = new CardLayout();
@@ -40,12 +43,17 @@ public class TuningTableView {
 
     public TuningTableView(String title, boolean viewMode) {
         this.title = title;
+        this.viewMode = viewMode;
         table.getTableHeader().setReorderingAllowed(false);
         table.setSelectionBackground(Color.ORANGE);
         table.setDefaultRenderer(Object.class, new GradientRenderer());
         table.setCellSelectionEnabled(true);
         table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        table.setToolTipText("Arrow keys to move; Shift+arrows to select; Ctrl+A to select all; see Shortcuts for more");
+        table.setToolTipText(viewMode
+            ? "Arrow keys to move; Shift+arrows to select; Ctrl+A to select all"
+            : "Arrows to move; Enter/F2 to edit; Enter to accept; Esc to cancel; Tab/Shift+Tab to accept and move");
+        installAxisHighlighting();
+        installKeyboardEditing();
 
         table.addMouseListener(new MouseAdapter() {
             @Override
@@ -150,15 +158,162 @@ public class TuningTableView {
             inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, 0), "interpolateVertical");
             inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_SLASH, 0), "interpolateSelection");
             inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0), "smoothSelection");
-            content.getActionMap().put("interpolateHorizontal", horizontalAction);
-            content.getActionMap().put("interpolateVertical", verticalAction);
-            content.getActionMap().put("interpolateSelection", interpolateAction);
-            content.getActionMap().put("smoothSelection", smoothAction);
+            content.getActionMap().put("interpolateHorizontal", tableShortcut(horizontalAction));
+            content.getActionMap().put("interpolateVertical", tableShortcut(verticalAction));
+            content.getActionMap().put("interpolateSelection", tableShortcut(interpolateAction));
+            content.getActionMap().put("smoothSelection", tableShortcut(smoothAction));
         }
 
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         content.add(topPanel);
         content.add(tableContainer);
+    }
+
+    private void installAxisHighlighting() {
+        TableCellRenderer headerRenderer = table.getTableHeader().getDefaultRenderer();
+        table.getTableHeader().setDefaultRenderer((source, value, selected, focused, row, column) -> {
+            Component renderer = headerRenderer.getTableCellRendererComponent(source, value, selected, focused, row, column);
+            Color background = table.getTableHeader().getBackground();
+            renderer.setBackground(isActiveValueCell() && column == activeColumn()
+                ? axisHighlight(background) : background);
+            return renderer;
+        });
+        table.getSelectionModel().addListSelectionListener(e -> repaintAxes());
+        table.getColumnModel().getSelectionModel().addListSelectionListener(e -> repaintAxes());
+    }
+
+    private void repaintAxes() {
+        table.repaint();
+        table.getTableHeader().repaint();
+    }
+
+    private int activeRow() {
+        return table.getSelectionModel().getLeadSelectionIndex();
+    }
+
+    private int activeColumn() {
+        return table.getColumnModel().getSelectionModel().getLeadSelectionIndex();
+    }
+
+    private boolean isActiveValueCell() {
+        return activeRow() >= 0 && activeRow() < table.getRowCount()
+            && activeColumn() > 0 && activeColumn() < table.getColumnCount()
+            && table.isCellSelected(activeRow(), activeColumn());
+    }
+
+    private Color axisHighlight(Color background) {
+        Color selection = table.getSelectionBackground();
+        return new Color((3 * background.getRed() + selection.getRed()) / 4,
+            (3 * background.getGreen() + selection.getGreen()) / 4,
+            (3 * background.getBlue() + selection.getBlue()) / 4);
+    }
+
+    private void installKeyboardEditing() {
+        // Editing is explicit, so letter shortcuts still operate on the selection.
+        table.putClientProperty("JTable.autoStartsEdit", false);
+        table.putClientProperty("terminateEditOnFocusLost", true);
+        JTextField field = new JTextField();
+        field.setHorizontalAlignment(SwingConstants.CENTER);
+        DefaultCellEditor editor = new DefaultCellEditor(field) {
+            @Override
+            public boolean stopCellEditing() {
+                try {
+                    if (!Double.isFinite(Double.parseDouble(field.getText().trim()))) {
+                        throw new NumberFormatException();
+                    }
+                } catch (NumberFormatException e) {
+                    field.setBorder(BorderFactory.createLineBorder(Color.RED));
+                    field.setToolTipText("Enter a finite number, or press Esc to cancel");
+                    return false;
+                }
+                return super.stopCellEditing();
+            }
+
+            @Override
+            public Component getTableCellEditorComponent(JTable source, Object value, boolean selected, int row, int column) {
+                Component component = super.getTableCellEditorComponent(source, value, selected, row, column);
+                field.setBorder(UIManager.getBorder("TextField.border"));
+                field.setToolTipText("Enter to accept; Esc to cancel; Tab/Shift+Tab to accept and move");
+                field.selectAll();
+                return component;
+            }
+        };
+        table.setDefaultEditor(Object.class, editor);
+        Action edit = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (viewMode) {
+                    return;
+                }
+                if (table.isEditing()) {
+                    if (table.getCellEditor().stopCellEditing()) {
+                        table.requestFocusInWindow();
+                    }
+                    return;
+                }
+                if (table.getSelectedRow() == -1 && table.getRowCount() > 0 && table.getColumnCount() > 1) {
+                    table.changeSelection(0, 1, false, false);
+                }
+                if (isActiveValueCell() && table.editCellAt(activeRow(), activeColumn())) {
+                    table.getEditorComponent().requestFocusInWindow();
+                }
+            }
+        };
+        bindKey(table, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, "ENTER", "editValue", edit);
+        bindKey(table, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, "F2", "editValue", edit);
+        bindKey(field, JComponent.WHEN_FOCUSED, "ENTER", "acceptValue", edit);
+        bindKey(field, JComponent.WHEN_FOCUSED, "ESCAPE", "cancelValue", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                editor.cancelCellEditing();
+                table.requestFocusInWindow();
+            }
+        });
+        field.setFocusTraversalKeysEnabled(false);
+        for (boolean backwards : new boolean[]{false, true}) {
+            String key = backwards ? "shift TAB" : "TAB";
+            Action move = new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    moveValueCell(backwards);
+                }
+            };
+            bindKey(table, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, key, key, move);
+            bindKey(field, JComponent.WHEN_FOCUSED, key, key, move);
+        }
+    }
+
+    private void bindKey(JComponent component, int condition, String key, String name, Action action) {
+        component.getInputMap(condition).put(KeyStroke.getKeyStroke(key), name);
+        component.getActionMap().put(name, action);
+    }
+
+    private Action tableShortcut(Action action) {
+        return new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!table.isEditing()) {
+                    action.actionPerformed(e);
+                }
+            }
+        };
+    }
+
+    private void moveValueCell(boolean backwards) {
+        int row = activeRow();
+        int column = activeColumn();
+        if (table.isEditing() && !table.getCellEditor().stopCellEditing()) {
+            return;
+        }
+        int columns = table.getColumnCount() - 1;
+        int cells = table.getRowCount() * columns;
+        if (cells <= 0) {
+            return;
+        }
+        int index = row >= 0 && column > 0 ? row * columns + column - 1 : (backwards ? 0 : -1);
+        index = Math.floorMod(index + (backwards ? -1 : 1), cells);
+        table.changeSelection(index / columns, index % columns + 1, false, false);
+        table.requestFocusInWindow();
     }
 
     protected int showConfirmDialog(JPanel panel) {
@@ -220,6 +375,8 @@ public class TuningTableView {
     }
 
     private void commitEdit(TuningTableModel model, int[] selectedRows, int[] selectedCols) {
+        int leadRow = activeRow();
+        int leadColumn = activeColumn();
         boolean wroteImage = writeBackZBins(model);
         calculateMinMax(model.data);
         model.fireTableDataChanged();
@@ -231,6 +388,8 @@ public class TuningTableView {
         for (int col : selectedCols) {
             table.addColumnSelectionInterval(col, col);
         }
+        ((DefaultListSelectionModel) table.getSelectionModel()).moveLeadSelectionIndex(leadRow);
+        ((DefaultListSelectionModel) table.getColumnModel().getSelectionModel()).moveLeadSelectionIndex(leadColumn);
 
         surface3DView.setData(model.data, model.xBins, model.yBins, minValue, maxValue);
         if (wroteImage && onEdit != null) {
@@ -494,7 +653,8 @@ public class TuningTableView {
         this.imageTarget = zImage;
         this.zBinsField = ltft;
 
-        table.setModel(new TuningTableModel(dataValues, xBins, yBins, precision));
+        table.setModel(new TuningTableModel(dataValues, xBins, yBins, precision, !viewMode,
+            model -> commitEdit(model, table.getSelectedRows(), table.getSelectedColumns())));
         table.clearSelection();
         surface3DView.setData(dataValues, xBins, yBins, minValue, maxValue);
     }
@@ -560,12 +720,49 @@ public class TuningTableView {
         final Double[] xBins;
         final Double[] yBins;
         private final int precision;
+        private final boolean editable;
+        private final Consumer<TuningTableModel> onCellEdit;
 
         public TuningTableModel(Double[][] data, Double[] xBins, Double[] yBins, int precision) {
+            this(data, xBins, yBins, precision, true, null);
+        }
+
+        private TuningTableModel(Double[][] data, Double[] xBins, Double[] yBins, int precision,
+                                 boolean editable, Consumer<TuningTableModel> onCellEdit) {
             this.data = data;
             this.xBins = xBins;
             this.yBins = yBins;
             this.precision = precision;
+            this.editable = editable;
+            this.onCellEdit = onCellEdit;
+        }
+
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return editable && column > 0;
+        }
+
+        @Override
+        public void setValueAt(Object value, int row, int column) {
+            if (!isCellEditable(row, column)) {
+                return;
+            }
+            double number;
+            try {
+                number = Double.parseDouble(value.toString().trim());
+            } catch (NumberFormatException e) {
+                return;
+            }
+            int dataRow = data.length - 1 - row;
+            if (!Double.isFinite(number) || Double.compare(data[dataRow][column - 1], number) == 0) {
+                return;
+            }
+            data[dataRow][column - 1] = number;
+            if (onCellEdit != null) {
+                onCellEdit.accept(this);
+            } else {
+                fireTableCellUpdated(row, column);
+            }
         }
 
         @Override
@@ -617,13 +814,15 @@ public class TuningTableView {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            if (column == 0) {
+                c.setBackground(isActiveValueCell() && row == activeRow()
+                    ? axisHighlight(table.getBackground()) : table.getBackground());
+                c.setForeground(table.getForeground());
+                return c;
+            }
             if (isSelected) {
                 c.setBackground(Color.ORANGE);
                 c.setForeground(Color.BLACK);
-                return c;
-            }
-            if (column == 0) {
-                c.setBackground(table.getBackground());
                 return c;
             }
 
