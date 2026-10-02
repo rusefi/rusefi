@@ -6603,3 +6603,38 @@ event 2 0 0 230.000000 1.277778
 event 3 0 1 361.000000 nan
 event 4 0 0 540.000000 1.347826
 event 5 0 1 581.000000 nan
+TRIGGERTYPE 99 16 TT_GM_LT1_OPTISPARK_8 0.00
+knownOperationMode=true
+operationMode=FOUR_STROKE_CAM_SENSOR
+crankBased=false
+hasSecondChannel=false
+isSecondWheelCam=false
+cycleDuration=720
+gapsCount=3
+syncEdge=Both
+isSynchronizationNeeded=true
+useOnlyPrimaryForSync=false
+shapeWithoutTdc=false
+gapFrom.0=0.120000
+gapTo.0=0.210000
+gapFrom.1=16.000000
+gapTo.1=27.000000
+gapFrom.2=0.065000
+gapTo.2=0.110000
+# end of meta section
+event 0 0 0 0.000000 0.162791
+event 1 0 1 75.999992 5.428571
+event 2 0 0 79.999992 0.052632
+event 3 0 1 166.000000 21.500000
+event 4 0 0 190.000000 0.279070
+event 5 0 1 256.000000 2.750000
+event 6 0 0 260.000000 0.060606
+event 7 0 1 346.000000 21.500000
+event 8 0 0 380.000000 0.395349
+event 9 0 1 436.000000 1.647059
+event 10 0 0 440.000000 0.071429
+event 11 0 1 526.000000 21.500000
+event 12 0 0 570.000000 0.511628
+event 13 0 1 616.000000 1.045455
+event 14 0 0 620.000000 0.086957
+event 15 0 1 706.000000 21.500000
