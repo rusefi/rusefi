@@ -32,6 +32,7 @@ Release template (copy/paste this for new release):
 
 ### Added
  - h-bridge as one GPIO #9673
+ - updater: keyboard table operation
 
 ### Fixed
  - overdwell protection causes Null-pointer deref and crash #9435

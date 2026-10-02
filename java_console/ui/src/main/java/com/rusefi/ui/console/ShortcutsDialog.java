@@ -36,6 +36,8 @@ final class ShortcutsDialog extends JDialog {
                     + "typing instead, so return focus to the table before using them.",
             "",
             "Arrow keys    Move the selected cell.",
+            "Mouse wheel over the grid  Move the active value cell up/down in its column.",
+            "                           Stops at the table edges; ignored while editing.",
             "Shift+arrows  Extend the selection.",
             "Ctrl+A        Select all cells.",
             "Ctrl+Space    Toggle the current cell's selection.",

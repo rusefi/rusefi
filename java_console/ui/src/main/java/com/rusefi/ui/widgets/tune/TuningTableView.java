@@ -18,6 +18,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -50,10 +51,11 @@ public class TuningTableView {
         table.setCellSelectionEnabled(true);
         table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         table.setToolTipText(viewMode
-            ? "Arrow keys to move; Shift+arrows to select; Ctrl+A to select all"
-            : "Arrows to move; Enter/F2 to edit; Enter to accept; Esc to cancel; Tab/Shift+Tab to accept and move");
+            ? "Arrows or mouse wheel to move; Shift+arrows to select; Ctrl+A to select all"
+            : "Arrows or mouse wheel to move; Enter/F2 to edit; Enter to accept; Esc to cancel; Tab/Shift+Tab to accept and move");
         installAxisHighlighting();
         installKeyboardEditing();
+        table.addMouseWheelListener(this::moveValueCellWithWheel);
 
         table.addMouseListener(new MouseAdapter() {
             @Override
@@ -314,6 +316,19 @@ public class TuningTableView {
         index = Math.floorMod(index + (backwards ? -1 : 1), cells);
         table.changeSelection(index / columns, index % columns + 1, false, false);
         table.requestFocusInWindow();
+    }
+
+    private void moveValueCellWithWheel(MouseWheelEvent event) {
+        // Handle the wheel here so the scroll pane doesn't also scroll independently.
+        event.consume();
+        if (table.isEditing() || !isActiveValueCell() || event.getWheelRotation() == 0) {
+            return;
+        }
+        int row = Math.max(0, Math.min(table.getRowCount() - 1, activeRow() + event.getWheelRotation()));
+        if (row != activeRow()) {
+            // changeSelection also scrolls the selected cell into view.
+            table.changeSelection(row, activeColumn(), false, false);
+        }
     }
 
     protected int showConfirmDialog(JPanel panel) {

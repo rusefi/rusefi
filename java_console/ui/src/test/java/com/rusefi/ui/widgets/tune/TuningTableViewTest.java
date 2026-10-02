@@ -13,6 +13,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -410,6 +411,77 @@ public class TuningTableViewTest {
             assertEquals(xNormal, headerBackground(table, 2));
             assertEquals(yNormal, cellBackground(table, 1, 0));
         });
+    }
+
+    @Test
+    public void testWheelMovesActiveCellAndStopsAtEdges() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            for (boolean viewMode : new boolean[]{false, true}) {
+                ConfigurationImage image = new ConfigurationImage(4);
+                TuningTableView view = editableView(viewMode, image);
+                AtomicInteger edits = new AtomicInteger();
+                view.setOnEdit(edits::incrementAndGet);
+                JTable table = findTable(view.getContent());
+                wheel(table, 1);
+                assertEquals(-1, table.getSelectedRow());
+
+                table.changeSelection(0, 2, false, false);
+                Color normalAxis = cellBackground(table, 1, 0);
+                wheel(table, 1);
+                assertTrue(table.isCellSelected(1, 2));
+                assertNotEquals(normalAxis, cellBackground(table, 1, 0));
+                assertEquals(normalAxis, cellBackground(table, 0, 0));
+                wheel(table, 3);
+                assertTrue(table.isCellSelected(1, 2));
+                wheel(table, -1);
+                assertTrue(table.isCellSelected(0, 2));
+                wheel(table, -3);
+                assertTrue(table.isCellSelected(0, 2));
+
+                if (!viewMode) {
+                    pressKey(table, "ENTER");
+                    JTextField editor = (JTextField) table.getEditorComponent();
+                    editor.setText("99");
+                    wheel(table, 1);
+                    assertTrue(table.isEditing());
+                    assertTrue(table.isCellSelected(0, 2));
+                    assertEquals("99", editor.getText());
+                    pressKey(editor, "ESCAPE");
+                }
+                assertEquals(0, edits.get());
+                assertArrayEquals(new byte[]{1, 2, 3, 4}, image.getContent());
+            }
+        });
+    }
+
+    @Test
+    public void testWheelKeepsActiveCellVisible() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            JTable table = findTable(new TuningTableView("Test").getContent());
+            Double[][] data = new Double[30][2];
+            for (Double[] row : data) {
+                java.util.Arrays.fill(row, 1.0);
+            }
+            table.setModel(new TuningTableView.TuningTableModel(data, null, null, 0));
+            JViewport viewport = (JViewport) table.getParent();
+            viewport.setSize(300, table.getRowHeight() * 3);
+            table.setSize(300, table.getRowHeight() * 30);
+            table.changeSelection(0, 2, false, false);
+            wheel(table, 10);
+            assertTrue(table.isCellSelected(10, 2));
+            assertTrue(viewport.getViewRect().contains(table.getCellRect(10, 2, false)));
+            wheel(table, -10);
+            assertTrue(table.isCellSelected(0, 2));
+            assertEquals(0, viewport.getViewPosition().y);
+        });
+    }
+
+    private void wheel(JTable table, int rotation) {
+        MouseWheelEvent event = new MouseWheelEvent(table, MouseEvent.MOUSE_WHEEL,
+            System.currentTimeMillis(), 0, 10, 10, 0, false,
+            MouseWheelEvent.WHEEL_UNIT_SCROLL, 3, rotation);
+        table.dispatchEvent(event);
+        assertTrue(event.isConsumed());
     }
 
     private TuningTableView editableView(boolean viewMode, ConfigurationImage image) {
