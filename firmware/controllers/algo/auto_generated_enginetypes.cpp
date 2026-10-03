@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Fri Oct 02 18:34:20 UTC 2026
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Sat Oct 03 02:13:53 UTC 2026
 // see also gen_config_and_enums.bat
 
 
@@ -376,6 +376,8 @@ const char *getTrigger_type_e(trigger_type_e value) {
 			return "TT_SUBARU_SVX_CAM_VVT";
 		case trigger_type_e::TT_SUBARU_SVX_CRANK_1:
 			return "TT_SUBARU_SVX_CRANK_1";
+		case trigger_type_e::TT_SUZUKI_36_2_2:
+			return "TT_SUZUKI_36_2_2";
 		case trigger_type_e::TT_SUZUKI_G13B:
 			return "TT_SUZUKI_G13B";
 		case trigger_type_e::TT_SUZUKI_G16B:

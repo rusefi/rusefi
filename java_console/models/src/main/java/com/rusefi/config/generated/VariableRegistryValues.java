@@ -1704,6 +1704,7 @@ public class VariableRegistryValues {
 	public static final int trigger_type_e_TT_SUBARU_SVX = 49;
 	public static final int trigger_type_e_TT_SUBARU_SVX_CAM_VVT = 64;
 	public static final int trigger_type_e_TT_SUBARU_SVX_CRANK_1 = 63;
+	public static final int trigger_type_e_TT_SUZUKI_36_2_2 = 100;
 	public static final int trigger_type_e_TT_SUZUKI_G13B = 66;
 	public static final int trigger_type_e_TT_SUZUKI_G16B = 95;
 	public static final int trigger_type_e_TT_SUZUKI_K6A = 50;
@@ -1714,7 +1715,7 @@ public class VariableRegistryValues {
 	public static final int trigger_type_e_TT_TOOTHED_WHEEL_60_2 = 8;
 	public static final int trigger_type_e_TT_TOYOTA_3_TOOTH_UZ = 91;
 	public static final int trigger_type_e_TT_TRI_TACH = 53;
-	public static final int trigger_type_e_TT_UNUSED = 100;
+	public static final int trigger_type_e_TT_UNUSED = 101;
 	public static final int trigger_type_e_TT_VIPER_V10_CRANK = 96;
 	public static final int trigger_type_e_TT_VVT_BARRA_3_PLUS_1 = 56;
 	public static final int trigger_type_e_TT_VVT_BOSCH_QUICK_START = 47;
@@ -1858,7 +1859,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2026.10.03.t-b-g.4122566909";
+	public static final String TS_SIGNATURE = "rusEFI master.2026.10.03.t-b-g.3917612640";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2224;
