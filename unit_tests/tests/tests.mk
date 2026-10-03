@@ -46,6 +46,7 @@ TESTS_SRC_CPP = \
 	tests/trigger/test_real_neon.cpp \
 	tests/trigger/test_real_gm_24x.cpp \
 	tests/trigger/test_gm_lt1_optispark.cpp \
+	tests/trigger/test_suzuki_36_2_2.cpp \
 	tests/trigger/test_real_nissan_hr.cpp \
 	tests/trigger/test_real_nissan_hr_vvt.cpp \
 	tests/trigger/test_real_k24a2.cpp \

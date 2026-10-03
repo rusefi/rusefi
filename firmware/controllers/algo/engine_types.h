@@ -270,6 +270,8 @@ enum class trigger_type_e : uint32_t {
 	// GM Gen II LT1 Optispark, low-resolution track only (one cycle per cam revolution).
 	TT_GM_LT1_OPTISPARK_8 = 99,
 
+	TT_SUZUKI_36_2_2 = 100,
+
 	// TL,DR https://github.com/rusefi/rusefi/commit/523805138589585cc8889d6afd9305d120180902 example of new trigger commit
 	//
 	// before you add a new trigger: did you have a chance to capture digital signal with a logic analyzer?
@@ -281,7 +283,7 @@ enum class trigger_type_e : uint32_t {
 	//
 	// Another point: once you add a new trigger, run get_trigger_images.bat which would run rusefi_test.exe from unit_tests
 	//
-	TT_UNUSED = 100, // this is used if we want to iterate over all trigger types
+	TT_UNUSED = 101, // this is used if we want to iterate over all trigger types
 };
 
 typedef enum {
