@@ -55,6 +55,8 @@ void flashBarrier() {
 
 size_t flashSectorSize(flashsector_t) { return 128 * 1024; }
 
+#include "../../firmware/bootloader/openblt_chibios/openblt_flash.cpp"
+
 static void reset() {
     flashRegisters = {};
     powerRegisters = {};
@@ -185,6 +187,26 @@ int main() {
     assert(intFlashErase(end - 32, 64) == FLASH_RETURN_BAD_FLASH);
     assert(programmingBanks.empty());
     assert(erasedSectors.empty());
+    checkLocked();
+
+    // Exercise OpenBLT through the real low-level driver, including failures.
+    reset();
+    FlashInit();
+    uint8_t update[64] = {1, 2, 3, 4};
+    assert(FlashWrite(app, sizeof(update), update) == BLT_TRUE);
+    assert(FlashDone() == BLT_TRUE);
+    assert((programmingBanks == std::vector<unsigned>{1, 1}));
+    assert(memcmp(reinterpret_cast<void*>(app), update, sizeof(update)) == 0);
+    assert(FlashErase(app, sizeof(update)) == BLT_TRUE);
+    assert((erasedSectors == std::vector<std::pair<unsigned, unsigned>>{{1, 1}}));
+    checkLocked();
+
+    reset();
+    FlashInit();
+    programError = FLASH_SR_WRPERR;
+    assert(FlashWrite(app, sizeof(update), update) == BLT_FALSE);
+    assert(FlashDone() == BLT_FALSE);
+    assert(programmingBanks.size() == 1);
     checkLocked();
 
     std::cout << "Flash driver: bank selection, erase mapping, errors and boundaries passed\n";

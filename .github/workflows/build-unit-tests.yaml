@@ -49,6 +49,9 @@ jobs:
       # NOTE: on mac, this is actually symlink'd to clang, not gcc, but that's ok - we want to build on both
       run: gcc -v
 
+    - name: Test STM32 flash and OpenBLT drivers
+      run: python3 unit_tests/stm32_flash/test_flash.py
+
     - name: Handle docs-enums separately just to make github logs more readable
       working-directory: ./unit_tests/
       run: make -j4 docs-enums

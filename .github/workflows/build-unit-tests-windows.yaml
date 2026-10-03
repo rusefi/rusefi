@@ -40,6 +40,9 @@ jobs:
     - name: Print make version
       run: make -v
 
+    - name: Test STM32 flash and OpenBLT drivers
+      run: python3 unit_tests/stm32_flash/test_flash.py
+
     - name: Handle docs-enums separately just to make github logs more readable
       working-directory: ./unit_tests/
       run: make -j4 docs-enums
