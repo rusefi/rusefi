@@ -81,6 +81,7 @@ public:
 	static void stopBus(size_t idx);
 	/**
 	 * Stop accepting new frames on this bus and discard its queued frames.
+	 * Submissions fail without a configuration error until setDevice restores it.
 	 */
 	static void removeDevice(size_t idx);
 	// Handle one bus without waiting for a hardware mailbox. False means no

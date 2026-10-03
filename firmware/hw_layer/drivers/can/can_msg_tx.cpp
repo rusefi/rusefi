@@ -57,6 +57,7 @@ struct CanTxBusState {
 	fifo_buffer<CanTxQueuedFrame, CAN_TX_QUEUE_CAPACITY> queue;
 	CanTxQueuedFrame inFlight;
 	bool hasInFlight = false;
+	bool removed = false;
 	uint32_t inFlightStartMs = 0;
 	bool inFlightLogged = false;
 	int dropCount = 0;
@@ -179,6 +180,7 @@ static void resetBusI(size_t idx) {
 	CanTxBusServiceLock serviceLock(txBuses[idx]);
 	chSysLock();
 	s_devices[idx] = device;
+	txBuses[idx].removed = false;
 	notifyWorkI();
 	rescheduleAfterWakeS();
 	chSysUnlock();
@@ -205,6 +207,7 @@ static void resetBusI(size_t idx) {
 	// Changing the generation tells waiting senders that their bus was reset.
 	chSysLock();
 	s_devices[idx] = nullptr;
+	txBuses[idx].removed = true;
 	resetBusI(idx);
 	rescheduleAfterWakeS();
 	chSysUnlock();
@@ -435,6 +438,13 @@ bool CanTxMessage::submit() {
 
 	chSysLock();
 	auto& bus = txBuses[busIndex];
+	// Device removal is intentional during controller reconfiguration or a
+	// board's exclusive diagnostic transmission. Periodic producers keep
+	// running, so reject their frames until setDevice restores this bus.
+	if (bus.removed) {
+		chSysUnlock();
+		return false;
+	}
 	if (!s_devices[busIndex]) {
 		chSysUnlock();
 		criticalError("Send: CAN%d device not configured %s %x", busIndex + 1, getCanCategory(category),
