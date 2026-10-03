@@ -18,44 +18,40 @@
 #include "flash_int.h"
 #include <string.h>
 
+// Keep sector numbers relative to the beginning of flash. The H743 application
+// and OpenBLT updates use bank 1, while settings normally use bank 2.
+struct FlashBankRegisters {
+	volatile uint32_t& cr;
+	volatile uint32_t& sr;
+	volatile uint32_t& keyr;
 #ifdef STM32H7XX
-	#undef FLASH_BASE
-
-	#ifdef STM32H743xx
-		// Use bank 2 on H743
-		#define FLASH_CR FLASH->CR2
-		#define FLASH_SR FLASH->SR2
-		#define FLASH_KEYR FLASH->KEYR2
-		#define FLASH_CCR FLASH->CCR2
-
-		// This is the start of the second bank, since H7 sector numbers are bank relative
-		#define FLASH_BASE 0x08100000
-	#endif
-
-	#ifdef STM32H723xx
-		// H723 is single banked
-		#define FLASH_CR FLASH->CR1
-		#define FLASH_SR FLASH->SR1
-		#define FLASH_KEYR FLASH->KEYR1
-		#define FLASH_CCR FLASH->CCR1
-
-		// This is the start of the bank, since H7 sector numbers are bank relative
-		#define FLASH_BASE 0x08000000
-	#endif
-
-	// I have no idea why ST changed the register name from STRT -> START
-	#define FLASH_CR_STRT FLASH_CR_START
-
-	// QW bit supercedes the older BSY bit
-	#define intFlashWaitWhileBusy() do { __DSB(); } while (FLASH_SR & FLASH_SR_QW);
-#else
-	#define FLASH_CR FLASH->CR
-	#define FLASH_SR FLASH->SR
-	#define FLASH_KEYR FLASH->KEYR
-
-	// Wait for the flash operation to finish
-	#define intFlashWaitWhileBusy() do { __DSB(); } while (FLASH->SR & FLASH_SR_BSY);
+	volatile uint32_t& ccr;
 #endif
+};
+
+static FlashBankRegisters intFlashBank([[maybe_unused]] flashaddr_t address) {
+#ifdef STM32H7XX
+#ifdef STM32H743xx
+	if (address >= FLASH_BANK2_BASE) {
+		return {FLASH->CR2, FLASH->SR2, FLASH->KEYR2, FLASH->CCR2};
+	}
+#endif
+	return {FLASH->CR1, FLASH->SR1, FLASH->KEYR1, FLASH->CCR1};
+#else
+	return {FLASH->CR, FLASH->SR, FLASH->KEYR};
+#endif
+}
+
+static void intFlashWaitWhileBusy(const FlashBankRegisters& bank) {
+	// Complete outstanding stores before polling the controller.
+	do {
+		__DSB();
+#ifdef STM32H7XX
+	} while (bank.sr & FLASH_SR_QW);
+#else
+	} while (bank.sr & FLASH_SR_BSY);
+#endif
+}
 
 flashaddr_t intFlashSectorBegin(flashsector_t sector) {
 	flashaddr_t address = FLASH_BASE;
@@ -77,17 +73,17 @@ flashsector_t intFlashSectorAt(flashaddr_t address) {
 	return sector;
 }
 
-static void intFlashClearErrors() {
+static void intFlashClearErrors(const FlashBankRegisters& bank) {
 #ifdef STM32H7XX
-	FLASH_CCR = 0xffffffff;
+	bank.ccr = 0xffffffff;
 #else
-	FLASH_SR = 0x0000ffff;
+	bank.sr = 0x0000ffff;
 #endif
 	__DSB();
 }
 
-static int intFlashCheckErrors() {
-	uint32_t sr = FLASH_SR;
+static int intFlashCheckErrors(const FlashBankRegisters& bank) {
+	uint32_t sr = bank.sr;
 
 #ifdef FLASH_SR_OPERR
 	if (sr & FLASH_SR_OPERR)
@@ -128,6 +124,17 @@ static int intFlashCheckErrors() {
 		return FLASH_RETURN_CRCERROR;
 #endif
 
+#ifdef STM32H7XX
+	if (sr & FLASH_SR_STRBERR) {
+		return FLASH_RETURN_ALIGNERROR;
+	}
+	if (sr & FLASH_SR_INCERR) {
+		return FLASH_RETURN_PSEQERROR;
+	}
+	if (sr & FLASH_SR_DBECCERR) {
+		return FLASH_RETURN_BAD_FLASH;
+	}
+#endif
 	return FLASH_RETURN_SUCCESS;
 }
 
@@ -136,17 +143,18 @@ static int intFlashCheckErrors() {
  * @return HAL_SUCCESS  Unlock was successful.
  * @return HAL_FAILED    Unlock failed.
  */
-static bool intFlashUnlock(void) {
+static bool intFlashUnlock(const FlashBankRegisters& bank) {
 	/* Check if unlock is really needed */
-	if (!(FLASH_CR & FLASH_CR_LOCK))
+	if (!(bank.cr & FLASH_CR_LOCK))
 		return HAL_SUCCESS;
 
 	/* Write magic unlock sequence */
-	FLASH_KEYR = 0x45670123;
-	FLASH_KEYR = 0xCDEF89AB;
+	bank.keyr = 0x45670123;
+	bank.keyr = 0xCDEF89AB;
+	__DSB();
 
 	/* Check if unlock was successful */
-	if (FLASH_CR & FLASH_CR_LOCK)
+	if (bank.cr & FLASH_CR_LOCK)
 		return HAL_FAILED;
 	return HAL_SUCCESS;
 }
@@ -154,7 +162,9 @@ static bool intFlashUnlock(void) {
 /**
  * @brief Lock the flash memory for write access.
  */
-#define intFlashLock() { FLASH_CR |= FLASH_CR_LOCK; }
+static void intFlashLock(const FlashBankRegisters& bank) {
+	bank.cr |= FLASH_CR_LOCK;
+}
 
 #ifdef STM32F7XX
 static bool isDualBank(void) {
@@ -178,8 +188,15 @@ static bool isDualBank(void) {
  * @return FLASH_RETURN_NO_PERMISSION   Access denied.
  */
 static int intFlashSectorErase(flashsector_t sector) {
+	const auto bank = intFlashBank(intFlashSectorBegin(sector));
 	int ret;
 	uint8_t sectorRegIdx = sector;
+#ifdef STM32H743xx
+	// H743 has eight 128 KiB sectors per bank; SNB is bank relative.
+	if (intFlashSectorBegin(sector) >= FLASH_BANK2_BASE) {
+		sectorRegIdx -= (FLASH_BANK2_BASE - FLASH_BASE) / flashSectorSize(sector);
+	}
+#endif
 #ifdef STM32F7XX
 	// On dual bank STM32F7, sector index doesn't match register value.
 	// High bit indicates bank, low 4 bits indicate sector within bank.
@@ -195,18 +212,18 @@ static int intFlashSectorErase(flashsector_t sector) {
 #endif
 
 	/* Unlock flash for write access */
-	if (intFlashUnlock() == HAL_FAILED)
+	if (intFlashUnlock(bank) == HAL_FAILED)
 		return FLASH_RETURN_NO_PERMISSION;
 
 	/* Wait for any busy flags. */
-	intFlashWaitWhileBusy();
+	intFlashWaitWhileBusy(bank);
 
 	/* Clearing error status bits.*/
-	intFlashClearErrors();
+	intFlashClearErrors(bank);
 
 	/* Setup parallelism before any program/erase */
-	FLASH_CR &= ~FLASH_CR_PSIZE_MASK;
-	FLASH_CR |= FLASH_CR_PSIZE_VALUE;
+	bank.cr &= ~FLASH_CR_PSIZE_MASK;
+	bank.cr |= FLASH_CR_PSIZE_VALUE;
 
 	/* Start deletion of sector.
 	 * SNB(4:1) is defined as:
@@ -218,24 +235,27 @@ static int intFlashSectorErase(flashsector_t sector) {
 	 * ...
 	 * 11011 sector 23 (the end of 2nd bank, 2Mb border)
 	 * others not allowed */
-	FLASH_CR &= ~FLASH_CR_SNB_Msk;
-	FLASH_CR |= (sectorRegIdx << FLASH_CR_SNB_Pos) & FLASH_CR_SNB_Msk;
+	bank.cr &= ~FLASH_CR_SNB_Msk;
+	bank.cr |= (sectorRegIdx << FLASH_CR_SNB_Pos) & FLASH_CR_SNB_Msk;
 	/* sector erase */
-	FLASH_CR |= FLASH_CR_SER;
+	bank.cr |= FLASH_CR_SER;
 	/* start erase operation */
-	FLASH_CR |= FLASH_CR_STRT;
+#ifdef STM32H7XX
+	bank.cr |= FLASH_CR_START;
+#else
+	bank.cr |= FLASH_CR_STRT;
+#endif
 
 	/* Wait until it's finished. */
-	intFlashWaitWhileBusy();
+	intFlashWaitWhileBusy(bank);
 
 	/* Sector erase flag does not clear automatically. */
-	FLASH_CR &= ~FLASH_CR_SER;
+	bank.cr &= ~FLASH_CR_SER;
 
 	/* Lock flash again */
-	intFlashLock()
-	;
+	intFlashLock(bank);
 
-	ret = intFlashCheckErrors();
+	ret = intFlashCheckErrors(bank);
 	if (ret != FLASH_RETURN_SUCCESS)
 		return ret;
 
@@ -277,6 +297,15 @@ static bool intFlashGetPVDStatus() {
 }
 
 int intFlashErase(flashaddr_t address, size_t size) {
+	if (size == 0) {
+		return FLASH_RETURN_SUCCESS;
+	}
+#ifdef STM32H7XX
+	const size_t flashSize = flashSizeKb() * 1024;
+	if (address < FLASH_BASE || address - FLASH_BASE >= flashSize || size > flashSize - (address - FLASH_BASE)) {
+		return FLASH_RETURN_BAD_FLASH;
+	}
+#endif
 	flashaddr_t endAddress = address + size - 1;
 	while (address <= endAddress) {
 		flashsector_t sector = intFlashSectorAt(address);
@@ -350,74 +379,74 @@ int intFlashRead(flashaddr_t source, char* destination, size_t size) {
 
 #ifdef STM32H7XX
 int intFlashWrite(flashaddr_t address, const char* buffer, size_t size) {
-	intFlashSetPVD();
-	if (!intFlashGetPVDStatus()) {
-		return FLASH_RETURN_LOWVOLTAGEERROR;
+	constexpr size_t flashWordSize = 32;
+	if (size == 0) {
+		return FLASH_RETURN_SUCCESS;
+	}
+	if (address % flashWordSize != 0) {
+		return FLASH_RETURN_ALIGNERROR;
+	}
+	const size_t flashSize = flashSizeKb() * 1024;
+	if (address < FLASH_BASE || address - FLASH_BASE >= flashSize || size > flashSize - (address - FLASH_BASE)) {
+		return FLASH_RETURN_BAD_FLASH;
 	}
 
-	/* Unlock flash for write access */
-	if (intFlashUnlock() == HAL_FAILED)
-		return FLASH_RETURN_NO_PERMISSION;
-
-	/* Wait for any busy flags */
-	intFlashWaitWhileBusy();
-
-	/* Setup parallelism before program */
-	FLASH_CR &= ~FLASH_CR_PSIZE_MASK;
-	FLASH_CR |= FLASH_CR_PSIZE_VALUE;
-
-	// Round up to the next number of full 32 byte words
-	size_t flashWordCount = (size - 1) / 32 + 1;
-
-	// Read units of flashdata_t from the buffer, writing to flash
-	const flashdata_t* pRead = (const flashdata_t*)buffer;
-	flashdata_t* pWrite = (flashdata_t*)address;
-
-	for (size_t word = 0; word < flashWordCount; word++) {
+	intFlashSetPVD();
+	while (size > 0) {
 		if (!intFlashGetPVDStatus()) {
-			intFlashLock();
 			return FLASH_RETURN_LOWVOLTAGEERROR;
 		}
 
-		/* Enter flash programming mode */
-		FLASH_CR |= FLASH_CR_PG;
+		// Select again for each word so a write may cross the bank boundary.
+		const auto bank = intFlashBank(address);
+		if (intFlashUnlock(bank) == HAL_FAILED) {
+			return FLASH_RETURN_NO_PERMISSION;
+		}
+		intFlashWaitWhileBusy(bank);
+		intFlashClearErrors(bank);
+		bank.cr = (bank.cr & ~FLASH_CR_PSIZE_MASK) | FLASH_CR_PSIZE_VALUE;
 
-		// Flush pipelines
+		// Pad the final flash word without reading past the caller's buffer.
+		// memcpy also permits an unaligned source buffer.
+		uint32_t data[flashWordSize / sizeof(uint32_t)];
+		memset(data, 0xff, sizeof(data));
+		const size_t chunk = size < flashWordSize ? size : flashWordSize;
+		memcpy(data, buffer, chunk);
+
+		bank.cr |= FLASH_CR_PG;
 		__ISB();
 		__DSB();
 
-		static_assert(sizeof(*pWrite) == 4, "Driver supports only 32bit PSIZE");
+		volatile uint32_t* destination = reinterpret_cast<volatile uint32_t*>(address);
+		for (size_t i = 0; i < flashWordSize / sizeof(uint32_t); i++) {
+			destination[i] = data[i];
+		}
+		__ISB();
+		__DSB();
+		intFlashWaitWhileBusy(bank);
+		bank.cr &= ~FLASH_CR_PG;
+		__DSB();
+		__ISB();
 
-		// Write 32 bytes/256bits
-		for (size_t i = 0; i < 8; i++) {
-			*pWrite++ = *pRead++;
+		const int result = intFlashCheckErrors(bank);
+		intFlashLock(bank);
+		if (result != FLASH_RETURN_SUCCESS) {
+			return result;
 		}
 
-		// Flush pipelines
-		__ISB();
-		__DSB();
-
-		/* Wait for completion */
-		intFlashWaitWhileBusy();
-
-		/* Exit flash programming mode */
-		FLASH_CR &= ~FLASH_CR_PG;
-
-		// Flush pipelines
-		__ISB();
-		__DSB();
+		address += flashWordSize;
+		buffer += chunk;
+		size -= chunk;
 	}
-
-	/* Lock flash again */
-	intFlashLock();
 
 	return FLASH_RETURN_SUCCESS;
 }
 
 #else // not STM32H7XX
 static int intFlashWriteData(flashaddr_t address, const flashdata_t data) {
+	const auto bank = intFlashBank(address);
 	/* Clearing error status bits.*/
-	intFlashClearErrors();
+	intFlashClearErrors(bank);
 
 	/* Enter flash programming mode */
 	FLASH->CR |= FLASH_CR_PG;
@@ -432,15 +461,16 @@ static int intFlashWriteData(flashaddr_t address, const flashdata_t data) {
 #endif
 
 	/* Wait for completion */
-	intFlashWaitWhileBusy();
+	intFlashWaitWhileBusy(bank);
 
 	/* Exit flash programming mode */
 	FLASH->CR &= ~FLASH_CR_PG;
 
-	return intFlashCheckErrors();
+	return intFlashCheckErrors(bank);
 }
 
 int intFlashWrite(flashaddr_t address, const char* buffer, size_t size) {
+	const auto bank = intFlashBank(address);
 	intFlashSetPVD();
 	if (!intFlashGetPVDStatus()) {
 		return FLASH_RETURN_LOWVOLTAGEERROR;
@@ -449,11 +479,11 @@ int intFlashWrite(flashaddr_t address, const char* buffer, size_t size) {
 	int ret = FLASH_RETURN_SUCCESS;
 
 	/* Unlock flash for write access */
-	if (intFlashUnlock() == HAL_FAILED)
+	if (intFlashUnlock(bank) == HAL_FAILED)
 		return FLASH_RETURN_NO_PERMISSION;
 
 	/* Wait for any busy flags */
-	intFlashWaitWhileBusy();
+	intFlashWaitWhileBusy(bank);
 
 	/* Setup parallelism before any program/erase */
 	FLASH->CR &= ~FLASH_CR_PSIZE_MASK;
@@ -461,7 +491,7 @@ int intFlashWrite(flashaddr_t address, const char* buffer, size_t size) {
 
 	while (size) {
 		if (!intFlashGetPVDStatus()) {
-			intFlashLock();
+			intFlashLock(bank);
 			return FLASH_RETURN_LOWVOLTAGEERROR;
 		}
 
@@ -522,8 +552,7 @@ int intFlashWrite(flashaddr_t address, const char* buffer, size_t size) {
 
 exit:
 	/* Lock flash again */
-	intFlashLock()
-	;
+	intFlashLock(bank);
 
 	return ret;
 }

@@ -13,6 +13,7 @@ extern "C" {
 
 static blt_int8u flashBuffer[FLASH_ECC_LINE_SIZE];
 static blt_addr flashAddr = 0x0;
+static bool flashWriteFailed = false;
 
 #define FLASH_WRITE_STEP		FLASH_ECC_LINE_SIZE
 #define FLASH_WRITE_ADDR_MASK	(~(FLASH_WRITE_STEP - 1))
@@ -25,23 +26,32 @@ static void FlashBufferReset()
 
 static blt_bool FlashBufferFlush()
 {
+	if (flashWriteFailed) {
+		return BLT_FALSE;
+	}
 	if (flashAddr == 0x0) {
 		return BLT_TRUE;
 	}
 
 	int result = intFlashWrite(flashAddr, (const char*)flashBuffer, sizeof(flashBuffer));
 
+	flashWriteFailed = result != FLASH_RETURN_SUCCESS;
 	FlashBufferReset();
 
-	return (result == FLASH_RETURN_SUCCESS) ? BLT_TRUE : BLT_FALSE;
+	return flashWriteFailed ? BLT_FALSE : BLT_TRUE;
 }
 
 static blt_bool FlashBufferedWrite(blt_addr addr, blt_int32u len, blt_int8u *data)
 {
+	if (flashWriteFailed) {
+		return BLT_FALSE;
+	}
 	while (len) {
 		if ((addr & FLASH_WRITE_ADDR_MASK) != flashAddr) {
 			// crossing ECC line boundary
-			FlashBufferFlush();
+			if (FlashBufferFlush() == BLT_FALSE) {
+				return BLT_FALSE;
+			}
 
 			flashAddr = addr & FLASH_WRITE_ADDR_MASK;
 		}
@@ -63,6 +73,7 @@ static blt_bool FlashBufferedWrite(blt_addr addr, blt_int32u len, blt_int8u *dat
 void FlashInit() {
 	// Flash already init by ChibiOS
 #ifdef STM32H7XX
+	flashWriteFailed = false;
 	FlashBufferReset();
 #endif
 }
@@ -107,9 +118,10 @@ blt_bool FlashErase(blt_addr addr, blt_int32u len) {
 
 blt_bool FlashDone() {
 #ifdef STM32H7XX
-	FlashBufferFlush();
-#endif
+	return FlashBufferFlush();
+#else
 	return BLT_TRUE;
+#endif
 }
 
 blt_bool FlashWriteChecksum() {
