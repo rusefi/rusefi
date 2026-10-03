@@ -14,6 +14,9 @@ DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE -DSTM32_ADC_USE_ADC3=TRUE
 DDEFS += -DEFI_MAX_31855=TRUE
 
 #we are low on flash
+# The embedded USB INI disk costs 136 KiB. Use the INI from the firmware bundle.
+# See docs/firmware-flash-usage.md for measured savings and other options.
+DDEFS += -DEFI_EMBED_INI_MSD=FALSE
 DDEFS += -DEFI_LOGIC_ANALYZER=FALSE
 DDEFS += -DEFI_MISFIRE_DETECTION=FALSE
 DDEFS += -DEFI_HPFP=FALSE
