@@ -17,6 +17,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.HierarchyBoundsAdapter;
+import java.awt.event.HierarchyEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -32,6 +34,7 @@ public class TuningTableView {
     private final Surface3DView surface3DView = new Surface3DView();
     private final Surface3DView mini3DView = new Surface3DView();
     private final JPanel gridPanel = new JPanel(new BorderLayout());
+    private final JScrollPane tableScrollPane = new JScrollPane(table);
     private boolean full3D;
     private boolean previewEligible;
     private final CardLayout cardLayout = new CardLayout();
@@ -87,7 +90,7 @@ public class TuningTableView {
         mini3DView.setPreferredSize(new Dimension(320, 160));
         mini3DView.setToolTipText("3D preview - drag to rotate; select 3D view for a larger view");
         mini3DView.setVisible(false);
-        gridPanel.add(new JScrollPane(table), BorderLayout.CENTER);
+        gridPanel.add(tableScrollPane, BorderLayout.CENTER);
         gridPanel.add(mini3DView, BorderLayout.SOUTH);
         tableContainer.add(gridPanel, "table");
         tableContainer.add(surface3DView, "3d");
@@ -188,16 +191,53 @@ public class TuningTableView {
                 updatePreviewVisibility();
             }
         });
+        tableContainer.addHierarchyBoundsListener(new HierarchyBoundsAdapter() {
+            @Override
+            public void ancestorResized(HierarchyEvent e) {
+                // Ancestor layout may not yet have updated the viewport's extent.
+                SwingUtilities.invokeLater(() -> updatePreviewVisibility());
+            }
+        });
+        tableContainer.addHierarchyListener(e -> {
+            if ((e.getChangeFlags() & (HierarchyEvent.PARENT_CHANGED | HierarchyEvent.SHOWING_CHANGED)) != 0) {
+                SwingUtilities.invokeLater(() -> updatePreviewVisibility());
+            }
+        });
     }
 
     private void updatePreviewVisibility() {
         // Keep the grid usable in small dialogs. Large tables can scroll above the preview.
         int gridHeight = Math.min(320, table.getRowCount() * table.getRowHeight())
             + table.getTableHeader().getPreferredSize().height;
+        int availableHeight = tableContainer.getHeight();
+        JViewport viewport = (JViewport) SwingUtilities.getAncestorOfClass(JViewport.class, tableContainer);
+        if (viewport != null) {
+            // Scrollable dialogs retain preferred height instead of filling a tall viewport.
+            // Measure from the table's top in the dialog, independent of scrolling position.
+            Point top = SwingUtilities.convertPoint(tableContainer, 0, 0, viewport.getView());
+            availableHeight = viewport.getExtentSize().height - Math.max(0, top.y);
+        }
         boolean visible = previewEligible && !full3D && tableContainer.getWidth() >= 320
-            && tableContainer.getHeight() >= gridHeight + 160;
+            && availableHeight >= gridHeight + 160;
+        boolean sizeChanged = false;
+        if (visible) {
+            int previewHeight = availableHeight - gridHeight;
+            if (mini3DView.getPreferredSize().height != previewHeight
+                || tableScrollPane.getPreferredSize().height != gridHeight) {
+                mini3DView.setPreferredSize(new Dimension(320, previewHeight));
+                tableScrollPane.setPreferredSize(new Dimension(
+                    tableScrollPane.getPreferredSize().width, gridHeight));
+                sizeChanged = true;
+            }
+        } else if (tableScrollPane.isPreferredSizeSet()) {
+            tableScrollPane.setPreferredSize(null);
+            sizeChanged = true;
+        }
         if (mini3DView.isVisible() != visible) {
             mini3DView.setVisible(visible);
+            sizeChanged = true;
+        }
+        if (sizeChanged) {
             gridPanel.revalidate();
             gridPanel.repaint();
         }

@@ -295,6 +295,12 @@ Build commands, host callback tests, and hardware checks: [H7 ADC mux](docs/h7-a
 
 ## Console keyboard shortcuts
 
+Console calibration dialogs use ScrollablePanel, which tracks viewport width
+but not height. A table can therefore retain its preferred height inside a
+much taller viewport. Space-dependent table UI must consult the outer
+JViewport extent (and table offset within its view), not just the table's own
+height; re-evaluate after ancestor resize/layout as well as local resize.
+
 - Whenever Console keyboard shortcuts are added, changed, or removed, update the user-facing legend in `java_console/ui/src/main/java/com/rusefi/ui/console/ShortcutsDialog.java` in the same change. Describe the action, focus/context restrictions, and relevant modifiers; keep the corresponding button/menu tooltips and accelerators consistent with the legend.
 
 ## Java Version Constants

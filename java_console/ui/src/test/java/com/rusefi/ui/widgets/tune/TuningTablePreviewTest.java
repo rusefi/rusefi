@@ -3,9 +3,14 @@ package com.rusefi.ui.widgets.tune;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.IniFileMetaInfoImpl;
+import com.opensr5.ini.RawIniFile;
 import com.opensr5.ini.TableModel;
 import com.opensr5.ini.field.ArrayIniField;
 import com.rusefi.config.FieldType;
+import com.rusefi.ui.util.ScrollablePanel;
+import com.rusefi.ini.reader.IniFileReaderUtil;
+import com.rusefi.tune.xml.Msq;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
@@ -19,6 +24,70 @@ import static org.mockito.Mockito.*;
 
 class TuningTablePreviewTest {
     @Test
+    void sandboxIgnitionTableShowsPreviewInTallViewport() throws Exception, com.rusefi.ini.reader.IniParsingException {
+        IniFileModel ini;
+        try (java.io.InputStream stream = getClass().getResourceAsStream("/january.ini")) {
+            RawIniFile raw = IniFileReaderUtil.read(stream, "january.ini");
+            ini = IniFileReaderUtil.readIniFile(raw, "january.ini", new IniFileMetaInfoImpl(raw));
+        }
+        ConfigurationImage image = Msq.readTune(new java.io.File(
+            getClass().getResource("/january_tune.msq").toURI()).getAbsolutePath()).asImage(ini);
+        SwingUtilities.invokeAndWait(() -> {
+            TuningTableView view = new TuningTableView("Ignition advance");
+            view.displayTable(ini, "ignitionTableTbl", image);
+            ScrollablePanel dialog = new ScrollablePanel();
+            dialog.setLayout(new BoxLayout(dialog, BoxLayout.Y_AXIS));
+            dialog.add(view.getContent());
+            JScrollPane scroll = new JScrollPane(dialog);
+            scroll.setSize(1100, 800);
+            scroll.doLayout();
+            scroll.getViewport().doLayout();
+            dialog.doLayout();
+            view.getContent().doLayout();
+            JPanel cards = (JPanel) view.getContent().getComponent(1);
+            resize(cards, cards.getWidth(), cards.getHeight());
+            JPanel grid = (JPanel) cards.getComponent(0);
+            assertTrue(grid.getComponent(1).isVisible(), "The sandbox's real 16x16 ignition table must have a preview");
+            invalidateTree(scroll);
+            layoutTree(scroll);
+            Surface3DView preview = (Surface3DView) grid.getComponent(1);
+            Point bottom = SwingUtilities.convertPoint(preview, 0, preview.getHeight(), dialog);
+            assertEquals(scroll.getViewport().getExtentSize().height, bottom.y,
+                "Preview must fill the viewport below the table");
+            assertTrue(preview.getHeight() > 160);
+        });
+    }
+
+    @Test
+    void scrollableDialogHasSpaceBeyondTablesPreferredHeight() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            TuningTableView view = new TuningTableView("Ignition advance");
+            loadTable(view, true);
+            ScrollablePanel dialog = new ScrollablePanel();
+            dialog.setLayout(new BoxLayout(dialog, BoxLayout.Y_AXIS));
+            dialog.add(view.getContent());
+            JScrollPane scroll = new JScrollPane(dialog);
+            scroll.setSize(900, 800);
+            scroll.doLayout();
+            scroll.getViewport().doLayout();
+            dialog.doLayout();
+            view.getContent().doLayout();
+            JPanel cards = (JPanel) view.getContent().getComponent(1);
+            // Emulate the compact preferred height of a table inside a scrollable dialog.
+            resize(cards, 800, 180);
+            JPanel grid = (JPanel) cards.getComponent(0);
+            assertTrue(grid.getComponent(1).isVisible(),
+                "The outer viewport has space even though the table has a compact height");
+            scroll.setSize(900, 180);
+            scroll.doLayout();
+            scroll.getViewport().doLayout();
+            resize(cards, 800, 400);
+            assertFalse(grid.getComponent(1).isVisible(),
+                "A previously expanded table must not keep the preview visible in a short viewport");
+        });
+    }
+
+    @Test
     void previewFollowsAvailableSpaceAndViewMode() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
             TuningTableView view = new TuningTableView("VE");
@@ -28,6 +97,12 @@ class TuningTablePreviewTest {
             loadTable(view, true);
             resize(cards, 600, 400);
             assertTrue(preview.isVisible());
+            grid.doLayout();
+            int shortHeight = preview.getHeight();
+            resize(cards, 600, 700);
+            grid.doLayout();
+            assertEquals(300, preview.getHeight() - shortHeight,
+                "All additional height should go to the surface");
             JCheckBox toggle = findToggle(view.getContent());
             assertNotNull(toggle);
             toggle.doClick();
@@ -52,6 +127,24 @@ class TuningTablePreviewTest {
         for (ComponentListener listener : cards.getComponentListeners()) {
             listener.componentResized(new ComponentEvent(cards, ComponentEvent.COMPONENT_RESIZED));
         }
+    }
+
+    private static void layoutTree(Container container) {
+        container.doLayout();
+        for (Component component : container.getComponents()) {
+            if (component instanceof Container) {
+                layoutTree((Container) component);
+            }
+        }
+    }
+
+    private static void invalidateTree(Container container) {
+        for (Component component : container.getComponents()) {
+            if (component instanceof Container) {
+                invalidateTree((Container) component);
+            }
+        }
+        container.invalidate();
     }
 
     private static JCheckBox findToggle(Container container) {
