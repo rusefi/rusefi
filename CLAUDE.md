@@ -306,6 +306,14 @@ height; re-evaluate after ancestor resize/layout as well as local resize.
 
 ## Java Version Constants
 
+TunerStudio's bundled runtime is Java 8. Gradle's Java 11 toolchain with
+source/targetCompatibility=8 still permits newer JDK API calls, producing
+Java 8 bytecode that crashes at runtime. The INI module uses --release 8 and
+has a java8Test task; pass -Pjava8Executable=<TunerStudio runtime8/bin/java.exe>
+to test with the installed runtime. The plugin launcher compares both exact
+file size and timestamp against the server, so a locally rebuilt cached body
+JAR is replaced on the next online plugin launch until the fix is published.
+
 - When modifying Java code (`java_console/`, `java_tools/`), bump `UiVersion.CONSOLE_VERSION` in `java_tools/version/src/main/java/com/rusefi/UiVersion.java` to the current date in `YYYYMMDD` format as part of the same change (no-op if it already shows today's date).
 - `Autoupdate.AUTOUPDATE_VERSION` in `java_console/autoupdate/src/main/java/com/rusefi/autoupdate/Autoupdate.java` is a separate, manually managed version for the updater executable. Bump it (same `YYYYMMDD` format) only when the change affects updater behavior, i.e. code that runs inside `rusefi_autoupdate.exe`.
 

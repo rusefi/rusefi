@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.util.Map;
+import java.util.HashMap;
 
 import static com.opensr5.ini.test.IniFileReaderTest.EPS;
 import static com.opensr5.ini.test.IniFileReaderTest.readLines;
@@ -36,11 +37,11 @@ public class IniDialogTest {
         assertEquals("Common CLT Sensors", selector.getLabel());
         assertEquals(4, selector.getOptions().size());
         assertEquals("Miata NA", selector.getOptions().get(1).getLabel());
-        assertEquals(Map.of(
-            "clt_tempC_1", "-40",
-            "clt_resistance_1", "100000",
-            "useLinearCltSensor", "0"
-        ), selector.getOptions().get(0).getAssignments());
+        Map<String, String> assignments = new HashMap<>();
+        assignments.put("clt_tempC_1", "-40");
+        assignments.put("clt_resistance_1", "100000");
+        assignments.put("useLinearCltSensor", "0");
+        assertEquals(assignments, selector.getOptions().get(0).getAssignments());
         assertTrue(model.getDialogs().get("other").getSettingSelectors().isEmpty());
     }
 
