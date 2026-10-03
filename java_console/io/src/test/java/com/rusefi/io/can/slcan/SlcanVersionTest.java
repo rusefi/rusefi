@@ -22,10 +22,20 @@ class SlcanVersionTest {
     }
 
     @Test
-    void weActAndCanableAreTheUnacknowledgedFamily() {
+    void weActAndCanableSupportVersionBarriers() {
         assertTrue(SlcanVersion.isCanableFamily(CANABLE));
         assertTrue(SlcanVersion.isCanableFamily(WEACT));
         assertFalse(SlcanVersion.isCanableFamily("V1220"));
+    }
+
+    @Test
+    void distinguishesWeActForVendorSpecificSetup() {
+        assertTrue(SlcanVersion.isWeAct(WEACT));
+        assertTrue(SlcanVersion.isWeAct("WeAct Studio V1.0.0.6_4fa52575"));
+        assertFalse(SlcanVersion.isWeAct(CANABLE));
+        assertFalse(SlcanVersion.isWeAct("V1220"));
+        assertFalse(SlcanVersion.isWeAct(null));
+        assertFalse(SlcanVersion.isWeAct("WeAct Studio"));
     }
 
     @Test

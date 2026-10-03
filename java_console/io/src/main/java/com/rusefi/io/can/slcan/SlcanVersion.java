@@ -13,8 +13,8 @@ import java.util.regex.Pattern;
  * <li>WeAct Studio USB2CANFDV1 firmware, derived from CANable 2:
  * {@code WeAct Studio V1.0.0.3_bb264e71}.</li>
  * </ul>
- * CANable 2 and its WeAct derivative do not acknowledge setup commands; their ordered V reply is
- * used as a barrier instead, see {@link #isCanableFamily(String)}.
+ * CANable 2 omits setup acknowledgements. Its WeAct derivative can also acknowledge them;
+ * both support the ordered V reply used as a setup barrier, see {@link #isCanableFamily(String)}.
  */
 public final class SlcanVersion {
     private static final Pattern LAWICEL = Pattern.compile("V[0-9A-Fa-f]{4}");
@@ -33,9 +33,14 @@ public final class SlcanVersion {
 
     /**
      * True for CANable 2 family firmware (CANable 2 and WeAct USB2CANFDV1), which reports a build
-     * revision instead of Vhhhh and sends no acknowledgements for C/S/O commands.
+     * revision instead of Vhhhh and supports V as a setup barrier.
      */
     public static boolean isCanableFamily(String line) {
-        return line != null && (CANABLE2.matcher(line).matches() || WEACT.matcher(line).matches());
+        return line != null && (CANABLE2.matcher(line).matches() || isWeAct(line));
+    }
+
+    /** WeAct defaults to one-shot CAN transmission; A1 enables arbitration retries while closed. */
+    public static boolean isWeAct(String line) {
+        return line != null && WEACT.matcher(line).matches();
     }
 }

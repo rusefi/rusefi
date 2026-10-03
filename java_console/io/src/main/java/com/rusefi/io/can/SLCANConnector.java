@@ -73,6 +73,12 @@ public final class SLCANConnector implements RawCanPort {
             System.out.println(port + " SLCAN version: " + version);
             drain(100); // Discard any trailing version acknowledgement before setup.
             expectOk("S" + bitrate);
+            if (SlcanVersion.isWeAct(version)) {
+                // WeAct defaults to one-shot TX: losing arbitration can discard an ISO-TP
+                // request or flow-control frame. Configure controller retries before O.
+                // A1 is vendor-specific; do not send it to arbitrary Lawicel adapters.
+                expectOk("A1");
+            }
             expectOk("O");
         } catch (IOException | RuntimeException e) {
             close();
@@ -93,7 +99,7 @@ public final class SLCANConnector implements RawCanPort {
     }
 
     private void expectOk(String command) throws IOException {
-        // CANable does not acknowledge setup commands. Its ordered V reply is a barrier.
+        // CANable can omit setup acknowledgements. Its ordered V reply is a barrier.
         writeLine(command);
         if (canable) {
             writeLine("V");

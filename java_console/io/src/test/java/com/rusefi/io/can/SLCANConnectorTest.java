@@ -29,11 +29,40 @@ class SLCANConnectorTest {
         serial.banner = "WeAct Studio V1.0.0.3_bb264e71";
         try (SLCANConnector connector = new SLCANConnector("fake", 6, () -> serial)) {
             connector.open(new CanAddress(0x720, false));
-            assertEquals(Arrays.asList("C", "V", "S6", "V", "O", "V"), serial.commands);
+            assertEquals(Arrays.asList("C", "V", "S6", "V", "A1", "V", "O", "V"), serial.commands);
             serial.reply("t7202AABB\r");
             assertEquals(new ClassicCanFrame(new CanAddress(0x720, false), new byte[]{(byte) 0xaa, (byte) 0xbb}),
                 connector.receive(100).get());
         }
+    }
+
+    @Test
+    void weActEnablesArbitrationRetriesBeforeSendingOnContendedBus() throws Exception {
+        FakeSerial serial = new FakeSerial(true);
+        serial.banner = "WeAct Studio V1.0.0.6_4fa52575";
+        serial.contended = true;
+        try (SLCANConnector connector = new SLCANConnector("fake", 6, () -> serial)) {
+            connector.open(new CanAddress(0x720, false));
+            connector.send(new ClassicCanFrame(new CanAddress(0x710, false),
+                new byte[]{0x30, 0, 0}));
+            assertTrue(serial.automaticRetransmission);
+            assertTrue(serial.commands.indexOf("A1") < serial.commands.indexOf("O"));
+            assertEquals(new ClassicCanFrame(new CanAddress(0x720, false), new byte[]{1, (byte) 0xaa}),
+                connector.receive(100).get());
+        }
+    }
+
+    @Test
+    void rejectedWeActRetransmissionSetupStopsBeforeOpeningCan() {
+        FakeSerial serial = new FakeSerial(true);
+        serial.banner = "WeAct Studio V1.0.0.6_4fa52575";
+        serial.rejectAutomaticRetransmission = true;
+        SLCANConnector connector = new SLCANConnector("fake", 6, () -> serial);
+        IOException failure = assertThrows(IOException.class,
+            () -> connector.open(new CanAddress(0x720, false)));
+        assertTrue(failure.getMessage().contains("A1"));
+        assertFalse(serial.commands.contains("O"));
+        assertTrue(serial.isClosed());
     }
 
     @Test
@@ -67,6 +96,9 @@ class SLCANConnectorTest {
         final boolean canable;
         String banner = "16e7497-dirty github.com/normaldotcom/canable2.git";
         boolean rejectOpen;
+        boolean contended;
+        boolean automaticRetransmission;
+        boolean rejectAutomaticRetransmission;
 
         FakeSerial(boolean canable) {
             this.canable = canable;
@@ -89,7 +121,16 @@ class SLCANConnectorTest {
         public void write(byte[] bytes) {
             String command = new String(bytes, StandardCharsets.US_ASCII).trim();
             commands.add(command);
-            if (command.equals("V")) {
+            if (command.equals("A1")) {
+                if (rejectAutomaticRetransmission) {
+                    reply("\u0007");
+                } else {
+                    automaticRetransmission = true;
+                    reply("\r");
+                }
+            } else if (command.startsWith("t") && contended) {
+                if (automaticRetransmission) reply("\rt720201AA\r");
+            } else if (command.equals("V")) {
                 reply(canable ? banner + "\r" : "V1220\r");
             } else if (rejectOpen && command.equals("O")) {
                 reply("\u0007");

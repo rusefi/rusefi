@@ -401,3 +401,15 @@ Live WeAct V1.0.0.6_4fa52575 can discard the V query when CR/V/CR follows
 binary TS HELLO in a single write, returning only BELL. Separate the CR
 and V writes with a bounded separator-response read; this restored live
 detection in 8/8 scans versus 0/8 for the combined write.
+
+### WeAct console ISO-TP arbitration retries
+
+WeAct USB2CANFDV1 defaults to one-shot CAN TX. On a live M74.9 bus, a
+request or flow-control frame could disappear despite a complete USB write;
+the console then received only four TS body bytes and timed out. Configure
+`A1` while CAN is closed, before `O`, for a recognized WeAct version. Keep
+this vendor command out of generic Lawicel setup. A fixed 20 ms host delay
+improved but did not eliminate failures. Do not replay whole tune-write or
+burn requests to compensate: controller arbitration retries address the
+unsent CAN frame. WeAct can acknowledge setup commands even though CANable
+2 omits them; both support the existing V-response setup barrier.
