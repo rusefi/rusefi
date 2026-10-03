@@ -15,6 +15,8 @@ import java.awt.Component;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
@@ -28,7 +30,7 @@ final class BinaryLoggingMenu {
     private final JMenuItem startItem;
     private final JMenuItem stopItem;
     private final JCheckBoxMenuItem saveTuneItem;
-    private SwingWorker<Void, Void> startWorker;
+    private SwingWorker<byte[], Void> startWorker;
 
     BinaryLoggingMenu(UIContext uiContext, Component parent, Icon startIcon, Icon stopIcon) {
         this.uiContext = uiContext;
@@ -52,7 +54,7 @@ final class BinaryLoggingMenu {
         menu.add(stopItem);
         menu.addSeparator();
         saveTuneItem = new JCheckBoxMenuItem("Save tune", true);
-        saveTuneItem.setToolTipText("Save a dated tune snapshot beside each data log");
+        saveTuneItem.setToolTipText("Embed the starting tune in each data log and save a dated MSQ beside it");
         menu.add(saveTuneItem);
 
         refresh();
@@ -97,21 +99,22 @@ final class BinaryLoggingMenu {
         }
 
         if (!saveTuneItem.isSelected()) {
-            start(file);
+            start(file, null);
             return;
         }
 
         BinaryProtocol protocol = uiContext.getBinaryProtocol();
-        startWorker = new SwingWorker<Void, Void>() {
+        startWorker = new SwingWorker<byte[], Void>() {
             @Override
-            protected Void doInBackground() throws Exception {
+            protected byte[] doInBackground() throws Exception {
                 IniFileModel ini = protocol == null ? null : protocol.getIniFileNullable();
                 if (ini == null) {
                     throw new IllegalStateException("No ECU tune is available");
                 }
                 Msq tune = TuneSnapshot.read(uiContext.getLinkManager(), protocol, ini);
                 if (!isCancelled()) {
-                    TuneSnapshot.save(file.getAbsoluteFile().getParentFile().toPath(), tune, LocalDate.now());
+                    Path saved = TuneSnapshot.save(file.getAbsoluteFile().getParentFile().toPath(), tune, LocalDate.now());
+                    return Files.readAllBytes(saved);
                 }
                 return null;
             }
@@ -123,10 +126,10 @@ final class BinaryLoggingMenu {
                 }
                 startWorker = null;
                 try {
-                    get();
+                    byte[] tune = get();
                     if (uiContext.getBinaryProtocol() == protocol
                             && ConnectionStatusLogic.INSTANCE.getValue() == ConnectionStatusValue.CONNECTED) {
-                        start(file);
+                        start(file, tune);
                     }
                 } catch (InterruptedException failure) {
                     Thread.currentThread().interrupt();
@@ -144,7 +147,7 @@ final class BinaryLoggingMenu {
     }
 
     void stop() {
-        SwingWorker<Void, Void> pending = startWorker;
+        SwingWorker<byte[], Void> pending = startWorker;
         startWorker = null;
         if (pending != null) {
             pending.cancel(false);
@@ -152,8 +155,8 @@ final class BinaryLoggingMenu {
         uiContext.sensorLogger.stop();
     }
 
-    private void start(File file) {
-        if (!uiContext.sensorLogger.start(file)) {
+    private void start(File file, byte[] tune) {
+        if (!uiContext.sensorLogger.start(file, tune)) {
             JOptionPane.showMessageDialog(parent,
                     "No supported output channels are available for binary logging.",
                     "Binary Logging",

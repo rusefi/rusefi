@@ -25,6 +25,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -121,9 +122,11 @@ class SensorLoggerTest {
 
         SensorLogger logger = new SensorLogger(context);
         Path file = tempDir.resolve("selected.mlg");
+        byte[] tune = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><msq><note>\u03bb tune</note></msq>\n"
+                .getBytes(StandardCharsets.UTF_8);
         assertFalse(logger.isLogging());
         try {
-            assertTrue(logger.start(file.toFile()));
+            assertTrue(logger.start(file.toFile(), tune));
             assertTrue(logger.isLogging());
             assertTrue(logger.start(file.toFile()));
             SensorCentral sensorCentral = SensorCentral.getInstance();
@@ -145,6 +148,7 @@ class SensorLoggerTest {
         assertFalse(logger.isLogging());
         assertFalse(SensorCentral.getInstance().getOutputChannelDemand().isFull());
         assertTrue(Files.exists(file));
+        assertArrayEquals(tune, MlgTune.read(file));
 
         ByteBuffer data = ByteBuffer.wrap(Files.readAllBytes(file)).order(ByteOrder.BIG_ENDIAN);
         assertEquals(5, data.getShort(22));

@@ -8,6 +8,7 @@ import com.rusefi.config.generated.Integration;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.tune.xml.Msq;
+import com.rusefi.sensor_logs.MlgTune;
 import com.rusefi.ui.lua.LuaIncludeSyntax;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
@@ -341,6 +342,16 @@ public class EcuMcpServer {
                         {"outputPath", "string", "New CSV path on the server host; parent must exist. " +
                                 "Defaults to inputPath with its extension replaced by .csv."}
                 }, new String[]{"inputPath"}, false)));
+        tools.add(tool("extract_tune_from_log",
+                "Extract the starting tune embedded in a host-side TunerStudio or rusEFI MLVLG v2 log " +
+                        "to an MSQ file. No ECU connection or INI is needed. Preserves the original XML bytes. " +
+                        "Fails if no tune is embedded, the information section is malformed, or output exists. " +
+                        "Returns success, path and byteCount.",
+                schemaObject(new String[][]{
+                        {"inputPath", "string", "Existing .mlg log file on the MCP server host."},
+                        {"outputPath", "string", "New MSQ path on the server host; parent must exist. " +
+                                "Defaults to inputPath with its extension replaced by .msq."}
+                }, new String[]{"inputPath"}, false)));
         tools.add(tool("capture_engine_sniffer",
                 "Wait for the next Console Digital Sniffer chart and return parsed crank/cam, output and TDC events, " +
                         "microsecond timestamps, channel summaries and the raw chart. Uses current sniffer settings; " +
@@ -353,14 +364,15 @@ public class EcuMcpServer {
                 "Start recording ECU operating data to an MLG file on the MCP server host. " +
                         "Records all numeric/enum output channels at the connection polling rate. " +
                         "Fails if already recording or the file exists. Returns logging, path, format, " +
-                        "sampleCount, channelCount and tunePath. Saves a daily tune snapshot by default. " +
+                        "sampleCount, channelCount, tunePath and tuneEmbedded. Embeds the starting tune " +
+                        "and saves a daily MSQ snapshot by default. " +
                         "Poll data_logging_status for progress or write errors.",
                 schemaObject(new String[][]{
                         {"path", "string", "New output .mlg file path; parent directory must exist. " +
                                 "Omit to create a temporary rusefi_data_*.mlg file."},
-                        {"saveTune", "boolean", "Default true: save a fresh ECU tune beside the log as YYYY-MM-DD.msq " +
+                        {"saveTune", "boolean", "Default true: embed a fresh ECU tune in the log and save it beside the log as YYYY-MM-DD.msq " +
                                 "(server local date). Reuse identical tunes; changed tunes get _1, _2, etc. " +
-                                "False disables the tune snapshot."}
+                                "False disables both embedded and separate tune snapshots."}
                 }, new String[]{}, false)));
         for (String target : new String[]{"ecu", "pc"}) {
             tools.add(tool("mount_to_" + target,
@@ -377,7 +389,7 @@ public class EcuMcpServer {
                 "Stop recording and close the MLG file. Safe to repeat; returns final recording status. " +
                         "Does not require an ECU connection.", emptyObjectSchema()));
         tools.add(tool("data_logging_status",
-                "Return logging, path, tunePath, format, sampleCount, channelCount and any recording error. " +
+                "Return logging, path, tunePath, tuneEmbedded, format, sampleCount, channelCount and any recording error. " +
                         "Does not connect to the ECU. No samples arrive while disconnected; reconnecting " +
                         "stops the old recording. Server shutdown also closes the file.", emptyObjectSchema()));
         tools.add(tool("read_messages",
@@ -478,6 +490,7 @@ public class EcuMcpServer {
                 case "mount_to_ecu": toolResult = doMount(args, true); break;
                 case "mount_to_pc": toolResult = doMount(args, false); break;
                 case "convert_log_to_csv": toolResult = doConvertLogToCsv(args); break;
+                case "extract_tune_from_log": toolResult = doExtractTuneFromLog(args); break;
                 case "capture_engine_sniffer": toolResult = doCaptureEngineSniffer(args); break;
                 case "start_data_logging": toolResult = doStartDataLogging(args); break;
                 case "stop_data_logging": toolResult = dataLogger.stop(); break;
@@ -498,6 +511,26 @@ public class EcuMcpServer {
             return toolError(t.toString());
         }
         return wrapToolResult(toolResult);
+    }
+
+    @SuppressWarnings("unchecked")
+    private JSONObject doExtractTuneFromLog(JSONObject args) throws IOException {
+        Object input = args.get("inputPath");
+        Object output = args.get("outputPath");
+        if (!(input instanceof String) || ((String) input).trim().isEmpty()) {
+            throw new IllegalArgumentException("inputPath must be a non-empty string");
+        }
+        if (args.containsKey("outputPath") && (!(output instanceof String) || ((String) output).trim().isEmpty())) {
+            throw new IllegalArgumentException("outputPath must be a non-empty string");
+        }
+        Path source = Paths.get((String) input);
+        Path target = MlgTune.extract(source,
+                output == null ? MlgTune.defaultOutput(source) : Paths.get((String) output));
+        JSONObject result = new JSONObject();
+        result.put("success", true);
+        result.put("path", target.toString());
+        result.put("byteCount", Files.size(target));
+        return result;
     }
 
     @SuppressWarnings("unchecked")

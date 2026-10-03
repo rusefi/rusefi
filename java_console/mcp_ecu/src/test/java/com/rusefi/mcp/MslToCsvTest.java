@@ -3,6 +3,7 @@ package com.rusefi.mcp;
 import com.rusefi.core.SensorCategory;
 import com.rusefi.sensor_logs.BinaryLogEntry;
 import com.rusefi.sensor_logs.BinarySensorLog;
+import com.rusefi.sensor_logs.MlgTune;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -54,12 +55,21 @@ class MslToCsvTest {
             }
         };
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        byte[] tune = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><msq><note>\u03bb tune</note></msq>\n"
+                .getBytes(StandardCharsets.UTF_8);
         BinarySensorLog<BinaryLogEntry> logger = new BinarySensorLog<>(entry -> 1234.0,
-                Collections.singletonList(rpm), bytes);
+                Collections.singletonList(rpm), bytes, tune);
         logger.writeSensorLogLineChecked();
         logger.close();
         Path input = directory.resolve("java.mlg");
         Files.write(input, bytes.toByteArray());
+        assertArrayEquals(tune, MlgTune.read(input));
+        ByteBuffer data = ByteBuffer.wrap(bytes.toByteArray());
+        String info = new String(bytes.toByteArray(), data.getInt(12), data.getInt(16) - data.getInt(12),
+                StandardCharsets.UTF_8);
+        assertTrue(info.contains("\nNEW_INFO_PROVIDER,LogStart_MAIN_TUNE,Type:msqVisible:falseLength:"
+                + tune.length + "\n"));
+        assertEquals(0, bytes.toByteArray()[data.getInt(16) - 1]);
         Path output = directory.resolve("java.csv");
         MslToCsv.convert(input, output);
         assertEquals("RPM (rpm)\n1234.00\n", new String(Files.readAllBytes(output), StandardCharsets.UTF_8));

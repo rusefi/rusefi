@@ -71,6 +71,7 @@ Behavior common to all tools:
 | `stop_data_logging` | Stop recording and close the file. |
 | `data_logging_status` | Recording state, file path, sample count, and errors. |
 | `convert_log_to_csv` | Convert a host-side MLG/MSL log to CSV without connecting to an ECU. |
+| `extract_tune_from_log` | Extract the starting MSQ tune embedded in a host-side MLG log without connecting to an ECU. |
 | `read_messages` | Pull recent ECU messages (Lua `print` included). |
 | `wait_for_message` | Block until a message matches a regex. |
 | `read_tune` | Save the complete ECU tune as a `.msq` file. |
@@ -79,6 +80,29 @@ Behavior common to all tools:
 | `update_firmware` | Update via OpenBLT, back up and migrate the configuration, then reconnect. |
 | `reboot` | Reboot the ECU. |
 | `reboot_to_blt` | Reboot the ECU into the OpenBLT bootloader. |
+
+### `extract_tune_from_log`
+
+| Argument | Type | Required | Description |
+|---|---|---|---|
+| `inputPath` | string | yes | Existing TunerStudio or rusEFI MLVLG v2 `.mlg` file on the MCP server host. |
+| `outputPath` | string | no | New MSQ file; defaults to the input path with its extension replaced by `.msq`. Parent directory must exist. |
+
+Extracts `LogStart_MAIN_TUNE` from the log's information section, preserving the
+original XML bytes, encoding, comments and all tune pages. No ECU connection or
+INI file is needed. Relative paths resolve against the server's working directory.
+Returns `success`, absolute `path` and `byteCount`.
+
+```json
+{"name":"extract_tune_from_log","arguments":{"inputPath":"/tmp/engine-run.mlg"}}
+```
+
+Existing output files are never overwritten. Missing tunes, unsupported formats,
+invalid offsets/provider lengths and malformed MSQ XML return errors without
+publishing a partial file. Information sections are limited to 32 MiB; XML DTDs
+and external entities are not supported. This extracts the tune at logging start,
+not subsequent tune edits. Text MSL logs and logs without embedded tunes are not
+supported by this tool.
 
 ### `convert_log_to_csv`
 
@@ -251,7 +275,7 @@ the host OS has mounted a drive letter.
 | Argument | Type | Required | Default | Description |
 |---|---|---|---|---|
 | `path` | string | no | Temporary `rusefi_data_*.mlg` file | New file on the MCP server host; parent directory must exist. Relative paths resolve against the server's working directory. |
-| `saveTune` | boolean | no | `true` | Save a tune snapshot in the same folder as the data log. |
+| `saveTune` | boolean | no | `true` | Embed the starting tune in the log and save an MSQ snapshot in the same folder. |
 
 Connects if necessary, creates the file and writes its header before returning.
 Existing files are never overwritten. Starting while already recording fails and
@@ -270,7 +294,14 @@ Existing files are preserved, including invalid MSQ files. Comparison includes
 firmware signature and calibration constants on each page, ignoring comments and
 writer metadata. Unchanged numbered snapshots are reused too.
 
-Set `"saveTune": false` to record only data. If the required tune read/save fails,
+The saved MSQ is also embedded in the MLG information section using TunerStudio's
+`NEW_INFO_PROVIDER,LogStart_MAIN_TUNE,Type:msqVisible:falseLength:...` format.
+Sharing the log alone therefore includes its starting tune. Use
+`extract_tune_from_log` to recover it; `convert_log_to_csv` skips this metadata
+and continues to export the recorded samples.
+
+Set `"saveTune": false` to disable both embedded and separate tune snapshots and
+record only data. If the required tune read/save fails,
 start fails without activating recording; any newly created data log is removed.
 The snapshot describes the tune at logging start; edits during a recording do not
 create further tune snapshots.
@@ -293,6 +324,7 @@ fields as start:
 | `path` | Absolute file path, or null before the first successful start. |
 | `format` | `mlg`. |
 | `tunePath` | Absolute path of the saved/reused tune, or null when tune saving is disabled or no recording has started. |
+| `tuneEmbedded` | Whether the log includes that MSQ in its information section. |
 | `sampleCount` | Rows successfully written in this recording. |
 | `channelCount` | Fields in the log, including the frontend's MAP compatibility alias. |
 | `error` | Failure description, when present. |

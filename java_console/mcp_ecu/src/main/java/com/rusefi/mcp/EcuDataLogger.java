@@ -46,8 +46,9 @@ final class EcuDataLogger {
         BinarySensorLog<CustomBinaryLogEntry> newWriter;
         Path savedTune;
         try {
-            newWriter = new BinarySensorLog<>(entry -> entry.getValue(response), entries, opened);
             savedTune = tune == null ? null : TuneSnapshot.save(target.getParent(), tune, LocalDate.now());
+            newWriter = new BinarySensorLog<>(entry -> entry.getValue(response), entries, opened,
+                    savedTune == null ? null : Files.readAllBytes(savedTune));
         } catch (IOException | RuntimeException failure) {
             try {
                 opened.close();
@@ -118,6 +119,7 @@ final class EcuDataLogger {
         result.put("path", path == null ? null : path.toString());
         result.put("format", "mlg");
         result.put("tunePath", tunePath == null ? null : tunePath.toString());
+        result.put("tuneEmbedded", tunePath != null);
         result.put("sampleCount", samples);
         result.put("channelCount", channelCount);
         if (error != null) {

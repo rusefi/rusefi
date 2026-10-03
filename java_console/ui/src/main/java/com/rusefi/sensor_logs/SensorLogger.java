@@ -80,6 +80,10 @@ public class SensorLogger {
     }
 
     public synchronized boolean start(File file) {
+        return start(file, null);
+    }
+
+    public synchronized boolean start(File file, byte[] tune) {
         if (sensorLog != null) {
             return true;
         }
@@ -91,7 +95,7 @@ public class SensorLogger {
 
         sensorLog = new BinarySensorLog<>(sensor -> {
             return currentResponse == null ? 0.0 : sensor.getValue(currentResponse);
-        }, outputChannels, System::currentTimeMillis, file.getAbsolutePath());
+        }, outputChannels, System::currentTimeMillis, file.getAbsolutePath(), tune);
         SensorCentral sensorCentral = SensorCentral.getInstance();
         fullOutputLease = sensorCentral.acquireFullOutput();
         snapshotListenerToken = sensorCentral.addSnapshotListener(this::writeSensorLogLine);

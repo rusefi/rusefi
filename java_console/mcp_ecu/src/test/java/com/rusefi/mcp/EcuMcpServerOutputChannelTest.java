@@ -134,6 +134,9 @@ class EcuMcpServerOutputChannelTest {
             assertEquals(recording.toString(), started.get("path"));
             Path initialTune = tempDir.resolve(LocalDate.now() + ".msq");
             assertEquals(initialTune.toString(), started.get("tunePath"));
+            assertEquals(Boolean.TRUE, started.get("tuneEmbedded"));
+            org.junit.jupiter.api.Assertions.assertArrayEquals(Files.readAllBytes(initialTune),
+                    com.rusefi.sensor_logs.MlgTune.read(recording));
             assertEquals("0", Msq.readTune(initialTune.toString()).getConstantsAsMap()
                     .get("mockScalarIniField").getValue());
             assertEquals(Boolean.FALSE, mcp.call("start_data_logging", pathArgument(shutdownFile), 5_000).get("success"));
@@ -180,6 +183,8 @@ class EcuMcpServerOutputChannelTest {
             JSONObject changed = mcp.call("start_data_logging", pathArgument(tempDir.resolve("changed.mlg")), 5_000);
             Path changedTune = tempDir.resolve(LocalDate.now() + "_1.msq");
             assertEquals(changedTune.toString(), changed.get("tunePath"), changed.toJSONString());
+            org.junit.jupiter.api.Assertions.assertArrayEquals(Files.readAllBytes(changedTune),
+                    com.rusefi.sensor_logs.MlgTune.read(tempDir.resolve("changed.mlg")));
             assertEquals("1", Msq.readTune(changedTune.toString()).getConstantsAsMap()
                     .get("mockScalarIniField").getValue());
             mcp.call("stop_data_logging", "{}", 5_000);
@@ -191,7 +196,10 @@ class EcuMcpServerOutputChannelTest {
             JSONObject disabled = mcp.call("start_data_logging", disabledArgs.toJSONString(), 5_000);
             assertEquals(Boolean.TRUE, disabled.get("logging"), disabled.toJSONString());
             org.junit.jupiter.api.Assertions.assertNull(disabled.get("tunePath"));
+            assertEquals(Boolean.FALSE, disabled.get("tuneEmbedded"));
             mcp.call("stop_data_logging", "{}", 5_000);
+            org.junit.jupiter.api.Assertions.assertThrows(java.io.IOException.class,
+                    () -> com.rusefi.sensor_logs.MlgTune.read(noTuneFolder.resolve("only-data.mlg")));
             try (java.util.stream.Stream<Path> files = Files.list(noTuneFolder)) {
                 assertEquals(1, files.count(), "saveTune=false creates only the data log");
             }

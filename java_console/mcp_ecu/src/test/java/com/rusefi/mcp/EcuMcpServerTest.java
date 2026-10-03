@@ -65,6 +65,7 @@ class EcuMcpServerTest {
         assertTrue(names.contains("stop_data_logging"));
         assertTrue(names.contains("data_logging_status"));
         assertTrue(names.contains("convert_log_to_csv"));
+        assertTrue(names.contains("extract_tune_from_log"));
         assertTrue(names.contains("read_messages"));
         assertTrue(names.contains("wait_for_message"));
         assertTrue(names.contains("read_tune"));
@@ -174,6 +175,58 @@ class EcuMcpServerTest {
             envelope = (JSONObject) parse(drive(jsonRpc(2, "tools/call", params.toJSONString()) + "\n")[0]).get("result");
             assertEquals(true, envelope.get("isError"));
         }
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void extractsTuneWithoutEcuAndReportsErrors(@TempDir Path directory) throws Exception {
+        Path source = directory.resolve("capture.mlg");
+        byte[] tune = "<?xml version=\"1.0\"?><msq><page number=\"0\"/></msq>\n"
+                .getBytes(StandardCharsets.UTF_8);
+        try (java.io.OutputStream output = Files.newOutputStream(source)) {
+            new com.rusefi.sensor_logs.BinarySensorLog<>(entry -> 0.0,
+                    java.util.Collections.<com.rusefi.sensor_logs.BinaryLogEntry>emptyList(), output, tune).close();
+        }
+        JSONObject args = new JSONObject();
+        args.put("inputPath", source.toString());
+        JSONObject params = new JSONObject();
+        params.put("name", "extract_tune_from_log");
+        params.put("arguments", args);
+        String request = jsonRpc(1, "tools/call", params.toJSONString()) + "\n";
+        JSONObject envelope = (JSONObject) parse(drive(request)[0]).get("result");
+        JSONObject body = (JSONObject) envelope.get("structuredContent");
+        assertEquals(false, envelope.get("isError"));
+        assertEquals(true, body.get("success"));
+        assertEquals((long) tune.length, body.get("byteCount"));
+        assertEquals(directory.resolve("capture.msq").toString(), body.get("path"));
+        assertArrayEquals(tune, Files.readAllBytes(directory.resolve("capture.msq")));
+        envelope = (JSONObject) parse(drive(request)[0]).get("result");
+        assertEquals(true, envelope.get("isError"), "Do not overwrite an existing tune");
+
+        args.put("outputPath", directory.resolve("custom.msq").toString());
+        envelope = (JSONObject) parse(drive(jsonRpc(2, "tools/call", params.toJSONString()) + "\n")[0]).get("result");
+        assertEquals(false, envelope.get("isError"));
+        assertArrayEquals(tune, Files.readAllBytes(directory.resolve("custom.msq")));
+        for (String field : new String[]{"inputPath", "outputPath"}) {
+            for (Object invalid : new Object[]{null, "", 42L}) {
+                args.put(field, invalid);
+                envelope = (JSONObject) parse(drive(jsonRpc(3, "tools/call", params.toJSONString()) + "\n")[0]).get("result");
+                assertEquals(true, envelope.get("isError"));
+            }
+            args.put(field, source.toString());
+        }
+        Path noTune = directory.resolve("no-tune.mlg");
+        try (java.io.OutputStream output = Files.newOutputStream(noTune)) {
+            new com.rusefi.sensor_logs.BinarySensorLog<>(entry -> 0.0,
+                    java.util.Collections.<com.rusefi.sensor_logs.BinaryLogEntry>emptyList(), output).close();
+        }
+        args.put("inputPath", noTune.toString());
+        args.remove("outputPath");
+        envelope = (JSONObject) parse(drive(jsonRpc(4, "tools/call", params.toJSONString()) + "\n")[0]).get("result");
+        assertEquals(true, envelope.get("isError"));
+        body = (JSONObject) envelope.get("structuredContent");
+        assertTrue(body.get("error").toString().contains("No embedded"));
+        assertFalse(Files.exists(directory.resolve("no-tune.msq")));
     }
 
     @Test

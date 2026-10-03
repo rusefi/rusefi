@@ -10,7 +10,7 @@ Use `capture_engine_sniffer` for a Digital Sniffer snapshot with parsed crank/ca
 
 | Module | Transport | Purpose |
 |--------|-----------|---------|
-| `:mcp_ecu` | stdio JSON-RPC | Lua scripts, ECU messages/live data, engine sniffer (`capture_engine_sniffer`), host data logging, SD mount control (`mount_to_ecu`, `mount_to_pc`), fresh board/universal bundle downloads (`download_bundle`), OpenBLT updates with configuration migration (`update_firmware`) |
+| `:mcp_ecu` | stdio JSON-RPC | Lua scripts, ECU messages/live data, engine sniffer (`capture_engine_sniffer`), host data logging with embedded tunes, offline tune extraction (`extract_tune_from_log`), SD mount control (`mount_to_ecu`, `mount_to_pc`), fresh board/universal bundle downloads (`download_bundle`), OpenBLT updates with configuration migration (`update_firmware`) |
 | `:mcp_can` | stdio JSON-RPC | Read-only CAN bus sniffing via PCAN or built-in SLCAN |
 
 #### .ini file resolution

@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.function.Function;
 
 /**
- * MLV .mlq binary log file
+ * MLV .mlg binary log file
  * </p>
  * Andrey Belomutskiy, (c) 2013-2020
  */
@@ -18,6 +18,7 @@ public class BinarySensorLog<T extends BinaryLogEntry> {
     private final Collection<T> entries;
     private final TimeProvider timeProvider;
     private final String requestedFileName;
+    private final byte[] tune;
     private DataOutputStream stream;
 
     private String fileName;
@@ -33,16 +34,27 @@ public class BinarySensorLog<T extends BinaryLogEntry> {
     }
 
     BinarySensorLog(Function<T, Double> valueProvider, Collection<T> sensors, TimeProvider timeProvider, String fileName) {
+        this(valueProvider, sensors, timeProvider, fileName, null);
+    }
+
+    BinarySensorLog(Function<T, Double> valueProvider, Collection<T> sensors, TimeProvider timeProvider,
+                    String fileName, byte[] tune) {
         this.valueProvider = Objects.requireNonNull(valueProvider, "valueProvider");
         this.entries = Objects.requireNonNull(sensors, "entries");
         this.timeProvider = timeProvider;
         this.requestedFileName = fileName;
+        this.tune = tune == null ? null : tune.clone();
     }
 
     /** Eager writer for callers that own the stream and need to report I/O failures. */
     public BinarySensorLog(Function<T, Double> valueProvider, Collection<T> sensors, OutputStream output)
             throws IOException {
-        this(valueProvider, sensors, System::currentTimeMillis, null);
+        this(valueProvider, sensors, output, null);
+    }
+
+    public BinarySensorLog(Function<T, Double> valueProvider, Collection<T> sensors, OutputStream output, byte[] tune)
+            throws IOException {
+        this(valueProvider, sensors, System::currentTimeMillis, null, tune);
         stream = new DataOutputStream(Objects.requireNonNull(output, "output"));
         writeHeader();
     }
@@ -113,6 +125,7 @@ public class BinarySensorLog<T extends BinaryLogEntry> {
     private void writeHeader() throws IOException {
         String headerText = "\"rusEFI " + UiVersion.CONSOLE_VERSION + "\"\n" +
                 "\"Capture Date: " + new Date() + "\"\n";
+        byte[] info = MlgTune.informationBlock(headerText, tune);
 
         for (char c : "MLVLG\0".toCharArray()) {
             stream.write(c);
@@ -135,7 +148,7 @@ public class BinarySensorLog<T extends BinaryLogEntry> {
         stream.writeInt(headerSize);
 
         // 0010h Data begin index - begins immediately after the header text
-        int headerWithTextSize = headerSize + headerText.length();
+        int headerWithTextSize = headerSize + info.length;
         stream.writeInt(headerWithTextSize);
 
         // 0014h Record length
@@ -165,9 +178,10 @@ public class BinarySensorLog<T extends BinaryLogEntry> {
             writeLine(stream, category, 34);
         }
 
-        if (stream.size() != headerSize)
+        if (stream.size() != headerSize) {
             throw new IllegalStateException("We are doing something wrong :( stream.size=" + stream.size() + " vs " + headerSize);
-        writeLine(stream, headerText, headerText.length());
+        }
+        stream.write(info);
     }
 
     public void close() {
