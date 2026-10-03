@@ -3583,7 +3583,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 1058
 	 */
-	Gpio ignitionKeyDigitalPin;
+	switch_input_pin_e ignitionKeyDigitalPin;
 	/**
 	 * units: Hz
 	 * offset 1060
