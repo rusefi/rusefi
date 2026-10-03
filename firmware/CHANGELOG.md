@@ -34,6 +34,7 @@ Release template (copy/paste this for new release):
  - h-bridge as one GPIO #9673
  - updater: keyboard table operation
  - 36-2-2 Suzuki trigger
+ - better MLVLG v2 support: logs have embedded tune
 
 ### Fixed
  - overdwell protection causes Null-pointer deref and crash #9435
