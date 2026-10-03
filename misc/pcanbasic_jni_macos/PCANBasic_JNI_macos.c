@@ -82,6 +82,7 @@ static pfn_SetValue         p_SetValue;
 static pfn_GetErrorText     p_GetErrorText;
 static pfn_LookUpChannel    p_LookUpChannel;
 
+#define PCAN_ERROR_OK           0x00000L
 #define PCAN_ERROR_ILLPARAMTYPE 0x04000L
 
 static const char *libraryCandidates[] = {
@@ -418,6 +419,84 @@ JNIEXPORT jobject JNICALL Java_peak_can_basic_PCANBasic_FilterMessages
 	return statusFromCode(env, (jint)result);
 }
 
+
+/* Buffer marshalling for GetValue/SetValue. PEAK's Java binding passes a
+ * peak.can.MutableInteger or MutableLong (public field "value"), a byte[]
+ * or a StringBuffer; the Windows PCANBasic_JNI.dll updates those in place,
+ * which is how callers read e.g. PCAN_CHANNEL_CONDITION without initializing
+ * the channel. The classes are resolved from the buffer object itself, so
+ * no fixed class name has to be on the class path. */
+static jfieldID valueField(JNIEnv *env, jobject buffer, const char *signature) {
+	jclass cls = (*env)->GetObjectClass(env, buffer);
+	jfieldID fid = (*env)->GetFieldID(env, cls, "value", signature);
+	if (fid == NULL) {
+		(*env)->ExceptionClear(env);
+	}
+	(*env)->DeleteLocalRef(env, cls);
+	return fid;
+}
+
+static int isInstanceOfName(JNIEnv *env, jobject object, const char *name) {
+	jclass cls = (*env)->FindClass(env, name);
+	if (cls == NULL) {
+		(*env)->ExceptionClear(env);
+		return 0;
+	}
+	int result = (*env)->IsInstanceOf(env, object, cls) == JNI_TRUE;
+	(*env)->DeleteLocalRef(env, cls);
+	return result;
+}
+
+/* Copies the Java buffer contents into buf (SetValue input). */
+static void bufferToNative(JNIEnv *env, jobject buffer, char *buf, size_t size) {
+	jfieldID fid;
+	if (buffer == NULL) {
+		return;
+	}
+	if ((fid = valueField(env, buffer, "I")) != NULL) {
+		jint value = (*env)->GetIntField(env, buffer, fid);
+		memcpy(buf, &value, size < sizeof(value) ? size : sizeof(value));
+	} else if ((fid = valueField(env, buffer, "J")) != NULL) {
+		jlong value = (*env)->GetLongField(env, buffer, fid);
+		memcpy(buf, &value, size < sizeof(value) ? size : sizeof(value));
+	} else if (isInstanceOfName(env, buffer, "[B")) {
+		jsize n = (*env)->GetArrayLength(env, (jbyteArray)buffer);
+		if ((size_t)n < size) {
+			size = (size_t)n;
+		}
+		(*env)->GetByteArrayRegion(env, (jbyteArray)buffer, 0, (jsize)size, (jbyte *)buf);
+	}
+}
+
+/* Copies buf back into the Java buffer (GetValue output). */
+static void bufferFromNative(JNIEnv *env, jobject buffer, const char *buf, size_t size) {
+	jfieldID fid;
+	if (buffer == NULL) {
+		return;
+	}
+	if ((fid = valueField(env, buffer, "I")) != NULL) {
+		jint value = 0;
+		memcpy(&value, buf, size < sizeof(value) ? size : sizeof(value));
+		(*env)->SetIntField(env, buffer, fid, value);
+	} else if ((fid = valueField(env, buffer, "J")) != NULL) {
+		jlong value = 0;
+		memcpy(&value, buf, size < sizeof(value) ? size : sizeof(value));
+		(*env)->SetLongField(env, buffer, fid, value);
+	} else if (isInstanceOfName(env, buffer, "[B")) {
+		jsize n = (*env)->GetArrayLength(env, (jbyteArray)buffer);
+		if ((size_t)n < size) {
+			size = (size_t)n;
+		}
+		(*env)->SetByteArrayRegion(env, (jbyteArray)buffer, 0, (jsize)size, (const jbyte *)buf);
+	} else if (isInstanceOfName(env, buffer, "java/lang/StringBuffer")) {
+		jclass cls = (*env)->GetObjectClass(env, buffer);
+		jmethodID append = (*env)->GetMethodID(env, cls, "append",
+			"(Ljava/lang/String;)Ljava/lang/StringBuffer;");
+		(*env)->CallObjectMethod(env, buffer, append, (*env)->NewStringUTF(env, buf));
+		(*env)->DeleteLocalRef(env, cls);
+	}
+}
+
 JNIEXPORT jobject JNICALL Java_peak_can_basic_PCANBasic_GetValue
   (JNIEnv *env, jobject obj, jobject channel, jobject parameter,
    jobject buffer, jint bufferLength) {
@@ -426,13 +505,16 @@ JNIEXPORT jobject JNICALL Java_peak_can_basic_PCANBasic_GetValue
 		return statusFromCode(env, PCAN_ERROR_ILLPARAMTYPE);
 	}
 	BYTE param = (BYTE)intValueFromJava(env, parameter, "TPCANParameter");
-	char buf[128] = {0};
-	if ((DWORD)bufferLength > sizeof(buf)) {
+	/* One spare byte keeps string parameters NUL-terminated for StringBuffer. */
+	char buf[129] = {0};
+	if (bufferLength < 0 || (size_t)bufferLength >= sizeof(buf)) {
 		return statusFromCode(env, PCAN_ERROR_ILLPARAMTYPE);
 	}
 	DWORD result = p_GetValue(channelFromJava(env, channel), param,
 		buf, (DWORD)bufferLength);
-	(void)buffer;
+	if (result == PCAN_ERROR_OK) {
+		bufferFromNative(env, buffer, buf, (size_t)bufferLength);
+	}
 	return statusFromCode(env, (jint)result);
 }
 
@@ -444,13 +526,13 @@ JNIEXPORT jobject JNICALL Java_peak_can_basic_PCANBasic_SetValue
 		return statusFromCode(env, PCAN_ERROR_ILLPARAMTYPE);
 	}
 	BYTE param = (BYTE)intValueFromJava(env, parameter, "TPCANParameter");
-	char buf[128] = {0};
-	if ((DWORD)bufferLength > sizeof(buf)) {
+	char buf[129] = {0};
+	if (bufferLength < 0 || (size_t)bufferLength >= sizeof(buf)) {
 		return statusFromCode(env, PCAN_ERROR_ILLPARAMTYPE);
 	}
+	bufferToNative(env, buffer, buf, (size_t)bufferLength);
 	DWORD result = p_SetValue(channelFromJava(env, channel), param,
 		buf, (DWORD)bufferLength);
-	(void)buffer;
 	return statusFromCode(env, (jint)result);
 }
 

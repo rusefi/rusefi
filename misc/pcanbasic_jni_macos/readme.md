@@ -52,9 +52,17 @@ Apple Silicon (arm64 only, 2026-09); Intel Macs need the universal rebuild.
 - Plugging the adapter in after the first `CAN_Initialize` failed
   (`PCAN_ERROR_ILLHW`) has been seen to leave MacCAN unable to claim the
   device until the process restarts: plug the adapter in first.
-- `InitializeFD`/`ReadFD`/`WriteFD`, `GetValue`/`SetValue` buffers and the
-  receive-event functions are stubs returning `PCAN_ERROR_ILLPARAMTYPE`;
-  the console only uses Initialize/FilterMessages/Read/Write/Uninitialize.
+- `InitializeFD`/`ReadFD`/`WriteFD` and the receive-event functions are
+  stubs returning `PCAN_ERROR_ILLPARAMTYPE`; the console only uses
+  Initialize/FilterMessages/Read/Write/Uninitialize.
+- `GetValue`/`SetValue` marshal the Java buffer like PEAK's Windows JNI:
+  `peak.can.MutableInteger`/`MutableLong` (public `value` field), `byte[]`
+  and `StringBuffer` are read before `SetValue` and filled after a
+  successful `GetValue`. A bridge built before this change forwarded the
+  query but never copied the result back, so `PCAN_CHANNEL_CONDITION`
+  always read as its Java default and adapters could not be enumerated;
+  callers that pre-seed the buffer with an impossible value can detect that
+  older dylib. Rebuild with `build.sh` after updating this source.
 
 ## Diagnostics
 
