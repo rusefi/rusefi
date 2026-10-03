@@ -7,6 +7,8 @@ import java.awt.event.MouseEvent;
 
 public class Surface3DView extends JPanel {
     private Double[][] data;
+    private double[] xPositions;
+    private double[] yPositions;
     private double minValue;
     private double maxValue;
 
@@ -43,9 +45,42 @@ public class Surface3DView extends JPanel {
 
     public void setData(Double[][] data, Double[] xBins, Double[] yBins, double minValue, double maxValue) {
         this.data = data;
+        this.xPositions = axisPositions(xBins, data.length == 0 ? 0 : data[0].length);
+        this.yPositions = axisPositions(yBins, data.length);
         this.minValue = minValue;
         this.maxValue = maxValue;
         repaint();
+    }
+
+    static double[] axisPositions(Double[] bins, int count) {
+        double[] positions = new double[count];
+        boolean valid = hasUsableAxis(bins, count);
+        for (int i = 0; i < count; i++) {
+            positions[i] = valid ? (bins[i] - bins[0]) / (bins[count - 1] - bins[0]) - 0.5
+                : (count > 1 ? (double) i / (count - 1) - 0.5 : 0);
+        }
+        return positions;
+    }
+
+    static boolean hasUsableAxis(Double[] bins, int count) {
+        if (count < 2 || bins == null || bins.length != count) {
+            return false;
+        }
+        for (Double bin : bins) {
+            if (bin == null || !Double.isFinite(bin)) {
+                return false;
+            }
+        }
+        double span = bins[count - 1] - bins[0];
+        if (!Double.isFinite(span) || span == 0) {
+            return false;
+        }
+        for (int i = 1; i < count; i++) {
+            if ((span > 0 && bins[i] <= bins[i - 1]) || (span < 0 && bins[i] >= bins[i - 1])) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
@@ -69,8 +104,8 @@ public class Surface3DView extends JPanel {
         Point3D[][] points = new Point3D[rows][cols];
         for (int r = 0; r < rows; r++) {
             for (int c = 0; c < cols; c++) {
-                double x = (double) c / (cols - 1) - 0.5;
-                double y = (double) r / (rows - 1) - 0.5;
+                double x = xPositions[c];
+                double y = yPositions[r];
                 double z = 0;
                 if (maxValue > minValue) {
                     z = (data[r][c] - minValue) / (maxValue - minValue) - 0.5;

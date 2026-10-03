@@ -15,6 +15,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -28,6 +30,10 @@ public class TuningTableView {
     private final boolean viewMode;
     private final JTable table = new JTable();
     private final Surface3DView surface3DView = new Surface3DView();
+    private final Surface3DView mini3DView = new Surface3DView();
+    private final JPanel gridPanel = new JPanel(new BorderLayout());
+    private boolean full3D;
+    private boolean previewEligible;
     private final CardLayout cardLayout = new CardLayout();
     private final JPanel tableContainer = new JPanel(cardLayout);
     private final JPanel content = new JPanel();
@@ -78,12 +84,19 @@ public class TuningTableView {
             }
         });
 
-        tableContainer.add(new JScrollPane(table), "table");
+        mini3DView.setPreferredSize(new Dimension(320, 160));
+        mini3DView.setToolTipText("3D preview - drag to rotate; select 3D view for a larger view");
+        mini3DView.setVisible(false);
+        gridPanel.add(new JScrollPane(table), BorderLayout.CENTER);
+        gridPanel.add(mini3DView, BorderLayout.SOUTH);
+        tableContainer.add(gridPanel, "table");
         tableContainer.add(surface3DView, "3d");
 
         JCheckBox view3d = new JCheckBox("3D view");
         view3d.addActionListener(e -> {
+            full3D = view3d.isSelected();
             cardLayout.show(tableContainer, view3d.isSelected() ? "3d" : "table");
+            updatePreviewVisibility();
         });
 
         JTextField deltaField = new JTextField("0.5", 5);
@@ -169,6 +182,34 @@ public class TuningTableView {
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         content.add(topPanel);
         content.add(tableContainer);
+        tableContainer.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                updatePreviewVisibility();
+            }
+        });
+    }
+
+    private void updatePreviewVisibility() {
+        // Keep the grid usable in small dialogs. Large tables can scroll above the preview.
+        int gridHeight = Math.min(320, table.getRowCount() * table.getRowHeight())
+            + table.getTableHeader().getPreferredSize().height;
+        boolean visible = previewEligible && !full3D && tableContainer.getWidth() >= 320
+            && tableContainer.getHeight() >= gridHeight + 160;
+        if (mini3DView.isVisible() != visible) {
+            mini3DView.setVisible(visible);
+            gridPanel.revalidate();
+            gridPanel.repaint();
+        }
+    }
+
+    private void updateSurfaces(Double[][] data, Double[] xBins, Double[] yBins) {
+        surface3DView.setData(data, xBins, yBins, minValue, maxValue);
+        mini3DView.setData(data, xBins, yBins, minValue, maxValue);
+        previewEligible = data.length >= 2 && data[0].length >= 2
+            && Surface3DView.hasUsableAxis(xBins, data[0].length)
+            && Surface3DView.hasUsableAxis(yBins, data.length);
+        updatePreviewVisibility();
     }
 
     private void installAxisHighlighting() {
@@ -406,7 +447,7 @@ public class TuningTableView {
         ((DefaultListSelectionModel) table.getSelectionModel()).moveLeadSelectionIndex(leadRow);
         ((DefaultListSelectionModel) table.getColumnModel().getSelectionModel()).moveLeadSelectionIndex(leadColumn);
 
-        surface3DView.setData(model.data, model.xBins, model.yBins, minValue, maxValue);
+        updateSurfaces(model.data, model.xBins, model.yBins);
         if (wroteImage && onEdit != null) {
             onEdit.run();
         }
@@ -671,7 +712,7 @@ public class TuningTableView {
         table.setModel(new TuningTableModel(dataValues, xBins, yBins, precision, !viewMode,
             model -> commitEdit(model, table.getSelectedRows(), table.getSelectedColumns())));
         table.clearSelection();
-        surface3DView.setData(dataValues, xBins, yBins, minValue, maxValue);
+        updateSurfaces(dataValues, xBins, yBins);
     }
 
     public void displayTable(IniFileModel iniFile, String tableName, ConfigurationImage image) {
