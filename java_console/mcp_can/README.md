@@ -45,6 +45,17 @@ java -jar java_console/mcp_can/build/libs/mcp_can-all.jar --backend pcan --chann
 PCAN requires its driver and PCANBasic JNI library on the Java library path. A channel
 can also be specified as `PCAN_USBBUS2`. Run one server per adapter connection.
 
+On Windows that is PEAK's driver plus `PCANBasic_JNI.dll`/`PCANBasic.dll` from `java_console/`.
+On macOS install MacCAN (`brew tap mac-can/maccan && brew install pcbusb`) and point
+`-Djava.library.path` at the directory holding `libpcanbasic_jni.dylib` (checked in under
+`java_console/`, source and traps in `misc/pcanbasic_jni_macos/readme.md`):
+
+```sh
+java -Djava.library.path=java_console -jar java_console/mcp_can/build/libs/mcp_can-all.jar --backend pcan
+```
+
+Linux has no PCANBasic binding; use SLCAN there.
+
 ## Tools and packet format
 
 - `connect`: opens the backend selected on the command line. Repeated calls reuse an active connection.

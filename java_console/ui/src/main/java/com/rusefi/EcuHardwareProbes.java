@@ -7,9 +7,9 @@ import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
+import com.rusefi.io.can.PCanHelper;
 import com.rusefi.io.can.PCanIoStream;
 import com.rusefi.io.can.SocketCANIoStream;
-import com.rusefi.io.can.PCanIoStream;
 import com.rusefi.io.can.SLCANConnector;
 import com.rusefi.io.serial.BufferedSerialIoStream;
 import com.rusefi.io.tcp.TcpConnector;
@@ -173,7 +173,17 @@ public class EcuHardwareProbes implements SerialPortScanner.HardwareProbes {
     static final PCanProbe REAL_PCAN_PROBE = new PCanProbe() {
         @Override
         public boolean isSupported() {
-            return OsUtil.isWindows() && MaintenanceUtil.detectPcan(UpdateOperationCallbacks.DUMMY);
+            if (OsUtil.isWindows()) {
+                // PEAK driver present? Asks PnP so that no channel is touched while probing.
+                return MaintenanceUtil.detectPcan(UpdateOperationCallbacks.DUMMY);
+            }
+            if (OsUtil.isLinux()) {
+                // SocketCAN is the Linux CAN path; there is no PCANBasic binding to load.
+                return false;
+            }
+            // macOS: the JNI bridge loads MacCAN's libPCBUSB; "present" means the library resolved.
+            // Whether an adapter is actually plugged in shows up as open() returning null.
+            return PCanHelper.isNativeApiAvailable();
         }
 
         @Override

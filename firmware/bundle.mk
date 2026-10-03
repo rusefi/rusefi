@@ -99,10 +99,15 @@ UPDATE_CONSOLE_FOLDER_SOURCES = \
   $(TS_PLUGIN_LAUNCHER_JAR)
 
 # PCAN support is optional and excluded by default.
+# The .dll pair is PEAK's Windows driver binding; libpcanbasic_jni.dylib is the
+# macOS JNI bridge onto MacCAN's libPCBUSB (source: misc/pcanbasic_jni_macos).
+# The bundle is OS-agnostic, so both ship side by side next to rusefi_console.jar;
+# rusefi_updater.sh adds that folder to java.library.path.
 ifeq ($(BUNDLE_PCAN),yes)
   UPDATE_CONSOLE_FOLDER_SOURCES += \
     ../java_console/PCANBasic.dll \
-    ../java_console/PCANBasic_JNI.dll
+    ../java_console/PCANBasic_JNI.dll \
+    ../java_console/libpcanbasic_jni.dylib
 endif
 
 # Launchers live at the bundle root; they delegate to console/rusefi_console.jar
