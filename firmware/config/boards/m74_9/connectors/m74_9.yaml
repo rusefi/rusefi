@@ -318,8 +318,10 @@ pins:
     type: can
 
   - pin: BF2
-    function: Ignition
-    type: ign
+    id: L9779_PIN_KEY
+    class: switch_inputs
+    function: Ignition key
+    type: din
 
   - pin: BF3
 #    id: [F10, EFI_ADC3_8]
