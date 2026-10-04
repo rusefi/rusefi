@@ -2,6 +2,10 @@ package com.rusefi.io.can.isotp;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.util.HexBinary;
+import com.rusefi.core.net.PropertiesHolder;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -9,6 +13,10 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class IsoTpConnector {
     private final static Logging log = Logging.getLogging(IsoTpConnector.class);
+
+    // Board bundles can pace outgoing CFs to avoid overrunning a small ECU CAN FIFO.
+    // Zero preserves the shared transport's unpaced behavior.
+    private static final String PACING_PROPERTY = "isotp_consecutive_frame_delay_ms";
 
     private final int canId;
 
@@ -25,6 +33,8 @@ public abstract class IsoTpConnector {
 
         log.info(HexBinary.printHexBinary(bytes));
 
+
+        int pacingMs = consecutiveFrameDelayMs();
 
         // 1 frame
         if (bytes.length <= 7) {
@@ -48,6 +58,31 @@ public abstract class IsoTpConnector {
             connector.sendCanFrame((IsoTpConstants.ISO_TP_FRAME_CONSECUTIVE << 4) | ((idx++) & 0x0f), bytes, offset, len);
             offset += len;
             remaining -= len;
+            if (remaining > 0 && pacingMs > 0) {
+                connector.pauseBetweenConsecutiveFrames(pacingMs);
+            }
+        }
+    }
+
+    private static int consecutiveFrameDelayMs() {
+        String value = PropertiesHolder.getProperty(PACING_PROPERTY, "0").trim();
+        try {
+            int milliseconds = Integer.parseInt(value);
+            if (milliseconds >= 0) {
+                return milliseconds;
+            }
+        } catch (NumberFormatException ignored) {
+            // Report the property name along with the invalid value below.
+        }
+        throw new IllegalArgumentException(PACING_PROPERTY + " must be a nonnegative integer: " + value);
+    }
+
+    protected void pauseBetweenConsecutiveFrames(int milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new UncheckedIOException(new IOException("ISO-TP pacing interrupted", e));
         }
     }
 
