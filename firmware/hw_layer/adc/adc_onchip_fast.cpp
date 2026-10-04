@@ -24,6 +24,7 @@
 #if HAL_USE_ADC
 
 #include "adc_device.h"
+#include "adc_onchip.h"
 #include "adc_subscription.h"
 #include "mpu_util.h"
 #include "periodic_thread_controller.h"
@@ -224,17 +225,24 @@ void AdcDevice::init(void) {
 }
 
 int AdcDevice::enableChannel(adc_channel_e hwChannel) {
+	if (!isAdcChannelOnChip(hwChannel)) {
+		return -1;
+	}
+#if defined(STM32F4) || defined(STM32F7)
+	int channelAdcIndex = getAdcInternalChannel(adcp->adc, hwChannel);
+	if (channelAdcIndex < 0) {
+		criticalError("ADC input %d unavailable for fast sampling", hwChannel);
+		return -1;
+	}
+#else
+	size_t channelAdcIndex = hwChannel - EFI_ADC_0;
+#endif
 	if ((channelCount + 1) >= ADC_MAX_CHANNELS_COUNT) {
 		criticalError("Too many ADC channels configured");
 		return -1;
 	}
 
 	int logicChannel = channelCount++;
-
-	/* TODO: following is correct for STM32 ADC1/2.
-	 * ADC3 has another input to gpio mapping
-	 * and should be handled separately */
-	size_t channelAdcIndex = hwChannel - EFI_ADC_0;
 
 	internalAdcIndexByHardwareIndex[hwChannel] = logicChannel;
 	if (logicChannel < 6) {

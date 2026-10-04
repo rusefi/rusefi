@@ -245,7 +245,9 @@ void addFastAdcChannel(const char*, adc_channel_e hwChannel) {
 	}
 
 #if EFI_USE_FAST_ADC
-	fastAdc.enableChannel(hwChannel);
+	if (fastAdc.enableChannel(hwChannel) < 0) {
+		return;
+	}
 #endif
 
 	adcHwChannelMode[hwChannel] = AdcChannelMode::Fast;

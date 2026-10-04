@@ -12,6 +12,7 @@
 
 #include "adc_device.h"
 #include "adc_sample_buffer.h"
+#include "adc_onchip.h"
 
 #ifndef SLOW_ADC_CHANNEL_COUNT
 #ifdef ADC_MUX_PIN
@@ -34,6 +35,10 @@ void adcOnchipSlowUpdate(efitick_t nowNt) {
 	UNUSED(nowNt);
 
 	ScopePerf perf(PE::AdcConversionSlow);
+
+#if EFI_ADC3_SLOW
+	adc3SlowUpdate();
+#endif
 
 	/* drop volatile type qualifier - this is safe */
 	if (!readSlowAnalogInputs((adcsample_t *)slowAdcSamples)) {
@@ -59,6 +64,11 @@ void adcOnchipSlowUpdate(efitick_t nowNt) {
 
 int adcOnchipSlowGetAvgRaw(adc_channel_e hwChannel)
 {
+#if EFI_ADC3_SLOW
+	if (hwChannel >= EFI_ADC_32 && hwChannel <= EFI_ADC_39) {
+		return adc3SlowRead(hwChannel);
+	}
+#endif
 	return readSlowAdcSample(slowAdcSamples, SLOW_ADC_CHANNEL_COUNT, hwChannel - EFI_ADC_0);
 }
 
