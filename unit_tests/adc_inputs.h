@@ -9,6 +9,8 @@
 
 #include "rusefi_hw_enums.h"
 
+float getAnalogInputDividerCoefficient(adc_channel_e);
+
 inline bool isAdcChannelValid(adc_channel_e hwChannel) {
 	/* Compiler will optimize, keep following if as a reminder */
 	if (hwChannel >= EFI_ADC_TOTAL_CHANNELS) {

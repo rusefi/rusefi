@@ -38,6 +38,12 @@ After ChibiOS build-rule changes, validate generated-header dependencies with an
 
 ### Unit Tests
 
+The host build shadows `firmware/hw_layer/adc/adc_inputs.h` with
+`unit_tests/adc_inputs.h`. Including the short name in a host test does not
+expose newly added production declarations; keep the mock declaration in sync
+when testing a shared ADC entry point. Host ADC subscriptions are stubs, so
+converter tests do not establish DMA acquisition, filtering or sample freshness.
+
 ```bash
 cd unit_tests
 ./test.sh

@@ -3,6 +3,30 @@
 #include "unit_test_framework.h"
 #include "init.h"
 #include "functional_sensor.h"
+#include "thermistor_func.h"
+#include "adc_inputs.h"
+#include "board_overrides.h"
+
+namespace {
+struct ScopedTemperatureElectricalOverrides {
+	std::optional<setup_custom_get_adc_float_type> supply = custom_board_getThermistorSupplyVoltage;
+	std::optional<setup_custom_get_adc_float_type> divider = custom_board_getAnalogInputDividerCoefficient;
+
+	ScopedTemperatureElectricalOverrides() {
+		custom_board_getThermistorSupplyVoltage = [](adc_channel_e channel) {
+			return channel == EFI_ADC_6 ? 3.3f : 5.0f;
+		};
+		custom_board_getAnalogInputDividerCoefficient = [](adc_channel_e channel) {
+			return channel == EFI_ADC_6 ? 1.0f : engineConfiguration->analogInputDividerCoefficient;
+		};
+	}
+
+	~ScopedTemperatureElectricalOverrides() {
+		custom_board_getThermistorSupplyVoltage = supply;
+		custom_board_getAnalogInputDividerCoefficient = divider;
+	}
+};
+}
 
 static void postToFuncSensor(Sensor* s, float value) {
 	static_cast<FunctionalSensor*>(s)->postRawValue(value, getTimeNowNt());
@@ -234,6 +258,75 @@ TEST(SensorInit, Clt) {
 	// Test out of range
 	EXPECT_POINT_INVALID(s, 0.0f);
 	EXPECT_POINT_INVALID(s, 5.0f);
+}
+
+TEST(SensorInit, BufferedThreeVoltThermistor) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	ScopedTemperatureElectricalOverrides overrides;
+	engineConfiguration->clt.config = {0, 30, 100, 32500, 7550, 700, 2150};
+	engineConfiguration->clt.adcChannel = EFI_ADC_6;
+	engineConfiguration->analogInputDividerCoefficient = 2.0f;
+	initThermistors();
+	auto sensor = static_cast<const FunctionalSensor*>(Sensor::getSensorOfType(SensorType::Clt));
+	ASSERT_NE(nullptr, sensor);
+	auto chain = static_cast<thermistor_t*>(sensor->getFunction());
+	EXPECT_FLOAT_EQ(1.0f, getAnalogInputDividerCoefficient(EFI_ADC_6));
+	auto resistance = chain->get<resist>().convert(1.65f);
+	ASSERT_TRUE(resistance.Valid);
+	EXPECT_NEAR(2150.0f, resistance.Value, 0.01f);
+	EXPECT_EQ(UnexpectedCode::High, chain->get<resist>().convert(3.3f).Code);
+	EXPECT_EQ(UnexpectedCode::Low, chain->get<resist>().convert(0.0f).Code);
+	EXPECT_FLOAT_EQ(0.0f, chain->get<resist>().getLastResistance());
+	// Verify the complete initialized voltage -> resistance -> temperature chain.
+	for (auto point : {std::pair{32500.0f, 0.0f}, {7550.0f, 30.0f}, {700.0f, 100.0f}}) {
+		const float voltage = 3.3f * point.first / (2150.0f + point.first);
+		auto result = chain->convert(voltage * getAnalogInputDividerCoefficient(EFI_ADC_6));
+		ASSERT_TRUE(result.Valid);
+		EXPECT_NEAR(point.second, result.Value, 0.01f);
+	}
+}
+
+TEST(SensorInit, ThermistorSupplyIsPerChannel) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	ScopedTemperatureElectricalOverrides overrides;
+	engineConfiguration->iat.config = {0, 30, 100, 32500, 7550, 700, 2150};
+	engineConfiguration->iat.adcChannel = EFI_ADC_7;
+	engineConfiguration->auxTempSensor1 = engineConfiguration->iat;
+	engineConfiguration->auxTempSensor1.adcChannel = EFI_ADC_6;
+	engineConfiguration->analogInputDividerCoefficient = 2.0f;
+	initThermistors();
+	EXPECT_FLOAT_EQ(2.0f, getAnalogInputDividerCoefficient(EFI_ADC_7));
+	for (auto type : {SensorType::Iat, SensorType::AuxTemp1}) {
+		auto sensor = const_cast<Sensor*>(Sensor::getSensorOfType(type));
+		ASSERT_NE(nullptr, sensor);
+		const float supply = type == SensorType::Iat ? 5.0f : 3.3f;
+		EXPECT_POINT_VALID(sensor, supply * 7550.0f / (2150.0f + 7550.0f), 30.0f);
+		EXPECT_POINT_INVALID(sensor, supply);
+	}
+}
+
+TEST(SensorInit, ThreeVoltPulldownThermistor) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	ScopedTemperatureElectricalOverrides overrides;
+	engineConfiguration->clt.config = {0, 30, 100, 32500, 7550, 700, 2150};
+	engineConfiguration->clt.adcChannel = EFI_ADC_6;
+	engineConfiguration->cltSensorPulldown = true;
+	initThermistors();
+	auto sensor = const_cast<Sensor*>(Sensor::getSensorOfType(SensorType::Clt));
+	ASSERT_NE(nullptr, sensor);
+	EXPECT_POINT_VALID(sensor, 3.3f * 2150.0f / (2150.0f + 7550.0f), 30.0f);
+}
+
+TEST(SensorInit, LinearTemperatureIgnoresThermistorSupply) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	ScopedTemperatureElectricalOverrides overrides;
+	engineConfiguration->clt.config = {0, 100, 200, 0.5f, 2.5f, 4.5f, 2150};
+	engineConfiguration->clt.adcChannel = EFI_ADC_6;
+	engineConfiguration->useLinearCltSensor = true;
+	initThermistors();
+	auto sensor = const_cast<Sensor*>(Sensor::getSensorOfType(SensorType::Clt));
+	ASSERT_NE(nullptr, sensor);
+	EXPECT_POINT_VALID(sensor, 1.5f, 50.0f);
 }
 
 TEST(SensorInit, Lambda) {

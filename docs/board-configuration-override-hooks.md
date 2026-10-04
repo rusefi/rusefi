@@ -155,6 +155,22 @@ Burn command       -> validateConfigOnStartUpOrBurn(true)
 
 ## Decision guide
 
+Analog conversion uses two independent per-channel callbacks in `board_overrides.h`:
+
+- `custom_board_getAnalogInputDividerCoefficient(adc_channel_e)` returns physical
+  input volts per MCU ADC volt. With no callback, the default implementation
+  uses `analogInputDividerCoefficient`. Existing boards that replace the legacy
+  weak `getAnalogInputDividerCoefficient` function keep their own implementation.
+- `custom_board_getThermistorSupplyVoltage(adc_channel_e)` returns the voltage
+  supplying a thermistor divider. Without a callback, it is 5 V. This applies
+  to all resistive temperature slots; linear temperature conversion is unchanged.
+
+Install these callbacks during `setup_custom_board_overrides()`, before sensor
+initialization. Each callback must handle every channel and return the normal
+fallback for channels without special circuitry. Supply voltage and ADC scaling
+must describe the same physical voltage domain. Neither callback changes sensor
+calibration points, stored bias values or ADC acquisition support.
+
 - Starting-point value for fresh tunes, user may change it later
   -> `custom_board_DefaultConfiguration`
 - Hardware fact of the board, user must never change it
