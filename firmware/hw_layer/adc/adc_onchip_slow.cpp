@@ -11,6 +11,7 @@
 #if HAL_USE_ADC
 
 #include "adc_device.h"
+#include "adc_sample_buffer.h"
 
 #ifndef SLOW_ADC_CHANNEL_COUNT
 #ifdef ADC_MUX_PIN
@@ -56,9 +57,9 @@ void adcOnchipSlowUpdate(efitick_t nowNt) {
 	mcuVrefVoltage = getMcuVrefVoltage();
 }
 
-adcsample_t adcOnchipSlowGetAvgRaw(adc_channel_e hwChannel)
+int adcOnchipSlowGetAvgRaw(adc_channel_e hwChannel)
 {
-	return slowAdcSamples[hwChannel - EFI_ADC_0];
+	return readSlowAdcSample(slowAdcSamples, SLOW_ADC_CHANNEL_COUNT, hwChannel - EFI_ADC_0);
 }
 
 extern void adcPrintChannelReport(const char *prefix, int internalIndex, adc_channel_e hwChannel);

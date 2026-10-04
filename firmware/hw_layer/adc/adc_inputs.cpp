@@ -136,7 +136,7 @@ AdcChannelMode getAdcMode(adc_channel_e hwChannel) {
 	return adcHwChannelMode[hwChannel];
 }
 
-extern adcsample_t adcOnchipSlowGetAvgRaw(adc_channel_e hwChannel);
+extern int adcOnchipSlowGetAvgRaw(adc_channel_e hwChannel);
 
 int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 	if (!isAdcChannelValid(hwChannel)) {

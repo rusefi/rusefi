@@ -2,6 +2,7 @@ TESTS_SRC_CPP = \
 	tests/test_adc_offchip.cpp \
 	tests/test_mcp4728.cpp \
 	tests/test_adc_callbacks.cpp \
+	tests/test_adc_sample_buffer.cpp \
 	tests/controllers/test_at32_port.cpp \
 	tests/test_slcan.cpp \
 	tests/test_hardware_pwm.cpp \
