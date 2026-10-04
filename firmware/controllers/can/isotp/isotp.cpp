@@ -89,7 +89,7 @@ void IsoTpBase::sendFlowControl(can_sysinterval_t timeout) {
 	sendFrame(header, nullptr, 0, timeout);
 }
 
-// returns the number of copied bytes
+// Returns copied bytes, or -1 when a broken packet has been discarded.
 int CanStreamerState::receiveFrame(const CANRxFrame &rxmsg, uint8_t *destinationBuff, int availableAtBuffer, can_sysinterval_t timeout) {
 	if (rxmsg.DLC < 1 + isoHeaderByteIndex)
 		return 0;
@@ -127,9 +127,10 @@ int CanStreamerState::receiveFrame(const CANRxFrame &rxmsg, uint8_t *destination
 		break;
 	case ISO_TP_FRAME_CONSECUTIVE:
 		frameIdx = rxmsg.data8[isoHeaderByteIndex] & 0xf;
-		if (this->waitingForNumBytes < 0 || this->waitingForFrameIndex != frameIdx) {
-			// todo: that's an abnormal situation, and we probably should react?
-			return 0;
+		if (this->waitingForNumBytes <= 0 || this->waitingForFrameIndex != frameIdx) {
+			// Do not retain payload from a packet with a missing or stale frame.
+			reset();
+			return -1;
 		}
 		numBytesAvailable = minI(this->waitingForNumBytes, 7 - isoHeaderByteIndex);
 		srcBuf = rxmsg.data8 + 1 + isoHeaderByteIndex;
@@ -193,6 +194,7 @@ void CanStreamerState::reset() {
   waitingForNumBytes = 0;
   waitingForFrameIndex = 0;
   isComplete = false;
+  rxFifoBuf.clear();
 }
 
 int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sysinterval_t timeout) {
@@ -215,6 +217,10 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 
 	// multiple frames
 
+	// Discard stale acknowledgements before FF, never after transmit returns:
+	// the CAN reader may queue our reply while transmit is still completing.
+	rxTransport->prepareFlowControlWait();
+
 	// send the first header frame (FF)
 	IsoTpFrameHeader header;
 	header.frameType = ISO_TP_FRAME_FIRST;
@@ -233,14 +239,16 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 	{
 		CANRxFrame rxmsg;
 		for (size_t numFcReceived = 0; ; numFcReceived++) {
-			if (rxTransport->receive(&rxmsg, timeout) != CAN_MSG_OK) {
+			if (rxTransport->receiveFlowControl(&rxmsg, timeout) != CAN_MSG_OK) {
 #ifdef SERIAL_CAN_DEBUG
 				PRINT("*** ERROR: CAN Flow Control frame not received" PRINT_EOL);
 #endif /* SERIAL_CAN_DEBUG */
 				//warning(ObdCode::CUSTOM_ERR_CAN_COMMUNICATION, "CAN Flow Control frame not received");
 				return 0;
 			}
-			receiveFrame(rxmsg, nullptr, 0, timeout);
+			if (rxmsg.DLC < 3) {
+				return 0;
+			}
 			uint8_t frameType = (rxmsg.data8[isoHeaderByteIndex] >> 4) & 0xf;
 			uint8_t flowStatus = rxmsg.data8[isoHeaderByteIndex] & 0xf;
 			// if something is not ok

@@ -31,7 +31,16 @@ public:
 		return rxFifo.get(item, timeout);
 	}
 
+	void prepareFlowControlWait() override {
+		flowControlFifo.clear();
+	}
+
+	bool getFlowControl(CanRxMessage &item, int timeout) override {
+		return flowControlFifo.get(item, timeout);
+	}
+
 protected:
+	fifo_buffer_sync<CanRxMessage, CAN_FIFO_FRAME_SIZE> flowControlFifo;
   // CanStreamerState has non-sync fifo, unify?
 	fifo_buffer_sync<CanRxMessage, CAN_FIFO_FRAME_SIZE> rxFifo;
 };
@@ -45,6 +54,8 @@ public:
 	virtual can_msg_t transmit(CanTxMessage &ctfp, can_sysinterval_t timeout) override;
 	virtual can_msg_t receive(CANRxFrame *crfp, can_sysinterval_t timeout) override;
 	virtual void onTpFirstFrame() override;
+	void prepareFlowControlWait() override;
+	can_msg_t receiveFlowControl(CANRxFrame *crfp, can_sysinterval_t timeout) override;
 
 	CanRxMessageSource *source;
 };

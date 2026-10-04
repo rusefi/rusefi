@@ -44,6 +44,24 @@ public:
 		return CAN_MSG_OK;
 	}
 
+	void prepareFlowControlWait() override {
+		crfList.remove_if([](const CANRxFrame &frame) {
+			return (frame.data8[0] >> 4) == ISO_TP_FRAME_FLOW_CONTROL;
+		});
+	}
+
+	can_msg_t receiveFlowControl(CANRxFrame *frame, can_sysinterval_t) override {
+		auto it = std::find_if(crfList.begin(), crfList.end(), [](const CANRxFrame &candidate) {
+			return (candidate.data8[0] >> 4) == ISO_TP_FRAME_FLOW_CONTROL;
+		});
+		if (it == crfList.end()) {
+			return CAN_MSG_TIMEOUT;
+		}
+		*frame = *it;
+		crfList.erase(it);
+		return CAN_MSG_OK;
+	}
+
 	template<typename T>
 	void checkFrame(const T & frame, const std::string & bytes, int frameIndex) {
 		EXPECT_EQ(bytes.size(), frame.DLC);
@@ -102,12 +120,12 @@ public:
 		return result;
 	}
 
-	can_msg_t receive(CANRxFrame *frame, can_sysinterval_t timeout) override {
+	can_msg_t receiveFlowControl(CANRxFrame *frame, can_sysinterval_t timeout) override {
 		receiveCalls++;
 		if (beforeReceive) {
 			beforeReceive();
 		}
-		return TestCanTransport::receive(frame, timeout);
+		return TestCanTransport::receiveFlowControl(frame, timeout);
 	}
 };
 
@@ -135,48 +153,110 @@ protected:
 	}
 };
 
-TEST_F(IsoTpFlowControl, WaitConsumesIncomingCommandAndAbortsResponse) {
+TEST_F(IsoTpFlowControl, WaitPreservesIncomingCommandAndCompletesResponse) {
 	transport.crfList.push_back(frame({0x02, 0x55, 0x66}));
 	transport.duringFirstTransmit = [&] {
 		transport.crfList.push_back(frame({0x30, 0, 0}));
 	};
 
-	// TDB: the pending command is consumed as though it were an acknowledgement.
-	EXPECT_EQ(0, send());
+	EXPECT_EQ(10, send());
 	EXPECT_EQ(1, transport.receiveCalls);
-	ASSERT_EQ(1u, transport.ctfList.size()); // Response stops after its first frame.
-	EXPECT_EQ(0x10, transport.ctfList.front().data8[0]);
+	ASSERT_EQ(2u, transport.ctfList.size());
 	ASSERT_EQ(1u, transport.crfList.size());
-	EXPECT_EQ(0x30, transport.crfList.front().data8[0]); // Actual CTS is left behind.
-	EXPECT_TRUE(state.isComplete);
-	EXPECT_EQ(2, state.rxFifoBuf.getCount());
-	EXPECT_EQ(0x55, state.rxFifoBuf.get());
-	EXPECT_EQ(0x66, state.rxFifoBuf.get());
+	EXPECT_EQ(0x02, transport.crfList.front().data8[0]);
+	EXPECT_FALSE(state.isComplete);
+	EXPECT_EQ(0, state.rxFifoBuf.getCount());
 }
 
-TEST_F(IsoTpFlowControl, WaitAdvancesPartiallyReceivedCommandAndAbortsResponse) {
+TEST_F(IsoTpFlowControl, WaitPreservesPartiallyReceivedCommandAndCompletesResponse) {
 	auto first = frame({0x10, 10, 1, 2, 3, 4, 5, 6});
 	state.receiveFrame(first, nullptr, 0, 0);
 	ASSERT_EQ(4, state.waitingForNumBytes);
 	ASSERT_EQ(1, state.waitingForFrameIndex);
-	transport.ctfList.clear(); // Ignore our CTS acknowledging the inbound command.
+	transport.ctfList.clear();
 	transport.crfList.push_back(frame({0x21, 7, 8, 9, 10}));
 	transport.duringFirstTransmit = [&] {
 		transport.crfList.push_back(frame({0x30, 0, 0}));
 	};
 
-	// TDB: waiting for outbound CTS also mutates the inbound assembly state.
-	EXPECT_EQ(0, send());
-	EXPECT_EQ(0, state.waitingForNumBytes);
-	EXPECT_EQ(2, state.waitingForFrameIndex);
+	EXPECT_EQ(10, send());
+	EXPECT_EQ(4, state.waitingForNumBytes);
+	EXPECT_EQ(1, state.waitingForFrameIndex);
+	EXPECT_FALSE(state.isComplete);
+	ASSERT_EQ(6, state.rxFifoBuf.getCount());
+	ASSERT_EQ(2u, transport.ctfList.size());
+	ASSERT_EQ(1u, transport.crfList.size());
+	EXPECT_EQ(0x21, transport.crfList.front().data8[0]);
+	state.receiveFrame(transport.crfList.front(), nullptr, 0, 0);
 	EXPECT_TRUE(state.isComplete);
 	ASSERT_EQ(10, state.rxFifoBuf.getCount());
 	for (auto byte : payload) {
 		EXPECT_EQ(byte, state.rxFifoBuf.get());
 	}
-	ASSERT_EQ(1u, transport.ctfList.size());
-	ASSERT_EQ(1u, transport.crfList.size());
-	EXPECT_EQ(0x30, transport.crfList.front().data8[0]);
+}
+
+TEST_F(IsoTpFlowControl, MissingConsecutiveFrameRecovery) {
+	state.receiveFrame(frame({0x10, 20, 1, 2, 3, 4, 5, 6}), nullptr, 0, 0);
+	ASSERT_EQ(6, state.rxFifoBuf.getCount());
+	EXPECT_EQ(-1, state.receiveFrame(frame({0x22, 7, 8, 9, 10}), nullptr, 0, 0));
+	EXPECT_EQ(0, state.waitingForNumBytes);
+	EXPECT_EQ(0, state.waitingForFrameIndex);
+	EXPECT_EQ(0, state.rxFifoBuf.getCount());
+	state.receiveFrame(frame({0x02, 0x55, 0x66}), nullptr, 0, 0);
+	ASSERT_EQ(2, state.rxFifoBuf.getCount());
+	EXPECT_EQ(0x55, state.rxFifoBuf.get());
+	EXPECT_EQ(0x66, state.rxFifoBuf.get());
+	EXPECT_TRUE(state.isComplete);
+}
+
+TEST_F(IsoTpFlowControl, StaleAcknowledgementDoesNotAuthorizeNextResponse) {
+	transport.crfList.push_back(frame({0x30, 0, 0}));
+	EXPECT_EQ(0, send());
+	EXPECT_EQ(1u, transport.ctfList.size());
+}
+
+class InspectableCanTsListener : public CanTsListener {
+public:
+	int dataCount() const { return rxFifo.getCount(); }
+	int flowControlCount() const { return flowControlFifo.getCount(); }
+};
+
+TEST_F(IsoTpFlowControl, ListenerSeparatesCommandsAndAcknowledgements) {
+	InspectableCanTsListener listener;
+	listener.decodeFrame(frame({0x02, 0x55, 0x66}), 0);
+	listener.decodeFrame(frame({0x30, 0, 0}), 0);
+	ASSERT_EQ(1, listener.dataCount());
+	ASSERT_EQ(1, listener.flowControlCount());
+	listener.prepareFlowControlWait();
+	EXPECT_EQ(1, listener.dataCount());
+	EXPECT_EQ(0, listener.flowControlCount());
+	listener.decodeFrame(frame({0x31, 0, 0}), 0);
+	listener.decodeFrame(frame({0x30, 0, 0}), 0);
+	ASSERT_EQ(2, listener.flowControlCount());
+	CanRxMessage message;
+	ASSERT_TRUE(listener.getFlowControl(message, 0));
+	EXPECT_EQ(0x31, message.frame.data8[0]);
+	ASSERT_TRUE(listener.getFlowControl(message, 0));
+	EXPECT_EQ(0x30, message.frame.data8[0]);
+	EXPECT_EQ(0, listener.flowControlCount());
+	ASSERT_TRUE(listener.get(message, 0));
+	EXPECT_EQ(0x55, message.frame.data8[1]);
+	EXPECT_EQ(0, listener.dataCount());
+}
+
+TEST_F(IsoTpFlowControl, ListenerRejectsForeignAndMalformedAcknowledgements) {
+	InspectableCanTsListener listener;
+	auto extended = frame({0x30, 0, 0});
+	extended.IDE = 1;
+	listener.decodeFrame(extended, 0);
+	auto remote = frame({0x30, 0, 0});
+	remote.RTR = 1;
+	listener.decodeFrame(remote, 0);
+	auto shortFrame = frame({0x30});
+	shortFrame.DLC = 1;
+	listener.decodeFrame(shortFrame, 0);
+	EXPECT_EQ(0, listener.dataCount());
+	EXPECT_EQ(0, listener.flowControlCount());
 }
 
 TEST_F(IsoTpFlowControl, AcknowledgementDuringFirstTransmitIsNotMissed) {

@@ -44,6 +44,14 @@ void CanTsListener::decodeFrame(const CANRxFrame& frame, efitick_t /*nowNt*/) {
 	// CAN ID filtering happens in base class, by the time we are here we know it's the CAN_ECU_SERIAL_RX_ID packet
 	// todo: what if the FIFO is full?
 	CanRxMessage msg(frame);
+	if ((frame.data8[0] >> 4) == ISO_TP_FRAME_FLOW_CONTROL) {
+		// TX acknowledgements have a separate queue. Waiting for one must not
+		// consume a command or change its partially assembled receive state.
+		if (frame.DLC >= 3 && !flowControlFifo.put(msg)) {
+			warning(ObdCode::CUSTOM_ERR_CAN_COMMUNICATION, "CAN flow control queue full");
+		}
+		return;
+	}
 	if (engineConfiguration->verboseIsoTp) {
 		PRINT("*** INFO: CanTsListener decodeFrame %d" PRINT_EOL, isoTpPacketCounter++);
 	}
@@ -72,6 +80,19 @@ can_msg_t CanTransport::receive(CANRxFrame *crfp, can_sysinterval_t timeout) {
 	// see CanTsListener and processCanRxMessage()
 	CanRxMessage msg;
 	if (this->source->get(msg, timeout)) {
+		*crfp = msg.frame;
+		return CAN_MSG_OK;
+	}
+	return CAN_MSG_TIMEOUT;
+}
+
+void CanTransport::prepareFlowControlWait() {
+	source->prepareFlowControlWait();
+}
+
+can_msg_t CanTransport::receiveFlowControl(CANRxFrame *crfp, can_sysinterval_t timeout) {
+	CanRxMessage msg;
+	if (source->getFlowControl(msg, timeout)) {
 		*crfp = msg.frame;
 		return CAN_MSG_OK;
 	}

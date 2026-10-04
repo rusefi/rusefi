@@ -71,6 +71,8 @@ public:
 class CanRxMessageSource {
 public:
   virtual bool get(CanRxMessage &item, int timeout) = 0;
+  virtual void prepareFlowControlWait() = 0;
+  virtual bool getFlowControl(CanRxMessage &item, int timeout) = 0;
 };
 
 class ICanTransmitter {
@@ -82,6 +84,10 @@ class ICanReceiver {
 public:
   virtual can_msg_t receive(CANRxFrame *crfp, can_sysinterval_t timeout) = 0;
   virtual void onTpFirstFrame() = 0;
+  // Arm before transmitting the first frame, so an immediate reply is retained.
+  virtual void prepareFlowControlWait() = 0;
+  // Receiving TX acknowledgements must not consume queued incoming commands.
+  virtual can_msg_t receiveFlowControl(CANRxFrame *crfp, can_sysinterval_t timeout) = 0;
 };
 
 class IsoTpBase {
