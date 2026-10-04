@@ -327,7 +327,7 @@ TEST(L9779Spi, FullAdaptiveVrsConfigurationEnablesAdaptiveFilter) {
 	EXPECT_EQ(0xd8, config.config5);
 	EXPECT_NE(0, config.config1 & 0x02); // Full-adaptive mode.
 	EXPECT_EQ(0x18, config.config5 & 0x18); // Adaptive hysteresis and filter.
-	EXPECT_EQ(0x00, config.config5 & 0x07); // 17 uA hysteresis floor.
+	EXPECT_EQ(0x00, config.config5 & 0x07); // Nominal 17 uA manual selector.
 	EXPECT_EQ(0x00, config.config5 & 0x20); // VRS diagnosis remains disabled.
 }
 

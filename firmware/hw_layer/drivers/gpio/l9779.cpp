@@ -1177,8 +1177,9 @@ err_gpios:
 /* Configure the crank VR conditioner for the L9779's fully adaptive mode
  * (datasheet section 6.14). CONFIG_REG1 enables full adaptation, while
  * CONFIG_REG5 enables both amplitude-based hysteresis and the adaptive time
- * filter (Tfilter = 1/32 of the tooth period) with a 17 uA floor. The chip
- * performs both adaptations internally, so no RPM-driven software ramp is
+ * filter (Tfilter = 1/32 of the tooth period). VRS_HYST stores the nominal
+ * 17 uA manual selector; it does not set a minimum in full-adaptive mode.
+ * The chip performs both adaptations internally, so no RPM-driven software ramp is
  * needed. These registers are write-only and reset with the chip. */
 int L9779::vrs_configure()
 {

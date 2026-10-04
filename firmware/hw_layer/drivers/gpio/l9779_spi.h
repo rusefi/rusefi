@@ -32,7 +32,7 @@ struct L9779VrsConfiguration {
 inline constexpr L9779VrsConfiguration l9779FullAdaptiveVrsConfiguration() {
 	return {
 		0x02, // Full-adaptive VRS mode.
-		0xd8, // Adaptive hysteresis and time filter, 17 uA floor.
+		0xd8, // Adaptive hysteresis and time filter; nominal 17 uA manual selector.
 	};
 }
 
