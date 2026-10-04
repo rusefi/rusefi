@@ -34,7 +34,25 @@ signed -1 for an unsupported channel. `adcGetRawVoltage()` rejects that result,
 so a subscription does not refresh its sensor from unrelated memory. Pin mapping
 alone does not establish ADC acquisition support. Thermistor conversion also
 requires the board's pull-up supply and voltage scaling to agree with the
-converter; the generic initialization currently assumes a 5 V supply.
+converter; initialization defaults to 5 V and supports the per-channel
+`custom_board_getThermistorSupplyVoltage` callback.
+
+On ADCv2, boards may opt into `EFI_ADC3_SLOW` and provide an
+`adc3_slow_config.h` with `ADC3_SLOW_CHANNELS` listing ADC3-only logical inputs
+(EFI_ADC_32 through EFI_ADC_39). `stm32_adc_v2_adc3.cpp` collects eight samples
+per input in a separate linear DMA buffer. The slow-sensor thread requests a
+batch only when ADC3 is ready. Software knock preempts an active slow batch;
+temperature sampling never aborts a knock batch. Completed averages expire at
+6 ms, DMA errors invalidate them, and stalled slow batches are retried after
+2 ms. Invalid raw reads do not refresh the existing sensor timeout.
+
+The feature requires matching scheduler, ADC error and ADC DMA IRQ priorities,
+enforced with static assertions. ADCv2 shares an error IRQ across ADC1/2/3;
+changing ADC3's priority alone is insufficient to serialize HAL state changes.
+The AT32 port selects matching priorities when the feature is enabled. This
+changes interrupt latency and requires physical timing validation on the board.
+Controller mapping also rejects a logical input absent from the chosen ADC;
+fast ADC setup validates membership before inserting a channel in its sequence.
 
 ## Sensor Categories
 - **Thermistors** (CLT/IAT/oil/fuel temp): resistance divider → Steinhart-Hart via `FuncChain`, or linear mode.
