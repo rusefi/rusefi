@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include "../../../firmware/hw_layer/ports/at32/at32_reset_cause.h"
 #include "gpio/l9779_spi.h"
+#include "gpio/l9779_startup.h"
 #include "../../../firmware/hw_layer/ports/at32/at32f4/cfg/mcuconf.h"
 
 // ADC callbacks validate their NVIC priority against EFI_IRQ_ADC_PRIORITY.
@@ -34,6 +35,140 @@ TEST(At32ResetCause, ReservedBits) {
 	EXPECT_EQ(Reset_Cause_Unknown, decodeAt32ResetCause(0));
 	// Artery CRM_CTRLSTS bit 25 is reserved, despite the STM32 BOR alias.
 	EXPECT_EQ(Reset_Cause_Unknown, decodeAt32ResetCause(1U << 25));
+}
+
+namespace {
+struct L9779StartupFake {
+	bool need_init = true;
+	bool power_stage_on = true;
+	bool wd_running = true;
+	unsigned init_attempts = 0;
+	int init_error = 0;
+	int resetResult = 0;
+	int initResult = 0;
+	int outputResult = 0;
+	int resetCalls = 0;
+	int initCalls = 0;
+	int outputCalls = 0;
+	int stopCalls = 0;
+
+	void stop_watchdog() { ++stopCalls; wd_running = false; }
+	int chip_reset() {
+		EXPECT_FALSE(wd_running);
+		EXPECT_TRUE(need_init);
+		++resetCalls;
+		return resetResult;
+	}
+	int chip_init() {
+		EXPECT_EQ(0, resetResult);
+		EXPECT_FALSE(wd_running);
+		EXPECT_TRUE(need_init);
+		++initCalls;
+		return initResult;
+	}
+	int update_output() {
+		EXPECT_EQ(0, initResult);
+		EXPECT_FALSE(wd_running);
+		EXPECT_TRUE(need_init);
+		++outputCalls;
+		return outputResult;
+	}
+};
+}
+
+TEST(L9779Startup, ResetFailure) {
+	L9779StartupFake chip;
+	chip.resetResult = -1;
+	EXPECT_FALSE(l9779InitializeOnKeyOn(chip));
+	EXPECT_TRUE(chip.need_init);
+	EXPECT_FALSE(chip.wd_running);
+	EXPECT_EQ(-1, chip.init_error);
+	EXPECT_EQ(1, chip.resetCalls);
+	EXPECT_EQ(0, chip.initCalls);
+	EXPECT_EQ(0, chip.outputCalls);
+}
+
+TEST(L9779Startup, ConfigurationFailure) {
+	L9779StartupFake chip;
+	chip.initResult = -2;
+	EXPECT_FALSE(l9779InitializeOnKeyOn(chip));
+	EXPECT_TRUE(chip.need_init);
+	EXPECT_FALSE(chip.wd_running);
+	EXPECT_EQ(-2, chip.init_error);
+	EXPECT_EQ(1, chip.initCalls);
+	EXPECT_EQ(0, chip.outputCalls);
+}
+
+TEST(L9779Startup, OutputFailure) {
+	L9779StartupFake chip;
+	chip.outputResult = -3;
+	EXPECT_FALSE(l9779InitializeOnKeyOn(chip));
+	EXPECT_TRUE(chip.need_init);
+	EXPECT_FALSE(chip.wd_running);
+	EXPECT_EQ(-3, chip.init_error);
+	EXPECT_EQ(1, chip.outputCalls);
+}
+
+TEST(L9779Startup, RetryThenSuccess) {
+	L9779StartupFake chip;
+	chip.initResult = -1;
+	EXPECT_FALSE(l9779InitializeOnKeyOn(chip));
+	chip.initResult = 0;
+	EXPECT_TRUE(l9779InitializeOnKeyOn(chip));
+	EXPECT_FALSE(chip.need_init);
+	EXPECT_EQ(0, chip.init_error);
+	EXPECT_EQ(2, chip.resetCalls);
+	EXPECT_EQ(2, chip.initCalls);
+	EXPECT_EQ(1, chip.outputCalls);
+}
+
+TEST(L9779Startup, RetryBudgetAndKeyCycle) {
+	L9779StartupFake chip;
+	chip.outputResult = -1;
+	for (unsigned i = 0; i < L9779_KEY_ON_MAX_ATTEMPTS + 5; i++) {
+		EXPECT_FALSE(l9779InitializeOnKeyOn(chip));
+	}
+	EXPECT_EQ(3, chip.resetCalls);
+	EXPECT_EQ(3, chip.outputCalls);
+	EXPECT_EQ(3, chip.stopCalls);
+	EXPECT_TRUE(chip.need_init);
+
+	// A healthy link alone cannot clear exhaustion or bypass pending setup.
+	chip.outputResult = 0;
+	EXPECT_FALSE(l9779InitializeOnKeyOn(chip));
+	chip.power_stage_on = false;
+	EXPECT_FALSE(l9779InitializeOnKeyOn(chip));
+	chip.power_stage_on = true;
+	l9779RequestInitialization(chip);
+	EXPECT_TRUE(l9779InitializeOnKeyOn(chip));
+	EXPECT_FALSE(chip.need_init);
+	EXPECT_EQ(4, chip.resetCalls);
+	EXPECT_EQ(4, chip.outputCalls);
+}
+
+TEST(L9779Startup, SuccessfulSetupNotRepeated) {
+	L9779StartupFake chip;
+	EXPECT_TRUE(l9779InitializeOnKeyOn(chip));
+	chip.wd_running = true; // Normal service has armed the watchdog.
+	EXPECT_TRUE(l9779InitializeOnKeyOn(chip));
+	EXPECT_TRUE(chip.wd_running);
+	EXPECT_EQ(1, chip.stopCalls);
+	EXPECT_EQ(1, chip.resetCalls);
+	EXPECT_EQ(1, chip.initCalls);
+	EXPECT_EQ(1, chip.outputCalls);
+}
+
+TEST(L9779Startup, OffDoesNotInitializeOrConsumeAttempts) {
+	L9779StartupFake chip;
+	chip.power_stage_on = false;
+	for (unsigned i = 0; i < 10; i++) {
+		EXPECT_FALSE(l9779InitializeOnKeyOn(chip));
+	}
+	EXPECT_EQ(0U, chip.init_attempts);
+	EXPECT_EQ(0, chip.resetCalls);
+	EXPECT_EQ(0, chip.initCalls);
+	EXPECT_EQ(0, chip.outputCalls);
+	EXPECT_TRUE(chip.need_init);
 }
 
 TEST(L9779Spi, ArrayWriteParity) {

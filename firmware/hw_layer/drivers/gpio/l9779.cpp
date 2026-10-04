@@ -32,6 +32,7 @@
 
 #include "gpio/l9779.h"
 #include "gpio/l9779_spi.h"
+#include "gpio/l9779_startup.h"
 
 #if EFI_PROD_CODE && (BOARD_L9779_COUNT > 0)
 
@@ -167,6 +168,7 @@ struct L9779 : public GpioChip {
 	int refresh_diag_cache(int maxRegisters);
 	void wd_feed();
 	void wd_arm(int delayMs);
+	void stop_watchdog();
 
 	int update_output();
 	int update_direct_output(size_t pin, int value);
@@ -255,6 +257,8 @@ struct L9779 : public GpioChip {
 	 * the defaults on so boards without an ignition gate retain old behavior. */
 	volatile bool				power_stage_on = true;
 	bool						power_stage_applied = true;
+	unsigned					init_attempts = 0;
+	int							init_error = 0;
 	L9779SpiFrameLog				frame_log;
 };
 
@@ -601,7 +605,7 @@ int L9779::refresh_diag_cache(int maxRegisters)
 			efiPrintf(DRIVER_NAME " OUT_DIS cleared: DIA10=0x%02x", dia10);
 		}
 
-		if (outDis && power_stage_on) {
+		if (outDis && power_stage_on && !need_init) {
 			const systime_t now = chVTGetSystemTimeX();
 			if (now - out_dis_heal_ts >= TIME_MS2I(OUT_DIS_HEAL_MS)) {
 				out_dis_heal_ts = now;
@@ -786,6 +790,12 @@ static void wdaTimerStop()
 	WDA_TIMER->CR1 = 0;
 	WDA_TIMER->DIER = 0;
 	WDA_TIMER->SR = 0;
+}
+
+void L9779::stop_watchdog()
+{
+	wd_running = false;
+	wdaTimerStop();
 }
 
 void L9779::wd_arm(int delayMs)
@@ -976,21 +986,21 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 		if (chip->power_stage_on != chip->power_stage_applied) {
 			chip->power_stage_applied = chip->power_stage_on;
 			if (chip->power_stage_on) {
-				chip->need_init = true;
+				l9779RequestInitialization(*chip);
 			} else {
 				chip->chip_power_off();
 			}
 		}
 
-		if (chip->power_stage_on) {
-			if (chip->need_init) {
-				/* A key-on reset clears the parked PSOFF state and watchdog EC. */
-				chip->need_init = false;
-				chip->chip_reset();
-				chip->chip_init();
-				chip->update_output();
-			}
+		const unsigned previousAttempts = chip->init_attempts;
+		const bool ready = l9779InitializeOnKeyOn(*chip);
+		if (!ready && chip->init_attempts != previousAttempts) {
+			efiPrintf(DRIVER_NAME " key-on setup failed (%d), attempt %u/%u%s",
+				chip->init_error, chip->init_attempts, L9779_KEY_ON_MAX_ATTEMPTS,
+				chip->init_attempts == L9779_KEY_ON_MAX_ATTEMPTS ? "; cycle key to retry" : "");
+		}
 
+		if (ready) {
 			if (!chip->wd_running) {
 				chip->wd_running = true;
 				chip->wd_arm(chip->wd_delay_ms);
@@ -1259,8 +1269,7 @@ int L9779::chip_init()
  * leaves chip logic, SPI, and KEY_ON monitoring alive for the wake edge. */
 int L9779::chip_power_off()
 {
-	wd_running = false;
-	wdaTimerStop();
+	stop_watchdog();
 
 	const int ret = spi_rw(MSG_W(0x06, L9779_CONFIG6_PSOFF), NULL);
 	if (ret != 0) {
@@ -1341,7 +1350,7 @@ int L9779::init()
 	out_dis_heal_ts = 0;
 
 	/* force chip init from driver thread */
-	need_init = true;
+	l9779RequestInitialization(*this);
 
 	/* instance is ready */
 	drv_state = L9779_READY;
