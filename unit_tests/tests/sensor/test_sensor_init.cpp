@@ -260,6 +260,22 @@ TEST(SensorInit, Clt) {
 	EXPECT_POINT_INVALID(s, 5.0f);
 }
 
+TEST(SensorInit, AnalogDividerOverrideLifecycle) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	ScopedTemperatureElectricalOverrides overrides;
+	engineConfiguration->analogInputDividerCoefficient = 2.0f;
+
+	EXPECT_FLOAT_EQ(1.0f, getAnalogInputDividerCoefficient(EFI_ADC_6));
+	EXPECT_FLOAT_EQ(2.0f, getAnalogInputDividerCoefficient(EFI_ADC_7));
+
+	// With no board callback, every channel uses the current configuration.
+	custom_board_getAnalogInputDividerCoefficient.reset();
+	EXPECT_FLOAT_EQ(2.0f, getAnalogInputDividerCoefficient(EFI_ADC_6));
+	engineConfiguration->analogInputDividerCoefficient = 3.0f;
+	EXPECT_FLOAT_EQ(3.0f, getAnalogInputDividerCoefficient(EFI_ADC_6));
+	EXPECT_FLOAT_EQ(3.0f, getAnalogInputDividerCoefficient(EFI_ADC_7));
+}
+
 TEST(SensorInit, BufferedThreeVoltThermistor) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	ScopedTemperatureElectricalOverrides overrides;

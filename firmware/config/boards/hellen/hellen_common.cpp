@@ -251,7 +251,7 @@ ObdCode boardGetAnalogDiagnostic()
 #endif
 }
 
-float getAnalogInputDividerCoefficient(adc_channel_e hwChannel) {
+static float hellenGetAnalogInputDividerCoefficient(adc_channel_e hwChannel) {
 #if (HELLEN_BOARD_MM64 == TRUE)
 	(void)hwChannel;
 	if (0)
@@ -272,6 +272,10 @@ float getAnalogInputDividerCoefficient(adc_channel_e hwChannel) {
 	}
 
 	return engineConfiguration->analogInputDividerCoefficient;
+}
+
+void setupHellenBoardOverrides() {
+	custom_board_getAnalogInputDividerCoefficient = hellenGetAnalogInputDividerCoefficient;
 }
 
 void setupHellenSharedInputs(void) {

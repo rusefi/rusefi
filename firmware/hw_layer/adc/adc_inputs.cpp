@@ -13,7 +13,7 @@
 std::optional<setup_custom_board_adjust_voltage_type> custom_board_boardAdjustVoltage;
 std::optional<setup_custom_get_adc_float_type> custom_board_getAnalogInputDividerCoefficient;
 
-float PUBLIC_API_WEAK getAnalogInputDividerCoefficient(adc_channel_e channel) {
+float getAnalogInputDividerCoefficient(adc_channel_e channel) {
     return get_board_override_result(custom_board_getAnalogInputDividerCoefficient,
         engineConfiguration->analogInputDividerCoefficient, channel);
 }

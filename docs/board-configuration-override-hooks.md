@@ -159,8 +159,12 @@ Analog conversion uses two independent per-channel callbacks in `board_overrides
 
 - `custom_board_getAnalogInputDividerCoefficient(adc_channel_e)` returns physical
   input volts per MCU ADC volt. With no callback, the default implementation
-  uses `analogInputDividerCoefficient`. Existing boards that replace the legacy
-  weak `getAnalogInputDividerCoefficient` function keep their own implementation.
+  uses `analogInputDividerCoefficient`. `getAnalogInputDividerCoefficient` is an
+  ordinary shared function; board-specific scaling belongs in this callback.
+  Firmware startup calls `setupHellenBoardOverrides()` for non-MM64 Hellen
+  boards before firmware- and board-specific setup, so either can replace the
+  shared per-channel scaling. MM64 uses the normal configuration fallback.
+  S105 registers its own per-channel callback in its override setup.
 - `custom_board_getThermistorSupplyVoltage(adc_channel_e)` returns the voltage
   supplying a thermistor divider. Without a callback, it is 5 V. This applies
   to all resistive temperature slots; linear temperature conversion is unchanged.

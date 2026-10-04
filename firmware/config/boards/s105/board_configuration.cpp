@@ -109,7 +109,7 @@ static void s105_boardConfigOverrides() {
 	engineConfiguration->canTxPin = Gpio::A12;
 }
 
-float getAnalogInputDividerCoefficient(adc_channel_e hwChannel) {
+static float s105_getAnalogInputDividerCoefficient(adc_channel_e hwChannel) {
 	switch (hwChannel) {
 		/* MAP, TPS, MAF (na), AC press (na) */
 		case EFI_ADC_0:
@@ -154,6 +154,7 @@ float getAnalogInputDividerCoefficient(adc_channel_e hwChannel) {
 }
 
 void setup_custom_board_overrides() {
+	custom_board_getAnalogInputDividerCoefficient = s105_getAnalogInputDividerCoefficient;
 	custom_board_DefaultConfiguration = s105_boardDefaultConfiguration;
 	custom_board_ConfigOverrides = s105_boardConfigOverrides;
 }

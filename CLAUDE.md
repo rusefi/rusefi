@@ -109,6 +109,16 @@ Use explicitly named `TEST` cases sharing a helper when their traces are needed.
 
 **Cross-platform requirement**: Unit test code MUST build and run on all supported host platforms — Linux (GCC/Clang), macOS (Clang), and Windows (MSVC and MinGW). Avoid POSIX-only APIs (e.g. `realpath`, `PATH_MAX`, `dirent.h` without guards) unless wrapped in `#ifdef` guards or replaced by portable C++ equivalents. Prefer `std::filesystem` over POSIX path APIs.
 
+MinGW can leave an ordinary cross-translation-unit call unresolved when the
+implementation alone carries `PUBLIC_API_WEAK`, even with its object linked
+directly. A two-file reproduction fails with MinGW GCC 13 and passes with Linux
+GCC/Clang; making the definition strong fixes the MinGW link. Windows CI GCC
+14.2 hit this when sensor tests first called `getAnalogInputDividerCoefficient`
+directly (run 37217674429). Check weak/strong symbol linkage before adding mocks
+or changing source lists. Preserve production board overrides when changing
+weak definitions; migrate them to explicit board callbacks or narrowly scope
+the host-build adjustment.
+
 ### Hardware CI settings-write timing
 
 Hardware CI's F407 `HighRevTest` is sensitive to asynchronous settings burns: `setEngineType()` queues a forced save, while the Java helper resumes configuration changes after a fixed sleep. Passing master runs can already contain `Flash: validation failed`; do not treat that message alone as a new regression. In PR #10186, adding a 5 s settings retry backoff moved the next erase from the RPM settling period into the 40 s assertion window, producing `engine stopped`, ~1200 ms coil-overcharge warnings, and 6000 -> 0 RPM failures. Self-stimulation explicitly permits settings writes even on F4, where flash erase stalls execution. Check flash-write timing against the assertion window before investigating trigger decoding. The cause of the original validation mismatches was not established by those logs (concurrent mutation of the live configuration is a candidate).
