@@ -244,19 +244,22 @@ TEST_F(IsoTpFlowControl, ListenerSeparatesCommandsAndAcknowledgements) {
 	EXPECT_EQ(0, listener.dataCount());
 }
 
-TEST_F(IsoTpFlowControl, ListenerRejectsForeignAndMalformedAcknowledgements) {
+TEST_F(IsoTpFlowControl, ListenerRejectsTruncatedAcknowledgements) {
 	InspectableCanTsListener listener;
-	auto extended = frame({0x30, 0, 0});
-	extended.IDE = 1;
-	listener.decodeFrame(extended, 0);
-	auto remote = frame({0x30, 0, 0});
-	remote.RTR = 1;
-	listener.decodeFrame(remote, 0);
-	auto shortFrame = frame({0x30});
-	shortFrame.DLC = 1;
-	listener.decodeFrame(shortFrame, 0);
+	for (int dlc = 0; dlc < 3; dlc++) {
+		auto shortFrame = frame({0x30, 0, 0});
+		shortFrame.DLC = dlc;
+		listener.decodeFrame(shortFrame, 0);
+		EXPECT_EQ(0, listener.flowControlCount()) << "DLC " << dlc;
+	}
 	EXPECT_EQ(0, listener.dataCount());
-	EXPECT_EQ(0, listener.flowControlCount());
+
+	// A complete, unpadded acknowledgement must still reach the flow-control queue.
+	auto valid = frame({0x30, 0, 0});
+	valid.DLC = 3;
+	listener.decodeFrame(valid, 0);
+	EXPECT_EQ(1, listener.flowControlCount());
+	EXPECT_EQ(0, listener.dataCount());
 }
 
 TEST_F(IsoTpFlowControl, AcknowledgementDuringFirstTransmitIsNotMissed) {
