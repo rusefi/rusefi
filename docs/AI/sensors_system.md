@@ -28,8 +28,17 @@ The sensor framework decouples sensor *producers* (ADC, CAN, frequency inputs, L
 - `firmware/controllers/sensors/sensor_checker.cpp`: periodic health checks mapping failures to OBD codes.
 - `firmware/libfirmware/util/include/rusefi/expected.h`: the `expected<float>` type underlying `SensorResult`.
 
+The global ADC channel enum can describe more inputs than a port samples.
+The slow ADC getter bounds-checks against the actual sample buffer and returns
+signed -1 for an unsupported channel. `adcGetRawVoltage()` rejects that result,
+so a subscription does not refresh its sensor from unrelated memory. Pin mapping
+alone does not establish ADC acquisition support. Thermistor conversion also
+requires the board's pull-up supply and voltage scaling to agree with the
+converter; the generic initialization currently assumes a 5 V supply.
+
 ## Sensor Categories
 - **Thermistors** (CLT/IAT/oil/fuel temp): resistance divider → Steinhart-Hart via `FuncChain`, or linear mode.
+
 - **Pressure** (MAP/oil/fuel/baro): `LinearFunc` with built-in calibrations for common part numbers; `SensorType::Map` is a `FallbackSensor` preferring `MapFast` (crank-synced average) over `MapSlow` (async analog).
 - **TPS/Pedal** (`init/sensor/init_tps.cpp`): redundant primary+secondary pairs with agreement checking (`RedundantSensor`, split-range `RedundantFordTps`); `DriverThrottleIntent` proxies pedal-if-present-else-TPS1.
 - **Lambda**: analog AFR curve or CAN wideband (`AemXSeriesWideband`); configuring both is a `criticalError`.
