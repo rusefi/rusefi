@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Sat Oct 03 02:13:53 UTC 2026
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Mon Oct 05 21:26:25 UTC 2026
 // see also gen_config_and_enums.bat
 
 
@@ -350,6 +350,10 @@ const char *getTrigger_type_e(trigger_type_e value) {
 			return "TT_NISSAN_QR25";
 		case trigger_type_e::TT_NISSAN_SR20VE:
 			return "TT_NISSAN_SR20VE";
+		case trigger_type_e::TT_NISSAN_VK56DE:
+			return "TT_NISSAN_VK56DE";
+		case trigger_type_e::TT_NISSAN_VK56DE_CAM:
+			return "TT_NISSAN_VK56DE_CAM";
 		case trigger_type_e::TT_NISSAN_VQ30:
 			return "TT_NISSAN_VQ30";
 		case trigger_type_e::TT_NISSAN_VQ35:
