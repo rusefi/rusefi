@@ -111,6 +111,17 @@ void initializeNissanMR18crank(TriggerWaveform *s) {
 	s->setTriggerSynchronizationGap(0.33);
 }
 
+void initializeNissanVK56DEcrank(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR, SyncEdge::RiseOnly);
+
+	// Two groups of 17 teeth: one missing tooth every 180 crank degrees.
+	// Physical TDC offset and cam phase must be established on the engine.
+	makeNissanPattern(s, 2, 36, 1);
+	// Sync on the second rise after the gap: 10/20, preceded by 20/10.
+	s->setTriggerSynchronizationGap2(0.4f, 0.6f);
+	s->setSecondTriggerSynchronizationGap2(1.6f, 2.4f);
+}
+
 void initializeNissanQR25crank(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR, SyncEdge::RiseOnly);
 	s->setTriggerSynchronizationGap(0.33);
