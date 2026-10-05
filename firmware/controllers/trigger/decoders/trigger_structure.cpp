@@ -579,6 +579,10 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		initializeNissanVK56DEcrank(this);
 		break;
 
+	case trigger_type_e::TT_NISSAN_VK56DE_CAM:
+		initializeNissanVK56DEcam(this);
+		break;
+
 	case trigger_type_e::TT_NISSAN_VQ30:
 		initializeNissanVQ30cam(this);
 		break;

@@ -122,6 +122,32 @@ void initializeNissanVK56DEcrank(TriggerWaveform *s) {
 	s->setSecondTriggerSynchronizationGap2(1.6f, 2.4f);
 }
 
+void initializeNissanVK56DEcam(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
+
+	// PHASE sensor, not the separate intake valve timing sensors.
+	// Nominal geometry inferred from Matt Wallace's VK56DE scope screenshots:
+	// https://rotkee.com/en/wavebase/good-timing-ckp-cmp-signal-nissan-titan-2003-2015?system=51
+	// Groups 1, 3, 4, 2 start 180 crank degrees apart. Each group begins
+	// with a 20-degree pulse; subsequent 10-degree pulses start at +35,
+	// +61 and +87 degrees. Physical TDC reference is not established.
+	static constexpr int counts[] = {1, 3, 4, 2};
+	for (size_t group = 0; group < efi::size(counts); group++) {
+		const angle_t base = 135 + 180 * group;
+		s->addEvent720(base, TriggerValue::RISE);
+		s->addEvent720(base + 20, TriggerValue::FALL);
+		for (int tooth = 1; tooth < counts[group]; tooth++) {
+			const angle_t rise = base + 35 + 26 * (tooth - 1);
+			s->addEvent720(rise, TriggerValue::RISE);
+			s->addEvent720(rise + 10, TriggerValue::FALL);
+		}
+	}
+
+	// First rise of the single-pulse group: 145/35, preceded by 35/93.
+	s->setTriggerSynchronizationGap2(3.5f, 4.8f);
+	s->setSecondTriggerSynchronizationGap2(0.32f, 0.42f);
+}
+
 void initializeNissanQR25crank(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR, SyncEdge::RiseOnly);
 	s->setTriggerSynchronizationGap(0.33);
@@ -265,4 +291,3 @@ void initializeNissanHRvvtIn(TriggerWaveform *s) {
 
 	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 0.1, 0.3);
 }
-

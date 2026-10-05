@@ -35,7 +35,7 @@ Release template (copy/paste this for new release):
  - updater: keyboard table operation
  - 36-2-2 Suzuki trigger
  - better MLVLG v2 support: logs have embedded tune
- - Nissan VK56DE (36-1-1) trigger
+ - Nissan VK56DE (36-1-1) crank and PHASE cam triggers
 
 ### Fixed
  - overdwell protection causes Null-pointer deref and crash #9435

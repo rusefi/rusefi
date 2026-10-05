@@ -215,6 +215,7 @@ static angle_t adjustCrankPhase(int camIndex) {
 	case VVT_FORD_ST170:
 	case VVT_BARRA_3_PLUS_1:
 	case VVT_NISSAN_MR:
+	case VVT_NISSAN_VK56DE:
   case VVT_HR12DDR_IN:
 	case VVT_MAZDA_SKYACTIV:
 	case VVT_MAZDA_L:
