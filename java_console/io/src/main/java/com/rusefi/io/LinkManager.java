@@ -299,12 +299,14 @@ public class LinkManager implements Closeable {
     private final CommunicationThreadFactory COMMUNICATION_THREAD_FACTORY = new CommunicationThreadFactory();
     /**
      * All request/responses to underlying controller are happening on this single-threaded executor in a FIFO manner
+     * No permanent core thread: discovery discards LinkManagers after each probe. Idle workers
+     * must exit, while the executor remains usable after close() for console reconnects.
      */
     public final ExecutorService COMMUNICATION_EXECUTOR = new ThreadPoolExecutor(
+        0,
         1,
-        1,
-        0L,
-        TimeUnit.MILLISECONDS,
+        1L,
+        TimeUnit.SECONDS,
         COMMUNICATION_QUEUE,
         COMMUNICATION_THREAD_FACTORY
     );

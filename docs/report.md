@@ -726,3 +726,38 @@ Remaining:
 - Validate real cranking/running captures, compression-induced speed changes,
   compression phase, trigger offset and timing accuracy on the engine.
 - No ECU was flashed; no custom Levin board build was made.
+
+
+## 2026-10-05 - Release idle console discovery workers (#10347)
+
+- Investigated the recurring macOS native-thread allocation error. The screenshot
+  identifies SerialPortScanner thread creation as the failure site, but completed
+  discovery probes also retain workers in their temporary LinkManagers.
+- Confirmed two leaks without hardware: constructing eight temporary managers
+  leaves eight permanent ECU Commands Queue threads, and executing work on each
+  leaves eight permanent ECU Communication Executor threads after close().
+- TDB: first ran two passing tests asserting that bad behavior, then changed
+  their expectations after the fix. The original coverage patch and passing log
+  are /tmp/rusefi-10347-reproduction.patch and
+  /tmp/rusefi-10347-reproduction.log.
+
+| File | Change |
+| --- | --- |
+| CommandQueue.java | Start the command worker on demand; retire after one idle second; serialize enqueue and retirement to avoid stranded commands |
+| LinkManager.java | Keep at most one communication worker and release it after one idle second |
+| CommunicationThreadFactory.java | Permit replacement of an exited worker without a spurious multiple-thread warning |
+| LinkManagerThreadLifecycleTest.java | Five tests covering repeated probes, worker retirement/restart, FIFO commands, clearing and duplicate suppression |
+| UiVersion.java | Bump console version to 20261005 |
+| CLAUDE.md | Document reusable close semantics and discovery worker lifetime |
+
+- Kept close() reusable for reconnection: permanently shutting down the executor
+  there would break existing console reconnect paths. Idle retirement also
+  handles managers whose callers do not explicitly dispose of the object.
+- Validation: ./gradlew :ecu_io:test :connectivity:test :ui:test passed on Linux;
+  281 transport tests, 94 connectivity tests, and 601 UI tests passed, with one
+  UI test skipped. git diff --check passed. Test log:
+  /tmp/rusefi-10347-tests.log.
+- Follow-up: confirm prolonged console use on the reporter's M2 MacBook Air.
+  No macOS hardware run or thread dump was available, so these reproduced leaks
+  do not establish that every possible source of thread exhaustion is fixed.
+- No commit, push, or GitHub comment was made.

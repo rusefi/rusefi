@@ -25,7 +25,7 @@ class CommunicationThreadFactory extends NamedThreadFactory {
     public Thread newThread(@NotNull Runnable r) {
         final Thread newCommunicationThread = super.newThread(r);
         final Thread prevCommunicationThread = communicationThread.getAndSet(newCommunicationThread);
-        if (prevCommunicationThread != null) {
+        if (prevCommunicationThread != null && prevCommunicationThread.isAlive()) {
             log.warn("Multiple communication threads.");
         }
         return newCommunicationThread;

@@ -342,6 +342,13 @@ rusEFI provides two MCP (Model Context Protocol) servers for LLM-driven tooling 
 
 ## Serial Connectivity
 
+`LinkManager.close()` disconnects but is also used before reconnecting the same
+manager; it is not terminal disposal. Discovery creates disposable managers
+through `BinaryProtocolExecutor`, so per-manager workers must release idle
+threads without shutting down the reusable communication executor. A daemon
+thread still consumes native resources and can exhaust macOS's thread limit.
+See `LinkManagerThreadLifecycleTest` for repeated-probe and worker-restart coverage.
+
 All rusEFI serial connections use the USB CDC (Communications Device Class) profile. Baud rate is irrelevant and never a concern — the USB serial profile handles throughput natively regardless of any baud rate setting in host software or code.
 
 ### SLCAN CAN sniffer on the second VCP
