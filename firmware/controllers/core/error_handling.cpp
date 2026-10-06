@@ -375,7 +375,7 @@ static const char *errorHandlerGetReportName(ErrorCookie cookie, Reset_Cause_t c
 
 bool needErrorReportFile = false;
 
-void errorHandlerWriteReportFile(FIL *fd) {
+bool errorHandlerWriteReportFile(FIL *fd) {
 #if EFI_BACKUP_SRAM
 	backupErrorState *err = &lastBootError;
 	ErrorCookie cookie = err->Cookie;
@@ -423,10 +423,11 @@ void errorHandlerWriteReportFile(FIL *fd) {
 			// additional board-specific data
 			call_board_override(custom_board_onBoardWriteErrorFile, fd);
 			// todo: figure out what else would be useful
-			f_close(fd);
+			if (f_close(fd) != FR_OK) return false;
 			enginePins.warningLedPin.setValue(1);
 		}
 	}
+    return true;
 }
 
 static int errorHandlerIsReportExist(const char *reportName) {
