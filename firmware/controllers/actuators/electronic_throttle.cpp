@@ -56,10 +56,6 @@
 #include "proteus_meta.h"
 #endif // HW_PROTEUS
 
-#ifndef ETB_MAX_COUNT
-#define ETB_MAX_COUNT 2
-#endif /* ETB_MAX_COUNT */
-
 #ifndef ETB_INTERMITTENT_LIMIT
 #define ETB_INTERMITTENT_LIMIT 50
 #endif
@@ -399,8 +395,9 @@ float EtbController::getLuaAdjustment() const {
 	}
 }
 
-percent_t EtbController2::getThrottleTrim(float rpm, percent_t targetPosition) const {
-	return m_throttle2Trim.getValue(rpm, targetPosition);
+percent_t EtbControllerWithTrim::getThrottleTrim(float rpm, percent_t targetPosition) const {
+	// Trim belongs to throttle bank 2, regardless of which H-bridge drives it.
+	return getFunction() == DC_Throttle2 ? m_throttle2Trim.getValue(rpm, targetPosition) : 0;
 }
 
 expected<percent_t> EtbController::getOpenLoop(percent_t target) {
@@ -711,10 +708,21 @@ void EtbController::checkJam(percent_t setpoint, percent_t observation) {
 #include <utility>
 
 // real implementation (we mock for some unit tests)
-EtbImpl<EtbController1> etb1;
-EtbImpl<EtbController2> etb2(throttle2TrimTable);
+static_assert(ETB_COUNT == 2 || ETB_COUNT == 4);
+EtbImpl<EtbControllerWithTrim> etb1(throttle2TrimTable);
+EtbImpl<EtbControllerWithTrim> etb2(throttle2TrimTable);
+#if ETB_COUNT > 2
+// Controller state is CPU-only. Keep the extra slots out of scarce F4 SRAM.
+CCM_OPTIONAL EtbImpl<EtbControllerWithTrim> etb3(throttle2TrimTable);
+CCM_OPTIONAL EtbImpl<EtbControllerWithTrim> etb4(throttle2TrimTable);
+#endif
 
-static EtbController* etbControllers[] = { &etb1, &etb2 };
+static EtbController* etbControllers[] = {
+	&etb1, &etb2,
+#if ETB_COUNT > 2
+	&etb3, &etb4,
+#endif
+};
 static_assert(ETB_COUNT == sizeof(etbControllers) / sizeof(EtbController*));
 
 void blinkEtbErrorCodes(bool blinkPhase) {
@@ -838,6 +846,9 @@ void setDefaultEtbParameters() {
 	// Default is to run each throttle off its respective hbridge
 	engineConfiguration->etbFunctions[0] = DC_Throttle1;
 	engineConfiguration->etbFunctions[1] = DC_Throttle2;
+	for (size_t i = 2; i < ETB_COUNT; i++) {
+		engineConfiguration->etbFunctions[i] = DC_None;
+	}
 
 	engineConfiguration->etbFreq = DEFAULT_ETB_PWM_FREQUENCY;
 

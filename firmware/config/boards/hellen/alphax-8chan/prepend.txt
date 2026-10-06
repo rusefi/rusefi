@@ -1,6 +1,8 @@
 #define MAIN_HELP_URL "https://rusefi.com/s/8chan"
 
-
+#define ETB_COUNT 4
+#define ts_show_dc_2 false
+#define ts_show_dc_4 true
 
 
 #define ts_show_vbatt false

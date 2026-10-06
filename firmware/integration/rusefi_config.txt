@@ -210,6 +210,8 @@ struct_no_prefix engine_configuration_s
 ! https://rusefi.com/forum/viewtopic.php?p=47307#p47307
 #define ETB_HW_MAX_FREQUENCY 3000
 #define ETB_COUNT 2
+#define ts_show_dc_2 true
+#define ts_show_dc_4 false
 #define DC_PER_STEPPER 2
 #define DEFAULT_SOLENOID_FREQUENCY 300
 
