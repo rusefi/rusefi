@@ -63,6 +63,7 @@
 #include <cstdio>
 #include <cstring>
 #include "mmc_card.h"
+#include "sd_card_access.h"
 #include "ff.h"
 #include "mmc_card_util.h"
 #include "mass_storage_init.h"
@@ -85,7 +86,7 @@ static NO_CACHE FileBufferedWriter logBuffer;
 // This is dirty workaround to fix compilation without adding this function prototype
 // to error_handling.h file that will also need to add "ff.h" include to same file and
 // cause simulator fail to build.
-extern void errorHandlerWriteReportFile(FIL *fd);
+extern bool errorHandlerWriteReportFile(FIL *fd);
 extern int errorHandlerCheckReportFiles();
 extern void errorHandlerDeleteReports();
 
@@ -141,9 +142,13 @@ static const char *sdModeName(SD_MODE mode) {
 
 // Log 'regular' ECU log to MLG file
 static int mlgLogger();
+// Logger computes pacing while owned; MMC thread sleeps after releasing access.
+static bool sdLoggerPacePending = false;
+static systime_t sdLoggerPaceBefore, sdLoggerPaceUntil;
 
 static bool sdLoggerInitDone = false;
 static bool sdLoggerFailed = false;
+static bool sdLoggerFinalizationFailed = false;
 static SDLoggerMode sdLoggerMode = SDLoggerMode::None;
 
 static bool sdLoggedSuppressed = false;
@@ -442,7 +447,21 @@ static void prepareLogFileName() {
  * This function saves the name of the file in a global variable
  * so that we can later append to that file
  */
+// A live descriptor must not be reset/reused or unmounted after finalization fails.
+static bool sdLoggerFinalizationError(const char *operation, FRESULT result) {
+    printFatFsError(operation, result);
+    sdLoggerFailed = true;
+    sdLoggerFinalizationFailed = true;
+    sdLoggerSetReady(false);
+    boardSdCardAccessFailed();
+    return false;
+}
+
 static int sdLoggerCreateFile(FIL *fd) {
+    if (sdLoggerFinalizationFailed || fd->obj.fs) {
+        sdLoggerFinalizationError("log descriptor still open", FR_INVALID_OBJECT);
+        return -1;
+    }
 	// turn off indicator
 	sdLoggerSetReady(false);
 
@@ -487,24 +506,36 @@ static int sdLoggerCreateFile(FIL *fd) {
 	return 0;
 }
 
-static void sdLoggerCloseFile(FIL *fd)
+static bool sdLoggerCloseFile(FIL *fd)
 {
+    if (sdLoggerFinalizationFailed) return false;
+    // Stopping a selected logger before its first file was created is harmless.
+    if (!fd->obj.fs) return true;
 #ifdef LOGGER_MAX_FILE_SIZE
-	// Shrink the file from the 32Mb f_expand() pre-allocation back to the size actually
-	// written, returning the unused tail to free space. A file that never got this
-	// treatment (power loss) stays at full 32Mb with trailing garbage - log readers
-	// stop at the last valid record.
-	f_truncate(fd);
+    const FRESULT truncateResult = f_truncate(fd);
+    if (truncateResult != FR_OK) {
+        return sdLoggerFinalizationError("log truncate", truncateResult);
+    }
 #endif
-
-	// close file
-	f_close(fd);
-
-	// SD logger is inactive
-	sdLoggerSetReady(false);
+    const FRESULT closeResult = f_close(fd);
+    if (closeResult != FR_OK) {
+        return sdLoggerFinalizationError("log close", closeResult);
+    }
+    sdLoggerSetReady(false);
+    return true;
 }
 
+PUBLIC_API_WEAK bool boardSdCardTryAccess() { return true; }
+PUBLIC_API_WEAK void boardSdCardReleaseAccess() {}
+PUBLIC_API_WEAK void boardSdCardAccessFailed() {}
+
 static void removeFile(const char *pathx) {
+    SdCardBoardAccess storageAccess;
+    if (!storageAccess) {
+        efiPrintf("SD card busy");
+        return;
+    }
+
 	if (sdMode != SD_MODE_ECU) {
 		efiPrintf("SD card should be mounted to ECU");
 		return;
@@ -518,6 +549,12 @@ static void removeFile(const char *pathx) {
 
 // Writes a 1Mb test file filled with an incrementing 32 bit counter, reports throughput
 static void sdTestWrite1Mb() {
+    SdCardBoardAccess storageAccess;
+    if (!storageAccess) {
+        efiPrintf("SD card busy");
+        return;
+    }
+
 	if (sdMode != SD_MODE_ECU) {
 		efiPrintf("SD card should be mounted to ECU");
 		return;
@@ -554,7 +591,11 @@ static void sdTestWrite1Mb() {
 		written += bytesWritten;
 	}
 
-	f_close(&testFd);
+    if (f_close(&testFd) != FR_OK) {
+        boardSdCardAccessFailed();
+        efiPrintf("SD test file close failed");
+        return;
+    }
 
 	sysinterval_t elapsed = chVTTimeElapsedSinceX(before);
 	uint32_t elapsedMs = TIME_I2MS(elapsed);
@@ -807,7 +848,11 @@ static int sdLoggerTooth(FIL *fd) {
 		}
 
 		// Ok, lets create file
-		incLogFileName(fd);
+        if (!incLogFileName(fd)) {
+            sdLoggerFailed = true;
+            if (fd->obj.fs) sdLoggerFinalizationError("log index close", FR_DISK_ERR);
+            return -1;
+        }
 
 		ret = sdLoggerCreateFile(fd);
 		if (ret != 0) {
@@ -840,7 +885,7 @@ static int sdLoggerTooth(FIL *fd) {
 	// some error or no more data...
 	// in both cases: close file
 	logBuffer.stop();
-	sdLoggerCloseFile(fd);
+	if (!sdLoggerCloseFile(fd)) return -2;
 
 	// need to start new file
 	sdLoggerInitDone = false;
@@ -861,7 +906,11 @@ static int sdLoggerMlg(FIL *fd) {
 	int ret = 0;
 
 	if (!sdLoggerInitDone) {
-		incLogFileName(fd);
+        if (!incLogFileName(fd)) {
+            sdLoggerFailed = true;
+            if (fd->obj.fs) sdLoggerFinalizationError("log index close", FR_DISK_ERR);
+            return -1;
+        }
 		MLG::resetFileLogging();
 
 		ret = sdLoggerCreateFile(fd);
@@ -883,7 +932,7 @@ static int sdLoggerMlg(FIL *fd) {
 
 	if (ret < 0) {
 		logBuffer.stop();
-		sdLoggerCloseFile(fd);
+		if (!sdLoggerCloseFile(fd)) return -2;
 		sdLoggerFailed = true;
 		return ret;
 	}
@@ -894,7 +943,7 @@ static int sdLoggerMlg(FIL *fd) {
 	// TODO: use f_tell() instead ?
 	if (logBuffer.size() + ret > LOGGER_MAX_FILE_SIZE) {
 		logBuffer.stop();
-		sdLoggerCloseFile(fd);
+		if (!sdLoggerCloseFile(fd)) return -2;
 
 		//need to start new file
 		sdLoggerInitDone = false;
@@ -904,8 +953,9 @@ static int sdLoggerMlg(FIL *fd) {
 	return ret;
 }
 
-static void sdLoggerStop()
+static bool sdLoggerStop()
 {
+    if (sdLoggerFinalizationFailed) return false;
 	switch (sdLoggerMode) {
 		case SDLoggerMode::Mlg:
 	#if EFI_TOOTH_LOGGER
@@ -913,7 +963,7 @@ static void sdLoggerStop()
 		case SDLoggerMode::ToothCsv:
 	#endif
 			logBuffer.stop();
-			sdLoggerCloseFile(&resources.fd);
+			if (!sdLoggerCloseFile(&resources.fd)) return false;
 		#if EFI_TOOTH_LOGGER
 			if (toothLoggerStarted) {
 				DisableToothLogger();
@@ -931,14 +981,16 @@ static void sdLoggerStop()
 	}
 
 	sdLoggerMode = SDLoggerMode::None;
+    return true;
 }
 
-static void sdLoggerStart()
+static bool sdLoggerStart()
 {
+    if (sdLoggerFinalizationFailed) return false;
 	// mode has changed?
 	if (sdLoggerMode != engineConfiguration->sdLoggerMode) {
 		// Stop current logger
-		sdLoggerStop();
+		if (!sdLoggerStop()) return false;
 
 		sdLoggerInitDone = false;
 		sdLoggerFailed = false;
@@ -969,6 +1021,7 @@ static void sdLoggerStart()
 				break;
 		}
 	}
+    return true;
 }
 
 static bool sdFormat()
@@ -1029,7 +1082,7 @@ static int sdModeSwitchToIdle(SD_MODE from)
 	case SD_MODE_IDLE:
 		return 0;
 	case SD_MODE_ECU:
-		sdLoggerStop();
+		if (!sdLoggerStop()) return -1;
 		unmountMmc();
 		sdSetCurrentStatus(SD_STATUS_INIT);
 		return 0;
@@ -1160,7 +1213,7 @@ static int sdModeExecuter(SD_MODE mode)
 			sdNeedRemoveReports = false;
 		}
 
-		sdLoggerStart();
+		if (!sdLoggerStart()) return -1;
 		if ((sdLoggedSuppressed) || (sdLoggerFailed)) {
 			// logger is dead or paused, do not waste CPU
 			engine->outputChannels.sdLoggingState = (uint8_t)(sdLoggerFailed ? SD_LOG_FAILED : SD_LOG_SUPPRESSED);
@@ -1177,7 +1230,7 @@ static int sdModeExecuter(SD_MODE mode)
 				engine->outputChannels.sd_logging_internal = false;
 				// close the current file so each logging session is its own file
 				if (sdLoggerInitDone) {
-					sdLoggerStop();
+					if (!sdLoggerStop()) return -1;
 					sdLoggerInitDone = false;
 				}
 				// Do nothing, sleep
@@ -1209,7 +1262,10 @@ static int sdModeExecuter(SD_MODE mode)
 static int sdReportStorageInit()
 {
 	// write error report file if needed
-	errorHandlerWriteReportFile(&resources.fd);
+    if (!errorHandlerWriteReportFile(&resources.fd)) {
+        boardSdCardAccessFailed();
+        return -1;
+    }
 
 	// check for any exist reports
 	errorHandlerCheckReportFiles();
@@ -1236,6 +1292,45 @@ static THD_WORKING_AREA(mmcThreadStack, mmcThreadStackSize);		// MMC monitor thr
  * sdModeSwitcher() transitions to it, sdModeExecuter() does that mode's work.
  * If the card fails to initialize the thread parks itself until the next boot.
  */
+// Ownership spans transition, publication and deferred filesystem work. The
+// caller sleeps only after destruction releases the board lease.
+static int sdCardRunIteration() {
+    SdCardBoardAccess storageAccess;
+    if (!storageAccess) return 100;
+    if (sdLoggerFinalizationFailed) return 1000;
+    int delayMs = 0;
+    sdLoggerPacePending = false;
+
+	// get SD card mode
+	SD_MODE target = sdModeSelector();
+
+	// target mode is valid and not reached yet
+	if ((target != SD_MODE_IDLE) && (sdMode != target)) {
+		// Try to swith to this adjusted mode
+		SD_MODE current = sdModeSwitcher(sdMode, target);
+        // Keep the existing published mode/FIL; no executor work after failure.
+        if (sdLoggerFinalizationFailed) return 1000;
+
+		// Target mode is valid and we have failed to switch to it
+		if (current != target) {
+			efiPrintf("SD: failed to switch from %s to %s", sdModeName(sdMode), sdModeName(target));
+
+			sdTargetMode = SD_MODE_IDLE;
+			sdTargetModeRequested = false;
+
+                delayMs = 1000;
+			sdCardSetCurrentMode(SD_MODE_IDLE);
+		} else {
+			efiPrintf("SD: switched from %s to %s", sdModeName(sdMode), sdModeName(target));
+			sdCardSetCurrentMode(target);
+		}
+	}
+
+        if (sdModeExecuter(sdMode) == 0 && delayMs == 0) delayMs = 100;
+        return delayMs;
+
+}
+
 static THD_FUNCTION(MMCmonThread, arg) {
 	(void)arg;
 
@@ -1252,17 +1347,27 @@ static THD_FUNCTION(MMCmonThread, arg) {
 		efiPrintf("SD backup RAM state is not valid");
 	}
 
+    // Initial mount/report work/unmount must also exclude board file clients.
+    while (!boardSdCardTryAccess()) chThdSleepMilliseconds(100);
 	sdSetCurrentStatus(SD_STATUS_CONNECTING);
 	if (!initMmc()) {
 		efiPrintf("Card is not preset/failed to init");
 		sdSetCurrentStatus(SD_STATUS_NOT_INSERTED);
+        // Failure cleanup is still inside the initial ownership interval.
+        deinitMmc();
+        boardSdCardDisable();
+        boardSdCardReleaseAccess();
 		// give up until next boot
 		goto die;
 	}
 
 	// Try to mount SD card, drop critical report if needed and check for previously stored reports
 	if (mountMmc()) {
-		sdReportStorageInit();
+        if (sdReportStorageInit() != 0) {
+            // Failed report close leaves the FIL live. Do not unmount/reset it.
+            boardSdCardReleaseAccess();
+            goto die;
+        }
 
 #if EFI_STORAGE_SD == TRUE
 		// Give some time for storage manager to load settings from SD
@@ -1271,40 +1376,18 @@ static THD_FUNCTION(MMCmonThread, arg) {
 
 		unmountMmc();
 	}
+    boardSdCardReleaseAccess();
 
 	while (1) {
-		// get SD card mode
-		SD_MODE target = sdModeSelector();
-
-		// target mode is valid and not reached yet
-		if ((target != SD_MODE_IDLE) && (sdMode != target)) {
-			// Try to swith to this adjusted mode
-			SD_MODE current = sdModeSwitcher(sdMode, target);
-
-			// Target mode is valid and we have failed to switch to it
-			if (current != target) {
-				efiPrintf("SD: failed to switch from %s to %s", sdModeName(sdMode), sdModeName(target));
-
-				sdTargetMode = SD_MODE_IDLE;
-				sdTargetModeRequested = false;
-
-				chThdSleepMilliseconds(1000);
-				sdCardSetCurrentMode(SD_MODE_IDLE);
-			} else {
-				efiPrintf("SD: switched from %s to %s", sdModeName(sdMode), sdModeName(target));
-				sdCardSetCurrentMode(target);
-			}
-		}
-
-		if (sdModeExecuter(sdMode) == 0) {
-			chThdSleepMilliseconds(100);
-		}
-	}
+        const int delayMs = sdCardRunIteration();
+        if (sdLoggerPacePending) {
+            sdLoggerPacePending = false;
+            chThdSleepUntilWindowed(sdLoggerPaceBefore, sdLoggerPaceUntil);
+        }
+        if (delayMs > 0) chThdSleepMilliseconds(delayMs);
+    }
 
 die:
-	// bring SD interface to safe state
-	deinitMmc();
-	boardSdCardDisable();
 
 	efiPrintf("SD logger has died!");
 
@@ -1361,7 +1444,9 @@ static int mlgLogger() {
 	}
 
 	systime_t period = CH_CFG_ST_FREQUENCY / freq;
-	chThdSleepUntilWindowed(before, before + period);
+    sdLoggerPaceBefore = before;
+    sdLoggerPaceUntil = before + period;
+    sdLoggerPacePending = true;
 
 	return writen;
 }
