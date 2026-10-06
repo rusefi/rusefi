@@ -2,7 +2,7 @@
 
 #pragma once
 
-void incLogFileName(FIL *fd);
+bool incLogFileName(FIL *fd);
 const char *getFatFsErrorDescription(FRESULT f_error);
 void printFatFsError(const char *str, FRESULT f_error);
 void writeErrorReportFile();

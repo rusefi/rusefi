@@ -15,7 +15,8 @@ using namespace rusefi::stringutil;
 #define MIN_FILE_INDEX 10
 int logFileIndex = MIN_FILE_INDEX;
 
-void incLogFileName(FIL *fd) {
+bool incLogFileName(FIL *fd) {
+    if (fd->obj.fs) return false;
 	// clear the memory
 	memset(fd, 0, sizeof(FIL));
 	// This file has the index for next log file name
@@ -42,7 +43,7 @@ void incLogFileName(FIL *fd) {
 				logFileIndex++;
 			}
 		}
-		f_close(fd);
+		if (f_close(fd) != FR_OK) return false;
 	} else if (ret == FR_NO_FILE) {
 		// no index file - this is not an error, just an empty SD
 		logFileIndex = MIN_FILE_INDEX;
@@ -61,12 +62,13 @@ void incLogFileName(FIL *fd) {
 		if ((ret != FR_OK) || (len != writen)) {
 			printFatFsError("log index write", ret);
 		}
-		f_close(fd);
+		if (f_close(fd) != FR_OK) return false;
 	} else {
 		printFatFsError("log index file write", ret);
 	}
 
 	efiPrintf("New log file index %d", logFileIndex);
+    return ret == FR_OK;
 }
 
 #endif // EFI_PROD_CODE && EFI_FILE_LOGGING
