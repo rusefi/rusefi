@@ -1,0 +1,70 @@
+name: Firmware source and documentation archive
+
+on:
+  schedule:
+    # GitHub Actions cron schedules use UTC.
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  archive:
+    if: ${{ github.repository == 'rusefi/rusefi' && github.ref == 'refs/heads/master' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out firmware
+        uses: actions/checkout@v7
+        with:
+          path: rusefi
+          persist-credentials: false
+
+      - name: Initialize libfirmware only
+        working-directory: rusefi
+        run: git submodule update --init --depth 1 firmware/libfirmware
+
+      - name: Check out wiki Markdown
+        uses: actions/checkout@v7
+        with:
+          repository: rusefi/rusefi_documentation
+          path: rusefi_documentation
+          persist-credentials: false
+          sparse-checkout: |
+            *.md
+          sparse-checkout-cone-mode: false
+
+      - name: Create archive
+        working-directory: rusefi
+        run: python3 firmware/bin/zip_firmware_source.py build/firmware-source.zip
+
+      - name: Check ZIP integrity
+        working-directory: rusefi
+        run: python3 -m zipfile -t build/firmware-source.zip
+
+      - name: Upload archive
+        uses: actions/upload-artifact@v7
+        with:
+          name: firmware-source
+          path: rusefi/build/firmware-source.zip
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 14
+
+      - name: Install upload tool dependency
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y sshpass
+
+      - name: Upload archive to rusEFI server
+        working-directory: rusefi
+        env:
+          RUSEFI_SSH_USER: ${{ secrets.RUSEFI_SSH_USER }}
+          RUSEFI_SSH_PASS: ${{ secrets.RUSEFI_SSH_PASS }}
+          RUSEFI_SSH_SERVER: ${{ secrets.RUSEFI_SSH_SERVER }}
+        run: |
+          : "${RUSEFI_SSH_USER:?RUSEFI_SSH_USER is required}"
+          : "${RUSEFI_SSH_PASS:?RUSEFI_SSH_PASS is required}"
+          : "${RUSEFI_SSH_SERVER:?RUSEFI_SSH_SERVER is required}"
+          bash java_console/upload_file.sh "$RUSEFI_SSH_USER" "$RUSEFI_SSH_PASS" "$RUSEFI_SSH_SERVER" build_server build/firmware-source.zip
