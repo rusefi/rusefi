@@ -41,8 +41,8 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 |---|---:|---|---|
 | firmware | 696 | updateWidebandFirmwareFromFile(unsigned char) | controllers/can/rusefi_wideband.cpp:336:6 |
 | firmware | 520 | f_unlink | ext/FatFS/ff.c:5087:9 |
-| firmware | 424 | errorHandlerDeleteTypedReport(char const*) | controllers/core/error_handling.cpp:458:13 |
-| firmware | 416 | errorHandlerIsReportExist(char const*) | controllers/core/error_handling.cpp:432:12 |
+| firmware | 424 | errorHandlerDeleteTypedReport(char const*) | controllers/core/error_handling.cpp:459:13 |
+| firmware | 416 | errorHandlerIsReportExist(char const*) | controllers/core/error_handling.cpp:433:12 |
 | firmware | 408 | f_mkdir | ext/FatFS/ff.c:5176:9 |
 | firmware | 400 | canDashboardHondaK(CanCycle) | controllers/can/can_dash_honda.cpp:46:6 |
 | firmware | 368 | ToothLoggerWriteCsvLine(Writer&, long long, composite_logger_s, composite_sensor_snapshot_s const&, void const*) | console/binary/tooth_logger.cpp:530:12 |
@@ -158,8 +158,8 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | 864 | canDashboardHondaK(CanCycle) | controllers/can/can_dash_honda.cpp:46:6 |
 | firmware | 744 | updateWidebandFirmwareFromFile(unsigned char) | controllers/can/rusefi_wideband.cpp:336:6 |
 | firmware | 520 | f_unlink | ext/FatFS/ff.c:5087:9 |
-| firmware | 424 | errorHandlerDeleteTypedReport(char const*) | controllers/core/error_handling.cpp:458:13 |
-| firmware | 416 | errorHandlerIsReportExist(char const*) | controllers/core/error_handling.cpp:432:12 |
+| firmware | 424 | errorHandlerDeleteTypedReport(char const*) | controllers/core/error_handling.cpp:459:13 |
+| firmware | 416 | errorHandlerIsReportExist(char const*) | controllers/core/error_handling.cpp:433:12 |
 | firmware | 408 | f_mkdir | ext/FatFS/ff.c:5176:9 |
 | firmware | 352 | ToothLoggerWriteCsvLine(Writer&, long long, composite_logger_s, composite_sensor_snapshot_s const&, void const*) | console/binary/tooth_logger.cpp:530:12 |
 | firmware | 352 | f_open | ext/FatFS/ff.c:3799:9 |
@@ -217,8 +217,8 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 |---|---:|---|---|
 | firmware | 696 | updateWidebandFirmwareFromFile(unsigned char) | controllers/can/rusefi_wideband.cpp:336:6 |
 | firmware | 520 | f_unlink | ext/FatFS/ff.c:5087:9 |
-| firmware | 424 | errorHandlerDeleteTypedReport(char const*) | controllers/core/error_handling.cpp:458:13 |
-| firmware | 416 | errorHandlerIsReportExist(char const*) | controllers/core/error_handling.cpp:432:12 |
+| firmware | 424 | errorHandlerDeleteTypedReport(char const*) | controllers/core/error_handling.cpp:459:13 |
+| firmware | 416 | errorHandlerIsReportExist(char const*) | controllers/core/error_handling.cpp:433:12 |
 | firmware | 408 | f_mkdir | ext/FatFS/ff.c:5176:9 |
 | firmware | 400 | canDashboardHondaK(CanCycle) | controllers/can/can_dash_honda.cpp:46:6 |
 | firmware | 368 | ToothLoggerWriteCsvLine(Writer&, long long, composite_logger_s, composite_sensor_snapshot_s const&, void const*) | console/binary/tooth_logger.cpp:530:12 |
@@ -277,8 +277,8 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 |---|---:|---|---|
 | firmware | 696 | updateWidebandFirmwareFromFile(unsigned char) | controllers/can/rusefi_wideband.cpp:336:6 |
 | firmware | 520 | f_unlink | ext/FatFS/ff.c:5087:9 |
-| firmware | 424 | errorHandlerDeleteTypedReport(char const*) | controllers/core/error_handling.cpp:458:13 |
-| firmware | 416 | errorHandlerIsReportExist(char const*) | controllers/core/error_handling.cpp:432:12 |
+| firmware | 424 | errorHandlerDeleteTypedReport(char const*) | controllers/core/error_handling.cpp:459:13 |
+| firmware | 416 | errorHandlerIsReportExist(char const*) | controllers/core/error_handling.cpp:433:12 |
 | firmware | 408 | f_mkdir | ext/FatFS/ff.c:5176:9 |
 | firmware | 400 | canDashboardHondaK(CanCycle) | controllers/can/can_dash_honda.cpp:46:6 |
 | firmware | 368 | tinf_decode_trees | ext/uzlib/src/tinflate.c:307:12 |
