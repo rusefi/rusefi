@@ -194,9 +194,13 @@ static void overFireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 #endif /* SPARK_EXTREME_LOGGING */
 	float actualDwellMs = event->actualDwellTimer.getElapsedSeconds() * 1e3;
 
-	warning((ObdCode)((int)ObdCode::CUSTOM_Ignition_Coil_Overcharge_1 + event->cylinderIndex),
-		"cylinder %d %s overcharge %f ms",
-		event->cylinderIndex + 1, event->outputs[0]->getName(), actualDwellMs);
+	// Coastdown can miss the scheduled firing tooth. Keep the protective
+	// discharge below active, but do not report it as a fault after a stop request.
+	if (!getLimpManager()->shutdownController.isEngineStop(getTimeNowNt())) {
+		warning((ObdCode)((int)ObdCode::CUSTOM_Ignition_Coil_Overcharge_1 + event->cylinderIndex),
+			"cylinder %d %s overcharge %f ms",
+			event->cylinderIndex + 1, event->outputs[0]->getName(), actualDwellMs);
+	}
 
 	// kill pending fire
 	engine->module<TriggerScheduler>()->cancel(&event->sparkEvent);

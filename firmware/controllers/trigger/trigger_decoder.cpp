@@ -317,6 +317,13 @@ void PrimaryTriggerDecoder::onTriggerError() {
 }
 
 void PrimaryTriggerDecoder::onNotEnoughTeeth(int /*actual*/, int /*expected*/) {
+#if EFI_ENGINE_CONTROL
+	// Suppress only the report: decoding, sync loss and error counters still run.
+	if (getLimpManager()->shutdownController.isEngineStop(getTimeNowNt())) {
+		return;
+	}
+#endif // EFI_ENGINE_CONTROL
+
 	warning(ObdCode::CUSTOM_PRIMARY_NOT_ENOUGH_TEETH, "primary trigger error: not enough teeth between sync points: expected %d/%d got %d/%d",
 			getTriggerCentral()->triggerShape.getExpectedEventCount(TriggerWheel::T_PRIMARY),
 			getTriggerCentral()->triggerShape.getExpectedEventCount(TriggerWheel::T_SECONDARY),
@@ -330,6 +337,13 @@ int tooManyTeethCounter = 0;
 #endif // EFI_UNIT_TEST
 
 void PrimaryTriggerDecoder::onTooManyTeeth(int /*actual*/, int /*expected*/) {
+#if EFI_ENGINE_CONTROL
+	// Suppress only the report: decoding, sync loss and error counters still run.
+	if (getLimpManager()->shutdownController.isEngineStop(getTimeNowNt())) {
+		return;
+	}
+#endif // EFI_ENGINE_CONTROL
+
 	warning(ObdCode::CUSTOM_PRIMARY_TOO_MANY_TEETH, "primary trigger error: too many teeth between sync points: expected %d/%d got %d/%d",
 			getTriggerCentral()->triggerShape.getExpectedEventCount(TriggerWheel::T_PRIMARY),
 			getTriggerCentral()->triggerShape.getExpectedEventCount(TriggerWheel::T_SECONDARY),
@@ -361,10 +375,24 @@ case TriggerValue::RISE:
 }
 
 void VvtTriggerDecoder::onNotEnoughTeeth(int actual, int expected) {
+#if EFI_ENGINE_CONTROL
+	// Suppress only the report: decoding, sync loss and error counters still run.
+	if (getLimpManager()->shutdownController.isEngineStop(getTimeNowNt())) {
+		return;
+	}
+#endif // EFI_ENGINE_CONTROL
+
 	warning(ObdCode::CUSTOM_CAM_NOT_ENOUGH_TEETH, "cam %s trigger error: not enough teeth between sync points: actual %d expected %d", name, actual, expected);
 }
 
 void VvtTriggerDecoder::onTooManyTeeth(int actual, int expected) {
+#if EFI_ENGINE_CONTROL
+	// Suppress only the report: decoding, sync loss and error counters still run.
+	if (getLimpManager()->shutdownController.isEngineStop(getTimeNowNt())) {
+		return;
+	}
+#endif // EFI_ENGINE_CONTROL
+
 	warning(ObdCode::CUSTOM_CAM_TOO_MANY_TEETH, "cam %s trigger error: too many teeth between sync points: %d > %d", name, actual, expected);
 }
 

@@ -826,8 +826,14 @@ bool TriggerCentral::isToothExpectedNow(efitick_t timestamp) {
 			float absError = absF(angleError);
 			float isRpmEnough = Sensor::getOrZero(SensorType::Rpm) > 1000;
 			// TODO: configurable threshold
-			if (isRpmEnough && absError > 10 && absError < 180) {
-				// This tooth came at a very unexpected time, ignore it
+			bool reportTimingError = isRpmEnough && absError > 10 && absError < 180;
+#if EFI_ENGINE_CONTROL
+			// Keep the measured angle error and doubled-edge rejection above.
+			// Only the timing warning is suppressed during requested coastdown.
+			reportTimingError = reportTimingError && !getLimpManager()->shutdownController.isEngineStop(getTimeNowNt());
+#endif // EFI_ENGINE_CONTROL
+			if (reportTimingError) {
+				// Report the unexpected timing without rejecting this tooth.
 				warning((angleError > 0) ? ObdCode::CUSTOM_PRIMARY_BAD_TOOTH_TIMING_EARLY : ObdCode::CUSTOM_PRIMARY_BAD_TOOTH_TIMING_LATE,
 					"tooth #%d error of %.1f", triggerState.currentCycle.current_index, angleError);
 

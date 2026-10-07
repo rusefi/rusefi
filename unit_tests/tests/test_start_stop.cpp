@@ -174,3 +174,46 @@ TEST(start, startStop) {
 	// starter is now OFF due to timeout
 	ASSERT_FALSE(efiReadPin(engineConfiguration->starterControlPin));
 }
+
+// Exercise the reporting callbacks independently of engine speed: an unrequested
+// stall must still report, while an explicit stop window will suppress reports.
+TEST_F(StartStopTest, ToothCountWarningsAcrossStopWindow) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->engineShutDownPeriod = 3;
+	auto& shutdown = getLimpManager()->shutdownController;
+	auto reportToothCounts = [&]() {
+		auto& tc = engine->triggerCentral;
+		tc.triggerState.onNotEnoughTeeth(1, 2);
+		tc.triggerState.onTooManyTeeth(3, 2);
+		tc.vvtState[0][0].onNotEnoughTeeth(1, 2);
+		tc.vvtState[0][0].onTooManyTeeth(3, 2);
+	};
+
+	ASSERT_EQ(0, Sensor::getOrZero(SensorType::Rpm));
+	reportToothCounts();
+	EXPECT_EQ(4, eth.getWarningCounter());
+	ASSERT_TRUE(hasRecentWarningCode(ObdCode::CUSTOM_CAM_TOO_MANY_TEETH));
+	doScheduleStopEngine(StopRequestedReason::Lua);
+	reportToothCounts();
+	// Existing warnings remain, but the stop window adds no new reports.
+	EXPECT_EQ(4, eth.getWarningCounter());
+	EXPECT_TRUE(hasRecentWarningCode(ObdCode::CUSTOM_CAM_TOO_MANY_TEETH));
+	warning(ObdCode::OBD_Map_Timeout, "unrelated sensor timeout");
+	EXPECT_EQ(5, eth.getWarningCounter());
+	EXPECT_TRUE(hasRecentWarningCode(ObdCode::OBD_Map_Timeout));
+
+	eth.moveTimeForwardMs(3000);
+	ASSERT_FALSE(shutdown.isEngineStop(getTimeNowNt()));
+	reportToothCounts();
+	EXPECT_GT(eth.getWarningCounter(), 5);
+
+	const auto beforeRestart = eth.getWarningCounter();
+	doScheduleStopEngine(StopRequestedReason::Console);
+	ASSERT_TRUE(shutdown.isEngineStop(getTimeNowNt()));
+	testLuaExecString("startCrankingEngine()");
+	ASSERT_FALSE(shutdown.isEngineStop(getTimeNowNt()));
+	// The source remains latched, but it must not suppress a fresh start's faults.
+	EXPECT_NE(0, engine->outputChannels.stopEngineCode);
+	reportToothCounts();
+	EXPECT_GT(eth.getWarningCounter(), beforeRestart);
+}

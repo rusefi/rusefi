@@ -10,7 +10,7 @@
 
 #include "logicdata_csv_reader.h"
 
-static void checkColdStartCamGap(int cam) {
+static void checkColdStartCamGap(int cam, bool requestStop = false) {
 	EngineTestHelper eth(engine_type_e::BMW_N52);
 	Sensor::setMockValue(SensorType::Rpm, 250);
 	auto& tc = engine->triggerCentral;
@@ -51,12 +51,16 @@ static void checkColdStartCamGap(int cam) {
 
 	// Current behavior: the short-after-long ratio drops just below 0.4.
 	// A complete six-edge cycle is rejected even though no edges were added.
+	if (requestStop) {
+		engineConfiguration->engineShutDownPeriod = 5;
+		doScheduleStopEngine(StopRequestedReason::Lua);
+	}
 	gap(gapsUs[cam][4]);
 	EXPECT_NEAR(static_cast<float>(gapsUs[cam][4]) / gapsUs[cam][3], decoder.triggerSyncGapRatio, 1e-6);
 	EXPECT_FALSE(decoder.getShaftSynchronized());
 	EXPECT_EQ(6, decoder.getCurrentIndex());
-	EXPECT_EQ(1, eth.getWarningCounter());
-	EXPECT_TRUE(hasRecentWarningCode(ObdCode::CUSTOM_CAM_TOO_MANY_TEETH));
+	EXPECT_EQ(requestStop ? 0 : 1, eth.getWarningCounter());
+	EXPECT_EQ(!requestStop, hasRecentWarningCode(ObdCode::CUSTOM_CAM_TOO_MANY_TEETH));
 	EXPECT_EQ(1u, decoder.totalTriggerErrorCounter);
 	EXPECT_EQ(0u, tc.triggerState.totalTriggerErrorCounter);
 
@@ -65,7 +69,7 @@ static void checkColdStartCamGap(int cam) {
 	gap(gapsUs[cam][7]);
 	EXPECT_TRUE(decoder.getShaftSynchronized());
 	EXPECT_EQ(6, decoder.triggerCountersError) << "One missed cycle, not six additional warnings";
-	EXPECT_EQ(1, eth.getWarningCounter());
+	EXPECT_EQ(requestStop ? 0 : 1, eth.getWarningCounter());
 
 	gap(gapsUs[cam][8]);
 	gap(gapsUs[cam][9]);
@@ -74,7 +78,7 @@ static void checkColdStartCamGap(int cam) {
 	EXPECT_EQ(0, decoder.triggerCountersError);
 	EXPECT_EQ(0u, decoder.orderingErrorCounter);
 	EXPECT_EQ(1, decoder.getSynchronizationCounter());
-	EXPECT_EQ(1, eth.getWarningCounter());
+	EXPECT_EQ(requestStop ? 0 : 1, eth.getWarningCounter());
 }
 
 TEST(realBmwE90, ColdStartIntakeGapWarns9004AndRecovers) {
@@ -140,4 +144,12 @@ TEST(realBmwE90, realCams) {
 		EXPECT_GE(positionUpdates[cam], 20) << "cam " << cam;
 		EXPECT_LE(tc->vvtState[0][cam].totalTriggerErrorCounter, 20u) << "cam " << cam;
 	}
+}
+
+TEST(realBmwE90, IntakeGapDuringRequestedStop) {
+	checkColdStartCamGap(0, true);
+}
+
+TEST(realBmwE90, ExhaustGapDuringRequestedStop) {
+	checkColdStartCamGap(1, true);
 }

@@ -55,10 +55,14 @@ TEST(trigger, testNoStartUpWarnings) {
 	EXPECT_EQ(ObdCode::CUSTOM_PRIMARY_TOO_MANY_TEETH, getRecentWarnings()->get(0).Code);
 }
 
-TEST(trigger, testNoisyInput) {
+static void checkNoisyInput(bool requestStop) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	ASSERT_EQ(0, Sensor::getOrZero(SensorType::Rpm));
+	if (requestStop) {
+		engineConfiguration->engineShutDownPeriod = 5;
+		doScheduleStopEngine(StopRequestedReason::Lua);
+	}
 
 	eth.firePrimaryTriggerRise();
 	eth.firePrimaryTriggerFall();
@@ -70,8 +74,17 @@ TEST(trigger, testNoisyInput) {
 	eth.firePrimaryTriggerFall();
 	ASSERT_EQ(0, Sensor::getOrZero(SensorType::Rpm));
 
-	EXPECT_EQ(1u, getRecentWarnings()->getCount());
-	EXPECT_EQ(ObdCode::CUSTOM_PRIMARY_NOT_ENOUGH_TEETH, getRecentWarnings()->get(0).Code);
+	EXPECT_EQ(requestStop ? 0u : 1u, getRecentWarnings()->getCount());
+	EXPECT_EQ(!requestStop, hasRecentWarningCode(ObdCode::CUSTOM_PRIMARY_NOT_ENOUGH_TEETH));
+	EXPECT_EQ(1u, engine->triggerCentral.triggerState.totalTriggerErrorCounter);
+}
+
+TEST(trigger, testNoisyInput) {
+	checkNoisyInput(false);
+}
+
+TEST(trigger, NoisyInputDuringRequestedStop) {
+	checkNoisyInput(true);
 }
 
 TEST(trigger, testCamInput) {
@@ -185,4 +198,53 @@ TEST(trigger, testNB2CamInput) {
 	ASSERT_EQ(totalRevolutionCountBeforeVvtSync + 3, engine->triggerCentral.triggerState.getSynchronizationCounter());
 
 	EXPECT_EQ(40, waveChart.getSize());
+}
+
+static void checkToothTimingAfterStop(bool requestStop, float toothIntervalMs, ObdCode code) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->isIgnitionEnabled = false;
+	engineConfiguration->isInjectionEnabled = false;
+	engineConfiguration->engineShutDownPeriod = 5;
+	engineConfiguration->trigger.customTotalToothCount = 12;
+	engineConfiguration->trigger.customSkippedToothCount = 0;
+	setCrankOperationMode();
+	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL);
+	for (int i = 0; i < 60; i++) {
+		eth.fireRise(2);
+	}
+	ASSERT_GT(Sensor::getOrZero(SensorType::Rpm), 1000);
+	ASSERT_EQ(0, eth.getWarningCounter());
+	if (requestStop) {
+		doScheduleStopEngine(StopRequestedReason::Lua);
+	}
+	eth.fireRise(toothIntervalMs);
+	// The same tooth timing still gets decoded during an explicit stop window.
+	const bool doubledEdge = code == ObdCode::CUSTOM_PRIMARY_DOUBLED_EDGE;
+	EXPECT_EQ(doubledEdge || !requestStop, hasRecentWarningCode(code));
+	EXPECT_NEAR(30 - 15 * toothIntervalMs, engine->triggerCentral.triggerToothAngleError, 0.1);
+	EXPECT_EQ(doubledEdge ? 1 : 0, engine->triggerCentral.triggerIgnoredToothCount);
+}
+
+TEST(trigger, EarlyToothWithoutStopRequest) {
+	checkToothTimingAfterStop(false, 1, ObdCode::CUSTOM_PRIMARY_BAD_TOOTH_TIMING_EARLY);
+}
+
+TEST(trigger, EarlyToothDuringRequestedStop) {
+	checkToothTimingAfterStop(true, 1, ObdCode::CUSTOM_PRIMARY_BAD_TOOTH_TIMING_EARLY);
+}
+
+TEST(trigger, LateToothWithoutStopRequest) {
+	checkToothTimingAfterStop(false, 4, ObdCode::CUSTOM_PRIMARY_BAD_TOOTH_TIMING_LATE);
+}
+
+TEST(trigger, LateToothDuringRequestedStop) {
+	checkToothTimingAfterStop(true, 4, ObdCode::CUSTOM_PRIMARY_BAD_TOOTH_TIMING_LATE);
+}
+
+TEST(trigger, DoubledToothDuringRequestedStop) {
+	checkToothTimingAfterStop(true, 0.001, ObdCode::CUSTOM_PRIMARY_DOUBLED_EDGE);
+}
+
+TEST(trigger, DoubledToothWithoutStopRequest) {
+	checkToothTimingAfterStop(false, 0.001, ObdCode::CUSTOM_PRIMARY_DOUBLED_EDGE);
 }

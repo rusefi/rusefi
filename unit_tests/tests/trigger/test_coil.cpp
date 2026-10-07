@@ -47,7 +47,7 @@ static void prepareToScheduleOverdwellSparkDown(EngineTestHelper& eth) {
 	eth.smartFireRise(20);
 }
 
-TEST(coil, testOverdwellProtection) {
+static void checkOverdwellProtection(bool requestStop) {
 	printf("*************************************************** testOverdwellProtection\r\n");
 
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
@@ -121,10 +121,12 @@ TEST(coil, testOverdwellProtection) {
 	};
 
 	std::optional<int> testIgnitionEventState;
+	IgnitionEvent* testEvent = nullptr;
 	engine->onIgnitionEvent = [&](IgnitionEvent* event, bool state) -> void {
 		if (testOutputName == event->outputs[0]->getName()) {
 			EXPECT_EQ(testSparkCounter.value(), event->sparkCounter) << "Unexpected spark counter in ignition event";
 			testIgnitionEventState = state;
+			testEvent = event;
 		}
 	};
 
@@ -142,8 +144,35 @@ TEST(coil, testOverdwellProtection) {
 	EXPECT_TRUE(testCoil.getLogicValue()) << "Test coil still should be on";
 	EXPECT_FALSE(testIgnitionEventState.has_value()) << "Unexpected ignition event";
 
+	if (requestStop) {
+		engineConfiguration->engineShutDownPeriod = 5;
+		doScheduleStopEngine(StopRequestedReason::Lua);
+		ASSERT_TRUE(getLimpManager()->shutdownController.isEngineStop(getTimeNowNt()));
+	}
+	const auto canceledBefore = engine->engineState.overDwellCanceledCounter;
+	ASSERT_NE(nullptr, testEvent);
+	EXPECT_EQ(&testEvent->sparkEvent, engine->module<TriggerScheduler>()->getElementAtIndexForUnitTest(0));
 	eth.setTimeAndInvokeEventsNt(expectedSparkDownOverdwellTimestampNt);
 	EXPECT_FALSE(testCoil.getLogicValue()) << "Test coil should be off";
 	ASSERT_TRUE(testIgnitionEventState.has_value()) << "Missed ignition event";
 	EXPECT_FALSE(testIgnitionEventState.value()) << "Unexpected state in ignition event";
+	EXPECT_EQ(canceledBefore + 1, engine->engineState.overDwellCanceledCounter);
+	EXPECT_TRUE(testEvent->wasSparkCanceled);
+	// A later tooth may schedule the next dwell, but must never promote the
+	// canceled spark. Observe the real scheduler without executing new actions.
+	testing::NiceMock<MockExecutor> executor;
+	engine->scheduler.setMockExecutor(&executor);
+	EXPECT_CALL(executor, schedule(_, &testEvent->sparkEvent.eventScheduling, _, _)).Times(0);
+	engine->module<TriggerScheduler>()->scheduleEventsUntilNextTriggerTooth(3000, getTimeNowNt(), 0, 720);
+	engine->scheduler.setMockExecutor(nullptr);
+	// An unrequested stall still reports; a requested stop only silences the report.
+	EXPECT_EQ(!requestStop, hasRecentWarningCode(ObdCode::CUSTOM_Ignition_Coil_Overcharge_1));
+}
+
+TEST(coil, testOverdwellProtection) {
+	checkOverdwellProtection(false);
+}
+
+TEST(coil, OverdwellProtectionDuringRequestedStop) {
+	checkOverdwellProtection(true);
 }
