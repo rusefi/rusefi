@@ -6,7 +6,6 @@ Updated: 2026-10-08.
 
 | Tool/capability | Open work |
 | --- | --- |
-| Lua, logging and sniffer evidence | Adapt implementations to the borrowed session and bound results |
 | `export_diagnostic_case` | Save findings, referenced tune/log/capture evidence and provenance |
 
 Keep the first release read-only. Tune writes, arbitrary commands and firmware

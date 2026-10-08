@@ -18,7 +18,8 @@ opens the browser automatically; if that fails, the tab displays a copyable link
 The app identifies itself as **rusEFI Updater**.
 
 The terminal shows streamed answers and tool names as they run. User messages,
-requested ECU evidence and retrieved source/wiki excerpts are sent to OpenAI
+requested ECU evidence (including selected tune values, Lua source and captures)
+and retrieved source/wiki excerpts are sent to OpenAI
 using the selected ChatGPT plan.
 The assistant's tools are read-only:
 
@@ -30,6 +31,9 @@ The assistant's tools are read-only:
 | `read_live_values` | Up to 32 selected channels from one full poll, with a shared sample ID, timestamp and age |
 | `diagnostic_snapshot` | Selected live channels and raw warning/error channels from the same full poll |
 | `read_tune_fields` | Selected scalar, enum/bitfield and small-array calibrations, read freshly from their ECU pages |
+| `get_lua` | Bounded Lua source lines from fresh ECU RAM reads, with citations and a source hash |
+| `capture_live_log` | A short in-memory series of selected channels from new full polls |
+| `capture_engine_sniffer` | The next received chart, with bounded events and channel summaries |
 | `read_messages` | Console/ECU messages observed since this conversation started, with sequence numbers |
 | `search_knowledge` | Literal or keyword matches in cached firmware/wiki text, with paths and line numbers |
 | `read_knowledge` | Bounded line ranges, file hashes and citation metadata from cached text |
@@ -101,6 +105,34 @@ have a ten-second overall deadline. Stop, timeout or connection replacement
 discards the result and stops further chunks; an already-running wire transaction
 finishes normally so cancellation does not interrupt the shared connection.
 
+`get_lua` accepts optional `start_line` (default 1) and `max_lines` (default 80,
+maximum 120). It reads the declared `LUASCRIPT` field freshly from its main or
+secondary page, up to 64 KiB, with the same ten-second deadline and chunk-level
+cancellation as calibration reads. Results contain at most 6,000 source characters
+and 2,000 characters per line, truncation flags, a next-line hint, citations such
+as `ecu:LUASCRIPT:L1-L20`, and a SHA-256 hash of the ASCII source before its NUL
+terminator. Compare hashes across paged reads to detect edits. RAM source does
+not establish which script is running in the Lua VM or saved in flash. The tool
+does not resolve includes, execute scripts, write, burn or reset Lua.
+
+`capture_live_log` requires `names` (1-16 channel names). Optional `duration_ms`
+defaults to 2,000 and ranges from 100 to 10,000; `max_samples` defaults to 20 and
+ranges from 1 to 20. It observes only full polls completed after capture starts,
+returning at most one sample per 100 ms. Each sample includes its ID, timestamp,
+age and selected values. Reaching the sample or JSON-size cap marks the result
+partial. No new polls gives an explicit error. This is downsampled trend evidence,
+not a complete or high-rate recording, and it writes no MLG/CSV or tune files.
+
+`capture_engine_sniffer` accepts `timeoutMs` (default 5,000, maximum 10,000) and
+`max_events` (default 100, maximum 128). It observes the next nonempty chart using
+the existing firmware settings, alongside the Console UI. No acquisition settings
+are changed and no enable/reset command is sent. It returns at most 32 channel
+summaries and omits raw chart text. Event count and duration describe the full
+chart even when returned events or summaries are truncated. Event times are
+chart-relative; `receivedAt` is host time. Invalid/oversized charts and timeouts
+are explicit errors. Completion, Stop and connection changes release only the
+assistant's observer, leaving the Console listener intact.
+
 **Stop** cancels the current turn. A turn also has a two-minute cancellation
 deadline, up to eight model requests and 24 tool calls. Failed, stopped and
 incomplete turns are not added to the next request. Network disconnect/read
@@ -131,12 +163,12 @@ borrowed `LinkManager`. The standalone MCP entry point remains available for
 external clients with its existing tool catalog.
 
 The Console shadow JAR includes authentication, ECU and knowledge tool code.
-A second MCP process/JAR is unnecessary for this tab. Lua reading,
-log/sniffer capture, diagnostic export, and write tools remain follow-ups.
+A second MCP process/JAR is unnecessary for this tab. Diagnostic export and
+write tools remain follow-ups.
 
 ## Local knowledge retrieval
 
-`TroubleshootingTools` combines the seven ECU tools with `LocalKnowledgeTools`,
+`TroubleshootingTools` combines the ten ECU tools with `LocalKnowledgeTools`,
 using the exact cache directory returned by source preparation. Both stay bound
 to the current Console connection. The model can search case-insensitively for
 a literal substring or all whitespace-separated keywords on one line, then

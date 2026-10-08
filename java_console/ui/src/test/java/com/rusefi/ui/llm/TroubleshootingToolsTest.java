@@ -3,6 +3,7 @@ package com.rusefi.ui.llm;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniFileMetaInfo;
 import com.opensr5.ini.field.ScalarIniField;
+import com.opensr5.ini.field.StringIniField;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.FieldType;
 import com.rusefi.core.OutputChannelSnapshot;
@@ -20,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.BitSet;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.rusefi.ui.llm.ChatGptClient.*;
@@ -50,6 +52,9 @@ class TroubleshootingToolsTest {
         when(ini.getMetaInfo()).thenReturn(meta);
         when(ini.getBlockingFactor()).thenReturn(16);
         when(protocol.getIniFile()).thenReturn(ini);
+        when(protocol.getIniFileNullable()).thenReturn(ini);
+        when(ini.findIniField("LUASCRIPT")).thenReturn(Optional.of(new StringIniField("luaScript", 4, 12)));
+        when(protocol.readFromPage(0, 4, 12)).thenReturn(new byte[]{'r', 'e', 't', 'u', 'r', 'n', ' ', '1', '\n', 0, 0, 0});
         when(protocol.readFromPage(0, 1, 1)).thenReturn(new byte[]{(byte) 200});
         doAnswer(call -> { ((Runnable) call.getArgument(0)).run(); return null; }).when(link).submit(any(Runnable.class));
         SensorCentral sensors = SensorCentral.getInstance();
@@ -62,7 +67,10 @@ class TroubleshootingToolsTest {
             TroubleshootingTools tools = new TroubleshootingTools(session, directory);
             AtomicInteger rounds = new AtomicInteger();
             JSONArray history = ChatGptAgent.run((input, definitions, delta, c) -> {
-                assertEquals(9, definitions.size());
+                assertEquals(12, definitions.size());
+                assertTrue(definitions.toJSONString().contains("get_lua"));
+                assertTrue(definitions.toJSONString().contains("capture_live_log"));
+                assertTrue(definitions.toJSONString().contains("capture_engine_sniffer"));
                 assertTrue(definitions.toJSONString().contains("read_tune_fields"));
                 assertTrue(definitions.toJSONString().contains("read_live_values"));
                 assertTrue(definitions.toJSONString().contains("diagnostic_snapshot"));
@@ -85,9 +93,14 @@ class TroubleshootingToolsTest {
                         JSONObject search = returned(input, "search");
                         JSONObject match = (JSONObject) ((JSONArray) search.get("matches")).get(0);
                         assertEquals("rusefi_documentation/Cranking.md:L2", match.get("citation"));
-                        return response(call("read", "read_knowledge", object("path", match.get("path"), "start_line", 2, "max_lines", 2)));
+                        return response(call("read", "read_knowledge", object("path", match.get("path"), "start_line", 2, "max_lines", 2)),
+                                call("lua", "get_lua", object("start_line", 1, "max_lines", 1)));
                     default:
                         JSONObject read = returned(input, "read");
+                        JSONObject lua = returned(input, "lua");
+                        assertEquals("ecu_ram", lua.get("source"));
+                        assertEquals("return 1", ((JSONObject) ((JSONArray) lua.get("lines")).get(0)).get("text"));
+                        assertEquals(64, ((String) lua.get("sha256")).length());
                         assertEquals("rusefi_documentation/Cranking.md:L2-L3", read.get("citation"));
                         assertEquals("unverified", ((JSONObject) read.get("provenance")).get("ecu_match"));
                         assertEquals("Check cranking voltage and RPM.", ((JSONObject) ((JSONArray) read.get("lines")).get(0)).get("text"));
