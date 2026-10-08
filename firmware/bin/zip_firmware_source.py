@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Zip tracked firmware, libfirmware, and wiki Markdown from the working trees.
+"""Zip tracked firmware, libfirmware, AI guides, and wiki Markdown.
 
 Requires Python 3 and Git. Includes local edits and staged new files, skips
 deleted files, and excludes images, firmware/ext/cmsis-svd/, the cypress and
@@ -9,6 +9,8 @@ The libfirmware submodule must be initialized before running this script.
 The sibling rusefi_documentation checkout is also required; use
 --documentation-dir to select another checkout. Its tracked .md files are
 included under rusefi_documentation/, preserving their relative paths.
+Includes the root docs/AI/ directory and generates a root README.md with an
+archive overview and links to the included AI guides.
 Keeps other tracked firmware assets (including build scripts and configuration)
 and the firmware/ directory layout. Symlinks are stored without following them.
 
@@ -22,6 +24,7 @@ import os
 from pathlib import Path
 import stat
 import subprocess
+from urllib.parse import quote
 import zipfile
 
 
@@ -36,6 +39,29 @@ EXCLUDED_DIRECTORIES = (
     "firmware/config/boards/cypress/",
     "firmware/config/boards/kinetis/",
 )
+
+
+def archive_index(ai_names):
+    lines = [
+        "# rusEFI firmware source and documentation",
+        "",
+        "Tracked working-tree content, including local edits, exported by",
+        "`firmware/bin/zip_firmware_source.py`.",
+        "",
+        "## Contents",
+        "",
+        "- [Firmware](firmware/): controllers, board configuration, Lua examples, and build scripts.",
+        "- [libfirmware](firmware/libfirmware/): reusable firmware library.",
+        "- [AI guides](docs/AI/): subsystem explanations and diagnostic notes, indexed below.",
+        "- [Wiki Markdown](rusefi_documentation/): setup, wiring, and operating documentation.",
+        "",
+        "## AI guide index",
+        "",
+    ]
+    for name in sorted(ai_names):
+        label = name[len("docs/AI/"):].replace("[", "\\[").replace("]", "\\]")
+        lines.append("- [{}]({})".format(label, quote(name)))
+    return "\n".join(lines) + "\n"
 
 
 def main():
@@ -65,6 +91,7 @@ def main():
     # Explicitly include libfirmware, without recursing into other submodules.
     repositories = (
         (root, "firmware/", "", False),
+        (root, "docs/AI/", "", False),
         (libfirmware, ".", "firmware/libfirmware/", False),
         (documentation, ".", "rusefi_documentation/", True),
     )
@@ -102,6 +129,7 @@ def main():
         parser.error("no tracked firmware files found")
     if not documentation_count:
         parser.error("no tracked Markdown files found in {}".format(documentation))
+    ai_names = [name for name, _ in files if name.startswith("docs/AI/")]
     output.parent.mkdir(parents=True, exist_ok=True)
     try:
         archive = zipfile.ZipFile(output, "x", compression=zipfile.ZIP_DEFLATED)
@@ -109,6 +137,7 @@ def main():
         parser.error("output already exists: {} (choose another path)".format(output))
     try:
         with archive:
+            archive.writestr("README.md", archive_index(ai_names))
             for name, source in files:
                 if source.is_symlink():
                     info = zipfile.ZipInfo(name)
@@ -120,8 +149,9 @@ def main():
     except BaseException:
         output.unlink()
         raise
-    print("Created {} ({} files, including {} wiki Markdown files, {:.1f} MiB)".format(
-        output, len(files), documentation_count, output.stat().st_size / (1024 * 1024)))
+    print("Created {} ({} files, including {} AI files and {} wiki Markdown files, {:.1f} MiB)".format(
+        output, len(files) + 1, len(ai_names), documentation_count,
+        output.stat().st_size / (1024 * 1024)))
 
 
 if __name__ == "__main__":
