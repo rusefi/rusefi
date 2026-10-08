@@ -127,25 +127,25 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 
 | Image | Stack / entry | Nominal | Reviewed | Scenario | Proxy snapshot | Current proxy | Result |
 |---|---|---:|---:|---|---:|---:|---|
-| firmware | bench test | 1600 | 204 | idle production worker | 2028 | 1940 | PROXY -88; partial proxy: 25 unknown, 6 indirect, recursion |
-| firmware | CAN RX | 768 | 496 | CAN serial receive | 1340 | 1404 | REVIEW PROXY +64; partial proxy: 52 unknown, 28 indirect, recursion |
-| firmware | CAN TX | 1536 | - | - | - | 1956 | NOT REVIEWED: 29 unknown, 10 indirect, recursion |
-| firmware | electronic throttle | 512 | 312 | normal ETB update | 532 | 580 | REVIEW PROXY +48; partial proxy: 11 unknown, 3 indirect, recursion |
+| firmware | bench test | 1600 | 204 | idle production worker | 2028 | 1948 | PROXY -80; partial proxy: 25 unknown, 6 indirect, recursion |
+| firmware | CAN RX | 768 | 496 | CAN serial receive | 1340 | 1420 | REVIEW PROXY +80; partial proxy: 52 unknown, 28 indirect, recursion |
+| firmware | CAN TX | 1536 | - | - | - | 1964 | NOT REVIEWED: 29 unknown, 10 indirect, recursion |
+| firmware | electronic throttle | 512 | 312 | normal ETB update | 532 | 588 | REVIEW PROXY +56; partial proxy: 11 unknown, 3 indirect, recursion |
 | firmware | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | firmware | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
-| firmware | log flush | 400 | 132 | mailbox wait/flush | 644 | 692 | REVIEW PROXY +48; partial proxy: 17 unknown, 2 indirect, recursion |
+| firmware | log flush | 400 | 132 | mailbox wait/flush | 644 | 700 | REVIEW PROXY +56; partial proxy: 17 unknown, 2 indirect, recursion |
 | firmware | Lua | 4096 | - | - | - | 3196 | NOT REVIEWED: 34 unknown, 15 indirect, recursion |
-| firmware | lwIP driver | 672 | 192 | normal Ethernet delivery | 812 | 836 | REVIEW PROXY +24; partial proxy: 31 unknown, 6 indirect, recursion |
-| firmware | lwIP TCP/IP | 1024 | 584 | TCP write with ARP | 660 | 708 | REVIEW PROXY +48; partial proxy: 15 unknown, 5 indirect, recursion |
+| firmware | lwIP driver | 672 | 192 | normal Ethernet delivery | 812 | 844 | REVIEW PROXY +32; partial proxy: 31 unknown, 6 indirect, recursion |
+| firmware | lwIP TCP/IP | 1024 | 584 | TCP write with ARP | 660 | 716 | REVIEW PROXY +56; partial proxy: 15 unknown, 5 indirect, recursion |
 | firmware | main loop | 1024 | 208 | normal ADC processing | 620 | 716 | REVIEW PROXY +96; partial proxy: 14 unknown, 4 indirect, recursion |
-| firmware | main/process | 1536 | 704 | startup fast callback | 1196 | 1220 | REVIEW PROXY +24; partial proxy: 65 unknown, 28 indirect, recursion |
-| firmware | PCA9685 | 784 | - | - | - | 684 | NOT REVIEWED: 13 unknown, 4 indirect, recursion |
-| firmware | SD/MMC | 1600 | 1436 | exFAT log creation | 2036 | 1844 | PROXY -192; partial proxy: 46 unknown, 20 indirect, recursion |
-| firmware | stepper | 400 | 280 | startup redundant pedal check | 652 | 700 | REVIEW PROXY +48; partial proxy: 15 unknown, 6 indirect, recursion |
-| firmware | storage manager | 400 | 292 | internal-flash tune burn | 644 | 692 | REVIEW PROXY +48; partial proxy: 18 unknown, 5 indirect, recursion |
-| firmware | timer watchdog | 256 | 112 | normal watchdog sleep | 528 | 576 | REVIEW PROXY +48; partial proxy: 11 unknown, 2 indirect, recursion |
-| firmware | TunerStudio | 1200 | 744 | Ethernet TS with ARP | 1316 | 1372 | REVIEW PROXY +56; partial proxy: 56 unknown, 34 indirect, recursion |
-| firmware | USB mass storage | 2048 | 300 | SD READ/WRITE(10) | 732 | 780 | REVIEW PROXY +48; partial proxy: 18 unknown, 5 indirect, recursion |
+| firmware | main/process | 1536 | 704 | startup fast callback | 1196 | 1236 | REVIEW PROXY +40; partial proxy: 65 unknown, 28 indirect, recursion |
+| firmware | PCA9685 | 784 | - | - | - | 692 | NOT REVIEWED: 13 unknown, 4 indirect, recursion |
+| firmware | SD/MMC | 1600 | 1436 | exFAT log creation | 2036 | 1852 | PROXY -184; partial proxy: 46 unknown, 20 indirect, recursion |
+| firmware | stepper | 400 | 280 | startup redundant pedal check | 652 | 708 | REVIEW PROXY +56; partial proxy: 15 unknown, 6 indirect, recursion |
+| firmware | storage manager | 400 | 292 | internal-flash tune burn | 644 | 700 | REVIEW PROXY +56; partial proxy: 18 unknown, 5 indirect, recursion |
+| firmware | timer watchdog | 256 | 112 | normal watchdog sleep | 528 | 584 | REVIEW PROXY +56; partial proxy: 11 unknown, 2 indirect, recursion |
+| firmware | TunerStudio | 1200 | 744 | Ethernet TS with ARP | 1316 | 1388 | REVIEW PROXY +72; partial proxy: 56 unknown, 34 indirect, recursion |
+| firmware | USB mass storage | 2048 | 300 | SD READ/WRITE(10) | 732 | 788 | REVIEW PROXY +56; partial proxy: 18 unknown, 5 indirect, recursion |
 | bootloader | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | bootloader | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
 | bootloader | LED | 256 | - | - | - | 80 | NOT REVIEWED: 3 unknown |
