@@ -14,6 +14,16 @@ packaged in the Console JAR. Troubleshooting requests require the connected
 Console integration, whose tab is currently disabled by a `false &&` guard in
 `ConsoleUI`. See [Console troubleshooting assistant](llm-troubleshooting.md).
 
+The sandbox first prepares a valid cached source ZIP. If none is usable, it
+shows only the source download prompt, **Start Download**, progress and status.
+Click **Start Download** and wait for download/extraction to complete before
+the account and chat controls appear. A failed attempt can be retried. To use
+isolated account and source directories for development:
+
+```sh
+./gradlew :ui:runLLMTabSandbox --args="/tmp/rusefi-chatgpt-dev /tmp/rusefi-source-cache"
+```
+
 1. Click **Continue with ChatGPT** and complete sign-in in your system browser.
    If the browser cannot open, copy the link from the dialog. The browser must
    reach the Java process's `127.0.0.1` loopback interface. Sign-in expires after

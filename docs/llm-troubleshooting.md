@@ -5,7 +5,14 @@ from the development checkout. The integration and tools are packaged in the
 Console JAR; the connected workflow below applies when that guard is enabled.
 
 The **Troubleshooting** tab uses ChatGPT with the Console's existing ECU
-connection. Connect to an ECU, open the tab, select a saved account or choose
+connection. Connect to an ECU and open the tab. It first checks and extracts
+the cached source ZIP in the background without making a network request.
+If the ZIP is missing, too small, expired or corrupt, the panel shows a source
+download prompt, **Start Download**, a progress bar and status text. All chat
+controls stay hidden until ZIP validation and extraction finish successfully.
+Download failures keep this screen visible and allow another attempt.
+
+Once sources are ready, select a saved account or choose
 **Continue with ChatGPT**, select a model, and describe the problem. Sign-in
 opens the browser automatically; if that fails, the tab displays a copyable link.
 The app identifies itself as **rusEFI Updater**.
@@ -95,7 +102,10 @@ The CLI sandbox prints progress as text:
 ```
 
 This prepares local content only; it does not yet expose source/wiki search to
-the model.
+the model. `LLMTab` uses `prepareCached(...)` on opening and waits for a user
+click before calling `downloadFresh(...)`. Account-store initialization also
+waits until sources are ready. Closing the panel cancels source preparation
+and ignores late progress/completion callbacks.
 
 ## Developer validation
 
