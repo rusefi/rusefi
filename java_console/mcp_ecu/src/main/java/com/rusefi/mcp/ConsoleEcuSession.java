@@ -10,22 +10,44 @@ import org.json.simple.JSONObject;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.LongSupplier;
 
 /** Read-only in-process MCP adapter, pinned to a Console-owned connection for one conversation. */
 @SuppressWarnings("unchecked")
 public final class ConsoleEcuSession implements AutoCloseable {
+    private static final int MAX_CHANNELS = 32;
+    private static final String[] DEFAULT_CHANNELS = {
+            "RPMValue", "VBatt", "isCranking", "MAPValue", "TPSValue", "coolant", "intake"
+    };
+    private static final String[] FAULT_CHANNELS = {
+            "checkEngine", "hasCriticalError", "isWarnNow", "isTriggerError", "warningCounter", "lastErrorCode",
+            "recentErrorCode1", "recentErrorCode2", "recentErrorCode3", "recentErrorCode4",
+            "recentErrorCode5", "recentErrorCode6", "recentErrorCode7", "recentErrorCode8"
+    };
     private final LinkManager link;
     private final BinaryProtocol protocol;
     private final EcuMcpServer server;
     private final SensorCentral.FullOutputLease lease;
     private final SensorCentral.SnapshotListenerToken samples;
     private final Map<String, JSONObject> definitions = new HashMap<>();
+    private final LongSupplier nanoTime;
+    private final AtomicLong sampleSequence = new AtomicLong();
     private volatile Sample sample;
     private volatile boolean closed;
 
     public ConsoleEcuSession(LinkManager link) throws IOException {
+        this(link, System::nanoTime, System::currentTimeMillis);
+    }
+
+    ConsoleEcuSession(LinkManager link, LongSupplier nanoTime, LongSupplier currentTimeMillis) throws IOException {
         this.link = link;
+        this.nanoTime = nanoTime;
         protocol = link.getBinaryProtocol();
         checkConnected();
         server = new EcuMcpServer(link, protocol);
@@ -34,7 +56,8 @@ public final class ConsoleEcuSession implements AutoCloseable {
             // Snapshot listeners run after SensorCentral has decoded channel values.
             if (!closed && link.getBinaryProtocol() == protocol && !protocol.isClosed()
                     && snapshot.isFull() && snapshot.getGeneration() >= lease.getGeneration()) {
-                sample = new Sample(SensorCentral.getInstance().getOutputChannelMap());
+                sample = new Sample(SensorCentral.getInstance().getOutputChannelMap(), sampleSequence.incrementAndGet(),
+                        currentTimeMillis.getAsLong(), nanoTime.getAsLong());
             }
         });
         for (Object item : (JSONArray) server.toolsList().get("tools")) {
@@ -48,6 +71,17 @@ public final class ConsoleEcuSession implements AutoCloseable {
         definitions.put("list_output_channels", object("name", "list_output_channels",
                 "description", "List up to 100 INI datalog channel names and labels. Narrow using filter if truncated.",
                 "inputSchema", object("type", "object", "properties", properties, "required", new JSONArray(), "additionalProperties", false)));
+        JSONObject names = object("type", "array", "minItems", 1, "maxItems", MAX_CHANNELS, "uniqueItems", true,
+                "items", object("type", "string", "minLength", 1, "maxLength", 256),
+                "description", "INI output channel names, case-insensitive. Discover names with list_output_channels.");
+        definitions.put("read_live_values", object("name", "read_live_values",
+                "description", "Read 1-32 channels from one recent completed full host poll, with a shared sample ID, timestamp and age. Missing/non-finite values are explicit. A host poll is not an atomic ECU measurement.",
+                "inputSchema", object("type", "object", "properties", object("names", names),
+                        "required", array("names"), "additionalProperties", false)));
+        definitions.put("diagnostic_snapshot", object("name", "diagnostic_snapshot",
+                "description", "Read selected live channels plus warning/error channels from the same recent full host poll. Optional names defaults to RPMValue, VBatt, isCranking, MAPValue, TPSValue, coolant, intake. Recent/last codes and counters are history, not proof of active faults. Missing channels do not mean healthy.",
+                "inputSchema", object("type", "object", "properties", object("names", names),
+                        "required", new JSONArray(), "additionalProperties", false)));
     }
 
     public boolean isCurrent() {
@@ -60,10 +94,11 @@ public final class ConsoleEcuSession implements AutoCloseable {
         }
     }
 
-    /** Responses function definitions adapted from the same schemas used by standalone MCP. */
+    /** Responses function definitions, including the Console-only discovery and snapshot tools. */
     public JSONArray definitions() {
         JSONArray result = new JSONArray();
-        for (String name : Arrays.asList("ecu_info", "list_output_channels", "read_output_channel", "read_messages")) {
+        for (String name : Arrays.asList("ecu_info", "list_output_channels", "read_output_channel",
+                "read_live_values", "diagnostic_snapshot", "read_messages")) {
             JSONObject tool = definitions.get(name);
             result.add(object("type", "function", "name", name, "description", tool.get("description"),
                     "parameters", tool.get("inputSchema"), "strict", false));
@@ -94,22 +129,24 @@ public final class ConsoleEcuSession implements AutoCloseable {
         JSONObject result;
         if ("list_output_channels".equals(name)) {
             result = listChannels((String) args.getOrDefault("filter", ""));
-        } else if ("read_output_channel".equals(name)) {
-            long deadline = System.nanoTime() + java.util.concurrent.TimeUnit.SECONDS.toNanos(3);
-            Sample current;
-            while ((current = sample) == null || System.nanoTime() - current.nanoTime > java.util.concurrent.TimeUnit.SECONDS.toNanos(2)) {
-                checkCancellation.run();
-                checkConnected();
-                if (System.nanoTime() >= deadline) {
-                    return error("No fresh full output-channel sample. Check the Console connection.");
-                }
-                Thread.sleep(25);
+        } else if ("read_output_channel".equals(name) || "read_live_values".equals(name) || "diagnostic_snapshot".equals(name)) {
+            Sample current = awaitSample(checkCancellation);
+            if (current == null) {
+                return error("No fresh full output-channel sample. Check the Console connection.");
             }
-            String channel = (String) args.get("name");
-            double value = current.values.getOrDefault(channel, Double.NaN);
-            result = EcuMcpServer.outputChannelResult(channel, Double.isFinite(value) ? value : Double.NaN);
+            if ("read_output_channel".equals(name)) {
+                result = channelResult(current, (String) args.get("name"));
+            } else {
+                JSONArray names = (JSONArray) args.getOrDefault("names", array(DEFAULT_CHANNELS));
+                result = object("success", true, "values", channelResults(current, names, checkCancellation));
+                if ("diagnostic_snapshot".equals(name)) {
+                    result.put("faults", channelResults(current, array(FAULT_CHANNELS), checkCancellation));
+                    result.put("faultNote", "Raw warning/error channels from this poll; last/recent codes and counters can describe past events. Missing data is not evidence of no faults. Use the matching firmware documentation to interpret numeric codes.");
+                }
+            }
+            result.put("sampleId", current.id);
             result.put("sampleTimestampMs", current.timestamp);
-            result.put("sampleAgeMs", java.util.concurrent.TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - current.nanoTime));
+            result.put("sampleAgeMs", TimeUnit.NANOSECONDS.toMillis(nanoTime.getAsLong() - current.nanoTime));
         } else {
             JSONObject envelope = server.toolsCall(object("name", name, "arguments", args));
             result = (JSONObject) envelope.get("structuredContent");
@@ -120,6 +157,37 @@ public final class ConsoleEcuSession implements AutoCloseable {
         checkCancellation.run();
         checkConnected();
         result.put("signature", protocol.signature);
+        return result;
+    }
+
+    private Sample awaitSample(Runnable checkCancellation) throws Exception {
+        long deadline = nanoTime.getAsLong() + TimeUnit.SECONDS.toNanos(3);
+        while (true) {
+            checkCancellation.run();
+            checkConnected();
+            Sample current = sample;
+            long now = nanoTime.getAsLong();
+            if (current != null && now - current.nanoTime <= TimeUnit.SECONDS.toNanos(2)) {
+                return current;
+            }
+            if (now - deadline >= 0) {
+                return null;
+            }
+            Thread.sleep(25);
+        }
+    }
+
+    private static JSONObject channelResult(Sample sample, String name) {
+        double value = sample.values.getOrDefault(name, Double.NaN);
+        return EcuMcpServer.outputChannelResult(name, Double.isFinite(value) ? value : Double.NaN);
+    }
+
+    private static JSONArray channelResults(Sample sample, JSONArray names, Runnable checkCancellation) {
+        JSONArray result = new JSONArray();
+        for (Object name : names) {
+            checkCancellation.run();
+            result.add(channelResult(sample, (String) name));
+        }
         return result;
     }
 
@@ -154,6 +222,20 @@ public final class ConsoleEcuSession implements AutoCloseable {
             if ("integer".equals(type) && !(value instanceof Long || value instanceof Integer)) {
                 return "Integer argument required.";
             }
+            if ("array".equals(type)) {
+                if (!(value instanceof JSONArray) || ((JSONArray) value).isEmpty() || ((JSONArray) value).size() > MAX_CHANNELS) {
+                    return "names must contain between 1 and 32 channel names.";
+                }
+                Set<String> unique = new HashSet<>();
+                for (Object name : (JSONArray) value) {
+                    if (!(name instanceof String) || ((String) name).trim().isEmpty() || ((String) name).length() > 256) {
+                        return "Channel names must be nonblank strings of at most 256 characters.";
+                    }
+                    if (!unique.add(((String) name).toLowerCase(Locale.ROOT))) {
+                        return "Channel names must be unique (case-insensitive).";
+                    }
+                }
+            }
         }
         JSONArray required = (JSONArray) schema.get("required");
         if (required != null) {
@@ -171,13 +253,23 @@ public final class ConsoleEcuSession implements AutoCloseable {
     }
 
     private static final class Sample {
-        final long timestamp = System.currentTimeMillis();
-        final long nanoTime = System.nanoTime();
+        final long id;
+        final long timestamp;
+        final long nanoTime;
         final Map<String, Double> values = new java.util.TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
-        Sample(Map<String, Double> values) {
+        Sample(Map<String, Double> values, long id, long timestamp, long nanoTime) {
             this.values.putAll(values);
+            this.id = id;
+            this.timestamp = timestamp;
+            this.nanoTime = nanoTime;
         }
+    }
+
+    private static JSONArray array(String... values) {
+        JSONArray result = new JSONArray();
+        result.addAll(Arrays.asList(values));
+        return result;
     }
 
     private static JSONObject object(Object... pairs) {

@@ -15,10 +15,18 @@ the extracted firmware paths.
 ## Embedded Console use
 
 `ConsoleEcuSession` provides an in-process adapter for an existing Console
-connection. It exposes only `ecu_info`, `list_output_channels`, `read_output_channel`
-and `read_messages` through the Console-owned connection. It validates arguments
+connection. It exposes only `ecu_info`, `list_output_channels`, `read_output_channel`,
+`read_live_values`, `diagnostic_snapshot` and `read_messages` through the
+Console-owned connection. It validates arguments
 and rejects changed connections; closing it releases its subscriptions without
 closing the port. There is no second stdio process or port discovery.
+
+The Console-only batch tools read at most 32 requested channel names from one
+recent completed full poll. `diagnostic_snapshot` adds raw warning/error channels
+from that same poll. They return a shared sample ID, timestamp and age; missing
+channels are explicit. Last/recent codes and counters can be historical, and a
+host poll is not an atomic ECU measurement. These tools do not send commands,
+clear faults, or alter the standalone stdio tool catalog below.
 
 ## Architecture
 

@@ -38,7 +38,7 @@ class ConsoleEcuSessionTest {
         assertFalse(sensors.getOutputChannelDemand().isFull());
         try (SensorCentral.FullOutputLease consoleLease = sensors.acquireFullOutput()) {
             ConsoleEcuSession session = open();
-            assertEquals(4, session.definitions().size());
+            assertEquals(6, session.definitions().size());
             assertEquals("rusEFI-test-board", session.execute("ecu_info", object(), () -> {}).get("signature"));
             session.close();
             session.close();
