@@ -2,8 +2,9 @@ package com.rusefi.ui.llm;
 
 import com.rusefi.io.LinkManager;
 import com.rusefi.mcp.ConsoleEcuSession;
+import com.rusefi.core.net.FirmwareSourceCodeDownloader;
+import com.rusefi.core.net.ConnectionAndMeta.DownloadProgressListener;
 
-import com.rusefi.ui.llm.ChatGptClient;
 import com.rusefi.ui.llm.ChatGptClient.Account;
 import com.rusefi.ui.llm.ChatGptClient.Cancellation;
 import com.rusefi.ui.llm.ChatGptClient.Model;
@@ -17,12 +18,22 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /** ChatGPT troubleshooting through the existing Console connection. Construct and close on the EDT. */
 public final class LLMTab implements AutoCloseable {
     private final LinkManager linkManager;
+    private final Path storage;
+    private final SourcePreparation sources;
     private ConsoleEcuSession session;
-    private final JPanel content = new JPanel(new BorderLayout(8, 8));
+    private final CardLayout cards = new CardLayout();
+    private final JPanel content = new JPanel(cards);
+    private final JPanel llmControls = new JPanel(new BorderLayout(8, 8));
+    private final JButton startDownload = new JButton("Start Download");
+    private final JProgressBar sourceProgress = new JProgressBar(0, 100);
+    private final JLabel sourceStatus = new JLabel("Checking cached source code...");
+    private Future<?> sourceTask;
+    private boolean preparingSources;
     private final JComboBox<Account> accounts = new JComboBox<>();
     private final JComboBox<Model> models = new JComboBox<>();
     private final JButton login = new JButton("Continue with ChatGPT");
@@ -48,8 +59,43 @@ public final class LLMTab implements AutoCloseable {
     private boolean ready;
 
     public LLMTab(Path storage, LinkManager linkManager) {
+        this(storage, linkManager, new FirmwareSourceCodeDownloader());
+    }
+
+    public LLMTab(Path storage, LinkManager linkManager, FirmwareSourceCodeDownloader downloader) {
+        this(storage, linkManager, new SourcePreparation() {
+            @Override public Path prepareCached(DownloadProgressListener progress) throws Exception {
+                return downloader.prepareCached(progress);
+            }
+            @Override public Path download(DownloadProgressListener progress) throws Exception {
+                return downloader.downloadFresh(progress);
+            }
+        });
+    }
+
+    interface SourcePreparation {
+        Path prepareCached(DownloadProgressListener progress) throws Exception;
+        Path download(DownloadProgressListener progress) throws Exception;
+    }
+
+    /** Test seam: source preparation can be held or failed without real network/cache access. */
+    LLMTab(Path storage, LinkManager linkManager, SourcePreparation sources) {
         this.linkManager = linkManager;
+        this.storage = storage;
+        this.sources = sources;
         content.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        JPanel sourceCard = new JPanel(new GridBagLayout());
+        JPanel downloadControls = new JPanel(new GridLayout(0, 1, 0, 8));
+        downloadControls.add(new JLabel("Hit the button below to download the rusEFI source code gist."));
+        downloadControls.add(startDownload);
+        sourceProgress.setStringPainted(true);
+        downloadControls.add(sourceProgress);
+        downloadControls.add(sourceStatus);
+        sourceCard.add(downloadControls);
+        content.add(sourceCard, "sources");
+        content.add(llmControls, "chat");
+        cards.show(content, "sources");
+        startDownload.addActionListener(e -> prepareSources(true));
         JPanel accountBar = new JPanel(new FlowLayout(FlowLayout.LEFT));
         accounts.setPreferredSize(new Dimension(300, 28));
         accounts.setToolTipText("Saved ChatGPT account and workspace registrations");
@@ -66,7 +112,7 @@ public final class LLMTab implements AutoCloseable {
         modelBar.add(reset);
         modelBar.add(status);
         header.add(modelBar, BorderLayout.SOUTH);
-        content.add(header, BorderLayout.NORTH);
+        llmControls.add(header, BorderLayout.NORTH);
 
         Font mono = new Font(Font.MONOSPACED, Font.PLAIN, 14);
         terminal.setFont(mono);
@@ -78,7 +124,7 @@ public final class LLMTab implements AutoCloseable {
         terminal.setWrapStyleWord(true);
         terminal.setMargin(new Insets(10, 10, 10, 10));
         terminal.getAccessibleContext().setAccessibleName("ChatGPT terminal output");
-        content.add(new JScrollPane(terminal), BorderLayout.CENTER);
+        llmControls.add(new JScrollPane(terminal), BorderLayout.CENTER);
         prompt.setFont(mono);
         prompt.setLineWrap(true);
         prompt.setWrapStyleWord(true);
@@ -90,7 +136,7 @@ public final class LLMTab implements AutoCloseable {
         buttons.add(send);
         buttons.add(stop);
         input.add(buttons, BorderLayout.EAST);
-        content.add(input, BorderLayout.SOUTH);
+        llmControls.add(input, BorderLayout.SOUTH);
         append("rusEFI Troubleshooting\nSign in to use your ChatGPT plan.\n"
                 + "Your messages and requested ECU readings are sent to OpenAI. Tools have read-only access.\n"
                 + "Connect to an ECU in Console, then describe the problem.\n\n");
@@ -126,6 +172,51 @@ public final class LLMTab implements AutoCloseable {
             }
         });
         send.addActionListener(e -> send());
+        updateControls();
+        prepareSources(false);
+    }
+
+    private void prepareSources(boolean download) {
+        if (closed || preparingSources) { return; }
+        preparingSources = true;
+        startDownload.setEnabled(false);
+        sourceProgress.setValue(0);
+        sourceProgress.setIndeterminate(true);
+        sourceStatus.setText(download ? "Downloading and extracting source code..." : "Checking cached source code...");
+        sourceTask = worker.submit(() -> {
+            try {
+                DownloadProgressListener progress = percent -> SwingUtilities.invokeLater(() -> {
+                    if (closed) { return; }
+                    sourceProgress.setIndeterminate(false);
+                    sourceProgress.setValue(percent);
+                });
+                Path prepared = download ? sources.download(progress) : sources.prepareCached(progress);
+                SwingUtilities.invokeLater(() -> {
+                    if (closed) { return; }
+                    preparingSources = false;
+                    sourceProgress.setIndeterminate(false);
+                    if (prepared == null) {
+                        sourceStatus.setText("Source code download required.");
+                        startDownload.setEnabled(true);
+                        return;
+                    }
+                    sourceProgress.setValue(100);
+                    cards.show(content, "chat");
+                    openAccountStore();
+                });
+            } catch (Exception e) {
+                SwingUtilities.invokeLater(() -> {
+                    if (closed) { return; }
+                    preparingSources = false;
+                    sourceProgress.setIndeterminate(false);
+                    sourceStatus.setText("Source preparation failed: " + safeMessage(e) + " Click Start Download to retry.");
+                    startDownload.setEnabled(true);
+                });
+            }
+        });
+    }
+
+    private void openAccountStore() {
         perform("Opening account store...", cancellation -> {
             client = new ChatGptClient(storage);
             return () -> append("Select a saved connection or click Continue with ChatGPT.\n");
@@ -319,6 +410,7 @@ public final class LLMTab implements AutoCloseable {
     @Override public void close() {
         if (closed) { return; }
         closed = true;
+        if (sourceTask != null) { sourceTask.cancel(true); }
         if (session != null) { session.close(); }
         if (running != null) { running.cancel(); }
         worker.execute(() -> {

@@ -108,6 +108,35 @@ class FirmwareSourceCodeDownloaderTest {
         assertEquals(Integer.valueOf(100), progress.get(progress.size() - 1));
     }
 
+    @Test void cachedPreparationNeverDownloadsMissingSmallOrExpiredArchives() throws Exception {
+        assertNull(downloader.prepareCached(ignored -> {}));
+        cache(archive("firmware/small.txt", false), NOW);
+        assertNull(downloader.prepareCached(ignored -> {}));
+        cache(GOOD_ZIP, NOW.minusSeconds(31L * 24 * 3600));
+        assertNull(downloader.prepareCached(ignored -> {}));
+        assertEquals(0, requests.get());
+    }
+
+    @Test void cachedPreparationRestoresExtractionBeforeReturningReady() throws Exception {
+        cache(GOOD_ZIP, NOW);
+        assertEquals(directory, downloader.prepareCached(ignored -> {}));
+        assertTrue(Files.isRegularFile(directory.resolve("firmware/readme.md")));
+        assertTrue(Files.isRegularFile(directory.resolve("rusefi_documentation/Help.md")));
+        assertEquals(0, requests.get());
+    }
+
+    @Test void explicitDownloadRecoversFromRecentCorruptCache() throws Exception {
+        byte[] broken = GOOD_ZIP.clone();
+        broken[30 + "firmware/readme.md".length()] ^= 1;
+        cache(broken, NOW);
+        assertThrows(IOException.class, () -> downloader.prepareCached(ignored -> {}));
+        assertEquals(0, requests.get());
+        assertEquals(directory, downloader.downloadFresh(ignored -> {}));
+        assertEquals(1, requests.get());
+        assertArrayEquals(GOOD_ZIP, Files.readAllBytes(zip()));
+        assertTrue(Files.isRegularFile(directory.resolve("firmware/readme.md")));
+    }
+
     @Test void failedOrTooSmallDownloadKeepsOldCacheAndExtractedFiles() throws Exception {
         byte[] old = archive("firmware/old.txt", false);
         cache(old, NOW);
