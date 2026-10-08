@@ -16,7 +16,9 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.time.Clock;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.zip.CRC32;
@@ -34,6 +36,18 @@ public final class FirmwareSourceCodeDownloader {
     private final Path directory;
     private final URL source;
     private final Clock clock;
+    private final MoveOperation moveOperation;
+    private final CleanupOperation cleanupOperation;
+
+    @FunctionalInterface
+    interface MoveOperation {
+        Path move(Path source, Path target, CopyOption... options) throws IOException;
+    }
+
+    @FunctionalInterface
+    interface CleanupOperation {
+        void delete(Path path) throws IOException;
+    }
 
     public FirmwareSourceCodeDownloader() {
         this(Paths.get(FileUtil.RUSEFI_SETTINGS_FOLDER, "llm-temp"));
@@ -45,9 +59,16 @@ public final class FirmwareSourceCodeDownloader {
 
     /** Local HTTP server and clock seam for deterministic cache tests. */
     FirmwareSourceCodeDownloader(Path directory, URL source, Clock clock) {
+        this(directory, source, clock, Files::move, FirmwareSourceCodeDownloader::deleteTree);
+    }
+
+    FirmwareSourceCodeDownloader(Path directory, URL source, Clock clock, MoveOperation moveOperation,
+                                 CleanupOperation cleanupOperation) {
         this.directory = directory.toAbsolutePath().normalize();
         this.source = source;
         this.clock = clock;
+        this.moveOperation = Objects.requireNonNull(moveOperation, "moveOperation");
+        this.cleanupOperation = Objects.requireNonNull(cleanupOperation, "cleanupOperation");
     }
 
     private static URL defaultSource() {
@@ -110,6 +131,8 @@ public final class FirmwareSourceCodeDownloader {
             return null;
         }
         Path temporary = Files.createTempDirectory(directory, ".source-");
+        boolean preserveTemporary = false;
+        Throwable preparationFailure = null;
         try {
             Path candidate = refresh ? temporary.resolve(ARCHIVE_NAME) : archive;
             if (refresh) {
@@ -127,30 +150,108 @@ public final class FirmwareSourceCodeDownloader {
                     }
                 }
             }
-            // A legacy ZIP must never inherit revision metadata from an earlier cache.
-            if (!Files.exists(extracted.resolve(KnowledgeManifest.NAME))) {
-                Files.deleteIfExists(directory.resolve(KnowledgeManifest.NAME));
-            }
-            try (DirectoryStream<Path> roots = Files.newDirectoryStream(extracted)) {
-                for (Path root : roots) {
-                    Path target = directory.resolve(root.getFileName());
-                    deleteTree(target);
-                    Files.move(root, target);
-                }
-            }
-            if (refresh) {
-                // Age measures successful local download time, not the server's source timestamp.
-                Files.setLastModifiedTime(candidate, FileTime.from(clock.instant()));
-                try {
-                    Files.move(candidate, archive, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
-                } catch (AtomicMoveNotSupportedException e) {
-                    Files.move(candidate, archive, StandardCopyOption.REPLACE_EXISTING);
-                }
-            }
+            publish(extracted, candidate, archive, refresh, temporary);
             progress.report(100);
             return directory;
+        } catch (IOException | RuntimeException | Error failure) {
+            preparationFailure = failure;
+            preserveTemporary = failure instanceof CacheRollbackException;
+            throw failure;
         } finally {
-            deleteTree(temporary);
+            if (!preserveTemporary) {
+                try {
+                    cleanupOperation.delete(temporary);
+                } catch (IOException cleanupFailure) {
+                    if (preparationFailure == null) { throw cleanupFailure; }
+                    preparationFailure.addSuppressed(cleanupFailure);
+                }
+            }
+        }
+    }
+
+    /** Publish extracted roots, legacy metadata removal, and a refreshed ZIP as one rollback unit. */
+    private void publish(Path extracted, Path candidate, Path archive, boolean refresh, Path temporary) throws IOException {
+        Path backups = Files.createDirectory(temporary.resolve("backups"));
+        List<Publication> publications = new ArrayList<>();
+        try (DirectoryStream<Path> roots = Files.newDirectoryStream(extracted)) {
+            int index = 0;
+            for (Path root : roots) {
+                publications.add(new Publication(root, directory.resolve(root.getFileName()), backups.resolve(Integer.toString(index++))));
+            }
+        }
+        Path manifest = directory.resolve(KnowledgeManifest.NAME);
+        if (!Files.exists(extracted.resolve(KnowledgeManifest.NAME), LinkOption.NOFOLLOW_LINKS)) {
+            publications.add(new Publication(null, manifest, backups.resolve(Integer.toString(publications.size()))));
+        }
+        if (refresh) {
+            // Age measures successful local download time, not the server's source timestamp.
+            Files.setLastModifiedTime(candidate, FileTime.from(clock.instant()));
+            publications.add(new Publication(candidate, archive, backups.resolve(Integer.toString(publications.size()))));
+        }
+
+        try {
+            for (Publication publication : publications) {
+                publication.hadOriginal = Files.exists(publication.target, LinkOption.NOFOLLOW_LINKS);
+                if (publication.hadOriginal) {
+                    moveOperation.move(publication.target, publication.backup);
+                }
+                if (publication.source != null) {
+                    if (refresh && publication.source.equals(candidate)) {
+                        try {
+                            moveOperation.move(publication.source, publication.target, StandardCopyOption.ATOMIC_MOVE);
+                        } catch (AtomicMoveNotSupportedException e) {
+                            moveOperation.move(publication.source, publication.target);
+                        }
+                    } else {
+                        moveOperation.move(publication.source, publication.target);
+                    }
+                }
+            }
+        } catch (IOException publicationFailure) {
+            IOException rollbackFailure = null;
+            for (int i = publications.size() - 1; i >= 0; i--) {
+                Publication publication = publications.get(i);
+                try {
+                    boolean backupExists = Files.exists(publication.backup, LinkOption.NOFOLLOW_LINKS);
+                    boolean targetExists = Files.exists(publication.target, LinkOption.NOFOLLOW_LINKS);
+                    if (backupExists) {
+                        if (targetExists) { deleteTree(publication.target); }
+                        moveOperation.move(publication.backup, publication.target);
+                    } else if (publication.hadOriginal && !targetExists) {
+                        throw new IOException("Original cache entry is missing from both target and backup: " + publication.target);
+                    } else if (!publication.hadOriginal && publication.source != null
+                            && !Files.exists(publication.source, LinkOption.NOFOLLOW_LINKS) && targetExists) {
+                        deleteTree(publication.target);
+                    }
+                } catch (IOException e) {
+                    if (rollbackFailure == null) { rollbackFailure = e; }
+                    else { rollbackFailure.addSuppressed(e); }
+                }
+            }
+            if (rollbackFailure != null) {
+                CacheRollbackException recoveryFailure = new CacheRollbackException(
+                        "Cache publication failed and rollback was incomplete; recovery data retained at " + temporary,
+                        publicationFailure);
+                recoveryFailure.addSuppressed(rollbackFailure);
+                throw recoveryFailure;
+            }
+            throw publicationFailure;
+        }
+    }
+
+    private static final class CacheRollbackException extends IOException {
+        private CacheRollbackException(String message, IOException cause) { super(message, cause); }
+    }
+
+    private static final class Publication {
+        private final Path source;
+        private final Path target;
+        private final Path backup;
+        private boolean hadOriginal;
+        private Publication(Path source, Path target, Path backup) {
+            this.source = source;
+            this.target = target;
+            this.backup = backup;
         }
     }
 

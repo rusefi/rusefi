@@ -4,6 +4,7 @@ import com.rusefi.io.LinkManager;
 import com.rusefi.mcp.ConsoleEcuSession;
 import com.rusefi.core.net.FirmwareSourceCodeDownloader;
 import com.rusefi.core.net.ConnectionAndMeta.DownloadProgressListener;
+import com.rusefi.ui.widgets.tune.CalibrationFieldFactory;
 
 import com.rusefi.ui.llm.ChatGptClient.Account;
 import com.rusefi.ui.llm.ChatGptClient.Cancellation;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.function.Consumer;
 
 /** ChatGPT troubleshooting through the existing Console connection. Construct and close on the EDT. */
 public final class LLMTab implements AutoCloseable {
@@ -30,6 +32,10 @@ public final class LLMTab implements AutoCloseable {
     private final LinkManager linkManager;
     private final Path storage;
     private final SourcePreparation sources;
+    private final ClientFactory clients;
+    private final BrowserOpener browser;
+    private final FallbackDialogFactory fallbackDialogs;
+    private final AuthDialogLifecycle authDialogs = new AuthDialogLifecycle();
     private Path knowledgeDirectory;
     private ConsoleEcuSession session;
     private DiagnosticCaseStore caseEvidence;
@@ -46,6 +52,7 @@ public final class LLMTab implements AutoCloseable {
     private final JButton login = new JButton("Continue with ChatGPT");
     private final JButton addAccount = new JButton("Add account");
     private final JButton logout = new JButton("Sign out");
+    private final JButton cancelSignIn = new JButton("Cancel sign-in");
     private final JButton send = new JButton("Send");
     private final JButton stop = new JButton("Stop");
     private final JButton reset = new JButton("New conversation");
@@ -64,6 +71,8 @@ public final class LLMTab implements AutoCloseable {
     private boolean updatingAccounts;
     private boolean closed;
     private boolean ready;
+    private boolean signingIn;
+    private String initialLastAccount = "";
 
     public LLMTab(Path storage, LinkManager linkManager) {
         this(storage, linkManager, new FirmwareSourceCodeDownloader());
@@ -87,9 +96,50 @@ public final class LLMTab implements AutoCloseable {
 
     /** Test seam: source preparation can be held or failed without real network/cache access. */
     LLMTab(Path storage, LinkManager linkManager, SourcePreparation sources) {
+        this(storage, linkManager, sources, ChatGptClient::new, null, null);
+    }
+
+    interface ClientFactory { ChatGptClient create(Path storage) throws Exception; }
+    interface BrowserOpener { boolean open(URI uri) throws Exception; }
+    interface AuthDialogHandle { void dispose(); }
+    interface FallbackDialogFactory { AuthDialogHandle show(URI uri, Runnable onCancel); }
+
+    static final class AuthDialogLifecycle {
+        private AuthDialogHandle handle;
+        private Cancellation owner;
+
+        void opened(Cancellation cancellation, AuthDialogHandle dialog) {
+            close();
+            owner = cancellation;
+            handle = dialog;
+        }
+
+        void finish(Cancellation cancellation) {
+            if (owner == cancellation) { close(); }
+        }
+
+        void close() {
+            AuthDialogHandle active = handle;
+            handle = null;
+            owner = null;
+            if (active != null) { active.dispose(); }
+        }
+
+        static boolean mayBrowse(Cancellation attempt, Cancellation current, boolean tabClosed) {
+            return !tabClosed && attempt != null && attempt == current && !attempt.isCancelled();
+        }
+    }
+
+    /** Test seam: supplies isolated auth transport, browser and modeless fallback dialog. */
+    LLMTab(Path storage, LinkManager linkManager, SourcePreparation sources,
+           ClientFactory clients, BrowserOpener browser, FallbackDialogFactory fallbackDialogs) {
         this.linkManager = linkManager;
         this.storage = storage;
         this.sources = sources;
+        this.clients = clients;
+        this.browser = browser;
+        this.fallbackDialogs = fallbackDialogs == null ? this::showFallbackDialog : fallbackDialogs;
+        CalibrationFieldFactory.applyStyle(startDownload);
         content.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         JPanel sourceCard = new JPanel(new GridBagLayout());
         JPanel downloadControls = new JPanel(new GridLayout(0, 1, 0, 8));
@@ -104,17 +154,28 @@ public final class LLMTab implements AutoCloseable {
         cards.show(content, "sources");
         startDownload.addActionListener(e -> prepareSources(true));
         JPanel accountBar = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        accounts.setPreferredSize(new Dimension(300, 28));
+        CalibrationFieldFactory.applyStyle(accounts);
+        CalibrationFieldFactory.applyStyle(login);
+        CalibrationFieldFactory.applyStyle(addAccount);
+        CalibrationFieldFactory.applyStyle(logout);
+        CalibrationFieldFactory.applyStyle(cancelSignIn);
+        accounts.setPreferredSize(new Dimension(300, accounts.getPreferredSize().height));
         accounts.setToolTipText("Saved ChatGPT account and workspace registrations");
         accountBar.add(accounts);
         accountBar.add(login);
         accountBar.add(addAccount);
+        addAccount.setVisible(false);
         accountBar.add(logout);
+        accountBar.add(cancelSignIn);
         JPanel header = new JPanel(new BorderLayout());
         header.add(accountBar, BorderLayout.NORTH);
         JPanel modelBar = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        modelBar.add(new JLabel("Model:"));
-        models.setPreferredSize(new Dimension(250, 28));
+        JLabel modelLabel = new JLabel("Model:");
+        CalibrationFieldFactory.applyStyle(modelLabel);
+        modelBar.add(modelLabel);
+        CalibrationFieldFactory.applyStyle(models);
+        CalibrationFieldFactory.applyStyle(reset);
+        models.setPreferredSize(new Dimension(250, models.getPreferredSize().height));
         modelBar.add(models);
         modelBar.add(reset);
         modelBar.add(status);
@@ -133,6 +194,7 @@ public final class LLMTab implements AutoCloseable {
         terminal.getAccessibleContext().setAccessibleName("ChatGPT terminal output");
         llmControls.add(new JScrollPane(terminal), BorderLayout.CENTER);
         prompt.setFont(mono);
+        CalibrationFieldFactory.applyStyle(prompt);
         prompt.setLineWrap(true);
         prompt.setWrapStyleWord(true);
         prompt.getAccessibleContext().setAccessibleName("Message to ChatGPT");
@@ -144,9 +206,13 @@ public final class LLMTab implements AutoCloseable {
             }
         });
         JPanel input = new JPanel(new BorderLayout(8, 8));
-        input.add(new JLabel("Describe your problem below and hit 'Send'"), BorderLayout.NORTH);
+        JLabel promptLabel = new JLabel("Describe your problem below and hit 'Send'");
+        CalibrationFieldFactory.applyStyle(promptLabel);
+        input.add(promptLabel, BorderLayout.NORTH);
         input.add(new JScrollPane(prompt), BorderLayout.CENTER);
         send.setToolTipText("Send the message (Ctrl+Enter from the message field)");
+        CalibrationFieldFactory.applyStyle(send);
+        CalibrationFieldFactory.applyStyle(stop);
         JPanel buttons = new JPanel(new GridLayout(2, 1, 4, 4));
         buttons.add(send);
         buttons.add(stop);
@@ -159,6 +225,13 @@ public final class LLMTab implements AutoCloseable {
 
         login.addActionListener(e -> signIn(selectedId));
         addAccount.addActionListener(e -> signIn(null));
+        cancelSignIn.addActionListener(e -> {
+            if (signingIn && running != null) {
+                running.cancel();
+                status.setText("Cancelling sign-in...");
+                updateControls();
+            }
+        });
         logout.addActionListener(e -> {
             String id = selectedId;
             perform("Signing out...", cancellation -> {
@@ -174,6 +247,9 @@ public final class LLMTab implements AutoCloseable {
             if (updatingAccounts) { return; }
             Account account = (Account) accounts.getSelectedItem();
             selectedId = account == null ? null : account.id;
+            updateLoginLabel(account);
+            updateAccountStatus(account);
+            updateControls();
             clearConversation();
             models.removeAllItems();
             loadModels();
@@ -236,22 +312,16 @@ public final class LLMTab implements AutoCloseable {
 
     private void openAccountStore() {
         perform("Opening account store...", cancellation -> {
-            client = new ChatGptClient(storage);
-            String last = client.lastAccount();
-            return () -> {
-                append("Select a saved connection or click Continue with ChatGPT.\n");
-                if (selectedId == null && !last.isEmpty()) {
-                    selectedId = last;
-                    // After this perform() finishes (running cleared), load the restored account's models.
-                    SwingUtilities.invokeLater(this::loadModels);
-                }
-            };
+            client = clients.create(storage);
+            initialLastAccount = client.lastAccount();
+            return () -> append("Select a saved connection or click Continue with ChatGPT.\n");
         });
     }
 
     private void signIn(String id) {
+        signingIn = true;
         perform("Complete sign-in in your browser...", cancellation -> {
-            String signedIn = client.signIn(id, uri -> SwingUtilities.invokeLater(() -> browse(uri)), cancellation);
+            String signedIn = client.signIn(id, uri -> SwingUtilities.invokeLater(() -> browse(uri, cancellation)), cancellation);
             List<Model> available = loadModels(signedIn, cancellation);
             return () -> {
                 selectedId = signedIn;
@@ -273,7 +343,7 @@ public final class LLMTab implements AutoCloseable {
 
     private List<Model> loadModels(String id, Cancellation cancellation) throws Exception {
         Account account = client.accounts().stream().filter(a -> a.id.equals(id)).findFirst().orElse(null);
-        if (account == null) { return Collections.emptyList(); }
+        if (account == null || account.reLoginRequired) { return Collections.emptyList(); }
         client.rememberLastAccount(id);
         if (!account.planEnabled) { return Collections.emptyList(); }
         try {
@@ -358,6 +428,7 @@ public final class LLMTab implements AutoCloseable {
             boolean initialized = client != null;
             Runnable finish = success;
             SwingUtilities.invokeLater(() -> {
+                authDialogs.finish(cancellation);
                 if (closed) { return; }
                 finish.run();
                 updatingAccounts = true;
@@ -367,13 +438,26 @@ public final class LLMTab implements AutoCloseable {
                 for (Account account : saved) {
                     if (account.id.equals(selectedId)) { accounts.setSelectedItem(account); }
                 }
+                boolean loadInitialModels = false;
+                if ("Opening account store...".equals(message) && selectedId == null && !saved.isEmpty()) {
+                    Account initial = saved.stream().filter(account -> account.id.equals(initialLastAccount) && isReadyAccount(account))
+                            .findFirst().orElseGet(() -> saved.stream().filter(LLMTab::isReadyAccount).findFirst().orElse(saved.get(0)));
+                    selectedId = initial.id;
+                    accounts.setSelectedItem(initial);
+                    loadInitialModels = isReadyAccount(initial);
+                }
+                addAccount.setVisible(!saved.isEmpty());
                 updatingAccounts = false;
                 running = null;
+                if (signingIn) { signingIn = false; }
                 ready = initialized;
                 Account selected = (Account) accounts.getSelectedItem();
-                status.setText(!ready ? "Account store unavailable; reopen the Console" : selected == null || !selected.connected ? "Not connected"
-                        : selected.planEnabled ? "ChatGPT plan usage enabled" : "Connected; plan usage not granted");
+                status.setText(!ready ? "Account store unavailable; reopen the Console" : selected == null ? "Not connected"
+                        : selected.reLoginRequired ? "Re-login required" : !selected.connected ? "Not connected"
+                        : selected.planEnabled ? "ChatGPT plan usage enabled" : "Connected; plan access required");
+                updateLoginLabel(selected);
                 updateControls();
+                if (loadInitialModels) { SwingUtilities.invokeLater(this::loadModels); }
             });
         });
     }
@@ -386,15 +470,37 @@ public final class LLMTab implements AutoCloseable {
     private void updateControls() {
         boolean idle = running == null && !closed && ready;
         accounts.setEnabled(idle);
-        login.setEnabled(idle);
         addAccount.setEnabled(idle);
+        addAccount.setVisible(accounts.getItemCount() > 0);
         Account selected = (Account) accounts.getSelectedItem();
+        login.setEnabled(idle && (selected == null || !selected.connected || selected.reLoginRequired || !selected.planEnabled));
         logout.setEnabled(idle && selected != null && selected.connected);
+        cancelSignIn.setEnabled(signingIn && running != null && !running.isCancelled() && !closed);
         models.setEnabled(idle);
-        send.setEnabled(idle && selected != null && selected.planEnabled && models.getItemCount() > 0);
+        send.setEnabled(canSend(idle, selected, models.getItemCount()));
         prompt.setEnabled(idle);
         stop.setEnabled(running != null && !closed);
         reset.setEnabled(idle);
+    }
+
+    static boolean canSend(boolean idle, Account selected, int modelCount) {
+        return idle && selected != null && !selected.reLoginRequired && selected.planEnabled && modelCount > 0;
+    }
+
+    private static boolean isReadyAccount(Account account) {
+        return account.connected && account.planEnabled && !account.reLoginRequired;
+    }
+
+    private void updateLoginLabel(Account selected) {
+        boolean reLoginRequired = selected != null && selected.reLoginRequired;
+        login.setText(reLoginRequired ? "Continue with ChatGPT (re-login required)" : "Continue with ChatGPT");
+        login.setToolTipText(reLoginRequired ? "Re-login required for this saved connection." : "Sign in to ChatGPT.");
+    }
+
+    private void updateAccountStatus(Account selected) {
+        status.setText(selected == null ? "Not connected" : selected.reLoginRequired ? "Re-login required"
+                : !selected.connected ? "Not connected" : selected.planEnabled ? "ChatGPT plan usage enabled"
+                : "Connected; plan access required");
     }
 
     private void clearConversation() {
@@ -417,19 +523,41 @@ public final class LLMTab implements AutoCloseable {
         terminal.setCaretPosition(terminal.getDocument().getLength());
     }
 
-    private void browse(URI uri) {
-        if (closed || (running != null && running.isCancelled())) { return; }
+    private void browse(URI uri, Cancellation cancellation) {
+        if (!AuthDialogLifecycle.mayBrowse(cancellation, running, closed)) { return; }
         try {
-            if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+            if (browser != null) {
+                if (browser.open(uri)) { return; }
+            } else if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
                 Desktop.getDesktop().browse(uri);
                 return;
             }
         } catch (Exception ignored) { }
+        authDialogs.opened(cancellation, fallbackDialogs.show(uri, cancellation::cancel));
+    }
+
+    private AuthDialogHandle showFallbackDialog(URI uri, Runnable onCancel) {
         JTextArea link = new JTextArea(uri.toString(), 5, 70);
         link.setEditable(false);
         link.setLineWrap(true);
         link.setWrapStyleWord(true);
-        JOptionPane.showMessageDialog(content, new JScrollPane(link), "Open this link in your browser", JOptionPane.INFORMATION_MESSAGE);
+        JDialog dialog = new JDialog(SwingUtilities.getWindowAncestor(content), "Open this link in your browser",
+                Dialog.ModalityType.MODELESS);
+        dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override public void windowClosing(java.awt.event.WindowEvent e) { onCancel.run(); }
+        });
+        JButton cancel = new JButton("Cancel sign-in");
+        cancel.addActionListener(e -> { onCancel.run(); dialog.dispose(); });
+        JPanel panel = new JPanel(new BorderLayout(8, 8));
+        panel.add(new JLabel("Open this sign-in link in your browser, or cancel sign-in:"), BorderLayout.NORTH);
+        panel.add(new JScrollPane(link), BorderLayout.CENTER);
+        panel.add(cancel, BorderLayout.SOUTH);
+        dialog.setContentPane(panel);
+        dialog.pack();
+        dialog.setLocationRelativeTo(content);
+        dialog.setVisible(true);
+        return dialog::dispose;
     }
 
     private static String safeMessage(Exception error) {
@@ -443,6 +571,7 @@ public final class LLMTab implements AutoCloseable {
         if (sourceTask != null) { sourceTask.cancel(true); }
         if (session != null) { session.close(); }
         if (running != null) { running.cancel(); }
+        authDialogs.close();
         worker.execute(() -> {
             if (client != null) {
                 try { client.close(); } catch (Exception ignored) { }

@@ -10,8 +10,8 @@ For the standalone Java ChatGPT sign-in and streaming terminal experiment, see
 ## ChatGPT troubleshooting
 
 The experimental **Troubleshooting** tab provides browser ChatGPT sign-in and
-read-only tools using the existing ECU connection. Its registration is currently
-disabled by a `false &&` guard in `ConsoleUI`. See
+read-only tools using the existing ECU connection in online, non-log-viewer
+sessions. See
 [Console troubleshooting assistant](llm-troubleshooting.md) for usage, limits,
 packaging and developer validation.
 
