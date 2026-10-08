@@ -165,6 +165,59 @@ class ConsoleDiagnosticsTest {
         publish(rpm, millivolts, checkEngine, error, true, sensors.getOutputChannelDemand().getGeneration());
     }
 
+    @Test void liveLogCollectsOnlyFuturePollsWithBoundedSamplesAndCoherentValues() throws Exception {
+        publish(9999, 11000, 0, 0);
+        AtomicInteger checks = new AtomicInteger();
+        JSONObject result = session.execute("capture_live_log", object("names", array("RPMValue", "VBatt"),
+                "duration_ms", 1000, "max_samples", 2), () -> {
+            nanos.addAndGet(TimeUnit.MILLISECONDS.toNanos(100));
+            int index = checks.incrementAndGet();
+            publish(index, index * 1000, 0, 0);
+        });
+        assertEquals(Boolean.TRUE, result.get("success"));
+        assertEquals(2, result.get("sampleCount"));
+        assertEquals(Boolean.TRUE, result.get("truncated"));
+        long previous = 1;
+        for (Object item : (JSONArray) result.get("samples")) {
+            JSONObject sample = (JSONObject) item;
+            assertTrue(((Number) sample.get("sampleId")).longValue() > previous);
+            previous = ((Number) sample.get("sampleId")).longValue();
+            assertEquals(channel(sample, "values", "RPMValue").get("value"), channel(sample, "values", "VBatt").get("value"));
+            assertNotEquals(9999.0, channel(sample, "values", "RPMValue").get("value"));
+        }
+    }
+
+    @Test void liveLogDoesNotReplayAvailablePollsAndHonorsCancellationAndReplacement() throws Exception {
+        publish(250, 11000, 0, 0);
+        JSONObject result = session.execute("capture_live_log", object("names", array("RPMValue"), "duration_ms", 100),
+                () -> nanos.addAndGet(TimeUnit.MILLISECONDS.toNanos(100)));
+        assertEquals(Boolean.FALSE, result.get("success"));
+        assertEquals(0, result.get("sampleCount"));
+        AtomicInteger checks = new AtomicInteger();
+        assertThrows(CancellationException.class, () -> session.execute("capture_live_log", object("names", array("RPMValue")), () -> {
+            if (checks.incrementAndGet() == 2) { throw new CancellationException(); }
+        }));
+        checks.set(0);
+        assertThrows(CancellationException.class, () -> session.execute("capture_live_log", object("names", array("RPMValue")), () -> {
+            if (checks.incrementAndGet() == 2) { when(link.getBinaryProtocol()).thenReturn(mock(BinaryProtocol.class)); }
+        }));
+    }
+
+    @Test void evidenceToolsRejectUnboundedArgumentsBeforeWaitingOrReading() throws Exception {
+        JSONArray tooMany = new JSONArray();
+        for (int i = 0; i < 17; i++) { tooMany.add("channel" + i); }
+        assertEquals(Boolean.FALSE, session.execute("capture_live_log", object("names", tooMany), () -> {}).get("success"));
+        for (Object duration : new Object[]{0, 10001, 100.5, null}) {
+            assertEquals(Boolean.FALSE, session.execute("capture_live_log", object("names", array("RPMValue"), "duration_ms", duration), () -> {}).get("success"));
+        }
+        assertEquals(Boolean.FALSE, session.execute("capture_live_log", object("names", array("RPMValue"), "max_samples", 21), () -> {}).get("success"));
+        assertEquals(Boolean.FALSE, session.execute("capture_engine_sniffer", object("timeoutMs", 10001), () -> {}).get("success"));
+        assertEquals(Boolean.FALSE, session.execute("capture_engine_sniffer", object("max_events", 129), () -> {}).get("success"));
+        assertEquals(Boolean.FALSE, session.execute("get_lua", object("max_lines", 121), () -> {}).get("success"));
+        assertEquals(Boolean.FALSE, session.execute("get_lua", object("start_line", 0), () -> {}).get("success"));
+        verify(protocol, never()).readFromPage(anyInt(), anyInt(), anyInt());
+    }
+
     private void publish(int rpm, int millivolts, int checkEngine, int error, boolean full, long generation) {
         byte[] response = ByteBuffer.allocate(13).order(ByteOrder.LITTLE_ENDIAN).put((byte) 0)
                 .putShort((short) rpm).putShort((short) millivolts).putShort((short) checkEngine)

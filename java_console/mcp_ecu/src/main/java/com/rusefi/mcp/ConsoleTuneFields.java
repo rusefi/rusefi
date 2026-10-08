@@ -18,11 +18,6 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /** Selected fresh calibration reads; never touches the Console's editable tune cache. */
 @SuppressWarnings("unchecked")
@@ -32,15 +27,7 @@ final class ConsoleTuneFields {
     }
 
     static JSONObject read(LinkManager link, BinaryProtocol protocol, JSONArray names, Runnable check, long timeoutMs) throws Exception {
-        AtomicBoolean stopped = new AtomicBoolean();
-        long deadline = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(timeoutMs);
-        Runnable guard = () -> {
-            check.run();
-            if (stopped.get() || System.nanoTime() - deadline >= 0) {
-                throw new java.util.concurrent.CancellationException("Tune field read stopped or timed out.");
-            }
-        };
-        FutureTask<JSONObject> task = new FutureTask<>(() -> {
+        return ConsoleReadTask.run(link, check, timeoutMs, guard -> {
             guard.run();
             IniFileModel ini = protocol.getIniFile();
             Map<String, IniField> fields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -93,25 +80,6 @@ final class ConsoleTuneFields {
                     "readStartedTimestampMs", started, "readCompletedTimestampMs", System.currentTimeMillis(),
                     "note", "Fresh sequential ECU RAM reads, not an atomic tune snapshot or proof of flash persistence. Values use the Console's parsed INI scaling. String/Lua fields and large arrays are excluded.");
         });
-        try {
-            guard.run();
-            link.submit(task);
-            while (true) {
-                guard.run();
-                try {
-                    return task.get(50, TimeUnit.MILLISECONDS);
-                } catch (TimeoutException waiting) {
-                    // Keep checking cancellation and the borrowed connection while queued or reading.
-                } catch (ExecutionException failure) {
-                    Throwable cause = failure.getCause();
-                    if (cause instanceof Exception) { throw (Exception) cause; }
-                    throw new IOException("Tune field read failed.", cause);
-                }
-            }
-        } finally {
-            stopped.set(true);
-            task.cancel(false);
-        }
     }
 
     private static int count(IniField field) {

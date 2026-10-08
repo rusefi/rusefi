@@ -16,10 +16,21 @@ the extracted firmware paths.
 
 `ConsoleEcuSession` provides an in-process adapter for an existing Console
 connection. It exposes only `ecu_info`, `list_output_channels`, `read_output_channel`,
-`read_live_values`, `diagnostic_snapshot`, `read_tune_fields` and `read_messages` through the
+`read_live_values`, `diagnostic_snapshot`, `read_tune_fields`, `get_lua`,
+`capture_live_log`, `capture_engine_sniffer` and `read_messages` through the
 Console-owned connection. It validates arguments
 and rejects changed connections; closing it releases its subscriptions without
 closing the port. There is no second stdio process or port discovery.
+
+The embedded adapters bound results more tightly than the standalone catalog:
+`get_lua` returns paged fresh RAM source with line citations and a hash;
+`capture_live_log` returns an in-memory trend (up to 16 channels, 20 samples,
+10 seconds); and `capture_engine_sniffer` returns up to 128 events and 32 channel
+summaries from the next chart, without raw chart text. It uses an EngineState
+observer alongside existing UI actions. Cancellation and connection changes
+stop these operations without closing the borrowed port or replacing UI listeners.
+The assistant does not write/reset Lua, configure acquisition, record arbitrary
+paths, or enable the standalone server's write tools.
 
 `list_output_channels` includes INI gauge-title/datalog descriptions and units,
 with source and availability metadata. Output-channel units take precedence

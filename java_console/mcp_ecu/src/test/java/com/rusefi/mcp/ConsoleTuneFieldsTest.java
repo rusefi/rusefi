@@ -6,6 +6,7 @@ import com.opensr5.ini.field.*;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.FieldType;
 import com.rusefi.io.LinkManager;
+import com.rusefi.io.lua.LuaService;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.junit.jupiter.api.AfterEach;
@@ -14,10 +15,12 @@ import org.junit.jupiter.api.Test;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -223,6 +226,64 @@ class ConsoleTuneFieldsTest {
         ScalarIniField field = new ScalarIniField(name, offset, "", type, 1, "0", 0);
         fields.put(name, field);
         return field;
+    }
+
+    @Test void luaReadPagesFreshSourceFromMainAndSecondaryPagesWithHashesAndCitations() throws Exception {
+        StringIniField lua = new StringIniField("luaScript", 100, 64);
+        enableLua(lua);
+        byte[] script = "-- test\r\nreturn 42\n-- end\n".getBytes(StandardCharsets.US_ASCII);
+        System.arraycopy(script, 0, main, 100, script.length);
+        JSONObject first = session.execute("get_lua", object("start_line", 2, "max_lines", 1), () -> {});
+        assertEquals(Boolean.TRUE, first.get("success"));
+        assertEquals("ecu:LUASCRIPT:L2-L2", first.get("citation"));
+        assertEquals("return 42", ((JSONObject) ((JSONArray) first.get("lines")).get(0)).get("text"));
+        assertEquals(3, first.get("nextLine"));
+        assertEquals(Boolean.TRUE, first.get("truncated"));
+        assertEquals(64, ((String) first.get("sha256")).length());
+        lua.setPageIndex(0x400);
+        System.arraycopy(script, 0, extra, 100, script.length);
+        extra[100] = '#';
+        JSONObject second = session.execute("get_lua", object(), () -> {});
+        assertEquals(0x400, second.get("page"));
+        assertNotEquals(first.get("sha256"), second.get("sha256"));
+        verify(protocol).readFromPage(0, 100, 4);
+        verify(protocol).readFromPage(0x400, 100, 4);
+    }
+
+    @Test void luaReadBoundsPassagesAndRejectsMissingOversizedOrInvalidText() throws Exception {
+        assertEquals(Boolean.FALSE, session.execute("get_lua", object(), () -> {}).get("success"));
+        enableLua(new StringIniField("luaScript", 0, 65537));
+        assertEquals(Boolean.FALSE, session.execute("get_lua", object(), () -> {}).get("success"));
+        verify(protocol, never()).readFromPage(anyInt(), anyInt(), anyInt());
+        enableLua(new StringIniField("luaScript", 0, 9000));
+        when(ini.getMetaInfo().getPageSize(0)).thenReturn(10000);
+        when(ini.getBlockingFactor()).thenReturn(256);
+        byte[] script = ("x".repeat(7000) + "\nend\n").getBytes(StandardCharsets.US_ASCII);
+        byte[] padded = Arrays.copyOf(script, 9000);
+        doAnswer(call -> Arrays.copyOfRange(padded, call.getArgument(1), (int) call.getArgument(1) + (int) call.getArgument(2)))
+                .when(protocol).readFromPage(eq(0), anyInt(), anyInt());
+        JSONObject result = session.execute("get_lua", object(), () -> {});
+        assertEquals(Boolean.TRUE, result.get("truncated"));
+        JSONObject line = (JSONObject) ((JSONArray) result.get("lines")).get(0);
+        assertEquals(2000, ((String) line.get("text")).length());
+        assertEquals(Boolean.TRUE, line.get("lineTruncated"));
+        padded[0] = (byte) 0xff;
+        assertEquals(Boolean.FALSE, session.execute("get_lua", object(), () -> {}).get("success"));
+    }
+
+    @Test void luaReadStopsOnConnectionReplacementWithoutReadingAnotherChunk() throws Exception {
+        enableLua(new StringIniField("luaScript", 0, 64));
+        doAnswer(call -> {
+            when(link.getBinaryProtocol()).thenReturn(mock(BinaryProtocol.class));
+            return new byte[4];
+        }).when(protocol).readFromPage(0, 0, 4);
+        assertThrows(CancellationException.class, () -> session.execute("get_lua", object(), () -> {}));
+        verify(protocol, times(1)).readFromPage(anyInt(), anyInt(), anyInt());
+    }
+
+    private void enableLua(StringIniField field) {
+        when(protocol.getIniFileNullable()).thenReturn(ini);
+        when(ini.findIniField(LuaService.LUASCRIPT_FIELD)).thenReturn(Optional.of(field));
     }
     private JSONObject read(String... names) throws Exception {
         return session.execute("read_tune_fields", object("names", array((Object[]) names)), () -> {});
