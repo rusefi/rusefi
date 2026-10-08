@@ -32,6 +32,9 @@ final class ChatGptAgent {
             + "Hashes identify retrieved files, not firmware builds. Upstream wiki URLs are current master, not version-pinned citations. "
             + "Preserve useful Markdown links to omitted diagrams and use the returned upstream_url to direct users to their original documentation. "
             + "Never claim you changed ECU settings or executed commands. Local reads are limited to the knowledge tools. "
+            + "When the user asks to save/export a diagnostic case, use export_diagnostic_case with retained evidence_id values. "
+            + "Include the relevant tune, log/capture, message and source evidence already collected, distinguish findings from hypotheses and state next measurements. "
+            + "The export saves selected evidence and model-authored analysis locally; it does not validate your conclusions or save a complete tune/log. Report success only when the tool returns success. "
             + "Cite channel names, firmware signature, message sequences, sample IDs and sample times when using evidence.";
     static final int MAX_ROUNDS = 8;
     static final int MAX_CALLS = 24;
@@ -127,6 +130,9 @@ final class ChatGptAgent {
                 cancellation.check();
                 tools.checkConnected();
                 String serialized = result.toJSONString();
+                if ("export_diagnostic_case".equals(name) && Boolean.TRUE.equals(result.get("success"))) {
+                    progress.accept("\n[Diagnostic case saved: " + result.get("path") + "]\n");
+                }
                 if (serialized.length() > MAX_RESULT) {
                     serialized = object("success", false, "error", "Result exceeded the size limit. Request fewer records.").toJSONString();
                 }

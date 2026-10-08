@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.BitSet;
 import java.util.Collections;
 import java.util.Optional;
@@ -64,10 +65,10 @@ class TroubleshootingToolsTest {
             valid.set(0, 2);
             sensors.grabSensorValues(new OutputChannelSnapshot(new byte[]{0, (byte) 250, 0}, valid,
                     Collections.emptySet(), sensors.getOutputChannelDemand().getGeneration(), true), ini, null);
-            TroubleshootingTools tools = new TroubleshootingTools(session, directory);
+            TroubleshootingTools tools = new TroubleshootingTools(session, directory, new DiagnosticCaseStore(directory.resolve("cases")));
             AtomicInteger rounds = new AtomicInteger();
             JSONArray history = ChatGptAgent.run((input, definitions, delta, c) -> {
-                assertEquals(12, definitions.size());
+                assertEquals(13, definitions.size());
                 assertTrue(definitions.toJSONString().contains("get_lua"));
                 assertTrue(definitions.toJSONString().contains("capture_live_log"));
                 assertTrue(definitions.toJSONString().contains("capture_engine_sniffer"));
@@ -95,7 +96,7 @@ class TroubleshootingToolsTest {
                         assertEquals("rusefi_documentation/Cranking.md:L2", match.get("citation"));
                         return response(call("read", "read_knowledge", object("path", match.get("path"), "start_line", 2, "max_lines", 2)),
                                 call("lua", "get_lua", object("start_line", 1, "max_lines", 1)));
-                    default:
+                    case 2:
                         JSONObject read = returned(input, "read");
                         JSONObject lua = returned(input, "lua");
                         assertEquals("ecu_ram", lua.get("source"));
@@ -104,11 +105,28 @@ class TroubleshootingToolsTest {
                         assertEquals("rusefi_documentation/Cranking.md:L2-L3", read.get("citation"));
                         assertEquals("unverified", ((JSONObject) read.get("provenance")).get("ecu_match"));
                         assertEquals("Check cranking voltage and RPM.", ((JSONObject) ((JSONArray) read.get("lines")).get(0)).get("text"));
+                        return response(call("export", "export_diagnostic_case", object(
+                                "findings", "Cranking threshold is 200 RPM; observed RPM is 250.",
+                                "hypotheses", "Voltage may be low; not yet measured.",
+                                "next_measurements", "Measure cranking voltage.",
+                                "evidence_ids", array(returned(input, "ecu").get("evidence_id"),
+                                        returned(input, "tune").get("evidence_id"), read.get("evidence_id"), lua.get("evidence_id")))));
+                    default:
+                        JSONObject exported = returned(input, "export");
+                        assertEquals(Boolean.TRUE, exported.get("success"));
+                        JSONObject report = parseObject(new String(Files.readAllBytes(Paths.get((String) exported.get("path"))), StandardCharsets.UTF_8));
+                        assertEquals("test-ecu-signature", ((JSONObject) report.get("ecu_identity")).get("signature"));
+                        JSONArray evidence = (JSONArray) report.get("evidence");
+                        assertEquals(4, evidence.size());
+                        assertEquals("read_tune_fields", ((JSONObject) evidence.get(1)).get("tool"));
+                        JSONObject passage = (JSONObject) ((JSONObject) evidence.get(2)).get("result");
+                        assertEquals("rusefi_documentation/Cranking.md:L2-L3", passage.get("citation"));
+                        assertEquals("unverified", ((JSONObject) passage.get("provenance")).get("ecu_match"));
                         return response(object("type", "message", "role", "assistant", "content", array(object("type", "output_text",
                                 "text", "ECU test-ecu-signature: check cranking voltage and RPM (rusefi_documentation/Cranking.md:L2-L3). Source/ECU match is unverified."))));
                 }
-            }, tools, array(), "The engine cranks but will not start", ignored -> {}, ignored -> {}, new Cancellation());
-            assertEquals(3, rounds.get());
+            }, tools, array(), "The engine cranks but will not start. Export a diagnostic case.", ignored -> {}, ignored -> {}, new Cancellation());
+            assertEquals(4, rounds.get());
             JSONObject answer = (JSONObject) history.get(history.size() - 1);
             JSONObject content = (JSONObject) ((JSONArray) answer.get("content")).get(0);
             assertTrue(((String) content.get("text")).contains("rusefi_documentation/Cranking.md:L2-L3"));
@@ -126,11 +144,13 @@ class TroubleshootingToolsTest {
         protocol.signature = "test-ecu";
         when(link.getBinaryProtocol()).thenReturn(protocol);
         try (ConsoleEcuSession session = new ConsoleEcuSession(link)) {
-            TroubleshootingTools tools = new TroubleshootingTools(session, directory.resolve("missing"));
+            TroubleshootingTools tools = new TroubleshootingTools(session, directory.resolve("missing"), new DiagnosticCaseStore(directory.resolve("cases")));
             assertEquals(Boolean.FALSE, tools.execute("search_knowledge", object("query", "cranking"), () -> {}).get("success"));
             assertEquals("test-ecu", tools.execute("ecu_info", object(), () -> {}).get("signature"));
             when(link.getBinaryProtocol()).thenReturn(mock(BinaryProtocol.class));
             assertThrows(IOException.class, () -> tools.execute("search_knowledge", object("query", "cranking"), () -> {}));
+            assertThrows(IOException.class, () -> tools.execute("export_diagnostic_case", object(), () -> {}));
+            assertFalse(Files.exists(directory.resolve("cases")));
         }
     }
 

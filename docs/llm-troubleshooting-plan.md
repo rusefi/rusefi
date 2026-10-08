@@ -2,16 +2,12 @@
 
 Updated: 2026-10-08.
 
-## 1. Extend read-only diagnostics
+Keep ECU access in the first release read-only. Local diagnostic case export
+is implemented; live acceptance remains below. Tune writes, arbitrary commands
+and firmware updates are later work, with concrete proposed changes shown before
+execution.
 
-| Tool/capability | Open work |
-| --- | --- |
-| `export_diagnostic_case` | Save findings, referenced tune/log/capture evidence and provenance |
-
-Keep the first release read-only. Tune writes, arbitrary commands and firmware
-updates are later work, with concrete proposed changes shown before execution.
-
-## 2. Finish delivery and provenance
+## 1. Finish delivery and provenance
 
 - Verify a hosted archive workflow run and download the published ZIP through
   `FirmwareSourceCodeDownloader`.
@@ -25,7 +21,7 @@ updates are later work, with concrete proposed changes shown before execution.
   Verify source/ECU version compatibility before claiming downloaded source
   matches the connected firmware.
 
-## 3. Validate the complete user journey
+## 2. Validate the complete user journey
 
 Test a clean-machine installation with live ChatGPT and hardware:
 
@@ -35,7 +31,8 @@ Test a clean-machine installation with live ChatGPT and hardware:
 - Exercise missing, valid, stale and failed-download cache paths. Confirm an
   answer cites both a current ECU observation and a relevant source/wiki passage.
 - Cancel operations and handle unplug/reconnect without mixing ECU evidence.
-- Export a diagnostic case once that capability is available.
+- Export a diagnostic case and inspect its findings, referenced evidence and
+  provenance outside the Console.
 
 Acceptance scenario: "The engine cranks but won't start." Collect firmware
 identity, relevant tune values, cranking voltage/RPM, synchronization evidence

@@ -27,6 +27,7 @@ public final class LLMTab implements AutoCloseable {
     private final SourcePreparation sources;
     private Path knowledgeDirectory;
     private ConsoleEcuSession session;
+    private DiagnosticCaseStore caseEvidence;
     private final CardLayout cards = new CardLayout();
     private final JPanel content = new JPanel(cards);
     private final JPanel llmControls = new JPanel(new BorderLayout(8, 8));
@@ -139,7 +140,8 @@ public final class LLMTab implements AutoCloseable {
         input.add(buttons, BorderLayout.EAST);
         llmControls.add(input, BorderLayout.SOUTH);
         append("rusEFI Troubleshooting\nSign in to use your ChatGPT plan.\n"
-                + "Your messages, requested ECU readings and source/wiki excerpts are sent to OpenAI. Tools have read-only access.\n"
+                + "Your messages, requested ECU readings and source/wiki excerpts are sent to OpenAI. ECU access is read-only.\n"
+                + "Ask to export a diagnostic case to save findings and selected evidence locally.\n"
                 + "Connect to an ECU in Console, then describe the problem.\n\n");
 
         login.addActionListener(e -> signIn(selectedId));
@@ -276,18 +278,20 @@ public final class LLMTab implements AutoCloseable {
         if (session == null) {
             try {
                 session = new ConsoleEcuSession(linkManager);
+                caseEvidence = new DiagnosticCaseStore(storage.resolve("diagnostic-cases"));
             } catch (java.io.IOException e) {
                 append("[" + e.getMessage() + "]\n");
                 return;
             }
         }
         ConsoleEcuSession current = session;
+        DiagnosticCaseStore turnEvidence = new DiagnosticCaseStore(caseEvidence);
         JSONArray previous = new JSONArray();
         previous.addAll(history);
         append("\n> " + text + "\n\n");
         prompt.setText("");
         perform("Troubleshooting...", cancellation -> {
-            ChatGptAgent.Tools tools = new TroubleshootingTools(current, knowledgeDirectory);
+            ChatGptAgent.Tools tools = new TroubleshootingTools(current, knowledgeDirectory, turnEvidence);
             JSONArray completed = ChatGptAgent.run(
                     (input, definitions, delta, c) -> client.respondWithTools(id, model.slug, input, definitions, delta, c),
                     tools, previous, text, delta -> SwingUtilities.invokeLater(() -> append(delta)),
@@ -299,6 +303,7 @@ public final class LLMTab implements AutoCloseable {
                 }
                 history.clear();
                 history.addAll(completed);
+                caseEvidence = turnEvidence;
                 append("\n");
             };
         });
@@ -365,6 +370,7 @@ public final class LLMTab implements AutoCloseable {
 
     private void clearConversation() {
         history.clear();
+        caseEvidence = null;
         terminal.setText("");
         if (session != null) {
             session.close();
