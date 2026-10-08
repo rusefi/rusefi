@@ -871,6 +871,11 @@
 #define gear_e_GEAR_2 2
 #define gear_e_GEAR_3 3
 #define gear_e_GEAR_4 4
+#define gear_e_GEAR_5 5
+#define gear_e_GEAR_6 6
+#define gear_e_GEAR_7 7
+#define gear_e_GEAR_8 8
+#define gear_e_INVALID -9
 #define gear_e_NEUTRAL 0
 #define gear_e_REVERSE -1
 #define GearControllerMode_auto_enum 0="None",2="Automatic",1="ButtonShift",3="Generic"
@@ -1650,7 +1655,7 @@
 #define show_default_engine_type false
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 2471999256
+#define SIGNATURE_HASH 525703661
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2301,7 +2306,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.10.08.uaefi_pro_h7.2471999256"
+#define TS_SIGNATURE "rusEFI master.2026.10.08.uaefi_pro_h7.525703661"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'

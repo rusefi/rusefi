@@ -487,7 +487,7 @@ struct output_channels_s {
 	 * @@GAUGE_NAME_DETECTED_GEAR@@
 	 * offset 120
 	 */
-	uint8_t detectedGear = (uint8_t)0;
+	int8_t detectedGear = (int8_t)0;
 	/**
 	 * offset 121
 	 */

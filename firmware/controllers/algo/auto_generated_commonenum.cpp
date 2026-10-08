@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Mon Oct 05 21:26:24 UTC 2026
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Thu Oct 08 12:12:42 UTC 2026
 // see also gen_config_and_enums.bat
 
 
@@ -644,6 +644,16 @@ const char *getGear_e(gear_e value) {
 			return "GEAR_3";
 		case GEAR_4:
 			return "GEAR_4";
+		case GEAR_5:
+			return "GEAR_5";
+		case GEAR_6:
+			return "GEAR_6";
+		case GEAR_7:
+			return "GEAR_7";
+		case GEAR_8:
+			return "GEAR_8";
+		case INVALID:
+			return "INVALID";
 		case NEUTRAL:
 			return "NEUTRAL";
 		case REVERSE:
