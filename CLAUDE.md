@@ -36,6 +36,16 @@ Firmware and unit-test builds keep dependency files in `firmware/.dep/` and `uni
 
 After ChibiOS build-rule changes, validate generated-header dependencies with an empty `DEPDIR` (a fresh directory under `/tmp` is sufficient). Existing compiler-generated `.dep` files can hide missing explicit Makefile prerequisites: an incremental build generates the RAM disk correctly while a clean CI build compiles against its checked-in placeholder header.
 
+Firmware and host builds have private PCH directories but still share generated
+configuration headers under `firmware/controllers/generated`. Do not compile
+different board configurations concurrently in one checkout. The generator lock
+serializes generation, not compilation: a host build can replace
+`page_5_generated.h` with an 8000-byte Lua page while Proteus F7 expects 48000,
+causing a static assertion in `lua.cpp`. Separate delivery-unit sentinels can also
+miss that another build overwrote shared outputs. After switching between host
+and F7 builds, force regeneration for the selected target (for example, touch
+`firmware/integration/rusefi_config.txt` before make), then build sequentially.
+
 ### Unit Tests
 
 The host build shadows `firmware/hw_layer/adc/adc_inputs.h` with

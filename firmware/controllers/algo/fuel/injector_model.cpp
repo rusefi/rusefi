@@ -197,6 +197,19 @@ float InjectorModelWithConfig::getDeadtime() const {
 	);
 }
 
+#if EFI_ENGINE_CONTROL && EFI_LUA && (defined(STM32F7) || EFI_UNIT_TEST)
+floatms_t InjectorModelPrimary::getDeadtime() const {
+	const float configured = InjectorModelWithConfig::getDeadtime();
+	const float addition = engine->module<InjectorDeadtimeAutotune>()->getDeadtimeAdd();
+	if (addition == 0) {
+		return configured;
+	}
+	const float adjusted = configured + addition;
+	// Preserve invalid model results so the existing fuel error handling sees them.
+	return adjusted < 0 ? 0 : adjusted;
+}
+#endif
+
 //TODO: only used in the tests, refactor pending to InjectorModelWithConfig
 floatms_t InjectorModelBase::getInjectionDuration(float fuelMassGram) const {
 	if (fuelMassGram <= 0) {

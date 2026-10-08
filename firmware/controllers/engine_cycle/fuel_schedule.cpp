@@ -140,6 +140,12 @@ bool InjectionEvent::updateInjectionAngle() {
  * @returns false in case of error, true if success
  */
 bool InjectionEvent::update() {
+#if EFI_LUA && (defined(STM32F7) || EFI_UNIT_TEST)
+	if (engine->module<InjectorDeadtimeAutotune>()->isSchedulingBlocked()) {
+		// Keep the output pointers of all queued pulses intact while draining.
+		return true;
+	}
+#endif
 	bool updatedAngle = updateInjectionAngle();
 
 	if (!updatedAngle) {

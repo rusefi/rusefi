@@ -12,6 +12,27 @@
 #include "rusefi_lua.h"
 #include "thread_controller.h"
 
+int luaProtectedCall(lua_State* ls, int arguments, int results) {
+	int status = lua_pcall(ls, arguments, results, 0);
+#if EFI_ENGINE_CONTROL && EFI_LUA && (defined(STM32F7) || EFI_UNIT_TEST)
+	if (status != LUA_OK) {
+		// Only a VM which used the controls owns an engine pointer. Pure Lua users
+		// (including host tests without EngineTestHelper) need no engine at all.
+		// Shared registry key with injectorTuningControls() in lua_hooks_ext.cpp.
+		lua_getfield(ls, LUA_REGISTRYINDEX, "rusefi.injectorTuning");
+		auto* controls = static_cast<InjectorDeadtimeAutotune*>(lua_touserdata(ls, -1));
+		lua_pop(ls, 1);
+		if (controls) {
+			controls->onLuaError();
+		}
+		// Retain the failure even if this VM has not tried to arm an experiment yet.
+		lua_pushboolean(ls, true);
+		lua_setfield(ls, LUA_REGISTRYINDEX, "rusefi.injectorTuning");
+	}
+#endif
+	return status;
+}
+
 #if EFI_LUA
 
 #include "lua.hpp"
@@ -105,7 +126,7 @@ static LuaHandle setupLuaState(lua_Alloc alloc) {
 // this function is needed for a correct graph on the stackUsageReport
 static int doString(lua_State* ls, const char* script) {
 	return luaL_loadbufferx(ls, script, std::strlen(script), script, "t")
-		|| lua_pcall(ls, 0, LUA_MULTRET, 0);
+		|| luaProtectedCall(ls, 0, LUA_MULTRET);
 }
 
 static bool loadScript(LuaHandle& ls, const char* scriptStr) {
@@ -180,7 +201,7 @@ static void invokeTick(LuaHandle& ls) {
   uint32_t before = port_rt_get_counter_value();
 #endif // EFI_PROD_CODE
 
-	int status = lua_pcall(ls, 0, 0, 0);
+	int status = luaProtectedCall(ls, 0, 0);
 
 #if EFI_PROD_CODE
   uint32_t duration = port_rt_get_counter_value() - before;
@@ -379,7 +400,7 @@ static LuaHandle runScript(const char* script) {
 		throw std::logic_error("Failed to find function testFunc");
 	}
 
-	int status = lua_pcall(ls, 0, 1, 0);
+	int status = luaProtectedCall(ls, 0, 1);
 
 	if (0 != status) {
 		std::string msg = std::string("lua error while running script: ") + lua_tostring(ls, -1);

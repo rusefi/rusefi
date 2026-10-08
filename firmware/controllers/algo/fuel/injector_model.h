@@ -69,6 +69,10 @@ private:
 struct InjectorModelPrimary : InjectorModelWithConfig {
 	InjectorModelPrimary();
 
+#if EFI_ENGINE_CONTROL && EFI_LUA && (defined(STM32F7) || EFI_UNIT_TEST)
+	floatms_t getDeadtime() const override;
+#endif
+
 	InjectorNonlinearMode getNonlinearMode() const override;
 
 	// Ford small pulse model

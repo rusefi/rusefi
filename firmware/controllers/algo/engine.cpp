@@ -349,6 +349,9 @@ void Engine::reset() {
  * todo: https://github.com/rusefi/rusefi/issues/4308 Uniform reset pattern for all Lua adjustments
  */
 void Engine::resetLua() {
+#if EFI_ENGINE_CONTROL && EFI_LUA && (defined(STM32F7) || EFI_UNIT_TEST)
+	module<InjectorDeadtimeAutotune>()->resetLua();
+#endif
 	engineState.lua = {};
 	engineState.lua.fuelAdd = 0;
 	engineState.lua.fuelMult = 1;
@@ -589,7 +592,14 @@ bool Engine::isInShutdownMode() const {
 }
 
 injection_mode_e getCurrentInjectionMode() {
+#if EFI_ENGINE_CONTROL && EFI_LUA && (defined(STM32F7) || EFI_UNIT_TEST)
+	if (getEngineRotationState()->isCranking()) {
+		return engineConfiguration->crankingInjectionMode;
+	}
+	return engine->module<InjectorDeadtimeAutotune>()->getInjectionMode(engineConfiguration->injectionMode);
+#else
 	return getEngineRotationState()->isCranking() ? engineConfiguration->crankingInjectionMode : engineConfiguration->injectionMode;
+#endif
 }
 
 /**
@@ -601,7 +611,13 @@ void Engine::periodicFastCallback() {
 
 	call_board_override(custom_board_periodicFastCallback);
 
+#if EFI_ENGINE_CONTROL && EFI_LUA && (defined(STM32F7) || EFI_UNIT_TEST)
+	module<InjectorDeadtimeAutotune>()->beginFastCallback();
+#endif
 	engineState.periodicFastCallback();
+#if EFI_ENGINE_CONTROL && EFI_LUA && (defined(STM32F7) || EFI_UNIT_TEST)
+	module<InjectorDeadtimeAutotune>()->endFastCallback();
+#endif
 
 	speedoUpdate();
 

@@ -203,6 +203,13 @@ void RpmCalculator::setRpmValue(float value) {
 	// This presumably fixes injection mode change for cranking-to-running transition.
 	// 'isSimultaneous' flag should be updated for events if injection modes differ for cranking and running.
 	if (state != oldState && engineConfiguration->crankingInjectionMode != engineConfiguration->injectionMode) {
+#if EFI_LUA && (defined(STM32F7) || EFI_UNIT_TEST)
+		if (engine->module<InjectorDeadtimeAutotune>()->hasModeOverride()) {
+			// The Lua experiment must drain queued pulses before rewriting their pins.
+			// Cranking still wins in getCurrentInjectionMode; the fast callback rebuilds.
+			return;
+		}
+#endif
 		// Reset the state of all injectors: when we change fueling modes, we could
 		// immediately reschedule an injection that's currently underway.  That will cause
 		// the injector's overlappingCounter to get out of sync with reality.  As the fix,
@@ -461,4 +468,3 @@ RpmCalculator::RpmCalculator() :
 }
 
 #endif /* EFI_SHAFT_POSITION_INPUT */
-

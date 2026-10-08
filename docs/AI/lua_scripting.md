@@ -94,6 +94,43 @@ Numeric trims applied on top of the normal control algorithms. These are the pri
 | `setEtbAdd(pct)` / `setEwgAdd(pct)` | Electronic throttle / wastegate position adjustment |
 | `setEngineTorque(nm)` | Publishes torque estimate to `engineState.lua.engineTorque` (not on F4) |
 
+#### F7 injector deadtime experiments
+
+With EFI_ENGINE_CONTROL and EFI_LUA, STM32F7 (and host unit tests) registers
+the following in lua_hooks_ext.cpp. The InjectorDeadtimeAutotune module owns
+temporary controls; the estimator remains in Lua. Other MCU families have no
+bindings or control state. These hooks do not modify or burn calibration.
+
+| Hook | Contract |
+| --- | --- |
+| `setInjectionModeOverride("sequential" / "batch" / nil)` | Boolean acceptance; nil releases. Requested changes drain queued pulses, recalculate mass and rebuild mappings before scheduling resumes |
+| `getInjectionMode()` | Returns effective mode string and a transitioning boolean; wait for false, then allow exhaust/STFT settling |
+| `setInjectorDeadtimeAdd(ms)` | Boolean acceptance; finite -2..2 ms, zero releases. All primary-stage injectors; clamps adjusted deadtime at zero after voltage/pressure interpolation |
+| `getFuelTrim(bank)` | 1-based bank; returns table with correction (multiplier, 1 = neutral), correctionState, learningState, cell (1-based), saturated and enabled |
+| `setLtftLearningDisabled(bool)` | EFI_LTFT_CONTROL only; boolean acceptance; inhibit learning while continuing to apply existing trims |
+
+Each setter independently expires after one second without renewal. Call active
+setters from onTick at 10 Hz or faster. A mode release may wait for outstanding
+pulse closures and the next fast callback; never rewrite queued output pointers.
+No new pulses are scheduled while draining, so a transition can briefly interrupt
+fuel delivery and is unsuitable as a high-frequency modulation API.
+
+Nonzero/active requests require a running engine with phase sync, more than one
+cylinder, a sequential/batch base tune, staging disabled, INJ_None, and the injector
+flow linearization table disabled. Invalid arguments raise Lua errors; unsupported
+runtime conditions return false. Cranking retains precedence. Eligibility loss,
+engine stop, configuration change or Lua reset clears requests. Uncaught load,
+onTick, CAN callback or interactive execution errors revoke requests and latch out
+rearming until Lua reset/reload.
+
+Fuel trim cell order is idle, overrun, power, cruise (1..4). State codes follow
+stft_state_e; zero is enabled. `enabled` requires both correction and learning
+enabled, a running engine, valid lambda and a positive finite correction. Also
+reject saturated trims and changed operating conditions when measuring a pair.
+Generic getOutput skips the STFT array; generic setCalibration skips injection
+mode enums and the voltage/pressure deadtime table. Table writeback is not part
+of these hooks. Existing getOutput("m_deadtime") reads prepared primary deadtime.
+
 ### 5. Cut / disable / start-stop controls
 
 Hard on/off overrides, mostly booleans in `engineState.lua`, consumed by LimpManager and

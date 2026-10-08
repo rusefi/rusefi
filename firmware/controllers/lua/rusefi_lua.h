@@ -43,6 +43,9 @@ private:
 
 void startLua();
 
+// Uncaught script errors revoke temporary injector-tuning controls.
+int luaProtectedCall(lua_State* ls, int arguments, int results);
+
 #if EFI_UNIT_TEST
 #include <rusefi/expected.h>
 

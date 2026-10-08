@@ -33,6 +33,9 @@ public:
 	bool needsDelayedShutoff() override;
 
 	ClosedLoopFuelResult getCorrection(float rpm, float fuelLoad);
+	bool isSaturated(size_t bank) const {
+		return banks[bank].cells[stftCorrectionBinIdx].isSaturated();
+	}
 
 #if ! EFI_UNIT_TEST
 private:

@@ -37,6 +37,10 @@ float ClosedLoopFuelCellBase::getAdjustment() const {
 	return 1.0f + m_adjustment;
 }
 
+bool ClosedLoopFuelCellBase::isSaturated() const {
+	return m_adjustment <= getMinAdjustment() || m_adjustment >= getMaxAdjustment();
+}
+
 float ClosedLoopFuelCellImpl::getLambdaError() const {
 	auto lambda = Sensor::get(m_lambdaSensor);
 

@@ -49,6 +49,9 @@
 
 void endSimultaneousInjection(InjectionEvent* event) {
 	endSimultaneousInjectionOnlyTogglePins();
+#if EFI_LUA && (defined(STM32F7) || EFI_UNIT_TEST)
+	engine->module<InjectorDeadtimeAutotune>()->injectionClosed();
+#endif
 	event->update();
 }
 
@@ -61,6 +64,9 @@ void turnInjectionPinLow(InjectionEvent *event) {
 			output->close(nowNt);
 		}
 	}
+#if EFI_LUA && (defined(STM32F7) || EFI_UNIT_TEST)
+	engine->module<InjectorDeadtimeAutotune>()->injectionClosed();
+#endif
 	event->update();
 }
 
@@ -73,9 +79,17 @@ static void turnInjectionPinLowStage2(InjectionEvent* event) {
 			output->close(nowNt);
 		}
 	}
+#if EFI_LUA && (defined(STM32F7) || EFI_UNIT_TEST)
+	engine->module<InjectorDeadtimeAutotune>()->injectionClosed();
+#endif
 }
 
 void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float nextPhase) {
+#if EFI_LUA && (defined(STM32F7) || EFI_UNIT_TEST)
+	if (engine->module<InjectorDeadtimeAutotune>()->isSchedulingBlocked()) {
+		return;
+	}
+#endif
 	auto eventAngle = injectionStartAngle;
 
 	// Determine whether our angle is going to happen before (or near) the next tooth
@@ -108,8 +122,7 @@ void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float n
 	{
 		// Log this fuel as consumed
 
-		bool isCranking = getEngineRotationState()->isCranking();
-		int numberOfInjections = isCranking ? getNumberOfInjections(engineConfiguration->crankingInjectionMode) : getNumberOfInjections(engineConfiguration->injectionMode);
+		int numberOfInjections = getNumberOfInjections(getCurrentInjectionMode());
 
 		float actualInjectedMass = numberOfInjections * (injectionMassStage1 + injectionMassStage2);
 
@@ -205,6 +218,9 @@ void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float n
 	}
 
 	// Schedule opening (stage 1 + stage 2 open together)
+#if EFI_LUA && (defined(STM32F7) || EFI_UNIT_TEST)
+	engine->module<InjectorDeadtimeAutotune>()->injectionScheduled(hasStage2Injection && endActionStage2 ? 2 : 1);
+#endif
 	efitick_t startTime = scheduleByAngle(nullptr, nowNt, angleFromNow, startAction);
 
 	// Schedule closing stage 1

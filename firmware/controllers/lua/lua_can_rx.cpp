@@ -137,7 +137,7 @@ static void handleCanFrame(LuaHandle& ls, CanFrameData* data) {
 	}
 
 	// Perform the actual function call
-	int status = lua_pcall(ls, 4, 0, 0);
+	int status = luaProtectedCall(ls, 4, 0);
 
 	if (0 != status) {
 		// error calling CAN rx hook function

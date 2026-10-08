@@ -114,6 +114,12 @@ float LongTermFuelTrim::getMinAdjustment(const ltft_s& cfg) const {
 }
 
 void LongTermFuelTrim::learn(ClosedLoopFuelResult clResult, float rpm, float fuelLoad) {
+#if EFI_ENGINE_CONTROL && EFI_LUA && (defined(STM32F7) || EFI_UNIT_TEST)
+	if (engine->module<InjectorDeadtimeAutotune>()->isLtftLearningDisabled()) {
+		ltftLearning = false;
+		return;
+	}
+#endif
 	const auto& cfg = engineConfiguration->ltft;
 
 	// LTFT uses STFT output, so if STFT is not correcting for some reason - LTFT also should not learn

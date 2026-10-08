@@ -9,6 +9,7 @@ public:
 
 	// Get the current adjustment amount, without altering internal state.
 	float getAdjustment() const;
+	bool isSaturated() const;
 
 	virtual float getLambdaError() const = 0;
 protected:
