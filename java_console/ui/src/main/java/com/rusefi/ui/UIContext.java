@@ -54,7 +54,7 @@ public class UIContext {
         this.linkManager = new LinkManager(connectedEcuTarget);
     }
 
-    public SensorLogger sensorLogger = new SensorLogger(this);
+    public SensorLogger sensorLogger = new SensorLogger(this::getBinaryProtocol);
 
     public IniFileState iniFileState = new IniFileState(this);
     public GaugesPanel.DetachedRepository DetachedRepositoryINSTANCE = new GaugesPanel.DetachedRepository(this);

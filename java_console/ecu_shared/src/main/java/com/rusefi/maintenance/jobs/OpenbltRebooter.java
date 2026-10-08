@@ -4,7 +4,7 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.io.BootloaderHelper;
 import com.rusefi.io.UpdateOperationCallbacks;
-import com.rusefi.maintenance.ProgramSelector;
+import com.rusefi.maintenance.FirmwareOperations;
 
 import javax.swing.*;
 
@@ -20,7 +20,7 @@ public class OpenbltRebooter {
         @Override
         public void rebootToOpenblt(final JComponent parent, final String port,
                                     final UpdateOperationCallbacks callbacks) {
-            ProgramSelector.rebootToOpenblt(parent, port, callbacks);
+            FirmwareOperations.rebootToOpenblt(parent, port, callbacks);
         }
     };
 

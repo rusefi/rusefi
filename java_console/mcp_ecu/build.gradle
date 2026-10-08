@@ -3,7 +3,7 @@ apply from: dependenciesPath
 
 dependencies {
     api project(':ecu_io')
-    api project(':ui')
+    api project(':ecu_shared')
     api project(':models')
     api project(':inifile')
     implementation project(':connectivity')

@@ -5,7 +5,7 @@ import com.rusefi.PortResult;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
-import com.rusefi.maintenance.ProgramSelector;
+import com.rusefi.maintenance.FirmwareOperations;
 import com.rusefi.maintenance.CalibrationsHelper;
 import com.rusefi.maintenance.FirmwareFlashEligibility;
 import org.jetbrains.annotations.Nullable;
@@ -49,11 +49,11 @@ public class OpenBltAutoJob extends AbstractAutoFlashJob {
     @Override
     protected boolean flash(final LinkManager lm, final BinaryProtocol bp, final UpdateOperationCallbacks callbacks) {
         if (isAutomaticCanPort(context.getPort().port)) {
-            return ProgramSelector.flashOpenbltCanAutomatic(
+            return FirmwareOperations.flashOpenbltCanAutomatic(
                 context.getParent(), context.getPort(), bp, lm, callbacks, connectivityContext,
                 firmwareSrecFile, policy);
         }
-        return ProgramSelector.flashOpenbltSerialAutomatic(
+        return FirmwareOperations.flashOpenbltSerialAutomatic(
             context.getParent(), context.getPort(), bp, lm, callbacks, connectivityContext, firmwareSrecFile, policy);
     }
 

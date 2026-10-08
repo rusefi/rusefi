@@ -32,7 +32,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Production {@link SerialPortScanner.HardwareProbes}: real OS/hardware detection behind the
- * connectivity-module scan policy. Lives in the ui module because ECU/OpenBLT detection needs the
+ * connectivity-module scan policy. Lives in the shared ECU module alongside the
  * flashing tools ({@link DfuFlasher}, {@link StLinkFlasher}, {@link CalibrationsHelper}).
  */
 public class EcuHardwareProbes implements SerialPortScanner.HardwareProbes {

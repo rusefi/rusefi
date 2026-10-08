@@ -34,7 +34,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * @see StLinkFlasher
  */
 public class DfuFlasher {
-    private static final String DFU_CMD_TOOL_LOCATION = Launcher.TOOLS_PATH + File.separator + "STM32_Programmer_CLI/bin";
+    private static final String DFU_CMD_TOOL_LOCATION = ExecHelper.TOOLS_PATH + File.separator + "STM32_Programmer_CLI/bin";
     private static final String DFU_CMD_TOOL = "STM32_Programmer_CLI.exe";
     private static final String DFU_UTIL = "dfu-util";
     private static final String STM32_DFU_USB_ID = "0483:df11";

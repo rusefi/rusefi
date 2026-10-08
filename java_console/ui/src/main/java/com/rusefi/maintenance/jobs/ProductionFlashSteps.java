@@ -6,7 +6,7 @@ import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.CalibrationsHelper;
 import com.rusefi.maintenance.MaintenanceUtil;
 import com.rusefi.maintenance.OpenBltWipeArtifact;
-import com.rusefi.maintenance.ProgramSelector;
+import com.rusefi.maintenance.FirmwareOperations;
 
 import javax.swing.*;
 
@@ -20,7 +20,7 @@ public class ProductionFlashSteps {
         @Override
         public boolean flash(final JComponent parent, final String port, final UpdateOperationCallbacks callbacks,
                              final ConnectedEcuTarget target) {
-            return ProgramSelector.flashOpenbltSerial(parent, port, callbacks, target);
+            return FirmwareOperations.flashOpenbltSerial(parent, port, callbacks, target);
         }
 
         @Override
@@ -40,7 +40,7 @@ public class ProductionFlashSteps {
             @Override
             public boolean flash(final JComponent parent, final String port,
                                  final UpdateOperationCallbacks callbacks, final ConnectedEcuTarget target) {
-                return ProgramSelector.wipeOpenbltSerial(port, callbacks, artifact);
+                return FirmwareOperations.wipeOpenbltSerial(port, callbacks, artifact);
             }
 
             @Override

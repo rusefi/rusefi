@@ -4,6 +4,7 @@ configurations {
 }
 
 dependencies {
+    implementation project(':ecu_shared')
     implementation project(':autoupdate')
     implementation project(':connectivity')
     implementation project(':ts_plugin')
@@ -28,6 +29,7 @@ dependencies {
     testFixturesApi testFixtures(project(':ecu_io'))
     testImplementation testFixtures(project(':connectivity'))
     testFixturesApi project(':connectivity')
+    testFixturesImplementation project(':ecu_shared')
     implementation global_libs.jaxb_runtime
 }
 

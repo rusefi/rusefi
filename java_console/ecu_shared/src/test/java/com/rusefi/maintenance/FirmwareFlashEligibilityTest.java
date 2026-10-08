@@ -102,11 +102,11 @@ public class FirmwareFlashEligibilityTest {
                 String file = "rusefi_lts-test_2026-09-09_test_board_123_hash_update.srec";
 
                 if (LinkManager.isCanPort(port)) {
-                    assertFalse(ProgramSelector.flashOpenbltCanAutomatic(null, ecu, bp, lm,
+                    assertFalse(FirmwareOperations.flashOpenbltCanAutomatic(null, ecu, bp, lm,
                         callbacks, connectivity, file, CalibrationsHelper.FirmwareUpdatePolicy.FORWARD_MIGRATION));
                     verify(lm).getLastTriedPort();
                 } else {
-                    assertFalse(ProgramSelector.flashOpenbltSerialAutomatic(null, ecu, bp, lm,
+                    assertFalse(FirmwareOperations.flashOpenbltSerialAutomatic(null, ecu, bp, lm,
                         callbacks, connectivity, file));
                 }
 

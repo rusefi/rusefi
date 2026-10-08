@@ -2,6 +2,13 @@
 
 *Snapshot of the current state of the Gradle multi-project build (`java_console/` + `java_tools/`) with suggested improvements. Generated July 2026.*
 
+October 2026 update: `:ecu_shared` now holds the ECU application services used by
+both `:ui` and `:mcp_ecu`: maintenance/flashing, hardware probes, binary logging,
+and Lua includes. `:mcp_ecu` no longer depends on `:ui`; UI does not yet depend on
+MCP. The shared module depends on `:connectivity`, `:core_ui`, and `:autoupdate`,
+preserving existing optional maintenance dialogs. It is not entirely Swing-free.
+Class counts below are from the original snapshot.
+
 ## 1. Build overview
 
 - Root `settings.gradle` declares **30 unique projects**. Every project lives under `java_console/` or `java_tools/` and is remapped via `project(':x').projectDir = new File(rootRelativePath + ...)`.
@@ -27,10 +34,11 @@
 | `:autoupdate` | autoupdate | 8 | Self-updater (`rusefi_autoupdate.jar`) | core_ui |
 | `:shared_ui` | shared_ui | 10 | TS-plugin-shared UI bits | core_ui, ecu_io, models, config_definition_base |
 | `:trigger-ui` | trigger-ui | 9 | Trigger wheel visualization | core_ui, shared_ui, models, trigger-image, autoupdate |
-| `:ui` | ui | **333** | The console (`rusefi_console.jar`) — plus much non-UI code | ts_plugin, trigger-ui, autotest, luaformatter, enum_to_string |
+| `:ui` | ui | **333** | The console (`rusefi_console.jar`) — plus much non-UI code | ecu_shared, ts_plugin, trigger-ui, autotest, luaformatter, enum_to_string |
 | `:autotest` | autotest | 31 | HW/simulator functional test runner | ecu_io |
 | `:luaformatter` | **luaformatter_module** | 0 | Wrapper compiling the `../luaformatter` submodule (empty when submodule not checked out) | — |
-| `:mcp_ecu` | mcp_ecu | 3 | ECU MCP server (fat jar) | ecu_io, **ui**, models, inifile |
+| `:ecu_shared` | ecu_shared | 31 | Shared ECU application services | connectivity, core_ui, autoupdate |
+| `:mcp_ecu` | mcp_ecu | 3 | ECU MCP server (fat jar) | ecu_io, ecu_shared, models, inifile, connectivity |
 | `:mcp_can` | mcp_can | 1 | CAN sniffer MCP server (fat jar) | ecu_io, peak-can-basic |
 | `:peak-can-basic` | peak-can-basic | 0 | PCAN JNI wrapper (git submodule, empty in fresh checkout) | — |
 
@@ -64,7 +72,7 @@ Note that `java_console` vs `java_tools` is **not a layering boundary**: tools d
 ### 3.1 Severe
 
 1. **`proxy_server`'s production code lives in `src/test/java`.** `src/main` contains only a 2-file vendored log4j shim (`com.devexperts.logging`); the entire server — `Backend`, `BackendLauncher`, `ControllerConnectionState`, the `com.rusefi.proxy.client` code, 19 classes — sits in `src/test/java/com/rusefi/server/` with zero `@Test` annotations. The module has no `Main-Class`/shadowJar, so the server can only be exercised through the test task.
-2. **`:mcp_ecu` depends on the full Swing `:ui` module** (`java_console/mcp_ecu/build.gradle`). A headless stdio MCP server transitively pulls the entire console, flatlaf, syntax editors, etc. into its fat jar.
+2. **Full `:ui` dependency removed from `:mcp_ecu` (October 2026).** Shared services live in `:ecu_shared`; the MCP fat jar no longer pulls in the console, flatlaf, or syntax editors.
 3. **Massive split packages.** The same Java package spans multiple modules in ~25 cases, the worst being: `com.rusefi.core` (shared_io, io, inifile, models), `com.rusefi` (5 modules), `com.rusefi.io` (io, models, ui), `com.rusefi.ui` (io, trigger-ui, ui), `com.rusefi.util` (4 modules), `com.rusefi.maintenance[.migration.*]` (io ↔ ui), `com.rusefi.binaryprotocol` (io, ui), `com.rusefi.tools.tune` (config_definition_base, config_definition, tune-tools), `com.opensr5[.ini]` (inifile, io, logging-api). Split packages break JPMS, confuse IDEs/shadow merging, and mean no module owns its API.
 4. **`:ui` is a 333-class dumping ground.** Large clusters have no Swing dependency at all: tune migration domain logic (`com.rusefi.maintenance.*`, ~100 classes smeared across ui and io), sensor log parsing (`com.rusefi.sensor_logs`), the ANTLR LiveData parser (`com.rusefi.livedata.*`), binary protocol helpers, autodetect, and CLI entry points (`ConsoleTools`, `MassUpdater`).
 
@@ -112,7 +120,7 @@ Note that `java_console` vs `java_tools` is **not a layering boundary**: tools d
 ### Medium effort
 
 9. **Move `proxy_server`'s server from `src/test/java` to `src/main/java`**, keep the real tests in test, and give it a `Main-Class`/shadowJar so it is a deployable artifact.
-10. **Break `:mcp_ecu`'s dependency on `:ui`** — identify the handful of classes it actually uses and move them down to `ecu_io`/`models`/a new headless module.
+10. ~~Break `:mcp_ecu`'s dependency on `:ui`.~~ Done via `:ecu_shared`. A further cleanup can separate optional Swing dialogs from the shared maintenance services.
 11. Move test helpers out of main source sets (`com.opensr5.ini.test`, `com.rusefi.util.test`, `Bug3923`, `*Sandbox` mains) into `test`/`testFixtures` — the `java-test-fixtures` plugin is already applied everywhere.
 12. Consolidate `com.rusefi.tools.tune` into one module (currently config_definition_base + config_definition + tune-tools).
 13. Introduce a small **convention plugin** (`buildSrc/` or an included build) for: the fat-jar-with-jaxb pattern, the shared shadowJar exclusions, and the httpclient stack — replacing copy-pasted blocks. Apply shadow/test-fixtures selectively there instead of on all 30 projects.

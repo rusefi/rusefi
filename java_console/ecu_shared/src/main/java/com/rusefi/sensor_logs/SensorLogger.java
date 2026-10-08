@@ -9,7 +9,6 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.FieldType;
 import com.rusefi.core.OutputChannelSnapshot;
 import com.rusefi.core.SensorCentral;
-import com.rusefi.ui.UIContext;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -19,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.function.Supplier;
 
 import static com.rusefi.config.generated.VariableRegistryValues.GAUGE_NAME_MAP;
 import static com.rusefi.core.SensorNames.MAPGauge;
@@ -28,8 +28,8 @@ import static com.rusefi.core.SensorNames.MAPGauge;
  * 4/15/2016.
  */
 public class SensorLogger {
-    private static List<CustomBinaryLogEntry> getOutputChannels(UIContext uiContext) {
-        BinaryProtocol bp = uiContext.getBinaryProtocol();
+    private static List<CustomBinaryLogEntry> getOutputChannels(Supplier<BinaryProtocol> protocol) {
+        BinaryProtocol bp = protocol.get();
         if (bp == null) {
             return Collections.emptyList();
         }
@@ -69,14 +69,14 @@ public class SensorLogger {
                 && ((ScalarIniField) field).getType() != FieldType.STRING);
     }
 
-    private final UIContext uiContext;
+    private final Supplier<BinaryProtocol> protocol;
     private BinarySensorLog<CustomBinaryLogEntry> sensorLog;
     private SensorCentral.FullOutputLease fullOutputLease;
     private SensorCentral.SnapshotListenerToken snapshotListenerToken;
     private byte[] currentResponse;
 
-    public SensorLogger(UIContext uiContext) {
-        this.uiContext = uiContext;
+    public SensorLogger(Supplier<BinaryProtocol> protocol) {
+        this.protocol = protocol;
     }
 
     public synchronized boolean start(File file) {
@@ -88,7 +88,7 @@ public class SensorLogger {
             return true;
         }
 
-        List<CustomBinaryLogEntry> outputChannels = getOutputChannels(uiContext);
+        List<CustomBinaryLogEntry> outputChannels = getOutputChannels(protocol);
         if (outputChannels.isEmpty()) {
             return false;
         }

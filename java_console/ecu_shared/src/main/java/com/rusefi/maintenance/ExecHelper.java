@@ -15,6 +15,7 @@ import static com.devexperts.logging.Logging.getLogging;
  * @see SimulatorExecHelper
  */
 public class ExecHelper {
+    public static final String TOOLS_PATH = System.getProperty("tools_path", ".");
     private static final Logging log = getLogging(ExecHelper.class);
 
     private static boolean isRunning(Process p) {

@@ -9,7 +9,6 @@ import com.rusefi.config.FieldType;
 import com.rusefi.core.OutputChannelSnapshot;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.ini.reader.IniFileReaderUtil;
-import com.rusefi.ui.UIContext;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -97,7 +96,6 @@ class SensorLoggerTest {
 
     @Test
     void startsAndStopsExplicitly() throws Exception {
-        UIContext context = mock(UIContext.class);
         BinaryProtocol protocol = mock(BinaryProtocol.class);
         IniFileModel ini = mock(IniFileModel.class);
         ScalarIniField rpm = new ScalarIniField("rpm", 0, "RPM", FieldType.UINT16, 1, "0", 0);
@@ -111,7 +109,6 @@ class SensorLoggerTest {
         outputChannels.put("flag", flag);
         outputChannels.put("MAPValue", map);
 
-        when(context.getBinaryProtocol()).thenReturn(protocol);
         when(protocol.getIniFileNullable()).thenReturn(ini);
         when(ini.getAllOutputChannels()).thenReturn(outputChannels);
         when(ini.getGauges()).thenReturn(Collections.emptyMap());
@@ -120,7 +117,7 @@ class SensorLoggerTest {
         when(ini.getOutputChannel("flag")).thenReturn(flag);
         when(ini.getOutputChannel("MAPValue")).thenReturn(map);
 
-        SensorLogger logger = new SensorLogger(context);
+        SensorLogger logger = new SensorLogger(() -> protocol);
         Path file = tempDir.resolve("selected.mlg");
         byte[] tune = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><msq><note>\u03bb tune</note></msq>\n"
                 .getBytes(StandardCharsets.UTF_8);

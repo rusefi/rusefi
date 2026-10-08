@@ -36,6 +36,12 @@ LLM client  <-- stdio JSON-RPC (MCP) -->  EcuMcpServer
 `EcuMcpServer` both depend on. It owns connecting to the ECU, locating the `LUASCRIPT`
 ini field, writing/burning, and `luareset`.
 
+`:mcp_ecu` and `:ui` both depend on `:ecu_shared` for calibration backup/migration,
+firmware operations, hardware probes, binary logging, and Lua include expansion.
+MCP no longer depends on `:ui`, and UI does not yet depend on MCP. The shared
+module retains the existing `:autoupdate`/`:core_ui` helpers and optional maintenance
+dialogs; it does not include the console widgets, editors, or visualization modules.
+
 ## Prerequisite: a matching .ini file
 
 Connecting requires a TunerStudio `.ini` file matching the ECU's signature hash. For

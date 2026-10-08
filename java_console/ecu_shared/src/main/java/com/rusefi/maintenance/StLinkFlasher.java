@@ -1,6 +1,5 @@
 package com.rusefi.maintenance;
 
-import com.rusefi.Launcher;
 import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.io.ConnectedEcuTarget;
 import com.rusefi.io.UpdateOperationCallbacks;
@@ -22,8 +21,8 @@ public class StLinkFlasher {
     /**
      * SWD ST-LINK/V2 mode
      */
-    private static final String OPENOCD_EXE = Launcher.TOOLS_PATH + File.separator + "openocd/openocd.exe";
-    // todo: combine this with Launcher#TOOLS_PATH?
+    private static final String OPENOCD_EXE = ExecHelper.TOOLS_PATH + File.separator + "openocd/openocd.exe";
+    // todo: combine this with ExecHelper#TOOLS_PATH?
     private static final String OPENOCD_BINARY_LOCATION = ".";
     private static final String SUCCESS_MESSAGE_TAG = "shutdown command invoked";
     private static final String FAILED_MESSAGE_TAG = "failed";
