@@ -84,6 +84,28 @@ loggers runs, chosen by `engineConfiguration->sdTriggerLog`:
 - `MLG::resetFileLogging()` must be called per new file so the header is written
   again and the rolling counter restarts.
 
+### Validating .mlg data
+
+Use the file's descriptors, not fixed field counts, offsets, or TunerStudio channel
+names. MLG labels are display names (for example `Time`), and vary with generated
+fields and board configuration. `mlg_types.h` and `mlg_field.h` define the 24-byte
+header, 89-byte field descriptors, big-endian numeric encoding, and the value
+conversion `(raw + transform) * scale`.
+
+Check that field widths sum to `recordLength`, and that each data record has
+`recordLength + 5` bytes. Its checksum is the sum modulo 256 of payload bytes only;
+the four-byte prefix is excluded. Check the rolling counter separately (modulo
+256). A valid checksum alone does not establish a complete, correctly timed log.
+
+The 16-bit prefix timestamp wraps every 655.36 ms. Summing modulo deltas loses
+whole wraps when a write stalls longer than that, even with a continuous rolling
+counter. This writer also logs `packedTime` as `Time` in seconds with millisecond
+precision; use that field to assess long gaps. The firmware file header currently
+writes a zero Unix timestamp regardless of RTC availability, so do not derive a
+wall-clock start from it. `MslToCsv` in `:mcp_ecu` validates descriptor lengths and
+checksums and preserves logged fields; it skips the prefix counter/timestamp and
+does not validate their continuity.
+
 ### Trigger tooth .teeth log (`sdLoggerTooth`)
 
 Used when `sdTriggerLog` is enabled; records every trigger/cam edge, coil,
@@ -124,8 +146,10 @@ The important power-loss defense is in `sdLoggerCreateFile()` /
   but without the corruption protection.
 - On close, `f_truncate()` shrinks the file back to the actually-written size,
   returning the unused tail of the pre-allocation to free space. A file that was
-  never closed cleanly shows up as a full 32MB file with trailing garbage - MLG
-  readers stop at the last valid record.
+  never closed cleanly can remain 32MB with an unwritten tail. Do not assume a
+  reader or checksum detects its boundary: an all-zero record passes the additive
+  checksum. Use counter/time continuity and the recorded fields as additional
+  evidence; an all-zero payload by itself is not proof of end-of-log.
 - Both loggers pre-allocate (they share `sdLoggerCreateFile()`), but only the
   .mlg logger enforces the 32MB size cap/rollover; a .teeth file that outgrows
   the pre-allocation silently degrades to normal allocation.

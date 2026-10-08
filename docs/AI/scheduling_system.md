@@ -50,6 +50,15 @@ Rates are centralized in `firmware/controllers/core/main_loop.h`:
 
 `PeriodicController` base (`periodic_thread_controller.h`) sleeps until a window measured from loop *start* (`chThdSleepUntilWindowed`), so the frequency stays constant regardless of how long the task body takes.
 
+Do not confuse that thread base with `PeriodicTimerController`
+(`firmware/controllers/system/periodic_task.{h,cpp}`). Its `start()` runs the first
+iteration synchronously, then `chVTSetAny` schedules subsequent iterations in
+virtual-timer interrupt context. Code reached through module `onFastCallback()`
+must therefore remain safe in interrupt context; a passing host test does not
+establish that blocking calls are safe there. When exposing a control action through
+a console/TS command, hand off the request with appropriate synchronization rather
+than concurrently driving callback-owned state from the command thread.
+
 ### periodicFastCallback (200 Hz)
 
 `Engine::periodicFastCallback()` (`engine.cpp`) -> `EngineState::periodicFastCallback()` (`engine2.cpp`) is the fuel/ignition math pipeline: dwell, IAT/CLT/baro corrections, DFCO, rev limit, tCharge, injection mass + duration (incl. stage 2 split), STFT/LTFT application, ignition advance + knock/limp retard, per-cylinder trims and timing, multispark - then `onFastCallback()` on every `EngineModule` (IdleController, BoostController, VvtController, AlternatorController, KnockController, WallFuelController, HpfpController, MapAveragingModule, LimpManager, TachometerModule, ...).

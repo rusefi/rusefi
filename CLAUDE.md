@@ -90,6 +90,20 @@ When testing actuator init paths, remember that `EngineTestHelper` construction 
 
 #### Troubleshooting test output
 
+For suspected test-order leaks, run the built binary directly from `unit_tests/`:
+`build/rusefi_test --gtest_shuffle --gtest_random_seed=31337 --gtest_repeat=3`.
+Record the failing iteration's seed and keep the same test selection when replaying;
+changing `--gtest_filter` changes the shuffled order. `test.sh` accepts a name filter,
+not arbitrary GoogleTest flags. `EngineTestHelperBase` rewinds simulated time to zero,
+while `Sensor::resetRegistry()` only clears registry entries: a file-static
+`StoredValueSensor` can retain a previous value/timestamp and appear fresh after the
+clock rewind. Reset/invalidate the underlying object, not just its registration.
+
+For Valgrind, rebuild with `SANITIZE=no`; the normal non-Windows unit-test build
+enables ASan. From `unit_tests/`, use `make clean`, `make -j12 SANITIZE=no`, then
+`./run_with_valgrind.sh`. `make_for_valgrind.sh` selects the flag but does not clean
+old objects, so running it alone after an ASan build can reuse incompatible objects.
+
 `EngineTestHelper::applyTriggerWaveform()` also increments the global configuration version and notifies hardware controllers. Static ETB controllers can retain PID pointers into an earlier test's destroyed configuration when the next test skips throttle initialization (for example, without TPS sensors). A later configuration notification then reads the stale pointer in `Pid::isSame()`, detectable under Valgrind. For tests that only need trigger/cylinder geometry refreshed, use `engine->updateTriggerConfiguration()` directly; tests of global configuration changes still require ETB lifetime isolation. See the MAP sampling tests and the 2026-09-29 report.
 
 Starter tests must explicitly clear `enginePins.starterControl` in setup and cleanup. `EngineTestHelper` resets injector/coil outputs and pin registrations, but an unassigned starter retains its logical output across tests; the next `doStartCranking()` then sees an already-engaged starter and skips new-engagement behavior.
