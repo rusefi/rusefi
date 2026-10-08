@@ -11,8 +11,8 @@ classpath in your IDE. It opens a standalone Swing window for authentication
 and UI development without opening an ECU port. The launcher remains in the
 test source set; its shared UI, authentication and JWT dependency are now
 packaged in the Console JAR. Troubleshooting requests require the connected
-Console integration, whose tab is currently disabled by a `false &&` guard in
-`ConsoleUI`. See [Console troubleshooting assistant](llm-troubleshooting.md).
+Console integration, available in online, non-log-viewer sessions.
+See [Console troubleshooting assistant](llm-troubleshooting.md).
 
 The sandbox first prepares a valid cached source ZIP. If none is usable, it
 shows only the source download prompt, **Start Download**, progress and status.
@@ -27,11 +27,14 @@ isolated account and source directories for development:
 1. Click **Continue with ChatGPT** and complete sign-in in your system browser.
    If the browser cannot open, copy the link from the dialog. The browser must
    reach the Java process's `127.0.0.1` loopback interface. Sign-in expires after
-   five minutes; **Stop** cancels it.
+   five minutes; **Cancel sign-in** or **Stop** cancels it. Closing the modeless
+   link dialog cancels sign-in; completion, failure and timeout close the dialog
+   automatically. An external browser-tab closure cannot notify the Console.
 2. Approve ChatGPT plan usage for the app. Eligibility and usage limits are
    controlled by OpenAI and your account. Identity-only sign-in leaves Send
    disabled. **Continue with ChatGPT** reauthorizes the selected connection;
-   **Add account** creates a separate account/workspace registration.
+   **Add account** appears after a registration exists and creates a separate
+   account/workspace registration. Cancelling it retains the current selection.
    New registrations send the app name **rusEFI Updater** to ChatGPT. Returning
    sign-ins reuse the saved client ID and do not send a new name hint.
 3. Choose a model from the account's catalog. The standalone launcher has no
@@ -48,8 +51,12 @@ isolated account and source directories for development:
    If revocation cannot be confirmed, the terminal tells you to disconnect the
    app in ChatGPT Settings.
 
-Saved connections are loaded on restart; select one to load its models and
-check model access. The client refreshes expiring tokens automatically.
+On restart, the last-used account is preferred when ready; otherwise a ready
+saved account is selected when available. Its models load in the background,
+including token refresh when needed. The UI distinguishes re-login from missing
+plan access, and never opens a browser automatically on startup.
+**Continue with ChatGPT** is disabled for a ready account and becomes available
+when sign-in or renewed authorization is required.
 Reselect an account to retry a failed model-catalog request.
 
 ## Local storage and protocol

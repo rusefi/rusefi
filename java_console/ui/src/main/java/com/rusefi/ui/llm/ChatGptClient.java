@@ -32,6 +32,7 @@ public final class ChatGptClient implements Closeable {
     static final String RESOURCE = "https://api.openai.com/v1";
     static final String DYNAMIC_CLIENT = "dynamic_agent_client";
     static final String PLAN_SCOPE = "chatgpt.tokens.use.direct";
+    private static final long ACCESS_TOKEN_REFRESH_SKEW_MILLIS = 60000;
     private final ChatGptStore store;
     private final JSONObject profiles;
     private final Transport transport;
@@ -51,11 +52,17 @@ public final class ChatGptClient implements Closeable {
         public final String label;
         public final boolean connected;
         public final boolean planEnabled;
+        public final boolean reLoginRequired;
 
         Account(String id, JSONObject profile) {
             this.id = id;
-            connected = !string(profile, "access_token").isEmpty();
+            boolean hasAccessToken = !string(profile, "access_token").isEmpty();
+            boolean hasRefreshToken = !string(profile, "refresh_token").isEmpty();
+            connected = hasAccessToken || hasRefreshToken;
             planEnabled = connected && hasPlanScope(string(profile, "scope"));
+            reLoginRequired = Boolean.TRUE.equals(profile.get("relogin_required"))
+                    || (!hasAccessToken && !hasRefreshToken)
+                    || (hasAccessToken && !hasRefreshToken && accessTokenNeedsRefresh(profile));
             label = string(profile, "label") + " - " + string(profile, "email")
                     + (connected ? "" : " (signed out)");
         }
@@ -166,6 +173,7 @@ public final class ChatGptClient implements Closeable {
             updated.put("issuer", identity.getIssuer());
             updated.put("email", Optional.ofNullable(identity.getStringClaim("email")).orElse(identity.getSubject()));
             updateTokens(updated, tokens, false);
+            updated.remove("relogin_required");
             cancellation.check();
             profiles.put(id, updated);
             store.save();
@@ -201,7 +209,13 @@ public final class ChatGptClient implements Closeable {
     }
 
     public List<Model> models(String id, Cancellation cancellation) throws Exception {
-        JSONObject result = json("GET", RESOURCE + "/models", accessToken(id, cancellation), null, cancellation);
+        JSONObject result;
+        try {
+            result = json("GET", RESOURCE + "/models", accessToken(id, cancellation), null, cancellation);
+        } catch (AuthRequiredException e) {
+            markReLoginRequired(id);
+            throw e;
+        }
         List<Model> models = new ArrayList<>();
         Object catalog = result.get("models");
         if (!(catalog instanceof JSONArray)) {
@@ -220,10 +234,57 @@ public final class ChatGptClient implements Closeable {
     /** Returns only after response.completed. Callers must not commit partial replies to conversation history. */
     public String respond(String id, String model, JSONArray history, Consumer<String> delta, Cancellation cancellation) throws Exception {
         JSONObject body = object("model", model, "input", history, "store", false, "stream", true);
-        try (Reader reader = transport.request("POST", RESOURCE + "/responses", accessToken(id, cancellation),
-                "application/json", body.toJSONString(), cancellation)) {
+        try (Reader reader = accountRequest(id, "POST", RESOURCE + "/responses", "application/json", body.toJSONString(), cancellation)) {
             return readEvents(reader, delta, cancellation);
         }
+    }
+
+    private Reader accountRequest(String id, String method, String url, String contentType, String body,
+                                  Cancellation cancellation) throws Exception {
+        try {
+            return transport.request(method, url, accessToken(id, cancellation), contentType, body, cancellation);
+        } catch (AuthRequiredException e) {
+            markReLoginRequired(id);
+            throw e;
+        }
+    }
+
+    private String accessToken(String id, Cancellation cancellation) throws Exception {
+        JSONObject current = profile(id);
+        if (!hasPlanScope(string(current, "scope"))) {
+            throw new IOException("ChatGPT plan usage is not enabled. Continue with ChatGPT and grant plan usage.");
+        }
+        boolean missingAccessToken = string(current, "access_token").isEmpty();
+        if (missingAccessToken && string(current, "refresh_token").isEmpty()) {
+            markReLoginRequired(id);
+            throw new AuthRequiredException("Please continue with ChatGPT to sign in.");
+        }
+        if (missingAccessToken || accessTokenNeedsRefresh(current)) {
+            if (string(current, "refresh_token").isEmpty()) {
+                markReLoginRequired(id);
+                throw new AuthRequiredException("Session expired. Continue with ChatGPT to sign in again.");
+            }
+            log.info("access token expired, refreshing");
+            JSONObject tokens;
+            try {
+                tokens = json("POST", ISSUER + "/api/accounts/oauth/token", null,
+                        form("grant_type", "refresh_token", "client_id", string(current, "client_id"),
+                                "refresh_token", string(current, "refresh_token"), "resource", RESOURCE), cancellation);
+            } catch (AuthRequiredException e) {
+                markReLoginRequired(id);
+                throw e;
+            }
+            JSONObject updated = copy(current);
+            updateTokens(updated, tokens, true);
+            updated.remove("relogin_required");
+            profiles.put(id, updated);
+            store.save();
+            current = updated;
+        }
+        if (!hasPlanScope(string(current, "scope"))) {
+            throw new IOException("ChatGPT plan permission is no longer granted. Check ChatGPT Settings > Usage.");
+        }
+        return string(current, "access_token");
     }
 
     public Response respondWithTools(String id, String model, JSONArray history, JSONArray tools,
@@ -233,8 +294,7 @@ public final class ChatGptClient implements Closeable {
         JSONArray include = new JSONArray();
         include.add("reasoning.encrypted_content");
         body.put("include", include);
-        try (Reader reader = transport.request("POST", RESOURCE + "/responses", accessToken(id, cancellation),
-                "application/json", body.toJSONString(), cancellation)) {
+        try (Reader reader = accountRequest(id, "POST", RESOURCE + "/responses", "application/json", body.toJSONString(), cancellation)) {
             Response response = readResponse(reader, delta, cancellation);
             if (response.output == null || response.output.isEmpty()) {
                 throw new IOException("ChatGPT completed without response items.");
@@ -251,34 +311,6 @@ public final class ChatGptClient implements Closeable {
             this.text = text;
             this.output = output;
         }
-    }
-
-    private String accessToken(String id, Cancellation cancellation) throws Exception {
-        JSONObject current = profile(id);
-        if (!hasPlanScope(string(current, "scope"))) {
-            throw new IOException("ChatGPT plan usage is not enabled. Continue with ChatGPT and grant plan usage.");
-        }
-        if (string(current, "access_token").isEmpty()) {
-            throw new IOException("Please continue with ChatGPT to sign in.");
-        }
-        if (((Number) current.get("expires_at")).longValue() <= System.currentTimeMillis() + 60000) {
-            if (string(current, "refresh_token").isEmpty()) {
-                throw new IOException("Session expired. Continue with ChatGPT to sign in again.");
-            }
-            log.info("access token expired, refreshing");
-            JSONObject tokens = json("POST", ISSUER + "/api/accounts/oauth/token", null,
-                    form("grant_type", "refresh_token", "client_id", string(current, "client_id"),
-                            "refresh_token", string(current, "refresh_token"), "resource", RESOURCE), cancellation);
-            JSONObject updated = copy(current);
-            updateTokens(updated, tokens, true);
-            profiles.put(id, updated);
-            store.save();
-            current = updated;
-        }
-        if (!hasPlanScope(string(current, "scope"))) {
-            throw new IOException("ChatGPT plan permission is no longer granted. Sign in again.");
-        }
-        return string(current, "access_token");
     }
 
     static void updateTokens(JSONObject profile, JSONObject tokens, boolean refresh) throws IOException {
@@ -433,6 +465,22 @@ public final class ChatGptClient implements Closeable {
     }
 
     static boolean hasPlanScope(String scope) { return Arrays.asList(scope.split("\\s+")).contains(PLAN_SCOPE); }
+    private static boolean accessTokenNeedsRefresh(JSONObject profile) {
+        return !(profile.get("expires_at") instanceof Number)
+                || ((Number) profile.get("expires_at")).longValue() <= System.currentTimeMillis() + ACCESS_TOKEN_REFRESH_SKEW_MILLIS;
+    }
+
+    private void markReLoginRequired(String id) throws IOException {
+        JSONObject current = profile(id);
+        if (!Boolean.TRUE.equals(current.get("relogin_required"))) {
+            current.put("relogin_required", true);
+            store.save();
+        }
+    }
+
+    static final class AuthRequiredException extends IOException {
+        AuthRequiredException(String message) { super(message); }
+    }
     static String string(JSONObject object, String key) { return object.get(key) instanceof String ? (String) object.get(key) : ""; }
     static JSONObject copy(JSONObject original) { JSONObject result = new JSONObject(); result.putAll(original); return result; }
 
@@ -546,9 +594,13 @@ public final class ChatGptClient implements Closeable {
                 log.info(method + " " + url + ": HTTP " + status);
                 if (status < 200 || status >= 300) {
                     // Do not echo an auth response body, which may contain credentials or callback data.
-                    throw new IOException("ChatGPT request failed (HTTP " + status + "). "
+                    String message = "ChatGPT request failed (HTTP " + status + "). "
                             + (status == 401 || (status == 400 && url.endsWith("/oauth/token")) ? "Continue with ChatGPT to sign in again."
-                            : status == 403 || status == 429 ? "Check plan access in ChatGPT Settings > Usage." : "Please try again."));
+                            : status == 403 || status == 429 ? "Check plan access in ChatGPT Settings > Usage." : "Please try again.");
+                    if (status == 401 || (status == 400 && url.endsWith("/oauth/token"))) {
+                        throw new AuthRequiredException(message);
+                    }
+                    throw new IOException(message);
                 }
                 return new FilterReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8)) {
                     @Override public void close() throws IOException {

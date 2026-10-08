@@ -578,7 +578,7 @@ public class CalibrationFieldFactory {
         row.setMaximumSize(new Dimension(Integer.MAX_VALUE, row.getPreferredSize().height + 5));
     }
 
-    static void applyStyle(JComponent component) {
+    public static void applyStyle(JComponent component) {
         Font font = component.getFont();
         if (font != null) {
             component.setFont(font.deriveFont(font.getSize() * 1.2f));

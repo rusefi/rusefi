@@ -12,9 +12,21 @@ download prompt, **Start Download**, a progress bar and status text. All chat
 controls stay hidden until ZIP validation and extraction finish successfully.
 Download failures keep this screen visible and allow another attempt.
 
-Once sources are ready, select a saved account or choose
-**Continue with ChatGPT**, select a model, and describe the problem. Sign-in
+Once sources are ready, the last-used saved account is selected if ready;
+otherwise another ready saved account is selected when available. Models load
+in the background, refreshing credentials when possible. Startup never opens
+a browser automatically. If authorization is needed, choose **Continue with
+ChatGPT**; the UI distinguishes re-login from missing ChatGPT plan access.
+For a ready account, **Continue with ChatGPT** is disabled because authorization
+is already usable. Refreshable token expiry alone does not require manual sign-in.
+**Add account** appears only after a registration exists, for adding another
+account or workspace. Select a model and describe the problem. Sign-in
 opens the browser automatically; if that fails, the tab displays a copyable link.
+Use **Cancel sign-in** to abandon authorization. Closing the modeless link
+dialog also cancels it, and the dialog closes on every terminal sign-in path
+or tab close. Closing an external browser tab cannot notify the Console;
+use **Cancel sign-in** instead. Cancelled account addition keeps the current
+account selected.
 The app identifies itself as **rusEFI Updater**.
 
 The terminal shows streamed answers and tool names as they run. User messages,
@@ -272,6 +284,12 @@ replacing existing content. Hash mismatches preserve the old cache. Legacy
 ZIPs remove any old manifest so they cannot inherit unrelated revisions.
 Replacing a top-level tree removes stale files within it. ZIP link entries become plain text containing their target,
 not filesystem links. Failed downloads or ZIP validation preserve the old cache.
+Publication backs up existing trees, the manifest and any replaced ZIP before
+moving staged entries into place. A publication I/O failure rolls those changes
+back, including the previous ZIP timestamp. If rollback fails, recovery data is
+retained in the reported `.source-*` directory rather than deleted. Unrelated
+cache files are left alone. This is exception-safe rollback, not crash- or
+power-loss atomicity.
 A per-folder lock prevents overlapping preparations.
 
 The blocking `download(DownloadProgressListener)` method returns the prepared

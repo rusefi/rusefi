@@ -8,6 +8,7 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -138,6 +139,109 @@ class ChatGptClientTest {
         assertFalse(ChatGptClient.hasPlanScope((String) profile.get("scope")));
         response.remove("access_token");
         assertThrows(IOException.class, () -> ChatGptClient.updateTokens(profile, response, true));
+    }
+
+    @Test void expiredAccessTokenNeedsReloginOnlyWhenRefreshIsUnavailable() {
+        JSONObject refreshable = ChatGptClient.object("label", "Saved", "email", "user@example.com",
+                "access_token", "expired", "refresh_token", "refresh", "expires_at", 0L,
+                "scope", "openid " + ChatGptClient.PLAN_SCOPE);
+        ChatGptClient.Account ready = new ChatGptClient.Account("one", refreshable);
+        assertTrue(ready.connected);
+        assertTrue(ready.planEnabled);
+        assertFalse(ready.reLoginRequired);
+
+        JSONObject expiredWithoutRefresh = ChatGptClient.object("label", "Saved", "email", "user@example.com",
+                "access_token", "expired", "expires_at", 0L,
+                "scope", "openid " + ChatGptClient.PLAN_SCOPE);
+        assertTrue(new ChatGptClient.Account("two", expiredWithoutRefresh).reLoginRequired);
+        JSONObject missingPlan = ChatGptClient.object("label", "Saved", "email", "user@example.com",
+                "access_token", "valid", "expires_at", System.currentTimeMillis() + 3600000,
+                "scope", "openid profile");
+        ChatGptClient.Account planRequired = new ChatGptClient.Account("three", missingPlan);
+        assertFalse(planRequired.reLoginRequired);
+        assertFalse(planRequired.planEnabled);
+    }
+
+    @Test void authenticationRejectionsPersistForOnlyTheAffectedAccountAndDisableSend() throws Exception {
+        try (ChatGptStore store = new ChatGptStore(directory)) {
+            JSONObject profiles = (JSONObject) store.data.get("profiles");
+            for (String id : Arrays.asList("one", "two")) {
+                profiles.put(id, ChatGptClient.object("client_id", "client", "label", "Saved " + id,
+                        "email", id + "@example.com", "scope", "openid " + ChatGptClient.PLAN_SCOPE,
+                        "access_token", "access-" + id, "refresh_token", "refresh-" + id,
+                        "expires_at", System.currentTimeMillis() + 3600000));
+            }
+            store.save();
+        }
+        AuthFailureTransport transport = new AuthFailureTransport();
+        try (ChatGptClient client = new ChatGptClient(directory, transport)) {
+            assertThrows(ChatGptClient.AuthRequiredException.class,
+                    () -> client.models("one", new ChatGptClient.Cancellation()));
+            assertTrue(account(client, "one").reLoginRequired);
+            assertFalse(account(client, "two").reLoginRequired);
+            assertFalse(LLMTab.canSend(true, account(client, "one"), 1));
+
+            assertThrows(ChatGptClient.AuthRequiredException.class,
+                    () -> client.respond("two", "available", new JSONArray(), ignored -> {}, new ChatGptClient.Cancellation()));
+            assertThrows(ChatGptClient.AuthRequiredException.class,
+                    () -> client.respondWithTools("two", "available", new JSONArray(), new JSONArray(),
+                            ignored -> {}, new ChatGptClient.Cancellation()));
+            assertTrue(account(client, "two").reLoginRequired);
+            String saved = new String(Files.readAllBytes(directory.resolve("accounts.json")), StandardCharsets.UTF_8);
+            assertEquals(2, saved.split("relogin_required", -1).length - 1);
+        }
+    }
+
+    @Test void failedNewAccountSignInDoesNotMarkTheExistingAccountForRelogin() throws Exception {
+        try (ChatGptStore store = new ChatGptStore(directory)) {
+            ((JSONObject) store.data.get("profiles")).put("saved", ChatGptClient.object("client_id", "client",
+                    "label", "Saved", "email", "user@example.com", "scope", "openid " + ChatGptClient.PLAN_SCOPE,
+                    "access_token", "valid", "refresh_token", "refresh",
+                    "expires_at", System.currentTimeMillis() + 3600000));
+            store.save();
+        }
+        FakeTransport transport = new FakeTransport();
+        transport.failExchange = true;
+        try (ChatGptClient client = new ChatGptClient(directory, transport)) {
+            assertThrows(IOException.class, () -> client.signIn(null, transport::browser, new ChatGptClient.Cancellation()));
+            assertFalse(account(client, "saved").reLoginRequired);
+            JSONObject root = (JSONObject) new JSONParser().parse(
+                    new String(Files.readAllBytes(directory.resolve("accounts.json")), StandardCharsets.UTF_8));
+            JSONObject savedProfile = (JSONObject) ((JSONObject) root.get("profiles")).get("saved");
+            assertFalse(savedProfile.containsKey("relogin_required"));
+        }
+    }
+
+    @Test void successfulReauthorizationClearsPersistedReloginMarker() throws Exception {
+        try (ChatGptStore store = new ChatGptStore(directory)) {
+            ((JSONObject) store.data.get("profiles")).put("saved", ChatGptClient.object("client_id", "issued-client",
+                    "subject", "subject", "label", "Saved", "email", "user@example.com",
+                    "scope", "openid " + ChatGptClient.PLAN_SCOPE, "access_token", "old",
+                    "refresh_token", "old-refresh", "expires_at", 0L, "relogin_required", true));
+            store.save();
+        }
+        FakeTransport transport = new FakeTransport();
+        try (ChatGptClient client = new ChatGptClient(directory, transport)) {
+            assertTrue(account(client, "saved").reLoginRequired);
+            assertEquals("saved", client.signIn("saved", transport::browser, new ChatGptClient.Cancellation()));
+            assertFalse(account(client, "saved").reLoginRequired);
+            JSONObject root = (JSONObject) new JSONParser().parse(
+                    new String(Files.readAllBytes(directory.resolve("accounts.json")), StandardCharsets.UTF_8));
+            assertFalse(((JSONObject) ((JSONObject) root.get("profiles")).get("saved")).containsKey("relogin_required"));
+        }
+    }
+
+    private static ChatGptClient.Account account(ChatGptClient client, String id) {
+        return client.accounts().stream().filter(account -> account.id.equals(id)).findFirst().orElseThrow(AssertionError::new);
+    }
+
+    private static final class AuthFailureTransport implements ChatGptClient.Transport {
+        @Override public Reader request(String method, String url, String token, String contentType, String body,
+                                        ChatGptClient.Cancellation cancellation) throws Exception {
+            if (url.endsWith("/models")) { throw new ChatGptClient.AuthRequiredException("Unauthorized."); }
+            if (url.endsWith("/responses")) { throw new ChatGptClient.AuthRequiredException("Unauthorized."); }
+            throw new AssertionError("Unexpected endpoint " + url);
+        }
     }
 
     @Test void storeRetainsHostAndExcludesConcurrentProcesses() throws Exception {

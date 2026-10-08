@@ -17,6 +17,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -178,6 +179,78 @@ class FirmwareSourceCodeDownloaderTest {
         }
     }
 
+    @Test void characterizationFailedPublicationCanLeavePartiallyReplacedCache() throws Exception {
+        byte[] old = archive("firmware/old.txt", false);
+        cache(old, NOW);
+        Files.createDirectories(directory.resolve("firmware"));
+        Files.write(directory.resolve("firmware/old.txt"), new byte[]{3});
+        Files.createDirectories(directory.resolve("rusefi_documentation"));
+        Files.write(directory.resolve("rusefi_documentation/old.txt"), new byte[]{4});
+        response = archive("firmware/new.txt", true);
+        AtomicInteger publishedRoots = new AtomicInteger();
+        downloader = new FirmwareSourceCodeDownloader(directory,
+                new URL("http://127.0.0.1:" + server.getAddress().getPort() + "/firmware-source.zip"),
+                Clock.fixed(NOW, ZoneOffset.UTC), (source, target, options) -> {
+                    if (source.toString().contains("/extracted/") && publishedRoots.incrementAndGet() == 2) {
+                        throw new IOException("injected publication failure");
+                    }
+                    return Files.move(source, target, options);
+                }, FirmwareSourceCodeDownloaderTest::deleteTreeForTest);
+
+        IOException failure = assertThrows(IOException.class, () -> downloader.downloadFresh(ignored -> {}));
+
+        assertEquals("injected publication failure", failure.getMessage());
+        assertArrayEquals(new byte[]{3}, Files.readAllBytes(directory.resolve("firmware/old.txt")));
+        assertArrayEquals(new byte[]{4}, Files.readAllBytes(directory.resolve("rusefi_documentation/old.txt")));
+        assertFalse(Files.exists(directory.resolve("firmware/new.txt")));
+        assertArrayEquals(old, Files.readAllBytes(zip()));
+    }
+
+    @Test void rollbackFailureReportsRecoveryDirectoryAndPreservesPublicationFailure() throws Exception {
+        cache(archive("firmware/old.txt", false), NOW);
+        Files.createDirectories(directory.resolve("firmware"));
+        Files.write(directory.resolve("firmware/old.txt"), new byte[]{3});
+        Files.createDirectories(directory.resolve("rusefi_documentation"));
+        Files.write(directory.resolve("rusefi_documentation/old.txt"), new byte[]{4});
+        response = archive("firmware/new.txt", true);
+        AtomicInteger extractedMoves = new AtomicInteger();
+        downloader = new FirmwareSourceCodeDownloader(directory,
+                new URL("http://127.0.0.1:" + server.getAddress().getPort() + "/firmware-source.zip"),
+                Clock.fixed(NOW, ZoneOffset.UTC), (source, target, options) -> {
+                    if (source.toString().contains("/extracted/") && extractedMoves.incrementAndGet() == 2) {
+                        throw new IOException("primary publication failure");
+                    }
+                    if (source.toString().contains("/backups/") && target.getParent().equals(directory)) {
+                        throw new IOException("rollback move failure");
+                    }
+                    return Files.move(source, target, options);
+                }, FirmwareSourceCodeDownloaderTest::deleteTreeForTest);
+
+        IOException failure = assertThrows(IOException.class, () -> downloader.downloadFresh(ignored -> {}));
+
+        assertTrue(failure.getMessage().contains("rollback was incomplete"), failure.toString());
+        assertTrue(failure.getMessage().contains(".source-"));
+        assertEquals("primary publication failure", failure.getCause().getMessage());
+        assertTrue(Arrays.stream(failure.getSuppressed()).anyMatch(e -> e.getMessage().contains("rollback move failure")));
+        Path recovery = Paths.get(failure.getMessage().substring(failure.getMessage().lastIndexOf(" at ") + 4));
+        assertTrue(Files.isDirectory(recovery.resolve("backups")));
+    }
+
+    @Test void cleanupFailureIsSuppressedOnOriginalPreparationFailure() throws Exception {
+        status = 500;
+        downloader = new FirmwareSourceCodeDownloader(directory,
+                new URL("http://127.0.0.1:" + server.getAddress().getPort() + "/firmware-source.zip"),
+                Clock.fixed(NOW, ZoneOffset.UTC), Files::move, path -> {
+                    deleteTreeForTest(path);
+                    throw new IOException("cleanup failure");
+                });
+
+        IOException failure = assertThrows(IOException.class, () -> downloader.download(ignored -> {}));
+
+        assertTrue(failure.getMessage().contains("HTTP 500"));
+        assertTrue(Arrays.stream(failure.getSuppressed()).anyMatch(e -> "cleanup failure".equals(e.getMessage())));
+    }
+
     @Test void rejectsIncompleteDownload() {
         truncated = true;
         assertThrows(IOException.class, () -> downloader.download(ignored -> {}));
@@ -278,6 +351,21 @@ class FirmwareSourceCodeDownloaderTest {
     private void assertNoTemporaryFiles() throws IOException {
         try (DirectoryStream<Path> paths = Files.newDirectoryStream(directory, ".source-*")) {
             assertFalse(paths.iterator().hasNext());
+        }
+    }
+    private static void deleteTreeForTest(Path path) throws IOException {
+        if (Files.exists(path, LinkOption.NOFOLLOW_LINKS)) {
+            Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+                @Override public FileVisitResult visitFile(Path file, java.nio.file.attribute.BasicFileAttributes attrs) throws IOException {
+                    Files.delete(file);
+                    return FileVisitResult.CONTINUE;
+                }
+                @Override public FileVisitResult postVisitDirectory(Path dir, IOException error) throws IOException {
+                    if (error != null) { throw error; }
+                    Files.delete(dir);
+                    return FileVisitResult.CONTINUE;
+                }
+            });
         }
     }
     private static byte[] archive(String name, boolean large) {
