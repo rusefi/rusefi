@@ -7,21 +7,19 @@ is implemented; live acceptance remains below. Tune writes, arbitrary commands
 and firmware updates are later work, with concrete proposed changes shown before
 execution.
 
-## 1. Verify updated hosted delivery
-
-- After the manifest changes land, verify a hosted archive workflow run and
-  download the manifest-enabled published ZIP through `FirmwareSourceCodeDownloader`.
-  Confirm its revisions, licenses and payload hashes survive preparation and case export.
-
-The existing hosted workflow/published ZIP, local manifest-enabled archive and
-normal universal Console bundle were verified on 2026-10-08. Distribution uses
+Hosted delivery passed on 2026-10-08 against workflow run `37794547442`, including
+a fresh published download, artifact SHA-256 match, manifest validation, license
+and source reads, pinned wiki citation, and diagnostic case export/readback.
+The downloader now bypasses stale CDN responses with a unique query parameter
+on each network fetch. The normal universal Console bundle was also verified.
+Distribution uses
 the normal Console runtime/native bundle with source fetched on demand; users
 need no Git, Python or Gradle. Revision metadata, file/payload hashes, technical
 guides, index and licenses are implemented. ECU/source compatibility stays
 unverified because the current ECU signature does not establish a Git revision.
 See [delivery details](llm-troubleshooting.md#distribution-and-archive-contents).
 
-## 2. Validate the complete user journey
+## 1. Validate the complete user journey
 
 Test a clean-machine installation with live ChatGPT and hardware:
 

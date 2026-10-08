@@ -41,6 +41,7 @@ class FirmwareSourceCodeDownloaderTest {
     private int status = 200;
     private boolean chunked;
     private boolean truncated;
+    private Map<String, byte[]> edgeCache;
     private FirmwareSourceCodeDownloader downloader;
 
     @BeforeEach void startServer() throws Exception {
@@ -48,9 +49,11 @@ class FirmwareSourceCodeDownloaderTest {
         server.createContext("/firmware-source.zip", exchange -> {
             requests.incrementAndGet();
             assertEquals("RE-Internal-Sync", exchange.getRequestHeaders().getFirst("User-Agent"));
-            exchange.sendResponseHeaders(status, chunked ? 0 : response.length + (truncated ? 10 : 0));
+            byte[] served = edgeCache == null ? response
+                    : edgeCache.computeIfAbsent(exchange.getRequestURI().toString(), ignored -> response);
+            exchange.sendResponseHeaders(status, chunked ? 0 : served.length + (truncated ? 10 : 0));
             try {
-                exchange.getResponseBody().write(response);
+                exchange.getResponseBody().write(served);
             } finally {
                 exchange.close();
             }
@@ -62,6 +65,21 @@ class FirmwareSourceCodeDownloaderTest {
     }
 
     @AfterEach void stopServer() { server.stop(0); }
+
+    @Test void refreshDoesNotReuseCdnCachedUrlEvenWhenHeadersAreIgnored() throws Exception {
+        edgeCache = new java.util.concurrent.ConcurrentHashMap<>();
+        edgeCache.put("/firmware-source.zip", GOOD_ZIP);
+        response = archive("firmware/new-publication.md", true);
+        downloader.downloadFresh(ignored -> {});
+        assertArrayEquals(response, Files.readAllBytes(zip()));
+        assertTrue(Files.exists(directory.resolve("firmware/new-publication.md")));
+        response = archive("firmware/next-publication.md", true);
+        downloader.downloadFresh(ignored -> {});
+        assertArrayEquals(response, Files.readAllBytes(zip()));
+        assertTrue(Files.exists(directory.resolve("firmware/next-publication.md")));
+        assertFalse(Files.exists(directory.resolve("firmware/new-publication.md")));
+        assertEquals(2, requests.get());
+    }
 
     @Test void downloadsMissingArchiveExtractsBesideItAndReportsProgress() throws Exception {
         List<Integer> progress = new ArrayList<>();

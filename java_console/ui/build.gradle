@@ -47,6 +47,15 @@ tasks.register('runLLMTabSandbox', JavaExec) {
     }
 }
 
+// Explicit release check: downloads the published ZIP, without ECU access or ChatGPT authorization.
+tasks.register('verifyHostedKnowledgeDelivery', JavaExec) {
+    dependsOn testClasses
+    group = 'Verification'
+    description = 'Verify published knowledge against a workflow revision/artifact hash through case export'
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.rusefi.ui.llm.HostedKnowledgeDeliveryCheck'
+}
+
 // Headless soak: cycles the SD card ECU/logging <-> PC/MSD 10 times, 20s in each mode, and
 // reports a pass/fail tally. Auto-detects the serial port, or pass -PecuPort=COM7.
 task runSdCycle(type: JavaExec) {
