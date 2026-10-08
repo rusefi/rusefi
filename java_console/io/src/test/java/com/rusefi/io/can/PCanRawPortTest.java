@@ -1,11 +1,13 @@
 package com.rusefi.io.can;
 
 import org.junit.jupiter.api.Test;
+import peak.can.MutableInteger;
 import peak.can.basic.TPCANBaudrate;
 import peak.can.basic.TPCANHandle;
 import peak.can.basic.TPCANMessageType;
-import peak.can.basic.TPCANMode;
 import peak.can.basic.TPCANMsg;
+import peak.can.basic.TPCANParameter;
+import peak.can.basic.TPCANParameterValue;
 import peak.can.basic.TPCANStatus;
 
 import java.io.IOException;
@@ -30,7 +32,7 @@ class PCanRawPortTest {
     private static final TPCANHandle CHANNEL = TPCANHandle.PCAN_USBBUS1;
 
     @Test
-    void openInitializes500kChannelAndFiltersExactExtendedAddress() throws IOException {
+    void openInitializes500kChannelAndOpensNativeReceiveFilter() throws IOException {
         FakeApi api = new FakeApi();
         PCanRawPort port = port(api, new FakeClock());
 
@@ -40,17 +42,110 @@ class PCanRawPortTest {
         assertEquals(1, api.initializeCalls);
         assertEquals(CHANNEL, api.lastChannel);
         assertEquals(TPCANBaudrate.PCAN_BAUD_500K, api.lastBitrate);
-        assertEquals(0x107e1, api.filterFromId);
-        assertEquals(0x107e1, api.filterToId);
-        assertEquals(TPCANMode.PCAN_MODE_EXTENDED, api.filterMode);
+        assertEquals(1, api.setValueCalls);
+        assertEquals(TPCANParameter.PCAN_MESSAGE_FILTER, api.setValueParameter);
+        assertEquals(TPCANParameterValue.PCAN_FILTER_OPEN.getValue(), api.setValueValue);
+        assertEquals(Integer.BYTES, api.setValueBufferLength);
         assertThrows(IOException.class, () -> port.open(new CanAddress(0x123, false)));
         port.close();
     }
 
     @Test
-    void failedFilterReleasesInitializedChannel() {
+    void receiveIgnoresUnrelatedFrameAndTimesOut() throws IOException {
         FakeApi api = new FakeApi();
-        api.filterStatus = TPCANStatus.PCAN_ERROR_ILLPARAMVAL;
+        api.reads.add(ReadResult.frame(0x123, TPCANMessageType.PCAN_MESSAGE_STANDARD, new byte[]{9}));
+        FakeClock clock = new FakeClock();
+        PCanRawPort port = openPort(api, clock);
+
+        assertEquals(Optional.empty(), port.receive(20));
+
+        assertEquals(22, api.readCalls);
+        assertEquals(20, clock.sleeps.size());
+        port.close();
+    }
+
+    @Test
+    void receiveIgnoresStandardFrameWithSameIdAsRequestedExtendedAddress() throws IOException {
+        FakeApi api = new FakeApi();
+        api.reads.add(ReadResult.frame(0x720, TPCANMessageType.PCAN_MESSAGE_STANDARD, new byte[]{7}));
+        FakeClock clock = new FakeClock();
+        PCanRawPort port = port(api, clock);
+        port.open(new CanAddress(0x720, true));
+
+        assertEquals(Optional.empty(), port.receive(1));
+
+        assertEquals(3, api.readCalls);
+        assertEquals(1, clock.sleeps.size());
+        port.close();
+    }
+
+    @Test
+    void receiveReturnsEmptyAtDeadlineUnderContinuousUnrelatedTraffic() throws IOException {
+        FakeApi api = new FakeApi();
+        FakeClock clock = new FakeClock();
+        api.onRead = () -> clock.nanos += TimeUnit.MILLISECONDS.toNanos(1);
+        api.reads.add(ReadResult.frame(0x123, TPCANMessageType.PCAN_MESSAGE_STANDARD, new byte[]{1}));
+        api.reads.add(ReadResult.frame(0x124, TPCANMessageType.PCAN_MESSAGE_STANDARD, new byte[]{2}));
+        api.reads.add(ReadResult.frame(0x125, TPCANMessageType.PCAN_MESSAGE_STANDARD, new byte[]{3}));
+        PCanRawPort port = openPort(api, clock);
+
+        assertEquals(Optional.empty(), port.receive(3));
+
+        assertEquals(3, api.readCalls);
+        assertEquals(TimeUnit.MILLISECONDS.toNanos(3), clock.nanos);
+        assertTrue(clock.sleeps.isEmpty());
+        port.close();
+    }
+
+    @Test
+    void receiveSkipsNoiseAndReturnsMatchingExtendedFrame() throws IOException {
+        FakeApi api = new FakeApi();
+        api.reads.add(ReadResult.frame(0x123, TPCANMessageType.PCAN_MESSAGE_STANDARD, new byte[]{9}));
+        api.reads.add(ReadResult.frame(0x107e1, TPCANMessageType.PCAN_MESSAGE_EXTENDED, new byte[]{1, 2}));
+        PCanRawPort port = openPort(api, new FakeClock());
+
+        ClassicCanFrame frame = port.receive(20).orElseThrow(AssertionError::new);
+
+        assertEquals(new CanAddress(0x107e1, true), frame.getAddress());
+        assertArrayEquals(new byte[]{1, 2}, frame.getPayload());
+        assertEquals(2, api.readCalls);
+        port.close();
+    }
+
+    @Test
+    void receiveSkipsMalformedUnrelatedFrameBeforeReturningMatchingFrame() throws IOException {
+        FakeApi api = new FakeApi();
+        api.reads.add(ReadResult.frame(0x123, TPCANMessageType.PCAN_MESSAGE_STANDARD, new byte[9]));
+        api.reads.add(ReadResult.frame(0x107e1, TPCANMessageType.PCAN_MESSAGE_EXTENDED, new byte[]{1}));
+        PCanRawPort port = openPort(api, new FakeClock());
+
+        ClassicCanFrame frame = port.receive(20).orElseThrow(AssertionError::new);
+
+        assertEquals(new CanAddress(0x107e1, true), frame.getAddress());
+        assertArrayEquals(new byte[]{1}, frame.getPayload());
+        assertEquals(2, api.readCalls);
+        port.close();
+    }
+
+    @Test
+    void receiveIgnoresExtendedFrameWithSameIdAsRequestedStandardAddress() throws IOException {
+        FakeApi api = new FakeApi();
+        api.reads.add(ReadResult.frame(0x720, TPCANMessageType.PCAN_MESSAGE_EXTENDED, new byte[]{7}));
+        FakeClock clock = new FakeClock();
+        PCanRawPort port = port(api, clock);
+        port.open(new CanAddress(0x720, false));
+
+        assertEquals(Optional.empty(), port.receive(1));
+
+        assertEquals(3, api.readCalls);
+        assertEquals(1, clock.sleeps.size());
+        port.close();
+    }
+
+    @Test
+    void failedFilterReleasesInitializedChannel() throws IOException {
+        FakeApi api = new FakeApi();
+        api.setValueStatus = TPCANStatus.PCAN_ERROR_ILLPARAMVAL;
         PCanRawPort port = port(api, new FakeClock());
 
         IOException failure = assertThrows(IOException.class,
@@ -60,6 +155,13 @@ class PCanRawPortTest {
         assertEquals(1, api.uninitializeCalls);
         assertThrows(IOException.class,
             () -> port.send(new ClassicCanFrame(new CanAddress(0x10667, true), new byte[]{1})));
+
+        FakeApi replacementApi = new FakeApi();
+        PCanRawPort replacementPort = port(replacementApi, new FakeClock());
+        replacementPort.open(new CanAddress(0x720, false));
+        assertEquals(1, replacementApi.initializeCalls);
+        assertEquals(1, replacementApi.setValueCalls);
+        replacementPort.close();
     }
 
     @Test
@@ -72,7 +174,7 @@ class PCanRawPortTest {
             () -> port.open(new CanAddress(0x107e1, true)));
 
         assertTrue(failure.getMessage().contains("initialize channel"));
-        assertEquals(0, api.filterCalls);
+        assertEquals(0, api.setValueCalls);
         assertEquals(0, api.uninitializeCalls);
     }
 
@@ -125,7 +227,9 @@ class PCanRawPortTest {
     @Test
     void receiveRejectsRemoteAndOversizedFrames() throws IOException {
         FakeApi remoteApi = new FakeApi();
-        remoteApi.reads.add(ReadResult.frame(0x107e1, TPCANMessageType.PCAN_MESSAGE_RTR, new byte[0]));
+        byte extendedRemoteType = (byte) (TPCANMessageType.PCAN_MESSAGE_RTR.getValue()
+            | TPCANMessageType.PCAN_MESSAGE_EXTENDED.getValue());
+        remoteApi.reads.add(ReadResult.frame(0x107e1, extendedRemoteType, new byte[0]));
         PCanRawPort remotePort = openPort(remoteApi, new FakeClock());
         assertThrows(IOException.class, () -> remotePort.receive(0));
         remotePort.close();
@@ -278,22 +382,23 @@ class PCanRawPortTest {
     private static class FakeApi implements PCanApi {
         boolean apiAvailable = true;
         TPCANStatus initializeStatus = TPCANStatus.PCAN_ERROR_OK;
-        TPCANStatus filterStatus = TPCANStatus.PCAN_ERROR_OK;
+        TPCANStatus setValueStatus = TPCANStatus.PCAN_ERROR_OK;
         TPCANStatus writeStatus = TPCANStatus.PCAN_ERROR_OK;
         TPCANStatus uninitializeStatus = TPCANStatus.PCAN_ERROR_OK;
         final Deque<ReadResult> reads = new ArrayDeque<>();
         final List<TPCANMsg> writes = new ArrayList<>();
         int initializeApiCalls;
         int initializeCalls;
-        int filterCalls;
+        int setValueCalls;
         int readCalls;
         int uninitializeCalls;
         TPCANHandle lastChannel;
         TPCANBaudrate lastBitrate;
-        int filterFromId;
-        int filterToId;
-        TPCANMode filterMode;
+        TPCANParameter setValueParameter;
+        int setValueValue;
+        int setValueBufferLength;
         boolean blockRead;
+        Runnable onRead = () -> { };
         final CountDownLatch readStarted = new CountDownLatch(1);
         final CountDownLatch releaseRead = new CountDownLatch(1);
 
@@ -312,13 +417,14 @@ class PCanRawPortTest {
         }
 
         @Override
-        public TPCANStatus filterMessages(TPCANHandle channel, int fromId, int toId, TPCANMode mode) {
-            filterCalls++;
+        public TPCANStatus setValue(TPCANHandle channel, TPCANParameter parameter,
+                                    MutableInteger value, int bufferLength) {
+            setValueCalls++;
             lastChannel = channel;
-            filterFromId = fromId;
-            filterToId = toId;
-            filterMode = mode;
-            return filterStatus;
+            setValueParameter = parameter;
+            setValueValue = value.getValue();
+            setValueBufferLength = bufferLength;
+            return setValueStatus;
         }
 
         @Override
@@ -331,6 +437,7 @@ class PCanRawPortTest {
         @Override
         public TPCANStatus read(TPCANHandle channel, TPCANMsg message) {
             readCalls++;
+            onRead.run();
             lastChannel = channel;
             if (blockRead) {
                 readStarted.countDown();
@@ -380,7 +487,11 @@ class PCanRawPortTest {
         }
 
         static ReadResult frame(int id, TPCANMessageType type, byte[] payload) {
-            return new ReadResult(TPCANStatus.PCAN_ERROR_OK, id, type.getValue(), payload);
+            return frame(id, type.getValue(), payload);
+        }
+
+        static ReadResult frame(int id, byte type, byte[] payload) {
+            return new ReadResult(TPCANStatus.PCAN_ERROR_OK, id, type, payload);
         }
     }
 }
