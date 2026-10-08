@@ -99,6 +99,32 @@ class ChatGptClientTest {
         assertThrows(CancellationException.class, () -> ChatGptClient.readEvents(new StringReader(stream), ignored -> {}, cancellation));
     }
 
+    @Test void streamedOutputItemsBackFillEmptyCompletedOutput() throws Exception {
+        // Field capture 2026-10-08 (gpt-6.1 via the ChatGPT plan endpoint): the function call is
+        // streamed through response.output_item.* events while the closing response.completed
+        // event carries "output": []. Items assembled from the stream must back-fill the turn.
+        JSONObject item = ChatGptClient.object("id", "fc_1", "type", "function_call", "status", "completed",
+                "arguments", "{\"query\":\"trigger\"}", "call_id", "call_1", "name", "search_knowledge");
+        String stream = "data: " + ChatGptClient.object("type", "response.output_item.added", "output_index", 0,
+                        "item", ChatGptClient.object("id", "fc_1", "type", "function_call", "status", "in_progress",
+                                "arguments", "", "call_id", "call_1", "name", "search_knowledge")) + "\n\n"
+                + "data: " + ChatGptClient.object("type", "response.function_call_arguments.delta",
+                        "item_id", "fc_1", "delta", "{\"query\":\"trigger\"}") + "\n\n"
+                + "data: " + ChatGptClient.object("type", "response.output_item.done", "output_index", 0, "item", item) + "\n\n"
+                + ChatGptAgentTest.completed(new JSONArray());
+        StringBuilder visible = new StringBuilder();
+        ChatGptClient.Response response = ChatGptClient.readResponse(new StringReader(stream),
+                visible::append, new ChatGptClient.Cancellation());
+        assertEquals("", visible.toString(), "function-call argument deltas are not user-visible text");
+        assertEquals(ChatGptAgentTest.array(item), response.output);
+        // A non-empty completed output remains authoritative over the streamed items.
+        String both = "data: " + ChatGptClient.object("type", "response.output_item.done", "output_index", 0,
+                "item", ChatGptClient.object("type", "message")) + "\n\n"
+                + ChatGptAgentTest.completed(ChatGptAgentTest.array(item));
+        assertEquals(ChatGptAgentTest.array(item), ChatGptClient.readResponse(new StringReader(both),
+                ignored -> {}, new ChatGptClient.Cancellation()).output);
+    }
+
     @Test void scopeIsGrantedNotAssumedAndRotatedTokensReplaceTogether() throws Exception {
         assertFalse(ChatGptClient.hasPlanScope("openid profile"));
         assertFalse(ChatGptClient.hasPlanScope("chatgpt.tokens.use.direct.extra"));
@@ -233,6 +259,10 @@ class ChatGptClientTest {
             assertEquals(ChatGptAgentTest.array("reasoning.encrypted_content"), transport.inference.get("include"));
             assertEquals(ChatGptAgent.INSTRUCTIONS, transport.inference.get("instructions"));
             transport.responseStream = completed();
+            assertThrows(IOException.class, () -> client.respondWithTools(id, "available", new JSONArray(), tools,
+                    ignored -> {}, new ChatGptClient.Cancellation()));
+            // Completed with zero items anywhere (no streamed fallback either) is an error, not success.
+            transport.responseStream = ChatGptAgentTest.completed(new JSONArray());
             assertThrows(IOException.class, () -> client.respondWithTools(id, "available", new JSONArray(), tools,
                     ignored -> {}, new ChatGptClient.Cancellation()));
         }

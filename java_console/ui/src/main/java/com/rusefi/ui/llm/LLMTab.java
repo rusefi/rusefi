@@ -25,6 +25,8 @@ import java.util.concurrent.Future;
 
 /** ChatGPT troubleshooting through the existing Console connection. Construct and close on the EDT. */
 public final class LLMTab implements AutoCloseable {
+    // Never log prompts, reply text or tokens; operation names, model slugs and exceptions only.
+    private static final com.devexperts.logging.Logging log = com.devexperts.logging.Logging.getLogging(LLMTab.class);
     private final LinkManager linkManager;
     private final Path storage;
     private final SourcePreparation sources;
@@ -220,6 +222,7 @@ public final class LLMTab implements AutoCloseable {
                     openAccountStore();
                 });
             } catch (Exception e) {
+                log.error("source preparation failed", e);
                 SwingUtilities.invokeLater(() -> {
                     if (closed) { return; }
                     preparingSources = false;
@@ -301,6 +304,8 @@ public final class LLMTab implements AutoCloseable {
         previous.addAll(history);
         append("\n> " + text + "\n\n");
         prompt.setText("");
+        log.info("troubleshooting turn: model=" + model.slug + ", prompt=" + text.length() + " chars, "
+                + history.size() + " history items");
         perform("Troubleshooting...", cancellation -> {
             ChatGptAgent.Tools tools = new TroubleshootingTools(current, knowledgeDirectory, turnEvidence);
             JSONArray completed = ChatGptAgent.run(
@@ -328,11 +333,14 @@ public final class LLMTab implements AutoCloseable {
         running = cancellation;
         status.setText(message);
         updateControls();
+        log.info("operation started: " + message);
         worker.execute(() -> {
             Runnable success;
             try {
                 success = work.run(cancellation);
             } catch (Exception e) {
+                // The UI shows a sanitized message; keep the full diagnosis in the console log.
+                log.error("operation failed (" + message + ", cancelled=" + cancellation.isCancelled() + ")", e);
                 success = () -> append(cancellation.isCancelled() ? "\n[Stopped or time limit reached; partial turn was not saved.]\n"
                         : "\n[" + safeMessage(e) + "]\n");
             }

@@ -45,6 +45,28 @@ class ChatGptAgentTest {
         assertEquals(1, previous.size(), "The caller commits a complete turn; the loop does not mutate old history");
     }
 
+    @Test void streamedItemsWithEmptyCompletedOutputStillRunToolsAndAnswer() throws Exception {
+        // Field capture 2026-10-08: a backend that streams items via response.output_item.done
+        // but sends "output": [] in response.completed. Before the fix this made the whole turn
+        // a silent no-op - no tool ran, no text was shown, no error was raised.
+        FakeTools tools = new FakeTools();
+        AtomicInteger requests = new AtomicInteger();
+        String callStream = "data: " + object("type", "response.output_item.done", "output_index", 0,
+                "item", call("call_1", "ecu_info", "{}")) + "\n\n" + completed(array());
+        JSONObject answer = object("type", "message", "role", "assistant", "content",
+                array(object("type", "output_text", "text", "Trigger looks healthy", "annotations", array())));
+        String answerStream = "data: {\"type\":\"response.output_text.delta\",\"delta\":\"Trigger looks healthy\"}\n\n"
+                + "data: " + object("type", "response.output_item.done", "output_index", 0, "item", answer) + "\n\n"
+                + completed(array());
+        StringBuilder visible = new StringBuilder();
+        JSONArray result = ChatGptAgent.run((input, defs, delta, c) -> readResponse(new StringReader(
+                        requests.getAndIncrement() == 0 ? callStream : answerStream), delta, c),
+                tools, array(), "how do i troubleshoot trigger", visible::append, ignored -> {}, new Cancellation());
+        assertEquals(1, tools.executed);
+        assertEquals("Trigger looks healthy", visible.toString());
+        assertEquals(answer, result.get(result.size() - 1));
+    }
+
     @Test void neverExecutesPartialOrFailedStreams() {
         for (String ending : new String[]{"", "data: {\"type\":\"response.failed\"}\n\n",
                 "data: {\"type\":\"response.incomplete\"}\n\n"}) {
