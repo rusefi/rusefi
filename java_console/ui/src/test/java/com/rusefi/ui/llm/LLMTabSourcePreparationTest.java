@@ -114,7 +114,7 @@ class LLMTabSourcePreparationTest {
             assertEquals(6, styledButtons);
             List<?> combos = visible(JComboBox.class);
             assertEquals(2, combos.size());
-            int[] intendedWidths = {300, 250};
+            int[] intendedWidths = {500, 250};
             for (int i = 0; i < combos.size(); i++) {
                 JComboBox<?> combo = (JComboBox<?>) combos.get(i);
                 JComboBox<?> expected = new JComboBox<>();

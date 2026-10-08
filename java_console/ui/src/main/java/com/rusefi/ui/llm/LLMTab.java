@@ -159,7 +159,7 @@ public final class LLMTab implements AutoCloseable {
         CalibrationFieldFactory.applyStyle(addAccount);
         CalibrationFieldFactory.applyStyle(logout);
         CalibrationFieldFactory.applyStyle(cancelSignIn);
-        accounts.setPreferredSize(new Dimension(300, accounts.getPreferredSize().height));
+        accounts.setPreferredSize(new Dimension(500, accounts.getPreferredSize().height));
         accounts.setToolTipText("Saved ChatGPT account and workspace registrations");
         accountBar.add(accounts);
         accountBar.add(login);
