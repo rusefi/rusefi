@@ -62,6 +62,41 @@ this implementation covers the model/tool loop and initial Console connection
 integration. Merely extracting documentation beside the JAR does not yet make
 it searchable by the assistant.
 
+## Firmware source cache
+
+`com.rusefi.core.net.FirmwareSourceCodeDownloader` downloads
+`https://rusefi.com/build_server/firmware-source.zip` into
+`FileUtil.RUSEFI_SETTINGS_FOLDER/llm-temp` (normally `~/.rusEFI/llm-temp`).
+It refreshes a missing ZIP, one smaller than 10 MiB (10 * 1024 * 1024 bytes),
+or one whose local modification time is more than 30 days old. A successful
+download sets that time to the current time. Otherwise it reuses the ZIP
+without a network request.
+
+Every invocation extracts into the same cache folder, producing `firmware/`
+and `rusefi_documentation/` beside `firmware-source.zip`. Extraction is staged
+and checked before replacing the corresponding top-level trees, removing stale
+files within them. ZIP link entries become plain text containing their target,
+not filesystem links. Failed downloads or ZIP validation preserve the old cache.
+A per-folder lock prevents overlapping preparations.
+
+The blocking `download(DownloadProgressListener)` method returns the prepared
+folder and reports monotonic 0-100 percent progress on the calling thread.
+Run it on a worker and marshal the callback to Swing's event thread for a UI
+progress bar. Download occupies 0-70 percent; extraction and publishing finish
+the operation. When the server omits Content-Length, download progress is
+indeterminate until it finishes. Cached extraction uses the full progress range.
+
+The CLI sandbox prints progress as text:
+
+```sh
+./gradlew :shared_io:runFirmwareSourceCodeDownloaderSandbox
+# Optional alternate cache directory:
+./gradlew :shared_io:runFirmwareSourceCodeDownloaderSandbox --args="/tmp/rusefi-source-cache"
+```
+
+This prepares local content only; it does not yet expose source/wiki search to
+the model.
+
 ## Developer validation
 
 From the repository root:
