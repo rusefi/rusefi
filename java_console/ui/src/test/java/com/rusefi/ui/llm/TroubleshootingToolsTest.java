@@ -1,6 +1,7 @@
 package com.rusefi.ui.llm;
 
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.IniFileMetaInfo;
 import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.FieldType;
@@ -41,6 +42,16 @@ class TroubleshootingToolsTest {
         ScalarIniField rpm = new ScalarIniField("RPMValue", 0, "RPM", FieldType.UINT16, 1, "0", 0);
         when(ini.getAllOutputChannels()).thenReturn(Collections.singletonMap("RPMValue", rpm));
         when(ini.getOutputChannel("RPMValue")).thenReturn(rpm);
+        ScalarIniField cranking = new ScalarIniField("cranking_rpm", 1, "RPM", FieldType.UINT8, 1, "0", 0);
+        when(ini.getAllIniFields()).thenReturn(Collections.singletonMap("cranking_rpm", cranking));
+        IniFileMetaInfo meta = mock(IniFileMetaInfo.class);
+        when(meta.getnPages()).thenReturn(1);
+        when(meta.getPageSize(0)).thenReturn(16);
+        when(ini.getMetaInfo()).thenReturn(meta);
+        when(ini.getBlockingFactor()).thenReturn(16);
+        when(protocol.getIniFile()).thenReturn(ini);
+        when(protocol.readFromPage(0, 1, 1)).thenReturn(new byte[]{(byte) 200});
+        doAnswer(call -> { ((Runnable) call.getArgument(0)).run(); return null; }).when(link).submit(any(Runnable.class));
         SensorCentral sensors = SensorCentral.getInstance();
         sensors.reset();
         try (ConsoleEcuSession session = new ConsoleEcuSession(link)) {
@@ -51,7 +62,8 @@ class TroubleshootingToolsTest {
             TroubleshootingTools tools = new TroubleshootingTools(session, directory);
             AtomicInteger rounds = new AtomicInteger();
             JSONArray history = ChatGptAgent.run((input, definitions, delta, c) -> {
-                assertEquals(8, definitions.size());
+                assertEquals(9, definitions.size());
+                assertTrue(definitions.toJSONString().contains("read_tune_fields"));
                 assertTrue(definitions.toJSONString().contains("read_live_values"));
                 assertTrue(definitions.toJSONString().contains("diagnostic_snapshot"));
                 assertTrue(definitions.toJSONString().contains("search_knowledge"));
@@ -59,6 +71,7 @@ class TroubleshootingToolsTest {
                 switch (rounds.getAndIncrement()) {
                     case 0:
                         return response(call("ecu", "diagnostic_snapshot", object("names", array("RPMValue"))),
+                                call("tune", "read_tune_fields", object("names", array("cranking_rpm"))),
                                 call("search", "search_knowledge", object("query", "cranking voltage")));
                     case 1:
                         JSONObject ecu = returned(input, "ecu");
@@ -66,6 +79,9 @@ class TroubleshootingToolsTest {
                         assertEquals(250.0, ((JSONObject) ((JSONArray) ecu.get("values")).get(0)).get("value"));
                         assertEquals(1L, ecu.get("sampleId"));
                         assertFalse(((JSONArray) ecu.get("faults")).isEmpty());
+                        JSONObject tune = returned(input, "tune");
+                        assertEquals(Boolean.TRUE, tune.get("complete"));
+                        assertEquals(200.0, ((JSONObject) ((JSONArray) tune.get("fields")).get(0)).get("value"));
                         JSONObject search = returned(input, "search");
                         JSONObject match = (JSONObject) ((JSONArray) search.get("matches")).get(0);
                         assertEquals("rusefi_documentation/Cranking.md:L2", match.get("citation"));

@@ -6,7 +6,6 @@ Updated: 2026-10-08.
 
 | Tool/capability | Open work |
 | --- | --- |
-| `read_tune_fields` | Return selected calibration values without sending the entire tune |
 | Lua, logging and sniffer evidence | Adapt implementations to the borrowed session and bound results |
 | `export_diagnostic_case` | Save findings, referenced tune/log/capture evidence and provenance |
 
@@ -42,5 +41,5 @@ Test a clean-machine installation with live ChatGPT and hardware:
 Acceptance scenario: "The engine cranks but won't start." Collect firmware
 identity, relevant tune values, cranking voltage/RPM, synchronization evidence
 and messages. Distinguish observed findings from hypotheses and state the next
-measurement needed. Tune-field reads and case export are required before this
-full scenario is considered complete.
+measurement needed. Case export is required before this full scenario is
+considered complete.
