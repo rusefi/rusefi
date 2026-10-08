@@ -33,7 +33,12 @@ jobs:
           persist-credentials: false
           sparse-checkout: |
             *.md
+            LICENSE
           sparse-checkout-cone-mode: false
+
+      - name: Test archive metadata and payload
+        working-directory: rusefi
+        run: python3 -m unittest discover -s firmware/bin -p test_zip_firmware_source.py
 
       - name: Create archive
         working-directory: rusefi
