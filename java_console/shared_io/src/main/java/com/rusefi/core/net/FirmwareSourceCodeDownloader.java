@@ -63,6 +63,23 @@ public final class FirmwareSourceCodeDownloader {
      * Each call extracts even a reused ZIP, restoring missing files without another download.
      */
     public Path download(DownloadProgressListener listener) throws IOException {
+        return prepare(listener, true, false);
+    }
+
+    /** Explicit user-requested refresh, including recovery from a corrupt but recent cached ZIP. */
+    public Path downloadFresh(DownloadProgressListener listener) throws IOException {
+        return prepare(listener, true, true);
+    }
+
+    /**
+     * Validate and extract a usable cached ZIP without contacting the server.
+     * Returns null if the ZIP is missing, too small or expired; throws if validation/extraction fails.
+     */
+    public Path prepareCached(DownloadProgressListener listener) throws IOException {
+        return prepare(listener, false, false);
+    }
+
+    private Path prepare(DownloadProgressListener listener, boolean allowDownload, boolean forceRefresh) throws IOException {
         Progress progress = new Progress(Objects.requireNonNull(listener, "listener"));
         progress.report(0);
         if (Files.isSymbolicLink(directory)) {
@@ -76,18 +93,21 @@ public final class FirmwareSourceCodeDownloader {
                 if (lock == null) {
                     throw new IOException("Source cache is already being prepared: " + directory);
                 }
-                return prepare(progress);
+                return prepare(progress, allowDownload, forceRefresh);
             } catch (OverlappingFileLockException e) {
                 throw new IOException("Source cache is already being prepared: " + directory, e);
             }
         }
     }
 
-    private Path prepare(Progress progress) throws IOException {
+    private Path prepare(Progress progress, boolean allowDownload, boolean forceRefresh) throws IOException {
         Path archive = directory.resolve(ARCHIVE_NAME);
-        boolean refresh = !Files.isRegularFile(archive, LinkOption.NOFOLLOW_LINKS)
+        boolean refresh = forceRefresh || !Files.isRegularFile(archive, LinkOption.NOFOLLOW_LINKS)
                 || Files.size(archive) < MIN_ARCHIVE_SIZE
                 || Files.getLastModifiedTime(archive).toInstant().isBefore(clock.instant().minus(MAX_AGE));
+        if (refresh && !allowDownload) {
+            return null;
+        }
         Path temporary = Files.createTempDirectory(directory, ".source-");
         try {
             Path candidate = refresh ? temporary.resolve(ARCHIVE_NAME) : archive;
