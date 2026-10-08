@@ -18,6 +18,7 @@ import java.time.Clock;
 import java.time.Duration;
 import java.util.Enumeration;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -154,7 +155,11 @@ public final class FirmwareSourceCodeDownloader {
     }
 
     private void fetch(Path target, Progress progress) throws IOException {
-        HttpURLConnection connection = (HttpURLConnection) source.openConnection();
+        // The public CDN can ignore no-cache and serve a previous publication for four hours.
+        // Local cache policy already limits downloads; each actual fetch needs a new edge-cache key.
+        URL freshSource = new URL(source, source.getFile() + (source.getQuery() == null ? "?" : "&")
+                + "rusefi_refresh=" + UUID.randomUUID());
+        HttpURLConnection connection = (HttpURLConnection) freshSource.openConnection();
         connection.setConnectTimeout(30_000);
         connection.setReadTimeout(60_000);
         connection.setUseCaches(false);
