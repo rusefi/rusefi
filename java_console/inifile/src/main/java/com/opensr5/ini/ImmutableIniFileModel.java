@@ -1,11 +1,16 @@
 package com.opensr5.ini;
 
+import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.IniField;
+import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.config.Field;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ImmutableIniFileModel implements IniFileModel {
+    private static final Pattern ARRAY_ELEMENT = Pattern.compile("^([^\\[\\]]+)\\[([0-9]+)\\]$");
     private final String signature;
     private final int blockingFactor;
     private final Map<String, List<String>> defines;
@@ -181,11 +186,42 @@ public class ImmutableIniFileModel implements IniFileModel {
 
     @Override
     public Optional<IniField> findIniField(String key) {
+        IniField field = findDeclaredField(key);
+        if (field != null) {
+            return Optional.of(field);
+        }
+        Matcher matcher = ARRAY_ELEMENT.matcher(key);
+        if (!matcher.matches()) {
+            return Optional.empty();
+        }
+        IniField base = findDeclaredField(matcher.group(1));
+        if (!(base instanceof ArrayIniField)) {
+            return Optional.empty();
+        }
+        ArrayIniField array = (ArrayIniField) base;
+        int index;
+        try {
+            index = Integer.parseInt(matcher.group(2));
+        } catch (NumberFormatException e) {
+            return Optional.empty();
+        }
+        // A single subscript selects an element of a one-dimensional INI array.
+        if (array.getCols() != 1 || index >= array.getRows()) {
+            return Optional.empty();
+        }
+        ScalarIniField element = new ScalarIniField(array.getName() + "[" + index + "]",
+            array.getOffset(index, 0), array.getUnits(), array.getType(),
+            array.getMultiplier(), array.getDigits(), 0);
+        element.setPageIndex(array.getPageIndex());
+        return Optional.of(element);
+    }
+
+    private IniField findDeclaredField(String key) {
         IniField field = allIniFields.get(key);
         if (field == null) {
             field = secondaryIniFields.get(key);
         }
-        return Optional.ofNullable(field);
+        return field;
     }
 
     @Override

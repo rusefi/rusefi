@@ -4,12 +4,14 @@ import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.IndicatorModel;
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.IniFileMetaInfo;
 import com.opensr5.ini.PanelModel;
 import com.opensr5.ini.ReadoutModel;
 import com.opensr5.ini.TableModel;
 import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.EnumIniField;
 import com.rusefi.config.FieldType;
+import com.rusefi.ini.reader.IniFileReaderUtil;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.laf.GradientTitleBorder;
@@ -17,6 +19,8 @@ import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -29,6 +33,49 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class CalibrationDialogWidgetTest {
+
+    /** Issue #10352: dialog fields referencing individual gear voltages. */
+    @Test
+    public void arrayElementFields() throws Throwable {
+        StringBuilder text = new StringBuilder("[Constants]\npage = 1\n"
+            + "gearPositionVoltage = array, U16, 4, [7], \"V\", 0.001, 0, 0, 5, 3\n"
+            + "[UserDefined]\ndialog = gearPositionDetectionVoltages, \"Gear central voltages\"\n");
+        for (int i = 0; i < 7; i++) {
+            text.append("field = \"Gear ").append(i).append("\", gearPositionVoltage[").append(i).append("]\n");
+        }
+        IniFileModel ini = IniFileReaderUtil.readIniFile(IniFileReaderUtil.read(
+            new ByteArrayInputStream(text.toString().getBytes(StandardCharsets.US_ASCII))),
+            "issue10352.ini", mock(IniFileMetaInfo.class));
+        ConfigurationImage image = new ConfigurationImage(new byte[20]);
+        for (int i = 0; i < 7; i++) {
+            image.getByteBuffer(4 + 2 * i, 2).putShort((short) (500 + 500 * i));
+        }
+        SwingUtilities.invokeAndWait(() -> {
+            CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+            try {
+                widget.update(ini.getDialogs().get("gearPositionDetectionVoltages"), ini, image);
+                JPanel content = widget.getContentPane();
+                assertEquals(7, content.getComponentCount());
+                for (int i = 0; i < 7; i++) {
+                    JTextField editor = getTextFieldFromRow((JPanel) content.getComponent(i));
+                    assertNotNull(editor, "Each gear voltage must have an editor");
+                    assertEquals(0.5 + 0.5 * i, Double.parseDouble(editor.getText()), 0.0001);
+                }
+                // Edit every element, including both ends; compare all bytes so a wrong stride,
+                // offset, or whole-array write cannot silently overwrite adjacent settings.
+                byte[] expected = image.getContent().clone();
+                for (int i = 0; i < 7; i++) {
+                    JTextField editor = getTextFieldFromRow((JPanel) content.getComponent(i));
+                    editor.setText("4.125");
+                    new ConfigurationImage(expected).getByteBuffer(4 + 2 * i, 2).putShort((short) 4125);
+                    assertArrayEquals(expected, widget.getWorkingImage().getContent());
+                }
+                assertEquals(500, image.getByteBuffer(4, 2).getShort(), "Original image is unchanged");
+            } finally {
+                widget.destroy();
+            }
+        });
+    }
 
     @Test
     public void activeReadoutControlsOutputDemand() {

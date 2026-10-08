@@ -21,6 +21,7 @@ public interface IniFileModel {
 
     Map<String, IniField> getSecondaryIniFields();
 
+    /** Finds a declared field or a zero-based element reference such as {@code voltages[0]} in a 1D array. */
     Optional<IniField> findIniField(String key);
 
     IniField getIniField(Field field);

@@ -1,20 +1,87 @@
 package com.opensr5.ini.test;
 
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.IniFileMetaInfo;
 import com.opensr5.ini.RawIniFile;
+import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.IniField;
+import com.opensr5.ini.field.ScalarIniField;
+import com.rusefi.config.FieldType;
 import com.rusefi.ini.reader.IniFileReaderUtil;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 /**
  * Tests for ImmutableIniFileModel
  */
 public class ImmutableIniFileModelTest {
+
+    @Test
+    public void arrayElementLookupPreservesMetadataAndDeclaredFields() {
+        IniFileModel model = readArrayFields();
+        ArrayIniField array = (ArrayIniField) model.findIniField("voltages").get();
+        for (int i = 0; i < 3; i++) {
+            ScalarIniField element = (ScalarIniField) model.findIniField("VOLTAGES[" + i + "]").get();
+            assertEquals("voltages[" + i + "]", element.getName());
+            assertEquals(4 + 2 * i, element.getOffset());
+            assertEquals(2, element.getSize());
+            assertEquals(FieldType.UINT16, element.getType());
+            assertEquals("V", element.getUnits());
+            assertEquals("3", element.getDigits());
+            assertEquals(0.001, element.getMultiplier());
+            assertEquals(array.getPageIndex(), element.getPageIndex());
+        }
+        assertSame(array, model.findIniField("voltages").get());
+        assertEquals(6, array.getSize());
+        assertFalse(model.getAllIniFields().containsKey("voltages[0]"),
+            "Element views must not duplicate array storage when iterating declared fields");
+
+        assertEquals(21, model.findIniField("bytes[1]").get().getOffset());
+        assertEquals(FieldType.INT8, ((ScalarIniField) model.findIniField("bytes[1]").get()).getType());
+        assertEquals(28, model.findIniField("floats[1]").get().getOffset());
+        assertEquals(FieldType.FLOAT, ((ScalarIniField) model.findIniField("floats[1]").get()).getType());
+        assertSame(model.getAllIniFields().get("scalar"), model.findIniField("scalar").get());
+    }
+
+    @Test
+    public void invalidArrayElementReferencesAreNotResolved() {
+        IniFileModel model = readArrayFields();
+        for (String key : new String[]{"voltages[-1]", "voltages[3]", "voltages[2147483648]",
+            "voltages[]", "voltages[1.0]", "voltages[x]", "voltages[1", "voltages[0][1]",
+            "voltages[0]suffix", "missing[0]", "scalar[0]", "table[0]"}) {
+            assertFalse(model.findIniField(key).isPresent(), key);
+        }
+    }
+
+    @Test
+    public void arrayElementOnSecondaryPageRetainsWireIdentifier() throws Throwable {
+        IniFileMetaInfo meta = mock(IniFileMetaInfo.class);
+        when(meta.getPageIdentifier(1)).thenReturn(0x100);
+        String text = "[Constants]\npage = 2\n"
+            + "voltages = array, U16, 4, [3], \"V\", 0.001, 0, 0, 5, 3\n";
+        IniFileModel model = IniFileReaderUtil.readIniFile(IniFileReaderUtil.read(
+            new ByteArrayInputStream(text.getBytes(StandardCharsets.US_ASCII))), "array.ini", meta);
+        IniField element = model.findIniField("voltages[2]").get();
+        assertEquals(0x100, element.getPageIndex());
+        assertEquals(8, element.getOffset());
+    }
+
+    private static IniFileModel readArrayFields() {
+        String text = "[Constants]\npage = 1\n"
+            + "voltages = array, U16, 4, [3], \"V\", 0.001, 0, 0, 5, 3\n"
+            + "scalar = scalar, F32, 12, \"\", 1, 0, 0, 100, 1\n"
+            + "bytes = array, S08, 20, [3], \"\", 1, 0, 0, 100, 0\n"
+            + "floats = array, F32, 24, [3], \"\", 1, 0, 0, 100, 2\n"
+            + "table = array, U16, 40, [2x3], \"\", 1, 0, 0, 100, 0\n";
+        return IniFileReaderTest.readLines(IniFileReaderUtil.read(
+            new ByteArrayInputStream(text.getBytes(StandardCharsets.US_ASCII))));
+    }
 
     @Test
     public void datalogPreservesDeclarationOrderLabelsAndSectionBoundaries() {
