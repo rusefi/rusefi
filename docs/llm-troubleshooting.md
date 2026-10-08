@@ -29,6 +29,7 @@ The assistant's tools are read-only:
 | `read_output_channel` | One value from a recent full poll, with its host timestamp and age |
 | `read_live_values` | Up to 32 selected channels from one full poll, with a shared sample ID, timestamp and age |
 | `diagnostic_snapshot` | Selected live channels and raw warning/error channels from the same full poll |
+| `read_tune_fields` | Selected scalar, enum/bitfield and small-array calibrations, read freshly from their ECU pages |
 | `read_messages` | Console/ECU messages observed since this conversation started, with sequence numbers |
 | `search_knowledge` | Literal or keyword matches in cached firmware/wiki text, with paths and line numbers |
 | `read_knowledge` | Bounded line ranges, file hashes and citation metadata from cached text |
@@ -77,6 +78,29 @@ last/recent codes can describe past events. Missing channels never imply that
 the ECU is fault-free; interpret codes using documentation for its firmware.
 Console messages have their own timestamps and are read separately.
 
+`read_tune_fields` accepts `{"names":["cranking_rpm","displacement"]}` with
+1-32 unique, case-insensitive INI calibration names. Names can be found in the
+local source/INI knowledge; they are different from live output-channel names.
+Only the selected field ranges are read on the Console communication thread,
+including fields on secondary pages. The tool does not read the entire tune,
+use the editable Console tune cache, change settings, burn, or clear faults.
+
+Supported fields are scalars, enums/bitfields and numeric arrays of at most
+64 elements each, with a total budget of 512 values (at most 2 KiB of field
+data) per call. Strings, including Lua scripts, and larger arrays are excluded.
+Arrays return rows and columns in INI order. Scalars and arrays use the
+Console's parsed INI scaling; enums return their numeric value and an INI label
+when one exists. Unit expressions are not evaluated. Non-finite values, unknown
+fields, unsupported types, invalid page ranges and failed reads have explicit
+per-field errors; `complete: false` means some requested fields failed.
+
+Results include firmware signature, `source: ecu`, field page/offset and host
+read timestamps. These are fresh sequential ECU RAM reads, separate from live
+poll samples, not an atomic tune snapshot or proof of flash persistence. Reads
+have a ten-second overall deadline. Stop, timeout or connection replacement
+discards the result and stops further chunks; an already-running wire transaction
+finishes normally so cancellation does not interrupt the shared connection.
+
 **Stop** cancels the current turn. A turn also has a two-minute cancellation
 deadline, up to eight model requests and 24 tool calls. Failed, stopped and
 incomplete turns are not added to the next request. Network disconnect/read
@@ -107,12 +131,12 @@ borrowed `LinkManager`. The standalone MCP entry point remains available for
 external clients with its existing tool catalog.
 
 The Console shadow JAR includes authentication, ECU and knowledge tool code.
-A second MCP process/JAR is unnecessary for this tab. Tune/Lua reading,
+A second MCP process/JAR is unnecessary for this tab. Lua reading,
 log/sniffer capture, diagnostic export, and write tools remain follow-ups.
 
 ## Local knowledge retrieval
 
-`TroubleshootingTools` combines the six ECU tools with `LocalKnowledgeTools`,
+`TroubleshootingTools` combines the seven ECU tools with `LocalKnowledgeTools`,
 using the exact cache directory returned by source preparation. Both stay bound
 to the current Console connection. The model can search case-insensitively for
 a literal substring or all whitespace-separated keywords on one line, then
