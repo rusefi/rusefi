@@ -14,8 +14,8 @@ the extracted firmware paths.
 
 ## Embedded Console use
 
-`ConsoleEcuSession` provides an in-process adapter for an existing Console
-connection. It exposes only `ecu_info`, `list_output_channels`, `read_output_channel`,
+The Console's **Troubleshooting** tab uses `ConsoleEcuSession` in process. This
+adapter exposes only `ecu_info`, `list_output_channels`, `read_output_channel`,
 `read_live_values`, `diagnostic_snapshot`, `read_tune_fields`, `get_lua`,
 `capture_live_log`, `capture_engine_sniffer` and `read_messages` through the
 Console-owned connection. It validates arguments

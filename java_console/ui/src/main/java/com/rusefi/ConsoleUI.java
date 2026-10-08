@@ -569,7 +569,7 @@ console live data tab is broken #8402
             tabbedPane.addTab("Logs Manager", tabbedPane.logsManager.getContent());
         }
 
-        if (false && !isOffline && !linkManager.isLogViewer()) {
+        if (!isOffline && !linkManager.isLogViewer()) {
             tabbedPane.addTab("Troubleshooting", new InitOnFirstPaintPanel() {
                 @Override protected JPanel createContent() {
                     llmTab = new LLMTab(Paths.get(
