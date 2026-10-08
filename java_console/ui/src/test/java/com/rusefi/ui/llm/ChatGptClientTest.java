@@ -268,6 +268,20 @@ class ChatGptClientTest {
         }
     }
 
+    @Test void lastChosenConnectionPersistsAcrossReopen() throws Exception {
+        FakeTransport transport = new FakeTransport();
+        String id;
+        try (ChatGptClient client = new ChatGptClient(directory, transport)) {
+            assertEquals("", client.lastAccount());
+            id = client.signIn(null, transport::browser, new ChatGptClient.Cancellation());
+            client.rememberLastAccount(id);
+            assertEquals(id, client.lastAccount());
+        }
+        try (ChatGptClient reopened = new ChatGptClient(directory, transport)) {
+            assertEquals(id, reopened.lastAccount());
+        }
+    }
+
     @Test void reauthorizationCannotReplaceAConnectionsIdentity() throws Exception {
         FakeTransport transport = new FakeTransport();
         try (ChatGptClient client = new ChatGptClient(directory, transport)) {

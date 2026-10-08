@@ -17,6 +17,7 @@ Release template (copy/paste this for new release):
  - MAP Prediction AE Improvements #9482
  - 1-2-3-4 firing order for 982 honda sabre 750 reverse rotation V4
  - migrated to Chibios Kernel: 7.0.6 #10295
+ - AI/LLM troubleshooting updater feature
 
 ### Fixed
  - wasted to sequential transition when phase is detected #9613

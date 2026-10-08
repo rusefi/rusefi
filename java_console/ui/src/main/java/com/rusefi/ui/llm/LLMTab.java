@@ -237,7 +237,15 @@ public final class LLMTab implements AutoCloseable {
     private void openAccountStore() {
         perform("Opening account store...", cancellation -> {
             client = new ChatGptClient(storage);
-            return () -> append("Select a saved connection or click Continue with ChatGPT.\n");
+            String last = client.lastAccount();
+            return () -> {
+                append("Select a saved connection or click Continue with ChatGPT.\n");
+                if (selectedId == null && !last.isEmpty()) {
+                    selectedId = last;
+                    // After this perform() finishes (running cleared), load the restored account's models.
+                    SwingUtilities.invokeLater(this::loadModels);
+                }
+            };
         });
     }
 
@@ -265,7 +273,9 @@ public final class LLMTab implements AutoCloseable {
 
     private List<Model> loadModels(String id, Cancellation cancellation) throws Exception {
         Account account = client.accounts().stream().filter(a -> a.id.equals(id)).findFirst().orElse(null);
-        if (account == null || !account.planEnabled) { return Collections.emptyList(); }
+        if (account == null) { return Collections.emptyList(); }
+        client.rememberLastAccount(id);
+        if (!account.planEnabled) { return Collections.emptyList(); }
         try {
             List<Model> available = client.models(id, cancellation);
             if (available.isEmpty()) {
