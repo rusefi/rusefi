@@ -21,6 +21,12 @@ Console-owned connection. It validates arguments
 and rejects changed connections; closing it releases its subscriptions without
 closing the port. There is no second stdio process or port discovery.
 
+`list_output_channels` includes INI gauge-title/datalog descriptions and units,
+with source and availability metadata. Output-channel units take precedence
+over gauge units. Missing, dynamic or conflicting units are explicit; discovery
+does not evaluate expressions or read the tune. Its filter also matches returned
+descriptions and known units, and results remain bounded to at most 100 entries.
+
 The Console-only batch tools read at most 32 requested channel names from one
 recent completed full poll. `diagnostic_snapshot` adds raw warning/error channels
 from that same poll. They return a shared sample ID, timestamp and age; missing

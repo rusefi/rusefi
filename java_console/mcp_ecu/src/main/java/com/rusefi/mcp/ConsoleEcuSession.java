@@ -1,6 +1,5 @@
 package com.rusefi.mcp;
 
-import com.opensr5.ini.DatalogEntry;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.LinkManager;
@@ -67,9 +66,9 @@ public final class ConsoleEcuSession implements AutoCloseable {
                 definitions.put(name, definition);
             }
         }
-        JSONObject properties = object("filter", object("type", "string", "description", "Case-insensitive channel or label substring; default empty."));
+        JSONObject properties = object("filter", object("type", "string", "description", "Case-insensitive channel, label, description or known units substring; default empty."));
         definitions.put("list_output_channels", object("name", "list_output_channels",
-                "description", "List up to 100 INI datalog channel names and labels. Narrow using filter if truncated.",
+                "description", "List up to 100 INI datalog channels with labels, descriptions and units. unitsStatus distinguishes known, unknown, dynamic and conflicting units; never assume units when null. Descriptions come from gauge titles or datalog labels. Narrow using filter if truncated.",
                 "inputSchema", object("type", "object", "properties", properties, "required", new JSONArray(), "additionalProperties", false)));
         JSONObject names = object("type", "array", "minItems", 1, "maxItems", MAX_CHANNELS, "uniqueItems", true,
                 "items", object("type", "string", "minLength", 1, "maxLength", 256),
@@ -128,7 +127,7 @@ public final class ConsoleEcuSession implements AutoCloseable {
         }
         JSONObject result;
         if ("list_output_channels".equals(name)) {
-            result = listChannels((String) args.getOrDefault("filter", ""));
+            result = ConsoleChannelCatalog.list(protocol.getIniFile(), (String) args.getOrDefault("filter", ""), checkCancellation);
         } else if ("read_output_channel".equals(name) || "read_live_values".equals(name) || "diagnostic_snapshot".equals(name)) {
             Sample current = awaitSample(checkCancellation);
             if (current == null) {
@@ -189,22 +188,6 @@ public final class ConsoleEcuSession implements AutoCloseable {
             result.add(channelResult(sample, (String) name));
         }
         return result;
-    }
-
-    private JSONObject listChannels(String filter) throws Exception {
-        JSONArray channels = new JSONArray();
-        int matches = 0;
-        String needle = filter.toLowerCase(java.util.Locale.ROOT);
-        for (DatalogEntry entry : protocol.getIniFile().getDatalogEntries()) {
-            if (!(entry.getChannel() + " " + entry.getLabel()).toLowerCase(java.util.Locale.ROOT).contains(needle)) {
-                continue;
-            }
-            matches++;
-            if (channels.size() < 100) {
-                channels.add(object("name", entry.getChannel(), "label", entry.getLabel()));
-            }
-        }
-        return object("channels", channels, "matches", matches, "truncated", matches > channels.size());
     }
 
     private static String validate(JSONObject args, JSONObject schema) {

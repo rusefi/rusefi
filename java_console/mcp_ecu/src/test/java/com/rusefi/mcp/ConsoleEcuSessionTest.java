@@ -94,7 +94,11 @@ class ConsoleEcuSessionTest {
         when(ini.getDatalogEntries()).thenReturn(Collections.singletonList(new DatalogEntry("RPMValue", "Engine speed")));
         try (ConsoleEcuSession session = open()) {
             JSONObject listing = session.execute("list_output_channels", object("filter", "speed"), () -> {});
-            assertEquals("RPMValue", ((JSONObject) ((JSONArray) listing.get("channels")).get(0)).get("name"));
+            JSONObject channel = (JSONObject) ((JSONArray) listing.get("channels")).get(0);
+            assertEquals("RPMValue", channel.get("name"));
+            assertEquals("Engine speed", channel.get("description"));
+            assertEquals("RPM", channel.get("units"));
+            assertEquals("known", channel.get("unitsStatus"));
             sensors.setValue(9999, "staleValue"); // Old cache values cannot be presented as current observations.
             BitSet valid = new BitSet();
             valid.set(0, 2);
