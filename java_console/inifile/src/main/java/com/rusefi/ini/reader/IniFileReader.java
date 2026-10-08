@@ -159,8 +159,9 @@ public class IniFileReader {
         if (fieldsOfCurrentDialog.isEmpty() && commandsOfCurrentDialog.isEmpty()
                 && panelsOfCurrentDialog.isEmpty() && indicatorsOfCurrentDialog.isEmpty()
                 && readoutsOfCurrentDialog.isEmpty() && gaugeNamesOfCurrentDialog.isEmpty()
-                && settingSelectorsOfCurrentDialog.isEmpty())
+                && settingSelectorsOfCurrentDialog.isEmpty() && orderedEntriesOfCurrentDialog.isEmpty()) {
             return;
+        }
         if (dialogUiName == null)
             dialogUiName = dialogId;
         // Store dialogs by their key (dialogId), not by UI name, for easier panel resolution
@@ -313,7 +314,10 @@ public class IniFileReader {
 
             switch (first) {
                 case "field":
-                    handleField(list);
+                    handleField(list, false);
+                    break;
+                case "runtimeValue":
+                    handleField(list, true);
                     break;
                 case "commandButton":
                     handleCommand(list);
@@ -521,14 +525,18 @@ public class IniFileReader {
         orderedEntriesOfCurrentDialog.add(new DialogModel.DialogEntry(DialogModel.DialogEntry.Kind.COMMAND, cmd));
     }
 
-    private void handleField(LinkedList<String> list) {
-        list.removeFirst(); // "field"
+    private void handleField(LinkedList<String> list, boolean runtimeValue) {
+        list.removeFirst(); // "field" or "runtimeValue"
 
         String uiFieldName = list.isEmpty() ? "" : list.removeFirst();
 
         String key = list.isEmpty() ? null : list.removeFirst();
 
-        if (key == null || uiFieldName.startsWith("!")) {
+        if (runtimeValue && (dialogId == null || key == null || key.isEmpty())) {
+            return;
+        }
+
+        if (!runtimeValue && (key == null || uiFieldName.startsWith("!"))) {
             key = uiFieldName;
         }
 
@@ -546,7 +554,14 @@ public class IniFileReader {
             }
         }
 
-        registerUiField(key, uiFieldName, enableExpression, visibleExpression);
+        if (runtimeValue) {
+            // Runtime channels are read-only and must not enter the editable constants list.
+            orderedEntriesOfCurrentDialog.add(new DialogModel.DialogEntry(
+                DialogModel.DialogEntry.Kind.RUNTIME_VALUE,
+                new DialogModel.Field(key, uiFieldName, enableExpression, visibleExpression)));
+        } else {
+            registerUiField(key, uiFieldName, enableExpression, visibleExpression);
+        }
         log.debug("IniFileModel: Field label=[" + uiFieldName + "] : key=[" + key + "]");
     }
 

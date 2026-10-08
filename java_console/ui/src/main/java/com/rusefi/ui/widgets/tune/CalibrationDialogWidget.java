@@ -31,6 +31,7 @@ import com.rusefi.trigger.TriggerImage;
 import com.rusefi.trigger.TriggerWheelInfo;
 import com.opensr5.ConfigurationImageGetterSetter;
 import java.io.File;
+import java.text.DecimalFormat;
 
 import com.devexperts.logging.Logging;
 
@@ -107,12 +108,18 @@ public class CalibrationDialogWidget {
         final String channel;
         final String units;
         final int valDigits;
+        final boolean compact;
 
         ReadoutLabelEntry(JLabel valueLabel, String channel, String units, int valDigits) {
+            this(valueLabel, channel, units, valDigits, false);
+        }
+
+        ReadoutLabelEntry(JLabel valueLabel, String channel, String units, int valDigits, boolean compact) {
             this.valueLabel = valueLabel;
             this.channel = channel;
             this.units = units;
             this.valDigits = valDigits;
+            this.compact = compact;
         }
     }
 
@@ -308,6 +315,9 @@ public class CalibrationDialogWidget {
                     renderField(container, entry.getAs(DialogModel.Field.class), iniFileModel, ci,
                         fieldLabelWidth, fieldEditorWidth);
                     break;
+                case RUNTIME_VALUE:
+                    renderRuntimeValue(container, entry.getAs(DialogModel.Field.class), iniFileModel, ci);
+                    break;
                 case COMMAND:
                     container.add(CalibrationFieldFactory.createCommandRow(
                         entry.getAs(DialogModel.Command.class),
@@ -409,6 +419,26 @@ public class CalibrationDialogWidget {
             CalibrationFieldFactory.fixRowHeight(row);
         }
 
+        registerFieldExpressions(row, field, iniFileModel, ci);
+        container.add(row);
+    }
+
+    private void renderRuntimeValue(JPanel container, DialogModel.Field field, IniFileModel ini,
+                                    ConfigurationImage ci) {
+        JPanel row = CalibrationFieldFactory.createLabelRow(field);
+        row.add(Box.createHorizontalStrut(10));
+        JLabel value = new JLabel("---");
+        value.setFont(value.getFont().deriveFont(Font.BOLD));
+        row.add(value);
+        CalibrationFieldFactory.fixRowHeight(row);
+        // runtimeValue has no precision/units arguments; show up to three decimal places.
+        readoutEntries.add(new ReadoutLabelEntry(value, field.getKey(), "", 3, true));
+        registerFieldExpressions(row, field, ini, ci);
+        container.add(row);
+    }
+
+    private void registerFieldExpressions(JPanel row, DialogModel.Field field, IniFileModel iniFileModel,
+                                         ConfigurationImage ci) {
         boolean hasExpressions = field.getEnableExpression() != null || field.getVisibleExpression() != null;
         if (hasExpressions) {
             ExpressionRow exprRow = new ExpressionRow(row, field.getEnableExpression(), field.getVisibleExpression());
@@ -418,7 +448,6 @@ public class CalibrationDialogWidget {
                 applyExpressionState(exprRow, iniFileModel, evalImage);
             }
         }
-        container.add(row);
     }
 
     private void renderIndicatorGroup(JPanel container, List<IndicatorModel> indicators, IniFileModel iniFileModel, ConfigurationImage ci, int cols) {
@@ -675,7 +704,8 @@ public class CalibrationDialogWidget {
         for (ReadoutLabelEntry entry : readoutEntries) {
             double val = SensorCentral.getInstance().getValue(entry.channel);
             String text = Double.isNaN(val) ? "---" :
-                    String.format("%." + entry.valDigits + "f", val) +
+                    (entry.compact ? new DecimalFormat("0.###").format(val) :
+                        String.format("%." + entry.valDigits + "f", val)) +
                     (entry.units != null && !entry.units.isEmpty() ? " " + entry.units : "");
             entry.valueLabel.setText(text);
         }
