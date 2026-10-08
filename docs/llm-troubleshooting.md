@@ -1,8 +1,8 @@
 # Console troubleshooting assistant
 
-The tab is currently disabled by the `false &&` guard in `ConsoleUI`, retained
-from the development checkout. The integration and tools are packaged in the
-Console JAR; the connected workflow below applies when that guard is enabled.
+The tab is available in online Console sessions for acceptance testing. It is
+hidden in offline and log-viewer modes. The integration and tools are packaged
+in the Console JAR.
 
 The **Troubleshooting** tab uses ChatGPT with the Console's existing ECU
 connection. Connect to an ECU and open the tab. It first checks and extracts
@@ -25,8 +25,10 @@ The assistant's tools are read-only:
 | Tool | Evidence |
 | --- | --- |
 | `ecu_info` | Connected firmware signature and Lua field availability |
-| `list_output_channels` | INI datalog channel names and labels, with a substring filter |
+| `list_output_channels` | INI datalog channel names, labels, descriptions and units, with a substring filter |
 | `read_output_channel` | One value from a recent full poll, with its host timestamp and age |
+| `read_live_values` | Up to 32 selected channels from one full poll, with a shared sample ID, timestamp and age |
+| `diagnostic_snapshot` | Selected live channels and raw warning/error channels from the same full poll |
 | `read_messages` | Console/ECU messages observed since this conversation started, with sequence numbers |
 | `search_knowledge` | Literal or keyword matches in cached firmware/wiki text, with paths and line numbers |
 | `read_knowledge` | Bounded line ranges, file hashes and citation metadata from cached text |
@@ -35,6 +37,45 @@ Message capture uses the same global MessagesCentral stream as the Console,
 including UI diagnostics. It does not retrieve historical ECU messages. Channel
 reads wait up to three seconds for a sample and reject samples older than two
 seconds. Timestamps describe host reception, not an ECU hardware clock.
+
+For correlated readings, `read_live_values` accepts `{"names":["RPMValue","VBatt"]}`.
+`diagnostic_snapshot` accepts the same optional list; omitting it selects
+`RPMValue`, `VBatt`, `isCranking`, `MAPValue`, `TPSValue`, `coolant` and `intake`.
+Names are case-insensitive, unique and limited to 32 per request. Discover the
+connected firmware's available names with `list_output_channels`.
+
+Channel discovery returns up to 100 datalog entries. Its case-insensitive
+`filter` matches names, labels, returned descriptions and known units. Descriptions
+use a literal gauge title when available, otherwise the datalog label;
+`descriptionSource` identifies which. These are INI display descriptions, not
+additional diagnostic guidance. If several gauges name the channel, the first
+literal title in gauge-name order is used.
+
+Units come from the output-channel definition first. If it supplies no units
+metadata, agreeing literal gauge units are used as a fallback. `unitsSource`
+identifies the source. `unitsStatus` is `known`, `unknown`, `dynamic` or
+`conflicting`; only `known` returns a units string. A known empty string means
+the INI specifies no unit. Dynamic unit expressions are not evaluated, and
+disagreeing gauge units are not guessed. No tune data is needed for discovery.
+Labels and descriptions are bounded to 256 and 512 characters respectively;
+overlong units are marked unknown. `metadataTruncated` identifies shortened
+metadata, while result-level `truncated` means to narrow the filter because
+the entry-count or JSON size limit was reached.
+
+Both tools return a `values` array and shared `sampleId`, `sampleTimestampMs`,
+`sampleAgeMs` and firmware `signature`. Sample IDs increase within a conversation;
+successive reads may reuse the same recent poll. All returned values come from
+that completed host poll even if another poll arrives during the call. A host
+poll can read multiple ECU chunks, so this is not an atomic hardware measurement.
+Unavailable or non-finite channels have `found: false` and no numeric value.
+
+The snapshot also returns a `faults` array containing `checkEngine`,
+`hasCriticalError`, `isWarnNow`, `isTriggerError`, `warningCounter`, `lastErrorCode`
+and `recentErrorCode1` through `recentErrorCode8`. These are raw channel values,
+not decoded DTC descriptions or a complete fault inventory. Counters and
+last/recent codes can describe past events. Missing channels never imply that
+the ECU is fault-free; interpret codes using documentation for its firmware.
+Console messages have their own timestamps and are read separately.
 
 **Stop** cancels the current turn. A turn also has a two-minute cancellation
 deadline, up to eight model requests and 24 tool calls. Failed, stopped and
@@ -71,7 +112,7 @@ log/sniffer capture, diagnostic export, and write tools remain follow-ups.
 
 ## Local knowledge retrieval
 
-`TroubleshootingTools` combines the four ECU tools with `LocalKnowledgeTools`,
+`TroubleshootingTools` combines the six ECU tools with `LocalKnowledgeTools`,
 using the exact cache directory returned by source preparation. Both stay bound
 to the current Console connection. The model can search case-insensitively for
 a literal substring or all whitespace-separated keywords on one line, then

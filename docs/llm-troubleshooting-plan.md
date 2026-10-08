@@ -1,18 +1,11 @@
 # Open work: integrated rusEFI troubleshooting assistant
 
-Updated: 2026-10-07.
+Updated: 2026-10-08.
 
-## 1. Enable the tab for acceptance testing
-
-- Enable the Troubleshooting tab by removing the `false &&` guard in
-  `ConsoleUI` when ready for acceptance testing.
-
-## 2. Extend read-only diagnostics
+## 1. Extend read-only diagnostics
 
 | Tool/capability | Open work |
 | --- | --- |
-| `diagnostic_snapshot` / `read_live_values` | Correlate faults and several live channels from one sample |
-| Channel metadata | Extend discovery with descriptions and units |
 | `read_tune_fields` | Return selected calibration values without sending the entire tune |
 | Lua, logging and sniffer evidence | Adapt implementations to the borrowed session and bound results |
 | `export_diagnostic_case` | Save findings, referenced tune/log/capture evidence and provenance |
@@ -20,7 +13,7 @@ Updated: 2026-10-07.
 Keep the first release read-only. Tune writes, arbitrary commands and firmware
 updates are later work, with concrete proposed changes shown before execution.
 
-## 3. Finish delivery and provenance
+## 2. Finish delivery and provenance
 
 - Verify a hosted archive workflow run and download the published ZIP through
   `FirmwareSourceCodeDownloader`.
@@ -34,10 +27,9 @@ updates are later work, with concrete proposed changes shown before execution.
   Verify source/ECU version compatibility before claiming downloaded source
   matches the connected firmware.
 
-## 4. Validate the complete user journey
+## 3. Validate the complete user journey
 
-After enabling the tab, test a clean-machine
-installation with live ChatGPT and hardware:
+Test a clean-machine installation with live ChatGPT and hardware:
 
 - Launch and restore authorization.
 - Connect to the ECU and resolve the matching INI.
