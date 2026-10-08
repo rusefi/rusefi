@@ -71,6 +71,17 @@ public final class ChatGptClient implements Closeable {
         @Override public String toString() { return name; }
     }
 
+    /** Last connection used for chat/model discovery; empty when never recorded. */
+    public String lastAccount() {
+        return string(store.data, "last_account");
+    }
+
+    public void rememberLastAccount(String id) throws IOException {
+        if (id == null || id.equals(store.data.get("last_account"))) { return; }
+        store.data.put("last_account", id);
+        store.save();
+    }
+
     public List<Account> accounts() {
         List<Account> result = new ArrayList<>();
         for (Object key : profiles.keySet()) {
