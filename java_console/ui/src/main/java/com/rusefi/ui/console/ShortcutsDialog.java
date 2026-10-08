@@ -62,6 +62,11 @@ final class ShortcutsDialog extends JDialog {
             "In a single-line command field, Enter also sends the command and Up/Down "
                     + "browse command history. In a multiline field, Enter inserts a new line.",
             "",
+            "LLM TAB",
+            "Ctrl+Enter  Send the typed message while the message field is focused.",
+            "            Available when sending is enabled (signed in, model selected,",
+            "            no request in progress). Enter inserts a new line.",
+            "",
             "LUA EDITOR",
             "Ctrl+Z  Undo a script edit.",
             "Ctrl+Y  Redo a script edit.",
