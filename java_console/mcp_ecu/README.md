@@ -20,7 +20,8 @@ connection. It exposes only `ecu_info`, `list_output_channels`, `read_output_cha
 `capture_live_log`, `capture_engine_sniffer` and `read_messages` through the
 Console-owned connection. It validates arguments
 and rejects changed connections; closing it releases its subscriptions without
-closing the port. There is no second stdio process or port discovery.
+closing the port. There is no second stdio process or port discovery. See
+[Console troubleshooting assistant](../../docs/llm-troubleshooting.md).
 
 The embedded adapters bound results more tightly than the standalone catalog:
 `get_lua` returns paged fresh RAM source with line citations and a hash;
