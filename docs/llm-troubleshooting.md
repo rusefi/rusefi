@@ -21,7 +21,7 @@ The terminal shows streamed answers and tool names as they run. User messages,
 requested ECU evidence (including selected tune values, Lua source and captures)
 and retrieved source/wiki excerpts are sent to OpenAI
 using the selected ChatGPT plan.
-The assistant's tools are read-only:
+ECU access is read-only; case export writes a local report:
 
 | Tool | Evidence |
 | --- | --- |
@@ -37,6 +37,7 @@ The assistant's tools are read-only:
 | `read_messages` | Console/ECU messages observed since this conversation started, with sequence numbers |
 | `search_knowledge` | Literal or keyword matches in cached firmware/wiki text, with paths and line numbers |
 | `read_knowledge` | Bounded line ranges, file hashes and citation metadata from cached text |
+| `export_diagnostic_case` | Save findings, hypotheses, next measurements and selected retained evidence to local JSON |
 
 Message capture uses the same global MessagesCentral stream as the Console,
 including UI diagnostics. It does not retrieve historical ECU messages. Channel
@@ -142,9 +143,44 @@ or model also starts fresh. A changed ECU connection discards an in-progress
 turn; the next Send starts a fresh conversation.
 
 Authorization registrations, the stable host UUID, and refresh tokens remain
-in `~/.rusefi/llm-access/accounts.json`. Conversation history is memory-only.
+in `~/.rusefi/llm-access/accounts.json`. Conversation history is memory-only except for explicitly exported cases.
 Sign out clears local tokens and attempts remote revocation. Only one instance
 can open an account store at a time.
+
+## Diagnostic case export
+
+Ask the assistant to "export a diagnostic case" after collecting evidence. The
+`export_diagnostic_case` tool saves a UTF-8 JSON file under
+`~/.rusefi/llm-access/diagnostic-cases/` (or `diagnostic-cases/` inside a custom
+account-store directory). The terminal displays the saved path independently of
+the model's final answer. Each export creates a new file and returns its SHA-256,
+byte count and evidence count; existing cases are never overwritten.
+
+Arguments are `findings`, `hypotheses` and `next_measurements` (each 1-4000
+characters; use "None established" when appropriate), plus `evidence_ids`
+(1-64 unique IDs returned by prior tools). No destination path or arbitrary
+attachment is accepted. Evidence IDs are added to ECU and knowledge tool results;
+the exporter copies the original retained results, not model-supplied evidence.
+This includes selected tune values, Lua excerpts, live-log samples, sniffer
+events, messages and source/wiki passages with their timestamps, hashes,
+citations, errors, missing values, truncation flags and provenance intact.
+
+The versioned report separates model-authored analysis from observations. It
+includes the firmware identity, Console version, conversation ID and export
+time. Source, libfirmware, wiki and client revisions remain explicitly unknown;
+source/ECU compatibility remains unverified. A case is selected bounded evidence,
+not a full tune, MLG recording or raw sniffer capture. It contains neither the
+credential store nor opaque model reasoning. Review findings and included
+ECU/Lua data before sharing a case.
+
+Retention is limited to 128 results and 2 MiB per conversation. Reaching a limit
+returns `evidence_retained: false`; older evidence is not silently evicted. Start
+a new conversation to collect more exportable evidence. Completed turns retain
+evidence for later export; failed/stopped turns do not add to the next turn's
+retention. New conversations and changed connections cannot reference old IDs.
+Cancellation or connection changes detected during export remove incomplete
+files. A successfully saved case remains on disk even if a later model request
+fails or the conversation is cleared; delete unwanted cases manually.
 
 ## Implementation
 
@@ -163,8 +199,8 @@ borrowed `LinkManager`. The standalone MCP entry point remains available for
 external clients with its existing tool catalog.
 
 The Console shadow JAR includes authentication, ECU and knowledge tool code.
-A second MCP process/JAR is unnecessary for this tab. Diagnostic export and
-write tools remain follow-ups.
+A second MCP process/JAR is unnecessary for this tab. ECU write tools remain
+follow-ups. Case export is a Console-local tool, not a standalone MCP tool.
 
 ## Local knowledge retrieval
 
