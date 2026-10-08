@@ -26,6 +26,8 @@ import java.util.function.Consumer;
 /** Direct, public-client ChatGPT OAuth + Responses API; call from one worker, never the EDT. */
 @SuppressWarnings("unchecked") // json-simple exposes raw collections.
 public final class ChatGptClient implements Closeable {
+    // Never log tokens, prompts, reply text or tool arguments; URLs, sizes and event names only.
+    private static final com.devexperts.logging.Logging log = com.devexperts.logging.Logging.getLogging(ChatGptClient.class);
     static final String ISSUER = "https://auth.openai.com";
     static final String RESOURCE = "https://api.openai.com/v1";
     static final String DYNAMIC_CLIENT = "dynamic_agent_client";
@@ -223,7 +225,7 @@ public final class ChatGptClient implements Closeable {
         try (Reader reader = transport.request("POST", RESOURCE + "/responses", accessToken(id, cancellation),
                 "application/json", body.toJSONString(), cancellation)) {
             Response response = readResponse(reader, delta, cancellation);
-            if (response.output == null) {
+            if (response.output == null || response.output.isEmpty()) {
                 throw new IOException("ChatGPT completed without response items.");
             }
             return response;
@@ -252,6 +254,7 @@ public final class ChatGptClient implements Closeable {
             if (string(current, "refresh_token").isEmpty()) {
                 throw new IOException("Session expired. Continue with ChatGPT to sign in again.");
             }
+            log.info("access token expired, refreshing");
             JSONObject tokens = json("POST", ISSUER + "/api/accounts/oauth/token", null,
                     form("grant_type", "refresh_token", "client_id", string(current, "client_id"),
                             "refresh_token", string(current, "refresh_token"), "resource", RESOURCE), cancellation);
@@ -319,6 +322,9 @@ public final class ChatGptClient implements Closeable {
         BufferedReader reader = new BufferedReader(input);
         StringBuilder data = new StringBuilder();
         StringBuilder answer = new StringBuilder();
+        // Some backends send "output": [] in response.completed and deliver the items only as
+        // response.output_item.done events (observed 2026-10-08 with gpt-6.1 on the plan endpoint).
+        JSONArray streamed = new JSONArray();
         String line;
         while ((line = reader.readLine()) != null) {
             cancellation.check();
@@ -334,19 +340,36 @@ public final class ChatGptClient implements Closeable {
                             throw new IOException("ChatGPT reply exceeded the text limit.");
                         }
                         delta.accept(text);
+                    } else if ("response.output_item.done".equals(type)) {
+                        if (event.get("item") instanceof JSONObject) {
+                            if (streamed.size() >= 256) {
+                                throw new IOException("ChatGPT returned too many response items.");
+                            }
+                            streamed.add(event.get("item"));
+                        }
                     } else if ("response.completed".equals(type)) {
                         JSONObject response = (JSONObject) event.get("response");
                         if (response == null || !"completed".equals(string(response, "status"))) {
                             throw new IOException("Response did not complete successfully.");
                         }
                         Object output = response.get("output");
-                        return new Response(answer.toString(), output instanceof JSONArray ? (JSONArray) output : null);
+                        JSONArray items = output instanceof JSONArray ? (JSONArray) output : null;
+                        boolean assembled = (items == null || items.isEmpty()) && !streamed.isEmpty();
+                        if (assembled) {
+                            items = streamed;
+                        }
+                        log.info("response completed: " + (items == null ? "no output array" : items.size() + " items")
+                                + (assembled ? " (assembled from streamed output_item.done events)" : "")
+                                + ", " + answer.length() + " text chars");
+                        return new Response(answer.toString(), items);
                     } else if ("response.incomplete".equals(type)) {
+                        log.error("response incomplete");
                         throw new IOException("ChatGPT returned an incomplete response; the partial reply was not saved.");
                     } else if ("response.failed".equals(type) || "error".equals(type)) {
                         JSONObject details = event.get("response") instanceof JSONObject ? (JSONObject) event.get("response") : event;
                         details = details.get("error") instanceof JSONObject ? (JSONObject) details.get("error") : details;
                         String code = string(details, "code");
+                        log.error("response " + type + ", code=" + code);
                         if ("subscription_sharing_usage_limit_exceeded".equals(code) || "subscription_sharing_usage_unavailable".equals(code)) {
                             throw new IOException("ChatGPT plan usage is unavailable or its limit was reached. Open ChatGPT Settings > Usage.");
                         }
@@ -509,6 +532,7 @@ public final class ChatGptClient implements Closeable {
                     try (OutputStream out = connection.getOutputStream()) { out.write(bytes); }
                 }
                 int status = connection.getResponseCode();
+                log.info(method + " " + url + ": HTTP " + status);
                 if (status < 200 || status >= 300) {
                     // Do not echo an auth response body, which may contain credentials or callback data.
                     throw new IOException("ChatGPT request failed (HTTP " + status + "). "

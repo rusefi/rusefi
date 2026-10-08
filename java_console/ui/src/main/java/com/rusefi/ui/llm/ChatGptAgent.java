@@ -15,6 +15,8 @@ import static com.rusefi.ui.llm.ChatGptClient.*;
 
 /** Stateless Responses function-call loop. Only complete turns become conversation history. */
 final class ChatGptAgent {
+    // Never log prompts, reply text or tool arguments; tool names, counts and sizes only.
+    private static final com.devexperts.logging.Logging log = com.devexperts.logging.Logging.getLogging(ChatGptAgent.class);
     static final String INSTRUCTIONS = "You are the rusEFI troubleshooting assistant in rusEFI Console. "
             + "Use the read-only tools to collect evidence from the connected ECU before drawing conclusions. "
             + "Prefer diagnostic_snapshot or read_live_values when correlating faults and several live readings: their channels share one completed host poll and sample ID, not an atomic ECU measurement. "
@@ -82,6 +84,7 @@ final class ChatGptAgent {
             cancellation.check();
             tools.checkConnected();
             checkSize(history);
+            log.info("round " + (round + 1) + "/" + MAX_ROUNDS + ": requesting response, " + history.size() + " history items");
             Response response = request.respond(history, tools.definitions(), delta, cancellation);
             cancellation.check();
             tools.checkConnected();
@@ -125,7 +128,11 @@ final class ChatGptAgent {
                         result = object("success", false, "error", "Tool arguments must be a JSON object.");
                     } else {
                         progress.accept("\n[Tool: " + name + "]\n");
+                        long started = System.nanoTime();
                         result = tools.execute(name, parsed, cancellation::check);
+                        log.info("tool " + name + ": " + arguments.length() + " argument chars, "
+                                + result.toJSONString().length() + " result chars in "
+                                + (System.nanoTime() - started) / 1_000_000 + " ms");
                     }
                 }
                 cancellation.check();
@@ -141,6 +148,7 @@ final class ChatGptAgent {
                 checkSize(history);
             }
             if (!called) {
+                log.info("turn complete after round " + (round + 1) + ": " + history.size() + " history items");
                 return history;
             }
         }
