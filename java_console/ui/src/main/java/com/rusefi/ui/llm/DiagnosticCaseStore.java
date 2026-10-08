@@ -83,20 +83,28 @@ final class DiagnosticCaseStore {
             return error("Select 1-64 unique evidence_ids returned by tools in this conversation.");
         }
         JSONArray evidence = new JSONArray();
+        JSONArray knowledgeProvenance = new JSONArray();
         Set<String> seen = new HashSet<>();
         for (Object id : (JSONArray) requested) {
             check.run();
             if (!(id instanceof String) || !records.containsKey(id) || !seen.add((String) id)) {
                 return error("Unknown or duplicate evidence_id; use retained evidence from this conversation.");
             }
-            evidence.add(parseObject(records.get(id)));
+            JSONObject record = parseObject(records.get(id));
+            evidence.add(record);
+            JSONObject result = (JSONObject) record.get("result");
+            if (LocalKnowledgeTools.handles((String) record.get("tool")) && result.get("provenance") instanceof JSONObject
+                    && !knowledgeProvenance.contains(result.get("provenance"))) {
+                knowledgeProvenance.add(result.get("provenance"));
+            }
         }
         String caseId = UUID.randomUUID().toString();
         JSONObject report = object("schema_version", 1, "case_id", caseId, "conversation_id", conversationId,
                 "exported_at", Instant.now().toString(), "ecu_identity", identity,
-                "provenance", object("console_version", UiVersion.CONSOLE_VERSION, "client_revision", "unknown",
-                        "firmware_revision", "See ECU signature; not independently verified",
-                        "source_revision", "unknown", "libfirmware_revision", "unknown", "wiki_revision", "unknown",
+                "provenance", object("console_version", UiVersion.CONSOLE_VERSION,
+                        "client_revision", ClientBuildProvenance.CURRENT.revision,
+                        "client_dirty", ClientBuildProvenance.CURRENT.dirty,
+                        "firmware_revision", "unknown", "knowledge", knowledgeProvenance,
                         "ecu_source_match", "unverified"),
                 "analysis", object("author", "assistant", "verified", false, "findings", args.get("findings"),
                         "hypotheses", args.get("hypotheses"), "next_measurements", args.get("next_measurements"),

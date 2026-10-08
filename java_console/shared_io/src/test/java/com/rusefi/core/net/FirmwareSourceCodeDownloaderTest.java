@@ -18,10 +18,16 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.LinkedHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import java.util.zip.ZipInputStream;
+import java.io.ByteArrayInputStream;
+import org.json.simple.JSONObject;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -181,6 +187,69 @@ class FirmwareSourceCodeDownloaderTest {
             assertNoTemporaryFiles();
         }
         assertFalse(Files.exists(directory.getParent().resolve("escaped.txt")));
+    }
+
+    @Test void verifiesVersionedPayloadBeforeReplacingCacheAndClearsMetadataForLegacy() throws Exception {
+        response = versionedArchive(false);
+        downloader.downloadFresh(ignored -> {});
+        byte[] good = Files.readAllBytes(zip());
+        byte[] metadata = Files.readAllBytes(directory.resolve(KnowledgeManifest.NAME));
+        assertEquals("present", KnowledgeManifest.read(directory).provenance(null).get("manifest_status"));
+        response = versionedArchive(true); // Valid ZIP CRCs, but a payload hash disagrees with its manifest.
+        assertThrows(IOException.class, () -> downloader.downloadFresh(ignored -> {}));
+        assertArrayEquals(good, Files.readAllBytes(zip()));
+        assertArrayEquals(metadata, Files.readAllBytes(directory.resolve(KnowledgeManifest.NAME)));
+        assertNoTemporaryFiles();
+        response = GOOD_ZIP;
+        downloader.downloadFresh(ignored -> {});
+        assertFalse(Files.exists(directory.resolve(KnowledgeManifest.NAME)));
+        assertEquals("unknown", KnowledgeManifest.read(directory).provenance(null).get("source_revision"));
+    }
+
+    @SuppressWarnings("unchecked")
+    private byte[] versionedArchive(boolean corrupt) throws Exception {
+        Map<String, byte[]> contents = new LinkedHashMap<>();
+        try (ZipInputStream zip = new ZipInputStream(new ByteArrayInputStream(GOOD_ZIP))) {
+            ZipEntry entry;
+            while ((entry = zip.getNextEntry()) != null) {
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                byte[] buffer = new byte[8192];
+                int count;
+                while ((count = zip.read(buffer)) != -1) { bytes.write(buffer, 0, count); }
+                contents.put(entry.getName(), bytes.toByteArray());
+            }
+        }
+        Path fixture = directory.resolve("fixture");
+        JSONObject manifest = KnowledgeManifestTest.writeFixture(fixture, false);
+        JSONObject files = new JSONObject();
+        StringBuilder hashes = new StringBuilder();
+        for (Map.Entry<String, byte[]> file : new TreeMap<>(contents).entrySet()) {
+            JSONObject metadata = new JSONObject();
+            String hash = KnowledgeManifest.sha256(file.getValue());
+            metadata.put("sha256", hash);
+            metadata.put("size", file.getValue().length);
+            files.put(file.getKey(), metadata);
+            hashes.append(file.getKey()).append('\0').append(hash).append('\n');
+        }
+        manifest.put("files", files);
+        manifest.put("payload_sha256", KnowledgeManifest.sha256(hashes.toString().getBytes(StandardCharsets.UTF_8)));
+        contents.put(KnowledgeManifest.NAME, manifest.toJSONString().getBytes(StandardCharsets.UTF_8));
+        if (corrupt) { contents.get("firmware/readme.md")[0] = 1; }
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        try (ZipOutputStream zip = new ZipOutputStream(bytes)) {
+            for (Map.Entry<String, byte[]> file : contents.entrySet()) {
+                ZipEntry entry = new ZipEntry(file.getKey());
+                CRC32 crc = new CRC32();
+                crc.update(file.getValue());
+                entry.setSize(file.getValue().length);
+                entry.setCrc(crc.getValue());
+                entry.setMethod(ZipEntry.STORED);
+                zip.putNextEntry(entry);
+                zip.write(file.getValue());
+                zip.closeEntry();
+            }
+        }
+        return bytes.toByteArray();
     }
 
     private Path zip() { return directory.resolve(FirmwareSourceCodeDownloader.ARCHIVE_NAME); }

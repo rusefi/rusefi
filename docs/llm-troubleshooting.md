@@ -167,7 +167,10 @@ citations, errors, missing values, truncation flags and provenance intact.
 
 The versioned report separates model-authored analysis from observations. It
 includes the firmware identity, Console version, conversation ID and export
-time. Source, libfirmware, wiki and client revisions remain explicitly unknown;
+time. Client revision and its tracked-edit flag come from a build-time resource.
+The `provenance.knowledge` array preserves the distinct archive provenance records
+from selected knowledge evidence, including firmware-source, libfirmware and wiki
+revisions and manifest/payload hashes. Legacy archives report unknown revisions;
 source/ECU compatibility remains unverified. A case is selected bounded evidence,
 not a full tune, MLG recording or raw sniffer capture. It contains neither the
 credential store nor opaque model reasoning. Review findings and included
@@ -224,12 +227,31 @@ lines, 6,000 text characters total and 2,000 characters per line, with truncatio
 flags and a next-line hint when applicable. Stop cancels retrieval too.
 
 Results identify files with relative paths, line numbers and SHA-256 hashes;
-answers are instructed to cite `path:Lstart-Lend`. The ZIP has no revision
-manifest, so source revision is explicitly **unknown** and the ECU match is
-**unverified**. A file hash is not proof that its source matches the ECU.
-Markdown image references are preserved; wiki results include a current-upstream
-page URL to help locate omitted diagrams. That URL is not a version-pinned
-copy of the cached passage.
+answers are instructed to cite `path:Lstart-Lend`. New archives contain
+`knowledge-manifest.json`, with firmware-source, libfirmware and wiki Git
+revisions, tracked-edit flags, per-file SHA-256/size and a payload index hash.
+The manifest's own hash identifies the exact metadata. Revisions are publisher
+metadata and hashes check content integrity; they are not digital signatures.
+Legacy archives without a manifest remain usable with **unknown** revisions.
+Malformed manifests fail retrieval rather than supplying trusted provenance.
+
+Each retrieved file reports `file_hash_matches_manifest`. A false value means
+there is no manifest entry or the cached file changed; do not attribute that
+text to the declared revision. A dirty repository contains tracked local edits,
+so its revision alone does not describe the archived bytes. File hashes still
+identify the actual exported content.
+
+The ECU HELLO signature identifies its INI schema/build, not a firmware Git
+revision. Matching its date, board or numeric schema hash to source metadata
+cannot prove matching code. The assistant therefore keeps `ecu_match` explicitly
+**unverified**, even for a valid, clean manifest. Exact compatibility would need
+additional firmware build identity, which the current read-only tools do not
+supply.
+
+Markdown image references are preserved. Wiki `upstream_url` links are pinned
+to `upstream_revision` only for clean wiki metadata and a matching file hash;
+otherwise they refer to current master and `upstream_revision` is `unverified`.
+Use these links to locate diagrams omitted from the text archive.
 
 ## Firmware source cache
 
@@ -241,10 +263,14 @@ or one whose local modification time is more than 30 days old. A successful
 download sets that time to the current time. Otherwise it reuses the ZIP
 without a network request.
 
-Every invocation extracts into the same cache folder, producing `firmware/`
-and `rusefi_documentation/` beside `firmware-source.zip`. Extraction is staged
-and checked before replacing the corresponding top-level trees, removing stale
-files within them. ZIP link entries become plain text containing their target,
+Every invocation extracts into the same cache folder, producing `firmware/`,
+`rusefi_documentation/`, `docs/`, `README.md` and (for new archives)
+`knowledge-manifest.json` beside `firmware-source.zip`. Extraction is staged.
+For a manifest-enabled ZIP, the downloader verifies the payload index hash,
+file sizes and hashes, and checks that every extracted file is indexed before
+replacing existing content. Hash mismatches preserve the old cache. Legacy
+ZIPs remove any old manifest so they cannot inherit unrelated revisions.
+Replacing a top-level tree removes stale files within it. ZIP link entries become plain text containing their target,
 not filesystem links. Failed downloads or ZIP validation preserve the old cache.
 A per-folder lock prevents overlapping preparations.
 
@@ -269,12 +295,45 @@ click before calling `downloadFresh(...)`. Account-store initialization also
 waits until sources are ready. Closing the panel cancels source preparation
 and ignores late progress/completion callbacks.
 
+## Distribution and archive contents
+
+Use the normal universal Console bundle and its launchers/native libraries;
+there is no separate troubleshooting application. The source ZIP is fetched
+on demand through **Start Download** and reused from the local cache. A first
+installation needs network access for this download and sign-in. Users need the
+normal Console Java runtime (Java 11 or newer), but no Git, Python or Gradle.
+The existing Windows launcher locates an installed runtime; the shell launcher
+uses `java` on PATH. Runtime installation remains the normal Console setup.
+
+`firmware/bin/assemble_universal_bundle.sh` packages the Console JAR and native
+helpers unchanged. The JAR contains the authentication client, tools and
+`client-build.properties`, generated from the client repository revision and
+tracked-edit status during the Gradle build. Missing/malformed build metadata
+is reported as unknown; the installed client never invokes Git.
+
+The source archive includes tracked firmware/configuration/INI inputs, board
+mappings, Lua examples, the initialized libfirmware submodule, root `docs/AI/`,
+selected technical guides and wiki Markdown. `docs/knowledge-index.md` is a
+searchable index; `docs/licenses/` contains the rusEFI and wiki licenses, with
+per-file notices retained in source. Images, PDF/CHM collections, other
+submodules and untracked build output are excluded. The workflow's sparse wiki
+checkout explicitly includes LICENSE. Python/Git are only archive build tools.
+
+On 2026-10-08, hosted [archive run 37727067660](https://github.com/rusefi/rusefi/actions/runs/37727067660)
+completed including server upload. The published ZIP downloaded through
+`FirmwareSourceCodeDownloader` matched the workflow artifact byte-for-byte:
+SHA-256 `c2ec2b4c9e638c0272d52c70af98b9622d7def392a070763c9f951b97cd984eb`.
+That hosted ZIP predates the manifest changes. A locally generated manifest
+archive and the normal universal bundle were also built and validated; hosted
+validation of the updated workflow remains a release follow-up.
+
 ## Developer validation
 
 From the repository root:
 
 ```sh
-./gradlew :ui:test --tests 'com.rusefi.ui.llm.*' :mcp_ecu:test :ui:shadowJar --max-workers=12
+python3 -m unittest discover -s firmware/bin -p test_zip_firmware_source.py
+./gradlew :shared_io:test --tests 'com.rusefi.core.net.*Test' :ui:test --tests 'com.rusefi.ui.llm.*' :mcp_ecu:test :ui:shadowJar --max-workers=12
 ```
 
 Tests use temporary credentials, fake OAuth/inference and mocked or local TCP

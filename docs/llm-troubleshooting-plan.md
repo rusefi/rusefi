@@ -7,19 +7,19 @@ is implemented; live acceptance remains below. Tune writes, arbitrary commands
 and firmware updates are later work, with concrete proposed changes shown before
 execution.
 
-## 1. Finish delivery and provenance
+## 1. Verify updated hosted delivery
 
-- Verify a hosted archive workflow run and download the published ZIP through
-  `FirmwareSourceCodeDownloader`.
-- Choose the final client distribution: reuse normal Console runtime/native
-  bundle assembly, with the source ZIP bundled for offline use or fetched on
-  demand. Users must not need Git, Python or Gradle.
-- Add root `docs/AI/`, selected technical text, an index, licenses and provenance
-  metadata to the knowledge payload. Preserve useful board mappings, Lua
-  examples and INI metadata; avoid large image/PDF collections.
-- Record firmware, libfirmware, wiki and client revisions and payload hashes.
-  Verify source/ECU version compatibility before claiming downloaded source
-  matches the connected firmware.
+- After the manifest changes land, verify a hosted archive workflow run and
+  download the manifest-enabled published ZIP through `FirmwareSourceCodeDownloader`.
+  Confirm its revisions, licenses and payload hashes survive preparation and case export.
+
+The existing hosted workflow/published ZIP, local manifest-enabled archive and
+normal universal Console bundle were verified on 2026-10-08. Distribution uses
+the normal Console runtime/native bundle with source fetched on demand; users
+need no Git, Python or Gradle. Revision metadata, file/payload hashes, technical
+guides, index and licenses are implemented. ECU/source compatibility stays
+unverified because the current ECU signature does not establish a Git revision.
+See [delivery details](llm-troubleshooting.md#distribution-and-archive-contents).
 
 ## 2. Validate the complete user journey
 
