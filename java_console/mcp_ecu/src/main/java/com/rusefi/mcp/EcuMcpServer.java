@@ -92,6 +92,9 @@ public class EcuMcpServer {
 
     /** Lazy-initialized link manager — created on first ECU-touching tool call. */
     private volatile LinkManager linkManager;
+    private BinaryProtocol borrowedProtocol;
+    private MessagesCentral.MessageListener messagesListener;
+    private volatile boolean closed;
     private final Object connectLock = new Object();
     private final EcuDataLogger dataLogger = new EcuDataLogger();
     /**
@@ -169,10 +172,22 @@ public class EcuMcpServer {
         log.info("stdin closed, exiting");
     }
 
-    private void shutdown() {
+    /** Embedded mode borrows an already connected Console; it never discovers or owns a port. */
+    EcuMcpServer(LinkManager linkManager, BinaryProtocol protocol) {
+        this(null, null, null);
+        this.linkManager = linkManager;
+        this.borrowedProtocol = protocol;
+        installMessagesListener();
+    }
+
+    void shutdown() {
+        closed = true;
+        if (messagesListener != null) {
+            MessagesCentral.getInstance().removeListener(messagesListener);
+        }
         dataLogger.stop();
         LinkManager lm = linkManager;
-        if (lm != null) {
+        if (lm != null && borrowedProtocol == null) {
             try { lm.close(); } catch (Throwable ignored) {}
         }
         synchronized (connectLock) {
@@ -188,7 +203,11 @@ public class EcuMcpServer {
     // -----------------------------------------------------------------------------------
 
     private void installMessagesListener() {
-        MessagesCentral.getInstance().addListener((clazz, message) -> {
+        messagesListener = (clazz, message) -> {
+            if (closed || (borrowedProtocol != null
+                    && (linkManager.getBinaryProtocol() != borrowedProtocol || borrowedProtocol.isClosed()))) {
+                return;
+            }
             synchronized (messageLock) {
                 long seq = ++messageSeq;
                 messageBuffer.addLast(new EcuMessage(seq, System.currentTimeMillis(),
@@ -197,7 +216,8 @@ public class EcuMcpServer {
                     messageBuffer.removeFirst();
                 messageLock.notifyAll();
             }
-        });
+        };
+        MessagesCentral.getInstance().addListener(messagesListener);
     }
 
     private static final class EcuMessage {
@@ -281,7 +301,7 @@ public class EcuMcpServer {
     // -----------------------------------------------------------------------------------
 
     @SuppressWarnings("unchecked")
-    private JSONObject toolsList() {
+    JSONObject toolsList() {
         JSONArray tools = new JSONArray();
         tools.add(tool("connect",
                 "Connect to the ECU (autodetect serial port unless --port was passed on startup). " +
@@ -473,7 +493,7 @@ public class EcuMcpServer {
     }
 
     @SuppressWarnings("unchecked")
-    private JSONObject toolsCall(JSONObject params) throws Exception {
+    JSONObject toolsCall(JSONObject params) throws Exception {
         String name = (String) params.get("name");
         JSONObject args = (JSONObject) params.getOrDefault("arguments", new JSONObject());
         JSONObject toolResult;
@@ -563,6 +583,12 @@ public class EcuMcpServer {
     }
 
     private LinkManager ensureConnected(String portOrNull) throws Exception {
+        if (borrowedProtocol != null) {
+            if (closed || linkManager.getBinaryProtocol() != borrowedProtocol || borrowedProtocol.isClosed()) {
+                throw new IOException("Console connection changed. Start a new conversation.");
+            }
+            return linkManager;
+        }
         LinkManager lm = linkManager;
         if (lm != null && lm.isActive()) return lm;
         synchronized (connectLock) {
@@ -922,7 +948,11 @@ public class EcuMcpServer {
         // ensureConnected() holds a full-output lease, so every channel of the .ini is being polled
         ensureConnected(null);
         double value = SensorCentral.getInstance().getValue(name);
+        return outputChannelResult(name, value);
+    }
 
+    @SuppressWarnings("unchecked")
+    static JSONObject outputChannelResult(String name, double value) {
         JSONObject o = new JSONObject();
         o.put("name", name);
         o.put("found", !Double.isNaN(value));

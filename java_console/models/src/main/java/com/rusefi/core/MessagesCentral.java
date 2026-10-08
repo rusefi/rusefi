@@ -44,6 +44,10 @@ public class MessagesCentral {
         listeners.add(listener);
     }
 
+    public void removeListener(MessageListener listener) {
+        listeners.remove(listener);
+    }
+
     /**
      * Registers a display listener and replays the buffered message backlog to it, so messages that
      * arrived before this listener existed - e.g. during the splash-screen auto-connect, before the

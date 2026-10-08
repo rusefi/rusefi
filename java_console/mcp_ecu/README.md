@@ -12,6 +12,14 @@ updates firmware via OpenBLT while backing up and migrating the ECU configuratio
 `download_bundle` fetches fresh board or universal autoupdate bundles and returns
 the extracted firmware paths.
 
+## Embedded Console use
+
+`ConsoleEcuSession` provides an in-process adapter for an existing Console
+connection. It exposes only `ecu_info`, `list_output_channels`, `read_output_channel`
+and `read_messages` through the Console-owned connection. It validates arguments
+and rejects changed connections; closing it releases its subscriptions without
+closing the port. There is no second stdio process or port discovery.
+
 ## Architecture
 
 ```
