@@ -25,6 +25,7 @@ public final class LLMTab implements AutoCloseable {
     private final LinkManager linkManager;
     private final Path storage;
     private final SourcePreparation sources;
+    private Path knowledgeDirectory;
     private ConsoleEcuSession session;
     private final CardLayout cards = new CardLayout();
     private final JPanel content = new JPanel(cards);
@@ -138,7 +139,7 @@ public final class LLMTab implements AutoCloseable {
         input.add(buttons, BorderLayout.EAST);
         llmControls.add(input, BorderLayout.SOUTH);
         append("rusEFI Troubleshooting\nSign in to use your ChatGPT plan.\n"
-                + "Your messages and requested ECU readings are sent to OpenAI. Tools have read-only access.\n"
+                + "Your messages, requested ECU readings and source/wiki excerpts are sent to OpenAI. Tools have read-only access.\n"
                 + "Connect to an ECU in Console, then describe the problem.\n\n");
 
         login.addActionListener(e -> signIn(selectedId));
@@ -201,6 +202,7 @@ public final class LLMTab implements AutoCloseable {
                         return;
                     }
                     sourceProgress.setValue(100);
+                    knowledgeDirectory = prepared;
                     cards.show(content, "chat");
                     openAccountStore();
                 });
@@ -285,14 +287,7 @@ public final class LLMTab implements AutoCloseable {
         append("\n> " + text + "\n\n");
         prompt.setText("");
         perform("Troubleshooting...", cancellation -> {
-            ChatGptAgent.Tools tools = new ChatGptAgent.Tools() {
-                @Override public JSONArray definitions() { return current.definitions(); }
-                @Override public void checkConnected() throws java.io.IOException { current.checkConnected(); }
-                @Override public org.json.simple.JSONObject execute(String name, org.json.simple.JSONObject arguments,
-                                                                    Runnable checkCancellation) throws Exception {
-                    return current.execute(name, arguments, checkCancellation);
-                }
-            };
+            ChatGptAgent.Tools tools = new TroubleshootingTools(current, knowledgeDirectory);
             JSONArray completed = ChatGptAgent.run(
                     (input, definitions, delta, c) -> client.respondWithTools(id, model.slug, input, definitions, delta, c),
                     tools, previous, text, delta -> SwingUtilities.invokeLater(() -> append(delta)),
