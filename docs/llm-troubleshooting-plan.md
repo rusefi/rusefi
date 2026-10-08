@@ -2,11 +2,8 @@
 
 Updated: 2026-10-07.
 
-## 1. Connect source preparation to the assistant
+## 1. Enable the tab for acceptance testing
 
-- Wire `FirmwareSourceCodeDownloader` into `LLMTab` on a background worker.
-- Display progress and actionable download errors. Keep ECU diagnostics usable
-  when knowledge preparation fails.
 - Enable the Troubleshooting tab by removing the `false &&` guard in
   `ConsoleUI` when ready for acceptance testing.
 
