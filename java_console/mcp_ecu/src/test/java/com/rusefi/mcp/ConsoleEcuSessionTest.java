@@ -38,7 +38,7 @@ class ConsoleEcuSessionTest {
         assertFalse(sensors.getOutputChannelDemand().isFull());
         try (SensorCentral.FullOutputLease consoleLease = sensors.acquireFullOutput()) {
             ConsoleEcuSession session = open();
-            assertEquals(6, session.definitions().size());
+            assertEquals(7, session.definitions().size());
             assertEquals("rusEFI-test-board", session.execute("ecu_info", object(), () -> {}).get("signature"));
             session.close();
             session.close();
@@ -81,6 +81,8 @@ class ConsoleEcuSessionTest {
             assertError(session, "read_messages", object("maxLines", Long.MAX_VALUE));
             assertError(session, "read_messages", object("sinceSeq", -2L));
             assertError(session, "read_messages", object("sourceFilter", null));
+            assertError(session, "read_tune_fields", object());
+            assertError(session, "read_tune_fields", object("names", "cranking_rpm"));
         }
     }
 

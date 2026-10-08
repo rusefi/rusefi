@@ -81,6 +81,12 @@ public final class ConsoleEcuSession implements AutoCloseable {
                 "description", "Read selected live channels plus warning/error channels from the same recent full host poll. Optional names defaults to RPMValue, VBatt, isCranking, MAPValue, TPSValue, coolant, intake. Recent/last codes and counters are history, not proof of active faults. Missing channels do not mean healthy.",
                 "inputSchema", object("type", "object", "properties", object("names", names),
                         "required", new JSONArray(), "additionalProperties", false)));
+        definitions.put("read_tune_fields", object("name", "read_tune_fields",
+                "description", "Read selected calibration fields freshly from ECU RAM. Supply 1-32 exact INI calibration names, case-insensitive (find names in local knowledge). Scalars, enums/bitfields and arrays of up to 64 elements are supported, with at most 512 values total. Strings/Lua and larger arrays are excluded. Sequential reads are not an atomic snapshot or proof of flash persistence; values use parsed INI scaling. Never sends the entire tune.",
+                "inputSchema", object("type", "object", "properties", object("names", object("type", "array",
+                        "minItems", 1, "maxItems", MAX_CHANNELS, "uniqueItems", true,
+                        "items", object("type", "string", "minLength", 1, "maxLength", 256))),
+                        "required", array("names"), "additionalProperties", false)));
     }
 
     public boolean isCurrent() {
@@ -97,7 +103,7 @@ public final class ConsoleEcuSession implements AutoCloseable {
     public JSONArray definitions() {
         JSONArray result = new JSONArray();
         for (String name : Arrays.asList("ecu_info", "list_output_channels", "read_output_channel",
-                "read_live_values", "diagnostic_snapshot", "read_messages")) {
+                "read_live_values", "diagnostic_snapshot", "read_tune_fields", "read_messages")) {
             JSONObject tool = definitions.get(name);
             result.add(object("type", "function", "name", name, "description", tool.get("description"),
                     "parameters", tool.get("inputSchema"), "strict", false));
@@ -128,6 +134,13 @@ public final class ConsoleEcuSession implements AutoCloseable {
         JSONObject result;
         if ("list_output_channels".equals(name)) {
             result = ConsoleChannelCatalog.list(protocol.getIniFile(), (String) args.getOrDefault("filter", ""), checkCancellation);
+        } else if ("read_tune_fields".equals(name)) {
+            result = ConsoleTuneFields.read(link, protocol, (JSONArray) args.get("names"), () -> {
+                checkCancellation.run();
+                if (!isCurrent()) {
+                    throw new java.util.concurrent.CancellationException("Console connection changed during tune read.");
+                }
+            });
         } else if ("read_output_channel".equals(name) || "read_live_values".equals(name) || "diagnostic_snapshot".equals(name)) {
             Sample current = awaitSample(checkCancellation);
             if (current == null) {
@@ -207,15 +220,15 @@ public final class ConsoleEcuSession implements AutoCloseable {
             }
             if ("array".equals(type)) {
                 if (!(value instanceof JSONArray) || ((JSONArray) value).isEmpty() || ((JSONArray) value).size() > MAX_CHANNELS) {
-                    return "names must contain between 1 and 32 channel names.";
+                    return "names must contain between 1 and 32 names.";
                 }
                 Set<String> unique = new HashSet<>();
                 for (Object name : (JSONArray) value) {
                     if (!(name instanceof String) || ((String) name).trim().isEmpty() || ((String) name).length() > 256) {
-                        return "Channel names must be nonblank strings of at most 256 characters.";
+                        return "Names must be nonblank strings of at most 256 characters.";
                     }
                     if (!unique.add(((String) name).toLowerCase(Locale.ROOT))) {
-                        return "Channel names must be unique (case-insensitive).";
+                        return "Names must be unique (case-insensitive).";
                     }
                 }
             }
