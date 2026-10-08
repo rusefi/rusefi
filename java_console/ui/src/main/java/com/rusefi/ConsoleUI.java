@@ -46,6 +46,8 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import com.rusefi.ui.InitOnFirstPaintPanel;
+import com.rusefi.ui.llm.LLMTab;
+import java.nio.file.Paths;
 import com.rusefi.ui.basic.LoadTuneHelper;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -86,6 +88,8 @@ public class ConsoleUI {
 
     private final TabbedPanel tabbedPane;
     private final String port;
+
+    private LLMTab llmTab;
 
     public final UIContext uiContext;
     private final ConnectivityContext connectivityContext;
@@ -565,6 +569,15 @@ console live data tab is broken #8402
             tabbedPane.addTab("Logs Manager", tabbedPane.logsManager.getContent());
         }
 
+        if (false && !isOffline && !linkManager.isLogViewer()) {
+            tabbedPane.addTab("Troubleshooting", new InitOnFirstPaintPanel() {
+                @Override protected JPanel createContent() {
+                    llmTab = new LLMTab(Paths.get(
+                            System.getProperty("user.home"), ".rusefi", "llm-access"), linkManager);
+                    return llmTab.getContent();
+                }
+            }.getContent());
+        }
 
         MessagesCentral.getInstance().postMessage(ConsoleUI.class, "COMPOSITE_OFF_RPM=" + BinaryProtocolLogger.COMPOSITE_OFF_RPM);
 
@@ -759,6 +772,12 @@ console live data tab is broken #8402
     private void setNonTabContentActive(boolean active) {
         nonTabContentActive = active;
         updateOutputPollingForSelectedTab();
+    }
+
+    public void closeAssistant() {
+        if (llmTab != null) {
+            llmTab.close();
+        }
     }
 
     private void releaseOutputPolling() {

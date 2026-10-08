@@ -4,6 +4,17 @@ The rusEFI console is a Java/Swing application. End users run a native `.exe` la
 (created with [launch4j](http://launch4j.sourceforge.net/), see the `misc/console_launcher`
 folder), which is just a thin wrapper that locates a JRE and starts the bundled JAR.
 
+For the standalone Java ChatGPT sign-in and streaming terminal experiment, see
+[LLM tab sandbox](llm-tab-sandbox.md) (`./gradlew :ui:runLLMTabSandbox`).
+
+## ChatGPT troubleshooting
+
+The experimental **Troubleshooting** tab provides browser ChatGPT sign-in and
+read-only tools using the existing ECU connection. Its registration is currently
+disabled by a `false &&` guard in `ConsoleUI`. See
+[Console troubleshooting assistant](llm-troubleshooting.md) for usage, limits,
+packaging and developer validation.
+
 ## Optional startup tabs
 
 Implement `com.rusefi.ui.plugins.StartupTabProvider` to add tabs to the startup screen.

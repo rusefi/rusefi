@@ -5,6 +5,8 @@ configurations {
 
 dependencies {
     implementation project(':ecu_shared')
+    implementation project(':mcp_ecu')
+    implementation 'com.nimbusds:nimbus-jose-jwt:10.10'
     implementation project(':autoupdate')
     implementation project(':connectivity')
     implementation project(':ts_plugin')
@@ -31,6 +33,18 @@ dependencies {
     testFixturesApi project(':connectivity')
     testFixturesImplementation project(':ecu_shared')
     implementation global_libs.jaxb_runtime
+}
+
+// Auth/UI development without opening an ECU port. Use Console for live tools.
+tasks.register('runLLMTabSandbox', JavaExec) {
+    dependsOn testClasses
+    group = 'Execution'
+    description = 'Open the ChatGPT authentication/UI sandbox (no ECU port opened)'
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.rusefi.ui.LLMTabSandbox'
+    if (project.hasProperty('llmStore')) {
+        args project.property('llmStore')
+    }
 }
 
 // Headless soak: cycles the SD card ECU/logging <-> PC/MSD 10 times, 20s in each mode, and

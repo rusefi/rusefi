@@ -1000,6 +1000,7 @@ public class MainFrame {
     }
 
     private void windowClosedHandler() {
+        consoleUI.closeAssistant();
         configErrorSubscription.remove();
         configErrorHealTimer.stop();
         ConnectionStatusLogic.INSTANCE.removeListener(configErrorConnectionListener);
