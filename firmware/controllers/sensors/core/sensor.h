@@ -82,6 +82,13 @@ public:
 	static SensorResult get(SensorType type);
 
 	/*
+	 * Get a reading from the specified sensor, or fallbackValue if unavailable.
+	 */
+	static float getOr(SensorType type, float fallbackValue) {
+		return Sensor::get(type).value_or(fallbackValue);
+	}
+
+	/*
 	 * Get a reading from the specified sensor, or zero if unavailable.
 	 */
 	static float getOrZero(SensorType type) {

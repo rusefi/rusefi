@@ -134,7 +134,7 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 	int16_t autoscale accelerationLat;@@GAUGE_NAME_ACCEL_LAT@@;"G",{1/1000}, 0, 0, 0, 0
 	int16_t autoscale accelerationLon;@@GAUGE_NAME_ACCEL_LON@@;"G",{1/1000}, 0, 0, 0, 0
 
-	uint8_t detectedGear;@@GAUGE_NAME_DETECTED_GEAR@@;"", 1, 0, 0, @@TCU_GEAR_COUNT@@, 0
+	int8_t detectedGear;@@GAUGE_NAME_DETECTED_GEAR@@;"", 1, 0, 0, @@TCU_GEAR_COUNT@@, 0
 	uint8_t maxTriggerReentrant;;"", 1, 0, 0, 100, 0
 
 	int16_t autoscale rawLowFuelPressure;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3

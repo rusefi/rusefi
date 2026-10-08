@@ -537,13 +537,17 @@ typedef enum __attribute__ ((__packed__)) {
 } air_pressure_sensor_type_e;
 
 typedef enum {
+	INVALID = -9,
 	REVERSE = -1,
 	NEUTRAL = 0,
 	GEAR_1 = 1,
 	GEAR_2 = 2,
 	GEAR_3 = 3,
 	GEAR_4 = 4,
-
+	GEAR_5 = 5,
+	GEAR_6 = 6,
+	GEAR_7 = 7,
+	GEAR_8 = 8,
 } gear_e;
 
 typedef enum __attribute__ ((__packed__)) {
