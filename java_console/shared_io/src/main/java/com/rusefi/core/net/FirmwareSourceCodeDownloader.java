@@ -116,6 +116,7 @@ public final class FirmwareSourceCodeDownloader {
             }
             Path extracted = Files.createDirectory(temporary.resolve("extracted"));
             extract(candidate, extracted, progress, refresh ? 70 : 0);
+            KnowledgeManifest.read(extracted).verifyPayload(extracted, () -> progress.report(99));
             // Validate the entire ZIP before replacing any previously extracted content.
             try (DirectoryStream<Path> roots = Files.newDirectoryStream(extracted)) {
                 for (Path root : roots) {
@@ -124,6 +125,10 @@ public final class FirmwareSourceCodeDownloader {
                         throw new IOException("Source cache entry must not be a symbolic link: " + target);
                     }
                 }
+            }
+            // A legacy ZIP must never inherit revision metadata from an earlier cache.
+            if (!Files.exists(extracted.resolve(KnowledgeManifest.NAME))) {
+                Files.deleteIfExists(directory.resolve(KnowledgeManifest.NAME));
             }
             try (DirectoryStream<Path> roots = Files.newDirectoryStream(extracted)) {
                 for (Path root : roots) {

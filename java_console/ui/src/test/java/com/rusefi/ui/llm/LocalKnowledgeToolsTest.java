@@ -2,6 +2,7 @@ package com.rusefi.ui.llm;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import com.rusefi.core.net.KnowledgeManifest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -19,6 +20,43 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 class LocalKnowledgeToolsTest {
     @TempDir Path root;
+
+    @Test @SuppressWarnings("unchecked") void pinsOnlyCleanHashMatchedWikiEvidenceAndPreservesProvenanceInCases() throws Exception {
+        String revision = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+        String path = "rusefi_documentation/Start.md";
+        String text = "Check cranking voltage.";
+        write(path, text);
+        String hash = KnowledgeManifest.sha256(text.getBytes(StandardCharsets.UTF_8));
+        JSONObject manifest = object("schema_version", 1, "files", object(path, object("sha256", hash, "size", text.length())),
+                "repositories", object("firmware", object("revision", revision, "dirty", false),
+                        "libfirmware", object("revision", revision, "dirty", false), "wiki", object("revision", revision, "dirty", false)),
+                "payload_sha256", KnowledgeManifest.sha256((path + "\0" + hash + "\n").getBytes(StandardCharsets.UTF_8)));
+        write(KnowledgeManifest.NAME, manifest.toJSONString());
+        JSONObject result = read(object("path", path));
+        assertEquals(Boolean.TRUE, result.get("file_hash_matches_manifest"));
+        assertEquals(revision, result.get("upstream_revision"));
+        assertTrue(((String) result.get("upstream_url")).contains("/blob/" + revision + "/"));
+        assertEquals(revision, ((JSONObject) result.get("provenance")).get("wiki_revision"));
+        DiagnosticCaseStore cases = new DiagnosticCaseStore(root.resolve("cases"));
+        cases.retain("read_knowledge", object("path", path), result);
+        JSONObject exported = cases.export(object("findings", "Voltage needs checking.", "hypotheses", "Unknown.",
+                "next_measurements", "Measure voltage.", "evidence_ids", ChatGptAgentTest.array(result.get("evidence_id"))), object(), () -> {});
+        JSONObject report = ChatGptClient.parseObject(new String(Files.readAllBytes(java.nio.file.Paths.get((String) exported.get("path"))), StandardCharsets.UTF_8));
+        JSONObject provenance = (JSONObject) report.get("provenance");
+        assertEquals(ClientBuildProvenance.CURRENT.revision, provenance.get("client_revision"));
+        assertEquals(result.get("provenance"), ((JSONArray) provenance.get("knowledge")).get(0));
+        write(path, "Locally changed text");
+        result = read(object("path", path));
+        assertEquals(Boolean.FALSE, result.get("file_hash_matches_manifest"));
+        assertEquals("unverified", result.get("upstream_revision"));
+        write(path, text);
+        ((JSONObject) ((JSONObject) manifest.get("repositories")).get("wiki")).put("dirty", true);
+        write(KnowledgeManifest.NAME, manifest.toJSONString());
+        result = read(object("path", path));
+        assertEquals(Boolean.TRUE, result.get("file_hash_matches_manifest"));
+        assertEquals("unverified", result.get("upstream_revision"));
+        assertEquals(Boolean.TRUE, ((JSONObject) result.get("provenance")).get("wiki_dirty"));
+    }
 
     @Test void literalAndKeywordSearchReturnScopedCitationsAndUnknownProvenance() throws Exception {
         write("firmware/controllers/start.cpp", "void getCrankingFuel() {}\n");

@@ -86,6 +86,31 @@ task writeScanAndUpdateArgs {
 
 def customJavaUi = findProject(':custom-java-ui')
 
+// Build-time Git only: installed clients read this resource without Git or Gradle.
+def clientRevision = providers.exec {
+    workingDir rootDir
+    commandLine 'git', 'rev-parse', 'HEAD'
+}.standardOutput.asText.map { it.trim() }
+def clientDirty = providers.exec {
+    workingDir rootDir
+    commandLine 'git', 'status', '--porcelain', '--untracked-files=no'
+}.standardOutput.asText.map { (!it.trim().isEmpty()).toString() }
+def clientProvenanceFile = layout.buildDirectory.file('generated-resources/provenance/com/rusefi/ui/llm/client-build.properties')
+def clientProvenance = tasks.register('generateClientProvenance') {
+    inputs.property('revision', clientRevision)
+    inputs.property('dirty', clientDirty)
+    outputs.file(clientProvenanceFile)
+    doLast {
+        def target = clientProvenanceFile.get().asFile
+        target.parentFile.mkdirs()
+        target.text = "revision=${inputs.properties.revision}\ndirty=${inputs.properties.dirty}\n"
+    }
+}
+processResources {
+    dependsOn clientProvenance
+    from(layout.buildDirectory.dir('generated-resources/provenance'))
+}
+
 shadowJar {
     if (customJavaUi != null) {
         dependsOn ':custom-java-ui:classes'

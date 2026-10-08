@@ -1,5 +1,6 @@
 package com.rusefi.ui.llm;
 
+import com.rusefi.core.net.KnowledgeManifest;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -28,6 +29,7 @@ final class LocalKnowledgeTools {
     private static final Set<String> EXTENSIONS = new HashSet<>(Arrays.asList(
             "md", "txt", "c", "cc", "cpp", "cxx", "h", "hpp", "hxx", "inc", "ini", "lua", "yaml", "yml", "s", "mk", "cfg"));
     private final Path root;
+    private KnowledgeManifest manifest;
 
     LocalKnowledgeTools(Path root) {
         this.root = Objects.requireNonNull(root, "root").toAbsolutePath().normalize();
@@ -40,12 +42,12 @@ final class LocalKnowledgeTools {
     static JSONArray definitions() {
         JSONArray definitions = new JSONArray();
         definitions.add(definition("search_knowledge",
-                "Search cached rusEFI firmware/wiki text. Literal mode finds a substring (use for exact symbols); keywords mode requires every whitespace-separated term on the same line. Case-insensitive. Results include path:line citations, SHA-256 and unverified revision metadata. Narrow path_prefix if truncated.",
+                "Search cached rusEFI firmware/wiki text. Literal mode finds a substring (use for exact symbols); keywords mode requires every whitespace-separated term on the same line. Case-insensitive. Results include citations, hashes and archive provenance; ECU compatibility is unverified. Narrow path_prefix if truncated.",
                 object("query", object("type", "string"), "mode", object("type", "string", "enum", array("literal", "keywords")),
                         "path_prefix", object("type", "string", "description", "Optional relative directory or file under firmware/, rusefi_documentation/ or docs/."),
                         "max_results", object("type", "integer", "minimum", 1, "maximum", 20)), array("query")));
         definitions.add(definition("read_knowledge",
-                "Read a bounded line range from a cached text file returned by search_knowledge. Preserves Markdown/image references. Cite path and line numbers; upstream_url is current upstream, not a verified archive revision.",
+                "Read a bounded line range from a cached text file returned by search_knowledge. Preserves Markdown/image references. Cite path and line numbers; upstream_revision identifies a pinned wiki URL when available, otherwise upstream_url refers to current master.",
                 object("path", object("type", "string"), "start_line", object("type", "integer", "minimum", 1, "maximum", 1000000),
                         "max_lines", object("type", "integer", "minimum", 1, "maximum", 120)), array("path")));
         return definitions;
@@ -54,6 +56,7 @@ final class LocalKnowledgeTools {
     JSONObject execute(String name, JSONObject args, Runnable cancellation) {
         cancellation.run();
         try {
+            manifest = KnowledgeManifest.read(root);
             if ("search_knowledge".equals(name)) {
                 checkKeys(args, "query", "mode", "path_prefix", "max_results");
                 String query = string(args, "query", null, 256).trim();
@@ -300,18 +303,22 @@ final class LocalKnowledgeTools {
     private JSONObject metadata(Path file, Text text) {
         String path = relative(file);
         JSONObject result = object("path", path, "sha256", text.sha256);
+        boolean matches = manifest.contains(path, text.sha256);
+        result.put("file_hash_matches_manifest", matches);
         if (path.startsWith("rusefi_documentation/")) {
+            String revision = matches ? manifest.cleanRevision("wiki") : null;
+            result.put("upstream_revision", revision == null ? "unverified" : revision);
             try {
-                result.put("upstream_url", new URI("https", "github.com", "/rusefi/rusefi_documentation/blob/master/"
+                result.put("upstream_url", new URI("https", "github.com", "/rusefi/rusefi_documentation/blob/"
+                        + (revision == null ? "master" : revision) + "/"
                         + path.substring("rusefi_documentation/".length()), null).toASCIIString());
             } catch (java.net.URISyntaxException e) { throw new IllegalArgumentException("Invalid documentation path"); }
         }
         return result;
     }
 
-    private static JSONObject result() {
-        return object("success", true, "provenance", object("source_revision", "unknown", "ecu_match", "unverified",
-                "note", "The cache has no revision manifest. File hashes identify retrieved content, not a matching ECU firmware build. Upstream links refer to current master."));
+    private JSONObject result() {
+        return object("success", true, "provenance", manifest.provenance(null));
     }
     private static JSONObject error(String message) { return object("success", false, "error", message); }
     private static JSONObject definition(String name, String description, JSONObject properties, JSONArray required) {
