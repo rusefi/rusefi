@@ -570,7 +570,7 @@ console live data tab is broken #8402
         }
 
         if (!isOffline && !linkManager.isLogViewer()) {
-            tabbedPane.addTab("Troubleshooting", new InitOnFirstPaintPanel() {
+            tabbedPane.addTab("AI Troubleshooting", new InitOnFirstPaintPanel() {
                 @Override protected JPanel createContent() {
                     llmTab = new LLMTab(Paths.get(
                             System.getProperty("user.home"), ".rusefi", "llm-access"), linkManager);

@@ -12,6 +12,9 @@ import org.json.simple.JSONArray;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.net.URI;
 import java.nio.file.Path;
 import java.util.Collections;
@@ -131,9 +134,17 @@ public final class LLMTab implements AutoCloseable {
         prompt.setLineWrap(true);
         prompt.setWrapStyleWord(true);
         prompt.getAccessibleContext().setAccessibleName("Message to ChatGPT");
-        prompt.setToolTipText("Type a message, then click Send. Enter inserts a new line.");
+        prompt.setToolTipText("Type a message, then press Ctrl+Enter or click Send. Enter inserts a new line.");
+        prompt.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_DOWN_MASK), "send-prompt");
+        prompt.getActionMap().put("send-prompt", new AbstractAction() {
+            @Override public void actionPerformed(ActionEvent e) {
+                if (send.isEnabled()) { send(); }
+            }
+        });
         JPanel input = new JPanel(new BorderLayout(8, 8));
+        input.add(new JLabel("Describe your problem below and hit 'Send'"), BorderLayout.NORTH);
         input.add(new JScrollPane(prompt), BorderLayout.CENTER);
+        send.setToolTipText("Send the message (Ctrl+Enter from the message field)");
         JPanel buttons = new JPanel(new GridLayout(2, 1, 4, 4));
         buttons.add(send);
         buttons.add(stop);
