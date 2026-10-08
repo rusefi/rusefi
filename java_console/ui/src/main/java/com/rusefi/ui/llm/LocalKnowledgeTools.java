@@ -101,6 +101,7 @@ final class LocalKnowledgeTools {
                 }
                 @Override public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
                     if (!budget.visit()) { return FileVisitResult.TERMINATE; }
+                    if (attrs.isDirectory()) { budget.skipped++; } // Directory at the traversal depth limit.
                     if (attrs.isRegularFile() && allowed(file)) {
                         if (attrs.size() <= MAX_FILE_BYTES) {
                             files.add(file);
@@ -127,13 +128,17 @@ final class LocalKnowledgeTools {
         int scanned = 0;
         searchFiles:
         for (Path file : files) {
-            if (!budget.check() || scanned >= MAX_FILES || budget.bytes + Files.size(file) > MAX_SCAN_BYTES) {
+            if (!budget.check() || scanned >= MAX_FILES) {
                 budget.limited = true;
                 break;
             }
             scanned++;
             Text text;
             try {
+                if (budget.bytes + Files.size(file) > MAX_SCAN_BYTES) {
+                    budget.limited = true;
+                    break;
+                }
                 text = load(file, budget);
             } catch (IOException unsafeOrNonText) {
                 budget.skipped++;
