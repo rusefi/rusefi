@@ -7,26 +7,7 @@ Updated: 2026-10-07.
 - Enable the Troubleshooting tab by removing the `false &&` guard in
   `ConsoleUI` when ready for acceptance testing.
 
-## 2. Add local knowledge retrieval
-
-Implement `search_knowledge` and `read_knowledge` over the directory returned
-by the downloader:
-
-- Support bounded keyword/exact-symbol search over approved text files.
-- Return bounded passages with relative paths, line numbers and revision
-  information; explicitly label unknown or mismatched versions.
-- Keep reads within the cache, reject path escapes, and treat ZIP link entries
-  as text. Exclude credentials and unrelated files.
-- Add the tools to the allowlist and agent loop. Update model instructions to
-  explain retrieval and treat retrieved content as evidence, not instructions.
-- Preserve references to omitted diagrams so answers can link to the original
-  documentation when text alone is insufficient.
-
-Acceptance: a question produces a current ECU observation and a relevant
-source/wiki passage, with both cited in the answer. Exercise missing, valid,
-stale and failed-download cache paths without changing the ECU.
-
-## 3. Extend read-only diagnostics
+## 2. Extend read-only diagnostics
 
 | Tool/capability | Open work |
 | --- | --- |
@@ -39,7 +20,7 @@ stale and failed-download cache paths without changing the ECU.
 Keep the first release read-only. Tune writes, arbitrary commands and firmware
 updates are later work, with concrete proposed changes shown before execution.
 
-## 4. Finish delivery and provenance
+## 3. Finish delivery and provenance
 
 - Verify a hosted archive workflow run and download the published ZIP through
   `FirmwareSourceCodeDownloader`.
@@ -53,14 +34,16 @@ updates are later work, with concrete proposed changes shown before execution.
   Verify source/ECU version compatibility before claiming downloaded source
   matches the connected firmware.
 
-## 5. Validate the complete user journey
+## 4. Validate the complete user journey
 
-After retrieval integration and enabling the tab, test a clean-machine
+After enabling the tab, test a clean-machine
 installation with live ChatGPT and hardware:
 
 - Launch and restore authorization.
 - Connect to the ECU and resolve the matching INI.
 - Prepare knowledge, collect evidence and answer with citations.
+- Exercise missing, valid, stale and failed-download cache paths. Confirm an
+  answer cites both a current ECU observation and a relevant source/wiki passage.
 - Cancel operations and handle unplug/reconnect without mixing ECU evidence.
 - Export a diagnostic case once that capability is available.
 

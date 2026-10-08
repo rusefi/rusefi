@@ -150,6 +150,19 @@ class LocalKnowledgeToolsTest {
         assertEquals("new source", ((JSONObject) ((JSONArray) second.get("lines")).get(0)).get("text"));
     }
 
+    @Test void scanHasAnAggregateByteBudget() throws Exception {
+        Files.createDirectories(root.resolve("firmware"));
+        for (int i = 0; i < 35; i++) {
+            try (RandomAccessFile file = new RandomAccessFile(root.resolve("firmware/" + i + ".txt").toFile(), "rw")) {
+                file.setLength(LocalKnowledgeTools.MAX_FILE_BYTES);
+            }
+        }
+        JSONObject result = search(object("query", "absent"));
+        assertEquals(Boolean.TRUE, result.get("truncated"));
+        assertTrue(((Number) result.get("files_scanned")).intValue() < 35);
+        assertTrue(((JSONArray) result.get("matches")).isEmpty());
+    }
+
     private JSONObject search(JSONObject args) { return new LocalKnowledgeTools(root).execute("search_knowledge", args, () -> {}); }
     private JSONObject read(JSONObject args) { return new LocalKnowledgeTools(root).execute("read_knowledge", args, () -> {}); }
     private void write(String path, String content) throws IOException {

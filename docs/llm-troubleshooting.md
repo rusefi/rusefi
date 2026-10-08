@@ -17,8 +17,9 @@ Once sources are ready, select a saved account or choose
 opens the browser automatically; if that fails, the tab displays a copyable link.
 The app identifies itself as **rusEFI Updater**.
 
-The terminal shows streamed answers and tool names as they run. User messages
-and requested ECU evidence are sent to OpenAI using the selected ChatGPT plan.
+The terminal shows streamed answers and tool names as they run. User messages,
+requested ECU evidence and retrieved source/wiki excerpts are sent to OpenAI
+using the selected ChatGPT plan.
 The assistant's tools are read-only:
 
 | Tool | Evidence |
@@ -27,6 +28,8 @@ The assistant's tools are read-only:
 | `list_output_channels` | INI datalog channel names and labels, with a substring filter |
 | `read_output_channel` | One value from a recent full poll, with its host timestamp and age |
 | `read_messages` | Console/ECU messages observed since this conversation started, with sequence numbers |
+| `search_knowledge` | Literal or keyword matches in cached firmware/wiki text, with paths and line numbers |
+| `read_knowledge` | Bounded line ranges, file hashes and citation metadata from cached text |
 
 Message capture uses the same global MessagesCentral stream as the Console,
 including UI diagnostics. It does not retrieve historical ECU messages. Channel
@@ -62,12 +65,38 @@ subscriptions. It never scans ports, reconnects, submits commands, or closes the
 borrowed `LinkManager`. The standalone MCP entry point remains available for
 external clients with its existing tool catalog.
 
-The Console shadow JAR includes authentication and ECU tool code. A second MCP
-process/JAR is unnecessary for this tab. Local wiki/source retrieval, tune/Lua
-reading, log/sniffer capture, diagnostic export, and write tools are follow-ups;
-this implementation covers the model/tool loop and initial Console connection
-integration. Merely extracting documentation beside the JAR does not yet make
-it searchable by the assistant.
+The Console shadow JAR includes authentication, ECU and knowledge tool code.
+A second MCP process/JAR is unnecessary for this tab. Tune/Lua reading,
+log/sniffer capture, diagnostic export, and write tools remain follow-ups.
+
+## Local knowledge retrieval
+
+`TroubleshootingTools` combines the four ECU tools with `LocalKnowledgeTools`,
+using the exact cache directory returned by source preparation. Both stay bound
+to the current Console connection. The model can search case-insensitively for
+a literal substring or all whitespace-separated keywords on one line, then
+read the surrounding lines. `path_prefix` limits a search to a directory/file.
+
+Reads are restricted to non-hidden text files under `firmware/`,
+`rusefi_documentation/` and `docs/` when present. Supported extensions include
+Markdown, plain text, C/C++/assembly, INI, Lua, YAML, make fragments and config
+text. JSON credentials, unrelated cache files, absolute/traversing paths and
+filesystem symlinks are excluded. Extracted ZIP link entries remain plain text.
+
+Files must be valid UTF-8 without NUL bytes and at most 2 MiB. Searches have a
+five-second work budget, at most 12,000 traversal visits, 4,000 scanned files,
+64 MiB of input and 20 returned matches. Partial results are marked; narrow
+the query or path prefix when a limit is reached. Reads return at most 120
+lines, 6,000 text characters total and 2,000 characters per line, with truncation
+flags and a next-line hint when applicable. Stop cancels retrieval too.
+
+Results identify files with relative paths, line numbers and SHA-256 hashes;
+answers are instructed to cite `path:Lstart-Lend`. The ZIP has no revision
+manifest, so source revision is explicitly **unknown** and the ECU match is
+**unverified**. A file hash is not proof that its source matches the ECU.
+Markdown image references are preserved; wiki results include a current-upstream
+page URL to help locate omitted diagrams. That URL is not a version-pinned
+copy of the cached passage.
 
 ## Firmware source cache
 
@@ -101,8 +130,8 @@ The CLI sandbox prints progress as text:
 ./gradlew :shared_io:runFirmwareSourceCodeDownloaderSandbox --args="/tmp/rusefi-source-cache"
 ```
 
-This prepares local content only; it does not yet expose source/wiki search to
-the model. `LLMTab` uses `prepareCached(...)` on opening and waits for a user
+The CLI prepares files on disk; the LLM panel exposes them through the knowledge
+tools. `LLMTab` uses `prepareCached(...)` on opening and waits for a user
 click before calling `downloadFresh(...)`. Account-store initialization also
 waits until sources are ready. Closing the panel cancels source preparation
 and ignores late progress/completion callbacks.
