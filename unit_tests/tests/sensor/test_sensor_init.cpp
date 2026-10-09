@@ -374,7 +374,7 @@ TEST(SensorInit, Map) {
 	EXPECT_FLOAT_EQ(75, Sensor::getOrZero(SensorType::Map));
 }
 
-// Reproduction: a custom barometer currently inherits manifold MAP calibration.
+// The onboard barometer must not change when manifold MAP calibration changes.
 TEST(SensorInit, CustomBarometerCalibration) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->mapErrorDetectionTooLow = 0;
@@ -394,15 +394,20 @@ TEST(SensorInit, CustomBarometerCalibration) {
 	auto map = const_cast<Sensor*>(Sensor::getSensorOfType(SensorType::MapSlow));
 	ASSERT_NE(nullptr, baro);
 	ASSERT_NE(nullptr, map);
-	EXPECT_POINT_VALID(baro, 3.9475f, 278.43f);
+	EXPECT_POINT_VALID(baro, 3.9475f, 100);
 	EXPECT_POINT_VALID(map, 5, 350);
 
 	engineConfiguration->map.sensor.highValue = 450;
 	engineConfiguration->mapLowValueVoltage = 0.5f;
 	engineConfiguration->mapHighValueVoltage = 4.5f;
 	initMap();
-	EXPECT_POINT_VALID(baro, 3.9475f, 389.225f);
+	EXPECT_POINT_VALID(baro, 3.9475f, 100);
 	EXPECT_POINT_VALID(map, 4.5f, 450);
+
+	engineConfiguration->baroSensor.lowValue = 5;
+	engineConfiguration->baroSensor.highValue = 105;
+	initMap();
+	EXPECT_POINT_VALID(baro, 2.5f, 55);
 
 	engineConfiguration->baroSensor.type = MT_GM_1_BAR;
 	initMap();
