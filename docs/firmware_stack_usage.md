@@ -204,7 +204,7 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | stepper | 400 | - | - | - | 716 | NOT REVIEWED: 25 unknown, 6 indirect, recursion |
 | firmware | storage manager | 1200 | - | - | - | 700 | NOT REVIEWED: 28 unknown, 5 indirect, recursion |
 | firmware | timer watchdog | 256 | - | - | - | 592 | NOT REVIEWED: 20 unknown, 2 indirect, recursion |
-| firmware | TunerStudio | 1200 | - | - | - | 1308 | NOT REVIEWED: 66 unknown, 37 indirect, recursion |
+| firmware | TunerStudio | 1200 | - | - | - | 1316 | NOT REVIEWED: 66 unknown, 37 indirect, recursion |
 | firmware | USB mass storage | 256 | - | - | - | 796 | NOT REVIEWED: 27 unknown, 5 indirect, recursion |
 | bootloader | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | bootloader | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
