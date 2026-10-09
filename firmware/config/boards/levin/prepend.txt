@@ -1,0 +1,35 @@
+#define ts_show_can_pins false
+#define ts_show_can2 false
+#define ts_show_sd_card true
+#define ts_show_sd_pins false
+#define ts_show_spi false
+#define ts_show_spi1_enable false
+#define ts_show_spi2_enable false
+#define ts_show_spi3_enable false
+#define ts_show_spi1_pins false
+#define ts_show_spi2_pins false
+#define ts_show_spi3_pins false
+#define ts_show_stepper_pins false
+#define ts_show_stepper_hbridge false
+#define ts_show_stepper_push_pull false
+#define ts_show_tunerstudio_port false
+#define ts_show_analog_divider false
+#define ts_show_communityCommsLedPin false
+#define ts_show_onboard_accelerometer false
+#define ts_show_vr_threshold_all false
+#define ts_show_vr_threshold_2 false
+#define ts_show_software_knock false
+#define ts_show_hardware_simulator false
+#define ts_show_cylinder_9 false
+#define ts_show_cylinder_10 false
+#define ts_show_cylinder_11 false
+#define ts_show_cylinder_12 false
+#define INJ_PHASE_RPM_COUNT 6
+#define INJ_PHASE_LOAD_COUNT 6
+#define MAP_EST_RPM_COUNT 6
+#define MAP_EST_LOAD_COUNT 6
+#define ts_show_baro_pin false
+#define ts_show_vbatt_pin false
+
+! Generic digital selectors expose connector pins only, preserving STM32 enum IDs.
+#define Gpio_enum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INJ 2","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","VSS","INVALID","AUX PULSE 2","IGN 7","INVALID","INVALID","INJ 6","INJ 3","INJ 4","INJ 1","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","PWM OUT 2","AUX PULSE 3","INVALID","INVALID","INVALID","INVALID","INVALID","IGN 1","INVALID","INVALID","INVALID","INVALID","INVALID","CRANK","CAM","INVALID","INVALID","AUX PULSE 4","PWM OUT 4","IDLE 2","IDLE 1","PWM OUT 3","IGN 8","AUX PULSE 1","GAUX 2","PWM OUT 1","INVALID","INVALID","IGN 6","IGN 5","IGN 4","IGN 3","IGN 2","INJ 7","TACHO","FAN","INJ 8","FUEL PUMP","INVALID","INJ 5","GAUX 1","PNP PWM OUT","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID"

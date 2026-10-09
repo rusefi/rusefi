@@ -1,0 +1,156 @@
+pins:
+  - pin: CN12_1
+    id: E8
+    class: outputs
+    type: ls
+    ts_name: TACHO
+
+  - pin: CN12_3
+    id: E15
+    class: outputs
+    type: hs
+    ts_name: PNP PWM OUT
+
+  - pin: CN12_5
+    id: D10
+    class: outputs
+    type: ls
+    ts_name: IDLE 1
+
+  - pin: CN12_6
+    id: E11
+    class: outputs
+    type: ls
+    ts_name: FUEL PUMP
+
+  - pin: CN12_7
+    id: D9
+    class: outputs
+    type: ls
+    ts_name: IDLE 2
+
+  - pin: CN12_8
+    id: E9
+    class: outputs
+    type: ls
+    ts_name: FAN
+
+  - pin: CN12_10
+    id: D15
+    class: outputs
+    type: ls
+    ts_name: PWM OUT 1
+
+  - pin: CN12_12
+    id: C6
+    class: outputs
+    type: ls
+    ts_name: PWM OUT 2
+
+  - pin: CN12_14
+    id: D11
+    class: outputs
+    type: ls
+    ts_name: PWM OUT 3
+
+  - pin: CN12_16
+    id: D8
+    class: outputs
+    type: ls
+    ts_name: PWM OUT 4
+
+  - pin: CN12_19
+    id: B15
+    class: outputs
+    type: inj
+    ts_name: INJ 1
+
+  - pin: CN12_21
+    id: A8
+    class: outputs
+    type: inj
+    ts_name: INJ 2
+
+  - pin: CN12_23
+    id: B13
+    class: outputs
+    type: inj
+    ts_name: INJ 3
+
+  - pin: CN12_25
+    id: B14
+    class: outputs
+    type: inj
+    ts_name: INJ 4
+
+  - pin: CN12_27
+    id: E13
+    class: outputs
+    type: inj
+    ts_name: INJ 5
+
+  - pin: CN12_29
+    id: B12
+    class: outputs
+    type: inj
+    ts_name: INJ 6
+
+  - pin: CN12_31
+    id: E7
+    class: outputs
+    type: inj
+    ts_name: INJ 7
+
+  - pin: CN12_33
+    id: E10
+    class: outputs
+    type: inj
+    ts_name: INJ 8
+
+  - pin: CN12_20
+    id: C13
+    class: outputs
+    type: ign
+    ts_name: IGN 1
+
+  - pin: CN12_22
+    id: E6
+    class: outputs
+    type: ign
+    ts_name: IGN 2
+
+  - pin: CN12_24
+    id: E5
+    class: outputs
+    type: ign
+    ts_name: IGN 3
+
+  - pin: CN12_26
+    id: E4
+    class: outputs
+    type: ign
+    ts_name: IGN 4
+
+  - pin: CN12_28
+    id: E3
+    class: outputs
+    type: ign
+    ts_name: IGN 5
+
+  - pin: CN12_30
+    id: E2
+    class: outputs
+    type: ign
+    ts_name: IGN 6
+
+  - pin: CN12_32
+    id: B9
+    class: outputs
+    type: ign
+    ts_name: IGN 7
+
+  - pin: CN12_34
+    id: D12
+    class: outputs
+    type: ign
+    ts_name: IGN 8

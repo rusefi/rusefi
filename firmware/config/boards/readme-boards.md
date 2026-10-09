@@ -25,6 +25,7 @@ covers the board_configuration.cpp configuration hooks.
 
 | Board | Notes |
 | ----- | ----- |
+| [levin](levin) | Levin Pro, STM32F407, native USB and CH340/Bluetooth variants |
 | [microrusefi](microrusefi) | microRusEFI (MRE), F4 and F7 variants |
 | [proteus](proteus) | Proteus, F4/F7/H7 variants, including a TCU variant |
 | [hellen/uaefi](hellen/uaefi) | uaEFI, including Pro F7/H7 variants |

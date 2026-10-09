@@ -1,0 +1,85 @@
+pins:
+  - pin: CN11_1
+    id: [B6, B6]
+    class: [event_inputs, switch_inputs]
+    ts_name: VSS
+
+  - pin: CN11_2
+    id: [D14, D14]
+    class: [event_inputs, switch_inputs]
+    ts_name: GAUX 2
+
+  - pin: CN11_3
+    id: [D3, D3]
+    class: [event_inputs, switch_inputs]
+    ts_name: CRANK
+
+  - pin: CN11_6
+    id: [D4, D4]
+    class: [event_inputs, switch_inputs]
+    ts_name: CAM
+
+  - pin: CN11_8
+    id: [D13, D13]
+    class: [event_inputs, switch_inputs]
+    ts_name: AUX PULSE 1
+
+  - pin: CN11_12
+    id: [E14, E14]
+    class: [event_inputs, switch_inputs]
+    ts_name: GAUX 1
+
+  - pin: CN11_15
+    id: [D7, D7]
+    class: [event_inputs, switch_inputs]
+    ts_name: AUX PULSE 4
+
+  - pin: CN11_16
+    id: [C7, C7]
+    class: [event_inputs, switch_inputs]
+    ts_name: AUX PULSE 3
+
+  - pin: CN11_17
+    id: [B8, B8]
+    class: [event_inputs, switch_inputs]
+    ts_name: AUX PULSE 2
+
+  - pin: CN11_23
+    id: EFI_ADC_0
+    class: analog_inputs
+    ts_name: IAT
+
+  - pin: CN11_22
+    id: EFI_ADC_1
+    class: analog_inputs
+    ts_name: CLT
+
+  - pin: CN11_21
+    id: EFI_ADC_2
+    class: analog_inputs
+    ts_name: TPS
+
+  - pin: CN11_20
+    id: EFI_ADC_3
+    class: analog_inputs
+    ts_name: MAP
+
+  - pin: CN11_19
+    id: EFI_ADC_8
+    class: analog_inputs
+    ts_name: O2
+
+  - pin: CN11_18
+    id: EFI_ADC_12
+    class: analog_inputs
+    ts_name: ANALOG IN 1
+
+  - pin: CN11_9
+    id: EFI_ADC_10
+    class: analog_inputs
+    ts_name: ANALOG IN 2
+
+  - pin: CN11_14
+    id: EFI_ADC_11
+    class: analog_inputs
+    ts_name: ANALOG IN 3

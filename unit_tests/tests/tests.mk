@@ -1,4 +1,5 @@
 TESTS_SRC_CPP = \
+	tests/boards/test_levin.cpp \
 	tests/test_nucleo_hardware_ci.cpp \
 	tests/test_adc_offchip.cpp \
 	tests/test_mcp4728.cpp \
