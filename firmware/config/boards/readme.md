@@ -54,7 +54,7 @@ A: please remember about https://wiki.rusefi.com/Hardware#q-this-is-all-very-coo
 
 # Q: I insist on custom
 
-A: https://wiki.rusefi.com/Custom-Firmware
+A: https://wiki.rusefi.com/Custom-Firmware https://github.com/rusefi/fw-custom-example
 
 # Q: I want to build the firmware in debug mode
 
