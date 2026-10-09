@@ -72,6 +72,9 @@ PYTHON = "python"
 # this reason; locally we pull the equivalent msys2 repackages from conda-forge
 # so `make` runs from a plain `pixi shell` without Git Bash or Cygwin on PATH.
 [target.win-64.dependencies]
+# Native host compilers for unit tests; firmware uses arm-gnu-toolchain above.
+gcc = ">=14.3.0,<14.4"
+gxx = ">=14.3.0,<14.4"
 m2-bash = "*"
 m2-sed = "*"
 m2-gawk = "*"
@@ -85,6 +88,10 @@ m2-zip = ">=3.0.4,<4"
 m2-p7zip = ">=17.5.2,<18"
 
 [target.linux-64.dependencies]
+# Native host compilers and binary tools for unit tests.
+gcc = ">=14.3.0,<14.4"
+gxx = ">=14.3.0,<14.4"
+binutils = ">=2.43,<3"
 coreutils = "*"  # provides nproc for firmware and unit-test build scripts
 util-linux = "*"  # provides flock, used by java_tools.mk to serialize gradle
 # INI archive generation invokes both zip and 7z.
@@ -93,6 +100,9 @@ p7zip = ">=16.2,<17"
 valgrind = ">=3.24.0,<4"  # used by unit_tests/run_with_valgrind.sh (SANITIZE=no)
 
 [target.osx-arm64.dependencies]
+# Native host compilers for unit tests.
+clang = ">=22,<23"
+clangxx = ">=22,<23"
 coreutils = "*"  # provides nproc for firmware and unit-test build scripts
 util-linux = "*"  # provides flock, used by java_tools.mk to serialize gradle
 # INI archive generation invokes both zip and 7z.
