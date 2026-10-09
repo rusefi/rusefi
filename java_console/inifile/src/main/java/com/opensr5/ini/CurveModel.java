@@ -9,9 +9,15 @@ public class CurveModel {
     private final AxisModel yAxis;
     private final String xBins;
     private final String yBins;
+    private final String topicHelp;
 
     public CurveModel(String curveId, String title, String xLabel, String yLabel,
                       AxisModel xAxis, AxisModel yAxis, String xBins, String yBins) {
+        this(curveId, title, xLabel, yLabel, xAxis, yAxis, xBins, yBins, null);
+    }
+
+    public CurveModel(String curveId, String title, String xLabel, String yLabel,
+                      AxisModel xAxis, AxisModel yAxis, String xBins, String yBins, String topicHelp) {
         this.curveId = curveId;
         this.title = title;
         this.xLabel = xLabel;
@@ -20,6 +26,11 @@ public class CurveModel {
         this.yAxis = yAxis;
         this.xBins = xBins;
         this.yBins = yBins;
+        this.topicHelp = topicHelp;
+    }
+
+    public String getTopicHelp() {
+        return topicHelp;
     }
 
     public String getCurveId() {

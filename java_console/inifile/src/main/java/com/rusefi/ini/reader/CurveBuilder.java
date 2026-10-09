@@ -17,6 +17,7 @@ public class CurveBuilder {
     private AxisModel yAxis;
     private String xBins;
     private String yBins;
+    private String topicHelp;
 
     public void setCurveDefinition(String curveId, String title) {
         this.curveId = curveId;
@@ -57,7 +58,7 @@ public class CurveBuilder {
     }
 
     public CurveModel build() {
-        return new CurveModel(curveId, title, xLabel, yLabel, xAxis, yAxis, xBins, yBins);
+        return new CurveModel(curveId, title, xLabel, yLabel, xAxis, yAxis, xBins, yBins, topicHelp);
     }
 
     public void reset() {
@@ -69,6 +70,7 @@ public class CurveBuilder {
         yAxis = null;
         xBins = null;
         yBins = null;
+        topicHelp = null;
     }
 
     public boolean handleLine(LinkedList<String> list, java.util.function.Consumer<String> addField, Runnable finishCurrentCurve) {
@@ -86,7 +88,11 @@ public class CurveBuilder {
             return false;
         }
 
-        if (first.equalsIgnoreCase("columnLabel")) {
+        if (first.equalsIgnoreCase("topicHelp")) {
+            list.removeFirst();
+            topicHelp = list.isEmpty() ? null : list.removeFirst();
+            return true;
+        } else if (first.equalsIgnoreCase("columnLabel")) {
             list.removeFirst();
             setColumnLabels(list.removeFirst(), list.removeFirst());
             return true;

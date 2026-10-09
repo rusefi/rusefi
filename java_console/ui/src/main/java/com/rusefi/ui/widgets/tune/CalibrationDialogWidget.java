@@ -162,6 +162,33 @@ public class CalibrationDialogWidget {
         }
     }
 
+    // Keep help outside the INI layout, especially panels already using BorderLayout.NORTH.
+    private static JPanel prepareTopicHelp(JPanel container, String reference, IniFileModel ini) {
+        JButton help = CalibrationFieldFactory.createTopicHelpButton(ini, reference);
+        if (help == null) {
+            return container;
+        }
+        JPanel toolbar = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));
+        toolbar.add(help);
+        JPanel body = new JPanel();
+        body.setAlignmentX(Component.LEFT_ALIGNMENT);
+        container.setLayout(new BorderLayout());
+        container.add(toolbar, BorderLayout.NORTH);
+        container.add(body, BorderLayout.CENTER);
+        return body;
+    }
+
+    private static JComponent withTopicHelp(JComponent content, String reference, IniFileModel ini) {
+        JPanel wrapper = new JPanel();
+        JPanel body = prepareTopicHelp(wrapper, reference, ini);
+        if (body == wrapper) {
+            return content;
+        }
+        body.setLayout(new BorderLayout());
+        body.add(content, BorderLayout.CENTER);
+        return wrapper;
+    }
+
     public ConfigurationImage getWorkingImage() {
         return workingImage;
     }
@@ -197,14 +224,15 @@ public class CalibrationDialogWidget {
             }
             contentPane.setName(uiName);
 
-            applyLayout(contentPane, dialogModel.getLayoutHint());
+            JPanel body = prepareTopicHelp(contentPane, dialogModel.getTopicHelp(), iniFileModel);
+            applyLayout(body, dialogModel.getLayoutHint());
             contentPane.setAlignmentX(Component.LEFT_ALIGNMENT);
-            fillPanel(contentPane, dialogModel, iniFileModel, ci,
+            fillPanel(body, dialogModel, iniFileModel, ci,
                 getFieldLabelWidth(dialogModel, iniFileModel, new HashSet<>()),
                 getFieldEditorWidth(dialogModel, iniFileModel, ci, new HashSet<>()));
 
             if (TriggerImageHelper.isTriggerPanel(dialogModel.getKey(), uiName)) {
-                addTriggerImage(contentPane, dialogModel.getKey(), uiName);
+                addTriggerImage(body, dialogModel.getKey(), uiName);
             }
         }
         updateLiveDemand();
@@ -247,7 +275,8 @@ public class CalibrationDialogWidget {
 
             TableModel table = iniFileModel.getTable(key);
             if (table != null) {
-                contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+                JPanel body = prepareTopicHelp(contentPane, table.getTopicHelp(), iniFileModel);
+                body.setLayout(new BoxLayout(body, BoxLayout.Y_AXIS));
                 //TODO: nicer injection of this button? maybe a comment on the .ini and then hook this?
                 if ("veTableTbl".equals(table.getTableId())) {
                     final IniFileModel capturedIni = iniFileModel;
@@ -255,19 +284,20 @@ public class CalibrationDialogWidget {
                     genVeBtn.addActionListener(e -> showVeGeneratorPanel(capturedIni));
                     JPanel veToolbar = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));
                     veToolbar.add(genVeBtn);
-                    contentPane.add(veToolbar);
+                    body.add(veToolbar);
                 }
                 TuningTableView tuningTableView = new TuningTableView(table.getTitle());
                 tuningTableView.displayTable(iniFileModel, table.getTableId(), workingImage);
                 tuningTableView.setOnEdit(notifyEdit);
-                contentPane.add(tuningTableView.getContent());
+                body.add(tuningTableView.getContent());
             } else {
                 CurveModel curve = iniFileModel.getCurves().get(key);
                 if (curve != null) {
-                    contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+                    JPanel body = prepareTopicHelp(contentPane, curve.getTopicHelp(), iniFileModel);
+                    body.setLayout(new BoxLayout(body, BoxLayout.Y_AXIS));
                     CurveWidget curveWidget = new CurveWidget(curve, iniFileModel, workingImage);
                     curveWidget.setOnEdit(notifyEdit);
-                    contentPane.add(curveWidget.getContentPane());
+                    body.add(curveWidget.getContentPane());
                 }
             }
         }
@@ -575,7 +605,7 @@ public class CalibrationDialogWidget {
         if (curve != null) {
             CurveWidget curveWidget = new CurveWidget(curve, iniFileModel, workingImage);
             curveWidget.setOnEdit(notifyEdit);
-            JComponent content = curveWidget.getContentPane();
+            JComponent content = withTopicHelp(curveWidget.getContentPane(), curve.getTopicHelp(), iniFileModel);
             CalibrationFieldFactory.applyStyle(content);
             content.setAlignmentX(Component.LEFT_ALIGNMENT);
             if (constraint != null) targetContainer.add(content, constraint); else targetContainer.add(content);
@@ -599,6 +629,7 @@ public class CalibrationDialogWidget {
                 wrapper.add(content, BorderLayout.CENTER);
                 content = wrapper;
             }
+            content = withTopicHelp(content, table.getTopicHelp(), iniFileModel);
             CalibrationFieldFactory.applyStyle(content);
             content.setAlignmentX(Component.LEFT_ALIGNMENT);
             if (constraint != null) targetContainer.add(content, constraint); else targetContainer.add(content);
@@ -609,7 +640,8 @@ public class CalibrationDialogWidget {
         panelWidget.setAlignmentX(Component.LEFT_ALIGNMENT);
         DialogModel subDialog = panel.resolveDialog(iniFileModel);
         String subLayoutHint = subDialog != null ? subDialog.getLayoutHint() : null;
-        applyLayout(panelWidget, subLayoutHint);
+        JPanel body = prepareTopicHelp(panelWidget, subDialog == null ? null : subDialog.getTopicHelp(), iniFileModel);
+        applyLayout(body, subLayoutHint);
 
         if (subDialog != null) {
             String uiName = subDialog.getUiName();
@@ -619,11 +651,11 @@ public class CalibrationDialogWidget {
             if (uiName != null && !uiName.trim().isEmpty()) {
                 GradientTitleBorder.installBorder(uiName, panelWidget);
             }
-            fillPanel(panelWidget, subDialog, iniFileModel, ci,
+            fillPanel(body, subDialog, iniFileModel, ci,
                 Math.max(0, fieldLabelWidth - panelWidget.getInsets().left), fieldEditorWidth);
 
             if (TriggerImageHelper.isTriggerPanel(subDialog.getKey(), uiName) || "Sub Panel".equals(uiName)) {
-                addTriggerImage(panelWidget, subDialog.getKey(), uiName);
+                addTriggerImage(body, subDialog.getKey(), uiName);
             }
         } else {
             panelWidget.setName(panel.getPanelName());

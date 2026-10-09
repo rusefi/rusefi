@@ -6,6 +6,8 @@ import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
 import com.opensr5.ini.field.StringIniField;
 import com.opensr5.ini.DialogModel;
+import com.opensr5.ini.ContextHelpModel;
+import com.opensr5.ini.IniFileModel;
 import com.rusefi.core.ui.AutoupdateUtil;
 
 import javax.swing.*;
@@ -193,13 +195,39 @@ public class CalibrationFieldFactory {
             source.getImage().getScaledInstance(HELP_ICON_SIZE, HELP_ICON_SIZE, Image.SCALE_SMOOTH));
     }
 
+    static JButton createTopicHelpButton(IniFileModel ini, String reference) {
+        if (reference == null || reference.trim().isEmpty()) {
+            return null;
+        }
+        reference = reference.trim();
+        ContextHelpModel help = ini.getContextHelp(reference);
+        String html;
+        if (help != null) {
+            html = "<html>" + help.toHtml() + "</html>";
+        } else if (reference.startsWith("https://") || reference.startsWith("http://")) {
+            html = formatHelpHtml(reference);
+        } else {
+            return null;
+        }
+        JButton button = new JButton("Help", SETTING_HELP_ICON);
+        button.setName("topicHelpButton");
+        button.setToolTipText(html);
+        button.getAccessibleContext().setAccessibleName(help == null ? "Topic help" : help.getTitle());
+        button.addActionListener(event -> showHtmlHelpPopup(button, html));
+        return button;
+    }
+
     private static void showHelpPopup(JButton owner, String helpText) {
+        showHtmlHelpPopup(owner, formatHelpHtml(helpText));
+    }
+
+    private static void showHtmlHelpPopup(JButton owner, String html) {
         closeHelpPopup();
         if (!owner.isShowing()) {
             return;
         }
 
-        JScrollPane scrollPane = createHelpScrollPane(helpText);
+        JScrollPane scrollPane = createHtmlHelpScrollPane(html);
 
         JPanel content = new JPanel(new BorderLayout(4, 4));
         content.setBackground(HELP_BACKGROUND);
@@ -243,7 +271,11 @@ public class CalibrationFieldFactory {
     }
 
     static JScrollPane createHelpScrollPane(String helpText) {
-        JEditorPane helpPane = new JEditorPane("text/html", formatHelpHtml(helpText));
+        return createHtmlHelpScrollPane(formatHelpHtml(helpText));
+    }
+
+    static JScrollPane createHtmlHelpScrollPane(String html) {
+        JEditorPane helpPane = new JEditorPane("text/html", html);
         helpPane.setEditable(false);
         helpPane.setOpaque(true);
         helpPane.setBackground(HELP_BACKGROUND);
