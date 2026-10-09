@@ -92,6 +92,7 @@ zip = ">=3.0,<4"
 p7zip = ">=16.2,<17"
 
 [target.osx-arm64.dependencies]
+coreutils = "*"  # provides nproc for firmware and unit-test build scripts
 util-linux = "*"  # provides flock, used by java_tools.mk to serialize gradle
 # INI archive generation invokes both zip and 7z.
 zip = ">=3.0,<4"
