@@ -42,10 +42,10 @@ static void nucleo_f429_preHalInit() {
 }
 
 #if defined(HARDWARE_CI) && defined(HW_NUCLEO_F767)
+#include "../nucleo_f767/hardware_ci_configuration.h"
+
 static void nucleoHardwareCiConfigOverrides() {
-	// MINIMAL_PINS has no MAP input, so the fast ADC would never start.
-	// PC3 supports ADC2 (fast) and ADC1 (slow), and avoids Ethernet pins.
-	engineConfiguration->map.sensor.hwChannel = EFI_ADC_13;
+	setNucleoHardwareCiConfiguration(*engineConfiguration);
 }
 #endif
 
