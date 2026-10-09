@@ -2306,7 +2306,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.10.09.uaefi_pro_h7.3394937660"
+#define TS_SIGNATURE "rusEFI master.2026.10.10.uaefi_pro_h7.3394937660"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
