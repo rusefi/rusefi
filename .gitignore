@@ -33,6 +33,9 @@ temp/
 
 .gradle
 
+# let's ignore this one for now
+pixi.lock
+
 # Eclipse
 .metadata/
 
