@@ -39,7 +39,7 @@
 # reproducible, CI-matching build; use global only for personal convenience.
 # =============================================================================
 
-[project]
+[workspace]
 name = "rusefi"
 # https://github.com/xtitoris/xtitoris-forge
 channels = ["conda-forge", "xtitoris"]
