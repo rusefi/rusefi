@@ -277,6 +277,13 @@ jobs:
         bash bin/compile.sh ${{env.BOARD_META_PATH}} docs-enums
         bash bin/compile.sh ${{env.BOARD_META_PATH}} config
 
+    - name: Check Levin connector labels and fixed-pin visibility
+      if: ${{ matrix.build-target == 'levin' || matrix.build-target == 'levin_native' }}
+      working-directory: ./firmware/
+      run: |
+        source config/boards/common_script_read_meta_env.inc ${{ env.BOARD_META_PATH }}
+        python3 config/boards/levin/tests/check_ini.py "${META_OUTPUT_ROOT_FOLDER}tunerstudio/generated/rusefi_${SHORT_BOARD_NAME}.ini"
+
     - name: Check config diff
       working-directory: ./firmware/
       run: colordiff <generated.patch
