@@ -2596,6 +2596,7 @@ end_struct
 #define ts_show_charge_estimation true
 #define ts_show_flow_units true
 #define ts_show_stepper_hbridge true
+#define ts_show_stepper_pins true
 #define ts_show_stepper_push_pull false
 #define ts_show_live_data true
 #define ts_show_ve_blend true
@@ -2776,6 +2777,7 @@ end_struct
 ! some board files override this value using prepend file
 #define ts_show_ign_key_switch false
 #define ts_show_baroSettings true
+#define ts_show_baro_pin true
 #define ts_show_ford_toyota_tps_pps true
 #define ts_show_primary_trigger true
 #define ts_show_ign_key_analog_input false
@@ -2917,6 +2919,7 @@ end_struct
 #define ts_show_can_pins true
 #define ts_show_can_bitrate true
 #define ts_show_vbatt true
+#define ts_show_vbatt_pin true
 #define ts_show_clt true
 #define ts_show_clt_iat_pullup true
 #define ts_show_iat true
