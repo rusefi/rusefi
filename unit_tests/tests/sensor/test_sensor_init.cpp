@@ -373,3 +373,38 @@ TEST(SensorInit, Map) {
 	Sensor::resetMockValue(SensorType::MapFast);
 	EXPECT_FLOAT_EQ(75, Sensor::getOrZero(SensorType::Map));
 }
+
+// Reproduction: a custom barometer currently inherits manifold MAP calibration.
+TEST(SensorInit, CustomBarometerCalibration) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->mapErrorDetectionTooLow = 0;
+	engineConfiguration->mapErrorDetectionTooHigh = 500;
+	engineConfiguration->baroSensor.hwChannel = EFI_ADC_5;
+	engineConfiguration->baroSensor.type = MT_CUSTOM;
+	engineConfiguration->baroSensor.lowValue = 0;
+	engineConfiguration->baroSensor.highValue = 1.0f / 0.007895f;
+	engineConfiguration->map.sensor.hwChannel = EFI_ADC_3;
+	engineConfiguration->map.sensor.type = MT_CUSTOM;
+	engineConfiguration->map.sensor.lowValue = 10;
+	engineConfiguration->map.sensor.highValue = 350;
+	engineConfiguration->mapLowValueVoltage = 0;
+	engineConfiguration->mapHighValueVoltage = 5;
+	initMap();
+	auto baro = const_cast<Sensor*>(Sensor::getSensorOfType(SensorType::BarometricPressure));
+	auto map = const_cast<Sensor*>(Sensor::getSensorOfType(SensorType::MapSlow));
+	ASSERT_NE(nullptr, baro);
+	ASSERT_NE(nullptr, map);
+	EXPECT_POINT_VALID(baro, 3.9475f, 278.43f);
+	EXPECT_POINT_VALID(map, 5, 350);
+
+	engineConfiguration->map.sensor.highValue = 450;
+	engineConfiguration->mapLowValueVoltage = 0.5f;
+	engineConfiguration->mapHighValueVoltage = 4.5f;
+	initMap();
+	EXPECT_POINT_VALID(baro, 3.9475f, 389.225f);
+	EXPECT_POINT_VALID(map, 4.5f, 450);
+
+	engineConfiguration->baroSensor.type = MT_GM_1_BAR;
+	initMap();
+	EXPECT_POINT_VALID(baro, 5, 105);
+}
