@@ -83,6 +83,11 @@ m2-p7zip = ">=17.5.2,<18"
 zip = ">=3.0,<4"
 p7zip = ">=16.2,<17"
 
+[target.osx-arm64.dependencies]
+# INI archive generation invokes both zip and 7z.
+zip = ">=3.0,<4"
+7zip = "*"
+
 # Convenience wrappers - run as `pixi run build-fw` / `pixi run test`, or from
 # inside `pixi shell`. See the HOWTO block at the top of this file.
 [tasks]
