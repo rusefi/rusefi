@@ -547,7 +547,7 @@ static bool validateConfig(const engine_configuration_s* previousConfiguration) 
   }
 #endif
 
-  if (engineConfiguration->knockFrequency != 0 && engineConfiguration->knockFrequency < 100) {
+  if (engineConfiguration->enableSoftwareKnock && engineConfiguration->knockFrequency != 0 && engineConfiguration->knockFrequency < 100) {
     // todo: migrate from hard error to soft error
 		criticalError("knock frequency setting uses HZ not KHz: %f", engineConfiguration->knockFrequency);
 		return false;

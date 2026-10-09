@@ -19,6 +19,22 @@ TEST(Knock, frequencyApproximation) {
   ASSERT_NEAR(7.3456, bore2frequency(78/*mm*/), EPS2D);
 }
 
+TEST(Knock, InvalidFrequencyIsIgnoredWhenDisabled) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->enableSoftwareKnock = false;
+	engineConfiguration->knockFrequency = 7.5f;
+
+	EXPECT_TRUE(validateConfigOnStartUpOrBurn());
+}
+
+TEST(Knock, InvalidFrequencyIsRejectedWhenEnabled) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->enableSoftwareKnock = true;
+	engineConfiguration->knockFrequency = 7.5f;
+
+	EXPECT_FATAL_ERROR(validateConfigOnStartUpOrBurn());
+}
+
 TEST(Knock, Retards) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
