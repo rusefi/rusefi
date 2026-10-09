@@ -221,6 +221,18 @@ For detailed technical documentation intended for AI assistants, see:
 
 A `JFrame` has exactly one glass pane (`JFrame.setGlassPane` delegates to `getRootPane().setGlassPane`). In the console TWO subsystems both grab the main frame's glass pane: `MainFrame`'s `FrameOverlay`s (config error, unsaved-tune, firmware-update prompts) and `TabbedPanel.installGlassPane()` (the loading/updating/critical-error `statusGlassPane`). They only coexist because `installGlassPane` runs once early (on the tabbedPane's `SHOWING_CHANGED` `invokeLater`) and `showOverlay` save/restores `previousGlassPane`. Any `FrameOverlay` shown *during* start-up races that install and gets silently replaced by the invisible status pane while `activeOverlay` still points at the orphan - the overlay is logically "up" but never on screen (issue #10219, config-error overlay shown at connect time). If you add or move a start-up overlay, make it displacement-aware: re-assert when `frame.getGlassPane() != yourOverlay` (see `ConfigErrorOverlayController`'s `displaced` predicate). A single glass-pane arbiter would remove the whole class of bug.
 
+### Swing startup readiness in tests
+
+An enabled control can be a transient state between startup operations. In
+`LLMTab`, opening a saved account enables controls before an `invokeLater`
+starts model loading and disables them again. Separate EDT calls to observe
+enabled and `doClick()` can therefore lose the click. The cancellation test
+hit this in CI check 113887619777; wait for the fake transport's initial model
+request plus enabled controls before clicking. That report was attached to
+the Windows check suite, but its failing XML and logs came from the Linux
+console workflow (run 37950058647); inspect the producing workflow rather
+than inferring the host from the report association.
+
 ### Key Concepts
 
 - **Event-driven execution**: Trigger events from crank/cam sensors drive the main control loop

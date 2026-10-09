@@ -190,7 +190,8 @@ class LLMTabSourcePreparationTest {
         CountDownLatch browserRequested = new CountDownLatch(1);
         UiTransport transport = new UiTransport();
         open(transport, uri -> { browserRequested.countDown(); return true; });
-        await(() -> button("Add account") != null && button("Add account").isEnabled());
+        // Account-store startup briefly enables controls before queuing the initial model load.
+        await(() -> transport.models.get() == 1 && button("Add account") != null && button("Add account").isEnabled());
         edt(() -> { button("Add account").doClick(); return null; });
         assertTrue(browserRequested.await(5, TimeUnit.SECONDS));
         await(() -> button("Cancel sign-in") != null && button("Cancel sign-in").isEnabled());
