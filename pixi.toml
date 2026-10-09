@@ -58,6 +58,8 @@ python = "3.12.*"
 # RAM-disk image generation uses mkfs.fat, fatlabel, and mcopy.
 dosfstools = ">=4.2,<5"
 mtools = ">=4.0.49,<5"
+# Provides xxd for converting RAM-disk images to C headers.
+vim = ">=9.2.397,<10"
 
 [activation.env]
 # Conda's Windows Python executable is python.exe, not python3.exe.
