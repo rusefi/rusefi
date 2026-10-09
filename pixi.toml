@@ -66,7 +66,8 @@ vim = ">=9.2.397,<10"
 PYTHON = "python"
 
 # The rusEFI Makefiles shell out to a Unix userland (bash, sed, awk, grep,
-# coreutils). On Linux/macOS these come from the OS. On native Windows the CI job
+# coreutils). On Linux/macOS the OS supplies tools not declared below.
+# On native Windows the CI job
 # (.github/workflows/build-firmware-windows.yaml) installs Cygwin for exactly
 # this reason; locally we pull the equivalent msys2 repackages from conda-forge
 # so `make` runs from a plain `pixi shell` without Git Bash or Cygwin on PATH.
@@ -84,6 +85,7 @@ m2-zip = ">=3.0.4,<4"
 m2-p7zip = ">=17.5.2,<18"
 
 [target.linux-64.dependencies]
+coreutils = "*"  # provides nproc for firmware and unit-test build scripts
 util-linux = "*"  # provides flock, used by java_tools.mk to serialize gradle
 # INI archive generation invokes both zip and 7z.
 zip = ">=3.0,<4"
