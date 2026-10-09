@@ -55,6 +55,9 @@ arm-gnu-toolchain = ">=14,<15"
 # setup-java action in .github/workflows/build-firmware-windows.yaml.
 openjdk = "17.*"
 python = "3.12.*"
+# RAM-disk image generation uses mkfs.fat, fatlabel, and mcopy.
+dosfstools = ">=4.2,<5"
+mtools = ">=4.0.49,<5"
 
 [activation.env]
 # Conda's Windows Python executable is python.exe, not python3.exe.
