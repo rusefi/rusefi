@@ -10,6 +10,7 @@
 #include "electronic_throttle_impl.h"
 #include "dc_motor.h"
 #include "idle_thread.h"
+#include "defaults.h"
 
 #include "mocks.h"
 
@@ -918,4 +919,129 @@ TEST(etb, tractionControlEtbDrop) {
 	Sensor::setMockValue(SensorType::WheelSlipRatio, 1.2);
 
 	EXPECT_EQ(62, etb.getSetpoint().value_or(-1));
+}
+
+// ---------------------------------------------------------------------------
+// #9799: the duty ceiling used to be a hard-coded 90%, it is configurable per
+// H-bridge now. These pin the fallbacks, because getting them wrong means a
+// throttle which either never opens or ignores the user's limit.
+// ---------------------------------------------------------------------------
+
+TEST(etb, dutyCeilingDefaultsToHistoricalLimit) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->etbFunctions[0] = DC_Throttle1;
+
+	// deliberately not set here: a fresh configuration must already carry the historical limit
+	EXPECT_EQ(ETB_DEFAULT_MAX_DUTY_CYCLE, engineConfiguration->etbMaxDutyCycle[0]);
+
+	EtbController dut;
+	dut.init(DC_Throttle1, nullptr, nullptr, nullptr);
+
+	EXPECT_FLOAT_EQ(0.9f, dut.getMaxDutyCycle());
+	EXPECT_FLOAT_EQ(0.9f, dut.percentToDuty(100));
+	EXPECT_FLOAT_EQ(-0.9f, dut.percentToDuty(-100));
+	// below the ceiling nothing is clamped
+	EXPECT_FLOAT_EQ(0.5f, dut.percentToDuty(50));
+	EXPECT_FLOAT_EQ(-0.5f, dut.percentToDuty(-50));
+}
+
+TEST(etb, dutyCeilingIsHonoredWhenLowered) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->etbFunctions[0] = DC_Throttle1;
+	// the reporting user's throttle is mechanically wide open around here
+	engineConfiguration->etbMaxDutyCycle[0] = 45;
+
+	EtbController dut;
+	dut.init(DC_Throttle1, nullptr, nullptr, nullptr);
+
+	EXPECT_FLOAT_EQ(0.45f, dut.getMaxDutyCycle());
+	EXPECT_FLOAT_EQ(0.45f, dut.percentToDuty(100));
+	EXPECT_FLOAT_EQ(-0.45f, dut.percentToDuty(-100));
+	// still linear below the ceiling
+	EXPECT_FLOAT_EQ(0.3f, dut.percentToDuty(30));
+}
+
+TEST(etb, dutyCeilingFallsBackRatherThanShuttingTheThrottle) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->etbFunctions[0] = DC_Throttle1;
+
+	EtbController dut;
+	dut.init(DC_Throttle1, nullptr, nullptr, nullptr);
+
+	// a tune which predates the field carries 0 - that must not mean "never open"
+	engineConfiguration->etbMaxDutyCycle[0] = 0;
+	EXPECT_FLOAT_EQ(0.9f, dut.getMaxDutyCycle());
+
+	// too low to open the throttle at all
+	engineConfiguration->etbMaxDutyCycle[0] = ETB_MIN_MAX_DUTY_CYCLE - 1;
+	EXPECT_FLOAT_EQ(0.9f, dut.getMaxDutyCycle());
+
+	// above what the hardware was ever allowed to do
+	engineConfiguration->etbMaxDutyCycle[0] = ETB_DEFAULT_MAX_DUTY_CYCLE + 1;
+	EXPECT_FLOAT_EQ(0.9f, dut.getMaxDutyCycle());
+
+	// the extremes of the valid range are accepted
+	engineConfiguration->etbMaxDutyCycle[0] = ETB_MIN_MAX_DUTY_CYCLE;
+	EXPECT_FLOAT_EQ(0.1f, dut.getMaxDutyCycle());
+	engineConfiguration->etbMaxDutyCycle[0] = ETB_DEFAULT_MAX_DUTY_CYCLE;
+	EXPECT_FLOAT_EQ(0.9f, dut.getMaxDutyCycle());
+}
+
+TEST(etb, dutyCeilingIsPerHBridge) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->etbFunctions[0] = DC_Throttle1;
+	engineConfiguration->etbFunctions[1] = DC_Throttle2;
+	engineConfiguration->etbMaxDutyCycle[0] = 80;
+	engineConfiguration->etbMaxDutyCycle[1] = 40;
+
+	EtbController first;
+	first.init(DC_Throttle1, nullptr, nullptr, nullptr);
+	EtbController second;
+	second.init(DC_Throttle2, nullptr, nullptr, nullptr);
+
+	EXPECT_EQ(0u, first.getHBridgeIndex());
+	EXPECT_EQ(1u, second.getHBridgeIndex());
+	EXPECT_FLOAT_EQ(0.8f, first.getMaxDutyCycle());
+	EXPECT_FLOAT_EQ(0.4f, second.getMaxDutyCycle());
+}
+
+TEST(etb, dutyCeilingIsMigratedForOldTunes) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	for (size_t i = 0; i < efi::size(engineConfiguration->etbMaxDutyCycle); i++) {
+		engineConfiguration->etbMaxDutyCycle[i] = 0;
+	}
+
+	EXPECT_TRUE(applyDefaultsOrFixAfterBurn(nullptr));
+
+	for (size_t i = 0; i < efi::size(engineConfiguration->etbMaxDutyCycle); i++) {
+		EXPECT_EQ(ETB_DEFAULT_MAX_DUTY_CYCLE, engineConfiguration->etbMaxDutyCycle[i]) << "index " << i;
+	}
+
+	// a value the user actually chose is left alone
+	engineConfiguration->etbMaxDutyCycle[0] = 45;
+	applyDefaultsOrFixAfterBurn(nullptr);
+	EXPECT_EQ(45, engineConfiguration->etbMaxDutyCycle[0]);
+}
+
+TEST(etb, dutyCeilingAlsoAppliesToDirectDrivePaths) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->etbFunctions[0] = DC_Throttle1;
+
+	EtbController dut;
+	dut.init(DC_Throttle1, nullptr, nullptr, nullptr);
+
+	// the bench test and the TPS autocal command a fixed 0.5 duty straight at the motor,
+	// bypassing setOutput(). With the default ceiling that is unchanged...
+	EXPECT_FLOAT_EQ(0.5f, dut.clampToMaxDutyCycle(0.5f));
+	EXPECT_FLOAT_EQ(-0.5f, dut.clampToMaxDutyCycle(-0.5f));
+
+	// ...but a user who lowered the ceiling below it did so precisely to stop the driver
+	// being pushed that hard, so those paths have to respect it too
+	engineConfiguration->etbMaxDutyCycle[0] = 45;
+	EXPECT_FLOAT_EQ(0.45f, dut.clampToMaxDutyCycle(0.5f));
+	EXPECT_FLOAT_EQ(-0.45f, dut.clampToMaxDutyCycle(-0.5f));
+
+	// a request already inside the ceiling is untouched
+	EXPECT_FLOAT_EQ(0.2f, dut.clampToMaxDutyCycle(0.2f));
 }
