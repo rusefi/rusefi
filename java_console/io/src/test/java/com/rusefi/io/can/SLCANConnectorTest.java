@@ -37,6 +37,18 @@ class SLCANConnectorTest {
     }
 
     @Test
+    void acknowledgedWeActStillUsesVersionBarriersAndEnablesRetransmission() throws Exception {
+        FakeSerial serial = new FakeSerial(true);
+        serial.banner = "WeAct Studio V1.0.0.6_4fa52575";
+        serial.acknowledgeSetup = true;
+        try (SLCANConnector connector = new SLCANConnector("fake", 6, () -> serial)) {
+            connector.open(new CanAddress(0x720, false));
+            assertEquals(Arrays.asList("C", "V", "S6", "V", "A1", "V", "O", "V"), serial.commands);
+            assertTrue(serial.automaticRetransmission);
+        }
+    }
+
+    @Test
     void weActEnablesArbitrationRetriesBeforeSendingOnContendedBus() throws Exception {
         FakeSerial serial = new FakeSerial(true);
         serial.banner = "WeAct Studio V1.0.0.6_4fa52575";
@@ -99,6 +111,7 @@ class SLCANConnectorTest {
         boolean contended;
         boolean automaticRetransmission;
         boolean rejectAutomaticRetransmission;
+        boolean acknowledgeSetup;
 
         FakeSerial(boolean canable) {
             this.canable = canable;
@@ -134,7 +147,7 @@ class SLCANConnectorTest {
                 reply(canable ? banner + "\r" : "V1220\r");
             } else if (rejectOpen && command.equals("O")) {
                 reply("\u0007");
-            } else if (!canable) {
+            } else if (!canable || acknowledgeSetup) {
                 reply("\r");
             }
         }
@@ -159,7 +172,8 @@ class SLCANConnectorTest {
     @Test
     void ignoresAcksRtrFdAndMalformedFrames() {
         for (String value : new String[]{"", "z", "Z", "r1238", "d1230", "tFFF0", "TFFFFFFFF0",
-                "t1239", "t1232AA", "t1231GG", "t123100123", "t123100ZZZZ"}) {
+                "t1239", "t1232AA", "t1231GG", "t123100123", "t123100ZZZZ",
+                "&t1230", "$t1230"}) {
             assertFalse(SLCANConnector.decode(value).isPresent(), value);
         }
     }
