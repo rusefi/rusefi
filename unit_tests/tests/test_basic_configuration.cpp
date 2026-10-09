@@ -10,6 +10,45 @@
 
 extern engine_configuration_s& activeConfiguration;
 
+TEST(MafConfiguration, InvalidCurveWithoutAnalogInputs) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
+	engineConfiguration->maf2AdcChannel = EFI_ADC_NONE;
+	setArrayValues(config->mafDecodingBins, 0.0f);
+
+	// An unused MAF curve must not prevent startup or be rewritten by validation.
+	EXPECT_TRUE(validateConfigOnStartUpOrBurn());
+	for (auto bin : config->mafDecodingBins) {
+		EXPECT_FLOAT_EQ(0.0f, bin);
+	}
+}
+
+TEST(MafConfiguration, InvalidCurveWithPrimaryInput) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->mafAdcChannel = EFI_ADC_0;
+	engineConfiguration->maf2AdcChannel = EFI_ADC_NONE;
+	setArrayValues(config->mafDecodingBins, 0.0f);
+
+	EXPECT_FATAL_ERROR(validateConfigOnStartUpOrBurn());
+}
+
+TEST(MafConfiguration, InvalidCurveWithSecondaryInput) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
+	engineConfiguration->maf2AdcChannel = EFI_ADC_0;
+	setArrayValues(config->mafDecodingBins, 0.0f);
+
+	EXPECT_FATAL_ERROR(validateConfigOnStartUpOrBurn());
+}
+
+TEST(MafConfiguration, ValidCurveWithBothInputs) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->mafAdcChannel = EFI_ADC_0;
+	engineConfiguration->maf2AdcChannel = EFI_ADC_1;
+
+	EXPECT_TRUE(validateConfigOnStartUpOrBurn());
+}
+
 static int pinDefaultsApplyCount;
 
 static void applyTestPinDefaults() {

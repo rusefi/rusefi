@@ -657,7 +657,10 @@ static bool validateConfig(const engine_configuration_s* previousConfiguration) 
 // todo: huh? why does this not work on CI?	ensureArrayIsAscendingOrDefault("Dwell Correction Voltage", engineConfiguration->dwellVoltageCorrVoltBins);
 
 #if EFI_ENGINE_CONTROL
-	ensureArrayIsAscending("MAF transfer function", config->mafDecodingBins);
+	// Both analog MAF inputs use this curve, regardless of the fuel algorithm.
+	if (isAdcChannelValid(engineConfiguration->mafAdcChannel) || isAdcChannelValid(engineConfiguration->maf2AdcChannel)) {
+		ensureArrayIsAscending("MAF transfer function", config->mafDecodingBins);
+	}
 
 	// Cranking tables
 	ensureArrayIsAscending("Cranking fuel mult", config->crankingFuelBins);
