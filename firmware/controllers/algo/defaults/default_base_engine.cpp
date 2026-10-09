@@ -130,6 +130,14 @@ void setDynoDefaults() {
 bool applyDefaultsOrFixAfterBurn(const engine_configuration_s* previousConfiguration) {
   bool changed = false;
 
+#ifndef KNOCK_SPECTROGRAM
+  // Tunes can carry this optional display setting from a spectrogram-capable build.
+  if (engineConfiguration->enableKnockSpectrogram) {
+    engineConfiguration->enableKnockSpectrogram = false;
+    changed = true;
+  }
+#endif
+
   if (config->dynoCarCarMassKg == 0) {
     setDynoDefaults();
     changed = true;

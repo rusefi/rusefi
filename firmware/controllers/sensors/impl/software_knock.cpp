@@ -173,10 +173,10 @@ void initSoftwareKnock() {
 			engine->module<KnockController>()->m_knockFrequencyStart = (uint16_t)freqStart;
 			engine->module<KnockController>()->m_knockFrequencyStep = freqStep;
 		}
-  #else // KNOCK_SPECTROGRAM
-    criticalAssertVoid(!engineConfiguration->enableKnockSpectrogram, "KNOCK_SPECTROGRAM not enabled");
 	#endif // KNOCK_SPECTROGRAM
 
+    // Hardware init precedes calibration correction. An unsupported spectrogram
+    // request must not prevent ordinary knock detection from starting.
   // fun fact: we do not offer any ADC channel flexibility like we have for many other kinds of inputs
 		efiSetPadMode("knock ch1", KNOCK_PIN_CH1, PAL_MODE_INPUT_ANALOG);
 #if KNOCK_HAS_CH2
