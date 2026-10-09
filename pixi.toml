@@ -78,6 +78,11 @@ m2-util-linux = "*"  # provides flock, used by java_tools.mk to serialize gradle
 m2-zip = ">=3.0.4,<4"
 m2-p7zip = ">=17.5.2,<18"
 
+[target.linux-64.dependencies]
+# INI archive generation invokes both zip and 7z.
+zip = ">=3.0,<4"
+p7zip = ">=16.2,<17"
+
 # Convenience wrappers - run as `pixi run build-fw` / `pixi run test`, or from
 # inside `pixi shell`. See the HOWTO block at the top of this file.
 [tasks]
