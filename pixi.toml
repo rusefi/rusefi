@@ -82,4 +82,4 @@ m2-p7zip = ">=17.5.2,<18"
 # inside `pixi shell`. See the HOWTO block at the top of this file.
 [tasks]
 build-fw = { cmd = "make -j12", cwd = "firmware" }
-test = { cmd = "./test.sh", cwd = "unit_tests" }
+test = { cmd = "bash ./test.sh", cwd = "unit_tests" }
