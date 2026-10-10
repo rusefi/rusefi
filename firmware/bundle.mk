@@ -30,7 +30,11 @@ ifeq ($(UNAME_S),)
 endif
 
 # *** KLUDGE ***: we do not include DFU files into bundle but we require DFU for checksum manipulations
-ifneq (,$(findstring NT,$(UNAME_S)))
+H2D_FROM_PATH := $(strip $(shell command -v hex2dfu 2>/dev/null))
+
+ifneq ($(H2D_FROM_PATH),)
+	H2D = $(H2D_FROM_PATH)
+else ifneq (,$(findstring NT,$(UNAME_S)))
 	H2D = ../misc/encedo_hex2dfu/hex2dfu.exe
 else
 	H2D = ../misc/encedo_hex2dfu/hex2dfu.bin
