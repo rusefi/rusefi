@@ -170,7 +170,8 @@
 /*
  * ADC driver system settings.
  */
-#define STM32_ADC_ADCPRE                    ADC_CCR_ADCPRE_DIV4
+// AT32 ADC clock is HCLK / 8 = 36 MHz at 288 MHz, independent of PCLK2.
+#define STM32_ADC_ADCPRE                    ADC_CCR_ADCPRE_DIV8
 #define STM32_ADC_USE_ADC1                  TRUE
 #define STM32_ADC_USE_ADC2                  TRUE
 #define STM32_ADC_USE_ADC3                  TRUE

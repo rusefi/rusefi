@@ -210,6 +210,10 @@ int AdcDevice::size() const {
 
 void AdcDevice::init(void) {
 	hwConfig->num_channels = size();
+	// No configured fast inputs: do not run an empty ADC sequence/timer.
+	if (hwConfig->num_channels == 0) {
+		return;
+	}
 	/* driver does this internally */
 	//hwConfig->sqr1 += ADC_SQR1_NUM_CH(size());
 
@@ -266,6 +270,9 @@ int AdcDevice::enableChannel(adc_channel_e hwChannel) {
 
 void AdcDevice::startConversionI()
 {
+	if (hwConfig->num_channels == 0) {
+		return;
+	}
 	chSysLockFromISR();
 	if ((ADC_FAST_DEVICE.state == ADC_READY) ||
 		(ADC_FAST_DEVICE.state == ADC_ERROR)) {
