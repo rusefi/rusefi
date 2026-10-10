@@ -531,6 +531,7 @@ public class PinoutPane {
             return;
         }
 
+        connectors.sort(Comparator.comparing(cd -> cd.title, String.CASE_INSENSITIVE_ORDER));
         Map<String, String> tuneUseMap = buildTuneUseMap();
 
         JTabbedPane tabs = new JTabbedPane();
@@ -706,6 +707,9 @@ public class PinoutPane {
             }
         }
 
+        if (!title.isEmpty()) {
+            title = Character.toUpperCase(title.charAt(0)) + title.substring(1);
+        }
         return new ConnectorData(title, image, coords, rows);
     }
 
