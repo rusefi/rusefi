@@ -1,5 +1,7 @@
 package com.rusefi.ui.widgets;
 
+import com.opensr5.ini.GaugeModel;
+import com.opensr5.ini.IniFileModel;
 import com.rusefi.SensorTypeHelper;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.ui.AutoupdateUtil;
@@ -33,7 +35,7 @@ import static com.rusefi.config.generated.Integration.CMD_SET_SENSOR_MOCK;
 public class DetachedSensor {
     private static final String NAME = "name";
     private static final String WIDTH = "width";
-    public static final int DEFAULT_WIDTH = 256;
+    public static final int DEFAULT_WIDTH = 320;
 
     private final static Hashtable<Integer, JComponent> SLIDER_LABELS = new Hashtable<>();
     public static final String XPOS = "xpos";
@@ -64,11 +66,10 @@ public class DetachedSensor {
 
     public DetachedSensor(UIContext uiContext, String gaugeName, int width) {
         this.uiContext = uiContext;
-        this.width = width;
-        this.gaugeName = gaugeName;
+        this.width = Math.max(width, DEFAULT_WIDTH);
         frame = new JFrame();
         frame.setAlwaysOnTop(true);
-        frame.setTitle(gaugeName);
+        onChange(gaugeName);
 
         uiContext.DetachedRepositoryINSTANCE.add(this);
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -95,16 +96,19 @@ public class DetachedSensor {
         content.add(mockControlPanel, BorderLayout.SOUTH);
 
         frame.add(content);
+        frame.setSize(width, width);
     }
 
     public void show(MouseEvent e) {
-        frame.setVisible(true);
         frame.setLocation(e.getXOnScreen(), e.getYOnScreen());
+        frame.setVisible(true);
     }
 
     public void onChange(String gaugeName) {
         this.gaugeName = gaugeName;
-        frame.setTitle(gaugeName);
+        IniFileModel iniFile = uiContext.iniFileState.getIniFileModel();
+        GaugeModel gaugeModel = iniFile == null ? null : iniFile.getGauge(gaugeName);
+        frame.setTitle(gaugeModel == null ? gaugeName : gaugeModel.getTitle());
 //        showMockControl();
     }
 
