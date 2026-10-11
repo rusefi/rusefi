@@ -27,7 +27,6 @@ import static com.devexperts.logging.Logging.getLogging;
  */
 public class Launcher implements rusEFIVersion {
     private static final Logging log = getLogging(Launcher.class);
-    public static final String TOOLS_PATH = com.rusefi.maintenance.ExecHelper.TOOLS_PATH;
 
     /**
      * rusEfi console entry point
