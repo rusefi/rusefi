@@ -171,7 +171,7 @@ void UsbLeaveLowPowerModeHook(void)
 ** \return    none.
 **
 ****************************************************************************************/
-void NvmInitHook(void)
+__attribute__((weak)) void NvmInitHook(void)
 {
 } /*** end of NvmInitHook ***/
 
@@ -182,7 +182,7 @@ void NvmInitHook(void)
 ** \return    none.
 **
 ****************************************************************************************/
-void NvmReinitHook(void)
+__attribute__((weak)) void NvmReinitHook(void)
 {
 } /*** end of NvmReinitHook ***/
 
@@ -201,7 +201,7 @@ void NvmReinitHook(void)
 **            operation failed.
 **
 ****************************************************************************************/
-blt_int8u NvmWriteHook(blt_addr addr, blt_int32u len, blt_int8u *data)
+__attribute__((weak)) blt_int8u NvmWriteHook(blt_addr addr, blt_int32u len, blt_int8u *data)
 {
   return BLT_NVM_NOT_IN_RANGE;
 } /*** end of NvmWriteHook ***/
@@ -220,7 +220,7 @@ blt_int8u NvmWriteHook(blt_addr addr, blt_int32u len, blt_int8u *data)
 **            operation failed.
 **
 ****************************************************************************************/
-blt_int8u NvmEraseHook(blt_addr addr, blt_int32u len)
+__attribute__((weak)) blt_int8u NvmEraseHook(blt_addr addr, blt_int32u len)
 {
   return BLT_NVM_NOT_IN_RANGE;
 } /*** end of NvmEraseHook ***/
@@ -231,7 +231,7 @@ blt_int8u NvmEraseHook(blt_addr addr, blt_int32u len)
 ** \return    BLT_TRUE is successful, BLT_FALSE otherwise.
 **
 ****************************************************************************************/
-blt_bool NvmDoneHook(void)
+__attribute__((weak)) blt_bool NvmDoneHook(void)
 {
   return BLT_TRUE;
 } /*** end of NvmDoneHook ***/

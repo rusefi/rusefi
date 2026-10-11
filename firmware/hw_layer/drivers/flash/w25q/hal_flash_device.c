@@ -268,6 +268,7 @@ static void w25q_reset_memory(SNORDriver *devp) {
   wspiCommand(devp->config->busp, &cmd_reset_1);
 }
 
+#if W25Q_BUS_MODE == W25Q_BUS_MODE_WSPI4L
 static void w25q_enter_qpi(SNORDriver *devp) {
   static const wspi_command_t cmd_enter_qpi = {
     .cmd              = W25Q_CMD_ENTER_QPI,
@@ -278,6 +279,7 @@ static void w25q_enter_qpi(SNORDriver *devp) {
   };
   wspiCommand(devp->config->busp, &cmd_enter_qpi);
 }
+#endif
 
 static void w25q_exit_qpi(SNORDriver *devp) {
   static const wspi_command_t cmd_exit_qpi = {

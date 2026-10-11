@@ -214,7 +214,9 @@
  * BOOT_NVM_CHECKSUM_HOOKS_ENABLE.
  */
 /** \brief Enable/disable the NVM hook function for supporting additional memory devices. */
+#ifndef BOOT_NVM_HOOKS_ENABLE
 #define BOOT_NVM_HOOKS_ENABLE           (0)
+#endif
 /** \brief Configure the size of the default memory device (typically flash EEPROM). */
 #define BOOT_NVM_SIZE_KB                (2048)
 /** \brief Enable/disable hooks functions to override the user program checksum handling. */
@@ -253,7 +255,9 @@
  */
 #define BOOT_XCP_SEED_KEY_ENABLE        (0)
 
+#ifndef BOOT_XCP_UPLOAD_ENABLE
 #define BOOT_XCP_UPLOAD_ENABLE          (0)
+#endif
 
 /** \brief Enable custom plain-text probes ('?' version, 0xBF board signature). */
 #ifndef BOOT_XCP_PACKET_RECEIVED_HOOK
