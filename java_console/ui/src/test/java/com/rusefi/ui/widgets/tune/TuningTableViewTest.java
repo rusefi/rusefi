@@ -117,6 +117,23 @@ public class TuningTableViewTest {
             assertArrayEquals(expected.getContent(), axisImage.getContent(), "Escape cancels the header edit");
             assertTrue(table.isCellSelected(0, 0), "Header editing preserves the grid selection");
             afterEdits = axisImage.getContent().clone();
+            table.getTableHeader().dispatchEvent(new MouseEvent(table.getTableHeader(), MouseEvent.MOUSE_CLICKED,
+                System.currentTimeMillis(), 0, header.x + 5, 10, 2, false, MouseEvent.BUTTON1));
+            table.getColumnModel().getColumn(1).setWidth(110);
+            table.getTableHeader().doLayout();
+            assertEquals(table.getTableHeader().getHeaderRect(1), inlineAxis.getBounds(),
+                "The editor follows column resizing");
+            for (java.awt.event.FocusListener listener : inlineAxis.getFocusListeners()) {
+                listener.focusLost(new java.awt.event.FocusEvent(inlineAxis, java.awt.event.FocusEvent.FOCUS_LOST));
+            }
+            assertFalse(inlineAxis.isVisible(), "Leaving the header accepts the edit");
+            assertArrayEquals(afterEdits, axisImage.getContent(), "Unchanged focus-loss commit preserves the image");
+            table.getTableHeader().dispatchEvent(new MouseEvent(table.getTableHeader(), MouseEvent.MOUSE_CLICKED,
+                System.currentTimeMillis(), 0, header.x + 5, 10, 2, false, MouseEvent.BUTTON1));
+            inlineAxis.setText("999");
+            view.displayTable(ini, "table", zImage, axisImage);
+            assertFalse(inlineAxis.isVisible(), "Loading another table cancels its old header editor");
+            assertArrayEquals(afterEdits, axisImage.getContent());
             TuningTableView readOnly = new TuningTableView("Comparison", true);
             readOnly.displayTable(ini, "table", zImage, axisImage);
             JTable comparison = findTable(readOnly.getContent());
