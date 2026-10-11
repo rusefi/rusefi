@@ -4,11 +4,30 @@
 #include "maf_airmass.h"
 #include "speed_density_airmass.h"
 #include "util/injection_crank_helper.h"
+#include <stdexcept>
 
 using ::testing::StrictMock;
 using ::testing::FloatNear;
 using ::testing::InSequence;
 using ::testing::_;
+
+TEST(FuelMath, InvalidAccelEnrichmentModeMessage) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(_, _))
+		.WillRepeatedly(Return(AirmassResult{1.3440001f, 50.0f}));
+	engine->rpmCalculator.setRpmValue(1200);
+	engineConfiguration->accelEnrichmentMode = static_cast<accel_enrichment_mode_e>(182);
+
+	// [tag:user_facing_ini_labels] #10363: the diagnostic must identify the setting
+	// by its tunerstudio.template.ini field label and include the invalid value.
+	try {
+		getInjectionMass(1200);
+		FAIL() << "Invalid acceleration enrichment mode must raise a firmware error";
+	} catch (const std::logic_error& error) {
+		EXPECT_STREQ("Invalid Accel Enrichment Mode: 182", error.what());
+	}
+}
 
 TEST(FuelMath, getStandardAirCharge) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);

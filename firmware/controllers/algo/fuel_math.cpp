@@ -374,7 +374,10 @@ float getInjectionMass(float rpm) {
 			break;
 
 		default:
-			criticalError("Invalid accelEnrichmentMode %d", engineConfiguration->accelEnrichmentMode);
+			// [tag:user_facing_ini_labels] Match the "Accel Enrichment Mode" field label
+			// in tunerstudio.template.ini so users can find the setting (#10363).
+			// See error_handling.h for the diagnostic naming rule.
+			criticalError("Invalid Accel Enrichment Mode: %d", engineConfiguration->accelEnrichmentMode);
 			break;
 	}
 

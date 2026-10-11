@@ -374,6 +374,14 @@ to the first command. Good worked examples are `[tag:disable_engine_module]`
 `[tag:ts_page_table]` (firmware identifiers/sizes, Java generator, board flags,
 INI template, and generator tests).
 
+For user-visible diagnostics that identify a tune setting, follow
+`[tag:user_facing_ini_labels]`: use the corresponding human-readable .ini field
+label, with setting/dialog context for ambiguous labels, so the user can find
+the control. The main explanation is in `firmware/controllers/core/error_handling.h`;
+issue [#10363](https://github.com/rusefi/rusefi/issues/10363) links the
+`accelEnrichmentMode` diagnostic to its "Accel Enrichment Mode" label in
+`firmware/tunerstudio/tunerstudio.template.ini`.
+
 ## Embedded Code Practices
 
 For H7 ADC mux work, verify DMA placement against the linked ELF and MPU settings,
