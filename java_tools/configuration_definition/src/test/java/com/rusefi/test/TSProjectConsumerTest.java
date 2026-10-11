@@ -17,10 +17,10 @@ import org.junit.jupiter.api.io.TempDir;
 
 import java.io.IOException;
 import java.io.ByteArrayInputStream;
+import java.io.StringBufferInputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.io.StringBufferInputStream;
 import java.util.TreeSet;
 
 import static com.rusefi.AssertCompatibility.assertEquals;
@@ -327,6 +327,21 @@ public class TSProjectConsumerTest {
         TSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
         // This should NOT throw exception because we allow re-definitions if there is a directive in between
         state.readBufferedReader(test, tsProjectConsumer);
+    }
+
+    @Test
+    public void wueAliasOffsetsArePublishedForPageOne() {
+        String test = "struct config\n" +
+                "    float[2] cltFuelCorr;warmup correction;\"ratio\", 1, 0, 0, 5, 2\n" +
+                "    uint8_t[2] lambdaTable;target;\"afr\", 1, 0, 0, 25, 1\n" +
+                "end_struct\n";
+
+        ReaderStateImpl state = new ReaderStateImpl();
+        TSProjectConsumer consumer = new TestTSProjectConsumer(state);
+        state.readBufferedReader(test, consumer);
+
+        assertEquals("0", state.getVariableRegistry().get("TS_PAGE_1_OFFSET_cltFuelCorr"));
+        assertEquals("8", state.getVariableRegistry().get("TS_PAGE_1_OFFSET_lambdaTable"));
     }
 
     // --- [tag:ts_page_table] generator page-table emission + @@if_block (issue #9699) ---

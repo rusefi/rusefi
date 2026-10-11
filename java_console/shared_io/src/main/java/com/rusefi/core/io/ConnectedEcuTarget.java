@@ -33,6 +33,25 @@ public class ConnectedEcuTarget {
     private static final String LAST_BOARD_FILE = FileUtil.RUSEFI_SETTINGS_FOLDER + "last_connected_board.txt";
 
     private volatile String connectedTarget;
+    private final String recoveryTarget;
+    private volatile boolean unverifiedTargetTrusted;
+
+    public ConnectedEcuTarget() {
+        this(null);
+    }
+
+    private ConnectedEcuTarget(String recoveryTarget) {
+        this.recoveryTarget = recoveryTarget;
+    }
+
+    /** An explicit choice for one recovery job, not a live identity or a persisted guess. */
+    public static ConnectedEcuTarget forManualRecovery(String target) {
+        if (target == null || !target.matches("[A-Za-z0-9][A-Za-z0-9_-]*")
+            || "universal".equalsIgnoreCase(target)) {
+            throw new IllegalArgumentException("Select a concrete board target for recovery");
+        }
+        return new ConnectedEcuTarget(target);
+    }
 
     public void set(String ecuTarget) {
         connectedTarget = ecuTarget;
@@ -52,6 +71,9 @@ public class ConnectedEcuTarget {
      * @return connected ECU target if known, otherwise the local bundle target.
      */
     public String effectiveTarget() {
+        if (recoveryTarget != null) {
+            return recoveryTarget;
+        }
         String t = connectedTarget;
         if (t != null) {
             return t;
@@ -88,6 +110,19 @@ public class ConnectedEcuTarget {
      */
     public boolean isLiveTargetKnown() {
         return connectedTarget != null;
+    }
+
+    /**
+     * Unattended production flashing (MassUpdater) programs a known board type over and over; the
+     * operator vouches for the target up front, so flashers must not stop to ask about an unverified one.
+     */
+    public ConnectedEcuTarget setUnverifiedTargetTrusted(boolean unverifiedTargetTrusted) {
+        this.unverifiedTargetTrusted = unverifiedTargetTrusted;
+        return this;
+    }
+
+    public boolean isUnverifiedTargetTrusted() {
+        return unverifiedTargetTrusted;
     }
 
     private static void persist(String ecuTarget) {

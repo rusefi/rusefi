@@ -3,29 +3,30 @@ package com.rusefi;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Tests for the parallel port-probe fan-out with an injected inspector — no real serial ports.
  * Covers the result-classification rules: dead ports (null) are dropped, a crashing probe is
- * reported as Unknown rather than killing the scan. The deliberate-timeout path is NOT tested here:
- * it costs the hardwired 5s sleep and needs a clock seam first (see
- * docs/java-connectivity-ui-unit-testing.md). [tag:better_ux_for_flashing]
+ * reported as Unknown rather than killing the scan. Also exercises the real timeout with an
+ * inspector that ignores interruption, like a blocked native serial open. [tag:better_ux_for_flashing]
  */
 public class SerialPortScannerInspectPortsTest {
 
-    /**
-     * All scripted inspectors below complete, which makes the fan-out interrupt the calling thread
-     * to cancel its timeout sleep — clear the flag so it never leaks into the next test.
-     */
     private static List<PortResult> inspect(List<String> ports, Function<String, PortResult> inspector) {
         try {
-            return SerialPortScanner.inspectPorts(ports, null, inspector);
+            return SerialPortScanner.inspectPorts(ports, new HashMap<>(), inspector);
         } finally {
             Thread.interrupted();
         }
@@ -67,5 +68,71 @@ public class SerialPortScannerInspectPortsTest {
         assertTrue(results.contains(new PortResult("COM_BOOM", SerialPortType.Unknown)),
             "a probe exception must degrade to Unknown, not lose the port");
         assertTrue(results.contains(new PortResult("COM1", SerialPortType.Ecu)));
+    }
+
+    @Test
+    public void stuckProbeIsNotRepeatedUntilItsEarlierThreadExits() throws InterruptedException {
+        Map<String, Thread> tracked = new HashMap<>();
+        List<Thread> blockedThreads = new CopyOnWriteArrayList<>();
+        CountDownLatch release = new CountDownLatch(1);
+        AtomicInteger stuckCalls = new AtomicInteger();
+        AtomicInteger healthyCalls = new AtomicInteger();
+        Function<String, PortResult> inspector = port -> {
+            if ("STUCK".equals(port)) {
+                blockedThreads.add(Thread.currentThread());
+                stuckCalls.incrementAndGet();
+                boolean interrupted = false;
+                while (true) {
+                    try {
+                        release.await();
+                        break;
+                    } catch (InterruptedException e) {
+                        // Model a native open that cannot be cancelled by Thread.interrupt().
+                        interrupted = true;
+                    }
+                }
+                if (interrupted) {
+                    Thread.currentThread().interrupt();
+                }
+            } else {
+                healthyCalls.incrementAndGet();
+            }
+            return new PortResult(port, SerialPortType.Ecu);
+        };
+
+        try {
+            assertEquals(Collections.singletonList(new PortResult("STUCK", SerialPortType.Unknown)),
+                SerialPortScanner.inspectPorts(Collections.singletonList("STUCK"), tracked, inspector));
+            Thread.interrupted();
+
+            List<PortResult> second = SerialPortScanner.inspectPorts(asList("STUCK", "HEALTHY"), tracked, inspector);
+            Thread.interrupted();
+            assertTrue(second.contains(new PortResult("STUCK", SerialPortType.Unknown)));
+            assertTrue(second.contains(new PortResult("HEALTHY", SerialPortType.Ecu)));
+            assertEquals(1, healthyCalls.get(), "a blocked port must not prevent detection of other ports");
+            assertEquals(1, stuckCalls.get(), "a timed-out probe must not be repeated while its thread is alive");
+
+            // An OS node disappearing and reappearing must not bypass the running probe.
+            assertTrue(SerialPortScanner.inspectPorts(Collections.emptyList(), tracked, inspector).isEmpty());
+            long before = System.nanoTime();
+            assertEquals(Collections.singletonList(new PortResult("STUCK", SerialPortType.Unknown)),
+                SerialPortScanner.inspectPorts(Collections.singletonList("STUCK"), tracked, inspector));
+            assertTrue(System.nanoTime() - before < 4_000_000_000L,
+                "a scan with only an already-running probe must not wait for another timeout");
+            assertEquals(1, stuckCalls.get(), "reappearing ports must still wait for their earlier probe");
+        } finally {
+            release.countDown();
+            Thread.interrupted();
+            for (Thread thread : blockedThreads) {
+                thread.join(2000);
+                assertFalse(thread.isAlive(), "test must release every blocked probe");
+            }
+            Thread.interrupted();
+        }
+
+        assertEquals(Collections.singletonList(new PortResult("STUCK", SerialPortType.Ecu)),
+            SerialPortScanner.inspectPorts(Collections.singletonList("STUCK"), tracked, inspector));
+        Thread.interrupted();
+        assertEquals(2, stuckCalls.get(), "the port can be detected after its blocked probe exits");
     }
 }

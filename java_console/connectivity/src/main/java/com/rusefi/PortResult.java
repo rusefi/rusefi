@@ -71,8 +71,16 @@ public class PortResult {
             return this.port;
         } else {
             String identity = "";
-            if (type == SerialPortType.OpenBlt && bootloaderInfo != null && bootloaderInfo.raw != null) {
-                identity = ": " + bootloaderInfo.raw;
+            if (type == SerialPortType.OpenBlt && bootloaderInfo != null) {
+                if (bootloaderInfo.version != null) {
+                    identity = " v" + bootloaderInfo.version;
+                }
+                if (bootloaderInfo.features != null && !bootloaderInfo.features.isEmpty()) {
+                    identity += "[" + String.join(",", bootloaderInfo.features) + "]";
+                }
+                if (bootloaderInfo.raw != null) {
+                    identity += ": " + bootloaderInfo.raw;
+                }
             } else if (type == SerialPortType.UnsupportedEcu && unsupportedEcuInfo != null) {
                 identity = ": " + unsupportedEcuInfo.getEcuTarget();
             }

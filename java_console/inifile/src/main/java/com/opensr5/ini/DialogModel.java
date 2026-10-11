@@ -27,7 +27,7 @@ public class DialogModel {
 
     /** Ordered entry list preserving INI declaration order across all element types. */
     public static final class DialogEntry {
-        public enum Kind { FIELD, COMMAND, INDICATOR, PANEL, GAUGE }
+        public enum Kind { FIELD, RUNTIME_VALUE, COMMAND, INDICATOR, PANEL, GAUGE }
         public final Kind kind;
         private final Object element;
 

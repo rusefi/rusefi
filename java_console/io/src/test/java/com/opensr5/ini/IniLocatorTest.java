@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Bundled-.ini fallback used when the signature-keyed download fails (custom board).
  * The old locator threw {@link IllegalStateException} on more than one {@code rusefi*.ini}, which broke
  * the fallback and left the board classified "Unknown"; these lock in that it (a) tolerates multiple
- * matches and (b) prefers the signature-matching .ini when the caller knows the board signature.
+ * matches and (b) requires the signature-matching .ini when the caller knows the board signature.
  */
 public class IniLocatorTest {
     private static final String SIG_A = "rusEFI master.2026.07.06.custom-fw.99386034";
@@ -51,11 +51,9 @@ public class IniLocatorTest {
     }
 
     @Test
-    public void unmatchedSignatureFallsBackToFirstMatch(@TempDir Path dir) throws IOException {
+    public void unmatchedSignatureReturnsNull(@TempDir Path dir) throws IOException {
         writeIni(dir, "rusefi_only.ini", SIG_B);
-        // no candidate carries the wanted signature -> still return the available .ini rather than null
-        assertEquals(new File(dir.toFile(), "rusefi_only.ini").getAbsolutePath(),
-            IniLocator.findIniFile(dir.toString(), SIG_A));
+        assertNull(IniLocator.findIniFile(dir.toString(), SIG_A));
     }
 
     @Test

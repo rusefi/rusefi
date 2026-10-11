@@ -4,6 +4,7 @@ import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ini.AxisModel;
 import com.opensr5.ini.CurveModel;
+import com.opensr5.ini.ExpressionEvaluator;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.TsStringFunction;
 import com.opensr5.ini.field.ArrayIniField;
@@ -16,9 +17,12 @@ import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.KeyEvent;
+import java.awt.geom.AffineTransform;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.EventObject;
 
 /**
  * curve panel consists of two parts
@@ -40,9 +44,18 @@ public class CurveWidget {
     private final JTable table = new JTable();
 
     private CurveModel curveModel;
+    private AxisModel xAxis;
+    private AxisModel yAxis;
+    private AxisModel configuredXAxis;
+    private AxisModel configuredYAxis;
+    private double xMin;
+    private double xMax;
+    private double yMin;
+    private double yMax;
     private Double[] xValues;
     private Double[] yValues;
     private String xUnits;
+    private String yUnits;
     private int xDigits;
     private int yDigits;
     private ConfigurationImage imageTarget;
@@ -53,6 +66,29 @@ public class CurveWidget {
     public CurveWidget(CurveModel curveModel, IniFileModel iniFileModel, ConfigurationImage ci) {
         table.getTableHeader().setReorderingAllowed(false);
         table.setDefaultRenderer(Object.class, new GradientRenderer());
+        table.setDefaultEditor(Object.class, new DefaultCellEditor(new JTextField()) {
+            private boolean keyboardEditing;
+
+            @Override
+            public boolean isCellEditable(EventObject event) {
+                keyboardEditing = event instanceof KeyEvent;
+                return super.isCellEditable(event);
+            }
+
+            @Override
+            public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+                JTextField editor = (JTextField) super.getTableCellEditorComponent(table, value, isSelected, row, column);
+                if (keyboardEditing) {
+                    editor.setText("");
+                }
+                return editor;
+            }
+        });
+        table.setCellSelectionEnabled(true);
+        table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        table.setToolTipText("Type to replace a value; Enter to accept; Esc to cancel; Shift+arrows to select");
+        table.getSelectionModel().addListSelectionListener(e -> canvas.repaint());
+        table.getColumnModel().getSelectionModel().addListSelectionListener(e -> canvas.repaint());
         // JTable defaults to a 450x400 preferredScrollableViewportSize; left unchanged the table would
         // claim ~450px of fixed preferred width and starve the canvas (which only receives the GridBag
         // remainder) on narrow windows. Size the table to its actual content so the 0.8/0.2 weights hold.
@@ -82,6 +118,8 @@ public class CurveWidget {
     private void update(CurveModel curveModel, IniFileModel iniFile, ConfigurationImage ci) {
         this.curveModel = Objects.requireNonNull(curveModel);
         this.imageTarget = ci;
+        this.configuredXAxis = curveModel.getxAxis().resolve(iniFile, ci);
+        this.configuredYAxis = curveModel.getyAxis().resolve(iniFile, ci);
 
         IniField xField = iniFile.findIniField(curveModel.getxBins()).get();
         this.xUnits = resolveUnits(xField.getUnits(), iniFile, ci);
@@ -89,11 +127,19 @@ public class CurveWidget {
         this.xBinsField = xField instanceof ArrayIniField ? (ArrayIniField) xField : null;
 
         IniField yField = iniFile.findIniField(curveModel.getyBins()).get();
+        this.yUnits = resolveUnits(yField.getUnits(), iniFile, ci);
         this.yDigits = parseDigits(yField.getDigits());
         this.yBinsField = yField instanceof ArrayIniField ? (ArrayIniField) yField : null;
 
+        // Field limits are engineering values, independent of the INI's suggested plot range (#9191).
+        xMin = resolveLimit(xBinsField == null ? null : xBinsField.getMin(), iniFile, ci, Double.NEGATIVE_INFINITY);
+        xMax = resolveLimit(xBinsField == null ? null : xBinsField.getMax(), iniFile, ci, Double.POSITIVE_INFINITY);
+        yMin = resolveLimit(yBinsField == null ? null : yBinsField.getMin(), iniFile, ci, Double.NEGATIVE_INFINITY);
+        yMax = resolveLimit(yBinsField == null ? null : yBinsField.getMax(), iniFile, ci, Double.POSITIVE_INFINITY);
+
         this.xValues = readArray(curveModel.getxBins(), iniFile, ci);
         this.yValues = readArray(curveModel.getyBins(), iniFile, ci);
+        updatePlotAxes();
 
         canvas.setCurve(curveModel, xValues, yValues);
         table.setModel(new CurveTableModel());
@@ -103,6 +149,58 @@ public class CurveWidget {
 
     public void setOnEdit(Runnable onEdit) {
         this.onEdit = onEdit;
+    }
+
+    private static double resolveLimit(String raw, IniFileModel ini, ConfigurationImage image, double fallback) {
+        Double value = ExpressionEvaluator.evaluateNumericExpression(raw, ini, image);
+        if (value == null) {
+            value = ExpressionEvaluator.tryEvaluate(raw);
+        }
+        return value != null && Double.isFinite(value) ? value : fallback;
+    }
+
+    private void updatePlotAxes() {
+        xAxis = fitAxis(configuredXAxis, xValues);
+        yAxis = fitAxis(configuredYAxis, yValues);
+    }
+
+    private static AxisModel fitAxis(AxisModel configured, Double[] values) {
+        double min = configured.getMin();
+        double max = configured.getMax();
+        for (Double value : values) {
+            if (value != null && Double.isFinite(value)) {
+                min = Math.min(min, value);
+                max = Math.max(max, value);
+            }
+        }
+        if (min == configured.getMin() && max == configured.getMax() && min < max && configured.getStep() >= 2) {
+            return configured;
+        }
+        if (min == max) {
+            // Avoid a zero-sized transform, including unresolved or constant INI axes.
+            min -= 1;
+            max += 1;
+        }
+        // Expand to readable 1/2/5 * 10^n ticks, preserving at least the suggested INI range.
+        double step = (max - min) / Math.max(1, configured.getStep() - 1);
+        double magnitude = Math.pow(10, Math.floor(Math.log10(step)));
+        double fraction = step / magnitude;
+        double roundedStep = (fraction <= 1 ? 1 : fraction <= 2 ? 2 : fraction <= 5 ? 5 : 10) * magnitude;
+        min = Math.floor(min / roundedStep) * roundedStep;
+        max = Math.ceil(max / roundedStep) * roundedStep;
+        return new AxisModel(min, max, (int) Math.round((max - min) / roundedStep) + 1);
+    }
+
+    private void setXValue(int index, double value) {
+        double min = index == 0 ? xMin : Math.max(xMin, xValues[index - 1]);
+        double max = index == xValues.length - 1 ? xMax : Math.min(xMax, xValues[index + 1]);
+        if (min <= max) {
+            xValues[index] = Math.max(min, Math.min(max, value));
+        }
+    }
+
+    private void setYValue(int index, double value) {
+        yValues[index] = Math.max(yMin, Math.min(yMax, value));
     }
 
     private void writeBackToImage() {
@@ -204,6 +302,10 @@ public class CurveWidget {
                 public void mouseReleased(MouseEvent e) {
                     if (dragged) {
                         writeBackToImage();
+                        // Keep the transform stable for the whole gesture; fit only after release.
+                        updatePlotAxes();
+                        repaint();
+                        table.repaint();
                         if (onEdit != null) onEdit.run();
                     }
                     draggingIndex = null;
@@ -244,12 +346,8 @@ public class CurveWidget {
 
         private void updatePoint(int index, Point p) {
             Point2D world = canvasToWorld(p);
-            // enforce X-coordinate to stay in order
-            double minX = (index == 0) ? curve.getxAxis().getMin() : x[index - 1];
-            double maxX = (index == x.length - 1) ? curve.getxAxis().getMax() : x[index + 1];
-
-            x[index] = Math.max(minX, Math.min(maxX, world.x));
-            y[index] = Math.max(curve.getyAxis().getMin(), Math.min(curve.getyAxis().getMax(), world.y));
+            setXValue(index, world.x);
+            setYValue(index, world.y);
         }
 
         @Override
@@ -261,7 +359,14 @@ public class CurveWidget {
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
             drawGrid(g2);
-            drawCurve(g2);
+            Graphics2D plotGraphics = (Graphics2D) g2.create();
+            try {
+                Rectangle plot = getPlotBounds();
+                plotGraphics.clipRect(plot.x, plot.y, plot.width + 1, plot.height + 1);
+                drawCurve(plotGraphics);
+            } finally {
+                plotGraphics.dispose();
+            }
 
             g2.setColor(Color.WHITE);
             String title = curve.getTitle();
@@ -272,13 +377,19 @@ public class CurveWidget {
                 int unitsWidth = g2.getFontMetrics().stringWidth(xUnits);
                 g2.drawString(xUnits, (getWidth() - unitsWidth) / 2, getHeight() - 5);
             }
+
+            if (yUnits != null && !yUnits.isEmpty()) {
+                int unitsWidth = g2.getFontMetrics().stringWidth(yUnits);
+                AffineTransform transform = g2.getTransform();
+                g2.rotate(-Math.PI / 2);
+                g2.drawString(yUnits, -(getHeight() + unitsWidth) / 2, 12);
+                g2.setTransform(transform);
+            }
         }
 
         public void drawGrid(Graphics2D g2) {
             Color gridColor = new Color(200, 200, 200, 100); // light grey, semi-transparent
             g2.setStroke(new BasicStroke(0.5f));
-            AxisModel xAxis = curve.getxAxis();
-            AxisModel yAxis = curve.getyAxis();
 
             FontMetrics fm = g2.getFontMetrics();
 
@@ -337,45 +448,42 @@ public class CurveWidget {
                 Point p = worldToCanvas(x[i], y[i]);
                 g2.fillOval(p.x - 4, p.y - 4, 8, 8);
             }
+
+            g2.setColor(Color.MAGENTA);
+            for (int row : table.getSelectedRows()) {
+                Point p = worldToCanvas(x[row], y[row]);
+                g2.fillOval(p.x - 5, p.y - 5, 10, 10);
+            }
         }
 
-        private Point worldToCanvas(double wx, double wy) {
-            double xMin = curve.getxAxis().getMin();
-            double xMax = curve.getxAxis().getMax();
-            double yMin = curve.getyAxis().getMin();
-            double yMax = curve.getyAxis().getMax();
+        private Rectangle getPlotBounds() {
+            return new Rectangle(50, 20, Math.max(1, getWidth() - 70), Math.max(1, getHeight() - 60));
+        }
 
-            int leftPadding = 50;
-            int rightPadding = 20;
-            int topPadding = 20;
-            int bottomPadding = 40;
+        // Package-private for rendering and mouse-interaction tests.
+        Point worldToCanvas(double wx, double wy) {
+            double xMin = xAxis.getMin();
+            double xMax = xAxis.getMax();
+            double yMin = yAxis.getMin();
+            double yMax = yAxis.getMax();
 
-            int width = getWidth() - leftPadding - rightPadding;
-            int height = getHeight() - topPadding - bottomPadding;
-
-            int cx = leftPadding + (int) ((wx - xMin) / (xMax - xMin) * width);
+            Rectangle plot = getPlotBounds();
+            int cx = plot.x + (int) ((wx - xMin) / (xMax - xMin) * plot.width);
             // y axis is displayed in descending order
-            int cy = topPadding + height - (int) ((wy - yMin) / (yMax - yMin) * height);
+            int cy = plot.y + plot.height - (int) ((wy - yMin) / (yMax - yMin) * plot.height);
 
             return new Point(cx, cy);
         }
 
         private Point2D canvasToWorld(Point p) {
-            double xMin = curve.getxAxis().getMin();
-            double xMax = curve.getxAxis().getMax();
-            double yMin = curve.getyAxis().getMin();
-            double yMax = curve.getyAxis().getMax();
+            double xMin = xAxis.getMin();
+            double xMax = xAxis.getMax();
+            double yMin = yAxis.getMin();
+            double yMax = yAxis.getMax();
 
-            int leftPadding = 50;
-            int rightPadding = 20;
-            int topPadding = 20;
-            int bottomPadding = 40;
-
-            int width = getWidth() - leftPadding - rightPadding;
-            int height = getHeight() - topPadding - bottomPadding;
-
-            double wx = xMin + (double) (p.x - leftPadding) / width * (xMax - xMin);
-            double wy = yMin + (double) (topPadding + height - p.y) / height * (yMax - yMin);
+            Rectangle plot = getPlotBounds();
+            double wx = xMin + (double) (p.x - plot.x) / plot.width * (xMax - xMin);
+            double wy = yMin + (double) (plot.y + plot.height - p.y) / plot.height * (yMax - yMin);
 
             return new Point2D(wx, wy);
         }
@@ -399,7 +507,8 @@ public class CurveWidget {
 
         @Override
         public String getColumnName(int column) {
-            return column == 0 ? "X Axis" : "Y Axis";
+            String label = column == 0 ? curveModel.getXLabel() : curveModel.getYLabel();
+            return label != null ? label : (column == 0 ? "X Axis" : "Y Axis");
         }
 
         @Override
@@ -418,19 +527,28 @@ public class CurveWidget {
         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
             try {
                 double val = Double.parseDouble(aValue.toString());
-                if (columnIndex == 0) {
-                    // Check order
-                    double min = (rowIndex == 0) ? curveModel.getxAxis().getMin() : xValues[rowIndex - 1];
-                    double max = (rowIndex == xValues.length - 1) ? curveModel.getxAxis().getMax() : xValues[rowIndex + 1];
-                    xValues[rowIndex] = Math.max(min, Math.min(max, val));
-                } else {
-                    yValues[rowIndex] = Math.max(curveModel.getyAxis().getMin(), Math.min(curveModel.getyAxis().getMax(), val));
+                if (!Double.isFinite(val)) {
+                    return;
                 }
-                fireTableCellUpdated(rowIndex, columnIndex);
+                for (int row : table.getSelectedRows()) {
+                    for (int column : table.getSelectedColumns()) {
+                        setValue(row, column, val);
+                    }
+                }
+                updatePlotAxes();
+                fireTableDataChanged();
                 canvas.repaint();
                 writeBackToImage();
                 if (onEdit != null) onEdit.run();
             } catch (NumberFormatException ignored) {}
+        }
+
+        private void setValue(int row, int column, double value) {
+            if (column == 0) {
+                setXValue(row, value);
+            } else {
+                setYValue(row, value);
+            }
         }
     }
 
@@ -453,11 +571,11 @@ public class CurveWidget {
 
             double min, max;
             if (column == 0) {
-                min = curveModel.getxAxis().getMin();
-                max = curveModel.getxAxis().getMax();
+                min = xAxis.getMin();
+                max = xAxis.getMax();
             } else {
-                min = curveModel.getyAxis().getMin();
-                max = curveModel.getyAxis().getMax();
+                min = yAxis.getMin();
+                max = yAxis.getMax();
             }
             applyGradient(c, doubleValue, min, max);
             return c;

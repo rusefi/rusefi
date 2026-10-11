@@ -114,8 +114,14 @@ public class ConfigDefinition {
                 case "-field_lookup_file": {
                     String cppFile = args[i + 1];
                     String mdFile = args[i + 2];
+                    String tableFile = args.length > i + 3 ? args[i + 3] : null;
+                    if (tableFile != null && tableFile.startsWith("-")) {
+                        tableFile = null;
+                    } else if (tableFile != null) {
+                        i++;
+                    }
                     i++;
-                    state.addDestination(new GetConfigValueConsumer(cppFile, mdFile, LazyFile.REAL));
+                    state.addDestination(new GetConfigValueConsumer(cppFile, tableFile, mdFile, LazyFile.REAL));
                 }
                 break;
                 case READFILE_OPTION:
@@ -227,8 +233,6 @@ public class ConfigDefinition {
     private static void handlePage(ReaderStateImpl parentState, int pageIndex, List<String> softPrepends, TreeSet<String> usedNames) throws IOException {
         PlainConfigHandler page = new PlainConfigHandler("integration/config_page_" + pageIndex + ".txt", pageIndex, softPrepends, usedNames);
         page.doJob();
-        // PAGE_CONTENT_N is handled here!
-        parentState.getVariableRegistry().put("PAGE_CONTENT_" + pageIndex, page.tsProjectConsumer.getContent());
-        parentState.getVariableRegistry().register("PAGE_SIZE_" + pageIndex, Integer.toString(page.tsProjectConsumer.getTotalSize()));
+        page.tsProjectConsumer.registerPage(parentState.getVariableRegistry());
     }
 }

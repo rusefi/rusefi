@@ -43,6 +43,9 @@ public abstract class IsoTpCanDecoder {
     }
 
    public byte[] decodePacket(byte[] data, int dataSize) {
+        if (dataSize > data.length || dataSize <= isoHeaderByteIndex) {
+            return malformedFrame("Invalid ISO-TP frame length: " + dataSize);
+        }
 //        log.info("Decoding " + printHexBinary(data));
         int frameType = (data[isoHeaderByteIndex] >> 4) & 0xf;
         int numBytesAvailable;
@@ -52,13 +55,20 @@ public abstract class IsoTpCanDecoder {
             case IsoTpConstants.ISO_TP_FRAME_SINGLE:
                 numBytesAvailable = data[isoHeaderByteIndex] & 0xf;
                 dataOffset = isoHeaderByteIndex + 1;
+                if (numBytesAvailable > Math.min(7 - isoHeaderByteIndex, dataSize - dataOffset)) {
+                    return malformedFrame("ISO-TP payload exceeds frame length");
+                }
                 this.waitingForNumBytes = 0;
                 if (log.debugEnabled())
                     log.debug("ISO_TP_FRAME_SINGLE " + numBytesAvailable);
                 setComplete(true);
                 break;
             case IsoTpConstants.ISO_TP_FRAME_FIRST:
-                this.waitingForNumBytes = ((data[isoHeaderByteIndex] & 0xf) << 8) | data[isoHeaderByteIndex + 1];
+                if (dataSize < isoHeaderByteIndex + 2) {
+                    return malformedFrame("Truncated ISO-TP first-frame header");
+                }
+                this.waitingForNumBytes = ((data[isoHeaderByteIndex] & 0xf) << 8) | (data[isoHeaderByteIndex + 1] & 0xff);
+                setComplete(false);
                 if (log.debugEnabled())
                     log.debug("Total expected: " + waitingForNumBytes);
                 this.waitingForFrameIndex = 1;
@@ -69,8 +79,20 @@ public abstract class IsoTpCanDecoder {
                 break;
             case IsoTpConstants.ISO_TP_FRAME_CONSECUTIVE:
                 frameIdx = data[isoHeaderByteIndex] & 0xf;
-                if (this.waitingForNumBytes < 0 || this.waitingForFrameIndex != frameIdx) {
-                    throw new IllegalStateException("ISO_TP_FRAME_CONSECUTIVE: That's an abnormal situation, and we probably should react? waitingForNumBytes=" + waitingForNumBytes + " waitingForFrameIndex=" + waitingForFrameIndex + " frameIdx=" + frameIdx);
+                if (this.waitingForNumBytes <= 0) {
+                    if (log.debugEnabled())
+                        log.debug("Ignoring ISO-TP consecutive frame while no message is active: frameIdx=" + frameIdx);
+                    onTpDecodeError("Unexpected ISO-TP consecutive frame: index=" + frameIdx);
+                    reset();
+                    return new byte[0];
+                }
+                if (this.waitingForFrameIndex != frameIdx) {
+                    String message = "ISO-TP sequence error: expected=" + waitingForFrameIndex
+                        + " received=" + frameIdx + " bytesRemaining=" + waitingForNumBytes;
+                    log.warn(message);
+                    onTpDecodeError(message);
+                    reset();
+                    return new byte[0];
                 }
                 this.waitingForFrameIndex = (this.waitingForFrameIndex + 1) & 0xf;
                 numBytesAvailable = Math.min(this.waitingForNumBytes, dataSize - 1 - isoHeaderByteIndex);
@@ -81,6 +103,9 @@ public abstract class IsoTpCanDecoder {
                 setComplete(waitingForNumBytes == 0);
                 break;
             case ISO_TP_FRAME_FLOW_CONTROL:
+                if (dataSize < isoHeaderByteIndex + 3) {
+                    return malformedFrame("Truncated ISO-TP flow-control header");
+                }
                 int flowStatus = data[isoHeaderByteIndex] & 0xf;
                 int blockSize = data[isoHeaderByteIndex + 1];
                 int separationTime = data[isoHeaderByteIndex + 2];
@@ -98,11 +123,28 @@ public abstract class IsoTpCanDecoder {
 
     protected abstract void onTpFirstFrame();
 
+    private byte[] malformedFrame(String message) {
+        reset();
+        log.warn(message);
+        onTpDecodeError(message);
+        return new byte[0];
+    }
+
+    /** Override to fail the connection instead of discarding malformed data. */
+    protected void onTpDecodeError(String message) {
+    }
+
     public void setComplete(boolean isComplete) {
         this.isComplete = isComplete;
     }
 
     public boolean isComplete() {
         return isComplete;
+    }
+
+    private void reset() {
+        waitingForNumBytes = 0;
+        waitingForFrameIndex = 0;
+        setComplete(false);
     }
 }

@@ -39,6 +39,15 @@ public enum LiveDocsRegistry {
         }
     }
 
+    public boolean hasVisible() {
+        for (LiveDocHolder holder : liveDocs) {
+            if (holder.isVisible()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void refresh(LiveDocHolder holder, live_data_e context, LiveDataProvider liveDataProvider) {
 
         byte[] response = liveDataProvider.provide(context);
@@ -60,12 +69,18 @@ public enum LiveDocsRegistry {
 */
             int structOffset = StateDictionary.INSTANCE.getOffset(context);
             byte[] overallOutputs = SensorCentral.getInstance().getResponse();
-
-            byte[] response = new byte[size];
-
-            System.arraycopy(overallOutputs, structOffset, overallOutputs, 0, size);
-            return response;
+            return sliceOutput(overallOutputs, structOffset, size);
         };
+    }
+
+    static byte[] sliceOutput(byte[] overallOutputs, int structOffset, int size) {
+        if (overallOutputs == null || structOffset < 0 || size < 0
+                || structOffset > overallOutputs.length - 1 - size) {
+            return null;
+        }
+        byte[] response = new byte[size];
+        System.arraycopy(overallOutputs, structOffset + 1, response, 0, size);
+        return response;
     }
 
     public interface LiveDataProvider {

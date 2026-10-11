@@ -6,6 +6,9 @@ import com.rusefi.config.FieldType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -15,14 +18,14 @@ public class EnumIniReaderHelper {
     private static final String STARTS_WITH_NUMBERS_OPTIONAL_SPACES_AND_EQUALS = "^\\d+\\s*=.*";
     private static final Pattern IS_KEY_VALUE_SYNTAX = Pattern.compile(STARTS_WITH_NUMBERS_OPTIONAL_SPACES_AND_EQUALS);
     private static final Pattern BIT_RANGE_DELIMITERS = Pattern.compile("[]\\[:]");
-    private static final Set<String> PIN_ENUM_LISTS = Set.of(
+    private static final Set<String> PIN_ENUM_LISTS = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
         "$gpio_list",
         "$output_pin_e_list",
         "$brain_input_pin_e_list",
         "$switch_input_pin_e_list",
         "$adc_channel_e_list",
         "$sent_input_pin_e_list"
-    );
+    )));
 
     private EnumIniReaderHelper() {
     }

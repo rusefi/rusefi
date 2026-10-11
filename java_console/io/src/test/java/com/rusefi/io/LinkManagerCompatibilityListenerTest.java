@@ -6,13 +6,31 @@ import com.rusefi.core.io.UnsupportedEcuInfo;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LinkManagerCompatibilityListenerTest {
+    @Test
+    public void canTransportsCanReconnectWithoutAppearingAsSerialPorts() {
+        assertTrue(LinkManager.isCanPort("SLCAN:COM7"));
+        assertTrue(LinkManager.isSpecialNotSerial("SLCAN:COM7"));
+        assertTrue(LinkManager.isPortAvailableForReconnect("SLCAN:COM7", Collections.emptySet()));
+        assertTrue(LinkManager.isPortAvailableForReconnect(
+            LinkManager.SOCKET_CAN, Collections.emptySet()));
+        assertTrue(LinkManager.isPortAvailableForReconnect(
+            LinkManager.PCAN, Collections.emptySet()));
+        assertFalse(LinkManager.isPortAvailableForReconnect(
+            "COM7", Collections.emptySet()));
+        assertTrue(LinkManager.isPortAvailableForReconnect(
+            "COM7", Collections.singleton("COM7")));
+    }
+
     @Test
     public void unsupportedEventCarriesPortAndIdentity() {
         AtomicReference<String> reportedPort = new AtomicReference<>();

@@ -1,17 +1,22 @@
 package com.rusefi.mcp;
 
 import com.devexperts.logging.Logging;
-import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.binaryprotocol.IniNotFoundException;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.tune.xml.Msq;
-import com.rusefi.tune.xml.MsqFactory;
+import com.rusefi.sensor_logs.MlgTune;
 import com.rusefi.ui.lua.LuaIncludeSyntax;
 import com.rusefi.io.LinkManager;
+import com.rusefi.io.UpdateOperationCallbacks;
+import com.rusefi.util.TuneSnapshot;
 import com.rusefi.io.lua.LuaService;
+import com.rusefi.maintenance.CalibrationsHelper;
+import com.rusefi.maintenance.CalibrationsInfo;
+import com.rusefi.maintenance.CalibrationsUpdater;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -27,7 +32,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Deque;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -42,7 +54,7 @@ import static com.devexperts.logging.Logging.getLogging;
  *     <li><code>tools/list</code></li>
  *     <li><code>tools/call</code> for: connect, ecu_info, set_lua, get_lua, lua_reset,
  *         send_command (alias: command), read_output_channel, read_messages,
- *         wait_for_message, read_tune, reboot, reboot_to_blt — see
+ *         wait_for_message, read_tune, write_tune, start_data_logging, stop_data_logging, data_logging_status, download_bundle, update_firmware, reboot, reboot_to_blt — see
  *         java_console/mcp_ecu/README.md for the tool reference</li>
  *     <li><code>notifications/initialized</code></li>
  * </ul>
@@ -80,7 +92,18 @@ public class EcuMcpServer {
 
     /** Lazy-initialized link manager — created on first ECU-touching tool call. */
     private volatile LinkManager linkManager;
+    private BinaryProtocol borrowedProtocol;
+    private MessagesCentral.MessageListener messagesListener;
+    private volatile boolean closed;
     private final Object connectLock = new Object();
+    private final EcuDataLogger dataLogger = new EcuDataLogger();
+    /**
+     * Console output-channel polling is subscription based (#10171): the pull thread fetches only the byte ranges
+     * of channels somebody subscribed to, and this headless process has no gauges. Holding a full-frame lease for
+     * the lifetime of the connection restores the pre-#10171 behaviour - every channel of the .ini is polled, so
+     * read_output_channel simply returns the latest value.
+     */
+    private SensorCentral.FullOutputLease fullOutputLease;
 
     /** CLI: optional fixed serial port; null => autodetect on first connect. */
     private final String forcedPort;
@@ -127,27 +150,51 @@ public class EcuMcpServer {
         log.info("rusEFI ECU MCP server starting. forcedPort=" + forcedPort);
         installMessagesListener();
 
-        String line;
-        while ((line = in.readLine()) != null) {
-            line = line.trim();
-            if (line.isEmpty()) continue;
-            try {
-                Object parsed = parser.parse(line);
-                if (parsed instanceof JSONObject) {
-                    handleMessage((JSONObject) parsed);
+        try {
+            String line;
+            while ((line = in.readLine()) != null) {
+                line = line.trim();
+                if (line.isEmpty()) {
+                    continue;
                 }
-            } catch (Throwable t) {
-                log.error("Failed to handle line: " + line, t);
+                try {
+                    Object parsed = parser.parse(line);
+                    if (parsed instanceof JSONObject) {
+                        handleMessage((JSONObject) parsed);
+                    }
+                } catch (Throwable t) {
+                    log.error("Failed to handle line: " + line, t);
+                }
             }
+        } finally {
+            shutdown();
         }
         log.info("stdin closed, exiting");
-        shutdown();
     }
 
-    private void shutdown() {
+    /** Embedded mode borrows an already connected Console; it never discovers or owns a port. */
+    EcuMcpServer(LinkManager linkManager, BinaryProtocol protocol) {
+        this(null, null, null);
+        this.linkManager = linkManager;
+        this.borrowedProtocol = protocol;
+        installMessagesListener();
+    }
+
+    void shutdown() {
+        closed = true;
+        if (messagesListener != null) {
+            MessagesCentral.getInstance().removeListener(messagesListener);
+        }
+        dataLogger.stop();
         LinkManager lm = linkManager;
-        if (lm != null) {
+        if (lm != null && borrowedProtocol == null) {
             try { lm.close(); } catch (Throwable ignored) {}
+        }
+        synchronized (connectLock) {
+            if (fullOutputLease != null) {
+                fullOutputLease.close();
+                fullOutputLease = null;
+            }
         }
     }
 
@@ -156,7 +203,11 @@ public class EcuMcpServer {
     // -----------------------------------------------------------------------------------
 
     private void installMessagesListener() {
-        MessagesCentral.getInstance().addListener((clazz, message) -> {
+        messagesListener = (clazz, message) -> {
+            if (closed || (borrowedProtocol != null
+                    && (linkManager.getBinaryProtocol() != borrowedProtocol || borrowedProtocol.isClosed()))) {
+                return;
+            }
             synchronized (messageLock) {
                 long seq = ++messageSeq;
                 messageBuffer.addLast(new EcuMessage(seq, System.currentTimeMillis(),
@@ -165,7 +216,8 @@ public class EcuMcpServer {
                     messageBuffer.removeFirst();
                 messageLock.notifyAll();
             }
-        });
+        };
+        MessagesCentral.getInstance().addListener(messagesListener);
     }
 
     private static final class EcuMessage {
@@ -249,7 +301,7 @@ public class EcuMcpServer {
     // -----------------------------------------------------------------------------------
 
     @SuppressWarnings("unchecked")
-    private JSONObject toolsList() {
+    JSONObject toolsList() {
         JSONArray tools = new JSONArray();
         tools.add(tool("connect",
                 "Connect to the ECU (autodetect serial port unless --port was passed on startup). " +
@@ -295,12 +347,71 @@ public class EcuMcpServer {
                         {"command", "string", "Command text."}
                 }, new String[]{"command"}, false)));
         tools.add(tool("read_output_channel",
-                "Read latest output-channel value by channel name from SensorCentral. " +
-                        "'found: false' means unknown channel OR no data received yet — retry before " +
-                        "concluding the name is wrong.",
+                "Read latest output-channel value by channel name from SensorCentral (this server keeps all " +
+                        "output channels polled while connected). 'found: false' means unknown channel OR no " +
+                        "data received yet — retry before concluding the name is wrong.",
                 schemaObject(new String[][]{
                         {"name", "string", "Output-channel (gauge) name, case-insensitive, e.g. 'RPMValue'."}
                 }, new String[]{"name"}, false)));
+        tools.add(tool("convert_log_to_csv",
+                "Convert a host-side binary MLVLG v2 or text TunerStudio MSL log to CSV. " +
+                        "No ECU connection required. Stop recording before converting. " +
+                        "Never overwrites an existing file. Returns success, path, inputFormat, recordCount and fieldCount.",
+                schemaObject(new String[][]{
+                        {"inputPath", "string", "Existing log file on the MCP server host."},
+                        {"outputPath", "string", "New CSV path on the server host; parent must exist. " +
+                                "Defaults to inputPath with its extension replaced by .csv."}
+                }, new String[]{"inputPath"}, false)));
+        tools.add(tool("extract_tune_from_log",
+                "Extract the starting tune embedded in a host-side TunerStudio or rusEFI MLVLG v2 log " +
+                        "to an MSQ file. No ECU connection or INI is needed. Preserves the original XML bytes. " +
+                        "Fails if no tune is embedded, the information section is malformed, or output exists. " +
+                        "Returns success, path and byteCount.",
+                schemaObject(new String[][]{
+                        {"inputPath", "string", "Existing .mlg log file on the MCP server host."},
+                        {"outputPath", "string", "New MSQ path on the server host; parent must exist. " +
+                                "Defaults to inputPath with its extension replaced by .msq."}
+                }, new String[]{"inputPath"}, false)));
+        tools.add(tool("capture_engine_sniffer",
+                "Wait for the next Console Digital Sniffer chart and return parsed crank/cam, output and TDC events, " +
+                        "microsecond timestamps, channel summaries and the raw chart. Uses current sniffer settings; " +
+                        "does not change the tune or reset acquisition. A newly received chart may contain events " +
+                        "collected before this call. This is a bounded snapshot, not continuous composite logging.",
+                schemaObject(new String[][]{
+                        {"timeoutMs", "integer", "Wait for a chart in ms, 1..120000. Default 10000; connection has a separate timeout."}
+                }, new String[]{}, false)));
+        tools.add(tool("start_data_logging",
+                "Start recording ECU operating data to an MLG file on the MCP server host. " +
+                        "Records all numeric/enum output channels at the connection polling rate. " +
+                        "Fails if already recording or the file exists. Returns logging, path, format, " +
+                        "sampleCount, channelCount, tunePath and tuneEmbedded. Embeds the starting tune " +
+                        "and saves a daily MSQ snapshot by default. " +
+                        "Poll data_logging_status for progress or write errors.",
+                schemaObject(new String[][]{
+                        {"path", "string", "New output .mlg file path; parent directory must exist. " +
+                                "Omit to create a temporary rusefi_data_*.mlg file."},
+                        {"saveTune", "boolean", "Default true: embed a fresh ECU tune in the log and save it beside the log as YYYY-MM-DD.msq " +
+                                "(server local date). Reuse identical tunes; changed tunes get _1, _2, etc. " +
+                                "False disables both embedded and separate tune snapshots."}
+                }, new String[]{}, false)));
+        for (String target : new String[]{"ecu", "pc"}) {
+            tools.add(tool("mount_to_" + target,
+                    "Mount the SD card to the " + target.toUpperCase(java.util.Locale.ROOT) +
+                            " and wait for a fresh sdCardMode report. Requires firmware with sdCardMode. " +
+                            "ECU mode permits logging/file access; PC mode exposes USB mass storage. " +
+                            "Safely eject the PC drive before switching to ECU. A USB disconnect leaves " +
+                            "completion unconfirmed; reconnect and read sdCardMode before retrying.",
+                    schemaObject(new String[][]{
+                            {"timeoutMs", "integer", "Command and mount confirmation timeout in ms, 1..120000. Default 20000."}
+                    }, new String[]{}, false)));
+        }
+        tools.add(tool("stop_data_logging",
+                "Stop recording and close the MLG file. Safe to repeat; returns final recording status. " +
+                        "Does not require an ECU connection.", emptyObjectSchema()));
+        tools.add(tool("data_logging_status",
+                "Return logging, path, tunePath, tuneEmbedded, format, sampleCount, channelCount and any recording error. " +
+                        "Does not connect to the ECU. No samples arrive while disconnected; reconnecting " +
+                        "stops the old recording. Server shutdown also closes the file.", emptyObjectSchema()));
         tools.add(tool("read_messages",
                 "Return ECU messages from the in-memory ring buffer captured via MessagesCentral " +
                         "(this is the same stream the Swing MessagesView shows, including Lua print() output). " +
@@ -334,6 +445,37 @@ public class EcuMcpServer {
                         {"path", "string", "Output .msq file path on the MCP server host (not the client). " +
                                 "Default: a temp file named rusefi_tune_*.msq."}
                 }, new String[]{}, false)));
+        tools.add(tool("write_tune",
+                "Load a TunerStudio-compatible .msq file from the MCP server host, merge its compatible " +
+                        "calibration fields into the connected ECU tune, write and burn changed pages, then " +
+                        "read the ECU back and verify every resulting page. ECU-specific identity fields such " +
+                        "as VIN are preserved. Returns 'changed', 'verified', 'failedFields', source/ECU " +
+                        "signatures and file metadata.",
+                schemaObject(new String[][]{
+                        {"path", "string", "Existing input .msq file path on the MCP server host (not the client)."}
+                }, new String[]{"path"}, false)));
+        tools.add(tool("download_bundle",
+                "Download and extract a fresh autoupdate bundle on the MCP server host, without connecting " +
+                        "to or flashing an ECU. Select a board, the universal updater, or both. The universal " +
+                        "archive alone has no firmware; also specify board to add its SREC to the extracted " +
+                        "universal bundle. Returns archive paths, bundleDirectory, srecPaths, and firmwarePath " +
+                        "when there is one SREC (pass it to update_firmware). May take several minutes.",
+                schemaObject(new String[][]{
+                        {"board", "string", "Board target, e.g. proteus_f7 or uaefi. Required unless universal is true."},
+                        {"universal", "boolean", "Download the universal updater bundle. Default false."},
+                        {"branch", "string", "development (default), master (alias), or an LTS release such as lts-26."},
+                        {"destination", "string", "New directory on the MCP server host; must not exist. Default: a temp directory."}
+                }, new String[]{}, false)));
+        tools.add(tool("update_firmware",
+                "Update the connected ECU via OpenBLT and migrate its configuration using the console's " +
+                        "backup/flash/restore flow. Requires running firmware over serial or SocketCAN. " +
+                        "Stops data logging. Backs up the tune before flashing; incompatible fields remain at " +
+                        "firmware defaults and are reported in warnings/messages. Reconnects after the update. " +
+                        "This synchronous operation may take several minutes.",
+                schemaObject(new String[][]{
+                        {"firmwarePath", "string", "Optional existing .srec firmware file on the MCP server host. " +
+                                "Omit to use the bundle's firmware for the connected board."}
+                }, new String[]{}, false)));
         tools.add(tool("reboot",
                 "Reboot the ECU (send '" + Integration.CMD_REBOOT + "'). The serial link drops while the ECU " +
                         "restarts — reconnect (any ECU-touching tool reconnects implicitly) after a few seconds.",
@@ -351,7 +493,7 @@ public class EcuMcpServer {
     }
 
     @SuppressWarnings("unchecked")
-    private JSONObject toolsCall(JSONObject params) throws Exception {
+    JSONObject toolsCall(JSONObject params) throws Exception {
         String name = (String) params.get("name");
         JSONObject args = (JSONObject) params.getOrDefault("arguments", new JSONObject());
         JSONObject toolResult;
@@ -365,9 +507,20 @@ public class EcuMcpServer {
                 case "send_command":toolResult = doSendCommand(args); break;
                 case "command":    toolResult = doSendCommand(args); break;
                 case "read_output_channel": toolResult = doReadOutputChannel(args); break;
+                case "mount_to_ecu": toolResult = doMount(args, true); break;
+                case "mount_to_pc": toolResult = doMount(args, false); break;
+                case "convert_log_to_csv": toolResult = doConvertLogToCsv(args); break;
+                case "extract_tune_from_log": toolResult = doExtractTuneFromLog(args); break;
+                case "capture_engine_sniffer": toolResult = doCaptureEngineSniffer(args); break;
+                case "start_data_logging": toolResult = doStartDataLogging(args); break;
+                case "stop_data_logging": toolResult = dataLogger.stop(); break;
+                case "data_logging_status": toolResult = dataLogger.status(); break;
                 case "read_messages": toolResult = doReadMessages(args); break;
                 case "wait_for_message": toolResult = doWaitForMessage(args); break;
                 case "read_tune":   toolResult = doReadTune(args); break;
+                case "write_tune":  toolResult = doWriteTune(args); break;
+                case "download_bundle": toolResult = new BundleDownloader().download(args); break;
+                case "update_firmware": toolResult = doUpdateFirmware(args); break;
                 case "reboot":      toolResult = doReboot(Integration.CMD_REBOOT); break;
                 case "reboot_to_blt": toolResult = doReboot(Integration.CMD_REBOOT_OPENBLT); break;
                 default:
@@ -380,12 +533,73 @@ public class EcuMcpServer {
         return wrapToolResult(toolResult);
     }
 
+    @SuppressWarnings("unchecked")
+    private JSONObject doExtractTuneFromLog(JSONObject args) throws IOException {
+        Object input = args.get("inputPath");
+        Object output = args.get("outputPath");
+        if (!(input instanceof String) || ((String) input).trim().isEmpty()) {
+            throw new IllegalArgumentException("inputPath must be a non-empty string");
+        }
+        if (args.containsKey("outputPath") && (!(output instanceof String) || ((String) output).trim().isEmpty())) {
+            throw new IllegalArgumentException("outputPath must be a non-empty string");
+        }
+        Path source = Paths.get((String) input);
+        Path target = MlgTune.extract(source,
+                output == null ? MlgTune.defaultOutput(source) : Paths.get((String) output));
+        JSONObject result = new JSONObject();
+        result.put("success", true);
+        result.put("path", target.toString());
+        result.put("byteCount", Files.size(target));
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    private JSONObject doConvertLogToCsv(JSONObject args) throws IOException {
+        Object input = args.get("inputPath");
+        Object output = args.get("outputPath");
+        if (!(input instanceof String) || ((String) input).trim().isEmpty()) {
+            throw new IllegalArgumentException("inputPath must be a non-empty string");
+        }
+        if (args.containsKey("outputPath") && (!(output instanceof String) || ((String) output).trim().isEmpty())) {
+            throw new IllegalArgumentException("outputPath must be a non-empty string");
+        }
+        Path source = Paths.get((String) input);
+        MslToCsv.Result conversion = MslToCsv.convert(source,
+                output == null ? MslToCsv.defaultOutput(source) : Paths.get((String) output));
+        JSONObject result = new JSONObject();
+        result.put("success", true);
+        result.put("path", conversion.path.toString());
+        result.put("inputFormat", conversion.inputFormat);
+        result.put("recordCount", conversion.recordCount);
+        result.put("fieldCount", conversion.fieldCount);
+        return result;
+    }
+
+    private JSONObject doUpdateFirmware(JSONObject args) throws Exception {
+        Path firmware = args.containsKey("firmwarePath")
+                ? EcuFirmwareUpdater.validateFirmwarePath(args.get("firmwarePath")) : null;
+        LinkManager lm = ensureConnected(null);
+        return new EcuFirmwareUpdater().update(lm, firmware, () -> dataLogger.stop());
+    }
+
     private LinkManager ensureConnected(String portOrNull) throws Exception {
+        if (borrowedProtocol != null) {
+            if (closed || linkManager.getBinaryProtocol() != borrowedProtocol || borrowedProtocol.isClosed()) {
+                throw new IOException("Console connection changed. Start a new conversation.");
+            }
+            return linkManager;
+        }
         LinkManager lm = linkManager;
         if (lm != null && lm.isActive()) return lm;
         synchronized (connectLock) {
             if (linkManager != null && linkManager.isActive()) return linkManager;
+            // Never append a new connection's potentially different channel layout to an old file.
+            dataLogger.stop();
             String port = portOrNull != null ? portOrNull : forcedPort;
+            // subscribe to all output channels before the pull thread makes its first poll
+            if (fullOutputLease == null) {
+                fullOutputLease = SensorCentral.getInstance().acquireFullOutput();
+            }
             linkManager = LuaService.connect(port, 60_000);
             return linkManager;
         }
@@ -451,6 +665,9 @@ public class EcuMcpServer {
         o.put("bytesWritten", r.bytesWritten);
         o.put("fieldSize", r.fieldSize);
         o.put("burnSucceeded", r.burnSucceeded);
+        o.put("resetConfirmed", r.resetConfirmed);
+        if (r.success && !r.resetConfirmed)
+            o.put("warning", "luareset not confirmed - old VM may still be running, verify a version marker or call lua_reset");
         return o;
     }
 
@@ -487,6 +704,47 @@ public class EcuMcpServer {
         return o;
     }
 
+    private JSONObject doStartDataLogging(JSONObject args) throws Exception {
+        Object requestedPath = args.get("path");
+        if (args.containsKey("path") && (!(requestedPath instanceof String)
+                || ((String) requestedPath).trim().isEmpty())) {
+            return errorBody("'path' must be a non-empty string");
+        }
+        Object saveTune = args.containsKey("saveTune") ? args.get("saveTune") : Boolean.TRUE;
+        if (!(saveTune instanceof Boolean)) {
+            return errorBody("'saveTune' must be a boolean");
+        }
+        LinkManager lm = ensureConnected(null);
+        BinaryProtocol bp = lm.getBinaryProtocol();
+        IniFileModel ini = bp == null ? null : bp.getIniFileNullable();
+        if (ini == null) {
+            return errorBody("No .ini model for this connection");
+        }
+        Msq tune = (Boolean) saveTune ? TuneSnapshot.read(lm, bp, ini) : null;
+        return dataLogger.start(ini, requestedPath == null ? null : Paths.get((String) requestedPath), tune);
+    }
+
+    @SuppressWarnings("unchecked")
+    private JSONObject doCaptureEngineSniffer(JSONObject args) throws Exception {
+        long timeoutMs = asLong(args.get("timeoutMs"), 10_000);
+        if (timeoutMs < 1 || timeoutMs > 120_000) {
+            return errorBody("'timeoutMs' must be between 1 and 120000");
+        }
+        LinkManager lm = ensureConnected(null);
+        String signature = String.valueOf(lm.getBinaryProtocol().signature);
+        JSONObject result = EngineSnifferCapture.capture(lm, timeoutMs);
+        result.put("signature", signature);
+        return result;
+    }
+
+    private JSONObject doMount(JSONObject args, boolean toEcu) throws Exception {
+        long timeoutMs = asLong(args.get("timeoutMs"), 20_000);
+        if (timeoutMs < 1 || timeoutMs > 120_000) {
+            return errorBody("'timeoutMs' must be between 1 and 120000");
+        }
+        return SdCardMount.mount(ensureConnected(null), SensorCentral.getInstance(), toEcu, timeoutMs);
+    }
+
     @SuppressWarnings("unchecked")
     private JSONObject doReadTune(JSONObject args) throws Exception {
         String path = (String) args.get("path");
@@ -495,24 +753,178 @@ public class EcuMcpServer {
         BinaryProtocol bp = lm.getBinaryProtocol();
         if (bp == null)
             return errorBody("Binary protocol not established yet");
-        ConfigurationImage image = bp.getControllerConfiguration();
-        if (image == null)
-            return errorBody("Controller configuration image not available yet");
         IniFileModel ini = bp.getIniFileNullable();
         if (ini == null)
             return errorBody("No .ini model for this connection");
 
-        Msq tune = MsqFactory.valueOf(image, ini);
+        Msq tune = TuneSnapshot.read(lm, bp, ini);
         File outputFile = path != null ? new File(path) : File.createTempFile("rusefi_tune_", ".msq");
         tune.writeXmlFile(outputFile.getAbsolutePath());
 
         JSONObject o = new JSONObject();
         o.put("success", true);
         o.put("path", outputFile.getAbsolutePath());
-        o.put("constantCount", (long) tune.findPage().constant.size());
+        o.put("constantCount", (long) tune.getConstantsAsMap().size());
         o.put("fileSize", outputFile.length());
         o.put("signature", String.valueOf(bp.signature));
         return o;
+    }
+
+    @SuppressWarnings("unchecked")
+    private JSONObject doWriteTune(JSONObject args) throws Exception {
+        Object requestedPath = args.get("path");
+        if (!(requestedPath instanceof String) || ((String) requestedPath).trim().isEmpty()) {
+            return errorBody("'path' must be a non-empty string");
+        }
+
+        Path input = Paths.get((String) requestedPath).toAbsolutePath();
+        if (!Files.isRegularFile(input)) {
+            return errorBody("Tune path is not an existing regular file: " + input);
+        }
+
+        Msq sourceTune = Msq.readTune(input.toString());
+        String sourceSignature = sourceTune.getVersionInfo() == null
+                ? null : sourceTune.getVersionInfo().getSignature();
+        if (sourceSignature == null || sourceSignature.trim().isEmpty()) {
+            return errorBody("Tune does not contain a firmware signature: " + input);
+        }
+
+        LinkManager lm = ensureConnected(null);
+        BinaryProtocol bp = lm.getBinaryProtocol();
+        if (bp == null) {
+            return errorBody("Binary protocol not established yet");
+        }
+        IniFileModel targetIni = bp.getIniFileNullable();
+        if (targetIni == null) {
+            return errorBody("No .ini model for this connection");
+        }
+        IniFileModel sourceIni;
+        if (sourceSignature.equals(targetIni.getSignature())) {
+            sourceIni = targetIni;
+        } else {
+            try {
+                sourceIni = BinaryProtocol.iniFileProvider.provide(sourceSignature);
+            } catch (IniNotFoundException e) {
+                return errorBody("No .ini available for tune signature '" + sourceSignature + "': " + e.getMessage());
+            }
+        }
+
+        TuneWriteCallbacks callbacks = new TuneWriteCallbacks();
+        Optional<CalibrationsInfo> current = readCalibrations(lm, bp, callbacks);
+        if (!current.isPresent()) {
+            return tuneWriteFailure("Failed to read the current ECU tune", input, sourceTune,
+                    sourceSignature, bp, callbacks, Collections.emptyList(), false);
+        }
+
+        CalibrationsHelper.MergeResult merge = CalibrationsHelper.mergeCalibrationsWithPartialFailure(
+                sourceIni, sourceTune, current.get(), callbacks,
+                Collections.singleton("vinNumber"));
+        boolean changed = merge.mergedCalibrations.isPresent();
+        CalibrationsInfo expected = merge.mergedCalibrations.orElse(current.get());
+
+        if (changed && !CalibrationsUpdater.INSTANCE.updateCalibrations(
+                bp, lm, expected, callbacks)) {
+            return tuneWriteFailure("Failed to write or burn the merged tune", input, sourceTune,
+                    sourceSignature, bp, callbacks, merge.failedFields, true);
+        }
+
+        Optional<CalibrationsInfo> reread = readCalibrations(lm, bp, callbacks);
+        boolean verified = reread.isPresent() && sameCalibrationPages(expected, reread.get());
+        if (!verified) {
+            return tuneWriteFailure("ECU tune readback did not match the requested result", input, sourceTune,
+                    sourceSignature, bp, callbacks, merge.failedFields, changed);
+        }
+
+        JSONObject result = tuneWriteBase(input, sourceTune, sourceSignature, bp, callbacks, merge.failedFields);
+        result.put("success", true);
+        result.put("changed", changed);
+        result.put("verified", true);
+        return result;
+    }
+
+    private static Optional<CalibrationsInfo> readCalibrations(
+            LinkManager lm, BinaryProtocol bp, UpdateOperationCallbacks callbacks) throws Exception {
+        FutureTask<Optional<CalibrationsInfo>> read = new FutureTask<>(
+                () -> CalibrationsHelper.readCurrentCalibrations(bp, callbacks));
+        lm.submit(read);
+        try {
+            return read.get(60, TimeUnit.SECONDS);
+        } finally {
+            // Do not interrupt an in-flight wire transaction if the caller is cancelled/times out.
+            read.cancel(false);
+        }
+    }
+
+    private static boolean sameCalibrationPages(CalibrationsInfo expected, CalibrationsInfo actual) {
+        if (!expected.getPages().keySet().equals(actual.getPages().keySet())) {
+            return false;
+        }
+        for (Map.Entry<Integer, com.opensr5.ConfigurationImageWithMeta> page : expected.getPages().entrySet()) {
+            com.opensr5.ConfigurationImageWithMeta actualPage = actual.getPage(page.getKey());
+            if (actualPage == null || !Arrays.equals(
+                    page.getValue().getConfigurationImage().getContent(),
+                    actualPage.getConfigurationImage().getContent())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static JSONObject tuneWriteFailure(String error, Path input, Msq tune, String sourceSignature,
+                                               BinaryProtocol bp, TuneWriteCallbacks callbacks,
+                                               List<String> failedFields, boolean changed) {
+        JSONObject result = tuneWriteBase(input, tune, sourceSignature, bp, callbacks, failedFields);
+        result.put("success", false);
+        result.put("changed", changed);
+        result.put("verified", false);
+        result.put("error", callbacks.lastError == null ? error : error + ": " + callbacks.lastError);
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static JSONObject tuneWriteBase(Path input, Msq tune, String sourceSignature,
+                                            BinaryProtocol bp, TuneWriteCallbacks callbacks,
+                                            List<String> failedFields) {
+        JSONObject result = new JSONObject();
+        result.put("path", input.toString());
+        result.put("constantCount", (long) tune.getConstantsAsMap().size());
+        try {
+            result.put("fileSize", Files.size(input));
+        } catch (IOException ignored) {
+            // The input was already parsed successfully; metadata failure must not hide the write result.
+        }
+        result.put("sourceSignature", sourceSignature);
+        result.put("ecuSignature", String.valueOf(bp.signature));
+        JSONArray failed = new JSONArray();
+        failed.addAll(failedFields);
+        result.put("failedFields", failed);
+        JSONArray warnings = new JSONArray();
+        warnings.addAll(callbacks.warnings);
+        result.put("warnings", warnings);
+        return result;
+    }
+
+    private static final class TuneWriteCallbacks implements UpdateOperationCallbacks {
+        private final java.util.ArrayList<String> warnings = new java.util.ArrayList<>();
+        private String lastError;
+
+        @Override
+        public void log(String message, boolean breakLineOnTextArea, boolean sendToLogger) {
+            log.info("write_tune: " + message);
+            String upper = message.toUpperCase(Locale.ROOT);
+            if (upper.contains("WARNING")) {
+                warnings.add(message);
+            }
+            if (upper.contains("ERROR") || upper.contains("FAILED")) {
+                lastError = message;
+            }
+        }
+
+        @Override public void done() { }
+        @Override public void warning() { }
+        @Override public void error() { }
+        @Override public void clear() { }
     }
 
     @SuppressWarnings("unchecked")
@@ -533,9 +945,14 @@ public class EcuMcpServer {
             return errorBody("'name' is required");
         }
 
+        // ensureConnected() holds a full-output lease, so every channel of the .ini is being polled
         ensureConnected(null);
         double value = SensorCentral.getInstance().getValue(name);
+        return outputChannelResult(name, value);
+    }
 
+    @SuppressWarnings("unchecked")
+    static JSONObject outputChannelResult(String name, double value) {
         JSONObject o = new JSONObject();
         o.put("name", name);
         o.put("found", !Double.isNaN(value));

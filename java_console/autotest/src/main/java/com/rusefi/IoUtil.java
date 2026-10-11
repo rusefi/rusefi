@@ -1,5 +1,7 @@
 package com.rusefi;
 
+import com.rusefi.core.OsUtil;
+
 import com.devexperts.logging.Logging;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.*;
@@ -119,7 +121,7 @@ public class IoUtil {
 
     public static void connectToSimulator(LinkManager linkManager, boolean startProcess) throws InterruptedException {
         if (startProcess) {
-            if (FileLog.isWindows()) {
+            if (OsUtil.isWindows()) {
                 // this check seems not to work on Linux
                 if (!TcpConnector.getAvailablePorts().isEmpty())
                     throw new IllegalStateException("Port already binded on startup?");

@@ -10,7 +10,21 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
- * this class runs rusEFI functional tests against rusEFI simulator
+ * Command-line entry point which runs the {@link SimulatorFunctionalTest} suite against a rusEFI simulator
+ * process over the TunerStudio binary protocol (TCP, see {@link IoUtil#connectToSimulator}).
+ * <p>
+ * Arguments:
+ * <ul>
+ * <li>args[0] (required) - .ini file describing the simulator's configuration layout,
+ *     e.g. firmware/tunerstudio/generated/rusefi_f407-discovery.ini</li>
+ * <li>args[1] (optional) - "start" to launch a previously built simulator binary as a child process
+ *     via {@link SimulatorExecHelper}; omit to connect to a simulator started externally</li>
+ * </ul>
+ * Exits 0 on success, -1 on test failure, 66 on an uncaught exception in any thread.
+ * <p>
+ * Invoked by the gradle tasks in autotest/build.gradle (simulatorFunctionalTestLauncherWithSimulator and
+ * simulatorFunctionalTestLauncherAssumungSimulatorWasStartedExternally); CI runs the former from the
+ * build-simulator.yaml GHA workflow.
  */
 public class SimulatorFunctionalTestLauncher {
     static volatile boolean isHappy;

@@ -4,10 +4,12 @@ import com.devexperts.logging.Logging;
 import com.opensr5.ini.*;
 import com.rusefi.ini.reader.IniFileReader;
 import com.rusefi.core.SignatureHelper;
+import com.rusefi.core.Pair;
 import com.rusefi.ui.StatusConsumer;
 import com.rusefi.ini.reader.IniFileReaderUtil;
 import com.rusefi.ini.reader.IniParsingException;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -26,10 +28,24 @@ public class RealIniFileProvider implements IniFileProvider {
      * stays Swing-free. See {@link com.rusefi.core.SignatureHelper#importIntoCache}.
      */
     public interface ManualIniPicker {
-        File pick(String signature);
+        void pick(String signature);
     }
 
     public static ManualIniPicker manualPicker = null;
+
+    interface IniDownloader {
+        String findOrDownload(Pair<String, String> location, boolean allowDownload);
+    }
+
+    private final IniDownloader iniDownloader;
+
+    public RealIniFileProvider() {
+        this(SignatureHelper::downloadIfNotAvailable);
+    }
+
+    RealIniFileProvider(IniDownloader iniDownloader) {
+        this.iniDownloader = iniDownloader;
+    }
 
     /**
      * Signatures for which a picker has already been opened. The port scanner calls {@link #provide}
@@ -40,9 +56,15 @@ public class RealIniFileProvider implements IniFileProvider {
      * can clear it later if anyone asks.
      */
     private static final Set<String> promptedSignatures = ConcurrentHashMap.newKeySet();
+    private static final Set<String> reportedMissingSignatures = ConcurrentHashMap.newKeySet();
 
-    public static void clearPromptedSignaturesForTests() {
+    public static void clearMissingIniStateForTests() {
         promptedSignatures.clear();
+        reportedMissingSignatures.clear();
+    }
+
+    public static void allowManualPrompt(String signature) {
+        promptedSignatures.remove(signature);
     }
 
     private StatusConsumer statusConsumer = StatusConsumer.ANONYMOUS;
@@ -51,48 +73,68 @@ public class RealIniFileProvider implements IniFileProvider {
         this.statusConsumer = statusConsumer;
     }
 
+    /**
+     * @return .ini copied from TunerStudio's cache into ours (so the next connect is a plain cache
+     * hit), the TunerStudio file itself if the copy failed, or null if TunerStudio does not have it
+     */
+    @Nullable
+    private static String importFromTunerStudioCache(String signature) {
+        String tsIniFile = PrimeTunerStudioCache.findInTunerStudioCache(signature);
+        if (tsIniFile == null) {
+            return null;
+        }
+        try {
+            String imported = SignatureHelper.importIntoCache(signature, new File(tsIniFile));
+            if (imported != null) {
+                return imported;
+            }
+        } catch (IOException e) {
+            log.warn("Failed to import " + tsIniFile + " into local cache: " + e);
+        }
+        return tsIniFile;
+    }
+
     @Override
     @NotNull
     public IniFileModel provide(String signature) throws IniNotFoundException {
-        /**
-         * first we look at {@link SignatureHelper#LOCAL_INI_CACHE_FOLDER}
-         * second we attempt downloading
-         * third we look via {@link SignatureHelper#EXTRA_INI_SOURCE} environment variable
-         */
-        String localIniFile = SignatureHelper.downloadIfNotAvailable(SignatureHelper.getUrl(signature));
+        // 1. Bundled .ini (one level up, or env override) (#10031)
+        String localIniFile = IniLocator.findIniFile(IniFileReader.INI_FILE_PATH, signature);
         if (localIniFile == null) {
-            String message = "Failed to download " + signature + " maybe custom board?";
-            log.info(message);
-            statusConsumer.logLine(message);
-            // 4th option: current folder
+            // 2. Current folder
             localIniFile = IniLocator.findIniFile(".", signature);
         }
         if (localIniFile == null) {
-            // 5th option: one level up or environment variable direction
-            localIniFile = IniLocator.findIniFile(IniFileReader.INI_FILE_PATH, signature);
+            // 3. Cache or download from server
+            // Once the manual picker has been requested, keep checking its cache but do not make every
+            // later scanner probe repeat the same unavailable remote lookup (#10158).
+            localIniFile = iniDownloader.findOrDownload(
+                SignatureHelper.getUrl(signature), !promptedSignatures.contains(signature));
+        }
+        if (localIniFile == null) {
+            // 4. TunerStudio's own ecuDef cache: the server may not have this build (custom board,
+            // local compile) while TunerStudio has already loaded its .ini
+            localIniFile = importFromTunerStudioCache(signature);
         }
         ManualIniPicker picker = manualPicker;
-        if (localIniFile == null && picker != null && promptedSignatures.add(signature)) {
-            // 6th option: ask the user to point at a local .ini and cache it for next time.
-            // Atomic add prevents concurrent port-scanner probes from opening duplicate pickers.
-            File picked = picker.pick(signature);
-            if (picked != null) {
-                try {
-                    localIniFile = SignatureHelper.importIntoCache(signature, picked);
-                    if (localIniFile == null)
-                        localIniFile = picked.getAbsolutePath();
-                } catch (IOException e) {
-                    log.info("Failed to import picked .ini into cache: " + e);
-                    localIniFile = picked.getAbsolutePath();
-                }
+        if (localIniFile == null) {
+            if (reportedMissingSignatures.add(signature)) {
+                String message = "Failed to download " + signature + " maybe custom board?";
+                log.info(message);
+                statusConsumer.logLine(message);
+            }
+            if (picker != null && promptedSignatures.add(signature)) {
+                // The UI caches the eventual selection asynchronously; a later probe will find it.
+                picker.pick(signature);
             }
         }
-        if (localIniFile == null)
-            throw new IniNotFoundException("Failed to locate .ini file in five different places!");
+        if (localIniFile == null) {
+            throw new IniNotFoundException("Failed to locate matching .ini file");
+        }
         IniFileModel iniFileModel;
         try {
                 iniFileModel = IniFileReaderUtil.readIniFileChecked(localIniFile);
         } catch (IniParsingException e) {
+            new File(localIniFile).delete();
             throw new IniNotFoundException("Parsing error: " + e, e);
         } catch (FileNotFoundException e) {
             throw new IniNotFoundException(e.toString());

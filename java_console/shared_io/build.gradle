@@ -5,6 +5,7 @@ apply from: '../../android/dependencies.gradle'
 dependencies {
   api project(':logging-api')
   api project(':version')
+  api global_libs.json
 }
 
 java {
@@ -26,3 +27,12 @@ java {
 
 // TODO: rename folder to core_io?
 // this CORE module cannot depend on model/ini!
+
+// Downloads/caches source and wiki text; no ECU or ChatGPT account required.
+tasks.register('runFirmwareSourceCodeDownloaderSandbox', JavaExec) {
+  dependsOn testClasses
+  group = 'Execution'
+  description = 'Download and extract the firmware source archive with textual progress'
+  classpath = sourceSets.test.runtimeClasspath
+  mainClass = 'com.rusefi.core.net.FirmwareSourceCodeDownloaderSandbox'
+}

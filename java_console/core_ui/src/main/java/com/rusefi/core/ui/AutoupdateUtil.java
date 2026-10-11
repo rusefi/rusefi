@@ -20,11 +20,21 @@ import java.util.concurrent.atomic.AtomicReference;
 import static com.devexperts.logging.Logging.getLogging;
 
 public class AutoupdateUtil {
+    /**
+     * Shown instead of a raw {@link java.net.UnknownHostException} when rusefi.com does not resolve, see #10191.
+     * Compile-time constant on purpose: it gets inlined, so a newer autoupdate jar still runs against an older core_ui jar.
+     */
+    public static final String CHECK_INTERNET_CONNECTION = "Check your internet connection";
     private static final Logging log = getLogging(AutoupdateUtil.class);
     public static final boolean runHeadless = Boolean.getBoolean("run_headless") || GraphicsEnvironment.isHeadless();
 
     // todo: figure out a better way to work with absolute path
     private static final String APPICON = "/appicon.png";
+
+    /**
+     * Where icons and logos actually live on the classpath, see java_console/shared_ui/resources.
+     */
+    static final String RUSEFI_RESOURCE_PACKAGE = "/com/rusefi/";
 
     public static JComponent wrap(JComponent component) {
         AutoupdateUtil.assertAwtThread();
@@ -60,7 +70,7 @@ public class AutoupdateUtil {
                         throw e;
                     }
                     String message = (e instanceof UnknownHostException)
-                        ? "Please fix your internet connection"
+                        ? CHECK_INTERNET_CONNECTION
                         : "Error downloading: " + e;
                     boolean retry = view.showErrorAndWaitForRetry(message);
                     if (!retry) {
@@ -132,20 +142,6 @@ public class AutoupdateUtil {
         component.repaint();
     }
 
-    private static Window getSelectedWindow(Window[] windows) {
-        for (Window window : windows) {
-            if (window.isActive()) {
-                return window;
-            } else {
-                Window[] ownedWindows = window.getOwnedWindows();
-                if (ownedWindows != null) {
-                    return getSelectedWindow(ownedWindows);
-                }
-            }
-        }
-        return null;
-    }
-
     public static void assertNotAwtThread() {
         if (SwingUtilities.isEventDispatchThread()) {
             showError("Non AWT thread expected");
@@ -164,11 +160,7 @@ public class AutoupdateUtil {
         StringBuilder trace = new StringBuilder(e + "\n");
         for(StackTraceElement element : e.getStackTrace())
             trace.append(element.toString()).append("\n");
-        SwingUtilities.invokeLater(() -> {
-            // todo: reuse ErrorMessageHelper?
-            Window w = getSelectedWindow(Window.getWindows());
-            JOptionPane.showMessageDialog(w, trace, "Error", JOptionPane.ERROR_MESSAGE);
-        });
+        SwingUtilities.invokeLater(() -> ErrorMessageHelper.showErrorDialog(trace.toString(), "Error"));
     }
 
     public static boolean hasExistingFile(String zipFileName, long completeFileSize, long lastModified) {
@@ -183,7 +175,7 @@ public class AutoupdateUtil {
             return new ImageIcon(imgURL);
         } else {
             log.info("Using secondary resource path for " + strPath);
-            imgURL = dynamicResourcesLoader.getResource("/com/rusefi/" + strPath);
+            imgURL = dynamicResourcesLoader.getResource(secondaryResourcePath(strPath));
             if (imgURL != null) {
                 return new ImageIcon(imgURL);
             }
@@ -192,11 +184,26 @@ public class AutoupdateUtil {
         }
     }
 
+    /**
+     * Maps a bare resource name onto the package our resources actually live in, e.g.
+     * {@code /appicon.png} to {@code /com/rusefi/appicon.png}.
+     * <p>
+     * Careful with the slash: plain concatenation produced {@code /com/rusefi//appicon.png}, and a
+     * jar entry lookup is an exact string match, so the doubled slash silently resolved to nothing
+     * whenever the console ran from its jar rather than from an IDE class directory. That is why
+     * {@link #setAppIcon} used to leave the default Java coffee cup on the frame - see #6928.
+     */
+    static String secondaryResourcePath(String strPath) {
+        String relative = strPath.startsWith("/") ? strPath.substring(1) : strPath;
+        return RUSEFI_RESOURCE_PACKAGE + relative;
+    }
+
     public static void setAppIcon(JFrame frame) {
         // huh? sometimes we are making icon from logo and sometimes we have dedicated icon file?!
         ImageIcon icon = loadIcon(APPICON);
-        if (icon != null)
+        if (icon != null) {
             frame.setIconImage(icon.getImage());
+        }
     }
 
     public static void pack(Window window) {

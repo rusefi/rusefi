@@ -11,6 +11,7 @@ import com.rusefi.enums.bench_mode_e;
 import com.rusefi.enums.bench_test_magic_numbers_e;
 import com.rusefi.enums.bench_test_packet_ids_e;
 import com.rusefi.enums.bench_test_io_control_e;
+import com.rusefi.binaryprotocol.FsImageReader;
 import com.rusefi.functional_tests.EcuTestHelper;
 import com.rusefi.io.LinkManager;
 import etch.util.CircularByteBuffer;
@@ -18,6 +19,7 @@ import etch.util.CircularByteBuffer;
 import java.io.EOFException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static com.rusefi.IoUtil.getDisableCommand;
 import static com.rusefi.binaryprotocol.IoHelper.swap16;
@@ -38,26 +40,33 @@ public class SimulatorFunctionalTest {
     }
 
     public void mainTestBody() throws InterruptedException {
-        assertHappyTriggerSimulator();
-        assertVvtPosition();
-        assertRawAnalogPackets();
+        SensorCentral sensorCentral = SensorCentral.getInstance();
+        try (SensorCentral.FullOutputLease lease = sensorCentral.acquireFullOutput()) {
+            if (sensorCentral.awaitFullSnapshot(lease.getGeneration(), Timeouts.BINARY_IO_TIMEOUT) == null) {
+                throw new IllegalStateException("No full output-channel snapshot from simulator");
+            }
+            assertHappyTriggerSimulator();
+            assertVvtPosition();
+            assertRawAnalogPackets();
+            assertFsImageContainsIni();
 
-        int vvtOutputFrequency = 300; // todo: move the constant to Fields
-        testPwmPin(bench_mode_e.BENCH_VVT0_VALVE, vvtOutputFrequency);
+            int vvtOutputFrequency = 300; // todo: move the constant to Fields
+            testPwmPin(bench_mode_e.BENCH_VVT0_VALVE, vvtOutputFrequency);
 
-        testOutputPin(bench_mode_e.BENCH_MAIN_RELAY, Integration.BENCH_MAIN_RELAY_DURATION);
-        testOutputPin(bench_mode_e.BENCH_FUEL_PUMP, Integration.BENCH_FUEL_PUMP_DURATION);
-        testOutputPin(bench_mode_e.BENCH_FAN_RELAY, Integration.BENCH_FAN_DURATION);
-        testOutputPin(bench_mode_e.HD_ACR, Integration.BENCH_AC_RELAY_DURATION);
-        testOutputPin(bench_mode_e.HD_ACR2, Integration.BENCH_AC_RELAY_DURATION);
-        testOutputPin(bench_mode_e.BENCH_AC_COMPRESSOR_RELAY, Integration.BENCH_AC_RELAY_DURATION);
-        testOutputPin(bench_mode_e.BENCH_STARTER_ENABLE_RELAY, Integration.BENCH_STARTER_DURATION);
-        EcuTestHelper ecu = new EcuTestHelper(linkManager);
+            testOutputPin(bench_mode_e.BENCH_MAIN_RELAY, Integration.BENCH_MAIN_RELAY_DURATION);
+            testOutputPin(bench_mode_e.BENCH_FUEL_PUMP, Integration.BENCH_FUEL_PUMP_DURATION);
+            testOutputPin(bench_mode_e.BENCH_FAN_RELAY, Integration.BENCH_FAN_DURATION);
+            testOutputPin(bench_mode_e.HD_ACR, Integration.BENCH_AC_RELAY_DURATION);
+            testOutputPin(bench_mode_e.HD_ACR2, Integration.BENCH_AC_RELAY_DURATION);
+            testOutputPin(bench_mode_e.BENCH_AC_COMPRESSOR_RELAY, Integration.BENCH_AC_RELAY_DURATION);
+            testOutputPin(bench_mode_e.BENCH_STARTER_ENABLE_RELAY, Integration.BENCH_STARTER_DURATION);
+            EcuTestHelper ecu = new EcuTestHelper(linkManager);
 
-        ecu.sendCommand(getDisableCommand(Integration.CMD_SELF_STIMULATION));
-        IoUtil.awaitRpm(0);
+            ecu.sendCommand(getDisableCommand(Integration.CMD_SELF_STIMULATION));
+            IoUtil.awaitRpm(0);
 
-        testOutputPin(bench_mode_e.BENCH_VVT0_VALVE, Integration.BENCH_VVT_DURATION);
+            testOutputPin(bench_mode_e.BENCH_VVT0_VALVE, Integration.BENCH_VVT_DURATION);
+        }
     }
 
     private void assertHappyTriggerSimulator() throws InterruptedException {
@@ -65,6 +74,59 @@ public class SimulatorFunctionalTest {
         Thread.sleep(5 * Timeouts.SECOND);
         double triggerErrors = SensorCentral.getInstance().getValue(Sensor.totalTriggerErrorCounter);
         assertTrue("triggerErrors " + triggerErrors, triggerErrors < 5);
+    }
+
+    /**
+     * External displays (e.g. lvgl dashboards) self-configure by pulling the embedded filesystem
+     * image over TS_READ32_COMMAND and extracting the .ini from it - assert the simulator serves
+     * a valid image so that path stays covered by CI.
+     */
+    private void assertFsImageContainsIni() throws InterruptedException {
+        CountDownLatch done = new CountDownLatch(1);
+        AtomicReference<Object> result = new AtomicReference<>();
+        linkManager.submit(() -> {
+            try {
+                result.set(FsImageReader.readImage(linkManager.getBinaryProtocol()));
+            } catch (Throwable e) {
+                result.set(e);
+            } finally {
+                done.countDown();
+            }
+        });
+        if (!done.await(1, TimeUnit.MINUTES)) {
+            throw new IllegalStateException("Timeout reading FS image");
+        }
+        if (result.get() instanceof Throwable) {
+            throw new IllegalStateException("FS image read failed", (Throwable) result.get());
+        }
+        byte[] image = (byte[]) result.get();
+        log.info("FS image: got " + image.length + " CRC-validated bytes");
+
+        // FAT boot sector signature proves we got a filesystem, not garbage
+        assertTrue("FS image too small: " + image.length, image.length > 512);
+        assertTrue("FAT boot sector signature missing",
+                (image[510] & 0xff) == 0x55 && (image[511] & 0xff) == 0xAA);
+
+        // the .ini is stored inside the image as rusefi.ini.7z (see create_ini_image.sh) -
+        // 7z archive magic bytes prove the payload displays extract is actually present
+        byte[] sevenZipMagic = {0x37, 0x7A, (byte) 0xBC, (byte) 0xAF, 0x27, 0x1C};
+        assertTrue("7z magic (compressed .ini) not found in FS image", contains(image, sevenZipMagic));
+    }
+
+    private static boolean contains(byte[] haystack, byte[] needle) {
+        for (int i = 0; i <= haystack.length - needle.length; i++) {
+            boolean match = true;
+            for (int j = 0; j < needle.length; j++) {
+                if (haystack[i + j] != needle[j]) {
+                    match = false;
+                    break;
+                }
+            }
+            if (match) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void assertVvtPosition() {

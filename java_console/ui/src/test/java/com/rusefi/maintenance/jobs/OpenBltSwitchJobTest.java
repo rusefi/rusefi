@@ -1,5 +1,6 @@
 package com.rusefi.maintenance.jobs;
 
+import com.rusefi.FakePortScanner;
 import com.rusefi.PortResult;
 import com.rusefi.SerialPortType;
 import com.rusefi.binaryprotocol.BinaryProtocol;
@@ -7,9 +8,13 @@ import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -29,11 +34,13 @@ public class OpenBltSwitchJobTest {
     private static final String PORT = "COM9";
 
     private final OpenBltSwitchJob.Rebooter rebooter = mock(OpenBltSwitchJob.Rebooter.class);
+    private final FakePortScanner scanner = new FakePortScanner();
     private final UpdateOperationCallbacks callbacks = UpdateOperationCallbacks.DUMMY;
     private final AtomicInteger jobFinishedCount = new AtomicInteger();
 
     private OpenBltSwitchJob newJob(final LinkManager linkManager) {
-        return new OpenBltSwitchJob(new PortResult(PORT, SerialPortType.EcuWithOpenblt), null, linkManager, rebooter);
+        return new OpenBltSwitchJob(new PortResult(PORT, SerialPortType.EcuWithOpenblt), null,
+            linkManager, scanner, rebooter);
     }
 
     @Test
@@ -74,6 +81,43 @@ public class OpenBltSwitchJobTest {
         newJob(null).doJob(callbacks, jobFinishedCount::incrementAndGet);
 
         verify(rebooter).rebootToOpenblt(null, PORT, callbacks);
+        assertEquals(1, jobFinishedCount.get());
+    }
+
+    @Test
+    public void offlineSwitchSuspendsScannerBeforeOpeningSelectedPort() {
+        AtomicInteger suspendCountAtReboot = new AtomicInteger();
+        AtomicInteger resumeCountAtReboot = new AtomicInteger();
+        doAnswer(invocation -> {
+            suspendCountAtReboot.set(scanner.suspendCount);
+            resumeCountAtReboot.set(scanner.resumeCount);
+            return null;
+        }).when(rebooter).rebootToOpenblt(null, PORT, callbacks);
+
+        newJob(null).doJob(callbacks, jobFinishedCount::incrementAndGet);
+
+        assertEquals(1, suspendCountAtReboot.get(), "scanner must stop before the direct port open");
+        assertEquals(0, resumeCountAtReboot.get(), "scanner must remain stopped during the reboot command");
+    }
+
+    @Test
+    public void offlineSwitchInvalidatesPortAndResumesScannerAfterReboot() {
+        newJob(null).doJob(callbacks, jobFinishedCount::incrementAndGet);
+
+        assertEquals(Collections.singletonList(PORT), scanner.invalidatedPorts);
+        assertEquals(1, scanner.resumeCount);
+    }
+
+    @Test
+    public void crashingOfflineRebooterStillInvalidatesPortAndResumesScanner() {
+        doThrow(new RuntimeException("rebooter blew up"))
+            .when(rebooter).rebootToOpenblt(null, PORT, callbacks);
+
+        assertThrows(RuntimeException.class,
+            () -> newJob(null).doJob(callbacks, jobFinishedCount::incrementAndGet));
+
+        assertEquals(Collections.singletonList(PORT), scanner.invalidatedPorts);
+        assertEquals(1, scanner.resumeCount);
         assertEquals(1, jobFinishedCount.get());
     }
 }

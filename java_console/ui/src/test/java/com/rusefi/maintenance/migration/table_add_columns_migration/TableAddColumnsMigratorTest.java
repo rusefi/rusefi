@@ -26,7 +26,57 @@ public class TableAddColumnsMigratorTest {
         ComposedTuneMigrator.INSTANCE.migrateTune(testContext);
 
         final Map<String, Constant> migratedConstants = testContext.getMigratedConstants();
-        assertEquals(8, migratedConstants.size());
+        assertEquals(11, migratedConstants.size());
+    }
+
+    @Test
+    void checkTableRowsAndColumnsMigration() {
+        testContext.checkValueMigration(
+            PEDAL_TO_TPS_TABLE_FIELD_NAME,
+            new Constant(
+                PEDAL_TO_TPS_TABLE_FIELD_NAME,
+                null,
+                "\n" +
+                    "         1.0 2.0 3.0\n" +
+                    "         4.0 5.0 6.0\n",
+                "0",
+                "2",
+                "3"
+            ),
+            new Constant(
+                PEDAL_TO_TPS_TABLE_FIELD_NAME,
+                null,
+                "\n" +
+                    "         0.0 0.0 0.0 0.0 0.0\n" +
+                    "         0.0 0.0 0.0 0.0 0.0\n" +
+                    "         0.0 0.0 0.0 0.0 0.0\n" +
+                    "         0.0 0.0 0.0 0.0 0.0\n",
+                "0",
+                "4",
+                "5"
+            ),
+            new Constant(
+                PEDAL_TO_TPS_TABLE_FIELD_NAME,
+                "%",
+                "\n" +
+                    "         1.0 2.0 3.0 3.0 3.0\n" +
+                    "         4.0 5.0 6.0 6.0 6.0\n" +
+                    "         4.0 5.0 6.0 6.0 6.0\n" +
+                    "         4.0 5.0 6.0 6.0 6.0\n",
+                "0",
+                "4",
+                "5"
+            )
+        );
+
+        assertEquals(
+            "\n         1000.0\n         2000.0\n         3000.0\n         4000.0\n         5000.0\n",
+            testContext.getMigratedValue(PEDAL_TO_TPS_RPM_BINS_FIELD_NAME).getValue()
+        );
+        assertEquals(
+            "\n         0.0\n         100.0\n         110.0\n         120.0\n",
+            testContext.getMigratedValue(PEDAL_TO_TPS_PEDAL_BINS_FIELD_NAME).getValue()
+        );
     }
 
     @Test
@@ -938,4 +988,3 @@ public class TableAddColumnsMigratorTest {
         );
     }
 }
-

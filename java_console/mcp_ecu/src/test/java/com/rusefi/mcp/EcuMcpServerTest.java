@@ -4,12 +4,15 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -55,11 +58,22 @@ class EcuMcpServerTest {
         assertTrue(names.contains("send_command"));
         assertTrue(names.contains("command"));
         assertTrue(names.contains("read_output_channel"));
+        assertTrue(names.contains("capture_engine_sniffer"));
+        assertTrue(names.contains("mount_to_ecu"));
+        assertTrue(names.contains("mount_to_pc"));
+        assertTrue(names.contains("start_data_logging"));
+        assertTrue(names.contains("stop_data_logging"));
+        assertTrue(names.contains("data_logging_status"));
+        assertTrue(names.contains("convert_log_to_csv"));
+        assertTrue(names.contains("extract_tune_from_log"));
         assertTrue(names.contains("read_messages"));
         assertTrue(names.contains("wait_for_message"));
         assertTrue(names.contains("read_tune"));
+        assertTrue(names.contains("write_tune"));
         assertTrue(names.contains("ecu_info"));
         assertTrue(names.contains("connect"));
+        assertTrue(names.contains("download_bundle"));
+        assertTrue(names.contains("update_firmware"));
         assertTrue(names.contains("reboot"));
         assertTrue(names.contains("reboot_to_blt"));
 
@@ -89,6 +103,20 @@ class EcuMcpServerTest {
     }
 
     @Test
+    void captureAndMountToolsValidateTimeoutBeforeConnecting() throws Exception {
+        for (String name : new String[]{"mount_to_ecu", "mount_to_pc", "capture_engine_sniffer"}) {
+            for (long timeout : new long[]{0, -1, 120001}) {
+                String[] responses = drive(jsonRpc(1, "tools/call",
+                        "{\"name\":\"" + name + "\",\"arguments\":{\"timeoutMs\":" + timeout + "}}") + "\n");
+                JSONObject result = (JSONObject) parse(responses[0]).get("result");
+                JSONObject body = (JSONObject) result.get("structuredContent");
+                assertEquals(false, body.get("success"));
+                assertTrue(body.get("error").toString().contains("timeoutMs"));
+            }
+        }
+    }
+
+    @Test
     void waitForMessageTimesOutQuickly() throws Exception {
         String input = jsonRpc(1, "tools/call",
                 "{\"name\":\"wait_for_message\",\"arguments\":{\"regex\":\"NEVER_HAPPENS\",\"timeoutMs\":50}}") + "\n";
@@ -103,6 +131,127 @@ class EcuMcpServerTest {
         assertEquals("timeout", structured.get("error"));
         // Should return promptly after the 50ms timeout (give generous slack for CI).
         assertTrue(elapsed < 5_000, "wait_for_message blocked too long: " + elapsed + "ms");
+    }
+
+    @Test
+    void writeTuneRequiresAHostPathBeforeConnecting() throws Exception {
+        for (String arguments : new String[]{"{}", "{\"path\":\"\"}", "{\"path\":42}"}) {
+            String input = jsonRpc(1, "tools/call",
+                    "{\"name\":\"write_tune\",\"arguments\":" + arguments + "}") + "\n";
+            JSONObject envelope = (JSONObject) parse(drive(input)[0]).get("result");
+            JSONObject body = (JSONObject) envelope.get("structuredContent");
+            assertEquals(Boolean.TRUE, envelope.get("isError"));
+            assertEquals(Boolean.FALSE, body.get("success"));
+            assertTrue(body.get("error").toString().contains("path"));
+        }
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void convertsLogWithoutEcuAndReturnsConversionFailures(@TempDir Path directory) throws Exception {
+        Path source = directory.resolve("capture.msl");
+        Files.write(source, "Time\tRPM\ns\trpm\n0.5\t1200\n".getBytes(StandardCharsets.UTF_8));
+        JSONObject args = new JSONObject();
+        args.put("inputPath", source.toString());
+        JSONObject params = new JSONObject();
+        params.put("name", "convert_log_to_csv");
+        params.put("arguments", args);
+        String request = jsonRpc(1, "tools/call", params.toJSONString()) + "\n";
+        JSONObject envelope = (JSONObject) parse(drive(request)[0]).get("result");
+        JSONObject body = (JSONObject) envelope.get("structuredContent");
+        assertEquals(false, envelope.get("isError"));
+        assertEquals(true, body.get("success"));
+        assertEquals(1L, body.get("recordCount"));
+        assertEquals(2L, body.get("fieldCount"));
+        assertEquals("msl", body.get("inputFormat"));
+        assertEquals(directory.resolve("capture.csv").toString(), body.get("path"));
+        assertEquals("Time (s),RPM (rpm)\n0.5,1200\n",
+                new String(Files.readAllBytes(directory.resolve("capture.csv")), StandardCharsets.UTF_8));
+        // Existing output -> tool error, not a successful or partial conversion.
+        envelope = (JSONObject) parse(drive(request)[0]).get("result");
+        assertEquals(true, envelope.get("isError"));
+        for (Object invalid : new Object[]{null, "", 42L}) {
+            args.put("inputPath", invalid);
+            envelope = (JSONObject) parse(drive(jsonRpc(2, "tools/call", params.toJSONString()) + "\n")[0]).get("result");
+            assertEquals(true, envelope.get("isError"));
+        }
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void extractsTuneWithoutEcuAndReportsErrors(@TempDir Path directory) throws Exception {
+        Path source = directory.resolve("capture.mlg");
+        byte[] tune = "<?xml version=\"1.0\"?><msq><page number=\"0\"/></msq>\n"
+                .getBytes(StandardCharsets.UTF_8);
+        try (java.io.OutputStream output = Files.newOutputStream(source)) {
+            new com.rusefi.sensor_logs.BinarySensorLog<>(entry -> 0.0,
+                    java.util.Collections.<com.rusefi.sensor_logs.BinaryLogEntry>emptyList(), output, tune).close();
+        }
+        JSONObject args = new JSONObject();
+        args.put("inputPath", source.toString());
+        JSONObject params = new JSONObject();
+        params.put("name", "extract_tune_from_log");
+        params.put("arguments", args);
+        String request = jsonRpc(1, "tools/call", params.toJSONString()) + "\n";
+        JSONObject envelope = (JSONObject) parse(drive(request)[0]).get("result");
+        JSONObject body = (JSONObject) envelope.get("structuredContent");
+        assertEquals(false, envelope.get("isError"));
+        assertEquals(true, body.get("success"));
+        assertEquals((long) tune.length, body.get("byteCount"));
+        assertEquals(directory.resolve("capture.msq").toString(), body.get("path"));
+        assertArrayEquals(tune, Files.readAllBytes(directory.resolve("capture.msq")));
+        envelope = (JSONObject) parse(drive(request)[0]).get("result");
+        assertEquals(true, envelope.get("isError"), "Do not overwrite an existing tune");
+
+        args.put("outputPath", directory.resolve("custom.msq").toString());
+        envelope = (JSONObject) parse(drive(jsonRpc(2, "tools/call", params.toJSONString()) + "\n")[0]).get("result");
+        assertEquals(false, envelope.get("isError"));
+        assertArrayEquals(tune, Files.readAllBytes(directory.resolve("custom.msq")));
+        for (String field : new String[]{"inputPath", "outputPath"}) {
+            for (Object invalid : new Object[]{null, "", 42L}) {
+                args.put(field, invalid);
+                envelope = (JSONObject) parse(drive(jsonRpc(3, "tools/call", params.toJSONString()) + "\n")[0]).get("result");
+                assertEquals(true, envelope.get("isError"));
+            }
+            args.put(field, source.toString());
+        }
+        Path noTune = directory.resolve("no-tune.mlg");
+        try (java.io.OutputStream output = Files.newOutputStream(noTune)) {
+            new com.rusefi.sensor_logs.BinarySensorLog<>(entry -> 0.0,
+                    java.util.Collections.<com.rusefi.sensor_logs.BinaryLogEntry>emptyList(), output).close();
+        }
+        args.put("inputPath", noTune.toString());
+        args.remove("outputPath");
+        envelope = (JSONObject) parse(drive(jsonRpc(4, "tools/call", params.toJSONString()) + "\n")[0]).get("result");
+        assertEquals(true, envelope.get("isError"));
+        body = (JSONObject) envelope.get("structuredContent");
+        assertTrue(body.get("error").toString().contains("No embedded"));
+        assertFalse(Files.exists(directory.resolve("no-tune.msq")));
+    }
+
+    @Test
+    void updateFirmwareRejectsInvalidImagesBeforeConnecting(@TempDir Path directory) throws Exception {
+        Path invalid = directory.resolve("invalid.srec");
+        Files.writeString(invalid, "not firmware");
+        for (String arguments : new String[]{
+                "{\"firmwarePath\":\"\"}", "{\"firmwarePath\":null}", "{\"firmwarePath\":42}",
+                "{\"firmwarePath\":\"" + JSONObject.escape(invalid.toString()) + "\"}",
+                "{\"firmwarePath\":\"" + JSONObject.escape(directory.resolve("missing.srec").toString()) + "\"}"}) {
+            JSONObject envelope = (JSONObject) parse(drive(jsonRpc(1, "tools/call",
+                    "{\"name\":\"update_firmware\",\"arguments\":" + arguments + "}") + "\n")[0]).get("result");
+            assertEquals(true, envelope.get("isError"));
+            assertEquals(false, ((JSONObject) envelope.get("structuredContent")).get("success"));
+        }
+    }
+
+    @Test
+    void downloadBundleRejectsInvalidArgumentsThroughMcp() throws Exception {
+        for (String arguments : new String[]{"{}", "{\"board\":\"../uaefi\"}", "{\"universal\":\"true\"}"}) {
+            JSONObject envelope = (JSONObject) parse(drive(jsonRpc(1, "tools/call",
+                    "{\"name\":\"download_bundle\",\"arguments\":" + arguments + "}") + "\n")[0]).get("result");
+            assertEquals(true, envelope.get("isError"));
+            assertEquals(false, ((JSONObject) envelope.get("structuredContent")).get("success"));
+        }
     }
 
     // ---- helpers ----

@@ -462,14 +462,15 @@ public class KnockCanvas {
         }
 
         int i = (int) ((float) imageX / bx);
-        // we shall be in [0, width) range
-        return Integer.min(width - 1, i);
+        // This is a spectrogram index, not a pixel coordinate.
+        return Math.max(0, Math.min(SPECTROGRAM_X_AXIS_SIZE - 1, i));
     }
 
     private int canvasYToSpectrogramSpace(int y) {
         int height = bufferedImage.getHeight();
         float by = (float)height / (float)spectrogramYAxisSize;
-        return spectrogramYAxisSize - 1 - (int)((float)y / by);
+        int i = spectrogramYAxisSize - 1 - (int)((float)y / by);
+        return Math.max(0, Math.min(spectrogramYAxisSize - 1, i));
     }
 /* some unfinished feature?
     void setupFrequencyByClick(int x, int y) {

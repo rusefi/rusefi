@@ -1,11 +1,13 @@
 package com.rusefi.maintenance.jobs;
 
 import com.rusefi.PortResult;
+import com.rusefi.PortScanner;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
 
 import javax.swing.*;
+import java.util.concurrent.TimeUnit;
 
 public class OpenBltSwitchJob extends AsyncJobWithContext<SerialPortWithParentComponentJobContext> {
     /**
@@ -20,13 +22,15 @@ public class OpenBltSwitchJob extends AsyncJobWithContext<SerialPortWithParentCo
     }
 
     private final LinkManager linkManager;
+    private final PortScanner scanner;
     private final Rebooter rebooter;
 
     // package-private: unit tests inject a recording rebooter, see Rebooter
     public OpenBltSwitchJob(final PortResult port, final JComponent parent, final LinkManager linkManager,
-                     final Rebooter rebooter) {
+                            final PortScanner scanner, final Rebooter rebooter) {
         super("OpenBLT switch", new SerialPortWithParentComponentJobContext(port, parent));
         this.linkManager = linkManager;
+        this.scanner = scanner;
         this.rebooter = rebooter;
     }
 
@@ -57,7 +61,26 @@ public class OpenBltSwitchJob extends AsyncJobWithContext<SerialPortWithParentCo
                     // classified by the scanner uncontested and a single reconnect brings the console back. [tag:better_ux_for_flashing]
                     linkManager.close();
                 } else {
-                    rebooter.rebootToOpenblt(context.getParent(), context.getPort().port, callbacks);
+                    try {
+                        if (!scanner.suspend().await(30, TimeUnit.SECONDS)) {
+                            callbacks.logLine("Timed out waiting for the serial port scanner to stop.");
+                            scanner.resume();
+                            callbacks.error();
+                            return;
+                        }
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        callbacks.logLine("Interrupted while waiting for the serial port scanner to stop.");
+                        scanner.resume();
+                        callbacks.error();
+                        return;
+                    }
+                    try {
+                        rebooter.rebootToOpenblt(context.getParent(), context.getPort().port, callbacks);
+                    } finally {
+                        scanner.invalidatePort(context.getPort().port);
+                        scanner.resume();
+                    }
                 }
             },
             onJobFinished

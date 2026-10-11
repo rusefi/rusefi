@@ -7,7 +7,7 @@ import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.io.serial.BufferedSerialIoStream;
-import com.rusefi.maintenance.ProgramSelector;
+import com.rusefi.maintenance.FirmwareOperations;
 import com.rusefi.updater.OpenbltDetectorStrategy;
 
 import java.io.File;
@@ -90,7 +90,7 @@ public class ScanAndUpdateFlow {
      */
     public static boolean rebootAndFlash(String ecuPort, String boardName, String srecFile) throws InterruptedException {
         System.out.println("Rebooting ECU on " + ecuPort + " to OpenBLT...");
-        ProgramSelector.rebootToOpenblt(null, ecuPort, UpdateOperationCallbacks.LOGGER);
+        FirmwareOperations.rebootToOpenblt(null, ecuPort, UpdateOperationCallbacks.LOGGER);
 
         String openBltPort = waitForOpenBltPort();
         if (openBltPort == null) {
@@ -101,12 +101,12 @@ public class ScanAndUpdateFlow {
 
         ConnectedEcuTarget connectedEcuTarget = new ConnectedEcuTarget();
         connectedEcuTarget.set(boardName);
-        return ProgramSelector.flashOpenbltSerial(null, openBltPort,
+        return FirmwareOperations.flashOpenbltSerial(null, openBltPort,
             UpdateOperationCallbacks.LOGGER, connectedEcuTarget, srecFile);
     }
 
     /**
-     * Same direct-probe approach as ProgramSelector.waitForNewOpenBltPortAppeared: scan all system
+     * Same direct-probe approach as FirmwareOperations.waitForNewOpenBltPortAppeared: scan all system
      * serial ports and XCP-probe each one until the bootloader answers, since OpenBLT may enumerate
      * on a different port than the original ECU port.
      */

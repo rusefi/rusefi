@@ -13,6 +13,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -20,6 +21,115 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class TuningTableViewTest {
+    @Test
+    public void testAxisEditingWritesSeparateAxisImage() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            AtomicInteger headerDialogs = new AtomicInteger();
+            TuningTableView view = new TuningTableView("Axes") {
+                @Override
+                protected int showConfirmDialog(JPanel panel) {
+                    headerDialogs.incrementAndGet();
+                    return JOptionPane.CANCEL_OPTION;
+                }
+            };
+            IniFileModel ini = mock(IniFileModel.class);
+            TableModel definition = mock(TableModel.class);
+            ArrayIniField z = new ArrayIniField("z", 0, FieldType.UINT8, 2, 2, "", 1, "0", "255", "0");
+            ArrayIniField x = new ArrayIniField("x", 2, FieldType.UINT16, 2, 1, "", 0.5, "0", "1000", "1");
+            ArrayIniField y = new ArrayIniField("y", 8, FieldType.UINT16, 1, 2, "", 0.5, "0", "1000", "1");
+            ConfigurationImage zImage = new ConfigurationImage(4);
+            ConfigurationImage axisImage = new ConfigurationImage(16);
+            ConfigurationImageGetterSetter.setArrayValues(z, zImage, new Double[][]{{1.0, 2.0}, {3.0, 4.0}});
+            ConfigurationImageGetterSetter.setArrayValues(x, axisImage, new Double[][]{{100.0, 200.0}});
+            ConfigurationImageGetterSetter.setArrayValues(y, axisImage, new Double[][]{{10.0}, {20.0}});
+            byte[] originalAxes = axisImage.getContent().clone();
+            byte[] originalZ = zImage.getContent().clone();
+            when(ini.getTable("table")).thenReturn(definition);
+            when(definition.getZBinsConstant()).thenReturn("z");
+            when(definition.getXBinsConstant()).thenReturn("x");
+            when(definition.getYBinsConstant()).thenReturn("y");
+            when(ini.findIniField("z")).thenReturn(Optional.of(z));
+            when(ini.findIniField("x")).thenReturn(Optional.of(x));
+            when(ini.findIniField("y")).thenReturn(Optional.of(y));
+            AtomicInteger edits = new AtomicInteger();
+            view.setOnEdit(edits::incrementAndGet);
+            view.displayTable(ini, "table", zImage, axisImage);
+            JTable table = findTable(view.getContent());
+            table.getTableHeader().setSize(300, 30);
+            Rectangle header = table.getTableHeader().getHeaderRect(1);
+            table.getTableHeader().dispatchEvent(new MouseEvent(table.getTableHeader(), MouseEvent.MOUSE_CLICKED,
+                System.currentTimeMillis(), 0, header.x + 5, 10, 2, false, MouseEvent.BUTTON1));
+            assertEquals(0, headerDialogs.get(), "Axis editing must not open a dialog");
+            JTextField inlineAxis = findTextField(table.getTableHeader(), table.getColumnName(1));
+            assertNotNull(inlineAxis);
+            assertTrue(inlineAxis.isVisible());
+            assertEquals(header, inlineAxis.getBounds(), "The editor sits directly over the axis value");
+            inlineAxis.setText("175.25");
+            pressKey(inlineAxis, "ENTER");
+            assertFalse(inlineAxis.isVisible());
+            ConfigurationImage expected = new ConfigurationImage(originalAxes.clone());
+            ConfigurationImageGetterSetter.setArrayValues(x, expected, new Double[][]{{175.25, 200.0}});
+            assertArrayEquals(expected.getContent(), axisImage.getContent());
+            double encodedX = ConfigurationImageGetterSetter.getArrayValues(x, expected)[0][0];
+            assertEquals(encodedX, Double.parseDouble(table.getColumnName(1)));
+            assertEquals(table.getColumnName(1), table.getColumnModel().getColumn(1).getHeaderValue());
+            assertEquals(1, edits.get());
+            assertTrue(table.isCellEditable(0, 0));
+            table.changeSelection(0, 0, false, false);
+            pressKey(table, "F2");
+            assertTrue(table.isEditing());
+            ((JTextField) table.getEditorComponent()).setText("35.25");
+            pressKey((JTextField) table.getEditorComponent(), "ENTER");
+            ConfigurationImageGetterSetter.setArrayValues(y, expected, new Double[][]{{10.0}, {35.25}});
+            assertArrayEquals(expected.getContent(), axisImage.getContent(), "Top displayed row edits the last Y bin");
+            assertEquals(ConfigurationImageGetterSetter.getArrayValues(y, expected)[1][0],
+                Double.parseDouble(table.getValueAt(0, 0).toString()));
+            assertArrayEquals(originalZ, zImage.getContent());
+            assertEquals(2, edits.get());
+            byte[] afterEdits = axisImage.getContent().clone();
+            for (String invalid : new String[]{"bad", "NaN", "Infinity"}) {
+                table.setValueAt(invalid, 0, 0);
+                table.getTableHeader().dispatchEvent(new MouseEvent(table.getTableHeader(), MouseEvent.MOUSE_CLICKED,
+                    System.currentTimeMillis(), 0, header.x + 5, 10, 2, false, MouseEvent.BUTTON1));
+                inlineAxis.setText(invalid);
+                pressKey(inlineAxis, "ENTER");
+                assertTrue(inlineAxis.isVisible(), "Invalid input stays in the inline editor");
+                assertArrayEquals(afterEdits, axisImage.getContent());
+                pressKey(inlineAxis, "ESCAPE");
+                assertFalse(inlineAxis.isVisible());
+            }
+            table.setValueAt(table.getValueAt(0, 0), 0, 0);
+            assertArrayEquals(afterEdits, axisImage.getContent());
+            assertEquals(2, edits.get(), "Invalid and unchanged edits do not notify");
+            table.getTableHeader().dispatchEvent(new MouseEvent(table.getTableHeader(), MouseEvent.MOUSE_CLICKED,
+                System.currentTimeMillis(), 0, header.x + 5, 10, 2, false, MouseEvent.BUTTON1));
+            pressKey(inlineAxis, "TAB");
+            assertEquals(table.getTableHeader().getHeaderRect(2), inlineAxis.getBounds());
+            inlineAxis.setText("245.25");
+            pressKey(inlineAxis, "shift TAB");
+            assertEquals(header, inlineAxis.getBounds());
+            ConfigurationImageGetterSetter.setArrayValues(x, expected,
+                new Double[][]{{encodedX, 245.25}});
+            assertArrayEquals(expected.getContent(), axisImage.getContent());
+            assertEquals(3, edits.get());
+            inlineAxis.setText("999");
+            pressKey(inlineAxis, "ESCAPE");
+            assertArrayEquals(expected.getContent(), axisImage.getContent(), "Escape cancels the header edit");
+            assertTrue(table.isCellSelected(0, 0), "Header editing preserves the grid selection");
+            afterEdits = axisImage.getContent().clone();
+            TuningTableView readOnly = new TuningTableView("Comparison", true);
+            readOnly.displayTable(ini, "table", zImage, axisImage);
+            JTable comparison = findTable(readOnly.getContent());
+            assertFalse(comparison.isCellEditable(0, 0));
+            comparison.setValueAt("70", 0, 0);
+            comparison.getTableHeader().setSize(300, 30);
+            comparison.getTableHeader().dispatchEvent(new MouseEvent(comparison.getTableHeader(), MouseEvent.MOUSE_CLICKED,
+                System.currentTimeMillis(), 0, header.x + 5, 10, 2, false, MouseEvent.BUTTON1));
+            assertArrayEquals(afterEdits, axisImage.getContent());
+            assertFalse(findTextField(comparison.getTableHeader(), "").isVisible());
+            assertEquals(0, headerDialogs.get());
+        });
+    }
 
     @Test
     public void testSelectionPreservedAfterDelta() {
@@ -288,6 +398,232 @@ public class TuningTableViewTest {
         assertNull(findButton(view.getContent(), "Interpolate"), "Interpolate should be hidden in viewMode");
         assertNull(findButton(view.getContent(), "Smooth"), "Smooth should be hidden in viewMode");
         assertNull(findTextField(view.getContent(), "0.5"), "Delta field should be hidden in viewMode");
+    }
+
+    @Test
+    public void testKeyboardEditWritesImageAndNavigatesValueCells() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            AtomicInteger edits = new AtomicInteger();
+            ConfigurationImage image = new ConfigurationImage(4);
+            TuningTableView view = editableView(false, image);
+            view.setOnEdit(edits::incrementAndGet);
+            JTable table = findTable(view.getContent());
+
+            pressKey(table, "ENTER");
+            assertTrue(table.isEditing());
+            assertEquals(0, table.getEditingRow());
+            assertEquals(1, table.getEditingColumn());
+            JTextField editor = (JTextField) table.getEditorComponent();
+            assertEquals(editor.getText(), editor.getSelectedText());
+            editor.setText("42.4");
+            pressKey(editor, "ENTER");
+            assertFalse(table.isEditing());
+            assertEquals("42", table.getValueAt(0, 1));
+            assertEquals(42, image.getContent()[2]);
+            assertEquals(1, edits.get());
+            assertTrue(table.isCellSelected(0, 1));
+
+            pressKey(table, "RIGHT");
+            pressKey(table, "F2");
+            editor = (JTextField) table.getEditorComponent();
+            editor.setText("51");
+            pressKey(editor, "TAB");
+            assertFalse(table.isEditing());
+            assertEquals(51, image.getContent()[3]);
+            assertEquals(2, edits.get());
+            assertTrue(table.isCellSelected(1, 1));
+
+            pressKey(table, "ENTER");
+            editor = (JTextField) table.getEditorComponent();
+            editor.setText("63");
+            pressKey(editor, "shift TAB");
+            assertEquals(63, image.getContent()[0]);
+            assertTrue(table.isCellSelected(0, 2));
+            assertEquals(3, edits.get());
+
+            table.changeSelection(0, 1, false, false);
+            pressKey(table, "shift TAB");
+            assertTrue(table.isCellSelected(1, 2));
+            pressKey(table, "TAB");
+            assertTrue(table.isCellSelected(0, 1));
+        });
+    }
+
+    @Test
+    public void testInvalidEditAndEscapeLeaveImageUntouched() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            ConfigurationImage image = new ConfigurationImage(4);
+            TuningTableView view = editableView(false, image);
+            AtomicInteger edits = new AtomicInteger();
+            view.setOnEdit(edits::incrementAndGet);
+            JTable table = findTable(view.getContent());
+            pressKey(table, "ENTER");
+            JTextField editor = (JTextField) table.getEditorComponent();
+            pressKey(view.getContent(), "S");
+            assertEquals(0, edits.get(), "Bulk shortcuts must not change values while typing an edit");
+            for (String invalid : new String[]{"abc", "", "NaN", "Infinity"}) {
+                editor.setText(invalid);
+                pressKey(editor, "TAB");
+                assertTrue(table.isEditing());
+                assertTrue(table.isCellSelected(0, 1));
+                assertEquals(0, edits.get());
+            }
+            editor.setText("99");
+            pressKey(editor, "ESCAPE");
+            assertFalse(table.isEditing());
+            assertEquals("3", table.getValueAt(0, 1));
+            assertEquals(3, image.getContent()[2]);
+            assertEquals(0, edits.get());
+        });
+    }
+
+    @Test
+    public void testAxesAndComparisonTablesCannotBeEdited() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            for (boolean viewMode : new boolean[]{false, true}) {
+                TuningTableView view = editableView(viewMode, new ConfigurationImage(4));
+                JTable table = findTable(view.getContent());
+                table.changeSelection(0, 0, false, false);
+                assertFalse(table.editCellAt(0, 0));
+                pressKey(table, "ENTER");
+                assertFalse(table.isEditing());
+                if (viewMode) {
+                    table.changeSelection(0, 1, false, false);
+                    pressKey(table, "ENTER");
+                    assertFalse(table.isEditing());
+                    assertFalse(table.editCellAt(0, 1));
+                }
+            }
+        });
+    }
+
+    @Test
+    public void testAxisHighlightFollowsActiveCellAndClearsWithSelection() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            JTable table = findTable(editableView(false, new ConfigurationImage(4)).getContent());
+            Color xNormal = headerBackground(table, 1);
+            Color yNormal = cellBackground(table, 0, 0);
+            table.changeSelection(0, 1, false, false);
+            assertNotEquals(xNormal, headerBackground(table, 1));
+            assertEquals(xNormal, headerBackground(table, 2));
+            assertNotEquals(yNormal, cellBackground(table, 0, 0));
+            assertEquals(yNormal, cellBackground(table, 1, 0));
+
+            pressKey(table, "shift RIGHT");
+            pressKey(table, "shift DOWN");
+            assertTrue(table.isCellSelected(0, 1));
+            assertEquals(xNormal, headerBackground(table, 1));
+            assertNotEquals(xNormal, headerBackground(table, 2));
+            assertEquals(yNormal, cellBackground(table, 0, 0));
+            assertNotEquals(yNormal, cellBackground(table, 1, 0));
+            table.clearSelection();
+            assertEquals(xNormal, headerBackground(table, 2));
+            assertEquals(yNormal, cellBackground(table, 1, 0));
+        });
+    }
+
+    @Test
+    public void testWheelMovesActiveCellAndStopsAtEdges() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            for (boolean viewMode : new boolean[]{false, true}) {
+                ConfigurationImage image = new ConfigurationImage(4);
+                TuningTableView view = editableView(viewMode, image);
+                AtomicInteger edits = new AtomicInteger();
+                view.setOnEdit(edits::incrementAndGet);
+                JTable table = findTable(view.getContent());
+                wheel(table, 1);
+                assertEquals(-1, table.getSelectedRow());
+
+                table.changeSelection(0, 2, false, false);
+                Color normalAxis = cellBackground(table, 1, 0);
+                wheel(table, 1);
+                assertTrue(table.isCellSelected(1, 2));
+                assertNotEquals(normalAxis, cellBackground(table, 1, 0));
+                assertEquals(normalAxis, cellBackground(table, 0, 0));
+                wheel(table, 3);
+                assertTrue(table.isCellSelected(1, 2));
+                wheel(table, -1);
+                assertTrue(table.isCellSelected(0, 2));
+                wheel(table, -3);
+                assertTrue(table.isCellSelected(0, 2));
+
+                if (!viewMode) {
+                    pressKey(table, "ENTER");
+                    JTextField editor = (JTextField) table.getEditorComponent();
+                    editor.setText("99");
+                    wheel(table, 1);
+                    assertTrue(table.isEditing());
+                    assertTrue(table.isCellSelected(0, 2));
+                    assertEquals("99", editor.getText());
+                    pressKey(editor, "ESCAPE");
+                }
+                assertEquals(0, edits.get());
+                assertArrayEquals(new byte[]{1, 2, 3, 4}, image.getContent());
+            }
+        });
+    }
+
+    @Test
+    public void testWheelKeepsActiveCellVisible() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            JTable table = findTable(new TuningTableView("Test").getContent());
+            Double[][] data = new Double[30][2];
+            for (Double[] row : data) {
+                java.util.Arrays.fill(row, 1.0);
+            }
+            table.setModel(new TuningTableView.TuningTableModel(data, null, null, 0));
+            JViewport viewport = (JViewport) table.getParent();
+            viewport.setSize(300, table.getRowHeight() * 3);
+            table.setSize(300, table.getRowHeight() * 30);
+            table.changeSelection(0, 2, false, false);
+            wheel(table, 10);
+            assertTrue(table.isCellSelected(10, 2));
+            assertTrue(viewport.getViewRect().contains(table.getCellRect(10, 2, false)));
+            wheel(table, -10);
+            assertTrue(table.isCellSelected(0, 2));
+            assertEquals(0, viewport.getViewPosition().y);
+        });
+    }
+
+    private void wheel(JTable table, int rotation) {
+        MouseWheelEvent event = new MouseWheelEvent(table, MouseEvent.MOUSE_WHEEL,
+            System.currentTimeMillis(), 0, 10, 10, 0, false,
+            MouseWheelEvent.WHEEL_UNIT_SCROLL, 3, rotation);
+        table.dispatchEvent(event);
+        assertTrue(event.isConsumed());
+    }
+
+    private TuningTableView editableView(boolean viewMode, ConfigurationImage image) {
+        TuningTableView view = new TuningTableView("Test", viewMode);
+        IniFileModel iniFile = mock(IniFileModel.class);
+        TableModel tableModel = mock(TableModel.class);
+        ArrayIniField field = new ArrayIniField("zBins", 0, FieldType.UINT8, 2, 2, "", 1, "0", "255", "0");
+        ConfigurationImageGetterSetter.setArrayValues(field, image, new Double[][]{{1.0, 2.0}, {3.0, 4.0}});
+        when(iniFile.getTable("table")).thenReturn(tableModel);
+        when(tableModel.getZBinsConstant()).thenReturn("zBins");
+        when(iniFile.findIniField("zBins")).thenReturn(Optional.of(field));
+        view.displayTable(iniFile, "table", image);
+        return view;
+    }
+
+    private void pressKey(JComponent component, String key) {
+        KeyStroke stroke = KeyStroke.getKeyStroke(key);
+        Object actionKey = component.getInputMap(JComponent.WHEN_FOCUSED).get(stroke);
+        if (actionKey == null) {
+            actionKey = component.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).get(stroke);
+        }
+        Action action = component.getActionMap().get(actionKey);
+        assertNotNull(action, "Missing action for " + key);
+        action.actionPerformed(new ActionEvent(component, ActionEvent.ACTION_PERFORMED, key));
+    }
+
+    private Color headerBackground(JTable table, int column) {
+        return table.getTableHeader().getDefaultRenderer().getTableCellRendererComponent(
+            table, table.getColumnName(column), false, false, -1, column).getBackground();
+    }
+
+    private Color cellBackground(JTable table, int row, int column) {
+        return table.prepareRenderer(table.getCellRenderer(row, column), row, column).getBackground();
     }
 
     private JTable findTable(JComponent c) {

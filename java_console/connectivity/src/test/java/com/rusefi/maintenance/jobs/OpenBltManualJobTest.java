@@ -179,4 +179,21 @@ public class OpenBltManualJobTest {
         assertEquals(1, callbacks.errorCount);
         assertEquals(1, jobFinishedCount.get());
     }
+
+    @Test
+    public void interruptedScannerAcquisitionAbortsBeforeFlashingAndResumesScanner() {
+        Thread.currentThread().interrupt();
+        try {
+            newJob().doJob(callbacks, jobFinishedCount::incrementAndGet);
+            assertTrue(Thread.currentThread().isInterrupted());
+        } finally {
+            Thread.interrupted();
+        }
+
+        assertEquals(0, steps.flashCount);
+        assertEquals(1, scanner.resumeCount);
+        assertTrue(scanner.invalidatedPorts.isEmpty());
+        assertEquals(1, callbacks.errorCount);
+        assertEquals(1, jobFinishedCount.get());
+    }
 }

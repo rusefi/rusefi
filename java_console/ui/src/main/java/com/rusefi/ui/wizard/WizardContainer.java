@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
+import java.util.function.Consumer;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -28,12 +29,12 @@ public class WizardContainer extends JPanel {
 
     private final UIContext uiContext;
     private final WizardProgressPanel progressPanel = new WizardProgressPanel();
+    private final JLabel wizardTitle = new JLabel("rusEFI Setup Wizard");
     private final JPanel stepContentPanel = new JPanel(new CardLayout());
     private final JButton cancelButton = new JButton("Exit Wizard");
     private final JButton dontShowAgainButton = new JButton("Don't Show Again");
     private final JPanel exitPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, WizardStyle.GAP, 0));
     private final JPanel footerPanel = new JPanel(new BorderLayout());
-    private final JPanel headerPanel = new JPanel(new BorderLayout());
     private final List<WizardStep> steps = new ArrayList<>();
     private final List<Integer> visibleCatalogIndices = new ArrayList<>();
 
@@ -48,9 +49,14 @@ public class WizardContainer extends JPanel {
     private int activeStepIndex = -1;
     private boolean singleStepMode;
     private int selectedCylinders = 4; // default, updated by step 0
+    private Consumer<String> messageHandler = message -> JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.WARNING_MESSAGE);
 
     public WizardContainer(UIContext uiContext) {
         this(uiContext, false);
+    }
+
+    public void setMessageHandler(Consumer<String> messageHandler) {
+        this.messageHandler = messageHandler;
     }
 
     /**
@@ -62,16 +68,20 @@ public class WizardContainer extends JPanel {
         super(new BorderLayout());
         this.uiContext = uiContext;
 
+        JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBorder(BorderFactory.createEmptyBorder(
             compact ? WizardStyle.GAP : WizardStyle.LARGE_GAP,
             WizardStyle.LARGE_GAP,
             WizardStyle.GAP,
             WizardStyle.LARGE_GAP));
+        wizardTitle.setFont(wizardTitle.getFont().deriveFont(Font.BOLD, compact ? 16f : 20f));
+        wizardTitle.setBorder(BorderFactory.createEmptyBorder(0, 0, WizardStyle.GAP / 2, 0));
+        headerPanel.add(wizardTitle, BorderLayout.NORTH);
         headerPanel.add(progressPanel, BorderLayout.CENTER);
 
-        AbstractWizardStep.styleButton(cancelButton);
+        AbstractWizardStep.stylePrimaryAction(cancelButton);
         cancelButton.addActionListener(e -> exitWizard());
-        AbstractWizardStep.styleButton(dontShowAgainButton);
+        AbstractWizardStep.stylePrimaryAction(dontShowAgainButton);
         dontShowAgainButton.setVisible(false);
         dontShowAgainButton.addActionListener(e -> {
             if (onDontShowAgain != null) {
@@ -79,9 +89,10 @@ public class WizardContainer extends JPanel {
             }
             exitWizard();
         });
+        exitPanel.setBorder(BorderFactory.createEmptyBorder(
+            WizardStyle.GAP, WizardStyle.LARGE_GAP, WizardStyle.LARGE_GAP, WizardStyle.LARGE_GAP));
         exitPanel.add(cancelButton);
         exitPanel.add(dontShowAgainButton);
-        headerPanel.add(exitPanel, BorderLayout.EAST);
         progressPanel.setOnCompletedSelected(this::showStep);
 
         add(headerPanel, BorderLayout.NORTH);
@@ -93,6 +104,7 @@ public class WizardContainer extends JPanel {
         buildDebugPanel();
         debugPanel.setVisible(false);
         footerPanel.add(debugPanel, BorderLayout.CENTER);
+        footerPanel.add(exitPanel, BorderLayout.EAST);
         add(footerPanel, BorderLayout.SOUTH);
     }
 
@@ -231,61 +243,67 @@ public class WizardContainer extends JPanel {
         stepContentPanel.add(firingOrderPlaceholder, "step1");
         steps.add(null); // placeholder slot
 
-        // Step 2: Base VE Table (wizardDisplacement — silently skipped on older firmware)
+        // Step 2: Optional Base VE Table (wizardVeTable — silently skipped on older firmware)
         VeTableWizardStep veStep = new VeTableWizardStep(uiContext);
         wireStep(veStep, 2);
         steps.add(veStep);
         stepContentPanel.add(veStep.getPanel(), "step2");
 
-        // Step 3: MAP Sensor Type
+        // Step 3: Required engine displacement, independent of VE Apply/Skip
+        DisplacementPanel displacementPanel = new DisplacementPanel(uiContext);
+        wireStep(displacementPanel, 3);
+        steps.add(displacementPanel);
+        stepContentPanel.add(displacementPanel.getPanel(), "step3");
+
+        // Step 4: MAP Sensor Type
         MapSensorTypePanel mapPanel = new MapSensorTypePanel(uiContext);
-        wireStep(mapPanel, 3);
+        wireStep(mapPanel, 4);
         steps.add(mapPanel);
-        stepContentPanel.add(mapPanel.getPanel(), "step3");
+        stepContentPanel.add(mapPanel.getPanel(), "step4");
 
-        // Step 4: TPS
+        // Step 5: TPS
         TpsPanel tpsPanel = new TpsPanel(uiContext);
-        wireStep(tpsPanel, 4);
+        wireStep(tpsPanel, 5);
         steps.add(tpsPanel);
-        stepContentPanel.add(tpsPanel.getPanel(), "step4");
+        stepContentPanel.add(tpsPanel.getPanel(), "step5");
 
-        // Step 5: CLT Sensor
+        // Step 6: CLT Sensor
         CltSensorPanel cltPanel = new CltSensorPanel(uiContext);
-        wireStep(cltPanel, 5);
+        wireStep(cltPanel, 6);
         steps.add(cltPanel);
-        stepContentPanel.add(cltPanel.getPanel(), "step5");
+        stepContentPanel.add(cltPanel.getPanel(), "step6");
 
-        // Step 6: Crank Trigger
+        // Step 7: Crank Trigger
         CrankTriggerPanel crankPanel = new CrankTriggerPanel(uiContext);
-        wireStep(crankPanel, 6);
+        wireStep(crankPanel, 7);
         steps.add(crankPanel);
-        stepContentPanel.add(crankPanel.getPanel(), "step6");
+        stepContentPanel.add(crankPanel.getPanel(), "step7");
 
-        // Step 7: Cam Trigger
+        // Step 8: Cam Trigger
         CamTriggerPanel camPanel = new CamTriggerPanel(uiContext);
-        wireStep(camPanel, 7);
+        wireStep(camPanel, 8);
         steps.add(camPanel);
-        stepContentPanel.add(camPanel.getPanel(), "step7");
+        stepContentPanel.add(camPanel.getPanel(), "step8");
 
-        // Step 8: Ignition Outputs
+        // Step 9: Ignition Outputs
         OutputAssignmentPanel ignitionOutputs = new OutputAssignmentPanel(
             uiContext, OutputAssignmentPanel.OutputType.IGNITION);
-        wireStep(ignitionOutputs, 8);
+        wireStep(ignitionOutputs, 9);
         steps.add(ignitionOutputs);
-        stepContentPanel.add(ignitionOutputs.getPanel(), "step8");
+        stepContentPanel.add(ignitionOutputs.getPanel(), "step9");
 
-        // Step 9: Injector Outputs
+        // Step 10: Injector Outputs
         OutputAssignmentPanel injectorOutputs = new OutputAssignmentPanel(
             uiContext, OutputAssignmentPanel.OutputType.INJECTOR);
-        wireStep(injectorOutputs, 9);
+        wireStep(injectorOutputs, 10);
         steps.add(injectorOutputs);
-        stepContentPanel.add(injectorOutputs.getPanel(), "step9");
+        stepContentPanel.add(injectorOutputs.getPanel(), "step10");
 
-        // Step 10: Injector Flow
+        // Step 11: Injector Flow
         InjectorFlowPanel injPanel = new InjectorFlowPanel(uiContext);
-        wireStep(injPanel, 10);
+        wireStep(injPanel, 11);
         steps.add(injPanel);
-        stepContentPanel.add(injPanel.getPanel(), "step10");
+        stepContentPanel.add(injPanel.getPanel(), "step11");
 
         // Completion card
         JPanel completionPanel = new JPanel(new GridBagLayout());
@@ -388,18 +406,10 @@ public class WizardContainer extends JPanel {
     }
 
     private void configureExitLayout(boolean singleStep) {
-        headerPanel.remove(exitPanel);
         footerPanel.removeAll();
         ((FlowLayout) exitPanel.getLayout()).setAlignment(singleStep ? FlowLayout.CENTER : FlowLayout.RIGHT);
         footerPanel.add(debugPanel, singleStep ? BorderLayout.NORTH : BorderLayout.CENTER);
-        if (singleStep) {
-            exitPanel.setBorder(BorderFactory.createEmptyBorder(
-                WizardStyle.GAP, WizardStyle.LARGE_GAP, WizardStyle.LARGE_GAP, WizardStyle.LARGE_GAP));
-            footerPanel.add(exitPanel, BorderLayout.CENTER);
-        } else {
-            exitPanel.setBorder(null);
-            headerPanel.add(exitPanel, BorderLayout.EAST);
-        }
+        footerPanel.add(exitPanel, singleStep ? BorderLayout.CENTER : BorderLayout.EAST);
     }
 
     private void configureExitButtons(boolean autoLaunch) {
@@ -512,17 +522,13 @@ public class WizardContainer extends JPanel {
     private void onStepCompleted(WizardStepResult result, WizardStep step) {
         BinaryProtocol bp = uiContext.getBinaryProtocol();
         if (bp == null) {
-            JOptionPane.showMessageDialog(this,
-                "ECU is not connected. Please reconnect and try again.",
-                "Not Connected", JOptionPane.WARNING_MESSAGE);
+            messageHandler.accept("ECU is not connected. Please reconnect and try again.");
             return;
         }
         IniFileModel ini = uiContext.iniFileState.getIniFileModel();
         ConfigurationImage image = bp.getControllerConfiguration();
         if (ini == null || image == null) {
-            JOptionPane.showMessageDialog(this,
-                "Configuration not loaded. Please reconnect and try again.",
-                "Error", JOptionPane.WARNING_MESSAGE);
+            messageHandler.accept("Configuration not loaded. Please reconnect and try again.");
             return;
         }
 
@@ -565,6 +571,15 @@ public class WizardContainer extends JPanel {
     }
 
     static void clearDependentWizardFlags(String completedFlag, IniFileModel ini, ConfigurationImage image) {
+        if ("wizardVeTable".equals(completedFlag)) {
+            // Older consoles used wizardDisplacement for VE completion. Always require
+            // a separate displacement confirmation after applying or skipping VE.
+            IniField displacementFlag = ini.findIniField("wizardDisplacement").orElse(null);
+            if (displacementFlag instanceof EnumIniField) {
+                image.setBitValue((EnumIniField) displacementFlag, 0);
+            }
+            return;
+        }
         if (!"wizardNumberOfCylinders".equals(completedFlag)) return;
 
         for (String flagName : new String[]{
@@ -671,6 +686,10 @@ public class WizardContainer extends JPanel {
         return progressPanel.isVisible();
     }
 
+    String getWizardTitleForTests() {
+        return wizardTitle.getText();
+    }
+
     String getCancelButtonTextForTests() {
         return cancelButton.getText();
     }
@@ -684,7 +703,7 @@ public class WizardContainer extends JPanel {
     }
 
     Object getExitPanelConstraintForTests() {
-        return ((BorderLayout) exitPanel.getParent().getLayout()).getConstraints(exitPanel);
+        return ((BorderLayout) footerPanel.getLayout()).getConstraints(exitPanel);
     }
 
     void clickDontShowAgainForTests() {

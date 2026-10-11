@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.util.Map;
+import java.util.HashMap;
 
 import static com.opensr5.ini.test.IniFileReaderTest.EPS;
 import static com.opensr5.ini.test.IniFileReaderTest.readLines;
@@ -15,6 +16,48 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class IniDialogTest {
+    @Test
+    public void runtimeValueOnlyDialogIsRetained() {
+        String text = "dialog = gearSensorReadout\n"
+            + "runtimeValue = \"Gear sensor voltage\", rawAuxAnalog1\n"
+            + "runtimeValue = \"Gear detected\", detectedGear\n"
+            + "dialog = hdGearPositionCalibrationRight, \"Gear sensor calibration\"\n"
+            + "panel = gearSensorReadout\n";
+        IniFileModel model = readLines(IniFileReaderUtil.read(new ByteArrayInputStream(text.getBytes())));
+        assertNotNull(model.getDialogs().get("hdGearPositionCalibrationRight"));
+        DialogModel dialog = model.getDialogs().get("gearSensorReadout");
+        assertNotNull(dialog);
+        assertEquals(2, dialog.getOrderedEntries().size());
+        assertEquals(DialogModel.DialogEntry.Kind.RUNTIME_VALUE, dialog.getOrderedEntries().get(0).kind);
+        DialogModel.Field voltage = dialog.getOrderedEntries().get(0).getAs(DialogModel.Field.class);
+        assertEquals("Gear sensor voltage", voltage.getUiName());
+        assertEquals("rawAuxAnalog1", voltage.getKey());
+        assertEquals("detectedGear", dialog.getOrderedEntries().get(1).getAs(DialogModel.Field.class).getKey());
+        assertTrue(dialog.getFields().isEmpty());
+        assertTrue(model.getFieldsInUiOrder().isEmpty());
+    }
+
+    @Test
+    public void runtimeValuesPreserveOrderAndExpressions() {
+        String text = "runtimeValue = \"Outside a dialog\", ignored\n"
+            + "dialog = mixed\nfield = \"Before\", setting\n"
+            + "runtimeValue = \"Voltage\", rawAuxAnalog1, { setting }, { setting > 1 }\n"
+            + "runtimeValue = \"Missing channel\"\n"
+            + "commandButton = \"Grab\", grab\n"
+            + "dialog = next\nfield = \"After\", setting\n";
+        IniFileModel model = readLines(IniFileReaderUtil.read(new ByteArrayInputStream(text.getBytes())));
+        DialogModel mixed = model.getDialogs().get("mixed");
+        assertEquals(3, mixed.getOrderedEntries().size());
+        assertEquals(DialogModel.DialogEntry.Kind.FIELD, mixed.getOrderedEntries().get(0).kind);
+        assertEquals(DialogModel.DialogEntry.Kind.RUNTIME_VALUE, mixed.getOrderedEntries().get(1).kind);
+        assertEquals(DialogModel.DialogEntry.Kind.COMMAND, mixed.getOrderedEntries().get(2).kind);
+        DialogModel.Field value = mixed.getOrderedEntries().get(1).getAs(DialogModel.Field.class);
+        assertEquals("{ setting }", value.getEnableExpression());
+        assertEquals("{ setting > 1 }", value.getVisibleExpression());
+        assertEquals(1, mixed.getFields().size());
+        assertEquals(1, model.getDialogs().get("next").getOrderedEntries().size());
+    }
+
     @Test
     public void testSettingSelectorOptions() {
         String string =
@@ -36,11 +79,11 @@ public class IniDialogTest {
         assertEquals("Common CLT Sensors", selector.getLabel());
         assertEquals(4, selector.getOptions().size());
         assertEquals("Miata NA", selector.getOptions().get(1).getLabel());
-        assertEquals(Map.of(
-            "clt_tempC_1", "-40",
-            "clt_resistance_1", "100000",
-            "useLinearCltSensor", "0"
-        ), selector.getOptions().get(0).getAssignments());
+        Map<String, String> assignments = new HashMap<>();
+        assignments.put("clt_tempC_1", "-40");
+        assignments.put("clt_resistance_1", "100000");
+        assignments.put("useLinearCltSensor", "0");
+        assertEquals(assignments, selector.getOptions().get(0).getAssignments());
         assertTrue(model.getDialogs().get("other").getSettingSelectors().isEmpty());
     }
 

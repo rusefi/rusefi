@@ -28,7 +28,12 @@ public class OpenBltManualJob extends AsyncJobWithContext<SerialPortWithParentCo
 
     OpenBltManualJob(final PortResult port, final JComponent parent, final ConnectivityContext connectivityContext,
                      final FlashSteps steps) {
-        super("OpenBLT via Serial", new SerialPortWithParentComponentJobContext(port, parent));
+        this("OpenBLT via Serial", port, parent, connectivityContext, steps);
+    }
+
+    OpenBltManualJob(final String title, final PortResult port, final JComponent parent,
+                     final ConnectivityContext connectivityContext, final FlashSteps steps) {
+        super(title, new SerialPortWithParentComponentJobContext(port, parent));
         this.connectivityContext = connectivityContext;
         this.steps = steps;
     }
@@ -50,9 +55,18 @@ public class OpenBltManualJob extends AsyncJobWithContext<SerialPortWithParentCo
                 // auto path's bltUpdateFirmware. [tag:better_ux_for_flashing]
                 final PortScanner scanner = connectivityContext.getPortScanner();
                 try {
-                    scanner.suspend().await(30, TimeUnit.SECONDS);
+                    if (!scanner.suspend().await(30, TimeUnit.SECONDS)) {
+                        callbacks.logLine("Timed out waiting for the serial port scanner to stop.");
+                        scanner.resume();
+                        callbacks.error();
+                        return;
+                    }
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
+                    callbacks.logLine("Interrupted while waiting for the serial port scanner to stop.");
+                    scanner.resume();
+                    callbacks.error();
+                    return;
                 }
                 final boolean flashed;
                 try {

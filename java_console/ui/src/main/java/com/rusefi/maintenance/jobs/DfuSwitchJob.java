@@ -6,7 +6,7 @@ import com.rusefi.config.generated.Integration;
 import com.rusefi.io.BootloaderHelper;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
-import com.rusefi.maintenance.ProgramSelector;
+import com.rusefi.maintenance.FirmwareOperations;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -50,7 +50,7 @@ public class DfuSwitchJob extends AsyncJobWithContext<SerialPortWithParentCompon
                     rebooter.rebootToDfu(context.getParent(), linkManager.getBinaryProtocol(), callbacks);
                     linkManager.close();
                 } else {
-                    ProgramSelector.rebootToDfu(context.getParent(), context.getPort().port, callbacks);
+                    FirmwareOperations.rebootToDfu(context.getParent(), context.getPort().port, callbacks);
                 }
             },
             onJobFinished

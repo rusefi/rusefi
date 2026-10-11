@@ -47,6 +47,7 @@ class AutoupdateFirmwareDownloadTest {
         assertTrue(Files.exists(expectedDirectory.resolve("openblt.bin")));
         assertFalse(Files.exists(expectedDirectory.resolve("console/rusefi_console.jar")));
         assertFalse(Files.exists(expectedDirectory.resolve("console/release.txt")));
+        assertFalse(Files.exists(expectedDirectory.resolve("bin/wipe/emergency_wipe.srec")));
     }
 
     @Test
@@ -78,6 +79,7 @@ class AutoupdateFirmwareDownloadTest {
             add(output, "openblt.bin");
             add(output, "console/rusefi_console.jar");
             add(output, "console/release.txt");
+            add(output, "bin/wipe/emergency_wipe.srec");
         }
         return zip;
     }

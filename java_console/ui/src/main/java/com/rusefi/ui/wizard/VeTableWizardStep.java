@@ -9,14 +9,14 @@ import java.awt.*;
 /**
  * Wizard step that embeds the VE table generator.
  * Apply fires step completion with the patched image; Skip fires it with no image change.
- * Uses wizardDisplacement as the progress flag — silently skipped on older firmware.
+ * Uses wizardVeTable as the progress flag — silently skipped on older firmware.
  */
 public class VeTableWizardStep extends AbstractWizardStep {
     private final UIContext uiContext;
     private final JPanel panel;
 
     public VeTableWizardStep(UIContext uiContext) {
-        super("Base VE Table", "wizardDisplacement");
+        super("Base VE Table", "wizardVeTable");
         this.uiContext = uiContext;
         panel = new JPanel(new BorderLayout());
         panel.add(new JLabel("Loading...", SwingConstants.CENTER), BorderLayout.CENTER);

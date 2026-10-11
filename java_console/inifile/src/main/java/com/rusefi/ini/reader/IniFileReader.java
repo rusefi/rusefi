@@ -25,6 +25,7 @@ public class IniFileReader {
                 allIniFields,
                 secondaryIniFields,
                 allOutputChannels,
+                datalogEntries,
                 expressionOutputChannels,
                 protocolMeta,
                 getMetaInfo(),
@@ -77,6 +78,7 @@ public class IniFileReader {
     private final Map<String, IniField> allIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<String, IniField> secondaryIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<String, IniField> allOutputChannels = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    private final List<DatalogEntry> datalogEntries = new ArrayList<>();
     // Expression-based output channels like: coolantTemperature = { useMetricOnInterface ? coolant : (coolant * 1.8 + 32) }
     private final Map<String, String> expressionOutputChannels = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public final Map<String, DialogModel.Field> fieldsInUiOrder = new LinkedHashMap<>();
@@ -85,6 +87,7 @@ public class IniFileReader {
     private final Map<String, String> protocolMeta = new TreeMap<>();
     private boolean isConstantsSection;
     private boolean isOutputChannelsSection;
+    private boolean isDatalogSection;
     private boolean isPcVariablesSection;
     private final IniFileMetaInfo metaInfo;
     private final String iniFilePath;
@@ -130,15 +133,6 @@ public class IniFileReader {
     private boolean isInSettingContextHelp = false;
     private boolean isInsidePageDefinition;
     private int blockingFactor;
-    // useful when connecting remotely via TCP/IP, if CUSTOM_TS_BUFFER_SIZE is available
-	// For proteus_f7 over TCP/IP recommended to set blockingFactorOverride=32000
-	// java -jar -DblockingFactorOverride=32000 rusefi_console.jar host:port
-    private static final Integer blockingFactorOverride = Integer.getInteger("blockingFactorOverride");
-
-    static {
-        if (blockingFactorOverride != null)
-            log.info("blockingFactorOverride=" + blockingFactorOverride);
-    }
 
     private int currentPageIndex;
 
@@ -148,8 +142,6 @@ public class IniFileReader {
     }
 
     public int getBlockingFactor() {
-        if (blockingFactorOverride != null)
-            return blockingFactorOverride;
         return blockingFactor;
     }
 
@@ -167,8 +159,9 @@ public class IniFileReader {
         if (fieldsOfCurrentDialog.isEmpty() && commandsOfCurrentDialog.isEmpty()
                 && panelsOfCurrentDialog.isEmpty() && indicatorsOfCurrentDialog.isEmpty()
                 && readoutsOfCurrentDialog.isEmpty() && gaugeNamesOfCurrentDialog.isEmpty()
-                && settingSelectorsOfCurrentDialog.isEmpty())
+                && settingSelectorsOfCurrentDialog.isEmpty() && orderedEntriesOfCurrentDialog.isEmpty()) {
             return;
+        }
         if (dialogUiName == null)
             dialogUiName = dialogId;
         // Store dialogs by their key (dialogId), not by UI name, for easier panel resolution
@@ -247,6 +240,7 @@ public class IniFileReader {
                 }
                 isConstantsSection = first.equals("[Constants]");
                 isOutputChannelsSection = first.equals("[OutputChannels]");
+                isDatalogSection = first.equalsIgnoreCase("[Datalog]");
                 isPcVariablesSection = first.equalsIgnoreCase("[PcVariables]");
                 isGaugeConfigurationsSection = first.equalsIgnoreCase("[GaugeConfigurations]");
                 isTableEditorSection = first.equalsIgnoreCase("[TableEditor]");
@@ -280,6 +274,11 @@ public class IniFileReader {
                 }
             } else if (isOutputChannelsSection) {
                 handleOutputChannelDefinition(list);
+                return;
+            } else if (isDatalogSection) {
+                if (first.equalsIgnoreCase("entry") && list.size() >= 3) {
+                    datalogEntries.add(new DatalogEntry(list.get(1), list.get(2)));
+                }
                 return;
             } else if (isPcVariablesSection) {
                 handlePcVariableDefinition(list, line);
@@ -315,7 +314,10 @@ public class IniFileReader {
 
             switch (first) {
                 case "field":
-                    handleField(list);
+                    handleField(list, false);
+                    break;
+                case "runtimeValue":
+                    handleField(list, true);
                     break;
                 case "commandButton":
                     handleCommand(list);
@@ -523,14 +525,18 @@ public class IniFileReader {
         orderedEntriesOfCurrentDialog.add(new DialogModel.DialogEntry(DialogModel.DialogEntry.Kind.COMMAND, cmd));
     }
 
-    private void handleField(LinkedList<String> list) {
-        list.removeFirst(); // "field"
+    private void handleField(LinkedList<String> list, boolean runtimeValue) {
+        list.removeFirst(); // "field" or "runtimeValue"
 
         String uiFieldName = list.isEmpty() ? "" : list.removeFirst();
 
         String key = list.isEmpty() ? null : list.removeFirst();
 
-        if (key == null || uiFieldName.startsWith("!")) {
+        if (runtimeValue && (dialogId == null || key == null || key.isEmpty())) {
+            return;
+        }
+
+        if (!runtimeValue && (key == null || uiFieldName.startsWith("!"))) {
             key = uiFieldName;
         }
 
@@ -548,7 +554,14 @@ public class IniFileReader {
             }
         }
 
-        registerUiField(key, uiFieldName, enableExpression, visibleExpression);
+        if (runtimeValue) {
+            // Runtime channels are read-only and must not enter the editable constants list.
+            orderedEntriesOfCurrentDialog.add(new DialogModel.DialogEntry(
+                DialogModel.DialogEntry.Kind.RUNTIME_VALUE,
+                new DialogModel.Field(key, uiFieldName, enableExpression, visibleExpression)));
+        } else {
+            registerUiField(key, uiFieldName, enableExpression, visibleExpression);
+        }
         log.debug("IniFileModel: Field label=[" + uiFieldName + "] : key=[" + key + "]");
     }
 

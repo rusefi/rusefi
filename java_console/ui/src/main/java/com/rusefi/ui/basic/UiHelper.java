@@ -1,5 +1,7 @@
 package com.rusefi.ui.basic;
 
+import com.rusefi.core.OsUtil;
+
 import com.devexperts.logging.Logging;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
@@ -16,7 +18,7 @@ public class UiHelper {
     private static final Logging log = getLogging(UiHelper.class);
 
     public static void commonUiStartup() {
-        log.info("OS name: " + FileLog.getOsName());
+        log.info("OS name: " + OsUtil.getOsName());
         log.info("OS version: " + System.getProperty(FileLog.OS_VERSION));
 
         try {

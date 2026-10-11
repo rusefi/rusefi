@@ -1026,10 +1026,10 @@ public class IniFileReaderTest {
             throw new RuntimeException(e);
         }
 
-        IniField lua = model.findIniField("luaScript").orElseThrow();
+        IniField lua = model.findIniField("luaScript").orElseThrow(IllegalStateException::new);
         assertEquals(0x0400, lua.getPageIndex(), "Lua field must carry the 0x0400 wire page identifier");
 
-        IniField main = model.findIniField("someMainField").orElseThrow();
+        IniField main = model.findIniField("someMainField").orElseThrow(IllegalStateException::new);
         assertEquals(0x0000, main.getPageIndex(), "Main page field stays on identifier 0x0000");
 
         // ...but user-facing messages show the friendly 1-based TS page, not the raw wire id (#9766).
