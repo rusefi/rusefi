@@ -131,7 +131,10 @@ import static com.rusefi.core.FindFileHelper.findFirmwareFile;
  */
 public class Autoupdate {
     private static final Logging log = getLogging(Autoupdate.class);
-    private static final int AUTOUPDATE_VERSION = 20260907; // separate from rusEFIVersion#CONSOLE_VERSION
+    private static final int AUTOUPDATE_VERSION = 20261011; // separate from rusEFIVersion#CONSOLE_VERSION
+    // Resolve before unzipping can replace our own JAR. Installed launchers bypass
+    // ConsoleExeFileLocator's default lookup, so it may not have loaded OsUtil (#10368).
+    private static final boolean IS_WINDOWS = OsUtil.isWindows();
     private static final String userHomeSubDirectory = FileUtil.RUSEFI_SETTINGS_FOLDER + "updates" + File.separator;
 
     /**
@@ -879,8 +882,8 @@ public class Autoupdate {
      * {@link ProcessBuilder} would then fail with "Permission denied", so give it one best-effort
      * chance to fix itself. See #8360.
      */
-    private static void ensureLauncherIsExecutable(final String launcherFileName) {
-        if (OsUtil.isWindows()) {
+    static void ensureLauncherIsExecutable(final String launcherFileName) {
+        if (IS_WINDOWS) {
             return;
         }
         final File launcher = new File(launcherFileName);
