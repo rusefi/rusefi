@@ -1,6 +1,17 @@
 apply from: '../../android/dependencies.gradle'
 apply from: dependenciesPath
 
+tasks.register('externalStorageSandbox', JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.rusefi.libopenblt.ExternalStorageSandbox'
+    if (project.hasProperty('storagePort') && project.hasProperty('storageOperation')) {
+        args project.property('storagePort'), project.property('storageOperation')
+        if (project.hasProperty('storageImage')) {
+            args project.property('storageImage')
+        }
+    }
+}
+
 configurations {
     all*.exclude group: 'org.hamcrest', module: 'hamcrest-core'
 }

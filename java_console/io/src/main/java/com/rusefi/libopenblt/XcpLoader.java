@@ -56,6 +56,13 @@ public class XcpLoader {
     private TargetInfo mTargetInfo;
     private String mExpectedStationId;
     private boolean mVerifyStationId;
+    private byte[] mRequiredStorageLayout;
+
+    public void requireStorageLayout(int qspiAddress, int qspiCapacity, int emmcAddress, int emmcCapacity) {
+        mRequiredStorageLayout = ByteBuffer.allocate(21).order(ByteOrder.LITTLE_ENDIAN)
+            .put((byte) 0xff).put(new byte[]{'X', 'S', 'T', '1'})
+            .putInt(qspiAddress).putInt(qspiCapacity).putInt(emmcAddress).putInt(emmcCapacity).array();
+    }
 
     public XcpLoader(IXcpTransport transport, XcpSettings settings) {
         mTransport = transport;
@@ -130,6 +137,38 @@ public class XcpLoader {
         }
     }
 
+    /** Disconnect without finalizing a failed/incomplete programming transaction. */
+    public void abort() throws IOException {
+        try {
+            mTransport.disconnect();
+        } finally {
+            mTargetInfo = null;
+        }
+    }
+
+    /** Read back bytes through XCP UPLOAD, including board-backed external storage. */
+    public byte[] readData(int address, int length) throws IOException {
+        if (length < 0 || Integer.toUnsignedLong(address) + length > 0x1_0000_0000L) {
+            throw new IllegalArgumentException("Read range wraps the 32-bit address space");
+        }
+        if (mTargetInfo == null || mTargetInfo.maxCto < 2) {
+            throw new IllegalStateException("No active programming session");
+        }
+        byte[] result = new byte[length];
+        setMta(address);
+        for (int offset = 0; offset < length;) {
+            int count = Math.min(length - offset, mTargetInfo.maxCto - 1);
+            byte[] response = mTransport.sendPacket(
+                new byte[]{XCPLOADER_CMD_UPLOAD, (byte) count}, mSettings.timeoutT1, count + 1);
+            if (response.length != count + 1 || response[0] != XCPLOADER_CMD_PID_RES) {
+                throw new IOException("XCP read failed at 0x" + Integer.toHexString(address + offset));
+            }
+            System.arraycopy(response, 1, result, offset, count);
+            offset += count;
+        }
+        return result;
+    }
+
     private void disconnectAfterFailure(Throwable failure) {
         try {
             mTransport.disconnect();
@@ -143,6 +182,13 @@ public class XcpLoader {
 
         if (mVerifyStationId) {
             verifyStationId();
+        }
+
+        if (mRequiredStorageLayout != null) {
+            byte[] actual = mTransport.sendPacket(new byte[]{(byte) 0xbe}, mSettings.timeoutT1, 21);
+            if (!Arrays.equals(actual, mRequiredStorageLayout)) {
+                throw new IOException("Target lacks the required external-storage layout; install the matching bootloader first");
+            }
         }
 
         // Place the target in programming mode

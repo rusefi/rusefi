@@ -129,18 +129,24 @@ public class XcpSerial implements IXcpTransport {
                 throw new IOException("XcpSerial: Cannot read response actual read=" + actualRead + "; request type was 0x" +  Integer.toHexString(request[0] & 0xFF) + " with length " + request.length + ", timeoutMs=" + timeoutMs);
             }
 
-            byte[] response = new byte[responseLen[0]];
-            actualRead = mPort.readBytes(response, response.length);
+            byte[] response = readResponse(responseLen[0], data -> mPort.readBytes(data, data.length));
             if (VERBOSE) {
                 log.info("actualRead response " + HexBinary.printHexBinary(response));
             }
-            //if (actualRead != expectResponseBytes ||
-            //    responseLen[0] != expectResponseBytes) {
-            //    throw new IOException("Unexpected bytes read on command " + Integer.toHexString(request[0] & 0xFF) +
-            //        ", requested " + expectResponseBytes + " but got " + actualRead + ": " + HexBinary.printHexBinary(response));
-            //}
 
             return response;
         }
     }
+    static byte[] readResponse(byte length, java.util.function.ToIntFunction<byte[]> read) throws IOException {
+        byte[] response = new byte[Byte.toUnsignedInt(length)];
+        if (response.length == 0) {
+            throw new IOException("XcpSerial: empty response");
+        }
+        int received = read.applyAsInt(response);
+        if (received != response.length) {
+            throw new IOException("XcpSerial: short response " + received + " / " + response.length);
+        }
+        return response;
+    }
+
 }
