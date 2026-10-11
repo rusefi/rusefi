@@ -30,3 +30,16 @@ dependencies {
     testFixturesApi global_libs.annotations
     testFixturesApi global_libs.junit5api
 }
+
+// Explicitly selected hardware only; never part of the automated test suite.
+tasks.register('slcanConnectorSandbox', JavaExec) {
+    dependsOn testClasses
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.rusefi.binaryprotocol.test.SLCANConnectorSandbox'
+    if (project.hasProperty('slcanPort')) {
+        args project.property('slcanPort'), project.findProperty('slcanBitrate') ?: '6'
+        if (project.hasProperty('slcanExpectedSignature')) {
+            args project.property('slcanExpectedSignature')
+        }
+    }
+}

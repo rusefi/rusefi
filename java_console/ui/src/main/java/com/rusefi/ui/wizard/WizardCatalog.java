@@ -41,8 +41,16 @@ public class WizardCatalog {
             null
         ),
         new WizardStepDescriptor(
-            "wizardDisplacement",
+            "wizardVeTable",
             "Base VE Table",
+            true,
+            WizardStepDescriptor.ALWAYS,
+            null,
+            null
+        ),
+        new WizardStepDescriptor(
+            "wizardDisplacement",
+            "Engine Displacement",
             true,
             WizardStepDescriptor.ALWAYS,
             null,

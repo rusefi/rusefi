@@ -1,5 +1,7 @@
 package com.rusefi;
 
+import com.rusefi.core.OsUtil;
+
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
@@ -20,6 +22,7 @@ import com.rusefi.tools.TunerStudioHelper;
 import com.rusefi.ui.BasicLogoHelper;
 import com.rusefi.ui.LogoHelper;
 import com.rusefi.ui.UIContext;
+import com.rusefi.ui.plugins.StartupTabProvider;
 import com.rusefi.ui.wizard.WizardCatalog;
 import com.rusefi.ui.wizard.WizardContainer;
 import com.rusefi.ui.wizard.WizardStep;
@@ -50,8 +53,11 @@ import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.*;
 import java.util.Date;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.ServiceLoader;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
@@ -82,6 +88,7 @@ public class StartupFrame {
     public static final String CHECK_TS_RUNNING = "check_ts_running";
     private static final String STARTUP_TAB_INDEX = "startup_tab_index";
     private static final String NO_PORTS_FOUND = "<html>No ports found!<br>Confirm blue LED is blinking</html>";
+    private static final String SOCKET_CAN_WITHOUT_ECU = "CAN connected, but no ECU replied";
     public static final String SCANNING_PORTS = "Scanning ports";
     private static final String CARD_SCANNING = "scanning";
     private static final String CARD_STARTUP = "startup";
@@ -303,14 +310,11 @@ public class StartupFrame {
             leftPanel.add(miscPanel);
         }
 
-        if (FileLog.isWindows()) {
+        if (OsUtil.isWindows()) {
             JPanel topButtons = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
             topButtons.add(ToolButtons.createShowDeviceManagerButton());
             if (DriverInstall.isFolderExist())
                 topButtons.add(DriverInstall.createButton());
-            if (UiProperties.usePCAN()) {
-                topButtons.add(ToolButtons.createPcanConnectorButton());
-            }
             realHardwarePanel.add(topButtons, "right, wrap");
         }
         realHardwarePanel.add(connectPanel, "right, wrap");
@@ -332,7 +336,8 @@ public class StartupFrame {
         dfuErrorTimer.setRepeats(false);
         dfuErrorTimer.start();
 
-        selector = new ProgramSelector(connectivityContext, portsComboBox.getComboPorts());
+        selector = new ProgramSelector(connectivityContext, portsComboBox.getComboPorts(),
+            this::showFullScreenPanel, this::closeFullScreenPanel);
         selector.setJobExecutor(asyncJobExecutor);
 
         realHardwarePanel.add(new HorizontalLine(), "right, wrap");
@@ -445,20 +450,13 @@ public class StartupFrame {
         BinaryProtocol.iniFileProvider.setStatusConsumer(firmwareStatusPanel);
         startupUpdateActions = new StartupUpdateActions(connectivityContext, firmwareStatusPanel,
             asyncJobExecutor, ecuPortToUse, softwareUpdateOutcome,
-            picker -> {
-                rollbackPicker.removeAll();
-                rollbackPicker.add(picker, BorderLayout.CENTER);
-                showCard(CARD_ROLLBACK);
-            },
-            () -> showCard(CARD_STARTUP));
+            this::showFullScreenPanel, this::closeFullScreenPanel);
         startupUpdateActions.configureFirmwareSelector(selector);
 
         JPanel firmwareTopPanel = new JPanel(new BorderLayout(0, 0));
         firmwareTopPanel.add(selector.getControl(), BorderLayout.NORTH);
         JPanel updateButtons = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
         updateButtons.add(startupUpdateActions.getUpdateSoftwareStatus());
-        updateButtons.add(startupUpdateActions.getUpdateSoftwareButton());
-        updateButtons.add(startupUpdateActions.getUpdateFirmwareButton());
         updateButtons.add(startupUpdateActions.getRollbackFirmwareButton());
         firmwareTopPanel.add(updateButtons, BorderLayout.CENTER);
         firmwareTopPanel.add(startupUpdateActions.getMigrateSettings(), BorderLayout.SOUTH);
@@ -478,6 +476,7 @@ public class StartupFrame {
         );
         outerTabs.addTab("Manage Tunes", tuneManagementTab.getContent());
         outerTabs.addTab("Connect", connectTabWrapper);
+        addCustomTabs(outerTabs, uiContext);
 
         int savedTabIndex = getConfig().getRoot().getIntProperty(STARTUP_TAB_INDEX, 0);
         outerTabs.setSelectedIndex(Math.min(savedTabIndex, outerTabs.getTabCount() - 1));
@@ -526,6 +525,49 @@ public class StartupFrame {
         for (Component component : getAllComponents(frame)) {
             component.addKeyListener(hwTestEasterEgg);
         }
+    }
+
+    // Package-private so service discovery can be tested without creating a frame or scanning hardware.
+    static void addCustomTabs(JTabbedPane tabs, UIContext uiContext) {
+        String serviceResource = "META-INF/services/" + StartupTabProvider.class.getName();
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        if (classLoader == null) {
+            classLoader = StartupFrame.class.getClassLoader();
+        }
+        try {
+            List<java.net.URL> serviceFiles = Collections.list(classLoader.getResources(serviceResource));
+            log.info("addCustomTabs: found " + serviceFiles.size() + " '" + serviceResource + "' file(s) on classpath: " + serviceFiles);
+        } catch (Throwable e) {
+            log.error("addCustomTabs: failed to enumerate '" + serviceResource + "' on classpath", e);
+        }
+
+        int providerCount = 0;
+        try {
+            Iterator<StartupTabProvider> iterator = ServiceLoader.load(StartupTabProvider.class, classLoader).iterator();
+            while (true) {
+                StartupTabProvider provider;
+                try {
+                    if (!iterator.hasNext()) {
+                        break;
+                    }
+                    provider = iterator.next();
+                } catch (Throwable e) {
+                    log.error("addCustomTabs: ServiceLoader failed to instantiate a StartupTabProvider", e);
+                    break;
+                }
+                providerCount++;
+                try {
+                    String title = provider.getTitle();
+                    log.info("addCustomTabs: adding custom startup tab '" + title + "' from " + provider.getClass().getName());
+                    tabs.addTab(title, provider.createTab(uiContext));
+                } catch (Throwable e) {
+                    log.error("addCustomTabs: failed to add custom startup tab from " + provider.getClass().getName(), e);
+                }
+            }
+        } catch (Throwable e) {
+            log.error("addCustomTabs: failed to load custom startup tabs", e);
+        }
+        log.info("addCustomTabs: " + providerCount + " StartupTabProvider(s) discovered via ServiceLoader");
     }
 
     public static @NotNull Optional<JPanel> newReleaseAnnounce(
@@ -600,6 +642,16 @@ public class StartupFrame {
         AutoupdateUtil.trueLayoutAndRepaint(frame);
     }
 
+    private void showFullScreenPanel(JComponent panel) {
+        rollbackPicker.removeAll();
+        rollbackPicker.add(panel, BorderLayout.CENTER);
+        showCard(CARD_ROLLBACK);
+    }
+
+    private void closeFullScreenPanel() {
+        showCard(CARD_STARTUP);
+    }
+
     private void updateConnectButtonState() {
         PortResult selectedItem = (PortResult) portsComboBox.getComboPorts().getSelectedItem();
         // OpenBLT bootloader and DFU are not connectable — they are firmware-update targets [tag:better_ux_for_flashing].
@@ -630,8 +682,9 @@ public class StartupFrame {
             .orElse(null);
         boolean hasOpenBlt = openBltPort != null;
         if (ports.isEmpty()) {
-            noPortsMessage.setForeground(Color.red);
-            noPortsMessage.setText(NO_PORTS_FOUND);
+            String message = emptyHardwareMessage(currentHardware);
+            noPortsMessage.setForeground(SOCKET_CAN_WITHOUT_ECU.equals(message) ? Color.darkGray : Color.red);
+            noPortsMessage.setText(message);
         } else if (hasOpenBlt) {
             // A board sitting in the OpenBLT bootloader has no running firmware to auto-connect to —
             // mirror the auto-connect status line and point the user at the firmware-update flow.
@@ -660,6 +713,15 @@ public class StartupFrame {
             log.info("Single ECU detected, auto-connecting in background: " + target);
             autoConnect(target);
         }
+    }
+
+    static String emptyHardwareMessage(AvailableHardware hardware) {
+        boolean onlySocketCanDetected = hardware.isSocketCanAvailable()
+            && hardware.getKnownPorts().isEmpty()
+            && !hardware.isDfuFound()
+            && !hardware.isStLinkConnected()
+            && !hardware.isPCANConnected();
+        return onlySocketCanDetected ? SOCKET_CAN_WITHOUT_ECU : NO_PORTS_FOUND;
     }
 
     public static void setFrameIcon(Frame frame) {
@@ -764,8 +826,9 @@ public class StartupFrame {
             outerTabs.setSelectedIndex(0);
         }
         outerTabs.setEnabledAt(0, true);
-        outerTabs.setEnabledAt(1, !inProgress);
-        outerTabs.setEnabledAt(2, !inProgress);
+        for (int i = 1; i < outerTabs.getTabCount(); i++) {
+            outerTabs.setEnabledAt(i, !inProgress);
+        }
         startupUpdateActions.getMigrateSettings().setEnabled(!inProgress);
         portsComboBox.getComboPorts().setEnabled(!inProgress);
         if (inProgress) {
@@ -899,16 +962,6 @@ public class StartupFrame {
      * Flip the root {@link CardLayout}. The frame stays fixed-maximized (#9715), so we relayout
      * the content in place rather than packing/resizing the window.
      */
-    private void showFullScreenPanel(JComponent panel) {
-        rollbackPicker.removeAll();
-        rollbackPicker.add(panel, BorderLayout.CENTER);
-        showCard(CARD_ROLLBACK);
-    }
-
-    private void closeFullScreenPanel() {
-        showCard(CARD_STARTUP);
-    }
-
     private void showCard(String name) {
         CardLayout cl = (CardLayout) rootContent.getLayout();
         cl.show(rootContent, name);

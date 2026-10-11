@@ -52,6 +52,7 @@ public class LuaTextEditor {
         textArea.setAutoIndentEnabled(true);
         textArea.setBracketMatchingEnabled(true);
         textArea.setTabSize(2);
+        textArea.setToolTipText("Edit Lua script; Ctrl+Z to undo, Ctrl+Y to redo, Ctrl+Space for completions");
         Font current = textArea.getFont();
         textArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, current != null ? current.getSize() : 12));
 		textArea.requestFocusInWindow();

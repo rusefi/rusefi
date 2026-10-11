@@ -21,6 +21,7 @@ public interface IniFileModel {
 
     Map<String, IniField> getSecondaryIniFields();
 
+    /** Finds a declared field or a zero-based element reference such as {@code voltages[0]} in a 1D array. */
     Optional<IniField> findIniField(String key);
 
     IniField getIniField(Field field);
@@ -32,6 +33,9 @@ public interface IniFileModel {
     IniField getOutputChannel(String key) throws IniMemberNotFound;
 
     Map<String, IniField> getAllOutputChannels();
+
+    /** Display labels in INI [Datalog] declaration order. */
+    List<DatalogEntry> getDatalogEntries();
 
     /**
      * Get an expression-based output channel by name.

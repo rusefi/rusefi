@@ -1,0 +1,60 @@
+package com.rusefi;
+
+import com.rusefi.core.net.ConnectionAndMeta;
+import com.rusefi.core.net.PropertiesHolder;
+
+public class UiProperties {
+    public static final String SKIP_ECU_TYPE_DETECTION = "skip_ecu_type_detection";
+    public static final String SHOW_CAN_OPENBLT = "show_can_openblt";
+
+    public static boolean useCanbusConnector() {
+        return ConnectionAndMeta.getBoolean("use_canbus_connector", PropertiesHolder.INSTANCE.getProperties());
+    }
+
+    public static boolean useSimulator() {
+        return ConnectionAndMeta.getBoolean("show_simulator", PropertiesHolder.INSTANCE.getProperties());
+    }
+
+    public static boolean isCanOpenBltEnabled() {
+        String override = System.getProperty(SHOW_CAN_OPENBLT);
+        return override != null
+            ? Boolean.parseBoolean(override)
+            : ConnectionAndMeta.getBoolean(SHOW_CAN_OPENBLT, PropertiesHolder.INSTANCE.getProperties());
+    }
+
+    public static String getWhiteLabel() {
+        return ConnectionAndMeta.getWhiteLabel(PropertiesHolder.INSTANCE.getProperties());
+    }
+
+    public static String getUpdateHelpUrl() {
+        return PropertiesHolder.getUpdateHelpUrl("https://wiki.rusefi.com/HOWTO-Update-Firmware");
+    }
+
+    public static boolean skipEcuTypeDetection() {
+        return ConnectionAndMeta.getBoolean(SKIP_ECU_TYPE_DETECTION);
+    }
+
+    public static boolean isEngineSnifferEnabled() {
+        return ConnectionAndMeta.getBoolean("show_engine_sniffer_tab", PropertiesHolder.INSTANCE.getProperties());
+    }
+
+    public static boolean isPinoutEnabled() {
+        return ConnectionAndMeta.getBoolean("show_pinout_tab", PropertiesHolder.INSTANCE.getProperties());
+    }
+
+    public static boolean isSlcanSnifferEnabled() {
+        return ConnectionAndMeta.getBoolean("show_slcan_sniffer", PropertiesHolder.INSTANCE.getProperties());
+    }
+
+    public static boolean isKnockAnalyzerEnabled() {
+        return ConnectionAndMeta.getBoolean("show_knock_analyzer_tab", PropertiesHolder.INSTANCE.getProperties(), true);
+    }
+
+    public static boolean isLaunchWizardEnabled() {
+        return ConnectionAndMeta.getBoolean("show_launch_wizard", PropertiesHolder.INSTANCE.getProperties(), true);
+    }
+
+    public static boolean isWizardAutoLaunchEnabled() {
+        return ConnectionAndMeta.getBoolean("auto_launch_wizard", PropertiesHolder.INSTANCE.getProperties(), true);
+    }
+}

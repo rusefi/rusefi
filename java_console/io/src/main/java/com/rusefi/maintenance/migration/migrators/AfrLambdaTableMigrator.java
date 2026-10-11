@@ -41,23 +41,27 @@ public enum AfrLambdaTableMigrator implements TuneMigrator {
             ) {
                 final int updatedTableFieldCols = updatedTableField.getCols();
                 final Constant prevValue = context.getPrevTune().getConstantsAsMap().get(LAMBDA_TABLE_FIELD_NAME);
-                if (prevValue != null) {
+                final Constant updatedValue = context.getUpdatedTune().getConstantsAsMap().get(LAMBDA_TABLE_FIELD_NAME);
+                if (prevValue != null && updatedValue != null) {
                     final Optional<String[][]> migratedValues = AfrLambdaTableValuesConverter.INSTANCE.convertTableValues(
                         prevTableField.getValues(prevValue.getValue()),
                         context
                     );
                     if (migratedValues.isPresent()) {
-                        context.addMigration(
+                        final Constant migratedValue = new Constant(
                             LAMBDA_TABLE_FIELD_NAME,
-                            new Constant(
-                                LAMBDA_TABLE_FIELD_NAME,
-                                updatedTableField.getUnits(),
-                                updatedTableField.formatValue(migratedValues.get()),
-                                updatedTableField.getDigits(),
-                                Integer.toString(updatedTableField.getRows()),
-                                Integer.toString(updatedTableFieldCols)
-                            )
+                            updatedTableField.getUnits(),
+                            updatedTableField.formatValue(migratedValues.get()),
+                            updatedTableField.getDigits(),
+                            Integer.toString(updatedTableField.getRows()),
+                            Integer.toString(updatedTableFieldCols)
                         );
+                        final String formattedUpdatedValue = updatedTableField.formatValue(
+                            updatedTableField.getValues(updatedValue.getValue())
+                        );
+                        if (!Objects.equals(migratedValue.getValue(), formattedUpdatedValue)) {
+                            context.addMigration(LAMBDA_TABLE_FIELD_NAME, migratedValue);
+                        }
                     }
                 }
             }

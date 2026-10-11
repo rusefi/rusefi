@@ -446,6 +446,11 @@ public class ExpressionEvaluator {
     }
 
     private static Map<String, Double> buildVariableContext(String expression, IniFileModel ini, ConfigurationImage ci) {
+        return buildVariableContext(expression, ini, ci, new HashSet<>());
+    }
+
+    private static Map<String, Double> buildVariableContext(String expression, IniFileModel ini,
+                                                           ConfigurationImage ci, Set<String> resolving) {
         Set<String> varNames = extractVariables(expression);
         Map<String, Double> context = new HashMap<>();
         for (String varName : varNames) {
@@ -453,6 +458,17 @@ public class ExpressionEvaluator {
             if (field.isPresent()) {
                 Double value = ci.readNumericValue(field.get());
                 if (value != null) context.put(varName, value);
+            } else {
+                // Axis limits can reference expression channels such as cltHighXaxis.
+                // Resolve only config-backed expressions; cyclic references remain unresolved.
+                String channel = ini.getExpressionOutputChannel(varName);
+                if (channel != null && resolving.add(varName)) {
+                    Double value = tryEvaluateWithContext(channel, buildVariableContext(channel, ini, ci, resolving));
+                    resolving.remove(varName);
+                    if (value != null) {
+                        context.put(varName, value);
+                    }
+                }
             }
         }
         return context;

@@ -33,6 +33,8 @@ public class MessagesView {
         messages.setEditable(false);
         // fixed-width font so hexdumps and other formatted multi-line output stay aligned (#9827)
         messages.setFont(new Font(Font.MONOSPACED, Font.PLAIN, messages.getFont().getSize()));
+        // ECU-controlled background color, see 'set_bg_color=' messages
+        MessagesPaneBackgroundColor.register(messages);
 
         UiUtils.installPopupMenu(createPopupMenu(), messages);
 

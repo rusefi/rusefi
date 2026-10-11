@@ -7,6 +7,7 @@ import com.rusefi.io.LinkDecoder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -47,6 +48,7 @@ public class EngineState {
 
     private final ResponseBuffer buffer;
     private final List<StringActionPair> actions = new ArrayList<>();
+    private final List<StringActionPair> observers = new CopyOnWriteArrayList<>();
     private final Set<String> keys = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
 
     public EngineState(@NotNull final EngineStateListener listener) {
@@ -132,8 +134,21 @@ public class EngineState {
     private String handleResponse(String response, EngineStateListener listener) {
         String originalResponse = response;
         synchronized (lock) {
-            for (StringActionPair pair : actions)
-                response = handleStringActionPair(response, pair, listener);
+            for (StringActionPair pair : actions) {
+                String remaining = handleStringActionPair(response, pair, listener);
+                if (remaining.length() != response.length()) {
+                    notifyObservers(pair.first, valueOf(response, pair.first));
+                    return remaining;
+                }
+            }
+        }
+        for (StringActionPair observer : observers) {
+            if (startWithIgnoreCase(response, observer.prefix)) {
+                String value = valueOf(response, observer.first);
+                notifyObservers(observer.first, value);
+                listener.onKeyValue(observer.first, value);
+                return skipToken(skipToken(response));
+            }
         }
         if (originalResponse.length() == response.length()) {
             int keyEnd = response.indexOf(Integration.LOG_DELIMITER);
@@ -229,6 +244,31 @@ public class EngineState {
                 throw new IllegalStateException("Already registered: " + key);
             keys.add(key);
             actions.add(new StringActionPair(key, callback));
+        }
+    }
+
+    /** Non-owning observers can coexist with UI actions and remove only their own subscription. */
+    public AutoCloseable addStringValueObserver(String key, ValueCallback<String> callback) {
+        StringActionPair observer = new StringActionPair(key, callback);
+        observers.add(observer);
+        return () -> observers.remove(observer);
+    }
+
+    private static String valueOf(String response, String key) {
+        int start = key.length() + 1;
+        int end = response.indexOf(Integration.LOG_DELIMITER, start);
+        return response.substring(start, end < 0 ? response.length() : end);
+    }
+
+    private void notifyObservers(String key, String value) {
+        for (StringActionPair observer : observers) {
+            if (observer.first.equalsIgnoreCase(key)) {
+                try {
+                    observer.second.onUpdate(value);
+                } catch (RuntimeException failure) {
+                    log.warn("EngineState observer failed for " + key, failure);
+                }
+            }
         }
     }
 

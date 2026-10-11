@@ -3,12 +3,16 @@ apply from: dependenciesPath
 
 dependencies {
     api project(':ecu_io')
-    api project(':ui')
+    api project(':ecu_shared')
     api project(':models')
     api project(':inifile')
+    implementation project(':connectivity')
     implementation global_libs.json
 
     testImplementation global_libs.junit5api
+    testImplementation global_libs.mockito
+    // MockIniFileProvider & friends: lets a test host a fake TCP ECU for end-to-end MCP tool coverage
+    testImplementation testFixtures(project(':ecu_io'))
     testRuntimeOnly global_libs.junit5engine
 }
 

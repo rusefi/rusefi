@@ -10,6 +10,7 @@ import com.opensr5.ini.IndicatorModel;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.core.SensorSubscription;
 import com.rusefi.maintenance.OfflineEditMigration;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.core.preferences.storage.Node;
@@ -22,12 +23,15 @@ import com.rusefi.ui.widgets.tune.TuningToolbarWidget;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.ui.basic.TuneOperationStatusPanel;
+import com.rusefi.ui.console.MainFrame;
 
 import javax.swing.*;
 import javax.swing.Action;
 import java.awt.*;
 import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
@@ -59,6 +63,11 @@ public class TuningPane {
     /** Fired when the user opens Wiring/Pinout from a pin-enum field. Wired from ConsoleUI after construction. */
     private Consumer<String> navigateToPinout;
     private Runnable showTuningTab = () -> { };
+    private SensorCentral.ResponseListenerToken eventTriggerToken;
+    private IndicatorPanel frontPageIndicatorPanel;
+    private ConnectionStatusLogic.Listener connectionStatusListener;
+    private boolean active;
+    private boolean destroyed;
 
     public TuningPane(UIContext uiContext) {
         this(uiContext, null, null);
@@ -77,7 +86,7 @@ public class TuningPane {
         left = new MainMenuTreeWidget(uiContext);
 
         right = new CalibrationDialogWidget(uiContext);
-        JScrollPane rightScrollPane = new JScrollPane(right.getContentPane());
+        JScrollPane rightScrollPane = new JScrollPane(right.getViewportPane());
 
         ConfigurationImage baseline = initialBaseline;
         BinaryProtocol initialBp = uiContext.getBinaryProtocol();
@@ -213,7 +222,8 @@ public class TuningPane {
                 }
             }
         };
-        SensorCentral.getInstance().addListener(eventTriggerListener);
+        eventTriggerToken = SensorCentral.getInstance().addListener(eventTriggerListener, new SensorSubscription());
+        eventTriggerToken.setActive(false);
 
         // When the ECU disconnects (e.g. after a firmware flash or board swap), drop stale
         // undo/redo state so the next connection starts fresh, but preserve sessionImage
@@ -221,7 +231,7 @@ public class TuningPane {
         // Without clearing sessionImage, the old board's image would be used as the diff
         // baseline in uploadChangesWithoutBurn — but that's fine because on reconnect
         // we re-seed from the ECU below.
-        ConnectionStatusLogic.INSTANCE.addListener(isConnected -> {
+        connectionStatusListener = isConnected -> {
             if (!isConnected) {
                 SwingUtilities.invokeLater(() -> {
                     toolbar.onDisconnect();
@@ -231,6 +241,7 @@ public class TuningPane {
                 });
             } else {
                 SwingUtilities.invokeLater(() -> {
+                    updateEventTriggerDemand();
                     triggerPrevValues.clear();
                     BinaryProtocol bp = uiContext.getBinaryProtocol();
                     if (bp == null || bp.getControllerConfiguration() == null) {
@@ -260,14 +271,15 @@ public class TuningPane {
                     uiContext.fireConfigImageChanged(sessionImage.get());
                 });
             }
-        });
+        };
+        ConnectionStatusLogic.INSTANCE.addListener(connectionStatusListener);
 
         JPanel northPanel = new JPanel();
         northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
         northPanel.add(toolbar.getPanel());
-        JPanel indicatorPanel = buildFrontendIndicatorPanel(uiContext);
-        if (indicatorPanel != null) {
-            northPanel.add(indicatorPanel);
+        frontPageIndicatorPanel = buildFrontendIndicatorPanel(uiContext);
+        if (frontPageIndicatorPanel != null) {
+            northPanel.add(frontPageIndicatorPanel.getPanel());
         }
         if (gaugeStrip != null) {
             northPanel.add(gaugeStrip.getContent());
@@ -281,7 +293,7 @@ public class TuningPane {
     }
 
 
-    private static JPanel buildFrontendIndicatorPanel(UIContext uiContext) {
+    private static IndicatorPanel buildFrontendIndicatorPanel(UIContext uiContext) {
         IniFileModel ini = uiContext.iniFileState.getIniFileModel();
         if (ini == null) {
             return null;
@@ -294,11 +306,55 @@ public class TuningPane {
         if (indicators.isEmpty()) {
             return null;
         }
-        return new IndicatorPanel(indicators, ini, 0).getPanel();
+        return new IndicatorPanel(indicators, ini, 0);
     }
 
     public JPanel getContent() {
         return content;
+    }
+
+    public void setActive(boolean active) {
+        if (destroyed) {
+            return;
+        }
+        this.active = active;
+        if (gaugeStrip != null) {
+            gaugeStrip.setActive(active);
+        }
+        right.setActive(active);
+        if (frontPageIndicatorPanel != null) {
+            frontPageIndicatorPanel.setActive(active);
+        }
+        updateEventTriggerDemand();
+    }
+
+    public void destroy() {
+        if (destroyed) {
+            return;
+        }
+        destroyed = true;
+        active = false;
+        if (gaugeStrip != null) {
+            gaugeStrip.destroy();
+        }
+        right.destroy();
+        if (frontPageIndicatorPanel != null) {
+            frontPageIndicatorPanel.destroy();
+        }
+        eventTriggerToken.remove();
+        ConnectionStatusLogic.INSTANCE.removeListener(connectionStatusListener);
+    }
+
+    private void updateEventTriggerDemand() {
+        Set<String> channels = new HashSet<>();
+        IniFileModel ini = uiContext.iniFileState.getIniFileModel();
+        if (ini != null) {
+            for (EventTriggerModel trigger : ini.getEventTriggers()) {
+                channels.addAll(ExpressionEvaluator.extractVariables(trigger.getExpression()));
+            }
+        }
+        eventTriggerToken.setSubscription(new SensorSubscription(channels.toArray(new String[0])));
+        eventTriggerToken.setActive(active && !channels.isEmpty());
     }
 
     public void setNavigateToPinout(Consumer<String> navigateToPinout) {
@@ -341,6 +397,10 @@ public class TuningPane {
         return toolbar.getSaveTuneAction();
     }
 
+    public void setErrorHandler(Consumer<String> errorHandler) {
+        toolbar.setErrorHandler(errorHandler);
+    }
+
     enum ExitPrompt {
         NONE,
         BURN,
@@ -367,7 +427,7 @@ public class TuningPane {
         }
     }
 
-    public void requestExit(Component parent, Runnable exit, boolean firmwareUpdateInProgress) {
+    public void requestExit(MainFrame mainFrame, Runnable exit, boolean firmwareUpdateInProgress) {
         ExitPrompt prompt = exitPrompt(toolbar.hasUnsavedChanges(sessionImage.get()),
                 ConnectionStatusLogic.INSTANCE.isConnected() && uiContext.getBinaryProtocol() != null,
                 firmwareUpdateInProgress);
@@ -377,16 +437,24 @@ public class TuningPane {
         }
 
         boolean burn = prompt == ExitPrompt.BURN;
-        String action = burn ? "Burn to ECU and Exit" : "Save Tune and Exit";
-        String without = burn ? "Exit Without Burning" : "Exit Without Saving";
-        int choice = JOptionPane.showOptionDialog(parent,
-                burn ? "The tune has changes that have not been burned to the ECU."
-                        : "The tune has unsaved changes.",
-                "Unsaved Tune Changes", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
-                null, new Object[]{action, without, "Cancel"}, action);
-        dispatchExitChoice(prompt, choice,
-                onSuccess -> toolbar.burnToEcuAndThen(right, onSuccess),
-                onSuccess -> toolbar.saveTuneAndThen(right, onSuccess), exit);
+        String offlineTunePath = uiContext.getOfflineTunePath();
+        boolean autoSaveOfflineTune = uiContext.isOfflineMode() && offlineTunePath != null;
+        String action = burn ? "Burn to ECU and Exit" : autoSaveOfflineTune ? "Save and Exit" : "Save Tune and Exit";
+        String message = burn
+            ? "The tune has changes that have not been burned to the ECU."
+            : autoSaveOfflineTune
+                ? "The loaded tune has unsaved changes. It will be saved to its original .msq file."
+                : "The tune has unsaved changes.";
+        mainFrame.showUnsavedTuneChangesOverlay(message, action,
+            onSuccess -> {
+                if (burn) {
+                    toolbar.burnToEcuAndThen(right, onSuccess);
+                } else if (autoSaveOfflineTune) {
+                    toolbar.saveTuneToPathAndThen(right, offlineTunePath, onSuccess);
+                } else {
+                    toolbar.saveTuneAndThen(right, onSuccess);
+                }
+            }, exit);
     }
 
     public void setFirmwareUpdateInProgress(boolean inProgress) {

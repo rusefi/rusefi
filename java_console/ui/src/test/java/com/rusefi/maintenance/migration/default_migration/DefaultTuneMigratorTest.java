@@ -243,9 +243,7 @@ public class DefaultTuneMigratorTest {
     @Test
     public void testContent() {
         assertEquals(
-            "WARNING! Type of `map_samplingAngleBins` ini-field is expected to be `UINT16` instead of `FLOAT`\r\n" +
-                "WARNING! Type of `map_samplingAngleBins` ini-field is expected to be `UINT16` instead of `FLOAT`\r\n" +
-                "We aren't going to restore field `auxSerialRxPin`: it is missed in new .ini file\r\n" +
+            "We aren't going to restore field `auxSerialRxPin`: it is missed in new .ini file\r\n" +
                 "We aren't going to restore field `auxSerialSpeed`: it is missed in new .ini file\r\n" +
                 "We aren't going to restore field `auxSerialTxPin`: it is missed in new .ini file\r\n" +
                 "We aren't going to restore field `boardUse2stepPullDown`: it is missed in new .ini file\r\n" +

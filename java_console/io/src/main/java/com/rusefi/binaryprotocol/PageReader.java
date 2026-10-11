@@ -33,7 +33,7 @@ public class PageReader {
         ConfigurationImage image = imageWithMeta.getConfigurationImage();
 
         int offset = 0;
-        int blockingFactor = bp.getIniFile().getBlockingFactor();
+        int blockingFactor = bp.getBlockingFactor();
 
         if (image == null){
             return ConfigurationImageWithMeta.VOID;

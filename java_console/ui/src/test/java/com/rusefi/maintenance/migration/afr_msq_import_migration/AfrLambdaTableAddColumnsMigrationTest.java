@@ -23,7 +23,7 @@ public class AfrLambdaTableAddColumnsMigrationTest {
         ComposedTuneMigrator.INSTANCE.migrateTune(testContext);
 
         final Map<String, Constant> migratedConstants = testContext.getMigratedConstants();
-        assertEquals(1, migratedConstants.size());
+        assertEquals(2, migratedConstants.size());
         assertEquals("", testContext.getTestCallbacks().getContent());
     }
 
@@ -136,4 +136,3 @@ public class AfrLambdaTableAddColumnsMigrationTest {
         );
     }
 }
-

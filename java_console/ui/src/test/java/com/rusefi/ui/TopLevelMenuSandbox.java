@@ -27,11 +27,13 @@ import java.net.URL;
 import static com.rusefi.ui.basic.UiHelper.commonUiStartup;
 
 /**
- * Visual sandbox for the top-level calibration menu tree.
+ * Visual sandbox for {@link MainMenuTreeWidget}, the curve UI control
+ * {@link com.rusefi.ui.widgets.tune.CurveWidget}, and the table UI control
+ * {@link com.rusefi.ui.widgets.tune.TuningTableView}.
  */
 public class TopLevelMenuSandbox {
-    private static final String INI_RESOURCE = "/january.ini";
-    private static final String TUNE_RESOURCE = "/january_tune.msq";
+    private static final String INI_RESOURCE = "/26october.ini";
+    private static final String TUNE_RESOURCE = "/26october.msq";
 
     public static void main(String[] args) throws JAXBException, IOException, IniParsingException, java.net.URISyntaxException {
         commonUiStartup();
@@ -98,7 +100,7 @@ public class TopLevelMenuSandbox {
         MainMenuTreeWidget left = new MainMenuTreeWidget(uiContext);
 
         CalibrationDialogWidget right = new CalibrationDialogWidget(uiContext);
-        JScrollPane rightScrollPane = new JScrollPane(right.getContentPane());
+        JScrollPane rightScrollPane = new JScrollPane(right.getViewportPane());
 
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, left.getContentPane(), rightScrollPane);
         splitPane.setResizeWeight(0.3);
@@ -111,4 +113,3 @@ public class TopLevelMenuSandbox {
         left.selectSubMenu("dwellSettings");
     }
 }
-

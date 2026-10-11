@@ -4,6 +4,8 @@ import com.rusefi.core.io.UnsupportedEcuInfo;
 import com.rusefi.updater.OpenbltDetectorStrategy.OpenbltInfo;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -78,6 +80,27 @@ public class PortResultTest {
         assertEquals("COM2 (OpenBLT Bootloader)", new PortResult("COM2", SerialPortType.OpenBlt).toString());
         assertEquals("COM3 (OpenBLT Bootloader: rusefi.uaefi)",
             new PortResult("COM3", SerialPortType.OpenBlt, null, new OpenbltInfo(true, "rusefi.uaefi")).toString());
+    }
+
+    @Test
+    public void toStringShowsVersionAndFeatures() {
+        assertEquals("COM1 (OpenBLT Bootloader v1.16.0[custom_led])",
+            new PortResult("COM1", SerialPortType.OpenBlt, null,
+                new OpenbltInfo(true, null, "1.16.0", List.of("custom_led"))).toString());
+        assertEquals("COM1 (OpenBLT Bootloader v1.16.0)",
+            new PortResult("COM1", SerialPortType.OpenBlt, null,
+                new OpenbltInfo(true, null, "1.16.0", null)).toString(),
+            "no brackets when the bootloader reports no features");
+        assertEquals("COM1 (OpenBLT Bootloader v1.16.0[encrypted,custom_led])",
+            new PortResult("COM1", SerialPortType.OpenBlt, null,
+                new OpenbltInfo(true, null, "1.16.0", List.of("encrypted", "custom_led"))).toString());
+    }
+
+    @Test
+    public void toStringShowsBoardString() {
+        assertEquals("COM3 (OpenBLT Bootloader v1.16.0[custom_led]: rusefi.uaefi)",
+            new PortResult("COM3", SerialPortType.OpenBlt, null,
+                new OpenbltInfo(true, "rusefi.uaefi", "1.16.0", List.of("custom_led"))).toString());
     }
 
 }

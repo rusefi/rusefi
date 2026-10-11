@@ -40,9 +40,10 @@ public class BinaryProtocolLocalCache {
             log.info(String.format(CONFIGURATION_RUSEFI_BINARY + " Local cache CRC %x\n", crcOfLocallyCachedConfiguration));
 
             // there is a local file! let's request CRC from controller so that we can compare it to local file (validate)
-            int crcFromController = binaryProtocol.getCrcFromController(localCached.getConfigurationImage().getSize());
+            Integer crcFromController = binaryProtocol.getValidatedCrcFromController(
+                localCached.getConfigurationImage().getSize());
 
-            if (crcOfLocallyCachedConfiguration == crcFromController) {
+            if (crcFromController != null && crcOfLocallyCachedConfiguration == crcFromController) {
                 return localCached;
             }
 

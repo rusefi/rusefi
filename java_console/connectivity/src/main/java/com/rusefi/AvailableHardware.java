@@ -13,12 +13,20 @@ public class AvailableHardware {
     private final boolean dfuFound;
     private final boolean stLinkConnected;
     private final boolean PCANConnected;
+    private final boolean socketCanAvailable;
 
-    public AvailableHardware(List<PortResult> ports, boolean dfuFound, boolean stLinkConnected, boolean PCANConnected) {
+    public AvailableHardware(List<PortResult> ports, boolean dfuFound, boolean stLinkConnected,
+                             boolean PCANConnected) {
+        this(ports, dfuFound, stLinkConnected, PCANConnected, false);
+    }
+
+    public AvailableHardware(List<PortResult> ports, boolean dfuFound, boolean stLinkConnected,
+                             boolean PCANConnected, boolean socketCanAvailable) {
         this.ports = ports;
         this.dfuFound = dfuFound;
         this.stLinkConnected = stLinkConnected;
         this.PCANConnected = PCANConnected;
+        this.socketCanAvailable = socketCanAvailable;
     }
 
     @NotNull
@@ -40,6 +48,7 @@ public class AvailableHardware {
 
     public boolean isStLinkConnected() {return stLinkConnected;}
     public boolean isPCANConnected(){return PCANConnected;}
+    public boolean isSocketCanAvailable() {return socketCanAvailable;}
 
     public boolean isPortAvailable(final PortResult port) {
         return ports.contains(port);
@@ -50,7 +59,11 @@ public class AvailableHardware {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AvailableHardware that = (AvailableHardware) o;
-        return dfuFound == that.dfuFound && stLinkConnected == that.stLinkConnected && PCANConnected == that.PCANConnected && ports.equals(that.ports);
+        return dfuFound == that.dfuFound
+            && stLinkConnected == that.stLinkConnected
+            && PCANConnected == that.PCANConnected
+            && socketCanAvailable == that.socketCanAvailable
+            && ports.equals(that.ports);
     }
 
     public boolean isEmpty() {
@@ -64,7 +77,7 @@ public class AvailableHardware {
             ", dfuFound=" + dfuFound +
             ", stLinkConnected=" + stLinkConnected +
             ", PCANConnected=" + PCANConnected +
+            ", socketCanAvailable=" + socketCanAvailable +
             '}';
     }
 }
-

@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.rusefi.common.MiscTest;
+import com.rusefi.common.AdcHardwareTest;
 import com.rusefi.f4discovery.CompositeLoggerTest;
 import com.rusefi.f4discovery.HighRevTest;
 import com.rusefi.f4discovery.PTraceTest;
@@ -16,6 +17,7 @@ public class HwCiProteus {
                 CompositeLoggerTest.class,
                 HighRevTest.class,
                 MiscTest.class,
+                AdcHardwareTest.class,
                 ProteusAnalogTest.class,
         });
     }

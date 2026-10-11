@@ -31,6 +31,9 @@ project(':logging-api').projectDir = new File(rootRelativePath + 'java_console/l
 include ':gcc_map_reader'
 project(':gcc_map_reader').projectDir = new File(rootRelativePath + 'java_tools/gcc_map_reader')
 
+include ':openblt_wipe_generator'
+project(':openblt_wipe_generator').projectDir = new File(rootRelativePath + 'java_tools/openblt_wipe_generator')
+
 include ':enum_to_string'
 project(':enum_to_string').projectDir = new File(rootRelativePath + 'java_tools/enum_to_string')
 
@@ -56,6 +59,8 @@ include ':shared_ui'
 project(':shared_ui').projectDir = new File(rootRelativePath + 'java_console/shared_ui')
 include ':ecu_io'
 project(':ecu_io').projectDir = new File(rootRelativePath + 'java_console/io')
+include ':ecu_shared'
+project(':ecu_shared').projectDir = new File(rootRelativePath + 'java_console/ecu_shared')
 include ':connectivity'
 project(':connectivity').projectDir = new File(rootRelativePath + 'java_console/connectivity')
 include ':logging'

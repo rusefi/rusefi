@@ -1,5 +1,7 @@
 package com.rusefi.tools;
 
+import com.rusefi.core.OsUtil;
+
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.io.ConfigurationImageFile;
@@ -70,7 +72,7 @@ public class ConsoleTools {
             PCanIoStream stream = PCanIoStream.createStream();
             CANConnectorStartup.start(stream, statusListener);
         }, "Connect your rusEFI ECU using PCAN CAN-bus adapter");
-        if (!FileLog.isWindows()) {
+        if (!OsUtil.isWindows()) {
             registerTool("socketcan_connector", strings -> CANConnectorStartup.start(SocketCANIoStream.create(), statusListener), "Connect your rusEFI ECU using SocketCAN CAN-bus adapter");
         }
         registerTool("print_auth_token", args -> printAuthToken(), "Print current rusEFI Online authentication token.");

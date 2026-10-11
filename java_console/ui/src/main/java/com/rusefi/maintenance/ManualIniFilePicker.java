@@ -1,62 +1,37 @@
 package com.rusefi.maintenance;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.binaryprotocol.RealIniFileProvider;
+import com.rusefi.core.SignatureHelper;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.io.File;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.atomic.AtomicReference;
+import java.io.IOException;
+
+import static com.devexperts.logging.Logging.getLogging;
 
 /**
  * Swing .ini picker registered into the (Swing-free) io module via
  * {@link RealIniFileProvider#manualPicker}. Fires when a connect cannot download or locate the
- * matching .ini (internet down / custom board, see issue #9774); the returned file is cached by
- * {@link RealIniFileProvider} so subsequent connects are prompt-free.
+ * matching .ini (internet down / custom board, see issue #9774); the selected file is cached so a
+ * later port-scanner probe can connect without blocking on user input.
  */
 public class ManualIniFilePicker {
+    private static final Logging log = getLogging(ManualIniFilePicker.class);
+
     public static void register() {
         RealIniFileProvider.manualPicker = ManualIniFilePicker::pick;
     }
 
-    private static File pick(String signature) {
-        AtomicReference<File> result = new AtomicReference<>();
-        CountDownLatch completed = new CountDownLatch(1);
-        Runnable prompt = () -> showPicker(signature, result, completed);
-        if (SwingUtilities.isEventDispatchThread()) {
-            SecondaryLoop loop = Toolkit.getDefaultToolkit().getSystemEventQueue().createSecondaryLoop();
-            prompt.run();
-            Thread waiter = new Thread(() -> {
-                await(completed);
-                SwingUtilities.invokeLater(loop::exit);
-            }, "INI picker wait");
-            waiter.setDaemon(true);
-            waiter.start();
-            loop.enter();
-        } else {
-            SwingUtilities.invokeLater(prompt);
-            if (!await(completed)) {
-                return null;
-            }
-        }
-        return result.get();
+    private static void pick(String signature) {
+        SwingUtilities.invokeLater(() -> showPicker(signature));
     }
 
-    private static boolean await(CountDownLatch completed) {
-        try {
-            completed.await();
-            return true;
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            return false;
-        }
-    }
-
-    private static void showPicker(String signature, AtomicReference<File> result, CountDownLatch completed) {
+    private static void showPicker(String signature) {
         JFrame frame = findVisibleFrame();
         if (frame == null) {
-            completed.countDown();
+            RealIniFileProvider.allowManualPrompt(signature);
             return;
         }
 
@@ -94,13 +69,21 @@ public class ManualIniFilePicker {
 
         chooser.addActionListener(e -> {
             if (JFileChooser.APPROVE_SELECTION.equals(e.getActionCommand())) {
-                result.set(chooser.getSelectedFile());
+                try {
+                    if (SignatureHelper.importIntoCache(signature, chooser.getSelectedFile()) == null) {
+                        throw new IllegalArgumentException("Invalid ECU signature: " + signature);
+                    }
+                } catch (IOException | IllegalArgumentException ex) {
+                    log.error("Failed to import picked .ini into cache", ex);
+                    JOptionPane.showMessageDialog(frame, ex.getMessage(),
+                        "Failed to Import INI", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
             } else if (!JFileChooser.CANCEL_SELECTION.equals(e.getActionCommand())) {
                 return;
             }
             frame.setGlassPane(previousGlassPane);
             previousGlassPane.setVisible(previousVisible);
-            completed.countDown();
         });
 
         frame.setGlassPane(overlay);

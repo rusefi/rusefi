@@ -20,12 +20,12 @@ public class WizardCatalogTest {
     public void flaggedStepsHaveStableOrderAndTitles() {
         List<WizardStepDescriptor> flagged = WizardCatalog.flaggedSteps();
         assertEquals(Arrays.asList(
-            "wizardNumberOfCylinders", "wizardFiringOrder", "wizardDisplacement", "wizardMapSensorType",
+            "wizardNumberOfCylinders", "wizardFiringOrder", "wizardVeTable", "wizardDisplacement", "wizardMapSensorType",
             "wizardTps", "wizardCltSensor", "wizardCrankTrigger", "wizardCamTrigger",
             "wizardIgnitionOutputs", "wizardInjectorOutputs", "wizardInjectorFlow"),
             flagged.stream().map(d -> d.flagName).collect(java.util.stream.Collectors.toList()));
         assertEquals(Arrays.asList(
-            "Cylinders", "Firing Order", "Base VE Table", "MAP Sensor", "TPS", "CLT Sensor",
+            "Cylinders", "Firing Order", "Base VE Table", "Engine Displacement", "MAP Sensor", "TPS", "CLT Sensor",
             "Crank Trigger", "Cam Trigger", "Ignition Outputs", "Injector Outputs", "Injector Flow"),
             flagged.stream().map(d -> d.displayTitle).collect(java.util.stream.Collectors.toList()));
     }

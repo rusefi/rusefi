@@ -6,16 +6,27 @@ import com.opensr5.ini.CurveModel;
 import java.util.LinkedList;
 
 public class CurveBuilder {
+    // TunerStudio treats the axis step (grid divisions) as optional, e.g. "yAxis = -5, 5,"
+    private static final int DEFAULT_AXIS_STEP = 10;
+
     private String curveId;
     private String title;
+    private String xLabel;
+    private String yLabel;
     private AxisModel xAxis;
     private AxisModel yAxis;
     private String xBins;
     private String yBins;
+    private String topicHelp;
 
     public void setCurveDefinition(String curveId, String title) {
         this.curveId = curveId;
         this.title = title;
+    }
+
+    public void setColumnLabels(String xLabel, String yLabel) {
+        this.xLabel = xLabel;
+        this.yLabel = yLabel;
     }
 
     public void setXAxis(double min, double max, int step) {
@@ -47,16 +58,19 @@ public class CurveBuilder {
     }
 
     public CurveModel build() {
-        return new CurveModel(curveId, title, xAxis, yAxis, xBins, yBins);
+        return new CurveModel(curveId, title, xLabel, yLabel, xAxis, yAxis, xBins, yBins, topicHelp);
     }
 
     public void reset() {
         curveId = null;
         title = null;
+        xLabel = null;
+        yLabel = null;
         xAxis = null;
         yAxis = null;
         xBins = null;
         yBins = null;
+        topicHelp = null;
     }
 
     public boolean handleLine(LinkedList<String> list, java.util.function.Consumer<String> addField, Runnable finishCurrentCurve) {
@@ -74,19 +88,27 @@ public class CurveBuilder {
             return false;
         }
 
-        if (first.equalsIgnoreCase("xAxis")) {
+        if (first.equalsIgnoreCase("topicHelp")) {
             list.removeFirst();
-            double min = com.opensr5.ini.field.IniField.parseDouble(list.removeFirst());
-            double max = com.opensr5.ini.field.IniField.parseDouble(list.removeFirst());
-            int step = (int) com.opensr5.ini.field.IniField.parseDouble(list.removeFirst());
-            setXAxis(min, max, step);
+            topicHelp = list.isEmpty() ? null : list.removeFirst();
+            return true;
+        } else if (first.equalsIgnoreCase("columnLabel")) {
+            list.removeFirst();
+            setColumnLabels(list.removeFirst(), list.removeFirst());
+            return true;
+        } else if (first.equalsIgnoreCase("xAxis")) {
+            list.removeFirst();
+            String min = list.removeFirst();
+            String max = list.removeFirst();
+            int step = list.isEmpty() ? DEFAULT_AXIS_STEP : (int) com.opensr5.ini.field.IniField.parseDouble(list.removeFirst());
+            xAxis = new AxisModel(min, max, step);
             return true;
         } else if (first.equalsIgnoreCase("yAxis")) {
             list.removeFirst();
-            double min = com.opensr5.ini.field.IniField.parseDouble(list.removeFirst());
-            double max = com.opensr5.ini.field.IniField.parseDouble(list.removeFirst());
-            int step = (int) com.opensr5.ini.field.IniField.parseDouble(list.removeFirst());
-            setYAxis(min, max, step);
+            String min = list.removeFirst();
+            String max = list.removeFirst();
+            int step = list.isEmpty() ? DEFAULT_AXIS_STEP : (int) com.opensr5.ini.field.IniField.parseDouble(list.removeFirst());
+            yAxis = new AxisModel(min, max, step);
             return true;
         } else if (first.equalsIgnoreCase("xBins")) {
             list.removeFirst();
