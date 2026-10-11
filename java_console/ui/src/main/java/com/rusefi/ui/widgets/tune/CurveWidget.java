@@ -582,21 +582,9 @@ public class CurveWidget {
         }
 
         private void applyGradient(Component c, double value, double minVal, double maxVal) {
-            if (maxVal <= minVal) {
-                c.setBackground(Color.WHITE);
-                return;
-            }
-            double ratio = (value - minVal) / (maxVal - minVal);
-            ratio = Math.max(0, Math.min(1, ratio));
-
-            int r1 = 173, g1 = 216, b1 = 230; // Min value color
-            int r2 = 255, g2 = 182, b2 = 193; // Max value color
-
-            int red = (int) (r1 + ratio * (r2 - r1));
-            int green = (int) (g1 + ratio * (g2 - g1));
-            int blue = (int) (b1 + ratio * (b2 - b1));
-            c.setBackground(new Color(red, green, blue));
-            c.setForeground(Color.BLACK);
+            Color background = CalibrationColorPalette.background(value, minVal, maxVal);
+            c.setBackground(background);
+            c.setForeground(CalibrationColorPalette.foreground(background));
         }
     }
 }
