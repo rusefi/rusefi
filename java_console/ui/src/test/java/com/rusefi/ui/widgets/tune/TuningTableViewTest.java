@@ -22,6 +22,72 @@ import static org.mockito.Mockito.*;
 
 public class TuningTableViewTest {
     @Test
+    public void testPlainWheelAdjustsSelection() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            ConfigurationImage image = new ConfigurationImage(4);
+            TuningTableView view = editableView(false, image);
+            AtomicInteger edits = new AtomicInteger();
+            view.setOnEdit(edits::incrementAndGet);
+            JTable table = findTable(view.getContent());
+            table.setRowSelectionInterval(0, 0);
+            table.setColumnSelectionInterval(1, 2);
+            MouseWheelEvent event = new MouseWheelEvent(table, MouseEvent.MOUSE_WHEEL,
+                System.currentTimeMillis(), 0, 10, 10, 0, false,
+                MouseWheelEvent.WHEEL_UNIT_SCROLL, 3, 3);
+            table.dispatchEvent(event);
+            assertTrue(event.isConsumed());
+            assertArrayEquals(new byte[]{1, 2, 2, 3}, image.getContent(), "One decrement, regardless of rotation magnitude");
+            assertEquals(1, edits.get(), "Notify once for the whole selected region");
+            assertTrue(table.isCellSelected(0, 1));
+            assertTrue(table.isCellSelected(0, 2));
+            wheel(table, -3, 0);
+            assertArrayEquals(new byte[]{1, 2, 3, 4}, image.getContent());
+            assertEquals(2, edits.get());
+            wheel(table, 0, 0);
+            assertEquals(2, edits.get(), "Zero rotation does nothing");
+            table.changeSelection(0, 0, false, false);
+            wheel(table, -1, 0);
+            assertArrayEquals(new byte[]{1, 2, 3, 4}, image.getContent(), "Do not adjust axes");
+            assertEquals(2, edits.get());
+            table.clearSelection();
+            wheel(table, -1, 0);
+            assertEquals(2, edits.get());
+        });
+    }
+
+    @Test
+    public void testWheelUsesPrecisionAndShiftThreeSteps() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            ConfigurationImage image = new ConfigurationImage(16);
+            ArrayIniField field = new ArrayIniField("zBins", 0, FieldType.FLOAT, 2, 2, "", 1, "0", "100", "1");
+            TuningTableView view = editableView(false, image, field);
+            AtomicInteger edits = new AtomicInteger();
+            view.setOnEdit(edits::incrementAndGet);
+            JTable table = findTable(view.getContent());
+            table.setRowSelectionInterval(0, 0);
+            table.setColumnSelectionInterval(0, 2);
+            wheel(table, -3, 0);
+            Double[][] values = ConfigurationImageGetterSetter.getArrayValues(field, image);
+            assertEquals(3.1, values[1][0], 0.00001);
+            assertEquals(4.1, values[1][1], 0.00001);
+            wheel(table, 7, java.awt.event.InputEvent.SHIFT_DOWN_MASK);
+            values = ConfigurationImageGetterSetter.getArrayValues(field, image);
+            assertEquals(2.8, values[1][0], 0.00001);
+            assertEquals(3.8, values[1][1], 0.00001);
+            wheel(table, -7, java.awt.event.InputEvent.SHIFT_DOWN_MASK);
+            values = ConfigurationImageGetterSetter.getArrayValues(field, image);
+            assertEquals(3.1, values[1][0], 0.00001);
+            assertEquals(4.1, values[1][1], 0.00001);
+            assertArrayEquals(new Double[]{1.0, 2.0}, values[0], "Unselected row stays untouched");
+            assertEquals(3, edits.get());
+            assertTrue(table.isCellSelected(0, 0));
+            assertTrue(table.isCellSelected(0, 2));
+            TuningTableView.TuningTableModel model = (TuningTableView.TuningTableModel) table.getModel();
+            assertArrayEquals(values[1], model.data[1], "Model reflects encoded values");
+        });
+    }
+
+    @Test
     public void testAxisEditingWritesSeparateAxisImage() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
             AtomicInteger headerDialogs = new AtomicInteger();
@@ -563,16 +629,25 @@ public class TuningTableViewTest {
                 assertTrue(table.isCellSelected(0, 2));
                 wheel(table, -3);
                 assertTrue(table.isCellSelected(0, 2));
+                wheel(table, 1, java.awt.event.InputEvent.CTRL_DOWN_MASK | java.awt.event.InputEvent.SHIFT_DOWN_MASK);
+                assertTrue(table.isCellSelected(1, 2), "Ctrl takes precedence over Shift");
+                wheel(table, -1);
 
                 if (!viewMode) {
                     pressKey(table, "ENTER");
                     JTextField editor = (JTextField) table.getEditorComponent();
                     editor.setText("99");
                     wheel(table, 1);
+                    wheel(table, 1, 0);
                     assertTrue(table.isEditing());
                     assertTrue(table.isCellSelected(0, 2));
                     assertEquals("99", editor.getText());
                     pressKey(editor, "ESCAPE");
+                }
+                if (viewMode) {
+                    wheel(table, 1, 0);
+                    wheel(table, -1, java.awt.event.InputEvent.SHIFT_DOWN_MASK);
+                    assertTrue(table.isCellSelected(0, 2));
                 }
                 assertEquals(0, edits.get());
                 assertArrayEquals(new byte[]{1, 2, 3, 4}, image.getContent());
@@ -603,18 +678,26 @@ public class TuningTableViewTest {
     }
 
     private void wheel(JTable table, int rotation) {
+        wheel(table, rotation, java.awt.event.InputEvent.CTRL_DOWN_MASK);
+    }
+
+    private void wheel(JTable table, int rotation, int modifiers) {
         MouseWheelEvent event = new MouseWheelEvent(table, MouseEvent.MOUSE_WHEEL,
-            System.currentTimeMillis(), 0, 10, 10, 0, false,
+            System.currentTimeMillis(), modifiers, 10, 10, 0, false,
             MouseWheelEvent.WHEEL_UNIT_SCROLL, 3, rotation);
         table.dispatchEvent(event);
         assertTrue(event.isConsumed());
     }
 
     private TuningTableView editableView(boolean viewMode, ConfigurationImage image) {
+        return editableView(viewMode, image,
+            new ArrayIniField("zBins", 0, FieldType.UINT8, 2, 2, "", 1, "0", "255", "0"));
+    }
+
+    private TuningTableView editableView(boolean viewMode, ConfigurationImage image, ArrayIniField field) {
         TuningTableView view = new TuningTableView("Test", viewMode);
         IniFileModel iniFile = mock(IniFileModel.class);
         TableModel tableModel = mock(TableModel.class);
-        ArrayIniField field = new ArrayIniField("zBins", 0, FieldType.UINT8, 2, 2, "", 1, "0", "255", "0");
         ConfigurationImageGetterSetter.setArrayValues(field, image, new Double[][]{{1.0, 2.0}, {3.0, 4.0}});
         when(iniFile.getTable("table")).thenReturn(tableModel);
         when(tableModel.getZBinsConstant()).thenReturn("zBins");
