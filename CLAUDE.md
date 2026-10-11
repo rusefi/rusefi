@@ -208,6 +208,13 @@ Any code reachable from a unit-test build (`unit_tests/` itself, plus firmware s
 - When modifying Java code (`java_console/`, `java_tools/`), bump `UiVersion.CONSOLE_VERSION` in `java_tools/version/src/main/java/com/rusefi/UiVersion.java` to the current date in `YYYYMMDD` format as part of the same change (no-op if it already shows today's date).
 - `Autoupdate.AUTOUPDATE_VERSION` in `java_console/autoupdate/src/main/java/com/rusefi/autoupdate/Autoupdate.java` is a separate, manually managed version for the updater executable. Bump it (same `YYYYMMDD` format) only when the change affects updater behavior, i.e. code that runs inside `rusefi_autoupdate.exe`.
 
+The standalone updater overwrites its own JAR during extraction. Classes first
+used after that point can fail to load even though they are packaged correctly.
+Installed launchers use `installation.properties` and bypass the default launcher
+lookup, so they do not necessarily preload the same classes as extracted bundles
+(#10368: `OsUtil`). Resolve launch-time dependencies before extraction; test in a
+fresh JVM so earlier tests cannot hide lazy-loading failures.
+
 ## MCP Servers
 
 rusEFI provides two MCP (Model Context Protocol) servers for LLM-driven tooling over stdio JSON-RPC:
