@@ -30,7 +30,7 @@ RAM3_SIZE = DEFINED(STM32F4_HAS_SRAM3) ? 64k : 0;
 SDRAM_SIZE = DEFINED(STM32_HAS_SDRAM) ? 8M : 0;
 
 /* change address & length if bootloader */
-bootloader_size = 32k;
+bootloader_size = DEFINED(BOARD_BOOTLOADER_SIZE) ? BOARD_BOOTLOADER_SIZE : 32k;
 flash_start = 0x08000000 + (DEFINED(HAS_BOOTLOADER) ? bootloader_size : 0);
 /* see also getFlashAddrFirstCopy() method */
 flash_size = DEFINED(IS_BOOTLOADER) ? bootloader_size : (DEFINED(EFI_FLASH_SIZE) ? EFI_FLASH_SIZE : 768k);

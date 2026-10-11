@@ -16,7 +16,7 @@
 
 /* change address & length if bootloader */
 /* H743 has all sectors 128K size */
-bootloader_size = 128k;
+bootloader_size = DEFINED(BOARD_BOOTLOADER_SIZE) ? BOARD_BOOTLOADER_SIZE : 128k;
 flash_start = 0x08000000 + (DEFINED(HAS_BOOTLOADER) ? bootloader_size : 0);
 /* Keep the settings boundary in sync with getFlashAddrFirstCopy(). */
 flash_size = DEFINED(IS_BOOTLOADER) ? bootloader_size : (DEFINED(EFI_FLASH_SIZE) ? EFI_FLASH_SIZE : 1M);

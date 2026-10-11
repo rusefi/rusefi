@@ -79,7 +79,9 @@ void FlashInit() {
 }
 
 blt_addr FlashGetUserProgOffset() {
-#ifdef STM32H7XX
+#ifdef BOARD_BOOTLOADER_SIZE
+	return BOARD_BOOTLOADER_SIZE;
+#elif defined(STM32H7XX)
 	return 128 * 1024;
 #else // not STM32H7
 	return 32 * 1024;
