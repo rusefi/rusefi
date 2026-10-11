@@ -25,6 +25,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 public class TuningTableView {
     private static final int TOOLBAR_GAP = 6;
@@ -45,6 +46,9 @@ public class TuningTableView {
     private double maxValue = -Double.MAX_VALUE;
     private ConfigurationImage imageTarget;
     private ArrayIniField zBinsField;
+    private ConfigurationImage axisImageTarget;
+    private ArrayIniField xBinsField;
+    private ArrayIniField yBinsField;
     private Runnable onEdit;
 
     public TuningTableView(String title) {
@@ -64,6 +68,27 @@ public class TuningTableView {
             : "Arrows or mouse wheel to move; Enter/F2 to edit; Enter to accept; Esc to cancel; Tab/Shift+Tab to accept and move");
         installAxisHighlighting();
         installKeyboardEditing();
+        table.getTableHeader().setToolTipText(viewMode ? null : "Double-click an axis value to edit");
+        table.getTableHeader().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (viewMode || e.getButton() != MouseEvent.BUTTON1 || e.getClickCount() != 2
+                    || xBinsField == null || !(table.getModel() instanceof TuningTableModel)) {
+                    return;
+                }
+                int column = table.getTableHeader().columnAtPoint(e.getPoint());
+                if (column <= 0 || (table.isEditing() && !table.getCellEditor().stopCellEditing())) {
+                    return;
+                }
+                JTextField value = new JTextField(table.getColumnName(column), 10);
+                JPanel panel = new JPanel(new GridLayout(0, 1));
+                panel.add(new JLabel("X axis value:"));
+                panel.add(value);
+                if (showConfirmDialog(panel) == JOptionPane.OK_OPTION) {
+                    setAxisValue(true, column - 1, value.getText());
+                }
+            }
+        });
         table.addMouseWheelListener(this::moveValueCellWithWheel);
 
         table.addMouseListener(new MouseAdapter() {
@@ -337,7 +362,9 @@ public class TuningTableView {
                 if (table.getSelectedRow() == -1 && table.getRowCount() > 0 && table.getColumnCount() > 1) {
                     table.changeSelection(0, 1, false, false);
                 }
-                if (isActiveValueCell() && table.editCellAt(activeRow(), activeColumn())) {
+                if (activeRow() >= 0 && activeColumn() >= 0
+                    && table.isCellSelected(activeRow(), activeColumn())
+                    && table.editCellAt(activeRow(), activeColumn())) {
                     table.getEditorComponent().requestFocusInWindow();
                 }
             }
@@ -456,6 +483,63 @@ public class TuningTableView {
 
     public void setOnEdit(Runnable onEdit) {
         this.onEdit = onEdit;
+    }
+
+    private ArrayIniField editableAxisField(IniFileModel ini, String name) {
+        Optional<IniField> field = ini.findIniField(name);
+        if (field.isPresent() && field.get() instanceof ArrayIniField) {
+            ArrayIniField array = (ArrayIniField) field.get();
+            if (array.getRows() == 1 || array.getCols() == 1) {
+                return array;
+            }
+        }
+        return null;
+    }
+
+    private void setAxisValue(boolean xAxis, int index, Object value) {
+        ArrayIniField field = xAxis ? xBinsField : yBinsField;
+        if (viewMode || field == null || axisImageTarget == null || value == null
+            || !(table.getModel() instanceof TuningTableModel)) {
+            return;
+        }
+        TuningTableModel model = (TuningTableModel) table.getModel();
+        Double[] bins = xAxis ? model.xBins : model.yBins;
+        if (bins == null || index < 0 || index >= bins.length) {
+            return;
+        }
+        double number;
+        try {
+            number = Double.parseDouble(value.toString().trim());
+        } catch (NumberFormatException e) {
+            return;
+        }
+        if (!Double.isFinite(number)) {
+            return;
+        }
+        int row = field.getRows() == 1 ? 0 : index;
+        int column = field.getRows() == 1 ? index : 0;
+        // Encode only the edited element, then display the actual stored precision.
+        int offset = field.getOffset(row, column);
+        ConfigurationImage candidate = axisImageTarget.clone();
+        ConfigurationImage.setScalarValue(candidate.getByteBuffer(offset, field.getType().getStorageSize()),
+            field.getType(), Double.toString(number), com.rusefi.config.Field.NO_BIT_OFFSET, field.getMultiplier(), 0);
+        double encoded = ConfigurationImageGetterSetter.getArrayValues(field, candidate)[row][column];
+        if (!Double.isFinite(encoded) || Double.compare(bins[index], encoded) == 0) {
+            return;
+        }
+        System.arraycopy(candidate.getContent(), offset, axisImageTarget.getContent(), offset,
+            field.getType().getStorageSize());
+        bins[index] = encoded;
+        if (xAxis) {
+            table.getColumnModel().getColumn(index + 1).setHeaderValue(model.getColumnName(index + 1));
+            table.getTableHeader().repaint();
+        } else {
+            model.fireTableCellUpdated(model.data.length - 1 - index, 0);
+        }
+        updateSurfaces(model.data, model.xBins, model.yBins);
+        if (onEdit != null) {
+            onEdit.run();
+        }
     }
 
     private boolean writeBackZBins(TuningTableModel model) {
@@ -748,9 +832,18 @@ public class TuningTableView {
 
         this.imageTarget = zImage;
         this.zBinsField = ltft;
+        this.axisImageTarget = axisImage;
+        this.xBinsField = editableAxisField(iniFile, iniTable.getXBinsConstant());
+        this.yBinsField = editableAxisField(iniFile, iniTable.getYBinsConstant());
 
-        table.setModel(new TuningTableModel(dataValues, xBins, yBins, precision, !viewMode,
-            model -> commitEdit(model, table.getSelectedRows(), table.getSelectedColumns())));
+        TuningTableModel model = new TuningTableModel(dataValues, xBins, yBins, precision, !viewMode,
+            edited -> commitEdit(edited, table.getSelectedRows(), table.getSelectedColumns()));
+        if (!viewMode && axisImage != null && yBinsField != null) {
+            model.onYAxisEdit = (index, value) -> setAxisValue(false, index, value);
+        }
+        model.xPrecision = xBinsField == null ? precision : IniField.parseDigits(xBinsField.getDigits());
+        model.yPrecision = yBinsField == null ? precision : IniField.parseDigits(yBinsField.getDigits());
+        table.setModel(model);
         table.clearSelection();
         updateSurfaces(dataValues, xBins, yBins);
     }
@@ -818,6 +911,9 @@ public class TuningTableView {
         private final int precision;
         private final boolean editable;
         private final Consumer<TuningTableModel> onCellEdit;
+        private BiConsumer<Integer, Object> onYAxisEdit;
+        private int xPrecision;
+        private int yPrecision;
 
         public TuningTableModel(Double[][] data, Double[] xBins, Double[] yBins, int precision) {
             this(data, xBins, yBins, precision, true, null);
@@ -829,18 +925,25 @@ public class TuningTableView {
             this.xBins = xBins;
             this.yBins = yBins;
             this.precision = precision;
+            this.xPrecision = precision;
+            this.yPrecision = precision;
             this.editable = editable;
             this.onCellEdit = onCellEdit;
         }
 
         @Override
         public boolean isCellEditable(int row, int column) {
-            return editable && column > 0;
+            return editable && (column > 0 || (onYAxisEdit != null && yBins != null
+                && data.length - 1 - row < yBins.length));
         }
 
         @Override
         public void setValueAt(Object value, int row, int column) {
             if (!isCellEditable(row, column)) {
+                return;
+            }
+            if (column == 0) {
+                onYAxisEdit.accept(data.length - 1 - row, value);
                 return;
             }
             double number;
@@ -875,7 +978,7 @@ public class TuningTableView {
         public String getColumnName(int column) {
             if (column == 0) return "Load \\ RPM";
             if (xBins != null && column - 1 < xBins.length) {
-                return formatNumber(xBins[column - 1]);
+                return formatNumber(xBins[column - 1], xPrecision);
             }
             return "Col " + column;
         }
@@ -886,7 +989,7 @@ public class TuningTableView {
             int reversedRowIndex = data.length - 1 - rowIndex;
             if (columnIndex == 0) {
                 if (yBins != null && reversedRowIndex < yBins.length) {
-                    return formatNumber(yBins[reversedRowIndex]);
+                    return formatNumber(yBins[reversedRowIndex], yPrecision);
                 }
                 return "Row " + rowIndex;
             }
@@ -894,8 +997,12 @@ public class TuningTableView {
         }
 
         private String formatNumber(Object value) {
+            return formatNumber(value, precision);
+        }
+
+        private String formatNumber(Object value, int digits) {
             if (value instanceof Number) {
-                return String.format("%." + precision + "f", ((Number) value).doubleValue())
+                return String.format("%." + digits + "f", ((Number) value).doubleValue())
                     .replace(',', '.').replaceFirst("\\.0+$", "");
             }
             return String.valueOf(value);

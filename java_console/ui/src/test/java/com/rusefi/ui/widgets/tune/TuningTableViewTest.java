@@ -16,11 +16,90 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class TuningTableViewTest {
+    @Test
+    public void testAxisEditingWritesSeparateAxisImage() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            AtomicReference<String> headerValue = new AtomicReference<>("175.25");
+            TuningTableView view = new TuningTableView("Axes") {
+                @Override
+                protected int showConfirmDialog(JPanel panel) {
+                    ((JTextField) panel.getComponent(1)).setText(headerValue.get());
+                    return JOptionPane.OK_OPTION;
+                }
+            };
+            IniFileModel ini = mock(IniFileModel.class);
+            TableModel definition = mock(TableModel.class);
+            ArrayIniField z = new ArrayIniField("z", 0, FieldType.UINT8, 2, 2, "", 1, "0", "255", "0");
+            ArrayIniField x = new ArrayIniField("x", 2, FieldType.UINT16, 2, 1, "", 0.5, "0", "1000", "1");
+            ArrayIniField y = new ArrayIniField("y", 8, FieldType.UINT16, 1, 2, "", 0.5, "0", "1000", "1");
+            ConfigurationImage zImage = new ConfigurationImage(4);
+            ConfigurationImage axisImage = new ConfigurationImage(16);
+            ConfigurationImageGetterSetter.setArrayValues(z, zImage, new Double[][]{{1.0, 2.0}, {3.0, 4.0}});
+            ConfigurationImageGetterSetter.setArrayValues(x, axisImage, new Double[][]{{100.0, 200.0}});
+            ConfigurationImageGetterSetter.setArrayValues(y, axisImage, new Double[][]{{10.0}, {20.0}});
+            byte[] originalAxes = axisImage.getContent().clone();
+            byte[] originalZ = zImage.getContent().clone();
+            when(ini.getTable("table")).thenReturn(definition);
+            when(definition.getZBinsConstant()).thenReturn("z");
+            when(definition.getXBinsConstant()).thenReturn("x");
+            when(definition.getYBinsConstant()).thenReturn("y");
+            when(ini.findIniField("z")).thenReturn(Optional.of(z));
+            when(ini.findIniField("x")).thenReturn(Optional.of(x));
+            when(ini.findIniField("y")).thenReturn(Optional.of(y));
+            AtomicInteger edits = new AtomicInteger();
+            view.setOnEdit(edits::incrementAndGet);
+            view.displayTable(ini, "table", zImage, axisImage);
+            JTable table = findTable(view.getContent());
+            table.getTableHeader().setSize(300, 30);
+            Rectangle header = table.getTableHeader().getHeaderRect(1);
+            table.getTableHeader().dispatchEvent(new MouseEvent(table.getTableHeader(), MouseEvent.MOUSE_CLICKED,
+                System.currentTimeMillis(), 0, header.x + 5, 10, 2, false, MouseEvent.BUTTON1));
+            ConfigurationImage expected = new ConfigurationImage(originalAxes.clone());
+            ConfigurationImageGetterSetter.setArrayValues(x, expected, new Double[][]{{175.25, 200.0}});
+            assertArrayEquals(expected.getContent(), axisImage.getContent());
+            double encodedX = ConfigurationImageGetterSetter.getArrayValues(x, expected)[0][0];
+            assertEquals(encodedX, Double.parseDouble(table.getColumnName(1)));
+            assertEquals(table.getColumnName(1), table.getColumnModel().getColumn(1).getHeaderValue());
+            assertEquals(1, edits.get());
+            assertTrue(table.isCellEditable(0, 0));
+            table.changeSelection(0, 0, false, false);
+            pressKey(table, "F2");
+            assertTrue(table.isEditing());
+            ((JTextField) table.getEditorComponent()).setText("35.25");
+            pressKey((JTextField) table.getEditorComponent(), "ENTER");
+            ConfigurationImageGetterSetter.setArrayValues(y, expected, new Double[][]{{10.0}, {35.25}});
+            assertArrayEquals(expected.getContent(), axisImage.getContent(), "Top displayed row edits the last Y bin");
+            assertEquals(ConfigurationImageGetterSetter.getArrayValues(y, expected)[1][0],
+                Double.parseDouble(table.getValueAt(0, 0).toString()));
+            assertArrayEquals(originalZ, zImage.getContent());
+            assertEquals(2, edits.get());
+            byte[] afterEdits = axisImage.getContent().clone();
+            for (String invalid : new String[]{"bad", "NaN", "Infinity"}) {
+                table.setValueAt(invalid, 0, 0);
+                headerValue.set(invalid);
+                table.getTableHeader().dispatchEvent(new MouseEvent(table.getTableHeader(), MouseEvent.MOUSE_CLICKED,
+                    System.currentTimeMillis(), 0, header.x + 5, 10, 2, false, MouseEvent.BUTTON1));
+            }
+            table.setValueAt(table.getValueAt(0, 0), 0, 0);
+            assertArrayEquals(afterEdits, axisImage.getContent());
+            assertEquals(2, edits.get(), "Invalid and unchanged edits do not notify");
+            TuningTableView readOnly = new TuningTableView("Comparison", true);
+            readOnly.displayTable(ini, "table", zImage, axisImage);
+            JTable comparison = findTable(readOnly.getContent());
+            assertFalse(comparison.isCellEditable(0, 0));
+            comparison.setValueAt("70", 0, 0);
+            comparison.getTableHeader().setSize(300, 30);
+            comparison.getTableHeader().dispatchEvent(new MouseEvent(comparison.getTableHeader(), MouseEvent.MOUSE_CLICKED,
+                System.currentTimeMillis(), 0, header.x + 5, 10, 2, false, MouseEvent.BUTTON1));
+            assertArrayEquals(afterEdits, axisImage.getContent());
+        });
+    }
 
     @Test
     public void testSelectionPreservedAfterDelta() {
