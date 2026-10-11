@@ -29,7 +29,8 @@ bool AntilagSystemBase::isInsideALSSwitchCondition() {
 	} else if (engineConfiguration->antiLagActivationMode == ALWAYS_ON_ANTILAG) {
 		return true;
 	} else {
-	  criticalError("Unexpected antiLagActivationMode");
+		// [tag:user_facing_ini_labels] "Activation Mode" in the AntiLag INI dialog.
+		criticalError("Invalid Activation Mode in AntiLag/Rotational Idle Settings: %d", engineConfiguration->antiLagActivationMode);
 		return false;
 	}
 }

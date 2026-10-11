@@ -675,7 +675,8 @@ void updateDash(CanCycle cycle) {
 		canDashboardTS(cycle);
 		break;
 	default:
-		criticalError("Nothing for canNbcType %d/%s", engineConfiguration->canNbcType, getCan_nbc_e(engineConfiguration->canNbcType));
+		// [tag:user_facing_ini_labels] Match the dash selection label in tunerstudio.template.ini.
+		criticalError("Unsupported CAN dash type: %d", engineConfiguration->canNbcType);
 		break;
 	}
 }

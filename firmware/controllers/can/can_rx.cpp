@@ -12,6 +12,23 @@
 
 #include "can_rx.h"
 
+#if EFI_CAN_SUPPORT || EFI_UNIT_TEST
+uint32_t getFourBytesLsb(const CANRxFrame& frame, int offset) {
+	return (frame.data8[offset + 3] << 24) +
+	    (frame.data8[offset + 2] << 16) +
+	    (frame.data8[offset + 1] << 8) +
+	    frame.data8[offset];
+}
+
+uint16_t getTwoBytesLsb(const CANRxFrame& frame, int offset) {
+	return (frame.data8[offset + 1] << 8) + frame.data8[offset];
+}
+
+uint16_t getTwoBytesMsb(const CANRxFrame& frame, int offset) {
+	return (frame.data8[offset] << 8) + frame.data8[offset + 1];
+}
+#endif
+
 #if EFI_USE_OPENBLT || EFI_UNIT_TEST
 #include "openblt/efi_blt_ids.h"
 
@@ -158,21 +175,6 @@ void registerCanSensor(CanSensorBase& sensor) {
 /* Mercedes pn: A 006 542 26 18 CAN IDs */
 #define MM5_10_MB_YAW_Y_CANID		0x150
 #define MM5_10_MB_ROLL_X_CANID		0x151
-
-uint32_t getFourBytesLsb(const CANRxFrame& frame, int offset) {
-	return (frame.data8[offset + 3] << 24) +
-	    (frame.data8[offset + 2] << 16) +
-	    (frame.data8[offset + 1] << 8) +
-	    frame.data8[offset];
-}
-
-uint16_t getTwoBytesLsb(const CANRxFrame& frame, int offset) {
-	return (frame.data8[offset + 1] << 8) + frame.data8[offset];
-}
-
-uint16_t getTwoBytesMsb(const CANRxFrame& frame, int offset) {
-	return (frame.data8[offset] << 8) + frame.data8[offset + 1];
-}
 
 static int16_t getShiftedLSB_intel(const CANRxFrame& frame, int offset) {
 	return getTwoBytesLsb(frame, offset) - 0x8000;

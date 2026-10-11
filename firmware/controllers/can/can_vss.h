@@ -10,6 +10,6 @@
 void initCanVssSupport();
 void setCanVss(int type);
 
-#if EFI_CAN_SUPPORT
+#if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 void processCanRxVss(const CANRxFrame& frame, efitick_t nowNt);
 #endif

@@ -173,7 +173,8 @@ AirmassModelBase* getAirmassModel(engine_load_mode_e mode) {
 	case engine_load_mode_e::LM_LUA: return &(getLuaAirmassModel());
 #endif
 	default:
-		firmwareError(ObdCode::CUSTOM_ERR_ASSERT, "Invalid airmass mode %d", engineConfiguration->fuelAlgorithm);
+		// [tag:user_facing_ini_labels] The INI calls this setting "Fuel strategy".
+		firmwareError(ObdCode::CUSTOM_ERR_ASSERT, "Invalid Fuel strategy: %d", engineConfiguration->fuelAlgorithm);
 		return nullptr;
 	}
 }
@@ -190,7 +191,8 @@ static float getBaseFuelMass(float rpm) {
 
 	// airmass modes - get airmass first, then convert to fuel
 	auto model = getAirmassModel(engineConfiguration->fuelAlgorithm);
-	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, model != nullptr, "Invalid airmass mode", 0.0f);
+	// [tag:user_facing_ini_labels] Use the same INI label for the null-model fallback.
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, model != nullptr, "Invalid Fuel strategy", 0.0f);
 
 	auto airmass = model->getAirmass(rpm, true);
 
@@ -264,7 +266,8 @@ int getNumberOfInjections(injection_mode_e mode) {
 	case IM_SEQUENTIAL:
 		return 1;
 	default:
-		firmwareError(ObdCode::CUSTOM_ERR_INVALID_INJECTION_MODE, "Unexpected injection_mode_e %d", mode);
+		// [tag:user_facing_ini_labels] "Mode" in the Injection INI dialog.
+		firmwareError(ObdCode::CUSTOM_ERR_INVALID_INJECTION_MODE, "Invalid Injection Mode: %d", mode);
 		return 1;
 	}
 }
@@ -291,7 +294,8 @@ float getInjectionModeDurationMultiplier() {
 		// the fuel for a second pulse which never happens leaves the engine running lean. #8345
 		return engineConfiguration->cylindersCount == 1 ? 1 : 0.5f;
 	default:
-		firmwareError(ObdCode::CUSTOM_ERR_INVALID_INJECTION_MODE, "Unexpected injection_mode_e %d", mode);
+		// [tag:user_facing_ini_labels] "Mode" in the Injection INI dialog.
+		firmwareError(ObdCode::CUSTOM_ERR_INVALID_INJECTION_MODE, "Invalid Injection Mode: %d", mode);
 		return 0;
 	}
 }

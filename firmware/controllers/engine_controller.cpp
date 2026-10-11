@@ -557,7 +557,8 @@ static bool validateConfig(const engine_configuration_s* previousConfiguration) 
   // the only step which is allowed to modify configuration - everything else in this method is read-only validation
   applyDefaultsOrFixAfterBurn(previousConfiguration);
 	if (engineConfiguration->cylindersCount > MAX_CYLINDER_COUNT) {
-		criticalError("Invalid cylinder count: %d", engineConfiguration->cylindersCount);
+		// [tag:user_facing_ini_labels] Match the engine setting label in tunerstudio.template.ini.
+		criticalError("Invalid Number of cylinders: %d", engineConfiguration->cylindersCount);
 		return false;
 	}
 #if EFI_PROD_CODE && (BOARD_MC33810_COUNT > 0)
@@ -576,7 +577,8 @@ static bool validateConfig(const engine_configuration_s* previousConfiguration) 
 
 #endif // EFI_PROD_CODE && (BOARD_MC33810_COUNT > 0)
 	if (engineConfiguration->adcVcc > 5.0f || engineConfiguration->adcVcc < 1.0f) {
-    criticalError("Invalid adcVcc: %f", engineConfiguration->adcVcc);
+		// [tag:user_facing_ini_labels] Match the hardware setting label in tunerstudio.template.ini.
+    criticalError("Invalid ADC vRef voltage: %f", engineConfiguration->adcVcc);
 		return false;
 	}
 

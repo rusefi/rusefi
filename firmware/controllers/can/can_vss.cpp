@@ -9,7 +9,7 @@
 
 #include "pch.h"
 
-#if EFI_CAN_SUPPORT
+#if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 #include "can_rx.h"
 #include "dynoview.h"
 #include "stored_value_sensor.h"
@@ -32,10 +32,12 @@ static expected<uint16_t> look_up_rpm_can_id(can_vss_nbc_e type) {
 		case W202:
 		case BMW_e90:
 		case HYUNDAI_PB:
-			firmwareError(ObdCode::OBD_Vehicle_Speed_SensorB, "RPM Can type not implemented yet: %d", type);
+			// [tag:user_facing_ini_labels] RPM input also uses the INI's "CAN VSS type" selection.
+			firmwareError(ObdCode::OBD_Vehicle_Speed_SensorB, "CAN VSS type does not support RPM input: %d", type);
 			return unexpected;
 		default:
-			firmwareError(ObdCode::OBD_Vehicle_Speed_SensorB, "Wrong RPM Can type: %d", type);
+			// [tag:user_facing_ini_labels] RPM input also uses the INI's "CAN VSS type" selection.
+			firmwareError(ObdCode::OBD_Vehicle_Speed_SensorB, "Invalid CAN VSS type for RPM input: %d", type);
 			return unexpected;
 	}
 }
@@ -57,7 +59,8 @@ static expected<uint16_t> look_up_vss_can_id(can_vss_nbc_e type) {
 		case W202:
 			return 0x0200; /* W202 C180 ABS signal */
 		default:
-			firmwareError(ObdCode::OBD_Vehicle_Speed_SensorB, "Wrong VSS Can type selected: %d", type);
+			// [tag:user_facing_ini_labels] Match the vehicle-speed label in tunerstudio.template.ini.
+			firmwareError(ObdCode::OBD_Vehicle_Speed_SensorB, "Invalid CAN VSS type: %d", type);
 			return unexpected;
 	}
 }
@@ -170,7 +173,8 @@ void processCanRxSecondVss(const CANRxFrame& frame, efitick_t nowNt) {
 		  processNissanSecondVss(frame, nowNt);
 		  return;
 		default:
-		  criticalError("Unexpected processCanRxSecondVss %d", (int)engineConfiguration->canVssNbcType);
+			// [tag:user_facing_ini_labels] Identify the INI selection that lacks second-speed support.
+			criticalError("CAN VSS type does not support second speed input: %d", (int)engineConfiguration->canVssNbcType);
 	}
 }
 
@@ -222,4 +226,4 @@ void setCanVss(int type) {
 	engineConfiguration->canVssNbcType = (can_vss_nbc_e)type;
 }
 
-#endif // EFI_CAN_SUPPORT
+#endif // EFI_CAN_SUPPORT || EFI_UNIT_TEST

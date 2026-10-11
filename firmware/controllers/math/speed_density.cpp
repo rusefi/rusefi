@@ -55,7 +55,8 @@ float IFuelComputer::getTChargeCoefficient(float rpm, float tps) {
 			engineConfiguration->tchargeValues
 		);
 	} else {
-		criticalError("Unexpected tChargeMode: %d", engineConfiguration->tChargeMode);
+		// [tag:user_facing_ini_labels] Qualify the "Mode" field with its INI dialog title.
+		criticalError("Invalid Mode in Estimated cylinder air temperature: %d", engineConfiguration->tChargeMode);
 		return 0;
 	}
 }

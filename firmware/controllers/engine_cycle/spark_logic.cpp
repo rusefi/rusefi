@@ -80,7 +80,8 @@ static int getIgnitionPinForIndex(int cylinderIndex, ignition_mode_e ignitionMod
 		return cylinderIndex % 2;
 
 	default:
-		firmwareError(ObdCode::CUSTOM_OBD_IGNITION_MODE, "Invalid ignition mode getIgnitionPinForIndex(): %d", engineConfiguration->ignitionMode);
+		// [tag:user_facing_ini_labels] Qualify the ignition INI's "Mode" field.
+		firmwareError(ObdCode::CUSTOM_OBD_IGNITION_MODE, "Invalid Ignition Mode: %d", engineConfiguration->ignitionMode);
 		return 0;
 	}
 }
@@ -532,7 +533,8 @@ void initializeIgnitionActions() {
 		list->isReady = false;
 		return;
 	}
-	efiAssertVoid(ObdCode::CUSTOM_ERR_6592, engineConfiguration->cylindersCount > 0, "cylindersCount");
+	// [tag:user_facing_ini_labels] Match the engine setting label in tunerstudio.template.ini.
+	efiAssertVoid(ObdCode::CUSTOM_ERR_6592, engineConfiguration->cylindersCount > 0, "Number of cylinders must be greater than zero");
 
 	for (size_t cylinderIndex = 0; cylinderIndex < engineConfiguration->cylindersCount; cylinderIndex++) {
 		list->elements[cylinderIndex].cylinderIndex = cylinderIndex;
@@ -701,7 +703,8 @@ int getNumberOfSparks(ignition_mode_e mode) {
 	case IM_WASTED_SPARK:
 		return 2;
 	default:
-		firmwareError(ObdCode::CUSTOM_ERR_IGNITION_MODE, "Unexpected ignition_mode_e %d", mode);
+		// [tag:user_facing_ini_labels] Qualify the ignition INI's "Mode" field.
+		firmwareError(ObdCode::CUSTOM_ERR_IGNITION_MODE, "Invalid Ignition Mode: %d", mode);
 		return 1;
 	}
 }

@@ -40,7 +40,8 @@ float FuelComputer::getStoichiometricRatio() const {
 
 	if (primary < 5) {
    	// Config compatibility: this field may be zero on ECUs with very old defaults
-		criticalError("Please set stoichRatioPrimary");
+		// [tag:user_facing_ini_labels] Match the fuel setting label in tunerstudio.template.ini.
+		criticalError("Please set Stoichiometric ratio");
 		return 0;
 	}
 
@@ -53,7 +54,8 @@ float FuelComputer::getStoichiometricRatio() const {
 
 	if (secondary < 5) {
 	  // Config compatibility: this field may be zero on ECUs with very old defaults
-		criticalError("Please set stoichRatioSecondary");
+		// [tag:user_facing_ini_labels] Match the flex-fuel setting label in tunerstudio.template.ini.
+		criticalError("Please set E100 stoichiometric ratio");
 		return 0;
 	}
 
