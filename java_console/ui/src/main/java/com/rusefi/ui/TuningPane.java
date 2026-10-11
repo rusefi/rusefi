@@ -86,7 +86,7 @@ public class TuningPane {
         left = new MainMenuTreeWidget(uiContext);
 
         right = new CalibrationDialogWidget(uiContext);
-        JScrollPane rightScrollPane = new JScrollPane(right.getContentPane());
+        JScrollPane rightScrollPane = new JScrollPane(right.getViewportPane());
 
         ConfigurationImage baseline = initialBaseline;
         BinaryProtocol initialBp = uiContext.getBinaryProtocol();

@@ -100,7 +100,7 @@ public class TopLevelMenuSandbox {
         MainMenuTreeWidget left = new MainMenuTreeWidget(uiContext);
 
         CalibrationDialogWidget right = new CalibrationDialogWidget(uiContext);
-        JScrollPane rightScrollPane = new JScrollPane(right.getContentPane());
+        JScrollPane rightScrollPane = new JScrollPane(right.getViewportPane());
 
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, left.getContentPane(), rightScrollPane);
         splitPane.setResizeWeight(0.3);

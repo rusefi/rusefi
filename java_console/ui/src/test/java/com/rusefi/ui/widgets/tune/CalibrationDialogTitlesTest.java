@@ -1,8 +1,12 @@
 package com.rusefi.ui.widgets.tune;
 
+import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileMetaInfo;
+import com.opensr5.ini.IniFileMetaInfoImpl;
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.RawIniFile;
 import com.rusefi.ini.reader.IniFileReaderUtil;
+import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.laf.GradientTitleBorder;
 import org.junit.jupiter.api.Test;
@@ -10,6 +14,8 @@ import org.junit.jupiter.api.Test;
 import javax.swing.*;
 import java.awt.*;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,6 +25,76 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 class CalibrationDialogTitlesTest {
+    @Test
+    void curveAndTableViewportWidth() throws Throwable {
+        RawIniFile raw;
+        try (InputStream stream = getClass().getResourceAsStream("/january.ini")) {
+            raw = IniFileReaderUtil.read(stream, "january.ini");
+        }
+        IniFileModel ini = IniFileReaderUtil.readIniFile(raw, "january.ini",
+            new IniFileMetaInfoImpl(raw));
+        ConfigurationImage image = Msq.readTune(
+            new File(getClass().getResource("/january_tune.msq").toURI()).getAbsolutePath()).asImage(ini);
+        SwingUtilities.invokeAndWait(() -> {
+            CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+            try {
+                for (String key : Arrays.asList("dwellSettings", "veTableTbl", "engineChars", "dwellSettings")) {
+                    widget.update(key, ini, image);
+                    JPanel viewport = widget.getViewportPane();
+                    JPanel frame = (JPanel) viewport.getComponent(0);
+                    int preferredWidth = frame.getPreferredSize().width;
+                    viewport.setSize(preferredWidth + 400, viewport.getPreferredSize().height);
+                    viewport.doLayout();
+                    if ("engineChars".equals(key)) {
+                        assertEquals(preferredWidth, frame.getWidth(), "Forms stay compact after visiting a table");
+                    } else {
+                        assertEquals(viewport.getWidth() - 16, frame.getWidth(), key + " fills available width");
+                        assertEquals(8, frame.getX());
+                    }
+                }
+            } finally {
+                widget.destroy();
+            }
+        });
+    }
+
+    @Test
+    void wideViewportDialogLayout() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+            try {
+                JPanel dialog = widget.getContentPane();
+                dialog.add(new JLabel("Vehicle information"));
+                JPanel viewport = widget.getViewportPane();
+                JPanel frame = (JPanel) viewport.getComponent(0);
+                int preferredWidth = frame.getPreferredSize().width;
+                JScrollPane scroll = new JScrollPane(viewport);
+                scroll.setSize(preferredWidth + 400, 300);
+                scroll.doLayout();
+                scroll.getViewport().doLayout();
+                viewport.doLayout();
+                assertEquals(preferredWidth, frame.getWidth());
+                assertEquals((viewport.getWidth() - preferredWidth) / 2, frame.getX());
+                assertTrue(frame.getX() > 0);
+                assertNotNull(frame.getBorder(), "The complete dialog has an outer frame");
+                scroll.setSize(preferredWidth / 2, 300);
+                scroll.doLayout();
+                scroll.getViewport().doLayout();
+                viewport.doLayout();
+                assertTrue(frame.getWidth() < preferredWidth, "Narrow viewports shrink the dialog");
+                assertTrue(frame.getX() >= 0);
+                assertTrue(frame.getX() + frame.getWidth() <= viewport.getWidth());
+                scroll.setSize(preferredWidth + 400, 300);
+                scroll.doLayout();
+                scroll.getViewport().doLayout();
+                viewport.doLayout();
+                assertEquals(preferredWidth, frame.getWidth(), "Restore full width after resizing");
+            } finally {
+                widget.destroy();
+            }
+        });
+    }
+
     /** The SD panel declarations from the INI, reduced to their layout and displayed labels. */
     private static final String SD_DIALOG = String.join("\n",
         "dialog = sdCardHW, \"SD Card Interface\"",

@@ -55,6 +55,7 @@ public class CalibrationDialogWidget {
     private static final Logging log = getLogging(CalibrationDialogWidget.class);
 
     private final JPanel contentPane = new ScrollablePanel();
+    private final DialogViewport viewportPane = new DialogViewport(contentPane);
     private final UIContext uiContext;
     private final List<Runnable> triggerImageUpdaters = new ArrayList<>();
     private ConfigurationImage workingImage;
@@ -198,6 +199,7 @@ public class CalibrationDialogWidget {
      * from the previous board are not carried over to the next connection.
      */
     public void reset() {
+        viewportPane.fillWidth = false;
         workingImage = null;
         CalibrationFieldFactory.closeHelpPopup();
         clearLiveComponents();
@@ -207,6 +209,7 @@ public class CalibrationDialogWidget {
     }
 
     public void update(DialogModel dialogModel, IniFileModel iniFileModel, ConfigurationImage ci) {
+        viewportPane.fillWidth = false;
         CalibrationFieldFactory.closeHelpPopup();
         final DialogModel capturedDm = dialogModel;
         final IniFileModel capturedIni = iniFileModel;
@@ -257,6 +260,7 @@ public class CalibrationDialogWidget {
     }
 
     public void update(String key, IniFileModel iniFileModel, ConfigurationImage ci) {
+        viewportPane.fillWidth = false;
         CalibrationFieldFactory.closeHelpPopup();
         final String capturedKey = key;
         final IniFileModel capturedIniForRestore = iniFileModel;
@@ -275,6 +279,7 @@ public class CalibrationDialogWidget {
 
             TableModel table = iniFileModel.getTable(key);
             if (table != null) {
+                viewportPane.fillWidth = true;
                 JPanel body = prepareTopicHelp(contentPane, table.getTopicHelp(), iniFileModel);
                 body.setLayout(new BoxLayout(body, BoxLayout.Y_AXIS));
                 //TODO: nicer injection of this button? maybe a comment on the .ini and then hook this?
@@ -293,6 +298,7 @@ public class CalibrationDialogWidget {
             } else {
                 CurveModel curve = iniFileModel.getCurves().get(key);
                 if (curve != null) {
+                    viewportPane.fillWidth = true;
                     JPanel body = prepareTopicHelp(contentPane, curve.getTopicHelp(), iniFileModel);
                     body.setLayout(new BoxLayout(body, BoxLayout.Y_AXIS));
                     CurveWidget curveWidget = new CurveWidget(curve, iniFileModel, workingImage);
@@ -603,6 +609,7 @@ public class CalibrationDialogWidget {
 
         CurveModel curve = iniFileModel.getCurves().get(panel.getPanelName());
         if (curve != null) {
+            viewportPane.fillWidth = true;
             CurveWidget curveWidget = new CurveWidget(curve, iniFileModel, workingImage);
             curveWidget.setOnEdit(notifyEdit);
             JComponent content = withTopicHelp(curveWidget.getContentPane(), curve.getTopicHelp(), iniFileModel);
@@ -614,6 +621,7 @@ public class CalibrationDialogWidget {
 
         TableModel table = iniFileModel.getTable(panel.getPanelName());
         if (table != null) {
+            viewportPane.fillWidth = true;
             TuningTableView tuningTableView = new TuningTableView(table.getTitle());
             tuningTableView.displayTable(iniFileModel, table.getTableId(), workingImage);
             tuningTableView.setOnEdit(notifyEdit);
@@ -903,5 +911,55 @@ public class CalibrationDialogWidget {
 
     public JPanel getContentPane() {
         return contentPane;
+    }
+
+    /** Viewport presentation shared by the tuning tab and its visual sandbox. */
+    public JPanel getViewportPane() {
+        return viewportPane;
+    }
+
+    private static class DialogViewport extends ScrollablePanel {
+        private static final int MARGIN = 8;
+        private final JPanel frame = new JPanel(new BorderLayout());
+        private int preferredWidth = -1;
+        private boolean fillWidth;
+
+        DialogViewport(JPanel content) {
+            setLayout(null);
+            frame.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Color.GRAY),
+                BorderFactory.createEmptyBorder(8, 8, 8, 8)));
+            frame.add(content, BorderLayout.CENTER);
+            add(frame);
+            content.addContainerListener(new java.awt.event.ContainerAdapter() {
+                @Override
+                public void componentAdded(java.awt.event.ContainerEvent e) {
+                    preferredWidth = -1;
+                }
+
+                @Override
+                public void componentRemoved(java.awt.event.ContainerEvent e) {
+                    preferredWidth = -1;
+                }
+            });
+        }
+
+        @Override
+        public Dimension getPreferredSize() {
+            Dimension size = frame.getPreferredSize();
+            return new Dimension(size.width + 2 * MARGIN, size.height + 2 * MARGIN);
+        }
+
+        @Override
+        public void doLayout() {
+            if (preferredWidth < 0) {
+                preferredWidth = frame.getPreferredSize().width;
+            }
+            int availableWidth = Math.max(0, getWidth() - 2 * MARGIN);
+            int width = fillWidth ? availableWidth : Math.min(preferredWidth, availableWidth);
+            frame.setBounds((getWidth() - width) / 2, MARGIN, width,
+                frame.getPreferredSize().height);
+            frame.doLayout();
+        }
     }
 }
