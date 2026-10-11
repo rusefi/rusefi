@@ -1,8 +1,6 @@
 package com.rusefi;
 
 import com.rusefi.common.MiscTest;
-import com.rusefi.common.AdcHardwareTest;
-import com.rusefi.common.MapAnalogHardwareTest;
 import com.rusefi.f4discovery.*;
 import com.rusefi.io.CommandQueue;
 
@@ -13,7 +11,7 @@ import com.rusefi.io.CommandQueue;
  * PD1 (output) <=> PC6 (PAL/ICU input)
  * PD2 (output) <=> PA5 (PAL/ICU input)
  *
- * Analog MAP fixture: 3V - 10 kOhm - PA4 - 10 kOhm - GND (see AdcHardwareTest).
+ * New ADC/MAP tests require firmware telemetry and analog fixtures not backported to LTS.
  *
  * <p>
  * <p>
@@ -28,8 +26,6 @@ public class HwCiF4Discovery {
             CompositeLoggerTest.class,
             BurnCommandTest.class,
             MiscTest.class,
-            AdcHardwareTest.class,
-            MapAnalogHardwareTest.class,
             CommonFunctionalTest.class,
             DiscoveryPwmHardwareTest.class,
             VssHardwareLoopTest.class,
