@@ -44,6 +44,14 @@
 #include "boot.h"                                /* bootloader generic header          */
 #include "flash.h"
 
+#if BOOT_NVM_HOOKS_ENABLE > 0
+extern void NvmInitHook(void);
+extern void NvmReinitHook(void);
+extern blt_int8u NvmWriteHook(blt_addr, blt_int32u, blt_int8u *);
+extern blt_int8u NvmEraseHook(blt_addr, blt_int32u);
+extern blt_bool NvmDoneHook(void);
+#endif
+
 /************************************************************************************//**
 ** \brief     Initializes the NVM driver.
 ** \return    none.
@@ -53,6 +61,9 @@ void NvmInit(void)
 {
   /* init the internal driver */
   FlashInit();
+#if BOOT_NVM_HOOKS_ENABLE > 0
+  NvmInitHook();
+#endif
 } /*** end of NvmInit ***/
 
 
@@ -67,6 +78,9 @@ void NvmReinit(void)
 {
   /* reinitialize the internal driver */
   FlashReinit();
+#if BOOT_NVM_HOOKS_ENABLE > 0
+  NvmReinitHook();
+#endif
 } /*** end of NvmReinit ***/
 
 
@@ -81,6 +95,12 @@ void NvmReinit(void)
 blt_bool NvmWrite(blt_addr addr, blt_int32u len, blt_int8u *data)
 {
   /* still here so the internal driver should try and perform the program operation */
+#if BOOT_NVM_HOOKS_ENABLE > 0
+  blt_int8u result = NvmWriteHook(addr, len, data);
+  if (result != BLT_NVM_NOT_IN_RANGE) {
+    return result == BLT_NVM_OKAY ? BLT_TRUE : BLT_FALSE;
+  }
+#endif
   return FlashWrite(addr, len, data);
 } /*** end of NvmWrite ***/
 
@@ -95,6 +115,12 @@ blt_bool NvmWrite(blt_addr addr, blt_int32u len, blt_int8u *data)
 blt_bool NvmErase(blt_addr addr, blt_int32u len)
 {
   /* still here so the internal driver should try and perform the erase operation */
+#if BOOT_NVM_HOOKS_ENABLE > 0
+  blt_int8u result = NvmEraseHook(addr, len);
+  if (result != BLT_NVM_NOT_IN_RANGE) {
+    return result == BLT_NVM_OKAY ? BLT_TRUE : BLT_FALSE;
+  }
+#endif
   return FlashErase(addr, len);
 } /*** end of NvmErase ***/
 
@@ -135,6 +161,11 @@ blt_addr NvmGetUserProgBaseAddress(void)
 ****************************************************************************************/
 blt_bool NvmDone(void)
 {
+#if BOOT_NVM_HOOKS_ENABLE > 0
+  if (NvmDoneHook() == BLT_FALSE) {
+    return BLT_FALSE;
+  }
+#endif
   /* compute and write checksum, which is programmed by the internal driver. */
   if (FlashWriteChecksum() == BLT_FALSE)
   {
