@@ -122,7 +122,7 @@ public class Surface3DView extends JPanel {
                 Point3D p4 = points[r][c + 1];
 
                 double avgZ = (data[r][c] + data[r + 1][c] + data[r + 1][c + 1] + data[r][c + 1]) / 4.0;
-                g2d.setColor(getGradientColor(avgZ));
+                g2d.setColor(CalibrationColorPalette.background(avgZ, minValue, maxValue));
 
                 int[] xPoints = {p1.x, p2.x, p3.x, p4.x};
                 int[] yPoints = {p1.y, p2.y, p3.y, p4.y};
@@ -146,20 +146,6 @@ public class Surface3DView extends JPanel {
             (int) (centerX + x1 * scale),
             (int) (centerY - y2 * scale)
         );
-    }
-
-    private Color getGradientColor(double value) {
-        if (maxValue <= minValue) return Color.WHITE;
-        double ratio = (value - minValue) / (maxValue - minValue);
-        ratio = Math.max(0, Math.min(1, ratio));
-
-        int r1 = 173, g1 = 216, b1 = 230; // Pastel Blue
-        int r2 = 255, g2 = 182, b2 = 193; // Pastel Red
-
-        int red = (int) (r1 + ratio * (r2 - r1));
-        int green = (int) (g1 + ratio * (g2 - g1));
-        int blue = (int) (b1 + ratio * (b2 - b1));
-        return new Color(red, green, blue);
     }
 
     private static class Point3D {
