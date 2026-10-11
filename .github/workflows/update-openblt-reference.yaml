@@ -1,0 +1,14 @@
+name: Update OpenBLT Reference
+
+on:
+  workflow_dispatch:
+  schedule:
+    # offset from update-wideband-reference.yaml so the two nightly pushes to the
+    # same branch do not race each other
+    - cron: '55 0 * * *'
+
+jobs:
+  update-git:
+    uses: ./.github/workflows/update-submodule-reference.yaml
+    with:
+      submodule: firmware/ext/openblt
