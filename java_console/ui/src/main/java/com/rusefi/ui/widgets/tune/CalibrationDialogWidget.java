@@ -951,6 +951,59 @@ public class CalibrationDialogWidget {
         }
 
         @Override
+        public boolean getScrollableTracksViewportHeight() {
+            // Paint the unused area below short forms as well as their side margins.
+            return getParent() instanceof JViewport && getParent().getHeight() >= getPreferredSize().height;
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            Graphics2D mosaic = (Graphics2D) g.create();
+            try {
+                java.awt.geom.Area unused = new java.awt.geom.Area(new Rectangle(0, 0, getWidth(), getHeight()));
+                unused.subtract(new java.awt.geom.Area(frame.getBounds()));
+                mosaic.clip(unused);
+                mosaic.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                Color background = getBackground();
+                boolean dark = background.getRed() + background.getGreen() + background.getBlue() < 384;
+                mosaic.setColor(dark ? Color.WHITE : new Color(45, 58, 68));
+                final double radius = 22;
+                final double rowHeight = Math.sqrt(3) * radius;
+                Rectangle clip = mosaic.getClipBounds();
+                int firstColumn = (int) Math.floor(clip.x / (1.5 * radius)) - 1;
+                int lastColumn = (int) Math.ceil((clip.x + clip.width) / (1.5 * radius)) + 1;
+                int firstRow = (int) Math.floor(clip.y / rowHeight) - 1;
+                int lastRow = (int) Math.ceil((clip.y + clip.height) / rowHeight) + 1;
+                for (int column = firstColumn; column <= lastColumn; column++) {
+                    for (int row = firstRow; row <= lastRow; row++) {
+                        double centerX = column * 1.5 * radius;
+                        double centerY = (row + ((column & 1) == 0 ? 0 : 0.5)) * rowHeight;
+                        java.awt.geom.Path2D hexagon = new java.awt.geom.Path2D.Double();
+                        for (int corner = 0; corner < 6; corner++) {
+                            double angle = corner * Math.PI / 3;
+                            double x = centerX + radius * Math.cos(angle);
+                            double y = centerY + radius * Math.sin(angle);
+                            if (corner == 0) {
+                                hexagon.moveTo(x, y);
+                            } else {
+                                hexagon.lineTo(x, y);
+                            }
+                        }
+                        hexagon.closePath();
+                        int shade = Math.floorMod(column * 31 + row * 17, 7);
+                        mosaic.setComposite(AlphaComposite.SrcOver.derive(0.018f + shade * 0.006f));
+                        mosaic.fill(hexagon);
+                        mosaic.setComposite(AlphaComposite.SrcOver.derive(0.07f));
+                        mosaic.draw(hexagon);
+                    }
+                }
+            } finally {
+                mosaic.dispose();
+            }
+        }
+
+        @Override
         public void doLayout() {
             if (preferredWidth < 0) {
                 preferredWidth = frame.getPreferredSize().width;
