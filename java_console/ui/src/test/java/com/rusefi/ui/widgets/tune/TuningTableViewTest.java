@@ -16,7 +16,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -25,12 +24,12 @@ public class TuningTableViewTest {
     @Test
     public void testAxisEditingWritesSeparateAxisImage() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
-            AtomicReference<String> headerValue = new AtomicReference<>("175.25");
+            AtomicInteger headerDialogs = new AtomicInteger();
             TuningTableView view = new TuningTableView("Axes") {
                 @Override
                 protected int showConfirmDialog(JPanel panel) {
-                    ((JTextField) panel.getComponent(1)).setText(headerValue.get());
-                    return JOptionPane.OK_OPTION;
+                    headerDialogs.incrementAndGet();
+                    return JOptionPane.CANCEL_OPTION;
                 }
             };
             IniFileModel ini = mock(IniFileModel.class);
@@ -60,6 +59,14 @@ public class TuningTableViewTest {
             Rectangle header = table.getTableHeader().getHeaderRect(1);
             table.getTableHeader().dispatchEvent(new MouseEvent(table.getTableHeader(), MouseEvent.MOUSE_CLICKED,
                 System.currentTimeMillis(), 0, header.x + 5, 10, 2, false, MouseEvent.BUTTON1));
+            assertEquals(0, headerDialogs.get(), "Axis editing must not open a dialog");
+            JTextField inlineAxis = findTextField(table.getTableHeader(), table.getColumnName(1));
+            assertNotNull(inlineAxis);
+            assertTrue(inlineAxis.isVisible());
+            assertEquals(header, inlineAxis.getBounds(), "The editor sits directly over the axis value");
+            inlineAxis.setText("175.25");
+            pressKey(inlineAxis, "ENTER");
+            assertFalse(inlineAxis.isVisible());
             ConfigurationImage expected = new ConfigurationImage(originalAxes.clone());
             ConfigurationImageGetterSetter.setArrayValues(x, expected, new Double[][]{{175.25, 200.0}});
             assertArrayEquals(expected.getContent(), axisImage.getContent());
@@ -82,13 +89,34 @@ public class TuningTableViewTest {
             byte[] afterEdits = axisImage.getContent().clone();
             for (String invalid : new String[]{"bad", "NaN", "Infinity"}) {
                 table.setValueAt(invalid, 0, 0);
-                headerValue.set(invalid);
                 table.getTableHeader().dispatchEvent(new MouseEvent(table.getTableHeader(), MouseEvent.MOUSE_CLICKED,
                     System.currentTimeMillis(), 0, header.x + 5, 10, 2, false, MouseEvent.BUTTON1));
+                inlineAxis.setText(invalid);
+                pressKey(inlineAxis, "ENTER");
+                assertTrue(inlineAxis.isVisible(), "Invalid input stays in the inline editor");
+                assertArrayEquals(afterEdits, axisImage.getContent());
+                pressKey(inlineAxis, "ESCAPE");
+                assertFalse(inlineAxis.isVisible());
             }
             table.setValueAt(table.getValueAt(0, 0), 0, 0);
             assertArrayEquals(afterEdits, axisImage.getContent());
             assertEquals(2, edits.get(), "Invalid and unchanged edits do not notify");
+            table.getTableHeader().dispatchEvent(new MouseEvent(table.getTableHeader(), MouseEvent.MOUSE_CLICKED,
+                System.currentTimeMillis(), 0, header.x + 5, 10, 2, false, MouseEvent.BUTTON1));
+            pressKey(inlineAxis, "TAB");
+            assertEquals(table.getTableHeader().getHeaderRect(2), inlineAxis.getBounds());
+            inlineAxis.setText("245.25");
+            pressKey(inlineAxis, "shift TAB");
+            assertEquals(header, inlineAxis.getBounds());
+            ConfigurationImageGetterSetter.setArrayValues(x, expected,
+                new Double[][]{{encodedX, 245.25}});
+            assertArrayEquals(expected.getContent(), axisImage.getContent());
+            assertEquals(3, edits.get());
+            inlineAxis.setText("999");
+            pressKey(inlineAxis, "ESCAPE");
+            assertArrayEquals(expected.getContent(), axisImage.getContent(), "Escape cancels the header edit");
+            assertTrue(table.isCellSelected(0, 0), "Header editing preserves the grid selection");
+            afterEdits = axisImage.getContent().clone();
             TuningTableView readOnly = new TuningTableView("Comparison", true);
             readOnly.displayTable(ini, "table", zImage, axisImage);
             JTable comparison = findTable(readOnly.getContent());
@@ -98,6 +126,8 @@ public class TuningTableViewTest {
             comparison.getTableHeader().dispatchEvent(new MouseEvent(comparison.getTableHeader(), MouseEvent.MOUSE_CLICKED,
                 System.currentTimeMillis(), 0, header.x + 5, 10, 2, false, MouseEvent.BUTTON1));
             assertArrayEquals(afterEdits, axisImage.getContent());
+            assertFalse(findTextField(comparison.getTableHeader(), "").isVisible());
+            assertEquals(0, headerDialogs.get());
         });
     }
 

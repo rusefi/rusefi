@@ -13,6 +13,7 @@ import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
@@ -23,6 +24,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.BiConsumer;
@@ -49,6 +52,8 @@ public class TuningTableView {
     private ConfigurationImage axisImageTarget;
     private ArrayIniField xBinsField;
     private ArrayIniField yBinsField;
+    private final JTextField xAxisEditor = new JTextField();
+    private int xAxisEditingColumn = -1;
     private Runnable onEdit;
 
     public TuningTableView(String title) {
@@ -58,6 +63,13 @@ public class TuningTableView {
     public TuningTableView(String title, boolean viewMode) {
         this.title = title;
         this.viewMode = viewMode;
+        table.setTableHeader(new JTableHeader(table.getColumnModel()) {
+            @Override
+            public void doLayout() {
+                super.doLayout();
+                positionXAxisEditor();
+            }
+        });
         table.getTableHeader().setReorderingAllowed(false);
         table.setSelectionBackground(Color.ORANGE);
         table.setDefaultRenderer(Object.class, new GradientRenderer());
@@ -68,25 +80,16 @@ public class TuningTableView {
             : "Arrows or mouse wheel to move; Enter/F2 to edit; Enter to accept; Esc to cancel; Tab/Shift+Tab to accept and move");
         installAxisHighlighting();
         installKeyboardEditing();
+        installXAxisEditing();
         table.getTableHeader().setToolTipText(viewMode ? null : "Double-click an axis value to edit");
         table.getTableHeader().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (viewMode || e.getButton() != MouseEvent.BUTTON1 || e.getClickCount() != 2
-                    || xBinsField == null || !(table.getModel() instanceof TuningTableModel)) {
+                if (e.getButton() != MouseEvent.BUTTON1 || e.getClickCount() != 2) {
                     return;
                 }
                 int column = table.getTableHeader().columnAtPoint(e.getPoint());
-                if (column <= 0 || (table.isEditing() && !table.getCellEditor().stopCellEditing())) {
-                    return;
-                }
-                JTextField value = new JTextField(table.getColumnName(column), 10);
-                JPanel panel = new JPanel(new GridLayout(0, 1));
-                panel.add(new JLabel("X axis value:"));
-                panel.add(value);
-                if (showConfirmDialog(panel) == JOptionPane.OK_OPTION) {
-                    setAxisValue(true, column - 1, value.getText());
-                }
+                startXAxisEdit(column);
             }
         });
         table.addMouseWheelListener(this::moveValueCellWithWheel);
@@ -325,13 +328,7 @@ public class TuningTableView {
         DefaultCellEditor editor = new DefaultCellEditor(field) {
             @Override
             public boolean stopCellEditing() {
-                try {
-                    if (!Double.isFinite(Double.parseDouble(field.getText().trim()))) {
-                        throw new NumberFormatException();
-                    }
-                } catch (NumberFormatException e) {
-                    field.setBorder(BorderFactory.createLineBorder(Color.RED));
-                    field.setToolTipText("Enter a finite number, or press Esc to cancel");
+                if (!validateNumericEditor(field)) {
                     return false;
                 }
                 return super.stopCellEditing();
@@ -351,6 +348,9 @@ public class TuningTableView {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (viewMode) {
+                    return;
+                }
+                if (!finishXAxisEdit(true)) {
                     return;
                 }
                 if (table.isEditing()) {
@@ -393,6 +393,111 @@ public class TuningTableView {
         }
     }
 
+    private boolean validateNumericEditor(JTextField field) {
+        try {
+            if (Double.isFinite(Double.parseDouble(field.getText().trim()))) {
+                return true;
+            }
+        } catch (NumberFormatException ignored) {
+        }
+        field.setBorder(BorderFactory.createLineBorder(Color.RED));
+        field.setToolTipText("Enter a finite number, or press Esc to cancel");
+        return false;
+    }
+
+    private void installXAxisEditing() {
+        xAxisEditor.setHorizontalAlignment(SwingConstants.CENTER);
+        xAxisEditor.setVisible(false);
+        xAxisEditor.setFocusTraversalKeysEnabled(false);
+        table.getTableHeader().add(xAxisEditor);
+        xAxisEditor.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                finishXAxisEdit(true);
+            }
+        });
+        bindKey(xAxisEditor, JComponent.WHEN_FOCUSED, "ENTER", "acceptAxis", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (finishXAxisEdit(true)) {
+                    table.requestFocusInWindow();
+                }
+            }
+        });
+        bindKey(xAxisEditor, JComponent.WHEN_FOCUSED, "ESCAPE", "cancelAxis", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                finishXAxisEdit(false);
+                table.requestFocusInWindow();
+            }
+        });
+        for (boolean backwards : new boolean[]{false, true}) {
+            String key = backwards ? "shift TAB" : "TAB";
+            bindKey(xAxisEditor, JComponent.WHEN_FOCUSED, key, key, new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    int column = xAxisEditingColumn;
+                    if (column > 0 && finishXAxisEdit(true, true)) {
+                        int count = Math.min(table.getColumnCount() - 1, xBinsField.getRows() * xBinsField.getCols());
+                        startXAxisEdit(1 + Math.floorMod(column - 1 + (backwards ? -1 : 1), count));
+                    }
+                }
+            });
+        }
+    }
+
+    private void positionXAxisEditor() {
+        if (xAxisEditingColumn > 0 && xAxisEditingColumn < table.getColumnCount()) {
+            xAxisEditor.setBounds(table.getTableHeader().getHeaderRect(xAxisEditingColumn));
+        }
+    }
+
+    private void startXAxisEdit(int column) {
+        if (viewMode || xBinsField == null || axisImageTarget == null || column <= 0
+            || column >= table.getColumnCount() || !(table.getModel() instanceof TuningTableModel)) {
+            return;
+        }
+        TuningTableModel model = (TuningTableModel) table.getModel();
+        if (model.xBins == null || column - 1 >= model.xBins.length || !finishXAxisEdit(true, true)
+            || (table.isEditing() && !table.getCellEditor().stopCellEditing())) {
+            return;
+        }
+        xAxisEditingColumn = column;
+        xAxisEditor.setText(table.getColumnName(column));
+        xAxisEditor.setFont(table.getFont());
+        xAxisEditor.setBorder(UIManager.getBorder("TextField.border"));
+        xAxisEditor.setToolTipText("Enter to accept; Esc to cancel; Tab/Shift+Tab to edit the next axis value");
+        positionXAxisEditor();
+        xAxisEditor.setVisible(true);
+        xAxisEditor.selectAll();
+        xAxisEditor.requestFocusInWindow();
+        table.getTableHeader().repaint();
+    }
+
+    private boolean finishXAxisEdit(boolean commit) {
+        return finishXAxisEdit(commit, false);
+    }
+
+    private boolean finishXAxisEdit(boolean commit, boolean keepEditorVisible) {
+        if (xAxisEditingColumn < 0) {
+            return true;
+        }
+        if (commit && !validateNumericEditor(xAxisEditor)) {
+            return false;
+        }
+        int column = xAxisEditingColumn;
+        xAxisEditingColumn = -1;
+        // Moving between headers must not generate focus-loss events for the reused editor.
+        if (!keepEditorVisible) {
+            xAxisEditor.setVisible(false);
+        }
+        if (commit) {
+            setAxisValue(true, column - 1, xAxisEditor.getText());
+        }
+        table.getTableHeader().repaint();
+        return true;
+    }
+
     private void bindKey(JComponent component, int condition, String key, String name, Action action) {
         component.getInputMap(condition).put(KeyStroke.getKeyStroke(key), name);
         component.getActionMap().put(name, action);
@@ -402,7 +507,7 @@ public class TuningTableView {
         return new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!table.isEditing()) {
+                if (!table.isEditing() && xAxisEditingColumn < 0) {
                     action.actionPerformed(e);
                 }
             }
@@ -808,6 +913,7 @@ public class TuningTableView {
     }
 
     public void displayTable(IniFileModel iniFile, String tableName, ConfigurationImage zImage, ConfigurationImage axisImage) {
+        finishXAxisEdit(false);
         TableModel iniTable = iniFile.getTable(tableName);
         if (iniTable == null) {
             return;
