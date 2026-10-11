@@ -32,8 +32,8 @@ import static com.rusefi.ui.basic.UiHelper.commonUiStartup;
  * {@link com.rusefi.ui.widgets.tune.TuningTableView}.
  */
 public class TopLevelMenuSandbox {
-    private static final String INI_RESOURCE = "/january.ini";
-    private static final String TUNE_RESOURCE = "/january_tune.msq";
+    private static final String INI_RESOURCE = "/26october.ini";
+    private static final String TUNE_RESOURCE = "/26october.msq";
 
     public static void main(String[] args) throws JAXBException, IOException, IniParsingException, java.net.URISyntaxException {
         commonUiStartup();
