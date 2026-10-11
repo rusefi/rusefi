@@ -27,6 +27,7 @@
 #include <optional>
 #include "rusefi_types.h"
 #include "engine_configuration.h"
+#include "obd_error_codes.h"
 
 // function with no parameters and returning void
 using setup_custom_board_overrides_type = void (*)();
@@ -42,6 +43,12 @@ using setup_custom_hack_hellen_board_id_type = int (*)(int /*detectedId*/);
 using setup_custom_get_cylinder_ignition_trim_type = angle_t (*)(size_t /*cylinderNumber*/, float /*rpm*/, float /*ignitionLoad*/);
 using setup_custom_get_cylinder_fuel_trim_type = float (*)(size_t /*cylinderNumber*/, float /*rpm*/, float /*fuelLoad*/);
 using setup_custom_bool_type = bool (*)();
+
+// Read-only MIL display policy. Return true to blink a stored code; an absent
+// hook accepts all codes. This never filters diagnostic storage or warning().
+// Install during board setup, before periodic callbacks begin.
+using board_mil_code_filter_type = bool (*)(ObdCode);
+extern std::optional<board_mil_code_filter_type> custom_board_milCodeFilter;
 
 // Five hooks touch configuration at different lifecycle moments: DefaultConfiguration,
 // ConfigOverrides, fix_configuration, validateConfig, OnConfigurationChange.

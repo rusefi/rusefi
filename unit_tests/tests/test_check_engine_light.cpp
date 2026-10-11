@@ -6,11 +6,29 @@
 #include "functional_sensor.h"
 #include "identity_func.h"
 #include "malfunction_central.h"
+#include "board_overrides.h"
 #ifdef MODULE_MIL
 #include "bench_test.h"
 #include "malfunction_indicator.h"
 #endif
 #include "stored_value_sensor.h"
+
+#ifdef MODULE_MIL
+// Board hooks live for the process lifetime. Keep upstream MIL tests isolated
+// from custom-board setup performed by other suites in the same binary.
+class MilCodeFilterGuard {
+public:
+	explicit MilCodeFilterGuard(board_mil_code_filter_type filter = nullptr)
+		: m_previous(custom_board_milCodeFilter) {
+		custom_board_milCodeFilter = filter ? std::optional<board_mil_code_filter_type>(filter) : std::nullopt;
+	}
+	~MilCodeFilterGuard() {
+		custom_board_milCodeFilter = m_previous;
+	}
+private:
+	std::optional<board_mil_code_filter_type> m_previous;
+};
+#endif
 
 class CheckEngineLightTest : public ::testing::Test {
 protected:
@@ -69,6 +87,9 @@ protected:
 	}
 
 	EngineTestHelper eth;
+#ifdef MODULE_MIL
+	MilCodeFilterGuard filterGuard;
+#endif
 	FunctionalSensor battery;
 	FunctionalSensor map;
 	FunctionalSensor iat;
@@ -210,6 +231,7 @@ TEST(checkEngineLight, sensorWithoutRawVoltageIsIgnored) {
 
 #ifdef MODULE_MIL
 TEST(checkEngineLight, milControllerBlinksDiagnosticCode) {
+	MilCodeFilterGuard filterGuard;
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	auto& mil = engine->module<MILController>();
 	addError(ObdCode::OBD_Map_Low);
@@ -257,6 +279,7 @@ TEST(checkEngineLight, milControllerBlinksDiagnosticCode) {
 }
 
 TEST(checkEngineLight, milRestartsAfterBenchTest) {
+	MilCodeFilterGuard filterGuard;
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	auto& mil = engine->module<MILController>();
 	mil->onIgnitionStateChanged(true);
@@ -270,11 +293,129 @@ TEST(checkEngineLight, milRestartsAfterBenchTest) {
 	advanceTimeUs(2'000'000);
 	mil->onSlowCallback();
 	EXPECT_FALSE(enginePins.checkEnginePin.getLogicValue());
+	EXPECT_FALSE(mil->isLampOn());
+	EXPECT_FALSE(mil->isDiagnosticLampOn());
 
 	setOutputOnTheBenchTestForUnitTest(nullptr);
 	mil->onSlowCallback();
 	EXPECT_TRUE(enginePins.checkEnginePin.getLogicValue());
+	EXPECT_TRUE(mil->isDiagnosticLampOn());
+}
+
+TEST(checkEngineLight, filteredMilPublishesLogicalPulsesAndSkipsRejectedCodes) {
+	MilCodeFilterGuard filterGuard([](ObdCode code) {
+		return code == ObdCode::OBD_Map_Low;
+	});
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	auto& mil = engine->module<MILController>();
+	engine->rpmCalculator.setRpmValue(1000);
+	addError(ObdCode::OBD_Iat_High); // rejected code comes first
+	addError(ObdCode::OBD_Map_Low);
+	addError(ObdCode::OBD_TPS1_Primary_High);
+	mil->onSlowCallback();
+	EXPECT_FALSE(mil->isLampOn()); // ignition off
+	EXPECT_FALSE(mil->isDiagnosticLampOn());
+	mil->onIgnitionStateChanged(true);
+	mil->onSlowCallback();
+
+	auto expectPulse = [&](int durationMs) {
+		EXPECT_TRUE(mil->isLampOn());
+		EXPECT_TRUE(mil->isDiagnosticLampOn());
+		EXPECT_TRUE(mil->isBlinking());
+		advanceTimeUs(MS2US(durationMs - 1));
+		mil->onSlowCallback();
+		EXPECT_TRUE(mil->isDiagnosticLampOn());
+		advanceTimeUs(2'000);
+		mil->onSlowCallback();
+		EXPECT_FALSE(mil->isLampOn());
+		EXPECT_FALSE(mil->isDiagnosticLampOn());
+		EXPECT_TRUE(mil->isBlinking()); // off gap still belongs to the sequence
+		advanceTimeUs(401'000);
+		mil->onSlowCallback();
+	};
+	// Two whole repetitions of 107 prove rejected neighbors are skipped during
+	// selection and rotation, and preserve the existing digit/pulse encoding.
+	for (int repeat = 0; repeat < 2; repeat++) {
+		expectPulse(400);
+		expectPulse(400);
+		expectPulse(1500);
+		for (int i = 0; i < 8; i++) {
+			expectPulse(400);
+		}
+	}
+
+	// Changing the policy while a pulse is active stops diagnostic blinking.
+	custom_board_milCodeFilter = [](ObdCode) { return false; };
+	mil->onSlowCallback();
+	EXPECT_FALSE(mil->isLampOn());
+	EXPECT_FALSE(mil->isDiagnosticLampOn());
+	error_codes_set_s codes;
+	EXPECT_FALSE(mil->isBlinking());
+	getErrorCodes(&codes);
+	EXPECT_EQ(3, codes.count); // display filtering never mutates diagnostics
+
+	// The stopped-engine lamp check is separate from diagnostic pulses.
+	engine->rpmCalculator.setStopSpinning();
+	mil->onSlowCallback();
+	EXPECT_TRUE(mil->isLampOn());
+	EXPECT_FALSE(mil->isDiagnosticLampOn());
+	mil->onIgnitionStateChanged(false);
+	mil->onSlowCallback();
+	EXPECT_FALSE(mil->isLampOn());
+}
+
+TEST(checkEngineLight, filteredMilRestartsWhenActiveCodeIsRemoved) {
+	MilCodeFilterGuard filterGuard([](ObdCode code) {
+		return code == ObdCode::OBD_Map_Low;
+	});
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	auto& mil = engine->module<MILController>();
+	engine->rpmCalculator.setRpmValue(1000);
+	mil->onIgnitionStateChanged(true);
+	addError(ObdCode::OBD_Iat_High);
+	mil->onSlowCallback();
+	EXPECT_FALSE(mil->isDiagnosticLampOn());
+	addError(ObdCode::OBD_Map_Low);
+	mil->onSlowCallback();
+	EXPECT_TRUE(mil->isDiagnosticLampOn());
+	removeError(ObdCode::OBD_Map_Low);
+	mil->onSlowCallback();
+	EXPECT_FALSE(mil->isLampOn());
+	EXPECT_TRUE(hasErrorCodes()); // rejected IAT code remains
+	addError(ObdCode::OBD_Map_Low);
+	mil->onSlowCallback();
+	EXPECT_TRUE(mil->isDiagnosticLampOn());
 }
 #endif
+
+TEST(checkEngineLight, filteredSnapshotsPreserveStorageAndOrder) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	addError(ObdCode::OBD_Iat_High);
+	addError(ObdCode::OBD_Map_Low);
+	addError(ObdCode::OBD_TPS1_Primary_High);
+	const ObdCodeFilter filter = [](ObdCode code) {
+		return code != ObdCode::OBD_Iat_High;
+	};
+	error_codes_set_s codes;
+	getErrorCodes(&codes, filter);
+	ASSERT_EQ(2, codes.count);
+	EXPECT_EQ(ObdCode::OBD_Map_Low, codes.error_codes[0]);
+	EXPECT_EQ(ObdCode::OBD_TPS1_Primary_High, codes.error_codes[1]);
+	EXPECT_TRUE(hasErrorCodes(filter));
+	getErrorCodes(&codes, [](ObdCode) { return false; });
+	EXPECT_EQ(0, codes.count);
+	EXPECT_EQ(ObdCode::None, codes.error_codes[0]);
+	EXPECT_FALSE(hasErrorCodes([](ObdCode) { return false; }));
+	EXPECT_TRUE(hasErrorCodes());
+	getErrorCodes(&codes);
+	ASSERT_EQ(3, codes.count);
+	EXPECT_EQ(ObdCode::OBD_Iat_High, codes.error_codes[0]);
+	EXPECT_EQ(ObdCode::OBD_Map_Low, codes.error_codes[1]);
+	EXPECT_EQ(ObdCode::OBD_TPS1_Primary_High, codes.error_codes[2]);
+	clearWarnings();
+	getErrorCodes(&codes, filter);
+	EXPECT_EQ(0, codes.count);
+	EXPECT_FALSE(hasErrorCodes(filter));
+}
 
 #endif

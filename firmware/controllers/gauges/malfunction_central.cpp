@@ -49,11 +49,21 @@ void removeError(ObdCode errorCode) {
 	}
 }
 
-void getErrorCodes(error_codes_set_s * copy) {
-	copy->count = error_codes_set.count;
-	copyArray(copy->error_codes, error_codes_set.error_codes);
+void getErrorCodes(error_codes_set_s * copy, ObdCodeFilter filter) {
+	*copy = {};
+	for (int i = 0; i < error_codes_set.count; i++) {
+		const auto code = error_codes_set.error_codes[i];
+		if (!filter || filter(code)) {
+			copy->error_codes[copy->count++] = code;
+		}
+	}
 }
 
-bool hasErrorCodes(void) {
-	return error_codes_set.count > 0;
+bool hasErrorCodes(ObdCodeFilter filter) {
+	for (int i = 0; i < error_codes_set.count; i++) {
+		if (!filter || filter(error_codes_set.error_codes[i])) {
+			return true;
+		}
+	}
+	return false;
 }

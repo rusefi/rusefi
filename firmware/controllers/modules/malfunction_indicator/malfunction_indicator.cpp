@@ -30,6 +30,7 @@
 #include "pch.h"
 
 #include "bench_test.h"
+#include "board_overrides.h"
 #include "malfunction_central.h"
 #include "malfunction_indicator.h"
 
@@ -37,12 +38,35 @@ static constexpr float ShortPulseMs = 400;
 static constexpr float LongPulseMs = 1500;
 static constexpr float PulseGapMs = 400;
 
+std::optional<board_mil_code_filter_type> custom_board_milCodeFilter;
+
+bool MILController::isLampOn() const {
+	const auto state = m_lampState.load(std::memory_order_relaxed);
+	return state == LampState::On || state == LampState::DiagnosticOn;
+}
+
+bool MILController::isDiagnosticLampOn() const {
+	return m_lampState.load(std::memory_order_relaxed) == LampState::DiagnosticOn;
+}
+
+bool MILController::isBlinking() const {
+	const auto state = m_lampState.load(std::memory_order_relaxed);
+	return state == LampState::DiagnosticOn || state == LampState::DiagnosticOff;
+}
+
+void MILController::setLamp(bool on, bool diagnostic) {
+	m_lampState.store(diagnostic
+		? (on ? LampState::DiagnosticOn : LampState::DiagnosticOff)
+		: (on ? LampState::On : LampState::Off), std::memory_order_relaxed);
+	enginePins.checkEnginePin.setValue("MIL", on);
+}
+
 void MILController::onIgnitionStateChanged(bool ignitionOn) {
 	m_ignitionOn = ignitionOn;
 }
 
 void MILController::startPulse() {
-	enginePins.checkEnginePin.setValue("MIL", true);
+	setLamp(true, true);
 	m_phase = Phase::Pulse;
 	m_phaseTimer.reset();
 }
@@ -66,10 +90,7 @@ void MILController::startCode(ObdCode code) {
 	startDigit();
 }
 
-bool MILController::isActiveCodePresent() const {
-	error_codes_set_s codes;
-	getErrorCodes(&codes);
-
+bool MILController::isActiveCodePresent(const error_codes_set_s& codes) const {
 	for (int i = 0; i < codes.count; i++) {
 		if (codes.error_codes[i] == m_activeCode) {
 			return true;
@@ -79,10 +100,7 @@ bool MILController::isActiveCodePresent() const {
 	return false;
 }
 
-void MILController::startNextCode() {
-	error_codes_set_s codes;
-	getErrorCodes(&codes);
-
+void MILController::startNextCode(const error_codes_set_s& codes) {
 	if (codes.count == 0) {
 		m_phase = Phase::Idle;
 		m_activeCode = ObdCode::None;
@@ -103,6 +121,8 @@ void MILController::startNextCode() {
 void MILController::onSlowCallback() {
 	if (getOutputOnTheBenchTest() == &enginePins.checkEnginePin) {
 		m_wasBenchActive = true;
+		m_lampState.store(enginePins.checkEnginePin.getLogicValue() ? LampState::On : LampState::Off,
+			std::memory_order_relaxed);
 		return;
 	}
 
@@ -115,26 +135,30 @@ void MILController::onSlowCallback() {
 	if (!m_ignitionOn) {
 		m_phase = Phase::Idle;
 		m_activeCode = ObdCode::None;
-		enginePins.checkEnginePin.setValue("MIL", false);
+		setLamp(false);
 		return;
 	}
 
-	if (!hasErrorCodes()) {
+	// Use one filtered snapshot for presence checks and code rotation so a
+	// rejected code can never start or keep a blink sequence alive.
+	error_codes_set_s codes;
+	getErrorCodes(&codes, custom_board_milCodeFilter.value_or(nullptr));
+	if (codes.count == 0) {
 		m_phase = Phase::Idle;
 		m_activeCode = ObdCode::None;
-		enginePins.checkEnginePin.setValue("MIL", engine->rpmCalculator.isStopped());
+		setLamp(engine->rpmCalculator.isStopped());
 		return;
 	}
 
-	if (m_phase == Phase::Idle || !isActiveCodePresent()) {
-		startNextCode();
+	if (m_phase == Phase::Idle || !isActiveCodePresent(codes)) {
+		startNextCode(codes);
 		return;
 	}
 
 	if (m_phase == Phase::Pulse) {
 		const float duration = m_digitPlace % 2 == 0 ? ShortPulseMs : LongPulseMs;
 		if (m_phaseTimer.hasElapsedMs(duration)) {
-			enginePins.checkEnginePin.setValue("MIL", false);
+			setLamp(false, true);
 			m_phase = Phase::Gap;
 			m_phaseTimer.reset();
 		}
@@ -152,6 +176,6 @@ void MILController::onSlowCallback() {
 		m_digitPlace--;
 		startDigit();
 	} else {
-		startNextCode();
+		startNextCode(codes);
 	}
 }
