@@ -1,5 +1,5 @@
 /**
- * @file malfunction_central.c
+ * @file malfunction_central.cpp
  * @brief This data structure holds current malfunction codes
  *
  * todo: make this a class
