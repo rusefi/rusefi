@@ -76,8 +76,8 @@ public class TuningTableView {
         table.setCellSelectionEnabled(true);
         table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         table.setToolTipText(viewMode
-            ? "Arrows or mouse wheel to move; Shift+arrows to select; Ctrl+A to select all"
-            : "Arrows or mouse wheel to move; Enter/F2 to edit; Enter to accept; Esc to cancel; Tab/Shift+Tab to accept and move");
+            ? "Arrows or Ctrl+mouse wheel to move; Shift+arrows to select; Ctrl+A to select all"
+            : "Wheel to adjust selected values; Shift+wheel for 3 steps; Ctrl+wheel to move; Enter/F2 to edit; Esc to cancel");
         installAxisHighlighting();
         installKeyboardEditing();
         installXAxisEditing();
@@ -92,7 +92,7 @@ public class TuningTableView {
                 startXAxisEdit(column);
             }
         });
-        table.addMouseWheelListener(this::moveValueCellWithWheel);
+        table.addMouseWheelListener(this::handleTableWheel);
 
         table.addMouseListener(new MouseAdapter() {
             @Override
@@ -531,16 +531,54 @@ public class TuningTableView {
         table.requestFocusInWindow();
     }
 
-    private void moveValueCellWithWheel(MouseWheelEvent event) {
+    private void handleTableWheel(MouseWheelEvent event) {
         // Handle the wheel here so the scroll pane doesn't also scroll independently.
         event.consume();
-        if (table.isEditing() || !isActiveValueCell() || event.getWheelRotation() == 0) {
+        if (table.isEditing() || xAxisEditingColumn >= 0 || event.getWheelRotation() == 0) {
+            return;
+        }
+        if (!event.isControlDown()) {
+            adjustValuesWithWheel(event);
+            return;
+        }
+        if (!isActiveValueCell()) {
             return;
         }
         int row = Math.max(0, Math.min(table.getRowCount() - 1, activeRow() + event.getWheelRotation()));
         if (row != activeRow()) {
             // changeSelection also scrolls the selected cell into view.
             table.changeSelection(row, activeColumn(), false, false);
+        }
+    }
+
+    private void adjustValuesWithWheel(MouseWheelEvent event) {
+        if (viewMode || !(table.getModel() instanceof TuningTableModel)) {
+            return;
+        }
+        TuningTableModel model = (TuningTableModel) table.getModel();
+        int[] selectedRows = table.getSelectedRows();
+        int[] selectedColumns = getSelectedDataColumns();
+        int direction = event.getWheelRotation() > 0 ? -1 : 1;
+        double step = Math.pow(10, -model.precision);
+        boolean changed = false;
+        // One adjustment per event, regardless of rotation magnitude or pointer position.
+        for (int selectedRow : selectedRows) {
+            int row = model.data.length - 1 - selectedRow;
+            for (int selectedColumn : selectedColumns) {
+                int column = selectedColumn - 1;
+                Double old = model.data[row][column];
+                if (old == null || !Double.isFinite(old)) {
+                    continue;
+                }
+                double value = old + direction * step * (event.isShiftDown() ? 3 : 1);
+                if (Double.isFinite(value) && Double.compare(old, value) != 0) {
+                    model.data[row][column] = value;
+                    changed = true;
+                }
+            }
+        }
+        if (changed) {
+            commitEdit(model, selectedRows, table.getSelectedColumns());
         }
     }
 
