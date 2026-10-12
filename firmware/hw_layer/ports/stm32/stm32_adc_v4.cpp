@@ -354,7 +354,7 @@ static const ADCConversionGroup adcConvGroupCh1 = {
 							H7_KNOCK_ADC_SHIFT_BITS << ADC_CFGR2_OVSS_Pos |		// shift the result right log2(N) bits to make a 16 bit result out of the internal oversample sum
 							ADC_CFGR2_ROVSE,			// Enable oversampling
 	.ccr				= 0,
-	.pcsel				= 0xFFFFFFFF, // enable analog switches on all channels
+	.pcsel				= BIT(KNOCK_ADC_CH1), // enable analog switch for only one channel
 	// Thresholds aren't used
 	.ltr1 = 0, .htr1 = 0, .ltr2 = 0, .htr2 = 0, .ltr3 = 0, .htr3 = 0,
 	.awd2cr = 0,
@@ -379,7 +379,7 @@ static const ADCConversionGroup adcConvGroupCh2 = {
 							H7_KNOCK_ADC_SHIFT_BITS << ADC_CFGR2_OVSS_Pos |		// shift the result right log2(N) bits to make a 16 bit result out of the internal oversample sum
 							ADC_CFGR2_ROVSE,			// Enable oversampling
 	.ccr				= 0,
-	.pcsel				= 0xFFFFFFFF, // enable analog switches on all channels
+	.pcsel				= BIT(KNOCK_ADC_CH2), // enable analog switch for only one channel
 	// Thresholds aren't used
 	.ltr1 = 0, .htr1 = 0, .ltr2 = 0, .htr2 = 0, .ltr3 = 0, .htr3 = 0,
 	.awd2cr = 0,
