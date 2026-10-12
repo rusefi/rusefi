@@ -249,9 +249,6 @@ static void processLastKnockEvent() {
 	// take a local copy
 	auto lastKnockTime = lastKnockSampleTime;
 
-	// We're done with inspecting the buffer, another sample can be taken
-	knockNeedsProcess = false;
-
 #ifdef KNOCK_SPECTROGRAM
 	if (engineConfiguration->enableKnockSpectrogram) {
 		ScopePerf perf(PE::KnockAnalyzer);
@@ -274,21 +271,24 @@ static void processLastKnockEvent() {
 
 			uint32_t compressed = uint32_t(a << 24 | b << 16 | c << 8 | d);
 
-      {
-		    chibios_rt::CriticalSectionLocker csl;
-			  spectrum[i] = compressed;
+			{
+				chibios_rt::CriticalSectionLocker csl;
+				spectrum[i] = compressed;
 			}
 		}
 
 		uint16_t compressedChannelCyl = uint16_t(channelNumber << 8 | currentCylinderNumber);
 
 		{
-		  chibios_rt::CriticalSectionLocker csl;
-		  engine->module<KnockController>()->m_knockSpectrumChannelCyl = compressedChannelCyl;
+			chibios_rt::CriticalSectionLocker csl;
+			engine->module<KnockController>()->m_knockSpectrumChannelCyl = compressedChannelCyl;
 		}
 	}
 
 #endif
+
+	// We're done with inspecting the buffer, another sample can be taken
+	knockNeedsProcess = false;
 
 	// mean of squares (not yet root)
 	float meanSquares = sumSq / localCount;
@@ -299,7 +299,7 @@ static void processLastKnockEvent() {
 	// clamp to reasonable range
 	db = clampF(-100, db, 100);
 
-	engine->module<KnockController>()->onKnockSenseCompleted(currentCylinderNumber, db, lastKnockTime);
+	engine->module<KnockController>()->onKnockSenseCompleted(localCylinder, db, lastKnockTime);
 }
 
 RUSEFI_STACK_ROOT(KnockThread, ThreadTask);
