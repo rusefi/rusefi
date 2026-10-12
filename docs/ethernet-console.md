@@ -13,7 +13,7 @@ port to connect to, and how to set up your PC and TunerStudio.
 | Gateway     | 192.168.10.1                                 |
 | MAC address | 72:75:73:12:34:56 (ascii "rus" + 12:34:56)   |
 | Protocol    | TunerStudio serial protocol over raw TCP     |
-| Clients     | one connection at a time                     |
+| Clients     | one by default; board-configurable                     |
 
 There is NO DHCP client in the firmware: the ECU will not request an address
 from your router, and it will not answer discovery. It always boots with the
@@ -47,10 +47,17 @@ is the exact same TunerStudio protocol as USB/serial, just framed over TCP, so
 anything that can talk to a rusEFI TCP port (TunerStudio, rusEFI console,
 simulator tooling) works unchanged.
 
-Only ONE client can be connected at a time (`lwip_listen(listenerSocket, 1)`).
+The number of simultaneous clients on this TCP port is selected at build time
+with `Ethernet_Connection_Count`, which defaults to 1. The network hub overrides
+it to 2. Each client has its own TunerStudio worker, socket, protocol state and
+response buffers. With multiple clients enabled, an idle client or a reconnect
+does not stop another client. All connections access the same ECU configuration;
+changes made through any connection apply to that ECU.
+
 A dropped client is detected via TCP keepalive (5 s idle, 1 s probe interval,
 3 probes -> roughly 8 s), after which the ECU goes back to accepting a new
-connection. If you cannot reconnect, wait a few seconds for the keepalive to
+connection in that slot. If all slots are occupied, wait for one client to
+disconnect. If you cannot reconnect, wait a few seconds for the keepalive to
 reap the stale connection.
 
 ## Which boards have this
@@ -76,8 +83,15 @@ was built with it, the TCP server is always listening whenever the link is up.
   to the TunerStudio .ini (`defaultIpPort`).
 - Server implementation:
   `firmware/controllers/modules/ethernet_console/ethernet_console.cpp` - binds
-  to INADDR_ANY:ETHERNET_PORT, accepts one client, and hands the socket to the
-  standard TunerStudio thread as a `TsChannelBase`.
+  to INADDR_ANY:ETHERNET_PORT and provides `Ethernet_Connection_Count` independent
+  `TsChannelBase` instances to standard TunerStudio threads. A mutex serializes
+  listener setup and accepts; established client I/O does not take that mutex. The default
+  lwIP pools (4 netconns and 5 active TCP PCBs) accommodate the listener and
+  two clients.
+- Client count: `Ethernet_Connection_Count` defaults to 1 in the server source.
+  Set `DDEFS += -DEthernet_Connection_Count=2` in a board's `board.mk` to serve two
+  clients. Worker storage and listener backlog both use this count. Counts must
+  be positive; larger counts also require sufficient RAM and lwIP pool capacity.
 - Addressing mode: `lwipInit(nullptr)` uses the compile-time settings above.
   `LWIP_DHCP` is never defined, so lwIP's default (0) applies and ChibiOS's
   `lwipthread.c` picks `NET_ADDRESS_STATIC`.
