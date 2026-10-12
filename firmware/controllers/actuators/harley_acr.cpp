@@ -35,12 +35,12 @@
 // (test-visible) code, so the symbol must exist even in builds that compile
 // the ACR strategy itself out.
 std::optional<setup_custom_bool_type> custom_board_holdAcr;
+std::optional<board_acr_outputs_type> custom_board_getAcrOutputs;
 
 #if EFI_HD_ACR
 
 static bool getAcrState() {
     bool engineMovedRecently = getTriggerCentral()->engineMovedRecently();
-    engine->engineState.acrEngineMovedRecently = engineMovedRecently;
 
 	if (custom_board_holdAcr.has_value() && custom_board_holdAcr.value()()) {
 		return true;
@@ -84,17 +84,25 @@ void HarleyAcr::onSlowCallback() {
 	// skip if no pin
 	if (!isBrainPinValid(engineConfiguration->acrPin)) {
 		m_active = false;
+		engine->engineState.acrActive = false;
 		return;
 	}
 
-	bool acrState = getAcrState();
-	engine->engineState.acrActive = acrState;
+	engine->engineState.acrEngineMovedRecently = getTriggerCentral()->engineMovedRecently();
+	bool acrState = false;
+	bool acrState2 = false;
+	if (!custom_board_getAcrOutputs || !(*custom_board_getAcrOutputs)(acrState, acrState2)) {
+		acrState = getAcrState();
+		acrState2 = acrState;
+	}
+	bool anyActive = acrState || (isBrainPinValid(engineConfiguration->acrPin2) && acrState2);
+	engine->engineState.acrActive = anyActive;
 	enginePins.harleyAcr.setValue(acrState);
-	enginePins.harleyAcr2.setValue(acrState);
+	enginePins.harleyAcr2.setValue(acrState2);
 #if EFI_TOOTH_LOGGER
-	LogTriggerAcrState(getTimeNowNt(), acrState);
+	LogTriggerAcrState(getTimeNowNt(), anyActive);
 #endif // EFI_TOOTH_LOGGER
-	m_active = acrState;
+	m_active = anyActive;
 }
 
 void HarleyAcr::updateAcr() {
