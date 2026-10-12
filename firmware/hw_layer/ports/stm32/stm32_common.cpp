@@ -283,6 +283,13 @@ bool isStm32F42x() {
 }
 #endif
 
+#if defined(STM32H7XX)
+bool isStm32H7revisionV() {
+	// this revision have additional /2 divider in ADC
+	return ((DBGMCU->IDCODE & DBGMCU_IDCODE_REV_ID_Msk) == 0x20030000);
+}
+#endif
+
 // Stubs for per-board low power helpers
 PUBLIC_API_WEAK void boardPrepareForStop() {
 	// Default implementation - wake up on PA0 - boards should override this
@@ -330,7 +337,9 @@ const char *getStm32McuName(int mcuRevision) {
     case 1105:
       return "F7";
     case 0x483:
-      return "H7";
+      return "H72x/H73x";
+    case 0x450:
+      return "H74x/75x";
   }
   return "unknown";
 }
