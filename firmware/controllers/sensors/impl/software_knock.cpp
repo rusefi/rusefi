@@ -91,13 +91,17 @@ void onStartKnockSampling(uint8_t cylinderNumber, float samplingSeconds, uint8_t
 	}
 
 	// Convert sampling time to number of samples
+#if defined(STM32H7XX)
+	float sampleRate = KNOCK_SAMPLE_RATE / (isStm32H7revisionV() ? 2 : 1);
+#else
 	constexpr int sampleRate = KNOCK_SAMPLE_RATE;
+#endif
 	sampleCount = 0xFFFFFFFE & static_cast<size_t>(clampF(100, samplingSeconds * sampleRate, efi::size(sampleBuffer)));
 
 	// Select the appropriate conversion group - it will differ depending on which sensor this cylinder should listen on
 	auto conversionGroup = getKnockConversionGroup(channelIdx);
 
-  //current chanel number for spectrum TS plugin
+	//current chanel number for spectrum TS plugin
 	channelNumber = channelIdx;
 
 	// Stash the current cylinder's number so we can store the result appropriately
@@ -117,23 +121,30 @@ static KnockThread kt;
 
 void initSoftwareKnock() {
 	if (engineConfiguration->enableSoftwareKnock) {
+		float frequencyHz = 0;
 
-		float frequencyHz;
+#if defined(STM32H7XX)
+		float sampleRate = KNOCK_SAMPLE_RATE / (isStm32H7revisionV() ? 2 : 1);
+		efiPrintf("ADC clock %d sampling rate %d", (int)STM32_ADC3_CLOCK / (isStm32H7revisionV() ? 2 : 1) , (int)sampleRate);
+#else
+		constexpr float sampleRate = KNOCK_SAMPLE_RATE;
+#endif
 
 		if (engineConfiguration->knockFrequency > 0.01) {
 			frequencyHz = engineConfiguration->knockFrequency;
-
-			// A center frequency this far below the sample rate can't be represented by the filter.
-			if (frequencyHz < KNOCK_SAMPLE_RATE / 1000.0f) {
-				criticalError("Invalid knock band frequency: %.2f Hz", frequencyHz);
-				return;
-			}
 		} else {
-		  frequencyHz = 1000 * bore2frequency(engineConfiguration->cylinderBore);
-      frequencyHz = engineConfiguration->knockDetectionUseDoubleFrequency ? 2 * frequencyHz : frequencyHz;
+			frequencyHz = 1000 * bore2frequency(engineConfiguration->cylinderBore);
+			frequencyHz = engineConfiguration->knockDetectionUseDoubleFrequency ? 2 * frequencyHz : frequencyHz;
+			efiPrintf("Calculated knock frequency %.3f KHz", frequencyHz / 1000.0);
 		}
 
-		knockFilter.configureBandpass(KNOCK_SAMPLE_RATE, frequencyHz, 3);
+		// A center frequency this far below the sample rate can't be represented by the filter.
+		if (frequencyHz < sampleRate / 1000.0f) {
+			configError("Invalid knock band frequency: %.2f Hz", frequencyHz);
+			return;
+		}
+
+		knockFilter.configureBandpass(sampleRate, frequencyHz, 3);
 
 	#ifdef KNOCK_SPECTROGRAM
 		if (engineConfiguration->enableKnockSpectrogram) {
@@ -155,7 +166,7 @@ void initSoftwareKnock() {
 
 			for (size_t i = 0; i < FFT_SIZE/2; i++)
 			{
-				float freq = float(i * KNOCK_SAMPLE_RATE) / FFT_SIZE;
+				float freq = float(i * sampleRate) / FFT_SIZE;
 				int min = abs(freq - freqStartConst);
 
 				// next after freq start index
@@ -175,9 +186,9 @@ void initSoftwareKnock() {
 		}
 	#endif // KNOCK_SPECTROGRAM
 
-    // Hardware init precedes calibration correction. An unsupported spectrogram
-    // request must not prevent ordinary knock detection from starting.
-  // fun fact: we do not offer any ADC channel flexibility like we have for many other kinds of inputs
+		// Hardware init precedes calibration correction. An unsupported spectrogram
+		// request must not prevent ordinary knock detection from starting.
+		// fun fact: we do not offer any ADC channel flexibility like we have for many other kinds of inputs
 		efiSetPadMode("knock ch1", KNOCK_PIN_CH1, PAL_MODE_INPUT_ANALOG);
 #if KNOCK_HAS_CH2
 		efiSetPadMode("knock ch2", KNOCK_PIN_CH2, PAL_MODE_INPUT_ANALOG);
