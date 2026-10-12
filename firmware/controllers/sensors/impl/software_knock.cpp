@@ -219,16 +219,19 @@ static void processLastKnockEvent() {
 	}
 
 	float sumSq = 0;
-
-	// todo: reduce magic constants. engineConfiguration->adcVcc?
-	constexpr float ratio = 3.3f / 4095.0f;
+#if defined(STM32H7XX)
+	// samples are 16 bit
+	float ratio = engineConfiguration->adcVcc / ((1 << 16) - 1);
+#else
+	float ratio = engineConfiguration->adcVcc / 4095.0f;
+#endif
 
 	size_t localCount = sampleCount;
+	uint8_t localCylinder = currentCylinderNumber;
 
 	// Prepare the steady state at vcc/2 so that there isn't a step
 	// when samples begin
-	// todo: reduce magic constants. engineConfiguration->adcVcc?
-	knockFilter.cookSteadyState(3.3f / 2);
+	knockFilter.cookSteadyState(engineConfiguration->adcVcc / 2);
 
 	// Compute the sum of squares
 	for (size_t i = 0; i < localCount; i++) {
