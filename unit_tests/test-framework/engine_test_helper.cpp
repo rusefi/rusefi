@@ -53,8 +53,6 @@ EngineTestHelperBase::EngineTestHelperBase(Engine * eng, persistent_config_s * p
 	setTimeNowUs(0);
 	ButtonDebounce::resetForUnitTests();
 
-	// Reset global error code set so checkEngine bit doesn't leak between tests
-	clearWarnings();
 	EnableToothLogger();
 	if (engine || engineConfiguration || config) {
 		firmwareError(ObdCode::OBD_PCM_Processor_Fault,
@@ -63,6 +61,10 @@ EngineTestHelperBase::EngineTestHelperBase(Engine * eng, persistent_config_s * p
 	engine = eng;
 	engineConfiguration = &pers->engineConfiguration;
 	config = pers;
+
+	// Reset global error code set so checkEngine bit doesn't leak between tests
+	// NOTE: this needs valid engine pointer
+	clearWarnings();
 
 	setup_custom_fw_overrides();
 }

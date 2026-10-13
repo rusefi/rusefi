@@ -10,6 +10,8 @@
 
 #include "obd_error_codes.h"
 
+#define MAX_ERROR_CODES_COUNT 10
+
 // This is moved from engine_parts.h
 struct warning_t {
 	Timer LastTriggered;
@@ -33,20 +35,36 @@ struct warning_t {
 	}
 };
 
-typedef static_vector<warning_t, 24> warningBuffer_t;
+typedef static_vector<warning_t, MAX_ERROR_CODES_COUNT> warningBuffer_t;
+
+struct error_codes_set_s {
+	size_t count = 0;
+	ObdCode error_codes[MAX_ERROR_CODES_COUNT]{};
+};
+
+// Return true to include a code. Predicates must not modify the shared store.
+using ObdCodeFilter = bool (*)(ObdCode);
 
 class WarningCodeState {
 public:
 	WarningCodeState();
 	void addWarningCode(ObdCode code, const char *text = nullptr);
+	void removeErrorCode(ObdCode code);
+	void getCodes(error_codes_set_s *copy, ObdCodeFilter filter);
+	bool hasCodes(ObdCodeFilter filter);
+
 	bool isWarningNow() const;
 	bool isWarningNow(ObdCode code) const;
 	bool hasWarningMessage();
 	const char* getWarningMessage();
 	void refreshTs();
 	void clear();
-	int warningCounter;
+
+	int warningCounter = 0;
 	ObdCode lastErrorCode = ObdCode::None;
+private:
+	void removeErrorCode(size_t idx);
+	void refresh();
 	const char *description;
 
 	Timer timeSinceLastWarning;
@@ -55,19 +73,12 @@ public:
 	critical_msg_t m_msg;
 	warning_t *m_msgWarning = nullptr;
 
+#if EFI_UNIT_TEST
+public:
+#endif
 	// todo: we need a way to post multiple recent warnings into TS
 	warningBuffer_t recentWarnings;
 };
-
-#define MAX_ERROR_CODES_COUNT 10
-
-struct error_codes_set_s {
-	int count = 0;
-	ObdCode error_codes[MAX_ERROR_CODES_COUNT]{};
-};
-
-// Return true to include a code. Predicates must not modify the shared store.
-using ObdCodeFilter = bool (*)(ObdCode);
 
 /**
  * @brief Adds an error code into the set of current errors.

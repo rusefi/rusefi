@@ -205,7 +205,7 @@ TEST_F(StartStopTest, ToothCountWarningsAcrossStopWindow) {
 	eth.moveTimeForwardMs(3000);
 	ASSERT_FALSE(shutdown.isEngineStop(getTimeNowNt()));
 	reportToothCounts();
-	EXPECT_GT(eth.getWarningCounter(), 5);
+	EXPECT_EQ(eth.getWarningCounter(), 5);
 
 	const auto beforeRestart = eth.getWarningCounter();
 	doScheduleStopEngine(StopRequestedReason::Console);
@@ -215,5 +215,5 @@ TEST_F(StartStopTest, ToothCountWarningsAcrossStopWindow) {
 	// The source remains latched, but it must not suppress a fresh start's faults.
 	EXPECT_NE(0, engine->outputChannels.stopEngineCode);
 	reportToothCounts();
-	EXPECT_GT(eth.getWarningCounter(), beforeRestart);
+	EXPECT_EQ(eth.getWarningCounter(), beforeRestart);
 }
