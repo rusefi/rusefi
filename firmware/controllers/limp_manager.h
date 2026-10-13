@@ -124,6 +124,7 @@ public:
 
 private:
 	void setFaultRevLimit(int limit, ClearReason rpmLimitReason);
+	bool shouldReportCutWarning(efitick_t nowNt);
 
 	Hysteresis m_revLimitHysteresis;
 	MaxLimitWithHysteresis<> m_boostCutHysteresis;
@@ -155,6 +156,9 @@ private:
 
 	// Tracks how long since a cut (ignition or fuel) was active for any reason
 	Timer m_lastCutTime;
+
+	// Shared reporting interval for boost, injector duty, lambda and ETB cuts.
+	Timer m_lastCutWarning;
 
 	// Tracks how long injector duty has been over the sustained limit
 	Timer m_injectorDutySustainedTimer;

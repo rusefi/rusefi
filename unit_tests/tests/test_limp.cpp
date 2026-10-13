@@ -485,6 +485,30 @@ struct Mockhpfp : public MockHpfpController {
 	angle_t m_deadangle;
 };
 
+static void checkCutWarningInterval(EngineTestHelper& eth, LimpManager& dut, ObdCode code) {
+	ASSERT_EQ(1, eth.getWarningCounter());
+	ASSERT_TRUE(hasRecentWarningCode(code));
+
+	dut.updateState(2000, getTimeNowNt());
+	EXPECT_EQ(1, eth.getWarningCounter());
+	advanceTimeUs(29999999);
+	dut.updateState(2000, getTimeNowNt());
+	EXPECT_EQ(1, eth.getWarningCounter());
+
+	// The boundary is inclusive, with no early report from float rounding.
+	advanceTimeUs(1);
+	dut.updateState(2000, getTimeNowNt());
+	EXPECT_EQ(2, eth.getWarningCounter());
+	EXPECT_EQ(code, engine->engineState.warnings.lastErrorCode);
+	dut.updateState(2000, getTimeNowNt());
+	EXPECT_EQ(2, eth.getWarningCounter());
+
+	// Still report after an interval longer than UINT32_MAX native ticks.
+	advanceTimeUs(60000000);
+	dut.updateState(2000, getTimeNowNt());
+	EXPECT_EQ(3, eth.getWarningCounter());
+}
+
 TEST(limp, boostCutWarning) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	LimpManager dut;
@@ -492,8 +516,7 @@ TEST(limp, boostCutWarning) {
 	Sensor::setMockValue(SensorType::Map, 110);
 	dut.updateState(1000, getTimeNowNt());
 	ASSERT_EQ(ClearReason::BoostCut, dut.allowInjection().reason);
-	// Reproduce the missing diagnostic before adding reporting.
-	EXPECT_EQ(0, eth.getWarningCounter());
+	checkCutWarningInterval(eth, dut, ObdCode::OBD_Engine_Overboost);
 }
 
 TEST(limp, lambdaCutWarning) {
@@ -502,7 +525,7 @@ TEST(limp, lambdaCutWarning) {
 	engine->lambdaMonitor.lambdaMonitorCut = true;
 	dut.updateState(1000, getTimeNowNt());
 	ASSERT_EQ(ClearReason::LambdaProtection, dut.allowInjection().reason);
-	EXPECT_EQ(0, eth.getWarningCounter());
+	checkCutWarningInterval(eth, dut, ObdCode::OBD_System_Too_Lean_Bank_1);
 }
 
 TEST(limp, etbCutWarning) {
@@ -512,7 +535,7 @@ TEST(limp, etbCutWarning) {
 	dut.updateState(2000, getTimeNowNt());
 	ASSERT_FALSE(dut.allowElectronicThrottle());
 	ASSERT_EQ(ClearReason::EtbJammedRevLimit, dut.allowInjection().reason);
-	EXPECT_EQ(0, eth.getWarningCounter());
+	checkCutWarningInterval(eth, dut, ObdCode::OBD_Throttle_Actuator_Control_Range_Performance_Bank_1);
 }
 
 TEST(limp, injectorDutyCutWarning) {
@@ -523,10 +546,82 @@ TEST(limp, injectorDutyCutWarning) {
 	engine->engineState.injectionDuration = 120;
 	dut.updateState(1000, getTimeNowNt());
 	ASSERT_EQ(ClearReason::InjectorDutyCycle, dut.allowInjection().reason);
-	ASSERT_TRUE(hasRecentWarningCode(ObdCode::CUSTOM_TOO_LONG_FUEL_INJECTION));
-	int firstWarningCount = eth.getWarningCounter();
-	advanceTimeUs(100000);
+	checkCutWarningInterval(eth, dut, ObdCode::CUSTOM_TOO_LONG_FUEL_INJECTION);
+}
+
+TEST(limp, cutWarningsShareTimer) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	LimpManager dut;
+	engineConfiguration->boostCutPressure = 100;
+	engineConfiguration->boostCutPressureHyst = 10;
+	Sensor::setMockValue(SensorType::Map, 80);
 	dut.updateState(1000, getTimeNowNt());
-	// Reproduce repeated reporting within the requested 30-second window.
-	EXPECT_GT(eth.getWarningCounter(), firstWarningCount);
+	ASSERT_TRUE(dut.allowInjection());
+	ASSERT_EQ(0, eth.getWarningCounter());
+
+	Sensor::setMockValue(SensorType::Map, 110);
+	dut.updateState(1000, getTimeNowNt());
+	ASSERT_EQ(1, eth.getWarningCounter());
+	ASSERT_TRUE(hasRecentWarningCode(ObdCode::OBD_Engine_Overboost));
+
+	// Recovery and a different cut must not reset the reporting interval.
+	advanceTimeUs(1000000);
+	Sensor::setMockValue(SensorType::Map, 80);
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
+	engineConfiguration->maxInjectorDutyInstant = 90;
+	engine->engineState.injectionDuration = 120;
+	dut.updateState(1000, getTimeNowNt());
+	EXPECT_EQ(ClearReason::InjectorDutyCycle, dut.allowInjection().reason);
+	EXPECT_EQ(1, eth.getWarningCounter());
+
+	advanceTimeUs(1000000);
+	engine->engineState.injectionDuration = 0;
+	engine->lambdaMonitor.lambdaMonitorCut = true;
+	dut.updateState(1000, getTimeNowNt());
+	EXPECT_EQ(ClearReason::LambdaProtection, dut.allowInjection().reason);
+	EXPECT_EQ(1, eth.getWarningCounter());
+
+	advanceTimeUs(1000000);
+	engine->lambdaMonitor.lambdaMonitorCut = false;
+	dut.reportEtbJammed();
+	dut.updateState(2000, getTimeNowNt());
+	EXPECT_FALSE(dut.allowElectronicThrottle());
+	EXPECT_EQ(ClearReason::EtbJammedRevLimit, dut.allowInjection().reason);
+	EXPECT_EQ(1, eth.getWarningCounter());
+
+	// Even simultaneous faults share the same interval.
+	Sensor::setMockValue(SensorType::Map, 110);
+	engine->engineState.injectionDuration = 120;
+	engine->lambdaMonitor.lambdaMonitorCut = true;
+
+	// One jam report is enough: the latched fault gets reported when eligible.
+	advanceTimeUs(26999999);
+	dut.updateState(2000, getTimeNowNt());
+	EXPECT_EQ(1, eth.getWarningCounter());
+	advanceTimeUs(1);
+	dut.updateState(2000, getTimeNowNt());
+	EXPECT_EQ(2, eth.getWarningCounter());
+	EXPECT_TRUE(hasRecentWarningCode(ObdCode::OBD_Throttle_Actuator_Control_Range_Performance_Bank_1));
+}
+
+TEST(limp, recoveredCutDoesNotReportAgain) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	LimpManager dut;
+	engineConfiguration->boostCutPressure = 100;
+	engineConfiguration->boostCutPressureHyst = 10;
+	Sensor::setMockValue(SensorType::Map, 110);
+	dut.updateState(1000, getTimeNowNt());
+	ASSERT_EQ(1, eth.getWarningCounter());
+
+	Sensor::setMockValue(SensorType::Map, 80);
+	advanceTimeUs(30000000);
+	dut.updateState(1000, getTimeNowNt());
+	EXPECT_TRUE(dut.allowInjection());
+	EXPECT_EQ(1, eth.getWarningCounter());
+
+	// A healthy update does not consume the next interval.
+	Sensor::setMockValue(SensorType::Map, 110);
+	dut.updateState(1000, getTimeNowNt());
+	EXPECT_EQ(ClearReason::BoostCut, dut.allowInjection().reason);
+	EXPECT_EQ(2, eth.getWarningCounter());
 }

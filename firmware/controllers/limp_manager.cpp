@@ -79,9 +79,24 @@ void LimpManager::updateRevLimit(float rpm) {
 	m_fuelCorrection = 1.0f + fuelAdded / 100;
 }
 
+bool LimpManager::shouldReportCutWarning(efitick_t nowNt) {
+	// Use 64-bit ticks: Timer's elapsed helpers saturate at UINT32_MAX ticks.
+	if (nowNt - m_lastCutWarning.get() < MS2NT(30000)) {
+		return false;
+	}
+
+	m_lastCutWarning.reset(nowNt);
+	return true;
+}
+
 void LimpManager::updateState(float rpm, efitick_t nowNt) {
 	Clearable allowFuel = engineConfiguration->isInjectionEnabled;
 	Clearable allowSpark = engineConfiguration->isIgnitionEnabled;
+
+	// A jam is latched even if the ETB controller no longer reports it.
+	if (m_allowEtb.clearReason == ClearReason::EtbProblem && shouldReportCutWarning(nowNt)) {
+		warning(ObdCode::OBD_Throttle_Actuator_Control_Range_Performance_Bank_1, "ETB jam protection active");
+	}
 
 #if EFI_SHAFT_POSITION_INPUT && !EFI_UNIT_TEST
 	if (!m_ignitionOn
@@ -126,6 +141,9 @@ void LimpManager::updateState(float rpm, efitick_t nowNt) {
 #if EFI_SHAFT_POSITION_INPUT
 	if (engine->lambdaMonitor.isCut()) {
 		allowFuel.clear(ClearReason::LambdaProtection);
+		if (shouldReportCutWarning(nowNt)) {
+			warning(ObdCode::OBD_System_Too_Lean_Bank_1, "Lambda protection fuel cut");
+		}
 	}
 
   if (!engine->triggerCentral.triggerState.hasSynchronizedPhase()) {
@@ -155,6 +173,9 @@ void LimpManager::updateState(float rpm, efitick_t nowNt) {
 		// require drop of 'boostCutPressureHyst' kPa to resume fuel
 		if (m_boostCutHysteresis.checkIfLimitIsExceeded(Sensor::getOrZero(SensorType::Map), mapCut, engineConfiguration->boostCutPressureHyst)) {
 			allowFuel.clear(ClearReason::BoostCut);
+			if (shouldReportCutWarning(nowNt)) {
+				warning(ObdCode::OBD_Engine_Overboost, "Boost pressure fuel cut");
+			}
 		}
 	}
 
@@ -257,7 +278,9 @@ void LimpManager::updateState(float rpm, efitick_t nowNt) {
 
 		if (m_injectorDutyCutHysteresis.test(someLimitTripped, isUnderLowDuty)) {
 			allowFuel.clear(ClearReason::InjectorDutyCycle);
-			warning(ObdCode::CUSTOM_TOO_LONG_FUEL_INJECTION, "Injector duty cycle cut %.1f", injDutyCycle);
+			if (shouldReportCutWarning(nowNt)) {
+				warning(ObdCode::CUSTOM_TOO_LONG_FUEL_INJECTION, "Injector duty cycle cut %.1f", injDutyCycle);
+			}
 		}
 	}
 
