@@ -9,6 +9,23 @@
 
 #include "pch.h"
 
+#if EFI_UNIT_TEST
+static bool pinOwnershipEnabledForUnitTest;
+
+ScopedPinOwnershipForUnitTest::ScopedPinOwnershipForUnitTest()
+	: m_wasEnabled(pinOwnershipEnabledForUnitTest) {
+	pinOwnershipEnabledForUnitTest = true;
+}
+
+ScopedPinOwnershipForUnitTest::~ScopedPinOwnershipForUnitTest() {
+	pinOwnershipEnabledForUnitTest = m_wasEnabled;
+}
+
+bool isPinOwnershipEnabledForUnitTest() {
+	return pinOwnershipEnabledForUnitTest;
+}
+#endif
+
 #if EFI_PROD_CODE
 
 #include "gpio/gpio_ext.h"

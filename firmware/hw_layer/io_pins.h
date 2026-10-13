@@ -31,6 +31,19 @@ void efiSetPadMode(const char *msg, brain_pin_e pin, iomode_t mode);
 void efiSetPadModeWithoutOwnershipAcquisition(const char *msg, brain_pin_e brainPin, iomode_t mode);
 void efiSetPadUnused(brain_pin_e brainPin);
 
+#if EFI_UNIT_TEST
+class ScopedPinOwnershipForUnitTest {
+public:
+	ScopedPinOwnershipForUnitTest();
+	~ScopedPinOwnershipForUnitTest();
+
+private:
+	bool m_wasEnabled;
+};
+
+bool isPinOwnershipEnabledForUnitTest();
+#endif
+
 #if EFI_GPIO_HARDWARE
 bool efiReadPin(brain_pin_e pin);
 bool efiReadPin(brain_pin_e pin, pin_input_mode_e mode);

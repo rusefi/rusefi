@@ -138,11 +138,12 @@ public:
 
 #if EFI_UNIT_TEST
 	void resetForUnitTest();
+	void updateCylinderOutputPinsForUnitTest();
 #endif
 
 private:
-	void startInjectionPins();
-	void startIgnitionPins();
+	void startInjectionPins(bool forUnitTest = false);
+	void startIgnitionPins(bool forUnitTest = false);
 	void startAuxValves();
 
 	void stopInjectionPins();
