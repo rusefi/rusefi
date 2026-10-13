@@ -139,6 +139,8 @@ static void testMalfunctionCentralRemoveFirstElement() {
 }
 
 TEST(misc, testMalfunctionCentral) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
 	testMalfunctionCentralRemoveNonExistent();
 	testMalfunctionCentralSameElementAgain();
 	testMalfunctionCentralRemoveFirstElement();
@@ -162,15 +164,17 @@ TEST(misc, testMalfunctionCentral) {
 	// let's remove value which is not in the collection
 	removeError((ObdCode) 22);
 	// element not present - nothing to removed
+	getErrorCodes(&localCopy);
 	ASSERT_EQ(1, localCopy.count);
 	ASSERT_EQ(code, localCopy.error_codes[0]);
 
 	code = ObdCode::OBD_TPS2_Correlation;
 	addError(code);
 	getErrorCodes(&localCopy);
-	// todo:	ASSERT_EQ(2, localCopy.count);
+	ASSERT_EQ(2, localCopy.count);
 
-	for (int i = 0; i < 100; i++) {
+	// 0 is ObdCode::None
+	for (int i = 1; i < 101; i++) {
 		addError((ObdCode) i);
 	}
 	getErrorCodes(&localCopy);

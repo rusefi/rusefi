@@ -24,8 +24,14 @@ void WarningCodeState::clear() {
 }
 
 void WarningCodeState::addWarningCode(ObdCode code, const char *text) {
-	warningCounter++;
+	if (code == ObdCode::None) {
+		return;
+	}
+
+	// Set last code
 	lastErrorCode = code;
+	// Reset the "any warning" timer too
+	timeSinceLastWarning.reset();
 
 	warning_t* existing = recentWarnings.find(code);
 	if (!existing) {
@@ -33,6 +39,9 @@ void WarningCodeState::addWarningCode(ObdCode code, const char *text) {
 
 		// Add the code to the list
 		existing = recentWarnings.add(warning_t(code));
+		if (existing) {
+			warningCounter++;
+		}
 	}
 
 	if (existing) {
@@ -45,41 +54,93 @@ void WarningCodeState::addWarningCode(ObdCode code, const char *text) {
 			m_msgWarning = existing;
 		}
 	}
+}
 
-	// Reset the "any warning" timer too
-	timeSinceLastWarning.reset();
+void WarningCodeState::removeErrorCode(size_t idx) {
+	warning_t& warn = recentWarnings.get(idx);
+	if (m_msgWarning == &warn) {
+		m_msg[0] = 0;
+		m_msgWarning = nullptr;
+	}
+	warn.Code = ObdCode::None;
+	warningCounter--;
+}
+
+void WarningCodeState::removeErrorCode(ObdCode code) {
+	warning_t* warn = recentWarnings.find(code);
+	if (warn) {
+		if (m_msgWarning == warn) {
+			m_msg[0] = 0;
+			m_msgWarning = nullptr;
+		}
+		warn->Code = ObdCode::None;
+		warningCounter--;
+	}
+}
+
+void WarningCodeState::getCodes(error_codes_set_s *copy, ObdCodeFilter filter) {
+	*copy = {};
+	for (size_t i = 0; (i < recentWarnings.getCount()) && (copy->count < efi::size(copy->error_codes)); i++) {
+		const auto warn = recentWarnings.get(i);
+		if (warn.Code == ObdCode::None) {
+			continue;
+		}
+		if (!filter || filter(warn.Code)) {
+			copy->error_codes[copy->count++] = warn.Code;
+		}
+	}
+}
+
+bool WarningCodeState::hasCodes(ObdCodeFilter filter) {
+	for (size_t i = 0; i < recentWarnings.getCount(); i++) {
+		const auto warn = recentWarnings.get(i);
+		if (warn.Code == ObdCode::None) {
+			continue;
+		}
+		if (!filter || filter(warn.Code)) {
+			return true;
+		}
+	}
+	return false;
+}
+
+void WarningCodeState::refresh() {
+	// remove all outdated codes
+	const int period = maxI(3, engineConfiguration->warningPeriod);
+	for (size_t j = 0; j < recentWarnings.getCount(); j++) {
+		warning_t& warn = recentWarnings.get(j);
+		if (warn.Code != ObdCode::None) {
+			if (warn.LastTriggered.hasElapsedSec(period)) {
+				// warning message is outdated, stop showing to TS
+				removeErrorCode(j);
+			}
+		}
+	}
 }
 
 void WarningCodeState::refreshTs() {
 	output_channels_s *tsOutputChannels = &engine->outputChannels;
-	const int period = maxI(3, engineConfiguration->warningPeriod);
+
+	// This should be periodically called, not from TS only
+	refresh();
 
 	// TODO: do we need this sticky warning code?
-	tsOutputChannels->warningCounter = engine->engineState.warnings.warningCounter;
-	tsOutputChannels->lastErrorCode = static_cast<uint16_t>(engine->engineState.warnings.lastErrorCode);
+	tsOutputChannels->lastErrorCode = static_cast<uint16_t>(lastErrorCode);
 
 	// TODO: fix OBD codes "jumping" between positions when one of codes disapears
-
 	size_t i = 0;
 	for (size_t j = 0; j < recentWarnings.getCount(); j++) {
 		warning_t& warn = recentWarnings.get(j);
-		if (warn.Code != ObdCode::None) {
-			if (!warn.LastTriggered.hasElapsedSec(period)) {
-				if (i < efi::size(tsOutputChannels->recentErrorCode)) {
-					tsOutputChannels->recentErrorCode[i] = static_cast<uint16_t>(warn.Code);
-					i++;
-				}
-			} else {
-				// warning message is outdated, stop showing to TS
-				if (m_msgWarning == &warn) {
-					m_msg[0] = 0;
-					m_msgWarning = nullptr;
-				}
-				// TODO:
-				// reset warning as it is outdated
-			}
+		if (warn.Code == ObdCode::None) {
+			continue;
 		}
+		if (i < efi::size(tsOutputChannels->recentErrorCode)) {
+			tsOutputChannels->recentErrorCode[i] = static_cast<uint16_t>(warn.Code);
+		}
+		i++;
 	}
+
+	tsOutputChannels->warningCounter = i;
 
 	// reset rest
 	for ( ; i < efi::size(tsOutputChannels->recentErrorCode); i++) {
@@ -118,58 +179,22 @@ bool WarningCodeState::isWarningNow(ObdCode code) const {
 	return !warn->LastTriggered.hasElapsedSec(maxI(3, engineConfiguration->warningPeriod));
 }
 
-static error_codes_set_s error_codes_set;
-
 void clearWarnings(void) {
-	error_codes_set.count = 0;
-}
-
-/**
- * Search if code is present
- * @return -1 if code not found
- */
-static int find_position(ObdCode e_code) {
-	// cycle for searching element equal seaching code
-	for (int t = 0; t < error_codes_set.count; t++)
-		if (error_codes_set.error_codes[t] == e_code)
-			return t;			// we found position where this code is present
-	return -1;														// -1 if code not found
+	engine->engineState.warnings.clear();
 }
 
 void addError(ObdCode errorCode) {
-	if (error_codes_set.count < MAX_ERROR_CODES_COUNT && find_position(errorCode) == -1) {
-		error_codes_set.error_codes[error_codes_set.count] = errorCode;
-		error_codes_set.count++;
-	}
+	engine->engineState.warnings.addWarningCode(errorCode);
 }
 
 void removeError(ObdCode errorCode) {
-	int pos = find_position(errorCode);
-	if (pos >= 0) {
-		// shift all right elements to one pos left
-		for (int t = pos; t < error_codes_set.count - 1; t++) {
-			error_codes_set.error_codes[t] = error_codes_set.error_codes[t + 1];
-		}
-
-		error_codes_set.error_codes[--error_codes_set.count] = (ObdCode)0;				// place 0
-	}
+	engine->engineState.warnings.removeErrorCode(errorCode);
 }
 
-void getErrorCodes(error_codes_set_s * copy, ObdCodeFilter filter) {
-	*copy = {};
-	for (int i = 0; i < error_codes_set.count; i++) {
-		const auto code = error_codes_set.error_codes[i];
-		if (!filter || filter(code)) {
-			copy->error_codes[copy->count++] = code;
-		}
-	}
+void getErrorCodes(error_codes_set_s *copy, ObdCodeFilter filter) {
+	engine->engineState.warnings.getCodes(copy, filter);
 }
 
 bool hasErrorCodes(ObdCodeFilter filter) {
-	for (int i = 0; i < error_codes_set.count; i++) {
-		if (!filter || filter(error_codes_set.error_codes[i])) {
-			return true;
-		}
-	}
-	return false;
+	return engine->engineState.warnings.hasCodes(filter);
 }
