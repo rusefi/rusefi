@@ -69,6 +69,8 @@ else
 $(error Unexpected PROJECT_CPU [$(PROJECT_CPU)])
 endif
 
+CPU_HWLAYER_DIR ?= $(PROJECT_DIR)/hw_layer/$(CPU_HWLAYER)
+
 ifeq ($(CPU_STARTUP_DIR),)
 CPU_STARTUP_DIR = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk/$(CPU_STARTUP)
 endif

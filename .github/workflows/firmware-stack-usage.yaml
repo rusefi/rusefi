@@ -73,7 +73,6 @@ jobs:
         include:
           - meta-info: config/boards/f407-discovery/meta-info.env
           - meta-info: config/boards/nucleo_f767/meta-info.env
-          - meta-info: config/boards/nucleo_h743/meta-info.env
           - meta-info: config/boards/hellen/uaefi/meta-info.env
           - meta-info: config/boards/hellen/uaefi/meta-info-uaefi_pro.env
 

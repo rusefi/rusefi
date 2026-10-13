@@ -8,6 +8,10 @@ FDIR=$(cd "$(dirname "$0")/.."; pwd -P)
 getTarget ()
 {
 	source "${2}/config/boards/common_script_read_meta_env.inc" "$1" >/dev/null
+	# H7 builds require an externally supplied hardware port.
+	if [[ "$PROJECT_CPU" == ARCH_STM32H7 ]]; then
+		return
+	fi
 	SKIP_RATE=${SKIP_RATE:-0}
 	ONLY=$(echo "$COMMIT_MESSAGE" | grep -Po '(?<=only:)[^\s]*')
 	if [[ ( "$EVENT_NAME" == 'workflow_dispatch' \
