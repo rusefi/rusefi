@@ -14,6 +14,17 @@ Every cut is associated with a `ClearReason` (defined in `limp_manager.h`). This
 - **Permanent Cuts**: Managed via `m_allowInjection`, etc. These usually trigger a fatal error or a state that requires a power cycle or specific recovery.
 - **Transient Cuts**: Managed via `m_transientAllowInjection`, etc. These are evaluated every `onFastCallback` (e.g., RPM limit, Boost cut).
 
+## Protection warnings
+
+`BoostCut`, `InjectorDutyCycle`, `LambdaProtection`, and the latched ETB jam
+(`EtbProblem`) report P0234, C9013, P0171, and P0638 respectively. A single
+`LimpManager` timer limits this group to one warning per 30 seconds, including
+when the active reason changes. The first warning can be reported immediately.
+The limiter only gates diagnostics; cut decisions and recovery are unchanged.
+ETB reporting runs from `updateState` so a jam remains eligible for reporting
+after another warning consumed the interval, even if `reportEtbJammed` is not
+called again.
+
 ## How-To: Adding an Engine Protection Feature
 
 To add a new protection feature (e.g., "Fuel Pressure Protection"), follow this 4-step pattern:
