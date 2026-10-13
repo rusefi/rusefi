@@ -96,6 +96,117 @@ TEST(util, parallelPidLimits) {
 	commonPidTest(&pid);
 }
 
+// [tag:pid_conditional_integration] The opt-in policy changes only clamped
+// parallel PID integration. Legacy callers must retain their existing behavior.
+TEST(util, pidConditionalIntegrationOptIn) {
+	pid_s params{};
+	params.pFactor = 1.2f;
+	params.iFactor = 1.4f;
+	params.minValue = -15;
+	params.maxValue = 15;
+	Pid legacy(&params);
+	Pid limited(&params);
+	limited.conditionalIntegration = true;
+	for (int i = 0; i < 100; i++) {
+		EXPECT_FLOAT_EQ(legacy.getOutput(120, 96, 0.05f), 15);
+		EXPECT_FLOAT_EQ(limited.getOutput(120, 96, 0.05f), 15);
+	}
+	EXPECT_GT(legacy.iTerm, 150);
+	EXPECT_NEAR(limited.iTerm, 0, 0.0001f);
+	EXPECT_LT(limited.getOutput(120, 125, 0.05f), 0);
+	EXPECT_FLOAT_EQ(legacy.getOutput(120, 125, 0.05f), 15);
+
+	limited.reset();
+	for (int i = 0; i < 100; i++) {
+		EXPECT_FLOAT_EQ(limited.getOutput(96, 120, 0.05f), -15);
+	}
+	EXPECT_NEAR(limited.iTerm, 0, 0.0001f);
+	EXPECT_GT(limited.getOutput(120, 115, 0.05f), 0);
+}
+
+TEST(util, pidConditionalIntegrationTracksPdOffsetAndPartialStep) {
+	for (float sign : {-1.0f, 1.0f}) {
+		SCOPED_TRACE(sign);
+		pid_s params{};
+		params.pFactor = 1;
+		params.iFactor = 2;
+		params.dFactor = 0.5f;
+		params.offset = sign;
+		params.minValue = -10;
+		params.maxValue = 10;
+		Pid pid(&params);
+		pid.conditionalIntegration = true;
+		EXPECT_FLOAT_EQ(pid.getOutput(sign * 2, 0, 0.5f), sign * 7);
+		EXPECT_FLOAT_EQ(pid.iTerm, sign * 2);
+		EXPECT_FLOAT_EQ(pid.getOutput(sign * 2, 0, 0.5f), sign * 7);
+		EXPECT_FLOAT_EQ(pid.iTerm, sign * 4);
+		// Candidate I=7 would produce output=12. Admit only I=5 so that
+		// P=3, D=1 and offset=1 still produce exactly the output limit.
+		EXPECT_FLOAT_EQ(pid.getOutput(sign * 3, 0, 0.5f), sign * 10);
+		EXPECT_FLOAT_EQ(pid.iTerm, sign * 5);
+		EXPECT_FLOAT_EQ(pid.dTerm, sign);
+		EXPECT_FLOAT_EQ(pid.previousError, sign * 3);
+		EXPECT_FLOAT_EQ(pid.output, sign * 10);
+		EXPECT_FLOAT_EQ(pid.target, sign * 3);
+		EXPECT_FLOAT_EQ(pid.input, 0);
+	}
+}
+
+TEST(util, pidConditionalIntegrationUnwindsWhileStillSaturated) {
+	pid_s params{};
+	params.iFactor = 1;
+	params.minValue = -10;
+	params.maxValue = 10;
+	Pid pid(&params);
+	pid.conditionalIntegration = true;
+	// Integral could predate opt-in or a change to output limits.
+	pid.iTerm = 20;
+	EXPECT_FLOAT_EQ(pid.getOutput(0, 2, 0.5f), 10);
+	EXPECT_FLOAT_EQ(pid.iTerm, 19);
+	pid.iTerm = -20;
+	EXPECT_FLOAT_EQ(pid.getOutput(2, 0, 0.5f), -10);
+	EXPECT_FLOAT_EQ(pid.iTerm, -19);
+}
+
+TEST(util, pidConditionalIntegrationReachesLimitWithIntegralOnly) {
+	pid_s params{};
+	params.iFactor = 1;
+	params.minValue = -10;
+	params.maxValue = 10;
+	Pid pid(&params);
+	pid.conditionalIntegration = true;
+	EXPECT_FLOAT_EQ(pid.getOutput(12, 0, 1), 10);
+	EXPECT_FLOAT_EQ(pid.iTerm, 10);
+	EXPECT_FLOAT_EQ(pid.getOutput(12, 0, 1), 10);
+	EXPECT_FLOAT_EQ(pid.iTerm, 10);
+	pid.reset();
+	EXPECT_FLOAT_EQ(pid.getOutput(0, 12, 1), -10);
+	EXPECT_FLOAT_EQ(pid.iTerm, -10);
+}
+
+TEST(util, pidConditionalIntegrationRespectsChangedIntegralBounds) {
+	pid_s params{};
+	params.pFactor = 2;
+	params.iFactor = 1;
+	params.minValue = -10;
+	params.maxValue = 10;
+	Pid pid(&params);
+	pid.conditionalIntegration = true;
+	pid.iTerm = -20;
+	pid.iTermMin = -2;
+	pid.iTermMax = 2;
+	EXPECT_FLOAT_EQ(pid.getOutput(20, 0, 1), 10);
+	EXPECT_FLOAT_EQ(pid.iTerm, -2);
+	pid.iTerm = 20;
+	EXPECT_FLOAT_EQ(pid.getOutput(0, 20, 1), -10);
+	EXPECT_FLOAT_EQ(pid.iTerm, 2);
+	// Inside output limits the ordinary integral bounds still apply.
+	params.pFactor = 0;
+	pid.reset();
+	EXPECT_FLOAT_EQ(pid.getOutput(5, 0, 1), 2);
+	EXPECT_FLOAT_EQ(pid.iTerm, 2);
+}
+
 TEST(util, industrialPidLimits) {
 	pid_s pidS;
 	commonPidTestParameters(&pidS);
