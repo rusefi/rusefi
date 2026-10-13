@@ -11,6 +11,7 @@
 #include "engine_parts.h"
 #include "engine_state_generated.h"
 #include "trigger_decoder.h"
+#include "malfunction_central.h"
 
 class EngineState : public engine_state_s {
 public:

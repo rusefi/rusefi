@@ -10,6 +10,55 @@
 
 #include "obd_error_codes.h"
 
+// This is moved from engine_parts.h
+struct warning_t {
+	Timer LastTriggered;
+	ObdCode Code = ObdCode::None;
+
+	warning_t() { }
+
+	explicit warning_t(ObdCode code)
+		: Code(code)
+	{
+	}
+
+	// Equality just checks the code, timer doesn't matter
+	bool operator ==(const warning_t& other) const {
+		return other.Code == Code;
+	}
+
+	// Compare against a plain OBD code
+	bool operator ==(const ObdCode other) const {
+		return other == Code;
+	}
+};
+
+typedef static_vector<warning_t, 24> warningBuffer_t;
+
+class WarningCodeState {
+public:
+	WarningCodeState();
+	void addWarningCode(ObdCode code, const char *text = nullptr);
+	bool isWarningNow() const;
+	bool isWarningNow(ObdCode code) const;
+	bool hasWarningMessage();
+	const char* getWarningMessage();
+	void refreshTs();
+	void clear();
+	int warningCounter;
+	ObdCode lastErrorCode = ObdCode::None;
+	const char *description;
+
+	Timer timeSinceLastWarning;
+
+	// text that may be assotiated with some warning and should be reported to TS
+	critical_msg_t m_msg;
+	warning_t *m_msgWarning = nullptr;
+
+	// todo: we need a way to post multiple recent warnings into TS
+	warningBuffer_t recentWarnings;
+};
+
 #define MAX_ERROR_CODES_COUNT 10
 
 struct error_codes_set_s {
