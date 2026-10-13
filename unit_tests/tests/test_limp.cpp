@@ -484,3 +484,49 @@ struct Mockhpfp : public MockHpfpController {
 	bool isHpfpActive;
 	angle_t m_deadangle;
 };
+
+TEST(limp, boostCutWarning) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	LimpManager dut;
+	engineConfiguration->boostCutPressure = 100;
+	Sensor::setMockValue(SensorType::Map, 110);
+	dut.updateState(1000, getTimeNowNt());
+	ASSERT_EQ(ClearReason::BoostCut, dut.allowInjection().reason);
+	// Reproduce the missing diagnostic before adding reporting.
+	EXPECT_EQ(0, eth.getWarningCounter());
+}
+
+TEST(limp, lambdaCutWarning) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	LimpManager dut;
+	engine->lambdaMonitor.lambdaMonitorCut = true;
+	dut.updateState(1000, getTimeNowNt());
+	ASSERT_EQ(ClearReason::LambdaProtection, dut.allowInjection().reason);
+	EXPECT_EQ(0, eth.getWarningCounter());
+}
+
+TEST(limp, etbCutWarning) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	LimpManager dut;
+	dut.reportEtbJammed();
+	dut.updateState(2000, getTimeNowNt());
+	ASSERT_FALSE(dut.allowElectronicThrottle());
+	ASSERT_EQ(ClearReason::EtbJammedRevLimit, dut.allowInjection().reason);
+	EXPECT_EQ(0, eth.getWarningCounter());
+}
+
+TEST(limp, injectorDutyCutWarning) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	LimpManager dut;
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
+	engineConfiguration->maxInjectorDutyInstant = 90;
+	engine->engineState.injectionDuration = 120;
+	dut.updateState(1000, getTimeNowNt());
+	ASSERT_EQ(ClearReason::InjectorDutyCycle, dut.allowInjection().reason);
+	ASSERT_TRUE(hasRecentWarningCode(ObdCode::CUSTOM_TOO_LONG_FUEL_INJECTION));
+	int firstWarningCount = eth.getWarningCounter();
+	advanceTimeUs(100000);
+	dut.updateState(1000, getTimeNowNt());
+	// Reproduce repeated reporting within the requested 30-second window.
+	EXPECT_GT(eth.getWarningCounter(), firstWarningCount);
+}
