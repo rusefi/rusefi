@@ -18,6 +18,7 @@ Release template (copy/paste this for new release):
  - 1-2-3-4 firing order for 982 honda sabre 750 reverse rotation V4
  - migrated to Chibios Kernel: 7.0.6 #10295
  - AI/LLM troubleshooting updater feature
+ - do not use cylinder output pins based on cylinder count #10372
 
 ### Fixed
  - wasted to sequential transition when phase is detected #9613
