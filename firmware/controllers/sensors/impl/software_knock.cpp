@@ -91,13 +91,17 @@ void onStartKnockSampling(uint8_t cylinderNumber, float samplingSeconds, uint8_t
 	}
 
 	// Convert sampling time to number of samples
+#if defined(STM32H7XX)
+	float sampleRate = KNOCK_SAMPLE_RATE / (isStm32H7revisionV() ? 2 : 1);
+#else
 	constexpr int sampleRate = KNOCK_SAMPLE_RATE;
+#endif
 	sampleCount = 0xFFFFFFFE & static_cast<size_t>(clampF(100, samplingSeconds * sampleRate, efi::size(sampleBuffer)));
 
 	// Select the appropriate conversion group - it will differ depending on which sensor this cylinder should listen on
 	auto conversionGroup = getKnockConversionGroup(channelIdx);
 
-  //current chanel number for spectrum TS plugin
+	//current chanel number for spectrum TS plugin
 	channelNumber = channelIdx;
 
 	// Stash the current cylinder's number so we can store the result appropriately
@@ -117,23 +121,30 @@ static KnockThread kt;
 
 void initSoftwareKnock() {
 	if (engineConfiguration->enableSoftwareKnock) {
+		float frequencyHz = 0;
 
-		float frequencyHz;
+#if defined(STM32H7XX)
+		float sampleRate = KNOCK_SAMPLE_RATE / (isStm32H7revisionV() ? 2 : 1);
+		efiPrintf("ADC clock %d sampling rate %d", (int)STM32_ADC3_CLOCK / (isStm32H7revisionV() ? 2 : 1) , (int)sampleRate);
+#else
+		constexpr float sampleRate = KNOCK_SAMPLE_RATE;
+#endif
 
 		if (engineConfiguration->knockFrequency > 0.01) {
 			frequencyHz = engineConfiguration->knockFrequency;
-
-			// A center frequency this far below the sample rate can't be represented by the filter.
-			if (frequencyHz < KNOCK_SAMPLE_RATE / 1000.0f) {
-				criticalError("Invalid knock band frequency: %.2f Hz", frequencyHz);
-				return;
-			}
 		} else {
-		  frequencyHz = 1000 * bore2frequency(engineConfiguration->cylinderBore);
-      frequencyHz = engineConfiguration->knockDetectionUseDoubleFrequency ? 2 * frequencyHz : frequencyHz;
+			frequencyHz = 1000 * bore2frequency(engineConfiguration->cylinderBore);
+			frequencyHz = engineConfiguration->knockDetectionUseDoubleFrequency ? 2 * frequencyHz : frequencyHz;
+			efiPrintf("Calculated knock frequency %.3f KHz", frequencyHz / 1000.0);
 		}
 
-		knockFilter.configureBandpass(KNOCK_SAMPLE_RATE, frequencyHz, 3);
+		// A center frequency this far below the sample rate can't be represented by the filter.
+		if (frequencyHz < sampleRate / 1000.0f) {
+			configError("Invalid knock band frequency: %.2f Hz", frequencyHz);
+			return;
+		}
+
+		knockFilter.configureBandpass(sampleRate, frequencyHz, 3);
 
 	#ifdef KNOCK_SPECTROGRAM
 		if (engineConfiguration->enableKnockSpectrogram) {
@@ -155,7 +166,7 @@ void initSoftwareKnock() {
 
 			for (size_t i = 0; i < FFT_SIZE/2; i++)
 			{
-				float freq = float(i * KNOCK_SAMPLE_RATE) / FFT_SIZE;
+				float freq = float(i * sampleRate) / FFT_SIZE;
 				int min = abs(freq - freqStartConst);
 
 				// next after freq start index
@@ -175,9 +186,9 @@ void initSoftwareKnock() {
 		}
 	#endif // KNOCK_SPECTROGRAM
 
-    // Hardware init precedes calibration correction. An unsupported spectrogram
-    // request must not prevent ordinary knock detection from starting.
-  // fun fact: we do not offer any ADC channel flexibility like we have for many other kinds of inputs
+		// Hardware init precedes calibration correction. An unsupported spectrogram
+		// request must not prevent ordinary knock detection from starting.
+		// fun fact: we do not offer any ADC channel flexibility like we have for many other kinds of inputs
 		efiSetPadMode("knock ch1", KNOCK_PIN_CH1, PAL_MODE_INPUT_ANALOG);
 #if KNOCK_HAS_CH2
 		efiSetPadMode("knock ch2", KNOCK_PIN_CH2, PAL_MODE_INPUT_ANALOG);
@@ -208,16 +219,19 @@ static void processLastKnockEvent() {
 	}
 
 	float sumSq = 0;
-
-	// todo: reduce magic constants. engineConfiguration->adcVcc?
-	constexpr float ratio = 3.3f / 4095.0f;
+#if defined(STM32H7XX)
+	// samples are 16 bit
+	float ratio = engineConfiguration->adcVcc / ((1 << 16) - 1);
+#else
+	float ratio = engineConfiguration->adcVcc / 4095.0f;
+#endif
 
 	size_t localCount = sampleCount;
+	uint8_t localCylinder = currentCylinderNumber;
 
 	// Prepare the steady state at vcc/2 so that there isn't a step
 	// when samples begin
-	// todo: reduce magic constants. engineConfiguration->adcVcc?
-	knockFilter.cookSteadyState(3.3f / 2);
+	knockFilter.cookSteadyState(engineConfiguration->adcVcc / 2);
 
 	// Compute the sum of squares
 	for (size_t i = 0; i < localCount; i++) {
@@ -234,9 +248,6 @@ static void processLastKnockEvent() {
 
 	// take a local copy
 	auto lastKnockTime = lastKnockSampleTime;
-
-	// We're done with inspecting the buffer, another sample can be taken
-	knockNeedsProcess = false;
 
 #ifdef KNOCK_SPECTROGRAM
 	if (engineConfiguration->enableKnockSpectrogram) {
@@ -260,21 +271,24 @@ static void processLastKnockEvent() {
 
 			uint32_t compressed = uint32_t(a << 24 | b << 16 | c << 8 | d);
 
-      {
-		    chibios_rt::CriticalSectionLocker csl;
-			  spectrum[i] = compressed;
+			{
+				chibios_rt::CriticalSectionLocker csl;
+				spectrum[i] = compressed;
 			}
 		}
 
 		uint16_t compressedChannelCyl = uint16_t(channelNumber << 8 | currentCylinderNumber);
 
 		{
-		  chibios_rt::CriticalSectionLocker csl;
-		  engine->module<KnockController>()->m_knockSpectrumChannelCyl = compressedChannelCyl;
+			chibios_rt::CriticalSectionLocker csl;
+			engine->module<KnockController>()->m_knockSpectrumChannelCyl = compressedChannelCyl;
 		}
 	}
 
 #endif
+
+	// We're done with inspecting the buffer, another sample can be taken
+	knockNeedsProcess = false;
 
 	// mean of squares (not yet root)
 	float meanSquares = sumSq / localCount;
@@ -285,7 +299,7 @@ static void processLastKnockEvent() {
 	// clamp to reasonable range
 	db = clampF(-100, db, 100);
 
-	engine->module<KnockController>()->onKnockSenseCompleted(currentCylinderNumber, db, lastKnockTime);
+	engine->module<KnockController>()->onKnockSenseCompleted(localCylinder, db, lastKnockTime);
 }
 
 RUSEFI_STACK_ROOT(KnockThread, ThreadTask);

@@ -22,6 +22,10 @@ bool mcuCanFlashWhileRunning();
 bool isStm32F42x();
 #endif // STM32F4
 
+#if defined(STM32H7XX)
+bool isStm32H7revisionV();
+#endif // STM32H7XX
+
 #if defined(STM32F4) || defined(STM32F7) || defined(STM32H7)
 void printWRPBits();
 void printOptBytes();
