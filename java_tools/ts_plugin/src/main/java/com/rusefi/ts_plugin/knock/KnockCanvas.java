@@ -4,123 +4,52 @@ import com.rusefi.core.ui.AutoupdateUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.awt.image.BufferedImage;
 
-import static org.apache.commons.math3.util.Precision.round;
-
+/**
+ * Scrolling knock spectrogram.
+ * <p>
+ * The spectrogram is accumulated into a {@link BufferedImage} of exactly one pixel per
+ * (time, frequency bin) cell, so the on-screen result is resolution independent: the image is
+ * simply stretched into the plot area on every repaint. All decorations (axis, legend, markers)
+ * are laid out relative to the component size and measured with {@link FontMetrics}, so nothing
+ * is clipped or scattered around the corners when the component is resized.
+ */
 public class KnockCanvas {
+    private static final int SPECTROGRAM_X_AXIS_SIZE_BASE = 1024 * 4;
+    /** Number of frequency bins, matches the firmware protocol size. */
+    private static final int BIN_COUNT = 64;
+    /** Draw one frequency label per this many bins. */
+    private static final int LABEL_STEP = 8;
+
+    private static final int MARGIN_LEFT = 52;
+    private static final int MARGIN_RIGHT = 10;
+    private static final int MARGIN_BOTTOM = 6;
+    private static final int LEGEND_PADDING = 4;
+
+    private static final Color BACKGROUND = new Color(0x1b, 0x1b, 0x1f);
+    private static final Color GRID = new Color(0xff, 0xff, 0xff, 40);
+    private static final Color AXIS_TEXT = new Color(0xd0, 0xd0, 0xd0);
+    private static final Color TITLE = new Color(0xff, 0xff, 0xff, 60);
 
     private final JComponent component = new JComponent() {
         @Override
-        public void paint(Graphics g) {
-            super.paint(g);
-
-            Dimension size = component.getSize();
-
-            int width = bufferedImage.getWidth();
-            int height = bufferedImage.getHeight();
-            float bx = (float)width / (float)SPECTROGRAM_X_AXIS_SIZE;
-
-            int offset = (int)(currentIndexXAxis * bx);
-
-            // flip buffers
-            g.drawImage(bufferedImage,
-                0, 0, size.width - offset, size.height,
-                offset, 0, size.width, size.height,
-                null);
-            g.drawImage(bufferedImage, size.width - offset, 0, size.width, size.height,null);
-
-            //debug helper
-            /*g.setColor(Color.RED);
-            int line = (int)(currentIndexXAxis * bx);
-            g.drawLine(line, 0, line, height);*/
-
-            Font f = g.getFont();
-            g.setFont(new Font(f.getName(), Font.BOLD, g.getFont().getSize() - 4));
-
-            g.setColor(Color.YELLOW);
-            for(int i = 0; i < yAxisHz.length / 8; ++i) {
-
-                int y = hzToYScreen(yAxisHz[i * 8], height);
-
-                g.setColor(Color.orange);
-                g.fillRect(0, y, 30, 1);
-
-                double hz = yAxisHz[i * 8];
-                g.drawString(Double.valueOf(round(hz, 1)).toString(), 35,  y);
-            }
-
-            float mouseFrequency = (float) YScreenToHz(mouse_y, height);
-
-            int mouseSpecX = canvasXToSpectrogramSpace(mouse_x, false);
-            int mouseSpecY = canvasYToSpectrogramSpace(mouse_y);
-
-            float mouseAmplitude = spectrogram[mouseSpecX][mouseSpecY];
-
-            //Font f = g.getFont();
-            g.setFont(new Font(f.getName(), Font.BOLD, g.getFont().getSize()));
-
-            g.setColor(Color.YELLOW);
-            int currentX = width / 4;
-            g.drawString("[current]", currentX,  10);
-            g.drawString(Float.valueOf(currentFrequency).toString() + " Hz", currentX,  30);
-            g.drawString(Float.valueOf(currentAmplitude).toString() + " Amp", currentX,  50);
-
-            g.setColor(Color.RED);
-            g.drawString("[peak]", currentX * 2,  10);
-            g.drawString(Float.valueOf(peakFrequency).toString() + " Hz", currentX * 2,  30);
-            g.drawString(Float.valueOf(peakAmplitude).toString() + " Amp", currentX * 2,  50);
-
-            g.setColor(Color.ORANGE);
-            g.drawString("[mouse]", currentX * 3,  10);
-            g.drawString(Float.valueOf(mouseFrequency).toString() + " Hz", currentX * 3,  30);
-            g.drawString(Float.valueOf(mouseAmplitude).toString() + " Amp", currentX * 3,  50);
-
-
-            g.setFont(new Font(f.getName(), Font.BOLD, g.getFont().getSize() * 5));
-            g.setColor(Color.WHITE);
-            if (isCombined) {
-                g.drawString("Combined", 10,  30);
-            } else {
-                g.drawString(Integer.valueOf(number).toString(), 10,  30);
-            }
-
-            g.setFont(f);
-
-            g.setColor(Color.RED);
-            //g.fillOval(spectrogramSpaceToCanvasX(peakX)-5, spectrogramSpaceToCanvasY(peakY)-5, 10, 10);
-            int peakYCanvasSpace = spectrogramSpaceToCanvasY(peakY);
-            g.drawPolygon(new int[]{width, width-5, width}, new int[]{peakYCanvasSpace-3, peakYCanvasSpace, peakYCanvasSpace+3}, 3);
-
-            g.setColor(Color.YELLOW);
-            int currentYCanvasSpace = hzToYScreen(currentFrequency, height);
-            g.drawPolygon(new int[]{width, width-5, width}, new int[]{currentYCanvasSpace-3, currentYCanvasSpace, currentYCanvasSpace+3}, 3);
-
-            g.setColor(Color.DARK_GRAY);
-            g.fillRect(0, mouse_y, width, 1);
-
-            g.dispose();
+        protected void paintComponent(Graphics g) {
+            render((Graphics2D) g, getWidth(), getHeight());
         }
     };
+
     private final boolean isCombined;
+    private final int number;
 
-    private BufferedImage bufferedImage;
-    private Graphics2D bufferedGraphics;
-
-    private static final int SPECTROGRAM_X_AXIS_SIZE_BASE = 1024 * 4;
-
-    private final int SPECTROGRAM_X_AXIS_SIZE;
+    private final int spectrogramXAxisSize;
     private final float[][] spectrogram;
+    private final BufferedImage bufferedImage;
     private final Color[] colorspace;
-
-    private final int spectrogramYAxisSize;
 
     private int currentIndexXAxis = 0;
 
-    private final int number;
-
-    public double[] yAxisHz;
+    public double[] yAxisHz = new double[BIN_COUNT];
     private int yAxisFrequencyStart = -1;
     private float yAxisFrequencyStep = -1;
 
@@ -130,32 +59,26 @@ public class KnockCanvas {
     private int peakY = 0;
     private float peakFrequency = 0;
     private float peakAmplitude = 0;
-    private int peakAmplitudeCol = 0;
 
-    private int mouse_x = 0;
-    private int mouse_y = 0;
+    /** Slowly decaying reference used to normalize colors, avoids a full-history rescan per line. */
+    private float referenceAmplitude = 1;
+
+    private int mouseX = -1;
+    private int mouseY = -1;
 
     public KnockCanvas(int number, int divider, boolean isCombined) {
         this.isCombined = isCombined;
-
-        SwingUtilities.invokeLater(() -> AutoupdateUtil.trueLayoutAndRepaint(component));
-
         this.number = number;
-        SPECTROGRAM_X_AXIS_SIZE = SPECTROGRAM_X_AXIS_SIZE_BASE / divider;
+        this.spectrogramXAxisSize = SPECTROGRAM_X_AXIS_SIZE_BASE / Math.max(1, divider);
 
-        bufferedImage = new BufferedImage(640,480, BufferedImage.TYPE_INT_RGB);
-        bufferedGraphics = bufferedImage.createGraphics();
-        ComponentListener componentListener = new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                bufferedImage = new BufferedImage(component.getWidth(), component.getHeight(), BufferedImage.TYPE_INT_RGB);
-                bufferedGraphics = bufferedImage.createGraphics();
-            }
-        };
-        component.addComponentListener(componentListener);
+        spectrogram = new float[spectrogramXAxisSize][BIN_COUNT];
+        bufferedImage = new BufferedImage(spectrogramXAxisSize, BIN_COUNT, BufferedImage.TYPE_INT_RGB);
+
+        component.setOpaque(true);
+        component.setBackground(BACKGROUND);
 
         //linear-gradient(to right, #000000, #290d1a, #490b32, #670353, #81007b, #a60085, #ca008b, #ef008f, #ff356b, #ff6947, #ff9a22, #ffc700);
-        colorspace = new Color[] {
+        colorspace = new Color[]{
             Color.decode("#000000"),
             Color.decode("#290d1a"),
             Color.decode("#490b32"),
@@ -170,320 +93,311 @@ public class KnockCanvas {
             Color.decode("#ffc700"),
         };
 
-        yAxisHz = new double[64]; // protocol size
-
-        spectrogramYAxisSize = yAxisHz.length;
-        spectrogram = new float[SPECTROGRAM_X_AXIS_SIZE][spectrogramYAxisSize];
+        SwingUtilities.invokeLater(() -> AutoupdateUtil.trueLayoutAndRepaint(component));
     }
-
-    public void setFrequencyStart(int start) {
-        boolean needSetup = this.yAxisFrequencyStart < 0;
-
-        this.yAxisFrequencyStart = start;
-
-        if(needSetup) {
-            setupFrequencyYAxis();
-        }
-    }
-
 
     public JComponent getComponent() {
         return component;
     }
 
-    public void setFrequencyStep(float step) {
-
-        boolean needSetup = this.yAxisFrequencyStep < 0;
-
-        this.yAxisFrequencyStep = step;
-
-        if(needSetup) {
+    public void setFrequencyStart(int start) {
+        boolean needSetup = this.yAxisFrequencyStart < 0;
+        this.yAxisFrequencyStart = start;
+        if (needSetup)
             setupFrequencyYAxis();
-        }
+    }
+
+    public void setFrequencyStep(float step) {
+        boolean needSetup = this.yAxisFrequencyStep < 0;
+        this.yAxisFrequencyStep = step;
+        if (needSetup)
+            setupFrequencyYAxis();
     }
 
     public void setupFrequencyYAxis() {
-
-        if(this.yAxisFrequencyStep < 0 || this.yAxisFrequencyStart < 0) {
+        if (this.yAxisFrequencyStep < 0 || this.yAxisFrequencyStart < 0)
             return;
-        }
 
-        for (int i = 0; i < 64; ++i) {
-            float y = (float)this.yAxisFrequencyStart + (this.yAxisFrequencyStep * (float)i);
-            this.yAxisHz[i] = y;
-        }
+        for (int i = 0; i < BIN_COUNT; ++i)
+            yAxisHz[i] = yAxisFrequencyStart + (double) yAxisFrequencyStep * i;
     }
 
+    // ---- data ----------------------------------------------------------------
+
     public void processValues(float[] values) {
+        float[] column = spectrogram[currentIndexXAxis];
 
-        for (int i = 0; i < spectrogramYAxisSize; ++i) {
-            spectrogram[currentIndexXAxis][i] = values[i];
-        }
-
-        int width = bufferedImage.getWidth();
-        int height = bufferedImage.getHeight();
-
-        float bx = (float)width / (float)SPECTROGRAM_X_AXIS_SIZE;
-
-        int maxYIndex = 0;
-        float min = Integer.MAX_VALUE;
-        float max = 0;
-        float minCurrent = min;
-        float maxCurrent = max;
-        int maxX = 0;
-        int maxY = 0;
-        for(int x = 0; x < SPECTROGRAM_X_AXIS_SIZE; ++x) {
-            for(int y = 0; y < spectrogramYAxisSize; ++y) {
-                float value = spectrogram[x][y];
-                if(value < min) {
-                    min = value;
-                }
-
-                if(value > max) {
-                    max = value;
-                    maxX = x;
-                    maxY = y;
-                }
-
-
-                if(x == currentIndexXAxis && value < minCurrent) {
-                    minCurrent = value;
-                }
-
-                if(x == currentIndexXAxis && value > maxCurrent) {
-                    maxCurrent = value;
-                    maxYIndex = y;
-                }
+        float columnMax = 0;
+        int columnMaxIndex = 0;
+        for (int i = 0; i < BIN_COUNT; ++i) {
+            float value = i < values.length ? values[i] : 0;
+            column[i] = value;
+            if (value > columnMax) {
+                columnMax = value;
+                columnMaxIndex = i;
             }
         }
 
-        currentAmplitude = maxCurrent;
-        currentFrequency = (float)this.yAxisHz[maxYIndex];
+        currentAmplitude = columnMax;
+        currentFrequency = (float) yAxisHz[columnMaxIndex];
 
-        if(peakAmplitudeCol == currentIndexXAxis) {
-            peakFrequency = 0;
-            peakAmplitude = 0;
-            peakY = 0;
-        }
+        // decay keeps the palette adaptive without rescanning the whole history
+        referenceAmplitude = Math.max(columnMax, referenceAmplitude * 0.995f);
+        if (referenceAmplitude < 1)
+            referenceAmplitude = 1;
 
-        if(currentAmplitude > peakAmplitude) {
+        if (currentAmplitude >= peakAmplitude) {
             peakFrequency = currentFrequency;
             peakAmplitude = currentAmplitude;
-            peakY = maxY;
-            peakAmplitudeCol = currentIndexXAxis;
+            peakY = columnMaxIndex;
         }
 
-        for(int y = 0; y < spectrogramYAxisSize; ++y)
-        {
-            float value = spectrogram[currentIndexXAxis][y];
-            double lvalue = value;
-            double lmin = min;
-            double lmax = max;
-
-            double normalized = 0;
-            if((lmax-lmin) != 0) {
-                normalized = (lvalue-lmin)/(lmax-lmin);
-            }
-
-            if(normalized > 1)
-            {
-                normalized = 1.0;
-            }
-
-            if(normalized < 0)
-            {
-                normalized = 0.0;
-            }
-
-            //int color_index = (int)((colorspace.length - 1) * (float)random()); //for test
-            int color_index = (int)((colorspace.length-1) * normalized);
-
-            Color color = colorspace[color_index];
-
-            //simple draw
-            bufferedGraphics.setColor(color);
-            int yr = height - (height / spectrogramYAxisSize) * y;
-            int xr = (int)(currentIndexXAxis * bx);
-            int widthr = ((int)bx) + 1;
-            int heightr = (height / spectrogramYAxisSize);
-            bufferedGraphics.fillRect(xr, yr, widthr, heightr);
+        for (int y = 0; y < BIN_COUNT; ++y) {
+            float normalized = column[y] / referenceAmplitude;
+            if (normalized < 0)
+                normalized = 0;
+            if (normalized > 1)
+                normalized = 1;
+            int colorIndex = (int) ((colorspace.length - 1) * normalized);
+            // image row 0 is the highest frequency bin
+            bufferedImage.setRGB(currentIndexXAxis, BIN_COUNT - 1 - y, colorspace[colorIndex].getRGB());
         }
 
-        ++currentIndexXAxis;
-
-        if(currentIndexXAxis >= SPECTROGRAM_X_AXIS_SIZE){
+        if (++currentIndexXAxis >= spectrogramXAxisSize)
             currentIndexXAxis = 0;
-        }
     }
 
     public void resetPeak() {
         peakFrequency = 0;
         peakAmplitude = 0;
         peakY = 0;
+        referenceAmplitude = 1;
     }
 
-    private double lerp(double start, double end, double t) {
-        return start * (1 - t) + end * t;
+    // ---- rendering -----------------------------------------------------------
+
+    private int plotLeft() {
+        return MARGIN_LEFT;
     }
 
-    private int searchHZ(double[] a, int fromIndex, int toIndex, double key) {
-        int low = fromIndex;
-        int high = toIndex - 1;
+    private int plotWidth(int width) {
+        return Math.max(1, width - MARGIN_LEFT - MARGIN_RIGHT);
+    }
 
-        // bisect
-        while (low <= high) {
-            int mid = (low + high) >>> 1;
-            double midVal = a[mid];
+    private int plotTop(int legendHeight) {
+        return legendHeight;
+    }
 
-            if (midVal < key)
-                low = mid + 1;
-            else if (midVal > key)
-                high = mid - 1;
-            else
-                return mid; // key found
+    private int plotHeight(int height, int legendHeight) {
+        return Math.max(1, height - legendHeight - MARGIN_BOTTOM);
+    }
+
+    private void render(Graphics2D g, int width, int height) {
+        g.setColor(BACKGROUND);
+        g.fillRect(0, 0, width, height);
+
+        Font base = g.getFont();
+        Font legendFont = base.deriveFont(Font.BOLD, Math.max(10f, base.getSize2D()));
+        FontMetrics legendMetrics = g.getFontMetrics(legendFont);
+        int legendHeight = legendMetrics.getHeight() * 2 + LEGEND_PADDING * 2;
+
+        int left = plotLeft();
+        int top = plotTop(legendHeight);
+        int plotW = plotWidth(width);
+        int plotH = plotHeight(height, legendHeight);
+
+        drawSpectrogram(g, left, top, plotW, plotH);
+        drawTitle(g, base, left, top, plotW, plotH);
+        drawFrequencyAxis(g, base, left, top, plotW, plotH);
+        drawMarkers(g, left, top, plotW, plotH);
+        drawLegend(g, legendFont, legendMetrics, width, legendHeight, top, plotH);
+
+        g.setFont(base);
+    }
+
+    private void drawSpectrogram(Graphics2D g, int left, int top, int plotW, int plotH) {
+        int n = spectrogramXAxisSize;
+        int cur = currentIndexXAxis;
+        // oldest column goes to the left edge, newest one to the right edge
+        int split = left + Math.round(plotW * (float) (n - cur) / n);
+        if (cur < n)
+            g.drawImage(bufferedImage, left, top, split, top + plotH, cur, 0, n, BIN_COUNT, null);
+        if (cur > 0)
+            g.drawImage(bufferedImage, split, top, left + plotW, top + plotH, 0, 0, cur, BIN_COUNT, null);
+    }
+
+    private void drawTitle(Graphics2D g, Font base, int left, int top, int plotW, int plotH) {
+        String title = isCombined ? "Combined" : Integer.toString(number);
+        float size = Math.min(plotH * 0.3f, base.getSize2D() * 2f);
+        g.setFont(base.deriveFont(Font.BOLD, Math.max(11f, size)));
+        FontMetrics fm = g.getFontMetrics();
+        g.setColor(TITLE);
+        // top right corner: the left side is occupied by the frequency labels
+        g.drawString(title, left + plotW - fm.stringWidth(title) - 16, top + fm.getAscent() + 2);
+    }
+
+    private void drawFrequencyAxis(Graphics2D g, Font base, int left, int top, int plotW, int plotH) {
+        g.setFont(base.deriveFont(Font.PLAIN, Math.max(9f, base.getSize2D() - 2)));
+        FontMetrics fm = g.getFontMetrics();
+
+        int step = labelStep(plotH, fm.getHeight() + 2);
+        for (int i = 0; i < BIN_COUNT; i += step) {
+            int y = binToY(i, top, plotH);
+
+            g.setColor(GRID);
+            g.drawLine(left, y, left + plotW, y);
+
+            String label = formatHz(yAxisHz[i]);
+            int textY = Math.min(top + plotH - 1, Math.max(top + fm.getAscent(), y + fm.getAscent() / 2));
+            g.setColor(AXIS_TEXT);
+            g.drawString(label, Math.max(2, left - 6 - fm.stringWidth(label)), textY);
         }
-        return low;  // key not found.
     }
 
-    private int hzToYScreen(double hz, int screen_height) {
-
-        int near_hz_index = searchHZ(yAxisHz, 0, yAxisHz.length - 1, hz);
-
-        int a = near_hz_index-1;
-        int b = near_hz_index;
-
-        if(a < 0) {
-            a = 0;
+    /** Picks a label step so that neighbour labels never overlap on a short component. */
+    private static int labelStep(int plotH, int labelHeight) {
+        for (int step = LABEL_STEP; step < BIN_COUNT; step *= 2) {
+            if ((double) plotH * step / BIN_COUNT >= labelHeight)
+                return step;
         }
-
-        if(b > yAxisHz.length - 1) {
-            b = yAxisHz.length - 1;
-        }
-
-        // interpolate value between two y axis coordinates
-        double a_value = yAxisHz[a];
-        double b_value = yAxisHz[b];
-
-        double t = a == b ? 0 : (hz - a_value) / (b_value - a_value);
-
-        double y_step = (double)screen_height / (double)(yAxisHz.length-1);
-
-        double a_screen = (y_step * (a));
-        double b_screen = (y_step * (b));
-
-        double y_screen = lerp(a_screen, b_screen,t);
-
-        return screen_height - (int)y_screen;
+        return BIN_COUNT;
     }
 
-    private double YScreenToHz(int screenY, int screen_height) {
+    private void drawMarkers(Graphics2D g, int left, int top, int plotW, int plotH) {
+        int right = left + plotW;
 
-        if(screenY < 0 || screenY > screen_height) {
+        g.setColor(Color.RED);
+        drawArrow(g, right, binToY(peakY, top, plotH));
+
+        g.setColor(Color.YELLOW);
+        drawArrow(g, right, hzToY(currentFrequency, top, plotH));
+
+        if (mouseX >= left && mouseX <= right && mouseY >= top && mouseY <= top + plotH) {
+            g.setColor(new Color(0xff, 0xff, 0xff, 90));
+            g.drawLine(left, mouseY, right, mouseY);
+        }
+    }
+
+    private static void drawArrow(Graphics2D g, int x, int y) {
+        g.fillPolygon(new int[]{x, x - 7, x}, new int[]{y - 4, y, y + 4}, 3);
+    }
+
+    private void drawLegend(Graphics2D g, Font legendFont, FontMetrics fm, int width, int legendHeight, int top, int plotH) {
+        g.setFont(legendFont);
+
+        float mouseFrequency = (float) yToHz(mouseY, top, plotH);
+        float mouseAmplitude = mouseAmplitude(top, plotH);
+        boolean mouseInside = mouseX >= plotLeft() && mouseY >= top && mouseY <= top + plotH;
+
+        String[] titles = {"current", "peak", "mouse"};
+        String[] frequencies = {
+            formatHz(currentFrequency) + " Hz",
+            formatHz(peakFrequency) + " Hz",
+            mouseInside ? formatHz(mouseFrequency) + " Hz" : "-",
+        };
+        String[] amplitudes = {
+            formatAmplitude(currentAmplitude),
+            formatAmplitude(peakAmplitude),
+            mouseInside ? formatAmplitude(mouseAmplitude) : "-",
+        };
+        Color[] colors = {Color.YELLOW, new Color(0xff, 0x6e, 0x6e), Color.ORANGE};
+
+        int cellWidth = Math.max(1, width / titles.length);
+        int firstLine = LEGEND_PADDING + fm.getAscent();
+        int secondLine = firstLine + fm.getHeight();
+
+        for (int i = 0; i < titles.length; i++) {
+            int cellLeft = i * cellWidth + LEGEND_PADDING;
+            int available = cellWidth - LEGEND_PADDING * 2;
+
+            g.setColor(colors[i]);
+            g.drawString(clip(fm, "[" + titles[i] + "]", available), cellLeft, firstLine);
+            String values = frequencies[i] + "   " + amplitudes[i];
+            g.drawString(clip(fm, values, available), cellLeft, secondLine);
+        }
+
+        g.setColor(GRID);
+        g.drawLine(0, legendHeight - 1, width, legendHeight - 1);
+    }
+
+    private float mouseAmplitude(int top, int plotH) {
+        float[] column = spectrogram[columnAt(mouseX)];
+        return column[yToBin(mouseY, top, plotH)];
+    }
+
+    // ---- coordinate conversions ----------------------------------------------
+
+    private int binToY(int bin, int top, int plotH) {
+        double relative = (bin + 0.5) / BIN_COUNT;
+        return top + (int) Math.round(plotH * (1 - relative));
+    }
+
+    private int hzToY(double hz, int top, int plotH) {
+        return binToY((int) Math.round(hzToBin(hz)), top, plotH);
+    }
+
+    private double hzToBin(double hz) {
+        if (yAxisFrequencyStep <= 0)
             return 0;
-        }
-
-        double relative = ((double)screen_height - (double)screenY) / ((double)screen_height);
-        double spectrogramRelative = (double)(spectrogramYAxisSize) * relative;
-
-        int spectrogramY = (int)spectrogramRelative;
-        if(spectrogramY < 0) {
-            spectrogramY = 0;
-        }
-        if(spectrogramY >= yAxisHz.length) {
-            spectrogramY = yAxisHz.length - 1;
-        }
-
-        int spectrogramY0 = spectrogramY + 1;
-
-        if(spectrogramY0 < 0) {
-            spectrogramY0 = spectrogramY;
-        }
-        if(spectrogramY0 >= yAxisHz.length) {
-            spectrogramY0 = yAxisHz.length - 1;
-        }
-
-        //double t = (spectrogramRelative - spectrogramY0) / (spectrogramY - spectrogramY0);
-
-        double a_hz = yAxisHz[spectrogramY];
-        double b_hz = yAxisHz[spectrogramY0];
-
-        int a_screen = hzToYScreen(a_hz, screen_height);
-        int b_screen = hzToYScreen(b_hz, screen_height);
-
-        double t = a_screen == b_screen ? 0 : ((double)screenY - (double)b_screen) / ((double)a_screen - (double)b_screen);
-
-        double hz = lerp(a_hz, b_hz, 1.0 - t);
-
-        return hz;
+        double bin = (hz - yAxisFrequencyStart) / yAxisFrequencyStep;
+        return Math.max(0, Math.min(BIN_COUNT - 1, bin));
     }
 
-/* dead code?
-    int spectrogramSpaceToCanvasX(int x) {
-        int width = bufferedImage.getWidth();
-        float bx = (float)width / (float)SPECTROGRAM_X_AXIS_SIZE;
-        return (int)((float)x * bx);
-    }
-*/
-
-    private int spectrogramSpaceToCanvasY(int y) {
-        int height = bufferedImage.getHeight();
-        float by = (float)height / (float)spectrogramYAxisSize;
-        return (int)(((float)spectrogramYAxisSize - 1 - (float)y) * by);
+    private int yToBin(int y, int top, int plotH) {
+        double relative = 1 - (double) (y - top) / plotH;
+        int bin = (int) (relative * BIN_COUNT);
+        return Math.max(0, Math.min(BIN_COUNT - 1, bin));
     }
 
-    private int canvasXToSpectrogramSpace(int x, boolean reverseOffset) {
-        int width = bufferedImage.getWidth();
-        float bx = (float)width / (float)SPECTROGRAM_X_AXIS_SIZE;
+    private double yToHz(int y, int top, int plotH) {
+        return yAxisHz[yToBin(y, top, plotH)];
+    }
 
-        int offset = (int)(currentIndexXAxis * bx);
+    /** Maps a component x coordinate into the ring buffer column which is drawn there. */
+    private int columnAt(int x) {
+        int plotW = Math.max(1, component.getWidth() - MARGIN_LEFT - MARGIN_RIGHT);
+        double relative = (double) (x - plotLeft()) / plotW;
+        relative = Math.max(0, Math.min(1, relative));
+        int offset = (int) (relative * (spectrogramXAxisSize - 1));
+        int index = currentIndexXAxis + offset;
+        if (index >= spectrogramXAxisSize)
+            index -= spectrogramXAxisSize;
+        return Math.max(0, Math.min(spectrogramXAxisSize - 1, index));
+    }
 
-        int imageX;
-
-        if(reverseOffset) {
-            if(offset < x) {
-                imageX = x + offset;
-                if(imageX > width) {
-                    imageX -= width;
-                }
-            }
-            else {
-                imageX = x - (width - offset);
-                if(imageX < 0) {
-                    imageX = Math.abs(imageX);
-                }
-            }
-        } else {
-            if(offset < x) {
-                imageX = x - offset;
-            }
-            else {
-                imageX = x + (width - offset);
-            }
+    private static String clip(FontMetrics fm, String text, int available) {
+        if (available <= 0 || fm.stringWidth(text) <= available)
+            return text;
+        String ellipsis = "...";
+        int width = available - fm.stringWidth(ellipsis);
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < text.length(); i++) {
+            if (fm.stringWidth(sb.toString() + text.charAt(i)) > width)
+                break;
+            sb.append(text.charAt(i));
         }
-
-        int i = (int) ((float) imageX / bx);
-        // This is a spectrogram index, not a pixel coordinate.
-        return Math.max(0, Math.min(SPECTROGRAM_X_AXIS_SIZE - 1, i));
+        return sb + ellipsis;
     }
 
-    private int canvasYToSpectrogramSpace(int y) {
-        int height = bufferedImage.getHeight();
-        float by = (float)height / (float)spectrogramYAxisSize;
-        int i = spectrogramYAxisSize - 1 - (int)((float)y / by);
-        return Math.max(0, Math.min(spectrogramYAxisSize - 1, i));
+    private static String formatHz(double hz) {
+        if (hz >= 1000)
+            return String.format("%.1fk", hz / 1000);
+        return String.format("%.0f", hz);
     }
-/* some unfinished feature?
-    void setupFrequencyByClick(int x, int y) {
 
+    private static String formatAmplitude(float amplitude) {
+        return String.format("%.0f amp", amplitude);
     }
-*/
+
+    // ---- mouse ----------------------------------------------------------------
+
     public float[] getCurrentMouseMagnitudes() {
-        int spectrogramSpaceX = this.canvasXToSpectrogramSpace(this.mouse_x, true);
-        return spectrogram[spectrogramSpaceX];
+        return spectrogram[columnAt(mouseX)];
     }
 
     public void setMousePosition(int x, int y) {
-        mouse_x = x;
-        mouse_y = y;
+        mouseX = x;
+        mouseY = y;
+        component.repaint();
     }
 }
