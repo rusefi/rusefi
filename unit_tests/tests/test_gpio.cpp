@@ -36,6 +36,24 @@ static void expectPinOwner(brain_pin_e pin, const char* expectedOwner) {
 	}
 }
 
+class ScopedIssue10311PinCleanup {
+public:
+	explicit ScopedIssue10311PinCleanup(brain_pin_e pin)
+		: m_pin(pin), m_owner(getBrainUsedPin(brainPin_to_index(pin))), m_state(efiReadPin(pin)) {
+		efiSetPadUnused(m_pin);
+	}
+	~ScopedIssue10311PinCleanup() {
+		efiSetPadUnused(m_pin);
+		getBrainUsedPin(brainPin_to_index(m_pin)) = m_owner;
+		setMockState(m_pin, m_state);
+	}
+
+private:
+	brain_pin_e m_pin;
+	const char* m_owner;
+	bool m_state;
+};
+
 static void establishEmptyCylinderOutputBaseline() {
 	configureCylinderOutputPins(0);
 	enginePins.updateCylinderOutputPinsForUnitTest();
@@ -113,6 +131,93 @@ TEST(gpio, deInit) {
 
 	// Reinit with DIFFERENT pin should work after deinit
 	EXPECT_NO_FATAL_ERROR(dut.initPin("testPin", Gpio::B5));
+}
+
+// #10311: these tests assert current bugs, not the desired behavior.
+// A rejected pin user should leave the existing owner untouched.
+// Mode 0 tests pin ownership only, not ADC/EXTI hardware setup.
+// Keep the same setup when changing expectations for the fix.
+// https://github.com/rusefi/rusefi/issues/10311
+TEST(gpio, issue10311_duplicateInputInputClaimPreservesOriginalOwner) {
+	ScopedPinOwnershipForUnitTest pinOwnership;
+	ScopedIssue10311PinCleanup cleanup(Gpio::A6);
+
+	efiSetPadMode("issue10311 original input", Gpio::A6, static_cast<iomode_t>(0));
+	EXPECT_FATAL_ERROR(efiSetPadMode("issue10311 duplicate input", Gpio::A6, static_cast<iomode_t>(0)));
+
+	expectPinOwner(Gpio::A6, "issue10311 original input");
+}
+
+TEST(gpio, issue10311_inputThenOutputDuplicateClaimClobbersInputAndCleanup) {
+	ScopedPinOwnershipForUnitTest pinOwnership;
+	ScopedIssue10311PinCleanup cleanup(Gpio::A6);
+	OutputPin outputClaimant;
+
+	efiSetPadMode("issue10311 input owner", Gpio::A6, static_cast<iomode_t>(0));
+	setMockState(Gpio::A6, true);
+	ASSERT_TRUE(efiReadPin(Gpio::A6));
+	EXPECT_FATAL_ERROR(outputClaimant.initPin("issue10311 output claimant", Gpio::A6));
+
+	expectPinOwner(Gpio::A6, "issue10311 input owner");
+	// The failed output init still changes the input's mock level.
+	EXPECT_FALSE(efiReadPin(Gpio::A6));
+	// It also remembers the pin it failed to acquire.
+	EXPECT_EQ(outputClaimant.brainPin, Gpio::A6);
+	outputClaimant.deInit();
+	// Cleanup wrongly removes the existing owner's registration.
+	expectPinOwner(Gpio::A6, nullptr);
+}
+
+TEST(gpio, issue10311_outputThenInputDuplicateClaimRetainsOwnerAndLevel) {
+	ScopedPinOwnershipForUnitTest pinOwnership;
+	ScopedIssue10311PinCleanup cleanup(Gpio::A6);
+	OutputPin outputOwner;
+
+	outputOwner.initPin("issue10311 output owner", Gpio::A6);
+	outputOwner.setValue(true);
+	ASSERT_TRUE(efiReadPin(Gpio::A6));
+	EXPECT_FATAL_ERROR(efiSetPadMode("issue10311 input claimant", Gpio::A6, static_cast<iomode_t>(0)));
+
+	expectPinOwner(Gpio::A6, "issue10311 output owner");
+	EXPECT_TRUE(efiReadPin(Gpio::A6));
+	outputOwner.deInit();
+	expectPinOwner(Gpio::A6, nullptr);
+}
+
+TEST(gpio, issue10311_duplicateOutputDefaultWriteAndFailedClaimantCleanup) {
+	ScopedPinOwnershipForUnitTest pinOwnership;
+	ScopedIssue10311PinCleanup cleanup(Gpio::A6);
+	OutputPin originalOwner;
+	OutputPin failedClaimant;
+
+	originalOwner.initPin("issue10311 original output", Gpio::A6);
+	originalOwner.setValue(true);
+	ASSERT_TRUE(efiReadPin(Gpio::A6));
+
+	// Init writes the default level before checking ownership.
+	EXPECT_FATAL_ERROR(failedClaimant.initPin("issue10311 duplicate output", Gpio::A6));
+	expectPinOwner(Gpio::A6, "issue10311 original output");
+	EXPECT_EQ(failedClaimant.brainPin, Gpio::A6);
+	EXPECT_FALSE(efiReadPin(Gpio::A6));
+
+	// The failed output can still write the pin and remove its owner's registration.
+	failedClaimant.setValue(true);
+	EXPECT_TRUE(efiReadPin(Gpio::A6));
+	failedClaimant.deInit();
+	expectPinOwner(Gpio::A6, nullptr);
+	originalOwner.deInit();
+}
+
+TEST(gpio, issue10311_sameOutputObjectReinitCurrentlyRaisesDuplicateClaim) {
+	ScopedPinOwnershipForUnitTest pinOwnership;
+	ScopedIssue10311PinCleanup cleanup(Gpio::A6);
+	OutputPin output;
+
+	// Reinitializing the same output wrongly reports a conflict.
+	EXPECT_NO_FATAL_ERROR(output.initPin("issue10311 same output", Gpio::A6));
+	EXPECT_FATAL_ERROR(output.initPin("issue10311 same output", Gpio::A6));
+	expectPinOwner(Gpio::A6, "issue10311 same output");
+	EXPECT_EQ(output.brainPin, Gpio::A6);
 }
 
 TEST(gpio, pinSetNotInverted) {

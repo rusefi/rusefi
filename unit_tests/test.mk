@@ -5,6 +5,7 @@ FRAMEWORK_SRC_CPP = test-framework/unit_test_framework.cpp \
 	boards.cpp \
 	backupram.cpp \
 	test-framework/test_executor.cpp \
+	test-framework/exti_host_adapter.cpp \
 	test_basic_math/test_find_index.cpp \
 	test_basic_math/test_interpolation_3d.cpp \
 

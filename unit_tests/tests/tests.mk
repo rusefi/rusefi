@@ -216,6 +216,7 @@ TESTS_SRC_CPP = \
 	tests/binary_log/test_log_file_content.cpp \
 	tests/test_dynoview.cpp \
 	tests/test_gpio.cpp \
+	tests/test_digital_input_exti.cpp \
 	tests/test_limp.cpp \
 	tests/test_tcu.cpp \
 	tests/test_hellen_board_id.cpp \

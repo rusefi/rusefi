@@ -7,8 +7,11 @@
 
 #include "pch.h"
 
-#if HAL_USE_PAL && EFI_PROD_CODE
+#if (HAL_USE_PAL && EFI_PROD_CODE) || EFI_UNIT_TEST
 #include "digital_input_exti.h"
+#if EFI_UNIT_TEST
+#include "exti_host_adapter.h"
+#endif
 
 /**
  * EXTI is a funny thing: you can only use same pin on one port. For example, you can use
@@ -18,10 +21,14 @@
  * because pin '0' would be used on two different ports
  */
 
-#ifdef EFI_IRQ_EXTI_HANDOFF_PRIORITY
+#if defined(EFI_IRQ_EXTI_HANDOFF_PRIORITY) || EFI_UNIT_TEST
+#if EFI_PROD_CODE && defined(EFI_IRQ_EXTI_HANDOFF_PRIORITY)
 void efiExtiInit() {
 	nvicEnableVector(I2C1_EV_IRQn, EFI_IRQ_EXTI_HANDOFF_PRIORITY);
 }
+#elif EFI_UNIT_TEST
+void efiExtiInit() { }
+#endif
 
 struct ExtiChannel
 {
@@ -45,7 +52,7 @@ int efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, ExtiC
 	criticalAssert(msg, "efiExtiEnablePin msg must not be null", -1);
 
 	ioportid_t port = getHwPort(msg, brainPin);
-	if (port == NULL) {
+	if (port == 0) {
 		return -1;
 	}
 
@@ -83,7 +90,7 @@ void efiExtiDisablePin(brain_pin_e brainPin)
 		return;
 
 	ioportid_t port = getHwPort("exti", brainPin);
-	if (port == NULL)
+	if (port == 0)
 		return;
 	brain_pin_markUnused(brainPin);
 
@@ -105,6 +112,43 @@ void efiExtiDisablePin(brain_pin_e brainPin)
 	channel.CallbackData = nullptr;
 }
 
+#if EFI_UNIT_TEST
+void efiExtiGetChannelForUnitTest(size_t index, ExtiChannelSnapshotForUnitTest& result) {
+	if (index >= 16) {
+		result = {};
+		return;
+	}
+	result = { channels[index].Callback, channels[index].CallbackData, channels[index].Name };
+}
+
+void efiExtiSnapshotChannelsForUnitTest(ExtiChannelSnapshotForUnitTest* snapshots) {
+	for (size_t i = 0; i < 16; i++) {
+		snapshots[i] = { channels[i].Callback, channels[i].CallbackData, channels[i].Name };
+	}
+}
+
+void efiExtiResetChannelsForUnitTest() {
+	for (size_t i = 0; i < 16; i++) {
+		channels[i].Callback = nullptr;
+		channels[i].CallbackData = nullptr;
+		channels[i].Name = nullptr;
+	}
+}
+
+void efiExtiRestoreChannelsForUnitTest(const ExtiChannelSnapshotForUnitTest* snapshots) {
+	for (size_t i = 0; i < 16; i++) {
+		channels[i].Callback = snapshots[i].callback;
+		channels[i].CallbackData = snapshots[i].callbackData;
+		channels[i].Name = snapshots[i].name;
+	}
+}
+
+uint8_t getExtiOverflowCounter() {
+	return 0;
+}
+#endif
+
+#if EFI_PROD_CODE && defined(EFI_IRQ_EXTI_HANDOFF_PRIORITY)
 static inline void triggerInterrupt() {
 	// Manually fire the I2C1_EV interrupt, it will be queued after this interrupt returns
 	NVIC->STIR = I2C1_EV_IRQn;
@@ -248,6 +292,7 @@ CH_FAST_IRQ_HANDLER(VectorE0) {
 	handleExtiIsr(14);
 	handleExtiIsr(15);
 }
+#endif // EFI_IRQ_EXTI_HANDOFF_PRIORITY
 
 #else // not STM32
 
@@ -268,4 +313,4 @@ uint8_t getExtiOverflowCounter() {
 
 #endif
 
-#endif /* HAL_USE_PAL && EFI_PROD_CODE */
+#endif /* (HAL_USE_PAL && EFI_PROD_CODE) || EFI_UNIT_TEST */
