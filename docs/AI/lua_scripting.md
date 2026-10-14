@@ -4,6 +4,9 @@ This document inventories the custom functions and classes that rusEFI firmware 
 into the user Lua VM, grouped by category. It is intended for AI assistants and developers
 working on the scripting surface; user-facing docs live at https://wiki.rusefi.com/Lua-Scripting
 
+For which subsystems can accept a Lua implementation, and the limits of each
+replacement/adjustment path, see [Lua implementation injection points](lua_implementation_injection.md).
+
 ## Where hooks are registered
 
 | File | Role |
@@ -59,7 +62,7 @@ Lets a script *be* a sensor - e.g. CAN-sourced coolant temp or pedal position.
 | Hook | Notes |
 |------------------------------|-------|
 | `Sensor` class (`LuaSensor`) | `Sensor.new("Clt")`: registers a `StoredValueSensor` under the named `SensorType`; methods `set(value)`, `invalidate()`, `setTimeout(ms)` (default 100ms staleness), `setRedundant(bool)`; Lua error if the type is already registered; auto-unregisters on GC |
-| `setLuaGauge(idx, value)` | 1-based, writes one of `luaGauges[LUA_GAUGE_COUNT]` (8) - purely for display/logging, header comment notes LuaSensor could do the same |
+| `setLuaGauge(idx, value)` | 1-based, updates one of eight pre-registered sensors (5-second timeout). Used for display/logging and configurable control inputs, including GPPWM channels and nitrous arming |
 | `setDashLight(idx, bool)` | 0-based magic index (0 left turn, 1 right turn, 2 check engine, 3 high beams, 4 parking brake) writes the matching `dash*` bit directly into `engine->outputChannels`; Lua error on any other index. Firmware never touches these bits, so the script owns them; read back via `getOutput("dashLeftTurn")` etc. `dashCheckEngine` is independent of the firmware-derived `checkEngine` bit |
 | `setAirmass(airmass, engineLoadPercent)` | Feeds the `LuaAirmass` model (clamped 0..10 g, 0..1000 %) - used when fuel algorithm is set to Lua; pairs with `getAirmass` below |
 
@@ -80,11 +83,12 @@ instead of / in addition to physical switches.
 ### 4. Closed-loop trims and adjustments (fuel / ignition / boost / idle / ETB)
 
 Numeric trims applied on top of the normal control algorithms. These are the primary
-"engine control from Lua" surface; values persist until the script changes them.
+"engine control from Lua" surface. Most persist until changed or reset; ETB/EWG
+additions expire after 0.2 seconds without refresh.
 
 | Function | Target |
 |------------------------------|--------|
-| `setFuelAdd(mg)` / `setFuelMult(coef)` | Fueling (see [fueling_system.md](fueling_system.md)); Add is per-cylinder mg |
+| `setFuelAdd(grams)` / `setFuelMult(coef)` | Fueling (see [fueling_system.md](fueling_system.md)); Add is grams per injection, applied before downstream trims/staging |
 | `setTimingAdd(deg)` / `setTimingMult(coef)` | Ignition advance (see [ignition_system.md](ignition_system.md)) |
 | `setSparkSkipRatio(r)` / `setSparkHardSkipRatio(r)` | Soft/hard spark-skip (traction/launch style torque cut) |
 | `setBoostTargetAdd(v)` / `setBoostTargetMult(v)` / `setBoostDutyAdd(v)` | BoostController closed/open loop (EFI_BOOST_CONTROL) |
