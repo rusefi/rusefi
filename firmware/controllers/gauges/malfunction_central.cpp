@@ -204,6 +204,7 @@ void clearWarnings(void) {
 	engine->engineState.warnings.clear();
 }
 
+/* this method does not cause freeze frame, use warning() instead */
 void addError(ObdCode errorCode) {
 	engine->engineState.warnings.addWarningCode(errorCode);
 }
