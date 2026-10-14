@@ -12,7 +12,6 @@ import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.ts_plugin.knock.KnockCanvas;
 import com.rusefi.ts_plugin.knock.KnockMagnitudeCanvas;
-import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,11 +28,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class KnockPane {
 
-    private static final int PREFERRED_WIDTH = 800;
-    private static final int PREF_HEIGHT = 200;
+    /** Minimal readable height of a single spectrogram, the scroll pane kicks in below that. */
+    private static final int MIN_CANVAS_HEIGHT = 140;
+    private static final int PREFERRED_WIDTH = 600;
     private static final int COMPRESSED_SPECTRUM_PROTOCOL_SIZE = 16;
-    private static final int MAG_WIDTH = 760;
-    private static final int MAG_HEIGHT = 200;
+    private static final int MAG_HEIGHT = 170;
     // Sum of indices 0..COMPRESSED_SPECTRUM_PROTOCOL_SIZE-1; used as a "all packets received" checksum.
     private static final int SPECTRUM_INDEX_CHECKSUM = COMPRESSED_SPECTRUM_PROTOCOL_SIZE * (COMPRESSED_SPECTRUM_PROTOCOL_SIZE - 1) / 2;
 
@@ -49,7 +48,7 @@ public class KnockPane {
     private final UIContext uiContext;
 
     private final JPanel content = new JPanel(new BorderLayout());
-    private final JComponent canvasesPanel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, 5, 5));
+    private final CanvasesPanel canvasesPanel = new CanvasesPanel();
     private final JButton buttonStartStop = new JButton("Start");
     private final JLabel statusLabel = new JLabel(STATUS_NOT_CONNECTED);
 
@@ -76,13 +75,16 @@ public class KnockPane {
         buttonStartStop.addActionListener(e -> toggleStartStop());
 
         JComponent buttons = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
-        buttons.add(statusLabel);
         buttons.add(buttonStartStop);
+        buttons.add(statusLabel);
         content.add(buttons, BorderLayout.NORTH);
 
+        // horizontal scrolling is never needed: the panel always matches the viewport width
         JScrollPane canvasScroll = new JScrollPane(canvasesPanel,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        canvasScroll.setBorder(BorderFactory.createEmptyBorder());
+        canvasScroll.getVerticalScrollBar().setUnitIncrement(16);
 
         // Each tab owns a wrapper; the canvas scroll is re-parented to the active tab on switch.
         JPanel allPanel      = new JPanel(new BorderLayout());
@@ -104,17 +106,22 @@ public class KnockPane {
             switchCanvasType(tabTypes[idx]);
         });
 
-        JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, viewTabs, magnitudes.getComponent());
-        split.setResizeWeight(0.7);
-        split.setDividerSize(4);
-        content.add(split, BorderLayout.CENTER);
-
         JComponent mag = magnitudes.getComponent();
         mag.setFocusable(true);
         mag.setFocusTraversalKeysEnabled(false);
         mag.setDoubleBuffered(true);
-        mag.setPreferredSize(new Dimension(MAG_WIDTH, MAG_HEIGHT));
-        mag.setMinimumSize(new Dimension(100, 50));
+        mag.setPreferredSize(new Dimension(PREFERRED_WIDTH, MAG_HEIGHT));
+        mag.setMinimumSize(new Dimension(100, 60));
+
+        JPanel magPanel = new JPanel(new BorderLayout());
+        magPanel.setBorder(BorderFactory.createTitledBorder("Magnitudes at cursor"));
+        magPanel.add(mag, BorderLayout.CENTER);
+
+        JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, viewTabs, magPanel);
+        split.setResizeWeight(1.0);
+        split.setDividerSize(6);
+        split.setBorder(BorderFactory.createEmptyBorder());
+        content.add(split, BorderLayout.CENTER);
 
         subscribe();
         createCanvas();
@@ -277,6 +284,10 @@ public class KnockPane {
                     addCanvas(2, 2, false);
                     break;
                 case CT_CYLINDERS:
+                    if (cylindersCount < 1) {
+                        addCanvas(1, 1, false);
+                        break;
+                    }
                     for (int i = 0; i < cylindersCount; i++)
                         addCanvas(i + 1, cylindersCount, false);
                     break;
@@ -296,8 +307,9 @@ public class KnockPane {
         comp.addMouseListener(new MouseAdapter() {});
         comp.setFocusable(true);
         comp.setDoubleBuffered(true);
-        comp.setPreferredSize(new Dimension(PREFERRED_WIDTH, PREF_HEIGHT));
-        comp.setMinimumSize(new Dimension(PREFERRED_WIDTH, PREF_HEIGHT));
+        // width is driven by the layout, only the height matters for the scroll pane
+        comp.setPreferredSize(new Dimension(PREFERRED_WIDTH, MIN_CANVAS_HEIGHT));
+        comp.setMinimumSize(new Dimension(0, MIN_CANVAS_HEIGHT));
         canvasesPanel.add(comp);
         canvases.add(canvas);
     }
@@ -336,6 +348,44 @@ public class KnockPane {
 
     public JPanel getContent() {
         return content;
+    }
+
+    // ---- Inner classes -------------------------------------------------------
+
+    /**
+     * Stretches the spectrogram stack to the full viewport width and, as long as the canvases fit,
+     * to the full viewport height as well, so nothing is squeezed into a corner.
+     */
+    private static class CanvasesPanel extends JPanel implements Scrollable {
+        CanvasesPanel() {
+            super(new GridLayout(0, 1, 0, 4));
+        }
+
+        @Override
+        public Dimension getPreferredScrollableViewportSize() {
+            return getPreferredSize();
+        }
+
+        @Override
+        public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
+            return 16;
+        }
+
+        @Override
+        public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
+            return orientation == SwingConstants.VERTICAL ? visibleRect.height : visibleRect.width;
+        }
+
+        @Override
+        public boolean getScrollableTracksViewportWidth() {
+            return true;
+        }
+
+        @Override
+        public boolean getScrollableTracksViewportHeight() {
+            Container parent = getParent();
+            return parent == null || getPreferredSize().height <= parent.getHeight();
+        }
     }
 
     // ---- Inner listener classes ----------------------------------------------
