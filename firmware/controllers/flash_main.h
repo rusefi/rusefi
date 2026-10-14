@@ -20,6 +20,10 @@ void initFlash();
 void writeToFlashNow();
 bool writeToFlashNowImpl();
 void setNeedToWriteConfiguration();
+#if EFI_UNIT_TEST
+void resetConfigurationWriteRequestCountForUnitTest();
+int getConfigurationWriteRequestCountForUnitTest();
+#endif
 void suspendLinearTimeWatcher();
 
 bool settingsLtftRequestWriteToFlash();

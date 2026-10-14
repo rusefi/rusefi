@@ -66,6 +66,18 @@ bool checkSettingsWriteFailure() {
 
 #endif // EFI_CONFIGURATION_STORAGE
 
+#if EFI_UNIT_TEST
+static int configurationWriteRequestCountForUnitTest;
+
+void resetConfigurationWriteRequestCountForUnitTest() {
+	configurationWriteRequestCountForUnitTest = 0;
+}
+
+int getConfigurationWriteRequestCountForUnitTest() {
+	return configurationWriteRequestCountForUnitTest;
+}
+#endif
+
 /* If any setting storage is exist */
 #if EFI_CONFIGURATION_STORAGE
 
@@ -76,9 +88,12 @@ void writeToFlashNow() {
 }
 
 void setNeedToWriteConfiguration() {
+#if EFI_UNIT_TEST
+	configurationWriteRequestCountForUnitTest++;
+#else
 	efiPrintf("Scheduling write");
-
 	storageRequestWriteID(EFI_SETTINGS_RECORD_ID, false);
+#endif
 }
 
 bool settingsLtftRequestWriteToFlash() {
@@ -246,3 +261,9 @@ void initFlash() {
 }
 
 #endif /* EFI_CONFIGURATION_STORAGE */
+
+#if EFI_UNIT_TEST && !(EFI_CONFIGURATION_STORAGE)
+void setNeedToWriteConfiguration() {
+	configurationWriteRequestCountForUnitTest++;
+}
+#endif

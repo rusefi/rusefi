@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include "basic_configuration.h"
+#include "flash_main.h"
 #include "board_overrides.h"
 #include "defaults.h"
 #include "electronic_throttle_impl.h"
@@ -181,4 +182,227 @@ TEST_F(BasicConfigurationTest, RejectsRunningEngineAndUnknownAction) {
 
 	custom_board_applyBasicConfiguration.reset();
 	EXPECT_FALSE(handleBasicConfigurationAction(static_cast<uint16_t>(BasicConfigurationAction::EtbToStepper)));
+}
+
+TEST_F(BasicConfigurationTest, UnassignOutputsClearsActuatorDebugAndDacPinsOnly) {
+	// [tag:unassign_outputs] Cover the explicit clearing inventory and preserved infrastructure.
+	const auto assignedGpio = Gpio::A0;
+	const auto assignedOutput = static_cast<output_pin_e>(Gpio::A0);
+	for (auto& pin : engineConfiguration->injectionPins) {
+		pin = assignedOutput;
+	}
+	for (auto& pin : engineConfiguration->injectionPinsStage2) {
+		pin = assignedOutput;
+	}
+	for (auto& pin : engineConfiguration->ignitionPins) {
+		pin = assignedOutput;
+	}
+	for (auto& pin : engineConfiguration->trailingCoilPins) {
+		pin = assignedOutput;
+	}
+	for (auto& pin : engineConfiguration->stepper_raw_output) {
+		pin = assignedOutput;
+	}
+	for (auto& pin : engineConfiguration->vvtPins) {
+		pin = assignedOutput;
+	}
+	for (auto& pin : engineConfiguration->tcu_solenoid) {
+		pin = assignedOutput;
+	}
+	for (auto& pin : engineConfiguration->luaOutputPins) {
+		pin = assignedOutput;
+	}
+	for (auto& pin : engineConfiguration->auxValves) {
+		pin = assignedGpio;
+	}
+	const auto lastAuxValve = sizeof(engineConfiguration->auxValves) / sizeof(engineConfiguration->auxValves[0]) - 1;
+	engineConfiguration->auxValves[lastAuxValve] = Gpio::TLE6240_PIN_1;
+	for (auto& pin : engineConfiguration->triggerSimulatorPins) {
+		pin = assignedGpio;
+	}
+	for (auto& pin : engineConfiguration->dacOutputPins) {
+		pin = assignedGpio;
+	}
+	for (size_t i = 0; i < ETB_COUNT; i++) {
+		engineConfiguration->etbIo[i].directionPin1 = assignedGpio;
+		engineConfiguration->etbIo[i].directionPin2 = assignedGpio;
+		engineConfiguration->etbIo[i].controlPin = assignedGpio;
+		engineConfiguration->etbIo[i].disablePin = assignedGpio;
+	}
+	for (size_t i = 0; i < DC_PER_STEPPER; i++) {
+		engineConfiguration->stepperDcIo[i].directionPin1 = assignedGpio;
+		engineConfiguration->stepperDcIo[i].directionPin2 = assignedGpio;
+		engineConfiguration->stepperDcIo[i].controlPin = assignedGpio;
+		engineConfiguration->stepperDcIo[i].disablePin = assignedGpio;
+	}
+	engineConfiguration->stepperEnablePin = assignedGpio;
+	engineConfiguration->idle.solenoidPin = assignedOutput;
+	engineConfiguration->idle.stepperDirectionPin = assignedGpio;
+	engineConfiguration->idle.stepperStepPin = assignedGpio;
+	engineConfiguration->secondSolenoidPin = assignedOutput;
+	engineConfiguration->fuelPumpPin = assignedOutput;
+	engineConfiguration->starterControlPin = assignedOutput;
+	engineConfiguration->starterRelayDisablePin = assignedOutput;
+	engineConfiguration->acRelayPin = assignedOutput;
+	engineConfiguration->alternatorControlPin = assignedOutput;
+	engineConfiguration->malfunctionIndicatorPin = assignedOutput;
+	engineConfiguration->tachOutputPin = assignedOutput;
+	engineConfiguration->speedometerOutputPin = assignedOutput;
+	engineConfiguration->o2heaterPin = assignedOutput;
+	engineConfiguration->hpfpValvePin = assignedOutput;
+	engineConfiguration->acrPin = assignedOutput;
+	engineConfiguration->acrPin2 = assignedOutput;
+	engineConfiguration->nitrousRelayPin = assignedOutput;
+	engineConfiguration->vvlRelayPin = assignedOutput;
+	engineConfiguration->tcu_tcc_onoff_solenoid = assignedOutput;
+	engineConfiguration->tcu_tcc_pwm_solenoid = assignedOutput;
+	engineConfiguration->tcu_pc_solenoid_pin = assignedOutput;
+	engineConfiguration->tcu_32_solenoid_pin = assignedOutput;
+	for (auto& pwm : engineConfiguration->gppwm) {
+		pwm.pin = assignedOutput;
+	}
+	engineConfiguration->boostControlPin = assignedOutput;
+	engineConfiguration->fanPin = assignedOutput;
+	engineConfiguration->fan2Pin = assignedOutput;
+	engineConfiguration->debugTriggerSync = assignedGpio;
+	engineConfiguration->debugTriggerState = assignedGpio;
+	engineConfiguration->triggerErrorPin = assignedGpio;
+	engineConfiguration->camSimulatorPin = assignedGpio;
+	engineConfiguration->mainRelayPin = assignedOutput;
+	engineConfiguration->sdCardCsPin = assignedGpio;
+	engineConfiguration->canTxPin = assignedGpio;
+	engineConfiguration->canRxPin = assignedGpio;
+	engineConfiguration->sdCardSpiDevice = static_cast<spi_device_e>(1);
+	engineConfiguration->is_enabled_spi_1 = true;
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_5;
+	engineConfiguration->tps1SecondaryMin = 303;
+	engineConfiguration->injectionMode = IM_BATCH;
+	engineConfiguration->triggerInputPins[0] = static_cast<brain_input_pin_e>(Gpio::A0);
+	engineConfiguration->spi1mosiPin = assignedGpio;
+	engine->engineTypeChangeTimer.init();
+
+	EXPECT_TRUE(handleBasicConfigurationAction(static_cast<uint16_t>(BasicConfigurationAction::UnassignOutputs)));
+
+	for (auto pin : engineConfiguration->injectionPins) {
+		EXPECT_EQ(static_cast<output_pin_e>(0), pin);
+	}
+	for (auto pin : engineConfiguration->injectionPinsStage2) {
+		EXPECT_EQ(static_cast<output_pin_e>(0), pin);
+	}
+	for (auto pin : engineConfiguration->ignitionPins) {
+		EXPECT_EQ(static_cast<output_pin_e>(0), pin);
+	}
+	for (auto pin : engineConfiguration->trailingCoilPins) {
+		EXPECT_EQ(static_cast<output_pin_e>(0), pin);
+	}
+	for (auto pin : engineConfiguration->stepper_raw_output) {
+		EXPECT_EQ(static_cast<output_pin_e>(0), pin);
+	}
+	for (auto pin : engineConfiguration->vvtPins) {
+		EXPECT_EQ(static_cast<output_pin_e>(0), pin);
+	}
+	for (auto pin : engineConfiguration->tcu_solenoid) {
+		EXPECT_EQ(static_cast<output_pin_e>(0), pin);
+	}
+	for (auto pin : engineConfiguration->luaOutputPins) {
+		EXPECT_EQ(static_cast<output_pin_e>(0), pin);
+	}
+	for (auto pin : engineConfiguration->auxValves) {
+		EXPECT_EQ(Gpio::Unassigned, pin);
+	}
+	for (auto pin : engineConfiguration->triggerSimulatorPins) {
+		EXPECT_EQ(Gpio::Unassigned, pin);
+	}
+	for (auto pin : engineConfiguration->dacOutputPins) {
+		EXPECT_EQ(Gpio::Unassigned, pin);
+	}
+	for (size_t i = 0; i < ETB_COUNT; i++) {
+		EXPECT_EQ(Gpio::Unassigned, engineConfiguration->etbIo[i].directionPin1);
+		EXPECT_EQ(Gpio::Unassigned, engineConfiguration->etbIo[i].directionPin2);
+		EXPECT_EQ(Gpio::Unassigned, engineConfiguration->etbIo[i].controlPin);
+		EXPECT_EQ(Gpio::Unassigned, engineConfiguration->etbIo[i].disablePin);
+	}
+	for (size_t i = 0; i < DC_PER_STEPPER; i++) {
+		EXPECT_EQ(Gpio::Unassigned, engineConfiguration->stepperDcIo[i].directionPin1);
+		EXPECT_EQ(Gpio::Unassigned, engineConfiguration->stepperDcIo[i].directionPin2);
+		EXPECT_EQ(Gpio::Unassigned, engineConfiguration->stepperDcIo[i].controlPin);
+		EXPECT_EQ(Gpio::Unassigned, engineConfiguration->stepperDcIo[i].disablePin);
+	}
+	EXPECT_EQ(Gpio::Unassigned, engineConfiguration->stepperEnablePin);
+	EXPECT_EQ(static_cast<output_pin_e>(0), engineConfiguration->idle.solenoidPin);
+	EXPECT_EQ(Gpio::Unassigned, engineConfiguration->idle.stepperDirectionPin);
+	EXPECT_EQ(Gpio::Unassigned, engineConfiguration->idle.stepperStepPin);
+	EXPECT_EQ(static_cast<output_pin_e>(0), engineConfiguration->secondSolenoidPin);
+	EXPECT_EQ(static_cast<output_pin_e>(0), engineConfiguration->fuelPumpPin);
+	EXPECT_EQ(static_cast<output_pin_e>(0), engineConfiguration->starterControlPin);
+	EXPECT_EQ(static_cast<output_pin_e>(0), engineConfiguration->starterRelayDisablePin);
+	EXPECT_EQ(static_cast<output_pin_e>(0), engineConfiguration->acRelayPin);
+	EXPECT_EQ(static_cast<output_pin_e>(0), engineConfiguration->alternatorControlPin);
+	EXPECT_EQ(static_cast<output_pin_e>(0), engineConfiguration->malfunctionIndicatorPin);
+	EXPECT_EQ(static_cast<output_pin_e>(0), engineConfiguration->tachOutputPin);
+	EXPECT_EQ(static_cast<output_pin_e>(0), engineConfiguration->speedometerOutputPin);
+	EXPECT_EQ(static_cast<output_pin_e>(0), engineConfiguration->o2heaterPin);
+	EXPECT_EQ(static_cast<output_pin_e>(0), engineConfiguration->hpfpValvePin);
+	EXPECT_EQ(static_cast<output_pin_e>(0), engineConfiguration->acrPin);
+	EXPECT_EQ(static_cast<output_pin_e>(0), engineConfiguration->acrPin2);
+	EXPECT_EQ(static_cast<output_pin_e>(0), engineConfiguration->nitrousRelayPin);
+	EXPECT_EQ(static_cast<output_pin_e>(0), engineConfiguration->vvlRelayPin);
+	EXPECT_EQ(static_cast<output_pin_e>(0), engineConfiguration->tcu_tcc_onoff_solenoid);
+	EXPECT_EQ(static_cast<output_pin_e>(0), engineConfiguration->tcu_tcc_pwm_solenoid);
+	EXPECT_EQ(static_cast<output_pin_e>(0), engineConfiguration->tcu_pc_solenoid_pin);
+	EXPECT_EQ(static_cast<output_pin_e>(0), engineConfiguration->tcu_32_solenoid_pin);
+	for (auto& pwm : engineConfiguration->gppwm) {
+		EXPECT_EQ(static_cast<output_pin_e>(0), pwm.pin);
+	}
+	EXPECT_EQ(static_cast<output_pin_e>(0), engineConfiguration->boostControlPin);
+	EXPECT_EQ(static_cast<output_pin_e>(0), engineConfiguration->fanPin);
+	EXPECT_EQ(static_cast<output_pin_e>(0), engineConfiguration->fan2Pin);
+	EXPECT_EQ(Gpio::Unassigned, engineConfiguration->debugTriggerSync);
+	EXPECT_EQ(Gpio::Unassigned, engineConfiguration->debugTriggerState);
+	EXPECT_EQ(Gpio::Unassigned, engineConfiguration->triggerErrorPin);
+	EXPECT_EQ(Gpio::Unassigned, engineConfiguration->camSimulatorPin);
+	EXPECT_EQ(assignedOutput, engineConfiguration->mainRelayPin);
+	EXPECT_EQ(assignedGpio, engineConfiguration->sdCardCsPin);
+	EXPECT_EQ(assignedGpio, engineConfiguration->canTxPin);
+	EXPECT_EQ(assignedGpio, engineConfiguration->canRxPin);
+	EXPECT_EQ(static_cast<spi_device_e>(1), engineConfiguration->sdCardSpiDevice);
+	EXPECT_TRUE(engineConfiguration->is_enabled_spi_1);
+	EXPECT_EQ(EFI_ADC_5, engineConfiguration->tps1_1AdcChannel);
+	EXPECT_EQ(static_cast<brain_input_pin_e>(Gpio::A0), engineConfiguration->triggerInputPins[0]);
+	EXPECT_EQ(303, engineConfiguration->tps1SecondaryMin);
+	EXPECT_EQ(IM_BATCH, engineConfiguration->injectionMode);
+	EXPECT_EQ(assignedGpio, engineConfiguration->spi1mosiPin);
+	EXPECT_EQ(0, pinDefaultsApplyCount);
+	EXPECT_TRUE(needToTriggerTsRefresh());
+	EXPECT_TRUE(validateConfigOnStartUpOrBurn());
+
+	EXPECT_TRUE(handleBasicConfigurationAction(static_cast<uint16_t>(BasicConfigurationAction::UnassignOutputs)));
+	EXPECT_EQ(0, pinDefaultsApplyCount);
+}
+
+TEST_F(BasicConfigurationTest, UnassignOutputsDoesNotRequireBoardHookAndRefusesLockedOrRunningEngine) {
+	resetConfigurationWriteRequestCountForUnitTest();
+	custom_board_applyBasicConfiguration.reset();
+	engineConfiguration->fuelPumpPin = static_cast<output_pin_e>(Gpio::A0);
+	engine->engineTypeChangeTimer.init();
+	EXPECT_TRUE(handleBasicConfigurationAction(static_cast<uint16_t>(BasicConfigurationAction::UnassignOutputs)));
+	EXPECT_EQ(static_cast<output_pin_e>(0), engineConfiguration->fuelPumpPin);
+	EXPECT_TRUE(needToTriggerTsRefresh());
+	EXPECT_EQ(1, getConfigurationWriteRequestCountForUnitTest());
+
+	resetConfigurationWriteRequestCountForUnitTest();
+	engine->engineTypeChangeTimer.init();
+	engineConfiguration->fuelPumpPin = static_cast<output_pin_e>(Gpio::A0);
+	engineConfiguration->tuneHidingKey = 7;
+	EXPECT_FATAL_ERROR(handleBasicConfigurationAction(static_cast<uint16_t>(BasicConfigurationAction::UnassignOutputs)));
+	EXPECT_EQ(static_cast<output_pin_e>(Gpio::A0), engineConfiguration->fuelPumpPin);
+	EXPECT_FALSE(needToTriggerTsRefresh());
+	EXPECT_EQ(0, getConfigurationWriteRequestCountForUnitTest());
+
+	engineConfiguration->tuneHidingKey = 0;
+	engine->rpmCalculator.setRpmValue(1000);
+	EXPECT_TRUE(handleBasicConfigurationAction(static_cast<uint16_t>(BasicConfigurationAction::UnassignOutputs)));
+	EXPECT_EQ(static_cast<output_pin_e>(Gpio::A0), engineConfiguration->fuelPumpPin);
+	EXPECT_FALSE(needToTriggerTsRefresh());
+	EXPECT_EQ(0, getConfigurationWriteRequestCountForUnitTest());
 }
