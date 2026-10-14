@@ -60,12 +60,12 @@
  *
  * see also configError() for bad-tune problems and firmwareError() for fatal ones.
  */
-bool warning(ObdCode code, const char *fmt, ...);
+bool warning(ObdCode code, const char *fmt = nullptr, ...);
 
 /**
  * Same as warning(), but also report to the user via a pop-up window in TunerStudio.
  */
-bool warningTsReport(ObdCode code, const char *fmt, ...);
+bool warningTsReport(ObdCode code, const char *fmt = nullptr, ...);
 
 using critical_msg_t = char[CRITICAL_BUFFER_SIZE];
 
