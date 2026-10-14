@@ -12,6 +12,7 @@ Everything below is gated by `EFI_FILE_LOGGING`.
 |------|------|
 | `firmware/hw_layer/mmc_card.cpp` | SD thread: card init, mount, mode state machine, log file lifecycle |
 | `firmware/hw_layer/mmc_card_util.cpp` | Persistent log file index (`rusefi.ind`), `incLogFileName()` |
+| `firmware/hw_layer/past_codes_storage.cpp` | Load and persist the eight-entry diagnostic history (`past-codes.csv`) |
 | `firmware/console/binary_mlg_log/binary_mlg_logging.cpp` | MLG binary format writer (header + data records) |
 | `firmware/console/binary/tooth_logger.cpp` | Trigger tooth ("composite") logger: RAM buffers + .teeth/CSV file output |
 | `firmware/controllers/system/file_writer.h` | `FileBufferedWriter`: 512-byte buffered writer on top of FatFS `f_write` |
@@ -60,6 +61,35 @@ Note the CDC console + MSD composite-USB caveat in CLAUDE.md: switching PC -> EC
 yanks the medium from the host and usually drops the USB console connection.
 
 ## ECU (logging) mode
+
+### Persistent diagnostic history
+
+`past-codes.csv` holds up to eight unique numeric `ObdCode` values, oldest
+first. Each headerless line is `code,unix_timestamp`; the timestamp field is
+empty when the RTC is unavailable or fails the SD filename date-validity policy.
+Order follows first occurrence, including when timestamps are unavailable or
+the RTC changes. Repeated retained codes keep their original timestamp and
+position. A ninth distinct code evicts the oldest; an evicted code can be
+recorded again if it recurs.
+
+`WarningCodeState::pastCodes` captures codes independently of active warning
+capacity, expiry and clearing. During the initial SD mount, disk entries are
+merged ahead of warnings already raised this boot, preserving disk timestamps
+for duplicates. Missing files are treated as empty history. Malformed or
+unreadable files are left untouched and retried.
+
+`sdServicePastCodes()` in `past_codes_storage.cpp` runs at the initial mount and in ECU mode before logging
+suppression/trigger checks, under the board SD lease. It uses its own static
+`NO_CACHE` FatFS descriptor and buffer. Clean histories cause no writes; adding
+or replacing an entry makes a snapshot dirty. A complete write and successful
+close acknowledge only that snapshot, so codes arriving during I/O remain
+pending. Failed writes retain dirty state and retry at most once per second;
+failed closes return their FatFS error to `mmc_card.cpp`, which stops SD work
+to avoid reusing/unmounting a live descriptor.
+PC/MSD mode defers persistence until the ECU owns the card again. As with other
+SD files, power loss during a rewrite can leave incomplete contents.
+
+### Log iteration
 
 Each executer iteration first checks the `SdLogTrigger` module (`shouldLog()`):
 conditional logging closes the current file when trigger conditions stop being met,

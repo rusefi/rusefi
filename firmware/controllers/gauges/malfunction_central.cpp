@@ -12,6 +12,7 @@
 
 #include "rusefi/efistring.h"
 #include "malfunction_central.h"
+#include "rtc_helper.h"
 
 WarningCodeState::WarningCodeState() {
 	clear();
@@ -27,6 +28,20 @@ void WarningCodeState::addWarningCode(ObdCode code, const char *text) {
 	if (code == ObdCode::None) {
 		return;
 	}
+
+#if EFI_FILE_LOGGING || EFI_UNIT_TEST
+	if (!pastCodes.contains(code)) {
+		uint32_t timestamp = 0;
+#if EFI_PROD_CODE && EFI_RTC
+		// Use the same validity policy as SD log filenames.
+		const auto dateTime = getRtcDateTime();
+		if (dateTime.year >= 2016 && dateTime.year <= 2030) {
+			timestamp = dateTimeToEpochTime(dateTime);
+		}
+#endif
+		pastCodes.add(code, timestamp);
+	}
+#endif
 
 	// Set last code
 	lastErrorCode = code;

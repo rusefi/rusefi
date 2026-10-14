@@ -66,6 +66,7 @@
 #include "sd_card_access.h"
 #include "ff.h"
 #include "mmc_card_util.h"
+#include "past_codes_storage.h"
 #include "mass_storage_init.h"
 #include "hellen_meta.h"
 
@@ -1208,6 +1209,10 @@ static int sdModeExecuter(SD_MODE mode)
 		// nothing to do in these state, just sleep
 		return 0;
 	case SD_MODE_ECU:
+		if (const auto result = sdServicePastCodes(); result != FR_OK) {
+			sdLoggerFinalizationError("past codes close", result);
+			return -1;
+		}
 		if (sdNeedRemoveReports) {
 			errorHandlerDeleteReports();
 			sdNeedRemoveReports = false;
@@ -1363,6 +1368,11 @@ static THD_FUNCTION(MMCmonThread, arg) {
 
 	// Try to mount SD card, drop critical report if needed and check for previously stored reports
 	if (mountMmc()) {
+        if (const auto result = sdServicePastCodes(); result != FR_OK) {
+            sdLoggerFinalizationError("past codes close", result);
+            boardSdCardReleaseAccess();
+            goto die;
+        }
         if (sdReportStorageInit() != 0) {
             // Failed report close leaves the FIL live. Do not unmount/reset it.
             boardSdCardReleaseAccess();

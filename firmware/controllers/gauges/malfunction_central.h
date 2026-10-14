@@ -9,6 +9,7 @@
 #pragma once
 
 #include "obd_error_codes.h"
+#include "past_codes.h"
 
 #define MAX_ERROR_CODES_COUNT 10
 
@@ -62,6 +63,10 @@ public:
 
 	int warningCounter = 0;
 	ObdCode lastErrorCode = ObdCode::None;
+#if EFI_FILE_LOGGING || EFI_UNIT_TEST
+	// Independent of active warnings: clearing/expiry must not erase history.
+	PastCodeHistory pastCodes;
+#endif
 private:
 	void removeErrorCode(size_t idx);
 	void refresh();
