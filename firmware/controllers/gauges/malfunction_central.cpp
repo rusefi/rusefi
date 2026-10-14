@@ -37,8 +37,14 @@ void WarningCodeState::addWarningCode(ObdCode code, const char *text) {
 	if (!existing) {
 		chibios_rt::CriticalSectionLocker csl;
 
-		// Add the code to the list
-		existing = recentWarnings.add(warning_t(code));
+		// Removal/expiry clears a slot without shrinking the vector. Reuse it
+		// in place so pointers to other warnings (including m_msgWarning) stay valid.
+		existing = recentWarnings.find(ObdCode::None);
+		if (existing) {
+			*existing = warning_t(code);
+		} else {
+			existing = recentWarnings.add(warning_t(code));
+		}
 		if (existing) {
 			warningCounter++;
 		}

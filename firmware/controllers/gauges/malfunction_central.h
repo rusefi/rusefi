@@ -96,7 +96,7 @@ void removeError(ObdCode errorCode);
 void clearWarnings(void);
 /**
  * @brief Copies the current set of errors into the specified buffer.
- * A null filter includes all codes. Filtering preserves insertion order and
+ * A null filter includes all codes. Filtering preserves storage order and
  * does not remove codes from the shared diagnostic store.
  */
 void getErrorCodes(error_codes_set_s * buffer, ObdCodeFilter filter = nullptr);

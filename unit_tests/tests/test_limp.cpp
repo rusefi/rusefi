@@ -487,26 +487,34 @@ struct Mockhpfp : public MockHpfpController {
 
 static void checkCutWarningInterval(EngineTestHelper& eth, LimpManager& dut, ObdCode code) {
 	ASSERT_EQ(1, eth.getWarningCounter());
-	ASSERT_TRUE(hasRecentWarningCode(code));
+	auto* warning = eth.recentWarnings()->find(code);
+	ASSERT_NE(nullptr, warning);
+	const auto firstReport = warning->LastTriggered.get();
+	EXPECT_EQ(getTimeNowNt(), firstReport);
 
+	// warningCounter counts stored codes; timestamps track repeated reports.
+	advanceTimeUs(1);
 	dut.updateState(2000, getTimeNowNt());
-	EXPECT_EQ(1, eth.getWarningCounter());
-	advanceTimeUs(29999999);
+	EXPECT_EQ(firstReport, warning->LastTriggered.get());
+	advanceTimeUs(29999998);
 	dut.updateState(2000, getTimeNowNt());
-	EXPECT_EQ(1, eth.getWarningCounter());
+	EXPECT_EQ(firstReport, warning->LastTriggered.get());
 
 	// The boundary is inclusive, with no early report from float rounding.
 	advanceTimeUs(1);
 	dut.updateState(2000, getTimeNowNt());
-	EXPECT_EQ(2, eth.getWarningCounter());
+	const auto secondReport = getTimeNowNt();
+	EXPECT_EQ(secondReport, warning->LastTriggered.get());
 	EXPECT_EQ(code, engine->engineState.warnings.lastErrorCode);
+	advanceTimeUs(1);
 	dut.updateState(2000, getTimeNowNt());
-	EXPECT_EQ(2, eth.getWarningCounter());
+	EXPECT_EQ(secondReport, warning->LastTriggered.get());
 
 	// Still report after an interval longer than UINT32_MAX native ticks.
 	advanceTimeUs(60000000);
 	dut.updateState(2000, getTimeNowNt());
-	EXPECT_EQ(3, eth.getWarningCounter());
+	EXPECT_EQ(getTimeNowNt(), warning->LastTriggered.get());
+	EXPECT_EQ(1, eth.getWarningCounter());
 }
 
 TEST(limp, boostCutWarning) {
@@ -562,7 +570,9 @@ TEST(limp, cutWarningsShareTimer) {
 	Sensor::setMockValue(SensorType::Map, 110);
 	dut.updateState(1000, getTimeNowNt());
 	ASSERT_EQ(1, eth.getWarningCounter());
-	ASSERT_TRUE(hasRecentWarningCode(ObdCode::OBD_Engine_Overboost));
+	auto* boostWarning = eth.recentWarnings()->find(ObdCode::OBD_Engine_Overboost);
+	ASSERT_NE(nullptr, boostWarning);
+	const auto firstReport = boostWarning->LastTriggered.get();
 
 	// Recovery and a different cut must not reset the reporting interval.
 	advanceTimeUs(1000000);
@@ -601,7 +611,12 @@ TEST(limp, cutWarningsShareTimer) {
 	advanceTimeUs(1);
 	dut.updateState(2000, getTimeNowNt());
 	EXPECT_EQ(2, eth.getWarningCounter());
-	EXPECT_TRUE(hasRecentWarningCode(ObdCode::OBD_Throttle_Actuator_Control_Range_Performance_Bank_1));
+	auto* etbWarning = eth.recentWarnings()->find(ObdCode::OBD_Throttle_Actuator_Control_Range_Performance_Bank_1);
+	ASSERT_NE(nullptr, etbWarning);
+	EXPECT_EQ(getTimeNowNt(), etbWarning->LastTriggered.get());
+	EXPECT_EQ(firstReport, boostWarning->LastTriggered.get());
+	EXPECT_FALSE(hasRecentWarningCode(ObdCode::OBD_System_Too_Lean_Bank_1));
+	EXPECT_FALSE(hasRecentWarningCode(ObdCode::CUSTOM_TOO_LONG_FUEL_INJECTION));
 }
 
 TEST(limp, recoveredCutDoesNotReportAgain) {
@@ -612,16 +627,20 @@ TEST(limp, recoveredCutDoesNotReportAgain) {
 	Sensor::setMockValue(SensorType::Map, 110);
 	dut.updateState(1000, getTimeNowNt());
 	ASSERT_EQ(1, eth.getWarningCounter());
+	auto* warning = eth.recentWarnings()->find(ObdCode::OBD_Engine_Overboost);
+	ASSERT_NE(nullptr, warning);
+	const auto firstReport = warning->LastTriggered.get();
 
 	Sensor::setMockValue(SensorType::Map, 80);
 	advanceTimeUs(30000000);
 	dut.updateState(1000, getTimeNowNt());
 	EXPECT_TRUE(dut.allowInjection());
-	EXPECT_EQ(1, eth.getWarningCounter());
+	EXPECT_EQ(firstReport, warning->LastTriggered.get());
 
 	// A healthy update does not consume the next interval.
 	Sensor::setMockValue(SensorType::Map, 110);
 	dut.updateState(1000, getTimeNowNt());
 	EXPECT_EQ(ClearReason::BoostCut, dut.allowInjection().reason);
-	EXPECT_EQ(2, eth.getWarningCounter());
+	EXPECT_EQ(getTimeNowNt(), warning->LastTriggered.get());
+	EXPECT_EQ(1, eth.getWarningCounter());
 }
