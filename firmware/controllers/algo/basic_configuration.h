@@ -7,6 +7,8 @@ enum class BasicConfigurationAction : uint16_t {
 	StepperToEtb = 1,
 	CableTps = 2,
 	PpsTps = 3,
+	// [tag:unassign_outputs] Wire index must match cmd_unassign_outputs in the INI template.
+	UnassignOutputs = 4,
 };
 
 bool applyBasicConfiguration(BasicConfigurationAction action,
