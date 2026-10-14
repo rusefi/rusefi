@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Thu Oct 08 12:12:42 UTC 2026
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Wed Oct 14 19:43:31 UTC 2026
 // see also gen_config_and_enums.bat
 
 
@@ -247,6 +247,8 @@ const char *getUiMode(UiMode value) {
 }
 const char *getAccel_enrichment_mode_e(accel_enrichment_mode_e value) {
 	switch (value) {
+		case AE_MODE_LUA:
+			return "AE_MODE_LUA";
 		case AE_MODE_MS_ADDER:
 			return "AE_MODE_MS_ADDER";
 		case AE_MODE_PERCENT_ADDER:

@@ -155,8 +155,14 @@ struct tps_accel_state_s {
 	 * offset 44
 	 */
 	int cycleCnt = (int)0;
+	/**
+	 * Fuel: Lua AE cycle mass
+	 * units: g
+	 * offset 48
+	 */
+	float luaAccelFuel = (float)0;
 };
-static_assert(sizeof(tps_accel_state_s) == 48);
+static_assert(sizeof(tps_accel_state_s) == 52);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/tps_accel_state.txt

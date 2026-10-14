@@ -3620,7 +3620,7 @@ struct engine_configuration_s {
 	 */
 	float tpsDecelEnleanmentMultiplier;
 	/**
-	 * Selects the acceleration enrichment strategy.
+	 * Selects acceleration enrichment. Lua: setAccelEnrichment(grams) supplies extra fuel per cylinder per cycle. Refresh within 200 ms.
 	 * offset 1076
 	 */
 	accel_enrichment_mode_e accelEnrichmentMode;
