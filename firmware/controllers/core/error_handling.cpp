@@ -656,7 +656,10 @@ bool warningVA(ObdCode code, bool reportToTs, const char *fmt, va_list args) {
 	size_t size = snprintf(warningBuffer, sizeof(warningBuffer), "%s%04d: ",
 		ObdCodeIsCustom(code) ? "C" : "P", (int) code);
 
-	chvsnprintf(warningBuffer + size, sizeof(warningBuffer) - size, fmt, args);
+	// fmt may be nullptr, so no additional information
+	if (fmt) {
+		chvsnprintf(warningBuffer + size, sizeof(warningBuffer) - size, fmt, args);
+	}
 
 	engine->engineState.warnings.addWarningCode(code, reportToTs ? warningBuffer : nullptr);
 #if EFI_SIMULATOR || EFI_PROD_CODE
