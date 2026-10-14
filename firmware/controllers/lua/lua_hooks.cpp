@@ -1018,6 +1018,15 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 		engine->engineState.lua.fuelMult = luaL_checknumber(l, 1);
 		return 0;
 	});
+#if EFI_ENGINE_CONTROL
+	// [tag:lua_accel_enrichment] Dedicated AE provider; independent of setFuelAdd.
+	lua_register(lState, "setAccelEnrichment", [](lua_State* l) {
+		auto grams = luaL_checknumber(l, 1);
+		luaL_argcheck(l, engine->module<TpsAccelEnrichment>()->setLuaEnrichment(grams),
+			1, "finite g>=0");
+		return 0;
+	});
+#endif
 #if EFI_ELECTRONIC_THROTTLE_BODY && EFI_PROD_CODE
 	lua_register(lState, "setEtbAdd", [](lua_State* l) {
 		auto luaAdjustment = luaL_checknumber(l, 1);

@@ -1,6 +1,7 @@
 # Lua implementation injection points
 
-Source review: 2026-10-14, revision `a85e63ec148`. This report describes the
+Source review: 2026-10-14, revision `a85e63ec148`, updated with the Lua AE feature.
+This report describes the
 checked-out firmware, not a guarantee that every board enables every hook.
 See [Lua API inventory](lua_scripting.md) for the wider scripting API.
 
@@ -8,6 +9,7 @@ See [Lua API inventory](lua_scripting.md) for the wider scripting API.
 contributions, but has no equivalent whole-controller Lua selection.** Other
 useful seams are fuel mass, ignition advance, boost target/duty, throttle and
 wastegate targets, sensor providers, CAN protocols, and dedicated Lua outputs.
+Acceleration enrichment also has an explicit Lua strategy selection.
 
 ## What counts as implementation injection?
 
@@ -34,6 +36,7 @@ native controller does not synchronously call a Lua function for its next result
 | Sensor acquisition / conversion | `Sensor.new(name)`, `:set`, `:invalidate`, `:setTimeout` | Lua can provide a named sensor from CAN, auxiliary voltage, or a custom calculation, if that registry slot is free. |
 | Idle air control | `setIdleAdd`, `setIdleRpm`, `setParkNeutral` | Running open-loop contribution and target/input control. Native phase logic, optional PID, actuator handling, and some table-only branches remain. |
 | Fuel quantity | `setFuelMult`, `setFuelAdd` | Can substitute the pre-trim injection mass by setting multiplier to zero and supplying the mass with the adder. Native downstream fueling remains. |
+| Acceleration enrichment | `setAccelEnrichment(grams)`; `accelEnrichmentMode = AE_MODE_LUA` | Replaces the native transient strategy with extra mass per cylinder per cycle, with injection-mode scaling, 200 ms expiry, reset and STFT holdoff integration. |
 | Ignition advance | `setTimingMult`, `setTimingAdd` | Can substitute the advance at `getWrappedAdvance()` by using multiplier zero. Later corrections and spark scheduling remain native. |
 | Boost | `setBoostTargetMult`, `setBoostTargetAdd`, `setBoostDutyAdd` | Custom target and feed-forward duty contributions; native enable/validity gates, optional PID, output limits and actuator handling remain. |
 | Electronic throttle / electric wastegate | `setEtbAdd`, `setEwgAdd`, `setEtbDisabled` | Position-target additions or disable request. Does not replace the native motor position controller. |
@@ -138,6 +141,16 @@ coil edge at a crank angle. See [ignition_system.md](ignition_system.md).
 Some builds omit `setTimingMult` (`DISABLE_LUA_SET_TIMING_MULT`) or `setFuelAdd`
 (`DISABLE_LUA_SET_FUEL_ADD`), so these substitutions are build-dependent.
 
+## Acceleration enrichment
+
+For transient fuel specifically, use the dedicated
+[Lua acceleration-enrichment mode](acceleration_enrichment.md#lua-implementation-injection).
+It replaces native TPS/MS/percent/predictive AE without taking ownership of the
+whole fuel calculation. The script controls detection and decay; native code
+suppresses it during stopped/cranking operation, DFCO and VE tuning, and retains
+downstream wall wetting and injection scheduling. `luaAccelFuel` logs applied
+cycle mass separately from the legacy milliseconds/fraction diagnostic.
+
 ## Boost, throttle, and wastegate
 
 [`BoostController`](../../firmware/controllers/actuators/boost_control.cpp)
@@ -235,10 +248,11 @@ These demonstrate patterns, not validation of a particular vehicle setup.
   a guaranteed execution frequency or crank-synchronous callback.
 - An `onTick()` error is logged and the loop continues. It does **not**
   automatically reset all published values. Fuel/ignition/idle/boost adjustments
-  have no general freshness timeout. Sensors and ETB/EWG additions have their
+  have no general freshness timeout. Dedicated Lua AE expires after 200 ms;
+  sensors and ETB/EWG additions have their
   own timeout rules described above.
 - [Engine::resetLua()](../../firmware/controllers/algo/engine.cpp) resets selected
-  adjustments on VM restart, including fuel/ignition, boost, idle and P/N state.
+  adjustments on VM restart, including fuel/ignition, Lua AE, boost, idle and P/N state.
   It is not universal: static Lua airmass, calibration edits, and fields outside
   its reset list (including spark-skip and launch/antilag trigger fields) should
   not be assumed cleared. Normal VM teardown also unregisters Lua sensors,
@@ -250,8 +264,10 @@ These demonstrate patterns, not validation of a particular vehicle setup.
 
 This is a source-traced inventory: registrations were followed to their native
 consumers, including control formulas, bypass branches, units, build guards,
-timeouts and reset paths. No firmware behavior was changed and no hardware
-validation or test execution was performed for this documentation change.
+timeouts and reset paths. The original inventory involved no firmware changes.
+The later Lua AE implementation and its coverage are described in
+[acceleration_enrichment.md](acceleration_enrichment.md). Hardware validation
+has not been performed.
 
 Existing coverage useful for future implementation work includes
 [Lua bindings/sensors](../../unit_tests/tests/lua/test_lua_hooks.cpp),

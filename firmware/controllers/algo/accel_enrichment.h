@@ -23,10 +23,13 @@ public:
 	// This flag is set by onNewValue() when an accel event is detected
 	// and cleared by isAccelEventTriggered() after being read.
 	bool m_accelEventJustOccurred = false;
+	mass_t m_luaEnrichment = 0;
+	Timer m_luaEnrichmentTimer;
 public:
 	TpsAccelEnrichment();
 
 	void onConfigurationChange(engine_configuration_s const* previousConfig) override;
+	void onEngineStop() override;
 
 	Timer m_timeSinceAccel;
 	// This function returns true ONCE per acceleration event.
@@ -48,6 +51,14 @@ public:
 	void resetFractionValues();
 	void resetAE();
 	float getTimeSinceAcell() const;
+
+	// [tag:lua_accel_enrichment] Lua supplies extra grams per cylinder per engine
+	// cycle. The fuel pipeline applies injection-mode scaling exactly once.
+	// Only AE_MODE_LUA consumes it, with a 200 ms timeout. Reset on Lua reload,
+	// engine stop and mode changes so a previous script/event cannot linger.
+	bool setLuaEnrichment(mass_t grams);
+	mass_t getLuaEnrichment();
+	void resetLua();
 };
 
 void initAccelEnrichment();

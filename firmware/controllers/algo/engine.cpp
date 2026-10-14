@@ -349,6 +349,8 @@ void Engine::reset() {
  * todo: https://github.com/rusefi/rusefi/issues/4308 Uniform reset pattern for all Lua adjustments
  */
 void Engine::resetLua() {
+	// [tag:lua_accel_enrichment] Clear the script's transient request on VM reload.
+	module<TpsAccelEnrichment>()->resetLua();
 	engineState.lua = {};
 	engineState.lua.fuelAdd = 0;
 	engineState.lua.fuelMult = 1;

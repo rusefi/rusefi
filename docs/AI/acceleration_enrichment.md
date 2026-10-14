@@ -1,12 +1,13 @@
 # Acceleration Enrichment and Transient Fueling
 
-`accelEnrichmentMode` selects **three mutually exclusive strategies**:
+`accelEnrichmentMode` selects **four mutually exclusive strategies**:
 
 | Value / enum | TunerStudio name | Correction |
 |---|---|---|
 | `0` / `AE_MODE_MS_ADDER` | MS Adder | TPS-based extra duration, converted to fuel mass using primary injector flow. |
 | `1` / `AE_MODE_PERCENT_ADDER` | Percent Adder | TPS-based extra fuel proportional to the calculated injection mass. |
 | `2` / `AE_MODE_PREDICTIVE_MAP` | MAP Prediction | Temporarily raises the MAP used by the speed-density air-mass calculation, then blends back to measured MAP. |
+| `3` / `AE_MODE_LUA` | Lua | Script supplies extra fuel mass per cylinder per engine cycle using `setAccelEnrichment(grams)`. |
 
 **Wall wetting is independent of this selector** and can operate with any of these modes. Its simple/complex model selector (`complexWallModel`) is a separate choice. MAP Prediction is triggered by TPS movement, not a MAP derivative.
 
@@ -17,7 +18,7 @@ The [fueling overview](fueling_system.md) is conceptual; the relevant execution 
 ```text
 SpeedDensityAirmass::getMap()                  <- MAP Prediction, if selected
   -> air mass / base fuel / running or cranking fuel
-  -> getInjectionMass()                       <- MS Adder or Percent Adder
+  -> getInjectionMass()                       <- MS Adder, Percent Adder or Lua
   -> Lua fuel adjustment, bank/cylinder trims -> stored injectionMass[cylinder]
   -> InjectionEvent::onTriggerTooth()
        -> WallFuel::adjust()                 <- independent fuel-film correction
@@ -83,6 +84,47 @@ The effective MAP feeds both the physical air-mass calculation and the speed-den
 
 The TPS/TPS extra-fuel table, fractional settings, adder RPM correction and `flexAeMult` do not apply in this mode; `getTpsEnrichment()` returns zero immediately. That early return also means the adders' cranking-RPM and VE-tuning checks do not gate MAP Prediction itself.
 
+## Lua implementation injection
+
+[tag:lua_accel_enrichment] Select **Accel Enrichment Mode = Lua** and call
+`setAccelEnrichment(grams)` from the script. The argument is finite, non-negative
+extra fuel mass **per cylinder per engine cycle**, held until replaced. Zero
+turns it off. Negative, NaN and infinite arguments clear the request and raise a
+Lua error. Requires a build with `EFI_LUA` and `EFI_ENGINE_CONTROL`.
+
+The script owns event detection, magnitude, decay, RPM and flex compensation.
+Lua mode ignores the native TPS table, thresholds, lookback, fractional pump,
+RPM multiplier and `flexAeMult`. MAP prediction is also inactive. The existing
+MS Adder, Percent Adder and MAP Prediction values (0, 1, 2) keep their meaning;
+the fourth choice fits the existing two-bit configuration field.
+
+`getInjectionMass()` adds `D * luaExtraCycleMass` to the native injection mass,
+where `D` is the injection-mode duration multiplier. For a four-cylinder engine,
+`setAccelEnrichment(0.004)` adds 4 mg per sequential injection, 2 mg per batch
+injection, or 1 mg per simultaneous injection. Single-point uses `D = 1`, matching
+the native cycle-mass convention. This is a correction per engine cycle, not a
+one-shot quantity consumed each time Lua calls the setter.
+
+Refresh within **200 ms** (normally every `onTick`); an expired request contributes
+zero. Lua VM reset, engine stop, `resetAE()` and any configuration-change notification
+clear the request. No script means zero Lua AE, with no native-AE fallback.
+Stopped/cranking operation, RPM below the cranking threshold, DFCO and active
+VE-tuning detection suppress application. Normal protection cuts still govern
+whether injection is scheduled.
+
+Positive applied Lua AE resets the same acceleration timer used by STFT's
+`noFuelTrimAfterAccelTime` holdoff. Zero, expired or suppressed requests do not
+extend that timer. The separate float output `luaAccelFuel` (log label
+`Fuel: Lua AE cycle mass`, grams) reports the applied cycle correction before
+injection-mode scaling. `tpsAccelFuel` stays zero in Lua mode so the legacy
+ms/fraction channel retains its units and packing. The standard `Engine` state's
+acceleration bit follows applied Lua mass rather than native TPS flags.
+
+The usual Lua fuel multiplier/adder, trims, staging, wall wetting, injector
+characterization and scheduling remain downstream. `setFuelAdd()` is independent:
+it adds grams per injection at a later stage and does not provide AE holdoff or
+the 200 ms freshness rule. See [Lua injection inventory](lua_implementation_injection.md).
+
 ## Wall wetting and flex fuel
 
 `WallFuelController::onFastCallback()` computes parameters, while each injection event owns a `WallFuel` state updated by `adjust()` on the trigger path. This corrects fuel **mass**, after cylinder/bank trims and before splitting between injector stages.
@@ -105,14 +147,15 @@ All three flex multiplier tables share `flexTransientCltBins` and `flexTransient
 
 ## Closed-loop interaction and diagnostics
 
-`ShortTermFuelTrim` inhibits correction while `getTimeSinceAcell() < noFuelTrimAfterAccelTime`. The adders reset that timer on acceleration or deceleration; MAP Prediction resets it when prediction starts. The "Inhibit closed loop fuel after accel" setting is available in TunerStudio for all three modes.
+`ShortTermFuelTrim` inhibits correction while `getTimeSinceAcell() < noFuelTrimAfterAccelTime`. The native adders reset that timer on acceleration or deceleration; MAP Prediction resets it when prediction starts; Lua resets it while positive extra mass is applied. The "Inhibit closed loop fuel after accel" setting is available in TunerStudio for all four modes.
 
 | Inspect | Meaning / limitation |
 |---|---|
-| `engine` (log label `Engine`) | TunerStudio/MLV state byte: bits 0/1 running/cranking, 2/3 after-start/warmup, 4 TPS acceleration (including active MAP Prediction), 5 TPS deceleration or DFCO; bits 6/7 unused. Adder threshold flags and the signed applied adder cover detection and decay. Wall wetting is not represented. |
+| `engine` (log label `Engine`) | TunerStudio/MLV state byte: bits 0/1 running/cranking, 2/3 after-start/warmup, 4 acceleration (including active MAP Prediction or applied Lua AE), 5 TPS deceleration or DFCO; bits 6/7 unused. Native adder threshold flags and the signed applied adder cover detection and decay. Wall wetting is not represented. |
 | `tpsFrom`, `tpsTo`, `deltaTps`, `isAboveAccelThreshold` | Selected historical TPS step and event threshold, not necessarily the latest step. |
 | `valueFromTable`, `extraFuel`, `accumulatedValue`, `cycleCnt` | Adder internals. Early-return paths can leave these diagnostic fields unchanged. |
-| `tpsAccelFuel` | Adder result; zero in MAP Prediction does not mean transient correction is inactive. |
+| `tpsAccelFuel` | Native adder result; zero in MAP Prediction or Lua does not mean transient correction is inactive. |
+| `luaAccelFuel` | Applied Lua extra mass in grams per cylinder per cycle, before injection-mode scaling; zero when inactive, expired or suppressed. |
 | `fallbackMap`, `effectiveMap`, `isMapPredictionActive` | Table prediction, MAP used by speed density, and prediction state. |
 | `predTimerResetCnt`, `mapPredEventOver` | Prediction starts and duration expirations; not every timer restart or early exit. |
 | `flexAeMultiplier`, `flexWwTauMultiplier`, `flexWwBetaMultiplier` | Last evaluated flex multipliers; bypassed paths need not refresh them. |
@@ -123,5 +166,6 @@ All three flex multiplier tables share `flexTransientCltBins` and `flexTransient
 - [TPS detector and adders](../../firmware/controllers/algo/accel_enrichment.cpp), [mass conversion](../../firmware/controllers/algo/fuel_math.cpp), [predictive MAP](../../firmware/controllers/algo/airmass/speed_density_airmass.cpp).
 - [Wall model](../../firmware/controllers/algo/wall_fuel.cpp), [injection integration](../../firmware/controllers/engine_cycle/main_trigger_callback.cpp), [flex multiplier helper](../../firmware/controllers/algo/flex_transient.h), [closed-loop gating](../../firmware/controllers/math/closed_loop_fuel.cpp).
 - [TPS tests](../../unit_tests/tests/test_accel_enrichment.cpp): history, sampling versus engine-cycle updates, fractional portions, predictive-mode adder bypass and flex multiplier.
+- The same file's `LuaAccelEnrichment` tests exercise the Lua binding, mass scaling, native-mode isolation, expiry, reset, DFCO/cranking and VE-tuning suppression. [TunerStudio tests](../../unit_tests/tests/test_tunerstudio.cpp) cover the Lua acceleration state bit.
 - [Fuel math tests](../../unit_tests/tests/ignition_injection/test_fuel_math.cpp): `AirmassModes.PredictiveMapCalculation` and `PredictiveMapBlendTowardRisingSensor` cover blending, catch-up and sensor fallback.
 - [Wall-wetting tests](../../unit_tests/tests/ignition_injection/test_fuel_wall_wetting.cpp): film math, injection-event scheduling and flex compensation.

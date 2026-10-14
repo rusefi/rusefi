@@ -27,5 +27,8 @@ float fractionalInjFuel;Fuel: TPS AE fractionalInjFuel
 	floatms_t maxInjectedPerPeriod
 	int cycleCnt
 
+! [tag:lua_accel_enrichment] Applied cycle mass, before injection-mode scaling; separate from the legacy ms/fraction channel.
+float luaAccelFuel;Fuel: Lua AE cycle mass;"g", 1, 0, 0, 10, 6
+
 
 end_struct

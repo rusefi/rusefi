@@ -360,6 +360,9 @@ static uint8_t packTSEngineState() {
 		// Prediction is TPS-triggered and can outlast the TPS threshold flag.
 		// Adder diagnostics may be stale in this mode, so ignore them.
 		accelerating = engine->outputChannels.isMapPredictionActive;
+	} else if (engineConfiguration->accelEnrichmentMode == AE_MODE_LUA) {
+		// [tag:lua_accel_enrichment] Use applied mass, not the native TPS detector.
+		accelerating = engine->module<TpsAccelEnrichment>()->luaAccelFuel > 0;
 	} else {
 		const auto& ae = engine->module<TpsAccelEnrichment>();
 		// The applied adder also covers fractional-pump decay after the TPS step.

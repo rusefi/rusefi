@@ -11,6 +11,10 @@
 #include "pch.h"
 
 #include "accel_enrichment.h"
+#include "fuel_math.h"
+#include "rusefi_lua.h"
+#include "tunerstudio.h"
+#include "tunerstudio_impl.h"
 
 TEST(fuel, testTpsAccelEnrichmentMath) {
 	printf("====================================================================================== testAccelEnrichment\r\n");
@@ -199,4 +203,191 @@ TEST(fuel, tpsAccelFlexFuelCompensation) {
 	// Disable flag -> back to neutral even with a flex sensor present
 	engineConfiguration->flexFuelTransientComp = false;
 	EXPECT_NEAR(1.0f, triggerAccel(), EPS4D);
+}
+
+// [tag:lua_accel_enrichment] Exercise the Lua binding through the fuel pipeline,
+// including unit conversion, expiry, native bypasses and restart behavior.
+class LuaAccelEnrichment : public ::testing::Test {
+protected:
+	EngineTestHelper eth{engine_type_e::TEST_ENGINE};
+
+	void SetUp() override {
+		setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
+		EXPECT_CALL(*eth.mockAirmass, getAirmass(testing::_, testing::_))
+			.WillRepeatedly(testing::Return(AirmassResult{1.3440001f, 50.0f}));
+		engine->rpmCalculator.setRpmValue(1200);
+		engineConfiguration->accelEnrichmentMode = AE_MODE_LUA;
+		engineConfiguration->isTuningDetectorEnabled = false;
+		engineConfiguration->coastingFuelCutEnabled = false;
+		engineConfiguration->tpsAccelLookback = 0;
+		initAccelEnrichment();
+	}
+
+	TpsAccelEnrichment& ae() {
+		return engine->module<TpsAccelEnrichment>().unmock();
+	}
+
+	void publish() {
+		testLuaExecString("setAccelEnrichment(0.004)");
+	}
+};
+
+TEST_F(LuaAccelEnrichment, ScalesCycleMassOnceForEachInjectionMode) {
+	const injection_mode_e modes[] = {IM_SEQUENTIAL, IM_BATCH, IM_SIMULTANEOUS, IM_SINGLE_POINT};
+	const float multipliers[] = {1, 0.5f, 0.25f, 1};
+	ASSERT_EQ(4, engineConfiguration->cylindersCount);
+	for (size_t i = 0; i < efi::size(modes); i++) {
+		engineConfiguration->injectionMode = modes[i];
+		testLuaExecString("setAccelEnrichment(0)");
+		float base = getInjectionMass(1200);
+		publish();
+		EXPECT_NEAR(base + 0.004f * multipliers[i], getInjectionMass(1200), 1e-7f);
+		// It is a held correction, not a one-shot fuel quantity consumed on read.
+		EXPECT_NEAR(base + 0.004f * multipliers[i], getInjectionMass(1200), 1e-7f);
+		EXPECT_FLOAT_EQ(0.004f, ae().luaAccelFuel);
+		EXPECT_FLOAT_EQ(0, engine->engineState.tpsAccelEnrich);
+	}
+}
+
+TEST_F(LuaAccelEnrichment, ReplacesNativeTpsCorrectionsAndLeavesOtherModesAlone) {
+	engineConfiguration->tpsAccelLookback = 1;
+	engineConfiguration->tpsAccelFractionPeriod = 3;
+	engineConfiguration->tpsAccelFractionDivisor = 2;
+	setTable(config->tpsTpsAccelTable, 10);
+	setArrayValues(config->tpsTspCorrValues, 5.0f);
+	engineConfiguration->flexFuelTransientComp = true;
+	engineConfiguration->flexSensorPin = Gpio::A0;
+	Sensor::setMockValue(SensorType::FuelEthanolPercent, 100);
+	setTable(config->flexAeMult, 3);
+	ae().isAboveAccelThreshold = true;
+	// Ethanol also changes native stoichiometric fueling: measure that baseline
+	// after configuring it, independently of the transient correction.
+	float base = getInjectionMass(1200);
+	publish();
+	EXPECT_NEAR(base + 0.002f, getInjectionMass(1200), 1e-7f); // batch
+	EXPECT_FLOAT_EQ(0, ae().getTpsEnrichment());
+
+	for (auto mode : {AE_MODE_MS_ADDER, AE_MODE_PERCENT_ADDER, AE_MODE_PREDICTIVE_MAP}) {
+		engineConfiguration->accelEnrichmentMode = mode;
+		ae().resetFractionValues();
+		ae().resetLua();
+		float native = getInjectionMass(1200);
+		publish();
+		EXPECT_FLOAT_EQ(native, getInjectionMass(1200));
+		EXPECT_FLOAT_EQ(0, ae().luaAccelFuel);
+	}
+}
+
+TEST_F(LuaAccelEnrichment, TimeoutRefreshAndClosedLoopHoldoff) {
+	float base = getInjectionMass(1200);
+	engineConfiguration->noFuelTrimAfterAccelTime = 0.5f;
+	engineConfiguration->noFuelTrimAfterDfcoTime = 0;
+	engineConfiguration->stft.minAfr = 10;
+	engineConfiguration->stft.maxAfr = 18;
+	Sensor::setMockValue(SensorType::Lambda1, 1.0f);
+	ShortTermFuelTrim stft;
+	stft.init(&engineConfiguration->stft);
+	advanceTimeUs(3000000);
+	EXPECT_EQ(stftEnabled, stft.getLearningState(SensorType::Lambda1));
+	publish();
+	EXPECT_GT(getInjectionMass(1200), base);
+	EXPECT_FLOAT_EQ(0, ae().getTimeSinceAcell());
+	EXPECT_EQ(stftDisabledTpsAccel, stft.getLearningState(SensorType::Lambda1));
+	advanceTimeUs(199000);
+	EXPECT_GT(getInjectionMass(1200), base);
+	EXPECT_FLOAT_EQ(0, ae().getTimeSinceAcell());
+	advanceTimeUs(2000);
+	EXPECT_FLOAT_EQ(base, getInjectionMass(1200));
+	EXPECT_FLOAT_EQ(0, ae().luaAccelFuel);
+	EXPECT_NEAR(0.002f, ae().getTimeSinceAcell(), 1e-6f);
+	EXPECT_EQ(stftDisabledTpsAccel, stft.getLearningState(SensorType::Lambda1));
+	publish();
+	EXPECT_GT(getInjectionMass(1200), base);
+	testLuaExecString("setAccelEnrichment(0)");
+	advanceTimeUs(10000);
+	EXPECT_FLOAT_EQ(base, getInjectionMass(1200));
+	EXPECT_NEAR(0.01f, ae().getTimeSinceAcell(), 1e-6f);
+	advanceTimeUs(500000);
+	EXPECT_EQ(stftEnabled, stft.getLearningState(SensorType::Lambda1));
+}
+
+TEST_F(LuaAccelEnrichment, ResetAndModeChangesClearRequest) {
+	float base = getInjectionMass(1200);
+	publish();
+	EXPECT_GT(getInjectionMass(1200), base);
+	engine->resetLua();
+	EXPECT_FLOAT_EQ(base, getInjectionMass(1200));
+	publish();
+	engine->onEngineStopped();
+	EXPECT_FLOAT_EQ(base, getInjectionMass(1200));
+	publish();
+	ae().resetAE(); // same reset used when the engine stops
+	EXPECT_FLOAT_EQ(base, getInjectionMass(1200));
+	publish();
+	ae().onConfigurationChange(engineConfiguration);
+	EXPECT_FLOAT_EQ(base, getInjectionMass(1200));
+
+	publish();
+	engine_configuration_s previous = *engineConfiguration;
+	engineConfiguration->accelEnrichmentMode = AE_MODE_MS_ADDER;
+	ae().onConfigurationChange(&previous);
+	previous = *engineConfiguration;
+	engineConfiguration->accelEnrichmentMode = AE_MODE_LUA;
+	ae().onConfigurationChange(&previous);
+	EXPECT_FLOAT_EQ(base, getInjectionMass(1200));
+}
+
+TEST_F(LuaAccelEnrichment, RejectsInvalidMass) {
+	float base = getInjectionMass(1200);
+	for (const char* script : {"setAccelEnrichment(-0.001)", "setAccelEnrichment(0/0)",
+		"setAccelEnrichment(math.huge)", "setAccelEnrichment(-math.huge)"}) {
+		publish();
+		EXPECT_THROW(testLuaExecString(script), std::logic_error);
+		EXPECT_FLOAT_EQ(base, getInjectionMass(1200));
+	}
+}
+
+TEST_F(LuaAccelEnrichment, SuppressedWhenStoppedCrankingOrDfco) {
+	for (float rpm : {0.0f, 200.0f}) {
+		engine->rpmCalculator.setRpmValue(rpm);
+		float base = getInjectionMass(rpm);
+		publish();
+		EXPECT_FLOAT_EQ(base, getInjectionMass(rpm));
+		EXPECT_FLOAT_EQ(0, ae().luaAccelFuel);
+	}
+
+	engine->rpmCalculator.setRpmValue(2000);
+	engineConfiguration->coastingFuelCutEnabled = true;
+	engineConfiguration->coastingFuelCutRpmHigh = 1500;
+	engineConfiguration->coastingFuelCutRpmLow = 1300;
+	engineConfiguration->coastingFuelCutTps = 2;
+	engineConfiguration->coastingFuelCutClt = 30;
+	engineConfiguration->coastingFuelCutMap = 100;
+	engineConfiguration->coastingFuelCutVssHigh = 0;
+	engineConfiguration->coastingFuelCutVssLow = 0;
+	engineConfiguration->dfcoDelay = 0;
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 0);
+	Sensor::setMockValue(SensorType::Clt, 90);
+	Sensor::setMockValue(SensorType::Map, 20);
+	engine->module<DfcoController>()->update();
+	ASSERT_TRUE(engine->module<DfcoController>()->cutFuel());
+	publish();
+	EXPECT_FLOAT_EQ(0, getInjectionMass(2000));
+	EXPECT_FLOAT_EQ(0, ae().luaAccelFuel);
+}
+
+TEST_F(LuaAccelEnrichment, TuningDetectorSuspendsCorrection) {
+	float base = getInjectionMass(1200);
+	engineConfiguration->isTuningDetectorEnabled = true;
+	::testing::NiceMock<MockTsChannel> channel;
+	const uint16_t offset = static_cast<uint16_t>(offsetof(persistent_config_s, veTable));
+	uint8_t dummy = 0;
+	TunerStudio ts;
+	ts.handleWriteChunkCommand(&channel, TS_PAGE_SETTINGS, offset, 1, &dummy);
+	ASSERT_TRUE(isTuningVeNow());
+	publish();
+	EXPECT_FLOAT_EQ(base, getInjectionMass(1200));
+	EXPECT_FLOAT_EQ(0, ae().luaAccelFuel);
+	resetCalibrationTimerForTest();
+	EXPECT_GT(getInjectionMass(1200), base);
 }

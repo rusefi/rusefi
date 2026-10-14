@@ -349,11 +349,13 @@ float getInjectionMass(float rpm) {
 		engine->module<InjectorModelSecondary>()->prepare();
 	}
 
-	// This variable will hold the extra fuel mass from legacy AE modes
+	// Extra fuel mass per injection from the selected AE implementation.
 	float tpsFuelMass = 0;
 
-	// Get the AE value (it will be 0 if predictive mode is active)
-	float tpsAccelEnrich = engine->module<TpsAccelEnrichment>()->getTpsEnrichment();
+	auto& ae = engine->module<TpsAccelEnrichment>();
+	// Legacy units stay separate from Lua's grams-per-cycle diagnostic.
+	float tpsAccelEnrich = ae->getTpsEnrichment();
+	float luaAccelEnrich = ae->getLuaEnrichment();
 	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !std::isnan(tpsAccelEnrich), "NaN tpsAccelEnrich", 0);
 	engine->engineState.tpsAccelEnrich = tpsAccelEnrich;
 
@@ -375,6 +377,11 @@ float getInjectionMass(float rpm) {
 		case AE_MODE_PREDICTIVE_MAP:
 			// Do nothing here. Fuel correction has already been handled by providing a
 			// corrected MAP value to the getBaseFuelMass() calculation.
+			break;
+
+		case AE_MODE_LUA:
+			// [tag:lua_accel_enrichment] Convert extra cycle mass to mass per injection.
+			tpsFuelMass = durationMultiplier * luaAccelEnrich;
 			break;
 
 		default:

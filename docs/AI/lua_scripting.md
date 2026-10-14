@@ -84,11 +84,12 @@ instead of / in addition to physical switches.
 
 Numeric trims applied on top of the normal control algorithms. These are the primary
 "engine control from Lua" surface. Most persist until changed or reset; ETB/EWG
-additions expire after 0.2 seconds without refresh.
+additions and dedicated Lua AE expire after 0.2 seconds without refresh.
 
 | Function | Target |
 |------------------------------|--------|
 | `setFuelAdd(grams)` / `setFuelMult(coef)` | Fueling (see [fueling_system.md](fueling_system.md)); Add is grams per injection, applied before downstream trims/staging |
+| `setAccelEnrichment(grams)` | Lua AE mode only: extra grams per cylinder per engine cycle, scaled for injection mode. Non-negative finite values; zero disables. Expires after 200 ms, resets on Lua reload/engine stop/configuration change, and participates in STFT holdoff. See [acceleration_enrichment.md](acceleration_enrichment.md) |
 | `setTimingAdd(deg)` / `setTimingMult(coef)` | Ignition advance (see [ignition_system.md](ignition_system.md)) |
 | `setSparkSkipRatio(r)` / `setSparkHardSkipRatio(r)` | Soft/hard spark-skip (traction/launch style torque cut) |
 | `setBoostTargetAdd(v)` / `setBoostTargetMult(v)` / `setBoostDutyAdd(v)` | BoostController closed/open loop (EFI_BOOST_CONTROL) |

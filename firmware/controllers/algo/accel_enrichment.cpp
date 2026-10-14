@@ -2,11 +2,12 @@
  * @file    accel_enrichment.cpp
  * @brief   Acceleration enrichment calculator
  *
- * accelEnrichmentMode selects one of three acceleration enrichment strategies:
+ * accelEnrichmentMode selects one of four acceleration enrichment strategies:
  *
  * 1) MS Adder: TPS-based extra injection duration, converted to fuel mass.
  * 2) Percent Adder: TPS-based extra fuel proportional to injection mass.
  * 3) MAP Prediction: TPS-triggered MAP prediction in speed_density_airmass.cpp.
+ * 4) Lua: script-supplied extra cycle fuel mass, with a freshness timeout.
  *
  * This file implements the shared TPS detector and the two adders.
  * Wall wetting in wall_fuel.cpp is independent and can operate with any mode.
@@ -28,8 +29,9 @@
 float TpsAccelEnrichment::getTpsEnrichment() {
 	ScopePerf perf(PE::GetTpsEnrichment);
 
-	// If predictive MAP mode is active, the old "adder" logic is disabled.
-	if (engineConfiguration->accelEnrichmentMode == AE_MODE_PREDICTIVE_MAP) {
+	// Lua and predictive MAP replace the legacy TPS adders.
+	if (engineConfiguration->accelEnrichmentMode == AE_MODE_PREDICTIVE_MAP
+		|| engineConfiguration->accelEnrichmentMode == AE_MODE_LUA) {
 		return 0;
 	}
 
@@ -92,10 +94,54 @@ float TpsAccelEnrichment::getTpsEnrichment() {
 	}
 
 	// Flex fuel transient compensation (CLT x ethanol). Neutral (1.0) without a flex sensor.
-	// Note: AE_MODE_PREDICTIVE_MAP returns earlier, so this does not apply in that mode.
+	// Predictive MAP and Lua return earlier, so this only applies to legacy adders.
 	float flexMult = getFlexTransientMult(config->flexAeMult);
 	engine->outputChannels.flexAeMultiplier = flexMult;
 	return extraFuel * mult * flexMult;
+}
+
+bool TpsAccelEnrichment::setLuaEnrichment(mass_t grams) {
+	if (!std::isfinite(grams) || grams < 0) {
+		resetLua();
+		return false;
+	}
+
+	m_luaEnrichment = grams;
+	m_luaEnrichmentTimer.reset();
+	return true;
+}
+
+mass_t TpsAccelEnrichment::getLuaEnrichment() {
+	luaAccelFuel = 0;
+	if (engineConfiguration->accelEnrichmentMode != AE_MODE_LUA
+		|| m_luaEnrichmentTimer.hasElapsedMs(200)
+		|| !engine->rpmCalculator.isRunning()
+		|| engine->rpmCalculator.getCachedRpm() < engineConfiguration->cranking.rpm
+		|| engine->module<DfcoController>()->cutFuel()) {
+		return 0;
+	}
+
+#if EFI_TUNER_STUDIO
+	if (isTuningVeNow()) {
+		return 0;
+	}
+#endif
+
+	luaAccelFuel = m_luaEnrichment;
+	if (luaAccelFuel > 0) {
+		// Keep closed-loop fuel from undoing the script's transient correction.
+		m_timeSinceAccel.reset();
+	}
+	return luaAccelFuel;
+}
+
+void TpsAccelEnrichment::resetLua() {
+	m_luaEnrichment = 0;
+	luaAccelFuel = 0;
+}
+
+void TpsAccelEnrichment::onEngineStop() {
+	resetLua();
 }
 
 void TpsAccelEnrichment::onEngineCycleTps() {
@@ -164,6 +210,7 @@ float TpsAccelEnrichment::getMaxDelta() {
 void TpsAccelEnrichment::resetAE() {
 	cb.clear();
 	resetFractionValues();
+	resetLua();
 }
 
 void TpsAccelEnrichment::resetFractionValues() {
@@ -214,6 +261,14 @@ TpsAccelEnrichment::TpsAccelEnrichment() {
 }
 
 void TpsAccelEnrichment::onConfigurationChange(engine_configuration_s const* /*previousConfig*/) {
+	// A transient request belongs to the tune under which it was computed.
+	resetLua();
+
+	if (engineConfiguration->accelEnrichmentMode == AE_MODE_LUA) {
+		// The script owns event detection; don't depend on legacy lookback settings.
+		return;
+	}
+
 	constexpr float slowCallbackPeriodSecond = SLOW_CALLBACK_PERIOD_MS / 1000.0f;
 	int length;
 
