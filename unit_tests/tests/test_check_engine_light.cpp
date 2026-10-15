@@ -258,6 +258,17 @@ TEST(checkEngineLight, milControllerBlinksDiagnosticCode) {
 	// 107: two short pulses, one long pulse, eight short pulses
 	mil->onSlowCallback();
 
+	// the lamp is steady on for five seconds, then pauses before the first digit
+	EXPECT_TRUE(enginePins.checkEnginePin.getLogicValue());
+	advanceTimeUs(MS2US(4999));
+	mil->onSlowCallback();
+	EXPECT_TRUE(enginePins.checkEnginePin.getLogicValue());
+	advanceTimeUs(MS2US(2));
+	mil->onSlowCallback();
+	EXPECT_FALSE(enginePins.checkEnginePin.getLogicValue());
+	advanceTimeUs(MS2US(2001));
+	mil->onSlowCallback();
+
 	auto expectPulse = [&](int durationMs) {
 		EXPECT_TRUE(enginePins.checkEnginePin.getLogicValue());
 		advanceTimeUs(MS2US(durationMs - 1));
@@ -277,10 +288,13 @@ TEST(checkEngineLight, milControllerBlinksDiagnosticCode) {
 		expectPulse(400);
 	}
 
-	// The sequence is over: the lamp stays off until the next callback picks a code again.
+	// The sequence is over: the lamp stays off for the pause which follows the last code.
 	EXPECT_FALSE(enginePins.checkEnginePin.getLogicValue());
 
 	clearWarnings();
+	advanceTimeUs(MS2US(2001));
+	mil->onSlowCallback();
+	EXPECT_FALSE(enginePins.checkEnginePin.getLogicValue());
 	mil->onSlowCallback();
 	EXPECT_TRUE(enginePins.checkEnginePin.getLogicValue());
 
@@ -333,6 +347,19 @@ TEST(checkEngineLight, filteredMilPublishesLogicalPulsesAndSkipsRejectedCodes) {
 	mil->onIgnitionStateChanged(true);
 	mil->onSlowCallback();
 
+	// the steady lamp and the pause which open every round
+	auto expectPrelude = [&]() {
+		EXPECT_TRUE(mil->isDiagnosticLampOn());
+		advanceTimeUs(MS2US(4999));
+		mil->onSlowCallback();
+		EXPECT_TRUE(mil->isDiagnosticLampOn());
+		advanceTimeUs(MS2US(2));
+		mil->onSlowCallback();
+		EXPECT_FALSE(mil->isLampOn());
+		advanceTimeUs(MS2US(2001));
+		mil->onSlowCallback();
+	};
+
 	auto expectPulse = [&](int durationMs) {
 		EXPECT_TRUE(mil->isLampOn());
 		EXPECT_TRUE(mil->isDiagnosticLampOn());
@@ -352,10 +379,14 @@ TEST(checkEngineLight, filteredMilPublishesLogicalPulsesAndSkipsRejectedCodes) {
 	// selection and rotation, and preserve the existing digit/pulse encoding.
 	for (int repeat = 0; repeat < 2; repeat++) {
 		if (repeat > 0) {
-			// a finished sequence returns to idle, the next callback starts it over
+			// the last code is followed by a pause, then idle, then the round starts over
+			EXPECT_FALSE(mil->isLampOn());
+			advanceTimeUs(MS2US(2001));
+			mil->onSlowCallback();
 			EXPECT_FALSE(mil->isLampOn());
 			mil->onSlowCallback();
 		}
+		expectPrelude();
 		expectPulse(400);
 		expectPulse(400);
 		expectPulse(1500);
@@ -363,6 +394,10 @@ TEST(checkEngineLight, filteredMilPublishesLogicalPulsesAndSkipsRejectedCodes) {
 			expectPulse(400);
 		}
 	}
+
+	// wait out the pause which follows the last code of the round
+	advanceTimeUs(MS2US(2001));
+	mil->onSlowCallback();
 
 	// Changing the policy while a pulse is active stops diagnostic blinking.
 	custom_board_milCodeFilter = [](ObdCode) { return false; };
@@ -382,6 +417,57 @@ TEST(checkEngineLight, filteredMilPublishesLogicalPulsesAndSkipsRejectedCodes) {
 	mil->onIgnitionStateChanged(false);
 	mil->onSlowCallback();
 	EXPECT_FALSE(mil->isLampOn());
+}
+
+TEST(checkEngineLight, milSeparatesCodesWithPauseAndRestartsWithSteadyLamp) {
+	MilCodeFilterGuard filterGuard([](ObdCode code) {
+		return code == ObdCode::OBD_Map_Low || code == ObdCode::OBD_Iat_High;
+	});
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	auto& mil = engine->module<MILController>();
+	engine->rpmCalculator.setRpmValue(1000);
+	addError(ObdCode::OBD_Map_Low);
+	addError(ObdCode::OBD_Iat_High);
+	mil->onIgnitionStateChanged(true);
+
+	// measures how long the lamp keeps its current state, in milliseconds
+	auto measureState = [&](bool expectedState) {
+		EXPECT_EQ(expectedState, mil->isLampOn());
+		int ms = 0;
+		while (mil->isLampOn() == expectedState && ms < 10000) {
+			advanceTimeUs(MS2US(1));
+			mil->onSlowCallback();
+			ms++;
+		}
+		return ms;
+	};
+
+	mil->onSlowCallback();
+	// the round opens with five seconds of steady light and a two second pause
+	EXPECT_NEAR(5000, measureState(true), 2);
+	EXPECT_NEAR(2000, measureState(false), 2);
+
+	// blink out the first code, its digits are separated by short gaps only
+	int offMs = 0;
+	do {
+		measureState(true);
+		offMs = measureState(false);
+	} while (offMs < 1000);
+
+	// the codes themselves are separated by a two second pause
+	EXPECT_NEAR(2000, offMs, 2);
+
+	// the second code, then the steady lamp again instead of a plain pause
+	int onMs = 0;
+	do {
+		onMs = measureState(true);
+		if (onMs < 2000) {
+			measureState(false);
+		}
+	} while (onMs < 2000);
+
+	EXPECT_NEAR(5000, onMs, 2);
+	EXPECT_NEAR(2000, measureState(false), 2);
 }
 
 TEST(checkEngineLight, filteredMilFinishesSequenceWhenActiveCodeIsRemoved) {

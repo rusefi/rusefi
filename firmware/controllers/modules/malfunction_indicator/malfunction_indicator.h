@@ -43,15 +43,23 @@ private:
 	void setLamp(bool on, bool diagnostic = false);
 	enum class Phase : uint8_t {
 		Idle,
+		// steady lamp before the first code and after the last one
+		Prelude,
 		Pulse,
 		Gap,
+		// long pause between two consecutive codes
+		CodeGap,
+		// long pause after last code
+		CodeGapLast,
 	};
 
+	void startPrelude();
 	void startCode(ObdCode code);
 	void startDigit();
 	void startPulse();
 	void startNextCode(const error_codes_set_s& codes);
 	bool isActiveCodePresent(const error_codes_set_s& codes) const;
+	bool isLastCode(const error_codes_set_s& codes) const;
 
 	std::atomic<LampState> m_lampState{LampState::Off};
 
