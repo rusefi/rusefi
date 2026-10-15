@@ -553,6 +553,13 @@ static bool validateConfig(const engine_configuration_s* previousConfiguration) 
 		return false;
   }
 
+#ifndef EFI_SOFTWARE_KNOCK
+  if (engineConfiguration->enableSoftwareKnock) {
+    // [tag:user_facing_ini_labels] Match the Knock sensing control in TunerStudio.
+    criticalError("Knock sensing is enabled but this firmware does not support software knock");
+    return false;
+  }
+#endif // EFI_SOFTWARE_KNOCK
 
   // the only step which is allowed to modify configuration - everything else in this method is read-only validation
   applyDefaultsOrFixAfterBurn(previousConfiguration);
