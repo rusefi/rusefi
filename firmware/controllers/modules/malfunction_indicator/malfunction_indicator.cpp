@@ -37,12 +37,17 @@
 static constexpr float ShortPulseMs = 400;
 static constexpr float LongPulseMs = 1500;
 static constexpr float PulseGapMs = 400;
+// steady lamp before the first code and after the last one
+static constexpr float PreludeMs = 5000;
+// pause between two consecutive codes
+static constexpr float CodeGapMs = 2000;
 
 // Optional board hook: decides which OBD codes are allowed to be blinked out at all.
 std::optional<board_mil_code_filter_type> custom_board_milCodeFilter;
 // Optional board hook: maps an OBD code onto a shorter board specific number which is
 // what actually gets blinked out. Not installed by default, in that case the OBD code
 // itself is blinked.
+// Should return codes without zero in the middle (we cannot blink zero times!)
 std::optional<board_mil_code_translator_type> custom_board_milCodeTranslator;
 
 bool MILController::isLampOn() const {
@@ -82,9 +87,23 @@ void MILController::startPulse() {
 
 void MILController::startDigit() {
 	// blinking is driven by the translated (displayed) number, not by the raw OBD code
-	const int code = static_cast<int>(m_activeCode);
-	m_pulsesRemaining = (code / m_divisor) % 10 + 1;
+	const uint32_t code = m_activeCode;
+	if (custom_board_milCodeTranslator.has_value()) {
+		// We expect custom_board_milCodeTranslator converts to code without zeroes in a middle (like 102)
+		m_pulsesRemaining = (code / m_divisor) % 10;
+	} else {
+		// raw OBD code can contain zeroes in the middle, so add +1
+		m_pulsesRemaining = (code / m_divisor) % 10 + 1;
+	}
 	startPulse();
+}
+
+void MILController::startPrelude() {
+	// a new round starts from the first code of the set
+	m_activeObdCode = ObdCode::None;
+	m_phase = Phase::Prelude;
+	m_phaseTimer.reset();
+	setLamp(true, true);
 }
 
 void MILController::startCode(ObdCode code) {
@@ -98,7 +117,7 @@ void MILController::startCode(ObdCode code) {
 		static_cast<uint32_t>(m_activeObdCode), m_activeObdCode);
 
 	// find the highest decimal place so that digits are blinked from the most significant one
-	for (int value = static_cast<int>(code); value >= 10; value /= 10) {
+	for (int value = m_activeCode; value >= 10; value /= 10) {
 		m_divisor *= 10;
 		m_digitPlace++;
 	}
@@ -114,6 +133,10 @@ bool MILController::isActiveCodePresent(const error_codes_set_s& codes) const {
 	}
 
 	return false;
+}
+
+bool MILController::isLastCode(const error_codes_set_s& codes) const {
+	return codes.count == 0 || codes.error_codes[codes.count - 1] == m_activeObdCode;
 }
 
 void MILController::startNextCode(const error_codes_set_s& codes) {
@@ -134,6 +157,7 @@ void MILController::startNextCode(const error_codes_set_s& codes) {
 	startCode(codes.error_codes[next]);
 }
 
+// TODO: Why this is so comlicated? driving this with SlowCallback is pain in the back, simple thread will be much simplier
 void MILController::onSlowCallback() {
 	if (getOutputOnTheBenchTest() == &enginePins.checkEnginePin) {
 		m_wasBenchActive = true;
@@ -167,6 +191,32 @@ void MILController::onSlowCallback() {
 				setLamp(engine->rpmCalculator.isStopped());
 				return;
 			}
+			// codes are present: start with the steady lamp
+			startPrelude();
+		}
+	break;
+
+	case Phase::Prelude:
+		{
+			if (!m_phaseTimer.hasElapsedMs(PreludeMs)) {
+				return;
+			}
+
+			// the steady lamp is followed by the same pause as between two codes
+			setLamp(false, true);
+			m_phase = Phase::CodeGap;
+			m_phaseTimer.reset();
+		}
+	break;
+
+	case Phase::CodeGap:
+		{
+			if (!m_phaseTimer.hasElapsedMs(CodeGapMs)) {
+				return;
+			}
+
+			error_codes_set_s codes;
+			getErrorCodes(&codes, custom_board_milCodeFilter.value_or(nullptr));
 			startNextCode(codes);
 		}
 	break;
@@ -195,8 +245,28 @@ void MILController::onSlowCallback() {
 				m_digitPlace--;
 				startDigit();
 			} else {
-				m_phase = Phase::Idle;
+				// the whole code is blinked out: either pause before the next one
+				// or run the steady lamp again when we wrap around to the first code
+				error_codes_set_s codes;
+				getErrorCodes(&codes, custom_board_milCodeFilter.value_or(nullptr));
+				setLamp(false, true);
+				if (!isActiveCodePresent(codes) || isLastCode(codes)) {
+					m_phase = Phase::CodeGapLast;
+					m_activeObdCode = ObdCode::None;
+				} else {
+					// the timer keeps running: the pulse gap is a part of the pause
+					m_phase = Phase::CodeGap;
+				}
 			}
+		}
+	break;
+
+	case Phase::CodeGapLast:
+		{
+			if (!m_phaseTimer.hasElapsedMs(CodeGapMs)) {
+				return;
+			}
+			m_phase = Phase::Idle;
 		}
 	break;
 	}
