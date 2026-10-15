@@ -155,43 +155,49 @@ void MILController::onSlowCallback() {
 		return;
 	}
 
-	// Use one filtered snapshot for presence checks and code rotation so a
-	// rejected code can never start or keep a blink sequence alive.
-	error_codes_set_s codes;
-	getErrorCodes(&codes, custom_board_milCodeFilter.value_or(nullptr));
-	if (codes.count == 0) {
-		m_phase = Phase::Idle;
-		m_activeObdCode = ObdCode::None;
-		setLamp(engine->rpmCalculator.isStopped());
-		return;
-	}
-
-	if (m_phase == Phase::Idle || !isActiveCodePresent(codes)) {
-		startNextCode(codes);
-		return;
-	}
-
-	if (m_phase == Phase::Pulse) {
-		const float duration = m_digitPlace % 2 == 0 ? ShortPulseMs : LongPulseMs;
-		if (m_phaseTimer.hasElapsedMs(duration)) {
-			setLamp(false, true);
-			m_phase = Phase::Gap;
-			m_phaseTimer.reset();
+	switch (m_phase) {
+	case Phase::Idle:
+		{
+			// Use one filtered snapshot for presence checks and code rotation so a
+			// rejected code can never start or keep a blink sequence alive.
+			error_codes_set_s codes;
+			getErrorCodes(&codes, custom_board_milCodeFilter.value_or(nullptr));
+			if (codes.count == 0) {
+				m_activeObdCode = ObdCode::None;
+				setLamp(engine->rpmCalculator.isStopped());
+				return;
+			}
+			startNextCode(codes);
 		}
-		return;
-	}
+	break;
 
-	if (!m_phaseTimer.hasElapsedMs(PulseGapMs)) {
-		return;
-	}
+	case Phase::Pulse:
+		{
+			const float duration = m_digitPlace % 2 == 0 ? ShortPulseMs : LongPulseMs;
+			if (m_phaseTimer.hasElapsedMs(duration)) {
+				setLamp(false, true);
+				m_phase = Phase::Gap;
+				m_phaseTimer.reset();
+			}
+		}
+	break;
 
-	if (--m_pulsesRemaining > 0) {
-		startPulse();
-	} else if (m_divisor > 1) {
-		m_divisor /= 10;
-		m_digitPlace--;
-		startDigit();
-	} else {
-		startNextCode(codes);
+	case Phase::Gap:
+		{
+			if (!m_phaseTimer.hasElapsedMs(PulseGapMs)) {
+				return;
+			}
+
+			if (--m_pulsesRemaining > 0) {
+				startPulse();
+			} else if (m_divisor > 1) {
+				m_divisor /= 10;
+				m_digitPlace--;
+				startDigit();
+			} else {
+				m_phase = Phase::Idle;
+			}
+		}
+	break;
 	}
 }

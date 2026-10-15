@@ -73,6 +73,19 @@ protected:
 #endif
 	}
 
+#ifdef MODULE_MIL
+	// A started blink sequence is finished even if the code is already gone,
+	// let it run out before checking the plain (non-diagnostic) lamp state.
+	void finishBlinking() {
+		auto& mil = engine->module<MILController>();
+		for (int i = 0; i < 200 && mil->isBlinking(); i++) {
+			advanceTimeUs(MS2US(100));
+			mil->onSlowCallback();
+		}
+		mil->onSlowCallback();
+	}
+#endif
+
 	bool hasCode(ObdCode code) {
 		error_codes_set_s errors;
 		getErrorCodes(&errors);
@@ -138,6 +151,8 @@ TEST_F(CheckEngineLightTest, configuredVoltageFaults) {
 	evaluateAfterDebounce();
 	EXPECT_FALSE(hasErrorCodes());
 #ifdef MODULE_MIL
+	finishBlinking();
+	// no codes left: the lamp is simply on because the engine is not spinning
 	EXPECT_TRUE(enginePins.checkEnginePin.getLogicValue());
 #endif
 
@@ -262,8 +277,8 @@ TEST(checkEngineLight, milControllerBlinksDiagnosticCode) {
 		expectPulse(400);
 	}
 
-	// The single code repeats after its final gap.
-	EXPECT_TRUE(enginePins.checkEnginePin.getLogicValue());
+	// The sequence is over: the lamp stays off until the next callback picks a code again.
+	EXPECT_FALSE(enginePins.checkEnginePin.getLogicValue());
 
 	clearWarnings();
 	mil->onSlowCallback();
@@ -336,6 +351,11 @@ TEST(checkEngineLight, filteredMilPublishesLogicalPulsesAndSkipsRejectedCodes) {
 	// Two whole repetitions of 107 prove rejected neighbors are skipped during
 	// selection and rotation, and preserve the existing digit/pulse encoding.
 	for (int repeat = 0; repeat < 2; repeat++) {
+		if (repeat > 0) {
+			// a finished sequence returns to idle, the next callback starts it over
+			EXPECT_FALSE(mil->isLampOn());
+			mil->onSlowCallback();
+		}
 		expectPulse(400);
 		expectPulse(400);
 		expectPulse(1500);
@@ -364,7 +384,7 @@ TEST(checkEngineLight, filteredMilPublishesLogicalPulsesAndSkipsRejectedCodes) {
 	EXPECT_FALSE(mil->isLampOn());
 }
 
-TEST(checkEngineLight, filteredMilRestartsWhenActiveCodeIsRemoved) {
+TEST(checkEngineLight, filteredMilFinishesSequenceWhenActiveCodeIsRemoved) {
 	MilCodeFilterGuard filterGuard([](ObdCode code) {
 		return code == ObdCode::OBD_Map_Low;
 	});
@@ -379,9 +399,19 @@ TEST(checkEngineLight, filteredMilRestartsWhenActiveCodeIsRemoved) {
 	mil->onSlowCallback();
 	EXPECT_TRUE(mil->isDiagnosticLampOn());
 	removeError(ObdCode::OBD_Map_Low);
+	// the sequence is not aborted in the middle, that would confuse the user
 	mil->onSlowCallback();
-	EXPECT_FALSE(mil->isLampOn());
+	EXPECT_TRUE(mil->isDiagnosticLampOn());
 	EXPECT_TRUE(hasErrorCodes()); // rejected IAT code remains
+
+	// let the started code blink out to the end
+	for (int i = 0; i < 200 && mil->isBlinking(); i++) {
+		advanceTimeUs(MS2US(100));
+		mil->onSlowCallback();
+	}
+	EXPECT_FALSE(mil->isBlinking());
+	EXPECT_FALSE(mil->isLampOn()); // engine is running and no code is accepted anymore
+
 	addError(ObdCode::OBD_Map_Low);
 	mil->onSlowCallback();
 	EXPECT_TRUE(mil->isDiagnosticLampOn());
