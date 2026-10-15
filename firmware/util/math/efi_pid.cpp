@@ -82,7 +82,30 @@ float Pid::getUnclampedOutput(float p_target, float p_input, float dTime) {
  * @param dTime seconds probably? :)
  */
 float Pid::getOutput(float p_target, float p_input, float dTime) {
+	if (conditionalIntegration) {
+		// Apply any changed integral bounds before saving the starting point.
+		// Anti-windup must not undo enforcement of a newly tightened bound.
+		updateITerm(0);
+	}
+	float previousITerm = iTerm;
 	float l_output = getUnclampedOutput(p_target, p_input, dTime);
+
+	// [tag:pid_conditional_integration] Keep P/D/error history from this update,
+	// but remove integral growth beyond the available output authority. Retaining
+	// the portion up to the limit lets an I-only controller actually reach a rail.
+	// A step opposing saturation is kept, even if output is still clipped.
+	if (conditionalIntegration) {
+		float deltaI = iTerm - previousITerm;
+		if (deltaI > 0 && l_output > parameters->maxValue) {
+			float excess = std::min(deltaI, l_output - parameters->maxValue);
+			iTerm -= excess;
+			l_output -= excess;
+		} else if (deltaI < 0 && l_output < getMinValue()) {
+			float excess = std::min(-deltaI, getMinValue() - l_output);
+			iTerm += excess;
+			l_output += excess;
+		}
+	}
 
 	if (l_output > parameters->maxValue) {
 		l_output = parameters->maxValue;

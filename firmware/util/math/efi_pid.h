@@ -67,6 +67,11 @@ public:
 	// todo: move this to pid_s one day
 	float iTermMin = -1000000.0;
 	float iTermMax =  1000000.0;
+	// [tag:pid_conditional_integration] Opt in for the clamped getOutput() path.
+	// Admit only the part of an integral step that fits the output limits;
+	// always allow steps back out of saturation. Unclamped/CIC and industrial
+	// controllers keep their own integration behavior. reset() retains this policy.
+	bool conditionalIntegration = false;
 protected:
 	pid_s *parameters = nullptr;
 	virtual void updateITerm(float value);
