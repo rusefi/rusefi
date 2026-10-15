@@ -241,6 +241,24 @@ TEST_F(LuaAccelEnrichment, HasFiniteBaselineFuelMass) {
 	EXPECT_GT(base, 0);
 }
 
+class LuaAccelEnrichmentZeroLambdaDefaults : public LuaAccelEnrichment {
+public:
+	LuaAccelEnrichmentZeroLambdaDefaults() {
+		// Start with a zero table before SetUp() fills it.
+		setTable(config->lambdaTable, 0.0f);
+	}
+};
+
+TEST_F(LuaAccelEnrichmentZeroLambdaDefaults, FuelBaselineAndLuaCorrection) {
+	// SetUp() must produce valid fueling even when the table starts at zero.
+	float base = getInjectionMass(1200);
+	ASSERT_TRUE(std::isfinite(base));
+	EXPECT_GT(base, 0);
+	publish();
+	// Batch injection applies half of the 0.004 g cycle correction.
+	EXPECT_NEAR(base + 0.002f, getInjectionMass(1200), 1e-7f);
+}
+
 TEST_F(LuaAccelEnrichment, ScalesCycleMassOnceForEachInjectionMode) {
 	const injection_mode_e modes[] = {IM_SEQUENTIAL, IM_BATCH, IM_SIMULTANEOUS, IM_SINGLE_POINT};
 	const float multipliers[] = {1, 0.5f, 0.25f, 1};
@@ -249,6 +267,7 @@ TEST_F(LuaAccelEnrichment, ScalesCycleMassOnceForEachInjectionMode) {
 		engineConfiguration->injectionMode = modes[i];
 		testLuaExecString("setAccelEnrichment(0)");
 		float base = getInjectionMass(1200);
+		ASSERT_TRUE(std::isfinite(base));
 		publish();
 		EXPECT_NEAR(base + 0.004f * multipliers[i], getInjectionMass(1200), 1e-7f);
 		// It is a held correction, not a one-shot fuel quantity consumed on read.
@@ -272,6 +291,7 @@ TEST_F(LuaAccelEnrichment, ReplacesNativeTpsCorrectionsAndLeavesOtherModesAlone)
 	// Ethanol also changes native stoichiometric fueling: measure that baseline
 	// after configuring it, independently of the transient correction.
 	float base = getInjectionMass(1200);
+	ASSERT_TRUE(std::isfinite(base));
 	publish();
 	EXPECT_NEAR(base + 0.002f, getInjectionMass(1200), 1e-7f); // batch
 	EXPECT_FLOAT_EQ(0, ae().getTpsEnrichment());
@@ -281,6 +301,7 @@ TEST_F(LuaAccelEnrichment, ReplacesNativeTpsCorrectionsAndLeavesOtherModesAlone)
 		ae().resetFractionValues();
 		ae().resetLua();
 		float native = getInjectionMass(1200);
+		ASSERT_TRUE(std::isfinite(native));
 		publish();
 		EXPECT_FLOAT_EQ(native, getInjectionMass(1200));
 		EXPECT_FLOAT_EQ(0, ae().luaAccelFuel);
@@ -289,6 +310,7 @@ TEST_F(LuaAccelEnrichment, ReplacesNativeTpsCorrectionsAndLeavesOtherModesAlone)
 
 TEST_F(LuaAccelEnrichment, TimeoutRefreshAndClosedLoopHoldoff) {
 	float base = getInjectionMass(1200);
+	ASSERT_TRUE(std::isfinite(base));
 	engineConfiguration->noFuelTrimAfterAccelTime = 0.5f;
 	engineConfiguration->noFuelTrimAfterDfcoTime = 0;
 	engineConfiguration->stft.minAfr = 10;
@@ -322,6 +344,7 @@ TEST_F(LuaAccelEnrichment, TimeoutRefreshAndClosedLoopHoldoff) {
 
 TEST_F(LuaAccelEnrichment, ResetAndModeChangesClearRequest) {
 	float base = getInjectionMass(1200);
+	ASSERT_TRUE(std::isfinite(base));
 	publish();
 	EXPECT_GT(getInjectionMass(1200), base);
 	engine->resetLua();
@@ -348,6 +371,7 @@ TEST_F(LuaAccelEnrichment, ResetAndModeChangesClearRequest) {
 
 TEST_F(LuaAccelEnrichment, RejectsInvalidMass) {
 	float base = getInjectionMass(1200);
+	ASSERT_TRUE(std::isfinite(base));
 	for (const char* script : {"setAccelEnrichment(-0.001)", "setAccelEnrichment(0/0)",
 		"setAccelEnrichment(math.huge)", "setAccelEnrichment(-math.huge)"}) {
 		publish();
@@ -360,6 +384,7 @@ TEST_F(LuaAccelEnrichment, SuppressedWhenStoppedCrankingOrDfco) {
 	for (float rpm : {0.0f, 200.0f}) {
 		engine->rpmCalculator.setRpmValue(rpm);
 		float base = getInjectionMass(rpm);
+		ASSERT_TRUE(std::isfinite(base));
 		publish();
 		EXPECT_FLOAT_EQ(base, getInjectionMass(rpm));
 		EXPECT_FLOAT_EQ(0, ae().luaAccelFuel);
@@ -387,6 +412,7 @@ TEST_F(LuaAccelEnrichment, SuppressedWhenStoppedCrankingOrDfco) {
 
 TEST_F(LuaAccelEnrichment, TuningDetectorSuspendsCorrection) {
 	float base = getInjectionMass(1200);
+	ASSERT_TRUE(std::isfinite(base));
 	engineConfiguration->isTuningDetectorEnabled = true;
 	::testing::NiceMock<MockTsChannel> channel;
 	const uint16_t offset = static_cast<uint16_t>(offsetof(persistent_config_s, veTable));
