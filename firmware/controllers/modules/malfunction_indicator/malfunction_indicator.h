@@ -30,6 +30,8 @@ public:
 	bool isDiagnosticLampOn() const;
 	// True throughout a diagnostic sequence, including its off gaps.
 	bool isBlinking() const;
+	// True if any code present
+	bool isError() const;
 
 private:
 	enum class LampState : uint8_t {
