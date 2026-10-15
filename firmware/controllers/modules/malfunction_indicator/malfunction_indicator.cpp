@@ -59,6 +59,10 @@ bool MILController::isBlinking() const {
 	return state == LampState::DiagnosticOn || state == LampState::DiagnosticOff;
 }
 
+bool MILController::isError() const {
+	return m_activeObdCode != ObdCode::None;
+}
+
 void MILController::setLamp(bool on, bool diagnostic) {
 	m_lampState.store(diagnostic
 		? (on ? LampState::DiagnosticOn : LampState::DiagnosticOff)
