@@ -49,6 +49,10 @@ using setup_custom_bool_type = bool (*)();
 // Install during board setup, before periodic callbacks begin.
 using board_mil_code_filter_type = bool (*)(ObdCode);
 extern std::optional<board_mil_code_filter_type> custom_board_milCodeFilter;
+// Translate long OBD code to some short that can be blinked by Check Engine indicator
+// Install during board setup, before periodic callbacks begin.
+using board_mil_code_translator_type = uint32_t (*)(ObdCode);
+extern std::optional<board_mil_code_translator_type> custom_board_milCodeTranslator;
 
 // Five hooks touch configuration at different lifecycle moments: DefaultConfiguration,
 // ConfigOverrides, fix_configuration, validateConfig, OnConfigurationChange.

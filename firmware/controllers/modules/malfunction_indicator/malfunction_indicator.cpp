@@ -38,7 +38,12 @@ static constexpr float ShortPulseMs = 400;
 static constexpr float LongPulseMs = 1500;
 static constexpr float PulseGapMs = 400;
 
+// Optional board hook: decides which OBD codes are allowed to be blinked out at all.
 std::optional<board_mil_code_filter_type> custom_board_milCodeFilter;
+// Optional board hook: maps an OBD code onto a shorter board specific number which is
+// what actually gets blinked out. Not installed by default, in that case the OBD code
+// itself is blinked.
+std::optional<board_mil_code_translator_type> custom_board_milCodeTranslator;
 
 bool MILController::isLampOn() const {
 	const auto state = m_lampState.load(std::memory_order_relaxed);
@@ -72,16 +77,23 @@ void MILController::startPulse() {
 }
 
 void MILController::startDigit() {
+	// blinking is driven by the translated (displayed) number, not by the raw OBD code
 	const int code = static_cast<int>(m_activeCode);
 	m_pulsesRemaining = (code / m_divisor) % 10 + 1;
 	startPulse();
 }
 
 void MILController::startCode(ObdCode code) {
-	m_activeCode = code;
+	// m_activeObdCode is the identity of the code: it is matched against the error code set,
+	// while m_activeCode is only the number we blink out.
+	m_activeObdCode = code;
 	m_divisor = 1;
 	m_digitPlace = 0;
+	// board may shorten the code, otherwise fall back to the OBD code value itself
+	m_activeCode = get_board_override_result(custom_board_milCodeTranslator,
+		static_cast<uint32_t>(m_activeObdCode), m_activeObdCode);
 
+	// find the highest decimal place so that digits are blinked from the most significant one
 	for (int value = static_cast<int>(code); value >= 10; value /= 10) {
 		m_divisor *= 10;
 		m_digitPlace++;
@@ -91,8 +103,8 @@ void MILController::startCode(ObdCode code) {
 }
 
 bool MILController::isActiveCodePresent(const error_codes_set_s& codes) const {
-	for (int i = 0; i < codes.count; i++) {
-		if (codes.error_codes[i] == m_activeCode) {
+	for (size_t i = 0; i < codes.count; i++) {
+		if (codes.error_codes[i] == m_activeObdCode) {
 			return true;
 		}
 	}
@@ -103,13 +115,13 @@ bool MILController::isActiveCodePresent(const error_codes_set_s& codes) const {
 void MILController::startNextCode(const error_codes_set_s& codes) {
 	if (codes.count == 0) {
 		m_phase = Phase::Idle;
-		m_activeCode = ObdCode::None;
+		m_activeObdCode = ObdCode::None;
 		return;
 	}
 
 	int next = 0;
-	for (int i = 0; i < codes.count; i++) {
-		if (codes.error_codes[i] == m_activeCode) {
+	for (size_t i = 0; i < codes.count; i++) {
+		if (codes.error_codes[i] == m_activeObdCode) {
 			next = (i + 1) % codes.count;
 			break;
 		}
@@ -129,12 +141,12 @@ void MILController::onSlowCallback() {
 	if (m_wasBenchActive) {
 		m_wasBenchActive = false;
 		m_phase = Phase::Idle;
-		m_activeCode = ObdCode::None;
+		m_activeObdCode = ObdCode::None;
 	}
 
 	if (!m_ignitionOn) {
 		m_phase = Phase::Idle;
-		m_activeCode = ObdCode::None;
+		m_activeObdCode = ObdCode::None;
 		setLamp(false);
 		return;
 	}
@@ -145,7 +157,7 @@ void MILController::onSlowCallback() {
 	getErrorCodes(&codes, custom_board_milCodeFilter.value_or(nullptr));
 	if (codes.count == 0) {
 		m_phase = Phase::Idle;
-		m_activeCode = ObdCode::None;
+		m_activeObdCode = ObdCode::None;
 		setLamp(engine->rpmCalculator.isStopped());
 		return;
 	}
