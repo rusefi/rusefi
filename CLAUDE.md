@@ -84,6 +84,11 @@ The build system does not track compiler-flag changes, so run `make clean` in `u
 
 Unit tests use Google Test and run on PC, not on the ECU.
 
+Fuel-pipeline fixtures used by custom boards must initialize `config->lambdaTable`
+explicitly: the default lambda calibration only populates a 16x16 table. With
+some custom boards 24 RPM bins, a `TEST_ENGINE` fixture otherwise divides by zero and returns
+infinite fuel mass, which can silently satisfy floating-point equality checks.
+
 If a fresh unit-test build fails with `can't create build/obj/*.o: No such file or directory`, create `build/obj`, `build/lst`, and `.dep` under `unit_tests/`, then rerun `make -j12`. A partially created `build/` directory can satisfy the current directory prerequisite without its object subdirectory existing (observed during the MCP4728 work, 2026-09-27).
 
 When testing actuator init paths, remember that `EngineTestHelper` construction already runs `commonInitEngineController()` -> `initElectronicThrottle()`: with `TEST_ENGINE` (which defaults `etbFunctions[0]=DC_Wastegate`) DC hardware pool slot 0 is started *before* the test body runs, and the `DcHardware::isStarted` latch silently ignores any re-init with different settings. Call `resetDcHardwareForUnitTest()` / `resetIdleHardwareForUnitTest()` (both `EFI_UNIT_TEST` seams; also invoked by the `EngineTestHelper` constructor for cross-test isolation) before re-initializing with test-specific config. The idle stepper stack (`initIdleHardware()`, `StepDirectionStepper`, `DualHBridgeStepper`) compiles in unit tests; in that build `StepperMotor` is an alias of `StepperMotorBase` with no thread — tests drive it by calling `doIteration()` manually (see `test_idle_hardware.cpp`).

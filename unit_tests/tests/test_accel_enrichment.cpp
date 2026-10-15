@@ -213,6 +213,9 @@ protected:
 
 	void SetUp() override {
 		setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
+		// Custom boards can resize the lambda table beyond the default 16x16
+		// calibration. Give this fuel-pipeline fixture a valid target explicitly.
+		setTable(config->lambdaTable, 1.0f);
 		EXPECT_CALL(*eth.mockAirmass, getAirmass(testing::_, testing::_))
 			.WillRepeatedly(testing::Return(AirmassResult{1.3440001f, 50.0f}));
 		engine->rpmCalculator.setRpmValue(1200);
@@ -231,6 +234,12 @@ protected:
 		testLuaExecString("setAccelEnrichment(0.004)");
 	}
 };
+
+TEST_F(LuaAccelEnrichment, HasFiniteBaselineFuelMass) {
+	const float base = getInjectionMass(1200);
+	ASSERT_TRUE(std::isfinite(base));
+	EXPECT_GT(base, 0);
+}
 
 TEST_F(LuaAccelEnrichment, ScalesCycleMassOnceForEachInjectionMode) {
 	const injection_mode_e modes[] = {IM_SEQUENTIAL, IM_BATCH, IM_SIMULTANEOUS, IM_SINGLE_POINT};
