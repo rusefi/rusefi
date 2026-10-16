@@ -1320,7 +1320,7 @@ float getOutputValueByHash(const int hash) {
 			return engine->engineState.dwellOverChargeCounter;
 // dwellActualRatio
 		case -175046954:
-			return engine->engineState.dwellActualRatio;
+			return (engine->engineState.dwellActualRatio + -1.0f) * 100.0f;
 // dcOutput0
 		case 1242329357:
 			return engine->dc_motors.dcOutput0;
@@ -1483,19 +1483,19 @@ float getOutputValueByHash(const int hash) {
 			return engine->module<MisfireController>()->misfireTotalCount;
 // misfireEmaUs
 		case 1057331407:
-			return engine->module<MisfireController>()->misfireEmaUs;
+			return engine->module<MisfireController>()->misfireEmaUs * 0.001f;
 // misfireLastSegUs
 		case -1971271249:
-			return engine->module<MisfireController>()->misfireLastSegUs;
+			return engine->module<MisfireController>()->misfireLastSegUs * 0.001f;
 // misfireThreshUs
 		case 1848662122:
-			return engine->module<MisfireController>()->misfireThreshUs;
+			return engine->module<MisfireController>()->misfireThreshUs * 0.001f;
 // misfireWobbleUs
 		case 675334487:
-			return engine->module<MisfireController>()->misfireWobbleUs;
+			return engine->module<MisfireController>()->misfireWobbleUs * 0.001f;
 // misfireWobbleThreshUs
 		case -783525499:
-			return engine->module<MisfireController>()->misfireWobbleThreshUs;
+			return engine->module<MisfireController>()->misfireWobbleThreshUs * 0.001f;
 #endif
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 // lambdaCurrentlyGood
