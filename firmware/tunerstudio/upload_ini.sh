@@ -43,19 +43,28 @@ if [ ! -z "$sig" -a "$sig" != " " ]; then
     hash=${BASH_REMATCH[6]}
     path="$branch/$year/$month/$day/$board/$hash.ini"
     echo "* found path: $path"
-    # we do not have ssh for this user
-    # sftp does not support -p flag on mkdir :(
-
-    $(realpath $(dirname "$0"))/../bin/sshpass-retry.sh $PASS sftp -o StrictHostKeyChecking=no ${USER}@${HOST} <<SSHCMD
-mkdir ${INI_DESTINATION_FOLDER}rusefi
-cd ${INI_DESTINATION_FOLDER}rusefi
-mkdir $branch
-mkdir $branch/$year
-mkdir $branch/$year/$month
-mkdir $branch/$year/$month/$day
-mkdir $branch/$year/$month/$day/$board
-put $fileName $path
+    # [tag:ini_upload_status] SFTP needs batch mode to fail on cd/put errors.
+    # A batch file is reopened on every retry; stdin would already be consumed.
+    batchFile=$(mktemp) || exit 1
+    trap 'rm -f "$batchFile"' EXIT
+    # SFTP has no mkdir -p. Allow existing directories, but keep cd/put fatal.
+    if ! cat > "$batchFile" <<SSHCMD
+-mkdir "${INI_DESTINATION_FOLDER}rusefi"
+cd "${INI_DESTINATION_FOLDER}rusefi"
+-mkdir "$branch"
+-mkdir "$branch/$year"
+-mkdir "$branch/$year/$month"
+-mkdir "$branch/$year/$month/$day"
+-mkdir "$branch/$year/$month/$day/$board"
+put "$fileName" "$path"
 SSHCMD
+    then
+      exit 1
+    fi
+
+    # Keep password authentication via sshpass available in SFTP batch mode.
+    "$(realpath "$(dirname "$0")")/../bin/sshpass-retry.sh" "$PASS" \
+      sftp -oBatchMode=no -b "$batchFile" -o StrictHostKeyChecking=no "${USER}@${HOST}"
     retVal=$?
 
     if [ $retVal -ne 0 ]; then
