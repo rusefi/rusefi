@@ -1243,7 +1243,7 @@ bit useFixedBaroCorrFromMap,"yes","no";Read MAP sensor on ECU start-up to use as
 bit useSeparateAdvanceForCranking,"Table","Fixed (auto taper)";In Constant mode, timing is automatically tapered to running as RPM increases.\nIn Table mode, the "Cranking ignition advance" table is used directly.
 bit useAdvanceCorrectionsForCranking,"yes","no";This enables the various ignition corrections during cranking (IAT, CLT and PID idle).\nYou probably don't need this.
 bit flexCranking,"enabled","disabled";Enable flex-fuel compensation for engine start. When on (and a flex fuel sensor is present) the cranking coolant multiplier and the priming pulse mass each come from a 2D table over coolant and ethanol % (crankingFuelFlexTable / primeFlexTable, 4-row ethanol axis) instead of their 1D coolant curves. When off, the 1D curves (crankingFuelCoef / primeValues) are used.
-bit flexFuelTransientComp,"enabled","disabled";Enable flex-fuel transient fueling compensation (acceleration enrichment and wall wetting tau/beta) based on ethanol content and coolant temperature.
+bit flexFuelTransientComp,"enabled","disabled";Shared CLT/ethanol compensation for additive TPS AE and wall-film tau/beta. AE multiplier applies only to MS/Percent Adder. tau/beta apply in every AE strategy and Basic/Advanced. Requires a registered ethanol sensor. Does not control base stoichiometry, cranking or priming.
 bit useIacPidMultTable,"yes","no";This flag allows to use a special 'PID Multiplier' table (0.0-1.0) to compensate for nonlinear nature of IAC-RPM controller
 bit isBoostControlEnabled,"enabled","disabled"
 bit launchSmoothRetard,"enabled","disabled";Gradually interpolates the ignition timing from the base timing table value down to the target "Absolute Timing at Launch" value, starting from the beginning of the launch window.
@@ -1298,7 +1298,7 @@ custom pin_mode_e 1 bits, U08, @OFFSET@, [0:6], $pin_mode_e_enum
 	float tachPulseDuractionMs;Duration in ms or duty cycle depending on selected mode;"", 1, 0, 0, 100, 2
 
 
-	float wwaeTau;Length of time the deposited wall fuel takes to dissipate after the start of acceleration. ;"Seconds", 1, 0, 0, 3, 2
+	float wwaeTau;Evaporation time constant for the Basic fuel-film model, in seconds. Higher values make the film respond more slowly. This is an exponential time constant, not the time for all deposited fuel to evaporate. Effective values below 0.01 bypass compensation.;"Seconds", 1, 0, 0, 3, 2
 	pid_s alternatorControl;
 	pid_s etb;
 	int16_t airTaperRpmRange;RPM range above upper limit for extra air taper;"RPM", 1, 0, 0, 1500, 0
@@ -1318,7 +1318,7 @@ tps_limit_t tps2Max;Fully opened voltage for primary throttle position sensor
 	uint16_t autoscale multisparkSparkDuration;How long to wait for the spark to fire before recharging the coil for another spark.;"ms", 0.001, 0, 0, 3, 2
 	uint16_t autoscale multisparkDwell;This sets the dwell time for subsequent sparks. The main spark's dwell is set by the dwell table.;"ms", 0.001, 0, 0, 3, 2
 	pid_s idleRpmPid;See cltIdleRpmBins
-	float wwaeBeta;0 = No fuel settling on port walls 1 = All the fuel settling on port walls setting this to 0 disables the wall wetting enrichment. ;"Fraction", 1, 0, 0, 1, 2
+	float wwaeBeta;Fraction of injected fuel deposited on the wall in the Basic model. 0.20 represents 20%. Larger values increase modeled deposition. Effective values below 0.01 bypass compensation. Downstream controller limits still apply.;"Fraction", 1, 0, 0, 1, 2
 
 	Gpio binarySerialTxPin;See also EFI_CONSOLE_RX_BRAIN_PIN
 	Gpio binarySerialRxPin;
@@ -1576,8 +1576,8 @@ float tChargeAirDecrLimit;Maximum allowed rate of decrease allowed for the estim
     custom torqueReductionActivationMode_e  1 bits, S08, @OFFSET@, [0:1], @@torqueReductionActivationMode_e_enum@@
     torqueReductionActivationMode_e torqueReductionActivationMode;
 
-	int16_t tpsAccelFractionPeriod;A delay in cycles between fuel-enrich. portions;"cycles", 1, 0, 0, 500, 0
-	float tpsAccelFractionDivisor;A fraction divisor: 1 or less = entire portion at once, or split into diminishing fractions;"coef", 1, 0, 1, 100, 2
+	int16_t tpsAccelFractionPeriod;Spread each additive enrichment portion evenly across this number of engine cycles. Higher values reduce delivery per cycle and spread it longer. Period 1 and divisor 1 disable fractional spreading. Ignored by MAP Prediction and Lua.;"cycles", 1, 0, 0, 500, 0
+	float tpsAccelFractionDivisor;Divide accumulated additive enrichment into diminishing portions. 1 delivers a full portion. Larger values reduce the initial delivery and extend the tail. With period 1 and divisor 2: 1/2, 1/4, 1/8. Ignored by MAP Prediction and Lua.;"coef", 1, 0, 1, 100, 2
 
 	spi_device_e tle8888spiDevice;
 	spi_device_e mc33816spiDevice;
@@ -2220,7 +2220,7 @@ uint8_t[FUEL_LOAD_COUNT x FUEL_RPM_COUNT] autoscale lambdaTable;;{useLambdaOnInt
 uint16_t[FUEL_LOAD_COUNT] lambdaLoadBins;;{bitStringValue(afrLoadUnitLabels, afrLoadUnitIdx)}, {!(afrOverrideMode == 1 || (afrOverrideMode == 0 && fuelAlgorithm == 0)) || useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, 0, {afrOverrideMode == 1 || (afrOverrideMode == 0 && fuelAlgorithm == 0) ? (useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@) : @@MAP_UPPER_LIMIT@@}, 0
 uint16_t[FUEL_RPM_COUNT] lambdaRpmBins;;"RPM",	  1, 0, 0, 18000, 0
 
-float[TPS_TPS_ACCEL_TABLE x TPS_TPS_ACCEL_TABLE] tpsTpsAccelTable;MS Adder uses milliseconds. Percent Adder uses a fraction: 0.20 adds 20% with sequential injection and other corrections neutral. Injection-mode scaling also applies. MAP Prediction does not use this table. Changing modes reinterprets the same values.;@@TPS_ACCEL_UNITS@@, 1, 0, 0, 30000, 2
+float[TPS_TPS_ACCEL_TABLE x TPS_TPS_ACCEL_TABLE] tpsTpsAccelTable;X: previous TPS. Y: new TPS. MS Adder values are milliseconds. Percent Adder values are fractions: 0.20 adds 20% in sequential injection with neutral corrections. Injection-mode scaling also applies. MAP Prediction and Lua ignore this table. Changing modes reinterprets existing values.;@@TPS_ACCEL_UNITS@@, 1, 0, 0, 30000, 2
 float[TPS_TPS_ACCEL_TABLE] tpsTpsAccelFromRpmBins;;"%",	  1, 0, 0, 30000, 2
 float[TPS_TPS_ACCEL_TABLE] tpsTpsAccelToRpmBins;;"%",	  1, 0, 0, 25500, 2
 
@@ -2429,10 +2429,10 @@ uint16_t[ENGINE_NOISE_CURVE_SIZE] knockNoiseRpmBins;;"RPM", 1, 0, 0, 30000, 0
 int8_t[ENGINE_NOISE_CURVE_SIZE] autoscale knockBaseNoise;Knock sensor output knock detection threshold depending on current RPM.;"dB", 0.5, 0, -64, 10, 1
 
 uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale tpsTspCorrValuesBins;;"RPM", 50, 0, 0, 12500, 0
-uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale tpsTspCorrValues;;"multiplier", 0.02, 0, 0, 5, 2
+uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale tpsTspCorrValues;Multiplier applied to additive TPS enrichment at each RPM. 1.00 is neutral, 0.50 halves and 2.00 doubles. Ignored by MAP Prediction and Lua.;"multiplier", 0.02, 0, 0, 5, 2
 
 uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale predictiveMapBlendDurationBins;;"RPM", 50, 0, 0, 12500, 0
-uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale predictiveMapBlendDurationValues;;"second", 0.02, 0, 0, 5, 2
+uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale predictiveMapBlendDurationValues;Transition duration from estimated MAP toward current measured MAP, interpolated at current RPM. Prediction may exit earlier or restart if estimated MAP increases. The largest duration in this curve also sizes TPS history. Used only by MAP Prediction.;"second", 0.02, 0, 0, 5, 2
 
 ! Flex-fuel transient fueling compensation: CLT (X) x Ethanol% (Y) multiplier tables
 #define FLEX_TRANSIENT_CLT_SIZE 8
@@ -2440,9 +2440,9 @@ uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale predictiveMapBlendDurationValues
 
 int16_t[FLEX_TRANSIENT_CLT_SIZE] flexTransientCltBins;Coolant temperature axis for the flex-fuel transient compensation tables;"C", 1, 0, -40, 200, 0
 uint8_t[FLEX_TRANSIENT_ETH_SIZE] flexTransientEthanolBins;Ethanol percentage axis for the flex-fuel transient compensation tables;"%", 1, 0, 0, 100, 0
-uint8_t[FLEX_TRANSIENT_ETH_SIZE x FLEX_TRANSIENT_CLT_SIZE] autoscale flexAeMult;Acceleration enrichment multiplier as a function of CLT (X) and ethanol % (Y);"mult", 0.02, 0, 0, 5, 2
-uint8_t[FLEX_TRANSIENT_ETH_SIZE x FLEX_TRANSIENT_CLT_SIZE] autoscale flexWwTauMult;Wall wetting tau multiplier as a function of CLT (X) and ethanol % (Y);"mult", 0.02, 0, 0, 5, 2
-uint8_t[FLEX_TRANSIENT_ETH_SIZE x FLEX_TRANSIENT_CLT_SIZE] autoscale flexWwBetaMult;Wall wetting beta multiplier as a function of CLT (X) and ethanol % (Y);"mult", 0.02, 0, 0, 5, 2
+uint8_t[FLEX_TRANSIENT_ETH_SIZE x FLEX_TRANSIENT_CLT_SIZE] autoscale flexAeMult;Additive TPS AE multiplier over CLT (X) and ethanol (Y), enabled by Flex fuel transient compensation. 1.00 is neutral. Ignored by MAP Prediction and Lua. CLT/ethanol bins are shared with both wall-film flex tables.;"mult", 0.02, 0, 0, 5, 2
+uint8_t[FLEX_TRANSIENT_ETH_SIZE x FLEX_TRANSIENT_CLT_SIZE] autoscale flexWwTauMult;Multiplier of wall-film evaporation time constant over CLT (X) and ethanol (Y). Above 1 makes evaporation slower. Applies with every AE strategy and Basic/Advanced. CLT/ethanol bins are shared with the other flex transient tables.;"mult", 0.02, 0, 0, 5, 2
+uint8_t[FLEX_TRANSIENT_ETH_SIZE x FLEX_TRANSIENT_CLT_SIZE] autoscale flexWwBetaMult;Multiplier of wall-film deposition fraction over CLT (X) and ethanol (Y). Above 1 increases modeled deposition. Applies with every AE strategy and Basic/Advanced. CLT/ethanol bins are shared with the other flex transient tables.;"mult", 0.02, 0, 0, 5, 2
 
 ! yes, 200C region is legit for some air-cooled engines
 int16_t[CLT_LIMITER_CURVE_SIZE] autoscale cltRevLimitRpmBins;;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -40 : -40}, {useMetricOnInterface ? 200 : 392}, 0

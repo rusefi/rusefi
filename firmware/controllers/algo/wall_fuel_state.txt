@@ -2,8 +2,8 @@
 ! Store both in grams; scale 1000 exposes mg without converting model state on every injection.
 ! SD logging and Lua automatically use the same field scale as TunerStudio.
 struct_no_prefix wall_fuel_state_s
-float wallFuelCorrection;@@GAUGE_NAME_FUEL_WALL_CORRECTION@@\nFuel mass correction for wall wetting in the current injection. Positive adds fuel, negative subtracts fuel.;"mg", 1000, 0, -20, 20, 3
-float wallFuel;@@GAUGE_NAME_FUEL_WALL_AMOUNT@@\nEstimated fuel mass on the intake port wall for the monitored cylinder.;"mg", 1000, 0, 0, 100, 3
+float wallFuelCorrection;@@GAUGE_NAME_FUEL_WALL_CORRECTION@@\nFuel mass correction for wall wetting in the last calculated injection event 0. Positive adds fuel, negative subtracts fuel. May retain its last calculated value while compensation is bypassed.;"mg", 1000, 0, -20, 20, 3
+float wallFuel;@@GAUGE_NAME_FUEL_WALL_AMOUNT@@\nEstimated fuel mass on the intake port wall for injection event 0, not an all-cylinder total.;"mg", 1000, 0, 0, 100, 3
 ! wall_fuel_state
 end_struct
 

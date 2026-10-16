@@ -1,6 +1,6 @@
-	uint8_t autoscale tpsAccelLookback;How long to look back for TPS-based acceleration enrichment. Increasing this time will trigger enrichment for longer when a throttle position change occurs.;"sec", 0.05, 0, 0, 5, 2
+	uint8_t autoscale tpsAccelLookback;TPS history window for additive AE. The detector selects an adjacent-sample step within this window. A longer window keeps an older step eligible longer. Zero disables additive AE. MAP Prediction derives its history from the duration curve. Lua ignores this setting.;"sec", 0.05, 0, 0, 5, 2
 	float tpsDecelEnleanmentThreshold;Deceleration is detected when the largest signed TPS change between adjacent samples in the history is below the negative of this threshold. Units are TPS percentage points per sample (50 ms). A zero or positive change elsewhere in the history can mask a throttle-closing step.;"%/sample", 1, 0, 0, 200, 1
-	float tpsDecelEnleanmentMultiplier;Magic multiplier, we multiply delta of TPS and get fuel squirt duration;"coeff", 1, 0, 0, 200, 2
+	float tpsDecelEnleanmentMultiplier;Scale fuel reduction from the selected TPS closing step in additive modes. Larger values increase reduction. RPM and flex multipliers also apply. Fractional-pump processing can suppress the reduction. This setting is independent of DFCO and ignored by MAP Prediction and Lua.;"coeff", 1, 0, 0, 200, 2
 
 custom accel_enrichment_mode_e 1 bits, U08, @OFFSET@, [0:1], "MS Adder", "Percent Adder", "MAP Prediction", "Lua"
-accel_enrichment_mode_e accelEnrichmentMode;Selects acceleration enrichment. Lua: setAccelEnrichment(grams) supplies extra fuel per cylinder per cycle. Refresh within 200 ms.
+accel_enrichment_mode_e accelEnrichmentMode;Select transient enrichment strategy. MS Adder uses milliseconds. Percent Adder uses fractions. MAP Prediction corrects Speed Density MAP. Lua supplies extra g/cylinder/cycle with setAccelEnrichment(grams), refreshed before 200 ms. Wall wetting is independent.
