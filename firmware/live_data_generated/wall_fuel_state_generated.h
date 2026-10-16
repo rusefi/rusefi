@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/wall_fuel_state.txt Tue Nov 01 20:59:53 UTC 2022
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/wall_fuel_state.txt
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -6,19 +6,21 @@
 // start of wall_fuel_state_s
 struct wall_fuel_state_s {
 	/**
-	 * fuel wallwetting injection time
-	 *  correction to account for wall wetting effect for current cycle
+	 * @@GAUGE_NAME_FUEL_WALL_CORRECTION@@
+	 * Fuel mass correction for wall wetting in the current injection. Positive adds fuel, negative subtracts fuel.
+	 * units: mg
 	 * offset 0
 	 */
 	float wallFuelCorrection = (float)0;
 	/**
-	 * Fuel on the wall
-	 * in ms of injector open time for each injector.
+	 * @@GAUGE_NAME_FUEL_WALL_AMOUNT@@
+	 * Estimated fuel mass on the intake port wall for the monitored cylinder.
+	 * units: mg
 	 * offset 4
 	 */
-	floatms_t wallFuel = (floatms_t)0;
+	float wallFuel = (float)0;
 };
 static_assert(sizeof(wall_fuel_state_s) == 8);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/wall_fuel_state.txt Tue Nov 01 20:59:53 UTC 2022
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/wall_fuel_state.txt

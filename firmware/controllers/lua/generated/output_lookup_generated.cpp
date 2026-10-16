@@ -190,12 +190,6 @@ float getOutputValueByHash(const int hash) {
 // engineMakeCodeNameCrc16
 		case 1726931380:
 			return engine->outputChannels.engineMakeCodeNameCrc16;
-// wallFuelAmount
-		case 115540725:
-			return engine->outputChannels.wallFuelAmount;
-// wallFuelCorrectionValue
-		case -1511514122:
-			return engine->outputChannels.wallFuelCorrectionValue;
 // flexAeMultiplier
 		case -1150933023:
 			return engine->outputChannels.flexAeMultiplier;
@@ -1382,6 +1376,12 @@ float getOutputValueByHash(const int hash) {
 // injectorHwIssue
 		case -1237512821:
 			return engine->fuelComputer.injectorHwIssue;
+// wallFuelCorrection
+		case -1361470151:
+			return engine->injectionEvents.elements[0].getWallFuel().wallFuelCorrection * 1000.0f;
+// wallFuel
+		case 2095557601:
+			return engine->injectionEvents.elements[0].getWallFuel().wallFuel * 1000.0f;
 // dtAutotuneActive
 		case 408698318:
 			return engine->module<InjectorDeadtimeAutotune>()->dtAutotuneActive;
