@@ -15,4 +15,21 @@ Implementation details:
 
 https://www.youtube.com/watch?v=n_pqH-3P3Qc
 
-TODO: Live Documentation with branching sections. 
+TODO: Live Documentation with branching sections.
+
+### Scaling model values for telemetry
+
+`[tag:live_data_output_scale]` A `LiveData.yaml` entry can set
+`applyOutputScale: true` to apply its fields' constant INI scale to SD logging
+and Lua `getOutput()`. The field definition remains the single source for the
+scale. Plain C++ fields retain their native units; SD writes the scale into
+the log header, while Lua multiplies only when the value is requested.
+`autoscale` fields already convert through `scaled_channel` and receive no
+additional multiplier.
+
+This option supports constant scales (including simple division) with zero
+offset. Unsupported offsets or dynamic scale expressions fail generation.
+It defaults to false to preserve existing SD/Lua unit contracts. Enable it
+when introducing or migrating a fragment whose outputs should match the INI
+units. For example, a float stored in grams can declare `"mg", 1000, 0` in
+its field metadata. No existing fragment is opted in by default.

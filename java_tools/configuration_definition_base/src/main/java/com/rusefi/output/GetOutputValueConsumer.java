@@ -29,6 +29,7 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
     public String[] expressions = {"engine->outputChannels"};
     public String[] names;
     public boolean moduleMode;
+    public boolean applyOutputScale;
     public String currentEngineModule;
     public String conditional;
     public String additionalHeaders = "";
@@ -70,7 +71,12 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
             javaName = expression + (isPtr ? "->" : ".") + prefix;
         }
 
-        getterPairs.add(new VariableRecord(userName, javaName + cf.getName(), null, conditional));
+        String value = javaName + cf.getName();
+        float scale = applyOutputScale ? OutputScale.getAdditionalScale(cf) : 1;
+        if (scale != 1) {
+            value += " * " + scale + "f";
+        }
+        getterPairs.add(new VariableRecord(userName, value, null, conditional));
 
 
         return "";

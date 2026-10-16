@@ -9,8 +9,39 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import static com.rusefi.AssertCompatibility.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LiveDataProcessorTest {
+    @Test
+    public void outputScaleIsOptInPerFragment() throws IOException {
+        // [tag:live_data_output_scale] Shared consumers must reset the opt-in for each YAML entry.
+        String yaml = "Usages:\n"
+                + "  - name: scaled\n"
+                + "    java: Scaled.java\n"
+                + "    folder: test\n"
+                + "    constexpr: engine->scaled\n"
+                + "    applyOutputScale: true\n"
+                + "  - name: legacy\n"
+                + "    java: Legacy.java\n"
+                + "    folder: test\n"
+                + "    constexpr: engine->legacy\n";
+        TestFileCaptor captor = new TestFileCaptor();
+        LiveDataProcessor processor = new LiveDataProcessor("test", fileName -> {
+            String name = fileName.contains("scaled") ? "scaled" : "legacy";
+            return new StringReader("struct_no_prefix " + name + "_s\n"
+                    + "float " + name + "Mass;" + name + " mass;\"mg\", 1000, 0, 0, 100, 3\n"
+                    + "end_struct\n");
+        }, captor, "");
+        processor.handleYaml(LiveDataProcessor.getStringObjectMap(new StringReader(yaml)));
+
+        String sd = captor.fileCapture.get(SdCardFieldsContent.SD_CARD_OUTPUT_FILE_NAME).sb.toString();
+        String lua = captor.fileCapture.get(LiveDataProcessor.getOutputLookupFileName()).sb.toString();
+        assertTrue(sd.contains("{engine->scaled.scaledMass, \"scaled mass\", \"mg\", 3, \"none\", 1000.0f}"), sd);
+        assertTrue(sd.contains("{engine->legacy.legacyMass, \"legacy mass\", \"mg\", 3}"), sd);
+        assertTrue(lua.contains("return engine->scaled.scaledMass * 1000.0f;"), lua);
+        assertTrue(lua.contains("return engine->legacy.legacyMass;"), lua);
+    }
+
     @Test
     public void testTwoSections() throws IOException {
         String testYaml = "Usages:\n" +

@@ -299,6 +299,10 @@ public class LiveDataProcessor {
                 inputFolder = inputOutputFolder;
             }
 
+            // [tag:live_data_output_scale] Opt in per fragment to preserve existing SD/Lua unit contracts.
+            boolean applyOutputScale = Boolean.TRUE.equals(entry.get("applyOutputScale"));
+            sdCardFieldsConsumer.applyOutputScale = applyOutputScale;
+            outputValueConsumer.applyOutputScale = applyOutputScale;
             handler.onEntry(name, java, inputFolder, prepend, outputNamesArr, constexpr, conditional, engineModule, isPtr, cppFileName, "live_data_generated");
 
             String enumName = "LDS_" + name;

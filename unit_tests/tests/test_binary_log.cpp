@@ -63,3 +63,24 @@ TEST(BinaryLogField, Value) {
 	// Check that big endian data was written, and bytes after weren't touched
 	EXPECT_THAT(buffer, ElementsAre(0x00, 0xbc, 0x61, 0x4e, 0xAA, 0xAA));
 }
+
+TEST(BinaryLogField, FloatDisplayScale) {
+	float grams = 0.125f;
+	Field field(grams, "Fuel mass", "mg", 3, "none", 1000);
+	// [tag:live_data_output_scale] The log reader converts grams to mg using the header, not payload writes.
+	EXPECT_FLOAT_EQ(1000, field.getMultiplier());
+	EXPECT_DOUBLE_EQ(125, field.readValueAsDouble(nullptr));
+	StrictMock<MockWriter> writer;
+	EXPECT_CALL(writer, write(_, 89)).WillOnce([](const char* buffer, size_t count) {
+		EXPECT_EQ(0x44, static_cast<unsigned char>(buffer[46]));
+		EXPECT_EQ(0x7a, static_cast<unsigned char>(buffer[47]));
+		EXPECT_EQ(0, buffer[48]);
+		EXPECT_EQ(0, buffer[49]);
+		return count;
+	});
+	field.writeHeader(writer);
+	char data[sizeof(float)];
+	EXPECT_EQ(sizeof(float), field.writeData(data, nullptr));
+	EXPECT_THAT(data, ElementsAre(0x3e, 0, 0, 0));
+	EXPECT_FLOAT_EQ(0.125f, grams);
+}

@@ -45,10 +45,11 @@ public:
 	}
 
 	// Non-scaled channel, works for plain arithmetic types (int, float, uint8_t, etc)
+	// [tag:live_data_output_scale] Display scaling belongs in the header; writeData keeps raw model units.
 	template <typename TValue, typename = typename std::enable_if<std::is_arithmetic_v<TValue>>::type>
 	LOG_FIELD_CONSTNESS_SPECIFIER_METHODS Field(TValue& toRead,
-			   const char* name, const char* units, int8_t digits, const char* category = "none")
-		: m_multiplier(1)
+			   const char* name, const char* units, int8_t digits, const char* category = "none", float multiplier = 1)
+		: m_multiplier(multiplier)
 		, m_addr(&toRead)
 		, m_type_id(static_cast<std::underlying_type_t<Types::Field::Scalar>>(Types::Field::resolveBuiltInNumberType<TValue>()))
 		, m_digits(digits)
