@@ -14,6 +14,10 @@
 void initElectronicThrottle();
 void doInitElectronicThrottle(bool isStartupInit);
 
+#if EFI_UNIT_TEST
+void resetElectronicThrottleForUnitTest();
+#endif
+
 void setEtbIdlePosition(percent_t pos);
 void setEtbWastegatePosition(percent_t pos);
 void setEtbLuaAdjustment(percent_t adjustment);

@@ -749,6 +749,22 @@ static DcThread dcThread CCM_OPTIONAL;
 #endif // !EFI_UNIT_TEST
 
 #if EFI_UNIT_TEST
+#include <new>
+
+void resetElectronicThrottleForUnitTest() {
+	// [tag:etb_test_lifetime] EngineTestHelper owns the PID configuration, but
+	// these controllers are static. Reconstruct them before that configuration
+	// dies: a later init can skip an unused slot or return early without TPS,
+	// leaving the old PID pointer reachable from onConfigurationChange().
+	// Reset the complete objects, including bench/autocal state, and retain
+	// throttle 2's reference to its static trim table.
+	etb1.~EtbImpl();
+	new (&etb1) EtbImpl<EtbController1>();
+	etb2.~EtbImpl();
+	new (&etb2) EtbImpl<EtbController2>(throttle2TrimTable);
+	ebtResetCounter = 0;
+}
+
 void etbPidReset() {
 	for (int i = 0 ; i < ETB_COUNT; i++) {
 		if (auto controller = engine->etbControllers[i]) {

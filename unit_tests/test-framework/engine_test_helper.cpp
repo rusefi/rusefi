@@ -18,6 +18,7 @@
 #include "hardware.h"
 #include "dc_motors.h"
 #include "idle_hardware.h"
+#include "electronic_throttle.h"
 // https://stackoverflow.com/questions/23427804/cant-find-mkdir-function-in-dirent-h-for-windows
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -256,6 +257,11 @@ EngineTestHelper::~EngineTestHelper() {
   closeUnitTestLog();
 
 	// Cleanup
+#if EFI_ELECTRONIC_THROTTLE_BODY
+	// [tag:etb_test_lifetime] Release static controllers' references before our
+	// persistentConfig is destroyed, even if a test installed mock controllers.
+	resetElectronicThrottleForUnitTest();
+#endif
   	// reset pin config state, will trigger isPinConfigurationChanged
 	enginePins.resetForUnitTest();
 	enginePins.reset();

@@ -3,8 +3,63 @@
 #include "electronic_throttle_impl.h"
 #include "live_data.h"
 #include "live_data_ids.h"
+#include <memory>
 
 extern int ebtResetCounter;
+
+// [tag:etb_test_lifetime] Static controllers must not outlive the configuration
+// owned by a helper. Inspect public state without dereferencing the stale PID.
+TEST(EtbLifetime, ControllersAfterHelperDestruction) {
+	EtbController* controllers[ETB_COUNT];
+	{
+		EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+		Sensor::setMockValue(SensorType::Tps1, 25, true);
+		Sensor::setMockValue(SensorType::Tps2, 30, true);
+		doInitElectronicThrottle(true);
+
+		for (size_t i = 0; i < ETB_COUNT; i++) {
+			controllers[i] = static_cast<EtbController*>(engine->etbControllers[i]);
+			ASSERT_EQ(static_cast<uint8_t>(EtbState::SuccessfulInit), controllers[i]->state);
+			controllers[i]->setLuaAdjustment(12 + i);
+		}
+	}
+
+	for (size_t i = 0; i < ETB_COUNT; i++) {
+		EXPECT_EQ(DC_None, controllers[i]->getFunction());
+		EXPECT_EQ(static_cast<uint8_t>(EtbState::Uninitialized), controllers[i]->state);
+		EXPECT_FLOAT_EQ(0, controllers[i]->getLuaAdjustment());
+	}
+
+	// Heap allocation prevents a new stack helper from masking the expired
+	// configuration's address. This is the same setup path as LuaAccelEnrichment.
+	{
+		auto next = std::make_unique<EngineTestHelper>(engine_type_e::TEST_ENGINE);
+		ASSERT_FALSE(Sensor::hasSensor(SensorType::Tps1));
+		ASSERT_FALSE(Sensor::hasSensor(SensorType::Tps2));
+		setupSimpleTestEngineWithMafAndTT_ONE_trigger(next.get());
+
+		// Also exercise teardown of a heap-owned configuration, then a helper
+		// whose disabled slots bypass controller initialization entirely.
+		Sensor::setMockValue(SensorType::Tps1, 25, true);
+		Sensor::setMockValue(SensorType::Tps2, 30, true);
+		doInitElectronicThrottle(true);
+		for (auto controller : controllers) {
+			ASSERT_EQ(static_cast<uint8_t>(EtbState::SuccessfulInit), controller->state);
+		}
+	}
+	{
+		auto next = std::make_unique<EngineTestHelper>(engine_type_e::TEST_ENGINE,
+			[](engine_configuration_s* cfg) {
+				for (auto& function : cfg->etbFunctions) {
+					function = DC_None;
+				}
+			});
+		setupSimpleTestEngineWithMafAndTT_ONE_trigger(next.get());
+		for (auto controller : controllers) {
+			EXPECT_EQ(DC_None, controller->getFunction());
+		}
+	}
+}
 
 static EtbController * initEtbIntegratedTest() {
 	etbPidReset(); // ETB controlles are global shared instances :(
