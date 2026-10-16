@@ -187,6 +187,10 @@ Usages:
     cppFileName: wall_fuel
     java: WallFuelState.java
     folder: controllers/algo
+    prepend: integration/rusefi_config_shared.txt
+    # [tag:wall_fuel_telemetry] SD logging and Lua read the same mg fields as TunerStudio.
+    constexpr: "engine->injectionEvents.elements[0].getWallFuel()"
+    conditional_compilation: "EFI_ENGINE_CONTROL"
 
   - name: closed_loop_idle
     cppFileName: closed_loop_idle

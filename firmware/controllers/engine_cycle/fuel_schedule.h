@@ -22,7 +22,10 @@ public:
 	// Call this every decoded trigger tooth.  It will schedule any relevant events for this injector.
 	void onTriggerTooth(efitick_t nowNt, float currentPhase, float nextPhase);
 
-	WallFuel& getWallFuel();
+	// [tag:wall_fuel_telemetry] SD log field addresses must be constant expressions in production.
+	constexpr WallFuel& getWallFuel() {
+		return wallFuel;
+	}
 
 	void setIndex(uint8_t index) {
 		ownIndex = index;

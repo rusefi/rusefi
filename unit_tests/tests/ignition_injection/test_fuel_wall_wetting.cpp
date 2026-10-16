@@ -8,6 +8,9 @@
  */
 
 #include "pch.h"
+#include "binary_mlg_logging.h"
+#include "mlg_field.h"
+#include "value_lookup.h"
 
 struct MockWallController : public IWallFuelController {
 	MOCK_METHOD(bool, getEnable, (), (const, override));
@@ -20,6 +23,55 @@ struct TestWallFuelController : public WallFuelController {
 	using WallFuelController::computeTau;
 	using WallFuelController::computeBeta;
 };
+
+// [tag:wall_fuel_telemetry] Model values stay in grams; TS, SD logs and Lua expose the same masses in mg.
+TEST(fuel, wallWettingTelemetryMass) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	MockWallController wallController;
+	EXPECT_CALL(wallController, getEnable()).WillRepeatedly(Return(true));
+	EXPECT_CALL(wallController, getAlpha()).WillRepeatedly(Return(0.5f));
+	EXPECT_CALL(wallController, getBeta()).WillRepeatedly(Return(0.25f));
+	engine->engineModules.get<WallFuelController>().set(&wallController);
+
+	auto& wall = engine->injectionEvents.elements[0].getWallFuel();
+	EXPECT_NEAR(0.016f, wall.adjust(0.012f), 1e-7f);
+	EXPECT_NEAR(0.004f, wall.wallFuel, 1e-7f);
+	EXPECT_NEAR(0.004f, wall.wallFuelCorrection, 1e-7f);
+	EXPECT_NEAR(0.004f, wall.getWallFuel(), 1e-7f);
+	EXPECT_NEAR(4, getOutputValueByName("wallFuel"), 1e-5f);
+	EXPECT_NEAR(4, getOutputValueByName("wallFuelCorrection"), 1e-5f);
+	EXPECT_FLOAT_EQ(EFI_ERROR_CODE, getOutputValueByName("wallFuelAmount"));
+	EXPECT_FLOAT_EQ(EFI_ERROR_CODE, getOutputValueByName("wallFuelCorrectionValue"));
+
+	int matches = 0;
+	MLG::forEachField([&](const MLG::Entries::Field& field) {
+		if (strcmp(field.getName(), "Fuel: wall amount") == 0 || strcmp(field.getName(), "Fuel: wall correction") == 0) {
+			matches++;
+			EXPECT_STREQ("mg", field.getUnits());
+			EXPECT_EQ(sizeof(float), field.getSize());
+			EXPECT_FLOAT_EQ(1000, field.getMultiplier());
+			EXPECT_NEAR(4, field.readValueAsDouble(MLG::getUnitTestFieldOffset(field)), 1e-5f);
+		}
+	});
+	EXPECT_EQ(2, matches);
+
+	// Evaporation supplies more than requested: injection clamps to zero and the correction is negative.
+	EXPECT_FLOAT_EQ(0, wall.adjust(0.001f));
+	EXPECT_NEAR(0.002f, wall.wallFuel, 1e-7f);
+	EXPECT_NEAR(-0.001f, wall.wallFuelCorrection, 1e-7f);
+	EXPECT_NEAR(-1, getOutputValueByName("wallFuelCorrection"), 1e-5f);
+	MLG::forEachField([&](const MLG::Entries::Field& field) {
+		if (strcmp(field.getName(), "Fuel: wall correction") == 0) {
+			EXPECT_NEAR(-1, field.readValueAsDouble(MLG::getUnitTestFieldOffset(field)), 1e-5f);
+		}
+	});
+
+	// Retain float precision below the old packed channel's 0.01 mg resolution.
+	wall.resetWF();
+	EXPECT_NEAR(0.000016f, wall.adjust(0.000012f), 1e-10f);
+	EXPECT_NEAR(0.004f, getOutputValueByName("wallFuel"), 1e-8f);
+	EXPECT_NEAR(0.004f, getOutputValueByName("wallFuelCorrection"), 1e-8f);
+}
 
 TEST(fuel, wallWettingFlexFuelCompensation) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);

@@ -633,10 +633,6 @@ static void updateFuelInfo() {
 	updateFuelCorrections();
 	updateFuelResults();
 #if EFI_ENGINE_CONTROL
-	const auto& wallFuel = engine->injectionEvents.elements[0].getWallFuel();
-	engine->outputChannels.wallFuelAmount = wallFuel.getWallFuel() * 1000;			// Convert grams to mg
-	engine->outputChannels.wallFuelCorrectionValue = wallFuel.wallFuelCorrection * 1000;	// Convert grams to mg
-
 	engine->outputChannels.veValue = engine->engineState.currentVe;
 #endif // EFI_ENGINE_CONTROL
 }

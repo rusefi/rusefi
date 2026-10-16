@@ -156,9 +156,23 @@ All three flex multiplier tables share `flexTransientCltBins` and `flexTransient
 | `valueFromTable`, `extraFuel`, `accumulatedValue`, `cycleCnt` | Adder internals. Early-return paths can leave these diagnostic fields unchanged. |
 | `tpsAccelFuel` | Native adder result; zero in MAP Prediction or Lua does not mean transient correction is inactive. |
 | `luaAccelFuel` | Applied Lua extra mass in grams per cylinder per cycle, before injection-mode scaling; zero when inactive, expired or suppressed. |
+| `wallFuelCorrection` | Signed wall-wetting correction in mg for injection event 0, logged as `Fuel: wall correction`. Positive adds fuel, negative subtracts fuel. |
+| `wallFuel` | Estimated fuel film mass in mg for injection event 0, logged as `Fuel: wall amount`. |
 | `fallbackMap`, `effectiveMap`, `isMapPredictionActive` | Table prediction, MAP used by speed density, and prediction state. |
 | `predTimerResetCnt`, `mapPredEventOver` | Prediction starts and duration expirations; not every timer restart or early exit. |
 | `flexAeMultiplier`, `flexWwTauMultiplier`, `flexWwBetaMultiplier` | Last evaluated flex multipliers; bypassed paths need not refresh them. |
+
+`[tag:wall_fuel_telemetry]` The wall-model fields are the single source for TunerStudio,
+SD logging and Lua `getOutput()`, all reporting mg. The model fields and
+`WallFuel::adjust()`/`getWallFuel()` remain in grams. The field metadata specifies
+scale 1000: TunerStudio applies it through the INI, SD logs store it in their
+header, and Lua applies it on lookup. SD and Lua automatically use the field
+metadata; no conversion occurs in the injection loop.
+The former packed `wallFuelCorrectionValue` and `wallFuelAmount` channels have
+been removed; update dashboards/scripts to `wallFuelCorrection` and `wallFuel`.
+Earlier TunerStudio definitions exposed these retained names in grams.
+The standard log labels remain unchanged.
+Bypassed adjustments can leave the last correction unchanged.
 
 ## Source and existing coverage
 

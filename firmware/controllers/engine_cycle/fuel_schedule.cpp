@@ -36,10 +36,6 @@ FuelSchedule::FuelSchedule() {
 	}
 }
 
-WallFuel& InjectionEvent::getWallFuel() {
-	return wallFuel;
-}
-
 void FuelSchedule::invalidate() {
 	isReady = false;
 }

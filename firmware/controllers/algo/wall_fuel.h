@@ -19,6 +19,7 @@ public:
 	 * @return total adjusted fuel squirt mass in grams once wall wetting is taken into effect
 	 */
 	float adjust(float desiredMassGrams);
+	// Fuel-film mass in grams.
 	float getWallFuel() const;
 	void resetWF();
 	int invocationCounter = 0;
