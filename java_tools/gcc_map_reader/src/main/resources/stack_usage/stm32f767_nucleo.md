@@ -9,7 +9,6 @@
 | firmware | BenchController::ThreadTask | bench test | - | - | - |
 | firmware | StepperMotor::ThreadTask | stepper | 220 | 652 | normal startup positioning |
 | firmware | TunerstudioThread::ThreadTask | TunerStudio | 804 | 1244 | normal tune burn |
-| firmware | LoggingBufferFlusher::ThreadTask | log flush | 120 | 636 | mailbox wait/flush |
 | firmware | MicrosecondTimerWatchdogController::PeriodicTask | timer watchdog | 112 | 528 | normal watchdog sleep |
 | firmware | CanWrite::ThreadTask | CAN TX | - | - | - |
 | firmware | DcThread::PeriodicTask | electronic throttle | 256 | 8 | normal ETB update |

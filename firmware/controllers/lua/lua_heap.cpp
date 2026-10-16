@@ -131,6 +131,8 @@ void luaHeapInit()
 	extern uint8_t __heap_ccm_end__[];
 	luaCcmHeap.init(__heap_ccm_base__, __heap_ccm_end__ - __heap_ccm_base__);
 #endif
+
+	addConsoleAction("heapinfo", luaHeapPrintInfo);
 }
 
 static size_t luaMemoryUsed = 0;
