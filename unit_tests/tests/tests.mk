@@ -214,6 +214,7 @@ TESTS_SRC_CPP = \
 	test-framework/logicdata2csv.cpp \
 	tests/binary_log/test_bit_logger_field.cpp \
 	tests/binary_log/test_log_file_content.cpp \
+	tests/binary_log/test_mlg_open_issues.cpp \
 	tests/test_dynoview.cpp \
 	tests/test_gpio.cpp \
 	tests/test_digital_input_exti.cpp \
