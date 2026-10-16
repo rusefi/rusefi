@@ -11,7 +11,8 @@
 #include "obd_error_codes.h"
 #include "past_codes.h"
 
-#define MAX_ERROR_CODES_COUNT 10
+#define MAX_STORED_ERROR_CODES_COUNT	32
+#define MAX_ERROR_CODES_COUNT			10
 
 // This is moved from engine_parts.h
 struct warning_t {
@@ -36,7 +37,7 @@ struct warning_t {
 	}
 };
 
-typedef static_vector<warning_t, MAX_ERROR_CODES_COUNT> warningBuffer_t;
+typedef static_vector<warning_t, MAX_STORED_ERROR_CODES_COUNT> warningBuffer_t;
 
 struct error_codes_set_s {
 	size_t count = 0;

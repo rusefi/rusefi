@@ -177,45 +177,59 @@ TEST(misc, testMalfunctionCentral) {
 	for (int i = 1; i < 101; i++) {
 		addError((ObdCode) i);
 	}
+	// up to MAX_STORED_ERROR_CODES_COUNT codes are stored but only the first
+	// MAX_ERROR_CODES_COUNT of them are reported
 	getErrorCodes(&localCopy);
 	ASSERT_EQ(MAX_ERROR_CODES_COUNT, localCopy.count);
 
-	// now we have full array and code below present
+	// storage is full, removal of one code does not reduce the reported count
 	removeError(code);
 	getErrorCodes(&localCopy);
+	ASSERT_EQ(MAX_ERROR_CODES_COUNT, localCopy.count);
+
+	// with less codes stored than the reporting limit removal is visible
+	clearWarnings();
+	for (int i = 1; i < MAX_ERROR_CODES_COUNT; i++) {
+		addError((ObdCode) i);
+	}
+	getErrorCodes(&localCopy);
 	ASSERT_EQ(MAX_ERROR_CODES_COUNT - 1, localCopy.count);
+
+	removeError((ObdCode) 1);
+	getErrorCodes(&localCopy);
+	ASSERT_EQ(MAX_ERROR_CODES_COUNT - 2, localCopy.count);
 }
 
 TEST(misc, warningSlotReuseAfterRemoval) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	auto& warnings = engine->engineState.warnings;
-	for (int i = 1; i <= MAX_ERROR_CODES_COUNT; i++) {
+	for (int i = 1; i <= MAX_STORED_ERROR_CODES_COUNT; i++) {
 		warnings.addWarningCode(static_cast<ObdCode>(i));
 	}
-	ASSERT_EQ(MAX_ERROR_CODES_COUNT, warnings.warningCounter);
+	ASSERT_EQ(MAX_STORED_ERROR_CODES_COUNT, warnings.warningCounter);
 
 	warnings.removeErrorCode(static_cast<ObdCode>(1));
-	for (int i = 0; i < 2 * MAX_ERROR_CODES_COUNT; i++) {
+	for (int i = 0; i < 2 * MAX_STORED_ERROR_CODES_COUNT; i++) {
 		warnings.addWarningCode(ObdCode::OBD_Engine_Overboost, "Boost cut");
 		ASSERT_TRUE(warnings.isWarningNow(ObdCode::OBD_Engine_Overboost));
-		ASSERT_EQ(MAX_ERROR_CODES_COUNT, warnings.warningCounter);
+		ASSERT_EQ(MAX_STORED_ERROR_CODES_COUNT, warnings.warningCounter);
 		ASSERT_TRUE(warnings.hasWarningMessage());
 		EXPECT_STREQ("Boost cut", warnings.getWarningMessage());
-		for (int code = 2; code <= MAX_ERROR_CODES_COUNT; code++) {
+		for (int code = 2; code <= MAX_STORED_ERROR_CODES_COUNT; code++) {
 			EXPECT_TRUE(warnings.isWarningNow(static_cast<ObdCode>(code)));
 		}
 
 		// Duplicates refresh the same entry; a full live store still rejects new codes.
 		advanceTimeUs(1);
 		warnings.addWarningCode(ObdCode::OBD_Engine_Overboost);
-		EXPECT_EQ(MAX_ERROR_CODES_COUNT, warnings.warningCounter);
+		EXPECT_EQ(MAX_STORED_ERROR_CODES_COUNT, warnings.warningCounter);
 		ASSERT_NE(nullptr, warnings.recentWarnings.find(ObdCode::OBD_Engine_Overboost));
 		EXPECT_EQ(getTimeNowNt(), warnings.recentWarnings.find(ObdCode::OBD_Engine_Overboost)->LastTriggered.get());
 		warnings.addWarningCode(ObdCode::OBD_System_Too_Lean_Bank_1);
 		EXPECT_FALSE(warnings.isWarningNow(ObdCode::OBD_System_Too_Lean_Bank_1));
 
 		warnings.removeErrorCode(ObdCode::OBD_Engine_Overboost);
-		EXPECT_EQ(MAX_ERROR_CODES_COUNT - 1, warnings.warningCounter);
+		EXPECT_EQ(MAX_STORED_ERROR_CODES_COUNT - 1, warnings.warningCounter);
 		EXPECT_FALSE(warnings.hasWarningMessage());
 	}
 }
@@ -246,7 +260,7 @@ TEST(misc, warningSlotReusePreservesPendingMessage) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	auto& warnings = engine->engineState.warnings;
 	warnings.addWarningCode(static_cast<ObdCode>(1), "Original message");
-	for (int i = 2; i <= MAX_ERROR_CODES_COUNT; i++) {
+	for (int i = 2; i <= MAX_STORED_ERROR_CODES_COUNT; i++) {
 		warnings.addWarningCode(static_cast<ObdCode>(i));
 	}
 	warnings.removeErrorCode(static_cast<ObdCode>(2));
@@ -261,7 +275,7 @@ TEST(misc, warningSlotReusePreservesPendingMessage) {
 	warnings.addWarningCode(ObdCode::OBD_System_Too_Lean_Bank_1, "Lambda cut");
 	ASSERT_TRUE(warnings.hasWarningMessage());
 	EXPECT_STREQ("Boost cut again", warnings.getWarningMessage());
-	EXPECT_EQ(MAX_ERROR_CODES_COUNT, warnings.warningCounter);
+	EXPECT_EQ(MAX_STORED_ERROR_CODES_COUNT, warnings.warningCounter);
 }
 
 static int lastInteger = -1;
