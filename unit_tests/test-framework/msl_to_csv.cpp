@@ -3,7 +3,7 @@
 // Reader of the binary MLG/MLVLG log written by unit_test_logger.cpp.
 // Produces a CSV with one header row of field names (with units) and one
 // data row per logged record. The raw integer/float value of each field is
-// multiplied by its declared scale (per MLG field descriptor) before being
+// shifted and multiplied by its declared conversion (per MLG field descriptor) before being
 // written out, so the CSV contains physical values just like TunerStudio.
 
 #include "msl_to_csv.h"
@@ -55,7 +55,8 @@ struct FieldDesc {
     ScalarType type;
     std::string name;
     std::string units;
-    float scale;       // raw * scale = physical value
+    float scale;       // (raw + translation) * scale = physical value
+    float translation;
     int8_t digits;     // decimal places
     size_t size;       // size in bytes of the raw value
 };
@@ -78,7 +79,8 @@ static double readScaledValue(const FieldDesc& f, const uint8_t* p) {
         }
         case ScalarType::F32: raw = double(readF32BE(p)); break;
     }
-    return raw * double(f.scale);
+    // [tag:live_data_output_scale] Match SD descriptors and Field::readValueAsDouble.
+    return (raw + double(f.translation)) * double(f.scale);
 }
 
 static std::string cleanField(std::string s) {
@@ -260,6 +262,7 @@ bool convertMslToCsv(const char* mslPath, const char* csvPath) {
         f.name   = std::string(reinterpret_cast<const char*>(d + 1),  strnlen(reinterpret_cast<const char*>(d + 1),  34));
         f.units  = std::string(reinterpret_cast<const char*>(d + 35), strnlen(reinterpret_cast<const char*>(d + 35), 10));
         f.scale  = readF32BE(d + 46);
+        f.translation = readF32BE(d + 50);
         f.digits = static_cast<int8_t>(d[54]);
         f.size   = sizeOfType(f.type);
         fields.push_back(std::move(f));

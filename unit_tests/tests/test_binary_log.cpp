@@ -1,7 +1,14 @@
 #include "mlg_field.h"
 #include "buffered_writer.h"
+#include <stdexcept>
+#include <string>
+#include "mlg_reader.h"
+#include "msl_to_csv.h"
+#include "unit_test_logger.h"
 
 #include <gmock/gmock.h>
+#include <filesystem>
+#include <fstream>
 
 using namespace MLG;
 using namespace MLG::Entries;
@@ -42,7 +49,7 @@ TEST(BinaryLogField, FieldHeader) {
 		0,
 		// Scale = 0.1 (float)
 		0x3d, 0xcc, 0xcc, 0xcd,
-		// Transform - we always use 0
+		// Translation defaults to 0
 		0, 0, 0, 0,
 		// Digits - 2, as configured
 		2,
@@ -83,4 +90,125 @@ TEST(BinaryLogField, FloatDisplayScale) {
 	EXPECT_EQ(sizeof(float), field.writeData(data, nullptr));
 	EXPECT_THAT(data, ElementsAre(0x3e, 0, 0, 0));
 	EXPECT_FLOAT_EQ(0.125f, grams);
+}
+
+static float readBigEndianFloat(const char* bytes) {
+	uint32_t bits = 0;
+	for (size_t i = 0; i < sizeof(bits); i++) {
+		bits = (bits << 8) | static_cast<unsigned char>(bytes[i]);
+	}
+	float value;
+	memcpy(&value, &bits, sizeof(value));
+	return value;
+}
+
+TEST(BinaryLogField, FloatTranslation) {
+	float trim = 1;
+	Field field(trim, "Trim", "%", 1, "Fuel", 100, -1);
+	char header[Types::Field::DescriptorSize];
+	StrictMock<MockWriter> writer;
+	EXPECT_CALL(writer, write(_, sizeof(header))).WillOnce([&](const char* buffer, size_t count) {
+		memcpy(header, buffer, count);
+		return count;
+	});
+	field.writeHeader(writer);
+	EXPECT_FLOAT_EQ(100, readBigEndianFloat(header + 46));
+	// [tag:live_data_output_scale] Decode emitted bytes to verify shift-before-scale and raw payloads.
+	EXPECT_FLOAT_EQ(-1, readBigEndianFloat(header + 50));
+	for (float raw : {0.95f, 1.0f, 1.05f}) {
+		trim = raw;
+		char data[sizeof(float)];
+		ASSERT_EQ(sizeof(data), field.writeData(data, nullptr));
+		EXPECT_FLOAT_EQ(raw, readBigEndianFloat(data));
+		double expected = (static_cast<double>(raw) - 1) * 100;
+		EXPECT_NEAR(expected, (readBigEndianFloat(data) + readBigEndianFloat(header + 50))
+			* readBigEndianFloat(header + 46), 0.00001);
+		EXPECT_NEAR(expected, field.readValueAsDouble(nullptr), 0.00001);
+	}
+}
+
+TEST(BinaryLogField, PackedTranslation) {
+	scaled_channel<int16_t, 10> packed;
+	Field field(packed, "Packed", "unit", 1, "none", 1, 100);
+	char header[Types::Field::DescriptorSize];
+	StrictMock<MockWriter> writer;
+	EXPECT_CALL(writer, write(_, sizeof(header))).WillOnce([&](const char* buffer, size_t count) {
+		memcpy(header, buffer, count);
+		return count;
+	});
+	field.writeHeader(writer);
+	EXPECT_FLOAT_EQ(0.1f, readBigEndianFloat(header + 46));
+	EXPECT_FLOAT_EQ(100, readBigEndianFloat(header + 50));
+	for (int raw : {-20, 0, 20}) {
+		packed = raw / 10.0f;
+		char data[sizeof(int16_t)];
+		ASSERT_EQ(sizeof(data), field.writeData(data, nullptr));
+		int decodedRaw = (static_cast<unsigned char>(data[0]) << 8) | static_cast<unsigned char>(data[1]);
+		if (decodedRaw >= 0x8000) {
+			decodedRaw -= 0x10000;
+		}
+		EXPECT_EQ(raw, decodedRaw);
+		double expected = (raw + 100) / 10.0;
+		EXPECT_NEAR(expected, (decodedRaw + readBigEndianFloat(header + 50))
+			* readBigEndianFloat(header + 46), 0.00001);
+		EXPECT_NEAR(expected, field.readValueAsDouble(nullptr), 0.00001);
+	}
+}
+
+TEST(BinaryLogField, ReadersApplyTranslation) {
+	// Independent on-disk fixture: float trim with shift -1, packed integer with shift +100.
+	const auto path = std::filesystem::path(TEST_RESULTS_DIR) / "output_offset_readers.mlg";
+	const auto csvPath = path.string() + ".csv";
+	std::filesystem::create_directories(path.parent_path());
+	std::ofstream file(path, std::ios::binary);
+	ASSERT_TRUE(file.is_open());
+	const unsigned char fileHeader[24] = {'M', 'L', 'V', 'L', 'G', 0, 0, 2,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 202, 0, 6, 0, 2};
+	file.write(reinterpret_cast<const char*>(fileHeader), sizeof(fileHeader));
+	float trim = 1.05f;
+	scaled_channel<int16_t, 10> packed = 2.0f;
+	Field fields[] = {{trim, "Trim", "%", 1, "Fuel", 100}, {packed, "Packed", "unit", 1}};
+	const unsigned char shifts[2][4] = {{0xbf, 0x80, 0, 0}, {0x42, 0xc8, 0, 0}};
+	char payload[6];
+	size_t position = 0;
+	for (size_t i = 0; i < 2; i++) {
+		StrictMock<MockWriter> writer;
+		EXPECT_CALL(writer, write(_, 89)).WillOnce([&](const char* buffer, size_t count) {
+			char header[89];
+			memcpy(header, buffer, count);
+			memcpy(header + 50, shifts[i], 4);
+			file.write(header, count);
+			return count;
+		});
+		fields[i].writeHeader(writer);
+		position += fields[i].writeData(payload + position, nullptr);
+	}
+	ASSERT_EQ(sizeof(payload), position);
+	const char recordHeader[4] = {};
+	file.write(recordHeader, sizeof(recordHeader));
+	file.write(payload, sizeof(payload));
+	uint8_t checksum = 0;
+	for (char byte : payload) {
+		checksum += static_cast<unsigned char>(byte);
+	}
+	file.put(static_cast<char>(checksum));
+	file.close();
+	{
+		BinarySensorReader reader;
+		reader.openMlg(path.string());
+		auto& values = reader.readBlock();
+		EXPECT_NEAR(5, values.at("Trim"), 0.00001);
+		EXPECT_NEAR(12, values.at("Packed"), 0.00001);
+	}
+	ASSERT_TRUE(convertMslToCsv(path.string().c_str(), csvPath.c_str()));
+	{
+		std::ifstream csv(csvPath);
+		std::string line;
+		ASSERT_TRUE(static_cast<bool>(std::getline(csv, line)));
+		EXPECT_EQ("Trim (%),Packed (unit)", line);
+		ASSERT_TRUE(static_cast<bool>(std::getline(csv, line)));
+		EXPECT_EQ("5.0,12.0", line);
+	}
+	std::filesystem::remove(path);
+	std::filesystem::remove(csvPath);
 }

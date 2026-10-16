@@ -73,6 +73,10 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
 
         String value = javaName + cf.getName();
         float scale = applyOutputScale ? OutputScale.getAdditionalScale(cf) : 1;
+        float translation = applyOutputScale ? OutputScale.getAdditionalTranslation(cf) : 0;
+        if (translation != 0) {
+            value = "(" + value + " + " + translation + "f)";
+        }
         if (scale != 1) {
             value += " * " + scale + "f";
         }

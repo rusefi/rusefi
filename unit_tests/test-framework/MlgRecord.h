@@ -17,10 +17,11 @@ private:
     std::string fieldName;
     MlgDataType type;
     float scale;
+    float translation;
 
 public:
-    Record(const std::string& fieldNameParam, MlgDataType typeParam, float scaleParam)
-        : fieldName(fieldNameParam), type(typeParam), scale(scaleParam) {}
+    Record(const std::string& fieldNameParam, MlgDataType typeParam, float scaleParam, float translationParam)
+        : fieldName(fieldNameParam), type(typeParam), scale(scaleParam), translation(translationParam) {}
 
     const std::string& getFieldName() const { return fieldName; }
 
@@ -37,41 +38,41 @@ public:
         switch (type) {
             case MlgDataType::MLG_DATA_S8:
                 temp_s8 = readByte(&ifs);
-                value = static_cast<float>(temp_s8) * scale;
+                value = static_cast<float>(temp_s8);
                 break;
             case MlgDataType::MLG_DATA_U8:
                 temp_u8 = static_cast<uint8_t>(readByte(&ifs)); // Read as signed, cast to unsigned
-                value = static_cast<float>(temp_u8) * scale;
+                value = static_cast<float>(temp_u8);
                 break;
             case MlgDataType::MLG_DATA_S16:
                 temp_s16 = readSwappedShort(&ifs);
-                value = static_cast<float>(temp_s16) * scale;
+                value = static_cast<float>(temp_s16);
                 break;
             case MlgDataType::MLG_DATA_U16:
                 temp_u16 = static_cast<uint16_t>(readSwappedShort(&ifs)); // Read as signed, cast to unsigned
-                value = static_cast<float>(temp_u16) * scale;
+                value = static_cast<float>(temp_u16);
                 break;
             case MlgDataType::MLG_DATA_S32:
                 temp_s32 = readSwappedInt(&ifs);
-                value = static_cast<float>(temp_s32) * scale;
+                value = static_cast<float>(temp_s32);
                 break;
             case MlgDataType::MLG_DATA_U32:
                 temp_u32 = static_cast<uint32_t>(readSwappedInt(&ifs)); // Read as signed, cast to unsigned
-                value = static_cast<float>(temp_u32) * scale;
+                value = static_cast<float>(temp_u32);
                 break;
             case MlgDataType::MLG_DATA_BIT:
                 temp_u8 = static_cast<uint8_t>(readByte(&ifs)); // Assuming bit is stored as a byte (0 or 1)
-                value = static_cast<float>(temp_u8);
-                break;
+                return static_cast<float>(temp_u8);
             case MlgDataType::MLG_DATA_FLOAT:
                 temp_float = readSwappedFloat(&ifs);
-                value = temp_float * scale;
+                value = temp_float;
                 break;
             default:
                 std::cerr << "Unsupported MLG data type: " << static_cast<int>(type) << std::endl;
                 throw std::runtime_error("Unsupported MLG data type");
         }
-        return value;
+        // [tag:live_data_output_scale] MLG translation is applied before its multiplier.
+        return (value + translation) * scale;
     }
 };
 

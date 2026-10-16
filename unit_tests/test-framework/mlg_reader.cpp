@@ -91,14 +91,14 @@ int BinarySensorReader::readRecordsMetadata(std::ifstream &input,
 
 		/*int8_t style = */readByte(&input);
 		float scale = readSwappedFloat(&input);
-		/*float transform = */readSwappedFloat(&input);
+		float transform = readSwappedFloat(&input);
 		/*int8_t digits = */readByte(&input);
 		/*category*/readFixedSizeString(input, 34);
 
 		MlgDataType type = findByOrdinal(typeCode);
 		lineTotalSize += getRecordSize(type);
 
-		Record *record = new Record(fieldName, type, scale);
+		Record *record = new Record(fieldName, type, scale, transform);
 		recordByName[fieldName] = record;
 		records.emplace_back(record);
 	}

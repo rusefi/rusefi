@@ -43,11 +43,42 @@ class OutputScaleTest {
     }
 
     @Test
+    void nonzeroOffsetsReachFirmwareConsumers() {
+        // [tag:live_data_output_scale] SD uses raw offsets; Lua offsets account for C++ unpacking.
+        String[] trim = generate("float trim;Trim;\"%\", 100, -1, -100, 100, 1\n", true);
+        assertTrue(trim[0].contains("trim = scalar, F32, 0, \"%\", 100.0, -1"), trim[0]);
+        assertTrue(trim[1].contains("return (engine->outputChannels.trim + -1.0f) * 100.0f;"), trim[1]);
+        assertTrue(trim[2].contains("{test->reference.trim, \"Trim\", \"%\", 1, \"none\", 100.0f, -1.0f}"), trim[2]);
+
+        String[] packed = generate("int16_t autoscale packed;Packed;\"unit\", 0.1, 100, -100, 100, 1\n", true);
+        assertTrue(packed[0].contains("\"unit\", 0.1, 100"), packed[0]);
+        assertTrue(packed[1].contains("return (engine->outputChannels.packed + 10.0f);"), packed[1]);
+        assertTrue(packed[2].contains("{test->reference.packed, \"Packed\", \"unit\", 1, \"none\", 1.0f, 100.0f}"), packed[2]);
+    }
+
+    @Test
+    void offsetWithoutScaleAndLegacyOffsets() {
+        String field = "int16_t temperature;Temperature;\"C\", 1, {-5/2}, -100, 100, 1, \"Sensors\"\n";
+        String[] converted = generate(field, true);
+        assertTrue(converted[1].contains("return (engine->outputChannels.temperature + -2.5f);"), converted[1]);
+        assertTrue(converted[2].contains("\"Sensors\", 1.0f, -2.5f}"), converted[2]);
+        String[] legacy = generate(field, false);
+        assertTrue(legacy[1].contains("return engine->outputChannels.temperature;"), legacy[1]);
+        assertTrue(legacy[2].contains("{test->reference.temperature, \"Temperature\", \"C\", 1, \"Sensors\"}"), legacy[2]);
+    }
+
+    @Test
     void unsupportedTransformsFailGeneration() {
         assertThrows(IllegalArgumentException.class, () ->
-                generate("float ratio;Ratio;\"%\", 100, -1, -100, 100, 1\n", true));
-        assertThrows(IllegalArgumentException.class, () ->
                 generate("float mass;Mass;\"mg\", {useMg ? 1000 : 1}, 0, 0, 100, 1\n", true));
+        assertThrows(IllegalArgumentException.class, () ->
+                generate("int16_t autoscale mass;Mass;\"mg\", {useMg ? 1000 : 1}, 1, 0, 100, 1\n", true));
+        assertThrows(IllegalArgumentException.class, () ->
+                generate("float temperature;Temperature;\"C\", 1, {useC ? 0 : 32}, 0, 100, 1\n", true));
+        for (String value : new String[]{"NaN", "Infinity", "{1/0}", "1e100"}) {
+            assertThrows(IllegalArgumentException.class, () ->
+                    generate("float value;Value;\"\", 1, " + value + ", 0, 100, 1\n", true));
+        }
     }
 
     private static String[] generate(String fields, boolean applyOutputScale) {

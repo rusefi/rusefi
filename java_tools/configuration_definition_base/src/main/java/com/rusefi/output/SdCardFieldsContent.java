@@ -119,11 +119,15 @@ public class SdCardFieldsContent {
                 "},\n";
         } else {
             float scale = applyOutputScale ? OutputScale.getAdditionalScale(configField) : 1;
-            if (scale != 1) {
+            float translation = applyOutputScale ? OutputScale.getTranslation(configField) : 0;
+            if (scale != 1 || translation != 0) {
                 if (categoryStr.isEmpty()) {
                     categoryStr = ", \"none\"";
                 }
                 categoryStr += ", " + scale + "f";
+                if (translation != 0) {
+                    categoryStr += ", " + translation + "f";
+                }
             }
             return
                 "\t{" +

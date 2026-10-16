@@ -29,8 +29,9 @@ public:
 	// Scaled channels, memcpys data directly and describes format in header
 	template <typename TValue, int TMult, int TDiv>
 	LOG_FIELD_CONSTNESS_SPECIFIER_METHODS Field(const scaled_channel<TValue, TMult, TDiv>& toRead,
-			   const char* name, const char* units, int8_t digits, const char* category = "none")
-		: m_multiplier(float(TDiv) / TMult)
+			   const char* name, const char* units, int8_t digits, const char* category = "none", float multiplier = 1, float translation = 0)
+		: m_multiplier(float(TDiv) / TMult * multiplier)
+		, m_translation(translation)
 		, m_addr(toRead.getFirstByteAddr())
 		, m_type_id(static_cast<std::underlying_type_t<Types::Field::Scalar>>(Types::Field::resolveBuiltInNumberType<TValue>()))
 		, m_digits(digits)
@@ -45,11 +46,13 @@ public:
 	}
 
 	// Non-scaled channel, works for plain arithmetic types (int, float, uint8_t, etc)
-	// [tag:live_data_output_scale] Display scaling belongs in the header; writeData keeps raw model units.
+	// [tag:live_data_output_scale] engineering = (raw + translation) * multiplier.
+	// The header stores the conversion, including raw packed offsets; writeData keeps storage unchanged.
 	template <typename TValue, typename = typename std::enable_if<std::is_arithmetic_v<TValue>>::type>
 	LOG_FIELD_CONSTNESS_SPECIFIER_METHODS Field(TValue& toRead,
-			   const char* name, const char* units, int8_t digits, const char* category = "none", float multiplier = 1)
+			   const char* name, const char* units, int8_t digits, const char* category = "none", float multiplier = 1, float translation = 0)
 		: m_multiplier(multiplier)
+		, m_translation(translation)
 		, m_addr(&toRead)
 		, m_type_id(static_cast<std::underlying_type_t<Types::Field::Scalar>>(Types::Field::resolveBuiltInNumberType<TValue>()))
 		, m_digits(digits)
@@ -73,6 +76,7 @@ public:
 		const char* units,
 		const char* category = "none"
 	): m_multiplier(1)
+		, m_translation(0)
 		, m_addr(&toRead)
 		, m_type_id(static_cast<std::underlying_type_t<Types::Field::Scalar>>(Types::Field::Scalar::U08))
 		, m_digits(0)
@@ -92,11 +96,12 @@ public:
 	constexpr const char* getUnits() const { return m_units; }
 	constexpr const char* getCategory() const { return m_category; }
 	constexpr float getMultiplier() const { return m_multiplier; }
+	constexpr float getTranslation() const { return m_translation; }
 	constexpr int8_t getDigits() const { return m_digits; }
 	constexpr uint8_t getTypeId() const { return m_type_id; }
 	constexpr bool isBitField() const { return m_isBitField; }
 
-	// Reads the field's current value, applies endianness, scale and bit extraction, and returns it as a double.
+	// Reads the field's current value, applies translation/scale or bit extraction, and returns it as a double.
 	// 'offset' has the same semantics as in writeData (unit-test engine pointer correction).
 	double readValueAsDouble(void* offset) const {
 		using namespace Types::Field;
@@ -126,7 +131,7 @@ public:
 			case Scalar::F32: rawValue = *reinterpret_cast<float*>(raw); break;
 			default: rawValue = 0; break;
 		}
-		return rawValue * m_multiplier;
+		return (rawValue + m_translation) * m_multiplier;
 	}
 
 	// Write the header data describing this field.
@@ -150,8 +155,8 @@ public:
 		// Offset 46, length 4 = Scale
 		copyFloat(buffer + 46, m_multiplier);
 
-		// Offset 50, length 4 = shift before scaling (always 0)
-		copyFloat(buffer + 50, 0);
+		// Offset 50, length 4 = shift in raw units, before scaling
+		copyFloat(buffer + 50, m_translation);
 
 		// Offset 54, size 1 = digits to display (signed int)
 		buffer[54] = m_digits;
@@ -205,6 +210,7 @@ private:
 	}
 
 	const float m_multiplier;
+	const float m_translation;
 	const void* const m_addr;
 	const uint8_t m_type_id;
 	const int8_t m_digits;

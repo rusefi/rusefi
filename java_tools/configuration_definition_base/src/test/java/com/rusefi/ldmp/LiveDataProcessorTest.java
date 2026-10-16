@@ -29,16 +29,16 @@ public class LiveDataProcessorTest {
         LiveDataProcessor processor = new LiveDataProcessor("test", fileName -> {
             String name = fileName.contains("scaled") ? "scaled" : "legacy";
             return new StringReader("struct_no_prefix " + name + "_s\n"
-                    + "float " + name + "Mass;" + name + " mass;\"mg\", 1000, 0, 0, 100, 3\n"
+                    + "float " + name + "Mass;" + name + " mass;\"mg\", 1000, -1, 0, 100, 3\n"
                     + "end_struct\n");
         }, captor, "");
         processor.handleYaml(LiveDataProcessor.getStringObjectMap(new StringReader(yaml)));
 
         String sd = captor.fileCapture.get(SdCardFieldsContent.SD_CARD_OUTPUT_FILE_NAME).sb.toString();
         String lua = captor.fileCapture.get(LiveDataProcessor.getOutputLookupFileName()).sb.toString();
-        assertTrue(sd.contains("{engine->scaled.scaledMass, \"scaled mass\", \"mg\", 3, \"none\", 1000.0f}"), sd);
+        assertTrue(sd.contains("{engine->scaled.scaledMass, \"scaled mass\", \"mg\", 3, \"none\", 1000.0f, -1.0f}"), sd);
         assertTrue(sd.contains("{engine->legacy.legacyMass, \"legacy mass\", \"mg\", 3}"), sd);
-        assertTrue(lua.contains("return engine->scaled.scaledMass * 1000.0f;"), lua);
+        assertTrue(lua.contains("return (engine->scaled.scaledMass + -1.0f) * 1000.0f;"), lua);
         assertTrue(lua.contains("return engine->legacy.legacyMass;"), lua);
     }
 
