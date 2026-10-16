@@ -1380,7 +1380,7 @@ tps_limit_t tps2Max;Fully opened voltage for primary throttle position sensor
 	uint8_t totalGearsCount;;"", 1, 0, 1, @@TCU_GEAR_COUNT@@, 0
 
 	custom InjectionTimingMode 1 bits, U08, @OFFSET@, [0:1], "End of injection", "Start of injection", "Center of injection"
-	InjectionTimingMode injectionTimingMode;Defines when fuel is injected relative to the intake valve opening. Options include End of Injection or other timing references.
+	InjectionTimingMode injectionTimingMode;Selects which point of the nominal injector pulse follows the Injection Timing table: End, Start, or Center.\nTable angles are crank degrees relative to each cylinder's compression TDC. Negative = before TDC, positive = after TDC.\nEnd/Center modes advance the start by the full/half pulse duration. See Injection Timing table help for examples.
 
 	debug_mode_e debugMode;See http://rusefi.com/s/debugmode
 	uint8_t fan1ExtraIdle;Additional idle % when fan #1 is active;"%", 1, 0, 0, 100, 0
@@ -2180,7 +2180,7 @@ uint8_t[IAT_IGN_CORR_LOAD_COUNT] autoscale ignitionIatCorrLoadBins;;{bitStringVa
 
 #define INJ_PHASE_LOAD_COUNT 16
 #define INJ_PHASE_RPM_COUNT 16
-int16_t[INJ_PHASE_LOAD_COUNT x INJ_PHASE_RPM_COUNT] injectionPhase;;"deg", 1, 0, -720, 720, 0
+int16_t[INJ_PHASE_LOAD_COUNT x INJ_PHASE_RPM_COUNT] injectionPhase;Crank degrees relative to each cylinder's compression TDC: 0 = TDC, negative = before, positive = after.\nInjection timing control mode selects End, Start, or Center of the nominal pulse.\nOn a four-stroke engine angles wrap every 720 degrees: -400 = +320, -250 = +470, +400 = -320. Valve timing depends on the camshaft and VVT.;"deg", 1, 0, -720, 720, 0
 uint16_t[INJ_PHASE_LOAD_COUNT] injPhaseLoadBins;;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, 0, {useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@}, 0
 uint16_t[INJ_PHASE_RPM_COUNT] injPhaseRpmBins;;"RPM",	   1, 0, 0, 18000, 0
 

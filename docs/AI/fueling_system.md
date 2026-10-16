@@ -22,6 +22,39 @@ The rusEFI fueling system is a mass-based model that translates configuration an
 16. **Output Logic**: Pulse width is clamped and synchronized with the engine phase.
 17. **Hardware Driver**: MOSFETs/GDI drivers fire the physical injectors.
 
+## Injection Timing Reference
+
+`[tag:injection_timing_reference]` The `injectionPhase` table uses crankshaft
+degrees relative to each cylinder's compression TDC. Negative values are before
+that TDC; positive values are after it. `getInjectionOffset()` wraps the table
+result to the engine cycle (720 degrees for four-stroke operation).
+The reference is independent of ignition advance and camshaft/VVT valve timing.
+
+`injectionTimingMode` selects the point of the nominal primary injector pulse
+that follows the table. `InjectionEvent::computeInjectionAngle()` calculates
+its start as follows, then adds the cylinder's firing-order offset and wraps:
+
+| Mode | Start angle before wrapping and cylinder offset |
+| --- | --- |
+| Start | table angle |
+| Center | table angle - half the pulse duration in crank degrees |
+| End | table angle - the full pulse duration in crank degrees |
+
+The duration is `engineState.injectionDuration`, converted using the current
+microseconds per crank degree. This is the scheduling duration before per-event
+wall-wetting adjustment; it is not a measurement of fuel arrival at the valve.
+The `injectionOffset` output reports the wrapped cylinder-relative start angle,
+even when the table uses Center or End mode.
+
+For four-stroke operation, `-400` wraps to `320`, `-250` to `470`, and `400`
+has the same phase as `-320`. Exhaust/intake TDC is at `360` (or `-360`).
+Per-cylinder phasing assumes synchronized sequential operation; batch and
+simultaneous operation group or repeat pulses.
+
+Source: `fuel_math.cpp::getInjectionOffset()`, `fuel_schedule.cpp`,
+`engine2.cpp` and `engine_math.cpp::getPerCylinderFiringOrderOffset()`.
+User explanation: wiki `Injection-Modes#injection-timing-reference`.
+
 ## Cranking Fuel
 
 While `RpmCalculator::isCranking()` is true, `getCrankingFuel3()` (in `fuel_math.cpp`) supplies the cycle fuel mass instead of `getRunningFuel()`. Reaching `cranking.rpm` enters running mode; a subsequent RPM dip below that threshold does not re-enter cranking until the engine stops. Injection-mode splitting, downstream adjustments/cuts and injector conversion still apply. See [Cold-start logic](cold_start.md) for the full sequence, ASE/WUE interaction and sensor fallbacks.

@@ -88,7 +88,10 @@ expected<float> InjectionEvent::computeInjectionAngle() const {
 	// for the duration of the injection
 	angle_t injectionDurationAngle = getInjectionAngleCorrection(fuelMs, oneDegreeUs);
 
-	// User configured offset - degrees after TDC combustion
+	// The table sets Start/Center/End of the nominal
+	// pulse in crank degrees after this cylinder's compression TDC. Negative table
+	// values wrap through the engine cycle; subtract the selected duration correction
+	// before applying the cylinder's firing-order offset below. See Injection Timing help.
 	floatus_t injectionOffset = getEngineState()->injectionOffset;
 	if (std::isnan(injectionOffset)) {
 		// injection offset map not ready - we are not ready to schedule fuel events
