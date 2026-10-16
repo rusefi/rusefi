@@ -4469,7 +4469,9 @@ struct engine_configuration_s {
 	 */
 	uint8_t totalGearsCount;
 	/**
-	 * Defines when fuel is injected relative to the intake valve opening. Options include End of Injection or other timing references.
+	 * Selects which point of the nominal injector pulse follows the Injection Timing table: End, Start, or Center.
+	 * Table angles are crank degrees relative to each cylinder's compression TDC. Negative = before TDC, positive = after TDC.
+	 * End/Center modes advance the start by the full/half pulse duration. See Injection Timing table help for examples.
 	 * offset 1649
 	 */
 	InjectionTimingMode injectionTimingMode;
@@ -7546,6 +7548,9 @@ struct persistent_config_s {
 	 */
 	scaled_channel<uint8_t, 1, 5> ignitionIatCorrLoadBins[IAT_IGN_CORR_LOAD_COUNT] = {};
 	/**
+	 * Crank degrees relative to each cylinder's compression TDC: 0 = TDC, negative = before, positive = after.
+	 * Injection timing control mode selects End, Start, or Center of the nominal pulse.
+	 * On a four-stroke engine angles wrap every 720 degrees: -400 = +320, -250 = +470, +400 = -320. Valve timing depends on the camshaft and VVT.
 	 * units: deg
 	 * offset 6952
 	 */
