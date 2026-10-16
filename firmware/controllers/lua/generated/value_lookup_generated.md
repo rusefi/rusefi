@@ -737,13 +737,13 @@ Output Max Duty Cycle
 
 
 ### tpsAccelLookback
-How long to look back for TPS-based acceleration enrichment. Increasing this time will trigger enrichment for longer when a throttle position change occurs.
+TPS history window for additive AE. The detector selects an adjacent-sample step within this window. A longer window keeps an older step eligible longer. Zero disables additive AE. MAP Prediction derives its history from the duration curve. Lua ignores this setting.
 
 ### tpsDecelEnleanmentThreshold
 Deceleration is detected when the largest signed TPS change between adjacent samples in the history is below the negative of this threshold. Units are TPS percentage points per sample (50 ms). A zero or positive change elsewhere in the history can mask a throttle-closing step.
 
 ### tpsDecelEnleanmentMultiplier
-Magic multiplier, we multiply delta of TPS and get fuel squirt duration
+Scale fuel reduction from the selected TPS closing step in additive modes. Larger values increase reduction. RPM and flex multipliers also apply. Fractional-pump processing can suppress the reduction. This setting is independent of DFCO and ignored by MAP Prediction and Lua.
 
 ### noFuelTrimAfterDfcoTime
 Pause closed loop fueling after deceleration fuel cut occurs. Set this to a little longer than however long is required for normal fueling behavior to resume after fuel cut.
@@ -947,7 +947,7 @@ This enables the various ignition corrections during cranking (IAT, CLT and PID 
 Enable flex-fuel compensation for engine start. When on (and a flex fuel sensor is present) the cranking coolant multiplier and the priming pulse mass each come from a 2D table over coolant and ethanol % (crankingFuelFlexTable / primeFlexTable, 4-row ethanol axis) instead of their 1D coolant curves. When off, the 1D curves (crankingFuelCoef / primeValues) are used.
 
 ### flexFuelTransientComp
-Enable flex-fuel transient fueling compensation (acceleration enrichment and wall wetting tau/beta) based on ethanol content and coolant temperature.
+Shared CLT/ethanol compensation for additive TPS AE and wall-film tau/beta. AE multiplier applies only to MS/Percent Adder. tau/beta apply in every AE strategy and Basic/Advanced. Requires a registered ethanol sensor. Does not control base stoichiometry, cranking or priming.
 
 ### useIacPidMultTable
 This flag allows to use a special 'PID Multiplier' table (0.0-1.0) to compensate for nonlinear nature of IAC-RPM controller
@@ -1043,7 +1043,7 @@ null
 Duration in ms or duty cycle depending on selected mode
 
 ### wwaeTau
-Length of time the deposited wall fuel takes to dissipate after the start of acceleration.
+Evaporation time constant for the Basic fuel-film model, in seconds. Higher values make the film respond more slowly. This is an exponential time constant, not the time for all deposited fuel to evaporate. Effective values below 0.01 bypass compensation.
 
 ### alternatorControl.pFactor
 
@@ -1127,7 +1127,7 @@ Output Min Duty Cycle
 Output Max Duty Cycle
 
 ### wwaeBeta
-0 = No fuel settling on port walls 1 = All the fuel settling on port walls setting this to 0 disables the wall wetting enrichment.
+Fraction of injected fuel deposited on the wall in the Basic model. 0.20 represents 20%. Larger values increase modeled deposition. Effective values below 0.01 bypass compensation. Downstream controller limits still apply.
 
 ### throttlePedalUpVoltage
 
@@ -1523,10 +1523,10 @@ Output Max Duty Cycle
 When entering idle, and the PID settings are aggressive, it's good to make a soft entry upon entering closed loop
 
 ### tpsAccelFractionPeriod
-A delay in cycles between fuel-enrich. portions
+Spread each additive enrichment portion evenly across this number of engine cycles. Higher values reduce delivery per cycle and spread it longer. Period 1 and divisor 1 disable fractional spreading. Ignored by MAP Prediction and Lua.
 
 ### tpsAccelFractionDivisor
-A fraction divisor: 1 or less = entire portion at once, or split into diminishing fractions
+Divide accumulated additive enrichment into diminishing portions. 1 delivers a full portion. Larger values reduce the initial delivery and extend the tail. With period 1 and divisor 2: 1/2, 1/4, 1/8. Ignored by MAP Prediction and Lua.
 
 ### idlerpmpid_iTermMin
 iTerm min value

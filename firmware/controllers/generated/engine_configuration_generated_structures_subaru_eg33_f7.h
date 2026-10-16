@@ -3602,7 +3602,7 @@ struct engine_configuration_s {
 	 */
 	cranking_condition_e crankingCondition;
 	/**
-	 * How long to look back for TPS-based acceleration enrichment. Increasing this time will trigger enrichment for longer when a throttle position change occurs.
+	 * TPS history window for additive AE. The detector selects an adjacent-sample step within this window. A longer window keeps an older step eligible longer. Zero disables additive AE. MAP Prediction derives its history from the duration curve. Lua ignores this setting.
 	 * units: sec
 	 * offset 1067
 	 */
@@ -3614,13 +3614,13 @@ struct engine_configuration_s {
 	 */
 	float tpsDecelEnleanmentThreshold;
 	/**
-	 * Magic multiplier, we multiply delta of TPS and get fuel squirt duration
+	 * Scale fuel reduction from the selected TPS closing step in additive modes. Larger values increase reduction. RPM and flex multipliers also apply. Fractional-pump processing can suppress the reduction. This setting is independent of DFCO and ignored by MAP Prediction and Lua.
 	 * units: coeff
 	 * offset 1072
 	 */
 	float tpsDecelEnleanmentMultiplier;
 	/**
-	 * Selects acceleration enrichment. Lua: setAccelEnrichment(grams) supplies extra fuel per cylinder per cycle. Refresh within 200 ms.
+	 * Select transient enrichment strategy. MS Adder uses milliseconds. Percent Adder uses fractions. MAP Prediction corrects Speed Density MAP. Lua supplies extra g/cylinder/cycle with setAccelEnrichment(grams), refreshed before 200 ms. Wall wetting is independent.
 	 * offset 1076
 	 */
 	accel_enrichment_mode_e accelEnrichmentMode;
@@ -3995,7 +3995,7 @@ struct engine_configuration_s {
 	offset 1440 bit 15 */
 	bool flexCranking : 1 {};
 	/**
-	 * Enable flex-fuel transient fueling compensation (acceleration enrichment and wall wetting tau/beta) based on ethanol content and coolant temperature.
+	 * Shared CLT/ethanol compensation for additive TPS AE and wall-film tau/beta. AE multiplier applies only to MS/Percent Adder. tau/beta apply in every AE strategy and Basic/Advanced. Requires a registered ethanol sensor. Does not control base stoichiometry, cranking or priming.
 	offset 1440 bit 16 */
 	bool flexFuelTransientComp : 1 {};
 	/**
@@ -4177,7 +4177,7 @@ struct engine_configuration_s {
 	 */
 	float tachPulseDuractionMs;
 	/**
-	 * Length of time the deposited wall fuel takes to dissipate after the start of acceleration.
+	 * Evaporation time constant for the Basic fuel-film model, in seconds. Higher values make the film respond more slowly. This is an exponential time constant, not the time for all deposited fuel to evaporate. Effective values below 0.01 bypass compensation.
 	 * units: Seconds
 	 * offset 1504
 	 */
@@ -4263,7 +4263,7 @@ struct engine_configuration_s {
 	 */
 	pid_s idleRpmPid;
 	/**
-	 * 0 = No fuel settling on port walls 1 = All the fuel settling on port walls setting this to 0 disables the wall wetting enrichment.
+	 * Fraction of injected fuel deposited on the wall in the Basic model. 0.20 represents 20%. Larger values increase modeled deposition. Effective values below 0.01 bypass compensation. Downstream controller limits still apply.
 	 * units: Fraction
 	 * offset 1596
 	 */
@@ -5174,13 +5174,13 @@ struct engine_configuration_s {
 	 */
 	torqueReductionActivationMode_e torqueReductionActivationMode;
 	/**
-	 * A delay in cycles between fuel-enrich. portions
+	 * Spread each additive enrichment portion evenly across this number of engine cycles. Higher values reduce delivery per cycle and spread it longer. Period 1 and divisor 1 disable fractional spreading. Ignored by MAP Prediction and Lua.
 	 * units: cycles
 	 * offset 2498
 	 */
 	int16_t tpsAccelFractionPeriod;
 	/**
-	 * A fraction divisor: 1 or less = entire portion at once, or split into diminishing fractions
+	 * Divide accumulated additive enrichment into diminishing portions. 1 delivers a full portion. Larger values reduce the initial delivery and extend the tail. With period 1 and divisor 2: 1/2, 1/4, 1/8. Ignored by MAP Prediction and Lua.
 	 * units: coef
 	 * offset 2500
 	 */
@@ -7568,7 +7568,7 @@ struct persistent_config_s {
 	 */
 	uint16_t lambdaRpmBins[FUEL_RPM_COUNT] = {};
 	/**
-	 * MS Adder uses milliseconds. Percent Adder uses a fraction: 0.20 adds 20% with sequential injection and other corrections neutral. Injection-mode scaling also applies. MAP Prediction does not use this table. Changing modes reinterprets the same values.
+	 * X: previous TPS. Y: new TPS. MS Adder values are milliseconds. Percent Adder values are fractions: 0.20 adds 20% in sequential injection with neutral corrections. Injection-mode scaling also applies. MAP Prediction and Lua ignore this table. Changing modes reinterprets existing values.
 	 * units: ms/frac
 	 * offset 9600
 	 */
@@ -8088,6 +8088,7 @@ struct persistent_config_s {
 	 */
 	scaled_channel<uint8_t, 1, 50> tpsTspCorrValuesBins[TPS_TPS_ACCEL_CLT_CORR_TABLE] = {};
 	/**
+	 * Multiplier applied to additive TPS enrichment at each RPM. 1.00 is neutral, 0.50 halves and 2.00 doubles. Ignored by MAP Prediction and Lua.
 	 * units: multiplier
 	 * offset 12928
 	 */
@@ -8098,6 +8099,7 @@ struct persistent_config_s {
 	 */
 	scaled_channel<uint8_t, 1, 50> predictiveMapBlendDurationBins[TPS_TPS_ACCEL_CLT_CORR_TABLE] = {};
 	/**
+	 * Transition duration from estimated MAP toward current measured MAP, interpolated at current RPM. Prediction may exit earlier or restart if estimated MAP increases. The largest duration in this curve also sizes TPS history. Used only by MAP Prediction.
 	 * units: second
 	 * offset 12936
 	 */
@@ -8115,19 +8117,19 @@ struct persistent_config_s {
 	 */
 	uint8_t flexTransientEthanolBins[FLEX_TRANSIENT_ETH_SIZE] = {};
 	/**
-	 * Acceleration enrichment multiplier as a function of CLT (X) and ethanol % (Y)
+	 * Additive TPS AE multiplier over CLT (X) and ethanol (Y), enabled by Flex fuel transient compensation. 1.00 is neutral. Ignored by MAP Prediction and Lua. CLT/ethanol bins are shared with both wall-film flex tables.
 	 * units: mult
 	 * offset 12964
 	 */
 	scaled_channel<uint8_t, 50, 1> flexAeMult[FLEX_TRANSIENT_ETH_SIZE][FLEX_TRANSIENT_CLT_SIZE] = {};
 	/**
-	 * Wall wetting tau multiplier as a function of CLT (X) and ethanol % (Y)
+	 * Multiplier of wall-film evaporation time constant over CLT (X) and ethanol (Y). Above 1 makes evaporation slower. Applies with every AE strategy and Basic/Advanced. CLT/ethanol bins are shared with the other flex transient tables.
 	 * units: mult
 	 * offset 13028
 	 */
 	scaled_channel<uint8_t, 50, 1> flexWwTauMult[FLEX_TRANSIENT_ETH_SIZE][FLEX_TRANSIENT_CLT_SIZE] = {};
 	/**
-	 * Wall wetting beta multiplier as a function of CLT (X) and ethanol % (Y)
+	 * Multiplier of wall-film deposition fraction over CLT (X) and ethanol (Y). Above 1 increases modeled deposition. Applies with every AE strategy and Basic/Advanced. CLT/ethanol bins are shared with the other flex transient tables.
 	 * units: mult
 	 * offset 13092
 	 */
