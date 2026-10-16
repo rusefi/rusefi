@@ -9,7 +9,6 @@
 | firmware | BenchController::ThreadTask | bench test | - | - | - |
 | firmware | StepperMotor::ThreadTask | stepper | - | - | - |
 | firmware | TunerstudioThread::ThreadTask | TunerStudio | - | - | - |
-| firmware | LoggingBufferFlusher::ThreadTask | log flush | - | - | - |
 | firmware | MicrosecondTimerWatchdogController::PeriodicTask | timer watchdog | - | - | - |
 | firmware | CanWrite::ThreadTask | CAN TX | - | - | - |
 | firmware | DcThread::PeriodicTask | electronic throttle | - | - | - |

@@ -9,7 +9,6 @@
 | firmware | BenchController::ThreadTask | bench test | 148 | 1932 | idle production worker |
 | firmware | StepperMotor::ThreadTask | stepper | 280 | 676 | dual H-bridge stepping |
 | firmware | TunerstudioThread::ThreadTask | TunerStudio | 824 | 1324 | normal communication |
-| firmware | LoggingBufferFlusher::ThreadTask | log flush | 124 | 660 | mailbox wait/flush |
 | firmware | MicrosecondTimerWatchdogController::PeriodicTask | timer watchdog | 104 | 552 | normal watchdog sleep |
 | firmware | CanWrite::ThreadTask | CAN TX | - | - | - |
 | firmware | DcThread::PeriodicTask | electronic throttle | 304 | 556 | normal ETB update |

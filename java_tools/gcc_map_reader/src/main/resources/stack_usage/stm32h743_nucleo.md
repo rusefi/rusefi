@@ -9,7 +9,6 @@
 | firmware | BenchController::ThreadTask | bench test | 204 | 2028 | idle production worker |
 | firmware | StepperMotor::ThreadTask | stepper | 280 | 652 | startup redundant pedal check |
 | firmware | TunerstudioThread::ThreadTask | TunerStudio | 744 | 1316 | Ethernet TS with ARP |
-| firmware | LoggingBufferFlusher::ThreadTask | log flush | 132 | 644 | mailbox wait/flush |
 | firmware | MicrosecondTimerWatchdogController::PeriodicTask | timer watchdog | 112 | 528 | normal watchdog sleep |
 | firmware | CanWrite::ThreadTask | CAN TX | - | - | - |
 | firmware | DcThread::PeriodicTask | electronic throttle | 312 | 532 | normal ETB update |
