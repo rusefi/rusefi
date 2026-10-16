@@ -20,7 +20,7 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | log flush | 400 | 124 | mailbox wait/flush | 660 | 748 | REVIEW PROXY +88; partial proxy: 27 unknown, 2 indirect, recursion |
 | firmware | Lua | 4096 | - | - | - | 3212 | NOT REVIEWED: 45 unknown, 15 indirect, recursion |
 | firmware | main loop | 1024 | - | - | - | 764 | NOT REVIEWED: 23 unknown, 4 indirect, recursion |
-| firmware | main/process | 1536 | - | - | - | 1284 | NOT REVIEWED: 73 unknown, 28 indirect, recursion |
+| firmware | main/process | 1536 | - | - | - | 1284 | NOT REVIEWED: 71 unknown, 28 indirect, recursion |
 | firmware | MAX3185x | 400 | 192 | normal sensor read | 756 | 844 | REVIEW PROXY +88; partial proxy: 28 unknown, 2 indirect, recursion |
 | firmware | PCA9685 | 784 | - | - | - | 748 | NOT REVIEWED: 23 unknown, 4 indirect, recursion |
 | firmware | SD/MMC | 1600 | 1432 | exFAT log creation | 2052 | 1908 | PROXY -144; partial proxy: 54 unknown, 20 indirect, recursion |
@@ -97,7 +97,7 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | Image | Frame bytes | Function | Source |
 |---|---:|---|---|
 | firmware | 400 | canDashboardHondaK(CanCycle) | controllers/can/can_dash_honda.cpp:46:6 |
-| firmware | 264 | Engine::periodicFastCallback() | controllers/algo/engine.cpp:601:6 |
+| firmware | 256 | Engine::periodicFastCallback() | controllers/algo/engine.cpp:601:6 |
 | firmware | 248 | CanWrite::ThreadTask() | controllers/can/can_tx.cpp:34:6 |
 | firmware | 248 | luaO_pushvfstring | ext/lua/lobject.c:480:13 |
 | firmware | 240 | luaO_str2num | ext/lua/lobject.c:308:8 |
