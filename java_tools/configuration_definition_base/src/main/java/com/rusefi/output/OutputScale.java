@@ -4,12 +4,12 @@ import com.rusefi.ConfigField;
 
 import static com.rusefi.TokenUtils.tokenizeWithBraces;
 
-/** Constant INI conversions for live-data fragments with applyOutputScale enabled. */
+/** Constant INI conversions shared by SD logging and Lua output lookup. */
 public final class OutputScale {
     private OutputScale() {
     }
 
-    // [tag:live_data_output_scale] Use the INI metadata at telemetry consumers without
+    // [tag:live_data_output_scale] Always use the INI metadata at telemetry consumers without
     // changing model storage: engineering = (raw + translation) * scale.
     // scaled_channel already applies its packing scale in C++, but not the translation.
     public static float getAdditionalScale(ConfigField field) {
@@ -44,7 +44,7 @@ public final class OutputScale {
 
     private static float finiteConstant(float value, ConfigField field) {
         if (!Float.isFinite(value)) {
-            throw new IllegalArgumentException("applyOutputScale requires a finite constant: " + field.getName());
+            throw new IllegalArgumentException("Output conversion requires a finite constant: " + field.getName());
         }
         return value;
     }
@@ -61,6 +61,6 @@ public final class OutputScale {
         if (parts.length == 2) {
             return Double.parseDouble(parts[0].trim()) / Double.parseDouble(parts[1].trim());
         }
-        throw new IllegalArgumentException("applyOutputScale requires a constant number or division: " + value);
+        throw new IllegalArgumentException("Output conversion requires a constant number or division: " + value);
     }
 }

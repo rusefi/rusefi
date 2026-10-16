@@ -166,7 +166,14 @@ script-owned curves/tables/settings defined in the tune.
 | `table3d(humanIdx, x, y)` | 1-based script table lookup |
 | `findCurveIndex("name")` / `findTableIndex("name")` | Name -> 1-based index, nil if missing; resolve once at script start |
 | `findSetting("name", default)` | Named `scriptSetting[]` value with fallback |
-| `getOutput("name")` | By-name read of any TS output channel (calls `updateTunerStudioState()` for freshness) |
+| `getOutput("name")` | By-name read of supported generated output channels in INI engineering units; applies constant scale/offset and calls `updateTunerStudioState()` for freshness |
+
+`[tag:live_data_output_scale]` Output conversion is automatic. For example,
+`dwellActualRatio` returns percent deviation (`1.05` in storage becomes `5`),
+and `misfireEmaUs`, `misfireLastSegUs`, `misfireThreshUs`, `misfireWobbleUs`
+and `misfireWobbleThreshUs` return milliseconds despite their names. Scripts
+written for the former raw values need their unit conversions updated.
+Packed channels already unpack in C++; only the remaining offset is applied.
 
 ### 9. Engine/vehicle state queries
 

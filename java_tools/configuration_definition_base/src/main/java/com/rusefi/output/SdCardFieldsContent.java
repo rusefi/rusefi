@@ -22,7 +22,6 @@ public class SdCardFieldsContent {
     public String[] expressions = {"test->reference"}; // technical debt: default value is only used by unit tests
     public String conditional;
     public Boolean isPtr = false;
-    public boolean applyOutputScale;
     public String[] names;
     public int structureStartingTsPosition;
 
@@ -118,8 +117,8 @@ public class SdCardFieldsContent {
                 categoryStr +
                 "},\n";
         } else {
-            float scale = applyOutputScale ? OutputScale.getAdditionalScale(configField) : 1;
-            float translation = applyOutputScale ? OutputScale.getTranslation(configField) : 0;
+            float scale = OutputScale.getAdditionalScale(configField);
+            float translation = OutputScale.getTranslation(configField);
             if (scale != 1 || translation != 0) {
                 if (categoryStr.isEmpty()) {
                     categoryStr = ", \"none\"";

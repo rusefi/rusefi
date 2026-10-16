@@ -13,14 +13,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LiveDataProcessorTest {
     @Test
-    public void outputScaleIsOptInPerFragment() throws IOException {
-        // [tag:live_data_output_scale] Shared consumers must reset the opt-in for each YAML entry.
+    public void everyFragmentUsesIniConversion() throws IOException {
+        // [tag:live_data_output_scale] Every fragment uses the same INI conversion without YAML flags.
         String yaml = "Usages:\n"
                 + "  - name: scaled\n"
                 + "    java: Scaled.java\n"
                 + "    folder: test\n"
                 + "    constexpr: engine->scaled\n"
-                + "    applyOutputScale: true\n"
                 + "  - name: legacy\n"
                 + "    java: Legacy.java\n"
                 + "    folder: test\n"
@@ -37,9 +36,9 @@ public class LiveDataProcessorTest {
         String sd = captor.fileCapture.get(SdCardFieldsContent.SD_CARD_OUTPUT_FILE_NAME).sb.toString();
         String lua = captor.fileCapture.get(LiveDataProcessor.getOutputLookupFileName()).sb.toString();
         assertTrue(sd.contains("{engine->scaled.scaledMass, \"scaled mass\", \"mg\", 3, \"none\", 1000.0f, -1.0f}"), sd);
-        assertTrue(sd.contains("{engine->legacy.legacyMass, \"legacy mass\", \"mg\", 3}"), sd);
+        assertTrue(sd.contains("{engine->legacy.legacyMass, \"legacy mass\", \"mg\", 3, \"none\", 1000.0f, -1.0f}"), sd);
         assertTrue(lua.contains("return (engine->scaled.scaledMass + -1.0f) * 1000.0f;"), lua);
-        assertTrue(lua.contains("return engine->legacy.legacyMass;"), lua);
+        assertTrue(lua.contains("return (engine->legacy.legacyMass + -1.0f) * 1000.0f;"), lua);
     }
 
     @Test

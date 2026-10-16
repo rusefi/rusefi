@@ -29,7 +29,6 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
     public String[] expressions = {"engine->outputChannels"};
     public String[] names;
     public boolean moduleMode;
-    public boolean applyOutputScale;
     public String currentEngineModule;
     public String conditional;
     public String additionalHeaders = "";
@@ -72,8 +71,8 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
         }
 
         String value = javaName + cf.getName();
-        float scale = applyOutputScale ? OutputScale.getAdditionalScale(cf) : 1;
-        float translation = applyOutputScale ? OutputScale.getAdditionalTranslation(cf) : 0;
+        float scale = OutputScale.getAdditionalScale(cf);
+        float translation = OutputScale.getAdditionalTranslation(cf);
         if (translation != 0) {
             value = "(" + value + " + " + translation + "f)";
         }

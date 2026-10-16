@@ -106,6 +106,12 @@ loggers runs, chosen by `engineConfiguration->sdTriggerLog`:
   1-byte additive checksum.
 - The field list is the generated `log_fields_generated.h`; count is reported by
   `sdinfo` as "SD card fields".
+- `[tag:live_data_output_scale]` Every exported numeric field automatically
+  uses its constant INI scale/offset in the descriptor: `(raw + offset) * scale`.
+  STFT bank 1/2 and dwell deviation therefore display `0.95`, `1.00`, `1.05`
+  as approximately `-5`, `0`, `5` percent. Payloads retain raw storage values,
+  and packed channels keep their existing packing scale. This does not add
+  missing fields or change the metadata stored in older log files.
 - Write rate: `sdCardLogFrequency` Hz, clamped to 1..250, paced with
   `chThdSleepUntilWindowed()` in `mlgLogger()`.
 - `f_sync` runs only every `F_SYNC_FREQUENCY` (10) lines, not per line.

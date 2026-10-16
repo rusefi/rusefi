@@ -9,6 +9,9 @@
 
 #include "unit_test_logger.h"
 #include "msl_to_csv.h"
+#include "binary_mlg_logging.h"
+#include "mlg_field.h"
+#include "value_lookup.h"
 
 #include <cstdio>
 #include <filesystem>
@@ -18,6 +21,26 @@
 #include <vector>
 
 namespace {
+
+class CaptureWriter : public Writer {
+public:
+	std::string bytes;
+	size_t write(const char* buffer, size_t count) override {
+		bytes.append(buffer, count);
+		return count;
+	}
+	size_t flush() override { return 0; }
+};
+
+float readFloatBE(const char* bytes) {
+	uint32_t bits = 0;
+	for (size_t i = 0; i < sizeof(bits); i++) {
+		bits = (bits << 8) | static_cast<unsigned char>(bytes[i]);
+	}
+	float result;
+	memcpy(&result, &bits, sizeof(result));
+	return result;
+}
 
 std::string makeArtifactPath(const std::string& suffix) {
 	auto testInfo = ::testing::UnitTest::GetInstance()->current_test_info();
@@ -43,6 +66,46 @@ std::string readFirstLine(const std::string& path) {
 } // namespace
 
 extern bool useNdJSONFiles;
+
+TEST(unitTestLog, generatedOutputConversions) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	auto& misfire = engine->module<MisfireController>().unmock();
+	misfire.misfireEmaUs = 1250;
+	EXPECT_NEAR(1.25, getOutputValueByName("misfireEmaUs"), 0.00001);
+	EXPECT_FLOAT_EQ(1250, misfire.misfireEmaUs);
+	CaptureWriter header;
+	MLG::writeFileHeader(header);
+	for (float raw : {0.95f, 1.0f, 1.05f}) {
+		engine->engineState.stftCorrection[0] = raw;
+		engine->engineState.stftCorrection[1] = raw;
+		engine->engineState.dwellActualRatio = raw;
+		CaptureWriter record;
+		MLG::writeSdBlock(record);
+		size_t descriptorOffset = MLG::Types::Header::Size;
+		size_t payloadOffset = 4; // Standard data-block prefix.
+		int matches = 0;
+		MLG::forEachField([&](const MLG::Entries::Field& field) {
+			std::string name(field.getName());
+			if (name == "STFT: Bank 1" || name == "STFT: Bank 2" || name == "Ignition: Dwell deviation") {
+				matches++;
+				ASSERT_LE(descriptorOffset + 89, header.bytes.size());
+				ASSERT_LE(payloadOffset + sizeof(float), record.bytes.size());
+				float scale = readFloatBE(header.bytes.data() + descriptorOffset + 46);
+				float translation = readFloatBE(header.bytes.data() + descriptorOffset + 50);
+				// [tag:live_data_output_scale] Actual generated fields must match their INI conversions.
+				EXPECT_FLOAT_EQ(100, scale) << name;
+				EXPECT_FLOAT_EQ(-1, translation) << name;
+				float stored = readFloatBE(record.bytes.data() + payloadOffset);
+				EXPECT_FLOAT_EQ(raw, stored) << name;
+				EXPECT_NEAR((raw - 1) * 100, (stored + translation) * scale, 0.00001) << name;
+			}
+			descriptorOffset += MLG::Types::Field::DescriptorSize;
+			payloadOffset += field.getSize();
+		});
+		EXPECT_EQ(3, matches);
+		EXPECT_NEAR((raw - 1) * 100, getOutputValueByName("dwellActualRatio"), 0.00001);
+	}
+}
 
 TEST(unitTestLog, ndjsonCsvAndBinaryContent) {
   bool wasUsing = useNdJSONFiles;
