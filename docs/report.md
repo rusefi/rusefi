@@ -761,3 +761,30 @@ Remaining:
   No macOS hardware run or thread dump was available, so these reproduced leaks
   do not establish that every possible source of thread exhaustion is fixed.
 - No commit, push, or GitHub comment was made.
+
+
+## 2026-10-17 - Running oil pressure check waits for after-start window (#9879)
+
+- Confirmed the issue by reading LimpManager::updateState(): the running
+  oil pressure check (enableOilPressureProtect + minimumOilPressure table)
+  started its timer at engine start and did not look at the 5 s
+  "Minimum oil pressure after start" window. With a timeout of at most 5 s, a
+  cold engine was cut before the after-start check had finished.
+- TDB: commit c79a880457 added only
+  limp.oilPressureRunningCheckDuringAfterStartWindow, asserting the bad cut at
+  2 s after start (60 kPa: above the 50 kPa after-start limit, below the 75 kPa
+  running table). This change flips that assertion.
+
+| File | Change |
+| --- | --- |
+| limp_manager.cpp | Keep the low oil pressure timer reset while the after-start check is enabled and its 5 s window is open |
+| test_limp.cpp | Expect no cut inside the window; expect the running check to cut 1 s (its timeout) after the window ends |
+
+- Decision: the running check is held back only when the after-start check is
+  enabled (minOilPressureAfterStart > 0 and a sensor exists). With the
+  after-start check disabled, running protection still starts at engine start.
+- Validation: none locally - this Mac has no Java runtime and no flock, so the
+  unit-test build stops at config generation. The test result will come from CI.
+- Follow-ups: the 5 s window is still hardcoded; the issue also asks to make it
+  configurable (needs a new config field + ini entry).
+- No commit or push was made.

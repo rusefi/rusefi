@@ -385,8 +385,8 @@ TEST(limp, oilPressureRunning) {
 
 // https://github.com/rusefi/rusefi/issues/9879
 // Cold start: oil pressure is above "Minimum oil pressure after start" but still
-// below the running table. The running check should wait for the 5 second
-// after-start window, but today it cuts fuel before the window ends.
+// below the running table. The running check waits for the 5 second
+// after-start window to end, then applies its own timeout.
 TEST(limp, oilPressureRunningCheckDuringAfterStartWindow) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->minOilPressureAfterStart = 50;
@@ -415,7 +415,21 @@ TEST(limp, oilPressureRunningCheckDuringAfterStartWindow) {
 	// 2 seconds after start, still inside the after-start window
 	advanceTimeUs(1.1e6);
 	dut.updateState(1000, getTimeNowNt());
-	// BUG #9879: running check already cut fuel. Should be EXPECT_TRUE.
+	EXPECT_TRUE(dut.allowInjection());
+
+	// 4.9 seconds after start: last update inside the window
+	advanceTimeUs(2.9e6);
+	dut.updateState(1000, getTimeNowNt());
+	EXPECT_TRUE(dut.allowInjection());
+
+	// 5.8 seconds after start: window is over, running timeout not reached yet
+	advanceTimeUs(0.9e6);
+	dut.updateState(1000, getTimeNowNt());
+	EXPECT_TRUE(dut.allowInjection());
+
+	// 6.1 seconds after start: still below running table, fuel is cut
+	advanceTimeUs(0.3e6);
+	dut.updateState(1000, getTimeNowNt());
 	EXPECT_FALSE(dut.allowInjection());
 	EXPECT_EQ(ClearReason::OilPressure, dut.allowInjection().reason);
 }
