@@ -131,7 +131,7 @@ import static com.rusefi.core.FindFileHelper.findFirmwareFile;
  */
 public class Autoupdate {
     private static final Logging log = getLogging(Autoupdate.class);
-    private static final int AUTOUPDATE_VERSION = 20261011; // separate from rusEFIVersion#CONSOLE_VERSION
+    private static final int AUTOUPDATE_VERSION = 20261017; // separate from rusEFIVersion#CONSOLE_VERSION
     // Resolve before unzipping can replace our own JAR. Installed launchers bypass
     // ConsoleExeFileLocator's default lookup, so it may not have loaded OsUtil (#10368).
     private static final boolean IS_WINDOWS = OsUtil.isWindows();
