@@ -1,5 +1,6 @@
 package com.rusefi.ui.widgets;
 
+import com.formdev.flatlaf.FlatLightLaf;
 import com.opensr5.ini.GaugeModel;
 import com.opensr5.ini.IniFileModelMocks;
 import com.rusefi.core.SensorCentral;
@@ -25,7 +26,69 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 /** Native shape/input smoke test. Run with a desktop or xvfb-run. */
 class DetachedSensorWindowTest {
     @Test
+    void retainsTransparencyWhenMovingBetweenScreens() throws Exception {
+        assumeFalse(GraphicsEnvironment.isHeadless());
+        GraphicsEnvironment environment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice first = environment.getDefaultScreenDevice();
+        GraphicsDevice second = null;
+        for (GraphicsDevice device : environment.getScreenDevices()) {
+            if (device != first && !device.getDefaultConfiguration().getBounds()
+                    .equals(first.getDefaultConfiguration().getBounds())) {
+                second = device;
+                break;
+            }
+        }
+        assumeTrue(second != null, "Requires two screens with different bounds");
+        assumeTrue(first.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.PERPIXEL_TRANSLUCENT));
+        assumeTrue(second.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.PERPIXEL_TRANSLUCENT));
+        GraphicsDevice destination = second;
+        GaugeModel model = CircularGaugeTest.model(0, 100, 80, 0);
+        UIContext context = new UIContext();
+        context.iniFileState.setIniFileModelForTest(IniFileModelMocks.withGauges(model));
+        context.DetachedRepositoryINSTANCE.init(new Node());
+        JFrame[] window = new JFrame[1];
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                window[0] = new DetachedSensor(context, model.getName(), 320).getFrameForTests();
+                Rectangle bounds = first.getDefaultConfiguration().getBounds();
+                window[0].setLocation(bounds.x + 100, bounds.y + 100);
+                window[0].setVisible(true);
+            });
+            await(() -> window[0].isShowing(), "Gauge opens on the first screen");
+            SwingUtilities.invokeAndWait(() -> {
+                Rectangle bounds = destination.getDefaultConfiguration().getBounds();
+                window[0].setLocation(bounds.x + 100, bounds.y + 100);
+            });
+            await(() -> window[0].getGraphicsConfiguration().getDevice() == destination,
+                "Gauge moves to the other screen");
+            await(() -> window[0].getGraphicsConfiguration().isTranslucencyCapable(),
+                "Moving screens preserves transparent corners");
+            SwingUtilities.invokeAndWait(() -> {
+                assertEquals(0, window[0].getBackground().getAlpha());
+                assertTrue(window[0].getGraphicsConfiguration().isTranslucencyCapable(),
+                    "The destination screen must retain an alpha visual");
+            });
+        } finally {
+            SwingUtilities.invokeAndWait(() -> {
+                if (window[0] != null) {
+                    window[0].dispatchEvent(new WindowEvent(window[0], WindowEvent.WINDOW_CLOSING));
+                    window[0].dispose();
+                }
+            });
+        }
+    }
+
+    @Test
     void circularWindowsHoverDragExpireAndClose() throws Exception {
+        checkCircularWindows(false);
+    }
+
+    @Test
+    void circularWindowsWithConsoleTheme() throws Exception {
+        checkCircularWindows(true);
+    }
+
+    private void checkCircularWindows(boolean consoleTheme) throws Exception {
         assumeFalse(GraphicsEnvironment.isHeadless());
         assumeTrue(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
             .isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.PERPIXEL_TRANSPARENT));
@@ -40,10 +103,17 @@ class DetachedSensorWindowTest {
         Robot robot = new Robot();
         robot.setAutoDelay(40);
         robot.mouseMove(0, 0);
+        LookAndFeel previousLookAndFeel = UIManager.getLookAndFeel();
+        boolean previousDecorated = JFrame.isDefaultLookAndFeelDecorated();
         try {
             SwingUtilities.invokeAndWait(() -> {
+                if (consoleTheme) {
+                    FlatLightLaf.setup();
+                    JFrame.setDefaultLookAndFeelDecorated(true);
+                }
                 JFrame background = new JFrame();
                 background.setUndecorated(true);
+                background.getRootPane().setWindowDecorationStyle(JRootPane.NONE);
                 background.getContentPane().setBackground(new Color(0xEEEEEE));
                 background.setBounds(80, 80, 800, 380);
                 background.setVisible(true);
@@ -56,6 +126,12 @@ class DetachedSensorWindowTest {
                     frame.setVisible(true);
                     close[i] = (JButton) frame.getContentPane().getComponent(0);
                     assertTrue(frame.isUndecorated());
+                    assertEquals(Window.Type.POPUP, frame.getType(),
+                        "The desktop must not add a rectangular frame or shadow behind the circular dial");
+                    if (!frame.isOpaque()) {
+                        assertEquals(0, frame.getRootPane().getBackground().getAlpha(),
+                            "Swing must clear its paint buffer to transparent, including under FlatLaf");
+                    }
                     assertNotNull(frame.getShape());
                     assertFalse(frame.getShape().contains(0, 0));
                     assertTrue(frame.getShape().contains(160, 160));
@@ -111,6 +187,12 @@ class DetachedSensorWindowTest {
                         window.dispatchEvent(new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
                         window.dispose();
                     }
+                }
+                JFrame.setDefaultLookAndFeelDecorated(previousDecorated);
+                try {
+                    UIManager.setLookAndFeel(previousLookAndFeel);
+                } catch (UnsupportedLookAndFeelException e) {
+                    throw new AssertionError(e);
                 }
             });
         }

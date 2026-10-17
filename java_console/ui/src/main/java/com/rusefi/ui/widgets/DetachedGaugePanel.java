@@ -14,6 +14,7 @@ import java.util.function.Consumer;
 final class DetachedGaugePanel extends JPanel {
     private static final int CLOSE_SIZE = 28;
     private static final int CLOSE_MARGIN = 4;
+    private static final int ANTIALIAS_MARGIN = 2;
     private final JPanelWithListener gaugeWrapper;
     private final JButton closeButton = new JButton(new CloseIcon());
     private final DetachedGaugeHover hover;
@@ -130,6 +131,22 @@ final class DetachedGaugePanel extends JPanel {
     }
 
     @Override
+    protected void paintComponent(Graphics graphics) {
+        // Swing may reuse a buffer that still contains an opaque background or
+        // the previous antialiased edge. Replace those pixels before painting.
+        Window window = SwingUtilities.getWindowAncestor(this);
+        Graphics2D g = (Graphics2D) graphics.create();
+        try {
+            g.setComposite(AlphaComposite.Src);
+            g.setColor(window == null ? new Color(0, true) : window.getBackground());
+            g.fillRect(0, 0, getWidth(), getHeight());
+        } finally {
+            g.dispose();
+        }
+        super.paintComponent(graphics);
+    }
+
+    @Override
     public void doLayout() {
         int size = Math.min(getWidth(), getHeight());
         int x = (getWidth() - size) / 2;
@@ -141,7 +158,10 @@ final class DetachedGaugePanel extends JPanel {
 
     Shape windowShape() {
         Rectangle dial = gaugeWrapper.getBounds();
-        Area shape = new Area(new Ellipse2D.Double(dial.x, dial.y, dial.width, dial.height));
+        // Native shaping is a binary clip. Keep it outside the painted fringe
+        // so the gauge's per-pixel alpha controls the smooth visible edge.
+        Area shape = new Area(new Ellipse2D.Double(dial.x - ANTIALIAS_MARGIN, dial.y - ANTIALIAS_MARGIN,
+            dial.width + 2 * ANTIALIAS_MARGIN, dial.height + 2 * ANTIALIAS_MARGIN));
         if (closeButton.isVisible()) {
             shape.add(new Area(closeButton.getBounds()));
         }

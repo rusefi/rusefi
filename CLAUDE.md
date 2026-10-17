@@ -242,6 +242,14 @@ the Windows check suite, but its failing XML and logs came from the Linux
 console workflow (run 37950058647); inspect the producing workflow rather
 than inferring the host from the report association.
 
+### Native Swing screenshots under WSLg
+
+Xvfb without a window manager verifies shaped-window input but cannot reveal
+compositor decorations. Under WSLg, Java Robot screen capture may return black
+even while the windows are visible on Windows; capture the Windows desktop to
+inspect those artifacts. Use the console's FlatLaf theme as well as the default
+theme when testing detached windows.
+
 ### Key Concepts
 
 - **Event-driven execution**: Trigger events from crank/cam sensors drive the main control loop

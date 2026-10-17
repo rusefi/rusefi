@@ -89,16 +89,41 @@ public class DetachedSensor {
         }
         JFrame frame = new JFrame(configuration);
         frame.setUndecorated(true);
+        // Undecorated NORMAL windows still receive a rectangular compositor
+        // frame/shadow on WSLg. POPUP bypasses that frame (X11 override-redirect).
+        frame.setType(Window.Type.POPUP);
         frame.setAlwaysOnTop(true);
         frame.getRootPane().setWindowDecorationStyle(JRootPane.NONE);
         frame.getRootPane().setOpaque(false);
         if (configuration.isTranslucencyCapable()
                 && device.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.PERPIXEL_TRANSLUCENT)) {
             frame.setBackground(new Color(0, 0, 0, 0));
+            // Swing clears its translucent back buffer to the root's background.
+            // FlatLaf supplies an opaque theme color even for a non-opaque root,
+            // which otherwise leaves a pale halo behind the antialiased rim.
+            frame.getRootPane().setBackground(frame.getBackground());
         } else {
             frame.setBackground(new Color(0x151515));
         }
+        frame.addPropertyChangeListener("graphicsConfiguration", event ->
+            SwingUtilities.invokeLater(() -> restoreTransparency(frame)));
         return frame;
+    }
+
+    private static void restoreTransparency(JFrame frame) {
+        if (!frame.isDisplayable() || frame.isOpaque()) {
+            return;
+        }
+        GraphicsConfiguration configuration = frame.getGraphicsConfiguration();
+        if (!configuration.isTranslucencyCapable() && configuration.getDevice()
+                .isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.PERPIXEL_TRANSLUCENT)) {
+            // X11 can replace the alpha visual with the destination screen's
+            // opaque default when moving between monitors. Reapply transparency
+            // after that peer change so AWT selects an alpha-capable visual.
+            Color background = frame.getBackground();
+            frame.setBackground(new Color(background.getRGB()));
+            frame.setBackground(background);
+        }
     }
 
     private void savePosition() {
