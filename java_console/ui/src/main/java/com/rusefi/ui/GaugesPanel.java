@@ -1,12 +1,10 @@
 package com.rusefi.ui;
 
-import com.devexperts.logging.FileLogger;
 import com.rusefi.core.ISensorCentral;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.core.WellKnownGauges;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
-import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.AnyCommand;
 import com.rusefi.ui.widgets.DetachedSensor;
 import org.jetbrains.annotations.NotNull;
@@ -44,7 +42,6 @@ public class GaugesPanel {
     public static final String DISABLE_LOGS = "DISABLE_LOGS";
     private static final int DEFAULT_ROWS = 3;
     private static final int DEFAULT_COLUMNS = 3;
-    public static boolean IS_PAUSED; // dirty but works for not
 
     private final JPanel content = new JPanel(new BorderLayout());
     private final GaugesGrid gauges;
@@ -174,34 +171,11 @@ public class GaugesPanel {
     @NotNull
     private JPanel createLeftTopPanel() {
         JPanel leftUpperPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
-        leftUpperPanel.add(createPauseButton());
-        leftUpperPanel.add(createSaveImageButton());
         rpmLabel = new RpmLabel(uiContext, 2);
         leftUpperPanel.add(rpmLabel.getContent());
         AnyCommand command = AnyCommand.createField(uiContext, config, false, false);
         leftUpperPanel.add(command.getContent());
         return leftUpperPanel;
-    }
-
-    private Component createPauseButton() {
-        String suffix = " Gauges";
-        final JButton pauseButton = UiUtils.createPauseButton(suffix);
-        pauseButton.addActionListener(e -> {
-            IS_PAUSED = !IS_PAUSED;
-            UiUtils.setPauseButtonText(pauseButton, IS_PAUSED, suffix);
-        });
-        return pauseButton;
-    }
-
-    @NotNull
-    private JButton createSaveImageButton() {
-        JButton saveImageButton = UiUtils.createSaveImageButton();
-        saveImageButton.addActionListener(e -> {
-            String fileName = FileLogger.getDate() + "_gauges.png";
-
-            UiUtils.saveImageWithPrompt(fileName, content, gauges.panel);
-        });
-        return saveImageButton;
     }
 
     private void setSensorGridDimensions(int rows, int columns) {

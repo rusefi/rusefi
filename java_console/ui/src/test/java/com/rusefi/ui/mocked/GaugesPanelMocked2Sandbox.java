@@ -75,7 +75,6 @@ public class GaugesPanelMocked2Sandbox {
 
     private void initApplication() {
         UIContext uiContext = new UIContext();
-        GaugesPanel.IS_PAUSED = false;
 
         setupMocking(uiContext);
 
@@ -127,8 +126,6 @@ public class GaugesPanelMocked2Sandbox {
 
     private void tick() {
         try {
-            if (GaugesPanel.IS_PAUSED) return;
-
             SensorCentral sensorCentral = SensorCentral.getInstance();
             ThreadLocalRandom safeRandom = ThreadLocalRandom.current();
 

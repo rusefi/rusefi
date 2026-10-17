@@ -84,7 +84,6 @@ public class GaugesPanelSandbox {
     }
 
     private void tick() {
-        if (GaugesPanel.IS_PAUSED) return;
         SensorCentral sc = SensorCentral.getInstance();
         java.util.concurrent.ThreadLocalRandom rnd = java.util.concurrent.ThreadLocalRandom.current();
 

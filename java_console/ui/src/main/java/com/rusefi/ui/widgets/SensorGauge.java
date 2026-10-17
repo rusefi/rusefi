@@ -89,8 +89,9 @@ public class SensorGauge {
         String channelName = gaugeModel.getChannel();
         ISensorCentral.ListenerToken valueToken = SensorCentral.getInstance().addListener(channelName,
             value -> {
-                if (gauge == null || GaugesPanel.IS_PAUSED)
+                if (gauge == null) {
                     return;
+                }
                 gauge.setValue(value);
             }
         );

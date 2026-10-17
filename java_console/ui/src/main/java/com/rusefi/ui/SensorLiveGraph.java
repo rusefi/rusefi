@@ -93,8 +93,9 @@ public class SensorLiveGraph extends JPanel {
                             return;
                         }
                     }
-                    if (active && !GaugesPanel.IS_PAUSED)
+                    if (active) {
                         grabNewValue();
+                    }
                 }
             }
         };

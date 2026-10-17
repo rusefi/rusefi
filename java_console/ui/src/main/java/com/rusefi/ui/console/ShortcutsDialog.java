@@ -96,7 +96,8 @@ final class ShortcutsDialog extends JDialog {
             "Alt+X         Also zooms in.",
             "Left / Right  Previous / next captured chart page where paging is available.",
             "Focused controls such as tables or text fields can use these keys themselves.",
-            "On panels with the corresponding buttons: Alt+P pauses, Alt+C clears, "
+            "Alt+P pauses Engine Sniffer or message panels.",
+            "On panels with the corresponding buttons: Alt+C clears "
                     + "and Alt+S saves an image. These actions depend on the active panel.",
             "",
             "MENUS AND DIALOGS",
