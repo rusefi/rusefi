@@ -1,11 +1,11 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Autoupdate from shadowJar" type="Application" factoryName="Application">
     <classpathModifications>
-      <entry path="C:\stuff\rusefi\console\rusefi_autoupdate.jar" />
+      <entry path="$PROJECT_DIR$/console/rusefi_autoupdate.jar" />
     </classpathModifications>
     <option name="MAIN_CLASS_NAME" value="com.rusefi.autoupdate.Autoupdate" />
-    <module name="java_tools.autoupdate.main" />
-    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../console" />
+    <module name="rusefi.autoupdate.main" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/console" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="com.rusefi.autoupdate.*" />

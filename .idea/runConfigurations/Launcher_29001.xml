@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Launcher 29001" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="com.rusefi.Launcher" />
-    <module name="java_tools.ui.main" />
+    <module name="rusefi.ui.main" />
     <option name="PROGRAM_PARAMETERS" value="29001" />
     <extension name="coverage">
       <pattern>

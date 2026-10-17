@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="BinaryProtocolServerSandbox" type="Application" factoryName="Application" nameIsGenerated="true">
     <option name="MAIN_CLASS_NAME" value="com.rusefi.binaryprotocol.test.BinaryProtocolServerSandbox" />
-    <module name="java_tools.ecu_io.test" />
+    <module name="rusefi.ecu_io.test" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="com.rusefi.binaryprotocol.test.*" />

@@ -3,6 +3,9 @@ plugins {
   id 'org.gradle.toolchains.foojay-resolver-convention' version '0.8.0'
 }
 
+// Keep IDEA module names independent of the checkout directory.
+rootProject.name = 'rusefi'
+
 include ':version'
 project(':version').projectDir = new File(rootRelativePath + 'java_tools/version')
 

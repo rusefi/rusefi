@@ -5,6 +5,7 @@
     <option name="MAIN_CLASS_NAME" value="com.rusefi.trigger.TriggerImage" />
     <module name="rusefi.trigger-ui.main" />
     <option name="PROGRAM_PARAMETERS" value="unit_tests" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="com.rusefi.trigger.*" />

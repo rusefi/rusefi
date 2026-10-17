@@ -1,9 +1,9 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="LiveDataProcessor" type="Application" factoryName="Application" nameIsGenerated="true">
     <option name="MAIN_CLASS_NAME" value="com.rusefi.ldmp.LiveDataProcessor" />
-    <module name="java_tools.config_definition.main" />
-    <option name="PROGRAM_PARAMETERS" value="integration/LiveData.yaml" />
-    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../firmware" />
+    <module name="rusefi.config_definition_base.main" />
+    <option name="PROGRAM_PARAMETERS" value="integration/LiveData.yaml integration/rusefi_config_trigger.txt ../unit_tests/test-framework/trigger_meta_generated.h ../java_tools/trigger-image/src/main/java/com/rusefi/config/generated/ ./" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/firmware" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="com.rusefi.ldmp.*" />
