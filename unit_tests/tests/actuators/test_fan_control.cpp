@@ -441,3 +441,22 @@ TEST(Actuators, FanPwm_DisableWhenStopped_RunningEngineStaysActive) {
     EXPECT_FALSE(engine->module<FanControl1>()->disabledWhileEngineStopped);
     EXPECT_GT(engine->module<FanControl1>()->pwmAppliedPwm, 0.0f);
 }
+
+TEST(Actuators, FanPwm_DisableAtSpeed) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	MockAcOff mockAc;
+	engine->module<AcController>().set(&mockAc);
+	setupFan1Pwm(eth);
+	engineConfiguration->disableFan1AtSpeed = 50;
+
+	// Hot running engine, the curve asks for 50%
+	Sensor::setMockValue(SensorType::Clt, 95);
+	engine->rpmCalculator.setRpmValue(1000);
+
+	// Driving above the speed limit
+	Sensor::setMockValue(SensorType::VehicleSpeed, 100);
+	updateFans();
+
+	EXPECT_TRUE(engine->module<FanControl1>()->disabledBySpeed);
+	EXPECT_NEAR(50.0f, engine->module<FanControl1>()->pwmAppliedPwm, 2.0f);
+}
