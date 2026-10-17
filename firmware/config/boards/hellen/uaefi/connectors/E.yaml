@@ -38,23 +38,25 @@ info:
   directory: hellen/uaefi
   board_url: https://wiki.rusefi.com/uaefi
   image:
-    file: uaefi-E.jpg
+    file: uaefi-E-front.png
+  # Mating face, latch up. Coordinates are pixels in the 1127x1024 image.
+  # Shared row centers: top y=389, bottom y=660; see docs/imagegen.md.
   pins:
     - pin: E1
-      x: 361
-      y: 221
+      x: 879
+      y: 660
     - pin: E2
-      x: 254
-      y: 221
+      x: 563
+      y: 660
     - pin: E3
-      x: 153
-      y: 221
+      x: 247
+      y: 660
     - pin: E4
-      x: 361
-      y: 116
+      x: 879
+      y: 389
     - pin: E5
-      x: 254
-      y: 116
+      x: 563
+      y: 389
     - pin: E6
-      x: 153
-      y: 116
+      x: 247
+      y: 389

@@ -110,53 +110,55 @@ info:
   directory: hellen/uaefi
   board_url: https://wiki.rusefi.com/uaefi
   image:
-    file: uaefi-D.jpg
+    file: uaefi-D-front.png
+  # Mating face, latch up. Coordinates are pixels in the 2671x1024 image.
+  # Shared row centers: top y=389, bottom y=660; see docs/imagegen.md.
   pins:
     - pin: D1
-      x: 977
-      y: 250
+      x: 2397
+      y: 660
     - pin: D2
-      x: 862
-      y: 250
+      x: 2096
+      y: 660
     - pin: D3
-      x: 743
-      y: 250
+      x: 1795
+      y: 660
     - pin: D4
-      x: 626
-      y: 250
+      x: 1490
+      y: 660
     - pin: D5
-      x: 511
-      y: 250
+      x: 1182
+      y: 660
     - pin: D6
-      x: 393
-      y: 250
+      x: 878
+      y: 660
     - pin: D7
-      x: 276
-      y: 250
+      x: 576
+      y: 660
     - pin: D8
-      x: 160
-      y: 250
-    - pin: D9
-      x: 977
-      y: 134
-    - pin: D10
-      x: 862
-      y: 134
-    - pin: D11
-      x: 743
-      y: 134
-    - pin: D12
-      x: 626
-      y: 134
-    - pin: D13
-      x: 511
-      y: 134
-    - pin: D14
-      x: 393
-      y: 134
-    - pin: D15
       x: 276
-      y: 134
+      y: 660
+    - pin: D9
+      x: 2397
+      y: 389
+    - pin: D10
+      x: 2096
+      y: 389
+    - pin: D11
+      x: 1795
+      y: 389
+    - pin: D12
+      x: 1490
+      y: 389
+    - pin: D13
+      x: 1182
+      y: 389
+    - pin: D14
+      x: 878
+      y: 389
+    - pin: D15
+      x: 576
+      y: 389
     - pin: D16
-      x: 160
-      y: 134
+      x: 276
+      y: 389
