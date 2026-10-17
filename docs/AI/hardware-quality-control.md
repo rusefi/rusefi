@@ -60,6 +60,18 @@ drive the valve for 3 s, both coils in double-solenoid mode). `bench_mode_e` in
 from TunerStudio (`cmd_test_*` in `tunerstudio.template.ini` -> `TS_BENCH_CATEGORY` ->
 `handleBenchCategory()`).
 
+`BENCH_SPEEDO_TEST` (`speedoBench()` in `bench_test.cpp`, implemented in
+`firmware/controllers/gauges/speedometer.cpp`) overrides the speedometer PWM frequency
+instead of queuing a `pinbench()` request. The **Test Speedo** button in the
+**Speedometer output** dialog uses `speedometerBenchTestFrequency` (default 100 Hz)
+for three seconds. `speedoUpdate()`, called by the 200 Hz fast callback, then returns
+to the current `VehicleSpeed` and `speedometerPulsePerKm` conversion. An uninitialized
+output rejects the request. Repeating the command replaces the frequency and restarts
+the timer. Zero frequency pauses pulses for the test interval using the PWM driver's
+`NAN` convention. The bench command retains AlphaX wire value 45; value 44 is reserved.
+`SpeedometerBenchTest` drives real PWM callbacks on the simulated clock to check
+command routing, output frequency, expiry, repeated requests, and zero-frequency pause.
+
 ### Dispatch invariant and unit coverage
 
 Every `bench_mode_e` value that `tunerstudio.template.ini` binds to a `commandButton` must have a

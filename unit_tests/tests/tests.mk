@@ -238,6 +238,7 @@ TESTS_SRC_CPP = \
 	tests/actuators/test_main_relay.cpp \
 	tests/actuators/test_stepper.cpp \
 	tests/actuators/test_tacho.cpp \
+	tests/actuators/test_speedometer.cpp \
 	tests/actuators/test_vvt.cpp \
 	tests/actuators/test_alternator.cpp \
 	tests/actuators/test_alternator_voltage_target_set_point.cpp \

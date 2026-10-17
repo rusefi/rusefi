@@ -125,7 +125,7 @@ TEST(BenchTest, noBenchFunctionRebootsEcu) {
 
 	// every value of bench_mode_e, including the ones compiled out of this build (HD ACR):
 	// the worst outcome is that warning, never a criticalError()
-	for (int index = 0; index <= BENCH_BOOST_VALVE; index++) {
+	for (int index = 0; index <= BENCH_SPEEDO_TEST; index++) {
 		EXPECT_NO_THROW(handleBenchCategory(index)) << "bench function " << index;
 		takePendingBenchRequestForUnitTest();
 	}

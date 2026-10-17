@@ -370,6 +370,7 @@ void setDefaultBaseEngine() {
 	engineConfiguration->debugMode = DBG_EXECUTOR;
 
   engineConfiguration->speedometerPulsePerKm = 2485; // GM GMT800 platform
+  engineConfiguration->speedometerBenchTestFrequency = 100; // Hz, used by the "Test Speedo" bench test button
 
 	engineConfiguration->primingDelay = 0.5;
 	// this should not be below default rpm! maybe even make them equal?

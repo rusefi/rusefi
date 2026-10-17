@@ -22,6 +22,7 @@
 
 #include "pch.h"
 #include "bench_test.h"
+#include "speedometer.h"
 #include "tunerstudio.h"
 #include "tunerstudio_calibration_channel.h"
 #include "long_term_fuel_trim.h"
@@ -359,6 +360,10 @@ void fuelPumpBench() {
 	fuelPumpBenchExt(BENCH_FUEL_PUMP_DURATION);
 }
 
+static void speedoBench() {
+	startSpeedoBenchTest(engineConfiguration->speedometerBenchTestFrequency);
+}
+
 #if EFI_VVT_PID || EFI_UNIT_TEST
 static void vvtValveBench(int vvtIndex) {
 	pinbench(BENCH_VVT_DURATION, 100.0, 1, getVvtOutputPin(vvtIndex));
@@ -506,6 +511,9 @@ void handleBenchCategory(uint16_t index) {
 		return;
 	case BENCH_BOOST_VALVE:
 		boostValveBench();
+		return;
+	case BENCH_SPEEDO_TEST:
+		speedoBench();
 		return;
 	case BENCH_FUEL_PUMP:
 		// cmd_test_fuel_pump

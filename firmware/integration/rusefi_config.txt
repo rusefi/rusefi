@@ -1771,6 +1771,7 @@ pin_input_mode_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPinModes;
 
 	output_pin_e speedometerOutputPin
 	uint16_t speedometerPulsePerKm;Number of speedometer pulses per kilometer travelled.;"", 1, 0, 0, 65000, 0
+	uint16_t speedometerBenchTestFrequency;Frequency used by the "Test Speedo" bench test button, pulsed for a fixed duration.;"Hz", 1, 0, 0, 2000, 0
 
 uint8_t[CAM_INPUTS_COUNT iterate] simulatorCamPosition;
 
