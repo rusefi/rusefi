@@ -98,13 +98,17 @@ function Get-SlcanPattern {
 }
 
 function Select-UsbipdDevices {
-    param([object[]]$Devices, [string]$Pattern, [string]$BusId, [string]$ComPort, [switch]$All)
+    param([object[]]$Devices, [string]$Pattern, [string]$BusId, [string]$ComPort,
+        [switch]$All, [switch]$IncludePersisted)
     if ($BusId) {
         $targets = @($Devices | Where-Object { $_.BusId -eq $BusId })
         if (-not $targets) { throw "No device on busid $BusId." }
         return $targets
     }
-    $targets = @($Devices | Where-Object { $_.BusId -and $_.InstanceId -match $Pattern })
+    # Unbinding must also find saved bindings for unplugged devices.
+    $targets = @($Devices | Where-Object {
+        ($_.BusId -or ($IncludePersisted -and $_.PersistedGuid)) -and $_.InstanceId -match $Pattern
+    })
     if ($ComPort) {
         $preferred = @($targets | Where-Object { $_.Description -match ('\(' + [regex]::Escape($ComPort) + '\)') })
         if ($preferred) { $targets = $preferred }
