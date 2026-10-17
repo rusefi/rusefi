@@ -450,11 +450,14 @@ TEST(FuelMath, VeSwitchTableBlend) {
 
 	// TPS = 50 -> 50% blend -> midpoint between 50% and 80% = 65%
 	Sensor::setMockValue(SensorType::Tps1, 50);
-	EXPECT_NEAR(dut.getVe(1000, 50, false), 0.65f, EPS4D);
+	EXPECT_NEAR(dut.getVe(1000, 50, true), 0.65f, EPS4D);
+	EXPECT_FLOAT_EQ(65.0f, engine->engineState.currentVe);
 
 	// TPS = 100 -> 100% blend -> fully switched (80%)
 	Sensor::setMockValue(SensorType::Tps1, 100);
 	EXPECT_NEAR(dut.getVe(1000, 50, false), 0.8f, EPS4D);
+	// Calculations with postState=false must not replace the published value.
+	EXPECT_FLOAT_EQ(65.0f, engine->engineState.currentVe);
 
 	// Pin takes priority over blend when active
 	secondTablesGetState()->secondVeTableInput = Gpio::A0;

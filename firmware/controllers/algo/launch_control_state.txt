@@ -3,7 +3,7 @@ struct_no_prefix launch_control_state_s
 
 bit launchActivatePinState
 bit isPreLaunchCondition
-	bit isLaunchCondition;Launch: isLaunchCondition
+	bit isLaunchCondition;Launch Control Triggered
 	bit isSwitchActivated;Launch: isSwitchActivated
 	bit isClutchActivated;Launch: isClutchActivated
 bit isBrakePedalActivated

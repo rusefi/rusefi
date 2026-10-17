@@ -62,7 +62,7 @@ struct_no_prefix engine_state_s
 	bit clutchDownState;@@INDICATOR_NAME_CLUTCH_DOWN@@
 	uint32_t startStopStateToggleCounter
 
-	float currentVe
+	float currentVe;@@GAUGE_NAME_FUEL_VE@@;"%", 1, 0, 0, 120, 1
 	float luaSoftSparkSkip
 	float luaHardSparkSkip
 	float tractionControlSparkSkip

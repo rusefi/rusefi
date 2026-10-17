@@ -27,7 +27,6 @@ bit isTriggerError;Error: Trigger
 bit hasCriticalError;Error: Active
 bit isWarnNow;Warning: Active
 bit isPedalError;Error: Pedal
-bit launchTriggered;Launch Control Triggered
 bit isTps2Error;Error: TPS2
 bit injectorFault;Injector Fault
 bit ignitionFault;Ignition Fault
@@ -43,7 +42,6 @@ bit hasFaultReportFile
 bit isAnalogFailure;Analog sensors supply failure
 bit isTuningNow
 bit sd_formating; SD: formating is in progress
-! bit 31 - last one!
   bit isMapAveraging
 
 uint16_t RPMValue;@@GAUGE_NAME_RPM@@;"RPM",1, 0, 0, 8000, 0
@@ -118,7 +116,6 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 
 	int16_t autoscale TPS2Value;@@GAUGE_NAME_TPS2@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
 	uint16_t tuneCrc16;@@GAUGE_NAME_TUNE_CRC16@@;"crc16", 1, 0, 0, 0, 0
-	uint16_t autoscale veValue;@@GAUGE_NAME_FUEL_VE@@;"ratio",{1/10}, 0, 0, 0, 1
 
 ! integration magic: TS requires exact 'seconds' name
 	uint32_t seconds;@@GAUGE_NAME_UPTIME@@;"sec", 1, 0, 0, 0, 0

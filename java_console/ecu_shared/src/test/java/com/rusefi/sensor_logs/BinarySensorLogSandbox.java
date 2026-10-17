@@ -27,7 +27,7 @@ public class BinarySensorLogSandbox {
                 "TPSVALUE,
                 "tpsAccelFuel,
                 "THROTTLEPEDALPOSITION,
-                "veValue,
+                "currentVe,
 //                "etbTarget,
                 "etb1DutyCycle,
                 "totalTriggerErrorCounter,
