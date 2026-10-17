@@ -9,7 +9,12 @@ CONFIG_INPUTS = \
   $(PROJECT_DIR)/controllers/algo/rusefi_hw_stm32_enums.h \
   $(PROJECT_DIR)/controllers/algo/rusefi_hw_adc_enums.h \
   $(PROJECT_DIR)/integration/rusefi_config.txt \
+  $(PROJECT_DIR)/integration/rusefi_config_shared.txt \
+  $(PROJECT_DIR)/controllers/algo/accel_enrichment.engineConfiguration.txt \
   $(PROJECT_DIR)/tunerstudio/tunerstudio.template.ini \
+  $(PROJECT_DIR)/tunerstudio/transient_fueling.ini \
+  $(PROJECT_DIR)/tunerstudio/transient_gauges.ini \
+  $(PROJECT_DIR)/tunerstudio/top_level_menu.ini \
   $(PROJECT_DIR)/${META_OUTPUT_ROOT_FOLDER}console/binary/generated/live_data_fragments.ini \
   $(PROJECT_DIR)/${META_OUTPUT_ROOT_FOLDER}console/binary/generated/data_logs.ini \
   $(PROJECT_DIR)/${META_OUTPUT_ROOT_FOLDER}console/binary/generated/fancy_content.ini \
