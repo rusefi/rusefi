@@ -97,7 +97,7 @@ public class TuningTableView {
         table.setToolTipText(viewMode
             ? "Arrows or Ctrl+mouse wheel to move; Shift+arrows to select; Ctrl+A to select all"
             : "Type digits to replace; F2 to edit text; Enter to accept; Esc to cancel; Tab to accept and move; "
-                + "wheel to adjust; Shift+wheel for 3 steps; Ctrl+wheel to move");
+                + "+/- to adjust by 1; wheel to adjust; Shift+wheel for 3 steps; Ctrl+wheel to move");
         installAxisHighlighting();
         installKeyboardEditing();
         installXAxisEditing();
@@ -402,6 +402,8 @@ public class TuningTableView {
             bindNumericEntry(digit);
         }
         bindNumericEntry('.');
+        bindValueAdjustment('+', 1);
+        bindValueAdjustment('-', -1);
         for (boolean backwards : new boolean[]{false, true}) {
             String key = backwards ? "BACK_SPACE" : "DELETE";
             bindKey(table, JComponent.WHEN_FOCUSED, key, key, new AbstractAction() {
@@ -501,7 +503,7 @@ public class TuningTableView {
                 if (table.isEditing()) {
                     ((JTextField) table.getEditorComponent()).replaceSelection(Character.toString(character));
                 } else if (character == '.' && selectionInput.isEmpty()) {
-                    adjustSelectedValues(1);
+                    adjustSelectedValuesByPrecision(1);
                 } else if (table.getSelectedRowCount() * table.getSelectedColumnCount() > 1) {
                     if (character == '.' && (selectionInput.contains(".")
                         || ((TuningTableModel) table.getModel()).precision == 0)) {
@@ -513,6 +515,28 @@ public class TuningTableView {
                 }
             }
         });
+    }
+
+    private void bindValueAdjustment(char character, double delta) {
+        Action action = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (viewMode || xAxisEditingColumn >= 0) {
+                    return;
+                }
+                if (table.isEditing()) {
+                    ((JTextField) table.getEditorComponent()).replaceSelection(Character.toString(character));
+                } else {
+                    selectionInput = "";
+                    adjustSelectedValues(delta);
+                }
+            }
+        };
+        // Character bindings cover the main keyboard and numpad without handling a key twice.
+        for (String modifier : new String[]{"", "shift "}) {
+            bindKey(table, JComponent.WHEN_FOCUSED, modifier + "typed " + character,
+                "adjustValue" + character, action);
+        }
     }
 
     private void applySelectionInput(String text) {
@@ -756,17 +780,23 @@ public class TuningTableView {
     private void adjustValuesWithWheel(MouseWheelEvent event) {
         // One adjustment per event, regardless of rotation magnitude or pointer position.
         int direction = event.getWheelRotation() > 0 ? -1 : 1;
-        adjustSelectedValues(direction * (event.isShiftDown() ? 3 : 1));
+        adjustSelectedValuesByPrecision(direction * (event.isShiftDown() ? 3 : 1));
     }
 
-    private void adjustSelectedValues(int steps) {
+    private void adjustSelectedValuesByPrecision(int steps) {
+        if (table.getModel() instanceof TuningTableModel) {
+            TuningTableModel model = (TuningTableModel) table.getModel();
+            adjustSelectedValues(steps * Math.pow(10, -model.precision));
+        }
+    }
+
+    private void adjustSelectedValues(double delta) {
         if (viewMode || !(table.getModel() instanceof TuningTableModel)) {
             return;
         }
         TuningTableModel model = (TuningTableModel) table.getModel();
         int[] selectedRows = table.getSelectedRows();
         int[] selectedColumns = getSelectedDataColumns();
-        double step = Math.pow(10, -model.precision);
         boolean changed = false;
         for (int selectedRow : selectedRows) {
             int row = model.data.length - 1 - selectedRow;
@@ -776,7 +806,7 @@ public class TuningTableView {
                 if (old == null || !Double.isFinite(old)) {
                     continue;
                 }
-                double value = old + steps * step;
+                double value = old + delta;
                 if (Double.isFinite(value) && Double.compare(old, value) != 0) {
                     model.data[row][column] = value;
                     changed = true;
