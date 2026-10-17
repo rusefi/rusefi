@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Mon Oct 05 21:26:25 UTC 2026
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Sat Oct 17 23:34:51 UTC 2026
 // see also gen_config_and_enums.bat
 
 
@@ -53,6 +53,8 @@ const char *getBench_mode_e(bench_mode_e value) {
 			return "BENCH_MAIN_RELAY";
 		case BENCH_SECOND_IDLE_VALVE:
 			return "BENCH_SECOND_IDLE_VALVE";
+		case BENCH_SPEEDO_TEST:
+			return "BENCH_SPEEDO_TEST";
 		case BENCH_STARTER_DISABLE_RELAY:
 			return "BENCH_STARTER_DISABLE_RELAY";
 		case BENCH_STARTER_ENABLE_RELAY:

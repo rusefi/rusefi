@@ -49,4 +49,5 @@ public enum bench_mode_e {
 	LUA_COMMAND_9,
 	LUA_COMMAND_10,
 	BENCH_BOOST_VALVE,
+	BENCH_SPEEDO_TEST,
 }

@@ -511,6 +511,9 @@ const ConfigParameter allParameters[] = {
 	{ 0x3F0B3F1F, // etbJamTimeout
 		[]() -> float { return engineConfiguration->etbJamTimeout; },
 		[](float value) { engineConfiguration->etbJamTimeout = value; } },
+	{ 0x3F1A9854, // speedometerBenchTestFrequency
+		[]() -> float { return engineConfiguration->speedometerBenchTestFrequency; },
+		[](float value) { engineConfiguration->speedometerBenchTestFrequency = value; } },
 	{ 0x3F379163, // useAdvanceCorrectionsForCranking
 		[]() -> float { return engineConfiguration->useAdvanceCorrectionsForCranking; },
 		[](float value) { engineConfiguration->useAdvanceCorrectionsForCranking = value; } },

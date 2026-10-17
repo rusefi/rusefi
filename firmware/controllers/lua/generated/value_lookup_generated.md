@@ -1837,6 +1837,9 @@ Pull-up resistor value on your board
 ### speedometerPulsePerKm
 Number of speedometer pulses per kilometer travelled.
 
+### speedometerBenchTestFrequency
+Frequency used by the "Test Speedo" bench test button, pulsed for a fixed duration.
+
 ### ignKeyAdcDivider
 null
 

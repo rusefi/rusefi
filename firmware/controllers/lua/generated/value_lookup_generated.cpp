@@ -1843,6 +1843,9 @@ float getConfigValueByHash(const int hash) {
 // speedometerPulsePerKm
 		case 1007396714:
 			return engineConfiguration->speedometerPulsePerKm;
+// speedometerBenchTestFrequency
+		case 1058707540:
+			return engineConfiguration->speedometerBenchTestFrequency;
 // ignKeyAdcDivider
 		case -506535813:
 			return engineConfiguration->ignKeyAdcDivider;
@@ -5294,6 +5297,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1007396714:
 	{
 		engineConfiguration->speedometerPulsePerKm = (int)value;
+		return 1;
+	}
+		case 1058707540:
+	{
+		engineConfiguration->speedometerBenchTestFrequency = (int)value;
 		return 1;
 	}
 		case -506535813:
