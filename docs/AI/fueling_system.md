@@ -89,6 +89,19 @@ The 2D table fields are appended config so existing tunes stay valid. Two mechan
 
 See `docs/calibration-compatibility.md` and `TuneMigrator.java`.
 
+## Launch fuel and trim learning
+
+[Launch control](launch_control.md) multiplies running fuel by
+`1 + launchFuelAdderPercent / 100` only in the full launch state, not in the
+pre-launch window. The independent launch fuel cut requires RPM strictly above
+Launch RPM and can suppress injection despite this enrichment.
+
+Both pre-launch and full launch pause STFT cell updates and LTFT learning.
+Existing corrections remain applicable; pausing learning does not reset trims
+to neutral. Fuel math and trim learning run before the launch-state update in
+the fast callback, so they observe its previous iteration's state. See the
+launch guide for exact gates, thresholds, diagnostics and regression tests.
+
 ## Fuel Consumption Tracking
 
 Downstream of the pipeline, the `TripOdometer` engine module (`firmware/controllers/modules/trip_odometer/`, guarded by `MODULE_ODOMETER` / `EFI_VEHICLE_SPEED`) accounts for fuel actually injected:

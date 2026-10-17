@@ -68,8 +68,9 @@ Lets a script *be* a sensor - e.g. CAN-sourced coolant temp or pedal position.
 
 ### 3. Virtual switch inputs (overriding driver controls)
 
-Boolean state pushed into `engine->engineState.lua.*`, consumed by the respective controllers
-instead of / in addition to physical switches.
+Switch state consumed by the respective controllers instead of / in addition
+to physical switches. Most setters write booleans into `engine->engineState.lua.*`;
+the launch and rolling-idle trigger setters take integers and write controller state.
 
 | Function | Target |
 |------------------------------|--------|
@@ -77,8 +78,8 @@ instead of / in addition to physical switches.
 | `setBrakePedalState(bool)` | Brake pedal |
 | `setAcRequestState(bool)` | AC request "button" |
 | `setTorqueReductionState(bool)` | Flat-shift/torque-reduction trigger |
-| `setLaunchTrigger(bool)` | `launchController.luaLaunchState` (EFI_LAUNCH_CONTROL) |
-| `setRollingIdleTrigger(bool)` | `antilagController.luaAntilagState` (EFI_ANTILAG_SYSTEM) |
+| `setLaunchTrigger(0 or 1)` | `launchController.luaLaunchState` (EFI_LAUNCH_CONTROL); selects the raw input in Lua activation mode, with native launch gates still applied. See [Launch Control](launch_control.md) for arming and reset behavior. |
+| `setRollingIdleTrigger(0 or 1)` | `antilagController.luaAntilagState` (EFI_ANTILAG_SYSTEM) |
 
 ### 4. Closed-loop trims and adjustments (fuel / ignition / boost / idle / ETB)
 

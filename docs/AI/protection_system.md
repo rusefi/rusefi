@@ -25,6 +25,15 @@ ETB reporting runs from `updateState` so a jam remains eligible for reporting
 after another warning consumed the interval, even if `reportEtbJammed` is not
 called again.
 
+## Launch cuts
+
+[Launch control](launch_control.md) independently enables fuel and ignition
+cuts. `LimpManager` requests `ClearReason::LaunchCut` only when launch is active
+and RPM is strictly above Launch RPM. Pre-launch spark skipping and the 100%
+skip request at exactly Launch RPM use the spark limiter instead, so launch
+can suppress sparks without a launch full-cut code. The launch guide describes
+the activation gates, RPM latch, timing/enrichment effects and live-data fields.
+
 ## How-To: Adding an Engine Protection Feature
 
 To add a new protection feature (e.g., "Fuel Pressure Protection"), follow this 4-step pattern:

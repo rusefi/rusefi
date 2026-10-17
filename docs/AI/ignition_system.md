@@ -19,8 +19,18 @@ The ignition (spark) system determines when to charge (dwell) and fire (discharg
 
 ## Key Files
 - `firmware/controllers/engine_cycle/spark_logic.cpp`: Core scheduling and event generation.
-- `firmware/controllers/algo/ignition_state.cpp`: Calculation of base timing and corrections (IAT, CLT, Knock).
+- `firmware/controllers/algo/ignition/ignition_state.cpp`: Calculation of base timing and corrections (IAT, CLT, Knock).
 - `firmware/controllers/engine_cycle/event_queue.cpp`: The high-precision scheduler.
+
+## Launch timing and ignition cuts
+
+[Launch control](launch_control.md) can replace running advance with an absolute
+angle, optionally interpolated across the pre-launch RPM window. This value is
+still subject to downstream timing corrections; fixed timing bypasses the
+running-advance override. Launch spark skipping uses the hard limiter, reaching
+100% at Launch RPM, while the separate `LimpManager` launch cut requires RPM
+strictly above that target. See the launch guide for configuration, shared-input
+flat-shift behavior and diagnostic boundaries.
 
 ## Implementation Notes
 - **BTDC vs ATDC**: Advance is typically measured in degrees Before Top Dead Center (BTDC). Internal math may use 0-720° cycle coordinates.
