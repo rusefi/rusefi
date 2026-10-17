@@ -73,6 +73,38 @@ static void setDefaultWarmupFuelEnrichment() {
 	};
 
 	copyArray(config->cltFuelCorr, values);
+#elif CLT_CURVE_SIZE == 8
+	// Compressed version of the 16-point curve above (every other point), for boards that
+	// override CLT_CURVE_SIZE down to 8 (e.g. fw-custom-paralela-master/prepend.txt) — without
+	// this branch the #if above silently compiled to nothing and cltFuelCorrBins/cltFuelCorr
+	// stayed at their zero-initialized default, i.e. no warmup enrichment axis at all.
+	static const float bins[] =
+	{
+		-40,
+		-20,
+		0,
+		20,
+		40,
+		60,
+		80,
+		100
+	};
+
+	copyArray(config->cltFuelCorrBins, bins);
+
+	static const float values[] =
+	{
+		1.50,
+		1.42,
+		1.28,
+		1.12,
+		1.06,
+		1.03,
+		1,
+		1
+	};
+
+	copyArray(config->cltFuelCorr, values);
 #endif // CLT_CURVE_SIZE
 }
 
