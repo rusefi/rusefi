@@ -16,9 +16,6 @@ import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.ui.GaugesPanel;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.util.UiUtils;
-import eu.hansolo.steelseries.gauges.Radial;
-import eu.hansolo.steelseries.tools.BackgroundColor;
-import eu.hansolo.steelseries.tools.ColorDef;
 
 import javax.swing.*;
 import java.awt.*;
@@ -75,99 +72,56 @@ public class SensorGauge {
 
     static void createGauge(UIContext uiContext, String gaugeName, JPanelWithListener wrapper, GaugeChangeListener listener, JMenuItem extraMenuItem,
                             GaugeModel gaugeModel) {
-        final Radial gauge = GraphicsEnvironment.isHeadless()
-            ? null
-            : createRadial(gaugeModel.getHighValue(), gaugeModel.getLowValue(), gaugeModel);
-
-        if (gauge != null) {
-            UiUtils.setToolTip(gauge, HINT_LINE_1, HINT_LINE_2);
-            UiUtils.setToolTip(wrapper, HINT_LINE_1, HINT_LINE_2);
-
-            gauge.setBackgroundColor(BackgroundColor.LIGHT_GRAY);
-        }
+        BinaryProtocol protocol = uiContext.getBinaryProtocol();
+        final CircularGauge gauge = new CircularGauge(gaugeModel, uiContext.iniFileState.getIniFileModel(),
+            protocol == null ? null : protocol.getControllerConfiguration());
+        UiUtils.setToolTip(gauge, HINT_LINE_1, HINT_LINE_2);
+        UiUtils.setToolTip(wrapper, HINT_LINE_1, HINT_LINE_2);
 
         String channelName = gaugeModel.getChannel();
-        ISensorCentral.ListenerToken valueToken = SensorCentral.getInstance().addListener(channelName,
-            value -> {
-                if (gauge == null) {
-                    return;
-                }
-                gauge.setValue(value);
-            }
-        );
+        ISensorCentral.ListenerToken valueToken = SensorCentral.getInstance().addListener(channelName, gauge::setValue);
 
-        // For expression-based labels, show empty placeholder until resolved by the data cycle.
-        // Cache last-applied values to avoid calling setTitle/setUnitString (and the
-        // reInitialize() they trigger in SteelSeries) on every response frame unchanged.
+        // Expression-based labels stay empty until the data cycle resolves them.
         final SensorCentral.ResponseListenerToken responseToken;
         boolean dynamicTitle = gaugeModel.getTitleValue().isExpression()
             && TsStringFunction.containsStringFunction(gaugeModel.getTitle());
         boolean dynamicUnits = gaugeModel.getUnitsValue().isExpression()
             && TsStringFunction.containsStringFunction(gaugeModel.getUnits());
         if (dynamicTitle || dynamicUnits) {
-            if (gauge != null) {
-                if (dynamicTitle) {
-                    gauge.setTitle("");
-                }
-                if (dynamicUnits) {
-                    gauge.setUnitString("");
-                }
-            }
-            final String[] lastLabels = {null, null}; // [title, units]
             Set<String> labelsSensors = new HashSet<>();
             if (dynamicTitle) {
+                gauge.setTitle("");
                 labelsSensors.addAll(ExpressionEvaluator.extractVariables(gaugeModel.getTitle()));
             }
             if (dynamicUnits) {
+                gauge.setUnitString("");
                 labelsSensors.addAll(ExpressionEvaluator.extractVariables(gaugeModel.getUnits()));
             }
-
-            SensorCentral.ResponseListener responseListener = gauge == null
-                ? () -> { }
-                : () -> SwingUtilities.invokeLater(() -> {
-                    ISensorHolder.ResolvedGaugeLabels labels = SensorCentral.getInstance().getResolvedLabels(gaugeName);
-                    if (labels != null) {
-                        boolean changed = false;
-                        if (!labels.getTitle().equals(lastLabels[0])) {
-                            lastLabels[0] = labels.getTitle();
-                            gauge.setTitle(labels.getTitle());
-                            changed = true;
-                        }
-                        if (!labels.getUnits().equals(lastLabels[1])) {
-                            lastLabels[1] = labels.getUnits();
-                            gauge.setUnitString(labels.getUnits());
-                            changed = true;
-                        }
-                        if (changed) {
-                            gauge.repaint();
-                        }
-                    }
-                });
+            SensorCentral.ResponseListener responseListener = () -> SwingUtilities.invokeLater(() -> {
+                ISensorHolder.ResolvedGaugeLabels labels = SensorCentral.getInstance().getResolvedLabels(gaugeName);
+                if (labels != null) {
+                    gauge.setTitle(labels.getTitle());
+                    gauge.setUnitString(labels.getUnits());
+                }
+            });
             responseToken = SensorCentral.getInstance().addListener(
                 responseListener, new SensorSubscription(labelsSensors.toArray(new String[0])));
         } else {
             responseToken = null;
         }
 
-        if (gauge != null) {
-            gauge.setValue(SensorCentral.getInstance().getValue(channelName));
-            gauge.setLcdDecimals(2);
-        }
-
-        MouseListener mouseListener = null;
-        if (gauge != null) {
-            mouseListener = new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    if (SwingUtilities.isRightMouseButton(e)) {
-                        showPopupMenu(uiContext, e, wrapper, listener, extraMenuItem);
-                    } else if (e.getClickCount() == 2) {
-                        handleDoubleClick(uiContext, e, gauge, gaugeName);
-                    }
+        gauge.setValue(SensorCentral.getInstance().getValue(channelName));
+        MouseListener mouseListener = new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    showPopupMenu(uiContext, e, wrapper, listener, extraMenuItem);
+                } else if (e.getClickCount() == 2) {
+                    handleDoubleClick(uiContext, e, gaugeName);
                 }
-            };
-            gauge.addMouseListener(mouseListener);
-        }
+            }
+        };
+        gauge.addMouseListener(mouseListener);
         // Remove previous gauge's children and run its cleanup actions (removes its
         // SensorCentral listeners), then register cleanup for the new listeners above.
         wrapper.removeAllChildrenAndListeners();
@@ -177,10 +131,8 @@ public class SensorGauge {
             wrapper.addCleanupAction(responseToken::remove);
             wrapper.addActiveStateAction(responseToken::setActive);
         }
-        if (mouseListener != null) {
-            wrapper.addMouseListener(mouseListener);
-        }
-        wrapper.add(gauge == null ? new JLabel(gaugeModel.getTitle()) : gauge, BorderLayout.CENTER);
+        wrapper.addMouseListener(mouseListener);
+        wrapper.add(gauge, BorderLayout.CENTER);
         AutoupdateUtil.trueLayoutAndRepaint(wrapper.getParent());
     }
 
@@ -235,28 +187,10 @@ public class SensorGauge {
         }
     }
 
-    private static void handleDoubleClick(UIContext uiContext, MouseEvent e, Radial gauge, String gaugeName) {
+    private static void handleDoubleClick(UIContext uiContext, MouseEvent e, String gaugeName) {
         final DetachedSensor ds = new DetachedSensor(uiContext, gaugeName, DetachedSensor.DEFAULT_WIDTH);
 
         ds.show(e);
     }
 
-    public static Radial createRadial(double maxValue, double minValue, GaugeModel gaugeModel) {
-        Radial radial1 = new Radial();
-        radial1.setTitle(gaugeModel.getTitle());
-        radial1.setUnitString(gaugeModel.getUnits());
-
-        radial1.setMinValue(minValue);
-        if (minValue == maxValue) {
-            // a bit of a hack to survive not great input data
-            radial1.setMaxValue(minValue + 10);
-        } else {
-            radial1.setMaxValue(maxValue);
-        }
-        radial1.setThresholdVisible(false);
-        radial1.setPointerColor(ColorDef.RED);
-
-        radial1.setValue(0);
-        return radial1;
-    }
 }

@@ -5,7 +5,6 @@ import com.opensr5.ini.CurveModel;
 import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.ExpressionEvaluator;
 import com.opensr5.ini.GaugeModel;
-import com.opensr5.ini.IniValue;
 import com.opensr5.ini.IndicatorModel;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.TsStringFunction;
@@ -19,9 +18,7 @@ import com.rusefi.core.SensorCentral;
 import com.rusefi.core.SensorSubscription;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.ui.UIContext;
-import com.rusefi.ui.widgets.SensorGauge;
-import eu.hansolo.steelseries.gauges.Radial;
-import eu.hansolo.steelseries.tools.BackgroundColor;
+import com.rusefi.ui.widgets.CircularGauge;
 import com.rusefi.ui.laf.GradientTitleBorder;
 import com.rusefi.ui.util.ConstrainedBorderLayout;
 import com.rusefi.ui.util.ScrollablePanel;
@@ -124,14 +121,14 @@ public class CalibrationDialogWidget {
         }
     }
 
-    /** Tracks a gauge-ref readout rendered as a small Radial gauge for live update. */
+    /** Tracks a gauge-ref readout rendered as a small circular gauge for live update. */
     private static class GaugeReadoutEntry {
-        final Radial radial;
+        final CircularGauge radial;
         final String channel;
         final String gaugeName;
         final boolean hasExpressionLabels;
 
-        GaugeReadoutEntry(Radial radial, String channel, String gaugeName, boolean hasExpressionLabels) {
+        GaugeReadoutEntry(CircularGauge radial, String channel, String gaugeName, boolean hasExpressionLabels) {
             this.radial = radial;
             this.channel = channel;
             this.gaugeName = gaugeName;
@@ -751,7 +748,7 @@ public class CalibrationDialogWidget {
         }
         for (GaugeReadoutEntry entry : gaugeReadoutEntries) {
             double val = SensorCentral.getInstance().getValue(entry.channel);
-            if (!Double.isNaN(val)) entry.radial.setValue(val);
+            entry.radial.setValue(val);
             if (entry.hasExpressionLabels) {
                 ISensorHolder.ResolvedGaugeLabels labels = SensorCentral.getInstance().getResolvedLabels(entry.gaugeName);
                 if (labels != null) {
@@ -800,33 +797,22 @@ public class CalibrationDialogWidget {
         return cell;
     }
 
-    private double resolveGaugeValue(IniValue v, double fallback) {
-        if (v == null) return fallback;
-        if (!v.isExpression()) return v.getNumericValue();
-        Double evaluated = ExpressionEvaluator.evaluateNumericExpression(v.getRawString(), currentIniFileModel, workingImage);
-        return evaluated != null ? evaluated : fallback;
-    }
-
     private JComponent buildGaugeCell(GaugeModel gaugeModel) {
-        if (GraphicsEnvironment.isHeadless()) {
-            return new JLabel(gaugeModel.getName());
-        }
-
-        double lo = resolveGaugeValue(gaugeModel.getLowValueValue(), gaugeModel.getLowValue());
-        double hi = resolveGaugeValue(gaugeModel.getHighValueValue(), gaugeModel.getHighValue());
-        Radial radial = SensorGauge.createRadial(hi, lo, gaugeModel);
-        radial.setBackgroundColor(BackgroundColor.LIGHT_GRAY);
-        radial.setLcdDecimals(gaugeModel.getValueDecimalPlaces());
+        CircularGauge radial = new CircularGauge(gaugeModel, currentIniFileModel, workingImage);
         Dimension size = new Dimension(READOUT_GAUGE_SIZE, READOUT_GAUGE_SIZE);
         radial.setPreferredSize(size);
         radial.setMinimumSize(size);
         radial.setMaximumSize(size);
         boolean exprTitle = gaugeModel.getTitleValue().isExpression() && TsStringFunction.containsStringFunction(gaugeModel.getTitle());
         boolean exprUnits = gaugeModel.getUnitsValue().isExpression() && TsStringFunction.containsStringFunction(gaugeModel.getUnits());
-        if (exprTitle) radial.setTitle("");
-        if (exprUnits) radial.setUnitString("");
+        if (exprTitle) {
+            radial.setTitle("");
+        }
+        if (exprUnits) {
+            radial.setUnitString("");
+        }
         double initialVal = SensorCentral.getInstance().getValue(gaugeModel.getChannel());
-        if (!Double.isNaN(initialVal)) radial.setValue(initialVal);
+        radial.setValue(initialVal);
         gaugeReadoutEntries.add(new GaugeReadoutEntry(radial, gaugeModel.getChannel(), gaugeModel.getName(), exprTitle || exprUnits));
         return radial;
     }

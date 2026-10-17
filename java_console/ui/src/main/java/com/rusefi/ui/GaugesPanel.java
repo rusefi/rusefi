@@ -180,7 +180,7 @@ public class GaugesPanel {
 
     private void setSensorGridDimensions(int rows, int columns) {
         // Destroy old elements before discarding them so their ConnectionStatusLogic
-        // listeners are removed and their Radial BufferedImage data can be GC'd.
+        // listeners are removed and their widgets can be garbage-collected.
         for (GaugesGridElement element : gaugeElements) {
             element.destroy();
         }

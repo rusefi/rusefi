@@ -98,7 +98,7 @@ public class GaugesGridElement {
     /**
      * Remove this element's {@link ConnectionStatusLogic} listener and tear down its inner components.
      * Must be called before discarding a {@code GaugesGridElement} (e.g. on grid resize)
-     * to prevent stale listeners from accumulating and keeping Radial gauge images alive.
+     * to prevent stale listeners from accumulating and keeping gauge widgets alive.
      */
     public void destroy() {
         destroyed = true;
