@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="15816">
+    <page number="0" size="15820">
         <constant name="accelEnrichmentMode">"MS Adder"</constant>
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
@@ -3653,6 +3653,7 @@
          4.0
 </constant>
         <constant digits="0" name="sparkHardwareLatencyCorrection" units="uS">0</constant>
+        <constant digits="0" name="speedometerBenchTestFrequency" units="Hz">100</constant>
         <constant name="speedometerOutputPin">"NONE"</constant>
         <constant digits="0" name="speedometerPulsePerKm" units="">2485</constant>
         <constant name="spi1MisoMode">"default"</constant>
@@ -5216,8 +5217,8 @@
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20261016" nPages="1" signature="rusEFI master.2026.10.17.f407-discovery.2331503071" version="5.0"/>
-    <bibliography author="rusEFI 20261016" writeDate="date"/>
+    <versionInfo firmwareInfo="20261017" nPages="1" signature="rusEFI master.2026.10.18.f407-discovery.2251220162" version="5.0"/>
+    <bibliography author="rusEFI 20261017" writeDate="date"/>
     <settings/>
     <userComments/>
 </msq>
