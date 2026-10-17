@@ -435,3 +435,39 @@ Open follow-ups:
   applying/resetting learned trims, or introduce an explicit tuning session).
 - Decide how a future bank-2-aware VE Analyze correction should select/combine
   STFT banks; this change preserves the existing bank-1 behavior.
+
+
+## 2026-10-17 - Lima Java UI follow-up cherry-picks
+
+What: Backported the missing Java UI changes from master cf2988a62a9 onto
+lts-26lima-dev, starting at fe5176dffc7. Compared file contents against the
+October 11 hard-copy Java port (346e595e76c, applied October 16), rather than
+treating all commits absent from branch ancestry as missing code.
+
+| Master commit | Change |
+|---------------|--------|
+| ecf1a7e980d | Preload updater platform detection before its JAR is overwritten; fresh-JVM regression tests |
+| b5af6958a56 | Table editing boundary test coverage |
+| d28ae202bd8 | Shared calibration colors and readable foreground colors |
+| c1df0af31d6 | Mouse wheel edits selected table values; Ctrl+wheel navigates |
+| 016cc40c830 | Resizable knock spectrogram and magnitude displays |
+
+Key decisions and why:
+- Used cherry-pick -x to retain each upstream commit reference. The only
+  conflict was the updater version already advanced by the hard-copy port;
+  preserved that value while applying the missing class-loading fix.
+- Kept Lima's trigger mapping, SD-card capability adaptation, generated
+  metadata, and hardware/simulator test adaptations. Excluded firmware,
+  firmware generators, firmware-dependent changes, and native-library updates.
+- Advanced CONSOLE_VERSION and AUTOUPDATE_VERSION to 20261017 in a separate
+  follow-up commit so both changed Java deliverables have fresh version markers.
+
+Validation:
+- ./gradlew :autoupdate:test :ui:test :ts_plugin:test --max-workers=12 --console=plain
+  succeeded: 606 tests passed, 1 skipped, no failures or errors.
+- Backported UI/build/test files match master; the updater differs only in its
+  version marker. git diff --check passed.
+- No firmware, simulator, unit-test, or firmware-generator files changed.
+- The pre-existing .idea/vcs.xml edit was preserved and excluded from commits.
+
+Open follow-ups: none for this backport. No hardware validation was performed.
