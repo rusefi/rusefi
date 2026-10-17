@@ -2,7 +2,8 @@
 
 Use this workflow to turn connector photographs into matching technical front
 views and update the interactive pinout coordinates. The uaEFI connector files
-are in `firmware/config/boards/hellen/uaefi/connectors/`.
+are in `firmware/config/boards/hellen/uaefi/connectors/`; the four-row super-uaEFI
+family is in `firmware/config/boards/hellen/super-uaefi/connectors/`.
 
 The approved style reference is
 [uaefi-A-front.png](../firmware/config/boards/hellen/uaefi/connectors/uaefi-A-front.png).
@@ -12,8 +13,9 @@ for style. Keep the original photographs.
 ## Drawing requirements
 
 - Orthographic view straight into the mating face, latch at the top.
-- White background, crisp black outlines, light-gray housing, white cavities,
-  and one small gray square terminal per cavity.
+- White background, crisp black outlines and light-gray housing. Preserve the
+  terminal shape: uaEFI has white keyed cavities with gray square terminals;
+  super-uaEFI has round terminal faces in a common recessed front plate.
 - Preserve the photographed cavity keying, pin count, rows, columns and latch.
   Keep terminal rows horizontal and paired terminals vertically aligned.
 - No perspective, environmental background, shadows, texture or gradients.
@@ -24,8 +26,8 @@ for style. Keep the original photographs.
 
 ## Shared coordinates
 
-Every final image has a **1024-pixel canvas height**. All five connectors use
-these exact YAML row coordinates:
+Every final image has a **1024-pixel canvas height**. The five two-row uaEFI
+connectors use these exact YAML row coordinates:
 
 | Row | Y coordinate |
 | --- | ---: |
@@ -48,7 +50,47 @@ with the number of columns; do not squeeze every connector into A's width.
 The existing YAML determines pin order. Do not mirror the drawing or infer
 numbering from the order of the electrical `pins:` entries.
 
-## Cavity keying
+### Four-row super-uaEFI connectors
+
+Preserve the rounded socket rims, rectangular indexing tabs and ribs, circular
+terminals, and staggered rows shown in these photos. The middle two rows are
+offset by half a column pitch. Do not copy uaEFI's square cavities or two-row
+layout into this family.
+
+All three images use four common row coordinates, retaining the same outer
+anchors as the two-row family:
+
+| Row, top to bottom | Y coordinate |
+| --- | ---: |
+| 1 | 389 |
+| 2 | 479 |
+| 3 | 570 |
+| 4 | 660 |
+
+Numbering increases left to right within each row. A and C are 34-pin sockets;
+B and D are 26-pin sockets. A is the left socket and B the right socket in the
+combined 60-pin housing. Preserve the number-before-letter names in this
+family, such as `1A`, rather than converting them to uaEFI's `A1` convention.
+
+| Socket | Row 1 | Row 2 | Row 3 | Row 4 |
+| --- | --- | --- | --- | --- |
+| A | 1A-9A | 10A-17A | 18A-25A | 26A-34A |
+| B | 1B-7B | 8B-13B | 14B-19B | 20B-26B |
+| C | 1C-9C | 10C-17C | 18C-25C | 26C-34C |
+| D | 1D-7D | 8D-13D | 14D-19D | 20D-26D |
+
+| Drawing | Physical terminals | Final PNG size | YAML |
+| --- | ---: | --- | --- |
+| 60pins-front.png | 60 (34 A + 26 B) | 1973x1024 | 60pin.yaml |
+| 34pins-4k-front.png | 34 C | 1163x1024 | C-34pins-4k.yaml |
+| 26pins-4k-front.png | 26 D | 1097x1024 | 26pin_4k.yaml |
+
+Pair X coordinates between rows 1/4 and between rows 2/3. Do not align the
+middle rows to the outer rows: that would remove the physical stagger.
+Draw every physical position listed under `info.pins`, including positions
+without an electrical assignment; do not invent electrical definitions.
+
+## Cavity keying (two-row uaEFI)
 
 Read each pattern left to right. `S` means square; `C` means both lower corners
 are chamfered, with square upper corners. These patterns were read from the
@@ -77,7 +119,8 @@ original uaEFI photos; another connector family needs its own inspection.
 5. Align the export to the shared coordinates as described below. Requesting
    pixel positions in the prompt alone does not guarantee them: the tool can
    return a different canvas size and slightly different placement.
-6. Save the result beside the original as `uaefi-<letter>-front.png`.
+6. Save the result beside the original as `<original-stem>-front.png`, for
+   example `uaefi-A-front.png` or `60pins-front.png`.
    Update only `info.image.file`, `info.pins` coordinates and explanatory
    comments in the corresponding YAML. Preserve all electrical definitions,
    metadata, functions, colors and original photos.
@@ -111,6 +154,13 @@ step with Lanczos3 resizing and white padding. It did not reconstruct the
 connector geometry. The temporary export tooling was outside the repository;
 no new project runtime dependency is required.
 
+For four-row connectors, also measure the two middle rows. Refine the uniform
+scale and vertical translation against all four target row positions, then
+remeasure the final PNG. Keep every row within the same 2-pixel tolerance;
+do not hide irregular spacing by assigning different Y values per connector.
+The 26-pin drawing needed a targeted imagegen correction before export to
+bring the row spacing into tolerance.
+
 Use the mean of the two measured terminal-center X values in each column,
 rounded to an integer, for both pins in that column. Write the fixed row Y
 values to the YAML. The exported terminal centers should be within 2 pixels
@@ -120,17 +170,22 @@ before accepting it.
 ## Validation
 
 - Parse each YAML and load the PNG named by `info.image.file`.
-- Verify every physical pin occurs exactly once in `info.pins`: A=8, B=18,
-  C=20, D=16, E=6. Non-connector items such as On-board MAP are electrical
-  definitions, not extra terminals to draw.
-- Verify image height is 1024, every coordinate is in bounds, both YAML row
-  values are exactly 389/660, and upper/lower pins share column X values.
+- Verify every physical pin occurs exactly once in `info.pins`: uaEFI has
+  A=8, B=18, C=20, D=16, E=6; super-uaEFI has A/B=60, C=34, D=26.
+  Non-connector items such as On-board MAP are electrical definitions, not
+  extra terminals to draw.
+- Verify image height is 1024, every coordinate is in bounds, YAML row
+  values match the family table, and aligned rows share column X values.
+  For super-uaEFI, also verify each middle-row pin lies between the adjacent
+  outer-row columns and A/B remain in their original left/right order.
 - Check the numbering against the row-order table and the keying against the
   photos, with latch up and no mirroring.
 - Measure all terminal centers and confirm alignment. For these drawings,
   connected components of grayscale pixels below 70 isolate the terminal
   outlines; retain near-square components about 40-85 pixels across. Confirm
-  the component count before trusting the measurement.
+  the component count before trusting the measurement. For super-uaEFI's
+  circular outlines, use bounding boxes about 35-75 pixels across and check
+  the four row counts (9/8/8/9 or 7/6/6/7) separately for each socket.
 - Compare parsed electrical definitions and unrelated `info` fields against
   their previous versions. Verify original JPGs are unchanged.
 - Run `git diff --check` and review the PNGs at their final resolution.
@@ -200,6 +255,72 @@ Output canvas ideally 1232 pixels wide by 1024 pixels tall. This is another memb
 Exactly TWO rows of 3 cavities each, exactly 6 terminals. Counting columns left-to-right, the top row keying is: square, square, chamfered. Bottom row: chamfered, chamfered, square. Chamfered means BOTH lower corners cut diagonally; all upper corners remain square. Square means all four corners square. Follow this sequence exactly and do not add any holes or pins.
 One light-gray rectangular housing enclosing all 6 cavities; single centered trapezoidal latch projecting upward. Match A's black outlines and sparse side indexing tabs. White background, no perspective, no shadows, no texture, no gradient. Preserve cavity proportions similar to the photo and A's style reference; adjust the width for the number of columns. Generous white margins, complete housing visible.
 Orientation: top row left-to-right E6,E5,E4; bottom E3,E2,E1. These labels are interpretation only: DO NOT DRAW ANY TEXT or numbers. No labels, arrows, dimensions, title, logos or watermark. Each terminal row must be exactly horizontal and uniform so it can be registered to common pinout coordinates y=389 and y=660.
+```
+
+</details>
+
+## Super-uaEFI prompts used
+
+These prompts use the built-in imagegen tool. The single-socket drawings use
+their original photo for geometry and uaEFI A for style. The combined A/B
+drawing uses its original photo plus the generated single-socket drawings.
+The 26-pin correction is applied before the final export alignment.
+
+<details>
+<summary>26-pin D</summary>
+
+```text
+Use case: style-transfer.
+Asset: technical orthographic front/mating-face illustration of the super-uaEFI 26-pin connector D, for an interactive pinout.
+Reference image 1 is the actual connector photo, the authority for its physical geometry, orientation and keying. Reference image 2 is an approved drawing of a DIFFERENT connector; use it ONLY for the clean engineering line-art STYLE: white background, black outlines, light-gray housing. Do NOT borrow its square cavities, 2-row layout or trapezoidal latch.
+Draw the 26-pin connector directly facing the viewer, eliminating the perspective of the photo. One rounded rectangular socket housing, thick rounded rim with an inset rim contour and light gray front plate. Preserve the photographed rectangular indexing ribs along the upper and lower inside edges and the short rectangular centered tab at the very top. Outline housing in black and use light neutral gray plastic. No surrounding board, neighboring sockets, wires, reflections, cast shadows, texture or gradients. Avoid decorative circles or manufacturing marks which could be mistaken for additional terminals.
+CRITICAL exact pin geometry: FOUR horizontal rows with respectively 7, 6, 6, 7 circular metal terminal faces. TOTAL exactly 26 terminals. Each terminal is one small flat gray circular disk with a sharp black circular outline, about 28 pixels in diameter on the requested canvas. All equal size. No square cavities, no hollow holes or projecting pins in perspective. The middle two rows are shifted horizontally half a column pitch relative to the outer rows. Upper and bottom rows align vertically with each other. Middle two rows align vertically with each other.
+Requested final canvas 1024 by 1024. Terminal center Y positions top-to-bottom: 389,479,570,660. Horizontal column pitch 76 pixels. Top and bottom row X coordinates: 284,360,436,512,588,664,740. Middle row X coordinates: 322,398,474,550,626,702. These coordinates are production layout guidance; count and staggering are essential. Keep both vertical margins generous, the whole rounded rim and top tab visible. Housing face spans approximately y=240..830; do not fill the canvas with an enlarged connector. The drawing should have level horizontal edges and perfectly straight rows.
+Orientation follows the photo without mirroring or rotation. Pin rows left-to-right, for interpretation ONLY: 1D through 7D; 8D through 13D; 14D through 19D; 20D through 26D. DO NOT render any of this text or any numbers; labels are supplied by the pinout software. No dimensions, arrows, labels, title, logo, legend or watermark.
+```
+
+</details>
+
+<details>
+<summary>26-pin D row-spacing correction</summary>
+
+```text
+Use case: precise-object-edit.
+Edit this technical connector drawing with ONE targeted correction: make the four circular-terminal rows evenly spaced vertically. Preserve the housing, rim, keys, tab, palette, white background, framing, all horizontal terminal positions and the exact counts 7,6,6,7.
+The input canvas is 1254x1254. Its row centers are approximately y=471,574,680.5,779.5. Keep the first, second and fourth rows fixed. Move the entire THIRD row of six circular terminals UP by 4 pixels, to y=676.5. This should make the three row gaps equal. Keep all six terminals of that row at exactly the same height. No new terminals, no missing terminals, no shape changes, no added text or numbers. Keep the output dimensions and framing identical to the input.
+```
+
+</details>
+
+<details>
+<summary>34-pin C</summary>
+
+```text
+Use case: style-transfer.
+Asset: technical orthographic front/mating-face illustration of the super-uaEFI 34-pin connector C, for an interactive pinout.
+Reference image 1 is the actual connector photo, the authority for its physical geometry, orientation and keying. Reference image 2 is an approved drawing of a DIFFERENT connector; use it ONLY for the clean engineering line-art STYLE: white background, black outlines, light-gray housing. Do NOT borrow its square cavities, 2-row layout or trapezoidal latch.
+Draw the 34-pin connector directly facing the viewer, eliminating the perspective of the photo. One rounded rectangular socket housing, thick rounded rim with an inset rim contour and light gray front plate. Preserve the photographed rectangular indexing ribs along the upper and lower inside edges and the short rectangular centered tab at the very top. Outline housing in black and use light neutral gray plastic. No surrounding board, neighboring sockets, wires, reflections, cast shadows, texture or gradients. Avoid decorative circles or manufacturing marks which could be mistaken for additional terminals.
+CRITICAL exact pin geometry: FOUR horizontal rows with respectively 9, 8, 8, 9 circular metal terminal faces. TOTAL exactly 34 terminals. Each terminal is one small flat gray circular disk with a sharp black circular outline, about 28 pixels in diameter on the requested canvas. All equal size. No square cavities, no hollow holes or projecting pins in perspective. The middle two rows are shifted horizontally half a column pitch relative to the outer rows. Upper and bottom rows align vertically with each other. Middle two rows align vertically with each other.
+Requested final canvas 1152 by 1024. Terminal center Y positions top-to-bottom: 389,479,570,660. Horizontal column pitch 76 pixels. Top and bottom row X coordinates: 272,348,424,500,576,652,728,804,880. Middle row X coordinates: 310,386,462,538,614,690,766,842. These coordinates are production layout guidance; count and staggering are essential. Keep both vertical margins generous, the whole rounded rim and top tab visible. Housing face spans approximately y=240..830; do not fill the canvas with an enlarged connector. The drawing should have level horizontal edges and perfectly straight rows.
+Orientation follows the photo without mirroring or rotation. Pin rows left-to-right, for interpretation ONLY: 1C through 9C; 10C through 17C; 18C through 25C; 26C through 34C. DO NOT render any of this text or any numbers; labels are supplied by the pinout software. No dimensions, arrows, labels, title, logo, legend or watermark.
+```
+
+</details>
+
+<details>
+<summary>60-pin A/B</summary>
+
+```text
+Use case: style-transfer.
+Asset: technical orthographic front/mating-face drawing of the super-uaEFI combined 60-pin A/B header.
+Reference image 1 is the actual 60-pin connector photograph and determines geometry and orientation. Reference images 2 and 3 are the approved technical line drawings of related 34-pin and 26-pin connectors. Match their clean black outlines, white background, light gray plastic, gray circular terminal faces, rounded rims and indexing ribs.
+Draw ONE assembly with TWO rounded rectangular sockets side by side in a common housing, separated by a vertical central divider, just as in photo 1. Left socket A is wider and contains 34 terminals. Right socket B is narrower and contains 26 terminals. Keep both sockets' upper and lower edges on the same horizontal lines. Preserve rectangular top indexing tabs and small rectangular keying ribs at the inner upper and lower edges as seen in photo 1. Do not add decorative holes, screws or circular manufacturing marks.
+CRITICAL terminal count and arrangement:
+LEFT socket: exactly FOUR horizontal rows, containing 9,8,8,9 small circular terminal faces, top to bottom. Outer rows have nine aligned columns; middle two rows have eight aligned columns shifted half a column pitch.
+RIGHT socket: exactly FOUR horizontal rows containing 7,6,6,7 small circular terminal faces, top to bottom. Outer rows have seven aligned columns; middle two rows have six aligned columns shifted half a column pitch.
+TOTAL exactly 60 circular terminal faces. Each is a flat gray disk with a sharp thin black circular outline, same diameter for all 60. Use exactly the same row height, row pitch and column pitch in both sockets. Every row of the left socket must continue in a perfect horizontal line across the right socket. Count carefully: left 34, right 26. No square cavities or visible projecting pins.
+Wide landscape canvas, ideally 2304x1024 pixels. All four terminal-row centers are at y=389,479,570,660. Complete housing visible with white margin above, below and at the sides. Keep height comparable to the single-socket references; widen the canvas to accommodate both sockets. Draw straight-on orthographic engineering line art with no perspective, gradients, shadows, reflections, photo texture, board, wires or background environment.
+Orientation MUST match photo 1, no mirroring or rotation. For interpretation ONLY, left socket rows read left-to-right: 1A..9A, 10A..17A, 18A..25A, 26A..34A. Right socket rows: 1B..7B, 8B..13B, 14B..19B, 20B..26B. DO NOT DRAW THESE LABELS or any text, numbers, arrows, dimensions, titles, logos or watermarks.
 ```
 
 </details>
