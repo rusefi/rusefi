@@ -324,8 +324,8 @@ static void checkFanPwmIndicatorsUpdate() {
 	engine->module<AcController>().set(&mockAcOn);
 	fan.onSlowCallback();
 	EXPECT_TRUE(fan.pwmActive);
-	EXPECT_NEAR(50.0f, fan.pwmAppliedPwm, 2.0f);
-	EXPECT_TRUE(fan.m_state);
+	EXPECT_EQ(0.0f, fan.pwmAppliedPwm);
+	EXPECT_FALSE(fan.m_state);
 	EXPECT_FALSE(fan.cranking);
 	EXPECT_FALSE(fan.notRunning);
 	EXPECT_FALSE(fan.disabledWhileEngineStopped);
@@ -458,5 +458,5 @@ TEST(Actuators, FanPwm_DisableAtSpeed) {
 	updateFans();
 
 	EXPECT_TRUE(engine->module<FanControl1>()->disabledBySpeed);
-	EXPECT_NEAR(50.0f, engine->module<FanControl1>()->pwmAppliedPwm, 2.0f);
+	EXPECT_EQ(0.0f, engine->module<FanControl1>()->pwmAppliedPwm);
 }

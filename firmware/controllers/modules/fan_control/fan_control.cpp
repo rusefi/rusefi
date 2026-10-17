@@ -120,6 +120,11 @@ void FanController::onSlowCallbackPwm(bool acActive) {
 		m_currentPwm = 0;
 	}
 
+	if (disabledBySpeed) {
+		// Inhibit while driving fast, as in relay mode
+		target = 0;
+	}
+
 	pwmTargetPwm = target;
 
 	// Soft-start: limit upward slew rate so ramp from 0-100 takes softStartSec seconds
