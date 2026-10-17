@@ -48,6 +48,9 @@ rusefi_simulator_log.mlg
 # bundle
 artifacts
 
+# only used as local source of commit message
+report.md
+
 # clangd cache
 
 .cache/

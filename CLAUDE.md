@@ -10,7 +10,7 @@ rusEFI is an open-source engine control unit firmware for STM32 microcontrollers
 
 After each completed unit of work (a landed feature, a fixed bug, or a finished investigation), and at minimum once per working session:
 
-1. **Append** a dated entry to `docs/report.md` — never rewrite or reorder earlier entries. Cover: what was done, key decisions and why, validation performed (tests run, hardware checks), and open follow-ups. Match the file's existing style: plain ASCII, `-`/`->` instead of dashes/arrows, tables for change inventories.
+1. **Prepare the commit message locally in `docs/report.md`.** It is only used as a local source of the commit message. Keep concise notes on what changed, key decisions and why, and validation performed; revise the draft as the work develops. No append-only or dated history is required. Do not stage, commit, or push the report as a log. Keep durable findings and open follow-ups in the relevant project documentation or guidance.
 2. **Fold durable, non-obvious knowledge into this CLAUDE.md**: build/tooling quirks, hardware protocols, architecture invariants, recurring debugging root-causes. Skip anything derivable from the code or git history — CLAUDE.md records what the code cannot say.
 3. **Update user-facing wiki docs**: the rusEFI wiki source may be checked out as a sibling repo at `../rusefi_documentation`. When a change alters user-visible behavior documented there — notably Lua scripting (hooks, `print()` semantics, console Lua tab behavior, console magic strings -> `Lua-Scripting.md`) — edit the matching page in the same unit of work, if that checkout is available. Same source-control rules apply there: git add is allowed; never commit or push, leave those actions for the human.
 
@@ -319,7 +319,7 @@ Any code reachable from a unit-test build (`unit_tests/` itself, plus firmware s
 
 - **Never commit or push — only a human does either.** Both `git commit` and `git push` (to any remote, any branch) are reserved for the human. Leave changes uncommitted in the working tree and summarize what changed; the human commits and pushes.
 - **Git add is allowed; stage new files immediately**: When you create a new source file (C/C++ headers/sources, Java/Kotlin sources, unit tests, scripts, build files, resources, docs, etc.), run `git add <path>` as part of the same change so it shows up in `git status` / `git diff` and is not lost on the next clean or branch switch.
-- Do not stage build artifacts or generated files (see "Do not attempt to commit any generated files" above), IDE-local files, or user-specific configs.
+- Do not stage `docs/report.md` (local commit-message preparation only), build artifacts or generated files (see "Do not attempt to commit any generated files" above), IDE-local files, or user-specific configs. The report is excluded from the new-file staging rule even if it is already tracked.
 
 ## Coding Style
 
