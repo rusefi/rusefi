@@ -1,11 +1,13 @@
 package com.rusefi.ui.widgets.tune;
 
 import com.opensr5.ConfigurationImage;
+import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.ExpressionEvaluator;
 import com.opensr5.ini.GroupMenuModel;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.MenuItem;
 import com.opensr5.ini.MenuModel;
+import com.opensr5.ini.PanelModel;
 import com.opensr5.ini.SeparatorMenuItem;
 import com.opensr5.ini.SubMenuModel;
 import com.rusefi.binaryprotocol.BinaryProtocol;
@@ -545,6 +547,46 @@ public class MainMenuTreeWidget {
 
     public void setOnSelect(Consumer<SubMenuModel> onSelect) {
         this.onSelect = onSelect;
+    }
+
+    /** Selects the first available menu page containing a field, following nested panel references. */
+    public boolean selectField(String fieldKey) {
+        IniFileModel ini = uiContext.iniFileState.getIniFileModel();
+        if (ini == null || fieldKey == null) {
+            return false;
+        }
+        // Search in menu order, not dialog declaration order: inner dialogs and unused
+        // pin summaries may be declared before the page that actually exposes the field.
+        Enumeration<?> nodes = root.preorderEnumeration();
+        while (nodes.hasMoreElements()) {
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) nodes.nextElement();
+            if (!(node.getUserObject() instanceof SubMenuModel) || !isSelectable(new TreePath(node.getPath()))) {
+                continue;
+            }
+            SubMenuModel subMenu = (SubMenuModel) node.getUserObject();
+            if (containsField(ini.getDialogs().get(subMenu.getKey()), ini, fieldKey, new HashSet<>())) {
+                selectSubMenu(subMenu.getKey());
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean containsField(DialogModel dialog, IniFileModel ini, String fieldKey, Set<String> visited) {
+        if (dialog == null || !visited.add(dialog.getKey())) {
+            return false;
+        }
+        for (DialogModel.Field field : dialog.getFields()) {
+            if (fieldKey.equals(field.getKey())) {
+                return true;
+            }
+        }
+        for (PanelModel panel : dialog.getPanels()) {
+            if (containsField(panel.resolveDialog(ini), ini, fieldKey, visited)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void selectSubMenu(String subMenuKey) {

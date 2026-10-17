@@ -33,13 +33,9 @@ class PinoutTuneUseNavigationTest {
     @TempDir
     Path tempDir;
 
-    /**
-     * Green reproduction: Pinout opens the Tuning tab, but an assignment in an inner
-     * dialog does not open its containing menu page. Flip the bad-behavior assertions
-     * when fixing navigation; the direct-menu and manual-parent checks are controls.
-     */
+    /** A pin assigned in an inner dialog must open the menu page containing that dialog. */
     @Test
-    void doubleClickOnNestedTuneUseCurrentlyLeavesPreviousTuningPageSelected() throws Throwable {
+    void doubleClickOnNestedTuneUseOpensContainingTuningPage() throws Throwable {
         IniFileModel ini = readIni();
         Path archive = writeConnectorArchive();
         AtomicReference<TuningPane> tuningRef = new AtomicReference<>();
@@ -99,15 +95,14 @@ class PinoutTuneUseNavigationTest {
                 assertEquals(Arrays.asList("fanPin", "fuelPumpPin"), requestedFields,
                     "The pin assignment was found and the actual double-click handler fired");
                 assertSame(tuning.getContent(), tabs.getSelectedComponent(),
-                    "The outer Tuning tab opens, so the failure is inside its navigation");
+                    "The outer Tuning tab opens");
 
-                // Current bug: fuelPumpDialog is nested below outputsDialogLeft/outputsDialog,
-                // and is not itself a menu item. The fan page remains selected and displayed.
-                assertEquals("fanSettings", selectedMenu(tuning),
-                    "Current bug: expected Outputs after a fix, but the previous Fan page remains selected");
-                assertTrue(hasSelectedPin(tuning, "B7 Low Side output"));
-                assertFalse(hasSelectedPin(tuning, "B6 Low Side output"),
-                    "Current bug: the assigned fuel-pump field is not displayed");
+                // fuelPumpDialog is nested below outputsDialogLeft/outputsDialog and
+                // is not itself a menu item. Navigate to its containing Outputs page.
+                assertEquals("outputsDialog", selectedMenu(tuning));
+                assertFalse(hasSelectedPin(tuning, "B7 Low Side output"));
+                assertTrue(hasSelectedPin(tuning, "B6 Low Side output"),
+                    "The assigned fuel-pump field must be displayed");
             });
         } finally {
             SwingUtilities.invokeAndWait(() -> {

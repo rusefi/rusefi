@@ -380,13 +380,15 @@ public class TuningPane {
     }
 
     /**
-     * Selects the dialog containing {@code fieldKey} in the left tree, which triggers the
-     * existing onSelect pipeline to render the dialog on the right.
+     * Selects the menu page containing {@code fieldKey}, including fields in nested panels,
+     * which triggers the existing onSelect pipeline to render the page on the right.
+     * The supplied dialog key is a fallback for fields not exposed by the menu.
      * Field-level scrolling within the dialog is deferred (see issue — "scroll into view").
      */
     public void navigateToField(String dialogKey, String fieldKey) {
-        if (dialogKey == null) return;
-        left.selectSubMenu(dialogKey);
+        if (!left.selectField(fieldKey) && dialogKey != null) {
+            left.selectSubMenu(dialogKey);
+        }
     }
 
     public Action getLoadTuneAction() {
