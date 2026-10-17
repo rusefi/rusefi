@@ -58,9 +58,6 @@ float getOutputValueByHash(const int hash) {
 // isPedalError
 		case -2035612655:
 			return engine->outputChannels.isPedalError;
-// launchTriggered
-		case -52473827:
-			return engine->outputChannels.launchTriggered;
 // isTps2Error
 		case -1529936844:
 			return engine->outputChannels.isTps2Error;
@@ -235,9 +232,6 @@ float getOutputValueByHash(const int hash) {
 // tuneCrc16
 		case -1158359776:
 			return engine->outputChannels.tuneCrc16;
-// veValue
-		case 1933507837:
-			return engine->outputChannels.veValue;
 // seconds
 		case -1962923820:
 			return engine->outputChannels.seconds;

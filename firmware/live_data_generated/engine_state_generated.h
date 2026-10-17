@@ -329,6 +329,8 @@ struct engine_state_s {
 	 */
 	uint32_t startStopStateToggleCounter = (uint32_t)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_VE@@
+	 * units: %
 	 * offset 104
 	 */
 	float currentVe = (float)0;

@@ -17,7 +17,7 @@ struct launch_control_state_s {
 	offset 4 bit 1 */
 	bool isPreLaunchCondition : 1 {};
 	/**
-	 * Launch: isLaunchCondition
+	 * Launch Control Triggered
 	offset 4 bit 2 */
 	bool isLaunchCondition : 1 {};
 	/**
