@@ -14,6 +14,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.JTableHeader;
+import javax.swing.text.DefaultEditorKit;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
@@ -34,7 +35,23 @@ public class TuningTableView {
     private static final int TOOLBAR_GAP = 6;
     private static final double SMOOTHING_FACTOR = 0.25;
     private final boolean viewMode;
-    private final JTable table = new JTable();
+    private final JTable table = new JTable() {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return getSelectedRowCount() <= 1 && getSelectedColumnCount() <= 1
+                && super.isCellEditable(row, column);
+        }
+
+        @Override
+        protected boolean processKeyBinding(KeyStroke stroke, KeyEvent event, int condition, boolean pressed) {
+            if (pressed && !Character.isDigit(event.getKeyChar())
+                && event.getKeyCode() != KeyEvent.VK_PERIOD && event.getKeyCode() != KeyEvent.VK_DECIMAL
+                && event.getKeyCode() != KeyEvent.VK_BACK_SPACE) {
+                selectionInput = "";
+            }
+            return super.processKeyBinding(stroke, event, condition, pressed);
+        }
+    };
     private final Surface3DView surface3DView = new Surface3DView();
     private final Surface3DView mini3DView = new Surface3DView();
     private final JPanel gridPanel = new JPanel(new BorderLayout());
@@ -55,6 +72,8 @@ public class TuningTableView {
     private final JTextField xAxisEditor = new JTextField();
     private int xAxisEditingColumn = -1;
     private Runnable onEdit;
+    private String selectionInput = "";
+    private boolean applyingSelectionInput;
 
     public TuningTableView(String title) {
         this(title, false);
@@ -77,7 +96,8 @@ public class TuningTableView {
         table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         table.setToolTipText(viewMode
             ? "Arrows or Ctrl+mouse wheel to move; Shift+arrows to select; Ctrl+A to select all"
-            : "Wheel to adjust selected values; Shift+wheel for 3 steps; Ctrl+wheel to move; Enter/F2 to edit; Esc to cancel");
+            : "Type digits to replace; F2 to edit text; Enter to accept; Esc to cancel; Tab to accept and move; "
+                + "wheel to adjust; Shift+wheel for 3 steps; Ctrl+wheel to move");
         installAxisHighlighting();
         installKeyboardEditing();
         installXAxisEditing();
@@ -97,6 +117,7 @@ public class TuningTableView {
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
+                selectionInput = "";
                 int row = table.rowAtPoint(e.getPoint());
                 int col = table.columnAtPoint(e.getPoint());
                 if (row != -1 && col != -1) {
@@ -320,9 +341,9 @@ public class TuningTableView {
     }
 
     private void installKeyboardEditing() {
-        // Editing is explicit, so letter shortcuts still operate on the selection.
+        // Only numeric entry starts replacement editing; letter shortcuts keep their actions.
         table.putClientProperty("JTable.autoStartsEdit", false);
-        table.putClientProperty("terminateEditOnFocusLost", true);
+        table.setFocusTraversalKeysEnabled(false);
         JTextField field = new JTextField();
         field.setHorizontalAlignment(SwingConstants.CENTER);
         DefaultCellEditor editor = new DefaultCellEditor(field) {
@@ -338,47 +359,72 @@ public class TuningTableView {
             public Component getTableCellEditorComponent(JTable source, Object value, boolean selected, int row, int column) {
                 Component component = super.getTableCellEditorComponent(source, value, selected, row, column);
                 field.setBorder(UIManager.getBorder("TextField.border"));
-                field.setToolTipText("Enter to accept; Esc to cancel; Tab/Shift+Tab to accept and move");
+                field.setToolTipText("Enter to accept; Esc to cancel; Tab/Shift+Tab to accept and move; "
+                    + "F2 for text-cursor navigation");
                 field.selectAll();
                 return component;
             }
         };
         table.setDefaultEditor(Object.class, editor);
-        Action edit = new AbstractAction() {
+        Action accept = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (viewMode) {
-                    return;
-                }
-                if (!finishXAxisEdit(true)) {
-                    return;
-                }
-                if (table.isEditing()) {
-                    if (table.getCellEditor().stopCellEditing()) {
-                        table.requestFocusInWindow();
-                    }
-                    return;
-                }
-                if (table.getSelectedRow() == -1 && table.getRowCount() > 0 && table.getColumnCount() > 1) {
-                    table.changeSelection(0, 1, false, false);
-                }
-                if (activeRow() >= 0 && activeColumn() >= 0
-                    && table.isCellSelected(activeRow(), activeColumn())
-                    && table.editCellAt(activeRow(), activeColumn())) {
-                    table.getEditorComponent().requestFocusInWindow();
+                selectionInput = "";
+                if (finishCellEdit(false)) {
+                    table.requestFocusInWindow();
                 }
             }
         };
-        bindKey(table, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, "ENTER", "editValue", edit);
-        bindKey(table, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, "F2", "editValue", edit);
-        bindKey(field, JComponent.WHEN_FOCUSED, "ENTER", "acceptValue", edit);
-        bindKey(field, JComponent.WHEN_FOCUSED, "ESCAPE", "cancelValue", new AbstractAction() {
+        for (String key : new String[]{"ENTER", "shift ENTER"}) {
+            bindKey(table, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, key, "acceptValue", accept);
+            bindKey(field, JComponent.WHEN_FOCUSED, key, "acceptValue", accept);
+        }
+        bindKey(table, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, "F2", "editValue", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                editor.cancelCellEditing();
-                table.requestFocusInWindow();
+                selectionInput = "";
+                startCellEdit(true);
             }
         });
+        Action cancel = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                selectionInput = "";
+                if (table.isEditing()) {
+                    table.getCellEditor().cancelCellEditing();
+                }
+                table.requestFocusInWindow();
+            }
+        };
+        bindKey(table, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, "ESCAPE", "cancelValue", cancel);
+        bindKey(field, JComponent.WHEN_FOCUSED, "ESCAPE", "cancelValue", cancel);
+        for (char digit = '0'; digit <= '9'; digit++) {
+            bindNumericEntry(digit);
+        }
+        bindNumericEntry('.');
+        for (boolean backwards : new boolean[]{false, true}) {
+            String key = backwards ? "BACK_SPACE" : "DELETE";
+            bindKey(table, JComponent.WHEN_FOCUSED, key, key, new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    deleteFromCell(backwards);
+                }
+            });
+        }
+        FocusAdapter finishOnFocusLost = new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                // Replacement entry keeps focus on the grid; F2 transfers it into the editor.
+                if (e.getOppositeComponent() != table.getEditorComponent()) {
+                    finishCellEdit(true);
+                    selectionInput = "";
+                }
+            }
+        };
+        table.addFocusListener(finishOnFocusLost);
+        field.addFocusListener(finishOnFocusLost);
+        table.getSelectionModel().addListSelectionListener(e -> resetSelectionInput());
+        table.getColumnModel().getSelectionModel().addListSelectionListener(e -> resetSelectionInput());
         field.setFocusTraversalKeysEnabled(false);
         for (boolean backwards : new boolean[]{false, true}) {
             String key = backwards ? "shift TAB" : "TAB";
@@ -390,7 +436,160 @@ public class TuningTableView {
             };
             bindKey(table, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, key, key, move);
             bindKey(field, JComponent.WHEN_FOCUSED, key, key, move);
+            String focusKey = backwards ? "ctrl shift TAB" : "ctrl TAB";
+            Action leave = new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    finishCellEdit(true);
+                    selectionInput = "";
+                    if (backwards) {
+                        table.transferFocusBackward();
+                    } else {
+                        table.transferFocus();
+                    }
+                }
+            };
+            bindKey(table, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, focusKey, focusKey, leave);
+            bindKey(field, JComponent.WHEN_FOCUSED, focusKey, focusKey, leave);
         }
+        installCellNavigation(field);
+    }
+
+    private void resetSelectionInput() {
+        if (!applyingSelectionInput) {
+            selectionInput = "";
+        }
+    }
+
+    private boolean startCellEdit(boolean focusEditor) {
+        if (viewMode || !finishXAxisEdit(true)) {
+            return false;
+        }
+        if (table.getSelectedRow() < 0 && table.getRowCount() > 0 && table.getColumnCount() > 1) {
+            table.changeSelection(0, 1, false, false);
+        }
+        if (!table.isEditing() && (activeRow() < 0 || activeColumn() < 0
+            || !table.isCellSelected(activeRow(), activeColumn())
+            || !table.editCellAt(activeRow(), activeColumn()))) {
+            return false;
+        }
+        if (focusEditor) {
+            table.getEditorComponent().requestFocusInWindow();
+        }
+        return true;
+    }
+
+    private boolean finishCellEdit(boolean cancelInvalid) {
+        if (table.isEditing() && !table.getCellEditor().stopCellEditing()) {
+            if (!cancelInvalid) {
+                return false;
+            }
+            table.getCellEditor().cancelCellEditing();
+        }
+        return true;
+    }
+
+    private void bindNumericEntry(char character) {
+        String name = "typeValue" + character;
+        table.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(character), name);
+        table.getActionMap().put(name, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (viewMode || !(table.getModel() instanceof TuningTableModel)) {
+                    return;
+                }
+                if (table.isEditing()) {
+                    ((JTextField) table.getEditorComponent()).replaceSelection(Character.toString(character));
+                } else if (character == '.' && selectionInput.isEmpty()) {
+                    adjustSelectedValues(1);
+                } else if (table.getSelectedRowCount() * table.getSelectedColumnCount() > 1) {
+                    if (character == '.' && (selectionInput.contains(".")
+                        || ((TuningTableModel) table.getModel()).precision == 0)) {
+                        return;
+                    }
+                    applySelectionInput(selectionInput + character);
+                } else if (startCellEdit(false)) {
+                    ((JTextField) table.getEditorComponent()).setText(Character.toString(character));
+                }
+            }
+        });
+    }
+
+    private void applySelectionInput(String text) {
+        if (viewMode || getSelectedDataColumns().length == 0) {
+            return;
+        }
+        double value;
+        try {
+            value = text.isEmpty() ? 0 : Double.parseDouble(text);
+        } catch (NumberFormatException e) {
+            return;
+        }
+        if (!Double.isFinite(value)) {
+            return;
+        }
+        selectionInput = text;
+        applyingSelectionInput = true;
+        try {
+            setValue(value, table.getSelectedRows(), table.getSelectedColumns());
+        } finally {
+            applyingSelectionInput = false;
+        }
+    }
+
+    private void deleteFromCell(boolean backwards) {
+        if (viewMode) {
+            return;
+        }
+        if (table.isEditing()) {
+            JTextField field = (JTextField) table.getEditorComponent();
+            String action = backwards ? DefaultEditorKit.deletePrevCharAction : DefaultEditorKit.deleteNextCharAction;
+            field.getActionMap().get(action).actionPerformed(new ActionEvent(field, ActionEvent.ACTION_PERFORMED, action));
+        } else if (backwards && !selectionInput.isEmpty()) {
+            applySelectionInput(selectionInput.substring(0, selectionInput.length() - 1));
+        } else if (startCellEdit(false)) {
+            ((JTextField) table.getEditorComponent()).setText("");
+        }
+    }
+
+    private void installCellNavigation(JTextField field) {
+        for (String key : new String[]{"LEFT", "RIGHT", "UP", "DOWN", "HOME", "END", "ctrl HOME", "ctrl END"}) {
+            for (boolean extend : new boolean[]{false, true}) {
+                String stroke = (extend ? "shift " : "") + key;
+                Action move = new AbstractAction() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        navigateCell(key, extend);
+                    }
+                };
+                bindKey(table, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, stroke, stroke, move);
+                if (key.equals("UP") || key.equals("DOWN")) {
+                    bindKey(field, JComponent.WHEN_FOCUSED, stroke, stroke, move);
+                }
+            }
+        }
+    }
+
+    private void navigateCell(String key, boolean extend) {
+        selectionInput = "";
+        if (!finishCellEdit(false) || table.getRowCount() == 0 || table.getColumnCount() <= 1) {
+            return;
+        }
+        int row = Math.max(0, activeRow());
+        int column = activeColumn() < 0 ? 1 : activeColumn();
+        int firstColumn = column == 0 ? 0 : 1;
+        switch (key) {
+            case "LEFT": column = Math.max(firstColumn, column - 1); break;
+            case "RIGHT": column = Math.min(table.getColumnCount() - 1, column + 1); break;
+            case "UP": row = Math.max(0, row - 1); break;
+            case "DOWN": row = Math.min(table.getRowCount() - 1, row + 1); break;
+            case "HOME": column = 1; break;
+            case "END": column = table.getColumnCount() - 1; break;
+            case "ctrl HOME": row = 0; break;
+            case "ctrl END": row = table.getRowCount() - 1; break;
+        }
+        table.changeSelection(row, column, false, extend);
+        table.requestFocusInWindow();
     }
 
     private boolean validateNumericEditor(JTextField field) {
@@ -508,6 +707,7 @@ public class TuningTableView {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!table.isEditing() && xAxisEditingColumn < 0) {
+                    selectionInput = "";
                     action.actionPerformed(e);
                 }
             }
@@ -515,6 +715,7 @@ public class TuningTableView {
     }
 
     private void moveValueCell(boolean backwards) {
+        selectionInput = "";
         int row = activeRow();
         int column = activeColumn();
         if (table.isEditing() && !table.getCellEditor().stopCellEditing()) {
@@ -537,6 +738,7 @@ public class TuningTableView {
         if (table.isEditing() || xAxisEditingColumn >= 0 || event.getWheelRotation() == 0) {
             return;
         }
+        selectionInput = "";
         if (!event.isControlDown()) {
             adjustValuesWithWheel(event);
             return;
@@ -552,16 +754,20 @@ public class TuningTableView {
     }
 
     private void adjustValuesWithWheel(MouseWheelEvent event) {
+        // One adjustment per event, regardless of rotation magnitude or pointer position.
+        int direction = event.getWheelRotation() > 0 ? -1 : 1;
+        adjustSelectedValues(direction * (event.isShiftDown() ? 3 : 1));
+    }
+
+    private void adjustSelectedValues(int steps) {
         if (viewMode || !(table.getModel() instanceof TuningTableModel)) {
             return;
         }
         TuningTableModel model = (TuningTableModel) table.getModel();
         int[] selectedRows = table.getSelectedRows();
         int[] selectedColumns = getSelectedDataColumns();
-        int direction = event.getWheelRotation() > 0 ? -1 : 1;
         double step = Math.pow(10, -model.precision);
         boolean changed = false;
-        // One adjustment per event, regardless of rotation magnitude or pointer position.
         for (int selectedRow : selectedRows) {
             int row = model.data.length - 1 - selectedRow;
             for (int selectedColumn : selectedColumns) {
@@ -570,7 +776,7 @@ public class TuningTableView {
                 if (old == null || !Double.isFinite(old)) {
                     continue;
                 }
-                double value = old + direction * step * (event.isShiftDown() ? 3 : 1);
+                double value = old + steps * step;
                 if (Double.isFinite(value) && Double.compare(old, value) != 0) {
                     model.data[row][column] = value;
                     changed = true;
@@ -952,6 +1158,10 @@ public class TuningTableView {
 
     public void displayTable(IniFileModel iniFile, String tableName, ConfigurationImage zImage, ConfigurationImage axisImage) {
         finishXAxisEdit(false);
+        if (table.isEditing()) {
+            table.getCellEditor().cancelCellEditing();
+        }
+        selectionInput = "";
         TableModel iniTable = iniFile.getTable(tableName);
         if (iniTable == null) {
             return;

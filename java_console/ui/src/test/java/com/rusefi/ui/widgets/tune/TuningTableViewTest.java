@@ -11,16 +11,419 @@ import org.junit.jupiter.api.Test;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Predicate;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.mockito.Mockito.*;
 
 public class TuningTableViewTest {
+    @Test
+    public void testKeyboardEntryModes() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            ConfigurationImage image = new ConfigurationImage(4);
+            JTable table = findTable(editableView(false, image).getContent());
+            table.changeSelection(0, 1, false, false);
+            pressKey(table, "ENTER");
+            assertFalse(table.isEditing(), "Enter without an edit retains the selected cell");
+            assertTrue(table.isCellSelected(0, 1));
+            pressKey(table, "typed 6");
+            assertTrue(table.isEditing());
+            JTextField editor = (JTextField) table.getEditorComponent();
+            assertEquals("6", editor.getText(), "The first digit replaces the previous value");
+            pressKey(table, "typed 4");
+            assertEquals("64", editor.getText());
+            assertArrayEquals(new byte[]{1, 2, 3, 4}, image.getContent(), "Replacement remains pending");
+            pressKey(table, "ESCAPE");
+            assertFalse(table.isEditing());
+            table.setColumnSelectionInterval(1, 2);
+            pressKey(table, "F2");
+            assertFalse(table.isEditing(), "A selection must not open a single-cell editor");
+            assertArrayEquals(new byte[]{1, 2, 3, 4}, image.getContent());
+        });
+    }
+
+    @Test
+    public void testReplacementCommitsWithArrowsAndRetainsCellOnEnter() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            for (String key : new String[]{"ENTER", "shift ENTER", "LEFT", "RIGHT", "UP", "DOWN", "TAB", "shift TAB"}) {
+                ConfigurationImage image = new ConfigurationImage(4);
+                TuningTableView view = editableView(false, image);
+                AtomicInteger edits = new AtomicInteger();
+                view.setOnEdit(edits::incrementAndGet);
+                JTable table = findTable(view.getContent());
+                table.changeSelection(0, 2, false, false);
+                pressKey(table, "typed 6");
+                pressKey(table, "typed 4");
+                pressKey(table, key);
+                assertFalse(table.isEditing(), key);
+                assertArrayEquals(new byte[]{1, 2, 3, 64}, image.getContent(), key);
+                assertEquals(1, edits.get(), "One write per accepted value: " + key);
+                int row = key.equals("DOWN") || key.equals("TAB") ? 1 : 0;
+                int column = key.equals("LEFT") || key.equals("shift TAB") || key.equals("TAB") ? 1 : 2;
+                assertTrue(table.isCellSelected(row, column), key);
+            }
+        });
+    }
+
+    @Test
+    public void testTextEditingKeepsHorizontalCaretNavigation() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            ConfigurationImage image = new ConfigurationImage(4);
+            JTable table = findTable(editableView(false, image).getContent());
+            table.changeSelection(0, 1, false, false);
+            pressKey(table, "F2");
+            JTextField editor = (JTextField) table.getEditorComponent();
+            assertEquals(editor.getText(), editor.getSelectedText());
+            editor.setText("64");
+            editor.setSize(100, 24);
+            editor.setCaretPosition(2);
+            pressKey(editor, "LEFT");
+            assertTrue(table.isEditing(), "Horizontal text navigation must not accept the value");
+            pressKey(editor, "RIGHT");
+            assertTrue(table.isCellSelected(0, 1));
+            assertTrue(table.isEditing());
+            assertArrayEquals(new byte[]{1, 2, 3, 4}, image.getContent());
+            pressKey(editor, "DOWN");
+            assertFalse(table.isEditing());
+            assertTrue(table.isCellSelected(1, 1));
+            assertArrayEquals(new byte[]{1, 2, 64, 4}, image.getContent());
+        });
+    }
+
+    @Test
+    public void testFocusLossAcceptsValidValuesAndCancelsInvalidValues() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            for (boolean textEditing : new boolean[]{false, true}) {
+                for (String value : new String[]{"65", "", "bad", "NaN", "Infinity"}) {
+                    ConfigurationImage image = new ConfigurationImage(4);
+                    TuningTableView view = editableView(false, image);
+                    AtomicInteger edits = new AtomicInteger();
+                    view.setOnEdit(edits::incrementAndGet);
+                    JTable table = findTable(view.getContent());
+                    table.changeSelection(0, 1, false, false);
+                    pressKey(table, textEditing ? "F2" : "typed 6");
+                    JTextField editor = (JTextField) table.getEditorComponent();
+                    editor.setText(value);
+                    Component focused = textEditing ? editor : table;
+                    loseFocus(focused, new JButton());
+                    assertFalse(table.isEditing(), value);
+                    boolean valid = value.equals("65");
+                    assertArrayEquals(new byte[]{1, 2, (byte) (valid ? 65 : 3), 4}, image.getContent(), value);
+                    assertEquals(valid ? 1 : 0, edits.get(), value);
+                    loseFocus(editor, table);
+                    assertEquals(valid ? 1 : 0, edits.get(), "A late focus event must not write twice");
+                }
+            }
+        });
+    }
+
+    @Test
+    public void testMovingFocusIntoEditorDoesNotAcceptReplacement() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            ConfigurationImage image = new ConfigurationImage(4);
+            JTable table = findTable(editableView(false, image).getContent());
+            table.changeSelection(0, 1, false, false);
+            pressKey(table, "typed 6");
+            Component editor = table.getEditorComponent();
+            pressKey(table, "F2");
+            loseFocus(table, editor);
+            assertTrue(table.isEditing());
+            assertEquals("6", ((JTextField) editor).getText());
+            assertArrayEquals(new byte[]{1, 2, 3, 4}, image.getContent());
+        });
+    }
+
+    @Test
+    public void testSelectedCellsAcceptDigitsImmediatelyAndEscapeDoesNotUndo() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            ConfigurationImage image = new ConfigurationImage(4);
+            TuningTableView view = editableView(false, image);
+            AtomicInteger edits = new AtomicInteger();
+            view.setOnEdit(edits::incrementAndGet);
+            JTable table = findTable(view.getContent());
+            table.setRowSelectionInterval(0, 1);
+            table.setColumnSelectionInterval(0, 2);
+            Object axis = table.getValueAt(0, 0);
+            pressKey(table, "typed 6");
+            assertFalse(table.isEditing());
+            assertArrayEquals(new byte[]{6, 6, 6, 6}, image.getContent());
+            pressKey(table, "typed 4");
+            assertArrayEquals(new byte[]{64, 64, 64, 64}, image.getContent());
+            assertEquals(2, edits.get(), "Notify once per key, not once per cell");
+            assertEquals(axis, table.getValueAt(0, 0), "Bulk numeric entry excludes the axis column");
+            assertArrayEquals(new int[]{0, 1}, table.getSelectedRows());
+            assertArrayEquals(new int[]{0, 1, 2}, table.getSelectedColumns());
+            pressKey(table, "BACK_SPACE");
+            assertArrayEquals(new byte[]{6, 6, 6, 6}, image.getContent());
+            pressKey(table, "ESCAPE");
+            assertArrayEquals(new byte[]{6, 6, 6, 6}, image.getContent());
+            pressKey(table, "typed 2");
+            assertArrayEquals(new byte[]{2, 2, 2, 2}, image.getContent(), "Escape resets the entry buffer");
+            table.setRowSelectionInterval(0, 0);
+            pressKey(table, "typed 3");
+            assertArrayEquals(new byte[]{2, 2, 3, 3}, image.getContent(), "A new selection starts a new number");
+        });
+    }
+
+    @Test
+    public void testDecimalReplacementAndSelectedCellEntry() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            ConfigurationImage image = new ConfigurationImage(16);
+            ArrayIniField field = new ArrayIniField("zBins", 0, FieldType.FLOAT, 2, 2, "", 1, "0", "100", "1");
+            JTable table = findTable(editableView(false, image, field).getContent());
+            table.changeSelection(0, 1, false, false);
+            pressKey(table, "typed 6");
+            pressKey(table, "typed .");
+            pressKey(table, "typed 4");
+            pressKey(table, "ENTER");
+            assertEquals(6.4, ConfigurationImageGetterSetter.getArrayValues(field, image)[1][0], 0.00001);
+            table.setColumnSelectionInterval(1, 2);
+            pressKey(table, "typed 7");
+            pressKey(table, "typed .");
+            pressKey(table, "typed .");
+            pressKey(table, "typed 5");
+            Double[][] values = ConfigurationImageGetterSetter.getArrayValues(field, image);
+            assertEquals(7.5, values[1][0], 0.00001);
+            assertEquals(7.5, values[1][1], 0.00001);
+            assertFalse(table.isEditing());
+            pressKey(table, "ESCAPE");
+            pressKey(table, "typed .");
+            assertEquals(7.6, ConfigurationImageGetterSetter.getArrayValues(field, image)[1][0], 0.00001,
+                "A period outside numeric entry increments by the displayed precision");
+        });
+    }
+
+    @Test
+    public void testDeleteAndBackspaceStartEmptyPendingEditsAndSpaceDoesNotEdit() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            ConfigurationImage image = new ConfigurationImage(4);
+            JTable table = findTable(editableView(false, image).getContent());
+            table.changeSelection(0, 1, false, false);
+            pressKey(table, "SPACE");
+            assertFalse(table.isEditing());
+            for (String key : new String[]{"DELETE", "BACK_SPACE"}) {
+                pressKey(table, key);
+                assertTrue(table.isEditing());
+                assertEquals("", ((JTextField) table.getEditorComponent()).getText());
+                pressKey(table, "ESCAPE");
+                assertArrayEquals(new byte[]{1, 2, 3, 4}, image.getContent());
+            }
+            pressKey(table, "typed 6");
+            pressKey(table, "typed 4");
+            pressKey(table, "BACK_SPACE");
+            assertEquals("6", ((JTextField) table.getEditorComponent()).getText());
+            pressKey(table, "ENTER");
+            assertArrayEquals(new byte[]{1, 2, 6, 4}, image.getContent());
+        });
+    }
+
+    @Test
+    public void testNavigationStaysInValueGridAndPreservesColumnAtRowEndpoints() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            JTable table = findTable(editableView(false, new ConfigurationImage(4)).getContent());
+            table.changeSelection(0, 1, false, false);
+            pressKey(table, "LEFT");
+            pressKey(table, "UP");
+            assertTrue(table.isCellSelected(0, 1));
+            pressKey(table, "END");
+            assertTrue(table.isCellSelected(0, 2));
+            pressKey(table, "ctrl END");
+            assertTrue(table.isCellSelected(1, 2));
+            pressKey(table, "RIGHT");
+            pressKey(table, "DOWN");
+            assertTrue(table.isCellSelected(1, 2));
+            pressKey(table, "ctrl HOME");
+            assertTrue(table.isCellSelected(0, 2));
+            pressKey(table, "HOME");
+            assertTrue(table.isCellSelected(0, 1));
+        });
+    }
+
+    @Test
+    public void testLoadingTableCancelsPendingValueAndResetsSelectionEntry() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            ConfigurationImage original = new ConfigurationImage(4);
+            TuningTableView view = editableView(false, original);
+            JTable table = findTable(view.getContent());
+            table.changeSelection(0, 1, false, false);
+            pressKey(table, "typed 9");
+            IniFileModel ini = mock(IniFileModel.class);
+            TableModel definition = mock(TableModel.class);
+            ArrayIniField field = new ArrayIniField("zBins", 0, FieldType.UINT8, 2, 2, "", 1, "0", "255", "0");
+            when(ini.getTable("table")).thenReturn(definition);
+            when(definition.getZBinsConstant()).thenReturn("zBins");
+            when(ini.findIniField("zBins")).thenReturn(Optional.of(field));
+            ConfigurationImage next = new ConfigurationImage(new byte[]{10, 20, 30, 40});
+            view.displayTable(ini, "table", next);
+            assertFalse(table.isEditing());
+            assertEquals(-1, table.getSelectedRow());
+            assertArrayEquals(new byte[]{1, 2, 3, 4}, original.getContent());
+            assertArrayEquals(new byte[]{10, 20, 30, 40}, next.getContent());
+            table.setRowSelectionInterval(0, 0);
+            table.setColumnSelectionInterval(1, 2);
+            pressKey(table, "typed 6");
+            view.displayTable(ini, "table", next);
+            table.setRowSelectionInterval(0, 0);
+            table.setColumnSelectionInterval(1, 2);
+            pressKey(table, "typed 2");
+            assertArrayEquals(new byte[]{10, 20, 2, 2}, next.getContent());
+        });
+    }
+
+    @Test
+    public void testReadOnlyTableRejectsNumericAndSelectionEntry() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            ConfigurationImage image = new ConfigurationImage(4);
+            JTable table = findTable(editableView(true, image).getContent());
+            for (boolean multiple : new boolean[]{false, true}) {
+                table.setRowSelectionInterval(0, multiple ? 1 : 0);
+                table.setColumnSelectionInterval(1, multiple ? 2 : 1);
+                for (String key : new String[]{"typed 6", "typed .", "DELETE", "BACK_SPACE", "F2", "ENTER"}) {
+                    pressKey(table, key);
+                    assertFalse(table.isEditing(), key);
+                    assertArrayEquals(new byte[]{1, 2, 3, 4}, image.getContent(), key);
+                }
+            }
+        });
+    }
+
+    private void loseFocus(Component component, Component opposite) {
+        FocusEvent event = new FocusEvent(component,
+            FocusEvent.FOCUS_LOST, false, opposite);
+        for (FocusListener listener : component.getFocusListeners()) {
+            listener.focusLost(event);
+        }
+    }
+
+    @Test
+    public void testKeyboardFocusWithRealEvents() throws Exception {
+        assumeTrue(Boolean.getBoolean("rusefi.test.keyboardFocus"),
+            "Opt in with a dedicated display for native keyboard events");
+        ConfigurationImage image = new ConfigurationImage(4);
+        AtomicReference<JFrame> window = new AtomicReference<>();
+        AtomicReference<JTable> grid = new AtomicReference<>();
+        AtomicReference<JButton> outside = new AtomicReference<>();
+        Robot robot = new Robot();
+        robot.setAutoWaitForIdle(true);
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                TuningTableView view = editableView(false, image);
+                JTable table = findTable(view.getContent());
+                JFrame frame = new JFrame("Keyboard editing test");
+                JButton button = new JButton("Outside table");
+                window.set(frame);
+                grid.set(table);
+                outside.set(button);
+                frame.add(view.getContent(), BorderLayout.CENTER);
+                frame.add(button, BorderLayout.SOUTH);
+                frame.setSize(640, 480);
+                frame.setVisible(true);
+                table.changeSelection(0, 2, false, false);
+                table.requestFocusInWindow();
+            });
+            JTable table = grid.get();
+            awaitFocus(component -> component == table);
+            typeKey(robot, KeyEvent.VK_6);
+            typeKey(robot, KeyEvent.VK_4);
+            SwingUtilities.invokeAndWait(() -> {
+                assertTrue(table.isFocusOwner(), "Replacement input keeps focus on the grid");
+                assertTrue(table.isEditing());
+                assertEquals("64", ((JTextField) table.getEditorComponent()).getText());
+                assertArrayEquals(new byte[]{1, 2, 3, 4}, image.getContent());
+            });
+            typeKey(robot, KeyEvent.VK_LEFT);
+            SwingUtilities.invokeAndWait(() -> {
+                assertFalse(table.isEditing());
+                assertTrue(table.isCellSelected(0, 1));
+                assertArrayEquals(new byte[]{1, 2, 3, 64}, image.getContent());
+            });
+            typeKey(robot, KeyEvent.VK_F2);
+            awaitFocus(component -> component != null && component == table.getEditorComponent());
+            typeKey(robot, KeyEvent.VK_6);
+            typeKey(robot, KeyEvent.VK_5);
+            typeKey(robot, KeyEvent.VK_LEFT);
+            SwingUtilities.invokeAndWait(() -> {
+                assertTrue(table.isEditing());
+                assertEquals(1, ((JTextField) table.getEditorComponent()).getCaretPosition());
+                assertTrue(table.isCellSelected(0, 1));
+            });
+            typeKey(robot, KeyEvent.VK_RIGHT);
+            SwingUtilities.invokeAndWait(() -> assertEquals(2,
+                ((JTextField) table.getEditorComponent()).getCaretPosition()));
+            typeKey(robot, KeyEvent.VK_ENTER);
+            awaitFocus(component -> component == table);
+            SwingUtilities.invokeAndWait(() -> {
+                assertFalse(table.isEditing());
+                assertTrue(table.isCellSelected(0, 1));
+                assertArrayEquals(new byte[]{1, 2, 65, 64}, image.getContent());
+            });
+            typeKey(robot, KeyEvent.VK_7);
+            typeKey(robot, KeyEvent.VK_ESCAPE);
+            SwingUtilities.invokeAndWait(() -> assertArrayEquals(new byte[]{1, 2, 65, 64}, image.getContent()));
+            typeKey(robot, KeyEvent.VK_DELETE);
+            SwingUtilities.invokeAndWait(() -> outside.get().requestFocusInWindow());
+            awaitFocus(component -> component == outside.get());
+            SwingUtilities.invokeAndWait(() -> {
+                assertFalse(table.isEditing(), "Invalid input is cancelled on real focus loss");
+                assertArrayEquals(new byte[]{1, 2, 65, 64}, image.getContent());
+                table.requestFocusInWindow();
+            });
+            awaitFocus(component -> component == table);
+            typeKey(robot, KeyEvent.VK_8);
+            typeKey(robot, KeyEvent.VK_TAB);
+            SwingUtilities.invokeAndWait(() -> {
+                assertFalse(table.isEditing());
+                assertTrue(table.isCellSelected(0, 2));
+                assertArrayEquals(new byte[]{1, 2, 8, 64}, image.getContent());
+            });
+        } finally {
+            SwingUtilities.invokeAndWait(() -> {
+                if (window.get() != null) {
+                    window.get().dispose();
+                }
+            });
+        }
+    }
+
+    private void typeKey(Robot robot, int code) {
+        robot.keyPress(code);
+        robot.keyRelease(code);
+        robot.waitForIdle();
+    }
+
+    private void awaitFocus(Predicate<Component> expected) throws Exception {
+        KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        CountDownLatch focused = new CountDownLatch(1);
+        PropertyChangeListener listener = event -> {
+            if (expected.test(manager.getFocusOwner())) {
+                focused.countDown();
+            }
+        };
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                manager.addPropertyChangeListener("focusOwner", listener);
+                if (expected.test(manager.getFocusOwner())) {
+                    focused.countDown();
+                }
+            });
+            assertTrue(focused.await(5, TimeUnit.SECONDS), "Keyboard focus did not reach the target");
+        } finally {
+            SwingUtilities.invokeAndWait(() -> manager.removePropertyChangeListener("focusOwner", listener));
+        }
+    }
+
     @Test
     public void testPlainWheelAdjustsSelection() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
@@ -189,8 +592,8 @@ public class TuningTableViewTest {
             table.getTableHeader().doLayout();
             assertEquals(table.getTableHeader().getHeaderRect(1), inlineAxis.getBounds(),
                 "The editor follows column resizing");
-            for (java.awt.event.FocusListener listener : inlineAxis.getFocusListeners()) {
-                listener.focusLost(new java.awt.event.FocusEvent(inlineAxis, java.awt.event.FocusEvent.FOCUS_LOST));
+            for (FocusListener listener : inlineAxis.getFocusListeners()) {
+                listener.focusLost(new FocusEvent(inlineAxis, FocusEvent.FOCUS_LOST));
             }
             assertFalse(inlineAxis.isVisible(), "Leaving the header accepts the edit");
             assertArrayEquals(afterEdits, axisImage.getContent(), "Unchanged focus-loss commit preserves the image");
@@ -492,7 +895,7 @@ public class TuningTableViewTest {
             view.setOnEdit(edits::incrementAndGet);
             JTable table = findTable(view.getContent());
 
-            pressKey(table, "ENTER");
+            pressKey(table, "F2");
             assertTrue(table.isEditing());
             assertEquals(0, table.getEditingRow());
             assertEquals(1, table.getEditingColumn());
@@ -516,7 +919,7 @@ public class TuningTableViewTest {
             assertEquals(2, edits.get());
             assertTrue(table.isCellSelected(1, 1));
 
-            pressKey(table, "ENTER");
+            pressKey(table, "F2");
             editor = (JTextField) table.getEditorComponent();
             editor.setText("63");
             pressKey(editor, "shift TAB");
@@ -540,7 +943,7 @@ public class TuningTableViewTest {
             AtomicInteger edits = new AtomicInteger();
             view.setOnEdit(edits::incrementAndGet);
             JTable table = findTable(view.getContent());
-            pressKey(table, "ENTER");
+            pressKey(table, "F2");
             JTextField editor = (JTextField) table.getEditorComponent();
             pressKey(view.getContent(), "S");
             assertEquals(0, edits.get(), "Bulk shortcuts must not change values while typing an edit");
@@ -568,11 +971,11 @@ public class TuningTableViewTest {
                 JTable table = findTable(view.getContent());
                 table.changeSelection(0, 0, false, false);
                 assertFalse(table.editCellAt(0, 0));
-                pressKey(table, "ENTER");
+                pressKey(table, "F2");
                 assertFalse(table.isEditing());
                 if (viewMode) {
                     table.changeSelection(0, 1, false, false);
-                    pressKey(table, "ENTER");
+                    pressKey(table, "F2");
                     assertFalse(table.isEditing());
                     assertFalse(table.editCellAt(0, 1));
                 }
@@ -634,7 +1037,7 @@ public class TuningTableViewTest {
                 wheel(table, -1);
 
                 if (!viewMode) {
-                    pressKey(table, "ENTER");
+                    pressKey(table, "F2");
                     JTextField editor = (JTextField) table.getEditorComponent();
                     editor.setText("99");
                     wheel(table, 1);
