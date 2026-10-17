@@ -2,105 +2,149 @@ package com.rusefi.ui.widgets;
 
 import com.opensr5.ini.GaugeModel;
 import com.opensr5.ini.IniFileModel;
-import com.rusefi.SensorTypeHelper;
 import com.rusefi.core.Sensor;
-import com.rusefi.core.ui.AutoupdateUtil;
-import com.rusefi.enums.SensorType;
-import com.rusefi.io.CommandQueue;
-import com.rusefi.io.IMethodInvocation;
-import com.rusefi.io.InvocationConfirmationListener;
-import com.rusefi.io.LinkManager;
-import com.rusefi.ui.UIContext;
 import com.rusefi.core.preferences.storage.Node;
+import com.rusefi.ui.UIContext;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.text.DecimalFormat;
-import java.text.Format;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Hashtable;
-import java.util.concurrent.atomic.AtomicReference;
 
-import static com.rusefi.config.generated.Integration.CMD_SET_SENSOR_MOCK;
-
-/**
- * Andrey Belomutskiy, (c) 2013-2020
- * 11/2/14
- */
+/** A movable, circular gauge window with a shared hover-to-close affordance. */
 public class DetachedSensor {
     private static final String NAME = "name";
     private static final String WIDTH = "width";
     public static final int DEFAULT_WIDTH = 320;
-
-    private final static Hashtable<Integer, JComponent> SLIDER_LABELS = new Hashtable<>();
     public static final String XPOS = "xpos";
     public static final String YPOS = "ypos";
 
-    static {
-        Format f = new DecimalFormat("0.0");
-        for (int i = 0; i <= 50; i += 5) {
-            JLabel label = new JLabel(f.format(i * 0.1));
-            label.setFont(label.getFont().deriveFont(Font.PLAIN));
-            SLIDER_LABELS.put(i, label);
-        }
-    }
-
-    /**
-     * We need to trick the JSlider into displaying float values
-     */
-    private static final int _5_VOLTS_WITH_DECIMAL = 50;
-
-    private final JPanel content = new JPanel(new BorderLayout());
     private final JPanelWithListener gaugeWrapper = new JPanelWithListener(new BorderLayout());
     private final JFrame frame;
-    private final JPanel mockControlPanel = new JPanel(new BorderLayout());
+    private final DetachedGaugePanel content;
     private String gaugeName;
     @NotNull
     private final UIContext uiContext;
-    private final int width;
+    private boolean closed;
 
     public DetachedSensor(UIContext uiContext, String gaugeName, int width) {
         this.uiContext = uiContext;
-        this.width = Math.max(width, DEFAULT_WIDTH);
-        frame = new JFrame();
-        frame.setAlwaysOnTop(true);
+        frame = createFrame();
+        content = new DetachedGaugePanel(gaugeWrapper, this::close, shape -> {
+            if (frame.getGraphicsConfiguration().getDevice().isWindowTranslucencySupported(
+                    GraphicsDevice.WindowTranslucency.PERPIXEL_TRANSPARENT)) {
+                frame.setShape(shape);
+            }
+        });
         onChange(gaugeName);
-
+        SensorGauge.createGaugeBody(uiContext, gaugeName, gaugeWrapper, this::onChange, null);
+        int diameter = Math.max(width, DEFAULT_WIDTH);
+        content.setPreferredSize(new Dimension(diameter, diameter));
+        frame.setContentPane(content);
+        frame.setMinimumSize(new Dimension(DEFAULT_WIDTH, DEFAULT_WIDTH));
+        frame.pack();
         uiContext.DetachedRepositoryINSTANCE.add(this);
+
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosing(WindowEvent e) {
-                uiContext.DetachedRepositoryINSTANCE.remove(DetachedSensor.this);
-                frame.dispose();
+            public void windowClosing(WindowEvent event) {
+                close();
             }
 
             @Override
-            public void windowClosed(WindowEvent e) {
-                gaugeWrapper.removeAllChildrenAndListeners();
+            public void windowClosed(WindowEvent event) {
+                close();
             }
         });
-        create();
-//        showMockControl();
+        frame.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentMoved(ComponentEvent event) {
+                savePosition();
+            }
+
+            @Override
+            public void componentResized(ComponentEvent event) {
+                savePosition();
+            }
+        });
     }
 
-    private void create() {
-        SensorGauge.GaugeChangeListener listener = this::onChange;
-        SensorGauge.createGaugeBody(uiContext, gaugeName, gaugeWrapper, listener, null);
-        content.add(gaugeWrapper, BorderLayout.CENTER);
-        content.add(mockControlPanel, BorderLayout.SOUTH);
-
-        frame.add(content);
-        frame.setSize(width, width);
+    private static JFrame createFrame() {
+        GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        GraphicsConfiguration configuration = device.getDefaultConfiguration();
+        // Use an alpha-capable configuration for smooth transparent edges where
+        // available. Native window shaping also works without per-pixel alpha.
+        if (device.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.PERPIXEL_TRANSLUCENT)) {
+            for (GraphicsConfiguration candidate : device.getConfigurations()) {
+                if (candidate.isTranslucencyCapable()) {
+                    configuration = candidate;
+                    break;
+                }
+            }
+        }
+        JFrame frame = new JFrame(configuration);
+        frame.setUndecorated(true);
+        // Undecorated NORMAL windows still receive a rectangular compositor
+        // frame/shadow on WSLg. POPUP bypasses that frame (X11 override-redirect).
+        frame.setType(Window.Type.POPUP);
+        frame.setAlwaysOnTop(true);
+        frame.getRootPane().setWindowDecorationStyle(JRootPane.NONE);
+        frame.getRootPane().setOpaque(false);
+        if (configuration.isTranslucencyCapable()
+                && device.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.PERPIXEL_TRANSLUCENT)) {
+            frame.setBackground(new Color(0, 0, 0, 0));
+            // Swing clears its translucent back buffer to the root's background.
+            // FlatLaf supplies an opaque theme color even for a non-opaque root,
+            // which otherwise leaves a pale halo behind the antialiased rim.
+            frame.getRootPane().setBackground(frame.getBackground());
+        } else {
+            frame.setBackground(new Color(0x151515));
+        }
+        frame.addPropertyChangeListener("graphicsConfiguration", event ->
+            SwingUtilities.invokeLater(() -> restoreTransparency(frame)));
+        return frame;
     }
 
-    public void show(MouseEvent e) {
-        frame.setLocation(e.getXOnScreen(), e.getYOnScreen());
+    private static void restoreTransparency(JFrame frame) {
+        if (!frame.isDisplayable() || frame.isOpaque()) {
+            return;
+        }
+        GraphicsConfiguration configuration = frame.getGraphicsConfiguration();
+        if (!configuration.isTranslucencyCapable() && configuration.getDevice()
+                .isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.PERPIXEL_TRANSLUCENT)) {
+            // X11 can replace the alpha visual with the destination screen's
+            // opaque default when moving between monitors. Reapply transparency
+            // after that peer change so AWT selects an alpha-capable visual.
+            Color background = frame.getBackground();
+            frame.setBackground(new Color(background.getRGB()));
+            frame.setBackground(background);
+        }
+    }
+
+    private void savePosition() {
+        if (!closed) {
+            uiContext.DetachedRepositoryINSTANCE.saveConfig();
+        }
+    }
+
+    private void close() {
+        if (closed) {
+            return;
+        }
+        closed = true;
+        content.dispose();
+        gaugeWrapper.removeAllChildrenAndListeners();
+        uiContext.DetachedRepositoryINSTANCE.remove(this);
+        frame.dispose();
+    }
+
+    public void show(MouseEvent event) {
+        frame.setLocation(event.getXOnScreen(), event.getYOnScreen());
         frame.setVisible(true);
     }
 
@@ -109,81 +153,12 @@ public class DetachedSensor {
         IniFileModel iniFile = uiContext.iniFileState.getIniFileModel();
         GaugeModel gaugeModel = iniFile == null ? null : iniFile.getGauge(gaugeName);
         frame.setTitle(gaugeModel == null ? gaugeName : gaugeModel.getTitle());
-//        showMockControl();
+        savePosition();
     }
-
-/*
-    public void showMockControl() {
-        mockControlPanel.removeAll();
-        Sensor sensor = Sensor.lookup(gaugeName, null);
-        boolean isMockable = sensor != null && isMockable(sensor);
-        if (isMockable) {
-            Component mockComponent = createMockValueSlider(uiContext.getCommandQueue(), sensor);
-            mockControlPanel.add(mockComponent);
-        }
-        AutoupdateUtil.trueLayoutAndRepaint(content);
-        int h = isMockable ? (int) (width * 1.5) : width;
-        frame.setSize(width, h);
-    }
-
-    private boolean isMockable(Sensor sensor) {
-        return MOCKABLE.contains(sensor) && LinkManager.isSimulationMode;
-    }
-    public static Component createMockValueSlider(CommandQueue commandQueue, final Sensor sensor) {
-        SensorType sensorType = SensorTypeHelper.valueOfAnyCase(sensor.getName());
-
-        int maxValue = 200;
-        final JSlider slider = new JSlider(0, maxValue);
-        slider.setLabelTable(SLIDER_LABELS);
-        slider.setPaintLabels(true);
-        slider.setPaintTicks(true);
-        slider.setMajorTickSpacing(10);
-        slider.setMinorTickSpacing(5);
-
-        AtomicReference<Double> pendingValue = new AtomicReference<>();
-
-        IMethodInvocation commandSender = new IMethodInvocation() {
-            @Override
-            public String getCommand() {
-                return CMD_SET_SENSOR_MOCK + " " + sensorType.ordinal() + " " + pendingValue.get();
-            }
-
-            @Override
-            public int getTimeout() {
-                return CommandQueue.DEFAULT_TIMEOUT;
-            }
-
-            @Override
-            public InvocationConfirmationListener getListener() {
-                return InvocationConfirmationListener.VOID;
-            }
-
-            @Override
-            public boolean isFireEvent() {
-                return false;
-            }
-        };
-
-
-        slider.addChangeListener(e -> {
-            double value = slider.getValue();
-            pendingValue.set(value);
-
-            /*
-             * User might be changing slider faster than commands are being send
-             * We only add commandSender into the queue only if not already pending in order to only send one command with latest requested value and not a sequence of commands.
-             */
-    /*
-            commandQueue.addIfNotPresent(commandSender);
-        });
-
-        return slider;
-    }
-        */
 
     public void saveConfig(Node child) {
         child.setProperty(NAME, gaugeName);
-        child.setProperty(WIDTH, frame.getWidth());
+        child.setProperty(WIDTH, Math.min(frame.getWidth(), frame.getHeight()));
         child.setProperty(XPOS, frame.getLocation().x);
         child.setProperty(YPOS, frame.getLocation().y);
     }
@@ -193,8 +168,12 @@ public class DetachedSensor {
         int width = child.getIntProperty(WIDTH, DEFAULT_WIDTH);
         int xpos = child.getIntProperty(XPOS, 0);
         int ypos = child.getIntProperty(YPOS, 0);
-        DetachedSensor ds = new DetachedSensor(uiContext, gaugeName, width);
-        ds.frame.setLocation(xpos, ypos);
-        ds.frame.setVisible(true);
+        DetachedSensor sensor = new DetachedSensor(uiContext, gaugeName, width);
+        sensor.frame.setLocation(xpos, ypos);
+        sensor.frame.setVisible(true);
+    }
+
+    JFrame getFrameForTests() {
+        return frame;
     }
 }
