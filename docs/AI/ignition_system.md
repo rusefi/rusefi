@@ -22,6 +22,15 @@ The ignition (spark) system determines when to charge (dwell) and fire (discharg
 - `firmware/controllers/algo/ignition/ignition_state.cpp`: Calculation of base timing and corrections (IAT, CLT, Knock).
 - `firmware/controllers/engine_cycle/event_queue.cpp`: The high-precision scheduler.
 
+## Rev-limit timing and ignition cuts
+
+The [main rev limiter](rev_limiters.md) subtracts a relative timing retard
+across the RPM hysteresis window when Cut spark on RPM limit is enabled and
+timing mode is dynamic. It reaches maximum retard at the selected hard limit;
+the separate full spark cut starts strictly above that limit. Fixed timing
+bypasses this retard but does not bypass the hard cut. The guide covers
+coolant-based limits, recovery boundaries and cut diagnostics.
+
 ## Launch timing and ignition cuts
 
 [Launch control](launch_control.md) can replace running advance with an absolute

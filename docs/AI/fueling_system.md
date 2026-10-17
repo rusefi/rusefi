@@ -89,6 +89,16 @@ The 2D table fields are appended config so existing tunes stay valid. Two mechan
 
 See `docs/calibration-compatibility.md` and `TuneMigrator.java`.
 
+## Rev-limit fuel correction and cuts
+
+The [main rev limiter](rev_limiters.md) progressively adds running fuel over
+the same RPM window used for hard-cut hysteresis. Cut fuel on RPM limit enables
+both the soft fuel multiplier and the hard fuel cut; the multiplier reaches
+its maximum at the selected limit, while the cut latches strictly above it.
+The fuel adder does not restore injection during a cut. See the limiter guide
+for coolant-based limits, forced fault cuts, STFT recovery delay and the current
+difference between STFT and LTFT learning gates during general cuts.
+
 ## Launch fuel and trim learning
 
 [Launch control](launch_control.md) multiplies running fuel by

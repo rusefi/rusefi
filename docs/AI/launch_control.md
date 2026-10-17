@@ -188,6 +188,11 @@ Thus pre-launch ignition skips do not require a "launch control" cut code.
 Other protection requests can also suppress fuel or spark; launch does not
 override them.
 
+The [main rev limiters](rev_limiters.md) have independent thresholds and
+enables. Their soft timing retard can subtract from launch's absolute angle,
+and their running-fuel multiplier can combine with launch enrichment. The main
+hard cut has hysteresis; launch's RPM classification and full-cut request do not.
+
 ### Fuel and feedback learning
 
 `getRunningFuel()` applies the launch fuel coefficient with the other running

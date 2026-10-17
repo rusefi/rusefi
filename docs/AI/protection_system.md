@@ -5,14 +5,33 @@ The `LimpManager` is the central authority for engine safety. It monitors engine
 ## Core Concepts
 
 ### ClearReason
-Every cut is associated with a `ClearReason` (defined in `limp_manager.h`). This reason is used for:
+
+Each `LimpManager` fuel/spark prohibition carries a `ClearReason` (defined in `limp_manager.h`). This reason is used for:
+
 - Logging the cause of a cut.
 - Informing the user via TunerStudio (displayed in the "Fuel/Ignition Cut Code" gauge).
 - Internal logic (e.g., preventing spark cuts in certain conditions to avoid backfires).
 
+`Clearable::clear()` retains the first reason that clears each output during
+an update; it does not record every simultaneous condition. Permanent
+prohibitions take priority over transient ones when permissions are read.
+Percentage spark skipping and ETB target tapering use separate paths and need
+not produce a `LimpManager` cut code.
+
 ### Transient vs. Permanent Cuts
+
 - **Permanent Cuts**: Managed via `m_allowInjection`, etc. These usually trigger a fatal error or a state that requires a power cycle or specific recovery.
 - **Transient Cuts**: Managed via `m_transientAllowInjection`, etc. These are evaluated every `onFastCallback` (e.g., RPM limit, Boost cut).
+
+## RPM limiting
+
+[Rev limiters](rev_limiters.md) documents the constant/coolant-based hard cut,
+its shared hysteresis and soft timing/fuel window, independent throttle taper,
+and latched fault ceilings. The main cut starts strictly above its limit and
+clears strictly below limit minus hysteresis. Coolant mode replaces the
+constant limit and still applies stored soft corrections, even though their
+UI panel is hidden. Cut code 4 ("ETB RPM limit") identifies the 1500 RPM jam
+fault fuel cut, not the configurable ETB throttle taper.
 
 ## Protection warnings
 
