@@ -96,7 +96,7 @@ static void hellen_MiataNB2_boardDefaultConfiguration() {
 	engineConfiguration->idle.solenoidPin = Gpio::D14;	// OUT_PWM5
 	engineConfiguration->fanPin = Gpio::D12;	// OUT_PWM8
 	engineConfiguration->fan2Pin = Gpio::D9;
-	engineConfiguration->enableFan2WithAc = true;
+	engineConfiguration->fan2AcMode = fan_ac_mode_e::Relay;
 	engineConfiguration->mainRelayPin = Gpio::I2;	// OUT_LOW3
 	engineConfiguration->vvtPins[0] = Gpio::I0;    // 4R - VVT (O5)
 

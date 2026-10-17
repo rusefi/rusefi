@@ -291,7 +291,7 @@ static void setCommonMazdaNB() {
 	engineConfiguration->idlerpmpid_iTermMax =  30;
 
 	// Fan
-	engineConfiguration->enableFan1WithAc = true;
+	engineConfiguration->fan1AcMode = fan_ac_mode_e::Relay;
 
 	// Alternator
 	engineConfiguration->isAlternatorControlEnabled = true;

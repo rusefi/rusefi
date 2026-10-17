@@ -15,7 +15,8 @@ enum class RadiatorFanState : uint8_t {
   Cold, // 8
   Previous, // 9
   Bench, // 10
-  BoardForcedOn // 11
+  BoardForcedOn, // 11
+  AcPressure // 12
 };
 
 struct FanController : public EngineModule, public fan_control_s {
@@ -23,21 +24,30 @@ struct FanController : public EngineModule, public fan_control_s {
 	void setDefaultConfiguration() override;
 
 private:
-	bool getState(bool acActive, bool lastState);
+	void updateConditions(bool acActive);
+	bool getState(bool lastState);
+	bool isHardInhibited();
 	void initPwm();
 	void onSlowCallbackPwm(bool acActive);
 
+	bool enabledForAcByPressure(bool lastState);
+	float getAcPressureDemand() const;
+
 	SimplePwm m_pwm;
 	bool m_pwmInitialized = false;
-	float m_currentPwm = 0.0f;
+	// Slew-limited speed demand, 0..100 (0 = off, 100 = full speed). Slewing happens in demand
+	// space rather than raw duty so soft-start behaves the same whether fan1MinPwm/fan1MaxPwm
+	// describe a "normal" (min < max) or hardware-inverted (min > max) PWM signal.
+	float m_currentDemand = 0.0f;
 
 protected:
 	virtual OutputPin& getPin() = 0;
 	virtual float getFanOnTemp() = 0;
 	virtual float getFanOffTemp() = 0;
-	virtual bool enableWithAc() = 0;
+	virtual fan_ac_mode_e getAcMode() const = 0;
 	virtual bool disableWhenStopped() = 0;
 	virtual int disableAtSpeed() = 0;
+	virtual int disableAtSpeedHysteresis() = 0;
 
 	// PWM mode virtuals
 	virtual bool isPwmEnabled() const = 0;
@@ -46,8 +56,10 @@ protected:
 	virtual float computeCurvePwm(float tempC) const = 0;
 	virtual float getMinPwm() const = 0;
 	virtual float getMaxPwm() const = 0;
-	virtual float getPwmAcAdder() const = 0;
 	virtual float getSoftStartSec() const = 0;
+
+	virtual float getAcPressureFanOnThreshold() const = 0;
+	virtual float getAcPressureFanOffThreshold() const = 0;
 };
 
 struct FanControl1 : public FanController {
@@ -63,8 +75,8 @@ struct FanControl1 : public FanController {
 		return engineConfiguration->fanOffTemperature;
 	}
 
-	bool enableWithAc() {
-		return engineConfiguration->enableFan1WithAc;
+	fan_ac_mode_e getAcMode() const override {
+		return engineConfiguration->fan1AcMode;
 	}
 
 	bool disableWhenStopped() {
@@ -73,6 +85,10 @@ struct FanControl1 : public FanController {
 
 	int disableAtSpeed() {
 		return engineConfiguration->disableFan1AtSpeed;
+	}
+
+	int disableAtSpeedHysteresis() {
+		return engineConfiguration->disableFan1AtSpeedHysteresis;
 	}
 
 	bool isPwmEnabled() const override {
@@ -99,12 +115,16 @@ struct FanControl1 : public FanController {
 		return engineConfiguration->fan1MaxPwm;
 	}
 
-	float getPwmAcAdder() const override {
-		return engineConfiguration->fan1AcAdder;
-	}
-
 	float getSoftStartSec() const override {
 		return engineConfiguration->fan1SoftStartSec;
+	}
+
+	float getAcPressureFanOnThreshold() const override {
+		return engineConfiguration->fan1AcPressureOn;
+	}
+
+	float getAcPressureFanOffThreshold() const override {
+		return engineConfiguration->fan1AcPressureOff;
 	}
 };
 
@@ -121,8 +141,8 @@ struct FanControl2 : public FanController {
 		return engineConfiguration->fan2OffTemperature;
 	}
 
-	bool enableWithAc() {
-		return engineConfiguration->enableFan2WithAc;
+	fan_ac_mode_e getAcMode() const override {
+		return engineConfiguration->fan2AcMode;
 	}
 
 	bool disableWhenStopped() {
@@ -131,6 +151,10 @@ struct FanControl2 : public FanController {
 
 	int disableAtSpeed() {
 		return engineConfiguration->disableFan2AtSpeed;
+	}
+
+	int disableAtSpeedHysteresis() {
+		return engineConfiguration->disableFan2AtSpeedHysteresis;
 	}
 
 	bool isPwmEnabled() const override {
@@ -157,11 +181,15 @@ struct FanControl2 : public FanController {
 		return engineConfiguration->fan2MaxPwm;
 	}
 
-	float getPwmAcAdder() const override {
-		return engineConfiguration->fan2AcAdder;
-	}
-
 	float getSoftStartSec() const override {
 		return engineConfiguration->fan2SoftStartSec;
+	}
+
+	float getAcPressureFanOnThreshold() const override {
+		return engineConfiguration->fan2AcPressureOn;
+	}
+
+	float getAcPressureFanOffThreshold() const override {
+		return engineConfiguration->fan2AcPressureOff;
 	}
 };

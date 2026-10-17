@@ -92,8 +92,6 @@ public enum BooleanIniFieldMigrator implements TuneMigrator {
         new BooleanField("useFordRedundantTps", "yes", "no"),
         new BooleanField("enableKline", "enabled", "disabled"),
         new BooleanField("overrideTriggerGaps", "yes", "no"),
-        new BooleanField("enableFan1WithAc", "yes", "no"),
-        new BooleanField("enableFan2WithAc", "yes", "no"),
         new BooleanField("enableTrailingSparks", "yes", "no"),
         new BooleanField("etb_use_two_wires", "yes", "no"),
         new BooleanField("isDoubleSolenoidIdle", "yes", "no"),

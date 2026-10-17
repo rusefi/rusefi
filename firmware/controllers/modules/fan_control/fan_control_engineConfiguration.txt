@@ -1,15 +1,17 @@
 output_pin_e fanPin
 pin_output_mode_e fanPinMode
-int16_t fanOnTemperature;Cooling fan turn-on temperature threshold, in Celsius;"SPECIAL_CASE_TEMPERATURE", 1, 0, -40, @@CLT_UPPER_LIMIT@@, 0
-int16_t fanOffTemperature;Cooling fan turn-off temperature threshold, in Celsius;"SPECIAL_CASE_TEMPERATURE", 1, 0, -40, @@CLT_UPPER_LIMIT@@, 0
+int16_t fanOnTemperature;Cooling fan turn-on temperature threshold, in Celsius. Only used by the on/off relay path - ignored when PWM mode is enabled, which uses the PWM curve's own bins instead.;"SPECIAL_CASE_TEMPERATURE", 1, 0, -40, @@CLT_UPPER_LIMIT@@, 0
+int16_t fanOffTemperature;Cooling fan turn-off temperature threshold, in Celsius. Only used by the on/off relay path - ignored when PWM mode is enabled, which uses the PWM curve's own bins instead.;"SPECIAL_CASE_TEMPERATURE", 1, 0, -40, @@CLT_UPPER_LIMIT@@, 0
 
 output_pin_e fan2Pin
 pin_output_mode_e fan2PinMode
-int16_t fan2OnTemperature;Cooling fan turn-on temperature threshold, in Celsius;"SPECIAL_CASE_TEMPERATURE", 1, 0, -40, @@CLT_UPPER_LIMIT@@, 0
-int16_t fan2OffTemperature;Cooling fan turn-off temperature threshold, in Celsius;"SPECIAL_CASE_TEMPERATURE", 1, 0, -40, @@CLT_UPPER_LIMIT@@, 0
+int16_t fan2OnTemperature;Cooling fan turn-on temperature threshold, in Celsius. Only used by the on/off relay path - ignored when PWM mode is enabled, which uses the PWM curve's own bins instead.;"SPECIAL_CASE_TEMPERATURE", 1, 0, -40, @@CLT_UPPER_LIMIT@@, 0
+int16_t fan2OffTemperature;Cooling fan turn-off temperature threshold, in Celsius. Only used by the on/off relay path - ignored when PWM mode is enabled, which uses the PWM curve's own bins instead.;"SPECIAL_CASE_TEMPERATURE", 1, 0, -40, @@CLT_UPPER_LIMIT@@, 0
 
-int8_t disableFan1AtSpeed
-int8_t disableFan2AtSpeed
+int8_t disableFan1AtSpeed;Inhibit the fan above this vehicle speed. Zero disables the check.;{bitStringValue(velocityUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KMH_TO_MPH@@}, 0, 0, {useMetricOnInterface ? 127 : 79}, 0
+int8_t disableFan2AtSpeed;Inhibit the fan above this vehicle speed. Zero disables the check.;{bitStringValue(velocityUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KMH_TO_MPH@@}, 0, 0, {useMetricOnInterface ? 127 : 79}, 0
+int8_t disableFan1AtSpeedHysteresis;Hysteresis below the disable-at-speed threshold before the fan is allowed back on. Prevents rapid on/off cycling at the threshold speed.;{bitStringValue(velocityUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KMH_TO_MPH@@}, 0, 0, {useMetricOnInterface ? 100 : 62}, 0
+int8_t disableFan2AtSpeedHysteresis;Hysteresis below the disable-at-speed threshold before the fan is allowed back on. Prevents rapid on/off cycling at the threshold speed.;{bitStringValue(velocityUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KMH_TO_MPH@@}, 0, 0, {useMetricOnInterface ? 100 : 62}, 0
 
 bit disableFan1WhenStopped,"yes","no";Inhibit operation of this fan while the engine is not running.
 bit disableFan2WhenStopped,"yes","no";Inhibit operation of this fan while the engine is not running.
@@ -22,16 +24,23 @@ uint16_t fan1PwmFrequency;Fan 1 PWM frequency;"Hz", 1, 0, 1, 30000, 0
 uint16_t fan2PwmFrequency;Fan 2 PWM frequency;"Hz", 1, 0, 1, 30000, 0
 
 int16_t[FAN_PWM_CURVE_SIZE] fan1TempBins;Fan 1 PWM curve temperature bins;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -40 : -40}, {useMetricOnInterface ? @@CLT_UPPER_LIMIT@@ : @@CLT_UPPER_LIMIT@@ * 1.8 + 32}, 0
-uint8_t[FAN_PWM_CURVE_SIZE] fan1PwmValues;Fan 1 PWM curve output values;"%", 1, 0, 0, 100, 0
+uint8_t[FAN_PWM_CURVE_SIZE] fan1PwmValues;Fan 1 speed demand (0% off, 100% full speed);"%", 1, 0, 0, 100, 0
 int16_t[FAN_PWM_CURVE_SIZE] fan2TempBins;Fan 2 PWM curve temperature bins;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -40 : -40}, {useMetricOnInterface ? @@CLT_UPPER_LIMIT@@ : @@CLT_UPPER_LIMIT@@ * 1.8 + 32}, 0
-uint8_t[FAN_PWM_CURVE_SIZE] fan2PwmValues;Fan 2 PWM curve output values;"%", 1, 0, 0, 100, 0
+uint8_t[FAN_PWM_CURVE_SIZE] fan2PwmValues;Fan 2 speed demand (0% off, 100% full speed);"%", 1, 0, 0, 100, 0
 
-uint8_t fan1MinPwm;Minimum PWM output clamp (Fan 1);"%", 1, 0, 0, 100, 0
-uint8_t fan1MaxPwm;Maximum PWM output clamp (Fan 1);"%", 1, 0, 0, 100, 0
-uint8_t fan2MinPwm;Minimum PWM output clamp (Fan 2);"%", 1, 0, 0, 100, 0
-uint8_t fan2MaxPwm;Maximum PWM output clamp (Fan 2);"%", 1, 0, 0, 100, 0
-uint8_t fan1AcAdder;PWM adder when AC compressor is active (Fan 1);"%", 1, 0, 0, 100, 0
-uint8_t fan2AcAdder;PWM adder when AC compressor is active (Fan 2);"%", 1, 0, 0, 100, 0
+uint8_t fan1MinPwm;PWM duty cycle meaning "fan off" (0% demand). May be greater than the full-speed duty to describe hardware that drives the fan with an inverted PWM signal (e.g. NPN transistor + pull-up: high duty = off, low duty = full speed) (Fan 1);"%", 1, 0, 0, 100, 0
+uint8_t fan1MaxPwm;PWM duty cycle meaning "fan full speed" (100% demand) (Fan 1);"%", 1, 0, 0, 100, 0
+uint8_t fan2MinPwm;PWM duty cycle meaning "fan off" (0% demand). May be greater than the full-speed duty to describe hardware that drives the fan with an inverted PWM signal (e.g. NPN transistor + pull-up: high duty = off, low duty = full speed) (Fan 2);"%", 1, 0, 0, 100, 0
+uint8_t fan2MaxPwm;PWM duty cycle meaning "fan full speed" (100% demand) (Fan 2);"%", 1, 0, 0, 100, 0
 
-float fan1SoftStartSec;Soft-start ramp time – how long to ramp from 0 to target PWM (Fan 1);"s", 1, 0, 0, 30, 1
-float fan2SoftStartSec;Soft-start ramp time – how long to ramp from 0 to target PWM (Fan 2);"s", 1, 0, 0, 30, 1
+float fan1SoftStartSec;Time to ramp speed demand from 0 to 100% (Fan 1);"s", 1, 0, 0, 30, 1
+float fan2SoftStartSec;Time to ramp speed demand from 0 to 100% (Fan 2);"s", 1, 0, 0, 30, 1
+
+#define fan_ac_mode_e_enum "Disabled", "Relay", "Pressure"
+custom fan_ac_mode_e 1 bits, U08, @OFFSET@, [0:1], @@fan_ac_mode_e_enum@@
+fan_ac_mode_e fan1AcMode;A/C assistance: Disabled, compressor Relay, or high-side Pressure independent of compressor state. Pressure mode requires an A/C pressure sensor.
+uint16_t fan1AcPressureOn;Pressure for relay fan turn-on or 100% PWM demand. Must exceed the off threshold.;"kPa", 1, 0, 0, 4000, 0
+uint16_t fan1AcPressureOff;Pressure below which relay assistance turns off, or at which PWM pressure demand reaches zero.;"kPa", 1, 0, 0, 4000, 0
+fan_ac_mode_e fan2AcMode;A/C assistance: Disabled, compressor Relay, or high-side Pressure independent of compressor state. Pressure mode requires an A/C pressure sensor.
+uint16_t fan2AcPressureOn;Pressure for relay fan turn-on or 100% PWM demand. Must exceed the off threshold.;"kPa", 1, 0, 0, 4000, 0
+uint16_t fan2AcPressureOff;Pressure below which relay assistance turns off, or at which PWM pressure demand reaches zero.;"kPa", 1, 0, 0, 4000, 0

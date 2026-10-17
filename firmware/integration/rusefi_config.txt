@@ -617,8 +617,8 @@ bit isForcedInduction,"yes","no";Does the vehicle have a turbo or supercharger?
 bit useFordRedundantTps,"yes","no";On some Ford and Toyota vehicles one of the throttle sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
 bit enableKline,"enabled","disabled"
 bit overrideTriggerGaps,"yes","no"
-bit enableFan1WithAc,"yes","no";Turn on this fan when AC is on.
-bit enableFan2WithAc,"yes","no";Turn on this fan when AC is on.
+bit unusedBit_enableFan1WithAc
+bit unusedBit_enableFan2WithAc
 bit enableTrailingSparks,"yes","no";Enable secondary spark outputs that fire after the primary (rotaries, twin plug engines).
 bit etb_use_two_wires,"yes","no";TLE7209 and L6205 use two-wire mode. TLE9201 and VNH2SP30 do NOT use two wire mode.
 bit isDoubleSolenoidIdle,"yes","no";Subaru/BMW style where default valve position is somewhere in the middle. First solenoid opens it more while second can close it more than default position.

@@ -106,8 +106,8 @@ void miataNAcommonEngineSettings() {
 //	engineConfiguration->totalGearsCount = 5;
 
 	engineConfiguration->rpmHardLimit = 7200;
-	engineConfiguration->enableFan1WithAc = true;
-	engineConfiguration->enableFan2WithAc = true;
+	engineConfiguration->fan1AcMode = fan_ac_mode_e::Relay;
+	engineConfiguration->fan2AcMode = fan_ac_mode_e::Relay;
 
 	engineConfiguration->tachPulsePerRev = 2;
 

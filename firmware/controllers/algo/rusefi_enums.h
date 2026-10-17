@@ -952,6 +952,12 @@ typedef enum __attribute__((__packed__)) {
 	ftRegionCruise = 3,
 } ft_region_e;
 
+enum class fan_ac_mode_e : uint8_t {
+	Disabled = 0,
+	Relay = 1,
+	Pressure = 2,
+};
+
 enum class SDLoggerMode : uint8_t {
 	None = 0,
 	Mlg = 1,
