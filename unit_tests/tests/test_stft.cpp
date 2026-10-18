@@ -48,6 +48,7 @@ TEST(ClosedLoopFuelCell, AdjustRate) {
 }
 
 TEST(ClosedLoopFuel, CellSelection) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	ShortTermFuelTrim stft;
 	stft_s cfg;
 
@@ -124,4 +125,39 @@ TEST(ClosedLoopFuel, afrLimits) {
 
 	Sensor::setMockValue(SensorType::Lambda1, 2.0f);
 	EXPECT_NE(stft.getLearningState(SensorType::Lambda1), stftEnabled);
+}
+
+TEST(ClosedLoopFuel, StateBasedSelectionAndFallback) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	auto& sm = engine->module<EngineStateMachine>().unmock();
+	auto& stft = engine->module<ShortTermFuelTrim>().unmock();
+	auto& cfg = engineConfiguration->stft;
+	cfg.maxIdleRegionRpm = 1500;
+	cfg.minPowerLoad = 80;
+	cfg.maxOverrunLoad = 30;
+	engineConfiguration->useEngineStateMachine = true;
+	engineConfiguration->stateBasedStft = true;
+	engine->rpmCalculator.setRpmValue(3000);
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 95);
+	sm.onSlowCallback();
+	ASSERT_EQ(sm.getCurrentState(), EngineStateMachineState::WOT);
+	EXPECT_EQ(stft.computeStftBin(1000, 10, cfg), ftRegionPower);
+	engineConfiguration->stateBasedStft = false;
+	EXPECT_EQ(stft.computeStftBin(1000, 10, cfg), ftRegionIdle);
+	engineConfiguration->stateBasedStft = true;
+	engineConfiguration->useEngineStateMachine = false;
+	EXPECT_EQ(stft.computeStftBin(1000, 10, cfg), ftRegionIdle);
+}
+
+TEST(ClosedLoopFuel, StateBasedRegionMapping) {
+	using S = EngineStateMachineState;
+	EXPECT_EQ(ShortTermFuelTrim::regionForSmState(S::Idle), ftRegionIdle);
+	EXPECT_EQ(ShortTermFuelTrim::regionForSmState(S::Afterstart), ftRegionIdle);
+	EXPECT_EQ(ShortTermFuelTrim::regionForSmState(S::Coasting), ftRegionIdle);
+	EXPECT_EQ(ShortTermFuelTrim::regionForSmState(S::Overrun), ftRegionOverrun);
+	EXPECT_EQ(ShortTermFuelTrim::regionForSmState(S::WOT), ftRegionPower);
+	for (auto state : {S::Off, S::Cranking, S::Transient, S::Cruising, S::Accelerating,
+		S::Decelerating, S::LaunchControl, S::Upshifting, S::Downshifting}) {
+		EXPECT_EQ(ShortTermFuelTrim::regionForSmState(state), ftRegionCruise);
+	}
 }

@@ -372,3 +372,8 @@ template<>
 const burst_knock_state_s* getLiveData(size_t) {
 	return &engine->module<BurstKnock>().unmock();
 }
+
+template<>
+const engine_state_machine_state_s* getLiveData(size_t) {
+	return &engine->module<EngineStateMachine>().unmock();
+}

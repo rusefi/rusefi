@@ -166,6 +166,7 @@ TESTS_SRC_CPP = \
 	tests/test_idle_controller.cpp \
 	tests/test_launch.cpp \
 	tests/test_rolling_launch.cpp \
+	tests/engine_state_machine/test_engine_state_machine.cpp \
 	tests/test_fuel_map.cpp \
 	tests/test_gear_detector.cpp \
 	tests/ignition_injection/test_fuel_wall_wetting.cpp \

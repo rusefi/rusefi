@@ -74,6 +74,7 @@
 #ifndef EFI_BOOTLOADER
 #include "engine_modules_generated.h"
 #include "burst_knock.h"
+#include "engine_state_machine.h"
 #endif
 
 #if EFI_MISFIRE_DETECTION
@@ -212,6 +213,7 @@ public:
 
 #include "modules_list_generated.h"
 		BurstKnock,
+        EngineStateMachine,
 
         EngineModule // dummy placeholder so the previous entries can all have commas
     > engineModules{};

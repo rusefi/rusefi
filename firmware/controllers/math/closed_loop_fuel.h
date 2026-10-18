@@ -7,6 +7,7 @@
 #include "short_term_fuel_trim_state_generated.h"
 
 struct stft_s;
+enum class EngineStateMachineState : uint8_t;
 
 struct ClosedLoopFuelResult {
 	ClosedLoopFuelResult() {
@@ -28,6 +29,7 @@ struct FuelingBank {
 class ShortTermFuelTrim : public EngineModule, public short_term_fuel_trim_state_s {
 public:
 	void init(stft_s *stftCfg);
+	static ft_region_e regionForSmState(EngineStateMachineState state);
 	// EngineModule implementation
 	void onSlowCallback() override;
 	bool needsDelayedShutoff() override;

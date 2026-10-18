@@ -326,3 +326,10 @@ Usages:
     prepend: integration/rusefi_config_shared.txt
     output_name: burst_knock
     engineModule: BurstKnock
+
+  - name: engine_state_machine_state
+    java: EngineStateMachine.java
+    folder: controllers/modules/engine_state_machine
+    prepend: integration/rusefi_config_shared.txt
+    output_name: engine_state_machine
+    engineModule: EngineStateMachine
