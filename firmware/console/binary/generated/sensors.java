@@ -788,3 +788,7 @@ rollingLaunchTimingRetardOut("Rolling Launch: timing retard", SensorCategory.SEN
 rollingLaunchRampElapsed("Rolling Launch: ramp elapsed", SensorCategory.SENSOR_INPUTS, FieldType.INT, 2252, 1.0, -1.0, -1.0, ""),
 burstKnockRetard("Burst Knock: timing pull", SensorCategory.SENSOR_INPUTS, FieldType.INT, 2260, 1.0, 0.0, 0.0, "deg"),
 burstKnockTpsRate("Burst Knock: TPS rate", SensorCategory.SENSOR_INPUTS, FieldType.INT, 2264, 1.0, 0.0, 0.0, "%/s"),
+engineSmCurrentState("Engine SM: display state", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 2272, 1.0, -1.0, -1.0, ""),
+alignmentFill_at_5("need 4 byte alignment", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 2273, 1.0, 0.0, 100.0, "units"),
+engineSmShiftAccumulator("Engine SM: Shift accumulator", SensorCategory.SENSOR_INPUTS, FieldType.INT, 2276, 1.0, -100.0, 100.0, ""),
+engineSmRpmRate("Engine SM: RPM rate (RPM/t)", SensorCategory.SENSOR_INPUTS, FieldType.INT, 2280, 1.0, -20000.0, 20000.0, "RPM/s"),

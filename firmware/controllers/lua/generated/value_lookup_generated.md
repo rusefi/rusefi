@@ -2179,6 +2179,63 @@ Pull ignition timing while the TPS acceleration-enrichment threshold is exceeded
 ### burstKnockDecayTime
 Linear decay time measured from the last above-threshold TPS sample. Zero removes retard as soon as the transient ends.
 
+### useEngineStateMachine
+Classify engine operating state and recognize shifts. State-based STFT is separately enabled below.
+
+### smWotTpsThreshold
+Engine SM: TPS threshold above which the engine is at Wide Open Throttle.
+
+### stateBasedStft
+Engine SM: drive STFT region selection from the live SM state (Idle/Overrun/WOT/Cruise) instead of the RPM/load region thresholds. The per-region STFT settings (time constant, max add/remove) are reused unchanged.
+
+### smSecondClutchSwitchAvailable
+Engine SM: a second clutch switch is also wired (e.g. both Clutch-Up and Clutch-Down, not just whichever is selected below). Lets shift detection open the window on the earliest available press edge and close it on the earliest available release edge, instead of relying solely on the configured switch's own edges.
+
+### smRelatchOnClutchDown
+Engine SM: while the shift latch (smShiftLatchTimeMs) is active, a fresh Clutch-Down full-press resets it back to the full duration instead of letting it expire -- keeps Upshifting/Downshifting asserted through a flurry of quick consecutive shifts. Requires smSecondClutchSwitchAvailable (both Clutch-Up and Clutch-Down wired).
+
+### smAccelRateThreshold
+Engine SM: RPM/s rate threshold to enter the Accelerating state. Also the accumulator gain normalizer while accelerating -- at exactly this rate the accumulator climbs at smAccumulatorGain pct/s, faster rates climb proportionally faster. 0 disables the Accelerating state.
+
+### smDecelRateThreshold
+Engine SM: RPM/s rate threshold to enter the Decelerating state (RPM falling faster than this). Also the accumulator normalizer in Overrun. 0 disables the Decelerating state.
+
+### smRpmRateWindowMs
+Engine SM: Time window used to compute RPM rate of change (RPM/s, "RPM/t") for Accelerating/Decelerating state detection and the RPM-rate shift-accumulator signal. Larger values smooth out sensor/tooth noise at the cost of slower response, smaller values track faster but are noisier. Internally floored to one slow-callback tick (50 ms). smAccelRateThreshold/smDecelRateThreshold stay in RPM/s regardless of this setting and do not need re-tuning when it changes.
+
+### smShiftLatchTimeMs
+Engine SM: once shift direction is confirmed, hold Upshifting/Downshifting true for at least this long. 0 = no latch.
+
+### smTransientHoldTimeMs
+Engine SM: time to hold the Transient state after the accel-enrichment threshold drops.. 0 = no hold.
+
+### smShiftMinVss
+Engine SM: VSS Rate mode only -- minimum vehicle speed. Below this the accumulator decays instead of accumulating. 0 = no minimum.
+
+### smAccumulatorUpshiftThreshold
+Engine SM: Accumulator must reach or exceed this value (0..100) to confirm an upshift. The accumulator runs from -100 to +100.
+
+### smAccumulatorDownshiftThreshold
+Engine SM: Accumulator must reach or fall below the negative of this value (0..100) to confirm a downshift.
+
+### smAccelHoldMs
+Engine SM: once the Accelerating rate threshold is met, hold the Accelerating state for at least this long after the rate drops back below threshold. A fresh threshold crossing during the hold resets it back to the full duration. Broken immediately by a lift into the Coasting/Overrun phase, so a stale hold can never mask Overrun/DFCO. 0 = no hold (raw signal, legacy behavior).
+
+### smAccumulatorGain
+Engine SM: Accumulator climb rate in %/s per 1x threshold ratio. At exactly the threshold rate, the accumulator changes by this many %/s. Larger = faster response.
+
+### smAccumulatorDecayRate
+Engine SM: Rate at which the accumulator decays toward 0 (%/s) when the signal is within the ±threshold dead-band. Larger = faster decay.
+
+### smAccumulatorSnapTimeMs
+Engine SM: once continuously in the Accelerating state for this long, a still-negative accumulator (left over from a prior decel run) is forced to 0 instead of waiting for it to decay/climb across zero on its own. Symmetrically, once continuously in Decelerating or Overrun for this long, a still-positive accumulator is forced to 0. Lets a same-gear direction reversal (e.g. a long overrun immediately followed by acceleration) shed a large stale opposite-sign accumulator quickly, rather than needing an equally long run the other way to null it out and risking a stale shift-direction call (e.g. a spurious downshift blip on clutch-in right after tipping back into the throttle). 0 = disabled (legacy decay/cross-only behavior).
+
+### smColdTempThreshold
+Engine Temperature Overlay: CLT below this is Cold engine. Between this and smHotTempThreshold is Operating temperature.
+
+### smHotTempThreshold
+Engine Temperature Overlay: CLT above this is Hot engine. Below smColdTempThreshold is Cold, between both is Operating temperature.
+
 ### tcu_shiftTime
 
 

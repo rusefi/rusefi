@@ -2185,6 +2185,63 @@ float getConfigValueByHash(const int hash) {
 // burstKnockDecayTime
 		case 1450535776:
 			return engineConfiguration->burstKnockDecayTime;
+// useEngineStateMachine
+		case 940343550:
+			return engineConfiguration->useEngineStateMachine;
+// smWotTpsThreshold
+		case -2047550909:
+			return engineConfiguration->smWotTpsThreshold;
+// stateBasedStft
+		case -677524570:
+			return engineConfiguration->stateBasedStft;
+// smSecondClutchSwitchAvailable
+		case -986298825:
+			return engineConfiguration->smSecondClutchSwitchAvailable;
+// smRelatchOnClutchDown
+		case 600304416:
+			return engineConfiguration->smRelatchOnClutchDown;
+// smAccelRateThreshold
+		case -1256577386:
+			return engineConfiguration->smAccelRateThreshold;
+// smDecelRateThreshold
+		case -1525657349:
+			return engineConfiguration->smDecelRateThreshold;
+// smRpmRateWindowMs
+		case -1700556168:
+			return engineConfiguration->smRpmRateWindowMs;
+// smShiftLatchTimeMs
+		case 312269950:
+			return engineConfiguration->smShiftLatchTimeMs;
+// smTransientHoldTimeMs
+		case 683461331:
+			return engineConfiguration->smTransientHoldTimeMs;
+// smShiftMinVss
+		case 1238442211:
+			return engineConfiguration->smShiftMinVss;
+// smAccumulatorUpshiftThreshold
+		case -93465099:
+			return engineConfiguration->smAccumulatorUpshiftThreshold;
+// smAccumulatorDownshiftThreshold
+		case 61699784:
+			return engineConfiguration->smAccumulatorDownshiftThreshold;
+// smAccelHoldMs
+		case -1160082044:
+			return engineConfiguration->smAccelHoldMs;
+// smAccumulatorGain
+		case -1309258940:
+			return engineConfiguration->smAccumulatorGain;
+// smAccumulatorDecayRate
+		case 1567309239:
+			return engineConfiguration->smAccumulatorDecayRate;
+// smAccumulatorSnapTimeMs
+		case -38731098:
+			return engineConfiguration->smAccumulatorSnapTimeMs;
+// smColdTempThreshold
+		case -195854998:
+			return engineConfiguration->smColdTempThreshold;
+// smHotTempThreshold
+		case 1186627731:
+			return engineConfiguration->smHotTempThreshold;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -5933,6 +5990,101 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1450535776:
 	{
 		engineConfiguration->burstKnockDecayTime = (int)value;
+		return 1;
+	}
+		case 940343550:
+	{
+		engineConfiguration->useEngineStateMachine = (int)value;
+		return 1;
+	}
+		case -2047550909:
+	{
+		engineConfiguration->smWotTpsThreshold = (int)value;
+		return 1;
+	}
+		case -677524570:
+	{
+		engineConfiguration->stateBasedStft = (int)value;
+		return 1;
+	}
+		case -986298825:
+	{
+		engineConfiguration->smSecondClutchSwitchAvailable = (int)value;
+		return 1;
+	}
+		case 600304416:
+	{
+		engineConfiguration->smRelatchOnClutchDown = (int)value;
+		return 1;
+	}
+		case -1256577386:
+	{
+		engineConfiguration->smAccelRateThreshold = (int)value;
+		return 1;
+	}
+		case -1525657349:
+	{
+		engineConfiguration->smDecelRateThreshold = (int)value;
+		return 1;
+	}
+		case -1700556168:
+	{
+		engineConfiguration->smRpmRateWindowMs = (int)value;
+		return 1;
+	}
+		case 312269950:
+	{
+		engineConfiguration->smShiftLatchTimeMs = (int)value;
+		return 1;
+	}
+		case 683461331:
+	{
+		engineConfiguration->smTransientHoldTimeMs = (int)value;
+		return 1;
+	}
+		case 1238442211:
+	{
+		engineConfiguration->smShiftMinVss = (int)value;
+		return 1;
+	}
+		case -93465099:
+	{
+		engineConfiguration->smAccumulatorUpshiftThreshold = (int)value;
+		return 1;
+	}
+		case 61699784:
+	{
+		engineConfiguration->smAccumulatorDownshiftThreshold = (int)value;
+		return 1;
+	}
+		case -1160082044:
+	{
+		engineConfiguration->smAccelHoldMs = (int)value;
+		return 1;
+	}
+		case -1309258940:
+	{
+		engineConfiguration->smAccumulatorGain = value;
+		return 1;
+	}
+		case 1567309239:
+	{
+		engineConfiguration->smAccumulatorDecayRate = value;
+		return 1;
+	}
+		case -38731098:
+	{
+		engineConfiguration->smAccumulatorSnapTimeMs = (int)value;
+		return 1;
+	}
+		case -195854998:
+	{
+		engineConfiguration->smColdTempThreshold = (int)value;
+		return 1;
+	}
+		case 1186627731:
+	{
+		engineConfiguration->smHotTempThreshold = (int)value;
 		return 1;
 	}
 		case -1658957891:

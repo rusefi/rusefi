@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sun Oct 18 00:05:06 UTC 2026
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sun Oct 18 03:34:47 UTC 2026
 // see also gen_config_and_enums.bat
 
 
@@ -1032,6 +1032,26 @@ const char *getPin_output_mode_e(pin_output_mode_e value) {
 			return "OM_OPENDRAIN";
 		case OM_OPENDRAIN_INVERTED:
 			return "OM_OPENDRAIN_INVERTED";
+	}
+	return NULL;
+}
+const char *getSm_clutch_switch_e(sm_clutch_switch_e value) {
+	switch (value) {
+		case sm_clutch_switch_e::ClutchDown:
+			return "ClutchDown";
+		case sm_clutch_switch_e::ClutchUp:
+			return "ClutchUp";
+		case sm_clutch_switch_e::None:
+			return "None";
+	}
+	return NULL;
+}
+const char *getSm_shift_detection_mode_e(sm_shift_detection_mode_e value) {
+	switch (value) {
+		case sm_shift_detection_mode_e::RpmRate:
+			return "RpmRate";
+		case sm_shift_detection_mode_e::VssRate:
+			return "VssRate";
 	}
 	return NULL;
 }

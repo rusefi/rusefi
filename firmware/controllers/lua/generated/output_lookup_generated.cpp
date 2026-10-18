@@ -1342,6 +1342,72 @@ float getOutputValueByHash(const int hash) {
 // burstKnockTpsRate
 		case -864794418:
 			return engine->module<BurstKnock>()->burstKnockTpsRate;
+// engineSmEnabled
+		case -1253164602:
+			return engine->module<EngineStateMachine>()->engineSmEnabled;
+// engineSmIsOff
+		case -193409774:
+			return engine->module<EngineStateMachine>()->engineSmIsOff;
+// engineSmIsCranking
+		case 1610341604:
+			return engine->module<EngineStateMachine>()->engineSmIsCranking;
+// engineSmIsAfterStart
+		case -1247857961:
+			return engine->module<EngineStateMachine>()->engineSmIsAfterStart;
+// engineSmIsIdle
+		case -2087772747:
+			return engine->module<EngineStateMachine>()->engineSmIsIdle;
+// engineSmIsCoasting
+		case 2037158031:
+			return engine->module<EngineStateMachine>()->engineSmIsCoasting;
+// engineSmIsTransient
+		case 474716559:
+			return engine->module<EngineStateMachine>()->engineSmIsTransient;
+// engineSmIsWot
+		case -193400751:
+			return engine->module<EngineStateMachine>()->engineSmIsWot;
+// engineSmIsCruising
+		case -1907559941:
+			return engine->module<EngineStateMachine>()->engineSmIsCruising;
+// engineSmIsOverrun
+		case 350089032:
+			return engine->module<EngineStateMachine>()->engineSmIsOverrun;
+// engineSmIsLaunchControl
+		case 148191603:
+			return engine->module<EngineStateMachine>()->engineSmIsLaunchControl;
+// engineSmIsTorqueReduction
+		case 2082760068:
+			return engine->module<EngineStateMachine>()->engineSmIsTorqueReduction;
+// engineSmIsUpshifting
+		case 2014464536:
+			return engine->module<EngineStateMachine>()->engineSmIsUpshifting;
+// engineSmIsDownshifting
+		case -2046339797:
+			return engine->module<EngineStateMachine>()->engineSmIsDownshifting;
+// engineSmIsCold
+		case -2087976391:
+			return engine->module<EngineStateMachine>()->engineSmIsCold;
+// engineSmIsOperating
+		case 962048096:
+			return engine->module<EngineStateMachine>()->engineSmIsOperating;
+// engineSmIsHot
+		case -193417086:
+			return engine->module<EngineStateMachine>()->engineSmIsHot;
+// engineSmIsAccelerating
+		case 25811225:
+			return engine->module<EngineStateMachine>()->engineSmIsAccelerating;
+// engineSmIsDecelerating
+		case -1625465922:
+			return engine->module<EngineStateMachine>()->engineSmIsDecelerating;
+// engineSmCurrentState
+		case 919099231:
+			return engine->module<EngineStateMachine>()->engineSmCurrentState;
+// engineSmShiftAccumulator
+		case 1239974297:
+			return engine->module<EngineStateMachine>()->engineSmShiftAccumulator;
+// engineSmRpmRate
+		case -1550884842:
+			return engine->module<EngineStateMachine>()->engineSmRpmRate;
 #if EFI_ENGINE_CONTROL
 // totalFuelCorrection
 		case -1779658835:
