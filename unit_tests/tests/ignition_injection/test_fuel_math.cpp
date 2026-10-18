@@ -238,6 +238,100 @@ TEST(AirmassModes, SpeedDensityCompensatedMap) {
 	EXPECT_NEAR(result.EngineLoadPercent, 80.0f, EPS4D);
 }
 
+// Exercise both paths reported in https://github.com/rusefi/rusefi/issues/10401.
+// Compensated MAP selects table cells; baroCorrTable independently multiplies
+// running fuel. Their coexistence must not apply MAP/baro to physical air mass.
+class BarometricCompensation : public testing::Test {
+protected:
+	EngineTestHelper eth{engine_type_e::TEST_ENGINE};
+
+	void SetUp() override {
+		engineConfiguration->fuelAlgorithm = engine_load_mode_e::LM_SPEED_DENSITY;
+		engineConfiguration->displacement = 2.0f;
+		engineConfiguration->cylindersCount = 4;
+		engineConfiguration->injectionMode = IM_SEQUENTIAL;
+		engineConfiguration->stoichRatioPrimary = 14.7f;
+		engineConfiguration->veOverrideMode = VE_None;
+		engineConfiguration->afrOverrideMode = AFR_None;
+		engineConfiguration->coastingFuelCutEnabled = false;
+		setTable(config->veTable, 80);
+		setTable(config->lambdaTable, 1.0f);
+		setArrayValues(config->cltFuelCorr, 1.0f);
+		setArrayValues(config->iatFuelCorr, 1.0f);
+		setTable(config->postCrankingFactor, 1.0f);
+		Sensor::setMockValue(SensorType::Clt, 20);
+		Sensor::setMockValue(SensorType::Iat, 20);
+		Sensor::setMockValue(SensorType::Tps1, 0);
+		engine->rpmCalculator.setRpmValue(2000);
+	}
+
+	void checkFuel(float map, float baro, float load, float ve, float correction) {
+		Sensor::setMockValue(SensorType::Map, map);
+		Sensor::setMockValue(SensorType::BarometricPressure, baro);
+		engine->periodicFastCallback();
+
+		const float expectedAir = SpeedDensityBase::getAirmassImpl(ve / 100, map, 293.15f);
+		const float actualFuel = engine->engineState.injectionMass[0];
+		ASSERT_TRUE(std::isfinite(actualFuel));
+		ASSERT_GT(actualFuel, 0);
+		EXPECT_NEAR(load, engine->engineState.veTableYAxis, EPS3D);
+		EXPECT_NEAR(load, engine->engineState.fuelingLoad, EPS3D);
+		EXPECT_NEAR(load, engine->fuelComputer.afrTableYAxis, EPS3D);
+		EXPECT_NEAR(ve, engine->engineState.currentVe, EPS3D);
+		EXPECT_NEAR(expectedAir, engine->fuelComputer.sdAirMassInOneCylinder, EPS4D);
+		EXPECT_NEAR(correction, engine->engineState.baroCorrection, EPS4D);
+		EXPECT_NEAR(correction, engine->fuelComputer.totalFuelCorrection, EPS4D);
+		EXPECT_NEAR(expectedAir / 14.7f * correction, actualFuel, 1e-6f);
+	}
+};
+
+TEST_F(BarometricCompensation, DefaultTableDoesNotDuplicateAltitudeCorrection) {
+	// Keep the default neutral baro table and a flat VE table to isolate pressure.
+	engineConfiguration->useCompensatedMap = false;
+	checkFuel(100, STD_ATMOSPHERE, 100, 80, 1);
+	const float seaLevelFuel = engine->engineState.injectionMass[0];
+
+	checkFuel(80, 0.8f * STD_ATMOSPHERE, 80, 80, 1);
+	EXPECT_NEAR(0.8f * seaLevelFuel, engine->engineState.injectionMass[0], 1e-6f);
+
+	// At altitude the load returns to 100, but actual MAP still reduces fuel
+	// to 80% of the sea-level value. There is no second altitude multiplier.
+	engineConfiguration->useCompensatedMap = true;
+	checkFuel(80, 0.8f * STD_ATMOSPHERE, 100, 80, 1);
+	EXPECT_NEAR(0.8f * seaLevelFuel, engine->engineState.injectionMass[0], 1e-6f);
+}
+
+TEST_F(BarometricCompensation, LoadAxisAndFuelMultiplierRemainIndependent) {
+	// Deliberately vary VE with load: 80% at load 80, 100% at load 100.
+	setLinearCurve(config->veLoadBins, 20, 140);
+	for (size_t row = 0; row < efi::size(config->veTable); row++) {
+		setArrayValues(config->veTable[row], config->veLoadBins[row]);
+	}
+
+	engineConfiguration->useCompensatedMap = false;
+	checkFuel(80, 0.8f * STD_ATMOSPHERE, 80, 80, 1);
+	const float baselineFuel = engine->engineState.injectionMass[0];
+
+	engineConfiguration->useCompensatedMap = true;
+	checkFuel(80, 0.8f * STD_ATMOSPHERE, 100, 100, 1);
+	EXPECT_NEAR(1.25f * baselineFuel, engine->engineState.injectionMass[0], 1e-6f);
+
+	// A separately calibrated baro table: 1.0 at sea level, 1.1 at 80% baro.
+	for (size_t row = 0; row < efi::size(config->baroCorrTable); row++) {
+		const float correction = 1.0f + (STD_ATMOSPHERE - config->baroCorrPressureBins[row]) / (2 * STD_ATMOSPHERE);
+		setArrayValues(config->baroCorrTable[row], correction);
+	}
+
+	// Both effects can be configured to add fuel, but each applies exactly once:
+	// 25% from the chosen VE cells and 10% from the explicit baro multiplier.
+	checkFuel(80, 0.8f * STD_ATMOSPHERE, 100, 100, 1.1f);
+	EXPECT_NEAR(1.25f * 1.1f * baselineFuel, engine->engineState.injectionMass[0], 1e-6f);
+
+	engineConfiguration->useCompensatedMap = false;
+	checkFuel(80, 0.8f * STD_ATMOSPHERE, 80, 80, 1.1f);
+	EXPECT_NEAR(1.1f * baselineFuel, engine->engineState.injectionMass[0], 1e-6f);
+}
+
 TEST(AirmassModes, FallbackMap) {
 	StrictMock<MockVp3d> veTable;
 	StrictMock<MockVp3d> mapFallback;
