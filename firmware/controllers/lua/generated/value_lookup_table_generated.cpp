@@ -985,6 +985,9 @@ const ConfigParameter allParameters[] = {
 	{ 0x76979FAF, // knockRetardAggression
 		[]() -> float { return engineConfiguration->knockRetardAggression; },
 		[](float value) { engineConfiguration->knockRetardAggression = value; } },
+	{ 0x770574D4, // tpsExpAverageResetThreshold
+		[]() -> float { return engineConfiguration->tpsExpAverageResetThreshold; },
+		[](float value) { engineConfiguration->tpsExpAverageResetThreshold = value; } },
 	{ 0x770A1D9B, // isTuningDetectorEnabled
 		[]() -> float { return engineConfiguration->isTuningDetectorEnabled; },
 		[](float value) { engineConfiguration->isTuningDetectorEnabled = value; } },
@@ -1834,6 +1837,9 @@ const ConfigParameter allParameters[] = {
 	{ 0xD279065F, // torqueReductionArmingRpm
 		[]() -> float { return engineConfiguration->torqueReductionArmingRpm; },
 		[](float value) { engineConfiguration->torqueReductionArmingRpm = value; } },
+	{ 0xD398396A, // tpsExpAverageAlpha
+		[]() -> float { return engineConfiguration->tpsExpAverageAlpha; },
+		[](float value) { engineConfiguration->tpsExpAverageAlpha = value; } },
 	{ 0xD4637D75, // alsEtbPosition
 		[]() -> float { return engineConfiguration->alsEtbPosition; },
 		[](float value) { engineConfiguration->alsEtbPosition = value; } },
@@ -1987,6 +1993,9 @@ const ConfigParameter allParameters[] = {
 	{ 0xE0B5E933, // idle_antiwindupFreq
 		[]() -> float { return engineConfiguration->idle_antiwindupFreq; },
 		[](float value) { engineConfiguration->idle_antiwindupFreq = value; } },
+	{ 0xE11C8056, // tpsExpAverageResetTimeMs
+		[]() -> float { return engineConfiguration->tpsExpAverageResetTimeMs; },
+		[](float value) { engineConfiguration->tpsExpAverageResetTimeMs = value; } },
 	{ 0xE1A78AC7, // stepperParkingExtraSteps
 		[]() -> float { return engineConfiguration->stepperParkingExtraSteps; },
 		[](float value) { engineConfiguration->stepperParkingExtraSteps = value; } },

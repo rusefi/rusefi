@@ -2170,6 +2170,15 @@ float getConfigValueByHash(const int hash) {
 // rollingLaunchMinVss
 		case 1711851159:
 			return engineConfiguration->rollingLaunchMinVss;
+// tpsExpAverageAlpha
+		case -744998550:
+			return engineConfiguration->tpsExpAverageAlpha;
+// tpsExpAverageResetThreshold
+		case 1996846292:
+			return engineConfiguration->tpsExpAverageResetThreshold;
+// tpsExpAverageResetTimeMs
+		case -518225834:
+			return engineConfiguration->tpsExpAverageResetTimeMs;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -5893,6 +5902,21 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1711851159:
 	{
 		engineConfiguration->rollingLaunchMinVss = (int)value;
+		return 1;
+	}
+		case -744998550:
+	{
+		engineConfiguration->tpsExpAverageAlpha = value;
+		return 1;
+	}
+		case 1996846292:
+	{
+		engineConfiguration->tpsExpAverageResetThreshold = value;
+		return 1;
+	}
+		case -518225834:
+	{
+		engineConfiguration->tpsExpAverageResetTimeMs = value;
 		return 1;
 	}
 		case -1658957891:

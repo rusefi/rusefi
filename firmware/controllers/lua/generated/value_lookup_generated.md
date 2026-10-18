@@ -2164,6 +2164,15 @@ Maximum captured target RPM. The normal rev limiter remains independent.
 ### rollingLaunchMinVss
 Minimum vehicle speed while the trigger is held. Requires valid vehicle speed.
 
+### tpsExpAverageAlpha
+Exponential smoothing applied independently to TPS1 and TPS2 on each resolved sensor read.\n1 passes readings through. Lower values add smoothing and feedback delay. This is not a fixed-rate filter.
+
+### tpsExpAverageResetThreshold
+If TPS changes by at least this much within tpsExpAverageResetTimeMs, the ExpAverage filter resets and jumps straight to the new raw value instead of smoothing into it. Set to 0 to disable.
+
+### tpsExpAverageResetTimeMs
+Time window for tpsExpAverageResetThreshold - a change of that size within this many milliseconds triggers an immediate ExpAverage reset. Set to 0 to disable.
+
 ### tcu_shiftTime
 
 

@@ -1,6 +1,6 @@
 #include "global.h"
 #include "sensor_type.h"
-// was generated automatically by rusEFI tool  from sensor_type.h // by enum_to_string.jar tool on Sun Oct 18 01:27:49 UTC 2026
+// was generated automatically by rusEFI tool  from sensor_type.h // by enum_to_string.jar tool on Sun Oct 18 02:09:47 UTC 2026
 // see also gen_config_and_enums.bat
 
 
@@ -181,12 +181,16 @@ const char *getSensorType(SensorType value) {
 			return "Tps1Primary";
 		case SensorType::Tps1Secondary:
 			return "Tps1Secondary";
+		case SensorType::Tps1Unfiltered:
+			return "Tps1Unfiltered";
 		case SensorType::Tps2:
 			return "Tps2";
 		case SensorType::Tps2Primary:
 			return "Tps2Primary";
 		case SensorType::Tps2Secondary:
 			return "Tps2Secondary";
+		case SensorType::Tps2Unfiltered:
+			return "Tps2Unfiltered";
 		case SensorType::TurbochargerSpeed:
 			return "TurbochargerSpeed";
 		case SensorType::VehicleSpeed:

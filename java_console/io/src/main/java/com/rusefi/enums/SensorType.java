@@ -98,5 +98,7 @@ public enum SensorType {
 	AuxSpeed1,
 	AuxSpeed2,
 	OutputShaftSpeed,
+	Tps1Unfiltered,
+	Tps2Unfiltered,
 	PlaceholderLast,
 }
