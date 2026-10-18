@@ -344,7 +344,7 @@ void startLua() {
 		doRunBenchTestLuaOutput((int)humanIndex, onTime, offTimeMs, (int)count);
 	});
 
-	addConsoleAction("luamemory", [](){
+	addConsoleAction("luainfo", [](){
 	  efiPrintf("maxLuaDuration %lu", maxLuaDuration);
 	  maxLuaDuration = 0;
 	  efiPrintf("rx total/recent/dropped %d %d %d", totalRxCount,
