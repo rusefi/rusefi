@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="16564">
+    <page number="0" size="16572">
         <constant name="accelEnrichmentMode">"MS Adder"</constant>
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
@@ -808,6 +808,7 @@
         <constant digits="0" name="coastingFuelCutClt" units="{bitStringValue(unitsLabels, useMetricOnInterface)}">60</constant>
         <constant name="coastingFuelCutEnabled">"disabled"</constant>
         <constant digits="0" name="coastingFuelCutMap" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">30</constant>
+        <constant name="coastingFuelCutRequiresGear">"disabled"</constant>
         <constant digits="0" name="coastingFuelCutRpmHigh" units="rpm">1500</constant>
         <constant digits="0" name="coastingFuelCutRpmLow" units="rpm">1300</constant>
         <constant digits="0" name="coastingFuelCutTps" units="%">2</constant>
@@ -973,6 +974,7 @@
         <constant digits="0" name="device_uid2" units="">0</constant>
         <constant digits="0" name="device_uid3" units="">0</constant>
         <constant digits="1" name="dfcoDelay" units="sec">0.0</constant>
+        <constant name="dfcoFuelCutMode">"Overrun"</constant>
         <constant digits="0" name="dfcoRetardDeg" units="deg">0</constant>
         <constant digits="1" name="dfcoRetardRampInTime" units="s">0.0</constant>
         <constant name="digitalPotentiometerChipSelect1">"NONE"</constant>
@@ -5399,7 +5401,7 @@
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20261017" nPages="1" signature="rusEFI master.2026.10.18.f407-discovery.3812130578" version="5.0"/>
+    <versionInfo firmwareInfo="20261017" nPages="1" signature="rusEFI master.2026.10.18.f407-discovery.2467473483" version="5.0"/>
     <bibliography author="rusEFI 20261017" writeDate="date"/>
     <settings/>
     <userComments/>
