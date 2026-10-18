@@ -11,6 +11,7 @@ import com.rusefi.core.SensorCentral;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.ui.widgets.GaugeMenuSearch;
+import com.rusefi.ui.widgets.GaugeMenuLabel;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -239,7 +240,7 @@ public class SensorLiveGraph extends JPanel {
                 JMenuItem cmi = new JMenu(category);
                 pm.add(cmi);
                 for (final GaugeModel gauge : iniFile.getGaugeCategories().get(category).getGauges()) {
-                    JMenuItem mi = new JMenuItem(gauge.getTitle());
+                    JMenuItem mi = new JMenuItem(GaugeMenuLabel.getTitle(uiContext, gauge));
                     mi.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {

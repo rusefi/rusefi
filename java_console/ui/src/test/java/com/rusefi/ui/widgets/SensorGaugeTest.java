@@ -7,6 +7,7 @@ import com.opensr5.ini.IniFileMetaInfoImpl;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniFileModelMocks;
 import com.opensr5.ini.RawIniFile;
+import com.opensr5.ini.TsStringFunction;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.ini.reader.IniFileReaderUtil;
@@ -33,6 +34,45 @@ import static org.mockito.Mockito.when;
 
 class SensorGaugeTest {
     @Test
+    void gaugeMenuResolvesGppwmNoteAndSearchesItsDisplayName() throws Throwable {
+        String text = "[Constants]\npage = 1\n"
+            + "gpPwmNote1 = string, ASCII, 0, 16\n"
+            + "[GaugeConfigurations]\ngaugeCategory = GPPWM Outputs\n"
+            + "gppwmGauge1 = gppwmOutput1, { stringValue(gpPwmNote1) }, \"%\", 0, 100, 0, 0, 100, 100, 1, 1\n";
+        IniFileModel ini = IniFileReaderUtil.readIniFile(IniFileReaderUtil.read(
+            new ByteArrayInputStream(text.getBytes(StandardCharsets.US_ASCII))),
+            "gppwm.ini", mock(IniFileMetaInfo.class));
+        ConfigurationImage image = new ConfigurationImage(new byte[16]);
+        byte[] note = "Cooling fan".getBytes(StandardCharsets.US_ASCII);
+        System.arraycopy(note, 0, image.getContent(), 0, note.length);
+        assertEquals("Cooling fan", TsStringFunction.resolve(ini.getGauge("gppwmGauge1").getTitle(), ini, image, null));
+
+        SwingUtilities.invokeAndWait(() -> {
+            UIContext context = new UIContext();
+            context.iniFileState.setIniFileModelForTest(ini);
+            BinaryProtocol protocol = mock(BinaryProtocol.class);
+            when(protocol.getControllerConfiguration()).thenReturn(image);
+            context.getLinkManager().setBinaryProtocolForTests(protocol);
+            JPopupMenu menu = new JPopupMenu();
+            SensorGauge.fillGaugeMenuItems(context, menu, new JPanelWithListener(new BorderLayout()), name -> { }, null);
+            List<String> expected = java.util.Collections.singletonList("GPPWM Outputs / Cooling fan");
+            assertEquals(expected, visibleGaugePaths(menu));
+            GaugeMenuSearch.addTo(menu);
+            JTextField search = (JTextField) UiUtils.getAllComponents(menu).stream()
+                .filter(component -> component instanceof JTextField)
+                .findFirst().orElseThrow(AssertionError::new);
+            search.setText("cooling fan");
+            assertEquals(expected, visibleGaugePaths(menu));
+            search.setText("GPPWM OUTPUTS / COOLING FAN");
+            assertEquals(expected, visibleGaugePaths(menu));
+            search.setText("stringValue");
+            assertTrue(visibleGaugePaths(menu).isEmpty());
+            search.setText("");
+            assertEquals(expected, visibleGaugePaths(menu));
+        });
+    }
+
+    @Test
     void gaugeMenuUsesLoadedIniWithoutAnEcuConnection() throws Throwable {
         IniFileModel ini;
         try (InputStream input = getClass().getResourceAsStream("/january.ini")) {
@@ -42,7 +82,8 @@ class SensorGaugeTest {
         }
         List<String> expectedPaths = new ArrayList<>();
         ini.getGaugeCategories().forEach((category, model) -> model.getGauges().forEach(
-            gauge -> expectedPaths.add(category + " / " + gauge.getTitle())));
+            gauge -> expectedPaths.add(category + " / "
+                + (gauge.getTitleValue().isExpression() ? gauge.getName() : gauge.getTitle()))));
         assertTrue(expectedPaths.size() > 100, "Exercise the sandbox's full INI catalog");
 
         SwingUtilities.invokeAndWait(() -> {
