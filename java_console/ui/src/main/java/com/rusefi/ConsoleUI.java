@@ -29,6 +29,7 @@ import com.rusefi.ui.plugins.ConsoleTabProvider;
 import com.rusefi.ui.util.JustOneInstance;
 import com.rusefi.ui.widgets.ConnectionStatusIcon;
 import com.rusefi.ui.widgets.StatusPanel;
+import com.rusefi.ui.widgets.tune.CalibrationPanelWorkspace;
 import com.rusefi.ui.wizard.WizardCatalog;
 import com.rusefi.ui.wizard.WizardContainer;
 import com.rusefi.ui.wizard.WizardStep;
@@ -483,6 +484,13 @@ console live data tab is broken #8402
             mainFrame.setTuneActions(
                 lazyTuneAction(LoadTuneHelper.LOAD_TUNE_TEXT, buildTuning, () -> tuningHolder[0].getLoadTuneAction()),
                 lazyTuneAction(LoadTuneHelper.SAVE_TUNE_TEXT, buildTuning, () -> tuningHolder[0].getSaveTuneAction()));
+
+            // Restore detached calibration windows even when another tab was selected at exit.
+            if (getConfig().getRoot().getChild("tuning").getChild(
+                    CalibrationPanelWorkspace.CONFIG_KEY).getIntProperty("count", 0) > 0) {
+                buildTuning.run();
+                tuningHolder[0].restoreDetachedPanels(mainFrame.getFrame().getFrame());
+            }
 
             if (UiProperties.isKnockAnalyzerEnabled()) {
                 tabbedPane.addTab("Knock Analyzer", new KnockPane(uiContext).getContent());
