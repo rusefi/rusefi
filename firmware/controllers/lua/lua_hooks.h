@@ -4,8 +4,10 @@
 
 struct lua_State;
 void configureRusefiLuaHooks(lua_State*);
+void configureRusefiLuaClassHooks(lua_State*);
 void configureRusefiLuaHooksExt(lua_State*);
 void luaDeInitPins();
+SensorType findLuaSensorByName(lua_State*, const char* name);
 
 struct AirmassModelBase;
 AirmassModelBase& getLuaAirmassModel();
