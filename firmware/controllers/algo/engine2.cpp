@@ -173,14 +173,23 @@ void EngineState::periodicFastCallback() {
 
 #if EFI_ENGINE_CONTROL
 void EngineState::updateTChargeK(float rpm, float tps) {
+	// [tag:charge_temperature_startup] Finite fallbacks must not consume startup
+	// initialization. Bypass the limiter once for each sensor's first valid reading,
+	// including staggered CLT/IAT arrival. Later sensor loss must not reset these latches.
+	const bool firstClt = !m_tChargeCltInitialized && Sensor::get(SensorType::Clt);
+	const bool firstIat = !m_tChargeIatInitialized && Sensor::get(SensorType::Iat);
 	float newTCharge = engine->fuelComputer.getTCharge(rpm, tps);
 	if (!std::isnan(newTCharge)) {
 		// control the rate of change or just fill with the initial value
 		efitick_t nowNt = getTimeNowNt();
 		float secsPassed = timeSinceLastTChargeK.getElapsedSeconds(nowNt);
-		sd.tCharge = (sd.tChargeK == 0) ? newTCharge : limitRateOfChange(newTCharge, sd.tCharge, engineConfiguration->tChargeAirIncrLimit, engineConfiguration->tChargeAirDecrLimit, secsPassed);
+		sd.tCharge = (sd.tChargeK == 0 || firstClt || firstIat)
+			? newTCharge
+			: limitRateOfChange(newTCharge, sd.tCharge, engineConfiguration->tChargeAirIncrLimit, engineConfiguration->tChargeAirDecrLimit, secsPassed);
 		sd.tChargeK = convertCelsiusToKelvin(sd.tCharge);
 		timeSinceLastTChargeK.reset(nowNt);
+		m_tChargeCltInitialized |= firstClt;
+		m_tChargeIatInitialized |= firstIat;
 	}
 }
 #endif

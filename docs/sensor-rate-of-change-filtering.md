@@ -84,7 +84,12 @@ These do not smooth a measurement - they cap how fast a computed value may move:
   `util/efilib.cpp`): the only user of the generic asymmetric limiter. Defaults:
   rise limited to 1 degC/s, fall to 12.5 degC/s (`tChargeAirIncrLimit` /
   `tChargeAirDecrLimit`, tunable). Asymmetry models thermal mass: hot soak builds
-  slowly, cool inrush acts fast.
+  slowly, cool inrush acts fast. `[tag:charge_temperature_startup]` The first
+  estimate and each temperature sensor's first valid reading bypass the limiter.
+  This lets real CLT/IAT readings immediately replace startup fallbacks even
+  when the sensors become available separately. Subsequent changes, including
+  sensor loss and recovery, use the configured limits. An actual 0 degC reading
+  counts as valid initialization.
 - **Fan PWM soft start** (`modules/fan_control/fan_control.cpp`): upward-only slew so
   a 0-100% ramp takes `softStartSec` seconds (step computed at the 20 Hz slow
   callback); downward steps are unlimited.

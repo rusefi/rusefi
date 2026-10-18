@@ -81,6 +81,10 @@ public:
 	multispark_state multispark{};
 
 	bool shouldUpdateInjectionTiming = true;
+
+private:
+	bool m_tChargeCltInitialized = false;
+	bool m_tChargeIatInitialized = false;
 };
 
 EngineState * getEngineState();

@@ -108,9 +108,9 @@ TEST_F(ChargeTemperatureStartup, ValidSensorsOnFirstUpdateBypassRateLimit) {
 	EXPECT_FLOAT_EQ(349.15f, engine->engineState.sd.tChargeK);
 }
 
-TEST_F(ChargeTemperatureStartup, MissingInitialReadingsRateLimitHotRestartFromZero) {
-	// Reproduce https://github.com/rusefi/rusefi/issues/10400 before the first ADC readings.
-	// These passing assertions describe the bug; update them when fixing initialization.
+TEST_F(ChargeTemperatureStartup, MissingInitialReadingsInitializeFromHotSensors) {
+	// [tag:charge_temperature_startup] Regression for https://github.com/rusefi/rusefi/issues/10400.
+	// The fallback before the first ADC readings must not consume initialization.
 	Sensor::setInvalidMockValue(SensorType::Clt);
 	Sensor::setInvalidMockValue(SensorType::Iat);
 	ASSERT_FLOAT_EQ(0, engine->engineState.sd.tChargeK);
@@ -118,29 +118,94 @@ TEST_F(ChargeTemperatureStartup, MissingInitialReadingsRateLimitHotRestartFromZe
 	ASSERT_FLOAT_EQ(0, engine->engineState.sd.tCharge);
 	ASSERT_FLOAT_EQ(273.15f, engine->engineState.sd.tChargeK);
 
-	// The 0 C fallback has consumed the first-update bypass. Real readings now
-	// request 75 C, but the estimate rises from zero at only 1 C/s.
+	// First real readings must immediately replace the 0 C fallback with 75 C.
 	Sensor::setMockValue(SensorType::Clt, 90);
 	Sensor::setMockValue(SensorType::Iat, 30);
 	ASSERT_FLOAT_EQ(75, engine->fuelComputer.getTCharge(1000, 0));
 	eth.moveTimeForwardMs(100);
 	engine->periodicFastCallback();
-	EXPECT_NEAR(0.1f, engine->engineState.sd.tCharge, EPS4D);
-	EXPECT_FLOAT_EQ(273.25f, engine->engineState.sd.tChargeK);
+	EXPECT_FLOAT_EQ(75, engine->engineState.sd.tCharge);
+	EXPECT_FLOAT_EQ(348.15f, engine->engineState.sd.tChargeK);
 
 	eth.moveTimeForwardSec(1);
 	engine->periodicFastCallback();
-	EXPECT_NEAR(1.1f, engine->engineState.sd.tCharge, EPS4D);
-	EXPECT_FLOAT_EQ(274.25f, engine->engineState.sd.tChargeK);
+	EXPECT_FLOAT_EQ(75, engine->engineState.sd.tCharge);
+	EXPECT_FLOAT_EQ(348.15f, engine->engineState.sd.tChargeK);
 
-	// Verify that speed density actually uses the cold estimate: at the same
-	// MAP and VE, it overestimates air mass by more than 25% compared with 75 C.
+	// Speed density must use the hot estimate immediately, without excess air mass.
 	const float hotAirmass = SpeedDensityBase::getAirmassImpl(0.8f, 100, 348.15f);
 	const float actualAirmass = engine->fuelComputer.sdAirMassInOneCylinder;
 	ASSERT_TRUE(std::isfinite(actualAirmass));
 	ASSERT_GT(hotAirmass, 0);
-	EXPECT_NEAR(hotAirmass * 348.15f / 274.25f, actualAirmass, EPS4D);
-	EXPECT_GT(actualAirmass, hotAirmass * 1.25f);
+	EXPECT_NEAR(hotAirmass, actualAirmass, EPS4D);
+}
+
+TEST_F(ChargeTemperatureStartup, CoolantArrivesBeforeIntakeTemperature) {
+	Sensor::setInvalidMockValue(SensorType::Iat);
+	engine->periodicFastCallback();
+	ASSERT_FLOAT_EQ(67.5f, engine->engineState.sd.tCharge); // IAT fallback is 0 C.
+
+	// An installation with only CLT must still rate-limit subsequent changes.
+	Sensor::setMockValue(SensorType::Clt, 100);
+	eth.moveTimeForwardSec(1);
+	engine->periodicFastCallback();
+	EXPECT_FLOAT_EQ(68.5f, engine->engineState.sd.tCharge);
+
+	Sensor::setMockValue(SensorType::Iat, 30);
+	eth.moveTimeForwardMs(100);
+	engine->periodicFastCallback();
+	EXPECT_FLOAT_EQ(82.5f, engine->engineState.sd.tCharge);
+	EXPECT_FLOAT_EQ(355.65f, engine->engineState.sd.tChargeK);
+}
+
+TEST_F(ChargeTemperatureStartup, IntakeTemperatureArrivesBeforeCoolant) {
+	Sensor::setInvalidMockValue(SensorType::Clt);
+	engine->periodicFastCallback();
+	ASSERT_FLOAT_EQ(30, engine->engineState.sd.tCharge); // Only IAT is available.
+
+	Sensor::setMockValue(SensorType::Iat, 40);
+	eth.moveTimeForwardSec(1);
+	engine->periodicFastCallback();
+	EXPECT_FLOAT_EQ(31, engine->engineState.sd.tCharge);
+
+	Sensor::setMockValue(SensorType::Clt, 90);
+	eth.moveTimeForwardMs(100);
+	engine->periodicFastCallback();
+	EXPECT_FLOAT_EQ(77.5f, engine->engineState.sd.tCharge);
+	EXPECT_FLOAT_EQ(350.65f, engine->engineState.sd.tChargeK);
+}
+
+TEST_F(ChargeTemperatureStartup, ValidZeroDegreesStillInitializesRateLimiter) {
+	Sensor::setMockValue(SensorType::Clt, 0);
+	Sensor::setMockValue(SensorType::Iat, 0);
+	engine->periodicFastCallback();
+	ASSERT_FLOAT_EQ(0, engine->engineState.sd.tCharge);
+	ASSERT_FLOAT_EQ(273.15f, engine->engineState.sd.tChargeK);
+
+	Sensor::setMockValue(SensorType::Clt, 90);
+	Sensor::setMockValue(SensorType::Iat, 30);
+	eth.moveTimeForwardSec(1);
+	engine->periodicFastCallback();
+	EXPECT_FLOAT_EQ(1, engine->engineState.sd.tCharge);
+	EXPECT_FLOAT_EQ(274.15f, engine->engineState.sd.tChargeK);
+}
+
+TEST_F(ChargeTemperatureStartup, LaterSensorLossAndRecoveryKeepRateLimits) {
+	engine->periodicFastCallback();
+	ASSERT_FLOAT_EQ(75, engine->engineState.sd.tCharge);
+
+	Sensor::setInvalidMockValue(SensorType::Clt);
+	Sensor::setInvalidMockValue(SensorType::Iat);
+	eth.moveTimeForwardSec(1);
+	engine->periodicFastCallback();
+	EXPECT_FLOAT_EQ(62.5f, engine->engineState.sd.tCharge);
+
+	Sensor::setMockValue(SensorType::Clt, 90);
+	Sensor::setMockValue(SensorType::Iat, 30);
+	eth.moveTimeForwardSec(1);
+	engine->periodicFastCallback();
+	EXPECT_FLOAT_EQ(63.5f, engine->engineState.sd.tCharge);
+	EXPECT_FLOAT_EQ(336.65f, engine->engineState.sd.tChargeK);
 }
 
 TEST(misc, testIgnitionMapGenerator) {
