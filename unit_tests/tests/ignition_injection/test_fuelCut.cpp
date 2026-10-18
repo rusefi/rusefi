@@ -8,8 +8,236 @@
 #include "pch.h"
 
 #include "event_queue.h"
+#include "engine_state_machine.h"
+#include "tunerstudio.h"
 
 using ::testing::_;
+
+static void setupStateAwareDfco() {
+	engineConfiguration->coastingFuelCutEnabled = true;
+	engineConfiguration->coastingFuelCutRpmLow = 1300;
+	engineConfiguration->coastingFuelCutRpmHigh = 1500;
+	engineConfiguration->coastingFuelCutVssLow = 0;
+	engineConfiguration->coastingFuelCutVssHigh = 0;
+	engineConfiguration->coastingFuelCutTps = 2;
+	engineConfiguration->coastingFuelCutClt = 30;
+	engineConfiguration->coastingFuelCutMap = 100;
+	engineConfiguration->dfcoDelay = 0;
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 0);
+	Sensor::setMockValue(SensorType::Clt, 90);
+	Sensor::setMockValue(SensorType::Map, 30);
+	engine->rpmCalculator.setRpmValue(3000);
+}
+
+static bool updateDfco() {
+	engine->module<DfcoController>()->update();
+	return engine->module<DfcoController>()->cutFuel();
+}
+
+// [tag:state_aware_dfco] Mode/gear zero defaults keep old tunes independent of the SM.
+TEST(StateAwareDfco, DefaultsAndGearValidity) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setupStateAwareDfco();
+	EXPECT_EQ(engineConfiguration->dfcoFuelCutMode, dfco_fuel_cut_mode_e::Overrun);
+	EXPECT_FALSE(engineConfiguration->coastingFuelCutRequiresGear);
+	EXPECT_FALSE(engineConfiguration->useEngineStateMachine);
+	Sensor::setInvalidMockValue(SensorType::DetectedGear);
+	EXPECT_TRUE(updateDfco());
+
+	engineConfiguration->coastingFuelCutRequiresGear = true;
+	EXPECT_FALSE(updateDfco());
+	for (float gear : {0.0f, -1.0f, 1.0f, 5.0f, 0.0f}) {
+		Sensor::setMockValue(SensorType::DetectedGear, gear);
+		EXPECT_EQ(updateDfco(), gear > 0);
+	}
+	Sensor::setInvalidMockValue(SensorType::DetectedGear);
+	EXPECT_FALSE(updateDfco());
+	engineConfiguration->coastingFuelCutRequiresGear = false;
+	EXPECT_TRUE(updateDfco());
+}
+
+TEST(StateAwareDfco, ModeSelectionAndDisabledStateMachine) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setupStateAwareDfco();
+	auto& sm = engine->module<EngineStateMachine>().unmock();
+	for (auto mode : {dfco_fuel_cut_mode_e::Overrun, dfco_fuel_cut_mode_e::Decel, dfco_fuel_cut_mode_e::Both}) {
+		engineConfiguration->dfcoFuelCutMode = mode;
+		for (bool physicalOverrun : {false, true}) {
+			Sensor::setMockValue(SensorType::DriverThrottleIntent, physicalOverrun ? 0 : 50);
+			for (bool decel : {false, true}) {
+				sm.engineSmIsDecelerating = decel;
+				engineConfiguration->useEngineStateMachine = true;
+				EXPECT_EQ(updateDfco(), (physicalOverrun && mode != dfco_fuel_cut_mode_e::Decel)
+					|| (decel && mode != dfco_fuel_cut_mode_e::Overrun));
+				// Disabling takes effect before the slow callback clears stale SM flags.
+				engineConfiguration->useEngineStateMachine = false;
+				EXPECT_EQ(updateDfco(), physicalOverrun && mode != dfco_fuel_cut_mode_e::Decel);
+			}
+		}
+	}
+	engineConfiguration->dfcoFuelCutMode = static_cast<dfco_fuel_cut_mode_e>(3);
+	EXPECT_FALSE(updateDfco());
+}
+
+TEST(StateAwareDfco, CommonGuardsAndMapHysteresisInEveryMode) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setupStateAwareDfco();
+	engineConfiguration->useEngineStateMachine = true;
+	engine->module<EngineStateMachine>()->engineSmIsDecelerating = true;
+	for (auto mode : {dfco_fuel_cut_mode_e::Overrun, dfco_fuel_cut_mode_e::Decel, dfco_fuel_cut_mode_e::Both}) {
+		engineConfiguration->dfcoFuelCutMode = mode;
+		EXPECT_TRUE(updateDfco());
+		engineConfiguration->coastingFuelCutEnabled = false;
+		EXPECT_FALSE(updateDfco());
+		engineConfiguration->coastingFuelCutEnabled = true;
+		engine->engineState.lua.disableDecelerationFuelCutOff = true;
+		EXPECT_FALSE(updateDfco());
+		engine->engineState.lua.disableDecelerationFuelCutOff = false;
+		Sensor::setInvalidMockValue(SensorType::Clt);
+		EXPECT_FALSE(updateDfco());
+		Sensor::setMockValue(SensorType::Clt, 30);
+		EXPECT_FALSE(updateDfco());
+		Sensor::setMockValue(SensorType::Clt, 90);
+		EXPECT_TRUE(updateDfco());
+		Sensor::setInvalidMockValue(SensorType::Map);
+		EXPECT_FALSE(updateDfco());
+		Sensor::setMockValue(SensorType::Map, 102);
+		EXPECT_FALSE(updateDfco());
+		Sensor::setMockValue(SensorType::Map, 100);
+		EXPECT_FALSE(updateDfco());
+		Sensor::setMockValue(SensorType::Map, 98);
+		EXPECT_TRUE(updateDfco());
+		Sensor::setMockValue(SensorType::Map, 100);
+		EXPECT_TRUE(updateDfco());
+		Sensor::resetMockValue(SensorType::Map);
+		ASSERT_FALSE(Sensor::hasSensor(SensorType::Map));
+		EXPECT_TRUE(updateDfco()); // MAP is optional.
+
+		engineConfiguration->isTuningDetectorEnabled = true;
+		testing::NiceMock<MockTsChannel> channel;
+		uint8_t dummy = 0;
+		TunerStudio ts;
+		ts.handleWriteChunkCommand(&channel, TS_PAGE_SETTINGS,
+			static_cast<uint16_t>(offsetof(persistent_config_s, veTable)), 1, &dummy);
+		EXPECT_FALSE(updateDfco());
+		resetCalibrationTimerForTest();
+		EXPECT_TRUE(updateDfco());
+	}
+}
+
+static void sampleDfcoRpm(float rpm) {
+	advanceTimeUs(100000);
+	engine->rpmCalculator.setRpmValue(rpm);
+	engine->module<EngineStateMachine>()->onSlowCallback();
+}
+
+TEST(StateAwareDfco, DecelUsesClassificationAndAbsentSpeedFallback) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setupStateAwareDfco();
+	engineConfiguration->useEngineStateMachine = true;
+	engineConfiguration->dfcoFuelCutMode = dfco_fuel_cut_mode_e::Decel;
+	engineConfiguration->smTransientHoldTimeMs = 0;
+	engineConfiguration->smDecelRateThreshold = 500;
+	engineConfiguration->smRpmRateWindowMs = 100;
+	// These overrun gates must not restrict Decel mode.
+	engineConfiguration->coastingFuelCutRpmLow = 4500;
+	engineConfiguration->coastingFuelCutRpmHigh = 5000;
+	engineConfiguration->coastingFuelCutVssLow = 80;
+	engineConfiguration->coastingFuelCutVssHigh = 100;
+	engineConfiguration->coastingFuelCutRequiresGear = true;
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 50);
+	Sensor::setMockValue(SensorType::DetectedGear, 0);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 40);
+	MockIdleController idle;
+	engine->module<IdleController>().set(&idle);
+	ON_CALL(idle, getCurrentPhase()).WillByDefault(Return(IIdleController::Phase::Running));
+	auto& sm = engine->module<EngineStateMachine>().unmock();
+	sampleDfcoRpm(4000);
+	sampleDfcoRpm(3900);
+	sampleDfcoRpm(3800);
+	ASSERT_TRUE(sm.engineSmIsDecelerating);
+	EXPECT_TRUE(updateDfco());
+
+	Sensor::setMockValue(SensorType::DetectedGear, 2);
+	sampleDfcoRpm(3700);
+	ASSERT_FALSE(sm.engineSmIsDecelerating);
+	EXPECT_FALSE(updateDfco()); // Valid speed and engaged gear: no Decel.
+	Sensor::setInvalidMockValue(SensorType::DetectedGear);
+	sampleDfcoRpm(3600);
+	EXPECT_FALSE(updateDfco());
+	Sensor::setMockValue(SensorType::DetectedGear, 0);
+	Sensor::setInvalidMockValue(SensorType::VehicleSpeed);
+	sampleDfcoRpm(3500);
+	ASSERT_LT(sm.getLastRpmRate(), -500);
+	ASSERT_FALSE(sm.engineSmIsDecelerating);
+	EXPECT_FALSE(updateDfco()); // Failed configured VSS is not absent VSS.
+
+	Sensor::resetMockValue(SensorType::VehicleSpeed);
+	ASSERT_FALSE(Sensor::hasSensor(SensorType::VehicleSpeed));
+	sampleDfcoRpm(3400);
+	ASSERT_FALSE(sm.engineSmIsDecelerating);
+	EXPECT_TRUE(updateDfco()); // Raw RPM rate fallback, with no state reclassification.
+	engineConfiguration->smDecelRateThreshold = 0;
+	EXPECT_FALSE(updateDfco());
+	engineConfiguration->smDecelRateThreshold = 500;
+	sampleDfcoRpm(3350);
+	EXPECT_FLOAT_EQ(sm.getLastRpmRate(), -500);
+	EXPECT_FALSE(updateDfco()); // Must be strictly faster than the threshold.
+	sampleDfcoRpm(3250);
+	EXPECT_TRUE(updateDfco());
+	engineConfiguration->useEngineStateMachine = false;
+	EXPECT_FALSE(updateDfco()); // Even before the next SM update.
+}
+
+TEST(StateAwareDfco, BothShiftDirectionsSuppressCutAndRestartDelay) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setupStateAwareDfco();
+	engineConfiguration->useEngineStateMachine = true;
+	engineConfiguration->dfcoDelay = 0.5f;
+	engineConfiguration->smTransientHoldTimeMs = 0;
+	auto& sm = engine->module<EngineStateMachine>().unmock();
+	for (bool upshift : {true, false}) {
+		engineConfiguration->smUpshiftClutchSwitch = upshift ? sm_clutch_switch_e::ClutchDown : sm_clutch_switch_e::None;
+		engineConfiguration->smDownshiftClutchSwitch = upshift ? sm_clutch_switch_e::None : sm_clutch_switch_e::ClutchDown;
+		sm.onConfigurationChange(nullptr);
+		engine->engineState.clutchDownState = false;
+		sampleDfcoRpm(3000);
+		updateDfco();
+		advanceTimeUs(600000);
+		ASSERT_TRUE(updateDfco());
+		engine->engineState.clutchDownState = true;
+		sampleDfcoRpm(3000);
+		ASSERT_EQ(sm.engineSmIsUpshifting, upshift);
+		ASSERT_EQ(sm.engineSmIsDownshifting, !upshift);
+		EXPECT_FALSE(updateDfco());
+		advanceTimeUs(600000);
+		EXPECT_FALSE(updateDfco());
+		engine->engineState.clutchDownState = false;
+		sampleDfcoRpm(3000);
+		ASSERT_FALSE(sm.engineSmIsUpshifting || sm.engineSmIsDownshifting);
+		EXPECT_FALSE(updateDfco());
+		advanceTimeUs(300000);
+		EXPECT_FALSE(updateDfco());
+		advanceTimeUs(200000);
+		EXPECT_TRUE(updateDfco());
+	}
+}
+
+TEST(StateAwareDfco, FuelCutGuardsDoNotChangePhysicalOverrunClassification) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setupStateAwareDfco();
+	engineConfiguration->useEngineStateMachine = true;
+	engineConfiguration->smTransientHoldTimeMs = 0;
+	engineConfiguration->coastingFuelCutEnabled = false;
+	Sensor::setMockValue(SensorType::Clt, 0);
+	Sensor::setInvalidMockValue(SensorType::Map);
+	MockIdleController idle;
+	engine->module<IdleController>().set(&idle);
+	ON_CALL(idle, getCurrentPhase()).WillByDefault(Return(IIdleController::Phase::Coasting));
+	sampleDfcoRpm(3000);
+	EXPECT_TRUE(engine->module<EngineStateMachine>()->engineSmIsOverrun);
+	EXPECT_FALSE(updateDfco());
+}
 
 // Define some helpers for not-cut and cut
 #define EXPECT_NORMAL() EXPECT_FLOAT_EQ(normalInjDuration, engine->engineState.injectionDuration)
@@ -288,3 +516,53 @@ TEST(fuelCut, nonZeroImpossiblyShortInjectionStillWarns) {
 	EXPECT_TRUE(hasRecentWarningCode(ObdCode::CUSTOM_OBD_impossibly_short_INJECTION));
 }
 #endif //FUEL_RPM_COUNT == 16
+
+#if FUEL_RPM_COUNT == 16
+TEST(fuelCut, requiresGear) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(_, _))
+		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
+
+	// configure coastingFuelCut, gated on being in a valid gear
+	engineConfiguration->coastingFuelCutEnabled = true;
+	engineConfiguration->coastingFuelCutRequiresGear = true;
+	engineConfiguration->coastingFuelCutRpmLow = 1300;
+	engineConfiguration->coastingFuelCutRpmHigh = 1500;
+	engineConfiguration->coastingFuelCutTps = 2;
+	engineConfiguration->coastingFuelCutClt = 30;
+	engineConfiguration->coastingFuelCutMap = 100;
+	// set cranking threshold
+	engineConfiguration->cranking.rpm = 999;
+
+	// basic engine setup
+	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
+
+	Sensor::setMockValue(SensorType::Map, 0);
+
+	// mock CLT - just above threshold ('hot engine')
+	float hotClt = engineConfiguration->coastingFuelCutClt + 1;
+	Sensor::setMockValue(SensorType::Clt, hotClt);
+	// mock TPS - throttle is released, RPM in cut range
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 0);
+	Sensor::setMockValue(SensorType::Rpm, engineConfiguration->coastingFuelCutRpmHigh + 1);
+	eth.moveTimeForwardUs(1000);
+
+	const float normalInjDuration = 1.5f;
+
+	// Neutral (DetectedGear == 0): all other DFCO conditions met, but no cut while in neutral
+	Sensor::setMockValue(SensorType::DetectedGear, 0);
+	eth.engine.periodicFastCallback();
+	EXPECT_NORMAL();
+
+	// Shift into 1st gear: cut should now engage
+	Sensor::setMockValue(SensorType::DetectedGear, 1);
+	eth.engine.periodicFastCallback();
+	EXPECT_CUT();
+
+	// Back to neutral: cut should disengage immediately
+	Sensor::setMockValue(SensorType::DetectedGear, 0);
+	eth.engine.periodicFastCallback();
+	EXPECT_NORMAL();
+}
+
+#endif

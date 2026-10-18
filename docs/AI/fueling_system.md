@@ -99,6 +99,45 @@ The fuel adder does not restore injection during a cut. See the limiter guide
 for coolant-based limits, forced fault cuts, STFT recovery delay and the current
 difference between STFT and LTFT learning gates during general cuts.
 
+## Overrun and deceleration fuel cut
+
+[tag:state_aware_dfco] `DfcoController` runs in the fast fuel loop. The
+`dfcoFuelCutMode` enum selects Overrun (0), Decel (1), or Both (2). Zero is the
+old-tune default; `coastingFuelCutRequiresGear` defaults false. Existing tunes
+therefore retain overrun operation without enabling the engine state machine.
+
+Common guards require `coastingFuelCutEnabled`, no VE-tuning or Lua inhibition,
+valid CLT above `coastingFuelCutClt`, and acceptable MAP. MAP is optional; a
+configured invalid sensor inhibits fuel cut. The MAP threshold retains its
++/-1 kPa hysteresis. These guards do not change physical SM Overrun classification.
+
+Overrun requires valid driver throttle intent below `coastingFuelCutTps`, RPM
+above `coastingFuelCutRpmHigh` and speed at least `coastingFuelCutVssHigh`. It
+holds the cut through the RPM/speed hysteresis bands until RPM or speed falls
+below the corresponding low threshold, throttle opens, or a common guard fails.
+Missing speed reads as zero; zero speed thresholds allow speed-independent
+operation. With `coastingFuelCutRequiresGear`, only valid `DetectedGear > 0`
+qualifies; neutral, unknown, invalid and nonpositive readings prevent this path.
+
+Decel requires an enabled `EngineStateMachine`. It consumes the latest
+`engineSmIsDecelerating` flag, including the SM's valid-speed/zero-gear and
+primary-state rules. If no vehicle-speed sensor is configured, a positive
+`smDecelRateThreshold` instead enables the fallback
+`getLastRpmRate() < -smDecelRateThreshold`. A configured but invalid VSS does not
+enable that fallback. The fallback uses the held RPM rate independently of the
+primary state; it does not reclassify the SM as Decelerating. Decel bypasses the
+Overrun TPS, RPM, speed and gear gates. Both accepts either path.
+
+Enabled SM upshift/downshift overlays suppress either path. Suppression resets
+the entry delay, so eligibility must again satisfy `dfcoDelay` before cutting.
+Disabling the SM immediately removes its Decel request and shift suppression,
+even before the slow callback resets its flags. The existing `dfcoActive`
+telemetry, ignition retard and trim-recovery handling use the same controller.
+
+`unit_tests/tests/ignition_injection/test_fuelCut.cpp` covers mode selection,
+gear validity, missing/failed speed, common guards, physical-state independence,
+shift suppression and delayed re-entry, alongside the injection-pipeline tests.
+
 ## Launch fuel and trim learning
 
 [Launch control](launch_control.md) multiplies running fuel by

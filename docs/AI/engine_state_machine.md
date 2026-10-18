@@ -89,6 +89,14 @@ Overrun selects overrun; WOT selects power; all remaining primary states select
 cruise. Existing per-region gains, limits and learning gates are unchanged.
 The fast fuel loop observes the latest completed slow-callback state.
 
+## DFCO integration
+
+[State-aware DFCO](fueling_system.md#overrun-and-deceleration-fuel-cut) consumes
+the latest Decelerating and up/downshift flags in the fast loop. Decel fuel cut
+also permits a raw RPM-rate fallback when no vehicle-speed sensor is configured;
+that fallback does not change primary-state classification. Overrun fuel-cut
+eligibility is evaluated independently of the SM's physical Overrun state.
+
 ## Regression coverage
 
 `unit_tests/tests/engine_state_machine/test_engine_state_machine.cpp` covers

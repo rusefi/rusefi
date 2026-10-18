@@ -4,8 +4,9 @@
 
 #include "dfco.h"
 #include "closed_loop_fuel.h"
+#include "engine_state_machine.h"
 
-bool DfcoController::getState() const {
+bool DfcoController::commonGuards() const {
 	if (!engineConfiguration->coastingFuelCutEnabled) {
 		return false;
 	}
@@ -14,33 +15,40 @@ bool DfcoController::getState() const {
 	  return false;
 	}
 
-	const auto tps = Sensor::get(SensorType::DriverThrottleIntent);
-	const auto clt = Sensor::get(SensorType::Clt);
-	const auto map = Sensor::get(SensorType::Map);
+	if (engine->engineState.lua.disableDecelerationFuelCutOff) {
+		return false;
+	}
 
-	// If some sensor is broken, inhibit DFCO
-	if (!tps || !clt) {
+	const auto clt = Sensor::get(SensorType::Clt);
+	if (!clt || clt.Value <= engineConfiguration->coastingFuelCutClt) {
 		return false;
 	}
 
 	// MAP sensor is optional, only inhibit if the sensor is present but broken
-	bool hasMap = Sensor::hasSensor(SensorType::Map);
-	if (hasMap && !map) {
+	if (Sensor::hasSensor(SensorType::Map)) {
+		const auto map = Sensor::get(SensorType::Map);
+		if (!map || m_mapHysteresis.test(map.Value,
+			engineConfiguration->coastingFuelCutMap + 1, engineConfiguration->coastingFuelCutMap - 1)) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool DfcoController::overrunActive() const {
+	const auto tps = Sensor::get(SensorType::DriverThrottleIntent);
+	if (!tps) {
 		return false;
 	}
-	if (engine->engineState.lua.disableDecelerationFuelCutOff) {
-	  // Lua might have reasons to disable
+	if (engineConfiguration->coastingFuelCutRequiresGear && Sensor::getOrZero(SensorType::DetectedGear) <= 0) {
 		return false;
 	}
 
 	float rpm = Sensor::getOrZero(SensorType::Rpm);
 	float vss = Sensor::getOrZero(SensorType::VehicleSpeed);
 
-	bool mapActivate = !hasMap || !m_mapHysteresis.test(map.value_or(0), engineConfiguration->coastingFuelCutMap + 1, engineConfiguration->coastingFuelCutMap - 1);
 	bool tpsActivate = tps.Value < engineConfiguration->coastingFuelCutTps;
-	bool cltActivate = clt.Value > engineConfiguration->coastingFuelCutClt;
-	// True if throttle, MAP, and CLT are all acceptable for DFCO to occur
-	bool dfcoAllowed = mapActivate && tpsActivate && cltActivate;
 
 	bool rpmActivate = (rpm > engineConfiguration->coastingFuelCutRpmHigh);
 	bool rpmDeactivate = (rpm < engineConfiguration->coastingFuelCutRpmLow);
@@ -49,13 +57,11 @@ bool DfcoController::getState() const {
 	bool vssActivate = (vss >= engineConfiguration->coastingFuelCutVssHigh);
 	bool vssDeactivate = (vss < engineConfiguration->coastingFuelCutVssLow);
 
-	// RPM is high enough, VSS high enough, and DFCO allowed
-	if (dfcoAllowed && rpmActivate && vssActivate) {
+	if (tpsActivate && rpmActivate && vssActivate) {
 		return true;
 	}
 
-	// RPM too low, VSS too low, or DFCO not allowed
-	if (!dfcoAllowed || rpmDeactivate || vssDeactivate) {
+	if (!tpsActivate || rpmDeactivate || vssDeactivate) {
 		return false;
 	}
 
@@ -63,9 +69,41 @@ bool DfcoController::getState() const {
 	return m_isDfco;
 }
 
+bool DfcoController::getState(const EngineStateMachine& sm) const {
+	if (!commonGuards()) {
+		return false;
+	}
+
+	auto mode = engineConfiguration->dfcoFuelCutMode;
+	bool wantsOverrun = mode == dfco_fuel_cut_mode_e::Overrun || mode == dfco_fuel_cut_mode_e::Both;
+	bool wantsDecel = mode == dfco_fuel_cut_mode_e::Decel || mode == dfco_fuel_cut_mode_e::Both;
+	if (wantsOverrun && overrunActive()) {
+		return true;
+	}
+
+	// [tag:state_aware_dfco] Decel uses the SM classification, independently of the
+	// overrun TPS/RPM/VSS/gear gates. Only an absent VSS permits the RPM-rate fallback;
+	// a configured but failed sensor must not silently change detection strategy.
+	if (wantsDecel && sm.isEnabled()) {
+		if (sm.engineSmIsDecelerating) {
+			return true;
+		}
+		if (!Sensor::hasSensor(SensorType::VehicleSpeed)) {
+			float decelThreshold = engineConfiguration->smDecelRateThreshold;
+			return decelThreshold > 0 && sm.getLastRpmRate() < -decelThreshold;
+		}
+	}
+
+	return false;
+}
+
 void DfcoController::update() {
-	// Run state machine
-	bool newState = getState();
+	auto& sm = engine->module<EngineStateMachine>().unmock();
+	bool newState = getState(sm);
+	// Shift assistance needs fuel. A suppressed cut also restarts the entry delay.
+	if (sm.isEnabled() && (sm.engineSmIsUpshifting || sm.engineSmIsDownshifting)) {
+		newState = false;
+	}
 
 	// If fuel is cut, reset the timer
 	if (newState) {
