@@ -1066,6 +1066,9 @@ float getOutputValueByHash(const int hash) {
 // fan1enabledForAc
 		case -662113279:
 			return engine->module<FanControl1>()->enabledForAc;
+// fan1enabledForAcPressure
+		case -1997492422:
+			return engine->module<FanControl1>()->enabledForAcPressure;
 // fan1hot
 		case -1717868938:
 			return engine->module<FanControl1>()->hot;
@@ -1081,12 +1084,12 @@ float getOutputValueByHash(const int hash) {
 // fan1radiatorFanStatus
 		case -1478067590:
 			return engine->module<FanControl1>()->radiatorFanStatus;
-// fan1pwmCurvePwm
-		case 86008152:
-			return engine->module<FanControl1>()->pwmCurvePwm;
-// fan1pwmTargetPwm
-		case -850386982:
-			return engine->module<FanControl1>()->pwmTargetPwm;
+// fan1fanSpeedTarget
+		case 377338104:
+			return engine->module<FanControl1>()->fanSpeedTarget;
+// fan1fanSpeedApplied
+		case 1384010608:
+			return engine->module<FanControl1>()->fanSpeedApplied;
 // fan1pwmAppliedPwm
 		case -1368130286:
 			return engine->module<FanControl1>()->pwmAppliedPwm;
@@ -1108,6 +1111,9 @@ float getOutputValueByHash(const int hash) {
 // fan2enabledForAc
 		case 669515138:
 			return engine->module<FanControl2>()->enabledForAc;
+// fan2enabledForAcPressure
+		case -637687365:
+			return engine->module<FanControl2>()->enabledForAcPressure;
 // fan2hot
 		case -1717833001:
 			return engine->module<FanControl2>()->hot;
@@ -1123,12 +1129,12 @@ float getOutputValueByHash(const int hash) {
 // fan2radiatorFanStatus
 		case -1778606949:
 			return engine->module<FanControl2>()->radiatorFanStatus;
-// fan2pwmCurvePwm
-		case 907263673:
-			return engine->module<FanControl2>()->pwmCurvePwm;
-// fan2pwmTargetPwm
-		case 481241435:
-			return engine->module<FanControl2>()->pwmTargetPwm;
+// fan2fanSpeedTarget
+		case -1178261831:
+			return engine->module<FanControl2>()->fanSpeedTarget;
+// fan2fanSpeedApplied
+		case 1588820305:
+			return engine->module<FanControl2>()->fanSpeedApplied;
 // fan2pwmAppliedPwm
 		case -374065485:
 			return engine->module<FanControl2>()->pwmAppliedPwm;

@@ -64,6 +64,9 @@ const ConfigParameter allParameters[] = {
 	{ 0x0415D2EA, // tpsAccelFractionDivisor
 		[]() -> float { return engineConfiguration->tpsAccelFractionDivisor; },
 		[](float value) { engineConfiguration->tpsAccelFractionDivisor = value; } },
+	{ 0x04D6DEC3, // fan1AcPressureOff
+		[]() -> float { return engineConfiguration->fan1AcPressureOff; },
+		[](float value) { engineConfiguration->fan1AcPressureOff = value; } },
 	{ 0x0517613B, // wizardIgnitionOutputs
 		[]() -> float { return config->wizardIgnitionOutputs; },
 		[](float value) { config->wizardIgnitionOutputs = value; } },
@@ -175,6 +178,9 @@ const ConfigParameter allParameters[] = {
 	{ 0x112E58A6, // vvtActivationDelayMs
 		[]() -> float { return engineConfiguration->vvtActivationDelayMs; },
 		[](float value) { engineConfiguration->vvtActivationDelayMs = value; } },
+	{ 0x11751046, // fan2AcPressureOn
+		[]() -> float { return engineConfiguration->fan2AcPressureOn; },
+		[](float value) { engineConfiguration->fan2AcPressureOn = value; } },
 	{ 0x11AD3273, // canSleepPeriodMs
 		[]() -> float { return engineConfiguration->canSleepPeriodMs; },
 		[](float value) { engineConfiguration->canSleepPeriodMs = value; } },
@@ -484,9 +490,6 @@ const ConfigParameter allParameters[] = {
 	{ 0x3B2634C3, // fan1MinPwm
 		[]() -> float { return engineConfiguration->fan1MinPwm; },
 		[](float value) { engineConfiguration->fan1MinPwm = value; } },
-	{ 0x3B344893, // enableFan2WithAc
-		[]() -> float { return engineConfiguration->enableFan2WithAc; },
-		[](float value) { engineConfiguration->enableFan2WithAc = value; } },
 	{ 0x3B630B12, // camSyncOnSecondCrankRevolution
 		[]() -> float { return engineConfiguration->camSyncOnSecondCrankRevolution; },
 		[](float value) { engineConfiguration->camSyncOnSecondCrankRevolution = value; } },
@@ -529,6 +532,9 @@ const ConfigParameter allParameters[] = {
 	{ 0x40141893, // dwellDutyModeEnabled
 		[]() -> float { return engineConfiguration->dwellDutyModeEnabled; },
 		[](float value) { engineConfiguration->dwellDutyModeEnabled = value; } },
+	{ 0x40171864, // fan2AcPressureOff
+		[]() -> float { return engineConfiguration->fan2AcPressureOff; },
+		[](float value) { engineConfiguration->fan2AcPressureOff = value; } },
 	{ 0x4038D9D5, // fan2OffTemperature
 		[]() -> float { return engineConfiguration->fan2OffTemperature; },
 		[](float value) { engineConfiguration->fan2OffTemperature = value; } },
@@ -1603,6 +1609,9 @@ const ConfigParameter allParameters[] = {
 	{ 0xBE258F11, // auxTempSensor1.config.tempC_3
 		[]() -> float { return engineConfiguration->auxTempSensor1.config.tempC_3; },
 		[](float value) { engineConfiguration->auxTempSensor1.config.tempC_3 = value; } },
+	{ 0xBEECD5B9, // disableFan2AtSpeedHysteresis
+		[]() -> float { return engineConfiguration->disableFan2AtSpeedHysteresis; },
+		[](float value) { engineConfiguration->disableFan2AtSpeedHysteresis = value; } },
 	{ 0xBF2CC4CD, // cutSparkOnHardLimit
 		[]() -> float { return engineConfiguration->cutSparkOnHardLimit; },
 		[](float value) { engineConfiguration->cutSparkOnHardLimit = value; } },
@@ -1645,6 +1654,9 @@ const ConfigParameter allParameters[] = {
 	{ 0xC1139EC6, // verboseQuad
 		[]() -> float { return engineConfiguration->verboseQuad; },
 		[](float value) { engineConfiguration->verboseQuad = value; } },
+	{ 0xC21606C5, // fan1AcPressureOn
+		[]() -> float { return engineConfiguration->fan1AcPressureOn; },
+		[](float value) { engineConfiguration->fan1AcPressureOn = value; } },
 	{ 0xC26E9CBF, // fordInjectorSmallPulseBreakPoint
 		[]() -> float { return engineConfiguration->fordInjectorSmallPulseBreakPoint; },
 		[](float value) { engineConfiguration->fordInjectorSmallPulseBreakPoint = value; } },
@@ -1753,6 +1765,9 @@ const ConfigParameter allParameters[] = {
 	{ 0xD0CCDE9E, // etbJamDetectThreshold
 		[]() -> float { return engineConfiguration->etbJamDetectThreshold; },
 		[](float value) { engineConfiguration->etbJamDetectThreshold = value; } },
+	{ 0xD0D6B398, // disableFan1AtSpeedHysteresis
+		[]() -> float { return engineConfiguration->disableFan1AtSpeedHysteresis; },
+		[](float value) { engineConfiguration->disableFan1AtSpeedHysteresis = value; } },
 	{ 0xD0E78C29, // cel_tps_max_v
 		[]() -> float { return config->cel_tps_max_v; },
 		[](float value) { config->cel_tps_max_v = value; } },
@@ -1942,9 +1957,6 @@ const ConfigParameter allParameters[] = {
 	{ 0xE0B5E933, // idle_antiwindupFreq
 		[]() -> float { return engineConfiguration->idle_antiwindupFreq; },
 		[](float value) { engineConfiguration->idle_antiwindupFreq = value; } },
-	{ 0xE182B0B0, // fan2AcAdder
-		[]() -> float { return engineConfiguration->fan2AcAdder; },
-		[](float value) { engineConfiguration->fan2AcAdder = value; } },
 	{ 0xE1A78AC7, // stepperParkingExtraSteps
 		[]() -> float { return engineConfiguration->stepperParkingExtraSteps; },
 		[](float value) { engineConfiguration->stepperParkingExtraSteps = value; } },
@@ -2071,9 +2083,6 @@ const ConfigParameter allParameters[] = {
 	{ 0xED6F9371, // disableFan2WhenStopped
 		[]() -> float { return engineConfiguration->disableFan2WhenStopped; },
 		[](float value) { engineConfiguration->disableFan2WhenStopped = value; } },
-	{ 0xEE3A0BD2, // enableFan1WithAc
-		[]() -> float { return engineConfiguration->enableFan1WithAc; },
-		[](float value) { engineConfiguration->enableFan1WithAc = value; } },
 	{ 0xEE645A58, // globalTriggerAngleOffset
 		[]() -> float { return engineConfiguration->globalTriggerAngleOffset; },
 		[](float value) { engineConfiguration->globalTriggerAngleOffset = value; } },
@@ -2137,9 +2146,6 @@ const ConfigParameter allParameters[] = {
 	{ 0xF4C252B2, // gapVvtTrackingLengthOverride
 		[]() -> float { return engineConfiguration->gapVvtTrackingLengthOverride; },
 		[](float value) { engineConfiguration->gapVvtTrackingLengthOverride = value; } },
-	{ 0xF540DBCF, // fan1AcAdder
-		[]() -> float { return engineConfiguration->fan1AcAdder; },
-		[](float value) { engineConfiguration->fan1AcAdder = value; } },
 	{ 0xF58B05BA, // misfireWindowStart
 		[]() -> float { return engineConfiguration->misfireWindowStart; },
 		[](float value) { engineConfiguration->misfireWindowStart = value; } },

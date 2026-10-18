@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Wed Oct 14 19:43:31 UTC 2026
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sun Oct 18 00:05:06 UTC 2026
 // see also gen_config_and_enums.bat
 
 
@@ -609,6 +609,17 @@ const char *getEgo_sensor_e(ego_sensor_e value) {
 			return "ES_Innovate_MTX_L";
 		case ES_PLX:
 			return "ES_PLX";
+	}
+	return NULL;
+}
+const char *getFan_ac_mode_e(fan_ac_mode_e value) {
+	switch (value) {
+		case fan_ac_mode_e::Disabled:
+			return "Disabled";
+		case fan_ac_mode_e::Pressure:
+			return "Pressure";
+		case fan_ac_mode_e::Relay:
+			return "Relay";
 	}
 	return NULL;
 }

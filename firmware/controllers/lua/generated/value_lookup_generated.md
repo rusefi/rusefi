@@ -106,12 +106,6 @@ On some Ford and Toyota vehicles one of the throttle sensors is not linear on th
 ### overrideTriggerGaps
 
 
-### enableFan1WithAc
-Turn on this fan when AC is on.
-
-### enableFan2WithAc
-Turn on this fan when AC is on.
-
 ### enableTrailingSparks
 Enable secondary spark outputs that fire after the primary (rotaries, twin plug engines).
 
@@ -320,22 +314,28 @@ Ratio/coefficient of input voltage dividers on your PCB. For example, use '2' if
 This is the ratio of the resistors for the battery voltage, measure the voltage at the battery and then adjust this number until the gauge matches the reading.
 
 ### fanOnTemperature
-Cooling fan turn-on temperature threshold, in Celsius
+Cooling fan turn-on temperature threshold, in Celsius. Only used by the on/off relay path - ignored when PWM mode is enabled, which uses the PWM curve's own bins instead.
 
 ### fanOffTemperature
-Cooling fan turn-off temperature threshold, in Celsius
+Cooling fan turn-off temperature threshold, in Celsius. Only used by the on/off relay path - ignored when PWM mode is enabled, which uses the PWM curve's own bins instead.
 
 ### fan2OnTemperature
-Cooling fan turn-on temperature threshold, in Celsius
+Cooling fan turn-on temperature threshold, in Celsius. Only used by the on/off relay path - ignored when PWM mode is enabled, which uses the PWM curve's own bins instead.
 
 ### fan2OffTemperature
-Cooling fan turn-off temperature threshold, in Celsius
+Cooling fan turn-off temperature threshold, in Celsius. Only used by the on/off relay path - ignored when PWM mode is enabled, which uses the PWM curve's own bins instead.
 
 ### disableFan1AtSpeed
-null
+Inhibit the fan above this vehicle speed. Zero disables the check.
 
 ### disableFan2AtSpeed
-null
+Inhibit the fan above this vehicle speed. Zero disables the check.
+
+### disableFan1AtSpeedHysteresis
+Hysteresis below the disable-at-speed threshold before the fan is allowed back on. Prevents rapid on/off cycling at the threshold speed.
+
+### disableFan2AtSpeedHysteresis
+Hysteresis below the disable-at-speed threshold before the fan is allowed back on. Prevents rapid on/off cycling at the threshold speed.
 
 ### disableFan1WhenStopped
 Inhibit operation of this fan while the engine is not running.
@@ -356,28 +356,34 @@ Fan 1 PWM frequency
 Fan 2 PWM frequency
 
 ### fan1MinPwm
-Minimum PWM output clamp (Fan 1)
+PWM duty cycle meaning "fan off" (0% demand). May be greater than the full-speed duty to describe hardware that drives the fan with an inverted PWM signal (e.g. NPN transistor + pull-up: high duty = off, low duty = full speed) (Fan 1)
 
 ### fan1MaxPwm
-Maximum PWM output clamp (Fan 1)
+PWM duty cycle meaning "fan full speed" (100% demand) (Fan 1)
 
 ### fan2MinPwm
-Minimum PWM output clamp (Fan 2)
+PWM duty cycle meaning "fan off" (0% demand). May be greater than the full-speed duty to describe hardware that drives the fan with an inverted PWM signal (e.g. NPN transistor + pull-up: high duty = off, low duty = full speed) (Fan 2)
 
 ### fan2MaxPwm
-Maximum PWM output clamp (Fan 2)
-
-### fan1AcAdder
-PWM adder when AC compressor is active (Fan 1)
-
-### fan2AcAdder
-PWM adder when AC compressor is active (Fan 2)
+PWM duty cycle meaning "fan full speed" (100% demand) (Fan 2)
 
 ### fan1SoftStartSec
-Soft-start ramp time ? how long to ramp from 0 to target PWM (Fan 1)
+Time to ramp speed demand from 0 to 100% (Fan 1)
 
 ### fan2SoftStartSec
-Soft-start ramp time ? how long to ramp from 0 to target PWM (Fan 2)
+Time to ramp speed demand from 0 to 100% (Fan 2)
+
+### fan1AcPressureOn
+Pressure for relay fan turn-on or 100% PWM demand. Must exceed the off threshold.
+
+### fan1AcPressureOff
+Pressure below which relay assistance turns off, or at which PWM pressure demand reaches zero.
+
+### fan2AcPressureOn
+Pressure for relay fan turn-on or 100% PWM demand. Must exceed the off threshold.
+
+### fan2AcPressureOff
+Pressure below which relay assistance turns off, or at which PWM pressure demand reaches zero.
 
 ### wizardPanelToShow
 

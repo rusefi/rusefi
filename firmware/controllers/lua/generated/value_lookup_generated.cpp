@@ -112,12 +112,6 @@ float getConfigValueByHash(const int hash) {
 // overrideTriggerGaps
 		case 1362186948:
 			return engineConfiguration->overrideTriggerGaps;
-// enableFan1WithAc
-		case -298185774:
-			return engineConfiguration->enableFan1WithAc;
-// enableFan2WithAc
-		case 993282195:
-			return engineConfiguration->enableFan2WithAc;
 // enableTrailingSparks
 		case -1409016614:
 			return engineConfiguration->enableTrailingSparks;
@@ -343,6 +337,12 @@ float getConfigValueByHash(const int hash) {
 // disableFan2AtSpeed
 		case -1906717594:
 			return engineConfiguration->disableFan2AtSpeed;
+// disableFan1AtSpeedHysteresis
+		case -791235688:
+			return engineConfiguration->disableFan1AtSpeedHysteresis;
+// disableFan2AtSpeedHysteresis
+		case -1091775047:
+			return engineConfiguration->disableFan2AtSpeedHysteresis;
 // disableFan1WhenStopped
 		case -1132710384:
 			return engineConfiguration->disableFan1WhenStopped;
@@ -373,18 +373,24 @@ float getConfigValueByHash(const int hash) {
 // fan2MaxPwm
 		case -2020267706:
 			return engineConfiguration->fan2MaxPwm;
-// fan1AcAdder
-		case -180298801:
-			return engineConfiguration->fan1AcAdder;
-// fan2AcAdder
-		case -511528784:
-			return engineConfiguration->fan2AcAdder;
 // fan1SoftStartSec
 		case 1115446416:
 			return engineConfiguration->fan1SoftStartSec;
 // fan2SoftStartSec
 		case -1847892463:
 			return engineConfiguration->fan2SoftStartSec;
+// fan1AcPressureOn
+		case -1038743867:
+			return engineConfiguration->fan1AcPressureOn;
+// fan1AcPressureOff
+		case 81190595:
+			return engineConfiguration->fan1AcPressureOff;
+// fan2AcPressureOn
+		case 292884550:
+			return engineConfiguration->fan2AcPressureOn;
+// fan2AcPressureOff
+		case 1075255396:
+			return engineConfiguration->fan2AcPressureOff;
 // wizardPanelToShow
 		case 727066858:
 			return engineConfiguration->wizardPanelToShow;
@@ -2414,16 +2420,6 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->overrideTriggerGaps = (int)value;
 		return 1;
 	}
-		case -298185774:
-	{
-		engineConfiguration->enableFan1WithAc = (int)value;
-		return 1;
-	}
-		case 993282195:
-	{
-		engineConfiguration->enableFan2WithAc = (int)value;
-		return 1;
-	}
 		case -1409016614:
 	{
 		engineConfiguration->enableTrailingSparks = (int)value;
@@ -2799,6 +2795,16 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->disableFan2AtSpeed = (int)value;
 		return 1;
 	}
+		case -791235688:
+	{
+		engineConfiguration->disableFan1AtSpeedHysteresis = (int)value;
+		return 1;
+	}
+		case -1091775047:
+	{
+		engineConfiguration->disableFan2AtSpeedHysteresis = (int)value;
+		return 1;
+	}
 		case -1132710384:
 	{
 		engineConfiguration->disableFan1WhenStopped = (int)value;
@@ -2849,16 +2855,6 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->fan2MaxPwm = (int)value;
 		return 1;
 	}
-		case -180298801:
-	{
-		engineConfiguration->fan1AcAdder = (int)value;
-		return 1;
-	}
-		case -511528784:
-	{
-		engineConfiguration->fan2AcAdder = (int)value;
-		return 1;
-	}
 		case 1115446416:
 	{
 		engineConfiguration->fan1SoftStartSec = value;
@@ -2867,6 +2863,26 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1847892463:
 	{
 		engineConfiguration->fan2SoftStartSec = value;
+		return 1;
+	}
+		case -1038743867:
+	{
+		engineConfiguration->fan1AcPressureOn = (int)value;
+		return 1;
+	}
+		case 81190595:
+	{
+		engineConfiguration->fan1AcPressureOff = (int)value;
+		return 1;
+	}
+		case 292884550:
+	{
+		engineConfiguration->fan2AcPressureOn = (int)value;
+		return 1;
+	}
+		case 1075255396:
+	{
+		engineConfiguration->fan2AcPressureOff = (int)value;
 		return 1;
 	}
 		case 727066858:
