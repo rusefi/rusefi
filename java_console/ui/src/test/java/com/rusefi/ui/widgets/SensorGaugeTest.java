@@ -3,8 +3,10 @@ package com.rusefi.ui.widgets;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.GaugeModel;
 import com.opensr5.ini.IniFileMetaInfo;
+import com.opensr5.ini.IniFileMetaInfoImpl;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniFileModelMocks;
+import com.opensr5.ini.RawIniFile;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.ini.reader.IniFileReaderUtil;
@@ -15,10 +17,14 @@ import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,6 +32,54 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class SensorGaugeTest {
+    @Test
+    void gaugeMenuUsesLoadedIniWithoutAnEcuConnection() throws Throwable {
+        IniFileModel ini;
+        try (InputStream input = getClass().getResourceAsStream("/january.ini")) {
+            assertNotNull(input);
+            RawIniFile raw = IniFileReaderUtil.read(input, "/january.ini");
+            ini = IniFileReaderUtil.readIniFile(raw, "/january.ini", new IniFileMetaInfoImpl(raw));
+        }
+        List<String> expectedPaths = new ArrayList<>();
+        ini.getGaugeCategories().forEach((category, model) -> model.getGauges().forEach(
+            gauge -> expectedPaths.add(category + " / " + gauge.getTitle())));
+        assertTrue(expectedPaths.size() > 100, "Exercise the sandbox's full INI catalog");
+
+        SwingUtilities.invokeAndWait(() -> {
+            UIContext context = new UIContext();
+            context.iniFileState.setIniFileModelForTest(ini);
+            assertNull(context.getBinaryProtocol());
+            JPanelWithListener wrapper = new JPanelWithListener(new BorderLayout());
+            JPopupMenu menu = new JPopupMenu();
+            SensorGauge.fillGaugeMenuItems(context, menu, wrapper, name -> { }, null);
+            // Reproduction: the loaded INI is ignored without a live protocol.
+            assertEquals(7, visibleGaugePaths(menu).size());
+            assertNotEquals(expectedPaths, visibleGaugePaths(menu));
+
+            BinaryProtocol protocol = mock(BinaryProtocol.class);
+            when(protocol.getIniFileNullable()).thenReturn(ini);
+            context.getLinkManager().setBinaryProtocolForTests(protocol);
+            JPopupMenu connectedMenu = new JPopupMenu();
+            SensorGauge.fillGaugeMenuItems(context, connectedMenu, wrapper, name -> { }, null);
+            assertEquals(expectedPaths, visibleGaugePaths(connectedMenu));
+        });
+    }
+
+    private static List<String> visibleGaugePaths(JPopupMenu menu) {
+        List<String> paths = new ArrayList<>();
+        for (Component component : menu.getComponents()) {
+            if (component instanceof JMenu && component.isVisible()) {
+                JMenu category = (JMenu) component;
+                for (Component child : category.getMenuComponents()) {
+                    if (child instanceof JMenuItem && child.isVisible()) {
+                        paths.add(category.getText() + " / " + ((JMenuItem) child).getText());
+                    }
+                }
+            }
+        }
+        return paths;
+    }
+
     @Test
     void tuneExpressionsDefineTheScaleAndDangerZone() throws Throwable {
         String text = "[Constants]\npage = 1\n"

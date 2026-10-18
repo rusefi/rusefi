@@ -10,6 +10,7 @@ import com.rusefi.core.SensorCategory;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.core.ui.AutoupdateUtil;
+import com.rusefi.ui.widgets.GaugeMenuSearch;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -127,6 +128,7 @@ public class SensorLiveGraph extends JPanel {
         JPopupMenu pm = new JPopupMenu();
 
         addChangeSensorItems(pm);
+        GaugeMenuSearch.addTo(pm);
         pm.add(new JSeparator());
         addChangePeriodItems(pm);
         JMenuItem scale = new JMenu("Scale");
@@ -230,7 +232,7 @@ public class SensorLiveGraph extends JPanel {
         }
     }
 
-    private void addChangeSensorItems(JPopupMenu pm) {
+    void addChangeSensorItems(JPopupMenu pm) {
         BinaryProtocol bp = uiContext.getLinkManager().getBinaryProtocol();
         if (bp != null) {
             IniFileModel iniFile = bp.getIniFileNullable();

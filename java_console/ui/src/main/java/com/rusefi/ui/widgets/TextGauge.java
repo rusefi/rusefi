@@ -196,6 +196,7 @@ public class TextGauge {
             }
         }
         if (pm.getSubElements().length > 0) {
+            GaugeMenuSearch.addTo(pm);
             pm.show(e.getComponent(), e.getX(), e.getY());
         }
     }
