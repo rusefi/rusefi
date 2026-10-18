@@ -706,3 +706,112 @@ TEST(AirmassModes, PredictiveMapBlendTowardRisingSensor) {
 	Sensor::setMockValue(SensorType::Map, 90.0f);
 	EXPECT_FLOAT_EQ(dut.getMap(1500, false), 90.0f);
 }
+
+// [tag:predictive_map_lifetime] Blend restarts must not extend the event's lifetime.
+TEST(AirmassModes, PredictiveMapRetriggersRespectSessionDuration) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->accelEnrichmentMode = AE_MODE_PREDICTIVE_MAP;
+	engineConfiguration->tpsAccelEnrichmentThreshold = 5;
+	for (auto& duration : config->predictiveMapBlendDurationValues) {
+		duration = 0.5f;
+	}
+
+	StrictMock<MockVp3d> veTable;
+	StrictMock<MockVp3d> mapFallback;
+	EXPECT_CALL(mapFallback, getValue(1500, 30)).WillRepeatedly(Return(85));
+	EXPECT_CALL(mapFallback, getValue(1500, 40)).WillRepeatedly(Return(95));
+	EXPECT_CALL(mapFallback, getValue(1500, 50)).WillRepeatedly(Return(105));
+	SpeedDensityAirmass dut(veTable, mapFallback);
+	Sensor::setMockValue(SensorType::Map, 65);
+	Sensor::setMockValue(SensorType::Tps1, 30);
+	auto& ae = *engine->module<TpsAccelEnrichment>();
+	ae.isAboveAccelThreshold = true;
+	ae.m_accelEventJustOccurred = true;
+	ASSERT_FLOAT_EQ(dut.getMap(1500, true), 85);
+	ASSERT_TRUE(engine->outputChannels.isMapPredictionActive);
+
+	eth.moveTimeForwardMs(200);
+	Sensor::setMockValue(SensorType::Tps1, 40);
+	ae.m_accelEventJustOccurred = true;
+	EXPECT_FLOAT_EQ(dut.getMap(1500, true), 95);
+	eth.moveTimeForwardMs(200);
+	Sensor::setMockValue(SensorType::Tps1, 50);
+	ae.m_accelEventJustOccurred = true;
+	EXPECT_FLOAT_EQ(dut.getMap(1500, true), 105);
+
+	eth.moveTimeForwardMs(99);
+	EXPECT_NEAR(dut.getMap(1500, true), 97.08f, EPS4D);
+	ASSERT_TRUE(engine->outputChannels.isMapPredictionActive);
+	eth.moveTimeForwardMs(1);
+	// The session ends at 500 ms, despite the last blend restart at 400 ms.
+	EXPECT_FLOAT_EQ(dut.getMap(1500, true), 65);
+	EXPECT_FALSE(engine->outputChannels.isMapPredictionActive);
+	EXPECT_EQ(engine->outputChannels.mapPredEventOver, 1);
+	EXPECT_EQ(engine->outputChannels.predTimerResetCnt, 1);
+
+	// Pending acceleration cannot immediately restart a capped event.
+	ae.m_accelEventJustOccurred = true;
+	eth.moveTimeForwardMs(100);
+	EXPECT_FLOAT_EQ(dut.getMap(1500, true), 65);
+	EXPECT_EQ(engine->outputChannels.mapPredEventOver, 1);
+	EXPECT_EQ(engine->outputChannels.predTimerResetCnt, 1);
+
+	// Clearing the detector threshold permits a new event with its own timer.
+	ae.m_accelEventJustOccurred = false;
+	ae.isAboveAccelThreshold = false;
+	EXPECT_FLOAT_EQ(dut.getMap(1500, true), 65);
+	ae.isAboveAccelThreshold = true;
+	ae.m_accelEventJustOccurred = true;
+	EXPECT_FLOAT_EQ(dut.getMap(1500, true), 105);
+	eth.moveTimeForwardMs(250);
+	EXPECT_FLOAT_EQ(dut.getMap(1500, true), 85);
+	EXPECT_TRUE(engine->outputChannels.isMapPredictionActive);
+	EXPECT_EQ(engine->outputChannels.predTimerResetCnt, 2);
+}
+
+TEST(AirmassModes, PredictiveMapSmallerEventHasItsOwnTpsPeak) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->accelEnrichmentMode = AE_MODE_PREDICTIVE_MAP;
+	engineConfiguration->tpsAccelEnrichmentThreshold = 5;
+	for (auto& duration : config->predictiveMapBlendDurationValues) {
+		duration = 0.5f;
+	}
+
+	StrictMock<MockVp3d> veTable;
+	StrictMock<MockVp3d> mapFallback;
+	EXPECT_CALL(mapFallback, getValue(1500, 80)).WillRepeatedly(Return(100));
+	EXPECT_CALL(mapFallback, getValue(1500, 0)).WillRepeatedly(Return(40));
+	EXPECT_CALL(mapFallback, getValue(1500, 30)).WillRepeatedly(Return(70));
+	EXPECT_CALL(mapFallback, getValue(1500, 20)).WillRepeatedly(Return(60));
+	SpeedDensityAirmass dut(veTable, mapFallback);
+	Sensor::setMockValue(SensorType::Map, 40);
+	Sensor::setMockValue(SensorType::Tps1, 80);
+	auto& ae = *engine->module<TpsAccelEnrichment>();
+	ae.isAboveAccelThreshold = true;
+	ae.m_accelEventJustOccurred = true;
+	ASSERT_FLOAT_EQ(dut.getMap(1500, true), 100);
+	ASSERT_FLOAT_EQ(dut.getMap(1500, true), 100); // Record the first event's peak.
+
+	eth.moveTimeForwardMs(100);
+	Sensor::setMockValue(SensorType::Tps1, 0);
+	ae.isAboveAccelThreshold = false;
+	ASSERT_FLOAT_EQ(dut.getMap(1500, true), 40);
+	ASSERT_FALSE(engine->outputChannels.isMapPredictionActive);
+
+	eth.moveTimeForwardMs(500);
+	Sensor::setMockValue(SensorType::Tps1, 30);
+	ae.isAboveAccelThreshold = true;
+	ae.m_accelEventJustOccurred = true;
+	ASSERT_FLOAT_EQ(dut.getMap(1500, true), 70);
+	ASSERT_TRUE(engine->outputChannels.isMapPredictionActive);
+	// The new event retains its 30% peak instead of inheriting the old 80% peak.
+	EXPECT_FLOAT_EQ(dut.getMap(1500, true), 70);
+	EXPECT_TRUE(engine->outputChannels.isMapPredictionActive);
+	eth.moveTimeForwardMs(250);
+	EXPECT_FLOAT_EQ(dut.getMap(1500, true), 55);
+
+	// A real throttle release still cancels prediction before MAP catches up.
+	Sensor::setMockValue(SensorType::Tps1, 20);
+	EXPECT_FLOAT_EQ(dut.getMap(1500, true), 40);
+	EXPECT_FALSE(engine->outputChannels.isMapPredictionActive);
+}

@@ -50,6 +50,7 @@ Release template (copy/paste this for new release):
  - Nissan VK56DE (36-1-1) crank and PHASE cam triggers
 
 ### Fixed
+ - Predictive MAP caps total event duration across TPS retriggers and resets the TPS peak for each event. kudos AlphaX!
  - overdwell protection causes Null-pointer deref and crash #9435
  - huge print in Lua walks into memory #10159
  - H723 bootloader fixes

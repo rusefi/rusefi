@@ -2441,7 +2441,7 @@ uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale tpsTspCorrValuesBins;;"RPM", 50,
 uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale tpsTspCorrValues;Multiplier applied to additive TPS enrichment at each RPM. 1.00 is neutral, 0.50 halves and 2.00 doubles. Ignored by MAP Prediction and Lua.;"multiplier", 0.02, 0, 0, 5, 2
 
 uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale predictiveMapBlendDurationBins;;"RPM", 50, 0, 0, 12500, 0
-uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale predictiveMapBlendDurationValues;Transition duration from estimated MAP toward current measured MAP, interpolated at current RPM. Prediction may exit earlier or restart if estimated MAP increases. The largest duration in this curve also sizes TPS history. Used only by MAP Prediction.;"second", 0.02, 0, 0, 5, 2
+uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale predictiveMapBlendDurationValues;Transition duration and total event time limit from estimated MAP toward current measured MAP, interpolated at current RPM. Rising estimated MAP restarts blending without extending the event time limit. Prediction may exit earlier. The largest duration in this curve also sizes TPS history. Used only by MAP Prediction.;"second", 0.02, 0, 0, 5, 2
 
 ! Flex-fuel transient fueling compensation: CLT (X) x Ethanol% (Y) multiplier tables
 #define FLEX_TRANSIENT_CLT_SIZE 8

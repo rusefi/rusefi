@@ -67,7 +67,7 @@ The MS Adder conversion uses injector flow without adding deadtime; final inject
 
 The implementation:
 
-1. Consumes a latched TPS acceleration event and starts prediction only when table MAP exceeds measured MAP and the retrigger lock is clear. It initially uses table MAP directly.
+1. Consumes a latched TPS acceleration event and starts prediction only when table MAP exceeds measured MAP and the retrigger lock is clear. It initially uses table MAP directly, starts the session timer and initializes the TPS peak from the current throttle position.
 2. Blends from the event's prediction toward the **current measured MAP**:
 
    ```text
@@ -75,8 +75,8 @@ The implementation:
                 + (currentMeasuredMap - initialPredictedMap) * elapsed / blendDuration
    ```
 
-3. If table MAP rises above the saved prediction as the throttle keeps opening, adopts the higher prediction and restarts the blend timer.
-4. Ends prediction when the duration expires, measured MAP catches up to the prediction/effective MAP, or TPS falls more than the acceleration threshold below the tracked peak. It drains acceleration events while active. The retrigger lock clears when the shared `isAboveAccelThreshold` flag becomes false; a physical return to closed throttle is not required.
+3. If table MAP rises above the saved prediction as the throttle keeps opening, adopts the higher prediction and restarts the blend timer. The separate session timer continues running, so blend restarts cannot extend the total event time limit. The limit is interpolated at current RPM on each call. [tag:predictive_map_lifetime]
+4. Ends prediction when the session duration expires, measured MAP catches up to the prediction/effective MAP, or TPS falls more than the acceleration threshold below this event's tracked peak. A smaller event starts with its own peak. It drains acceleration events while active. The retrigger lock clears when the shared `isAboveAccelThreshold` flag becomes false; a physical return to closed throttle is not required.
 
 For example, predicted MAP 85 kPa and measured MAP 65 kPa initially use 85 kPa. Halfway through the blend, if measured MAP has risen to 75 kPa, effective MAP is 80 kPa.
 
@@ -181,5 +181,5 @@ Bypassed adjustments can leave the last correction unchanged.
 - [Wall model](../../firmware/controllers/algo/wall_fuel.cpp), [injection integration](../../firmware/controllers/engine_cycle/main_trigger_callback.cpp), [flex multiplier helper](../../firmware/controllers/algo/flex_transient.h), [closed-loop gating](../../firmware/controllers/math/closed_loop_fuel.cpp).
 - [TPS tests](../../unit_tests/tests/test_accel_enrichment.cpp): history, sampling versus engine-cycle updates, fractional portions, predictive-mode adder bypass and flex multiplier.
 - The same file's `LuaAccelEnrichment` tests exercise the Lua binding, mass scaling, native-mode isolation, expiry, reset, DFCO/cranking and VE-tuning suppression. [TunerStudio tests](../../unit_tests/tests/test_tunerstudio.cpp) cover the Lua acceleration state bit.
-- [Fuel math tests](../../unit_tests/tests/ignition_injection/test_fuel_math.cpp): `AirmassModes.PredictiveMapCalculation` and `PredictiveMapBlendTowardRisingSensor` cover blending, catch-up and sensor fallback.
+- [Fuel math tests](../../unit_tests/tests/ignition_injection/test_fuel_math.cpp): `AirmassModes.PredictiveMap*` cover blending, catch-up, sensor fallback, the session duration cap across retriggers, rearming, and TPS peak reset between events.
 - [Wall-wetting tests](../../unit_tests/tests/ignition_injection/test_fuel_wall_wetting.cpp): film math, injection-event scheduling and flex compensation.

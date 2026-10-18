@@ -28,6 +28,8 @@ private:
 	bool m_isMapPredictionActive = false;
 	bool m_awaitingThrottleRelease = false;
 	Timer m_predictionTimer;
+	// Starts with a new event; rising-TPS blend restarts leave this timer running.
+	Timer m_sessionTimer;
 	float m_initialPredictedMap = 0;
 	float m_tpsPeak = 0;
 };

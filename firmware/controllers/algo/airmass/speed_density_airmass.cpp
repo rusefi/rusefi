@@ -87,7 +87,9 @@ float SpeedDensityAirmass::getPredictiveMap(float rpm, bool postState, float map
 
 	float elapsedTime = m_predictionTimer.getElapsedSeconds();
 
-	if (m_isMapPredictionActive && elapsedTime >= blendDuration) {
+	// [tag:predictive_map_lifetime] Rising TPS may restart the blend, but the
+	// session timer limits total substitution of the working MAP sensor.
+	if (m_isMapPredictionActive && m_sessionTimer.getElapsedSeconds() >= blendDuration) {
 			m_isMapPredictionActive = false;
 			engine->outputChannels.mapPredEventOver++;
 	}
@@ -146,10 +148,13 @@ float SpeedDensityAirmass::getPredictiveMap(float rpm, bool postState, float map
 				m_isMapPredictionActive = true;
 				ae->m_timeSinceAccel.reset();
 				m_predictionTimer.reset();
+				m_sessionTimer.reset();
 				m_initialPredictedMap = predictedMap;
 				engine->outputChannels.predTimerResetCnt++;
 				effectiveMap = predictedMap;
 				m_awaitingThrottleRelease = true;
+				// A new event's release threshold starts at its own TPS, not a previous peak.
+				m_tpsPeak = Sensor::getOrZero(SensorType::Tps1);
 			}
 		}
 	}
