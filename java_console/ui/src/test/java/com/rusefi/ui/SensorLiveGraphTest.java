@@ -41,9 +41,7 @@ class SensorLiveGraphTest {
                 graph.setActive(false);
                 JPopupMenu menu = new JPopupMenu();
                 graph.addChangeSensorItems(menu);
-                // Reproduction: the loaded INI is ignored without a live protocol.
-                assertEquals(7, gaugePaths(menu).size());
-                assertNotEquals(expectedPaths, gaugePaths(menu));
+                assertEquals(expectedPaths, gaugePaths(menu));
 
                 BinaryProtocol protocol = mock(BinaryProtocol.class);
                 when(protocol.getIniFileNullable()).thenReturn(ini);

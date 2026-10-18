@@ -52,9 +52,16 @@ class SensorGaugeTest {
             JPanelWithListener wrapper = new JPanelWithListener(new BorderLayout());
             JPopupMenu menu = new JPopupMenu();
             SensorGauge.fillGaugeMenuItems(context, menu, wrapper, name -> { }, null);
-            // Reproduction: the loaded INI is ignored without a live protocol.
-            assertEquals(7, visibleGaugePaths(menu).size());
-            assertNotEquals(expectedPaths, visibleGaugePaths(menu));
+            assertEquals(expectedPaths, visibleGaugePaths(menu));
+            GaugeMenuSearch.addTo(menu);
+            JTextField search = (JTextField) UiUtils.getAllComponents(menu).stream()
+                .filter(component -> component instanceof JTextField)
+                .findFirst().orElseThrow(AssertionError::new);
+            assertEquals(expectedPaths, visibleGaugePaths(menu), "Empty search shows the full catalog");
+            search.setText("not-a-gauge-in-this-ini");
+            assertTrue(visibleGaugePaths(menu).isEmpty());
+            search.setText("");
+            assertEquals(expectedPaths, visibleGaugePaths(menu), "Clearing search restores the full catalog");
 
             BinaryProtocol protocol = mock(BinaryProtocol.class);
             when(protocol.getIniFileNullable()).thenReturn(ini);

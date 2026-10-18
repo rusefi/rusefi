@@ -148,27 +148,24 @@ public class SensorGauge {
     }
 
     static void fillGaugeMenuItems(UIContext uiContext, JPopupMenu popupMenu, final JPanelWithListener wrapper, final GaugeChangeListener listener, final JMenuItem extraMenuItem) {
-        BinaryProtocol bp = uiContext.getLinkManager().getBinaryProtocol();
-        if (bp != null) {
-            IniFileModel iniFile = bp.getIniFileNullable();
-            if (iniFile != null) {
-                for (final String category : iniFile.getGaugeCategories().keySet()) {
-                    JMenuItem cmi = new JMenu(category);
-                    popupMenu.add(cmi);
-                    for (final GaugeModel gauge : iniFile.getGaugeCategories().get(category).getGauges()) {
-                        JMenuItem mi = new JMenuItem(gauge.getTitle());
-                        mi.addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                createGaugeBody(uiContext, gauge.getName(), wrapper, listener, extraMenuItem);
-                                listener.onSensorChange(gauge.getName());
-                            }
-                        });
-                        cmi.add(mi);
-                    }
+        IniFileModel iniFile = uiContext.iniFileState.getIniFileModel();
+        if (iniFile != null) {
+            for (final String category : iniFile.getGaugeCategories().keySet()) {
+                JMenuItem cmi = new JMenu(category);
+                popupMenu.add(cmi);
+                for (final GaugeModel gauge : iniFile.getGaugeCategories().get(category).getGauges()) {
+                    JMenuItem mi = new JMenuItem(gauge.getTitle());
+                    mi.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            createGaugeBody(uiContext, gauge.getName(), wrapper, listener, extraMenuItem);
+                            listener.onSensorChange(gauge.getName());
+                        }
+                    });
+                    cmi.add(mi);
                 }
-                return;
             }
+            return;
         }
 
         for (final SensorCategory sc : SensorCategory.values()) {
