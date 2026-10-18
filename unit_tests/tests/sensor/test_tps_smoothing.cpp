@@ -295,3 +295,29 @@ TEST(TpsSmoothing, PreRegisteredRawProviderCanUseFilter) {
 	EXPECT_EQ(Sensor::getSensorOfType(SensorType::Tps1), nullptr);
 	rawTps.unregister();
 }
+
+TEST(TpsSmoothing, FaultAndRecoveryOnlyResetTheAffectedThrottle) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	configureAnalogTps();
+	engineConfiguration->tpsExpAverageAlpha = 0.5f;
+	initTps();
+	Sensor::setMockValue(SensorType::Tps1Primary, 20);
+	Sensor::setMockValue(SensorType::Tps2Primary, 60);
+	EXPECT_FLOAT_EQ(Sensor::getOrZero(SensorType::Tps1), 20);
+	EXPECT_FLOAT_EQ(Sensor::getOrZero(SensorType::Tps2), 60);
+
+	Sensor::setInvalidMockValue(SensorType::Tps1Primary);
+	Sensor::setMockValue(SensorType::Tps2Primary, 80);
+	EXPECT_FALSE(Sensor::get(SensorType::Tps1).Valid);
+	EXPECT_FLOAT_EQ(Sensor::getOrZero(SensorType::Tps2), 70);
+	Sensor::setMockValue(SensorType::Tps1Primary, 80);
+	EXPECT_FLOAT_EQ(Sensor::getOrZero(SensorType::Tps1), 80);
+	EXPECT_FLOAT_EQ(Sensor::getOrZero(SensorType::Tps2), 75);
+
+	Sensor::setMockValue(SensorType::Tps2Primary, INFINITY);
+	EXPECT_FALSE(Sensor::get(SensorType::Tps2).Valid);
+	Sensor::setMockValue(SensorType::Tps1Primary, 60);
+	EXPECT_FLOAT_EQ(Sensor::getOrZero(SensorType::Tps1), 70);
+	Sensor::setMockValue(SensorType::Tps2Primary, 20);
+	EXPECT_FLOAT_EQ(Sensor::getOrZero(SensorType::Tps2), 20);
+}

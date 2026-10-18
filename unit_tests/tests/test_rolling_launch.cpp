@@ -389,3 +389,60 @@ TEST(RollingLaunch, RunningFuelAndIgnitionCorrections) {
 	engineConfiguration->fixedTiming = 13;
 	EXPECT_FLOAT_EQ(engine->ignitionState.getWrappedAdvance(3500, 50), 13);
 }
+
+TEST(RollingLaunch, LuaResetLeavesHoldEngaged_KnownBug) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setupRl();
+	EXPECT_EQ(testLuaReturnsNumber(R"(
+		function testFunc()
+			setRollingLaunchTrigger(1)
+			return 1
+		end
+	)"), 1);
+	Sensor::setMockValue(SensorType::Rpm, 3500);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 30);
+	getRl().onSlowCallback();
+	Sensor::setMockValue(SensorType::Rpm, 4000);
+	getRl().onSlowCallback();
+	ASSERT_TRUE(getRl().isRollingLaunchArmed);
+	ASSERT_FLOAT_EQ(getRl().getSparkSkipRatio(), 1);
+
+	// Reproduce a script reload without a replacement script asserting the trigger.
+	// Known bug: resetLua() omits luaRollingLaunchState, so the old script keeps
+	// cutting spark and adding fuel indefinitely. A fix must clear the Lua request
+	// and release the hold on the next slow callback, retaining normal ramp-out.
+	engine->resetLua();
+	eth.moveTimeForwardSec(2);
+	getRl().onSlowCallback();
+	engine->engineState.updateSparkSkip();
+	EXPECT_TRUE(getRl().luaRollingLaunchState);
+	EXPECT_TRUE(getRl().isRollingLaunchArmed);
+	EXPECT_FALSE(getRl().isRollingLaunchRampActive);
+	EXPECT_FLOAT_EQ(getRl().getFuelCoefficient(), 1.05f);
+	EXPECT_FLOAT_EQ(getRl().getTimingRetard(), 10);
+	EXPECT_FLOAT_EQ(engine->hardSparkLimiter.getTargetSkipRatio(), 1);
+}
+
+TEST(RollingLaunch, LuaResetPreservesHardwareRequest) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setupRl();
+	const auto pin = Gpio::F3;
+	const bool previousState = efiReadPin(pin);
+	engineConfiguration->rollingLaunchActivatePin = pin;
+	engineConfiguration->rollingLaunchActivatePinMode = PI_DEFAULT;
+	setMockState(pin, true);
+	step(3500, 30, false);
+	step(3750, 30, false);
+	engine->resetLua();
+	getRl().onSlowCallback();
+	EXPECT_FALSE(getRl().luaRollingLaunchState);
+	EXPECT_TRUE(getRl().isRollingLaunchArmed);
+	EXPECT_FLOAT_EQ(getRl().capturedRpm, 3500);
+	EXPECT_FLOAT_EQ(getRl().getSparkSkipRatio(), 0.5f);
+
+	setMockState(pin, false);
+	getRl().onSlowCallback();
+	EXPECT_FALSE(getRl().isRollingLaunchArmed);
+	EXPECT_TRUE(getRl().isRollingLaunchRampActive);
+	setMockState(pin, previousState);
+}

@@ -510,6 +510,100 @@ TEST(OutputShaftSpeed, FrequencyConversion) {
 	EXPECT_FALSE(converter.convert(100).Valid);
 }
 
+TEST(GearDetector, MissingSelectedShaftSourceDoesNotFallBack) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	auto& dut = setupSlipDetection();
+	engineConfiguration->gearDetectionRpmSourceIsInputShaftSpeed = true;
+	engineConfiguration->transmissionSlipRpmSourceIsInputShaftSpeed = true;
+	Sensor::setMockValue(SensorType::InputShaftSpeed, 1000);
+	dut.onSlowCallback();
+	ASSERT_EQ(1, dut.get().Value);
+	ASSERT_TRUE(dut.isSlipValid());
+
+	// Valid engine RPM/VSS must not conceal loss of an explicitly selected shaft sensor.
+	for (auto source : {SensorType::InputShaftSpeed, SensorType::OutputShaftSpeed}) {
+		SCOPED_TRACE(static_cast<int>(source));
+		Sensor::setInvalidMockValue(source);
+		dut.onSlowCallback();
+		EXPECT_FLOAT_EQ(0, dut.getGearboxRatio());
+		EXPECT_EQ(0, dut.get().Value);
+		EXPECT_FALSE(dut.isSlipValid());
+		EXPECT_FLOAT_EQ(0, dut.getSlipPercent());
+		Sensor::setMockValue(source, 1000);
+		dut.onSlowCallback();
+		EXPECT_EQ(1, dut.get().Value);
+		EXPECT_TRUE(dut.isSlipValid());
+	}
+}
+
+TEST(GearDetector, NonfiniteShaftRatioReportsFirstGear_KnownBug) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	auto& dut = setupSlipDetection();
+	engineConfiguration->totalGearsCount = 2;
+	engineConfiguration->gearRatio[0] = 2;
+	engineConfiguration->gearRatio[1] = 1;
+	engineConfiguration->gearDetectionRpmSourceIsInputShaftSpeed = true;
+	dut.onConfigurationChange(nullptr);
+	Sensor::resetMockValue(SensorType::OutputShaftSpeed);
+	StoredValueSensor inputShaft(SensorType::InputShaftSpeed, MS2NT(500));
+	StoredValueSensor outputShaft(SensorType::OutputShaftSpeed, MS2NT(500));
+	ASSERT_TRUE(inputShaft.Register());
+	ASSERT_TRUE(outputShaft.Register());
+	inputShaft.setValidValue(1000, getTimeNowNt());
+	outputShaft.setValidValue(1000, getTimeNowNt());
+	dut.onSlowCallback();
+	ASSERT_EQ(2, dut.get().Value);
+	ASSERT_TRUE(dut.isSlipValid());
+
+	// External providers, including Lua sensors, publish via StoredValueSensor.
+	for (auto* source : {&inputShaft, &outputShaft}) {
+		SCOPED_TRACE(static_cast<int>(source->type()));
+		source->setValidValue(NAN, getTimeNowNt());
+		dut.onSlowCallback();
+		EXPECT_TRUE(std::isnan(dut.getGearboxRatio()));
+		// Known bug: NaN bypasses all ratio comparisons, reporting first gear.
+		// Slip correctly becomes invalid, but DetectedGear should also return neutral.
+		EXPECT_EQ(1, dut.get().Value);
+		EXPECT_EQ(1, Sensor::getOrZero(SensorType::DetectedGear));
+		EXPECT_FALSE(dut.isSlipValid());
+		EXPECT_FLOAT_EQ(0, dut.getSlipPercent());
+		source->setValidValue(1000, getTimeNowNt());
+		dut.onSlowCallback();
+		EXPECT_EQ(2, dut.get().Value);
+		EXPECT_TRUE(dut.isSlipValid());
+	}
+	inputShaft.unregister();
+	outputShaft.unregister();
+}
+
+TEST(GearDetector, OutputShaftTimeoutClearsGearAndSlipThenRecovers) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	auto& dut = setupSlipDetection();
+	Sensor::resetMockValue(SensorType::OutputShaftSpeed);
+	StoredValueSensor shaft(SensorType::OutputShaftSpeed, MS2NT(500));
+	ASSERT_TRUE(shaft.Register());
+	shaft.setValidValue(1000, getTimeNowNt());
+	dut.onSlowCallback();
+	ASSERT_EQ(1, dut.get().Value);
+	ASSERT_TRUE(dut.isSlipValid());
+
+	eth.moveTimeForwardMs(501);
+	dut.onSlowCallback();
+	EXPECT_EQ(0, dut.get().Value);
+	EXPECT_FALSE(dut.isSlipValid());
+	updateTunerStudioState();
+	EXPECT_FALSE(engine->outputChannels.transmissionSlipValid);
+	EXPECT_FLOAT_EQ(0, engine->outputChannels.transmissionSlipPercent);
+	EXPECT_FLOAT_EQ(0, engine->outputChannels.outputShaftSpeed);
+
+	shaft.setValidValue(1000, getTimeNowNt());
+	dut.onSlowCallback();
+	EXPECT_EQ(1, dut.get().Value);
+	EXPECT_TRUE(dut.isSlipValid());
+	EXPECT_NEAR(10, dut.getSlipPercent(), 0.001f);
+	shaft.unregister();
+}
+
 TEST(OutputShaftSpeed, PulseInputTimeoutAndReconfiguration) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	extern FrequencySensor outputShaftSpeedSensor;

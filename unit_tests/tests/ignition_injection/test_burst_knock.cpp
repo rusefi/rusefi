@@ -215,3 +215,74 @@ TEST(BurstKnock, PreservesFixedTimingAndCrankingCorrectionSwitch) {
 	feedTransient(300, true);
 	EXPECT_NEAR(engine->ignitionState.getWrappedAdvance(200, 50), baseline - 10, 0.001f);
 }
+
+TEST(BurstKnock, SlowCallbackConsumesCurrentTpsSampleBeforeComputingRetard) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setupBurst();
+	engineConfiguration->tpsAccelLookback = 0.2f;
+	engineConfiguration->tpsAccelEnrichmentThreshold = 5;
+	getAe().onConfigurationChange(nullptr);
+	Sensor::setMockValue(SensorType::Tps1, 0);
+	for (int i = 0; i < 4; i++) {
+		eth.moveTimeForwardMs(50);
+		engine->periodicSlowCallback();
+	}
+	ASSERT_FALSE(getBurst().isBurstKnockActive);
+
+	// Use the engine dispatch path: feeding AE by hand would hide callback-order bugs.
+	Sensor::setMockValue(SensorType::Tps1, 20);
+	eth.moveTimeForwardMs(50);
+	engine->periodicSlowCallback();
+	EXPECT_TRUE(getBurst().isBurstKnockActive);
+	EXPECT_FLOAT_EQ(getAe().deltaTps, 20);
+	EXPECT_NEAR(getBurst().burstKnockTpsRate, 100, 0.001f);
+	EXPECT_FLOAT_EQ(getBurst().getTimingRetard(), 10);
+
+	// Age the jump out through the same dispatch path, then observe decay.
+	for (int i = 0; i < 4; i++) {
+		eth.moveTimeForwardMs(50);
+		engine->periodicSlowCallback();
+	}
+	ASSERT_FALSE(getAe().isAboveAccelThreshold);
+	const float retard = getBurst().getTimingRetard();
+	ASSERT_GT(retard, 0);
+	ASSERT_LT(retard, 10);
+	eth.moveTimeForwardSec(0.5f);
+	engine->periodicSlowCallback();
+	EXPECT_NEAR(getBurst().getTimingRetard(), retard - 2.5f, 0.001f);
+}
+
+TEST(BurstKnock, RetardAddsToRollingLaunchAndDecaysIndependently) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setupBurst(6, 2);
+	engine->rpmCalculator.setRpmValue(3500);
+	engineConfiguration->timingMode = TM_DYNAMIC;
+	setTable(config->ignitionTable, 25);
+	const float baseline = engine->ignitionState.getWrappedAdvance(3500, 50);
+	ASSERT_TRUE(std::isfinite(baseline));
+	engineConfiguration->rollingLaunchEnabled = true;
+	engineConfiguration->rollingLaunchTimingRetard = 10;
+	engineConfiguration->rollingLaunchRampOutTime = 1;
+	Sensor::setMockValue(SensorType::VehicleSpeed, 30);
+	auto& rolling = engine->module<RollingLaunchControl>().unmock();
+	rolling.luaRollingLaunchState = true;
+	rolling.onSlowCallback();
+	ASSERT_TRUE(rolling.isRollingLaunchArmed);
+	feedTransient(300, true);
+	EXPECT_NEAR(engine->ignitionState.getWrappedAdvance(3500, 50), baseline - 16, 0.001f);
+
+	rolling.luaRollingLaunchState = false;
+	rolling.onSlowCallback();
+	feedTransient(0, false);
+	eth.moveTimeForwardSec(0.5f);
+	rolling.onSlowCallback();
+	getBurst().onSlowCallback();
+	EXPECT_NEAR(engine->ignitionState.getWrappedAdvance(3500, 50), baseline - 9.5f, 0.001f);
+	eth.moveTimeForwardSec(0.5f);
+	rolling.onSlowCallback();
+	getBurst().onSlowCallback();
+	EXPECT_NEAR(engine->ignitionState.getWrappedAdvance(3500, 50), baseline - 3, 0.001f);
+	eth.moveTimeForwardSec(1);
+	getBurst().onSlowCallback();
+	EXPECT_NEAR(engine->ignitionState.getWrappedAdvance(3500, 50), baseline, 0.001f);
+}
