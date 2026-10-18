@@ -24,6 +24,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.*;
@@ -38,6 +39,8 @@ import static com.rusefi.core.ui.AutoupdateUtil.trueLayoutAndRepaint;
 public class MainMenuTreeWidget {
     private final JPanel contentPane = new JPanel(new BorderLayout());
     private final JTree tree;
+    private int keyboardNavigationDirection;
+    private boolean keyboardChildNavigation;
     private final DefaultMutableTreeNode root = new DefaultMutableTreeNode("Menus");
 
     private final JTextField searchField = new JTextField();
@@ -100,8 +103,9 @@ public class MainMenuTreeWidget {
                     return;
                 }
                 for (TreePath path : paths) {
-                    if (isSelectable(path)) {
-                        super.setSelectionPaths(new TreePath[]{path});
+                    TreePath selectablePath = getSelectablePath(path);
+                    if (selectablePath != null) {
+                        super.setSelectionPaths(new TreePath[]{selectablePath});
                         return;
                     }
                 }
@@ -113,13 +117,21 @@ public class MainMenuTreeWidget {
                     return;
                 }
                 for (TreePath path : paths) {
-                    if (isSelectable(path)) {
-                        super.addSelectionPaths(new TreePath[]{path});
+                    TreePath selectablePath = getSelectablePath(path);
+                    if (selectablePath != null) {
+                        super.addSelectionPaths(new TreePath[]{selectablePath});
                         return;
                     }
                 }
             }
         });
+        installNavigationActions(-1, false, "selectPrevious", "selectPreviousChangeLead", "selectPreviousExtendSelection",
+            "selectLast", "selectLastChangeLead", "selectLastExtendSelection",
+            "scrollUpChangeSelection", "scrollUpChangeLead", "scrollUpExtendSelection");
+        installNavigationActions(1, false, "selectNext", "selectNextChangeLead", "selectNextExtendSelection",
+            "selectFirst", "selectFirstChangeLead", "selectFirstExtendSelection",
+            "scrollDownChangeSelection", "scrollDownChangeLead", "scrollDownExtendSelection");
+        installNavigationActions(1, true, "selectChild", "selectChildChangeLead");
         tree.setToggleClickCount(1);
         tree.addMouseListener(new MouseAdapter() {
             @Override
@@ -359,6 +371,55 @@ public class MainMenuTreeWidget {
             }
             tree.scrollPathToVisible(path);
         }
+    }
+
+    private void installNavigationActions(int direction, boolean childNavigation, String... names) {
+        for (String name : names) {
+            Action original = tree.getActionMap().get(name);
+            if (original == null) {
+                continue;
+            }
+            tree.getActionMap().put(name, new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    keyboardNavigationDirection = direction;
+                    keyboardChildNavigation = childNavigation;
+                    try {
+                        original.actionPerformed(e);
+                    } finally {
+                        keyboardNavigationDirection = 0;
+                        keyboardChildNavigation = false;
+                    }
+                    // Swing actions can set their lead/anchor and scroll to the rejected row.
+                    TreePath selected = tree.getSelectionPath();
+                    tree.setLeadSelectionPath(selected);
+                    tree.setAnchorSelectionPath(selected);
+                    if (selected != null) {
+                        tree.scrollPathToVisible(selected);
+                    }
+                }
+            });
+        }
+    }
+
+    private TreePath getSelectablePath(TreePath path) {
+        if (isSelectable(path)) {
+            return path;
+        }
+        // Only keyboard navigation skips rows. Mouse/programmatic selection still rejects them.
+        if (path != null && keyboardNavigationDirection != 0) {
+            int row = tree.getRowForPath(path);
+            for (row += keyboardNavigationDirection; row >= 0 && row < tree.getRowCount(); row += keyboardNavigationDirection) {
+                TreePath candidate = tree.getPathForRow(row);
+                if (keyboardChildNavigation && !path.getParentPath().isDescendant(candidate)) {
+                    break;
+                }
+                if (isSelectable(candidate)) {
+                    return candidate;
+                }
+            }
+        }
+        return null;
     }
 
     private boolean isSelectable(TreePath path) {
