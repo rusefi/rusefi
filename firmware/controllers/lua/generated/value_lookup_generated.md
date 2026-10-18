@@ -533,7 +533,7 @@ Sample MAP during only one cylinder's intake per engine cycle instead of every c
 If enabled, RPM is estimated from ~90 degrees of rotation using tooth timestamps collected even before trigger sync, and fuel/ignition scheduling starts as soon as the trigger syncs (sequential ignition temporarily runs as wasted spark until full phase sync). As soon as the trigger syncs plus 90 degrees rotation, fuel and ignition events will occur. If disabled, worst case may require up to 4 full crank rotations before any events are scheduled.
 
 ### coastingFuelCutEnabled
-This setting disables fuel injection while the engine is in overrun, this is useful as a fuel saving measure and to prevent back firing.
+Enable fuel cutoff in the selected Overrun, Decel or Both mode. Coolant, MAP, tuning and Lua guards apply to every mode.
 
 ### useIacTableForCoasting
 Override the IAC position during overrun conditions to help reduce engine breaking, this can be helpful for large engines in light weight cars or engines that have trouble returning to idle.
@@ -2253,6 +2253,9 @@ Exhaust VVT integral minimum. Both integral limits zero restore defaults of -100
 
 ### vvtExhaust_iTermMax
 Exhaust VVT integral maximum. Applies in both basic and advanced modes.
+
+### coastingFuelCutRequiresGear
+Require a valid DetectedGear greater than zero for the Overrun path. Neutral, unknown or invalid gear prevents overrun fuel cut. Configure gear detection before enabling. Does not restrict the Decel path.
 
 ### tcu_shiftTime
 

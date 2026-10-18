@@ -2260,6 +2260,9 @@ float getConfigValueByHash(const int hash) {
 // vvtExhaust_iTermMax
 		case -1814511475:
 			return engineConfiguration->vvtExhaust_iTermMax;
+// coastingFuelCutRequiresGear
+		case 1353927396:
+			return engineConfiguration->coastingFuelCutRequiresGear;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -6133,6 +6136,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1814511475:
 	{
 		engineConfiguration->vvtExhaust_iTermMax = (int)value;
+		return 1;
+	}
+		case 1353927396:
+	{
+		engineConfiguration->coastingFuelCutRequiresGear = (int)value;
 		return 1;
 	}
 		case -1658957891:

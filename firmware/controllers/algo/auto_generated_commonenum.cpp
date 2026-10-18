@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sun Oct 18 03:34:47 UTC 2026
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sun Oct 18 04:54:49 UTC 2026
 // see also gen_config_and_enums.bat
 
 
@@ -581,6 +581,17 @@ const char *getDc_function_e(dc_function_e value) {
 			return "DC_Throttle2";
 		case DC_Wastegate:
 			return "DC_Wastegate";
+	}
+	return NULL;
+}
+const char *getDfco_fuel_cut_mode_e(dfco_fuel_cut_mode_e value) {
+	switch (value) {
+		case dfco_fuel_cut_mode_e::Both:
+			return "Both";
+		case dfco_fuel_cut_mode_e::Decel:
+			return "Decel";
+		case dfco_fuel_cut_mode_e::Overrun:
+			return "Overrun";
 	}
 	return NULL;
 }

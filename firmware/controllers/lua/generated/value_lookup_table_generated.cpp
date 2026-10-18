@@ -673,6 +673,9 @@ const ConfigParameter allParameters[] = {
 	{ 0x4EDA3A9E, // warningPeriod
 		[]() -> float { return engineConfiguration->warningPeriod; },
 		[](float value) { engineConfiguration->warningPeriod = value; } },
+	{ 0x50B34AE4, // coastingFuelCutRequiresGear
+		[]() -> float { return engineConfiguration->coastingFuelCutRequiresGear; },
+		[](float value) { engineConfiguration->coastingFuelCutRequiresGear = value; } },
 	{ 0x513152C4, // overrideTriggerGaps
 		[]() -> float { return engineConfiguration->overrideTriggerGaps; },
 		[](float value) { engineConfiguration->overrideTriggerGaps = value; } },
