@@ -1,6 +1,16 @@
-# 20 — Time-based WOT enrichment
+# DONE — 20 — Time-based WOT enrichment
 
 [Back to the ECU change index](../alphax-beta-vs-master.md) · [Fork branch](https://github.com/ElDominio/rusefi/tree/alphax-beta)
+
+## Upstream completion
+
+**DONE on upstream master**, reviewed at [`bb15031c451`](https://github.com/rusefi/rusefi/commit/bb15031c45118a859e42ca008ecbf6d2795639e2). Commit [`1719eb197e5`](https://github.com/rusefi/rusefi/commit/1719eb197e5d3252e71388a615467e8899e36286) adds the eight-point elapsed-WOT AFR-adder curve and its fuel-target consumer, using the upstream [state machine](DONE-42-engine-state-machine-and-shift-recognition.md). It includes module registration, defaults, tuning controls and telemetry.
+
+The [upstream module](https://github.com/rusefi/rusefi/blob/bb15031c45118a859e42ca008ecbf6d2795639e2/firmware/controllers/modules/wot_enrichment/wot_enrichment.cpp) requires both feature enables and the state machine's WOT flag. Time starts at the first WOT sample, caps at 30 seconds, and resets on leaving WOT, disabling either feature, engine stop or configuration change. This avoids counting time before WOT entry. The module runs after the state machine in the slow-callback module list.
+
+The [fuel consumer](https://github.com/rusefi/rusefi/blob/bb15031c45118a859e42ca008ecbf6d2795639e2/firmware/controllers/algo/fuel/fuel_computer.cpp) adds the offset after converting target lambda with the current fuel-dependent stoichiometric ratio. It updates fuel mass, published AFR and published lambda consistently. Negative offsets richen and positive offsets lean. A non-finite or nonpositive adjusted AFR leaves the base target intact. Master uses the main configuration page with disabled/neutral defaults, rather than the fork's page 6 and `EFI_WOT_ENRICHMENT` gate.
+
+The adoption commit changes **+82 / −2 maintained firmware C/C++ lines across six files**, including two replaced STFT comment lines; this is a file-scope footprint, not exclusively new WOT logic. The new [upstream tests](https://github.com/rusefi/rusefi/blob/bb15031c45118a859e42ca008ecbf6d2795639e2/unit_tests/tests/ignition_injection/test_wot_enrichment.cpp) add 188 lines separately and cover interpolation/capping, distinct bursts, entry timing, state/enable gates, stop/burn resets, enrichment and leaning, fuel-dependent stoichiometry, published targets and nonpositive AFR rejection. Tests were inspected, not rerun. Historical fork LOC below is unchanged.
 
 ## Executive summary
 
@@ -17,11 +27,11 @@ The new WOT module looks up an AFR adder from elapsed time in the engine state m
 
 ## Calibration, dependencies and review limits
 
-The calculation is small, but it depends on the state machine, page 6 and the fuel-target pipeline. The diff has no dedicated WOT-enrichment test file.
+The fork calculation is small, but it depends on the state machine, page 6 and the fuel-target pipeline. The original fork diff has no dedicated WOT-enrichment test file; upstream coverage is linked above.
 
-Check AFR-adder sign and state-machine WOT thresholds. An AFR addition is not a fuel-percentage addition; no dedicated new WOT-enrichment test is present.
+Check AFR-adder sign and state-machine WOT thresholds. An AFR addition is not a fuel-percentage addition.
 
-No feature-specific test is claimed by this report. The source/commit evidence below establishes implementation, not hardware validation.
+No feature-specific test is claimed for the pinned fork. The source/commit evidence below establishes implementation, not hardware validation.
 
 No firmware, host-test, simulator or hardware run was performed for this documentation update. The pinned branch tip records an unresolved CAN-listener unit-test link failure; see the [comparison and validation notes](../alphax-beta-vs-master.md#validation-limits).
 

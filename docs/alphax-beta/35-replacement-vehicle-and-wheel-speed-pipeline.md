@@ -8,6 +8,8 @@ Rechecked master at [`3dd620b8d5b`](https://github.com/rusefi/rusefi/commit/3dd6
 
 This report remains open: master retains legacy VehicleSpeed and vendor CAN VSS, and has not adopted the fork's OSS/front/rear main-speed selection, axle-speed inputs, percentage-per-second plausibility filtering or wheel-slip source pipeline. The historical analysis and LOC tables below still refer to the original master comparison.
 
+Rechecked at [`bb15031c451`](https://github.com/rusefi/rusefi/commit/bb15031c45118a859e42ca008ecbf6d2795639e2): the additional frequency-sensor history reset in [`937936ee1fd`](https://github.com/rusefi/rusefi/commit/937936ee1fdcf7d44520de6bdef439b6f3cc2da6) is compiled only for unit tests. The broader production speed-pipeline work remains absent.
+
 ## Executive summary
 
 Master's legacy physical VSS and built-in vendor CAN VSS paths are replaced. Main vehicle speed selects output-shaft speed, front axle or rear axle; each source can be physical or CAN/Lua-fed. Output-shaft frequency becomes RPM, then uses final-drive ratio and wheel revolutions/km for vehicle speed. A shared percentage-per-second plausibility setting governs separate physical-source filter instances. Wheel slip can be derived from a selected pair of speed sources.

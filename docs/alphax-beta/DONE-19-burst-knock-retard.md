@@ -1,6 +1,16 @@
-# 19 — Burst knock retard
+# DONE — 19 — Burst knock retard
 
 [Back to the ECU change index](../alphax-beta-vs-master.md) · [Fork branch](https://github.com/ElDominio/rusefi/tree/alphax-beta)
+
+## Upstream completion
+
+**DONE on upstream master**, reviewed at [`bb15031c451`](https://github.com/rusefi/rusefi/commit/bb15031c45118a859e42ca008ecbf6d2795639e2). Commit [`e08f9bf74f1`](https://github.com/rusefi/rusefi/commit/e08f9bf74f1e9aeee0938a146a0f7ee56a62edaa) implements the TPS-acceleration-enrichment trigger, RPM/rate table interpolation, nonnegative retard, linear decay and ignition subtraction described below. Module registration, live telemetry, tuning controls and disabled/zero-table defaults are included.
+
+The [upstream controller](https://github.com/rusefi/rusefi/blob/bb15031c45118a859e42ca008ecbf6d2795639e2/firmware/controllers/modules/burst_knock/burst_knock.cpp) divides AE's largest adjacent TPS jump by the lookback, floored to 0.001 seconds. This is a rate estimate tied to AE history. It refreshes the table value and decay timer on every qualifying sample, then decays from the last value; it does not retain the maximum value seen throughout the transient. Disabling clears the correction and telemetry. The ignition path applies relative retard alongside rolling launch; existing fixed-timing and cranking-correction rules still govern whether corrections apply.
+
+Master places the settings on the main configuration page and registers the module directly, rather than using the fork's page 6 and `EFI_BURST_KNOCK` gate. The adoption commit adds **85 maintained firmware C/C++ lines across five files**: the module `.cpp`/`.h`, `engine.h`, `live_data.cpp` and `ignition_state.cpp`. Generated code, schema, UI, build files, docs and tests are excluded.
+
+The [upstream test file](https://github.com/rusefi/rusefi/blob/bb15031c45118a859e42ca008ecbf6d2795639e2/unit_tests/tests/ignition_injection/test_burst_knock.cpp) contains 288 added lines at the reviewed tip, including follow-up coverage from [`2f1ca596a0d`](https://github.com/rusefi/rusefi/commit/2f1ca596a0de583e6e8340e819fdcb5460a43c79). It exercises the real AE threshold/history, callback ordering, table interpolation, decay/retrigger, disable, negative cells and combined ignition corrections. Tests were inspected, not rerun. The fork analysis and LOC tables below preserve the original comparison.
 
 ## Executive summary
 

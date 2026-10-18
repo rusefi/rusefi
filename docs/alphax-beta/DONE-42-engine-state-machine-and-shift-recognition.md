@@ -1,10 +1,24 @@
-# 42 — Engine state machine and shift recognition
+# DONE — 42 — Engine state machine and shift recognition
 
 [Back to the ECU change index](../alphax-beta-vs-master.md) · [Fork branch](https://github.com/ElDominio/rusefi/tree/alphax-beta)
 
+## Upstream completion
+
+**DONE on upstream master**, reviewed at [`bb15031c451`](https://github.com/rusefi/rusefi/commit/bb15031c45118a859e42ca008ecbf6d2795639e2). Commit [`d63e3cbace1`](https://github.com/rusefi/rusefi/commit/d63e3cbace1062e92b85f488ae080c6d1d3e69a2) imports the primary-state classifier, shift recognition, launch/flat-shift/temperature overlays, configuration, telemetry and optional STFT region selection. Reproduction commit [`96175a70798`](https://github.com/rusefi/rusefi/commit/96175a707989186f850ee3260af9d568d87bac92) is followed by fixes in [`59455c622c8`](https://github.com/rusefi/rusefi/commit/59455c622c82d1b0bf7f75082f385c80bd01be33).
+
+The [upstream module](https://github.com/rusefi/rusefi/blob/bb15031c45118a859e42ca008ecbf6d2795639e2/firmware/controllers/modules/engine_state_machine/engine_state_machine.cpp) covers the six core steps below: lifecycle and operating-state classification; separate primary/display states; RPM- or VSS-rate shift accumulation; clutch edges and optional second-switch timing; latch/re-latch and stale-window handling; millisecond transient/acceleration holds; and state-based STFT. RPM-rate observation uses the configured cadence floored to one slow callback. Single-direction shift selection trusts its switch; two-direction selection requires accumulator evidence, with the VSS minimum applying in VSS mode.
+
+STFT uses the primary state when both `useEngineStateMachine` and `stateBasedStft` are enabled: Idle/Afterstart/Coasting select idle, Overrun selects overrun, WOT selects power, and other states select cruise. Existing learning gates and per-region settings remain in effect. The module is disabled by default and uses the main configuration page rather than the fork's custom-page layout.
+
+The follow-up fixes clear state, timers, rates and shift history on disable, stop and configuration changes. RPM-rate sampling continues without shift switches and during flat shift. Missing VSS clears VSS-mode evidence/window/latch state and requires a fresh sample anchor; the first clutch sample establishes history without inventing a press. Overrun checks available physical clutch inputs independently of shift-direction selections. Stopped/cranking states suppress launch and shift overlays.
+
+Completion covers this core coordinator and STFT consumer. Fork-only Sport/Eco/Quick Warmup/Ghost Cam/Pops-and-bangs overlays and their control effects remain tracked in reports 43–47. The presence of state/shift flags does not complete state-aware DFCO (51), downshift blip (52), upshift hold (53), launch power ramp (54), or automatic TCU behavior (58).
+
+The import adds **700 maintained firmware C/C++ lines across seven files**; the fix commit separately changes **+111 / −27 across the module `.cpp` and `.h`**. These are per-commit source footprints, excluding generated files, schema, UI, build files, docs and tests, and are not additive retained-line totals. At the reviewed tip, the [state-machine test file](https://github.com/rusefi/rusefi/blob/bb15031c45118a859e42ca008ecbf6d2795639e2/unit_tests/tests/engine_state_machine/test_engine_state_machine.cpp) has 1,733 added lines and [STFT tests](https://github.com/rusefi/rusefi/blob/bb15031c45118a859e42ca008ecbf6d2795639e2/unit_tests/tests/test_stft.cpp) add 36 lines relative to the previous review. Coverage includes state priority, rate cadence, clutch edges, accumulator/latch/timeout behavior, reset and sensor-loss recovery, overlays and STFT mapping/fallback. Tests were inspected, not rerun. The original fork analysis and LOC tables below remain historical.
+
 ## Executive summary
 
-The new state machine classifies Off, Cranking, Afterstart, Idle, Coasting, Transient, WOT, Cruising, Overrun, Accelerating and Decelerating conditions, then publishes launch, shift, torque-reduction and operating-mode overlays. Master has subsystem states but no corresponding AlphaX coordinator.
+The fork state machine classifies Off, Cranking, Afterstart, Idle, Coasting, Transient, WOT, Cruising, Overrun, Accelerating and Decelerating conditions, then publishes launch, shift, torque-reduction and operating-mode overlays. The original master comparison has subsystem states but no corresponding AlphaX coordinator. The upstream completion section distinguishes the adopted core from the separately tracked operating modes.
 
 ## ECU logic and behavior
 

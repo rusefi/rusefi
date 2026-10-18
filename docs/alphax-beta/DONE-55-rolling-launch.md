@@ -14,6 +14,8 @@ The adoption commit changes **215 maintained firmware C/C++ lines (+214 / −1 a
 
 The fork analysis and LOC tables below retain the original comparison against master `c12cf1498315`; they are historical measurements, not remaining work.
 
+Rechecked at [`bb15031c451`](https://github.com/rusefi/rusefi/commit/bb15031c45118a859e42ca008ecbf6d2795639e2). Follow-up [`937936ee1fd`](https://github.com/rusefi/rusefi/commit/937936ee1fdcf7d44520de6bdef439b6f3cc2da6), after reproduction coverage in [`2f1ca596a0d`](https://github.com/rusefi/rusefi/commit/2f1ca596a0de583e6e8340e819fdcb5460a43c79), clears `luaRollingLaunchState` during Lua reset. The next slow callback releases a Lua-only hold through the normal timing ramp, while a held hardware switch continues the existing capture. Updated [rolling-launch tests](https://github.com/rusefi/rusefi/blob/bb15031c45118a859e42ca008ecbf6d2795639e2/unit_tests/tests/test_rolling_launch.cpp) cover both cases and repeated resets during ramp-out. Completion is retained; tests were inspected, not rerun.
+
 ## Executive summary
 
 While a hardware/Lua trigger is held and speed/RPM gates pass, rolling launch captures RPM and builds a spark-skip ramp up to a capped target window. It applies fixed timing retard and fuel addition while armed, then ramps the retard out after release.

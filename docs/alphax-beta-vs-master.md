@@ -4,22 +4,30 @@ This index focuses on firmware changes that affect ECU inputs, decisions, output
 
 ## Master progress
 
-Reviewed upstream `origin/master` at [`41e3c63a9865141686bbfa7940defe0e86a4cb11`](https://github.com/rusefi/rusefi/commit/41e3c63a9865141686bbfa7940defe0e86a4cb11), committed 2026-10-18 UTC, after fetching. It contains 22 commits beyond the original comparison revision, including five since the previous review at `3dd620b8d5b`: TPS smoothing plus four automatic configuration/default-tune regeneration commits (*INFRASTRUCTURE*). The five prior completions remain present. **Six reports are now prefixed `DONE-`** because master implements their operational scope:
+Reviewed upstream `origin/master` at [`bb15031c45118a859e42ca008ecbf6d2795639e2`](https://github.com/rusefi/rusefi/commit/bb15031c45118a859e42ca008ecbf6d2795639e2), committed 2026-10-18, after fetching. It contains 37 commits beyond the original comparison revision, including 15 since the previous review at `41e3c63a986`. Newly completed items are the knock-spectrogram guard, burst-knock retard, time-based WOT enrichment, and core engine state machine/shift recognition. All six prior completions remain present. **Ten reports are now prefixed `DONE-`**:
 
 | Report | Upstream completion evidence |
 | --- | --- |
 | [DONE — 06b: Eight-bin warmup defaults](alphax-beta/DONE-06b-eight-bin-warmup-enrichment-defaults.md) | [`78759669096`](https://github.com/rusefi/rusefi/commit/787596690963ee455ed4450485a92b571ed71237); patch-equivalent to the fork fix. |
+| [DONE — 06d: Knock spectrogram feature guard — *INFRASTRUCTURE*](alphax-beta/DONE-06d-knock-spectrogram-feature-guard.md) | [`1e7087ac64c`](https://github.com/rusefi/rusefi/commit/1e7087ac64c701160f2a680f550f717a42232489); numeric guards, FALSE defaults and compiled-out configuration handling. |
 | [DONE — 06e: Speedometer bench command](alphax-beta/DONE-06e-speedometer-output-bench-command.md) | [`fc5a5a1e381`](https://github.com/rusefi/rusefi/commit/fc5a5a1e3817d46add4107eb82416ead8b27c84a) plus [`de4133f2355`](https://github.com/rusefi/rusefi/commit/de4133f2355036c7bf67f5f775afe604f6621a96); firmware, tests and tuning UI. |
 | [DONE — 13a: TPS smoothing](alphax-beta/DONE-13a-tps-smoothing.md) | [`edaaf10bab6`](https://github.com/rusefi/rusefi/commit/edaaf10bab64e4ab9b60f60684995a8246207c05); independent TPS filters, fast-transient reset, invalidity handling, tuning controls and tests. |
+| [DONE — 19: Burst knock retard](alphax-beta/DONE-19-burst-knock-retard.md) | [`e08f9bf74f1`](https://github.com/rusefi/rusefi/commit/e08f9bf74f1e9aeee0938a146a0f7ee56a62edaa); AE-triggered table retard, decay, ignition integration and tests. |
+| [DONE — 20: Time-based WOT enrichment](alphax-beta/DONE-20-time-based-wot-enrichment.md) | [`1719eb197e5`](https://github.com/rusefi/rusefi/commit/1719eb197e5d3252e71388a615467e8899e36286); state-gated elapsed-time curve, fuel/AFR/lambda integration, lifecycle resets and tests. |
 | [DONE — 31: Fan pressure mode and PWM semantics](alphax-beta/DONE-31-cooling-fan-pressure-mode-and-pwm-semantics.md) | [`3da3feb4de3`](https://github.com/rusefi/rusefi/commit/3da3feb4de30e61d875c4d8a7d3b0b0d45b4be91) plus [`060dc248caa`](https://github.com/rusefi/rusefi/commit/060dc248caa047b059d7cd86d041ae913fd9e2fd); operational behavior and old A/C-toggle migration. |
 | [DONE — 36: Gear detection and transmission slip](alphax-beta/DONE-36-gear-detection-and-transmission-slip.md) | [`0208ad604b6`](https://github.com/rusefi/rusefi/commit/0208ad604b62c7395e8cd88f812037e58195aecf), following reproduction [`e529a799d7a`](https://github.com/rusefi/rusefi/commit/e529a799d7a1a9dec9337594aaeab651edbf87bd); clutch handling, OSS/RPM selection, slip calculation, telemetry and tests. |
+| [DONE — 42: Engine state machine and shift recognition](alphax-beta/DONE-42-engine-state-machine-and-shift-recognition.md) | [`d63e3cbace1`](https://github.com/rusefi/rusefi/commit/d63e3cbace1062e92b85f488ae080c6d1d3e69a2) plus [`59455c622c8`](https://github.com/rusefi/rusefi/commit/59455c622c82d1b0bf7f75082f385c80bd01be33); core classification, shift/temperature overlays, STFT selection and lifecycle/sensor-loss fixes. |
 | [DONE — 55: Rolling launch](alphax-beta/DONE-55-rolling-launch.md) | [`3dd620b8d5b`](https://github.com/rusefi/rusefi/commit/3dd620b8d5b05839ddc958bb4104bba4bd63558e); captured-RPM spark limiting, hardware/Lua activation, fuel enrichment, timing ramp-out, tuning controls and tests. |
 
-`DONE` means the described operational feature is present upstream; it does not require identical files, AlphaX page placement or every fork-only diagnostic. Each completed report records those differences. Reviewing the intervening source changes found one newly completed feature, TPS smoothing. Former report 13 is split into completed [13a](alphax-beta/DONE-13a-tps-smoothing.md) and open [13b](alphax-beta/13b-tps-pps-discrepancy-configuration.md), because master has not adopted the wider discrepancy limit or changed storage scale. There are now **63 reports: six DONE and 57 open**.
+`DONE` means the described feature is present upstream; it does not require identical files, AlphaX page placement or every fork-only diagnostic. Each completed report records those differences. Former report 13 remains split into completed [13a](alphax-beta/DONE-13a-tps-smoothing.md) and open [13b](alphax-beta/13b-tps-pps-discrepancy-configuration.md), because master has not adopted the wider discrepancy limit or changed storage scale. There are now **63 reports: ten DONE and 53 open**.
 
 Report [35](alphax-beta/35-replacement-vehicle-and-wheel-speed-pipeline.md) has partial progress: standalone OSS acquisition is implemented, while the broader main-speed/axle/slip pipeline replacement remains open. Slip telemetry alone does not complete the TCU pressure-trim work in report 58. Shared status/default-file edits likewise do not complete ignition-voltage fallback (06a) or fuel economy (14). Preserving external TPS providers during smoothing initialization does not implement the CAN ETB protocol in report 59.
 
 Rolling launch uses the existing shared limiter and its own timing ramp-out. Its integration edits do not complete standing-launch controls (21), coordinated traction control (37), custom-page infrastructure (41) or the separate launch power ramp (54).
+
+The core state machine does not complete the separate operating modes (43–47), state-aware DFCO (51), downshift blip (52), upshift hold (53), launch power ramp (54) or automatic TCU (58). Their actuator consumers remain open. Follow-up [`937936ee1fd`](https://github.com/rusefi/rusefi/commit/937936ee1fdcf7d44520de6bdef439b6f3cc2da6) improves already-completed gear detection and rolling launch: non-finite ratios no longer select first gear, and Lua reset clears the rolling-launch request. The new frequency-sensor reset helper is unit-test-only and does not complete report 35.
+
+Other *INFRASTRUCTURE* progress includes regenerated configurations/default tunes and board flash reductions. MicroRusEFI disables the DTC manager in [`9bc9d8d2d11`](https://github.com/rusefi/rusefi/commit/9bc9d8d2d112e90c85b51c5666172ead123f1567); the small CAN board stops embedding its INI in [`bb15031c451`](https://github.com/rusefi/rusefi/commit/bb15031c45118a859e42ca008ecbf6d2795639e2). These are build/diagnostic resource changes, not completion of the fork's CEL escalation or storage-layout reports.
 
 This is a source/history review; tests were inspected, not rerun. The comparison revisions, LOC tables and complete inventories below remain the original historical snapshot, so their counts are not a remaining-work estimate.
 
@@ -62,7 +70,7 @@ There are **63 separate reports**. The original section numbers are retained for
 | 06a | [Ignition-voltage telemetry fallback](alphax-beta/06a-ignition-voltage-telemetry-fallback.md) | +77 / −5 |
 | 06b | [DONE — Eight-bin warmup enrichment defaults](alphax-beta/DONE-06b-eight-bin-warmup-enrichment-defaults.md) | +36 / −0 |
 | 06c | [Lua limiter-adder axis defaults](alphax-beta/06c-lua-limiter-adder-axis-defaults.md) | +362 / −0 |
-| 06d | [*INFRASTRUCTURE* — Knock spectrogram feature guard](alphax-beta/06d-knock-spectrogram-feature-guard.md) | +11 / −4 |
+| 06d | [DONE — *INFRASTRUCTURE* — Knock spectrogram feature guard](alphax-beta/DONE-06d-knock-spectrogram-feature-guard.md) | +11 / −4 |
 | 06e | [DONE — Speedometer output bench command](alphax-beta/DONE-06e-speedometer-output-bench-command.md) | +47 / −2 |
 
 ### Board wiring and default behavior
@@ -86,8 +94,8 @@ There are **63 separate reports**. The original section numbers are retained for
 | 16 | [Injector small-pulse percentage curve](alphax-beta/16-injector-small-pulse-percentage-curve.md) | +29 / −2 |
 | 17 | [Manual injector pressure correction](alphax-beta/17-manual-injector-pressure-correction.md) | +29 / −2 |
 | 18 | [VVT-dependent fuel and ignition corrections](alphax-beta/18-vvt-dependent-fuel-and-ignition-corrections.md) | +109 / −13 |
-| 19 | [Burst knock retard](alphax-beta/19-burst-knock-retard.md) | +153 / −13 |
-| 20 | [Time-based WOT enrichment](alphax-beta/20-time-based-wot-enrichment.md) | +110 / −0 |
+| 19 | [DONE — Burst knock retard](alphax-beta/DONE-19-burst-knock-retard.md) | +153 / −13 |
+| 20 | [DONE — Time-based WOT enrichment](alphax-beta/DONE-20-time-based-wot-enrichment.md) | +110 / −0 |
 | 21 | [Launch switch semantics and Lua controls](alphax-beta/21-launch-switch-semantics-and-lua-controls.md) | +47 / −2 |
 | 22 | [Priming after trigger teeth](alphax-beta/22-priming-after-trigger-teeth.md) | +259 / −10 |
 | 23 | [Cranking without ECU spark](alphax-beta/23-cranking-without-ecu-spark.md) | +74 / −2 |
@@ -117,7 +125,7 @@ There are **63 separate reports**. The original section numbers are retained for
 
 | ID | Detailed report | Added / deleted source lines |
 | --- | --- | ---: |
-| 42 | [Engine state machine and shift recognition](alphax-beta/42-engine-state-machine-and-shift-recognition.md) | +1,299 / −0 |
+| 42 | [DONE — Engine state machine and shift recognition](alphax-beta/DONE-42-engine-state-machine-and-shift-recognition.md) | +1,299 / −0 |
 | 43 | [Sport mode and pedal shaping](alphax-beta/43-sport-mode-and-pedal-shaping.md) | +1,717 / −19 |
 | 44 | [Eco operating mode](alphax-beta/44-eco-operating-mode.md) | +1,532 / −47 |
 | 45 | [Quick warmup](alphax-beta/45-quick-warmup.md) | +1,420 / −45 |

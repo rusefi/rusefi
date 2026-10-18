@@ -1,8 +1,16 @@
-# 06d — Knock spectrogram feature guard
+# DONE — 06d — Knock spectrogram feature guard
 
 [Back to the ECU change index](../alphax-beta-vs-master.md) · [Fork branch](https://github.com/ElDominio/rusefi/tree/alphax-beta)
 
 *INFRASTRUCTURE* — firmware support with an ECU runtime consequence.
+
+## Upstream completion
+
+**DONE on upstream master**, reviewed at [`bb15031c451`](https://github.com/rusefi/rusefi/commit/bb15031c45118a859e42ca008ecbf6d2795639e2). Commit [`1e7087ac64c`](https://github.com/rusefi/rusefi/commit/1e7087ac64c701160f2a680f550f717a42232489) converts all four optional spectrum guards in `software_knock.cpp` to numeric `#if KNOCK_SPECTROGRAM` checks. It supplies a FALSE default in feature headers rather than locally in that source file, so an absent or explicitly false setting excludes the FFT/spectrum diagnostic while a true setting retains it.
+
+The same commit changes tune repair to clear `enableKnockSpectrogram` when the feature is compiled out, and makes the shared-memory/compressed-INI selection respect a false macro value. This remains *INFRASTRUCTURE*: it selects optional diagnostic code and resources; it does not add acoustic knock control.
+
+The adoption footprint is **+18 / −6 across five maintained firmware C/C++ files**, including three feature headers, `default_base_engine.cpp` and `software_knock.cpp`. Simulator and unit-test feature headers each add four lines separately. The guards and defaults were inspected; no absent/FALSE/TRUE build matrix was run. The original fork LOC tables below remain historical measurements.
 
 ## Executive summary
 
