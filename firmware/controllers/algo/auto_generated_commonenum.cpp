@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sun Oct 18 04:54:49 UTC 2026
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sun Oct 18 13:08:52 UTC 2026
 // see also gen_config_and_enums.bat
 
 
@@ -655,6 +655,17 @@ const char *getFuel_pressure_sensor_mode_e(fuel_pressure_sensor_mode_e value) {
 			return "FPM_Differential";
 		case FPM_Gauge:
 			return "FPM_Gauge";
+	}
+	return NULL;
+}
+const char *getFuel_pump_mode_e(fuel_pump_mode_e value) {
+	switch (value) {
+		case fuel_pump_mode_e::Dual:
+			return "Dual";
+		case fuel_pump_mode_e::Pwm:
+			return "Pwm";
+		case fuel_pump_mode_e::Single:
+			return "Single";
 	}
 	return NULL;
 }

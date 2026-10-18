@@ -1,4 +1,4 @@
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sun Oct 18 04:54:49 UTC 2026
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sun Oct 18 13:08:52 UTC 2026
 // see also gen_config_and_enums.bat
 
 
@@ -78,6 +78,9 @@ const char *getFan_ac_mode_e(fan_ac_mode_e value);
 #endif //__cplusplus
 const char *getFt_region_e(ft_region_e value);
 const char *getFuel_pressure_sensor_mode_e(fuel_pressure_sensor_mode_e value);
+#if __cplusplus
+const char *getFuel_pump_mode_e(fuel_pump_mode_e value);
+#endif //__cplusplus
 const char *getGear_e(gear_e value);
 const char *getGppwm_channel_e(gppwm_channel_e value);
 const char *getGppwm_compare_mode_e(gppwm_compare_mode_e value);

@@ -2257,6 +2257,72 @@ Exhaust VVT integral maximum. Applies in both basic and advanced modes.
 ### coastingFuelCutRequiresGear
 Require a valid DetectedGear greater than zero for the Overrun path. Neutral, unknown or invalid gear prevents overrun fuel cut. Configure gear detection before enabling. Does not restrict the Decel path.
 
+### secondaryFpActivationRpm
+Secondary pump engages only when RPM, fueling load and TPS all exceed their thresholds.
+
+### secondaryFpActivationLoad
+Fueling-load threshold for the secondary pump. Speed Density uses MAP in kPa, other fueling algorithms use their own load scale.
+
+### secondaryFpActivationTps
+TPS threshold for the secondary pump.
+
+### secondaryFpTpsHysteresis
+Secondary pump releases when any input falls below its activation threshold minus hysteresis.
+
+### secondaryFpRpmHysteresis
+RPM release hysteresis for the secondary pump.
+
+### secondaryFpLoadHysteresis
+Fueling-load release hysteresis for the secondary pump.
+
+### fuelPumpPwmFrequency
+PWM command frequency. Use a compatible pump controller or power driver and its specified frequency. Burn frequency changes.
+
+### fuelPumpMinDuty
+Minimum duty while pressure control is active, including relief or an invalid control result. An inactive pump always receives zero duty.
+
+### fuelPumpMaxDuty
+Maximum running duty and key-on prime duty.
+
+### fuelPumpControl.pFactor
+
+
+### fuelPumpControl.iFactor
+
+
+### fuelPumpControl.dFactor
+
+
+### fuelPumpControl.offset
+Linear addition to PID logic\nAlso known as feedforward.
+
+### fuelPumpControl.periodMs
+PID dTime
+
+### fuelPumpControl.minValue
+Output Min Duty Cycle
+
+### fuelPumpControl.maxValue
+Output Max Duty Cycle
+
+### fuelPump_iTermMin
+Minimum integral correction.
+
+### fuelPump_iTermMax
+Maximum integral correction.
+
+### fuelPumpAggressiveRelief
+Hold minimum active duty during low-demand overpressure. Intended for returnless systems. Feedback resumes below the recovery threshold or when fuel demand increases.
+
+### fuelPumpReliefMaxInjectedMass
+Relief is eligible below this injected mass per cycle.
+
+### fuelPumpReliefEngageOverpressure
+Engage relief above target pressure plus this value.
+
+### fuelPumpReliefRecoverOverpressure
+Release relief at or below target plus this value. Set below the engagement threshold.
+
 ### tcu_shiftTime
 
 

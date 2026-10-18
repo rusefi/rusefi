@@ -2263,6 +2263,72 @@ float getConfigValueByHash(const int hash) {
 // coastingFuelCutRequiresGear
 		case 1353927396:
 			return engineConfiguration->coastingFuelCutRequiresGear;
+// secondaryFpActivationRpm
+		case 503101220:
+			return engineConfiguration->secondaryFpActivationRpm;
+// secondaryFpActivationLoad
+		case -577745931:
+			return engineConfiguration->secondaryFpActivationLoad;
+// secondaryFpActivationTps
+		case 503103404:
+			return engineConfiguration->secondaryFpActivationTps;
+// secondaryFpTpsHysteresis
+		case -437130995:
+			return engineConfiguration->secondaryFpTpsHysteresis;
+// secondaryFpRpmHysteresis
+		case 654808709:
+			return engineConfiguration->secondaryFpRpmHysteresis;
+// secondaryFpLoadHysteresis
+		case -479316394:
+			return engineConfiguration->secondaryFpLoadHysteresis;
+// fuelPumpPwmFrequency
+		case -847641639:
+			return engineConfiguration->fuelPumpPwmFrequency;
+// fuelPumpMinDuty
+		case -1648021571:
+			return engineConfiguration->fuelPumpMinDuty;
+// fuelPumpMaxDuty
+		case -1949245505:
+			return engineConfiguration->fuelPumpMaxDuty;
+// fuelPumpControl.pFactor
+		case 84173873:
+			return engineConfiguration->fuelPumpControl.pFactor;
+// fuelPumpControl.iFactor
+		case -366167318:
+			return engineConfiguration->fuelPumpControl.iFactor;
+// fuelPumpControl.dFactor
+		case 1766427429:
+			return engineConfiguration->fuelPumpControl.dFactor;
+// fuelPumpControl.offset
+		case -1077592247:
+			return engineConfiguration->fuelPumpControl.offset;
+// fuelPumpControl.periodMs
+		case -2136471963:
+			return engineConfiguration->fuelPumpControl.periodMs;
+// fuelPumpControl.minValue
+		case -413496189:
+			return engineConfiguration->fuelPumpControl.minValue;
+// fuelPumpControl.maxValue
+		case -1763951419:
+			return engineConfiguration->fuelPumpControl.maxValue;
+// fuelPump_iTermMin
+		case -1795541801:
+			return engineConfiguration->fuelPump_iTermMin;
+// fuelPump_iTermMax
+		case -1795542055:
+			return engineConfiguration->fuelPump_iTermMax;
+// fuelPumpAggressiveRelief
+		case 668125882:
+			return engineConfiguration->fuelPumpAggressiveRelief;
+// fuelPumpReliefMaxInjectedMass
+		case -2119617526:
+			return engineConfiguration->fuelPumpReliefMaxInjectedMass;
+// fuelPumpReliefEngageOverpressure
+		case -1292368058:
+			return engineConfiguration->fuelPumpReliefEngageOverpressure;
+// fuelPumpReliefRecoverOverpressure
+		case -1248973931:
+			return engineConfiguration->fuelPumpReliefRecoverOverpressure;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -6141,6 +6207,116 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1353927396:
 	{
 		engineConfiguration->coastingFuelCutRequiresGear = (int)value;
+		return 1;
+	}
+		case 503101220:
+	{
+		engineConfiguration->secondaryFpActivationRpm = (int)value;
+		return 1;
+	}
+		case -577745931:
+	{
+		engineConfiguration->secondaryFpActivationLoad = (int)value;
+		return 1;
+	}
+		case 503103404:
+	{
+		engineConfiguration->secondaryFpActivationTps = (int)value;
+		return 1;
+	}
+		case -437130995:
+	{
+		engineConfiguration->secondaryFpTpsHysteresis = (int)value;
+		return 1;
+	}
+		case 654808709:
+	{
+		engineConfiguration->secondaryFpRpmHysteresis = (int)value;
+		return 1;
+	}
+		case -479316394:
+	{
+		engineConfiguration->secondaryFpLoadHysteresis = (int)value;
+		return 1;
+	}
+		case -847641639:
+	{
+		engineConfiguration->fuelPumpPwmFrequency = (int)value;
+		return 1;
+	}
+		case -1648021571:
+	{
+		engineConfiguration->fuelPumpMinDuty = (int)value;
+		return 1;
+	}
+		case -1949245505:
+	{
+		engineConfiguration->fuelPumpMaxDuty = (int)value;
+		return 1;
+	}
+		case 84173873:
+	{
+		engineConfiguration->fuelPumpControl.pFactor = value;
+		return 1;
+	}
+		case -366167318:
+	{
+		engineConfiguration->fuelPumpControl.iFactor = value;
+		return 1;
+	}
+		case 1766427429:
+	{
+		engineConfiguration->fuelPumpControl.dFactor = value;
+		return 1;
+	}
+		case -1077592247:
+	{
+		engineConfiguration->fuelPumpControl.offset = (int)value;
+		return 1;
+	}
+		case -2136471963:
+	{
+		engineConfiguration->fuelPumpControl.periodMs = (int)value;
+		return 1;
+	}
+		case -413496189:
+	{
+		engineConfiguration->fuelPumpControl.minValue = (int)value;
+		return 1;
+	}
+		case -1763951419:
+	{
+		engineConfiguration->fuelPumpControl.maxValue = (int)value;
+		return 1;
+	}
+		case -1795541801:
+	{
+		engineConfiguration->fuelPump_iTermMin = (int)value;
+		return 1;
+	}
+		case -1795542055:
+	{
+		engineConfiguration->fuelPump_iTermMax = (int)value;
+		return 1;
+	}
+		case 668125882:
+	{
+		engineConfiguration->fuelPumpAggressiveRelief = (int)value;
+		return 1;
+	}
+		case -2119617526:
+	{
+		engineConfiguration->fuelPumpReliefMaxInjectedMass = (int)value;
+		return 1;
+	}
+		case -1292368058:
+	{
+		engineConfiguration->fuelPumpReliefEngageOverpressure = (int)value;
+		return 1;
+	}
+		case -1248973931:
+	{
+		engineConfiguration->fuelPumpReliefRecoverOverpressure = (int)value;
 		return 1;
 	}
 		case -1658957891:

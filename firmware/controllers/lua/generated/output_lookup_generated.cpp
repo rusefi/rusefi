@@ -1162,6 +1162,21 @@ float getOutputValueByHash(const int hash) {
 // ignitionOn
 		case -381519965:
 			return engine->module<FuelPumpController>()->ignitionOn;
+// isSecondaryPumpOn
+		case 2108021704:
+			return engine->module<FuelPumpController>()->isSecondaryPumpOn;
+// isFpPidActive
+		case -1198544592:
+			return engine->module<FuelPumpController>()->isFpPidActive;
+// isFpReliefActive
+		case 511613578:
+			return engine->module<FuelPumpController>()->isFpReliefActive;
+// fuelPumpDuty
+		case 456425721:
+			return engine->module<FuelPumpController>()->fuelPumpDuty;
+// fuelPressureTarget
+		case 1083687089:
+			return engine->module<FuelPumpController>()->fuelPressureTarget;
 // lua.fuelAdd
 		case 1649801578:
 			return engine->engineState.lua.fuelAdd;
