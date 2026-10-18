@@ -86,6 +86,7 @@ static void unassignOutputs() {
 	clearPinArray(engineConfiguration->ignitionPins, noOutput);
 	clearPinArray(engineConfiguration->trailingCoilPins, noOutput);
 	engineConfiguration->fuelPumpPin = noOutput;
+	engineConfiguration->fuelPump2Pin = noOutput;
 	engineConfiguration->starterControlPin = noOutput;
 	engineConfiguration->starterRelayDisablePin = noOutput;
 	engineConfiguration->acRelayPin = noOutput;

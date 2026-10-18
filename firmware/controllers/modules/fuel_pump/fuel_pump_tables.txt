@@ -1,0 +1,11 @@
+#define FP_PRESSURE_TABLE_SIZE 4
+#define FP_PRESSURE_RPM_SIZE 4
+#define FP_DUTY_TABLE_SIZE 4
+#define FP_DUTY_RPM_SIZE 4
+
+uint16_t[FP_PRESSURE_TABLE_SIZE x FP_PRESSURE_RPM_SIZE] autoscale fuelPressureTargetTable;Low fuel pressure target using the same pressure reference as the low-pressure sensor.;"kPa", 0.1, 0, 0, 1275, 1
+uint16_t[FP_PRESSURE_TABLE_SIZE] fuelPressureTargetLoadBins;Fueling-load axis. Speed Density uses MAP in kPa.;"load", 1, 0, 0, 1000, 0
+uint16_t[FP_PRESSURE_RPM_SIZE] fuelPressureTargetRpmBins;;"rpm", 1, 0, 0, 20000, 0
+uint16_t[FP_DUTY_TABLE_SIZE x FP_DUTY_RPM_SIZE] autoscale fuelPumpBaseDutyTable;Base duty before PID correction. Also used without pressure feedback when the sensor is absent or invalid.;"%", 0.1, 0, 0, 100, 1
+uint16_t[FP_DUTY_TABLE_SIZE] fuelPumpBaseDutyFpBins;Target-pressure axis for the base-duty map.;"kPa", 1, 0, 0, 1275, 0
+uint16_t[FP_DUTY_RPM_SIZE] fuelPumpBaseDutyRpmBins;;"rpm", 1, 0, 0, 20000, 0

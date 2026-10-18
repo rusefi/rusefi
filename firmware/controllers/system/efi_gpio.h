@@ -89,6 +89,7 @@ public:
 	// see acRelayPin
 	RegisteredOutputPin acRelay;
 	RegisteredOutputPin fuelPumpRelay;
+	RegisteredOutputPin fuelPumpRelay2;
 	RegisteredOutputPin nitrousRelay;
 	RegisteredOutputPin vvlRelay;
 #if EFI_HD_ACR

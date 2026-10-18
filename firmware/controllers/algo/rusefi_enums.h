@@ -977,6 +977,12 @@ enum class dfco_fuel_cut_mode_e : uint8_t {
 	Both = 2,
 };
 
+enum class fuel_pump_mode_e : uint8_t {
+	Single = 0,
+	Dual = 1,
+	Pwm = 2,
+};
+
 enum class SDLoggerMode : uint8_t {
 	None = 0,
 	Mlg = 1,

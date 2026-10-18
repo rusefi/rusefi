@@ -450,6 +450,10 @@ void commonInitEngineController() {
 
 	initGpPwm();
 
+#ifdef MODULE_FUEL_PUMP
+	initFuelPump();
+#endif
+
 #if EFI_IDLE_CONTROL
 	startIdleThread();
 #endif /* EFI_IDLE_CONTROL */

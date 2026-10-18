@@ -2062,6 +2062,7 @@ include_file controllers/actuators/vvt_advanced_engineConfiguration.txt
 custom dfco_fuel_cut_mode_e 1 bits, U08, @OFFSET@, [0:1], @@dfco_fuel_cut_mode_e_enum@@
 dfco_fuel_cut_mode_e dfcoFuelCutMode;Overrun uses the TPS, RPM and vehicle-speed thresholds below. Decel requires Enable Engine State Machine and its Decelerating state, or RPM falling faster than the Decel RPM rate threshold when no vehicle-speed sensor is configured. Decel does not use the overrun TPS/RPM/speed/gear gates. Both accepts either path. Coolant, MAP, tuning and Lua guards apply in all modes. Active state-machine shifts suppress fuel cut.
 bit coastingFuelCutRequiresGear,"enabled","disabled";Require a valid DetectedGear greater than zero for the Overrun path. Neutral, unknown or invalid gear prevents overrun fuel cut. Configure gear detection before enabling. Does not restrict the Decel path.
+include_file controllers/modules/fuel_pump/fuel_pump_engineConfiguration.txt
 end_struct
 
 ! note that this magic field name is used by LiveDataParserPanel
@@ -2597,6 +2598,7 @@ split_lines@@BOARD_CONFIG_FROM_FILE@@
 	end_struct
 
 	KnockGain[MAX_CYLINDER_COUNT iterate] knockGains
+include_file controllers/modules/fuel_pump/fuel_pump_tables.txt
 end_struct
 
 #define PPS_OK_INDICATOR "Pedal OK"

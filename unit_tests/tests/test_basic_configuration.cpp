@@ -241,6 +241,7 @@ TEST_F(BasicConfigurationTest, UnassignOutputsClearsActuatorDebugAndDacPinsOnly)
 	engineConfiguration->idle.stepperStepPin = assignedGpio;
 	engineConfiguration->secondSolenoidPin = assignedOutput;
 	engineConfiguration->fuelPumpPin = assignedOutput;
+	engineConfiguration->fuelPump2Pin = assignedOutput;
 	engineConfiguration->starterControlPin = assignedOutput;
 	engineConfiguration->starterRelayDisablePin = assignedOutput;
 	engineConfiguration->acRelayPin = assignedOutput;
@@ -334,6 +335,7 @@ TEST_F(BasicConfigurationTest, UnassignOutputsClearsActuatorDebugAndDacPinsOnly)
 	EXPECT_EQ(Gpio::Unassigned, engineConfiguration->idle.stepperStepPin);
 	EXPECT_EQ(static_cast<output_pin_e>(0), engineConfiguration->secondSolenoidPin);
 	EXPECT_EQ(static_cast<output_pin_e>(0), engineConfiguration->fuelPumpPin);
+	EXPECT_EQ(Gpio::Unassigned, engineConfiguration->fuelPump2Pin);
 	EXPECT_EQ(static_cast<output_pin_e>(0), engineConfiguration->starterControlPin);
 	EXPECT_EQ(static_cast<output_pin_e>(0), engineConfiguration->starterRelayDisablePin);
 	EXPECT_EQ(static_cast<output_pin_e>(0), engineConfiguration->acRelayPin);

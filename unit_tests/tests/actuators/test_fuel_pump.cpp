@@ -18,6 +18,7 @@ TEST(Actuators, FuelPump) {
 	engineConfiguration->fuelPumpPin = Gpio::A0;
 	// Re-init so it picks up the new config
 	enginePins.fuelPumpRelay.init();
+	dut.initHardware();
 
 	// ECU just started, haven't seen trigger yet
 	setTimeNowUs(0.5e6);

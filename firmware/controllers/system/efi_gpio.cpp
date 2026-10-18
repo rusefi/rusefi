@@ -149,6 +149,7 @@ EnginePins::EnginePins() :
 		fanRelay2("Fan Relay 2", CONFIG_PIN_OFFSETS(fan2)),
 		acRelay("A/C Relay", CONFIG_PIN_OFFSETS(acRelay)),
 		fuelPumpRelay("Fuel pump Relay", CONFIG_PIN_OFFSETS(fuelPump)),
+		fuelPumpRelay2("Fuel pump Relay 2", CONFIG_PIN_OFFSETS(fuelPump2)),
 		nitrousRelay("Nitrous Relay", CONFIG_PIN_OFFSETS(nitrousRelay)),
 		vvlRelay("VVL Relay", CONFIG_PIN_OFFSETS(vvlRelay)),
 #if EFI_HD_ACR
@@ -922,6 +923,7 @@ void turnAllPinsOff() {
 	}
 	enginePins.mainRelay.setValue(false);
 	enginePins.fuelPumpRelay.setValue(false);
+	enginePins.fuelPumpRelay2.setValue(false);
 	enginePins.checkEnginePin.setValue(true); // yes this one can go ON
 #if EFI_PROD_CODE && HW_HELLEN
   hellenDisableEnSilently();

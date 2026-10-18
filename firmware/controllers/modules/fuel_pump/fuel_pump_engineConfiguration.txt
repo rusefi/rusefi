@@ -1,0 +1,21 @@
+#define fuel_pump_mode_e_enum "Single relay", "Dual relay", "PWM pressure control", "INVALID"
+custom fuel_pump_mode_e 1 bits, U08, @OFFSET@, [0:1], @@fuel_pump_mode_e_enum@@
+fuel_pump_mode_e fuelPumpMode;Single relay preserves normal priming and engine-motion control. Dual stages a second relay. PWM regulates low fuel pressure. Burn changes to mode, pins or PWM frequency before use.
+output_pin_e fuelPump2Pin;Secondary pump relay output, used in Dual relay mode.
+pin_output_mode_e fuelPump2PinMode;Secondary pump output polarity.
+uint16_t secondaryFpActivationRpm;Secondary pump engages only when RPM, fueling load and TPS all exceed their thresholds.;"rpm", 1, 0, 0, 20000, 0
+uint16_t secondaryFpActivationLoad;Fueling-load threshold for the secondary pump. Speed Density uses MAP in kPa, other fueling algorithms use their own load scale.;"load", 1, 0, 0, 1000, 0
+uint8_t secondaryFpActivationTps;TPS threshold for the secondary pump.;"%", 1, 0, 0, 100, 0
+uint8_t secondaryFpTpsHysteresis;Secondary pump releases when any input falls below its activation threshold minus hysteresis.;"%", 1, 0, 0, 100, 0
+uint16_t secondaryFpRpmHysteresis;RPM release hysteresis for the secondary pump.;"rpm", 1, 0, 0, 20000, 0
+uint16_t secondaryFpLoadHysteresis;Fueling-load release hysteresis for the secondary pump.;"load", 1, 0, 0, 1000, 0
+uint16_t fuelPumpPwmFrequency;PWM command frequency. Use a compatible pump controller or power driver and its specified frequency. Burn frequency changes.;"Hz", 1, 0, 1, 3000, 0
+uint8_t fuelPumpMinDuty;Minimum duty while pressure control is active, including relief or an invalid control result. An inactive pump always receives zero duty.;"%", 1, 0, 0, 100, 0
+uint8_t fuelPumpMaxDuty;Maximum running duty and key-on prime duty.;"%", 1, 0, 0, 100, 0
+pid_s fuelPumpControl;Fuel-pressure PID correction added to the base-duty map. Output limits are signed duty corrections, not total pump duty.
+int16_t fuelPump_iTermMin;Minimum integral correction.;"%", 1, 0, -100, 100, 1
+int16_t fuelPump_iTermMax;Maximum integral correction.;"%", 1, 0, -100, 100, 1
+bit fuelPumpAggressiveRelief,"enabled","disabled";Hold minimum active duty during low-demand overpressure. Intended for returnless systems. Feedback resumes below the recovery threshold or when fuel demand increases.
+uint16_t fuelPumpReliefMaxInjectedMass;Relief is eligible below this injected mass per cycle.;"mg", 1, 0, 0, 2000, 0
+uint16_t fuelPumpReliefEngageOverpressure;Engage relief above target pressure plus this value.;"kPa", 1, 0, 0, 500, 0
+uint16_t fuelPumpReliefRecoverOverpressure;Release relief at or below target plus this value. Set below the engagement threshold.;"kPa", 1, 0, 0, 500, 0

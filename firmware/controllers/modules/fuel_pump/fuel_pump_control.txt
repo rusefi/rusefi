@@ -3,4 +3,9 @@ struct_no_prefix fuel_pump_control_s
 	bit engineTurnedRecently
 	bit isFuelPumpOn
 	bit ignitionOn
+	bit isSecondaryPumpOn;Secondary fuel pump on
+	bit isFpPidActive;Fuel pressure feedback active
+	bit isFpReliefActive;Fuel pressure relief active
+	uint16_t autoscale fuelPumpDuty;Fuel pump PWM duty;"%", 0.1, 0, 0, 100, 1
+	uint16_t autoscale fuelPressureTarget;Fuel pressure target;"kPa", 0.1, 0, 0, 1275, 1
 end_struct

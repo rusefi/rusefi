@@ -238,6 +238,7 @@ TESTS_SRC_CPP = \
 	tests/actuators/test_etb_integrated.cpp \
 	tests/actuators/test_fan_control.cpp \
 	tests/actuators/test_fuel_pump.cpp \
+	tests/actuators/test_fuel_pump_pwm.cpp \
 	tests/actuators/test_gppwm.cpp \
 	tests/actuators/test_idle_hardware.cpp \
 	tests/actuators/test_main_relay.cpp \
