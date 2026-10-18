@@ -244,6 +244,28 @@ TEST(LuaHooks, TestLuaTimer) {
 			)"), 0);
 }
 
+// [tag:lua_direct_class_methods] Direct adapters retain luaaa's receiver and
+// argument validation, including errors before a native method can be called.
+TEST(LuaHooks, ClassMethodsRejectInvalidReceiversAndArguments) {
+	EXPECT_ANY_THROW(testLuaExecString(R"(
+		local timer = Timer.new()
+		timer.reset({})
+	)"));
+	EXPECT_ANY_THROW(testLuaExecString(R"(
+		local timer = Timer.new()
+		local pid = Pid.new(0.5, 0, 0, -10, 10)
+		timer.getElapsedSeconds(pid)
+	)"));
+	EXPECT_ANY_THROW(testLuaExecString(R"(
+		local pid = Pid.new(0.5, 0, 0, -10, 10)
+		pid:get(nil, 7)
+	)"));
+	EXPECT_ANY_THROW(testLuaExecString(R"(
+		local debounce = SignalDebounce.new(0.1)
+		debounce:set(1)
+	)"));
+}
+
 static const char* sensorTest = R"(
 function testFunc()
 	local sens = Sensor.new("CLT")

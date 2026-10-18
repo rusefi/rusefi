@@ -13,17 +13,14 @@
 #include "lua_hooks.h"
 #include "second_tables.h"
 
-#include "lua_biquad.h"
 #include "fuel_math.h"
 #include "airmass.h"
 #include "lua_airmass.h"
 #include "value_lookup.h"
 #include "can_filter.h"
 #include "tunerstudio.h"
-#include "lua_pid.h"
 #include "start_stop.h"
 #include "tinymt32.h" // TL,DR: basic implementation of 'random'
-#include "signaldebounce.h"
 
 #if EFI_PROD_CODE && HW_HELLEN
 #include "hellen_meta.h"
@@ -43,13 +40,8 @@
 #include "can_hw.h"
 #endif // EFI_CAN_SUPPORT
 #include "settings.h"
-#include <new>
 
-// We don't want to try and use the STL on a microcontroller
-#define LUAAA_WITHOUT_CPP_STDLIB
-#include "luaaa.hpp"
 #include "lua_hooks_util.h"
-using namespace luaaa;
 
 #include "script_impl.h"
 #include "trigger_emulator_algo.h"
@@ -119,19 +111,9 @@ static int lua_getSensorByIndex(lua_State* l) {
 	return getSensor(l, static_cast<SensorType>(zeroBasedSensorIndex));
 }
 
-static SensorType findSensorByName(lua_State* l, const char* name) {
-	SensorType type = findSensorTypeByName(name);
-
-	if (l && type == SensorType::Invalid) {
-		luaL_error(l, "Invalid sensor type: %s", name);
-	}
-
-	return type;
-}
-
 static int lua_getSensorByName(lua_State* l) {
 	auto sensorName = luaL_checklstring(l, 1, nullptr);
-	SensorType type = findSensorByName(l, sensorName);
+	SensorType type = findLuaSensorByName(l, sensorName);
 
 	return getSensor(l, type);
 }
@@ -484,78 +466,6 @@ static int lua_setAirmass(lua_State* l) {
 
 #endif // EFI_UNIT_TEST
 
-// TODO: PR this back in to https://github.com/gengyong/luaaa
-namespace LUAAA_NS {
-    template<typename TCLASS, typename ...ARGS>
-    struct PlacementConstructorCaller<TCLASS, lua_State*, ARGS...>
-    {
-        // this speciailization passes the Lua state to the constructor as first argument, as it shouldn't
-        // participate in the index generation as it's not a normal parameter passed via the Lua stack.
-
-        static TCLASS * Invoke(lua_State * state, void * mem)
-        {
-            return InvokeImpl(state, mem, typename make_indices<sizeof...(ARGS)>::type());
-        }
-
-    private:
-        template<std::size_t ...Ns>
-        static TCLASS * InvokeImpl(lua_State * state, void * mem, indices<Ns...>)
-        {
-            (void)state;
-            return new(mem) TCLASS(state, LuaStack<ARGS>::get(state, Ns + 1)...);
-        }
-    };
-}
-
-struct LuaSensor final : public StoredValueSensor {
-	LuaSensor() : LuaSensor(nullptr, "Invalid") { }
-
-	~LuaSensor() {
-		unregister();
-	}
-
-	LuaSensor(lua_State* l, const char* name)
-		: StoredValueSensor(findSensorByName(l, name), MS2NT(100))
-	{
-		// do a soft collision check to avoid a fatal error from the hard check in Register()
-		if (l && Sensor::hasSensor(type())) {
-			luaL_error(l, "Tried to create a Lua sensor of type %s, but one was already registered.", getSensorName());
-		} else {
-			Register();
-			efiPrintf("LUA registered sensor of type %s", getSensorName());
-		}
-	}
-
-	bool isRedundant() const override {
-		return m_isRedundant;
-	}
-
-	// do we need method defined exactly on LuaSensor for Luaa to be happy?
-	void setTimeout(int timeoutMs) override {
-	    StoredValueSensor::setTimeout(timeoutMs);
-	}
-
-	void setRedundant(bool value) {
-		m_isRedundant = value;
-	}
-
-	void set(float value) {
-		setValidValue(value, getTimeNowNt());
-	}
-
-	void invalidate() {
-		StoredValueSensor::invalidate();
-	}
-
-	void showInfo(const char* sensorName) const override {
-		const auto value = get();
-		efiPrintf("Sensor \"%s\": Lua sensor: Valid: %s Converted value %.2f", sensorName, boolToString(value.Valid), value.Value);
-	}
-
-private:
-	bool m_isRedundant = false;
-};
-
 static bool isFunction(lua_State* l, int idx) {
 	return lua_type(l, idx) == LUA_TFUNCTION;
 }
@@ -681,47 +591,7 @@ void configureRusefiLuaHooks(lua_State* lState) {
 		return 1;
 	});
 
-	LuaClass<Timer> luaTimer(lState, "Timer");
-	luaTimer
-		.ctor()
-		.fun("reset",             static_cast<void (Timer::*)()     >(&Timer::reset            ))
-		.fun("getElapsedSeconds", static_cast<float(Timer::*)()const>(&Timer::getElapsedSeconds));
-
-	LuaClass<LuaSensor> luaSensor(lState, "Sensor");
-	luaSensor
-		.ctor<lua_State*, const char*>()
-		.fun("set", &LuaSensor::set)
-		.fun("setRedundant", &LuaSensor::setRedundant)
-		.fun("setTimeout", &LuaSensor::setTimeout)
-		.fun("invalidate", &LuaSensor::invalidate);
-
-#ifndef WITH_LUA_PID
-#define WITH_LUA_PID TRUE
-#endif
-
-#if WITH_LUA_PID
-  LuaClass<LuaBiQuad> biQuard(lState, "Biquad");
-  biQuard
-    .ctor()
-		.fun("filter", &LuaBiQuad::filter)
-		.fun("configureLowpass", &LuaBiQuad::configureLowpass);
-
-	LuaClass<LuaPid> luaPid(lState, "Pid");
-	luaPid
-		.ctor<float, float, float, float, float>()
-		.fun("get", &LuaPid::get)
-		.fun("setOffset", &LuaPid::setOffset)
-		.fun("reset", &LuaPid::reset);
-
-	LuaClass<LuaIndustrialPid> luaIndustrialPid(lState, "IndustrialPid");
-	luaIndustrialPid
-		.ctor<float, float, float, float, float>()
-		.fun("get", &LuaIndustrialPid::get)
-		.fun("setOffset", &LuaIndustrialPid::setOffset)
-		.fun("setDerivativeFilterLoss", &LuaIndustrialPid::setDerivativeFilterLoss)
-		.fun("setAntiwindupFreq", &LuaIndustrialPid::setAntiwindupFreq)
-		.fun("reset", &LuaIndustrialPid::reset);
-#endif
+	configureRusefiLuaClassHooks(lState);
 
 	configureRusefiLuaUtilHooks(lState);
 
@@ -1337,14 +1207,6 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 		return 1;
 	});
 #endif // LUA_I2C_DAC
-
-#if WITH_LUA_PID
-    LuaClass<SignalDebounce> luaDebounce(lState, "SignalDebounce");
-    luaDebounce
-        .ctor<float>()
-        .fun("set", &SignalDebounce::set)
-        .fun("get", &SignalDebounce::get);
-#endif // WITH_LUA_PID
 
 #if EFI_UNIT_TEST
     lua_register(lState, "advanceTimeUs", [](lua_State *l){
