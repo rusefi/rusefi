@@ -2242,6 +2242,9 @@ float getConfigValueByHash(const int hash) {
 // smHotTempThreshold
 		case 1186627731:
 			return engineConfiguration->smHotTempThreshold;
+// wotEnrichmentEnabled
+		case -979032745:
+			return engineConfiguration->wotEnrichmentEnabled;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -6085,6 +6088,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1186627731:
 	{
 		engineConfiguration->smHotTempThreshold = (int)value;
+		return 1;
+	}
+		case -979032745:
+	{
+		engineConfiguration->wotEnrichmentEnabled = (int)value;
 		return 1;
 	}
 		case -1658957891:

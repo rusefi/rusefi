@@ -1408,6 +1408,15 @@ float getOutputValueByHash(const int hash) {
 // engineSmRpmRate
 		case -1550884842:
 			return engine->module<EngineStateMachine>()->engineSmRpmRate;
+// isWotEnrichmentActive
+		case 1376849540:
+			return engine->module<WotEnrichment>()->isWotEnrichmentActive;
+// wotEnrichmentTimer
+		case -1123079795:
+			return engine->module<WotEnrichment>()->wotEnrichmentTimer;
+// wotEnrichmentAfrAdder
+		case -1996371419:
+			return engine->module<WotEnrichment>()->wotEnrichmentAfrAdder;
 #if EFI_ENGINE_CONTROL
 // totalFuelCorrection
 		case -1779658835:

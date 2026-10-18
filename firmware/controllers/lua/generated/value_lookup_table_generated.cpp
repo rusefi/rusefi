@@ -1765,6 +1765,9 @@ const ConfigParameter allParameters[] = {
 	{ 0xC58982DF, // launchFuelCutEnable
 		[]() -> float { return engineConfiguration->launchFuelCutEnable; },
 		[](float value) { engineConfiguration->launchFuelCutEnable = value; } },
+	{ 0xC5A52557, // wotEnrichmentEnabled
+		[]() -> float { return engineConfiguration->wotEnrichmentEnabled; },
+		[](float value) { engineConfiguration->wotEnrichmentEnabled = value; } },
 	{ 0xC6718AE6, // minAcPressure
 		[]() -> float { return engineConfiguration->minAcPressure; },
 		[](float value) { engineConfiguration->minAcPressure = value; } },

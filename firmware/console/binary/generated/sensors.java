@@ -792,3 +792,5 @@ engineSmCurrentState("Engine SM: display state", SensorCategory.SENSOR_INPUTS, F
 alignmentFill_at_5("need 4 byte alignment", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 2273, 1.0, 0.0, 100.0, "units"),
 engineSmShiftAccumulator("Engine SM: Shift accumulator", SensorCategory.SENSOR_INPUTS, FieldType.INT, 2276, 1.0, -100.0, 100.0, ""),
 engineSmRpmRate("Engine SM: RPM rate (RPM/t)", SensorCategory.SENSOR_INPUTS, FieldType.INT, 2280, 1.0, -20000.0, 20000.0, "RPM/s"),
+wotEnrichmentTimer("WOT Enrichment: time at WOT", SensorCategory.SENSOR_INPUTS, FieldType.INT, 2288, 1.0, 0.0, 0.0, "s"),
+wotEnrichmentAfrAdder("WOT Enrichment: AFR adder", SensorCategory.SENSOR_INPUTS, FieldType.INT, 2292, 1.0, 0.0, 0.0, "afr"),

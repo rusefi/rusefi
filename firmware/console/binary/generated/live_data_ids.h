@@ -54,6 +54,7 @@ LDS_injector_deadtime_autotune_state,
 LDS_rolling_launch_state,
 LDS_burst_knock_state,
 LDS_engine_state_machine_state,
+LDS_wot_enrichment_state,
 } live_data_e;
 #define OUTPUT_CHANNELS_BASE_ADDRESS 0
 #define FUEL_COMPUTER_BASE_ADDRESS 944
@@ -99,3 +100,4 @@ LDS_engine_state_machine_state,
 #define ROLLING_LAUNCH_STATE_BASE_ADDRESS 2232
 #define BURST_KNOCK_STATE_BASE_ADDRESS 2256
 #define ENGINE_STATE_MACHINE_STATE_BASE_ADDRESS 2268
+#define WOT_ENRICHMENT_STATE_BASE_ADDRESS 2284

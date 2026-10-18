@@ -56,4 +56,5 @@ public enum live_data_e {
 	LDS_rolling_launch_state,
 	LDS_burst_knock_state,
 	LDS_engine_state_machine_state,
+	LDS_wot_enrichment_state,
 }

@@ -2195,10 +2195,10 @@ Engine SM: a second clutch switch is also wired (e.g. both Clutch-Up and Clutch-
 Engine SM: while the shift latch (smShiftLatchTimeMs) is active, a fresh Clutch-Down full-press resets it back to the full duration instead of letting it expire -- keeps Upshifting/Downshifting asserted through a flurry of quick consecutive shifts. Requires smSecondClutchSwitchAvailable (both Clutch-Up and Clutch-Down wired).
 
 ### smAccelRateThreshold
-Engine SM: RPM/s rate threshold to enter the Accelerating state. Also the accumulator gain normalizer while accelerating -- at exactly this rate the accumulator climbs at smAccumulatorGain pct/s, faster rates climb proportionally faster. 0 disables the Accelerating state.
+Engine SM: RPM/s rate threshold to enter the Accelerating state. Also the accumulator gain normalizer while accelerating -- at exactly this rate the accumulator climbs at smAccumulatorGain pct/s, faster rates climb proportionally faster. 0 disables the Accelerating state. In VSS Rate mode this numeric value also normalizes the accumulator signal in km/h/s.
 
 ### smDecelRateThreshold
-Engine SM: RPM/s rate threshold to enter the Decelerating state (RPM falling faster than this). Also the accumulator normalizer in Overrun. 0 disables the Decelerating state.
+Engine SM: RPM/s rate threshold to enter the Decelerating state (RPM falling faster than this). Also the accumulator normalizer in Overrun. 0 disables the Decelerating state. In VSS Rate mode this numeric value also normalizes the accumulator signal in km/h/s.
 
 ### smRpmRateWindowMs
 Engine SM: Time window used to compute RPM rate of change (RPM/s, "RPM/t") for Accelerating/Decelerating state detection and the RPM-rate shift-accumulator signal. Larger values smooth out sensor/tooth noise at the cost of slower response, smaller values track faster but are noisier. Internally floored to one slow-callback tick (50 ms). smAccelRateThreshold/smDecelRateThreshold stay in RPM/s regardless of this setting and do not need re-tuning when it changes.
@@ -2207,7 +2207,7 @@ Engine SM: Time window used to compute RPM rate of change (RPM/s, "RPM/t") for A
 Engine SM: once shift direction is confirmed, hold Upshifting/Downshifting true for at least this long. 0 = no latch.
 
 ### smTransientHoldTimeMs
-Engine SM: time to hold the Transient state after the accel-enrichment threshold drops.. 0 = no hold.
+Engine SM: time to hold the Transient state after the accel-enrichment threshold drops. 0 = no hold.
 
 ### smShiftMinVss
 Engine SM: VSS Rate mode only -- minimum vehicle speed. Below this the accumulator decays instead of accumulating. 0 = no minimum.
@@ -2235,6 +2235,9 @@ Engine Temperature Overlay: CLT below this is Cold engine. Between this and smHo
 
 ### smHotTempThreshold
 Engine Temperature Overlay: CLT above this is Hot engine. Below smColdTempThreshold is Cold, between both is Operating temperature.
+
+### wotEnrichmentEnabled
+Add an AFR offset according to continuous time in the Engine State Machine WOT state. Requires Enable Engine State Machine. Negative values richen; positive values lean. Leaving WOT resets the timer and offset.
 
 ### tcu_shiftTime
 
