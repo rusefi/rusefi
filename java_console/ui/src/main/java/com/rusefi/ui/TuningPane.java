@@ -17,6 +17,7 @@ import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.widgets.TextGaugeStrip;
 import com.rusefi.ui.widgets.StatusPanel;
 import com.rusefi.ui.widgets.tune.CalibrationDialogWidget;
+import com.rusefi.ui.widgets.tune.CalibrationPanelWorkspace;
 import com.rusefi.ui.widgets.tune.IndicatorPanel;
 import com.rusefi.ui.widgets.tune.MainMenuTreeWidget;
 import com.rusefi.ui.widgets.tune.TuningToolbarWidget;
@@ -52,6 +53,7 @@ public class TuningPane {
     private final TuningToolbarWidget toolbar;
     private final TuneOperationStatusPanel loadStatusCard;
     private final CalibrationDialogWidget right;
+    private final CalibrationPanelWorkspace workspace;
     private TextGaugeStrip gaugeStrip;
     /** Accumulated tune edits across all dialogs for this session. Field so offline seeding can set it. */
     private final AtomicReference<ConfigurationImage> sessionImage = new AtomicReference<>();
@@ -85,8 +87,9 @@ public class TuningPane {
         this.uiContext = uiContext;
         left = new MainMenuTreeWidget(uiContext);
 
-        right = new CalibrationDialogWidget(uiContext);
-        JScrollPane rightScrollPane = new JScrollPane(right.getViewportPane());
+        workspace = new CalibrationPanelWorkspace(uiContext,
+            config == null ? null : config.getChild(CalibrationPanelWorkspace.CONFIG_KEY));
+        right = workspace.getPrimary();
 
         ConfigurationImage baseline = initialBaseline;
         BinaryProtocol initialBp = uiContext.getBinaryProtocol();
@@ -119,7 +122,7 @@ public class TuningPane {
             gaugeStrip = new TextGaugeStrip(uiContext, config.getChild("gauge_strip"));
         }
 
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, left.getContentPane(), rightScrollPane);
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, left.getContentPane(), workspace.getContent());
         left.getContentPane().setMinimumSize(new Dimension(180, 0));
         splitPane.setDividerLocation(MENU_WIDTH);
         splitPane.setResizeWeight(0);
@@ -152,7 +155,7 @@ public class TuningPane {
 
         // All edit events (dialog fields, table cells, curve drags) flow through onConfigChange.
         // Text fields fire per-keystroke; the toolbar widget coalesces them into one undo point.
-        right.setOnConfigChange(image -> {
+        workspace.setOnConfigChange(image -> {
             toolbar.onEdit(sessionImage.get());
             // Clone because workingImage is mutated in-place by further edits.
             sessionImage.set(image.clone());
@@ -161,7 +164,7 @@ public class TuningPane {
         });
 
         // The Wiring/Pinout button on a pin-enum combo fires the current value upward.
-        right.setOnShowInPinout(value -> {
+        workspace.setOnShowInPinout(value -> {
             if (navigateToPinout != null) navigateToPinout.accept(value);
         });
 
@@ -211,9 +214,7 @@ public class TuningPane {
                                 assert newImage != null;
                                 sessionImage.set(newImage.clone());
                                 String key = currentKey.get();
-                                if (key != null) {
-                                    right.update(key, ini, sessionImage.get());
-                                }
+                                right.update(key, ini, sessionImage.get());
                             });
                         });
                     } else {
@@ -264,9 +265,7 @@ public class TuningPane {
                     toolbar.setBaselineImage(sessionImage.get().clone());
                     left.refreshExpressions(sessionImage.get());
                     String key = currentKey.get();
-                    if (key != null) {
-                        right.update(key, uiContext.iniFileState.getIniFileModel(), sessionImage.get());
-                    }
+                    right.update(key, uiContext.iniFileState.getIniFileModel(), sessionImage.get());
                     // Refresh config-image-driven panes (e.g. PinoutPane "Tune use") to the adopted ECU tune.
                     uiContext.fireConfigImageChanged(sessionImage.get());
                 });
@@ -290,6 +289,14 @@ public class TuningPane {
         content.add(tuningContent, TUNING_CARD);
         content.add(loadStatusCard.getContent(), LOAD_CARD);
         showTuningContent();
+        if (baseline != null) {
+            sessionImage.set(baseline.clone());
+            right.update((String) null, uiContext.iniFileState.getIniFileModel(), sessionImage.get());
+        }
+    }
+
+    public void restoreDetachedPanels(Window owner) {
+        workspace.restore(owner);
     }
 
 
@@ -337,7 +344,7 @@ public class TuningPane {
         if (gaugeStrip != null) {
             gaugeStrip.destroy();
         }
-        right.destroy();
+        workspace.destroy();
         if (frontPageIndicatorPanel != null) {
             frontPageIndicatorPanel.destroy();
         }
@@ -477,6 +484,7 @@ public class TuningPane {
         toolbar.setBaselineImage(image.clone());
         // Remember which .ini these edits belong to so a different-signature ECU can migrate them.
         offlineIni = uiContext.iniFileState.getIniFileModel();
+        right.update(currentKey.get(), offlineIni, sessionImage.get());
         // Select the first dialog if none is selected yet
         if (dialogKey != null) {
             left.selectSubMenu(dialogKey);
@@ -600,9 +608,7 @@ public class TuningPane {
                 sessionImage.set(merged.clone());
                 toolbar.setBaselineImage(merged.clone());
                 String key = currentKey.get();
-                if (key != null) {
-                    right.update(key, targetIni, sessionImage.get());
-                }
+                right.update(key, targetIni, sessionImage.get());
                 uiContext.fireConfigImageChanged(merged);
             });
         });

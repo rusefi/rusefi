@@ -146,9 +146,9 @@ public class TuningToolbarWidget {
             }
             sessionImage.set(undoStack.pop());
             String key = currentKey.get();
-            if (key != null) {
-                right.update(key, uiContext.iniFileState.getIniFileModel(), sessionImage.get());
-            }
+            // [tag:detached_calibration_sync] Restored windows may be open before a primary page
+            // is selected. Publish replacements even with a null key (also redo/discard/load below).
+            right.update(key, uiContext.iniFileState.getIniFileModel(), sessionImage.get());
             updateButtons.run();
         });
 
@@ -164,9 +164,7 @@ public class TuningToolbarWidget {
             }
             sessionImage.set(redoStack.pop());
             String key = currentKey.get();
-            if (key != null) {
-                right.update(key, uiContext.iniFileState.getIniFileModel(), sessionImage.get());
-            }
+            right.update(key, uiContext.iniFileState.getIniFileModel(), sessionImage.get());
             updateButtons.run();
         });
 
@@ -265,9 +263,7 @@ public class TuningToolbarWidget {
             }
             sessionImage.set(baselineImage.clone());
             String key = currentKey.get();
-            if (key != null) {
-                right.update(key, uiContext.iniFileState.getIniFileModel(), sessionImage.get());
-            }
+            right.update(key, uiContext.iniFileState.getIniFileModel(), sessionImage.get());
             undoCommitTimer.stop();
             undoStack.clear();
             redoStack.clear();
@@ -362,9 +358,7 @@ public class TuningToolbarWidget {
                                             uiContext.setOfflineTunePath(path);
                                         }
                                         String key = currentKey.get();
-                                        if (key != null) {
-                                            right.update(key, targetIni, newImage);
-                                        }
+                                        right.update(key, targetIni, newImage);
                                         // Adopt the loaded tune as baseline (enables discard + refreshes state label).
                                         setBaselineImage(newImage.clone());
                                         uiContext.fireConfigImageChanged(newImage);

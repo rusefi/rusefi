@@ -72,6 +72,21 @@ public class CalibrationDialogWidget {
     private Consumer<String> onShowInPinout;
     /** Restores the last navigated view; set on every update() call so the VE generator panel can return to it. */
     private Runnable currentViewRestorer;
+    private String currentKey;
+    private Runnable onViewChanged = () -> { };
+
+    /** Also reports replacements from navigation, undo, discard, and loading another tune. */
+    public void setOnViewChanged(Runnable listener) {
+        onViewChanged = listener;
+    }
+
+    public String getCurrentKey() {
+        return currentKey;
+    }
+
+    public IniFileModel getCurrentIniFileModel() {
+        return currentIniFileModel;
+    }
 
     public void setOnConfigChange(Consumer<ConfigurationImage> onConfigChange) {
         this.onConfigChange = onConfigChange;
@@ -198,14 +213,18 @@ public class CalibrationDialogWidget {
     public void reset() {
         viewportPane.fillWidth = false;
         workingImage = null;
+        currentKey = null;
+        currentIniFileModel = null;
         CalibrationFieldFactory.closeHelpPopup();
         clearLiveComponents();
         contentPane.removeAll();
         contentPane.revalidate();
         contentPane.repaint();
+        onViewChanged.run();
     }
 
     public void update(DialogModel dialogModel, IniFileModel iniFileModel, ConfigurationImage ci) {
+        currentKey = dialogModel == null ? null : dialogModel.getKey();
         viewportPane.fillWidth = false;
         CalibrationFieldFactory.closeHelpPopup();
         final DialogModel capturedDm = dialogModel;
@@ -248,6 +267,7 @@ public class CalibrationDialogWidget {
             contentPane.revalidate();
             contentPane.repaint();
         });
+        onViewChanged.run();
     }
 
     public void update(String key) {
@@ -257,21 +277,24 @@ public class CalibrationDialogWidget {
     }
 
     public void update(String key, IniFileModel iniFileModel, ConfigurationImage ci) {
+        currentKey = key;
+        currentIniFileModel = iniFileModel;
         viewportPane.fillWidth = false;
         CalibrationFieldFactory.closeHelpPopup();
         final String capturedKey = key;
         final IniFileModel capturedIniForRestore = iniFileModel;
         currentViewRestorer = () -> update(capturedKey, capturedIniForRestore, workingImage);
         clearLiveComponents();
+        expressionRows.clear();
+        triggerImageUpdaters.clear();
         contentPane.removeAll();
+        workingImage = ci != null ? ci.clone() : null;
         if (key != null) {
             DialogModel dialog = iniFileModel.getDialogs().get(key);
             if (dialog != null) {
                 update(dialog, iniFileModel, ci);
                 return;
             }
-            workingImage = ci != null ? ci.clone() : null;
-
             Runnable notifyEdit = () -> { if (onConfigChange != null) onConfigChange.accept(workingImage); };
 
             TableModel table = iniFileModel.getTable(key);
@@ -307,6 +330,7 @@ public class CalibrationDialogWidget {
         updateLiveDemand();
         contentPane.revalidate();
         contentPane.repaint();
+        onViewChanged.run();
     }
 
     private void fillPanel(JPanel container, DialogModel dialogModel, IniFileModel iniFileModel,
