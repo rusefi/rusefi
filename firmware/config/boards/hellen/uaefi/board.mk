@@ -4,11 +4,6 @@
 BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp \
   $(BOARD_DIR)/../uaefi121/mega-uaefi.cpp
 
-ifeq ($(PROJECT_CPU),ARCH_STM32F4)
-	# Save flash by using the INI from the firmware bundle instead of the USB INI drive.
-	DDEFS += -DEFI_EMBED_INI_MSD=FALSE
-endif
-
 ifeq ($(PROJECT_CPU),ARCH_STM32F7)
 	include $(PROJECT_DIR)/hw_layer/ports/stm32/2mb_flash.mk
 	DDEFS += -DLUA_RX_MAX_FILTER_COUNT=96

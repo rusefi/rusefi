@@ -64,7 +64,6 @@ ifeq ($(PROJECT_CPU),ARCH_STM32F7)
   endif
   DDEFS += -DEFI_LUA_LOOKUP=$(EFI_LUA_LOOKUP)
 
-	# note #define EFI_EMBED_INI_MSD FALSE in F7 features
 	ifeq ($(DEBUG_LEVEL_OPT),)
 		DEBUG_LEVEL_OPT = -Os -ggdb -g
 	endif
@@ -74,7 +73,6 @@ else ifeq ($(PROJECT_CPU),ARCH_STM32F4)
 	# you would think that removal of below like would reduce flash usage but somehow it increased it somehow?!
 	DDEFS += -DKNOCK_SPECTROGRAM=TRUE
 	DDEFS += -DEFI_WIDEBAND_FIRMWARE_UPDATE=FALSE
-	DDEFS += -DEFI_EMBED_INI_MSD=FALSE
 else ifeq ($(PROJECT_CPU),ARCH_STM32H7)
 	DDEFS += -DSTATIC_BOARD_ID=STATIC_BOARD_ID_PROTEUS_H7
 else

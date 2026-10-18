@@ -17,8 +17,6 @@ endif
 
 BUNDLE_OPENOCD = yes
 
-# Save flash by using the INI from the firmware bundle instead of the USB INI drive.
-DDEFS += -DEFI_EMBED_INI_MSD=FALSE
 
 # User can configure LIN/K-line interface
 #DDEFS += -DEFI_KLINE=TRUE

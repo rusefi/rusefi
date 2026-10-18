@@ -53,6 +53,14 @@ backwards` from an address above `0x10010000` means static data exceeds the
 features. `PERSISTENT_LOCATION=` places the settings container in main SRAM;
 the Lua configuration page stays in CCM and Lua can allocate from both heaps.
 
+F4 can overflow both SRAM and CCM in the same build. The linker stops at the
+first backwards heap assignment, so fixing main SRAM can expose a second CCM
+failure. After linking, inspect `__heap_base__`/`__heap_end__` and
+`__heap_ccm_base__`/`__heap_ccm_end__`: the memory-usage table counts the heaps
+as allocated and reports 100% even when space remains. Firmware CI samples
+boards using their metadata `SKIP_RATE`; a green master run is not evidence
+that a particular board was built.
+
 ### Unit Tests
 
 The host build shadows `firmware/hw_layer/adc/adc_inputs.h` with

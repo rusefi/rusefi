@@ -13,8 +13,6 @@ endif
 DDEFS += -DFIRMWARE_ID=\"hellen121nissan\" $(VAR_DEF_ENGINE_TYPE)
 DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE -DSTM32_ADC_USE_ADC3=TRUE
 
-# Save flash by using the INI from the firmware bundle instead of the USB INI drive.
-DDEFS += -DEFI_EMBED_INI_MSD=FALSE
 
 DDEFS += -DSTATIC_BOARD_ID=STATIC_BOARD_ID_HELLEN_121NISSAN
 

@@ -37,10 +37,10 @@ DDEFS += -DFIRMWARE_ID=\"microRusEFI\"
 DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE -DSTM32_ADC_USE_ADC3=TRUE
 DDEFS += $(VAR_DEF_ENGINE_TYPE)
 
-# F4-specific flash budget and peripherals
+# F4-specific memory placement and peripherals
 ifeq ($(PROJECT_CPU),ARCH_STM32F4)
-    # Keep flash headroom; use the matching INI from the firmware bundle.
-    DDEFS += -DEFI_EMBED_INI_MSD=FALSE
+    # Main SRAM has room for settings; leave CCM space for the engine and Lua heap.
+    DDEFS += -DPERSISTENT_LOCATION=
 
     # This board can capture SENT
     DDEFS += -DEFI_SENT_SUPPORT=TRUE
@@ -66,11 +66,6 @@ $(error Unsupported PROJECT_CPU [$(PROJECT_CPU)])
 endif
 
 ifeq ($(BOARD_HAS_EXT_FLASH),yes)
-    ifeq ($(PROJECT_CPU),ARCH_STM32F4)
-        # Main SRAM has room for settings; leave CCM space for the engine and Lua heap.
-        DDEFS += -DPERSISTENT_LOCATION=
-    endif
-
     # MRE has optional external SPI flash that uses ChibiOS MFS driver
     include $(PROJECT_DIR)/hw_layer/ports/stm32/use_higher_level_flash_api.mk
     include $(PROJECT_DIR)/hw_layer/drivers/flash/w25q/w25q_single_spi.mk

@@ -401,8 +401,10 @@
 #define EFI_FILE_LOGGING TRUE
 #endif
 
+// Save flash on F4: use the matching INI from the firmware bundle.
+// F7/H7 inherit this default; boards with room can explicitly enable the image.
 #ifndef EFI_EMBED_INI_MSD
-#define EFI_EMBED_INI_MSD TRUE
+#define EFI_EMBED_INI_MSD FALSE
 #endif
 
 #ifndef EFI_USB_SERIAL

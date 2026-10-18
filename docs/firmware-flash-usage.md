@@ -1,12 +1,35 @@
 # Firmware flash usage
 
+## Embedded INI policy
+
+All STM32F4 configurations omit the embedded TunerStudio INI image. Use the
+matching INI from the firmware bundle. USB serial tuning, SD logging and USB
+access to the SD card remain available when enabled for the board.
+
+`firmware/config/stm32f4ems/efifeatures.h` provides the shared
+`EFI_EMBED_INI_MSD=FALSE` default. Board makefiles do not repeat that setting.
+F7/H7 inherit it; their existing board-specific opt-ins enable the image where
+there is sufficient memory. The simulator enables its own image separately.
+
+## F4 RAM placement
+
+Both microRusEFI F4 variants put `persistentState` in main SRAM using
+`PERSISTENT_LOCATION=`. The Lua configuration page stays in CCM, leaving room
+for the engine object and Lua's CCM heap.
+
+AlphaX-8chan F4 also puts settings in main SRAM. It disables automatic DTC
+freeze-frame capture to free its dedicated tooth buffers and worker stack;
+regular SD/tooth logging uses the shared big buffer. Its two console text
+buffers hold 5,000 bytes each, leaving additional SRAM headroom. This limits
+the amount of console text queued between reads; engine protection, trigger
+scope and ordinary logging remain enabled. F7 retains its existing settings.
+
 ## uaefi121: measured example
 
 On 2026-10-03, revision `d942e51da6d` overflowed uaefi121's application
 flash region by 104 bytes. Disabling the embedded INI disk with
 `EFI_EMBED_INI_MSD=FALSE` saves 139,540 bytes and leaves 139,436 bytes
-(136.2 KiB) free. This is now set in
-[uaefi121/board.mk](../firmware/config/boards/hellen/uaefi121/board.mk).
+(136.2 KiB) free. uaefi121 inherits the shared F4 default described above.
 
 Users must obtain the matching TunerStudio INI from the firmware bundle.
 The ECU no longer supplies its embedded INI disk/image. USB serial tuning,
@@ -41,8 +64,8 @@ measurements, not hardware tests. Future revisions and toolchains can differ.
 Prefer a feature whose loss is acceptable for the board's users, and leave
 room for future growth instead of fixing only the last few overflow bytes.
 
-1. **Embedded INI disk** (`EFI_EMBED_INI_MSD=FALSE`): the change chosen for
-   uaefi121. It removes the local copy of the INI and its disk wrapper.
+1. **Embedded INI disk** (`EFI_EMBED_INI_MSD=FALSE`): already disabled on all
+   F4 configurations, including uaefi121. It removes the local copy of the INI and its disk wrapper.
    `getStorageImage()` returns null and its size is zero; the INI USB LUN
    uses the null block device. It does not disable `EFI_USB_SERIAL`,
    `EFI_FILE_LOGGING`, or the separate SD-card LUN.

@@ -3,8 +3,6 @@
 # Target ECU board design
 BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 
-# Keep flash headroom; use the matching INI from the firmware bundle.
-DDEFS += -DEFI_EMBED_INI_MSD=FALSE
 
 
 # This board has two tle9104

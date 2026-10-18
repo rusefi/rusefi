@@ -12,12 +12,6 @@
 
  #pragma once
 
-// Disable ini ramdisk as a mitigation of https://github.com/rusefi/rusefi/issues/3775
-// See STM32F7.ld for more info
-#ifndef EFI_EMBED_INI_MSD
-#define EFI_EMBED_INI_MSD FALSE
-#endif
-
 #ifndef KNOCK_SPECTROGRAM
 #define KNOCK_SPECTROGRAM TRUE
 #endif
@@ -35,7 +29,7 @@
 #define EFI_CONSOLE_RX_BRAIN_PIN Gpio::D9
 #endif
 
-// see also EFI_EMBED_INI_MSD which is disabled above
+// Boards that enable EFI_EMBED_INI_MSD use compressed images by default.
 #ifndef EFI_USE_COMPRESSED_INI_MSD
 #define EFI_USE_COMPRESSED_INI_MSD TRUE
 #endif

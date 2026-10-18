@@ -24,12 +24,17 @@ ifeq ($(PROJECT_CPU),ARCH_STM32F7)
 	# OTG2 has enough endpoints for MSD plus a second CDC ACM for the CAN sniffer.
 	DDEFS += -DHAL_USE_USB_CDC_2=TRUE
 else ifeq ($(PROJECT_CPU),ARCH_STM32F4)
+    # Free the dedicated DTC capture buffers/stack so settings can move out of CCM.
+    # Regular SD/tooth logging still uses the shared big buffer.
+    MODULE_DTC_MANAGER = no
+    DDEFS += -DPERSISTENT_LOCATION=
+    # Keep main SRAM headroom with two 5 KB console text buffers.
+    DDEFS += -DDL_OUTPUT_BUFFER=5000
     # This board has trigger scope hardware!
     DDEFS += -DTRIGGER_SCOPE
     # serial ports only on F4
 	DDEFS += $(PRIMARY_COMMUNICATION_PORT_USART2)
 	DDEFS += -DEFI_WIDEBAND_FIRMWARE_UPDATE=FALSE
-	DDEFS += -DEFI_EMBED_INI_MSD=FALSE
 else
 $(error Unsupported PROJECT_CPU [$(PROJECT_CPU)])
 endif
