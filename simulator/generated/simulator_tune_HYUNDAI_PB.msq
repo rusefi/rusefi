@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="15868">
+    <page number="0" size="16196">
         <constant name="accelEnrichmentMode">"MS Adder"</constant>
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
@@ -559,6 +559,38 @@
         <constant digits="0" name="brakeMeanEffectivePressureDifferential" units="">0</constant>
         <constant name="brakePedalPin">"NONE"</constant>
         <constant name="brakePedalPinMode">"PULLUP"</constant>
+        <constant digits="1" name="burstKnockDecayTime" units="s">1.0</constant>
+        <constant name="burstKnockEnabled">"disabled"</constant>
+        <constant cols="8" digits="1" name="burstKnockRetardTable" rows="8" units="deg">
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+</constant>
+        <constant cols="1" digits="0" name="burstKnockRpmBins" rows="8" units="rpm">
+         800
+         1600
+         2400
+         3200
+         4000
+         4800
+         5600
+         6400
+</constant>
+        <constant cols="1" digits="0" name="burstKnockTpsRateBins" rows="8" units="%/s">
+         0
+         150
+         300
+         450
+         600
+         750
+         900
+         1050
+</constant>
         <constant digits="0" name="byFirmwareVersion" units="index">0</constant>
         <constant digits="0" name="calibrationBirthday" units="">20261018</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="angle">95</constant>
@@ -5244,7 +5276,7 @@
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20261017" nPages="1" signature="rusEFI master.2026.10.18.f407-discovery.133583103" version="5.0"/>
+    <versionInfo firmwareInfo="20261017" nPages="1" signature="rusEFI master.2026.10.18.f407-discovery.125734754" version="5.0"/>
     <bibliography author="rusEFI 20261017" writeDate="date"/>
     <settings/>
     <userComments/>
