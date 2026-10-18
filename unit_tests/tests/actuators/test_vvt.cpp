@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include "vvt.h"
+#include "defaults.h"
 
 using ::testing::StrictMock;
 using ::testing::Return;
@@ -182,4 +183,321 @@ TEST(Vvt, ClosedLoopInverted) {
 
 	// Target of -30 with position -20 should yield positive duty, P=1.5 means 15% duty for 10% error
 	EXPECT_EQ(dut.getClosedLoop(-30, -20).value_or(0), 15);
+}
+
+TEST(VVT, SetpointHysteresisSkippedInAdvancedMode) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	Sensor::setMockValue(SensorType::Clt, 70); // m_isCltWarmEnough
+	// m_isRpmHighEnough
+	engine->rpmCalculator.setRpmValue(1500);
+	engineConfiguration->vvtControlMinRpm = 500;
+	// m_engineRunningLongEnough
+	advanceTimeUs(0.8e6);
+	engineConfiguration->vvtActivationDelayMs = 5;
+	engineConfiguration->invertVvtControlIntake = false;
+	engineConfiguration->invertVvtControlExhaust = false;
+
+	engineConfiguration->vvtAdvancedModeEnabled = true;
+
+	FakeMap targetMap;
+	MockPwm pwm;
+
+	VvtController dut(0);
+	dut.init(&targetMap, &pwm);
+
+	// update m_engineRunningLongEnough / m_isRpmHighEnough flags
+	dut.onFastCallback();
+
+	// In Advanced Mode, even a 0 (or near-0) target flows through to the feedforward+PID math
+	// instead of being disabled by the near-rest hysteresis gate.
+	targetMap.setpoint = 0;
+	EXPECT_EQ(0, dut.getSetpoint().value_or(-1000));
+
+	targetMap.setpoint = 0.5;
+	EXPECT_EQ(0.5, dut.getSetpoint().value_or(-1000));
+
+	targetMap.setpoint = -0.5;
+	EXPECT_EQ(-0.5, dut.getSetpoint().value_or(-1000));
+}
+
+// VVT Advanced Mode: the feedforward baseline is always the duty-vs-oil-pressure curve (the fixed
+// "Hold Duty" / pid_s.offset is never used while Advanced Mode is enabled). On top of that, the
+// P+I+D trim's P factor comes from a distance-vs-P-factor curve instead of the fixed pid_s.pFactor
+// -- I and D still use the fixed auxPid iFactor/dFactor. The trim always runs on top of the
+// feedforward; if I trim isn't wanted, set the fixed auxPid iFactor to 0.
+
+static void setupAdvancedIntakePid(int camIndex) {
+	engineConfiguration->auxPid[camIndex].pFactor = 0;
+	engineConfiguration->auxPid[camIndex].iFactor = 0;
+	engineConfiguration->auxPid[camIndex].dFactor = 0;
+	engineConfiguration->auxPid[camIndex].offset = 0;
+	engineConfiguration->auxPid[camIndex].periodMs = 10;
+	engineConfiguration->auxPid[camIndex].minValue = -1000;
+	engineConfiguration->auxPid[camIndex].maxValue = 1000;
+}
+
+// Flat (all-zero) curves matching the real bin counts/ranges: a symmetric -40..40 deg distance
+// axis (9 points, zero at the center, bin index 5 at +10 deg) driving P factor, and a 0..500 kPa
+// oil pressure axis (6 points, bin index 3 at 300 kPa) driving base duty. Individual tests
+// override specific bins as needed.
+static void setupAdvancedIntakeCurvesFlat(engine_configuration_s* d) {
+	for (size_t i = 0; i < efi::size(d->vvtAdvDistanceBinsIntake); i++) {
+		d->vvtAdvDistanceBinsIntake[i] = -40.0f + i * 10.0f;
+		d->vvtAdvPFactorIntake[i] = 0;
+	}
+	for (size_t i = 0; i < efi::size(d->vvtAdvOilPressureBinsIntake); i++) {
+		d->vvtAdvOilPressureBinsIntake[i] = i * 100.0f;
+		d->vvtAdvDutyIntake[i] = 0;
+	}
+}
+
+TEST(Vvt, AdvancedModeDisabledMatchesLegacyBehavior) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	VvtController dut(0);
+	int camIndex = 0;
+	dut.init(nullptr, nullptr);
+
+	engineConfiguration->vvtAdvancedModeEnabled = false;
+
+	engineConfiguration->auxPid[camIndex].pFactor = 1.5f;
+	engineConfiguration->auxPid[camIndex].iFactor = 0;
+	engineConfiguration->auxPid[camIndex].dFactor = 0;
+	engineConfiguration->auxPid[camIndex].offset = 0;
+
+	// Same as ClosedLoopNotInverted: P=1.5 means 15% duty for 10% error.
+	EXPECT_EQ(dut.getClosedLoop(30, 20).value_or(0), 15);
+}
+
+TEST(Vvt, AdvancedModeFeedforwardTracksOilPressureNotHoldDuty) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	VvtController dut(0);
+	int camIndex = 0;
+	dut.init(nullptr, nullptr);
+	setupAdvancedIntakePid(camIndex);
+	engineConfiguration->auxPid[camIndex].offset = 999.0f; // Hold Duty -- must never leak in
+
+	auto* d = engineConfiguration;
+	d->vvtAdvancedModeEnabled = true;
+	setupAdvancedIntakeCurvesFlat(d);
+	d->vvtAdvDutyIntake[0] = 7.0f;  // 0 kPa
+	d->vvtAdvDutyIntake[3] = 42.0f; // 300 kPa
+
+	// Oil pressure = 0 kPa (no sensor mocked yet) -> feedforward is the curve's leftmost value.
+	Sensor::resetMockValue(SensorType::OilPressure);
+	EXPECT_NEAR(dut.getClosedLoop(20, 20).value_or(0), 7.0f, 0.01f);
+
+	// 300 kPa -> same curve, different point.
+	Sensor::setMockValue(SensorType::OilPressure, 300);
+	EXPECT_NEAR(dut.getClosedLoop(20, 20).value_or(0), 42.0f, 0.01f);
+}
+
+TEST(Vvt, AdvancedModeUsesCurvePFactor) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	VvtController dut(0);
+	int camIndex = 0;
+	dut.init(nullptr, nullptr);
+	setupAdvancedIntakePid(camIndex);
+	engineConfiguration->auxPid[camIndex].pFactor = 999.0f; // fixed P factor -- must never leak in
+	engineConfiguration->auxPid[camIndex].offset = 999.0f;  // Hold Duty -- must never leak in
+
+	auto* d = engineConfiguration;
+	d->vvtAdvancedModeEnabled = true;
+	setupAdvancedIntakeCurvesFlat(d); // zero P-factor and zero duty curves everywhere
+	d->vvtAdvPFactorIntake[5] = 1.0f; // bin index 5 = +10 deg -> P factor 1.0 there
+
+	// distance = 10 deg -> PID runs using the curve's P factor (1.0) at that distance, not the
+	// fixed (sentinel) pFactor; feedforward is still the (zero) duty curve.
+	EXPECT_NEAR(dut.getClosedLoop(30, 20).value_or(0), 10.0f, 0.01f);
+}
+
+TEST(Vvt, DistanceLiveDataOnlyTrackedInAdvancedMode) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	VvtController dut(0);
+	int camIndex = 0;
+	dut.init(nullptr, nullptr);
+	setupAdvancedIntakePid(camIndex);
+
+	auto* d = engineConfiguration;
+
+	// Basic mode: distance tracker is not written.
+	d->vvtAdvancedModeEnabled = false;
+	dut.vvtDistance = 0;
+	dut.getClosedLoop(30, 20);
+	EXPECT_EQ(dut.vvtDistance, 0);
+
+	// Advanced mode: distance tracker reflects target - observation.
+	d->vvtAdvancedModeEnabled = true;
+	setupAdvancedIntakeCurvesFlat(d);
+	dut.getClosedLoop(30, 20);
+	EXPECT_NEAR(dut.vvtDistance, 10.0f, 0.5f); // vvtDistance is a scaled int16 (0.1 deg resolution)
+}
+
+TEST(VVT, DisabledBelowMinRpmEvenInAdvancedMode) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	Sensor::setMockValue(SensorType::Clt, 70); // m_isCltWarmEnough
+	engineConfiguration->vvtControlMinRpm = 500;
+	engineConfiguration->vvtActivationDelayMs = 5;
+	engineConfiguration->invertVvtControlIntake = false;
+	engineConfiguration->invertVvtControlExhaust = false;
+
+	engineConfiguration->vvtAdvancedModeEnabled = true;
+
+	FakeMap targetMap;
+	MockPwm pwm;
+
+	VvtController dut(0);
+	dut.init(&targetMap, &pwm);
+	targetMap.setpoint = 20; // well above the near-rest hysteresis band
+
+	// Bring the engine into RUNNING state once (RPM above the default cranking.rpm) and let
+	// m_engineRunningLongEnough settle. RpmCalculator::setRpmValue() only resets its "engine
+	// started" timer on a transition *into* RUNNING -- once RUNNING, later RPM changes (even below
+	// cranking.rpm) don't revert the state or reset the timer, so this isolates the vvtControlMinRpm
+	// check below from that unrelated state machine.
+	engine->rpmCalculator.setRpmValue(1500);
+	advanceTimeUs(0.8e6); // m_engineRunningLongEnough
+
+	// Below vvtControlMinRpm: still fully disabled (getSetpoint() -> unexpected), same as legacy
+	// PID mode: Advanced Mode does not bypass the minimum-RPM gate.
+	engine->rpmCalculator.setRpmValue(400);
+	dut.onFastCallback();
+	EXPECT_EQ(-1000, dut.getSetpoint().value_or(-1000));
+
+	// Above it, control resumes as normal.
+	engine->rpmCalculator.setRpmValue(1500);
+	dut.onFastCallback();
+	EXPECT_EQ(20, dut.getSetpoint().value_or(-1000));
+}
+
+TEST(Vvt, AdvancedModeDefaultsAndOldTuneMigration) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	EXPECT_FALSE(engineConfiguration->vvtAdvancedModeEnabled);
+	EXPECT_FLOAT_EQ(engineConfiguration->vvtAdvDistanceBinsIntake[0], -40);
+	EXPECT_FLOAT_EQ(engineConfiguration->vvtAdvDistanceBinsExhaust[4], 0);
+	EXPECT_FLOAT_EQ(engineConfiguration->vvtAdvDistanceBinsIntake[8], 40);
+	EXPECT_FLOAT_EQ(engineConfiguration->vvtAdvOilPressureBinsExhaust[5], 1000);
+	EXPECT_FLOAT_EQ(engineConfiguration->vvtAdvDutyIntake[3], 0);
+	EXPECT_FLOAT_EQ(engineConfiguration->vvtAdvPFactorExhaust[5], 0);
+
+	setArrayValues(engineConfiguration->vvtAdvDistanceBinsIntake, 0);
+	setArrayValues(engineConfiguration->vvtAdvOilPressureBinsExhaust, 0);
+	engineConfiguration->vvtIntake_iTermMin = 0;
+	engineConfiguration->vvtIntake_iTermMax = 0;
+	EXPECT_TRUE(applyDefaultsOrFixAfterBurn(nullptr));
+	EXPECT_FLOAT_EQ(engineConfiguration->vvtAdvDistanceBinsIntake[4], 0);
+	EXPECT_FLOAT_EQ(engineConfiguration->vvtAdvDistanceBinsIntake[8], 40);
+	EXPECT_FLOAT_EQ(engineConfiguration->vvtAdvOilPressureBinsExhaust[5], 1000);
+	EXPECT_EQ(engineConfiguration->vvtIntake_iTermMin, -1000);
+	EXPECT_EQ(engineConfiguration->vvtIntake_iTermMax, 1000);
+
+	// A zero on just one side is a valid limit, not an uninitialized pair.
+	engineConfiguration->vvtIntake_iTermMin = 0;
+	engineConfiguration->vvtIntake_iTermMax = 20;
+	engineConfiguration->vvtControlMinRpm = 300;
+	engineConfiguration->cranking.rpm = 500;
+	applyDefaultsOrFixAfterBurn(nullptr);
+	EXPECT_EQ(engineConfiguration->vvtIntake_iTermMin, 0);
+	EXPECT_EQ(engineConfiguration->vvtIntake_iTermMax, 20);
+	EXPECT_EQ(engineConfiguration->vvtControlMinRpm, 300);
+}
+
+// [tag:vvt_advanced_control] Signed gain lookup and telemetry follow solenoid direction.
+TEST(Vvt, AdvancedModeCamDirectionCurvesAndTelemetry) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->vvtAdvancedModeEnabled = true;
+	engineConfiguration->invertVvtControlIntake = false;
+	engineConfiguration->invertVvtControlExhaust = true;
+	setupAdvancedIntakePid(0);
+	setupAdvancedIntakePid(1);
+	setArrayValues(engineConfiguration->vvtAdvDutyIntake, 20);
+	setArrayValues(engineConfiguration->vvtAdvDutyExhaust, 50);
+	setArrayValues(engineConfiguration->vvtAdvPFactorIntake, 2);
+	setArrayValues(engineConfiguration->vvtAdvPFactorExhaust, 0);
+	engineConfiguration->vvtAdvPFactorExhaust[3] = 1; // -10 degrees
+	engineConfiguration->vvtAdvPFactorExhaust[5] = 3; // +10 degrees
+	for (int index = 0; index < CAM_INPUTS_COUNT; index++) {
+		VvtController dut(index);
+		dut.init(nullptr, nullptr);
+		bool intake = dut.getCamIndex() == 0;
+		EXPECT_FLOAT_EQ(dut.getClosedLoop(30, 20).value_or(-1000), 40);
+		EXPECT_FLOAT_EQ(dut.vvtDistance, intake ? 10 : -10);
+		auto& status = engine->outputChannels.vvtStatus[index];
+		EXPECT_FLOAT_EQ(status.pTerm, intake ? 20 : -10);
+		EXPECT_FLOAT_EQ(status.output, 40);
+		EXPECT_FLOAT_EQ(dut.getClosedLoop(20, 30).value_or(-1000), intake ? 0 : 80);
+		EXPECT_FLOAT_EQ(dut.vvtDistance, intake ? -10 : 10);
+		EXPECT_FLOAT_EQ(status.pTerm, intake ? -20 : 30);
+	}
+}
+
+TEST(Vvt, AdvancedModeInterpolatesPressureAndHandlesInvalidSensor) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->vvtAdvancedModeEnabled = true;
+	setupAdvancedIntakePid(0);
+	setLinearCurve(engineConfiguration->vvtAdvOilPressureBinsIntake, 0, 500, 1);
+	for (size_t i = 0; i < VVT_ADV_OILP_SIZE; i++) {
+		engineConfiguration->vvtAdvDutyIntake[i] = 10 + i * 10;
+	}
+	VvtController dut(0);
+	dut.init(nullptr, nullptr);
+	Sensor::setMockValue(SensorType::OilPressure, 250);
+	EXPECT_FLOAT_EQ(dut.getClosedLoop(20, 20).value_or(0), 35);
+	Sensor::setInvalidMockValue(SensorType::OilPressure);
+	EXPECT_FLOAT_EQ(dut.getClosedLoop(20, 20).value_or(0), 10);
+}
+
+TEST(Vvt, IntegralBoundsApplyInBothModesAndResetOnBurn) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	for (bool advanced : {false, true}) {
+		for (int cam = 0; cam < CAMS_PER_BANK; cam++) {
+			engineConfiguration->vvtAdvancedModeEnabled = advanced;
+			setupAdvancedIntakePid(cam);
+			engineConfiguration->auxPid[cam].iFactor = 100;
+			engineConfiguration->vvtIntake_iTermMin = -2;
+			engineConfiguration->vvtIntake_iTermMax = 3;
+			engineConfiguration->vvtExhaust_iTermMin = -4;
+			engineConfiguration->vvtExhaust_iTermMax = 5;
+			VvtController dut(cam);
+			dut.init(nullptr, nullptr);
+			for (int i = 0; i < 10; i++) {
+				dut.getClosedLoop(20, 10);
+			}
+			EXPECT_FLOAT_EQ(dut.getClosedLoop(20, 20).value_or(0), cam == 0 ? 3 : 5);
+			for (int i = 0; i < 10; i++) {
+				dut.getClosedLoop(10, 20);
+			}
+			EXPECT_FLOAT_EQ(dut.getClosedLoop(20, 20).value_or(0), cam == 0 ? -2 : -4);
+			dut.onConfigurationChange(nullptr);
+			EXPECT_FLOAT_EQ(dut.getClosedLoop(20, 20).value_or(1000), 0);
+		}
+	}
+}
+
+TEST(Vvt, AdvancedModeClampsFinalCommandAndDrivesPwm) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->vvtAdvancedModeEnabled = true;
+	setupAdvancedIntakePid(0);
+	engineConfiguration->auxPid[0].minValue = 10;
+	engineConfiguration->auxPid[0].maxValue = 90;
+	setArrayValues(engineConfiguration->vvtAdvDutyIntake, 50);
+	setArrayValues(engineConfiguration->vvtAdvPFactorIntake, 10);
+	StrictMock<MockPwm> pwm;
+	VvtController dut(0);
+	dut.init(nullptr, &pwm);
+	auto output = dut.getClosedLoop(30, 20);
+	EXPECT_FLOAT_EQ(output.value_or(0), 90);
+	EXPECT_FLOAT_EQ(engine->outputChannels.vvtStatus[0].output, 90);
+	EXPECT_FLOAT_EQ(engine->outputChannels.vvtStatus[0].pTerm, 100);
+	EXPECT_CALL(pwm, setSimplePwmDutyCycle(testing::FloatNear(0.9f, 0.0001f)));
+	dut.setOutput(output);
+	EXPECT_FLOAT_EQ(dut.vvtOutput, 90);
+	EXPECT_FLOAT_EQ(dut.getClosedLoop(20, 30).value_or(0), 10);
+	EXPECT_FLOAT_EQ(engine->outputChannels.vvtStatus[0].output, 10);
+	EXPECT_CALL(pwm, setSimplePwmDutyCycle(0));
+	dut.setOutput(unexpected);
+	EXPECT_FLOAT_EQ(dut.vvtOutput, 0);
 }

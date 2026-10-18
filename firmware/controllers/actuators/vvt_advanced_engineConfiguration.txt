@@ -1,0 +1,20 @@
+! [tag:vvt_advanced_control] Curves replace fixed Hold Duty and P only; I/D remain in auxPid.
+#define VVT_ADV_DISTANCE_SIZE 9
+#define VVT_ADV_OILP_SIZE 6
+
+bit vvtAdvancedModeEnabled,"enabled","disabled";VVT Advanced Mode: master enable. Replaces the fixed PID offset (Hold Duty) with an oil-pressure-based base duty curve, and the fixed PID P factor with a distance-from-target P factor curve.
+
+float[VVT_ADV_DISTANCE_SIZE] vvtAdvDistanceBinsIntake;VVT Advanced Mode: intake signed target-minus-position axis after control-direction inversion, shared by the P factor curve below.;"deg", 1, 0, -40, 40, 0
+float[VVT_ADV_DISTANCE_SIZE] vvtAdvPFactorIntake;VVT Advanced Mode: intake PID P factor at each distance from target (curve Y). Replaces the fixed Intake PID "P factor" field. Entered/displayed x100 for friendlier decimal precision (e.g. 100 = 1.000 actual P factor, 0.1 = 0.001 actual).;"x100", 100, 0, -1000, 1000, 1
+float[VVT_ADV_OILP_SIZE] vvtAdvOilPressureBinsIntake;VVT Advanced Mode: intake oil pressure axis (curve X), shared by the base duty curve below.;"kPa", 1, 0, 0, 1000, 0
+float[VVT_ADV_OILP_SIZE] vvtAdvDutyIntake;VVT Advanced Mode: intake base duty cycle at each oil pressure (curve Y). Evaluated at 0 kPa if oil pressure is unavailable.;"%", 1, 0, -100, 100, 1
+
+float[VVT_ADV_DISTANCE_SIZE] vvtAdvDistanceBinsExhaust;VVT Advanced Mode: exhaust signed target-minus-position axis after control-direction inversion, shared by the P factor curve below.;"deg", 1, 0, -40, 40, 0
+float[VVT_ADV_DISTANCE_SIZE] vvtAdvPFactorExhaust;VVT Advanced Mode: exhaust PID P factor at each distance from target (curve Y). Replaces the fixed Exhaust PID "P factor" field. Entered/displayed x100 for friendlier decimal precision (e.g. 100 = 1.000 actual P factor, 0.1 = 0.001 actual).;"x100", 100, 0, -1000, 1000, 1
+float[VVT_ADV_OILP_SIZE] vvtAdvOilPressureBinsExhaust;VVT Advanced Mode: exhaust oil pressure axis (curve X), shared by the base duty curve below.;"kPa", 1, 0, 0, 1000, 0
+float[VVT_ADV_OILP_SIZE] vvtAdvDutyExhaust;VVT Advanced Mode: exhaust base duty cycle at each oil pressure (curve Y). Evaluated at 0 kPa if oil pressure is unavailable.;"%", 1, 0, -100, 100, 1
+
+int16_t vvtIntake_iTermMin;Intake VVT integral minimum. Both integral limits zero restore defaults of -1000 and 1000.;"%", 1, 0, -30000, 30000, 0
+int16_t vvtIntake_iTermMax;Intake VVT integral maximum. Applies in both basic and advanced modes.;"%", 1, 0, -30000, 30000, 0
+int16_t vvtExhaust_iTermMin;Exhaust VVT integral minimum. Both integral limits zero restore defaults of -1000 and 1000.;"%", 1, 0, -30000, 30000, 0
+int16_t vvtExhaust_iTermMax;Exhaust VVT integral maximum. Applies in both basic and advanced modes.;"%", 1, 0, -30000, 30000, 0

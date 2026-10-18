@@ -48,6 +48,9 @@ public:
 	virtual float getOutput(float target, float input, float dTime);
 	// doesn't limit the result (used in incremental CIC PID, see below)
 	float getUnclampedOutput(float target, float input, float dTime);
+	// [tag:vvt_advanced_control] Schedule P without changing the stored PID calibration.
+	// I, D, offset and error amplification retain their normal behavior.
+	float getUnclampedOutputWithPFactor(float target, float input, float dTime, float pFactorOverride);
 	void updateFactors(float pFactor, float iFactor, float dFactor);
 	virtual void reset();
 	float getP() const;

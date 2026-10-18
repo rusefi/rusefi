@@ -60,11 +60,15 @@ float Pid::getOutput(float p_target, float p_input) {
 }
 
 float Pid::getUnclampedOutput(float p_target, float p_input, float dTime) {
+	return getUnclampedOutputWithPFactor(p_target, p_input, dTime, parameters->pFactor);
+}
+
+float Pid::getUnclampedOutputWithPFactor(float p_target, float p_input, float dTime, float pFactorOverride) {
 	target = p_target;
 	input = p_input;
 	float error = (target - input) * errorAmplificationCoef;
 
-	float pTerm = parameters->pFactor * error;
+	float pTerm = pFactorOverride * error;
 	updateITerm(parameters->iFactor * dTime * error);
 	dTerm = parameters->dFactor / dTime * (error - previousError);
 

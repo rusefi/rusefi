@@ -49,8 +49,17 @@ void VvtController::onFastCallback() {
 }
 
 void VvtController::onConfigurationChange(engine_configuration_s const * previousConfig) {
-	if (!previousConfig || !m_pid.isSame(&previousConfig->auxPid[m_cam])) {
+	// Advanced curve/bound changes must not carry an integral trim from the old tune.
+	if (!previousConfig || !m_pid.isSame(&previousConfig->auxPid[m_cam])
+		|| engineConfiguration->vvtAdvancedModeEnabled
+		|| previousConfig->vvtAdvancedModeEnabled != engineConfiguration->vvtAdvancedModeEnabled
+		|| previousConfig->vvtIntake_iTermMin != engineConfiguration->vvtIntake_iTermMin
+		|| previousConfig->vvtIntake_iTermMax != engineConfiguration->vvtIntake_iTermMax
+		|| previousConfig->vvtExhaust_iTermMin != engineConfiguration->vvtExhaust_iTermMin
+		|| previousConfig->vvtExhaust_iTermMax != engineConfiguration->vvtExhaust_iTermMax) {
 		m_pid.reset();
+		m_targetHysteresis = Hysteresis();
+		vvtDistance = 0;
 	}
 }
 
@@ -96,11 +105,13 @@ expected<angle_t> VvtController::getSetpoint() {
 	// - Avoid integrator windup from trying to jam the cam against the stop
 	// - Many VVT implementations don't like being controlled near the stop,
 	//       as this can cause problems with the lock pin jamming.
-	bool allowCamControl;
-	if (shouldInvertVvt(m_cam)) {
-		allowCamControl = m_targetHysteresis.test(target < -3, target > -1);
-	} else {
-		allowCamControl = m_targetHysteresis.test(target > 3, target < 1);
+	bool allowCamControl = true;
+	if (!engineConfiguration->vvtAdvancedModeEnabled) {
+		if (shouldInvertVvt(m_cam)) {
+			allowCamControl = m_targetHysteresis.test(target < -3, target > -1);
+		} else {
+			allowCamControl = m_targetHysteresis.test(target > 3, target < 1);
+		}
 	}
 
 	if (!allowCamControl) {
@@ -124,6 +135,35 @@ expected<percent_t> VvtController::getClosedLoop(angle_t target, angle_t observa
 	// "retard" means that additional solenoid duty makes indicated VVT position more negative
 	bool isInverted = shouldInvertVvt(m_cam);
 	m_pid.setErrorAmplification(isInverted ? -1.0f : 1.0f);
+	m_pid.iTermMin = m_cam == 0 ? engineConfiguration->vvtIntake_iTermMin : engineConfiguration->vvtExhaust_iTermMin;
+	m_pid.iTermMax = m_cam == 0 ? engineConfiguration->vvtIntake_iTermMax : engineConfiguration->vvtExhaust_iTermMax;
+
+	// [tag:vvt_advanced_control] The signed error selects P after direction inversion.
+	// Oil-pressure duty replaces the fixed offset; PID trim runs continuously.
+	// The two cam types have separate curves shared across banks.
+	if (engineConfiguration->vvtAdvancedModeEnabled) {
+		float distance = (target - observation) * (isInverted ? -1.0f : 1.0f);
+		vvtDistance = distance;
+		float oilPressure = Sensor::getOrZero(SensorType::OilPressure);
+		float feedforward = m_cam == 0
+			? interpolate2d(oilPressure, engineConfiguration->vvtAdvOilPressureBinsIntake, engineConfiguration->vvtAdvDutyIntake)
+			: interpolate2d(oilPressure, engineConfiguration->vvtAdvOilPressureBinsExhaust, engineConfiguration->vvtAdvDutyExhaust);
+		float pFactor = m_cam == 0
+			? interpolate2d(distance, engineConfiguration->vvtAdvDistanceBinsIntake, engineConfiguration->vvtAdvPFactorIntake)
+			: interpolate2d(distance, engineConfiguration->vvtAdvDistanceBinsExhaust, engineConfiguration->vvtAdvPFactorExhaust);
+		float dTime = MS2SEC(GET_PERIOD_LIMITED(&engineConfiguration->auxPid[m_cam]));
+		float trim = m_pid.getUnclampedOutputWithPFactor(target, observation, dTime, pFactor) - m_pid.getOffset();
+		float output = clampF(engineConfiguration->auxPid[m_cam].minValue, feedforward + trim,
+			engineConfiguration->auxPid[m_cam].maxValue);
+		m_pid.output = output;
+#if EFI_TUNER_STUDIO
+		m_pid.postState(engine->outputChannels.vvtStatus[index]);
+		engine->outputChannels.vvtStatus[index].pTerm = pFactor * m_pid.getPrevError();
+#endif
+		return output;
+	}
+
+	vvtDistance = 0;
 
 	float retVal = m_pid.getOutput(target, observation);
 

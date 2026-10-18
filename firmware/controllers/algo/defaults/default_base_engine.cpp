@@ -278,8 +278,31 @@ bool applyDefaultsOrFixAfterBurn(const engine_configuration_s* previousConfigura
         changed = true;
     }
 
-	if (engineConfiguration->vvtControlMinRpm < engineConfiguration->cranking.rpm) {
-		engineConfiguration->vvtControlMinRpm = engineConfiguration->cranking.rpm;
+	// Seed fields absent in older tunes without overwriting a deliberately one-sided limit.
+	if (engineConfiguration->vvtIntake_iTermMin == 0 && engineConfiguration->vvtIntake_iTermMax == 0) {
+		engineConfiguration->vvtIntake_iTermMin = -1000;
+		engineConfiguration->vvtIntake_iTermMax = 1000;
+		changed = true;
+	}
+	if (engineConfiguration->vvtExhaust_iTermMin == 0 && engineConfiguration->vvtExhaust_iTermMax == 0) {
+		engineConfiguration->vvtExhaust_iTermMin = -1000;
+		engineConfiguration->vvtExhaust_iTermMax = 1000;
+		changed = true;
+	}
+	if (engineConfiguration->vvtAdvDistanceBinsIntake[VVT_ADV_DISTANCE_SIZE - 1] == 0) {
+		setLinearCurve(engineConfiguration->vvtAdvDistanceBinsIntake, -40, 40, 1);
+		changed = true;
+	}
+	if (engineConfiguration->vvtAdvDistanceBinsExhaust[VVT_ADV_DISTANCE_SIZE - 1] == 0) {
+		setLinearCurve(engineConfiguration->vvtAdvDistanceBinsExhaust, -40, 40, 1);
+		changed = true;
+	}
+	if (engineConfiguration->vvtAdvOilPressureBinsIntake[VVT_ADV_OILP_SIZE - 1] == 0) {
+		setLinearCurve(engineConfiguration->vvtAdvOilPressureBinsIntake, 0, 1000, 1);
+		changed = true;
+	}
+	if (engineConfiguration->vvtAdvOilPressureBinsExhaust[VVT_ADV_OILP_SIZE - 1] == 0) {
+		setLinearCurve(engineConfiguration->vvtAdvOilPressureBinsExhaust, 0, 1000, 1);
 		changed = true;
 	}
 

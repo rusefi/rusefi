@@ -11,6 +11,25 @@
 
 #include "efi_pid.h"
 
+TEST(util, pidScheduledPLeavesCalibrationAndOtherTermsIntact) {
+	pid_s params{};
+	params.pFactor = 99;
+	params.iFactor = 2;
+	params.dFactor = 0.1f;
+	params.offset = 5;
+	params.minValue = -100;
+	params.maxValue = 100;
+	Pid pid(&params);
+	// Error 2: P=6, I=0.4, D=2, offset=5.
+	EXPECT_NEAR(pid.getUnclampedOutputWithPFactor(12, 10, 0.1f, 3), 13.4f, 0.0001f);
+	EXPECT_FLOAT_EQ(params.pFactor, 99);
+	// A different scheduled P keeps accumulated I and the previous error for D.
+	EXPECT_NEAR(pid.getUnclampedOutputWithPFactor(12, 10, 0.1f, 4), 13.8f, 0.0001f);
+	pid.reset();
+	// The ordinary entry point continues to use the calibrated P factor.
+	EXPECT_NEAR(pid.getUnclampedOutput(12, 10, 0.1f), 205.4f, 0.0001f);
+}
+
 TEST(util, pid) {
 	pid_s pidS;
 	pidS.pFactor = 50;

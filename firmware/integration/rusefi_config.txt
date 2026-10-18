@@ -2056,6 +2056,7 @@ include_file controllers/modules/rolling_launch/rolling_launch_engineConfigurati
 include_file controllers/modules/burst_knock/burst_knock_engineConfiguration.txt
 include_file controllers/modules/engine_state_machine/engine_state_machine_engineConfiguration.txt
 include_file controllers/modules/wot_enrichment/wot_enrichment_engineConfiguration.txt
+include_file controllers/actuators/vvt_advanced_engineConfiguration.txt
 end_struct
 
 ! note that this magic field name is used by LiveDataParserPanel

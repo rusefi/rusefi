@@ -34,6 +34,7 @@ Release template (copy/paste this for new release):
 
 ### Added
  - Optional engine state machine, clutch-based shift recognition and state-based STFT regions. kudos AlphaX!
+ - Advanced VVT control with oil-pressure base duty, signed-error P-gain curves and configurable integral limits. kudos AlphaX!
  - Time-based WOT enrichment with an AFR-offset curve and matching lambda target reporting. kudos AlphaX!
  - Burst knock retard with an RPM/TPS-rate table and linear timing recovery. kudos AlphaX!
  - Optional TPS1/TPS2 exponential smoothing with fast-transient reset. kudos AlphaX!
