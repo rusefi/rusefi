@@ -7,6 +7,7 @@
 #include "proxy_sensor.h"
 #include "linear_func.h"
 #include "tps.h"
+#include "tps_smoothing.h"
 #include "auto_generated_sensor.h"
 #include "defaults.h"
 #include "board_overrides.h"
@@ -200,16 +201,16 @@ static LinearSensorUnit tps2p(TPS_TS_CONVERSION, SensorType::Tps2Primary);
 static LinearSensorUnit tps2s(TPS_TS_CONVERSION, SensorType::Tps2Secondary);
 
 // Used in case of "normal", non-Ford ETB TPS
-static RedundantPair analogTps1(tps1p, tps1s, SensorType::Tps1);
-static RedundantPair tps2(tps2p, tps2s, SensorType::Tps2);
+static RedundantPair analogTps1(tps1p, tps1s, SensorType::Tps1Unfiltered);
+static RedundantPair tps2(tps2p, tps2s, SensorType::Tps2Unfiltered);
 
 #if EFI_SENT_SUPPORT
 SentTps sentTps;
 #endif
 
 // Used only in case of weird Ford-style ETB TPS
-static RedundantFordTps fordTps1(SensorType::Tps1, SensorType::Tps1Primary, SensorType::Tps1Secondary);
-static RedundantFordTps fordTps2(SensorType::Tps2, SensorType::Tps2Primary, SensorType::Tps2Secondary);
+static RedundantFordTps fordTps1(SensorType::Tps1Unfiltered, SensorType::Tps1Primary, SensorType::Tps1Secondary);
+static RedundantFordTps fordTps2(SensorType::Tps2Unfiltered, SensorType::Tps2Primary, SensorType::Tps2Secondary);
 static RedundantFordTps
 		fordPps(SensorType::AcceleratorPedalUnfiltered,
 				SensorType::AcceleratorPedalPrimary,
@@ -227,6 +228,25 @@ void updateUnfilteredRawPedal() {
 // This sensor indicates the driver's throttle intent - Pedal if we have one, TPS if not.
 static ProxySensor driverIntent(SensorType::DriverThrottleIntent);
 static ProxySensor ppsFilterSensor(SensorType::AcceleratorPedal);
+static ProxySensor tps1FilterSensor(SensorType::Tps1);
+static ProxySensor tps2FilterSensor(SensorType::Tps2);
+static SmartExpAverage tps1ExpAverage;
+static SmartExpAverage tps2ExpAverage;
+
+static SensorResult filterTps(SmartExpAverage& average, SensorResult raw) {
+	if (!raw) {
+		average.reset();
+		return raw;
+	}
+	if (!std::isfinite(raw.Value)) {
+		average.reset();
+		return UnexpectedCode::Unknown;
+	}
+	return average.update(raw.Value,
+		engineConfiguration->tpsExpAverageAlpha,
+		engineConfiguration->tpsExpAverageResetThreshold,
+		engineConfiguration->tpsExpAverageResetTimeMs);
+}
 
 // These sensors are TPS-like, so handle them in here too
 static LinearSensorUnit wastegate(1, SensorType::WastegatePosition);
@@ -234,6 +254,8 @@ static LinearSensorUnit idlePos(PACK_MULT_VOLTAGE, SensorType::IdlePosition);
 
 void initTps() {
 	criticalAssertVoid(engineConfiguration != nullptr, "null engineConfiguration");
+	tps1ExpAverage.reset();
+	tps2ExpAverage.reset();
 	percent_t minTpsPps = engineConfiguration->tpsErrorDetectionTooLow;
 	percent_t maxTpsPps = engineConfiguration->tpsErrorDetectionTooHigh;
 
@@ -249,6 +271,7 @@ void initTps() {
 
 #if EFI_SENT_SUPPORT
 		if (isDigitalTps1()) {
+			sentTps.invalidate();
 			sentTps.Register();
 		} else
 #endif
@@ -283,6 +306,23 @@ void initTps() {
 				 (float)engineConfiguration->tps2SecondaryMax,
 				 minTpsPps,
 				 maxTpsPps});
+
+		// Do not reserve resolved TPS slots with no native/raw source: existing Lua/CAN
+		// providers can continue to register Tps1/Tps2 directly in that configuration.
+		if (Sensor::hasSensor(SensorType::Tps1Unfiltered)) {
+			tps1FilterSensor.setProxiedSensor(SensorType::Tps1Unfiltered);
+			tps1FilterSensor.setConverter([](SensorResult raw) {
+				return filterTps(tps1ExpAverage, raw);
+			});
+			tps1FilterSensor.Register();
+		}
+		if (Sensor::hasSensor(SensorType::Tps2Unfiltered)) {
+			tps2FilterSensor.setProxiedSensor(SensorType::Tps2Unfiltered);
+			tps2FilterSensor.setConverter([](SensorResult raw) {
+				return filterTps(tps2ExpAverage, raw);
+			});
+			tps2FilterSensor.Register();
+		}
 
 		float ppsSecondaryMaximum = engineConfiguration->ppsSecondaryMaximum;
 		if (ppsSecondaryMaximum < 20) {
@@ -344,6 +384,10 @@ void initTps() {
 }
 
 void deinitTps() {
+	tps1FilterSensor.unregister();
+	tps2FilterSensor.unregister();
+	tps1ExpAverage.reset();
+	tps2ExpAverage.reset();
 	bool isFordTps = activeConfiguration.useFordRedundantTps;
 	bool isFordPps = activeConfiguration.useFordRedundantPps;
 
@@ -353,6 +397,7 @@ void deinitTps() {
 
 #if EFI_SENT_SUPPORT
 	sentTps.unregister();
+	sentTps.invalidate();
 #endif
 
 	wastegate.deinit();

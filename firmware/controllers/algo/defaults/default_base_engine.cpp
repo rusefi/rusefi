@@ -225,6 +225,18 @@ bool applyDefaultsOrFixAfterBurn(const engine_configuration_s* previousConfigura
 	  engineConfiguration->ppsExpAverageAlpha = 1;
 	  changed = true;
 	}
+	if (!std::isfinite(engineConfiguration->tpsExpAverageAlpha) || engineConfiguration->tpsExpAverageAlpha <= 0 || engineConfiguration->tpsExpAverageAlpha > 1) {
+	  engineConfiguration->tpsExpAverageAlpha = 1;
+	  changed = true;
+	}
+	if (!std::isfinite(engineConfiguration->tpsExpAverageResetThreshold) || engineConfiguration->tpsExpAverageResetThreshold < 0) {
+	  engineConfiguration->tpsExpAverageResetThreshold = 10;
+	  changed = true;
+	}
+	if (!std::isfinite(engineConfiguration->tpsExpAverageResetTimeMs) || engineConfiguration->tpsExpAverageResetTimeMs < 0) {
+	  engineConfiguration->tpsExpAverageResetTimeMs = 50;
+	  changed = true;
+	}
 	if (engineConfiguration->afrExpAverageAlpha <= 0 || engineConfiguration->afrExpAverageAlpha > 1) {
 	  engineConfiguration->afrExpAverageAlpha = 1;
 	  changed = true;
@@ -519,6 +531,7 @@ void setDefaultBaseEngine() {
 	engineConfiguration->iacByTpsTaper = 2;
 
     engineConfiguration->etbSplit = MAX_TPS_PPS_DISCREPANCY;
+	engineConfiguration->tpsExpAverageAlpha = 1;
 
 	// Advanced Trigger
 

@@ -169,6 +169,10 @@ enum class SensorType : unsigned char {
 
 	OutputShaftSpeed,
 
+	// Resolved throttle positions before optional exponential smoothing.
+	Tps1Unfiltered,
+	Tps2Unfiltered,
+
 	// Preserve existing numeric sensor IDs: append new types above PlaceholderLast.
 
 	// Leave me at the end!

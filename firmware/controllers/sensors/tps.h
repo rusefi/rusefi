@@ -34,7 +34,7 @@ void grabPedalIsWideOpen();
 #if EFI_SENT_SUPPORT
 
 struct SentTps : public StoredValueSensor {
-	SentTps() : StoredValueSensor(SensorType::Tps1, MS2NT(200)) {
+	SentTps() : StoredValueSensor(SensorType::Tps1Unfiltered, MS2NT(200)) {
 	}
 
 	bool isRedundant() const override {

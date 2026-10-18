@@ -33,6 +33,7 @@ Release template (copy/paste this for new release):
 ## Unreleased
 
 ### Added
+ - Optional TPS1/TPS2 exponential smoothing with fast-transient reset. kudos AlphaX!
  - Rolling launch control with captured-RPM spark skip, fuel enrichment and timing-retard ramp-out. kudos AlphaX!
  - Output-shaft speed input with configurable tooth count and filtering.
  - Clutch-aware gear detection with selectable engine/input-shaft RPM and vehicle/output-shaft speed sources.. kudos AlphaX!

@@ -117,6 +117,29 @@ There is no general-purpose rate-of-change / derivative helper in the sensor fra
 - **Not measurers**: `limitRateOfChange()` (`firmware/util/efilib.cpp`) is a slew-rate *limiter* (used for tCharge); ETB/idle PID derivative terms differentiate their own error internally and are not exposed.
 - A true %/sec rate would require a new time-aware differentiator (value + `Timer`, like the `edgeTimer` pattern in `frequency_sensor.cpp`) or a time-normalized generalization of the `TpsAccelEnrichment` buffer.
 
+## TPS Smoothing
+
+Analog redundant pairs (including Ford split-range sensors) and SENT TPS publish
+calibrated percentages as `Tps1Unfiltered` / `Tps2Unfiltered`. `init_tps.cpp`
+registers `Tps1` / `Tps2` proxies only when an underlying source exists.
+`SmartExpAverage` in `tps_smoothing.h` keeps independent histories with shared
+`tpsExpAverageAlpha` and fast-change reset settings. Alpha defaults to 1, and
+zero reset settings disable transient reset. A change at least as large as the
+threshold resets the average when elapsed time is strictly below the window.
+
+Like PPS smoothing, each resolved read advances the average, including repeated
+reads of the same acquired sample. This is not a fixed-rate filter: adding a
+consumer can change its effective response. Redundancy checks precede smoothing;
+invalid results and timeouts propagate immediately and clear filter history.
+Sensor reinitialization also clears history. Analog primary/secondary values and
+raw voltages remain available before smoothing.
+
+`consumeObdSensors` retains its direct TPS provider. A Lua/CAN provider can still
+register `Tps1` / `Tps2` directly when no native source is configured; such a
+provider bypasses this filter. An unfiltered external provider must exist before
+`initTps()` to acquire a filtering proxy. This port does not add the AlphaX
+external CAN ETB protocol.
+
 ## Unit Testing
 - `Sensor::setMockValue(type, value)` / `setInvalidMockValue(type)` override any sensor; mocks take precedence over real sensors in the registry. `Sensor::resetRegistry()` runs between tests.
 - Framework tests live in `unit_tests/tests/sensor/`; control-logic tests throughout the suite use `setMockValue` to stand up engine state.

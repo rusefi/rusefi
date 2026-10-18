@@ -2050,6 +2050,9 @@ end_struct
 	float idleParkNeutralOffset;Signed idle position offset when Lua reports Park or Neutral via setParkNeutral(boolean). Negative values reduce opening, positive values increase it. Added to running open-loop idle, not target RPM. Zero disables the correction.;"%", 1, 0, -100, 100, 1
 include_file controllers/modules/gear_detector/gear_detector_engineConfiguration.txt
 include_file controllers/modules/rolling_launch/rolling_launch_engineConfiguration.txt
+    float tpsExpAverageAlpha;Exponential smoothing applied independently to TPS1 and TPS2 on each resolved sensor read.\n1 passes readings through. Lower values add smoothing and feedback delay. This is not a fixed-rate filter.;"", 1, 0, 0, 1, 3
+    float tpsExpAverageResetThreshold;If TPS changes by at least this much within tpsExpAverageResetTimeMs, the ExpAverage filter resets and jumps straight to the new raw value instead of smoothing into it. Set to 0 to disable.;"%", 1, 0, 0, 100, 1
+    float tpsExpAverageResetTimeMs;Time window for tpsExpAverageResetThreshold - a change of that size within this many milliseconds triggers an immediate ExpAverage reset. Set to 0 to disable.;"ms", 1, 0, 0, 1000, 0
 end_struct
 
 ! note that this magic field name is used by LiveDataParserPanel
