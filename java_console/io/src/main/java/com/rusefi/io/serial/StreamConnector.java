@@ -32,11 +32,11 @@ public class StreamConnector implements LinkConnector {
     public void connectAndReadConfiguration(BinaryProtocol.Arguments arguments, ConnectionStatusLogic.Listener listener) {
         Objects.requireNonNull(arguments);
         log.info("StreamConnector: connecting");
-        portHolder.listener = listener;
+        Runnable open = portHolder.prepareConnection(arguments, listener);
         log.info("scheduleOpening");
         linkManager.execute(() -> {
             log.info("scheduleOpening>openPort");
-            portHolder.connectAndReadConfiguration(arguments);
+            open.run();
         });
     }
 

@@ -12,30 +12,47 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.IdentityHashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-/** Passing characterization: closed SLCAN tabs retain callbacks. Update expectations with the fix. */
+/** Removing a sniffer tab must release every bus subscription to the live UIContext. */
 class SlcanTabLifecycleDefectTest {
     @Test
-    void disconnectedSnifferTabsRetainCallbacksAndStillUpdateRemovedCheckboxes() throws Exception {
+    void disconnectedSnifferTabsReleaseCallbacksAndOnlyCurrentCheckboxesUpdate() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
             CountingContext context = new CountingContext();
             IniFileModel ini = mock(IniFileModel.class);
-            when(ini.getDialogs()).thenReturn(Collections.singletonMap("canHw1",
-                new DialogModel("canHw1", "CAN 1", Collections.emptyList(), Collections.emptyList())));
-            when(ini.getIniField("canSniffer1_listenOurs")).thenReturn(new ScalarIniField(
-                "canSniffer1_listenOurs", 0, "", FieldType.UINT8, 1, "0", 0));
-            when(ini.getIniField("canSniffer1_read")).thenReturn(new ScalarIniField(
-                "canSniffer1_read", 1, "", FieldType.UINT8, 1, "0", 0));
+            Map<String, DialogModel> dialogs = new LinkedHashMap<>();
+            for (int bus = 1; bus <= 3; bus++) {
+                String dialogKey = "canHw" + bus;
+                dialogs.put(dialogKey, new DialogModel(dialogKey, "CAN " + bus,
+                    Collections.emptyList(), Collections.emptyList()));
+                String listenOurs = "canSniffer" + bus + "_listenOurs";
+                String read = "canSniffer" + bus + "_read";
+                when(ini.getIniField(listenOurs)).thenReturn(new ScalarIniField(
+                    listenOurs, (bus - 1) * 2, "", FieldType.UINT8, 1, "0", 0));
+                when(ini.getIniField(read)).thenReturn(new ScalarIniField(
+                    read, (bus - 1) * 2 + 1, "", FieldType.UINT8, 1, "0", 0));
+            }
+            when(ini.getDialogs()).thenReturn(dialogs);
             context.iniFileState.setIniFileModelForTest(ini);
             JTabbedPane tabs = new JTabbedPane();
             List<JCheckBox> removedCheckboxes = new ArrayList<>();
+            List<SlcanTab> createdTabs = new ArrayList<>();
             SlcanTabController controller = new SlcanTabController(tabs,
-                () -> new SlcanTab(context, message -> fail(message), false));
+                () -> {
+                    SlcanTab tab = new SlcanTab(context, message -> fail(message), false);
+                    createdTabs.add(tab);
+                    return tab;
+                });
+            // Numeric reads require a four-byte window even for a UINT8 field.
+            ConfigurationImage enabled = new ConfigurationImage(new byte[]{1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0});
             try {
                 for (int cycle = 1; cycle <= 10; cycle++) {
                     controller.update(ini, true);
@@ -46,19 +63,27 @@ class SlcanTabLifecycleDefectTest {
                     } finally {
                         graphics.dispose();
                     }
-                    JCheckBox checkbox = findCheckbox(lazyTab);
-                    assertNotNull(checkbox);
-                    removedCheckboxes.add(checkbox);
+                    List<JCheckBox> currentCheckboxes = new ArrayList<>();
+                    findCheckboxes(lazyTab, currentCheckboxes);
+                    assertEquals(3, currentCheckboxes.size());
+                    context.deliveries = 0;
+                    context.fireConfigImageChanged(new ConfigurationImage(12));
+                    assertEquals(3, context.deliveries, "Only the current tab's three buses receive updates");
+                    assertTrue(currentCheckboxes.stream().noneMatch(AbstractButton::isSelected));
+                    assertTrue(removedCheckboxes.stream().allMatch(AbstractButton::isSelected));
+                    context.fireConfigImageChanged(enabled);
+                    assertEquals(6, context.deliveries);
+                    assertTrue(currentCheckboxes.stream().allMatch(AbstractButton::isSelected));
+                    removedCheckboxes.addAll(currentCheckboxes);
                     controller.update(null, false); // ConsoleUI's disconnect path calls SlcanTab.close().
                     assertEquals(0, tabs.getTabCount());
 
                     context.deliveries = 0;
-                    context.fireConfigImageChanged(new ConfigurationImage(new byte[]{1, 1, 0, 0, 0, 0, 0, 0}));
-                    assertEquals(cycle, context.deliveries,
-                        "Current defect: every closed tab remains subscribed to the live UIContext");
-                    assertTrue(removedCheckboxes.stream().allMatch(AbstractButton::isSelected));
-                    context.fireConfigImageChanged(new ConfigurationImage(8));
-                    assertTrue(removedCheckboxes.stream().noneMatch(AbstractButton::isSelected));
+                    createdTabs.get(createdTabs.size() - 1).close(); // Repeated close is harmless.
+                    context.fireConfigImageChanged(new ConfigurationImage(12));
+                    assertEquals(0, context.deliveries, "Closed tabs must unsubscribe from the live UIContext");
+                    assertTrue(removedCheckboxes.stream().allMatch(AbstractButton::isSelected),
+                        "Removed controls must retain their last state instead of processing later tune images");
                 }
             } finally {
                 controller.update(null, false);
@@ -67,30 +92,34 @@ class SlcanTabLifecycleDefectTest {
         });
     }
 
-    private static JCheckBox findCheckbox(Component component) {
+    private static void findCheckboxes(Component component, List<JCheckBox> checkboxes) {
         if (component instanceof JCheckBox) {
-            return (JCheckBox) component;
+            checkboxes.add((JCheckBox) component);
         }
         if (component instanceof Container) {
             for (Component child : ((Container) component).getComponents()) {
-                JCheckBox found = findCheckbox(child);
-                if (found != null) {
-                    return found;
-                }
+                findCheckboxes(child, checkboxes);
             }
         }
-        return null;
     }
 
     private static class CountingContext extends UIContext {
         int deliveries;
+        private final Map<Consumer<ConfigurationImage>, Consumer<ConfigurationImage>> wrappers = new IdentityHashMap<>();
 
         @Override
         public void addConfigImageListener(Consumer<ConfigurationImage> listener) {
-            super.addConfigImageListener(image -> {
+            Consumer<ConfigurationImage> wrapper = image -> {
                 deliveries++;
                 listener.accept(image);
-            });
+            };
+            wrappers.put(listener, wrapper);
+            super.addConfigImageListener(wrapper);
+        }
+
+        @Override
+        public void removeConfigImageListener(Consumer<ConfigurationImage> listener) {
+            super.removeConfigImageListener(wrappers.remove(listener));
         }
     }
 }
