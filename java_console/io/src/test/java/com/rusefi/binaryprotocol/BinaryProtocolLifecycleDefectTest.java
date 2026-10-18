@@ -16,10 +16,10 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-/** Passing characterization: logger startup registers a listener after close. Update expectations with the fix. */
+/** Connection completion must not restart logging after stream cleanup. */
 class BinaryProtocolLifecycleDefectTest {
     @Test
-    void disconnectAtConnectionCompletionRegistersRpmListenerAfterClose() throws Exception {
+    void disconnectAtConnectionCompletionRejectsConnectionWithoutRetainingRpmListener() throws Exception {
         SensorCentral sensors = SensorCentral.getInstance();
         int before = sensors.getSensorListenerCountForTests();
         IniFileProvider previousProvider = BinaryProtocol.iniFileProvider;
@@ -37,46 +37,67 @@ class BinaryProtocolLifecycleDefectTest {
                 LinkManager link = new LinkManager() {
                     @Override
                     public boolean getNeedPullData() {
-                        // Deterministic transport-close interleaving after the final isClosed check,
+                        // Deterministic transport-close interleaving after the calibration isClosed check,
                         // before BinaryProtocolLogger.start(). No polling thread is needed.
                         stream.close();
                         return false;
                     }
                 }.setNotifyGlobalStatusOnClose(false);
                 BinaryProtocol protocol = new BinaryProtocol(link, stream);
-                assertNull(protocol.connectAndReadConfiguration(new BinaryProtocol.Arguments(false, false),
-                    bytes -> { }), "Current defect: connection completion reports success after close");
+                assertNotNull(protocol.connectAndReadConfiguration(new BinaryProtocol.Arguments(false, false),
+                    bytes -> { }), "Connection completion must reject a closed stream");
                 assertTrue(protocol.isClosed());
                 protocol.close(); // Idempotent stream close does not replay logger cleanup.
-                assertEquals(before + cycle, sensors.getSensorListenerCountForTests(),
-                    "Current defect: one permanent RPM listener per close/start interleaving");
+                assertEquals(before, sensors.getSensorListenerCountForTests(),
+                    "Closed connections must not retain RPM listeners");
             }
         } finally {
             BinaryProtocol.iniFileProvider = previousProvider;
             for (TestStream stream : streams) {
                 stream.close();
-                // Undo the leak by explicitly replaying the callbacks captured by the fake transport.
-                for (Runnable callback : stream.closeCallbacks) {
-                    callback.run();
-                }
             }
         }
         assertEquals(before, sensors.getSensorListenerCountForTests());
     }
 
+    @Test
+    void loggerStartIsIdempotentAndCannotRestartAfterClose() {
+        assertLoggerLifecycle(false);
+    }
+
+    @Test
+    void loggerClosedBeforeStartupNeverRegistersAListener() {
+        assertLoggerLifecycle(true);
+    }
+
+    private void assertLoggerLifecycle(boolean closeBeforeStart) {
+        SensorCentral sensors = SensorCentral.getInstance();
+        int before = sensors.getSensorListenerCountForTests();
+        LinkManager link = new LinkManager().setNotifyGlobalStatusOnClose(false);
+        BinaryProtocolLogger logger = new BinaryProtocolLogger(link);
+        try {
+            if (closeBeforeStart) {
+                logger.close();
+            }
+            logger.start();
+            logger.start();
+            assertEquals(before + (closeBeforeStart ? 0 : 1), sensors.getSensorListenerCountForTests());
+            logger.close();
+            logger.close();
+            logger.start();
+            assertEquals(before, sensors.getSensorListenerCountForTests());
+        } finally {
+            logger.close();
+            link.close();
+        }
+    }
+
     private static class TestStream extends AbstractIoStream {
-        final List<Runnable> closeCallbacks = new ArrayList<>();
         private final IncomingDataBuffer buffer = mock(IncomingDataBuffer.class);
 
         TestStream() throws Exception {
             when(buffer.getPacket(Timeouts.BINARY_IO_TIMEOUT, "[hello]"))
                 .thenReturn("\u0000lifecycle-test\u0000".getBytes(StandardCharsets.US_ASCII));
-        }
-
-        @Override
-        public void addCloseListener(Runnable callback) {
-            closeCallbacks.add(callback);
-            super.addCloseListener(callback);
         }
 
         @Override

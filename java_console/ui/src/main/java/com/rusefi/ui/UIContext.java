@@ -119,6 +119,11 @@ public class UIContext {
         configImageListeners.add(listener);
     }
 
+    /** Call on the Swing EDT when the listener's owning view is closed. */
+    public void removeConfigImageListener(Consumer<ConfigurationImage> listener) {
+        configImageListeners.remove(listener);
+    }
+
     /** Call on the Swing EDT whenever the working configuration image changes. */
     public void fireConfigImageChanged(ConfigurationImage ci) {
         currentConfigurationImage = ci;

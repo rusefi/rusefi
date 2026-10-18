@@ -86,6 +86,7 @@ public class SlcanTab {
     private final JButton stopButton = new JButton("Stop");
     private final Consumer<String> messageHandler;
     private final UIContext uiContext;
+    private final List<Consumer<ConfigurationImage>> configImageListeners = new ArrayList<>();
 
     public SlcanTab(UIContext uiContext) {
         this(uiContext, null);
@@ -169,6 +170,10 @@ public class SlcanTab {
         recording = false;
         refreshTimer.stop();
         reader.interrupt();
+        for (Consumer<ConfigurationImage> listener : configImageListeners) {
+            uiContext.removeConfigImageListener(listener);
+        }
+        configImageListeners.clear();
     }
 
     private void readerLoop() {
@@ -292,9 +297,9 @@ public class SlcanTab {
 
             JCheckBox cb = new JCheckBox(busName);
 
-            uiContext.addConfigImageListener(image -> {
-                updateCheckbox(cb, fieldName1, fieldName2, ini, image);
-            });
+            Consumer<ConfigurationImage> listener = image -> updateCheckbox(cb, fieldName1, fieldName2, ini, image);
+            configImageListeners.add(listener);
+            uiContext.addConfigImageListener(listener);
 
             // Initial state
             BinaryProtocol bp = uiContext.getBinaryProtocol();

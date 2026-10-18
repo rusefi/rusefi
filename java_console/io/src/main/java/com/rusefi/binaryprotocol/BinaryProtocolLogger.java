@@ -37,6 +37,8 @@ public class BinaryProtocolLogger {
 
     private final SensorCentral.SensorListener rpmListener;
     private final Thread hook = new Thread(() -> closeComposites(), "BinaryProtocol::hook");
+    private boolean started;
+    private boolean closed;
 
     public BinaryProtocolLogger(LinkManager linkManager) {
         rpmListener = currentRpm -> {
@@ -110,11 +112,17 @@ public class BinaryProtocolLogger {
         }
     }
 
-    public void start() {
-        SensorCentral.getInstance().addListener(WellKnownGauges.RPMGauge.RPMGauge.getOutputChannelName(), rpmListener);
+    public synchronized void start() {
+        if (closed || started) {
+            return;
+        }
+        SensorCentral.getInstance().addListener(WellKnownGauges.RPMGauge.getOutputChannelName(), rpmListener);
+        started = true;
     }
 
-    public void close() {
+    public synchronized void close() {
+        // Stream cleanup is terminal, even if it happens before connection startup.
+        closed = true;
         SensorCentral.getInstance().removeListener(WellKnownGauges.RPMGauge.getOutputChannelName(), rpmListener);
         closeComposites();
         Runtime.getRuntime().removeShutdownHook(hook);

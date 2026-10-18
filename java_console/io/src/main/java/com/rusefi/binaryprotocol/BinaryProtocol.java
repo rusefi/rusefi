@@ -316,6 +316,9 @@ public class BinaryProtocol {
         if (linkManager.getNeedPullData())
             startPullThread(listener);
         binaryProtocolLogger.start();
+        if (stream.isClosed()) {
+            return "Connection closed during startup";
+        }
         log.info("connectAndReadConfiguration: completed successfully");
         return null;
     }

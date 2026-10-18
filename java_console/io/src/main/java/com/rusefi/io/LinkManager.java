@@ -379,8 +379,8 @@ public class LinkManager implements Closeable {
                         return TcpIoStream.open(port);
                     } catch (Throwable e) {
                         log.error("TCP error " + e);
-                        stateListener.onConnectionFailed("Error " + e);
-                        return null;
+                        // PortHolder owns failure notification so cancelled opens stay silent.
+                        throw new IllegalStateException("Error " + e, e);
                     }
                 }
             };
