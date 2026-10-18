@@ -92,6 +92,11 @@ public class SlcanTab {
     }
 
     public SlcanTab(UIContext uiContext, Consumer<String> messageHandler) {
+        this(uiContext, messageHandler, true);
+    }
+
+    // Lifecycle tests build the real controls without scanning hardware or starting the UI timer.
+    SlcanTab(UIContext uiContext, Consumer<String> messageHandler, boolean startBackgroundWork) {
         this.uiContext = uiContext;
         this.messageHandler = messageHandler != null
             ? messageHandler
@@ -145,11 +150,13 @@ public class SlcanTab {
         });
 
         refreshTimer = new Timer(250, e -> refresh());
-        refreshTimer.start();
 
         reader = new Thread(this::readerLoop, "SLCAN tab reader");
         reader.setDaemon(true);
-        reader.start();
+        if (startBackgroundWork) {
+            refreshTimer.start();
+            reader.start();
+        }
     }
 
     public JPanel getContent() {
