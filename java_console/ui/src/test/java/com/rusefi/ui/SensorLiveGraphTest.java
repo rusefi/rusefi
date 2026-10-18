@@ -29,7 +29,8 @@ class SensorLiveGraphTest {
         }
         List<String> expectedPaths = new ArrayList<>();
         ini.getGaugeCategories().forEach((category, model) -> model.getGauges().forEach(
-            gauge -> expectedPaths.add(category + " / " + gauge.getTitle())));
+            gauge -> expectedPaths.add(category + " / "
+                + (gauge.getTitleValue().isExpression() ? gauge.getName() : gauge.getTitle()))));
         assertTrue(expectedPaths.size() > 100, "Exercise the sandbox's full INI catalog");
 
         SwingUtilities.invokeAndWait(() -> {

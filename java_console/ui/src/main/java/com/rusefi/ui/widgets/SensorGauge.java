@@ -154,7 +154,7 @@ public class SensorGauge {
                 JMenuItem cmi = new JMenu(category);
                 popupMenu.add(cmi);
                 for (final GaugeModel gauge : iniFile.getGaugeCategories().get(category).getGauges()) {
-                    JMenuItem mi = new JMenuItem(gauge.getTitle());
+                    JMenuItem mi = new JMenuItem(GaugeMenuLabel.getTitle(uiContext, gauge));
                     mi.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {

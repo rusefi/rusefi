@@ -112,6 +112,8 @@ public class UIContext {
     // ---- Config-image change notifications ----
 
     private final List<Consumer<ConfigurationImage>> configImageListeners = new ArrayList<>();
+    private ConfigurationImage currentConfigurationImage;
+    private IniFileModel configurationImageIni;
 
     public void addConfigImageListener(Consumer<ConfigurationImage> listener) {
         configImageListeners.add(listener);
@@ -119,6 +121,17 @@ public class UIContext {
 
     /** Call on the Swing EDT whenever the working configuration image changes. */
     public void fireConfigImageChanged(ConfigurationImage ci) {
+        currentConfigurationImage = ci;
+        configurationImageIni = iniFileState.getIniFileModel();
         for (Consumer<ConfigurationImage> l : configImageListeners) l.accept(ci);
+    }
+
+    /** On the EDT: use the working tune, including offline edits, before the ECU image. */
+    public ConfigurationImage getCurrentConfigurationImage() {
+        if (currentConfigurationImage != null && configurationImageIni == iniFileState.getIniFileModel()) {
+            return currentConfigurationImage;
+        }
+        BinaryProtocol protocol = getBinaryProtocol();
+        return protocol == null ? null : protocol.getControllerConfiguration();
     }
 }
