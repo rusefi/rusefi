@@ -140,12 +140,14 @@ public class SensorGauge {
                                       JMenuItem extraMenuItem) {
         JPopupMenu pm = new JPopupMenu();
         fillGaugeMenuItems(uiContext, pm, wrapper, listener, extraMenuItem);
-        if (extraMenuItem != null)
+        GaugeMenuSearch.addTo(pm);
+        if (extraMenuItem != null) {
             pm.add(extraMenuItem);
+        }
         pm.show(e.getComponent(), e.getX(), e.getY());
     }
 
-    private static void fillGaugeMenuItems(UIContext uiContext, JPopupMenu popupMenu, final JPanelWithListener wrapper, final GaugeChangeListener listener, final JMenuItem extraMenuItem) {
+    static void fillGaugeMenuItems(UIContext uiContext, JPopupMenu popupMenu, final JPanelWithListener wrapper, final GaugeChangeListener listener, final JMenuItem extraMenuItem) {
         BinaryProtocol bp = uiContext.getLinkManager().getBinaryProtocol();
         if (bp != null) {
             IniFileModel iniFile = bp.getIniFileNullable();
