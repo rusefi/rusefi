@@ -1333,6 +1333,15 @@ float getOutputValueByHash(const int hash) {
 // isEnabled0
 		case 1691876092:
 			return engine->dc_motors.isEnabled0;
+// isBurstKnockActive
+		case -235151165:
+			return engine->module<BurstKnock>()->isBurstKnockActive;
+// burstKnockRetard
+		case -638105939:
+			return engine->module<BurstKnock>()->burstKnockRetard;
+// burstKnockTpsRate
+		case -864794418:
+			return engine->module<BurstKnock>()->burstKnockTpsRate;
 #if EFI_ENGINE_CONTROL
 // totalFuelCorrection
 		case -1779658835:

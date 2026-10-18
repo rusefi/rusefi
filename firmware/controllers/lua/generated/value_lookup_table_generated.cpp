@@ -574,6 +574,9 @@ const ConfigParameter allParameters[] = {
 	{ 0x434CD837, // mc33_t_min_boost
 		[]() -> float { return engineConfiguration->mc33_t_min_boost; },
 		[](float value) { engineConfiguration->mc33_t_min_boost = value; } },
+	{ 0x43D215F6, // burstKnockEnabled
+		[]() -> float { return engineConfiguration->burstKnockEnabled; },
+		[](float value) { engineConfiguration->burstKnockEnabled = value; } },
 	{ 0x44408E26, // hpfpPeakPos
 		[]() -> float { return engineConfiguration->hpfpPeakPos; },
 		[](float value) { engineConfiguration->hpfpPeakPos = value; } },
@@ -679,6 +682,9 @@ const ConfigParameter allParameters[] = {
 	{ 0x5621E5C6, // widebandOnSecondBus
 		[]() -> float { return engineConfiguration->widebandOnSecondBus; },
 		[](float value) { engineConfiguration->widebandOnSecondBus = value; } },
+	{ 0x56756B60, // burstKnockDecayTime
+		[]() -> float { return engineConfiguration->burstKnockDecayTime; },
+		[](float value) { engineConfiguration->burstKnockDecayTime = value; } },
 	{ 0x567CD1D4, // lambdaProtectionEnable
 		[]() -> float { return engineConfiguration->lambdaProtectionEnable; },
 		[](float value) { engineConfiguration->lambdaProtectionEnable = value; } },

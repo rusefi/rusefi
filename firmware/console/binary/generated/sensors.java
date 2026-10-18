@@ -786,3 +786,5 @@ rollingLaunchTargetRpm("Rolling Launch: hold target RPM", SensorCategory.SENSOR_
 rollingLaunchSparkSkipRatio("Rolling Launch: spark skip ratio", SensorCategory.SENSOR_INPUTS, FieldType.INT, 2244, 1.0, -1.0, -1.0, ""),
 rollingLaunchTimingRetardOut("Rolling Launch: timing retard", SensorCategory.SENSOR_INPUTS, FieldType.INT, 2248, 1.0, -1.0, -1.0, ""),
 rollingLaunchRampElapsed("Rolling Launch: ramp elapsed", SensorCategory.SENSOR_INPUTS, FieldType.INT, 2252, 1.0, -1.0, -1.0, ""),
+burstKnockRetard("Burst Knock: timing pull", SensorCategory.SENSOR_INPUTS, FieldType.INT, 2260, 1.0, 0.0, 0.0, "deg"),
+burstKnockTpsRate("Burst Knock: TPS rate", SensorCategory.SENSOR_INPUTS, FieldType.INT, 2264, 1.0, 0.0, 0.0, "%/s"),

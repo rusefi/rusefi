@@ -2179,6 +2179,12 @@ float getConfigValueByHash(const int hash) {
 // tpsExpAverageResetTimeMs
 		case -518225834:
 			return engineConfiguration->tpsExpAverageResetTimeMs;
+// burstKnockEnabled
+		case 1137841654:
+			return engineConfiguration->burstKnockEnabled;
+// burstKnockDecayTime
+		case 1450535776:
+			return engineConfiguration->burstKnockDecayTime;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -5917,6 +5923,16 @@ bool setConfigValueByName(const char *name, float value) {
 		case -518225834:
 	{
 		engineConfiguration->tpsExpAverageResetTimeMs = value;
+		return 1;
+	}
+		case 1137841654:
+	{
+		engineConfiguration->burstKnockEnabled = (int)value;
+		return 1;
+	}
+		case 1450535776:
+	{
+		engineConfiguration->burstKnockDecayTime = (int)value;
 		return 1;
 	}
 		case -1658957891:

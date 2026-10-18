@@ -2173,6 +2173,12 @@ If TPS changes by at least this much within tpsExpAverageResetTimeMs, the ExpAve
 ### tpsExpAverageResetTimeMs
 Time window for tpsExpAverageResetThreshold - a change of that size within this many milliseconds triggers an immediate ExpAverage reset. Set to 0 to disable.
 
+### burstKnockEnabled
+Pull ignition timing while the TPS acceleration-enrichment threshold is exceeded, then decay the retard to zero. This uses the TPS delta and lookback, not acoustic knock detection.
+
+### burstKnockDecayTime
+Linear decay time measured from the last above-threshold TPS sample. Zero removes retard as soon as the transient ends.
+
 ### tcu_shiftTime
 
 

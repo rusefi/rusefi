@@ -164,6 +164,8 @@ public class VariableRegistryValues {
 	public static final int brain_pin_diag_e_PIN_SHORT_TO_BAT = 0x04;
 	public static final int brain_pin_diag_e_PIN_SHORT_TO_GND = 0x02;
 	public static final int brain_pin_diag_e_PIN_UNKNOWN = 0x80;
+	public static final int BURST_KNOCK_RPM_SIZE = 8;
+	public static final int BURST_KNOCK_TPS_RATE_SIZE = 8;
 	public static final int C_MC33810_COUNT = 1;
 	public static final String CAM_1_MODE_NAME = "Cam mode (intake)";
 	public static final String CAM_2_MODE_NAME = "Cam mode (exhaust)";
@@ -457,7 +459,7 @@ public class VariableRegistryValues {
 	public static final int ego_sensor_e_ES_PLX = 4;
 	public static final String egoSettings_NAME = "CAN O2 sensors";
 	public static final int EGT_CHANNEL_COUNT = 8;
-	public static final int engine_configuration_s_size = 4332;
+	public static final int engine_configuration_s_size = 4660;
 	public static final int engine_load_mode_e_LM_ALPHA_N = 2;
 	public static final int engine_load_mode_e_LM_LUA = 3;
 	public static final int engine_load_mode_e_LM_REAL_MAF = 1;
@@ -1437,7 +1439,7 @@ public class VariableRegistryValues {
 	public static final int PEDAL_TO_TPS_SIZE = 8;
 	public static final String pedalSensor_NAME = "Accelerator pedal";
 	public static final String pedalToTpsTbl_NAME = "ETB pedal target";
-	public static final int persistent_config_s_size = 16824;
+	public static final int persistent_config_s_size = 17152;
 	public static final int pid_s_size = 20;
 	public static final int pin_input_mode_e_PI_DEFAULT = 0;
 	public static final int pin_input_mode_e_PI_INVERTED_DEFAULT = 4;
@@ -1610,7 +1612,7 @@ public class VariableRegistryValues {
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_BUTTON = 0;
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH = 2;
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_UP_SWITCH = 3;
-	public static final int TOTAL_CONFIG_SIZE = 16824;
+	public static final int TOTAL_CONFIG_SIZE = 17152;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final String TPS_ACCEL_UNITS = "ms/frac";
 	public static final int TPS_PPS_TOO_HIGH_THRESHOLD = 110;
@@ -1874,10 +1876,10 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2026.10.18.t-b-g.3867823042";
+	public static final String TS_SIGNATURE = "rusEFI master.2026.10.18.t-b-g.3858928735";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
-	public static final int TS_TOTAL_OUTPUT_SIZE = 2256;
+	public static final int TS_TOTAL_OUTPUT_SIZE = 2268;
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_1_NAME = "Channel 1";
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_2_NAME = "Channel 2";
 	public static final int TS_TRIGGER_SCOPE_DISABLE = 5;
