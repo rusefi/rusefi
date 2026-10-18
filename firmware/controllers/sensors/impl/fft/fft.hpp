@@ -40,7 +40,10 @@ void rerrange(complex_type* data, const size_t num_elements)
 
 bool transform(complex_type* data, const size_t count)
 {
-    double local_pi = -M_PI;
+    // all-float math on purpose: double sin()/cos() here is what used to drag the
+    // entire double-precision libm (__kernel_sin & co) into the firmware image,
+    // see check_illegal_conversion.sh; float is plenty for knock-level FFT
+    const real_type local_pi = -static_cast<real_type>(M_PI);
 
     size_t next, match;
     real_type sine;
@@ -51,10 +54,10 @@ bool transform(complex_type* data, const size_t count)
     {
         next = i << 1;
         delta = local_pi / i;
-        sine = sin(0.5 * delta);
+        sine = sinf(0.5f * delta);
 
-        mult = complex_type(-2.0 * sine * sine, sin(delta));
-        factor = 1.0;
+        mult = complex_type(-2.0f * sine * sine, sinf(delta));
+        factor = 1.0f;
 
         for (size_t j = 0; j < i; ++j)
         {
@@ -126,7 +129,7 @@ float fast_sqrt(float x) {
   u.i = 0x5f375a86 - (u.i >> 1);
   float xu = x * u.x;
   float xu2 = xu * u.x;
-  u.x = (0.125 * 3.0) * xu * (5.0 - xu2 * ((10.0 / 3.0) - xu2));
+  u.x = (0.125f * 3.0f) * xu * (5.0f - xu2 * ((10.0f / 3.0f) - xu2));
   return u.x;
 }
 
@@ -150,7 +153,7 @@ void cosine_window(float * w, unsigned n, const float * coeff, unsigned ncoeff, 
 
             for (unsigned j = 0; j < ncoeff; ++j)
             {
-                wi += coeff[j] * cos(i * j * 2.0 * M_PI / wlength);
+                wi += coeff[j] * cosf(i * j * 2.0f * static_cast<float>(M_PI) / wlength);
             }
 
             w[i] = wi;
