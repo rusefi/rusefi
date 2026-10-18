@@ -1,10 +1,18 @@
-# 27 — Predictive MAP event lifetime
+# DONE — 27 — Predictive MAP event lifetime
 
 [Back to the ECU change index](../alphax-beta-vs-master.md) · [Fork branch](https://github.com/ElDominio/rusefi/tree/alphax-beta)
 
+## Upstream completion
+
+**DONE on upstream master**, reviewed at [`bd98053cc7f`](https://github.com/rusefi/rusefi/commit/bd98053cc7ffecbb1a323c632a1319671af1a73a). Commit [`7dff676ec6c`](https://github.com/rusefi/rusefi/commit/7dff676ec6c85703799cf9e6c8e02510d707c258) implements both fixes. The [upstream calculation](https://github.com/rusefi/rusefi/blob/bd98053cc7ffecbb1a323c632a1319671af1a73a/firmware/controllers/algo/airmass/speed_density_airmass.cpp) and [timer storage](https://github.com/rusefi/rusefi/blob/bd98053cc7ffecbb1a323c632a1319671af1a73a/firmware/controllers/algo/airmass/speed_density_airmass.h) match the pinned fork's logic; the remaining differences in those files are comments.
+
+The overall session timer starts only when a new event begins. Rising-TPS retriggers restart the blend timer without extending the session deadline; at the configured duration the calculation returns measured MAP. Each new event also initializes its own TPS peak, so release detection does not inherit a larger previous event. Existing release/rearm gates and diagnostic counters remain in place, and the tuning description now explains that retriggers cannot extend the total duration.
+
+The adoption commit changes **9 maintained firmware C/C++ lines: +8 / −1 across these two files**. Its [upstream tests](https://github.com/rusefi/rusefi/blob/bd98053cc7ffecbb1a323c632a1319671af1a73a/unit_tests/tests/ignition_injection/test_fuel_math.cpp) add 109 lines separately. They check repeated retriggers through the exact session deadline, measured-MAP fallback, rearming for a subsequent session, and a smaller event retaining its own peak until actual throttle release. Tests were inspected, not rerun. Historical fork LOC below is unchanged.
+
 ## Executive summary
 
-Master already provides predictive MAP. The branch adds a separate session timer so repeated TPS retriggers cannot extend a prediction past the configured overall duration. It also resets the recorded TPS peak on each new prediction, preventing a previous larger event from immediately cancelling a smaller later event.
+At the original comparison revision, master already provided predictive MAP. The branch adds a separate session timer so repeated TPS retriggers cannot extend a prediction past the configured overall duration. It also resets the recorded TPS peak on each new prediction, preventing a previous larger event from immediately cancelling a smaller later event. Both fixes are now upstream as described above.
 
 ## ECU logic and behavior
 
@@ -17,11 +25,11 @@ Master already provides predictive MAP. The branch adds a separate session timer
 
 ## Calibration, dependencies and review limits
 
-These are two small fixes in one subsystem, separable from the other AlphaX controls. No corresponding predictive-MAP test change appears in the branch-side diff.
+These are two small fixes in one subsystem, separable from the other AlphaX controls. No corresponding predictive-MAP test change appears in the branch-side diff; upstream coverage is linked above.
 
 Exercise repeated retriggers up to the duration cap and a large event followed by a small event. Existing predictive MAP is retained; these are two lifetime/reset fixes.
 
-No feature-specific test is claimed by this report. The source/commit evidence below establishes implementation, not hardware validation.
+No feature-specific test is claimed for the pinned fork. The source/commit evidence below establishes implementation, not hardware validation.
 
 No firmware, host-test, simulator or hardware run was performed for this documentation update. The pinned branch tip records an unresolved CAN-listener unit-test link failure; see the [comparison and validation notes](../alphax-beta-vs-master.md#validation-limits).
 

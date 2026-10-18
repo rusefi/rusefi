@@ -1,10 +1,22 @@
-# 56 — Advanced VVT control
+# DONE — 56 — Advanced VVT control
 
 [Back to the ECU change index](../alphax-beta-vs-master.md) · [Fork branch](https://github.com/ElDominio/rusefi/tree/alphax-beta)
 
+## Upstream completion
+
+**DONE on upstream master**, reviewed at adoption commit [`bd98053cc7f`](https://github.com/rusefi/rusefi/commit/bd98053cc7ffecbb1a323c632a1319671af1a73a). The [upstream VVT controller](https://github.com/rusefi/rusefi/blob/bd98053cc7ffecbb1a323c632a1319671af1a73a/firmware/controllers/actuators/vvt.cpp) implements the final fork behavior: separate intake/exhaust oil-pressure base-duty curves, signed-error proportional-gain curves, continuous PID trim, configurable integral bounds, near-zero-target hysteresis bypass and scheduled-P/final-command telemetry.
+
+Each cam type has a six-point pressure curve and a nine-point gain curve shared across banks. Gain lookup uses `(target - position)` after control-direction inversion. Missing oil pressure evaluates the duty curve at zero pressure. The [PID API](https://github.com/rusefi/rusefi/blob/bd98053cc7ffecbb1a323c632a1319671af1a73a/firmware/util/math/efi_pid.cpp) accepts a P override without changing stored calibration, retaining I/D history and error amplification. VVT subtracts the fixed offset from that trim, adds pressure-based duty, clamps the sum to the configured output limits and publishes the applied command and scheduled P term. Integral bounds apply in both basic and advanced modes.
+
+Advanced mode bypasses only near-zero-target hysteresis; RPM, coolant-temperature, startup-delay and valid-position gates remain. Configuration changes reset the controller when advanced calibration or integral limits may have changed. [Defaults and tune migration](https://github.com/rusefi/rusefi/blob/bd98053cc7ffecbb1a323c632a1319671af1a73a/firmware/controllers/algo/defaults/default_base_engine.cpp) seed missing curve axes and restore −1000/+1000 integral limits when both bounds are zero, preserving deliberately one-sided zero limits. The minimum VVT RPM is no longer forced up to cranking RPM. Advanced mode remains disabled by default.
+
+Master places the [new calibration fields](https://github.com/rusefi/rusefi/blob/bd98053cc7ffecbb1a323c632a1319671af1a73a/firmware/controllers/actuators/vvt_advanced_engineConfiguration.txt) on its main configuration page and adds [tuning controls](https://github.com/rusefi/rusefi/blob/bd98053cc7ffecbb1a323c632a1319671af1a73a/firmware/tunerstudio/tunerstudio.template.ini), without adopting the fork's custom-page layout. Neither the removed fade/pause experiments nor unrelated Eco/Ghost Cam target overlays are required for this report's final controller scope. Reports [18](18-vvt-dependent-fuel-and-ignition-corrections.md), [44](44-eco-operating-mode.md) and [46](46-ghost-cam-idle-mode.md) remain open.
+
+The adoption commit changes **88 maintained firmware C/C++ lines: +79 / −9 across four files**: `vvt.cpp` (+46/−6), `efi_pid.cpp` (+5/−1), `efi_pid.h` (+3/−0) and `default_base_engine.cpp` (+25/−2). This includes default/migration work beyond the historical three-file scope below; schema, tuning UI, telemetry definitions and tests are excluded. [VVT tests](https://github.com/rusefi/rusefi/blob/bd98053cc7ffecbb1a323c632a1319671af1a73a/unit_tests/tests/actuators/test_vvt.cpp) and [PID tests](https://github.com/rusefi/rusefi/blob/bd98053cc7ffecbb1a323c632a1319671af1a73a/unit_tests/tests/test_pid.cpp) add 337 lines separately. They cover basic-mode compatibility, both control directions and banks, pressure interpolation/fallback, integral limits, defaults, configuration resets, telemetry, output clamping and the PWM path. Tests were inspected, not rerun. Historical fork LOC below is unchanged.
+
 ## Executive summary
 
-Master's fixed PID offset/proportional gain can be replaced by an oil-pressure base-duty curve and a signed distance-to-target proportional-gain curve, separately for intake/exhaust. Integral bounds become configurable, and advanced mode bypasses the normal near-zero target hysteresis gate. Telemetry reports the scheduled P term and final applied command.
+The fixed PID offset/proportional gain can be replaced by an oil-pressure base-duty curve and a signed distance-to-target proportional-gain curve, separately for intake/exhaust. Integral bounds become configurable, and advanced mode bypasses the normal near-zero target hysteresis gate. Telemetry reports the scheduled P term and final applied command. This behavior is now upstream as described above.
 
 ## ECU logic and behavior
 

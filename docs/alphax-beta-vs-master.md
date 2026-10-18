@@ -4,7 +4,7 @@ This index focuses on firmware changes that affect ECU inputs, decisions, output
 
 ## Master progress
 
-Reviewed upstream `origin/master` at [`bb15031c45118a859e42ca008ecbf6d2795639e2`](https://github.com/rusefi/rusefi/commit/bb15031c45118a859e42ca008ecbf6d2795639e2), committed 2026-10-18, after fetching. It contains 37 commits beyond the original comparison revision, including 15 since the previous review at `41e3c63a986`. Newly completed items are the knock-spectrogram guard, burst-knock retard, time-based WOT enrichment, and core engine state machine/shift recognition. All six prior completions remain present. **Ten reports are now prefixed `DONE-`**:
+Reviewed upstream `origin/master` at [`bd98053cc7ffecbb1a323c632a1319671af1a73a`](https://github.com/rusefi/rusefi/commit/bd98053cc7ffecbb1a323c632a1319671af1a73a), committed 2026-10-18, after fetching. It contains 42 commits beyond the original comparison revision, including five since the previous review at `bb15031c451`. Newly completed items are predictive MAP event lifetime and advanced VVT control. All ten prior completions remain present. **Twelve reports are now prefixed `DONE-`**:
 
 | Report | Upstream completion evidence |
 | --- | --- |
@@ -14,12 +14,14 @@ Reviewed upstream `origin/master` at [`bb15031c45118a859e42ca008ecbf6d2795639e2`
 | [DONE — 13a: TPS smoothing](alphax-beta/DONE-13a-tps-smoothing.md) | [`edaaf10bab6`](https://github.com/rusefi/rusefi/commit/edaaf10bab64e4ab9b60f60684995a8246207c05); independent TPS filters, fast-transient reset, invalidity handling, tuning controls and tests. |
 | [DONE — 19: Burst knock retard](alphax-beta/DONE-19-burst-knock-retard.md) | [`e08f9bf74f1`](https://github.com/rusefi/rusefi/commit/e08f9bf74f1e9aeee0938a146a0f7ee56a62edaa); AE-triggered table retard, decay, ignition integration and tests. |
 | [DONE — 20: Time-based WOT enrichment](alphax-beta/DONE-20-time-based-wot-enrichment.md) | [`1719eb197e5`](https://github.com/rusefi/rusefi/commit/1719eb197e5d3252e71388a615467e8899e36286); state-gated elapsed-time curve, fuel/AFR/lambda integration, lifecycle resets and tests. |
+| [DONE — 27: Predictive MAP event lifetime](alphax-beta/DONE-27-predictive-map-event-lifetime.md) | [`7dff676ec6c`](https://github.com/rusefi/rusefi/commit/7dff676ec6c85703799cf9e6c8e02510d707c258); session duration cap across retriggers, per-event TPS peak reset and tests. |
 | [DONE — 31: Fan pressure mode and PWM semantics](alphax-beta/DONE-31-cooling-fan-pressure-mode-and-pwm-semantics.md) | [`3da3feb4de3`](https://github.com/rusefi/rusefi/commit/3da3feb4de30e61d875c4d8a7d3b0b0d45b4be91) plus [`060dc248caa`](https://github.com/rusefi/rusefi/commit/060dc248caa047b059d7cd86d041ae913fd9e2fd); operational behavior and old A/C-toggle migration. |
 | [DONE — 36: Gear detection and transmission slip](alphax-beta/DONE-36-gear-detection-and-transmission-slip.md) | [`0208ad604b6`](https://github.com/rusefi/rusefi/commit/0208ad604b62c7395e8cd88f812037e58195aecf), following reproduction [`e529a799d7a`](https://github.com/rusefi/rusefi/commit/e529a799d7a1a9dec9337594aaeab651edbf87bd); clutch handling, OSS/RPM selection, slip calculation, telemetry and tests. |
 | [DONE — 42: Engine state machine and shift recognition](alphax-beta/DONE-42-engine-state-machine-and-shift-recognition.md) | [`d63e3cbace1`](https://github.com/rusefi/rusefi/commit/d63e3cbace1062e92b85f488ae080c6d1d3e69a2) plus [`59455c622c8`](https://github.com/rusefi/rusefi/commit/59455c622c82d1b0bf7f75082f385c80bd01be33); core classification, shift/temperature overlays, STFT selection and lifecycle/sensor-loss fixes. |
 | [DONE — 55: Rolling launch](alphax-beta/DONE-55-rolling-launch.md) | [`3dd620b8d5b`](https://github.com/rusefi/rusefi/commit/3dd620b8d5b05839ddc958bb4104bba4bd63558e); captured-RPM spark limiting, hardware/Lua activation, fuel enrichment, timing ramp-out, tuning controls and tests. |
+| [DONE — 56: Advanced VVT control](alphax-beta/DONE-56-advanced-vvt-control.md) | [`bd98053cc7f`](https://github.com/rusefi/rusefi/commit/bd98053cc7ffecbb1a323c632a1319671af1a73a); oil-pressure base duty, signed-error P curves, integral limits, activation/telemetry behavior, tuning controls and tests. |
 
-`DONE` means the described feature is present upstream; it does not require identical files, AlphaX page placement or every fork-only diagnostic. Each completed report records those differences. Former report 13 remains split into completed [13a](alphax-beta/DONE-13a-tps-smoothing.md) and open [13b](alphax-beta/13b-tps-pps-discrepancy-configuration.md), because master has not adopted the wider discrepancy limit or changed storage scale. There are now **63 reports: ten DONE and 53 open**.
+`DONE` means the described feature is present upstream; it does not require identical files, AlphaX page placement or every fork-only diagnostic. Each completed report records those differences. Former report 13 remains split into completed [13a](alphax-beta/DONE-13a-tps-smoothing.md) and open [13b](alphax-beta/13b-tps-pps-discrepancy-configuration.md), because master has not adopted the wider discrepancy limit or changed storage scale. There are now **63 reports: twelve DONE and 51 open**.
 
 Report [35](alphax-beta/35-replacement-vehicle-and-wheel-speed-pipeline.md) has partial progress: standalone OSS acquisition is implemented, while the broader main-speed/axle/slip pipeline replacement remains open. Slip telemetry alone does not complete the TCU pressure-trim work in report 58. Shared status/default-file edits likewise do not complete ignition-voltage fallback (06a) or fuel economy (14). Preserving external TPS providers during smoothing initialization does not implement the CAN ETB protocol in report 59.
 
@@ -28,6 +30,8 @@ Rolling launch uses the existing shared limiter and its own timing ramp-out. Its
 The core state machine does not complete the separate operating modes (43–47), state-aware DFCO (51), downshift blip (52), upshift hold (53), launch power ramp (54) or automatic TCU (58). Their actuator consumers remain open. Follow-up [`937936ee1fd`](https://github.com/rusefi/rusefi/commit/937936ee1fdcf7d44520de6bdef439b6f3cc2da6) improves already-completed gear detection and rolling launch: non-finite ratios no longer select first gear, and Lua reset clears the rolling-launch request. The new frequency-sensor reset helper is unit-test-only and does not complete report 35.
 
 Other *INFRASTRUCTURE* progress includes regenerated configurations/default tunes and board flash reductions. MicroRusEFI disables the DTC manager in [`9bc9d8d2d11`](https://github.com/rusefi/rusefi/commit/9bc9d8d2d112e90c85b51c5666172ead123f1567); the small CAN board stops embedding its INI in [`bb15031c451`](https://github.com/rusefi/rusefi/commit/bb15031c45118a859e42ca008ecbf6d2795639e2). These are build/diagnostic resource changes, not completion of the fork's CEL escalation or storage-layout reports.
+
+This review's other three commits are *INFRASTRUCTURE*: regenerated [default tunes](https://github.com/rusefi/rusefi/commit/e3a2d25c8b25e66a04fd94386af6928b3912ad73), [configurations/docs](https://github.com/rusefi/rusefi/commit/aa00d5ad19290e8bbab744fe341f3664452aa6e2) and [charge-temperature startup regression coverage](https://github.com/rusefi/rusefi/commit/9bb95c3f8782048015fcc25b299f438900f5cddf). The last commit changes tests only and asserts the existing 0°C initialization problem after missing first sensor readings; it does not fix firmware or complete thermal report 38. Advanced VVT completes the cam controller, while VVT-dependent fuel/ignition correction (18), Eco mode (44) and Ghost Cam mode (46) remain open.
 
 This is a source/history review; tests were inspected, not rerun. The comparison revisions, LOC tables and complete inventories below remain the original historical snapshot, so their counts are not a remaining-work estimate.
 
@@ -102,7 +106,7 @@ There are **63 separate reports**. The original section numbers are retained for
 | 24 | [Delayed start authorization](alphax-beta/24-delayed-start-authorization.md) | +95 / −17 |
 | 25 | [Alternator feed-forward and output telemetry](alphax-beta/25-alternator-feed-forward-and-output-telemetry.md) | +69 / −12 |
 | 26 | [Boost target calculation in open loop](alphax-beta/26-boost-target-calculation-in-open-loop.md) | +36 / −10 |
-| 27 | [Predictive MAP event lifetime](alphax-beta/27-predictive-map-event-lifetime.md) | +14 / −10 |
+| 27 | [DONE — Predictive MAP event lifetime](alphax-beta/DONE-27-predictive-map-event-lifetime.md) | +14 / −10 |
 
 ### Actuator, speed and thermal control
 
@@ -139,7 +143,7 @@ There are **63 separate reports**. The original section numbers are retained for
 | 53 | [Upshift RPM hold](alphax-beta/53-upshift-rpm-hold.md) | +526 / −17 |
 | 54 | [Launch power ramp](alphax-beta/54-launch-power-ramp.md) | +139 / −13 |
 | 55 | [DONE — Rolling launch](alphax-beta/DONE-55-rolling-launch.md) | +282 / −14 |
-| 56 | [Advanced VVT control](alphax-beta/56-advanced-vvt-control.md) | +124 / −6 |
+| 56 | [DONE — Advanced VVT control](alphax-beta/DONE-56-advanced-vvt-control.md) | +124 / −6 |
 | 57 | [First-order RPM estimation](alphax-beta/57-first-order-rpm-estimation.md) | +79 / −16 |
 
 ### Transmission, acquisition and synchronization
