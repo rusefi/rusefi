@@ -1403,3 +1403,151 @@ TEST(EngineStateMachine, tempOverlay_exactlyAtColdThreshold_isNotCold) {
 	EXPECT_FALSE(sm.engineSmIsCold);
 	EXPECT_TRUE(sm.engineSmIsOperating);
 }
+
+// Passing reproductions of source defects; expectations change in the subsequent fix.
+TEST(EngineStateMachineRegression, KnownBugDisableRetainsWot) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setupSmConfig();
+	enterRunning(3000, 95);
+	ASSERT_TRUE(getSm().engineSmIsWot);
+	engineConfiguration->useEngineStateMachine = false;
+	getSm().onSlowCallback();
+	EXPECT_FALSE(getSm().engineSmEnabled);
+	EXPECT_TRUE(getSm().engineSmIsWot); // BAD: stale WOT survives disabling.
+}
+
+TEST(EngineStateMachineRegression, KnownBugEngineStopRetainsWot) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setupSmConfig();
+	enterRunning(3000, 95);
+	ASSERT_TRUE(getSm().engineSmIsWot);
+	engine->rpmCalculator.setRpmValue(0);
+	getSm().onEngineStop();
+	EXPECT_TRUE(getSm().engineSmIsWot); // BAD: stale WOT survives stopping.
+}
+
+TEST(EngineStateMachineRegression, KnownBugBurnRetainsWot) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setupSmConfig();
+	enterRunning(3000, 95);
+	ASSERT_TRUE(getSm().engineSmIsWot);
+	getSm().onConfigurationChange(nullptr);
+	EXPECT_TRUE(getSm().engineSmIsWot); // BAD: stale WOT survives a burn.
+}
+
+TEST(EngineStateMachineRegression, KnownBugRateDetectionRequiresClutchSwitch) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setupSmConfig();
+	setupAccumulatorConfig();
+	MockIdleController idle;
+	engine->module<IdleController>().set(&idle);
+	ON_CALL(idle, getCurrentPhase()).WillByDefault(Return(IIdleController::Phase::Running));
+	enterRunning();
+	seedRampedRpm(2000, 100, 20, 50);
+	EXPECT_FLOAT_EQ(getSm().engineSmRpmRate, 0); // BAD: rate sampling depends on shift switches.
+	EXPECT_FALSE(getSm().engineSmIsAccelerating);
+}
+
+TEST(EngineStateMachineRegression, KnownBugLaunchAccumulatesShiftEvidence) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setupShiftDetectionConfig();
+	MockIdleController idle;
+	engine->module<IdleController>().set(&idle);
+	ON_CALL(idle, getCurrentPhase()).WillByDefault(Return(IIdleController::Phase::Running));
+	enterRunning();
+	engine->launchController.isLaunchCondition = true;
+	seedRampedRpm(2000, 100, 20, 50);
+	ASSERT_TRUE(getSm().engineSmIsLaunchControl);
+	EXPECT_GT(getSm().engineSmShiftAccumulator, 0); // BAD: display overlay is not the primary state.
+}
+
+TEST(EngineStateMachineRegression, KnownBugFirstVssSampleCreatesAcceleration) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setupVssRateModeConfig();
+	advanceTimeUs(10 * 1000000);
+	engine->rpmCalculator.setRpmValue(3000);
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 50);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 40);
+	getSm().onSlowCallback();
+	EXPECT_GT(getSm().engineSmShiftAccumulator, 0); // BAD: startup VSS compared against zero.
+}
+
+TEST(EngineStateMachineRegression, KnownBugInvalidVssCreatesDownshiftEvidence) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setupVssRateModeConfig();
+	enterRunning();
+	Sensor::setMockValue(SensorType::VehicleSpeed, 60);
+	seedHistory();
+	Sensor::setInvalidMockValue(SensorType::VehicleSpeed);
+	advanceTimeUs(50000);
+	getSm().onSlowCallback();
+	EXPECT_LT(getSm().engineSmShiftAccumulator, 0); // BAD: failed VSS treated as a sudden stop.
+}
+
+// Guard against the synthetic clutch edge introduced by the deferred reset implementation.
+TEST(EngineStateMachineRegression, HeldClutchDoesNotCreateFreshShiftAfterBurn) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setupSmConfig();
+	engineConfiguration->smUpshiftClutchSwitch = sm_clutch_switch_e::ClutchDown;
+	enterRunning();
+	engine->engineState.lua.clutchDownState = true;
+	engine->periodicSlowCallback();
+	ASSERT_TRUE(getSm().engineSmIsUpshifting);
+	advanceTimeUs(3100 * 1000);
+	engine->periodicSlowCallback();
+	ASSERT_FALSE(getSm().engineSmIsUpshifting); // Original shift expired with the pedal still down.
+
+	getSm().onConfigurationChange(nullptr);
+	ASSERT_FALSE(getSm().engineSmIsUpshifting);
+	// No new physical edge: the pedal has stayed down throughout the settings burn.
+	engine->periodicSlowCallback();
+	EXPECT_FALSE(getSm().engineSmIsUpshifting); // No new edge, so the expired shift stays inactive.
+}
+
+// Additional source defects: preserve the bad expectations until their fixes.
+TEST(EngineStateMachineRegression, KnownBugInvalidVssStillQualifiesDecelerating) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setupSmConfig();
+	setupAccumulatorConfig();
+	engineConfiguration->smUpshiftClutchSwitch = sm_clutch_switch_e::ClutchDown;
+	MockIdleController idle;
+	engine->module<IdleController>().set(&idle);
+	ON_CALL(idle, getCurrentPhase()).WillByDefault(Return(IIdleController::Phase::Running));
+	Sensor::setMockValue(SensorType::DetectedGear, 0);
+	Sensor::setInvalidMockValue(SensorType::VehicleSpeed);
+	ASSERT_TRUE(Sensor::hasSensor(SensorType::VehicleSpeed));
+	ASSERT_FALSE(Sensor::get(SensorType::VehicleSpeed).Valid);
+	enterRunning(4000);
+	seedRampedRpm(4000, -100, 10, 50);
+	EXPECT_LT(getSm().engineSmRpmRate, -500);
+	EXPECT_TRUE(getSm().engineSmIsDecelerating); // BAD: existence is mistaken for valid speed.
+}
+
+TEST(EngineStateMachineRegression, KnownBugOverrunIgnoresUnassignedClutch) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setupSmConfig();
+	engineConfiguration->clutchDownPin = Gpio::A1;
+	engineConfiguration->coastingFuelCutTps = 5;
+	engineConfiguration->coastingFuelCutRpmHigh = 2000;
+	MockIdleController idle;
+	engine->module<IdleController>().set(&idle);
+	ON_CALL(idle, getCurrentPhase()).WillByDefault(Return(IIdleController::Phase::Coasting));
+	engine->rpmCalculator.setRpmValue(3000);
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 0);
+	engine->engineState.clutchDownState = true;
+	ASSERT_EQ(engineConfiguration->smUpshiftClutchSwitch, sm_clutch_switch_e::None);
+	ASSERT_EQ(engineConfiguration->smDownshiftClutchSwitch, sm_clutch_switch_e::None);
+	getSm().onSlowCallback();
+	EXPECT_TRUE(getSm().isTransmissionEngaged()); // BAD: a configured, pressed clutch is ignored.
+	EXPECT_TRUE(getSm().engineSmIsOverrun);
+	engineConfiguration->stateBasedStft = true;
+	auto& stft = engine->module<ShortTermFuelTrim>().unmock();
+	EXPECT_EQ(stft.computeStftBin(3000, 50, engineConfiguration->stft), ftRegionOverrun);
+
+	// Merely assigning that same switch to shift recognition changes primary-state detection.
+	engineConfiguration->smUpshiftClutchSwitch = sm_clutch_switch_e::ClutchDown;
+	getSm().onSlowCallback();
+	EXPECT_FALSE(getSm().isTransmissionEngaged());
+	EXPECT_TRUE(getSm().engineSmIsCoasting);
+	EXPECT_EQ(stft.computeStftBin(3000, 50, engineConfiguration->stft), ftRegionIdle);
+}

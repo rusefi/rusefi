@@ -84,6 +84,36 @@ Overrun selects overrun; WOT selects power; all remaining primary states select
 cruise. Existing per-region gains, limits and learning gates are unchanged.
 The fast fuel loop observes the latest completed slow-callback state.
 
+## Reproduced defects and deferred fixes
+
+The `EngineStateMachineRegression.KnownBug*` tests deliberately assert current
+bad behavior in the AlphaX-style import `d63e3cbace1`. They pass before a fix;
+update the same expectations when fixing each defect in a subsequent change.
+These are inherited defects/limitations, not evidence that this port introduced
+them:
+
+- Disable, engine-stop notification and settings burn retain the previous WOT
+  flag. The three lifecycle tests establish WOT first, then invoke each path.
+- With neither shift direction configured, RPM mode never samples the RPM ramp
+  and cannot classify Accelerating.
+- Launch is a display overlay, so the primary-state check in the accumulator
+  fails to suppress launch-time shift evidence.
+- The first VSS sample is compared with zero and creates positive evidence
+  even without a measured change in speed.
+- Invalid VSS is treated as zero, creating false negative shift evidence.
+- Decelerating checks sensor existence rather than VSS sample validity. Its
+  reproduction configures one shift direction so the separate RPM-sampling
+  defect cannot mask this path.
+- Overrun ignores a configured, pressed clutch unless that switch is assigned
+  to a shift direction. The reproduction also verifies the resulting overrun
+  STFT cell and the change to idle when the same switch is assigned.
+
+`HeldClutchDoesNotCreateFreshShiftAfterBurn` protects a behavior the import
+already gets right: burning settings after a shift times out must not invent
+another press edge. The deferred reset implementation in `rusefi.5` revision
+`a8907d449ae` initializes previous clutch levels to false and breaks this case.
+That implementation and its other lifecycle/rate/VSS fixes were not imported.
+
 ## Verification
 
 `unit_tests/tests/engine_state_machine/test_engine_state_machine.cpp` covers
@@ -91,3 +121,5 @@ state priority, transient hold, rate cadence, clutch edges, accumulator
 direction, latches, stale-window timeout and temperature overlays. These are
 adapted AlphaX tests, restricted to the imported features.
 `unit_tests/tests/test_stft.cpp` covers region mapping and threshold fallback.
+The separate regression commit adds nine bad-behavior reproductions and the
+held-clutch burn guard without changing production code.
