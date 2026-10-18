@@ -70,6 +70,79 @@ TEST(misc, testEngineMath) {
 	ASSERT_NEAR(50.6476f/*kg/h*/, engine->engineState.airflowEstimate, EPS4D);
 }
 
+class ChargeTemperatureStartup : public testing::Test {
+protected:
+	EngineTestHelper eth{engine_type_e::TEST_ENGINE};
+
+	void SetUp() override {
+		engineConfiguration->fuelAlgorithm = engine_load_mode_e::LM_SPEED_DENSITY;
+		setTable(config->lambdaTable, 1.0f);
+		setTable(config->veTable, 80);
+		engineConfiguration->tChargeMode = TCHARGE_MODE_RPM_TPS;
+		engineConfiguration->tChargeMinRpmMinTps = 0.25f;
+		engineConfiguration->tChargeMaxRpmMinTps = 0.25f;
+		engineConfiguration->tChargeAirIncrLimit = 1.0f;
+		engineConfiguration->tChargeAirDecrLimit = 12.5f;
+		Sensor::setMockValue(SensorType::Rpm, 1000);
+		Sensor::setMockValue(SensorType::Tps1, 0);
+		Sensor::setMockValue(SensorType::Map, 100);
+		Sensor::setMockValue(SensorType::Clt, 90);
+		Sensor::setMockValue(SensorType::Iat, 30);
+	}
+};
+
+TEST_F(ChargeTemperatureStartup, ValidSensorsOnFirstUpdateBypassRateLimit) {
+	ASSERT_FLOAT_EQ(0, engine->engineState.sd.tChargeK);
+	ASSERT_FLOAT_EQ(75, engine->fuelComputer.getTCharge(1000, 0)); // 90 + 0.25 * (30 - 90)
+
+	eth.moveTimeForwardMs(100);
+	engine->periodicFastCallback();
+	EXPECT_FLOAT_EQ(75, engine->engineState.sd.tCharge);
+	EXPECT_FLOAT_EQ(348.15f, engine->engineState.sd.tChargeK);
+
+	// After initialization, ordinary temperature changes still use the rate limiter.
+	Sensor::setMockValue(SensorType::Clt, 100);
+	eth.moveTimeForwardSec(1);
+	engine->periodicFastCallback();
+	EXPECT_FLOAT_EQ(76, engine->engineState.sd.tCharge);
+	EXPECT_FLOAT_EQ(349.15f, engine->engineState.sd.tChargeK);
+}
+
+TEST_F(ChargeTemperatureStartup, MissingInitialReadingsRateLimitHotRestartFromZero) {
+	// Reproduce https://github.com/rusefi/rusefi/issues/10400 before the first ADC readings.
+	// These passing assertions describe the bug; update them when fixing initialization.
+	Sensor::setInvalidMockValue(SensorType::Clt);
+	Sensor::setInvalidMockValue(SensorType::Iat);
+	ASSERT_FLOAT_EQ(0, engine->engineState.sd.tChargeK);
+	engine->periodicFastCallback();
+	ASSERT_FLOAT_EQ(0, engine->engineState.sd.tCharge);
+	ASSERT_FLOAT_EQ(273.15f, engine->engineState.sd.tChargeK);
+
+	// The 0 C fallback has consumed the first-update bypass. Real readings now
+	// request 75 C, but the estimate rises from zero at only 1 C/s.
+	Sensor::setMockValue(SensorType::Clt, 90);
+	Sensor::setMockValue(SensorType::Iat, 30);
+	ASSERT_FLOAT_EQ(75, engine->fuelComputer.getTCharge(1000, 0));
+	eth.moveTimeForwardMs(100);
+	engine->periodicFastCallback();
+	EXPECT_NEAR(0.1f, engine->engineState.sd.tCharge, EPS4D);
+	EXPECT_FLOAT_EQ(273.25f, engine->engineState.sd.tChargeK);
+
+	eth.moveTimeForwardSec(1);
+	engine->periodicFastCallback();
+	EXPECT_NEAR(1.1f, engine->engineState.sd.tCharge, EPS4D);
+	EXPECT_FLOAT_EQ(274.25f, engine->engineState.sd.tChargeK);
+
+	// Verify that speed density actually uses the cold estimate: at the same
+	// MAP and VE, it overestimates air mass by more than 25% compared with 75 C.
+	const float hotAirmass = SpeedDensityBase::getAirmassImpl(0.8f, 100, 348.15f);
+	const float actualAirmass = engine->fuelComputer.sdAirMassInOneCylinder;
+	ASSERT_TRUE(std::isfinite(actualAirmass));
+	ASSERT_GT(hotAirmass, 0);
+	EXPECT_NEAR(hotAirmass * 348.15f / 274.25f, actualAirmass, EPS4D);
+	EXPECT_GT(actualAirmass, hotAirmass * 1.25f);
+}
+
 TEST(misc, testIgnitionMapGenerator) {
 	float rpmBin[16];
 	setRpmBin(rpmBin, 16, 800, 7000);
