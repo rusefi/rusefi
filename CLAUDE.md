@@ -104,6 +104,14 @@ while `Sensor::resetRegistry()` only clears registry entries: a file-static
 `StoredValueSensor` can retain a previous value/timestamp and appear fresh after the
 clock rewind. Reset/invalidate the underlying object, not just its registration.
 
+File-static `FrequencySensor` objects retain edge-timer and biquad history across
+the fixture's clock rewind. That can give the next edge a zero elapsed interval,
+feeding infinity and then NaN into the filter; invalidating the published value
+does not clear this history. Call `resetHistoryForUnitTest()` once at fixture
+setup, as in `OutputShaftSpeed.PulseInputTimeoutAndReconfiguration`. Do not reset
+it again inside a production-reconfiguration test, which must exercise the real
+init/deinit behavior. This test-clock issue does not establish a hardware fault.
+
 For Valgrind, rebuild with `SANITIZE=no`; the normal non-Windows unit-test build
 enables ASan. From `unit_tests/`, use `make clean`, `make -j12 SANITIZE=no`, then
 `./run_with_valgrind.sh`. `make_for_valgrind.sh` selects the flag but does not clean

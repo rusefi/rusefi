@@ -380,7 +380,12 @@ On release or gate loss, skip and fuel return to neutral at the next slow
 callback; timing decays linearly over the configured ramp time. Re-arming
 cancels the ramp and captures a new target. Disabling the feature, engine stop,
 and configuration burn clear the controller state. The Lua request remains
-latched until a script explicitly clears it, including across Lua reloads.
+latched until a script explicitly clears it or `Engine::resetLua()` runs on
+script reload. Lua reset clears only the Lua request: the next slow callback
+releases the hold with normal timing ramp-out, unless the hardware switch still
+requests activation. Repeated resets do not restart the ramp. Tests
+`RollingLaunch.LuaResetReleasesHoldAndRampsOutTiming` and
+`RollingLaunch.LuaResetPreservesHardwareRequest` cover both paths.
 
 `isRollingLaunchActive` reports the raw request and `isRollingLaunchArmed`
 reports the hold. `unit_tests/tests/test_rolling_launch.cpp` covers the fork's

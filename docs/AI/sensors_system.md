@@ -141,6 +141,13 @@ provider bypasses this filter. An unfiltered external provider must exist before
 external CAN ETB protocol.
 
 ## Unit Testing
+
+An external shaft-speed provider can publish NaN through `StoredValueSensor`.
+Gear classification rejects nonfinite ratios, reporting neutral/unknown (zero)
+and invalid slip measurement. `GearDetector.NonfiniteShaftRatioReportsNeutral`
+in `unit_tests/tests/test_gear_detector.cpp` covers both shaft providers and
+recovery to valid readings; it also checks NaN and infinite ratios directly.
+
 - `Sensor::setMockValue(type, value)` / `setInvalidMockValue(type)` override any sensor; mocks take precedence over real sensors in the registry. `Sensor::resetRegistry()` runs between tests.
 - Framework tests live in `unit_tests/tests/sensor/`; control-logic tests throughout the suite use `setMockValue` to stand up engine state.
 - Console equivalents for live debugging: `set_sensor_mock <name> <value>`, `reset_sensor_mocks`, `show_sensors`.
