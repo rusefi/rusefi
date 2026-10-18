@@ -7,6 +7,10 @@
 
 #pragma once
 
+#ifndef KNOCK_SPECTROGRAM
+#define KNOCK_SPECTROGRAM FALSE
+#endif
+
 #ifndef EFI_UDS
 #define EFI_UDS TRUE
 #endif

@@ -14,6 +14,10 @@
 
 #define EFI_GPIO_HARDWARE TRUE
 
+#ifndef KNOCK_SPECTROGRAM
+#define KNOCK_SPECTROGRAM FALSE
+#endif
+
 #ifndef SENT_CHANNELS_NUM
 #define SENT_CHANNELS_NUM 1
 #endif
@@ -417,7 +421,7 @@
 	//  - use compressed USB MSD image (requires 32k of memory)
 	//  - use perf trace (requires ~16k of memory)
 	//  - use spectorgram (requires ~12k of memory), need disable perf trace or compressed USB MSD image
-	#ifndef KNOCK_SPECTROGRAM
+	#if !KNOCK_SPECTROGRAM
 	  #ifndef EFI_USE_COMPRESSED_INI_MSD
 		#define EFI_USE_COMPRESSED_INI_MSD TRUE
 		#endif

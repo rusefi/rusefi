@@ -9,6 +9,10 @@
 
 #include <rusefi/true_false.h>
 
+#ifndef KNOCK_SPECTROGRAM
+#define KNOCK_SPECTROGRAM FALSE
+#endif
+
 // see SIM_SD1_PORT and SIM_SD2_PORT
 #define TS_PRIMARY_UxART_PORT SD1
 #define EFI_TS_PRIMARY_IS_SERIAL TRUE

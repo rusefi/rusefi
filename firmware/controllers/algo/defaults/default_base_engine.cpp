@@ -130,7 +130,7 @@ void setDynoDefaults() {
 bool applyDefaultsOrFixAfterBurn(const engine_configuration_s* previousConfiguration) {
   bool changed = false;
 
-#ifndef KNOCK_SPECTROGRAM
+#if !KNOCK_SPECTROGRAM
   // Tunes can carry this optional display setting from a spectrogram-capable build.
   if (engineConfiguration->enableKnockSpectrogram) {
     engineConfiguration->enableKnockSpectrogram = false;
