@@ -301,8 +301,6 @@ void LuaThread::ThreadTask() {
 static LuaThread luaThread;
 
 void startLua() {
-	luaHeapInit();
-
 #if LUA_I2C_DAC
 	initI2cDacConsole();
 #endif
