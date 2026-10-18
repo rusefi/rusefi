@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="16196">
+    <page number="0" size="16244">
         <constant name="accelEnrichmentMode">"MS Adder"</constant>
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
@@ -3684,6 +3684,26 @@
         <constant digits="0" name="simulatorCamPosition3" units="">0</constant>
         <constant digits="0" name="simulatorCamPosition4" units="">0</constant>
         <constant name="skippedWheelOnCam">"On crankshaft"</constant>
+        <constant digits="0" name="smAccelHoldMs" units="ms">0</constant>
+        <constant digits="0" name="smAccelRateThreshold" units="RPM/s">0</constant>
+        <constant digits="1" name="smAccumulatorDecayRate" units="%/s">10.0</constant>
+        <constant digits="0" name="smAccumulatorDownshiftThreshold" units="">40</constant>
+        <constant digits="1" name="smAccumulatorGain" units="%/s">20.0</constant>
+        <constant digits="0" name="smAccumulatorSnapTimeMs" units="ms">0</constant>
+        <constant digits="0" name="smAccumulatorUpshiftThreshold" units="">40</constant>
+        <constant digits="0" name="smColdTempThreshold" units="{bitStringValue(unitsLabels, useMetricOnInterface)}">60</constant>
+        <constant digits="0" name="smDecelRateThreshold" units="RPM/s">0</constant>
+        <constant name="smDownshiftClutchSwitch">"None"</constant>
+        <constant digits="0" name="smHotTempThreshold" units="{bitStringValue(unitsLabels, useMetricOnInterface)}">100</constant>
+        <constant name="smRelatchOnClutchDown">"disabled"</constant>
+        <constant digits="0" name="smRpmRateWindowMs" units="ms">100</constant>
+        <constant name="smSecondClutchSwitchAvailable">"no"</constant>
+        <constant name="smShiftDetectionMode">"RPM Rate"</constant>
+        <constant digits="0" name="smShiftLatchTimeMs" units="ms">0</constant>
+        <constant digits="0" name="smShiftMinVss" units="{bitStringValue(velocityUnitsLabels, useMetricOnInterface)}">0</constant>
+        <constant digits="0" name="smTransientHoldTimeMs" units="ms">200</constant>
+        <constant name="smUpshiftClutchSwitch">"None"</constant>
+        <constant digits="0" name="smWotTpsThreshold" units="%">90</constant>
         <constant cols="1" digits="0" name="sparkDwellRpmBins" rows="8" units="RPM">
          0
          1000
@@ -3754,6 +3774,7 @@
         <constant name="startStopButtonMode">"DEFAULT"</constant>
         <constant name="startStopButtonPin">"NONE"</constant>
         <constant digits="0" name="startUpFuelPumpDuration" units="seconds">4</constant>
+        <constant name="stateBasedStft">"disabled"</constant>
         <constant name="stepper_dc_use_two_wires">"no"</constant>
         <constant name="stepper_raw_output1">"NONE"</constant>
         <constant name="stepper_raw_output2">"NONE"</constant>
@@ -4729,6 +4750,7 @@
         <constant name="useCltBasedRpmLimit">"no"</constant>
         <constant name="useCompensatedMap">"disabled"</constant>
         <constant name="useEeprom">"no"</constant>
+        <constant name="useEngineStateMachine">"disabled"</constant>
         <constant name="useFixedBaroCorrFromMap">"no"</constant>
         <constant name="useFordRedundantPps">"no"</constant>
         <constant name="useFordRedundantTps">"no"</constant>
@@ -5275,7 +5297,7 @@
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20261017" nPages="1" signature="rusEFI master.2026.10.18.f407-discovery.125734754" version="5.0"/>
+    <versionInfo firmwareInfo="20261017" nPages="1" signature="rusEFI master.2026.10.18.f407-discovery.3796308980" version="5.0"/>
     <bibliography author="rusEFI 20261017" writeDate="date"/>
     <settings/>
     <userComments/>
