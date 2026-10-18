@@ -1,6 +1,6 @@
 #include "global.h"
 #include "sensor_type.h"
-// was generated automatically by rusEFI tool  from sensor_type.h // by enum_to_string.jar tool on Sat Apr 04 11:57:47 UTC 2026
+// was generated automatically by rusEFI tool  from sensor_type.h // by enum_to_string.jar tool on Sun Oct 18 01:27:49 UTC 2026
 // see also gen_config_and_enums.bat
 
 
@@ -151,6 +151,8 @@ const char *getSensorType(SensorType value) {
 			return "OilPressure";
 		case SensorType::OilTemperature:
 			return "OilTemperature";
+		case SensorType::OutputShaftSpeed:
+			return "OutputShaftSpeed";
 		case SensorType::PlaceholderLast:
 			return "PlaceholderLast";
 		case SensorType::RangeInput1:

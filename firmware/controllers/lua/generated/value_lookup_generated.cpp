@@ -1966,6 +1966,18 @@ float getConfigValueByHash(const int hash) {
 // canSnifferIncludeBus
 		case -1408814862:
 			return engineConfiguration->canSnifferIncludeBus;
+// gearDetectionUseOutputShaftSpeed
+		case 209205704:
+			return engineConfiguration->gearDetectionUseOutputShaftSpeed;
+// gearDetectionRpmSourceIsInputShaftSpeed
+		case -97064362:
+			return engineConfiguration->gearDetectionRpmSourceIsInputShaftSpeed;
+// transmissionSlipDetectionEnabled
+		case 1972642993:
+			return engineConfiguration->transmissionSlipDetectionEnabled;
+// transmissionSlipRpmSourceIsInputShaftSpeed
+		case -1388601766:
+			return engineConfiguration->transmissionSlipRpmSourceIsInputShaftSpeed;
 // nitrousLuaGaugeArmingValue
 		case -1760115393:
 			return engineConfiguration->nitrousLuaGaugeArmingValue;
@@ -2125,6 +2137,39 @@ float getConfigValueByHash(const int hash) {
 // idleParkNeutralOffset
 		case 1550171219:
 			return engineConfiguration->idleParkNeutralOffset;
+// transmissionSlipMinVss
+		case -838086233:
+			return engineConfiguration->transmissionSlipMinVss;
+// outputShaftSpeedSensorTeeth
+		case -304117647:
+			return engineConfiguration->outputShaftSpeedSensorTeeth;
+// ossFilterReciprocal
+		case 209259268:
+			return engineConfiguration->ossFilterReciprocal;
+// rollingLaunchEnabled
+		case -905762494:
+			return engineConfiguration->rollingLaunchEnabled;
+// rollingLaunchTimingRetard
+		case -13147103:
+			return engineConfiguration->rollingLaunchTimingRetard;
+// rollingLaunchFuelAdderPercent
+		case 791499668:
+			return engineConfiguration->rollingLaunchFuelAdderPercent;
+// rollingLaunchRampOutTime
+		case -27725394:
+			return engineConfiguration->rollingLaunchRampOutTime;
+// rollingLaunchRpmWindow
+		case -422720642:
+			return engineConfiguration->rollingLaunchRpmWindow;
+// rollingLaunchMinArmRpm
+		case 1155403530:
+			return engineConfiguration->rollingLaunchMinArmRpm;
+// rollingLaunchMaxRpm
+		case 1702718700:
+			return engineConfiguration->rollingLaunchMaxRpm;
+// rollingLaunchMinVss
+		case 1711851159:
+			return engineConfiguration->rollingLaunchMinVss;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -5510,6 +5555,26 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->canSnifferIncludeBus = (int)value;
 		return 1;
 	}
+		case 209205704:
+	{
+		engineConfiguration->gearDetectionUseOutputShaftSpeed = (int)value;
+		return 1;
+	}
+		case -97064362:
+	{
+		engineConfiguration->gearDetectionRpmSourceIsInputShaftSpeed = (int)value;
+		return 1;
+	}
+		case 1972642993:
+	{
+		engineConfiguration->transmissionSlipDetectionEnabled = (int)value;
+		return 1;
+	}
+		case -1388601766:
+	{
+		engineConfiguration->transmissionSlipRpmSourceIsInputShaftSpeed = (int)value;
+		return 1;
+	}
 		case -1760115393:
 	{
 		engineConfiguration->nitrousLuaGaugeArmingValue = value;
@@ -5773,6 +5838,61 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1550171219:
 	{
 		engineConfiguration->idleParkNeutralOffset = value;
+		return 1;
+	}
+		case -838086233:
+	{
+		engineConfiguration->transmissionSlipMinVss = (int)value;
+		return 1;
+	}
+		case -304117647:
+	{
+		engineConfiguration->outputShaftSpeedSensorTeeth = (int)value;
+		return 1;
+	}
+		case 209259268:
+	{
+		engineConfiguration->ossFilterReciprocal = (int)value;
+		return 1;
+	}
+		case -905762494:
+	{
+		engineConfiguration->rollingLaunchEnabled = (int)value;
+		return 1;
+	}
+		case -13147103:
+	{
+		engineConfiguration->rollingLaunchTimingRetard = (int)value;
+		return 1;
+	}
+		case 791499668:
+	{
+		engineConfiguration->rollingLaunchFuelAdderPercent = (int)value;
+		return 1;
+	}
+		case -27725394:
+	{
+		engineConfiguration->rollingLaunchRampOutTime = (int)value;
+		return 1;
+	}
+		case -422720642:
+	{
+		engineConfiguration->rollingLaunchRpmWindow = (int)value;
+		return 1;
+	}
+		case 1155403530:
+	{
+		engineConfiguration->rollingLaunchMinArmRpm = (int)value;
+		return 1;
+	}
+		case 1702718700:
+	{
+		engineConfiguration->rollingLaunchMaxRpm = (int)value;
+		return 1;
+	}
+		case 1711851159:
+	{
+		engineConfiguration->rollingLaunchMinVss = (int)value;
 		return 1;
 	}
 		case -1658957891:

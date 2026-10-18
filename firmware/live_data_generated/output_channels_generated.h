@@ -1747,8 +1747,117 @@ struct output_channels_s {
 	 * offset 930
 	 */
 	uint8_t alignmentFill_at_930[2] = {};
+	/**
+	 * Output Shaft Speed
+	 * units: RPM
+	 * offset 932
+	 */
+	float outputShaftSpeed = (float)0;
+	/**
+	 * @@GAUGE_NAME_TRANS_SLIP@@
+	 * units: %
+	 * offset 936
+	 */
+	float transmissionSlipPercent = (float)0;
+	/**
+	 * Transmission slip valid
+	offset 940 bit 0 */
+	bool transmissionSlipValid : 1 {};
+	/**
+	offset 940 bit 1 */
+	bool unusedBit_370_1 : 1 {};
+	/**
+	offset 940 bit 2 */
+	bool unusedBit_370_2 : 1 {};
+	/**
+	offset 940 bit 3 */
+	bool unusedBit_370_3 : 1 {};
+	/**
+	offset 940 bit 4 */
+	bool unusedBit_370_4 : 1 {};
+	/**
+	offset 940 bit 5 */
+	bool unusedBit_370_5 : 1 {};
+	/**
+	offset 940 bit 6 */
+	bool unusedBit_370_6 : 1 {};
+	/**
+	offset 940 bit 7 */
+	bool unusedBit_370_7 : 1 {};
+	/**
+	offset 940 bit 8 */
+	bool unusedBit_370_8 : 1 {};
+	/**
+	offset 940 bit 9 */
+	bool unusedBit_370_9 : 1 {};
+	/**
+	offset 940 bit 10 */
+	bool unusedBit_370_10 : 1 {};
+	/**
+	offset 940 bit 11 */
+	bool unusedBit_370_11 : 1 {};
+	/**
+	offset 940 bit 12 */
+	bool unusedBit_370_12 : 1 {};
+	/**
+	offset 940 bit 13 */
+	bool unusedBit_370_13 : 1 {};
+	/**
+	offset 940 bit 14 */
+	bool unusedBit_370_14 : 1 {};
+	/**
+	offset 940 bit 15 */
+	bool unusedBit_370_15 : 1 {};
+	/**
+	offset 940 bit 16 */
+	bool unusedBit_370_16 : 1 {};
+	/**
+	offset 940 bit 17 */
+	bool unusedBit_370_17 : 1 {};
+	/**
+	offset 940 bit 18 */
+	bool unusedBit_370_18 : 1 {};
+	/**
+	offset 940 bit 19 */
+	bool unusedBit_370_19 : 1 {};
+	/**
+	offset 940 bit 20 */
+	bool unusedBit_370_20 : 1 {};
+	/**
+	offset 940 bit 21 */
+	bool unusedBit_370_21 : 1 {};
+	/**
+	offset 940 bit 22 */
+	bool unusedBit_370_22 : 1 {};
+	/**
+	offset 940 bit 23 */
+	bool unusedBit_370_23 : 1 {};
+	/**
+	offset 940 bit 24 */
+	bool unusedBit_370_24 : 1 {};
+	/**
+	offset 940 bit 25 */
+	bool unusedBit_370_25 : 1 {};
+	/**
+	offset 940 bit 26 */
+	bool unusedBit_370_26 : 1 {};
+	/**
+	offset 940 bit 27 */
+	bool unusedBit_370_27 : 1 {};
+	/**
+	offset 940 bit 28 */
+	bool unusedBit_370_28 : 1 {};
+	/**
+	offset 940 bit 29 */
+	bool unusedBit_370_29 : 1 {};
+	/**
+	offset 940 bit 30 */
+	bool unusedBit_370_30 : 1 {};
+	/**
+	offset 940 bit 31 */
+	bool unusedBit_370_31 : 1 {};
 };
-static_assert(sizeof(output_channels_s) == 932);
+static_assert(sizeof(output_channels_s) == 944);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt

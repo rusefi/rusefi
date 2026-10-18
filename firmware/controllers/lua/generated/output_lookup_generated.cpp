@@ -961,6 +961,15 @@ float getOutputValueByHash(const int hash) {
 // sdCardMode
 		case 545972859:
 			return engine->outputChannels.sdCardMode;
+// outputShaftSpeed
+		case 1934602685:
+			return engine->outputChannels.outputShaftSpeed;
+// transmissionSlipPercent
+		case 1834866008:
+			return engine->outputChannels.transmissionSlipPercent;
+// transmissionSlipValid
+		case -15013385:
+			return engine->outputChannels.transmissionSlipValid;
 // baseDwell
 		case -1777838088:
 			return engine->ignitionState.baseDwell;
@@ -1584,6 +1593,36 @@ float getOutputValueByHash(const int hash) {
 // trqRedIgnRetXaxisValue
 		case 892591242:
 			return engine->shiftTorqueReductionController.trqRedIgnRetXaxisValue;
+// isRollingLaunchArmed
+		case -206147908:
+			return engine->module<RollingLaunchControl>()->isRollingLaunchArmed;
+// isRollingLaunchActive
+		case 1769521423:
+			return engine->module<RollingLaunchControl>()->isRollingLaunchActive;
+// rollingLaunchSwitchState
+		case 26446954:
+			return engine->module<RollingLaunchControl>()->rollingLaunchSwitchState;
+// luaRollingLaunchState
+		case 44100218:
+			return engine->module<RollingLaunchControl>()->luaRollingLaunchState;
+// isRollingLaunchRampActive
+		case -622383905:
+			return engine->module<RollingLaunchControl>()->isRollingLaunchRampActive;
+// capturedRpm
+		case 1244730476:
+			return engine->module<RollingLaunchControl>()->capturedRpm;
+// rollingLaunchTargetRpm
+		case 1396112877:
+			return engine->module<RollingLaunchControl>()->rollingLaunchTargetRpm;
+// rollingLaunchSparkSkipRatio
+		case 528199470:
+			return engine->module<RollingLaunchControl>()->rollingLaunchSparkSkipRatio;
+// rollingLaunchTimingRetardOut
+		case -20913095:
+			return engine->module<RollingLaunchControl>()->rollingLaunchTimingRetardOut;
+// rollingLaunchRampElapsed
+		case -432387355:
+			return engine->module<RollingLaunchControl>()->rollingLaunchRampElapsed;
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 // etb1etbCurrentTarget

@@ -1960,6 +1960,18 @@ By default the idle solenoid is switched off whenever the engine is not turning,
 ### canSnifferIncludeBus
 Include CAN bus in trace using Elmue SLCAN prefixes (CAN1: none, CAN2: &, CAN3: $). Disable for standard SLCAN clients such as SavvyCAN or slcand. Reconnect the sniffer after changing this setting.
 
+### gearDetectionUseOutputShaftSpeed
+Driveshaft reference for gear detection. Main Vehicle Speed uses wheel revolutions/km and final drive ratio. Output Shaft Speed reads shaft RPM directly and requires an OSS provider.
+
+### gearDetectionRpmSourceIsInputShaftSpeed
+RPM source when Speed Source is Output Shaft Speed. Main Vehicle Speed retains automatic input-shaft selection when that sensor is registered.
+
+### transmissionSlipDetectionEnabled
+Compare the selected Slip RPM Source with expected RPM for the detected gear. Requires Speed Source = Output Shaft Speed, a valid gear and the minimum vehicle speed. Wheel-based references cannot identify transmission slip.
+
+### transmissionSlipRpmSourceIsInputShaftSpeed
+Input Shaft Speed measures internal gearbox slip. Engine RPM also includes clutch or torque-converter slip. Accurate gear ratios are required.
+
 ### nitrousLuaGaugeArmingValue
 
 
@@ -2118,6 +2130,39 @@ Dwell Duty Mode: percentage of the inter-spark interval used as coil dwell time.
 
 ### idleParkNeutralOffset
 Signed idle position offset when Lua reports Park or Neutral via setParkNeutral(boolean). Negative values reduce opening, positive values increase it. Added to running open-loop idle, not target RPM. Zero disables the correction.
+
+### transmissionSlipMinVss
+Below this vehicle speed, transmission slip is invalid. Zero is reset to the 5 km/h default.
+
+### outputShaftSpeedSensorTeeth
+Pulses per output-shaft revolution.
+
+### ossFilterReciprocal
+Output-shaft low-pass filter reciprocal. Higher values average more teeth.
+
+### rollingLaunchEnabled
+Hold a captured RPM window while moving with the activation switch or Lua trigger held.
+
+### rollingLaunchTimingRetard
+Ignition timing removed while armed. This is relative retard, not an absolute timing target.
+
+### rollingLaunchFuelAdderPercent
+Additional fuel while armed. Removed immediately when disarmed.
+
+### rollingLaunchRampOutTime
+Time for the timing retard to decay to zero after release or loss of an arming gate. Zero removes retard immediately.
+
+### rollingLaunchRpmWindow
+RPM above the captured arming RPM where spark skip reaches 100%. Zero requests a hard cut at the captured RPM.
+
+### rollingLaunchMinArmRpm
+Minimum RPM while the trigger is held. Crossing this gate can arm without another button press.
+
+### rollingLaunchMaxRpm
+Maximum captured target RPM. The normal rev limiter remains independent.
+
+### rollingLaunchMinVss
+Minimum vehicle speed while the trigger is held. Requires valid vehicle speed.
 
 ### tcu_shiftTime
 
