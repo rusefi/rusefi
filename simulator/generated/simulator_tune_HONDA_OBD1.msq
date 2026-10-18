@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="16244">
+    <page number="0" size="16312">
         <constant name="accelEnrichmentMode">"MS Adder"</constant>
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
@@ -5197,6 +5197,27 @@
         <constant digits="0" name="wizardPanelToShow" units="">0</constant>
         <constant name="wizardTps">"no"</constant>
         <constant name="wizardVeTable">"no"</constant>
+        <constant cols="1" digits="1" name="wotEnrichmentAfrAdder" rows="8" units="afr">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
+        <constant name="wotEnrichmentEnabled">"disabled"</constant>
+        <constant cols="1" digits="1" name="wotEnrichmentTimeBins" rows="8" units="s">
+         0.0
+         4.3
+         8.6
+         12.9
+         17.1
+         21.4
+         25.7
+         30.0
+</constant>
         <constant cols="1" digits="0" name="wueAnalyzeCltFuelCorr" rows="16" units="%">
          150
          150
@@ -5297,7 +5318,7 @@
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20261017" nPages="1" signature="rusEFI master.2026.10.18.f407-discovery.3796308980" version="5.0"/>
+    <versionInfo firmwareInfo="20261017" nPages="1" signature="rusEFI master.2026.10.18.f407-discovery.2378796211" version="5.0"/>
     <bibliography author="rusEFI 20261017" writeDate="date"/>
     <settings/>
     <userComments/>
