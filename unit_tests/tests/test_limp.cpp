@@ -417,6 +417,23 @@ TEST(limp, oilPressureRunningCheckDuringAfterStartWindow) {
 	dut.updateState(1000, getTimeNowNt());
 	// BUG #9879: running check already cut fuel. Should be EXPECT_TRUE.
 	EXPECT_FALSE(dut.allowInjection());
+
+	// 4.9 seconds after start: last update inside the window
+	advanceTimeUs(2.9e6);
+	dut.updateState(1000, getTimeNowNt());
+	// BUG #9879: fuel is still cut. Should be EXPECT_TRUE.
+	EXPECT_FALSE(dut.allowInjection());
+
+	// 5.8 seconds after start: window is over, running timeout not reached yet
+	advanceTimeUs(0.9e6);
+	dut.updateState(1000, getTimeNowNt());
+	// BUG #9879: fuel is still cut. Should be EXPECT_TRUE.
+	EXPECT_FALSE(dut.allowInjection());
+
+	// 6.1 seconds after start: still below running table, fuel is cut
+	advanceTimeUs(0.3e6);
+	dut.updateState(1000, getTimeNowNt());
+	EXPECT_FALSE(dut.allowInjection());
 	EXPECT_EQ(ClearReason::OilPressure, dut.allowInjection().reason);
 }
 
