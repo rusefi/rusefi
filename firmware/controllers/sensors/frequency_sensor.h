@@ -21,6 +21,14 @@ public:
 
 	void onEdge(efitick_t nowNt);
 
+#if EFI_UNIT_TEST
+	// Static sensors outlive EngineTestHelper's simulated-clock rewind.
+	void resetHistoryForUnitTest() {
+		m_edgeTimer.init();
+		m_filter.reset();
+	}
+#endif
+
 	int eventCounter = 0;
 private:
 	Timer m_edgeTimer;

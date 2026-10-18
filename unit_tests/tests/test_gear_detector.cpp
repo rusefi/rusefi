@@ -536,7 +536,7 @@ TEST(GearDetector, MissingSelectedShaftSourceDoesNotFallBack) {
 	}
 }
 
-TEST(GearDetector, NonfiniteShaftRatioReportsFirstGear_KnownBug) {
+TEST(GearDetector, NonfiniteShaftRatioReportsNeutral) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	auto& dut = setupSlipDetection();
 	engineConfiguration->totalGearsCount = 2;
@@ -554,6 +554,9 @@ TEST(GearDetector, NonfiniteShaftRatioReportsFirstGear_KnownBug) {
 	dut.onSlowCallback();
 	ASSERT_EQ(2, dut.get().Value);
 	ASSERT_TRUE(dut.isSlipValid());
+	for (float ratio : {NAN, INFINITY, -INFINITY}) {
+		EXPECT_EQ(0u, dut.determineGearFromRatio(ratio));
+	}
 
 	// External providers, including Lua sensors, publish via StoredValueSensor.
 	for (auto* source : {&inputShaft, &outputShaft}) {
@@ -561,10 +564,10 @@ TEST(GearDetector, NonfiniteShaftRatioReportsFirstGear_KnownBug) {
 		source->setValidValue(NAN, getTimeNowNt());
 		dut.onSlowCallback();
 		EXPECT_TRUE(std::isnan(dut.getGearboxRatio()));
-		// Known bug: NaN bypasses all ratio comparisons, reporting first gear.
-		// Slip correctly becomes invalid, but DetectedGear should also return neutral.
-		EXPECT_EQ(1, dut.get().Value);
-		EXPECT_EQ(1, Sensor::getOrZero(SensorType::DetectedGear));
+		// Nonfinite ratios cannot establish a gear, even though comparisons with
+		// NaN would otherwise fall through to first gear.
+		EXPECT_EQ(0, dut.get().Value);
+		EXPECT_EQ(0, Sensor::getOrZero(SensorType::DetectedGear));
 		EXPECT_FALSE(dut.isSlipValid());
 		EXPECT_FLOAT_EQ(0, dut.getSlipPercent());
 		source->setValidValue(1000, getTimeNowNt());
@@ -607,6 +610,9 @@ TEST(GearDetector, OutputShaftTimeoutClearsGearAndSlipThenRecovers) {
 TEST(OutputShaftSpeed, PulseInputTimeoutAndReconfiguration) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	extern FrequencySensor outputShaftSpeedSensor;
+	// Start this fixture with fresh acquisition history after the clock rewind.
+	// Do not reset again below: the in-test reconfiguration must exercise production init.
+	outputShaftSpeedSensor.resetHistoryForUnitTest();
 	engineConfiguration->outputShaftSpeedSensorPin = Gpio::A3;
 	engineConfiguration->outputShaftSpeedSensorTeeth = 20;
 	engineConfiguration->ossFilterReciprocal = 5;

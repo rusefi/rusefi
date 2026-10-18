@@ -390,7 +390,7 @@ TEST(RollingLaunch, RunningFuelAndIgnitionCorrections) {
 	EXPECT_FLOAT_EQ(engine->ignitionState.getWrappedAdvance(3500, 50), 13);
 }
 
-TEST(RollingLaunch, LuaResetLeavesHoldEngaged_KnownBug) {
+TEST(RollingLaunch, LuaResetReleasesHoldAndRampsOutTiming) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	setupRl();
 	EXPECT_EQ(testLuaReturnsNumber(R"(
@@ -407,20 +407,27 @@ TEST(RollingLaunch, LuaResetLeavesHoldEngaged_KnownBug) {
 	ASSERT_TRUE(getRl().isRollingLaunchArmed);
 	ASSERT_FLOAT_EQ(getRl().getSparkSkipRatio(), 1);
 
-	// Reproduce a script reload without a replacement script asserting the trigger.
-	// Known bug: resetLua() omits luaRollingLaunchState, so the old script keeps
-	// cutting spark and adding fuel indefinitely. A fix must clear the Lua request
-	// and release the hold on the next slow callback, retaining normal ramp-out.
+	// A script reload clears its trigger, then the next slow callback releases
+	// fuel/spark hold and starts the ordinary timing ramp-out.
 	engine->resetLua();
-	eth.moveTimeForwardSec(2);
+	EXPECT_FALSE(getRl().luaRollingLaunchState);
 	getRl().onSlowCallback();
 	engine->engineState.updateSparkSkip();
-	EXPECT_TRUE(getRl().luaRollingLaunchState);
-	EXPECT_TRUE(getRl().isRollingLaunchArmed);
-	EXPECT_FALSE(getRl().isRollingLaunchRampActive);
-	EXPECT_FLOAT_EQ(getRl().getFuelCoefficient(), 1.05f);
+	EXPECT_FALSE(getRl().isRollingLaunchActive);
+	EXPECT_FALSE(getRl().isRollingLaunchArmed);
+	EXPECT_TRUE(getRl().isRollingLaunchRampActive);
+	EXPECT_FLOAT_EQ(getRl().getFuelCoefficient(), 1);
 	EXPECT_FLOAT_EQ(getRl().getTimingRetard(), 10);
-	EXPECT_FLOAT_EQ(engine->hardSparkLimiter.getTargetSkipRatio(), 1);
+	EXPECT_FLOAT_EQ(engine->hardSparkLimiter.getTargetSkipRatio(), 0);
+
+	eth.moveTimeForwardSec(0.5f);
+	engine->resetLua(); // Another reset must not restart or cancel the release ramp.
+	getRl().onSlowCallback();
+	EXPECT_FLOAT_EQ(getRl().getTimingRetard(), 5);
+	eth.moveTimeForwardSec(0.5f);
+	getRl().onSlowCallback();
+	EXPECT_FALSE(getRl().isRollingLaunchRampActive);
+	EXPECT_FLOAT_EQ(getRl().getTimingRetard(), 0);
 }
 
 TEST(RollingLaunch, LuaResetPreservesHardwareRequest) {
@@ -431,8 +438,8 @@ TEST(RollingLaunch, LuaResetPreservesHardwareRequest) {
 	engineConfiguration->rollingLaunchActivatePin = pin;
 	engineConfiguration->rollingLaunchActivatePinMode = PI_DEFAULT;
 	setMockState(pin, true);
-	step(3500, 30, false);
-	step(3750, 30, false);
+	step(3500, 30, true);
+	step(3750, 30, true);
 	engine->resetLua();
 	getRl().onSlowCallback();
 	EXPECT_FALSE(getRl().luaRollingLaunchState);

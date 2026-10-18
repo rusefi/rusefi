@@ -362,6 +362,11 @@ void Engine::resetLua() {
 #if EFI_BOOST_CONTROL
 	module<BoostController>().unmock().resetLua();
 #endif // EFI_BOOST_CONTROL
+#if EFI_LAUNCH_CONTROL
+	// The next slow callback releases the hold with normal timing ramp-out,
+	// or keeps it armed if the hardware switch is still pressed.
+	module<RollingLaunchControl>().unmock().luaRollingLaunchState = false;
+#endif // EFI_LAUNCH_CONTROL
 	ignitionState.luaTimingAdd = 0;
 	ignitionState.luaTimingMult = 1;
 #if EFI_IDLE_CONTROL
