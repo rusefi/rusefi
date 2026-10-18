@@ -66,6 +66,11 @@ $(error Unsupported PROJECT_CPU [$(PROJECT_CPU)])
 endif
 
 ifeq ($(BOARD_HAS_EXT_FLASH),yes)
+    ifeq ($(PROJECT_CPU),ARCH_STM32F4)
+        # Main SRAM has room for settings; leave CCM space for the engine and Lua heap.
+        DDEFS += -DPERSISTENT_LOCATION=
+    endif
+
     # MRE has optional external SPI flash that uses ChibiOS MFS driver
     include $(PROJECT_DIR)/hw_layer/ports/stm32/use_higher_level_flash_api.mk
     include $(PROJECT_DIR)/hw_layer/drivers/flash/w25q/w25q_single_spi.mk

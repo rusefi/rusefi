@@ -47,6 +47,12 @@ Firmware and unit-test builds keep dependency files in `firmware/.dep/` and `uni
 
 After ChibiOS build-rule changes, validate generated-header dependencies with an empty `DEPDIR` (a fresh directory under `/tmp` is sufficient). Existing compiler-generated `.dep` files can hide missing explicit Makefile prerequisites: an incremental build generates the RAM disk correctly while a clean CI build compiles against its checked-in placeholder header.
 
+On STM32F4, a linker error at `.heap_ccm` saying `cannot move location counter
+backwards` from an address above `0x10010000` means static data exceeds the
+64 KiB CCM RAM region, not flash. Inspect both SRAM and CCM before removing
+features. `PERSISTENT_LOCATION=` places the settings container in main SRAM;
+the Lua configuration page stays in CCM and Lua can allocate from both heaps.
+
 ### Unit Tests
 
 The host build shadows `firmware/hw_layer/adc/adc_inputs.h` with

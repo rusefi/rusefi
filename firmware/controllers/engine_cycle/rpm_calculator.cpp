@@ -38,6 +38,13 @@ bool RpmCalculator::isCranking() const {
 	return state == CRANKING || (state == SPINNING_UP && cachedRpmValue > 0);
 }
 
+/**
+ * @return true if there was a full shaft revolution within the last second
+ */
+bool RpmCalculator::isRunning() const {
+	return state == RUNNING;
+}
+
 bool RpmCalculator::isSpinningUp() const {
 	return state == SPINNING_UP;
 }
@@ -103,13 +110,6 @@ RpmCalculator::RpmCalculator() :
 		StoredValueSensor(SensorType::Rpm, 0)
 	{
 	assignRpmValue(0);
-}
-
-/**
- * @return true if there was a full shaft revolution within the last second
- */
-bool RpmCalculator::isRunning() const {
-	return state == RUNNING;
 }
 
 /**
