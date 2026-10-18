@@ -167,7 +167,9 @@ enum class SensorType : unsigned char {
 	AuxSpeed1,
 	AuxSpeed2,
 
-	// Let's always have all auxiliary sensors at the end - please add specific sensors above auxiliary
+	OutputShaftSpeed,
+
+	// Preserve existing numeric sensor IDs: append new types above PlaceholderLast.
 
 	// Leave me at the end!
 	PlaceholderLast,

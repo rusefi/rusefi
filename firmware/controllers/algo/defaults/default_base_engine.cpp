@@ -153,6 +153,11 @@ bool applyDefaultsOrFixAfterBurn(const engine_configuration_s* previousConfigura
     changed = true;
   }
 
+  if (engineConfiguration->transmissionSlipMinVss == 0) {
+    engineConfiguration->transmissionSlipMinVss = 5;
+    changed = true;
+  }
+
   // Seed the 2D cranking flex table for tunes that predate it (all-zero ethanol axis). Mirror the existing
   // E0 coolant curve at every ethanol level so turning on flexCranking stays neutral with respect to ethanol
   // until the user calibrates it.
@@ -316,6 +321,9 @@ void setDefaultBaseEngine() {
 
 	engineConfiguration->compressionRatio = 9;
 	engineConfiguration->vssFilterReciprocal = VSS_FILTER_MIN;
+	engineConfiguration->ossFilterReciprocal = 3;
+	engineConfiguration->outputShaftSpeedSensorTeeth = 1;
+	engineConfiguration->transmissionSlipMinVss = 5;
 	engineConfiguration->acLowRpmLimit = 500;
 
 	engineConfiguration->mafFilterParameter = 1;

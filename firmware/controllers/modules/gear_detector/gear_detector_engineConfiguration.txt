@@ -1,0 +1,4 @@
+uint8_t transmissionSlipMinVss;Below this vehicle speed, transmission slip is invalid. Zero is reset to the 5 km/h default.;{bitStringValue(velocityUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KMH_TO_MPH@@}, 0, {useMetricOnInterface ? 1 : 1}, {useMetricOnInterface ? 100 : 62}, 0
+brain_input_pin_e outputShaftSpeedSensorPin;Output-shaft pulse input. Leave unassigned for a Lua/CAN provider using Sensor.new("OutputShaftSpeed") in RPM. Use a separate input from the main vehicle speed sensor.
+uint8_t outputShaftSpeedSensorTeeth;Pulses per output-shaft revolution.;"count", 1, 0, 1, 255, 0
+uint8_t ossFilterReciprocal;Output-shaft low-pass filter reciprocal. Higher values average more teeth.;"", 1, 0, 3, 200, 0

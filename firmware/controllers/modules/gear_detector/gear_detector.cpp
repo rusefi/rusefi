@@ -70,10 +70,29 @@ void GearDetector::onSlowCallback() {
         isInitialized = true;
     }
 
+	bool hasClutchDown = isBrainPinValid(engineConfiguration->clutchDownPin);
+	bool hasClutchUp   = isBrainPinValid(engineConfiguration->clutchUpPin);
+
+	if (hasClutchDown || hasClutchUp) {
+		bool clutchDown = engine->engineState.clutchDownState;
+		bool clutchUp   = engine->engineState.clutchUpState != 0;
+
+		// Clutch disengaged means drivetrain is disconnected — ratio is meaningless
+		if ((hasClutchDown && clutchDown) || (hasClutchUp && !clutchUp)) {
+			m_gearboxRatio = 0;
+			m_currentGear  = 0;
+			m_slipPercent  = 0;
+			m_slipValid    = false;
+			return;
+		}
+	}
+
 	float ratio = computeGearboxRatio();
 	m_gearboxRatio = ratio;
 
 	m_currentGear = determineGearFromRatio(ratio);
+
+	computeSlip();
 }
 
 size_t GearDetector::determineGearFromRatio(float ratio) const {
@@ -107,8 +126,14 @@ size_t GearDetector::determineGearFromRatio(float ratio) const {
 }
 
 float GearDetector::getDriveshaftRpm() const {
-	auto vssKph = Sensor::getOrZero(SensorType::VehicleSpeed);
+	if (engineConfiguration->gearDetectionUseOutputShaftSpeed) {
+		// OSS is measured at the transmission output - it already *is* driveshaft RPM, no
+		// conversion needed. Returns invalid/0 if OSS isn't actually configured/registered.
+		return Sensor::getOrZero(SensorType::OutputShaftSpeed);
+	}
 
+	// Preserve the existing main-VSS path and its automatic input-shaft RPM selection.
+	auto vssKph = Sensor::getOrZero(SensorType::VehicleSpeed);
 	if (vssKph < 3) {
 		// Vehicle too slow to determine gearbox ratio, avoid div/0
 		return 0;
@@ -132,7 +157,12 @@ float GearDetector::computeGearboxRatio() const {
 	}
 
 	float engineRpm;
-	if (Sensor::hasSensor(SensorType::InputShaftSpeed)) {
+	if (engineConfiguration->gearDetectionUseOutputShaftSpeed) {
+		// Explicit choice, only meaningful when paired with Output Shaft Speed.
+		engineRpm = engineConfiguration->gearDetectionRpmSourceIsInputShaftSpeed
+				? Sensor::getOrZero(SensorType::InputShaftSpeed)
+				: Sensor::getOrZero(SensorType::Rpm);
+	} else if (Sensor::hasSensor(SensorType::InputShaftSpeed)) {
 		engineRpm = Sensor::getOrZero(SensorType::InputShaftSpeed);
 	} else {
 		engineRpm = Sensor::getOrZero(SensorType::Rpm);
@@ -154,6 +184,55 @@ float GearDetector::getGearboxRatio() const {
 	return m_gearboxRatio;
 }
 
+float GearDetector::getSlipPercent() const {
+	return m_slipPercent;
+}
+
+bool GearDetector::isSlipValid() const {
+	return m_slipValid;
+}
+
+void GearDetector::computeSlip() {
+	m_slipPercent = 0;
+	m_slipValid = false;
+
+	if (!engineConfiguration->transmissionSlipDetectionEnabled || m_currentGear == 0 || !std::isfinite(m_gearboxRatio)) {
+		return;
+	}
+
+	// This checkout retains the legacy VSS providers, which do not identify their physical
+	// source. Only the explicit OSS path guarantees an output-shaft reference for slip.
+	if (!engineConfiguration->gearDetectionUseOutputShaftSpeed) {
+		return;
+	}
+
+	// Below this speed the driveshaft-RPM ratio math is unstable (near-0 denominator), same
+	// class of issue as getDriveshaftRpm()'s hardcoded <3kph floor on the wheel-speed path, but
+	// user-configurable here since the OSS-direct path has no such floor of its own.
+	auto vss = Sensor::get(SensorType::VehicleSpeed);
+	if (!vss.Valid || !std::isfinite(vss.Value) || vss.Value < engineConfiguration->transmissionSlipMinVss) {
+		return;
+	}
+
+	auto rpmSourceType = engineConfiguration->transmissionSlipRpmSourceIsInputShaftSpeed
+			? SensorType::InputShaftSpeed
+			: SensorType::Rpm;
+
+	auto actualRpm = Sensor::get(rpmSourceType);
+	if (!actualRpm.Valid || !std::isfinite(actualRpm.Value) || actualRpm.Value < 0) {
+		return;
+	}
+
+	// Ideal (no-slip) RPM for the Detected Gear given the current driveshaft speed.
+	float expectedRpm = getRpmInGear(m_currentGear);
+	if (!std::isfinite(expectedRpm) || expectedRpm <= 0) {
+		return;
+	}
+
+	m_slipPercent = 100.0f * (actualRpm.Value / expectedRpm - 1.0f);
+	m_slipValid = true;
+}
+
 SensorResult GearDetector::get() const {
 	return m_currentGear;
 }
@@ -162,4 +241,5 @@ void GearDetector::showInfo(const char* sensorName) const {
 	efiPrintf("Sensor \"%s\" is gear detector.", sensorName);
 	efiPrintf("    Gearbox ratio: %.3f", m_gearboxRatio);
 	efiPrintf("    Detected gear: %d", m_currentGear);
+	efiPrintf("    Slip: %.1f%% (%s)", m_slipPercent, m_slipValid ? "valid" : "invalid");
 }
