@@ -2,6 +2,10 @@
 
 [Back to the ECU change index](../alphax-beta-vs-master.md) · [Fork branch](https://github.com/ElDominio/rusefi/tree/alphax-beta)
 
+## Master progress — still open
+
+Reviewed at [`359a64d8a0a`](https://github.com/rusefi/rusefi/commit/359a64d8a0a0b49730c94088e5986aa519472114). [Core state-aware DFCO](DONE-51-state-aware-dfco.md) is now upstream, including shift inhibition, but the [upstream DFCO controller](https://github.com/rusefi/rusefi/blob/359a64d8a0a0b49730c94088e5986aa519472114/firmware/controllers/algo/fuel/dfco.cpp) has no Pops-and-bangs inhibition. The P&B state/actuator behavior described below, including keeping fuel enabled while P&B is active and restoring normal DFCO afterward, remains open. Completion of report 51 does not complete this integration.
+
 ## Executive summary
 
 An overrun-driven state machine supplies delay/duration, RPM/temperature gates, optional Sport/cutout permission, an absolute timing override, VE override, additional air and optional periodic spark-cut windows. It inhibits DFCO while active. The branch's normal ignition path returns the P&B timing override early when eligible.

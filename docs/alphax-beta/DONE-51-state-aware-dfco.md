@@ -1,10 +1,24 @@
-# 51 — State-aware DFCO
+# DONE — 51 — State-aware DFCO
 
 [Back to the ECU change index](../alphax-beta-vs-master.md) · [Fork branch](https://github.com/ElDominio/rusefi/tree/alphax-beta)
 
+## Upstream completion
+
+**Core state-aware DFCO is DONE on upstream master**, reviewed at adoption commit [`359a64d8a0a`](https://github.com/rusefi/rusefi/commit/359a64d8a0a0b49730c94088e5986aa519472114). The [upstream controller](https://github.com/rusefi/rusefi/blob/359a64d8a0a0b49730c94088e5986aa519472114/firmware/controllers/algo/fuel/dfco.cpp) implements Overrun/Decel/Both selection, common eligibility guards, optional overrun gear gating, state-machine deceleration and absent-speed fallback, and inhibition during either shift direction. **The fork's additional Pops-and-bangs inhibition remains open under [report 47](47-pops-and-bangs.md)**; this completion does not claim that mode or its fuel-cut integration is present.
+
+Every mode honors the feature enable, VE-tuning and Lua inhibition, valid warm coolant, and MAP validity/hysteresis when a MAP sensor exists. Overrun retains throttle/RPM/speed thresholds and RPM/speed hysteresis, optionally requiring `DetectedGear > 0`; invalid, unknown, neutral and nonpositive gear readings then prevent that path. These fuel-cut guards remain independent of the [state machine's physical Overrun classification](https://github.com/rusefi/rusefi/blob/359a64d8a0a0b49730c94088e5986aa519472114/firmware/controllers/modules/engine_state_machine/engine_state_machine.cpp).
+
+Decel requires an enabled state machine and accepts its latest Decelerating flag. That classification requires valid speed and detected neutral gear, subject to primary-state priority. With no configured speed sensor, a positive threshold instead permits `getLastRpmRate() < -smDecelRateThreshold`; a configured but failed speed sensor does not permit this fallback. The fallback does not change the published primary state. Decel is independent of the overrun throttle/RPM/speed/gear gates, and Both accepts either path.
+
+Enabled upshift/downshift flags suppress both paths and restart the fuel-cut entry delay. Disabling the state machine immediately removes its Decel request and shift inhibition, even before the next slow callback clears the flags. Existing injection cut, timing-retard, trim-recovery and `dfcoActive` telemetry paths remain in use; the fork-only `dfcoCutActive` field is not required for this completion.
+
+The [enum](https://github.com/rusefi/rusefi/blob/359a64d8a0a0b49730c94088e5986aa519472114/firmware/controllers/algo/rusefi_enums.h) makes zero select Overrun. The [main-page schema](https://github.com/rusefi/rusefi/blob/359a64d8a0a0b49730c94088e5986aa519472114/firmware/integration/rusefi_config.txt) and [tuning controls](https://github.com/rusefi/rusefi/blob/359a64d8a0a0b49730c94088e5986aa519472114/firmware/tunerstudio/tunerstudio.template.ini) expose modes, gear gating and state-machine rate settings. Zero defaults preserve overrun without a gear requirement or an enabled state machine; master does not adopt the fork's custom-page layout.
+
+The adoption commit changes **91 maintained firmware C/C++ lines: +70 / −21 across three files**: `dfco.cpp` (+58/−20), `dfco.h` (+5/−1) and `rusefi_enums.h` (+7/−0). Schema, tuning UI, documentation and tests are excluded. [Upstream fuel-cut tests](https://github.com/rusefi/rusefi/blob/359a64d8a0a0b49730c94088e5986aa519472114/unit_tests/tests/ignition_injection/test_fuelCut.cpp) separately change by +279/−1 and cover mode combinations, defaults, invalid gear, shared guards and MAP hysteresis, physical-state independence, absent versus failed speed, the strict RPM-rate threshold, shift suppression/delayed re-entry and actual injection behavior. Tests were inspected, not rerun. Historical fork LOC below is unchanged.
+
 ## Executive summary
 
-Master's overrun fuel cut becomes selectable Overrun, Decel or Both. Common guards remain separate from physical overrun detection, overrun can require a detected gear, and Decel uses state-machine deceleration with an RPM-rate fallback when vehicle speed is absent. P&B and active up/down shifts suppress the cut.
+The fork extends overrun fuel cut with selectable Overrun, Decel or Both modes. Common guards remain separate from physical overrun detection, overrun can require a detected gear, and Decel uses state-machine deceleration with an RPM-rate fallback when vehicle speed is absent. Active up/down shifts suppress the cut. This core behavior is now upstream; the fork's additional P&B suppression remains part of open report 47.
 
 ## ECU logic and behavior
 
@@ -12,7 +26,7 @@ Master's overrun fuel cut becomes selectable Overrun, Decel or Both. Common guar
 2. Select Overrun, Decel or Both mode.
 3. Optionally require a detected engaged gear for the overrun path.
 4. Use the state-machine deceleration classification, including an RPM-rate fallback without vehicle speed.
-5. Suppress the cut during P&B and active up/down shifts.
+5. Suppress the cut during active up/down shifts. The fork additionally suppresses it during P&B, whose upstream integration remains tracked in [report 47](47-pops-and-bangs.md).
 
 **Illustrative behavior:** A clutch-assisted shift can inhibit fuel cut even when throttle is closed, avoiding a conflict with the shift-assist torque request.
 
