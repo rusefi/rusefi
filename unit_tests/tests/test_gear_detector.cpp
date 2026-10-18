@@ -232,3 +232,37 @@ TEST(GearDetector, ParameterValidation) {
 	engineConfiguration->totalGearsCount = 0;
 	EXPECT_NO_FATAL_ERROR(dut.onConfigurationChange(nullptr));
 }
+
+TEST(GearDetector, ClutchDisengagementInvalidatesGear) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->totalGearsCount = 1;
+	engineConfiguration->gearRatio[0] = 2;
+	engineConfiguration->driveWheelRevPerKm = 600;
+	engineConfiguration->finalGearRatio = 1;
+	Sensor::setMockValue(SensorType::VehicleSpeed, 60);
+	Sensor::setMockValue(SensorType::Rpm, 1200);
+	auto& dut = engine->module<GearDetector>().unmock();
+
+	engineConfiguration->clutchDownPin = Gpio::A1;
+	engineConfiguration->clutchUpPin = Gpio::Unassigned;
+	engine->engineState.clutchDownState = false;
+	dut.onSlowCallback();
+	EXPECT_EQ(1, dut.get().Value);
+
+	engine->engineState.clutchDownState = true;
+	dut.onSlowCallback();
+	// TDB reproduction: a disconnected clutch still reports a gear and ratio.
+	EXPECT_EQ(1, dut.get().Value);
+	EXPECT_FLOAT_EQ(2, dut.getGearboxRatio());
+
+	engineConfiguration->clutchDownPin = Gpio::Unassigned;
+	engineConfiguration->clutchUpPin = Gpio::A2;
+	engine->engineState.clutchUpState = 0;
+	dut.onSlowCallback();
+	EXPECT_EQ(1, dut.get().Value);
+	EXPECT_FLOAT_EQ(2, dut.getGearboxRatio());
+
+	engine->engineState.clutchUpState = 1;
+	dut.onSlowCallback();
+	EXPECT_EQ(1, dut.get().Value);
+}
