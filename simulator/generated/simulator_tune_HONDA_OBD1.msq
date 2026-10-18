@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="15828">
+    <page number="0" size="15856">
         <constant name="accelEnrichmentMode">"MS Adder"</constant>
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
@@ -1347,6 +1347,8 @@
          0.0
 </constant>
         <constant name="gearControllerMode">"None"</constant>
+        <constant name="gearDetectionRpmSourceIsInputShaftSpeed">"Engine RPM"</constant>
+        <constant name="gearDetectionUseOutputShaftSpeed">"Main Vehicle Speed"</constant>
         <constant digits="2" name="gearRatio1" units="ratio">0.0</constant>
         <constant digits="2" name="gearRatio10" units="ratio">0.0</constant>
         <constant digits="2" name="gearRatio2" units="ratio">0.0</constant>
@@ -3192,6 +3194,9 @@
         <constant digits="1" name="oilTempSensor_tempC_1" units="{bitStringValue(unitsLabels, useMetricOnInterface)}">0.0</constant>
         <constant digits="1" name="oilTempSensor_tempC_2" units="{bitStringValue(unitsLabels, useMetricOnInterface)}">0.0</constant>
         <constant digits="1" name="oilTempSensor_tempC_3" units="{bitStringValue(unitsLabels, useMetricOnInterface)}">0.0</constant>
+        <constant digits="0" name="ossFilterReciprocal" units="">3</constant>
+        <constant name="outputShaftSpeedSensorPin">"NONE"</constant>
+        <constant digits="0" name="outputShaftSpeedSensorTeeth" units="count">1</constant>
         <constant name="overrideTriggerGaps">"no"</constant>
         <constant name="overrideVvtTriggerGaps">"no"</constant>
         <constant name="pauseEtbControl">"no"</constant>
@@ -3306,6 +3311,16 @@
         <constant digits="0" name="referenceTorqueForGenerator" units="Nm">250</constant>
         <constant digits="0" name="referenceVeForGenerator" units="">75</constant>
         <constant name="rethrowHardFault">"no"</constant>
+        <constant name="rollingLaunchActivatePin">"NONE"</constant>
+        <constant name="rollingLaunchActivatePinMode">"DEFAULT"</constant>
+        <constant name="rollingLaunchEnabled">"disabled"</constant>
+        <constant digits="0" name="rollingLaunchFuelAdderPercent" units="%">5</constant>
+        <constant digits="0" name="rollingLaunchMaxRpm" units="rpm">7000</constant>
+        <constant digits="0" name="rollingLaunchMinArmRpm" units="rpm">2500</constant>
+        <constant digits="0" name="rollingLaunchMinVss" units="{bitStringValue(velocityUnitsLabels, useMetricOnInterface)}">10</constant>
+        <constant digits="1" name="rollingLaunchRampOutTime" units="s">1.0</constant>
+        <constant digits="0" name="rollingLaunchRpmWindow" units="rpm">500</constant>
+        <constant digits="0" name="rollingLaunchTimingRetard" units="deg">10</constant>
         <constant digits="0" name="rotationalIdleController_accumulators1_acc_adder" units="">0</constant>
         <constant digits="0" name="rotationalIdleController_accumulators1_acc_max" units="">0</constant>
         <constant digits="0" name="rotationalIdleController_accumulators1_acc_offset" units="">0</constant>
@@ -4588,6 +4603,9 @@
          7.0 9.0 10.0 12.0
 </constant>
         <constant name="transmissionControllerMode">"None"</constant>
+        <constant name="transmissionSlipDetectionEnabled">"disabled"</constant>
+        <constant digits="0" name="transmissionSlipMinVss" units="{bitStringValue(velocityUnitsLabels, useMetricOnInterface)}">5</constant>
+        <constant name="transmissionSlipRpmSourceIsInputShaftSpeed">"Engine RPM"</constant>
         <constant digits="0" name="trigger_customSkippedToothCount" units="number">0</constant>
         <constant digits="0" name="trigger_customTotalToothCount" units="number">0</constant>
         <constant name="trigger_type">"12crank/24cam"</constant>
@@ -5222,7 +5240,7 @@
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20261017" nPages="1" signature="rusEFI master.2026.10.18.f407-discovery.1844893270" version="5.0"/>
+    <versionInfo firmwareInfo="20261017" nPages="1" signature="rusEFI master.2026.10.18.f407-discovery.4122779328" version="5.0"/>
     <bibliography author="rusEFI 20261017" writeDate="date"/>
     <settings/>
     <userComments/>
