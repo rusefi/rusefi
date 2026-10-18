@@ -333,3 +333,10 @@ Usages:
     prepend: integration/rusefi_config_shared.txt
     output_name: engine_state_machine
     engineModule: EngineStateMachine
+
+  - name: wot_enrichment_state
+    java: WotEnrichment.java
+    folder: controllers/modules/wot_enrichment
+    prepend: integration/rusefi_config_shared.txt
+    output_name: wot_enrichment
+    engineModule: WotEnrichment

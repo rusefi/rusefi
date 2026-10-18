@@ -1,0 +1,5 @@
+#define WOT_ENRICHMENT_SIZE 8
+
+bit wotEnrichmentEnabled,"enabled","disabled";Add an AFR offset according to continuous time in the Engine State Machine WOT state. Requires Enable Engine State Machine. Negative values richen; positive values lean. Leaving WOT resets the timer and offset.
+float[WOT_ENRICHMENT_SIZE] wotEnrichmentTimeBins;Continuous time in WOT, capped at 30 seconds.;"s", 1, 0, 0, 30, 1
+float[WOT_ENRICHMENT_SIZE] wotEnrichmentAfrAdder;Offset added to the target AFR after the fuel-dependent stoichiometric conversion. This is an AFR change, not a fuel percentage.;"afr", 1, 0, -10, 10, 1

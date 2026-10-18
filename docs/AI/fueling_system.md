@@ -112,6 +112,27 @@ to neutral. Fuel math and trim learning run before the launch-state update in
 the fast callback, so they observe its previous iteration's state. See the
 launch guide for exact gates, thresholds, diagnostics and regression tests.
 
+## Time-based WOT enrichment
+
+`WotEnrichment` runs after `EngineStateMachine` in the slow callback and consumes
+its WOT flag. Both runtime enable settings must be on. Its eight-point curve
+maps continuous WOT time to an AFR offset, with elapsed time capped at 30 seconds.
+The first WOT sample starts at zero. Leaving WOT, disabling either feature,
+stopping the engine, or burning settings clears the timer and correction.
+Defaults are disabled, with a 0..30 second axis and zero offsets.
+
+`FuelComputerBase::getCycleFuel()` applies the offset after the fuel-dependent
+stoichiometric conversion: `AFR = stoich * baseLambda + wotAdder` and
+`fuelMass = airMass / AFR`. It republishes `targetLambda = AFR / stoich`, so
+closed-loop feedback uses the same target. Negative offsets richen; positive
+offsets lean. This is an AFR adjustment, not a percentage of fuel. Corrections
+that produce nonpositive or nonfinite AFR are ignored, retaining the base target.
+
+Tests in `test_wot_enrichment.cpp` cover state-machine integration, timing and
+reset boundaries, curve interpolation, the cap, both signs, flex-fuel stoich,
+published targets and invalid adjusted AFR. The state classifier and its
+separate STFT-region option are documented in [Engine State Machine](engine_state_machine.md).
+
 ## Fuel Consumption Tracking
 
 Downstream of the pipeline, the `TripOdometer` engine module (`firmware/controllers/modules/trip_odometer/`, guarded by `MODULE_ODOMETER` / `EFI_VEHICLE_SPEED`) accounts for fuel actually injected:

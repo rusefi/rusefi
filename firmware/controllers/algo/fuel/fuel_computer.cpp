@@ -25,6 +25,12 @@ mass_t FuelComputerBase::getCycleFuel(mass_t airmass, float rpm, float load) {
 	float stoich = getStoichiometricRatio();
 	float lambda = getTargetLambda(rpm, load);
 	float afr = stoich * lambda;
+	// Time at WOT changes the AFR target, including the published lambda used by STFT.
+	float adjustedAfr = afr + engine->module<WotEnrichment>().unmock().getAfrAdder();
+	if (std::isfinite(adjustedAfr) && adjustedAfr > 0) {
+		afr = adjustedAfr;
+		lambda = afr / stoich;
+	}
 
 	afrTableYAxis = load;
 	targetLambda = lambda;

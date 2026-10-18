@@ -377,3 +377,8 @@ template<>
 const engine_state_machine_state_s* getLiveData(size_t) {
 	return &engine->module<EngineStateMachine>().unmock();
 }
+
+template<>
+const wot_enrichment_state_s* getLiveData(size_t) {
+	return &engine->module<WotEnrichment>().unmock();
+}

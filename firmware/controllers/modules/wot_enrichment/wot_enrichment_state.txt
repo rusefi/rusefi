@@ -1,0 +1,5 @@
+struct_no_prefix wot_enrichment_state_s
+	bit isWotEnrichmentActive;WOT Enrichment: active
+	float wotEnrichmentTimer;WOT Enrichment: time at WOT;"s", 1, 0, 0, 0, 1
+	float wotEnrichmentAfrAdder;WOT Enrichment: AFR adder;"afr", 1, 0, 0, 0, 2
+end_struct
