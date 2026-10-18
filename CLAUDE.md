@@ -14,6 +14,17 @@ After each completed unit of work (a landed feature, a fixed bug, or a finished 
 2. **Fold durable, non-obvious knowledge into this CLAUDE.md**: build/tooling quirks, hardware protocols, architecture invariants, recurring debugging root-causes. Skip anything derivable from the code or git history — CLAUDE.md records what the code cannot say.
 3. **Update user-facing wiki docs**: the rusEFI wiki source may be checked out as a sibling repo at `../rusefi_documentation`. When a change alters user-visible behavior documented there — notably Lua scripting (hooks, `print()` semantics, console Lua tab behavior, console magic strings -> `Lua-Scripting.md`) — edit the matching page in the same unit of work, if that checkout is available. Same source-control rules apply there: git add is allowed; never commit or push, leave those actions for the human.
 
+### Current-state documentation
+
+Describe current behavior, configuration, constraints and usage in present tense
+in ordinary documentation, including wiki pages, `docs/AI/` and durable guidance.
+Do not include commit hashes, revision footers, local checkout folder names,
+machine-specific paths, import/review chronology or narratives about earlier
+implementations. Git records history. Use repository-relative source paths,
+symbols, settings and test names when they help explain the current behavior.
+Keep historical analysis in explicitly requested historical reports, not in
+current-state documentation.
+
 ## Build Commands
 
 Default to building with 12 threads unless otherwise specified (-j12 etc).
@@ -214,7 +225,7 @@ For detailed technical documentation intended for AI assistants, see:
 - [Ignition System](docs/AI/ignition_system.md) - Timing calculation and spark scheduling.
 - [Launch Control](docs/AI/launch_control.md) - Activation modes, RPM arming latch, pre-launch timing/skip ramps, full cuts, shared-clutch flat shift, fuel-trim learning and diagnostic limitations.
 - [Rev Limiters](docs/AI/rev_limiters.md) - Constant/CLT hard limits, strict hysteresis, timing/fuel ramps, independent ETB taper, fault ceilings, cut priority and diagnostics.
-- [Engine State Machine](docs/AI/engine_state_machine.md) - AlphaX operating-state classification, shift recognition and optional STFT region selection.
+- [Engine State Machine](docs/AI/engine_state_machine.md) - Operating-state classification, shift recognition and optional STFT region selection.
 - [Engine Protection](docs/AI/protection_system.md) - LimpManager and cut logic.
 - [Sensor Framework](docs/AI/sensors_system.md) - Sensor registry, conversion pipeline, redundancy and mocking.
 - [Kick-Start Cranking](docs/AI/kick-start.md) - kickStartCranking mode: both coils charged off the trigger edge and fired a dwell-time later below 800 RPM, normal spark suppressed via ClearReason::KickStart.

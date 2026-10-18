@@ -29,15 +29,18 @@ public:
 	using interface_t = EngineStateMachine;
 	void setDefaultConfiguration() override;
 	void onSlowCallback() override;
+	void onEngineStop() override;
+	void onConfigurationChange(engine_configuration_s const* previousConfig) override;
 	EngineStateMachineState getCurrentState() const;
 	bool isEnabled() const;
 	bool isTransmissionEngaged() const;
 	float getLastRpmRate() const { return m_lastRpmRate; }
 
 private:
-	EngineStateMachineState determineState(float rpm, float tps, float vss);
-	void updateShiftDetection(float tps, float rpm, float vss, efitimems_t nowMs);
-	void updateShiftAccumulator(float rpm, float vss, efitimems_t nowMs);
+	void reset();
+	EngineStateMachineState determineState(float rpm, float tps, float vss, bool vssValid);
+	void updateShiftDetection(float vss, bool vssValid, efitimems_t nowMs);
+	void updateShiftAccumulator(float rpm, float vss, bool vssValid, efitimems_t nowMs);
 	bool evaluateShiftDirection(bool isUpshift, float currentVss);
 	float recordRpmSampleAndComputeRate(float rpm, efitimems_t nowMs);
 	void updateTempOverlay();
@@ -52,6 +55,7 @@ private:
 	efitimems_t m_shiftWindowOpenMs = 0;
 	bool m_prevClutchUp = false;
 	bool m_prevClutchDown = false;
+	bool m_clutchHasSample = false;
 	bool m_shiftLatched = false;
 	bool m_shiftLatchedIsUpshift = false;
 	efitimems_t m_shiftLatchUntilMs = 0;
@@ -59,6 +63,7 @@ private:
 	efitimems_t m_accumulatorLastMs = 0;
 	float m_accumulatorLastRpm = 0;
 	float m_accumulatorLastVss = 0;
+	bool m_accumulatorHasSample = false;
 	// Held between cadence updates; state classification reads the previous callback's rate.
 	float m_lastRpmRate = 0;
 	efitimems_t m_rpmRateAnchorMs = 0;

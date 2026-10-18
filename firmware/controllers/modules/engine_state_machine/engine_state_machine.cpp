@@ -26,6 +26,43 @@ void EngineStateMachine::setDefaultConfiguration() {
 	engineConfiguration->smHotTempThreshold = 100;
 }
 
+void EngineStateMachine::reset() {
+	static_cast<engine_state_machine_state_s&>(*this) = {};
+	engineSmEnabled = isEnabled();
+	engineSmIsOff = true;
+	m_currentState = EngineStateMachineState::Off;
+	m_transientHoldTimer.init();
+	m_accelHoldTimer.init();
+	m_accelStateTimer.init();
+	m_decelStateTimer.init();
+	m_shiftWindowOpen = false;
+	m_shiftIsUpshift = false;
+	m_shiftWindowOpenMs = 0;
+	m_prevClutchUp = false;
+	m_prevClutchDown = false;
+	m_clutchHasSample = false;
+	m_shiftLatched = false;
+	m_shiftLatchedIsUpshift = false;
+	m_shiftLatchUntilMs = 0;
+	m_shiftAccumulator = 0;
+	m_accumulatorLastMs = 0;
+	m_accumulatorLastRpm = 0;
+	m_accumulatorLastVss = 0;
+	m_accumulatorHasSample = false;
+	m_lastRpmRate = 0;
+	m_rpmRateAnchorMs = 0;
+	m_rpmRateAnchorRpm = 0;
+	m_rpmRateHasAnchor = false;
+}
+
+void EngineStateMachine::onEngineStop() {
+	reset();
+}
+
+void EngineStateMachine::onConfigurationChange(engine_configuration_s const*) {
+	reset();
+}
+
 bool EngineStateMachine::isEnabled() const {
 	return engineConfiguration->useEngineStateMachine;
 }
@@ -35,11 +72,17 @@ EngineStateMachineState EngineStateMachine::getCurrentState() const {
 }
 
 void EngineStateMachine::onSlowCallback() {
-	engineSmEnabled = isEnabled();
-
 	if (!isEnabled()) {
+		reset();
 		return;
 	}
+
+	// Do not carry timers, rate samples or shift windows through a stop/restart.
+	bool running = engine->rpmCalculator.isRunning();
+	if (!running) {
+		reset();
+	}
+	engineSmEnabled = true;
 
 	efitimems_t nowMs = getTimeNowMs();
 	float rpm = engine->rpmCalculator.getCachedRpm();
@@ -47,10 +90,12 @@ void EngineStateMachine::onSlowCallback() {
 	auto tpsSensor = Sensor::get(SensorType::DriverThrottleIntent);
 	float tps = tpsSensor ? tpsSensor.Value : 0.0f;
 
-	float vss = Sensor::getOrZero(SensorType::VehicleSpeed);
+	auto vssSensor = Sensor::get(SensorType::VehicleSpeed);
+	float vss = vssSensor.value_or(0);
+	bool vssValid = vssSensor.Valid;
 
 	// Primary state determination (engine lifecycle, throttle position)
-	EngineStateMachineState newState = determineState(rpm, tps, vss);
+	EngineStateMachineState newState = determineState(rpm, tps, vss, vssValid);
 	m_currentState = newState;
 
 	uint8_t stateNum = static_cast<uint8_t>(newState);
@@ -68,6 +113,11 @@ void EngineStateMachine::onSlowCallback() {
 	engineSmIsAccelerating = (newState == EngineStateMachineState::Accelerating);
 	engineSmIsDecelerating = (newState == EngineStateMachineState::Decelerating);
 
+	if (!running) {
+		updateTempOverlay();
+		return;
+	}
+
 #if EFI_LAUNCH_CONTROL
 	// Overlay: Launch Control — forward directly from LaunchControlBase
 	engineSmIsLaunchControl = engine->launchController.isLaunchCondition;
@@ -82,14 +132,17 @@ void EngineStateMachine::onSlowCallback() {
 	bool flatShiftActive = false;
 #endif
 
+	// RPM classification must continue without shift switches and during a flat shift.
+	updateShiftAccumulator(rpm, vss, vssValid, nowMs);
 	if (flatShiftActive) {
 		engineSmIsUpshifting   = true;
 		engineSmIsDownshifting = false;
 		// Abort any open clutch-detection window/latch so it doesn't fight the flat-shift signal
 		m_shiftWindowOpen = false;
 		m_shiftLatched    = false;
+		m_clutchHasSample = false;
 	} else {
-		updateShiftDetection(tps, rpm, vss, nowMs);
+		updateShiftDetection(vss, vssValid, nowMs);
 	}
 
 	updateTempOverlay();
@@ -119,7 +172,7 @@ void EngineStateMachine::updateTempOverlay() {
 	engineSmIsOperating = !engineSmIsCold && !engineSmIsHot;
 }
 
-EngineStateMachineState EngineStateMachine::determineState(float rpm, float tps, float vss) {
+EngineStateMachineState EngineStateMachine::determineState(float rpm, float tps, float vss, bool vssValid) {
 	// Priority 1: engine not spinning
 	if (engine->rpmCalculator.isStopped()) {
 		return EngineStateMachineState::Off;
@@ -187,7 +240,7 @@ EngineStateMachineState EngineStateMachine::determineState(float rpm, float tps,
 		// so we fall through to let the idle-controller path classify it as Coasting/Overrun.
 		if (decelThr > 0 && m_lastRpmRate < -static_cast<float>(decelThr)) {
 			auto gearResult = Sensor::get(SensorType::DetectedGear);
-			if (Sensor::hasSensor(SensorType::VehicleSpeed) && gearResult.Valid && gearResult.Value == 0) {
+			if (vssValid && gearResult.Valid && gearResult.Value == 0) {
 				return EngineStateMachineState::Decelerating;
 			}
 		}
@@ -236,14 +289,22 @@ EngineStateMachineState EngineStateMachine::determineState(float rpm, float tps,
 bool EngineStateMachine::isTransmissionEngaged() const {
 	sm_clutch_switch_e upSw = engineConfiguration->smUpshiftClutchSwitch;
 	sm_clutch_switch_e dnSw = engineConfiguration->smDownshiftClutchSwitch;
+	bool secondSwitch = engineConfiguration->smSecondClutchSwitchAvailable
+		&& (upSw != sm_clutch_switch_e::None || dnSw != sm_clutch_switch_e::None);
+	// Physical inputs work independently of shift-direction selection. Selections
+	// also describe virtual (Lua) switches that have no hardware pin assigned.
+	bool hasClutchDown = isBrainPinValid(engineConfiguration->clutchDownPin) || secondSwitch
+		|| upSw == sm_clutch_switch_e::ClutchDown || dnSw == sm_clutch_switch_e::ClutchDown;
+	bool hasClutchUp = isBrainPinValid(engineConfiguration->clutchUpPin) || secondSwitch
+		|| upSw == sm_clutch_switch_e::ClutchUp || dnSw == sm_clutch_switch_e::ClutchUp;
 
 	// Clutch-Down reads true when the pedal is pressed (clutch disengaged).
-	if (upSw == sm_clutch_switch_e::ClutchDown || dnSw == sm_clutch_switch_e::ClutchDown) {
-		return !engine->engineState.clutchDownState;
+	if (hasClutchDown && engine->engineState.clutchDownState) {
+		return false;
 	}
 	// Clutch-Up reads true when the pedal is at rest (clutch engaged).
-	if (upSw == sm_clutch_switch_e::ClutchUp || dnSw == sm_clutch_switch_e::ClutchUp) {
-		return engine->engineState.clutchUpState != 0;
+	if (hasClutchUp && engine->engineState.clutchUpState == 0) {
+		return false;
 	}
 
 	return true;
@@ -280,8 +341,9 @@ float EngineStateMachine::recordRpmSampleAndComputeRate(float rpm, efitimems_t n
 	return rate;
 }
 
-void EngineStateMachine::updateShiftAccumulator(float rpm, float vss, efitimems_t nowMs) {
-	efitimems_t dtMs = nowMs - m_accumulatorLastMs;
+void EngineStateMachine::updateShiftAccumulator(float rpm, float vss, bool vssValid, efitimems_t nowMs) {
+	efitimems_t dtMs = m_accumulatorHasSample ? nowMs - m_accumulatorLastMs : 0;
+	m_accumulatorHasSample = true;
 	float prevVss = m_accumulatorLastVss;
 	m_accumulatorLastMs  = nowMs;
 	m_accumulatorLastRpm = rpm;
@@ -292,8 +354,19 @@ void EngineStateMachine::updateShiftAccumulator(float rpm, float vss, efitimems_
 	m_lastRpmRate = recordRpmSampleAndComputeRate(rpm, nowMs);
 	engineSmRpmRate = m_lastRpmRate; // live-data visibility
 
+	// Missing VSS is not a sudden stop. The first recovered sample starts a new interval.
+	bool missingVss = engineConfiguration->smShiftDetectionMode == sm_shift_detection_mode_e::VssRate && !vssValid;
+	bool noShiftSwitches = engineConfiguration->smUpshiftClutchSwitch == sm_clutch_switch_e::None
+		&& engineConfiguration->smDownshiftClutchSwitch == sm_clutch_switch_e::None;
+	if (missingVss || noShiftSwitches) {
+		m_shiftAccumulator = 0;
+		engineSmShiftAccumulator = 0;
+		m_accumulatorHasSample = false;
+		return;
+	}
+
 	// Accumulator is frozen while the shift window is open (clutch out).
-	// dtMs == 0 guard covers the first-ever call where we have no previous data.
+	// The first sample establishes the anchor; same-time callbacks add no evidence.
 	if (m_shiftWindowOpen || dtMs == 0) {
 		engineSmShiftAccumulator = m_shiftAccumulator;
 		return;
@@ -325,7 +398,7 @@ void EngineStateMachine::updateShiftAccumulator(float rpm, float vss, efitimems_
 	};
 
 	if (m_currentState == EngineStateMachineState::Idle ||
-	    m_currentState == EngineStateMachineState::LaunchControl) {
+	    engineSmIsLaunchControl || engineSmIsTorqueReduction) {
 		// Idle oscillations and launch-RPM hold are not shift evidence — decay only.
 		decay();
 		engineSmShiftAccumulator = m_shiftAccumulator;
@@ -401,13 +474,13 @@ void EngineStateMachine::updateShiftAccumulator(float rpm, float vss, efitimems_
 	engineSmShiftAccumulator = m_shiftAccumulator;
 }
 
-void EngineStateMachine::updateShiftDetection(float /*tps*/, float rpm, float vss, efitimems_t nowMs) {
-	// VSS Rate mode requires VSS to have a meaningful signal — disable shift detection
-	// entirely in that mode when no VSS sensor is present. RPM Rate mode can work without
+void EngineStateMachine::updateShiftDetection(float vss, bool vssValid, efitimems_t nowMs) {
+	// VSS Rate mode requires a valid sample — disable shift detection
+	// entirely in that mode when VSS is unavailable. RPM Rate mode can work without
 	// VSS since it only needs engine RPM, so it falls through normally.
-	bool vssPresent = Sensor::hasSensor(SensorType::VehicleSpeed);
-	if (!vssPresent && engineConfiguration->smShiftDetectionMode == sm_shift_detection_mode_e::VssRate) {
-		updateShiftAccumulator(rpm, vss, nowMs);
+	if (!vssValid && engineConfiguration->smShiftDetectionMode == sm_shift_detection_mode_e::VssRate) {
+		m_shiftWindowOpen = false;
+		m_clutchHasSample = false;
 		engineSmIsUpshifting   = false;
 		engineSmIsDownshifting = false;
 		m_shiftLatched         = false;
@@ -425,15 +498,21 @@ void EngineStateMachine::updateShiftDetection(float /*tps*/, float rpm, float vs
 
 	// No direction configured → disable shift detection
 	if (upSw == sm_clutch_switch_e::None && dnSw == sm_clutch_switch_e::None) {
+		m_shiftWindowOpen = false;
+		m_clutchHasSample = false;
 		engineSmIsUpshifting   = false;
 		engineSmIsDownshifting = false;
 		m_shiftLatched         = false;
 		return;
 	}
 
-	// Update the direction accumulator. This runs every tick; the accumulator itself
-	// only advances while the window is closed (clutch engaged).
-	updateShiftAccumulator(rpm, vss, nowMs);
+	// A reset or a gap in detection must not turn a held pedal into a new press.
+	// Establish the baseline from the first usable sample, after switch inputs update.
+	if (!m_clutchHasSample) {
+		m_prevClutchUp = clutchUpActive;
+		m_prevClutchDown = clutchDownActive;
+		m_clutchHasSample = true;
+	}
 
 	// Raw physical edges, independent of which direction (if any) a switch is assigned to, so a
 	// switch can be consulted even when it isn't the one a given direction is configured with.

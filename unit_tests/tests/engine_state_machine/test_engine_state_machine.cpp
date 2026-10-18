@@ -1404,8 +1404,8 @@ TEST(EngineStateMachine, tempOverlay_exactlyAtColdThreshold_isNotCold) {
 	EXPECT_TRUE(sm.engineSmIsOperating);
 }
 
-// Passing reproductions of source defects; expectations change in the subsequent fix.
-TEST(EngineStateMachineRegression, KnownBugDisableRetainsWot) {
+// These expectations exercise the fixes to the defects reproduced in 96175a70798.
+TEST(EngineStateMachineRegression, DisableClearsWot) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	setupSmConfig();
 	enterRunning(3000, 95);
@@ -1413,29 +1413,32 @@ TEST(EngineStateMachineRegression, KnownBugDisableRetainsWot) {
 	engineConfiguration->useEngineStateMachine = false;
 	getSm().onSlowCallback();
 	EXPECT_FALSE(getSm().engineSmEnabled);
-	EXPECT_TRUE(getSm().engineSmIsWot); // BAD: stale WOT survives disabling.
+	EXPECT_FALSE(getSm().engineSmIsWot);
+	EXPECT_EQ(getSm().getCurrentState(), EngineStateMachineState::Off);
 }
 
-TEST(EngineStateMachineRegression, KnownBugEngineStopRetainsWot) {
+TEST(EngineStateMachineRegression, EngineStopClearsWot) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	setupSmConfig();
 	enterRunning(3000, 95);
 	ASSERT_TRUE(getSm().engineSmIsWot);
 	engine->rpmCalculator.setRpmValue(0);
 	getSm().onEngineStop();
-	EXPECT_TRUE(getSm().engineSmIsWot); // BAD: stale WOT survives stopping.
+	EXPECT_FALSE(getSm().engineSmIsWot);
+	EXPECT_EQ(getSm().getCurrentState(), EngineStateMachineState::Off);
 }
 
-TEST(EngineStateMachineRegression, KnownBugBurnRetainsWot) {
+TEST(EngineStateMachineRegression, BurnClearsWot) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	setupSmConfig();
 	enterRunning(3000, 95);
 	ASSERT_TRUE(getSm().engineSmIsWot);
 	getSm().onConfigurationChange(nullptr);
-	EXPECT_TRUE(getSm().engineSmIsWot); // BAD: stale WOT survives a burn.
+	EXPECT_FALSE(getSm().engineSmIsWot);
+	EXPECT_EQ(getSm().getCurrentState(), EngineStateMachineState::Off);
 }
 
-TEST(EngineStateMachineRegression, KnownBugRateDetectionRequiresClutchSwitch) {
+TEST(EngineStateMachineRegression, RateDetectionWithoutClutchSwitch) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	setupSmConfig();
 	setupAccumulatorConfig();
@@ -1444,11 +1447,19 @@ TEST(EngineStateMachineRegression, KnownBugRateDetectionRequiresClutchSwitch) {
 	ON_CALL(idle, getCurrentPhase()).WillByDefault(Return(IIdleController::Phase::Running));
 	enterRunning();
 	seedRampedRpm(2000, 100, 20, 50);
-	EXPECT_FLOAT_EQ(getSm().engineSmRpmRate, 0); // BAD: rate sampling depends on shift switches.
-	EXPECT_FALSE(getSm().engineSmIsAccelerating);
+	EXPECT_NEAR(getSm().engineSmRpmRate, 2000, 0.1f);
+	EXPECT_TRUE(getSm().engineSmIsAccelerating);
+	EXPECT_FLOAT_EQ(getSm().engineSmShiftAccumulator, 0);
+
+	engineConfiguration->torqueReductionEnabled = true;
+	engine->shiftTorqueReductionController.isFlatShiftConditionSatisfied = true;
+	seedRampedRpm(4000, 200, 10, 50);
+	EXPECT_TRUE(getSm().engineSmIsUpshifting);
+	EXPECT_NEAR(getSm().engineSmRpmRate, 4000, 0.1f);
+	EXPECT_FLOAT_EQ(getSm().engineSmShiftAccumulator, 0);
 }
 
-TEST(EngineStateMachineRegression, KnownBugLaunchAccumulatesShiftEvidence) {
+TEST(EngineStateMachineRegression, LaunchDoesNotAccumulateShiftEvidence) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	setupShiftDetectionConfig();
 	MockIdleController idle;
@@ -1458,10 +1469,10 @@ TEST(EngineStateMachineRegression, KnownBugLaunchAccumulatesShiftEvidence) {
 	engine->launchController.isLaunchCondition = true;
 	seedRampedRpm(2000, 100, 20, 50);
 	ASSERT_TRUE(getSm().engineSmIsLaunchControl);
-	EXPECT_GT(getSm().engineSmShiftAccumulator, 0); // BAD: display overlay is not the primary state.
+	EXPECT_FLOAT_EQ(getSm().engineSmShiftAccumulator, 0);
 }
 
-TEST(EngineStateMachineRegression, KnownBugFirstVssSampleCreatesAcceleration) {
+TEST(EngineStateMachineRegression, FirstVssSampleIsNotAcceleration) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	setupVssRateModeConfig();
 	advanceTimeUs(10 * 1000000);
@@ -1469,10 +1480,10 @@ TEST(EngineStateMachineRegression, KnownBugFirstVssSampleCreatesAcceleration) {
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 50);
 	Sensor::setMockValue(SensorType::VehicleSpeed, 40);
 	getSm().onSlowCallback();
-	EXPECT_GT(getSm().engineSmShiftAccumulator, 0); // BAD: startup VSS compared against zero.
+	EXPECT_FLOAT_EQ(getSm().engineSmShiftAccumulator, 0);
 }
 
-TEST(EngineStateMachineRegression, KnownBugInvalidVssCreatesDownshiftEvidence) {
+TEST(EngineStateMachineRegression, InvalidVssDoesNotCreateDownshiftEvidence) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	setupVssRateModeConfig();
 	enterRunning();
@@ -1481,10 +1492,21 @@ TEST(EngineStateMachineRegression, KnownBugInvalidVssCreatesDownshiftEvidence) {
 	Sensor::setInvalidMockValue(SensorType::VehicleSpeed);
 	advanceTimeUs(50000);
 	getSm().onSlowCallback();
-	EXPECT_LT(getSm().engineSmShiftAccumulator, 0); // BAD: failed VSS treated as a sudden stop.
+	EXPECT_FLOAT_EQ(getSm().engineSmShiftAccumulator, 0);
+	EXPECT_FALSE(getSm().engineSmIsDownshifting);
+
+	// A recovered sensor also needs a fresh anchor, not a comparison with zero.
+	Sensor::setMockValue(SensorType::VehicleSpeed, 80);
+	advanceTimeUs(50000);
+	getSm().onSlowCallback();
+	EXPECT_FLOAT_EQ(getSm().engineSmShiftAccumulator, 0);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 81);
+	advanceTimeUs(50000);
+	getSm().onSlowCallback();
+	EXPECT_GT(getSm().engineSmShiftAccumulator, 0);
 }
 
-// Guard against the synthetic clutch edge introduced by the deferred reset implementation.
+// Reset must establish clutch history without synthesizing a press edge.
 TEST(EngineStateMachineRegression, HeldClutchDoesNotCreateFreshShiftAfterBurn) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	setupSmConfig();
@@ -1504,8 +1526,7 @@ TEST(EngineStateMachineRegression, HeldClutchDoesNotCreateFreshShiftAfterBurn) {
 	EXPECT_FALSE(getSm().engineSmIsUpshifting); // No new edge, so the expired shift stays inactive.
 }
 
-// Additional source defects: preserve the bad expectations until their fixes.
-TEST(EngineStateMachineRegression, KnownBugInvalidVssStillQualifiesDecelerating) {
+TEST(EngineStateMachineRegression, InvalidVssDoesNotQualifyDecelerating) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	setupSmConfig();
 	setupAccumulatorConfig();
@@ -1520,10 +1541,15 @@ TEST(EngineStateMachineRegression, KnownBugInvalidVssStillQualifiesDecelerating)
 	enterRunning(4000);
 	seedRampedRpm(4000, -100, 10, 50);
 	EXPECT_LT(getSm().engineSmRpmRate, -500);
-	EXPECT_TRUE(getSm().engineSmIsDecelerating); // BAD: existence is mistaken for valid speed.
+	EXPECT_FALSE(getSm().engineSmIsDecelerating);
+
+	// Valid speed restores classification without changing the neutral-gear input.
+	Sensor::setMockValue(SensorType::VehicleSpeed, 60);
+	getSm().onSlowCallback();
+	EXPECT_TRUE(getSm().engineSmIsDecelerating);
 }
 
-TEST(EngineStateMachineRegression, KnownBugOverrunIgnoresUnassignedClutch) {
+TEST(EngineStateMachineRegression, OverrunHonorsUnassignedClutch) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	setupSmConfig();
 	engineConfiguration->clutchDownPin = Gpio::A1;
@@ -1538,16 +1564,170 @@ TEST(EngineStateMachineRegression, KnownBugOverrunIgnoresUnassignedClutch) {
 	ASSERT_EQ(engineConfiguration->smUpshiftClutchSwitch, sm_clutch_switch_e::None);
 	ASSERT_EQ(engineConfiguration->smDownshiftClutchSwitch, sm_clutch_switch_e::None);
 	getSm().onSlowCallback();
-	EXPECT_TRUE(getSm().isTransmissionEngaged()); // BAD: a configured, pressed clutch is ignored.
-	EXPECT_TRUE(getSm().engineSmIsOverrun);
+	EXPECT_FALSE(getSm().isTransmissionEngaged());
+	EXPECT_TRUE(getSm().engineSmIsCoasting);
 	engineConfiguration->stateBasedStft = true;
 	auto& stft = engine->module<ShortTermFuelTrim>().unmock();
-	EXPECT_EQ(stft.computeStftBin(3000, 50, engineConfiguration->stft), ftRegionOverrun);
+	EXPECT_EQ(stft.computeStftBin(3000, 50, engineConfiguration->stft), ftRegionIdle);
 
-	// Merely assigning that same switch to shift recognition changes primary-state detection.
+	// Assigning the switch to shift recognition must not change the primary state.
 	engineConfiguration->smUpshiftClutchSwitch = sm_clutch_switch_e::ClutchDown;
 	getSm().onSlowCallback();
 	EXPECT_FALSE(getSm().isTransmissionEngaged());
 	EXPECT_TRUE(getSm().engineSmIsCoasting);
 	EXPECT_EQ(stft.computeStftBin(3000, 50, engineConfiguration->stft), ftRegionIdle);
+}
+
+static void checkShiftHistoryReset(void (*reset)()) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setupSmConfig();
+	setupAccumulatorConfig();
+	engineConfiguration->smUpshiftClutchSwitch = sm_clutch_switch_e::ClutchDown;
+	engineConfiguration->smShiftLatchTimeMs = 2000;
+	engineConfiguration->smAccelHoldMs = 5000;
+	MockIdleController idle;
+	engine->module<IdleController>().set(&idle);
+	ON_CALL(idle, getCurrentPhase()).WillByDefault(Return(IIdleController::Phase::Running));
+	enterRunning();
+	seedRampedRpm(2000, 100, 20, 50);
+	ASSERT_GT(getSm().engineSmShiftAccumulator, 40);
+	ASSERT_GT(getSm().engineSmRpmRate, 500);
+	engine->engineState.lua.clutchDownState = true;
+	engine->periodicSlowCallback();
+	ASSERT_TRUE(getSm().engineSmIsUpshifting);
+
+	reset();
+	EXPECT_FALSE(getSm().engineSmIsUpshifting);
+	EXPECT_FALSE(getSm().engineSmIsDownshifting);
+	EXPECT_FLOAT_EQ(getSm().engineSmShiftAccumulator, 0);
+	EXPECT_FLOAT_EQ(getSm().engineSmRpmRate, 0);
+	EXPECT_EQ(getSm().getCurrentState(), EngineStateMachineState::Off);
+	EXPECT_TRUE(getSm().engineSmIsOff);
+
+	engineConfiguration->useEngineStateMachine = true;
+	engine->rpmCalculator.setRpmValue(3000);
+	engine->periodicSlowCallback();
+	advanceTimeUs(100000);
+	engine->periodicSlowCallback();
+	// A new RPM anchor and expired hold timers allow steady cruising immediately.
+	EXPECT_EQ(getSm().getCurrentState(), EngineStateMachineState::Cruising);
+	EXPECT_FLOAT_EQ(getSm().engineSmShiftAccumulator, 0);
+	EXPECT_FLOAT_EQ(getSm().engineSmRpmRate, 0);
+	EXPECT_FALSE(getSm().engineSmIsUpshifting); // Pedal remained pressed through reset.
+
+	engine->engineState.lua.clutchDownState = false;
+	engine->periodicSlowCallback();
+	advanceTimeUs(50000);
+	engine->engineState.lua.clutchDownState = true;
+	engine->periodicSlowCallback();
+	EXPECT_TRUE(getSm().engineSmIsUpshifting); // A real new press still works.
+}
+
+TEST(EngineStateMachineRegression, DisableClearsShiftHistory) {
+	checkShiftHistoryReset([] {
+		engineConfiguration->useEngineStateMachine = false;
+		getSm().onSlowCallback();
+	});
+}
+
+TEST(EngineStateMachineRegression, EngineStopClearsShiftHistory) {
+	checkShiftHistoryReset([] {
+		engine->rpmCalculator.setRpmValue(0);
+		getSm().onEngineStop();
+	});
+}
+
+TEST(EngineStateMachineRegression, BurnClearsShiftHistory) {
+	checkShiftHistoryReset([] { getSm().onConfigurationChange(nullptr); });
+}
+
+TEST(EngineStateMachineRegression, VssLossCancelsShiftUntilNewClutchPress) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setupVssRateModeConfig();
+	engineConfiguration->smDownshiftClutchSwitch = sm_clutch_switch_e::None;
+	engineConfiguration->smShiftLatchTimeMs = 2000;
+	Sensor::setMockValue(SensorType::VehicleSpeed, 40);
+	enterRunning();
+	engine->engineState.lua.clutchDownState = true;
+	engine->periodicSlowCallback();
+	ASSERT_TRUE(getSm().engineSmIsUpshifting);
+
+	Sensor::setInvalidMockValue(SensorType::VehicleSpeed);
+	advanceTimeUs(50000);
+	engine->periodicSlowCallback();
+	EXPECT_FALSE(getSm().engineSmIsUpshifting);
+	EXPECT_FALSE(getSm().engineSmIsDownshifting);
+	EXPECT_FLOAT_EQ(getSm().engineSmShiftAccumulator, 0);
+
+	Sensor::setMockValue(SensorType::VehicleSpeed, 80);
+	advanceTimeUs(50000);
+	engine->periodicSlowCallback();
+	EXPECT_FALSE(getSm().engineSmIsUpshifting); // Lost window/latch must not revive.
+	EXPECT_FLOAT_EQ(getSm().engineSmShiftAccumulator, 0);
+	engine->engineState.lua.clutchDownState = false;
+	engine->periodicSlowCallback();
+	engine->engineState.lua.clutchDownState = true;
+	engine->periodicSlowCallback();
+	EXPECT_TRUE(getSm().engineSmIsUpshifting);
+}
+
+TEST(EngineStateMachineRegression, OverrunHonorsEitherConfiguredClutchInput) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setupSmConfig();
+	engineConfiguration->clutchUpPin = Gpio::A2;
+	engineConfiguration->coastingFuelCutTps = 5;
+	engineConfiguration->coastingFuelCutRpmHigh = 2000;
+	MockIdleController idle;
+	engine->module<IdleController>().set(&idle);
+	ON_CALL(idle, getCurrentPhase()).WillByDefault(Return(IIdleController::Phase::Coasting));
+	engine->rpmCalculator.setRpmValue(3000);
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 0);
+	engine->engineState.clutchUpState = 0;
+	getSm().onSlowCallback();
+	EXPECT_TRUE(getSm().engineSmIsCoasting);
+	engine->engineState.clutchUpState = 1;
+	getSm().onSlowCallback();
+	EXPECT_TRUE(getSm().engineSmIsOverrun);
+
+	// With both switches installed, either indication of disengagement blocks Overrun.
+	engineConfiguration->clutchDownPin = Gpio::A1;
+	engine->engineState.clutchDownState = true;
+	getSm().onSlowCallback();
+	EXPECT_TRUE(getSm().engineSmIsCoasting);
+	engine->engineState.clutchDownState = false;
+	engine->engineState.clutchUpState = 0;
+	getSm().onSlowCallback();
+	EXPECT_TRUE(getSm().engineSmIsCoasting);
+	engine->engineState.clutchUpState = 1;
+	getSm().onSlowCallback();
+	EXPECT_TRUE(getSm().engineSmIsOverrun);
+}
+
+TEST(EngineStateMachineRegression, StoppedAndCrankingClearOverlays) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setupSmConfig();
+	enterRunning();
+	engineConfiguration->torqueReductionEnabled = true;
+	engine->launchController.isLaunchCondition = true;
+	engine->shiftTorqueReductionController.isFlatShiftConditionSatisfied = true;
+	getSm().onSlowCallback();
+	ASSERT_TRUE(getSm().engineSmIsLaunchControl);
+	ASSERT_TRUE(getSm().engineSmIsUpshifting);
+
+	engine->rpmCalculator.setRpmValue(0);
+	getSm().onSlowCallback();
+	EXPECT_EQ(getSm().getCurrentState(), EngineStateMachineState::Off);
+	EXPECT_EQ(getSm().engineSmCurrentState, static_cast<uint8_t>(EngineStateMachineState::Off));
+	EXPECT_FALSE(getSm().engineSmIsLaunchControl);
+	EXPECT_FALSE(getSm().engineSmIsUpshifting);
+	EXPECT_FALSE(getSm().engineSmIsTorqueReduction);
+	engine->rpmCalculator.setRpmValue(TEST_CRANKING_RPM - 50);
+	engine->launchController.isLaunchCondition = true;
+	engine->shiftTorqueReductionController.isFlatShiftConditionSatisfied = true;
+	getSm().onSlowCallback();
+	EXPECT_TRUE(getSm().engineSmIsCranking);
+	EXPECT_EQ(getSm().engineSmCurrentState, static_cast<uint8_t>(EngineStateMachineState::Cranking));
+	EXPECT_FALSE(getSm().engineSmIsLaunchControl);
+	EXPECT_FALSE(getSm().engineSmIsUpshifting);
+	EXPECT_FALSE(getSm().engineSmIsTorqueReduction);
 }
