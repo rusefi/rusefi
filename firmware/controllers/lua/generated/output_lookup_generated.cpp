@@ -2095,6 +2095,9 @@ float getOutputValueByHash(const int hash) {
 // vvtOutput
 		case 1990697206:
 			return engine->module<VvtController1>()->vvtOutput;
+// vvtDistance
+		case -93524688:
+			return engine->module<VvtController1>()->vvtDistance;
 #endif
 #if FULL_SD_LOGS
 // acButtonState

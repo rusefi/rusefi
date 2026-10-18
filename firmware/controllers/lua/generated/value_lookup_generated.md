@@ -2239,6 +2239,21 @@ Engine Temperature Overlay: CLT above this is Hot engine. Below smColdTempThresh
 ### wotEnrichmentEnabled
 Add an AFR offset according to continuous time in the Engine State Machine WOT state. Requires Enable Engine State Machine. Negative values richen; positive values lean. Leaving WOT resets the timer and offset.
 
+### vvtAdvancedModeEnabled
+VVT Advanced Mode: master enable. Replaces the fixed PID offset (Hold Duty) with an oil-pressure-based base duty curve, and the fixed PID P factor with a distance-from-target P factor curve.
+
+### vvtIntake_iTermMin
+Intake VVT integral minimum. Both integral limits zero restore defaults of -1000 and 1000.
+
+### vvtIntake_iTermMax
+Intake VVT integral maximum. Applies in both basic and advanced modes.
+
+### vvtExhaust_iTermMin
+Exhaust VVT integral minimum. Both integral limits zero restore defaults of -1000 and 1000.
+
+### vvtExhaust_iTermMax
+Exhaust VVT integral maximum. Applies in both basic and advanced modes.
+
 ### tcu_shiftTime
 
 

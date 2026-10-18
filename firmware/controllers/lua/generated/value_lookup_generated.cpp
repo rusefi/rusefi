@@ -2245,6 +2245,21 @@ float getConfigValueByHash(const int hash) {
 // wotEnrichmentEnabled
 		case -979032745:
 			return engineConfiguration->wotEnrichmentEnabled;
+// vvtAdvancedModeEnabled
+		case -2075222549:
+			return engineConfiguration->vvtAdvancedModeEnabled;
+// vvtIntake_iTermMin
+		case -1830011739:
+			return engineConfiguration->vvtIntake_iTermMin;
+// vvtIntake_iTermMax
+		case -1830011993:
+			return engineConfiguration->vvtIntake_iTermMax;
+// vvtExhaust_iTermMin
+		case -1814511221:
+			return engineConfiguration->vvtExhaust_iTermMin;
+// vvtExhaust_iTermMax
+		case -1814511475:
+			return engineConfiguration->vvtExhaust_iTermMax;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -6093,6 +6108,31 @@ bool setConfigValueByName(const char *name, float value) {
 		case -979032745:
 	{
 		engineConfiguration->wotEnrichmentEnabled = (int)value;
+		return 1;
+	}
+		case -2075222549:
+	{
+		engineConfiguration->vvtAdvancedModeEnabled = (int)value;
+		return 1;
+	}
+		case -1830011739:
+	{
+		engineConfiguration->vvtIntake_iTermMin = (int)value;
+		return 1;
+	}
+		case -1830011993:
+	{
+		engineConfiguration->vvtIntake_iTermMax = (int)value;
+		return 1;
+	}
+		case -1814511221:
+	{
+		engineConfiguration->vvtExhaust_iTermMin = (int)value;
+		return 1;
+	}
+		case -1814511475:
+	{
+		engineConfiguration->vvtExhaust_iTermMax = (int)value;
 		return 1;
 	}
 		case -1658957891:

@@ -1132,6 +1132,9 @@ const ConfigParameter allParameters[] = {
 	{ 0x840BF24C, // tcu_rangeSensorPulldown
 		[]() -> float { return engineConfiguration->tcu_rangeSensorPulldown; },
 		[](float value) { engineConfiguration->tcu_rangeSensorPulldown = value; } },
+	{ 0x844E9DEB, // vvtAdvancedModeEnabled
+		[]() -> float { return engineConfiguration->vvtAdvancedModeEnabled; },
+		[](float value) { engineConfiguration->vvtAdvancedModeEnabled = value; } },
 	{ 0x848C7FE6, // magicNumberAvailableForDevTricks
 		[]() -> float { return engineConfiguration->magicNumberAvailableForDevTricks; },
 		[](float value) { engineConfiguration->magicNumberAvailableForDevTricks = value; } },
@@ -1273,6 +1276,12 @@ const ConfigParameter allParameters[] = {
 	{ 0x92C75254, // isBoostControlEnabled
 		[]() -> float { return engineConfiguration->isBoostControlEnabled; },
 		[](float value) { engineConfiguration->isBoostControlEnabled = value; } },
+	{ 0x92EC3BA7, // vvtIntake_iTermMax
+		[]() -> float { return engineConfiguration->vvtIntake_iTermMax; },
+		[](float value) { engineConfiguration->vvtIntake_iTermMax = value; } },
+	{ 0x92EC3CA5, // vvtIntake_iTermMin
+		[]() -> float { return engineConfiguration->vvtIntake_iTermMin; },
+		[](float value) { engineConfiguration->vvtIntake_iTermMin = value; } },
 	{ 0x92EC7CD4, // launchSparkCutEnable
 		[]() -> float { return engineConfiguration->launchSparkCutEnable; },
 		[](float value) { engineConfiguration->launchSparkCutEnable = value; } },
@@ -1285,6 +1294,12 @@ const ConfigParameter allParameters[] = {
 	{ 0x93B2CFAA, // useLinearCltSensor
 		[]() -> float { return engineConfiguration->useLinearCltSensor; },
 		[](float value) { engineConfiguration->useLinearCltSensor = value; } },
+	{ 0x93D8C08D, // vvtExhaust_iTermMax
+		[]() -> float { return engineConfiguration->vvtExhaust_iTermMax; },
+		[](float value) { engineConfiguration->vvtExhaust_iTermMax = value; } },
+	{ 0x93D8C18B, // vvtExhaust_iTermMin
+		[]() -> float { return engineConfiguration->vvtExhaust_iTermMin; },
+		[](float value) { engineConfiguration->vvtExhaust_iTermMin = value; } },
 	{ 0x94018255, // knockFuelTrimAggression
 		[]() -> float { return engineConfiguration->knockFuelTrimAggression; },
 		[](float value) { engineConfiguration->knockFuelTrimAggression = value; } },

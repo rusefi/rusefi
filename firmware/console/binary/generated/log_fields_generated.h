@@ -894,5 +894,6 @@ static LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE MLG::Entries::Field fields[] = {
 #if EFI_VVT_PID
 	{engine->module<VvtController1>()->vvtTarget, "vvtTarget", "deg", 1},
 	{engine->module<VvtController1>()->vvtOutput, "vvtOutput", "%", 0},
+	{engine->module<VvtController1>()->vvtDistance, "VVT signed target error", "deg", 1},
 #endif
 };
