@@ -3,7 +3,8 @@
 # and push the resulting commit back to the calling branch.
 #
 # Callers: update-chibios-reference.yaml, update-libfirmware-reference.yaml,
-# update-openblt-reference.yaml, update-wideband-reference.yaml
+# update-luaaa-reference.yaml, update-openblt-reference.yaml,
+# update-wideband-reference.yaml
 
 name: Update Submodule Reference
 
