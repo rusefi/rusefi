@@ -2049,6 +2049,7 @@ end_struct
 ! end of engine_configuration_s
 	float idleParkNeutralOffset;Signed idle position offset when Lua reports Park or Neutral via setParkNeutral(boolean). Negative values reduce opening, positive values increase it. Added to running open-loop idle, not target RPM. Zero disables the correction.;"%", 1, 0, -100, 100, 1
 include_file controllers/modules/gear_detector/gear_detector_engineConfiguration.txt
+include_file controllers/modules/rolling_launch/rolling_launch_engineConfiguration.txt
 end_struct
 
 ! note that this magic field name is used by LiveDataParserPanel
@@ -2641,6 +2642,7 @@ end_struct
 #define ts_show_can_wbo true
 #define ts_show_vvt_output_pin true
 #define ts_show_vvl_control true
+#define ts_show_rolling_launch true
 #define ts_show_hbridge_function true
 #define ts_show_aux_sensors true
 #define ts_show_clutch_up true

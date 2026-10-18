@@ -62,6 +62,9 @@ void startSwitchPins() {
 
 	startInputPinIfValid("brake pedal switch", engineConfiguration->brakePedalPin, engineConfiguration->brakePedalPinMode);
 	startInputPinIfValid("Launch Button", engineConfiguration->launchActivatePin, engineConfiguration->launchActivatePinMode);
+#if EFI_LAUNCH_CONTROL
+	startInputPinIfValid("Rolling Launch Button", engineConfiguration->rollingLaunchActivatePin, engineConfiguration->rollingLaunchActivatePinMode);
+#endif
 	startInputPinIfValid("Antilag Button", engineConfiguration->ALSActivatePin, engineConfiguration->ALSActivatePinMode);
 	startInputPinIfValid("Ignition Switch", engineConfiguration->ignitionKeyDigitalPin, engineConfiguration->ignitionKeyDigitalPinMode);
 	startInputPinIfValid("Torque Reduction Button", engineConfiguration->torqueReductionTriggerPin, engineConfiguration->torqueReductionTriggerPinMode);
@@ -74,6 +77,9 @@ void stopSwitchPins() {
 	brain_pin_markUnused(activeConfiguration.clutchDownPin);
 	brain_pin_markUnused(activeConfiguration.brakePedalPin);
 	brain_pin_markUnused(activeConfiguration.launchActivatePin);
+#if EFI_LAUNCH_CONTROL
+	brain_pin_markUnused(activeConfiguration.rollingLaunchActivatePin);
+#endif
 	brain_pin_markUnused(activeConfiguration.ALSActivatePin);
 	brain_pin_markUnused(activeConfiguration.ignitionKeyDigitalPin);
 	brain_pin_markUnused(activeConfiguration.torqueReductionTriggerPin);

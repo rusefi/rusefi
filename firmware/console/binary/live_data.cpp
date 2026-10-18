@@ -358,3 +358,12 @@ const misfire_detection_state_s* getLiveData(size_t) {
 	return nullptr;
 #endif
 }
+
+template<>
+const rolling_launch_state_s* getLiveData(size_t) {
+#if EFI_LAUNCH_CONTROL
+	return &engine->module<RollingLaunchControl>().unmock();
+#else
+	return nullptr;
+#endif
+}

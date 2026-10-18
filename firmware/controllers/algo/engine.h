@@ -32,6 +32,7 @@
 #include "idle_thread.h"
 #include "injector_model.h"
 #include "launch_control.h"
+#include "rolling_launch.h"
 #include "shift_torque_reduction_controller.h"
 #include "nitrous_controller.h"
 #include "antilag_system.h"
@@ -195,6 +196,7 @@ public:
         TpsAccelEnrichment,
 #if EFI_LAUNCH_CONTROL
         NitrousController,
+        RollingLaunchControl,
 #endif // EFI_LAUNCH_CONTROL
 #if EFI_LTFT_CONTROL
         LongTermFuelTrim,

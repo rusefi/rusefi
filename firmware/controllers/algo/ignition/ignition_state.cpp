@@ -223,7 +223,11 @@ angle_t getAdvanceCorrections(float engineLoad) {
 	return engine->ignitionState.timingIatCorrection
 		+ engine->ignitionState.cltTimingCorrection
 		+ engine->ignitionState.timingPidCorrection
-		- engine->ignitionState.dfcoTimingRetard;
+		- engine->ignitionState.dfcoTimingRetard
+#if EFI_LAUNCH_CONTROL
+		- engine->module<RollingLaunchControl>().unmock().getTimingRetard()
+#endif
+		;
 }
 
 /**

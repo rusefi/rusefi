@@ -311,3 +311,11 @@ Usages:
     folder: controllers/modules/injector_deadtime_autotune
     engineModule: InjectorDeadtimeAutotune
     conditional_compilation: "EFI_ENGINE_CONTROL"
+
+  - name: rolling_launch_state
+    java: RollingLaunch.java
+    folder: controllers/modules/rolling_launch
+    prepend: integration/rusefi_config_shared.txt
+    output_name: rolling_launch
+    engineModule: RollingLaunchControl
+    conditional_compilation: "EFI_LAUNCH_CONTROL"

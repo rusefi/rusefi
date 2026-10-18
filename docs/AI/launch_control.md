@@ -353,3 +353,37 @@ physical wiring, an engine-specific calibration, or every lifecycle/boundary
 case described above. In particular, the runtime-disable cache, Speed Based
 edge behavior and Lua reload omissions are source-review findings, not claims
 of dedicated regression coverage.
+
+
+## Rolling launch
+
+The report-55 port from AlphaX `ebb877615ee1` adds `RollingLaunchControl` alongside
+standing launch. It shares `EFI_LAUNCH_CONTROL` with the hard spark limiter and
+uses the main configuration page, rather than the fork's custom page. See
+`controllers/modules/rolling_launch/` for the controller, defaults, schema and
+telemetry; the shared menu is **Advanced > Rolling Launch Control**.
+
+At the 20 Hz slow callback, the hardware switch and numeric Lua
+`setRollingLaunchTrigger(1/0)` request are OR-ed. Valid, finite RPM and VSS must
+meet inclusive minimum gates, with RPM positive. On each false-to-true armed
+transition, capture RPM and cap `captured + window` at `rollingLaunchMaxRpm`.
+A held trigger can therefore arm on gate recovery without a new button edge.
+
+While armed, skip interpolates across the captured window, fixed relative
+retard is applied, and running fuel receives the configured percentage adder.
+For a zero/collapsed window, cut at the capped target, including when capture
+occurred above the ceiling. Skip adds to existing hard-limiter requests in
+`EngineState::updateSparkSkip()`. It does not affect the soft limiter. Timing is
+subtracted in `getAdvanceCorrections()`; fixed-timing mode bypasses it.
+
+On release or gate loss, skip and fuel return to neutral at the next slow
+callback; timing decays linearly over the configured ramp time. Re-arming
+cancels the ramp and captures a new target. Disabling the feature, engine stop,
+and configuration burn clear the controller state. The Lua request remains
+latched until a script explicitly clears it, including across Lua reloads.
+
+`isRollingLaunchActive` reports the raw request and `isRollingLaunchArmed`
+reports the hold. `unit_tests/tests/test_rolling_launch.cpp` covers the fork's
+six original cases, above-ceiling capture, invalid sensor gates, stale switch
+state, lifecycle reset, re-arming, actual Lua/pin inputs and the fuel/timing/skip
+integration. These are host tests, not hardware or vehicle validation.

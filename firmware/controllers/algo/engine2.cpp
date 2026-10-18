@@ -38,6 +38,7 @@ void EngineState::updateSparkSkip() {
 			 * https://github.com/rusefi/rusefi/issues/6566#issuecomment-2153149902).
 			 */
 			engine->launchController.getSparkSkipRatio() + engine->shiftTorqueReductionController.getSparkSkipRatio()
+				+ engine->module<RollingLaunchControl>().unmock().getSparkSkipRatio()
 		);
 #endif // EFI_LAUNCH_CONTROL
 }

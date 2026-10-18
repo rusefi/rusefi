@@ -33,6 +33,12 @@ Release template (copy/paste this for new release):
 ## Unreleased
 
 ### Added
+ - Rolling launch control with captured-RPM spark skip, fuel enrichment and timing-retard ramp-out. kudos AlphaX!
+ - Output-shaft speed input with configurable tooth count and filtering.
+ - Clutch-aware gear detection with selectable engine/input-shaft RPM and vehicle/output-shaft speed sources.. kudos AlphaX!
+ - Transmission slip reporting with selectable RPM source and speed/validity gates.
+ - Cooling-fan A/C pressure mode with configurable PWM off/full duty and demand soft-start.. kudos AlphaX!
+ - Speedometer output bench test (100 Hz for three seconds).
  - h-bridge as one GPIO #9673
  - updater: keyboard table operation
  - 36-2-2 Suzuki trigger

@@ -1,0 +1,11 @@
+! Rolling launch uses the main configuration page; no fork-specific custom page is required.
+bit rollingLaunchEnabled,"enabled","disabled";Hold a captured RPM window while moving with the activation switch or Lua trigger held.
+switch_input_pin_e rollingLaunchActivatePin;Hardware activation switch, OR-ed with setRollingLaunchTrigger(1). Unassigned allows Lua-only activation.
+pin_input_mode_e rollingLaunchActivatePinMode;
+uint8_t rollingLaunchTimingRetard;Ignition timing removed while armed. This is relative retard, not an absolute timing target.;"deg", 1, 0, 0, 30, 0
+uint8_t rollingLaunchFuelAdderPercent;Additional fuel while armed. Removed immediately when disarmed.;"%", 1, 0, 0, 50, 0
+uint8_t autoscale rollingLaunchRampOutTime;Time for the timing retard to decay to zero after release or loss of an arming gate. Zero removes retard immediately.;"s", 0.1, 0, 0, 10, 1
+uint16_t rollingLaunchRpmWindow;RPM above the captured arming RPM where spark skip reaches 100%. Zero requests a hard cut at the captured RPM.;"rpm", 1, 0, 0, 4000, 0
+uint16_t rollingLaunchMinArmRpm;Minimum RPM while the trigger is held. Crossing this gate can arm without another button press.;"rpm", 1, 0, 0, 15000, 0
+uint16_t rollingLaunchMaxRpm;Maximum captured target RPM. The normal rev limiter remains independent.;"rpm", 1, 0, 0, 15000, 0
+uint16_t rollingLaunchMinVss;Minimum vehicle speed while the trigger is held. Requires valid vehicle speed.;{bitStringValue(velocityUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KMH_TO_MPH@@}, 0, 0, 300, 0
