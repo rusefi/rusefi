@@ -337,7 +337,7 @@ public class MainFrame {
         updateSoftwareItem.addActionListener(e -> onUpdateSoftwareClicked());
         actionsMenu.add(updateSoftwareItem);
 
-        checkEcuUpdateItem = new JMenuItem("Check for ECU Firmware Updates");
+        checkEcuUpdateItem = new JMenuItem("Compare ECU with Downloaded Firmware…");
         checkEcuUpdateItem.setIcon(loadMenuIcon("refresh"));
         checkEcuUpdateItem.setEnabled(false);
         checkEcuUpdateItem.addActionListener(e -> requestFirmwareUpdateCheck(true));
