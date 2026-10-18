@@ -109,7 +109,13 @@ public class TopLevelMenuSandbox {
             right.update(subMenu.getKey());
         });
 
-        frameHelper.showFrame(splitPane);
+        // Avoid WSL2 mouse-position offsets in maximized windows by using 90% of the usable screen.
+        Rectangle screen = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+        JFrame frame = frameHelper.getFrame();
+        frame.setSize((int) (screen.width * 0.9), (int) (screen.height * 0.9));
+        frame.setLocation(screen.x + (screen.width - frame.getWidth()) / 2,
+                screen.y + (screen.height - frame.getHeight()) / 2);
+        frameHelper.showFrame(splitPane, false);
         left.selectSubMenu("dwellSettings");
     }
 }
