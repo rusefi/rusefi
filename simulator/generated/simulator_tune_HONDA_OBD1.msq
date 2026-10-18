@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="16312">
+    <page number="0" size="16564">
         <constant name="accelEnrichmentMode">"MS Adder"</constant>
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
@@ -5104,9 +5104,90 @@
         <constant name="vvlRelayPin">"NONE"</constant>
         <constant name="vvlRelayPinMode">"default"</constant>
         <constant digits="0" name="vvtActivationDelayMs" units="ms">6000</constant>
+        <constant name="vvtAdvancedModeEnabled">"disabled"</constant>
+        <constant cols="1" digits="0" name="vvtAdvDistanceBinsExhaust" rows="9" units="deg">
+         -40
+         -30
+         -20
+         -10
+         0
+         10
+         20
+         30
+         40
+</constant>
+        <constant cols="1" digits="0" name="vvtAdvDistanceBinsIntake" rows="9" units="deg">
+         -40
+         -30
+         -20
+         -10
+         0
+         10
+         20
+         30
+         40
+</constant>
+        <constant cols="1" digits="1" name="vvtAdvDutyExhaust" rows="6" units="%">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
+        <constant cols="1" digits="1" name="vvtAdvDutyIntake" rows="6" units="%">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
+        <constant cols="1" digits="0" name="vvtAdvOilPressureBinsExhaust" rows="6" units="kPa">
+         0
+         200
+         400
+         600
+         800
+         1000
+</constant>
+        <constant cols="1" digits="0" name="vvtAdvOilPressureBinsIntake" rows="6" units="kPa">
+         0
+         200
+         400
+         600
+         800
+         1000
+</constant>
+        <constant cols="1" digits="1" name="vvtAdvPFactorExhaust" rows="9" units="x100">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
+        <constant cols="1" digits="1" name="vvtAdvPFactorIntake" rows="9" units="x100">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
         <constant name="vvtBooleanForVerySpecialCases">"false"</constant>
         <constant digits="0" name="vvtControlMinClt" units="{bitStringValue(unitsLabels, useMetricOnInterface)}">0</constant>
         <constant digits="0" name="vvtControlMinRpm" units="RPM">600</constant>
+        <constant digits="0" name="vvtExhaust_iTermMax" units="%">1000</constant>
+        <constant digits="0" name="vvtExhaust_iTermMin" units="%">-1000</constant>
+        <constant digits="0" name="vvtIntake_iTermMax" units="%">1000</constant>
+        <constant digits="0" name="vvtIntake_iTermMin" units="%">-1000</constant>
         <constant name="vvtMode1">"Single Tooth"</constant>
         <constant name="vvtMode2">"Inactive"</constant>
         <constant digits="1" name="vvtOffsets1" units="value">450.0</constant>
@@ -5318,7 +5399,7 @@
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20261017" nPages="1" signature="rusEFI master.2026.10.18.f407-discovery.2378796211" version="5.0"/>
+    <versionInfo firmwareInfo="20261017" nPages="1" signature="rusEFI master.2026.10.18.f407-discovery.3812130578" version="5.0"/>
     <bibliography author="rusEFI 20261017" writeDate="date"/>
     <settings/>
     <userComments/>
