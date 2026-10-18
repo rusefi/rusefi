@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="15816">
+    <page number="0" size="15828">
         <constant name="accelEnrichmentMode">"MS Adder"</constant>
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
@@ -560,7 +560,7 @@
         <constant name="brakePedalPin">"NONE"</constant>
         <constant name="brakePedalPinMode">"PULLUP"</constant>
         <constant digits="0" name="byFirmwareVersion" units="index">0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">20261017</constant>
+        <constant digits="0" name="calibrationBirthday" units="">20261018</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="angle">95</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -949,9 +949,11 @@
         <constant name="digitalPotentiometerChipSelect4">"NONE"</constant>
         <constant name="digitalPotentiometerSpiDevice">"Off"</constant>
         <constant name="disableEtbWhenEngineStopped">"no"</constant>
-        <constant digits="0" name="disableFan1AtSpeed" units="">0</constant>
+        <constant digits="0" name="disableFan1AtSpeed" units="{bitStringValue(velocityUnitsLabels, useMetricOnInterface)}">0</constant>
+        <constant digits="0" name="disableFan1AtSpeedHysteresis" units="{bitStringValue(velocityUnitsLabels, useMetricOnInterface)}">5</constant>
         <constant name="disableFan1WhenStopped">"no"</constant>
-        <constant digits="0" name="disableFan2AtSpeed" units="">0</constant>
+        <constant digits="0" name="disableFan2AtSpeed" units="{bitStringValue(velocityUnitsLabels, useMetricOnInterface)}">0</constant>
+        <constant digits="0" name="disableFan2AtSpeedHysteresis" units="{bitStringValue(velocityUnitsLabels, useMetricOnInterface)}">5</constant>
         <constant name="disableFan2WhenStopped">"no"</constant>
         <constant digits="3" name="displacement" units="L">1.645</constant>
         <constant name="displayLogicLevelsInEngineSniffer">"no"</constant>
@@ -1002,8 +1004,6 @@
         <constant name="enableAemXSeriesEgt">"no"</constant>
         <constant name="enableCanVss">"no"</constant>
         <constant name="enableExtendedCanBroadcast">"yes"</constant>
-        <constant name="enableFan1WithAc">"no"</constant>
-        <constant name="enableFan2WithAc">"no"</constant>
         <constant name="enableKline">"disabled"</constant>
         <constant name="enableKnockSpectrogram">"no"</constant>
         <constant name="enableKnockSpectrogramFilter">"no"</constant>
@@ -1079,10 +1079,12 @@
         <constant digits="0" name="etbWastegatePid_periodMs" units="ms">0</constant>
         <constant digits="4" name="etbWastegatePid_pFactor" units="">1.0</constant>
         <constant name="externalRusEfiGdiModule">"no"</constant>
-        <constant digits="0" name="fan1AcAdder" units="%">10</constant>
+        <constant name="fan1AcMode">"Disabled"</constant>
+        <constant digits="0" name="fan1AcPressureOff" units="kPa">1100</constant>
+        <constant digits="0" name="fan1AcPressureOn" units="kPa">1400</constant>
         <constant digits="0" name="fan1ExtraIdle" units="%">10</constant>
         <constant digits="0" name="fan1MaxPwm" units="%">100</constant>
-        <constant digits="0" name="fan1MinPwm" units="%">20</constant>
+        <constant digits="0" name="fan1MinPwm" units="%">0</constant>
         <constant name="fan1PwmEnabled">"no"</constant>
         <constant digits="0" name="fan1PwmFrequency" units="Hz">250</constant>
         <constant cols="1" digits="0" name="fan1PwmValues" rows="8" units="%">
@@ -1106,10 +1108,12 @@
          105
          110
 </constant>
-        <constant digits="0" name="fan2AcAdder" units="%">10</constant>
+        <constant name="fan2AcMode">"Disabled"</constant>
+        <constant digits="0" name="fan2AcPressureOff" units="kPa">1400</constant>
+        <constant digits="0" name="fan2AcPressureOn" units="kPa">1800</constant>
         <constant digits="0" name="fan2ExtraIdle" units="%">2</constant>
         <constant digits="0" name="fan2MaxPwm" units="%">100</constant>
-        <constant digits="0" name="fan2MinPwm" units="%">20</constant>
+        <constant digits="0" name="fan2MinPwm" units="%">0</constant>
         <constant digits="0" name="fan2OffTemperature" units="C">91</constant>
         <constant digits="0" name="fan2OnTemperature" units="C">95</constant>
         <constant name="fan2Pin">"NONE"</constant>
@@ -3654,6 +3658,7 @@
          4.0
 </constant>
         <constant digits="0" name="sparkHardwareLatencyCorrection" units="uS">0</constant>
+        <constant digits="0" name="speedometerBenchTestFrequency" units="Hz">100</constant>
         <constant name="speedometerOutputPin">"NONE"</constant>
         <constant digits="0" name="speedometerPulsePerKm" units="">2485</constant>
         <constant name="spi1MisoMode">"default"</constant>
@@ -5217,7 +5222,7 @@
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20261017" nPages="1" signature="rusEFI master.2026.10.17.f407-discovery.1573190752" version="5.0"/>
+    <versionInfo firmwareInfo="20261017" nPages="1" signature="rusEFI master.2026.10.18.f407-discovery.1844893270" version="5.0"/>
     <bibliography author="rusEFI 20261017" writeDate="date"/>
     <settings/>
     <userComments/>
