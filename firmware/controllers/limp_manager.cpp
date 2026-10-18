@@ -183,11 +183,13 @@ void LimpManager::updateState(float rpm, efitick_t nowNt) {
 		bool hasOilpSensor = Sensor::hasSensor(SensorType::OilPressure);
 		auto oilp = Sensor::get(SensorType::OilPressure);
 		uint16_t minOilPressure = engineConfiguration->minOilPressureAfterStart;
+		bool isInAfterStartWindow = false;
 
 		// Only check if the setting is enabled and you have an oil pressure sensor
 		if (minOilPressure > 0 && hasOilpSensor) {
 			// Has it been long enough we should have pressure?
 			bool isTimedOut = engine->rpmCalculator.getSecondsSinceEngineStart(nowNt) > 5.0f;
+			isInAfterStartWindow = !isTimedOut;
 
 			// Only check before timed out
 			if (!isTimedOut) {
@@ -209,7 +211,9 @@ void LimpManager::updateState(float rpm, efitick_t nowNt) {
 			float minPressure = interpolate2d(rpm, config->minimumOilPressureBins, config->minimumOilPressureValues);
 			bool isPressureSufficient = oilp.Value > minPressure;
 
-			if (isPressureSufficient) {
+			// #9879: cold oil needs time to reach running pressure, so the
+			// running check waits until the after-start window is over
+			if (isPressureSufficient || isInAfterStartWindow) {
 				m_lowOilPressureTimer.reset(nowNt);
 			}
 
