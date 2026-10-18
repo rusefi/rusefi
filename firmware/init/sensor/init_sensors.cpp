@@ -110,6 +110,7 @@ static void sensorStartUpOrReconfiguration(bool isFirstTime) {
 	initAuxSensors();
 	initAuxSpeedSensors();
 	initInputShaftSpeedSensor();
+	initOutputShaftSpeedSensor();
 #if EFI_TCU
 	initRangeSensors();
 #endif
@@ -171,6 +172,7 @@ void stopSensors() {
 	deinitAuxSpeedSensors();
 	deinitMap();
 	deinitInputShaftSpeedSensor();
+	deinitOutputShaftSpeedSensor();
 	stopEgt();
 }
 

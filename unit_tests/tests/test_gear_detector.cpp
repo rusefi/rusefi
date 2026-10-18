@@ -1,4 +1,8 @@
 #include "pch.h"
+#include "frequency_sensor.h"
+#include "init.h"
+#include "output_shaft_speed_converter.h"
+#include "tunerstudio.h"
 
 float GetGearRatioFor(float revPerKm, float axle, float kph, float rpm) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
@@ -251,18 +255,292 @@ TEST(GearDetector, ClutchDisengagementInvalidatesGear) {
 
 	engine->engineState.clutchDownState = true;
 	dut.onSlowCallback();
-	// TDB reproduction: a disconnected clutch still reports a gear and ratio.
-	EXPECT_EQ(1, dut.get().Value);
-	EXPECT_FLOAT_EQ(2, dut.getGearboxRatio());
+	// A disconnected clutch invalidates gear inference for either switch.
+	EXPECT_EQ(0, dut.get().Value);
+	EXPECT_FLOAT_EQ(0, dut.getGearboxRatio());
 
 	engineConfiguration->clutchDownPin = Gpio::Unassigned;
 	engineConfiguration->clutchUpPin = Gpio::A2;
 	engine->engineState.clutchUpState = 0;
 	dut.onSlowCallback();
-	EXPECT_EQ(1, dut.get().Value);
-	EXPECT_FLOAT_EQ(2, dut.getGearboxRatio());
+	EXPECT_EQ(0, dut.get().Value);
+	EXPECT_FLOAT_EQ(0, dut.getGearboxRatio());
 
 	engine->engineState.clutchUpState = 1;
 	dut.onSlowCallback();
 	EXPECT_EQ(1, dut.get().Value);
+}
+
+// Speed Source = Output Shaft Speed (explicit choice): OSS RPM is used directly as driveshaft RPM,
+// no VSS/wheel-size math at all.
+TEST(GearDetector, DriveshaftRpmUsesOutputShaftSpeedWhenSelected) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	engineConfiguration->totalGearsCount = 1;
+	engineConfiguration->gearRatio[0] = 1.0f;
+	// Deliberately implausible VSS-path config, to prove it's NOT used when OSS is selected.
+	engineConfiguration->driveWheelRevPerKm = 1;
+	engineConfiguration->finalGearRatio = 1;
+	Sensor::setMockValue(SensorType::VehicleSpeed, 0);
+
+	engineConfiguration->gearDetectionUseOutputShaftSpeed = true;
+	Sensor::setMockValue(SensorType::OutputShaftSpeed, 4200.0f);
+
+	auto& dut = engine->module<GearDetector>().unmock();
+
+	EXPECT_NEAR(4200.0f, dut.getRpmInGear(1), 1e-2);
+}
+
+// Speed Source = Main Vehicle Speed (default): converts SensorType::VehicleSpeed back to driveshaft
+// RPM via driveWheelRevPerKm/finalGearRatio, regardless of which physical sensor feeds VehicleSpeed.
+TEST(GearDetector, DriveshaftRpmUsesMainVehicleSpeedByDefault) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	engineConfiguration->totalGearsCount = 1;
+	engineConfiguration->gearRatio[0] = 3.35f;
+	engineConfiguration->finalGearRatio = 4.1f;
+	engineConfiguration->driveWheelRevPerKm = 507;
+
+	Sensor::setMockValue(SensorType::VehicleSpeed, 29.45f / 0.6214f);
+
+	auto& dut = engine->module<GearDetector>().unmock();
+	// Same numbers as the Volvo racecar case in ComputeGearRatio (507 revs/km, 4.1 final drive).
+	EXPECT_NEAR(5500, dut.getRpmInGear(1), 1);
+}
+
+// RPM Source (Engine RPM vs Input Shaft Speed) only takes effect when Speed Source = Output Shaft
+// Speed - selecting Input Shaft Speed there uses ISS instead of plain engine RPM as the numerator.
+TEST(GearDetector, RpmSourceOnlyAppliesWithOutputShaftSpeed) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	engineConfiguration->totalGearsCount = 1;
+	engineConfiguration->gearRatio[0] = 1.0f;
+
+	engineConfiguration->gearDetectionUseOutputShaftSpeed = true;
+	engineConfiguration->gearDetectionRpmSourceIsInputShaftSpeed = true;
+	Sensor::setMockValue(SensorType::OutputShaftSpeed, 2000.0f);
+	Sensor::setMockValue(SensorType::Rpm, 9999.0f);
+	Sensor::setMockValue(SensorType::InputShaftSpeed, 3000.0f);
+
+	engine->periodicSlowCallback();
+	auto& dut = engine->module<GearDetector>().unmock();
+
+	// 3000 ISS / 2000 OSS - proves ISS (not the deliberately-wrong 9999 RPM) fed the numerator.
+	EXPECT_NEAR_M3(1.5f, dut.getGearboxRatio());
+
+	engineConfiguration->gearDetectionRpmSourceIsInputShaftSpeed = false;
+	dut.onSlowCallback();
+	EXPECT_NEAR(9999.0f / 2000, dut.getGearboxRatio(), 0.001f);
+
+	// The selector does not change legacy VSS's automatic ISS preference.
+	engineConfiguration->gearDetectionUseOutputShaftSpeed = false;
+	engineConfiguration->driveWheelRevPerKm = 600;
+	engineConfiguration->finalGearRatio = 1;
+	Sensor::setMockValue(SensorType::VehicleSpeed, 100);
+	dut.onSlowCallback();
+	EXPECT_FLOAT_EQ(3, dut.getGearboxRatio());
+}
+
+static GearDetector& setupSlipDetection() {
+	engineConfiguration->totalGearsCount = 1;
+	engineConfiguration->gearRatio[0] = 1;
+	engineConfiguration->driveWheelRevPerKm = 600;
+	engineConfiguration->finalGearRatio = 1;
+	engineConfiguration->gearDetectionUseOutputShaftSpeed = true;
+	engineConfiguration->transmissionSlipDetectionEnabled = true;
+	engineConfiguration->transmissionSlipMinVss = 5;
+	Sensor::setMockValue(SensorType::VehicleSpeed, 100);
+	Sensor::setMockValue(SensorType::OutputShaftSpeed, 1000);
+	Sensor::setMockValue(SensorType::Rpm, 1100);
+	return engine->module<GearDetector>().unmock();
+}
+
+TEST(GearDetector, SlipSignedPercentAndTelemetry) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	auto& dut = setupSlipDetection();
+	dut.onSlowCallback();
+	ASSERT_TRUE(dut.isSlipValid());
+	EXPECT_NEAR(10, dut.getSlipPercent(), 0.001f);
+	updateTunerStudioState();
+	EXPECT_TRUE(engine->outputChannels.transmissionSlipValid);
+	EXPECT_NEAR(10, engine->outputChannels.transmissionSlipPercent, 0.001f);
+	EXPECT_FLOAT_EQ(1000, engine->outputChannels.outputShaftSpeed);
+
+	Sensor::setMockValue(SensorType::Rpm, 900);
+	dut.onSlowCallback();
+	ASSERT_TRUE(dut.isSlipValid());
+	EXPECT_NEAR(-10, dut.getSlipPercent(), 0.001f);
+
+	Sensor::setMockValue(SensorType::Rpm, 1000);
+	dut.onSlowCallback();
+	ASSERT_TRUE(dut.isSlipValid());
+	EXPECT_FLOAT_EQ(0, dut.getSlipPercent());
+
+	engineConfiguration->transmissionSlipDetectionEnabled = false;
+	dut.onSlowCallback();
+	EXPECT_FALSE(dut.isSlipValid());
+	EXPECT_FLOAT_EQ(0, dut.getSlipPercent());
+	updateTunerStudioState();
+	EXPECT_FALSE(engine->outputChannels.transmissionSlipValid);
+	EXPECT_FLOAT_EQ(0, engine->outputChannels.transmissionSlipPercent);
+}
+
+TEST(GearDetector, SlipRpmSourceIndependentOfGearRpmSource) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	auto& dut = setupSlipDetection();
+	engineConfiguration->gearDetectionRpmSourceIsInputShaftSpeed = true;
+	Sensor::setMockValue(SensorType::InputShaftSpeed, 1000);
+	Sensor::setMockValue(SensorType::Rpm, 6000);
+	dut.onSlowCallback();
+	EXPECT_FLOAT_EQ(1, dut.getGearboxRatio());
+	ASSERT_TRUE(dut.isSlipValid());
+	EXPECT_FLOAT_EQ(500, dut.getSlipPercent());
+	updateTunerStudioState();
+	// A large engine/shaft difference must not wrap the telemetry representation.
+	EXPECT_FLOAT_EQ(500, engine->outputChannels.transmissionSlipPercent);
+
+	engineConfiguration->transmissionSlipRpmSourceIsInputShaftSpeed = true;
+	Sensor::setInvalidMockValue(SensorType::Rpm);
+	dut.onSlowCallback();
+	ASSERT_TRUE(dut.isSlipValid());
+	EXPECT_FLOAT_EQ(0, dut.getSlipPercent());
+
+	// Gear RPM is valid, but the separately selected slip RPM is unavailable.
+	engineConfiguration->gearDetectionRpmSourceIsInputShaftSpeed = false;
+	Sensor::setMockValue(SensorType::Rpm, 1000);
+	Sensor::setInvalidMockValue(SensorType::InputShaftSpeed);
+	dut.onSlowCallback();
+	EXPECT_EQ(1, dut.get().Value);
+	EXPECT_FALSE(dut.isSlipValid());
+	EXPECT_FLOAT_EQ(0, dut.getSlipPercent());
+}
+
+TEST(GearDetector, SlipRequiresOssSpeedFloorAndValidSources) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	auto& dut = setupSlipDetection();
+	dut.onSlowCallback();
+	ASSERT_TRUE(dut.isSlipValid());
+
+	// An otherwise valid gear from legacy VSS cannot establish OSS provenance.
+	engineConfiguration->gearDetectionUseOutputShaftSpeed = false;
+	dut.onSlowCallback();
+	EXPECT_EQ(1, dut.get().Value);
+	EXPECT_FALSE(dut.isSlipValid());
+	engineConfiguration->gearDetectionUseOutputShaftSpeed = true;
+
+	Sensor::setMockValue(SensorType::VehicleSpeed, 4.99f);
+	dut.onSlowCallback();
+	EXPECT_FALSE(dut.isSlipValid());
+	Sensor::setMockValue(SensorType::VehicleSpeed, 5);
+	dut.onSlowCallback();
+	EXPECT_TRUE(dut.isSlipValid());
+	Sensor::setInvalidMockValue(SensorType::VehicleSpeed);
+	dut.onSlowCallback();
+	EXPECT_FALSE(dut.isSlipValid());
+	Sensor::setMockValue(SensorType::VehicleSpeed, 100);
+
+	Sensor::setMockValue(SensorType::OutputShaftSpeed, 0);
+	dut.onSlowCallback();
+	EXPECT_EQ(0, dut.get().Value);
+	EXPECT_FALSE(dut.isSlipValid());
+	Sensor::setInvalidMockValue(SensorType::OutputShaftSpeed);
+	dut.onSlowCallback();
+	EXPECT_FALSE(dut.isSlipValid());
+	Sensor::setMockValue(SensorType::OutputShaftSpeed, 1000);
+	Sensor::setInvalidMockValue(SensorType::Rpm);
+	dut.onSlowCallback();
+	EXPECT_FALSE(dut.isSlipValid());
+	EXPECT_FLOAT_EQ(0, dut.getSlipPercent());
+
+	Sensor::setMockValue(SensorType::Rpm, NAN);
+	dut.onSlowCallback();
+	EXPECT_FALSE(dut.isSlipValid());
+	EXPECT_FLOAT_EQ(0, dut.getSlipPercent());
+
+	// Excessive ratio cannot identify a gear, so it also cannot identify slip.
+	Sensor::setMockValue(SensorType::Rpm, 2000);
+	dut.onSlowCallback();
+	EXPECT_EQ(0, dut.get().Value);
+	EXPECT_FALSE(dut.isSlipValid());
+}
+
+TEST(GearDetector, ClutchClearsAndRestoresSlip) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	auto& dut = setupSlipDetection();
+	engineConfiguration->clutchDownPin = Gpio::A1;
+	dut.onSlowCallback();
+	ASSERT_TRUE(dut.isSlipValid());
+	engine->engineState.clutchDownState = true;
+	dut.onSlowCallback();
+	EXPECT_EQ(0, dut.get().Value);
+	EXPECT_FALSE(dut.isSlipValid());
+	EXPECT_FLOAT_EQ(0, dut.getSlipPercent());
+	engine->engineState.clutchDownState = false;
+	dut.onSlowCallback();
+	EXPECT_TRUE(dut.isSlipValid());
+
+	engineConfiguration->clutchUpPin = Gpio::A2;
+	engine->engineState.clutchUpState = 0;
+	dut.onSlowCallback();
+	EXPECT_FALSE(dut.isSlipValid());
+	engine->engineState.clutchUpState = 1;
+	dut.onSlowCallback();
+	EXPECT_TRUE(dut.isSlipValid());
+
+	// Unconfigured switches must not suppress a vehicle without clutch inputs.
+	engineConfiguration->clutchDownPin = Gpio::Unassigned;
+	engineConfiguration->clutchUpPin = Gpio::Unassigned;
+	engine->engineState.clutchDownState = true;
+	engine->engineState.clutchUpState = 0;
+	dut.onSlowCallback();
+	EXPECT_TRUE(dut.isSlipValid());
+}
+
+TEST(OutputShaftSpeed, FrequencyConversion) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	OutputShaftSpeedConverter converter;
+	engineConfiguration->outputShaftSpeedSensorTeeth = 20;
+	EXPECT_FLOAT_EQ(300, converter.convert(100).value_or(-1));
+	EXPECT_FLOAT_EQ(0, converter.convert(0).value_or(-1));
+	engineConfiguration->outputShaftSpeedSensorTeeth = 40;
+	EXPECT_FLOAT_EQ(150, converter.convert(100).value_or(-1));
+	EXPECT_FALSE(converter.convert(-1).Valid);
+	EXPECT_FALSE(converter.convert(NAN).Valid);
+	engineConfiguration->outputShaftSpeedSensorTeeth = 0;
+	EXPECT_FALSE(converter.convert(100).Valid);
+}
+
+TEST(OutputShaftSpeed, PulseInputTimeoutAndReconfiguration) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	extern FrequencySensor outputShaftSpeedSensor;
+	engineConfiguration->outputShaftSpeedSensorPin = Gpio::A3;
+	engineConfiguration->outputShaftSpeedSensorTeeth = 20;
+	engineConfiguration->ossFilterReciprocal = 5;
+	initOutputShaftSpeedSensor();
+	ASSERT_TRUE(Sensor::hasSensor(SensorType::OutputShaftSpeed));
+	EXPECT_FALSE(Sensor::get(SensorType::OutputShaftSpeed).Valid);
+	for (int i = 0; i < 100; i++) {
+		eth.moveTimeForwardUs(10000);
+		outputShaftSpeedSensor.onEdge(getTimeNowNt());
+	}
+	EXPECT_NEAR(300, Sensor::get(SensorType::OutputShaftSpeed).value_or(-1), 0.1f);
+	eth.moveTimeForwardUs(501000);
+	EXPECT_FALSE(Sensor::get(SensorType::OutputShaftSpeed).Valid);
+
+	deinitOutputShaftSpeedSensor();
+	EXPECT_FALSE(Sensor::hasSensor(SensorType::OutputShaftSpeed));
+	initOutputShaftSpeedSensor();
+	EXPECT_FALSE(Sensor::get(SensorType::OutputShaftSpeed).Valid);
+	deinitOutputShaftSpeedSensor();
+	engineConfiguration->outputShaftSpeedSensorPin = Gpio::Unassigned;
+	initOutputShaftSpeedSensor();
+	EXPECT_FALSE(Sensor::hasSensor(SensorType::OutputShaftSpeed));
+
+	// Deinitializing the unconfigured hardware provider leaves a Lua/CAN owner intact.
+	StoredValueSensor externalProvider(SensorType::OutputShaftSpeed, MS2NT(500));
+	ASSERT_TRUE(externalProvider.Register());
+	externalProvider.setValidValue(2000, getTimeNowNt());
+	deinitOutputShaftSpeedSensor();
+	EXPECT_FLOAT_EQ(2000, Sensor::get(SensorType::OutputShaftSpeed).value_or(-1));
+	externalProvider.unregister();
 }

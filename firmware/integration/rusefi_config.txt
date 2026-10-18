@@ -1881,13 +1881,13 @@ uint8_t autoscale knockFuelTrim;Maximum Amount of Fuel trim when knock;"%", 1, 0
 	bit unusedBit_Fancy14
 	bit unusedBit_Fancy15
 	bit unusedBit_Fancy16
-	bit unusedBit_Fancy17
-	bit unusedBit_Fancy18
+	bit gearDetectionUseOutputShaftSpeed,"Output Shaft Speed","Main Vehicle Speed";Driveshaft reference for gear detection. Main Vehicle Speed uses wheel revolutions/km and final drive ratio. Output Shaft Speed reads shaft RPM directly and requires an OSS provider.
+	bit gearDetectionRpmSourceIsInputShaftSpeed,"Input Shaft Speed","Engine RPM";RPM source when Speed Source is Output Shaft Speed. Main Vehicle Speed retains automatic input-shaft selection when that sensor is registered.
 	bit unusedBit_Fancy19
 	bit unusedBit_Fancy20
 	bit unusedBit_Fancy21
-	bit unusedBit_Fancy22
-	bit unusedBit_Fancy23
+	bit transmissionSlipDetectionEnabled,"enabled","disabled";Compare the selected Slip RPM Source with expected RPM for the detected gear. Requires Speed Source = Output Shaft Speed, a valid gear and the minimum vehicle speed. Wheel-based references cannot identify transmission slip.
+	bit transmissionSlipRpmSourceIsInputShaftSpeed,"Input Shaft Speed","Engine RPM";Input Shaft Speed measures internal gearbox slip. Engine RPM also includes clutch or torque-converter slip. Accurate gear ratios are required.
 	bit unusedBit_Fancy24
 	bit unusedBit_Fancy25
 	bit unusedBit_Fancy26
@@ -2048,6 +2048,7 @@ end_struct
 
 ! end of engine_configuration_s
 	float idleParkNeutralOffset;Signed idle position offset when Lua reports Park or Neutral via setParkNeutral(boolean). Negative values reduce opening, positive values increase it. Added to running open-loop idle, not target RPM. Zero disables the correction.;"%", 1, 0, -100, 100, 1
+include_file controllers/modules/gear_detector/gear_detector_engineConfiguration.txt
 end_struct
 
 ! note that this magic field name is used by LiveDataParserPanel
