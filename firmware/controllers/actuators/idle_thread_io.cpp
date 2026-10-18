@@ -54,6 +54,9 @@ percent_t getIdlePosition() {
 
 void startSwitchPins() {
 #if EFI_PROD_CODE
+	for (size_t i = 0; i < IDLE_UP_SWITCH_COUNT; i++) {
+		startInputPinIfValid("Idle-up switch", engineConfiguration->idleUpSwitchPins[i], engineConfiguration->idleUpSwitchMode[i]);
+	}
 	// this is neutral/no gear switch input. on Miata it's wired both to clutch pedal and neutral in gearbox
 	// this switch is not used yet
 	startInputPinIfValid("clutch down switch", engineConfiguration->clutchDownPin, engineConfiguration->clutchDownPinMode);
@@ -73,6 +76,9 @@ void startSwitchPins() {
 }
 
 void stopSwitchPins() {
+	for (size_t i = 0; i < IDLE_UP_SWITCH_COUNT; i++) {
+		brain_pin_markUnused(activeConfiguration.idleUpSwitchPins[i]);
+	}
 	brain_pin_markUnused(activeConfiguration.clutchUpPin);
 	brain_pin_markUnused(activeConfiguration.clutchDownPin);
 	brain_pin_markUnused(activeConfiguration.brakePedalPin);
@@ -132,7 +138,9 @@ void setDefaultIdleParameters() {
 	engineConfiguration->idlePidRpmUpperLimit = 300;
 
 	engineConfiguration->idlePidRpmDeadZone = 50;
-	engineConfiguration->idleReturnTargetRampDuration = 3;
+	engineConfiguration->offIdleRpmStabilityThreshold = 100;
+	engineConfiguration->offIdleWaitTime = 0.5f;
+	engineConfiguration->offIdleRpmAdderDecayTime = 2;
 }
 
 void startIdleThread() {

@@ -428,6 +428,7 @@ custom UiMode 1 bits, S08, @OFFSET@, [0:1], @@UiMode_enum@@
 
 struct cranking_parameters_s
 int16_t rpm;This sets the RPM limit below which the ECU will use cranking fuel and ignition logic, typically this is around 350-450rpm. \nset cranking_rpm X;"RPM", 1, 0, 0, 12000, 0
+uint8_t tpsTarget;Fixed ETB opening during cranking below 2 km/h, when enabled. This is actual throttle percent, not percent of the idle range.;"%", 1, 0, 0, 100, 0
 end_struct
 
 #define debug_mode_e_enum "INVALID", "TPS acceleration enrichment", "INVALID", "Stepper Idle Control", "Engine Load accl enrich", "Trigger Counters", "Soft Spark Cut", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "SD card", "sr5", "Knock", "INVALID", "Electronic Throttle", "Executor", "Bench Test / TS commands", "INVALID", "Analog inputs #1", "INSTANT_RPM", "INVALID", "Status", "INVALID", "INVALID", "MAP", "Metrics", "INVALID", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "INVALID", "Boost Control", "INVALID", "INVALID", "ETB Autotune", "Composite Log", "INVALID", "INVALID", "INVALID", "Dyno_View", "Logic_Analyzer", "INVALID", "TCU", "Lua"
@@ -594,7 +595,7 @@ uint16_t engineSnifferRpmThreshold;Engine sniffer would be disabled above this r
 
 	output_pin_e tachOutputPin;
 	pin_output_mode_e tachOutputPinMode;
-	uint8_t acIdleExtraOffset;Additional idle % while A/C is active;"%", 1, 0, 0, 100, 0
+	uint8_t unusedAcIdleExtraOffset;Additional idle % while A/C is active;"%", 1, 0, 0, 100, 0
 
 
 	uint8_t multisparkMaxSparkingAngle;This parameter sets the latest that the last multispark can occur after the main ignition event. For example, if the ignition timing is 30 degrees BTDC, and this parameter is set to 45, no multispark will ever be fired after 15 degrees ATDC.;"deg", 1, 0, 0, 60, 0
@@ -978,7 +979,7 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	bit useAbsolutePressureForLagTime,"yes","no"
 	! see #8650, only used on the UI
 
-	bit idleReturnTargetRamp,"yes","no";When returning to idle from coasting, start the closed-loop RPM target elevated by the 'RPM upper limit' idle detection threshold, then ramp it down to the normal target over the 'Ramp target duration'. Helps prevent RPM from dipping below the idle target on return to idle.
+	bit unusedIdleReturnTargetRamp,"yes","no";When returning to idle from coasting, start the closed-loop RPM target elevated by the 'RPM upper limit' idle detection threshold, then ramp it down to the normal target over the 'Ramp target duration'. Helps prevent RPM from dipping below the idle target on return to idle.
 	bit useInjectorFlowLinearizationTable,"yes","no"
 	bit useHbridgesToDriveIdleStepper,"yes","no";If enabled we use two H-bridges to drive stepper idle air valve
 	bit multisparkEnable,"yes","no"
@@ -1273,7 +1274,7 @@ pin_input_mode_e sdLogTriggerPinMode;
 
 	float turboSpeedSensorMultiplier;;"mult", 1, 0, 0, 7000, 3
 
-	int16_t acIdleRpmTarget;Idle target speed when A/C is enabled. Some cars need the extra speed to keep the AC efficient while idling.;"RPM", 1, 0, 0, 2000, 0
+	int16_t acIdleRpmAdder;RPM added to the coolant-based idle target while A/C is requested.;"RPM", 1, 0, 0, 1000, 0
 
 	int16_t warningPeriod;set warningPeriod X;"seconds", 1, 0, 0, 60, 0
 
@@ -1953,7 +1954,7 @@ uint8_t autoscale knockFuelTrim;Maximum Amount of Fuel trim when knock;"%", 1, 0
 
 	int8_t[8] airmassToTimingBins;;"mg", 1, 0, -100, 100, 0
 	int8_t[8] airmassToTimingValues;;"deg", 1, 0, -30, 30, 0
-	uint8_t autoscale idleReturnTargetRampDuration;Time for the idle RPM target to ramp down from the elevated return-to-idle value (normal target + 'RPM upper limit') to the normal target. Longer duration gives a gentler, slower settle to idle. Only used when 'Ramp target on return to idle' is enabled.;"seconds", 0.1, 0, 0.1, 15, 1
+	uint8_t autoscale unusedIdleReturnTargetRampDuration;Time for the idle RPM target to ramp down from the elevated return-to-idle value (normal target + 'RPM upper limit') to the normal target. Longer duration gives a gentler, slower settle to idle. Only used when 'Ramp target on return to idle' is enabled.;"seconds", 0.1, 0, 0.1, 15, 1
 
 	float wastegatePositionOpenedVoltage;Voltage when the wastegate is fully open;"v", 1, 0, 0, 10, 2
 	float wastegatePositionClosedVoltage;Voltage when the wastegate is closed;"v", 1, 0, 0, 10, 2
@@ -2062,6 +2063,21 @@ include_file controllers/actuators/vvt_advanced_engineConfiguration.txt
 custom dfco_fuel_cut_mode_e 1 bits, U08, @OFFSET@, [0:1], @@dfco_fuel_cut_mode_e_enum@@
 dfco_fuel_cut_mode_e dfcoFuelCutMode;Overrun uses the TPS, RPM and vehicle-speed thresholds below. Decel requires Enable Engine State Machine and its Decelerating state, or RPM falling faster than the Decel RPM rate threshold when no vehicle-speed sensor is configured. Decel does not use the overrun TPS/RPM/speed/gear gates. Both accepts either path. Coolant, MAP, tuning and Lua guards apply in all modes. Active state-machine shifts suppress fuel cut.
 bit coastingFuelCutRequiresGear,"enabled","disabled";Require a valid DetectedGear greater than zero for the Overrun path. Neutral, unknown or invalid gear prevents overrun fuel cut. Configure gear detection before enabling. Does not restrict the Decel path.
+
+! [tag:idle_air_migration] IdleAirMigrator preserves legacy cranking air and converts A/C calibration.
+bit crankingAirAmountEnabled,"enabled","disabled";Use the CLT cranking air curve, blending into running air after start. With RPM flare enabled this curve is an addition to running air.
+bit crankingIdleRpmFlareEnabled,"enabled","disabled";Add the CLT cranking RPM curve to the idle target during cranking and crank-to-run taper. Closed-loop idle stays disabled until taper completes.
+bit crankingTpsTargetEnabled,"enabled","disabled";Use a fixed electronic throttle opening while cranking below 2 km/h. Missing vehicle speed is treated as zero.
+bit idleVssGateClutchOverride,"enabled","disabled";Allow idle above Max vehicle speed when the transmission is disengaged or detected gear is neutral. Neutral remains latched through transient gear matches until RPM exceeds the idle exit threshold or the throttle is pressed.
+#define IDLE_UP_SWITCH_COUNT 3
+switch_input_pin_e[IDLE_UP_SWITCH_COUNT iterate] idleUpSwitchPins;External idle air request input.
+pin_input_mode_e[IDLE_UP_SWITCH_COUNT iterate] idleUpSwitchMode
+uint8_t[IDLE_UP_SWITCH_COUNT iterate] idleUpAdder;Running idle air added while this input is active.;"%", 1, 0, 0, 100, 0
+int16_t offIdleRpmAdder;RPM added while running or coasting, held on return to idle until RPM stabilizes, then held for the wait time and decayed. Zero disables.;"RPM", 1, 0, 0, 1000, 0
+uint8_t autoscale offIdleWaitTime;Hold time after RPM first stabilizes.;"s", 0.1, 0, 0, 10, 1
+uint8_t autoscale offIdleRpmAdderDecayTime;Time to decay the off-idle RPM addition to zero.;"s", 0.1, 0, 0, 10, 1
+uint8_t autoscale offIdleRpmStabilityThreshold;Absolute RPM change rate below which the off-idle hold timer starts.;"RPM/s", 10, 0, 0, 2550, 0
+
 end_struct
 
 ! note that this magic field name is used by LiveDataParserPanel
@@ -2597,6 +2613,14 @@ split_lines@@BOARD_CONFIG_FROM_FILE@@
 	end_struct
 
 	KnockGain[MAX_CYLINDER_COUNT iterate] knockGains
+
+#define AC_IDLE_PRESSURE_CURVE_SIZE 8
+float[AC_IDLE_PRESSURE_CURVE_SIZE] acIdleAdderByPressureBins;;"kPa", 1, 0, 0, 3000, 0
+float[AC_IDLE_PRESSURE_CURVE_SIZE] acIdleAdderByPressure;Idle air added while A/C is requested. Missing or invalid pressure uses the first value.;"%", 1, 0, 0, 100, 1
+float[CLT_CRANKING_CURVE_SIZE] cltCrankingRpmAdder;Idle target RPM addition during cranking, fading out through the crank-to-run taper.;"RPM", 1, 0, 0, 2000, 0
+float[CLT_CRANKING_TAPER_CURVE_SIZE] afterCrankingIACtaperHoldDurationBins;;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -100 : -148}, {useMetricOnInterface ? @@CLT_UPPER_LIMIT@@ : @@CLT_UPPER_LIMIT@@ * 1.8 + 32}, 2
+uint16_t[CLT_CRANKING_TAPER_CURVE_SIZE] afterCrankingIACtaperHoldDuration;Engine cycles since start to hold cranking air and RPM flare before taper begins. Includes cycles spent cranking.;"cycles", 1, 0, 0, 500, 0
+
 end_struct
 
 #define PPS_OK_INDICATOR "Pedal OK"

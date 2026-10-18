@@ -47,4 +47,7 @@ custom idle_state_e 4 bits, S32, @OFFSET@, [0:2], "not important"
 
 	uint16_t idleTargetAirmass;Target airmass;"mg", 1, 0, 0, 0, 0
 	uint16_t autoscale idleTargetFlow;Target airflow;"kg/h", 0.01, 0, 0, 0, 2
+	int16_t offIdleAdderCurrentRpm;Idle: off-idle RPM addition;"RPM", 1, 0, 0, 1000, 0
+	! States: 0 inactive, 1 armed, 2 stabilizing, 3 waiting, 4 decaying
+	uint8_t offIdleAdderStateIndex;Idle: off-idle state
 end_struct

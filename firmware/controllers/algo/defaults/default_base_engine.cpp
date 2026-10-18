@@ -263,10 +263,7 @@ bool applyDefaultsOrFixAfterBurn(const engine_configuration_s* previousConfigura
   	engineConfiguration->alternator_iTermMax = 1000;
   	changed = true;
 	}
-	if (engineConfiguration->idleReturnTargetRampDuration <= 0.1){
-		engineConfiguration->idleReturnTargetRampDuration = 3;
-		changed = true;
-	}
+
 
 	if (engineConfiguration->fan1PwmFrequency == 0) {
         engineConfiguration->fan1PwmFrequency = 250;
@@ -551,7 +548,6 @@ void setDefaultBaseEngine() {
 	engineConfiguration->idleStepperReactionTime = 3;
 	engineConfiguration->idleStepperTotalSteps = 200;
 	engineConfiguration->stepperForceParkingEveryRestart = true;
-	engineConfiguration->iacByTpsTaper = 2;
 
     engineConfiguration->etbSplit = MAX_TPS_PPS_DISCREPANCY;
 	engineConfiguration->tpsExpAverageAlpha = 1;

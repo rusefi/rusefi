@@ -33,6 +33,7 @@ Release template (copy/paste this for new release):
 ## Unreleased
 
 ### Added
+ - Idle air and target rework with A/C RPM/pressure additions, external idle-up switches, cranking air/flare/ETB targets and hold/taper, off-idle RPM decay and clutch/neutral speed-gate override. kudos AlphaX!
  - Optional engine state machine, clutch-based shift recognition and state-based STFT regions. kudos AlphaX!
  - Advanced VVT control with oil-pressure base duty, signed-error P-gain curves and configurable integral limits. kudos AlphaX!
  - State-aware DFCO with Overrun/Decel/Both modes, optional detected-gear gating and shift suppression. kudos AlphaX!

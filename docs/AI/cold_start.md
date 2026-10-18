@@ -124,10 +124,13 @@ multiplier does not enable or disable this separate cut.
 
 ## Air, spark and diagnostics
 
-Cranking idle air uses the coolant-indexed `cltCrankingCorr` curve. The ordinary
-position-based crank-to-idle taper uses the same engine-cycle counter described
-above, with a coolant-dependent duration. See [idle control](idle_system.md)
-for phase selection and the modeled-flow alternative.
+Cranking idle air optionally uses the coolant-indexed `cltCrankingCorr` curve.
+With cranking RPM flare enabled, that air becomes an addition to running air,
+and `cltCrankingRpmAdder` raises the target used to select running air. A
+CLT-dependent hold precedes the taper; both count engine cycles from rotation
+start, including cranking. Fixed cranking ETB opening is a separate opt-in
+setting, active only below 2 km/h. See [idle control](idle_system.md) for
+selection, zero-duration behavior and closed-loop gating.
 
 Cranking uses `ignitionDwellForCrankingMs`. Advance comes from the separate
 cranking curve when selected; otherwise `crankingTimingAngle` is blended toward

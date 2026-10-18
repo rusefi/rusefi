@@ -13,7 +13,11 @@ void setDefaultCranking() {
 	engineConfiguration->ignitionDwellForCrankingMs = DEFAULT_CRANKING_DWELL_MS;
 	engineConfiguration->crankingTimingAngle = DEFAULT_CRANKING_ANGLE;
 
-	// IAC
+	// IAC: preserve cranking air by default; flare, hold and fixed TPS are opt-in.
+	engineConfiguration->crankingAirAmountEnabled = true;
+	setArrayValues(config->cltCrankingRpmAdder, 0);
+	setArrayValues(config->afterCrankingIACtaperHoldDuration, 0);
+	setLinearCurve(config->afterCrankingIACtaperHoldDurationBins, CLT_CURVE_RANGE_FROM, 100, 1);
 	setArrayValues(config->cltCrankingCorr, 50);
 	// should be 100 once tune is better
 	setArrayValues(config->afterCrankingIACtaperDuration, 200);

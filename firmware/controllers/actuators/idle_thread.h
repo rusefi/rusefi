@@ -65,6 +65,7 @@ public:
 	}
 
 	float getIdlePosition(float rpm);
+	float getOffIdleAdder(Phase phase, float rpm);
 
 	// TARGET DETERMINATION
 	TargetInfo getTargetRpm(float clt) override;
@@ -132,7 +133,14 @@ private:
 	float m_crankTaperEndTime = 0.0f;
 	float m_idleTimingSoftEntryEndTime = 0.0f;
 
-  Timer m_timeInIdlePhase;
+	enum class OffIdleAdderPhase : uint8_t { Inactive, Armed, Stabilizing, Waiting, Decaying };
+	OffIdleAdderPhase m_offIdlePhase = OffIdleAdderPhase::Inactive;
+	Timer m_offIdleWaitTimer;
+	Timer m_offIdleDecayTimer;
+	float m_lastRpmForStability = 0;
+	float m_offIdleAdderRpm = 0;
+	bool m_vssGateOverrideEngaged = false;
+	void resetTargetAdders();
 
 	// This is stored by getClosedLoop and used in case we want to "do nothing"
 	float m_lastAutomaticPosition = 0;

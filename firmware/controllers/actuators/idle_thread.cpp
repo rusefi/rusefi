@@ -38,30 +38,18 @@ IIdleController::TargetInfo IdleController::getTargetRpm(float clt) {
 	// Base target from the CLT->RPM curve (cold engines idle higher)
 	targetRpmByClt = interpolate2d(clt, config->cltIdleRpmBins, config->cltIdleRpm);
 
-  // FIXME: this is running as "RPM target" not "RPM bump" [ie adding to the CLT rpm target]
 	// idle air Bump for AC
 	// Why do we bump based on button not based on actual A/C relay state?
 	// Because AC output has a delay to allow idle bump to happen first, so that the airflow increase gets a head start on the load increase
 	// alternator duty cycle has a similar logic
-	targetRpmAc = engine->module<AcController>().unmock().acButtonState ? engineConfiguration->acIdleRpmTarget : 0;
+	targetRpmAc = engine->module<AcController>().unmock().acButtonState ? engineConfiguration->acIdleRpmAdder : 0;
 
-	float target = (targetRpmByClt < targetRpmAc) ? targetRpmAc : targetRpmByClt;
+	float target = targetRpmByClt + targetRpmAc;
 	float rpmUpperLimit = engineConfiguration->idlePidRpmUpperLimit;
  	float entryRpm = target + rpmUpperLimit;
 
   // Higher exit than entry to add some hysteresis to avoid bouncing around upper threshold
  	float exitRpm = target + 1.5 * rpmUpperLimit;
-
- 	// Ramp the target down from the transition RPM to normal over a few seconds
-  if (engineConfiguration->idleReturnTargetRamp) {
- 		// Ramp the target down from the transition RPM to normal over a few seconds
- 		float timeSinceIdleEntry = m_timeInIdlePhase.getElapsedSeconds();
- 		target += interpolateClamped(
- 			0, rpmUpperLimit,
- 			engineConfiguration->idleReturnTargetRampDuration, 0,
- 			timeSinceIdleEntry
- 		);
- 	}
 
  	idleTarget = target;
 	idleEntryRpm = entryRpm;
@@ -82,6 +70,15 @@ IIdleController::TargetInfo IdleController::getTargetRpm(float clt) {
  */
 IIdleController::Phase IdleController::determinePhase(float rpm, IIdleController::TargetInfo targetRpm, SensorResult tps, float vss, float crankingTaperFraction) {
 #if EFI_SHAFT_POSITION_INPUT
+	// Clear the neutral latch before any early return. A later gear match must
+	// not resurrect an override after leaving the idle corner.
+	if (!engineConfiguration->idleVssGateClutchOverride || !engine->rpmCalculator.isRunning()
+		|| !tps || tps.Value > engineConfiguration->idlePidDeactivationTpsThreshold
+		|| rpm > targetRpm.IdleExitRpm || engineConfiguration->maxIdleVss == 0
+		|| vss <= engineConfiguration->maxIdleVss) {
+		m_vssGateOverrideEngaged = false;
+	}
+
 	// Not spinning at running RPM yet -> cranking
 	if (!engine->rpmCalculator.isRunning()) {
 		return Phase::Cranking;
@@ -114,6 +111,20 @@ IIdleController::Phase IdleController::determinePhase(float rpm, IIdleController
 	// If the vehicle is moving too quickly, disable CL idle
 	auto maxVss = engineConfiguration->maxIdleVss;
 	looksLikeRunning = maxVss != 0 && vss > maxVss;
+	if (looksLikeRunning && engineConfiguration->idleVssGateClutchOverride) {
+		if (!engine->module<EngineStateMachine>().unmock().isTransmissionEngaged()) {
+			m_vssGateOverrideEngaged = false;
+			looksLikeRunning = false;
+		} else {
+			auto gear = Sensor::get(SensorType::DetectedGear);
+			if (gear && gear.Value == 0) {
+				m_vssGateOverrideEngaged = true;
+			}
+			if (m_vssGateOverrideEngaged) {
+				looksLikeRunning = false;
+			}
+		}
+	}
 	if (looksLikeRunning) {
 		return Phase::Running;
 	}
@@ -140,8 +151,88 @@ IIdleController::Phase IdleController::determinePhase(float rpm, IIdleController
  * cranking IAC position into running open-loop position.
  */
 float IdleController::getCrankingTaperFraction(float clt) const {
-  	float taperDuration = interpolate2d(clt, config->afterCrankingIACtaperDurationBins, config->afterCrankingIACtaperDuration);
-	return (float)engine->rpmCalculator.getRevolutionCounterSinceStart() / taperDuration;
+	float hold = interpolate2d(clt, config->afterCrankingIACtaperHoldDurationBins, config->afterCrankingIACtaperHoldDuration);
+	float duration = interpolate2d(clt, config->afterCrankingIACtaperDurationBins, config->afterCrankingIACtaperDuration);
+	float cyclesPastHold = engine->rpmCalculator.getRevolutionCounterSinceStart() - hold;
+	if (cyclesPastHold < 0) {
+		return 0;
+	}
+	// A zero-length taper finishes immediately at the end of the hold.
+	return duration > 0 ? cyclesPastHold / duration : 1;
+}
+
+float IdleController::getOffIdleAdder(Phase phase, float rpm) {
+	float dRpmPerSec = std::abs(rpm - m_lastRpmForStability) / (FAST_CALLBACK_PERIOD_MS / 1000.0f);
+	m_lastRpmForStability = rpm;
+
+	if (engineConfiguration->offIdleRpmAdder <= 0) {
+		m_offIdlePhase = OffIdleAdderPhase::Inactive;
+		return m_offIdleAdderRpm = 0;
+	}
+
+	// Cranking always aborts the adder, even if a prior Running/Coasting cycle left it
+	// Armed/Stabilizing/Waiting/Decaying (e.g. the engine stalled and is being re-cranked).
+	// The adder must only ever engage via Coasting (or Running), never carry over into cranking.
+	if (phase == Phase::Cranking) {
+		m_offIdlePhase = OffIdleAdderPhase::Inactive;
+		return m_offIdleAdderRpm = 0;
+	}
+
+	const float maxAdder  = engineConfiguration->offIdleRpmAdder;
+	const float stability = engineConfiguration->offIdleRpmStabilityThreshold;
+	const float waitTime  = engineConfiguration->offIdleWaitTime;
+	const float decayTime = engineConfiguration->offIdleRpmAdderDecayTime;
+
+	bool isOffIdle = (phase == Phase::Running || phase == Phase::Coasting);
+
+	if (isOffIdle) {
+		m_offIdlePhase = OffIdleAdderPhase::Armed;
+		return m_offIdleAdderRpm = maxAdder;
+	}
+
+	switch (m_offIdlePhase) {
+		case OffIdleAdderPhase::Inactive:
+			return m_offIdleAdderRpm = 0;
+
+		case OffIdleAdderPhase::Armed:
+			m_offIdlePhase = OffIdleAdderPhase::Stabilizing;
+			return m_offIdleAdderRpm = maxAdder;
+
+		case OffIdleAdderPhase::Stabilizing:
+			if (dRpmPerSec < stability) {
+				m_offIdlePhase = OffIdleAdderPhase::Waiting;
+				m_offIdleWaitTimer.reset();
+			}
+			return m_offIdleAdderRpm = maxAdder;
+
+		case OffIdleAdderPhase::Waiting:
+			if (m_offIdleWaitTimer.hasElapsedSec(waitTime)) {
+				m_offIdlePhase = OffIdleAdderPhase::Decaying;
+				m_offIdleDecayTimer.reset();
+			}
+			return m_offIdleAdderRpm = maxAdder;
+
+		case OffIdleAdderPhase::Decaying: {
+			float elapsed = m_offIdleDecayTimer.getElapsedSeconds();
+			if (decayTime <= 0 || elapsed >= decayTime) {
+				m_offIdlePhase = OffIdleAdderPhase::Inactive;
+				return m_offIdleAdderRpm = 0;
+			}
+			return m_offIdleAdderRpm = interpolateClamped(0, maxAdder, decayTime, 0.0f, elapsed);
+		}
+	}
+	return m_offIdleAdderRpm = 0;
+}
+
+/**
+ * Idle open-loop % adder while A/C is active, looked up from the A/C pressure curve.
+ * Cars with no A/C pressure sensor wired use the leftmost (lowest-pressure) curve value.
+ */
+static percent_t getAcIdleAdder() {
+	auto acPressure = Sensor::get(SensorType::AcPressure);
+	return acPressure.Valid
+		? interpolate2d(acPressure.Value, config->acIdleAdderByPressureBins, config->acIdleAdderByPressure)
+		: config->acIdleAdderByPressure[0];
 }
 
 /**
@@ -172,11 +263,18 @@ percent_t IdleController::getRunningOpenLoop(IIdleController::Phase phase, float
 
 	// Now we bump it by the AC/fan amount if necessary
     if (engine->module<AcController>().unmock().acButtonState && (phase == Phase::Idling || phase == Phase::CrankToIdleTaper)) {
-    	running += engineConfiguration->acIdleExtraOffset;
+		running += getAcIdleAdder();
     }
 
 	running += enginePins.fanRelay.getLogicValue() ? engineConfiguration->fan1ExtraIdle : 0;
 	running += enginePins.fanRelay2.getLogicValue() ? engineConfiguration->fan2ExtraIdle : 0;
+
+	for (size_t i = 0; i < IDLE_UP_SWITCH_COUNT; i++) {
+		if (isBrainPinValid(engineConfiguration->idleUpSwitchPins[i])
+			&& efiReadPin(engineConfiguration->idleUpSwitchPins[i], engineConfiguration->idleUpSwitchMode[i])) {
+			running += engineConfiguration->idleUpAdder[i];
+		}
+	}
 
 	running += luaAdd;
 	running += m_isParkNeutral ? engineConfiguration->idleParkNeutralOffset : 0;
@@ -236,8 +334,8 @@ percent_t IdleController::getOpenLoop(Phase phase, float rpm, float clt, SensorR
 	isCranking = phase == Phase::Cranking;
 	isIdleCoasting = phase == Phase::Coasting || (phase == Phase::Running && engineConfiguration->modeledFlowIdle);
 
-	// if we're cranking, nothing more to do.
-	if (isCranking) {
+	// Exclusive cranking air unless flare makes it additive.
+	if (isCranking && engineConfiguration->crankingAirAmountEnabled && !engineConfiguration->crankingIdleRpmFlareEnabled) {
 		return crankingValvePosition;
 	}
 
@@ -248,7 +346,7 @@ percent_t IdleController::getOpenLoop(Phase phase, float rpm, float clt, SensorR
 
 		// Add A/C offset if the A/C is on during coasting
 		if (engine->module<AcController>().unmock().acButtonState) {
-			coastingPosition += engineConfiguration->acIdleExtraOffset;
+			coastingPosition += getAcIdleAdder();
 		}
 
 		// We return here, bypassing the final interpolation, so we should clamp the value
@@ -257,6 +355,13 @@ percent_t IdleController::getOpenLoop(Phase phase, float rpm, float clt, SensorR
 	}
 
 	percent_t running = getRunningOpenLoop(phase, rpm, clt, tps);
+
+	if (!engineConfiguration->crankingAirAmountEnabled) {
+		return running;
+	}
+	if (engineConfiguration->crankingIdleRpmFlareEnabled) {
+		return clampPercentValue(running + interpolateClamped(0, crankingValvePosition, 1, 0, crankingTaperFraction));
+	}
 
 	// Interpolate between cranking and running over a short time
 	// This clamps once you fall off the end, so no explicit check for >1 required
@@ -432,7 +537,6 @@ float IdleController::getIdlePosition(float rpm) {
 
 		// Compute the target we're shooting for
 		auto targetRpm = getTargetRpm(clt);
-		m_lastTargetRpm = targetRpm.ClosedLoopTarget;
 
 		// Determine cranking taper (modeled flow does no taper of open loop)
 		float crankingTaper = useModeledFlow ? 1 : getCrankingTaperFraction(clt);
@@ -444,10 +548,18 @@ float IdleController::getIdlePosition(float rpm) {
 		// update TS flag
 		isIdling = (phase == Phase::Idling) || (phase == Phase::CrankToIdleTaper);
 
-    if (phase != m_lastPhase && phase == Phase::Idling) {
-        // Just entered idle, reset timer
- 		    m_timeInIdlePhase.reset();
- 	  }
+		// Thresholds stay based on the normal target, so transient additions do
+		// not change phase detection. The final target also selects the air table row.
+		if (engineConfiguration->crankingIdleRpmFlareEnabled &&
+			(phase == Phase::Cranking || phase == Phase::CrankToIdleTaper)) {
+			float flare = interpolate2d(clt, config->cltCrankingCorrBins, config->cltCrankingRpmAdder);
+			targetRpm.ClosedLoopTarget += interpolateClamped(0, flare, 1, 0, crankingTaper);
+		}
+		offIdleAdderCurrentRpm = getOffIdleAdder(phase, rpm);
+		offIdleAdderStateIndex = static_cast<uint8_t>(m_offIdlePhase);
+		targetRpm.ClosedLoopTarget += m_offIdleAdderRpm;
+		m_lastTargetRpm = targetRpm.ClosedLoopTarget;
+		idleTarget = targetRpm.ClosedLoopTarget;
 
 		m_lastPhase = phase;
 
@@ -536,11 +648,22 @@ void IdleController::onFastCallback() {
 #endif // EFI_SHAFT_POSITION_INPUT
 }
 
+void IdleController::resetTargetAdders() {
+	m_offIdlePhase = OffIdleAdderPhase::Inactive;
+	m_offIdleAdderRpm = 0;
+	m_lastRpmForStability = 0;
+	offIdleAdderCurrentRpm = 0;
+	offIdleAdderStateIndex = 0;
+	m_vssGateOverrideEngaged = false;
+}
+
 void IdleController::onEngineStop() {
+	resetTargetAdders();
 	getIdlePid()->reset();
 }
 
 void IdleController::onConfigurationChange(engine_configuration_s const * previousConfiguration) {
+	resetTargetAdders();
 #if ! EFI_UNIT_TEST
 	shouldResetPid = !previousConfiguration || !getIdlePid()->isSame(&previousConfiguration->idleRpmPid);
 #endif
@@ -551,6 +674,7 @@ void IdleController::onConfigurationChange(engine_configuration_s const * previo
  * by modeled-flow idle, and the main RPM idle PID.
  */
 void IdleController::init() {
+	resetTargetAdders();
 	shouldResetPid = false;
 	mightResetPid = false;
 	wasResetPid = false;

@@ -21,6 +21,7 @@ public enum ComposedTuneMigrator implements TuneMigrator {
         AfrLambdaTableMigrator.INSTANCE,
         ArrayFieldScaleMigrator.INSTANCE,
         BattLagCorrExtensionMigrator.INSTANCE,
+        IdleAirMigrator.INSTANCE,
         CltIdleCorrMigrator.INSTANCE,
         DisplacementIniFieldMigrator.INSTANCE,
         VeBlends1BlendParameterMigrator.INSTANCE,

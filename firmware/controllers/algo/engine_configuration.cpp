@@ -599,12 +599,13 @@ static void setDefaultEngineConfiguration() {
 #endif
 	engineConfiguration->isWaveAnalyzerEnabled = true;
 
-	engineConfiguration->acIdleRpmTarget = 900;
+	engineConfiguration->acIdleRpmAdder = 0;
 	engineConfiguration->acDelay = engine_configuration_defaults::AC_DELAY;
     engineConfiguration->minAcPressure = engine_configuration_defaults::MIN_AC_PRESSURE;
     engineConfiguration->maxAcPressure = engine_configuration_defaults::MAX_AC_PRESSURE;
 	engineConfiguration->acPressureEnableHyst = engine_configuration_defaults::AC_PRESSURE_ENABLE_HYST;
-	engineConfiguration->acIdleExtraOffset = 15;
+	setLinearCurve(config->acIdleAdderByPressureBins, 0, 2000, 1);
+	setArrayValues(config->acIdleAdderByPressure, 15);
 
     engineConfiguration->nitrousMinimumTps = engine_configuration_defaults::NITROUS_MINIMUM_TPS;
     engineConfiguration->nitrousMinimumClt = engine_configuration_defaults::NITROUS_MINIMUM_CLT;

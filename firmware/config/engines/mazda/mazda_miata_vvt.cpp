@@ -275,8 +275,7 @@ static void setCommonMazdaNB() {
 
 	// Idle
 	engineConfiguration->idleMode = idle_mode_e::IM_AUTO;
-	engineConfiguration->iacByTpsTaper = 6;
-	engineConfiguration->acIdleExtraOffset = 15;
+	setArrayValues(config->acIdleAdderByPressure, 15);
 
 	engineConfiguration->useIdleTimingPidControl = true;
 	engineConfiguration->idlePidRpmUpperLimit = 350;

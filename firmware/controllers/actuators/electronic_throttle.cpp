@@ -317,6 +317,12 @@ expected<percent_t> EtbController::getSetpointEtb() {
 		return unexpected;
 	}
 
+	// Direct cranking opening is separate from the normal idle-range blend.
+	if (engineConfiguration->crankingTpsTargetEnabled && engine->rpmCalculator.isCranking()
+		&& Sensor::getOrZero(SensorType::VehicleSpeed) < 2.0f) {
+		return clampPercentValue(engineConfiguration->cranking.tpsTarget);
+	}
+
 	float sanitizedPedal = getSanitizedPedal();
 	float rpm = Sensor::getOrZero(SensorType::Rpm);
 

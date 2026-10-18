@@ -30,9 +30,6 @@ void setMaverickX3() {
     engineConfiguration->injector.flow = 320;
     engineConfiguration->etbIdleThrottleRange = 10;
 
-    engineConfiguration->iacByTpsHoldTime = 2;
-    engineConfiguration->iacByTpsDecayTime = 2;
-    engineConfiguration->iacByTpsTaper = 5;
     engineConfiguration->useIdleTimingPidControl = true;
     engineConfiguration->idleTimingSoftEntryTime = 1;
 

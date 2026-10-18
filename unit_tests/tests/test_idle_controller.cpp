@@ -159,7 +159,7 @@ TEST(idle_v2, runningFanAcBump) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	IdleController dut;
 
-	engineConfiguration->acIdleExtraOffset = 9;
+	setArrayValues(config->acIdleAdderByPressure, 9);
 	engineConfiguration->fan1ExtraIdle = 7;
 	engineConfiguration->fan2ExtraIdle = 3;
 
@@ -233,7 +233,7 @@ TEST(idle_v2, idleAdderShouldNotAffectNonIdleAreas) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	IdleController dut;
 
-	engineConfiguration->acIdleExtraOffset = 9;
+	setArrayValues(config->acIdleAdderByPressure, 9);
 
 	setTable(config->cltIdleCorrTable, 50.0f);
 
@@ -619,4 +619,374 @@ TEST(idle_v2, IntegrationClamping) {
 
 	// Result would be 75 + 75 = 150, but it should clamp to 100
 	EXPECT_EQ(100, dut.getIdlePosition(950));
+}
+
+
+TEST(idle_v2, clutchOrNeutralOverridesVssGate) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	IdleController dut;
+
+	engineConfiguration->idlePidDeactivationTpsThreshold = 5;
+	engineConfiguration->maxIdleVss = 10;
+
+	TgtInfo targetInfo{};
+	targetInfo.IdleEntryRpm = 1000 + 100;
+	targetInfo.IdleExitRpm = 1000 + 100;
+
+	engine->rpmCalculator.setRpmValue(1000);
+
+	// Baseline: above maxIdleVss forces Running, override disabled (default).
+	EXPECT_EQ(ICP::Running, dut.determinePhase(1000, targetInfo, 0, 25, 10));
+
+	engineConfiguration->idleVssGateClutchOverride = true;
+
+	// Override enabled, but still in gear with clutch engaged -- VSS gate still applies.
+	Sensor::setMockValue(SensorType::DetectedGear, 3);
+	EXPECT_EQ(ICP::Running, dut.determinePhase(1000, targetInfo, 0, 25, 10));
+
+	// Neutral detected (Detected Gear == 0) -- override allows closed-loop idle despite high VSS.
+	Sensor::setMockValue(SensorType::DetectedGear, 0);
+	EXPECT_EQ(ICP::Idling, dut.determinePhase(1000, targetInfo, 0, 25, 10));
+
+	// No gear signal, but the clutch switch itself reports disengaged -- override still applies.
+	Sensor::resetMockValue(SensorType::DetectedGear);
+	engineConfiguration->smUpshiftClutchSwitch = sm_clutch_switch_e::ClutchDown;
+	engine->engineState.clutchDownState = true;
+	EXPECT_EQ(ICP::Idling, dut.determinePhase(1000, targetInfo, 0, 25, 10));
+
+	// Clutch released again (pedal at rest) -- VSS gate re-applies.
+	engine->engineState.clutchDownState = false;
+	EXPECT_EQ(ICP::Running, dut.determinePhase(1000, targetInfo, 0, 25, 10));
+}
+
+TEST(idle_v2, neutralOverrideStaysLatchedThroughTransientGearRematch) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	IdleController dut;
+
+	engineConfiguration->idlePidDeactivationTpsThreshold = 5;
+	engineConfiguration->maxIdleVss = 10;
+	engineConfiguration->idleVssGateClutchOverride = true;
+
+	TgtInfo targetInfo{};
+	targetInfo.IdleEntryRpm = 1000 + 100;
+	targetInfo.IdleExitRpm = 1000 + 100;
+
+	engine->rpmCalculator.setRpmValue(1000);
+
+	// Neutral detected while RPM is sagging below entry -- override grants idle authority.
+	Sensor::setMockValue(SensorType::DetectedGear, 0);
+	EXPECT_EQ(ICP::Idling, dut.determinePhase(900, targetInfo, 0, 25, 10));
+
+	// RPM sags further under closed-loop idle correction, still neutral.
+	EXPECT_EQ(ICP::Idling, dut.determinePhase(700, targetInfo, 0, 25, 10));
+
+	// RPM recovers and GearDetector's ratio briefly re-matches a gear again -- but RPM is
+	// still well below IdleExitRpm, so the override must stay latched: this is the exact
+	// transient that used to bounce back to Running before reaching a real exit.
+	Sensor::setMockValue(SensorType::DetectedGear, 6);
+	EXPECT_EQ(ICP::Idling, dut.determinePhase(1000, targetInfo, 0, 25, 10));
+
+	// Gear flickers back to neutral -- still idling either way.
+	Sensor::setMockValue(SensorType::DetectedGear, 0);
+	EXPECT_EQ(ICP::Idling, dut.determinePhase(1050, targetInfo, 0, 25, 10));
+
+	// Only once RPM genuinely climbs past IdleExitRpm does the override release -- at that point
+	// the ordinary Coasting classification (checked before the VSS gate) already takes over.
+	Sensor::setMockValue(SensorType::DetectedGear, 6);
+	EXPECT_EQ(ICP::Coasting, dut.determinePhase(1101, targetInfo, 0, 25, 10));
+	// Returning below entry in gear must not revive the old neutral latch.
+	EXPECT_EQ(ICP::Running, dut.determinePhase(900, targetInfo, 0, 25, 10));
+}
+
+TEST(idle_v2, getCrankingTaperFractionWithHold) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	StrictMock<MockOpenLoopIdler> dut;
+	const float mockedTemperature = 50;
+
+	// Hold for 200 cycles before the 500-cycle taper begins counting down.
+	setArrayValues(config->afterCrankingIACtaperHoldDuration, 200);
+	setArrayValues(config->afterCrankingIACtaperDuration, 500);
+
+	// 0 cycles - within hold, pinned at (or below) cranking value
+	EXPECT_LE(dut.getCrankingTaperFraction(mockedTemperature), 0);
+
+	// 100 cycles - still within hold
+	for (size_t i = 0; i < 100; i++) {
+		engine->rpmCalculator.onNewEngineCycle();
+	}
+	EXPECT_LE(dut.getCrankingTaperFraction(mockedTemperature), 0);
+
+	// 200 cycles - hold just elapsed, taper now starts from 0
+	for (size_t i = 0; i < 100; i++) {
+		engine->rpmCalculator.onNewEngineCycle();
+	}
+	EXPECT_FLOAT_EQ(0, dut.getCrankingTaperFraction(mockedTemperature));
+
+	// 450 cycles - 250 cycles past the hold, halfway through the 500-cycle taper
+	for (size_t i = 0; i < 250; i++) {
+		engine->rpmCalculator.onNewEngineCycle();
+	}
+	EXPECT_FLOAT_EQ(0.5f, dut.getCrankingTaperFraction(mockedTemperature));
+
+	// 700 cycles - 500 cycles past the hold, taper complete
+	for (size_t i = 0; i < 250; i++) {
+		engine->rpmCalculator.onNewEngineCycle();
+	}
+	EXPECT_FLOAT_EQ(1, dut.getCrankingTaperFraction(mockedTemperature));
+}
+
+static void setupOffIdleAdder(int adderRpm = 200, float stabilityThreshold = 100, float waitTime = 0.5f, float decayTime = 2.0f) {
+	engineConfiguration->offIdleRpmAdder = adderRpm;
+	engineConfiguration->offIdleRpmStabilityThreshold = stabilityThreshold;
+	engineConfiguration->offIdleWaitTime = waitTime;
+	engineConfiguration->offIdleRpmAdderDecayTime = decayTime;
+}
+
+TEST(idle_v2, offIdleAdder_waitTimerBeforeDecay) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	IdleController dut;
+	setupOffIdleAdder(200, 100, 0.5f, 2.0f);
+
+	// Arm → Stabilizing → Waiting (stable RPM)
+	dut.getOffIdleAdder(ICP::Running, 2000);
+	dut.getOffIdleAdder(ICP::Idling, 1000);
+	dut.getOffIdleAdder(ICP::Idling, 1000); // transitions to Waiting here
+
+	// Not yet expired - still max
+	EXPECT_FLOAT_EQ(200, dut.getOffIdleAdder(ICP::Idling, 1000));
+
+	// Advance past the wait time
+	advanceTimeUs(600'000); // 0.6s > 0.5s wait time
+
+	// Should now be Decaying - first call returns max (transitions on this call)
+	EXPECT_FLOAT_EQ(200, dut.getOffIdleAdder(ICP::Idling, 1000));
+}
+
+TEST(idle_v2, offIdleAdder_linearDecay) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	IdleController dut;
+	setupOffIdleAdder(200, 100, 0.0f, 2.0f); // no wait time
+
+	// Arm → Stabilizing → Waiting (stable RPM, 0 wait) → Decaying
+	dut.getOffIdleAdder(ICP::Running, 2000);
+	dut.getOffIdleAdder(ICP::Idling, 1000);
+	dut.getOffIdleAdder(ICP::Idling, 1000); // transitions to Waiting
+	dut.getOffIdleAdder(ICP::Idling, 1000); // wait=0 → transitions to Decaying, returns max
+
+	// At start of decay: full adder
+	EXPECT_NEAR(200, dut.getOffIdleAdder(ICP::Idling, 1000), 5);
+
+	// At ~1s: half adder
+	advanceTimeUs(1'000'000);
+	EXPECT_NEAR(100, dut.getOffIdleAdder(ICP::Idling, 1000), 5);
+
+	// At 2s: zero, transitions to Inactive
+	advanceTimeUs(1'000'000);
+	EXPECT_FLOAT_EQ(0, dut.getOffIdleAdder(ICP::Idling, 1000));
+}
+
+TEST(idle_v2, offIdleAdder_rearmDuringDecay) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	IdleController dut;
+	setupOffIdleAdder(200, 100, 0.0f, 2.0f);
+
+	// Get into Decaying state (same path as linearDecay)
+	dut.getOffIdleAdder(ICP::Running, 2000);
+	dut.getOffIdleAdder(ICP::Idling, 1000);
+	dut.getOffIdleAdder(ICP::Idling, 1000);
+	dut.getOffIdleAdder(ICP::Idling, 1000); // now Decaying
+	advanceTimeUs(1'000'000); // decay is half-way
+
+	// Mid-decay value should be ~100
+	EXPECT_NEAR(100, dut.getOffIdleAdder(ICP::Idling, 1000), 10);
+
+	// Re-arm by going off-idle again
+	EXPECT_FLOAT_EQ(200, dut.getOffIdleAdder(ICP::Running, 3000));
+	// Back to Armed - full max
+	EXPECT_FLOAT_EQ(200, dut.getOffIdleAdder(ICP::Coasting, 1500));
+}
+
+TEST(idle_v2, offIdleAdder_abortsOnRecrankFromAnyState) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	IdleController dut;
+	setupOffIdleAdder(200, 100, 0.0f, 2.0f); // no wait time
+
+	// Armed by Running, then engine stalls and is re-cranked mid-cycle: must not
+	// carry the adder into Cranking.
+	EXPECT_FLOAT_EQ(200, dut.getOffIdleAdder(ICP::Running, 2000));
+	EXPECT_FLOAT_EQ(0, dut.getOffIdleAdder(ICP::Cranking, 300));
+
+	// Get all the way into Decaying, then stall/re-crank: must still abort to zero.
+	dut.getOffIdleAdder(ICP::Running, 2000);
+	dut.getOffIdleAdder(ICP::Idling, 1000);
+	dut.getOffIdleAdder(ICP::Idling, 1000); // transitions to Waiting
+	dut.getOffIdleAdder(ICP::Idling, 1000); // wait=0 -> transitions to Decaying
+	advanceTimeUs(1'000'000); // decay is half-way
+	EXPECT_NEAR(100, dut.getOffIdleAdder(ICP::Idling, 1000), 10);
+
+	EXPECT_FLOAT_EQ(0, dut.getOffIdleAdder(ICP::Cranking, 300));
+
+	// Once cranking has reset the adder, resuming Idling must not resurrect the
+	// stale decay - it should stay off until re-armed via Running/Coasting.
+	EXPECT_FLOAT_EQ(0, dut.getOffIdleAdder(ICP::Idling, 1000));
+}
+
+TEST(idle_v2, acRpmAdditionAndPressureAir) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	IdleController dut;
+	setArrayValues(config->cltIdleRpm, 800);
+	engineConfiguration->acIdleRpmAdder = 100;
+	EXPECT_EQ(800, dut.getTargetRpm(80).ClosedLoopTarget);
+	engine->module<AcController>().unmock().acButtonState = true;
+	EXPECT_EQ(900, dut.getTargetRpm(80).ClosedLoopTarget);
+	setArrayValues(config->cltIdleRpm, 1200);
+	EXPECT_EQ(1300, dut.getTargetRpm(-20).ClosedLoopTarget);
+
+	setTable(config->cltIdleCorrTable, 20);
+	for (size_t i = 0; i < AC_IDLE_PRESSURE_CURVE_SIZE; i++) {
+		config->acIdleAdderByPressureBins[i] = 100 + i * 100;
+		config->acIdleAdderByPressure[i] = 5 + i * 10;
+	}
+	EXPECT_FLOAT_EQ(25, dut.getRunningOpenLoop(ICP::Idling, 800, 80, 0));
+	Sensor::setMockValue(SensorType::AcPressure, 250);
+	EXPECT_FLOAT_EQ(40, dut.getRunningOpenLoop(ICP::Idling, 800, 80, 0));
+	EXPECT_FLOAT_EQ(40, dut.getRunningOpenLoop(ICP::CrankToIdleTaper, 800, 80, 0));
+	EXPECT_FLOAT_EQ(20, dut.getRunningOpenLoop(ICP::Running, 2000, 80, 0));
+	engineConfiguration->useIacTableForCoasting = true;
+	setArrayValues(config->iacCoasting, 90);
+	EXPECT_FLOAT_EQ(100, dut.getOpenLoop(ICP::Coasting, 2000, 80, 0, 1));
+	Sensor::resetMockValue(SensorType::AcPressure);
+	EXPECT_FLOAT_EQ(95, dut.getOpenLoop(ICP::Coasting, 2000, 80, 0, 1));
+}
+
+TEST(idle_v2, externalAirRequestsStackWithLuaAndParkNeutral) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	IdleController dut;
+	setTable(config->cltIdleCorrTable, 20);
+	engineConfiguration->idleUpSwitchPins[0] = Gpio::A6;
+	engineConfiguration->idleUpSwitchPins[1] = Gpio::A7;
+	engineConfiguration->idleUpSwitchPins[2] = Gpio::A8;
+	for (size_t i = 0; i < IDLE_UP_SWITCH_COUNT; i++) {
+		engineConfiguration->idleUpAdder[i] = 10 * (i + 1);
+	}
+	engineConfiguration->idleUpSwitchMode[1] = PI_INVERTED_DEFAULT;
+	setMockState(Gpio::A6, true);
+	setMockState(Gpio::A7, true);
+	setMockState(Gpio::A8, false);
+	EXPECT_FLOAT_EQ(30, dut.getRunningOpenLoop(ICP::Idling, 800, 80, 0));
+	setMockState(Gpio::A7, false);
+	setMockState(Gpio::A8, true);
+	dut.luaAdd = 5;
+	dut.setParkNeutral(true);
+	engineConfiguration->idleParkNeutralOffset = -10;
+	EXPECT_FLOAT_EQ(75, dut.getRunningOpenLoop(ICP::Idling, 800, 80, 0));
+	engineConfiguration->idleUpSwitchPins[2] = Gpio::Unassigned;
+	EXPECT_FLOAT_EQ(45, dut.getRunningOpenLoop(ICP::Idling, 800, 80, 0));
+}
+
+TEST(idle_v2, optionalCrankingAirAndAdditiveFlare) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	IdleController dut;
+	setTable(config->cltIdleCorrTable, 25);
+	setArrayValues(config->cltCrankingCorr, 50);
+	ASSERT_TRUE(engineConfiguration->crankingAirAmountEnabled);
+	EXPECT_FLOAT_EQ(50, dut.getOpenLoop(ICP::Cranking, 300, 80, 0, 0));
+	engineConfiguration->crankingAirAmountEnabled = false;
+	EXPECT_FLOAT_EQ(25, dut.getOpenLoop(ICP::Cranking, 300, 80, 0, 0));
+	EXPECT_FLOAT_EQ(25, dut.getOpenLoop(ICP::CrankToIdleTaper, 900, 80, 0, 0.5f));
+	engineConfiguration->crankingIdleRpmFlareEnabled = true;
+	EXPECT_FLOAT_EQ(25, dut.getOpenLoop(ICP::Cranking, 300, 80, 0, 0));
+	engineConfiguration->crankingAirAmountEnabled = true;
+	EXPECT_FLOAT_EQ(75, dut.getOpenLoop(ICP::Cranking, 300, 80, 0, 0));
+	EXPECT_FLOAT_EQ(50, dut.getOpenLoop(ICP::CrankToIdleTaper, 900, 80, 0, 0.5f));
+	EXPECT_FLOAT_EQ(25, dut.getOpenLoop(ICP::Idling, 900, 80, 0, 2));
+	setTable(config->cltIdleCorrTable, 80);
+	EXPECT_FLOAT_EQ(100, dut.getOpenLoop(ICP::Cranking, 300, 80, 0, 0));
+}
+
+TEST(idle_v2, flareUsesFreshTargetAndAirTableWithoutClosedLoop) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	IdleController dut;
+	dut.init();
+	engineConfiguration->crankingIdleRpmFlareEnabled = true;
+	engineConfiguration->crankingAirAmountEnabled = false;
+	engineConfiguration->idleMode = idle_mode_e::IM_AUTO;
+	engineConfiguration->idlePidRpmUpperLimit = 300;
+	setArrayValues(config->cltIdleRpm, 800);
+	setArrayValues(config->cltCrankingRpmAdder, 700);
+	setArrayValues(config->afterCrankingIACtaperDuration, 100);
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 0);
+	Sensor::setMockValue(SensorType::Clt, 80);
+	for (size_t i = 0; i < efi::size(config->rpmIdleCorrBins); i++) {
+		config->rpmIdleCorrBins[i] = 800 + 700 * i;
+		setArrayValues(config->cltIdleCorrTable[i], 20 + 20 * i);
+	}
+	engine->rpmCalculator.setRpmValue(300);
+	EXPECT_FLOAT_EQ(40, dut.getIdlePosition(300));
+	EXPECT_EQ(1500, dut.idleTarget);
+	EXPECT_EQ(1100, dut.idleEntryRpm);
+	EXPECT_FALSE(dut.isIdleClosedLoop);
+	EXPECT_FLOAT_EQ(40, dut.getIdlePosition(300));
+	EXPECT_EQ(1500, dut.idleTarget);
+	engine->rpmCalculator.setRpmValue(900);
+	for (int i = 0; i < 50; i++) {
+		engine->rpmCalculator.onNewEngineCycle();
+	}
+	EXPECT_FLOAT_EQ(30, dut.getIdlePosition(900));
+	EXPECT_EQ(1150, dut.idleTarget);
+	EXPECT_EQ(ICP::CrankToIdleTaper, dut.getCurrentPhase());
+	EXPECT_FALSE(dut.isIdleClosedLoop);
+}
+
+TEST(idle_v2, zeroDurationTaperAndOffIdleReset) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	IdleController dut;
+	dut.init();
+	setArrayValues(config->afterCrankingIACtaperHoldDuration, 1);
+	setArrayValues(config->afterCrankingIACtaperDuration, 0);
+	EXPECT_FLOAT_EQ(0, dut.getCrankingTaperFraction(80));
+	engine->rpmCalculator.onNewEngineCycle();
+	EXPECT_FLOAT_EQ(1, dut.getCrankingTaperFraction(80));
+	setupOffIdleAdder(200, 100, 0, 0);
+	EXPECT_FLOAT_EQ(0, dut.getOffIdleAdder(ICP::Idling, 800));
+	dut.getOffIdleAdder(ICP::Running, 2000);
+	dut.getOffIdleAdder(ICP::Idling, 800);
+	dut.getOffIdleAdder(ICP::Idling, 800);
+	dut.getOffIdleAdder(ICP::Idling, 800);
+	EXPECT_FLOAT_EQ(0, dut.getOffIdleAdder(ICP::Idling, 800));
+	dut.getOffIdleAdder(ICP::Running, 2000);
+	dut.onEngineStop();
+	EXPECT_FLOAT_EQ(0, dut.getOffIdleAdder(ICP::Idling, 800));
+	dut.getOffIdleAdder(ICP::Running, 2000);
+	dut.onConfigurationChange(nullptr);
+	EXPECT_FLOAT_EQ(0, dut.getOffIdleAdder(ICP::Idling, 800));
+	dut.getOffIdleAdder(ICP::Running, 2000);
+	engineConfiguration->offIdleRpmAdder = 0;
+	EXPECT_FLOAT_EQ(0, dut.getOffIdleAdder(ICP::Idling, 800));
+}
+
+TEST(idle_v2, neutralLatchClearsOnThrottleInvalidTpsAndRecrank) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	IdleController dut;
+	engineConfiguration->idlePidDeactivationTpsThreshold = 5;
+	engineConfiguration->maxIdleVss = 10;
+	engineConfiguration->idleVssGateClutchOverride = true;
+	TgtInfo target{800, 1000, 1100};
+	engine->rpmCalculator.setRpmValue(900);
+	for (int exit = 0; exit < 3; exit++) {
+		Sensor::setMockValue(SensorType::DetectedGear, 0);
+		EXPECT_EQ(ICP::Idling, dut.determinePhase(900, target, 0, 25, 1));
+		Sensor::setMockValue(SensorType::DetectedGear, 3);
+		EXPECT_EQ(ICP::Idling, dut.determinePhase(900, target, 0, 25, 1));
+		if (exit == 0) {
+			EXPECT_EQ(ICP::Running, dut.determinePhase(900, target, 10, 25, 1));
+		} else if (exit == 1) {
+			EXPECT_EQ(ICP::Running, dut.determinePhase(900, target, unexpected, 25, 1));
+		} else {
+			engine->rpmCalculator.setRpmValue(0);
+			EXPECT_EQ(ICP::Cranking, dut.determinePhase(0, target, 0, 25, 0));
+			engine->rpmCalculator.setRpmValue(900);
+		}
+		EXPECT_EQ(ICP::Running, dut.determinePhase(900, target, 0, 25, 1));
+	}
 }
