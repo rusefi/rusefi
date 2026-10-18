@@ -3,7 +3,9 @@ package com.rusefi.ui.widgets.tune;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileMetaInfo;
+import com.opensr5.ini.IniFileMetaInfoImpl;
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.RawIniFile;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ini.reader.IniFileReaderUtil;
 import com.rusefi.io.UpdateOperationCallbacks;
@@ -13,11 +15,13 @@ import org.junit.jupiter.api.Test;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,6 +36,69 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.mockito.Mockito.*;
 
 class CalibrationPanelWorkspaceTest {
+    @Test
+    void multisparkDetachesAtItsFormCornerAndPreferredSize() throws Throwable {
+        IniFileModel ini;
+        try (InputStream input = getClass().getResourceAsStream("/26october.ini")) {
+            RawIniFile raw = IniFileReaderUtil.read(input, "26october.ini");
+            ini = IniFileReaderUtil.readIniFile(raw, "26october.ini", new IniFileMetaInfoImpl(raw));
+        }
+        SwingUtilities.invokeAndWait(() -> {
+            try (Fixture fixture = new Fixture(ini, new Node())) {
+                fixture.primary.update("multisparkSettings", ini,
+                    new ConfigurationImage(ini.getMetaInfo().getPageSize(0)));
+                DetachPanelLayer ui = (DetachPanelLayer) ((JLayer<?>) fixture.workspace.getContent()).getUI();
+                JLayer<JScrollPane> layer = ui.getContent();
+                layer.setSize(1500, 900);
+                layout(layer);
+                // The form's deferred wrapping/layout pass is also used when shown on a desktop.
+                layout(layer);
+                JComponent form = fixture.primary.getPanelFrame();
+                Rectangle bounds = SwingUtilities.convertRectangle(form, new Rectangle(form.getSize()), layer);
+                assertTrue(bounds.width < 1500);
+                assertTrue(bounds.height < 900);
+                layer.getUI().eventDispatched(new MouseEvent(form, MouseEvent.MOUSE_ENTERED,
+                    0, 0, 20, 20, 0, false), layer);
+                JButton detach = find(layer.getGlassPane(), JButton.class);
+                assertTrue(detach.isVisible());
+                assertEquals(bounds.x + bounds.width - 34, detach.getX());
+                assertEquals(bounds.y + 6, detach.getY());
+                detach.doClick();
+                FakeWindow window = fixture.windows.get(0);
+                assertEquals("Multispark", window.title);
+                assertEquals(window.content.getPreferredSize(), window.bounds.getSize());
+                assertTrue(window.bounds.width < 1500);
+                assertTrue(window.bounds.height < 900);
+            }
+        });
+    }
+
+    private static void layout(Container container) {
+        container.doLayout();
+        for (Component child : container.getComponents()) {
+            if (child instanceof Container) {
+                layout((Container) child);
+            }
+        }
+    }
+
+    @Test
+    void freshDetachedWindowFitsCompactContent() throws Throwable {
+        IniFileModel ini = ini();
+        SwingUtilities.invokeAndWait(() -> {
+            try (Fixture fixture = new Fixture(ini, new Node())) {
+                fixture.select("first");
+                fixture.workspace.getContent().setSize(1000, 800);
+                fixture.workspace.getContent().doLayout();
+                fixture.workspace.detachCurrentPanel();
+                FakeWindow window = fixture.windows.get(0);
+                assertEquals(window.content.getPreferredSize(), window.bounds.getSize());
+                assertTrue(window.bounds.width < 1000);
+                assertTrue(window.bounds.height < 400, "A compact form must not inherit the tile height");
+            }
+        });
+    }
+
     @Test
     void nativeWindowsHoverEditAndRestore() throws Throwable {
         checkNativeWindows(false);
@@ -75,6 +142,10 @@ class CalibrationPanelWorkspaceTest {
                 JLayer<?> layer = (JLayer<?>) workspace[0].getContent();
                 JButton detach = find(layer.getGlassPane(), JButton.class);
                 assertTrue(detach.isShowing(), "Native hover reveals the button over nested editors");
+                JComponent form = workspace[0].getPrimary().getPanelFrame();
+                Rectangle bounds = SwingUtilities.convertRectangle(form, new Rectangle(form.getSize()), layer);
+                assertEquals(bounds.x + bounds.width - 34, detach.getX());
+                assertEquals(bounds.y + 6, detach.getY());
                 point[0] = detach.getLocationOnScreen();
             });
             robot.mouseMove(point[0].x + 14, point[0].y + 14);
@@ -82,6 +153,11 @@ class CalibrationPanelWorkspaceTest {
             robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
             SwingUtilities.invokeAndWait(() -> {
                 Window detached = Arrays.stream(owner[0].getOwnedWindows()).filter(Window::isShowing).findFirst().get();
+                assertTrue(detached.getWidth() < owner[0].getWidth());
+                assertTrue(detached.getHeight() < owner[0].getHeight() / 2);
+                JScrollPane scroll = find(detached, JScrollPane.class);
+                assertEquals(scroll.getPreferredSize(), ((JDialog) detached).getContentPane().getSize(),
+                    "Pack around the form, with native window decorations outside the preferred content size");
                 find(detached, JTextField.class).setText("58");
                 assertEquals("58", find(workspace[0].getPrimary().getContentPane(), JTextField.class).getText());
                 detached.setBounds(savedBounds);
@@ -309,8 +385,8 @@ class CalibrationPanelWorkspaceTest {
             this.ini = ini;
             context.iniFileState.setIniFileModelForTest(ini);
             workspace = new CalibrationPanelWorkspace(context, config,
-                (owner, title, content, bounds, close, moved) -> {
-                    FakeWindow window = new FakeWindow(title, content, bounds, close, moved);
+                (owner, title, content, close, moved) -> {
+                    FakeWindow window = new FakeWindow(title, content, close, moved);
                     windows.add(window);
                     return window;
                 }, () -> Collections.singletonList(new Rectangle(0, 0, 1280, 960)));
@@ -338,10 +414,10 @@ class CalibrationPanelWorkspaceTest {
         Rectangle bounds;
         boolean disposed;
 
-        FakeWindow(String title, JScrollPane content, Rectangle bounds, Runnable close, Consumer<Rectangle> moved) {
+        FakeWindow(String title, JScrollPane content, Runnable close, Consumer<Rectangle> moved) {
             this.title = title;
             this.content = content;
-            this.bounds = bounds;
+            this.bounds = new Rectangle(content.getPreferredSize());
             this.close = close;
             this.moved = moved;
         }
@@ -354,6 +430,7 @@ class CalibrationPanelWorkspaceTest {
         public void show() { }
         public void toFront() { }
         public Rectangle getBounds() { return new Rectangle(bounds); }
+        public void setBounds(Rectangle bounds) { this.bounds = new Rectangle(bounds); }
         public void dispose() { disposed = true; }
     }
 

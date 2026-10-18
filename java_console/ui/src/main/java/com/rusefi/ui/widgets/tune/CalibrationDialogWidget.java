@@ -928,6 +928,11 @@ public class CalibrationDialogWidget {
         return viewportPane;
     }
 
+    /** The framed form excludes the unused tiled viewport background. */
+    JComponent getPanelFrame() {
+        return viewportPane.frame;
+    }
+
     private static class DialogViewport extends ScrollablePanel {
         private static final int MARGIN = 8;
         private final JPanel frame = new JPanel(new BorderLayout());
