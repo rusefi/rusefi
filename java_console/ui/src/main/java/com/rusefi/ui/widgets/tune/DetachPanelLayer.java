@@ -1,19 +1,38 @@
 package com.rusefi.ui.widgets.tune;
 
 import javax.swing.*;
+import javax.swing.event.ChangeListener;
 import javax.swing.plaf.LayerUI;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 
-/** Hover affordance above the scrolling content; only the button intercepts mouse input. */
+/** Hover affordance in the form's corner; only the button intercepts mouse input. */
 final class DetachPanelLayer extends LayerUI<JScrollPane> {
     private static final int BUTTON_SIZE = 28;
     private final JButton button = new JButton(new DetachIcon());
     private final JLayer<JScrollPane> layer;
+    private final JScrollPane scrollPane;
+    private final JComponent panel;
     private boolean available;
-    private boolean hovered;
+    private Point mousePosition;
+    private final ChangeListener viewportListener = event -> layoutButton();
+    private final ComponentAdapter panelListener = new ComponentAdapter() {
+        @Override
+        public void componentMoved(ComponentEvent event) {
+            layoutButton();
+        }
 
-    DetachPanelLayer(JScrollPane scrollPane, Runnable detach) {
+        @Override
+        public void componentResized(ComponentEvent event) {
+            layoutButton();
+        }
+    };
+
+    DetachPanelLayer(JScrollPane scrollPane, JComponent panel, Runnable detach) {
+        this.scrollPane = scrollPane;
+        this.panel = panel;
         button.setToolTipText("Detach this panel into a separate window");
         button.getAccessibleContext().setAccessibleName("Detach panel");
         button.setMargin(new Insets(0, 0, 0, 0));
@@ -27,10 +46,7 @@ final class DetachPanelLayer extends LayerUI<JScrollPane> {
 
             @Override
             public void doLayout() {
-                JScrollBar scrollbar = scrollPane.getVerticalScrollBar();
-                int scrollbarWidth = scrollbar.isVisible() ? scrollbar.getWidth() : 0;
-                button.setBounds(Math.max(0, getWidth() - scrollbarWidth - BUTTON_SIZE - 6),
-                    6, BUTTON_SIZE, BUTTON_SIZE);
+                layoutButton();
             }
         };
         glass.setOpaque(false);
@@ -38,6 +54,8 @@ final class DetachPanelLayer extends LayerUI<JScrollPane> {
         layer = new JLayer<>(scrollPane, this);
         layer.setGlassPane(glass);
         glass.setVisible(true);
+        scrollPane.getViewport().addChangeListener(viewportListener);
+        panel.addComponentListener(panelListener);
     }
 
     JLayer<JScrollPane> getContent() {
@@ -46,7 +64,7 @@ final class DetachPanelLayer extends LayerUI<JScrollPane> {
 
     void setAvailable(boolean available) {
         this.available = available;
-        button.setVisible(available && hovered);
+        layoutButton();
     }
 
     @Override
@@ -58,6 +76,8 @@ final class DetachPanelLayer extends LayerUI<JScrollPane> {
     @Override
     public void uninstallUI(JComponent component) {
         ((JLayer<?>) component).setLayerEventMask(0);
+        scrollPane.getViewport().removeChangeListener(viewportListener);
+        panel.removeComponentListener(panelListener);
         super.uninstallUI(component);
     }
 
@@ -72,9 +92,17 @@ final class DetachPanelLayer extends LayerUI<JScrollPane> {
     }
 
     private void updateHover(MouseEvent event, JLayer<? extends JScrollPane> layer) {
-        Point point = SwingUtilities.convertPoint(event.getComponent(), event.getPoint(), layer);
-        hovered = layer.contains(point);
-        button.setVisible(available && hovered);
+        mousePosition = SwingUtilities.convertPoint(event.getComponent(), event.getPoint(), layer);
+        layoutButton();
+    }
+
+    private void layoutButton() {
+        Rectangle bounds = SwingUtilities.convertRectangle(panel, new Rectangle(panel.getSize()), layer);
+        Rectangle viewport = SwingUtilities.convertRectangle(scrollPane.getViewport(),
+            new Rectangle(scrollPane.getViewport().getSize()), layer);
+        button.setBounds(bounds.x + bounds.width - BUTTON_SIZE - 6, bounds.y + 6, BUTTON_SIZE, BUTTON_SIZE);
+        button.setVisible(available && mousePosition != null && bounds.contains(mousePosition)
+            && viewport.contains(mousePosition) && viewport.contains(button.getBounds()));
     }
 
     private static final class DetachIcon implements Icon {

@@ -58,7 +58,7 @@ public final class CalibrationPanelWorkspace {
         this.screens = screens;
         primary = new CalibrationDialogWidget(uiContext);
         primaryScroll = new JScrollPane(primary.getViewportPane());
-        layer = new DetachPanelLayer(primaryScroll, this::detachCurrentPanel);
+        layer = new DetachPanelLayer(primaryScroll, primary.getPanelFrame(), this::detachCurrentPanel);
         primary.setOnViewChanged(this::primaryViewChanged);
         primary.setOnConfigChange(changed -> edited(primary, changed));
         primary.setOnShowInPinout(value -> onShowInPinout.accept(value));
@@ -161,10 +161,8 @@ public final class CalibrationPanelWorkspace {
         }
         DetachedPanel panel = panels.get(key);
         if (panel == null) {
-            Rectangle screen = screens.get().get(0);
-            Rectangle bounds = new Rectangle(screen.x + 40, screen.y + 40,
-                Math.max(480, primaryScroll.getWidth()), Math.max(360, primaryScroll.getHeight()));
-            panel = new DetachedPanel(key, fitBounds(bounds, screens.get()));
+            // A fresh window packs its own form. Only restored windows have saved outer bounds.
+            panel = new DetachedPanel(key, null);
             panels.put(key, panel);
         }
         restoring = true;
@@ -190,12 +188,18 @@ public final class CalibrationPanelWorkspace {
                 panel.widget.setOnConfigChange(changed -> edited(panel.widget, changed));
                 panel.widget.setOnShowInPinout(value -> onShowInPinout.accept(value));
                 panel.widget.update(panel.key, ini, image);
-                panel.bounds = fitBounds(panel.bounds, screens.get());
-                panel.window = windowFactory.create(owner, title(panel.key), panel.scroll, panel.bounds,
+                panel.window = windowFactory.create(owner, title(panel.key), panel.scroll,
                     () -> closePanel(panel.key), bounds -> {
                         panel.bounds = new Rectangle(bounds);
                         saveLayout();
                     });
+                if (panel.bounds == null) {
+                    panel.bounds = panel.window.getBounds();
+                    Rectangle screen = screens.get().get(0);
+                    panel.bounds.setLocation(screen.x + 40, screen.y + 40);
+                }
+                panel.bounds = fitBounds(panel.bounds, screens.get());
+                panel.window.setBounds(panel.bounds);
                 panel.widget.setActive(true);
                 panel.window.show();
             } else if (panel.widget != null && panel.widget != source) {
@@ -270,8 +274,8 @@ public final class CalibrationPanelWorkspace {
                 screen = candidate;
             }
         }
-        int width = Math.min(screen.width, Math.max(320, bounds.width));
-        int height = Math.min(screen.height, Math.max(240, bounds.height));
+        int width = Math.min(screen.width, Math.max(1, bounds.width));
+        int height = Math.min(screen.height, Math.max(1, bounds.height));
         return new Rectangle(Math.max(screen.x, Math.min(bounds.x, screen.x + screen.width - width)),
             Math.max(screen.y, Math.min(bounds.y, screen.y + screen.height - height)), width, height);
     }
@@ -319,11 +323,12 @@ public final class CalibrationPanelWorkspace {
         void show();
         void toFront();
         Rectangle getBounds();
+        void setBounds(Rectangle bounds);
         void dispose();
     }
 
     interface WindowFactory {
-        PanelWindow create(Window owner, String title, JScrollPane content, Rectangle bounds,
+        PanelWindow create(Window owner, String title, JScrollPane content,
                            Runnable close, Consumer<Rectangle> moved);
     }
 
@@ -331,12 +336,12 @@ public final class CalibrationPanelWorkspace {
         private final JDialog dialog;
         private boolean disposed;
 
-        SwingPanelWindow(Window owner, String title, JScrollPane content, Rectangle bounds,
+        SwingPanelWindow(Window owner, String title, JScrollPane content,
                          Runnable close, Consumer<Rectangle> moved) {
             dialog = new JDialog(owner, title, Dialog.ModalityType.MODELESS);
             dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
             dialog.add(content);
-            dialog.setBounds(bounds);
+            dialog.pack();
             dialog.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosing(WindowEvent event) {
@@ -375,6 +380,11 @@ public final class CalibrationPanelWorkspace {
         @Override
         public Rectangle getBounds() {
             return dialog.getBounds();
+        }
+
+        @Override
+        public void setBounds(Rectangle bounds) {
+            dialog.setBounds(bounds);
         }
 
         @Override
