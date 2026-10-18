@@ -2,6 +2,12 @@
 
 [Back to the ECU change index](../alphax-beta-vs-master.md) · [Fork branch](https://github.com/ElDominio/rusefi/tree/alphax-beta)
 
+## Upstream progress — partial
+
+Rechecked master at [`3dd620b8d5b`](https://github.com/rusefi/rusefi/commit/3dd620b8d5b05839ddc958bb4104bba4bd63558e). Commit [`0208ad604b6`](https://github.com/rusefi/rusefi/commit/0208ad604b62c7395e8cd88f812037e58195aecf) supplies a standalone physical output-shaft-speed input, frequency-to-RPM conversion, filtering, timeout/reconfiguration handling and a registry slot available to a Lua/CAN provider when no physical pin is assigned. This supports the completed [gear/slip report 36](DONE-36-gear-detection-and-transmission-slip.md).
+
+This report remains open: master retains legacy VehicleSpeed and vendor CAN VSS, and has not adopted the fork's OSS/front/rear main-speed selection, axle-speed inputs, percentage-per-second plausibility filtering or wheel-slip source pipeline. The historical analysis and LOC tables below still refer to the original master comparison.
+
 ## Executive summary
 
 Master's legacy physical VSS and built-in vendor CAN VSS paths are replaced. Main vehicle speed selects output-shaft speed, front axle or rear axle; each source can be physical or CAN/Lua-fed. Output-shaft frequency becomes RPM, then uses final-drive ratio and wheel revolutions/km for vehicle speed. A shared percentage-per-second plausibility setting governs separate physical-source filter instances. Wheel slip can be derived from a selected pair of speed sources.

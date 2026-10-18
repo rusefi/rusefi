@@ -1,10 +1,22 @@
-# 13 — TPS smoothing and discrepancy configuration
+# DONE — 13a — TPS smoothing
 
 [Back to the ECU change index](../alphax-beta-vs-master.md) · [Fork branch](https://github.com/ElDominio/rusefi/tree/alphax-beta)
 
+## Upstream completion
+
+**DONE on upstream master**, reviewed at [`41e3c63a986`](https://github.com/rusefi/rusefi/commit/41e3c63a9865141686bbfa7940defe0e86a4cb11). Implementation commit [`edaaf10bab6`](https://github.com/rusefi/rusefi/commit/edaaf10bab64e4ab9b60f60684995a8246207c05) adds separate unfiltered TPS identities, independent exponential filters with shared settings, fast-transient reset, calibration repair and tuning controls. Alpha defaults to 1/pass-through; zero threshold or time disables transient reset. Redundancy checks occur before smoothing, and invalid readings/timeouts propagate to consumers immediately.
+
+The [upstream filter](https://github.com/rusefi/rusefi/blob/41e3c63a9865141686bbfa7940defe0e86a4cb11/firmware/controllers/sensors/tps_smoothing.h) treats zero throttle as a real sample, clears history after invalid input or sensor reconfiguration, rejects non-finite readings and passes through invalid live alpha settings until calibration repair. [Sensor registration](https://github.com/rusefi/rusefi/blob/41e3c63a9865141686bbfa7940defe0e86a4cb11/firmware/init/sensor/init_tps.cpp) routes analog, Ford and SENT providers through the filter. It only registers a proxy when an unfiltered source exists, preserving direct OBD/Lua/CAN providers where appropriate. A direct resolved TPS provider bypasses smoothing; an external unfiltered provider must exist before initialization to acquire a proxy. This does not implement the external CAN ETB protocol in report 59.
+
+Like the fork, the average advances on each resolved sensor read, including repeated reads of one acquired sample. Its response therefore depends on consumer read frequency. The transient comparison uses an inclusive change threshold and a strict elapsed-time window.
+
+The adoption commit changes **111 maintained firmware C/C++ lines (+106 / −5 across five files)**: `default_base_engine.cpp`, `sensor_type.h`, `tps.h`, the new `tps_smoothing.h`, and `init_tps.cpp`. Generated files, schema, UI, build files, docs and tests are excluded. The new [upstream tests](https://github.com/rusefi/rusefi/blob/41e3c63a9865141686bbfa7940defe0e86a4cb11/unit_tests/tests/sensor/test_tps_smoothing.cpp) add 297 lines separately, covering zero samples, reset boundaries, independent histories, calibration repair, invalidity/recovery, timeouts, analog/Ford/SENT paths and external-provider ownership. Tests were inspected, not rerun.
+
+The former report 13 combined smoothing with an independent discrepancy-limit change. That remaining change is now tracked in [report 13b](13b-tps-pps-discrepancy-configuration.md): master retains its default cap of 5 rather than the fork's 30. The original four-file LOC scope below is preserved as a historical measurement and still overlaps with discrepancy and CAN ETB work; it is not a remaining-work estimate.
+
 ## Executive summary
 
-Master already has pedal smoothing. The branch adds separate unfiltered TPS1/TPS2 sensor identities and filtered proxies, sharing a configurable exponential-average coefficient. A fast change exceeding the configured threshold within a time window resets the average. Alpha defaults to 1/pass-through; zero reset settings leave the transient-reset feature disabled.
+The original master comparison already has pedal smoothing. The branch adds separate unfiltered TPS1/TPS2 sensor identities and filtered proxies, sharing a configurable exponential-average coefficient. A fast change at least as large as the configured threshold within a time window resets the average. Alpha defaults to 1/pass-through; zero reset settings leave the transient-reset feature disabled.
 
 ## ECU logic and behavior
 
@@ -12,17 +24,16 @@ Master already has pedal smoothing. The branch adds separate unfiltered TPS1/TPS
 2. Each filter maintains the previous raw sample/time and an exponential average.
 3. A sufficiently large raw step inside the reset interval resets the average before the new value is accepted.
 4. Alpha 1 passes readings through; both reset settings must be positive to activate transient reset.
-5. The default maximum discrepancy limit changes independently of filtering; etbSplit remains 5.
 
 **Illustrative behavior:** A small steady fluctuation can be smoothed while a rapid throttle movement resets the average, avoiding the same smoothing delay through that step.
 
 ## Calibration, dependencies and review limits
 
-This affects every TPS consumer, including throttle feedback and acceleration enrichment. Separately, the default maximum permitted TPS/PPS discrepancy setting rises from 5 to 30, while the normal `etbSplit` default stays 5. That limit change is independently reviewable. No dedicated TPS-smoothing test is added; the final branch report records compilation followed by a CAN-related link failure.
+This affects TPS consumers, including throttle feedback and acceleration enrichment. The independent TPS/PPS discrepancy calibration change is covered in [report 13b](13b-tps-pps-discrepancy-configuration.md). No dedicated TPS-smoothing test was added in the pinned fork; the final branch report records compilation followed by a CAN-related link failure.
 
-Review noise attenuation against ETB feedback delay, invalid-sensor propagation and interaction with CAN virtual channels. There is no dedicated new smoothing test; the tip reports a unit-test link failure.
+Review noise attenuation against ETB feedback delay, invalid-sensor propagation and interaction with CAN virtual channels. The upstream coverage cited above is separate from the pinned fork's test evidence.
 
-No feature-specific test is claimed by this report. The source/commit evidence below establishes implementation, not hardware validation.
+No feature-specific test is claimed for the pinned fork. The source/commit evidence below establishes implementation, not hardware validation.
 
 No firmware, host-test, simulator or hardware run was performed for this documentation update. The pinned branch tip records an unresolved CAN-listener unit-test link failure; see the [comparison and validation notes](../alphax-beta-vs-master.md#validation-limits).
 
@@ -51,7 +62,6 @@ Links below open commits in the ElDominio fork. Each selected commit touches the
 
 | Date | Commit and original subject | Source delta in measured files |
 | --- | --- | ---: |
-| 2026-06-29 | [135f45852f6](https://github.com/ElDominio/rusefi/commit/135f45852f690816fc92d13a8bc29839b414df8a) — Misc actuator/controller fixes: sport pedal live bit, upshift flat-shift priority, gear detector clutch-aware, fuel pump no-sensor fast path, etbSplit default | +1 / −1 |
 | 2026-09-06 | [f4dec5f1f96](https://github.com/ElDominio/rusefi/commit/f4dec5f1f96b4dee90a34cc850722f39d6ed2336) — External CAN ETB: virtual TPS1/TPSB channels, feedforward telemetry, status gauge | +87 / −25 |
 | 2026-09-29 | [d3e61a53053](https://github.com/ElDominio/rusefi/commit/d3e61a53053b0c054c9974394f970ae87f268e16) — tps: add ExpAverage smoothing to TPS1/TPS2 with smart fast-transient reset | +90 / −5 |
 

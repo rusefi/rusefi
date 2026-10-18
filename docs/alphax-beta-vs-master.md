@@ -2,6 +2,27 @@
 
 This index focuses on firmware changes that affect ECU inputs, decisions, outputs, diagnostics or persistent operation in the [ElDominio alphax-beta fork](https://github.com/ElDominio/rusefi/tree/alphax-beta). Operational changes have separate detailed Markdown reports, ordered from small defaults and diagnostics through control algorithms to transmission, ADC acquisition and crank synchronization. Host tooling, build/schema work and supporting firmware architecture are marked *INFRASTRUCTURE*.
 
+## Master progress
+
+Reviewed upstream `origin/master` at [`41e3c63a9865141686bbfa7940defe0e86a4cb11`](https://github.com/rusefi/rusefi/commit/41e3c63a9865141686bbfa7940defe0e86a4cb11), committed 2026-10-18 UTC, after fetching. It contains 22 commits beyond the original comparison revision, including five since the previous review at `3dd620b8d5b`: TPS smoothing plus four automatic configuration/default-tune regeneration commits (*INFRASTRUCTURE*). The five prior completions remain present. **Six reports are now prefixed `DONE-`** because master implements their operational scope:
+
+| Report | Upstream completion evidence |
+| --- | --- |
+| [DONE — 06b: Eight-bin warmup defaults](alphax-beta/DONE-06b-eight-bin-warmup-enrichment-defaults.md) | [`78759669096`](https://github.com/rusefi/rusefi/commit/787596690963ee455ed4450485a92b571ed71237); patch-equivalent to the fork fix. |
+| [DONE — 06e: Speedometer bench command](alphax-beta/DONE-06e-speedometer-output-bench-command.md) | [`fc5a5a1e381`](https://github.com/rusefi/rusefi/commit/fc5a5a1e3817d46add4107eb82416ead8b27c84a) plus [`de4133f2355`](https://github.com/rusefi/rusefi/commit/de4133f2355036c7bf67f5f775afe604f6621a96); firmware, tests and tuning UI. |
+| [DONE — 13a: TPS smoothing](alphax-beta/DONE-13a-tps-smoothing.md) | [`edaaf10bab6`](https://github.com/rusefi/rusefi/commit/edaaf10bab64e4ab9b60f60684995a8246207c05); independent TPS filters, fast-transient reset, invalidity handling, tuning controls and tests. |
+| [DONE — 31: Fan pressure mode and PWM semantics](alphax-beta/DONE-31-cooling-fan-pressure-mode-and-pwm-semantics.md) | [`3da3feb4de3`](https://github.com/rusefi/rusefi/commit/3da3feb4de30e61d875c4d8a7d3b0b0d45b4be91) plus [`060dc248caa`](https://github.com/rusefi/rusefi/commit/060dc248caa047b059d7cd86d041ae913fd9e2fd); operational behavior and old A/C-toggle migration. |
+| [DONE — 36: Gear detection and transmission slip](alphax-beta/DONE-36-gear-detection-and-transmission-slip.md) | [`0208ad604b6`](https://github.com/rusefi/rusefi/commit/0208ad604b62c7395e8cd88f812037e58195aecf), following reproduction [`e529a799d7a`](https://github.com/rusefi/rusefi/commit/e529a799d7a1a9dec9337594aaeab651edbf87bd); clutch handling, OSS/RPM selection, slip calculation, telemetry and tests. |
+| [DONE — 55: Rolling launch](alphax-beta/DONE-55-rolling-launch.md) | [`3dd620b8d5b`](https://github.com/rusefi/rusefi/commit/3dd620b8d5b05839ddc958bb4104bba4bd63558e); captured-RPM spark limiting, hardware/Lua activation, fuel enrichment, timing ramp-out, tuning controls and tests. |
+
+`DONE` means the described operational feature is present upstream; it does not require identical files, AlphaX page placement or every fork-only diagnostic. Each completed report records those differences. Reviewing the intervening source changes found one newly completed feature, TPS smoothing. Former report 13 is split into completed [13a](alphax-beta/DONE-13a-tps-smoothing.md) and open [13b](alphax-beta/13b-tps-pps-discrepancy-configuration.md), because master has not adopted the wider discrepancy limit or changed storage scale. There are now **63 reports: six DONE and 57 open**.
+
+Report [35](alphax-beta/35-replacement-vehicle-and-wheel-speed-pipeline.md) has partial progress: standalone OSS acquisition is implemented, while the broader main-speed/axle/slip pipeline replacement remains open. Slip telemetry alone does not complete the TCU pressure-trim work in report 58. Shared status/default-file edits likewise do not complete ignition-voltage fallback (06a) or fuel economy (14). Preserving external TPS providers during smoothing initialization does not implement the CAN ETB protocol in report 59.
+
+Rolling launch uses the existing shared limiter and its own timing ramp-out. Its integration edits do not complete standing-launch controls (21), coordinated traction control (37), custom-page infrastructure (41) or the separate launch power ramp (54).
+
+This is a source/history review; tests were inspected, not rerun. The comparison revisions, LOC tables and complete inventories below remain the original historical snapshot, so their counts are not a remaining-work estimate.
+
 ## Comparison scope
 
 Reviewed on 2026-10-17, after fetching both remotes. **Master means upstream `origin/master`**, rather than the older `master` branch in the fork.
@@ -28,7 +49,7 @@ Source links below point to immutable revisions. Test references mean coverage e
 
 ## Reading the detailed reports
 
-There are **62 separate reports**. The original section numbers are retained for the complete file inventory; `06a–06e`, `10a–10e` and `61a–61d` split previously bundled changes. Each report includes an executive summary, control flow, an example, calibration/dependency notes, exact source-file diff counts and clickable fork commit links.
+There are **63 separate reports**. The original section numbers are retained for the complete file inventory; `06a–06e`, `10a–10e`, `13a–13b` and `61a–61d` split previously bundled changes. Inventory section 13 covers both TPS reports. Each report includes an executive summary, control flow, an example, calibration/dependency notes, exact source-file diff counts and clickable fork commit links.
 
 **LOC convention:** numbers below are added/deleted physical lines in the maintained firmware C/C++ files listed in each report, from the common ancestor to the fork tip. They include comments and blank lines. Shared control files serve several features: these are overlapping file-scope measurements, not additive feature-exclusive estimates. Each report also gives current-master comparison counts and per-commit counts so narrow fixes can be inspected separately. Generated artifacts, schema, tests and host tools are excluded from these firmware totals.
 
@@ -39,10 +60,10 @@ There are **62 separate reports**. The original section numbers are retained for
 | ID | Detailed report | Added / deleted source lines |
 | --- | --- | ---: |
 | 06a | [Ignition-voltage telemetry fallback](alphax-beta/06a-ignition-voltage-telemetry-fallback.md) | +77 / −5 |
-| 06b | [Eight-bin warmup enrichment defaults](alphax-beta/06b-eight-bin-warmup-enrichment-defaults.md) | +36 / −0 |
+| 06b | [DONE — Eight-bin warmup enrichment defaults](alphax-beta/DONE-06b-eight-bin-warmup-enrichment-defaults.md) | +36 / −0 |
 | 06c | [Lua limiter-adder axis defaults](alphax-beta/06c-lua-limiter-adder-axis-defaults.md) | +362 / −0 |
 | 06d | [*INFRASTRUCTURE* — Knock spectrogram feature guard](alphax-beta/06d-knock-spectrogram-feature-guard.md) | +11 / −4 |
-| 06e | [Speedometer output bench command](alphax-beta/06e-speedometer-output-bench-command.md) | +47 / −2 |
+| 06e | [DONE — Speedometer output bench command](alphax-beta/DONE-06e-speedometer-output-bench-command.md) | +47 / −2 |
 
 ### Board wiring and default behavior
 
@@ -58,7 +79,8 @@ There are **62 separate reports**. The original section numbers are retained for
 
 | ID | Detailed report | Added / deleted source lines |
 | --- | --- | ---: |
-| 13 | [TPS smoothing and discrepancy configuration](alphax-beta/13-tps-smoothing-and-discrepancy-configuration.md) | +253 / −24 |
+| 13a | [DONE — TPS smoothing](alphax-beta/DONE-13a-tps-smoothing.md) | +253 / −24 |
+| 13b | [TPS/PPS discrepancy configuration](alphax-beta/13b-tps-pps-discrepancy-configuration.md) | +238 / −24 |
 | 14 | [Instantaneous fuel economy](alphax-beta/14-instantaneous-fuel-economy.md) | +160 / −5 |
 | 15 | [Manual fuel trim by bank](alphax-beta/15-manual-fuel-trim-by-bank.md) | +68 / −1 |
 | 16 | [Injector small-pulse percentage curve](alphax-beta/16-injector-small-pulse-percentage-curve.md) | +29 / −2 |
@@ -81,12 +103,12 @@ There are **62 separate reports**. The original section numbers are retained for
 | 28 | [Intake manifold runner control](alphax-beta/28-intake-manifold-runner-control.md) | +215 / −0 |
 | 29 | [Exhaust cutout control](alphax-beta/29-exhaust-cutout-control.md) | +480 / −0 |
 | 30 | [Clutch delay valve](alphax-beta/30-clutch-delay-valve.md) | +102 / −0 |
-| 31 | [Cooling fan pressure mode and PWM semantics](alphax-beta/31-cooling-fan-pressure-mode-and-pwm-semantics.md) | +242 / −73 |
+| 31 | [DONE — Cooling fan pressure mode and PWM semantics](alphax-beta/DONE-31-cooling-fan-pressure-mode-and-pwm-semantics.md) | +242 / −73 |
 | 32 | [Dual and PWM fuel pumps](alphax-beta/32-dual-and-pwm-fuel-pumps.md) | +236 / −9 |
 | 33 | [Idle air and target rework](alphax-beta/33-idle-air-and-target-rework.md) | +486 / −53 |
 | 34 | [Soft RPM range and ETB RPM PID](alphax-beta/34-soft-rpm-range-and-etb-rpm-pid.md) | +307 / −19 |
 | 35 | [Replacement vehicle and wheel-speed pipeline](alphax-beta/35-replacement-vehicle-and-wheel-speed-pipeline.md) | +321 / −278 |
-| 36 | [Gear detection and transmission slip](alphax-beta/36-gear-detection-and-transmission-slip.md) | +105 / −7 |
+| 36 | [DONE — Gear detection and transmission slip](alphax-beta/DONE-36-gear-detection-and-transmission-slip.md) | +105 / −7 |
 | 37 | [Coordinated traction control](alphax-beta/37-coordinated-traction-control.md) | +463 / −31 |
 | 38 | [Cylinder-head sensor and thermal estimates](alphax-beta/38-cylinder-head-sensor-and-thermal-estimates.md) | +452 / −11 |
 | 39 | [Weighted oil-life monitor](alphax-beta/39-weighted-oil-life-monitor.md) | +334 / −2 |
@@ -108,7 +130,7 @@ There are **62 separate reports**. The original section numbers are retained for
 | 52 | [Downshift rev matching](alphax-beta/52-downshift-rev-matching.md) | +549 / −17 |
 | 53 | [Upshift RPM hold](alphax-beta/53-upshift-rpm-hold.md) | +526 / −17 |
 | 54 | [Launch power ramp](alphax-beta/54-launch-power-ramp.md) | +139 / −13 |
-| 55 | [Rolling launch](alphax-beta/55-rolling-launch.md) | +282 / −14 |
+| 55 | [DONE — Rolling launch](alphax-beta/DONE-55-rolling-launch.md) | +282 / −14 |
 | 56 | [Advanced VVT control](alphax-beta/56-advanced-vvt-control.md) | +124 / −6 |
 | 57 | [First-order RPM estimation](alphax-beta/57-first-order-rpm-estimation.md) | +79 / −16 |
 

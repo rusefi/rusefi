@@ -1,6 +1,16 @@
-# 36 — Gear detection and transmission slip
+# DONE — 36 — Gear detection and transmission slip
 
 [Back to the ECU change index](../alphax-beta-vs-master.md) · [Fork branch](https://github.com/ElDominio/rusefi/tree/alphax-beta)
+
+## Upstream completion
+
+**DONE on upstream master**, rechecked at [`3dd620b8d5b`](https://github.com/rusefi/rusefi/commit/3dd620b8d5b05839ddc958bb4104bba4bd63558e). Implementation commit [`0208ad604b6`](https://github.com/rusefi/rusefi/commit/0208ad604b62c7395e8cd88f812037e58195aecf) implements clutch-disengagement invalidation, direct output-shaft-speed gear inference, engine/input-shaft RPM selection, signed slip percentage with validity gates, and the associated telemetry, defaults and tuning controls. It also adds a physical OSS input, frequency-to-RPM conversion and sensor lifecycle integration. The preceding [`e529a799d7a`](https://github.com/rusefi/rusefi/commit/e529a799d7a1a9dec9337594aaeab651edbf87bd) records the clutch bug reproduction; `0208ad604b6` changes its expectations to the corrected behavior.
+
+The previous progress reference `99b0eb7a2ad` was rewritten as `0208ad604b6`. Comparing the two trees confirms the gear/slip implementation is retained; the replacement additionally appends `OutputShaftSpeed` to the sensor enum while preserving existing numeric sensor IDs. Completion and test links now use the retained upstream history.
+
+Master retains the legacy main-VSS providers and therefore permits slip measurement only with the explicit OSS reference. The fork additionally permits its OSS-backed main VehicleSpeed route, which depends on the separate wheel-speed replacement in report 35. Master also rejects non-finite inputs and negative measured RPM. These are deliberate integration differences, not missing gear/slip detection. Publishing the slip result does not complete the TCU pressure-trim consumer in report 58.
+
+Upstream [gear/OSS tests](https://github.com/rusefi/rusefi/blob/0208ad604b62c7395e8cd88f812037e58195aecf/unit_tests/tests/test_gear_detector.cpp) cover both clutch switches, RPM-source selection, positive/negative/zero slip, telemetry, invalid sensors, the speed floor, OSS pulse conversion, timeout and reconfiguration. Tests were inspected, not rerun. The analysis and LOC tables below preserve the original comparison against master `c12cf1498315`; they are historical measurements, not remaining work.
 
 ## Executive summary
 

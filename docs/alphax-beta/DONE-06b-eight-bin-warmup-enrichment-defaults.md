@@ -1,6 +1,12 @@
-# 06b — Eight-bin warmup enrichment defaults
+# DONE — 06b — Eight-bin warmup enrichment defaults
 
 [Back to the ECU change index](../alphax-beta-vs-master.md) · [Fork branch](https://github.com/ElDominio/rusefi/tree/alphax-beta)
+
+## Upstream completion
+
+**DONE on upstream master**, reviewed at [`e3f1c1f935c`](https://github.com/rusefi/rusefi/commit/e3f1c1f935c1c6d47bd1bb0a1df1ef87a71e7dfe). Commit [`78759669096`](https://github.com/rusefi/rusefi/commit/787596690963ee455ed4450485a92b571ed71237) adds the eight-bin initializer with the same temperatures and multipliers. Its stable patch ID matches the fork's `579681192f1` exactly.
+
+The remaining difference in `default_fuel.cpp` concerns the fork's P&B default, not this warmup fix. The analysis and LOC tables below preserve the original comparison against master `c12cf1498315`; they are historical measurements, not remaining work. This completion check inspected Git patches and source; no tests were rerun.
 
 ## Executive summary
 

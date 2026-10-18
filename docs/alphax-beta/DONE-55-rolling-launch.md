@@ -1,6 +1,18 @@
-# 55 — Rolling launch
+# DONE — 55 — Rolling launch
 
 [Back to the ECU change index](../alphax-beta-vs-master.md) · [Fork branch](https://github.com/ElDominio/rusefi/tree/alphax-beta)
+
+## Upstream completion
+
+**DONE on upstream master**, reviewed at commit [`3dd620b8d5b`](https://github.com/rusefi/rusefi/commit/3dd620b8d5b05839ddc958bb4104bba4bd63558e). It implements all five operational steps below and connects the module to the shared spark limiter, running-fuel multiplier and ignition corrections. Hardware input setup, `setRollingLaunchTrigger`, disabled defaults, tuning controls and live telemetry are included.
+
+The [upstream controller](https://github.com/rusefi/rusefi/blob/3dd620b8d5b05839ddc958bb4104bba4bd63558e/firmware/controllers/modules/rolling_launch/rolling_launch.cpp) combines the hardware and Lua triggers, requires valid finite RPM/VSS and the configured gates, and captures RPM on each transition into the armed state. Spark skip rises from zero at capture to full cut at the capped target. While armed, it adds the configured fuel percentage and subtracts relative timing retard; release or loss of an arming gate clears the skip/enrichment requests on the next slow callback and starts the linear retard ramp-out. Re-entering the gates while still holding the trigger captures a new target. Fixed-timing mode continues to bypass normal timing corrections.
+
+Master uses the main configuration page and `EFI_LAUNCH_CONTROL`, rather than the fork's custom page and `EFI_ROLLING_LAUNCH`. It also tightens several edge cases: missing/non-finite sensors cannot satisfy zero-valued gates; zero RPM cannot arm; an unassigned pin clears stale switch state; and a collapsed window cuts at the capped target even when capture was above that ceiling. Disabling the feature, stopping the engine or changing configuration clears the hold/ramp state. These differences preserve the feature's scope without requiring the broader custom-page infrastructure.
+
+The adoption commit changes **215 maintained firmware C/C++ lines (+214 / −1 across nine files)**: `live_data.cpp`, `idle_thread_io.cpp`, `engine.h`, `engine2.cpp`, `fuel_math.cpp`, `ignition_state.cpp`, `lua_hooks.cpp`, and the new rolling-launch `.cpp`/`.h`. This is the commit's firmware-source footprint, excluding generated code, configuration/schema, build files, docs and tests. The new [upstream tests](https://github.com/rusefi/rusefi/blob/3dd620b8d5b05839ddc958bb4104bba4bd63558e/unit_tests/tests/test_rolling_launch.cpp) add 391 lines separately and cover capture/capping, graded skip, release/re-arm, invalid sensors, hardware/Lua activation, reset paths, shared-limiter requests, and fuel/ignition integration. Tests were inspected, not rerun.
+
+The fork analysis and LOC tables below retain the original comparison against master `c12cf1498315`; they are historical measurements, not remaining work.
 
 ## Executive summary
 

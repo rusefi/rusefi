@@ -1,6 +1,16 @@
-# 31 — Cooling fan pressure mode and PWM semantics
+# DONE — 31 — Cooling fan pressure mode and PWM semantics
 
 [Back to the ECU change index](../alphax-beta-vs-master.md) · [Fork branch](https://github.com/ElDominio/rusefi/tree/alphax-beta)
+
+## Upstream completion
+
+**DONE on upstream master**, reviewed at [`e3f1c1f935c`](https://github.com/rusefi/rusefi/commit/e3f1c1f935c1c6d47bd1bb0a1df1ef87a71e7dfe). Commit [`3da3feb4de3`](https://github.com/rusefi/rusefi/commit/3da3feb4de30e61d875c4d8a7d3b0b0d45b4be91) covers all six operational changes below: independent Disabled/Relay/Pressure modes, pressure demand without compressor engagement, shared relay/PWM inhibition, demand-space soft-start, inverted off/full-duty mapping and vehicle-speed hysteresis. It also supplies configuration, defaults, UI and telemetry.
+
+Master refreshes diagnostic conditions before output-priority evaluation and stores fan settings in the main configuration instead of AlphaX page 6. It provides pressure mode without the fork's `EFI_AC_PRESSURE_FAN` build gate. The fork's manual `fan_pwm_reinit` diagnostic hook remains different; it is not required for the automatic fan-control behavior covered here.
+
+Commit [`060dc248caa`](https://github.com/rusefi/rusefi/commit/060dc248caa047b059d7cd86d041ae913fd9e2fd) additionally migrates the old A/C enable booleans to Disabled/Relay while preserving existing mode values. This covers that field migration, not every historical PWM calibration. Upstream [fan-control tests](https://github.com/rusefi/rusefi/blob/e3f1c1f935c1c6d47bd1bb0a1df1ef87a71e7dfe/unit_tests/tests/actuators/test_fan_control.cpp) exercise pressure, inverted PWM, soft-start, inhibit gates and hysteresis; [migration tests](https://github.com/rusefi/rusefi/blob/e3f1c1f935c1c6d47bd1bb0a1df1ef87a71e7dfe/java_console/ui/src/test/java/com/rusefi/maintenance/migration/FanAcModeMigratorTest.java) cover the A/C field conversion. Tests were inspected, not rerun.
+
+The analysis and LOC tables below preserve the original comparison against master `c12cf1498315`; statements about the earlier master and missing fork migration describe that historical snapshot, not current upstream status.
 
 ## Executive summary
 

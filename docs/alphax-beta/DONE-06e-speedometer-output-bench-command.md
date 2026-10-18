@@ -1,6 +1,14 @@
-# 06e — Speedometer output bench command
+# DONE — 06e — Speedometer output bench command
 
 [Back to the ECU change index](../alphax-beta-vs-master.md) · [Fork branch](https://github.com/ElDominio/rusefi/tree/alphax-beta)
+
+## Upstream completion
+
+**DONE on upstream master**, reviewed at [`e3f1c1f935c`](https://github.com/rusefi/rusefi/commit/e3f1c1f935c1c6d47bd1bb0a1df1ef87a71e7dfe). Commit [`fc5a5a1e381`](https://github.com/rusefi/rusefi/commit/fc5a5a1e3817d46add4107eb82416ead8b27c84a) implements the configured frequency, three-second override, unconfigured-output rejection, normal-output restoration, command dispatch and 100 Hz default. Commit [`de4133f2355`](https://github.com/rusefi/rusefi/commit/de4133f2355036c7bf67f5f775afe604f6621a96) adds the TunerStudio frequency field and test button.
+
+Master additionally pauses PWM for frequencies below 1 Hz. Its [speedometer tests](https://github.com/rusefi/rusefi/blob/e3f1c1f935c1c6d47bd1bb0a1df1ef87a71e7dfe/unit_tests/tests/actuators/test_speedometer.cpp) cover requested frequency, timeout/restoration, repeated commands, absent output and zero frequency. These tests were inspected, not rerun. The legacy VSS event-counter difference in `can_bench_test.cpp` belongs to report 35 and does not leave this bench command incomplete.
+
+The analysis and LOC tables below preserve the original comparison against master `c12cf1498315`; they are historical measurements, not remaining work.
 
 ## Executive summary
 
