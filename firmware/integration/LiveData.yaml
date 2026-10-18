@@ -319,3 +319,10 @@ Usages:
     output_name: rolling_launch
     engineModule: RollingLaunchControl
     conditional_compilation: "EFI_LAUNCH_CONTROL"
+
+  - name: burst_knock_state
+    java: BurstKnock.java
+    folder: controllers/modules/burst_knock
+    prepend: integration/rusefi_config_shared.txt
+    output_name: burst_knock
+    engineModule: BurstKnock

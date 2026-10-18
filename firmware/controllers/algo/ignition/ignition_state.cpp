@@ -224,6 +224,7 @@ angle_t getAdvanceCorrections(float engineLoad) {
 		+ engine->ignitionState.cltTimingCorrection
 		+ engine->ignitionState.timingPidCorrection
 		- engine->ignitionState.dfcoTimingRetard
+		- engine->module<BurstKnock>().unmock().getTimingRetard()
 #if EFI_LAUNCH_CONTROL
 		- engine->module<RollingLaunchControl>().unmock().getTimingRetard()
 #endif

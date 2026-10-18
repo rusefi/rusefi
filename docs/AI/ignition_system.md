@@ -41,6 +41,27 @@ running-advance override. Launch spark skipping uses the hard limiter, reaching
 strictly above that target. See the launch guide for configuration, shared-input
 flat-shift behavior and diagnostic boundaries.
 
+## Burst knock retard
+
+`BurstKnock` in `controllers/modules/burst_knock` uses the shared TPS AE detector
+to request feed-forward retard without an acoustic knock event. The module runs
+after `TpsAccelEnrichment::onNewValue()` in `Engine::periodicSlowCallback()`.
+Its rate proxy is AE's largest adjacent TPS jump divided by
+`max(tpsAccelLookback, 0.001)`, rather than an instantaneous derivative.
+The selected AE fuel mode does not gate this timing correction.
+
+While `isAboveAccelThreshold` is true, the module interpolates the 8×8 RPM/rate
+table, clamps negative retard to zero, and resets the decay timer. Once false,
+the last table value decays linearly from the last above-threshold sample.
+Disabling clears the state on the next slow callback. Defaults are disabled,
+zero table, one-second decay. Settings use the main configuration page.
+
+`getAdvanceCorrections()` subtracts the result, preserving the existing fixed
+timing bypass and cranking-correction switch. Telemetry is `isBurstKnockActive`,
+`burstKnockRetard`, and `burstKnockTpsRate`. Tests in
+`unit_tests/tests/ignition_injection/test_burst_knock.cpp` exercise the detector,
+table, decay and ignition integration.
+
 ## Implementation Notes
 - **BTDC vs ATDC**: Advance is typically measured in degrees Before Top Dead Center (BTDC). Internal math may use 0-720° cycle coordinates.
 - **Dwell Overlap**: rusEFI supports overlapping dwell events (where one coil starts charging before another finishes firing).

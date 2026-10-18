@@ -1,0 +1,7 @@
+struct_no_prefix burst_knock_state_s
+
+	bit isBurstKnockActive;Burst Knock: active
+	float burstKnockRetard;Burst Knock: timing pull;"deg", 1, 0, 0, 0, 1
+	float burstKnockTpsRate;Burst Knock: TPS rate;"%/s", 1, 0, 0, 0, 1
+
+end_struct

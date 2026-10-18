@@ -367,3 +367,8 @@ const rolling_launch_state_s* getLiveData(size_t) {
 	return nullptr;
 #endif
 }
+
+template<>
+const burst_knock_state_s* getLiveData(size_t) {
+	return &engine->module<BurstKnock>().unmock();
+}

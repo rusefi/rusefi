@@ -261,6 +261,12 @@ theme when testing detached windows.
 - **No sensor has a value during init**: `initNewSensors()` only *subscribes* sensors to the ADC — the first sample arrives on a later slow-ADC callback. `initSensors()` runs a few instructions later on the same thread, so `Sensor::get()` on any ADC-backed sensor is still invalid for every `init*()` function. Code that needs a real reading at start-up must defer to the slow callback and latch there (worked example: `updateFixedBaroFromMap()` in `controllers/sensors/impl/map.cpp`). A `Sensor::get(...).value_or(someDefault)` at init time does not "read the sensor, with a fallback" — it latches the default, every single boot; that was issue #9744.
 - **Engine modules**: Engine-asynchronous control logic derives from `EngineModule` and registers in the `type_list` in `firmware/controllers/algo/engine.h`. Before creating a module or making one compile-time optional, search the codebase for `[tag:disable_engine_module]` and read those comments — they document the module lifecycle and the TS-page guard-flag rules (a module that owns a TunerStudio page must have its `EFI_*` flag declared in the board `prepend.txt`, never in `board.mk` or `efifeatures.h`).
 
+The files in `controllers/modules/generated/` currently contain TODO placeholders
+for module-list generation: setting `MODULES_INCLUDE`/`MODULES_LIST` in a module's
+makefile does not update them during `make`. Register new shared modules directly
+in `engine.h` (include and type-list entry), as rolling launch and burst knock do;
+use the module makefile for compiler include paths and source files.
+
 #### Generated configuration layout
 
 **Custom gauge lists and shared templates:** `TUNING_SECTION_FILE` overrides the inherited `[Tuning]` layout independently of `GAUGES_DECLARATIONS_FILE`. Hiding menu entries does not remove their page definitions. Guard optional shared gauge references with the matching `ts_show_*` flag in every include (boost curves and secondary panels included); keep `IniReferenceValidator` strict. Adding a declaration cannot repair a reference when `ignore_gauges.txt` subsequently removes that declaration.

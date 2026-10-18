@@ -33,6 +33,7 @@ Release template (copy/paste this for new release):
 ## Unreleased
 
 ### Added
+ - Burst knock retard with an RPM/TPS-rate table and linear timing recovery. kudos AlphaX!
  - Optional TPS1/TPS2 exponential smoothing with fast-transient reset. kudos AlphaX!
  - Rolling launch control with captured-RPM spark skip, fuel enrichment and timing-retard ramp-out. kudos AlphaX!
  - Output-shaft speed input with configurable tooth count and filtering.

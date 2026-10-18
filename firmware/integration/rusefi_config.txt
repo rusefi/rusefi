@@ -2053,6 +2053,7 @@ include_file controllers/modules/rolling_launch/rolling_launch_engineConfigurati
     float tpsExpAverageAlpha;Exponential smoothing applied independently to TPS1 and TPS2 on each resolved sensor read.\n1 passes readings through. Lower values add smoothing and feedback delay. This is not a fixed-rate filter.;"", 1, 0, 0, 1, 3
     float tpsExpAverageResetThreshold;If TPS changes by at least this much within tpsExpAverageResetTimeMs, the ExpAverage filter resets and jumps straight to the new raw value instead of smoothing into it. Set to 0 to disable.;"%", 1, 0, 0, 100, 1
     float tpsExpAverageResetTimeMs;Time window for tpsExpAverageResetThreshold - a change of that size within this many milliseconds triggers an immediate ExpAverage reset. Set to 0 to disable.;"ms", 1, 0, 0, 1000, 0
+include_file controllers/modules/burst_knock/burst_knock_engineConfiguration.txt
 end_struct
 
 ! note that this magic field name is used by LiveDataParserPanel
@@ -2646,6 +2647,7 @@ end_struct
 #define ts_show_vvt_output_pin true
 #define ts_show_vvl_control true
 #define ts_show_rolling_launch true
+#define ts_show_burst_knock true
 #define ts_show_hbridge_function true
 #define ts_show_aux_sensors true
 #define ts_show_clutch_up true

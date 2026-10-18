@@ -19,6 +19,7 @@ include $(PROJECT_DIR)/controllers/modules/tachometer/tachometer.mk
 include $(PROJECT_DIR)/controllers/modules/fuel_pump/fuel_pump.mk
 include $(PROJECT_DIR)/controllers/modules/gear_detector/gear_detector.mk
 include $(PROJECT_DIR)/controllers/modules/rolling_launch/rolling_launch.mk
+include $(PROJECT_DIR)/controllers/modules/burst_knock/burst_knock.mk
 include $(PROJECT_DIR)/controllers/modules/trip_odometer/trip_odometer.mk
 include $(PROJECT_DIR)/controllers/modules/fan_control/fan_control.mk
 include $(PROJECT_DIR)/controllers/modules/map_averaging/map_averaging.mk
