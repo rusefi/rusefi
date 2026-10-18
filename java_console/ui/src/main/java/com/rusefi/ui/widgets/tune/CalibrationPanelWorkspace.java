@@ -2,6 +2,8 @@ package com.rusefi.ui.widgets.tune;
 
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.DialogModel;
+import com.opensr5.ini.PanelModel;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.UIContext;
 
@@ -27,7 +29,7 @@ public final class CalibrationPanelWorkspace {
     private final CalibrationDialogWidget primary;
     private final JScrollPane primaryScroll;
     private final DetachPanelLayer layer;
-    private final Map<String, DetachedPanel> panels = new LinkedHashMap<>();
+    private final Map<CalibrationPanelKey, DetachedPanel> panels = new LinkedHashMap<>();
     private final WindowFactory windowFactory;
     private final Supplier<List<Rectangle>> screens;
     private Consumer<ConfigurationImage> onConfigChange = image -> { };
@@ -66,7 +68,8 @@ public final class CalibrationPanelWorkspace {
             Node saved = this.config.getChild("panel" + i);
             String key = saved.getProperty("key");
             if (!key.isEmpty()) {
-                panels.put(key, new DetachedPanel(key, new Rectangle(
+                CalibrationPanelKey panelKey = new CalibrationPanelKey(key, saved.getBoolProperty("ownContent"));
+                panels.put(panelKey, new DetachedPanel(panelKey, new Rectangle(
                     saved.getIntProperty("x", 80), saved.getIntProperty("y", 80),
                     saved.getIntProperty("width", 800), saved.getIntProperty("height", 600))));
             }
@@ -128,7 +131,7 @@ public final class CalibrationPanelWorkspace {
         }
         ini = primary.getCurrentIniFileModel();
         image = primary.getWorkingImage();
-        layer.setAvailable(image != null && supports(primary.getCurrentKey()));
+        layer.setAvailable(image != null && new CalibrationPanelKey(primary.getCurrentKey()).isSupported(ini));
         refreshDetached(null);
     }
 
@@ -145,7 +148,7 @@ public final class CalibrationPanelWorkspace {
         synchronizing = true;
         try {
             if (source != primary) {
-                refresh(primary, primaryScroll, primary.getCurrentKey());
+                refresh(primary, primaryScroll, new CalibrationPanelKey(primary.getCurrentKey()));
             }
             refreshDetached(source);
         } finally {
@@ -155,8 +158,8 @@ public final class CalibrationPanelWorkspace {
     }
 
     public void detachCurrentPanel() {
-        String key = primary.getCurrentKey();
-        if (destroyed || image == null || !supports(key)) {
+        CalibrationPanelKey key = new CalibrationPanelKey(primary.getCurrentKey());
+        if (destroyed || image == null || !key.isSupported(ini)) {
             return;
         }
         DetachedPanel panel = panels.get(key);
@@ -171,58 +174,140 @@ public final class CalibrationPanelWorkspace {
         saveLayout();
     }
 
-    private boolean supports(String key) {
-        return ini != null && key != null && (ini.getDialogs().containsKey(key)
-            || ini.getTable(key) != null || ini.getCurves().containsKey(key));
-    }
-
     private void refreshDetached(CalibrationDialogWidget source) {
         for (DetachedPanel panel : panels.values()) {
-            if (image == null || !supports(panel.key)) {
+            if (image == null || !panel.key.isSupported(ini)) {
                 panel.dispose();
                 continue;
             }
             if (panel.window == null && restoring) {
-                panel.widget = new CalibrationDialogWidget(uiContext);
-                panel.scroll = new JScrollPane(panel.widget.getViewportPane());
-                panel.widget.setOnConfigChange(changed -> edited(panel.widget, changed));
-                panel.widget.setOnShowInPinout(value -> onShowInPinout.accept(value));
-                panel.widget.update(panel.key, ini, image);
-                panel.window = windowFactory.create(owner, title(panel.key), panel.scroll,
-                    () -> closePanel(panel.key), bounds -> {
-                        panel.bounds = new Rectangle(bounds);
-                        saveLayout();
-                    });
-                if (panel.bounds == null) {
-                    panel.bounds = panel.window.getBounds();
-                    Rectangle screen = screens.get().get(0);
-                    panel.bounds.setLocation(screen.x + 40, screen.y + 40);
-                }
-                panel.bounds = fitBounds(panel.bounds, screens.get());
-                panel.window.setBounds(panel.bounds);
-                panel.widget.setActive(true);
-                panel.window.show();
+                Rectangle screen = screens.get().get(0);
+                openPanel(panel, new Point(screen.x + 40, screen.y + 40));
             } else if (panel.widget != null && panel.widget != source) {
                 refresh(panel.widget, panel.scroll, panel.key);
+            }
+            if (panel.window != null) {
+                panel.window.setCanSplit(!panel.key.splitParts(ini).isEmpty());
             }
         }
     }
 
-    private String title(String key) {
+    private void openPanel(DetachedPanel panel, Point position) {
+        panel.widget = new CalibrationDialogWidget(uiContext);
+        panel.scroll = new JScrollPane(panel.widget.getViewportPane());
+        panel.widget.setOnConfigChange(changed -> edited(panel.widget, changed));
+        panel.widget.setOnShowInPinout(value -> onShowInPinout.accept(value));
+        refresh(panel.widget, panel.scroll, panel.key);
+        panel.window = windowFactory.create(owner, title(panel.key), panel.scroll,
+            () -> closePanel(panel.key), () -> splitPanel(panel.key), !panel.key.splitParts(ini).isEmpty(), bounds -> {
+                panel.bounds = new Rectangle(bounds);
+                saveLayout();
+            });
+        if (panel.bounds == null) {
+            panel.bounds = panel.window.getBounds();
+            panel.bounds.setLocation(position);
+        }
+        panel.bounds = fitBounds(panel.bounds, screens.get());
+        panel.window.setBounds(panel.bounds);
+        panel.widget.setActive(true);
+        panel.window.show();
+    }
+
+    private String title(CalibrationPanelKey key) {
+        return panelTitle(key.name) + (key.ownContent ? " — General" : "");
+    }
+
+    private String panelTitle(String key) {
         if (ini.getDialogs().containsKey(key)) {
             String title = ini.getDialogs().get(key).getUiName();
-            return title == null || title.isEmpty() ? key : title;
+            if (title != null && !title.trim().isEmpty()) {
+                return title;
+            }
+            // Anonymous layout groups still need a useful window title after splitting.
+            for (DialogModel parent : ini.getDialogs().values()) {
+                if (parent.getUiName() == null || parent.getUiName().trim().isEmpty()) {
+                    continue;
+                }
+                for (PanelModel panel : parent.getPanels()) {
+                    if (key.equals(panel.getPanelName())) {
+                        return parent.getUiName() + " — " + placementLabel(panel.getPlacement());
+                    }
+                }
+            }
+            return "Settings";
         }
         return ini.getTable(key) != null ? ini.getTable(key).getTitle() : ini.getCurves().get(key).getTitle();
     }
 
-    private void refresh(CalibrationDialogWidget widget, JScrollPane scroll, String key) {
+    private static String placementLabel(String placement) {
+        if ("west".equalsIgnoreCase(placement)) {
+            return "Left";
+        }
+        if ("east".equalsIgnoreCase(placement)) {
+            return "Right";
+        }
+        if ("north".equalsIgnoreCase(placement)) {
+            return "Top";
+        }
+        if ("south".equalsIgnoreCase(placement)) {
+            return "Bottom";
+        }
+        return "Settings";
+    }
+
+    private void refresh(CalibrationDialogWidget widget, JScrollPane scroll, CalibrationPanelKey key) {
         Point position = scroll.getViewport().getViewPosition();
-        widget.update(key, ini, image);
+        if (key.ownContent) {
+            widget.update(key.ownDialog(ini), ini, image);
+        } else {
+            widget.update(key.name, ini, image);
+        }
         scroll.getViewport().setViewPosition(position);
     }
 
-    void closePanel(String key) {
+    private void splitPanel(CalibrationPanelKey key) {
+        DetachedPanel parent = panels.get(key);
+        List<CalibrationPanelKey> parts = key.splitParts(ini);
+        if (destroyed || parent == null || parent.window == null || parts.isEmpty()
+                || !commitEditors(parent.scroll)) {
+            return;
+        }
+        Rectangle origin = parent.window.getBounds();
+        int offset = 0;
+        for (CalibrationPanelKey part : parts) {
+            DetachedPanel child = panels.get(part);
+            if (child == null) {
+                child = new DetachedPanel(part, null);
+                panels.put(part, child);
+            }
+            if (child.window == null) {
+                openPanel(child, new Point(origin.x + offset, origin.y + offset));
+            }
+            child.window.toFront();
+            offset += 32;
+        }
+        // Commit editors and create all replacement views before disposing the original.
+        closePanel(key);
+    }
+
+    private static boolean commitEditors(Component component) {
+        if (component instanceof JTable) {
+            JTable table = (JTable) component;
+            if (table.isEditing() && !table.getCellEditor().stopCellEditing()) {
+                return false;
+            }
+        }
+        if (component instanceof Container) {
+            for (Component child : ((Container) component).getComponents()) {
+                if (!commitEditors(child)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private void closePanel(CalibrationPanelKey key) {
         DetachedPanel panel = panels.remove(key);
         if (panel != null) {
             panel.dispose();
@@ -239,7 +324,8 @@ public final class CalibrationPanelWorkspace {
                 panel.bounds = panel.window.getBounds();
             }
             Node saved = config.getChild("panel" + index++);
-            saved.setProperty("key", panel.key);
+            saved.setProperty("key", panel.key.name);
+            saved.setProperty("ownContent", panel.key.ownContent);
             saved.setProperty("x", panel.bounds.x);
             saved.setProperty("y", panel.bounds.y);
             saved.setProperty("width", panel.bounds.width);
@@ -296,13 +382,13 @@ public final class CalibrationPanelWorkspace {
     }
 
     private final class DetachedPanel {
-        final String key;
+        final CalibrationPanelKey key;
         Rectangle bounds;
         CalibrationDialogWidget widget;
         JScrollPane scroll;
         PanelWindow window;
 
-        DetachedPanel(String key, Rectangle bounds) {
+        DetachedPanel(CalibrationPanelKey key, Rectangle bounds) {
             this.key = key;
             this.bounds = bounds;
         }
@@ -324,22 +410,25 @@ public final class CalibrationPanelWorkspace {
         void toFront();
         Rectangle getBounds();
         void setBounds(Rectangle bounds);
+        void setCanSplit(boolean canSplit);
         void dispose();
     }
 
     interface WindowFactory {
         PanelWindow create(Window owner, String title, JScrollPane content,
-                           Runnable close, Consumer<Rectangle> moved);
+                           Runnable close, Runnable split, boolean canSplit, Consumer<Rectangle> moved);
     }
 
     private static final class SwingPanelWindow implements PanelWindow {
         private final JDialog dialog;
+        private final Consumer<Boolean> setCanSplit;
         private boolean disposed;
 
         SwingPanelWindow(Window owner, String title, JScrollPane content,
-                         Runnable close, Consumer<Rectangle> moved) {
+                         Runnable close, Runnable split, boolean canSplit, Consumer<Rectangle> moved) {
             dialog = new JDialog(owner, title, Dialog.ModalityType.MODELESS);
             dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+            setCanSplit = DetachedPanelTitleBar.install(dialog, split, canSplit);
             dialog.add(content);
             dialog.pack();
             dialog.addWindowListener(new WindowAdapter() {
@@ -385,6 +474,11 @@ public final class CalibrationPanelWorkspace {
         @Override
         public void setBounds(Rectangle bounds) {
             dialog.setBounds(bounds);
+        }
+
+        @Override
+        public void setCanSplit(boolean canSplit) {
+            setCanSplit.accept(canSplit);
         }
 
         @Override

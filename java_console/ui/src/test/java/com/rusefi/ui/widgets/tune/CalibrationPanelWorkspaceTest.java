@@ -2,6 +2,7 @@ package com.rusefi.ui.widgets.tune;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import com.opensr5.ConfigurationImage;
+import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ini.IniFileMetaInfo;
 import com.opensr5.ini.IniFileMetaInfoImpl;
 import com.opensr5.ini.IniFileModel;
@@ -37,12 +38,122 @@ import static org.mockito.Mockito.*;
 
 class CalibrationPanelWorkspaceTest {
     @Test
+    void softwareKnockSplitsOneLayoutLevelAtATime() throws Throwable {
+        IniFileModel ini = exampleIni();
+        SwingUtilities.invokeAndWait(() -> {
+            Node config = new Node();
+            try (Fixture fixture = new Fixture(ini, config)) {
+                fixture.primary.update("softwareKnock", ini, new ConfigurationImage(ini.getMetaInfo().getPageSize(0)));
+                fixture.workspace.detachCurrentPanel();
+                FakeWindow original = fixture.windows.get(0);
+                assertTrue(original.canSplit);
+                original.move(new Rectangle(120, 100, 900, 700));
+                original.split.run();
+                assertTrue(original.disposed);
+                assertEquals(3, fixture.windows.size());
+                assertEquals("softwareKnockLeft", config.getChild("panel0").getProperty("key"));
+                assertEquals("knockThresholdCurve", config.getChild("panel1").getProperty("key"));
+                FakeWindow left = fixture.windows.get(1);
+                assertEquals("Software Knock — Left", left.title);
+                assertEquals(120, left.bounds.x);
+                assertTrue(left.bounds.y <= 100, "Keep a tall child panel within the available screen");
+                assertTrue(new Rectangle(0, 0, 1280, 960).contains(left.bounds));
+                assertTrue(left.canSplit);
+                assertFalse(fixture.windows.get(2).canSplit);
+                left.split.run();
+                assertTrue(left.disposed);
+                assertEquals(3, config.getIntProperty("count", 0));
+                FakeWindow sense = fixture.windows.get(3);
+                FakeWindow response = fixture.windows.get(4);
+                assertEquals("Sense", sense.title);
+                assertEquals("Response", response.title);
+                assertTrue(sense.canSplit, "Sense has its own controls and a nested cylinder-mapping panel");
+                assertFalse(response.canSplit);
+                find(sense.content, JCheckBox.class).doClick();
+                find(sense.content, JTextField.class).setText("92");
+                assertEquals("92.0", ConfigurationImageGetterSetter.getStringValue(
+                    ini.findIniField("cylinderBore").get(), fixture.primary.getWorkingImage()));
+            }
+            try (Fixture restored = new Fixture(ini, roundTrip(config))) {
+                restored.primary.update("softwareKnock", ini, new ConfigurationImage(ini.getMetaInfo().getPageSize(0)));
+                restored.workspace.restoreWindows();
+                assertEquals(3, restored.windows.size());
+                assertTrue(restored.windows.stream().noneMatch(window -> "Software Knock".equals(window.title)));
+            }
+        });
+    }
+
+    @Test
+    void splitPreservesParentControlsReusesOpenChildrenAndRestoresGeneralWindow() throws Throwable {
+        IniFileModel ini = ini();
+        SwingUtilities.invokeAndWait(() -> {
+            Node config = new Node();
+            try (Fixture fixture = new Fixture(ini, config)) {
+                fixture.select("first");
+                fixture.workspace.detachCurrentPanel();
+                FakeWindow first = fixture.windows.get(0);
+                fixture.select("combined");
+                fixture.workspace.detachCurrentPanel();
+                FakeWindow combined = fixture.windows.get(1);
+                combined.split.run();
+                assertTrue(combined.disposed);
+                assertFalse(first.disposed);
+                assertEquals(4, fixture.windows.size(), "Reuse the already-open first panel");
+                assertEquals(3, config.getIntProperty("count", 0));
+                FakeWindow general = fixture.windows.get(2);
+                assertEquals("Combined — General", general.title);
+                assertFalse(general.canSplit);
+                assertNull(find(general.content, JTable.class), "General excludes the child curve");
+                find(general.content, JTextField.class).setText("44");
+                assertEquals("44", find(first.content, JTextField.class).getText());
+                assertEquals("44", find(fixture.primary.getContentPane(), JTextField.class).getText());
+                assertTrue(config.getChild("panel1").getBoolProperty("ownContent"));
+            }
+            try (Fixture restored = new Fixture(ini, roundTrip(config))) {
+                restored.workspace.restoreWindows();
+                assertEquals(3, restored.windows.size());
+                FakeWindow general = restored.windows.get(1);
+                assertEquals("Combined — General", general.title);
+                assertFalse(general.canSplit);
+                assertNull(find(general.content, JTable.class));
+            }
+        });
+    }
+
+    @Test
+    void splitCommitsAnActiveTableEditorBeforeReplacingItsWindow() throws Throwable {
+        IniFileModel ini = ini();
+        SwingUtilities.invokeAndWait(() -> {
+            try (Fixture fixture = new Fixture(ini, new Node())) {
+                fixture.select("charts");
+                fixture.workspace.detachCurrentPanel();
+                FakeWindow original = fixture.windows.get(0);
+                JTable table = find(original.content, JTable.class);
+                table.changeSelection(0, 1, false, false);
+                assertTrue(table.editCellAt(0, 1));
+                ((JTextField) table.getEditorComponent()).setText("72");
+                original.split.run();
+                assertTrue(original.disposed);
+                assertEquals("72", find(fixture.windows.get(1).content, JTable.class).getValueAt(0, 1).toString());
+                assertEquals("72", find(fixture.primary.getContentPane(), JTable.class).getValueAt(0, 1).toString());
+            }
+        });
+    }
+
+    @Test
+    void leavesAndUnresolvableLayoutsCannotSplit() throws Throwable {
+        IniFileModel ini = ini();
+        assertTrue(new CalibrationPanelKey("first").splitParts(ini).isEmpty());
+        assertTrue(new CalibrationPanelKey("curve").splitParts(ini).isEmpty());
+        assertTrue(new CalibrationPanelKey("combined", true).splitParts(ini).isEmpty());
+        assertTrue(new CalibrationPanelKey("incomplete").splitParts(ini).isEmpty());
+        assertTrue(new CalibrationPanelKey("recursive").splitParts(ini).isEmpty());
+        assertEquals(2, new CalibrationPanelKey("charts").splitParts(ini).size());
+    }
+
+    @Test
     void multisparkDetachesAtItsFormCornerAndPreferredSize() throws Throwable {
-        IniFileModel ini;
-        try (InputStream input = getClass().getResourceAsStream("/26october.ini")) {
-            RawIniFile raw = IniFileReaderUtil.read(input, "26october.ini");
-            ini = IniFileReaderUtil.readIniFile(raw, "26october.ini", new IniFileMetaInfoImpl(raw));
-        }
+        IniFileModel ini = exampleIni();
         SwingUtilities.invokeAndWait(() -> {
             try (Fixture fixture = new Fixture(ini, new Node())) {
                 fixture.primary.update("multisparkSettings", ini,
@@ -107,6 +218,107 @@ class CalibrationPanelWorkspaceTest {
     @Test
     void nativeWindowsWithConsoleTheme() throws Throwable {
         checkNativeWindows(true);
+    }
+
+    @Test
+    void nativeTitleBarSplitsIntoCompactWindowsAndStillCloses() throws Throwable {
+        assumeFalse(GraphicsEnvironment.isHeadless());
+        IniFileModel ini = ini();
+        Node config = new Node();
+        JFrame[] owner = new JFrame[1];
+        CalibrationPanelWorkspace[] workspace = new CalibrationPanelWorkspace[1];
+        JDialog[] original = new JDialog[1];
+        LookAndFeel previous = UIManager.getLookAndFeel();
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                FlatLightLaf.setup();
+                owner[0] = new JFrame("Split workspace test");
+                workspace[0] = new CalibrationPanelWorkspace(new UIContext(), config);
+                workspace[0].getPrimary().update("combined", ini, initialImage());
+                owner[0].add(workspace[0].getContent());
+                owner[0].setBounds(30, 30, 700, 450);
+                owner[0].setVisible(true);
+                workspace[0].detachCurrentPanel();
+                original[0] = (JDialog) Arrays.stream(owner[0].getOwnedWindows())
+                    .filter(Window::isShowing).findFirst().get();
+                original[0].setBounds(100, 70, 1100, 850);
+            });
+            Robot robot = new Robot();
+            robot.setAutoDelay(60);
+            robot.setAutoWaitForIdle(true);
+            robot.waitForIdle();
+            Point[] point = new Point[1];
+            SwingUtilities.invokeAndWait(() -> {
+                JButton split = namedButton(original[0], "Split panel");
+                JButton close = namedButton(original[0], "Close");
+                assertNotNull(split);
+                assertNotNull(close);
+                assertTrue(split.isShowing());
+                assertSame(close.getParent(), split.getParent());
+                assertEquals(close.getX(), split.getX() + split.getWidth(), "Split sits immediately beside Close");
+                assertNotNull(split.getIcon());
+                assertTrue(split.getText() == null || split.getText().isEmpty());
+                point[0] = split.getLocationOnScreen();
+                point[0].translate(split.getWidth() / 2, split.getHeight() / 2);
+            });
+            robot.mouseMove(point[0].x, point[0].y);
+            robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+            robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+            SwingUtilities.invokeAndWait(() -> {
+                assertFalse(original[0].isDisplayable());
+                Window[] children = Arrays.stream(owner[0].getOwnedWindows()).filter(Window::isShowing)
+                    .toArray(Window[]::new);
+                assertEquals(3, children.length);
+                assertEquals(3, config.getIntProperty("count", 0));
+                for (Window child : children) {
+                    assertTrue(child.getWidth() < 1100);
+                    assertTrue(child.getHeight() < 850);
+                    assertFalse(namedButton(child, "Split panel").isShowing(), "These child panels are leaves");
+                }
+                JDialog general = (JDialog) Arrays.stream(children)
+                    .filter(child -> "Combined — General".equals(((JDialog) child).getTitle())).findFirst().get();
+                find(general, JTextField.class).setText("48");
+                assertEquals("48", find(workspace[0].getPrimary().getContentPane(), JTextField.class).getText());
+                general.toFront();
+                JButton close = namedButton(general, "Close");
+                point[0] = close.getLocationOnScreen();
+                point[0].translate(close.getWidth() / 2, close.getHeight() / 2);
+            });
+            robot.mouseMove(point[0].x, point[0].y);
+            robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+            robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+            SwingUtilities.invokeAndWait(() -> assertEquals(2, config.getIntProperty("count", 0)));
+        } finally {
+            SwingUtilities.invokeAndWait(() -> {
+                if (workspace[0] != null) {
+                    workspace[0].destroy();
+                }
+                if (owner[0] != null) {
+                    owner[0].dispose();
+                }
+                try {
+                    UIManager.setLookAndFeel(previous);
+                } catch (UnsupportedLookAndFeelException e) {
+                    throw new AssertionError(e);
+                }
+            });
+        }
+    }
+
+    private static JButton namedButton(Component component, String name) {
+        if (component instanceof JButton
+                && name.equals(component.getAccessibleContext().getAccessibleName())) {
+            return (JButton) component;
+        }
+        if (component instanceof Container) {
+            for (Component child : ((Container) component).getComponents()) {
+                JButton found = namedButton(child, name);
+                if (found != null) {
+                    return found;
+                }
+            }
+        }
+        return null;
     }
 
     private void checkNativeWindows(boolean flatLaf) throws Throwable {
@@ -385,8 +597,8 @@ class CalibrationPanelWorkspaceTest {
             this.ini = ini;
             context.iniFileState.setIniFileModelForTest(ini);
             workspace = new CalibrationPanelWorkspace(context, config,
-                (owner, title, content, close, moved) -> {
-                    FakeWindow window = new FakeWindow(title, content, close, moved);
+                (owner, title, content, close, split, canSplit, moved) -> {
+                    FakeWindow window = new FakeWindow(title, content, close, split, canSplit, moved);
                     windows.add(window);
                     return window;
                 }, () -> Collections.singletonList(new Rectangle(0, 0, 1280, 960)));
@@ -410,15 +622,20 @@ class CalibrationPanelWorkspaceTest {
         final String title;
         final JScrollPane content;
         final Runnable close;
+        final Runnable split;
         final Consumer<Rectangle> moved;
         Rectangle bounds;
         boolean disposed;
+        boolean canSplit;
 
-        FakeWindow(String title, JScrollPane content, Runnable close, Consumer<Rectangle> moved) {
+        FakeWindow(String title, JScrollPane content, Runnable close, Runnable split, boolean canSplit,
+                   Consumer<Rectangle> moved) {
             this.title = title;
             this.content = content;
             this.bounds = new Rectangle(content.getPreferredSize());
             this.close = close;
+            this.split = split;
+            this.canSplit = canSplit;
             this.moved = moved;
         }
 
@@ -431,6 +648,7 @@ class CalibrationPanelWorkspaceTest {
         public void toFront() { }
         public Rectangle getBounds() { return new Rectangle(bounds); }
         public void setBounds(Rectangle bounds) { this.bounds = new Rectangle(bounds); }
+        public void setCanSplit(boolean canSplit) { this.canSplit = canSplit; }
         public void dispose() { disposed = true; }
     }
 
@@ -475,6 +693,13 @@ class CalibrationPanelWorkspaceTest {
         return new ConfigurationImage(new byte[]{10, 0, 0, 20, 1, 10, 2, 10, 1, 2, 3, 4});
     }
 
+    private static IniFileModel exampleIni() throws Throwable {
+        try (InputStream input = CalibrationPanelWorkspaceTest.class.getResourceAsStream("/26october.ini")) {
+            RawIniFile raw = IniFileReaderUtil.read(input, "26october.ini");
+            return IniFileReaderUtil.readIniFile(raw, "26october.ini", new IniFileMetaInfoImpl(raw));
+        }
+    }
+
     private static IniFileModel ini() throws Throwable {
         String fields = "field = \"Value\", value\nfield = \"Enabled\", enabled\nfield = \"Mode\", mode\n";
         String text = "[Constants]\npage = 1\n"
@@ -488,6 +713,10 @@ class CalibrationPanelWorkspaceTest {
             + "[UserDefined]\ndialog = first, \"First\"\n" + fields
             + "dialog = second, \"Second\"\n" + fields
             + "dialog = other, \"Other\"\nfield = \"Other value\", otherValue\n"
+            + "dialog = combined, \"Combined\"\nfield = \"Value\", value\npanel = first\npanel = curve\n"
+            + "dialog = charts, \"Charts\"\npanel = table\npanel = curve\n"
+            + "dialog = incomplete, \"Incomplete\"\npanel = first\npanel = missing\n"
+            + "dialog = recursive, \"Recursive\"\npanel = first\npanel = recursive\n"
             + "[TableEditor]\ntable = table, tableMap, \"Table\", 1\nxBins = x\nyBins = y\nzBins = z\n"
             + "[CurveEditor]\ncurve = curve, \"Curve\"\ncolumnLabel = \"X\", \"Y\"\n"
             + "xAxis = 0, 10, 5\nyAxis = 0, 10, 5\nxBins = x\nyBins = y\n";
