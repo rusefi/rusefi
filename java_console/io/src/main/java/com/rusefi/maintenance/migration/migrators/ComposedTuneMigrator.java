@@ -26,6 +26,7 @@ public enum ComposedTuneMigrator implements TuneMigrator {
         VeBlends1BlendParameterMigrator.INSTANCE,
         BoostLoadBinsMigrator.INSTANCE,
         BooleanIniFieldMigrator.INSTANCE,
+        FanAcModeMigrator.INSTANCE,
         DigitsIniFieldMigrator.INSTANCE,
         STFTFieldMigrator.INSTANCE,
         IdleCurveMigrator.INSTANCE,
