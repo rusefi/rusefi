@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="15856">
+    <page number="0" size="15868">
         <constant name="accelEnrichmentMode">"MS Adder"</constant>
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
@@ -4488,6 +4488,9 @@
         <constant digits="1" name="tpsDecelEnleanmentThreshold" units="%/sample">0.0</constant>
         <constant digits="0" name="tpsErrorDetectionTooHigh" units="%">110</constant>
         <constant digits="0" name="tpsErrorDetectionTooLow" units="%">-10</constant>
+        <constant digits="3" name="tpsExpAverageAlpha" units="">1.0</constant>
+        <constant digits="1" name="tpsExpAverageResetThreshold" units="%">0.0</constant>
+        <constant digits="0" name="tpsExpAverageResetTimeMs" units="ms">0</constant>
         <constant digits="2" name="tpsMax" units="V">4.63</constant>
         <constant digits="2" name="tpsMin" units="V">0.49</constant>
         <constant digits="1" name="tpsSecondaryMaximum" units="%">0.0</constant>
@@ -5241,7 +5244,7 @@
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20261017" nPages="1" signature="rusEFI master.2026.10.18.f407-discovery.4122779328" version="5.0"/>
+    <versionInfo firmwareInfo="20261017" nPages="1" signature="rusEFI master.2026.10.18.f407-discovery.133583103" version="5.0"/>
     <bibliography author="rusEFI 20261017" writeDate="date"/>
     <settings/>
     <userComments/>
