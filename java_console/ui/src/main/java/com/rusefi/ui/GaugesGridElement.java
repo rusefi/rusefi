@@ -2,6 +2,7 @@ package com.rusefi.ui;
 
 import com.rusefi.core.Sensor;
 import com.rusefi.core.preferences.storage.Node;
+import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.ui.widgets.GaugeDisplayKind;
 import com.rusefi.ui.widgets.JPanelWithListener;
@@ -44,6 +45,11 @@ public class GaugesGridElement {
             createDisplayAsMenu(GaugeDisplayKind.LIVE_GRAPH)));
         addLiveGraph(new SensorLiveGraph(uiContext, config.getChild("bottom"), Sensor.RPMGauge.name(),
             createDisplayAsMenu(GaugeDisplayKind.LIVE_GRAPH)));
+        // Lay the graphs out now, as the round gauge path does; otherwise they stay zero-sized
+        // until some later layout pass and the empty graph appears with a delay.
+        wrapper.doLayout();
+        AutoupdateUtil.trueLayoutAndRepaint(wrapper.getParent());
+        wrapper.repaint();
     }
 
     private void addLiveGraph(SensorLiveGraph graph) {

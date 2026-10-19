@@ -67,12 +67,12 @@ class GaugesGridElementTest {
     }
 
     /**
-     * Switching a slot to Live graph adds the two graphs without laying them out, unlike the
-     * round gauge path. They stay zero-sized, so nothing shows until some other layout pass,
-     * which users see as a delay before the graph appears.
+     * Switching a slot to Live graph used to add the two graphs without laying them out, unlike
+     * the round gauge path. They stayed zero-sized until some other layout pass, which users saw
+     * as a delay before the graph appeared.
      */
     @Test
-    void switchingToLiveGraphLeavesTheGraphsUnlaidOut() throws Throwable {
+    void switchingToLiveGraphLaysOutTheGraphsAtOnce() throws Throwable {
         SwingUtilities.invokeAndWait(() -> {
             Node config = new Node();
             GaugesGridElement element = GaugesGridElement.create(GaugesPanelLayoutTest.createContext(), config, "RPMGauge");
@@ -81,9 +81,9 @@ class GaugesGridElementTest {
                 wrapper.setSize(400, 300);
                 element.setDisplayKind(GaugeDisplayKind.LIVE_GRAPH);
                 Component top = wrapper.getComponent(0);
-                // Current, wrong behavior: the graphs have no size until a later layout.
-                assertEquals(0, top.getWidth());
-                assertEquals(0, top.getHeight());
+                Component bottom = wrapper.getComponent(1);
+                assertEquals(new Rectangle(0, 0, 400, 150), top.getBounds(), "Sized immediately, still empty");
+                assertEquals(new Rectangle(0, 150, 400, 150), bottom.getBounds());
             } finally {
                 element.destroy();
             }

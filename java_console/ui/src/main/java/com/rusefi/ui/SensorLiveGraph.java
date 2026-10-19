@@ -8,7 +8,6 @@ import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCategory;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.core.preferences.storage.Node;
-import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.ui.widgets.GaugeMenuSearch;
 import com.rusefi.ui.widgets.GaugeStyle;
 import com.rusefi.ui.widgets.GaugeMenuLabel;
@@ -124,12 +123,8 @@ public class SensorLiveGraph extends JPanel {
         }
 
         addValue(SensorCentral.getInstance().getValue(channelName));
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                AutoupdateUtil.trueLayoutAndRepaint(SensorLiveGraph.this);
-            }
-        });
+        // A new reading changes only the picture, never the layout; repaint() is thread-safe.
+        repaint();
     }
 
     private void showPopupMenu(MouseEvent e) {
