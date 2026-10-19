@@ -40,6 +40,31 @@ TEST(LaunchControl, VSSCondition) {
 
 }
 
+// Reproduces ECU-035: invalid vehicle speed activates the launch hard cut.
+TEST(LaunchControl, InvalidVehicleSpeedEnablesLaunchSparkCut) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->launchControlEnabled = true;
+	engineConfiguration->launchActivationMode = ALWAYS_ACTIVE_LAUNCH;
+	engineConfiguration->launchSpeedThreshold = 30;
+	engineConfiguration->launchTpsThreshold = 20;
+	engineConfiguration->launchRpm = 3000;
+	engineConfiguration->launchSparkCutEnable = true;
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 50);
+	Sensor::setMockValue(SensorType::Rpm, 3500);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 40);
+	auto& launch = engine->launchController;
+	launch.update();
+	ASSERT_FALSE(launch.isLaunchCondition);
+	ASSERT_FLOAT_EQ(0, launch.getSparkSkipRatio());
+
+	Sensor::setInvalidMockValue(SensorType::VehicleSpeed);
+	launch.update();
+	EXPECT_TRUE(launch.isLaunchCondition);
+	EXPECT_FLOAT_EQ(1, launch.getSparkSkipRatio());
+	engine->engineState.updateSparkSkip();
+	EXPECT_FLOAT_EQ(1, engine->hardSparkLimiter.getTargetSkipRatio());
+}
+
 TEST(LaunchControl, ZeroVSSCondition) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
