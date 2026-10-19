@@ -66,6 +66,30 @@ class GaugesGridElementTest {
         });
     }
 
+    /**
+     * Switching a slot to Live graph adds the two graphs without laying them out, unlike the
+     * round gauge path. They stay zero-sized, so nothing shows until some other layout pass,
+     * which users see as a delay before the graph appears.
+     */
+    @Test
+    void switchingToLiveGraphLeavesTheGraphsUnlaidOut() throws Throwable {
+        SwingUtilities.invokeAndWait(() -> {
+            Node config = new Node();
+            GaugesGridElement element = GaugesGridElement.create(GaugesPanelLayoutTest.createContext(), config, "RPMGauge");
+            try {
+                JPanel wrapper = element.getContent();
+                wrapper.setSize(400, 300);
+                element.setDisplayKind(GaugeDisplayKind.LIVE_GRAPH);
+                Component top = wrapper.getComponent(0);
+                // Current, wrong behavior: the graphs have no size until a later layout.
+                assertEquals(0, top.getWidth());
+                assertEquals(0, top.getHeight());
+            } finally {
+                element.destroy();
+            }
+        });
+    }
+
     @Test
     void legacyFlagStillSelectsTheLiveGraph() throws Throwable {
         SwingUtilities.invokeAndWait(() -> {

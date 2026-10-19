@@ -86,22 +86,29 @@ class SensorLiveGraphTest {
 
     /**
      * Output channels are polled only when something subscribes to them by channel name.
-     * The graph subscribes with its gauge name, so on its own it never gets data: it shows
-     * readings only when another widget happens to subscribe to the same channel.
+     * The graph used to subscribe with its gauge name, so on its own it never got data: it
+     * showed readings only when another widget happened to subscribe to the same channel.
      */
     @Test
-    void graphSubscribesToItsGaugeNameInsteadOfItsChannel() throws Throwable {
+    void graphSubscribesToItsChannelAndFollowsGaugeChanges() throws Throwable {
         SwingUtilities.invokeAndWait(() -> {
             SensorLiveGraph graph = new SensorLiveGraph(GaugesPanelLayoutTest.createContext(), new Node(), "CustomGauge", null);
             try {
                 graph.setActive(true);
-                // Current, wrong behavior: the gauge name is requested and the channel is not.
-                assertTrue(GaugesPanelLayoutTest.hasDemand("CustomGauge"));
-                assertFalse(GaugesPanelLayoutTest.hasDemand("layoutCustomChannel"));
+                assertTrue(GaugesPanelLayoutTest.hasDemand("layoutCustomChannel"));
+                assertFalse(GaugesPanelLayoutTest.hasDemand("CustomGauge"), "The gauge name is not a channel");
+
+                graph.setSensor("RPMGauge");
+                assertTrue(GaugesPanelLayoutTest.hasDemand("layoutDefaultChannel"));
+                assertFalse(GaugesPanelLayoutTest.hasDemand("layoutCustomChannel"), "The old channel is released");
+
+                graph.setActive(false);
+                assertFalse(GaugesPanelLayoutTest.hasDemand("layoutDefaultChannel"), "Hidden graphs stop polling");
+                graph.setActive(true);
             } finally {
                 graph.destroy();
             }
-            assertFalse(GaugesPanelLayoutTest.hasDemand("CustomGauge"));
+            assertFalse(GaugesPanelLayoutTest.hasDemand("layoutDefaultChannel"));
         });
     }
 
@@ -140,6 +147,7 @@ class SensorLiveGraphTest {
                 assertNull(graph.getBorder(), "No black frame");
                 BufferedImage empty = render(graph);
                 assertEquals(0, amber(empty), "No readings, no line");
+                assertTrue(grayText(empty) > 20, "An empty graph says it is waiting for data");
                 assertEquals(0, empty.getRGB(0, 0) >>> 24);
 
                 for (int i = 0; i < 31; i++) {
@@ -168,6 +176,23 @@ class SensorLiveGraphTest {
         graph.paint(g);
         g.dispose();
         return image;
+    }
+
+    /** Gray text pixels in the middle of the plot, where the waiting message goes. */
+    private static int grayText(BufferedImage image) {
+        int count = 0;
+        for (int y = image.getHeight() * 2 / 5; y < image.getHeight() * 4 / 5; y++) {
+            for (int x = image.getWidth() / 3; x < image.getWidth() * 2 / 3; x++) {
+                int argb = image.getRGB(x, y);
+                int r = (argb >> 16) & 0xFF;
+                int g = (argb >> 8) & 0xFF;
+                int b = argb & 0xFF;
+                if ((argb >>> 24) == 255 && r < 190 && Math.abs(r - g) < 20 && Math.abs(g - b) < 20) {
+                    count++;
+                }
+            }
+        }
+        return count;
     }
 
     /** Pixels of the amber line and the strongest part of its fill. */

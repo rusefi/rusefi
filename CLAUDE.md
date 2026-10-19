@@ -503,6 +503,13 @@ threads without shutting down the reusable communication executor. A daemon
 thread still consumes native resources and can exhaust macOS's thread limit.
 See `LinkManagerThreadLifecycleTest` for repeated-probe and worker-restart coverage.
 
+Console output channels are polled selectively: only names subscribed through
+`SensorCentral.addListener` (active tokens) are requested. Subscribe with the
+output channel name (`GaugeModel.getChannel()`), never the gauge name; a
+gauge-name subscription requests nothing and the widget only appears to work
+while another widget polls the same channel. `GaugesPanelLayoutTest.hasDemand`
+checks the requested set.
+
 All rusEFI serial connections use the USB CDC (Communications Device Class) profile. Baud rate is irrelevant and never a concern — the USB serial profile handles throughput natively regardless of any baud rate setting in host software or code.
 
 ### SLCAN CAN sniffer on the second VCP
