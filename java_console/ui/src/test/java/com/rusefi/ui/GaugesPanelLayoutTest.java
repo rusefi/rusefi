@@ -96,6 +96,7 @@ class GaugesPanelLayoutTest {
         Node config = singleGauge("CustomGauge");
         Node element = config.getChild("element_0");
         element.setProperty("type", true);
+        element.setProperty("display", "graph");
         Node top = element.getChild("top");
         top.setProperty("sensor", "Temperature\u00b0Gauge");
         top.setProperty("period", 50);
@@ -118,6 +119,7 @@ class GaugesPanelLayoutTest {
         Node loadedElement = loaded.getChild("element_0");
         assertEquals("CustomGauge", loadedElement.getProperty("gauge"));
         assertTrue(loadedElement.getBoolProperty("type"));
+        assertEquals("graph", loadedElement.getProperty("display"));
         assertEquals(top.getConfig(), loadedElement.getChild("top").getConfig());
         assertEquals(bottom.getConfig(), loadedElement.getChild("bottom").getConfig());
         String text = new String(Files.readAllBytes(file), StandardCharsets.UTF_8);
@@ -139,7 +141,8 @@ class GaugesPanelLayoutTest {
             {"gauges_rows", "2147483647"}, {"element_0.gauge", ""},
             {"element_0.type", "maybe"}, {"element_0.top.period", "-1"},
             {"element_0.bottom.auto_scale", "yes"}, {"element_0.top.lower", "NaN"},
-            {"element_0.bottom.upper", "Infinity"}, {"element_0.top.sensor", " "}
+            {"element_0.bottom.upper", "Infinity"}, {"element_0.top.sensor", " "},
+            {"element_0.display", "dial"}
         };
         Node config = singleGauge("RPMGauge");
         SwingUtilities.invokeAndWait(() -> {
