@@ -717,7 +717,11 @@ EtbImpl<EtbController2> etb2(throttle2TrimTable);
 static EtbController* etbControllers[] = { &etb1, &etb2 };
 static_assert(ETB_COUNT == sizeof(etbControllers) / sizeof(EtbController*));
 
+// todo: do we still need this blinking weirdness? it was a work-around for TS defect somewhere in 2024
 void blinkEtbErrorCodes(bool blinkPhase) {
+	if (!Sensor::hasSensor(SensorType::AcceleratorPedal)) {
+		return;
+	}
 	for (int i = 0;i<ETB_COUNT;i++) {
 		int8_t etbErrorCode = etbControllers[i]->etbErrorCode;
 		if (etbErrorCode && engine->etbAutoTune) {
