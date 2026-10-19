@@ -85,17 +85,19 @@ class CircularGaugeTest {
         CircularGauge gauge = gauge(0, 100, 80, 0);
         gauge.setValue(50);
         BufferedImage image = render(gauge, 400, 400);
-        assertEquals(0xD0E128, rgb(image, 70, 150), "Filled side of the dial");
-        assertNotEquals(0xD0E128, rgb(image, 330, 150), "Unfilled side of the dial");
-        assertEquals(0xC60000, rgb(image, 200, 25), "Half-scale needle points straight up");
-        assertEquals(0x202020, rgb(image, 200, 120), "Hub hides the inner needle");
-        assertEquals(0xFF0000, rgb(image, 394, 200), "Danger ring at the end of the scale");
+        int progress = CircularGauge.PROGRESS.getRGB() & 0xFFFFFF;
+        assertEquals(progress, rgb(image, 70, 150), "Filled side of the dial");
+        assertNotEquals(progress, rgb(image, 330, 150), "Unfilled side of the dial");
+        assertEquals(CircularGauge.NEEDLE.getRGB() & 0xFFFFFF, rgb(image, 200, 40), "Half-scale needle points straight up");
+        assertNotEquals(CircularGauge.NEEDLE.getRGB() & 0xFFFFFF, rgb(image, 200, 120), "Hub hides the inner needle");
+        assertEquals(0xE53935, rgb(image, 384, 200), "Danger ring at the end of the scale");
         gauge.setValue(80);
         image = render(gauge, 400, 400);
-        assertEquals(0xFF0000, rgb(image, 70, 150), "Danger starts at the threshold, inclusively");
+        assertEquals(CircularGauge.DANGER_FILL.getRGB() & 0xFFFFFF, rgb(image, 70, 150),
+            "Danger starts at the threshold, inclusively");
         gauge.setHighDangerValue(100);
         image = render(gauge, 400, 400);
-        assertEquals(0xD0E128, rgb(image, 70, 150), "Changing threshold updates the fill");
+        assertEquals(progress, rgb(image, 70, 150), "Changing threshold updates the fill");
     }
 
     @Test

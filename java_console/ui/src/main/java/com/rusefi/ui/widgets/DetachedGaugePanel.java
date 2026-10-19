@@ -196,7 +196,7 @@ final class DetachedGaugePanel extends JPanel {
             Graphics2D g = (Graphics2D) graphics.create();
             try {
                 g.translate(x, y);
-                g.setColor(new Color(0x202020));
+                g.setColor(new Color(0xF3F4F6));
                 g.fillRect(0, 0, CLOSE_SIZE, CLOSE_SIZE);
                 g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g.setStroke(new BasicStroke(2));
