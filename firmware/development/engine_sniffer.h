@@ -31,14 +31,30 @@ void addEngineSnifferOutputPinEvent(NamedOutputPin *pin, FrontDirection frontDir
 #if EFI_ENGINE_SNIFFER
 
 /**
- * This is the number of events in the digital chart which would be displayed
- * on the 'digital sniffer' pane
+ * This is the size in bytes of the text buffer of the digital chart which would be displayed
+ * on the 'digital sniffer' panel
+ *
+ * Each event is appended as "name!msg!time!" that is
+ *   strlen(name) + strlen(msg) + digits(time) + 3 bytes
+ *   name: 1-4 chars ('r', 't1', 'v1', output pin short name)
+ *   msg:  1-5 chars ('u'/'d', 'u_123', rpm value)
+ *   time: ENGINE_SNIFFER_UNIT_US ticks, 4-5 digits for a typical chart, up to 6 digits
+ * which is 10-12 bytes for a typical event and up to ~18 bytes worst case.
+ *
+ * With the default engineConfiguration->engineChartSize = 180 events that is
+ *   180 * 12 = ~2.2k typical, 180 * 15 = ~2.7k pessimistic, 180 * 18 = ~3.2k worst case
+ * plus the header, the LOG_DELIMITER and WAVE_LOGGING_TAIL_GUARD bytes of tail reserve.
+ *
+ * Once the buffer is nearly full isFull() cuts the chart short, see WAVE_LOGGING_TAIL_GUARD
  */
 #if EFI_PROD_CODE
 #define WAVE_LOGGING_SIZE 5000
 #else
 #define WAVE_LOGGING_SIZE 35000
 #endif
+
+/* Each event consumes up to ~15 bytes */
+#define WAVE_LOGGING_TAIL_GUARD	35
 
 /**
  * @brief	rusEfi console sniffer data buffer

@@ -90,7 +90,8 @@ bool WaveChart::isStartedTooLongAgo() const {
 }
 
 bool WaveChart::isFull() const {
-	return counter >= engineConfiguration->engineChartSize;
+	return (counter >= engineConfiguration->engineChartSize) ||
+		(logging.remainingSize() <= WAVE_LOGGING_TAIL_GUARD);
 }
 
 int WaveChart::getSize() {
@@ -171,6 +172,7 @@ void WaveChart::addEvent3(const char *name, const char * msg) {
 
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6653, isInitialized, "chart not initialized");
 
+	/* this also checks if we have enough (WAVE_LOGGING_TAIL_GUARD) space in logging */
 	if (isFull()) {
 		return;
 	}
@@ -195,21 +197,19 @@ void WaveChart::addEvent3(const char *name, const char * msg) {
 	uint32_t diffNt = nowNt - startTimeNt;
 	uint32_t time100 = NT2US(diffNt / ENGINE_SNIFFER_UNIT_US);
 
-	if (logging.remainingSize() > 35) {
-		/**
-		 * printf is a heavy method, append is used here as a performance optimization
-		 */
-		logging.appendFast(name);
-		logging.appendChar(CHART_DELIMETER);
-		logging.appendFast(msg);
-		logging.appendChar(CHART_DELIMETER);
-//		time100 -= startTime100;
+	/**
+	 * printf is a heavy method, append is used here as a performance optimization
+	 */
+	logging.appendFast(name);
+	logging.appendChar(CHART_DELIMETER);
+	logging.appendFast(msg);
+	logging.appendChar(CHART_DELIMETER);
+//	time100 -= startTime100;
 
-		itoa10(timeBuffer, time100);
-		logging.appendFast(timeBuffer);
-		logging.appendChar(CHART_DELIMETER);
-		logging.terminate();
-	}
+	itoa10(timeBuffer, time100);
+	logging.appendFast(timeBuffer);
+	logging.appendChar(CHART_DELIMETER);
+	logging.terminate();
 #endif /* EFI_TEXT_LOGGING */
 }
 
