@@ -11,6 +11,7 @@ TEST(Actuators, AntiLag) {
 	Sensor::setMockValue(SensorType::Rpm, 1000);
 	Sensor::setMockValue(SensorType::Tps1, 1);
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 1);
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 1);
 
 	engineConfiguration->antiLagActivationMode = SWITCH_INPUT_ANTILAG;
 	engine->periodicFastCallback();

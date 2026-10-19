@@ -56,9 +56,9 @@ bool AntilagSystemBase::isALSMaxCLTCondition() const {
 }
 
 bool AntilagSystemBase::isALSMaxThrottleIntentCondition() const {
-	int throttleIntent = Sensor::getOrZero(SensorType::DriverThrottleIntent);
+	auto throttleIntent = Sensor::get(SensorType::DriverThrottleIntent);
 
-	return engineConfiguration->ALSMaxTPS > throttleIntent;
+	return throttleIntent.Valid && engineConfiguration->ALSMaxTPS > static_cast<int>(throttleIntent.Value);
 }
 
 bool AntilagSystemBase::isInsideALSTimerCondition() {
