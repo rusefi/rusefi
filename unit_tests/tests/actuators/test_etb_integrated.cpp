@@ -115,6 +115,9 @@ TEST(etb, failedPedalDisarmsAntilagAndClosesEtbTarget) {
 	engineConfiguration->ALSMinCLT = 50;
 	engineConfiguration->ALSMaxCLT = 105;
 	engineConfiguration->ALSMaxTPS = 5;
+	// Keep anti-lag available across the six-second sensor startup delay below.
+	// Duration-limit behavior is covered by AntilagStopsAfterConfiguredTimeout.
+	engineConfiguration->ALSMaxDuration = 0;
 	engineConfiguration->ALSEtbAdd = 20;
 	engineConfiguration->etbIdleThrottleRange = 0;
 	engineConfiguration->etbMinimumPosition = 1;
@@ -143,6 +146,7 @@ TEST(etb, failedPedalDisarmsAntilagAndClosesEtbTarget) {
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0, true);
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 0);
 	engine->antilagController.update();
+	ASSERT_TRUE(engine->antilagController.ALSTimerCondition);
 	ASSERT_TRUE(engine->antilagController.isAntilagCondition);
 	ASSERT_NEAR(20, etb.getSetpoint().value_or(-1), 0.01f);
 
