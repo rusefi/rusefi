@@ -2,7 +2,7 @@
 - TunerStudio Help Documentation: `.junie/ts-help-topic.md`
 - TunerStudio Persistence: `firmware/tunerstudio/readme-persistence.md`
 - Validation: Scan `firmware/tunerstudio/generated/rusefi_uaefi.ini` to verify final field names, gauge mappings, and output channel logic.
-- UI Pattern: Prefer wrapping 3D tables/curves into a `dialog` with `border` layout, placing the table (West) and a status `panel` (East) side-by-side. The status panel should contain relevant gauges and calibration fields (e.g., offsets, PID status).
+- UI Pattern: Follow the resizable TunerStudio table-dialog guidance in `CLAUDE.md`. The status panel should contain relevant gauges and calibration fields (e.g., offsets, PID status).
 - TS templating: Names defined in `rusefi_config.txt` using `#define SOME_NAME "String Value"` can be used in `tunerstudio.template.ini` as `@@SOME_NAME@@`.
 - Dialog/Panel validation: The final generated INI is checked for undefined constants, output channels, gauges and panels. Child UI panels must be defined before their parent dialog; tables/curves are loaded first by TS and may appear later. Template conditions are resolved before this check. See `firmware/tunerstudio/readme.md` for scope and the standalone validation command.
 - [UserDefined] section: Dialog and panel definitions should generally be placed in this section of the template to maintain organization.
