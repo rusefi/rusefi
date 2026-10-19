@@ -9,6 +9,7 @@ import com.rusefi.core.SensorCategory;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.widgets.GaugeMenuSearch;
+import com.rusefi.ui.widgets.GaugePopups;
 import com.rusefi.ui.widgets.GaugeStyle;
 import com.rusefi.ui.widgets.GaugeMenuLabel;
 import com.rusefi.ui.widgets.SensorGauge;
@@ -78,12 +79,18 @@ public class SensorLiveGraph extends JPanel {
         thread.start();
 
         MouseListener mouseListener = new MouseAdapter() {
+            // Popup trigger, not mouseClicked: see SensorGauge's mouse listener.
             @Override
-            public void mouseClicked(MouseEvent e) {
-                if (SwingUtilities.isRightMouseButton(e)) {
+            public void mousePressed(MouseEvent e) {
+                if (e.isPopupTrigger()) {
                     showPopupMenu(e);
-//                } else if (e.getClickCount() == 2) {
-//                    handleDoubleClick(e, gauge, sensor);
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (e.isPopupTrigger()) {
+                    showPopupMenu(e);
                 }
             }
         };
@@ -128,7 +135,7 @@ public class SensorLiveGraph extends JPanel {
     }
 
     private void showPopupMenu(MouseEvent e) {
-        createPopupMenu().show(e.getComponent(), e.getX(), e.getY());
+        GaugePopups.show(createPopupMenu(), e);
     }
 
     /** Search, "Change gauge", graph options, then the caller's display options. */

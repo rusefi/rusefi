@@ -123,12 +123,29 @@ public class SensorGauge {
 
         gauge.setValue(SensorCentral.getInstance().getValue(channelName));
         MouseListener mouseListener = new MouseAdapter() {
+            // The menu follows the platform popup trigger (press on macOS/Linux, release on
+            // Windows). mouseClicked is lost whenever the mouse moves a pixel between press
+            // and release, which made right-click open nothing now and then.
+            @Override
+            public void mousePressed(MouseEvent e) {
+                showMenuOnPopupTrigger(e);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                showMenuOnPopupTrigger(e);
+            }
+
+            private void showMenuOnPopupTrigger(MouseEvent e) {
+                if (e.isPopupTrigger()) {
+                    GaugePopups.show(createPopupMenu(uiContext, wrapper, listener, extraMenuItem,
+                        () -> popOut(uiContext, e, gaugeName), kind), e);
+                }
+            }
+
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (SwingUtilities.isRightMouseButton(e)) {
-                    createPopupMenu(uiContext, wrapper, listener, extraMenuItem,
-                        () -> popOut(uiContext, e, gaugeName), kind).show(e.getComponent(), e.getX(), e.getY());
-                } else if (e.getClickCount() == 2) {
+                if (!SwingUtilities.isRightMouseButton(e) && e.getClickCount() == 2) {
                     popOut(uiContext, e, gaugeName);
                 }
             }
