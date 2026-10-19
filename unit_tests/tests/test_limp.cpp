@@ -617,13 +617,33 @@ TEST(limp, highOilPressureTimeoutAlreadyExpiredAtEngineStart) {
 	Sensor::setMockValue(SensorType::OilPressure, 600);
 	engine->rpmCalculator.setRpmValue(1000);
 	dut.updateState(1000, getTimeNowNt());
-	EXPECT_EQ(ClearReason::OilPressure, dut.allowInjection().reason);
+	EXPECT_TRUE(dut.allowInjection());
 
 	// Once a healthy running sample resets the timer, its configured delay works.
 	Sensor::setMockValue(SensorType::OilPressure, 400);
 	dut.updateState(1000, getTimeNowNt());
 	ASSERT_TRUE(dut.allowInjection());
 	Sensor::setMockValue(SensorType::OilPressure, 600);
+	advanceTimeUs(900000);
+	dut.updateState(1000, getTimeNowNt());
+	EXPECT_TRUE(dut.allowInjection());
+	advanceTimeUs(200000);
+	dut.updateState(1000, getTimeNowNt());
+	EXPECT_EQ(ClearReason::OilPressure, dut.allowInjection().reason);
+}
+
+TEST(limp, highOilPressureTimeoutStartsAtFirstRunningSample) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->minOilPressureAfterStart = 0;
+	engineConfiguration->enableOilPressureProtect = false;
+	engineConfiguration->maxOilPressureTimeout = 1;
+	setArrayValues(config->maximumOilPressureValues, 500);
+	Sensor::setMockValue(SensorType::OilPressure, 600);
+	engine->rpmCalculator.setRpmValue(1000);
+	LimpManager dut;
+
+	dut.updateState(1000, getTimeNowNt());
+	EXPECT_TRUE(dut.allowInjection());
 	advanceTimeUs(900000);
 	dut.updateState(1000, getTimeNowNt());
 	EXPECT_TRUE(dut.allowInjection());

@@ -225,20 +225,24 @@ void LimpManager::updateState(float rpm, efitick_t nowNt) {
 
 		// check the maximum oil pressure
 		float maxOilPressure = interpolate2d(rpm, config->maximumOilPressureBins, config->maximumOilPressureValues);
-		if (maxOilPressure > 0 && hasOilpSensor) {
+		if (maxOilPressure > 0 && oilp) {
 			bool isPressureTooHigh = oilp.Value >= maxOilPressure;
-			if (!isPressureTooHigh) {
+			if (m_highOilPressureTimer.get() == Timer::InitialState || !isPressureTooHigh) {
 				m_highOilPressureTimer.reset(nowNt);
 			}
-			if (isPressureTooHigh && m_highOilPressureTimer.hasElapsedSec(engineConfiguration->maxOilPressureTimeout)) {
+			if (isPressureTooHigh
+				&& m_highOilPressureTimer.hasElapsedSec(engineConfiguration->maxOilPressureTimeout)) {
 				allowFuel.clear(ClearReason::OilPressure);
 			}
+		} else {
+			m_highOilPressureTimer.reset(nowNt);
 		}
 
 	} else {
 		// reset state in case of stalled engine
 		m_hadOilPressureAfterStart = false;
 		m_lowOilPressureTimer.reset(nowNt);
+		m_highOilPressureTimer.reset(nowNt);
 	}
 
 	// If we're in the engine-stop window (a stop was requested recently via start button, Lua,
