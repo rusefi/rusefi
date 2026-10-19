@@ -46,6 +46,7 @@ public class GaugesPanel {
     private static final int DEFAULT_COLUMNS = 3;
     static final String EDIT_LAYOUT = "Edit Layout";
     static final String DONE_EDITING = "Done";
+    static final String RESET_LAYOUT = "Reset Layout";
 
     private final JPanel content = new JPanel(new BorderLayout());
     private final GaugesGrid gauges;
@@ -123,6 +124,11 @@ public class GaugesPanel {
         loadLayout.setToolTipText("Replace the gauge grid with a saved layout");
         loadLayout.addActionListener(e -> chooseLayoutFile(false));
         rightUpperPanel.add(loadLayout);
+
+        JButton resetLayout = new JButton(RESET_LAYOUT);
+        resetLayout.setToolTipText("Grid: return to the default gauges. Free: return to the grid you started from");
+        resetLayout.addActionListener(e -> confirmResetLayout());
+        rightUpperPanel.add(resetLayout);
 
         final JPopupMenu selectorMenu = new JPopupMenu();
         selectorMenu.add(new SizeSelectorPanel((row, column) -> {
@@ -202,6 +208,32 @@ public class GaugesPanel {
         AnyCommand command = AnyCommand.createField(uiContext, config, false, false);
         leftUpperPanel.add(command.getContent());
         return leftUpperPanel;
+    }
+
+    private void confirmResetLayout() {
+        String question = GaugeLayout.isFreeMode(config)
+            ? "Undo all free layout changes and return to the grid you started from?"
+            : "Replace the gauges with the default " + DEFAULT_ROWS + "x" + DEFAULT_COLUMNS + " layout?";
+        if (JOptionPane.showConfirmDialog(content, question, RESET_LAYOUT,
+            JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
+            resetLayout();
+        }
+    }
+
+    /**
+     * Grid: the default gauges in the default grid, each shown as a round gauge.
+     * Free: a fresh copy of the current grid, which Free mode never changes, so this
+     * undoes every free-layout edit and stays in Free mode.
+     */
+    // Package-private so tests reset without the confirmation dialog.
+    void resetLayout() {
+        if (GaugeLayout.isFreeMode(config)) {
+            GaugeLayout.seedFreeFromGrid(config);
+        } else {
+            config.getConfig().keySet().removeIf(key -> key.matches("element_\\d+"));
+            saveConfig(DEFAULT_ROWS, DEFAULT_COLUMNS);
+        }
+        showLayout();
     }
 
     private void setSensorGridDimensions(int rows, int columns) {
