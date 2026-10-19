@@ -62,7 +62,7 @@ TEST(idle_v2, testTargetRpm) {
 	engineConfiguration->idlePidRpmUpperLimit = 50;
 	EXPECT_EQ((TgtInfo{100, 150, 175}), dut.getTargetRpm(10));
  	EXPECT_EQ((TgtInfo{500, 550, 575}), dut.getTargetRpm(50));
- 
+
  	engineConfiguration->idlePidRpmUpperLimit = 73;
 	EXPECT_EQ((TgtInfo{100, 173, 209.5}), dut.getTargetRpm(10));
  	EXPECT_EQ((TgtInfo{500, 573, 609.5}), dut.getTargetRpm(50));
@@ -81,7 +81,7 @@ TEST(idle_v2, testDeterminePhase) {
   TgtInfo targetInfo;
  	// Phase determination should ignore this!
  	targetInfo.ClosedLoopTarget = 9999;
- 
+
  	// Idling threshold is 1000 + 100 rpm
  	targetInfo.IdleEntryRpm = 1000 + 100;
   targetInfo.IdleExitRpm = 1000 + 100;
@@ -118,6 +118,62 @@ TEST(idle_v2, testDeterminePhase) {
 	// Below TPS but above RPM should be outside the zone
 	EXPECT_EQ(ICP::Coasting, dut.determinePhase(1101, targetInfo, 0, 0, 10));
 	EXPECT_EQ(ICP::Coasting, dut.determinePhase(5000, targetInfo, 0, 0, 10));
+}
+
+// This documents the current lockout: a stopped bike with a closed twistgrip
+// cannot correct a high base idle until RPM falls below the re-entry threshold.
+TEST(idle_v2, stoppedHighRpmLocksOutIdleCorrection) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	IdleController dut;
+
+	setArrayValues(config->cltIdleRpm, 1060);
+	engineConfiguration->idlePidRpmUpperLimit = 350;
+	engineConfiguration->idlePidDeactivationTpsThreshold = 2;
+	engineConfiguration->maxIdleVss = 10;
+	engineConfiguration->idleReturnTargetRamp = false;
+	engineConfiguration->idlePidRpmDeadZone = 50;
+
+	// Proportional-only gains isolate phase gating from integrator history.
+	engineConfiguration->idleRpmPid.pFactor = 0.005f;
+	engineConfiguration->idleRpmPid.iFactor = 0;
+	engineConfiguration->idleRpmPid.dFactor = 0;
+	engineConfiguration->idleRpmPid.minValue = -20;
+	engineConfiguration->idleRpmPid.maxValue = 100;
+	engineConfiguration->useIdleTimingPidControl = true;
+	engineConfiguration->idleTimingSoftEntryTime = 0;
+	engineConfiguration->idleTimingPid.pFactor = 0.005f;
+	engineConfiguration->idleTimingPid.iFactor = 0;
+	engineConfiguration->idleTimingPid.dFactor = 0;
+	engineConfiguration->idleTimingPid.minValue = -6;
+	engineConfiguration->idleTimingPid.maxValue = 6;
+	dut.init();
+
+	auto target = dut.getTargetRpm(80);
+	EXPECT_EQ((TgtInfo{1060, 1410, 1585}), target);
+
+	// Zero rider demand, stopped vehicle, and cranking taper already complete.
+	// Neutral and clutch state are not inputs to determinePhase().
+	for (float rpm : {2500.0f, 1700.0f, 1700.0f, 1500.0f}) {
+		SCOPED_TRACE(rpm);
+		engine->rpmCalculator.setRpmValue(rpm);
+		auto phase = dut.determinePhase(rpm, target, /*tps*/ 0, /*vss*/ 0, /*taper*/ 1);
+		ASSERT_EQ(ICP::Coasting, phase);
+		EXPECT_FLOAT_EQ(0, dut.getClosedLoop(phase, 0, rpm, target.ClosedLoopTarget));
+		EXPECT_FLOAT_EQ(0, dut.getIdleTimingAdjustment(rpm, target.ClosedLoopTarget, phase));
+		advanceTimeUs(1'000'000);
+	}
+
+	// Even below the exit threshold (1500 < 1585), coasting stays latched.
+	// Only falling below the entry threshold releases both corrections.
+	engine->rpmCalculator.setRpmValue(1409);
+	auto phase = dut.determinePhase(1409, target, 0, 0, 1);
+	ASSERT_EQ(ICP::Idling, phase);
+	// Process pending air PID resets, then allow reset damping to finish.
+	dut.getClosedLoop(phase, 0, 1409, target.ClosedLoopTarget);
+	dut.getClosedLoop(phase, 0, 1409, target.ClosedLoopTarget);
+	advanceTimeUs(1'000'000);
+	EXPECT_LT(dut.getClosedLoop(phase, 0, 1409, target.ClosedLoopTarget), 0);
+	EXPECT_LT(dut.getIdleTimingAdjustment(1409, target.ClosedLoopTarget, phase), 0);
 }
 
 TEST(idle_v2, crankingOpenLoop) {
@@ -557,7 +613,7 @@ TEST(idle_v2, IntegrationAutomatic) {
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, expectedTps.Value);
 	Sensor::setMockValue(SensorType::Clt, expectedClt);
 	Sensor::setMockValue(SensorType::VehicleSpeed, 15.0);
-  
+
   TgtInfo target{1000, 1100, 1100};
 
 	// Target of 1000 rpm
