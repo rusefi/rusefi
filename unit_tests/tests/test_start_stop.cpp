@@ -115,8 +115,7 @@ TEST_F(StartStopTest, buttonStartCancelsStopRequest) {
 	EXPECT_FALSE(getLimpManager()->shutdownController.isEngineStop(getTimeNowNt()));
 }
 
-// the brake interlock currently allows a button start with the pedal released.
-TEST_F(StartStopTest, BrakeInterlockAllowsButtonStartWithPedalReleased) {
+TEST_F(StartStopTest, BrakeInterlockRequiresPressedPedal) {
 	EngineTestHelper eth(engine_type_e::PROTEUS_BMW_M73);
 	engineConfiguration->crankingCondition = CC_BRAKE;
 	engineConfiguration->startButtonSuppressOnStartUpMs = 0;
@@ -130,11 +129,17 @@ TEST_F(StartStopTest, BrakeInterlockAllowsButtonStartWithPedalReleased) {
 	slowStartStopButtonCallback();
 	setMockState(engineConfiguration->startStopButtonPin, false);
 	slowStartStopButtonCallback();
+	EXPECT_FALSE(enginePins.starterControl.getLogicValue());
+
+	engine->brakePedalSwitchedState.update(true);
+	setMockState(engineConfiguration->startStopButtonPin, true);
+	slowStartStopButtonCallback();
+	setMockState(engineConfiguration->startStopButtonPin, false);
+	slowStartStopButtonCallback();
 	EXPECT_TRUE(enginePins.starterControl.getLogicValue());
 }
 
-// the clutch-up interlock currently allows a start with the input inactive.
-TEST_F(StartStopTest, ClutchUpInterlockAllowsButtonStartWithInputInactive) {
+TEST_F(StartStopTest, ClutchUpInterlockRequiresActiveInput) {
 	EngineTestHelper eth(engine_type_e::PROTEUS_BMW_M73);
 	engineConfiguration->crankingCondition = CC_CLUTCH;
 	engineConfiguration->startButtonSuppressOnStartUpMs = 0;
@@ -144,6 +149,13 @@ TEST_F(StartStopTest, ClutchUpInterlockAllowsButtonStartWithInputInactive) {
 	ASSERT_FALSE(enginePins.starterControl.getLogicValue());
 
 	eth.moveTimeForwardSec(1);
+	setMockState(engineConfiguration->startStopButtonPin, true);
+	slowStartStopButtonCallback();
+	setMockState(engineConfiguration->startStopButtonPin, false);
+	slowStartStopButtonCallback();
+	EXPECT_FALSE(enginePins.starterControl.getLogicValue());
+
+	engine->clutchUpSwitchedState.update(true);
 	setMockState(engineConfiguration->startStopButtonPin, true);
 	slowStartStopButtonCallback();
 	setMockState(engineConfiguration->startStopButtonPin, false);

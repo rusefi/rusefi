@@ -89,10 +89,10 @@ void slowStartStopButtonCallback() {
     }
 
   if (engine->rpmCalculator.isStopped()) {
-    if (engineConfiguration->crankingCondition == CC_BRAKE && !engine->brakePedalSwitchedState) {
+    if (engineConfiguration->crankingCondition == CC_BRAKE && !engine->engineState.brakePedalState) {
       return;
     }
-    if (engineConfiguration->crankingCondition == CC_CLUTCH && !engine->clutchUpSwitchedState) {
+    if (engineConfiguration->crankingCondition == CC_CLUTCH && !engine->engineState.clutchUpState) {
       return;
     }
     if (engineConfiguration->crankingCondition == CC_CLUTCH_DOWN && !engine->engineState.clutchDownState) {
