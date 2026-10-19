@@ -27,6 +27,8 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
         super(new BorderLayout());
 
         logTextArea.setLineWrap(true);
+        // read-only status log: text arrives via log(), user keystrokes must not alter it
+        logTextArea.setEditable(false);
         JScrollPane messagesScroll = new JScrollPane(logTextArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
             @Override
             public Dimension getPreferredSize() {
