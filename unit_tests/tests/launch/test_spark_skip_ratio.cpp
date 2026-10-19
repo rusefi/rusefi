@@ -331,8 +331,8 @@ namespace {
         );
     }
 
-    // Reproduces ECU-016: disabling active launch retains its hard spark cut.
-    TEST(LaunchControl, DisablingActiveLaunchControlLeavesFullSparkCut) {
+    // ECU-016: disabling active launch must clear its hard spark cut.
+    TEST(LaunchControl, DisablingActiveLaunchControlClearsSparkCut) {
         EngineTestHelper eth(engine_type_e::TEST_ENGINE);
         engineConfiguration->launchControlEnabled = true;
         engineConfiguration->launchActivationMode = ALWAYS_ACTIVE_LAUNCH;
@@ -357,10 +357,13 @@ namespace {
             engine->periodicFastCallback();
         }
         ASSERT_FALSE(engine->launchController.isLaunchOrPreLaunchCondition());
-        EXPECT_FLOAT_EQ(1, engine->launchController.getSparkSkipRatio());
-        EXPECT_FLOAT_EQ(1, engine->hardSparkLimiter.getTargetSkipRatio());
+        EXPECT_FALSE(engine->launchController.isLaunchCondition);
+        EXPECT_FALSE(engine->launchController.isPreLaunchCondition);
+        EXPECT_FALSE(engine->launchController.isLaunchLatched);
+        EXPECT_FLOAT_EQ(0, engine->launchController.getSparkSkipRatio());
+        EXPECT_FLOAT_EQ(0, engine->hardSparkLimiter.getTargetSkipRatio());
         for (int i = 0; i < 10; i++) {
-            EXPECT_TRUE(engine->hardSparkLimiter.shouldSkip());
+            EXPECT_FALSE(engine->hardSparkLimiter.shouldSkip());
         }
     }
 

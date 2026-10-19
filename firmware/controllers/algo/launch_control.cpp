@@ -145,6 +145,11 @@ float LaunchControlBase::getFuelCoefficient() const {
 
 void LaunchControlBase::update() {
 	if (!engineConfiguration->launchControlEnabled) {
+		isLaunchCondition = false;
+		isPreLaunchCondition = false;
+		isLaunchLatched = false;
+		activateSwitchCondition = false;
+		sparkSkipRatio = 0;
 		return;
 	}
 
