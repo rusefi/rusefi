@@ -30,7 +30,9 @@ public class ConfigFieldImpl implements ConfigField {
     public static final String VOID_BIT = "void";
     public static final ConfigFieldImpl VOID = new ConfigFieldImpl(null, "", null, null, null, new int[0], null, false, false, VOID_BIT, VOID_BIT);
 
-    private static final String typePattern = "([\\w\\d_]+(?:<[^>]+>)?)(\\s*\\[([\\w\\d]+)(\\sx\\s([\\w\\d]+))?(\\s([\\w\\d]+))?\\])?";
+    private static final String dimensionPattern = "[\\w\\d]+(?:\\{[A-Za-z_][A-Za-z_0-9]*\\})?";
+
+    private static final String typePattern = "([\\w\\d_]+(?:<[^>]+>)?)(\\s*\\[(" + dimensionPattern + ")(\\sx\\s(" + dimensionPattern + "))?(\\s([\\w\\d]+))?\\])?";
 
     private static final String namePattern = "[[@\\w\\d\\s_]]+";
     private static final String commentPattern = ";([^;]*)";
@@ -48,6 +50,8 @@ public class ConfigFieldImpl implements ConfigField {
     public final String arraySizeVariableName;
     private final String type;
     private final int[] arraySizes;
+    private final String arraySizeSpecification;
+    private final String[] tsArrayDimensions;
 
     private final String tsInfo;
     private final boolean isIterate;
@@ -107,7 +111,24 @@ public class ConfigFieldImpl implements ConfigField {
         if (!isVoid())
             Objects.requireNonNull(type);
         this.type = type;
-        this.arraySizeVariableName = arraySizeAsText;
+        this.arraySizeSpecification = arraySizeAsText;
+        this.arraySizeVariableName = arraySizeAsText == null ? null : arraySizeAsText.replaceAll("\\{[^}]*\\}", "");
+        this.tsArrayDimensions = new String[arraySizes.length];
+        String[] dimensions = arraySizeAsText == null ? new String[0] : arraySizeAsText.split("\\]\\[");
+        for (int i = 0; i < arraySizes.length; i++) {
+            int brace = hasDynamicTsDimensions() ? dimensions[i].indexOf('{') : -1;
+            tsArrayDimensions[i] = brace < 0 ? Integer.toString(arraySizes[i]) : dimensions[i].substring(brace);
+        }
+        if (hasDynamicTsDimensions()) {
+            if (isIterate || !TypesHelper.isPrimitive(type) || state.getTsCustomLine().containsKey(type)) {
+                throw new IllegalArgumentException("Dynamic TS dimensions require a non-iterated primitive array: " + name);
+            }
+            for (int size : arraySizes) {
+                if (size <= 0) {
+                    throw new IllegalArgumentException("Dynamic TS array capacity must be positive: " + name);
+                }
+            }
+        }
         this.arraySizes = arraySizes;
         this.tsInfo = tsInfo == null ? null : state.getVariableRegistry().applyVariables(tsInfo);
         this.isIterate = isIterate;
@@ -210,7 +231,22 @@ public class ConfigFieldImpl implements ConfigField {
         return parentType;
     }
 
+    /** Original TXT dimensions, including runtime TS annotations, for cloning fields. */
+    public String getArraySizeSpecification() {
+        return arraySizeSpecification;
+    }
+
+    public boolean hasDynamicTsDimensions() {
+        return arraySizeSpecification != null && arraySizeSpecification.contains("{");
+    }
+
+    /** TS dimensions in C order; the INI emitter reverses them. */
+    public String[] getTsArrayDimensions() {
+        return tsArrayDimensions.clone();
+    }
+
     private static int getSize(VariableRegistry variableRegistry, String s) {
+        s = s.replaceAll("\\{[^}]*\\}", "");
         if (variableRegistry.intValues.containsKey(s)) {
             return variableRegistry.intValues.get(s);
         }
