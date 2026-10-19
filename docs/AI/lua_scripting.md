@@ -11,7 +11,9 @@ replacement/adjustment path, see [Lua implementation injection points](lua_imple
 
 | File | Role |
 |-------------------------------------------------------|-------------------------------------------------|
-| firmware/controllers/lua/lua_hooks.cpp | Main registration site: `configureRusefiLuaHooks()` registers nearly all functions and the luaaa helper classes |
+| firmware/controllers/lua/lua_hooks.cpp | Main hook registration and VM-specific initialization |
+| firmware/controllers/lua/lua_class_adapters.cpp | Helper class constructors, direct method adapters and sensor-name lookup |
+| firmware/controllers/lua/lua_hooks_registry.cpp | Eager registration visitor and optional per-VM lazy native binding cache |
 | firmware/controllers/lua/lua_hooks_util.cpp | `configureRusefiLuaUtilHooks()`: print/interpolate/find* helpers, `mcu_standby` |
 | firmware/controllers/lua/lua_hooks_ext.cpp | `configureRusefiLuaHooksExt()`: currently empty extension point |
 | firmware/controllers/lua/lua.cpp | Lua thread itself; registers `setTickRate`, invokes the `onTick` callback |
@@ -35,6 +37,24 @@ Conventions worth knowing:
   (`getCanRxDropped`, `getCanBaudRate`, `setEngineTorque`, `getTorque`, `getGpPwm`,
   `disableExtendedCanBroadcast`); boards can also trim with `DISABLE_LUA_SET_TIMING_MULT`,
   `DISABLE_LUA_SET_FUEL_ADD`, `WITH_LUA_PID`, `WITH_LUA_CONSUMPTION`, `WITH_LUA_STOP_ENGINE`.
+
+## Runtime memory
+
+STM32F4 builds enable `LUA_LAZY_NATIVE_HOOKS`: native function names and targets stay
+in firmware flash until a script first reads them. Resolved functions are cached
+in a private per-VM table, so subsequent reads avoid scanning the hook list. Script
+replacement and explicit `nil` assignment remain effective before and after
+resolution. Helper classes and board-specific setup still initialize eagerly.
+Other MCU families keep eager native registration unless they opt in.
+
+Raw C-API enumeration of globals does not include these private native bindings.
+The ECU Lua build does not expose the base-library `_G`, `pairs` or `rawget`.
+
+The script storage limit is not an execution-memory guarantee. VM setup, API
+names, tables, compiled code and script-created objects all consume runtime RAM.
+On STM32F4, Lua allocates from available CCM and optional RAM first, then the
+shared ChibiOS heap. Separate regions cannot satisfy a single allocation larger
+than their individual free blocks.
 
 ## Categories
 
