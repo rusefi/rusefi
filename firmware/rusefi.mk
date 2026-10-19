@@ -45,6 +45,8 @@ else ifeq ($(PROJECT_CPU),ARCH_STM32F4)
   #CPU_PLATFORM = $(CHIBIOS)/os/hal/ports/STM32/STM32F4xx/platform.mk
   CPU_PLATFORM = ${CHIBIOS_CONTRIB}/os/hal/ports/STM32/STM32F4xx/platform.mk
   CPU_HWLAYER = ports/stm32/stm32f4
+  # Save startup Lua RAM by registering native functions as scripts use them.
+  DDEFS += -DLUA_LAZY_NATIVE_HOOKS=TRUE
 else ifeq ($(PROJECT_CPU),ARCH_STM32H7)
   CPU_STARTUP = startup_stm32h7xx.mk
   # TODO: why different platform.mk for different H7?
