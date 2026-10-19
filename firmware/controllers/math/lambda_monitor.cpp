@@ -40,7 +40,7 @@ void LambdaMonitorBase::update(float rpm, float load) {
 
 	lambdaTimeSinceGood = m_timeSinceGoodLambda.getElapsedSeconds();
 
-	if (m_timeSinceGoodLambda.hasElapsedSec(getTimeout())) {
+	if (!isGood && m_timeSinceGoodLambda.hasElapsedSec(getTimeout())) {
 		// Things have been bad long enough, cut!
 		lambdaMonitorCut = true;
 	}
@@ -106,6 +106,10 @@ bool LambdaMonitorBase::isCurrentlyGood(float rpm, float load) const {
 }
 
 bool LambdaMonitorBase::restoreConditionsMet(float rpm, float load) const {
+	if (!engineConfiguration->lambdaProtectionEnable) {
+		return true;
+	}
+
 	if (rpm > engineConfiguration->lambdaProtectionRestoreRpm) {
 		return false;
 	}

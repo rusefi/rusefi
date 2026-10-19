@@ -223,7 +223,8 @@ void LimpManager::updateState(float rpm, efitick_t nowNt) {
 				m_lowOilPressureTimer.reset(nowNt);
 			}
 
-			if (m_lowOilPressureTimer.hasElapsedSec(engineConfiguration->minimumOilPressureTimeout)) {
+			if (!isPressureSufficient && !isInAfterStartWindow
+				&& m_lowOilPressureTimer.hasElapsedSec(engineConfiguration->minimumOilPressureTimeout)) {
 				allowFuel.clear(ClearReason::OilPressure);
 			}
 		}
@@ -231,10 +232,11 @@ void LimpManager::updateState(float rpm, efitick_t nowNt) {
 		// check the maximum oil pressure
 		float maxOilPressure = interpolate2d(rpm, config->maximumOilPressureBins, config->maximumOilPressureValues);
 		if (maxOilPressure > 0 && hasOilpSensor) {
-			if (oilp.Value < maxOilPressure) {
+			bool isPressureTooHigh = oilp.Value >= maxOilPressure;
+			if (!isPressureTooHigh) {
 				m_highOilPressureTimer.reset(nowNt);
 			}
-			if (m_highOilPressureTimer.hasElapsedSec(engineConfiguration->maxOilPressureTimeout)) {
+			if (isPressureTooHigh && m_highOilPressureTimer.hasElapsedSec(engineConfiguration->maxOilPressureTimeout)) {
 				allowFuel.clear(ClearReason::OilPressure);
 			}
 		}
@@ -282,7 +284,8 @@ void LimpManager::updateState(float rpm, efitick_t nowNt) {
 		}
 
 		// True if isOverSustainedDutyCycle has been true for longer than the timeout
-		bool sustainedLimitTimedOut = m_injectorDutySustainedTimer.hasElapsedSec(engineConfiguration->maxInjectorDutySustainedTimeout);
+		bool sustainedLimitTimedOut = isOverSustainedDutyCycle
+			&& m_injectorDutySustainedTimer.hasElapsedSec(engineConfiguration->maxInjectorDutySustainedTimeout);
 
 		bool someLimitTripped = isOverInstantDutyCycle || sustainedLimitTimedOut;
 
