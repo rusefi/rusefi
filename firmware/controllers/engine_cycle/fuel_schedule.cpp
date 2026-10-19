@@ -6,8 +6,6 @@
 
 #include "pch.h"
 
-#if EFI_ENGINE_CONTROL
-
 void startInjection(scheduler_arg_t arg) {
 	const InjectorContext ctx(arg);
 	const auto nowNt = getTimeNowNt();
@@ -32,9 +30,13 @@ void endInjection(scheduler_arg_t arg) {
 		}
 	}
 
+	// Priming also uses this helper on boards without engine control. Only
+	// scheduled fuel events need their injection angle refreshed afterward.
+#if EFI_ENGINE_CONTROL
 	if (ctx.eventIndex() < MAX_CYLINDER_COUNT) {
 		getFuelSchedule()->elements[ctx.eventIndex()].update();
 	}
+#endif
 }
 
 void endInjectionStage2(scheduler_arg_t arg) {
@@ -47,6 +49,8 @@ void endInjectionStage2(scheduler_arg_t arg) {
 		}
 	}
 }
+
+#if EFI_ENGINE_CONTROL
 
 CylinderMask InjectionEvent::calculateInjectorOutputMask() const {
 	switch (m_injectionMode) {
