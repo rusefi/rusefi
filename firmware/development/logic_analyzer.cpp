@@ -170,63 +170,8 @@ static float getSignalOnTime(int index) {
 	return reader.last_wave_high_widthUs / 1000.0f;
 }
 
-static efitimeus_t getWaveOffset(int index) {
-	return readers[index].waveOffsetUs;
-}
-
 static float getSignalPeriodMs(int index) {
 	return readers[index].signalPeriodUs / 1000.0f;
-}
-
-static void reportWave(Logging *logging, int index) {
-	if (readers[index].line == 0) {
-		return;
-	}
-
-//	int counter = getEventCounter(index);
-//	debugInt2(logging, "ev", index, counter);
-
-	float dwellMs = getSignalOnTime(index);
-	float periodMs = getSignalPeriodMs(index);
-
-	logging->appendPrintf("duty%d%s", index, LOG_DELIMITER);
-	logging->appendFloat(100.0f * dwellMs / periodMs, 2);
-	logging->appendPrintf("%s", LOG_DELIMITER);
-
-	/**
-	 * that's the ON time of the LAST signal
-	 */
-	logging->appendPrintf("dwell%d%s", index, LOG_DELIMITER);
-	logging->appendFloat(dwellMs, 2);
-	logging->appendPrintf("%s", LOG_DELIMITER);
-
-	/**
-	 * that's the total ON time during the previous engine cycle
-	 */
-	logging->appendPrintf("total_dwell%d%s", index, LOG_DELIMITER);
-	logging->appendFloat(readers[index].prevTotalOnTimeUs / 1000.0f, 2);
-	logging->appendPrintf("%s", LOG_DELIMITER);
-
-	logging->appendPrintf("period%d%s", index, LOG_DELIMITER);
-	logging->appendFloat(periodMs, 2);
-	logging->appendPrintf("%s", LOG_DELIMITER);
-
-	efitimeus_t offsetUs = getWaveOffset(index);
-	float rpm = Sensor::getOrZero(SensorType::Rpm);
-	if (rpm != 0) {
-		float oneDegreeUs = getOneDegreeTimeUs(rpm);
-
-		logging->appendPrintf("advance%d%s", index, LOG_DELIMITER);
-		float angle = (offsetUs / oneDegreeUs) - tdcPosition();
-		wrapAngle(angle, "waveAn", ObdCode::CUSTOM_ERR_6564);
-		logging->appendFloat(angle, 3);
-		logging->appendPrintf("%s", LOG_DELIMITER);
-	}
-}
-
-void printWave(Logging *logging) {
-	reportWave(logging, 0);
-	reportWave(logging, 1);
 }
 
 void showWaveInfo(void) {
