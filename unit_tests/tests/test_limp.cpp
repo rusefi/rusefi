@@ -210,6 +210,23 @@ TEST(limp, boostCut) {
 	EXPECT_TRUE(dut.allowInjection());
 }
 
+// an invalid MAP reading currently releases an active boost fuel cut.
+TEST(limp, BoostFuelCutReleasesWhenMapSensorFails) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->boostCutPressure = 180;
+	engineConfiguration->boostCutPressureHyst = 20;
+	Sensor::setMockValue(SensorType::Map, 200);
+	engine->rpmCalculator.setRpmValue(2000);
+	auto* limp = getLimpManager();
+	limp->updateState(2000, getTimeNowNt());
+	ASSERT_EQ(ClearReason::BoostCut, limp->allowInjection().reason);
+
+	Sensor::setInvalidMockValue(SensorType::Map);
+	ASSERT_FALSE(Sensor::get(SensorType::Map));
+	limp->updateState(2000, getTimeNowNt());
+	EXPECT_TRUE(limp->allowInjection());
+}
+
 TEST(limp, boostCutUint8Overflow) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
