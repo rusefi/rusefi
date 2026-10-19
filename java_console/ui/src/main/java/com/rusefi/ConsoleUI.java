@@ -2,6 +2,7 @@ package com.rusefi;
 
 import com.devexperts.logging.FileLogger;
 import com.devexperts.logging.Logging;
+import com.formdev.flatlaf.FlatClientProperties;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.autodetect.PortDetector;
@@ -658,6 +659,8 @@ console live data tab is broken #8402
     private @NotNull JButton getLaunchWizardButton(MainFrame mainFrame, JPanel rootPanel,
                                                     WizardContainer wizardContainer, CardLayout rootCardLayout) {
         JButton launchWizardButton = new JButton("Launch Wizard");
+        // blue main-action style from the theme files [tag:console_theme]
+        launchWizardButton.putClientProperty(FlatClientProperties.STYLE_CLASS, "primary");
         launchWizardButton.addActionListener(e -> {
             if (ConnectionStatusLogic.INSTANCE.getValue() != ConnectionStatusValue.CONNECTED) {
                 mainFrame.showMessageOverlay("Please connect to an ECU before launching the wizard.");

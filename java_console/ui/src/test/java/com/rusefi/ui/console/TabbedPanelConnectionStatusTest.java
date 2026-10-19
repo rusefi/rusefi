@@ -88,7 +88,7 @@ class TabbedPanelConnectionStatusTest {
 
         SwingUtilities.invokeAndWait(() -> {
             assertFalse(overlay.isVisible());
-            assertEquals(Color.RED, indicatorColor());
+            assertDisconnectedRed(indicatorColor());
             assertTrue(icon.getToolTipText().startsWith("Disconnected."));
         });
     }
@@ -138,7 +138,7 @@ class TabbedPanelConnectionStatusTest {
                 flushEdt();
                 SwingUtilities.invokeAndWait(() -> {
                     assertFalse(overlay.isVisible());
-                    assertEquals(Color.RED, indicatorColor());
+                    assertDisconnectedRed(indicatorColor());
                 });
                 return new byte[]{Integration.TS_RESPONSE_OK, 42, 0};
             }).when(protocol).executeCommand(eq(Integration.TS_OUTPUT_COMMAND), any(byte[].class), anyString());
@@ -150,7 +150,7 @@ class TabbedPanelConnectionStatusTest {
             assertTrue(protocol.isClosed());
             SwingUtilities.invokeAndWait(() -> {
                 assertFalse(overlay.isVisible());
-                assertEquals(Color.RED, indicatorColor());
+                assertDisconnectedRed(indicatorColor());
                 assertTrue(icon.getToolTipText().startsWith("Disconnected."));
             });
             verify(protocol).executeCommand(eq(Integration.TS_OUTPUT_COMMAND), any(byte[].class), anyString());
@@ -168,6 +168,11 @@ class TabbedPanelConnectionStatusTest {
         SwingUtilities.invokeAndWait(() -> {});
     }
 
+    private static void assertDisconnectedRed(Color c) {
+        assertTrue(c.getRed() > 150 && c.getRed() > 2 * c.getGreen() && c.getRed() > 2 * c.getBlue(),
+            "Expected the red disconnected dot, got " + c);
+    }
+
     private static Color indicatorColor() {
         BufferedImage image = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = image.createGraphics();
@@ -176,7 +181,8 @@ class TabbedPanelConnectionStatusTest {
         } finally {
             g.dispose();
         }
-        return new Color(image.getRGB(8, 8), true);
+        Icon dot = icon.getIcon();
+        return new Color(image.getRGB(dot.getIconWidth() / 2, dot.getIconHeight() / 2), true);
     }
 
     private static boolean paintsColor(JComponent component, Color color) {

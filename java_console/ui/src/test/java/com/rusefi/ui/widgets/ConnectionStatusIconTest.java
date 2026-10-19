@@ -43,8 +43,8 @@ public class ConnectionStatusIconTest {
         Graphics2D g = img.createGraphics();
         delegate.paintIcon(icon, g, 0, 0);
         g.dispose();
-        // The center pixel should be red (disconnected)
-        int rgb = img.getRGB(8, 8);
+        // The centre of the dot should be red (disconnected)
+        int rgb = img.getRGB(delegate.getIconWidth() / 2, delegate.getIconHeight() / 2);
         Color c = new Color(rgb, true);
         assertTrue(c.getRed() > c.getGreen() && c.getRed() > c.getBlue(), "Expected red when disconnected, got " + c);
     }
@@ -58,7 +58,7 @@ public class ConnectionStatusIconTest {
         Graphics2D g = img.createGraphics();
         delegate.paintIcon(icon, g, 0, 0);
         g.dispose();
-        int rgb = img.getRGB(8, 8);
+        int rgb = img.getRGB(delegate.getIconWidth() / 2, delegate.getIconHeight() / 2);
         Color c = new Color(rgb, true);
         assertTrue(c.getGreen() > c.getRed() && c.getGreen() > c.getBlue(), "Expected green when connected, got " + c);
     }
@@ -74,7 +74,7 @@ public class ConnectionStatusIconTest {
         Graphics2D g = img.createGraphics();
         delegate.paintIcon(icon, g, 0, 0);
         g.dispose();
-        int rgb = img.getRGB(8, 8);
+        int rgb = img.getRGB(delegate.getIconWidth() / 2, delegate.getIconHeight() / 2);
         Color c = new Color(rgb, true);
         // Purple: high blue, medium red, low green
         assertTrue(c.getBlue() > c.getRed() && c.getBlue() > c.getGreen(), "Expected purple in bootloader mode, got " + c);
@@ -173,6 +173,29 @@ public class ConnectionStatusIconTest {
             fail(e);
         }
         assertTrue(icon.getToolTipText().contains("Offline tune"), "Should show offline after property change");
+    }
+
+    @Test
+    void badgeNamesEachState() throws Exception {
+        ConnectionStatusIcon icon = new ConnectionStatusIcon(linkManager, tabbedPane);
+        assertEquals("Disconnected", icon.getText());
+
+        ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.LOADING);
+        SwingUtilities.invokeAndWait(() -> {});
+        assertEquals("Connecting…", icon.getText());
+
+        ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.CONNECTED);
+        SwingUtilities.invokeAndWait(() -> {});
+        assertEquals("Connected", icon.getText());
+
+        ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED);
+        tabbedPane.putClientProperty("offlineMode", Boolean.TRUE);
+        SwingUtilities.invokeAndWait(() -> {});
+        assertEquals("Offline", icon.getText());
+
+        tabbedPane.putClientProperty("bootloaderMode", "DFU");
+        SwingUtilities.invokeAndWait(() -> {});
+        assertEquals("DFU bootloader", icon.getText());
     }
 
     @Test
