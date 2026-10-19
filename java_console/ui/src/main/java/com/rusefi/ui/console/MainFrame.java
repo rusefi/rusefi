@@ -1,6 +1,8 @@
 package com.rusefi.ui.console;
 
 import com.devexperts.logging.Logging;
+import com.formdev.flatlaf.FlatClientProperties;
+import com.formdev.flatlaf.util.SystemInfo;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.*;
 import com.rusefi.autoupdate.Autoupdate;
@@ -212,6 +214,7 @@ public class MainFrame {
     private JMenuItem updateEcuItem;
     private BinaryLoggingMenu binaryLoggingMenu;
     private ShortcutsDialog shortcutsDialog;
+    private TitleBarPanel titleBarPanel;
     private Runnable updateEcuAction;
     private Runnable exitRequestHandler;
     private boolean firmwareUpdateInProgress;
@@ -359,20 +362,60 @@ public class MainFrame {
                 loadMenuIcon("player-play"), loadMenuIcon("player-stop"));
         menuBar.add(binaryLoggingMenu.getMenu());
 
-        JMenuItem shortcutsItem = new JMenuItem("Shortcuts");
-        shortcutsItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
+        menuBar.add(new MenuBarDivider());
+
+        // The F1 badge replaces the accelerator text, so F1 is bound on the root pane instead
+        // of as the item's accelerator; both work while the main window is focused.
+        JMenuItem shortcutsItem = new JMenuItem("Shortcuts", new KeyBadgeIcon("F1"));
+        shortcutsItem.setHorizontalTextPosition(SwingConstants.LEADING);
+        shortcutsItem.setIconTextGap(8);
         shortcutsItem.setToolTipText("Show keyboard shortcuts in a separate window (F1)");
         shortcutsItem.setMaximumSize(shortcutsItem.getPreferredSize());
-        shortcutsItem.addActionListener(e -> {
-            if (shortcutsDialog == null || !shortcutsDialog.isDisplayable()) {
-                shortcutsDialog = new ShortcutsDialog(frame.getFrame());
-            }
-            shortcutsDialog.setVisible(true);
-            shortcutsDialog.toFront();
-        });
+        shortcutsItem.addActionListener(e -> showShortcutsDialog());
         menuBar.add(shortcutsItem);
+        frame.getFrame().getRootPane().registerKeyboardAction(e -> showShortcutsDialog(),
+            KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
+
+        // FlatLaf embeds the menu bar in the window title bar everywhere except macOS. There the
+        // custom title replaces FlatLaf's title text; the glue on both sides centres it.
+        if (!SystemInfo.isMacOS) {
+            titleBarPanel = new TitleBarPanel();
+            menuBar.add(Box.createHorizontalGlue());
+            menuBar.add(titleBarPanel);
+            menuBar.add(Box.createHorizontalGlue());
+            frame.getFrame().getRootPane().putClientProperty(FlatClientProperties.TITLE_BAR_SHOW_TITLE, false);
+        }
 
         frame.getFrame().setJMenuBar(menuBar);
+    }
+
+    private void showShortcutsDialog() {
+        if (shortcutsDialog == null || !shortcutsDialog.isDisplayable()) {
+            shortcutsDialog = new ShortcutsDialog(frame.getFrame());
+        }
+        shortcutsDialog.setVisible(true);
+        shortcutsDialog.toFront();
+    }
+
+    /** Thin vertical line separating the menus from Shortcuts. */
+    private static class MenuBarDivider extends JComponent {
+        private static final Dimension SIZE = new Dimension(13, 18);
+
+        MenuBarDivider() {
+            setPreferredSize(SIZE);
+            setMinimumSize(SIZE);
+            setMaximumSize(SIZE);
+            setAlignmentY(CENTER_ALIGNMENT);
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            Color color = UIManager.getColor("Separator.foreground");
+            g.setColor(color != null ? color : Color.LIGHT_GRAY);
+            int x = getWidth() / 2;
+            int top = (getHeight() - SIZE.height) / 2;
+            g.drawLine(x, top, x, top + SIZE.height - 1);
+        }
     }
 
     public void setUpdateEcuAction(Runnable action) {
@@ -974,25 +1017,36 @@ public class MainFrame {
     private void setTitle() {
         String consoleVersion = "Console " + Launcher.CONSOLE_VERSION;
         String frameTitle;
+        // the title bar shows the same state as short labels; the full text stays in its tooltip
+        java.util.List<String> chips;
         Object bootloaderMode = tabbedPane.tabbedPane.getClientProperty("bootloaderMode");
         if (Boolean.TRUE.equals(tabbedPane.tabbedPane.getClientProperty("isUpdating"))) {
             frameTitle = "UPDATING " + consoleVersion;
+            chips = java.util.Collections.singletonList("UPDATING");
         } else if (bootloaderMode != null) {
             // Board sitting in a bootloader [tag:better_ux_for_flashing] — not connected, but not a plain "disconnected" state.
             frameTitle = bootloaderMode + " BOOTLOADER " + consoleVersion;
+            chips = java.util.Collections.singletonList(bootloaderMode + " BOOTLOADER");
         } else if (ConnectionStatusLogic.INSTANCE.isConnected()) {
             BinaryProtocol bp = consoleUI.uiContext.getBinaryProtocol();
             String signature = bp == null ? "not loaded" : bp.signature;
             frameTitle = consoleVersion + "; firmware=" + Launcher.firmwareVersion.get() + "@" + consoleUI.getPort() + " " + signature;
+            chips = java.util.Arrays.asList(TitleBarPanel.firmwareLabel(signature),
+                TitleBarPanel.connectionLabel(Launcher.firmwareVersion.get(), consoleUI.getPort()));
         } else if (consoleUI.uiContext.isOfflineMode()) {
             // [tag:offline_tune] no ECU — title reflects the loaded tune's signature
             IniFileModel ini = consoleUI.uiContext.iniFileState.getIniFileModel();
             String signature = ini != null ? ini.getSignature() : "no INI";
             frameTitle = "OFFLINE " + consoleVersion + " " + signature;
+            chips = java.util.Arrays.asList("OFFLINE", TitleBarPanel.firmwareLabel(signature));
         } else {
             frameTitle = "DISCONNECTED " + consoleVersion;
+            chips = java.util.Collections.singletonList("DISCONNECTED");
         }
         frame.getFrame().setTitle(frameTitle);
+        if (titleBarPanel != null) {
+            titleBarPanel.update(String.valueOf(Launcher.CONSOLE_VERSION), chips, frameTitle);
+        }
     }
 
     private void showConnectionFailedDialog(String errorMessage) {
