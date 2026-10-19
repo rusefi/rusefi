@@ -9,26 +9,38 @@ import com.opensr5.ini.IniValue;
 import javax.swing.JComponent;
 import java.awt.*;
 import java.awt.geom.Arc2D;
+import java.awt.geom.Point2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.util.Locale;
 import java.util.Objects;
 
 /**
- * Swing rendering of lvgl-linux-dash's classic circular gauge.
- * Geometry and colors follow ui/components/ui_comp_gaugecontainer.c; display
- * rounding and the shared needle/arc position follow ui/gauge_display_value.c.
+ * Swing rendering of lvgl-linux-dash's classic circular gauge, restyled with a
+ * light dial to match the console's light theme. Geometry follows
+ * ui/components/ui_comp_gaugecontainer.c; display rounding and the shared
+ * needle/arc position follow ui/gauge_display_value.c.
  * Draw in a 400-unit square, scaled to fit the component without stretching.
  */
 public final class CircularGauge extends JComponent {
     private static final int START_DEGREES = 135;
     private static final int SWEEP_DEGREES = 270;
-    private static final Color PROGRESS = new Color(0xD0E128);
-    private static final Color DANGER = new Color(0xFF0000);
-    private static final Color NEEDLE = new Color(0xC60000);
-    private static final Color SCALE = new Color(0x717171);
-    private static final Color RING = new Color(0x394041);
-    private static final Color HUB = new Color(0x202020);
+    // Light dial matching the console's FlatLaf light theme.
+    static final Color PROGRESS = new Color(0xFCE38A);
+    static final Color DANGER_FILL = new Color(0xFFCDD2);
+    private static final Color DANGER = new Color(0xE53935);
+    static final Color NEEDLE = new Color(0xE53935);
+    private static final Color SCALE = new Color(0x5F656D);
+    private static final Color TICK = new Color(0x9AA0A6);
+    private static final Color TRACK = new Color(0xE3E5E8);
+    private static final Color BEZEL_TOP = new Color(0xFBFBFC);
+    private static final Color BEZEL_BOTTOM = new Color(0xDADDE1);
+    private static final Color FACE_CENTER = Color.WHITE;
+    private static final Color FACE_EDGE = new Color(0xF3F4F6);
+    static final Color HUB = Color.WHITE;
+    private static final Color HUB_RIM = new Color(0xE1E4E8);
+    private static final Color TEXT = new Color(0x111111);
+    private static final Color LABEL_TEXT = new Color(0x2B2F33);
     private static final Font FONT = new Font(Font.SANS_SERIF, Font.PLAIN, 16);
     // Clockwise label centers from ui_gauge_resize(), relative to the dial center.
     private static final int[] LABEL_X = {-127, -169, -165, -139, -83, -1, 83, 139, 165, 163, 129};
@@ -197,48 +209,57 @@ public final class CircularGauge extends JComponent {
             g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
             Reading current = reading;
             boolean danger = current.value >= dangerThreshold;
-            Color fill = danger ? DANGER : PROGRESS;
+            Color fill = danger ? DANGER_FILL : PROGRESS;
 
-            g.setPaint(new GradientPaint(0, 0, new Color(0x1D1D1D), 0, 314, new Color(0x151515)));
+            // Everything stays inside the dial circle: detached windows clip to it.
+            g.setPaint(new GradientPaint(0, 0, BEZEL_TOP, 0, 400, BEZEL_BOTTOM));
             g.fill(new Ellipse2D.Double(1.5, 1.5, 397, 397));
-            g.setColor(RING);
-            g.setStroke(new BasicStroke(3));
+            g.setColor(HUB_RIM);
+            g.setStroke(new BasicStroke(1.5f));
             g.draw(new Ellipse2D.Double(1.5, 1.5, 397, 397));
+            g.setPaint(new RadialGradientPaint(new Point2D.Double(200, 170), 200,
+                new float[] {0.4f, 1f}, new Color[] {FACE_CENTER, FACE_EDGE}));
+            g.fill(new Ellipse2D.Double(11, 11, 378, 378));
 
-            drawArc(g, 141, 100, 0, current.degrees, fill);
-            drawArc(g, 194.5, 7, 0, SWEEP_DEGREES, RING);
+            drawArc(g, 140, 80, 0, current.degrees, fill);
+            drawArc(g, 184, 4, 0, SWEEP_DEGREES, TRACK);
             double dangerStart = (dangerThreshold - minValue) / (maxValue - minValue) * SWEEP_DEGREES;
-            drawArc(g, 194.5, 7, dangerStart, SWEEP_DEGREES - dangerStart, DANGER);
+            drawArc(g, 184, 6, dangerStart, SWEEP_DEGREES - dangerStart, DANGER);
 
             for (int i = 0; i <= 10; i++) {
                 double value = minValue + (maxValue - minValue) * i / 10;
-                Color color = value >= dangerThreshold - 0.001 ? new Color(0xB70000) : SCALE;
-                if (current.degrees > i * SWEEP_DEGREES / 10 && contrast(color, fill) < 3) {
-                    color = new Color(fill.getRed() * 90 / 255, fill.getGreen() * 90 / 255, fill.getBlue() * 90 / 255);
-                }
+                boolean dangerLabel = value >= dangerThreshold - 0.001;
+                Color color = dangerLabel ? DANGER : SCALE;
                 double angle = Math.toRadians(START_DEGREES + i * SWEEP_DEGREES / 10.0);
-                g.setColor(color);
-                g.setStroke(new BasicStroke(2));
-                double inner = i % 2 == 0 ? 180 : 183;
+                g.setColor(dangerLabel ? DANGER : TICK);
+                g.setStroke(new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER));
+                double inner = i % 2 == 0 ? 168 : 174;
                 g.draw(new Line2D.Double(200 + inner * Math.cos(angle), 200 + inner * Math.sin(angle),
-                    200 + 191 * Math.cos(angle), 200 + 191 * Math.sin(angle)));
-                drawText(g, scaleLabels[i], 200 + LABEL_X[i], 200 + LABEL_Y[i], i % 2 == 0 ? 18 : 16, 62, color);
+                    200 + 181 * Math.cos(angle), 200 + 181 * Math.sin(angle)));
+                drawText(g, scaleLabels[i], 200 + LABEL_X[i] * 0.84, 200 + LABEL_Y[i] * 0.84,
+                    i % 2 == 0 ? 18 : 16, 62, color);
             }
 
             // The needle and fill share the same rounded angle. The hub covers
             // the needle's inner end; labels and the value stay above the needle.
             double angle = Math.toRadians(START_DEGREES + current.degrees);
             g.setColor(NEEDLE);
-            g.setStroke(new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER));
+            g.setStroke(new BasicStroke(4, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER));
             g.draw(new Line2D.Double(200 + 90 * Math.cos(angle), 200 + 90 * Math.sin(angle),
-                200 + 180 * Math.cos(angle), 200 + 180 * Math.sin(angle)));
-            g.setColor(HUB);
+                200 + 178 * Math.cos(angle), 200 + 178 * Math.sin(angle)));
+            // Soft drop shadow lifting the hub off the face.
+            for (int i = 8; i >= 1; i--) {
+                g.setColor(new Color(0, 0, 0, 5));
+                g.fill(new Ellipse2D.Double(100 - i, 104 - i, 200 + 2 * i, 200 + 2 * i));
+            }
+            g.setPaint(new GradientPaint(0, 100, HUB, 0, 300, FACE_EDGE));
             g.fill(new Ellipse2D.Double(100, 100, 200, 200));
-            drawArc(g, 96.5, 7, 0, SWEEP_DEGREES, new Color(0x384244));
-            drawArc(g, 99.5, 1, 0, SWEEP_DEGREES, new Color(0, 0, 0, 100));
-            drawText(g, current.text, 200, 200, 60, 165, danger ? DANGER : Color.WHITE);
-            drawText(g, units, 202, 246, 16, 160, Color.WHITE);
-            drawText(g, title, 200, 331, 16, 230, Color.WHITE);
+            g.setColor(HUB_RIM);
+            g.setStroke(new BasicStroke(1.5f));
+            g.draw(new Ellipse2D.Double(100, 100, 200, 200));
+            drawText(g, current.text, 200, 200, 60, 165, danger ? DANGER : TEXT);
+            drawText(g, units, 202, 246, 16, 160, LABEL_TEXT);
+            drawText(g, title, 200, 331, 16, 230, LABEL_TEXT);
         } finally {
             g.dispose();
         }
@@ -268,20 +289,5 @@ public final class CircularGauge extends JComponent {
         g.setColor(color);
         g.drawString(text, (float) (x - metrics.stringWidth(text) / 2.0),
             (float) (y + (metrics.getAscent() - metrics.getDescent()) / 2.0));
-    }
-
-    private static double contrast(Color a, Color b) {
-        double first = luminance(a) + 0.05;
-        double second = luminance(b) + 0.05;
-        return Math.max(first, second) / Math.min(first, second);
-    }
-
-    private static double luminance(Color color) {
-        return 0.2126 * linear(color.getRed()) + 0.7152 * linear(color.getGreen()) + 0.0722 * linear(color.getBlue());
-    }
-
-    private static double linear(int channel) {
-        double c = channel / 255.0;
-        return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
     }
 }

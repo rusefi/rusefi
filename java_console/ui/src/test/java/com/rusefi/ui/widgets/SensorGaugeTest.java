@@ -153,10 +153,10 @@ class SensorGaugeTest {
                 gauge.setValue(4000);
                 // Resolve the tune's 6000 RPM limit: range 0..8000, danger at 6000.
                 assertEquals(135, gauge.getProgressDegrees());
-                assertEquals(0xD0E128, CircularGaugeTest.render(gauge, 400, 400).getRGB(70, 150) & 0xFFFFFF);
+                assertEquals(CircularGauge.PROGRESS.getRGB() & 0xFFFFFF, CircularGaugeTest.render(gauge, 400, 400).getRGB(70, 150) & 0xFFFFFF);
                 gauge.setValue(6000);
                 assertEquals(203, gauge.getProgressDegrees());
-                assertEquals(0xFF0000, CircularGaugeTest.render(gauge, 400, 400).getRGB(70, 150) & 0xFFFFFF);
+                assertEquals(CircularGauge.DANGER_FILL.getRGB() & 0xFFFFFF, CircularGaugeTest.render(gauge, 400, 400).getRGB(70, 150) & 0xFFFFFF);
             } finally {
                 wrapper.removeAllChildrenAndListeners();
             }

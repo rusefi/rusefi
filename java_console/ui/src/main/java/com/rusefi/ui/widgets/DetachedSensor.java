@@ -103,7 +103,7 @@ public class DetachedSensor {
             // which otherwise leaves a pale halo behind the antialiased rim.
             frame.getRootPane().setBackground(frame.getBackground());
         } else {
-            frame.setBackground(new Color(0x151515));
+            frame.setBackground(new Color(0xF3F4F6));
         }
         frame.addPropertyChangeListener("graphicsConfiguration", event ->
             SwingUtilities.invokeLater(() -> restoreTransparency(frame)));
