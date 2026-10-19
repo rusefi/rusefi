@@ -6,6 +6,7 @@
 #include "prime_injection.h"
 #include "sensor.h"
 #include "backup_ram.h"
+#include "limp_manager.h"
 #if EFI_PROD_CODE
 #include "microsecond_timer.h"
 #endif
@@ -105,6 +106,11 @@ uint32_t PrimeController::getKeyCycleCounter() const {
 }
 
 void PrimeController::onPrimeStart() {
+	// A delayed pulse must use the current start and fuel-cut conditions.
+	if (isPrimeInjectionPulseSkipped() || !engineConfiguration->isInjectionEnabled || !getLimpManager()->allowInjection()) {
+		return;
+	}
+
 	auto durationMs = getPrimeDuration();
 
 	// Don't prime a zero-duration pulse

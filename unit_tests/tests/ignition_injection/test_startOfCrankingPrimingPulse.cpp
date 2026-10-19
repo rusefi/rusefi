@@ -141,10 +141,16 @@ void expectPrimePulseAndDrain(EngineTestHelper& eth) {
 	}
 }
 
+void expectNoPrimePulse() {
+	EXPECT_FALSE(engine->module<PrimeController>().unmock().isPriming());
+	for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
+		EXPECT_FALSE(enginePins.injectors[i].getLogicValue());
+	}
+}
+
 } // namespace
 
-// priming currently bypasses disabled injection.
-TEST(priming, PrimeInjectsWithInjectionDisabled) {
+TEST(priming, PrimeRespectsDisabledInjection) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	configurePrimeForGateReproduction();
 	engineConfiguration->isInjectionEnabled = false;
@@ -152,11 +158,10 @@ TEST(priming, PrimeInjectsWithInjectionDisabled) {
 	ASSERT_EQ(ClearReason::Settings, getLimpManager()->allowInjection().reason);
 	engine->module<PrimeController>()->onIgnitionStateChanged(true);
 	eth.moveTimeForwardAndInvokeEventsUs(600000);
-	expectPrimePulseAndDrain(eth);
+	expectNoPrimePulse();
 }
 
-// a scheduled prime currently fires after the engine starts.
-TEST(priming, DelayedPrimeInjectsAfterEngineStarts) {
+TEST(priming, DelayedPrimeSkipsAfterEngineStarts) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	configurePrimeForGateReproduction();
 	engine->module<PrimeController>()->onIgnitionStateChanged(true);
@@ -165,11 +170,10 @@ TEST(priming, DelayedPrimeInjectsAfterEngineStarts) {
 	ASSERT_TRUE(engine->rpmCalculator.isRunning());
 	eth.moveTimeForwardAndInvokeEventsUs(500000);
 	EXPECT_TRUE(engine->rpmCalculator.isRunning());
-	expectPrimePulseAndDrain(eth);
+	expectNoPrimePulse();
 }
 
-// a scheduled prime currently fires after flood clear is requested.
-TEST(priming, DelayedPrimeInjectsAfterFloodClearIsRequested) {
+TEST(priming, DelayedPrimeRespectsFloodClear) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	configurePrimeForGateReproduction();
 	engineConfiguration->isCylinderCleanupEnabled = true;
@@ -181,5 +185,15 @@ TEST(priming, DelayedPrimeInjectsAfterFloodClearIsRequested) {
 	ASSERT_EQ(ClearReason::FloodClear, getLimpManager()->allowInjection().reason);
 	eth.moveTimeForwardAndInvokeEventsUs(500000);
 	EXPECT_EQ(ClearReason::FloodClear, getLimpManager()->allowInjection().reason);
+	expectNoPrimePulse();
+}
+
+TEST(priming, AllowedPrimeStillInjects) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	configurePrimeForGateReproduction();
+	getLimpManager()->updateState(0, getTimeNowNt());
+	ASSERT_TRUE(getLimpManager()->allowInjection());
+	engine->module<PrimeController>()->onIgnitionStateChanged(true);
+	eth.moveTimeForwardAndInvokeEventsUs(600000);
 	expectPrimePulseAndDrain(eth);
 }
