@@ -56,6 +56,20 @@ On STM32F4, Lua allocates from available CCM and optional RAM first, then the
 shared ChibiOS heap. Separate regions cannot satisfy a single allocation larger
 than their individual free blocks.
 
+Allocation failures report `CUSTOM_LUA_ERROR` (C6730) through the warning channel.
+VM initialization, tick lookup/calls and CAN argument construction/calls execute
+inside `luaProtectedCall`. Failed initialization closes the partial state and
+waits for a Lua reset; a failed callback returns to the Lua loop. Keep C++ objects
+requiring destruction outside those callbacks because Lua errors use `longjmp`.
+The last-resort panic handler warns and parks only the Lua thread; that exceptional
+path requires an ECU restart. [tag:lua_protected_setup]
+
+The `luaaa` class-name pointer must only be published after its userdata has a
+GC finalizer. Otherwise an allocation failure during registration leaves a dangling
+pointer after VM teardown and prevents the next interpreter from initializing.
+`LuaBasic.SetupFailureAtEachAllocationAndRetry` exercises partial registration and
+subsequent startup across allocation failures.
+
 ## Categories
 
 ### 1. Reading inputs (sensors, pins, SENT)

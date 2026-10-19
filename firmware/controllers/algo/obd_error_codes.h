@@ -2122,6 +2122,9 @@ enum class ObdCode : uint16_t {
 	CUSTOM_VVT_MODE_NOT_SELECTED = 6727,
 	CUSTOM_ERR_6728 = 6728,
 	CUSTOM_ARTIFICIAL_MISFIRE = 6729,
+	// C6730: Lua VM allocation/setup failures and protected callback errors.
+	// Report through warning(); exhausting script memory must not latch a fatal ECU error.
+	CUSTOM_LUA_ERROR = 6730,
 
 	CUSTOM_INSTANT_MAP_DECODING = 6899,
 	STACK_USAGE_COMMUNICATION = 6900,

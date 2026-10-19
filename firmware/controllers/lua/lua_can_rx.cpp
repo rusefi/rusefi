@@ -79,6 +79,9 @@ void processLuaCan(const size_t busIndex, const CANRxFrame& frame) {
 }
 
 // From lapi.c:762 lua_createtable, modified slightly
+// Suppressing the routine GC check does not make this allocation-free:
+// luaH_new/luaH_resize can still exhaust memory (and trigger emergency GC).
+// Call only inside the protected CAN operation below.
 static void lua_createtable_noGC(lua_State *L, int narray) {
 	Table *t;
 	lua_lock(L);
@@ -94,8 +97,10 @@ static void lua_createtable_noGC(lua_State *L, int narray) {
 	lua_unlock(L);
 }
 
-static void handleCanFrame(LuaHandle& ls, CanFrameData* data) {
-	ScopePerf perf(PE::LuaOneCanRxCallback);
+static int handleCanFrameCallback(lua_State* ls) {
+	// Borrow the mailbox buffer through luaProtectedCall's argument. Ownership
+	// stays with doOneLuaCanRx so a Lua longjmp cannot skip returning the buffer.
+	auto* data = static_cast<CanFrameData*>(lua_touserdata(ls, 1));
 	if (data->Callback == NO_CALLBACK) {
 		// No callback, use catch-all function
 		lua_getglobal(ls, "onCanRx");
@@ -109,8 +114,7 @@ static void handleCanFrame(LuaHandle& ls, CanFrameData* data) {
 	if (lua_isnil(ls, -1)) {
 		// no rx function, ignore
 		efiPrintf("LUA CAN rx missing function onCanRx ID=%ld", frameCanId);
-		lua_settop(ls, 0);
-		return;
+		return 0;
 	}
 
 	auto dlc = data->Frame.DLC;
@@ -136,16 +140,19 @@ static void handleCanFrame(LuaHandle& ls, CanFrameData* data) {
 		lua_rawseti(ls, -2, i + 1);
 	}
 
-	// Perform the actual function call
-	int status = lua_pcall(ls, 4, 0, 0);
+	// The outer lua_pcall covers lookup, table construction and script errors.
+	// Protecting only this call would leave argument-allocation failures fatal.
+	lua_call(ls, 4, 0);
+	return 0;
+}
 
-	if (0 != status) {
-		// error calling CAN rx hook function
-		auto errMsg = lua_tostring(ls, -1);
-		efiPrintf("LUA CAN RX error %s", errMsg);
-		lua_pop(ls, 1);
-	}
-
+static void handleCanFrame(LuaHandle& ls, CanFrameData* data) {
+	// [tag:lua_protected_call] ScopePerf must survive the Lua error jump so
+	// its destructor runs even when lookup or payload-table allocation fails.
+	ScopePerf perf(PE::LuaOneCanRxCallback);
+	// Failure abandons this callback and returns normally to doOneLuaCanRx.
+	// Do not replay the frame: the script may already have performed side effects.
+	luaProtectedCall(ls, handleCanFrameCallback, data, "CAN RX failed");
 	lua_settop(ls, 0);
 }
 
@@ -169,7 +176,8 @@ static bool doOneLuaCanRx(LuaHandle& ls) {
 	// We've accepted the frame, process it in Lua.
 	handleCanFrame(ls, data);
 
-	// We're done, return this frame to the free list
+	// Release on both callback success and caught Lua error. Losing a buffer
+	// on each OOM would eventually exhaust this fixed pool and drop all CAN RX.
 	msg = freeBuffers.post(data, TIME_IMMEDIATE);
 	efiAssert(ObdCode::OBD_PCM_Processor_Fault, msg == MSG_OK, "lua can post to free buffer fail", false);
 

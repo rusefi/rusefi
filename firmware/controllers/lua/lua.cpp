@@ -20,6 +20,7 @@
 #include "can_filter.h"
 #include "lua_config_page.h"
 #include "bench_test.h"
+#include <cstdlib>
 
 #if LUA_I2C_DAC
 #include "mcp4728.h"
@@ -54,7 +55,7 @@ static int lua_setTickRate(lua_State* l) {
 	return 0;
 }
 
-static void loadLibraries(LuaHandle& ls) {
+static void loadLibraries(lua_State* ls) {
 	constexpr luaL_Reg libs[] = {
 		// TODO: do we even need the base lib?
 		//{ LUA_GNAME, luaopen_base },
@@ -67,52 +68,104 @@ static void loadLibraries(LuaHandle& ls) {
 	}
 }
 
-static LuaHandle setupLuaState(lua_Alloc alloc) {
-	LuaHandle ls = lua_newstate(alloc, NULL);
+bool luaProtectedCall(lua_State* state, lua_CFunction callback, void* context, const char* description) {
+	// [tag:lua_protected_call] A zero-upvalue C function and light userdata do
+	// not allocate (the caller supplies stack space). A closure with captured
+	// upvalues or full userdata could fail before lua_pcall installs its handler.
+	lua_pushcfunction(state, callback);
+	lua_pushlightuserdata(state, context);
+	// No Lua message handler: producing a traceback can itself need memory.
+	if (lua_pcall(state, 1, 0, 0) != LUA_OK) {
+		// Converting a numeric error to a string can itself allocate. Only read
+		// existing strings here, since we may already be out of memory. Do not
+		// use lua_isstring: it also accepts numbers that lua_tostring converts.
+		const char* message = lua_type(state, -1) == LUA_TSTRING
+			? lua_tostring(state, -1) : "non-string error";
+		warning(ObdCode::CUSTOM_LUA_ERROR, "Lua %s: %s", description, message);
+		// lua_pcall leaves one error object in place of the function/arguments.
+		// Consume it so repeated failures cannot fill the Lua stack.
+		lua_pop(state, 1);
+		return false;
+	}
+	return true;
+}
+
+static int initializeLuaState(lua_State* ls) {
+	// [tag:lua_protected_setup] Even library/hook registration can exhaust the
+	// heap. Run the entire setup inside luaProtectedCall, before any user script
+	// executes. Borrow the raw state here; setupLuaState owns the LuaHandle in
+	// the outer C++ frame that survives Lua's longjmp and performs teardown.
+	loadLibraries(ls);
+	lua_register(ls, "setTickRate", lua_setTickRate);
+	configureRusefiLuaHooks(ls);
+
+	lua_gc(ls, LUA_GCCOLLECT, 0);
+	// see https://www.lua.org/manual/5.4/manual.html#2.5.1
+	lua_gc(ls, LUA_GCINC, 50, 1000, 9);
+	return 0;
+}
+
+static LuaHandle setupLuaState(lua_Alloc alloc, void* userdata = nullptr) {
+	// lua_newstate protects its own bootstrap and frees a partial state before
+	// returning null. Our library/hook registration needs a separate boundary.
+	LuaHandle ls = lua_newstate(alloc, userdata);
 
 	if (!ls) {
-		criticalError("Failed to start Lua interpreter");
+		warning(ObdCode::CUSTOM_LUA_ERROR, "Failed to start Lua interpreter: not enough memory");
 
 		return nullptr;
 	}
 
 	lua_atpanic(ls, [](lua_State* l) {
-		criticalError("Lua panic: %s", lua_tostring(l, -1));
+		warning(ObdCode::CUSTOM_LUA_ERROR, "Lua panic: %s",
+			lua_type(l, -1) == LUA_TSTRING ? lua_tostring(l, -1) : "non-string error");
 
-		// hang the lua thread
-		while (true) ;
-
+		// Last resort for an API error outside a protected call. Returning from
+		// panic calls Lua's abort(); sleeping instead lets other ECU threads run.
+		// This path never returns to the loop that observes needsReset, so Lua
+		// requires an ECU restart. Expected OOM errors return from protected
+		// calls and follow the normal callback/setup recovery paths below.
+#if EFI_UNIT_TEST
+		// Make a missed protection boundary fail the host test immediately.
+		std::abort();
+#else
+		while (true) {
+			chThdSleepMilliseconds(1000);
+		}
+#endif
 		return 0;
 	});
 
-	// Load Lua's own libraries
-	loadLibraries(ls);
-
-	// Load rusEFI hooks
-	lua_register(ls, "setTickRate", lua_setTickRate);
-	configureRusefiLuaHooks(ls);
-
-	// run a GC cycle
-	lua_gc(ls, LUA_GCCOLLECT, 0);
-
-	// set GC settings
-	// see https://www.lua.org/manual/5.4/manual.html#2.5.1
-	lua_gc(ls, LUA_GCINC, 50, 1000, 9);
+	if (!luaProtectedCall(ls, initializeLuaState, nullptr, "initialization failed")) {
+		// Normal scope exit closes the partial VM, including class-name
+		// finalizers in luaaa.hpp. Returning a half-registered VM is unsafe;
+		// runOneLua reports failure and ThreadTask waits for an explicit reset.
+		return nullptr;
+	}
 
 	return ls;
 }
 
 // this function is needed for a correct graph on the stackUsageReport
 static int doString(lua_State* ls, const char* script) {
-	return luaL_loadbufferx(ls, script, std::strlen(script), script, "t")
-		|| lua_pcall(ls, 0, LUA_MULTRET, 0);
+	// Loading protects parser allocations; lua_pcall protects chunk execution.
+	// Preserve the actual status from either stage: combining them with ||
+	// reduces errors to 1 and hides LUA_ERRMEM from both callers below.
+	int status = luaL_loadbufferx(ls, script, std::strlen(script), script, "t");
+	return status == LUA_OK ? lua_pcall(ls, 0, LUA_MULTRET, 0) : status;
 }
 
 static bool loadScript(LuaHandle& ls, const char* scriptStr) {
 	efiPrintf(TAG "loading script length: %u...", std::strlen(scriptStr));
 
-	if (0 != doString(ls, scriptStr)) {
+	int status = doString(ls, scriptStr);
+	if (status != LUA_OK) {
 		withErrorLoading = true;
+		// Syntax/runtime diagnostics still go to the console. Allocation failure
+		// additionally reaches the ECU warning channel, without a fatal latch.
+		if (status == LUA_ERRMEM) {
+			warning(ObdCode::CUSTOM_LUA_ERROR, "Lua script loading failed: not enough memory");
+		}
 		efiPrintf(TAG "ERROR loading script: %s", lua_tostring(ls, -1));
 		lua_pop(ls, 1);
 		return false;
@@ -155,7 +208,11 @@ static void doInteractive(LuaHandle& ls) {
 			efiPrintf(TAG "interactive returned nothing.");
 		}
 	} else {
-		// error with interactive command, print it
+		// Use the same OOM warning as script loading; consuming this command
+		// below lets the Lua loop continue and accept another command/reset.
+		if (status == LUA_ERRMEM) {
+			warning(ObdCode::CUSTOM_LUA_ERROR, "Lua interactive command failed: not enough memory");
+		}
 		efiPrintf(TAG "interactive error: %s", lua_tostring(ls, -1));
 	}
 
@@ -166,33 +223,35 @@ static void doInteractive(LuaHandle& ls) {
 
 static uint32_t maxLuaDuration{};
 
-static void invokeTick(LuaHandle& ls) {
-	ScopePerf perf(PE::LuaTickFunction);
-
-	// run the tick function
+static int invokeTickCallback(lua_State* ls) {
+	// [tag:lua_protected_call] Global lookup can intern a name or invoke the
+	// lazy native __index hook. It belongs inside the same boundary as onTick.
 	lua_getglobal(ls, "onTick");
 	if (lua_isnil(ls, -1)) {
 		// TODO: handle missing tick function
-		lua_settop(ls, 0);
-		return;
+		return 0;
 	}
+	// Errors propagate to the outer lua_pcall, which also covers the lookup.
+	lua_call(ls, 0, 0);
+	return 0;
+}
+
+static void invokeTick(LuaHandle& ls) {
+	// Keep the performance scope outside the callback so a Lua longjmp cannot
+	// bypass its destructor. Timing includes lookup and failure reporting.
+	ScopePerf perf(PE::LuaTickFunction);
 #if EFI_PROD_CODE
 	uint32_t before = port_rt_get_counter_value();
 #endif // EFI_PROD_CODE
 
-	int status = lua_pcall(ls, 0, 0, 0);
+	// A failed tick is reported and abandoned; later loop iterations still run
+	// and can observe a reset request. Existing script side effects remain.
+	luaProtectedCall(ls, invokeTickCallback, nullptr, "onTick failed");
 
 #if EFI_PROD_CODE
 	uint32_t duration = port_rt_get_counter_value() - before;
 	maxLuaDuration = std::max(maxLuaDuration, duration);
 #endif // EFI_PROD_CODE
-
-	if (0 != status) {
-		// error calling hook function
-		auto errMsg = lua_tostring(ls, -1);
-		efiPrintf(TAG "error %s", errMsg);
-		lua_pop(ls, 1);
-	}
 
 	lua_settop(ls, 0);
 }
@@ -289,8 +348,9 @@ void LuaThread::ThreadTask() {
 		engine->resetLua();
 
 		if (!wasOk) {
-			// Something went wrong executing the script, spin
-			// until reset invoked (maybe the user fixed the script)
+			// Setup or initial script loading failed and the LuaHandle has already
+			// closed the VM. Wait for luareset instead of repeatedly allocating
+			// and warning with the same memory pressure or invalid script.
 			while (!needsReset) {
 				chThdSleepMilliseconds(100);
 			}
@@ -357,6 +417,14 @@ void startLua() {
 #else // not EFI_UNIT_TEST
 
 void startLua() { }
+
+LuaHandle setupLuaStateForTests(lua_Alloc alloc, void* userdata) {
+	return setupLuaState(alloc, userdata);
+}
+
+bool loadLuaScriptForTests(LuaHandle& ls, const char* script) {
+	return loadScript(ls, script);
+}
 
 #include <stdexcept>
 #include <string>
