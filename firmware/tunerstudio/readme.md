@@ -16,6 +16,32 @@ omit those gauges should disable the feature flag in their prepend. Check
 Keep validation enabled so misspelled or accidentally missing gauges fail
 generation.
 
+## Ignition blends
+
+`Ignition > Ignition Blends` opens one combined dialog for each of the four
+additive timing corrections. The expanding table is on the left; input and
+load-axis selectors, the weight curve and six numeric readouts are on the right.
+Selecting Zero as the input keeps the table visible with editing disabled.
+
+Table values are offsets in crankshaft degrees. A +4 degree cell at 50% weight
+adds +2 degrees; a negative cell retards timing. The four offsets are summed.
+Second Ignition Table blending instead interpolates absolute timing maps and
+has separate controls.
+
+Zero as a load-axis override uses the effective ignition load, including the
+main ignition table's override. The axis label and table-load readout identify
+that source in native units. Input and load selections are independent, and
+changing either source does not convert its existing axis bins.
+
+Readouts show input, RPM, weight, calculated blend correction, table load and
+adjusted timing. Configured does not imply an actively applied correction:
+fixed timing and separate cranking timing bypass the running blends, while
+idle, launch and shift strategies can reduce or replace their contribution.
+Bypassed blend readouts can retain an earlier calculation. Adjusted timing is
+the existing corrected ignition advance; cylinder trims and hardware latency
+are applied later. The dialog Help explains these distinctions and sensor
+fallbacks. Native calibration fields and firmware calculations are unchanged.
+
 ## Template validation
 
 Conditions (`@@if_FLAG` and `@@if_block FLAG@@` / `@@endif_block`) require
