@@ -25,6 +25,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -53,22 +54,34 @@ class SensorGaugeTest {
             BinaryProtocol protocol = mock(BinaryProtocol.class);
             when(protocol.getControllerConfiguration()).thenReturn(image);
             context.getLinkManager().setBinaryProtocolForTests(protocol);
-            JPopupMenu menu = new JPopupMenu();
-            SensorGauge.fillGaugeMenuItems(context, menu, new JPanelWithListener(new BorderLayout()), name -> { }, null);
+            JPanelWithListener wrapper = new JPanelWithListener(new BorderLayout());
+            AtomicReference<String> selected = new AtomicReference<>();
+            JPopupMenu menu = SensorGauge.createPopupMenu(context, wrapper, selected::set, null, () -> { });
             List<String> expected = java.util.Collections.singletonList("GPPWM Outputs / Cooling fan");
-            assertEquals(expected, visibleGaugePaths(menu));
-            GaugeMenuSearch.addTo(menu);
-            JTextField search = (JTextField) UiUtils.getAllComponents(menu).stream()
-                .filter(component -> component instanceof JTextField)
-                .findFirst().orElseThrow(AssertionError::new);
+            assertEquals(expected, catalogPaths(changeGaugeMenu(menu)));
+            assertEquals(Arrays.asList(SensorGauge.CHANGE_GAUGE, SensorGauge.POP_OUT), visibleItems(menu),
+                "Without a query the normal menu is shown");
+            JTextField search = searchField(menu);
             search.setText("cooling fan");
-            assertEquals(expected, visibleGaugePaths(menu));
+            assertEquals(expected, visibleItems(menu), "A query shows flat Group / Gauge results only");
             search.setText("GPPWM OUTPUTS / COOLING FAN");
-            assertEquals(expected, visibleGaugePaths(menu));
+            assertEquals(expected, visibleItems(menu));
             search.setText("stringValue");
-            assertTrue(visibleGaugePaths(menu).isEmpty());
+            assertEquals(java.util.Collections.singletonList("No matching gauges"), visibleItems(menu));
             search.setText("");
-            assertEquals(expected, visibleGaugePaths(menu));
+            assertEquals(Arrays.asList(SensorGauge.CHANGE_GAUGE, SensorGauge.POP_OUT), visibleItems(menu));
+
+            search.setText("cooling");
+            visibleMenuItem(menu, "GPPWM Outputs / Cooling fan").doClick(0);
+            assertEquals("gppwmGauge1", selected.get(), "A search result applies the gauge");
+            assertTrue(wrapper.getComponent(0) instanceof CircularGauge);
+
+            selected.set(null);
+            menu = SensorGauge.createPopupMenu(context, wrapper, selected::set, null, () -> { });
+            search = searchField(menu);
+            search.setText("fan");
+            search.postActionEvent();
+            assertEquals("gppwmGauge1", selected.get(), "Enter picks the first result");
         });
     }
 
@@ -91,38 +104,78 @@ class SensorGaugeTest {
             context.iniFileState.setIniFileModelForTest(ini);
             assertNull(context.getBinaryProtocol());
             JPanelWithListener wrapper = new JPanelWithListener(new BorderLayout());
-            JPopupMenu menu = new JPopupMenu();
-            SensorGauge.fillGaugeMenuItems(context, menu, wrapper, name -> { }, null);
-            assertEquals(expectedPaths, visibleGaugePaths(menu));
-            GaugeMenuSearch.addTo(menu);
-            JTextField search = (JTextField) UiUtils.getAllComponents(menu).stream()
-                .filter(component -> component instanceof JTextField)
-                .findFirst().orElseThrow(AssertionError::new);
-            assertEquals(expectedPaths, visibleGaugePaths(menu), "Empty search shows the full catalog");
+            JMenuItem displayAs = new JMenu("Display as");
+            JPopupMenu menu = SensorGauge.createPopupMenu(context, wrapper, name -> { }, displayAs, () -> { });
+            assertEquals(expectedPaths, catalogPaths(changeGaugeMenu(menu)));
+            assertEquals(Arrays.asList(SensorGauge.CHANGE_GAUGE, "Display as", SensorGauge.POP_OUT), visibleItems(menu));
+            JTextField search = searchField(menu);
             search.setText("not-a-gauge-in-this-ini");
-            assertTrue(visibleGaugePaths(menu).isEmpty());
+            assertEquals(java.util.Collections.singletonList("No matching gauges"), visibleItems(menu));
+            search.setText(" / ");
+            List<String> broad = new ArrayList<>(expectedPaths.subList(0, GaugeMenuSearch.MAX_RESULTS));
+            broad.add((expectedPaths.size() - GaugeMenuSearch.MAX_RESULTS) + " more - keep typing to narrow");
+            assertEquals(broad, visibleItems(menu), "A broad query is capped to keep the popup on screen");
             search.setText("");
-            assertEquals(expectedPaths, visibleGaugePaths(menu), "Clearing search restores the full catalog");
+            assertEquals(Arrays.asList(SensorGauge.CHANGE_GAUGE, "Display as", SensorGauge.POP_OUT), visibleItems(menu),
+                "Clearing search restores the normal menu");
 
             BinaryProtocol protocol = mock(BinaryProtocol.class);
             when(protocol.getIniFileNullable()).thenReturn(ini);
             context.getLinkManager().setBinaryProtocolForTests(protocol);
-            JPopupMenu connectedMenu = new JPopupMenu();
-            SensorGauge.fillGaugeMenuItems(context, connectedMenu, wrapper, name -> { }, null);
-            assertEquals(expectedPaths, visibleGaugePaths(connectedMenu));
+            JPopupMenu connectedMenu = SensorGauge.createPopupMenu(context, wrapper, name -> { }, null, () -> { });
+            assertEquals(expectedPaths, catalogPaths(changeGaugeMenu(connectedMenu)));
         });
     }
 
-    private static List<String> visibleGaugePaths(JPopupMenu menu) {
-        List<String> paths = new ArrayList<>();
+    @Test
+    void popOutItemRunsTheCallersAction() throws Throwable {
+        SwingUtilities.invokeAndWait(() -> {
+            UIContext context = new UIContext();
+            context.iniFileState.setIniFileModelForTest(IniFileModelMocks.withGauges(CircularGaugeTest.model(0, 100, 80, 0)));
+            int[] popOuts = {0};
+            JPopupMenu menu = SensorGauge.createPopupMenu(context, new JPanelWithListener(new BorderLayout()),
+                name -> { }, null, () -> popOuts[0]++);
+            visibleMenuItem(menu, SensorGauge.POP_OUT).doClick(0);
+            assertEquals(1, popOuts[0]);
+        });
+    }
+
+    static JMenu changeGaugeMenu(JPopupMenu menu) {
+        return (JMenu) visibleMenuItem(menu, SensorGauge.CHANGE_GAUGE);
+    }
+
+    static JTextField searchField(JPopupMenu menu) {
+        return (JTextField) UiUtils.getAllComponents(menu).stream()
+            .filter(component -> component instanceof JTextField)
+            .findFirst().orElseThrow(AssertionError::new);
+    }
+
+    static JMenuItem visibleMenuItem(JPopupMenu menu, String text) {
         for (Component component : menu.getComponents()) {
-            if (component instanceof JMenu && component.isVisible()) {
-                JMenu category = (JMenu) component;
-                for (Component child : category.getMenuComponents()) {
-                    if (child instanceof JMenuItem && child.isVisible()) {
-                        paths.add(category.getText() + " / " + ((JMenuItem) child).getText());
-                    }
-                }
+            if (component instanceof JMenuItem && component.isVisible() && text.equals(((JMenuItem) component).getText())) {
+                return (JMenuItem) component;
+            }
+        }
+        throw new AssertionError("No visible menu item " + text + " in " + visibleItems(menu));
+    }
+
+    /** Texts of the visible top-level items, in order; separators and the search field are skipped. */
+    static List<String> visibleItems(JPopupMenu menu) {
+        List<String> items = new ArrayList<>();
+        for (Component component : menu.getComponents()) {
+            if (component instanceof JMenuItem && component.isVisible()) {
+                items.add(((JMenuItem) component).getText());
+            }
+        }
+        return items;
+    }
+
+    static List<String> catalogPaths(JMenu catalog) {
+        List<String> paths = new ArrayList<>();
+        for (Component component : catalog.getMenuComponents()) {
+            JMenu category = (JMenu) component;
+            for (Component child : category.getMenuComponents()) {
+                paths.add(category.getText() + " / " + ((JMenuItem) child).getText());
             }
         }
         return paths;

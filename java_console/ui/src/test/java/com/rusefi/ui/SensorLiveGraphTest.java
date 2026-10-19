@@ -6,6 +6,7 @@ import com.opensr5.ini.RawIniFile;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ini.reader.IniFileReaderUtil;
+import com.rusefi.ui.widgets.SensorGauge;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
@@ -50,6 +51,30 @@ class SensorLiveGraphTest {
                 JPopupMenu connectedMenu = new JPopupMenu();
                 graph.addChangeSensorItems(connectedMenu);
                 assertEquals(expectedPaths, gaugePaths(connectedMenu));
+            } finally {
+                graph.destroy();
+            }
+        });
+    }
+
+    @Test
+    void popupPutsSearchAndGaugeCatalogFirst() throws Throwable {
+        SwingUtilities.invokeAndWait(() -> {
+            UIContext context = new UIContext();
+            JMenu displayAs = new JMenu(GaugesGridElement.DISPLAY_AS);
+            SensorLiveGraph graph = new SensorLiveGraph(context, new Node(), "RPMGauge", displayAs);
+            try {
+                graph.setActive(false);
+                JPopupMenu menu = graph.createPopupMenu();
+                assertTrue(menu.getComponent(0) instanceof JPanel, "Search field is at the top");
+                List<String> items = new ArrayList<>();
+                for (Component component : menu.getComponents()) {
+                    if (component instanceof JMenuItem && component.isVisible()) {
+                        items.add(((JMenuItem) component).getText());
+                    }
+                }
+                assertEquals(java.util.Arrays.asList(SensorGauge.CHANGE_GAUGE, "Refresh period", "Scale",
+                    GaugesGridElement.DISPLAY_AS), items);
             } finally {
                 graph.destroy();
             }

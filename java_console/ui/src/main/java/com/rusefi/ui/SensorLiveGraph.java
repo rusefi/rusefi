@@ -12,6 +12,7 @@ import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.ui.widgets.GaugeMenuSearch;
 import com.rusefi.ui.widgets.GaugeMenuLabel;
+import com.rusefi.ui.widgets.SensorGauge;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -126,11 +127,17 @@ public class SensorLiveGraph extends JPanel {
     }
 
     private void showPopupMenu(MouseEvent e) {
+        createPopupMenu().show(e.getComponent(), e.getX(), e.getY());
+    }
+
+    /** Search, "Change gauge", graph options, then the caller's display options. */
+    // Package-private so tests inspect the same menu users see.
+    JPopupMenu createPopupMenu() {
         JPopupMenu pm = new JPopupMenu();
 
-        addChangeSensorItems(pm);
-        GaugeMenuSearch.addTo(pm);
-        pm.add(new JSeparator());
+        JMenu changeGauge = new JMenu(SensorGauge.CHANGE_GAUGE);
+        addChangeSensorItems(changeGauge);
+        pm.add(changeGauge);
         addChangePeriodItems(pm);
         JMenuItem scale = new JMenu("Scale");
 
@@ -180,8 +187,12 @@ public class SensorLiveGraph extends JPanel {
 
         pm.add(scale);
 
-        pm.add(extraItem);
-        pm.show(e.getComponent(), e.getX(), e.getY());
+        if (extraItem != null) {
+            pm.addSeparator();
+            pm.add(extraItem);
+        }
+        GaugeMenuSearch.addTo(pm, changeGauge);
+        return pm;
     }
 
     enum ChangePeriod {
@@ -233,7 +244,7 @@ public class SensorLiveGraph extends JPanel {
         }
     }
 
-    void addChangeSensorItems(JPopupMenu pm) {
+    void addChangeSensorItems(JComponent pm) {
         IniFileModel iniFile = uiContext.iniFileState.getIniFileModel();
         if (iniFile != null) {
             for (final String category : iniFile.getGaugeCategories().keySet()) {
