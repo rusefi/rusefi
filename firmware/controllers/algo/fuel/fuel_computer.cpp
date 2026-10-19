@@ -51,8 +51,9 @@ float FuelComputer::getStoichiometricRatio() const {
 		return 0;
 	}
 
-	// Without an ethanol/flex sensor, return primary configured stoich ratio
-	if (!Sensor::hasSensor(SensorType::FuelEthanolPercent)) {
+	// A missing or invalid ethanol reading cannot select the secondary fuel.
+	auto flex = Sensor::get(SensorType::FuelEthanolPercent);
+	if (!flex) {
 		return primary;
 	}
 
@@ -64,10 +65,6 @@ float FuelComputer::getStoichiometricRatio() const {
 		criticalError("Please set E100 stoichiometric ratio");
 		return 0;
 	}
-
-	auto flex = Sensor::get(SensorType::FuelEthanolPercent);
-
-	// TODO: what do do if flex sensor fails?
 
 	// Linear interpolate between primary and secondary stoich ratios
 	return interpolateClamped(0, primary, 100, secondary, flex.Value);

@@ -84,7 +84,7 @@ public:
 
 } // namespace
 
-TEST(FuelComputer, InvalidEthanolPayloadControlsFuelStoichiometry) {
+TEST(FuelComputer, InvalidEthanolPayloadDoesNotControlFuelStoichiometry) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	Sensor::resetMockValue(SensorType::FuelEthanolPercent);
 	InvalidEthanolSensor sensor;
@@ -95,9 +95,9 @@ TEST(FuelComputer, InvalidEthanolPayloadControlsFuelStoichiometry) {
 	engineConfiguration->stoichRatioSecondary = 10;
 	FuelComputer dut;
 
-	// Both readings are invalid, but their unusable payload changes fueling.
+	// Invalid readings must use primary stoichiometry regardless of payload.
 	sensor.payload = 0;
 	EXPECT_FLOAT_EQ(15, dut.getStoichiometricRatio());
 	sensor.payload = 100;
-	EXPECT_FLOAT_EQ(10, dut.getStoichiometricRatio());
+	EXPECT_FLOAT_EQ(15, dut.getStoichiometricRatio());
 }
