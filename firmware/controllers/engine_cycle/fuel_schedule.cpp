@@ -11,7 +11,8 @@
 void startInjection(scheduler_arg_t arg) {
 	const InjectorContext ctx(arg);
 	const auto nowNt = getTimeNowNt();
-	for (uint16_t mask = ctx.outputsMask(), i = 0; mask; mask >>= 1, i++) {
+	CylinderMask mask = ctx.outputsMask();
+	for (uint16_t i = 0; mask; mask >>= 1, i++) {
 		if (mask & 1u) {
 			enginePins.injectors[i].open(nowNt);
 			if (ctx.stage2Active()) {
@@ -24,7 +25,8 @@ void startInjection(scheduler_arg_t arg) {
 void endInjection(scheduler_arg_t arg) {
 	const InjectorContext ctx(arg);
 	const auto nowNt = getTimeNowNt();
-	for (uint16_t mask = ctx.outputsMask(), i = 0; mask; mask >>= 1, i++) {
+	CylinderMask mask = ctx.outputsMask();
+	for (uint16_t i = 0; mask; mask >>= 1, i++) {
 		if (mask & 1u) {
 			enginePins.injectors[i].close(nowNt);
 		}
@@ -38,14 +40,15 @@ void endInjection(scheduler_arg_t arg) {
 void endInjectionStage2(scheduler_arg_t arg) {
 	const InjectorContext ctx(arg);
 	const auto nowNt = getTimeNowNt();
-	for (uint16_t mask = ctx.outputsMask(), i = 0; mask; mask >>= 1, i++) {
+	CylinderMask mask = ctx.outputsMask();
+	for (uint16_t i = 0; mask; mask >>= 1, i++) {
 		if (mask & 1u) {
 			enginePins.injectorsStage2[i].close(nowNt);
 		}
 	}
 }
 
-uint16_t InjectionEvent::calculateInjectorOutputMask() const {
+CylinderMask InjectionEvent::calculateInjectorOutputMask() const {
 	switch (m_injectionMode) {
 		case IM_SIMULTANEOUS:
 			return (1u << engineConfiguration->cylindersCount) - 1;

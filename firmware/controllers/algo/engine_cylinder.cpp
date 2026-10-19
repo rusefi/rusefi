@@ -40,20 +40,20 @@ angle_t OneCylinder::getAngleOffset() const {
 void EngineCylinders::updateCylinders() {
 #if EFI_ENGINE_CONTROL
     // Update valid cylinders with their position in the firing order
-    uint16_t cylinderUpdateMask = 0;
+    CylinderMask cylinderUpdateMask = 0;
     for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
         auto cylinderNumber = getCylinderNumberAtIndex(i);
 
         engine->cylinders[cylinderNumber].updateCylinderNumber(i, cylinderNumber);
 
-        auto mask = 1 << cylinderNumber;
+        CylinderMask mask = 1 << cylinderNumber;
         // Assert that this cylinder was not configured yet
         efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, (cylinderUpdateMask & mask) == 0, "cylinder update err");
         cylinderUpdateMask |= mask;
     }
 
     // Assert that all cylinders were configured
-    uint16_t expectedMask = (1 << (engineConfiguration->cylindersCount)) - 1;
+    CylinderMask expectedMask = (1 << (engineConfiguration->cylindersCount)) - 1;
     efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, cylinderUpdateMask == expectedMask, "cylinder update err");
 
     // Invalidate the remaining cylinders

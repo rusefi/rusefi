@@ -54,6 +54,9 @@ struct efidatetime_t {
 
 using angle_t = float;
 
+// One bit per cylinder, including cylinder-indexed injector outputs.
+using CylinderMask = uint16_t;
+
 using engineSyncCam_e = uint8_t;
 
 // mass in grams

@@ -29,7 +29,7 @@ public:
 		ownIndex = index;
 	}
 
-	uint16_t calculateInjectorOutputMask() const;
+	CylinderMask calculateInjectorOutputMask() const;
 	uint8_t getIndex() const { return ownIndex; }
 
 private:
@@ -60,20 +60,22 @@ public:
 struct InjectorContext {
 	scheduler_arg_t raw = 0;
 
-	static constexpr scheduler_arg_t OutputMask = (1u << MAX_CYLINDER_COUNT) - 1;
+	static constexpr CylinderMask OutputMask = (1u << MAX_CYLINDER_COUNT) - 1;
 	static constexpr scheduler_arg_t EventIndexShift = MAX_CYLINDER_COUNT;
 	static constexpr scheduler_arg_t Stage2Flag = 1u << (MAX_CYLINDER_COUNT + 4);
 
-	constexpr InjectorContext(uint16_t mask, uint8_t eventIndex, bool stage2Active)
+	constexpr InjectorContext(CylinderMask mask, uint8_t eventIndex, bool stage2Active)
 		: raw((mask & OutputMask) | ((eventIndex & 0xF) << EventIndexShift) | (stage2Active ? Stage2Flag : 0)) {}
 
 	constexpr explicit InjectorContext(scheduler_arg_t value) : raw(value) {}
 
-	constexpr uint16_t outputsMask() const { return raw & OutputMask; }
+	constexpr CylinderMask outputsMask() const { return raw & OutputMask; }
 	constexpr uint8_t eventIndex() const { return (raw >> EventIndexShift) & 0xF; }
 	constexpr bool stage2Active() const { return raw & Stage2Flag; }
 };
 
+static_assert(MAX_CYLINDER_COUNT <= sizeof(CylinderMask) * 8,
+	"CylinderMask must have one bit per cylinder");
 static_assert(MAX_CYLINDER_COUNT <= 12);
 
 void startInjection(scheduler_arg_t arg);
