@@ -1,6 +1,7 @@
 # ECU firmware findings ordered by severity
 
-Review goal and progress: [goal.md](goal.md).
+This report ranks defects that remain in the current firmware. Fixed findings
+are tracked separately below; the active reproductions assert current defects.
 
 ## Ranking rules
 
@@ -21,128 +22,40 @@ Confidence labels: **reproduced** (focused execution demonstrates the defect),
 **candidate** (important premise still requires validation). Host execution
 does not establish hardware timing or the physical severity of an outcome.
 
-## Ranked findings
+## Active ranked findings
 
 | Rank | ID | Severity | Confidence | Finding |
 | --- | --- | --- | --- | --- |
-| 1 | ECU-010 | S1 — Critical | Reproduced | Cranking-to-running transition can leave a secondary injector continuously open |
-| 2 | ECU-036 | S1 — Critical | Reproduced | Pedal failure can arm anti-lag and keep ETB opening commanded |
-| 3 | ECU-030 | S1 — Critical | Reproduced | Brake and clutch cranking interlocks read pointer presence instead of pedal state |
-| 4 | ECU-031 | S1 — Critical | Reproduced | Releasing clutch-down can hold the starter on past timeout when no RPM is detected |
-| 5 | ECU-025 | S2 — High | Reproduced | Nitrous relay stays on while protection cuts ECU-managed fuel injection |
-| 6 | ECU-024 | S2 — High | Reproduced | Ignition schedule rebuild can leave the previously charged coil energized |
-| 7 | ECU-015 | S2 — High | Reproduced | A 1% traction spark cut becomes 100% hard cut or 50% soft cut |
-| 8 | ECU-035 | S2 — High | Reproduced | Vehicle-speed sensor failure activates the launch hard spark cut at road speed |
-| 9 | ECU-001 | S2 — High | Reproduced | Invalid wastegate/idle-valve controller outputs still drive the motor |
-| 10 | ECU-006 | S2 — High | Reproduced | Injector duty protection ignores saturation of secondary injectors |
-| 11 | ECU-017 | S2 — High | Reproduced | Primary injector duty protection ignores actual trims, wall film and cranking mode |
-| 12 | ECU-011 | S2 — High | Reproduced | Shared-coil ignition ignores cylinder timing trims and distributor odd-fire offsets |
-| 13 | ECU-012 | S2 — High | Source-confirmed; identity mismatch reproduced | Software knock uses firing-order position as physical cylinder identity |
-| 14 | ECU-020 | S2 — High | Reproduced | VVT keeps actuating with absent or indefinitely stale cam feedback |
-| 15 | ECU-004 | S2 — High | Reproduced | Invalid ethanol readings determine running-fuel stoichiometry |
-| 16 | ECU-005 | S2 — High | Reproduced | Invalid fuel pressure selects injection duration, mass correction and deadtime |
-| 17 | ECU-003 | S2 — High | Reproduced | Anti-lag ignores its configured maximum duration |
-| 18 | ECU-002 | S2 — High | Reproduced | Zero protection delays cause fuel cuts with healthy inputs, including disabled lambda protection |
-| 19 | ECU-014 | S2 — High | Reproduced | Invalid oil-pressure payload can assert or release a running fuel cut |
-| 20 | ECU-034 | S2 — High | Reproduced | MAP sensor failure releases an active boost fuel cut |
-| 21 | ECU-009 | S2 — High | Source-confirmed; reachability reproduced | Ninth/tenth forward gear indexes beyond the boost duty adder array |
-| 22 | ECU-027 | S2 — High | Source-confirmed; arithmetic reproduced | Zero HPFP lobes leave a configured GDI pump active with a nonfinite fuel request |
-| 23 | ECU-032 | S2 — High | Source-confirmed | Delayed software-knock window can be attributed to the next cylinder |
-| 24 | ECU-016 | S2 — High | Reproduced | Disabling active launch control retains its previous spark cut |
-| 25 | ECU-023 | S2 — High | Reproduced | Invalid flat-shift table input selects arbitrary spark cut and timing |
-| 26 | ECU-033 | S3 — Moderate | Arithmetic reproduced; scheduler path source-confirmed | Zero injector flow is accepted and yields an infinite pulse duration |
-| 27 | ECU-018 | S3 — Moderate | Reproduced | Priming bypasses disabled injection and delayed startup/flood-clear gates |
-| 28 | ECU-028 | S3 — Moderate | Reproduced | Kick-start cranking fires coils despite Lua spark cut or required phase sync |
-| 29 | ECU-008 | S3 — Moderate | Reproduced | Maximum oil-pressure timeout may already be expired at engine start |
-| 30 | ECU-013 | S3 — Moderate | Reproduced | Knock response treats retarded timing as hundreds of degrees of advance |
-| 31 | ECU-019 | S3 — Moderate | Reproduced | Percentage acceleration enrichment shrinks with batch/simultaneous injection |
-| 32 | ECU-022 | S3 — Moderate | Reproduced | TPS acceleration enrichment appears without a new throttle step after a stop |
-| 33 | ECU-026 | S3 — Moderate | Reproduced | Predictive MAP substitutes the previous run's estimate after a quick restart |
-| 34 | ECU-021 | S3 — Moderate | Reproduced | VVT activation delay discards fractional seconds |
-| 35 | ECU-007 | S3 — Moderate | Reproduced | DFCO ignition recovery uses a fixed half-second ramp |
-| 36 | ECU-029 | S3 — Moderate | Reproduced | Failed A/C pressure feedback can re-enable a compressor after a pressure cut |
-
-### ECU-010 — Mode transition leaves a secondary injector open
-
-- **Source:** `RpmCalculator::setRpmValue()` in
-  [rpm_calculator.cpp](firmware/controllers/engine_cycle/rpm_calculator.cpp),
-  `FuelSchedule::resetOverlapping()` / `InjectionEvent::update()` in
-  [fuel_schedule.cpp](firmware/controllers/engine_cycle/fuel_schedule.cpp),
-  injection close callbacks in
-  [main_trigger_callback.cpp](firmware/controllers/engine_cycle/main_trigger_callback.cpp),
-  and overlap accounting in
-  [injection_gpio.cpp](firmware/controllers/system/injection_gpio.cpp).
-- **Trigger:** Staging is active during batch-mode cranking; the engine crosses
-  the running threshold into sequential injection while a staged batch pulse
-  is open. These are supported settings: staging is inhibited for simultaneous
-  injection, but not for batch cranking.
-- **Actual:** The transition resets only primary injector outputs, then rebuilds
-  each event's output arrays. The second batch secondary output becomes null.
-  Its already queued close callback reads the rewritten array and never closes
-  that injector. Its unmatched overlap count survives; subsequent normal
-  sequential open/close pairs also leave it high.
-- **Expected:** Every opened injector must receive its matching close despite
-  schedule/mode changes. Any transition reset must handle both injector stages
-  and preserve the identity/lifetime of already scheduled actions.
-- **Impact:** Continuous secondary fuel delivery can cause severe overfueling,
-  a stall, fuel accumulation, cylinder washing and possible engine damage.
-  Host tests establish a persistent asserted output, not physical damage or
-  fuel volume. Exposure requires staging during batch cranking and a pulse
-  spanning the mode transition. The stopped-engine watchdog can turn physical
-  outputs off, but does not prevent the fault while the engine keeps running.
-- **Validation:** `CrankingToRunningLeavesSecondaryBatchInjectorOpen` uses real
-  injector models, the real fuel schedule, RPM state transition and scheduler.
-  With four cylinders, firing order 1-3-4-2, 50% staging and 11 ms pulses, it opens
-  the batch pair at 390 RPM and crosses the 400-RPM running threshold to
-  410 RPM after 1 ms.
-  After all callbacks drain, cylinder 4's secondary output remains high.
-  Another complete sequential pulse still leaves it high. The test cleans up
-  secondary pins explicitly because `EnginePins::reset()` also omits them. The
-  same test models the physical stop action that lowers the pin (compiled out
-  of the normal host build), then executes real stop/restart and batch scheduling.
-  The secondary overlap count remains one and suppresses the next batch pulse.
-  This extension establishes the state-machine consequence but does not run
-  hardware GPIO stop code or establish the physical restart result.
-- **Fix direction:** Reset both stages during transitions; ensure callbacks
-  close the outputs actually opened, rather than mutable event mappings.
-  Cover changes while opening is pending, during each stage, and on stop/restart.
-
-### ECU-036 — Pedal failure can arm anti-lag and hold ETB open
-
-- **Source:** `AntilagSystemBase::isALSMaxThrottleIntentCondition()` in
-  [antilag_system.cpp](firmware/controllers/algo/antilag_system.cpp) reads
-  invalid `DriverThrottleIntent` through `Sensor::getOrZero()`, allowing its
-  low-throttle gate. That sensor proxies the pedal for ETB installations in
-  [init_tps.cpp](firmware/init/sensor/init_tps.cpp). `EtbController::getSetpointEtb()`
-  in [electronic_throttle.cpp](firmware/controllers/actuators/electronic_throttle.cpp)
-  substitutes zero for a failed pedal, then adds `ALSEtbAdd` when anti-lag is
-  active. Its status path counts a persistent PPS fault only on the first
-  invalid edge; the intermittent-fault limit is greater than 50 edges.
-- **Trigger:** Anti-lag is enabled and armed at qualifying RPM and CLT, its
-  maximum-throttle gate is configured, and `ALSEtbAdd` is positive. A valid
-  pedal request above the gate then becomes invalid while ETB position
-  feedback stays valid.
-- **Actual:** Anti-lag changes from inactive to active because invalid driver
-  intent becomes zero. In the reproduced configuration, the 20% pedal target
-  becomes a 20% anti-lag target after pedal failure instead of the 1% ETB
-  fallback. With sensor checking active, the ETB controller still sends a
-  positive motor command.
-- **Expected:** Invalid pedal/driver-intent feedback must not arm anti-lag or
-  add an opening ETB target; throttle should return to its defined fault
-  fallback unless another independently safe request is present.
-- **Impact:** A pedal fault can leave the throttle driven open without a valid
-  driver request, creating a credible unintended-torque risk. The test proves
-  target and motor command on the host, not actual plate movement, torque or
-  any independent vehicle-level interlock.
-- **Validation:** `FailedPedalArmsAntilagAndOpensEtbTarget` starts at a valid
-  20% pedal request with anti-lag inactive, then invalidates both pedal and
-  proxied driver intent. Anti-lag arms, ETB remains targeted at 20%, and its
-  motor receives an opening command while the sensor checker is active.
-  Disabling anti-lag at the same invalid pedal restores the 1% target. The
-  focused GCC, full GCC, independent Clang and Valgrind runs pass.
-- **Fix direction:** Require valid driver intent for anti-lag arming; suppress
-  anti-lag ETB addition when the pedal is invalid. Cover persistent as well
-  as intermittent PPS faults through the actual motor-output path.
+| 1 | ECU-030 | S1 — Critical | Reproduced | Brake and clutch cranking interlocks read pointer presence instead of pedal state |
+| 2 | ECU-024 | S2 — High | Reproduced | Ignition schedule rebuild can leave the previously charged coil energized |
+| 3 | ECU-015 | S2 — High | Reproduced | A 1% traction spark cut becomes 100% hard cut or 50% soft cut |
+| 4 | ECU-001 | S2 — High | Reproduced | Invalid wastegate/idle-valve controller outputs still drive the motor |
+| 5 | ECU-006 | S2 — High | Reproduced | Injector duty protection ignores saturation of secondary injectors |
+| 6 | ECU-017 | S2 — High | Reproduced | Primary injector duty protection ignores actual trims, wall film and cranking mode |
+| 7 | ECU-011 | S2 — High | Reproduced | Shared-coil ignition ignores cylinder timing trims and distributor odd-fire offsets |
+| 8 | ECU-012 | S2 — High | Source-confirmed; identity mismatch reproduced | Software knock uses firing-order position as physical cylinder identity |
+| 9 | ECU-020 | S2 — High | Reproduced | VVT keeps actuating with absent or indefinitely stale cam feedback |
+| 10 | ECU-004 | S2 — High | Reproduced | Invalid ethanol readings determine running-fuel stoichiometry |
+| 11 | ECU-005 | S2 — High | Reproduced | Invalid fuel pressure selects injection duration, mass correction and deadtime |
+| 12 | ECU-003 | S2 — High | Reproduced | Anti-lag ignores its configured maximum duration |
+| 13 | ECU-002 | S2 — High | Reproduced | Zero protection delays cause fuel cuts with healthy inputs, including disabled lambda protection |
+| 14 | ECU-014 | S2 — High | Reproduced | Invalid oil-pressure payload can assert or release a running fuel cut |
+| 15 | ECU-034 | S2 — High | Reproduced | MAP sensor failure releases an active boost fuel cut |
+| 16 | ECU-009 | S2 — High | Source-confirmed; reachability reproduced | Ninth/tenth forward gear indexes beyond the boost duty adder array |
+| 17 | ECU-027 | S2 — High | Source-confirmed; arithmetic reproduced | Zero HPFP lobes leave a configured GDI pump active with a nonfinite fuel request |
+| 18 | ECU-032 | S2 — High | Source-confirmed | Delayed software-knock window can be attributed to the next cylinder |
+| 19 | ECU-023 | S2 — High | Reproduced | Invalid flat-shift table input selects arbitrary spark cut and timing |
+| 20 | ECU-033 | S3 — Moderate | Arithmetic reproduced; scheduler path source-confirmed | Zero injector flow is accepted and yields an infinite pulse duration |
+| 21 | ECU-018 | S3 — Moderate | Reproduced | Priming bypasses disabled injection and delayed startup/flood-clear gates |
+| 22 | ECU-028 | S3 — Moderate | Reproduced | Kick-start cranking fires coils despite Lua spark cut or required phase sync |
+| 23 | ECU-008 | S3 — Moderate | Reproduced | Maximum oil-pressure timeout may already be expired at engine start |
+| 24 | ECU-013 | S3 — Moderate | Reproduced | Knock response treats retarded timing as hundreds of degrees of advance |
+| 25 | ECU-019 | S3 — Moderate | Reproduced | Percentage acceleration enrichment shrinks with batch/simultaneous injection |
+| 26 | ECU-022 | S3 — Moderate | Reproduced | TPS acceleration enrichment appears without a new throttle step after a stop |
+| 27 | ECU-026 | S3 — Moderate | Reproduced | Predictive MAP substitutes the previous run's estimate after a quick restart |
+| 28 | ECU-021 | S3 — Moderate | Reproduced | VVT activation delay discards fractional seconds |
+| 29 | ECU-007 | S3 — Moderate | Reproduced | DFCO ignition recovery uses a fixed half-second ramp |
+| 30 | ECU-029 | S3 — Moderate | Reproduced | Failed A/C pressure feedback can re-enable a compressor after a pressure cut |
 
 ### ECU-030 — Brake and clutch cranking interlocks test pointer presence
 
@@ -173,75 +86,6 @@ does not establish hardware timing or the physical severity of an outcome.
   `engineState.clutchUpState` (or expose a value accessor) instead of the
   wrapper's pointer-presence conversion. Exercise all three condition modes
   with released and pressed pedals.
-
-### ECU-031 — Clutch-down release bypasses starter timeout before RPM detection
-
-- **Source:** `slowStartStopButtonCallback()` in
-  [start_stop.cpp](firmware/controllers/start_stop.cpp) returns early when
-  `CC_CLUTCH_DOWN` is selected and the pedal becomes false; this return
-  precedes `disengageStarterIfNeeded()`, which contains both running-engine
-  disengagement and the configured cranking-duration timeout.
-- **Trigger:** The starter is engaged with the clutch-down input active, but
-  RPM remains in the stopped state (for example, no usable trigger pulses).
-  The clutch-down input is then released before the configured duration ends.
-- **Actual:** Slow callbacks keep returning before the timeout check. The
-  starter output remains asserted even after the duration expires, until the
-  pedal becomes active again, RPM leaves the stopped state, or another path
-  changes the output. Once cranking RPM is detected, this early return does
-  not apply and the timeout runs. Loss of ignition-voltage indication also
-  returns before the timeout check, though that branch is not covered here.
-- **Expected:** Starter timeout and disengagement run regardless of whether
-  a condition for *new* starts remains satisfied.
-- **Impact:** On a manual-transmission vehicle left in gear, releasing the
-  clutch while the starter remains asserted can move the vehicle unexpectedly.
-  Extended engagement can also overheat or damage the starter and ring gear.
-  The logical output can remain on indefinitely while the ECU remains powered,
-  RPM stays stopped, and the clutch-down condition is false. Hardware relay,
-  drivetrain and power behavior were not tested.
-- **Validation:** `ReleasingClutchDownBypassesStarterCrankingTimeout` starts
-  a two-second starter attempt through the real button callback with the input
-  true and RPM stopped, releases the input, and invokes the slow callback after
-  three seconds. The output stays high; reasserting the input
-  lets that same callback run the expired timeout and turn it off.
-- **Fix direction:** Always service starter disengagement and timeout before
-  returning from input-permission checks. Add tests for pedal release,
-  ignition-voltage loss, suppression and engine-running transitions.
-
-### ECU-025 — Nitrous remains commanded during a fuel-protection cut
-
-- **Source:** `NitrousController::onSlowCallback()` in
-  [nitrous_controller.cpp](firmware/controllers/algo/nitrous_controller.cpp)
-  drives `enginePins.nitrousRelay` from arming and sensor windows only.
-  `getFuelCoefficient()` supplies the ECU's nitrous fuel adder through
-  [fuel_math.cpp](firmware/controllers/algo/fuel_math.cpp). `LimpManager::updateState()`
-  asserts boost and other fuel cuts in
-  [limp_manager.cpp](firmware/controllers/limp_manager.cpp), and `handleFuel()`
-  in [main_trigger_callback.cpp](firmware/controllers/engine_cycle/main_trigger_callback.cpp)
-  returns before injection when fuel is cut.
-- **Trigger:** Nitrous is armed and its permissive windows remain satisfied
-  while protection cuts injection, for example MAP crosses a lower boost-cut
-  threshold but stays below the configured nitrous maximum MAP.
-- **Actual:** The nitrous relay stays commanded on, while the corresponding
-  ECU fuel adder is not injected. The relay code never consults
-  `LimpManager::allowInjection()` or injection enable state.
-- **Expected:** A nitrous output that depends on ECU enrichment must turn off
-  when the ECU cannot deliver the associated fuel.
-- **Impact:** A dry-nitrous setup relying on this ECU fuel adder can continue
-  supplying oxidizer when injection is forbidden; the behavior as fuel delivery
-  resumes is not controlled by a relay interlock. A wet system with independent
-  fuel hardware could also defeat the ECU's torque cut. This is a failure of
-  fuel/oxidizer and protection coordination, but the host output state does not
-  establish a lean combustion event, physical solenoid timing, or damage.
-- **Validation:** `NitrousRelayRemainsOnDuringBoostFuelCut` uses the supported
-  Lua-gauge arming method with valid 2,000-RPM and 200-kPa inputs, a 300-kPa
-  nitrous maximum MAP, 180-kPa boost-cut threshold, and 25% fuel adder. The
-  relay and nitrous condition stay high after the real limp manager reports
-  `BoostCut` and forbids injection. The test asserts all seven nitrous
-  permissive conditions before the cut.
-- **Fix direction:** Interlock the relay with actual injection permission and
-  active fuel delivery, and define fail-safe timing for already energized
-  solenoids when a fast fuel cut occurs. Cover boost, oil-pressure, rev-limit,
-  and configured injection-disable paths.
 
 ### ECU-024 — Ignition schedule rebuild can orphan a charged coil
 
@@ -308,36 +152,6 @@ does not establish hardware timing or the physical severity of an outcome.
   telemetry units explicit, and test low/interpolated and full-scale requests
   plus combinations with launch, shift and Lua cuts. Existing target-ratio
   tests assert addition of the raw table value and therefore miss this defect.
-
-### ECU-035 — Invalid vehicle speed activates launch hard spark cut
-
-- **Source:** `LaunchControlBase::isInsideSpeedCondition()` in
-  [launch_control.cpp](firmware/controllers/algo/launch_control.cpp) reads
-  vehicle speed through `Sensor::getOrZero()` when the configured launch speed
-  threshold is nonzero. An invalid speed is therefore treated as zero and
-  satisfies the below-threshold gate. `LaunchControlBase::update()` can then
-  set a 100% launch spark skip; `EngineState::updateSparkSkip()` in
-  [engine2.cpp](firmware/controllers/algo/engine2.cpp) passes that ratio to
-  the hard spark limiter.
-- **Trigger:** Launch control is enabled and armed, driver intent and RPM are
-  above their launch thresholds, actual road speed is above the configured
-  launch speed limit, and vehicle-speed feedback fails or times out.
-- **Actual:** Launch control changes from inactive to active because invalid
-  speed becomes zero. With launch spark cut enabled, the hard spark-skip
-  target becomes 1.0 (100%) despite the prior above-limit speed.
-- **Expected:** Invalid speed feedback must not satisfy a configured
-  low-speed launch gate or activate its torque cut.
-- **Impact:** A sensor failure can cause abrupt spark/torque loss while the
-  vehicle is moving. The host test establishes the logic path and limiter
-  target, not actual road speed or combustion behavior.
-- **Validation:** `InvalidVehicleSpeedEnablesLaunchSparkCut` uses a 30-unit
-  speed threshold, 40-unit valid speed, 3,500 RPM, active throttle intent,
-  and always-armed launch mode. Valid speed inhibits launch; invalidating the
-  same sensor asserts launch and a 1.0 hard-skip target. The focused GCC,
-  full GCC, and independent Clang review runs pass.
-- **Fix direction:** Require a valid speed for any nonzero launch speed gate,
-  and test invalidation during an armed high-speed drive as well as startup
-  with no valid sample.
 
 ### ECU-001 — Invalid wastegate/idle-valve outputs still drive the motor
 
@@ -833,31 +647,6 @@ does not establish hardware timing or the physical severity of an outcome.
 - **Fix direction:** Bind cylinder and bank to each pending scheduler action,
   and exercise windows that cross one or more later sparks.
 
-### ECU-016 — Disabling launch control does not release its spark cut
-
-- **Source:** `LaunchControlBase::update()` / `getSparkSkipRatio()` in
-  [launch_control.cpp](firmware/controllers/algo/launch_control.cpp) and
-  [launch_control.h](firmware/controllers/algo/launch_control.h), consumed by
-  [engine2.cpp](firmware/controllers/algo/engine2.cpp).
-- **Trigger:** Launch control has an active nonzero spark cut when its enable
-  setting is changed to false, such as during live tuning.
-- **Actual:** `update()` returns immediately when disabled, retaining its old
-  `sparkSkipRatio`. The getter does not check the enable flag. The engine keeps
-  forwarding this stale ratio to its hard spark limiter even when launch's
-  public active-condition predicate is false and RPM/throttle no longer qualify.
-- **Expected:** Disabling the feature must release its torque interventions
-  and reset/rearm any relevant per-episode state.
-- **Impact:** A full prior launch cut can become persistent loss of ignition,
-  causing a stall or loss of propulsion. Exposure requires a live setting change
-  during an active launch intervention; an initially disabled feature is safe
-  from this specific stale-state fault.
-- **Validation:** `DisablingActiveLaunchControlLeavesFullSparkCut` activates
-  launch at 3,100 RPM with a 3,000-RPM target, disables it, then drops to 1,000 RPM
-  and zero throttle. Ten subsequent real fast callbacks still leave the hard
-  limiter at 1.0, and all ten checked spark decisions are skipped.
-- **Fix direction:** Clear cached launch outputs when disabled or gate every
-  consuming getter; test disable/re-enable, RPM/throttle release, and stop/restart.
-
 ### ECU-023 — Invalid flat-shift axis controls ignition cuts and timing
 
 - **Source:** `readGppwmChannel()` in
@@ -1212,11 +1001,19 @@ does not establish hardware timing or the physical severity of an outcome.
   configured sensor that has become invalid, and retain the safe compressor-off
   state on feedback loss. Cover low- and high-pressure failures and recovery.
 
+## Fixed findings
+
+| ID | Former defect | Current behavior and regression coverage |
+| --- | --- | --- |
+| ECU-010 | A batch-to-sequential transition could orphan an open secondary injector. | Injection callbacks carry a snapshot of the output mask, so in-flight close actions target the injectors they opened. `fuelControl.CrankingToRunningClosesSecondaryBatchInjector` and the adjacent staged-batch controls cover the transition. |
+| ECU-036 | A failed pedal could arm anti-lag and keep the ETB target open. | Anti-lag requires valid driver intent; ETB suppresses its anti-lag adder when the pedal or intent is invalid. `etb.failedPedalDisarmsAntilagAndClosesEtbTarget` covers the target and motor command. |
+| ECU-031 | Releasing clutch-down could bypass the starter timeout. | The slow button callback services an engaged starter before checking permission for a new start. `StartStopTest.ReleasingClutchDownDoesNotBypassStarterCrankingTimeout` covers release without RPM detection. |
+| ECU-025 | Nitrous could remain commanded during a fuel-protection cut. | Fast and slow nitrous callbacks clear the relay when `LimpManager::allowInjection()` is false. `NitrousControl.NitrousRelayTurnsOffDuringBoostFuelCut` covers boost cut and recovery. |
+| ECU-035 | Invalid vehicle speed could arm a launch spark cut. | A configured launch speed gate requires a valid speed reading. `LaunchControl.InvalidVehicleSpeedDoesNotEnableLaunchSparkCut` covers invalidation after a valid above-threshold reading. |
+| ECU-016 | Disabling launch could retain its prior spark cut. | The disabled update path clears cached launch state and spark skip ratio. `LaunchControl.DisablingActiveLaunchControlClearsSparkCut` covers an active cut followed by disabling. |
+
 ## Candidates under investigation
 
-- Secondary injector pending-action identity across synchronization and
-  injection-mode transitions. The stop/restart overlap effect is now covered
-  under ECU-010, with physical GPIO stop modeled because it is absent on host.
 - Software-knock pending cylinder identity is now ECU-032 for a configured
   window beginning after the next spark. Multispark interactions remain to
   be checked separately: `fireSparkAndPrepareNextSchedule()` schedules a
@@ -1267,19 +1064,12 @@ electrical behavior on an engine. The following checks bound the review.
   sensor registry and stored values, fuel-pressure compensation, flex fueling,
   nitrous activation, anti-lag, and knock control. Inspection does not mean all
   behavior in these areas is covered.
-- Baseline: `make -j12` succeeds; 69 existing tests pass with filter
-  `limp.*:LambdaMonitor.*:etb.*:BoostControl.*`.
-- Reproductions: `make -j12` succeeds; all fifty-six
-  `EcuLogicReview.*` tests pass together on GCC and independent Clang. The
-  expanded ECU-010 stop/restart test also passes. These tests intentionally assert
-  current defects, not corrected behavior.
-- Current full GCC ASan/bounds suite: all 1,812 tests pass, including all
-  fifty-six reproductions. Command: `cd unit_tests && make -j12 &&
-  build/rusefi_test`.
-- An independent Clang build with `SANITIZE=no` passes all fifty-six
-  reproductions. Valgrind Memcheck of that binary with
-  `--track-origins=yes --leak-check=no --error-exitcode=37` also passes all
-  fifty-six with zero reported errors. This is not a leak audit or proof of
-  hardware safety.
+- Host `make -j12` succeeds. All 50 remaining `EcuLogicReview.*` tests and
+  the six master regression tests named in the fixed-findings table pass
+  together on GCC with ASan/bounds enabled (56 tests total). The review tests
+  intentionally assert current defects; the fixed-findings tests assert the
+  corrected behavior.
+- The full GCC ASan/bounds suite passes: 1,823 tests from 297 suites. Command:
+  `cd unit_tests && make -j12 && build/rusefi_test`.
 - The build regenerated tracked generated files. They remain unstaged, per
   repository guidance; no production source has been changed for this review.

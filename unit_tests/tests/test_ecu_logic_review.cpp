@@ -11,9 +11,7 @@
 #include "high_pressure_fuel_pump.h"
 #include "limp_manager.h"
 #include "knock_logic.h"
-#include "launch_control.h"
 #include "mocks.h"
-#include "nitrous_controller.h"
 #include "spark_logic.h"
 #include "speed_density_airmass.h"
 #include "start_stop.h"
@@ -25,7 +23,7 @@ using ::testing::Return;
 using ::testing::StrictMock;
 
 // Investigation coverage: these tests deliberately assert the current defects.
-// Change their expectations with the subsequent fixes, per CLAUDE.md.
+// When a fix lands, update or remove its reproduction in favor of regression coverage.
 // The ranked findings and intended behavior are in order_by_severity.md.
 
 TEST(EcuLogicReview, ZeroLambdaDelayCutsEvenWhenProtectionDisabled) {
@@ -200,55 +198,6 @@ TEST(EcuLogicReview, AntilagRemainsActiveAfterConfiguredTimeout) {
 	EXPECT_TRUE(engine->antilagController.ALSTimerCondition);
 	EXPECT_TRUE(engine->antilagController.isAntilagCondition);
 	EXPECT_FLOAT_EQ(50, engine->antilagController.fuelALSCorrection);
-}
-
-TEST(EcuLogicReview, FailedPedalArmsAntilagAndOpensEtbTarget) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	engineConfiguration->antiLagEnabled = true;
-	engineConfiguration->antiLagActivationMode = ALWAYS_ON_ANTILAG;
-	engineConfiguration->ALSMinRPM = 400;
-	engineConfiguration->ALSMaxRPM = 3200;
-	engineConfiguration->ALSMinCLT = 50;
-	engineConfiguration->ALSMaxCLT = 105;
-	engineConfiguration->ALSMaxTPS = 5;
-	engineConfiguration->ALSEtbAdd = 20;
-	engineConfiguration->etbIdleThrottleRange = 0;
-	engineConfiguration->etbMinimumPosition = 1;
-	engineConfiguration->etbMaximumPosition = 100;
-	Sensor::setMockValue(SensorType::Rpm, 2000);
-	Sensor::setMockValue(SensorType::Clt, 80);
-	Sensor::setMockValue(SensorType::Tps1, 0, true);
-	Sensor::setMockValue(SensorType::AcceleratorPedal, 20, true);
-	Sensor::setMockValue(SensorType::DriverThrottleIntent, 20);
-	StrictMock<MockVp3d> pedalMap;
-	EXPECT_CALL(pedalMap, getValue(_, _))
-		.WillRepeatedly([](float, float pedal) { return pedal; });
-	StrictMock<MockMotor> motor;
-	EtbController etb;
-	ASSERT_TRUE(etb.init(DC_Throttle1, &motor, &engineConfiguration->etb, &pedalMap));
-	engine->antilagController.update();
-	ASSERT_FALSE(engine->antilagController.isAntilagCondition);
-	ASSERT_NEAR(20, etb.getSetpoint().value_or(-1), 0.01f);
-	auto& checker = engine->module<SensorChecker>().unmock();
-	checker.onIgnitionStateChanged(true);
-	eth.moveTimeForwardSec(6);
-	checker.onSlowCallback();
-	ASSERT_TRUE(checker.analogSensorsShouldWork());
-
-	Sensor::setInvalidMockValue(SensorType::AcceleratorPedal);
-	Sensor::setInvalidMockValue(SensorType::DriverThrottleIntent);
-	checker.onSlowCallback();
-	engine->antilagController.update();
-	ASSERT_TRUE(engine->antilagController.isAntilagCondition);
-	// Anti-lag's 20% adder replaces the lost pedal's 20% request, holding
-	// the throttle target open instead of returning to its 1% fallback.
-	EXPECT_NEAR(20, etb.getSetpoint().value_or(-1), 0.01f);
-	EXPECT_CALL(motor, enable());
-	EXPECT_CALL(motor, set(::testing::Gt(0.0f))).WillOnce(Return(false));
-	etb.update();
-	engineConfiguration->antiLagEnabled = false;
-	engine->antilagController.update();
-	EXPECT_NEAR(1, etb.getSetpoint().value_or(-1), 0.01f);
 }
 
 namespace {
@@ -454,102 +403,6 @@ TEST(EcuLogicReview, GearDetectorCanExceedBoostAdderForwardGearCapacity) {
 	EXPECT_GT(Sensor::getOrZero(SensorType::DetectedGear), forwardGearCapacity);
 }
 
-TEST(EcuLogicReview, CrankingToRunningLeavesSecondaryBatchInjectorOpen) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	// EnginePins::reset currently omits secondary injectors. Keep this test isolated,
-	// including early assertion exits, while exposing the production transition.
-	struct SecondaryPinCleanup {
-		~SecondaryPinCleanup() {
-			for (auto& pin : enginePins.injectorsStage2) {
-				pin.reset();
-			}
-		}
-	} cleanup;
-	engineConfiguration->cylindersCount = 4;
-	engineConfiguration->firingOrder = FO_1_3_4_2;
-	engineConfiguration->cranking.rpm = 400;
-	engineConfiguration->crankingInjectionMode = IM_BATCH;
-	engineConfiguration->injectionMode = IM_SEQUENTIAL;
-	engineConfiguration->enableStagedInjection = true;
-	engineConfiguration->injectorFlowAsMassFlow = true;
-	engineConfiguration->injector.flow = 1;
-	engineConfiguration->injectorSecondary.flow = 1;
-	engineConfiguration->injectorCompensationMode = ICM_None;
-	engineConfiguration->secondaryInjectorCompensationMode = ICM_None;
-	engineConfiguration->injectorNonlinearMode = INJ_None;
-	setTable(engineConfiguration->injector.battLagCorrTable, 1.0f);
-	setTable(engineConfiguration->injectorSecondary.battLagCorrTable, 1.0f);
-	setTable(config->injectorStagingTable, 50);
-	engine->updateTriggerConfiguration();
-	engine->rpmCalculator.setRpmValue(390);
-	ASSERT_TRUE(engine->rpmCalculator.isCranking());
-	// First RPM invokes the fast callback. Set the event's input snapshot after it.
-	engine->engineState.injectionStage2Fraction = getStage2InjectionFraction(390, 100);
-	engine->engineState.injectionDuration = 11;
-	engine->engineState.injectionOffset = 0;
-	engine->engineState.shouldUpdateInjectionTiming = true;
-	setArrayValues(engine->engineState.injectionMass, 0.02f);
-	engine->module<InjectorModelPrimary>().unmock().prepare();
-	engine->module<InjectorModelSecondary>().unmock().prepare();
-	ASSERT_NEAR(11, engine->module<InjectorModelSecondary>()->getInjectionDuration(0.01f), 0.001f);
-	engine->injectionEvents.addFuelEvents();
-	auto& event = engine->injectionEvents.elements[0];
-	ASSERT_EQ(&enginePins.injectorsStage2[3], event.outputsStage2[1]);
-	event.injectionStartAngle = 0;
-	event.onTriggerTooth(getTimeNowNt(), 0, 10);
-	eth.executeActions();
-	ASSERT_TRUE(enginePins.injectorsStage2[0].getLogicValue());
-	ASSERT_TRUE(enginePins.injectorsStage2[3].getLogicValue());
-
-	eth.moveTimeForwardUs(1000);
-	engine->rpmCalculator.setRpmValue(410);
-	ASSERT_FALSE(engine->rpmCalculator.isCranking());
-	ASSERT_EQ(nullptr, event.outputsStage2[1]);
-	eth.moveTimeForwardUs(20000);
-	eth.executeActions();
-	ASSERT_EQ(nullptr, engine->scheduler.getHead());
-	EXPECT_FALSE(enginePins.injectorsStage2[0].getLogicValue());
-	EXPECT_TRUE(enginePins.injectorsStage2[3].getLogicValue());
-
-	// A subsequent complete sequential pulse cannot remove the orphaned overlap.
-	auto& nextEvent = engine->injectionEvents.elements[2];
-	ASSERT_EQ(&enginePins.injectorsStage2[3], nextEvent.outputsStage2[0]);
-	nextEvent.injectionStartAngle = 0;
-	nextEvent.onTriggerTooth(getTimeNowNt(), 0, 10);
-	eth.executeActions();
-	ASSERT_TRUE(enginePins.injectorsStage2[3].getLogicValue());
-	eth.moveTimeForwardUs(20000);
-	eth.executeActions();
-	EXPECT_EQ(nullptr, engine->scheduler.getHead());
-	EXPECT_TRUE(enginePins.injectorsStage2[3].getLogicValue());
-
-	// Production EnginePins::stopPins() lowers a stuck physical output but does
-	// not clear its overlap count. That GPIO path is compiled out on the host;
-	// model its pin action, then exercise the real stop/restart and fuel schedule.
-	auto& orphan = enginePins.injectorsStage2[3];
-	ASSERT_EQ(1, orphan.getOverlappingCounter());
-	orphan.setLow();
-	ASSERT_FALSE(orphan.getLogicValue());
-	engine->rpmCalculator.setStopSpinning();
-	engine->rpmCalculator.setRpmValue(390);
-	ASSERT_TRUE(engine->rpmCalculator.isCranking());
-	ASSERT_EQ(1, orphan.getOverlappingCounter());
-	engine->engineState.injectionStage2Fraction = getStage2InjectionFraction(390, 100);
-	engine->engineState.injectionDuration = 11;
-	engine->engineState.injectionOffset = 0;
-	setArrayValues(engine->engineState.injectionMass, 0.02f);
-	engine->module<InjectorModelPrimary>().unmock().prepare();
-	engine->module<InjectorModelSecondary>().unmock().prepare();
-	event.injectionStartAngle = 0;
-	event.onTriggerTooth(getTimeNowNt(), 0, 10);
-	eth.executeActions();
-	EXPECT_FALSE(orphan.getLogicValue());
-	eth.moveTimeForwardUs(20000);
-	eth.executeActions();
-	EXPECT_FALSE(orphan.getLogicValue());
-	EXPECT_EQ(1, orphan.getOverlappingCounter());
-}
-
 TEST(EcuLogicReview, DistributorUsesFirstCylinderTimingTrimForEveryCylinder) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->cylindersCount = 4;
@@ -752,38 +605,6 @@ TEST(EcuLogicReview, OnePercentTractionSoftCutSkipsHalfTheSparks) {
 		skipped += engine->softSparkLimiter.shouldSkip();
 	}
 	EXPECT_EQ(50, skipped); // The consecutive-skip guard limits the erroneous cut.
-}
-
-TEST(EcuLogicReview, DisablingActiveLaunchControlLeavesFullSparkCut) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	engineConfiguration->launchControlEnabled = true;
-	engineConfiguration->launchActivationMode = ALWAYS_ACTIVE_LAUNCH;
-	engineConfiguration->launchRpm = 3000;
-	engineConfiguration->launchRpmWindow = 500;
-	engineConfiguration->launchRpmThreshold = 0;
-	engineConfiguration->launchSpeedThreshold = 0;
-	engineConfiguration->launchTpsThreshold = 50;
-	engineConfiguration->launchSparkCutEnable = true;
-	engineConfiguration->launchFuelCutEnable = false;
-	Sensor::setMockValue(SensorType::DriverThrottleIntent, 80);
-	engine->rpmCalculator.setRpmValue(3100);
-	engine->periodicFastCallback();
-	ASSERT_TRUE(engine->launchController.isLaunchOrPreLaunchCondition());
-	ASSERT_FLOAT_EQ(1, engine->hardSparkLimiter.getTargetSkipRatio());
-
-	engineConfiguration->launchControlEnabled = false;
-	Sensor::setMockValue(SensorType::DriverThrottleIntent, 0);
-	engine->rpmCalculator.setRpmValue(1000);
-	for (int i = 0; i < 10; i++) {
-		advanceTimeUs(10000);
-		engine->periodicFastCallback();
-	}
-	ASSERT_FALSE(engine->launchController.isLaunchOrPreLaunchCondition());
-	EXPECT_FLOAT_EQ(1, engine->launchController.getSparkSkipRatio());
-	EXPECT_FLOAT_EQ(1, engine->hardSparkLimiter.getTargetSkipRatio());
-	for (int i = 0; i < 10; i++) {
-		EXPECT_TRUE(engine->hardSparkLimiter.shouldSkip());
-	}
 }
 
 namespace {
@@ -1264,45 +1085,6 @@ TEST(EcuLogicReview, RebuildingIgnitionScheduleRedirectsPendingCoilShutoff) {
 	chargedCoil->setLow();
 }
 
-TEST(EcuLogicReview, NitrousRelayRemainsOnDuringBoostFuelCut) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	engineConfiguration->nitrousControlEnabled = true;
-	engineConfiguration->nitrousControlArmingMethod = LUA_GAUGE;
-	engineConfiguration->nitrousLuaGauge = LUA_GAUGE_1;
-	engineConfiguration->nitrousLuaGaugeMeaning = LUA_GAUGE_LOWER_BOUND;
-	engineConfiguration->nitrousLuaGaugeArmingValue = 1;
-	engineConfiguration->nitrousActivationRpm = 1000;
-	engineConfiguration->nitrousDeactivationRpm = 6000;
-	engineConfiguration->nitrousMinimumTps = 0;
-	engineConfiguration->nitrousMaximumMap = 300;
-	engineConfiguration->nitrousMaximumAfr = 0;
-	engineConfiguration->nitrousFuelAdderPercent = 25;
-	engineConfiguration->boostCutPressure = 180;
-	Sensor::setMockValue(SensorType::LuaGauge1, 1);
-	Sensor::setMockValue(SensorType::Map, 200);
-	engine->rpmCalculator.setRpmValue(2000);
-	auto& nitrous = engine->module<NitrousController>().unmock();
-	nitrous.onSlowCallback();
-	EXPECT_TRUE(nitrous.isNitrousArmed);
-	EXPECT_TRUE(nitrous.isNitrousSpeedCondition);
-	EXPECT_TRUE(nitrous.isNitrousTpsCondition);
-	EXPECT_TRUE(nitrous.isNitrousCltCondition);
-	EXPECT_TRUE(nitrous.isNitrousMapCondition);
-	EXPECT_TRUE(nitrous.isNitrousAfrCondition);
-	EXPECT_TRUE(nitrous.isNitrousRpmCondition);
-	ASSERT_TRUE(nitrous.isNitrousCondition);
-	ASSERT_TRUE(enginePins.nitrousRelay.getLogicValue());
-	ASSERT_FLOAT_EQ(1.25f, nitrous.getFuelCoefficient());
-
-	getLimpManager()->updateState(2000, getTimeNowNt());
-	ASSERT_EQ(ClearReason::BoostCut, getLimpManager()->allowInjection().reason);
-	// handleFuel() now returns before injecting the nitrous fuel adder, but the
-	// relay remains commanded on while all nitrous arming inputs stay valid.
-	nitrous.onSlowCallback();
-	EXPECT_TRUE(nitrous.isNitrousCondition);
-	EXPECT_TRUE(enginePins.nitrousRelay.getLogicValue());
-}
-
 TEST(EcuLogicReview, BoostFuelCutReleasesWhenMapSensorFails) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->boostCutPressure = 180;
@@ -1317,30 +1099,6 @@ TEST(EcuLogicReview, BoostFuelCutReleasesWhenMapSensorFails) {
 	ASSERT_FALSE(Sensor::get(SensorType::Map));
 	limp->updateState(2000, getTimeNowNt());
 	EXPECT_TRUE(limp->allowInjection());
-}
-
-TEST(EcuLogicReview, InvalidVehicleSpeedEnablesLaunchSparkCut) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	engineConfiguration->launchControlEnabled = true;
-	engineConfiguration->launchActivationMode = ALWAYS_ACTIVE_LAUNCH;
-	engineConfiguration->launchSpeedThreshold = 30;
-	engineConfiguration->launchTpsThreshold = 20;
-	engineConfiguration->launchRpm = 3000;
-	engineConfiguration->launchSparkCutEnable = true;
-	Sensor::setMockValue(SensorType::DriverThrottleIntent, 50);
-	Sensor::setMockValue(SensorType::Rpm, 3500);
-	Sensor::setMockValue(SensorType::VehicleSpeed, 40);
-	auto& launch = engine->launchController;
-	launch.update();
-	ASSERT_FALSE(launch.isLaunchCondition);
-	ASSERT_FLOAT_EQ(0, launch.getSparkSkipRatio());
-
-	Sensor::setInvalidMockValue(SensorType::VehicleSpeed);
-	launch.update();
-	EXPECT_TRUE(launch.isLaunchCondition);
-	EXPECT_FLOAT_EQ(1, launch.getSparkSkipRatio());
-	engine->engineState.updateSparkSkip();
-	EXPECT_FLOAT_EQ(1, engine->hardSparkLimiter.getTargetSkipRatio());
 }
 
 TEST(EcuLogicReview, PredictiveMapBlendReplaysAfterQuickEngineRestart) {
@@ -1492,32 +1250,5 @@ TEST(EcuLogicReview, ClutchUpInterlockAllowsButtonStartWithInputInactive) {
 	setMockState(engineConfiguration->startStopButtonPin, false);
 	slowStartStopButtonCallback();
 	EXPECT_TRUE(enginePins.starterControl.getLogicValue());
-	enginePins.starterControl.setValue(false);
-}
-
-TEST(EcuLogicReview, ReleasingClutchDownBypassesStarterCrankingTimeout) {
-	EngineTestHelper eth(engine_type_e::PROTEUS_BMW_M73);
-	engineConfiguration->startCrankingDuration = 2;
-	engineConfiguration->startButtonSuppressOnStartUpMs = 0;
-	engineConfiguration->crankingCondition = CC_CLUTCH_DOWN;
-	Sensor::setMockValue(SensorType::BatteryVoltage, 15);
-	engine->engineState.clutchDownState = true;
-	eth.moveTimeForwardSec(1);
-	setMockState(engineConfiguration->startStopButtonPin, true);
-	slowStartStopButtonCallback();
-	setMockState(engineConfiguration->startStopButtonPin, false);
-	slowStartStopButtonCallback();
-	ASSERT_TRUE(enginePins.starterControl.getLogicValue());
-	ASSERT_TRUE(engine->rpmCalculator.isStopped());
-
-	engine->engineState.clutchDownState = false;
-	eth.moveTimeForwardSec(3);
-	ASSERT_TRUE(engine->rpmCalculator.isStopped());
-	slowStartStopButtonCallback();
-	EXPECT_TRUE(enginePins.starterControl.getLogicValue());
-
-	engine->engineState.clutchDownState = true;
-	slowStartStopButtonCallback();
-	EXPECT_FALSE(enginePins.starterControl.getLogicValue());
 	enginePins.starterControl.setValue(false);
 }
