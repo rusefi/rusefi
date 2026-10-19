@@ -16,35 +16,6 @@ omit those gauges should disable the feature flag in their prepend. Check
 Keep validation enabled so misspelled or accidentally missing gauges fail
 generation.
 
-## Boost blends
-
-`Boost Blends` has two Open Loop and two Closed Loop entries. Each opens one
-expanding correction table with its input, load override, weight curve and six
-numeric readouts. Input Zero keeps the table visible with editing disabled.
-Closed Loop entries require Open + Closed Loop mode; Open Loop blends remain
-part of the output calculation in that mode too.
-
-Open Loop table values add percentage points to the control output. A +10 cell
-at 50% weight adds 5 points, taking 40% to 45% before later adjustments. Override
-Zero inherits the base open-loop table's Y Axis setting. Readouts show input,
-RPM, weight, calculated correction, table load and final boost output. The
-native correction telemetry has integer resolution.
-
-Closed Loop table values add kPa offsets to the pressure target. A +20 cell at
-50% weight adds 10 kPa before Lua and temperature target corrections. Override
-Zero uses driver demand: the configured pedal signal, otherwise TPS. The table
-label and load readout identify this default as Accel Pedal % or TPS %. Readouts show
-the target correction in kPa and the final target in absolute kPa, preserving
-the existing numeric channel and its 0.1-kPa correction resolution.
-
-Input weighting and table load are independent. Changing a source does not
-convert calibrated axis numbers. Configured and threshold status do not prove
-that a correction reaches the actuator; skipped calculations can leave old
-readouts, and sensor failures or unmet thresholds can select safe output.
-Help explains these cases. Calibration storage and boost calculations are
-unchanged; the UI identifies pressure corrections without changing the legacy
-telemetry schema.
-
 ## Template validation
 
 Conditions (`@@if_FLAG` and `@@if_block FLAG@@` / `@@endif_block`) require
