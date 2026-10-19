@@ -102,3 +102,42 @@ TEST(kickStart, limpManagerSuppressesNormalSpark) {
 	dut.updateState(KICK_START_MODE_MAX_RPM, 0);
 	EXPECT_TRUE(dut.allowIgnition());
 }
+
+TEST(kickStart, sparkBypassesLuaIgnitionCut) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->kickStartCranking = true;
+	engineConfiguration->ignitionDwellForCrankingMs = 3;
+	engine->ignitionState.updateDwell(0, true);
+	engine->engineState.lua.luaIgnCut = true;
+	getLimpManager()->updateState(0, getTimeNowNt());
+	ASSERT_EQ(ClearReason::Lua, getLimpManager()->allowIgnition().reason);
+	ASSERT_TRUE(getLimpManager()->allowTriggerInput());
+
+	eth.firePrimaryTriggerRise();
+	EXPECT_TRUE(enginePins.coils[0].getLogicValue());
+	EXPECT_TRUE(enginePins.coils[1].getLogicValue());
+	eth.moveTimeForwardAndInvokeEventsUs(4000);
+	EXPECT_FALSE(enginePins.coils[0].getLogicValue());
+	EXPECT_FALSE(enginePins.coils[1].getLogicValue());
+}
+
+TEST(kickStart, sparkBypassesRequiredPhaseSync) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->kickStartCranking = true;
+	engineConfiguration->isPhaseSyncRequiredForIgnition = true;
+	engineConfiguration->ignitionDwellForCrankingMs = 3;
+	setCrankOperationMode();
+	eth.setTriggerType(trigger_type_e::TT_HALF_MOON);
+	engine->ignitionState.updateDwell(0, true);
+	ASSERT_FALSE(engine->triggerCentral.triggerState.hasSynchronizedPhase());
+	getLimpManager()->updateState(0, getTimeNowNt());
+	ASSERT_FALSE(getLimpManager()->allowIgnition());
+	ASSERT_TRUE(getLimpManager()->allowTriggerInput());
+
+	eth.firePrimaryTriggerRise();
+	EXPECT_TRUE(enginePins.coils[0].getLogicValue());
+	EXPECT_TRUE(enginePins.coils[1].getLogicValue());
+	eth.moveTimeForwardAndInvokeEventsUs(4000);
+	EXPECT_FALSE(enginePins.coils[0].getLogicValue());
+	EXPECT_FALSE(enginePins.coils[1].getLogicValue());
+}
