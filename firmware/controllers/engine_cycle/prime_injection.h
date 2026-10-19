@@ -25,7 +25,7 @@ public:
 	}
 
 private:
-	uint16_t m_primeOutputsMask = 0;
+	CylinderMask m_primeOutputsMask = 0;
 
 	static void onPrimeStartAdapter(PrimeController* instance) {
 		instance->onPrimeStart();
