@@ -90,7 +90,7 @@ class CardGaugeTest {
         Graphics2D g = image.createGraphics();
         g.setFont(GaugeStyle.font(java.awt.Font.PLAIN, 12));
         String fitted = GaugeStyle.fit(g, "Coolant temperature sensor", 60);
-        assertTrue(fitted.endsWith("…"));
+        assertTrue(fitted.endsWith("\u2026"));
         assertTrue(g.getFontMetrics().stringWidth(fitted) <= 60);
         assertEquals("CLT", GaugeStyle.fit(g, "CLT", 60));
         g.dispose();

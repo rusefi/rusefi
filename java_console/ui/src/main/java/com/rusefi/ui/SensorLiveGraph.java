@@ -3,7 +3,6 @@ package com.rusefi.ui;
 import com.opensr5.ini.GaugeModel;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.NamedThreadFactory;
-import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.ISensorCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCategory;
@@ -11,6 +10,7 @@ import com.rusefi.core.SensorCentral;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.ui.widgets.GaugeMenuSearch;
+import com.rusefi.ui.widgets.GaugeStyle;
 import com.rusefi.ui.widgets.GaugeMenuLabel;
 import com.rusefi.ui.widgets.SensorGauge;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +18,13 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Line2D;
+import java.awt.geom.Path2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.geom.RoundRectangle2D;
 import java.util.LinkedList;
+import java.util.Locale;
 import java.util.concurrent.ThreadFactory;
 
 /**
@@ -34,6 +40,9 @@ public class SensorLiveGraph extends JPanel {
     private static final String USE_AUTO_SCALE = "auto_scale";
     private static final String UPPER = "upper";
     private static final String LOWER = "lower";
+    private static final Color DANGER_BAND = new Color(0xFF, 0xCD, 0xD2, 110);
+    private static final Color AREA_TOP = new Color(0xF6, 0xC4, 0x45, 120);
+    private static final Color AREA_BOTTOM = new Color(0xF6, 0xC4, 0x45, 0);
 
     private final LinkedList<Double> values = new LinkedList<>();
     private final UIContext uiContext;
@@ -80,7 +89,7 @@ public class SensorLiveGraph extends JPanel {
 
         addMouseListener(mouseListener);
 
-        setBorder(BorderFactory.createLineBorder(Color.black));
+        setOpaque(false);
     }
 
     @NotNull
@@ -105,17 +114,8 @@ public class SensorLiveGraph extends JPanel {
     }
 
     private void grabNewValue() {
-        String channelName = gaugeName;
-        BinaryProtocol bp = uiContext.getLinkManager().getBinaryProtocol();
-        if (bp != null) {
-            IniFileModel iniFile = bp.getIniFileNullable();
-            if (iniFile != null) {
-                GaugeModel gaugeModel = iniFile.getGauge(gaugeName);
-                if (gaugeModel != null) {
-                    channelName = gaugeModel.getChannel();
-                }
-            }
-        }
+        GaugeModel gaugeModel = findGaugeModel();
+        String channelName = gaugeModel == null ? gaugeName : gaugeModel.getChannel();
 
         addValue(SensorCentral.getInstance().getValue(channelName));
         SwingUtilities.invokeLater(new Runnable() {
@@ -312,141 +312,276 @@ public class SensorLiveGraph extends JPanel {
         }
     }
 
-    private synchronized void addValue(double value) {
+    synchronized void addValue(double value) {
         if (values.size() > COUNT)
             values.removeFirst();
         values.add(value);
     }
 
+    /** Gauge definition from the loaded .ini, available with or without an ECU connection. */
+    private GaugeModel findGaugeModel() {
+        IniFileModel iniFile = uiContext.iniFileState.getIniFileModel();
+        return iniFile == null ? null : iniFile.getGauge(gaugeName);
+    }
+
     @Override
-    public synchronized void paint(Graphics g) {
-        super.paint(g);
-
-        Dimension d = getSize();
-        if (d.height < 5)
-            return; // it's hopeless
-        g.setColor(Color.black);
-
-        VisibleRange range = getRange();
-
-        paintGraph(g, d, range.minValue, range.maxValue);
-
-        g.setColor(Color.red);
-        int minY = d.height;
-        int maxY = g.getFont().getSize();
-        g.drawString(String.format("%.2f", range.minValue), 5, minY);
-        g.drawString(String.format("%.2f", (range.minValue + range.maxValue) / 2), 5, (minY + maxY) / 2);
-        g.drawString(String.format("%.2f", range.maxValue), 5, maxY);
-
-        g.setColor(Color.blue);
-        String title = null;
-        BinaryProtocol bp = uiContext.getLinkManager().getBinaryProtocol();
-        if (bp != null) {
-            IniFileModel iniFile = bp.getIniFileNullable();
-            if (iniFile != null) {
-                GaugeModel gaugeModel = iniFile.getGauge(gaugeName);
-                if (gaugeModel != null) {
-                    title = gaugeModel.getTitle();
-                }
+    protected void paintComponent(Graphics graphics) {
+        super.paintComponent(graphics);
+        int width = getWidth();
+        int height = getHeight();
+        if (width < 40 || height < 40) {
+            return;
+        }
+        double[] samples;
+        synchronized (this) {
+            samples = new double[values.size()];
+            int i = 0;
+            for (double value : values) {
+                samples[i++] = value;
             }
         }
-        if (title == null) {
-            Sensor s = Sensor.lookup(gaugeName, null);
-            title = s == null ? gaugeName : s.getName();
+        Graphics2D g = (Graphics2D) graphics.create();
+        try {
+            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+            g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+            RoundRectangle2D.Double face = GaugeStyle.paintCard(g, width, height);
+            paintGraph(g, face, samples, findGaugeModel());
+        } finally {
+            g.dispose();
         }
-        String sensorName = title + " ";
-        int nameWidth = g.getFontMetrics().stringWidth(sensorName);
-        g.drawString(sensorName, d.width - nameWidth, g.getFont().getSize());
-
-        Font f = g.getFont();
-        g.setFont(new Font(f.getName(), f.getStyle(), 3 * f.getSize()));
-
-        if (!values.isEmpty())
-            paintLastValue(g, d);
     }
 
-    private VisibleRange getRange() {
-        VisibleRange range;
-        if (autoScale) {
-            range = VisibleRange.findRange(values);
-        } else {
-            double maxValue = 0;
-            double minValue = 0;
+    private void paintGraph(Graphics2D g, RoundRectangle2D.Double face, double[] samples, GaugeModel model) {
+        double pad = Math.max(8, 0.06 * Math.min(face.width, face.height));
+        double left = face.x + pad;
+        double right = face.x + face.width - pad;
+        double bottom = face.y + face.height - pad;
+        double last = samples.length == 0 ? Double.NaN : samples[samples.length - 1];
+        double danger = dangerThreshold(model);
+        boolean inDanger = Double.isFinite(last) && last >= danger;
 
-            BinaryProtocol bp = uiContext.getBinaryProtocol();
-            if (bp != null) {
-                IniFileModel iniFile = bp.getIniFileNullable();
-                if (iniFile != null) {
-                    GaugeModel gaugeModel = iniFile.getGauge(gaugeName);
-                    if (gaugeModel != null) {
-                        maxValue = gaugeModel.getHighValue();
-                        minValue = gaugeModel.getLowValue();
-                    }
-                }
+        // Header: title on the left, the latest value and its units on the right.
+        Font valueFont = GaugeStyle.font(Font.BOLD, (float) clamp(face.height * 0.13, 12, 28));
+        Font unitsFont = GaugeStyle.font(Font.PLAIN, valueFont.getSize2D() * 0.5f);
+        FontMetrics valueMetrics = g.getFontMetrics(valueFont);
+        double headerBaseline = face.y + pad + valueMetrics.getAscent() * 0.9;
+        String units = units(model);
+        g.setFont(unitsFont);
+        g.setColor(GaugeStyle.SCALE);
+        double unitsWidth = g.getFontMetrics().stringWidth(units);
+        GaugeStyle.drawText(g, units, right, headerBaseline, 1);
+        int decimals = model == null ? 2 : Math.max(0, Math.min(6, model.getValueDecimalPlaces()));
+        String text = Double.isFinite(last) ? format(last, decimals) : "---";
+        g.setFont(valueFont);
+        g.setColor(!Double.isFinite(last) ? GaugeStyle.TICK : inDanger ? GaugeStyle.DANGER : GaugeStyle.TEXT);
+        double valueRight = right - unitsWidth - (units.isEmpty() ? 0 : valueFont.getSize2D() * 0.2);
+        GaugeStyle.drawText(g, text, valueRight, headerBaseline, 1);
+        double valueLeft = valueRight - valueMetrics.stringWidth(text);
+        g.setFont(GaugeStyle.font(Font.PLAIN, (float) clamp(face.height * 0.08, 10, 15)));
+        g.setColor(GaugeStyle.SCALE);
+        GaugeStyle.drawText(g, GaugeStyle.fit(g, getTitle(model), valueLeft - left - pad), left, headerBaseline, -1);
+
+        // Plot: scale labels on the left, light grid lines, the danger band, then the series.
+        VisibleRange range = getRange(samples, model);
+        Font labelFont = GaugeStyle.font(Font.PLAIN, (float) clamp(face.height * 0.06, 9, 12));
+        FontMetrics labelMetrics = g.getFontMetrics(labelFont);
+        double plotTop = headerBaseline + valueMetrics.getDescent() + Math.max(6, face.height * 0.05)
+            + labelMetrics.getAscent() / 2.0;
+        double plotBottom = bottom - labelMetrics.getAscent() / 2.0;
+        if (plotBottom - plotTop < 10) {
+            return;
+        }
+        int labelDecimals = labelDecimals(range);
+        String[] labels = {format(range.maxValue, labelDecimals),
+            format((range.minValue + range.maxValue) / 2, labelDecimals), format(range.minValue, labelDecimals)};
+        double labelWidth = 0;
+        for (String label : labels) {
+            labelWidth = Math.max(labelWidth, labelMetrics.stringWidth(label));
+        }
+        double plotLeft = left + labelWidth + 8;
+        if (right - plotLeft < 20) {
+            return;
+        }
+        Plot plot = new Plot(plotLeft, plotTop, right, plotBottom, range);
+
+        if (danger < range.maxValue) {
+            double y = plot.y(Math.max(danger, range.minValue));
+            g.setColor(DANGER_BAND);
+            g.fill(new Rectangle2D.Double(plotLeft, plotTop, right - plotLeft, y - plotTop));
+        }
+        g.setStroke(new BasicStroke(1f));
+        g.setColor(GaugeStyle.GRID);
+        for (int i = 0; i <= 4; i++) {
+            double y = plotTop + (plotBottom - plotTop) * i / 4;
+            g.draw(new Line2D.Double(plotLeft, y, right, y));
+        }
+        g.setFont(labelFont);
+        g.setColor(GaugeStyle.TICK);
+        for (int i = 0; i < labels.length; i++) {
+            double y = plotTop + (plotBottom - plotTop) * i / 2;
+            GaugeStyle.drawText(g, labels[i], plotLeft - 8, y + labelMetrics.getAscent() / 2.0 - 1, 1);
+        }
+
+        Shape oldClip = g.getClip();
+        g.clip(new Rectangle2D.Double(plotLeft, plotTop - 6, right - plotLeft + 1, plotBottom - plotTop + 12));
+        // New readings enter on the right; a missing reading breaks the line.
+        double step = (right - plotLeft) / COUNT;
+        int start = 0;
+        while (start < samples.length) {
+            if (!Double.isFinite(samples[start])) {
+                start++;
+                continue;
             }
-
-            range = new VisibleRange(Double.isNaN(customLower) ? minValue : customLower,
-                    Double.isNaN(customUpper) ? maxValue : customUpper);
-        }
-        return range;
-    }
-
-    private void paintLastValue(Graphics g, Dimension d) {
-        Double last = values.getLast();
-        if (!Double.isNaN(last)) {
-            String currentValue = String.format("%.2f", last);
-            g.drawString(currentValue, (d.width - g.getFontMetrics().stringWidth(currentValue)) / 2, d.height / 2 + g.getFont().getSize() / 2);
-        }
-    }
-
-    private void paintGraph(Graphics g, Dimension d, double minValue, double maxValue) {
-        int index = 0;
-        int prevX = 0;
-        int prevY = 0;
-        for (double value : values) {
-            int x = d.width * index / values.size();
-
-            int y = (int) (d.height - (value - minValue) * d.height / (maxValue - minValue));
-
-            g.drawOval(x, y, 3, 3);
-
-            if (index > 0) {
-                g.drawLine(x, y, prevX, prevY);
+            int end = start;
+            while (end + 1 < samples.length && Double.isFinite(samples[end + 1])) {
+                end++;
             }
-
-            prevX = x;
-            prevY = y;
-            index++;
+            paintSegment(g, plot, samples, start, end, step);
+            start = end + 1;
+        }
+        g.setClip(oldClip);
+        if (Double.isFinite(last)) {
+            double x = right;
+            double y = plot.y(Math.max(range.minValue, Math.min(range.maxValue, last)));
+            g.setColor(Color.WHITE);
+            g.fill(new Ellipse2D.Double(x - 4.5, y - 4.5, 9, 9));
+            g.setColor(inDanger ? GaugeStyle.DANGER : GaugeStyle.LINE);
+            g.setStroke(new BasicStroke(2.5f));
+            g.draw(new Ellipse2D.Double(x - 4.5, y - 4.5, 9, 9));
         }
     }
 
-    private static class VisibleRange {
-        private final double minValue;
-        private final double maxValue;
+    /** A smooth line through consecutive readings, over a fill that fades towards the bottom. */
+    private void paintSegment(Graphics2D g, Plot plot, double[] samples, int start, int end, double step) {
+        int count = end - start + 1;
+        double[] xs = new double[count];
+        double[] ys = new double[count];
+        for (int i = 0; i < count; i++) {
+            xs[i] = plot.right - (samples.length - 1 - (start + i)) * step;
+            ys[i] = plot.y(samples[start + i]);
+        }
+        Path2D.Double line = new Path2D.Double();
+        line.moveTo(xs[0], ys[0]);
+        for (int i = 1; i < count; i++) {
+            // Catmull-Rom through the neighbouring readings, as cubic Bezier segments.
+            double x0 = xs[Math.max(0, i - 2)];
+            double y0 = ys[Math.max(0, i - 2)];
+            double x3 = xs[Math.min(count - 1, i + 1)];
+            double y3 = ys[Math.min(count - 1, i + 1)];
+            line.curveTo(xs[i - 1] + (xs[i] - x0) / 6, ys[i - 1] + (ys[i] - y0) / 6,
+                xs[i] - (x3 - xs[i - 1]) / 6, ys[i] - (y3 - ys[i - 1]) / 6, xs[i], ys[i]);
+        }
+        if (count > 1) {
+            Path2D.Double area = new Path2D.Double(line);
+            area.lineTo(xs[count - 1], plot.bottom);
+            area.lineTo(xs[0], plot.bottom);
+            area.closePath();
+            g.setPaint(new GradientPaint(0, (float) plot.top, AREA_TOP, 0, (float) plot.bottom, AREA_BOTTOM));
+            g.fill(area);
+        }
+        g.setColor(GaugeStyle.LINE);
+        g.setStroke(new BasicStroke(2.2f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        g.draw(line);
+    }
 
-        public VisibleRange(double minValue, double maxValue) {
+    private String getTitle(GaugeModel model) {
+        if (model != null) {
+            return GaugeMenuLabel.getTitle(uiContext, model);
+        }
+        Sensor s = Sensor.lookup(gaugeName, null);
+        return s == null ? gaugeName : s.getName();
+    }
+
+    private static String units(GaugeModel model) {
+        return model == null || model.getUnitsValue().isExpression() ? "" : model.getUnits();
+    }
+
+    /** Readings at or above this are drawn as danger; infinite when the gauge defines none. */
+    private static double dangerThreshold(GaugeModel model) {
+        if (model == null || model.getHighDangerValueValue().isExpression()) {
+            return Double.POSITIVE_INFINITY;
+        }
+        double danger = model.getHighDangerValue();
+        return Double.isFinite(danger) && danger < model.getHighValue() ? danger : Double.POSITIVE_INFINITY;
+    }
+
+    private static int labelDecimals(VisibleRange range) {
+        double span = range.maxValue - range.minValue;
+        return span >= 100 ? 0 : span >= 10 ? 1 : 2;
+    }
+
+    private static String format(double value, int decimals) {
+        return String.format(Locale.ROOT, "%." + decimals + "f", value == 0 ? 0 : value);
+    }
+
+    private static double clamp(double value, double min, double max) {
+        return Math.max(min, Math.min(max, value));
+    }
+
+    private static final class Plot {
+        final double left;
+        final double top;
+        final double right;
+        final double bottom;
+        final VisibleRange range;
+
+        Plot(double left, double top, double right, double bottom, VisibleRange range) {
+            this.left = left;
+            this.top = top;
+            this.right = right;
+            this.bottom = bottom;
+            this.range = range;
+        }
+
+        double y(double value) {
+            return bottom - (value - range.minValue) * (bottom - top) / (range.maxValue - range.minValue);
+        }
+    }
+
+    /** Fixed .ini (or custom) bounds, or the readings' own range when auto scaling or no bounds are known. */
+    VisibleRange getRange(double[] samples, GaugeModel model) {
+        if (!autoScale) {
+            double min = model == null || model.getLowValueValue().isExpression() ? Double.NaN : model.getLowValue();
+            double max = model == null || model.getHighValueValue().isExpression() ? Double.NaN : model.getHighValue();
+            min = Double.isNaN(customLower) ? min : customLower;
+            max = Double.isNaN(customUpper) ? max : customUpper;
+            if (Double.isFinite(min) && Double.isFinite(max) && max > min) {
+                return new VisibleRange(min, max);
+            }
+        }
+        return VisibleRange.findRange(samples);
+    }
+
+    static class VisibleRange {
+        final double minValue;
+        final double maxValue;
+
+        VisibleRange(double minValue, double maxValue) {
             this.minValue = minValue;
             this.maxValue = maxValue;
         }
 
-        public static VisibleRange findRange(LinkedList<Double> values) {
-            double minValue = Double.MAX_VALUE;
-            double maxValue = -Double.MAX_VALUE;
+        /** Range of the finite readings with a small margin; 0..1 when there are none. */
+        static VisibleRange findRange(double[] values) {
+            double minValue = Double.POSITIVE_INFINITY;
+            double maxValue = Double.NEGATIVE_INFINITY;
             for (double value : values) {
-                minValue = Math.min(minValue, value);
-                maxValue = Math.max(maxValue, value);
+                if (Double.isFinite(value)) {
+                    minValue = Math.min(minValue, value);
+                    maxValue = Math.max(maxValue, value);
+                }
             }
-
-            if (minValue == maxValue) { // double equals should work here, should it?
-                minValue = 0.9 * maxValue - 1;
-                maxValue = 1.1 * maxValue + 1;
-            } else {
-                // expand the range just a bit for borders
-                double diff = maxValue - minValue;
-                minValue -= 0.05 * diff;
-                maxValue += 0.05 * diff;
+            if (minValue > maxValue) {
+                return new VisibleRange(0, 1);
             }
-            return new VisibleRange(minValue, maxValue);
+            if (minValue == maxValue) {
+                double margin = Math.max(1, Math.abs(maxValue) * 0.1);
+                return new VisibleRange(minValue - margin, maxValue + margin);
+            }
+            // expand the range just a bit for borders
+            double diff = maxValue - minValue;
+            return new VisibleRange(minValue - 0.05 * diff, maxValue + 0.05 * diff);
         }
     }
 }
