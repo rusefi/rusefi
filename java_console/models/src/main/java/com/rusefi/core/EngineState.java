@@ -157,6 +157,10 @@ public class EngineState {
                 return "";
             }
             String unknownKey = response.substring(0, keyEnd);
+            if (unknownKey.isEmpty()) {
+                // Empty key, such as a sequence of delimiters: consume one and continue.
+                return response.substring(keyEnd + Integration.LOG_DELIMITER.length());
+            }
             if (Integration.PROTOCOL_VERSION_TAG.equalsIgnoreCase(unknownKey) || Integration.PROTOCOL_OUTPIN.equalsIgnoreCase(unknownKey)) {
                 return "";
             }
@@ -167,7 +171,7 @@ public class EngineState {
                 // discarding invalid line
                 return "";
             }
-            String value = response.substring(keyEnd, valueEnd);
+            String value = response.substring(keyEnd + Integration.LOG_DELIMITER.length(), valueEnd);
             log.info("Invalid key [" + unknownKey + "] value [" + value + "]");
             // trying to process the rest of the line
             response = response.substring(valueEnd + Integration.LOG_DELIMITER.length());

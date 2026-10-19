@@ -63,6 +63,19 @@ public class EngineStateTest {
         state.processNewData(String.join(Integration.LOG_DELIMITER, tokens) + Integration.LOG_DELIMITER + "\r\n", LinkDecoder.VOID);
     }
 
+    @Test void sequenceOfDelimitersIsConsumedAndDoesNotAffectValidKeys() {
+        List<String> values = new ArrayList<>();
+        EngineState state = new EngineState(new EngineState.EngineStateListenerImpl());
+        state.registerStringValueAction("a", values::add);
+        String delimiters = String.join("", java.util.Collections.nCopies(43, Integration.LOG_DELIMITER));
+
+        state.processNewData(delimiters + "\r\n", LinkDecoder.VOID);
+        assertTrue(values.isEmpty());
+        state.processNewData(delimiters + "a" + Integration.LOG_DELIMITER + "one" + Integration.LOG_DELIMITER + "\r\n", LinkDecoder.VOID);
+
+        assertEquals(Arrays.asList("one"), values);
+    }
+
     @Test
     public void startsWithIgnoreCase() {
         assertTrue(EngineState.startWithIgnoreCase("HELLO", "he"));
