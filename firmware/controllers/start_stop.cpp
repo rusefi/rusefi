@@ -68,6 +68,11 @@ PUBLIC_API_WEAK bool isCrankingSuppressed() {
 }
 
 void slowStartStopButtonCallback() {
+	// Always service an active starter before checks that can reject a new start.
+	if (enginePins.starterControl.getLogicValue()) {
+		disengageStarterIfNeeded();
+	}
+
   if (!isIgnVoltage()) {
     // nothing to crank if we are powered only via USB
     engine->startStopState.timeSinceIgnitionPower.reset();
@@ -108,11 +113,5 @@ void slowStartStopButtonCallback() {
 	// todo: we shall extract start_stop.txt from engine_state.txt
 	engine->engineState.startStopState = startStopState;
 	engine->engineState.startStopPhysicalState = engine->startStopState.startStopButtonDebounce.getPhysicalState();
-
-    bool isStarterEngaged = enginePins.starterControl.getLogicValue();
-
-	if (isStarterEngaged) {
-	    disengageStarterIfNeeded();
-   	}
 }
 #endif // EFI_SHAFT_POSITION_INPUT

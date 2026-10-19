@@ -115,7 +115,7 @@ TEST_F(StartStopTest, buttonStartCancelsStopRequest) {
 	EXPECT_FALSE(getLimpManager()->shutdownController.isEngineStop(getTimeNowNt()));
 }
 
-TEST_F(StartStopTest, ReleasingClutchDownBypassesStarterCrankingTimeout) {
+TEST_F(StartStopTest, ReleasingClutchDownDoesNotBypassStarterCrankingTimeout) {
 	// Reproduce a button start with the required clutch-down input and no RPM signal.
 	// The starter must eventually time out even if the driver releases the clutch.
 	EngineTestHelper eth(engine_type_e::PROTEUS_BMW_M73);
@@ -133,16 +133,15 @@ TEST_F(StartStopTest, ReleasingClutchDownBypassesStarterCrankingTimeout) {
 	ASSERT_TRUE(engine->rpmCalculator.isStopped());
 
 	// Release the clutch while the starter is on, then pass the two-second limit.
-	// Without RPM, this callback returns at the clutch check before servicing
-	// the starter timeout. The still-active starter could move a car left in gear.
+	// The clutch check must not skip the timeout: a starter left active while
+	// the clutch is released could move a car left in gear.
 	engine->engineState.clutchDownState = false;
 	eth.moveTimeForwardSec(3);
 	ASSERT_TRUE(engine->rpmCalculator.isStopped());
 	slowStartStopButtonCallback();
-	// This assertion records the bug; a timeout fix should make it false.
-	EXPECT_TRUE(enginePins.starterControl.getLogicValue());
+	EXPECT_FALSE(enginePins.starterControl.getLogicValue());
 
-	// Reasserting clutch-down reaches the already-expired timeout and shuts it off.
+	// Reasserting clutch-down must not restart the expired attempt.
 	engine->engineState.clutchDownState = true;
 	slowStartStopButtonCallback();
 	EXPECT_FALSE(enginePins.starterControl.getLogicValue());
