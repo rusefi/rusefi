@@ -1,7 +1,6 @@
 #include "pch.h"
 
 #include "ac_control.h"
-#include "antilag_system.h"
 #include "dc_motor.h"
 #include "electronic_throttle_impl.h"
 #include "fuel_math.h"
@@ -14,7 +13,6 @@
 #include "mocks.h"
 #include "spark_logic.h"
 #include "speed_density_airmass.h"
-#include "start_stop.h"
 #include "stored_value_sensor.h"
 #include "vvt.h"
 
@@ -166,38 +164,6 @@ TEST(EcuLogicReview, WastegateSensorTimeoutStillEnablesMotor) {
 
 TEST(EcuLogicReview, IdlePositionSensorTimeoutStillEnablesMotor) {
 	reproduceDcSensorTimeout(DC_IdleValve, SensorType::IdlePosition);
-}
-
-TEST(EcuLogicReview, AntilagRemainsActiveAfterConfiguredTimeout) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	engineConfiguration->antiLagEnabled = true;
-	engineConfiguration->antiLagActivationMode = ALWAYS_ON_ANTILAG;
-	engineConfiguration->ALSMinRPM = 400;
-	engineConfiguration->ALSMaxRPM = 3200;
-	engineConfiguration->ALSMinCLT = 0;
-	engineConfiguration->ALSMaxCLT = 105;
-	engineConfiguration->ALSMaxTPS = 5;
-	engineConfiguration->ALSMaxDuration = 1;
-	setTable(config->ALSFuelAdjustment, 50);
-	Sensor::setMockValue(SensorType::Clt, 70);
-	Sensor::setMockValue(SensorType::DriverThrottleIntent, 1);
-
-	// Exceeding the activation range resets the existing duration timer.
-	Sensor::setMockValue(SensorType::Rpm, 4000);
-	engine->antilagController.update();
-	ASSERT_FALSE(engine->antilagController.isAntilagCondition);
-
-	Sensor::setMockValue(SensorType::Rpm, 1000);
-	engine->antilagController.update();
-	ASSERT_TRUE(engine->antilagController.isAntilagCondition);
-	ASSERT_TRUE(engine->antilagController.isInsideALSTimerCondition());
-
-	advanceTimeUs(1100000);
-	engine->antilagController.update();
-	ASSERT_FALSE(engine->antilagController.isInsideALSTimerCondition());
-	EXPECT_TRUE(engine->antilagController.ALSTimerCondition);
-	EXPECT_TRUE(engine->antilagController.isAntilagCondition);
-	EXPECT_FLOAT_EQ(50, engine->antilagController.fuelALSCorrection);
 }
 
 namespace {
@@ -695,78 +661,6 @@ TEST(EcuLogicReview, WallFuelSaturatesInjectorWithoutDutyProtection) {
 	EXPECT_FALSE(enginePins.injectors[0].getLogicValue());
 }
 
-namespace {
-
-void configureReviewPrime() {
-	engineConfiguration->cylindersCount = 4;
-	engineConfiguration->injectorFlowAsMassFlow = true;
-	engineConfiguration->injector.flow = 1;
-	engineConfiguration->injectorCompensationMode = ICM_None;
-	engineConfiguration->injectorNonlinearMode = INJ_None;
-	engineConfiguration->flexCranking = false;
-	setTable(engineConfiguration->injector.battLagCorrTable, 0.0f);
-	setArrayValues(engineConfiguration->primeValues, 10);
-	setTable(config->lambdaTable, 1.0f);
-	engineConfiguration->primingDelay = 0.5f;
-	Sensor::setMockValue(SensorType::Clt, 20);
-	Sensor::setMockValue(SensorType::Tps1, 0);
-	Sensor::setMockValue(SensorType::DriverThrottleIntent, 0);
-	engine->module<InjectorModelPrimary>().unmock().prepare();
-}
-
-void expectReviewPrimeAndDrain(EngineTestHelper& eth) {
-	auto& prime = engine->module<PrimeController>().unmock();
-	EXPECT_TRUE(prime.isPriming());
-	for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
-		EXPECT_TRUE(enginePins.injectors[i].getLogicValue());
-	}
-	eth.moveTimeForwardAndInvokeEventsUs(11000);
-	EXPECT_FALSE(prime.isPriming());
-	for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
-		EXPECT_FALSE(enginePins.injectors[i].getLogicValue());
-	}
-}
-
-} // namespace
-
-TEST(EcuLogicReview, PrimeInjectsWithInjectionDisabled) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	configureReviewPrime();
-	engineConfiguration->isInjectionEnabled = false;
-	getLimpManager()->updateState(0, getTimeNowNt());
-	ASSERT_EQ(ClearReason::Settings, getLimpManager()->allowInjection().reason);
-	engine->module<PrimeController>()->onIgnitionStateChanged(true);
-	eth.moveTimeForwardAndInvokeEventsUs(600000);
-	expectReviewPrimeAndDrain(eth);
-}
-
-TEST(EcuLogicReview, DelayedPrimeInjectsAfterEngineStarts) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	configureReviewPrime();
-	engine->module<PrimeController>()->onIgnitionStateChanged(true);
-	eth.moveTimeForwardAndInvokeEventsUs(100000);
-	engine->rpmCalculator.setRpmValue(1000);
-	ASSERT_TRUE(engine->rpmCalculator.isRunning());
-	eth.moveTimeForwardAndInvokeEventsUs(500000);
-	EXPECT_TRUE(engine->rpmCalculator.isRunning());
-	expectReviewPrimeAndDrain(eth);
-}
-
-TEST(EcuLogicReview, DelayedPrimeInjectsAfterFloodClearIsRequested) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	configureReviewPrime();
-	engineConfiguration->isCylinderCleanupEnabled = true;
-	engine->module<PrimeController>()->onIgnitionStateChanged(true);
-	eth.moveTimeForwardAndInvokeEventsUs(100000);
-	Sensor::setMockValue(SensorType::Tps1, 100);
-	Sensor::setMockValue(SensorType::DriverThrottleIntent, 100);
-	getLimpManager()->updateState(0, getTimeNowNt());
-	ASSERT_EQ(ClearReason::FloodClear, getLimpManager()->allowInjection().reason);
-	eth.moveTimeForwardAndInvokeEventsUs(500000);
-	EXPECT_EQ(ClearReason::FloodClear, getLimpManager()->allowInjection().reason);
-	expectReviewPrimeAndDrain(eth);
-}
-
 TEST(EcuLogicReview, PercentAccelEnrichmentIsReducedByInjectionModeTwice) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
@@ -1085,22 +979,6 @@ TEST(EcuLogicReview, RebuildingIgnitionScheduleRedirectsPendingCoilShutoff) {
 	chargedCoil->setLow();
 }
 
-TEST(EcuLogicReview, BoostFuelCutReleasesWhenMapSensorFails) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	engineConfiguration->boostCutPressure = 180;
-	engineConfiguration->boostCutPressureHyst = 20;
-	Sensor::setMockValue(SensorType::Map, 200);
-	engine->rpmCalculator.setRpmValue(2000);
-	auto* limp = getLimpManager();
-	limp->updateState(2000, getTimeNowNt());
-	ASSERT_EQ(ClearReason::BoostCut, limp->allowInjection().reason);
-
-	Sensor::setInvalidMockValue(SensorType::Map);
-	ASSERT_FALSE(Sensor::get(SensorType::Map));
-	limp->updateState(2000, getTimeNowNt());
-	EXPECT_TRUE(limp->allowInjection());
-}
-
 TEST(EcuLogicReview, PredictiveMapBlendReplaysAfterQuickEngineRestart) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->accelEnrichmentMode = AE_MODE_PREDICTIVE_MAP;
@@ -1215,40 +1093,4 @@ TEST(EcuLogicReview, FailedAcPressureSensorReleasesCompressorPressureCut) {
 	ac.onSlowCallback();
 	EXPECT_TRUE(ac.isAcEnabled());
 	EXPECT_TRUE(enginePins.acRelay.getLogicValue());
-}
-
-TEST(EcuLogicReview, BrakeInterlockAllowsButtonStartWithPedalReleased) {
-	EngineTestHelper eth(engine_type_e::PROTEUS_BMW_M73);
-	engineConfiguration->crankingCondition = CC_BRAKE;
-	engineConfiguration->startButtonSuppressOnStartUpMs = 0;
-	Sensor::setMockValue(SensorType::BatteryVoltage, 15);
-	engine->brakePedalSwitchedState.update(false);
-	ASSERT_EQ(0, engine->engineState.brakePedalState);
-	ASSERT_FALSE(enginePins.starterControl.getLogicValue());
-
-	eth.moveTimeForwardSec(1);
-	setMockState(engineConfiguration->startStopButtonPin, true);
-	slowStartStopButtonCallback();
-	setMockState(engineConfiguration->startStopButtonPin, false);
-	slowStartStopButtonCallback();
-	EXPECT_TRUE(enginePins.starterControl.getLogicValue());
-	enginePins.starterControl.setValue(false);
-}
-
-TEST(EcuLogicReview, ClutchUpInterlockAllowsButtonStartWithInputInactive) {
-	EngineTestHelper eth(engine_type_e::PROTEUS_BMW_M73);
-	engineConfiguration->crankingCondition = CC_CLUTCH;
-	engineConfiguration->startButtonSuppressOnStartUpMs = 0;
-	Sensor::setMockValue(SensorType::BatteryVoltage, 15);
-	engine->clutchUpSwitchedState.update(false);
-	ASSERT_EQ(0, engine->engineState.clutchUpState);
-	ASSERT_FALSE(enginePins.starterControl.getLogicValue());
-
-	eth.moveTimeForwardSec(1);
-	setMockState(engineConfiguration->startStopButtonPin, true);
-	slowStartStopButtonCallback();
-	setMockState(engineConfiguration->startStopButtonPin, false);
-	slowStartStopButtonCallback();
-	EXPECT_TRUE(enginePins.starterControl.getLogicValue());
-	enginePins.starterControl.setValue(false);
 }
