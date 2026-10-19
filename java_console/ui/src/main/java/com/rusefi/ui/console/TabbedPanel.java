@@ -70,7 +70,18 @@ public class TabbedPanel {
         }
     };
 
-    public final JTabbedPane tabbedPane = new JTabbedPane();
+    public final JTabbedPane tabbedPane = new JTabbedPane() {
+        @Override
+        public void updateUI() {
+            super.updateUI();
+            // White tab row above the grey page [tag:console_theme]. A ColorUIResource keeps the
+            // colour replaceable by the next theme, like the look-and-feel default it overrides.
+            Color tabArea = UIManager.getColor("Console.TabArea.background");
+            if (tabArea != null) {
+                setBackground(new javax.swing.plaf.ColorUIResource(tabArea));
+            }
+        }
+    };
 
     void installGlassPane() {
         JRootPane rootPane = tabbedPane.getRootPane();
@@ -118,7 +129,69 @@ public class TabbedPanel {
     }
 
     public void addTab(String title, Component component) {
-        tabbedPane.addTab(title, loadTabIcon(title), component);
+        Icon icon = loadTabIcon(title);
+        tabbedPane.addTab(title, icon, component);
+        tabbedPane.setTabComponentAt(tabbedPane.indexOfComponent(component), new TabTitle(tabbedPane, component, title, icon));
+    }
+
+    /**
+     * Tab title that turns bold and takes the selected colour on the selected tab, which FlatLaf
+     * cannot do per tab. Its width always fits the bold text so the tabs do not shift on selection.
+     * The tab keeps its own title, so indexOfTab() and the hidden-tabs menu still work.
+     */
+    static class TabTitle extends JLabel {
+        private final JTabbedPane pane;
+        private final Component content;
+
+        TabTitle(JTabbedPane pane, Component content, String title, Icon icon) {
+            super(title, icon, SwingConstants.LEADING);
+            this.pane = pane;
+            this.content = content;
+            setIconTextGap(6);
+            pane.addChangeListener(e -> refresh());
+            refresh();
+        }
+
+        boolean isSelectedTab() {
+            return pane.getSelectedComponent() == content;
+        }
+
+        private void refresh() {
+            if (pane == null) {
+                return;
+            }
+            boolean selected = isSelectedTab();
+            Font base = UIManager.getFont("TabbedPane.font");
+            if (base != null) {
+                setFont(base.deriveFont(selected ? Font.BOLD : Font.PLAIN));
+            }
+            Color color = UIManager.getColor(selected ? "TabbedPane.selectedForeground" : "TabbedPane.foreground");
+            if (color != null) {
+                setForeground(color);
+            }
+            int index = pane.indexOfComponent(content);
+            setEnabled(index < 0 || pane.isEnabledAt(index));
+            revalidate();
+            repaint();
+        }
+
+        @Override
+        public void updateUI() {
+            super.updateUI();
+            refresh();
+        }
+
+        @Override
+        public Dimension getPreferredSize() {
+            Dimension size = super.getPreferredSize();
+            Font font = getFont();
+            String text = getText();
+            if (font != null && text != null && !font.isBold()) {
+                size.width += getFontMetrics(font.deriveFont(Font.BOLD)).stringWidth(text)
+                    - getFontMetrics(font).stringWidth(text);
+            }
+            return size;
+        }
     }
 
     static Icon loadTabIcon(String title) {

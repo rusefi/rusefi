@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * [tag:console_theme] The console look is defined in com/rusefi/ui/theme/*.properties;
@@ -29,6 +30,10 @@ public class ConsoleThemeTest {
             assertEquals(new Color(0x2563eb), UIManager.getColor("TabbedPane.underlineColor"));
             assertEquals(new Color(0x1d4ed8), UIManager.getColor("TabbedPane.selectedForeground"));
             assertEquals(new Color(0x586273), UIManager.getColor("TabbedPane.foreground"));
+            assertEquals(new Color(0xffffff), UIManager.getColor("Console.TabArea.background"));
+            assertEquals(new Color(0x16a34a), UIManager.getColor("Console.Status.connected.dot"));
+            // [style] classes are stored as maps, so a broken entry shows up as missing
+            assertNotNull(UIManager.get("[style]Button.primary"), "Launch Wizard style class");
         } finally {
             SwingUtilities.invokeAndWait(() -> {
                 UiHelper.unregisterThemeForUnitTest();
