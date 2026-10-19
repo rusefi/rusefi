@@ -91,6 +91,15 @@ final class ShortcutsDialog extends JDialog {
             "Text fields also support standard Ctrl+A/C/X/V for select all/copy/cut/paste "
                     + "(typically Command instead of Ctrl on macOS).",
             "",
+            "GAUGES: EDIT LAYOUT (FREE LAYOUT)",
+            "Available after Edit Layout in Free mode; click a gauge to select it.",
+            "Arrow keys    Move the selected gauge by 1% of the gauge area.",
+            "Shift+arrows  Move the selected gauge by 5%.",
+            "Delete / Backspace  Remove the selected gauge.",
+            "Esc           Finish editing (same as the Done button).",
+            "Mouse: drag to move, drag the blue corner to resize, click the red cross to remove, "
+                    + "right-click to bring to front or send to back.",
+            "",
             "CHARTS AND ENGINE SNIFFER",
             "Numpad + / -  Zoom in / out where chart zoom controls are available.",
             "Alt+X         Also zooms in.",

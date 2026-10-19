@@ -7,6 +7,8 @@ import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.ui.widgets.AnyCommand;
 import com.rusefi.ui.widgets.DetachedSensor;
+import com.rusefi.ui.widgets.GaugeMenuSearch;
+import com.rusefi.ui.widgets.SensorGauge;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -42,16 +44,14 @@ public class GaugesPanel {
     public static final String DISABLE_LOGS = "DISABLE_LOGS";
     private static final int DEFAULT_ROWS = 3;
     private static final int DEFAULT_COLUMNS = 3;
+    static final String EDIT_LAYOUT = "Edit Layout";
+    static final String DONE_EDITING = "Done";
 
     private final JPanel content = new JPanel(new BorderLayout());
     private final GaugesGrid gauges;
-    private final JPanel freePanel = new JPanel(new FreeGaugeLayout()) {
-        @Override
-        public boolean isOptimizedDrawingEnabled() {
-            // Free gauges may overlap: a repainting lower gauge must not draw over the ones above it.
-            return false;
-        }
-    };
+    private final FreeGaugeArea freeArea;
+    private final JButton addGaugeButton = new JButton("Add Gauge");
+    private final JToggleButton editLayoutButton = new JToggleButton(EDIT_LAYOUT);
     private final JPanel layoutArea = new JPanel(new BorderLayout());
     private final JToggleButton gridModeButton = new JToggleButton("Grid");
     private final JToggleButton freeModeButton = new JToggleButton("Free");
@@ -68,6 +68,7 @@ public class GaugesPanel {
         this.uiContext = uiContext;
         gauges = new GaugesGrid(DEFAULT_ROWS, DEFAULT_COLUMNS);
         this.config = config;
+        freeArea = new FreeGaugeArea(uiContext, config, this::updateFreeControls);
         rpmDemandToken = SensorCentral.getInstance().addListener(
             WellKnownGauges.RPMGauge.getOutputChannelName(), value -> { });
         rpmDemandToken.setActive(false);
@@ -105,6 +106,13 @@ public class GaugesPanel {
         freeModeButton.addActionListener(e -> setFreeMode(true));
         rightUpperPanel.add(gridModeButton);
         rightUpperPanel.add(freeModeButton);
+
+        addGaugeButton.setToolTipText("Add a gauge to the free layout");
+        addGaugeButton.addActionListener(e -> createAddGaugeMenu().show(addGaugeButton, 0, addGaugeButton.getHeight()));
+        rightUpperPanel.add(addGaugeButton);
+        editLayoutButton.setToolTipText("Move, resize, stack and remove gauges");
+        editLayoutButton.addActionListener(e -> freeArea.setEditing(editLayoutButton.isSelected()));
+        rightUpperPanel.add(editLayoutButton);
 
         JButton saveLayout = new JButton("Save Layout...");
         saveLayout.setToolTipText("Save the gauge grid and graph settings to a file");
@@ -228,19 +236,22 @@ public class GaugesPanel {
         }
         gaugeElements.clear();
         layoutArea.removeAll();
-        freePanel.removeAll();
+        freeArea.destroy();
 
         boolean free = GaugeLayout.isFreeMode(config);
         if (free) {
-            showFreeLayout();
+            freeArea.setActive(active);
+            freeArea.rebuild(getDefaultLayout());
         } else {
+            freeArea.setEditing(false);
             showGrid(config.getIntProperty(GaugeLayout.ROWS, DEFAULT_ROWS),
                 config.getIntProperty(GaugeLayout.COLUMNS, DEFAULT_COLUMNS));
         }
-        layoutArea.add(free ? freePanel : gauges.panel, BorderLayout.CENTER);
+        layoutArea.add(free ? freeArea.getPanel() : gauges.panel, BorderLayout.CENTER);
         gridModeButton.setSelected(!free);
         freeModeButton.setSelected(free);
         gridSizeButton.setVisible(!free);
+        updateFreeControls();
         layoutArea.revalidate();
         layoutArea.repaint();
     }
@@ -260,24 +271,44 @@ public class GaugesPanel {
         }
     }
 
-    private void showFreeLayout() {
-        List<String> defaultLayout = getDefaultLayout();
-        for (int i = 0; i < GaugeLayout.freeCount(config); i++) {
-            Node node = config.getChild(GaugeLayout.FREE_ELEMENT + i);
-            String defaultGaugeName = defaultLayout.get(Math.min(i, defaultLayout.size() - 1));
-            GaugesGridElement element = GaugesGridElement.create(uiContext, node, defaultGaugeName);
-            element.setActive(active);
-            gaugeElements.add(element);
-            // Transparent around the dial, so an overlapped gauge shows outside the circle.
-            element.getContent().setOpaque(false);
-            // Index 0 is painted last, so later gauges stay on top of earlier ones.
-            freePanel.add(element.getContent(), GaugeLayout.getBounds(node), 0);
-        }
+    /** Keeps the free-layout buttons in step with the mode and the editor. */
+    private void updateFreeControls() {
+        boolean free = GaugeLayout.isFreeMode(config);
+        addGaugeButton.setVisible(free);
+        editLayoutButton.setVisible(free);
+        editLayoutButton.setSelected(freeArea.isEditing());
+        editLayoutButton.setText(freeArea.isEditing() ? DONE_EDITING : EDIT_LAYOUT);
     }
 
-    // Package-private so tests check where free gauges are placed.
+    /** Gauge catalog with search; the chosen gauge is added to the free layout. */
+    JPopupMenu createAddGaugeMenu() {
+        JPopupMenu menu = new JPopupMenu();
+        if (!freeArea.canAddGauge()) {
+            JMenuItem full = new JMenuItem("The free layout holds at most " + GaugeLayout.MAX_FREE_GAUGES + " gauges");
+            full.setEnabled(false);
+            menu.add(full);
+            return menu;
+        }
+        SensorGauge.addGaugeCatalog(uiContext, menu, freeArea::addGauge);
+        GaugeMenuSearch.addTo(menu);
+        return menu;
+    }
+
+    // Package-private so tests drive the free layout and its editor.
+    FreeGaugeArea getFreeArea() {
+        return freeArea;
+    }
+
     JPanel getFreePanel() {
-        return freePanel;
+        return freeArea.getPanel();
+    }
+
+    JToggleButton getEditLayoutButton() {
+        return editLayoutButton;
+    }
+
+    JButton getAddGaugeButton() {
+        return addGaugeButton;
     }
 
     JButton getGridSizeButton() {
@@ -303,6 +334,7 @@ public class GaugesPanel {
         for (GaugesGridElement element : gaugeElements) {
             element.setActive(active);
         }
+        freeArea.setActive(active);
     }
 
     public void destroy() {
@@ -310,6 +342,7 @@ public class GaugesPanel {
             element.destroy();
         }
         gaugeElements.clear();
+        freeArea.destroy();
         rpmDemandToken.remove();
         rpmLabel.destroy();
     }

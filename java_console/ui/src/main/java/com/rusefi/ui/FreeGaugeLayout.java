@@ -16,6 +16,13 @@ final class FreeGaugeLayout implements LayoutManager2 {
 
     private final Map<Component, Rectangle2D.Double> bounds = new HashMap<>();
 
+    /** Moves or resizes a child; the caller revalidates the container. */
+    void setBounds(Component component, Rectangle2D.Double fraction) {
+        if (bounds.containsKey(component)) {
+            bounds.put(component, (Rectangle2D.Double) fraction.clone());
+        }
+    }
+
     Rectangle2D.Double getBounds(Component component) {
         Rectangle2D.Double fraction = bounds.get(component);
         return fraction == null ? null : (Rectangle2D.Double) fraction.clone();
