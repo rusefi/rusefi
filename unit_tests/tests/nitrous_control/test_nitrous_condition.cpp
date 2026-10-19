@@ -5,6 +5,7 @@
 #include "pch.h"
 
 #include "nitrous_test_base.h"
+#include "limp_manager.h"
 
 namespace {
     class NitrousConditionTest : public NitrousTestBase {
@@ -86,4 +87,45 @@ namespace {
         unsatisfyRpmCondition();
         checkNitrousCondition(false, "Without RPM condition");
     }
+
+    // Reproduces ECU-025: the relay remains on while boost protection forbids injection.
+    TEST(NitrousControl, NitrousRelayRemainsOnDuringBoostFuelCut) {
+        EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+        engineConfiguration->nitrousControlEnabled = true;
+        engineConfiguration->nitrousControlArmingMethod = LUA_GAUGE;
+        engineConfiguration->nitrousLuaGauge = LUA_GAUGE_1;
+        engineConfiguration->nitrousLuaGaugeMeaning = LUA_GAUGE_LOWER_BOUND;
+        engineConfiguration->nitrousLuaGaugeArmingValue = 1;
+        engineConfiguration->nitrousActivationRpm = 1000;
+        engineConfiguration->nitrousDeactivationRpm = 6000;
+        engineConfiguration->nitrousMinimumTps = 0;
+        engineConfiguration->nitrousMaximumMap = 300;
+        engineConfiguration->nitrousMaximumAfr = 0;
+        engineConfiguration->nitrousFuelAdderPercent = 25;
+        engineConfiguration->boostCutPressure = 180;
+        Sensor::setMockValue(SensorType::LuaGauge1, 1);
+        Sensor::setMockValue(SensorType::Map, 200);
+        engine->rpmCalculator.setRpmValue(2000);
+        auto& nitrous = engine->module<NitrousController>().unmock();
+        nitrous.onSlowCallback();
+        EXPECT_TRUE(nitrous.isNitrousArmed);
+        EXPECT_TRUE(nitrous.isNitrousSpeedCondition);
+        EXPECT_TRUE(nitrous.isNitrousTpsCondition);
+        EXPECT_TRUE(nitrous.isNitrousCltCondition);
+        EXPECT_TRUE(nitrous.isNitrousMapCondition);
+        EXPECT_TRUE(nitrous.isNitrousAfrCondition);
+        EXPECT_TRUE(nitrous.isNitrousRpmCondition);
+        ASSERT_TRUE(nitrous.isNitrousCondition);
+        ASSERT_TRUE(enginePins.nitrousRelay.getLogicValue());
+        ASSERT_FLOAT_EQ(1.25f, nitrous.getFuelCoefficient());
+
+        getLimpManager()->updateState(2000, getTimeNowNt());
+        ASSERT_EQ(ClearReason::BoostCut, getLimpManager()->allowInjection().reason);
+        // handleFuel() now returns before injecting the nitrous fuel adder, but the
+        // relay remains commanded on while all nitrous arming inputs stay valid.
+        nitrous.onSlowCallback();
+        EXPECT_TRUE(nitrous.isNitrousCondition);
+        EXPECT_TRUE(enginePins.nitrousRelay.getLogicValue());
+    }
+
 }
