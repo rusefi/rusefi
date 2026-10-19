@@ -115,6 +115,42 @@ TEST_F(StartStopTest, buttonStartCancelsStopRequest) {
 	EXPECT_FALSE(getLimpManager()->shutdownController.isEngineStop(getTimeNowNt()));
 }
 
+// the brake interlock currently allows a button start with the pedal released.
+TEST_F(StartStopTest, BrakeInterlockAllowsButtonStartWithPedalReleased) {
+	EngineTestHelper eth(engine_type_e::PROTEUS_BMW_M73);
+	engineConfiguration->crankingCondition = CC_BRAKE;
+	engineConfiguration->startButtonSuppressOnStartUpMs = 0;
+	Sensor::setMockValue(SensorType::BatteryVoltage, 15);
+	engine->brakePedalSwitchedState.update(false);
+	ASSERT_EQ(0, engine->engineState.brakePedalState);
+	ASSERT_FALSE(enginePins.starterControl.getLogicValue());
+
+	eth.moveTimeForwardSec(1);
+	setMockState(engineConfiguration->startStopButtonPin, true);
+	slowStartStopButtonCallback();
+	setMockState(engineConfiguration->startStopButtonPin, false);
+	slowStartStopButtonCallback();
+	EXPECT_TRUE(enginePins.starterControl.getLogicValue());
+}
+
+// the clutch-up interlock currently allows a start with the input inactive.
+TEST_F(StartStopTest, ClutchUpInterlockAllowsButtonStartWithInputInactive) {
+	EngineTestHelper eth(engine_type_e::PROTEUS_BMW_M73);
+	engineConfiguration->crankingCondition = CC_CLUTCH;
+	engineConfiguration->startButtonSuppressOnStartUpMs = 0;
+	Sensor::setMockValue(SensorType::BatteryVoltage, 15);
+	engine->clutchUpSwitchedState.update(false);
+	ASSERT_EQ(0, engine->engineState.clutchUpState);
+	ASSERT_FALSE(enginePins.starterControl.getLogicValue());
+
+	eth.moveTimeForwardSec(1);
+	setMockState(engineConfiguration->startStopButtonPin, true);
+	slowStartStopButtonCallback();
+	setMockState(engineConfiguration->startStopButtonPin, false);
+	slowStartStopButtonCallback();
+	EXPECT_TRUE(enginePins.starterControl.getLogicValue());
+}
+
 TEST_F(StartStopTest, ReleasingClutchDownDoesNotBypassStarterCrankingTimeout) {
 	// Reproduce a button start with the required clutch-down input and no RPM signal.
 	// The starter must eventually time out even if the driver releases the clutch.
