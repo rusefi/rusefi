@@ -338,7 +338,10 @@ expected<percent_t> EtbController::getSetpointEtb() {
 	adjustedEtbTarget = targetPosition;
 
 #if EFI_ANTILAG_SYSTEM
-	if (engine->antilagController.isAntilagCondition) {
+	// The anti-lag state can still reflect the previous cycle when the pedal fails.
+	if (engine->antilagController.isAntilagCondition
+		&& Sensor::get(SensorType::AcceleratorPedal).Valid
+		&& Sensor::get(SensorType::DriverThrottleIntent).Valid) {
 		targetPosition += engineConfiguration->ALSEtbAdd;
 	}
 #endif /* EFI_ANTILAG_SYSTEM */
