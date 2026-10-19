@@ -23,6 +23,7 @@ Release template (copy/paste this for new release):
 ### Fixed
  - wasted to sequential transition when phase is detected #9613
  - disabling active launch retains its hard spark cut bugfix
+ - Invalid vehicle speed no longer enables the launch hard spark cut
  - critical issue with staged batches injection and similar injector control fixes #10414
 
 ### Removed

@@ -51,9 +51,8 @@ bool LaunchControlBase::isInsideSpeedCondition() const {
 		return true; // allow launch, speed does not matter
 	}
 
-	int speed = Sensor::getOrZero(SensorType::VehicleSpeed);
-
-	return engineConfiguration->launchSpeedThreshold > speed;
+	auto speed = Sensor::get(SensorType::VehicleSpeed);
+	return speed.Valid && engineConfiguration->launchSpeedThreshold > speed.Value;
 }
 
 /**
