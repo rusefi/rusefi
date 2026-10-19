@@ -56,6 +56,10 @@ On STM32F4, Lua allocates from available CCM and optional RAM first, then the
 shared ChibiOS heap. Separate regions cannot satisfy a single allocation larger
 than their individual free blocks.
 
+`lua.cpp` uses fixed `@script.lua` and `@interactive.lua` chunk names so Lua's
+debug metadata retains a short name with line numbers, rather than another copy
+of the source in the execution heap. [tag:lua_chunk_name]
+
 Allocation failures report `CUSTOM_LUA_ERROR` (C6730) through the warning channel.
 VM initialization, tick lookup/calls and CAN argument construction/calls execute
 inside `luaProtectedCall`. Failed initialization closes the partial state and

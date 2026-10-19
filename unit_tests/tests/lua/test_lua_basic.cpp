@@ -3,6 +3,7 @@
 
 #include <cstdlib>
 #include <limits>
+#include <string>
 
 namespace {
 // Fail after a chosen number of allocation/growth requests, rather than after a
@@ -12,6 +13,7 @@ struct LuaMemoryLimit {
 	size_t remainingAllocations;
 	size_t used = 0;
 	size_t denied = 0;
+	size_t byteLimit = std::numeric_limits<size_t>::max();
 
 	static void* allocate(void* userdata, void* pointer, size_t oldSize, size_t newSize) {
 		auto& limit = *static_cast<LuaMemoryLimit*>(userdata);
@@ -26,7 +28,7 @@ struct LuaMemoryLimit {
 		if (newSize > oldSize) {
 			// Shrinking and freeing remain available for GC and partial-VM
 			// teardown. Refusing growth leaves any existing block untouched.
-			if (limit.remainingAllocations == 0) {
+			if (limit.remainingAllocations == 0 || limit.used - oldSize + newSize > limit.byteLimit) {
 				limit.denied++;
 				return nullptr;
 			}
@@ -180,6 +182,30 @@ TEST(LuaBasic, ScriptAllocationFailure) {
 		EXPECT_EQ(lua_gettop(state), 0);
 	}
 	EXPECT_EQ(memory.used, 0u);
+}
+
+TEST(LuaBasic, ScriptSourceMemory) {
+	// [tag:lua_chunk_name] Comments in a near-limit uaEFI script must not
+	// become a second persistent copy of its source in the execution heap.
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	LuaMemoryLimit memory{std::numeric_limits<size_t>::max()};
+	LuaHandle state(lua_newstate(LuaMemoryLimit::allocate, &memory));
+	ASSERT_NE(static_cast<lua_State*>(state), nullptr);
+	// Plenty for this tiny program's bytecode, but not another 8 KB source copy.
+	memory.byteLimit = memory.used + 4096;
+	std::string script = "--" + std::string(7900, 'x') + "\nfunction onTick() end";
+	lua_gc(state, LUA_GCCOLLECT, 0);
+	int before = lua_gc(state, LUA_GCCOUNT, 0) * 1024 + lua_gc(state, LUA_GCCOUNTB, 0);
+	ASSERT_TRUE(loadLuaScriptForTests(state, script.c_str()));
+	lua_gc(state, LUA_GCCOLLECT, 0);
+	int after = lua_gc(state, LUA_GCCOUNT, 0) * 1024 + lua_gc(state, LUA_GCCOUNTB, 0);
+	EXPECT_LT(after - before, 1024);
+	lua_getglobal(state, "onTick");
+	lua_Debug info{};
+	ASSERT_NE(lua_getinfo(state, ">S", &info), 0);
+	EXPECT_STREQ(info.source, "@script.lua");
+	EXPECT_EQ(info.linedefined, 2);
+	EXPECT_EQ(memory.denied, 0u);
 }
 
 TEST(LuaBasic, ReturnsNumber) {

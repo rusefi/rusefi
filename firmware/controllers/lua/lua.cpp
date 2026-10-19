@@ -147,11 +147,14 @@ static LuaHandle setupLuaState(lua_Alloc alloc, void* userdata = nullptr) {
 }
 
 // this function is needed for a correct graph on the stackUsageReport
-static int doString(lua_State* ls, const char* script) {
+static int doString(lua_State* ls, const char* script, const char* name = "@script.lua") {
+	// [tag:lua_chunk_name] Lua retains the chunk name in every function's debug
+	// metadata. Using the script itself duplicates up to LUA_SCRIPT_SIZE bytes
+	// in the heap, in addition to the configuration page and compiled code.
 	// Loading protects parser allocations; lua_pcall protects chunk execution.
 	// Preserve the actual status from either stage: combining them with ||
 	// reduces errors to 1 and hides LUA_ERRMEM from both callers below.
-	int status = luaL_loadbufferx(ls, script, std::strlen(script), script, "t");
+	int status = luaL_loadbufferx(ls, script, std::strlen(script), name, "t");
 	return status == LUA_OK ? lua_pcall(ls, 0, LUA_MULTRET, 0) : status;
 }
 
@@ -190,7 +193,7 @@ static void doInteractive(LuaHandle& ls) {
 		return;
 	}
 
-	auto status = doString(ls, interactiveCmd);
+	auto status = doString(ls, interactiveCmd, "@interactive.lua");
 
 	if (0 == status) {
 		// Function call was OK, resolve return value and print it
