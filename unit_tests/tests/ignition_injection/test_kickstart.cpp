@@ -103,7 +103,7 @@ TEST(kickStart, limpManagerSuppressesNormalSpark) {
 	EXPECT_TRUE(dut.allowIgnition());
 }
 
-TEST(kickStart, sparkBypassesLuaIgnitionCut) {
+TEST(kickStart, sparkRespectsLuaIgnitionCut) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->kickStartCranking = true;
 	engineConfiguration->ignitionDwellForCrankingMs = 3;
@@ -114,14 +114,12 @@ TEST(kickStart, sparkBypassesLuaIgnitionCut) {
 	ASSERT_TRUE(getLimpManager()->allowTriggerInput());
 
 	eth.firePrimaryTriggerRise();
-	EXPECT_TRUE(enginePins.coils[0].getLogicValue());
-	EXPECT_TRUE(enginePins.coils[1].getLogicValue());
-	eth.moveTimeForwardAndInvokeEventsUs(4000);
 	EXPECT_FALSE(enginePins.coils[0].getLogicValue());
 	EXPECT_FALSE(enginePins.coils[1].getLogicValue());
+	EXPECT_EQ(0, engine->scheduler.size());
 }
 
-TEST(kickStart, sparkBypassesRequiredPhaseSync) {
+TEST(kickStart, sparkRespectsRequiredPhaseSync) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->kickStartCranking = true;
 	engineConfiguration->isPhaseSyncRequiredForIgnition = true;
@@ -135,9 +133,7 @@ TEST(kickStart, sparkBypassesRequiredPhaseSync) {
 	ASSERT_TRUE(getLimpManager()->allowTriggerInput());
 
 	eth.firePrimaryTriggerRise();
-	EXPECT_TRUE(enginePins.coils[0].getLogicValue());
-	EXPECT_TRUE(enginePins.coils[1].getLogicValue());
-	eth.moveTimeForwardAndInvokeEventsUs(4000);
 	EXPECT_FALSE(enginePins.coils[0].getLogicValue());
 	EXPECT_FALSE(enginePins.coils[1].getLogicValue());
+	EXPECT_EQ(0, engine->scheduler.size());
 }

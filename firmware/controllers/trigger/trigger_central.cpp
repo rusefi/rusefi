@@ -532,6 +532,10 @@ static void handleKickStart(trigger_event_e signal, efitick_t timestamp) {
 	if (Sensor::getOrZero(SensorType::Rpm) >= KICK_START_MODE_MAX_RPM) {
 		return;
 	}
+	const auto ignitionState = getLimpManager()->allowIgnition();
+	if (!ignitionState && ignitionState.reason != ClearReason::KickStart) {
+		return;
+	}
 	floatms_t dwellMs = engine->ignitionState.getDwell();
 	if (std::isnan(dwellMs) || dwellMs <= 0) {
 		// refuse to charge a coil we would not know when to release
