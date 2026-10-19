@@ -4,6 +4,8 @@
 #define protected public
 #include "fuel_computer.h"
 
+#include "stored_value_sensor.h"
+
 using ::testing::FloatEq;
 
 class MockFuelComputer : public FuelComputerBase {
@@ -61,4 +63,41 @@ TEST(FuelComputer, FlexFuel) {
 	// E110 -> clamp to secondary
 	Sensor::setMockValue(SensorType::FuelEthanolPercent, 110);
 	EXPECT_FLOAT_EQ(10.0f, dut.getStoichiometricRatio());
+}
+
+namespace {
+
+class InvalidEthanolSensor final : public Sensor {
+public:
+	InvalidEthanolSensor() : Sensor(SensorType::FuelEthanolPercent) {}
+	~InvalidEthanolSensor() { unregister(); }
+
+	SensorResult get() const override {
+		SensorResult result = payload;
+		result.Valid = false;
+		return result;
+	}
+
+	void showInfo(const char*) const override {}
+	float payload = 0;
+};
+
+} // namespace
+
+TEST(FuelComputer, InvalidEthanolPayloadControlsFuelStoichiometry) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	Sensor::resetMockValue(SensorType::FuelEthanolPercent);
+	InvalidEthanolSensor sensor;
+	ASSERT_TRUE(sensor.Register());
+	ASSERT_TRUE(Sensor::hasSensor(SensorType::FuelEthanolPercent));
+	ASSERT_FALSE(Sensor::get(SensorType::FuelEthanolPercent));
+	engineConfiguration->stoichRatioPrimary = 15;
+	engineConfiguration->stoichRatioSecondary = 10;
+	FuelComputer dut;
+
+	// Both readings are invalid, but their unusable payload changes fueling.
+	sensor.payload = 0;
+	EXPECT_FLOAT_EQ(15, dut.getStoichiometricRatio());
+	sensor.payload = 100;
+	EXPECT_FLOAT_EQ(10, dut.getStoichiometricRatio());
 }
