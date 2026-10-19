@@ -37,8 +37,8 @@ class GaugesPanelLayoutTest {
                 panel.setActive(true);
                 assertTrue(hasDemand("layoutCustomChannel"));
                 assertFalse(hasDemand("layoutDefaultChannel"));
-                assertNotNull(findButton(panel.getContent(), "Save Layout..."));
-                assertNotNull(findButton(panel.getContent(), "Load Layout..."));
+                assertNotNull(findButton(panel.getContent(), GaugesPanel.SAVE_LAYOUT));
+                assertNotNull(findButton(panel.getContent(), GaugesPanel.LOAD_LAYOUT));
             } finally {
                 panel.destroy();
             }

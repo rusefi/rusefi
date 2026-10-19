@@ -6,6 +6,9 @@ import com.rusefi.core.WellKnownGauges;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.ui.widgets.AnyCommand;
+import com.rusefi.ui.widgets.ChevronIcon;
+import com.rusefi.ui.widgets.JoinedButtons;
+import com.rusefi.ui.widgets.SegmentedControl;
 import com.rusefi.ui.widgets.DetachedSensor;
 import com.rusefi.ui.widgets.GaugeMenuSearch;
 import com.rusefi.ui.widgets.SensorGauge;
@@ -47,6 +50,10 @@ public class GaugesPanel {
     static final String EDIT_LAYOUT = "Edit Layout";
     static final String DONE_EDITING = "Done";
     static final String RESET_LAYOUT = "Reset Layout";
+    // no "…": after the "Layout" label a shortened "Save…" read as a truncated "Save Layout"
+    static final String SAVE_LAYOUT = "Save";
+    static final String LOAD_LAYOUT = "Load";
+    static final String RESET = "Reset";
 
     private final JPanel content = new JPanel(new BorderLayout());
     private final GaugesGrid gauges;
@@ -54,8 +61,8 @@ public class GaugesPanel {
     private final JButton addGaugeButton = new JButton("Add Gauge");
     private final JToggleButton editLayoutButton = new JToggleButton(EDIT_LAYOUT);
     private final JPanel layoutArea = new JPanel(new BorderLayout());
-    private final JToggleButton gridModeButton = new JToggleButton("Grid");
-    private final JToggleButton freeModeButton = new JToggleButton("Free");
+    private final JToggleButton gridModeButton = SegmentedControl.segment("Grid");
+    private final JToggleButton freeModeButton = SegmentedControl.segment("Free");
     private JButton gridSizeButton;
     private final Node config;
     private final UIContext uiContext;
@@ -95,9 +102,11 @@ public class GaugesPanel {
 
     @NotNull
     private JPanel createRightTopPanel() {
-        JPanel rightUpperPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
+        JPanel rightUpperPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
 
-        rightUpperPanel.add(new JLabel("Layout:"));
+        JLabel layoutLabel = new JLabel("Layout");
+        layoutLabel.setForeground(UIManager.getColor("Label.disabledForeground"));
+        rightUpperPanel.add(layoutLabel);
         gridModeButton.setToolTipText("Gauges fill a grid of rows and columns");
         freeModeButton.setToolTipText("Gauges can be placed anywhere and sized individually; the grid is kept");
         ButtonGroup modeGroup = new ButtonGroup();
@@ -105,30 +114,29 @@ public class GaugesPanel {
         modeGroup.add(freeModeButton);
         gridModeButton.addActionListener(e -> setFreeMode(false));
         freeModeButton.addActionListener(e -> setFreeMode(true));
-        rightUpperPanel.add(gridModeButton);
-        rightUpperPanel.add(freeModeButton);
+        rightUpperPanel.add(new SegmentedControl(gridModeButton, freeModeButton));
 
         addGaugeButton.setToolTipText("Add a gauge to the free layout");
         addGaugeButton.addActionListener(e -> createAddGaugeMenu().show(addGaugeButton, 0, addGaugeButton.getHeight()));
-        rightUpperPanel.add(addGaugeButton);
+
         editLayoutButton.setToolTipText("Move, resize, stack and remove gauges");
         editLayoutButton.addActionListener(e -> freeArea.setEditing(editLayoutButton.isSelected()));
-        rightUpperPanel.add(editLayoutButton);
+        // Free-mode tools; the group hides itself in Grid mode, when both buttons are hidden
+        rightUpperPanel.add(new JoinedButtons(addGaugeButton, editLayoutButton));
 
-        JButton saveLayout = new JButton("Save Layout...");
-        saveLayout.setToolTipText("Save the gauge grid and graph settings to a file");
+        // short names: the "Layout" label and the tooltips say what is saved, loaded or reset
+        JButton saveLayout = new JButton(SAVE_LAYOUT);
+        saveLayout.setToolTipText("Save the gauge layout and graph settings to a file");
         saveLayout.addActionListener(e -> chooseLayoutFile(true));
-        rightUpperPanel.add(saveLayout);
 
-        JButton loadLayout = new JButton("Load Layout...");
-        loadLayout.setToolTipText("Replace the gauge grid with a saved layout");
+        JButton loadLayout = new JButton(LOAD_LAYOUT);
+        loadLayout.setToolTipText("Replace the gauge layout with a saved one");
         loadLayout.addActionListener(e -> chooseLayoutFile(false));
-        rightUpperPanel.add(loadLayout);
 
-        JButton resetLayout = new JButton(RESET_LAYOUT);
-        resetLayout.setToolTipText("Grid: return to the default gauges. Free: return to the grid you started from");
+        JButton resetLayout = new JButton(RESET);
+        resetLayout.setToolTipText("Reset layout. Grid: return to the default gauges. Free: return to the grid you started from");
         resetLayout.addActionListener(e -> confirmResetLayout());
-        rightUpperPanel.add(resetLayout);
+        rightUpperPanel.add(new JoinedButtons(saveLayout, loadLayout, resetLayout));
 
         final JPopupMenu selectorMenu = new JPopupMenu();
         selectorMenu.add(new SizeSelectorPanel((row, column) -> {
@@ -136,14 +144,17 @@ public class GaugesPanel {
             setSensorGridDimensions(row, column);
         }));
 
-        JButton selector = new JButton("Grid Size");
+        // shows the current size, e.g. "Grid 3 × 3", and opens the size picker
+        JButton selector = new JButton(gridSizeText(), new ChevronIcon());
+        selector.setHorizontalTextPosition(SwingConstants.LEADING);
+        selector.setIconTextGap(8);
         gridSizeButton = selector;
         selector.setToolTipText("Choose the number of gauge rows and columns");
         selector.addActionListener(e -> {
             Component c = (Component) e.getSource();
             selectorMenu.show(c, -1, c.getHeight());
         });
-        rightUpperPanel.add(selector);
+        rightUpperPanel.add(new JoinedButtons(selector));
 
 
         return rightUpperPanel;
@@ -202,7 +213,7 @@ public class GaugesPanel {
 
     @NotNull
     private JPanel createLeftTopPanel() {
-        JPanel leftUpperPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
+        JPanel leftUpperPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
         rpmLabel = new RpmLabel(uiContext, 2);
         leftUpperPanel.add(rpmLabel.getContent());
         AnyCommand command = AnyCommand.createField(uiContext, config, false, false);
@@ -234,6 +245,11 @@ public class GaugesPanel {
             saveConfig(DEFAULT_ROWS, DEFAULT_COLUMNS);
         }
         showLayout();
+    }
+
+    String gridSizeText() {
+        return "Grid " + config.getIntProperty(GaugeLayout.ROWS, DEFAULT_ROWS)
+            + " × " + config.getIntProperty(GaugeLayout.COLUMNS, DEFAULT_COLUMNS);
     }
 
     private void setSensorGridDimensions(int rows, int columns) {
@@ -283,6 +299,7 @@ public class GaugesPanel {
         gridModeButton.setSelected(!free);
         freeModeButton.setSelected(free);
         gridSizeButton.setVisible(!free);
+        gridSizeButton.setText(gridSizeText());
         updateFreeControls();
         layoutArea.revalidate();
         layoutArea.repaint();

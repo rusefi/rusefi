@@ -37,6 +37,7 @@ class GaugesPanelFreeModeTest {
                 panel.setActive(true);
                 assertFalse(panel.isFreeMode(), "Grid is the default");
                 assertTrue(panel.getGridSizeButton().isVisible());
+                assertEquals("Grid 1 × 2", panel.getGridSizeButton().getText(), "the button shows the current size");
 
                 panel.setFreeMode(true);
                 assertTrue(panel.isFreeMode());
