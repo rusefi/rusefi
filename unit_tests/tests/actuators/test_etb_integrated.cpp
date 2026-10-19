@@ -1,9 +1,14 @@
 #include "pch.h"
 #include "init.h"
 #include "electronic_throttle_impl.h"
+#include "mocks.h"
 #include "live_data.h"
 #include "live_data_ids.h"
 #include <memory>
+
+using ::testing::_;
+using ::testing::Return;
+using ::testing::StrictMock;
 
 extern int ebtResetCounter;
 
@@ -99,6 +104,59 @@ TEST(etb, integrated) {
 
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 10, true);
 	etb->update();
+}
+
+// Reproduces the current pedal-failure behavior through anti-lag and ETB.
+// Update these expectations when the fault handling is fixed.
+TEST(etb, failedPedalArmsAntilagAndCommandsOpening) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->antiLagEnabled = true;
+	engineConfiguration->antiLagActivationMode = ALWAYS_ON_ANTILAG;
+	engineConfiguration->ALSMinRPM = 400;
+	engineConfiguration->ALSMaxRPM = 3200;
+	engineConfiguration->ALSMinCLT = 50;
+	engineConfiguration->ALSMaxCLT = 105;
+	engineConfiguration->ALSMaxTPS = 5;
+	engineConfiguration->ALSEtbAdd = 20;
+	engineConfiguration->etbIdleThrottleRange = 0;
+	engineConfiguration->etbMinimumPosition = 1;
+	engineConfiguration->etbMaximumPosition = 100;
+	Sensor::setMockValue(SensorType::Rpm, 2000);
+	Sensor::setMockValue(SensorType::Clt, 80);
+	Sensor::setMockValue(SensorType::Tps1, 0, true);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 20, true);
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 20);
+	StrictMock<MockVp3d> pedalMap;
+	EXPECT_CALL(pedalMap, getValue(_, _))
+		.WillRepeatedly([](float, float pedal) { return pedal; });
+	StrictMock<MockMotor> motor;
+	EtbController etb;
+	ASSERT_TRUE(etb.init(DC_Throttle1, &motor, &engineConfiguration->etb, &pedalMap));
+	engine->antilagController.update();
+	ASSERT_FALSE(engine->antilagController.isAntilagCondition);
+	ASSERT_NEAR(20, etb.getSetpoint().value_or(-1), 0.01f);
+
+	auto& checker = engine->module<SensorChecker>().unmock();
+	checker.onIgnitionStateChanged(true);
+	eth.moveTimeForwardSec(6);
+	checker.onSlowCallback();
+	ASSERT_TRUE(checker.analogSensorsShouldWork());
+
+	Sensor::setInvalidMockValue(SensorType::AcceleratorPedal);
+	Sensor::setInvalidMockValue(SensorType::DriverThrottleIntent);
+	checker.onSlowCallback();
+	engine->antilagController.update();
+	ASSERT_TRUE(engine->antilagController.isAntilagCondition);
+	// The anti-lag adder replaces the lost pedal request instead of using
+	// the configured 1% fault fallback.
+	EXPECT_NEAR(20, etb.getSetpoint().value_or(-1), 0.01f);
+	EXPECT_CALL(motor, enable());
+	EXPECT_CALL(motor, set(::testing::Gt(0.0f))).WillOnce(Return(false));
+	etb.update();
+
+	engineConfiguration->antiLagEnabled = false;
+	engine->antilagController.update();
+	EXPECT_NEAR(1, etb.getSetpoint().value_or(-1), 0.01f);
 }
 
 TEST(etb, intermittentTps) {
