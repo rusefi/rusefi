@@ -418,6 +418,11 @@ documentation, or separated stages within one file.
 - **Generated files:** Add or edit tags in generator/template inputs. Generated
   copies are useful for tracing output, but repeated hits are not independently
   maintained links. Do not hand-edit or stage generated outputs.
+- **INI templates and flash limits:** Keep comments and tags minimal in all
+  `.ini` templates and included fragments to conserve microcontroller flash.
+  Avoid verbose explanations, repeated comments, and redundant tags; keep
+  detailed rationale in source code or documentation. This limit takes
+  precedence over the tag-coverage guidance above.
 
 Search from the repository root with a fixed string (the brackets are literal):
 
