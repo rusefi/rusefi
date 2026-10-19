@@ -10,6 +10,7 @@ template <typename RisingChecker = StrictChecker, typename FallingChecker = Stri
 class MaxLimitWithHysteresis {
 public:
 	bool checkIfLimitIsExceeded(const float value, const float maxLimit, const float hysteresis);
+	bool isLimitExceeded() const { return m_hysteresis.isActive(); }
 private:
     Hysteresis m_hysteresis;
 };

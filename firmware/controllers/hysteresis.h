@@ -23,6 +23,7 @@ public:
     bool test(float value, float rising, float falling);
 
     bool test(bool risingCondition, bool fallingCondition);
+	bool isActive() const { return m_state; }
 private:
     bool m_state = false;
 };
