@@ -37,10 +37,6 @@ of +10% at 50% weight produces +5% VE correction and a multiplier of 1.05.
 Final VE includes all VE corrections. Zero blend telemetry alone does not
 distinguish a real zero input from an unavailable sensor.
 
-Offline dialog preview:
-
-![VE blend dialog](../../docs/images/ve-blend-dialog.png)
-
 ## Template validation
 
 Conditions (`@@if_FLAG` and `@@if_block FLAG@@` / `@@endif_block`) require
