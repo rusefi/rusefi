@@ -19,6 +19,9 @@ import java.awt.*;
 public class GaugesGridElement {
     private static final String GAUGE_TYPE = "gauge";
     private static final String IS_LIVE_GRAPH = "type";
+    static final String DISPLAY_AS = "Display as";
+    static final String ROUND_GAUGE = "Round gauge";
+    static final String LIVE_GRAPH = "Live graph";
 
     private final JPanelWithListener wrapper = new JPanelWithListener(new BorderLayout());
     private final UIContext uiContext;
@@ -36,10 +39,8 @@ public class GaugesGridElement {
     private void rebuildAsLiveBarElement() {
         wrapper.setLayout(new GridLayout(2, 1));
 
-        JMenuItem switchToGauge = getJMenuItem("Switch to Gauge Mode", false);
-
-        addLiveGraph(new SensorLiveGraph(uiContext, config.getChild("top"), config.getProperty(GAUGE_TYPE), switchToGauge));
-        addLiveGraph(new SensorLiveGraph(uiContext, config.getChild("bottom"), Sensor.RPMGauge.name(), switchToGauge));
+        addLiveGraph(new SensorLiveGraph(uiContext, config.getChild("top"), config.getProperty(GAUGE_TYPE), createDisplayAsMenu(true)));
+        addLiveGraph(new SensorLiveGraph(uiContext, config.getChild("bottom"), Sensor.RPMGauge.name(), createDisplayAsMenu(true)));
     }
 
     private void addLiveGraph(SensorLiveGraph graph) {
@@ -69,22 +70,35 @@ public class GaugesGridElement {
             }
         };
 
-        JMenuItem switchToLiveGraph = getJMenuItem("Switch to Live Graph", true);
-
         wrapper.setLayout(new BorderLayout());
-        SensorGauge.createGaugeBody(uiContext, config.getProperty(GAUGE_TYPE), wrapper, gaugeChangeListener, switchToLiveGraph);
+        SensorGauge.createGaugeBody(uiContext, config.getProperty(GAUGE_TYPE), wrapper, gaugeChangeListener,
+            createDisplayAsMenu(false));
 
     }
 
-    private @NotNull JMenuItem getJMenuItem(String menuText, boolean value) {
-        JMenuItem switchToLiveGraph = new JMenuItem(menuText);
-        switchToLiveGraph.addActionListener(e -> {
+    /** "Display as" submenu with the current presentation checked. */
+    // Package-private so tests drive the same menu users see.
+    @NotNull JMenu createDisplayAsMenu(boolean liveGraph) {
+        JMenu menu = new JMenu(DISPLAY_AS);
+        ButtonGroup group = new ButtonGroup();
+        menu.add(createDisplayAsItem(ROUND_GAUGE, false, liveGraph, group));
+        menu.add(createDisplayAsItem(LIVE_GRAPH, true, liveGraph, group));
+        return menu;
+    }
+
+    private @NotNull JMenuItem createDisplayAsItem(String text, boolean value, boolean current, ButtonGroup group) {
+        JRadioButtonMenuItem item = new JRadioButtonMenuItem(text, value == current);
+        group.add(item);
+        item.addActionListener(e -> {
+            if (value == current) {
+                return;
+            }
             wrapper.removeAllChildrenAndListeners();
             config.setBoolProperty(IS_LIVE_GRAPH, value);
 
             rebuild();
         });
-        return switchToLiveGraph;
+        return item;
     }
 
     public JPanelWithListener getContent() {

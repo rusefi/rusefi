@@ -28,7 +28,7 @@ import static com.devexperts.logging.Logging.getLogging;
 /**
  * Round gauge
  * <p>
- * On double-click a {@link DetachedSensor} is created
+ * Double-click, or "Pop out to window" in the right-click menu, creates a {@link DetachedSensor}
  * <p>
  * Date: 7/9/14
  * Andrey Belomutskiy, (c) 2013-2020
@@ -39,8 +39,10 @@ import static com.devexperts.logging.Logging.getLogging;
 public class SensorGauge {
     private static final Logging log = getLogging(SensorGauge.class);
 
+    public static final String CHANGE_GAUGE = "Change gauge";
+    static final String POP_OUT = "Pop out to window";
     private static final String HINT_LINE_1 = "Double-click to detach";
-    private static final String HINT_LINE_2 = "Right-click to change";
+    private static final String HINT_LINE_2 = "Right-click for options";
 
     public interface GaugeChangeListener {
         /**
@@ -115,9 +117,10 @@ public class SensorGauge {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (SwingUtilities.isRightMouseButton(e)) {
-                    showPopupMenu(uiContext, e, wrapper, listener, extraMenuItem);
+                    createPopupMenu(uiContext, wrapper, listener, extraMenuItem,
+                        () -> popOut(uiContext, e, gaugeName)).show(e.getComponent(), e.getX(), e.getY());
                 } else if (e.getClickCount() == 2) {
-                    handleDoubleClick(uiContext, e, gaugeName);
+                    popOut(uiContext, e, gaugeName);
                 }
             }
         };
@@ -136,18 +139,29 @@ public class SensorGauge {
         AutoupdateUtil.trueLayoutAndRepaint(wrapper.getParent());
     }
 
-    private static void showPopupMenu(UIContext uiContext, MouseEvent e, JPanelWithListener wrapper, GaugeChangeListener listener,
-                                      JMenuItem extraMenuItem) {
+    /**
+     * Search, then "Change gauge", the caller's display options, and "Pop out to window".
+     * Package-private so tests inspect the same menu users see.
+     */
+    static JPopupMenu createPopupMenu(UIContext uiContext, JPanelWithListener wrapper, GaugeChangeListener listener,
+                                      JMenuItem extraMenuItem, Runnable popOut) {
         JPopupMenu pm = new JPopupMenu();
-        fillGaugeMenuItems(uiContext, pm, wrapper, listener, extraMenuItem);
-        GaugeMenuSearch.addTo(pm);
+        JMenu changeGauge = new JMenu(CHANGE_GAUGE);
+        fillGaugeMenuItems(uiContext, changeGauge, wrapper, listener, extraMenuItem);
+        pm.add(changeGauge);
         if (extraMenuItem != null) {
             pm.add(extraMenuItem);
         }
-        pm.show(e.getComponent(), e.getX(), e.getY());
+        pm.addSeparator();
+        JMenuItem popOutItem = new JMenuItem(POP_OUT);
+        popOutItem.setToolTipText("Open this gauge in its own always-on-top window (also: double-click)");
+        popOutItem.addActionListener(e -> popOut.run());
+        pm.add(popOutItem);
+        GaugeMenuSearch.addTo(pm, changeGauge);
+        return pm;
     }
 
-    static void fillGaugeMenuItems(UIContext uiContext, JPopupMenu popupMenu, final JPanelWithListener wrapper, final GaugeChangeListener listener, final JMenuItem extraMenuItem) {
+    static void fillGaugeMenuItems(UIContext uiContext, JComponent popupMenu, final JPanelWithListener wrapper, final GaugeChangeListener listener, final JMenuItem extraMenuItem) {
         IniFileModel iniFile = uiContext.iniFileState.getIniFileModel();
         if (iniFile != null) {
             for (final String category : iniFile.getGaugeCategories().keySet()) {
@@ -186,10 +200,8 @@ public class SensorGauge {
         }
     }
 
-    private static void handleDoubleClick(UIContext uiContext, MouseEvent e, String gaugeName) {
-        final DetachedSensor ds = new DetachedSensor(uiContext, gaugeName, DetachedSensor.DEFAULT_WIDTH);
-
-        ds.show(e);
+    private static void popOut(UIContext uiContext, MouseEvent e, String gaugeName) {
+        new DetachedSensor(uiContext, gaugeName, DetachedSensor.DEFAULT_WIDTH).show(e);
     }
 
 }
