@@ -32,6 +32,8 @@ public class ConsoleThemeTest {
             assertEquals(new Color(0x586273), UIManager.getColor("TabbedPane.foreground"));
             assertEquals(new Color(0xffffff), UIManager.getColor("Console.TabArea.background"));
             assertEquals(new Color(0x16a34a), UIManager.getColor("Console.Status.connected.dot"));
+            assertEquals(new Color(0xeef0f3), UIManager.getColor("Console.Readout.background"));
+            assertEquals(new Color(0xffffff), UIManager.getColor("Console.Segmented.selectedBackground"));
             // [style] classes are stored as maps, so a broken entry shows up as missing
             assertNotNull(UIManager.get("[style]Button.primary"), "Launch Wizard style class");
         } finally {

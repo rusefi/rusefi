@@ -475,6 +475,8 @@ sizes/shapes shared by all themes, `FlatLightLaf.properties` (and a future
 `FlatDarkLaf.properties`) for palette variables and colour keys. Do not put colour keys in the
 shared file: FlatLaf's built-in `FlatLightLaf.properties` assigns most of them and wins. Add new
 look settings there rather than as `UIManager.put` calls, so they follow the active theme.
+Java's logical `Font.MONOSPACED` renders as Courier New on Windows; use `ConsoleFonts.mono()` for
+monospaced console text. Toolbar controls share `JoinedButtons.HEIGHT` so a row lines up.
 
 ## Java Version Constants
 
