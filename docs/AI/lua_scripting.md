@@ -74,7 +74,7 @@ the launch and rolling-idle trigger setters take integers and write controller s
 
 | Function | Target |
 |------------------------------|--------|
-| `setClutchUpState(bool)` / `setClutchDownState(bool)` | Clutch switches |
+| `setClutchUpState(bool)` / `setClutchDownState(bool)` | Clutch switches. With no physical clutch-down pin selected, `setClutchDownState(true)` allows closed-throttle idle correction above the RPM and vehicle-speed entry limits; cranking and startup taper still apply. |
 | `setBrakePedalState(bool)` | Brake pedal |
 | `setAcRequestState(bool)` | AC request "button" |
 | `setTorqueReductionState(bool)` | Flat-shift/torque-reduction trigger |

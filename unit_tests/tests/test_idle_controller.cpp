@@ -120,11 +120,14 @@ TEST(idle_v2, testDeterminePhase) {
 	EXPECT_EQ(ICP::Coasting, dut.determinePhase(5000, targetInfo, 0, 0, 10));
 }
 
-// This documents the current lockout: a stopped bike with a closed twistgrip
-// cannot correct a high base idle until RPM falls below the re-entry threshold.
-TEST(idle_v2, stoppedHighRpmLocksOutIdleCorrection) {
+// [tag:idle_clutch_disengaged] Lua clutch-down permits high-RPM idle correction;
+// releasing it restores the RPM hysteresis in IdleController::determinePhase().
+TEST(idle_v2, clutchDisengagedAllowsHighRpmIdleCorrection) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	IdleController dut;
+
+	engineConfiguration->clutchDownPin = Gpio::Unassigned;
+	engine->engineState.lua.clutchDownState = true;
 
 	setArrayValues(config->cltIdleRpm, 1060);
 	engineConfiguration->idlePidRpmUpperLimit = 350;
@@ -150,23 +153,30 @@ TEST(idle_v2, stoppedHighRpmLocksOutIdleCorrection) {
 
 	auto target = dut.getTargetRpm(80);
 	EXPECT_EQ((TgtInfo{1060, 1410, 1585}), target);
+	// Allow the air PID's initial entry damping to finish.
+	advanceTimeUs(1'000'000);
 
-	// Zero rider demand, stopped vehicle, and cranking taper already complete.
-	// Neutral and clutch state are not inputs to determinePhase().
+	// Zero rider demand, stopped vehicle, clutch disengaged, and taper complete.
 	for (float rpm : {2500.0f, 1700.0f, 1700.0f, 1500.0f}) {
 		SCOPED_TRACE(rpm);
 		engine->rpmCalculator.setRpmValue(rpm);
 		auto phase = dut.determinePhase(rpm, target, /*tps*/ 0, /*vss*/ 0, /*taper*/ 1);
-		ASSERT_EQ(ICP::Coasting, phase);
-		EXPECT_FLOAT_EQ(0, dut.getClosedLoop(phase, 0, rpm, target.ClosedLoopTarget));
-		EXPECT_FLOAT_EQ(0, dut.getIdleTimingAdjustment(rpm, target.ClosedLoopTarget, phase));
+		ASSERT_EQ(ICP::Idling, phase);
+		EXPECT_LT(dut.getClosedLoop(phase, 0, rpm, target.ClosedLoopTarget), 0);
+		EXPECT_LT(dut.getIdleTimingAdjustment(rpm, target.ClosedLoopTarget, phase), 0);
 		advanceTimeUs(1'000'000);
 	}
 
-	// Even below the exit threshold (1500 < 1585), coasting stays latched.
-	// Only falling below the entry threshold releases both corrections.
+	// Releasing the clutch restores coasting even inside the hysteresis band.
+	engine->engineState.lua.clutchDownState = false;
+	auto phase = dut.determinePhase(1500, target, 0, 0, 1);
+	ASSERT_EQ(ICP::Coasting, phase);
+	EXPECT_FLOAT_EQ(0, dut.getClosedLoop(phase, 0, 1500, target.ClosedLoopTarget));
+	EXPECT_FLOAT_EQ(0, dut.getIdleTimingAdjustment(1500, target.ClosedLoopTarget, phase));
+
+	// Without the clutch flag, falling below the entry threshold still permits idle.
 	engine->rpmCalculator.setRpmValue(1409);
-	auto phase = dut.determinePhase(1409, target, 0, 0, 1);
+	phase = dut.determinePhase(1409, target, 0, 0, 1);
 	ASSERT_EQ(ICP::Idling, phase);
 	// Process pending air PID resets, then allow reset damping to finish.
 	dut.getClosedLoop(phase, 0, 1409, target.ClosedLoopTarget);
@@ -174,6 +184,37 @@ TEST(idle_v2, stoppedHighRpmLocksOutIdleCorrection) {
 	advanceTimeUs(1'000'000);
 	EXPECT_LT(dut.getClosedLoop(phase, 0, 1409, target.ClosedLoopTarget), 0);
 	EXPECT_LT(dut.getIdleTimingAdjustment(1409, target.ClosedLoopTarget, phase), 0);
+}
+
+TEST(idle_v2, clutchDisengagedPhaseGuards) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	IdleController dut;
+	engineConfiguration->clutchDownPin = Gpio::Unassigned;
+	engineConfiguration->idlePidDeactivationTpsThreshold = 2;
+	engineConfiguration->maxIdleVss = 10;
+	engine->engineState.lua.clutchDownState = true;
+	TgtInfo target{1060, 1410, 1585};
+
+	// Clutch-down does not override cranking, invalid rider demand, or open throttle.
+	engine->rpmCalculator.setRpmValue(0);
+	EXPECT_EQ(ICP::Cranking, dut.determinePhase(0, target, 0, 25, 1));
+	engine->rpmCalculator.setRpmValue(2500);
+	EXPECT_EQ(ICP::Running, dut.determinePhase(2500, target, unexpected, 25, 1));
+	EXPECT_EQ(ICP::Running, dut.determinePhase(2500, target, 3, 25, 1));
+	EXPECT_EQ(ICP::CrankToIdleTaper, dut.determinePhase(2500, target, 0, 25, 0.5f));
+
+	// Once taper completes, the disengaged clutch allows idle at high road speed.
+	EXPECT_EQ(ICP::Idling, dut.determinePhase(2500, target, 0, 25, 1));
+	engine->engineState.lua.clutchDownState = false;
+	EXPECT_EQ(ICP::Coasting, dut.determinePhase(2500, target, 0, 25, 1));
+
+	// Below the RPM entry limit, clutch release still restores the vehicle-speed gate.
+	engine->rpmCalculator.setRpmValue(1409);
+	EXPECT_EQ(ICP::Running, dut.determinePhase(1409, target, 0, 25, 1));
+	engine->engineState.lua.clutchDownState = true;
+	EXPECT_EQ(ICP::Idling, dut.determinePhase(1409, target, 0, 25, 1));
+	engine->engineState.lua.clutchDownState = false;
+	EXPECT_EQ(ICP::Idling, dut.determinePhase(1409, target, 0, 0, 1));
 }
 
 TEST(idle_v2, crankingOpenLoop) {
