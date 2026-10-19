@@ -60,6 +60,10 @@ Release template (copy/paste this for new release):
  - Anti-lag stops after its configured duration while a zero timeout remains unrestricted.
  - An active boost fuel cut stays in place when the MAP sensor reading fails.
  - Priming skips injection when fuel is disabled, flood clear is active, or the engine has already started.
+ - Invalid ethanol readings use the primary fuel stoichiometric ratio.
+ - Zero-delay fuel protections cut only when lambda, oil pressure, or injector duty actually exceeds its limit.
+ - Kick-start cranking respects Lua ignition cuts and required phase synchronization.
+ - Maximum oil-pressure protection starts its timeout when the engine begins running.
  - Predictive MAP caps total event duration across TPS retriggers and resets the TPS peak for each event. kudos AlphaX!
  - overdwell protection causes Null-pointer deref and crash #9435
  - huge print in Lua walks into memory #10159
