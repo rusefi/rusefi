@@ -45,6 +45,17 @@ public class GaugesPanel {
 
     private final JPanel content = new JPanel(new BorderLayout());
     private final GaugesGrid gauges;
+    private final JPanel freePanel = new JPanel(new FreeGaugeLayout()) {
+        @Override
+        public boolean isOptimizedDrawingEnabled() {
+            // Free gauges may overlap: a repainting lower gauge must not draw over the ones above it.
+            return false;
+        }
+    };
+    private final JPanel layoutArea = new JPanel(new BorderLayout());
+    private final JToggleButton gridModeButton = new JToggleButton("Grid");
+    private final JToggleButton freeModeButton = new JToggleButton("Free");
+    private JButton gridSizeButton;
     private final Node config;
     private final UIContext uiContext;
     /** Tracked so we can call destroy() before replacing on grid resize. */
@@ -63,22 +74,13 @@ public class GaugesPanel {
 
         int rows = config.getIntProperty(GaugeLayout.ROWS, DEFAULT_ROWS);
         int columns = config.getIntProperty(GaugeLayout.COLUMNS, DEFAULT_COLUMNS);
-
-        setSensorGridDimensions(rows, columns);
-
+        saveConfig(rows, columns);
 
         content.add(createTopPanel(), BorderLayout.NORTH);
-
-        content.add(createMiddleLeftPanel(), BorderLayout.CENTER);
+        showLayout();
+        content.add(layoutArea, BorderLayout.CENTER);
 
         content.add(new WarningPanel(config).getPanel(config), BorderLayout.SOUTH);
-    }
-
-    @NotNull
-    private JPanel createMiddleLeftPanel() {
-        JPanel middleLeftPanel = new JPanel(new BorderLayout());
-        middleLeftPanel.add(gauges.panel, BorderLayout.CENTER);
-        return middleLeftPanel;
     }
 
     @NotNull
@@ -92,6 +94,17 @@ public class GaugesPanel {
     @NotNull
     private JPanel createRightTopPanel() {
         JPanel rightUpperPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
+
+        rightUpperPanel.add(new JLabel("Layout:"));
+        gridModeButton.setToolTipText("Gauges fill a grid of rows and columns");
+        freeModeButton.setToolTipText("Gauges can be placed anywhere and sized individually; the grid is kept");
+        ButtonGroup modeGroup = new ButtonGroup();
+        modeGroup.add(gridModeButton);
+        modeGroup.add(freeModeButton);
+        gridModeButton.addActionListener(e -> setFreeMode(false));
+        freeModeButton.addActionListener(e -> setFreeMode(true));
+        rightUpperPanel.add(gridModeButton);
+        rightUpperPanel.add(freeModeButton);
 
         JButton saveLayout = new JButton("Save Layout...");
         saveLayout.setToolTipText("Save the gauge grid and graph settings to a file");
@@ -110,6 +123,7 @@ public class GaugesPanel {
         }));
 
         JButton selector = new JButton("Grid Size");
+        gridSizeButton = selector;
         selector.setToolTipText("Choose the number of gauge rows and columns");
         selector.addActionListener(e -> {
             Component c = (Component) e.getSource();
@@ -162,10 +176,14 @@ public class GaugesPanel {
     void loadLayout(Path file) throws IOException {
         Node layout = GaugeLayout.load(file);
         // Leave warning and command preferences intact; discard old, including hidden, slots.
-        config.getConfig().keySet().removeIf(key -> key.matches("element_\\d+"));
+        // A version 1 file has no free layout, so it returns to Grid.
+        config.getConfig().keySet().removeIf(key -> key.matches("element_\\d+") || key.equals(GaugeLayout.MODE));
+        GaugeLayout.clearFreeLayout(config);
         config.getConfig().putAll(layout.getConfig());
-        setSensorGridDimensions(layout.getIntProperty(GaugeLayout.ROWS, DEFAULT_ROWS),
-            layout.getIntProperty(GaugeLayout.COLUMNS, DEFAULT_COLUMNS));
+        if (!GaugeLayout.isFreeMode(config)) {
+            GaugeLayout.clearFreeLayout(config);
+        }
+        showLayout();
     }
 
     @NotNull
@@ -179,28 +197,91 @@ public class GaugesPanel {
     }
 
     private void setSensorGridDimensions(int rows, int columns) {
+        saveConfig(rows, columns);
+        showLayout();
+    }
+
+    /** Switches between the grid and the free layout; Free always starts from the current grid. */
+    void setFreeMode(boolean free) {
+        if (free == GaugeLayout.isFreeMode(config)) {
+            return;
+        }
+        if (free) {
+            GaugeLayout.seedFreeFromGrid(config);
+        } else {
+            GaugeLayout.clearFreeLayout(config);
+        }
+        config.setProperty(GaugeLayout.MODE, free ? GaugeLayout.MODE_FREE : GaugeLayout.MODE_GRID);
+        showLayout();
+    }
+
+    boolean isFreeMode() {
+        return GaugeLayout.isFreeMode(config);
+    }
+
+    /** Rebuilds the gauges of the current mode from the configuration. */
+    private void showLayout() {
         // Destroy old elements before discarding them so their ConnectionStatusLogic
         // listeners are removed and their widgets can be garbage-collected.
         for (GaugesGridElement element : gaugeElements) {
             element.destroy();
         }
         gaugeElements.clear();
+        layoutArea.removeAll();
+        freePanel.removeAll();
 
+        boolean free = GaugeLayout.isFreeMode(config);
+        if (free) {
+            showFreeLayout();
+        } else {
+            showGrid(config.getIntProperty(GaugeLayout.ROWS, DEFAULT_ROWS),
+                config.getIntProperty(GaugeLayout.COLUMNS, DEFAULT_COLUMNS));
+        }
+        layoutArea.add(free ? freePanel : gauges.panel, BorderLayout.CENTER);
+        gridModeButton.setSelected(!free);
+        freeModeButton.setSelected(free);
+        gridSizeButton.setVisible(!free);
+        layoutArea.revalidate();
+        layoutArea.repaint();
+    }
+
+    private void showGrid(int rows, int columns) {
         gauges.setLayout(rows, columns);
 
         List<String> defaultLayout = getDefaultLayout();
         for (int i = 0; i < rows * columns; i++) {
             // sometimes grid is quite large so we shall be careful with default sensor index
             String defaultGaugeName = defaultLayout.get(Math.min(i, defaultLayout.size() - 1));
-            GaugesGridElement element = GaugesGridElement.create(uiContext, config.getChild("element_" + i), defaultGaugeName);
+            GaugesGridElement element = GaugesGridElement.create(uiContext,
+                config.getChild(GaugeLayout.GRID_ELEMENT + i), defaultGaugeName);
             element.setActive(active);
             gaugeElements.add(element);
             gauges.panel.add(element.getContent());
         }
+    }
 
-        saveConfig(rows, columns);
-        gauges.panel.revalidate();
-        gauges.panel.repaint();
+    private void showFreeLayout() {
+        List<String> defaultLayout = getDefaultLayout();
+        for (int i = 0; i < GaugeLayout.freeCount(config); i++) {
+            Node node = config.getChild(GaugeLayout.FREE_ELEMENT + i);
+            String defaultGaugeName = defaultLayout.get(Math.min(i, defaultLayout.size() - 1));
+            GaugesGridElement element = GaugesGridElement.create(uiContext, node, defaultGaugeName);
+            element.setActive(active);
+            gaugeElements.add(element);
+            // Transparent around the dial, so an overlapped gauge shows outside the circle.
+            element.getContent().setOpaque(false);
+            // Index 0 is painted last, so later gauges stay on top of earlier ones.
+            freePanel.add(element.getContent(), GaugeLayout.getBounds(node), 0);
+        }
+    }
+
+    // Package-private so tests check where free gauges are placed.
+    JPanel getFreePanel() {
+        return freePanel;
+    }
+
+    JButton getGridSizeButton() {
+        return gridSizeButton;
     }
 
     private List<String> getDefaultLayout() {
