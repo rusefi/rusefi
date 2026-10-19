@@ -21,7 +21,11 @@ import java.io.StringBufferInputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.rusefi.AssertCompatibility.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -343,7 +347,7 @@ public class TSProjectConsumerTest {
     }
 
     @Test
-    public void wueAliasesStayInConstantsPageOneBeforeGeneratedSettingContextHelp() throws IOException {
+    public void calibrationAliasesStayInConstantsPageOneBeforeGeneratedSettingContextHelp() throws IOException {
         ReaderStateImpl state = new ReaderStateImpl();
         state.setDefinitionInputFile("wue-alias-fixture.txt");
         VariableRegistry registry = state.getVariableRegistry();
@@ -354,17 +358,23 @@ public class TSProjectConsumerTest {
                 + "#define FUEL_LOAD_COUNT 3\n"
                 + "#define PACK_MULT_AFR_CFG 10\n"
                 + "#define CLT_FUEL_CURVE_SIZE 2\n"
+                + "#define BLEND_TABLE_COUNT 8\n"
+                + "#define TARGET_AFR_BLEND_PRECISION 0.01\n"
+                + "struct blend_table_s\n"
+                + "    int16_t[BLEND_TABLE_COUNT x BLEND_TABLE_COUNT] autoscale table;native lambda offset;\"\", 0.01, 0, -100, 100, 1\n"
+                + "end_struct\n"
                 + "struct config\n"
                 + "    uint32_t precedingField;nonzero offset;\"\", 1, 0, 0, 1, 0\n"
                 + "    float[CLT_FUEL_CURVE_SIZE] cltFuelCorr;canonical ratio;\"ratio\", 1, 0, 0, 5, 2\n"
                 + "    uint8_t[FUEL_LOAD_COUNT x FUEL_RPM_COUNT] lambdaTable;canonical target;\"ratio\", 1, 0, 0, 25, 1\n"
+                + "    blend_table_s[2 iterate] targetAfrBlends\n"
                 + "end_struct\n";
 
         TestTSProjectConsumer consumer = new TestTSProjectConsumer(state);
         state.readBufferedReader(definition, consumer);
 
         TsFileContent content = consumer.getTsFileContent(new ByteArrayInputStream(
-                wueAliasTemplateRegion().getBytes(StandardCharsets.UTF_8)));
+                calibrationAliasTemplateRegion().getBytes(StandardCharsets.UTF_8)));
         String generated = consumer.writeContentForTest(consumer.getContent(), content);
 
         assertTrue(generated.startsWith("[Constants]\npage = 2\n"));
@@ -373,6 +383,17 @@ public class TSProjectConsumerTest {
         assertTrue(generated.contains("wueAnalyzeCltFuelCorr = array, F32, 4, [2], \"%\", 100, 0, 0, 500, 0, noMsqSave"));
         assertTrue(generated.contains("cltFuelCorr = array, F32, 4, [2], \"ratio\", 1, 0, 0, 5, 2"));
         assertTrue(generated.contains("lambdaTable = array, U08, 12, [4x3], \"ratio\", 1, 0, 0, 25, 1"));
+        for (int adder = 1; adder <= 2; adder++) {
+            int offset = 24 + (adder - 1) * 128;
+            assertTrue(generated.contains("targetAfrBlends" + adder + "_table = array, S16, " + offset
+                    + ", [8x8], \"\", 0.01, 0, -100, 100, 1"));
+            assertTrue(generated.contains("targetMixtureAdder" + adder + "Display = array, S16, " + offset
+                    + ", [8x8], {useLambdaOnInterface ? \"lambda\" : \"AFR (gasoline scale)\"}, "
+                    + "{useLambdaOnInterface ? 0.01 : 0.147}, 0, {useLambdaOnInterface ? -100 : -1470}, "
+                    + "{useLambdaOnInterface ? 100 : 1470}, 2, noMsqSave"));
+            assertTrue(generated.indexOf("targetMixtureAdder" + adder + "Display =")
+                    < generated.indexOf("; CONFIG_DEFINITION_START"));
+        }
 
         int aliasIndex = generated.indexOf("wueAnalyzeTargetTable =");
         int generatedConfigStartIndex = generated.indexOf("; CONFIG_DEFINITION_START");
@@ -384,11 +405,65 @@ public class TSProjectConsumerTest {
                 "WUE aliases must remain in [Constants], before generated [SettingContextHelp]");
     }
 
-    private static String wueAliasTemplateRegion() throws IOException {
+    @Test
+    public void targetAdderHasOneEditorForTheSameCalibration() throws IOException {
+        String template = Files.readString(Path.of(ConfigDefinitionTest.FIRMWARE, "tunerstudio", "tunerstudio.template.ini"));
+        for (int adder = 1; adder <= 2; adder++) {
+            Matcher editors = Pattern.compile("(?m)^\\ttable = [^\\n]+\\n(?:(?:\\t\\t|;)[^\\n]*\\n|\\n)*?\\t\\txBins = targetAfrBlends"
+                    + adder + "_rpmBins,").matcher(template);
+            int count = 0;
+            while (editors.find()) {
+                count++;
+            }
+            assertEquals(1, count);
+        }
+    }
+
+    @Test
+    public void targetAdderUsesOneDialogAndTableForBothDisplayModes() throws IOException {
+        String template = Files.readString(Path.of(ConfigDefinitionTest.FIRMWARE, "tunerstudio", "tunerstudio.template.ini"));
+        String menu = Files.readString(Path.of(ConfigDefinitionTest.FIRMWARE, "tunerstudio", "top_level_menu.ini"));
+        for (int adder = 1; adder <= 2; adder++) {
+            String dialog = templateDialogBody(template, "targetAfrBlend" + adder + "Cfg");
+            List<String> centers = centerPanels(dialog);
+            // Both menu labels open the same editor. A second editor over the
+            // same storage can leave overlapping controls in TunerStudio.
+            assertEquals(1, centers.size());
+            assertEquals("panel = targetAfrBlend" + adder
+                    + "Table, Center, { targetAfrBlends" + adder + "_blendParameter != 0 }, { 1 }", centers.get(0));
+            assertTrue(dialog.contains("panel = targetAdder" + adder + "Settings, East"));
+            for (String mode : new String[]{"Lambda", "Afr"}) {
+                String condition = "Lambda".equals(mode) ? "useLambdaOnInterface" : "!useLambdaOnInterface";
+                String label = "Afr".equals(mode) ? "AFR" : mode;
+                assertTrue(menu.contains("groupChildMenu = targetAfrBlend" + adder + "Cfg, \"Target " + label
+                        + " Adder " + adder + "\", { isInjectionEnabled }, { " + condition + " }"));
+            }
+        }
+    }
+
+    private static String templateDialogBody(String template, String id) {
+        Matcher matcher = Pattern.compile("(?m)^\\tdialog = " + Pattern.quote(id)
+                + ",[^\\n]*\\n((?:\\t\\t[^\\n]*\\n|\\n)*)").matcher(template);
+        assertTrue(matcher.find(), "Missing dialog " + id);
+        return matcher.group(1);
+    }
+
+    private static List<String> centerPanels(String dialog) {
+        List<String> panels = new ArrayList<>();
+        for (String line : dialog.split("\\n")) {
+            String trimmed = line.trim();
+            if (trimmed.startsWith("panel = ") && trimmed.contains(", Center")) {
+                panels.add(trimmed);
+            }
+        }
+        return panels;
+    }
+
+    private static String calibrationAliasTemplateRegion() throws IOException {
         String template = Files.readString(Path.of(ConfigDefinitionTest.FIRMWARE, "tunerstudio", "tunerstudio.template.ini"));
         int begin = template.indexOf("@@TS_PAGE_FIELD_BLOCKS@@");
         int end = template.indexOf("; Continue SettingContextHelp");
-        assertTrue(begin >= 0 && end > begin, "Missing WUE alias template region");
+        assertTrue(begin >= 0 && end > begin, "Missing calibration alias template region");
         return "[Constants]\n" + template.substring(begin, end);
     }
 

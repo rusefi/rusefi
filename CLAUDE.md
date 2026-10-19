@@ -321,6 +321,11 @@ table in `Center` and the settings/status panel in `East`. `West` keeps the
 table's preferred width, leaving an empty center instead of expanding the table
 when the window is widened (see the VE blend dialogs).
 
+For Lambda/AFR views of a target adder, use one table editor and one display
+alias per native table, switching its units and scale like the main target
+table. Separate Lambda and AFR editors over overlapping calibration storage
+can leave duplicate controls overlaid in TunerStudio.
+
 - `firmware/integration/rusefi_config.txt` defines the parameters stored in persistent configuration (both "configuration", ie which pins do what, and the "calibration" or "tune", like the VE table, timing, etc.). This is the primary input that describes the main `engine_configuration_s` struct and the top-level persistent config layout.
 - `firmware/integration/config_page_*.txt` files define additional TunerStudio memory pages, each containing its own struct (e.g. `page2_s`, `page3_s`, `page4_s`). These pages hold data that lives outside the main configuration image — for example, high-speed scatter offsets (`page2_s` / TS page 2), long-term fuel trim tables (`page3_s` / TS page 3), and secondary VE tables with blend controls (`page4_s` / TS page 4). The struct and file numbers match the TunerStudio page numbers.
 - A board can append extra fields to `engine_configuration_s` by providing `board_engine_configuration.txt` in its board directory (picked up by `gen_config_common.sh`); a board `board_config.txt` instead splices into the outer `persistent_config_s`, so its fields are reached as `config->foo`, not `engineConfiguration->foo` (the AlphaX `boardUse*PullUp` bits and `boardUseCanTerminator` live there). Per-board TunerStudio fragments exist for most template sections - see the `set_board_file` list in `gen_config_common.sh` (e.g. `board_constants_extensions.ini` for per-board `requiresPowerCycle`, `board_panel_can_main.ini` for the CAN dialog); e.g. the `can3BaudRate`/`can3RxPin`/`can3TxPin` fields exist only on boards that declare them there, guarded in shared C++ by `#if (EFI_CAN_BUS_COUNT >= 3)` with the count itself raised via the board's `prepend.txt`. Note: adding/renaming these board `.txt` inputs may not trigger config regeneration on the next `make` - `touch firmware/integration/rusefi_config.txt` to force it.
