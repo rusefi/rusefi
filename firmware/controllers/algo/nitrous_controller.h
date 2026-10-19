@@ -10,6 +10,7 @@ class NitrousController : public nitrous_control_state_s, public EngineModule {
 public:
     using interface_t = NitrousController;
 
+    void onFastCallback() override;
     void onSlowCallback() override;
 
     float getFuelCoefficient() const;
