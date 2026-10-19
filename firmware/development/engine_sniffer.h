@@ -91,6 +91,8 @@ private:
 	 * https://github.com/rusefi/rusefi/issues/780
 	 */
 	bool collectingData = false;
+	// buffer is posted to logging central and waits for free(), do not touch it
+	volatile bool isPublished = false;
 	efitick_t startTimeNt = 0;
 	volatile int isInitialized = false;
 };

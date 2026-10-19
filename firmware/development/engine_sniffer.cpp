@@ -71,6 +71,7 @@ void WaveChart::reset() {
 	counter = 0;
 	startTimeNt = 0;
 	collectingData = false;
+	isPublished = false;
 	logging.appendPrintf( "%s%s", PROTOCOL_ENGINE_SNIFFER, LOG_DELIMITER);
 }
 
@@ -114,6 +115,11 @@ void setChartSize(int newSize) {
 #endif // EFI_UNIT_TEST
 
 void WaveChart::publishIfFull() {
+	// already queued: posting it again would append one more LOG_DELIMITER per status
+	// poll and send the same buffer several times until free() is called
+	if (isPublished) {
+		return;
+	}
 	if (isFull() || isStartedTooLongAgo()) {
 		publish();
 	}
@@ -136,6 +142,7 @@ void WaveChart::publish() {
 	if (getTriggerCentral()->isEngineSnifferEnabled) {
 		// set buffer used
 		len = logging.linePointer - getBuffer();
+		isPublished = true;
 		loggingPostBuffer(this);
 	} else {
 		reset();
@@ -173,7 +180,7 @@ void WaveChart::addEvent3(const char *name, const char * msg) {
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6653, isInitialized, "chart not initialized");
 
 	/* this also checks if we have enough (WAVE_LOGGING_TAIL_GUARD) space in logging */
-	if (isFull()) {
+	if (isPublished || isFull()) {
 		return;
 	}
 

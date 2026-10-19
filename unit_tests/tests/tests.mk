@@ -161,6 +161,7 @@ TESTS_SRC_CPP = \
 	tests/test_ion.cpp \
 	tests/test_kline_bytes_aggregator.cpp \
 	tests/test_engine_math.cpp \
+	tests/test_engine_sniffer.cpp \
 	tests/test_throttle_model.cpp \
 	tests/test_fasterEngineSpinningUp.cpp \
 	tests/test_dwell_corner_case_issue_796.cpp \
