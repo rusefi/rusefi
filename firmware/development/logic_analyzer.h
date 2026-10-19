@@ -16,7 +16,6 @@
 void initWaveAnalyzer();
 void startLogicAnalyzerPins();
 void stopLogicAnalyzerPins();
-void printWave(Logging *logging);
 void showWaveInfo(void);
 void reportLogicAnalyzerToTS(void); 
 
