@@ -8,3 +8,10 @@ dependencies {
     api global_libs.snakeyaml
     api 'org.apache.commons:commons-math3:3.6.1'
 }
+
+// ObdCodeDictionary reads OBD code names straight from the firmware enum
+processResources {
+    from(file('../../firmware/controllers/algo/obd_error_codes.h')) {
+        into 'obd'
+    }
+}

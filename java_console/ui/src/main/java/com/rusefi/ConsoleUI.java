@@ -22,6 +22,7 @@ import com.rusefi.ui.basic.SingleAsyncJobExecutor;
 import com.rusefi.ui.basic.StatusPanelWithProgressBar;
 import com.rusefi.ui.basic.TuneManagementTab;
 import com.rusefi.ui.console.MainFrame;
+import com.rusefi.ui.obd.ObdCodesPane;
 import com.rusefi.ui.console.TabbedPanel;
 import com.rusefi.ui.engine.EngineSnifferPanel;
 import com.rusefi.ui.lua.LuaScriptPanel;
@@ -537,6 +538,11 @@ console live data tab is broken #8402
                 tabbedPane.selectTab("Device");
                 devicePane.triggerAutoUpdate();
             });
+
+            if (!isOffline) {
+                // added after the other tabs so it does not shift their saved TAB_INDEX
+                tabbedPane.addTab(ObdCodesPane.TITLE, new ObdCodesPane().getContent());
+            }
 
             addCustomTabs();
 
