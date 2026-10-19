@@ -22,6 +22,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -162,20 +163,22 @@ public class SensorGauge {
     }
 
     static void fillGaugeMenuItems(UIContext uiContext, JComponent popupMenu, final JPanelWithListener wrapper, final GaugeChangeListener listener, final JMenuItem extraMenuItem) {
+        addGaugeCatalog(uiContext, popupMenu, gaugeName -> {
+            createGaugeBody(uiContext, gaugeName, wrapper, listener, extraMenuItem);
+            listener.onSensorChange(gaugeName);
+        });
+    }
+
+    /** Adds one submenu per gauge category; choosing a gauge passes its name to {@code onSelect}. */
+    public static void addGaugeCatalog(UIContext uiContext, JComponent menu, Consumer<String> onSelect) {
         IniFileModel iniFile = uiContext.iniFileState.getIniFileModel();
         if (iniFile != null) {
             for (final String category : iniFile.getGaugeCategories().keySet()) {
                 JMenuItem cmi = new JMenu(category);
-                popupMenu.add(cmi);
+                menu.add(cmi);
                 for (final GaugeModel gauge : iniFile.getGaugeCategories().get(category).getGauges()) {
                     JMenuItem mi = new JMenuItem(GaugeMenuLabel.getTitle(uiContext, gauge));
-                    mi.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            createGaugeBody(uiContext, gauge.getName(), wrapper, listener, extraMenuItem);
-                            listener.onSensorChange(gauge.getName());
-                        }
-                    });
+                    mi.addActionListener(e -> onSelect.accept(gauge.getName()));
                     cmi.add(mi);
                 }
             }
@@ -184,17 +187,11 @@ public class SensorGauge {
 
         for (final SensorCategory sc : SensorCategory.values()) {
             JMenuItem cmi = new JMenu(sc.getName());
-            popupMenu.add(cmi);
+            menu.add(cmi);
 
             for (final Sensor s : Sensor.getSensorsForCategory(sc.getName())) {
                 JMenuItem mi = new JMenuItem(s.getName());
-                mi.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        createGaugeBody(uiContext, s.name(), wrapper, listener, extraMenuItem);
-                        listener.onSensorChange(s.name());
-                    }
-                });
+                mi.addActionListener(e -> onSelect.accept(s.name()));
                 cmi.add(mi);
             }
         }
