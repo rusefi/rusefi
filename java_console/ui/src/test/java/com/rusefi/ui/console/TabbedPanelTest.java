@@ -13,7 +13,7 @@ public class TabbedPanelTest {
     public void builtInTabsHaveIcons() {
         String[] tabs = {
             "Gauges", "Messages", "Lua Scripting", "Engine Sniffer", "Tuning",
-            "Knock Analyzer", "Pinout", "Manage Tunes", "Device"
+            "Knock Analyzer", "Pinout", "Manage Tunes", "Device", "OBD Codes"
         };
 
         for (String tab : tabs) {

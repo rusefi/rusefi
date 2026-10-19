@@ -7,6 +7,7 @@ import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.ConnectionStatusValue;
 import com.rusefi.ui.LogDownloader;
 import com.rusefi.ui.UIContext;
+import com.rusefi.ui.obd.ObdCodesPane;
 
 import javax.swing.*;
 import java.awt.*;
@@ -149,6 +150,9 @@ public class TabbedPanel {
                 break;
             case "Device":
                 iconName = "controller";
+                break;
+            case ObdCodesPane.TITLE:
+                iconName = "file-info";
                 break;
             default:
                 return null;
