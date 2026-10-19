@@ -544,6 +544,68 @@ TEST(idle_v2, closedLoopDeadzone) {
 	EXPECT_FLOAT_EQ(-25, dut.getClosedLoop(ICP::Idling, 0, /*rpm*/ 900, /*tgt*/ 900));
 }
 
+// Target idle is 1000 RPM. At 940 RPM, the controller adds air to raise RPM.
+// At 1020 RPM, it still requests the same extra air because RPM is now inside
+// the +/-50 RPM deadzone. With only P enabled, it should instead reduce air.
+// This test passes by checking the current unwanted behavior in both directions.
+// When fixing it, keep the same RPM sequence and update the expected results.
+TEST(idle_v2, deadzoneReturnsStaleCorrectionAndPidState) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	IdleController dut;
+
+	engineConfiguration->idleRpmPid.pFactor = 0.01f;
+	engineConfiguration->idleRpmPid.iFactor = 0;
+	engineConfiguration->idleRpmPid.dFactor = 0;
+	engineConfiguration->idleRpmPid.offset = 0;
+	engineConfiguration->idleRpmPid.periodMs = 0;
+	engineConfiguration->idleRpmPid.minValue = -50;
+	engineConfiguration->idleRpmPid.maxValue = 50;
+	engineConfiguration->idlePidRpmDeadZone = 50;
+	engineConfiguration->useCicPidForIdle = false;
+	engineConfiguration->useIacPidMultTable = false;
+	engineConfiguration->pidExtraForLowRpm = 0;
+	engineConfiguration->idle_antiwindupFreq = 0;
+	engineConfiguration->idle_derivativeFilterLoss = 0;
+	engineConfiguration->idlePidDeactivationTpsThreshold = 2;
+	dut.init();
+
+	// Let the post-reset output damping finish before checking the cached value.
+	dut.getClosedLoop(ICP::Idling, 0, /*rpm*/ 940, /*target*/ 1000);
+	advanceTimeUs(1'000'000);
+	EXPECT_FLOAT_EQ(0.6f, dut.getClosedLoop(ICP::Idling, 0, /*rpm*/ 940, /*target*/ 1000));
+	EXPECT_FALSE(dut.isInDeadZone);
+
+	// Error reverses from +60 to -20 RPM. With I=D=0, live P would be -0.2,
+	// but current behavior retains +0.6 and the last posted error of +60 RPM.
+	EXPECT_FLOAT_EQ(0.6f, dut.getClosedLoop(ICP::Idling, 0, /*rpm*/ 1020, /*target*/ 1000));
+	EXPECT_TRUE(dut.isInDeadZone);
+	EXPECT_TRUE(dut.isIdleClosedLoop);
+	EXPECT_EQ(RPM_DEAD_ZONE, dut.idleState);
+	EXPECT_FLOAT_EQ(60, dut.getIdlePid()->getPrevError());
+	dut.getIdlePid()->postState(engine->outputChannels.idleStatus);
+	EXPECT_FLOAT_EQ(60, engine->outputChannels.idleStatus.error);
+	EXPECT_FLOAT_EQ(0.6f, engine->outputChannels.idleStatus.pTerm);
+	EXPECT_FLOAT_EQ(0, engine->outputChannels.idleStatus.iTerm);
+
+	// The configured 50 RPM boundary is included in the deadzone too.
+	EXPECT_FLOAT_EQ(0.6f, dut.getClosedLoop(ICP::Idling, 0, /*rpm*/ 1050, /*target*/ 1000));
+	EXPECT_TRUE(dut.isInDeadZone);
+	EXPECT_FLOAT_EQ(60, dut.getIdlePid()->getPrevError());
+
+	// A new error outside the band refreshes the cached correction in the other
+	// direction; reversing again to +20 RPM holds that negative value and -60 error.
+	EXPECT_FLOAT_EQ(-0.6f, dut.getClosedLoop(ICP::Idling, 0, /*rpm*/ 1060, /*target*/ 1000));
+	EXPECT_FALSE(dut.isInDeadZone);
+	EXPECT_FLOAT_EQ(-0.6f, dut.getClosedLoop(ICP::Idling, 0, /*rpm*/ 980, /*target*/ 1000));
+	EXPECT_TRUE(dut.isInDeadZone);
+	EXPECT_EQ(RPM_DEAD_ZONE, dut.idleState);
+	EXPECT_FLOAT_EQ(-60, dut.getIdlePid()->getPrevError());
+	dut.getIdlePid()->postState(engine->outputChannels.idleStatus);
+	EXPECT_FLOAT_EQ(-60, engine->outputChannels.idleStatus.error);
+	EXPECT_FLOAT_EQ(-0.6f, engine->outputChannels.idleStatus.pTerm);
+	EXPECT_FLOAT_EQ(0, engine->outputChannels.idleStatus.iTerm);
+}
+
 TEST(idle_v2, RunningToIdleTransition) {
   EngineTestHelper eth(engine_type_e::TEST_ENGINE);
   IdleController dut;
