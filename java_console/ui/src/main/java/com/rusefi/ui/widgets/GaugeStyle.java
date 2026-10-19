@@ -6,27 +6,30 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 
 /** Shared light palette and drawing helpers, so every gauge presentation looks like one family. */
-final class GaugeStyle {
-    static final Color PROGRESS = new Color(0xFCE38A);
-    static final Color PROGRESS_STRONG = new Color(0xF6C445);
-    static final Color DANGER_FILL = new Color(0xFFCDD2);
-    static final Color DANGER = new Color(0xE53935);
-    static final Color SCALE = new Color(0x5F656D);
-    static final Color TICK = new Color(0x9AA0A6);
-    static final Color TRACK = new Color(0xE3E5E8);
-    static final Color CARD_TOP = Color.WHITE;
-    static final Color CARD_BOTTOM = new Color(0xF6F7F9);
-    static final Color CARD_BORDER = new Color(0xE1E4E8);
-    static final Color TEXT = new Color(0x111111);
+public final class GaugeStyle {
+    public static final Color PROGRESS = new Color(0xFCE38A);
+    public static final Color PROGRESS_STRONG = new Color(0xF6C445);
+    public static final Color DANGER_FILL = new Color(0xFFCDD2);
+    public static final Color DANGER = new Color(0xE53935);
+    public static final Color SCALE = new Color(0x5F656D);
+    public static final Color TICK = new Color(0x9AA0A6);
+    public static final Color TRACK = new Color(0xE3E5E8);
+    public static final Color CARD_TOP = Color.WHITE;
+    public static final Color CARD_BOTTOM = new Color(0xF6F7F9);
+    public static final Color CARD_BORDER = new Color(0xE1E4E8);
+    public static final Color TEXT = new Color(0x111111);
+    /** Live graph line and the light grid behind it. */
+    public static final Color LINE = new Color(0xE0A100);
+    public static final Color GRID = new Color(0xEDEFF2);
     /** Ellipsis written as an escape: source encoding must not change the rendered text. */
-    static final String ELLIPSIS = "…";
+    public static final String ELLIPSIS = "\u2026";
     private static final int SHADOW = 3;
 
     private GaugeStyle() {
     }
 
     /** The look and feel's UI font family, so gauges match the rest of the console. */
-    static Font font(int style, float size) {
+    public static Font font(int style, float size) {
         Font base = UIManager.getFont("Label.font");
         if (base == null) {
             base = new Font(Font.SANS_SERIF, Font.PLAIN, 12);
@@ -38,7 +41,7 @@ final class GaugeStyle {
      * Paints a rounded white card with a soft shadow, entirely inside {@code width} x
      * {@code height}, and returns its face. Corners stay transparent for overlapping gauges.
      */
-    static RoundRectangle2D.Double paintCard(Graphics2D g, int width, int height) {
+    public static RoundRectangle2D.Double paintCard(Graphics2D g, int width, int height) {
         double arc = Math.min(18, 0.14 * Math.min(width, height));
         for (int i = SHADOW; i >= 1; i--) {
             g.setColor(new Color(0, 0, 0, 7));
@@ -56,7 +59,7 @@ final class GaugeStyle {
     }
 
     /** Rounded track, optional danger tint from {@code dangerStart}, and the filled share {@code fill}. */
-    static void paintBar(Graphics2D g, double x, double y, double width, double height, boolean vertical,
+    public static void paintBar(Graphics2D g, double x, double y, double width, double height, boolean vertical,
                          double fill, double dangerStart, boolean danger) {
         double arc = vertical ? width : height;
         RoundRectangle2D.Double track = new RoundRectangle2D.Double(x, y, width, height, arc, arc);
@@ -91,7 +94,7 @@ final class GaugeStyle {
     }
 
     /** Draws {@code text} with its left edge, centre or right edge at {@code x} (align -1, 0, 1). */
-    static void drawText(Graphics2D g, String text, double x, double baseline, int align) {
+    public static void drawText(Graphics2D g, String text, double x, double baseline, int align) {
         if (text == null || text.isEmpty()) {
             return;
         }
@@ -101,7 +104,7 @@ final class GaugeStyle {
     }
 
     /** {@code text} shortened with an ellipsis to fit {@code maxWidth} in the current font. */
-    static String fit(Graphics2D g, String text, double maxWidth) {
+    public static String fit(Graphics2D g, String text, double maxWidth) {
         if (text == null) {
             return "";
         }
@@ -119,7 +122,7 @@ final class GaugeStyle {
     }
 
     /** Largest font of {@code style} up to {@code maxSize} whose rendering of {@code text} fits {@code maxWidth}. */
-    static Font fitFont(Graphics2D g, String text, int style, float maxSize, double maxWidth) {
+    public static Font fitFont(Graphics2D g, String text, int style, float maxSize, double maxWidth) {
         Font font = font(style, maxSize);
         int width = g.getFontMetrics(font).stringWidth(text);
         if (width > maxWidth && width > 0) {
