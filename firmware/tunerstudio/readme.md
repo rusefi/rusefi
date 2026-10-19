@@ -37,6 +37,29 @@ of +10% at 50% weight produces +5% VE correction and a multiplier of 1.05.
 Final VE includes all VE corrections. Zero blend telemetry alone does not
 distinguish a real zero input from an unavailable sensor.
 
+## Target mixture adders
+
+`Fuel > Target Lambda Adders` or `Fuel > Target AFR Adders` follows the interface's
+Lambda/AFR setting. Each dialog combines the adjustment table, blend input,
+load-axis override, weight curve and live input, RPM, weight and final target.
+Selecting Zero as the blend input disables editing while keeping the table
+visible. The input name and curve units follow the selected channel.
+
+The ECU adds weighted lambda offsets to the main target. Negative offsets
+richen the mixture; positive offsets lean it. A table value of -0.10 lambda
+at 50% weight adds -0.05 lambda. The two adders are summed.
+
+AFR table values use the same fixed gasoline-equivalent scale as the main
+target table: 14.7 times lambda. Final target AFR uses the actual fuel's
+stoichiometric ratio, so it can differ on flex fuel. Display aliases share
+the native table bytes and use `noMsqSave`; saved tunes retain the original
+lambda fields. Changing display mode does not change the calibration.
+
+Zero as a load-axis override inherits the main target table's load source,
+including its override. This can differ from VE load. The adder keeps its
+own load bins; changing a source does not convert those numbers. RPM remains
+on X. Final target readouts include both adders and WOT target enrichment.
+
 ## Template validation
 
 Conditions (`@@if_FLAG` and `@@if_block FLAG@@` / `@@endif_block`) require
