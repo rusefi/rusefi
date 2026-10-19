@@ -477,6 +477,13 @@ to test with the installed runtime. The plugin launcher compares both exact
 file size and timestamp against the server, so a locally rebuilt cached body
 JAR is replaced on the next online plugin launch until the fix is published.
 
+Java sources are compiled as UTF-8 via `options.encoding` in the root `build.gradle`
+(`[tag:java_source_encoding]`, guarded by `SourceEncodingTest`). Without it, Windows
+builds garble non-ASCII literals. On a Windows checkout, `SensorLoggerTest` (temp
+directory still locked at cleanup), `FirmwareSourceCodeDownloaderTest` (two
+rollback-failure cases that expect an `IOException` Windows does not raise) and
+`CalibrationPanelWorkspaceTest` fail independently of the change being tested.
+
 - When modifying Java code (`java_console/`, `java_tools/`), bump `UiVersion.CONSOLE_VERSION` in `java_tools/version/src/main/java/com/rusefi/UiVersion.java` to the current date in `YYYYMMDD` format as part of the same change (no-op if it already shows today's date).
 - `Autoupdate.AUTOUPDATE_VERSION` in `java_console/autoupdate/src/main/java/com/rusefi/autoupdate/Autoupdate.java` is a separate, manually managed version for the updater executable. Bump it (same `YYYYMMDD` format) only when the change affects updater behavior, i.e. code that runs inside `rusefi_autoupdate.exe`.
 

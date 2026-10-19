@@ -34,6 +34,10 @@ allprojects {
 
     gradle.projectsEvaluated {
         tasks.withType(JavaCompile) {
+            // [tag:java_source_encoding] Sources are UTF-8. Without this, javac uses the platform
+            // charset (windows-1252 on Windows), so a literal like an ellipsis compiles into three
+            // garbled characters in Windows builds only. Covered by SourceEncodingTest.
+            options.encoding = 'UTF-8'
             options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
         }
     }
