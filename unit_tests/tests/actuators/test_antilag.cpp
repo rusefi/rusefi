@@ -35,3 +35,36 @@ TEST(Actuators, AntiLag) {
 	ASSERT_EQ(1, engine->antilagController.isAntilagCondition);
 	ASSERT_NEAR(1.5 * fuelWithCorrections, getRunningFuel(1), EPS4D);
 }
+
+// anti-lag currently remains active after its configured duration.
+TEST(Actuators, AntilagRemainsActiveAfterConfiguredTimeout) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->antiLagEnabled = true;
+	engineConfiguration->antiLagActivationMode = ALWAYS_ON_ANTILAG;
+	engineConfiguration->ALSMinRPM = 400;
+	engineConfiguration->ALSMaxRPM = 3200;
+	engineConfiguration->ALSMinCLT = 0;
+	engineConfiguration->ALSMaxCLT = 105;
+	engineConfiguration->ALSMaxTPS = 5;
+	engineConfiguration->ALSMaxDuration = 1;
+	setTable(config->ALSFuelAdjustment, 50);
+	Sensor::setMockValue(SensorType::Clt, 70);
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 1);
+
+	// Exceeding the activation range resets the existing duration timer.
+	Sensor::setMockValue(SensorType::Rpm, 4000);
+	engine->antilagController.update();
+	ASSERT_FALSE(engine->antilagController.isAntilagCondition);
+
+	Sensor::setMockValue(SensorType::Rpm, 1000);
+	engine->antilagController.update();
+	ASSERT_TRUE(engine->antilagController.isAntilagCondition);
+	ASSERT_TRUE(engine->antilagController.isInsideALSTimerCondition());
+
+	advanceTimeUs(1100000);
+	engine->antilagController.update();
+	ASSERT_FALSE(engine->antilagController.isInsideALSTimerCondition());
+	EXPECT_TRUE(engine->antilagController.ALSTimerCondition);
+	EXPECT_TRUE(engine->antilagController.isAntilagCondition);
+	EXPECT_FLOAT_EQ(50, engine->antilagController.fuelALSCorrection);
+}
