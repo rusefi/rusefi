@@ -3,6 +3,75 @@
 #include "fuel_math.h"
 #include "limp_manager.h"
 
+TEST(limp, zeroLambdaDelayCutsEvenWhenProtectionDisabled) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->lambdaProtectionEnable = false;
+	engineConfiguration->lambdaProtectionTimeout = 0;
+	engineConfiguration->lambdaProtectionRestoreRpm = 2000;
+	Sensor::setMockValue(SensorType::Lambda1, 0.85f);
+
+	engine->lambdaMonitor.update(3000, 80);
+	ASSERT_TRUE(engine->lambdaMonitor.lambdaCurrentlyGood);
+	EXPECT_TRUE(engine->lambdaMonitor.isCut());
+
+	LimpManager dut;
+	dut.updateState(3000, getTimeNowNt());
+	EXPECT_EQ(ClearReason::LambdaProtection, dut.allowInjection().reason);
+}
+
+TEST(limp, zeroLowOilDelayCutsWithHealthyPressure) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->minOilPressureAfterStart = 0;
+	engineConfiguration->enableOilPressureProtect = true;
+	engineConfiguration->minimumOilPressureTimeout = 0;
+	setArrayValues(config->minimumOilPressureValues, 100);
+	setArrayValues(config->maximumOilPressureValues, 0);
+	Sensor::setMockValue(SensorType::OilPressure, 200);
+	engine->rpmCalculator.setRpmValue(1000);
+
+	LimpManager dut;
+	dut.updateState(1000, getTimeNowNt());
+	EXPECT_EQ(ClearReason::OilPressure, dut.allowInjection().reason);
+
+	// A positive delay avoids the false cut with exactly the same inputs.
+	engineConfiguration->minimumOilPressureTimeout = 0.1f;
+	dut.updateState(1000, getTimeNowNt());
+	EXPECT_TRUE(dut.allowInjection());
+}
+
+TEST(limp, zeroHighOilDelayCutsWithHealthyPressure) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->minOilPressureAfterStart = 0;
+	engineConfiguration->enableOilPressureProtect = false;
+	engineConfiguration->maxOilPressureTimeout = 0;
+	setArrayValues(config->maximumOilPressureValues, 500);
+	Sensor::setMockValue(SensorType::OilPressure, 200);
+	engine->rpmCalculator.setRpmValue(1000);
+
+	LimpManager dut;
+	dut.updateState(1000, getTimeNowNt());
+	EXPECT_EQ(ClearReason::OilPressure, dut.allowInjection().reason);
+
+	engineConfiguration->maxOilPressureTimeout = 0.1f;
+	dut.updateState(1000, getTimeNowNt());
+	EXPECT_TRUE(dut.allowInjection());
+}
+
+TEST(limp, zeroInjectorDutyDelayCutsBelowBothLimits) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
+	engineConfiguration->maxInjectorDutyInstant = 95;
+	engineConfiguration->maxInjectorDutySustained = 85;
+	engineConfiguration->maxInjectorDutySustainedTimeout = 0;
+	engine->engineState.injectionDuration = 12;
+
+	// At 3000 RPM the 720-degree cycle is 40 ms, so duty is 30%.
+	ASSERT_NEAR(30, getInjectorDutyCycle(3000), 0.01f);
+	LimpManager dut;
+	dut.updateState(3000, getTimeNowNt());
+	EXPECT_EQ(ClearReason::InjectorDutyCycle, dut.allowInjection().reason);
+}
+
 TEST(limp, testFatalError) {
   EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	LimpManager dut;
