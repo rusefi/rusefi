@@ -3,6 +3,7 @@ package com.rusefi.ui;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.io.ConnectionStatusLogic;
+import com.rusefi.ui.widgets.GaugeDisplayKind;
 import com.rusefi.ui.widgets.JPanelWithListener;
 import com.rusefi.ui.widgets.SensorGauge;
 import org.jetbrains.annotations.NotNull;
@@ -18,10 +19,10 @@ import java.awt.*;
  */
 public class GaugesGridElement {
     private static final String GAUGE_TYPE = "gauge";
+    /** Legacy flag, still written so older consoles show live graphs (other kinds fall back to round). */
     private static final String IS_LIVE_GRAPH = "type";
+    static final String DISPLAY = "display";
     static final String DISPLAY_AS = "Display as";
-    static final String ROUND_GAUGE = "Round gauge";
-    static final String LIVE_GRAPH = "Live graph";
 
     private final JPanelWithListener wrapper = new JPanelWithListener(new BorderLayout());
     private final UIContext uiContext;
@@ -39,8 +40,10 @@ public class GaugesGridElement {
     private void rebuildAsLiveBarElement() {
         wrapper.setLayout(new GridLayout(2, 1));
 
-        addLiveGraph(new SensorLiveGraph(uiContext, config.getChild("top"), config.getProperty(GAUGE_TYPE), createDisplayAsMenu(true)));
-        addLiveGraph(new SensorLiveGraph(uiContext, config.getChild("bottom"), Sensor.RPMGauge.name(), createDisplayAsMenu(true)));
+        addLiveGraph(new SensorLiveGraph(uiContext, config.getChild("top"), config.getProperty(GAUGE_TYPE),
+            createDisplayAsMenu(GaugeDisplayKind.LIVE_GRAPH)));
+        addLiveGraph(new SensorLiveGraph(uiContext, config.getChild("bottom"), Sensor.RPMGauge.name(),
+            createDisplayAsMenu(GaugeDisplayKind.LIVE_GRAPH)));
     }
 
     private void addLiveGraph(SensorLiveGraph graph) {
@@ -55,14 +58,23 @@ public class GaugesGridElement {
         }
         // Clear existing components before rebuilding to prevent duplication on reconnect
         wrapper.removeAllChildrenAndListeners();
-        if (config.getBoolProperty(IS_LIVE_GRAPH)) {
+        GaugeDisplayKind kind = getDisplayKind();
+        if (kind == GaugeDisplayKind.LIVE_GRAPH) {
             rebuildAsLiveBarElement();
         } else {
-            rebuildAsCircleGauge();
+            rebuildAsGauge(kind);
         }
     }
 
-    private void rebuildAsCircleGauge() {
+    GaugeDisplayKind getDisplayKind() {
+        GaugeDisplayKind kind = GaugeDisplayKind.lookup(config.getProperty(DISPLAY, null));
+        if (kind != null) {
+            return kind;
+        }
+        return config.getBoolProperty(IS_LIVE_GRAPH) ? GaugeDisplayKind.LIVE_GRAPH : GaugeDisplayKind.ROUND;
+    }
+
+    private void rebuildAsGauge(GaugeDisplayKind kind) {
         SensorGauge.GaugeChangeListener gaugeChangeListener = new SensorGauge.GaugeChangeListener() {
             @Override
             public void onSensorChange(String gaugeName) {
@@ -72,33 +84,32 @@ public class GaugesGridElement {
 
         wrapper.setLayout(new BorderLayout());
         SensorGauge.createGaugeBody(uiContext, config.getProperty(GAUGE_TYPE), wrapper, gaugeChangeListener,
-            createDisplayAsMenu(false));
+            createDisplayAsMenu(kind), kind);
 
     }
 
     /** "Display as" submenu with the current presentation checked. */
     // Package-private so tests drive the same menu users see.
-    @NotNull JMenu createDisplayAsMenu(boolean liveGraph) {
+    @NotNull JMenu createDisplayAsMenu(GaugeDisplayKind current) {
         JMenu menu = new JMenu(DISPLAY_AS);
         ButtonGroup group = new ButtonGroup();
-        menu.add(createDisplayAsItem(ROUND_GAUGE, false, liveGraph, group));
-        menu.add(createDisplayAsItem(LIVE_GRAPH, true, liveGraph, group));
+        for (GaugeDisplayKind kind : GaugeDisplayKind.values()) {
+            JRadioButtonMenuItem item = new JRadioButtonMenuItem(kind.getLabel(), kind == current);
+            group.add(item);
+            item.addActionListener(e -> setDisplayKind(kind));
+            menu.add(item);
+        }
         return menu;
     }
 
-    private @NotNull JMenuItem createDisplayAsItem(String text, boolean value, boolean current, ButtonGroup group) {
-        JRadioButtonMenuItem item = new JRadioButtonMenuItem(text, value == current);
-        group.add(item);
-        item.addActionListener(e -> {
-            if (value == current) {
-                return;
-            }
-            wrapper.removeAllChildrenAndListeners();
-            config.setBoolProperty(IS_LIVE_GRAPH, value);
-
-            rebuild();
-        });
-        return item;
+    void setDisplayKind(GaugeDisplayKind kind) {
+        if (kind == getDisplayKind()) {
+            return;
+        }
+        wrapper.removeAllChildrenAndListeners();
+        config.setProperty(DISPLAY, kind.getKey());
+        config.setBoolProperty(IS_LIVE_GRAPH, kind == GaugeDisplayKind.LIVE_GRAPH);
+        rebuild();
     }
 
     public JPanelWithListener getContent() {

@@ -22,7 +22,7 @@ import java.util.Objects;
  * needle/arc position follow ui/gauge_display_value.c.
  * Draw in a 400-unit square, scaled to fit the component without stretching.
  */
-public final class CircularGauge extends JComponent {
+public final class CircularGauge extends JComponent implements GaugeDisplay {
     private static final int START_DEGREES = 135;
     private static final int SWEEP_DEGREES = 270;
     // Light dial matching the console's FlatLaf light theme.
@@ -102,7 +102,7 @@ public final class CircularGauge extends JComponent {
         setOpaque(false);
     }
 
-    private static double resolve(IniValue value, IniFileModel ini, ConfigurationImage configuration, double fallback) {
+    static double resolve(IniValue value, IniFileModel ini, ConfigurationImage configuration, double fallback) {
         if (!value.isExpression()) {
             return value.getNumericValue();
         }

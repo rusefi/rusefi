@@ -1,6 +1,7 @@
 package com.rusefi.ui;
 
 import com.rusefi.core.preferences.storage.Node;
+import com.rusefi.ui.widgets.GaugeDisplayKind;
 
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
@@ -39,7 +40,7 @@ final class GaugeLayout {
     static final double MIN_FREE_SIZE = 0.02;
     // Tolerates rounding in fractions written by Double.toString.
     private static final double EPSILON = 1e-9;
-    private static final String[] ELEMENT_PROPERTIES = {"gauge", "type"};
+    private static final String[] ELEMENT_PROPERTIES = {"gauge", "type", "display"};
     private static final String[] BOUNDS_PROPERTIES = {X, Y, WIDTH, HEIGHT};
     private static final String[] GRAPH_PROPERTIES = {"sensor", "period", "auto_scale", "lower", "upper"};
 
@@ -196,7 +197,7 @@ final class GaugeLayout {
             throw new IOException("Missing gauge selection for " + name);
         }
         element.setProperty("gauge", gauge);
-        copyFromFile(properties, prefix, element, "type");
+        copyFromFile(properties, prefix, element, "type", "display");
         for (String graph : new String[]{"top", "bottom"}) {
             copyFromFile(properties, prefix + graph + ".", element.getChild(graph), GRAPH_PROPERTIES);
         }
@@ -264,6 +265,8 @@ final class GaugeLayout {
                 } catch (NumberFormatException e) {
                     valid = false;
                 }
+            } else if (key.equals("display")) {
+                valid = GaugeDisplayKind.lookup(value) != null;
             } else if (key.equals("sensor")) {
                 valid = !value.trim().isEmpty();
             }

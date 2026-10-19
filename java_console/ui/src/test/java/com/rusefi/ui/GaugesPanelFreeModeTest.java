@@ -122,6 +122,7 @@ class GaugesPanelFreeModeTest {
         config.setProperty("gauges_mode", "free");
         Node top = config.getChild("free_1").getChild("top");
         top.setProperty("sensor", "layoutGraphChannel");
+        config.getChild("free_0").setProperty("display", "hbar");
         GaugeLayout.setBounds(config.getChild("free_1"), new Rectangle2D.Double(0.1, 0.2, 0.3, 0.4));
         Path freeFile = directory.resolve("free.gauges");
         GaugeLayout.save(freeFile, config);
@@ -131,6 +132,7 @@ class GaugesPanelFreeModeTest {
         assertEquals("free", loaded.getProperty("gauges_mode"));
         assertEquals(2, loaded.getIntProperty("free_count", 0));
         assertEquals("CustomGauge", loaded.getChild("free_0").getProperty("gauge"));
+        assertEquals("hbar", loaded.getChild("free_0").getProperty("display"));
         assertTrue(loaded.getChild("free_1").getBoolProperty("type"));
         assertEquals(top.getConfig(), loaded.getChild("free_1").getChild("top").getConfig());
         assertEquals(new Rectangle2D.Double(0.1, 0.2, 0.3, 0.4), GaugeLayout.getBounds(loaded.getChild("free_1")));
@@ -178,7 +180,7 @@ class GaugesPanelFreeModeTest {
         String[][] invalidSettings = {
             {"version", "3"}, {"gauges_mode", "other"}, {"free_count", "-1"}, {"free_count", "65"},
             {"free_count", "3"}, {"free_0.gauge", " "}, {"free_0.x", "1.5"}, {"free_0.x", "abc"},
-            {"free_0.w", "0"}, {"free_0.h", "0.01"}, {"free_1.x", "0.75"}, {"free_1.type", "maybe"}
+            {"free_0.w", "0"}, {"free_0.h", "0.01"}, {"free_1.x", "0.75"}, {"free_1.type", "maybe"}, {"free_1.display", "dial"}
         };
         for (String[] setting : invalidSettings) {
             Properties invalid = new Properties();
