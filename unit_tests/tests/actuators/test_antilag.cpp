@@ -5,6 +5,7 @@ TEST(Actuators, AntiLag) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	engineConfiguration->antiLagEnabled = true;
+	engineConfiguration->ALSMaxDuration = 0;
 
 	setTable(config->ALSFuelAdjustment, 50 /* percent */);
 	Sensor::setMockValue(SensorType::Clt, 70);
@@ -36,8 +37,7 @@ TEST(Actuators, AntiLag) {
 	ASSERT_NEAR(1.5 * fuelWithCorrections, getRunningFuel(1), EPS4D);
 }
 
-// anti-lag currently remains active after its configured duration.
-TEST(Actuators, AntilagRemainsActiveAfterConfiguredTimeout) {
+TEST(Actuators, AntilagStopsAfterConfiguredTimeout) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->antiLagEnabled = true;
 	engineConfiguration->antiLagActivationMode = ALWAYS_ON_ANTILAG;
@@ -64,7 +64,13 @@ TEST(Actuators, AntilagRemainsActiveAfterConfiguredTimeout) {
 	advanceTimeUs(1100000);
 	engine->antilagController.update();
 	ASSERT_FALSE(engine->antilagController.isInsideALSTimerCondition());
-	EXPECT_TRUE(engine->antilagController.ALSTimerCondition);
+	EXPECT_FALSE(engine->antilagController.ALSTimerCondition);
+	EXPECT_FALSE(engine->antilagController.isAntilagCondition);
+	EXPECT_FLOAT_EQ(0, engine->antilagController.fuelALSCorrection);
+
+	Sensor::setMockValue(SensorType::Rpm, 4000);
+	engine->antilagController.update();
+	Sensor::setMockValue(SensorType::Rpm, 1000);
+	engine->antilagController.update();
 	EXPECT_TRUE(engine->antilagController.isAntilagCondition);
-	EXPECT_FLOAT_EQ(50, engine->antilagController.fuelALSCorrection);
 }

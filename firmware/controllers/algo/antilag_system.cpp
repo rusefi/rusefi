@@ -62,6 +62,11 @@ bool AntilagSystemBase::isALSMaxThrottleIntentCondition() const {
 }
 
 bool AntilagSystemBase::isInsideALSTimerCondition() {
+	// A zero timeout leaves anti-lag duration unrestricted.
+	if (engineConfiguration->ALSMaxDuration <= 0) {
+		return true;
+	}
+
 	auto ALStime = ALStimer.getElapsedSeconds();
 
 	return ALStime < engineConfiguration->ALSMaxDuration;
@@ -76,11 +81,7 @@ bool AntilagSystemBase::isAntilagConditionMet(float rpm) {
 	ALSMaxCLTCondition = isALSMaxCLTCondition();
 	ALSMaxThrottleIntentCondition = isALSMaxThrottleIntentCondition();
 	ALSSwitchCondition = isInsideALSSwitchCondition();
-	ALSTimerCondition = true;
-/*
-todo: looking for a hero to figure out unit test part of this
 	ALSTimerCondition = isInsideALSTimerCondition();
-	*/
 
 	return ALSMinRPMCondition &&
 	    ALSMaxRPMCondition &&
