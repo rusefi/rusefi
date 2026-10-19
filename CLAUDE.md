@@ -467,6 +467,15 @@ height; re-evaluate after ancestor resize/layout as well as local resize.
 
 - Whenever Console keyboard shortcuts are added, changed, or removed, update the user-facing legend in `java_console/ui/src/main/java/com/rusefi/ui/console/ShortcutsDialog.java` in the same change. Describe the action, focus/context restrictions, and relevant modifiers; keep the corresponding button/menu tooltips and accelerators consistent with the legend.
 
+## Console theme files
+
+The console's FlatLaf look is defined in `java_console/ui/src/main/resources/com/rusefi/ui/theme/`
+(`[tag:console_theme]`, registered in `UiHelper.configureLaf()`): `FlatLaf.properties` for
+sizes/shapes shared by all themes, `FlatLightLaf.properties` (and a future
+`FlatDarkLaf.properties`) for palette variables and colour keys. Do not put colour keys in the
+shared file: FlatLaf's built-in `FlatLightLaf.properties` assigns most of them and wins. Add new
+look settings there rather than as `UIManager.put` calls, so they follow the active theme.
+
 ## Java Version Constants
 
 TunerStudio's bundled runtime is Java 8. Gradle's Java 11 toolchain with
