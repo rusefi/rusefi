@@ -69,7 +69,8 @@ class GaugesPanelLayoutTest {
                 panel.loadLayout(file);
                 assertTrue(hasDemand("layoutCustomChannel"));
                 assertTrue(hasDemand("layoutGraphChannel"));
-                assertFalse(hasDemand("layoutDefaultChannel"));
+                // The loaded live graph's bottom graph shows RPMGauge, so its channel stays polled.
+                assertTrue(hasDemand("layoutDefaultChannel"));
                 assertEquals(2, config.getIntProperty("gauges_cols", 0));
                 assertFalse(config.getConfig().containsKey("element_8"));
                 assertEquals("keep command", config.getProperty("command"));

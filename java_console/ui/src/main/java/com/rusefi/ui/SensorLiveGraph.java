@@ -40,6 +40,7 @@ public class SensorLiveGraph extends JPanel {
     private static final String USE_AUTO_SCALE = "auto_scale";
     private static final String UPPER = "upper";
     private static final String LOWER = "lower";
+    static final String WAITING = "Waiting for data" + GaugeStyle.ELLIPSIS;
     private static final Color DANGER_BAND = new Color(0xFF, 0xCD, 0xD2, 110);
     private static final Color AREA_TOP = new Color(0xF6, 0xC4, 0x45, 120);
     private static final Color AREA_BOTTOM = new Color(0xF6, 0xC4, 0x45, 0);
@@ -58,6 +59,7 @@ public class SensorLiveGraph extends JPanel {
     private volatile boolean active = true;
     private volatile boolean running = true;
     private ISensorCentral.ListenerToken demandToken;
+    private String demandChannel;
 
     public SensorLiveGraph(UIContext uiContext, Node config, final String defaultGaugeName, JMenuItem extraItem) {
         this.uiContext = uiContext;
@@ -98,6 +100,10 @@ public class SensorLiveGraph extends JPanel {
             @Override
             public void run() {
                 while (running) {
+                    // Read first, so a new graph shows its first point without waiting a period.
+                    if (active) {
+                        grabNewValue();
+                    }
                     try {
                         Thread.sleep(period.getMs());
                     } catch (InterruptedException e) {
@@ -105,17 +111,17 @@ public class SensorLiveGraph extends JPanel {
                             return;
                         }
                     }
-                    if (active) {
-                        grabNewValue();
-                    }
                 }
             }
         };
     }
 
     private void grabNewValue() {
-        GaugeModel gaugeModel = findGaugeModel();
-        String channelName = gaugeModel == null ? gaugeName : gaugeModel.getChannel();
+        String channelName = getChannelName();
+        if (!channelName.equals(demandChannel)) {
+            // The .ini can load after this graph was created, revealing the real channel.
+            updateDemandToken();
+        }
 
         addValue(SensorCentral.getInstance().getValue(channelName));
         SwingUtilities.invokeLater(new Runnable() {
@@ -281,29 +287,41 @@ public class SensorLiveGraph extends JPanel {
         }
     }
 
-    private synchronized void setSensor(String gaugeName) {
+    // Package-private so tests change the gauge as the menu does.
+    synchronized void setSensor(String gaugeName) {
         this.gaugeName = gaugeName;
         values.clear();
         config.setProperty(SENSOR_TYPE, gaugeName);
         updateDemandToken();
     }
 
-    private void updateDemandToken() {
+    /**
+     * Output channels are polled only while subscribed by channel name, so the graph must
+     * subscribe to its gauge's channel, not to the gauge name.
+     */
+    private synchronized void updateDemandToken() {
         if (demandToken != null) {
             demandToken.remove();
         }
-        demandToken = SensorCentral.getInstance().addListener(gaugeName, value -> { });
+        demandChannel = getChannelName();
+        demandToken = SensorCentral.getInstance().addListener(demandChannel, value -> { });
         demandToken.setActive(active);
     }
 
-    public void setActive(boolean active) {
+    /** The output channel behind the gauge, or the name itself for legacy sensors and unknown gauges. */
+    private String getChannelName() {
+        GaugeModel gaugeModel = findGaugeModel();
+        return gaugeModel == null ? gaugeName : gaugeModel.getChannel();
+    }
+
+    public synchronized void setActive(boolean active) {
         this.active = active;
         if (demandToken != null) {
             demandToken.setActive(active);
         }
     }
 
-    public void destroy() {
+    public synchronized void destroy() {
         running = false;
         thread.interrupt();
         if (demandToken != null) {
@@ -441,6 +459,12 @@ public class SensorLiveGraph extends JPanel {
             start = end + 1;
         }
         g.setClip(oldClip);
+        if (!hasReading(samples)) {
+            g.setFont(GaugeStyle.font(Font.PLAIN, (float) clamp(face.height * 0.08, 10, 14)));
+            g.setColor(GaugeStyle.TICK);
+            GaugeStyle.drawText(g, WAITING, (plotLeft + right) / 2,
+                (plotTop + plotBottom) / 2 + g.getFontMetrics().getAscent() / 2.0 - 1, 0);
+        }
         if (Double.isFinite(last)) {
             double x = right;
             double y = plot.y(Math.max(range.minValue, Math.min(range.maxValue, last)));
@@ -483,6 +507,15 @@ public class SensorLiveGraph extends JPanel {
         g.setColor(GaugeStyle.LINE);
         g.setStroke(new BasicStroke(2.2f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         g.draw(line);
+    }
+
+    private static boolean hasReading(double[] samples) {
+        for (double sample : samples) {
+            if (Double.isFinite(sample)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private String getTitle(GaugeModel model) {
