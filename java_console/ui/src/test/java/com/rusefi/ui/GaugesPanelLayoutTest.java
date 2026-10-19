@@ -134,7 +134,7 @@ class GaugesPanelLayoutTest {
             valid.load(reader);
         }
         String[][] invalidSettings = {
-            {"format", "other"}, {"version", "2"}, {"gauges_rows", "0"},
+            {"format", "other"}, {"version", "2"}, {"version", "3"}, {"gauges_rows", "0"},
             {"gauges_rows", "4"}, {"gauges_cols", "6"}, {"gauges_cols", "1.5"},
             {"gauges_rows", "2147483647"}, {"element_0.gauge", ""},
             {"element_0.type", "maybe"}, {"element_0.top.period", "-1"},
