@@ -11,6 +11,10 @@ import com.opensr5.ini.IniFileModel;
 import com.rusefi.core.ui.AutoupdateUtil;
 
 import javax.swing.*;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.HyperlinkEvent;
@@ -552,9 +556,40 @@ public class CalibrationFieldFactory {
         int columns = iniField instanceof StringIniField
             ? Math.min(((StringIniField) iniField).getSize(), 32) : 0;
         CalibrationTextField textField = new CalibrationTextField(currentValue, columns);
+        if (iniField instanceof StringIniField) {
+            ((AbstractDocument) textField.getDocument()).setDocumentFilter(
+                new StringLengthFilter(((StringIniField) iniField).getSize()));
+        }
         applyStyle(textField);
         applyBackgroundColor(textField, currentValue);
         return textField;
+    }
+
+    private static final class StringLengthFilter extends DocumentFilter {
+        private final int maximumLength;
+
+        private StringLengthFilter(int maximumLength) {
+            this.maximumLength = maximumLength;
+        }
+
+        @Override
+        public void insertString(FilterBypass bypass, int offset, String text, AttributeSet attributes)
+                throws BadLocationException {
+            replace(bypass, offset, 0, text, attributes);
+        }
+
+        @Override
+        public void replace(FilterBypass bypass, int offset, int length, String text, AttributeSet attributes)
+                throws BadLocationException {
+            String inserted = text == null ? "" : text;
+            int available = maximumLength - (bypass.getDocument().getLength() - length);
+            if (available <= 0) {
+                inserted = "";
+            } else if (inserted.length() > available) {
+                inserted = inserted.substring(0, available);
+            }
+            bypass.replace(offset, length, inserted, attributes);
+        }
     }
 
     private static JPanel createRowPanel() {
