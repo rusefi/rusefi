@@ -568,6 +568,15 @@ static bool validateConfig(const engine_configuration_s* previousConfiguration) 
 
   // the only step which is allowed to modify configuration - everything else in this method is read-only validation
   applyDefaultsOrFixAfterBurn(previousConfiguration);
+	if (!(engineConfiguration->injector.flow > 0) || !std::isfinite(engineConfiguration->injector.flow)) {
+		criticalError("Primary injector flow must be positive");
+		return false;
+	}
+	if (engineConfiguration->enableStagedInjection &&
+		(!(engineConfiguration->injectorSecondary.flow > 0) || !std::isfinite(engineConfiguration->injectorSecondary.flow))) {
+		criticalError("Secondary injector flow must be positive when staged injection is enabled");
+		return false;
+	}
 	if (engineConfiguration->cylindersCount > MAX_CYLINDER_COUNT) {
 		// [tag:user_facing_ini_labels] Match the engine setting label in tunerstudio.template.ini.
 		criticalError("Invalid Number of cylinders: %d", engineConfiguration->cylindersCount);
