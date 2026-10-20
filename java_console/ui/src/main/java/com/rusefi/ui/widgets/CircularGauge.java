@@ -49,6 +49,8 @@ public final class CircularGauge extends JComponent implements GaugeDisplay {
     private final double minValue;
     private final double maxValue;
     private final double displayStep;
+    /** Readings round to {@code displayOrigin + n * displayStep}. */
+    private final double displayOrigin;
     private final int valueDecimals;
     private final String[] scaleLabels = new String[11];
     private double dangerThreshold;
@@ -59,44 +61,35 @@ public final class CircularGauge extends JComponent implements GaugeDisplay {
     private volatile Reading reading;
 
     public CircularGauge(GaugeModel model, IniFileModel ini, ConfigurationImage configuration) {
-        this(resolve(model.getLowValueValue(), ini, configuration, 0),
-            resolve(model.getHighValueValue(), ini, configuration, 0), model,
-            resolve(model.getHighDangerValueValue(), ini, configuration, Double.NaN),
-            (int) resolve(model.getValueDecimalPlacesValue(), ini, configuration, 0),
-            (int) resolve(model.getLabelDecimalPlacesValue(), ini, configuration, 0));
+        this(GaugeScale.fromIni(model, ini, configuration), model);
     }
 
     public CircularGauge(double minValue, double maxValue, GaugeModel model) {
-        this(minValue, maxValue, model,
+        this(GaugeScale.of(minValue, maxValue,
             model.getHighDangerValueValue().isExpression() ? Double.NaN : model.getHighDangerValue(),
-            model.getValueDecimalPlaces(), model.getLabelDecimalPlaces());
+            model.getValueDecimalPlaces(), model.getLabelDecimalPlaces()), model);
     }
 
-    private CircularGauge(double minValue, double maxValue, GaugeModel model,
-                          double highDangerValue, int valueDecimals, int labelDecimals) {
-        if (!Double.isFinite(minValue)) {
-            minValue = 0;
+    public CircularGauge(GaugeScale scale, GaugeModel model) {
+        minValue = scale.getMin();
+        maxValue = scale.getMax();
+        if (scale.hasCustomDecimals()) {
+            // The user's decimals, counted from zero rather than from the scale's minimum.
+            displayStep = Math.pow(10, -scale.getValueDecimals());
+            displayOrigin = 0;
+        } else {
+            double maxAbs = Math.max(Math.abs(minValue), Math.abs(maxValue));
+            displayStep = maxAbs > 150 ? 4 : maxAbs >= 75 ? 2 : maxAbs >= 40 ? 1 : 0.25;
+            displayOrigin = minValue;
         }
-        if (!Double.isFinite(maxValue) || maxValue <= minValue || !Double.isFinite(maxValue - minValue)) {
-            maxValue = minValue + 10;
-            if (!Double.isFinite(maxValue) || maxValue <= minValue) {
-                minValue = 0;
-                maxValue = 10;
-            }
-        }
-        this.minValue = minValue;
-        this.maxValue = maxValue;
-        double maxAbs = Math.max(Math.abs(minValue), Math.abs(maxValue));
-        displayStep = maxAbs > 150 ? 4 : maxAbs >= 75 ? 2 : maxAbs >= 40 ? 1 : 0.25;
-        this.valueDecimals = boundedDecimals(valueDecimals);
+        this.valueDecimals = scale.getValueDecimals();
         title = model.getTitle();
         units = model.getUnits();
         for (int i = 0; i < scaleLabels.length; i++) {
-            scaleLabels[i] = format(minValue + (maxValue - minValue) * i / 10,
-                boundedDecimals(labelDecimals));
+            scaleLabels[i] = format(minValue + (maxValue - minValue) * i / 10, scale.getLabelDecimals());
         }
         reading = new Reading(Double.NaN);
-        setHighDangerValue(highDangerValue);
+        setHighDangerValue(scale.getHighDanger());
         setPreferredSize(new Dimension(200, 200));
         setMinimumSize(new Dimension(80, 80));
         setOpaque(false);
@@ -147,9 +140,9 @@ public final class CircularGauge extends JComponent implements GaugeDisplay {
     public void setValue(double value) {
         double displayValue = Double.NaN;
         if (Double.isFinite(value)) {
-            double steps = (value - minValue) / displayStep;
+            double steps = (value - displayOrigin) / displayStep;
             // C roundf rounds ties away from zero, unlike Math.round for negatives.
-            displayValue = minValue + Math.copySign(Math.floor(Math.abs(steps) + 0.5), steps) * displayStep;
+            displayValue = displayOrigin + Math.copySign(Math.floor(Math.abs(steps) + 0.5), steps) * displayStep;
         }
         if (Double.compare(reading.value, displayValue) != 0) {
             reading = new Reading(displayValue);
@@ -181,10 +174,6 @@ public final class CircularGauge extends JComponent implements GaugeDisplay {
             degrees = Double.isFinite(value)
                 ? (int) Math.round((visualValue - minValue) / (maxValue - minValue) * SWEEP_DEGREES) : 0;
         }
-    }
-
-    private static int boundedDecimals(int decimals) {
-        return Math.max(0, Math.min(6, decimals));
     }
 
     private static String format(double value, int decimals) {

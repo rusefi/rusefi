@@ -1,8 +1,6 @@
 package com.rusefi.ui.widgets;
 
-import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.GaugeModel;
-import com.opensr5.ini.IniFileModel;
 
 import javax.swing.JComponent;
 import java.awt.*;
@@ -12,7 +10,7 @@ import java.util.Objects;
 
 /**
  * Base of the card-style gauges (text and bars): range, danger threshold and value
- * formatting from the .ini gauge definition, painted on a {@link GaugeStyle} card.
+ * formatting from a {@link GaugeScale}, painted on a {@link GaugeStyle} card.
  */
 abstract class CardGauge extends JComponent implements GaugeDisplay {
     final double minValue;
@@ -25,33 +23,17 @@ abstract class CardGauge extends JComponent implements GaugeDisplay {
     // Sensor callbacks can run off the EDT; repaint() is thread-safe.
     private volatile double value = Double.NaN;
 
-    CardGauge(GaugeModel model, IniFileModel ini, ConfigurationImage configuration) {
-        double min = CircularGauge.resolve(model.getLowValueValue(), ini, configuration, 0);
-        double max = CircularGauge.resolve(model.getHighValueValue(), ini, configuration, 0);
-        if (!Double.isFinite(min)) {
-            min = 0;
-        }
-        if (!Double.isFinite(max) || max <= min || !Double.isFinite(max - min)) {
-            max = min + 10;
-            if (!Double.isFinite(max) || max <= min) {
-                min = 0;
-                max = 10;
-            }
-        }
-        minValue = min;
-        maxValue = max;
-        double danger = CircularGauge.resolve(model.getHighDangerValueValue(), ini, configuration, Double.NaN);
+    CardGauge(GaugeScale scale, GaugeModel model) {
+        minValue = scale.getMin();
+        maxValue = scale.getMax();
+        double danger = scale.getHighDanger();
         // Same rule as the round gauge: without a danger value the zone starts at the maximum.
-        dangerThreshold = Double.isFinite(danger) ? Math.max(min, Math.min(max, danger)) : max;
-        valueDecimals = bounded((int) CircularGauge.resolve(model.getValueDecimalPlacesValue(), ini, configuration, 0));
-        labelDecimals = bounded((int) CircularGauge.resolve(model.getLabelDecimalPlacesValue(), ini, configuration, 0));
+        dangerThreshold = Double.isFinite(danger) ? Math.max(minValue, Math.min(maxValue, danger)) : maxValue;
+        valueDecimals = scale.getValueDecimals();
+        labelDecimals = scale.getLabelDecimals();
         title = model.getTitle();
         units = model.getUnits();
         setOpaque(false);
-    }
-
-    private static int bounded(int decimals) {
-        return Math.max(0, Math.min(6, decimals));
     }
 
     @Override
