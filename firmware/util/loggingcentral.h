@@ -20,6 +20,11 @@ void startLoggingProcessor();
 // and releases each of them back to its owner
 size_t loggingSendOutputData(TsChannelBase* tsChannel);
 
+#if EFI_UNIT_TEST
+// Discards all queued buffers and makes every line buffer free again
+void resetLoggingForUnitTest();
+#endif
+
 namespace priv
 {
 	// Fixes up a possibly-truncated log line: guarantees the buffer stays

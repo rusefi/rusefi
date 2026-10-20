@@ -29,7 +29,11 @@
 /* for isprint() */
 #include <ctype.h>
 
-#if (EFI_PROD_CODE || EFI_SIMULATOR) && EFI_TEXT_LOGGING
+#if EFI_UNIT_TEST
+#include "mock-mailbox.h"
+#endif
+
+#if EFI_TEXT_LOGGING
 
 // Stores the result of one call to efiPrintfInternal while it waits in the queue to be sent to TS.
 // Returns itself to the free queue once it has been transferred
@@ -104,7 +108,19 @@ void startLoggingProcessor() {
 	}
 }
 
-#endif // EFI_PROD_CODE
+#if EFI_UNIT_TEST
+void resetLoggingForUnitTest() {
+	// drop whatever previous tests left queued, without calling free() on
+	// buffers whose owners may already be gone
+	filledBuffers.resetI();
+	filledBuffers.resumeX();
+	freeBuffers.resetI();
+	freeBuffers.resumeX();
+	startLoggingProcessor();
+}
+#endif // EFI_UNIT_TEST
+
+#endif // EFI_TEXT_LOGGING
 
 #if EFI_UNIT_TEST || EFI_SIMULATOR
 extern bool verboseMode;
@@ -155,7 +171,7 @@ void efiPrintfInternal(const char *format, ...) {
 		printf("\r\n");
 	}
 #endif
-#if (EFI_PROD_CODE || EFI_SIMULATOR) && EFI_TEXT_LOGGING
+#if EFI_TEXT_LOGGING
 	LogLineBuffer* lineBuffer;
 	msg_t msg;
 
@@ -210,7 +226,7 @@ void efiPrintfInternal(const char *format, ...) {
 }
 } // namespace priv
 
-#if (EFI_PROD_CODE || EFI_SIMULATOR) && EFI_TEXT_LOGGING
+#if EFI_TEXT_LOGGING
 void loggingPostBuffer(LogBufferBase *buffer) {
 #if EFI_SIMULATOR
 	const bool isIsr = port_is_isr_context();
@@ -229,4 +245,4 @@ void loggingPostBuffer(LogBufferBase *buffer) {
 #else
 void loggingPostBuffer(LogBufferBase *) {
 }
-#endif // (EFI_PROD_CODE || EFI_SIMULATOR) && EFI_TEXT_LOGGING
+#endif // EFI_TEXT_LOGGING

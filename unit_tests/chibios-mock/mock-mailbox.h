@@ -1,13 +1,13 @@
 // Host-side stand-in for chibios_rt::Mailbox so firmware code using the
-// free/filled buffer-queue pattern (tooth_logger_buffer.cpp) compiles and runs
+// free/filled buffer-queue pattern (tooth_logger_buffer.cpp, loggingcentral.cpp) compiles and runs
 // in unit tests.
 //
 // Semantics follow ChibiOS chmboxes.c:
 // - postI()/fetchI() return MSG_RESET while the mailbox is in reset state
 // - resetI() empties the queue and enters reset state; resumeX() re-arms it
 // - non-blocking postI() returns MSG_TIMEOUT when full, fetchI() when empty
-// Unit tests are single-threaded, so the blocking fetch() degenerates to the
-// non-blocking variant regardless of the requested timeout.
+// Unit tests are single-threaded, so the blocking fetch()/post() degenerate to the
+// non-blocking variants regardless of the requested timeout.
 
 #pragma once
 
@@ -22,6 +22,7 @@ typedef uint32_t sysinterval_t;
 #define MSG_RESET   ((msg_t)-2)
 
 #define TIME_IMMEDIATE ((sysinterval_t)0)
+#define TIME_INFINITE ((sysinterval_t)-1)
 
 namespace chibios_rt {
 
@@ -40,6 +41,10 @@ public:
 		m_items[(m_read + m_count) % N] = msg;
 		m_count++;
 		return MSG_OK;
+	}
+
+	msg_t post(T msg, sysinterval_t /*timeout*/) {
+		return postI(msg);
 	}
 
 	msg_t fetchI(T* out) {

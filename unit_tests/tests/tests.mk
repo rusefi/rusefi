@@ -177,6 +177,7 @@ TESTS_SRC_CPP = \
 	tests/test_bluetooth.cpp \
 	tests/test_pwm_generator.cpp \
 	tests/test_log_buffer.cpp \
+	tests/test_logging_central.cpp \
 	tests/test_event_queue.cpp \
 	tests/test_scheduling_pool.cpp \
 	tests/test_cpp_memory_layout.cpp \
