@@ -46,18 +46,6 @@ static char shaft_signal_msg_index[15];
 extern WaveChart waveChart;
 
 /**
- * This is the number of events in the digital chart which would be displayed
- * on the 'digital sniffer' pane
- */
-#if EFI_PROD_CODE
-#define WAVE_LOGGING_SIZE 5000
-#else
-#define WAVE_LOGGING_SIZE 35000
-#endif
-
-static char WAVE_LOGGING_BUFFER[WAVE_LOGGING_SIZE] CCM_OPTIONAL;
-
-/**
  * We want to skip some engine cycles to skip what was scheduled before parameters were changed
  */
 static uint32_t skipUntilEngineCycle = 0;
@@ -70,7 +58,7 @@ static void resetNow() {
 }
 #endif // EFI_UNIT_TEST
 
-WaveChart::WaveChart() : logging("wave chart", WAVE_LOGGING_BUFFER, sizeof(WAVE_LOGGING_BUFFER)) {
+WaveChart::WaveChart() : logging("wave chart", buffer, size()) {
 }
 
 void WaveChart::init() {
@@ -83,6 +71,7 @@ void WaveChart::reset() {
 	counter = 0;
 	startTimeNt = 0;
 	collectingData = false;
+	isPublished = false;
 	logging.appendPrintf( "%s%s", PROTOCOL_ENGINE_SNIFFER, LOG_DELIMITER);
 }
 
@@ -102,7 +91,8 @@ bool WaveChart::isStartedTooLongAgo() const {
 }
 
 bool WaveChart::isFull() const {
-	return counter >= engineConfiguration->engineChartSize;
+	return (counter >= engineConfiguration->engineChartSize) ||
+		(logging.remainingSize() <= WAVE_LOGGING_TAIL_GUARD);
 }
 
 int WaveChart::getSize() {
@@ -125,18 +115,37 @@ void setChartSize(int newSize) {
 #endif // EFI_UNIT_TEST
 
 void WaveChart::publishIfFull() {
+	// already queued: posting it again would append one more LOG_DELIMITER per status
+	// poll and send the same buffer several times until free() is called
+	if (isPublished) {
+		return;
+	}
 	if (isFull() || isStartedTooLongAgo()) {
 		publish();
-		reset();
 	}
 }
 
+// Called by logging central once our buffer was transferred to the console:
+// only now it is safe to start collecting the next chart in it
+void WaveChart::free() {
+	reset();
+}
+
+/**
+ * Hand our own buffer over to logging central instead of copying the chart into
+ * the common logging buffers. The chart is reset by free() once it was sent.
+ */
 void WaveChart::publish() {
 #if EFI_ENGINE_SNIFFER
 	logging.appendPrintf( LOG_DELIMITER);
 
 	if (getTriggerCentral()->isEngineSnifferEnabled) {
-		scheduleLogging(&logging);
+		// set buffer used
+		len = logging.linePointer - getBuffer();
+		isPublished = true;
+		loggingPostBuffer(this);
+	} else {
+		reset();
 	}
 #endif /* EFI_ENGINE_SNIFFER */
 }
@@ -170,11 +179,12 @@ void WaveChart::addEvent3(const char *name, const char * msg) {
 
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6653, isInitialized, "chart not initialized");
 
-	if (isFull()) {
+	/* this also checks if we have enough (WAVE_LOGGING_TAIL_GUARD) space in logging */
+	if (isPublished || isFull()) {
 		return;
 	}
 
-	// we have multiple threads writing to the same output buffer
+	// we have multiple threads writing to the same chart buffer
 	chibios_rt::CriticalSectionLocker csl;
 
 	if (counter == 0) {
@@ -194,21 +204,19 @@ void WaveChart::addEvent3(const char *name, const char * msg) {
 	uint32_t diffNt = nowNt - startTimeNt;
 	uint32_t time100 = NT2US(diffNt / ENGINE_SNIFFER_UNIT_US);
 
-	if (logging.remainingSize() > 35) {
-		/**
-		 * printf is a heavy method, append is used here as a performance optimization
-		 */
-		logging.appendFast(name);
-		logging.appendChar(CHART_DELIMETER);
-		logging.appendFast(msg);
-		logging.appendChar(CHART_DELIMETER);
-//		time100 -= startTime100;
+	/**
+	 * printf is a heavy method, append is used here as a performance optimization
+	 */
+	logging.appendFast(name);
+	logging.appendChar(CHART_DELIMETER);
+	logging.appendFast(msg);
+	logging.appendChar(CHART_DELIMETER);
+//	time100 -= startTime100;
 
-		itoa10(timeBuffer, time100);
-		logging.appendFast(timeBuffer);
-		logging.appendChar(CHART_DELIMETER);
-		logging.terminate();
-	}
+	itoa10(timeBuffer, time100);
+	logging.appendFast(timeBuffer);
+	logging.appendChar(CHART_DELIMETER);
+	logging.terminate();
 #endif /* EFI_TEXT_LOGGING */
 }
 

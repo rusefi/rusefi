@@ -7,14 +7,17 @@
  * (ie, global system lock) to log.  In the past there have been serious performance problems caused
  * by heavy logging on a low priority thread that blocks the rest of the system running (trigger errors, etc).
  *
- * Uses ChibiOS message queues to maintain one queue of free buffers, and one queue of used buffers.
- * When a thread wants to write, it acquires a free buffer, prints to it, and pushes it in to the
- * used queue. A dedicated thread then dequeues and writes lines from the used buffer in to the
- * large output buffer.
+ * Uses ChibiOS mailboxes to maintain one queue of free line buffers, and one queue of filled buffers.
+ * When a thread wants to write, it acquires a free line buffer, prints to it, and posts it in to the
+ * filled queue. There is no dedicated flusher thread and no intermediate large output buffer: the
+ * binary TS thread itself drains the filled queue in loggingSendOutputData() and sends several
+ * buffers back to back as one TS packet, releasing each buffer via LogBufferBase::free() right
+ * after it has been written out.
  *
- * Later, the binary TS thread will request access to the output log buffer for reading, so a lock is taken,
- * buffers, swapped, and the back buffer returned.  This blocks neither output nor logging in any case, as
- * each operation operates on a different buffer.
+ * Buffers are not limited to the internal fixed-size line buffers: any LogBufferBase owner (see the
+ * engine sniffer) may fill its own buffer and hand it over with loggingPostBuffer(). Such a buffer is
+ * returned to its owner by its own free() implementation once transferred. This saves RAM since the
+ * data is never copied into a second buffer.
  *
  * @date Mar 8, 2015, heavily revised April 2021
  * @author Andrey Belomutskiy, (c) 2012-2021
@@ -23,62 +26,107 @@
 
 #include "pch.h"
 
-
-#include "thread_controller.h"
-
 /* for isprint() */
 #include <ctype.h>
 
-template <size_t TBufferSize>
-void LogBuffer<TBufferSize>::writeLine(LogLineBuffer* line) {
-	writeInternal(line->buffer, sizeof(line->buffer));
-}
-
-template <size_t TBufferSize>
-void LogBuffer<TBufferSize>:: writeLogger(Logging* logging) {
-	writeInternal(logging->buffer, logging->bufferSize);
-}
-
-template <size_t TBufferSize>
-size_t LogBuffer<TBufferSize>::length() const {
-	return m_writePtr - m_buffer;
-}
-
-template <size_t TBufferSize>
-void LogBuffer<TBufferSize>::reset() {
-	m_writePtr = m_buffer;
-	*m_writePtr = '\0';
-}
-
-template <size_t TBufferSize>
-const char* LogBuffer<TBufferSize>::get() const {
-	return m_buffer;
-}
-
-template <size_t TBufferSize>
-void LogBuffer<TBufferSize>::writeInternal(const char* buffer, size_t maxLength) {
-	// never read past maxLength - an unterminated source buffer must not walk
-	// adjacent memory (on F7 with MPU guard pages that walk ends in a MemManage
-	// fault and a reboot), see https://github.com/rusefi/rusefi/issues/10159
-	const char* terminator = static_cast<const char*>(std::memchr(buffer, '\0', maxLength));
-	size_t len = terminator ? static_cast<size_t>(terminator - buffer) : maxLength;
-	// leave one byte extra at the end to guarantee room for a null terminator
-	size_t available = TBufferSize - length() - 1;
-
-	// If we can't fit the whole thing, write as much as we can
-	len = minI(available, len);
-	// Ensure the output buffer is always null terminated (in case we did a partial write)
-	*(m_writePtr + len) = '\0';
-	memcpy(m_writePtr, buffer, len);
-	m_writePtr += len;
-}
-
-// for unit tests
-template class LogBuffer<10>;
 #if EFI_UNIT_TEST
-// large enough to accept a whole unterminated LogLineBuffer
-template class LogBuffer<300>;
+#include "mock-mailbox.h"
 #endif
+
+#if EFI_TEXT_LOGGING
+
+// Stores the result of one call to efiPrintfInternal while it waits in the queue to be sent to TS.
+// Returns itself to the free queue once it has been transferred
+struct LogLineBuffer : LogBuffer<128>{
+	void free(void) override;
+};
+
+// These buffers store lines
+constexpr size_t lineBufferCount = 64;
+static LogLineBuffer lineBuffers[lineBufferCount];
+
+// freeBuffers contains a queue of line buffers that are not in use
+static chibios_rt::Mailbox<LogLineBuffer*, lineBufferCount> freeBuffers;
+// filledBuffers contains a queue of buffers currently waiting to be transfered
+static chibios_rt::Mailbox<LogBufferBase*, lineBufferCount + 10> filledBuffers;
+
+void LogLineBuffer::free() {
+	freeBuffers.post(this, TIME_INFINITE);
+}
+
+
+// actually we can send much more in one packed. this is just a threshold that triggers current packet finalization
+constexpr size_t maxSend = scratchBuffer_SIZE;
+
+/**
+ * Write as much data as possible
+ *
+ * @return actual size transfered
+ */
+
+size_t loggingSendOutputData(TsChannelBase* tsChannel) {
+	// consolidate up to 16 line buffers in one TS packet
+	LogBufferBase* bufs[16];
+	size_t totalBufs = 0;
+	size_t totalSize = 0;
+
+	while ((totalSize < maxSend) && (totalBufs < efi::size(bufs))) {
+		// Fetch a queued message
+		msg_t msg = filledBuffers.fetch(&bufs[totalBufs], TIME_IMMEDIATE);
+
+		if (msg != MSG_OK) {
+			break;
+		}
+
+		totalSize += bufs[totalBufs]->used();
+		totalBufs++;
+	}
+
+	uint32_t crc = tsChannel->writePacketHeader(TS_RESPONSE_OK, totalSize);
+
+	for (size_t i = 0; i < totalBufs; i++) {
+		LogBufferBase *buf = bufs[i];
+
+		crc = tsChannel->writePacketBody((uint8_t *)buf->getBuffer(), buf->used(), crc);
+		buf->free();
+	}
+
+	tsChannel->writeCrcPacketTail(crc);
+
+	return totalSize;
+}
+
+// Despite the historical name there is no logging thread to start anymore:
+// this just makes all line buffers available to the writers
+void startLoggingProcessor() {
+	// Push all buffers in to the free queue
+	for (size_t i = 0; i < lineBufferCount; i++) {
+		LogLineBuffer* line = &lineBuffers[i];
+
+		line->len = 0;
+		line->free();
+	}
+}
+
+#if EFI_UNIT_TEST
+void resetLoggingForUnitTest() {
+	// drop whatever previous tests left queued, without calling free() on
+	// buffers whose owners may already be gone
+	filledBuffers.resetI();
+	filledBuffers.resumeX();
+	freeBuffers.resetI();
+	freeBuffers.resumeX();
+	startLoggingProcessor();
+}
+#endif // EFI_UNIT_TEST
+
+#endif // EFI_TEXT_LOGGING
+
+#if EFI_UNIT_TEST || EFI_SIMULATOR
+extern bool verboseMode;
+#endif
+
+size_t maxPrintfSize = 0;
 
 namespace priv
 {
@@ -99,127 +147,6 @@ size_t terminateLogLine(char* buffer, size_t bufferSize, size_t untruncatedLen) 
 
 	return untruncatedLen;
 }
-} // namespace priv
-
-#if (EFI_PROD_CODE || EFI_SIMULATOR) && EFI_TEXT_LOGGING
-
-// This mutex protects the LogBuffer instances below
-chibios_rt::Mutex logBufferMutex;
-
-// Two buffers:
-//  - we copy line buffers to writeBuffer in LoggingBufferFlusher
-//  - and read from readBuffer via TunerStudio protocol commands
-// Limit: DL_OUTPUT_BUFFER (6500 bytes on STM32) is the most text that can accumulate
-// between two TS/console reads. Once it is full, LogBuffer::writeInternal keeps only what
-// fits and the rest of that line - and every later line until the next swap - is lost.
-using LB = LogBuffer<DL_OUTPUT_BUFFER>;
-LB buffers[2];
-LB* writeBuffer = &buffers[0];
-LB* readBuffer = &buffers[1];
-
-/**
- * Actual communication layer invokes this method when it's ready to send some data out
- *
- * @return pointer to the buffer which should be print to console
- */
-const char* swapOutputBuffers(size_t* actualOutputBufferSize) {
-	{
-		chibios_rt::MutexLocker lock(logBufferMutex);
-
-		// Swap buffers under lock
-		auto temp = writeBuffer;
-		writeBuffer = readBuffer;
-		readBuffer = temp;
-
-		// Reset the front buffer - it's now empty
-		writeBuffer->reset();
-	}
-
-	*actualOutputBufferSize = readBuffer->length();
-#if EFI_ENABLE_ASSERTS
-	size_t expectedOutputSize = std::strlen(readBuffer->get());
-
-	// Check that the actual length of the buffer matches the expected length of how much we thought we wrote
-	if (*actualOutputBufferSize != expectedOutputSize) {
-		firmwareError(ObdCode::ERROR_LOGGING_SIZE_CALC, "lsize mismatch %d vs strlen %d", *actualOutputBufferSize, expectedOutputSize);
-
-		return nullptr;
-	}
-#endif /* EFI_ENABLE_ASSERTS */
-	return readBuffer->get();
-}
-
-// These buffers store lines queued to be written to the writeBuffer.
-// Limit: 24 x 256 bytes = 6 KB of RAM. This is the number of efiPrintf lines that can be
-// in flight before the low-priority flusher thread copies them out; when the free queue is
-// empty efiPrintfInternal returns without logging (silent drop, no blocking).
-constexpr size_t lineBufferCount = 24;
-static LogLineBuffer lineBuffers[lineBufferCount];
-
-// freeBuffers contains a queue of buffers that are not in use
-static chibios_rt::Mailbox<LogLineBuffer*, lineBufferCount> freeBuffers;
-// filledBuffers contains a queue of buffers currently waiting to be written to the output buffer
-static chibios_rt::Mailbox<LogLineBuffer*, lineBufferCount> filledBuffers;
-
-class LoggingBufferFlusher : public ThreadController<UTILITY_THREAD_STACK_SIZE> {
-public:
-	LoggingBufferFlusher() : ThreadController("log flush", PRIO_TEXT_LOG) { }
-
-	void ThreadTask() override {
-		while (true) {
-			// Fetch a queued message
-			LogLineBuffer* line;
-			msg_t msg = filledBuffers.fetch(&line, TIME_INFINITE);
-
-			if (msg != MSG_OK) {
-				// This should be impossible - neither timeout or reset should happen
-			} else {
-				{
-					// Lock the buffer mutex - inhibit buffer swaps while writing
-					chibios_rt::MutexLocker lock(logBufferMutex);
-
-					// Write the line out to the output buffer
-					writeBuffer->writeLine(line);
-				}
-
-				// Return this line buffer to the free list
-				freeBuffers.post(line, TIME_INFINITE);
-			}
-		}
-	}
-};
-
-RUSEFI_STACK_ROOT(LoggingBufferFlusher, ThreadTask);
-
-static LoggingBufferFlusher lbf;
-
-void startLoggingProcessor() {
-	// Push all buffers in to the free queue
-	for (size_t i = 0; i < lineBufferCount; i++) {
-		freeBuffers.post(&lineBuffers[i], TIME_INFINITE);
-	}
-
-	// Start processing used buffers
-	lbf.start();
-}
-
-#endif // EFI_PROD_CODE
-
-#if EFI_UNIT_TEST || EFI_SIMULATOR
-extern bool verboseMode;
-#endif
-
-namespace priv
-{
-#if EFI_UNIT_TEST
-static LoggingTestSink* loggingTestSink = nullptr;
-
-LoggingTestSink* setLoggingTestSink(LoggingTestSink* sink) {
-	auto previous = loggingTestSink;
-	loggingTestSink = sink;
-	return previous;
-}
-#endif
 
 void efiPrintfInternal(const char *format, ...) {
 #if EFI_UNIT_TEST || EFI_SIMULATOR
@@ -244,17 +171,7 @@ void efiPrintfInternal(const char *format, ...) {
 		printf("\r\n");
 	}
 #endif
-#if (EFI_PROD_CODE || EFI_SIMULATOR || EFI_UNIT_TEST) && EFI_TEXT_LOGGING
-#if EFI_UNIT_TEST
-	if (!loggingTestSink) {
-		return;
-	}
-
-	LogLineBuffer* lineBuffer = loggingTestSink->acquire();
-	if (!lineBuffer) {
-		return;
-	}
-#else
+#if EFI_TEXT_LOGGING
 	LogLineBuffer* lineBuffer;
 	msg_t msg;
 
@@ -282,9 +199,8 @@ void efiPrintfInternal(const char *format, ...) {
 	if (msg != MSG_OK) {
 		return;
 	}
-#endif
 
-	// Write the formatted string to the output buffer
+	// Write the formatted string to the line buffer
 	va_list ap;
 	va_start(ap, format);
 	// chvsnprintf always null-terminates (at most at buffer[size - 1]) and returns
@@ -299,43 +215,34 @@ void efiPrintfInternal(const char *format, ...) {
 		if (isprint(lineBuffer->buffer[i]) == 0)
 			lineBuffer->buffer[i] = ' ';
 	}
+	lineBuffer->len = len;
 
-#if EFI_UNIT_TEST
-	loggingTestSink->publish(lineBuffer);
-#else
+	if (len > maxPrintfSize) {
+		maxPrintfSize = len;
+	}
+
+	loggingPostBuffer(lineBuffer);
+#endif
+}
+} // namespace priv
+
+#if EFI_TEXT_LOGGING
+void loggingPostBuffer(LogBufferBase *buffer) {
 #if EFI_SIMULATOR
+	const bool isIsr = port_is_isr_context();
 	if (isIsr) {
 		chSysLockFromISR();
-		filledBuffers.postI(lineBuffer);
+		filledBuffers.postI(buffer);
 		chSysUnlockFromISR();
 	} else
 #endif
 	{
 		// Push the buffer in to the written list so it can be written back
 		chibios_rt::CriticalSectionLocker csl;
-		filledBuffers.postI(lineBuffer);
+		filledBuffers.postI(buffer);
 	}
-#endif
-#endif
 }
-} // namespace priv
-
-/**
- * This method appends the content of specified thread-local logger into the global buffer
- * of logging content.
- *
- * This is a legacy function, most normal logging should use efiPrintf
- */
-void scheduleLogging(Logging *logging) {
-#if (EFI_PROD_CODE || EFI_SIMULATOR) && EFI_TEXT_LOGGING
-	// Lock the buffer mutex - inhibit buffer swaps while writing
-	{
-		chibios_rt::MutexLocker lock(logBufferMutex);
-
-		writeBuffer->writeLogger(logging);
-	}
-
-	// Reset the logging now that it's been written out
-	logging->reset();
-#endif
+#else
+void loggingPostBuffer(LogBufferBase *) {
 }
+#endif // EFI_TEXT_LOGGING

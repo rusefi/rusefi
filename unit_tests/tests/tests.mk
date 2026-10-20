@@ -161,6 +161,7 @@ TESTS_SRC_CPP = \
 	tests/test_ion.cpp \
 	tests/test_kline_bytes_aggregator.cpp \
 	tests/test_engine_math.cpp \
+	tests/test_engine_sniffer.cpp \
 	tests/test_throttle_model.cpp \
 	tests/test_fasterEngineSpinningUp.cpp \
 	tests/test_dwell_corner_case_issue_796.cpp \
@@ -176,6 +177,7 @@ TESTS_SRC_CPP = \
 	tests/test_bluetooth.cpp \
 	tests/test_pwm_generator.cpp \
 	tests/test_log_buffer.cpp \
+	tests/test_logging_central.cpp \
 	tests/test_event_queue.cpp \
 	tests/test_scheduling_pool.cpp \
 	tests/test_cpp_memory_layout.cpp \

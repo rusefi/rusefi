@@ -156,6 +156,9 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 
 	resetConfigErrorStateForUnitTest();
 
+	// logging central queues are file-scope statics too: drop lines and the
+	// engine sniffer buffer an earlier test left queued
+	resetLoggingForUnitTest();
 	waveChart.init();
 
 	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -40, 1.5);
