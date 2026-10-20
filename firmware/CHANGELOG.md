@@ -56,6 +56,7 @@ Release template (copy/paste this for new release):
  - Nissan VK56DE (36-1-1) crank and PHASE cam triggers
 
 ### Fixed
+ - Shift torque reduction ignores invalid sensor readings when selecting spark cut, ignition retard, and time limits.
  - Closed-loop VVT output stops when cam position feedback is missing or stale.
  - TPS acceleration enrichment clears on engine stop, preventing old or steady throttle readings from adding fuel on restart.
  - Push-button cranking respects the configured brake and clutch interlocks.

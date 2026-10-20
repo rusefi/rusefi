@@ -72,7 +72,7 @@ namespace {
         checkTargetSkipRatios("Flat Shift condition is not satisfied");
     }
 
-	TEST(ShiftTorqueReduction, InvalidFlatShiftAxisPayloadSelectsSparkCutAndTiming) {
+	TEST(ShiftTorqueReduction, InvalidFlatShiftAxisPayloadCannotChangeSparkCutOrTiming) {
 		EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 		engineConfiguration->torqueReductionEnabled = true;
 		config->torqueReductionCutXaxis = GPPWM_Tps;
@@ -97,10 +97,25 @@ namespace {
 		sensor.payload = 0;
 		ASSERT_FALSE(Sensor::get(SensorType::Tps1));
 		EXPECT_FLOAT_EQ(0, engine->shiftTorqueReductionController.getSparkSkipRatio());
-		EXPECT_FLOAT_EQ(20, engine->shiftTorqueReductionController.getTorqueReductionIgnitionRetard());
+		EXPECT_FLOAT_EQ(0, engine->shiftTorqueReductionController.getTorqueReductionIgnitionRetard());
 		sensor.payload = 100;
 		ASSERT_FALSE(Sensor::get(SensorType::Tps1));
-		EXPECT_FLOAT_EQ(1, engine->shiftTorqueReductionController.getSparkSkipRatio());
-		EXPECT_FLOAT_EQ(-10, engine->shiftTorqueReductionController.getTorqueReductionIgnitionRetard());
+		EXPECT_FLOAT_EQ(0, engine->shiftTorqueReductionController.getSparkSkipRatio());
+		EXPECT_FLOAT_EQ(0, engine->shiftTorqueReductionController.getTorqueReductionIgnitionRetard());
+
+		engineConfiguration->torqueReductionActivationMode = TORQUE_REDUCTION_BUTTON;
+		engineConfiguration->torqueReductionTriggerPin = Gpio::Unassigned;
+		engineConfiguration->limitTorqueReductionTime = true;
+		config->torqueReductionTimeXaxis = GPPWM_Zero;
+		setTable(config->torqueReductionTimeTable, 1000);
+		engine->engineState.lua.torqueReductionState = true;
+		engine->shiftTorqueReductionController.update();
+		ASSERT_TRUE(engine->shiftTorqueReductionController.isTimeConditionSatisfied);
+		config->torqueReductionTimeXaxis = GPPWM_Tps;
+		engine->shiftTorqueReductionController.update();
+		EXPECT_FALSE(engine->shiftTorqueReductionController.isTimeConditionSatisfied);
+		engineConfiguration->limitTorqueReductionTime = false;
+		engine->shiftTorqueReductionController.update();
+		EXPECT_TRUE(engine->shiftTorqueReductionController.isTimeConditionSatisfied);
 	}
 }
