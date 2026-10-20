@@ -33,20 +33,17 @@ does not establish hardware timing or the physical severity of an outcome.
 | 5 | ECU-017 | S2 — High | Reproduced | Primary injector duty protection ignores actual trims, wall film and cranking mode |
 | 6 | ECU-011 | S2 — High | Reproduced | Shared-coil ignition ignores cylinder timing trims and distributor odd-fire offsets |
 | 7 | ECU-012 | S2 — High | Source-confirmed; identity mismatch reproduced | Software knock uses firing-order position as physical cylinder identity |
-| 8 | ECU-020 | S2 — High | Reproduced | VVT keeps actuating with absent or indefinitely stale cam feedback |
-| 9 | ECU-005 | S2 — High | Reproduced | Invalid fuel pressure selects injection duration, mass correction and deadtime |
-| 10 | ECU-009 | S2 — High | Source-confirmed; reachability reproduced | Ninth/tenth forward gear indexes beyond the boost duty adder array |
-| 11 | ECU-027 | S2 — High | Source-confirmed; arithmetic reproduced | Zero HPFP lobes leave a configured GDI pump active with a nonfinite fuel request |
-| 12 | ECU-032 | S2 — High | Source-confirmed | Delayed software-knock window can be attributed to the next cylinder |
-| 13 | ECU-023 | S2 — High | Reproduced | Invalid flat-shift table input selects arbitrary spark cut and timing |
-| 14 | ECU-033 | S3 — Moderate | Arithmetic reproduced; scheduler path source-confirmed | Zero injector flow is accepted and yields an infinite pulse duration |
-| 15 | ECU-013 | S3 — Moderate | Reproduced | Knock response treats retarded timing as hundreds of degrees of advance |
-| 16 | ECU-019 | S3 — Moderate | Reproduced | Percentage acceleration enrichment shrinks with batch/simultaneous injection |
-| 17 | ECU-022 | S3 — Moderate | Reproduced | TPS acceleration enrichment appears without a new throttle step after a stop |
-| 18 | ECU-026 | S3 — Moderate | Reproduced | Predictive MAP substitutes the previous run's estimate after a quick restart |
-| 19 | ECU-021 | S3 — Moderate | Reproduced | VVT activation delay discards fractional seconds |
-| 20 | ECU-007 | S3 — Moderate | Reproduced | DFCO ignition recovery uses a fixed half-second ramp |
-| 21 | ECU-029 | S3 — Moderate | Reproduced | Failed A/C pressure feedback can re-enable a compressor after a pressure cut |
+| 8 | ECU-005 | S2 — High | Reproduced | Invalid fuel pressure selects injection duration, mass correction and deadtime |
+| 9 | ECU-009 | S2 — High | Source-confirmed; reachability reproduced | Ninth/tenth forward gear indexes beyond the boost duty adder array |
+| 10 | ECU-027 | S2 — High | Source-confirmed; arithmetic reproduced | Zero HPFP lobes leave a configured GDI pump active with a nonfinite fuel request |
+| 11 | ECU-032 | S2 — High | Source-confirmed | Delayed software-knock window can be attributed to the next cylinder |
+| 12 | ECU-033 | S3 — Moderate | Arithmetic reproduced; scheduler path source-confirmed | Zero injector flow is accepted and yields an infinite pulse duration |
+| 13 | ECU-013 | S3 — Moderate | Reproduced | Knock response treats retarded timing as hundreds of degrees of advance |
+| 14 | ECU-019 | S3 — Moderate | Reproduced | Percentage acceleration enrichment shrinks with batch/simultaneous injection |
+| 15 | ECU-026 | S3 — Moderate | Reproduced | Predictive MAP substitutes the previous run's estimate after a quick restart |
+| 16 | ECU-021 | S3 — Moderate | Reproduced | VVT activation delay discards fractional seconds |
+| 17 | ECU-007 | S3 — Moderate | Reproduced | DFCO ignition recovery uses a fixed half-second ramp |
+| 18 | ECU-029 | S3 — Moderate | Reproduced | Failed A/C pressure feedback can re-enable a compressor after a pressure cut |
 
 ### ECU-024 — Ignition schedule rebuild can orphan a charged coil
 
@@ -104,15 +101,15 @@ does not establish hardware timing or the physical severity of an outcome.
 - **Impact:** A mild traction intervention can abruptly remove all combustion
   torque or produce severe alternating misfire. Spark cuts do not themselves
   remove the corresponding fuel request, adding unburned-fuel consequences.
-- **Validation:** `OnePercentTractionHardCutSkipsEverySpark` and
-  `OnePercentTractionSoftCutSkipsHalfTheSparks` use a 1% table, real running
-  timing math and real spark limiters at 2,000 RPM. Of 100 decisions, all 100
+- **Validation:** `TractionSparkSkip.OnePercentHardCutSkipsEverySpark` and
+  `TractionSparkSkip.OnePercentSoftCutSkipsHalfTheSparks` use a 1% table, real
+  running timing math and spark limiters at 2,000 RPM. Of 100 decisions, all 100
   are cut in hard mode and 50 in soft mode. These are deterministic saturation
   cases, not statistical assertions about a random 1% sample.
 - **Fix direction:** Convert units at the table-to-limiter boundary, keep
   telemetry units explicit, and test low/interpolated and full-scale requests
-  plus combinations with launch, shift and Lua cuts. Existing target-ratio
-  tests assert addition of the raw table value and therefore miss this defect.
+  plus combinations with launch, shift and Lua cuts. Target-ratio tests assert
+  addition of the raw table value and do not enforce percent conversion.
 
 ### ECU-001 — Invalid wastegate/idle-valve outputs still drive the motor
 
@@ -287,40 +284,6 @@ does not establish hardware timing or the physical severity of an outcome.
   knock acquisition and retain that identity in each pending sample. Cover
   nontrivial firing orders, both banks and differing per-cylinder gains.
 
-### ECU-020 — VVT control has no valid/fresh cam-feedback gate
-
-- **Source:** `TriggerCentral::getVVTPosition()` / `handleVvtCamSignal()` in
-  [trigger_central.cpp](firmware/controllers/trigger/trigger_central.cpp),
-  `VvtController::observePlant()` / `onFastCallback()` in
-  [vvt.cpp](firmware/controllers/actuators/vvt.cpp), and the generic pipeline in
-  [closed_loop_controller.h](firmware/controllers/closed_loop_controller.h).
-- **Trigger:** VVT's RPM/temperature/delay gates permit control, but a cam has
-  never supplied a usable measurement or its signal disappears while crank
-  pulses continue. Both basic and advanced control consume the same feedback.
-- **Actual:** The cam angle is a zero-initialized float, returned as a valid
-  `expected` without a measurement-valid flag, timestamp or timeout. After
-  acquisition it retains the last angle indefinitely. Missing-cam diagnostics
-  do not invalidate this value or inhibit the VVT controller. The PID continues
-  driving the solenoid against fictitious/stale feedback.
-- **Expected:** Enable closed-loop cam control only with a usable measurement
-  for that cam. Loss of feedback must select a defined safe output and reset or
-  suspend integration until acquisition is restored.
-- **Impact:** Open-ended solenoid actuation after cam-signal loss can move the
-  actual cam away from its intended target, with poor combustion, torque loss,
-  stalls and potentially damaging timing depending on the engine's mechanical
-  constraints. The host tests establish continued PWM commands; they do not
-  establish actual cam travel, valve contact or damage.
-- **Validation:** `VvtActuatesWithoutAnyCamMeasurement` configures a cam input,
-  starts at 1,500 RPM and receives no cam edges. The zero angle is valid and the
-  real controller commands 20% PWM. `VvtKeepsDrivingAfterCamPulsesStop` acquires
-  a 71-degree measurement through actual crank/cam callbacks at 1,200 RPM,
-  then continues crank pulses for 30 seconds with no more cam edges. Feedback
-  remains valid at 71 degrees and the real PWM path still commands 20% for a
-  target 20 degrees above the stale measurement.
-- **Fix direction:** Track per-cam acquisition and freshness, not only global
-  engine synchronization. Cover first acquisition, separate-bank dropout,
-  missing-cam diagnostics, stop/restart and re-acquisition under both modes.
-
 ### ECU-005 — Invalid fuel pressure controls injection duration and deadtime
 
 - **Source:** `InjectorModelWithConfig::getInjectionDuration()`, `updateState()`,
@@ -464,41 +427,6 @@ does not establish hardware timing or the physical severity of an outcome.
 - **Fix direction:** Bind cylinder and bank to each pending scheduler action,
   and exercise windows that cross one or more later sparks.
 
-### ECU-023 — Invalid flat-shift axis controls ignition cuts and timing
-
-- **Source:** `readGppwmChannel()` in
-  [gppwm_channel_reader.cpp](firmware/controllers/actuators/gppwm_channel_reader.cpp),
-  `ShiftTorqueReductionController::getSparkSkipRatio()` /
-  `getTorqueReductionIgnitionRetard()` /
-  `updateTimeConditionSatisfied()` in
-  [shift_torque_reduction_controller.cpp](firmware/controllers/algo/shift_torque_reduction_controller.cpp),
-  consumed in [engine2.cpp](firmware/controllers/algo/engine2.cpp) and
-  [ignition_state.cpp](firmware/controllers/algo/ignition/ignition_state.cpp).
-- **Trigger:** Flat-shift torque reduction is active and one of its optional
-  GPPWM axes selects a sensor that fails or times out, such as TPS.
-- **Actual:** The channel reader preserves invalidity, but all three flat-shift
-  table lookups use the returned `.Value` without checking it. Unusable payload
-  bytes can select an arbitrary spark-cut percentage, replacement timing and
-  time limit. The hard spark limiter consumes the cut ratio; the ignition
-  calculation uses the timing table directly while flat shift is active.
-- **Expected:** An invalid axis must select an explicit fault policy, with no
-  table lookup driven by invalid storage. The active torque intervention must
-  transition predictably when input validity changes.
-- **Impact:** A sensor fault during a shift can cause a much larger or smaller
-  torque cut than calibrated, including full ignition cut, or a large timing
-  change. A sudden full cut can cause loss of propulsion; altered timing can
-  affect combustion. Physical outcome depends on calibration and actual error
-  payload; the initialized host payloads do not predict hardware bytes.
-- **Validation:** `InvalidFlatShiftAxisPayloadSelectsSparkCutAndTiming` registers
-  a TPS sensor that always returns invalid. With an active shift and a 0–100%
-  cut table, changing only the initialized unusable payload from 0 to 100
-  changes the requested hard cut from 0% to 100% and the timing table output
-  from +20 to -10 degrees. The consumer path is traced in production source;
-  the test calls the two table consumers directly rather than scheduling sparks.
-- **Fix direction:** Validate each selected axis before lookup, define whether
-  a sensor loss releases or maintains the torque intervention, and test the
-  time-axis path plus actual limiter/scheduler behavior.
-
 ### ECU-033 — Zero injector flow yields an infinite scheduled pulse width
 
 - **Source:** The injector-flow field in
@@ -582,49 +510,6 @@ does not establish hardware timing or the physical severity of an outcome.
 - **Fix direction:** Preserve the fraction across pulse counts and explicitly
   plan compatibility for tunes that compensate for the present extra scaling.
   Do not change MS Adder's physical duration conversion as part of this fix.
-
-### ECU-022 — TPS enrichment appears without a new post-stop throttle step
-
-- **Source:** `TpsAccelEnrichment::onEngineStop()` / `resetAE()` / `onNewValue()` /
-  `getTpsEnrichment()` in
-  [accel_enrichment.cpp](firmware/controllers/algo/accel_enrichment.cpp),
-  `Engine::OnTriggerSynchronizationLost()` in
-  [engine.cpp](firmware/controllers/algo/engine.cpp), and stopped slow-callback
-  ordering in
-  [engine_controller.cpp](firmware/controllers/engine_controller.cpp). Fuel
-  consumption is in
-  `getInjectionMass()` in [fuel_math.cpp](firmware/controllers/algo/fuel_math.cpp).
-- **Trigger:** (1) Trigger synchronization is lost after an acceleration event
-  and regained before the next slow callback; or (2) the stopped slow callback
-  resets TPS history while throttle is held open, then samples that same steady
-  throttle and the engine restarts.
-- **Actual:** Stop notification calls `onEngineStop()`, which resets only Lua
-  enrichment. Its cached acceleration threshold survives a fast phase resync.
-  The stopped slow callback does call `resetAE()`, clearing the fractional pump
-  and history, but its subsequent `onNewValue()` compares the held TPS value
-  with a zeroed history slot and invents a fresh acceleration event. After RPM
-  returns, either path can add enrichment without a new TPS step.
-- **Expected:** A synchronization loss should invalidate the old transient,
-  and the first sample after a stopped reset should seed history rather than
-  count as acceleration.
-- **Impact:** Extra startup fuel can cause a rich stumble, flooding or a failed
-  restart. The host test measures requested fuel mass, not combustion or injector
-  delivery. Fast resync exposure lasts until TPS history updates. The stopped
-  reset path can recur on every slow callback while TPS remains nonzero.
-- **Validation:** `PreviousTpsAccelerationReplaysOnFastPhaseResync` uses a real
-  0-to-20 TPS event, 0.20-fraction table and controlled air-mass input. It
-  computes 20% enrichment, calls the real trigger-synchronization-loss path,
-  regains RPM before the next slow tick, and still gets 20% extra mass.
-  `StoppedTpsResetInventsAccelerationFromHeldThrottle` executes the relevant
-  stopped reset followed by the real periodic slow sample on twenty ticks
-  spanning two seconds at a steady 20% TPS; it observes a false event and 20%
-  enrichment after RPM returns. The prior
-  two-second fractional-pump test was removed because it omitted the required
-  stopped slow resets and did not represent production callback ordering.
-- **Fix direction:** Clear cached threshold, delta and event state on stop and
-  configuration changes. Seed TPS history on the first sample after reset so
-  a held position cannot create an acceleration event. Cover callback ordering
-  and stop/resync timing in integration tests.
 
 ### ECU-026 — Predictive MAP state survives an engine stop
 
@@ -749,6 +634,9 @@ does not establish hardware timing or the physical severity of an outcome.
 | ECU-028 | Kick-start cranking could fire coils despite a Lua ignition cut or required phase sync. | `handleKickStart()` checks ignition permission and permits only its own `KickStart` clear reason. `kickStart.sparkRespectsLuaIgnitionCut` and `sparkRespectsRequiredPhaseSync` cover both denied paths. |
 | ECU-008 | The high oil-pressure timeout could already be expired on the first running sample. | The timer resets while stopped or without valid high-pressure feedback, then begins on the first running sample. `limp.highOilPressureTimeoutAlreadyExpiredAtEngineStart` and `highOilPressureTimeoutStartsAtFirstRunningSample` cover startup and elapsed time. |
 | ECU-014 | Invalid oil-pressure payload could control a running maximum-pressure fuel cut. | The high-pressure branch requires a valid sensor result before comparison, so invalid payload bytes cannot trigger its timer or cut. `LimpRegression.InvalidOilPressurePayloadDoesNotTriggerMaxCut` checks both payload values after the timeout. |
+| ECU-020 | VVT could drive a solenoid without a cam measurement or after cam pulses stopped. | Per-cam update timers now require synchronized feedback newer than one second; missing or stale feedback disables PWM and resets control state. `Vvt.DoesNotActuateWithoutAnyCamMeasurement` and `Vvt.StopsDrivingAfterCamPulsesStop` cover both cases. |
+| ECU-022 | TPS acceleration enrichment could replay across a quick resync or appear from held throttle after a stopped reset. | Stop resets TPS event state and fuel fractions; the first sample after reset seeds the baseline. `fuel.PreviousTpsAccelerationClearedOnFastPhaseResync` and `fuel.StoppedTpsResetDoesNotInventAccelerationFromHeldThrottle` cover both callback orders. |
+| ECU-023 | Invalid flat-shift axis payload could select spark cut, timing and time limit. | Flat-shift lookup paths require valid axis input and use a defined fallback for an unavailable time axis. `ShiftTorqueReduction.InvalidFlatShiftAxisPayloadCannotChangeSparkCutOrTiming` covers cut, retard and time-gate behavior. |
 
 ## Candidates under investigation
 
@@ -783,9 +671,6 @@ does not establish hardware timing or the physical severity of an outcome.
   does not establish an unsafe starter-disable behavior.
 - Fuel-pump aggressive relief holding configured minimum duty is expressly
   described by its tune field; it is not a zero-duty relief promise.
-- A two-second fractional TPS-pump carryover test omitted the production
-  stopped slow reset. ECU-022 now uses callback order that occurs in the
-  firmware and does not claim long-lived fractional balance.
 - Equal TPS/PPS calibration endpoints are rejected by `LinearSensorUnit`'s
   minimum voltage-span check. A hypothetical NaN throttle path needs an actual
   reachable non-finite source before it warrants a finding; resolved analog
@@ -802,12 +687,13 @@ electrical behavior on an engine. The following checks bound the review.
   sensor registry and stored values, fuel-pressure compensation, flex fueling,
   nitrous activation, anti-lag, and knock control. Inspection does not mean all
   behavior in these areas is covered.
-- Host `make -j12` succeeds. All 34 remaining `EcuLogicReview.*` tests and
-  `LimpRegression.InvalidOilPressurePayloadDoesNotTriggerMaxCut` pass on GCC
-  with ASan/bounds enabled (35 focused tests total). The review tests
-  intentionally assert current defects; the regression asserts corrected
-  behavior. The other fixed findings cite master regression tests above.
-- The full GCC ASan/bounds suite passes: 1,828 tests from 298 suites. Command:
+- Host `make -j12` succeeds. All 27 remaining `EcuLogicReview.*` tests,
+  `LimpRegression.InvalidOilPressurePayloadDoesNotTriggerMaxCut`, and the seven
+  relevant master tests for VVT feedback, TPS stop/reset, flat-shift input and
+  traction spark cut pass on GCC with ASan/bounds enabled (35 focused tests).
+  The review and traction tests assert current defects; the fixed-path tests
+  assert corrected behavior.
+- The full GCC ASan/bounds suite passes: 1,835 tests from 300 suites. Command:
   `cd unit_tests && make -j12 && build/rusefi_test`.
 - The build regenerated tracked generated files. They remain unstaged, per
   repository guidance; no production source has been changed for this review.

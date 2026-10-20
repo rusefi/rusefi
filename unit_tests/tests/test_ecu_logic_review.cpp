@@ -420,39 +420,6 @@ TEST(LimpRegression, InvalidOilPressurePayloadDoesNotTriggerMaxCut) {
 	EXPECT_TRUE(dut.allowInjection());
 }
 
-TEST(EcuLogicReview, OnePercentTractionHardCutSkipsEverySpark) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	engineConfiguration->useHardSkipInTraction = true;
-	setTable(engineConfiguration->tractionControlIgnitionSkip, 1);
-	Sensor::setMockValue(SensorType::VehicleSpeed, 50);
-	Sensor::setMockValue(SensorType::WheelSlipRatio, 5);
-	engine->rpmCalculator.setRpmValue(2000);
-	engine->periodicFastCallback();
-	ASSERT_FLOAT_EQ(1, engine->engineState.tractionControlSparkSkip);
-	EXPECT_FLOAT_EQ(1, engine->hardSparkLimiter.getTargetSkipRatio());
-	int skipped = 0;
-	for (int i = 0; i < 100; i++) {
-		skipped += engine->hardSparkLimiter.shouldSkip();
-	}
-	EXPECT_EQ(100, skipped); // The configured value is 1%, not a ratio of 1.
-}
-
-TEST(EcuLogicReview, OnePercentTractionSoftCutSkipsHalfTheSparks) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	engineConfiguration->useHardSkipInTraction = false;
-	setTable(engineConfiguration->tractionControlIgnitionSkip, 1);
-	Sensor::setMockValue(SensorType::VehicleSpeed, 50);
-	Sensor::setMockValue(SensorType::WheelSlipRatio, 5);
-	engine->rpmCalculator.setRpmValue(2000);
-	engine->periodicFastCallback();
-	EXPECT_FLOAT_EQ(1, engine->softSparkLimiter.getTargetSkipRatio());
-	int skipped = 0;
-	for (int i = 0; i < 100; i++) {
-		skipped += engine->softSparkLimiter.shouldSkip();
-	}
-	EXPECT_EQ(50, skipped); // The consecutive-skip guard limits the erroneous cut.
-}
-
 namespace {
 
 void configureReviewPrimaryFuel(float massGrams) {
@@ -581,70 +548,6 @@ TEST(EcuLogicReview, PercentAccelEnrichmentIsReducedByInjectionModeTwice) {
 	}
 }
 
-TEST(EcuLogicReview, PreviousTpsAccelerationReplaysOnFastPhaseResync) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
-	setTable(config->lambdaTable, 1.0f);
-	EXPECT_CALL(*eth.mockAirmass, getAirmass(_, _))
-		.WillRepeatedly(Return(AirmassResult{1.3440001f, 50.0f}));
-	engine->rpmCalculator.setRpmValue(1200);
-	engineConfiguration->accelEnrichmentMode = AE_MODE_PERCENT_ADDER;
-	engineConfiguration->injectionMode = IM_SEQUENTIAL;
-	engineConfiguration->isTuningDetectorEnabled = false;
-	engineConfiguration->coastingFuelCutEnabled = false;
-	engineConfiguration->tpsAccelLookback = 1;
-	engineConfiguration->tpsAccelEnrichmentThreshold = 5;
-	engineConfiguration->tpsAccelFractionPeriod = 1;
-	engineConfiguration->tpsAccelFractionDivisor = 1;
-	engineConfiguration->flexFuelTransientComp = false;
-	setArrayValues(config->tpsTspCorrValues, 1.0f);
-	setTable(config->tpsTpsAccelTable, 0.20f);
-	initAccelEnrichment();
-	auto& ae = engine->module<TpsAccelEnrichment>().unmock();
-	ae.onNewValue(0);
-	const float baseline = getInjectionMass(1200);
-	ASSERT_TRUE(std::isfinite(baseline));
-	ASSERT_GT(baseline, 0);
-	ae.onNewValue(20);
-	ASSERT_NEAR(1.20f, getInjectionMass(1200) / baseline, 0.00001f);
-	engine->OnTriggerSynchronizationLost();
-	ASSERT_FALSE(engine->rpmCalculator.isRunning());
-	ASSERT_NEAR(0, ae.getTpsEnrichment(), 0.00001f);
-	// Phase sync returns before the next slow callback can reset TPS history.
-	// The previous acceleration remains selected across onEngineStop().
-	engine->rpmCalculator.setRpmValue(1200);
-	ASSERT_TRUE(engine->rpmCalculator.isRunning());
-	EXPECT_NEAR(0.20f, ae.getTpsEnrichment(), 0.00001f);
-	EXPECT_NEAR(1.20f, getInjectionMass(1200) / baseline, 0.00001f);
-}
-
-TEST(EcuLogicReview, StoppedTpsResetInventsAccelerationFromHeldThrottle) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	engineConfiguration->accelEnrichmentMode = AE_MODE_PERCENT_ADDER;
-	engineConfiguration->tpsAccelLookback = 1;
-	engineConfiguration->tpsAccelEnrichmentThreshold = 5;
-	engineConfiguration->tpsAccelFractionPeriod = 1;
-	engineConfiguration->tpsAccelFractionDivisor = 1;
-	setArrayValues(config->tpsTspCorrValues, 1.0f);
-	setTable(config->tpsTpsAccelTable, 0.20f);
-	initAccelEnrichment();
-	auto& ae = engine->module<TpsAccelEnrichment>().unmock();
-	Sensor::setMockValue(SensorType::Tps1, 20);
-	ASSERT_FALSE(engine->rpmCalculator.isRunning());
-
-	// Reproduce the stopped branch of doPeriodicSlowCallback() followed by
-	// Engine::periodicSlowCallback() on each slow tick for two seconds.
-	for (int i = 0; i < 20; i++) {
-		eth.moveTimeForwardMs(100);
-		engine->rpmCalculator.onSlowCallback();
-		ae.resetAE();
-		engine->periodicSlowCallback();
-	}
-	ASSERT_TRUE(ae.isAboveAccelThreshold);
-	engine->rpmCalculator.setRpmValue(1200);
-	EXPECT_NEAR(0.20f, ae.getTpsEnrichment(), 0.00001f);
-}
-
 TEST(EcuLogicReview, CrankingBatchDutyIsUnderreportedAsRunningSequential) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->cylindersCount = 4;
@@ -710,68 +613,6 @@ void configureReviewVvt() {
 
 } // namespace
 
-TEST(EcuLogicReview, VvtActuatesWithoutAnyCamMeasurement) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	configureReviewVvt();
-	engineConfiguration->camInputs[0] = Gpio::A10;
-	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
-	engine->rpmCalculator.setRpmValue(1500);
-	advanceTimeUs(100000);
-	ASSERT_EQ(0u, engine->triggerCentral.vvtEventRiseCounter[0]);
-	StrictMock<MockVp3d> targetMap;
-	StrictMock<MockPwm> pwm;
-	EXPECT_CALL(targetMap, getValue(_, _)).WillRepeatedly(Return(20));
-	EXPECT_CALL(pwm, setSimplePwmDutyCycle(testing::FloatNear(0.2f, 0.00001f)));
-	VvtController dut(0);
-	dut.init(&targetMap, &pwm);
-	ASSERT_TRUE(dut.observePlant());
-	EXPECT_FLOAT_EQ(0, dut.observePlant().Value);
-	dut.onFastCallback();
-	EXPECT_FLOAT_EQ(20, dut.vvtOutput);
-}
-
-TEST(EcuLogicReview, VvtKeepsDrivingAfterCamPulsesStop) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	configureReviewVvt();
-	engineConfiguration->globalTriggerAngleOffset = -37;
-	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
-	engineConfiguration->vvtOffsets[0] = 360;
-	setCrankOperationMode();
-	eth.setTriggerType(trigger_type_e::TT_HALF_MOON);
-	engineConfiguration->camInputs[0] = Gpio::A10;
-	eth.fireTriggerEvents2(5, 25);
-	for (int i = 0; i < 4; i++) {
-		eth.moveTimeForwardUs(10000);
-		if (i % 2 == 0) {
-			hwHandleVvtCamSignal(TriggerValue::RISE, getTimeNowNt(), 0);
-		}
-		eth.moveTimeForwardUs(15000);
-		eth.firePrimaryTriggerRise();
-		eth.moveTimeForwardUs(25000);
-		eth.firePrimaryTriggerFall();
-	}
-	ASSERT_TRUE(engine->triggerCentral.triggerState.hasSynchronizedPhase());
-	ASSERT_EQ(1200, engine->rpmCalculator.getCachedRpm());
-	const auto camEdges = engine->triggerCentral.vvtEventRiseCounter[0];
-	ASSERT_GT(camEdges, 0u);
-	const float measuredPosition = engine->triggerCentral.getVVTPosition(0, 0);
-	ASSERT_NEAR(71, measuredPosition, 0.001f);
-	StrictMock<MockVp3d> targetMap;
-	StrictMock<MockPwm> pwm;
-	EXPECT_CALL(targetMap, getValue(_, _)).WillRepeatedly(Return(measuredPosition + 20));
-	EXPECT_CALL(pwm, setSimplePwmDutyCycle(testing::FloatNear(0.2f, 0.00001f))).Times(2);
-	VvtController dut(0);
-	dut.init(&targetMap, &pwm);
-	dut.onFastCallback();
-	// Crank still turns for thirty seconds, but the cam has no more edges.
-	eth.fireTriggerEvents2(600, 25);
-	ASSERT_EQ(1200, engine->rpmCalculator.getCachedRpm());
-	ASSERT_EQ(camEdges, engine->triggerCentral.vvtEventRiseCounter[0]);
-	EXPECT_FLOAT_EQ(measuredPosition, dut.observePlant().value_or(-1000));
-	dut.onFastCallback();
-	EXPECT_FLOAT_EQ(20, dut.vvtOutput);
-}
-
 TEST(EcuLogicReview, VvtActivationDelayTruncatesMillisecondsToWholeSeconds) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	configureReviewVvt();
@@ -783,6 +624,8 @@ TEST(EcuLogicReview, VvtActivationDelayTruncatesMillisecondsToWholeSeconds) {
 	VvtController dut(0);
 	dut.init(&targetMap, &pwm);
 	advanceTimeUs(900000);
+	// Keep cam feedback fresh so this test isolates activation-delay rounding.
+	engine->triggerCentral.vvtPositionUpdateTimer[0][0].reset();
 	EXPECT_CALL(pwm, setSimplePwmDutyCycle(0));
 	dut.onFastCallback();
 	advanceTimeUs(200000);
@@ -791,38 +634,6 @@ TEST(EcuLogicReview, VvtActivationDelayTruncatesMillisecondsToWholeSeconds) {
 	EXPECT_CALL(pwm, setSimplePwmDutyCycle(testing::FloatNear(0.2f, 0.00001f)));
 	dut.onFastCallback();
 	EXPECT_FLOAT_EQ(20, dut.vvtOutput);
-}
-
-TEST(EcuLogicReview, InvalidFlatShiftAxisPayloadSelectsSparkCutAndTiming) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	engineConfiguration->torqueReductionEnabled = true;
-	config->torqueReductionCutXaxis = GPPWM_Tps;
-	config->torqueReductionIgnitionRetardXaxis = GPPWM_Tps;
-	setLinearCurve(config->torqueReductionCutXBins, 0, 100, 1);
-	setLinearCurve(config->torqueReductionIgnitionRetardXBins, 0, 100, 1);
-	setLinearCurve(config->torqueReductionCutGearBins, 0, 5, 1);
-	setLinearCurve(config->torqueReductionIgnitionRetardGearBins, 0, 5, 1);
-	for (size_t gear = 0; gear < TORQUE_TABLE_Y_SIZE; gear++) {
-		for (size_t axis = 0; axis < TORQUE_TABLE_X_SIZE; axis++) {
-			config->torqueReductionIgnitionCutTable[gear][axis] =
-				config->torqueReductionCutXBins[axis];
-			config->torqueReductionIgnitionRetardTable[gear][axis] =
-				20 - config->torqueReductionIgnitionRetardXBins[axis] * 0.3f;
-		}
-	}
-	Sensor::setMockValue(SensorType::DetectedGear, 2);
-	Sensor::resetMockValue(SensorType::Tps1);
-	InvalidPayloadSensor sensor(SensorType::Tps1);
-	ASSERT_TRUE(sensor.Register());
-	engine->shiftTorqueReductionController.isFlatShiftConditionSatisfied = true;
-	sensor.payload = 0;
-	ASSERT_FALSE(Sensor::get(SensorType::Tps1));
-	EXPECT_FLOAT_EQ(0, engine->shiftTorqueReductionController.getSparkSkipRatio());
-	EXPECT_FLOAT_EQ(20, engine->shiftTorqueReductionController.getTorqueReductionIgnitionRetard());
-	sensor.payload = 100;
-	ASSERT_FALSE(Sensor::get(SensorType::Tps1));
-	EXPECT_FLOAT_EQ(1, engine->shiftTorqueReductionController.getSparkSkipRatio());
-	EXPECT_FLOAT_EQ(-10, engine->shiftTorqueReductionController.getTorqueReductionIgnitionRetard());
 }
 
 TEST(EcuLogicReview, RebuildingIgnitionScheduleRedirectsPendingCoilShutoff) {
