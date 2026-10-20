@@ -208,6 +208,7 @@ TESTS_SRC_CPP = \
 	tests/sensor/test_sensor_init.cpp \
 	tests/sensor/test_tps_smoothing.cpp \
 	tests/sensor/test_baro_from_map.cpp \
+	tests/sensor/test_lps25.cpp \
 	tests/sensor/table_func.cpp \
 	tests/sensor/test_fuel_level_func.cpp \
 	tests/test_stft.cpp \

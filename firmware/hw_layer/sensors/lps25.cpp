@@ -38,9 +38,11 @@ static constexpr uint8_t expectedWhoAmILps25 = 0xBD;
 #define REG_PressureOutH 0x2A
 
 bool Lps25::init(brain_pin_e scl, brain_pin_e sda) {
-	m_i2c = getI2cBus(scl, sda);
 	if (m_i2c == nullptr) {
-		return false;
+		m_i2c = getI2cBus(scl, sda);
+		if (m_i2c == nullptr) {
+			return false;
+		}
 	}
 
 	// Read ident register

@@ -146,6 +146,12 @@ bool initI2cModule(I2CDriver *driver, brain_pin_e scl, brain_pin_e sda, i2c_spee
 		return false;
 	}
 
+	// config field is 3 bits wide, not all values are defined
+	if (static_cast<size_t>(speed) >= efi::size(i2cfgs)) {
+		configError("I2C speed %d not supported", static_cast<int>(speed));
+		return false;
+	}
+
 	int af = getI2cAf(driver);
 
 	efiSetPadMode("I2C SCL", scl, PAL_MODE_ALTERNATE(af) | PAL_STM32_OTYPE_OPENDRAIN);

@@ -80,6 +80,10 @@ public:
 	bool isInitialized() {
 		return m_driver != nullptr;
 	}
+
+	I2CDriver *getDriver() {
+		return m_driver;
+	}
 private:
 	I2CDriver* m_driver = nullptr;
 
