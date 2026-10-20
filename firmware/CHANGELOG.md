@@ -56,6 +56,8 @@ Release template (copy/paste this for new release):
  - Nissan VK56DE (36-1-1) crank and PHASE cam triggers
 
 ### Fixed
+ - Closed-loop VVT output stops when cam position feedback is missing or stale.
+ - TPS acceleration enrichment clears on engine stop, preventing old or steady throttle readings from adding fuel on restart.
  - Push-button cranking respects the configured brake and clutch interlocks.
  - Anti-lag stops after its configured duration while a zero timeout remains unrestricted.
  - An active boost fuel cut stays in place when the MAP sensor reading fails.
