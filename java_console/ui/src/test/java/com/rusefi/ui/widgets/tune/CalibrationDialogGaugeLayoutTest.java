@@ -65,16 +65,23 @@ class CalibrationDialogGaugeLayoutTest {
                 collect(widget.getContentPane(), CircularGauge.class, gauges);
                 assertEquals(8, gauges.size());
 
-                layout(scroll, 1600, 2000);
+                // Text widths depend on the platform fonts (CI runs Linux), so only the 300 px
+                // cap is an exact size: a very wide window reaches it with any fonts.
+                layout(scroll, 2400, 2000);
                 Component middle = find(widget.getContentPane(), "Middle");
                 assertNotNull(middle);
                 for (CircularGauge gauge : gauges) {
                     assertEquals(gauge.getWidth(), gauge.getHeight(), "Gauge cells stay square");
-                    assertTrue(gauge.getWidth() > 250, "Wide window: gauges grow from 150 px, got " + gauge.getWidth());
-                    assertTrue(gauge.getWidth() <= 300, "Capped at 300 px, got " + gauge.getWidth());
+                    assertEquals(300, gauge.getWidth(), "Very wide window: gauges reach the cap");
                 }
                 assertEquals(middle.getPreferredSize().width, middle.getWidth(),
                     "The settings column keeps its width; spare width goes to the gauges");
+
+                layout(scroll, 1600, 2000);
+                for (CircularGauge gauge : gauges) {
+                    assertTrue(gauge.getWidth() > 150 && gauge.getWidth() <= 300,
+                        "Wide window: gauges grow from 150 px, got " + gauge.getWidth());
+                }
 
                 layout(scroll, 900, 2000);
                 for (CircularGauge gauge : gauges) {
