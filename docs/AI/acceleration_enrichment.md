@@ -38,7 +38,7 @@ MAP Prediction acts in `SpeedDensityAirmass::getMap()` with a valid MAP sensor. 
 - In the adder modes, `tpsAccelLookback` is a duration in seconds, converted to a sample count. A zero value disables the adder. More history keeps an earlier opening step eligible longer; this is not a derivative over the entire lookback interval.
 - In MAP Prediction, the sample count comes from the largest `predictiveMapBlendDurationValues` entry: `max(2, ceil(maxDuration / 0.05))`. The adder lookback setting is ignored.
 
-The fractional accumulator advances in `onEngineCycleTps()` from the trigger callback at engine-cycle boundaries, independently of TPS sampling. `resetAE()` clears TPS history and fractional state when the engine stops.
+The fractional accumulator advances in `onEngineCycleTps()` from the trigger callback at engine-cycle boundaries, independently of TPS sampling. On engine stop, `resetAE()` clears TPS history, threshold and event state, and fractional fuel. The first TPS sample after a reset establishes a baseline; it does not create an acceleration step from zero.
 
 ## MS Adder and Percent Adder
 

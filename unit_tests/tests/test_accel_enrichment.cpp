@@ -54,13 +54,13 @@ TEST(fuel, testTpsAccelEnrichmentScheduling) {
 	eth.setTriggerType(trigger_type_e::TT_HALF_MOON);
 
 
+	eth.fireTriggerEvents2(/* count */ 4, 25 /* ms */);
+	ASSERT_EQ( 1200,  Sensor::getOrZero(SensorType::Rpm)) << "RPM";
+	// Establish the TPS baseline after crank synchronization, which clears AE state.
 	Sensor::setMockValue(SensorType::Tps1, 0);
 	engine->periodicSlowCallback();
 	Sensor::setMockValue(SensorType::Tps1, 7);
 	engine->periodicSlowCallback();
-
-	eth.fireTriggerEvents2(/* count */ 4, 25 /* ms */);
-	ASSERT_EQ( 1200,  Sensor::getOrZero(SensorType::Rpm)) << "RPM";
 	int expectedInvocationCounter = 1;
 	ASSERT_EQ(expectedInvocationCounter, engine->module<TpsAccelEnrichment>()->onUpdateInvocationCounter);
 
@@ -427,7 +427,7 @@ TEST_F(LuaAccelEnrichment, TuningDetectorSuspendsCorrection) {
 	EXPECT_GT(getInjectionMass(1200), base);
 }
 
-TEST(fuel, PreviousTpsAccelerationReplaysOnFastPhaseResync) {
+TEST(fuel, PreviousTpsAccelerationClearedOnFastPhaseResync) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
 	setTable(config->lambdaTable, 1.0f);
@@ -457,14 +457,14 @@ TEST(fuel, PreviousTpsAccelerationReplaysOnFastPhaseResync) {
 	ASSERT_FALSE(engine->rpmCalculator.isRunning());
 	ASSERT_NEAR(0, ae.getTpsEnrichment(), 0.00001f);
 	// Phase sync returns before the next slow callback can reset TPS history.
-	// The previous acceleration remains selected across onEngineStop().
+	// A quick restart before the next slow callback must not replay the old TPS step.
 	engine->rpmCalculator.setRpmValue(1200);
 	ASSERT_TRUE(engine->rpmCalculator.isRunning());
-	EXPECT_NEAR(0.20f, ae.getTpsEnrichment(), 0.00001f);
-	EXPECT_NEAR(1.20f, getInjectionMass(1200) / baseline, 0.00001f);
+	EXPECT_NEAR(0, ae.getTpsEnrichment(), 0.00001f);
+	EXPECT_NEAR(1, getInjectionMass(1200) / baseline, 0.00001f);
 }
 
-TEST(fuel, StoppedTpsResetInventsAccelerationFromHeldThrottle) {
+TEST(fuel, StoppedTpsResetDoesNotInventAccelerationFromHeldThrottle) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->accelEnrichmentMode = AE_MODE_PERCENT_ADDER;
 	engineConfiguration->tpsAccelLookback = 1;
@@ -486,7 +486,7 @@ TEST(fuel, StoppedTpsResetInventsAccelerationFromHeldThrottle) {
 		ae.resetAE();
 		engine->periodicSlowCallback();
 	}
-	ASSERT_TRUE(ae.isAboveAccelThreshold);
+	ASSERT_FALSE(ae.isAboveAccelThreshold);
 	engine->rpmCalculator.setRpmValue(1200);
-	EXPECT_NEAR(0.20f, ae.getTpsEnrichment(), 0.00001f);
+	EXPECT_NEAR(0, ae.getTpsEnrichment(), 0.00001f);
 }
