@@ -178,9 +178,10 @@ namespace {
         );
     }
 
-    TEST_F(AcPressureTest, FailedPressureFeedbackReenablesCompressorAfterCut) {
+    TEST_F(AcPressureTest, FailedPressureFeedbackKeepsCompressorOffAfterCut) {
         setUpTestConfig(TEST_AC_PRESSURE_CONFIG);
         engineConfiguration->acDelay = 0;
+        engineConfiguration->acPressure.hwChannel = EFI_ADC_0;
         Sensor::setMockValue(SensorType::Rpm, 500);
         engine->engineState.lua.acRequestState = true;
         auto& ac = engine->engineModules.get<AcController>();
@@ -195,7 +196,7 @@ namespace {
         Sensor::setInvalidMockValue(SensorType::AcPressure);
         periodicSlowCallback();
         EXPECT_TRUE(ac->acPressureTooHigh);
-        EXPECT_TRUE(enginePins.acRelay.getLogicValue());
+        EXPECT_FALSE(enginePins.acRelay.getLogicValue());
 
         updateAcPressure(100);
         ASSERT_TRUE(enginePins.acRelay.getLogicValue());
@@ -207,6 +208,19 @@ namespace {
         Sensor::setInvalidMockValue(SensorType::AcPressure);
         periodicSlowCallback();
         EXPECT_TRUE(ac->acPressureTooLow);
+        EXPECT_FALSE(enginePins.acRelay.getLogicValue());
+    }
+
+    TEST_F(AcPressureTest, UnconfiguredPressureSensorDoesNotBlockCompressor) {
+        engineConfiguration->acDelay = 0;
+        engineConfiguration->acPressure.hwChannel = EFI_ADC_NONE;
+        Sensor::setMockValue(SensorType::Rpm, 500);
+        Sensor::setInvalidMockValue(SensorType::AcPressure);
+        engine->engineState.lua.acRequestState = true;
+
+        periodicSlowCallback();
+
+        EXPECT_TRUE(engine->engineModules.get<AcController>()->isAcEnabled());
         EXPECT_TRUE(enginePins.acRelay.getLogicValue());
     }
 

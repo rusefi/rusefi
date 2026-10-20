@@ -76,6 +76,9 @@ bool AcController::getAcState() {
         if (acPressureTooHigh) {
             return false;
         }
+    } else if (isAdcChannelValid(engineConfiguration->acPressure.hwChannel)) {
+        // A configured sensor has failed, so pressure limits cannot be checked.
+        return false;
     }
 
 	if (isDisabledByLua) {

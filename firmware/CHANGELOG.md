@@ -56,6 +56,7 @@ Release template (copy/paste this for new release):
  - Nissan VK56DE (36-1-1) crank and PHASE cam triggers
 
 ### Fixed
+ - A failed configured A/C pressure sensor no longer re-enables the compressor after a pressure cut.
  - VVT activation delay honors the full configured millisecond value, including fractions of a second.
  - Ignition schedule rebuilds now discharge the coil charged before its output mapping changed.
  - Invalid fuel-pressure readings use nominal pressure for injector duration and deadtime, and skip HPFP mass correction.
