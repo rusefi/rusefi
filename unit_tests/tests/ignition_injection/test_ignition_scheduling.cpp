@@ -187,7 +187,7 @@ TEST(ignition, twoCoils) {
 	ASSERT_EQ((void*)engine->ignitionEvents.elements[3].outputs[0], (void*)&enginePins.coils[6]);
 }
 
-TEST(ignition, ScheduleRebuildLeavesPreviouslyChargedCoilOn) {
+TEST(ignition, ScheduleRebuildTurnsOffPreviouslyChargedCoil) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->ignitionMode = IM_TWO_COILS;
 	engine->rpmCalculator.setRpmValue(1500);
@@ -213,11 +213,11 @@ TEST(ignition, ScheduleRebuildLeavesPreviouslyChargedCoilOn) {
 	ASSERT_EQ(&enginePins.coils[0], event.outputs[0]);
 	ASSERT_TRUE(chargedCoil->getLogicValue());
 
-	// The callback uses the new mapping, leaving the charged coil on.
+	// The pending callback must discharge the coil that was actually charged.
 	eth.setTimeAndInvokeEventsUs(getTimeNowUs() + 3001);
 	EXPECT_FALSE(enginePins.coils[0].getLogicValue());
-	EXPECT_TRUE(chargedCoil->getLogicValue());
-	chargedCoil->setLow();
+	EXPECT_FALSE(chargedCoil->getLogicValue());
+	EXPECT_EQ(0, eth.getWarningCounter());
 }
 
 TEST(ignition, trailingSpark) {

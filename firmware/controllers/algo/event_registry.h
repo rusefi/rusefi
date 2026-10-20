@@ -52,6 +52,9 @@ public:
 	IgnitionEvent();
 	// IgnitionEvent to IgnitionOutputPin is either 1 to 1 or 1 to 2 relationship, see large comment at 'MAX_OUTPUTS_FOR_IGNITION'
 	IgnitionOutputPin *outputs[MAX_OUTPUTS_FOR_IGNITION];
+	// The output mapping can change while a fire callback is pending. Keep the
+	// physical coils charged for that callback until they are discharged.
+	IgnitionOutputPin *chargedOutputs[MAX_OUTPUTS_FOR_IGNITION] = {};
 	scheduling_s dwellStartTimer;
 	AngleBasedEvent sparkEvent;
 

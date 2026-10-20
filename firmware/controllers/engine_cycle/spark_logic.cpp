@@ -221,12 +221,18 @@ void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 	}
 #endif
 
+	bool hasChargedOutput = false;
+	for (auto* output : event->chargedOutputs) {
+		hasChargedOutput |= output != nullptr;
+	}
+
 	for (int i = 0; i< MAX_OUTPUTS_FOR_IGNITION;i++) {
-		IgnitionOutputPin *output = event->outputs[i];
+		IgnitionOutputPin *output = hasChargedOutput ? event->chargedOutputs[i] : event->outputs[i];
 
 		if (output) {
 			fireSparkBySettingPinLow(event, output);
 		}
+		event->chargedOutputs[i] = nullptr;
 	}
 
 	efitick_t nowNt = getTimeNowNt();
@@ -350,12 +356,17 @@ void turnSparkPinHighStartCharging(IgnitionEvent *event) {
   bool skippedDwellDueToTriggerNoised = false;
 	for (int i = 0; i< MAX_OUTPUTS_FOR_IGNITION;i++) {
 		IgnitionOutputPin *output = event->outputs[i];
+		event->chargedOutputs[i] = nullptr;
 		if (output != NULL) {
 		  // at the moment we have a funny xor as if outputs could have different destiny. That's probably an over exaggeration,
 		  // realistically it should be enough to check the sequencing of only the first output but that would be less elegant
 		  //
 		  // maybe it would have need nicer if instead of an array of outputs we had a linked list of outputs? but that's just daydreaming.
-			skippedDwellDueToTriggerNoised |= startDwellByTurningSparkPinHigh(event, output);
+			bool skipped = startDwellByTurningSparkPinHigh(event, output);
+			skippedDwellDueToTriggerNoised |= skipped;
+			if (!skipped) {
+				event->chargedOutputs[i] = output;
+			}
 		}
 	}
 

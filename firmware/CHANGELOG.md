@@ -56,6 +56,7 @@ Release template (copy/paste this for new release):
  - Nissan VK56DE (36-1-1) crank and PHASE cam triggers
 
 ### Fixed
+ - Ignition schedule rebuilds now discharge the coil charged before its output mapping changed.
  - Invalid fuel-pressure readings use nominal pressure for injector duration and deadtime, and skip HPFP mass correction.
  - A GDI pump with zero configured cam lobes stays inactive and makes no fuel request.
  - Shift torque reduction ignores invalid sensor readings when selecting spark cut, ignition retard, and time limits.
