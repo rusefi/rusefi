@@ -10,8 +10,15 @@
 
 #include "i2c_bb.h"
 
+// Some legacy devices are configured using SDA/SCL pins in config
+// If old config used and no I2C bus is configured on given pins
+// we can still start up to I2C_BUS_LEGACY_COUNT busses in BB mode on any pins
+#ifndef I2C_BUS_LEGACY_COUNT
+#define I2C_BUS_LEGACY_COUNT 1
+#endif
+
 /* zero index is I2C_NONE */
-static i2cBus *i2cbuses[I2C_BUS_TOTAL_COUNT + 1];
+static i2cBus *i2cbuses[1 + I2C_BUS_TOTAL_COUNT + I2C_BUS_LEGACY_COUNT];
 
 #if HAL_USE_I2C
 
@@ -129,7 +136,9 @@ static i2cBus *initI2cHwBus(brain_pin_e scl, brain_pin_e sda, i2c_speed_e speed)
 
 #endif // HAL_USE_I2C
 
-static BitbangI2c bbI2c[I2C_BUS_TOTAL_COUNT];
+// Any bus can fallback to BB mode
+// Few extra buses are available for legacy configs
+static BitbangI2c bbI2c[I2C_BUS_TOTAL_COUNT + I2C_BUS_LEGACY_COUNT];
 
 brain_pin_e getSclPin(i2c_bus_e device) {
 	const i2c_config_s *cfg = getI2cCfg(device);
@@ -206,12 +215,28 @@ i2cBus *getI2cBus(brain_pin_e scl, brain_pin_e sda) {
 		return nullptr;
 	}
 
-	for (size_t n = I2C_BUS_1; n < I2C_BUS_TOTAL_COUNT; n++) {
-		i2cBus *bus = i2cbuses[n];
+	// Check if bus is configured in config
+	for (size_t idx = 0; idx < I2C_BUS_TOTAL_COUNT + I2C_BUS_LEGACY_COUNT; idx++) {
+		i2cBus *bus = i2cbuses[I2C_BUS_1 + idx];
 
 		if ((bus) && (bus->m_scl == scl) && (bus->m_sda == sda)) {
 			return bus;
 		}
+	}
+
+	// Try starting bitbang on given pins (legacy mode)
+	for (size_t idx = I2C_BUS_TOTAL_COUNT; idx < I2C_BUS_TOTAL_COUNT + I2C_BUS_LEGACY_COUNT; idx++) {
+		if (i2cbuses[I2C_BUS_1 + idx] == nullptr) {
+			i2cBus *bus = &bbI2c[idx];
+			if (bus->init(scl, sda, I2C_SPEED_400K)) {
+				efiPrintf("I2C%d in bitbang mode started", I2C_BUS_1 + 1);
+				i2cbuses[I2C_BUS_1 + idx] = bus;
+				return bus;
+			}
+			// failed to init, do not try more
+			return nullptr;
+		}
+
 	}
 
 	return nullptr;
