@@ -48,6 +48,31 @@ struct FakeMap : public ValueProvider3D {
 	}
 };
 
+TEST(Vvt, ActivationDelayDiscardsFractionalSeconds) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	Sensor::setMockValue(SensorType::Clt, 70);
+	engineConfiguration->vvtControlMinClt = 0;
+	engineConfiguration->vvtControlMinRpm = 500;
+	engineConfiguration->vvtActivationDelayMs = 1500;
+	engine->rpmCalculator.setRpmValue(1500);
+
+	FakeMap targetMap;
+	targetMap.setpoint = 20;
+	StrictMock<MockPwm> pwm;
+	EXPECT_CALL(pwm, setSimplePwmDutyCycle(0)).Times(2);
+	VvtController dut(0);
+	dut.init(&targetMap, &pwm);
+
+	advanceTimeUs(900000);
+	dut.onFastCallback();
+	EXPECT_FALSE(dut.getSetpoint());
+
+	// The 1500 ms setting currently becomes one second, enabling control too soon.
+	advanceTimeUs(350000);
+	dut.onFastCallback();
+	EXPECT_EQ(20, dut.getSetpoint().value_or(-1000));
+}
+
 TEST(VVT, SetpointHysteresisAdvancingCam) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	Sensor::setMockValue(SensorType::Clt, 70); // m_isCltWarmEnough
