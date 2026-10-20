@@ -2,7 +2,7 @@
  * @file        lps25.cpp
  * @brief       Driver for the ST LPS25HB pressure sensor
  *
- * At the moment uses bit-banged I2C driver
+ * Uses a configured shared I2C bus or a bit-banged fallback for pin-only tunes.
  *
  * @date February 6, 2020
  * @author Matthew Kennedy, (c) 2020
@@ -40,7 +40,12 @@ static constexpr uint8_t expectedWhoAmILps25 = 0xBD;
 bool Lps25::init(brain_pin_e scl, brain_pin_e sda) {
 	m_i2c = getI2cBus(scl, sda);
 	if (m_i2c == nullptr) {
-		return false;
+		// Older tunes configure only the LPS2x pins. They have no shared I2C bus
+		// for getI2cBus to find, so keep the former bit-banged path available.
+		m_i2c = m_fallbackI2c;
+		if (!m_i2c->init(scl, sda, I2C_SPEED_100K)) {
+			return false;
+		}
 	}
 
 	// Read ident register
@@ -151,7 +156,7 @@ uint8_t Lps25::regCr1() const {
 
 
 uint8_t Lps25::readRegister(uint8_t reg) {
-	uint8_t retval;
+	uint8_t retval = 0;
 
 	m_i2c->writeRead(addr, &reg, 1, &retval, 1);
 
@@ -172,7 +177,7 @@ void Lps25Thread::PeriodicTask(efitick_t nowNt) {
 }
 
 bool Lps25Thread::init() {
-	setPeriod(250 /*ms*/);	// sensor is configured for 25Hz refresh
+	setPeriod(250 /*ms*/);	// Ambient pressure changes slowly; the sensor updates at 7 Hz.
 	start();
 	return true;
 }

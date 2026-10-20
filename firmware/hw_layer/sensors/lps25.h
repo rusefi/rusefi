@@ -8,11 +8,13 @@
 
 #pragma once
 
-#include "i2c.h"
+#include "i2c_bb.h"
 
 class Lps25 : public StoredValueSensor {
 public:
-	Lps25() : StoredValueSensor(SensorType::BarometricPressure, MS2NT(1000)) { }
+	explicit Lps25(i2cBus* fallbackI2c = nullptr)
+		: StoredValueSensor(SensorType::BarometricPressure, MS2NT(1000)),
+		  m_fallbackI2c(fallbackI2c ? fallbackI2c : &m_bitbangI2c) { }
 
 	void showInfo(const char* sensorName) const override;
 
@@ -25,7 +27,9 @@ public:
 	}
 
 private:
-	i2cBus *m_i2c;
+	BitbangI2c m_bitbangI2c;
+	i2cBus *m_fallbackI2c;
+	i2cBus *m_i2c = nullptr;
 
 	uint8_t readRegister(uint8_t reg);
 	void writeRegister(uint8_t reg, uint8_t val);
