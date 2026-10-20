@@ -4,7 +4,7 @@
 
 #include "pch.h"
 
-#if EFI_LAUNCH_CONTROL
+#if EFI_LAUNCH_CONTROL && EFI_ENGINE_CONTROL
 #include "nitrous_controller.h"
 #include "limp_manager.h"
 
@@ -204,4 +204,4 @@ SensorType NitrousController::getLuaGauge() const {
     return result;
 }
 
-#endif // EFI_LAUNCH_CONTROL
+#endif // EFI_LAUNCH_CONTROL && EFI_ENGINE_CONTROL

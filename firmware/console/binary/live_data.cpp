@@ -140,11 +140,11 @@ const tps_accel_state_s* getLiveData(size_t) {
 
 template<>
 const nitrous_control_state_s* getLiveData(size_t) {
-#if EFI_LAUNCH_CONTROL
+#if EFI_LAUNCH_CONTROL && EFI_ENGINE_CONTROL
     return &engine->module<NitrousController>().unmock();
 #else
     return nullptr;
-#endif // EFI_LAUNCH_CONTROL
+#endif // EFI_LAUNCH_CONTROL && EFI_ENGINE_CONTROL
 }
 
 template<>

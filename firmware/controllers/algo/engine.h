@@ -198,7 +198,9 @@ public:
 #endif // EFI_BOOST_CONTROL
         TpsAccelEnrichment,
 #if EFI_LAUNCH_CONTROL
+#if EFI_ENGINE_CONTROL
         NitrousController,
+#endif // EFI_ENGINE_CONTROL
         RollingLaunchControl,
 #endif // EFI_LAUNCH_CONTROL
 #if EFI_LTFT_CONTROL

@@ -106,6 +106,7 @@ uint32_t PrimeController::getKeyCycleCounter() const {
 }
 
 void PrimeController::onPrimeStart() {
+#if EFI_ENGINE_CONTROL
 	// A delayed pulse must use the current start and fuel-cut conditions.
 	if (isPrimeInjectionPulseSkipped() || !engineConfiguration->isInjectionEnabled || !getLimpManager()->allowInjection()) {
 		return;
@@ -134,6 +135,7 @@ void PrimeController::onPrimeStart() {
 	m_primeOutputsMask = (1u << engineConfiguration->cylindersCount) - 1;
 	startInjection(InjectorContext(m_primeOutputsMask, 0xF, false).raw);
 	getScheduler()->schedule("onPrimeStart", nullptr, endTime, action_s::make<onPrimeEndAdapter>( this ));
+#endif // EFI_ENGINE_CONTROL
 }
 
 void PrimeController::onPrimeEnd() {
