@@ -37,8 +37,10 @@ class GaugesPanelLayoutTest {
                 panel.setActive(true);
                 assertTrue(hasDemand("layoutCustomChannel"));
                 assertFalse(hasDemand("layoutDefaultChannel"));
-                assertNotNull(findButton(panel.getContent(), GaugesPanel.SAVE_LAYOUT));
-                assertNotNull(findButton(panel.getContent(), GaugesPanel.LOAD_LAYOUT));
+                assertNotNull(findButton(panel.getContent(), GaugesPanel.EDIT_DASHBOARD));
+                assertNotNull(findMenuItem(panel.getEditMenu(), GaugesPanel.SAVE_LAYOUT));
+                assertNotNull(findMenuItem(panel.getEditMenu(), GaugesPanel.LOAD_LAYOUT));
+                assertNotNull(findMenuItem(panel.getEditMenu(), GaugesPanel.RESET));
             } finally {
                 panel.destroy();
             }
@@ -202,6 +204,15 @@ class GaugesPanelLayoutTest {
 
     static boolean hasDemand(String channel) {
         return SensorCentral.getInstance().getOutputChannelDemand().getChannels().contains(channel.toLowerCase());
+    }
+
+    private static JMenuItem findMenuItem(JPopupMenu menu, String text) {
+        for (Component child : menu.getComponents()) {
+            if (child instanceof JMenuItem && text.equals(((JMenuItem) child).getText())) {
+                return (JMenuItem) child;
+            }
+        }
+        return null;
     }
 
     private static JButton findButton(Container container, String text) {

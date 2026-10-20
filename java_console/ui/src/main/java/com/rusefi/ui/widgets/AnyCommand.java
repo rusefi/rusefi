@@ -47,6 +47,8 @@ public class AnyCommand {
         this.text = text;
         installCtrlEnterAction();
         text.setText(defaultCommand);
+        // transparent, so the command box sits on its toolbar's own background
+        content.setOpaque(false);
         if (withCommandCaption) {
             content.add(new JLabel("Command: "));
         }
