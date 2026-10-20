@@ -2,6 +2,7 @@ package com.rusefi.ui;
 
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.widgets.GaugeDisplayKind;
+import com.rusefi.ui.widgets.GaugeScaleOverrides;
 
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Properties;
 
@@ -40,7 +42,9 @@ final class GaugeLayout {
     static final double MIN_FREE_SIZE = 0.02;
     // Tolerates rounding in fractions written by Double.toString.
     private static final double EPSILON = 1e-9;
-    private static final String[] ELEMENT_PROPERTIES = {"gauge", "type", "display"};
+    // Older consoles read only the keys they know, so the scale settings need no version bump.
+    private static final String[] ELEMENT_PROPERTIES = {"gauge", "type", "display",
+        GaugeScaleOverrides.MIN, GaugeScaleOverrides.MAX, GaugeScaleOverrides.DANGER, GaugeScaleOverrides.DECIMALS};
     private static final String[] BOUNDS_PROPERTIES = {X, Y, WIDTH, HEIGHT};
     private static final String[] GRAPH_PROPERTIES = {"sensor", "period", "auto_scale", "lower", "upper"};
 
@@ -198,6 +202,11 @@ final class GaugeLayout {
         }
         element.setProperty("gauge", gauge);
         copyFromFile(properties, prefix, element, "type", "display");
+        copyFromFile(properties, prefix, element, GaugeScaleOverrides.KEYS);
+        GaugeScaleOverrides scale = GaugeScaleOverrides.read(element);
+        if (scale.getMin() != null && scale.getMax() != null && !(scale.getMin() < scale.getMax())) {
+            throw new IOException("Invalid scale for " + name + ": min must be below max");
+        }
         for (String graph : new String[]{"top", "bottom"}) {
             copyFromFile(properties, prefix + graph + ".", element.getChild(graph), GRAPH_PROPERTIES);
         }
@@ -267,6 +276,8 @@ final class GaugeLayout {
                 }
             } else if (key.equals("display")) {
                 valid = GaugeDisplayKind.lookup(value) != null;
+            } else if (Arrays.asList(GaugeScaleOverrides.KEYS).contains(key)) {
+                valid = GaugeScaleOverrides.isValid(key, value);
             } else if (key.equals("sensor")) {
                 valid = !value.trim().isEmpty();
             }

@@ -15,7 +15,11 @@ public final class BarGauge extends CardGauge {
     private final boolean vertical;
 
     public BarGauge(GaugeModel model, IniFileModel ini, ConfigurationImage configuration, boolean vertical) {
-        super(model, ini, configuration);
+        this(GaugeScale.fromIni(model, ini, configuration), model, vertical);
+    }
+
+    public BarGauge(GaugeScale scale, GaugeModel model, boolean vertical) {
+        super(scale, model);
         this.vertical = vertical;
         setPreferredSize(vertical ? new Dimension(120, 240) : new Dimension(260, 110));
         setMinimumSize(new Dimension(50, 50));

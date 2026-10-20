@@ -10,7 +10,11 @@ import java.awt.geom.RoundRectangle2D;
 /** Text presentation: title, a large value with its units, and a thin progress line. */
 public final class DigitalGauge extends CardGauge {
     public DigitalGauge(GaugeModel model, IniFileModel ini, ConfigurationImage configuration) {
-        super(model, ini, configuration);
+        this(GaugeScale.fromIni(model, ini, configuration), model);
+    }
+
+    public DigitalGauge(GaugeScale scale, GaugeModel model) {
+        super(scale, model);
         setPreferredSize(new Dimension(220, 120));
         setMinimumSize(new Dimension(80, 50));
     }

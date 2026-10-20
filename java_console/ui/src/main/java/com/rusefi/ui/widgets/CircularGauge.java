@@ -71,51 +71,31 @@ public final class CircularGauge extends JComponent implements GaugeDisplay {
     private volatile Reading reading;
 
     public CircularGauge(GaugeModel model, IniFileModel ini, ConfigurationImage configuration) {
-        this(resolve(model.getLowValueValue(), ini, configuration, 0),
-            resolve(model.getHighValueValue(), ini, configuration, 0), model,
-            resolve(model.getLowDangerValueValue(), ini, configuration, Double.NaN),
-            resolve(model.getLowWarningValueValue(), ini, configuration, Double.NaN),
-            resolve(model.getHighWarningValueValue(), ini, configuration, Double.NaN),
-            resolve(model.getHighDangerValueValue(), ini, configuration, Double.NaN),
-            (int) resolve(model.getValueDecimalPlacesValue(), ini, configuration, 0),
-            (int) resolve(model.getLabelDecimalPlacesValue(), ini, configuration, 0));
+        this(GaugeScale.fromIni(model, ini, configuration), model);
     }
 
     public CircularGauge(double minValue, double maxValue, GaugeModel model) {
-        this(minValue, maxValue, model,
+        this(GaugeScale.of(minValue, maxValue,
             numeric(model.getLowDangerValueValue()), numeric(model.getLowWarningValueValue()),
             numeric(model.getHighWarningValueValue()), numeric(model.getHighDangerValueValue()),
-            model.getValueDecimalPlaces(), model.getLabelDecimalPlaces());
+            model.getValueDecimalPlaces(), model.getLabelDecimalPlaces()), model);
     }
 
-    private CircularGauge(double minValue, double maxValue, GaugeModel model,
-                          double lowDangerValue, double lowWarningValue, double highWarningValue,
-                          double highDangerValue, int valueDecimals, int labelDecimals) {
-        if (!Double.isFinite(minValue)) {
-            minValue = 0;
-        }
-        if (!Double.isFinite(maxValue) || maxValue <= minValue || !Double.isFinite(maxValue - minValue)) {
-            maxValue = minValue + 10;
-            if (!Double.isFinite(maxValue) || maxValue <= minValue) {
-                minValue = 0;
-                maxValue = 10;
-            }
-        }
-        this.minValue = minValue;
-        this.maxValue = maxValue;
-        this.valueDecimals = boundedDecimals(valueDecimals);
-        displayStep = Math.pow(10, -this.valueDecimals);
+    public CircularGauge(GaugeScale scale, GaugeModel model) {
+        minValue = scale.getMin();
+        maxValue = scale.getMax();
+        valueDecimals = scale.getValueDecimals();
+        displayStep = Math.pow(10, -valueDecimals);
         title = model.getTitle();
         units = model.getUnits();
         for (int i = 0; i < scaleLabels.length; i++) {
-            scaleLabels[i] = format(minValue + (maxValue - minValue) * i / 10,
-                boundedDecimals(labelDecimals));
+            scaleLabels[i] = format(minValue + (maxValue - minValue) * i / 10, scale.getLabelDecimals());
         }
-        this.lowDangerValue = lowDangerValue;
-        this.lowWarningValue = lowWarningValue;
-        this.highWarningValue = highWarningValue;
+        lowDangerValue = scale.getLowDanger();
+        lowWarningValue = scale.getLowWarning();
+        highWarningValue = scale.getHighWarning();
         reading = new Reading(Double.NaN, Double.NaN);
-        setHighDangerValue(highDangerValue);
+        setHighDangerValue(scale.getHighDanger());
         setPreferredSize(new Dimension(200, 200));
         setMinimumSize(new Dimension(80, 80));
         setOpaque(false);
@@ -258,10 +238,6 @@ public final class CircularGauge extends JComponent implements GaugeDisplay {
             degrees = Double.isFinite(value)
                 ? (int) Math.round((visualValue - minValue) / (maxValue - minValue) * SWEEP_DEGREES) : 0;
         }
-    }
-
-    private static int boundedDecimals(int decimals) {
-        return Math.max(0, Math.min(6, decimals));
     }
 
     private static String format(double value, int decimals) {

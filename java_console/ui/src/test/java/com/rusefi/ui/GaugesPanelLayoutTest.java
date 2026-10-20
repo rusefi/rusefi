@@ -5,6 +5,7 @@ import com.opensr5.ini.IniFileModelMocks;
 import com.opensr5.ini.IniValue;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.core.preferences.storage.Node;
+import com.rusefi.ui.widgets.GaugeScaleOverrides;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -100,6 +101,7 @@ class GaugesPanelLayoutTest {
         Node element = config.getChild("element_0");
         element.setProperty("type", true);
         element.setProperty("display", "graph");
+        new GaugeScaleOverrides(-10.5, 120.0, null, 2).writeTo(element);
         Node top = element.getChild("top");
         top.setProperty("sensor", "Temperature\u00b0Gauge");
         top.setProperty("period", 50);
@@ -123,6 +125,7 @@ class GaugesPanelLayoutTest {
         assertEquals("CustomGauge", loadedElement.getProperty("gauge"));
         assertTrue(loadedElement.getBoolProperty("type"));
         assertEquals("graph", loadedElement.getProperty("display"));
+        assertEquals(new GaugeScaleOverrides(-10.5, 120.0, null, 2), GaugeScaleOverrides.read(loadedElement));
         assertEquals(top.getConfig(), loadedElement.getChild("top").getConfig());
         assertEquals(bottom.getConfig(), loadedElement.getChild("bottom").getConfig());
         String text = new String(Files.readAllBytes(file), StandardCharsets.UTF_8);
@@ -145,7 +148,8 @@ class GaugesPanelLayoutTest {
             {"element_0.type", "maybe"}, {"element_0.top.period", "-1"},
             {"element_0.bottom.auto_scale", "yes"}, {"element_0.top.lower", "NaN"},
             {"element_0.bottom.upper", "Infinity"}, {"element_0.top.sensor", " "},
-            {"element_0.display", "dial"}
+            {"element_0.display", "dial"}, {"element_0.min", "low"}, {"element_0.danger", "NaN"},
+            {"element_0.decimals", "7"}, {"element_0.decimals", "1.5"}
         };
         Node config = singleGauge("RPMGauge");
         SwingUtilities.invokeAndWait(() -> {
@@ -174,6 +178,19 @@ class GaugesPanelLayoutTest {
                 panel.destroy();
             }
         });
+    }
+
+    @Test
+    void scaleWithMinNotBelowMaxIsRejected() throws Exception {
+        Path file = directory.resolve("scale.gauges");
+        Node config = singleGauge("CustomGauge");
+        new GaugeScaleOverrides(100.0, 100.0, null, null).writeTo(config.getChild("element_0"));
+        assertThrows(IOException.class, () -> GaugeLayout.save(file, config), "Saving validates like loading");
+        assertFalse(Files.exists(file));
+        new GaugeScaleOverrides(100.0, null, null, null).writeTo(config.getChild("element_0"));
+        GaugeLayout.save(file, config);
+        assertEquals(100.0, GaugeScaleOverrides.read(GaugeLayout.load(file).getChild("element_0")).getMin(),
+            "A lone min is checked against the .ini max when the gauge is drawn");
     }
 
     private static Node singleGauge(String name) {
