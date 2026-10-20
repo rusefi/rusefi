@@ -214,10 +214,10 @@ void SoftSparkLimiter::updateTargetSkipRatio(
 	targetSkipRatio = luaSparkSkip;
 	if (engineConfiguration->useHardSkipInTraction) {
 		if (allowHardCut) {
-			targetSkipRatio += tractionControlSparkSkip;
+			targetSkipRatio += tractionControlSparkSkip / 100.0f;
 		}
 	} else if (!allowHardCut) {
-		targetSkipRatio += tractionControlSparkSkip;
+		targetSkipRatio += tractionControlSparkSkip / 100.0f;
 	}
 
 	if (allowHardCut) {
