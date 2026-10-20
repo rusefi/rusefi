@@ -7,21 +7,38 @@ import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.ConnectionStatusValue;
+import com.rusefi.ui.startup.StatusDotIcon;
+import com.rusefi.ui.widgets.JoinedButtons;
+import com.rusefi.ui.widgets.WarningIcon;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Status strip at the bottom of the Gauges, Messages and Engine Sniffer tabs: the latest firmware
+ * warning or error (critical errors blink), Clear warning, the log folder and the on-screen log
+ * buffer size. Colours from the theme files [tag:console_theme].
+ */
 public class WarningPanel {
 
     public static final String LOG_INFO_TEXT = "Writing logs to '" + FileLogger.DIR + "'";
+    static final String NO_WARNINGS = "No active warnings";
     private static final String WARNING = "WARNING";
     private static final String ERROR = "firmware error";
-    private final JPanel panel = new JPanel(new FlowLayout());
+    private final JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 14, 0)) {
+        @Override
+        protected void paintComponent(Graphics g) {
+            g.setColor(themed("Console.StatusBar.background", getBackground()));
+            g.fillRect(0, 0, getWidth(), getHeight());
+            g.setColor(themed("Separator.foreground", Color.LIGHT_GRAY));
+            g.drawLine(0, 0, getWidth(), 0);
+        }
+    };
 
-    private final JLabel label = new JLabel();
-    private final JButton reset = new JButton("clear warning");
+    private final JLabel label = new JLabel("", new WarningIcon(), SwingConstants.LEADING);
+    private final JButton reset = new JButton("Clear warning");
     private boolean haveFatalError = false;
     private final Timer criticalErrorBlinking = new Timer(1000, new ActionListener() {
         @Override
@@ -32,11 +49,9 @@ public class WarningPanel {
     });
 
     public WarningPanel(Node config) {
-        label.setForeground(Color.red);
+        panel.setBorder(BorderFactory.createEmptyBorder(8, 2, 8, 2));
+        label.setIconTextGap(10);
         panel.add(label);
-
-        Font currentFont = label.getFont();
-        label.setFont(currentFont.deriveFont((float) (currentFont.getSize() * 1.5)));
 
         clear();
 
@@ -56,13 +71,11 @@ public class WarningPanel {
                 if (message.startsWith(Integration.CRITICAL_PREFIX)) {
                     haveFatalError = true;
                     criticalErrorBlinking.start();
-                    label.setText(message);
-                    reset.setEnabled(true);
+                    showWarning(message);
                     return;
                 }
                 if (message.startsWith(WARNING) || message.startsWith(ERROR)) {
-                    label.setText(message);
-                    reset.setEnabled(true);
+                    showWarning(message);
                 }
             }
         });
@@ -75,18 +88,66 @@ public class WarningPanel {
             }
         });
 
-        panel.add(reset);
+        // same outlined style as the toolbar buttons (Edit dashboard)
+        panel.add(new JoinedButtons(reset));
+        panel.add(divider());
         // todo: only display label if logs are being recorded
-        panel.add(new JLabel(LOG_INFO_TEXT));
-        panel.add(new LogSizeControl(config).getContent());
+        // the dot is drawn in its label's colour, so it gets its own label: green dot, normal text
+        JPanel logRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        logRow.setOpaque(false);
+        logRow.add(new JLabel(new StatusDotIcon()) {
+            {
+                setForeground(themed("Console.Status.connected.dot", new Color(0x16a34a)));
+                setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 8));
+            }
+        });
+        logRow.add(new JLabel(LOG_INFO_TEXT));
+        panel.add(logRow);
+        panel.add(divider());
+        Component logSize = new LogSizeControl(config).getContent();
+        if (logSize instanceof JComponent) {
+            ((JComponent) logSize).setOpaque(false);
+        }
+        panel.add(logSize);
+    }
+
+    private void showWarning(String message) {
+        label.setText(message);
+        label.setForeground(themed("Console.Status.disconnected.foreground", new Color(0xb91c1c)));
+        label.setFont(label.getFont().deriveFont(Font.BOLD));
+        reset.setEnabled(true);
     }
 
     private void clear() {
-        label.setText("");
+        label.setText(NO_WARNINGS);
+        label.setForeground(themed("Console.TitleBar.mutedForeground", Color.GRAY));
+        label.setFont(UIManager.getFont("Label.font"));
         label.setVisible(true);
         reset.setEnabled(false);
         haveFatalError = false;
         criticalErrorBlinking.stop();
+    }
+
+    private static JComponent divider() {
+        JComponent line = new JComponent() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                g.setColor(themed("Separator.foreground", Color.LIGHT_GRAY));
+                g.drawLine(getWidth() / 2, 2, getWidth() / 2, getHeight() - 3);
+            }
+        };
+        line.setPreferredSize(new Dimension(1, 24));
+        return line;
+    }
+
+    private static Color themed(String key, Color fallback) {
+        Color c = UIManager.getColor(key);
+        return c != null ? c : fallback;
+    }
+
+    // package-private so tests can read the warning text
+    JLabel getWarningLabel() {
+        return label;
     }
 
     public JPanel getPanel(Node config) {

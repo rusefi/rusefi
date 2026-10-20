@@ -30,6 +30,8 @@ import com.rusefi.ui.lua.LuaScriptPanel;
 import com.rusefi.ui.plugins.ConsoleTabProvider;
 import com.rusefi.ui.util.JustOneInstance;
 import com.rusefi.ui.widgets.ConnectionStatusIcon;
+import com.rusefi.ui.widgets.JoinedButtons;
+import com.rusefi.ui.widgets.WandIcon;
 import com.rusefi.ui.widgets.StatusPanel;
 import com.rusefi.ui.widgets.tune.CalibrationPanelWorkspace;
 import com.rusefi.ui.wizard.WizardCatalog;
@@ -276,10 +278,20 @@ public class ConsoleUI {
         CardLayout rootCardLayout = (CardLayout) rootPanel.getLayout();
 
         JButton launchWizardButton = getLaunchWizardButton(mainFrame, rootPanel, wizardContainer, rootCardLayout);
+        // Blue only while the connected ECU has unfinished wizard steps (the same check that
+        // auto-launches the wizard); a normal button otherwise.
+        Runnable refreshLaunchWizardHighlight = () -> setLaunchWizardHighlight(launchWizardButton,
+            ConnectionStatusLogic.INSTANCE.getValue() == ConnectionStatusValue.CONNECTED
+                && uiContext.getBinaryProtocol() != null
+                && uiContext.getBinaryProtocol().getControllerConfiguration() != null
+                && wizardContainer.hasIncompleteSteps());
+        ConnectionStatusLogic.INSTANCE.addAndFireListener(isConnected ->
+            SwingUtilities.invokeLater(refreshLaunchWizardHighlight));
 
         wizardContainer.setOnWizardExit(() -> {
             rootCardLayout.show(rootPanel, "console");
             setNonTabContentActive(false);
+            refreshLaunchWizardHighlight.run();
         });
         wizardContainer.setMessageHandler(mainFrame::showMessageOverlay);
         wizardContainer.setOnDontShowAgain(() -> {
@@ -315,13 +327,8 @@ public class ConsoleUI {
             });
         });
 
-        JPanel cornerPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
-        cornerPanel.setOpaque(false);
-        cornerPanel.add(connectionStatus);
-        if (UiProperties.isLaunchWizardEnabled()) {
-            cornerPanel.add(launchWizardButton);
-        }
-        tabbedPane.setCornerComponent(cornerPanel);
+        tabbedPane.setCornerComponent(createCornerPanel(connectionStatus,
+            UiProperties.isLaunchWizardEnabled() ? launchWizardButton : null));
 
         // ---------------
 
@@ -656,11 +663,58 @@ console live data tab is broken #8402
         return false;
     }
 
+    /**
+     * Connection badge and Launch Wizard at the right end of the tab row. Its right inset matches
+     * the Gauges toolbar (JoinedButtons.ROW_END_INSET), so Launch Wizard's right edge lines up
+     * with Edit dashboard's.
+     */
+    static JPanel createCornerPanel(Component connectionStatus, JButton launchWizardButton) {
+        // GridBagLayout centres the controls vertically in the tab row
+        JPanel cornerPanel = new JPanel(new GridBagLayout());
+        cornerPanel.setOpaque(false);
+        cornerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, JoinedButtons.ROW_END_INSET));
+        // FlatLaf gives the trailing component the free width of the tab row: fill it on the left
+        GridBagConstraints filler = new GridBagConstraints();
+        filler.weightx = 1;
+        cornerPanel.add(Box.createHorizontalGlue(), filler);
+        GridBagConstraints c = new GridBagConstraints();
+        cornerPanel.add(connectionStatus, c);
+        if (launchWizardButton != null) {
+            c.insets = new Insets(0, JoinedButtons.ROW_GAP, 0, 0);
+            cornerPanel.add(launchWizardButton, c);
+        }
+        return cornerPanel;
+    }
+
+    /**
+     * Same shape as the Gauges "Edit dashboard" button: line icon, 36 px tall, as wide as its
+     * text [tag:console_theme].
+     */
+    static JButton newLaunchWizardButton() {
+        JButton button = new JButton("Launch Wizard", new WandIcon()) {
+            @Override
+            public Dimension getPreferredSize() {
+                Dimension size = super.getPreferredSize();
+                size.height = JoinedButtons.HEIGHT;
+                return size;
+            }
+        };
+        button.setIconTextGap(8);
+        button.setMargin(new Insets(0, 14, 0, 14));
+        return button;
+    }
+
+    /** Blue main-action style from the theme files [tag:console_theme] while setup is unfinished. */
+    static void setLaunchWizardHighlight(JButton launchWizardButton, boolean wizardIncomplete) {
+        launchWizardButton.putClientProperty(FlatClientProperties.STYLE_CLASS, wizardIncomplete ? "primary" : null);
+        launchWizardButton.setToolTipText(wizardIncomplete
+            ? "Some setup steps are not finished yet"
+            : "Step-by-step setup of the connected ECU");
+    }
+
     private @NotNull JButton getLaunchWizardButton(MainFrame mainFrame, JPanel rootPanel,
                                                     WizardContainer wizardContainer, CardLayout rootCardLayout) {
-        JButton launchWizardButton = new JButton("Launch Wizard");
-        // blue main-action style from the theme files [tag:console_theme]
-        launchWizardButton.putClientProperty(FlatClientProperties.STYLE_CLASS, "primary");
+        JButton launchWizardButton = newLaunchWizardButton();
         launchWizardButton.addActionListener(e -> {
             if (ConnectionStatusLogic.INSTANCE.getValue() != ConnectionStatusValue.CONNECTED) {
                 mainFrame.showMessageOverlay("Please connect to an ECU before launching the wizard.");

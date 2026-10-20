@@ -17,6 +17,10 @@ import java.awt.event.ComponentEvent;
 public class JoinedButtons extends JPanel {
     /** Shared height of the toolbar controls, so a row of them lines up. */
     public static final int HEIGHT = 36;
+    /** Gap between controls in a toolbar row. */
+    public static final int ROW_GAP = 8;
+    /** Distance from a toolbar row's last control to the window edge. */
+    public static final int ROW_END_INSET = 12;
     private static final int ARC = 10;
     private static final int BORDER = 1;
 

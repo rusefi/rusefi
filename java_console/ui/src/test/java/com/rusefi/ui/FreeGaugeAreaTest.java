@@ -22,31 +22,39 @@ class FreeGaugeAreaTest {
     void editLayoutOverlayTakesInputAndTheToolbarFollows() throws Exception {
         Node config = twoColumnGrid();
         onPanel(config, panel -> {
-            assertFalse(panel.getEditLayoutButton().isVisible(), "Editing is a free-layout feature");
-            assertFalse(panel.getAddGaugeButton().isVisible());
+            assertFalse(panel.getEditLayoutItem().isEnabled(), "Editing is a free-layout feature");
+            assertFalse(panel.getAddGaugeItem().isEnabled());
+            assertFalse(panel.getDoneEditingButton().isVisible());
             panel.setFreeMode(true);
-            assertTrue(panel.getEditLayoutButton().isVisible());
-            assertTrue(panel.getAddGaugeButton().isVisible());
+            assertTrue(panel.getEditLayoutItem().isEnabled());
+            assertTrue(panel.getAddGaugeItem().isEnabled());
+            assertFalse(panel.getDoneEditingButton().isVisible(), "Done only appears while arranging");
 
-            panel.getEditLayoutButton().doClick(0);
+            panel.getEditLayoutItem().doClick(0);
             FreeGaugeArea area = panel.getFreeArea();
             JPanel free = panel.getFreePanel();
             layout(free);
             assertTrue(area.isEditing());
-            assertEquals(GaugesPanel.DONE_EDITING, panel.getEditLayoutButton().getText());
+            assertTrue(panel.getDoneEditingButton().isVisible());
+            assertFalse(panel.getEditLayoutItem().isEnabled(), "Already arranging");
             assertSame(area.getEditor(), SwingUtilities.getDeepestComponentAt(free, 100, 100),
                 "Gauges cannot be clicked while editing");
 
             key(area.getEditor(), KeyEvent.VK_ESCAPE, 0);
             assertFalse(area.isEditing(), "Esc finishes editing");
-            assertFalse(panel.getEditLayoutButton().isSelected());
-            assertEquals(GaugesPanel.EDIT_LAYOUT, panel.getEditLayoutButton().getText());
+            assertFalse(panel.getDoneEditingButton().isVisible());
+            assertTrue(panel.getEditLayoutItem().isEnabled());
             assertNotSame(area.getEditor(), SwingUtilities.getDeepestComponentAt(free, 100, 100));
 
-            panel.getEditLayoutButton().doClick(0);
+            panel.getEditLayoutItem().doClick(0);
+            panel.getDoneEditingButton().doClick(0);
+            assertFalse(area.isEditing(), "Done finishes editing");
+
+            panel.getEditLayoutItem().doClick(0);
             panel.setFreeMode(false);
             assertFalse(area.isEditing(), "Leaving Free mode ends editing");
-            assertFalse(panel.getEditLayoutButton().isVisible());
+            assertFalse(panel.getEditLayoutItem().isEnabled());
+            assertFalse(panel.getDoneEditingButton().isVisible());
         });
     }
 
@@ -187,7 +195,7 @@ class FreeGaugeAreaTest {
 
     private static FreeGaugeArea startEditing(GaugesPanel panel) {
         panel.setFreeMode(true);
-        panel.getEditLayoutButton().doClick(0);
+        panel.getEditLayoutItem().doClick(0);
         layout(panel.getFreePanel());
         return panel.getFreeArea();
     }

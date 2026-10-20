@@ -36,13 +36,14 @@ class GaugesPanelFreeModeTest {
             try {
                 panel.setActive(true);
                 assertFalse(panel.isFreeMode(), "Grid is the default");
-                assertTrue(panel.getGridSizeButton().isVisible());
-                assertEquals("Grid 1 × 2", panel.getGridSizeButton().getText(), "the button shows the current size");
+                assertTrue(panel.getGridSizeMenu().isEnabled());
+                assertEquals("Grid layout · 1 × 2", panel.getLayoutModeLabel().getText(), "the toolbar shows the current layout");
 
                 panel.setFreeMode(true);
                 assertTrue(panel.isFreeMode());
                 assertEquals("free", config.getProperty("gauges_mode"));
-                assertFalse(panel.getGridSizeButton().isVisible(), "Grid Size only applies to the grid");
+                assertFalse(panel.getGridSizeMenu().isEnabled(), "Grid Size only applies to the grid");
+                assertEquals("Free layout", panel.getLayoutModeLabel().getText());
                 assertEquals(2, config.getIntProperty("free_count", 0), "The current grid replaces the old free layout");
                 assertFalse(config.getConfig().containsKey("free_2"));
                 assertEquals("CustomGauge", config.getChild("free_0").getProperty("gauge"));

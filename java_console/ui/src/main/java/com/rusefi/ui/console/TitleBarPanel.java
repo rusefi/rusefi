@@ -3,6 +3,7 @@ package com.rusefi.ui.console;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.rusefi.core.RusEfiSignature;
 import com.rusefi.core.SignatureHelper;
+import com.rusefi.ui.widgets.ConsoleFonts;
 
 import javax.swing.*;
 import java.awt.*;
@@ -109,16 +110,14 @@ class TitleBarPanel extends JPanel {
     private static class ChipLabel extends JLabel {
         ChipLabel(String text) {
             super(text);
-            setBorder(BorderFactory.createEmptyBorder(2, 8, 2, 8));
+            setBorder(BorderFactory.createEmptyBorder(3, 10, 3, 10));
         }
 
         @Override
         public void updateUI() {
             super.updateUI();
-            Font base = UIManager.getFont("Label.font");
-            if (base != null) {
-                setFont(new Font(Font.MONOSPACED, Font.PLAIN, Math.max(base.getSize() - 1, 10)));
-            }
+            // full label size in a modern monospace; the logical Monospaced font is Courier on Windows
+            setFont(ConsoleFonts.mono(Font.PLAIN, ConsoleFonts.baseSize()));
             setForeground(mutedForeground());
         }
 

@@ -13,40 +13,47 @@ import java.awt.geom.RoundRectangle2D;
  * toolbar controls ({@link JoinedButtons#HEIGHT}). The outline turns to the focus colour while
  * typing and to the error colour when the field carries FlatLaf's error outline property
  * (set by AnyCommand for invalid input). Colours from the theme files [tag:console_theme].
+ * The same frame serves other short inputs, e.g. "50000 | bytes" ({@link #withSuffix}).
  */
-class CommandBox extends JPanel {
+public class CommandBox extends JPanel {
     private static final int ARC = 10;
 
     private final JTextField text;
-    private final JButton go;
+    /** Shaded segment at the right end: the Go button or a unit label. */
+    private final JComponent trailing;
 
     CommandBox(JTextField text, JButton go) {
+        this(text, ">", styleGo(go));
+    }
+
+    /** A field with a unit shown in the shaded right segment, e.g. "bytes". */
+    public static CommandBox withSuffix(JTextField text, String suffix) {
+        JLabel unit = new JLabel(suffix);
+        unit.setBorder(BorderFactory.createEmptyBorder(0, 14, 0, 14));
+        return new CommandBox(text, null, unit);
+    }
+
+    private CommandBox(JTextField text, String prompt, JComponent trailing) {
         super(new BorderLayout());
         this.text = text;
-        this.go = go;
+        this.trailing = trailing;
         setOpaque(false);
         setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-        JLabel prompt = new JLabel(">");
-        prompt.setFont(ConsoleFonts.mono(Font.BOLD, ConsoleFonts.baseSize()));
-        prompt.setForeground(SegmentedControl.themed("Console.TitleBar.mutedForeground", Color.GRAY));
-        prompt.setBorder(BorderFactory.createEmptyBorder(0, 12, 0, 6));
-        add(prompt, BorderLayout.WEST);
+        if (prompt != null) {
+            JLabel promptLabel = new JLabel(prompt);
+            promptLabel.setFont(ConsoleFonts.mono(Font.BOLD, ConsoleFonts.baseSize()));
+            promptLabel.setForeground(SegmentedControl.themed("Console.TitleBar.mutedForeground", Color.GRAY));
+            promptLabel.setBorder(BorderFactory.createEmptyBorder(0, 12, 0, 6));
+            add(promptLabel, BorderLayout.WEST);
+        }
 
         // the box draws the frame; the field itself is bare text
-        text.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 8));
+        text.setBorder(BorderFactory.createEmptyBorder(0, prompt == null ? 12 : 0, 0, 8));
         text.setOpaque(false);
         text.setFont(ConsoleFonts.mono(Font.PLAIN, ConsoleFonts.baseSize()));
         add(text, BorderLayout.CENTER);
-
-        go.putClientProperty(FlatClientProperties.BUTTON_TYPE, FlatClientProperties.BUTTON_TYPE_TOOLBAR_BUTTON);
-        go.setFocusPainted(false);
-        go.setMargin(new Insets(0, 16, 0, 16));
-        Font buttonFont = UIManager.getFont("Button.font");
-        if (buttonFont != null) {
-            go.setFont(buttonFont.deriveFont(Font.BOLD));
-        }
-        add(go, BorderLayout.EAST);
+        add(trailing, BorderLayout.EAST);
 
         text.addFocusListener(new FocusAdapter() {
             @Override
@@ -60,6 +67,17 @@ class CommandBox extends JPanel {
             }
         });
         text.addPropertyChangeListener(FlatClientProperties.OUTLINE, e -> repaint());
+    }
+
+    private static JButton styleGo(JButton go) {
+        go.putClientProperty(FlatClientProperties.BUTTON_TYPE, FlatClientProperties.BUTTON_TYPE_TOOLBAR_BUTTON);
+        go.setFocusPainted(false);
+        go.setMargin(new Insets(0, 16, 0, 16));
+        Font buttonFont = UIManager.getFont("Button.font");
+        if (buttonFont != null) {
+            go.setFont(buttonFont.deriveFont(Font.BOLD));
+        }
+        return go;
     }
 
     @Override
@@ -79,7 +97,7 @@ class CommandBox extends JPanel {
             g2.fillRect(0, 0, getWidth(), getHeight());
             // shaded Go segment
             g2.setColor(SegmentedControl.themed("Console.Readout.background", new Color(0xeef0f3)));
-            g2.fillRect(go.getX(), 0, getWidth() - go.getX(), getHeight());
+            g2.fillRect(trailing.getX(), 0, getWidth() - trailing.getX(), getHeight());
         } finally {
             g2.dispose();
         }
@@ -99,7 +117,7 @@ class CommandBox extends JPanel {
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             Color border = SegmentedControl.themed("Component.borderColor", Color.LIGHT_GRAY);
             g2.setColor(border);
-            g2.drawLine(go.getX() - 1, 1, go.getX() - 1, getHeight() - 2);
+            g2.drawLine(trailing.getX() - 1, 1, trailing.getX() - 1, getHeight() - 2);
             boolean error = FlatClientProperties.OUTLINE_ERROR.equals(text.getClientProperty(FlatClientProperties.OUTLINE));
             if (error) {
                 g2.setColor(SegmentedControl.themed("Component.error.focusedBorderColor", Color.RED));
