@@ -14,6 +14,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static com.rusefi.config.generated.VariableRegistryValues.GAUGE_NAME_TIME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -25,7 +26,7 @@ class LogViewerSandboxTest {
         CsvLogReader log = LogViewerSandbox.load("/logview/test-log-binary-1.mlg");
         assertEquals(220, log.sampleCount());
         assertEquals(917, log.fieldCount());
-        assertEquals("Time", log.name(0));
+        assertEquals(GAUGE_NAME_TIME, log.name(0));
         assertEquals("RPM", log.name(32));
         assertEquals("TPS", log.name(40));
         assertEquals("MAP", log.name(45));
@@ -36,7 +37,7 @@ class LogViewerSandboxTest {
     @Test
     void stillLoadsTextFixture() throws IOException {
         CsvLogReader log = LogViewerSandbox.load("/logview/test-log-1.msl");
-        assertEquals("Time", log.name(0));
+        assertEquals(GAUGE_NAME_TIME, log.name(0));
         assertTrue(log.sampleCount() > 3000);
     }
 
@@ -57,7 +58,7 @@ class LogViewerSandboxTest {
 
             JPanel heading = (JPanel) fields.getComponent(0);
             JTextField search = (JTextField) heading.getComponent(1);
-            search.setText("Time");
+            search.setText(GAUGE_NAME_TIME);
             for (int index = 0; index < list.getModel().getSize(); index++) {
                 assertNotEquals(0, list.getModel().getElementAt(index), path);
             }

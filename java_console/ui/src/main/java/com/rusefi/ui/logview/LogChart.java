@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import static com.rusefi.config.generated.VariableRegistryValues.GAUGE_NAME_TIME;
+
 /** Time plot for the fields selected in the companion list. */
 final class LogChart extends JComponent {
     private static final Color BACKGROUND = new Color(21, 27, 38);
@@ -115,7 +117,8 @@ final class LogChart extends JComponent {
                 g.setColor(GRID);
             }
             g.setColor(LABEL);
-            g.drawString("Time (s)", (left + right - metrics.stringWidth("Time (s)")) / 2, bottom + 37);
+            String timeLabel = GAUGE_NAME_TIME + " (s)";
+            g.drawString(timeLabel, (left + right - metrics.stringWidth(timeLabel)) / 2, bottom + 37);
             if (signals.isEmpty()) {
                 g.setColor(LABEL);
                 g.drawString("Select a field to plot", left + 20, top + 30);

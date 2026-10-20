@@ -6,6 +6,8 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.rusefi.config.generated.VariableRegistryValues.GAUGE_NAME_TIME;
+
 /** A tab-delimited time-series log with an optional preamble and a units row. */
 public final class CsvLogReader {
     private final String[] names;
@@ -48,13 +50,13 @@ public final class CsvLogReader {
         String[] names = null;
         while ((line = reader.readLine()) != null) {
             String[] fields = line.split("\t", -1);
-            if (fields.length > 1 && "Time".equalsIgnoreCase(fields[0].trim())) {
+            if (fields.length > 1 && GAUGE_NAME_TIME.equalsIgnoreCase(fields[0].trim())) {
                 names = fields;
                 break;
             }
         }
         if (names == null) {
-            throw new IOException("No Time column found in log");
+            throw new IOException("No " + GAUGE_NAME_TIME + " column found in log");
         }
 
         line = reader.readLine();

@@ -8,6 +8,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.rusefi.config.generated.VariableRegistryValues.GAUGE_NAME_TIME;
+
 /** Reader for version 2 binary operating logs. */
 public final class BinaryLogReader {
     private static final int HEADER_SIZE = 24;
@@ -43,12 +45,12 @@ public final class BinaryLogReader {
             in.readFully(descriptor);
             fields[i] = new Field(descriptor);
             payloadSize += fields[i].size;
-            if (fields[i].name.equalsIgnoreCase("Time")) {
+            if (fields[i].name.equalsIgnoreCase(GAUGE_NAME_TIME)) {
                 timeField = i;
             }
         }
         if (payloadSize != recordLength || timeField < 0) {
-            throw new IOException("Binary log needs a Time field and matching record length");
+            throw new IOException("Binary log needs a " + GAUGE_NAME_TIME + " field and matching record length");
         }
 
         byte[] discard = new byte[8192];
