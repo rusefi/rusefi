@@ -426,3 +426,67 @@ TEST_F(LuaAccelEnrichment, TuningDetectorSuspendsCorrection) {
 	resetCalibrationTimerForTest();
 	EXPECT_GT(getInjectionMass(1200), base);
 }
+
+TEST(fuel, PreviousTpsAccelerationReplaysOnFastPhaseResync) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
+	setTable(config->lambdaTable, 1.0f);
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(::testing::_, ::testing::_))
+		.WillRepeatedly(::testing::Return(AirmassResult{1.3440001f, 50.0f}));
+	engine->rpmCalculator.setRpmValue(1200);
+	engineConfiguration->accelEnrichmentMode = AE_MODE_PERCENT_ADDER;
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
+	engineConfiguration->isTuningDetectorEnabled = false;
+	engineConfiguration->coastingFuelCutEnabled = false;
+	engineConfiguration->tpsAccelLookback = 1;
+	engineConfiguration->tpsAccelEnrichmentThreshold = 5;
+	engineConfiguration->tpsAccelFractionPeriod = 1;
+	engineConfiguration->tpsAccelFractionDivisor = 1;
+	engineConfiguration->flexFuelTransientComp = false;
+	setArrayValues(config->tpsTspCorrValues, 1.0f);
+	setTable(config->tpsTpsAccelTable, 0.20f);
+	initAccelEnrichment();
+	auto& ae = engine->module<TpsAccelEnrichment>().unmock();
+	ae.onNewValue(0);
+	const float baseline = getInjectionMass(1200);
+	ASSERT_TRUE(std::isfinite(baseline));
+	ASSERT_GT(baseline, 0);
+	ae.onNewValue(20);
+	ASSERT_NEAR(1.20f, getInjectionMass(1200) / baseline, 0.00001f);
+	engine->OnTriggerSynchronizationLost();
+	ASSERT_FALSE(engine->rpmCalculator.isRunning());
+	ASSERT_NEAR(0, ae.getTpsEnrichment(), 0.00001f);
+	// Phase sync returns before the next slow callback can reset TPS history.
+	// The previous acceleration remains selected across onEngineStop().
+	engine->rpmCalculator.setRpmValue(1200);
+	ASSERT_TRUE(engine->rpmCalculator.isRunning());
+	EXPECT_NEAR(0.20f, ae.getTpsEnrichment(), 0.00001f);
+	EXPECT_NEAR(1.20f, getInjectionMass(1200) / baseline, 0.00001f);
+}
+
+TEST(fuel, StoppedTpsResetInventsAccelerationFromHeldThrottle) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->accelEnrichmentMode = AE_MODE_PERCENT_ADDER;
+	engineConfiguration->tpsAccelLookback = 1;
+	engineConfiguration->tpsAccelEnrichmentThreshold = 5;
+	engineConfiguration->tpsAccelFractionPeriod = 1;
+	engineConfiguration->tpsAccelFractionDivisor = 1;
+	setArrayValues(config->tpsTspCorrValues, 1.0f);
+	setTable(config->tpsTpsAccelTable, 0.20f);
+	initAccelEnrichment();
+	auto& ae = engine->module<TpsAccelEnrichment>().unmock();
+	Sensor::setMockValue(SensorType::Tps1, 20);
+	ASSERT_FALSE(engine->rpmCalculator.isRunning());
+
+	// Reproduce the stopped branch of doPeriodicSlowCallback() followed by
+	// Engine::periodicSlowCallback() on each slow tick for two seconds.
+	for (int i = 0; i < 20; i++) {
+		eth.moveTimeForwardMs(100);
+		engine->rpmCalculator.onSlowCallback();
+		ae.resetAE();
+		engine->periodicSlowCallback();
+	}
+	ASSERT_TRUE(ae.isAboveAccelThreshold);
+	engine->rpmCalculator.setRpmValue(1200);
+	EXPECT_NEAR(0.20f, ae.getTpsEnrichment(), 0.00001f);
+}
