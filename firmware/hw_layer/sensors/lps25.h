@@ -12,7 +12,9 @@
 
 class Lps25 : public StoredValueSensor {
 public:
-	Lps25() : StoredValueSensor(SensorType::BarometricPressure, MS2NT(1000)) { }
+	explicit Lps25(i2cBus* i2c = nullptr)
+		: StoredValueSensor(SensorType::BarometricPressure, MS2NT(1000)),
+		m_i2c(i2c) {}
 
 	void showInfo(const char* sensorName) const override;
 
