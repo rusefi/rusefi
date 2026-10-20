@@ -32,6 +32,7 @@ TEST(Vvt, TestSetPoint) {
 
 	// Mock necessary inputs
 	engine->engineState.fuelingLoad = 55;
+	engine->triggerCentral.vvtPositionUpdateTimer[0][0].reset();
 
 	// update m_engineRunningLongEnough / m_isRpmHighEnough flags
 	dut.onFastCallback();
@@ -136,6 +137,7 @@ TEST(VVT, ObservePlant) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	engine->triggerCentral.vvtPosition[0][0] = 23;
+	engine->triggerCentral.vvtPositionUpdateTimer[0][0].reset();
 
 	VvtController dut(0);
 	dut.init(nullptr, nullptr);
@@ -521,7 +523,7 @@ void configureVvtFeedbackReproduction() {
 
 } // namespace
 
-TEST(Vvt, ActuatesWithoutAnyCamMeasurement) {
+TEST(Vvt, DoesNotActuateWithoutAnyCamMeasurement) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	configureVvtFeedbackReproduction();
 	engineConfiguration->camInputs[0] = Gpio::A10;
@@ -532,16 +534,15 @@ TEST(Vvt, ActuatesWithoutAnyCamMeasurement) {
 	StrictMock<MockVp3d> targetMap;
 	StrictMock<MockPwm> pwm;
 	EXPECT_CALL(targetMap, getValue(testing::_, testing::_)).WillRepeatedly(Return(20));
-	EXPECT_CALL(pwm, setSimplePwmDutyCycle(testing::FloatNear(0.2f, 0.00001f)));
+	EXPECT_CALL(pwm, setSimplePwmDutyCycle(0));
 	VvtController dut(0);
 	dut.init(&targetMap, &pwm);
-	ASSERT_TRUE(dut.observePlant());
-	EXPECT_FLOAT_EQ(0, dut.observePlant().Value);
+	ASSERT_FALSE(dut.observePlant());
 	dut.onFastCallback();
-	EXPECT_FLOAT_EQ(20, dut.vvtOutput);
+	EXPECT_FLOAT_EQ(0, dut.vvtOutput);
 }
 
-TEST(Vvt, KeepsDrivingAfterCamPulsesStop) {
+TEST(Vvt, StopsDrivingAfterCamPulsesStop) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	configureVvtFeedbackReproduction();
 	engineConfiguration->globalTriggerAngleOffset = -37;
@@ -570,7 +571,11 @@ TEST(Vvt, KeepsDrivingAfterCamPulsesStop) {
 	StrictMock<MockVp3d> targetMap;
 	StrictMock<MockPwm> pwm;
 	EXPECT_CALL(targetMap, getValue(testing::_, testing::_)).WillRepeatedly(Return(measuredPosition + 20));
-	EXPECT_CALL(pwm, setSimplePwmDutyCycle(testing::FloatNear(0.2f, 0.00001f))).Times(2);
+	{
+		testing::InSequence sequence;
+		EXPECT_CALL(pwm, setSimplePwmDutyCycle(testing::FloatNear(0.2f, 0.00001f)));
+		EXPECT_CALL(pwm, setSimplePwmDutyCycle(0));
+	}
 	VvtController dut(0);
 	dut.init(&targetMap, &pwm);
 	dut.onFastCallback();
@@ -578,7 +583,7 @@ TEST(Vvt, KeepsDrivingAfterCamPulsesStop) {
 	eth.fireTriggerEvents2(600, 25);
 	ASSERT_EQ(1200, engine->rpmCalculator.getCachedRpm());
 	ASSERT_EQ(camEdges, engine->triggerCentral.vvtEventRiseCounter[0]);
-	EXPECT_FLOAT_EQ(measuredPosition, dut.observePlant().value_or(-1000));
+	EXPECT_FALSE(dut.observePlant());
 	dut.onFastCallback();
-	EXPECT_FLOAT_EQ(20, dut.vvtOutput);
+	EXPECT_FLOAT_EQ(0, dut.vvtOutput);
 }

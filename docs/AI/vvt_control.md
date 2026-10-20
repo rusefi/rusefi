@@ -4,6 +4,9 @@
 advanced curves, shared across banks. It runs from the fast callback. RPM,
 coolant temperature, elapsed time after engine start and cam feedback gate
 control. `vvtControlMinRpm` is independent of the cranking threshold.
+Cam feedback is valid for one second after a synchronized position update.
+If no position has arrived or cam edges stop, the controller disables PWM and
+resets PID state until feedback resumes.
 
 ## Basic and advanced modes
 

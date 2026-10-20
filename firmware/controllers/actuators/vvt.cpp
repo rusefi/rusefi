@@ -75,6 +75,9 @@ static bool shouldInvertVvt(int camIndex) {
 
 expected<angle_t> VvtController::observePlant() {
 #if EFI_SHAFT_POSITION_INPUT
+	if (!engine->triggerCentral.isVvtPositionFresh(m_bank, m_cam)) {
+		return unexpected;
+	}
 	return engine->triggerCentral.getVVTPosition(m_bank, m_cam);
 #else
 	return unexpected;
