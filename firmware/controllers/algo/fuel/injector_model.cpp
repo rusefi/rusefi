@@ -89,10 +89,11 @@ InjectorNonlinearMode InjectorModelSecondary::getNonlinearMode() const {
 void InjectorModelWithConfig::updateState() {
 	// TODO: remove at the end of 2025
 	// hack not to break tunes before 2779925f54f5c2d23499cbb2797f71508c652f54 "injector lag lookup should be done based on differential pressure"
+	// Use nominal pressure for the deadtime lookup when measured pressure is unavailable.
+	const auto differentialPressure = getFuelDifferentialPressure();
+	pressureCorrectionReference = differentialPressure.value_or(getFuelReferencePressure());
 	if (engineConfiguration->useAbsolutePressureForLagTime) {
-		pressureCorrectionReference = getFuelPressure().Value;
-	} else {
-		pressureCorrectionReference = getFuelDifferentialPressure().Value;
+		pressureCorrectionReference += Sensor::get(SensorType::Map).value_or(STD_ATMOSPHERE);
 	}
 }
 
@@ -219,10 +220,11 @@ floatms_t InjectorModelWithConfig::getInjectionDuration(float fuelMassGram) cons
   // hopefully one day we pick between useInjectorFlowLinearizationTable and ICM_HPFP_Manual_Compensation approaches
   // and not more than one of these would stay
 	if (engineConfiguration->useInjectorFlowLinearizationTable) {
-	  auto fps = Sensor::get(SensorType::FuelPressureInjector);
-	// todo: KPA vs BAR mess?!
-    return interpolate3d(config->injectorFlowLinearization,
-			config->injectorFlowLinearizationPressureBins, KPA2BAR(fps.Value),// array values are on bar
+		const auto fps = Sensor::get(SensorType::FuelPressureInjector);
+		// The pressure table uses bar; the sensor and reference pressure use kPa.
+		const float pressureBar = KPA2BAR(fps.value_or(getFuelReferencePressure()));
+		return interpolate3d(config->injectorFlowLinearization,
+			config->injectorFlowLinearizationPressureBins, pressureBar,
 			config->injectorFlowLinearizationFuelMassBins, fuelMassGram * 1000);  // array values are on mg
 	}
 
@@ -239,7 +241,11 @@ floatms_t InjectorModelWithConfig::getInjectionDuration(float fuelMassGram) cons
 		return baseDuration + m_deadtime;
 	}
 
-	auto fps = Sensor::get(SensorType::FuelPressureHigh);
+	const auto fps = Sensor::get(SensorType::FuelPressureHigh);
+	if (!fps) {
+		return baseDuration + m_deadtime;
+	}
+
 	// todo: KPA vs BAR mess in code and UI?!
 	float fuelMassCompensation = interpolate3d(config->hpfpFuelMassCompensation,
 			config->hpfpFuelMassCompensationFuelPressure, KPA2BAR(fps.Value),// array values are on bar
