@@ -3,4 +3,5 @@ unittest*.events.txt
 unittest*.json
 *.ndjson
 *.msl
+*.mlg
 *.csv
